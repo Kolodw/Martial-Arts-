@@ -247,7 +247,7 @@ body.mono .scene canvas{filter:grayscale(1) contrast(1.1)}
     <div class="chev" id="chev">▾</div>
   </div>
   <div id="detail" style="display:none"><div id="gTags" style="margin-top:6px"></div><div class="stats" id="stats"></div><div class="arcs" id="arcs"></div><div class="peers" id="peers"></div></div>
-  <div class="scene" id="sceneBox"><canvas id="scene" width="160" height="56"></canvas><div class="scap" id="scCap"></div></div>
+  <div class="scene" id="sceneBox"><canvas id="scene" width="960" height="336"></canvas><div class="scap" id="scCap"></div></div>
   <div class="feed" id="feed"></div>
   <div class="ctrl">
     <div class="crow">
@@ -294,8 +294,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='4.0';
+const VERSION='4.1';
 const CHANGELOG=[
+ {v:'4.1',d:'7 พ.ย. 2026',l:['🎨 ฉากพิกเซลละเอียดขึ้น 3 เท่า ตัวละครวาดใหม่ทั้งหมด: หน้าตาชัด มีตา คิ้ว ปาก กะพริบตา · ผมยาวสำหรับหญิง มวยผมสำหรับชาย · ชุดฮั่นฝูคอไขว้ มีเงาและแสง · แขนเสื้อ มือ เข็มขัดมีชายห้อย','😊 สีหน้าเปลี่ยนตามชีวิต: มีความสุขยิ้มแก้มแดง · เศร้าคิ้วตก น้ำตาไหล · บาดเจ็บหนักมีแผล','🧓 วัยต่างกันชัดเจน: เด็กตัวเล็กผมจุก · คนแก่ผมขาว มีริ้วรอย เคราสำหรับผู้ชาย','🌀 อนิเมชันลื่นขึ้น ~30 เฟรมต่อวินาที: หายใจขึ้นลง แขนแกว่งตอนเดิน ชายเสื้อพลิ้วลม ผ้าคาดหัวโบก ออร่าเต้นเป็นจังหวะพร้อมประกายลอยขึ้น','🌦️ บรรยากาศ: กลีบดอกไม้ ใบไม้ หิมะเคลื่อนนุ่มนวล · ปีที่เศร้าภาพโทนฟ้าหม่น ปีที่มีความสุขโทนอุ่น · บาดเจ็บหนักขอบจอแดงกะพริบ · ลำแสงบนยอดเขา · ฝุ่นละอองในบ้าน · ขอบภาพมืดลงเล็กน้อยให้มีมิติ']},
  {v:'4.0',d:'7 พ.ย. 2026',l:['😈 ศัตรูคู่แค้นตลอดชีวิต: ปะทะกันทุกไม่กี่ปี ฉายาเปลี่ยนตามความแค้น (ศัตรูวัยเยาว์ → มารร้ายแห่งยุค) เลือกสู้ เจรจา หรือหลบ จนถึงศึกตัดสินบนยอดเขา','🗺️ แผนที่ยุทธภพ/โลกเซียน: บ้านเกิด · เมืองหลวง · สำนัก · ดินแดนที่เคยไป · มิติลับ · ถ้ำ · กิจการ · ศัตรู (ในเมนู)','⚔️ ดวลด้วยวิชาจริง: วิชาที่เรียนมามี 4 สาย 💥 ทำลายล้าง · 🛡️ คุ้มกาย · ☠️ พิษ · 💚 ฟื้นฟู และใช้ยาสมานแผลหรือยันต์จากกระเป๋ากลางศึกได้','👻 เล่นต่อเป็นคนอื่น: ตอนจบชีวิต เลือกเล่นต่อเป็นคนที่เกิดพร้อมกันหรือศิษย์คนแรกได้','💾 เซฟได้ 3 ช่อง เล่นค้างหลายชีวิตพร้อมกัน','🎖️ ธีมพิเศษปลดล็อกจากความสำเร็จ: 🍃 หยกเขียว · 🩸 โลหิตมาร · ✨ ทองเซียน','🪔 เทศกาลตามวันจริง: ตรุษจีน · โคมไฟ · เชงเม้ง · เรือมังกร · ชีซี · ไหว้พระจันทร์ · โคมลอย · ตงจื้อ มีอีเวนต์และโคมลอยในฉาก','🔠 ปรับขนาดตัวอักษร เล็ก · กลาง · ใหญ่','❓ แนะนำการเล่นครั้งแรก ชี้ทีละปุ่ม เปิดดูซ้ำได้ในเมนู']},
  {v:'3.9',d:'7 พ.ย. 2026',l:['⏭ ปุ่มข้ามข้อความ หรือแตะที่ฟีด — ข้อความที่เหลือของปีขึ้นทันที','📜 บันทึกชีวิตกลางเกม: ดูเหตุการณ์สำคัญย้อนหลังได้ทุกเมื่อ กรองดูเฉพาะ รัก · ศึก · พลัง · ระบบ · สำนัก','📳 มือถือสั่นเบาๆ ตอนเกิดเหตุการณ์ระดับตำนาน','📅 ชะตาประจำวัน: ทุกวันทุกคนได้ชาติกำเนิดเดียวกัน (แยกยุทธภพ/โลกเซียน) เก็บคะแนนดีที่สุดของวัน','🔥 โหมดท้าทาย: นรก (ห้ามสุ่มใหม่ โรคแรงขึ้น ศัตรูเก่งขึ้น) · ชีวิตสั้น 30 ปี · รากขยะ (พรสวรรค์ต่ำสุดเสมอ)','🖼️ อัลบั้มความทรงจำ: เก็บภาพฉากพิกเซลเองตอน แต่งงาน · ทะลวงขั้น · เหตุการณ์ระดับตำนาน ดูได้ในบันทึกชีวิตและหน้าสรุป','🖼️ การ์ดชีวิตเป็นรูป: ภาพตัวละคร ฉายา ระดับ อายุ บันทึกหรือส่งต่อได้','🪦 สุสานบรรพชน: รวมทุกชีวิตพร้อมคำไว้อาลัย และต้นไม้ตระกูลเมื่อสืบทอดเป็นลูกหลาน','📚 สารานุกรม: ระดับพลัง 3 โลก · สำนัก · ตระกูล · ระบบ · โลกเดิม · ไอเท็ม · โรค · ดินแดน · อาชีพ ปลดล็อกเมื่อเจอครั้งแรก','📊 สถิติรวม: อายุเฉลี่ย · สาเหตุการตาย · ระดับพลัง · ระบบที่เคยได้ · โลกที่เกิด','🏅 ความสำเร็จใหม่ 4 อย่าง']},
  {v:'3.8',d:'7 พ.ย. 2026',l:['⏳ ข้อความค่อยๆ ขึ้นทีละบรรทัดพร้อมเอฟเฟกต์เลื่อนขึ้น แทนการโผล่มาพร้อมกันทีเดียว — ลุ้นได้ว่าปีนี้จะเกิดอะไรต่อ','ความเร็วการขึ้นข้อความปรับตามความเร็วเกม (1× ช้า ลุ้นได้ · 16× เร็ว)','ปีถัดไปจะเริ่มเมื่อข้อความของปีนี้ขึ้นครบแล้ว','หน้าต่างตัวเลือกจะเด้งหลังข้อความก่อนหน้าขึ้นครบ จะได้รู้ว่าเกิดอะไรขึ้นก่อนต้องตัดสินใจ','🧹 โลกเซียน: ตรวจละเอียดทุกจุดแล้ว — ชื่อพรสวรรค์ (กระดูกดี → รากวิญญาณสองธาตุ) · หน้าสถานะ · แถบด้านบน · หน้าครอบครัว · คนเกิดพร้อมคุณ · หน้าเกิด · หน้าสรุปตอนตาย · ข้อความแชร์ · ทางราชการ (ราชครูเซียน · ศึกกำแพงเผ่าอสูร) · หน้าแรกเปลี่ยนคำตามโลกที่เลือก']},
@@ -1488,7 +1489,7 @@ function endGame(){
  const share=`「${ep}」 ${S.name}${S.gen>1?' (รุ่นที่ '+S.gen+')':''}\n${S.cause} อายุ ${S.age} ปี · ${REALMS[ri].n}\n${S.faction?S.faction.n+' — '+rankName():'จอมยุทธ์พเนจร'}\nโอกาสเกิด 1 ใน ${fmt(1/S.odds)}\n#1ในยุทธภพ`;
  const line=S.lineage.concat([{n:S.name,e:ep,a:S.age}]);
  $('end').innerHTML=xT(`<div class="box rec">
-  <div class="scene" style="margin:0 0 12px"><canvas id="endScene" width="160" height="56"></canvas><div class="scap">🪦 ${esc(S.name)} · ${S.age} ปี</div></div>
+  <div class="scene" style="margin:0 0 12px"><canvas id="endScene" width="960" height="336"></canvas><div class="scap">🪦 ${esc(S.name)} · ${S.age} ปี</div></div>
   <div style="text-align:center"><canvas class="avatar" id="ava2" width="16" height="16"></canvas></div>
   <div class="ep">「${ep}」</div><div class="nm">${esc(S.name)}${S.gen>1?` <span class="tag2">รุ่นที่ ${S.gen}</span>`:''}</div>
   <div class="yrs">${S.ow&&S.soul?`🌌 วิญญาณของ ${S.soul.n} จาก${S.world.n}<br>`:''}${S.era?`${S.era} · `:''}อายุ ${S.age} ปี · ${S.cause}<br>โอกาสเกิด 1 ใน ${fmt(1/S.odds)}</div>
@@ -2929,7 +2930,7 @@ function yearExtras(){festTick();miniTick();if(S.age>=2&&Math.random()<.6)sliceO
 function vib(ms){try{if(LS.get('murim_vib',1)&&navigator.vibrate)navigator.vibrate(ms)}catch(e){}}
 // ---- 7. อัลบั้ม ----
 function albumSnap(cap){if(!S||!S.alive)return;const a=S.album=S.album||[];if(a.length&&a[a.length-1].a===S.age)return;
- setTimeout(()=>{try{const cv=$('scene');if(!cv||!S||!S.alive)return;const u=cv.toDataURL('image/png');if(!u||u.length<200)return;a.push({a:S.age,c:cap.replace(/<[^>]+>/g,'').slice(0,60),u});if(a.length>24)a.splice(1,1)}catch(e){}},450)}
+ setTimeout(()=>{try{const cv=$('scene');if(!cv||!S||!S.alive)return;const sm=document.createElement('canvas');sm.width=240;sm.height=84;const sx=sm.getContext('2d');let u;if(sx){sx.imageSmoothingEnabled=false;sx.drawImage(cv,0,0,240,84);u=sm.toDataURL('image/png')}else u=cv.toDataURL('image/png');if(!u||u.length<200)return;a.push({a:S.age,c:cap.replace(/<[^>]+>/g,'').slice(0,60),u});if(a.length>24)a.splice(1,1)}catch(e){}},450)}
 function albumHTML(L){L=L||(S&&S.album)||[];if(!L.length)return '<p class="tag2">ยังไม่มีภาพในอัลบั้ม — ภาพจะถูกเก็บเองตอนเกิดเหตุการณ์สำคัญ</p>';
  return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">${L.map(p=>`<div style="border:2px solid var(--line);border-radius:6px;overflow:hidden;background:var(--w)"><img src="${p.u}" style="width:100%;image-rendering:pixelated;display:block"><div class="tag2" style="padding:3px 5px;font-size:11px;line-height:1.3"><b>${p.a} ปี</b> · ${esc(p.c)}</div></div>`).join('')}</div>`}
 // ---- 2. บันทึกชีวิตกลางเกม ----
@@ -3515,7 +3516,7 @@ const LOC={home:'🏠 บ้าน',village:'🏘️ หมู่บ้าน',f
  sick:'🤒 ล้มป่วย',fight:'⚔️ ปะทะ',wedding:'💍 งานแต่ง',birth:'👶 ชีวิตใหม่',portal:'🌌 รอยแยกมิติ',death:'🪦 ลาก่อน',plague:'☠️ โรคระบาด',aura:'✨ ทะลวงขั้น',system:'🟦 ระบบ',master:'🧓 อาจารย์',war:'🚩 สนามรบ',cradle:'👶 เปลไม้'};
 const FOC_LOC={baby:'cradle',play:'village',read:'home',drill:'yard',chores:'farm',train:'waterfall',qi:'peak',study:'library',adv:'road',mission:'hall',tech:'workshop',work:'market',rest:'teahouse',love:'home'};
 function setScene(type,data){if(!S)return;sceneEvt={type,data,t:type==='death'?Infinity:Date.now()+Math.max(900,2800/Math.sqrt(speed||2))}}
-let g;const P=(x,y,w,h,c)=>{g.fillStyle=c;g.fillRect(Math.round(x),Math.round(y),w,h)};
+let g,PS=3,fdt=1,lastTs=0,lastDraw=0;const P=(x,y,w,h,c)=>{g.fillStyle=c;const X=Math.round(x*PS),Y=Math.round(y*PS);g.fillRect(X/PS,Y/PS,Math.max(1,Math.round(w*PS))/PS,Math.max(1,Math.round(h*PS))/PS)};
 const srand=k=>{const x=Math.sin(k*127.1+311.7)*43758.5453;return x-Math.floor(x)};
 function avatarCols(seed,gender,demon){let s=seed;const rnd=()=>(s=(s*9301+49297)%233280)/233280;
  return{skin:['#ffd9b8','#f1c27d','#e0ac69','#c68642'][Math.floor(rnd()*4)],hair:demon?'#7a0f2a':['#2a2838','#4a3426','#6b4a2f','#1f2b4a'][Math.floor(rnd()*4)],robe:['#5b8def','#ff6b9a','#6fbf73','#e0a030','#8b4fd8'][Math.floor(rnd()*5)]}}
@@ -3560,51 +3561,98 @@ function meLook(){
  if(S.heirLead&&F.heirType==='มาร')o.hat='crown';else if(S.heirLead)o.hat=o.hat==='bald'?'bald':'crown';
  if(o.hat==='bald'&&S.gender==='หญิง')o.hat=null;
  const hair=S.age>=60?'#e6e6e6':S.age>=45?'#8a8a94':c.hair,w=S.gear&&S.gear.weapon,a=S.gear&&S.gear.armor;
- return Object.assign(o,{age:S.age,g:S.gender,skin:c.skin,hair,old:S.age>=65,beard:S.gender==='ชาย'&&S.age>=50?(S.age>=60?'#f0f0f0':'#6a6a72'):null,
+ return Object.assign(o,{mood:moodOfMe(),seed:S.seed,age:S.age,g:S.gender,skin:c.skin,hair,old:S.age>=65,beard:S.gender==='ชาย'&&S.age>=50?(S.age>=60?'#f0f0f0':'#6a6a72'):null,
   sword:S.age>=14&&(ri>=1||w)?(w?WPN[w]:'#c8ccd6'):null,glow:w==='w4',arm:a?ARM[a]:null,
   aura:ri>=4?(S.faction&&S.faction.t==='มาร'||S.family.heirType==='มาร'?'#ff3060':S.faction&&S.faction.t==='อธรรม'?'#b060ff':S.sys?'#4ab0ff':'#ffd040'):null});
 }
-function person(x,y,o,pose='stand'){
- const fr=frame%4<2?0:1,child=o.age<12,h=child?11:16;
- if(pose==='lie'){P(x,y-4,5,4,o.skin);P(x,y-5,5,1,o.hair);P(x-1,y-4,1,3,o.hair);P(x+5,y-4,12,4,o.robe);P(x+1,y-3,1,1,'#222');return}
- let top=y-h+(pose==='sit'?4:0)+(o.old?1:0);
- if(o.aura){g.globalAlpha=.25+.2*Math.sin(frame*.6);P(x-3,top-3,14,y-top+3,o.aura);g.globalAlpha=.5;P(x-1,top-1,10,y-top+1,o.aura);g.globalAlpha=1}
- const hx=x+2,bald=o.hat==='bald';
- P(hx,top,4,4,o.skin);
- if(!bald){P(hx,top,4,1,o.hair);P(hx-1,top,1,3,o.hair);P(hx+4,top,1,2,o.hair);
-  if(o.g==='หญิง'){P(hx-1,top+3,1,4,o.hair);P(hx+4,top+2,1,4,o.hair)}else if(!child&&!o.hat)P(hx+1,top-1,2,1,o.hair)}
- else{P(hx+1,top,1,1,'#c89a7a');P(hx+2,top,1,1,'#c89a7a')}
- if(o.beard&&!child)P(hx+1,top+4,3,2,o.beard);
- P(hx+3,top+2,1,1,'#222');P(hx+1,top+2,1,1,'#222');
+const shd=(c,a)=>{if(!c||c[0]!=='#'||c.length<7)return c;const n=parseInt(c.slice(1,7),16),r=n>>16,gg=n>>8&255,b=n&255;const f=v=>Math.max(0,Math.min(255,Math.round(a<0?v*(1+a):v+(255-v)*a)));return '#'+[f(r),f(gg),f(b)].map(v=>v.toString(16).padStart(2,'0')).join('')};
+const Q=(x,y,w,h,c)=>P(x/3,y/3,w/3,h/3,c);
+function person(x,y,o,pose='stand'){x=Math.round(x);y=Math.round(y);g.save();g.translate(x,y);g.scale(1.5,1.5);g.translate(-x,-y);try{person0(x,y,o,pose)}finally{g.restore()}}
+function person0(x,y,o,pose){
+ const X=Math.round(x*3),Y=Math.round(y*3),child=o.age<12,T=frame*.15;
+ const sd=(o.seed||((o.robe||'').length*7+(o.hair||'').length))%10;
+ if(pose==='lie'){const ly=Y-12;Q(X-2,ly,16,12,o.skin);Q(X-2,ly,16,3,o.hair);Q(X-4,ly+2,3,8,o.hair);Q(X+3,ly+6,2,1,'#2a2030');Q(X+8,ly+6,2,1,'#2a2030');Q(X+14,ly+1,36,11,o.robe);Q(X+14,ly+1,36,2,shd(o.robe,.25));Q(X+14,ly+9,36,2,shd(o.robe,-.25));Q(X+12,ly-2,40,3,'#f4ecd8');return}
+ const H=child?33:48,hw=child?11:12,hh=child?11:12,tw=child?11:16,th=child?11:18,walk=pose==='walk',sit=pose==='sit';
+ const bob=walk?(Math.sin(T*8)>0?-1:0):Math.round(Math.sin(T*1.6+sd)*.6);
+ let top=Y-H+(sit?9:0)+(o.old?2:0)+bob;const cx=X+12;
+ // aura
+ if(o.aura){const pu=.5+.5*Math.sin(T*2.4);g.globalAlpha=.10+.12*pu;Q(cx-14,top-6,28,Y-top+6,o.aura);g.globalAlpha=.18+.12*pu;Q(cx-10,top-2,20,Y-top+2,o.aura);g.globalAlpha=1;
+  for(let i=0;i<5;i++){const ph=(T*.6+i/5)%1;g.globalAlpha=1-ph;Q(cx-12+((i*7+sd*3)%24),Y-ph*(Y-top+10),2,2,shd(o.aura,.4))}g.globalAlpha=1}
+ const hx=cx-Math.floor(hw/2),ty=top+hh+1,bald=o.hat==='bald',fem=o.g==='หญิง';
+ const robe=o.robe||'#888',rD=shd(robe,-.28),rL=shd(robe,.22),skin=o.skin,sD=shd(skin,-.15),hair=o.hair||'#222',hD=shd(hair,-.3);
+ // sword behind
+ if(o.sword){if(o.glow){g.globalAlpha=.25+.2*Math.sin(T*3);Q(cx+5,ty-10,7,th+14,o.sword);g.globalAlpha=1}Q(cx+7,ty-6,2,th+8,o.sword);Q(cx+8,ty-6,1,th+8,shd(o.sword,-.3));Q(cx+5,ty-8,6,2,'#6a4a2a');Q(cx+7,ty-13,2,5,'#4a2a1a');Q(cx+6,ty-14,4,2,'#c8a040')}
+ if(o.staff&&!child){Q(cx+13,top-6,2,Y-top+6,o.staff);Q(cx+12,top-8,4,3,shd(o.staff,.3))}
+ // long hair behind
+ if(!bald&&fem&&!['hood','mask','veil'].includes(o.hat)){Q(hx-1,top+3,hw+2,hh+(child?3:9),hD);Q(hx,top+3,hw,hh+(child?2:8),hair)}
+ // legs / lower body
+ const ly=ty+th;
+ if(sit){Q(cx-11,Y-6,22,6,rD);Q(cx-11,Y-6,22,2,robe);Q(cx-12,Y-2,24,2,'#00000033')}
+ else{const lh=Math.max(2,Y-ly),sw=walk?Math.round(Math.sin(T*8)*2):0,pant=o.pant||'#3a3348';
+  Q(cx-5+sw,ly,4,lh,pant);Q(cx+1-sw,ly,4,lh,shd(pant,-.15));Q(cx-6+sw,Y-2,6,2,'#1e1a24');Q(cx+1-sw,Y-2,6,2,'#1e1a24')}
+ // robe torso (cross collar hanfu)
+ const hem=sit?0:2;
+ for(let r=0;r<th;r++){const w=tw+Math.floor(r*hem*2/th);const lx=cx-Math.floor(w/2);Q(lx,ty+r,w,1,robe);Q(lx+w-3,ty+r,3,1,rD);Q(lx,ty+r,1,1,rL)}
+ Q(cx-Math.floor(tw/2)+1,ty,tw-2,1,rL);
+ if(o.stripe)for(let r=1;r<th;r+=3)Q(cx-Math.floor(tw/2),ty+r,tw,1,'#ffffff40');
+ if(o.fur){Q(cx-Math.floor(tw/2)-1,ty,tw+2,4,'#e0a030');for(let i=0;i<tw;i+=4)Q(cx-Math.floor(tw/2)+i,ty+1,2,2,'#1a1a1a')}
+ const trim=o.trim||rD;for(let r=0;r<Math.min(8,th-3);r++){Q(cx-5+r,ty+r,2,1,trim)}Q(cx+3,ty,2,4,trim);
+ if(o.trim)Q(cx-Math.floor((tw+hem*2)/2),ly-2,tw+hem*2,2,o.trim);
+ const bY=ty+(child?6:9);Q(cx-Math.floor(tw/2)-1,bY,tw+2,3,o.belt||'#00000066');Q(cx-1,bY+3,2,3+((frame|0)%8<4?0:1),o.belt||'#00000066');
+ if(o.jade)Q(cx+3,bY+3,2,4,'#6ad0a0');if(o.emblem)Q(cx+2,ty+4,4,4,o.emblem);
+ if(o.patch){Q(cx-5,ty+5,3,3,shd(robe,-.4));Q(cx+3,ty+11,3,3,'#6a7a4a')}
+ // hem flutter
+ if(!sit&&!child){const fl=Math.round(Math.sin(T*3+sd)*1.2);Q(cx-Math.floor(tw/2)-2+fl,ly-1,2,2,rD)}
+ // arms
+ const as=walk?Math.round(Math.sin(T*8)*2):Math.round(Math.sin(T*1.6+sd)*.5),aL=child?8:12;
+ Q(cx-Math.floor(tw/2)-3,ty+1+as,4,aL,robe);Q(cx-Math.floor(tw/2)-3,ty+1+as,1,aL,rD);Q(cx-Math.floor(tw/2)-2,ty+1+as+aL,3,3,skin);
+ Q(cx+Math.floor(tw/2)-1,ty+1-as,4,aL,rD);Q(cx+Math.floor(tw/2),ty+1-as+aL,3,3,sD);
+ if(o.arm){Q(cx-Math.floor(tw/2)-4,ty-1,6,4,o.arm);Q(cx+Math.floor(tw/2)-2,ty-1,6,4,shd(o.arm,-.2));Q(cx-Math.floor(tw/2)-4,ty-1,6,1,shd(o.arm,.3))}
+ if(o.basket&&!child){Q(cx-14,ty+8,7,6,'#c8a060');Q(cx-14,ty+8,7,1,'#8a6a3a');Q(cx-12,ty+6,3,2,'#6ab04a')}
+ // neck + head
+ Q(cx-2,ty-2,4,3,sD);
+ Q(hx,top,hw,hh,skin);Q(hx+hw-2,top+1,2,hh-2,sD);Q(hx+1,top+hh,hw-2,1,skin);Q(hx-1,top+3,1,hh-5,skin);Q(hx+hw,top+3,1,hh-5,sD);
+ // face
+ const ey=top+Math.floor(hh*.5),blink=(T*1.3+sd)%4<.12,mood=o.mood||'neutral';
+ const eL=hx+2,eR=hx+hw-4;
+ if(blink){Q(eL,ey+1,2,1,'#2a2030');Q(eR,ey+1,2,1,'#2a2030')}
+ else{Q(eL,ey,2,2,'#2a2030');Q(eR,ey,2,2,'#2a2030');Q(eL,ey,1,1,'#ffffff');Q(eR,ey,1,1,'#ffffff')}
+ const bc=bald?'#5a4030':hD;if(mood==='sad'){Q(eL,ey-2,1,1,bc);Q(eL+1,ey-3,1,1,bc);Q(eR+1,ey-2,1,1,bc);Q(eR,ey-3,1,1,bc)}else if(mood==='angry'){Q(eL,ey-3,1,1,bc);Q(eL+1,ey-2,1,1,bc);Q(eR,ey-2,1,1,bc);Q(eR+1,ey-3,1,1,bc)}else{Q(eL,ey-2,2,1,bc);Q(eR,ey-2,2,1,bc)}
+ const my=ey+(child?3:4),mx=cx-1;
+ if(mood==='happy'){Q(mx-1,my,1,1,'#8a3a3a');Q(mx,my+1,2,1,'#8a3a3a');Q(mx+2,my,1,1,'#8a3a3a');g.globalAlpha=.45;Q(eL-1,ey+2,2,1,'#ff7a8a');Q(eR+1,ey+2,2,1,'#ff7a8a');g.globalAlpha=1}
+ else if(mood==='sad'){Q(mx,my,2,1,'#6a3a3a');Q(mx-1,my+1,1,1,'#6a3a3a');Q(mx+2,my+1,1,1,'#6a3a3a');if((T|0)%3===0)Q(eR+1,ey+2,1,2,'#8ad0ff')}
+ else if(mood==='hurt'){Q(mx-1,my,4,1,'#6a3a3a');Q(eL-1,ey-1,1,4,'#c8283a')}
+ else Q(mx,my,2,1,'#8a4a4a');
+ if(o.old&&!child){Q(hx+1,top+2,3,1,sD);Q(eR+2,ey+2,1,1,sD)}
+ if(o.beard&&!child){Q(hx+2,my+1,hw-4,child?2:5,o.beard);Q(hx+3,my+6,hw-6,2,o.beard);Q(hx+1,my-1,2,2,o.beard);Q(hx+hw-3,my-1,2,2,o.beard)}
+ // hair front
+ if(!bald&&!['hood','mask'].includes(o.hat)){Q(hx-1,top-1,hw+2,3,hair);Q(hx-1,top+1,2,4,hair);Q(hx+hw-1,top+1,2,4,hair);Q(hx+1,top+2,3,1,hair);Q(hx+hw-5,top+2,2,1,hair);Q(hx,top-1,hw,1,shd(hair,.2));
+  if(child){Q(hx-2,top-2,3,3,hair);Q(hx+hw-1,top-2,3,3,hair)}
+  else if(!fem&&!o.hat){Q(cx-2,top-4,4,3,hair);Q(cx-1,top-5,2,1,hD);Q(cx-3,top-2,6,1,'#c8a040')}
+  else if(fem&&!o.hat){Q(cx+2,top-3,3,3,hair);Q(cx+4,top-4,1,3,'#e8c040')}}
+ else if(bald){Q(hx+2,top+1,1,1,'#c89a7a');Q(hx+4,top+1,1,1,'#c89a7a');Q(hx+3,top+3,1,1,'#c89a7a')}
  // headwear
  const hc=o.hat;
- if(hc==='taoist'){P(hx,top-2,4,2,'#3a3a5a');P(hx+1,top-3,2,1,'#3a3a5a');P(hx+2,top-2,1,1,'#e8e0ff')}
- else if(hc==='straw'||hc==='bamboo'){const c2=hc==='straw'?'#e0c070':'#b89048';P(hx-3,top,10,1,c2);P(hx-1,top-1,6,1,c2);P(hx+1,top-2,2,1,c2)}
- else if(hc==='mask'){P(hx-1,top-1,6,2,o.maskC);P(hx,top+3,4,1,o.maskC);P(hx-1,top,1,3,o.maskC);P(hx+4,top,1,3,o.maskC);P(hx,top+1,4,1,'#a01020')}
- else if(hc==='veil'){g.globalAlpha=.7;P(hx,top+3,4,2,'#4a2a5a');g.globalAlpha=1;P(hx-1,top-1,6,1,'#4a2a5a')}
- else if(hc==='band'){P(hx-1,top+1,6,1,o.bandC);P(hx+5,top+2,2,1,o.bandC);P(hx+6,top+3,1,1,o.bandC)}
- else if(hc==='horn'||hc==='crown'){P(hx,top-1,4,1,'#c8a020');P(hx,top-2,1,1,'#c8a020');P(hx+3,top-2,1,1,'#c8a020');if(hc==='crown')P(hx+1,top-3,2,1,'#e0283a');if(o.trim==='#c8183a'||hc==='horn'){P(hx-1,top-2,1,2,'#c8183a');P(hx+4,top-2,1,2,'#c8183a')}}
- else if(hc==='flower'){P(hx+4,top-1,2,2,'#ff6b9a');P(hx+4,top-1,1,1,'#ffe060')}
- else if(hc==='official'){P(hx-2,top-1,8,1,'#1a1a1a');P(hx,top-2,4,1,'#1a1a1a')}
- else if(hc==='hood'){P(hx-1,top-1,6,1,o.hoodC);P(hx-1,top,1,4,o.hoodC);P(hx+4,top,1,4,o.hoodC)}
- const by=top+4,bh=child?4:7;
- if(o.staff&&!child)P(x+9,top-2,1,y-top+2,o.staff);
- P(x+1,by,6,bh,o.robe);
- if(o.stripe)for(let i=0;i<bh;i+=2)P(x+1,by+i,6,1,'#ffffff33');
- if(o.fur)P(x+1,by,6,2,'#e0a030'),P(x+2,by,1,1,'#1a1a1a'),P(x+5,by+1,1,1,'#1a1a1a');
- if(o.trim){P(x+3,by,2,1,o.trim);P(x+3,by+1,1,bh-2,o.trim);P(x+1,by+bh-1,6,1,o.trim)}
- P(x+1,by+(child?2:3),6,1,o.belt||'#00000055');
- if(o.patch){P(x+2,by+1,1,1,'#5a4a32');P(x+5,by+4,1,1,'#6a7a4a')}
- if(o.jade)P(x+5,by+(child?2:3)+1,1,2,'#6ad0a0');
- if(o.emblem)P(x+4,by+1,2,2,o.emblem);
- if(o.basket&&!child)P(x-2,by+3,3,3,'#c8a060');
- P(x,by+1,1,bh-2,o.robe);P(x+7,by+1,1,bh-2,o.robe);P(x,by+bh-1,1,1,o.skin);P(x+7,by+bh-1,1,1,o.skin);
- if(o.arm){P(x,by,2,2,o.arm);P(x+6,by,2,2,o.arm)}
- if(o.sword&&pose!=='lie'){if(o.glow){g.globalAlpha=.3+.25*Math.sin(frame*.8);P(x+7,by-5,3,bh+3,o.sword);g.globalAlpha=1}P(x+8,by-4,1,bh+1,o.sword);P(x+7,by-2,3,1,'#5a3a1a');P(x+8,by-4,1,2,'#7a5a3a')}
- if(pose==='sit'){P(x-1,y-2,10,2,o.robe);P(x-1,y-1,10,1,'#00000033')}
- else{const ly=by+bh,lh=Math.max(1,y-ly),wk=pose==='walk'?fr:0;P(x+2-wk,ly,2,lh,'#3a3348');P(x+4+wk,ly,2,lh,'#3a3348')}
- if(o.old&&pose!=='sit'&&!o.staff)P(x+9,by+2,1,y-by-2,'#7a5a3a');
+ if(hc==='taoist'){Q(hx,top-5,hw,4,'#3a3a5a');Q(hx+2,top-8,hw-4,3,'#3a3a5a');Q(cx-1,top-7,2,4,'#e8e0ff')}
+ else if(hc==='straw'||hc==='bamboo'){const c2=hc==='straw'?'#e0c070':'#b89048';Q(hx-8,top,hw+16,2,c2);Q(hx-4,top-3,hw+8,3,c2);Q(hx,top-6,hw,3,c2);Q(cx-2,top-8,4,2,c2);Q(hx-8,top+1,hw+16,1,shd(c2,-.25))}
+ else if(hc==='mask'){Q(hx-1,top-2,hw+2,5,o.maskC);Q(hx-1,ey+3,hw+2,hh-(ey-top)-2,o.maskC);Q(hx-1,top,2,hh,o.maskC);Q(hx+hw-1,top,2,hh,o.maskC);Q(hx,ey-1,hw,1,'#a01020')}
+ else if(hc==='veil'){g.globalAlpha=.75;Q(hx,ey+3,hw,6,'#4a2a5a');g.globalAlpha=1;Q(hx-2,top-2,hw+4,3,'#4a2a5a')}
+ else if(hc==='band'){Q(hx-1,top+3,hw+2,2,o.bandC);const fl=Math.round(Math.sin(T*3)*1);Q(hx+hw+1,top+4+fl,4,2,o.bandC);Q(hx+hw+4,top+6+fl,2,2,o.bandC)}
+ else if(hc==='horn'||hc==='crown'){Q(hx,top-3,hw,3,'#c8a020');Q(hx,top-6,2,3,'#c8a020');Q(cx-1,top-7,2,4,'#c8a020');Q(hx+hw-2,top-6,2,3,'#c8a020');if(hc==='crown')Q(cx-1,top-5,2,2,'#e0283a');if(hc==='horn'||o.trim==='#c8183a'){Q(hx-3,top-6,2,5,'#c8183a');Q(hx-4,top-8,2,3,'#c8183a');Q(hx+hw+1,top-6,2,5,'#c8183a');Q(hx+hw+2,top-8,2,3,'#c8183a')}}
+ else if(hc==='flower'){Q(hx+hw-1,top-2,5,5,'#ff6b9a');Q(hx+hw,top-1,3,3,'#ffb0c8');Q(hx+hw+1,top,1,1,'#ffe060')}
+ else if(hc==='official'){Q(hx-5,top-3,hw+10,2,'#1a1a1a');Q(hx,top-7,hw,4,'#1a1a1a');Q(cx-1,top-6,2,2,'#c8a040')}
+ else if(hc==='hood'){Q(hx-2,top-3,hw+4,4,o.hoodC);Q(hx-2,top,3,hh+2,o.hoodC);Q(hx+hw-1,top,3,hh+2,o.hoodC);Q(hx-2,top-3,hw+4,1,shd(o.hoodC,.2))}
 }
+// ---- บรรยากาศ ----
+function moodOfMe(){if(!S)return'neutral';if(S.hp<S.maxHp*.3)return'hurt';const h=S.happy==null?60:S.happy;if(S.grief>25||h<25)return'sad';if(h>78)return'happy';return'neutral'}
+function atmo(loc){if(!S)return;const T=frame*.15;
+ const h=S.happy==null?60:S.happy;
+ if(S.grief>25||h<25){g.globalAlpha=.16;P(0,0,SW,SH,'#2a3a6a');g.globalAlpha=1}else if(h>82){g.globalAlpha=.07;P(0,0,SW,SH,'#ffd080');g.globalAlpha=1}
+ if(S.alive&&S.hp<S.maxHp*.3){g.globalAlpha=.12+.1*Math.sin(T*4);P(0,0,SW,3,'#ff2030');P(0,SH-3,SW,3,'#ff2030');P(0,0,3,SH,'#ff2030');P(SW-3,0,3,SH,'#ff2030');g.globalAlpha=1}
+ if(loc==='peak'||loc==='aura'){g.globalAlpha=.08+.04*Math.sin(T);for(let i=0;i<3;i++){for(let y=0;y<SH;y+=1)P(30+i*45+y*.5,y,6,1,'#fff6c0')}g.globalAlpha=1}
+ if(['home','teahouse','library','cradle','hall'].includes(loc)){for(let i=0;i<6;i++){const ph=(T*.08+i/6)%1;g.globalAlpha=.5*Math.sin(ph*Math.PI);P(20+((i*37)%120)+Math.sin(T+i)*3,10+ph*30,1/3*2,1/3*2,'#fff4d0');g.globalAlpha=1}}
+ g.globalAlpha=.18;P(0,0,SW,1,'#000');P(0,SH-1,SW,1,'#000');P(0,0,1,SH,'#000');P(SW-1,0,1,SH,'#000');g.globalAlpha=.08;P(0,1,SW,1,'#000');P(0,SH-2,SW,1,'#000');P(1,0,1,SH,'#000');P(SW-2,0,1,SH,'#000');g.globalAlpha=1}
+
 function mountSprite(x,y){const m=S.gear&&S.gear.mount;if(!m)return;const c=m==='m1'?'#8a8a92':m==='m2'?'#8a5a3a':'#a8382a',mane=m==='m3'?'#1a1a1a':'#3a2a1a',bob=frame%4<2?0:1;
  P(x,y-9+bob,12,5,c);P(x+10,y-13+bob,3,6,c);P(x+11,y-14+bob,3,2,c);P(x+9,y-13+bob,1,4,mane);P(x+1,y-4,2,4,c);P(x+9,y-4,2,4,c);P(x-1,y-9+bob,1,4,mane);P(x+12,y-13+bob,1,1,'#111');if(m==='m1'){P(x+11,y-16+bob,1,2,c);P(x+13,y-16+bob,1,2,c)}}
 function petSprite(x,y){const p=S.pet;if(!p)return;const bob=frame%6<3?0:1;
@@ -3631,15 +3679,15 @@ function particles(season,kind){
  const k=kind||['petal',null,'leaf','snow'][season];if(!k)return;
  if(parts.length!==26||parts.k!==k){parts=Array.from({length:26},(_,i)=>({x:srand(i)*SW,y:srand(i+50)*SH,v:.4+srand(i+90)*.8}));parts.k=k}
  const col={petal:'#ffc0d8',leaf:'#e8862a',snow:'#ffffff',rain:'#a8c8f0',ember:'#ff9040',spark:'#e0c0ff'}[k];
- parts.forEach(p=>{p.y+=p.v*(k==='rain'?4:k==='ember'||k==='spark'?-1:1);p.x+=(k==='rain'?-.5:Math.sin((frame+p.v*20)*.15)*.5);
-  if(p.y>SH)p.y=-2;if(p.y<-2)p.y=SH;if(p.x<0)p.x=SW;if(p.x>SW)p.x=0;P(p.x,p.y,k==='rain'?1:1,k==='rain'?3:1,col)});
+ parts.forEach(p=>{p.y+=p.v*fdt*(k==='rain'?4:k==='ember'||k==='spark'?-1:1);p.x+=fdt*(k==='rain'?-.5:Math.sin((frame+p.v*20)*.15)*.5);
+  if(p.y>SH)p.y=-2;if(p.y<-2)p.y=SH;if(p.x<0)p.x=SW;if(p.x>SW)p.x=0;const sz=k==='rain'?1/3:(p.v>.8?1:2/3);g.globalAlpha=k==='snow'?.9:1;P(p.x,p.y,sz,k==='rain'?3:sz,col);if(k==='petal'||k==='leaf')P(p.x+sz,p.y,1/3,1/3,shd(col,-.2));g.globalAlpha=1});
 }
 function family(x,y,loc){
  if(S.spouse&&!['peak','waterfall','library','road','workshop','hall','yard'].includes(loc)){const c=avatarCols(S.seed+7,S.gender==='ชาย'?'หญิง':'ชาย');person(x+12,y,{age:S.age,g:S.gender==='ชาย'?'หญิง':'ชาย',skin:c.skin,hair:S.age>=60?'#e6e6e6':c.hair,robe:'#ff8fb3',old:S.age>=65})}
  if(S.kids&&['home','village','teahouse','market','farm'].includes(loc))for(let i=0;i<Math.min(3,S.kids);i++){const c=avatarCols(S.seed+i*13,i%2?'หญิง':'ชาย');person(x+24+i*9,y,{age:8,g:i%2?'หญิง':'ชาย',skin:c.skin,hair:c.hair,robe:['#6fbf73','#e0a030','#5b8def'][i]})}
 }
 function drawScene(ctx,type){
- g=ctx;const season=S.age%4,me=meLook(),Y=47;let loc=type;
+ g=ctx;PS=ctx.canvas.width/SW;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;const season=S.age%4,me=meLook(),Y=47;let loc=type;
  const st=me.age<12?'stand':'stand';
  switch(loc){
   case 'cradle':{interior();windowV(18,8,season);lantern(140,4);const r=Math.round(Math.sin(frame*.5)*1.5);P(66+r,Y-7,22,6,'#8a5a3a');P(64,Y-1,26,1,'#6a4022');P(68+r,Y-8,18,2,'#ffb7d0');P(70+r,Y-10,4,3,me.skin);P(70+r,Y-11,4,1,me.hair);
@@ -3702,21 +3750,22 @@ function drawScene(ctx,type){
    for(let i=0;i<4;i++){P(56+i*4,45,2,2,['#ffd04a','#fff','#ff8fb3','#fff'][i]);P(92+i*4,45,2,2,['#fff','#ffd04a','#fff','#ff8fb3'][i])}particles(2,'leaf');return}
  }
  if(!['home','teahouse','library','workshop','cradle','birth','hall','yard'].includes(loc)||loc==='hall'||loc==='yard')particles(season);
+ atmo(loc);
 }
 function sceneType(){if(sceneEvt&&Date.now()<sceneEvt.t)return sceneEvt.type;sceneEvt=null;if(!S.alive)return'death';if(S.age<2)return'cradle';if(S.chronic&&S.hp<S.maxHp*.4)return'sick';return FOC_LOC[S.focus]||'home'}
 function tickScene(){
  if(!S||!$('game').classList.contains('on'))return;
  const box=$('sceneBox');box.style.display=showScene?'block':'none';if(!showScene)return;
- frame++;const t=sceneType();const ctx=$('scene').getContext('2d');if(!ctx)return;drawScene(ctx,t);
+ {const now=performance.now();fdt=lastTs?Math.min(4,(now-lastTs)/150):1;lastTs=now;frame+=fdt}const t=sceneType();const ctx=$('scene').getContext('2d');if(!ctx)return;drawScene(ctx,t);
  const cap=`${LOC[t]||''} · ${SEASONS[S.age%4][1]} ${SEASONS[S.age%4][0]}`;if(cap!==lastCap){lastCap=cap;$('scCap').textContent=cap}
 }
-setInterval(tickScene,150);
+(function loopScene(ts){if(!lastDraw||ts-lastDraw>=33){lastDraw=ts;try{tickScene()}catch(e){}}requestAnimationFrame(loopScene)})(0);
 function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tickScene();openMenu()}
 
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION})}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
