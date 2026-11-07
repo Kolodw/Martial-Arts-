@@ -48,11 +48,11 @@ module.exports = async (req, res) => {
       if (okId(id)) {
         const ua = String(req.headers['user-agent'] || '');
         const org = String(req.headers['origin'] || req.headers['referer'] || '').replace(/^https?:\/\//, '').split('/')[0].slice(0, 60);
-        const meta = { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
+        const meta = { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(req.query.v || '').slice(0, 8), c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
         if (meta.b !== 'บอท') await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)]]);
       }
       const [, n, lives] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 300e3], ['ZCARD', 'online'], ['GET', 'lives']]);
-      return res.json({ n: n || 0, lives: +(lives || 0) });
+      return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7) });
     }
     if (a === 'who' || a === 'admin' || a === 'bugfix') {
       const AK = process.env.ADMIN_KEY;
@@ -123,13 +123,18 @@ module.exports = async (req, res) => {
       if (isAdm) {
         const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 90e3, '+inf']]);
         const all = [...(pub || []).map(x => [x, 'live:', 0]), ...(prv || []).filter(x => !(pub || []).includes(x)).map(x => [x, 'livep:', 1])];
-        if (!all.length) return res.json({ l: [], adm: 1 });
-        const vals = await cmd('MGET', ...all.map(x => x[1] + x[0]));
-        const cnt = await pipe(all.map(x => ['ZCOUNT', 'watch:' + x[0], now - 20e3, '+inf']));
+
+        const vals = all.length ? await cmd('MGET', ...all.map(x => x[1] + x[0])) : [];
+        const cnt = all.length ? await pipe(all.map(x => ['ZCOUNT', 'watch:' + x[0], now - 20e3, '+inf'])) : [];
         const l = [];
         all.forEach(([x, , pv], i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, w: cnt[i] || 0, pv }) } catch {} });
         await pipe([['ZREMRANGEBYSCORE', 'livezp', 0, now - 180e3]]);
-        return res.json({ l: l.sort((p, q) => q.age - p.age).slice(0, 80), adm: 1 });
+        const onIds = await cmd('ZRANGEBYSCORE', 'online', now - 300e3, '+inf');
+        const liveSet = new Set(all.map(x => x[0]));
+        const rest = (onIds || []).filter(x => !liveSet.has(x));
+        const metas = rest.length ? await cmd('HMGET', 'om', ...rest) : [];
+        const idle = rest.map((x, i) => { let m = {}; try { m = JSON.parse(metas[i] || '{}') } catch {} return { id: x.slice(0, 4), d: m.d, b: m.b, v: m.v || '', ago: Math.round((now - (m.t || now)) / 1000) } }).filter(x => x.b !== 'บอท');
+        return res.json({ l: l.sort((p, q) => q.age - p.age).slice(0, 80), adm: 1, idle });
       }
       const ids = await cmd('ZRANGEBYSCORE', 'livez', now - 60e3, '+inf');
       if (!ids || !ids.length) return res.json({ l: [] });
