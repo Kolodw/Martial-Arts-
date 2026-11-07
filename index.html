@@ -240,6 +240,19 @@ details.item summary{cursor:pointer}
 .rvst{display:flex;align-items:center;gap:2px;margin-bottom:6px}.rvst button{border:0;background:none;font-size:30px;line-height:1;color:#8a8a9a;padding:0 2px}.rvst button.on{color:#f0b830}.rvst span{margin-left:6px}
 .rvs{color:#f0b830;font-size:.9em}.rvsum{display:flex;gap:12px;align-items:center;margin-bottom:8px}.rvavg{text-align:center;min-width:80px}.rvavg b{font-size:30px;display:block}.rvavg span{color:#f0b830}.rvavg small{display:block;opacity:.6;font-size:.75em}
 .rvbars{flex:1;font-size:.75em}.rvbars div{display:flex;align-items:center;gap:4px}.rvbars i{flex:1;height:7px;border-radius:4px;background:rgba(128,128,128,.25);overflow:hidden}.rvbars i b{display:block;height:100%;background:#f0b830}.rvbars small{width:20px;text-align:right;opacity:.6}
+#recap{position:fixed;inset:0;z-index:999;background:radial-gradient(ellipse at 50% 60%,#2a1e30 0%,#0c0a12 70%);display:flex;align-items:center;justify-content:center;color:#f4e8d0;animation:rcIn .7s ease;overflow:hidden;cursor:pointer}
+#recap.out{animation:rcOut .65s ease forwards}@keyframes rcIn{from{opacity:0}}@keyframes rcOut{to{opacity:0;transform:scale(1.04)}}
+#recap .rl i{position:absolute;bottom:-30px;width:12px;height:16px;border-radius:4px 4px 6px 6px;background:linear-gradient(#ffd27a,#e0602a);box-shadow:0 0 14px 4px rgba(255,160,60,.45);animation:lantern linear infinite;opacity:.85}
+@keyframes lantern{0%{transform:translate(0,0)}50%{transform:translate(14px,-55vh)}100%{transform:translate(-6px,-115vh);opacity:0}}
+#recap .rbox{position:relative;text-align:center;width:min(92vw,440px);padding:20px}
+#recap .rnm{font-size:28px;letter-spacing:1px;text-shadow:0 2px 8px #000}#recap .rage{font-size:46px;color:#f0c860;margin:6px 0 14px;text-shadow:0 0 18px rgba(240,200,96,.5)}
+#recap .rev{min-height:150px;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;transition:opacity .6s}#recap .rev.fade{opacity:.15}
+#recap .rline{font-size:15px;line-height:1.4;animation:rlIn .55s ease;text-shadow:0 2px 6px #000}#recap .rline b{color:#f0c860;margin-right:6px}@keyframes rlIn{from{opacity:0;transform:translateY(14px)}}
+#recap .rep{font-family:'Srisakdi','Itim',serif;font-weight:700;font-size:clamp(24px,7.5vw,40px);line-height:1.3;margin-top:-90px;opacity:0;transform:scale(.8);transition:all .9s cubic-bezier(.2,1.4,.4,1);background:linear-gradient(180deg,#fff4c2,#f0c860 40%,#a8701e 60%,#ffe08a);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 #3a200a) drop-shadow(0 0 16px rgba(255,190,90,.5))}
+#recap .rep.on{opacity:1;transform:scale(1)}#recap .rcause{opacity:0;margin-top:10px;font-size:16px;transition:opacity .8s;color:#d8c8b0}#recap .rcause.on{opacity:1}
+#recap .rskip{position:absolute;right:14px;bottom:max(18px,env(safe-area-inset-bottom));background:rgba(255,255,255,.1);color:#f4e8d0;border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:6px 14px;font:inherit}
+#end.endanim .rec > *,#end.endanim .rec li,#end.endanim .five > .box,#end.endanim > h4,#end.endanim > button,#end.endanim > .brow,#end.endanim > .box{opacity:0;animation:euIn .55s ease forwards}
+@keyframes euIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -348,8 +361,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='4.5';
+const VERSION='4.6';
 const CHANGELOG=[
+ {v:'4.6',d:'7 พ.ย. 2026',l:['🛠️ แก้บั๊กกด "อำลา" แล้วไม่เข้าหน้าสรุปชีวิต','🏮 ภาพย้อนความทรงจำก่อนหน้าสรุป: อายุนับขึ้นจาก 0 พร้อมเหตุการณ์สำคัญผุดขึ้นทีละเรื่อง โคมลอยขึ้นฟ้า แล้วปิดด้วยฉายาตัวทอง · แตะข้ามได้','✨ หน้าสรุปค่อยๆ เลื่อนขึ้นมาทีละส่วน และคะแนนตำนานนับขึ้น']},
  {v:'4.5',d:'7 พ.ย. 2026',l:['🐞 กระดานแจ้งบั๊กในเกม: แจ้งบั๊กหรือขอฟีเจอร์ แล้วทุกคนเห็นบนกระดาน กด 🙋 เจอเหมือนกัน / 👍 อยากได้เหมือนกัน · ผู้พัฒนาติด ✅ แก้แล้ว ได้','💬 ความคิดเห็นผู้เล่น: ให้ดาว 1–5 พร้อมเขียนว่าเกมเป็นยังไง เห็นคะแนนเฉลี่ยและความเห็นของทุกคน','⚑ รายงานข้อความที่ไม่เหมาะสมได้ทั้งสองกระดาน']},
  {v:'4.4',d:'7 พ.ย. 2026',l:['🏮 เปลี่ยนชื่อเป็น 1 ใน นวนิยาย ตัวอักษรโบราณสีทองอมน้ำตาล','🌲 หน้าแรกมีฉากหลังพิกเซล: ป่ามูริมยามสนธยา ภูเขา เจดีย์ โคมไฟ ใบไม้ร่วง หิ่งห้อย · เลือกโลกเทพเซียนแล้วเปลี่ยนเป็นเกาะลอย สำนักบนฟ้า ทะเลเมฆ กระบี่ลอย นกกระเรียน','🌍 โลกพิกเซล 32×32 วาดใหม่ มีทวีปจริง ทะเลทราย น้ำแข็งขั้วโลก เมฆ แสงเงา หมุนรอบตัว','☰ ปุ่มต่างๆ หน้าแรกย่อรวมไว้ในขีดสามขีดมุมขวาบน · เอาตัวนับผู้คนออก','🎵 เพลงใหม่แนวจีนบรรเลง: กู่เจิงไล่โน้ต ขลุ่ยถามตอบ เบสนุ่ม มีเสียงก้อง จังหวะช้าสบาย']},
  {v:'4.3',d:'7 พ.ย. 2026',l:['🔨 งานช่าง 4 สาย: ปรุงยา ตีเหล็ก ค่ายกล เขียนยันต์ — 20 ตำรับ เครื่องมือ 4 ขั้นมีความทนทาน ฝีมือขึ้นตามการลงมือ ผลงาน 4 ขั้น ตั้งงานประจำได้ และจุดมุ่งหมายใหม่ 🔨 งานช่าง','👥 หน้าผู้คน: ครอบครัว อาจารย์ เพื่อน ศัตรู พร้อมตัวกรอง ★ คนโปรด ค่าความสนิท ใช้เวลาด้วยกัน และชวนเป็นคู่หูได้ 3 คน','🏘️ เมือง: ร้านยา โรงตีเหล็ก ร้านพู่กัน ร้านหยก โรงเตี๊ยม และกระดานภารกิจเมืองที่มาใหม่ทุกปี','🏡 ตระกูล: จ้างคนรับใช้และพ่อบ้าน · พงศาวดารทุกรุ่น','🏰 ดันเจี้ยน 7 แห่ง เดินทีละห้อง 5 ห้องแล้วบอส ถอยออกได้ ได้วัตถุดิบ อุปกรณ์ ตำรับ','⚙️ หน้าอัตโนมัติ: ดูแลผู้คน ซื้อยา ขายวัตถุดิบเกิน ลงดันเจี้ยนเอง','🌧️ เสียงบรรยากาศ ฝน ลม น้ำตก นก แมลง ตามฉากและอากาศ · ปรับความดังเพลง/เสียงประกอบ/บรรยากาศแยกกัน · ฉากมีฝนและหิมะตก','📘 คู่มือในเกมและหน้าเว็บ · 🐞 แจ้งบั๊กไปที่ GitHub · 💾 ย้ายเซฟข้ามเครื่องด้วยรหัส','🌐 ออนไลน์ (บนเว็บ Vercel): แชทโลก แชร์ชีวิต ทำเนียบประจำสัปดาห์ ประลองเงา ฝากเซฟด้วยรหัสสั้น — เปิดใช้เมื่อเชื่อมฐานข้อมูลแล้ว']},
@@ -1541,7 +1555,8 @@ function epithet(){
  return (S.ow?'ผู้มาจากต่างโลก ':'')+ch(pre)+['','','แห่งเมืองเล็ก','แห่งแคว้น','แห่งแผ่นดิน','ใต้หล้า','ผู้ไร้พ่าย','ผู้เหนือฟ้า'][ri];
 }
 function endGame(){
- const bye=($('byeIn')||{}).value||'';closeM();clearInterval(timer);finishPeers();
+ if(endGame._busy)return;endGame._busy=1;setTimeout(()=>endGame._busy=0,4000);
+ const bye=($('byeIn')||{}).value||'';closeM();choice._cur=null;choice._min=false;pendBar();clearInterval(timer);finishPeers();
  const ep=epithet(),ri=realmIdx();S.epithet=ep;
  const newAch=achCheck(true);
  const score=Math.round((total()+S.fame*5+S.money/10+(S.faction?S.rank*500:0)+S.kids*100+(S.ownSect?S.ownSect.dis*20:0)+S.offRank*400)*(S.goalDone?1.5:1));
@@ -1586,10 +1601,9 @@ function endGame(){
  <button class="gbtn" style="width:100%;margin-top:10px" onclick="openBook()">📖 สมุดตำนาน (${Object.keys(achGot).length}/${ACH_ALL.length})</button>
  <div class="brow" style="margin-top:10px"><button class="gbtn" id="cpBtn">📋 คัดลอกไปแชร์</button><button class="${(S.children||[]).some(c=>c.alive)?'gbtn':'pbtn'}" onclick="toTitle()">🐣 เกิดใหม่</button></div>`);
  drawAvatar($('ava2'),S.seed,S.gender,S.family.demon||S.talent.m>=4);bindSpark('skP');bindSpark('skH');
- {const ec=$('endScene').getContext('2d');if(ec){const ef=()=>{if(!$('end').classList.contains('on')||!$('endScene'))return clearInterval(et);frame++;drawScene(ec,'death')};var et=setInterval(ef,150);ef()}}
  $('cpBtn').onclick=()=>{navigator.clipboard.writeText(xT(share)).then(()=>toast('คัดลอกแล้ว'),()=>toast('คัดลอกไม่ได้'))};
- show('end');
  endExtras();
+ playRecap(ep,score,()=>{show('end');endAnim(score);{const ec=$('endScene')&&$('endScene').getContext('2d');if(ec){const ef=()=>{if(!$('end').classList.contains('on')||!$('endScene'))return clearInterval(et);frame++;drawScene(ec,'death')};var et=setInterval(ef,150);ef()}}});
 }
 function inherit(ci){
  const P=S,sur=P.name.split(' ')[0];const kid=ci!=null&&P.children?P.children[ci]:null;
@@ -3277,7 +3291,7 @@ function crStart(){const left=CR_PTS-crSpent();if(left<0)return toast('แต้
   look:{hs:CR_HS[C.hs][1],hair:CR_HC[C.hc][1],skin:CR_SK[C.sk][1],robe:CR_RB[C.rb][1]}};
  roll.root=rootOf(tv);roll.name=C.name.trim()||genName(f.v,gv0.n);roll.soul=w?genSoul(w.v,gv0.n):null;roll.goals=[C.goal];roll.goal=C.goal;
  rerolls=0;startLife()}
-function oddsLine(){return S&&S.custom?'✍️ ชีวิตที่ลิขิตเอง':`${oddsLine()}`}
+function oddsLine(){return S&&S.custom?'✍️ ชีวิตที่ลิขิตเอง':`โอกาสเกิด 1 ใน ${fmt(1/S.odds)}`}
 
 // ---------- 3) ชุดสวมใส่ ----------
 const EQI={
@@ -3806,6 +3820,27 @@ async function openFeedback(){
   el.innerHTML=(j.n?`<div class="rvsum"><div class="rvavg"><b class="px">${j.avg.toFixed(1)}</b><span>${stars(Math.round(j.avg))}</span><small>${fmt(j.n)} ความเห็น</small></div><div class="rvbars">${[5,4,3,2,1].map(r=>`<div><span>${r}★</span><i><b style="width:${j.dist[r-1]/mx*100}%"></b></i><small>${j.dist[r-1]}</small></div>`).join('')}</div></div>`:'')+
    ((j.m||[]).map(m=>`<div class="item fbi"><div class="h"><b>${esc(m.n)} <span class="rvs">${stars(m.r)}</span></b><span class="tag2">${ago(m.t)}</span></div>${m.x?`<p>${esc(m.x)}</p>`:''}<div class="brow2"><button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div></div>`).join('')||'<p class="tag2">ยังไม่มีความคิดเห็น เป็นคนแรกเลย!</p>')}catch(e){const el=$('rvList');if(el)el.textContent='โหลดไม่ได้'}}
 async function rvPost(){if(!RV.r)return toast('ให้คะแนนดาวก่อน');try{await api('review',{n:pname(),r:RV.r,x:($('rvTx').value||'').trim(),v:VERSION});toast('ขอบคุณสำหรับความเห็น!');openFeedback()}catch(e){toast(e.message==='rate'?'รอสักครู่ก่อนส่งใหม่':'ส่งไม่สำเร็จ')}}
+
+
+// ---------- v4.6 ภาพย้อนความทรงจำก่อนหน้าสรุป ----------
+function recapEvents(){const ev=(S.key||[]).map(k=>{const m=/^(\d+) ปี — ([\s\S]*)$/.exec(k);return m?{a:+m[1],t:m[2].replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim()}:null}).filter(e=>e&&e.t&&!/สมุดตำนาน|ความสำเร็จ/.test(e.t));
+ const seen=new Set(),U=ev.filter(e=>{const k=e.t.slice(0,24);if(seen.has(k))return false;seen.add(k);return true});
+ const n=Math.min(8,U.length),out=[];for(let i=0;i<n;i++)out.push(U[Math.round(i*(U.length-1)/Math.max(1,n-1))]);
+ return [...new Map(out.map(e=>[e.a+e.t,e])).values()]}
+function playRecap(ep,score,done){let fin=false;const end=()=>{if(fin)return;fin=true;clearInterval(T);el.classList.add('out');setTimeout(()=>{el.remove();done()},650)};
+ const E=recapEvents(),age=S.age,name=S.name,dur=Math.min(9000,1800+E.length*900);
+ const el=document.createElement('div');el.id='recap';el.innerHTML=xT(`<div class="rl">${Array.from({length:14},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i*0.45)%4}s;animation-duration:${6+(i%5)}s"></i>`).join('')}</div>
+  <div class="rbox"><div class="rnm">${esc(name)}</div><div class="rage px"><span id="rAge">0</span> ปี</div><div class="rev" id="rEv"></div><div class="rep" id="rEp">「${ep}」</div><div class="rcause" id="rCause">${S.cause}</div></div>
+  <button class="rskip" onclick="event.stopPropagation()">ข้าม ▶</button>`);
+ document.body.appendChild(el);el.querySelector('.rskip').onclick=e=>{e.stopPropagation();end()};el.onclick=()=>{if(stage>=2)end()};
+ let t0=performance.now(),shown=0,stage=0;const box=el.querySelector('#rEv');sfx('death');
+ const T=setInterval(()=>{const k=Math.min(1,(performance.now()-t0)/dur),a=Math.round(age*k);const ra=el.querySelector('#rAge');if(ra)ra.textContent=a;
+  while(shown<E.length&&E[shown].a<=a){const d=document.createElement('div');d.className='rline';d.innerHTML=`<b class="px">${E[shown].a}</b> ${esc(xT(E[shown].t)).slice(0,90)}`;box.appendChild(d);while(box.children.length>4)box.removeChild(box.firstChild);shown++;sfx('click')}
+  if(k>=1&&stage===0){stage=1;setTimeout(()=>{box.classList.add('fade');el.querySelector('#rEp').classList.add('on');sfx('rare')},500);setTimeout(()=>{el.querySelector('#rCause').classList.add('on');stage=2},1500);setTimeout(end,4200)}},60)}
+function endAnim(score){const root=$('end');root.classList.remove('endanim');void root.offsetWidth;root.classList.add('endanim');
+ const items=[...root.querySelectorAll('.rec > *, .rec li, .five > .box, #end > h4, #end > button, #end > .brow, #end > .box')];items.forEach((e,i)=>e.style.animationDelay=Math.min(3.2,i*.06)+'s');
+ const sc=[...root.querySelectorAll('.rec li b.px')].pop();if(sc){const t0=performance.now();const tk=()=>{const k=Math.min(1,(performance.now()-t0)/1600),v=Math.round(score*(1-Math.pow(1-k,3)));sc.textContent=fmt(v);if(k<1)requestAnimationFrame(tk)};setTimeout(tk,900)}
+ window.scrollTo(0,0)}
 
 // ============ SOUND (8-bit) ============
 let AC=null,sfxOn=LS.get('murim_sfx',true),bgmOn=LS.get('murim_bgm',true),bgmT=null,sfxLast={};
@@ -4463,7 +4498,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION})}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
