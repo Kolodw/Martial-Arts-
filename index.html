@@ -390,7 +390,7 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='7.1';
+const VERSION='7.2';
 const CHANGELOG=[
  {v:'7.1',d:'8 พ.ย. 2026',l:['🐾 เกิดเป็นสัตว์สุ่มอย่างเดียว — ฟ้าลิขิตชนิด ธาตุ และพรสวรรค์ให้ทั้งหมด','🏆 ทำเนียบเพิ่มแท็บ 🐾 สัตว์อสูร แยกจากยุทธภพและโลกเทพเซียน','📜 ดูคนอื่นเล่น: โหลดบันทึกทั้งหมดตั้งแต่เกิดถึงปัจจุบันได้ (กดโหลดครั้งเดียว)','🌸 คืนสู่วัยเยาว์: พลังสูงหรือลมปราณบริสุทธิ์ถึงขีดสุด ใบหน้าอาจหยุดแก่ — แต่บางคนก็ยังแก่ตามวัย','🍑 เหตุการณ์หายาก: โอสถคืนวัยเยาว์ ร่างกายกลับแข็งแรงเหมือนวัยรุ่น อายุขัยเพิ่ม','🏯 ตำหนักใน: เสน่ห์และชื่อเสียงสูงจะมีสาวงาม/บุรุษรูปงามมาขอติดตาม รับได้มากตามค่าสถานะ มีค่าเลี้ยงดูทุกปี คู่ชีวิตอาจไม่พอใจ — ดูได้ในหน้าครอบครัว']},
  {v:'6.8',d:'8 พ.ย. 2026',l:['📖 ฝึกวิชามีโอกาสสำเร็จและล้มเหลว ขึ้นกับพรสวรรค์ ปัญญา อาจารย์ และพรสวรรค์พิเศษ · ผ่านแบบชิวๆ มีโอกาสน้อย','📕 คัมภีร์ระดับล้ำเลิศขึ้นไปต้องเลือกวิธีฝึก: 🔥 ฝืนฝึกทันที (พรสวรรค์ไม่ถึงเสี่ยงตาย) · 🐢 ค่อยๆ ศึกษา 2–4 ปี · 💰 ขายคัมภีร์','🔁 ได้วิชาซ้ำจะกลายเป็นการทบทวน ได้พลังเพิ่มแทน','📈 วิชามีระดับความชำนาญ ต่ำ → กลาง → สูง → สุดยอด เลื่อนระดับระหว่างจำลอง ยิ่งสูงยิ่งยากแต่พลังวิชาเพิ่มถึง ×3.2','⏸ ออกจากเว็บหรือแอประหว่างเล่น การจำลองจะหยุดไว้ กลับมาแตะเพื่อเล่นต่อ','🍵 ปณิธานใหม่: ใช้ชีวิตสโลไลฟ์ — เลือกได้ทุกชีวิต','🗑️ ลบช่องเซฟได้ที่หน้าแรก (มีถามยืนยันก่อนลบ)']},
@@ -1670,7 +1670,7 @@ function inherit(ci){
  S=baseState({name:kid?kid.n:genName(fam,g.v.n,sur),gender:g.v.n,family:fam,talent:t.v,ow:false,world:null,seed:R(1,99999),odds:t.p*g.p,
   power:fam.power+R(0,15),int:R(10,25)+Math.round(P.int*.1),money:fam.money,karma:fam.karma,fame:Math.round(P.fame*.3),
   gen:P.gen+1,lineage:P.lineage.concat([{n:P.name,e:P.epithet,a:P.age}])});
- if(heirArt)S.arts.push({...heirArt,heir:1});
+ if(heirArt)Array.prototype.push.call(S.arts,{...heirArt,heir:1});
  S.gear=Object.assign({},P.gear||{});if(Object.keys(S.gear).length)S._gearInh=1;
  {const fr=rollTraits().list;const good=(P.traits||[]).filter(x=>!trOf(x).bad);if(good.length&&Math.random()<.3){const x=ch(good);if(!fr.includes(x))fr.push(x)}S.traits=fr;applyTraitsStart()}
  S.heirParents=[{n:P.name,title:ptitle,role:P.gender==='หญิง'?'แม่':'พ่อ',g:P.gender,age:P.age,life:P.age,alive:false,p:'ผู้ล่วงลับ',rel:80}];
@@ -1908,7 +1908,7 @@ function initHeir(){const F=S.family;if(!F.heirType)return;const f=FACTIONS.find
 }
 function heirScrollTick(){const H=S.heir;if(!H||H.scroll>=SCROLL.length)return;const [a,ri,r,b]=SCROLL[H.scroll];if(S.age<a||realmIdx()<ri)return;
  const nm=H.type==='มาร'?HEIR_T['มาร'].scroll:`${HEIR_T[H.type].scroll}${H.sect}`;let art=S.arts.find(x=>x.heirScroll);
- if(!art){art={n:nm,tier:ART_TIER[r].n,b,r,heirScroll:1};S.arts.push(art)}else{art.b=b;art.r=r;art.tier=ART_TIER[r].n}
+ if(!art){art={n:nm,tier:ART_TIER[r].n,b,r,heirScroll:1};Array.prototype.push.call(S.arts,art)}else{art.b=b;art.r=r;art.tier=ART_TIER[r].n}
  H.scroll++;art.n=`${nm} บทที่ ${H.scroll}`;log(`📕 ${H.defect?'แอบ':''}ฝึก<b>${art.n}</b>สำเร็จ [${art.tier}] — พลัง +${b}`,r>=3?'myth':'epic',true);setScene('aura')}
 function heirTick(){
  const H=S.heir;if(!H)return false;heirScrollTick();
@@ -3210,7 +3210,7 @@ function playAs(kind,i){const P=S;let o;
  closeM();flushReveal();
  S=baseState({name:o.name,soul:o.soul||null,era:P.era,gender:o.gender,family:o.family,talent:o.talent,ow:o.ow,world:o.world,seed:R(1,99999),odds:1e-4,power:o.power,int:R(20,60),karma:o.karma,money:o.money,goal:null,clan:null,traits:[]});
  S.age=o.age;S.xian=P.xian;S.xt=P.xt;S.ch=P.ch;S.slot=P.slot;S.line=R(1,1e9);S.awake=!!o.ow;S.owAwake=0;S.flags.lostParents=1;S.parents=[];S.sibs=[];S.children=[];S.lastRealm=realmIdx();S.focus='train';
- if(o.fac){S.faction=o.fac;S.rank=o.rank;S.merit=MERIT[o.rank]||0}if(o.art)S.arts.push(Object.assign({},o.art));
+ if(o.fac){S.faction=o.fac;S.rank=o.rank;S.merit=MERIT[o.rank]||0}if(o.art)Array.prototype.push.call(S.arts,Object.assign({},o.art));
  if(kind==='peer')peers=peers.filter((x,j)=>j!==i);peers.forEach(p=>{if(p.name===o.name)p.alive=false});
  $('feed').innerHTML='';headerAge=-1;quiet=null;paused=false;auto=false;acc=0;bagInit();show('game');
  log(`👻 ชีวิตของ <b>${P.name}</b> จบลงแล้ว — เรื่องราวของโลกใบนี้ดำเนินต่อผ่านสายตาของ <b>${S.name}</b> ${kind==='peer'?'คนที่เกิดในวินาทีเดียวกับเขา':'ศิษย์คนแรกของเขา'} (อายุ ${S.age} ปี)`,'myth',true);
@@ -4152,7 +4152,7 @@ const SAGA=[
  {id:'cursed',n:'คัมภีร์ต้องสาป',c:()=>S.age>=15,ch:[
   d=>runE(['📕 คัมภีร์ต้องสาป (1/3)','พบคัมภีร์หนังมนุษย์ในศาลเจ้าร้าง ตัวอักษรเปล่งแสงสีแดงเมื่อแตะ',[['ฝึกตาม','p+40 k-5','พลังทะลักทลายจนตกใจ',()=>d.on=1],['เผาทิ้ง','k+8','เปลวไฟสีดำลุกโชนนานผิดธรรมชาติ',()=>d.end=1]]]),
   d=>runE(['📕 คัมภีร์ต้องสาป (2/3)','คืนหนึ่งคุณฝันเห็นเงาดำกระซิบให้สังหารคนรอบตัว พลังยิ่งเพิ่มเสียงยิ่งดัง',[['ฝึกต่อให้ถึงขั้นสุด','p+80 j-10 k-8','ดวงตาเริ่มแดงก่ำ',()=>d.deep=1],['หยุดฝึกและสะกดจิต','q+2 h-10','ทรมานแสนสาหัสแต่ยังเป็นตัวเอง']]]),
-  d=>{if(d.deep&&!tr('allarts')&&Math.random()<.5){applyFx('h-40 p+120');log('📕 ธาตุไฟเข้าแทรก! คุณคลุ้มคลั่งไปสามวัน ตื่นมาพบว่าพลังสูงขึ้นมหาศาล แต่ผู้คนต่างหวาดกลัว','myth',true);S.fame+=30;S.karma-=15}else{applyFx('q+4 i+6');log('📕 สยบเสียงในหัวได้ คัมภีร์ต้องสาปกลายเป็นวิชาของคุณเองที่ควบคุมได้','epic',true);S.arts.push({n:'คัมภีร์โลหิตสยบใจ',tier:'สูง',b:90,r:3,p:.05})}}]},
+  d=>{if(d.deep&&!tr('allarts')&&Math.random()<.5){applyFx('h-40 p+120');log('📕 ธาตุไฟเข้าแทรก! คุณคลุ้มคลั่งไปสามวัน ตื่นมาพบว่าพลังสูงขึ้นมหาศาล แต่ผู้คนต่างหวาดกลัว','myth',true);S.fame+=30;S.karma-=15}else{applyFx('q+4 i+6');log('📕 สยบเสียงในหัวได้ คัมภีร์ต้องสาปกลายเป็นวิชาของคุณเองที่ควบคุมได้','epic',true);Array.prototype.push.call(S.arts,{n:'คัมภีร์โลหิตสยบใจ',tier:'สูง',b:90,r:3,p:.05})}}]},
  {id:'sworn',n:'พี่น้องร่วมสาบาน',c:()=>S.age>=15&&S.age<=45,ch:[
   d=>{d.nm=anyName('ชาย');runE(['🍶 พี่น้องร่วมสาบาน (1/4)',`ดื่มสุรากับ<b>${d.nm}</b> จอมยุทธ์พเนจรที่ช่วยกันสู้โจรมาด้วยกัน เขาเสนอให้สาบานเป็นพี่น้อง`,[['สาบานใต้ต้นท้อ','j+8 c+3',`"แม้มิได้เกิดวันเดียวกัน ขอตายวันเดียวกัน"`],['ปฏิเสธอย่างสุภาพ','','ต่างคนต่างไปตามทาง',()=>d.end=1]]])},
   d=>runE(['🍶 พี่น้องร่วมสาบาน (2/4)',`${d.nm}พาไปพบแผนที่สมบัติของสำนักโบราณ ทั้งสองบุกไปด้วยกัน`,[['ร่วมเดินทาง','p+20 $+800','ได้สมบัติมาแบ่งกันคนละครึ่ง'],['ให้เขาไปก่อน','i+2','รอข่าวอยู่ที่โรงเตี๊ยม']]]),
@@ -4976,7 +4976,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5226,13 +5226,13 @@ function learnRisk(a){if(tr('allarts'))return 0;const g=(a.r||0)-learnCap();retu
 const _nPush=Array.prototype.push;
 function artLearned(a,how){_nPush.call(S.arts,a);if(Math.random()<.1){a.b=Math.round(a.b*1.25);log(`✨ ฝึก${artHtml(a)}ผ่านอย่างง่ายดาย ราวกับเกิดมาเพื่อวิชานี้ — พลังวิชา +25%`,'epic');return}if(how)log(how,'good')}
 function artPush(...items){if(!S||window._artRaw||!S.alive||S.beastMode||S.age<1)return _nPush.apply(this,items);
- for(const a of items){if(!a||!a.n){_nPush.call(this,a);continue}
+ for(const a of items){if(!a)continue;if(!a.n){_nPush.call(this,a);continue}
   if(this.some(x=>x.n===a.n)){const g=Math.round((a.b||10)/4);S.power+=g;queueMicrotask(()=>{try{log(`📖 《${a.n}》 ซ้ำกับวิชาที่มีอยู่แล้ว — นำมาทบทวนจนชำนาญขึ้น พลัง +${g}`)}catch(e){}});continue}
   if((a.r||0)>=2){(S.learnQ=S.learnQ||[]).push(a);queueMicrotask(()=>{try{log(`📕 ได้คัมภีร์${artHtml(a)}มา — คัมภีร์ระดับนี้ต้องฝึกให้สำเร็จก่อนจึงจะใช้ได้`)}catch(e){}});continue}
   const p=learnP(a);if(Math.random()<p){_nPush.call(this,a);if(Math.random()<.08){a.b=Math.round(a.b*1.25);queueMicrotask(()=>{try{log(`✨ เข้าใจ《${a.n}》ได้ในพริบตา — พลังวิชา +25%`,'good')}catch(e){}})}}
   else{S.qi+=.3;queueMicrotask(()=>{try{log(`📖 ฝึก《${a.n}》แต่จับแก่นไม่ได้ — ยังใช้ไม่ได้ (โอกาส ${Math.round(p*100)}% · ขึ้นกับพรสวรรค์และปัญญา)`,'bad')}catch(e){}})}}
  return this.length}
-function artsHook(){if(S&&Array.isArray(S.arts)&&S.arts.push!==artPush)Object.defineProperty(S.arts,'push',{value:artPush,enumerable:false,configurable:true,writable:true})}
+function artsHook(){if(S&&Array.isArray(S.arts)&&S.arts.some(x=>!x)){const c=S.arts.filter(Boolean);S.arts.length=0;_nPush.apply(S.arts,c)}if(S&&Array.isArray(S.arts)&&S.arts.push!==artPush)Object.defineProperty(S.arts,'push',{value:artPush,enumerable:false,configurable:true,writable:true})}
 function learnTick(){if(!S||!S.alive||S.beastMode)return;artsHook();
  const sl=(S.learnSlow||[]);for(let k=sl.length-1;k>=0;k--){const it=sl[k];if(S.age<it.until)continue;sl.splice(k,1);
   if(Math.random()<it.p)artLearned(it.a,`📗 ศึกษา${artHtml(it.a)}อย่างค่อยเป็นค่อยไปจนสำเร็จ`);else{it.a.tries=(it.a.tries||0)+1;if(it.a.tries>=3)log(`📕 ศึกษา《${it.a.n}》มาหลายปีก็ยังไม่เข้าใจ — ยอมแพ้และวางคัมภีร์ลง`,'bad');else{(S.learnQ=S.learnQ||[]).push(it.a);log(`📕 ศึกษา《${it.a.n}》ไม่สำเร็จ ต้องลองใหม่ (โอกาส ${Math.round(it.p*100)}%)`,'bad')}}}
