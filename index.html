@@ -253,6 +253,8 @@ details.item summary{cursor:pointer}
 #recap .rskip{position:absolute;right:14px;bottom:max(18px,env(safe-area-inset-bottom));background:rgba(255,255,255,.1);color:#f4e8d0;border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:6px 14px;font:inherit}
 #end.endanim .rec > *,#end.endanim .rec li,#end.endanim .five > .box,#end.endanim > h4,#end.endanim > button,#end.endanim > .brow,#end.endanim > .box{opacity:0;animation:euIn .55s ease forwards}
 @keyframes euIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.tonline{position:fixed;top:calc(max(10px,env(safe-area-inset-top)) + 54px);right:12px;z-index:5;width:46px;height:46px;font-size:22px;border:2px solid #e8d8a8;border-radius:10px;background:rgba(20,16,24,.72);color:#f4e4b4;box-shadow:0 3px 0 rgba(0,0,0,.4);display:none;padding:0;line-height:1;position:fixed}
+#title.on .tonline{display:flex;flex-direction:column;align-items:center;justify-content:center}.tonline small{font-size:9px;margin-top:1px;color:#8fe8a0;font-family:'Silkscreen',monospace}.tonline.on::after{content:'';position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px #4ade80}
 </style>
 </head>
 <body>
@@ -261,6 +263,7 @@ details.item summary{cursor:pointer}
 <div id="title" class="screen on">
   <canvas id="titleBg" width="90" height="160"></canvas>
   <button class="tmenu" onclick="openTitleMenu()" aria-label="เมนู">☰</button>
+  <button class="tonline" onclick="openOnline()" aria-label="ออนไลน์">🌐<small id="tOnN"></small></button>
   <canvas class="globe" id="globe" width="32" height="32"></canvas>
   <div class="onlinebadge" id="onlineBadge" style="display:none" onclick="openOnline()"></div>
   <div class="big"><span class="gold">1 ใน นวนิยาย</span><small id="titleSub">วันนี้ จะได้เกิดเป็นใครในยุทธภพ?</small></div>
@@ -3631,7 +3634,7 @@ let onlineOK=false,onlineN=0,onlineLives=0,chatT=null,chatLast=0,chatMsgs=[];
 const pid=(()=>{let v=LS.get('murim_pid','');if(!v){v=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);LS.set('murim_pid',v)}return v})();
 const pname=()=>LS.get('murim_pname','')||(S?S.name:'จอมยุทธ์นิรนาม');
 async function api(a,body){const o=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({id:pid},body))}:{};const r=await fetch(API+'?a='+a+(body?'':'&id='+pid),o);const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.err||r.status);return j}
-async function onlinePing(){try{const j=await api('ping');onlineOK=true;onlineN=j.n||0;onlineLives=j.lives||0}catch(e){onlineOK=false}const el=$('onlineBadge');if(el){el.style.display=onlineOK?'':'none';el.innerHTML=`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิตที่เคยเล่น`}}
+async function onlinePing(){try{const j=await api('ping');onlineOK=true;onlineN=j.n||0;onlineLives=j.lives||0}catch(e){onlineOK=false}{const t=$('tOnN');if(t){t.textContent=onlineOK?fmt(onlineN):'';t.parentNode.classList.toggle('on',onlineOK)}}const el=$('onlineBadge');if(el){el.style.display=onlineOK?'':'none';el.innerHTML=`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิตที่เคยเล่น`}}
 setTimeout(onlinePing,1500);setInterval(()=>{if(!document.hidden)onlinePing()},60000);
 function myTitle(){if(!S)return'';const ri=realmIdx();return REALMS[ri].n}
 function chatRender(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60;box.innerHTML=chatMsgs.map(m=>`<div class="cm ${m.k==='share'?'share':''}"><span class="ct">${new Date(m.t).toTimeString().slice(0,5)}</span> <b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b> ${m.k==='share'?'📤 ':''}${esc(m.x)} <button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div>`).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';if(near)box.scrollTop=box.scrollHeight}
@@ -3665,7 +3668,7 @@ function v43Tick(){crTick();compTick();hhTick();auTick();tqRefresh()}
 // ============ v4.4 · หน้าแรกใหม่ · ฉากหลังพิกเซล · โลก 32×32 · เพลงจีนบรรเลง ============
 // ---------- เมนูขีดสามขีดหน้าแรก ----------
 function openTitleMenu(){const th=THEMES.find(x=>x[0]===theme)||['','☀️','ธีม'];
- const B=[['📖','ตำนาน','openBook()'],['🪦','สุสาน','openGraves()'],['📚','สารานุกรม','openCodex()'],['📊','สถิติ','openStats()'],['📘','คู่มือ','openGuide()'],['🌐','ออนไลน์','openOnline()'],['💾','ย้ายเซฟ','openSaveCode()'],['📜','อัปเดต','openUpdate()'],
+ const B=[['📖','ตำนาน','openBook()'],['🪦','สุสาน','openGraves()'],['📚','สารานุกรม','openCodex()'],['📊','สถิติ','openStats()'],['📘','คู่มือ','openGuide()'],['💾','ย้ายเซฟ','openSaveCode()'],['📜','อัปเดต','openUpdate()'],
   [th[1],'ธีม: '+(th[2]||''),'cycleTheme();openTitleMenu()'],['🔊','เสียงและเพลง','openSound()'],['🔠','ตัวอักษร '+FS[fsz],'cycleFs();openTitleMenu()'],['🐞','แจ้งบั๊ก','openReport()'],['💬','ความคิดเห็น','openFeedback()'],['🌐','','']].filter(b=>b[1]);
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☰ เมนู</h3><div class="tmgrid">${B.map(b=>`<button class="cb" onclick="${b[2]}"><i>${b[0]}</i>${b[1]}</button>`).join('')}</div>`,'tmenu')}
 
