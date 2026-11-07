@@ -119,6 +119,18 @@ module.exports = async (req, res) => {
       return res.json({ n: L.length, avg, dist, m: L.slice(0, 80) });
     }
     if (a === 'livelist') {
+      const isAdm = !!process.env.ADMIN_KEY && String(req.query.key || '') === process.env.ADMIN_KEY;
+      if (isAdm) {
+        const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 90e3, '+inf']]);
+        const all = [...(pub || []).map(x => [x, 'live:', 0]), ...(prv || []).filter(x => !(pub || []).includes(x)).map(x => [x, 'livep:', 1])];
+        if (!all.length) return res.json({ l: [], adm: 1 });
+        const vals = await cmd('MGET', ...all.map(x => x[1] + x[0]));
+        const cnt = await pipe(all.map(x => ['ZCOUNT', 'watch:' + x[0], now - 20e3, '+inf']));
+        const l = [];
+        all.forEach(([x, , pv], i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, w: cnt[i] || 0, pv }) } catch {} });
+        await pipe([['ZREMRANGEBYSCORE', 'livezp', 0, now - 180e3]]);
+        return res.json({ l: l.sort((p, q) => q.age - p.age).slice(0, 80), adm: 1 });
+      }
       const ids = await cmd('ZRANGEBYSCORE', 'livez', now - 60e3, '+inf');
       if (!ids || !ids.length) return res.json({ l: [] });
       const vals = await cmd('MGET', ...ids.map(x => 'live:' + x));
@@ -130,6 +142,14 @@ module.exports = async (req, res) => {
     }
     if (a === 'liveget') {
       const k2 = String(req.query.t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (process.env.ADMIN_KEY && String(req.query.key || '') === process.env.ADMIN_KEY) {
+        const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 90e3, '+inf']]);
+        const f1 = (pub || []).find(x => x.slice(0, 6) + x.slice(-4) === k2), f2 = (prv || []).find(x => x.slice(0, 6) + x.slice(-4) === k2);
+        const v = f1 ? await cmd('GET', 'live:' + f1) : f2 ? await cmd('GET', 'livep:' + f2) : null;
+        if (!v) return res.status(404).json({ err: 'off' });
+        const w = await cmd('ZCOUNT', 'watch:' + (f1 || f2), now - 20e3, '+inf');
+        return res.json({ s: JSON.parse(v), w: w || 0, adm: 1, pv: f1 ? 0 : 1 });
+      }
       const ids = await cmd('ZRANGEBYSCORE', 'livez', now - 60e3, '+inf');
       const full = (ids || []).find(x => x.slice(0, 6) + x.slice(-4) === k2);
       if (!full) return res.status(404).json({ err: 'off' });
@@ -155,11 +175,15 @@ module.exports = async (req, res) => {
     if (req.method !== 'POST') return res.status(405).json({ err: 'method' });
     if (!okId(id)) return res.status(400).json({ err: 'id' });
     if (a === 'live') {
-      if (!b.spec) { await pipe([['DEL', 'live:' + id], ['ZREM', 'livez', id]]); return res.json({ w: 0 }) }
+      if (!b.spec) {
+        const ps = String(b.s || '');
+        if (ps && ps.length <= 60000) { try { JSON.parse(ps); await pipe([['DEL', 'live:' + id], ['ZREM', 'livez', id], ['SET', 'livep:' + id, ps, 'EX', 100], ['ZADD', 'livezp', now, id]]); return res.json({ w: 0 }) } catch {} }
+        await pipe([['DEL', 'live:' + id], ['ZREM', 'livez', id], ['DEL', 'livep:' + id], ['ZREM', 'livezp', id]]); return res.json({ w: 0 })
+      }
       const snap = String(b.s || '');
       if (snap.length > 60000) return res.status(400).json({ err: 'size' });
       try { JSON.parse(snap) } catch { return res.status(400).json({ err: 'json' }) }
-      const [, , w] = await pipe([['SET', 'live:' + id, snap, 'EX', 70], ['ZADD', 'livez', now, id], ['ZCOUNT', 'watch:' + id, now - 20e3, '+inf']]);
+      const [, , , , w] = await pipe([['SET', 'live:' + id, snap, 'EX', 70], ['ZADD', 'livez', now, id], ['DEL', 'livep:' + id], ['ZREM', 'livezp', id], ['ZCOUNT', 'watch:' + id, now - 20e3, '+inf']]);
       return res.json({ w: w || 0 });
     }
     if (a === 'csave') {
