@@ -45,9 +45,20 @@ module.exports = async (req, res) => {
   const now = Date.now(), W = week();
   try {
     if (a === 'ping') {
-      if (okId(id)) await cmd('ZADD', 'online', now, id);
+      if (okId(id)) {
+        const ua = String(req.headers['user-agent'] || '');
+        const org = String(req.headers['origin'] || req.headers['referer'] || '').replace(/^https?:\/\//, '').split('/')[0].slice(0, 60);
+        const meta = { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
+        await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)]]);
+      }
       const [, n, lives] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 300e3], ['ZCARD', 'online'], ['GET', 'lives']]);
       return res.json({ n: n || 0, lives: +(lives || 0) });
+    }
+    if (a === 'who') {
+      const ids = await cmd('ZRANGEBYSCORE', 'online', now - 300e3, '+inf');
+      const metas = ids && ids.length ? await cmd('HMGET', 'om', ...ids) : [];
+      const rows = (ids || []).map((x, i) => { let m = null; try { m = JSON.parse(metas[i]) } catch {} return { id: x.slice(0, 4) + '…', d: m ? m.d : '-', b: m ? m.b : '-', o: m ? m.o : '-', c: m ? m.c : '-', ago: m ? Math.round((now - m.t) / 1000) : null } });
+      return res.json({ n: rows.length, rows });
     }
     if (a === 'chat') {
       const [list, hidden] = await pipe([['LRANGE', 'chat', 0, 79], ['SMEMBERS', 'chat:hidden']]);
