@@ -390,8 +390,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='5.7';
+const VERSION='5.8';
 const CHANGELOG=[
+ {v:'5.8',d:'7 พ.ย. 2026',l:['🐛 กดกลับหน้าแรกตอนมีตัวเลือกย่อค้างไว้ แล้วโหลดกลับมา เวลาไม่เดิน — ตอนนี้ระบบให้ชะตาเลือกแทนแล้วบันทึกก่อนออก','🐛 โหลดเซฟกลับมาแล้วเกมหยุดอยู่ ต้องกด ▶ เอง — ตอนนี้เล่นต่อทันที','🐛 เปิดทำเนียบสำนักบางจังหวะแล้ว error','ทดสอบเปิด-ปิดเมนูทุกหน้าสุ่มระหว่างเล่นกว่า 600 ครั้ง ไม่พบจุดค้าง']},
  {v:'5.7',d:'7 พ.ย. 2026',l:['🟥🟦🟪🟨 ตอนได้ระบบ จะมีหน้าต่าง [ SYSTEM ] เด้งขึ้นกลางจอ — เปิดแบบสแกนเรืองแสง ตัวอักษรไล่ขึ้นทีละบรรทัด แล้วสลายหายไปแบบกลิตช์','สีระบบสุ่ม 4 สี: แดง · ฟ้า · ม่วง · ทอง — อยู่สีนั้นทั้งชีวิต ทั้งฉากพิกเซลระบบ ออร่าตัวละคร ข้อความระบบในบันทึก ปุ่มและหน้าต่างระบบ','ระบบที่สืบทอดจากชาติก่อนก็มีหน้าต่างแจ้งตอนเกิด']},
  {v:'5.6',d:'7 พ.ย. 2026',l:['🧺 เด็กกำพร้ามีต้นกำเนิด 6 แบบ: ทารกหน้าประตูวัด · ผู้รอดจากหมู่บ้านที่ถูกเผา · ทารกในตะกร้าลอยน้ำ · ลูกของฝูงขอทาน · เด็กที่หมาป่าเลี้ยง (หายาก) · ทารกที่ฟ้าส่งมา (หายากมาก) — แต่ละแบบได้ค่าเริ่มต้นต่างกัน · เกิดได้ทั้งแบบสุ่มและเลือกในหน้าสร้างเอง','🌈 ความสำเร็จระดับใหม่ ??? (สีรุ้ง): สุดยอดแห่ง OP — พลังรวมเกิน 1,000,000 · ผู้ครองสมุดตำนาน — ปลดล็อกความสำเร็จอื่นครบทุกอย่าง','ความสำเร็จใหม่: ไร้รากเหง้า — เด็กกำพร้าที่ไต่ถึงขั้นสุดยอด']},
  {v:'5.5',d:'7 พ.ย. 2026',l:['🏆 ชีวิตที่ ✍️ สร้างเอง (เลือกชาติกำเนิด กระดูก พรสวรรค์เอง) จะไม่ติดอันดับทำเนียบออนไลน์อีกต่อไป — มีป้ายเตือนตอนเลือก และแจ้งในหน้าสรุป · 🎲 สุ่ม และ 🎨 ออกแบบหน้าตา ยังขึ้นทำเนียบได้ตามปกติ','ทำเนียบซ่อนชีวิตสร้างเองที่เคยขึ้นไปแล้วด้วย']},
@@ -2006,7 +2007,7 @@ function rankTick(){
  else if(b>10&&a<=10)log(`📜 ${mine} ตกจากทำเนียบสิบสำนักใหญ่...`,'bad');
  if(b<=3)S.fame+=5;if(b<=10&&S.faction)S.merit+=3;
 }
-function openRanking(){
+function openRanking(){if(!S)return;S.sr=S.sr||{};
  const L=rankList(),prev=S.sr.prev||{},mine=S.faction?S.faction.n:S.ownSect?S.ownSect.n:null;
  const row=(x,i)=>{const f=FACTIONS.find(y=>y.n===x.n),p=prev[x.n],d=p?p-(i+1):0,me=x.n===mine;
   return`<div class="item" style="${me?'border-color:var(--pink);background:var(--myth)':''}"><div class="h"><b>${i+1}. ${x.n}${me?' ⭐':''}</b><span>${f?`<span class="tag ${f.t}">${f.t}</span>`:'<span class="tag">สำนักใหม่</span>'} ${d>0?'<span style="color:#3a9a4a">▲'+d+'</span>':d<0?'<span style="color:#d8283a">▼'+(-d)+'</span>':'<span class="tag2">–</span>'}</span></div></div>`};
@@ -4963,14 +4964,14 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
  const fac=n=>n?FACTIONS.find(f=>f.n===n)||null:null;
  S=Object.assign(baseState({}),d.S);S.slot=n;S.flags=S.flags||{};S.faction=fac(S.faction);peers=d.peers.map(p=>({...p,fac:fac(p.fac)}));Object.assign(CFG,d.cfg);
- choice._cur=null;choice._min=false;flushReveal();$('feed').innerHTML=d.feed;headerAge=d.headerAge;quiet=null;paused=true;auto=false;speed=1;acc=0;detailOpen=false;
- show('game');render();startTimer();$('feed').scrollTop=$('feed').scrollHeight;toast('โหลดชีวิตเดิมแล้ว — กด ▶ เพื่อเล่นต่อ');
+ choice._cur=null;choice._min=false;flushReveal();$('feed').innerHTML=d.feed;headerAge=d.headerAge;quiet=null;paused=false;auto=false;speed=1;acc=0;detailOpen=false;
+ show('game');render();startTimer();$('feed').scrollTop=$('feed').scrollHeight;toast('▶ โหลดชีวิตเดิมแล้ว — เล่นต่อได้เลย');
 }
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveGame()});
 
@@ -5110,6 +5111,9 @@ function sysPop(T,G,inh){try{const old=document.getElementById('sysPop');if(old)
 {const _bs=bindSys;bindSys=function(T,G){S.sysCol=ch(SYC_K);_bs.apply(this,arguments);if(S&&S.sys){_syApplied='';sysApplyCol();setTimeout(()=>sysPop(T,SYS_GRADE[S.sys.gr]),250)}}}
 {const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{sysApplyCol()}catch(e){}return r}}
 {const _bl=beginLife;beginLife=function(){_syApplied='';const r=_bl.apply(this,arguments);try{sysApplyCol();if(S&&S.sys&&S._sysInherit){S.sysCol=S.sysCol||ch(SYC_K);const T=SYS_TYPES.find(x=>x.id===S.sys.t);setTimeout(()=>sysPop(T,SYS_GRADE[S.sys.gr||0],1),1200)}}catch(e){}return r}}
+
+// ============ v5.8: กันค้างตอนกลับหน้าแรก ============
+{const _tt=toTitle;toTitle=function(){try{if(S&&S.alive&&choice._cur){fateChoice(true);try{saveGame()}catch(e){}}clearTimeout(choice._t);clearInterval(choice._cd);choice._cur=null;choice._min=false;try{pendBar()}catch(e){}if(modalOpen)closeM();const sp=document.getElementById('sysPop');if(sp)sp.remove();paused=false}catch(e){console.error(e)}return _tt.apply(this,arguments)}}
 </script>
 </body>
 </html>
