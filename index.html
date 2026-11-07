@@ -1986,7 +1986,7 @@ function promoExam(){
 const PRESTIGE={'สำนักภูผาขาว':900,'วัดศิลาธรรม':950,'พรรคกระยาจก':850,'สำนักเขาเมฆม่วง':880,'หุบเขาดอกท้อ':700,'สำนักกระบี่สิบทิศ':800,'หุบเขาโอสถเทวดา':650,
  'พรรคเงาโลหิต':700,'หอพิษทมิฬ':680,'สมาคมโจรสลัดสายน้ำ':620,'หอข่าวกรองหมื่นลี้':640,'ค่ายเสือดำ':600,'ลัทธิมารสวรรค์':960,'พรรคมารโลหิต':750,'นิกายเงาจันทร์ดำ':720,'สำนักหมื่นวิญญาณ':690};
 function initRank(){S.sr={sc:{},prev:{}};FACTIONS.filter(f=>f.tier!=='เล็ก').forEach(f=>S.sr.sc[f.n]=(PRESTIGE[f.n]||700)+R(-80,80));S.sr.prev=rankPos()}
-function rankList(){if(!S.sr)initRank();const L=Object.entries(S.sr.sc).map(([n,v])=>({n,v}));if(S.ownSect&&S.ownSect.lv>=2)L.push({n:S.ownSect.n,v:Math.min(1100,S.ownSect.dis*1.2+S.fame*.15+realmIdx()*35),own:1});return L.sort((a,b)=>b.v-a.v)}
+function rankList(){if(!S.sr||!S.sr.sc)initRank();const L=Object.entries(S.sr.sc).map(([n,v])=>({n,v}));if(S.ownSect&&S.ownSect.lv>=2)L.push({n:S.ownSect.n,v:Math.min(1100,S.ownSect.dis*1.2+S.fame*.15+realmIdx()*35),own:1});return L.sort((a,b)=>b.v-a.v)}
 function rankPos(){const o={};rankList().forEach((x,i)=>o[x.n]=i+1);return o}
 const sectPos=n=>rankPos()[n]||99;
 function rankShift(n,d){if(S.sr&&S.sr.sc[n]!=null)S.sr.sc[n]+=d}
@@ -2010,7 +2010,7 @@ function rankTick(){
  else if(b>10&&a<=10)log(`📜 ${mine} ตกจากทำเนียบสิบสำนักใหญ่...`,'bad');
  if(b<=3)S.fame+=5;if(b<=10&&S.faction)S.merit+=3;
 }
-function openRanking(){if(!S)return;S.sr=S.sr||{};
+function openRanking(){if(!S)return;if(!S.sr||!S.sr.sc)initRank();
  const L=rankList(),prev=S.sr.prev||{},mine=S.faction?S.faction.n:S.ownSect?S.ownSect.n:null;
  const row=(x,i)=>{const f=FACTIONS.find(y=>y.n===x.n),p=prev[x.n],d=p?p-(i+1):0,me=x.n===mine;
   return`<div class="item" style="${me?'border-color:var(--pink);background:var(--myth)':''}"><div class="h"><b>${i+1}. ${x.n}${me?' ⭐':''}</b><span>${f?`<span class="tag ${f.t}">${f.t}</span>`:'<span class="tag">สำนักใหม่</span>'} ${d>0?'<span style="color:#3a9a4a">▲'+d+'</span>':d<0?'<span style="color:#d8283a">▼'+(-d)+'</span>':'<span class="tag2">–</span>'}</span></div></div>`};
