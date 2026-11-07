@@ -263,6 +263,7 @@ details.item summary{cursor:pointer}
 .item.brd.click{cursor:pointer}.privbox{margin-top:10px}.privbox p{margin:4px 0 8px}
 .bimg{image-rendering:pixelated;display:inline-block}.bgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.bcard{border:2px solid var(--line);border-radius:8px;padding:4px;text-align:center;font-size:11px;cursor:pointer;background:var(--w)}.bcard b{display:block;font-size:11px;line-height:1.25;word-break:break-word}.bcard small{opacity:.65;font-size:10px}.bcard.unk{opacity:.45;cursor:default}.bcard .bq{font-size:30px;height:54px;line-height:54px}.bcard.t3,.bcard.t4,.bcard.t5{border-color:#e0a030}.bcard.t5{box-shadow:0 0 8px #e0a03088}
 .item .tabb{background:var(--w);color:inherit}.item .tabb.on{background:var(--pink);color:#fff}
+.t5{color:#ff5ad8;text-shadow:0 0 6px #ff9af0}
 </style>
 </head>
 <body>
@@ -373,8 +374,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='5.2';
+const VERSION='5.3';
 const CHANGELOG=[
+ {v:'5.3',d:'7 พ.ย. 2026',l:['🐛 แก้บั๊กค้างอายุ 0 ตอนเริ่มชีวิตใหม่ (หน้าต่างตัวเลือกเก่าค้างอยู่)','🐛 แก้ระดับความสำเร็จขั้นสูงสุดแสดง undefined ในตำนาน — เพิ่มขั้น "อมตะ"','🐛 แก้ตัวเลือกร่างอสูรพันปีซ้อนกับตัวเลือกอื่น']},
  {v:'5.2',d:'7 พ.ย. 2026',l:['🎨 ฉากหลังวาดใหม่ละเอียดขึ้น 3 เท่า: ท้องฟ้าไล่สีเนียน ดวงอาทิตย์ จันทร์ ดาวกะพริบ เมฆลอย นกบิน · ภูเขามีแสงเงา ยอดหิมะ หมอก · หญ้าไหว ดอกไม้ ใบไม้ร่วง หิมะ · ต้นไม้ทรงพุ่มไหวตามลม · บ้านมีกระเบื้อง ชายคาเชิด หน้าต่างแสงไฟ ควันไฟลอย · ในบ้านมีลายไม้ ภาพแขวน เทียน','🚶 ชีวิตรอบตัว: ชาวบ้านเดินผ่านในหมู่บ้านและตลาด ไก่จิกดินในนา','🥋 ท่าทางตามสิ่งที่ทำ: ฝึกยุทธ์มีวงกระบี่ · ลมปราณหมุนรอบตัว · ศึกษามีตัวอักษรลอย · ทำงานเหงื่อออก · ท่องยุทธภพฝุ่นตลบ · พักผ่อน Zzz · ครอบครัวหัวใจลอย · งานช่างประกายไฟ','✨ อนิเมชันตามเหตุการณ์: แต่งงานหัวใจลอย · ได้เงินเหรียญกระเด็น · ทะลวงขั้นเสาแสง · ชนะศึกรอยฟัน · บาดเจ็บจอแดงสั่น · ป่วยไอพิษ · ได้วิชาม้วนคัมภีร์ · สัตว์อสูรโผล่ในฉากจริง']},
  {v:'5.1',d:'7 พ.ย. 2026',l:['🏞️ เพิ่มเพลงพื้นหลัง mists — เลือกได้ในเมนู 🔊 เสียง ว่าจะใช้เพลงบรรเลงในเกมหรือ mists']},
  {v:'5.0',d:'7 พ.ย. 2026',l:['🐉 สัตว์อสูร/สัตว์วิญญาณ 1,000 ตัว สุ่มชื่อ พันธุ์ ธาตุ นิสัย ถิ่นอาศัย และรูปร่างพิกเซล 10 ขั้น · เจอระหว่างท่องยุทธภพ เลือกสู้ สยบ สังเกต หรือหนี · ได้หนังเกล็ด แก่นอสูร ไปใช้งานช่าง','📖 สมุดสัตว์สะสมข้ามชีวิต','🐾 สัตว์คู่ใจ เลเวลขึ้น วิวัฒนาการ 2 ขั้น บางตัวแปลงกายเป็นมนุษย์ได้','🐾 โหมดใหม่ เกิดเป็นสัตว์: ลูกสัตว์ → อสูรพันปี แล้วเลือกแปลงกายเป็นคนหรือครองป่า','🌊 คลื่นสัตว์อสูรบุกเมือง','✨ เหตุการณ์ที่เคยเจอในชีวิตก่อนจะออกยากขึ้น เรื่องใหม่มีป้าย ✨','📜 เรื่องยาวหลายตอน 8 เรื่อง: คดีเด็กหาย รักต้องห้าม คัมภีร์ต้องสาป พี่น้องร่วมสาบาน หนี้ของบิดา ถูกใส่ร้ายในสำนัก มรดกที่หายไป ภูตจิ้งจอก','🤝 เหตุการณ์จากคนที่รู้จักจริง: เพื่อน พี่น้อง พ่อแม่ อาจารย์ คู่ชีวิต ลูก','💗 นิสัยโตตามการเลือก: ใจดี เหี้ยมโหด เจ้าเล่ห์ รักสงบ กล้าหาญ — ปลดล็อกเหตุการณ์เฉพาะ','🏜️ เหตุการณ์เฉพาะแต่ละดินแดน','🎒 ตัวเลือกช่วงวัยใหม่ 44 เรื่อง และทางแยกทุก 10 ปีไม่ซ้ำกัน','🕊️ ยุคสมัยผลัดเปลี่ยน: สันติสุข สงคราม โรคระบาด ยุคทอง ทุพภิกขภัย มารครองแผ่นดิน','🏯 การเมืองระหว่างสำนัก สงคราม พันธมิตร ผู้อาวุโสทรยศ ข้อเสนอให้หักหลัง','🥀 ครอบครัวสมจริงขึ้น: พ่อแม่มีนิสัยต่างกัน บางคนเย็นชา ลำเอียง ใจร้าย หรือขายลูก · พี่น้องหักหลังแย่งมรดก · ลูกทรยศพ่อแม่ยามแก่ · คุณเองก็เลือกเลี้ยงลูกแบบไหนก็ได้']},
@@ -729,7 +731,7 @@ function startLife(){
 function applyTraitsStart(){if(tr('genius'))S.int+=30;if(tr('beauty'))S.cha+=40;if(tr('longlife'))S.lifespan+=15;if(tr('crippled')&&Math.random()<.45)S.sysFate=R(5,35)}
 function beginLife(){
  peers=[makePeer(),makePeer(),makePeer(),makePeer()];
- flushReveal();$('feed').innerHTML='';headerAge=-1;quiet=null;paused=false;auto=false;speed=1;acc=0;detailOpen=false;choice._cur=null;choice._min=false;
+ flushReveal();$('feed').innerHTML='';headerAge=-1;quiet=null;paused=false;auto=false;speed=1;acc=0;detailOpen=false;choice._cur=null;choice._min=false;if(modalOpen)closeM();
  show('game');eqInit();S.age=0;sfx('birth');
  if(S.xian&&S.age===0)log('☁️ <b>โลกเทพเซียน</b> — ที่นี่ผู้ฝึกตนมีอายุนับร้อยปี ภูเขาลอยอยู่บนฟ้า และ "ระบบ" ปรากฏบ่อยกว่าโลกมนุษย์','myth',true);
  log(`ลืมตาดูโลกใน${S.family.n} ด้วย${S.talent.n}`,S.talent.m>=3?'myth':S.talent.m>=2?'epic':'',true);
@@ -3231,7 +3233,7 @@ function choice(title,text,opts){
  if(chMinDef()&&!auto){choice._min=true;pendBar();return}
  choiceShow();
 }
-function choiceRun(i){const c=choice._cur;if(!c)return;clearTimeout(choice._t);clearInterval(choice._cd);choice._cur=null;choice._min=false;pendBar();
+function choiceRun(i){const c=choice._cur;if(!c){if($('modal').dataset.k==='choice')closeM();return}clearTimeout(choice._t);clearInterval(choice._cd);choice._cur=null;choice._min=false;pendBar();
  if($('modal').dataset.k==='choice')closeM();try{persNote(c.opts[i].t)}catch(e){}c.opts[i].f();render();checkDeath()}
 function fateChoice(silent){const c=choice._cur;if(!c)return;const valid=c.opts.map((o,i)=>i).filter(i=>!c.opts[i].skip);const i=valid.length?ch(valid):0;
  if(!silent&&!auto)addFeed('ev',`🎲 ปล่อยให้ชะตาเลือก — <b>${c.title.replace(/<[^>]+>/g,'')}</b>: ${c.opts[i].t.replace(/<[^>]+>/g,'')}`,'sum');
@@ -4086,9 +4088,9 @@ const BL_EV=[
  ['🐍 สัตว์อสูรครองถิ่น','สัตว์อสูรตัวใหญ่ประกาศว่าป่านี้เป็นของมัน',[['ยอมเป็นลูกน้อง','p+5 j-5','ได้ส่วนแบ่งอาหารแต่ต้องรับใช้'],['ท้าสู้','p+25 h-30 f+15','สู้กันสามวันสามคืน'],['ย้ายป่า','i+2','ป่าใหม่เงียบสงบกว่า']]]];
 function blAdvance(){const m=S.beastMode;const need=[[3,0,0],[12,6,0],[0,20,450],[0,45,1500]];if(m.st>=4)return;const [age,qi,pow]=need[m.st];
  if(S.age>=age&&S.qi>=qi&&total()>=pow){m.st++;log(`🌟 ${S.name} ก้าวสู่ขั้น <b>${BL_ST[m.st]}</b>!${m.st===2?' — เริ่มเข้าใจภาษามนุษย์ และมีความคิดเป็นของตัวเอง':m.st===4?' — ทัณฑ์ฟ้าผ่านพ้น พลังเทียบเท่ายอดฝีมือมนุษย์':''}`,'myth',true);S.maxHp+=20;S.hp=S.maxHp;
-  if(m.st===4)setTimeout(()=>choice('🌙 ทางแยกของอสูรพันปี',`พลังของ${esc(S.name)}มาถึงขีดที่แปลงกายได้แล้ว<br>จะทิ้งร่างสัตว์ไปใช้ชีวิตเป็นมนุษย์ หรือครองป่าเป็นราชาอสูร?`,[
+  if(m.st===4){const tryC=()=>{if(choice._cur||modalOpen)return setTimeout(tryC,600);choice('🌙 ทางแยกของอสูรพันปี',`พลังของ${esc(S.name)}มาถึงขีดที่แปลงกายได้แล้ว<br>จะทิ้งร่างสัตว์ไปใช้ชีวิตเป็นมนุษย์ หรือครองป่าเป็นราชาอสูร?`,[
    {t:'🧑 แปลงกายเป็นมนุษย์',s:'เล่นต่อในร่างคน พลังเดิมติดตัว',f(){m.human=1;const g0=S.gender;S.name=anyName(g0);S.family=Object.assign({},S.family,{n:'อสูรแปลงกาย'});S.focus='train';S.flags.transformed=1;log(`✨ ร่างสัตว์สลายเป็นแสง กลายเป็นมนุษย์รูปงามชื่อ <b>${S.name}</b> — ก้าวเข้าสู่โลกมนุษย์`,'myth',true);setScene('aura');render()}},
-   {t:'👑 ครองป่าเป็นราชาอสูร',s:'อยู่ในร่างสัตว์ต่อ ขยายอาณาเขต',f(){m.king=1;S.fame+=200;log(`👑 ${S.name} ประกาศตนเป็นราชาอสูรแห่ง${ch(BHAB[S.xian?1:0])} สัตว์ทั้งป่าก้มหัวให้`,'myth',true)}}]),400)}}
+   {t:'👑 ครองป่าเป็นราชาอสูร',s:'อยู่ในร่างสัตว์ต่อ ขยายอาณาเขต',f(){m.king=1;S.fame+=200;log(`👑 ${S.name} ประกาศตนเป็นราชาอสูรแห่ง${ch(BHAB[S.xian?1:0])} สัตว์ทั้งป่าก้มหัวให้`,'myth',true)}}])};setTimeout(tryC,400)}}}
 function beastYear(){yearSum();yearSnap();const m=S.beastMode,f=S.focus;const mul=S.talent.m*(S.xian?1.4:1);
  if(f==='hunt'){S.power+=Math.round(R(8,18)*mul*(1+m.st*.6));if(Math.random()<.25)S.hp-=R(4,12);joy(2)}else if(f==='moon'){S.qi+=+(R(6,14)/10*mul*(m.st>=1?1.5:.6)).toFixed(1)}else if(f==='roam'){S.int+=R(1,3);if(Math.random()<.35){const b=beastPick(true);bdexAdd(b,'see');addFeed('ev',`🐾 พบ${b.n}ระหว่างท่องป่า แอบมองแล้วจากมา`,'sum')}}else if(f==='hide'){S.hp=Math.min(S.maxHp,S.hp+25);joy(3)}else if(f==='human'){S.int+=R(2,5);S.cha+=1;if(Math.random()<.2){S.hp-=R(10,20);log('🏘️ ชาวบ้านเห็นเข้า ไล่ตีด้วยไม้และคบไฟ','bad')}}
  S.age++;ensureHeader();S.hp=Math.min(S.maxHp,S.hp+R(4,9));
@@ -4529,7 +4531,7 @@ function court(win){if(win){S.offRank=Math.min(4,S.offRank+1);S.fame+=60;S.money
  else{S.path='continue';S.hp-=30;S.money=Math.floor(S.money*.5);log('👑 ฝ่ายที่คุณหนุนพ่ายแพ้... ถูกปลดและเนรเทศออกจากเมืองหลวง ทรัพย์สินถูกยึดครึ่งหนึ่ง','bad',true)}}
 
 // ============ ACHIEVEMENTS (สมุดตำนาน) ============
-const TIER_N=['ทั่วไป','หายาก','ล้ำค่า','ตำนาน','เทพ'];
+const TIER_N=['ทั่วไป','หายาก','ล้ำค่า','ตำนาน','เทพ','อมตะ'];
 const ACH=[
  ['กำเนิด',[
   {id:'b_trash',n:'ขยะที่ฟ้าลืม',d:'เกิดมาด้วยกระดูกขยะ',r:0,c:()=>S.talent.m<=.6},
@@ -4939,7 +4941,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
