@@ -54,11 +54,30 @@ module.exports = async (req, res) => {
       const [, n, lives] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 300e3], ['ZCARD', 'online'], ['GET', 'lives']]);
       return res.json({ n: n || 0, lives: +(lives || 0) });
     }
-    if (a === 'who') {
+    if (a === 'who' || a === 'admin' || a === 'bugfix') {
+      const AK = process.env.ADMIN_KEY;
+      if (!AK || String(req.query.key || '') !== AK) return res.status(403).json({ err: 'forbidden' });
+      if (a === 'bugfix') {
+        const bid = String(req.query.bid || '').slice(0, 20);
+        await cmd(req.query.undo ? 'SREM' : 'SADD', 'bugdone', bid);
+        res.setHeader('Location', '?a=admin&key=' + encodeURIComponent(AK));
+        return res.status(302).end();
+      }
       const ids = await cmd('ZRANGEBYSCORE', 'online', now - 300e3, '+inf');
       const metas = ids && ids.length ? await cmd('HMGET', 'om', ...ids) : [];
       const rows = (ids || []).map((x, i) => { let m = null; try { m = JSON.parse(metas[i]) } catch {} return { id: x.slice(0, 4) + '…', d: m ? m.d : '-', b: m ? m.b : '-', o: m ? m.o : '-', c: m ? m.c : '-', ago: m ? Math.round((now - m.t) / 1000) : null } });
-      return res.json({ n: rows.length, rows });
+      if (a === 'who') return res.json({ n: rows.length, rows });
+      const [lives, bl, done, rv] = await pipe([['GET', 'lives'], ['LRANGE', 'bugs2', 0, 49], ['SMEMBERS', 'bugdone'], ['HLEN', 'reviews']]);
+      const ds = new Set(done || []), bugs = (bl || []).map(x => JSON.parse(x));
+      const e = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      const K = encodeURIComponent(AK);
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      return res.status(200).send(`<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>ผู้ดูแล · 1 ใน นวนิยาย</title>
+<style>body{font-family:system-ui,sans-serif;background:#16131c;color:#eee;margin:0;padding:14px;max-width:760px;margin:auto}h1{font-size:20px}h2{font-size:16px;margin-top:22px;color:#f0c860}table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:6px;border-bottom:1px solid #333;text-align:left}.c{display:inline-block;background:#2a2433;border-radius:8px;padding:8px 12px;margin:4px 6px 4px 0}.c b{font-size:20px;display:block;color:#f0c860}.bug{background:#221d2a;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:14px}.bug.done{opacity:.55}a{color:#8fd0ff}small{opacity:.6}</style></head><body>
+<h1>🛡️ หน้าผู้ดูแล</h1><div><span class="c"><b>${rows.filter(r => r.b !== 'บอท').length}</b>ออนไลน์ (5 นาที)</span><span class="c"><b>${+(lives || 0)}</b>ชีวิตที่จบแล้ว</span><span class="c"><b>${bugs.length}</b>เรื่องบนกระดานบั๊ก</span><span class="c"><b>${rv || 0}</b>ความคิดเห็น</span></div>
+<h2>คนที่ออนไลน์ตอนนี้</h2><table><tr><th>รหัส</th><th>เครื่อง</th><th>เบราว์เซอร์</th><th>เข้าจาก</th><th>ประเทศ</th><th>ล่าสุด</th></tr>${rows.map(r => `<tr><td>${e(r.id)}</td><td>${e(r.d)}</td><td>${e(r.b)}</td><td>${e(r.o)}</td><td>${e(r.c)}</td><td>${r.ago == null ? '-' : r.ago + ' วิ'}</td></tr>`).join('') || '<tr><td colspan=6>ไม่มี</td></tr>'}</table>
+<h2>กระดานบั๊ก</h2>${bugs.map(b => `<div class="bug ${ds.has(b.i) ? 'done' : ''}">${b.k === 'idea' ? '💡' : '🐞'} <b>${e(b.n)}</b> <small>v${e(b.v)} · ${new Date(b.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })}</small><br>${e(b.x)}<br>${ds.has(b.i) ? `✅ แก้แล้ว · <a href="?a=bugfix&key=${K}&bid=${b.i}&undo=1">ยกเลิก</a>` : `<a href="?a=bugfix&key=${K}&bid=${b.i}">ติด ✅ แก้แล้ว</a>`}</div>`).join('') || '<p>ยังไม่มี</p>'}
+<p><small>หน้านี้เปิดได้เฉพาะลิงก์ที่มีรหัสผู้ดูแล อย่าแชร์ลิงก์นี้</small></p></body></html>`);
     }
     if (a === 'chat') {
       const [list, hidden] = await pipe([['LRANGE', 'chat', 0, 79], ['SMEMBERS', 'chat:hidden']]);
