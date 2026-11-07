@@ -264,6 +264,8 @@ details.item summary{cursor:pointer}
 .bimg{image-rendering:pixelated;display:inline-block}.bgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.bcard{border:2px solid var(--line);border-radius:8px;padding:4px;text-align:center;font-size:11px;cursor:pointer;background:var(--w)}.bcard b{display:block;font-size:11px;line-height:1.25;word-break:break-word}.bcard small{opacity:.65;font-size:10px}.bcard.unk{opacity:.45;cursor:default}.bcard .bq{font-size:30px;height:54px;line-height:54px}.bcard.t3,.bcard.t4,.bcard.t5{border-color:#e0a030}.bcard.t5{box-shadow:0 0 8px #e0a03088}
 .item .tabb{background:var(--w);color:inherit}.item .tabb.on{background:var(--pink);color:#fff}
 .t5{color:#ff5ad8;text-shadow:0 0 6px #ff9af0}
+.t6{background:linear-gradient(90deg,#ff4d4d,#ffd84d,#5dff7a,#4dd8ff,#b06bff,#ff4d4d);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;animation:t6r 3s linear infinite;font-weight:bold;filter:drop-shadow(0 0 4px #fff8)}
+@keyframes t6r{to{background-position:300% 0}}
 </style>
 </head>
 <body>
@@ -374,8 +376,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='5.5';
+const VERSION='5.6';
 const CHANGELOG=[
+ {v:'5.6',d:'7 พ.ย. 2026',l:['🧺 เด็กกำพร้ามีต้นกำเนิด 6 แบบ: ทารกหน้าประตูวัด · ผู้รอดจากหมู่บ้านที่ถูกเผา · ทารกในตะกร้าลอยน้ำ · ลูกของฝูงขอทาน · เด็กที่หมาป่าเลี้ยง (หายาก) · ทารกที่ฟ้าส่งมา (หายากมาก) — แต่ละแบบได้ค่าเริ่มต้นต่างกัน · เกิดได้ทั้งแบบสุ่มและเลือกในหน้าสร้างเอง','🌈 ความสำเร็จระดับใหม่ ??? (สีรุ้ง): สุดยอดแห่ง OP — พลังรวมเกิน 1,000,000 · ผู้ครองสมุดตำนาน — ปลดล็อกความสำเร็จอื่นครบทุกอย่าง','ความสำเร็จใหม่: ไร้รากเหง้า — เด็กกำพร้าที่ไต่ถึงขั้นสุดยอด']},
  {v:'5.5',d:'7 พ.ย. 2026',l:['🏆 ชีวิตที่ ✍️ สร้างเอง (เลือกชาติกำเนิด กระดูก พรสวรรค์เอง) จะไม่ติดอันดับทำเนียบออนไลน์อีกต่อไป — มีป้ายเตือนตอนเลือก และแจ้งในหน้าสรุป · 🎲 สุ่ม และ 🎨 ออกแบบหน้าตา ยังขึ้นทำเนียบได้ตามปกติ','ทำเนียบซ่อนชีวิตสร้างเองที่เคยขึ้นไปแล้วด้วย']},
  {v:'5.4',d:'7 พ.ย. 2026',l:['🌀 พรสวรรค์ใหม่ (หายาก) กายาหมื่นวิชา — เรียนได้ทุกศาสตร์ทุกแขนง ทั้งวิชาธรรมะ อธรรม มาร ไม่มีสิ่งใดเข้าแทรก · ธาตุไฟไม่เข้าแทรก · ฝึกยุทธ์ ×1.25 · ทุกปีมีโอกาสเรียนวิชาจากสำนักอื่นเอง · ในโลกเซียนชื่อ กายาเต๋าหมื่นศาสตร์ · เลือกได้ในหน้าสร้างตัวละคร','😈 โลกเซียนไม่มีมารสวรรค์แล้ว: วังมารสวรรค์ → นิกายเผ่ามาร · ประมุขมารสวรรค์ → จักรพรรดิมาร · มารสวรรค์รุ่นที่ X → ราชันมารรุ่นที่ X · บุตรแห่งมารสวรรค์ → ทายาทสายเลือดราชันมาร · กายามารสวรรค์ → กายามารบรรพกาล · ระบบมารสวรรค์กลืนกิน → ระบบมารกลืนฟ้า · เหตุการณ์คืนชีพ → ราชันมารบรรพกาลทำลายผนึก','สมุดตำนานเพิ่ม 2 ความสำเร็จ']},
  {v:'5.3',d:'7 พ.ย. 2026',l:['🐛 แก้บั๊กค้างอายุ 0 ตอนเริ่มชีวิตใหม่ (หน้าต่างตัวเลือกเก่าค้างอยู่)','🐛 แก้ระดับความสำเร็จขั้นสูงสุดไม่แสดงชื่อขั้นในตำนาน — เพิ่มขั้น "อมตะ"','🐛 แก้ตัวเลือกร่างอสูรพันปีซ้อนกับตัวเลือกอื่น']},
@@ -736,7 +739,7 @@ function beginLife(){
  flushReveal();$('feed').innerHTML='';headerAge=-1;quiet=null;paused=false;auto=false;speed=1;acc=0;detailOpen=false;choice._cur=null;choice._min=false;if(modalOpen)closeM();
  show('game');eqInit();S.age=0;sfx('birth');
  if(S.xian&&S.age===0)log('☁️ <b>โลกเทพเซียน</b> — ที่นี่ผู้ฝึกตนมีอายุนับร้อยปี ภูเขาลอยอยู่บนฟ้า และ "ระบบ" ปรากฏบ่อยกว่าโลกมนุษย์','myth',true);
- log(`ลืมตาดูโลกใน${S.family.n} ด้วย${S.talent.n}`,S.talent.m>=3?'myth':S.talent.m>=2?'epic':'',true);
+ log(`ลืมตาดูโลก${S.family.orphan&&!S.family.beast?'เป็น':'ใน'}${S.family.n} ด้วย${S.talent.n}`,S.talent.m>=3?'myth':S.talent.m>=2?'epic':'',true);
  if(S.gen>1)log(`<b>รุ่นที่ ${S.gen}</b> แห่งตระกูล — ${S.family.d}`,'epic',true);
  if(!S.parents||!S.parents.length&&!S.flags.lostParents){if(S.gen>1&&S.heirParents){S.parents=S.heirParents;S.sibs=[];delete S.heirParents}else mkFamily()}
  if(S.family.heirType&&!S.heir)initHeir();
@@ -3955,7 +3958,7 @@ const FXN={k:'กรรม',i:'ปัญญา',c:'เสน่ห์',$:'เง
 function applyFx(s){if(!s)return;const re=/([a-z$])([+-]\d+(?:\.\d+)?)/g;let m;while((m=re.exec(s))){const k=m[1],v=+m[2];
  if(k==='k')S.karma+=v;else if(k==='i')S.int+=v;else if(k==='c')S.cha+=v;else if(k==='$')S.money=Math.max(0,S.money+(v>0?inc(v):v));else if(k==='h')S.hp=Math.min(S.maxHp,S.hp+v);
  else if(k==='f')S.fame=Math.max(0,S.fame+v);else if(k==='p')S.power+=v;else if(k==='q')S.qi+=v;else if(k==='j')joy(v);else if(k==='l')S.lifespan+=v;else if(k==='m')S.merit=(S.merit||0)+v}}
-function fxDesc(s){if(!s)return'';const out=[];const re=/([a-z$])([+-]\d+(?:\.\d+)?)/g;let m;while((m=re.exec(s)))out.push(FXN[m[1]]+(+m[2]>0?'+':'')+m[2]);return out.join(' · ')}
+function fxDesc(s){if(!s)return'';const out=[];const re=/([a-z$])([+-]\d+(?:\.\d+)?)/g;let m;while((m=re.exec(s)))out.push(FXN[m[1]]+(+m[2]>0?'+':'')+(+m[2]));return out.join(' · ')}
 // E: [หัวข้อ, เรื่อง, [[ตัวเลือก, เอฟเฟกต์, ผลลัพธ์], ...], เงื่อนไข?]
 function runE(ev,tag){const [ti,tx,opts]=ev;choice((tag||'')+ti,typeof tx==='function'?tx():tx,opts.map(o=>({t:o[0],s:fxDesc(o[1]),f(){applyFx(o[1]);if(o[2])log(typeof o[2]==='function'?o[2]():o[2],/[-−]/.test(o[1]||'')&&!/\+/.test(o[1]||'')?'bad':'good');if(o[3])o[3]()}})))}
 function mulb(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -4534,7 +4537,7 @@ function court(win){if(win){S.offRank=Math.min(4,S.offRank+1);S.fame+=60;S.money
  else{S.path='continue';S.hp-=30;S.money=Math.floor(S.money*.5);log('👑 ฝ่ายที่คุณหนุนพ่ายแพ้... ถูกปลดและเนรเทศออกจากเมืองหลวง ทรัพย์สินถูกยึดครึ่งหนึ่ง','bad',true)}}
 
 // ============ ACHIEVEMENTS (สมุดตำนาน) ============
-const TIER_N=['ทั่วไป','หายาก','ล้ำค่า','ตำนาน','เทพ','อมตะ'];
+const TIER_N=['ทั่วไป','หายาก','ล้ำค่า','ตำนาน','เทพ','อมตะ','???'];
 const ACH=[
  ['กำเนิด',[
   {id:'b_trash',n:'ขยะที่ฟ้าลืม',d:'เกิดมาด้วยกระดูกขยะ',r:0,c:()=>S.talent.m<=.6},
@@ -4663,7 +4666,8 @@ const ACH=[
  ['ผู้ข้ามมิติ',[
   {id:'o_gun',n:'ปัง!',d:'ใช้ปืนพกในการต่อสู้',r:1,c:()=>!!S.flags.gun},
   {id:'o_all',n:'นักประดิษฐ์ข้ามมิติ',d:'ทำโครงการความรู้ต่างโลกครบทั้ง 5',r:3,c:()=>S.done.length>=5},
-  {id:'o_shop',n:'เจ้าพ่อร้านอาหาร',d:'ขยายร้านอาหารต่างโลกถึง Lv.5',r:2,c:()=>S.shop>=5}]]];
+  {id:'o_shop',n:'เจ้าพ่อร้านอาหาร',d:'ขยายร้านอาหารต่างโลกถึง Lv.5',r:2,c:()=>S.shop>=5}]],
+ ['??? — เหนือตำนาน',[   {id:'o_rise',n:'ไร้รากเหง้า',d:'เกิดเป็นเด็กกำพร้า แล้วไต่ขึ้นถึงขั้นสุดยอดหรือสูงกว่า',r:3,c:()=>S.family&&S.family.orphan&&!S.family.beast&&realmIdx()>=4},   {id:'z_op',n:'สุดยอดแห่ง OP',d:'พลังรวมเกิน 1,000,000',r:6,c:()=>total()>=1e6},   {id:'z_all',n:'ผู้ครองสมุดตำนาน',d:'ปลดล็อกความสำเร็จอื่นครบทุกอย่างในสมุดตำนาน',r:6,c:()=>ACH_ALL.every(a=>a.id==='z_all'||achGot[a.id])}]]];
 const ACH_ALL=ACH.flatMap(c=>c[1]);
 let achGot=LS.get('murim_ach',{});
 function achCheck(atEnd){
@@ -4944,7 +4948,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5057,6 +5061,19 @@ function allArtsTick(){if(!S||!S.alive||!tr('allarts')||S.age<6||Math.random()>.
  const side=f.t==='มาร'?'ฝ่ายมาร':f.t==='อธรรม'?'ฝ่ายอธรรม':'ฝ่ายธรรมะ';
  log(`🌀 ${ch([`เห็นศิษย์${f.n}ฝึกเพียงครั้งเดียวก็เข้าใจแก่นแท้`,`ได้อ่านบันทึกวิชาของ${f.n}ที่ตกหล่นอยู่`,`ประมือกับคนของ${f.n}แล้วจดจำท่าได้ทั้งหมด`,`ฟังผู้อาวุโส${f.n}บรรยายเต๋าจากนอกกำแพง`])} — เรียนรู้ ${artHtml(a)} วิชา${side}หลอมรวมเข้ากับวิชาเดิมโดยไม่ขัดกัน`,'epic')}
 {const _v53=v50Tick;v50Tick=function(){_v53.apply(this,arguments);try{allArtsTick()}catch(e){console.error(e)}}}
+
+// ============ v5.6: ต้นกำเนิดเด็กกำพร้า ============
+const ORPH=[
+ {w:5,n:'ทารกหน้าประตูวัด',t:'มีคนวางคุณไว้หน้าประตูวัดกลางหิมะ หลวงจีนชราเก็บมาเลี้ยงจนห้าขวบก่อนจะมรณภาพ',fx:'k+8 i+5'},
+ {w:4,n:'ผู้รอดจากหมู่บ้านที่ถูกเผา',t:'หมู่บ้านทั้งหมู่บ้านถูกเผาในคืนเดียว ไม่มีใครรอดนอกจากทารกที่ร้องไห้อยู่ใต้กองฟาง — คือคุณ',fx:'p+25 j-10 h+10'},
+ {w:4,n:'ทารกในตะกร้าลอยน้ำ',t:'แม่ค้าปลาพบคุณในตะกร้าที่ลอยมาตามแม่น้ำ เลี้ยงไว้ได้ไม่นานก็ต้องปล่อยให้ดิ้นรนเอง',fx:'c+6 $+20'},
+ {w:4,n:'ลูกของฝูงขอทาน',t:'ไม่มีใครรู้ว่าพ่อแม่คือใคร คุณโตมากับฝูงขอทานใต้สะพาน เรียนรู้ที่จะเอาตัวรอดก่อนจะหัดพูด',fx:'i+4 h+8'},
+ {w:1.5,n:'เด็กที่หมาป่าเลี้ยง',t:'นายพรานพบเด็กทารกนอนอยู่กลางฝูงหมาป่าในป่าลึก หมาป่าแม่ลูกอ่อนให้นมคุณแทนแม่',fx:'p+40 h+20 c-5'},
+ {w:1,n:'ทารกที่ฟ้าส่งมา',t:'คืนที่ดาวตกพาดฟ้า ชาวบ้านพบทารกนอนอยู่กลางหลุมที่ยังร้อนระอุ ไม่มีบาดแผลแม้แต่น้อย',fx:'q+3 l+10 f+10'}];
+{const _fi=familyIntro;familyIntro=function(){
+ if(S&&S.family&&S.family.orphan&&!S.family.beast&&S.flags.lostParents&&!S.orphV&&S.age<=1){const o=pickW(ORPH).v;S.orphV=o.n;S.family=Object.assign({},S.family,{d:o.n});
+  log(`🧺 <b>เด็กกำพร้า — ${o.n}</b> · ${o.t} · ไม่มีพ่อ ไม่มีแม่ ไม่มีแซ่ตระกูล`,'bad',true);applyFx(o.fx);log(`<span class="tag2">${fxDesc(o.fx)}</span>`);return}
+ return _fi.apply(this,arguments)}}
 </script>
 </body>
 </html>
