@@ -114,8 +114,52 @@ module.exports = async (req, res) => {
       const dist = [1, 2, 3, 4, 5].map(r => L.filter(m => m.r === r).length);
       return res.json({ n: L.length, avg, dist, m: L.slice(0, 80) });
     }
+    if (a === 'livelist') {
+      const ids = await cmd('ZRANGEBYSCORE', 'livez', now - 60e3, '+inf');
+      if (!ids || !ids.length) return res.json({ l: [] });
+      const vals = await cmd('MGET', ...ids.map(x => 'live:' + x));
+      const cnt = await pipe(ids.map(x => ['ZCOUNT', 'watch:' + x, now - 20e3, '+inf']));
+      const l = [];
+      ids.forEach((x, i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, w: cnt[i] || 0 }) } catch {} });
+      await cmd('ZREMRANGEBYSCORE', 'livez', 0, now - 120e3);
+      return res.json({ l: l.sort((p, q) => q.w - p.w || q.age - p.age).slice(0, 40) });
+    }
+    if (a === 'liveget') {
+      const k2 = String(req.query.t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const ids = await cmd('ZRANGEBYSCORE', 'livez', now - 60e3, '+inf');
+      const full = (ids || []).find(x => x.slice(0, 6) + x.slice(-4) === k2);
+      if (!full) return res.status(404).json({ err: 'off' });
+      const v = await cmd('GET', 'live:' + full);
+      if (!v) return res.status(404).json({ err: 'off' });
+      const viewer = okId(id) ? id : 'anon' + (req.headers['x-forwarded-for'] || '').slice(0, 15);
+      const [, , w] = await pipe([['ZADD', 'watch:' + full, now, viewer], ['ZREMRANGEBYSCORE', 'watch:' + full, 0, now - 20e3], ['ZCARD', 'watch:' + full], ['EXPIRE', 'watch:' + full, 120]]);
+      return res.json({ s: JSON.parse(v), w: w || 0 });
+    }
+    if (a === 'cload') {
+      const p0 = String(req.query.p || '').replace(/[^a-z0-9]/g, '').slice(0, 24), tk = String(req.query.tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
+      const [tok, d] = await pipe([['GET', 'ctok:' + p0], ['GET', 'cs2:' + p0]]);
+      if (!tok || tok !== tk || !d) return res.status(404).json({ err: 'notfound' });
+      return res.json({ d });
+    }
     if (req.method !== 'POST') return res.status(405).json({ err: 'method' });
     if (!okId(id)) return res.status(400).json({ err: 'id' });
+    if (a === 'live') {
+      if (!b.spec) { await pipe([['DEL', 'live:' + id], ['ZREM', 'livez', id]]); return res.json({ w: 0 }) }
+      const snap = String(b.s || '');
+      if (snap.length > 60000) return res.status(400).json({ err: 'size' });
+      try { JSON.parse(snap) } catch { return res.status(400).json({ err: 'json' }) }
+      const [, , w] = await pipe([['SET', 'live:' + id, snap, 'EX', 70], ['ZADD', 'livez', now, id], ['ZCOUNT', 'watch:' + id, now - 20e3, '+inf']]);
+      return res.json({ w: w || 0 });
+    }
+    if (a === 'csave') {
+      const tk = String(b.tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20), d = String(b.d || '');
+      if (tk.length < 8 || !d || d.length > 900000) return res.status(400).json({ err: 'bad' });
+      await cmd('SET', 'ctok:' + id, tk, 'NX');
+      const tok = await cmd('GET', 'ctok:' + id);
+      if (tok !== tk) return res.status(403).json({ err: 'token' });
+      await pipe([['SET', 'cs2:' + id, d, 'EX', 86400 * 90], ['EXPIRE', 'ctok:' + id, 86400 * 90]]);
+      return res.json({ ok: 1 });
+    }
     if (a === 'say') {
       if (await cmd('GET', 'mute:' + id)) return res.status(429).json({ err: 'muted' });
       const ok = await cmd('SET', 'rl:' + id, 1, 'NX', 'EX', 3);
