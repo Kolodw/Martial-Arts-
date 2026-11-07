@@ -374,8 +374,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='5.4';
+const VERSION='5.5';
 const CHANGELOG=[
+ {v:'5.5',d:'7 พ.ย. 2026',l:['🏆 ชีวิตที่ ✍️ สร้างเอง (เลือกชาติกำเนิด กระดูก พรสวรรค์เอง) จะไม่ติดอันดับทำเนียบออนไลน์อีกต่อไป — มีป้ายเตือนตอนเลือก และแจ้งในหน้าสรุป · 🎲 สุ่ม และ 🎨 ออกแบบหน้าตา ยังขึ้นทำเนียบได้ตามปกติ','ทำเนียบซ่อนชีวิตสร้างเองที่เคยขึ้นไปแล้วด้วย']},
  {v:'5.4',d:'7 พ.ย. 2026',l:['🌀 พรสวรรค์ใหม่ (หายาก) กายาหมื่นวิชา — เรียนได้ทุกศาสตร์ทุกแขนง ทั้งวิชาธรรมะ อธรรม มาร ไม่มีสิ่งใดเข้าแทรก · ธาตุไฟไม่เข้าแทรก · ฝึกยุทธ์ ×1.25 · ทุกปีมีโอกาสเรียนวิชาจากสำนักอื่นเอง · ในโลกเซียนชื่อ กายาเต๋าหมื่นศาสตร์ · เลือกได้ในหน้าสร้างตัวละคร','😈 โลกเซียนไม่มีมารสวรรค์แล้ว: วังมารสวรรค์ → นิกายเผ่ามาร · ประมุขมารสวรรค์ → จักรพรรดิมาร · มารสวรรค์รุ่นที่ X → ราชันมารรุ่นที่ X · บุตรแห่งมารสวรรค์ → ทายาทสายเลือดราชันมาร · กายามารสวรรค์ → กายามารบรรพกาล · ระบบมารสวรรค์กลืนกิน → ระบบมารกลืนฟ้า · เหตุการณ์คืนชีพ → ราชันมารบรรพกาลทำลายผนึก','สมุดตำนานเพิ่ม 2 ความสำเร็จ']},
  {v:'5.3',d:'7 พ.ย. 2026',l:['🐛 แก้บั๊กค้างอายุ 0 ตอนเริ่มชีวิตใหม่ (หน้าต่างตัวเลือกเก่าค้างอยู่)','🐛 แก้ระดับความสำเร็จขั้นสูงสุดไม่แสดงชื่อขั้นในตำนาน — เพิ่มขั้น "อมตะ"','🐛 แก้ตัวเลือกร่างอสูรพันปีซ้อนกับตัวเลือกอื่น']},
  {v:'5.2',d:'7 พ.ย. 2026',l:['🎨 ฉากหลังวาดใหม่ละเอียดขึ้น 3 เท่า: ท้องฟ้าไล่สีเนียน ดวงอาทิตย์ จันทร์ ดาวกะพริบ เมฆลอย นกบิน · ภูเขามีแสงเงา ยอดหิมะ หมอก · หญ้าไหว ดอกไม้ ใบไม้ร่วง หิมะ · ต้นไม้ทรงพุ่มไหวตามลม · บ้านมีกระเบื้อง ชายคาเชิด หน้าต่างแสงไฟ ควันไฟลอย · ในบ้านมีลายไม้ ภาพแขวน เทียน','🚶 ชีวิตรอบตัว: ชาวบ้านเดินผ่านในหมู่บ้านและตลาด ไก่จิกดินในนา','🥋 ท่าทางตามสิ่งที่ทำ: ฝึกยุทธ์มีวงกระบี่ · ลมปราณหมุนรอบตัว · ศึกษามีตัวอักษรลอย · ทำงานเหงื่อออก · ท่องยุทธภพฝุ่นตลบ · พักผ่อน Zzz · ครอบครัวหัวใจลอย · งานช่างประกายไฟ','✨ อนิเมชันตามเหตุการณ์: แต่งงานหัวใจลอย · ได้เงินเหรียญกระเด็น · ทะลวงขั้นเสาแสง · ชนะศึกรอยฟัน · บาดเจ็บจอแดงสั่น · ป่วยไอพิษ · ได้วิชาม้วนคัมภีร์ · สัตว์อสูรโผล่ในฉากจริง']},
@@ -3273,7 +3274,7 @@ function goBirthPick(){modal(`<button class="xbtn" onclick="closeM()">✕</butto
  <button class="opt" onclick="closeM();crForce=null;goBirth()">🎲 สุ่ม — ให้ฟ้าลิขิต<small>ชาติกำเนิด พรสวรรค์ และวิญญาณสุ่มทั้งหมด · ลุ้นโอกาส 1 ในพันล้าน</small></button>
  <button class="opt" onclick="closeM();goCreate(true)">🎨 ออกแบบหน้าตา — ที่เหลือให้ฟ้าลิขิต<small>เลือกเพศ ทรงผม สีผม สีผิว และสีชุดเอง แล้วสุ่มชาติกำเนิดตามปกติ</small></button>
  <button class="opt" onclick="closeM();goBeastLife()">🐾 เกิดเป็นสัตว์<small>เริ่มจากลูกสัตว์ในป่า บำเพ็ญจนเป็นอสูร แล้วเลือกแปลงกายเป็นคนหรือครองป่าเป็นราชาอสูร</small></button>
- <button class="opt" onclick="closeM();goCreate(false)">✍️ สร้างเอง<small>ใช้แต้ม ${CR_PTS} แต้มเลือกยุค ชาติกำเนิด กระดูก วิญญาณ และพรสวรรค์ · ไม่นับสถิติโอกาสเกิด</small></button>`)}
+ <button class="opt" onclick="closeM();goCreate(false)">✍️ สร้างเอง<small>ใช้แต้ม ${CR_PTS} แต้มเลือกยุค ชาติกำเนิด กระดูก วิญญาณ และพรสวรรค์ · ไม่นับสถิติโอกาสเกิด<br><span style="color:#ff8a7a">⚠️ ชีวิตที่สร้างเองจะไม่ติดอันดับทำเนียบ</span></small></button>`)}
 function goCreate(lookOnly){setWorld(!!CFG.xian);C={lookOnly,g:R(0,1),hs:0,hc:0,sk:1,rb:0,era:0,fam:0,tal:1,ow:0,trs:[],goal:GOALS[0].id,name:''};crStep=0;show('create');crDraw()}
 function crSteps(){const S0=[['เพศ','g'],['ทรงผม','hs'],['สีผม','hc'],['สีผิว','sk'],['สีชุด','rb']];if(C.lookOnly)return S0.concat([['ชื่อ','name']]);
  return S0.concat([['ยุคสมัย','era'],['ชาติกำเนิด','fam'],[CFG.xian?'รากวิญญาณ':'กระดูก','tal'],['วิญญาณ','ow'],['พรสวรรค์พิเศษ','trs'],['ปณิธาน','goal'],['ชื่อ','name']])}
@@ -3932,8 +3933,9 @@ function lifeDetail(score){const ri=realmIdx(),lifeAch=(S.achLife||[]).map(id=>A
   key:(S.key||[]).map(k=>String(k).replace(/<[^>]+>/g,'')).slice(-60),ach:lifeAch.map(a=>a.n).slice(0,20),bye:S._bye||'',
   look:{robe:o.robe,trim:o.trim,belt:o.belt,hat:o.hat,skin:o.skin,hair:o.hair,hs:o.hs,g:o.g,age:o.age,mood:'neutral',aura:o.aura,sword:o.sword,staff:o.staff,seed:o.seed}}}
 function lifePubDef(){return LS.get('murim_lifepub',1)}
-async function sendLife(score){if(!onlineOK||!S||S._sent)return;S._sent=1;S._lid=pid.slice(0,6)+Date.now().toString(36);
+async function sendLife(score){if(S&&S.custom){customNote();return}if(!onlineOK||!S||S._sent)return;S._sent=1;S._lid=pid.slice(0,6)+Date.now().toString(36);
  try{await api('life',{n:pname(),s:score,age:S.age,r:REALMS[realmIdx()].n,f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,cu:S.custom?1:0,lid:S._lid,pub:lifePubDef(),det:xT(JSON.stringify(lifeDetail(score)))});lifePrivBox()}catch(e){}}
+function customNote(){const end=$('end');if(!end||$('lifePriv'))return;const b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b);b.innerHTML='<b>✍️ ชีวิตที่สร้างเอง — ไม่ติดอันดับทำเนียบ</b><p class="tag2">ชีวิตที่เลือกชาติกำเนิด กระดูก และพรสวรรค์เองจะไม่ถูกส่งขึ้นทำเนียบออนไลน์ เพื่อความยุติธรรมกับคนที่ให้ฟ้าลิขิต · เลือก 🎲 สุ่ม หรือ 🎨 ออกแบบหน้าตา เพื่อลุ้นขึ้นทำเนียบ</p>'}
 function lifePrivBox(){const end=$('end');if(!end||!S||!S._lid)return;let b=$('lifePriv');if(!b){b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b)}
  const pub=lifePubDef();b.innerHTML=`<b>🏆 ชีวิตนี้ขึ้นทำเนียบออนไลน์แล้ว</b><p class="tag2">${pub?'คนอื่นกดดูรายละเอียดชีวิตนี้ได้ (ไทม์ไลน์ ค่าพลัง ของ วิชา ครอบครัว)':'คนอื่นเห็นแค่ชื่อกับคะแนน กดดูรายละเอียดไม่ได้'}</p>
  <div class="brow"><button class="${pub?'pbtn':'gbtn'}" onclick="lifePub(1)">🌐 เปิดให้ดู</button><button class="${pub?'gbtn':'pbtn'}" onclick="lifePub(0)">🔒 ส่วนตัว</button></div>`}
@@ -4942,7 +4944,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
