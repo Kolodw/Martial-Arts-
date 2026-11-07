@@ -181,15 +181,15 @@ body.mono .hpbar i{background:#000}
 body.mono .scene canvas{filter:grayscale(1) contrast(1.1)}
 .opt.sel{border-color:var(--pink);box-shadow:0 0 0 2px var(--pink);background:var(--myth)}
 .bub.world{background:var(--ink);color:var(--bg);max-width:100%;width:100%;margin-right:0;text-align:center;border-radius:6px}
-.bub.sys{background:#0b1a3a;color:#cfeaff;border-color:#4ab0ff;box-shadow:0 0 8px #4ab0ff66}
-.bub.sys.up{box-shadow:0 0 12px #4ab0ffcc}.bub.sys.fail{border-color:#ff5d73;box-shadow:0 0 8px #ff5d7366}
-.sysbox{background:#0b1a3a;color:#cfeaff;border:2px solid #4ab0ff;border-radius:6px;padding:12px;box-shadow:0 0 14px #4ab0ff88 inset}
-.sysbox h4{margin:12px 0 6px;color:#8fd0ff;font-size:14px}
+.bub.sys{background:var(--syBg);color:var(--syT);border-color:var(--syA);box-shadow:0 0 8px var(--syA6)}
+.bub.sys.up{box-shadow:0 0 12px var(--syAc)}.bub.sys.fail{border-color:#ff5d73;box-shadow:0 0 8px #ff5d7366}
+.sysbox{background:var(--syBg);color:var(--syT);border:2px solid var(--syA);border-radius:6px;padding:12px;box-shadow:0 0 14px var(--syA8) inset}
+.sysbox h4{margin:12px 0 6px;color:var(--syB);font-size:14px}
 .sysg{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
-.sysb{background:#123a7a;color:#e8f6ff;border:1.5px solid #4ab0ff;border-radius:5px;padding:6px 4px;font-size:12px}
+.sysb{background:var(--syM);color:var(--syW);border:1.5px solid var(--syA);border-radius:5px;padding:6px 4px;font-size:12px}
 .sysb small{display:block;font-size:10px;opacity:.8}.sysb:disabled{opacity:.35}
-.sysq{background:#0f2552;border:1px solid #2a6ab8;border-radius:5px;padding:7px 8px;margin-bottom:5px;font-size:12.5px;line-height:1.5}
-#sysBtn{background:#0b1a3a;color:#cfeaff;border-color:#4ab0ff}
+.sysq{background:var(--syQ);border:1px solid var(--syL);border-radius:5px;padding:7px 8px;margin-bottom:5px;font-size:12.5px;line-height:1.5}
+#sysBtn{background:var(--syBg);color:var(--syT);border-color:var(--syA)}
 .tl{border-left:3px solid var(--line);margin:6px 0 6px 4px;padding-left:8px}
 .tl summary{cursor:pointer;font-size:14px;padding:3px 0;list-style:none}.tl summary::-webkit-details-marker{display:none}
 .tl summary:before{content:'▸ ';color:var(--mut)}.tl[open] summary:before{content:'▾ '}
@@ -212,7 +212,7 @@ body.mono .scene canvas{filter:grayscale(1) contrast(1.1)}
 .crc small{display:block;opacity:.7;font-size:.78em;margin-top:2px}.crc .cc{position:absolute;left:6px;top:8px;font-size:.8em;font-weight:bold;background:var(--line);color:var(--w);border-radius:4px;padding:0 4px}.crc.bad .cc{background:#c84a4a}.crc.on{outline:3px solid #4ab07a;background:#e6f7ec}.crc.bad.on{outline-color:#c84a4a;background:#fbe9e9}.crc:disabled{opacity:.35}
 .crin{width:100%;box-sizing:border-box;padding:10px;border:2px solid var(--line);border-radius:8px;font:inherit;font-size:1.05em}
 .eqtop{display:flex;gap:12px;align-items:center;margin-bottom:8px}.eqg{display:grid;grid-template-columns:1fr 1fr;gap:6px}.eqs{border:2px solid var(--line);border-radius:8px;padding:6px 8px;font-size:.88em}.eqs.on{background:var(--tb4,#fff3c4)}.eqs .k{font-size:.78em;opacity:.65}.eqs b{display:block}.eqs small{display:block;opacity:.7;font-size:.8em}.eqs .sysb{margin-top:4px;padding:2px 8px}
-.qitem.pin{outline:3px solid #4ab0ff}.qitem.qdone{opacity:.6}
+.qitem.pin{outline:3px solid var(--syA)}.qitem.qdone{opacity:.6}
 .tabs{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0 8px}.tabb{border:2px solid var(--line);background:var(--w);border-radius:6px;padding:4px 8px;font:inherit;font-size:.82em;color:inherit;cursor:pointer}.tabb.on{background:var(--pink);color:#fff}
 .item.pin{outline:3px solid #4ab07a}.item.dead{opacity:.55}.brow2{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap}.chips{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
 .dgbar{display:flex;gap:4px}.dgbar i{flex:1;text-align:center;font-style:normal;border:2px solid var(--line);border-radius:6px;padding:2px 0;font-size:.8em;opacity:.5}.dgbar i.on{opacity:1;background:var(--pink);color:#fff}.dgbar i.boss{flex:1.3}
@@ -266,6 +266,20 @@ details.item summary{cursor:pointer}
 .t5{color:#ff5ad8;text-shadow:0 0 6px #ff9af0}
 .t6{background:linear-gradient(90deg,#ff4d4d,#ffd84d,#5dff7a,#4dd8ff,#b06bff,#ff4d4d);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;animation:t6r 3s linear infinite;font-weight:bold;filter:drop-shadow(0 0 4px #fff8)}
 @keyframes t6r{to{background-position:300% 0}}
+:root{--syA:#4ab0ff;--syA6:#4ab0ff66;--syAc:#4ab0ffcc;--syA8:#4ab0ff88;--syB:#8fd0ff;--syBg:#0b1a3a;--syM:#123a7a;--syQ:#0f2552;--syL:#2a6ab8;--syT:#cfeaff;--syW:#e8f6ff;--syK:#06102a}
+#sysPop{position:fixed;left:50%;top:42%;transform:translate(-50%,-50%);z-index:9000;pointer-events:none;width:min(86vw,360px);font-family:inherit}
+#sysPop .spw{position:relative;background:linear-gradient(180deg,var(--syBg),var(--syK));border:2px solid var(--syA);box-shadow:0 0 24px var(--syA8),0 0 60px var(--syA6),inset 0 0 22px var(--syA6);color:var(--syT);padding:14px 16px 16px;overflow:hidden;clip-path:inset(50% 0 50% 0);animation:spOpen .55s cubic-bezier(.2,.9,.3,1.2) forwards}
+#sysPop .spw:before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,var(--syA6) 3px 4px);opacity:.25;pointer-events:none}
+#sysPop .spw:after{content:'';position:absolute;left:0;right:0;height:30%;top:-30%;background:linear-gradient(180deg,transparent,var(--syA6),transparent);animation:spScan 1.6s linear infinite}
+#sysPop .sphd{font-size:12px;letter-spacing:4px;color:var(--syB);text-align:center;border-bottom:1px solid var(--syA);padding-bottom:6px;margin-bottom:8px;text-shadow:0 0 8px var(--syA)}
+#sysPop .spnm{font-size:20px;font-weight:bold;text-align:center;color:var(--syW);text-shadow:0 0 10px var(--syA);margin:6px 0}
+#sysPop .spln{font-size:13px;line-height:1.6;opacity:0;animation:spLine .3s forwards}
+#sysPop .spcn{position:absolute;width:10px;height:10px;border-color:var(--syW);border-style:solid}
+#sysPop.out{animation:spOut .9s ease-in forwards}
+@keyframes spOpen{0%{clip-path:inset(50% 0 50% 0);filter:brightness(3)}60%{clip-path:inset(0 0 0 0);filter:brightness(1.6)}100%{clip-path:inset(0 0 0 0);filter:none}}
+@keyframes spScan{to{top:100%}}
+@keyframes spLine{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+@keyframes spOut{0%{opacity:1;filter:none;transform:translate(-50%,-50%)}30%{opacity:1;filter:brightness(2) hue-rotate(20deg);transform:translate(-50%,-50%) skewX(-6deg)}100%{opacity:0;filter:blur(6px) brightness(2);transform:translate(-50%,-62%) scaleY(.2)}}
 </style>
 </head>
 <body>
@@ -376,8 +390,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='5.6';
+const VERSION='5.7';
 const CHANGELOG=[
+ {v:'5.7',d:'7 พ.ย. 2026',l:['🟥🟦🟪🟨 ตอนได้ระบบ จะมีหน้าต่าง [ SYSTEM ] เด้งขึ้นกลางจอ — เปิดแบบสแกนเรืองแสง ตัวอักษรไล่ขึ้นทีละบรรทัด แล้วสลายหายไปแบบกลิตช์','สีระบบสุ่ม 4 สี: แดง · ฟ้า · ม่วง · ทอง — อยู่สีนั้นทั้งชีวิต ทั้งฉากพิกเซลระบบ ออร่าตัวละคร ข้อความระบบในบันทึก ปุ่มและหน้าต่างระบบ','ระบบที่สืบทอดจากชาติก่อนก็มีหน้าต่างแจ้งตอนเกิด']},
  {v:'5.6',d:'7 พ.ย. 2026',l:['🧺 เด็กกำพร้ามีต้นกำเนิด 6 แบบ: ทารกหน้าประตูวัด · ผู้รอดจากหมู่บ้านที่ถูกเผา · ทารกในตะกร้าลอยน้ำ · ลูกของฝูงขอทาน · เด็กที่หมาป่าเลี้ยง (หายาก) · ทารกที่ฟ้าส่งมา (หายากมาก) — แต่ละแบบได้ค่าเริ่มต้นต่างกัน · เกิดได้ทั้งแบบสุ่มและเลือกในหน้าสร้างเอง','🌈 ความสำเร็จระดับใหม่ ??? (สีรุ้ง): สุดยอดแห่ง OP — พลังรวมเกิน 1,000,000 · ผู้ครองสมุดตำนาน — ปลดล็อกความสำเร็จอื่นครบทุกอย่าง','ความสำเร็จใหม่: ไร้รากเหง้า — เด็กกำพร้าที่ไต่ถึงขั้นสุดยอด']},
  {v:'5.5',d:'7 พ.ย. 2026',l:['🏆 ชีวิตที่ ✍️ สร้างเอง (เลือกชาติกำเนิด กระดูก พรสวรรค์เอง) จะไม่ติดอันดับทำเนียบออนไลน์อีกต่อไป — มีป้ายเตือนตอนเลือก และแจ้งในหน้าสรุป · 🎲 สุ่ม และ 🎨 ออกแบบหน้าตา ยังขึ้นทำเนียบได้ตามปกติ','ทำเนียบซ่อนชีวิตสร้างเองที่เคยขึ้นไปแล้วด้วย']},
  {v:'5.4',d:'7 พ.ย. 2026',l:['🌀 พรสวรรค์ใหม่ (หายาก) กายาหมื่นวิชา — เรียนได้ทุกศาสตร์ทุกแขนง ทั้งวิชาธรรมะ อธรรม มาร ไม่มีสิ่งใดเข้าแทรก · ธาตุไฟไม่เข้าแทรก · ฝึกยุทธ์ ×1.25 · ทุกปีมีโอกาสเรียนวิชาจากสำนักอื่นเอง · ในโลกเซียนชื่อ กายาเต๋าหมื่นศาสตร์ · เลือกได้ในหน้าสร้างตัวละคร','😈 โลกเซียนไม่มีมารสวรรค์แล้ว: วังมารสวรรค์ → นิกายเผ่ามาร · ประมุขมารสวรรค์ → จักรพรรดิมาร · มารสวรรค์รุ่นที่ X → ราชันมารรุ่นที่ X · บุตรแห่งมารสวรรค์ → ทายาทสายเลือดราชันมาร · กายามารสวรรค์ → กายามารบรรพกาล · ระบบมารสวรรค์กลืนกิน → ระบบมารกลืนฟ้า · เหตุการณ์คืนชีพ → ราชันมารบรรพกาลทำลายผนึก','สมุดตำนานเพิ่ม 2 ความสำเร็จ']},
@@ -861,7 +876,7 @@ function openMenu(){
   <button class="opt" onclick="openPeers()">👥 คนที่เกิดพร้อมกัน<small>${peers.filter(p=>p.alive).length}/4 ยังมีชีวิต</small></button>
   ${S.items.length?`<button class="opt" onclick="openItems()">🎒 ของต่างโลก<small>${S.items.length} ชิ้น</small></button>`:''}
   ${S.ow&&S.awake?`<button class="opt" onclick="openPortal()" ${S.portal>0?'style="background:var(--tb4)"':''}>🌌 ประตูมิติ<small>เปิดได้ ${S.portal} ครั้ง</small></button>`:''}
-  ${S.sys?`<button class="opt" onclick="openSys()" style="background:#0b1a3a;color:#cfeaff;border-color:#4ab0ff">🟦 ระบบ<small style="color:#8fd0ff">Lv.${S.sys.lv} · แต้ม ${S.sys.pts}</small></button>`:''}
+  ${S.sys?`<button class="opt" onclick="openSys()" style="background:var(--syBg);color:var(--syT);border-color:var(--syA)">🟦 ระบบ<small style="color:var(--syB)">Lv.${S.sys.lv} · แต้ม ${S.sys.pts}</small></button>`:''}
   <button class="opt" onclick="openTown()" style="background:var(--tb4)">🏘️ ${townName()}<small>ร้านค้า ภารกิจ ดันเจี้ยน</small></button>
   <button class="opt" onclick="openBeastComp()">🐾 สัตว์คู่ใจ<small>${S.beast?S.beast.nick+' Lv.'+S.beast.lv:'ยังไม่มี'}</small></button>
   <button class="opt" onclick="openBestiary()">📖 สมุดสัตว์<small>${Object.keys(bdexGet()).length}/${BEAST_N} ตัว</small></button>
@@ -2218,7 +2233,7 @@ function bindSys(T,G){
  if(tr('crippled')){S.cured=1;setTimeout(()=>{if(S)log('<span class="px">[ระบบ]</span> ตรวจพบชีพจรตายด้าน... กำลังซ่อมแซม... <b>ซ่อมแซมสำเร็จ!</b> ร่างกายที่ใครๆ ว่าไร้ค่า บัดนี้พร้อมจะฝึกวรยุทธแล้ว','myth',true)},0)}
  S.sys={t:T.id,gr:SYS_GRADE.indexOf(G),lv:1,exp:0,sp:30,pts:5,quests:[],done:0,fail:0,revive:0,since:S.age,hp:0,used:0};sysFix();setScene('system');S.flags.sys=1;
  const gtxt=G.m>1?` ระดับ<b style="color:${G.c}">${G.n}</b>`:'';
- if(S.age<6)log(`เด็กน้อยมองเห็นหน้าต่างสีฟ้าลอยอยู่กลางอากาศ เขียนว่า <b>${T.n}</b>${gtxt} แต่ยังอ่านไม่ออก... (เควสจะเริ่มเมื่ออายุ 6 ปี)`,'myth',true);
+ if(S.age<6)log(`เด็กน้อยมองเห็นหน้าต่างสี${SYC[S.sysCol]?SYC[S.sysCol].n:'ฟ้า'}ลอยอยู่กลางอากาศ เขียนว่า <b>${T.n}</b>${gtxt} แต่ยังอ่านไม่ออก... (เควสจะเริ่มเมื่ออายุ 6 ปี)`,'myth',true);
  else{sysLog(`ผูกมัดสำเร็จ! ยินดีต้อนรับสู่ <b>${T.ic} ${T.n}</b>${gtxt} — ของขวัญมือใหม่: 30 SP และแต้มสถานะ 5 แต้ม`,'myth');S.key.push(`${S.age} ปี — ได้รับ${T.n}`)}
  if(T.id==='villain')setTimeout(()=>{if(S&&S.sys&&S.sys.prot)sysLog(`บทของคุณถูกกำหนดแล้ว: <b>ตัวร้าย</b> · บุตรแห่งสวรรค์ของยุคนี้คือ <b>${S.sys.prot.n}</b> — ชิงชะตาของเขามาให้หมด!`,'myth')},0);
  if(T.id==='ring')setTimeout(()=>{if(S&&S.sys)sysLog(`เสียงแหบพร่าดังจากแหวนเก่าๆ: "เจ้าหนู... ข้าคือ <b>${S.sys.elder}</b> ยอดฝีมือเมื่อพันปีก่อน ร่างข้าถูกทำลาย เหลือเพียงวิญญาณ ช่วยข้า แล้วข้าจะช่วยเจ้า"`,'myth')},0);
@@ -2441,7 +2456,7 @@ function buySys(id){const s=S.sys,it=SHOP.find(x=>x.id===id);if(s.sp<it.c){toast
 }
 function sysSpecial(){const s=S.sys,box=h=>`<div class="sysq">${h}</div>`;
  switch(s.t){
-  case 'transcend':return `<h4>🌠 ก้าวข้ามขีดจำกัด ${s.tc}/5</h4>`+box(`<div class="hpbar" style="height:8px;border-color:#4ab0ff;background:#06102a"><i style="width:${s.tc*20}%;background:#ffd040"></i></div>${s.tc<5?`ขั้นต่อไป: <b>${TC_N[s.tc]}</b><br><span style="opacity:.75">ต้องการ: ระดับ ${REALMS[s.tc+2].n}+ · Lv.${4+s.tc*3}+ · อายุ 14+</span>`:'<b>ผู้ก้าวข้ามสวรรค์</b> — ไร้ขีดจำกัด'}<br><span style="opacity:.75">โบนัสตอนนี้: ฝึก +${s.tc*5}% · อายุ +${s.tc*3} · เพดานอายุ +${s.tc*4} ปี</span>`);
+  case 'transcend':return `<h4>🌠 ก้าวข้ามขีดจำกัด ${s.tc}/5</h4>`+box(`<div class="hpbar" style="height:8px;border-color:var(--syA);background:var(--syK)"><i style="width:${s.tc*20}%;background:#ffd040"></i></div>${s.tc<5?`ขั้นต่อไป: <b>${TC_N[s.tc]}</b><br><span style="opacity:.75">ต้องการ: ระดับ ${REALMS[s.tc+2].n}+ · Lv.${4+s.tc*3}+ · อายุ 14+</span>`:'<b>ผู้ก้าวข้ามสวรรค์</b> — ไร้ขีดจำกัด'}<br><span style="opacity:.75">โบนัสตอนนี้: ฝึก +${s.tc*5}% · อายุ +${s.tc*3} · เพดานอายุ +${s.tc*4} ปี</span>`);
   case 'gacha':return `<h4>🎰 กาชาสวรรค์</h4>`+box(`ตั๋ว 🎟️ <b>${s.tk}</b> · สุ่มแล้ว ${s.pulls} ครั้ง · SSR ${s.ssr} · UR ${s.ur}<br><span style="opacity:.75">การันตี SSR ในอีก ${Math.max(0,50-s.pity)} ครั้ง · N 55% · R 30% · SR 11% · SSR 3.5% · UR 0.5%</span><div style="display:flex;gap:6px;margin-top:6px"><button class="sysb" ${s.tk?'':'disabled'} onclick="gachaUI(1)">สุ่ม 1</button><button class="sysb" ${s.tk>=10?'':'disabled'} onclick="gachaUI(10)">สุ่ม 10</button><button class="sysb" ${s.tk?'':'disabled'} onclick="gachaUI(${s.tk})">สุ่มทั้งหมด</button></div>`);
   case 'villain':{const p=s.prot;return `<h4>😈 บุตรแห่งสวรรค์</h4>`+box(`<b>${p.n}</b> — ${!p.alive?'💀 ถูกคุณสังหารแล้ว':p.friend?'🤝 พี่น้องร่วมสาบาน':`พลัง ≈ ${fmt(total()*p.r)} (${Math.round(p.r*100)}% ของคุณ)`}<br><span style="opacity:.75">ชิงชะตาสำเร็จ ${s.steal} · ชนะต่อหน้าผู้คน ${s.humil} · ความแค้น ${'🔥'.repeat(Math.min(6,s.hate))||'-'}</span>`)}
   case 'alchemy':return `<h4>⚗️ ห้องหลอมยา</h4>`+box(`หลอมยาแล้ว <b>${s.pillN}</b> เม็ด · ยาเซียน ${s.sage}<br><span style="opacity:.75">ปีละ ${1+(s.upgrades.includes('furnace')?1:0)} เตา · โอกาสสำเร็จ ~${Math.round(clamp(.55+S.int/400+s.lv*.02,.5,.95)*100)}% (ปัญญาช่วยได้) · ป่วยยากขึ้น 40%</span>`);
@@ -2452,9 +2467,9 @@ function openSys(){
  const s=S.sys;if(!s)return;sysFix();const T=sysType(),G=sysG(),need=expNeed(s.lv),L=MAINQ[s.t]||[];
  const statB=(k,l,d)=>`<button class="sysb" ${s.pts?'':'disabled'} onclick="allocPt('${k}')">${l}<small>${d}</small></button>`;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="sysbox">
- <div class="px" style="font-size:12px;opacity:.8">[ SYSTEM ]</div><h3 style="color:#e8f6ff">${T.ic} ${sysName()}</h3>
+ <div class="px" style="font-size:12px;opacity:.8">[ SYSTEM ]</div><h3 style="color:var(--syW)">${T.ic} ${sysName()}</h3>
  <div class="px">Lv.${s.lv} · <span style="color:${G.c}">${G.n}</span> · SP ${s.sp}${s.revive?` · 🃏×${s.revive}`:''}</div>
- <div class="hpbar" style="height:9px;border-color:#4ab0ff;background:#06102a"><i style="width:${s.exp/need*100}%;background:#4ab0ff"></i></div><div class="px" style="font-size:10px;opacity:.7">EXP ${s.exp}/${need} · เควสสำเร็จ ${s.done} · ล้มเหลว ${s.fail} · เควสลับ ${s.hid.length}/${HIDQ.length}</div>
+ <div class="hpbar" style="height:9px;border-color:var(--syA);background:var(--syK)"><i style="width:${s.exp/need*100}%;background:var(--syA)"></i></div><div class="px" style="font-size:10px;opacity:.7">EXP ${s.exp}/${need} · เควสสำเร็จ ${s.done} · ล้มเหลว ${s.fail} · เควสลับ ${s.hid.length}/${HIDQ.length}</div>
  ${sysSpecial()}
  <h4>📜 เควสหลัก ${Math.min(s.main,L.length)}/${L.length}</h4><div class="sysq">${s.main<L.length?`<b>${L[s.main][0]}</b><br><span style="opacity:.75">ไม่มีเวลาจำกัด · รางวัล ${Math.round(250*(s.main+1)*sysM())} EXP</span>`:'✅ จบเควสหลักแล้ว'}</div>
  <h4>แต้มสถานะ: ${s.pts}</h4><div class="sysg">${statB('pow','⚔️ ยุทธ์','+'+Math.round(40*S.talent.m))}${statB('qi','🌀 ลมปราณ','+1.5')}${statB('int','📜 ปัญญา','+8')}${statB('cha','🌸 เสน่ห์','+5')}${statB('hp','❤️ ร่างกาย','+15')}</div>
@@ -4743,7 +4758,7 @@ function meLook(){
  const hair=S.age>=60?'#e6e6e6':S.age>=45?'#8a8a94':c.hair,w=S.gear&&S.gear.weapon,a=S.gear&&S.gear.armor;
  return Object.assign(o,{beast:(S.beastMode&&!S.beastMode.human)?blMe():null,hs:S.look?S.look.hs:0,mood:moodOfMe(),seed:S.seed,age:S.age,g:S.gender,skin:c.skin,hair,old:S.age>=65,beard:S.gender==='ชาย'&&S.age>=50?(S.age>=60?'#f0f0f0':'#6a6a72'):null,
   sword:S.age>=14&&(ri>=1||w)?(w?WPN[w]:'#c8ccd6'):null,glow:w==='w4',arm:a?ARM[a]:null,
-  aura:ri>=4?(S.faction&&S.faction.t==='มาร'||S.family.heirType==='มาร'?'#ff3060':S.faction&&S.faction.t==='อธรรม'?'#b060ff':S.sys?'#4ab0ff':'#ffd040'):null});
+  aura:ri>=4?(S.faction&&S.faction.t==='มาร'||S.family.heirType==='มาร'?'#ff3060':S.faction&&S.faction.t==='อธรรม'?'#b060ff':S.sys?sysC().a:'#ffd040'):null});
 }
 const shd=(c,a)=>{if(!c||c[0]!=='#'||c.length<7)return c;const n=parseInt(c.slice(1,7),16),r=n>>16,gg=n>>8&255,b=n&255;const f=v=>Math.max(0,Math.min(255,Math.round(a<0?v*(1+a):v+(255-v)*a)));return '#'+[f(r),f(gg),f(b)].map(v=>v.toString(16).padStart(2,'0')).join('')};
 const Q=(x,y,w,h,c)=>P(x/3,y/3,w/3,h/3,c);
@@ -4925,9 +4940,9 @@ function drawScene(ctx,type){
    person(56,Y,me,'stand');particles(0,'spark');return}
   case 'plague':{sky(season,'gray');mountains('#5a5a62',40,8,6);ground(season,46,'#5a5a4a');house(14,Y,24,'#3a3a3a');house(118,Y,22,'#3a3a3a');for(let i=0;i<3;i++){const sx=20+i*50,sy=10+((frame+i*7)%20);g.globalAlpha=.5;P(sx,sy,6,3,'#2a2a2a');g.globalAlpha=1}
    P(60+((frame*2)%60),12,3,1,'#111');P(61+((frame*2)%60),11,1,1,'#111');person(76,Y,me,'stand');if(frame%6<2)P(84,Y-13,2,1,'#ddd');break}
-  case 'system':{P(0,0,SW,SH,'#0a1430');for(let x=0;x<SW;x+=8)P(x,0,1,SH,'#13306a');for(let y=0;y<SH;y+=8)P(0,y,SW,1,'#13306a');
-   const fl=Math.round(Math.sin(frame*.3)*1.5);P(86,6+fl,64,34,'#4ab0ff');P(87,7+fl,62,32,'#0f2a5a');P(90,10+fl,30,2,'#8fd0ff');for(let i=0;i<4;i++)P(90,15+i*5+fl,20+((i*13+frame)%30),2,'#4ab0ff');P(132,14+fl,12,12,'#123a7a');P(134,16+fl,8,8,'#4ab0ff');
-   for(let i=0;i<12;i++){P(30+((i*37+frame*2)%60),50-((i*11+frame*3)%46),1,1,'#8fd0ff')}person(50,48,Object.assign({},meLook(),{aura:'#4ab0ff'}),'stand');return}
+  case 'system':{const Y_=sysC();P(0,0,SW,SH,Y_.d);for(let x=0;x<SW;x+=8)P(x,0,1,SH,Y_.g);for(let y=0;y<SH;y+=8)P(0,y,SW,1,Y_.g);
+   const fl=Math.round(Math.sin(frame*.3)*1.5);P(86,6+fl,64,34,Y_.a);P(87,7+fl,62,32,Y_.p);P(90,10+fl,30,2,Y_.b);for(let i=0;i<4;i++)P(90,15+i*5+fl,20+((i*13+frame)%30),2,Y_.a);P(132,14+fl,12,12,Y_.m);P(134,16+fl,8,8,Y_.a);
+   for(let i=0;i<12;i++){P(30+((i*37+frame*2)%60),50-((i*11+frame*3)%46),1,1,Y_.b)}person(50,48,Object.assign({},meLook(),{aura:Y_.a}),'stand');return}
   case 'death':{sky(season,'dusk');mountains('#4a3a5a',42,12,7);ground(season,44,'#4a5a3a');P(68,24,20,20,'#9a9aa4');P(70,22,16,2,'#9a9aa4');P(72,21,12,1,'#9a9aa4');P(70,28,16,1,'#7a7a84');P(72,32,12,1,'#7a7a84');P(72,36,12,1,'#7a7a84');
    P(76,44,4,3,'#7a5a3a');for(let i=0;i<3;i++){P(75+i*2,40,1,4,'#c8283a');for(let k=0;k<5;k++){const yy=38-k*3-(frame%3);g.globalAlpha=.5-k*.08;P(75+i*2+Math.sin((frame+k)*.5)*1.5,yy,1,2,'#ddd');g.globalAlpha=1}}
    for(let i=0;i<4;i++){P(56+i*4,45,2,2,['#ffd04a','#fff','#ff8fb3','#fff'][i]);P(92+i*4,45,2,2,['#fff','#ffd04a','#fff','#ff8fb3'][i])}particles(2,'leaf');return}
@@ -4948,7 +4963,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5074,6 +5089,27 @@ const ORPH=[
  if(S&&S.family&&S.family.orphan&&!S.family.beast&&S.flags.lostParents&&!S.orphV&&S.age<=1){const o=pickW(ORPH).v;S.orphV=o.n;S.family=Object.assign({},S.family,{d:o.n});
   log(`🧺 <b>เด็กกำพร้า — ${o.n}</b> · ${o.t} · ไม่มีพ่อ ไม่มีแม่ ไม่มีแซ่ตระกูล`,'bad',true);applyFx(o.fx);log(`<span class="tag2">${fxDesc(o.fx)}</span>`);return}
  return _fi.apply(this,arguments)}}
+
+// ============ v5.7: สีระบบ + หน้าต่างระบบกลางจอ ============
+const SYC={blue:{n:'ฟ้า',a:'#4ab0ff',b:'#8fd0ff',bg:'#0b1a3a',m:'#123a7a',q:'#0f2552',l:'#2a6ab8',t:'#cfeaff',w:'#e8f6ff',k:'#06102a',d:'#0a1430',g:'#13306a',p:'#0f2a5a'},
+ red:{n:'แดง',a:'#ff4a5a',b:'#ff9aa4',bg:'#2a0a10',m:'#6a1420',q:'#3a0f18',l:'#a82a3a',t:'#ffd6da',w:'#fff0f2',k:'#1a0408',d:'#1a0608',g:'#4a1420',p:'#3a0f16'},
+ purple:{n:'ม่วง',a:'#b05aff',b:'#d6a4ff',bg:'#1c0b3a',m:'#45207a',q:'#2a1452',l:'#6a3ab8',t:'#ead6ff',w:'#f6eeff',k:'#10062a',d:'#120a24',g:'#34186a',p:'#24104a'},
+ gold:{n:'ทอง',a:'#ffc23a',b:'#ffe08a',bg:'#2a1c06',m:'#6a4a10',q:'#3a2a0a',l:'#b88a2a',t:'#fff0c8',w:'#fff8e6',k:'#1a1204',d:'#181004',g:'#4a3610',p:'#3a2a08'}};
+const SYC_K=['red','blue','purple','gold'];
+function sysC(){if(S&&S.sys){if(!SYC[S.sysCol])S.sysCol=ch(SYC_K);return SYC[S.sysCol]}return SYC.blue}
+let _syApplied='';
+function sysApplyCol(){const c=sysC(),k=(S&&S.sys&&S.sysCol)||'blue';if(k===_syApplied)return;_syApplied=k;const r=document.documentElement.style;
+ r.setProperty('--syA',c.a);r.setProperty('--syA6',c.a+'66');r.setProperty('--syAc',c.a+'cc');r.setProperty('--syA8',c.a+'88');r.setProperty('--syB',c.b);r.setProperty('--syBg',c.bg);r.setProperty('--syM',c.m);r.setProperty('--syQ',c.q);r.setProperty('--syL',c.l);r.setProperty('--syT',c.t);r.setProperty('--syW',c.w);r.setProperty('--syK',c.k)}
+function sysPop(T,G,inh){try{const old=document.getElementById('sysPop');if(old)old.remove();if(!S||!S.sys)return;sysApplyCol();const c=sysC();
+ const el=document.createElement('div');el.id='sysPop';const L=(t,d)=>`<div class="spln" style="animation-delay:${d}s">${xT(t)}</div>`;
+ el.innerHTML=`<div class="spw"><span class="spcn" style="left:4px;top:4px;border-width:2px 0 0 2px"></span><span class="spcn" style="right:4px;top:4px;border-width:2px 2px 0 0"></span><span class="spcn" style="left:4px;bottom:4px;border-width:0 0 2px 2px"></span><span class="spcn" style="right:4px;bottom:4px;border-width:0 2px 2px 0"></span>
+  <div class="sphd">[ SYSTEM ]</div>`+L(inh?'⚠ ตรวจพบระบบที่สืบทอดมาจากชาติก่อน...':'⚠ ตรวจพบโฮสต์ที่มีคุณสมบัติ...',.45)+`<div class="spnm spln" style="animation-delay:.85s">${T?T.ic+' '+T.n:'ระบบ'}</div>`+
+  (G?L(`ระดับระบบ : <b style="color:${G.c}">${G.n}</b>`,1.15):'')+L(`สีระบบ : <b style="color:${c.a}">■ ${c.n}</b>`,1.4)+L('การผูกมัด <b style="color:'+c.w+'">สำเร็จ</b> — ขอต้อนรับ โฮสต์',1.7)+`</div>`;
+ document.body.appendChild(el);try{sfx('rare')}catch(e){}try{vib(60)}catch(e){}
+ setTimeout(()=>el.classList.add('out'),3800);setTimeout(()=>el.remove(),4800)}catch(e){console.error(e)}}
+{const _bs=bindSys;bindSys=function(T,G){S.sysCol=ch(SYC_K);_bs.apply(this,arguments);if(S&&S.sys){_syApplied='';sysApplyCol();setTimeout(()=>sysPop(T,SYS_GRADE[S.sys.gr]),250)}}}
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{sysApplyCol()}catch(e){}return r}}
+{const _bl=beginLife;beginLife=function(){_syApplied='';const r=_bl.apply(this,arguments);try{sysApplyCol();if(S&&S.sys&&S._sysInherit){S.sysCol=S.sysCol||ch(SYC_K);const T=SYS_TYPES.find(x=>x.id===S.sys.t);setTimeout(()=>sysPop(T,SYS_GRADE[S.sys.gr||0],1),1200)}}catch(e){}return r}}
 </script>
 </body>
 </html>
