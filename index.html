@@ -390,8 +390,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='5.8';
+const VERSION='5.9';
 const CHANGELOG=[
+ {v:'5.9',d:'7 พ.ย. 2026',l:['🌌 ผู้ข้ามมิติ/ต่างโลกมีโอกาส 35% ที่จะเกิดมาพร้อมระบบสุ่มประเภทและระดับ — เห็นตั้งแต่หน้าเกิด (แถว 🟦 ระบบติดตัวข้ามมิติ) และหน้าต่าง [ SYSTEM ] เด้งตั้งแต่ลืมตา','🔒 หนึ่งชีวิตมีได้แค่ระบบเดียว — ได้ระบบแล้วจะไม่มีระบบอื่นมาเสนออีกตลอดชีวิตนั้น','🔀 ประเภทระบบจะไม่ซ้ำกับระบบที่ได้ในชีวิตก่อนหน้า']},
  {v:'5.8',d:'7 พ.ย. 2026',l:['🐛 กดกลับหน้าแรกตอนมีตัวเลือกย่อค้างไว้ แล้วโหลดกลับมา เวลาไม่เดิน — ตอนนี้ระบบให้ชะตาเลือกแทนแล้วบันทึกก่อนออก','🐛 โหลดเซฟกลับมาแล้วเกมหยุดอยู่ ต้องกด ▶ เอง — ตอนนี้เล่นต่อทันที','🐛 เปิดทำเนียบสำนักบางจังหวะแล้ว error','ทดสอบเปิด-ปิดเมนูทุกหน้าสุ่มระหว่างเล่นกว่า 600 ครั้ง ไม่พบจุดค้าง']},
  {v:'5.7',d:'7 พ.ย. 2026',l:['🟥🟦🟪🟨 ตอนได้ระบบ จะมีหน้าต่าง [ SYSTEM ] เด้งขึ้นกลางจอ — เปิดแบบสแกนเรืองแสง ตัวอักษรไล่ขึ้นทีละบรรทัด แล้วสลายหายไปแบบกลิตช์','สีระบบสุ่ม 4 สี: แดง · ฟ้า · ม่วง · ทอง — อยู่สีนั้นทั้งชีวิต ทั้งฉากพิกเซลระบบ ออร่าตัวละคร ข้อความระบบในบันทึก ปุ่มและหน้าต่างระบบ','ระบบที่สืบทอดจากชาติก่อนก็มีหน้าต่างแจ้งตอนเกิด']},
  {v:'5.6',d:'7 พ.ย. 2026',l:['🧺 เด็กกำพร้ามีต้นกำเนิด 6 แบบ: ทารกหน้าประตูวัด · ผู้รอดจากหมู่บ้านที่ถูกเผา · ทารกในตะกร้าลอยน้ำ · ลูกของฝูงขอทาน · เด็กที่หมาป่าเลี้ยง (หายาก) · ทารกที่ฟ้าส่งมา (หายากมาก) — แต่ละแบบได้ค่าเริ่มต้นต่างกัน · เกิดได้ทั้งแบบสุ่มและเลือกในหน้าสร้างเอง','🌈 ความสำเร็จระดับใหม่ ??? (สีรุ้ง): สุดยอดแห่ง OP — พลังรวมเกิน 1,000,000 · ผู้ครองสมุดตำนาน — ปลดล็อกความสำเร็จอื่นครบทุกอย่าง','ความสำเร็จใหม่: ไร้รากเหง้า — เด็กกำพร้าที่ไต่ถึงขั้นสุดยอด']},
@@ -690,8 +691,8 @@ function genRoll(owRate){
  if(f.v.heirType){const T=f.v.heirType,opts=T==='มาร'?[facN('ลัทธิมารสวรรค์')]:FACTIONS.filter(x=>x.t===T&&x.tier!=='เล็ก').map(x=>x.n),sc=ch(opts);f={v:Object.assign({},f.v,{n:T==='มาร'?'บุตรแห่งมารสวรรค์':T==='ธรรมะ'?`ทายาทเจ้า${sc}`:`ทายาทประมุข${sc}`,d:T==='มาร'?'สายเลือดของมารสวรรค์คนปัจจุบัน ผู้ที่ทั้งยุทธภพหวาดกลัว':T==='ธรรมะ'?`บุตรของเจ้า${sc} ถูกคาดหวังให้สืบทอดสำนัก`:`บุตรของประมุข${sc} ต้องแย่งชิงตำแหน่งกับพี่น้อง`,heirSect:sc}),p:f.p/opts.length}}
  if(f.v.clan){const c=ch(CLANS);f={v:Object.assign({},f.v,{n:c.n,d:`หนึ่งในแปดตระกูลยุทธ์ใหญ่ — ${c.sp}`,clanObj:c}),p:f.p/CLANS.length}}const isOw=Math.random()<owRate;const op=isOw?owRate:1-owRate;
  let w=null,it=null;if(isOw){w=pickW(WORLDS.filter(x=>CFG.xian||!x.xo));it=pickW(w.v.items.filter(i=>CFG.xian||!i.xo))}
- const trs=rollTraits();
- return{g,f,t,isOw,op,w,it,trs,p:g.p*f.p*t.p*op*(w?w.p*it.p:1)*trs.p,seed:R(1,99999)};
+ const trs=rollTraits();let os=null;if(isOw&&Math.random()<OW_SYS){const T=sysPickT(),G=pickW(SYS_GRADE);os={t:T.v.id,g:SYS_GRADE.indexOf(G.v),p:OW_SYS*T.p*G.p}}
+ return{g,f,t,isOw,op,w,it,trs,os,p:g.p*f.p*t.p*op*(w?w.p*it.p:1)*trs.p*(os?os.p:(isOw?1-OW_SYS:1)),seed:R(1,99999)};
 }
 function goBirth(){setWorld(!!CFG.xian);rerolls=CFG.chm==1?0:3;$('rr').textContent=rerolls;show('birth');doRoll(true)}
 function doRoll(first){
@@ -703,6 +704,7 @@ function doRoll(first){
   ['วิญญาณ',roll.isOw?'ผู้ข้ามมิติ':'ชาวยุทธภพ',roll.isOw?'ความทรงจำจากอีกโลกจะตื่นขึ้นช่วงอายุ 4–8 ขวบ (ถ้ารอดถึงตอนนั้น)':'เกิดและเติบโตในยุทธภพ',roll.op]];
  {const L=roll.trs.list.map(trOf),tw=TRAITS.reduce((a,x)=>a+x.w,0);if(!L.length)T.push(['พรสวรรค์พิเศษ','ไม่มี','เกิดมาเป็นคนธรรมดา',.45]);else L.forEach(t=>T.push([t.bad?'⚠️ พรสวรรค์พิเศษ (ด้านร้าย)':'✨ พรสวรรค์พิเศษ',t.n,t.d,t.w/tw*.55]))}
  if(roll.w){T.push(['โลกเดิม',roll.w.v.n,`วิญญาณของ ${roll.soul.n} — ${roll.soul.d}`,roll.w.p]);T.push(['ของติดตัวจากโลกเดิม',roll.it.v.n,roll.it.v.d,roll.it.p])}
+ if(roll.os){const ST=SYS_TYPES.find(x=>x.id===roll.os.t),SG=SYS_GRADE[roll.os.g];if(ST)T.push(['🟦 ระบบติดตัวข้ามมิติ',`${ST.ic} ${ST.n}${SG&&SG.m>1?' · '+SG.n:''}`,'ระบบตามวิญญาณข้ามมิติมาตั้งแต่เกิด — '+ST.d,roll.os.p])}
  $('traits').innerHTML=T.map(c=>{const r=rarOf(c[3]);return`<div class="trait"><div><div class="k">${c[0]}</div><div class="v t${r}">${c[1]}</div>${c[2]?`<div class="d">${c[2]}</div>`:''}</div><span class="o t${r}">${oddsTxt(c[3])}</span></div>`}).join('');
  xFix(['traits','soulOut']);
  [...document.querySelectorAll('.trait')].forEach((e,i)=>setTimeout(()=>e.classList.add('show'),220*i+80));
@@ -2264,7 +2266,7 @@ function qFail(q){const s=S.sys;s.fail++;const r=R(1,4);
  else if(r===3){const d=Math.round(S.power*.04);S.power-=d;sysLog(`เควสล้มเหลว: ${q.n} — บทลงโทษ: ผนึกพลังยุทธ์ −${fmt(d)}`,'fail')}
  else{const d=Math.min(s.exp,Math.round(expNeed(s.lv)*.3));s.exp-=d;S.hp-=8;sysLog(`เควสล้มเหลว: ${q.n} — บทลงโทษ: ความเจ็บปวดจากการลบความทรงจำ EXP −${d}`,'fail')}}
 function sysTick(){
- if(S.sysRefused)return false;
+ if(S.sysRefused||(S.sysEver&&!S.sys))return false;
  if(!S.sys){if((S.sysFate!=null&&S.age>=S.sysFate)||Math.random()<CFG.sys){S.sysFate=null;sysOffer();return S.age>=6}return false}
  sysFix();
  const s=S.sys,T=sysType(),m=S.talent.m,gm=sysM();
@@ -3332,7 +3334,7 @@ function crStart(){const left=CR_PTS-crSpent();if(left<0)return toast('แต้
  if(left>0)f.v=Object.assign({},f.v,{money:(f.v.money||0)+left*150});
  let w=null,it=null;if(C.ow){w=pickW(WORLDS.filter(x=>CFG.xian||!x.xo));it=pickW(w.v.items.filter(i=>CFG.xian||!i.xo))}
  const gv0=GENDER[C.g],tv=TALENT[C.tal];
- roll={g:{v:gv0,p:.5},f,t:{v:tv,p:1},isOw:!!C.ow,op:1,w,it,trs:{list:C.trs.slice(),p:1},p:1,seed:R(1,99999),era:{v:ERAS[C.era],p:1},custom:true,
+ roll={g:{v:gv0,p:.5},f,t:{v:tv,p:1},isOw:!!C.ow,op:1,w,it,os:(C.ow&&Math.random()<OW_SYS)?(()=>{const T=sysPickT(),G=pickW(SYS_GRADE);return{t:T.v.id,g:SYS_GRADE.indexOf(G.v),p:1}})():null,trs:{list:C.trs.slice(),p:1},p:1,seed:R(1,99999),era:{v:ERAS[C.era],p:1},custom:true,
   look:{hs:CR_HS[C.hs][1],hair:CR_HC[C.hc][1],skin:CR_SK[C.sk][1],robe:CR_RB[C.rb][1]}};
  roll.root=rootOf(tv);roll.name=C.name.trim()||genName(f.v,gv0.n);roll.soul=w?genSoul(w.v,gv0.n):null;roll.goals=[C.goal];roll.goal=C.goal;
  rerolls=0;startLife()}
@@ -4964,7 +4966,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5114,6 +5116,13 @@ function sysPop(T,G,inh){try{const old=document.getElementById('sysPop');if(old)
 
 // ============ v5.8: กันค้างตอนกลับหน้าแรก ============
 {const _tt=toTitle;toTitle=function(){try{if(S&&S.alive&&choice._cur){fateChoice(true);try{saveGame()}catch(e){}}clearTimeout(choice._t);clearInterval(choice._cd);choice._cur=null;choice._min=false;try{pendBar()}catch(e){}if(modalOpen)closeM();const sp=document.getElementById('sysPop');if(sp)sp.remove();paused=false}catch(e){console.error(e)}return _tt.apply(this,arguments)}}
+
+// ============ v5.9: ผู้ข้ามมิติพร้อมระบบ + ระบบไม่ซ้ำ ============
+var OW_SYS=.35;
+function sysPickT(){const last=LS.get('murim_lastsys',null);const pool=SYS_TYPES.filter(x=>x.id!==last);const r=pickW(pool.length?pool:SYS_TYPES);return{v:r.v,p:r.p}}
+{const _so=sysOffer;sysOffer=function(){if(!S||S.sys||S.sysEver)return;const _pw=pickW;let first=true;pickW=function(arr){if(first&&arr===SYS_TYPES){first=false;return sysPickT()}return _pw.apply(this,arguments)};try{_so.apply(this,arguments)}finally{pickW=_pw}}}
+{const _bs2=bindSys;bindSys=function(T,G){if(S&&S.sys)return;_bs2.apply(this,arguments);if(S&&S.sys){S.sysEver=1;try{LS.set('murim_lastsys',S.sys.t)}catch(e){}}}}
+{const _sl=startLife;startLife=function(){const r=roll;const out=_sl.apply(this,arguments);try{if(r&&r.os&&S&&!S.sys){const T=SYS_TYPES.find(x=>x.id===r.os.t),G=SYS_GRADE[r.os.g]||SYS_GRADE[0];if(T){S.sysOw=1;log(`🌌 วิญญาณจากต่างโลกไม่ได้มาตัวเปล่า — มี<b>ระบบ</b>ติดตามข้ามมิติมาด้วย`,'myth',true);bindSys(T,G)}}}catch(e){console.error(e)}return out}}
 </script>
 </body>
 </html>
