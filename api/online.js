@@ -1,0 +1,129 @@
+// ระบบออนไลน์ของ "1 ในยุทธภพ" — Vercel Function + Upstash Redis (REST)
+// ต้องตั้งค่าตัวแปร KV_REST_API_URL / KV_REST_API_TOKEN (หรือ UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN)
+const URL_ = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+const TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+
+async function cmd(...args) {
+  const r = await fetch(URL_, { method: 'POST', headers: { Authorization: `Bearer ${TOKEN}` }, body: JSON.stringify(args) });
+  const j = await r.json();
+  if (j.error) throw new Error(j.error);
+  return j.result;
+}
+async function pipe(list) {
+  const r = await fetch(URL_ + '/pipeline', { method: 'POST', headers: { Authorization: `Bearer ${TOKEN}` }, body: JSON.stringify(list) });
+  const j = await r.json();
+  return j.map(x => x.result);
+}
+function week(d = new Date()) {
+  // สัปดาห์เริ่มวันจันทร์ 00:00 เวลาไทย
+  const t = new Date(d.getTime() + 7 * 3600e3);
+  const day = (t.getUTCDay() + 6) % 7;
+  const mon = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate() - day));
+  return mon.toISOString().slice(0, 10);
+}
+const BAD = ['ควย', 'เหี้ย', 'สัส', 'เย็ด', 'หี', 'แตด', 'fuck', 'shit', 'bitch', 'nigg', 'เงี่ยน', 'กะหรี่'];
+function clean(s, n) {
+  s = String(s || '').replace(/[\u0000-\u001f<>]/g, '').slice(0, n);
+  s = s.replace(/(https?:\/\/|www\.)\S+/gi, '[ลิงก์]').replace(/\b\S+\.(com|net|org|io|gg|me|xyz|th|co)\b\S*/gi, '[ลิงก์]');
+  for (const w of BAD) s = s.split(w).join('*'.repeat([...w].length));
+  return s.trim();
+}
+const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
+
+module.exports = async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Cache-Control', 'no-store');
+  if (req.method === 'OPTIONS') return res.status(204).end();
+  if (!URL_ || !TOKEN) return res.status(503).json({ err: 'nodb' });
+  const a = req.query.a;
+  let b = req.body || {};
+  if (typeof b === 'string') { try { b = JSON.parse(b) } catch { b = {} } }
+  const id = req.method === 'GET' ? req.query.id : b.id;
+  const now = Date.now(), W = week();
+  try {
+    if (a === 'ping') {
+      if (okId(id)) await cmd('ZADD', 'online', now, id);
+      const [, n, lives] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 300e3], ['ZCARD', 'online'], ['GET', 'lives']]);
+      return res.json({ n: n || 0, lives: +(lives || 0) });
+    }
+    if (a === 'chat') {
+      const [list, hidden] = await pipe([['LRANGE', 'chat', 0, 79], ['SMEMBERS', 'chat:hidden']]);
+      const hs = new Set(hidden || []);
+      return res.json({ m: (list || []).map(x => JSON.parse(x)).filter(m => !hs.has(m.i)) });
+    }
+    if (a === 'board') {
+      const prevW = week(new Date(now - 7 * 86400e3));
+      const [top, prev, ar] = await pipe([['ZREVRANGE', 'board:' + W, 0, 19, 'WITHSCORES'], ['ZREVRANGE', 'board:' + prevW, 0, 2, 'WITHSCORES'], ['ZREVRANGE', 'arenaW:' + W, 0, 9, 'WITHSCORES']]);
+      const pairs = l => { const o = []; for (let i = 0; i < (l || []).length; i += 2) o.push(l[i]); return o.map(x => JSON.parse(x)) };
+      const arena = []; for (let i = 0; i < (ar || []).length; i += 2) arena.push({ n: ar[i], w: +ar[i + 1] });
+      return res.json({ top: pairs(top), prev: pairs(prev), arena });
+    }
+    if (a === 'load') {
+      const code = String(req.query.code || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+      const d = code ? await cmd('GET', 'cs:' + code) : null;
+      if (!d) return res.status(404).json({ err: 'notfound' });
+      return res.json({ d });
+    }
+    if (req.method !== 'POST') return res.status(405).json({ err: 'method' });
+    if (!okId(id)) return res.status(400).json({ err: 'id' });
+    if (a === 'say') {
+      if (await cmd('GET', 'mute:' + id)) return res.status(429).json({ err: 'muted' });
+      const ok = await cmd('SET', 'rl:' + id, 1, 'NX', 'EX', 3);
+      if (!ok) return res.status(429).json({ err: 'rate' });
+      const x = clean(b.x, 200);
+      if (!x) return res.status(400).json({ err: 'empty' });
+      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: clean(b.n, 20) || 'นิรนาม', ti: clean(b.ti, 24), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4) };
+      await pipe([['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199]]);
+      return res.json({ ok: 1 });
+    }
+    if (a === 'report') {
+      const mid = String(b.mid || '').slice(0, 20);
+      const [, cnt] = await pipe([['SADD', 'rep:' + mid, id], ['SCARD', 'rep:' + mid], ['EXPIRE', 'rep:' + mid, 86400 * 3]]);
+      if (cnt >= 5) await cmd('SADD', 'chat:hidden', mid);
+      return res.json({ ok: 1 });
+    }
+    if (a === 'life') {
+      const e = { n: clean(b.n, 20) || 'นิรนาม', s: Math.max(0, Math.min(1e12, +b.s || 0)), age: +b.age || 0, r: clean(b.r, 30), f: clean(b.f, 30), c: clean(b.c, 60), x: b.x ? 1 : 0, cu: b.cu ? 1 : 0, t: now };
+      const key = 'board:' + W;
+      await pipe([['INCR', 'lives'], ['ZADD', key, e.s, JSON.stringify(e)], ['ZREMRANGEBYRANK', key, 0, -101], ['EXPIRE', key, 86400 * 40]]);
+      return res.json({ ok: 1 });
+    }
+    if (a === 'arena') {
+      const me = { n: clean(b.n, 20) || 'นิรนาม', p: Math.max(0, +b.p || 0), hp: +b.hp || 100, r: clean(b.r, 30), ri: Math.max(0, Math.min(12, +b.ri || 0)), x: b.x ? 1 : 0, t: now };
+      const ok = await cmd('SET', 'arl:' + id, 1, 'NX', 'EX', 20);
+      if (!ok) return res.status(429).json({ err: 'rate' });
+      const key = 'arena:' + me.x + ':' + me.ri;
+      await pipe([['HSET', key, id, JSON.stringify(me)], ['EXPIRE', key, 86400 * 14]]);
+      let o = null;
+      for (let k = 0; k < 4 && !o; k++) {
+        const f = await cmd('HRANDFIELD', key, 1);
+        const fid = Array.isArray(f) ? f[0] : f;
+        if (fid && fid !== id) o = JSON.parse(await cmd('HGET', key, fid));
+      }
+      return res.json({ o });
+    }
+    if (a === 'arenaRes') {
+      if (b.w) await pipe([['ZINCRBY', 'arenaW:' + W, 1, clean(b.n, 20) || 'นิรนาม'], ['EXPIRE', 'arenaW:' + W, 86400 * 40]]);
+      return res.json({ ok: 1 });
+    }
+    if (a === 'save') {
+      const d = String(b.d || '');
+      if (!d || d.length > 900000) return res.status(400).json({ err: 'size' });
+      const ok = await cmd('SET', 'svrl:' + id, 1, 'NX', 'EX', 30);
+      if (!ok) return res.status(429).json({ err: 'rate' });
+      const AB = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let code = ''; for (let i = 0; i < 8; i++) code += AB[Math.floor(Math.random() * AB.length)];
+      await cmd('SET', 'cs:' + code, d, 'EX', 86400 * 30);
+      return res.json({ code });
+    }
+    if (a === 'bug') {
+      await pipe([['LPUSH', 'bugs', JSON.stringify({ t: now, id, x: clean(b.x, 800), info: String(b.info || '').slice(0, 1200) })], ['LTRIM', 'bugs', 0, 499]]);
+      return res.json({ ok: 1 });
+    }
+    return res.status(400).json({ err: 'action' });
+  } catch (e) {
+    return res.status(500).json({ err: 'server' });
+  }
+};
