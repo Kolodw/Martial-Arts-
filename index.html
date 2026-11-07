@@ -390,8 +390,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='6.2';
+const VERSION='6.3';
 const CHANGELOG=[
+ {v:'6.3',d:'7 พ.ย. 2026',l:['⚖️ ปรับสมดุลคะแนน: ชื่อเสียงจากการชนะต่อสู้ไม่พุ่งตามพลังศัตรูแบบไร้ขีดอีกต่อไป · สูตรคะแนนใหม่ (ชื่อเสียง ×3 · เงินนับแบบลดหลั่น) · ตัวคูณการฝึกตามอายุมีเพดานที่ 100 ปี ชีวิตยาวหลายร้อยปีจึงไม่แกร่งแบบทวีคูณ','🏆 ทำเนียบแยกเป็น ⚔️ ยุทธภพ กับ ☁️ โลกเทพเซียน และเริ่มนับใหม่สัปดาห์นี้ด้วยสูตรใหม่']},
  {v:'6.2',d:'7 พ.ย. 2026',l:['🔄 เว็บเปิดค้างไว้แล้วมีเวอร์ชันใหม่ จะขึ้นแถบให้แตะโหลดใหม่ (บันทึกให้ก่อน) · ถ้าอยู่หน้าแรกจะโหลดใหม่เอง']},
  {v:'6.0',d:'7 พ.ย. 2026',l:['🌐 เพิ่มภาษาอังกฤษ (English) — ปุ่ม 🌐 EN มุมซ้ายบนของหน้าแรก หรือในเมนู ☰ · รอบนี้แปลส่วนติดต่อทั้งหมด: หน้าแรก เมนู ปุ่ม หน้าเกิด หน้าสร้างตัวละคร สถานะ หน้าสรุป สมุดตำนาน ชื่อคน · เนื้อเรื่องและเหตุการณ์จะทยอยแปลในรอบถัดไป','🐛 แก้ทำเนียบสำนักที่เปิดเร็วเกินไปแล้วเกมค้างทุกปี','🐛 แก้ปุ่ม 📋 คัดลอกรหัส ในหน้าย้ายเซฟที่กดแล้วไม่ทำงาน']},
  {v:'5.9',d:'7 พ.ย. 2026',l:['🌌 ผู้ข้ามมิติ/ต่างโลกมีโอกาส 35% ที่จะเกิดมาพร้อมระบบสุ่มประเภทและระดับ — เห็นตั้งแต่หน้าเกิด (แถว 🟦 ระบบติดตัวข้ามมิติ) และหน้าต่าง [ SYSTEM ] เด้งตั้งแต่ลืมตา','🔒 หนึ่งชีวิตมีได้แค่ระบบเดียว — ได้ระบบแล้วจะไม่มีระบบอื่นมาเสนออีกตลอดชีวิตนั้น','🔀 ประเภทระบบจะไม่ซ้ำกับระบบที่ได้ในชีวิตก่อนหน้า','🐛 แก้สอบเลื่อนขั้นตอนเป็นผู้นำพรรคอยู่แล้ว ขึ้นตำแหน่งว่างเปล่า']},
@@ -958,7 +959,7 @@ function fight(name,ep){
  if(my>=en&&tr('memory')&&Math.random()<.08){const a=newArt(1);S.arts.push(a);log(`🧠 ความจำภาพถ่าย: จดจำท่าของ${name}ได้ทั้งหมด — ได้ ${artHtml(a)}`,'epic')}
  if(my<en&&bagHas('tal')&&bagUse('tal')){log(`📜 ยันต์คุ้มกายลุกเป็นไฟ กันการโจมตีถึงตายจาก${name}ไว้ได้ แล้วคุณสวนกลับจนชนะ`,'epic');my=en+1}
  if(my>=en&&S.xian&&Math.random()<.2)bagAdd(Math.random()<.5?'core':'herb',1,1);
- if(my>=en){S.fame+=Math.round(ep/25)+3;S.money+=inc(R(10,60));S.kills++;return true}
+ if(my>=en){S.fame+=Math.round(3+Math.sqrt(Math.max(0,ep))/3);S.money+=inc(R(10,60));S.kills++;return true}
  S.hp-=Math.round(R(15,40)*(1-gv('armor','red')-eqA('red')-bufA('red'))*(tr('iron')?.8:1));joy(-2);if(Math.random()<.15)bagRob();return false;
 }
 
@@ -971,7 +972,7 @@ function doFocus(){
   case 'read':{const g=R(3,7);S.int+=g;routine('read',ch(['หัดเขียนตัวอักษรบนพื้นทราย','ท่องบทกวีตามผู้ใหญ่','แอบอ่านตำราของพ่อ']),g,'ปัญญา');break}
   case 'drill':{const g=R(3,8)*m*(S.family.power?1.5:1)*crip();S.power+=g;routine('drill',ch(['หัดตั้งท่าม้าจนขาสั่น','ฝึกต่อยกระสอบทราย','ตามผู้ใหญ่ฝึกหมัดตอนเช้า']),Math.round(g),'พลังยุทธ์');break}
   case 'chores':{S.karma+=1;const g=R(0,12);S.money+=g;routine('chores',ch(['ช่วยพ่อแม่ตักน้ำผ่าฟืน','เลี้ยงเป็ดเลี้ยงไก่','ช่วยขายของหน้าบ้าน']),g,'ตำลึง');break}
-  case 'train':{let g=R(8,16)*m*(1+S.age/40)*(S.faction?1.3:1)*(S.arc.master&&S.arc.master.alive?1.25:1)*sysTM()*daoM()*caveM()*fb('train')*cb('train')*smb('train')*hm()*eqM('train')*bufM('train')*eraM('train')*(tr('fastlearn')?1.3:1)*(tr('allarts')?1.25:1)*(tr('dragon')?1.2:1)*crip();S.power+=g;
+  case 'train':{let g=R(8,16)*m*(1+Math.min(S.age,100)/40)*(S.faction?1.3:1)*(S.arc.master&&S.arc.master.alive?1.25:1)*sysTM()*daoM()*caveM()*fb('train')*cb('train')*smb('train')*hm()*eqM('train')*bufM('train')*eraM('train')*(tr('fastlearn')?1.3:1)*(tr('allarts')?1.25:1)*(tr('dragon')?1.2:1)*crip();S.power+=g;
    if(Math.random()<.06){S.hp-=R(10,25);log(`${genLine('train')} แต่บาดเจ็บระหว่างฝึก (พลังยุทธ์ +${Math.round(g)})`,'bad')}else routine('train',genLine('train'),Math.round(g),'พลังยุทธ์');break}
   case 'qi':{let g=(.6+Math.random()*.8)*m*(S.faction?1.3:1)*(S.arc.master&&S.arc.master.alive?1.25:1)*sysTM()*daoM()*caveM()*fb('qi')*cb('qi')*smb('qi')*hm()*eqM('qi')*bufM('qi')*(tr('fastqi')?1.4:1)*(tr('yinyang')?1.2:1)*(tr('dragon')?1.2:1)*crip();S.qi+=g;
    if(S.qi>8&&!tr('yinyang')&&!tr('allarts')&&Math.random()<.07){const d=R(25,50);S.hp-=d;S.qi*=.85;log(`${ch(['ธาตุไฟเข้าแทรก! ลมปราณปั่นป่วน','ลมปราณไหลย้อนกลับ กระอักเลือดออกมาคำใหญ่','ฝืนทะลวงชีพจรเร็วเกินไป เส้นลมปราณฉีก','จิตฟุ้งซ่านกลางการโคจร ลมปราณพุ่งชนกันในอก'])} เสียเลือด ${d}`,'bad')}else routine('qi',genLine('qi'),+g.toFixed(1),'ลมปราณ');break}
@@ -1606,7 +1607,7 @@ function endGame(){
  const bye=($('byeIn')||{}).value||'';closeM();choice._cur=null;choice._min=false;pendBar();clearInterval(timer);finishPeers();
  const ep=epithet(),ri=realmIdx();S.epithet=ep;
  const newAch=achCheck(true);
- const score=Math.round((total()+S.fame*5+S.money/10+(S.faction?S.rank*500:0)+S.kids*100+(S.ownSect?S.ownSect.dis*20:0)+S.offRank*400)*(S.goalDone?1.5:1));
+ const score=lifeScore();
  {const st=LS.get('murim_stats',{lives:0,goals:0,best:0});st.lives++;if(S.goalDone)st.goals++;st.best=Math.max(st.best,score);LS.set('murim_stats',st)}
  recordLife(score,bye);
  const lifeAch=(S.achLife||[]).map(id=>ACH_ALL.find(a=>a.id===id)).filter(Boolean);
@@ -2162,7 +2163,7 @@ const houseT=()=>({h1:1,h2:2,h3:3})[S.gear&&S.gear.house]||0;
 const gearT=()=>['weapon','armor'].reduce((a,k)=>{const g=gearOf(k);return a+(g?GEAR[k].indexOf(g)+1:0)},0);
 const QV={power:()=>S.power,qi:()=>S.qi,money:()=>S.money,win:()=>S.kills,realm:()=>realmIdx(),art:()=>S.arts.length,fame:()=>S.fame,karma:()=>S.karma,karmaDown:()=>-S.karma,marry:()=>S.spouse?1:0,kid:()=>S.kids,join:()=>S.faction?1:0,rank:()=>S.rank,
  gear:()=>gearT(),house:()=>houseT(),int:()=>S.int,cha:()=>S.cha,pill:()=>S.sys.pillN||0};
-const yrPow=()=>Math.round((12*S.talent.m*(1+S.age/40)*1.4+(6+S.sys.lv*7)*S.talent.m)*(S.faction?1.2:1));
+const yrPow=()=>Math.round((12*S.talent.m*(1+Math.min(S.age,100)/40)*1.4+(6+S.sys.lv*7)*S.talent.m)*(S.faction?1.2:1));
 const QMK={
  power:()=>{const g=Math.max(30,Math.round(yrPow()*(1.6+Math.random())));return[`ฝึกจนพลังยุทธ์เพิ่มขึ้น ${fmt(g)}`,g,R(4,6)]},
  qi:()=>{const g=+(1+S.sys.lv*.2).toFixed(1);return[`สะสมลมปราณเพิ่ม ${g} ปี`,g,R(4,6)]},
@@ -2533,7 +2534,7 @@ function srFloor(fl,L,nm){
  if(fl===1){if(bagUse('map')){L.q+=2;log('🗺️ กางแผนที่มิติลับ — รู้ทางลัดและจุดซ่อนสมบัติ','good')}go();return}
  choice(`🌀 ${nm} — ชั้นที่ ${fl}/5`,`ของที่เก็บได้: ลมปราณ +${fmtG(+L.q.toFixed(1))} · คัมภีร์ ${L.a.length} เล่ม · ${fmt(L.m)} ตำลึง<br>พลังชีวิต ${Math.max(0,Math.round(S.hp))}/${S.maxHp} · ชั้นนี้อันตรายกว่าเดิม`,[
   {t:'⬇️ ลงต่อ',s:'ของดีขึ้น เสี่ยงขึ้น',f(){go()}},{t:'⬆️ ถอยออกพร้อมของที่มี',s:'ปลอดภัย',f(){out()}}])}
-const yrPow0=()=>Math.round(12*S.talent.m*(1+S.age/40)*1.4);
+const yrPow0=()=>Math.round(12*S.talent.m*(1+Math.min(S.age,100)/40)*1.4);
 // ---- 3. ดินแดนต่างถิ่น ----
 const REGION={
  desert:{n:'ทะเลทรายตะวันตก',ic:'🏜️',art:['ดาบจันทร์เสี้ยว','ฝ่ามือพายุทราย','ลมปราณเพลิงแดด'],ev:[['พายุทรายกลืนกองคาราวาน','กองโจรทะเลทรายม้าเร็ว'],['พบโอเอซิสลับ มีวิหารร้างอยู่กลางน้ำ',null],['ชนเผ่าเร่ร่อนท้าดวลเพื่อยอมรับคุณเป็นพี่น้อง','นักรบชนเผ่า']]},
@@ -3695,7 +3696,7 @@ function shareLife(){if(!S)return;const t=`${S.name} อายุ ${S.age} · ${
 async function chatRep(i){try{await api('report',{mid:i});toast('รายงานแล้ว')}catch(e){toast('รายงานไม่ได้')}}
 async function cloudPut(){try{const j=await api('save',{d:saveCode()});modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☁️ ฝากเซฟแล้ว</h3><p>รหัสของคุณ</p><div class="px" style="font-size:30px;text-align:center;letter-spacing:4px">${j.code}</div><p class="tag2">ใช้ได้ 30 วัน · ใส่รหัสนี้ในเครื่องอื่นที่เมนู 💾 ย้ายเซฟ</p>`)}catch(e){toast('ฝากไม่สำเร็จ')}}
 async function cloudGet(c){try{const j=await api('load&code='+encodeURIComponent(c.toUpperCase()));if(j.d)loadCode(j.d);closeM()}catch(e){toast('ไม่พบรหัสนี้')}}
-function lifeScore(){return Math.round((total()+S.fame*5+S.money/10+(S.faction?S.rank*500:0)+S.kids*100+(S.ownSect?S.ownSect.dis*20:0)+S.offRank*400)*(S.goalDone?1.5:1))}
+function lifeScore(){return Math.round((total()+S.fame*3+20*Math.sqrt(Math.max(0,S.money))+(S.faction?S.rank*500:0)+S.kids*100+(S.ownSect?S.ownSect.dis*20:0)+(S.offRank||0)*400)*(S.goalDone?1.5:1))}
 function onlineLife(){}
 let arenaBusy=false;
 async function arenaGo(){if(arenaBusy||!S)return;if(S.arY===S.age&&(S.arN||0)>=3)return toast('ปีนี้ประลองครบ 3 ครั้งแล้ว');arenaBusy=true;
@@ -3708,7 +3709,8 @@ async function openOnline(tab){tab=tab||'chat';clearInterval(chatT);const tabs=[
  if(!onlineOK){modal(head+`<p class="tag2">ระบบออนไลน์ต้องเปิดฐานข้อมูลก่อน หรือเครือข่ายตอนนี้ใช้ไม่ได้</p><button class="gbtn" style="width:100%" onclick="onlinePing().then(()=>openOnline('${tab}'))">ลองใหม่</button>`,'online');return}
  if(tab==='chat'){modal(head+`<div id="chatBox" class="chatbox"><div class="tag2">กำลังโหลด…</div></div><div class="chatin"><input id="chatIn" maxlength="200" placeholder="พิมพ์ข้อความ… (ลิงก์และคำหยาบถูกปิด)" onkeydown="if(event.key==='Enter')chatSend()"><button class="pbtn" onclick="chatSend()">ส่ง</button></div>${S?'<button class="gbtn" style="width:100%;margin-top:6px" onclick="shareLife()">📤 แชร์ชีวิตตอนนี้เข้าแชท</button>':''}<p class="tag2">⚑ รายงานข้อความที่ผิดกฎ · รายงานครบ 5 คนข้อความจะถูกซ่อน</p>`,'online');chatPoll();chatT=setInterval(()=>{if($('modal').dataset.k!=='online'||!$('chatBox'))return clearInterval(chatT);if(!document.hidden)chatPoll()},6000)}
  else if(tab==='board'){modal(head+'<div class="tag2">กำลังโหลด…</div>','online');try{const j=await api('board');const row=(e,i)=>`<div class="item brd ${e.lid?'click':''}" ${e.lid?`onclick="openLifeView('${e.lid}')"`:''}><div class="h"><b>${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${esc(e.n)}</b><span class="px">${fmt(e.s)}</span></div><p class="tag2">${esc(e.r)} · ${esc(e.f)} · อายุ ${e.age}${e.x?' · ☁️ เซียน':''}${e.cu?' · ✍️':''}<br>${esc(e.c||'')}${e.lid?`<br>${e.pub?'👁 แตะเพื่อดูชีวิตนี้':'🔒 ส่วนตัว'}`:''}</p></div>`;
-   modal(head+`<p class="tag2">คะแนนชีวิตสูงสุดของสัปดาห์นี้ (รีเซ็ตทุกวันจันทร์) · ส่งอัตโนมัติเมื่อสิ้นชีวิต</p>${(j.top||[]).map(row).join('')||'<p class="tag2">ยังไม่มีใครขึ้นทำเนียบสัปดาห์นี้</p>'}${(j.prev||[]).length?`<h4 style="margin:10px 0 4px">สามอันดับแรกสัปดาห์ก่อน</h4>`+j.prev.map(row).join(''):''}${(j.arena||[]).length?`<h4 style="margin:10px 0 4px">⚔️ ยอดนักประลองสัปดาห์นี้</h4>`+j.arena.map((e,i)=>`<div class="tag2">${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${esc(e.n)} — ชนะ ${e.w} ครั้ง</div>`).join(''):''}`,'online')}catch(e){modal(head+'<p class="tag2">โหลดไม่ได้</p>','online')}}
+   const bw=openOnline._bw!=null?openOnline._bw:(S?(S.xian?1:0):(CFG.xian?1:0));const T=(j.top||[]).filter(e=>(e.x?1:0)===bw).slice(0,20),Pv=(j.prev||[]).filter(e=>(e.x?1:0)===bw).slice(0,3);
+   modal(head+`<div class="tabs"><button class="tabb ${bw?'':'on'}" onclick="openOnline._bw=0;openOnline('board')">⚔️ ยุทธภพ</button><button class="tabb ${bw?'on':''}" onclick="openOnline._bw=1;openOnline('board')">☁️ โลกเทพเซียน</button></div><p class="tag2">คะแนนชีวิตสูงสุดของสัปดาห์นี้ แยกตามโลก (รีเซ็ตทุกวันจันทร์) · ส่งอัตโนมัติเมื่อสิ้นชีวิต</p>${T.map(row).join('')||'<p class="tag2">ยังไม่มีใครขึ้นทำเนียบสัปดาห์นี้</p>'}${Pv.length?`<h4 style="margin:10px 0 4px">สามอันดับแรกสัปดาห์ก่อน</h4>`+Pv.map(row).join(''):''}${(j.arena||[]).length?`<h4 style="margin:10px 0 4px">⚔️ ยอดนักประลองสัปดาห์นี้</h4>`+j.arena.map((e,i)=>`<div class="tag2">${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${esc(e.n)} — ชนะ ${e.w} ครั้ง</div>`).join(''):''}`,'online')}catch(e){modal(head+'<p class="tag2">โหลดไม่ได้</p>','online')}}
  else if(tab==='arena')modal(head+`<p>ส่งเงาของตัวละครไปประลองกับเงาของผู้เล่นคนอื่นในขั้นพลังใกล้เคียงกัน · ชนะได้ชื่อเสียง +10 · ปีละ 3 ครั้ง</p>${S?`<p class="tag2">พลังของคุณ ${fmt(Math.round(myPow()))} · ${REALMS[realmIdx()].n} · ปีนี้ประลองแล้ว ${S.arY===S.age?S.arN||0:0}/3</p><button class="pbtn" style="width:100%" onclick="arenaGo()">⚔️ หาคู่ประลอง</button>`:'<p class="tag2">ต้องอยู่ระหว่างเล่นชีวิตหนึ่งก่อน</p>'}`,'online');
  else modal(head+`<p class="tag2">ชื่อที่แสดงในแชทและทำเนียบ (เว้นว่าง = ใช้ชื่อตัวละคร)</p><input class="crin" maxlength="20" value="${esc(LS.get('murim_pname',''))}" onchange="LS.set('murim_pname',this.value.trim());toast('บันทึกแล้ว')"><button class="gbtn" style="width:100%;margin-top:8px" onclick="openSaveCode()">💾 ย้ายเซฟข้ามเครื่อง</button>`,'online')}
 
@@ -3958,7 +3960,7 @@ function lifeDetail(score){const ri=realmIdx(),lifeAch=(S.achLife||[]).map(id=>A
   look:{robe:o.robe,trim:o.trim,belt:o.belt,hat:o.hat,skin:o.skin,hair:o.hair,hs:o.hs,g:o.g,age:o.age,mood:'neutral',aura:o.aura,sword:o.sword,staff:o.staff,seed:o.seed}}}
 function lifePubDef(){return LS.get('murim_lifepub',1)}
 async function sendLife(score){if(S&&S.custom){customNote();return}if(!onlineOK||!S||S._sent)return;S._sent=1;S._lid=pid.slice(0,6)+Date.now().toString(36);
- try{await api('life',{n:pname(),s:score,age:S.age,r:REALMS[realmIdx()].n,f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,cu:S.custom?1:0,lid:S._lid,pub:lifePubDef(),det:xT(JSON.stringify(lifeDetail(score)))});lifePrivBox()}catch(e){}}
+ try{await api('life',{n:pname(),s:score,age:S.age,r:REALMS[realmIdx()].n,f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,cu:S.custom?1:0,ver:VERSION,lid:S._lid,pub:lifePubDef(),det:xT(JSON.stringify(lifeDetail(score)))});lifePrivBox()}catch(e){}}
 function customNote(){const end=$('end');if(!end||$('lifePriv'))return;const b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b);b.innerHTML='<b>✍️ ชีวิตที่สร้างเอง — ไม่ติดอันดับทำเนียบ</b><p class="tag2">ชีวิตที่เลือกชาติกำเนิด กระดูก และพรสวรรค์เองจะไม่ถูกส่งขึ้นทำเนียบออนไลน์ เพื่อความยุติธรรมกับคนที่ให้ฟ้าลิขิต · เลือก 🎲 สุ่ม หรือ 🎨 ออกแบบหน้าตา เพื่อลุ้นขึ้นทำเนียบ</p>'}
 function lifePrivBox(){const end=$('end');if(!end||!S||!S._lid)return;let b=$('lifePriv');if(!b){b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b)}
  const pub=lifePubDef();b.innerHTML=`<b>🏆 ชีวิตนี้ขึ้นทำเนียบออนไลน์แล้ว</b><p class="tag2">${pub?'คนอื่นกดดูรายละเอียดชีวิตนี้ได้ (ไทม์ไลน์ ค่าพลัง ของ วิชา ครอบครัว)':'คนอื่นเห็นแค่ชื่อกับคะแนน กดดูรายละเอียดไม่ได้'}</p>
@@ -4969,7 +4971,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;

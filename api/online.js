@@ -86,10 +86,10 @@ module.exports = async (req, res) => {
     }
     if (a === 'board') {
       const prevW = week(new Date(now - 7 * 86400e3));
-      const [top, prev, ar] = await pipe([['ZREVRANGE', 'board:' + W, 0, 59, 'WITHSCORES'], ['ZREVRANGE', 'board:' + prevW, 0, 29, 'WITHSCORES'], ['ZREVRANGE', 'arenaW:' + W, 0, 9, 'WITHSCORES']]);
+      const [top, prev, ar] = await pipe([['ZREVRANGE', 'bd2:' + W, 0, 99, 'WITHSCORES'], ['ZREVRANGE', 'bd2:' + prevW, 0, 49, 'WITHSCORES'], ['ZREVRANGE', 'arenaW:' + W, 0, 9, 'WITHSCORES']]);
       const pairs = l => { const o = []; for (let i = 0; i < (l || []).length; i += 2) o.push(l[i]); return o.map(x => JSON.parse(x)) };
       const arena = []; for (let i = 0; i < (ar || []).length; i += 2) arena.push({ n: ar[i], w: +ar[i + 1] });
-      const T = pairs(top).filter(x => !x.cu).slice(0, 20), Pv = pairs(prev).filter(x => !x.cu).slice(0, 3), all = T.concat(Pv).filter(x => x.lid);
+      const T = pairs(top).filter(x => !x.cu).slice(0, 60), Pv = pairs(prev).filter(x => !x.cu).slice(0, 20), all = T.concat(Pv).filter(x => x.lid);
       const pubs = all.length ? await cmd('MGET', ...all.map(x => 'lifep:' + x.lid)) : [];
       const pm = {}; all.forEach((x, i) => pm[x.lid] = pubs[i] === '1' ? 1 : 0);
       const fix = l => l.map(x => Object.assign(x, { pub: x.lid ? pm[x.lid] || 0 : 0 }));
@@ -219,8 +219,8 @@ module.exports = async (req, res) => {
     if (a === 'life') {
       const lid = String(b.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
       const e = { n: clean(b.n, 20) || 'นิรนาม', s: Math.max(0, Math.min(1e12, +b.s || 0)), age: +b.age || 0, r: clean(b.r, 30), f: clean(b.f, 30), c: clean(b.c, 60), x: b.x ? 1 : 0, cu: b.cu ? 1 : 0, t: now, lid };
-      const key = 'board:' + W, L = [['INCR', 'lives'], ['ZADD', key, e.s, JSON.stringify(e)], ['ZREMRANGEBYRANK', key, 0, -101], ['EXPIRE', key, 86400 * 40]];
-      if (e.cu) { await cmd('INCR', 'lives'); return res.json({ ok: 1, skip: 1 }) }
+      const key = 'bd2:' + W, L = [['INCR', 'lives'], ['ZADD', key, e.s, JSON.stringify(e)], ['ZREMRANGEBYRANK', key, 0, -101], ['EXPIRE', key, 86400 * 40]];
+      if (e.cu || !(parseFloat(b.ver) >= 6.3)) { await cmd('INCR', 'lives'); return res.json({ ok: 1, skip: 1 }) }
       const det = String(b.det || '');
       if (lid.length >= 6 && det && det.length < 40000) { try { JSON.parse(det); L.push(['SET', 'lifed:' + lid, det, 'EX', 86400 * 40], ['SET', 'lifeo:' + lid, id, 'EX', 86400 * 40], ['SET', 'lifep:' + lid, b.pub ? '1' : '0', 'EX', 86400 * 40]) } catch {} }
       await pipe(L);
