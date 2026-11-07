@@ -21,11 +21,12 @@ function week(d = new Date()) {
   const mon = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate() - day));
   return mon.toISOString().slice(0, 10);
 }
-const BAD = ['ควย', 'เหี้ย', 'สัส', 'เย็ด', 'หี', 'แตด', 'fuck', 'shit', 'bitch', 'nigg', 'เงี่ยน', 'กะหรี่'];
+const BAD = ['ควย', 'เหี้ย', 'สัส', 'เย็ด', 'แตด', 'fuck', 'shit', 'bitch', 'nigg', 'เงี่ยน', 'กะหรี่'];
 function clean(s, n) {
   s = String(s || '').replace(/[\u0000-\u001f<>]/g, '').slice(0, n);
   s = s.replace(/(https?:\/\/|www\.)\S+/gi, '[ลิงก์]').replace(/\b\S+\.(com|net|org|io|gg|me|xyz|th|co)\b\S*/gi, '[ลิงก์]');
   for (const w of BAD) s = s.split(w).join('*'.repeat([...w].length));
+  s = s.replace(/หี(?![บดม])/g, '**');
   return s.trim();
 }
 const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
