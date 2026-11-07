@@ -89,7 +89,11 @@ module.exports = async (req, res) => {
       const [top, prev, ar] = await pipe([['ZREVRANGE', 'board:' + W, 0, 19, 'WITHSCORES'], ['ZREVRANGE', 'board:' + prevW, 0, 2, 'WITHSCORES'], ['ZREVRANGE', 'arenaW:' + W, 0, 9, 'WITHSCORES']]);
       const pairs = l => { const o = []; for (let i = 0; i < (l || []).length; i += 2) o.push(l[i]); return o.map(x => JSON.parse(x)) };
       const arena = []; for (let i = 0; i < (ar || []).length; i += 2) arena.push({ n: ar[i], w: +ar[i + 1] });
-      return res.json({ top: pairs(top), prev: pairs(prev), arena });
+      const T = pairs(top), Pv = pairs(prev), all = T.concat(Pv).filter(x => x.lid);
+      const pubs = all.length ? await cmd('MGET', ...all.map(x => 'lifep:' + x.lid)) : [];
+      const pm = {}; all.forEach((x, i) => pm[x.lid] = pubs[i] === '1' ? 1 : 0);
+      const fix = l => l.map(x => Object.assign(x, { pub: x.lid ? pm[x.lid] || 0 : 0 }));
+      return res.json({ top: fix(T), prev: fix(Pv), arena });
     }
     if (a === 'load') {
       const code = String(req.query.code || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
@@ -141,6 +145,13 @@ module.exports = async (req, res) => {
       if (!tok || tok !== tk || !d) return res.status(404).json({ err: 'notfound' });
       return res.json({ d });
     }
+    if (a === 'lifeview') {
+      const lid = String(req.query.l || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
+      const [pub, d, own] = await pipe([['GET', 'lifep:' + lid], ['GET', 'lifed:' + lid], ['GET', 'lifeo:' + lid]]);
+      if (!d) return res.status(404).json({ err: 'notfound' });
+      if (pub !== '1' && own !== id) return res.status(403).json({ err: 'private' });
+      return res.json({ d: JSON.parse(d), pub: pub === '1' ? 1 : 0, mine: own === id ? 1 : 0 });
+    }
     if (req.method !== 'POST') return res.status(405).json({ err: 'method' });
     if (!okId(id)) return res.status(400).json({ err: 'id' });
     if (a === 'live') {
@@ -177,10 +188,20 @@ module.exports = async (req, res) => {
       return res.json({ ok: 1 });
     }
     if (a === 'life') {
-      const e = { n: clean(b.n, 20) || 'นิรนาม', s: Math.max(0, Math.min(1e12, +b.s || 0)), age: +b.age || 0, r: clean(b.r, 30), f: clean(b.f, 30), c: clean(b.c, 60), x: b.x ? 1 : 0, cu: b.cu ? 1 : 0, t: now };
-      const key = 'board:' + W;
-      await pipe([['INCR', 'lives'], ['ZADD', key, e.s, JSON.stringify(e)], ['ZREMRANGEBYRANK', key, 0, -101], ['EXPIRE', key, 86400 * 40]]);
+      const lid = String(b.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
+      const e = { n: clean(b.n, 20) || 'นิรนาม', s: Math.max(0, Math.min(1e12, +b.s || 0)), age: +b.age || 0, r: clean(b.r, 30), f: clean(b.f, 30), c: clean(b.c, 60), x: b.x ? 1 : 0, cu: b.cu ? 1 : 0, t: now, lid };
+      const key = 'board:' + W, L = [['INCR', 'lives'], ['ZADD', key, e.s, JSON.stringify(e)], ['ZREMRANGEBYRANK', key, 0, -101], ['EXPIRE', key, 86400 * 40]];
+      const det = String(b.det || '');
+      if (lid.length >= 6 && det && det.length < 40000) { try { JSON.parse(det); L.push(['SET', 'lifed:' + lid, det, 'EX', 86400 * 40], ['SET', 'lifeo:' + lid, id, 'EX', 86400 * 40], ['SET', 'lifep:' + lid, b.pub ? '1' : '0', 'EX', 86400 * 40]) } catch {} }
+      await pipe(L);
       return res.json({ ok: 1 });
+    }
+    if (a === 'lifepub') {
+      const lid = String(b.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
+      const own = await cmd('GET', 'lifeo:' + lid);
+      if (!own || own !== id) return res.status(403).json({ err: 'owner' });
+      await cmd('SET', 'lifep:' + lid, b.pub ? '1' : '0', 'KEEPTTL');
+      return res.json({ ok: 1, pub: b.pub ? 1 : 0 });
     }
     if (a === 'arena') {
       const me = { n: clean(b.n, 20) || 'นิรนาม', p: Math.max(0, +b.p || 0), hp: +b.hp || 100, r: clean(b.r, 30), ri: Math.max(0, Math.min(12, +b.ri || 0)), x: b.x ? 1 : 0, t: now };

@@ -260,6 +260,7 @@ details.item summary{cursor:pointer}
 .opt.live small{display:block}.spechead{display:flex;gap:10px;align-items:center;margin-bottom:6px}#specCv{width:84px;height:92px;image-rendering:pixelated;border:2px solid var(--line);border-radius:8px;flex:0 0 auto}
 .specgrid{display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:.88em}.specgrid div{border:1px dashed var(--line);border-radius:6px;padding:4px 6px}.speclist{margin:4px 0;padding-left:18px;font-size:.9em}
 .specfeed{max-height:300px;overflow-y:auto;font-size:.86em;display:flex;flex-direction:column;gap:4px}.specfeed div{padding:4px 6px;border-left:3px solid var(--line)}.specfeed .sfh{border:0;font-weight:bold;color:var(--pinkd);margin-top:4px}
+.item.brd.click{cursor:pointer}.privbox{margin-top:10px}.privbox p{margin:4px 0 8px}
 </style>
 </head>
 <body>
@@ -370,8 +371,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='4.7';
+const VERSION='4.8';
 const CHANGELOG=[
+ {v:'4.8',d:'7 พ.ย. 2026',l:['🏆 ทำเนียบ: แตะชื่อเพื่อดูชีวิตของคนนั้นได้ — สรุป ค่าพลัง ครอบครัว ไทม์ไลน์ทั้งชีวิต ของ วิชา ความสำเร็จ และคำอำลา','🔒 หน้าสรุปชีวิตเลือกได้ว่าจะ 🌐 เปิดให้คนอื่นดู หรือ 🔒 ตั้งเป็นส่วนตัว (เห็นแค่ชื่อกับคะแนน) เปลี่ยนได้ตลอด']},
  {v:'4.7',d:'7 พ.ย. 2026',l:['☁️ เซฟขึ้นเซิร์ฟเวอร์อัตโนมัติทุก 1–2 นาทีขณะเล่น ไม่ต้องกดเอง · ได้รหัสประจำเครื่องไว้โหลดเซฟล่าสุดในเครื่องอื่น','⏸ มีเรื่องให้ตัดสินใจ เวลาจะหยุดรอจนกว่าจะเลือก','⏩ เวลาเดินต่อเนื่อง ไม่ค้างรอข้อความ — ข้อความที่ค้างเยอะจะขึ้นเร็วขึ้นเอง','🩺 โรคเล็กน้อย (ไข้หวัด ไข้ป่า หัด) แทบไม่ตาย ยกเว้นตอนร่างกายทรุดหนัก · โรคเรื้อรังกัดกินช้าลงและไม่ทำให้ตายก่อนวัยชรา · เด็กเล็กรอดจากอุบัติเหตุได้บ่อยขึ้น','👁 ดูคนอื่นเล่นแบบสด: เห็นค่าพลัง ของ วิชา เควส ผู้คน และบันทึกชีวิต ดูได้อย่างเดียว · ผู้เล่นเลือกอนุญาตหรือปฏิเสธได้ · มีตัวเลขบอกว่ามีคนดูอยู่กี่คน']},
  {v:'4.6',d:'7 พ.ย. 2026',l:['🛠️ แก้บั๊กกด "อำลา" แล้วไม่เข้าหน้าสรุปชีวิต','🏮 ภาพย้อนความทรงจำก่อนหน้าสรุป: อายุนับขึ้นจาก 0 พร้อมเหตุการณ์สำคัญผุดขึ้นทีละเรื่อง โคมลอยขึ้นฟ้า แล้วปิดด้วยฉายาตัวทอง · แตะข้ามได้','✨ หน้าสรุปค่อยๆ เลื่อนขึ้นมาทีละส่วน และคะแนนตำนานนับขึ้น']},
  {v:'4.5',d:'7 พ.ย. 2026',l:['🐞 กระดานแจ้งบั๊กในเกม: แจ้งบั๊กหรือขอฟีเจอร์ แล้วทุกคนเห็นบนกระดาน กด 🙋 เจอเหมือนกัน / 👍 อยากได้เหมือนกัน · ผู้พัฒนาติด ✅ แก้แล้ว ได้','💬 ความคิดเห็นผู้เล่น: ให้ดาว 1–5 พร้อมเขียนว่าเกมเป็นยังไง เห็นคะแนนเฉลี่ยและความเห็นของทุกคน','⚑ รายงานข้อความที่ไม่เหมาะสมได้ทั้งสองกระดาน']},
@@ -1612,6 +1614,7 @@ function endGame(){
  drawAvatar($('ava2'),S.seed,S.gender,S.family.demon||S.talent.m>=4);bindSpark('skP');bindSpark('skH');
  $('cpBtn').onclick=()=>{navigator.clipboard.writeText(xT(share)).then(()=>toast('คัดลอกแล้ว'),()=>toast('คัดลอกไม่ได้'))};
  endExtras();
+ S._bye=bye;sendLife(score);
  playRecap(ep,score,()=>{show('end');endAnim(score);{const ec=$('endScene')&&$('endScene').getContext('2d');if(ec){const ef=()=>{if(!$('end').classList.contains('on')||!$('endScene'))return clearInterval(et);frame++;drawScene(ec,'death')};var et=setInterval(ef,150);ef()}}});
 }
 function inherit(ci){
@@ -3653,7 +3656,7 @@ async function chatRep(i){try{await api('report',{mid:i});toast('รายงา
 async function cloudPut(){try{const j=await api('save',{d:saveCode()});modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☁️ ฝากเซฟแล้ว</h3><p>รหัสของคุณ</p><div class="px" style="font-size:30px;text-align:center;letter-spacing:4px">${j.code}</div><p class="tag2">ใช้ได้ 30 วัน · ใส่รหัสนี้ในเครื่องอื่นที่เมนู 💾 ย้ายเซฟ</p>`)}catch(e){toast('ฝากไม่สำเร็จ')}}
 async function cloudGet(c){try{const j=await api('load&code='+encodeURIComponent(c.toUpperCase()));if(j.d)loadCode(j.d);closeM()}catch(e){toast('ไม่พบรหัสนี้')}}
 function lifeScore(){return Math.round((total()+S.fame*5+S.money/10+(S.faction?S.rank*500:0)+S.kids*100+(S.ownSect?S.ownSect.dis*20:0)+S.offRank*400)*(S.goalDone?1.5:1))}
-function onlineLife(){if(!onlineOK||!S||S._sent)return;S._sent=1;api('life',{n:pname(),s:lifeScore(),age:S.age,r:REALMS[realmIdx()].n,f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,cu:S.custom?1:0}).catch(()=>{})}
+function onlineLife(){}
 let arenaBusy=false;
 async function arenaGo(){if(arenaBusy||!S)return;if(S.arY===S.age&&(S.arN||0)>=3)return toast('ปีนี้ประลองครบ 3 ครั้งแล้ว');arenaBusy=true;
  try{const me={n:pname(),p:Math.round(myPow()),hp:S.maxHp,r:REALMS[realmIdx()].n,ri:realmIdx(),x:S.xian?1:0};const j=await api('arena',me);if(!j.o){toast('ยังไม่มีคู่ประลองในรุ่นเดียวกัน ลองใหม่ภายหลัง');return}
@@ -3664,7 +3667,7 @@ async function openOnline(tab){tab=tab||'chat';clearInterval(chatT);const tabs=[
  const head=`<button class="xbtn" onclick="clearInterval(chatT);closeM()">✕</button><h3>🌐 ออนไลน์</h3><p class="tag2">${onlineOK?`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิต`:'🔴 ยังเชื่อมต่อเซิร์ฟเวอร์ไม่ได้'}${/vercel\.app$/.test(location.hostname)?'':' · ระบบออนไลน์ใช้ได้บนเว็บ hahah-gamma.vercel.app'}</p><div class="tabs">${tabs}</div>`;
  if(!onlineOK){modal(head+`<p class="tag2">ระบบออนไลน์ต้องเปิดฐานข้อมูลก่อน หรือเครือข่ายตอนนี้ใช้ไม่ได้</p><button class="gbtn" style="width:100%" onclick="onlinePing().then(()=>openOnline('${tab}'))">ลองใหม่</button>`,'online');return}
  if(tab==='chat'){modal(head+`<div id="chatBox" class="chatbox"><div class="tag2">กำลังโหลด…</div></div><div class="chatin"><input id="chatIn" maxlength="200" placeholder="พิมพ์ข้อความ… (ลิงก์และคำหยาบถูกปิด)" onkeydown="if(event.key==='Enter')chatSend()"><button class="pbtn" onclick="chatSend()">ส่ง</button></div>${S?'<button class="gbtn" style="width:100%;margin-top:6px" onclick="shareLife()">📤 แชร์ชีวิตตอนนี้เข้าแชท</button>':''}<p class="tag2">⚑ รายงานข้อความที่ผิดกฎ · รายงานครบ 5 คนข้อความจะถูกซ่อน</p>`,'online');chatPoll();chatT=setInterval(()=>{if($('modal').dataset.k!=='online'||!$('chatBox'))return clearInterval(chatT);if(!document.hidden)chatPoll()},6000)}
- else if(tab==='board'){modal(head+'<div class="tag2">กำลังโหลด…</div>','online');try{const j=await api('board');const row=(e,i)=>`<div class="item brd"><div class="h"><b>${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${esc(e.n)}</b><span class="px">${fmt(e.s)}</span></div><p class="tag2">${esc(e.r)} · ${esc(e.f)} · อายุ ${e.age}${e.x?' · ☁️ เซียน':''}${e.cu?' · ✍️':''}<br>${esc(e.c||'')}</p></div>`;
+ else if(tab==='board'){modal(head+'<div class="tag2">กำลังโหลด…</div>','online');try{const j=await api('board');const row=(e,i)=>`<div class="item brd ${e.lid?'click':''}" ${e.lid?`onclick="openLifeView('${e.lid}')"`:''}><div class="h"><b>${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${esc(e.n)}</b><span class="px">${fmt(e.s)}</span></div><p class="tag2">${esc(e.r)} · ${esc(e.f)} · อายุ ${e.age}${e.x?' · ☁️ เซียน':''}${e.cu?' · ✍️':''}<br>${esc(e.c||'')}${e.lid?`<br>${e.pub?'👁 แตะเพื่อดูชีวิตนี้':'🔒 ส่วนตัว'}`:''}</p></div>`;
    modal(head+`<p class="tag2">คะแนนชีวิตสูงสุดของสัปดาห์นี้ (รีเซ็ตทุกวันจันทร์) · ส่งอัตโนมัติเมื่อสิ้นชีวิต</p>${(j.top||[]).map(row).join('')||'<p class="tag2">ยังไม่มีใครขึ้นทำเนียบสัปดาห์นี้</p>'}${(j.prev||[]).length?`<h4 style="margin:10px 0 4px">สามอันดับแรกสัปดาห์ก่อน</h4>`+j.prev.map(row).join(''):''}${(j.arena||[]).length?`<h4 style="margin:10px 0 4px">⚔️ ยอดนักประลองสัปดาห์นี้</h4>`+j.arena.map((e,i)=>`<div class="tag2">${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${esc(e.n)} — ชนะ ${e.w} ครั้ง</div>`).join(''):''}`,'online')}catch(e){modal(head+'<p class="tag2">โหลดไม่ได้</p>','online')}}
  else if(tab==='arena')modal(head+`<p>ส่งเงาของตัวละครไปประลองกับเงาของผู้เล่นคนอื่นในขั้นพลังใกล้เคียงกัน · ชนะได้ชื่อเสียง +10 · ปีละ 3 ครั้ง</p>${S?`<p class="tag2">พลังของคุณ ${fmt(Math.round(myPow()))} · ${REALMS[realmIdx()].n} · ปีนี้ประลองแล้ว ${S.arY===S.age?S.arN||0:0}/3</p><button class="pbtn" style="width:100%" onclick="arenaGo()">⚔️ หาคู่ประลอง</button>`:'<p class="tag2">ต้องอยู่ระหว่างเล่นชีวิตหนึ่งก่อน</p>'}`,'online');
  else modal(head+`<p class="tag2">ชื่อที่แสดงในแชทและทำเนียบ (เว้นว่าง = ใช้ชื่อตัวละคร)</p><input class="crin" maxlength="20" value="${esc(LS.get('murim_pname',''))}" onchange="LS.set('murim_pname',this.value.trim());toast('บันทึกแล้ว')"><button class="gbtn" style="width:100%;margin-top:8px" onclick="openSaveCode()">💾 ย้ายเซฟข้ามเครื่อง</button>`,'online')}
@@ -3900,6 +3903,32 @@ async function openSpectate(k,tab){specTarget=k;clearTimeout(specT);tab=tab||ope
  specDrawAva(s.look);const fd=document.querySelector('.specfeed');if(fd)fd.scrollTop=fd.scrollHeight;
  specT=setTimeout(()=>{if($('modal').dataset.k==='spec'&&modalOpen&&specTarget===k)openSpectate(k)},5000)}
 function specClose(){specTarget=null;clearTimeout(specT);closeM()}
+
+
+// ---------- v4.8 ทำเนียบ: ดูชีวิตของคนอื่น + ตั้งส่วนตัว ----------
+function lifeDetail(score){const ri=realmIdx(),lifeAch=(S.achLife||[]).map(id=>ACH_ALL.find(a=>a.id===id)).filter(Boolean),o=meLook();
+ return{n:S.name,ep:S.epithet||'',age:S.age,cause:S.cause||'',r:REALMS[ri].n,f:S.faction?S.faction.n+' — '+rankName():'จอมยุทธ์พเนจร',fam:S.family.n,tal:S.talent.n,x:S.xian?1:0,cu:S.custom?1:0,gen:S.gen||1,s:score,
+  traits:(S.traits||[]).map(trOf).filter(Boolean).map(t=>t.n),spouse:S.spouse||'',kids:(S.children||[]).map(c=>c.n+(c.alive?'':' †')),goal:S.goal&&goalOf(S.goal)?(goalOf(S.goal).n+(S.goalDone?' ✅':' ❌')):'',
+  sys:S.sys?sysName()+' Lv.'+S.sys.lv+' · เควสสำเร็จ '+S.sys.done:'',sect:S.ownSect?S.ownSect.n+' · ศิษย์ '+S.ownSect.dis:'',ow:S.ow&&S.world?('ผู้ข้ามมิติจาก'+S.world.n+(S.soul?' — '+S.soul.n:'')):'',
+  st:{pow:Math.round(total()),int:Math.round(S.int),cha:Math.round(S.cha),money:Math.round(S.money),fame:Math.round(S.fame),karma:Math.round(S.karma),kills:S.kills||0,joy:Math.round(S.hN?S.hSum/S.hN:60)},
+  eq:eqOn().map(i=>i.ic+' '+i.n).concat(['weapon','armor','mount','house'].map(k=>gearOf(k)).filter(Boolean).map(g0=>g0.n)),arts:(S.arts||[]).map(a=>typeof a==='string'?a:(a.n||'')).filter(Boolean).slice(0,30),
+  key:(S.key||[]).map(k=>String(k).replace(/<[^>]+>/g,'')).slice(-60),ach:lifeAch.map(a=>a.n).slice(0,20),bye:S._bye||'',
+  look:{robe:o.robe,trim:o.trim,belt:o.belt,hat:o.hat,skin:o.skin,hair:o.hair,hs:o.hs,g:o.g,age:o.age,mood:'neutral',aura:o.aura,sword:o.sword,staff:o.staff,seed:o.seed}}}
+function lifePubDef(){return LS.get('murim_lifepub',1)}
+async function sendLife(score){if(!onlineOK||!S||S._sent)return;S._sent=1;S._lid=pid.slice(0,6)+Date.now().toString(36);
+ try{await api('life',{n:pname(),s:score,age:S.age,r:REALMS[realmIdx()].n,f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,cu:S.custom?1:0,lid:S._lid,pub:lifePubDef(),det:xT(JSON.stringify(lifeDetail(score)))});lifePrivBox()}catch(e){}}
+function lifePrivBox(){const end=$('end');if(!end||!S||!S._lid)return;let b=$('lifePriv');if(!b){b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b)}
+ const pub=lifePubDef();b.innerHTML=`<b>🏆 ชีวิตนี้ขึ้นทำเนียบออนไลน์แล้ว</b><p class="tag2">${pub?'คนอื่นกดดูรายละเอียดชีวิตนี้ได้ (ไทม์ไลน์ ค่าพลัง ของ วิชา ครอบครัว)':'คนอื่นเห็นแค่ชื่อกับคะแนน กดดูรายละเอียดไม่ได้'}</p>
+ <div class="brow"><button class="${pub?'pbtn':'gbtn'}" onclick="lifePub(1)">🌐 เปิดให้ดู</button><button class="${pub?'gbtn':'pbtn'}" onclick="lifePub(0)">🔒 ส่วนตัว</button></div>`}
+async function lifePub(v){LS.set('murim_lifepub',v);lifePrivBox();if(!S||!S._lid)return;try{await api('lifepub',{lid:S._lid,pub:v});toast(v?'เปิดให้คนอื่นดูแล้ว':'ตั้งเป็นส่วนตัวแล้ว')}catch(e){toast('เปลี่ยนไม่สำเร็จ')}}
+async function openLifeView(lid,tab){tab=tab||'sum';let j;try{j=await api('lifeview&l='+encodeURIComponent(lid))}catch(e){modal(`<button class="xbtn" onclick="openOnline('board')">✕</button><h3>${e.message==='private'?'🔒 ชีวิตนี้เป็นส่วนตัว':'ไม่พบข้อมูล'}</h3><p class="tag2">${e.message==='private'?'เจ้าของตั้งไม่ให้คนอื่นดูรายละเอียด':'ข้อมูลอาจหมดอายุแล้ว (เก็บไว้ 40 วัน)'}</p><button class="gbtn" style="width:100%" onclick="openOnline('board')">← ทำเนียบ</button>`,'lifeview');return}
+ const d=j.d,st=d.st||{};const T=[['sum','สรุป'],['tl','ไทม์ไลน์'],['item','ของและวิชา'],['ach','ความสำเร็จ']];const list=(a,emp)=>a&&a.length?'<ul class="speclist">'+a.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':`<p class="tag2">${emp}</p>`;
+ let body='';if(tab==='sum')body=`<div class="specgrid"><div>⚔️ พลังรวม <b>${fmt(st.pow||0)}</b></div><div>📖 ปัญญา <b>${st.int}</b></div><div>🌸 เสน่ห์ <b>${st.cha}</b></div><div>💰 เงิน <b>${fmt(st.money||0)}</b></div><div>⭐ ชื่อเสียง <b>${fmt(st.fame||0)}</b></div><div>☯️ กรรม <b>${st.karma}</b></div><div>⚔️ ชนะศึก <b>${st.kills}</b></div><div>😊 สุขเฉลี่ย <b>${st.joy}</b></div></div>
+  <ul class="speclist"><li>${esc(d.fam)} · ${esc(d.tal)}${d.gen>1?' · รุ่นที่ '+d.gen:''}</li><li>${esc(d.f)}</li>${d.traits&&d.traits.length?`<li>พรสวรรค์: ${esc(d.traits.join(' · '))}</li>`:''}${d.ow?`<li>🌌 ${esc(d.ow)}</li>`:''}${d.spouse?`<li>💍 คู่ครอง ${esc(d.spouse)}</li>`:''}${d.kids&&d.kids.length?`<li>👶 ลูก ${d.kids.length} คน: ${esc(d.kids.join(', '))}</li>`:''}${d.goal?`<li>🎯 ปณิธาน: ${esc(d.goal)}</li>`:''}${d.sys?`<li>🟦 ${esc(d.sys)}</li>`:''}${d.sect?`<li>🏯 ${esc(d.sect)}</li>`:''}</ul>${d.bye?`<p style="font-style:italic;text-align:center">"${esc(d.bye)}"</p>`:''}`;
+ else if(tab==='tl')body='<div class="specfeed">'+(d.key||[]).map(k=>{const m=/^(\d+) ปี — ([\s\S]*)$/.exec(k);return m?`<div><b class="px">${m[1]}</b> ${esc(m[2])}</div>`:`<div>${esc(k)}</div>`}).join('')+`<div class="sfh">🪦 ${esc(d.cause)} · อายุ ${d.age}</div></div>`;
+ else if(tab==='item')body='<h4 style="margin:4px 0">สวมใส่</h4>'+list(d.eq,'ไม่มี')+'<h4 style="margin:8px 0 4px">วิชา</h4>'+list(d.arts,'ไม่มีวิชา');else body=list(d.ach,'ไม่ได้ปลดล็อกอะไรในชีวิตนี้');
+ modal(`<button class="xbtn" onclick="openOnline('board')">✕</button><div class="spechead"><canvas id="specCv" width="140" height="154"></canvas><div><div class="tag2" style="color:var(--pinkd)">「${esc(d.ep)}」</div><h3 style="margin:0">${esc(d.n)}</h3><div class="tag2">${d.x?'☁️ โลกเทพเซียน':'⚔️ ยุทธภพ'} · อายุ ${d.age} ปี · ${esc(d.r)}${d.cu?' · ✍️':''}</div><div class="tag2">🪦 ${esc(d.cause)}</div><div class="tag2">คะแนนตำนาน <b class="px">${fmt(d.s||0)}</b>${j.mine?` · ${j.pub?'🌐 เปิดให้ดู':'🔒 ส่วนตัว'} (ของคุณ)`:''}</div></div></div>
+  <div class="tabs">${T.map(t=>`<button class="tabb ${t[0]===tab?'on':''}" onclick="openLifeView('${lid}','${t[0]}')">${t[1]}</button>`).join('')}</div>${body}<button class="gbtn" style="width:100%;margin-top:8px" onclick="openOnline('board')">← ทำเนียบ</button>`,'lifeview');specDrawAva(d.look||{})}
 
 // ============ SOUND (8-bit) ============
 let AC=null,sfxOn=LS.get('murim_sfx',true),bgmOn=LS.get('murim_bgm',true),bgmT=null,sfxLast={};
@@ -4557,7 +4586,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
