@@ -66,6 +66,23 @@ module.exports = async (req, res) => {
       if (!d) return res.status(404).json({ err: 'notfound' });
       return res.json({ d });
     }
+    if (a === 'bugs') {
+      const [list, hidden] = await pipe([['LRANGE', 'bugs2', 0, 59], ['SMEMBERS', 'chat:hidden']]);
+      const hs = new Set(hidden || []);
+      const L = (list || []).map(x => JSON.parse(x)).filter(m => !hs.has(m.i));
+      const cnt = L.length ? await pipe(L.map(m => ['SCARD', 'bv:' + m.i])) : [];
+      const done = await cmd('SMEMBERS', 'bugdone');
+      const ds = new Set(done || []);
+      return res.json({ m: L.map((m, i) => Object.assign(m, { c: cnt[i] || 0, d: ds.has(m.i) ? 1 : 0 })) });
+    }
+    if (a === 'reviews') {
+      const [all, hidden] = await pipe([['HVALS', 'reviews'], ['SMEMBERS', 'chat:hidden']]);
+      const hs = new Set(hidden || []);
+      const L = (all || []).map(x => JSON.parse(x)).filter(m => !hs.has(m.i)).sort((x, y) => y.t - x.t);
+      const avg = L.length ? L.reduce((s0, m) => s0 + m.r, 0) / L.length : 0;
+      const dist = [1, 2, 3, 4, 5].map(r => L.filter(m => m.r === r).length);
+      return res.json({ n: L.length, avg, dist, m: L.slice(0, 80) });
+    }
     if (req.method !== 'POST') return res.status(405).json({ err: 'method' });
     if (!okId(id)) return res.status(400).json({ err: 'id' });
     if (a === 'say') {
@@ -119,7 +136,25 @@ module.exports = async (req, res) => {
       return res.json({ code });
     }
     if (a === 'bug') {
-      await pipe([['LPUSH', 'bugs', JSON.stringify({ t: now, id, x: clean(b.x, 800), info: String(b.info || '').slice(0, 1200) })], ['LTRIM', 'bugs', 0, 499]]);
+      const ok = await cmd('SET', 'bgrl:' + id, 1, 'NX', 'EX', 30);
+      if (!ok) return res.status(429).json({ err: 'rate' });
+      const x = clean(b.x, 600);
+      if (x.length < 3) return res.status(400).json({ err: 'empty' });
+      const m = { i: 'b' + now.toString(36) + Math.random().toString(36).slice(2, 5), t: now, n: clean(b.n, 20) || 'นิรนาม', k: b.k === 'idea' ? 'idea' : 'bug', x, v: clean(b.v, 10), u: id.slice(0, 4) };
+      await pipe([['LPUSH', 'bugs2', JSON.stringify(m)], ['LTRIM', 'bugs2', 0, 299], ['HSET', 'buginfo', m.i, String(b.info || '').slice(0, 1500)]]);
+      return res.json({ ok: 1, i: m.i });
+    }
+    if (a === 'bugvote') {
+      const bid = String(b.bid || '').slice(0, 20);
+      const [, n] = await pipe([['SADD', 'bv:' + bid, id], ['SCARD', 'bv:' + bid]]);
+      return res.json({ n });
+    }
+    if (a === 'review') {
+      const ok = await cmd('SET', 'rvrl:' + id, 1, 'NX', 'EX', 20);
+      if (!ok) return res.status(429).json({ err: 'rate' });
+      const r = Math.max(1, Math.min(5, Math.round(+b.r || 0)));
+      const m = { i: 'r' + id.slice(0, 8), t: now, n: clean(b.n, 20) || 'นิรนาม', r, x: clean(b.x, 400), v: clean(b.v, 10) };
+      await cmd('HSET', 'reviews', id, JSON.stringify(m));
       return res.json({ ok: 1 });
     }
     return res.status(400).json({ err: 'action' });

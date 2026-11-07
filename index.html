@@ -235,6 +235,11 @@ details.item summary{cursor:pointer}
  filter:drop-shadow(0 2px 0 #3a200a) drop-shadow(0 0 10px rgba(255,190,90,.35))}
 #title .big small{color:#f4e8d0!important;text-shadow:0 2px 4px rgba(0,0,0,.8)}
 #title .globe{filter:drop-shadow(0 0 14px rgba(120,180,255,.45))}
+.fbform{border:2px dashed var(--line);border-radius:10px;padding:8px}.fbi p{white-space:pre-wrap;word-break:break-word}.fbi.fixed{opacity:.7}.fixtag{font-size:.8em;color:#3a9a5a;font-weight:bold;align-self:center}
+.fbi .rep,.brow2 .rep{border:0;background:none;opacity:.35;cursor:pointer;margin-left:auto}
+.rvst{display:flex;align-items:center;gap:2px;margin-bottom:6px}.rvst button{border:0;background:none;font-size:30px;line-height:1;color:#8a8a9a;padding:0 2px}.rvst button.on{color:#f0b830}.rvst span{margin-left:6px}
+.rvs{color:#f0b830;font-size:.9em}.rvsum{display:flex;gap:12px;align-items:center;margin-bottom:8px}.rvavg{text-align:center;min-width:80px}.rvavg b{font-size:30px;display:block}.rvavg span{color:#f0b830}.rvavg small{display:block;opacity:.6;font-size:.75em}
+.rvbars{flex:1;font-size:.75em}.rvbars div{display:flex;align-items:center;gap:4px}.rvbars i{flex:1;height:7px;border-radius:4px;background:rgba(128,128,128,.25);overflow:hidden}.rvbars i b{display:block;height:100%;background:#f0b830}.rvbars small{width:20px;text-align:right;opacity:.6}
 </style>
 </head>
 <body>
@@ -343,8 +348,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='4.4';
+const VERSION='4.5';
 const CHANGELOG=[
+ {v:'4.5',d:'7 พ.ย. 2026',l:['🐞 กระดานแจ้งบั๊กในเกม: แจ้งบั๊กหรือขอฟีเจอร์ แล้วทุกคนเห็นบนกระดาน กด 🙋 เจอเหมือนกัน / 👍 อยากได้เหมือนกัน · ผู้พัฒนาติด ✅ แก้แล้ว ได้','💬 ความคิดเห็นผู้เล่น: ให้ดาว 1–5 พร้อมเขียนว่าเกมเป็นยังไง เห็นคะแนนเฉลี่ยและความเห็นของทุกคน','⚑ รายงานข้อความที่ไม่เหมาะสมได้ทั้งสองกระดาน']},
  {v:'4.4',d:'7 พ.ย. 2026',l:['🏮 เปลี่ยนชื่อเป็น 1 ใน นวนิยาย ตัวอักษรโบราณสีทองอมน้ำตาล','🌲 หน้าแรกมีฉากหลังพิกเซล: ป่ามูริมยามสนธยา ภูเขา เจดีย์ โคมไฟ ใบไม้ร่วง หิ่งห้อย · เลือกโลกเทพเซียนแล้วเปลี่ยนเป็นเกาะลอย สำนักบนฟ้า ทะเลเมฆ กระบี่ลอย นกกระเรียน','🌍 โลกพิกเซล 32×32 วาดใหม่ มีทวีปจริง ทะเลทราย น้ำแข็งขั้วโลก เมฆ แสงเงา หมุนรอบตัว','☰ ปุ่มต่างๆ หน้าแรกย่อรวมไว้ในขีดสามขีดมุมขวาบน · เอาตัวนับผู้คนออก','🎵 เพลงใหม่แนวจีนบรรเลง: กู่เจิงไล่โน้ต ขลุ่ยถามตอบ เบสนุ่ม มีเสียงก้อง จังหวะช้าสบาย']},
  {v:'4.3',d:'7 พ.ย. 2026',l:['🔨 งานช่าง 4 สาย: ปรุงยา ตีเหล็ก ค่ายกล เขียนยันต์ — 20 ตำรับ เครื่องมือ 4 ขั้นมีความทนทาน ฝีมือขึ้นตามการลงมือ ผลงาน 4 ขั้น ตั้งงานประจำได้ และจุดมุ่งหมายใหม่ 🔨 งานช่าง','👥 หน้าผู้คน: ครอบครัว อาจารย์ เพื่อน ศัตรู พร้อมตัวกรอง ★ คนโปรด ค่าความสนิท ใช้เวลาด้วยกัน และชวนเป็นคู่หูได้ 3 คน','🏘️ เมือง: ร้านยา โรงตีเหล็ก ร้านพู่กัน ร้านหยก โรงเตี๊ยม และกระดานภารกิจเมืองที่มาใหม่ทุกปี','🏡 ตระกูล: จ้างคนรับใช้และพ่อบ้าน · พงศาวดารทุกรุ่น','🏰 ดันเจี้ยน 7 แห่ง เดินทีละห้อง 5 ห้องแล้วบอส ถอยออกได้ ได้วัตถุดิบ อุปกรณ์ ตำรับ','⚙️ หน้าอัตโนมัติ: ดูแลผู้คน ซื้อยา ขายวัตถุดิบเกิน ลงดันเจี้ยนเอง','🌧️ เสียงบรรยากาศ ฝน ลม น้ำตก นก แมลง ตามฉากและอากาศ · ปรับความดังเพลง/เสียงประกอบ/บรรยากาศแยกกัน · ฉากมีฝนและหิมะตก','📘 คู่มือในเกมและหน้าเว็บ · 🐞 แจ้งบั๊กไปที่ GitHub · 💾 ย้ายเซฟข้ามเครื่องด้วยรหัส','🌐 ออนไลน์ (บนเว็บ Vercel): แชทโลก แชร์ชีวิต ทำเนียบประจำสัปดาห์ ประลองเงา ฝากเซฟด้วยรหัสสั้น — เปิดใช้เมื่อเชื่อมฐานข้อมูลแล้ว']},
  {v:'4.2',d:'7 พ.ย. 2026',l:['📜 ตัวเลือกกด "▾ ย่อไว้ก่อน" ได้ — เวลายังเดินต่อ ถ้าจบปีก่อนจะให้ชะตาเลือกแทน · ตั้งให้ชะตาตัดสินอัตโนมัติ 5/10/20 วินาที · ตั้งให้ตัวเลือกขึ้นแบบย่อตลอดได้','🗓️ หลอดเวลาแบ่ง 12 เดือน · ฉากบอกเดือน ฤดู และสิ่งที่ตัวละครกำลังทำ · มีสรุปปีว่าทำอะไรและได้อะไรบ้าง','✍️ สร้างตัวละครเองด้วยแต้ม 15 แต้ม: เพศ ทรงผม สีผม สีผิว สีชุด ยุค ชาติกำเนิด กระดูก วิญญาณ การ์ดพรสวรรค์ (ด้านร้ายได้แต้มคืน) ปณิธาน และชื่อ · หรือออกแบบแค่หน้าตาแล้วสุ่มที่เหลือ','⚔️ ชุดสวมใส่: เครื่องประดับ 2 ช่อง ของวิเศษป้องกันตัว (บางชิ้นกันตายได้) และชุดแต่งกายที่เปลี่ยนสีชุดในฉาก · หาได้จากการท่องยุทธภพหรือซื้อที่ตลาด · สวมของดีกว่าให้อัตโนมัติ','📋 บันทึกเควส: รวมปณิธาน เควสระบบ ถุงมิติ แค้น โครงการ คู่แค้น ไว้ที่เดียว · ปักหมุดติดตามไว้เหนือบันทึกชีวิต · พักเควสระบบไว้ได้ (เวลาหยุด ไม่ล้มเหลว)']},
@@ -837,7 +843,8 @@ function openMenu(){
   <button class="opt" onclick="openUpdate()">📜 อัปเดต<small>v${VERSION}</small></button>
   <button class="opt" onclick="openSound()">🔊 เสียง<small>เพลง ${bgmOn?'เปิด':'ปิด'} · บรรยากาศ ${ambOn?'เปิด':'ปิด'}</small></button>
   <button class="opt" onclick="openGuide()">📘 คู่มือ<small>อธิบายทุกระบบ</small></button>
-  <button class="opt" onclick="openReport()">🐞 แจ้งบั๊ก<small>ส่งปัญหา/ความเห็น</small></button>
+  <button class="opt" onclick="openReport()">🐞 แจ้งบั๊ก<small>กระดานบั๊กของผู้เล่น</small></button>
+  <button class="opt" onclick="openFeedback()">💬 ความคิดเห็น<small>เกมสนุกไหม?</small></button>
   <button class="opt" onclick="openSaveCode()">💾 ย้ายเซฟ<small>ข้ามเครื่อง</small></button>
   <button class="opt" onclick="toggleScene()">🖼️ ภาพฉาก<small>${showScene?'เปิดอยู่':'ปิดอยู่'}</small></button>
  </div><button class="gbtn" style="width:100%" onclick="saveGame();closeM();toTitle()">🏠 กลับหน้าแรก (บันทึกไว้)</button>
@@ -3596,10 +3603,6 @@ const GUIDE=[
  ['ออนไลน์','🌐 ออนไลน์ บนเว็บ hahah-gamma.vercel.app: แชทโลก ทำเนียบประจำสัปดาห์ ประลองเงา และรหัสเซฟข้ามเครื่อง · ใช้ได้เมื่อผู้ดูแลเปิดฐานข้อมูลแล้ว']];
 function openGuide(i){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📚 คู่มือ</h3>`+GUIDE.map((x,k)=>`<details class="item" ${k===i?'open':''}><summary><b>${x[0]}</b></summary><p>${x[1]}</p></details>`).join('')+`<p class="tag2" style="text-align:center;margin-top:8px"><a href="https://hahah-gamma.vercel.app/wiki" target="_blank" rel="noopener">เปิดหน้าคู่มือฉบับเว็บ</a></p>`,'guide')}
 function bugInfo(){const f=[...document.querySelectorAll('#feed .bub')].slice(-12).map(e=>e.textContent.slice(0,90)).join('\n');return`v${VERSION} · ${navigator.userAgent.slice(0,90)}\n${S?`อายุ ${S.age} · ${S.xian?'เซียน':'ยุทธภพ'} · ${S.family.n}`:'หน้าแรก'}\n---\n${f}`}
-function openReport(){const info=bugInfo();modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🐞 แจ้งบั๊ก / ความคิดเห็น</h3><p class="tag2">เล่าสิ่งที่เกิดขึ้น ระบบจะแนบเวอร์ชันและข้อความล่าสุดในเกมให้</p>
- <textarea id="bugTx" class="crin" rows="4" placeholder="เกิดอะไรขึ้น / อยากให้เพิ่มอะไร"></textarea>
- <div class="brow" style="margin-top:8px"><button class="gbtn" onclick="navigator.clipboard&&navigator.clipboard.writeText($('bugTx').value+'\\n\\n'+bugInfo()).then(()=>toast('คัดลอกแล้ว'),()=>toast('คัดลอกไม่ได้'))">📋 คัดลอก</button><button class="pbtn" onclick="bugSend()">ส่งที่ GitHub</button></div>
- ${onlineOK?`<button class="gbtn" style="width:100%;margin-top:6px" onclick="bugSendOnline()">🌐 ส่งถึงผู้พัฒนาโดยตรง</button>`:''}<pre class="buginfo">${esc(info)}</pre>`,'bug')}
 function bugSend(){const t=($('bugTx').value||'แจ้งปัญหา').slice(0,60),b=($('bugTx').value+'\n\n```\n'+bugInfo()+'\n```').slice(0,1800);window.open(`https://github.com/Kolodw/Martial-Arts-/issues/new?title=${encodeURIComponent(t)}&body=${encodeURIComponent(b)}`,'_blank','noopener')}
 function saveCode(){if(!S)return'';saveGame();const d=LS.get(slotKey(S.slot||1),null);try{return btoa(unescape(encodeURIComponent(JSON.stringify(d))))}catch(e){return''}}
 function loadCode(c){try{const d=JSON.parse(decodeURIComponent(escape(atob(c.trim()))));if(!d||!d.S)throw 0;const n=freeSlot();LS.set(slotKey(n),d);toast('นำเข้าเซฟแล้ว (ช่อง '+n+')');renderLegends();return true}catch(e){toast('รหัสไม่ถูกต้อง');return false}}
@@ -3625,7 +3628,6 @@ function shareLife(){if(!S)return;const t=`${S.name} อายุ ${S.age} · ${
 async function chatRep(i){try{await api('report',{mid:i});toast('รายงานแล้ว')}catch(e){toast('รายงานไม่ได้')}}
 async function cloudPut(){try{const j=await api('save',{d:saveCode()});modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☁️ ฝากเซฟแล้ว</h3><p>รหัสของคุณ</p><div class="px" style="font-size:30px;text-align:center;letter-spacing:4px">${j.code}</div><p class="tag2">ใช้ได้ 30 วัน · ใส่รหัสนี้ในเครื่องอื่นที่เมนู 💾 ย้ายเซฟ</p>`)}catch(e){toast('ฝากไม่สำเร็จ')}}
 async function cloudGet(c){try{const j=await api('load&code='+encodeURIComponent(c.toUpperCase()));if(j.d)loadCode(j.d);closeM()}catch(e){toast('ไม่พบรหัสนี้')}}
-async function bugSendOnline(){try{await api('bug',{x:($('bugTx').value||'').slice(0,800),info:bugInfo().slice(0,1200)});toast('ส่งแล้ว ขอบคุณ');closeM()}catch(e){toast('ส่งไม่สำเร็จ')}}
 function lifeScore(){return Math.round((total()+S.fame*5+S.money/10+(S.faction?S.rank*500:0)+S.kids*100+(S.ownSect?S.ownSect.dis*20:0)+S.offRank*400)*(S.goalDone?1.5:1))}
 function onlineLife(){if(!onlineOK||!S||S._sent)return;S._sent=1;api('life',{n:pname(),s:lifeScore(),age:S.age,r:REALMS[realmIdx()].n,f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,cu:S.custom?1:0}).catch(()=>{})}
 let arenaBusy=false;
@@ -3650,7 +3652,7 @@ function v43Tick(){crTick();compTick();hhTick();auTick();tqRefresh()}
 // ---------- เมนูขีดสามขีดหน้าแรก ----------
 function openTitleMenu(){const th=THEMES.find(x=>x[0]===theme)||['','☀️','ธีม'];
  const B=[['📖','ตำนาน','openBook()'],['🪦','สุสาน','openGraves()'],['📚','สารานุกรม','openCodex()'],['📊','สถิติ','openStats()'],['📘','คู่มือ','openGuide()'],['🌐','ออนไลน์','openOnline()'],['💾','ย้ายเซฟ','openSaveCode()'],['📜','อัปเดต','openUpdate()'],
-  [th[1],'ธีม: '+(th[2]||''),'cycleTheme();openTitleMenu()'],['🔊','เสียงและเพลง','openSound()'],['🔠','ตัวอักษร '+FS[fsz],'cycleFs();openTitleMenu()'],['🐞','แจ้งบั๊ก','openReport()']];
+  [th[1],'ธีม: '+(th[2]||''),'cycleTheme();openTitleMenu()'],['🔊','เสียงและเพลง','openSound()'],['🔠','ตัวอักษร '+FS[fsz],'cycleFs();openTitleMenu()'],['🐞','แจ้งบั๊ก','openReport()'],['💬','ความคิดเห็น','openFeedback()'],['🌐','','']].filter(b=>b[1]);
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☰ เมนู</h3><div class="tmgrid">${B.map(b=>`<button class="cb" onclick="${b[2]}"><i>${b[0]}</i>${b[1]}</button>`).join('')}</div>`,'tmenu')}
 
 // ---------- ฉากหลังหน้าแรก (พิกเซล) ----------
@@ -3778,6 +3780,32 @@ function bgmBar(t0){const beat=60/70,a=ac(),bar=BGM.bar,ci=bar%8,C=CHORDS[ci];
 function bgmSched(){const a=ac();if(!a||!BGM.on)return;bgmNodes();while(BGM.next<a.currentTime+1.2){if(BGM.next<a.currentTime)BGM.next=a.currentTime+.08;BGM.next+=bgmBar(BGM.next)}}
 function startBgm(){if(!bgmOn||BGM.on||!ac())return;BGM.on=true;bgmNodes();BGM.next=ac().currentTime+.15;BGM.bar=0;BGM.out.gain.cancelScheduledValues(ac().currentTime);BGM.out.gain.setTargetAtTime(VOL.b*.55,ac().currentTime,.5);BGM.tid=setInterval(bgmSched,250);bgmSched()}
 function stopBgm(){BGM.on=false;clearInterval(BGM.tid);if(BGM.out&&AC)BGM.out.gain.setTargetAtTime(0,AC.currentTime,.3)}
+
+// ---------- v4.5 กระดานแจ้งบั๊ก & ความคิดเห็นผู้เล่น ----------
+let RV={r:0},BUGK='bug';
+const ago=t=>{const s=(Date.now()-t)/1000;return s<60?'เมื่อสักครู่':s<3600?Math.floor(s/60)+' นาทีที่แล้ว':s<86400?Math.floor(s/3600)+' ชม.ที่แล้ว':Math.floor(s/86400)+' วันที่แล้ว'};
+const stars=n=>'★'.repeat(n)+'☆'.repeat(5-n);
+function fbHead(tab){return`<button class="xbtn" onclick="closeM()">✕</button><h3>📣 เสียงจากผู้เล่น</h3><div class="tabs"><button class="tabb ${tab==='bug'?'on':''}" onclick="openReport()">🐞 แจ้งบั๊ก</button><button class="tabb ${tab==='rv'?'on':''}" onclick="openFeedback()">💬 ความคิดเห็น</button></div>`+(onlineOK?'':`<p class="tag2">🔴 ยังเชื่อมต่อเซิร์ฟเวอร์ไม่ได้ — ${/vercel\.app$/.test(location.hostname)?'ระบบออนไลน์ยังไม่เปิด':'กระดานนี้ใช้ได้บนเว็บ hahah-gamma.vercel.app'}</p>`)}
+async function openReport(){
+ const form=`<div class="fbform"><div class="tabs"><button class="tabb ${BUGK==='bug'?'on':''}" onclick="BUGK='bug';openReport()">🐞 เจอบั๊ก</button><button class="tabb ${BUGK==='idea'?'on':''}" onclick="BUGK='idea';openReport()">💡 อยากให้เพิ่ม</button></div>
+  <textarea id="bugTx" class="crin" rows="3" maxlength="600" placeholder="${BUGK==='bug'?'เกิดอะไรขึ้น ตอนไหน ทำอะไรอยู่':'อยากให้เกมมีอะไรเพิ่ม'}"></textarea>
+  <div class="brow" style="margin-top:6px">${onlineOK?`<button class="pbtn" onclick="bugPost()">ส่งขึ้นกระดาน</button>`:''}<button class="gbtn" onclick="bugSend()">ส่งที่ GitHub</button></div>
+  <p class="tag2">ระบบแนบเวอร์ชันและข้อความล่าสุดในเกมให้ผู้พัฒนาดู (คนอื่นเห็นแค่ข้อความที่พิมพ์)</p></div>`;
+ modal(fbHead('bug')+form+(onlineOK?'<h4 style="margin:10px 0 4px">กระดานแจ้งบั๊ก</h4><div id="bugList" class="tag2">กำลังโหลด…</div>':''),'bug');
+ if(!onlineOK)return;try{const j=await api('bugs');const el=$('bugList');if(!el)return;
+  el.className='';el.innerHTML=(j.m||[]).map(m=>`<div class="item fbi ${m.d?'fixed':''}"><div class="h"><b>${m.k==='idea'?'💡':'🐞'} ${esc(m.n)}</b><span class="tag2">${ago(m.t)}${m.v?' · v'+esc(m.v):''}</span></div><p>${esc(m.x)}</p>
+   <div class="brow2">${m.d?'<span class="fixtag">✅ แก้แล้ว</span>':''}<button class="sysb" onclick="bugVote('${m.i}',this)">${m.k==='idea'?'👍 อยากได้เหมือนกัน':'🙋 เจอเหมือนกัน'} ${m.c||''}</button><button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div></div>`).join('')||'<p class="tag2">ยังไม่มีใครแจ้ง</p>'}catch(e){const el=$('bugList');if(el)el.textContent='โหลดไม่ได้'}}
+async function bugPost(){const x=($('bugTx').value||'').trim();if(x.length<3)return toast('พิมพ์รายละเอียดก่อน');try{await api('bug',{n:pname(),k:BUGK,x,v:VERSION,info:bugInfo()});toast('ส่งแล้ว ขอบคุณ');openReport()}catch(e){toast(e.message==='rate'?'รอ 30 วินาทีก่อนส่งใหม่':'ส่งไม่สำเร็จ')}}
+async function bugVote(i,btn){try{const j=await api('bugvote',{bid:i});if(btn){btn.disabled=true;btn.textContent=btn.textContent.replace(/\d+$/,'').trim()+' '+j.n}}catch(e){toast('กดไม่ได้')}}
+async function openFeedback(){
+ const form=`<div class="fbform"><p style="margin:0 0 4px">เกมนี้เป็นยังไงบ้าง สนุกไหม?</p><div class="rvst">${[1,2,3,4,5].map(n=>`<button class="${RV.r>=n?'on':''}" onclick="RV.r=${n};document.querySelectorAll('.rvst button').forEach((b,k)=>b.classList.toggle('on',k<${n}));$('rvLab').textContent=['','น่าเบื่อ','พอใช้','ก็ดีนะ','สนุก!','สนุกมาก ติดเลย!'][${n}]">★</button>`).join('')}<span id="rvLab" class="tag2">${RV.r?['','น่าเบื่อ','พอใช้','ก็ดีนะ','สนุก!','สนุกมาก ติดเลย!'][RV.r]:'แตะดาวเพื่อให้คะแนน'}</span></div>
+  <textarea id="rvTx" class="crin" rows="3" maxlength="400" placeholder="ชอบอะไร ไม่ชอบอะไร เล่นแล้วรู้สึกยังไง"></textarea>
+  ${onlineOK?`<button class="pbtn" style="width:100%;margin-top:6px" onclick="rvPost()">ส่งความคิดเห็น</button><p class="tag2">ส่งได้คนละ 1 ความเห็น ส่งใหม่จะแทนอันเดิม</p>`:''}</div>`;
+ modal(fbHead('rv')+form+(onlineOK?'<div id="rvList" class="tag2" style="margin-top:10px">กำลังโหลด…</div>':''),'bug');
+ if(!onlineOK)return;try{const j=await api('reviews');const el=$('rvList');if(!el)return;el.className='';const mx=Math.max(1,...j.dist);
+  el.innerHTML=(j.n?`<div class="rvsum"><div class="rvavg"><b class="px">${j.avg.toFixed(1)}</b><span>${stars(Math.round(j.avg))}</span><small>${fmt(j.n)} ความเห็น</small></div><div class="rvbars">${[5,4,3,2,1].map(r=>`<div><span>${r}★</span><i><b style="width:${j.dist[r-1]/mx*100}%"></b></i><small>${j.dist[r-1]}</small></div>`).join('')}</div></div>`:'')+
+   ((j.m||[]).map(m=>`<div class="item fbi"><div class="h"><b>${esc(m.n)} <span class="rvs">${stars(m.r)}</span></b><span class="tag2">${ago(m.t)}</span></div>${m.x?`<p>${esc(m.x)}</p>`:''}<div class="brow2"><button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div></div>`).join('')||'<p class="tag2">ยังไม่มีความคิดเห็น เป็นคนแรกเลย!</p>')}catch(e){const el=$('rvList');if(el)el.textContent='โหลดไม่ได้'}}
+async function rvPost(){if(!RV.r)return toast('ให้คะแนนดาวก่อน');try{await api('review',{n:pname(),r:RV.r,x:($('rvTx').value||'').trim(),v:VERSION});toast('ขอบคุณสำหรับความเห็น!');openFeedback()}catch(e){toast(e.message==='rate'?'รอสักครู่ก่อนส่งใหม่':'ส่งไม่สำเร็จ')}}
 
 // ============ SOUND (8-bit) ============
 let AC=null,sfxOn=LS.get('murim_sfx',true),bgmOn=LS.get('murim_bgm',true),bgmT=null,sfxLast={};
@@ -4435,7 +4463,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION})}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
