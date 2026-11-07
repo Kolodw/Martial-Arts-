@@ -3687,7 +3687,7 @@ function tbDraw(){const cv=$('titleBg');if(!cv||!$('title').classList.contains('
   // ประกายวิญญาณ
   for(let i=0;i<14;i++){const x=(tbRand(i)*W+Math.sin(t*.02+i)*3)%W,y=H-((t*.3+tbRand(i+9)*H)%H);c.fillStyle=`rgba(255,240,160,${.4+.4*Math.sin(t*.1+i)})`;c.fillRect(Math.round(x),Math.round(y),1,1)}
  }else{ // ---- ป่ามูริม ----
-  const sky=['#2a2a4a','#3a3460','#5a4470','#8a5a70','#c07a6a','#e09a6a'];for(let i=0;i<sky.length;i++)R0(0,i*10,W,11,sky[i]);
+  R0(0,0,W,H,'#e09a6a');const sky=['#2a2a4a','#3a3460','#5a4470','#8a5a70','#c07a6a','#e09a6a'];for(let i=0;i<sky.length;i++)R0(0,i*10,W,11,sky[i]);
   // พระจันทร์
   R0(64,10,8,8,'#f4e8c8');R0(63,11,10,6,'#f4e8c8');R0(66,12,2,2,'#e0d0a8');
   for(let i=0;i<16;i++){if(tbRand(i)*60>40)continue;R0(tbRand(i+3)*W,tbRand(i+7)*30,1,1,(t+i*7)%40<30?'#fff8e0':'#a8a0c0')}
