@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>1 ในยุทธภพ — จำลองชีวิตมูริม</title>
-<link href="https://fonts.googleapis.com/css2?family=Itim&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<title>1 ใน นวนิยาย — จำลองชีวิตยุทธภพและเทพเซียน</title>
+<link href="https://fonts.googleapis.com/css2?family=Itim&family=Srisakdi:wght@700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f4eee2;--card:#fffdf8;--w:#fff;--ink:#2a2838;--mut:#8a8496;--pink:#ff6b9a;--pinkd:#d94a7a;--line:#2a2838;--grid:#0000000a;
 --good:#e6f7e9;--bad:#ffe5e8;--epic:#fff3d6;--myth:#ffe1ee;--peerb:#eef1f6;--think:#dceaff;--tb1:#dceaff;--tb2:#f5e6cc;--tb3:#ffd6de;--tb4:#ece0ff;--me:#ffe9f0;
@@ -224,17 +224,28 @@ label.item.auto,.item.auto{display:flex;gap:10px;align-items:flex-start;cursor:p
 .chatin{display:flex;gap:6px;margin-top:6px}.chatin input{flex:1;padding:8px;border:2px solid var(--line);border-radius:8px;font:inherit}.brd .px{font-size:.9em}
 .onlinebadge{display:inline-block;margin:4px auto 0;padding:3px 10px;border:2px solid var(--line);border-radius:20px;font-size:.78em;background:var(--w);cursor:pointer}
 details.item summary{cursor:pointer}
+#titleBg{position:fixed;inset:0;width:100vw;height:100vh;object-fit:cover;image-rendering:pixelated;z-index:-1;display:none}
+#title.on #titleBg{display:block}#title{background:transparent}body:has(#title.on){background-image:none}
+.tmenu{position:fixed;top:max(10px,env(safe-area-inset-top));right:12px;z-index:5;width:46px;height:46px;font-size:24px;border:2px solid #e8d8a8;border-radius:10px;background:rgba(20,16,24,.72);color:#f4e4b4;box-shadow:0 3px 0 rgba(0,0,0,.4);display:none}
+#title.on .tmenu{display:block}
+.tmgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.tmgrid .cb{font-size:12px;padding:8px 2px;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:58px;line-height:1.2}.tmgrid .cb i{font-style:normal;font-size:20px}
+#title .big{text-shadow:none!important;margin-top:4px}
+#title .big .gold{font-family:'Srisakdi','Itim',serif;font-weight:700;font-size:clamp(36px,11.5vw,60px);line-height:1.3;letter-spacing:.5px;display:inline-block;padding:0 6px;white-space:nowrap;
+ background:linear-gradient(180deg,#fff4c2 0%,#f0c860 32%,#c8902a 52%,#8a5418 62%,#e8b84a 80%,#fff0b0 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+ filter:drop-shadow(0 2px 0 #3a200a) drop-shadow(0 0 10px rgba(255,190,90,.35))}
+#title .big small{color:#f4e8d0!important;text-shadow:0 2px 4px rgba(0,0,0,.8)}
+#title .globe{filter:drop-shadow(0 0 14px rgba(120,180,255,.45))}
 </style>
 </head>
 <body>
 
 <!-- TITLE -->
 <div id="title" class="screen on">
-  <div class="topbtns"><button class="cb" onclick="openBook()"><i>📖</i>ตำนาน</button><button class="cb" onclick="openGraves()"><i>🪦</i>สุสาน</button><button class="cb" onclick="openCodex()"><i>📚</i>สารานุกรม</button><button class="cb" onclick="openStats()"><i>📊</i>สถิติ</button><button class="cb" onclick="openUpdate()"><i>📜</i>อัปเดต</button><button class="cb" id="themeBtn" onclick="cycleTheme()">☀️</button><button class="cb" id="sfxBtn" onclick="toggleSfx()">🔊</button><button class="cb" onclick="cycleFs()"><i>🔠</i>ตัวอักษร</button><button class="cb" onclick="openGuide()"><i>📘</i>คู่มือ</button><button class="cb" onclick="openOnline()"><i>🌐</i>ออนไลน์</button><button class="cb" onclick="openSaveCode()"><i>💾</i>ย้ายเซฟ</button><button class="cb" onclick="openReport()"><i>🐞</i>แจ้งบั๊ก</button></div>
+  <canvas id="titleBg" width="90" height="160"></canvas>
+  <button class="tmenu" onclick="openTitleMenu()" aria-label="เมนู">☰</button>
   <canvas class="globe" id="globe" width="32" height="32"></canvas>
   <div class="onlinebadge" id="onlineBadge" style="display:none" onclick="openOnline()"></div>
-  <div class="big">1 ในยุทธภพ<small id="titleSub">วันนี้ จะได้เกิดเป็นใครในยุทธภพ?</small></div>
-  <div class="box counter">ตอนนี้มีผู้คนใน<span id="popW">ยุทธภพ</span> <b class="px" id="pop">8,000,000</b> คน</div>
+  <div class="big"><span class="gold">1 ใน นวนิยาย</span><small id="titleSub">วันนี้ จะได้เกิดเป็นใครในยุทธภพ?</small></div>
   <div class="box opts">
     <div class="lb">⏱️ ความเร็วของชีวิต</div>
     <div class="seg" data-k="len"><button data-v="2500">⚡ เร็ว</button><button data-v="5000" class="on">🍵 ปกติ</button><button data-v="9000">🐢 ช้า</button></div>
@@ -326,14 +337,15 @@ const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.par
 // ============ THEME ============
 const THEMES=[['light','☀️','สว่าง'],['dark','🌙','มืด'],['mono','⚫','ขาวดำ'],['jade','🍃','หยกเขียว'],['ember','🩸','โลหิตมาร'],['gold','✨','ทองเซียน']];
 let theme=LS.get('murim_theme','light');
-function applyTheme(){document.body.classList.remove('dark','mono','jade','ember','gold');if(theme!=='light')document.body.classList.add(theme);const t=THEMES.find(x=>x[0]===theme);$('themeBtn').textContent=t[1]}
+function applyTheme(){document.body.classList.remove('dark','mono','jade','ember','gold');if(theme!=='light')document.body.classList.add(theme);const t=THEMES.find(x=>x[0]===theme);const tb=$('themeBtn');if(tb)tb.textContent=t[1]}
 function cycleTheme(){const U=THEMES.filter(t=>{const x=typeof XTHEME!=='undefined'&&XTHEME.find(y=>y[0]===t[0]);return !x||x[4]()});const i=U.findIndex(x=>x[0]===theme);theme=U[(i+1)%U.length][0];LS.set('murim_theme',theme);applyTheme();toast('ธีม: '+THEMES.find(x=>x[0]===theme)[2]);if(S&&modalOpen&&$('modal').dataset.k==='menu')openMenu()}
 applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='4.3';
+const VERSION='4.4';
 const CHANGELOG=[
+ {v:'4.4',d:'7 พ.ย. 2026',l:['🏮 เปลี่ยนชื่อเป็น 1 ใน นวนิยาย ตัวอักษรโบราณสีทองอมน้ำตาล','🌲 หน้าแรกมีฉากหลังพิกเซล: ป่ามูริมยามสนธยา ภูเขา เจดีย์ โคมไฟ ใบไม้ร่วง หิ่งห้อย · เลือกโลกเทพเซียนแล้วเปลี่ยนเป็นเกาะลอย สำนักบนฟ้า ทะเลเมฆ กระบี่ลอย นกกระเรียน','🌍 โลกพิกเซล 32×32 วาดใหม่ มีทวีปจริง ทะเลทราย น้ำแข็งขั้วโลก เมฆ แสงเงา หมุนรอบตัว','☰ ปุ่มต่างๆ หน้าแรกย่อรวมไว้ในขีดสามขีดมุมขวาบน · เอาตัวนับผู้คนออก','🎵 เพลงใหม่แนวจีนบรรเลง: กู่เจิงไล่โน้ต ขลุ่ยถามตอบ เบสนุ่ม มีเสียงก้อง จังหวะช้าสบาย']},
  {v:'4.3',d:'7 พ.ย. 2026',l:['🔨 งานช่าง 4 สาย: ปรุงยา ตีเหล็ก ค่ายกล เขียนยันต์ — 20 ตำรับ เครื่องมือ 4 ขั้นมีความทนทาน ฝีมือขึ้นตามการลงมือ ผลงาน 4 ขั้น ตั้งงานประจำได้ และจุดมุ่งหมายใหม่ 🔨 งานช่าง','👥 หน้าผู้คน: ครอบครัว อาจารย์ เพื่อน ศัตรู พร้อมตัวกรอง ★ คนโปรด ค่าความสนิท ใช้เวลาด้วยกัน และชวนเป็นคู่หูได้ 3 คน','🏘️ เมือง: ร้านยา โรงตีเหล็ก ร้านพู่กัน ร้านหยก โรงเตี๊ยม และกระดานภารกิจเมืองที่มาใหม่ทุกปี','🏡 ตระกูล: จ้างคนรับใช้และพ่อบ้าน · พงศาวดารทุกรุ่น','🏰 ดันเจี้ยน 7 แห่ง เดินทีละห้อง 5 ห้องแล้วบอส ถอยออกได้ ได้วัตถุดิบ อุปกรณ์ ตำรับ','⚙️ หน้าอัตโนมัติ: ดูแลผู้คน ซื้อยา ขายวัตถุดิบเกิน ลงดันเจี้ยนเอง','🌧️ เสียงบรรยากาศ ฝน ลม น้ำตก นก แมลง ตามฉากและอากาศ · ปรับความดังเพลง/เสียงประกอบ/บรรยากาศแยกกัน · ฉากมีฝนและหิมะตก','📘 คู่มือในเกมและหน้าเว็บ · 🐞 แจ้งบั๊กไปที่ GitHub · 💾 ย้ายเซฟข้ามเครื่องด้วยรหัส','🌐 ออนไลน์ (บนเว็บ Vercel): แชทโลก แชร์ชีวิต ทำเนียบประจำสัปดาห์ ประลองเงา ฝากเซฟด้วยรหัสสั้น — เปิดใช้เมื่อเชื่อมฐานข้อมูลแล้ว']},
  {v:'4.2',d:'7 พ.ย. 2026',l:['📜 ตัวเลือกกด "▾ ย่อไว้ก่อน" ได้ — เวลายังเดินต่อ ถ้าจบปีก่อนจะให้ชะตาเลือกแทน · ตั้งให้ชะตาตัดสินอัตโนมัติ 5/10/20 วินาที · ตั้งให้ตัวเลือกขึ้นแบบย่อตลอดได้','🗓️ หลอดเวลาแบ่ง 12 เดือน · ฉากบอกเดือน ฤดู และสิ่งที่ตัวละครกำลังทำ · มีสรุปปีว่าทำอะไรและได้อะไรบ้าง','✍️ สร้างตัวละครเองด้วยแต้ม 15 แต้ม: เพศ ทรงผม สีผม สีผิว สีชุด ยุค ชาติกำเนิด กระดูก วิญญาณ การ์ดพรสวรรค์ (ด้านร้ายได้แต้มคืน) ปณิธาน และชื่อ · หรือออกแบบแค่หน้าตาแล้วสุ่มที่เหลือ','⚔️ ชุดสวมใส่: เครื่องประดับ 2 ช่อง ของวิเศษป้องกันตัว (บางชิ้นกันตายได้) และชุดแต่งกายที่เปลี่ยนสีชุดในฉาก · หาได้จากการท่องยุทธภพหรือซื้อที่ตลาด · สวมของดีกว่าให้อัตโนมัติ','📋 บันทึกเควส: รวมปณิธาน เควสระบบ ถุงมิติ แค้น โครงการ คู่แค้น ไว้ที่เดียว · ปักหมุดติดตามไว้เหนือบันทึกชีวิต · พักเควสระบบไว้ได้ (เวลาหยุด ไม่ล้มเหลว)']},
  {v:'4.1',d:'7 พ.ย. 2026',l:['🎨 ฉากพิกเซลละเอียดขึ้น 3 เท่า ตัวละครวาดใหม่ทั้งหมด: หน้าตาชัด มีตา คิ้ว ปาก กะพริบตา · ผมยาวสำหรับหญิง มวยผมสำหรับชาย · ชุดฮั่นฝูคอไขว้ มีเงาและแสง · แขนเสื้อ มือ เข็มขัดมีชายห้อย','😊 สีหน้าเปลี่ยนตามชีวิต: มีความสุขยิ้มแก้มแดง · เศร้าคิ้วตก น้ำตาไหล · บาดเจ็บหนักมีแผล','🧓 วัยต่างกันชัดเจน: เด็กตัวเล็กผมจุก · คนแก่ผมขาว มีริ้วรอย เคราสำหรับผู้ชาย','🌀 อนิเมชันลื่นขึ้น ~30 เฟรมต่อวินาที: หายใจขึ้นลง แขนแกว่งตอนเดิน ชายเสื้อพลิ้วลม ผ้าคาดหัวโบก ออร่าเต้นเป็นจังหวะพร้อมประกายลอยขึ้น','🌦️ บรรยากาศ: กลีบดอกไม้ ใบไม้ หิมะเคลื่อนนุ่มนวล · ปีที่เศร้าภาพโทนฟ้าหม่น ปีที่มีความสุขโทนอุ่น · บาดเจ็บหนักขอบจอแดงกะพริบ · ลำแสงบนยอดเขา · ฝุ่นละอองในบ้าน · ขอบภาพมืดลงเล็กน้อยให้มีมิติ']},
@@ -393,13 +405,7 @@ function updateHints(){for(const k of ['len','xian','chm']){const el=document.ge
 function titleMode(){const x=!!CFG.xian,a=document.getElementById('titleSub'),b=document.getElementById('popW');if(a)a.textContent=x?'วันนี้ จะได้เกิดเป็นใครในโลกเทพเซียน?':'วันนี้ จะได้เกิดเป็นใครในยุทธภพ?';if(b)b.textContent=x?'โลกเทพเซียน':'ยุทธภพ';document.body.classList.toggle('xian',x)}
 
 // ============ PIXEL ART ============
-(function globe(){const c=$('globe').getContext('2d');if(!c)return;let t=0;
- const land=[[3,10],[4,9],[5,9],[6,10],[4,11],[5,11],[10,5],[11,5],[12,6],[11,6],[13,7],[8,14],[9,14],[9,15],[10,15],[13,12],[14,12],[14,13]];
- setInterval(()=>{if(!$('title').classList.contains('on'))return;c.clearRect(0,0,32,32);for(let y=0;y<32;y++)for(let x=0;x<32;x++){const dx=x-15.5,dy=y-15.5;if(dx*dx+dy*dy<225){
-  const gx=Math.floor(((x+t)%32)/2),gy=Math.floor(y/2);const l=land.some(p=>p[0]===gx&&p[1]===gy)||(gx*7+gy*13)%11===0;
-  c.fillStyle=l?(gy<4?'#e9f2ff':'#6fbf73'):(dx*dx+dy*dy>169?'#3f6fd1':'#5b8def');c.fillRect(x,y,1,1)}}
-  c.fillStyle='#2a2838';for(let a=0;a<64;a++){const an=a/64*Math.PI*2;c.fillRect(Math.round(15.5+Math.cos(an)*15.4),Math.round(15.5+Math.sin(an)*15.4),1,1)}
-  t=(t+1)%32},180)})();
+
 function drawAvatar(cv,seed,gender,demon){
  const c=cv.getContext('2d');if(!c)return;let s=seed;const rnd=()=>(s=(s*9301+49297)%233280)/233280;
  c.clearRect(0,0,16,16);const {skin,hair,robe}=avatarCols(seed,gender,demon);
@@ -1537,7 +1543,7 @@ function endGame(){
  const lifeAch=(S.achLife||[]).map(id=>ACH_ALL.find(a=>a.id===id)).filter(Boolean);
  const L=LS.get('murim_leg',[]);L.unshift({n:S.name,e:ep,a:S.age,r:REALMS[ri].n,f:S.faction?S.faction.n:'พเนจร',s:score,ow:S.ow,g:S.gen});LS.set('murim_leg',L.slice(0,8));
  const key=S.key.slice(-9);
- const share=`「${ep}」 ${S.name}${S.gen>1?' (รุ่นที่ '+S.gen+')':''}\n${S.cause} อายุ ${S.age} ปี · ${REALMS[ri].n}\n${S.faction?S.faction.n+' — '+rankName():'จอมยุทธ์พเนจร'}\n${oddsLine()}\n#1ในยุทธภพ`;
+ const share=`「${ep}」 ${S.name}${S.gen>1?' (รุ่นที่ '+S.gen+')':''}\n${S.cause} อายุ ${S.age} ปี · ${REALMS[ri].n}\n${S.faction?S.faction.n+' — '+rankName():'จอมยุทธ์พเนจร'}\n${oddsLine()}\n#1ในนวนิยาย`;
  const line=S.lineage.concat([{n:S.name,e:ep,a:S.age}]);
  $('end').innerHTML=xT(`<div class="box rec">
   <div class="scene" style="margin:0 0 12px"><canvas id="endScene" width="960" height="336"></canvas><div class="scap">🪦 ${esc(S.name)} · ${S.age} ปี</div></div>
@@ -3052,7 +3058,7 @@ function shareCard(){try{const W=480,H=270,cv=document.createElement('canvas');c
  c.fillStyle='#ffd040';c.font='bold 20px Itim, sans-serif';c.fillText(xT(`「${S.epithet||epithet()}」`).slice(0,26),176,62);
  c.fillStyle='#fff';c.font='bold 26px Itim, sans-serif';c.fillText(S.name.slice(0,18),176,98);
  c.font='17px Itim, sans-serif';c.fillStyle='#e8e8f0';const L=[`อายุ ${S.age} ปี · ${REALMS[realmIdx()].n}`,xT(S.faction?`${S.faction.n} — ${rankName()}`:'พเนจร'),xT(S.cause||''),`${oddsLine()}`];L.forEach((t,i)=>c.fillText(t.slice(0,30),176,130+i*26));
- c.fillStyle='#ffd040';c.font='14px Silkscreen, monospace';c.fillText(S.xian?'#1ในโลกเทพเซียน':'#1ในยุทธภพ',26,H-24);c.textAlign='right';c.fillStyle='#ffffffaa';c.fillText(S.ch&&S.ch!=='normal'?CH_N[S.ch]:'',W-26,H-24);
+ c.fillStyle='#ffd040';c.font='14px Silkscreen, monospace';c.fillText(S.xian?'#1ในโลกเทพเซียน':'#1ในนวนิยาย',26,H-24);c.textAlign='right';c.fillStyle='#ffffffaa';c.fillText(S.ch&&S.ch!=='normal'?CH_N[S.ch]:'',W-26,H-24);
  const u=cv.toDataURL('image/png');
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🖼️ การ์ดชีวิต</h3><img src="${u}" style="width:100%;border-radius:8px;image-rendering:auto"><p class="tag2" style="text-align:center">กดค้างที่รูปเพื่อบันทึกได้เช่นกัน</p><button class="pbtn" id="dlCard" style="display:none;width:100%">⬇️ บันทึกรูป</button>`);
  window._cardU=u;window._cardN=S.name;
@@ -3564,7 +3570,7 @@ function ambUpdate(){if(!ambOn||!S||!$('game').classList.contains('on')||documen
  AMB.water.gain.setTargetAtTime(loc==='waterfall'?.2:S.region==='sea'?.12:0,t,.8);
  if(!inside&&wx!=='rain'){if(se===0&&Math.random()<.35)ambChirp('bird');if(se===1&&Math.random()<.3)ambChirp('bug');if(se===2&&Math.random()<.12)ambChirp('bird')}}
 setInterval(()=>{try{ambUpdate()}catch(e){}},1000);
-function setVol(k,v){VOL[k]=+v;LS.set('murim_v'+k,+v);if(k==='a'&&AMB)AMB.master.gain.value=VOL.a*.9}
+function setVol(k,v){VOL[k]=+v;LS.set('murim_v'+k,+v);if(k==='b'&&BGM.out&&BGM.on)BGM.out.gain.value=VOL.b*.55;if(k==='a'&&AMB)AMB.master.gain.value=VOL.a*.9}
 function openSound(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🔊 เสียง</h3>
  <div class="item auto"><input type="checkbox" ${bgmOn?'checked':''} onchange="toggleBgm();openSound()"><span><b>🎵 เพลง</b><input type="range" min="0" max="1" step=".05" value="${VOL.b}" oninput="setVol('b',this.value)"></span></div>
  <div class="item auto"><input type="checkbox" ${sfxOn?'checked':''} onchange="toggleSfx();openSound()"><span><b>🔔 เสียงประกอบ</b><input type="range" min="0" max="1" step=".05" value="${VOL.s}" oninput="setVol('s',this.value)"></span></div>
@@ -3640,8 +3646,141 @@ async function openOnline(tab){tab=tab||'chat';clearInterval(chatT);const tabs=[
 // ---------- รวม tick ----------
 function v43Tick(){crTick();compTick();hhTick();auTick();tqRefresh()}
 
+// ============ v4.4 · หน้าแรกใหม่ · ฉากหลังพิกเซล · โลก 32×32 · เพลงจีนบรรเลง ============
+// ---------- เมนูขีดสามขีดหน้าแรก ----------
+function openTitleMenu(){const th=THEMES.find(x=>x[0]===theme)||['','☀️','ธีม'];
+ const B=[['📖','ตำนาน','openBook()'],['🪦','สุสาน','openGraves()'],['📚','สารานุกรม','openCodex()'],['📊','สถิติ','openStats()'],['📘','คู่มือ','openGuide()'],['🌐','ออนไลน์','openOnline()'],['💾','ย้ายเซฟ','openSaveCode()'],['📜','อัปเดต','openUpdate()'],
+  [th[1],'ธีม: '+(th[2]||''),'cycleTheme();openTitleMenu()'],['🔊','เสียงและเพลง','openSound()'],['🔠','ตัวอักษร '+FS[fsz],'cycleFs();openTitleMenu()'],['🐞','แจ้งบั๊ก','openReport()']];
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☰ เมนู</h3><div class="tmgrid">${B.map(b=>`<button class="cb" onclick="${b[2]}"><i>${b[0]}</i>${b[1]}</button>`).join('')}</div>`,'tmenu')}
+
+// ---------- ฉากหลังหน้าแรก (พิกเซล) ----------
+const TB={w:90,h:160,t:0};
+function tbRand(i){const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x)}
+function tbDraw(){const cv=$('titleBg');if(!cv||!$('title').classList.contains('on'))return;const c=cv.getContext('2d');if(!c)return;const W=TB.w,H=TB.h,t=TB.t++;
+ const R0=(x,y,w,h,col)=>{c.fillStyle=col;c.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))};
+ if(CFG.xian){ // ---- โลกเทพเซียน ----
+  const sky=['#f6d9a8','#f2c6a8','#e3b3c4','#b9a8dc','#8ea2e0','#6f8fd8','#5a7ccc'];for(let i=0;i<sky.length;i++)R0(0,i*14,W,15,sky[sky.length-1-i]);
+  R0(0,98,W,62,'#5a7ccc');
+  // ดวงอาทิตย์
+  for(let r=9;r>0;r--){c.fillStyle=r>6?'rgba(255,240,190,.25)':'#fff6d8';c.beginPath();c.arc(66,30,r,0,7);c.fill()}
+  // เมฆไกล
+  const cloud=(x,y,s,col)=>{R0(x,y,14*s,3*s,col);R0(x+2*s,y-2*s,8*s,2*s,col);R0(x+5*s,y-3*s,4*s,1*s,col)};
+  for(let i=0;i<5;i++)cloud(((i*31+t*.08*(1+i%2))%(W+30))-20,18+i*9,1,'rgba(255,255,255,.7)');
+  // เกาะลอยและสำนัก
+  const island=(x,y,w,sect,col)=>{R0(x,y,w,3,'#6fbf73');R0(x,y+3,w,2,'#8a6a4a');for(let k=0;k<w/2;k++)R0(x+2+k*1.6,y+5,Math.max(1,w-4-k*3.2),2,k%2?'#6a5038':'#7a5a40');
+   // ต้นสน
+   R0(x+1,y-4,2,4,'#2f6a3a');R0(x+w-3,y-3,2,3,'#2f6a3a');
+   if(sect){const px=x+w/2-4;R0(px,y-4,8,4,col||'#e8e0d0');R0(px-2,y-6,12,2,'#a8282a');R0(px+1,y-9,6,3,col||'#e8e0d0');R0(px-1,y-11,10,2,'#a8282a');R0(px+3,y-13,2,2,'#c8a020');R0(px+3,y-3,2,3,'#3a2a20')}
+   // น้ำตก
+   if(w>16){for(let k=0;k<10;k++)R0(x+w-6,y+5+k*2,1,2,(k+t)%3?'#cfe8ff':'#ffffff')}};
+  const bob=k=>Math.round(Math.sin(t*.05+k)*1.2);
+  island(4,56+bob(1),22,1,'#f4ecd0');island(56,48+bob(2),28,1,'#eef2fa');island(32,76+bob(3),18,1,'#ffd6e0');island(70,84+bob(4),14,0);
+  // ทะเลเมฆ
+  for(let L=0;L<4;L++){const y=96+L*12,col=['#e8ecff','#dfe4fb','#cfd8f6','#bfcaf0'][L];for(let i=0;i<10;i++){const x=((i*22+t*(.15+L*.08))%(W+30))-20;R0(x,y-3,20,6,col);R0(x+4,y-6,12,4,col)}R0(0,y+2,W,10,col)}
+  // กระบี่ลอย
+  for(let i=0;i<6;i++){const x=8+i*14+Math.sin(t*.03+i)*2,y=36+((i*17)%30)+Math.sin(t*.06+i*1.7)*3;c.save();c.translate(Math.round(x),Math.round(y));c.rotate(-0.6+(i%2)*.1);
+   c.fillStyle='rgba(160,220,255,.35)';c.fillRect(-1,-1,13,3);c.fillStyle='#e8f0ff';c.fillRect(0,0,9,1);c.fillStyle='#c8a020';c.fillRect(9,-1,1,3);c.fillStyle='#6a3a20';c.fillRect(10,0,3,1);c.restore()}
+  // นกกระเรียน
+  for(let i=0;i<3;i++){const x=((t*.25+i*40)%(W+20))-10,y=20+i*6+Math.sin(t*.1+i)*1.5,f=(Math.floor(t/6)+i)%2;R0(x,y,3,1,'#fff');R0(x+(f?-1:3),y-1,1,1,'#fff');R0(x+3,y,1,1,'#2a2838');R0(x-2,y+(f?-1:1),2,1,'#fff')}
+  // ประกายวิญญาณ
+  for(let i=0;i<14;i++){const x=(tbRand(i)*W+Math.sin(t*.02+i)*3)%W,y=H-((t*.3+tbRand(i+9)*H)%H);c.fillStyle=`rgba(255,240,160,${.4+.4*Math.sin(t*.1+i)})`;c.fillRect(Math.round(x),Math.round(y),1,1)}
+ }else{ // ---- ป่ามูริม ----
+  const sky=['#2a2a4a','#3a3460','#5a4470','#8a5a70','#c07a6a','#e09a6a'];for(let i=0;i<sky.length;i++)R0(0,i*10,W,11,sky[i]);
+  // พระจันทร์
+  R0(64,10,8,8,'#f4e8c8');R0(63,11,10,6,'#f4e8c8');R0(66,12,2,2,'#e0d0a8');
+  for(let i=0;i<16;i++){if(tbRand(i)*60>40)continue;R0(tbRand(i+3)*W,tbRand(i+7)*30,1,1,(t+i*7)%40<30?'#fff8e0':'#a8a0c0')}
+  // ภูเขาไกล + เจดีย์บนยอด
+  const mtn=(base,amp,f,col,ph)=>{c.fillStyle=col;for(let x=0;x<W;x++){const h=Math.round(amp*(.55+.45*Math.sin(x*f+ph))*(.7+.3*Math.sin(x*f*2.3+ph*2)));c.fillRect(x,base-h,1,h+70)}};
+  mtn(70,26,.07,'#4a3a5a',1);
+  {const px=58,py=43;R0(px,py,5,7,'#2a2236');R0(px-2,py-1,9,1,'#2a2236');R0(px+1,py-4,3,3,'#2a2236');R0(px-1,py-5,7,1,'#2a2236');R0(px+2,py-7,1,2,'#2a2236');R0(px+2,py+3,1,1,'#ffb050')}
+  // หมอก
+  for(let i=0;i<3;i++){const y=62+i*8,x=((t*(.1+i*.05)+i*30)%(W+60))-60;c.fillStyle='rgba(230,200,210,.18)';c.fillRect(Math.round(x),y,60,3);c.fillRect(Math.round(x)+10,y-1,40,1)}
+  mtn(86,22,.11,'#2f3a4a',3);mtn(104,18,.15,'#22303a',5);
+  // ป่าไผ่และต้นสน
+  const pine=(x,y,s,col,dk)=>{for(let k=0;k<4;k++){const w=(8-k*1.6)*s;R0(x-w/2,y-k*3*s-3*s,w,3*s,k%2?dk:col)}R0(x-.5*s,y,1*s,3*s,'#3a2a20')};
+  for(let i=0;i<9;i++)pine(4+i*10+(i%2)*3,112-(i%3)*2,1,'#2a4a3a','#223e30');
+  for(let i=0;i<14;i++){const x=Math.round(tbRand(i+20)*W),sway=Math.round(Math.sin(t*.04+i)*.8);R0(x,104,1,40,i%2?'#4a7a3a':'#3a6a30');for(let k=0;k<5;k++)R0(x,108+k*7,1,1,'#2a4a20');R0(x+sway-1,102,3,2,'#5a8a40');R0(x+sway+1,100,3,1,'#6a9a4a')}
+  // พื้นดินและหญ้า
+  R0(0,140,W,20,'#2a3a24');for(let x=0;x<W;x+=2)R0(x,139-((x*7)%3),1,2,'#3a5a2a');R0(0,148,W,12,'#22301e');
+  // ทางเดินหิน
+  for(let i=0;i<6;i++)R0(36+i*2-(i%2)*4,141+i*3,10-i,2,'#5a5a52');
+  // ต้นไม้ใหญ่กรอบซ้ายขวา
+  R0(0,40,7,110,'#2a1e18');R0(7,60,2,90,'#3a2a20');for(let k=0;k<6;k++)R0(-4+k*2,30+k*5,16-k*2,6,k%2?'#1e3a26':'#24442c');
+  R0(W-7,50,7,100,'#2a1e18');R0(W-9,70,2,80,'#3a2a20');for(let k=0;k<6;k++)R0(W-12+k,38+k*5,16-k*2,6,k%2?'#1e3a26':'#24442c');
+  // โคมไฟแขวน
+  {const sw=Math.sin(t*.05)*1;R0(12+sw,62,1,8,'#3a2a20');R0(10+sw,70,5,6,'#c83a2a');R0(11+sw,71,3,4,'#ffb050');c.fillStyle=`rgba(255,180,80,${.15+.05*Math.sin(t*.2)})`;c.beginPath();c.arc(12.5+sw,73,8,0,7);c.fill()}
+  // ใบไม้ร่วง
+  for(let i=0;i<12;i++){const x=(tbRand(i)*W+t*.25+Math.sin(t*.05+i)*6)%W,y=(tbRand(i+40)*H+t*(.35+tbRand(i)*.3))%H;R0(x,y,1,1,['#e0a040','#c86a3a','#d8c050','#9ac060'][i%4])}
+  // หิ่งห้อย
+  for(let i=0;i<10;i++){const x=20+tbRand(i+60)*50+Math.sin(t*.03+i*2)*6,y=110+tbRand(i+70)*28+Math.cos(t*.04+i)*4;const a=.3+.7*Math.max(0,Math.sin(t*.08+i*1.3));c.fillStyle=`rgba(220,255,140,${a})`;c.fillRect(Math.round(x),Math.round(y),1,1)}
+ }
+ // ไล่เฉดล่างให้ปุ่มอ่านง่าย
+ const gr=c.createLinearGradient(0,H*.55,0,H);gr.addColorStop(0,'rgba(10,8,16,0)');gr.addColorStop(1,'rgba(10,8,16,.55)');c.fillStyle=gr;c.fillRect(0,0,W,H)}
+setInterval(()=>{try{tbDraw()}catch(e){}},70);
+
+// ---------- โลก 32×32 ----------
+const EARTH=(()=>{const W=64,H=32,m=new Uint8Array(W*H);
+ const P=[[[-168,65],[-140,70],[-95,72],[-75,62],[-55,52],[-70,44],[-80,25],[-97,18],[-90,15],[-83,9],[-105,22],[-118,32],[-125,42],[-135,57],[-165,60]],
+  [[-80,10],[-60,10],[-35,-6],[-40,-22],[-55,-35],[-68,-55],[-75,-45],[-71,-18],[-81,-5]],
+  [[-10,36],[-9,44],[-2,44],[-5,48],[5,53],[8,58],[16,69],[30,71],[42,67],[40,45],[28,40],[20,38],[10,38]],
+  [[-17,15],[-10,30],[-6,36],[10,37],[32,31],[35,28],[43,12],[51,11],[42,-2],[40,-15],[33,-27],[20,-35],[12,-17],[9,0],[-8,5]],
+  [[35,35],[42,42],[40,68],[70,73],[110,77],[140,72],[180,66],[180,62],[160,58],[140,46],[130,40],[122,30],[110,20],[104,10],[100,2],[97,15],[88,22],[80,8],[72,20],[58,24],[50,30],[44,13],[38,22]],
+  [[114,-22],[123,-15],[130,-12],[136,-12],[143,-11],[146,-19],[153,-26],[150,-37],[140,-38],[135,-34],[115,-34]],
+  [[-45,60],[-22,68],[-20,75],[-30,83],[-60,81],[-56,72]],[[95,5],[106,-6],[120,0],[128,-4],[141,-3],[150,-8],[130,-9],[105,-8]],[[130,31],[141,36],[143,44],[140,41],[133,34]],[[-6,50],[2,52],[-2,57],[-5,58],[-6,54]],[[44,-25],[50,-15],[48,-13],[44,-20]],[[166,-46],[174,-41],[178,-38],[172,-34],[170,-44]]];
+ const inP=(x,y,p)=>{let o=false;for(let i=0,j=p.length-1;i<p.length;j=i++){const [xi,yi]=p[i],[xj,yj]=p[j];if((yi>y)!==(yj>y)&&x<(xj-xi)*(y-yi)/(yj-yi)+xi)o=!o}return o};
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){const lon=-180+(x+.5)*360/W,lat=90-(y+.5)*180/H;let v=0;if(lat<-66)v=3;else if(P.some(p=>inP(lon,lat,p))){v=1;if((lat>12&&lat<32&&lon>-15&&lon<60)||(lat>-30&&lat<-18&&lon>118&&lon<145)||(lat>35&&lat<48&&lon>60&&lon<110))v=2;if(lat>66||(lon<-20&&lon>-60&&lat>60))v=3}m[y*W+x]=v}
+ return{W,H,m}})();
+(function globe2(){const cv=$('globe');if(!cv)return;const c=cv.getContext('2d');if(!c)return;let rot=0;
+ setInterval(()=>{if(!$('title').classList.contains('on'))return;rot+=.035;c.clearRect(0,0,32,32);const R=14.6,cx=15.5,cy=15.5,img=c.createImageData(32,32),d=img.data;
+  const L=[-.55,-.45,.7],ln=Math.hypot(...L);
+  for(let y=0;y<32;y++)for(let x=0;x<32;x++){const dx=(x+.5-16)/R,dy=(y+.5-16)/R,r2=dx*dx+dy*dy,i=(y*32+x)*4;
+   if(r2>1){if(r2<1.16){const a=(1.16-r2)/.16;d[i]=120;d[i+1]=180;d[i+2]=255;d[i+3]=Math.round(110*a)}continue}
+   const dz=Math.sqrt(1-r2),lat=Math.asin(-dy),lon=Math.atan2(dx,dz)+rot;
+   const u=((lon/(2*Math.PI))%1+1)%1,v=.5-lat/Math.PI,mx=Math.floor(u*EARTH.W)%EARTH.W,my=Math.min(EARTH.H-1,Math.floor(v*EARTH.H)),t=EARTH.m[my*EARTH.W+mx];
+   let col=t===0?(r2>.8?[30,72,160]:[44,104,206]):t===1?[76,150,72]:t===2?[196,168,92]:[236,244,255];
+   if(t===1&&((mx*7+my*3)%9===0))col=[56,120,58];
+   // เมฆ
+   const cu=((lon*1.0+rot*.5)/(2*Math.PI)%1+1)%1,cl=Math.sin(cu*24+lat*5)*Math.sin(cu*9-lat*7+1.3)>.45&&Math.abs(lat)<1.2;if(cl)col=[240,246,255];
+   const nd=(dx*L[0]+dy*L[1]+dz*L[2])/ln,b=Math.max(.28,Math.min(1.15,.35+nd*.9));
+   d[i]=Math.min(255,col[0]*b);d[i+1]=Math.min(255,col[1]*b);d[i+2]=Math.min(255,col[2]*b);d[i+3]=255;
+   if(nd>.88&&t===0){d[i]=Math.min(255,d[i]+40);d[i+1]=Math.min(255,d[i+1]+40);d[i+2]=255}}
+  c.putImageData(img,0,0)},90)})();
+
+// ---------- เพลงจีนบรรเลง ----------
+const BGM={on:false,next:0,bar:0,step:0,tid:null,out:null,rev:null,motif:null};
+const G_PENTA=[196,220,246.94,293.66,329.63,392,440,493.88,587.33,659.25,783.99,880,987.77,1174.66];
+const CHORDS=[[0,2,3,5,7],[4,5,7,9,11],[3,5,6,8,10],[1,3,4,6,8],[0,2,3,5,7],[4,6,7,9,11],[3,5,7,8,10],[0,3,5,7,10]];
+function bgmNodes(){const a=ac();if(!a)return null;if(BGM.out)return a;BGM.out=a.createGain();BGM.out.gain.value=VOL.b*.55;
+ const dry=a.createGain();dry.gain.value=.8;BGM.inp=a.createGain();BGM.inp.connect(dry);dry.connect(BGM.out);
+ const cv=a.createConvolver(),len=a.sampleRate*2.6,ir=a.createBuffer(2,len,a.sampleRate);for(let ch0=0;ch0<2;ch0++){const dd=ir.getChannelData(ch0);for(let i=0;i<len;i++)dd[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.4)}cv.buffer=ir;
+ const wet=a.createGain();wet.gain.value=.42;BGM.inp.connect(cv);cv.connect(wet);wet.connect(BGM.out);BGM.out.connect(a.destination);return a}
+function zheng(f,t,v=.09,dur=1.6){const a=ac();const o=a.createOscillator(),o2=a.createOscillator(),g0=a.createGain(),lp=a.createBiquadFilter();o.type='triangle';o2.type='sine';o.frequency.setValueAtTime(f*1.006,t);o.frequency.exponentialRampToValueAtTime(f,t+.06);o2.frequency.value=f*2;
+ lp.type='lowpass';lp.frequency.setValueAtTime(f*7,t);lp.frequency.exponentialRampToValueAtTime(f*2,t+dur);g0.gain.setValueAtTime(0,t);g0.gain.linearRampToValueAtTime(v,t+.006);g0.gain.exponentialRampToValueAtTime(.0005,t+dur);
+ const g2=a.createGain();g2.gain.value=.3;o.connect(lp);o2.connect(g2);g2.connect(lp);lp.connect(g0);g0.connect(BGM.inp);o.start(t);o2.start(t);o.stop(t+dur+.05);o2.stop(t+dur+.05)}
+function dizi(f,t,dur,v=.05){const a=ac();const o=a.createOscillator(),g0=a.createGain(),lfo=a.createOscillator(),lg=a.createGain();o.type='sine';o.frequency.setValueAtTime(f*.985,t);o.frequency.linearRampToValueAtTime(f,t+.09);
+ lfo.frequency.value=5.2;lg.gain.setValueAtTime(0,t);lg.gain.linearRampToValueAtTime(f*.012,t+Math.min(dur*.6,.5));lfo.connect(lg);lg.connect(o.frequency);
+ const o3=a.createOscillator(),g3=a.createGain();o3.type='triangle';o3.frequency.value=f*2;g3.gain.value=.12;o3.connect(g3);g3.connect(g0);
+ g0.gain.setValueAtTime(0,t);g0.gain.linearRampToValueAtTime(v,t+.1);g0.gain.setValueAtTime(v*.85,t+dur*.7);g0.gain.linearRampToValueAtTime(0,t+dur+.12);o.connect(g0);g0.connect(BGM.inp);[o,lfo,o3].forEach(x=>{x.start(t);x.stop(t+dur+.2)})}
+function bassN(f,t,dur){const a=ac();const o=a.createOscillator(),g0=a.createGain();o.type='sine';o.frequency.value=f;g0.gain.setValueAtTime(0,t);g0.gain.linearRampToValueAtTime(.07,t+.05);g0.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g0);g0.connect(BGM.inp);o.start(t);o.stop(t+dur+.05)}
+function mkMotif(){const m=[];let p=R(5,8);const rh=ch([[2,1,1,2,2],[1,1,2,1,1,2],[3,1,2,2],[2,2,1,1,2]]);for(const d of rh){p=Math.max(4,Math.min(12,p+ch([-2,-1,-1,1,1,2,0])));m.push([p,d])}return m}
+function bgmBar(t0){const beat=60/70,a=ac(),bar=BGM.bar,ci=bar%8,C=CHORDS[ci];
+ if(bar%16===0)BGM.motif=mkMotif();
+ bassN(G_PENTA[C[0]]/2,t0,beat*3.6);if(bar%2===1)bassN(G_PENTA[C[2]]/2,t0+beat*2,beat*1.8);
+ // กู่เจิงไล่โน้ต
+ if(bar%8===0){for(let i=0;i<7;i++)zheng(G_PENTA[2+i],t0+i*.055,.05,1.2)}
+ const arp=[C[0],C[2],C[3],C[4],C[3],C[2],C[1],C[2]];const st=(bar%4===3)?2:1;
+ for(let i=0;i<8;i+=st)zheng(G_PENTA[arp[i]]*(i>3?1:1),t0+(bar%8===0?.45:0)+i*beat/2,i===0?.085:.055,1.4);
+ // ขลุ่ยดิซือ: ถาม-ตอบ ทุก 2 ห้อง
+ const ph=Math.floor(bar/2)%4;if(ph!==3){let tt=t0+beat*.5;const mot=BGM.motif.map(([p,d],k)=>[ph===1?Math.max(4,p+ (k===BGM.motif.length-1?-1:1)):ph===2?Math.min(12,p+2):p,d]);
+  for(const [p,d] of mot){if(tt>t0+beat*4-.1)break;const dur=d*beat/2;dizi(G_PENTA[p],tt,dur*.95);tt+=dur}}
+ else zheng(G_PENTA[C[4]+2]||G_PENTA[12],t0+beat*3,.06,2);
+ BGM.bar++;return beat*4}
+function bgmSched(){const a=ac();if(!a||!BGM.on)return;bgmNodes();while(BGM.next<a.currentTime+1.2){if(BGM.next<a.currentTime)BGM.next=a.currentTime+.08;BGM.next+=bgmBar(BGM.next)}}
+function startBgm(){if(!bgmOn||BGM.on||!ac())return;BGM.on=true;bgmNodes();BGM.next=ac().currentTime+.15;BGM.bar=0;BGM.out.gain.cancelScheduledValues(ac().currentTime);BGM.out.gain.setTargetAtTime(VOL.b*.55,ac().currentTime,.5);BGM.tid=setInterval(bgmSched,250);bgmSched()}
+function stopBgm(){BGM.on=false;clearInterval(BGM.tid);if(BGM.out&&AC)BGM.out.gain.setTargetAtTime(0,AC.currentTime,.3)}
+
 // ============ SOUND (8-bit) ============
-let AC=null,sfxOn=LS.get('murim_sfx',true),bgmOn=LS.get('murim_bgm',false),bgmT=null,sfxLast={};
+let AC=null,sfxOn=LS.get('murim_sfx',true),bgmOn=LS.get('murim_bgm',true),bgmT=null,sfxLast={};
 function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){return null}}if(AC.state==='suspended')AC.resume().catch(()=>{});return AC}
 function tone(f,d,type='square',vol=.05,when=0,slide){const a=ac();if(!a)return;vol*=tone._b?VOL.b:VOL.s;if(vol<=0.0002)return;const t=a.currentTime+when,o=a.createOscillator(),gn=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(slide,t+d);gn.gain.setValueAtTime(vol,t);gn.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(gn);gn.connect(a.destination);o.start(t);o.stop(t+d+.02)}
 function noise(d,vol=.06){const a=ac();if(!a)return;vol*=VOL.s;const b=a.createBuffer(1,a.sampleRate*d,a.sampleRate),ch0=b.getChannelData(0);for(let i=0;i<ch0.length;i++)ch0[i]=(Math.random()*2-1)*(1-i/ch0.length);const s=a.createBufferSource(),gn=a.createGain();s.buffer=b;gn.gain.value=vol;s.connect(gn);gn.connect(a.destination);s.start()}
@@ -3651,10 +3790,7 @@ const SFX={click:()=>tone(660,.05,'square',.025),birth:()=>[523,659,784,1047].fo
  world:()=>[196,262,196,294,262].forEach((f,i)=>tone(f,.3,'sawtooth',.03,i*.2)),block:()=>tone(1200,.06,'square',.03,0,600)};
 function sfx(k){if(!sfxOn||!SFX[k])return;const n=Date.now();if(n-(sfxLast[k]||0)<220)return;sfxLast[k]=n;try{SFX[k]()}catch(e){}}
 const PENTA=[262,294,330,392,440,523,587,659];
-function startBgm(){if(bgmT||!bgmOn||!ac())return;let step=0,note=3;bgmT=setInterval(()=>{if(!bgmOn)return stopBgm();const a=ac();if(!a)return;tone._b=1;
- if(step%2===0){note=Math.max(0,Math.min(PENTA.length-1,note+ch([-2,-1,-1,0,1,1,2])));if(Math.random()<.8)tone(PENTA[note],.28,'triangle',.018)}
- if(step%8===0)tone(PENTA[ch([0,3,4])]/2,.9,'square',.012);tone._b=0;step++},230)}
-function stopBgm(){clearInterval(bgmT);bgmT=null}
+
 function toggleSfx(){sfxOn=!sfxOn;LS.set('murim_sfx',sfxOn);if(sfxOn)sfx('good');$('sfxBtn')&&($('sfxBtn').textContent=sfxOn?'🔊':'🔇');if($('modal').dataset.k==='menu')openMenu()}
 function toggleBgm(){bgmOn=!bgmOn;LS.set('murim_bgm',bgmOn);bgmOn?startBgm():stopBgm();if($('modal').dataset.k==='menu')openMenu()}
 document.addEventListener('pointerdown',()=>{ac();if(bgmOn)startBgm()});
@@ -4299,7 +4435,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION})}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -4309,7 +4445,7 @@ function loadGame(n=1){
  show('game');render();startTimer();$('feed').scrollTop=$('feed').scrollHeight;toast('โหลดชีวิตเดิมแล้ว — กด ▶ เพื่อเล่นต่อ');
 }
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveGame()});
-setInterval(()=>{const e=$('pop');if(e)e.textContent=fmt(8000000+R(-900,900))},700);
+
 setWorld(false);
 applyFs();
 updateHints();
