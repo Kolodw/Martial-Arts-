@@ -390,8 +390,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='10.3';
+const VERSION='10.4';
 const CHANGELOG=[
+ {v:'10.4',d:'8 พ.ย. 2026',l:['💕 ระบบคู่รักใหม่: มีคนรักได้ตั้งแต่อายุ 18 ปี คบกันก่อนแล้วค่อยขอแต่งงาน (มีลูกหลังแต่งงาน)','✨ เสน่ห์ยิ่งสูง คนที่เข้ามาหายิ่งอายุน้อย (ไม่ต่ำกว่า 18 ปีเสมอ) · เห็นอายุของทุกคนในหน้าครอบครัว','🏯 มีหลายคนได้ผ่านตำหนักใน — แต่ต้องถามคนรักคนแรกก่อน เธออาจยอมหรือไม่ยอม (ปฏิเสธแล้วถามใหม่ได้ใน 5 ปี) หรือจะแอบคบก็ได้ แต่เสี่ยงถูกจับได้','👥 ไปเน้นครอบครัวขณะมีคนรัก มีโอกาสได้พบคนใหม่ · คนในตำหนักในแก่ตัวและจากไปตามอายุ','☁️ ใช้ได้ทั้งยุทธภพและโลกเทพเซียน — คนรักในโลกเซียนอายุยืนหลายร้อยปี · ตำหนักในไม่ปิดตัวเมื่ออายุเกิน 75 อีก','🐛 เควสอัปเกรดอาวุธในระบบที่สองยังค้างแบบเดิม แก้แล้ว · อีเวนต์รักทุกแบบเริ่มที่ 18 ปี']},
  {v:'10.3',d:'8 พ.ย. 2026',l:['⬆️ เควสอัปเกรดอาวุธ/ชุดเกราะ มีปุ่มอัปเกรดตรงในหน้าระบบ ไม่ต้องหาเองว่าต้องไปไหน','🔨 ตีบวกอาวุธและชุดเกราะชั้นสูงสุดได้ถึง +10 ที่ตลาด — ซื้อจนเต็มชั้นแล้วก็ยังอัปเกรดต่อได้ · ไม่มีเควสอัปเกรดค้างที่ทำไม่ได้อีก','⚡ โลกเทพ: ไม่โดนเรียกข้ามทัณฑ์สวรรค์อีก จนกว่าจะถึงนิรันดร์ขั้นเก้า และเลือกไม่ข้ามแล้วเล่นต่อได้','💞 แต่งงานตอนอายุมาก คู่ชีวิตไม่ตายทันทีแล้ว — อายุคู่สมเหตุผล และอายุยืนตามขั้นพลังของคุณ','🃏 การ์ดคืนชีพถูกใช้ก่อนเสมอเมื่อตาย และถ้าตายเพราะแก่ จะต่ออายุได้จริงแม้ชนเพดานอายุของโลก']},
  {v:'9.8',d:'8 พ.ย. 2026',l:['📖 วิชาเพิ่มหลายพันแบบ: ประเภทอาวุธ/ท่า 24 แบบ (พลอง แส้ พัด ขวาน ง้าว หอก ธนู เข็ม กรงเล็บ ลูกเตะ ฯลฯ) และชื่อท่าใหม่ทุกสาย','✨ วิชาพิเศษ 110 วิชา 12 แขนง: 👁️ เนตร (มองไกล เห็นสมบัติ/ภัยซุ่ม ตรวจจับภัยเงา) · 💨 ตัวเบา · 🌫️ ซ่อนปราณ · 💚 ฟื้นฟู · 🛡️ กายา · 🧘 จิต · 🎵 เสียง · ☠️ พิษ · 🌸 เสน่ห์ · 🔯 ค่ายกล · 👻 วิญญาณ · 🐉 อัญเชิญ — แต่ละแขนงมีผลจริงในเกม','🔮 รวมวิชา: หลอมวิชาที่ฝึกถึงระดับกลาง 2–3 วิชาเป็นวิชาใหม่ในชื่อของตัวเอง พลังไม่ลด มีโอกาสได้ระดับสูงขึ้น และได้ความสามารถพิเศษของทุกวิชาที่รวม','⚡ เว็บลื่นขึ้น: ไฟล์เซฟเล็กลงมาก (ภาพในอัลบั้มบีบอัดใหม่) เซฟเร็วขึ้นและพื้นที่เครื่องไม่เต็มง่าย','🐛 แก้พลังในแดนเทพ (อายุเกิน 1,000 ปี) ที่โตแบบทวีคูณจนตัวเลขระเบิด','🐛 แก้ฉายาที่ยาวล้นจอมือถือ และคำศัพท์ฝั่งยุทธภพที่หลุดไปโผล่ในโลกเซียน']},
  {v:'9.3',d:'8 พ.ย. 2026',l:['🐾 สัตว์อสูรพิกเซลใหม่ ละเอียดขึ้น 2 เท่า: มีเส้นขอบ แสงเงา และท่าเดินขยับได้ · แต่ละพันธุ์มีลักษณะเฉพาะ เช่น ลายพยัคฆ์ จุดเสือดาว แผงคอสิงโต เขากวาง งวงช้าง นอแรด แม่เพรียงงูเห่า หนวดมังกร ขาแมงมุม ปีกผีเสื้อ ครีบฉลาม · สัตว์ระดับสูงมีออร่าและประกายธาตุวนรอบตัว','🦊 เกิดเป็นสัตว์อสูร: รูปในแถบสถานะ แผงตัวละคร และรูปโปรไฟล์ในแชทเป็นสัตว์จริงแล้ว ไม่ใช่คน · แถบสถานะแสดงขั้นการบำเพ็ญแบบสัตว์ (ลูกสัตว์ → อสูรพันปี) พร้อมระดับย่อย พันธุ์ และธาตุ · ตัวในฉากใหญ่ขึ้นสมส่วนกับคน','❓ การสอนใหม่: แนะนำระดับขั้น ตัวเลือกที่ย่อไว้ เควส ระบบ และแผงตัวละคร/ทางลัดบนคอม','📘 คู่มือระบบสำคัญ 13 หัวข้อ เปิดได้จากเมนูทั้งตอนเล่นและหน้าแรก พร้อมปุ่มพาไปหน้านั้นทันที','🐛 แก้หน้าต่างอื่นเด้งซ้อนทับระหว่างการสอน','🐛 แก้รูปโปรไฟล์ของสัตว์อสูรที่ว่างเปล่าหรือหลุดกรอบ']},
@@ -665,6 +666,10 @@ const whereTxt=()=>PLACE[S.focus]||'ระหว่างทาง';
 const withTxt=()=>S.focus==='love'&&S.spouse?` พร้อมกับ${S.spouse}${S.kids?'และลูกๆ':''}`:'';
 const oppG=()=>S.gender==='ชาย'?'หญิง':'ชาย';
 const roll01=p=>Math.random()<Math.max(.03,Math.min(.97,p+statAdj()));
+function loverAge(){const c=Math.max(0,S.cha||0),hi=Math.max(18,Math.min((S.age||18)+3,Math.round(60-c/5))),lo=Math.max(18,Math.round(hi-8-c/20));return R(lo,hi)}
+function loverLife(a){const ri=realmIdx();let l=Math.max(R(55,85),a+R(25,45),ri>=2?Math.round(lifeMax()*R(55,85)/100):0);if(S.xian)l=Math.max(l,a+R(150,300));return l}
+function mkLover(nm,t,o){const a=Math.max(18,(o&&o.age)||loverAge());return Object.assign({n:nm,t:t||'',p:ch(PERS_S),aff:72,age:a,life:loverLife(a),peer:false},o||{},{age:a})}
+const isWed=()=>!!S.spouse&&!(S.sp&&S.sp.wed===false);
 function marry(nm,how){albumSnap('แต่งงานกับ '+nm);S.spouse=nm;S.spouseP=null;S.cha+=5;log(`💍 ${how||'แต่งงานกับ'} <b>${nm}</b>`,'epic');setScene('wedding')}
 
 function beggarGood(extra=0){if(!S.arc.master&&Math.random()<.35+extra){meetMaster('ที่แท้ขอทานชราคือยอดฝีมือปลอมตัว!')}else{log('ชายชรายิ้ม แล้วหายไปในฝูงชน','good');plant('beggarFed',{},5,15,.7)}}
@@ -996,8 +1001,9 @@ function doFocus(){
   case 'work':{let g=inc(Math.round((R(40,120)+Math.round(S.int*1.5)+ri*60)*cb('money')*(1+gv('mount')*2)));S.money+=g;routine('work',genLine('work'),g,'ตำลึง');break}
   case 'rest':{let g=Math.max(0,Math.min(S.maxHp-S.hp,R(30,50)));S.hp+=g;S.cha+=R(1,3);routine('rest',genLine('rest'),g,g>0?'พลังชีวิต':'');break}
   case 'love':{const c=R(3,7);S.cha+=c;S.hp=Math.min(S.maxHp,S.hp+15);
-   if(S.spouse){if(Math.random()<(S.path==='family'?.5:.35)&&S.age<55){S.kids++;log(`บุตรคนที่ ${S.kids} ถือกำเนิดขึ้น 👶`,'epic');setScene('birth')}else routine('love',genLine('love'),c,'เสน่ห์')}
-   else{if(Math.random()<.3+S.cha/200){S.spouse=anyName(S.gender==='ชาย'?'หญิง':'ชาย');log(`พบรักและแต่งงานกับ <b>${S.spouse}</b> 💍`,'epic');setScene('wedding')}else routine('love',ch(['ออกไปพบปะผู้คน แต่ยังไม่พบคนที่ใช่','ไปงานเทศกาลจับคู่ กลับมามือเปล่า','แม่สื่อพามาดูตัวสามคน ไม่มีใครถูกใจ','แอบชอบคนขายเต้าหู้ แต่ไม่กล้าพูด','เขียนจดหมายรักแล้วฉีกทิ้งทุกฉบับ']),c,'เสน่ห์')}
+   if(S.spouse&&S.sp&&S.sp.wed===false){if(!choice._cur&&Math.random()<.3+S.sp.aff/400){const sp=S.sp;choice('💍 ขอแต่งงาน',`คบกับ<b>${sp.n}</b> (${sp.age} ปี) มาสักพักแล้ว ความรัก ${Math.round(sp.aff)}/100 — จะขอแต่งงานเลยไหม`,[{t:'💍 ขอแต่งงาน',s:'ขึ้นกับความรักและเสน่ห์',f(){if(roll01(.35+sp.aff/160+S.cha/600)){sp.wed=true;marry(sp.n,'คุกเข่าขอแต่งงาน — ได้แต่งงานกับ')}else{sp.aff=Math.max(0,sp.aff-5);log(`${sp.n}ยิ้มเขินๆ "ขอเวลาอีกหน่อยนะ"`)}}},{t:'ยังไม่ใช่ตอนนี้',skip:true,f(){log(`คุณกับ${sp.n}ยังคบกันแบบคนรักต่อไป`)}}])}else{routine('love',genLine('love'),c,'เสน่ห์')}if(Math.random()<.12)try{haremOffer(true)}catch(e){}}
+   else if(S.spouse){if(Math.random()<.1)try{haremOffer(true)}catch(e){}if(Math.random()<(S.path==='family'?.5:.35)&&S.age<55){S.kids++;log(`บุตรคนที่ ${S.kids} ถือกำเนิดขึ้น 👶`,'epic');setScene('birth')}else routine('love',genLine('love'),c,'เสน่ห์')}
+   else{if(S.age>=18&&Math.random()<.3+S.cha/200){const nm=anyName(S.gender==='ชาย'?'หญิง':'ชาย');S.spouse=nm;S.spouseP=null;S.sp=mkLover(nm,'',{wed:false});log(`💕 พบรักกับ <b>${nm}</b> (${S.sp.age} ปี) — เริ่มคบหาเป็นคนรัก`,'epic')}else routine('love',ch(['ออกไปพบปะผู้คน แต่ยังไม่พบคนที่ใช่','ไปงานเทศกาลจับคู่ กลับมามือเปล่า','แม่สื่อพามาดูตัวสามคน ไม่มีใครถูกใจ','แอบชอบคนขายเต้าหู้ แต่ไม่กล้าพูด','เขียนจดหมายรักแล้วฉีกทิ้งทุกฉบับ']),c,'เสน่ห์')}
    break}
  }
 }
@@ -1244,7 +1250,7 @@ const EVENTS=[
   if(S.money>=300)o.splice(2,0,{t:'💰 เดิมพันกับโต๊ะพนัน (300 ตำลึง)',s:'ทายผู้ชนะ',f(){S.money-=300;if(roll01(.35+S.int/400)){S.money+=inc(900);log('ทายถูก! ได้เงินกลับมา 900 ตำลึง','good')}else log('ทายผิด เสียไป 300 ตำลึง','bad')}});
   if(S.faction&&S.rank>=2)o.push({t:'ส่งศิษย์น้องลงแข่งแทน',s:'ผลงาน +',f(){S.merit+=20;log(`คุณฝึกศิษย์น้องของ${S.faction.n}จนได้อันดับสาม เจ้าสำนักพอใจมาก`,'good')}});
   choice('งานประลองชิงยอดยุทธภพ',`งานประลองใหญ่สิบปีครั้งเปิดขึ้นที่เมืองหลวง${S.faction?` ${S.faction.n}ส่งรายชื่อคุณเข้าร่วมด้วย`:''}`,o)}},
- {w:3,c:s=>s.age>=17&&!s.spouse&&s.age<45,f(){const nm=anyName(oppG()),o=[
+ {w:3,c:s=>s.age>=18&&!s.spouse&&s.age<45,f(){const nm=anyName(oppG()),o=[
    {t:'สารภาพรักตรงๆ',s:'ขึ้นกับเสน่ห์',f(){if(roll01(.3+S.cha/150))marry(nm,'ความจริงใจชนะใจ — แต่งงานกับ');else log(`${nm} ปฏิเสธอย่างสุภาพ ใจสลายไปหนึ่งดวง`,'bad')}}];
   if(S.int>=60)o.push({t:'✍️ เขียนบทกวีมอบให้',s:'ใช้ปัญญา',f(){if(roll01(.35+S.int/300))marry(nm,'บทกวีของคุณถูกเล่าขานไปทั่วเมือง — แต่งงานกับ');else log(`${nm}อ่านแล้วยิ้ม แต่ใจยังไม่หวั่นไหว`)}});
   if(S.money>=600)o.push({t:'🎁 ซื้อปิ่นหยกเป็นของขวัญ (600 ตำลึง)',s:'เงินซื้อใจได้ไหม?',f(){S.money-=600;if(roll01(.45))marry(nm,'ปิ่นหยกเปิดทางสู่หัวใจ — แต่งงานกับ');else log(`${nm}คืนปิ่นหยกให้ "ข้าไม่ได้ต้องการสิ่งนี้"`,'bad')}});
@@ -1279,7 +1285,7 @@ const EVENTS=[
    {t:'แสดงวิชาเต็มกำลัง',s:'ใช้พลัง',f(){if(total()>90+S.age*9){const a=newArt(2);a.n=ch(ART_S)+ch(c.arts);S.arts.push(a);S.fame+=10;log(`ผ่านบททดสอบ! ได้เรียนวิชาลับประจำ${c.n} ${artHtml(a)}`,'epic')}else log('พลังยังไม่พอ ผู้อาวุโสส่ายหน้า','bad')}},
    {t:'แสดงไหวพริบ',s:'ใช้ปัญญา',f(){if(roll01(S.int/120)){const a=newArt(1);a.n=ch(ART_S)+ch(c.arts);S.arts.push(a);S.int+=5;log(`ไหวพริบของคุณทำให้ผู้อาวุโสประทับใจ ได้เรียน ${artHtml(a)}`,'epic')}else log('ตอบผิดไปข้อหนึ่ง ผู้อาวุโสให้กลับไปฝึกใหม่','bad')}},
    {t:'ยอมรับว่ายังไม่พร้อม',s:'กรรม +',f(){S.karma+=3;log('ยอมรับตรงๆ ว่ายังไม่พร้อม ผู้อาวุโสพยักหน้าชื่นชมในความซื่อสัตย์')}}])}},
- {w:2,c:s=>!!s.clan&&!s.spouse&&s.age>=16&&s.age<=30&&!s.flags.arranged,f(){S.flags.arranged=1;const oc=ch(CLANS.filter(x=>x.n!==S.clan.n)),nm=oc.sur+' '+ch((oppG()==='หญิง'?NM.f:NM.m).noble);
+ {w:2,c:s=>!!s.clan&&!s.spouse&&s.age>=18&&s.age<=30&&!s.flags.arranged,f(){S.flags.arranged=1;const oc=ch(CLANS.filter(x=>x.n!==S.clan.n)),nm=oc.sur+' '+ch((oppG()==='หญิง'?NM.f:NM.m).noble);
    choice('🏮 คลุมถุงชน',`ผู้อาวุโสแห่ง${S.clan.n}ตกลงกับ${oc.n}ให้คุณแต่งงานกับ <b>${nm}</b> เพื่อเชื่อมสัมพันธ์สองตระกูล`,[
    {t:'ยอมรับตามที่ผู้ใหญ่จัดให้',s:'เงิน + ชื่อเสียง +',f(){S.money+=inc(800);S.fame+=20;marry(nm,`งานแต่งเชื่อมสัมพันธ์${S.clan.n}กับ${oc.n} — แต่งงานกับ`)}},
    {t:'ขอพบหน้ากันก่อน',s:'ขึ้นกับเสน่ห์ทั้งสองฝ่าย',f(){if(roll01(.4+S.cha/200)){S.money+=inc(800);marry(nm,'พบกันครั้งแรกก็ถูกชะตา — แต่งงานกับ')}else{S.fame-=5;log(`พบกันแล้วไม่ถูกชะตา งานแต่งถูกยกเลิกอย่างนุ่มนวล`)}}},
@@ -1358,7 +1364,7 @@ const EVENTS=[
   {t:'ลอบเข้าไป',s:'ถ้าถูกจับ — ลงโทษหนัก',f(){if(roll01(.5+S.int/400)){const a=newArt(2);S.arts.push(a);log(`ลอบคัดลอก ${artHtml(a)} ออกมาได้ก่อนรุ่งสาง`,'epic')}else{S.merit=Math.max(0,S.merit-40);S.hp-=25;log('ถูกผู้อาวุโสจับได้คาหนังคาเขา โดนโบยสามสิบไม้และหักผลงาน','bad')}}},
   {t:'ปลุกยามแล้วรายงาน',s:'ผลงาน +',f(){S.merit+=15;S.karma+=2;log('รายงานยามที่หลับเวร ผู้อาวุโสชมว่าซื่อตรง')}},
   {t:'เดินผ่านไป',f(){}}])}},
- {w:1.5,cd:12,c:s=>s.age>=16&&s.age<=32,f(){const nm=anyName(oppG());const o=[{t:'ชวนเดินชมโคมด้วยกัน',s:'ขึ้นกับเสน่ห์',f(){if(!S.spouse&&roll01(.25+S.cha/180))marry(nm,'คืนนั้นกลายเป็นจุดเริ่มต้น — แต่งงานกับ');else{joy(4);log(`เดินชมโคมกับ${nm}ทั้งคืน แล้วแยกกันตอนรุ่งสางโดยไม่ได้ถามว่าจะได้พบกันอีกไหม`)}}},{t:'แค่ยิ้มให้แล้วเดินต่อ',f(){joy(1)}}];
+ {w:1.5,cd:12,c:s=>s.age>=18&&s.age<=32,f(){const nm=anyName(oppG());const o=[{t:'ชวนเดินชมโคมด้วยกัน',s:'ขึ้นกับเสน่ห์',f(){if(!S.spouse&&roll01(.25+S.cha/180))marry(nm,'คืนนั้นกลายเป็นจุดเริ่มต้น — แต่งงานกับ');else{joy(4);log(`เดินชมโคมกับ${nm}ทั้งคืน แล้วแยกกันตอนรุ่งสางโดยไม่ได้ถามว่าจะได้พบกันอีกไหม`)}}},{t:'แค่ยิ้มให้แล้วเดินต่อ',f(){joy(1)}}];
   choice('🏮 งานโคมไฟ',`ในงานโคมไฟ มีคนสวมหน้ากากจิ้งจอกเดินชนคุณ หน้ากากหลุด — เป็น <b>${nm}</b> ที่สวยงามจนลืมหายใจ`,o)}},
  {w:1.5,cd:15,c:s=>s.age>=15&&s.age<=35,f(){const acc=ch(['เจ้าของร้านหยก','คหบดีหลิว','พ่อค้าผ้าไหม']);choice('⚖️ ถูกใส่ร้าย',`${acc}กล่าวหาว่าคุณขโมยของมีค่า ทหารเมืองกำลังมาจับ`,[
   {t:'สืบหาคนร้ายตัวจริง',s:'ใช้ปัญญา',f(){if(roll01(S.int/120)){S.fame+=15;S.money+=inc(200);log('คุณพบว่าลูกจ้างในร้านเป็นคนขโมย พลิกคดีได้ เจ้าของร้านขอโทษพร้อมเงินชดเชย','good')}else{S.money=Math.floor(S.money*.8);log('หาหลักฐานไม่ทัน ต้องเสียเงินจ่ายค่าปรับ','bad')}}},
@@ -1449,7 +1455,7 @@ const EVENTS=[
   {t:'เผชิญหน้าถามตรงๆ',s:'ฟังเหตุผล',f(){if(roll01(.6)){S.karma+=5;joy(5);log(`${sp}ร้องไห้สารภาพว่าถูกส่งมา แต่รักคุณจริง และจะไม่ส่งข่าวอีกแล้ว — คุณเลือกเชื่อ`,'epic');keyAdd(`รู้ว่าคู่ชีวิตเป็นสายลับของ${en} แต่เลือกให้อภัย`)}else{joy(-20);log(`${sp}หนีไปในคืนนั้น ทิ้งไว้เพียงจดหมายสั้นๆ "ขอโทษ"`,'bad');S.spouse=null;keyAdd(`คู่ชีวิตที่เป็นสายลับหนีกลับ${en}`)}}},
   {t:'แกล้งไม่รู้ ส่งข่าวปลอมกลับไป',s:'ใช้ปัญญา · ผลงาน +',f(){if(roll01(S.int/150)){S.merit+=60;S.fame+=20;log(`ข่าวปลอมทำให้${en}ตกหลุมพราง สำนักของคุณได้ชัยใหญ่ — แต่ทุกคืนคุณนอนหันหลังให้${sp}`,'epic')}else{S.merit=Math.max(0,S.merit-30);log('แผนถูกจับได้ ทั้งสำนักสงสัยว่าคุณรู้เห็นด้วย','bad')}}},
   {t:'รายงานสำนัก',s:'กรรม − · ผลงาน +',f(){S.merit+=40;S.karma-=5;joy(-25);log(`${sp}ถูกจับ คุณไม่ได้พบหน้าอีกเลย`,'bad');S.spouse=null;keyAdd('ส่งตัวคู่ชีวิตที่เป็นสายลับให้สำนัก')}}])}},
- {w:1.5,once:1,c:s=>!s.spouse&&s.age>=17&&s.age<=35,f(){const a=anyName(oppG()),b=anyName(oppG());choice('💞 รักสามเส้า',`<b>${a}</b> ลูกหลานสำนักใหญ่ผู้สง่างาม กับ <b>${b}</b> สหายวัยเด็กที่อยู่ข้างคุณมาตลอด — ทั้งสองสารภาพรักกับคุณในเดือนเดียวกัน`,[
+ {w:1.5,once:1,c:s=>!s.spouse&&s.age>=18&&s.age<=35,f(){const a=anyName(oppG()),b=anyName(oppG());choice('💞 รักสามเส้า',`<b>${a}</b> ลูกหลานสำนักใหญ่ผู้สง่างาม กับ <b>${b}</b> สหายวัยเด็กที่อยู่ข้างคุณมาตลอด — ทั้งสองสารภาพรักกับคุณในเดือนเดียวกัน`,[
   {t:`เลือก${a}`,s:'ชื่อเสียงและอนาคต',f(){S.fame+=20;S.money+=inc(1000);marry(a,'เลือกความรุ่งโรจน์ — แต่งงานกับ');log(`${b}มาร่วมงานแต่ง ยิ้มให้ แล้วจากไปไกล`)}},
   {t:`เลือก${b}`,s:'ความผูกพัน',f(){joy(12);S.karma+=3;marry(b,'เลือกคนที่อยู่ข้างกันมาตลอด — แต่งงานกับ')}},
   {t:'ไม่เลือกใครเลย',f(){log('คุณปฏิเสธทั้งคู่ เพราะไม่อยากทำร้ายใคร')}}])}},
@@ -1798,7 +1804,7 @@ function familyIntro(){
 }
 function syncFamily(){
  // spouse object
- if(S.spouse&&(!S.sp||S.sp.n!==S.spouse)){S.sp=(()=>{const a=S.age<=60?Math.max(16,S.age+R(-4,4)):R(25,60),ri=realmIdx(),l=Math.max(R(55,85),a+R(25,45),ri>=2?Math.round(lifeMax()*R(55,85)/100):0);return{n:S.spouse,p:ch(PERS_S),aff:72,age:a,life:l,peer:S.spouseP!=null}})();joy(25)}
+ if(S.spouse&&(!S.sp||S.sp.n!==S.spouse)){const pp=S.spouseP!=null&&typeof peers!=='undefined'?peers[S.spouseP]:null;S.sp=mkLover(S.spouse,'',{peer:S.spouseP!=null,age:pp&&pp.age?Math.max(18,pp.age):undefined});joy(25)}
  if(!S.spouse&&S.sp)S.sp=null;
  // children
  S.children=S.children||[];
@@ -1839,7 +1845,7 @@ function familyTick(){
   else if(!fired&&sp.aff<25&&Math.random()<.35){fired=true;choice('💔 ชีวิตคู่ร้าวฉาน',`${sp.n} (${sp.p}) แทบไม่พูดกับคุณมาหลายเดือน "เจ้ารักกระบี่มากกว่าข้า"`,[
     {t:'ซื้อของขวัญง้อ (300 ตำลึง)',f(){if(S.money>=300){S.money-=300;sp.aff+=25;log(`${sp.n}รับของขวัญแล้วยิ้มออกมาได้`,'good')}else log('ไม่มีเงินซื้อของขวัญ','bad')}},
     {t:'ขอโทษ และสัญญาว่าจะอยู่บ้านมากขึ้น',s:'เปลี่ยนเป็นทุ่มเทให้ครอบครัว',f(){sp.aff+=20;S.focus='love';log('คุณวางกระบี่ลงแล้วจับมือคนรัก','good')}},
-    {t:'หย่าขาด',s:'ความสุข −',f(){joy(-15);log(`หย่าขาดกับ${sp.n} ลูกๆ อยู่กับคุณ`,'bad',true);S.spouse=null;S.sp=null;S.spouseP=null}},
+    {t:sp.wed===false?'เลิกกัน':'หย่าขาด',s:'ความสุข −',f(){joy(-15);log(sp.wed===false?`เลิกรากับ${sp.n}`:`หย่าขาดกับ${sp.n} ลูกๆ อยู่กับคุณ`,'bad',true);S.spouse=null;S.sp=null;S.spouseP=null}},
     {t:'ต่างคนต่างอยู่',f(){joy(-5);log('อยู่บ้านเดียวกันแต่เหมือนคนแปลกหน้า')}}])}
   else if(!fired&&sp.aff>85&&Math.random()<.12){joy(10);log(`${sp.n}${sp.p==='อ่อนโยน'?'ชงชาอุ่นๆ รอคุณกลับบ้านทุกคืน':sp.p==='ร่าเริง'?'พาคุณไปเที่ยวงานโคมไฟจนดึก':'นั่งดูดาวกับคุณบนหลังคาบ้าน'} — ความรักของทั้งสองยังหวานเหมือนวันแรก`,'good')}}
  // children
@@ -1901,11 +1907,11 @@ function openFamily(){
  syncFamily();const st=x=>x.alive?'':' <span class="tag2">(ล่วงลับ)</span>',rel=v=>`<span class="tag2">ความสัมพันธ์ ${Math.round(clamp(v,0,100))}</span>`;
  const P=(S.parents||[]).map(p=>`<div class="item"><div class="h"><b>${p.role} ${p.n}${p.title?' · '+p.title:''}${st(p)}</b><span class="tag2">${p.alive?p.age+' ปี':''}</span></div><p>นิสัย${p.p} · ${rel(p.rel)}</p></div>`).join('')||`<p class="tag2">${S.flags.lostParents?'ไม่รู้ว่าพ่อแม่เป็นใคร':'—'}</p>`;
  const Sb=(S.sibs||[]).filter(s=>s.born).map(s=>`<div class="item"><div class="h"><b>${s.role} ${s.n}${st(s)}</b><span class="tag2">${s.alive?s.age+' ปี':''}</span></div><p>${s.tal.n}${s.fac?' · '+s.fac.n:''}${s.married?' · แต่งงานแล้ว':''} · ${rel(s.rel)}</p></div>`).join('')||'<p class="tag2">ไม่มีพี่น้อง</p>';
- const Sp=S.sp?`<div class="item"><div class="h"><b>💍 ${S.sp.n}</b><span class="tag2">${S.sp.age} ปี</span></div><p>นิสัย${S.sp.p}</p><div class="hpbar" style="height:8px"><i style="width:${S.sp.aff}%;background:#ff8fb3"></i></div><p>ความรัก ${Math.round(S.sp.aff)}/100</p></div>`:'<p class="tag2">ยังไม่มีคู่ครอง</p>';
+ const Sp=S.sp?`<div class="item"><div class="h"><b>${S.sp.wed===false?'💕':'💍'} ${S.sp.n}${S.sp.wed===false?' <span class="tag2">(คนรัก)</span>':''}</b><span class="tag2">${S.sp.age} ปี</span></div><p>นิสัย${S.sp.p}</p><div class="hpbar" style="height:8px"><i style="width:${S.sp.aff}%;background:#ff8fb3"></i></div><p>ความรัก ${Math.round(S.sp.aff)}/100</p></div>`:'<p class="tag2">ยังไม่มีคู่ครอง</p>';
  const C=(S.children||[]).map(c=>`<div class="item"><div class="h"><b>${c.g==='หญิง'?'👧':'👦'} ${c.n}${st(c)}</b><span class="tag2">${c.alive?c.age+' ปี':''}</span></div><p>${c.tal.n}${c.fac?' · '+c.fac.n:''}${c.married?' · แต่งงานแล้ว':''}${c.grand?' · หลาน '+c.grand+' คน':''}</p></div>`).join('')||'<p class="tag2">ยังไม่มีลูก</p>';
  const md=moodOf(S.happy);
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👪 ครอบครัว</h3><p>${md[0]} ความสุข: <b>${Math.round(S.happy)}</b>/100 (${md[1]})</p><div class="hpbar" style="height:9px;margin-bottom:8px"><i style="width:${S.happy}%;background:#ffc04a"></i></div>
- <h4 style="margin:10px 0 6px">พ่อแม่</h4>${P}<h4 style="margin:10px 0 6px">พี่น้อง</h4>${Sb}<h4 style="margin:10px 0 6px">คู่ชีวิต</h4>${Sp}<h4 style="margin:10px 0 6px">ลูก${S.grand?` · หลาน ${S.grand} คน`:''}</h4>${C}`,'family');
+ <h4 style="margin:10px 0 6px">พ่อแม่</h4>${P}<h4 style="margin:10px 0 6px">พี่น้อง</h4>${Sb}<h4 style="margin:10px 0 6px">${S.sp&&S.sp.wed===false?'คนรัก':'คู่ชีวิต'}</h4>${Sp}<h4 style="margin:10px 0 6px">ลูก${S.grand?` · หลาน ${S.grand} คน`:''}</h4>${C}`,'family');
 }
 function openHeirPick(){
  const al=(S.children||[]).map((c,i)=>[c,i]).filter(([c])=>c.alive);
@@ -2183,7 +2189,7 @@ const SYS_GRADE=[{w:70,n:'สามัญ',m:1,c:'#8fd0ff'},{w:25,n:'ทอง�
 const EVO_N=['','ขั้นสูง','สมบูรณ์'];
 const houseT=()=>({h1:1,h2:2,h3:3})[S.gear&&S.gear.house]||0;
 const gearT=()=>['weapon','armor'].reduce((a,k)=>{const g=gearOf(k);return a+(g?GEAR[k].indexOf(g)+1:0)+gupLv(k)},0);
-const QV={power:()=>S.power,qi:()=>S.qi,money:()=>S.money,win:()=>S.kills,realm:()=>realmIdx(),art:()=>S.arts.length,fame:()=>S.fame,karma:()=>S.karma,karmaDown:()=>-S.karma,marry:()=>S.spouse?1:0,kid:()=>S.kids,join:()=>S.faction?1:0,rank:()=>S.rank,
+const QV={power:()=>S.power,qi:()=>S.qi,money:()=>S.money,win:()=>S.kills,realm:()=>realmIdx(),art:()=>S.arts.length,fame:()=>S.fame,karma:()=>S.karma,karmaDown:()=>-S.karma,marry:()=>S.spouse&&!(S.sp&&S.sp.wed===false)?1:0,kid:()=>S.kids,join:()=>S.faction?1:0,rank:()=>S.rank,
  gear:()=>gearT(),house:()=>houseT(),int:()=>S.int,cha:()=>S.cha,pill:()=>S.sys.pillN||0};
 const yrPow=()=>Math.round((12*S.talent.m*(1+Math.min(S.age,100)/40)*1.4+(6+S.sys.lv*7)*S.talent.m)*(S.faction?1.2:1));
 const QMK={
@@ -2203,7 +2209,7 @@ const QMK={
  cha:()=>{const g=6+Math.floor(S.sys.lv/2);return[`เพิ่มเสน่ห์อีก ${g}`,g,R(4,6)]},
  pill:()=>{const g=R(2,4);return[`หลอมยาให้ได้ ${g} เม็ด`,g,R(3,5)]}};
 const QHINT={power:'train',qi:'qi',money:'work',win:'adv',realm:'train',art:'adv',fame:'adv',karma:'adv',karmaDown:'adv',marry:'love',kid:'love',rank:'mission',gear:'work',house:'work',int:'study',cha:'love',pill:'study'};
-const QOK={win:()=>S.age>=12,realm:()=>realmIdx()<7,marry:()=>!S.spouse&&S.age>=16,kid:()=>!!S.spouse&&S.age<50,join:()=>!S.faction&&!S.ownSect&&S.age>=8,rank:()=>S.faction&&S.rank<4,karmaDown:()=>S.age>=12,
+const QOK={win:()=>S.age>=12,realm:()=>realmIdx()<7,marry:()=>!S.spouse&&S.age>=18,kid:()=>!!S.spouse&&S.age<50,join:()=>!S.faction&&!S.ownSect&&S.age>=8,rank:()=>S.faction&&S.rank<4,karmaDown:()=>S.age>=12,
  gear:()=>S.age>=14&&!!gearNext(),house:()=>S.age>=16&&houseT()<3,pill:()=>S.age>=10};
 const SHOP=[
  {id:'pill',n:'ยาเม็ดเสริมพลัง',d:'พลังยุทธ์ +150 × พรสวรรค์',c:30},{id:'heal',n:'ยารักษาทุกโรค',d:'ฟื้นพลังชีวิตเต็ม หายจากโรคเรื้อรัง',c:25},
@@ -4162,7 +4168,7 @@ const SAGA=[
   d=>runE(['📜 คดีเด็กหาย (2/4)','รอยเท้าเล็กๆ นำไปถึงถ้ำร้างหลังเขา มีกลิ่นธูปและเสียงสวดดังออกมา',[['ลอบเข้าไปคนเดียว','h-10 i+4','เห็นลัทธิมารกำลังทำพิธีกับเด็ก',()=>d.saw=1],['กลับไปเรียกทางการ','k+2','ทางการบอกว่าจะส่งคนมา…แต่ไม่มีใครมา',()=>d.saw=0]]]),
   d=>{const ep=300+S.age*12+realmIdx()*250;runE(['📜 คดีเด็กหาย (3/4)',d.saw?'คุณเผชิญหน้าเจ้าลัทธิในถ้ำ เด็กห้าคนถูกมัดอยู่ข้างแท่นบูชา':'คืนนั้นเด็กหายเพิ่มอีกคน คุณตัดสินใจบุกถ้ำเอง',[['ต่อสู้ช่วยเด็ก','',null,()=>{d.win=fight('เจ้าลัทธิโลหิต',ep);log(d.win?'🗡️ ฟันเจ้าลัทธิล้มลง ช่วยเด็กออกมาได้ทุกคน':'🩸 พ่ายแพ้ เจ้าลัทธิหนีไปพร้อมเด็ก',d.win?'epic':'bad',true)}],['เจรจาแลกตัวเด็ก','$-500 k+4','ยอมจ่ายเงินแลกเด็กกลับมา แต่เจ้าลัทธิยังลอยนวล',()=>d.win=0]]])},
   d=>{if(d.win){applyFx('f+60 k+15 j+8');log('📜 คดีเด็กหายปิดฉาก — ชาวบ้านสร้างศาลเล็กๆ ไว้ระลึกถึงคุณ เด็กที่รอดเรียกคุณว่าผู้มีพระคุณ','epic',true)}else{applyFx('j-8');log('📜 หลายปีต่อมา ลัทธิโลหิตกลับมาพร้อมคนมากกว่าเดิม และจำหน้าคุณได้','bad',true);S.fame=Math.max(0,S.fame-10)}}]},
- {id:'love',n:'รักต้องห้าม',c:()=>S.age>=16&&S.age<=40&&!S.spouse,ch:[
+ {id:'love',n:'รักต้องห้าม',c:()=>S.age>=18&&S.age<=40&&!S.spouse,ch:[
   d=>{d.nm=anyName(S.gender==='ชาย'?'หญิง':'ชาย');d.fac=ch(FACTIONS.filter(f=>!S.faction||f.n!==S.faction.n)).n;runE(['💌 รักต้องห้าม (1/4)',`พบ<b>${d.nm}</b> ศิษย์แห่ง${d.fac} ใต้ต้นท้อริมลำธาร สบตากันแค่ครั้งเดียวก็ลืมไม่ลง`,[['แอบนัดพบกันอีก','j+8 c+3','จดหมายลับส่งถึงกันทุกเดือน'],['ตัดใจ','j-3','บางสายสัมพันธ์ไม่ควรเริ่มต้น',()=>d.end=1]]])},
   d=>runE(['💌 รักต้องห้าม (2/4)',`ข่าวลือเรื่องคุณกับ${d.nm}เริ่มแพร่ ${S.faction?'ผู้อาวุโสในสำนักเรียกไปตักเตือน':'ครอบครัวสั่งห้ามเด็ดขาด'}`,[['ปฏิเสธข่าวลือ','c-2 i+2','ต้องลดการพบกัน'],['ยอมรับตรงๆ','f+5 m-10','ทุกคนตกตะลึงในความกล้า',()=>d.open=1]]]),
   d=>runE(['💌 รักต้องห้าม (3/4)',`${d.fac}ส่งคนมาพาตัว${d.nm}กลับ และประกาศว่าถ้าพบคุณอีกจะสังหาร`,[['หนีไปด้วยกัน','j+10 f-10',`ทิ้งทุกอย่างพา${d.nm}หนีข้ามแคว้น`,()=>{d.run=1;if(S.faction){log(`ถูกขับออกจาก${S.faction.n}`,'bad');S.faction=null;S.rank=0}}],['ท้าดวลขอแต่งงาน','',null,()=>{d.win=fight('ศิษย์เอกแห่ง'+d.fac,350+S.age*14+realmIdx()*260);log(d.win?'⚔️ ชนะการดวลต่อหน้าทั้งสองสำนัก ได้รับการยอมรับ':'🩸 แพ้ดวล ถูกพาตัวคนรักไปต่อหน้าต่อตา',d.win?'epic':'bad',true)}],['ปล่อยเขาไป','j-12 k+3','น้ำตาไหลแต่ไม่ยอมให้ใครต้องตายเพราะรักนี้']]]),
@@ -4189,7 +4195,7 @@ const SAGA=[
   d=>runE(['🗺️ มรดกที่หายไป (1/3)','พบแผนที่เก่าในหีบของปู่ทวด เขียนว่า "สมบัติตระกูลซ่อนใต้น้ำตกสามสาย"',[['ออกเดินทางตามหา','j+4','เก็บของเตรียมเดินทางไกล'],['ขายแผนที่','$+300','พ่อค้าจ่ายเงินแล้วยิ้มแปลกๆ',()=>d.end=1]]]),
   d=>runE(['🗺️ มรดกที่หายไป (2/3)','ใต้น้ำตกมีประตูหินกับตัวอักษรโบราณ มีกลุ่มโจรตามมาเพราะได้ข่าวเรื่องสมบัติ',[['ไขปริศนาประตูก่อน','i+6','ประตูเปิดออกช้าๆ',()=>d.open=1],['จัดการโจรก่อน','',null,()=>{d.open=fight('หัวหน้าโจรตามล่าสมบัติ',240+S.age*12+realmIdx()*220);log(d.open?'🗡️ ไล่โจรแตกกระเจิง':'🩸 โจรแย่งแผนที่ไปได้ครึ่งหนึ่ง',d.open?'good':'bad')}]]]),
   d=>{if(d.open){const a=newArt(2);S.arts.push(a);applyFx('$+2000 f+20');log(`🗺️ ในห้องลับมีทองคำและคัมภีร์ประจำตระกูล ${artHtml(a)} — ตระกูลคุณเคยยิ่งใหญ่กว่าที่คิด`,'epic',true)}else log('🗺️ เมื่อกลับไปอีกครั้ง ห้องลับถูกขุดจนเกลี้ยงแล้ว','bad',true)}]},
- {id:'fox',n:'ภูตจิ้งจอกในป่าไผ่',c:()=>S.age>=16&&S.age<=50,ch:[
+ {id:'fox',n:'ภูตจิ้งจอกในป่าไผ่',c:()=>S.age>=18&&S.age<=50,ch:[
   d=>{d.nm=anyName(S.gender==='ชาย'?'หญิง':'ชาย');runE(['🦊 ภูตจิ้งจอก (1/3)',`คืนฝนตก ${d.nm}ผู้มีดวงตาสีอำพันมาขอหลบฝนในบ้าน มีหางจิ้งจอกโผล่ออกมาใต้ชายเสื้อ`,[['ให้พักแล้วแกล้งไม่เห็น','k+5 j+5','เขายิ้มอย่างรู้ทัน'],['ชี้ว่าเห็นหางแล้ว','i+3','เขาหัวเราะ แล้วหายไปในสายฝน',()=>d.end=1]]])},
   d=>runE(['🦊 ภูตจิ้งจอก (2/3)',`${d.nm}มาหาบ่อยขึ้น นักพรตคนหนึ่งเตือนว่าภูตจิ้งจอกจะดูดพลังชีวิตคน`,[['เชื่อนักพรต ไล่เขาไป','k-5 l+5','เขาร้องไห้แล้วจากไป',()=>d.out=1],['ไม่สนใจคำเตือน','l-5 j+10 q+3','อยู่ด้วยกันแล้วกลับรู้สึกพลังเพิ่ม']]]),
   d=>{if(d.out){log(`🦊 หลายปีต่อมาพบว่านักพรตคนนั้นคือผู้ล่าภูตที่ต้องการแก่นจิ้งจอก ส่วน${d.nm}ไม่เคยทำร้ายใคร`,'bad',true);joy(-6)}else{S.spouse=S.spouse||d.nm;applyFx('l+30 q+5');log(`🦊 ${d.nm}เผยร่างจิ้งจอกเก้าหาง แล้วแบ่งพลังพันปีให้ — ${S.spouse===d.nm?'ทั้งสองแต่งงานกันใต้แสงจันทร์':'สาบานเป็นสหายข้ามเผ่าพันธุ์'}`,'myth',true)}}]}];
@@ -5359,19 +5365,49 @@ const HM_N={หญิง:['หลิวอวี่','ซูเหมย','ห�
 const HM_T=['บุตรีเจ้าเมือง','นักดนตรีจากหอบุปผา','ศิษย์สำนักกระบี่','ลูกสาวพ่อค้าเกลือ','จอมยุทธ์พเนจร','หมอเทวดาสาว','องค์หญิงจากแคว้นใกล้','นักเต้นจากแดนตะวันตก','ศิษย์หุบเขาดอกท้อ','ธิดาตระกูลยุทธ์'];
 const HM_TM=['บุตรชายเจ้าเมือง','นักกวีจากหอบุปผา','ศิษย์สำนักกระบี่','ลูกชายพ่อค้าเกลือ','จอมยุทธ์พเนจร','หมอเทวดาหนุ่ม','องค์ชายจากแคว้นใกล้','นักดาบจากแดนตะวันตก','ศิษย์หุบเขาดอกท้อ','บุตรตระกูลยุทธ์'];
 function haremCap(){return Math.max(0,1+Math.floor(((S.cha||0)-50)/30)+Math.floor((S.fame||0)/2500)+Math.floor(realmIdx()/2))}
-function haremTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human)||S.age<18||S.age>75)return;const H=S.harem;
- if(H&&H.length){const up=H.length*(40+realmIdx()*25);if(S.money>=up){S.money-=up;joy(Math.min(8,2*H.length))}else{const g=H.pop();log(`🌸 เงินไม่พอเลี้ยงดูตำหนักใน — ${g.n} ขอลาจากไป`,'bad')}
-  if(S.sp)S.sp.aff=Math.max(0,(S.sp.aff||70)-2*H.length);if(H.length&&Math.random()<.03*H.length){S.kids=(S.kids||0)+1;log(`👶 ${ch(H).n}ให้กำเนิดบุตรแก่คุณ`,'good')}}
- if(choice._cur||modalOpen||(S.cha||0)<55)return;const cap=haremCap();if(H&&H.length>=cap)return;
- if(Math.random()>.05+((S.cha||0)-55)/2500+(S.fame||0)/60000)return;const og=oppG(),nm=ch(HM_N[og]),tt=ch(og==='หญิง'?HM_T:HM_TM),who=og==='หญิง'?'สาวงาม':'บุรุษรูปงาม';
- if(!H){const cost=Math.round(800*(1+realmIdx()*.4));choice(`🏯 ${who}มาขอติดตาม`,`<b>${nm}</b> ${tt} หลงใหลในชื่อเสียงและเสน่ห์ของคุณ ขอเป็นคนข้างกาย — ถ้ารับไว้ต้องเปิด<b>ตำหนักใน</b>เพื่อดูแลคนข้างกาย (รับได้สูงสุด ${cap} คนตามเสน่ห์ ชื่อเสียง และขั้นพลัง)`,[
-   {t:`เปิดตำหนักในและรับ${nm}ไว้`,s:`ใช้เสน่ห์ · ค่าเปิดตำหนัก ${fmt(cost)} · มีค่าเลี้ยงดูทุกปี`,f(){if(S.money<cost){log('เงินไม่พอเปิดตำหนักใน','bad');return}S.money-=cost;if(roll01(.55)){S.harem=[{n:nm,t:tt,a:S.age}];joy(10);S.fame+=10;log(`🏯 เปิดตำหนักใน — <b>${nm}</b> ${tt} เป็นคนแรกที่เข้ามาอยู่`,'epic',true)}else{S.harem=[];log(`${nm}เปลี่ยนใจกลางทาง ตำหนักในจึงยังว่างเปล่า`,'bad')}}},
-   {t:'ปฏิเสธอย่างสุภาพ',s:'กรรม +',f(){S.karma+=1;S.harem=null;log(`คุณปฏิเสธ${nm}อย่างนุ่มนวล`)}}]);return}
- choice(`🌸 ${who}ขอเข้าตำหนักใน`,`<b>${nm}</b> ${tt} ได้ยินกิตติศัพท์ของคุณ ขอเข้าตำหนักใน (ตอนนี้ ${H.length}/${cap} คน)${S.sp?`<br><span class="tag2">${S.sp.n} อาจไม่พอใจ</span>`:''}`,[
-  {t:`รับ${nm}เข้าตำหนัก`,s:'ใช้เสน่ห์ · ค่าเลี้ยงดูเพิ่มขึ้น',f(){if(roll01(.5)){H.push({n:nm,t:tt,a:S.age});joy(6);log(`🌸 <b>${nm}</b> ${tt} เข้าตำหนักใน (${H.length}/${cap})`,'good',H.length>=5)}else log(`${nm}ทดสอบใจคุณแล้วจากไป — ยังไม่ประทับใจพอ`,'bad')}},
-  {t:'ปฏิเสธ',s:'กรรม +',f(){S.karma+=1;log(`คุณปฏิเสธ${nm}`)}}])}
+function hmMember(nm,tt){const g=mkLover(nm,tt);return{n:nm,t:tt,a:S.age,age:g.age,life:g.life,aff:65}}
+function hmAskP(){const sp=S.sp;if(!sp)return .5;let p=.2+(sp.aff||60)/220+(S.cha||0)/700+(S.fame||0)/40000+realmIdx()*.02;if(sp.p==='ขี้หึง')p-=.25;if(sp.p==='ร่าเริง')p+=.08;if(S.xian)p+=.05;return clamp(p,.05,.85)}
+function haremTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human)||S.age<18)return;const H=S.harem;
+ if(H&&H.length&&S.haremOK==null&&!S.haremSecret)S.haremOK=1;
+ if(H&&H.length){
+  for(const g of H.slice()){if(g.age==null){g.age=loverAge();g.life=loverLife(g.age)}g.age++;if(g.age>=g.life){H.splice(H.indexOf(g),1);joy(-8);log(`🥀 <b>${g.n}</b> คนในตำหนักในจากไปด้วยวัย ${g.age} ปี`,'bad',true)}}
+  const up=H.length*(40+realmIdx()*25);if(S.money>=up){S.money-=up;joy(Math.min(8,2*H.length))}else if(H.length){const g=H.pop();log(`🌸 เงินไม่พอเลี้ยงดูตำหนักใน — ${g.n} ขอลาจากไป`,'bad')}
+  if(S.sp)S.sp.aff=Math.max(0,(S.sp.aff||70)-(S.haremOK?1:2)*H.length);if(H.length&&Math.random()<.03*H.length){S.kids=(S.kids||0)+1;log(`👶 ${ch(H).n}ให้กำเนิดบุตรแก่คุณ`,'good')}
+  if(S.haremSecret&&S.spouse&&!choice._cur&&!modalOpen&&Math.random()<.25){hmCaught();return}}
+ if(S.haremSecret&&(!H||!H.length))S.haremSecret=0;
+ if(choice._cur||modalOpen||(S.cha||0)<55)return;
+ if(Math.random()>.05+((S.cha||0)-55)/2500+(S.fame||0)/60000)return;
+ haremOffer(false)}
+function haremOffer(active){if(!S||!S.alive||S.age<18||choice._cur||modalOpen||(S.beastMode&&!S.beastMode.human))return false;const H=S.harem,cap=haremCap();
+ const og=oppG(),fr=HM_N[og].filter(x=>x!==S.spouse&&!(H||[]).some(g=>g.n===x)),nm=fr.length?ch(fr):anyName(og),tt=ch(og==='หญิง'?HM_T:HM_TM),who=og==='หญิง'?'สาวงาม':'บุรุษรูปงาม',g=hmMember(nm,tt),info=`<b>${nm}</b> ${tt} อายุ ${g.age} ปี`;
+ const intro=active?`ระหว่างออกไปพบปะผู้คน คุณได้รู้จักกับ${info} ทั้งสองคุยกันถูกคอ`:`${info} หลงใหลในชื่อเสียงและเสน่ห์ของคุณ ขอเป็นคนข้างกาย`;
+ if(!S.spouse){choice(`💕 ${who}สนใจคุณ`,intro,[
+   {t:`💕 คบกับ${nm}`,s:'เป็นคนรักคนแรก',f(){S.spouse=nm;S.spouseP=null;S.sp=mkLover(nm,tt,{wed:false,age:g.age});joy(8);log(`💕 เริ่มคบหากับ <b>${nm}</b> (${g.age} ปี)`,'epic')}},
+   {t:'ปฏิเสธอย่างสุภาพ',skip:true,f(){S.karma+=1;log(`คุณปฏิเสธ${nm}อย่างนุ่มนวล`)}}]);return true}
+ if(cap<1||(H&&H.length>=cap))return false;
+ const sp=S.sp,spN=sp?sp.n:S.spouse,cnt=H?H.length:0;
+ if(S.haremOK){choice(`🌸 ${who}ขอเข้าตำหนักใน`,`${intro} (ตอนนี้ ${cnt}/${cap} คน)`,[
+   {t:`รับ${nm}เข้าตำหนัก`,s:H?'ค่าเลี้ยงดูเพิ่มขึ้น':`ค่าเปิดตำหนัก ${fmt(Math.round(800*(1+realmIdx()*.4)))}`,f(){if(!H){const cost=Math.round(800*(1+realmIdx()*.4));if(S.money<cost){log('เงินไม่พอเปิดตำหนักใน','bad');return}S.money-=cost;S.harem=[]}
+     if(roll01(.55+(S.cha||0)/1000)){S.harem.push(g);joy(6);if(sp)sp.aff=Math.max(0,sp.aff-3);log(`🌸 <b>${nm}</b> ${tt} (${g.age} ปี) เข้าตำหนักใน (${S.harem.length}/${cap})`,'good',S.harem.length>=5)}else log(`${nm}ทดสอบใจคุณแล้วจากไป — ยังไม่ประทับใจพอ`,'bad')}},
+   {t:'ปฏิเสธ',skip:true,f(){S.karma+=1;log(`คุณปฏิเสธ${nm}`)}}]);return true}
+ const cost=Math.round(800*(1+realmIdx()*.4)),cool=S.haremNoAt!=null&&S.age-S.haremNoAt<5,pA=hmAskP(),o=[];
+ if(!cool)o.push({t:`💬 ถาม${spN}ก่อนว่าขอเปิดฮาเร็มได้ไหม`,s:`${spN}น่าจะยอมราว ${Math.round(pA*100)}% · ค่าเปิดตำหนัก ${fmt(cost)}`,f(){
+   if(roll01(pA)){S.haremOK=1;S.haremNoAt=null;if(sp)sp.aff=Math.max(0,sp.aff-5);log(`💬 ${spN}เงียบไปนาน ก่อนพยักหน้า "ข้าเป็นคนแรกของเจ้า... อย่าลืมก็พอ"`,'epic',true);
+     if(S.money<cost){log(`แต่ยังไม่มีเงินพอเปิดตำหนักใน (${fmt(cost)}) — ${nm}รอไม่ไหวจึงจากไป · คราวหน้ารับคนใหม่ได้เลยเมื่อมีเงิน`,'bad');return}
+     S.money-=cost;S.harem=S.harem||[];S.harem.push(g);joy(10);S.fame+=10;log(`🏯 เปิดตำหนักใน — <b>${nm}</b> ${tt} (${g.age} ปี) เข้ามาอยู่`,'epic',true)}
+   else{S.haremNoAt=S.age;if(sp)sp.aff=Math.max(0,sp.aff-10);joy(-4);log(`💬 ${spN}ไม่ยอม "ถ้าเจ้าอยากได้คนอื่น ก็ไม่ต้องมีข้า" — ${nm}จึงจากไป`,'bad')}}});
+ else o.push({t:`💬 ถาม${spN}`,s:`${spN}เพิ่งปฏิเสธไป${S.age-S.haremNoAt?'เมื่อ '+(S.age-S.haremNoAt)+' ปีก่อน':'ปีนี้'} · ถามใหม่ได้อีก ${5-(S.age-S.haremNoAt)} ปี`,f(){log(`คุณยังไม่กล้าเอ่ยปากถาม${spN}อีก ${nm}จึงจากไป`)}});
+ o.push({t:`ปฏิเสธ${nm} ซื่อสัตย์ต่อ${spN}`,skip:true,f(){S.karma+=2;if(sp)sp.aff=Math.min(100,sp.aff+4);log(`คุณปฏิเสธ${nm} — ${spN}รู้เรื่องทีหลังแล้วยิ้มอย่างอบอุ่น`,'good')}});
+ o.push({t:`🤫 แอบคบ${nm}โดยไม่บอก${spN}`,s:'เสี่ยง · ถ้าถูกจับได้ ความรักลดหนัก',f(){S.harem=S.harem||[];S.harem.push(g);S.haremSecret=1;S.karma-=3;log(`🤫 คุณแอบคบกับ <b>${nm}</b> (${g.age} ปี) โดยที่${spN}ยังไม่รู้`,'bad')}});
+ choice(`🌸 ${who}อยากอยู่ข้างกายคุณ`,`${intro}<br><span class="tag2">${spN} คือ${sp&&sp.wed===false?'คนรัก':'คู่ชีวิต'}คนแรกของคุณ — ถ้าจะเปิดฮาเร็มต้องถาม${og==='หญิง'?'เธอ':'เขา'}ก่อน</span>`,o);return true}
+function hmCaught(){const sp=S.sp,H=S.harem||[],spN=sp?sp.n:S.spouse;choice('💔 ถูกจับได้',`${spN}พบจดหมายรักจาก${H.map(g=>g.n).join(', ')} — "เจ้าทำแบบนี้กับข้าได้ยังไง"`,[
+  {t:'ขอโทษ และให้พวกนางไป',s:'ความรักลด · รักษาคู่ไว้',f(){S.harem=null;S.haremSecret=0;S.haremNoAt=S.age;if(sp)sp.aff=Math.max(0,sp.aff-25);joy(-10);log(`คุณยุติความสัมพันธ์ลับทั้งหมด ${spN}ยังอยู่ แต่แววตาเย็นชาลง`,'bad')}},
+  {t:'ขอให้ยอมรับพวกนาง',s:'เสี่ยงเลิกกัน',f(){S.haremSecret=0;if(sp&&roll01(clamp(hmAskP()-.2,.05,.6))){S.haremOK=1;sp.aff=Math.max(0,sp.aff-20);log(`${spN}ร้องไห้ทั้งคืน แต่สุดท้ายก็ยอมรับ — ตำหนักในเปิดอย่างเปิดเผย`,'epic')}else{log(`💔 ${spN}ตัดสินใจจากไป "ขอให้เจ้ามีความสุขกับพวกนาง"`,'bad',true);joy(-20);S.spouse=null;S.sp=null;S.spouseP=null;S.haremOK=1}}}])}
+function hmLeave(why){if(S.harem&&S.harem.length)log(`🌸 คนในตำหนักในส่งคุณจากไป — ${why}`);S.harem=null;S.haremOK=null;S.haremSecret=0;S.haremNoAt=null}
+{const _ax=ascendToX;ascendToX=function(){const r=_ax.apply(this,arguments);try{hmLeave('ทางของเซียนต้องเริ่มใหม่')}catch(e){}return r}}
+{const _ag=ascendGod;ascendGod=function(){const r=_ag.apply(this,arguments);try{hmLeave('พวกนางรอคุณอยู่ที่โลกเซียน')}catch(e){}return r}}
 {const _py4=passYear;passYear=function(){try{youthTick()}catch(e){console.error(e)}try{haremTick()}catch(e){console.error(e)}return _py4.apply(this,arguments)}}
-{const _of=openFamily;openFamily=function(){const r=_of.apply(this,arguments);try{const H=S.harem;if(H&&H.length){$('modal').insertAdjacentHTML('beforeend',`<h4 style="margin:12px 0 6px">🏯 ตำหนักใน (${H.length}/${haremCap()})</h4>`+H.map(g=>`<div class="item"><b>${esc(g.n)}</b> <span class="tag2">${esc(g.t)} · เข้ามาตอนคุณอายุ ${g.a}</span></div>`).join('')+`<p class="tag2">ค่าเลี้ยงดูปีละ ${fmt(H.length*(40+realmIdx()*25))}</p>`)}
+{const _of=openFamily;openFamily=function(){const r=_of.apply(this,arguments);try{const H=S.harem;if(H&&H.length){$('modal').insertAdjacentHTML('beforeend',`<h4 style="margin:12px 0 6px">🏯 ตำหนักใน (${H.length}/${haremCap()})</h4>`+H.map(g=>`<div class="item"><b>${esc(g.n)}</b>${g.age!=null?` <span class="tag2">${g.age} ปี</span>`:''} <span class="tag2">${esc(g.t)} · เข้ามาตอนคุณอายุ ${g.a}</span></div>`).join('')+`<p class="tag2">ค่าเลี้ยงดูปีละ ${fmt(H.length*(40+realmIdx()*25))}${S.haremSecret?' · 🤫 ยังเป็นความลับ':S.haremOK&&S.sp?` · ${esc(S.sp.n)}ยอมรับแล้ว`:''}</p>`)}
  if(S.agelessAt!=null)$('modal').insertAdjacentHTML('beforeend',`<p class="tag2">🌸 คืนสู่วัยเยาว์ — ใบหน้าหยุดไว้ที่ราว ${S.agelessAt} ปี${S.youthBody?' · ร่างกายแข็งแรงเหมือนวัยรุ่น':''}</p>`)}catch(e){}return r}}
 
 // ============ v7.3: เลย์เอาต์สำหรับหน้าจอคอม + คีย์ลัด ============
@@ -5668,7 +5704,7 @@ const NQT={
  elder:[['art','kid','อยากให้คุณรวบรวมวิชาไว้ถ่ายทอดให้คนรุ่นหลัง','อยากให้คุณรวบรวมคัมภีร์ไว้ให้ทายาท',6],['karma','monk','บอกว่าบั้นปลายชีวิตควรสร้างบุญไว้','บอกว่าก่อนสิ้นอายุขัยควรสะสางกรรมเก่า',5],
   ['qi','old','สอนวิธีบ่มเพาะลมปราณเพื่อยืดอายุ','สอนวิธีบ่มเพาะปราณเพื่อยืดอายุขัย',5],['money','kid','กังวลว่าครอบครัวจะลำบากหลังคุณจากไป อยากให้เก็บมรดกไว้','กังวลว่าตระกูลจะขาดทรัพยากรหลังคุณจากไป',5],
   ['realm','old','บอกว่าทะลวงอีกขั้นเดียว อายุขัยจะยืดออกไปอีกมาก','บอกว่าทะลวงอีกขั้นเดียว อายุขัยจะยืดออกไปอีกหลายร้อยปี',8],['fame','chief','อยากให้คุณช่วยเป็นที่ปรึกษาให้หมู่บ้าน','อยากให้คุณเป็นผู้อาวุโสพิทักษ์หมู่บ้าน',5]]};
-const NQOK={join:()=>!S.faction&&!S.ownSect,rank:()=>!!S.faction&&S.rank<4,marry:()=>!S.spouse&&S.age>=16,kid:()=>!!S.spouse&&S.age<55,gear:()=>{try{return gearT()<8}catch(e){return false}},house:()=>{try{return houseT()<3}catch(e){return false}},realm:()=>realmIdx()<7,win:()=>S.age>=12};
+const NQOK={join:()=>!S.faction&&!S.ownSect,rank:()=>!!S.faction&&S.rank<4,marry:()=>!S.spouse&&S.age>=18,kid:()=>!!S.spouse&&S.age<55,gear:()=>{try{return!!gearNext()}catch(e){return false}},house:()=>{try{return houseT()<3}catch(e){return false}},realm:()=>realmIdx()<7,win:()=>S.age>=12};
 function nqMake(){const st=lifeStage(),L=NQT[st];if(!L)return null;const have=(S.nq||[]).map(q=>q.k);
  const ok=L.filter(t=>(!NQOK[t[0]]||NQOK[t[0]]())&&!have.includes(t[0])&&QG[t[1]]&&QG[t[1]]());if(!ok.length)return null;
  const t=ch(ok),gv=QG[t[1]](),g=NQG[t[0]](),yrs=t[4]+R(0,2),mny=Math.round((30+S.age*6)*(1+realmIdx()*.3)/10)*10;
