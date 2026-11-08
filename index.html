@@ -390,7 +390,7 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='8.8';
+const VERSION='8.9';
 const CHANGELOG=[
  {v:'8.7',d:'8 พ.ย. 2026',l:['🌐 พบผู้เล่นจริงแบบเรียลไทม์: ระหว่างจำลอง มีโอกาสที่รอยแยกมิติจะพาผู้เล่นที่กำลังเล่นอยู่ตอนเดียวกันมาเจอคุณ — ท้าดวลหรือชวนเป็นพันธมิตรได้ และผลจะส่งไปถึงอีกฝ่ายด้วย · พันธมิตรมีโอกาสมาช่วยตอนจวนตัว','🌌 จักรวาลซ้อนทับ: บางชีวิตจะเกิดในจักรวาลเดียวกับผู้เล่นในทำเนียบ และอาจได้พบ ประลอง หรือสาบานเป็นพันธมิตรกับตำนานคนนั้น','🌍 ความแข็งแกร่งของโลกสุ่มทุกชีวิต: ยุคเสื่อมถอย (ศัตรู ×0.5) · ปกติ · ยอดฝีมือรุ่งเรือง (×1.6) · มารสวรรค์ไร้เทียมทาน (×3) · สวรรค์ลงทัณฑ์ (ศัตรูโคตรโกง ×6) — มารสวรรค์และจอมราชันมารแข็งแกร่งตามยุคด้วย','⏩ กาลเวลาแดนเทพ: ในโลกเซียน อายุเกิน 1,000 ปี หนึ่งก้าวเท่ากับ 100 ปี · เกิน 10,000 ปี ก้าวละ 1,000 ปี · เกิน 100,000 ปี ก้าวละ 10,000 ปี จนครบหนึ่งล้านปีกลายเป็นอมตะนิรันดร์ พร้อมความสำเร็จ ??? ใหม่','🧍 ตัวละครพิกเซลใหม่: ท่ายืนต่างกันตามพรรคและขั้นพลัง (กอดอก ไพล่มือ จับด้ามกระบี่ ท่าเตรียมสู้ ลอยตัว) · ตาเรืองแสงตามสีพรรคตอนใช้วิชา (สายมารตาแดงเลือดหมู) · เสื้อคลุมยาวสไตล์มังฮวามูริม','✏️ เสียงจากผู้เล่น: แก้ไขข้อความแจ้งบั๊กและความคิดเห็นของตัวเองได้ พร้อมป้าย (แก้ไขแล้ว) · ข้อความที่พิมพ์ค้างไว้ไม่หายเวลาสลับแท็บหรือปิดหน้าต่าง']},
  {v:'8.4',d:'8 พ.ย. 2026',l:['📱 สมาร์ตโฟนข้ามมิติใช้งานได้จริง: ผู้ข้ามมิติที่ได้มือถือมาเปิดได้จากเมนู มี 7 แอป — สารานุกรม คลิปสอนต่อสู้ เข็มทิศ กล้อง เพลง เกม เครื่องคิดเลข แบตชาร์จด้วยแผงโซลาร์','🔫 วรยุทธ์ระดับพิเศษสายปืน: ศาสตร์สร้างอาวุธปืน (สร้างปืนขายและใช้เอง) และวิชากระสุนแทนกระบี่ (ยิงปืนแทนกระบี่) ฝึกได้ระดับต่ำ กลาง สูง สุดยอด · โลกเซียนเป็นปืนวิญญาณและกระสุนปราณ','🏆 ความสำเร็จใหม่: หนึ่งในพันล้าน (???) · ความเป็นอมตะ (???) · สัญญาณหาย แต่แบตยังเหลือ · ติดมือถือข้ามภพ · ดินปืนในยุทธภพ · คลังแสงเดินได้ · เทพปืนไร้เทียมทาน','🌌 ประตูมิติกดเปิดต่อได้ทันทีหรือเปิดทั้งหมดรวดเดียว ไม่ต้องกลับไปเปิดเมนูใหม่ · ได้ของติดตัวซ้ำจะแลกเป็นเงินและปัญญาแทน','🐛 แก้ของต่างโลก 3 ชิ้นที่กดใช้แล้วไม่มีผล (วิชายุทธ์จากชาติก่อน · ตำราคณิตศาสตร์มหาวิทยาลัย · แหวนเก่าที่มีวิญญาณผู้เฒ่า) และกันกดประตูมิติรัวแล้วเสียครั้งเปิดฟรี','🌐 ย้ายแถบจำนวนคนออนไลน์ไปอยู่ใต้รูปโลกในหน้าแรก ไม่ทับชื่อเกม']},
@@ -1565,6 +1565,7 @@ function checkDeath(){
  else if(S.age>=lifeMax())cause='จากไปอย่างสงบด้วยวัยชรา'+(S.kids?' ท่ามกลางลูกหลาน':'');
  if(!cause)return false;
  try{if(ndSys(cause))return false}catch(e){console.error(e)}
+ try{if(typeof regTry==='function'&&regTry(cause))return false}catch(e){console.error(e)}
  if(S.sys&&S.sys.revive>0&&!S.flags.ascended){S.sys.revive--;S.hp=S.maxHp;S.deathCause=null;S.chronic=null;if(/วัยชรา/.test(cause))S.lifespan+=12;S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) — ร่างกายฟื้นคืนสมบูรณ์`,'up');setScene('system');return false}
  flushReveal();S.alive=false;S.cause=cause;saveLegacy();clearSave();setScene('death');setTimeout(()=>sfx('death'),300);log(`🪦 ${cause}`,'bad');
  setTimeout(()=>{modal(`<h3>ลาก่อน ${esc(S.name)}</h3><p>${cause} ในวัย ${S.age} ปี<br>อยากบอกอะไรกับคนคนนี้เป็นครั้งสุดท้าย?</p><input class="ta" id="byeIn" maxlength="80" placeholder="คำอำลาสุดท้าย"><button class="pbtn" style="width:100%" onclick="endGame()">อำลา</button>`,'bye')},900);
@@ -4994,7 +4995,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5','8.6','8.7',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5','8.6','8.7','8.8',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5920,6 +5921,34 @@ function shReveal(){const sh=S.shadow;if(!sh)return;const r=total()/sh.p,pw=Math
  add('ความตาย',[{id:'d_shadow',n:'ตายโดยไม่รู้ว่าใครฆ่า',d:'ถูกภัยเงาลอบสังหารโดยไม่ทันรู้ตัว',r:2,end:1,c:()=>/ไม่ทันรู้ตัว/.test(S.cause||'')}]);
  add('วิถียุทธ์',[{id:'w_shadow',n:'ผู้ล่าเงา',d:'สังหารภัยเงาที่ซ่อนตัวได้',r:3,c:()=>!!S.flags.shKill},{id:'w_shadowboss',n:'ถอนรากผู้อยู่เบื้องหลัง',d:'สังหารผู้อยู่เบื้องหลังภัยเงาได้',r:4,c:()=>!!S.flags.shBoss}])}
 try{Object.assign(I18N.d,{'ตรวจพบภัยเงา':'Hidden threat detected','ภัยเงา':'Shadow threat','ตามล่ากลับก่อนมันลงมือ':'Hunt it down first','วางค่ายกลป้องกันและเฝ้าระวัง':'Set protective arrays','หนีไปซ่อนตัวในแดนไกล':'Flee and hide far away','ถูกลอบสังหารโดยไม่ทันรู้ตัว':'Assassinated without ever noticing'})}catch(e){}
+
+// ---------- v8.9 ผู้หวนคืน: ย้อนเวลา / สิงร่าง + ล้างแค้น ----------
+const REG_BETRAY=['ศิษย์พี่ที่คุณไว้ใจที่สุด','สหายร่วมสาบานที่แอบอิจฉา','อาจารย์ที่ต้องการชิงคัมภีร์ของคุณ','คู่ชีวิตที่ถูกศัตรูซื้อตัว','ผู้อาวุโสในสำนักที่กลัวคุณจะแซงหน้า','พ่อค้าที่คุณช่วยไว้แต่หักหลัง'];
+function regKiller(cause){const m=/ถูก(.+?)สังหาร/.exec(cause||'');if(m&&!/ลอบสังหารโดยไม่ทันรู้ตัว/.test(cause))return m[1];if(/ไม่ทันรู้ตัว/.test(cause||'')){const k=(S.key||[]).map(x=>/ผู้ลงมือคือ (.+?) \(/.exec(x)).filter(Boolean).pop();if(k)return k[1]}return null}
+function regTry(cause){if(!S||S.beastMode||(S.regN||0)>=1||S.revenge||/บรรลุ|อมตะ|ทะลวงสู่|ก้าวข้าม|หลุดพ้น/.test(cause||''))return false;S.regN=(S.regN||0)+1;if(Math.random()>=.25)return false;
+ const killer=regKiller(cause),betray=!killer&&!/วัยชรา|ทารก/.test(cause)&&Math.random()<.5,target=killer||(betray?ch(REG_BETRAY):null),oldAge=S.age,oldPow=total(),poss=Math.random()<.5;
+ S.deathCause=null;S.chronic=null;S.shadow=null;S.flags.regress=1;S.flags.regBack=1;
+ if(poss){S.flags.possess=1;const pe=peers.filter(p=>p.alive&&p.age>=12);const P=pe.length&&Math.random()<.6?ch(pe):null;const g=P?P.g:S.gender,nm=P?P.name:anyName(g),na=P?Math.max(14,P.age):R(15,30);if(P){P.alive=false;P.killed=false}
+  S.prevName=S.name;S.name=nm;S.gender=g;S.age=na;S.power=Math.round(S.power*.35)+R(50,150);S.qi=+(S.qi*.4).toFixed(1);S.faction=null;S.rank=0;S.merit=0;S.spouse=null;S.harem=null;S.children=[];S.kids=0;
+  log(`👁️ ความมืดจางหาย... คุณลืมตาขึ้นในร่างของ <b>${esc(nm)}</b> อายุ ${na} ปี${P?' — คนที่เกิดในวินาทีเดียวกับคุณ':''} ความทรงจำทั้งหมดของ <b>${esc(S.prevName)}</b> ยังอยู่ครบ`,'myth',true)}
+ else{const na=Math.max(6,Math.min(16,Math.round(oldAge*.3)));S.age=na;S.power=Math.round(S.power*.4)+R(30,100);S.qi=+(S.qi*.5).toFixed(1);S.faction=null;S.rank=0;S.merit=0;S.spouse=null;S.harem=null;S.children=[];S.kids=0;(S.parents||[]).forEach(p=>{p.alive=true});
+  log(`⏳ สิ่งสุดท้ายที่เห็นคือ${esc(cause)}... แล้วคุณก็สะดุ้งตื่นบนเตียงไม้หลังเดิม — ย้อนกลับมาตอนอายุ <b>${na} ปี</b> พ่อแม่ยังมีชีวิตอยู่ และคุณจำทุกอย่างได้`,'myth',true)}
+ S.int+=30;S.hp=S.maxHp;S.lifespan=Math.max(S.lifespan,S.age+40);S.regFrom={age:oldAge,cause,pow:Math.round(oldPow)};S.key.push(`${S.age} ปี — หวนคืนจากความตายครั้งที่แล้ว (ตายตอนอายุ ${oldAge} ปี: ${cause})`);setScene('portal');
+ if(target&&Math.random()<.7){S.revenge={n:target,p:Math.round(Math.max(oldPow*1.15,200)),dl:S.age+R(18,30),met:0,betray:!killer};setTimeout(()=>{if(S&&S.alive&&S.revenge)log(`🔥 ${killer?`<b>${esc(target)}</b> คือคนที่ฆ่าคุณในชาติก่อน`:`ชาติก่อนคุณถูก<b>${esc(target)}</b>หักหลังจนตาย`} — ครั้งนี้ต้องชำระแค้นให้ได้ภายใน ${S.revenge.dl-S.age} ปี ก่อนชะตาเดิมจะวนกลับมา`,'bad',true)},600)}
+ try{render()}catch(e){}return true}
+function revTick(){const R0=S.revenge;if(!R0||!S.alive||S.age<14)return;
+ if(S.age>=R0.dl){S.revenge=null;const w=fight(R0.n,Math.round(R0.p*1.2));if(w){S.fame+=150;S.flags.revenged=1;log(`🔥 ชะตาเดิมวนกลับมา <b>${esc(R0.n)}</b>บุกมาเพื่อฆ่าคุณซ้ำ — แต่ครั้งนี้คุณเป็นฝ่ายชนะ! วงจรแห่งความตายถูกทำลาย`,'myth',true)}else{S.hp=0;S.deathCause=`ถูก${R0.n}ฆ่าซ้ำเป็นครั้งที่สอง — ชะตาไม่ให้โอกาสอีกแล้ว`;log(`💀 ชะตาเดิมวนกลับมา คุณล้างแค้นไม่ทัน <b>${esc(R0.n)}</b>มาเอาชีวิตคุณอีกครั้ง`,'bad',true)}return}
+ if(choice._cur||modalOpen||Math.random()>.1||R0.met>=3)return;R0.met++;R0.p=Math.round(Math.max(R0.p,total()*.9));const r=total()/R0.p,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100)));
+ choice(`🔥 พบศัตรูจากชาติก่อน`,`คุณเห็น <b>${esc(R0.n)}</b> ${R0.betray?'คนที่หักหลังคุณ':'คนที่ฆ่าคุณ'}ในชาติก่อน — เขายังไม่รู้ว่าคุณคือใคร<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของเขา · เหลือเวลาอีก ${R0.dl-S.age} ปีก่อนชะตาเดิมจะวนกลับมา</span>`,[
+  {t:'⚔️ ชำระแค้นตอนนี้',s:`โอกาสชนะราว ${pw}%`,f(){duel(R0.n,R0.p,w=>{if(w){S.revenge=null;S.fame+=Math.round(120+R0.p/80);S.flags.revenged=1;joy(15);const a=newArt(2);Array.prototype.push.call(S.arts,a);log(`🔥 ล้างแค้นข้ามชาติสำเร็จ! <b>${esc(R0.n)}</b>ตายด้วยน้ำมือของคุณ — ได้ ${artHtml(a)} ที่เขาเคยแย่งไป`,'myth',true)}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));log(`${esc(R0.n)}แข็งแกร่งกว่าที่คิด คุณถอยออกมาได้ก่อนเขาจะจำคุณได้`,'bad')}})}},
+  {t:'🕸️ วางแผนใช้ความรู้จากชาติก่อน',s:'ใช้ปัญญา · ถ้าสำเร็จ ศัตรูอ่อนลงและรอบหน้าได้เปรียบ',f(){if(roll01(.4+(S.int||0)/350)){R0.p=Math.round(R0.p*.7);log(`🕸️ คุณใช้สิ่งที่รู้จากชาติก่อนวางกับดัก ตัดกำลังของ${esc(R0.n)}ไปได้มาก`,'epic')}else log('แผนยังไม่สุกงอม ต้องรอโอกาสต่อไป','')}},
+  {t:'⏳ รอให้แข็งแกร่งกว่านี้',s:'ไม่มีผลเสีย แต่เวลาเหลือน้อยลง',skip:true,f(){log(`คุณกัดฟันเดินผ่าน${esc(R0.n)}ไป รอวันที่พร้อม`)}}])}
+{const _py12=passYear;passYear=function(){const r=_py12.apply(this,arguments);try{if(S&&S.alive)revTick()}catch(e){console.error(e)}return r}}
+{const _ql4=questList;questList=function(){const L=_ql4.apply(this,arguments);try{const R0=S&&S.revenge;if(R0)L.unshift({k:'revenge2',ic:'🔥',n:'ล้างแค้นข้ามชาติ: '+R0.n,p:`เหลือเวลา ${Math.max(0,R0.dl-S.age)} ปี`,d:R0.betray?'คนที่หักหลังคุณในชาติก่อน — ทำไม่สำเร็จ ชะตาเดิมจะวนกลับมา':'คนที่ฆ่าคุณในชาติก่อน — ทำไม่สำเร็จ ชะตาเดิมจะวนกลับมา'})}catch(e){}return L}}
+{const add=(cat,arr)=>{const c=ACH.find(x=>x[0]===cat);if(!c)return;arr.forEach(a=>{if(ACH_ALL.some(b=>b.id===a.id))return;const zi=c[1].findIndex(b=>b.id==='z_all');if(zi>=0)c[1].splice(zi,0,a);else c[1].push(a);ACH_ALL.push(a)})};
+ add('ผู้ข้ามมิติ',[{id:'ow_regback',n:'ชาติที่สองของชีวิตเดียว',d:'ตายแล้วย้อนเวลากลับมาเกิดใหม่ในชีวิตเดิม',r:2,c:()=>!!S.flags.regBack&&!S.flags.possess},{id:'ow_possess',n:'ร่างใหม่ วิญญาณเดิม',d:'ตายแล้วไปลืมตาในร่างของคนอื่น',r:2,c:()=>!!S.flags.possess},{id:'ow_revenge',n:'ล้างแค้นข้ามชาติ',d:'ฆ่าคนที่ฆ่าหรือหักหลังคุณในชาติก่อนได้สำเร็จ',r:3,c:()=>!!S.flags.revenged}])}
+try{TTL_SP.splice(3,0,['revenge',()=>S.flags.revenged,'ผู้หวนคืนมาทวงแค้น'],['possess',()=>S.flags.possess&&realmIdx()>=4,'วิญญาณเก่าในร่างใหม่'])}catch(e){}
+try{Object.assign(I18N.d,{'พบศัตรูจากชาติก่อน':'Enemy from your past life','ชำระแค้นตอนนี้':'Take revenge now','วางแผนใช้ความรู้จากชาติก่อน':'Plot with past-life knowledge','รอให้แข็งแกร่งกว่านี้':'Wait until stronger','ล้างแค้นข้ามชาติ':'Cross-life revenge','หวนคืนจากความตายครั้งที่แล้ว':'Returned from the previous death'})}catch(e){}
 </script>
 </body>
 </html>
