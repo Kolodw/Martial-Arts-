@@ -3720,7 +3720,7 @@ let onlineOK=false,onlineN=0,onlineLives=0,chatT=null,chatLast=0,chatMsgs=[];
 const pid=(()=>{let v=LS.get('murim_pid','');if(!v){v=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);LS.set('murim_pid',v)}return v})();
 const pname=()=>LS.get('murim_pname','')||(S?S.name:'จอมยุทธ์นิรนาม');
 async function api(a,body){const o=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({id:pid},body))}:{};const r=await fetch(API+'?a='+a+(body?'':'&id='+pid),o);const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.err||r.status);return j}
-async function onlinePing(){try{const j=await api('ping&v='+VERSION);onlineOK=true;onlineN=j.n||0;onlineLives=j.lives||0;try{bdCheck(j.bd)}catch(e){}try{if('ann' in j)annShow(j.ann)}catch(e){}}catch(e){onlineOK=false}{const t=$('tOnN');if(t){t.textContent=onlineOK?fmt(onlineN):'';t.parentNode.classList.toggle('on',onlineOK)}}const el=$('onlineBadge');if(el){el.style.display=onlineOK?'':'none';el.innerHTML=`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิตที่เคยเล่น`}}
+async function onlinePing(){try{let st='';try{st='&st='+encodeURIComponent(actSnap())}catch(e){}window._lastPing=Date.now();const j=await api('ping&v='+VERSION+st);onlineOK=true;onlineN=j.n||0;onlineLives=j.lives||0;try{bdCheck(j.bd)}catch(e){}try{if('ann' in j)annShow(j.ann)}catch(e){}}catch(e){onlineOK=false}{const t=$('tOnN');if(t){t.textContent=onlineOK?fmt(onlineN):'';t.parentNode.classList.toggle('on',onlineOK)}}const el=$('onlineBadge');if(el){el.style.display=onlineOK?'':'none';el.innerHTML=`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิตที่เคยเล่น`}}
 setTimeout(onlinePing,1500);setInterval(()=>{if(!document.hidden)onlinePing()},60000);
 function myTitle(){if(!S)return'';const ri=realmIdx();return REALMS[ri].n}
 function chatRender(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60;box.innerHTML=chatMsgs.map(m=>`<div class="cm ${m.k==='share'?'share':''}"><span class="ct">${new Date(m.t).toTimeString().slice(0,5)}</span> <b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b> ${m.k==='share'?'📤 ':''}${esc(m.x)} <button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div>`).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';if(near)box.scrollTop=box.scrollHeight}
@@ -6717,6 +6717,20 @@ function blYearEvent(){const m=S.beastMode,M=blM();M.evL=M.evL||{};const L=M.evL
 {const BLOCK={openFaction:'เข้าสำนัก',openMarket:'ซื้อขายในตลาด',openTown:'เข้าเมือง',openCraft:'ทำงานช่าง',openDungeons:'ลงดันเจี้ยน',openHouse:'ตั้งตระกูล',openPeople:'คบหาผู้คน',gachaArt:'สุ่มคัมภีร์',openEquip:'สวมชุดและอาวุธ',manualJoin:'เข้าสำนัก',openFrameShop:'แลกของในร้าน'};
  for(const k in BLOCK){const f=window[k];if(typeof f!=='function')continue;window[k]=function(){try{if(S&&S.beastMode&&!S.beastMode.human){const x=(typeof bx==='function'?bx():null),st=S.beastMode.st;
   modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🐾 ยังเป็น${esc(S.beastMode.sp)}</h3><p>สัตว์ป่ายัง${BLOCK[k]}ไม่ได้ — ต้องบำเพ็ญจนถึงขั้น <b>${BL_ST[4]}</b> แล้วเลือก<b>แปลงกายเป็นมนุษย์</b>ก่อน</p><p class="tag2">ตอนนี้: ${BL_ST[st]} · ระหว่างนี้ลองเน้น 🍖 ล่าเหยื่อ 🌕 ดูดซับแสงจันทร์ หรือ 🏘️ แอบดูมนุษย์ เพื่อเรียนรู้โลกของพวกเขา</p><button class="gbtn" style="width:100%" onclick="closeM()">เข้าใจแล้ว</button>`,'beastno');return}}catch(e){}return f.apply(this,arguments)}}}
+
+// ---------- สถานะการเล่นสำหรับหน้าผู้ดูแล (ส่งไปกับ ping) ----------
+window._lastIn=Date.now();window._lastYr=0;window._errT=[];window._errM='';
+['pointerdown','keydown','touchstart','wheel'].forEach(ev=>document.addEventListener(ev,()=>{window._lastIn=Date.now()},{passive:true,capture:true}));
+window.addEventListener('error',e=>{window._errT.push(Date.now());window._errM=String(e.message||'').slice(0,80)});
+{const _ce=console.error.bind(console);console.error=function(...a){try{window._errT.push(Date.now());const x=a.find(v=>v&&v.message)||a[0];window._errM=String(x&&x.message||x||'').slice(0,80)}catch(e){}return _ce(...a)}}
+{const _pyA=passYear;passYear=function(){window._lastYr=Date.now();return _pyA.apply(this,arguments)}}
+function actSnap(){const n=Date.now(),sc=(document.querySelector('.screen.on')||{}).id||'',md=modalOpen?($('modal').dataset.k||'อื่นๆ'):'';window._errT=window._errT.filter(t=>n-t<600000);
+ const o={sc,md,ch:choice&&choice._cur?1:0,hd:document.hidden?1:0,ia:Math.round((n-window._lastIn)/1000),er:window._errT.length,em:window._errT.length?window._errM:''};
+ if(S){o.nm=String(S.name||'').slice(0,20);o.ag=S.age;o.al=S.alive?1:0;o.au=auto?1:0;o.pa=paused?1:0;o.sp=speed;o.w=S.beastMode&&!S.beastMode.human?'b':S.xt?'g':S.xian?'x':'m';o.yr=window._lastYr?Math.round((n-window._lastYr)/1000):-1;try{o.ri=REALMS[realmIdx()].n}catch(e){}}
+ return JSON.stringify(o)}
+// แท็บซ่อนอยู่ก็ยังรายงานทุก 4 นาที และแจ้งทันทีตอนสลับแท็บ
+setInterval(()=>{if(document.hidden&&Date.now()-(window._lastPing||0)>=240000)onlinePing()},60000);
+document.addEventListener('visibilitychange',()=>{if(Date.now()-(window._lastPing||0)>15000)onlinePing()});
 </script>
 </body>
 </html>
