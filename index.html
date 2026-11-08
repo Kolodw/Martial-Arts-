@@ -390,7 +390,7 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='9.6';
+const VERSION='9.7';
 const CHANGELOG=[
  {v:'9.3',d:'8 พ.ย. 2026',l:['🐾 สัตว์อสูรพิกเซลใหม่ ละเอียดขึ้น 2 เท่า: มีเส้นขอบ แสงเงา และท่าเดินขยับได้ · แต่ละพันธุ์มีลักษณะเฉพาะ เช่น ลายพยัคฆ์ จุดเสือดาว แผงคอสิงโต เขากวาง งวงช้าง นอแรด แม่เพรียงงูเห่า หนวดมังกร ขาแมงมุม ปีกผีเสื้อ ครีบฉลาม · สัตว์ระดับสูงมีออร่าและประกายธาตุวนรอบตัว','🦊 เกิดเป็นสัตว์อสูร: รูปในแถบสถานะ แผงตัวละคร และรูปโปรไฟล์ในแชทเป็นสัตว์จริงแล้ว ไม่ใช่คน · แถบสถานะแสดงขั้นการบำเพ็ญแบบสัตว์ (ลูกสัตว์ → อสูรพันปี) พร้อมระดับย่อย พันธุ์ และธาตุ · ตัวในฉากใหญ่ขึ้นสมส่วนกับคน','❓ การสอนใหม่: แนะนำระดับขั้น ตัวเลือกที่ย่อไว้ เควส ระบบ และแผงตัวละคร/ทางลัดบนคอม','📘 คู่มือระบบสำคัญ 13 หัวข้อ เปิดได้จากเมนูทั้งตอนเล่นและหน้าแรก พร้อมปุ่มพาไปหน้านั้นทันที','🐛 แก้หน้าต่างอื่นเด้งซ้อนทับระหว่างการสอน','🐛 แก้รูปโปรไฟล์ของสัตว์อสูรที่ว่างเปล่าหรือหลุดกรอบ']},
  {v:'9.1',d:'8 พ.ย. 2026',l:['⭐ ระดับขั้นใหม่: ทุกขั้นแบ่งเป็น ระดับต่ำ → กลาง → สูง → ใกล้เลื่อนขั้น → สมบูรณ์ (รอทะลวง) · เหนือขั้นสูงสุดมีชั้น เทพ → ราชา → บรรพกาล → ราชัน → นิรันดร์ ชั้นละ 9 ขั้น รวม 45 ขั้น พร้อมออร่าตอนก้าวข้ามชั้น','🔥 ธาตุไฟเข้าแทรก: ทะลวงขั้นล้มเหลวมีโอกาสโดนธาตุไฟเข้าแทรกตามค่าสถานะ (ปัญญา ความสุข พรสวรรค์) — เบาๆ เสียพลังเล็กน้อย หนักๆ เสียเส้นลมปราณ ร้ายสุดถึงตาย','⏳ ผู้หวนคืน: ตายแล้วมีโอกาส 25% ย้อนเวลากลับไปตอนเด็กหรือไปลืมตาในร่างคนอื่นพร้อมความทรงจำ · ถ้าถูกฆ่าหรือหักหลังจะได้ภารกิจล้างแค้นข้ามชาติ ทำไม่ทันชะตาเดิมจะวนกลับมา','🌑 ภัยเงาในโลกเทพเซียน: ศัตรูปริศนาที่ซ่อนตัวจ้องเอาชีวิต ต้องใช้ปัญญาและประสาทสัมผัสจับให้ได้ก่อนมันลงมือ ไม่งั้นอาจถูกฆ่าโดยไม่รู้ตัว · ถ้าฆ่าไม่ตาย ผู้อยู่เบื้องหลังจะมาล้างรากเหง้า','🏆 ก่อนเกิดใหม่ถามว่าจะซ่อนหรือเปิดข้อมูลชีวิตในทำเนียบ (เปิดสาธารณะ · ซ่อนรายละเอียด · ซ่อนทั้งหมด) ติ๊กให้จำไว้ได้ และเปลี่ยนได้ตลอดที่สุสาน','🐛 แก้ไทม์ไลน์ชีวิตตอนจบที่บันทึกเหตุการณ์เดียวกันซ้ำสองบรรทัด']},
@@ -4997,7 +4997,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5','8.6','8.7','8.8','8.9','9.0','9.1','9.2','9.3','9.4','9.5',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5','8.6','8.7','8.8','8.9','9.0','9.1','9.2','9.3','9.4','9.5','9.6',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -6182,6 +6182,63 @@ setInterval(acCheck,700);
 // ปุ่มลัดเครื่องมือนักพัฒนา
 document.addEventListener('keydown',e=>{const k=(e.key||'').toLowerCase();if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['i','j','c','k'].includes(k))||(e.metaKey&&e.altKey&&['i','j','c'].includes(k))||(e.ctrlKey&&k==='u')){e.preventDefault();e.stopPropagation();return false}},true);
 document.addEventListener('contextmenu',e=>{if(!/INPUT|TEXTAREA/.test((e.target&&e.target.tagName)||''))e.preventDefault()},true);
+
+
+// ---------- v9.7 วิชาหลายร้อยแบบ · วิชาพิเศษ · รวมวิชา ----------
+ART_S.push('เพลงกระบี่คู่','ฝ่ามือเหล็ก','กรงเล็บ','เพลงพลอง','เพลงแส้','เพลงพัด','เพลงขวาน','เพลงง้าว','ลูกเตะ','ท่าร่าง','เพลงหอก','เพลงเข็ม','ธนูเทพ','กระบวนท่า','คัมภีร์กระดูก','เพลงหมัดคู่');
+['ธรรมะ','อธรรม','มาร','none'].forEach(k=>ART_P[k].push(...({'ธรรมะ':['บัวหิมะ','ธาราใส','พุทธะประกาย','ไผ่เขียว','หงส์ขาว','ดาวเหนือ','ฟ้าสาง','ภูผาหิมะ','ลมวสันต์','สนเขียว'],'อธรรม':['งูเงา','แมงมุมพิษ','ใบไม้ร่วง','จันทร์เสี้ยว','เข็มพันเล่ม','ทรายดูด','หมาป่าราตรี','ค้างคาวเลือด','ควันพิษ','ปีศาจหมอก'],'มาร':['โลหิตหมื่นศพ','เพลิงนรก','กระดูกขาว','หัวใจมาร','ทะเลเลือด','อสูรเก้าหัว','วิญญาณร้าย','จันทร์เลือด','มารพันมือ','เงาอเวจี'],'none':['เสือขาว','นกกระเรียน','ภูผาไหล','คลื่นคลั่ง','อาทิตย์แผดเผา','หิมะโปรย','ฟ้าคำราม','ปฐพีสะเทือน','ลมกรด','ดาวตก']})[k]));
+const UA={eye:{ic:'👁️',d:'มองไกล ตรวจจับภัยที่ซ่อนอยู่',m:['เนตรทิพย์พันลี้','เนตรอินทรีมองทะลุ','ดวงตาเห็นปราณ','เนตรมังกรส่องฟ้า','เนตรสัจธรรม','เนตรวัชระ','ดวงตาพันมิติ','เนตรเหยี่ยวราตรี'],x:['เนตรเต๋าส่องฟ้า','เนตรวิญญาณพันลี้','ดวงตาสวรรค์','เนตรเทพมองทะลุสามภพ','เนตรหยั่งกรรม','เนตรดาราส่องมิติ']},
+ move:{ic:'💨',d:'วิชาตัวเบา หลบหลีกและหนีได้ดีขึ้น',m:['ก้าวเมฆาเหยียบฟ้า','วิชาตัวเบานกนางแอ่น','ก้าวพันเงา','ย่างก้าวสายลม','ก้าวมายาหลบดาบ','เหยียบน้ำไร้ร่องรอย','ก้าวเงาจันทร์'],x:['ก้าวเหาะเมฆา','ย่นระยะพันลี้','ศาสตร์เคลื่อนย้ายมิติ','ก้าวสายฟ้าหมื่นลี้','กระบี่พาเหาะ']},
+ hide:{ic:'🌫️',d:'ซ่อนปราณ ไม่ให้ศัตรูหมายหัว',m:['วิชาซ่อนปราณ','ศาสตร์เต่าหลับ','ลมหายใจผู้ตาย','ศาสตร์พันหน้า','ร่างเงาไร้ตัวตน','ศาสตร์กลืนกลิ่นอาย'],x:['ศาสตร์อำพรางวิญญาณ','ม่านมายาซ่อนกาย','ศาสตร์ลบร่องรอยกรรม','ร่างว่างเปล่า']},
+ heal:{ic:'💚',d:'ฟื้นฟูร่างกายทุกปี มีโอกาสรักษาโรค',m:['คัมภีร์ฟื้นชีพธาราใส','ฝ่ามือประสานกระดูก','ลมปราณรักษาบาดแผล','คัมภีร์โอสถชีวิต','เข็มทองต่อชีวิต','ลมปราณหมุนเวียนสวรรค์'],x:['ศาสตร์ฟื้นฟูวิญญาณ','คัมภีร์ร่างอมตะ','ธารชีวิตหมื่นปี','ศาสตร์งอกเนื้อต่อกระดูก']},
+ body:{ic:'🛡️',d:'หลอมกายให้แข็งแกร่ง พลังชีวิตเพิ่ม',m:['กายาวัชระ','ระฆังทองคุ้มกาย','เสื้อเกราะเหล็กไหล','กายเหล็กอสูร','ผิวหยกกระดูกเหล็ก','ร่างอรหันต์ทองแดง'],x:['ร่างเทพทองคำ','กายาดารา','ร่างอสูรบรรพกาล','กายาไม่มีวันดับสูญ']},
+ mind:{ic:'🧘',d:'จิตมั่นคง ลดธาตุไฟเข้าแทรก ทะลวงขั้นง่ายขึ้น',m:['จิตสงบดั่งน้ำนิ่ง','คัมภีร์สมาธิพันปี','ใจพุทธะ','จิตอัสนี','สมาธิภูผา','คัมภีร์ล้างไขกระดูก'],x:['จิตเต๋าแน่วแน่','ทะเลจิตไร้ขอบเขต','ศาสตร์ขัดเกลาจิตวิญญาณ','หัวใจเต๋าไม่หวั่นไหว']},
+ sound:{ic:'🎵',d:'โจมตีด้วยเสียง ได้เปรียบในการต่อสู้',m:['พิณสังหาร','เสียงคำรามสิงห์','ขลุ่ยสะกดวิญญาณ','กลองศึกสะท้านฟ้า','เพลงพิณพันกระบี่'],x:['พิณเทพสะกดสวรรค์','เสียงระฆังสามภพ','บทเพลงทำลายจิต']},
+ poison:{ic:'☠️',d:'ใช้พิษ ได้เปรียบในการต่อสู้',m:['คัมภีร์พันพิษ','ฝ่ามือพิษเจ็ดก้าว','ร่างพิษหมื่นชนิด','เข็มพิษดอกท้อ','ผงพิษแมงป่องทอง'],x:['ศาสตร์พิษวิญญาณ','หมอกพิษกัดกร่อนเซียน','พิษกู่หมื่นตัว']},
+ charm:{ic:'🌸',d:'เสน่ห์เพิ่มขึ้นทุกปี',m:['ศาสตร์เสน่ห์ดอกท้อ','เนตรสะกดใจ','ระบำพันบุปผา','รอยยิ้มล่มเมือง'],x:['ศาสตร์จิ้งจอกเก้าหาง','เสน่ห์เทพธิดาจันทร์','มนตร์ใจผูกพัน']},
+ array:{ic:'🔯',d:'ค่ายกลป้องกันตัว รับมือการลอบโจมตี',m:['ค่ายกลแปดทิศ','ค่ายกลดาวเหนือเจ็ดดวง','ค่ายกลหินพันก้อน','ค่ายกลกระบี่สิบแปดทิศ'],x:['ค่ายกลสวรรค์ดารา','ค่ายกลผนึกมิติ','ค่ายกลเก้ามังกร','ค่ายกลวัฏจักรห้าธาตุ']},
+ soul:{ic:'👻',d:'สัมผัสวิญญาณ รู้ภัยล่วงหน้า',m:['วิชาสัมผัสวิญญาณ','ศาสตร์ถอดจิต','วิชาฟังเสียงลม'],x:['ศาสตร์แยกร่างวิญญาณ','วิญญาณจุติพันร่าง','ศาสตร์หยั่งรู้อนาคต']},
+ summon:{ic:'🐉',d:'อัญเชิญหรือควบคุมอาวุธ ได้เปรียบในการต่อสู้',m:['เพลงกระบี่บินได้','วิชาควบคุมอาวุธลับ','วิชาเรียกสัตว์ป่า'],x:['กระบี่บินพันเล่ม','อัญเชิญสัตว์วิญญาณ','ศาสตร์ควบคุมหุ่นเทพ','อัญเชิญเงาบรรพชน']}};
+const UA_COUNT=Object.values(UA).reduce((a,v)=>a+v.m.length+v.x.length,0);
+function uaNew(minR){const k=ch(Object.keys(UA)),u=UA[k];let t;do{t=pickW(ART_TIER)}while(ART_TIER.indexOf(t.v)<(minR||0));const r=ART_TIER.indexOf(t.v);return{n:ch(S&&S.xian?u.x:u.m),tier:t.v.n+' · วิชาพิเศษ',b:Math.round(t.v.b*.45*(.8+Math.random()*.4)),r,p:t.p,fx:k}}
+{const _na=newArt;newArt=function(minTier){if(S&&!S.beastMode&&Math.random()<.22){try{return uaNew(minTier||0)}catch(e){}}return _na.apply(this,arguments)}}
+function artFx(k){if(!S||!S.arts)return 0;let v=0;for(const a of S.arts){if(!a)continue;const f=Array.isArray(a.fx)?a.fx:[a.fx];if(f.includes(k))v+=(.5+(a.r||0)*.5)*[1,1.3,1.7,2.2][Math.min(3,a.lv||0)]}return v}
+// ผลของวิชาพิเศษ
+{const _sp=shPerc;shPerc=function(){return _sp.apply(this,arguments)+artFx('eye')*40+artFx('soul')*25}}
+{const _st=shTick;shTick=function(){if(S&&!S.shadow){const h=artFx('hide');if(h>0&&Math.random()<Math.min(.6,h*.15))return}return _st.apply(this,arguments)}}
+{const _ss=shStrike;shStrike=function(){const d=artFx('array')+artFx('body')*.5+artFx('soul')*.5;if(S&&S.shadow&&d>0&&Math.random()<Math.min(.55,d*.12)){const sh=S.shadow;S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.25));S.shadow=null;S.shCd=S.age+R(15,40);log(`🔯 ${sh.n}ลอบโจมตีกลางดึก แต่${artFx('array')>0?'ค่ายกลรอบตัว':'วิชาของคุณ'}เตือนภัยทัน — มันหนีไปพร้อมบาดแผล`,'epic',true);return}return _ss.apply(this,arguments)}}
+{const _qd=qiDev;qiDev=function(){const m=artFx('mind');if(m>0&&Math.random()<Math.min(.6,m*.15)){log('🧘 ลมปราณปั่นป่วน แต่จิตที่มั่นคงดึงมันกลับสู่ที่เดิมได้ทัน','good');return}return _qd.apply(this,arguments)}}
+{const _bc=btChance;btChance=function(){return Math.min(.97,_bc.apply(this,arguments)+artFx('mind')*.03)}}
+{const _f4=fight;fight=function(name,ep){const v=artFx('move')*.03+artFx('sound')*.04+artFx('poison')*.04+artFx('summon')*.05+artFx('eye')*.015;if(!S||v<=0)return _f4.apply(this,arguments);const add=Math.round(total()*Math.min(.6,v));S.power+=add;try{return _f4.apply(this,arguments)}finally{S.power-=add}}}
+function uaTick(){if(!S||!S.alive||S.beastMode)return;const h=artFx('heal'),b=artFx('body'),m=artFx('mind'),c=artFx('charm'),e=artFx('eye');
+ if(h>0){S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*Math.min(.3,.05*h)));if(S.chronic&&Math.random()<Math.min(.5,.1*h)){log(`💚 วิชาฟื้นฟูรักษา${S.chronic.n}จนหายขาด`,'good');S.chronic=null}}
+ if(b>0)S.maxHp+=Math.max(1,Math.round(b*1.5));if(m>0)S.int+=Math.max(1,Math.round(m*.8));if(c>0&&S.cha<9999)S.cha+=Math.max(1,Math.round(c*.6));
+ if(e>0&&Math.random()<Math.min(.35,.08*e)){if(Math.random()<.6){const g=Math.round(R(80,300)*(1+realmIdx()*.4));S.money+=g;log(`👁️ เนตรของคุณมองเห็น${ch(['สมุนไพรหายากบนหน้าผาไกลลิบ','หีบสมบัติที่ถูกฝังไว้ใต้ต้นไม้','ถ้ำลับหลังน้ำตก'])} — ได้ ${fmt(g)} ตำลึง`,'good')}else{S.fame+=R(5,15);log(`👁️ เนตรของคุณมองเห็น${ch(['กองโจรซุ่มอยู่ไกลออกไปสิบลี้','ศัตรูที่แฝงตัวในฝูงชน','ค่ายกลกับดักบนทางเดินข้างหน้า'])} จึงเตือนทุกคนให้หลบทัน`,'good')}}}
+{const _py15=passYear;passYear=function(){const r=_py15.apply(this,arguments);try{uaTick()}catch(e){console.error(e)}return r}}
+// ---- รวมวิชา ----
+let FU_SEL=[];
+function fuseCan(a){return a&&(a.lv||0)>=1}
+function fuseP(L){const m=(S.talent&&S.talent.m)||1,avg=L.reduce((s,a)=>s+(a.lv||0),0)/L.length,mr=Math.max(...L.map(a=>a.r||0));return Math.max(.05,Math.min(.85,.25+(S.int||0)/600+(m-1)*.1+avg*.08-(L.length-2)*.08-mr*.04+(artFx('mind')*.02)))}
+function openFuse(){if(!S)return;const L=S.arts.map((a,i)=>({a,i})).filter(x=>x.a);const cd=(S.fuseY!=null&&S.age-S.fuseY<3);FU_SEL=FU_SEL.filter(i=>S.arts[i]&&fuseCan(S.arts[i]));
+ const sel=FU_SEL.map(i=>S.arts[i]),p=sel.length>=2?fuseP(sel):0;
+ modal(`<button class="xbtn" onclick="openArts()">✕</button><h3>🔮 รวมวิชา</h3><p class="tag2">เลือกวิชาที่ฝึกถึง<b>ระดับกลาง</b>ขึ้นไป 2–3 วิชา เพื่อหลอมรวมเป็นวิชาใหม่ในแบบของคุณเอง · วิชาเดิมจะถูกหลอมหายไป พลังรวมไม่ลดลง และมีโอกาสได้ระดับสูงขึ้น · ล้มเหลวอาจโดนธาตุไฟเข้าแทรก · ทำได้ทุก 3 ปี</p>
+ ${L.map(({a,i})=>{const ok=fuseCan(a),on=FU_SEL.includes(i);return`<button class="item fuit ${on?'on':''}" ${ok?'':'disabled'} onclick="fuseTog(${i})" style="width:100%;text-align:left;${ok?'':'opacity:.45'}"><div class="h"><b class="t${a.r}">${on?'✅ ':''}《${a.n}》</b><span class="tag2">${AMN[a.lv||0]}</span></div>${a.fx?`<p class="tag2">${(Array.isArray(a.fx)?a.fx:[a.fx]).map(k=>UA[k]?UA[k].ic+' '+UA[k].d:'').join(' · ')}</p>`:''}</button>`}).join('')}
+ <button class="pbtn" style="width:100%;margin-top:8px" ${sel.length>=2&&!cd?'':'disabled'} onclick="fuseGo()">${cd?`รอให้ลมปราณสงบอีก ${3-(S.age-S.fuseY)} ปี`:sel.length>=2?`🔮 หลอมรวม ${sel.length} วิชา (โอกาสสำเร็จ ${Math.round(p*100)}%)`:'เลือกอย่างน้อย 2 วิชา'}</button>`,'fuse')}
+function fuseTog(i){const k=FU_SEL.indexOf(i);if(k>=0)FU_SEL.splice(k,1);else if(FU_SEL.length<3)FU_SEL.push(i);openFuse()}
+function fuseCore(n){let s=String(n||'').replace(/^วิชายุทธ์ชาติก่อน — /,'').replace(/^วิถี[^:]*: /,'');for(const p of ART_S.slice().sort((a,b)=>b.length-a.length))if(s.startsWith(p)){s=s.slice(p.length);break}return s.split('ผสาน')[0].split('·')[0]||s}
+function fuseGo(){const idx=FU_SEL.slice().sort((a,b)=>b-a),L=idx.map(i=>S.arts[i]).filter(Boolean);if(L.length<2||(S.fuseY!=null&&S.age-S.fuseY<3))return;const p=fuseP(L);S.fuseY=S.age;FU_SEL=[];closeM();
+ if(Math.random()<p){const tot=L.reduce((s,a)=>s+a.b*artM(a),0),mr=Math.max(...L.map(a=>a.r||0)),r=Math.min(4,mr+(Math.random()<.3?1:0)),fx=[...new Set(L.flatMap(a=>a.fx?(Array.isArray(a.fx)?a.fx:[a.fx]):[]))];
+  const given=(S.name||'').split(' ').pop(),typ=(ART_S.find(t=>String(L[0].n).startsWith(t))||ch(ART_S));const nm=`วิถี${given}: ${typ}${fuseCore(L[0].n)}ผสาน${fuseCore(L[1].n)}${L[2]?'·'+fuseCore(L[2].n):''}`;
+  const a={n:nm,tier:ART_TIER[r].n+' · วิชาของตัวเอง',b:Math.round(tot*1.05+ART_TIER[r].b*.2),r,p:.0001,lv:0,own:1};if(fx.length)a.fx=fx.length===1?fx[0]:fx;
+  idx.forEach(i=>S.arts.splice(i,1));Array.prototype.push.call(S.arts,a);S.flags.fused=(S.flags.fused||0)+1;setScene('aura');
+  log(`🔮 หลอมรวม ${L.map(x=>'《'+x.n+'》').join(' + ')} สำเร็จ! ถือกำเนิดเป็นวิชาใหม่ที่มีเพียงคุณคนเดียวในใต้หล้า — ${artHtml(a)}${r>mr?' ระดับสูงขึ้น!':''}`,'myth',true)}
+ else{log(`💢 พยายามหลอมรวม ${L.map(x=>'《'+x.n+'》').join(' + ')} แต่ลมปราณของวิชาต่างสายปะทะกัน — ล้มเหลว <span class="tag2">(โอกาส ${Math.round(p*100)}%)</span>`,'bad');if(Math.random()<.45)qiDev(false)}
+ render()}
+{const _oa=openArts;openArts=function(){const r=_oa.apply(this,arguments);try{const m=$('modal'),host=m&&(m.querySelector('#modalIn')||m);if(host&&S&&!S.beastMode){const ua=S.arts.filter(a=>a&&a.fx);const box=document.createElement('div');box.innerHTML=`${ua.length?`<p class="tag2" style="margin-top:6px">วิชาพิเศษ: ${[...new Set(ua.flatMap(a=>Array.isArray(a.fx)?a.fx:[a.fx]))].map(k=>UA[k]?UA[k].ic+' '+UA[k].d:'').join(' · ')}</p>`:''}${S.arts.filter(Boolean).length>=2?`<button class="pbtn" style="width:100%;margin-top:8px" onclick="openFuse()">🔮 รวมวิชา — สร้างวิชาของตัวเอง</button>`:''}`;host.appendChild(box)}}catch(e){}return r}}
+{const st=document.createElement('style');st.textContent='.fuit{display:block;margin:4px 0;cursor:pointer}.fuit.on{outline:2px solid var(--pink)}';document.head.appendChild(st)}
+{const add=(cat,arr)=>{const c=ACH.find(x=>x[0]===cat);if(!c)return;arr.forEach(a=>{if(ACH_ALL.some(b=>b.id===a.id))return;const zi=c[1].findIndex(b=>b.id==='z_all');if(zi>=0)c[1].splice(zi,0,a);else c[1].push(a);ACH_ALL.push(a)})};
+ add('วิถียุทธ์',[{id:'w_fuse',n:'ผู้สร้างวิชา',d:'หลอมรวมวิชาเป็นวิชาของตัวเองสำเร็จ',r:2,c:()=>(S.flags.fused||0)>=1},{id:'w_fusemaster',n:'ปรมาจารย์ผู้ก่อตั้งวิชา',d:'ฝึกวิชาที่สร้างเองจนถึงระดับสุดยอด',r:4,c:()=>(S.arts||[]).some(a=>a&&a.own&&(a.lv||0)>=3)},{id:'w_allfx',n:'รอบรู้ทุกแขนง',d:'มีวิชาพิเศษครบ 6 แขนงในชาติเดียว',r:3,c:()=>new Set((S.arts||[]).filter(a=>a&&a.fx).flatMap(a=>Array.isArray(a.fx)?a.fx:[a.fx])).size>=6},{id:'w_eye',n:'เนตรพันลี้',d:'ได้วิชาสายเนตร',r:1,c:()=>artFx('eye')>0}])}
+try{Object.assign(I18N.d,{'รวมวิชา':'Fuse arts','สร้างวิชาของตัวเอง':'create your own art','วิชาพิเศษ':'Special art','วิชาของตัวเอง':'Own art','หลอมรวม':'Fuse','ผู้สร้างวิชา':'Art Creator'})}catch(e){}
 
 // ---------- v9.6 anti-cheat ขยาย: ระบบออนไลน์อื่นๆ ----------
 const AC_W=new WeakMap();
