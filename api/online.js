@@ -29,12 +29,14 @@ function clean(s, n) {
   s = s.replace(/หี(?![บดม])/g, '**');
   return s.trim();
 }
+// อ่าน query ด้วย WHATWG URL (ไม่แตะ req.query ซึ่งใช้ url.parse ที่เลิกสนับสนุนแล้ว)
+const qOf = r => r._q || (r._q = Object.fromEntries(new URL(r.url || '/', 'http://localhost').searchParams));
 const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
 
 function uaMeta(req, now) {
   const ua = String(req.headers['user-agent'] || '');
   const org = String(req.headers['origin'] || req.headers['referer'] || '').replace(/^https?:\/\//, '').split('/')[0].slice(0, 60);
-  return { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(req.query.v || '').slice(0, 8), c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
+  return { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(qOf(req).v || '').slice(0, 8), c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
 }
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -43,17 +45,17 @@ module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (!URL_ || !TOKEN) return res.status(503).json({ err: 'nodb' });
-  const a = req.query.a;
+  const a = qOf(req).a;
   let b = req.body || {};
   if (typeof b === 'string') { try { b = JSON.parse(b) } catch { b = {} } }
-  const id = req.method === 'GET' ? req.query.id : b.id;
+  const id = req.method === 'GET' ? qOf(req).id : b.id;
   const now = Date.now(), W = week();
   try {
     if (a === 'ping') {
       if (okId(id)) {
         const ua = String(req.headers['user-agent'] || '');
         const org = String(req.headers['origin'] || req.headers['referer'] || '').replace(/^https?:\/\//, '').split('/')[0].slice(0, 60);
-        const meta = { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(req.query.v || '').slice(0, 8), c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
+        const meta = { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(qOf(req).v || '').slice(0, 8), c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
         if (meta.b !== 'บอท') await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)]]);
       }
       const [, n, lives] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 300e3], ['ZCARD', 'online'], ['GET', 'lives']]);
@@ -61,10 +63,10 @@ module.exports = async (req, res) => {
     }
     if (a === 'who' || a === 'admin' || a === 'bugfix') {
       const AK = process.env.ADMIN_KEY;
-      if (!AK || String(req.query.key || '') !== AK) return res.status(403).json({ err: 'forbidden' });
+      if (!AK || String(qOf(req).key || '') !== AK) return res.status(403).json({ err: 'forbidden' });
       if (a === 'bugfix') {
-        const bid = String(req.query.bid || '').slice(0, 20);
-        await cmd(req.query.undo ? 'SREM' : 'SADD', 'bugdone', bid);
+        const bid = String(qOf(req).bid || '').slice(0, 20);
+        await cmd(qOf(req).undo ? 'SREM' : 'SADD', 'bugdone', bid);
         res.setHeader('Location', '?a=admin&key=' + encodeURIComponent(AK));
         return res.status(302).end();
       }
@@ -93,7 +95,7 @@ module.exports = async (req, res) => {
 <p><small>หน้านี้เปิดได้เฉพาะลิงก์ที่มีรหัสผู้ดูแล อย่าแชร์ลิงก์นี้</small></p></body></html>`);
     }
     if (a === 'trk') {
-      const pg = String(req.query.p || '');
+      const pg = String(qOf(req).p || '');
       const PAGES = ['chat', 'live', 'board', 'arena', 'me', 'spec'];
       if (!okId(id) || !PAGES.includes(pg)) return res.json({ ok: 0 });
       const ua = String(req.headers['user-agent'] || '');
@@ -107,7 +109,7 @@ module.exports = async (req, res) => {
     }
     if (a === 'trkget') {
       const AK = process.env.ADMIN_KEY;
-      if (!AK || String(req.query.key || '') !== AK) return res.status(403).json({ err: 'forbidden' });
+      if (!AK || String(qOf(req).key || '') !== AK) return res.status(403).json({ err: 'forbidden' });
       const PAGES = ['chat', 'live', 'board', 'arena', 'me', 'spec'], days = [];
       for (let i = 0; i < 7; i++) days.push(new Date(now + 7 * 3600e3 - i * 86400e3).toISOString().slice(0, 10));
       const ops = [];
@@ -135,12 +137,12 @@ module.exports = async (req, res) => {
       const T = pairs(top).filter(x => !x.cu).slice(0, 60), Pv = pairs(prev).filter(x => !x.cu).slice(0, 20), all = T.concat(Pv).filter(x => x.lid);
       const pubs = all.length ? await cmd('MGET', ...all.map(x => 'lifep:' + x.lid)) : [];
       const pm = {}; all.forEach((x, i) => pm[x.lid] = pubs[i] === '1' ? 1 : pubs[i] === '2' ? 2 : 0);
-      const admB = !!process.env.ADMIN_KEY && String(req.query.key || '') === process.env.ADMIN_KEY;
+      const admB = !!process.env.ADMIN_KEY && String(qOf(req).key || '') === process.env.ADMIN_KEY;
       const fix = l => l.map(x => { const v = x.lid ? pm[x.lid] || 0 : 0; const o = Object.assign(x, { pub: v === 1 || (admB && x.lid) ? 1 : 0 }); if (v === 2 && !admB) { o.n = 'ผู้ไม่ประสงค์ออกนาม'; o.f = ''; o.anon = 1 } return o });
       return res.json({ top: fix(T), prev: fix(Pv), arena });
     }
     if (a === 'load') {
-      const code = String(req.query.code || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+      const code = String(qOf(req).code || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
       const d = code ? await cmd('GET', 'cs:' + code) : null;
       if (!d) return res.status(404).json({ err: 'notfound' });
       return res.json({ d });
@@ -169,7 +171,7 @@ module.exports = async (req, res) => {
       return res.json({ n: L.length, avg, dist, m: L.slice(0, 80) });
     }
     if (a === 'livelist') {
-      const isAdm = !!process.env.ADMIN_KEY && String(req.query.key || '') === process.env.ADMIN_KEY;
+      const isAdm = !!process.env.ADMIN_KEY && String(qOf(req).key || '') === process.env.ADMIN_KEY;
       if (isAdm) {
         const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 90e3, '+inf']]);
         const all = [...(pub || []).map(x => [x, 'live:', 0]), ...(prv || []).filter(x => !(pub || []).includes(x)).map(x => [x, 'livep:', 1])];
@@ -197,8 +199,8 @@ module.exports = async (req, res) => {
       return res.json({ l: l.sort((p, q) => q.w - p.w || q.age - p.age).slice(0, 40) });
     }
     if (a === 'liveget') {
-      const k2 = String(req.query.t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-      if (process.env.ADMIN_KEY && String(req.query.key || '') === process.env.ADMIN_KEY) {
+      const k2 = String(qOf(req).t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (process.env.ADMIN_KEY && String(qOf(req).key || '') === process.env.ADMIN_KEY) {
         const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 90e3, '+inf']]);
         const f1 = (pub || []).find(x => x.slice(0, 6) + x.slice(-4) === k2), f2 = (prv || []).find(x => x.slice(0, 6) + x.slice(-4) === k2);
         const v = f1 ? await cmd('GET', 'live:' + f1) : f2 ? await cmd('GET', 'livep:' + f2) : null;
@@ -216,25 +218,25 @@ module.exports = async (req, res) => {
       return res.json({ s: JSON.parse(v), w: w || 0 });
     }
     if (a === 'cload') {
-      const p0 = String(req.query.p || '').replace(/[^a-z0-9]/g, '').slice(0, 24), tk = String(req.query.tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
+      const p0 = String(qOf(req).p || '').replace(/[^a-z0-9]/g, '').slice(0, 24), tk = String(qOf(req).tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
       const [tok, d] = await pipe([['GET', 'ctok:' + p0], ['GET', 'cs2:' + p0]]);
       if (!tok || tok !== tk || !d) return res.status(404).json({ err: 'notfound' });
       return res.json({ d });
     }
     if (a === 'boarddel' || a === 'cheatlog') {
-      if (!process.env.ADMIN_KEY || String(req.query.key || '') !== process.env.ADMIN_KEY) return res.status(403).json({ err: 'forbidden' });
+      if (!process.env.ADMIN_KEY || String(qOf(req).key || '') !== process.env.ADMIN_KEY) return res.status(403).json({ err: 'forbidden' });
       if (a === 'cheatlog') { const L0 = await cmd('LRANGE', 'cheatlog', 0, 99); return res.json({ l: (L0 || []).map(s0 => JSON.parse(s0)) }) }
-      const lid = String(req.query.l || '').replace(/[^a-z0-9]/g, '').slice(0, 16), ban = req.query.ban === '1';
+      const lid = String(qOf(req).l || '').replace(/[^a-z0-9]/g, '').slice(0, 16), ban = qOf(req).ban === '1';
       const prevW = week(new Date(now - 7 * 86400e3)); let removed = 0;
       for (const k0 of ['bd2:' + W, 'bd2:' + prevW]) { const all = await cmd('ZRANGE', k0, 0, -1); for (const m of (all || [])) { try { if (JSON.parse(m).lid === lid) { await cmd('ZREM', k0, m); removed++ } } catch {} } }
       let banned = 0; if (ban) { const own = await cmd('GET', 'lifeo:' + lid); if (own) { await cmd('SADD', 'cheaters', own); banned = 1 } }
       return res.json({ ok: 1, removed, banned });
     }
     if (a === 'lifeview') {
-      const lid = String(req.query.l || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
+      const lid = String(qOf(req).l || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
       const [pub, d, own] = await pipe([['GET', 'lifep:' + lid], ['GET', 'lifed:' + lid], ['GET', 'lifeo:' + lid]]);
       if (!d) return res.status(404).json({ err: 'notfound' });
-      const admV = !!process.env.ADMIN_KEY && String(req.query.key || '') === process.env.ADMIN_KEY;
+      const admV = !!process.env.ADMIN_KEY && String(qOf(req).key || '') === process.env.ADMIN_KEY;
       if (pub !== '1' && own !== id && !admV) return res.status(403).json({ err: 'private' });
       return res.json({ d: JSON.parse(d), pub: pub === '1' ? 1 : 0, mine: own === id ? 1 : 0 });
     }
@@ -245,8 +247,8 @@ module.exports = async (req, res) => {
     const isBanned = async () => !!(await cmd('SISMEMBER', 'cheaters', id));
     const isAdmQ = k => !!process.env.ADMIN_KEY && String(k || '') === process.env.ADMIN_KEY;
     if (a === 'logget') {
-      const k2 = String(req.query.t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-      const full = await findLive(k2, isAdmQ(req.query.key));
+      const k2 = String(qOf(req).t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const full = await findLive(k2, isAdmQ(qOf(req).key));
       if (!full) return res.status(404).json({ err: 'off' });
       const v = await cmd('GET', 'logfull:' + full);
       if (!v) return res.json({ wait: 1 });
