@@ -390,7 +390,7 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='8.2';
+const VERSION='8.3';
 const CHANGELOG=[
  {v:'8.1',d:'8 พ.ย. 2026',l:['📖 สมุดตำนานแบบดาว: ทำความสำเร็จเดิมซ้ำในชาติใหม่เพื่อเพิ่มดาว ★☆☆ → ★★★ (รวม 372 ดาว) · มีระดับนักบันทึก 7 ขั้น ตั้งแต่ผู้เริ่มจดบันทึกถึงผู้อยู่เหนือตำนาน · ทุกดาวใหม่ได้กรรมเข้าคลังไว้แลกกรอบ','🏷️ ระบบฉายา: กว่า 2,200 แบบ — ยุทธภพหรือแดนเซียนจะเรียกขานคุณตามสายสำนัก ขั้นพลัง และสิ่งที่เด่นที่สุดในชีวิต เช่น กระบี่ทลายภูผา · จอมมารโลหิต · เทพเซียนจันทร์กระจ่าง พร้อมฉายาพิเศษหายากอีก 20 แบบ ฉายาแสดงข้างชื่อและเก็บสะสมในสมุดตำนาน','📜 เควสตามช่วงวัย: พ่อแม่ อาจารย์ในสำนัก ผู้ใหญ่บ้าน นายอำเภอ คู่ชีวิต ลูกๆ ฯลฯ จะมาฝากเควสที่เข้ากับช่วงชีวิต พร้อมบอกว่าใครให้และทำไม · เควสระบบเลือกตามวัยและบอกเหตุผล','☠️ ศึกตัวต่อตัวกับมารสวรรค์ (ยุทธภพ) และจอมราชันมาร (เทพเซียน) — สู้ หนี หรือก้มหัว ชนะได้วิชาระดับตำนาน แพ้แล้วหนีไม่รอดคือตาย','💫 ระบบตื่นตอนใกล้ตาย: ตอนกำลังจะตาย ถ้ายังไม่มีระบบ มีโอกาส 30% ที่ระบบจะผูกมัดฉุกเฉินและดึงคุณกลับมา','🖼️ ร้านแลกกรอบใหม่: ราคาเริ่ม 5,000 กรรม และกรรมของแต่ละชีวิตจะเข้าคลังกรรมถาวร สะสมข้ามชีวิตได้','🐛 แก้บั๊กกดเปิดประตูมิติแล้วเวลาค้างไม่เดินต่อ และกันตัวเลือกค้างจากหน้าต่างที่เปิดทับ']},
  {v:'7.5',d:'8 พ.ย. 2026',l:['🖥️ หน้าจอคอมแบบใหม่: ซ้ายสถานะตัวละคร (ภาพตัวละคร หลอดพลังชีวิต/พลัง/อายุขัย ค่าสถานะ วิชาเด่น) · กลางฉากและบันทึก · ขวาฟังก์ชันแบ่งหมวด พร้อมเควสและการ์ดระบบ','📐 หน้าเกิดและหน้าสร้างตัวละครบนคอมแบ่ง 2 คอลัมน์ เห็นครบในจอเดียว','⌨️ คีย์ลัดบนคอม: Space หยุด/เล่น · S ความเร็ว · A อัตโนมัติ · 1–9 เลือกตัวเลือก · Esc ปิด · M/B/Q/L เมนู กระเป๋า เควส บันทึก','🖼️ ร้านแลกกรอบ: ใช้กรรมดีหรือกรรมชั่วแลกกรอบรูป 11 แบบ — ปกติ · วิบวับ · สีเปลี่ยน · อนิเมชั่นเปลี่ยนสีแล้วกลับสีเดิม กรอบเป็นของคุณถาวรทุกชีวิตและแสดงที่รูปตัวละคร','👤 ระบบโปรไฟล์: ตั้งตัวละครเป็นรูปโปรไฟล์ พร้อมกรอบ แสดงข้างชื่อในแชทโลก','🐛 แก้บั๊กตัวเลือกที่ค้างไว้นานแล้วพัง และกันเกมค้างจากตัวเลือกที่ผิดพลาด']},
@@ -4979,7 +4979,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5766,6 +5766,30 @@ function phoneUse(id){const P=S.phone,a=PH_APPS.find(x=>x.id===id);if(!P||!a||P.
   {id:'ow_gunpeak',n:'เทพปืนไร้เทียมทาน',d:'ฝึกวรยุทธ์สายปืนจนถึงระดับสุดยอด',r:4,c:()=>(S.arts||[]).some(a=>a&&a.gun&&(a.lv||0)>=3)}]);
  add('??? — เหนือตำนาน',[{id:'z_eternal',n:'ความเป็นอมตะ',d:'บรรลุเซียนอมตะและมีชีวิตอยู่เกิน 500 ปี',r:6,c:()=>!!S.flags.xImm&&S.age>=500}])}
 try{Object.assign(I18N.d,{'สมาร์ตโฟน':'Smartphone','ไม่มีสัญญาณ':'No signal','สารานุกรมออฟไลน์':'Offline encyclopedia','คลิปสอนต่อสู้':'Fighting tutorials','เข็มทิศ':'Compass','แผนที่':'Map','กล้องถ่ายรูป':'Camera','เพลงจากโลกเดิม':'Music from home','เกมออฟไลน์':'Offline games','เครื่องคิดเลข':'Calculator','ใช้แล้วปีนี้':'Used this year','แบต':'Battery','ศาสตร์สร้างอาวุธปืน':'Art of Gunsmithing','ศาสตร์หลอมปืนวิญญาณ':'Spirit Gun Forging','วิชากระสุนแทนกระบี่':'Bullets Instead of Blades','วิชากระสุนปราณทะลวงฟ้า':'Qi Bullet Sky-Piercer','สายปืน':'Gun path','พิเศษ':'Special','หนึ่งในพันล้าน':'One in a Billion','ความเป็นอมตะ':'Immortality','เทพปืน':'Gun God'})}catch(e){}
+
+// ---------- v8.3 ประตูมิติ: เปิดต่อเนื่อง / เปิดทั้งหมด ----------
+let portalBusy=false;
+function portalRes(it){if(it.v.passive&&S.items.some(x=>x.id===it.v.id)){const g=Math.round((400+S.age*20)*(1+realmIdx()*.4));S.money+=g;S.int+=3;log(`🌌 ประตูมิติส่ง<b>${it.v.n}</b>มาอีกชิ้น แต่คุณมีอยู่แล้ว — นำไปแลกได้ ${fmt(g)} ตำลึง · ปัญญา +3`,'good');return{p:it.p,v:Object.assign({},it.v,{n:it.v.n+' (ซ้ำ)',d:`มีอยู่แล้ว — แลกเป็น ${fmt(g)} ตำลึง · ปัญญา +3`})}}addItem(it.v);try{if(it.v.id==='phone'||it.v.id==='xphone'){if(!S.phone){const o=S.owItem;S.owItem=it.v;phoneInit();S.owItem=o}}}catch(e){}log(`🌌 เปิดประตูมิติ! ได้รับ <b>${it.v.n}</b> จาก${S.world.n}`,'myth');return it}
+function portalBtns(){return(S.portal>0?`<button class="pbtn" style="width:100%;margin-top:6px" onclick="openPortal()">🌌 เปิดอีกครั้ง (เหลือ ${S.portal})</button>${S.portal>1?`<button class="gbtn" style="width:100%;margin-top:6px" onclick="portalAll()">⚡ เปิดทั้งหมด ${S.portal} ครั้ง</button>`:''}`:'')+
+ `<div class="brow" style="margin-top:6px"><button class="gbtn" onclick="closeM();openItems()">🎒 ดูของต่างโลก</button><button class="${S.portal>0?'gbtn':'pbtn'}" onclick="closeM()">รับไว้</button></div>`}
+openPortal=function(){if(!S||!S.alive||portalBusy)return;
+ if(S.portal<=0){const nx=S.age+(8-S.age%8);modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌌 ประตูมิติ</h3><p>พลังยังไม่พอ — ชาร์จเพิ่ม 1 ครั้งทุก 8 ปี (ครั้งถัดไปตอนอายุ ${nx} ปี)</p><button class="gbtn" style="width:100%" onclick="closeM();openItems()">🎒 ดูของต่างโลก</button>`,'portal');return}
+ portalBusy=true;S.portal--;modal(`<div class="gacha"><div class="spin" style="background:repeating-conic-gradient(#8b4fd8 0 25%,#5b8def 0 50%)"></div>กำลังเชื่อมต่อกับ${S.world.n}...</div>`,'gacha');
+ setTimeout(()=>{portalBusy=false;try{if(!S||!S.alive){if(modalOpen)closeM();return}const it=portalRes(pickW(S.world.items)),r=rarOf(it.p*.3);setScene('portal');
+  modal(`<div class="gacha"><div class="tag2">${oddsTxt(it.p)}</div><h3 class="t${r}" style="padding:0">${it.v.n}</h3><p>${it.v.d}</p>${portalBtns()}</div>`,'gacha');render()}
+  catch(e){console.error(e);if(modalOpen&&$('modal').dataset.k==='gacha')closeM();toast('ประตูมิติขัดข้อง ลองใหม่อีกครั้ง');if(S)S.portal++}},800)};
+function portalAll(){if(!S||!S.alive||portalBusy||S.portal<=0)return;portalBusy=true;const n=S.portal;modal(`<div class="gacha"><div class="spin" style="background:repeating-conic-gradient(#8b4fd8 0 25%,#5b8def 0 50%)"></div>เปิดประตูมิติ ${n} ครั้งรวด...</div>`,'gacha');
+ setTimeout(()=>{portalBusy=false;try{if(!S||!S.alive){if(modalOpen)closeM();return}const got=[];while(S.portal>0){S.portal--;try{got.push(portalRes(pickW(S.world.items)))}catch(e){console.error(e);S.portal++;break}}setScene('portal');
+  modal(`<div class="gacha"><h3 style="padding:0">🌌 ได้รับ ${got.length} ชิ้น</h3>${got.map(it=>`<div class="item" style="text-align:left"><b class="t${rarOf(it.p*.3)}">${it.v.n}</b><p class="tag2">${it.v.d}</p></div>`).join('')}${portalBtns()}</div>`,'gacha');render()}
+  catch(e){console.error(e);if(modalOpen)closeM();toast('ประตูมิติขัดข้อง ลองใหม่อีกครั้ง')}},1000)}
+try{Object.assign(I18N.d,{'เปิดอีกครั้ง':'Open again','เปิดทั้งหมด':'Open all','ดูของต่างโลก':'View otherworld items','รับไว้':'Accept','ได้รับ':'Received','ครั้งถัดไปตอนอายุ':'next at age'})}catch(e){}
+
+{const _ui2=useItem;useItem=function(i){const it=S&&S.items[i];if(!it||it.left<=0)return _ui2.apply(this,arguments);
+ if(it.id==='murimArt'){it.left--;const a=newArt(2);a.n='วิชายุทธ์ชาติก่อน — '+a.n;Array.prototype.push.call(S.arts,a);S.power+=Math.round(80*S.talent.m);log(`ความทรงจำวิชายุทธ์ชาติก่อนหลั่งไหลกลับมา — ได้ ${artHtml(a)}`,'myth');render();openItems();return}
+ if(it.id==='mathx'){it.left--;S.int+=30;S.prof=S.prof||{t:'array',lv:1,xp:0};log('ศึกษาตำราคณิตศาสตร์มหาวิทยาลัยจนแตกฉาน ปัญญา +30 และเข้าใจหลักค่ายกล','myth');render();openItems();return}
+ if(it.id==='oldring'){it.left--;if(!S.sys){const T=SYS_TYPES.find(t=>t.id==='ring');if(T)bindSys(T)}else{S.qi+=10;log('วิญญาณในแหวนเก่าถ่ายทอดลมปราณให้ก่อนจะหลับใหลไป ลมปราณ +10 ปี','epic')}render();openItems();return}
+ return _ui2.apply(this,arguments)}}
+{const _ow2=owXAwake;owXAwake=function(){const r=_ow2.apply(this,arguments);try{const id=S.owItem&&S.owItem.id;if(['murimArt','mathx','oldring'].includes(id)){const it=S.items.find(x=>x.id===id&&x.left>0);if(it)it.left=0}}catch(e){}return r}}
 </script>
 </body>
 </html>
