@@ -82,7 +82,11 @@ module.exports = async (req, res) => {
     if (a === 'chat') {
       const [list, hidden] = await pipe([['LRANGE', 'chat', 0, 79], ['SMEMBERS', 'chat:hidden']]);
       const hs = new Set(hidden || []);
-      return res.json({ m: (list || []).map(x => JSON.parse(x)).filter(m => !hs.has(m.i)) });
+      const ms = (list || []).map(x => JSON.parse(x)).filter(m => !hs.has(m.i));
+      const pus = [...new Set(ms.map(m => m.pu).filter(Boolean))];
+      const pv = pus.length ? await cmd('HMGET', 'prof', ...pus) : [];
+      const p = {}; pus.forEach((u, i) => { if (pv[i]) { try { p[u] = JSON.parse(pv[i]) } catch {} } });
+      return res.json({ m: ms, p });
     }
     if (a === 'board') {
       const prevW = week(new Date(now - 7 * 86400e3));
@@ -228,13 +232,19 @@ module.exports = async (req, res) => {
       await pipe([['SET', 'cs2:' + id, d, 'EX', 86400 * 90], ['EXPIRE', 'ctok:' + id, 86400 * 90]]);
       return res.json({ ok: 1 });
     }
+    if (a === 'profile') {
+      const av = String(b.av || ''), fr = String(b.fr || '').replace(/[^a-z0-9_]/g, '').slice(0, 20);
+      if (av && (av.length > 8000 || !/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(av))) return res.status(400).json({ err: 'av' });
+      await cmd('HSET', 'prof', id.slice(0, 12), JSON.stringify({ av, fr }));
+      return res.json({ ok: 1 });
+    }
     if (a === 'say') {
       if (await cmd('GET', 'mute:' + id)) return res.status(429).json({ err: 'muted' });
       const ok = await cmd('SET', 'rl:' + id, 1, 'NX', 'EX', 3);
       if (!ok) return res.status(429).json({ err: 'rate' });
       const x = clean(b.x, 200);
       if (!x) return res.status(400).json({ err: 'empty' });
-      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: clean(b.n, 20) || 'นิรนาม', ti: clean(b.ti, 24), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4) };
+      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: clean(b.n, 20) || 'นิรนาม', ti: clean(b.ti, 24), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
       await pipe([['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199]]);
       return res.json({ ok: 1 });
     }
