@@ -390,7 +390,7 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='9.9';
+const VERSION='10.0';
 const CHANGELOG=[
  {v:'9.8',d:'8 พ.ย. 2026',l:['📖 วิชาเพิ่มหลายพันแบบ: ประเภทอาวุธ/ท่า 24 แบบ (พลอง แส้ พัด ขวาน ง้าว หอก ธนู เข็ม กรงเล็บ ลูกเตะ ฯลฯ) และชื่อท่าใหม่ทุกสาย','✨ วิชาพิเศษ 110 วิชา 12 แขนง: 👁️ เนตร (มองไกล เห็นสมบัติ/ภัยซุ่ม ตรวจจับภัยเงา) · 💨 ตัวเบา · 🌫️ ซ่อนปราณ · 💚 ฟื้นฟู · 🛡️ กายา · 🧘 จิต · 🎵 เสียง · ☠️ พิษ · 🌸 เสน่ห์ · 🔯 ค่ายกล · 👻 วิญญาณ · 🐉 อัญเชิญ — แต่ละแขนงมีผลจริงในเกม','🔮 รวมวิชา: หลอมวิชาที่ฝึกถึงระดับกลาง 2–3 วิชาเป็นวิชาใหม่ในชื่อของตัวเอง พลังไม่ลด มีโอกาสได้ระดับสูงขึ้น และได้ความสามารถพิเศษของทุกวิชาที่รวม','⚡ เว็บลื่นขึ้น: ไฟล์เซฟเล็กลงมาก (ภาพในอัลบั้มบีบอัดใหม่) เซฟเร็วขึ้นและพื้นที่เครื่องไม่เต็มง่าย','🐛 แก้พลังในแดนเทพ (อายุเกิน 1,000 ปี) ที่โตแบบทวีคูณจนตัวเลขระเบิด','🐛 แก้ฉายาที่ยาวล้นจอมือถือ และคำศัพท์ฝั่งยุทธภพที่หลุดไปโผล่ในโลกเซียน']},
  {v:'9.3',d:'8 พ.ย. 2026',l:['🐾 สัตว์อสูรพิกเซลใหม่ ละเอียดขึ้น 2 เท่า: มีเส้นขอบ แสงเงา และท่าเดินขยับได้ · แต่ละพันธุ์มีลักษณะเฉพาะ เช่น ลายพยัคฆ์ จุดเสือดาว แผงคอสิงโต เขากวาง งวงช้าง นอแรด แม่เพรียงงูเห่า หนวดมังกร ขาแมงมุม ปีกผีเสื้อ ครีบฉลาม · สัตว์ระดับสูงมีออร่าและประกายธาตุวนรอบตัว','🦊 เกิดเป็นสัตว์อสูร: รูปในแถบสถานะ แผงตัวละคร และรูปโปรไฟล์ในแชทเป็นสัตว์จริงแล้ว ไม่ใช่คน · แถบสถานะแสดงขั้นการบำเพ็ญแบบสัตว์ (ลูกสัตว์ → อสูรพันปี) พร้อมระดับย่อย พันธุ์ และธาตุ · ตัวในฉากใหญ่ขึ้นสมส่วนกับคน','❓ การสอนใหม่: แนะนำระดับขั้น ตัวเลือกที่ย่อไว้ เควส ระบบ และแผงตัวละคร/ทางลัดบนคอม','📘 คู่มือระบบสำคัญ 13 หัวข้อ เปิดได้จากเมนูทั้งตอนเล่นและหน้าแรก พร้อมปุ่มพาไปหน้านั้นทันที','🐛 แก้หน้าต่างอื่นเด้งซ้อนทับระหว่างการสอน','🐛 แก้รูปโปรไฟล์ของสัตว์อสูรที่ว่างเปล่าหรือหลุดกรอบ']},
@@ -4998,7 +4998,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5','8.6','8.7','8.8','8.9','9.0','9.1','9.2','9.3','9.4','9.5','9.6','9.7','9.8',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5','8.6','8.7','8.8','8.9','9.0','9.1','9.2','9.3','9.4','9.5','9.6','9.7','9.8','9.9',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -6273,6 +6273,11 @@ function acTp(){try{return(S&&(AC_W.get(S)||S._tp))||''}catch(e){return''}}
 {const _py14=passYear;passYear=function(){try{acCheck()}catch(e){}const r=_py14.apply(this,arguments);try{acCheck()}catch(e){}return r}}
 setInterval(()=>{try{acCheck()}catch(e){}},1500);
 try{['acCheck','acFlag','acTp','acSnap','sendLife','api'].forEach(k=>{try{Object.defineProperty(window,k,{writable:false,configurable:false})}catch(e){}})}catch(e){}
+
+// ---------- v10.0 spectate beast portrait
+{const _ls=liveSnap;liveSnap=function(){const r=_ls.apply(this,arguments);try{if(r&&S&&S.beastMode&&!S.beastMode.human){r.look=r.look||{};r.look.beast=blMe()}}catch(e){}return r};
+ const _ld=lifeDetail;lifeDetail=function(){const r=_ld.apply(this,arguments);try{if(r&&S&&S.beastMode&&!S.beastMode.human){r.look=r.look||{};r.look.beast=blMe()}}catch(e){}return r};
+ const _sda=specDrawAva;specDrawAva=function(o){if(o&&o.beast&&o.beast.f&&o.beast.col){const cv=$('specCv');if(!cv)return;try{drawPortrait(cv,o,true)}catch(e){}return}return _sda.apply(this,arguments)}}
 </script>
 </body>
 </html>
