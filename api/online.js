@@ -31,6 +31,11 @@ function clean(s, n) {
 }
 const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
 
+function uaMeta(req, now) {
+  const ua = String(req.headers['user-agent'] || '');
+  const org = String(req.headers['origin'] || req.headers['referer'] || '').replace(/^https?:\/\//, '').split('/')[0].slice(0, 60);
+  return { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(req.query.v || '').slice(0, 8), c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
+}
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
@@ -133,8 +138,9 @@ module.exports = async (req, res) => {
 
         const vals = all.length ? await cmd('MGET', ...all.map(x => x[1] + x[0])) : [];
         const cnt = all.length ? await pipe(all.map(x => ['ZCOUNT', 'watch:' + x[0], now - 20e3, '+inf'])) : [];
+        const lms = all.length ? await cmd('HMGET', 'lm', ...all.map(x => x[0])) : [];
         const l = [];
-        all.forEach(([x, , pv], i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, w: cnt[i] || 0, pv }) } catch {} });
+        all.forEach(([x, , pv], i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, w: cnt[i] || 0, pv, m: (() => { try { return JSON.parse(lms[i]) } catch { return null } })() }) } catch {} });
         await pipe([['ZREMRANGEBYSCORE', 'livezp', 0, now - 180e3]]);
         const onIds = await cmd('ZRANGEBYSCORE', 'online', now - 300e3, '+inf');
         const liveSet = new Set(all.map(x => x[0]));
@@ -214,6 +220,7 @@ module.exports = async (req, res) => {
       return res.json({ ok: 1 });
     }
     if (a === 'live') {
+      if (okId(id)) { try { const lm = uaMeta(req, now); lm.u = String(req.headers['user-agent'] || '').slice(0, 160); await cmd('HSET', 'lm', id, JSON.stringify(lm)) } catch {} }
       if (!b.spec) {
         const ps = String(b.s || '');
         if (ps && ps.length <= 60000) { try { JSON.parse(ps); const r0 = await pipe([['DEL', 'live:' + id], ['ZREM', 'livez', id], ['SET', 'livep:' + id, ps, 'EX', 100], ['ZADD', 'livezp', now, id], ['GET', 'logreq:' + id]]); return res.json({ w: 0, lr: r0[4] ? 1 : 0 }) } catch {} }
