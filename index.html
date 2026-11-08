@@ -390,7 +390,7 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='7.5';
+const VERSION='7.6';
 const CHANGELOG=[
  {v:'7.5',d:'8 พ.ย. 2026',l:['🖥️ หน้าจอคอมแบบใหม่: ซ้ายสถานะตัวละคร (ภาพตัวละคร หลอดพลังชีวิต/พลัง/อายุขัย ค่าสถานะ วิชาเด่น) · กลางฉากและบันทึก · ขวาฟังก์ชันแบ่งหมวด พร้อมเควสและการ์ดระบบ','📐 หน้าเกิดและหน้าสร้างตัวละครบนคอมแบ่ง 2 คอลัมน์ เห็นครบในจอเดียว','⌨️ คีย์ลัดบนคอม: Space หยุด/เล่น · S ความเร็ว · A อัตโนมัติ · 1–9 เลือกตัวเลือก · Esc ปิด · M/B/Q/L เมนู กระเป๋า เควส บันทึก','🖼️ ร้านแลกกรอบ: ใช้กรรมดีหรือกรรมชั่วแลกกรอบรูป 11 แบบ — ปกติ · วิบวับ · สีเปลี่ยน · อนิเมชั่นเปลี่ยนสีแล้วกลับสีเดิม กรอบเป็นของคุณถาวรทุกชีวิตและแสดงที่รูปตัวละคร','👤 ระบบโปรไฟล์: ตั้งตัวละครเป็นรูปโปรไฟล์ พร้อมกรอบ แสดงข้างชื่อในแชทโลก','🐛 แก้บั๊กตัวเลือกที่ค้างไว้นานแล้วพัง และกันเกมค้างจากตัวเลือกที่ผิดพลาด']},
  {v:'7.1',d:'8 พ.ย. 2026',l:['🐾 เกิดเป็นสัตว์สุ่มอย่างเดียว — ฟ้าลิขิตชนิด ธาตุ และพรสวรรค์ให้ทั้งหมด','🏆 ทำเนียบเพิ่มแท็บ 🐾 สัตว์อสูร แยกจากยุทธภพและโลกเทพเซียน','📜 ดูคนอื่นเล่น: โหลดบันทึกทั้งหมดตั้งแต่เกิดถึงปัจจุบันได้ (กดโหลดครั้งเดียว)','🌸 คืนสู่วัยเยาว์: พลังสูงหรือลมปราณบริสุทธิ์ถึงขีดสุด ใบหน้าอาจหยุดแก่ — แต่บางคนก็ยังแก่ตามวัย','🍑 เหตุการณ์หายาก: โอสถคืนวัยเยาว์ ร่างกายกลับแข็งแรงเหมือนวัยรุ่น อายุขัยเพิ่ม','🏯 ตำหนักใน: เสน่ห์และชื่อเสียงสูงจะมีสาวงาม/บุรุษรูปงามมาขอติดตาม รับได้มากตามค่าสถานะ มีค่าเลี้ยงดูทุกปี คู่ชีวิตอาจไม่พอใจ — ดูได้ในหน้าครอบครัว']},
@@ -1538,8 +1538,8 @@ function useItem(i){
 function openPortal(){
  if(S.portal<=0){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌌 ประตูมิติ</h3><p>พลังยังไม่พอ (ชาร์จเพิ่ม 1 ครั้งทุก 8 ปี)</p>`);return}
  S.portal--;modal(`<div class="gacha"><div class="spin" style="background:repeating-conic-gradient(#8b4fd8 0 25%,#5b8def 0 50%)"></div>กำลังเชื่อมต่อกับ${S.world.n}...</div>`,'gacha');
- setTimeout(()=>{const it=pickW(S.world.items);addItem(it.v);const r=rarOf(it.p*.3);setScene('portal');log(`🌌 เปิดประตูมิติ! ได้รับ <b>${it.v.n}</b> จาก${S.world.n}`,'myth');
-  modal(`<div class="gacha"><div class="tag2">${oddsTxt(it.p)}</div><h3 class="t${r}" style="padding:0">${it.v.n}</h3><p>${it.v.d}</p><button class="pbtn" onclick="closeM()">รับไว้</button></div>`,'gacha');render()},1000);
+ setTimeout(()=>{try{const it=pickW(S.world.items);addItem(it.v);const r=rarOf(it.p*.3);setScene('portal');log(`🌌 เปิดประตูมิติ! ได้รับ <b>${it.v.n}</b> จาก${S.world.n}`,'myth');
+  modal(`<div class="gacha"><div class="tag2">${oddsTxt(it.p)}</div><h3 class="t${r}" style="padding:0">${it.v.n}</h3><p>${it.v.d}</p><button class="pbtn" onclick="closeM()">รับไว้</button></div>`,'gacha');render()}catch(e){console.error(e);if(modalOpen&&$('modal').dataset.k==='gacha')closeM();toast('ประตูมิติขัดข้อง ลองใหม่อีกครั้ง');S.portal++}},1000);
 }
 function openFaction(){
  if(!S.faction){const can=S.age>=8&&S.joinTry!==S.age;
@@ -4977,7 +4977,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5552,6 +5552,15 @@ try{DK_GROUPS[1][1].push(['🖼️','แลกกรอบ','openFrameShop',()=>
 #mobAvaW{flex:0 0 auto;align-self:center}#mobAva{width:40px;height:44px;display:block;image-rendering:pixelated;border-radius:5px}
 .cmp{display:flex;gap:8px;align-items:flex-start}.cmp .cav{flex:0 0 auto;padding-top:2px}.cmp .cmb{flex:1;min-width:0}
 `;document.head.appendChild(st)})();
+
+// ============ v7.6: กันค้างเมื่อเปิดหน้าต่างอื่นทับตัวเลือก ============
+{const _md=modal;modal=function(html,k){try{if(choice._cur&&modalOpen&&$('modal').dataset.k==='choice'&&k!=='choice'&&k!=='duel'){clearInterval(choice._cd);choice._min=true;pendBar()}}catch(e){}return _md.apply(this,arguments)}}
+function choiceGuard(){try{if(choice._cur&&!modalOpen&&!choice._min&&S&&S.alive){choice._min=true;pendBar();clearTimeout(choiceGuard._t);choiceGuard._t=setTimeout(()=>{if(choice._cur&&!modalOpen&&choice._min)openPend()},250)}
+ if(choice._cur&&choice._min){const pb=$('pendBar');if(pb&&pb.style.display==='none')pendBar()}}catch(e){}}
+{const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);try{if(choice._cur&&choice._min&&S&&S.alive&&!document.getElementById('awayBar')){clearTimeout(choiceGuard._t);choiceGuard._t=setTimeout(()=>{if(choice._cur&&!modalOpen&&choice._min&&!choice._userMin)openPend()},300)}}catch(e){}return r}}
+{const _mc=minChoice;minChoice=function(){choice._userMin=true;return _mc.apply(this,arguments)}}
+{const _cs2=choiceShow;choiceShow=function(){choice._userMin=false;return _cs2.apply(this,arguments)}}
+setInterval(choiceGuard,700);
 </script>
 </body>
 </html>
