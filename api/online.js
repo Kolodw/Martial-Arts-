@@ -118,14 +118,17 @@ module.exports = async (req, res) => {
       const done = await cmd('SMEMBERS', 'bugdone');
       const ds = new Set(done || []);
       const rp = L.length ? await cmd('HMGET', 'replies', ...L.map(m => 'b:' + m.i)) : [];
-      return res.json({ m: L.map((m, i) => Object.assign(m, { c: cnt[i] || 0, d: ds.has(m.i) ? 1 : 0, rp: rp[i] ? JSON.parse(rp[i]) : null })) });
+      const [own, ed] = L.length ? await pipe([['HMGET', 'bugown', ...L.map(m => m.i)], ['HMGET', 'bugedit', ...L.map(m => m.i)]]) : [[], []];
+      const me = String(id || '');
+      return res.json({ m: L.map((m, i) => { let e = null; try { e = ed && ed[i] ? JSON.parse(ed[i]) : null } catch {} const o = own && own[i]; const mine = !!me && (o ? o === me : (m.u && m.u === me.slice(0, 4))); const r0 = Object.assign(m, { c: cnt[i] || 0, d: ds.has(m.i) ? 1 : 0, rp: rp[i] ? JSON.parse(rp[i]) : null, me: mine ? 1 : 0 }); if (e) { r0.x = e.x; r0.e = e.t } delete r0.u; return r0 }) });
     }
     if (a === 'reviews') {
       const [all, hidden] = await pipe([['HVALS', 'reviews'], ['SMEMBERS', 'chat:hidden']]);
       const hs = new Set(hidden || []);
       const L0 = (all || []).map(x => JSON.parse(x)).filter(m => !hs.has(m.i)).sort((x, y) => y.t - x.t);
       const rpr = L0.length ? await cmd('HMGET', 'replies', ...L0.map(m => 'r:' + m.i)) : [];
-      const L = L0.map((m, i) => Object.assign(m, { rp: rpr[i] ? JSON.parse(rpr[i]) : null }));
+      const myR = 'r' + String(id || '').slice(0, 8);
+      const L = L0.map((m, i) => Object.assign(m, { rp: rpr[i] ? JSON.parse(rpr[i]) : null, me: id && m.i === myR ? 1 : 0 }));
       const avg = L.length ? L.reduce((s0, m) => s0 + m.r, 0) / L.length : 0;
       const dist = [1, 2, 3, 4, 5].map(r => L.filter(m => m.r === r).length);
       return res.json({ n: L.length, avg, dist, m: L.slice(0, 80) });
@@ -315,7 +318,7 @@ module.exports = async (req, res) => {
       const x = clean(b.x, 600);
       if (x.length < 3) return res.status(400).json({ err: 'empty' });
       const m = { i: 'b' + now.toString(36) + Math.random().toString(36).slice(2, 5), t: now, n: clean(b.n, 20) || 'นิรนาม', k: b.k === 'idea' ? 'idea' : 'bug', x, v: clean(b.v, 10), u: id.slice(0, 4) };
-      await pipe([['LPUSH', 'bugs2', JSON.stringify(m)], ['LTRIM', 'bugs2', 0, 299], ['HSET', 'buginfo', m.i, String(b.info || '').slice(0, 1500)]]);
+      await pipe([['LPUSH', 'bugs2', JSON.stringify(m)], ['LTRIM', 'bugs2', 0, 299], ['HSET', 'buginfo', m.i, String(b.info || '').slice(0, 1500)], ['HSET', 'bugown', m.i, id]]);
       return res.json({ ok: 1, i: m.i });
     }
     if (a === 'bugvote') {
@@ -332,11 +335,24 @@ module.exports = async (req, res) => {
       await cmd('HSET', 'replies', kind + ':' + mid, JSON.stringify({ x, t: now }));
       return res.json({ ok: 1 });
     }
+    if (a === 'bugedit') {
+      const ok = await cmd('SET', 'bgel:' + id, 1, 'NX', 'EX', 8);
+      if (!ok) return res.status(429).json({ err: 'rate' });
+      const mid = String(b.mid || '').replace(/[^a-z0-9]/gi, '').slice(0, 30);
+      const x = clean(b.x, 600);
+      if (!mid || x.length < 3) return res.status(400).json({ err: 'empty' });
+      let owner = await cmd('HGET', 'bugown', mid);
+      if (!owner) { const list = await cmd('LRANGE', 'bugs2', 0, 299); const f = (list || []).map(s0 => { try { return JSON.parse(s0) } catch { return null } }).find(m => m && m.i === mid); if (f && f.u && f.u === String(id).slice(0, 4)) owner = id }
+      if (owner !== id) return res.status(403).json({ err: 'forbidden' });
+      await cmd('HSET', 'bugedit', mid, JSON.stringify({ x, t: now }));
+      return res.json({ ok: 1 });
+    }
     if (a === 'review') {
       const ok = await cmd('SET', 'rvrl:' + id, 1, 'NX', 'EX', 20);
       if (!ok) return res.status(429).json({ err: 'rate' });
       const r = Math.max(1, Math.min(5, Math.round(+b.r || 0)));
       const m = { i: 'r' + id.slice(0, 8), t: now, n: clean(b.n, 20) || 'นิรนาม', r, x: clean(b.x, 400), v: clean(b.v, 10) };
+      try { const old = await cmd('HGET', 'reviews', id); if (old) { const o = JSON.parse(old); m.t = o.t || now; m.e = now } } catch {}
       await cmd('HSET', 'reviews', id, JSON.stringify(m));
       return res.json({ ok: 1 });
     }
