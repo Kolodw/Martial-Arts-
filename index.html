@@ -5964,6 +5964,21 @@ async function gvPub(lid,v){try{await api('lifepub',{lid,pub:+v});gvSet(lid,+v);
  const host=m.querySelector('.mbody')||m.firstElementChild||m;(m.querySelector('#modalIn')||m).appendChild(box)}catch(e){console.error(e)}return r}}
 {const st=document.createElement('style');st.textContent='.gvrow{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:5px 0;border-top:1px dashed var(--line)}.gvb{display:flex;gap:4px;flex-shrink:0}.gvb button{padding:3px 8px;min-width:0}';document.head.appendChild(st)}
 try{Object.assign(I18N.d,{'ซ่อนรายละเอียด':'Hide details','เปิดสาธารณะ':'Public','ซ่อนทั้งหมด':'Hide everything','ผู้ไม่ประสงค์ออกนาม':'Anonymous','ข้อมูลในทำเนียบ':'Ranking visibility','จะซ่อนหรือเปิดข้อมูล':'hide or show your data'})}catch(e){}
+
+// ---------- v9.0 ถามซ่อน/เปิดข้อมูลก่อนเกิดใหม่ + ความเป็นส่วนตัว ----------
+{const _lp=lifePub;lifePub=async function(v){if(S)S._pvSet=1;return _lp.apply(this,arguments)}}
+{const _lpb=lifePrivBox;lifePrivBox=function(){const r=_lpb.apply(this,arguments);try{const b=$('lifePriv'),end=$('end');if(b&&end&&end.firstElementChild!==b){const h=end.querySelector('h2,h3');if(h&&h.parentNode===end)end.insertBefore(b,h.nextSibling);else end.insertBefore(b,end.firstChild)}}catch(e){}return r}}
+function pvAsk(next){const v=S&&S._pv!=null?S._pv:lifePubDef();
+ modal(`<h3>🏆 ชีวิตของ ${esc(S.name)} ขึ้นทำเนียบแล้ว</h3><p class="tag2">ก่อนเกิดใหม่ — จะให้คนอื่นเห็นข้อมูลชีวิตนี้แค่ไหน? เปลี่ยนได้ตลอดที่เมนู 🪦 สุสาน</p>
+ ${[1,0,2].map(k=>`<button class="${v===k?'pbtn':'gbtn'}" style="width:100%;margin-top:6px;text-align:left" onclick="pvPick(${k})"><b>${PV_T[k][0]} ${PV_T[k][1]}</b><br><small>${PV_T[k][2]}</small></button>`).join('')}
+ <label style="display:flex;gap:6px;align-items:center;margin-top:10px;font-size:13px"><input type="checkbox" id="pvNo"> ใช้ตัวเลือกนี้ทุกชีวิต ไม่ต้องถามอีก</label>`,'pvask');window._pvNext=next}
+async function pvPick(k){const no=$('pvNo')&&$('pvNo').checked;if(no)LS.set('murim_pv_noask',1);try{await lifePub(k)}catch(e){}closeM();const n=window._pvNext;window._pvNext=null;if(n)n()}
+{const _tt=toTitle;toTitle=function(){const a=arguments,self=this;if(S&&S._lid&&!S._pvSet&&!LS.get('murim_pv_noask',0)&&!S.custom){S._pvSet=1;pvAsk(()=>_tt.apply(self,a));return}return _tt.apply(this,arguments)}}
+{const _oh=openHeirPick;openHeirPick=function(){const a=arguments,self=this;if(S&&S._lid&&!S._pvSet&&!LS.get('murim_pv_noask',0)&&!S.custom){S._pvSet=1;pvAsk(()=>_oh.apply(self,a));return}return _oh.apply(this,arguments)}}
+// ไม่เผยตัวตนของคนที่เลือกซ่อนทั้งหมด
+{const _si=shareInit;shareInit=async function(){const _api=api;try{api=async function(a,b){const j=await _api(a,b);if(a==='board'&&j){j.top=(j.top||[]).filter(e=>!e.anon);j.prev=(j.prev||[]).filter(e=>!e.anon)}return j};return await _si.apply(this,arguments)}finally{api=_api}}}
+{const _mp=meetPoll;meetPoll=async function(){try{if(+lifePubDef()===2)return}catch(e){}return _mp.apply(this,arguments)}}
+try{Object.assign(I18N.d,{'ก่อนเกิดใหม่':'Before rebirth','ใช้ตัวเลือกนี้ทุกชีวิต ไม่ต้องถามอีก':'Use this for every life, don\'t ask again'})}catch(e){}
 </script>
 </body>
 </html>
