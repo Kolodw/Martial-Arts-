@@ -390,7 +390,7 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='9.4';
+const VERSION='9.5';
 const CHANGELOG=[
  {v:'9.3',d:'8 พ.ย. 2026',l:['🐾 สัตว์อสูรพิกเซลใหม่ ละเอียดขึ้น 2 เท่า: มีเส้นขอบ แสงเงา และท่าเดินขยับได้ · แต่ละพันธุ์มีลักษณะเฉพาะ เช่น ลายพยัคฆ์ จุดเสือดาว แผงคอสิงโต เขากวาง งวงช้าง นอแรด แม่เพรียงงูเห่า หนวดมังกร ขาแมงมุม ปีกผีเสื้อ ครีบฉลาม · สัตว์ระดับสูงมีออร่าและประกายธาตุวนรอบตัว','🦊 เกิดเป็นสัตว์อสูร: รูปในแถบสถานะ แผงตัวละคร และรูปโปรไฟล์ในแชทเป็นสัตว์จริงแล้ว ไม่ใช่คน · แถบสถานะแสดงขั้นการบำเพ็ญแบบสัตว์ (ลูกสัตว์ → อสูรพันปี) พร้อมระดับย่อย พันธุ์ และธาตุ · ตัวในฉากใหญ่ขึ้นสมส่วนกับคน','❓ การสอนใหม่: แนะนำระดับขั้น ตัวเลือกที่ย่อไว้ เควส ระบบ และแผงตัวละคร/ทางลัดบนคอม','📘 คู่มือระบบสำคัญ 13 หัวข้อ เปิดได้จากเมนูทั้งตอนเล่นและหน้าแรก พร้อมปุ่มพาไปหน้านั้นทันที','🐛 แก้หน้าต่างอื่นเด้งซ้อนทับระหว่างการสอน','🐛 แก้รูปโปรไฟล์ของสัตว์อสูรที่ว่างเปล่าหรือหลุดกรอบ']},
  {v:'9.1',d:'8 พ.ย. 2026',l:['⭐ ระดับขั้นใหม่: ทุกขั้นแบ่งเป็น ระดับต่ำ → กลาง → สูง → ใกล้เลื่อนขั้น → สมบูรณ์ (รอทะลวง) · เหนือขั้นสูงสุดมีชั้น เทพ → ราชา → บรรพกาล → ราชัน → นิรันดร์ ชั้นละ 9 ขั้น รวม 45 ขั้น พร้อมออร่าตอนก้าวข้ามชั้น','🔥 ธาตุไฟเข้าแทรก: ทะลวงขั้นล้มเหลวมีโอกาสโดนธาตุไฟเข้าแทรกตามค่าสถานะ (ปัญญา ความสุข พรสวรรค์) — เบาๆ เสียพลังเล็กน้อย หนักๆ เสียเส้นลมปราณ ร้ายสุดถึงตาย','⏳ ผู้หวนคืน: ตายแล้วมีโอกาส 25% ย้อนเวลากลับไปตอนเด็กหรือไปลืมตาในร่างคนอื่นพร้อมความทรงจำ · ถ้าถูกฆ่าหรือหักหลังจะได้ภารกิจล้างแค้นข้ามชาติ ทำไม่ทันชะตาเดิมจะวนกลับมา','🌑 ภัยเงาในโลกเทพเซียน: ศัตรูปริศนาที่ซ่อนตัวจ้องเอาชีวิต ต้องใช้ปัญญาและประสาทสัมผัสจับให้ได้ก่อนมันลงมือ ไม่งั้นอาจถูกฆ่าโดยไม่รู้ตัว · ถ้าฆ่าไม่ตาย ผู้อยู่เบื้องหลังจะมาล้างรากเหง้า','🏆 ก่อนเกิดใหม่ถามว่าจะซ่อนหรือเปิดข้อมูลชีวิตในทำเนียบ (เปิดสาธารณะ · ซ่อนรายละเอียด · ซ่อนทั้งหมด) ติ๊กให้จำไว้ได้ และเปลี่ยนได้ตลอดที่สุสาน','🐛 แก้ไทม์ไลน์ชีวิตตอนจบที่บันทึกเหตุการณ์เดียวกันซ้ำสองบรรทัด']},
@@ -3972,7 +3972,7 @@ function lifeDetail(score){const ri=realmIdx(),lifeAch=(S.achLife||[]).map(id=>A
   look:{robe:o.robe,trim:o.trim,belt:o.belt,hat:o.hat,skin:o.skin,hair:o.hair,hs:o.hs,g:o.g,age:o.age,mood:'neutral',aura:o.aura,sword:o.sword,staff:o.staff,seed:o.seed}}}
 function lifePubDef(){return LS.get('murim_lifepub',1)}
 async function sendLife(score){if(S&&S.custom){customNote();return}if(!onlineOK||!S||S._sent)return;S._sent=1;S._lid=pid.slice(0,6)+Date.now().toString(36);
- try{await api('life',{n:pname(),s:score,age:S.age,r:(typeof realmLabel==='function'?realmLabel().base:REALMS[realmIdx()].n),f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,cu:S.custom?1:0,bm:S.beastMode?1:0,ver:VERSION,lid:S._lid,pub:lifePubDef(),det:xT(JSON.stringify(lifeDetail(score)))});lifePrivBox()}catch(e){}}
+ try{await api('life',{n:pname(),s:score,age:S.age,r:(typeof realmLabel==='function'?realmLabel().base:REALMS[realmIdx()].n),f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,cu:S.custom?1:0,bm:S.beastMode?1:0,ver:VERSION,tp:S._tp||'',lid:S._lid,pub:lifePubDef(),det:xT(JSON.stringify(lifeDetail(score)))});lifePrivBox()}catch(e){}}
 function customNote(){const end=$('end');if(!end||$('lifePriv'))return;const b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b);b.innerHTML='<b>✍️ ชีวิตที่สร้างเอง — ไม่ติดอันดับทำเนียบ</b><p class="tag2">ชีวิตที่เลือกชาติกำเนิด กระดูก และพรสวรรค์เองจะไม่ถูกส่งขึ้นทำเนียบออนไลน์ เพื่อความยุติธรรมกับคนที่ให้ฟ้าลิขิต · เลือก 🎲 สุ่ม หรือ 🎨 ออกแบบหน้าตา เพื่อลุ้นขึ้นทำเนียบ</p>'}
 function lifePrivBox(){const end=$('end');if(!end||!S||!S._lid)return;let b=$('lifePriv');if(!b){b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b)}
  const pub=lifePubDef();b.innerHTML=`<b>🏆 ชีวิตนี้ขึ้นทำเนียบออนไลน์แล้ว</b><p class="tag2">${pub?'คนอื่นกดดูรายละเอียดชีวิตนี้ได้ (ไทม์ไลน์ ค่าพลัง ของ วิชา ครอบครัว)':'คนอื่นเห็นแค่ชื่อกับคะแนน กดดูรายละเอียดไม่ได้'}</p>
@@ -4997,7 +4997,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5','8.6','8.7','8.8','8.9','9.0','9.1','9.2','9.3',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5','8.6','8.7','8.8','8.9','9.0','9.1','9.2','9.3','9.4',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5856,7 +5856,7 @@ function xFast(){return S&&S.xian&&S.alive&&S.age>=1000}
 {const _lm=lifeMax;lifeMax=function(){const v=_lm.apply(this,arguments);try{if(S&&S.xian&&(S.xt&&realmIdx()>=6||S.age>=1000))return Math.max(v,1e6+1)}catch(e){}return v}}
 function xStep(){return S.age>=100000?10000:S.age>=10000?1000:100}
 {const _py9=passYear;passYear=function(){const r=_py9.apply(this,arguments);try{if(xFast()){const st=xStep(),ex=st-1;if(S.xstep!==st){S.xstep=st;log(`⏩ กาลเวลาในแดนเทพไหลเร็วขึ้น — จากนี้หนึ่งก้าวเท่ากับ <b>${fmt(st)} ปี</b>`,'myth',true)}
-  S.age+=ex;S.qi+=+(ex*.01).toFixed(1);S.power+=Math.round((S.power*.00002+5)*ex);S.money+=Math.round(ex*8*(1+realmIdx()*.2));
+  S.age+=ex;S.qi+=+(ex*.01).toFixed(1);S.power+=Math.round((5+Math.min(S.power*.00002,20))*ex);S.money+=Math.round(ex*8*(1+realmIdx()*.2));
   if(S.age>=1e6&&!S.flags.eternal){S.flags.eternal=1;S.age=1e6;keyAdd('หลุดพ้นจากกาลเวลา กลายเป็นอมตะนิรันดร์');setScene('aura');log('♾️ หนึ่งล้านปีผ่านไป ดวงดาวดับแล้วเกิดใหม่นับครั้งไม่ถ้วน — คุณหลุดพ้นจากกาลเวลา กลายเป็น<b>อมตะนิรันดร์</b>','myth',true);S.deathCause='หลุดพ้นจากกาลเวลา กลายเป็นอมตะนิรันดร์';S.hp=0}}}catch(e){console.error(e)}return r}}
 // ---- จักรวาลซ้อนทับกับผู้เล่นในทำเนียบ ----
 async function shareInit(){try{if(!onlineOK||!S||Math.random()>.15)return;const j=await api('board');const L=(j.top||[]).concat(j.prev||[]).filter(e=>e&&e.n&&(e.x?1:0)===(S.xian?1:0)&&!e.bm&&e.n!==pname());if(!L.length||!S||!S.alive)return;
@@ -6158,6 +6158,30 @@ drawBeast=function(c,b,ox,oy,s,fr){s=s||1;fr=fr||0;try{if(b.f&&b.f.glow){const p
 function blStageTxt(){const m=S.beastMode;const st=BL_ST[Math.min(BL_ST.length-1,m.st||0)];return`${st}${m.st>=4&&realmIdx()>=5?' · ราชาอสูร':''}`}
 {const _rd4=render;render=function(){const r=_rd4.apply(this,arguments);try{if(S&&S.beastMode&&!S.beastMode.human&&$('gRealm')){const nx=realmNext();$('gRealm').innerHTML=`🐾 <b>${blStageTxt()}</b> <span class="rsub rs${realmSub()}">${RS_SUB[realmSub()]}</span> · พลังรวม <span class="px">${fmt(total())}</span>${nx?` / ${fmt(Math.round(nx))}`:''}`}}catch(e){}return r}}
 {const _dl3=dkLeft;dkLeft=function(){let h=_dl3.apply(this,arguments);try{if(S&&S.beastMode&&!S.beastMode.human){const m=S.beastMode;h=h.replace(/(<div class="dk-realm">🐾 )<b>[^<]*<\/b>/,`$1<b>${blStageTxt()}</b> <span class="rsub rs${realmSub()}">${RS_SUB[realmSub()]}</span>`).replace('<div class="dk-sub">ไร้สังกัด</div>',`<div class="dk-sub">${esc(m.sp)} · ธาตุ${esc(m.el)}</div>`)}}catch(e){}return h}}
+
+// ---------- v9.5 anti-cheat ----------
+const AC_CAP={int:20000,cha:20000,fame:2e7,money:1e11,qi:5e6};
+let acPrev=null;
+function acSnap(){return{int:+S.int||0,cha:+S.cha||0,fame:+S.fame||0,money:+S.money||0,qi:+S.qi||0,pow:+S.power||0,dis:S.ownSect?+S.ownSect.dis||0:0,kids:+S.kids||0,har:(S.harem||[]).length,age:+S.age||0}}
+function acFlag(why){if(!S||S._tp)return;S._tp=why;try{console.warn('integrity')}catch(e){}}
+let acObj=null;
+function acCheck(){try{if(!S||!S.alive||S.custom)return;if(S!==acObj){acObj=S;acPrev=null}const c=acSnap();
+ for(const k in AC_CAP)if(c[k]>AC_CAP[k]||!isFinite(c[k]))return acFlag('cap-'+k);
+ if(c.dis>2e6||c.kids>150||c.har>300||c.pow>2e9||!isFinite(c.pow))return acFlag('cap-x');
+ if(acPrev&&c.age-acPrev.age<=1){const d=(k)=>c[k]-acPrev[k];
+  if(d('int')>800||d('cha')>800)return acFlag('jump-stat');
+  if(d('fame')>Math.max(30000,acPrev.fame*4))return acFlag('jump-fame');
+  if(d('money')>Math.max(8e6,acPrev.money*20))return acFlag('jump-money');
+  if(d('pow')>Math.max(200000,acPrev.pow*6)&&c.age<1000)return acFlag('jump-pow');
+  if(d('dis')>Math.max(5000,acPrev.dis*5))return acFlag('jump-dis')}
+ acPrev=c}catch(e){}}
+setInterval(acCheck,700);
+{const _bl3=beginLife;beginLife=function(){acPrev=null;return _bl3.apply(this,arguments)}}
+// แจ้งในหน้าสรุปว่าไม่ขึ้นทำเนียบ
+{const _ee=endExtras;endExtras=function(){const r=_ee.apply(this,arguments);try{acCheck();if(S&&S._tp){const end=$('end');if(end&&!$('acNote')){const b=document.createElement('div');b.id='acNote';b.className='box';b.style.cssText='border-color:#d84a4a;padding:8px 10px;margin:8px 0';b.innerHTML='<b>⚠️ ตรวจพบการแก้ไขค่าในชีวิตนี้</b><p class="tag2">ชีวิตนี้จะไม่ถูกนำขึ้นทำเนียบ</p>';end.insertBefore(b,end.firstChild)}}}catch(e){}return r}}
+// ปุ่มลัดเครื่องมือนักพัฒนา
+document.addEventListener('keydown',e=>{const k=(e.key||'').toLowerCase();if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['i','j','c','k'].includes(k))||(e.metaKey&&e.altKey&&['i','j','c'].includes(k))||(e.ctrlKey&&k==='u')){e.preventDefault();e.stopPropagation();return false}},true);
+document.addEventListener('contextmenu',e=>{if(!/INPUT|TEXTAREA/.test((e.target&&e.target.tagName)||''))e.preventDefault()},true);
 </script>
 </body>
 </html>

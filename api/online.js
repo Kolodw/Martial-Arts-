@@ -187,6 +187,15 @@ module.exports = async (req, res) => {
       if (!tok || tok !== tk || !d) return res.status(404).json({ err: 'notfound' });
       return res.json({ d });
     }
+    if (a === 'boarddel' || a === 'cheatlog') {
+      if (!process.env.ADMIN_KEY || String(req.query.key || '') !== process.env.ADMIN_KEY) return res.status(403).json({ err: 'forbidden' });
+      if (a === 'cheatlog') { const L0 = await cmd('LRANGE', 'cheatlog', 0, 99); return res.json({ l: (L0 || []).map(s0 => JSON.parse(s0)) }) }
+      const lid = String(req.query.l || '').replace(/[^a-z0-9]/g, '').slice(0, 16), ban = req.query.ban === '1';
+      const prevW = week(new Date(now - 7 * 86400e3)); let removed = 0;
+      for (const k0 of ['bd2:' + W, 'bd2:' + prevW]) { const all = await cmd('ZRANGE', k0, 0, -1); for (const m of (all || [])) { try { if (JSON.parse(m).lid === lid) { await cmd('ZREM', k0, m); removed++ } } catch {} } }
+      let banned = 0; if (ban) { const own = await cmd('GET', 'lifeo:' + lid); if (own) { await cmd('SADD', 'cheaters', own); banned = 1 } }
+      return res.json({ ok: 1, removed, banned });
+    }
     if (a === 'lifeview') {
       const lid = String(req.query.l || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
       const [pub, d, own] = await pipe([['GET', 'lifep:' + lid], ['GET', 'lifed:' + lid], ['GET', 'lifeo:' + lid]]);
@@ -275,6 +284,24 @@ module.exports = async (req, res) => {
       const key = 'bd2:' + W, L = [['INCR', 'lives'], ['ZADD', key, e.s, JSON.stringify(e)], ['ZREMRANGEBYRANK', key, 0, -101], ['EXPIRE', key, 86400 * 40]];
       if (e.cu || !(parseFloat(b.ver) >= 6.3)) { await cmd('INCR', 'lives'); return res.json({ ok: 1, skip: 1 }) }
       const det = String(b.det || '');
+      // ---- anti-cheat: ตรวจความสมเหตุสมผลของคะแนนและค่าสถานะ ----
+      let bad = '';
+      try {
+        if (b.tp) bad = 'tamper:' + clean(String(b.tp), 40);
+        if (!bad && parseFloat(b.ver) >= 9.5 && !det) bad = 'nodet';
+        if (!bad && det) {
+          const D = JSON.parse(det), st = D.st || {}, kids = (D.kids || []).length, dis = +((String(D.sect || '').match(/ศิษย์\s*([0-9]+)/) || [])[1] || 0);
+          const pw = +st.pow || 0, fm = +st.fame || 0, mn = +st.money || 0, ag = Math.max(1, +e.age || 1);
+          if ((+st.int || 0) > 20000 || (+st.cha || 0) > 20000 || fm > 2e7 || mn > 1e11 || kids > 150 || dis > 2e6 || pw > 2e9) bad = 'stat';
+          const powCap = (e.x ? 60000 : 25000) * (1 + ag / 8) + 300000;
+          if (!bad && pw > powCap && ag < 1000) bad = 'pow-age';
+          const upper = (pw + fm * 3 + 20 * Math.sqrt(Math.max(0, mn)) + 2500 + kids * 100 + dis * 20 + 4000) * 1.5 * 1.05 + 1000;
+          if (!bad && e.s > upper) bad = 'score';
+        }
+        if (!bad && !det && e.s > 50000) bad = 'nodet-big';
+        if (!bad && await cmd('SISMEMBER', 'cheaters', id)) bad = 'banned';
+      } catch { bad = bad || 'parse' }
+      if (bad) { await pipe([['INCR', 'lives'], ['LPUSH', 'cheatlog', JSON.stringify({ id: id.slice(0, 10), n: e.n, s: e.s, age: e.age, why: bad, t: now })], ['LTRIM', 'cheatlog', 0, 99]]); return res.json({ ok: 1, skip: 1, flag: 1 }) }
       if (lid.length >= 6 && det && det.length < 40000) { try { JSON.parse(det); L.push(['SET', 'lifed:' + lid, det, 'EX', 86400 * 40], ['SET', 'lifeo:' + lid, id, 'EX', 86400 * 40], ['SET', 'lifep:' + lid, +b.pub === 2 ? '2' : b.pub ? '1' : '0', 'EX', 86400 * 40]) } catch {} }
       await pipe(L);
       return res.json({ ok: 1 });
