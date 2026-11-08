@@ -206,6 +206,9 @@ module.exports = async (req, res) => {
     }
 
     const findLive = async (k2, adm) => { const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 90e3, '+inf']]); const f1 = (pub || []).find(x => x.slice(0, 6) + x.slice(-4) === k2); if (f1) return f1; if (adm) return (prv || []).find(x => x.slice(0, 6) + x.slice(-4) === k2) || null; return null };
+    const RPC = [[120, 350, 800, 2200, 5500, 12000, 24000, 24000], [250, 900, 2500, 7000, 18000, 42000, 90000, 90000]];
+    const powOk = (p, ri, x, age) => { ri = Math.max(0, Math.min(7, +ri || 0)); if (!(p >= 0) || !isFinite(p) || p > 2e9) return false; if (ri < 7 && p > RPC[x ? 1 : 0][ri] * 8 + 1000) return false; if (age != null && +age < 1000 && p > (x ? 60000 : 25000) * (1 + (+age || 1) / 8) + 300000) return false; return true };
+    const isBanned = async () => !!(await cmd('SISMEMBER', 'cheaters', id));
     const isAdmQ = k => !!process.env.ADMIN_KEY && String(k || '') === process.env.ADMIN_KEY;
     if (a === 'logget') {
       const k2 = String(req.query.t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -234,6 +237,7 @@ module.exports = async (req, res) => {
       return res.json({ ok: 1 });
     }
     if (a === 'live') {
+      if (b.spec && (b.tp || await isBanned())) b.spec = 0;
       if (okId(id)) { try { const lm = uaMeta(req, now); lm.u = String(req.headers['user-agent'] || '').slice(0, 160); await cmd('HSET', 'lm', id, JSON.stringify(lm)) } catch {} }
       if (!b.spec) {
         const ps = String(b.s || '');
@@ -316,6 +320,7 @@ module.exports = async (req, res) => {
     }
     if (a === 'arena') {
       const me = { n: clean(b.n, 20) || 'นิรนาม', p: Math.max(0, +b.p || 0), hp: +b.hp || 100, r: clean(b.r, 30), ri: Math.max(0, Math.min(12, +b.ri || 0)), x: b.x ? 1 : 0, t: now };
+      if (b.tp || !powOk(me.p, me.ri, me.x, null) || await isBanned()) return res.status(403).json({ err: 'integrity' });
       const ok = await cmd('SET', 'arl:' + id, 1, 'NX', 'EX', 20);
       if (!ok) return res.status(429).json({ err: 'rate' });
       const key = 'arena:' + me.x + ':' + me.ri;
@@ -380,7 +385,8 @@ module.exports = async (req, res) => {
     if (a === 'meet') {
       const x = b.x ? 1 : 0, key = 'mp:' + x;
       const me = { n: clean(b.n, 20) || 'นิรนาม', ri: Math.max(0, Math.min(12, +b.ri || 0)), p: Math.max(0, Math.min(1e13, +b.p || 0)), f: clean(b.f, 30), age: Math.max(0, +b.age || 0), t: now };
-      const [, all, box] = await pipe([['HSET', key, id, JSON.stringify(me)], ['HGETALL', key], ['LRANGE', 'mbox:' + id, 0, 9]]);
+      const okMe = !b.tp && powOk(me.p, me.ri, x, me.age) && !(await isBanned());
+      const [, all, box] = await pipe([okMe ? ['HSET', key, id, JSON.stringify(me)] : ['HDEL', key, id], ['HGETALL', key], ['LRANGE', 'mbox:' + id, 0, 9]]);
       const cand = [], stale = [];
       for (let i = 0; i < (all || []).length; i += 2) { const k0 = all[i]; let v = null; try { v = JSON.parse(all[i + 1]) } catch {} if (!v || now - v.t > 120e3) { stale.push(k0); continue } if (k0 !== id) cand.push(Object.assign(v, { k: k0.slice(0, 6) + k0.slice(-4) })) }
       const L2 = [['EXPIRE', key, 3600]]; if (stale.length) L2.push(['HDEL', key, ...stale.slice(0, 50)]); if (box && box.length) L2.push(['DEL', 'mbox:' + id]);
@@ -389,6 +395,7 @@ module.exports = async (req, res) => {
       return res.json({ o, n: cand.length, inbox: (box || []).map(s0 => { try { return JSON.parse(s0) } catch { return null } }).filter(Boolean) });
     }
     if (a === 'meetact') {
+      if (b.tp || await isBanned()) return res.json({ ok: 0 });
       const ok = await cmd('SET', 'mtl:' + id, 1, 'NX', 'EX', 15);
       if (!ok) return res.status(429).json({ err: 'rate' });
       const to = String(b.to || '').replace(/[^a-z0-9]/g, '').slice(0, 12), x = b.x ? 1 : 0;
