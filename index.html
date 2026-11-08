@@ -390,7 +390,7 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='7.6';
+const VERSION='7.7';
 const CHANGELOG=[
  {v:'7.5',d:'8 พ.ย. 2026',l:['🖥️ หน้าจอคอมแบบใหม่: ซ้ายสถานะตัวละคร (ภาพตัวละคร หลอดพลังชีวิต/พลัง/อายุขัย ค่าสถานะ วิชาเด่น) · กลางฉากและบันทึก · ขวาฟังก์ชันแบ่งหมวด พร้อมเควสและการ์ดระบบ','📐 หน้าเกิดและหน้าสร้างตัวละครบนคอมแบ่ง 2 คอลัมน์ เห็นครบในจอเดียว','⌨️ คีย์ลัดบนคอม: Space หยุด/เล่น · S ความเร็ว · A อัตโนมัติ · 1–9 เลือกตัวเลือก · Esc ปิด · M/B/Q/L เมนู กระเป๋า เควส บันทึก','🖼️ ร้านแลกกรอบ: ใช้กรรมดีหรือกรรมชั่วแลกกรอบรูป 11 แบบ — ปกติ · วิบวับ · สีเปลี่ยน · อนิเมชั่นเปลี่ยนสีแล้วกลับสีเดิม กรอบเป็นของคุณถาวรทุกชีวิตและแสดงที่รูปตัวละคร','👤 ระบบโปรไฟล์: ตั้งตัวละครเป็นรูปโปรไฟล์ พร้อมกรอบ แสดงข้างชื่อในแชทโลก','🐛 แก้บั๊กตัวเลือกที่ค้างไว้นานแล้วพัง และกันเกมค้างจากตัวเลือกที่ผิดพลาด']},
  {v:'7.1',d:'8 พ.ย. 2026',l:['🐾 เกิดเป็นสัตว์สุ่มอย่างเดียว — ฟ้าลิขิตชนิด ธาตุ และพรสวรรค์ให้ทั้งหมด','🏆 ทำเนียบเพิ่มแท็บ 🐾 สัตว์อสูร แยกจากยุทธภพและโลกเทพเซียน','📜 ดูคนอื่นเล่น: โหลดบันทึกทั้งหมดตั้งแต่เกิดถึงปัจจุบันได้ (กดโหลดครั้งเดียว)','🌸 คืนสู่วัยเยาว์: พลังสูงหรือลมปราณบริสุทธิ์ถึงขีดสุด ใบหน้าอาจหยุดแก่ — แต่บางคนก็ยังแก่ตามวัย','🍑 เหตุการณ์หายาก: โอสถคืนวัยเยาว์ ร่างกายกลับแข็งแรงเหมือนวัยรุ่น อายุขัยเพิ่ม','🏯 ตำหนักใน: เสน่ห์และชื่อเสียงสูงจะมีสาวงาม/บุรุษรูปงามมาขอติดตาม รับได้มากตามค่าสถานะ มีค่าเลี้ยงดูทุกปี คู่ชีวิตอาจไม่พอใจ — ดูได้ในหน้าครอบครัว']},
@@ -3869,7 +3869,7 @@ async function openReport(){
   <p class="tag2">ระบบแนบเวอร์ชันและข้อความล่าสุดในเกมให้ผู้พัฒนาดู (คนอื่นเห็นแค่ข้อความที่พิมพ์)</p></div>`;
  modal(fbHead('bug')+form+(onlineOK?'<h4 style="margin:10px 0 4px">กระดานแจ้งบั๊ก</h4><div id="bugList" class="tag2">กำลังโหลด…</div>':''),'bug');
  if(!onlineOK)return;try{const j=await api('bugs');const el=$('bugList');if(!el)return;
-  el.className='';el.innerHTML=(j.m||[]).map(m=>`<div class="item fbi ${m.d?'fixed':''}"><div class="h"><b>${m.k==='idea'?'💡':'🐞'} ${esc(m.n)}</b><span class="tag2">${ago(m.t)}${m.v?' · v'+esc(m.v):''}</span></div><p>${esc(m.x)}</p>
+  el.className='';el.innerHTML=(j.m||[]).map(m=>`<div class="item fbi ${m.d?'fixed':''}"><div class="h"><b>${m.k==='idea'?'💡':'🐞'} ${esc(m.n)}</b><span class="tag2">${ago(m.t)}${m.v?' · v'+esc(m.v):''}</span></div><p>${esc(m.x)}</p>${rpBox('b',m)}
    <div class="brow2">${m.d?'<span class="fixtag">✅ แก้แล้ว</span>':''}<button class="sysb" onclick="bugVote('${m.i}',this)">${m.k==='idea'?'👍 อยากได้เหมือนกัน':'🙋 เจอเหมือนกัน'} ${m.c||''}</button><button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div></div>`).join('')||'<p class="tag2">ยังไม่มีใครแจ้ง</p>'}catch(e){const el=$('bugList');if(el)el.textContent='โหลดไม่ได้'}}
 async function bugPost(){const x=($('bugTx').value||'').trim();if(x.length<3)return toast('พิมพ์รายละเอียดก่อน');try{await api('bug',{n:pname(),k:BUGK,x,v:VERSION,info:bugInfo()});toast('ส่งแล้ว ขอบคุณ');openReport()}catch(e){toast(e.message==='rate'?'รอ 30 วินาทีก่อนส่งใหม่':'ส่งไม่สำเร็จ')}}
 async function bugVote(i,btn){try{const j=await api('bugvote',{bid:i});if(btn){btn.disabled=true;btn.textContent=btn.textContent.replace(/\d+$/,'').trim()+' '+j.n}}catch(e){toast('กดไม่ได้')}}
@@ -3880,7 +3880,7 @@ async function openFeedback(){
  modal(fbHead('rv')+form+(onlineOK?'<div id="rvList" class="tag2" style="margin-top:10px">กำลังโหลด…</div>':''),'bug');
  if(!onlineOK)return;try{const j=await api('reviews');const el=$('rvList');if(!el)return;el.className='';const mx=Math.max(1,...j.dist);
   el.innerHTML=(j.n?`<div class="rvsum"><div class="rvavg"><b class="px">${j.avg.toFixed(1)}</b><span>${stars(Math.round(j.avg))}</span><small>${fmt(j.n)} ความเห็น</small></div><div class="rvbars">${[5,4,3,2,1].map(r=>`<div><span>${r}★</span><i><b style="width:${j.dist[r-1]/mx*100}%"></b></i><small>${j.dist[r-1]}</small></div>`).join('')}</div></div>`:'')+
-   ((j.m||[]).map(m=>`<div class="item fbi"><div class="h"><b>${esc(m.n)} <span class="rvs">${stars(m.r)}</span></b><span class="tag2">${ago(m.t)}</span></div>${m.x?`<p>${esc(m.x)}</p>`:''}<div class="brow2"><button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div></div>`).join('')||'<p class="tag2">ยังไม่มีความคิดเห็น เป็นคนแรกเลย!</p>')}catch(e){const el=$('rvList');if(el)el.textContent='โหลดไม่ได้'}}
+   ((j.m||[]).map(m=>`<div class="item fbi"><div class="h"><b>${esc(m.n)} <span class="rvs">${stars(m.r)}</span></b><span class="tag2">${ago(m.t)}</span></div>${m.x?`<p>${esc(m.x)}</p>`:''}${rpBox('r',m)}<div class="brow2"><button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div></div>`).join('')||'<p class="tag2">ยังไม่มีความคิดเห็น เป็นคนแรกเลย!</p>')}catch(e){const el=$('rvList');if(el)el.textContent='โหลดไม่ได้'}}
 async function rvPost(){if(!RV.r)return toast('ให้คะแนนดาวก่อน');try{await api('review',{n:pname(),r:RV.r,x:($('rvTx').value||'').trim(),v:VERSION});toast('ขอบคุณสำหรับความเห็น!');openFeedback()}catch(e){toast(e.message==='rate'?'รอสักครู่ก่อนส่งใหม่':'ส่งไม่สำเร็จ')}}
 
 
@@ -4977,7 +4977,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5561,6 +5561,15 @@ function choiceGuard(){try{if(choice._cur&&!modalOpen&&!choice._min&&S&&S.alive)
 {const _mc=minChoice;minChoice=function(){choice._userMin=true;return _mc.apply(this,arguments)}}
 {const _cs2=choiceShow;choiceShow=function(){choice._userMin=false;return _cs2.apply(this,arguments)}}
 setInterval(choiceGuard,700);
+
+// ---------- v7.7 ตอบกลับความเห็น/บั๊ก ----------
+function rpBox(k,m){const r=m.rp,a=!!admK(),id=k+'_'+m.i;let h='';
+ if(r&&r.x)h+=`<div class="rpdev"><b>💬 ตอบกลับจากผู้พัฒนา</b><span class="tag2"> · ${ago(r.t)}</span><p>${esc(r.x)}</p></div>`;
+ if(a)h+=`<div class="rpadm"><textarea id="rp_${id}" class="crin" rows="2" maxlength="400" placeholder="ตอบกลับ (เว้นว่าง = ลบคำตอบ)">${r&&r.x?esc(r.x):''}</textarea><button class="sysb" onclick="rpSend('${k}','${m.i}')">ส่งคำตอบ</button></div>`;
+ return h}
+async function rpSend(k,mid){const el=$('rp_'+k+'_'+mid);if(!el)return;try{await api('reply',{kind:k,mid,x:(el.value||'').trim(),key:admK()});toast('บันทึกคำตอบแล้ว');k==='b'?openReport():openFeedback()}catch(e){toast('ส่งไม่สำเร็จ')}}
+{const st=document.createElement('style');st.textContent='.rpdev{margin:6px 0 4px;padding:6px 9px;border-left:3px solid #d8b25a;background:rgba(216,178,90,.1);border-radius:6px}.rpdev p{margin:3px 0 0;white-space:pre-wrap}.rpdev b{color:#b8862a;font-size:.9em}.rpadm{display:flex;gap:6px;align-items:flex-end;margin:6px 0}.rpadm textarea{flex:1;min-height:40px}';document.head.appendChild(st)}
+try{Object.assign(I18N.d,{'ตอบกลับจากผู้พัฒนา':'Developer reply','ตอบกลับ':'Reply','เว้นว่าง':'empty','ลบคำตอบ':'delete reply','ส่งคำตอบ':'Send reply','บันทึกคำตอบแล้ว':'Reply saved'})}catch(e){}
 </script>
 </body>
 </html>

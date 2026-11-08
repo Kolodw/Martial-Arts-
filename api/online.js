@@ -112,12 +112,15 @@ module.exports = async (req, res) => {
       const cnt = L.length ? await pipe(L.map(m => ['SCARD', 'bv:' + m.i])) : [];
       const done = await cmd('SMEMBERS', 'bugdone');
       const ds = new Set(done || []);
-      return res.json({ m: L.map((m, i) => Object.assign(m, { c: cnt[i] || 0, d: ds.has(m.i) ? 1 : 0 })) });
+      const rp = L.length ? await cmd('HMGET', 'replies', ...L.map(m => 'b:' + m.i)) : [];
+      return res.json({ m: L.map((m, i) => Object.assign(m, { c: cnt[i] || 0, d: ds.has(m.i) ? 1 : 0, rp: rp[i] ? JSON.parse(rp[i]) : null })) });
     }
     if (a === 'reviews') {
       const [all, hidden] = await pipe([['HVALS', 'reviews'], ['SMEMBERS', 'chat:hidden']]);
       const hs = new Set(hidden || []);
-      const L = (all || []).map(x => JSON.parse(x)).filter(m => !hs.has(m.i)).sort((x, y) => y.t - x.t);
+      const L0 = (all || []).map(x => JSON.parse(x)).filter(m => !hs.has(m.i)).sort((x, y) => y.t - x.t);
+      const rpr = L0.length ? await cmd('HMGET', 'replies', ...L0.map(m => 'r:' + m.i)) : [];
+      const L = L0.map((m, i) => Object.assign(m, { rp: rpr[i] ? JSON.parse(rpr[i]) : null }));
       const avg = L.length ? L.reduce((s0, m) => s0 + m.r, 0) / L.length : 0;
       const dist = [1, 2, 3, 4, 5].map(r => L.filter(m => m.r === r).length);
       return res.json({ n: L.length, avg, dist, m: L.slice(0, 80) });
@@ -312,6 +315,15 @@ module.exports = async (req, res) => {
       const bid = String(b.bid || '').slice(0, 20);
       const [, n] = await pipe([['SADD', 'bv:' + bid, id], ['SCARD', 'bv:' + bid]]);
       return res.json({ n });
+    }
+    if (a === 'reply') {
+      if (!process.env.ADMIN_KEY || String(b.key || '') !== process.env.ADMIN_KEY) return res.status(403).json({ err: 'forbidden' });
+      const kind = b.kind === 'r' ? 'r' : 'b', mid = String(b.mid || '').replace(/[^a-z0-9]/gi, '').slice(0, 30);
+      if (!mid) return res.status(400).json({ err: 'mid' });
+      const x = clean(b.x, 400);
+      if (!x) { await cmd('HDEL', 'replies', kind + ':' + mid); return res.json({ ok: 1, del: 1 }) }
+      await cmd('HSET', 'replies', kind + ':' + mid, JSON.stringify({ x, t: now }));
+      return res.json({ ok: 1 });
     }
     if (a === 'review') {
       const ok = await cmd('SET', 'rvrl:' + id, 1, 'NX', 'EX', 20);
