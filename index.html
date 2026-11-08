@@ -390,8 +390,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='10.6';
+const VERSION='10.7';
 const CHANGELOG=[
+ {v:'10.7',d:'8 พ.ย. 2026',l:['💬 แชทโลก: ข้อความของเราอยู่ฝั่งขวาเป็นกรอบสีชมพู ข้อความคนอื่นอยู่ซ้าย ดูง่ายขึ้นว่าเราพิมพ์อะไรไป','📢 ประกาศจากผู้ดูแล: ขึ้นเป็นกรอบสีเหลืองทึบลอยด้านบนให้ทุกคนเห็น ทั้งหน้าแรกและระหว่างเล่น กด "รับทราบ" เพื่อปิด']},
  {v:'10.6',d:'8 พ.ย. 2026',l:['💾 ขออภัย! เซฟที่หายไปจากหน้าแรกตั้งแต่อัปเดต v10.3 ยังอยู่ในเครื่องครบ — ตอนนี้กลับมาแสดงแล้ว (ต้นเหตุคือเกมซ่อนเซฟจากเวอร์ชันที่มันไม่รู้จัก)','🗂️ คลังสำรอง: ช่องเซฟเต็มหรือกดลบ ชีวิตเดิมจะย้ายไปคลังสำรอง กู้คืนได้ (เดิมเขียนทับทิ้งเงียบๆ) · ช่องเซฟเพิ่มเป็น 5 ช่อง','🛟 ทุกช่องมีสำเนาสำรองในเครื่อง ถ้าเซฟหลักเสียหายจะโหลดจากสำเนาแทน · โหลดพังจะไม่ลบอะไรทิ้ง','☁️ กู้จากเซิร์ฟเวอร์: ปุ่มใหม่ที่หน้าแรก ดึงเซฟอัตโนมัติบนคลาวด์ของเครื่องนี้กลับมาลงช่องว่าง · คลาวด์เก็บแยกตามช่องแล้ว ไม่ทับกัน']},
  {v:'10.5',d:'8 พ.ย. 2026',l:['🧪 ตรวจทั้งเกมด้วยการจำลองเล่นอัตโนมัติกว่า 400 ชีวิต (ยุทธภพ เทพเซียน สัตว์ ชะตาประจำวัน สร้างเอง เล่นต่อเป็นลูก/คนอื่น) กดทุกเมนูกว่า 4 หมื่นครั้ง — ไม่พบการค้าง','🐛 เรื่องที่ค้างรอเลือกเกี่ยวกับสำนัก ถ้าออกจากสำนักไปก่อนจะจบลงเองอย่างถูกต้อง ไม่เงียบหายหรือพัง · แก้การสอบเลื่อนขั้น/ถูกใส่ร้ายที่พังเมื่อไม่มีสำนัก','💾 ถ้าพื้นที่เซฟในเครื่องเต็ม เกมจะเตือนทันที (เดิมเงียบและเซฟไม่ติด) และลองบันทึกแบบย่อให้ก่อน','🔁 ลดเหตุการณ์ซ้ำซาก: เทศกาลตามวันจริงไม่เกิน 3 ครั้งต่อชีวิต · คนขอเข้าตำหนักในไม่ถี่เกินไป · ชีวิตคู่ร้าวฉานไม่วนทุกปี · ข้อความติดคอขวด · ประตูมิติชาร์จเก็บได้สูงสุด 5 · เหตุการณ์ชีวิตสัตว์ไม่ซ้ำติดกัน · เนตรวิเศษเจอสมบัติไม่ถี่เกินไป','⏳ โหมดชีวิตสั้น: ตายตอน 30 ปีไม่ขึ้นว่า "ตายด้วยวัยชรา" แล้ว และไม่เผาการ์ดคืนชีพทิ้ง','👶 ผู้บำเพ็ญในโลกเซียนมีลูกได้ตามอายุขัยที่ยาวกว่าคนธรรมดา · คนรักที่ยังไม่แต่งงานไม่นับเป็นเควสมีลูก','🌐 ระบบออนไลน์เลิกใช้คำสั่งเก่าที่ Node.js เตือนว่าจะถูกถอด']},
  {v:'10.4',d:'8 พ.ย. 2026',l:['💕 ระบบคู่รักใหม่: มีคนรักได้ตั้งแต่อายุ 18 ปี คบกันก่อนแล้วค่อยขอแต่งงาน (มีลูกหลังแต่งงาน)','✨ เสน่ห์ยิ่งสูง คนที่เข้ามาหายิ่งอายุน้อย (ไม่ต่ำกว่า 18 ปีเสมอ) · เห็นอายุของทุกคนในหน้าครอบครัว','🏯 มีหลายคนได้ผ่านตำหนักใน — แต่ต้องถามคนรักคนแรกก่อน เธออาจยอมหรือไม่ยอม (ปฏิเสธแล้วถามใหม่ได้ใน 5 ปี) หรือจะแอบคบก็ได้ แต่เสี่ยงถูกจับได้','👥 ไปเน้นครอบครัวขณะมีคนรัก มีโอกาสได้พบคนใหม่ · คนในตำหนักในแก่ตัวและจากไปตามอายุ','☁️ ใช้ได้ทั้งยุทธภพและโลกเทพเซียน — คนรักในโลกเซียนอายุยืนหลายร้อยปี · ตำหนักในไม่ปิดตัวเมื่ออายุเกิน 75 อีก','🐛 เควสอัปเกรดอาวุธในระบบที่สองยังค้างแบบเดิม แก้แล้ว · อีเวนต์รักทุกแบบเริ่มที่ 18 ปี']},
@@ -3716,7 +3717,7 @@ let onlineOK=false,onlineN=0,onlineLives=0,chatT=null,chatLast=0,chatMsgs=[];
 const pid=(()=>{let v=LS.get('murim_pid','');if(!v){v=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);LS.set('murim_pid',v)}return v})();
 const pname=()=>LS.get('murim_pname','')||(S?S.name:'จอมยุทธ์นิรนาม');
 async function api(a,body){const o=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({id:pid},body))}:{};const r=await fetch(API+'?a='+a+(body?'':'&id='+pid),o);const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.err||r.status);return j}
-async function onlinePing(){try{const j=await api('ping&v='+VERSION);onlineOK=true;onlineN=j.n||0;onlineLives=j.lives||0;try{bdCheck(j.bd)}catch(e){}}catch(e){onlineOK=false}{const t=$('tOnN');if(t){t.textContent=onlineOK?fmt(onlineN):'';t.parentNode.classList.toggle('on',onlineOK)}}const el=$('onlineBadge');if(el){el.style.display=onlineOK?'':'none';el.innerHTML=`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิตที่เคยเล่น`}}
+async function onlinePing(){try{const j=await api('ping&v='+VERSION);onlineOK=true;onlineN=j.n||0;onlineLives=j.lives||0;try{bdCheck(j.bd)}catch(e){}try{if('ann' in j)annShow(j.ann)}catch(e){}}catch(e){onlineOK=false}{const t=$('tOnN');if(t){t.textContent=onlineOK?fmt(onlineN):'';t.parentNode.classList.toggle('on',onlineOK)}}const el=$('onlineBadge');if(el){el.style.display=onlineOK?'':'none';el.innerHTML=`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิตที่เคยเล่น`}}
 setTimeout(onlinePing,1500);setInterval(()=>{if(!document.hidden)onlinePing()},60000);
 function myTitle(){if(!S)return'';const ri=realmIdx();return REALMS[ri].n}
 function chatRender(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60;box.innerHTML=chatMsgs.map(m=>`<div class="cm ${m.k==='share'?'share':''}"><span class="ct">${new Date(m.t).toTimeString().slice(0,5)}</span> <b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b> ${m.k==='share'?'📤 ':''}${esc(m.x)} <button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div>`).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';if(near)box.scrollTop=box.scrollHeight}
@@ -5626,7 +5627,7 @@ function mobAva(){if(deskOn)return;const top=document.querySelector('#game .top'
 {const _rd6=render;render=function(){const r=_rd6.apply(this,arguments);try{if(S&&$('game').classList.contains('on'))mobAva()}catch(e){}return r}}
 // --- chat with profile pictures ---
 let chatProf={};
-chatPoll=async function(){try{const j=await api('chat');chatMsgs=(j.m||[]).reverse();chatProf=j.p||{};chatRender()}catch(e){const b=$('chatBox');if(b)b.innerHTML='<div class="tag2">เชื่อมต่อไม่ได้</div>'}};
+chatPoll=async function(){try{const j=await api('chat');chatMsgs=(j.m||[]).reverse();chatProf=j.p||{};chatRender();try{if('ann' in j)annShow(j.ann)}catch(e){}}catch(e){const b=$('chatBox');if(b)b.innerHTML='<div class="tag2">เชื่อมต่อไม่ได้</div>'}};
 chatRender=function(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60;
  box.innerHTML=chatMsgs.map(m=>{const pf=m.pu&&chatProf[m.pu];const av=pf&&pf.av?`<img src="${pf.av}">`:'🙂';return`<div class="cm cmp ${m.k==='share'?'share':''}"><span class="cav">${frWrap(`<span class="frph sm">${av}</span>`,pf&&pf.fr)}</span><div class="cmb"><div><b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b> <span class="ct">${new Date(m.t).toTimeString().slice(0,5)}</span> <button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div><div>${m.k==='share'?'📤 ':''}${esc(m.x)}</div></div></div>`}).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';if(near)box.scrollTop=box.scrollHeight};
 // --- entry points ---
@@ -6427,6 +6428,53 @@ try{['acCheck','acFlag','acTp','acSnap','sendLife','api'].forEach(k=>{try{Object
  const _oo=openOnline;openOnline=function(tab){try{trkHit(tab||'chat')}catch(e){}return _oo.apply(this,arguments)};
  const _ol=openLiveList;openLiveList=function(){try{trkHit('live')}catch(e){}return _ol.apply(this,arguments)};
  const _os=openSpectate;openSpectate=function(k,tab){try{if(!tab&&!(specTarget===k&&$('modal').dataset.k==='spec'&&modalOpen))trkHit('spec')}catch(e){}return _os.apply(this,arguments)}}
+// ============ v10.7 แชทโลก: ข้อความเราอยู่ขวา · ประกาศ @everyone (แอดมิน) ============
+const myPu=()=>String(pid||'').slice(0,12);
+chatRender=function(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60,me=myPu();
+ box.innerHTML=chatMsgs.map(m=>{const mine=!!m.pu&&m.pu===me,pf=m.pu&&chatProf[m.pu],av=pf&&pf.av?`<img src="${pf.av}" alt="">`:'🙂',tm=new Date(m.t).toTimeString().slice(0,5);
+  if(m.k==='ann')return`<div class="cm cmann"><div class="cmb"><div class="cmh"><b>📢 ประกาศจากผู้ดูแล</b> <span class="ct">${tm}</span></div><div class="cmx">${esc(String(m.x||'').replace(/^@everyone\s*/i,''))}</div></div></div>`;
+  return`<div class="cm cmp ${mine?'me':''} ${m.k==='share'?'share':''}"><span class="cav">${frWrap(`<span class="frph sm">${av}</span>`,pf&&pf.fr)}</span><div class="cmb"><div class="cmh">${mine?`<span class="ct">${tm}</span> <b>คุณ</b>`:`<b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b> <span class="ct">${tm}</span> <button class="rep" onclick="chatRep('${esc(m.i)}')" title="รายงาน">⚑</button>`}</div><div class="cmx">${m.k==='share'?'📤 ':''}${esc(m.x)}</div></div></div>`}).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';
+ if(near)box.scrollTop=box.scrollHeight};
+{const _cs=chatSend;chatSend=async function(kind,text){const x=(text!=null?text:($('chatIn')||{}).value||'').trim();
+ if(/^@everyone\b/i.test(x)){if(!admK()){toast('@everyone ใช้ได้เฉพาะโหมดแอดมินเท่านั้น');return}
+  const body=x.replace(/^@everyone\b[\s:,-]*/i,'').trim();if(!body){toast('พิมพ์ข้อความประกาศต่อท้าย @everyone');return}
+  if(chatSend._busy)return;chatSend._busy=1;
+  try{const j=await api('say',{n:pname(),ti:'ผู้ดูแล',x,k:'msg',key:admK()});if($('chatIn')&&text==null)$('chatIn').value='';if(j&&j.ann){LS.del('murim_annX');annShow(j.ann)}toast('📢 ส่งประกาศถึงทุกคนแล้ว');chatPoll()}
+  catch(e){toast(e.message==='admin'?'รหัสแอดมินไม่ถูกต้อง — ส่งประกาศไม่ได้':e.message==='empty'?'ข้อความว่าง':'ส่งประกาศไม่สำเร็จ')}finally{chatSend._busy=0}return}
+ return _cs.apply(this,arguments)}}
+// แถบประกาศลอยด้านบน (ทึบ เห็นชัด อยู่เหนือทุกหน้าต่าง)
+let annCur=null;
+function annShow(a){annCur=a||null;let el=document.getElementById('annBar');
+ if(!a||!a.i||LS.get('murim_annX','')===a.i){if(el)el.remove();return}
+ if(el&&el.dataset.i===a.i)return;if(el)el.remove();
+ el=document.createElement('div');el.id='annBar';el.dataset.i=a.i;el.setAttribute('role','alert');
+ el.innerHTML=`<div class="annH"><span class="annI">📢</span><b>ประกาศจากผู้ดูแล</b><span class="annT">${new Date(a.t).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</span></div><div class="annX">${esc(a.x)}</div><div class="annB"><button class="annOk" onclick="annDismiss()">รับทราบ</button>${admK()?'<button class="annDel" onclick="annClear()">🗑️ ลบประกาศ (ทุกคน)</button>':''}</div>`;
+ document.body.appendChild(el);try{sfx('rare')}catch(e){}}
+function annDismiss(){if(annCur)LS.set('murim_annX',annCur.i);const el=document.getElementById('annBar');if(el)el.remove()}
+async function annClear(){if(!admK())return;try{await api('annclear',{key:admK()});annShow(null);toast('ลบประกาศแล้ว')}catch(e){toast(e.message==='admin'?'รหัสแอดมินไม่ถูกต้อง':'ลบไม่สำเร็จ')}}
+// ปุ่มช่วยพิมพ์ @everyone เฉพาะแอดมิน
+{const _oo3=openOnline;openOnline=function(tab){const r=_oo3.apply(this,arguments);try{if((tab||'chat')==='chat'&&admK()){const ci=$('chatIn');if(ci&&!document.getElementById('annHelp')){ci.placeholder='พิมพ์ข้อความ… · แอดมิน: ขึ้นต้นด้วย @everyone เพื่อประกาศ';ci.closest('.chatin').insertAdjacentHTML('afterend',`<button id="annHelp" class="gbtn" style="width:100%;margin-top:6px" onclick="const c=$('chatIn');if(!/^@everyone/i.test(c.value))c.value='@everyone '+c.value;c.focus()">📢 ประกาศถึงทุกคน (@everyone) · โหมดแอดมิน</button>`)}}}catch(e){}return r}}
+(function(){const st=document.createElement('style');st.textContent=`
+.cm.cmp .cmb{background:var(--peerb);border:2px solid var(--line);border-radius:4px 12px 12px 12px;padding:5px 9px;max-width:82%;flex:0 1 auto}
+.cm.cmp{border-bottom:0;padding:4px 0}
+.cm.cmp.me{flex-direction:row-reverse}
+.cm.cmp.me .cmb{background:var(--me);border-radius:12px 4px 12px 12px;text-align:right}
+.cm.cmp.me .cmx{text-align:left;display:inline-block}
+.cm .cmx{white-space:pre-wrap;word-break:break-word}
+.cm.cmann{border-bottom:0;padding:6px 0}
+.cm.cmann .cmb{background:#ffd84a;color:#2a1a00;border:3px solid #2a2838;border-radius:10px;padding:7px 10px;width:100%}
+.cm.cmann .ct{color:#5a4200;opacity:1}
+#annBar{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 24px));z-index:99999;background:#ffd84a;color:#1e1400;border:4px solid #1e1400;border-radius:14px;box-shadow:0 6px 0 #1e1400,0 10px 28px rgba(0,0,0,.45);padding:10px 14px 12px;font-size:16px;line-height:1.45;animation:annIn .35s ease-out}
+#annBar .annH{display:flex;align-items:center;gap:8px;font-size:17px;margin-bottom:4px}
+#annBar .annI{font-size:22px}
+#annBar .annT{margin-left:auto;font-size:13px;color:#5a4200}
+#annBar .annX{white-space:pre-wrap;word-break:break-word;max-height:40vh;overflow:auto;font-weight:600;background:#fff6cf;border:2px solid #1e1400;border-radius:8px;padding:8px 10px}
+#annBar .annB{display:flex;gap:8px;margin-top:9px}
+#annBar button{flex:1;font:inherit;font-weight:700;border:3px solid #1e1400;border-radius:10px;padding:8px 10px;cursor:pointer;color:#1e1400}
+#annBar .annOk{background:#fff}
+#annBar .annDel{background:#ff8fa8}
+@keyframes annIn{from{transform:translate(-50%,-30px);opacity:0}to{transform:translate(-50%,0);opacity:1}}`;document.head.appendChild(st)})();
+
 </script>
 </body>
 </html>

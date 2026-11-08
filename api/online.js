@@ -31,6 +31,8 @@ function clean(s, n) {
 }
 // อ่าน query ด้วย WHATWG URL (ไม่แตะ req.query ซึ่งใช้ url.parse ที่เลิกสนับสนุนแล้ว)
 const qOf = r => r._q || (r._q = Object.fromEntries(new URL(r.url || '/', 'http://localhost').searchParams));
+const isAdmKey = k => !!process.env.ADMIN_KEY && String(k || '') === process.env.ADMIN_KEY;
+const annGet = async () => { try { const v = await cmd('GET', 'ann'); return v ? JSON.parse(v) : null } catch { return null } };
 const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
 
 function uaMeta(req, now) {
@@ -58,8 +60,9 @@ module.exports = async (req, res) => {
         const meta = { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(qOf(req).v || '').slice(0, 8), c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
         if (meta.b !== 'บอท') await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)]]);
       }
-      const [, n, lives] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 300e3], ['ZCARD', 'online'], ['GET', 'lives']]);
-      return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7) });
+      const [, n, lives, annV] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 300e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann']]);
+      let ann = null; try { ann = annV ? JSON.parse(annV) : null } catch {}
+      return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7), ann });
     }
     if (a === 'who' || a === 'admin' || a === 'bugfix') {
       const AK = process.env.ADMIN_KEY;
@@ -127,7 +130,7 @@ module.exports = async (req, res) => {
       const pus = [...new Set(ms.map(m => m.pu).filter(Boolean))];
       const pv = pus.length ? await cmd('HMGET', 'prof', ...pus) : [];
       const p = {}; pus.forEach((u, i) => { if (pv[i]) { try { p[u] = JSON.parse(pv[i]) } catch {} } });
-      return res.json({ m: ms, p });
+      return res.json({ m: ms, p, ann: await annGet() });
     }
     if (a === 'board') {
       const prevW = week(new Date(now - 7 * 86400e3));
@@ -317,7 +320,21 @@ module.exports = async (req, res) => {
       await cmd('HSET', 'prof', id.slice(0, 12), JSON.stringify({ av, fr }));
       return res.json({ ok: 1 });
     }
+    if (a === 'annclear') {
+      if (!isAdmKey(b.key)) return res.status(403).json({ err: 'admin' });
+      await cmd('DEL', 'ann');
+      return res.json({ ok: 1 });
+    }
     if (a === 'say') {
+      if (/^\s*@everyone\b/i.test(String(b.x || ''))) {
+        if (!isAdmKey(b.key)) return res.status(403).json({ err: 'admin' });
+        const body = String(b.x || '').replace(/^\s*@everyone\b[\s:,-]*/i, '').replace(/[\u0000-\u0009\u000b-\u001f<>]/g, '').slice(0, 400).trim();
+        if (!body) return res.status(400).json({ err: 'empty' });
+        const ann = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, x: body, n: clean(b.n, 20) || 'ผู้ดูแล' };
+        const m = { i: ann.i, t: now, n: ann.n, ti: 'ผู้ดูแล', x: '@everyone ' + body, k: 'ann', u: String(id || '').slice(0, 4), pu: String(id || '').slice(0, 12) };
+        await pipe([['SET', 'ann', JSON.stringify(ann), 'EX', 86400 * 3], ['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199]]);
+        return res.json({ ok: 1, ann });
+      }
       if (await cmd('GET', 'mute:' + id)) return res.status(429).json({ err: 'muted' });
       const ok = await cmd('SET', 'rl:' + id, 1, 'NX', 'EX', 3);
       if (!ok) return res.status(429).json({ err: 'rate' });
