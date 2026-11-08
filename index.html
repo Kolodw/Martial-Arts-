@@ -390,7 +390,7 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='7.7';
+const VERSION='7.8';
 const CHANGELOG=[
  {v:'7.5',d:'8 พ.ย. 2026',l:['🖥️ หน้าจอคอมแบบใหม่: ซ้ายสถานะตัวละคร (ภาพตัวละคร หลอดพลังชีวิต/พลัง/อายุขัย ค่าสถานะ วิชาเด่น) · กลางฉากและบันทึก · ขวาฟังก์ชันแบ่งหมวด พร้อมเควสและการ์ดระบบ','📐 หน้าเกิดและหน้าสร้างตัวละครบนคอมแบ่ง 2 คอลัมน์ เห็นครบในจอเดียว','⌨️ คีย์ลัดบนคอม: Space หยุด/เล่น · S ความเร็ว · A อัตโนมัติ · 1–9 เลือกตัวเลือก · Esc ปิด · M/B/Q/L เมนู กระเป๋า เควส บันทึก','🖼️ ร้านแลกกรอบ: ใช้กรรมดีหรือกรรมชั่วแลกกรอบรูป 11 แบบ — ปกติ · วิบวับ · สีเปลี่ยน · อนิเมชั่นเปลี่ยนสีแล้วกลับสีเดิม กรอบเป็นของคุณถาวรทุกชีวิตและแสดงที่รูปตัวละคร','👤 ระบบโปรไฟล์: ตั้งตัวละครเป็นรูปโปรไฟล์ พร้อมกรอบ แสดงข้างชื่อในแชทโลก','🐛 แก้บั๊กตัวเลือกที่ค้างไว้นานแล้วพัง และกันเกมค้างจากตัวเลือกที่ผิดพลาด']},
  {v:'7.1',d:'8 พ.ย. 2026',l:['🐾 เกิดเป็นสัตว์สุ่มอย่างเดียว — ฟ้าลิขิตชนิด ธาตุ และพรสวรรค์ให้ทั้งหมด','🏆 ทำเนียบเพิ่มแท็บ 🐾 สัตว์อสูร แยกจากยุทธภพและโลกเทพเซียน','📜 ดูคนอื่นเล่น: โหลดบันทึกทั้งหมดตั้งแต่เกิดถึงปัจจุบันได้ (กดโหลดครั้งเดียว)','🌸 คืนสู่วัยเยาว์: พลังสูงหรือลมปราณบริสุทธิ์ถึงขีดสุด ใบหน้าอาจหยุดแก่ — แต่บางคนก็ยังแก่ตามวัย','🍑 เหตุการณ์หายาก: โอสถคืนวัยเยาว์ ร่างกายกลับแข็งแรงเหมือนวัยรุ่น อายุขัยเพิ่ม','🏯 ตำหนักใน: เสน่ห์และชื่อเสียงสูงจะมีสาวงาม/บุรุษรูปงามมาขอติดตาม รับได้มากตามค่าสถานะ มีค่าเลี้ยงดูทุกปี คู่ชีวิตอาจไม่พอใจ — ดูได้ในหน้าครอบครัว']},
@@ -4977,7 +4977,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5476,17 +5476,17 @@ if($('deskL')){deskUnbuild();deskOn=false;deskApply()}
 
 // ============ v7.5: กรอบโปรไฟล์ (แลกด้วยกรรม) + โปรไฟล์ในแชท ============
 const FRAMES=[
- {id:'f_wood',n:'กรอบไม้ไผ่',side:'g',c:15,ty:'static',c1:'#9a7a4a',c2:'#9a7a4a',d:'กรอบเรียบง่ายของผู้ฝึกตนสันโดษ'},
- {id:'f_jade',n:'กรอบหยกเขียว',side:'g',c:35,ty:'static',c1:'#3aa86a',c2:'#3aa86a',d:'หยกเขียวขัดเงา'},
- {id:'f_gold',n:'กรอบทองคำ',side:'g',c:70,ty:'static',c1:'#e8b830',c2:'#e8b830',d:'ทองคำบริสุทธิ์ของผู้มีบุญ'},
- {id:'f_star',n:'กรอบดาวระยิบ',side:'g',c:120,ty:'sparkle',c1:'#ffd84a',c2:'#fff4b0',d:'ประกายดาววิบวับรอบกรอบ'},
- {id:'f_cloud',n:'กรอบเมฆมงคล',side:'g',c:180,ty:'shift',c1:'#ff9ac8',c2:'#8ac8ff',d:'สีเมฆเปลี่ยนเล็กน้อยไปมา'},
- {id:'f_phoenix',n:'กรอบหงส์เพลิง',side:'g',c:280,ty:'pulse',c1:'#ff5a3a',c2:'#ffd84a',d:'เปลี่ยนสีเป็นเปลวทองแล้วกลับเป็นสีเดิม'},
- {id:'f_celestial',n:'กรอบเทพสวรรค์',side:'g',c:450,ty:'sparkle shift',c1:'#fff0a0',c2:'#a0e8ff',d:'ประกายวิบวับพร้อมสีสวรรค์เปลี่ยนไปมา'},
- {id:'f_bone',n:'กรอบกระดูกขาว',side:'e',c:15,ty:'static',c1:'#d8d0c0',c2:'#d8d0c0',d:'ประกอบจากกระดูกศัตรู'},
- {id:'f_blood',n:'กรอบโลหิต',side:'e',c:45,ty:'static',c1:'#a01a2a',c2:'#a01a2a',d:'คราบเลือดที่ไม่มีวันจาง'},
- {id:'f_shadow',n:'กรอบเงาราตรี',side:'e',c:120,ty:'sparkle',c1:'#7a3ad8',c2:'#c8a0ff',d:'ประกายสีม่วงในความมืด'},
- {id:'f_demon',n:'กรอบมารครองฟ้า',side:'e',c:280,ty:'pulse',c1:'#6a0a1a',c2:'#d83aff',d:'เปลี่ยนสีเป็นม่วงมารแล้วกลับเป็นแดงเลือด'}];
+ {id:'f_wood',n:'กรอบไม้ไผ่',side:'g',c:5000,ty:'static',c1:'#9a7a4a',c2:'#9a7a4a',d:'กรอบเรียบง่ายของผู้ฝึกตนสันโดษ'},
+ {id:'f_jade',n:'กรอบหยกเขียว',side:'g',c:7500,ty:'static',c1:'#3aa86a',c2:'#3aa86a',d:'หยกเขียวขัดเงา'},
+ {id:'f_gold',n:'กรอบทองคำ',side:'g',c:11250,ty:'static',c1:'#e8b830',c2:'#e8b830',d:'ทองคำบริสุทธิ์ของผู้มีบุญ'},
+ {id:'f_star',n:'กรอบดาวระยิบ',side:'g',c:16900,ty:'sparkle',c1:'#ffd84a',c2:'#fff4b0',d:'ประกายดาววิบวับรอบกรอบ'},
+ {id:'f_cloud',n:'กรอบเมฆมงคล',side:'g',c:25300,ty:'shift',c1:'#ff9ac8',c2:'#8ac8ff',d:'สีเมฆเปลี่ยนเล็กน้อยไปมา'},
+ {id:'f_phoenix',n:'กรอบหงส์เพลิง',side:'g',c:37950,ty:'pulse',c1:'#ff5a3a',c2:'#ffd84a',d:'เปลี่ยนสีเป็นเปลวทองแล้วกลับเป็นสีเดิม'},
+ {id:'f_celestial',n:'กรอบเทพสวรรค์',side:'g',c:56950,ty:'sparkle shift',c1:'#fff0a0',c2:'#a0e8ff',d:'ประกายวิบวับพร้อมสีสวรรค์เปลี่ยนไปมา'},
+ {id:'f_bone',n:'กรอบกระดูกขาว',side:'e',c:5000,ty:'static',c1:'#d8d0c0',c2:'#d8d0c0',d:'ประกอบจากกระดูกศัตรู'},
+ {id:'f_blood',n:'กรอบโลหิต',side:'e',c:7500,ty:'static',c1:'#a01a2a',c2:'#a01a2a',d:'คราบเลือดที่ไม่มีวันจาง'},
+ {id:'f_shadow',n:'กรอบเงาราตรี',side:'e',c:11250,ty:'sparkle',c1:'#7a3ad8',c2:'#c8a0ff',d:'ประกายสีม่วงในความมืด'},
+ {id:'f_demon',n:'กรอบมารครองฟ้า',side:'e',c:16900,ty:'pulse',c1:'#6a0a1a',c2:'#d83aff',d:'เปลี่ยนสีเป็นม่วงมารแล้วกลับเป็นแดงเลือด'}];
 function frGet(){const d=LS.get('murim_frames',null)||{};d.own=d.own||[];return d}
 function frSet(d){LS.set('murim_frames',d)}
 function frOf(id){return FRAMES.find(f=>f.id===id)||null}
@@ -5496,16 +5496,16 @@ function frWrap(inner,id,extra){const f=frOf(id);return`<span class="frw ${f?frC
 function drawPortrait(cv,o,full){const ctx=cv&&cv.getContext&&cv.getContext('2d');if(!ctx)return;o=o||meLook();const sg=g,sp=PS,vw=full?28:17;g=ctx;PS=cv.width/vw;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;
  const bg=S&&S.xian?['#1c2440','#2a3460']:['#1c1a28','#2a2638'];P(0,0,40,44,bg[0]);P(0,full?25:16,40,8,bg[1]);try{const ad=o.age<6?-8:o.age<14?-5:o.old?-1:0;full?person(14,29,o,'stand'):person(6,25+ad,o,'stand')}catch(e){}g=sg;PS=sp}
 function snapAvatar(){if(!S)return'';const c=document.createElement('canvas');c.width=56;c.height=62;drawPortrait(c);try{return c.toDataURL('image/png')}catch(e){return''}}
-function openFrameShop(){const d=frGet(),k=S?Math.round(S.karma):null;
- const card=f=>{const own=d.own.includes(f.id),eq=d.eq===f.id,can=S&&(f.side==='g'?S.karma>=f.c:S.karma<=-f.c);
+function openFrameShop(){const d=frGet(),k=S?Math.round(S.karma):null,kb=kbGet();
+ const card=f=>{const own=d.own.includes(f.id),eq=d.eq===f.id,can=kb[f.side]>=f.c;
   return`<div class="item frshop"><div class="frprev">${frWrap(`<span class="frph">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,f.id)}</div><div style="flex:1;min-width:0"><b>${f.n}</b> <span class="tag2">${{static:'ปกติ',sparkle:'วิบวับ',shift:'สีเปลี่ยน',pulse:'อนิเมชั่น','sparkle shift':'วิบวับ + สีเปลี่ยน'}[f.ty]}</span><p class="tag2">${f.d}</p>
-  ${own?(eq?`<button class="gbtn" onclick="frEquip(null)">ถอดกรอบ</button> <span class="tag2">✅ ใช้อยู่</span>`:`<button class="pbtn" onclick="frEquip('${f.id}')">สวมกรอบนี้</button>`):`<button class="${can?'pbtn':'gbtn'}" ${can?'':'disabled'} onclick="frBuy('${f.id}')">แลกด้วย ${f.side==='g'?'☯️ กรรมดี':'☠️ กรรมชั่ว'} ${f.c}</button>`}</div></div>`};
- modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🖼️ ร้านแลกกรอบ</h3><p class="tag2">ใช้<b>กรรม</b>ของชีวิตนี้แลกกรอบรูป — กรอบเป็นของคุณถาวรทุกชีวิต แสดงที่รูปตัวละครและรูปโปรไฟล์ในแชท<br>กรรมดีแลกกรอบสายธรรมะ (กรรมลดลง) · กรรมชั่วแลกกรอบสายมาร (กรรมขยับเข้าหาศูนย์) · การแลกมีผลกับเหตุการณ์ที่ขึ้นกับกรรม</p>
-  <div class="box" style="padding:8px 10px;margin-bottom:8px">${S?`กรรมตอนนี้: <b style="color:${k>=0?'#3a9a4a':'#d84a4a'}">${k>0?'+':''}${k}</b>`:'⚠️ ต้องอยู่ระหว่างจำลองชีวิตจึงจะแลกได้ (สวมกรอบที่มีอยู่แล้วได้เสมอ)'}</div>
+  ${own?(eq?`<button class="gbtn" onclick="frEquip(null)">ถอดกรอบ</button> <span class="tag2">✅ ใช้อยู่</span>`:`<button class="pbtn" onclick="frEquip('${f.id}')">สวมกรอบนี้</button>`):`<button class="${can?'pbtn':'gbtn'}" ${can?'':'disabled'} onclick="frBuy('${f.id}')">แลกด้วย ${f.side==='g'?'☯️ กรรมดี':'☠️ กรรมชั่ว'} ${fmt(f.c)}</button>`}</div></div>`};
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🖼️ ร้านแลกกรอบ</h3><p class="tag2">ใช้<b>คลังกรรม</b>แลกกรอบรูป — ทุกครั้งที่จบชีวิต กรรมของชีวิตนั้นจะเข้าคลังถาวร (กรรมบวกเข้าคลังกรรมดี กรรมลบเข้าคลังกรรมชั่ว) สะสมข้ามชีวิตได้ไม่จำกัด<br>กรอบเป็นของคุณถาวรทุกชีวิต แสดงที่รูปตัวละครและรูปโปรไฟล์ในแชท</p>
+  <div class="box" style="padding:8px 10px;margin-bottom:8px">🏦 คลังกรรม: <b style="color:#3a9a4a">☯️ ${fmt(kb.g)}</b> · <b style="color:#d84a4a">☠️ ${fmt(kb.e)}</b>${S&&S.alive?`<br><span class="tag2">ชีวิตนี้กรรม ${k>0?'+':''}${k} — จะเข้าคลังเมื่อจบชีวิต</span>`:''}</div>
   <h4>☯️ สายธรรมะ</h4>${FRAMES.filter(f=>f.side==='g').map(card).join('')}<h4 style="margin-top:10px">☠️ สายมาร</h4>${FRAMES.filter(f=>f.side==='e').map(card).join('')}
   <button class="gbtn" style="width:100%;margin-top:8px" onclick="openProfile()">👤 ไปหน้าโปรไฟล์</button>`,'frames')}
-function frBuy(id){const f=frOf(id),d=frGet();if(!f||!S||d.own.includes(id))return;if(f.side==='g'?S.karma<f.c:S.karma>-f.c){toast('กรรมไม่พอ');return}
- if(f.side==='g')S.karma-=f.c;else S.karma+=f.c;d.own.push(id);d.eq=id;frSet(d);log(`🖼️ แลก<b>${f.n}</b>ด้วย${f.side==='g'?'กรรมดี':'กรรมชั่ว'} ${f.c}`,'epic');toast('ได้ '+f.n);profPush();try{render()}catch(e){}openFrameShop()}
+function frBuy(id){const f=frOf(id),d=frGet(),kb=kbGet();if(!f||d.own.includes(id))return;if(kb[f.side]<f.c){toast('กรรมไม่พอ');return}
+ kb[f.side]-=f.c;kbSet(kb);d.own.push(id);d.eq=id;frSet(d);try{if(S&&S.alive)log(`🖼️ แลก<b>${f.n}</b>ด้วยคลัง${f.side==='g'?'กรรมดี':'กรรมชั่ว'} ${fmt(f.c)}`,'epic')}catch(e){}toast('ได้ '+f.n);profPush();try{render()}catch(e){}openFrameShop()}
 function frEquip(id){const d=frGet();d.eq=id;frSet(d);profPush();try{render()}catch(e){}if($('modal').dataset.k==='frames')openFrameShop();else if($('modal').dataset.k==='profile')openProfile()}
 async function profPush(){if(!onlineOK)return;const d=frGet();try{await api('profile',{av:d.av||'',fr:d.eq||''})}catch(e){}}
 function openProfile(){const d=frGet();const own=FRAMES.filter(f=>d.own.includes(f.id));
@@ -5570,6 +5570,13 @@ function rpBox(k,m){const r=m.rp,a=!!admK(),id=k+'_'+m.i;let h='';
 async function rpSend(k,mid){const el=$('rp_'+k+'_'+mid);if(!el)return;try{await api('reply',{kind:k,mid,x:(el.value||'').trim(),key:admK()});toast('บันทึกคำตอบแล้ว');k==='b'?openReport():openFeedback()}catch(e){toast('ส่งไม่สำเร็จ')}}
 {const st=document.createElement('style');st.textContent='.rpdev{margin:6px 0 4px;padding:6px 9px;border-left:3px solid #d8b25a;background:rgba(216,178,90,.1);border-radius:6px}.rpdev p{margin:3px 0 0;white-space:pre-wrap}.rpdev b{color:#b8862a;font-size:.9em}.rpadm{display:flex;gap:6px;align-items:flex-end;margin:6px 0}.rpadm textarea{flex:1;min-height:40px}';document.head.appendChild(st)}
 try{Object.assign(I18N.d,{'ตอบกลับจากผู้พัฒนา':'Developer reply','ตอบกลับ':'Reply','เว้นว่าง':'empty','ลบคำตอบ':'delete reply','ส่งคำตอบ':'Send reply','บันทึกคำตอบแล้ว':'Reply saved'})}catch(e){}
+
+// ---------- v7.8 คลังกรรมข้ามชีวิต ----------
+function kbGet(){const d=LS.get('murim_kbank',null)||{};d.g=Math.max(0,+d.g||0);d.e=Math.max(0,+d.e||0);return d}
+function kbSet(d){LS.set('murim_kbank',d)}
+function kbDeposit(){try{if(!S||S._kbDone)return;S._kbDone=1;const k=Math.round(S.karma||0);if(!k)return;const kb=kbGet();if(k>0)kb.g+=k;else kb.e+=-k;kbSet(kb);setTimeout(()=>{try{toast(`🏦 กรรม ${k>0?'+':''}${k} เข้าคลังกรรมแล้ว`)}catch(e){}},1500)}catch(e){}}
+{const _eg=endGame;endGame=function(){kbDeposit();return _eg.apply(this,arguments)}}
+try{Object.assign(I18N.d,{'คลังกรรม':'Karma vault','เข้าคลังกรรมแล้ว':'added to the karma vault','จะเข้าคลังเมื่อจบชีวิต':'goes to the vault when this life ends','ชีวิตนี้กรรม':'This life karma','คลังกรรมดี':'good karma vault','คลังกรรมชั่ว':'bad karma vault'})}catch(e){}
 </script>
 </body>
 </html>
