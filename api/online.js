@@ -101,7 +101,8 @@ module.exports = async (req, res) => {
       const T = pairs(top).filter(x => !x.cu).slice(0, 60), Pv = pairs(prev).filter(x => !x.cu).slice(0, 20), all = T.concat(Pv).filter(x => x.lid);
       const pubs = all.length ? await cmd('MGET', ...all.map(x => 'lifep:' + x.lid)) : [];
       const pm = {}; all.forEach((x, i) => pm[x.lid] = pubs[i] === '1' ? 1 : pubs[i] === '2' ? 2 : 0);
-      const fix = l => l.map(x => { const v = x.lid ? pm[x.lid] || 0 : 0; const o = Object.assign(x, { pub: v === 1 ? 1 : 0 }); if (v === 2) { o.n = 'ผู้ไม่ประสงค์ออกนาม'; o.f = ''; o.anon = 1 } return o });
+      const admB = !!process.env.ADMIN_KEY && String(req.query.key || '') === process.env.ADMIN_KEY;
+      const fix = l => l.map(x => { const v = x.lid ? pm[x.lid] || 0 : 0; const o = Object.assign(x, { pub: v === 1 || (admB && x.lid) ? 1 : 0 }); if (v === 2 && !admB) { o.n = 'ผู้ไม่ประสงค์ออกนาม'; o.f = ''; o.anon = 1 } return o });
       return res.json({ top: fix(T), prev: fix(Pv), arena });
     }
     if (a === 'load') {
@@ -190,7 +191,8 @@ module.exports = async (req, res) => {
       const lid = String(req.query.l || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
       const [pub, d, own] = await pipe([['GET', 'lifep:' + lid], ['GET', 'lifed:' + lid], ['GET', 'lifeo:' + lid]]);
       if (!d) return res.status(404).json({ err: 'notfound' });
-      if (pub !== '1' && own !== id) return res.status(403).json({ err: 'private' });
+      const admV = !!process.env.ADMIN_KEY && String(req.query.key || '') === process.env.ADMIN_KEY;
+      if (pub !== '1' && own !== id && !admV) return res.status(403).json({ err: 'private' });
       return res.json({ d: JSON.parse(d), pub: pub === '1' ? 1 : 0, mine: own === id ? 1 : 0 });
     }
 
