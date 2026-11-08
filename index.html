@@ -390,7 +390,7 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='7.8';
+const VERSION='7.9';
 const CHANGELOG=[
  {v:'7.5',d:'8 พ.ย. 2026',l:['🖥️ หน้าจอคอมแบบใหม่: ซ้ายสถานะตัวละคร (ภาพตัวละคร หลอดพลังชีวิต/พลัง/อายุขัย ค่าสถานะ วิชาเด่น) · กลางฉากและบันทึก · ขวาฟังก์ชันแบ่งหมวด พร้อมเควสและการ์ดระบบ','📐 หน้าเกิดและหน้าสร้างตัวละครบนคอมแบ่ง 2 คอลัมน์ เห็นครบในจอเดียว','⌨️ คีย์ลัดบนคอม: Space หยุด/เล่น · S ความเร็ว · A อัตโนมัติ · 1–9 เลือกตัวเลือก · Esc ปิด · M/B/Q/L เมนู กระเป๋า เควส บันทึก','🖼️ ร้านแลกกรอบ: ใช้กรรมดีหรือกรรมชั่วแลกกรอบรูป 11 แบบ — ปกติ · วิบวับ · สีเปลี่ยน · อนิเมชั่นเปลี่ยนสีแล้วกลับสีเดิม กรอบเป็นของคุณถาวรทุกชีวิตและแสดงที่รูปตัวละคร','👤 ระบบโปรไฟล์: ตั้งตัวละครเป็นรูปโปรไฟล์ พร้อมกรอบ แสดงข้างชื่อในแชทโลก','🐛 แก้บั๊กตัวเลือกที่ค้างไว้นานแล้วพัง และกันเกมค้างจากตัวเลือกที่ผิดพลาด']},
  {v:'7.1',d:'8 พ.ย. 2026',l:['🐾 เกิดเป็นสัตว์สุ่มอย่างเดียว — ฟ้าลิขิตชนิด ธาตุ และพรสวรรค์ให้ทั้งหมด','🏆 ทำเนียบเพิ่มแท็บ 🐾 สัตว์อสูร แยกจากยุทธภพและโลกเทพเซียน','📜 ดูคนอื่นเล่น: โหลดบันทึกทั้งหมดตั้งแต่เกิดถึงปัจจุบันได้ (กดโหลดครั้งเดียว)','🌸 คืนสู่วัยเยาว์: พลังสูงหรือลมปราณบริสุทธิ์ถึงขีดสุด ใบหน้าอาจหยุดแก่ — แต่บางคนก็ยังแก่ตามวัย','🍑 เหตุการณ์หายาก: โอสถคืนวัยเยาว์ ร่างกายกลับแข็งแรงเหมือนวัยรุ่น อายุขัยเพิ่ม','🏯 ตำหนักใน: เสน่ห์และชื่อเสียงสูงจะมีสาวงาม/บุรุษรูปงามมาขอติดตาม รับได้มากตามค่าสถานะ มีค่าเลี้ยงดูทุกปี คู่ชีวิตอาจไม่พอใจ — ดูได้ในหน้าครอบครัว']},
@@ -1561,6 +1561,7 @@ function checkDeath(){
  else if(S.hp<=0)cause=S.age<3?'จากไปตั้งแต่ยังเป็นทารก':S.age<20?'จากไปตั้งแต่ยังเยาว์':S.chronic?`ทรุดหนักด้วย${S.chronic.n}จนสิ้นใจ`:'สิ้นใจจากบาดแผลในยุทธภพ';
  else if(S.age>=lifeMax())cause='จากไปอย่างสงบด้วยวัยชรา'+(S.kids?' ท่ามกลางลูกหลาน':'');
  if(!cause)return false;
+ try{if(ndSys(cause))return false}catch(e){console.error(e)}
  if(S.sys&&S.sys.revive>0&&!S.flags.ascended){S.sys.revive--;S.hp=S.maxHp;S.deathCause=null;S.chronic=null;if(/วัยชรา/.test(cause))S.lifespan+=12;S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) — ร่างกายฟื้นคืนสมบูรณ์`,'up');setScene('system');return false}
  flushReveal();S.alive=false;S.cause=cause;saveLegacy();clearSave();setScene('death');setTimeout(()=>sfx('death'),300);log(`🪦 ${cause}`,'bad');
  setTimeout(()=>{modal(`<h3>ลาก่อน ${esc(S.name)}</h3><p>${cause} ในวัย ${S.age} ปี<br>อยากบอกอะไรกับคนคนนี้เป็นครั้งสุดท้าย?</p><input class="ta" id="byeIn" maxlength="80" placeholder="คำอำลาสุดท้าย"><button class="pbtn" style="width:100%" onclick="endGame()">อำลา</button>`,'bye')},900);
@@ -4977,7 +4978,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5121,7 +5122,7 @@ function sysPop(T,G,inh){try{const old=document.getElementById('sysPop');if(old)
   (G?L(`ระดับระบบ : <b style="color:${G.c}">${G.n}</b>`,1.15):'')+L(`สีระบบ : <b style="color:${c.a}">■ ${c.n}</b>`,1.4)+L('การผูกมัด <b style="color:'+c.w+'">สำเร็จ</b> — ขอต้อนรับ โฮสต์',1.7)+`</div>`;
  document.body.appendChild(el);try{sfx('rare')}catch(e){}try{vib(60)}catch(e){}
  setTimeout(()=>el.classList.add('out'),3800);setTimeout(()=>el.remove(),4800)}catch(e){console.error(e)}}
-{const _bs=bindSys;bindSys=function(T,G){S.sysCol=ch(SYC_K);_bs.apply(this,arguments);if(S&&S.sys){_syApplied='';sysApplyCol();setTimeout(()=>sysPop(T,SYS_GRADE[S.sys.gr]),250)}}}
+{const _bs=bindSys;bindSys=function(T,G){S.sysCol=ch(SYC_K);_bs.apply(this,arguments);if(S&&S.sys){_syApplied='';sysApplyCol();setTimeout(()=>{if(S&&S.sys)sysPop(T,SYS_GRADE[S.sys.gr])},250)}}}
 {const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{sysApplyCol()}catch(e){}return r}}
 {const _bl=beginLife;beginLife=function(){_syApplied='';const r=_bl.apply(this,arguments);try{sysApplyCol();if(S&&S.sys&&S._sysInherit){S.sysCol=S.sysCol||ch(SYC_K);const T=SYS_TYPES.find(x=>x.id===S.sys.t);setTimeout(()=>sysPop(T,SYS_GRADE[S.sys.gr||0],1),1200)}}catch(e){}return r}}
 
@@ -5577,6 +5578,30 @@ function kbSet(d){LS.set('murim_kbank',d)}
 function kbDeposit(){try{if(!S||S._kbDone)return;S._kbDone=1;const k=Math.round(S.karma||0);if(!k)return;const kb=kbGet();if(k>0)kb.g+=k;else kb.e+=-k;kbSet(kb);setTimeout(()=>{try{toast(`🏦 กรรม ${k>0?'+':''}${k} เข้าคลังกรรมแล้ว`)}catch(e){}},1500)}catch(e){}}
 {const _eg=endGame;endGame=function(){kbDeposit();return _eg.apply(this,arguments)}}
 try{Object.assign(I18N.d,{'คลังกรรม':'Karma vault','เข้าคลังกรรมแล้ว':'added to the karma vault','จะเข้าคลังเมื่อจบชีวิต':'goes to the vault when this life ends','ชีวิตนี้กรรม':'This life karma','คลังกรรมดี':'good karma vault','คลังกรรมชั่ว':'bad karma vault'})}catch(e){}
+
+// ---------- v7.9 ศึกตัวต่อตัวกับมารสวรรค์/ราชามาร + ระบบตื่นตอนใกล้ตาย ----------
+const BOSS_M=[{n:'มารสวรรค์',d:'ประมุขลัทธิมารสวรรค์ ยอดฝีมืออันดับหนึ่งที่ทั้งยุทธภพหวาดกลัว'},{n:'มารสวรรค์ผู้คืนชีพ',d:'มารสวรรค์รุ่นก่อนที่ทุกคนคิดว่าตายไปแล้ว กลับมาพร้อมพลังที่ล้ำลึกกว่าเดิม'},{n:'บุตรแห่งมารสวรรค์',d:'ทายาทที่สืบทอดวิชามารสวรรค์ครบทุกกระบวนท่า'}];
+const BOSS_X=[{n:'จอมราชันมารแห่งอเวจี',d:'ผู้ครองแดนมาร ปราณมารแผ่ปกคลุมฟ้าทั้งผืน'},{n:'จักรพรรดิมารโลหิต',d:'มารบรรพกาลที่ดูดกลืนเลือดเซียนมานับหมื่นปี'},{n:'ราชันอสูรบรรพกาล',d:'อสูรร่างมนุษย์ที่ตื่นจากผนึกโบราณ'}];
+function bossTick(){if(!S||!S.alive||S.beastMode||S.age<16||S.age>95||choice._cur||modalOpen)return;
+ if((S.bossN||0)>=2||S.age-(S.bossY||-99)<15)return;
+ const p=.009+Math.min(.012,(S.fame||0)/150000)+realmIdx()*.0012;if(Math.random()>p)return;
+ const x=!!S.xian,B=ch(x?BOSS_X:BOSS_M),base=x?55000:20000,ep=Math.round(Math.max(base,total()*.75)*(.9+Math.random()*.3));
+ const r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100))),esc=Math.max(.05,Math.min(.55,.06+.35*Math.min(1,r)+(S.int||0)/2500)),spare=Math.max(.05,Math.min(.6,.12+(S.cha||0)/450+(S.karma<0?.08:0)));
+ S.bossN=(S.bossN||0)+1;S.bossY=S.age;setScene('fight');
+ const die=how=>{S.deathCause=`ถูก${B.n}สังหาร${how}`;S.hp=0};
+ const fled=()=>{S.hp=Math.max(1,Math.round(S.maxHp*.15));joy(-8);log(`🏃 หนีรอดจาก${B.n}มาได้อย่างหวุดหวิด ร่างกายบาดเจ็บสาหัส`,'bad',true);S.key.push(`${S.age} ปี — หนีรอดจาก${B.n}`)};
+ const won=()=>{S.fame+=x?1500:1200;S.power+=Math.round(total()*.06);joy(15);S.karma+=x?0:5;S.flags.bossKill=1;let a=null;try{a=newArt(3);Array.prototype.push.call(S.arts,a)}catch(e){}
+  log(`👑 <b>ล้ม${B.n}ได้ในการดวลตัวต่อตัว!</b> ชื่อของคุณก้องไปทั่ว${x?'ทุกแดนเซียน':'ยุทธภพ'}${a?` — ได้ ${artHtml(a)}`:''}`,'myth',true);S.key.push(`${S.age} ปี — ล้ม${B.n}ในการดวลตัวต่อตัว`)};
+ choice(`☠️ เผชิญหน้า${B.n}`,`ระหว่างทาง ฟ้าพลันมืดมิด แรงกดดันมหาศาลตรึงร่างคุณไว้กับที่ — <b>${B.n}</b> ${B.d} ยืนขวางทางอยู่ตามลำพัง<br>"${x?'มดปลวกที่กล้าเหยียบแดนเดียวกับข้า':'ได้ยินชื่อเจ้ามานาน'}... มาดูกันว่าเจ้ามีดีแค่ไหน"<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของศัตรู</span>`,[
+  {t:'⚔️ สู้ตัวต่อตัว',s:`โอกาสชนะราว ${pw}% · ถ้าแพ้ต้องหนีให้รอด ไม่งั้นตาย`,f(){duel(B.n,ep,w=>{if(w)won();else if(Math.random()<esc*.8)fled();else die('ในการดวลตัวต่อตัว')})}},
+  {t:'🏃 หนีทันที',s:`ใช้ไหวพริบ · โอกาสรอดราว ${Math.round(esc*100)}%`,f(){if(Math.random()<esc)fled();else die('ขณะพยายามหลบหนี')}},
+  {t:'🙇 ก้มหัวยอมรับความพ่ายแพ้',s:`ใช้เสน่ห์ · โอกาสถูกไว้ชีวิตราว ${Math.round(spare*100)}% · เสียชื่อเสียง`,f(){if(Math.random()<spare){S.fame=Math.max(0,Math.round((S.fame||0)*.8));joy(-12);S.karma-=5;log(`${B.n}หัวเราะเยาะ แล้วเดินจากไป... ปล่อยให้คุณมีชีวิตอยู่กับความอัปยศ`,'bad',true)}else die('หลังก้มหัวยอมแพ้')}}])}
+{const _py5=passYear;passYear=function(){const r=_py5.apply(this,arguments);try{bossTick()}catch(e){console.error(e)}return r}}
+function ndSys(cause){if(!S||S.sys||S._ndSys||S.beastMode)return false;S._ndSys=1;if(Math.random()>=.3)return false;
+ const old=/วัยชรา/.test(cause);if(old){const lm=lifeMax();S.lifespan=(S.lifespan||0)+15;if(lifeMax()<=lm){S.lifespan-=15;return false}}S.hp=Math.max(30,Math.round(S.maxHp*.5));S.deathCause=null;S.chronic=null;
+ log(`💫 ${old?'ลมหายใจสุดท้ายกำลังจะขาด':'สติกำลังดับวูบ'}... แล้วเสียงกลไกเย็นเยียบก็ดังขึ้นในหัว <span class="px">[ตรวจพบโฮสต์ใกล้เสียชีวิต — เริ่มการผูกมัดฉุกเฉิน]</span> ร่างกายถูกดึงกลับจากความตาย!`,'myth',true);S.key.push(`${S.age} ปี — ระบบตื่นขึ้นตอนใกล้ตาย`);
+ bindSys(pickW(SYS_TYPES).v);return true}
+try{Object.assign(I18N.d,{'เผชิญหน้า':'Face','สู้ตัวต่อตัว':'Fight one-on-one','หนีทันที':'Flee at once','ก้มหัวยอมรับความพ่ายแพ้':'Bow and admit defeat','มารสวรรค์':'Heavenly Demon','จอมราชันมารแห่งอเวจี':'Demon Sovereign of the Abyss','จักรพรรดิมารโลหิต':'Blood Demon Emperor','ราชันอสูรบรรพกาล':'Primordial Beast Sovereign','โอกาสชนะราว':'Win chance about','โอกาสรอดราว':'Survival chance about','ระบบตื่นขึ้นตอนใกล้ตาย':'System awakened at death\'s door'})}catch(e){}
 </script>
 </body>
 </html>
