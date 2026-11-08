@@ -390,8 +390,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='9.2';
+const VERSION='9.3';
 const CHANGELOG=[
+ {v:'9.3',d:'8 พ.ย. 2026',l:['🐾 สัตว์อสูรพิกเซลใหม่ ละเอียดขึ้น 2 เท่า: มีเส้นขอบ แสงเงา และท่าเดินขยับได้ · แต่ละพันธุ์มีลักษณะเฉพาะ เช่น ลายพยัคฆ์ จุดเสือดาว แผงคอสิงโต เขากวาง งวงช้าง นอแรด แม่เพรียงงูเห่า หนวดมังกร ขาแมงมุม ปีกผีเสื้อ ครีบฉลาม · สัตว์ระดับสูงมีออร่าและประกายธาตุวนรอบตัว','🦊 เกิดเป็นสัตว์อสูร: รูปในแถบสถานะ แผงตัวละคร และรูปโปรไฟล์ในแชทเป็นสัตว์จริงแล้ว ไม่ใช่คน · แถบสถานะแสดงขั้นการบำเพ็ญแบบสัตว์ (ลูกสัตว์ → อสูรพันปี) พร้อมระดับย่อย พันธุ์ และธาตุ · ตัวในฉากใหญ่ขึ้นสมส่วนกับคน','❓ การสอนใหม่: แนะนำระดับขั้น ตัวเลือกที่ย่อไว้ เควส ระบบ และแผงตัวละคร/ทางลัดบนคอม','📘 คู่มือระบบสำคัญ 13 หัวข้อ เปิดได้จากเมนูทั้งตอนเล่นและหน้าแรก พร้อมปุ่มพาไปหน้านั้นทันที','🐛 แก้หน้าต่างอื่นเด้งซ้อนทับระหว่างการสอน','🐛 แก้รูปโปรไฟล์ของสัตว์อสูรที่ว่างเปล่าหรือหลุดกรอบ']},
  {v:'9.1',d:'8 พ.ย. 2026',l:['⭐ ระดับขั้นใหม่: ทุกขั้นแบ่งเป็น ระดับต่ำ → กลาง → สูง → ใกล้เลื่อนขั้น → สมบูรณ์ (รอทะลวง) · เหนือขั้นสูงสุดมีชั้น เทพ → ราชา → บรรพกาล → ราชัน → นิรันดร์ ชั้นละ 9 ขั้น รวม 45 ขั้น พร้อมออร่าตอนก้าวข้ามชั้น','🔥 ธาตุไฟเข้าแทรก: ทะลวงขั้นล้มเหลวมีโอกาสโดนธาตุไฟเข้าแทรกตามค่าสถานะ (ปัญญา ความสุข พรสวรรค์) — เบาๆ เสียพลังเล็กน้อย หนักๆ เสียเส้นลมปราณ ร้ายสุดถึงตาย','⏳ ผู้หวนคืน: ตายแล้วมีโอกาส 25% ย้อนเวลากลับไปตอนเด็กหรือไปลืมตาในร่างคนอื่นพร้อมความทรงจำ · ถ้าถูกฆ่าหรือหักหลังจะได้ภารกิจล้างแค้นข้ามชาติ ทำไม่ทันชะตาเดิมจะวนกลับมา','🌑 ภัยเงาในโลกเทพเซียน: ศัตรูปริศนาที่ซ่อนตัวจ้องเอาชีวิต ต้องใช้ปัญญาและประสาทสัมผัสจับให้ได้ก่อนมันลงมือ ไม่งั้นอาจถูกฆ่าโดยไม่รู้ตัว · ถ้าฆ่าไม่ตาย ผู้อยู่เบื้องหลังจะมาล้างรากเหง้า','🏆 ก่อนเกิดใหม่ถามว่าจะซ่อนหรือเปิดข้อมูลชีวิตในทำเนียบ (เปิดสาธารณะ · ซ่อนรายละเอียด · ซ่อนทั้งหมด) ติ๊กให้จำไว้ได้ และเปลี่ยนได้ตลอดที่สุสาน','🐛 แก้ไทม์ไลน์ชีวิตตอนจบที่บันทึกเหตุการณ์เดียวกันซ้ำสองบรรทัด']},
  {v:'8.7',d:'8 พ.ย. 2026',l:['🌐 พบผู้เล่นจริงแบบเรียลไทม์: ระหว่างจำลอง มีโอกาสที่รอยแยกมิติจะพาผู้เล่นที่กำลังเล่นอยู่ตอนเดียวกันมาเจอคุณ — ท้าดวลหรือชวนเป็นพันธมิตรได้ และผลจะส่งไปถึงอีกฝ่ายด้วย · พันธมิตรมีโอกาสมาช่วยตอนจวนตัว','🌌 จักรวาลซ้อนทับ: บางชีวิตจะเกิดในจักรวาลเดียวกับผู้เล่นในทำเนียบ และอาจได้พบ ประลอง หรือสาบานเป็นพันธมิตรกับตำนานคนนั้น','🌍 ความแข็งแกร่งของโลกสุ่มทุกชีวิต: ยุคเสื่อมถอย (ศัตรู ×0.5) · ปกติ · ยอดฝีมือรุ่งเรือง (×1.6) · มารสวรรค์ไร้เทียมทาน (×3) · สวรรค์ลงทัณฑ์ (ศัตรูโคตรโกง ×6) — มารสวรรค์และจอมราชันมารแข็งแกร่งตามยุคด้วย','⏩ กาลเวลาแดนเทพ: ในโลกเซียน อายุเกิน 1,000 ปี หนึ่งก้าวเท่ากับ 100 ปี · เกิน 10,000 ปี ก้าวละ 1,000 ปี · เกิน 100,000 ปี ก้าวละ 10,000 ปี จนครบหนึ่งล้านปีกลายเป็นอมตะนิรันดร์ พร้อมความสำเร็จ ??? ใหม่','🧍 ตัวละครพิกเซลใหม่: ท่ายืนต่างกันตามพรรคและขั้นพลัง (กอดอก ไพล่มือ จับด้ามกระบี่ ท่าเตรียมสู้ ลอยตัว) · ตาเรืองแสงตามสีพรรคตอนใช้วิชา (สายมารตาแดงเลือดหมู) · เสื้อคลุมยาวสไตล์มังฮวามูริม','✏️ เสียงจากผู้เล่น: แก้ไขข้อความแจ้งบั๊กและความคิดเห็นของตัวเองได้ พร้อมป้าย (แก้ไขแล้ว) · ข้อความที่พิมพ์ค้างไว้ไม่หายเวลาสลับแท็บหรือปิดหน้าต่าง']},
  {v:'8.4',d:'8 พ.ย. 2026',l:['📱 สมาร์ตโฟนข้ามมิติใช้งานได้จริง: ผู้ข้ามมิติที่ได้มือถือมาเปิดได้จากเมนู มี 7 แอป — สารานุกรม คลิปสอนต่อสู้ เข็มทิศ กล้อง เพลง เกม เครื่องคิดเลข แบตชาร์จด้วยแผงโซลาร์','🔫 วรยุทธ์ระดับพิเศษสายปืน: ศาสตร์สร้างอาวุธปืน (สร้างปืนขายและใช้เอง) และวิชากระสุนแทนกระบี่ (ยิงปืนแทนกระบี่) ฝึกได้ระดับต่ำ กลาง สูง สุดยอด · โลกเซียนเป็นปืนวิญญาณและกระสุนปราณ','🏆 ความสำเร็จใหม่: หนึ่งในพันล้าน (???) · ความเป็นอมตะ (???) · สัญญาณหาย แต่แบตยังเหลือ · ติดมือถือข้ามภพ · ดินปืนในยุทธภพ · คลังแสงเดินได้ · เทพปืนไร้เทียมทาน','🌌 ประตูมิติกดเปิดต่อได้ทันทีหรือเปิดทั้งหมดรวดเดียว ไม่ต้องกลับไปเปิดเมนูใหม่ · ได้ของติดตัวซ้ำจะแลกเป็นเงินและปัญญาแทน','🐛 แก้ของต่างโลก 3 ชิ้นที่กดใช้แล้วไม่มีผล (วิชายุทธ์จากชาติก่อน · ตำราคณิตศาสตร์มหาวิทยาลัย · แหวนเก่าที่มีวิญญาณผู้เฒ่า) และกันกดประตูมิติรัวแล้วเสียครั้งเปิดฟรี','🌐 ย้ายแถบจำนวนคนออนไลน์ไปอยู่ใต้รูปโลกในหน้าแรก ไม่ทับชื่อเกม']},
@@ -4996,7 +4997,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5','8.6','8.7','8.8','8.9','9.0','9.1',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5','8.6','8.7','8.8','8.9','9.0','9.1','9.2',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -6047,6 +6048,116 @@ try{Object.assign(I18N.d,{'คู่มือระบบสำคัญ':'Key s
 
 {let tutQ=[];const _md2=modal;modal=function(html,k){try{if(tutI>=0&&!['guide','guideask'].includes(k)){tutQ.push([html,k]);if(tutQ.length>4)tutQ.shift();return}}catch(e){}return _md2.apply(this,arguments)};
  const _td2=tutDraw;tutDraw=function(){const was=tutI>=0;const r=_td2.apply(this,arguments);try{if(was&&tutI<0&&tutQ.length){const q=tutQ.filter(x=>x[1]!=='choice');tutQ=[];const last=q[q.length-1];if(last)setTimeout(()=>{if(!modalOpen)_md2(last[0],last[1])},200)}}catch(e){}return r}}
+
+// ---------- v9.3 สัตว์อสูรพิกเซลความละเอียดสูง ----------
+const BHD_C=new Map();
+function bhdSprite(b,fr){const an=Math.floor(((fr||0)%40)/10),key=[b.i,b.sp,b.k,b.t,b.col,b.ec,JSON.stringify(b.f||{}),an].join('|');let cv=BHD_C.get(key);if(cv)return cv;
+ const W=64,H=48,buf=new Array(W*H).fill(null),f=b.f||{},base=b.col||'#888888',ec=b.ec||'#ffffff',dk=shadeC(base,-.32),dk2=shadeC(base,-.5),lt=shadeC(base,.28),bel=shadeC(base,.45),eyeC=b.t>=5?ec:'#141018',sp=b.sp||'';
+ const P0=(x,y,c)=>{x=Math.round(x);y=Math.round(y);if(x>=0&&y>=0&&x<W&&y<H)buf[y*W+x]=c};
+ const RC=(x,y,w,h,c)=>{for(let j=0;j<h;j++)for(let i=0;i<w;i++)P0(x+i,y+j,c)};
+ const EL=(cx,cy,rx,ry,c,shade)=>{for(let y=Math.floor(cy-ry);y<=Math.ceil(cy+ry);y++)for(let x=Math.floor(cx-rx);x<=Math.ceil(cx+rx);x++){const d=((x-cx)/rx)**2+((y-cy)/ry)**2;if(d<=1){let col=c;if(shade){const ny=(y-cy)/ry;col=ny>.45?shadeC(c,-.25):ny<-.5?shadeC(c,.18):c}P0(x,y,col)}}};
+ const LN=(x0,y0,x1,y1,c,w)=>{const n=Math.max(Math.abs(x1-x0),Math.abs(y1-y0))*2+1;for(let i=0;i<=n;i++){const x=x0+(x1-x0)*i/n,y=y0+(y1-y0)*i/n;if(w>1)RC(x-w/2,y-w/2,w,w,c);else P0(x,y,c)}};
+ const TRI=(ax,ay,bx,by,cx2,cy2,c)=>{const minx=Math.floor(Math.min(ax,bx,cx2)),maxx=Math.ceil(Math.max(ax,bx,cx2)),miny=Math.floor(Math.min(ay,by,cy2)),maxy=Math.ceil(Math.max(ay,by,cy2));const s=(px,py,qx,qy,rx,ry)=>(px-rx)*(qy-ry)-(qx-rx)*(py-ry);for(let y=miny;y<=maxy;y++)for(let x=minx;x<=maxx;x++){const d1=s(x,y,ax,ay,bx,by),d2=s(x,y,bx,by,cx2,cy2),d3=s(x,y,cx2,cy2,ax,ay);if(!((d1<0||d2<0||d3<0)&&(d1>0||d2>0||d3>0)))P0(x,y,c)}};
+ const EYE=(x,y,r)=>{RC(x,y,r||2,r||2,eyeC);P0(x,y,'#ffffff');if(b.t>=5){P0(x+(r||2),y,ec)}};
+ const bob=[0,-1,0,1][an],step=an%2;
+ const k=b.k;
+ const wings=(x,y,c1,c2,up)=>{if(up){TRI(x,y,x-14,y-14,x+6,y-4,c1);TRI(x-2,y-2,x-12,y-12,x-6,y-1,c2)}else{TRI(x,y,x-15,y+2,x+5,y+4,c1);TRI(x-1,y+1,x-12,y+2,x-4,y+4,c2)}};
+ if(k==='quad'||k==='qilin'){const cy=24+bob,big=/หมี|ช้าง|แรด/.test(sp),slim=/กวาง|เสือดาว|จิ้งจอก/.test(sp)||k==='qilin';
+  const rx=big?15:13,ry=big?9:slim?6:7;
+  // หาง
+  if(f.tail9){for(let t=0;t<9;t++){const a=-1.9+t*.33;LN(16,cy-2,16+Math.cos(a+Math.PI)*15,cy-2+Math.sin(a+Math.PI)*13,t%2?lt:base,3);P0(16+Math.cos(a+Math.PI)*15,cy-2+Math.sin(a+Math.PI)*13,'#ffffff')}}
+  else if(/จิ้งจอก/.test(sp)){EL(12,cy-3,6,4,base,1);EL(7,cy-5,3,2.5,'#f4f0e8')}
+  else if(/หมาป่า|พยัคฆ์ขาว/.test(sp)){EL(12,cy-1,6,2.6,base,1)}
+  else if(/หมี|แรด|ช้าง|หมูป่า/.test(sp)){RC(15,cy-2,3,2,dk)}
+  else{LN(18,cy-2,9,cy-8+bob,base,2);RC(8,cy-10+bob,3,3,/สิงโต/.test(sp)?dk2:dk)}
+  // ขาไกล
+  const lg=(x,o)=>{RC(x,cy+ry-3,slim?3:4,9+o,dk);RC(x-1,cy+ry+5+o,slim?4:5,2,dk2)};lg(21,step?1:0);lg(37,step?0:1);
+  // ลำตัว
+  EL(30,cy,rx,ry,base,1);EL(32,cy+ry-3,rx-4,2.5,bel);
+  if(/พยัคฆ์/.test(sp)&&!/ขาว/.test(sp)||/พยัคฆ์ขาว/.test(sp)){for(let t=0;t<6;t++)LN(22+t*3.4,cy-ry+1,21+t*3.4,cy+2,/ขาว/.test(sp)?'#3a3a48':dk2,1)}
+  if(/เสือดาว/.test(sp))for(let t=0;t<9;t++){P0(20+(t*5)%22,cy-3+(t*3)%7,dk2);P0(21+(t*5)%22,cy-3+(t*3)%7,dk2)}
+  if(k==='qilin'){for(let t=0;t<7;t++)RC(20+t*3,cy-2+(t%2),2,2,ec);}
+  if(f.spike)for(let t=0;t<6;t++)TRI(21+t*3.5,cy-ry+1,23+t*3.5,cy-ry-4,25+t*3.5,cy-ry+1,ec);
+  if(f.wing)wings(28,cy-ry+2,lt,ec,an<2);
+  // ขาใกล้
+  lg(25,step?0:1);lg(41,step?1:0);
+  // หัว
+  const hx=47,hy=cy-6;
+  if(/สิงโต/.test(sp))EL(hx-2,hy+1,9,8,dk2);
+  if(/ช้าง/.test(sp)){EL(hx,hy+1,7,7,base,1);EL(hx-3,hy+1,5,6,dk);LN(hx+5,hy+3,hx+7,hy+14,base,3);RC(hx+3,hy+5,4,1,'#f4f0e0');EYE(hx+2,hy-1)}
+  else{EL(hx,hy,big?7:6,big?6:5,base,1);
+   const sn=/หมาป่า|จิ้งจอก|พยัคฆ์ขาว/.test(sp)?[7,3]:/กวาง|qilin/.test(sp+k)?[6,3]:/หมูป่า/.test(sp)?[6,4]:[5,4];
+   RC(hx+3,hy,sn[0],sn[1],lt);RC(hx+3+sn[0]-2,hy,2,2,'#1a1418');RC(hx+3,hy+sn[1]-1,sn[0]-1,1,dk);EYE(hx+1,hy-2);
+   if(/หมี/.test(sp)){EL(hx-3,hy-5,2.2,2.2,dk)}else if(/หมูป่า/.test(sp)){RC(hx+6,hy+3,1,3,'#f4f0e0');for(let t=0;t<5;t++)P0(hx-6+t*2,hy-5,dk2)}
+   else if(/กวาง|qilin/.test(sp+k)){LN(hx-1,hy-4,hx-4,hy-12,'#c8a060',1);LN(hx-3,hy-9,hx-7,hy-11,'#c8a060',1);LN(hx+1,hy-4,hx+3,hy-12,'#c8a060',1);LN(hx+2,hy-9,hx+6,hy-11,'#c8a060',1)}
+   else{const eh=/จิ้งจอก|หมาป่า/.test(sp)?8:6;TRI(hx-4,hy-3,hx-3,hy-eh,hx,hy-4,base);TRI(hx-3,hy-4,hx-3,hy-eh+2,hx-1,hy-4,dk2);TRI(hx+1,hy-4,hx+2,hy-eh,hx+4,hy-3,shadeC(base,-.12))}
+   if(/แรด/.test(sp)){TRI(hx+6,hy,hx+9,hy-6,hx+9,hy,'#e8e0c8')}
+   if(/สิงโต/.test(sp))for(let t=0;t<6;t++)P0(hx-8+t,hy+7,dk2)}
+  if(f.horn&&!/กวาง|แรด/.test(sp)){LN(hx-1,hy-4,hx-3,hy-11,ec,2);LN(hx+2,hy-4,hx+3,hy-11,ec,2)}
+  if(f.eye3)RC(hx,hy-4,2,1,ec);
+  if(f.head2){EL(hx-6,hy-6,5,4,shadeC(base,-.1),1);EYE(hx-5,hy-8)}
+  if(k==='qilin'){for(let t=0;t<5;t++)TRI(hx-5+t*2,hy-4,hx-6+t*2,hy-9-(t%2)*2,hx-3+t*2,hy-4,ec)}}
+ else if(k==='serp'||k==='drag'){const n=18,cob=/เห่า/.test(sp),eel=/ไหล/.test(sp);let px0,py0;
+  for(let t=0;t<n;t++){const x=6+t*2.6,y=28+Math.sin(t*.55+an*.8)*5,r=(eel?2.6:3.6)*(.55+.45*t/n);EL(x,y,r+.4,r,t%2?base:shadeC(base,-.1),1);EL(x,y+r*.55,r*.7,r*.35,bel);if(k==='drag'&&t%3===1)TRI(x-1,y-r,x+1,y-r-4,x+3,y-r,ec);if(k==='drag'&&(t===5||t===12)){LN(x,y+r,x-2,y+r+5,dk,2);RC(x-4,y+r+5,4,1,dk2)}px0=x;py0=y}
+  const hx=px0+4,hy=py0-3;
+  if(cob){EL(hx-2,hy+1,5,6,dk,1);EL(hx-2,hy+1,3,4,shadeC(base,.1))}
+  EL(hx,hy,k==='drag'?6:4.5,k==='drag'?4:3.2,base,1);RC(hx+2,hy+1,k==='drag'?6:4,2,lt);EYE(hx,hy-2);
+  if(k!=='drag'){LN(hx+6,hy+2,hx+9,hy+3,'#d03030',1)}
+  if(k==='drag'){LN(hx-2,hy-3,hx-6,hy-10,ec,2);LN(hx+1,hy-3,hx-1,hy-11,ec,2);LN(hx+6,hy+2,hx+12,hy+6,lt,1);LN(hx+6,hy+3,hx+11,hy+9,lt,1);for(let t=0;t<4;t++)TRI(hx-5+t*2,hy-2,hx-7+t*2,hy-6,hx-4+t*2,hy-2,ec)}
+  if(f.wing)wings(30,22,lt,ec,an<2);if(f.head2){EL(hx-7,hy-6,4,3,base,1);EYE(hx-7,hy-8)}if(f.horn&&k!=='drag'){LN(hx,hy-3,hx-1,hy-8,ec,1)}}
+ else if(k==='bird'){const cy=22+bob,up=an<2,bat=/ค้างคาว/.test(sp),crane=/กระเรียน/.test(sp),ph=/หงส์/.test(sp);
+  if(ph||f.tail9){for(let t=0;t<5;t++)LN(22,cy+2,4,cy-6+t*5+(an%2),t%2?ec:lt,2)}else RC(13,cy+1,9,3,dk);
+  if(crane){LN(36,cy+5,35,cy+18,'#2a2a2a',1);LN(31,cy+5,31,cy+18,'#2a2a2a',1)}else{LN(30,cy+6,29,cy+10,'#c8a040',1);LN(34,cy+6,34,cy+10,'#c8a040',1)}
+  if(bat){TRI(30,cy,8,up?cy-14:cy+4,22,cy+6,dk);TRI(30,cy,10,up?cy-12:cy+3,16,cy+2,dk2)}
+  EL(31,cy+1,10,6,base,1);EL(33,cy+3,6,3,bel);
+  const nx=crane?45:41,ny=crane?cy-12:cy-5;if(crane)LN(38,cy-1,nx-1,ny+3,base,3);
+  EL(nx,ny,5,4.5,base,1);EYE(nx+1,ny-2);
+  if(!bat)TRI(nx+4,ny-1,nx+(crane?13:10),ny+1,nx+4,ny+2,crane?'#3a3a3a':'#e0a030');else{TRI(nx-3,ny-3,nx-2,ny-8,nx,ny-3,base);TRI(nx+1,ny-3,nx+3,ny-8,nx+4,ny-3,base)}
+  if(crane)RC(nx-1,ny-4,3,2,'#d03030');if(ph)for(let t=0;t<3;t++)LN(nx-2+t,ny-4,nx-4+t*2,ny-10,ec,1);
+  if(!bat){if(up){TRI(36,cy,16,cy-15,24,cy+1,lt);TRI(36,cy,24,cy-17,40,cy-1,lt);TRI(33,cy-1,20,cy-13,28,cy,ec)}else{TRI(36,cy-1,14,cy+5,26,cy+5,lt);TRI(36,cy-1,20,cy+8,38,cy+4,lt);TRI(33,cy+1,18,cy+6,30,cy+5,ec)}}
+  if(f.horn)LN(nx,ny-4,nx-1,ny-8,ec,1);if(f.eye3)P0(nx-1,ny-3,ec)}
+ else if(k==='bug'){const cy=28+bob;
+  if(/แมงมุม/.test(sp)){for(let t=0;t<4;t++){const a=step?1:0;LN(30,cy,18+t*3,cy-8+((t+a)%2)*3,dk2,1);LN(18+t*3,cy-8+((t+a)%2)*3,16+t*3,cy+8,dk2,1);LN(34,cy,44-t*3,cy-8+((t+1+a)%2)*3,dk2,1);LN(44-t*3,cy-8+((t+1+a)%2)*3,46-t*3,cy+8,dk2,1)}EL(26,cy,8,6,base,1);for(let t=0;t<3;t++)RC(23+t*2,cy-2,1,1,ec);EL(37,cy,5,4,dk,1);RC(39,cy-2,1,1,'#e04040');RC(41,cy-2,1,1,'#e04040')}
+  else if(/ตะขาบ/.test(sp)){for(let t=0;t<13;t++){const x=6+t*3.2,y=cy+Math.sin(t*.7+an)*2;LN(x,y,x-1,y+5+((t+step)%2),dk2,1);LN(x,y,x-1,y-4-((t+step)%2),dk2,1);EL(x,y,2.2,2,t%2?base:dk,1)}EL(49,cy+Math.sin(9.1+an)*2,3,2.5,base,1);RC(51,cy-3,4,1,ec);RC(51,cy+2,4,1,ec)}
+  else if(/ผีเสื้อ/.test(sp)){const o=up=>up?1:0;EL(24,cy-6-(an<2?3:0),10,9-(an<2?0:3),ec,1);EL(36,cy-6-(an<2?3:0),9,8-(an<2?0:3),lt,1);EL(24,cy+6,7,5,shadeC(ec,-.2),1);EL(34,cy+6,6,4,base,1);for(let t=0;t<4;t++)EL(20+t*5,cy-7,1.5,1.5,'#ffffff');RC(29,cy-6,3,16,'#2a2030');LN(31,cy-6,35,cy-13,'#2a2030',1);LN(30,cy-6,27,cy-13,'#2a2030',1)}
+  else{const scorp=/แมงป่อง/.test(sp);for(let t=0;t<3;t++){LN(22+t*6,cy+3,19+t*6,cy+8+((t+step)%2),dk2,1)}EL(30,cy,scorp?10:12,scorp?4:7,base,1);if(!scorp){LN(30,cy-7,30,cy+6,dk2,1);EL(26,cy-3,3,2,lt)}EL(43,cy,4,3.5,dk,1);RC(45,cy-1,1,1,'#e04040');
+   if(scorp){for(let t=0;t<6;t++){const a=Math.PI*(.95-t*.17);EL(20+Math.cos(a)*9,cy-4-Math.sin(a)*10,2.2,2.2,t%2?base:dk,1)}TRI(28,cy-14,32,cy-16,28,cy-11,ec);LN(46,cy,52,cy-4,dk,2);LN(46,cy+2,52,cy+5,dk,2);RC(51,cy-6,3,2,base);RC(51,cy+4,3,2,base)}
+   else{LN(46,cy-1,51,cy-6,dk2,1);LN(46,cy+1,51,cy-3,dk2,1)}
+   if(f.wing)EL(30,cy-8,9,4,lt+'aa')}}
+ else if(k==='fish'){const cy=24+bob,shark=/ฉลาม/.test(sp),tw=an%2;TRI(14,cy,4,cy-9-tw,4,cy+9+tw,shark?dk:ec);EL(30,cy,shark?18:15,shark?7:8,base,1);EL(32,cy+3,shark?14:11,3,bel);
+  TRI(26,cy-7,shark?32:31,cy-(shark?17:13),36,cy-7,shark?dk:ec);TRI(30,cy+5,33,cy+11,36,cy+5,shark?dk:ec);EYE(40,cy-3);
+  if(!shark)for(let t=0;t<12;t++)P0(20+(t*4)%16,cy-3+(t*3)%6,lt);else{for(let t=0;t<3;t++)LN(36+t*2,cy-1,35+t*2,cy+3,dk2,1);RC(42,cy+3,5,1,'#f4f4f4')}
+  if(/คาร์ป/.test(sp)){LN(44,cy+1,48,cy+6,'#e0a030',1)}if(f.horn)LN(40,cy-6,39,cy-11,ec,1)}
+ else if(k==='ape'){const cy=10+bob,stone=/หิน/.test(sp),big=/ยักษ์|กอริลลา/.test(sp);const bx=big?16:14;
+  RC(27,cy+24,5,10+(step?1:0),dk);RC(34,cy+24,5,10+(step?0:1),dk);RC(26,cy+33,7,2,dk2);RC(33,cy+33,7,2,dk2);
+  LN(25,cy+10,20,cy+27,base,big?6:4);EL(32,cy+16,bx/2+3,11,base,1);EL(33,cy+18,5,6,bel);LN(40,cy+10,45,cy+27,shadeC(base,-.1),big?6:4);RC(18,cy+26,4,3,dk);RC(43,cy+26,4,3,dk);
+  EL(33,cy+3,7,6.5,base,1);EL(34,cy+5,4.5,4,stone?'#9a9aa0':'#d8b090');EYE(31,cy+2);EYE(35,cy+2);RC(33,cy+6,3,1,dk2);
+  if(stone)for(let t=0;t<6;t++)LN(26+t*3,cy+9+(t%3)*5,28+t*3,cy+12+(t%3)*5,dk2,1);
+  if(f.horn){LN(29,cy-2,27,cy-7,ec,2);LN(37,cy-2,39,cy-7,ec,2)}if(f.eye3)RC(33,cy-1,2,1,ec)}
+ else if(k==='turt'){const cy=26+bob,toad=/คางคก/.test(sp);
+  RC(17,cy+4,5,6+(step?1:0),dk);RC(38,cy+4,5,6+(step?0:1),dk);
+  if(toad){EL(30,cy,15,8,base,1);EL(31,cy+4,11,3,bel);for(let t=0;t<9;t++)EL(20+(t*7)%22,cy-4+(t*3)%6,1.2,1.2,shadeC(base,-.25));EL(38,cy-6,3,3,base,1);EL(26,cy-6,3,3,base,1);EYE(38,cy-7);EYE(26,cy-7);RC(36,cy+1,8,1,dk2)}
+  else{EL(46,cy+1,5,4,shadeC(base,.15),1);EYE(48,cy-1);RC(49,cy+2,2,1,dk2);EL(29,cy-1,15,9,dk,1);EL(29,cy-2,13,7,base,1);
+   for(let t=0;t<5;t++)for(let u=0;u<2;u++){const x=20+t*4.5,y=cy-5+u*5;RC(x,y,4,1,dk2);RC(x,y,1,4,dk2)}RC(15,cy+5,28,2,shadeC(base,-.4));
+   if(/มังกร|ดำ/.test(sp)||f.horn){LN(47,cy-3,46,cy-8,ec,1);LN(49,cy-3,50,cy-8,ec,1)}if(/ดำ/.test(sp)){for(let t=0;t<10;t++){const a=t*.6;P0(14+Math.cos(a)*3+t*.4,cy-2+Math.sin(a)*3,'#4a6a4a')}}}
+  RC(19,cy+4,5,6+(step?0:1),base);RC(36,cy+4,5,6+(step?1:0),base);if(f.spike)for(let t=0;t<5;t++)TRI(20+t*4,cy-8,22+t*4,cy-12,24+t*4,cy-8,ec)}
+ else{EL(32,26,12,8,base,1);EYE(38,23)}
+ // เส้นขอบ
+ const out=shadeC(base,-.65),res=buf.slice();for(let y=0;y<H;y++)for(let x=0;x<W;x++){if(buf[y*W+x])continue;const nb=(xx,yy)=>xx>=0&&yy>=0&&xx<W&&yy<H&&buf[yy*W+xx];if(nb(x-1,y)||nb(x+1,y)||nb(x,y-1)||nb(x,y+1))res[y*W+x]=out}
+ cv=document.createElement('canvas');cv.width=W;cv.height=H;const cx=cv.getContext('2d');for(let y=0;y<H;y++)for(let x=0;x<W;x++){const c=res[y*W+x];if(c){cx.fillStyle=c;cx.fillRect(x,y,1,1)}}
+ if(BHD_C.size>400)BHD_C.clear();BHD_C.set(key,cv);return cv}
+drawBeast=function(c,b,ox,oy,s,fr){s=s||1;fr=fr||0;try{if(b.f&&b.f.glow){const pu=.09+.05*Math.sin(fr*.08);c.save();c.globalAlpha=pu;c.fillStyle=b.ec||'#fff';const r=14*s;const gx=ox+16*s,gy=oy+13*s;c.beginPath();c.ellipse?c.ellipse(gx,gy,r*1.2,r*.8,0,0,Math.PI*2):c.rect(gx-r,gy-r,2*r,2*r);c.fill();c.restore();
+  c.save();c.fillStyle=b.ec||'#fff';for(let t=0;t<5;t++){const a=fr*.03+t*1.26,rr=(11+3*Math.sin(fr*.05+t))*s;c.globalAlpha=.5+.4*Math.sin(fr*.1+t);c.fillRect(Math.round(gx+Math.cos(a)*rr*1.3),Math.round(gy+Math.sin(a)*rr*.7),Math.max(1,s*.6),Math.max(1,s*.6))}c.restore()}
+ const sp2=bhdSprite(b,fr),old=c.imageSmoothingEnabled;c.imageSmoothingEnabled=false;c.drawImage(sp2,0,0,64,48,ox,oy,32*s,24*s);c.imageSmoothingEnabled=old}catch(e){console.error(e)}};
+// ฉาก: ขยายขนาดสัตว์ให้สมส่วนกับคน และรูปโปรไฟล์เป็นสัตว์
+{const _pp=person;person=function(x,y,o,pose){if(o&&o.beast){if(o===curMe){meX=x;meY=y}const sc=o.beast.f&&o.beast.f.big?1.6:o.beast.t>=4?1.4:1.25;try{drawBeast(g,o.beast,Math.round(x-16*sc),Math.round(y-22*sc),sc,frame)}catch(e){}return}return _pp.apply(this,arguments)}}
+{const _dp=drawPortrait;drawPortrait=function(cv,o,full){o=o||(S?meLook():null);if(!o||!o.beast)return _dp.apply(this,arguments);const ctx=cv&&cv.getContext&&cv.getContext('2d');if(!ctx)return;ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;
+ const W=cv.width,H=cv.height,bg=S&&S.xian?['#1c2440','#2a3460']:['#1c1a28','#2a2638'];ctx.fillStyle=bg[0];ctx.fillRect(0,0,W,H);ctx.fillStyle=bg[1];ctx.fillRect(0,Math.round(H*.7),W,H);
+ const s=Math.min(W/(full?30:24),H/(full?22:18));drawBeast(ctx,o.beast,Math.round((W-32*s)/2+(full?0:-4*s)),Math.round(H*.72-21*s),s,typeof frame!=='undefined'?frame:0)}}
+// สถานะสัตว์อสูร: แสดงขั้นการบำเพ็ญแบบสัตว์แทนระดับมนุษย์
+function blStageTxt(){const m=S.beastMode;const st=BL_ST[Math.min(BL_ST.length-1,m.st||0)];return`${st}${m.st>=4&&realmIdx()>=5?' · ราชาอสูร':''}`}
+{const _rd4=render;render=function(){const r=_rd4.apply(this,arguments);try{if(S&&S.beastMode&&!S.beastMode.human&&$('gRealm')){const nx=realmNext();$('gRealm').innerHTML=`🐾 <b>${blStageTxt()}</b> <span class="rsub rs${realmSub()}">${RS_SUB[realmSub()]}</span> · พลังรวม <span class="px">${fmt(total())}</span>${nx?` / ${fmt(Math.round(nx))}`:''}`}}catch(e){}return r}}
+{const _dl3=dkLeft;dkLeft=function(){let h=_dl3.apply(this,arguments);try{if(S&&S.beastMode&&!S.beastMode.human){const m=S.beastMode;h=h.replace(/(<div class="dk-realm">🐾 )<b>[^<]*<\/b>/,`$1<b>${blStageTxt()}</b> <span class="rsub rs${realmSub()}">${RS_SUB[realmSub()]}</span>`).replace('<div class="dk-sub">ไร้สังกัด</div>',`<div class="dk-sub">${esc(m.sp)} · ธาตุ${esc(m.el)}</div>`)}}catch(e){}return h}}
 </script>
 </body>
 </html>
