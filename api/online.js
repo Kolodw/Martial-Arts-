@@ -33,6 +33,12 @@ function clean(s, n) {
 const qOf = r => r._q || (r._q = Object.fromEntries(new URL(r.url || '/', 'http://localhost').searchParams));
 const isAdmKey = k => !!process.env.ADMIN_KEY && String(k || '') === process.env.ADMIN_KEY;
 const annGet = async () => { try { const v = await cmd('GET', 'ann'); return v ? JSON.parse(v) : null } catch { return null } };
+const ANN_VOTE_DAYS = 7;
+const annHist = async () => { try { return ((await cmd('LRANGE', 'annh', 0, 29)) || []).map(v => { try { return JSON.parse(v) } catch { return null } }).filter(Boolean) } catch { return [] } };
+const annFind = async ai => { const cur = await annGet(); if (cur && cur.i === ai) return { ann: cur, cur: true }; const h = await annHist(); const a = h.find(x => x.i === ai); if (a) return { ann: a, cur: false };
+  // ประกาศเก่าก่อนมีประวัติ: กู้จากข้อความในแชท
+  try { for (const v of ((await cmd('LRANGE', 'chat', 0, 199)) || [])) { const m = JSON.parse(v); if (m.k === 'ann' && m.i === ai) return { ann: { i: m.i, t: m.t, n: m.n, x: String(m.x || '').replace(/^@everyone\s*/i, ''), poll: m.poll }, cur: false } } } catch {}
+  return null };
 const annPoll = async (ann, id) => {
   if (!ann || !Array.isArray(ann.poll) || !ann.poll.length) return ann;
   try {
@@ -231,6 +237,16 @@ module.exports = async (req, res) => {
       const [, , w] = await pipe([['ZADD', 'watch:' + full, now, viewer], ['ZREMRANGEBYSCORE', 'watch:' + full, 0, now - 20e3], ['ZCARD', 'watch:' + full], ['EXPIRE', 'watch:' + full, 120]]);
       return res.json({ s: JSON.parse(v), w: w || 0 });
     }
+    if (a === 'annget') {
+      const ai = String(qOf(req).ai || '').replace(/[^a-z0-9]/g, '').slice(0, 20), f = await annFind(ai);
+      if (!f) return res.status(404).json({ err: 'gone' });
+      return res.json({ ann: Object.assign(await annPoll(f.ann, id), { cur: f.cur, open: now - (+f.ann.t || 0) <= ANN_VOTE_DAYS * 86400e3 ? 1 : 0 }) });
+    }
+    if (a === 'annlist') {
+      const h = await annHist(), cur = await annGet();
+      try { const seen = new Set(h.map(x => x.i)); for (const v of ((await cmd('LRANGE', 'chat', 0, 199)) || [])) { const m = JSON.parse(v); if (m.k === 'ann' && !seen.has(m.i)) { seen.add(m.i); h.push({ i: m.i, t: m.t, x: String(m.x || '').replace(/^@everyone\s*/i, ''), poll: m.poll }) } } h.sort((p1, p2) => p2.t - p1.t) } catch {}
+      return res.json({ l: h.map(x => ({ i: x.i, t: x.t, x: String(x.x || '').slice(0, 120), poll: Array.isArray(x.poll) ? x.poll.length : 0, cur: !!(cur && cur.i === x.i) })) });
+    }
     if (a === 'clist') {
       // รายการเซฟบนคลาวด์ของเครื่องนี้ (ต้องมี token ของเครื่อง)
       if (!okId(id)) return res.json({ l: [] });
@@ -333,22 +349,26 @@ module.exports = async (req, res) => {
     }
     if (a === 'annvote') {
       if (!okId(id)) return res.status(400).json({ err: 'id' });
-      const ann = await annGet(), ai = String(b.ai || ''), o = parseInt(b.o, 10);
-      if (!ann || ann.i !== ai || !Array.isArray(ann.poll)) return res.status(410).json({ err: 'gone' });
+      const ai = String(b.ai || '').replace(/[^a-z0-9]/g, '').slice(0, 20), o = parseInt(b.o, 10), f = await annFind(ai), ann = f && f.ann;
+      if (!ann || !Array.isArray(ann.poll)) return res.status(410).json({ err: 'gone' });
+      if (now - (+ann.t || 0) > ANN_VOTE_DAYS * 86400e3) return res.status(410).json({ err: 'closed' });
       if (!(o >= 0 && o < ann.poll.length)) return res.status(400).json({ err: 'opt' });
       const okR = await cmd('SET', 'avrl:' + id, 1, 'NX', 'EX', 1);
       if (!okR) return res.status(429).json({ err: 'rate' });
       const prev = await cmd('HGET', 'annv:' + ai, id);
       if (prev == null || +prev !== o) {
-        const ops = [['HSET', 'annv:' + ai, id, String(o)], ['HINCRBY', 'annc:' + ai, String(o), 1], ['EXPIRE', 'annv:' + ai, 86400 * 4], ['EXPIRE', 'annc:' + ai, 86400 * 4]];
+        const ops = [['HSET', 'annv:' + ai, id, String(o)], ['HINCRBY', 'annc:' + ai, String(o), 1], ['EXPIRE', 'annv:' + ai, 86400 * 35], ['EXPIRE', 'annc:' + ai, 86400 * 35]];
         if (prev != null) ops.push(['HINCRBY', 'annc:' + ai, String(+prev), -1]);
         await pipe(ops);
       }
-      return res.json({ ok: 1, ann: await annPoll(ann, id) });
+      return res.json({ ok: 1, ann: Object.assign(await annPoll(ann, id), { cur: f.cur, open: 1 }) });
     }
     if (a === 'annclear') {
       if (!isAdmKey(b.key)) return res.status(403).json({ err: 'admin' });
-      await cmd('DEL', 'ann');
+      const cur = await annGet(), ai = String(b.ai || (cur && cur.i) || '');
+      if (cur && cur.i === ai) await cmd('DEL', 'ann');
+      if (ai) await cmd('SADD', 'chat:hidden', ai);
+      if (ai) { const raw = (await cmd('LRANGE', 'annh', 0, 29)) || []; for (const v of raw) { try { if (JSON.parse(v).i === ai) await cmd('LREM', 'annh', 0, v) } catch {} } }
       return res.json({ ok: 1 });
     }
     if (a === 'say') {
@@ -361,7 +381,7 @@ module.exports = async (req, res) => {
         const ann = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, x: body, n: clean(b.n, 20) || 'ผู้ดูแล' };
         if (poll.length >= 2) ann.poll = poll;
         const m = { i: ann.i, t: now, n: ann.n, ti: 'ผู้ดูแล', x: '@everyone ' + body, k: 'ann', poll: ann.poll, u: String(id || '').slice(0, 4), pu: String(id || '').slice(0, 12) };
-        await pipe([['SET', 'ann', JSON.stringify(ann), 'EX', 86400 * 3], ['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199]]);
+        await pipe([['SET', 'ann', JSON.stringify(ann), 'EX', 86400 * 3], ['LPUSH', 'annh', JSON.stringify(ann)], ['LTRIM', 'annh', 0, 29], ['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199]]);
         return res.json({ ok: 1, ann: await annPoll(ann, id) });
       }
       if (await cmd('GET', 'mute:' + id)) return res.status(429).json({ err: 'muted' });

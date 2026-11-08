@@ -390,8 +390,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='10.8';
+const VERSION='10.9';
 const CHANGELOG=[
+ {v:'10.9',d:'8 พ.ย. 2026',l:['📜 ประกาศจากผู้ดูแลทุกอันกดเปิดอ่านเต็มและโหวตได้ ไม่ใช่แค่อันล่าสุด · มีปุ่มดูประกาศย้อนหลังทั้งหมดในแชทโลก','🎨 กรอบประกาศและโพลใช้สีเดียวกับธีมเว็บ ไม่แสบตา และรองรับโหมดมืด']},
  {v:'10.8',d:'8 พ.ย. 2026',l:['📊 โพลในประกาศ: ผู้ดูแลแนบตัวเลือกให้ทุกคนโหวตได้ · กดโหวตในกรอบประกาศแล้วเห็นผลเป็นเปอร์เซ็นต์ทันที เปลี่ยนใจได้ · ปิดไปแล้วกดเปิดใหม่ได้จากแชทโลก']},
  {v:'10.7',d:'8 พ.ย. 2026',l:['💬 แชทโลก: ข้อความของเราอยู่ฝั่งขวาเป็นกรอบสีชมพู ข้อความคนอื่นอยู่ซ้าย ดูง่ายขึ้นว่าเราพิมพ์อะไรไป','📢 ประกาศจากผู้ดูแล: ขึ้นเป็นกรอบสีเหลืองทึบลอยด้านบนให้ทุกคนเห็น ทั้งหน้าแรกและระหว่างเล่น กด "รับทราบ" เพื่อปิด']},
  {v:'10.6',d:'8 พ.ย. 2026',l:['💾 ขออภัย! เซฟที่หายไปจากหน้าแรกตั้งแต่อัปเดต v10.3 ยังอยู่ในเครื่องครบ — ตอนนี้กลับมาแสดงแล้ว (ต้นเหตุคือเกมซ่อนเซฟจากเวอร์ชันที่มันไม่รู้จัก)','🗂️ คลังสำรอง: ช่องเซฟเต็มหรือกดลบ ชีวิตเดิมจะย้ายไปคลังสำรอง กู้คืนได้ (เดิมเขียนทับทิ้งเงียบๆ) · ช่องเซฟเพิ่มเป็น 5 ช่อง','🛟 ทุกช่องมีสำเนาสำรองในเครื่อง ถ้าเซฟหลักเสียหายจะโหลดจากสำเนาแทน · โหลดพังจะไม่ลบอะไรทิ้ง','☁️ กู้จากเซิร์ฟเวอร์: ปุ่มใหม่ที่หน้าแรก ดึงเซฟอัตโนมัติบนคลาวด์ของเครื่องนี้กลับมาลงช่องว่าง · คลาวด์เก็บแยกตามช่องแล้ว ไม่ทับกัน']},
@@ -6507,8 +6508,6 @@ async function annPollSend(){const x=($('acMsg').value||'').trim(),opts=[...docu
  catch(e){toast(e.message==='admin'?'รหัสแอดมินไม่ถูกต้อง':e.message==='poll'?'โพลต้องมีอย่างน้อย 2 ตัวเลือก':'ส่งไม่สำเร็จ')}finally{annPollSend._busy=0}}
 {const _oo4=openOnline;openOnline=function(tab){const r=_oo4.apply(this,arguments);try{if((tab||'chat')==='chat'&&admK()){const h=document.getElementById('annHelp');if(h&&!document.getElementById('annPollBtn'))h.insertAdjacentHTML('afterend','<button id="annPollBtn" class="pbtn" style="width:100%;margin-top:6px" onclick="annCompose()">📊 สร้างประกาศพร้อมโพลให้ผู้เล่นโหวต</button>')}}catch(e){}return r}}
 // ข้อความประกาศในแชท: บอกว่ามีโพล + ปุ่มเปิดดู/โหวต (กรณีปิดไปแล้ว)
-{const _cr2=chatRender;chatRender=function(){const r=_cr2.apply(this,arguments);try{const box=$('chatBox');if(!box)return r;const anns=chatMsgs.filter(m=>m.k==='ann');const nodes=box.querySelectorAll('.cm.cmann');
- nodes.forEach((n,k)=>{const m=anns[k];if(!m)return;const cur=annCur&&annCur.i===m.i;let h='';if(Array.isArray(m.poll)&&m.poll.length)h+=`<div class="cmpoll">📊 โพล: ${m.poll.map(esc).join(' · ')}</div>`;if(cur)h+=`<button class="cmreopen" onclick="annReopen()">${m.poll&&m.poll.length?'📊 เปิดโหวต / ดูผล':'📢 เปิดดูประกาศ'}</button>`;if(h)n.querySelector('.cmb').insertAdjacentHTML('beforeend',h)})}catch(e){}return r}}
 (function(){const st=document.createElement('style');st.textContent=`
 #annBar .annP{margin-top:9px}
 #annBar .annPh{font-size:14px;font-weight:700;margin-bottom:5px}
@@ -6524,6 +6523,70 @@ async function annPollSend(){const x=($('acMsg').value||'').trim(),opts=[...docu
 .cm.cmann .cmpoll{margin-top:4px;font-size:.9em}
 .cm.cmann .cmreopen{margin-top:6px;width:100%;font:inherit;font-weight:700;background:#fff;border:2px solid #2a2838;border-radius:8px;padding:5px;cursor:pointer;color:#2a1a00}
 .acRow{display:flex;gap:6px;margin-top:6px}.acRow input{flex:1}.acRow button{width:auto;flex:0 0 auto;padding:0 12px}`;document.head.appendChild(st)})();
+
+// ============ v10.9 ประกาศย้อนหลัง + สีกลืนกับเว็บ ============
+let annView=null;
+const annTm=t=>new Date(t).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+annPollHTML=function(a){if(!a||!Array.isArray(a.poll)||a.poll.length<2)return'';const c=Array.isArray(a.c)?a.c:a.poll.map(()=>0),tot=c.reduce((x,y)=>x+y,0),my=a.my!=null?a.my:-1,closed=a.open===0,show=my>=0||closed||!!admK();
+ return`<div class="annP"><div class="annPh">📊 ${closed?'ปิดโหวตแล้ว · ผลสุดท้าย':my>=0?'ผลโหวตตอนนี้ · แตะตัวเลือกอื่นเพื่อเปลี่ยนได้':'โหวตเลือก 1 ข้อ'}</div>`+a.poll.map((o,i)=>{const pc=tot?Math.round(c[i]/tot*100):0;
+  return`<button class="annO ${my===i?'mine':''}" ${closed?'disabled':''} onclick="annVote(${i},'${esc(a.i)}')"><span class="annOb" style="width:${show?pc:0}%"></span><span class="annOt">${my===i?'✅ ':''}${esc(o)}</span>${show?`<span class="annOp">${pc}% · ${fmt(c[i])}</span>`:''}</button>`}).join('')+
+  `<div class="annPt">${show?`ทั้งหมด ${fmt(tot)} โหวต`:'โหวตแล้วจะเห็นผล'}</div></div>`};
+annShow=function(a){if(a)annCur=a;else annCur=null;let el=document.getElementById('annBar');
+ if(!a||!a.i||LS.get('murim_annX','')===a.i){if(el)el.remove();return}
+ if(el&&el.dataset.i===a.i){const p=el.querySelector('.annPw');if(p)p.innerHTML=annPollHTML(a);return}
+ if(el)el.remove();el=document.createElement('div');el.id='annBar';el.dataset.i=a.i;el.setAttribute('role','alert');
+ el.innerHTML=`<div class="annH"><span class="annI">📢</span><b>ประกาศจากผู้ดูแล</b><span class="annT">${annTm(a.t)}</span></div><div class="annX">${esc(a.x)}</div><div class="annPw">${annPollHTML(a)}</div><div class="annB"><button class="annOk" onclick="annDismiss()">รับทราบ</button>${admK()?`<button class="annDel" onclick="annClear('${esc(a.i)}')">🗑️ ลบประกาศ</button>`:''}</div>`;
+ document.body.appendChild(el);try{sfx('rare')}catch(e){}};
+function annViewRender(){const a=annView;if(!a||$('modal').dataset.k!=='annview')return;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📢 ประกาศจากผู้ดูแล</h3><p class="tag2">${annTm(a.t)} · ${a.cur?'ประกาศปัจจุบัน':'ประกาศย้อนหลัง'}</p><div class="annCard"><div class="annX">${esc(a.x)}</div>${annPollHTML(a)}</div>
+ <div class="brow" style="margin-top:8px"><button class="gbtn" onclick="annList()">📜 ประกาศทั้งหมด</button><button class="gbtn" onclick="openOnline('chat')">💬 กลับไปแชท</button></div>${admK()?`<button class="gbtn" style="width:100%;margin-top:6px;color:#d84a4a" onclick="annClear('${esc(a.i)}',1)">🗑️ ลบประกาศนี้ (ทุกคน)</button>`:''}`,'annview')}
+async function annOpen(ai){annView=null;modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📢 ประกาศจากผู้ดูแล</h3><p class="tag2">กำลังโหลด…</p>`,'annview');
+ try{const j=await api('annget&ai='+encodeURIComponent(ai));annView=j.ann;annViewRender()}catch(e){if($('modal').dataset.k==='annview')modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📢 ประกาศ</h3><p>${e.message==='gone'?'ประกาศนี้ถูกลบหรือหมดอายุแล้ว':'โหลดไม่สำเร็จ ลองใหม่อีกครั้ง'}</p><button class="gbtn" style="width:100%" onclick="annList()">📜 ประกาศทั้งหมด</button>`,'annview')}}
+async function annList(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📜 ประกาศทั้งหมด</h3><p class="tag2">กำลังโหลด…</p>`,'annlist');
+ try{const j=await api('annlist');if($('modal').dataset.k!=='annlist')return;const L=j.l||[];
+  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📜 ประกาศทั้งหมด</h3><p class="tag2">ประกาศจากผู้ดูแลย้อนหลัง · กดเพื่ออ่านเต็มและโหวต</p>`+(L.length?L.map(x=>`<button class="opt annRow" onclick="annOpen('${esc(x.i)}')">${x.cur?'🟢 ':''}${esc(x.x)}<small>${annTm(x.t)}${x.poll?` · 📊 โพล ${x.poll} ตัวเลือก`:''}${x.cur?' · ประกาศปัจจุบัน':''}</small></button>`).join(''):'<p>ยังไม่มีประกาศ</p>')+`<button class="gbtn" style="width:100%;margin-top:6px" onclick="openOnline('chat')">💬 กลับไปแชท</button>`,'annlist')}
+ catch(e){if($('modal').dataset.k==='annlist')modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📜 ประกาศทั้งหมด</h3><p>โหลดไม่สำเร็จ</p>`,'annlist')}}
+annVote=async function(i,ai){ai=ai||(annCur&&annCur.i);const tgt=[annCur,annView].filter(x=>x&&x.i===ai);const a=tgt[0];if(!a||!a.poll||annVote._busy||a.open===0)return;if(a.my===i)return;annVote._busy=1;
+ const snap=tgt.map(x=>JSON.parse(JSON.stringify(x)));const bump=x=>{x.c=x.c||x.poll.map(()=>0);if(x.my>=0)x.c[x.my]=Math.max(0,x.c[x.my]-1);x.c[i]++;x.my=i};
+ const paint=()=>{if(annCur&&annCur.i===ai)annShow(annCur);annViewRender()};
+ try{tgt.forEach(bump);paint();const j=await api('annvote',{ai,o:i});if(j&&j.ann){const n=j.ann;tgt.forEach(x=>{x.c=n.c;x.my=n.my});paint()}toast('โหวตแล้ว ✅')}
+ catch(e){tgt.forEach((x,k)=>Object.assign(x,snap[k]));paint();toast(e.message==='gone'?'ประกาศนี้ถูกลบแล้ว':e.message==='closed'?'โพลนี้ปิดโหวตแล้ว':e.message==='rate'?'กดเร็วเกินไป':'โหวตไม่สำเร็จ')}finally{annVote._busy=0}};
+annClear=async function(ai,fromView){if(!admK())return;ai=ai||(annCur&&annCur.i);if(!ai)return;try{await api('annclear',{key:admK(),ai});if(annCur&&annCur.i===ai)annShow(null);toast('ลบประกาศแล้ว');if(fromView)annList()}catch(e){toast(e.message==='admin'?'รหัสแอดมินไม่ถูกต้อง':'ลบไม่สำเร็จ')}};
+// ทุกประกาศในแชทกดเปิดอ่าน/โหวตได้ + ปุ่มประกาศย้อนหลัง
+chatRender=function(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60,me=myPu();
+ box.innerHTML=chatMsgs.map(m=>{const mine=!!m.pu&&m.pu===me,pf=m.pu&&chatProf[m.pu],av=pf&&pf.av?`<img src="${pf.av}" alt="">`:'🙂',tm=new Date(m.t).toTimeString().slice(0,5);
+  if(m.k==='ann'){const hp=Array.isArray(m.poll)&&m.poll.length;return`<div class="cm cmann"><div class="cmb" onclick="annOpen('${esc(m.i)}')"><div class="cmh"><b>📢 ประกาศจากผู้ดูแล</b> <span class="ct">${tm}</span></div><div class="cmx">${esc(String(m.x||'').replace(/^@everyone\s*/i,''))}</div>${hp?`<div class="cmpoll">📊 โพล: ${m.poll.map(esc).join(' · ')}</div>`:''}<div class="cmopen">${hp?'📊 แตะเพื่อโหวต / ดูผล':'📢 แตะเพื่ออ่าน'} ›</div></div></div>`}
+  return`<div class="cm cmp ${mine?'me':''} ${m.k==='share'?'share':''}"><span class="cav">${frWrap(`<span class="frph sm">${av}</span>`,pf&&pf.fr)}</span><div class="cmb"><div class="cmh">${mine?`<span class="ct">${tm}</span> <b>คุณ</b>`:`<b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b> <span class="ct">${tm}</span> <button class="rep" onclick="chatRep('${esc(m.i)}')" title="รายงาน">⚑</button>`}</div><div class="cmx">${m.k==='share'?'📤 ':''}${esc(m.x)}</div></div></div>`}).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';
+ if(near)box.scrollTop=box.scrollHeight};
+{const _oo5=openOnline;openOnline=function(tab){const r=_oo5.apply(this,arguments);try{if((tab||'chat')==='chat'){const ci=$('chatIn');if(ci&&!document.getElementById('annListBtn'))ci.closest('.chatin').insertAdjacentHTML('beforebegin','<button id="annListBtn" class="gbtn" style="width:100%;margin:6px 0" onclick="annList()">📜 ประกาศจากผู้ดูแลทั้งหมด</button>')}}catch(e){}return r}}
+(function(){const st=document.createElement('style');st.textContent=`
+#annBar{background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:8px;box-shadow:4px 4px 0 var(--line),0 8px 24px rgba(0,0,0,.25);padding:0 0 10px;overflow:auto}
+#annBar .annH{background:var(--epic);border-bottom:2px solid var(--line);padding:8px 12px;margin:0 0 8px;font-size:16px}
+#annBar .annI{font-size:20px}
+#annBar .annT{color:var(--mut)}
+#annBar .annX,.annCard .annX{background:var(--w);color:var(--ink);border:2px solid var(--line);border-radius:6px;padding:8px 10px;font-weight:600;white-space:pre-wrap;word-break:break-word}
+#annBar .annX{margin:0 12px;max-height:35vh;overflow:auto}
+#annBar .annPw{padding:0 12px}
+#annBar .annB{padding:0 12px}
+#annBar button{border:2px solid var(--line);border-radius:8px;color:var(--ink);box-shadow:0 3px 0 var(--line)}
+#annBar .annOk{background:var(--card)}
+#annBar .annDel{background:var(--bad)}
+.annP{margin-top:9px}
+.annPh{font-size:14px;font-weight:700;margin-bottom:5px;color:var(--ink)}
+#annBar .annO,.annCard .annO{position:relative;display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:var(--w);color:var(--ink);border:2px solid var(--line);border-radius:8px;box-shadow:0 2px 0 var(--line);padding:9px 10px;margin:6px 0;overflow:hidden;font:inherit;font-size:15px;cursor:pointer}
+#annBar .annO.mine,.annCard .annO.mine{background:var(--good)}
+#annBar .annOb,.annCard .annOb{position:absolute;left:0;top:0;bottom:0;background:var(--c3);opacity:.22;transition:width .4s}
+#annBar .annO.mine .annOb,.annCard .annO.mine .annOb{background:#3dbb52;opacity:.3}
+.annCard .annO[disabled],#annBar .annO[disabled]{cursor:default;opacity:.9}
+.annOt,.annOp{position:relative}.annOt{flex:1}.annOp{font-size:13px;font-weight:700;white-space:nowrap}
+.annPt,#annBar .annPt{font-size:13px;color:var(--mut);text-align:right}
+#annBar .annPh{color:var(--ink)}
+.annCard{background:var(--epic);border:2px solid var(--line);border-radius:8px;box-shadow:3px 3px 0 var(--line);padding:10px}
+.cm.cmann .cmb{background:var(--epic);color:var(--ink);border:2px solid var(--line);border-radius:8px;box-shadow:2px 2px 0 var(--c3);cursor:pointer}
+.cm.cmann .ct{color:var(--mut)}
+.cm.cmann .cmopen{margin-top:6px;font-size:.88em;font-weight:700;color:var(--pinkd);text-align:right}
+.cm.cmann .cmreopen{display:none}
+.annRow small{display:block}`;document.head.appendChild(st)})();
 
 </script>
 </body>
