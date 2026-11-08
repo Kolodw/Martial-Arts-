@@ -390,7 +390,7 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='8.7';
+const VERSION='8.8';
 const CHANGELOG=[
  {v:'8.7',d:'8 พ.ย. 2026',l:['🌐 พบผู้เล่นจริงแบบเรียลไทม์: ระหว่างจำลอง มีโอกาสที่รอยแยกมิติจะพาผู้เล่นที่กำลังเล่นอยู่ตอนเดียวกันมาเจอคุณ — ท้าดวลหรือชวนเป็นพันธมิตรได้ และผลจะส่งไปถึงอีกฝ่ายด้วย · พันธมิตรมีโอกาสมาช่วยตอนจวนตัว','🌌 จักรวาลซ้อนทับ: บางชีวิตจะเกิดในจักรวาลเดียวกับผู้เล่นในทำเนียบ และอาจได้พบ ประลอง หรือสาบานเป็นพันธมิตรกับตำนานคนนั้น','🌍 ความแข็งแกร่งของโลกสุ่มทุกชีวิต: ยุคเสื่อมถอย (ศัตรู ×0.5) · ปกติ · ยอดฝีมือรุ่งเรือง (×1.6) · มารสวรรค์ไร้เทียมทาน (×3) · สวรรค์ลงทัณฑ์ (ศัตรูโคตรโกง ×6) — มารสวรรค์และจอมราชันมารแข็งแกร่งตามยุคด้วย','⏩ กาลเวลาแดนเทพ: ในโลกเซียน อายุเกิน 1,000 ปี หนึ่งก้าวเท่ากับ 100 ปี · เกิน 10,000 ปี ก้าวละ 1,000 ปี · เกิน 100,000 ปี ก้าวละ 10,000 ปี จนครบหนึ่งล้านปีกลายเป็นอมตะนิรันดร์ พร้อมความสำเร็จ ??? ใหม่','🧍 ตัวละครพิกเซลใหม่: ท่ายืนต่างกันตามพรรคและขั้นพลัง (กอดอก ไพล่มือ จับด้ามกระบี่ ท่าเตรียมสู้ ลอยตัว) · ตาเรืองแสงตามสีพรรคตอนใช้วิชา (สายมารตาแดงเลือดหมู) · เสื้อคลุมยาวสไตล์มังฮวามูริม','✏️ เสียงจากผู้เล่น: แก้ไขข้อความแจ้งบั๊กและความคิดเห็นของตัวเองได้ พร้อมป้าย (แก้ไขแล้ว) · ข้อความที่พิมพ์ค้างไว้ไม่หายเวลาสลับแท็บหรือปิดหน้าต่าง']},
  {v:'8.4',d:'8 พ.ย. 2026',l:['📱 สมาร์ตโฟนข้ามมิติใช้งานได้จริง: ผู้ข้ามมิติที่ได้มือถือมาเปิดได้จากเมนู มี 7 แอป — สารานุกรม คลิปสอนต่อสู้ เข็มทิศ กล้อง เพลง เกม เครื่องคิดเลข แบตชาร์จด้วยแผงโซลาร์','🔫 วรยุทธ์ระดับพิเศษสายปืน: ศาสตร์สร้างอาวุธปืน (สร้างปืนขายและใช้เอง) และวิชากระสุนแทนกระบี่ (ยิงปืนแทนกระบี่) ฝึกได้ระดับต่ำ กลาง สูง สุดยอด · โลกเซียนเป็นปืนวิญญาณและกระสุนปราณ','🏆 ความสำเร็จใหม่: หนึ่งในพันล้าน (???) · ความเป็นอมตะ (???) · สัญญาณหาย แต่แบตยังเหลือ · ติดมือถือข้ามภพ · ดินปืนในยุทธภพ · คลังแสงเดินได้ · เทพปืนไร้เทียมทาน','🌌 ประตูมิติกดเปิดต่อได้ทันทีหรือเปิดทั้งหมดรวดเดียว ไม่ต้องกลับไปเปิดเมนูใหม่ · ได้ของติดตัวซ้ำจะแลกเป็นเงินและปัญญาแทน','🐛 แก้ของต่างโลก 3 ชิ้นที่กดใช้แล้วไม่มีผล (วิชายุทธ์จากชาติก่อน · ตำราคณิตศาสตร์มหาวิทยาลัย · แหวนเก่าที่มีวิญญาณผู้เฒ่า) และกันกดประตูมิติรัวแล้วเสียครั้งเปิดฟรี','🌐 ย้ายแถบจำนวนคนออนไลน์ไปอยู่ใต้รูปโลกในหน้าแรก ไม่ทับชื่อเกม']},
@@ -4994,7 +4994,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5','8.6',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5','8.6','8.7',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5605,9 +5605,9 @@ function bossTick(){if(!S||!S.alive||S.beastMode||S.age<16||S.age>95||choice._cu
  const r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100))),esc=Math.max(.05,Math.min(.55,.06+.35*Math.min(1,r)+(S.int||0)/2500)),spare=Math.max(.05,Math.min(.6,.12+(S.cha||0)/450+(S.karma<0?.08:0)));
  S.bossN=(S.bossN||0)+1;S.bossY=S.age;setScene('fight');
  const die=how=>{S.deathCause=`ถูก${B.n}สังหาร${how}`;S.hp=0};
- const fled=()=>{S.hp=Math.max(1,Math.round(S.maxHp*.15));joy(-8);log(`🏃 หนีรอดจาก${B.n}มาได้อย่างหวุดหวิด ร่างกายบาดเจ็บสาหัส`,'bad',true);S.key.push(`${S.age} ปี — หนีรอดจาก${B.n}`)};
+ const fled=()=>{S.hp=Math.max(1,Math.round(S.maxHp*.15));joy(-8);log(`🏃 หนีรอดจาก${B.n}มาได้อย่างหวุดหวิด ร่างกายบาดเจ็บสาหัส`,'bad',true)};
  const won=()=>{S.fame+=x?1500:1200;S.power+=Math.round(total()*.06);joy(15);S.karma+=x?0:5;S.flags.bossKill=1;let a=null;try{a=newArt(3);Array.prototype.push.call(S.arts,a)}catch(e){}
-  log(`👑 <b>ล้ม${B.n}ได้ในการดวลตัวต่อตัว!</b> ชื่อของคุณก้องไปทั่ว${x?'ทุกแดนเซียน':'ยุทธภพ'}${a?` — ได้ ${artHtml(a)}`:''}`,'myth',true);S.key.push(`${S.age} ปี — ล้ม${B.n}ในการดวลตัวต่อตัว`)};
+  log(`👑 <b>ล้ม${B.n}ได้ในการดวลตัวต่อตัว!</b> ชื่อของคุณก้องไปทั่ว${x?'ทุกแดนเซียน':'ยุทธภพ'}${a?` — ได้ ${artHtml(a)}`:''}`,'myth',true)};
  choice(`☠️ เผชิญหน้า${B.n}`,`ระหว่างทาง ฟ้าพลันมืดมิด แรงกดดันมหาศาลตรึงร่างคุณไว้กับที่ — <b>${B.n}</b> ${B.d} ยืนขวางทางอยู่ตามลำพัง<br>"${x?'มดปลวกที่กล้าเหยียบแดนเดียวกับข้า':'ได้ยินชื่อเจ้ามานาน'}... มาดูกันว่าเจ้ามีดีแค่ไหน"<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของศัตรู</span>`,[
   {t:'⚔️ สู้ตัวต่อตัว',s:`โอกาสชนะราว ${pw}% · ถ้าแพ้ต้องหนีให้รอด ไม่งั้นตาย`,f(){duel(B.n,ep,w=>{if(w)won();else if(Math.random()<esc*.8)fled();else die('ในการดวลตัวต่อตัว')})}},
   {t:'🏃 หนีทันที',s:`ใช้ไหวพริบ · โอกาสรอดราว ${Math.round(esc*100)}%`,f(){if(Math.random()<esc)fled();else die('ขณะพยายามหลบหนี')}},
@@ -5615,7 +5615,7 @@ function bossTick(){if(!S||!S.alive||S.beastMode||S.age<16||S.age>95||choice._cu
 {const _py5=passYear;passYear=function(){const r=_py5.apply(this,arguments);try{bossTick()}catch(e){console.error(e)}return r}}
 function ndSys(cause){if(!S||S.sys||S._ndSys||S.beastMode)return false;S._ndSys=1;if(Math.random()>=.3)return false;
  const old=/วัยชรา/.test(cause);if(old){const lm=lifeMax();S.lifespan=(S.lifespan||0)+15;if(lifeMax()<=lm){S.lifespan-=15;return false}}S.hp=Math.max(30,Math.round(S.maxHp*.5));S.deathCause=null;S.chronic=null;
- log(`💫 ${old?'ลมหายใจสุดท้ายกำลังจะขาด':'สติกำลังดับวูบ'}... แล้วเสียงกลไกเย็นเยียบก็ดังขึ้นในหัว <span class="px">[ตรวจพบโฮสต์ใกล้เสียชีวิต — เริ่มการผูกมัดฉุกเฉิน]</span> ร่างกายถูกดึงกลับจากความตาย!`,'myth',true);S.key.push(`${S.age} ปี — ระบบตื่นขึ้นตอนใกล้ตาย`);
+ log(`💫 ${old?'ลมหายใจสุดท้ายกำลังจะขาด':'สติกำลังดับวูบ'}... แล้วเสียงกลไกเย็นเยียบก็ดังขึ้นในหัว <span class="px">[ตรวจพบโฮสต์ใกล้เสียชีวิต — เริ่มการผูกมัดฉุกเฉิน]</span> ร่างกายถูกดึงกลับจากความตาย!`,'myth',true);S.flags.ndSys=1;
  bindSys(pickW(SYS_TYPES).v);return true}
 try{Object.assign(I18N.d,{'เผชิญหน้า':'Face','สู้ตัวต่อตัว':'Fight one-on-one','หนีทันที':'Flee at once','ก้มหัวยอมรับความพ่ายแพ้':'Bow and admit defeat','มารสวรรค์':'Heavenly Demon','จอมราชันมารแห่งอเวจี':'Demon Sovereign of the Abyss','จักรพรรดิมารโลหิต':'Blood Demon Emperor','ราชันอสูรบรรพกาล':'Primordial Beast Sovereign','โอกาสชนะราว':'Win chance about','โอกาสรอดราว':'Survival chance about','ระบบตื่นขึ้นตอนใกล้ตาย':'System awakened at death\'s door'})}catch(e){}
 
@@ -5667,7 +5667,7 @@ function nqOffer(){const q=nqMake();if(!q)return;
   {t:'🙏 ปฏิเสธอย่างสุภาพ',s:q.gp?'ความสัมพันธ์ลดลงเล็กน้อย':'ไม่มีผลเสีย',skip:true,f(){const p=q.gp&&(S.parents||[]).find(x=>x.n===q.gp);if(p)p.rel=Math.max(0,(p.rel||0)-3);log(`คุณปฏิเสธเควสจาก${q.gv}`)}}])}
 function nqTick(){if(!S||!S.alive)return;S.nq=S.nq||[];
  for(const q of S.nq.slice()){if(q.pz){q.dl++;q.b=QV[q.k]();continue}const pr=QV[q.k]()-q.b,p=q.gp&&(S.parents||[]).find(x=>x.n===q.gp&&x.alive);
-  if(pr>=q.g){S.nq.splice(S.nq.indexOf(q),1);S.money+=q.mny;S.fame+=q.fm;joy(4);if(p)p.rel=Math.min(100,(p.rel||0)+8);log(`📜✅ ทำเควสของ<b>${q.gv}</b>สำเร็จ: ${q.n} — ได้ ${nqRwTxt(q)}`,'epic');S.key.push(`${S.age} ปี — ทำเควสของ${q.gv}สำเร็จ`)}
+  if(pr>=q.g){S.nq.splice(S.nq.indexOf(q),1);S.money+=q.mny;S.fame+=q.fm;joy(4);if(p)p.rel=Math.min(100,(p.rel||0)+8);log(`📜✅ ทำเควสของ<b>${q.gv}</b>สำเร็จ: ${q.n} — ได้ ${nqRwTxt(q)}`,'epic');}
   else if(S.age>=q.dl){S.nq.splice(S.nq.indexOf(q),1);joy(-3);S.fame=Math.max(0,S.fame-3);if(p)p.rel=Math.max(0,(p.rel||0)-5);log(`📜❌ เควสของ${q.gv}ล้มเหลว: ${q.n}`,'bad')}}
  if(S.beastMode||S.age<6||S.nq.length>=2||choice._cur||modalOpen)return;if(Math.random()<.14)nqOffer()}
 {const _py6=passYear;passYear=function(){const r=_py6.apply(this,arguments);try{nqTick()}catch(e){console.error(e)}return r}}
@@ -5705,7 +5705,7 @@ const TTL_CORE={m:{'ธรรมะ':['กระบี่','ยอดกระ�
 const TTL_MOD={power:['ทลายภูผา','พันชั่ง','กายาเหล็ก','สะท้านปฐพี','หมื่นชั่ง'],qi:['ปราณมังกร','วายุทมิฬ','ลมปราณพันปี','อัสนีบาต','เมฆาคราม'],int:['เจ้าปัญญา','ร้อยกลยุทธ์','จันทร์กระจ่าง','หมื่นอักษร','ตาทิพย์'],cha:['หน้าหยก','ล่มเมือง','ดอกท้อ','บุปผางาม','จันทร์เพ็ญ'],
  good:['เมตตา','ทรงธรรม','ใจพุทธะ','แสงอรุณ','บัวขาว'],evil:['โลหิต','ไร้ปรานี','อเวจี','เงามรณะ','กระดูกขาว'],fame:['ก้องหล้า','ใต้หล้า','ไร้เทียมทาน','สิบทิศ','ผู้เลื่องชื่อ'],money:['ทองคำ','หมื่นตำลึง','หยกพันชั่ง','มือทอง','ไข่มุกราตรี'],
  kills:['พันศพ','สังหารร้อย','มรณะ','ยมทูต','ทะเลเลือด'],love:['รักเดียว','ตำหนักใน','คู่จันทร์','สายใยรัก','ร้อยบุปผา'],elder:['อายุยืน','ผมขาว','ร้อยปี','อมตะ','กาลเวลา'],hermit:['สันโดษ','ภูผาเงียบ','สายลม','เมฆลอย','ธารน้ำใส']};
-const TTL_SP=[['bossM',()=>S.flags.bossKill&&!S.xian,'ผู้สังหารมารสวรรค์'],['bossX',()=>S.flags.bossKill&&S.xian,'ผู้ล้มราชันมารแห่งอเวจี'],['ndsys',()=>S._ndSys&&S.sys&&realmIdx()>=4&&(S.key||[]).some(k=>/ใกล้ตาย/.test(k)),'ผู้ที่ระบบดึงกลับจากความตาย'],
+const TTL_SP=[['bossM',()=>S.flags.bossKill&&!S.xian,'ผู้สังหารมารสวรรค์'],['bossX',()=>S.flags.bossKill&&S.xian,'ผู้ล้มราชันมารแห่งอเวจี'],['ndsys',()=>S.flags.ndSys&&S.sys&&realmIdx()>=4,'ผู้ที่ระบบดึงกลับจากความตาย'],
  ['orphan',()=>S.family&&S.family.orphan&&realmIdx()>=5,'ลูกกำพร้าผู้ท้าฟ้า'],['trash',()=>S.talent.m<=.6&&realmIdx()>=6,'ขยะผู้พลิกชะตาฟ้า'],['crip',()=>tr('crippled')&&!S.cured&&S.fame>=500,'ผู้ยิ่งใหญ่ไร้วรยุทธ'],['harem',()=>(S.harem||[]).length>=5,'ราชันแห่งตำหนักใน'],
  ['revive',()=>S.flags.revived,'ผู้กลับมาจากความตาย'],['ow',()=>S.ow&&S.awake&&realmIdx()>=6,'ผู้มาจากต่างโลกผู้ไร้เทียมทาน'],['regress',()=>S.flags.regress&&realmIdx()>=6,'ผู้ย้อนเวลามาแก้ชะตา'],['slowmax',()=>S.goal==='slow'&&S.age>=70&&(S.kills||0)<=10,'ฤๅษีผู้ไม่แตะต้องโลก'],
  ['kills300',()=>(S.kills||0)>=300,'ยมทูตเดินดิน'],['rich',()=>(S.money||0)>=1e6,'เจ้าสัวใต้หล้า'],['saint',()=>(S.karma||0)>=300,'พระโพธิสัตว์เดินดิน'],['fiend',()=>(S.karma||0)<=-300,'มารร้ายในร่างคน'],['sect',()=>!!S.ownSect&&realmIdx()>=5,'ปรมาจารย์ผู้ก่อตั้งสำนัก'],
@@ -5721,7 +5721,7 @@ function ttlMake(){const sp=TTL_SP.find(t=>{try{return t[1]()}catch(e){return fa
 const TTL_TOTAL=(()=>{const st=new Set();['m','x'].forEach(w=>Object.values(TTL_CORE[w]).forEach(L=>L.forEach(c=>Object.values(TTL_MOD).forEach(M=>M.forEach(m=>st.add(c+m))))));TTL_SP.forEach(x=>st.add(x[2]));return st.size})();
 function ttlCol(t){const d=LS.get('murim_ttl',{});if(!d[t])d[t]={n:S.name,t:Date.now(),c:0};d[t].c++;d[t].n=S.name;LS.set('murim_ttl',d)}
 function ttlTick(){if(!S||!S.alive||S.beastMode)return;if(S.age<15||(realmIdx()<1&&(S.fame||0)<100))return;const t=ttlMake();if(t===S.ttl)return;const old=S.ttl;S.ttl=t;ttlCol(t);
- log(`🏷️ ${old?`ฉายาเดิม「${old}」ถูกลืมไป — `:''}${S.xian?'แดนเซียน':'ยุทธภพ'}เริ่มเรียกขานคุณว่า <b>「${t}」</b>`,'epic',!old||TTL_SP.some(x=>x[2]===t));S.key.push(`${S.age} ปี — ได้รับฉายา「${t}」`)}
+ log(`🏷️ ${old?`ฉายาเดิม「${old}」ถูกลืมไป — `:''}${S.xian?'แดนเซียน':'ยุทธภพ'}เริ่มเรียกขานคุณว่า <b>「${t}」</b>`,'epic',!old||TTL_SP.some(x=>x[2]===t))}
 {const _py7=passYear;passYear=function(){const r=_py7.apply(this,arguments);try{if(S&&S.alive&&S.age%2===0)ttlTick()}catch(e){console.error(e)}return r}}
 {const _ep=epithet;epithet=function(){try{if(S&&S.ttl&&!S.beastMode)return S.ttl}catch(e){}return _ep.apply(this,arguments)}}
 {const _rd2=render;render=function(){const r=_rd2.apply(this,arguments);try{const g=$('gName');if(g&&S&&S.ttl&&!g.querySelector('.ttl')){const sp=document.createElement('small');sp.className='ttl';sp.textContent=` 「${xT(S.ttl)}」`;g.appendChild(sp)}}catch(e){}return r}}
@@ -5743,7 +5743,7 @@ try{Object.assign(I18N.d,{'ฉายา':'Titles','ความสำเร็�
 const GUN_A={craft:{m:'ศาสตร์สร้างอาวุธปืน',x:'ศาสตร์หลอมปืนวิญญาณ',b:300,d:'สร้างอาวุธปืนขาย ยิ่งชำนาญยิ่งทำปืนได้ดีและได้เงินมาก'},shoot:{m:'วิชากระสุนแทนกระบี่',x:'วิชากระสุนปราณทะลวงฟ้า',b:420,d:'ใช้ปืนยิงแทนกระบี่ ยิ่งชำนาญยิ่งได้เปรียบในการต่อสู้'}};
 function gunArt(k){return(S.arts||[]).find(a=>a&&a.gun===k)}
 function gunLearn(k,why){if(!S||gunArt(k))return null;const G=GUN_A[k],a={n:S.xian?G.x:G.m,tier:'พิเศษ · สายปืน',b:Math.round(G.b*(1+realmIdx()*.25)),r:3,p:.001,gun:k,lv:0};Array.prototype.push.call(S.arts,a);
- log(`🔫 ${why} — ได้วรยุทธ์ระดับพิเศษ ${artHtml(a)} (${AMN[0]}) · ${G.d}`,'myth',true);S.key.push(`${S.age} ปี — ได้${a.n}`);return a}
+ log(`🔫 ${why} — ได้วรยุทธ์ระดับพิเศษ ${artHtml(a)} (${AMN[0]}) · ${G.d}`,'myth',true);return a}
 {const _f=fight;fight=function(name,ep){const g=S&&gunArt('shoot');if(!g)return _f.apply(this,arguments);const add=Math.round(total()*[.1,.2,.35,.55][Math.min(3,g.lv||0)]);S.power+=add;try{return _f.apply(this,arguments)}finally{S.power-=add}}}
 function gunTick(){if(!S||!S.alive||S.beastMode)return;const c=gunArt('craft'),s=gunArt('shoot');
  if(c){const lv=Math.min(3,c.lv||0);S.money+=Math.round([150,500,1400,4000][lv]*(1+realmIdx()*.2));
@@ -5862,7 +5862,7 @@ async function shareInit(){try{if(!onlineOK||!S||Math.random()>.15)return;const 
 function sharePow(sh){const P=S.xian?XP:REALMS.map(r=>r.p);const lo=P[Math.min(7,sh.ri)]||100,hi=P[Math.min(7,sh.ri+1)]||lo*2;return Math.round((lo+(hi-lo)*.6)*(.9+Math.random()*.3))}
 function shareTick(){const sh=S.shared;if(!sh||sh.met>=2||S.age<18||choice._cur||modalOpen||S.beastMode||Math.random()>.035)return;sh.met++;const ep=sharePow(sh),r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100)));
  choice(`🌌 พบตำนานจากทำเนียบ`,`ในโรงเตี๊ยมกลางทาง คุณสบตากับ <b>${esc(sh.n)}</b> ${esc(sh.r)}${sh.f?' แห่ง'+esc(sh.f):''} — ผู้ที่ชื่อติดทำเนียบในจักรวาลที่ซ้อนทับกับของคุณ<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของเขา</span>`,[
-  {t:'⚔️ ขอประลอง',s:`โอกาสชนะราว ${pw}%`,f(){duel(sh.n,ep,w=>{if(w){S.fame+=Math.round(200+ep/50);log(`🌌 ชนะ${esc(sh.n)}! ทั้งสองจักรวาลสั่นสะเทือน`,'myth',true);S.key.push(`${S.age} ปี — ชนะตำนานจากทำเนียบ ${sh.n}`)}else log(`🌌 ${esc(sh.n)}ปล่อยให้คุณมีชีวิตรอด "ฝึกมาใหม่แล้วค่อยมาสู้กัน"`,'bad')})}},
+  {t:'⚔️ ขอประลอง',s:`โอกาสชนะราว ${pw}%`,f(){duel(sh.n,ep,w=>{if(w){S.fame+=Math.round(200+ep/50);log(`🌌 ชนะ${esc(sh.n)}! ทั้งสองจักรวาลสั่นสะเทือน`,'myth',true)}else log(`🌌 ${esc(sh.n)}ปล่อยให้คุณมีชีวิตรอด "ฝึกมาใหม่แล้วค่อยมาสู้กัน"`,'bad')})}},
   {t:'🤝 สาบานเป็นพันธมิตร',s:'ใช้เสน่ห์ · พันธมิตรจะมาช่วยตอนจวนตัว',f(){if(roll01(.35+(S.cha||0)/300)){allyAdd(sh.n,'ตำนานจากทำเนียบ');log(`🤝 ${esc(sh.n)}ยอมสาบานเป็นพันธมิตรกับคุณ`,'epic',true)}else log(`${esc(sh.n)}ยิ้มบางๆ แล้วเดินจากไป`)}},
   {t:'🙇 แยกทาง',s:'ไม่มีผลเสีย',skip:true,f(){log(`คุณกับ${esc(sh.n)}คารวะกันแล้วแยกทาง`)}}])}
 // ---- พันธมิตร ----
@@ -5888,6 +5888,38 @@ function meetTick(){if(!meetC||Date.now()-meetC.at>90000||S.age<14||choice._cur|
  add('ผู้ข้ามมิติ',[{id:'ow_meet',n:'ข้ามจักรวาล',d:'พบผู้เล่นจริงที่กำลังเล่นอยู่ในเวลาเดียวกัน',r:2,c:()=>(S.key||[]).some(k=>/ผู้เล่นจริง|ข้ามจักรวาล/.test(k))||(S.allies||[]).some(a=>a.src==='ผู้เล่นจริง')},{id:'ow_shared',n:'จักรวาลซ้อนทับ',d:'เกิดในจักรวาลเดียวกับผู้เล่นในทำเนียบ',r:2,c:()=>!!S.shared}])}
 try{TTL_SP.unshift(['eternal',()=>S.flags.eternal,'อมตะนิรันดร์'])}catch(e){}
 try{Object.assign(I18N.d,{'พบผู้เล่นจริง':'Real player encountered','ท้าดวล':'Challenge','ชวนเป็นพันธมิตร':'Invite as ally','พันธมิตร':'Allies','อมตะนิรันดร์':'Eternal Immortal','ยุคยุทธภพปกติ':'Normal martial era','ยุคที่มารสวรรค์ไร้เทียมทาน':'Era of the invincible Heavenly Demon','ยุคสวรรค์ลงทัณฑ์':'Era of Heavenly Punishment','พบตำนานจากทำเนียบ':'Legend from the rankings'})}catch(e){}
+
+// ---------- v8.8 ภัยเงาในโลกเทพเซียน ----------
+const SH_N=['ผู้สวมหน้ากากไร้หน้า','นักฆ่าจากนิกายเงาพันหน้า','ผู้อาวุโสปีศาจที่ซ่อนพลัง','ศิษย์อัจฉริยะที่แค้นคุณเงียบๆ','ปรมาจารย์เฒ่าที่คุณเคยขวางทาง','วิญญาณมารที่สิงร่างคนใกล้ตัว','มือสังหารจากตระกูลโบราณ'];
+const SH_M=['ผู้อยู่เบื้องหลังที่ไม่เคยเปิดเผยตัว','บรรพชนผู้หลับใหลแห่งนิกายคู่อริ','จอมมารเฒ่าที่จ้องชิงชะตาคุณมาหลายร้อยปี','เซียนผู้ทรยศที่ต้องการกลืนกินแก่นพลังของคุณ'];
+const SH_OMEN=['ลมเย็นพัดผ่านต้นคอ ทั้งที่ประตูปิดสนิท','น้ำชาในถ้วยกระเพื่อมเองโดยไม่มีใครแตะ','นกในสวนเงียบหายไปทั้งฝูงในคืนเดียว','รู้สึกเหมือนมีสายตาจับจ้องอยู่จากที่ไหนสักแห่ง','ฝันเห็นเงาดำยืนอยู่ปลายเตียง','ค่ายกลรอบถ้ำบำเพ็ญมีรอยถูกแตะเบาๆ'];
+function shPerc(){const ri=realmIdx();return (S.int||0)*.5+(S.qi||0)*.25+ri*15+(tr('eye')?60:0)+(has('foresight')?80:0)+(S.flags.regress?40:0)+(S.sys?25:0)}
+function shSpawn(){const lv=S.shLv||0,boss=lv>=2,ri=realmIdx();const p=Math.round(total()*(boss?1.2+Math.random()*.8:.6+Math.random()*.7)*Math.sqrt(wsM()));
+ S.shadow={n:boss?ch(SH_M):ch(SH_N),p,st:40+ri*18+R(0,40)+(boss?40:0),tm:R(3,6),seen:0,boss:boss?1:0,roots:boss?R(1,2):0,at:S.age};S.shN=(S.shN||0)+1}
+function shKillRoot(){const sh=S.shadow;const opts=[];(S.parents||[]).forEach(x=>{if(x.alive)opts.push(['par',x])});(S.children||[]).forEach(c=>{if(c.alive)opts.push(['kid',c])});if(S.spouse)opts.push(['spo']);if(S.ownSect&&(S.ownSect.dis||0)>3)opts.push(['sect']);(S.allies||[]).forEach(a=>opts.push(['ally',a]));
+ if(!opts.length)return;const o=ch(opts);let who='';
+ if(o[0]==='par'){o[1].alive=false;who=`${o[1].role} ${o[1].n}`}else if(o[0]==='kid'){o[1].alive=false;who=`ลูกของคุณ ${o[1].n}`;S.kids=Math.max(0,(S.kids||1)-1)}else if(o[0]==='spo'){who=`คู่ชีวิต ${S.spouse}`;S.spouse=null}else if(o[0]==='sect'){const d=Math.ceil(S.ownSect.dis*.4);S.ownSect.dis-=d;who=`ศิษย์ในสำนักของคุณ ${d} คน`}else{S.allies=S.allies.filter(a=>a!==o[1]);who=`พันธมิตร ${o[1].n}`}
+ joy(-15);log(`🩸 ${who}ถูกพบเสียชีวิตอย่างปริศนา ไม่มีบาดแผล ไม่มีร่องรอย — ${sh.seen?`ฝีมือของ<b>${sh.n}</b>`:'ไม่มีใครรู้ว่าใครเป็นคนลงมือ'}`,'bad',true)}
+function shStrike(){const sh=S.shadow;const def=total()*(1+(sh.seen?(sh.arr?.7:.45):0))*(.85+Math.random()*.3),atk=sh.p*(.85+Math.random()*.3);
+ if(atk>def){if(sh.seen){S.hp=0;S.deathCause=`ถูก${sh.n}สังหาร`;log(`💀 แม้จะรู้ตัวก่อน แต่<b>${sh.n}</b>ก็แข็งแกร่งเกินต้าน`,'bad',true)}else{S.hp=0;S.deathCause='ถูกลอบสังหารโดยไม่ทันรู้ตัว — ไม่มีใครรู้ว่าใครเป็นคนลงมือ';S.key.push(`${S.age} ปี — ผู้ลงมือคือ ${sh.n} (ไม่มีใครรู้)`);log('🌑 ...','bad')}S.shadow=null;return}
+ S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.45));S.shLv=(S.shLv||0)+1;S.fame+=80;log(`⚔️ กลางดึก<b>${sh.n}</b>ลอบโจมตีคุณ! ${sh.seen?'คุณที่เตรียมรับมือไว้':'แม้ไม่ทันตั้งตัว แต่พลังของคุณ'}ต้านไว้ได้ ศัตรูหลบหนีไปพร้อมบาดแผล — แต่คนที่ส่งมันมายังอยู่`,'epic',true);S.shadow=null;S.shCd=S.age+R(20,50)}
+function shTick(){if(!S||!S.alive||!S.xian||S.beastMode||S.age<20||realmIdx()<2)return;const sh=S.shadow;
+ if(!sh){if((S.shN||0)>=3||S.age<(S.shCd||0))return;const p=.006+realmIdx()*.003+Math.min(.02,(S.fame||0)/150000)+((S.karma||0)<-50?.01:0)+((S.shLv||0)>=1?.01:0);if(Math.random()<p)shSpawn();return}
+ if(!sh.seen){const pc=shPerc(),d=Math.max(.12,Math.min(.85,pc/(pc+sh.st*1.2)));if(Math.random()<d){sh.seen=1;shReveal();return}if(Math.random()<.35)log(`🌫️ ${ch(SH_OMEN)}...`,'')}
+ if(sh.roots>0&&Math.random()<.6){sh.roots--;shKillRoot();return}
+ sh.tm--;if(sh.tm<=0)shStrike()}
+function shReveal(){const sh=S.shadow;if(!sh)return;const r=total()/sh.p,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100)));setScene('fight');
+ const go=()=>choice(`👁️ ตรวจพบภัยเงา!`,`ประสาทสัมผัสของคุณจับได้ถึงปราณที่ถูกกดซ่อนไว้ — <b>${sh.n}</b> ${sh.boss?'ผู้อยู่เบื้องหลังทุกอย่าง ':''}กำลังเฝ้าดูคุณมาตลอด และเตรียมลงมือในอีกไม่นาน<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของมัน${sh.roots>0?' · มันกำลังตามล้างคนใกล้ตัวคุณ':''}</span>`,[
+  {t:'⚔️ ตามล่ากลับก่อนมันลงมือ',s:`โอกาสชนะราว ${pw}%`,f(){duel(sh.n,sh.p,w=>{if(w){S.fame+=Math.round(150+sh.p/100);S.shLv=(S.shLv||0)+1;S.shadow=null;S.shCd=S.age+R(25,60);const a=Math.random()<.5?newArt(3):null;if(a)Array.prototype.push.call(S.arts,a);log(`🗡️ สังหาร<b>${sh.n}</b>ได้สำเร็จ!${a?` ได้ ${artHtml(a)} จากศพของมัน`:''}${sh.boss?'':' แต่จากความทรงจำของมัน คุณรู้ว่ายังมีคนที่แข็งแกร่งกว่าอยู่เบื้องหลัง...'}`,'myth',true);S.flags.shKill=1;if(sh.boss)S.flags.shBoss=1}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));sh.tm=Math.max(1,sh.tm-2);log(`${sh.n}หายตัวไปในความมืด — มันจะกลับมาเร็วกว่าเดิม`,'bad')}})}},
+  {t:'🛡️ วางค่ายกลป้องกันและเฝ้าระวัง',s:'ใช้ปัญญา · ยืดเวลา และถ้ามันลงมือจะรับมือได้ดีขึ้น',f(){if(roll01(.4+(S.int||0)/400)){sh.tm+=R(2,4);sh.roots=0;sh.arr=1;log('🛡️ วางค่ายกลรอบตัวและคนใกล้ตัวแน่นหนา ภัยเงาถอยไปตั้งหลัก','good')}else log('ค่ายกลยังไม่สมบูรณ์ แต่อย่างน้อยคุณก็รู้ตัวแล้ว','')}},
+  {t:'🏃 หนีไปซ่อนตัวในแดนไกล',s:'ใช้ไหวพริบ · ทิ้งชื่อเสียงและคนที่รู้จักไว้เบื้องหลัง',f(){if(Math.random()<.45+Math.min(.3,(S.int||0)/500)){S.shadow=null;S.shCd=S.age+R(15,30);S.fame=Math.round((S.fame||0)*.7);joy(-8);log(`🏃 หลบหนีไปซ่อนตัวจนตัดร่องรอยได้ ${sh.n}คลาดกับคุณ...สักพัก`,'')}else{sh.tm=Math.max(1,sh.tm-1);log('ร่องรอยของคุณยังถูกตามได้','bad')}}}]);
+ if(choice._cur||modalOpen)setTimeout(()=>{if(S&&S.alive&&S.shadow===sh)go()},1500);else go()}
+{const _py11=passYear;passYear=function(){const r=_py11.apply(this,arguments);try{shTick()}catch(e){console.error(e)}return r}}
+{const _ql3=questList;questList=function(){const L=_ql3.apply(this,arguments);try{const sh=S&&S.shadow;if(sh&&sh.seen)L.unshift({k:'shadow',ic:'👁️',n:'ภัยเงา: '+sh.n,p:`คาดว่าจะลงมือภายใน ${Math.max(1,sh.tm)} ปี`,d:'ศัตรูที่ซ่อนตัวและจ้องเอาชีวิตคุณ'})}catch(e){}return L}}
+{const add=(cat,arr)=>{const c=ACH.find(x=>x[0]===cat);if(!c)return;arr.forEach(a=>{if(ACH_ALL.some(b=>b.id===a.id))return;const zi=c[1].findIndex(b=>b.id==='z_all');if(zi>=0)c[1].splice(zi,0,a);else c[1].push(a);ACH_ALL.push(a)})};
+ add('ความตาย',[{id:'d_shadow',n:'ตายโดยไม่รู้ว่าใครฆ่า',d:'ถูกภัยเงาลอบสังหารโดยไม่ทันรู้ตัว',r:2,end:1,c:()=>/ไม่ทันรู้ตัว/.test(S.cause||'')}]);
+ add('วิถียุทธ์',[{id:'w_shadow',n:'ผู้ล่าเงา',d:'สังหารภัยเงาที่ซ่อนตัวได้',r:3,c:()=>!!S.flags.shKill},{id:'w_shadowboss',n:'ถอนรากผู้อยู่เบื้องหลัง',d:'สังหารผู้อยู่เบื้องหลังภัยเงาได้',r:4,c:()=>!!S.flags.shBoss}])}
+try{Object.assign(I18N.d,{'ตรวจพบภัยเงา':'Hidden threat detected','ภัยเงา':'Shadow threat','ตามล่ากลับก่อนมันลงมือ':'Hunt it down first','วางค่ายกลป้องกันและเฝ้าระวัง':'Set protective arrays','หนีไปซ่อนตัวในแดนไกล':'Flee and hide far away','ถูกลอบสังหารโดยไม่ทันรู้ตัว':'Assassinated without ever noticing'})}catch(e){}
 </script>
 </body>
 </html>
