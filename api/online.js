@@ -100,8 +100,8 @@ module.exports = async (req, res) => {
       const arena = []; for (let i = 0; i < (ar || []).length; i += 2) arena.push({ n: ar[i], w: +ar[i + 1] });
       const T = pairs(top).filter(x => !x.cu).slice(0, 60), Pv = pairs(prev).filter(x => !x.cu).slice(0, 20), all = T.concat(Pv).filter(x => x.lid);
       const pubs = all.length ? await cmd('MGET', ...all.map(x => 'lifep:' + x.lid)) : [];
-      const pm = {}; all.forEach((x, i) => pm[x.lid] = pubs[i] === '1' ? 1 : 0);
-      const fix = l => l.map(x => Object.assign(x, { pub: x.lid ? pm[x.lid] || 0 : 0 }));
+      const pm = {}; all.forEach((x, i) => pm[x.lid] = pubs[i] === '1' ? 1 : pubs[i] === '2' ? 2 : 0);
+      const fix = l => l.map(x => { const v = x.lid ? pm[x.lid] || 0 : 0; const o = Object.assign(x, { pub: v === 1 ? 1 : 0 }); if (v === 2) { o.n = 'ผู้ไม่ประสงค์ออกนาม'; o.f = ''; o.anon = 1 } return o });
       return res.json({ top: fix(T), prev: fix(Pv), arena });
     }
     if (a === 'load') {
@@ -273,7 +273,7 @@ module.exports = async (req, res) => {
       const key = 'bd2:' + W, L = [['INCR', 'lives'], ['ZADD', key, e.s, JSON.stringify(e)], ['ZREMRANGEBYRANK', key, 0, -101], ['EXPIRE', key, 86400 * 40]];
       if (e.cu || !(parseFloat(b.ver) >= 6.3)) { await cmd('INCR', 'lives'); return res.json({ ok: 1, skip: 1 }) }
       const det = String(b.det || '');
-      if (lid.length >= 6 && det && det.length < 40000) { try { JSON.parse(det); L.push(['SET', 'lifed:' + lid, det, 'EX', 86400 * 40], ['SET', 'lifeo:' + lid, id, 'EX', 86400 * 40], ['SET', 'lifep:' + lid, b.pub ? '1' : '0', 'EX', 86400 * 40]) } catch {} }
+      if (lid.length >= 6 && det && det.length < 40000) { try { JSON.parse(det); L.push(['SET', 'lifed:' + lid, det, 'EX', 86400 * 40], ['SET', 'lifeo:' + lid, id, 'EX', 86400 * 40], ['SET', 'lifep:' + lid, +b.pub === 2 ? '2' : b.pub ? '1' : '0', 'EX', 86400 * 40]) } catch {} }
       await pipe(L);
       return res.json({ ok: 1 });
     }
@@ -281,8 +281,9 @@ module.exports = async (req, res) => {
       const lid = String(b.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
       const own = await cmd('GET', 'lifeo:' + lid);
       if (!own || own !== id) return res.status(403).json({ err: 'owner' });
-      await cmd('SET', 'lifep:' + lid, b.pub ? '1' : '0', 'KEEPTTL');
-      return res.json({ ok: 1, pub: b.pub ? 1 : 0 });
+      const pv = +b.pub === 2 ? 2 : b.pub ? 1 : 0;
+      await cmd('SET', 'lifep:' + lid, String(pv), 'KEEPTTL');
+      return res.json({ ok: 1, pub: pv });
     }
     if (a === 'arena') {
       const me = { n: clean(b.n, 20) || 'นิรนาม', p: Math.max(0, +b.p || 0), hp: +b.hp || 100, r: clean(b.r, 30), ri: Math.max(0, Math.min(12, +b.ri || 0)), x: b.x ? 1 : 0, t: now };
