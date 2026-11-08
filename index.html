@@ -390,7 +390,7 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='8.1';
+const VERSION='8.2';
 const CHANGELOG=[
  {v:'8.1',d:'8 พ.ย. 2026',l:['📖 สมุดตำนานแบบดาว: ทำความสำเร็จเดิมซ้ำในชาติใหม่เพื่อเพิ่มดาว ★☆☆ → ★★★ (รวม 372 ดาว) · มีระดับนักบันทึก 7 ขั้น ตั้งแต่ผู้เริ่มจดบันทึกถึงผู้อยู่เหนือตำนาน · ทุกดาวใหม่ได้กรรมเข้าคลังไว้แลกกรอบ','🏷️ ระบบฉายา: กว่า 2,200 แบบ — ยุทธภพหรือแดนเซียนจะเรียกขานคุณตามสายสำนัก ขั้นพลัง และสิ่งที่เด่นที่สุดในชีวิต เช่น กระบี่ทลายภูผา · จอมมารโลหิต · เทพเซียนจันทร์กระจ่าง พร้อมฉายาพิเศษหายากอีก 20 แบบ ฉายาแสดงข้างชื่อและเก็บสะสมในสมุดตำนาน','📜 เควสตามช่วงวัย: พ่อแม่ อาจารย์ในสำนัก ผู้ใหญ่บ้าน นายอำเภอ คู่ชีวิต ลูกๆ ฯลฯ จะมาฝากเควสที่เข้ากับช่วงชีวิต พร้อมบอกว่าใครให้และทำไม · เควสระบบเลือกตามวัยและบอกเหตุผล','☠️ ศึกตัวต่อตัวกับมารสวรรค์ (ยุทธภพ) และจอมราชันมาร (เทพเซียน) — สู้ หนี หรือก้มหัว ชนะได้วิชาระดับตำนาน แพ้แล้วหนีไม่รอดคือตาย','💫 ระบบตื่นตอนใกล้ตาย: ตอนกำลังจะตาย ถ้ายังไม่มีระบบ มีโอกาส 30% ที่ระบบจะผูกมัดฉุกเฉินและดึงคุณกลับมา','🖼️ ร้านแลกกรอบใหม่: ราคาเริ่ม 5,000 กรรม และกรรมของแต่ละชีวิตจะเข้าคลังกรรมถาวร สะสมข้ามชีวิตได้','🐛 แก้บั๊กกดเปิดประตูมิติแล้วเวลาค้างไม่เดินต่อ และกันตัวเลือกค้างจากหน้าต่างที่เปิดทับ']},
  {v:'7.5',d:'8 พ.ย. 2026',l:['🖥️ หน้าจอคอมแบบใหม่: ซ้ายสถานะตัวละคร (ภาพตัวละคร หลอดพลังชีวิต/พลัง/อายุขัย ค่าสถานะ วิชาเด่น) · กลางฉากและบันทึก · ขวาฟังก์ชันแบ่งหมวด พร้อมเควสและการ์ดระบบ','📐 หน้าเกิดและหน้าสร้างตัวละครบนคอมแบ่ง 2 คอลัมน์ เห็นครบในจอเดียว','⌨️ คีย์ลัดบนคอม: Space หยุด/เล่น · S ความเร็ว · A อัตโนมัติ · 1–9 เลือกตัวเลือก · Esc ปิด · M/B/Q/L เมนู กระเป๋า เควส บันทึก','🖼️ ร้านแลกกรอบ: ใช้กรรมดีหรือกรรมชั่วแลกกรอบรูป 11 แบบ — ปกติ · วิบวับ · สีเปลี่ยน · อนิเมชั่นเปลี่ยนสีแล้วกลับสีเดิม กรอบเป็นของคุณถาวรทุกชีวิตและแสดงที่รูปตัวละคร','👤 ระบบโปรไฟล์: ตั้งตัวละครเป็นรูปโปรไฟล์ พร้อมกรอบ แสดงข้างชื่อในแชทโลก','🐛 แก้บั๊กตัวเลือกที่ค้างไว้นานแล้วพัง และกันเกมค้างจากตัวเลือกที่ผิดพลาด']},
@@ -4979,7 +4979,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5723,6 +5723,49 @@ openBook=function(){const n=Object.keys(achGot).length,N=ACH_ALL.length,st=LS.ge
  modal(head+ACH.map(([cat,list])=>`<h4 style="margin:12px 0 6px">${cat} <span class="tag2">⭐ ${list.reduce((s,a)=>s+achStar(a),0)}/${list.length*3}</span></h4>`+list.map(a=>{const g=achGot[a.id],s=achStar(a),th=achTh(a),c=achCnt(a);
   return`<div class="item" style="${g?'':'opacity:.55'}"><div class="h"><b class="${g?'t'+a.r:''}">${g?'🏆 '+a.n:'🔒 ???'}</b><span><span class="bkst">${'★'.repeat(s)}<i>${'☆'.repeat(3-s)}</i></span> <span class="t${a.r}" style="font-size:11px">${TIER_N[a.r]}</span></span></div><p>${a.d}${g?` · ${esc(g.n)}<br><span class="tag2">ได้ ${c} ชาติ${s<3?` · ★ ถัดไปเมื่อครบ ${th[s]} ชาติ`:' · ครบ 3 ดาวแล้ว'}</span>`:''}</p></div>`}).join('')).join(''),'book')};
 try{Object.assign(I18N.d,{'ฉายา':'Titles','ความสำเร็จ':'Achievements','ระดับ':'Rank','ดาว':'stars','ผู้เริ่มจดบันทึก':'Novice Scribe','นักเล่าเรื่อง':'Storyteller','ผู้บันทึกพงศาวดาร':'Chronicler','ปราชญ์ผู้รู้แจ้ง':'Enlightened Sage','ผู้จารึกตำนาน':'Legend Engraver','เทพแห่งตำนาน':'God of Legends','ผู้อยู่เหนือตำนาน':'Beyond Legend','เริ่มเรียกขานคุณว่า':'begins to call you','ได้รับฉายา':'Earned the title','ฉายาพิเศษ':'special titles','ฉายาที่เคยได้รับ':'Titles earned'})}catch(e){}
+
+// ---------- v8.2 สมาร์ตโฟนข้ามมิติ + วรยุทธ์สายปืน ----------
+const GUN_A={craft:{m:'ศาสตร์สร้างอาวุธปืน',x:'ศาสตร์หลอมปืนวิญญาณ',b:300,d:'สร้างอาวุธปืนขาย ยิ่งชำนาญยิ่งทำปืนได้ดีและได้เงินมาก'},shoot:{m:'วิชากระสุนแทนกระบี่',x:'วิชากระสุนปราณทะลวงฟ้า',b:420,d:'ใช้ปืนยิงแทนกระบี่ ยิ่งชำนาญยิ่งได้เปรียบในการต่อสู้'}};
+function gunArt(k){return(S.arts||[]).find(a=>a&&a.gun===k)}
+function gunLearn(k,why){if(!S||gunArt(k))return null;const G=GUN_A[k],a={n:S.xian?G.x:G.m,tier:'พิเศษ · สายปืน',b:Math.round(G.b*(1+realmIdx()*.25)),r:3,p:.001,gun:k,lv:0};Array.prototype.push.call(S.arts,a);
+ log(`🔫 ${why} — ได้วรยุทธ์ระดับพิเศษ ${artHtml(a)} (${AMN[0]}) · ${G.d}`,'myth',true);S.key.push(`${S.age} ปี — ได้${a.n}`);return a}
+{const _f=fight;fight=function(name,ep){const g=S&&gunArt('shoot');if(!g)return _f.apply(this,arguments);const add=Math.round(total()*[.1,.2,.35,.55][Math.min(3,g.lv||0)]);S.power+=add;try{return _f.apply(this,arguments)}finally{S.power-=add}}}
+function gunTick(){if(!S||!S.alive||S.beastMode)return;const c=gunArt('craft'),s=gunArt('shoot');
+ if(c){const lv=Math.min(3,c.lv||0);S.money+=Math.round([150,500,1400,4000][lv]*(1+realmIdx()*.2));
+  const g=S.items.find(i=>i.id==='gun');if(lv>=1&&!g){addItem({id:'gun',n:S.xian?'ปืนวิญญาณฝีมือตัวเอง':'ปืนคาบศิลาฝีมือตัวเอง',d:'ใช้อัตโนมัติเมื่อจวนตัวในการต่อสู้ — ชนะทันที',uses:2+lv});log(`🔫 ${c.n}: คุณสร้างปืนกระบอกแรกของตัวเองสำเร็จ!`,'epic')}
+  else if(g&&lv>=2&&S.age%2===0&&g.left<6){g.left++}}
+ if(!s&&(S.flags.gun||(c&&(c.lv||0)>=1))&&Math.random()<.35)gunLearn('shoot',c?'ทดลองยิงปืนที่สร้างเองจนจับทางได้':'ลั่นไกปืนครั้งนั้นทำให้คุณเข้าใจจังหวะการยิง');
+ if(!c&&!s&&S.age>=16&&S.age<=60&&Math.random()<(S.ow&&S.world&&S.world.k==='modern'?.03:.0015))gunLearn(Math.random()<.5?'craft':'shoot',S.xian?'ผู้ฝึกตนจากแดนไกลถ่ายทอดศาสตร์ปืนวิญญาณให้':S.ow?'ความรู้จากโลกเดิมเรื่องปืนผุดขึ้นในหัว':'พ่อค้าชาวตะวันตกที่ท่าเรือสอนวิธีใช้ปืนคาบศิลาให้');
+ if(s&&(s.lv||0)>=3&&!S.flags.gunPeak){S.flags.gunPeak=1;S.fame+=150;log(`🔫 กระสุนของคุณทะลวงปราณคุ้มกายของยอดฝีมือได้ — ${S.xian?'แดนเซียน':'ยุทธภพ'}ขนานนามว่า <b>เทพปืน</b>`,'myth',true)}}
+// สมาร์ตโฟน
+const PH_APPS=[{id:'wiki',ic:'📚',n:'สารานุกรมออฟไลน์',b:20},{id:'clip',ic:'🎬',n:'คลิปสอนต่อสู้',b:20},{id:'map',ic:'🧭',n:'เข็มทิศ / แผนที่',b:15},{id:'cam',ic:'📷',n:'กล้องถ่ายรูป',b:10},{id:'music',ic:'🎵',n:'เพลงจากโลกเดิม',b:8},{id:'game',ic:'🎮',n:'เกมออฟไลน์',b:10},{id:'calc',ic:'🧮',n:'เครื่องคิดเลข',b:5}];
+function phoneInit(){if(!S||S.phone)return;const id=S.owItem&&S.owItem.id;if(id!=='phone'&&id!=='xphone')return;S.phone={bat:100,n:0,u:{},mg:id==='xphone'};log(`📱 คุณพบว่า<b>สมาร์ตโฟน</b>จากโลกเดิมยังเปิดติด! ${S.phone.mg?'มันกลายเป็นของวิเศษ ดูดปราณฟ้าดินแทนแบตเตอรี่':'มีแผงโซลาร์พับได้ไว้ชาร์จแบต'} (เปิดได้ที่เมนู ☰ → 📱)`,'myth',true)}
+{const _ow=owXAwake;owXAwake=function(){const r=_ow.apply(this,arguments);try{phoneInit()}catch(e){}return r}}
+function openPhone(){const P=S&&S.phone;if(!P)return;const used=a=>P.u[a.id]===S.age;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="phn"><div class="phs"><span>${S.xian?'ไม่มีสัญญาณ · แดนเซียน':'ไม่มีสัญญาณ · ยุทธภพ'}</span><span>🔋 ${Math.round(P.bat)}%</span></div><div class="phb"><i style="width:${P.bat}%"></i></div>
+ <div class="phg">${PH_APPS.map(a=>`<button class="pha" ${used(a)||P.bat<a.b?'disabled':''} onclick="phoneUse('${a.id}')"><span>${a.ic}</span><b>${a.n}</b><small>${used(a)?'ใช้แล้วปีนี้':'แบต '+a.b+'%'}</small></button>`).join('')}</div>
+ <p class="tag2">${P.mg?'ดูดปราณฟ้าดินชาร์จเอง ปีละ +40%':'ชาร์จด้วยแผงโซลาร์ ปีละ +15%'} · แต่ละแอปใช้ได้ปีละ 1 ครั้ง · ใช้ไปแล้ว ${P.n} ครั้ง</p></div>`,'phone')}
+function phoneUse(id){const P=S.phone,a=PH_APPS.find(x=>x.id===id);if(!P||!a||P.u[id]===S.age||P.bat<a.b)return;P.bat-=a.b;P.u[id]=S.age;P.n++;const m=S.talent.m,ri=realmIdx();
+ switch(id){case 'wiki':{const g=R(8,16);S.int+=g;if(!gunArt('craft')&&S.world&&S.world.k==='modern'&&S.age>=10&&Math.random()<.35){gunLearn('craft','เปิดเจอบทความกลไกปืนในสารานุกรมออฟไลน์')}else log(`📚 อ่านสารานุกรมออฟไลน์เรื่อง${ch(['ฟิสิกส์','เคมี','การแพทย์','ประวัติศาสตร์','วิศวกรรม','การเกษตร'])} ปัญญา +${g}`,'good');break}
+  case 'clip':{const g=Math.round(R(30,60)*m*(1+ri*.3));S.power+=g;log(`🎬 ดูคลิปสอนศิลปะการต่อสู้จากโลกเดิมแล้วฝึกตาม พลังยุทธ์ +${fmt(g)}`,'good');break}
+  case 'map':{const g=Math.round(R(100,400)*(1+ri*.4));S.money+=g;log(`🧭 ใช้เข็มทิศนำทางไปเจอ${ch(['สมุนไพรหายาก','ซากหีบสมบัติ','ถ้ำร้างที่มีของมีค่า'])} ได้ ${fmt(g)} ตำลึง`,'good');break}
+  case 'cam':{const f=R(3,10);S.fame+=f;joy(5);log(`📷 ถ่ายรูปให้คนในเมืองดู ทุกคนตะลึงว่าภาพเหมือนจริงยิ่งกว่าภาพวาด ชื่อเสียง +${f}`,'good');break}
+  case 'music':joy(7);log('🎵 เปิดเพลงจากโลกเดิมฟังคนเดียวใต้แสงจันทร์ หัวใจสงบลง','good');break;
+  case 'game':joy(8);S.int+=1;log('🎮 เล่นเกมออฟไลน์ที่ยังเหลืออยู่ในเครื่อง หัวเราะออกมาคนเดียว','good');break;
+  case 'calc':{const g=Math.round(R(50,150)*(1+ri*.3));S.money+=g;log(`🧮 ใช้เครื่องคิดเลขคำนวณกำไรการค้า ได้เงินเพิ่ม ${fmt(g)} ตำลึง`,'good');break}}
+ try{achCheck()}catch(e){}render();if(modalOpen&&$('modal').dataset.k==='phone')openPhone()}
+{const _ui=useItem;useItem=function(i){const it=S.items[i];if(it&&it.id==='phone'&&S.phone){openPhone();return}return _ui.apply(this,arguments)}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(S&&S.phone){const g=document.querySelector('#modal .mgrid');if(g){const b=document.createElement('button');b.className='opt';b.onclick=openPhone;b.innerHTML=`📱 สมาร์ตโฟน<small>🔋 ${Math.round(S.phone.bat)}%</small>`;g.insertBefore(b,g.firstChild)}}}catch(e){}return r}}
+{const _py8=passYear;passYear=function(){const r=_py8.apply(this,arguments);try{if(S&&S.alive){if(S.phone){S.phone.bat=Math.min(100,S.phone.bat+(S.phone.mg?40:15));if(auto){const ok=PH_APPS.filter(x=>S.phone.u[x.id]!==S.age&&S.phone.bat>=x.b);if(ok.length)phoneUse(ch(ok).id)}}gunTick()}}catch(e){console.error(e)}return r}}
+{const st=document.createElement('style');st.textContent='.phn{max-width:330px;margin:0 auto;background:#111;border:4px solid #333;border-radius:26px;padding:12px 12px 10px;color:#eee}.phn .tag2{color:#aaa}.phs{display:flex;justify-content:space-between;font-size:12px;opacity:.8}.phb{height:5px;background:#333;border-radius:3px;margin:4px 0 10px;overflow:hidden}.phb i{display:block;height:100%;background:#4cd964}.phg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pha{display:flex;flex-direction:column;align-items:center;gap:2px;background:#222;border:1px solid #444;border-radius:14px;padding:8px 4px;color:#eee;cursor:pointer}.pha span{font-size:26px}.pha b{font-size:11px;line-height:1.2}.pha small{font-size:10px;opacity:.6}.pha:disabled{opacity:.35;cursor:default}';document.head.appendChild(st)}
+// ความสำเร็จใหม่
+{const add=(cat,arr)=>{const c=ACH.find(x=>x[0]===cat);if(!c)return;arr.forEach(a=>{if(ACH_ALL.some(b=>b.id===a.id))return;const zi=c[1].findIndex(b=>b.id==='z_all');if(zi>=0)c[1].splice(zi,0,a);else c[1].push(a);ACH_ALL.push(a)})};
+ add('กำเนิด',[{id:'b_billion',n:'หนึ่งในพันล้าน',d:'เกิดด้วยโอกาส 1 ในพันล้านหรือยากกว่า',r:6,c:()=>S.odds<=1e-9}]);
+ add('ผู้ข้ามมิติ',[{id:'ow_phone',n:'สัญญาณหาย แต่แบตยังเหลือ',d:'ข้ามมิติมาพร้อมสมาร์ตโฟนที่ยังใช้ได้',r:1,c:()=>!!S.phone},{id:'ow_phone20',n:'ติดมือถือข้ามภพ',d:'ใช้แอปในสมาร์ตโฟนครบ 20 ครั้งในชาติเดียว',r:2,c:()=>S.phone&&S.phone.n>=20},
+  {id:'ow_gun',n:'ดินปืนในยุทธภพ',d:'ได้วรยุทธ์ระดับพิเศษสายปืน',r:2,c:()=>!!(gunArt('craft')||gunArt('shoot'))},{id:'ow_gunboth',n:'คลังแสงเดินได้',d:'มีทั้งศาสตร์สร้างปืนและวิชากระสุนในชาติเดียว',r:3,c:()=>!!(gunArt('craft')&&gunArt('shoot'))},
+  {id:'ow_gunpeak',n:'เทพปืนไร้เทียมทาน',d:'ฝึกวรยุทธ์สายปืนจนถึงระดับสุดยอด',r:4,c:()=>(S.arts||[]).some(a=>a&&a.gun&&(a.lv||0)>=3)}]);
+ add('??? — เหนือตำนาน',[{id:'z_eternal',n:'ความเป็นอมตะ',d:'บรรลุเซียนอมตะและมีชีวิตอยู่เกิน 500 ปี',r:6,c:()=>!!S.flags.xImm&&S.age>=500}])}
+try{Object.assign(I18N.d,{'สมาร์ตโฟน':'Smartphone','ไม่มีสัญญาณ':'No signal','สารานุกรมออฟไลน์':'Offline encyclopedia','คลิปสอนต่อสู้':'Fighting tutorials','เข็มทิศ':'Compass','แผนที่':'Map','กล้องถ่ายรูป':'Camera','เพลงจากโลกเดิม':'Music from home','เกมออฟไลน์':'Offline games','เครื่องคิดเลข':'Calculator','ใช้แล้วปีนี้':'Used this year','แบต':'Battery','ศาสตร์สร้างอาวุธปืน':'Art of Gunsmithing','ศาสตร์หลอมปืนวิญญาณ':'Spirit Gun Forging','วิชากระสุนแทนกระบี่':'Bullets Instead of Blades','วิชากระสุนปราณทะลวงฟ้า':'Qi Bullet Sky-Piercer','สายปืน':'Gun path','พิเศษ':'Special','หนึ่งในพันล้าน':'One in a Billion','ความเป็นอมตะ':'Immortality','เทพปืน':'Gun God'})}catch(e){}
 </script>
 </body>
 </html>
