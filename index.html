@@ -390,8 +390,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='11.0';
+const VERSION='11.1';
 const CHANGELOG=[
+ {v:'11.1',d:'8 พ.ย. 2026',l:['🔄 รีเฟรชเว็บหรือกดโหลดอัปเดตใหม่ระหว่างเล่น จะกลับมาเล่นต่อที่เดิมทันที ไม่เด้งไปหน้าแรก — จำความเร็ว โหมดอัตโนมัติ และการหยุดเกมไว้ด้วย']},
  {v:'11.0',d:'8 พ.ย. 2026',l:['🐾 ชีวิตสัตว์อสูรใหม่ทั้งหมด: เหตุการณ์เฉพาะแต่ละสายพันธุ์ — จิ้งจอกงอกหางทีละหาง · งูขาวลอกคราบ/จำศีล · กระเรียนอพยพ/ร่ายรำ · พยัคฆ์ชิงอาณาเขตจนลาย王ขึ้นหน้าผาก · เต่าดำหลับยาวหลายปี · ปลาคาร์ปพยายามกระโดดข้ามประตูมังกร · วานรขโมยลูกท้อเซียน · หมาป่าชิงจ่าฝูง','📖 เรื่องยาวต่อเนื่องทั้งชีวิต: ศัตรูคู่แค้นประจำป่าจนถึงศึกตัดสิน · นายพรานที่ตามล่าคุณ · คู่ชีวิต ลูกๆ ลืมตาดูโลกและออกจากรัง · หมู่บ้านที่บูชาคุณเป็นเทพขุนเขาหรือจ้างนักล่ามาฆ่า','🌲 ข้อความประจำปีผสมกันได้หลายพันแบบตามฤดู เวลา อากาศ ธาตุ ขั้นพลัง และอ้างถึงเรื่องที่เคยเกิดในชีวิตนี้ ("ผ่านที่เดิมที่เคย... เมื่อ 12 ปีก่อน")','🐾 สัตว์ที่ยังไม่แปลงกายเข้าสำนัก ตลาด เมือง ดันเจี้ยนไม่ได้แล้ว (สมเหตุสมผลขึ้น) · ตายแบบสัตว์มีข้อความของสัตว์','💭 คำถาม "กำลังคิดอะไรอยู่" ตามอายุ กด "ไม่ต้องถามอีก" ได้ (เปิดใหม่ได้ที่เมนู ☰)','🔍 ซูมหน้าจอบนมือถือได้แล้ว']},
  {v:'10.7',d:'8 พ.ย. 2026',l:['💬 แชทโลก: ข้อความของเราอยู่ฝั่งขวาเป็นกรอบสีชมพู ข้อความคนอื่นอยู่ซ้าย ดูง่ายขึ้นว่าเราพิมพ์อะไรไป']},
  {v:'10.6',d:'8 พ.ย. 2026',l:['💾 ขออภัย! เซฟที่หายไปจากหน้าแรกตั้งแต่อัปเดต v10.3 ยังอยู่ในเครื่องครบ — ตอนนี้กลับมาแสดงแล้ว (ต้นเหตุคือเกมซ่อนเซฟจากเวอร์ชันที่มันไม่รู้จัก)','🗂️ คลังสำรอง: ช่องเซฟเต็มหรือกดลบ ชีวิตเดิมจะย้ายไปคลังสำรอง กู้คืนได้ (เดิมเขียนทับทิ้งเงียบๆ) · ช่องเซฟเพิ่มเป็น 5 ช่อง','🛟 ทุกช่องมีสำเนาสำรองในเครื่อง ถ้าเซฟหลักเสียหายจะโหลดจากสำเนาแทน · โหลดพังจะไม่ลบอะไรทิ้ง','☁️ กู้จากเซิร์ฟเวอร์: ปุ่มใหม่ที่หน้าแรก ดึงเซฟอัตโนมัติบนคลาวด์ของเครื่องนี้กลับมาลงช่องว่าง · คลาวด์เก็บแยกตามช่องแล้ว ไม่ทับกัน']},
@@ -6721,7 +6722,14 @@ function blYearEvent(){const m=S.beastMode,M=blM();M.evL=M.evL||{};const L=M.evL
 // ---------- สถานะการเล่นสำหรับหน้าผู้ดูแล (ส่งไปกับ ping) ----------
 window._lastIn=Date.now();window._lastYr=0;window._errT=[];window._errM='';
 ['pointerdown','keydown','touchstart','wheel'].forEach(ev=>document.addEventListener(ev,()=>{window._lastIn=Date.now()},{passive:true,capture:true}));
-window.addEventListener('error',e=>{window._errT.push(Date.now());window._errM=String(e.message||'').slice(0,80)});
+window.addEventListener('error',e=>{window._errT.push(Date.now());window._errM=(String(e.message||'').slice(0,90)+(e.lineno?' @'+e.lineno+':'+e.colno:''));jsErrSend(e.message,e.error&&e.error.stack,e.lineno,e.colno)});
+window.addEventListener('unhandledrejection',e=>{const r=e.reason||{};jsErrSend('Promise: '+(r.message||r),r.stack,0,0)});
+const _jsSent=new Set();let _jsN=0;
+function jsErrSend(msg,stack,ln,col){try{msg=String(msg||'').slice(0,200);if(!msg||_jsN>=6||_jsSent.has(msg))return;_jsSent.add(msg);_jsN++;if(typeof onlineOK!=='undefined'&&!onlineOK)return;
+ const st=String(stack||'').split('\n').slice(0,4).map(x=>x.trim().replace(/https?:\/\/[^/]+\//,'')).join(' | ').slice(0,400);
+ const c={sc:(document.querySelector('.screen.on')||{}).id||'',md:modalOpen?($('modal').dataset.k||''):'',ch:choice&&choice._cur?String(choice._cur.title||'').replace(/<[^>]+>/g,'').slice(0,40):''};
+ if(S){c.ag=S.age;c.fo=S.focus;c.w=S.beastMode&&!S.beastMode.human?'b':S.xt?'g':S.xian?'x':'m';c.al=S.alive?1:0}
+ api('jserr',{m:msg,s:st,l:ln||0,c:col||0,v:VERSION,x:c}).catch(()=>{})}catch(e){}}
 {const _ce=console.error.bind(console);console.error=function(...a){try{window._errT.push(Date.now());const x=a.find(v=>v&&v.message)||a[0];window._errM=String(x&&x.message||x||'').slice(0,80)}catch(e){}return _ce(...a)}}
 {const _pyA=passYear;passYear=function(){window._lastYr=Date.now();return _pyA.apply(this,arguments)}}
 function actSnap(){const n=Date.now(),sc=(document.querySelector('.screen.on')||{}).id||'',md=modalOpen?($('modal').dataset.k||'อื่นๆ'):'';window._errT=window._errT.filter(t=>n-t<600000);
@@ -6731,6 +6739,19 @@ function actSnap(){const n=Date.now(),sc=(document.querySelector('.screen.on')||
 // แท็บซ่อนอยู่ก็ยังรายงานทุก 4 นาที และแจ้งทันทีตอนสลับแท็บ
 setInterval(()=>{if(document.hidden&&Date.now()-(window._lastPing||0)>=240000)onlinePing()},60000);
 document.addEventListener('visibilitychange',()=>{if(Date.now()-(window._lastPing||0)>15000)onlinePing()});
+
+// ---------- รีเฟรชเว็บ/มีอัปเดต แล้วกลับมาเล่นต่อที่เดิม ----------
+function resumeMark(){try{if(S&&S.alive&&S.slot&&$('game').classList.contains('on'))LS.set('murim_resume',{slot:S.slot,t:Date.now(),sp:speed,au:auto?1:0,pa:paused&&!(typeof _awayPaused!=='undefined'&&_awayPaused)?1:0})}catch(e){}}
+function resumeClear(){try{LS.del('murim_resume')}catch(e){}}
+{const _sgR=saveGame;saveGame=function(){const r=_sgR.apply(this,arguments);resumeMark();return r}}
+{const _ttR=toTitle;toTitle=function(){resumeClear();return _ttR.apply(this,arguments)}}
+{const _lgR=loadGame;loadGame=function(){const r=_lgR.apply(this,arguments);resumeMark();return r}}
+['pagehide','beforeunload'].forEach(ev=>window.addEventListener(ev,()=>{try{if(S&&S.alive&&$('game').classList.contains('on'))saveGame()}catch(e){}}));
+(function(){try{const r=LS.get('murim_resume',null);if(!r||!r.slot)return;if(Date.now()-(r.t||0)>7*86400e3){resumeClear();return}
+ const d=readSave(r.slot);if(!d||!d.S||d.S.alive===false){resumeClear();return}
+ loadGame(r.slot);if(!S||!S.alive)return;
+ if([0,1,2,4,8,16].includes(r.sp))speed=r.sp;auto=!!r.au;if(r.pa)paused=true;render();
+ toast('▶ กลับมาเล่นต่อจากที่ค้างไว้')}catch(e){console.warn('resume failed',e)}})();
 </script>
 </body>
 </html>
