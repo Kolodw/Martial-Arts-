@@ -390,8 +390,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='10.2';
+const VERSION='10.3';
 const CHANGELOG=[
+ {v:'10.3',d:'8 พ.ย. 2026',l:['⬆️ เควสอัปเกรดอาวุธ/ชุดเกราะ มีปุ่มอัปเกรดตรงในหน้าระบบ ไม่ต้องหาเองว่าต้องไปไหน','🔨 ตีบวกอาวุธและชุดเกราะชั้นสูงสุดได้ถึง +10 ที่ตลาด — ซื้อจนเต็มชั้นแล้วก็ยังอัปเกรดต่อได้ · ไม่มีเควสอัปเกรดค้างที่ทำไม่ได้อีก','⚡ โลกเทพ: ไม่โดนเรียกข้ามทัณฑ์สวรรค์อีก จนกว่าจะถึงนิรันดร์ขั้นเก้า และเลือกไม่ข้ามแล้วเล่นต่อได้','💞 แต่งงานตอนอายุมาก คู่ชีวิตไม่ตายทันทีแล้ว — อายุคู่สมเหตุผล และอายุยืนตามขั้นพลังของคุณ','🃏 การ์ดคืนชีพถูกใช้ก่อนเสมอเมื่อตาย และถ้าตายเพราะแก่ จะต่ออายุได้จริงแม้ชนเพดานอายุของโลก']},
  {v:'9.8',d:'8 พ.ย. 2026',l:['📖 วิชาเพิ่มหลายพันแบบ: ประเภทอาวุธ/ท่า 24 แบบ (พลอง แส้ พัด ขวาน ง้าว หอก ธนู เข็ม กรงเล็บ ลูกเตะ ฯลฯ) และชื่อท่าใหม่ทุกสาย','✨ วิชาพิเศษ 110 วิชา 12 แขนง: 👁️ เนตร (มองไกล เห็นสมบัติ/ภัยซุ่ม ตรวจจับภัยเงา) · 💨 ตัวเบา · 🌫️ ซ่อนปราณ · 💚 ฟื้นฟู · 🛡️ กายา · 🧘 จิต · 🎵 เสียง · ☠️ พิษ · 🌸 เสน่ห์ · 🔯 ค่ายกล · 👻 วิญญาณ · 🐉 อัญเชิญ — แต่ละแขนงมีผลจริงในเกม','🔮 รวมวิชา: หลอมวิชาที่ฝึกถึงระดับกลาง 2–3 วิชาเป็นวิชาใหม่ในชื่อของตัวเอง พลังไม่ลด มีโอกาสได้ระดับสูงขึ้น และได้ความสามารถพิเศษของทุกวิชาที่รวม','⚡ เว็บลื่นขึ้น: ไฟล์เซฟเล็กลงมาก (ภาพในอัลบั้มบีบอัดใหม่) เซฟเร็วขึ้นและพื้นที่เครื่องไม่เต็มง่าย','🐛 แก้พลังในแดนเทพ (อายุเกิน 1,000 ปี) ที่โตแบบทวีคูณจนตัวเลขระเบิด','🐛 แก้ฉายาที่ยาวล้นจอมือถือ และคำศัพท์ฝั่งยุทธภพที่หลุดไปโผล่ในโลกเซียน']},
  {v:'9.3',d:'8 พ.ย. 2026',l:['🐾 สัตว์อสูรพิกเซลใหม่ ละเอียดขึ้น 2 เท่า: มีเส้นขอบ แสงเงา และท่าเดินขยับได้ · แต่ละพันธุ์มีลักษณะเฉพาะ เช่น ลายพยัคฆ์ จุดเสือดาว แผงคอสิงโต เขากวาง งวงช้าง นอแรด แม่เพรียงงูเห่า หนวดมังกร ขาแมงมุม ปีกผีเสื้อ ครีบฉลาม · สัตว์ระดับสูงมีออร่าและประกายธาตุวนรอบตัว','🦊 เกิดเป็นสัตว์อสูร: รูปในแถบสถานะ แผงตัวละคร และรูปโปรไฟล์ในแชทเป็นสัตว์จริงแล้ว ไม่ใช่คน · แถบสถานะแสดงขั้นการบำเพ็ญแบบสัตว์ (ลูกสัตว์ → อสูรพันปี) พร้อมระดับย่อย พันธุ์ และธาตุ · ตัวในฉากใหญ่ขึ้นสมส่วนกับคน','❓ การสอนใหม่: แนะนำระดับขั้น ตัวเลือกที่ย่อไว้ เควส ระบบ และแผงตัวละคร/ทางลัดบนคอม','📘 คู่มือระบบสำคัญ 13 หัวข้อ เปิดได้จากเมนูทั้งตอนเล่นและหน้าแรก พร้อมปุ่มพาไปหน้านั้นทันที','🐛 แก้หน้าต่างอื่นเด้งซ้อนทับระหว่างการสอน','🐛 แก้รูปโปรไฟล์ของสัตว์อสูรที่ว่างเปล่าหรือหลุดกรอบ']},
  {v:'9.1',d:'8 พ.ย. 2026',l:['⭐ ระดับขั้นใหม่: ทุกขั้นแบ่งเป็น ระดับต่ำ → กลาง → สูง → ใกล้เลื่อนขั้น → สมบูรณ์ (รอทะลวง) · เหนือขั้นสูงสุดมีชั้น เทพ → ราชา → บรรพกาล → ราชัน → นิรันดร์ ชั้นละ 9 ขั้น รวม 45 ขั้น พร้อมออร่าตอนก้าวข้ามชั้น','🔥 ธาตุไฟเข้าแทรก: ทะลวงขั้นล้มเหลวมีโอกาสโดนธาตุไฟเข้าแทรกตามค่าสถานะ (ปัญญา ความสุข พรสวรรค์) — เบาๆ เสียพลังเล็กน้อย หนักๆ เสียเส้นลมปราณ ร้ายสุดถึงตาย','⏳ ผู้หวนคืน: ตายแล้วมีโอกาส 25% ย้อนเวลากลับไปตอนเด็กหรือไปลืมตาในร่างคนอื่นพร้อมความทรงจำ · ถ้าถูกฆ่าหรือหักหลังจะได้ภารกิจล้างแค้นข้ามชาติ ทำไม่ทันชะตาเดิมจะวนกลับมา','🌑 ภัยเงาในโลกเทพเซียน: ศัตรูปริศนาที่ซ่อนตัวจ้องเอาชีวิต ต้องใช้ปัญญาและประสาทสัมผัสจับให้ได้ก่อนมันลงมือ ไม่งั้นอาจถูกฆ่าโดยไม่รู้ตัว · ถ้าฆ่าไม่ตาย ผู้อยู่เบื้องหลังจะมาล้างรากเหง้า','🏆 ก่อนเกิดใหม่ถามว่าจะซ่อนหรือเปิดข้อมูลชีวิตในทำเนียบ (เปิดสาธารณะ · ซ่อนรายละเอียด · ซ่อนทั้งหมด) ติ๊กให้จำไว้ได้ และเปลี่ยนได้ตลอดที่สุสาน','🐛 แก้ไทม์ไลน์ชีวิตตอนจบที่บันทึกเหตุการณ์เดียวกันซ้ำสองบรรทัด']},
@@ -792,7 +793,7 @@ const artBonus=()=>Math.round(S.arts.reduce((s,a)=>s+a.b*artM(a),0)*(S.clan&&S.c
 const total=()=>gv('weapon')+eqA('pow')+S.power+S.qi*12+artBonus()+(has('axe')?80:0)+(S.done.includes('powder')?150:0);
 const LIFE_B=[0,3,6,10,20,40,70,100];
 function lifeMax(){const v=lifeMax0();return S&&S.ch==='short'?Math.min(30,v):v}
-function lifeMax0(){if(S&&S.beastMode)return Math.min(S.xian?1200:600,S.lifespan+40);const ri=realmIdx(),tc=S.sys?(S.sys.tc||0):0;return Math.min((S.xian?(S.xt?(ri>=7?1000:800):(ri>=7?480:380)):(ri>=7?200:150))+tc*4,S.lifespan+LIFE_B[ri]+Math.min(15,S.qi*.1)+tc*3)}
+function lifeMax0(){if(S&&S.beastMode)return Math.min(S.xian?1200:600,S.lifespan+40);const ri=realmIdx(),tc=S.sys?(S.sys.tc||0):0;return Math.min((S.xian?(S.xt?(ri>=7?1000:800):(ri>=7?480:380)):(ri>=7?200:150))+tc*4+(S.rvL||0),S.lifespan+LIFE_B[ri]+Math.min(15,S.qi*.1)+tc*3)}
 function rawRealm(){const p=total();let i=0;REALMS.forEach((r,k)=>{if(p>=r.p)i=k});return i}
 function realmIdx(){let i=rawRealm();if(S&&S.rcap!=null&&!S.beastMode)i=Math.min(i,S.rcap);return i}
 const rankName=()=>S.faction?RANKS[S.faction.t][S.rank]:'';
@@ -1568,8 +1569,8 @@ function checkDeath(){
  else if(S.age>=lifeMax())cause='จากไปอย่างสงบด้วยวัยชรา'+(S.kids?' ท่ามกลางลูกหลาน':'');
  if(!cause)return false;
  try{if(ndSys(cause))return false}catch(e){console.error(e)}
+ if(S.sys&&S.sys.revive>0&&!S.flags.ascended){S.sys.revive--;S.hp=S.maxHp;S.deathCause=null;S.chronic=null;if(/วัยชรา/.test(cause)){S.lifespan+=12;S.rvL=(S.rvL||0)+12}S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) — ร่างกายฟื้นคืนสมบูรณ์`,'up');setScene('system');return false}
  try{if(typeof regTry==='function'&&regTry(cause))return false}catch(e){console.error(e)}
- if(S.sys&&S.sys.revive>0&&!S.flags.ascended){S.sys.revive--;S.hp=S.maxHp;S.deathCause=null;S.chronic=null;if(/วัยชรา/.test(cause))S.lifespan+=12;S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) — ร่างกายฟื้นคืนสมบูรณ์`,'up');setScene('system');return false}
  flushReveal();S.alive=false;S.cause=cause;saveLegacy();clearSave();setScene('death');setTimeout(()=>sfx('death'),300);log(`🪦 ${cause}`,'bad');
  setTimeout(()=>{modal(`<h3>ลาก่อน ${esc(S.name)}</h3><p>${cause} ในวัย ${S.age} ปี<br>อยากบอกอะไรกับคนคนนี้เป็นครั้งสุดท้าย?</p><input class="ta" id="byeIn" maxlength="80" placeholder="คำอำลาสุดท้าย"><button class="pbtn" style="width:100%" onclick="endGame()">อำลา</button>`,'bye')},900);
  return true;
@@ -1680,7 +1681,7 @@ function inherit(ci){
   power:fam.power+R(0,15),int:R(10,25)+Math.round(P.int*.1),money:fam.money,karma:fam.karma,fame:Math.round(P.fame*.3),
   gen:P.gen+1,lineage:P.lineage.concat([{n:P.name,e:P.epithet,a:P.age}])});
  if(heirArt)Array.prototype.push.call(S.arts,{...heirArt,heir:1});
- S.gear=Object.assign({},P.gear||{});if(Object.keys(S.gear).length)S._gearInh=1;
+ S.gear=Object.assign({},P.gear||{});S.gup=Object.assign({},P.gup||{});if(Object.keys(S.gear).length)S._gearInh=1;
  {const fr=rollTraits().list;const good=(P.traits||[]).filter(x=>!trOf(x).bad);if(good.length&&Math.random()<.3){const x=ch(good);if(!fr.includes(x))fr.push(x)}S.traits=fr;applyTraitsStart()}
  S.heirParents=[{n:P.name,title:ptitle,role:P.gender==='หญิง'?'แม่':'พ่อ',g:P.gender,age:P.age,life:P.age,alive:false,p:'ผู้ล่วงลับ',rel:80}];
  if(P.sp&&P.spouse)S.heirParents.push({n:P.sp.n,role:P.gender==='หญิง'?'พ่อ':'แม่',g:P.gender==='หญิง'?'ชาย':'หญิง',age:Math.max(20,P.sp.age-P.age+28),life:Math.max(45,P.sp.life-P.age+28),alive:true,p:P.sp.p,rel:75});
@@ -1717,7 +1718,15 @@ const GEAR={
  house:[{id:'h1',n:'บ้านไม้หลังเล็ก',c:2000,v:4,inc:0},{id:'h2',n:'คฤหาสน์ในเมือง',c:10000,v:8,inc:300},{id:'h3',n:'จวนใหญ่ริมทะเลสาบ',c:40000,v:12,inc:1000}]};
 const SLOT_N={weapon:'⚔️ อาวุธ',armor:'🛡️ ชุดเกราะ',mount:'🐎 พาหนะ',house:'🏠 ที่อยู่อาศัย'};
 const gearOf=k=>S.gear&&S.gear[k]?GEAR[k].find(x=>x.id===S.gear[k]):null;
-const gv=(k,f='v')=>{const g=gearOf(k);return g?g[f]||0:0};
+const GUP_MAX=10,gupLv=k=>(S.gup&&S.gup[k])||0,gearTop=k=>{const g=gearOf(k);return!!g&&GEAR[k].indexOf(g)===GEAR[k].length-1};
+const gv=(k,f='v')=>{const g=gearOf(k);if(!g)return 0;const b=g[f]||0,u=(k==='weapon'||k==='armor')?gupLv(k):0;if(!u)return b;return f==='v'?Math.round(b*(1+.15*u)):f==='red'?Math.min(.55,b+.015*u):b};
+const gupCost=k=>Math.round(GEAR[k][GEAR[k].length-1].c*(.25+.1*gupLv(k))/10)*10;
+function gearNext(){const o=[];for(const k of['weapon','armor']){const cur=gearOf(k),i=cur?GEAR[k].indexOf(cur):-1;if(i<GEAR[k].length-1){const nx=GEAR[k][i+1];o.push({k,t:'buy',id:nx.id,c:Math.max(0,nx.c-(cur?Math.round(cur.c*.4):0)),n:nx.n})}else if(gupLv(k)<GUP_MAX)o.push({k,t:'up',c:gupCost(k),n:`${cur.n} +${gupLv(k)+1}`})}return o.sort((a,b)=>a.c-b.c)[0]||null}
+function gupDo(k,silent){if(!gearTop(k)||gupLv(k)>=GUP_MAX)return false;const c=gupCost(k);if(S.money<c){if(!silent)toast('เงินไม่พอ');return false}S.money-=c;S.gup=S.gup||{};S.gup[k]=gupLv(k)+1;sfx('good');log(`🔨 ช่างตีบวก<b>${gearOf(k).n}</b>ขึ้นเป็น <b>+${S.gup[k]}</b>`,'good');return true}
+function gearQuick(){const n=gearNext();if(!n){toast('อาวุธและชุดเกราะอัปเกรดเต็มแล้ว');return}if(S.money<n.c){toast(`ต้องใช้ ${fmt(n.c)} ตำลึง (มี ${fmt(S.money)})`);return}
+ if(n.t==='buy'){const cur=gearOf(n.k),it=GEAR[n.k].find(x=>x.id===n.id);S.money-=it.c;if(cur)S.money+=Math.round(cur.c*.4);S.gear=S.gear||{};S.gear[n.k]=n.id;sfx('good');log(`🛒 ${cur?`ขาย${cur.n}แล้ว`:''}ซื้อ <b>${it.n}</b>`,'good')}else gupDo(n.k);
+ render();try{openSys()}catch(e){}}
+function gupRow(k){if(!gearTop(k))return'';const u=gupLv(k);return`<div class="item"><div class="h"><b>🔨 ตีบวก${gearOf(k).n} +${u}${u<GUP_MAX?` → +${u+1}`:' (สูงสุด)'}</b>${u<GUP_MAX?`<button onclick="if(gupDo('${k}'))render(),openMarket()" ${S.money>=gupCost(k)?'':'disabled style="opacity:.4"'}>${fmt(gupCost(k))}</button>`:''}</div><p>ของชั้นสูงสุดแล้ว ตีบวกต่อได้ถึง +${GUP_MAX} · ${k==='weapon'?'พลังอาวุธ':'พลังชีวิตจากเกราะ'} +15% ต่อขั้น${k==='armor'?' · เจ็บน้อยลงอีก 1.5%':''} · นับเป็นเควสอัปเกรด</p></div>`}
 function buyGear(k,id){const it=GEAR[k].find(x=>x.id===id),cur=gearOf(k);if(S.money<it.c){toast('เงินไม่พอ');return}
  S.money-=it.c;S.gear=S.gear||{};S.gear[k]=id;sfx('good');
  log(`🛒 ${cur?`ขาย${cur.n}แล้ว`:''}ซื้อ <b>${it.n}</b>${k==='house'?' — ย้ายเข้าบ้านใหม่ ทั้งครอบครัวดีใจ':''}`,'good');
@@ -1734,13 +1743,13 @@ function investTick(){if(!S.invest||S.age<S.invest.y)return;const c=S.invest.c,r
  else if(r<.9){const g=inc(Math.round(c*(1.4+Math.random()*.8)));S.money+=g;log(`💼 กองคาราวานกลับมาพร้อมกำไร ได้ ${fmt(g)} ตำลึง`,'good')}
  else{const g=inc(c*4);S.money+=g;S.fame+=15;log(`💼 ค้าขายครั้งประวัติศาสตร์! ได้ ${fmt(g)} ตำลึง`,'epic')}}
 function openMarket(){
- const sec=k=>`<h4 style="margin:10px 0 6px">${SLOT_N[k]} <span class="tag2">${gearOf(k)?'ใช้อยู่: '+gearOf(k).n:'ยังไม่มี'}</span></h4>`+GEAR[k].map(it=>{const own=S.gear&&S.gear[k]===it.id,cur=gearOf(k),lower=cur&&GEAR[k].indexOf(cur)>=GEAR[k].indexOf(it);
+ const sec=k=>`<h4 style="margin:10px 0 6px">${SLOT_N[k]} <span class="tag2">${gearOf(k)?'ใช้อยู่: '+gearOf(k).n+(gupLv(k)?' +'+gupLv(k):''):'ยังไม่มี'}</span></h4>`+GEAR[k].map(it=>{const own=S.gear&&S.gear[k]===it.id,cur=gearOf(k),lower=cur&&GEAR[k].indexOf(cur)>=GEAR[k].indexOf(it);
   const eff=k==='weapon'?`พลังรวม +${it.v}`:k==='armor'?`พลังชีวิตสูงสุด +${it.v} · เจ็บน้อยลง ${it.red*100}%`:k==='mount'?`ท่องยุทธภพเจอเรื่องดีขึ้น · หนีเก่งขึ้น · ทำงานได้เงินเพิ่ม`:`ความสุข +${it.v}${it.inc?` · รายได้ ${fmt(it.inc)}/ปี · ชื่อเสียง`:''}`;
   return`<div class="item"><div class="h"><b>${it.n}${own?' ✅':''}</b>${own||lower?'':`<button onclick="buyGear('${k}','${it.id}')" ${S.money>=it.c?'':'disabled style="opacity:.4"'}>${fmt(it.c)}</button>`}</div><p>${eff}</p></div>`}).join('');
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🛒 ตลาดยุทธภพ</h3><p>💰 เงิน: <b>${fmt(S.money)}</b> ตำลึง <span class="tag2">· ของเก่าขายคืนได้ 40% เมื่อซื้อของใหม่ · ส่งต่อเป็นมรดกได้</span></p>
  <div class="mgrid"><button class="opt" onclick="marketAct('tonic')">🍵 ยาบำรุง<small>200 · พลังชีวิต +50</small></button><button class="opt" onclick="marketAct('qipill')">💊 ยาลมปราณ<small>900 · +2 ปี (ปีละ 2)</small></button>
  <button class="opt" onclick="marketAct('invest')">💼 ลงทุนกองคาราวาน<small>${S.invest?'กำลังเดินทาง...':'30% ของเงิน · เสี่ยงได้เสี่ยงเสีย'}</small></button><button class="opt" onclick="marketAct('donate')">🙏 บริจาค<small>10% ของเงิน · กรรม +8</small></button></div>
- ${sec('weapon')}${sec('armor')}${eqShopSec()}${sec('mount')}${sec('house')}`,'market');
+ ${sec('weapon')}${gupRow('weapon')}${sec('armor')}${gupRow('armor')}${eqShopSec()}${sec('mount')}${sec('house')}`,'market');
 }
 
 // ============ SLICE OF LIFE ============
@@ -1789,7 +1798,7 @@ function familyIntro(){
 }
 function syncFamily(){
  // spouse object
- if(S.spouse&&(!S.sp||S.sp.n!==S.spouse)){S.sp={n:S.spouse,p:ch(PERS_S),aff:72,age:S.age+R(-4,4),life:R(55,85),peer:S.spouseP!=null};joy(25)}
+ if(S.spouse&&(!S.sp||S.sp.n!==S.spouse)){S.sp=(()=>{const a=S.age<=60?Math.max(16,S.age+R(-4,4)):R(25,60),ri=realmIdx(),l=Math.max(R(55,85),a+R(25,45),ri>=2?Math.round(lifeMax()*R(55,85)/100):0);return{n:S.spouse,p:ch(PERS_S),aff:72,age:a,life:l,peer:S.spouseP!=null}})();joy(25)}
  if(!S.spouse&&S.sp)S.sp=null;
  // children
  S.children=S.children||[];
@@ -2173,7 +2182,7 @@ const SYS_TYPES=[
 const SYS_GRADE=[{w:70,n:'สามัญ',m:1,c:'#8fd0ff'},{w:25,n:'ทองคำ',m:1.25,c:'#ffd040'},{w:5,n:'ศักดิ์สิทธิ์',m:1.5,c:'#ff80e0'}];
 const EVO_N=['','ขั้นสูง','สมบูรณ์'];
 const houseT=()=>({h1:1,h2:2,h3:3})[S.gear&&S.gear.house]||0;
-const gearT=()=>['weapon','armor'].reduce((a,k)=>{const g=gearOf(k);return a+(g?GEAR[k].indexOf(g)+1:0)},0);
+const gearT=()=>['weapon','armor'].reduce((a,k)=>{const g=gearOf(k);return a+(g?GEAR[k].indexOf(g)+1:0)+gupLv(k)},0);
 const QV={power:()=>S.power,qi:()=>S.qi,money:()=>S.money,win:()=>S.kills,realm:()=>realmIdx(),art:()=>S.arts.length,fame:()=>S.fame,karma:()=>S.karma,karmaDown:()=>-S.karma,marry:()=>S.spouse?1:0,kid:()=>S.kids,join:()=>S.faction?1:0,rank:()=>S.rank,
  gear:()=>gearT(),house:()=>houseT(),int:()=>S.int,cha:()=>S.cha,pill:()=>S.sys.pillN||0};
 const yrPow=()=>Math.round((12*S.talent.m*(1+Math.min(S.age,100)/40)*1.4+(6+S.sys.lv*7)*S.talent.m)*(S.faction?1.2:1));
@@ -2195,7 +2204,7 @@ const QMK={
  pill:()=>{const g=R(2,4);return[`หลอมยาให้ได้ ${g} เม็ด`,g,R(3,5)]}};
 const QHINT={power:'train',qi:'qi',money:'work',win:'adv',realm:'train',art:'adv',fame:'adv',karma:'adv',karmaDown:'adv',marry:'love',kid:'love',rank:'mission',gear:'work',house:'work',int:'study',cha:'love',pill:'study'};
 const QOK={win:()=>S.age>=12,realm:()=>realmIdx()<7,marry:()=>!S.spouse&&S.age>=16,kid:()=>!!S.spouse&&S.age<50,join:()=>!S.faction&&!S.ownSect&&S.age>=8,rank:()=>S.faction&&S.rank<4,karmaDown:()=>S.age>=12,
- gear:()=>S.age>=14&&gearT()<8,house:()=>S.age>=16&&houseT()<3,pill:()=>S.age>=10};
+ gear:()=>S.age>=14&&!!gearNext(),house:()=>S.age>=16&&houseT()<3,pill:()=>S.age>=10};
 const SHOP=[
  {id:'pill',n:'ยาเม็ดเสริมพลัง',d:'พลังยุทธ์ +150 × พรสวรรค์',c:30},{id:'heal',n:'ยารักษาทุกโรค',d:'ฟื้นพลังชีวิตเต็ม หายจากโรคเรื้อรัง',c:25},
  {id:'qi',n:'ยาลมปราณร้อยปี',d:'ลมปราณ +8 ปี',c:40},{id:'art',n:'กล่องคัมภีร์ระบบ',d:'วิชาระดับล้ำเลิศขึ้นไป',c:55},
@@ -2493,7 +2502,7 @@ function openSys(){
  ${sysSpecial()}
  <h4>📜 เควสหลัก ${Math.min(s.main,L.length)}/${L.length}</h4><div class="sysq">${s.main<L.length?`<b>${L[s.main][0]}</b><br><span style="opacity:.75">ไม่มีเวลาจำกัด · รางวัล ${Math.round(250*(s.main+1)*sysM())} EXP</span>`:'✅ จบเควสหลักแล้ว'}</div>
  <h4>แต้มสถานะ: ${s.pts}</h4><div class="sysg">${statB('pow','⚔️ ยุทธ์','+'+Math.round(40*S.talent.m))}${statB('qi','🌀 ลมปราณ','+1.5')}${statB('int','📜 ปัญญา','+8')}${statB('cha','🌸 เสน่ห์','+5')}${statB('hp','❤️ ร่างกาย','+15')}</div>
- <h4>เควสรอง</h4>${s.quests.length?s.quests.map(q=>`<div class="sysq"><b>${q.n}</b>${QHINT[q.k]?` <span style="opacity:.6">· แนะนำ: ${(ALLF.find(f=>f[0]===QHINT[q.k])||['','',''])[1]} ${(ALLF.find(f=>f[0]===QHINT[q.k])||['','',''])[2]}</span>`:''}<br><span style="opacity:.75">${fmtG(+qProg(q).toFixed(1))}/${fmtG(q.g)} · เหลือ ${Math.max(0,q.dl-S.age)} ปี · ${q.rw} EXP · ${q.sp} SP</span></div>`).join(''):`<div class="sysq" style="opacity:.6">${S.age<6?'เควสจะเริ่มเมื่ออายุ 6 ปี':'ไม่มีเควสในตอนนี้ — รอระบบมอบหมาย'}</div>`}
+ <h4>เควสรอง</h4>${s.quests.length?s.quests.map(q=>`<div class="sysq"><b>${q.n}</b>${q.k==='gear'?(()=>{const n=gearNext();return n?` <button class="sysb" onclick="gearQuick()" ${S.money>=n.c?'':'disabled style="opacity:.5"'}>⬆️ ${n.t==='up'?'ตีบวก':'ซื้อ'} ${n.n} · ${fmt(n.c)}</button>`:' <span style="opacity:.6">· เต็มแล้ว</span>'})():QHINT[q.k]?` <span style="opacity:.6">· แนะนำ: ${(ALLF.find(f=>f[0]===QHINT[q.k])||['','',''])[1]} ${(ALLF.find(f=>f[0]===QHINT[q.k])||['','',''])[2]}</span>`:''}<br><span style="opacity:.75">${fmtG(+qProg(q).toFixed(1))}/${fmtG(q.g)} · เหลือ ${Math.max(0,q.dl-S.age)} ปี · ${q.rw} EXP · ${q.sp} SP</span></div>`).join(''):`<div class="sysq" style="opacity:.6">${S.age<6?'เควสจะเริ่มเมื่ออายุ 6 ปี':'ไม่มีเควสในตอนนี้ — รอระบบมอบหมาย'}</div>`}
  ${s.hid.length?`<h4>🔓 เควสลับที่ปลดล็อก</h4>${s.hid.map(id=>`<div class="sysq">${HIDQ.find(h=>h.id===id).n}</div>`).join('')}`:''}
  <h4>ร้านค้าระบบ</h4>${SHOP.filter(it=>!it.t||it.t===s.t).map(it=>{const own=it.once&&s.upgrades.includes(it.once);return `<div class="sysq" style="display:flex;justify-content:space-between;align-items:center;gap:6px"><div><b>${it.n}</b><br><span style="opacity:.75">${it.d}</span></div><button class="sysb" style="flex:0 0 auto" ${s.sp>=it.c&&!own?'':'disabled'} onclick="buySys('${it.id}')">${own?'มีแล้ว':it.c+' SP'}</button></div>`}).join('')}
  </div>`,'sys');
@@ -2629,10 +2638,10 @@ function peerLifeTick(){if(S.age<18||Math.random()>.09)return false;
   {t:'ปฏิเสธ',f(){log('คุณปฏิเสธอย่างสุภาพ')}}]);return true}
  log(`👥 ${p.name} ${rel} มีลูกคนแรกแล้ว`);return false}
 // ---- 11. ทัณฑ์สวรรค์ / เหาะเป็นเซียน ----
-function ascendTick(){if(realmIdx()<7||S.flags.ascendNo>=2||S.age<20||Math.random()>.25)return false;const toX=!S.xian;
- choice('⚡ ทัณฑ์สวรรค์','เมฆดำก่อตัวเหนือศีรษะ สายฟ้าสีม่วงคำรามไม่หยุด — ร่างกายของคุณถึงขีดสุดของโลกมนุษย์แล้ว<br>'+(toX?'ฝ่าทัณฑ์สวรรค์ 3 ระลอกได้ จะ<b>เหาะขึ้นสู่โลกเทพเซียน</b> แล้วเล่นต่อในโลกใหม่ · ล้มเหลว อาจตาย':'ฝ่าทัณฑ์สวรรค์ 3 ระลอกได้ จะ<b>บรรลุเป็นเซียนอมตะ</b> (ตอนจบสูงสุด) · ล้มเหลว อาจตาย'),[
-  {t:'⚡ ฝ่าทัณฑ์สวรรค์',s:toX?'ไปต่อในโลกเทพเซียน':'ตอนจบสูงสุด',f(){ascendWave(1)}},
-  {t:'🌏 อยู่ปกป้องโลกมนุษย์ต่อ',skip:true,f(){S.flags.ascendNo=(S.flags.ascendNo||0)+1;S.karma+=5;log('คุณกดเมฆทัณฑ์ให้สลายไป "ข้ายังมีคนที่ต้องดูแลอยู่ที่นี่"','epic')}}]);return true}
+function ascendTick(){if(realmIdx()<7||S.flags.ascendNo>=2||S.age<20||Math.random()>.25)return false;if(S.xt&&postLv()<RS_MAX)return false;const toX=!S.xian;
+ choice('⚡ ทัณฑ์สวรรค์','เมฆดำก่อตัวเหนือศีรษะ สายฟ้าสีม่วงคำรามไม่หยุด — ร่างกายของคุณถึงขีดสุดของ'+(S.xt?'ทุกชั้นแห่งโลกเทพ (นิรันดร์ขั้นเก้า)':S.xian?'โลกเซียน':'โลกมนุษย์')+'แล้ว<br>'+(toX?'ฝ่าทัณฑ์สวรรค์ 3 ระลอกได้ จะ<b>เหาะขึ้นสู่โลกเทพเซียน</b> แล้วเล่นต่อในโลกใหม่ · ล้มเหลว อาจตาย':S.xt?'ฝ่าทัณฑ์สวรรค์ 3 ระลอกได้ จะ<b>ก้าวข้ามสามภพ</b> — ปิดตำนานชีวิตนี้ (ตอนจบสูงสุด) · ไม่ฝ่าก็เล่นต่อได้ตามปกติ':'ฝ่าทัณฑ์สวรรค์ 3 ระลอกได้ จะ<b>ขึ้นสู่โลกเทพ</b> · ล้มเหลว อาจตาย'),[
+  {t:'⚡ ฝ่าทัณฑ์สวรรค์',s:toX?'ไปต่อในโลกเทพเซียน':S.xt?'ตอนจบสูงสุด':'ไปต่อในโลกเทพ',f(){ascendWave(1)}},
+  {t:S.xt?'🌏 ยังไม่ก้าวข้าม ใช้ชีวิตต่อ':S.xian?'🌏 อยู่ในโลกเซียนต่อ':'🌏 อยู่ปกป้องโลกมนุษย์ต่อ',skip:true,f(){S.flags.ascendNo=(S.flags.ascendNo||0)+1;S.karma+=5;log('คุณกดเมฆทัณฑ์ให้สลายไป "ข้ายังมีคนที่ต้องดูแลอยู่ที่นี่"','epic')}}]);return true}
 function ascendWave(n){const W=['อัสนีเก้าสาย','เพลิงสวรรค์เผาจิต','มารในใจครั้งสุดท้าย'];
  if(n>3&&!S.xian){S.flags.ascendNo=0;log('☁️ เมฆทัณฑ์แตกออก แสงทองสาดลงมาจากฟ้า ร่างของคุณลอยขึ้นสู่สวรรค์ท่ามกลางสายตาผู้คนนับหมื่น','myth',true);ascendToX();return}
  if(n>3&&S.xian&&!S.xt){S.flags.xImm=1;log('☁️ ทัณฑ์สวรรค์ครั้งสุดท้ายแห่งโลกเซียนสลายไป — เบื้องบนยังมีโลกที่สูงกว่า','myth',true);ascendGod();return}
