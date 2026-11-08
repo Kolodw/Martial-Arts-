@@ -73,6 +73,12 @@ module.exports = async (req, res) => {
       const rows = (ids || []).map((x, i) => { let m = null; try { m = JSON.parse(metas[i]) } catch {} return { id: x.slice(0, 4) + '…', d: m ? m.d : '-', b: m ? m.b : '-', o: m ? m.o : '-', c: m ? m.c : '-', ago: m ? Math.round((now - m.t) / 1000) : null } });
       if (a === 'who') return res.json({ n: rows.length, rows });
       const [lives, bl, done, rv] = await pipe([['GET', 'lives'], ['LRANGE', 'bugs2', 0, 49], ['SMEMBERS', 'bugdone'], ['HLEN', 'reviews']]);
+      const tday = new Date(now + 7 * 3600e3).toISOString().slice(0, 10), TP = [['chat', 'แชทโลก'], ['live', 'ดูคนอื่นเล่น'], ['spec', 'เปิดดูผู้เล่น'], ['board', 'ทำเนียบ'], ['arena', 'ประลองเงา'], ['me', 'ตั้งชื่อ']];
+      const td = []; for (let i = 0; i < 7; i++) td.push(new Date(now + 7 * 3600e3 - i * 86400e3).toISOString().slice(0, 10));
+      const tops = []; td.forEach(d => { tops.push(['HGETALL', 'trk:' + d], ['SCARD', 'trku:' + d]); TP.forEach(p => tops.push(['SCARD', 'trku:' + d + ':' + p[0]])) }); tops.push(['LRANGE', 'trklog', 0, 39]);
+      const tr = await pipe(tops); let tk = 0;
+      const trows = td.map(d => { const h = tr[tk++] || [], c = {}; for (let i = 0; i < h.length; i += 2) c[h[i]] = +h[i + 1]; const u = +tr[tk++] || 0, up = TP.map(p => (+tr[tk++] || 0)); return { d, u, c, up } });
+      const tlog = (tr[tk] || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(Boolean);
       const ds = new Set(done || []), bugs = (bl || []).map(x => JSON.parse(x));
       const e = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
       const K = encodeURIComponent(AK);
@@ -81,8 +87,36 @@ module.exports = async (req, res) => {
 <style>body{font-family:system-ui,sans-serif;background:#16131c;color:#eee;margin:0;padding:14px;max-width:760px;margin:auto}h1{font-size:20px}h2{font-size:16px;margin-top:22px;color:#f0c860}table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:6px;border-bottom:1px solid #333;text-align:left}.c{display:inline-block;background:#2a2433;border-radius:8px;padding:8px 12px;margin:4px 6px 4px 0}.c b{font-size:20px;display:block;color:#f0c860}.bug{background:#221d2a;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:14px}.bug.done{opacity:.55}a{color:#8fd0ff}small{opacity:.6}</style></head><body>
 <h1>🛡️ หน้าผู้ดูแล</h1><div><span class="c"><b>${rows.filter(r => r.b !== 'บอท').length}</b>ออนไลน์ (5 นาที)</span><span class="c"><b>${+(lives || 0)}</b>ชีวิตที่จบแล้ว</span><span class="c"><b>${bugs.length}</b>เรื่องบนกระดานบั๊ก</span><span class="c"><b>${rv || 0}</b>ความคิดเห็น</span></div>
 <h2>คนที่ออนไลน์ตอนนี้</h2><table><tr><th>รหัส</th><th>เครื่อง</th><th>เบราว์เซอร์</th><th>เข้าจาก</th><th>ประเทศ</th><th>ล่าสุด</th></tr>${rows.map(r => `<tr><td>${e(r.id)}</td><td>${e(r.d)}</td><td>${e(r.b)}</td><td>${e(r.o)}</td><td>${e(r.c)}</td><td>${r.ago == null ? '-' : r.ago + ' วิ'}</td></tr>`).join('') || '<tr><td colspan=6>ไม่มี</td></tr>'}</table>
+<h2>การเปิดหน้าออนไลน์ (7 วัน)</h2><p><small>ตัวเลข = คนไม่ซ้ำ / จำนวนครั้ง · เริ่มนับตั้งแต่ v10.2</small></p><table><tr><th>วัน</th><th>คน</th>${TP.map(p => `<th>${p[1]}</th>`).join('')}</tr>${trows.map(r => `<tr><td>${r.d.slice(5)}</td><td>${r.u}</td>${TP.map((p, i) => `<td>${r.up[i]} / ${r.c[p[0]] || 0}</td>`).join('')}</tr>`).join('')}</table>
+<h2>คลิกล่าสุด</h2><table><tr><th>รหัส</th><th>หน้า</th><th>เครื่อง</th><th>เวลา</th></tr>${tlog.map(x => `<tr><td>${e(x.u)}…</td><td>${e((TP.find(p => p[0] === x.p) || [0, x.p])[1])}</td><td>${e(x.d)}</td><td>${new Date(x.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })}</td></tr>`).join('') || '<tr><td colspan=4>ยังไม่มี</td></tr>'}</table>
 <h2>กระดานบั๊ก</h2>${bugs.map(b => `<div class="bug ${ds.has(b.i) ? 'done' : ''}">${b.k === 'idea' ? '💡' : '🐞'} <b>${e(b.n)}</b> <small>v${e(b.v)} · ${new Date(b.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })}</small><br>${e(b.x)}<br>${ds.has(b.i) ? `✅ แก้แล้ว · <a href="?a=bugfix&key=${K}&bid=${b.i}&undo=1">ยกเลิก</a>` : `<a href="?a=bugfix&key=${K}&bid=${b.i}">ติด ✅ แก้แล้ว</a>`}</div>`).join('') || '<p>ยังไม่มี</p>'}
 <p><small>หน้านี้เปิดได้เฉพาะลิงก์ที่มีรหัสผู้ดูแล อย่าแชร์ลิงก์นี้</small></p></body></html>`);
+    }
+    if (a === 'trk') {
+      const pg = String(req.query.p || '');
+      const PAGES = ['chat', 'live', 'board', 'arena', 'me', 'spec'];
+      if (!okId(id) || !PAGES.includes(pg)) return res.json({ ok: 0 });
+      const ua = String(req.headers['user-agent'] || '');
+      if (/bot|crawl|spider|headless|preview/i.test(ua)) return res.json({ ok: 0 });
+      const day = new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
+      const first = await cmd('SET', 'trl:' + id + ':' + pg, 1, 'NX', 'EX', 30);
+      if (!first) return res.json({ ok: 1 });
+      const ev = { u: id.slice(0, 4), p: pg, t: now, d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม' };
+      await pipe([['HINCRBY', 'trk:' + day, pg, 1], ['EXPIRE', 'trk:' + day, 86400 * 35], ['SADD', 'trku:' + day + ':' + pg, id], ['EXPIRE', 'trku:' + day + ':' + pg, 86400 * 35], ['SADD', 'trku:' + day, id], ['EXPIRE', 'trku:' + day, 86400 * 35], ['LPUSH', 'trklog', JSON.stringify(ev)], ['LTRIM', 'trklog', 0, 299]]);
+      return res.json({ ok: 1 });
+    }
+    if (a === 'trkget') {
+      const AK = process.env.ADMIN_KEY;
+      if (!AK || String(req.query.key || '') !== AK) return res.status(403).json({ err: 'forbidden' });
+      const PAGES = ['chat', 'live', 'board', 'arena', 'me', 'spec'], days = [];
+      for (let i = 0; i < 7; i++) days.push(new Date(now + 7 * 3600e3 - i * 86400e3).toISOString().slice(0, 10));
+      const ops = [];
+      days.forEach(d => { ops.push(['HGETALL', 'trk:' + d], ['SCARD', 'trku:' + d]); PAGES.forEach(p => ops.push(['SCARD', 'trku:' + d + ':' + p])) });
+      ops.push(['LRANGE', 'trklog', 0, 99]);
+      const r = await pipe(ops); let k = 0;
+      const out = days.map(d => { const h = r[k++] || []; const clicks = {}; for (let i = 0; i < h.length; i += 2) clicks[h[i]] = +h[i + 1]; const uniq = +r[k++] || 0; const up = {}; PAGES.forEach(p => { up[p] = +r[k++] || 0 }); return { d, uniq, clicks, up } });
+      const log = (r[k] || []).map(x => JSON.parse(x));
+      return res.json({ days: out, log });
     }
     if (a === 'chat') {
       const [list, hidden] = await pipe([['LRANGE', 'chat', 0, 79], ['SMEMBERS', 'chat:hidden']]);
