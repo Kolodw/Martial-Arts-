@@ -390,7 +390,7 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='8.5';
+const VERSION='8.6';
 const CHANGELOG=[
  {v:'8.4',d:'8 พ.ย. 2026',l:['📱 สมาร์ตโฟนข้ามมิติใช้งานได้จริง: ผู้ข้ามมิติที่ได้มือถือมาเปิดได้จากเมนู มี 7 แอป — สารานุกรม คลิปสอนต่อสู้ เข็มทิศ กล้อง เพลง เกม เครื่องคิดเลข แบตชาร์จด้วยแผงโซลาร์','🔫 วรยุทธ์ระดับพิเศษสายปืน: ศาสตร์สร้างอาวุธปืน (สร้างปืนขายและใช้เอง) และวิชากระสุนแทนกระบี่ (ยิงปืนแทนกระบี่) ฝึกได้ระดับต่ำ กลาง สูง สุดยอด · โลกเซียนเป็นปืนวิญญาณและกระสุนปราณ','🏆 ความสำเร็จใหม่: หนึ่งในพันล้าน (???) · ความเป็นอมตะ (???) · สัญญาณหาย แต่แบตยังเหลือ · ติดมือถือข้ามภพ · ดินปืนในยุทธภพ · คลังแสงเดินได้ · เทพปืนไร้เทียมทาน','🌌 ประตูมิติกดเปิดต่อได้ทันทีหรือเปิดทั้งหมดรวดเดียว ไม่ต้องกลับไปเปิดเมนูใหม่ · ได้ของติดตัวซ้ำจะแลกเป็นเงินและปัญญาแทน','🐛 แก้ของต่างโลก 3 ชิ้นที่กดใช้แล้วไม่มีผล (วิชายุทธ์จากชาติก่อน · ตำราคณิตศาสตร์มหาวิทยาลัย · แหวนเก่าที่มีวิญญาณผู้เฒ่า) และกันกดประตูมิติรัวแล้วเสียครั้งเปิดฟรี','🌐 ย้ายแถบจำนวนคนออนไลน์ไปอยู่ใต้รูปโลกในหน้าแรก ไม่ทับชื่อเกม']},
  {v:'8.1',d:'8 พ.ย. 2026',l:['📖 สมุดตำนานแบบดาว: ทำความสำเร็จเดิมซ้ำในชาติใหม่เพื่อเพิ่มดาว ★☆☆ → ★★★ (รวม 372 ดาว) · มีระดับนักบันทึก 7 ขั้น ตั้งแต่ผู้เริ่มจดบันทึกถึงผู้อยู่เหนือตำนาน · ทุกดาวใหม่ได้กรรมเข้าคลังไว้แลกกรอบ','🏷️ ระบบฉายา: กว่า 2,200 แบบ — ยุทธภพหรือแดนเซียนจะเรียกขานคุณตามสายสำนัก ขั้นพลัง และสิ่งที่เด่นที่สุดในชีวิต เช่น กระบี่ทลายภูผา · จอมมารโลหิต · เทพเซียนจันทร์กระจ่าง พร้อมฉายาพิเศษหายากอีก 20 แบบ ฉายาแสดงข้างชื่อและเก็บสะสมในสมุดตำนาน','📜 เควสตามช่วงวัย: พ่อแม่ อาจารย์ในสำนัก ผู้ใหญ่บ้าน นายอำเภอ คู่ชีวิต ลูกๆ ฯลฯ จะมาฝากเควสที่เข้ากับช่วงชีวิต พร้อมบอกว่าใครให้และทำไม · เควสระบบเลือกตามวัยและบอกเหตุผล','☠️ ศึกตัวต่อตัวกับมารสวรรค์ (ยุทธภพ) และจอมราชันมาร (เทพเซียน) — สู้ หนี หรือก้มหัว ชนะได้วิชาระดับตำนาน แพ้แล้วหนีไม่รอดคือตาย','💫 ระบบตื่นตอนใกล้ตาย: ตอนกำลังจะตาย ถ้ายังไม่มีระบบ มีโอกาส 30% ที่ระบบจะผูกมัดฉุกเฉินและดึงคุณกลับมา','🖼️ ร้านแลกกรอบใหม่: ราคาเริ่ม 5,000 กรรม และกรรมของแต่ละชีวิตจะเข้าคลังกรรมถาวร สะสมข้ามชีวิตได้','🐛 แก้บั๊กกดเปิดประตูมิติแล้วเวลาค้างไม่เดินต่อ และกันตัวเลือกค้างจากหน้าต่างที่เปิดทับ']},
@@ -4786,7 +4786,9 @@ function person0(x,y,o,pose){
  if(pose==='lie'){const ly=Y-12;Q(X-2,ly,16,12,o.skin);Q(X-2,ly,16,3,o.hair);Q(X-4,ly+2,3,8,o.hair);Q(X+3,ly+6,2,1,'#2a2030');Q(X+8,ly+6,2,1,'#2a2030');Q(X+14,ly+1,36,11,o.robe);Q(X+14,ly+1,36,2,shd(o.robe,.25));Q(X+14,ly+9,36,2,shd(o.robe,-.25));Q(X+12,ly-2,40,3,'#f4ecd8');return}
  const H=child?33:48,hw=child?11:12,hh=child?11:12,tw=child?11:16,th=child?11:18,walk=pose==='walk',sit=pose==='sit';
  const bob=walk?(Math.sin(T*8)>0?-1:0):Math.round(Math.sin(T*1.6+sd)*.6);
+ const stn=(pose==='stand'&&!child&&!sit)?o.stance:null;
  let top=Y-H+(sit?9:0)+(o.old?2:0)+bob;const cx=X+12;
+ if(o.float&&!sit&&!child&&pose!=='walk'){Q(cx-9,Y-1,18,2,'#00000035');g.save();g.translate(0,-(1+(Math.sin(T*2)>0?1:0)));try{o=Object.assign({},o,{float:0});return person0(x,y,o,pose)}finally{g.restore()}}
  // aura
  if(o.aura){const pu=.5+.5*Math.sin(T*2.4);g.globalAlpha=.10+.12*pu;Q(cx-14,top-6,28,Y-top+6,o.aura);g.globalAlpha=.18+.12*pu;Q(cx-10,top-2,20,Y-top+2,o.aura);g.globalAlpha=1;
   for(let i=0;i<5;i++){const ph=(T*.6+i/5)%1;g.globalAlpha=1-ph;Q(cx-12+((i*7+sd*3)%24),Y-ph*(Y-top+10),2,2,shd(o.aura,.4))}g.globalAlpha=1}
@@ -4801,7 +4803,7 @@ function person0(x,y,o,pose){
  const ly=ty+th;
  if(sit){Q(cx-11,Y-6,22,6,rD);Q(cx-11,Y-6,22,2,robe);Q(cx-12,Y-2,24,2,'#00000033')}
  else{const lh=Math.max(2,Y-ly),sw=walk?Math.round(Math.sin(T*8)*2):0,pant=o.pant||'#3a3348';
-  Q(cx-5+sw,ly,4,lh,pant);Q(cx+1-sw,ly,4,lh,shd(pant,-.15));Q(cx-6+sw,Y-2,6,2,'#1e1a24');Q(cx+1-sw,Y-2,6,2,'#1e1a24')}
+  const sp=stn==='ready'?2:0;Q(cx-5+sw-sp,ly,4,lh,pant);Q(cx+1-sw+sp,ly,4,lh,shd(pant,-.15));Q(cx-6+sw-sp,Y-2,6,2,'#1e1a24');Q(cx+1-sw+sp,Y-2,6,2,'#1e1a24')}
  // robe torso (cross collar hanfu)
  const hem=sit?0:2;
  for(let r=0;r<th;r++){const w=tw+Math.floor(r*hem*2/th);const lx=cx-Math.floor(w/2);Q(lx,ty+r,w,1,robe);Q(lx+w-3,ty+r,3,1,rD);Q(lx,ty+r,1,1,rL)}
@@ -4816,9 +4818,18 @@ function person0(x,y,o,pose){
  // hem flutter
  if(!sit&&!child){const fl=Math.round(Math.sin(T*3+sd)*1.2);Q(cx-Math.floor(tw/2)-2+fl,ly-1,2,2,rD)}
  // arms
- const as=walk?Math.round(Math.sin(T*8)*2):Math.round(Math.sin(T*1.6+sd)*.5),aL=child?8:12;
- Q(cx-Math.floor(tw/2)-3,ty+1+as,4,aL,robe);Q(cx-Math.floor(tw/2)-3,ty+1+as,1,aL,rD);Q(cx-Math.floor(tw/2)-2,ty+1+as+aL,3,3,skin);
- Q(cx+Math.floor(tw/2)-1,ty+1-as,4,aL,rD);Q(cx+Math.floor(tw/2),ty+1-as+aL,3,3,sD);
+ if(o.coat&&!child&&!sit){const cc=o.coat,cD=shd(cc,-.25),cL=o.coatL||shd(cc,.3),fl=Math.round(Math.sin(T*2.6+sd)*1.5),fl2=Math.round(Math.sin(T*2.6+sd+1.3)*1.5),bot=Y-3;
+  for(let yy=ty;yy<bot;yy++){const k=(yy-ty)/(bot-ty),fx=Math.round(k*k*(walk?2:1)*(yy>ly?1:0)*1.5),wl=6+Math.round(k*2);const L0=cx-Math.floor(tw/2)-1-fx+(yy>bot-5?fl:0),R0=cx+Math.floor(tw/2)+1-wl+fx+(yy>bot-5?fl2:0);
+   Q(L0,yy,wl,1,cc);Q(L0+wl-1,yy,1,1,cL);Q(L0,yy,1,1,cD);Q(R0,yy,wl,1,cD);Q(R0,yy,1,1,cL)}
+  Q(cx-Math.floor(tw/2)-1,ty,tw+2,2,cc);Q(cx-Math.floor(tw/2)-1,ty,tw+2,1,shd(cc,.18));Q(cx-3,ty,1,6,cL);Q(cx+2,ty,1,6,cL);
+  if(o.coatMark){Q(cx-Math.floor(tw/2)+1,ty+5,2,2,o.coatMark)}}
+ const as=walk?Math.round(Math.sin(T*8)*2):Math.round(Math.sin(T*1.6+sd)*.5),aL=child?8:12,slv=o.coat&&!child?o.coat:robe,slvD=shd(slv,-.28),aw=o.coat&&!child?5:4,lxA=cx-Math.floor(tw/2)-3-(aw-4),rxA=cx+Math.floor(tw/2)-1;
+ if(stn==='behind'){Q(lxA,ty+1,aw,aL-3,slv);Q(lxA,ty+1,1,aL-3,slvD);Q(rxA,ty+1,aw,aL-3,slvD)}
+ else if(stn==='cross'){Q(lxA,ty+1,aw,7,slv);Q(rxA,ty+1,aw,7,slvD);Q(cx-Math.floor(tw/2)-1,ty+6,tw+2,4,slv);Q(cx-Math.floor(tw/2)-1,ty+9,tw+2,1,slvD);Q(cx-Math.floor(tw/2),ty+6,2,1,shd(slv,.25));Q(cx-Math.floor(tw/2)+2,ty+7,2,2,skin);Q(cx+Math.floor(tw/2)-4,ty+7,2,2,sD)}
+ else if(stn==='hilt'){Q(lxA,ty+1+as,aw,aL,slv);Q(lxA,ty+1+as,1,aL,slvD);Q(lxA+1,ty+1+as+aL,3,3,skin);Q(rxA,ty+1,aw,6,slvD);Q(cx+Math.floor(tw/2)-3,ty+6,4,3,slvD);Q(cx+3,ty+8,3,3,sD)}
+ else if(stn==='ready'){Q(lxA-4,ty+3,aw+5,4,slv);Q(lxA-4,ty+6,aw+5,1,slvD);Q(lxA-7,ty+3,3,3,skin);Q(rxA,ty+1-as,aw,aL,slvD);Q(rxA+1,ty+1-as+aL,3,3,sD)}
+ else{Q(lxA,ty+1+as,aw,aL,slv);Q(lxA,ty+1+as,1,aL,slvD);Q(lxA+1,ty+1+as+aL,3,3,skin);
+ Q(rxA,ty+1-as,aw,aL,slvD);Q(rxA+1,ty+1-as+aL,3,3,sD);if(aw>4){Q(lxA-1,ty+aL-2+as,aw+1,3,slv);Q(rxA,ty+aL-2-as,aw+1,3,slvD)}}
  if(o.arm){Q(cx-Math.floor(tw/2)-4,ty-1,6,4,o.arm);Q(cx+Math.floor(tw/2)-2,ty-1,6,4,shd(o.arm,-.2));Q(cx-Math.floor(tw/2)-4,ty-1,6,1,shd(o.arm,.3))}
  if(o.basket&&!child){Q(cx-14,ty+8,7,6,'#c8a060');Q(cx-14,ty+8,7,1,'#8a6a3a');Q(cx-12,ty+6,3,2,'#6ab04a')}
  // neck + head
@@ -4827,8 +4838,10 @@ function person0(x,y,o,pose){
  // face
  const ey=top+Math.floor(hh*.5),blink=(T*1.3+sd)%4<.12,mood=o.mood||'neutral';
  const eL=hx+2,eR=hx+hw-4;
- if(blink){Q(eL,ey+1,2,1,'#2a2030');Q(eR,ey+1,2,1,'#2a2030')}
- else{Q(eL,ey,2,2,'#2a2030');Q(eR,ey,2,2,'#2a2030');Q(eL,ey,1,1,'#ffffff');Q(eR,ey,1,1,'#ffffff')}
+ const eg=o.eyeG&&!child&&typeof eyeGlowOn==='function'&&eyeGlowOn(o);
+ if(blink&&!eg){Q(eL,ey+1,2,1,'#2a2030');Q(eR,ey+1,2,1,'#2a2030')}
+ else{Q(eL,ey,2,2,eg?o.eyeG:'#2a2030');Q(eR,ey,2,2,eg?o.eyeG:'#2a2030');if(o.eye&&!eg){Q(eL+1,ey+1,1,1,o.eye);Q(eR+1,ey+1,1,1,o.eye)}Q(eL,ey,1,1,'#ffffff');Q(eR,ey,1,1,'#ffffff');
+  if(eg){const pu=.55+.45*Math.sin(T*5);g.globalAlpha=.32*pu;Q(eL-1,ey-1,4,4,o.eyeG);Q(eR-1,ey-1,4,4,o.eyeG);g.globalAlpha=.6*pu;Q(eR+2,ey,2+Math.round(3*pu),1,o.eyeG);Q(eL-2-Math.round(2*pu),ey,2+Math.round(2*pu),1,o.eyeG);g.globalAlpha=1}}
  const bc=bald?'#5a4030':hD;if(mood==='sad'){Q(eL,ey-2,1,1,bc);Q(eL+1,ey-3,1,1,bc);Q(eR+1,ey-2,1,1,bc);Q(eR,ey-3,1,1,bc)}else if(mood==='angry'){Q(eL,ey-3,1,1,bc);Q(eL+1,ey-2,1,1,bc);Q(eR,ey-2,1,1,bc);Q(eR+1,ey-3,1,1,bc)}else{Q(eL,ey-2,2,1,bc);Q(eR,ey-2,2,1,bc)}
  const my=ey+(child?3:4),mx=cx-1;
  if(mood==='happy'){Q(mx-1,my,1,1,'#8a3a3a');Q(mx,my+1,2,1,'#8a3a3a');Q(mx+2,my,1,1,'#8a3a3a');g.globalAlpha=.45;Q(eL-1,ey+2,2,1,'#ff7a8a');Q(eR+1,ey+2,2,1,'#ff7a8a');g.globalAlpha=1}
@@ -4980,7 +4993,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5807,6 +5820,22 @@ async function bugEdSave(i){const t=$('bueT_'+i);const x=((t&&t.value)||'').trim
 function rvEdit(){const m=window.MYRV;if(!m)return;RV.r=m.r;document.querySelectorAll('.rvst button').forEach((b,k)=>b.classList.toggle('on',k<m.r));const lab=$('rvLab');if(lab)lab.textContent=['','น่าเบื่อ','พอใช้','ก็ดีนะ','สนุก!','สนุกมาก ติดเลย!'][m.r];const t=$('rvTx');if(t){t.value=m.x||'';drSet('rv',t.value);t.focus();t.scrollIntoView({block:'center',behavior:'smooth'})}const b=document.querySelector('.fbform .pbtn');if(b)b.textContent='บันทึกการแก้ไข';toast('แก้ข้อความด้านบนแล้วกดบันทึก')}
 {const st=document.createElement('style');st.textContent='.edtag{font-size:.78em;opacity:.6;font-style:italic}.bued{margin:4px 0 6px}';document.head.appendChild(st)}
 try{Object.assign(I18N.d,{'แก้ไข':'Edit','แก้ไขแล้ว':'edited','บันทึกการแก้ไข':'Save changes','แก้ไขความเห็นของฉัน':'Edit my review','แก้ข้อความด้านบนแล้วกดบันทึก':'Edit the text above and save'})}catch(e){}
+
+// ---------- v8.6 ท่ายืน สีตา และเสื้อคลุมยาวสไตล์มังฮวา ----------
+function eyeGlowOn(o){if(!o||!o.me||!S)return false;if(typeof DU!=='undefined'&&DU)return true;const se=sceneEvt;if(se&&['fight','war','aura','realm','master'].includes(se.type)&&Date.now()<se.t)return true;if(S.focus==='train'&&(frame*.15)%7<1.6)return true;return false}
+{const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{if(!S||o.beast)return o;const ri=realmIdx(),x=!!S.xian,ft=S.faction?S.faction.t:(S.family&&S.family.heirType)||null,dem=ft==='มาร'||(S.sys&&S.sys.t==='demon')||(!ft&&S.family&&S.family.demon),adult=S.age>=16;
+ const side=dem?'มาร':ft==='อธรรม'||S.path==='assassin'?'อธรรม':ft==='ธรรมะ'?'ธรรมะ':null;o.me=1;
+ // สีตา
+ const EY={m:{'มาร':['#6a1020','#d4102e'],'ธรรมะ':['#2a5a9a','#8ad0ff'],'อธรรม':['#8a6a1a','#ffc030']},x:{'มาร':['#6a1020','#ff2050'],'ธรรมะ':['#2a7a98','#9ff0ff'],'อธรรม':['#6a3a9a','#c080ff']}}[x?'x':'m'];
+ if(side){o.eye=EY[side][0];o.eyeG=EY[side][1]}else if(ri>=3){o.eye=x?'#3a6a8a':'#4a4a6a';o.eyeG=x?'#bff4ff':'#e8e8ff'}
+ if(x&&ri>=5&&side!=='มาร')o.eyeG='#ffe070';if(S.sys&&!dem&&ri>=2){try{o.eyeG=sysC().a}catch(e){}}
+ // ท่ายืน
+ if(adult){o.stance=side==='มาร'?(ri>=3?'cross':'hilt'):side==='อธรรม'?'ready':side==='ธรรมะ'?(ri>=3?'behind':(o.sword?'hilt':null)):S.path==='hermit'||S.goal==='slow'?'behind':o.sword?'hilt':(ri>=4?'cross':null);
+  if(eyeGlowOn(o)&&o.sword)o.stance='ready';if(ri>=6&&S.goal!=='slow')o.float=1}
+ // เสื้อคลุมยาว
+ if(adult&&(ri>=2||S.faction)&&!['official','hood'].includes(o.hat)){const C={m:{'มาร':['#16121c','#a0102a'],'ธรรมะ':['#f2f4f8','#5b8def'],'อธรรม':['#3a3028','#c9a050']},x:{'มาร':['#1a1020','#c8183a'],'ธรรมะ':['#eef4ff','#9fe8ff'],'อธรรม':['#2a2238','#b070ff']}}[x?'x':'m'];
+  const c=side?C[side]:[shd(o.robe||'#666',-.38),o.trim||shd(o.robe||'#666',.3)];o.coat=c[0];o.coatL=c[1];if(ri>=5)o.coatMark=side==='มาร'?'#d4102e':side==='ธรรมะ'?'#c8a040':o.coatL}
+}catch(e){console.error(e)}return o}}
 </script>
 </body>
 </html>
