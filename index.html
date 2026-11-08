@@ -390,8 +390,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='8.6';
+const VERSION='8.7';
 const CHANGELOG=[
+ {v:'8.7',d:'8 พ.ย. 2026',l:['🌐 พบผู้เล่นจริงแบบเรียลไทม์: ระหว่างจำลอง มีโอกาสที่รอยแยกมิติจะพาผู้เล่นที่กำลังเล่นอยู่ตอนเดียวกันมาเจอคุณ — ท้าดวลหรือชวนเป็นพันธมิตรได้ และผลจะส่งไปถึงอีกฝ่ายด้วย · พันธมิตรมีโอกาสมาช่วยตอนจวนตัว','🌌 จักรวาลซ้อนทับ: บางชีวิตจะเกิดในจักรวาลเดียวกับผู้เล่นในทำเนียบ และอาจได้พบ ประลอง หรือสาบานเป็นพันธมิตรกับตำนานคนนั้น','🌍 ความแข็งแกร่งของโลกสุ่มทุกชีวิต: ยุคเสื่อมถอย (ศัตรู ×0.5) · ปกติ · ยอดฝีมือรุ่งเรือง (×1.6) · มารสวรรค์ไร้เทียมทาน (×3) · สวรรค์ลงทัณฑ์ (ศัตรูโคตรโกง ×6) — มารสวรรค์และจอมราชันมารแข็งแกร่งตามยุคด้วย','⏩ กาลเวลาแดนเทพ: ในโลกเซียน อายุเกิน 1,000 ปี หนึ่งก้าวเท่ากับ 100 ปี · เกิน 10,000 ปี ก้าวละ 1,000 ปี · เกิน 100,000 ปี ก้าวละ 10,000 ปี จนครบหนึ่งล้านปีกลายเป็นอมตะนิรันดร์ พร้อมความสำเร็จ ??? ใหม่','🧍 ตัวละครพิกเซลใหม่: ท่ายืนต่างกันตามพรรคและขั้นพลัง (กอดอก ไพล่มือ จับด้ามกระบี่ ท่าเตรียมสู้ ลอยตัว) · ตาเรืองแสงตามสีพรรคตอนใช้วิชา (สายมารตาแดงเลือดหมู) · เสื้อคลุมยาวสไตล์มังฮวามูริม','✏️ เสียงจากผู้เล่น: แก้ไขข้อความแจ้งบั๊กและความคิดเห็นของตัวเองได้ พร้อมป้าย (แก้ไขแล้ว) · ข้อความที่พิมพ์ค้างไว้ไม่หายเวลาสลับแท็บหรือปิดหน้าต่าง']},
  {v:'8.4',d:'8 พ.ย. 2026',l:['📱 สมาร์ตโฟนข้ามมิติใช้งานได้จริง: ผู้ข้ามมิติที่ได้มือถือมาเปิดได้จากเมนู มี 7 แอป — สารานุกรม คลิปสอนต่อสู้ เข็มทิศ กล้อง เพลง เกม เครื่องคิดเลข แบตชาร์จด้วยแผงโซลาร์','🔫 วรยุทธ์ระดับพิเศษสายปืน: ศาสตร์สร้างอาวุธปืน (สร้างปืนขายและใช้เอง) และวิชากระสุนแทนกระบี่ (ยิงปืนแทนกระบี่) ฝึกได้ระดับต่ำ กลาง สูง สุดยอด · โลกเซียนเป็นปืนวิญญาณและกระสุนปราณ','🏆 ความสำเร็จใหม่: หนึ่งในพันล้าน (???) · ความเป็นอมตะ (???) · สัญญาณหาย แต่แบตยังเหลือ · ติดมือถือข้ามภพ · ดินปืนในยุทธภพ · คลังแสงเดินได้ · เทพปืนไร้เทียมทาน','🌌 ประตูมิติกดเปิดต่อได้ทันทีหรือเปิดทั้งหมดรวดเดียว ไม่ต้องกลับไปเปิดเมนูใหม่ · ได้ของติดตัวซ้ำจะแลกเป็นเงินและปัญญาแทน','🐛 แก้ของต่างโลก 3 ชิ้นที่กดใช้แล้วไม่มีผล (วิชายุทธ์จากชาติก่อน · ตำราคณิตศาสตร์มหาวิทยาลัย · แหวนเก่าที่มีวิญญาณผู้เฒ่า) และกันกดประตูมิติรัวแล้วเสียครั้งเปิดฟรี','🌐 ย้ายแถบจำนวนคนออนไลน์ไปอยู่ใต้รูปโลกในหน้าแรก ไม่ทับชื่อเกม']},
  {v:'8.1',d:'8 พ.ย. 2026',l:['📖 สมุดตำนานแบบดาว: ทำความสำเร็จเดิมซ้ำในชาติใหม่เพื่อเพิ่มดาว ★☆☆ → ★★★ (รวม 372 ดาว) · มีระดับนักบันทึก 7 ขั้น ตั้งแต่ผู้เริ่มจดบันทึกถึงผู้อยู่เหนือตำนาน · ทุกดาวใหม่ได้กรรมเข้าคลังไว้แลกกรอบ','🏷️ ระบบฉายา: กว่า 2,200 แบบ — ยุทธภพหรือแดนเซียนจะเรียกขานคุณตามสายสำนัก ขั้นพลัง และสิ่งที่เด่นที่สุดในชีวิต เช่น กระบี่ทลายภูผา · จอมมารโลหิต · เทพเซียนจันทร์กระจ่าง พร้อมฉายาพิเศษหายากอีก 20 แบบ ฉายาแสดงข้างชื่อและเก็บสะสมในสมุดตำนาน','📜 เควสตามช่วงวัย: พ่อแม่ อาจารย์ในสำนัก ผู้ใหญ่บ้าน นายอำเภอ คู่ชีวิต ลูกๆ ฯลฯ จะมาฝากเควสที่เข้ากับช่วงชีวิต พร้อมบอกว่าใครให้และทำไม · เควสระบบเลือกตามวัยและบอกเหตุผล','☠️ ศึกตัวต่อตัวกับมารสวรรค์ (ยุทธภพ) และจอมราชันมาร (เทพเซียน) — สู้ หนี หรือก้มหัว ชนะได้วิชาระดับตำนาน แพ้แล้วหนีไม่รอดคือตาย','💫 ระบบตื่นตอนใกล้ตาย: ตอนกำลังจะตาย ถ้ายังไม่มีระบบ มีโอกาส 30% ที่ระบบจะผูกมัดฉุกเฉินและดึงคุณกลับมา','🖼️ ร้านแลกกรอบใหม่: ราคาเริ่ม 5,000 กรรม และกรรมของแต่ละชีวิตจะเข้าคลังกรรมถาวร สะสมข้ามชีวิตได้','🐛 แก้บั๊กกดเปิดประตูมิติแล้วเวลาค้างไม่เดินต่อ และกันตัวเลือกค้างจากหน้าต่างที่เปิดทับ']},
  {v:'7.5',d:'8 พ.ย. 2026',l:['🖥️ หน้าจอคอมแบบใหม่: ซ้ายสถานะตัวละคร (ภาพตัวละคร หลอดพลังชีวิต/พลัง/อายุขัย ค่าสถานะ วิชาเด่น) · กลางฉากและบันทึก · ขวาฟังก์ชันแบ่งหมวด พร้อมเควสและการ์ดระบบ','📐 หน้าเกิดและหน้าสร้างตัวละครบนคอมแบ่ง 2 คอลัมน์ เห็นครบในจอเดียว','⌨️ คีย์ลัดบนคอม: Space หยุด/เล่น · S ความเร็ว · A อัตโนมัติ · 1–9 เลือกตัวเลือก · Esc ปิด · M/B/Q/L เมนู กระเป๋า เควส บันทึก','🖼️ ร้านแลกกรอบ: ใช้กรรมดีหรือกรรมชั่วแลกกรอบรูป 11 แบบ — ปกติ · วิบวับ · สีเปลี่ยน · อนิเมชั่นเปลี่ยนสีแล้วกลับสีเดิม กรอบเป็นของคุณถาวรทุกชีวิตและแสดงที่รูปตัวละคร','👤 ระบบโปรไฟล์: ตั้งตัวละครเป็นรูปโปรไฟล์ พร้อมกรอบ แสดงข้างชื่อในแชทโลก','🐛 แก้บั๊กตัวเลือกที่ค้างไว้นานแล้วพัง และกันเกมค้างจากตัวเลือกที่ผิดพลาด']},
@@ -4993,7 +4994,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;LS.set(slotKey(S.slot),{t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION});try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5','8.6',VERSION].includes(d.v)?d:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5600,7 +5601,7 @@ const BOSS_X=[{n:'จอมราชันมารแห่งอเวจี',
 function bossTick(){if(!S||!S.alive||S.beastMode||S.age<16||S.age>95||choice._cur||modalOpen)return;
  if((S.bossN||0)>=2||S.age-(S.bossY||-99)<15)return;
  const p=.009+Math.min(.012,(S.fame||0)/150000)+realmIdx()*.0012;if(Math.random()>p)return;
- const x=!!S.xian,B=ch(x?BOSS_X:BOSS_M),base=x?55000:20000,ep=Math.round(Math.max(base,total()*.75)*(.9+Math.random()*.3));
+ const x=!!S.xian,B=ch(x?BOSS_X:BOSS_M),base=(x?55000:20000)*(typeof wsM==='function'?wsM():1),ep=Math.round(Math.max(base,total()*.75)*(.9+Math.random()*.3));
  const r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100))),esc=Math.max(.05,Math.min(.55,.06+.35*Math.min(1,r)+(S.int||0)/2500)),spare=Math.max(.05,Math.min(.6,.12+(S.cha||0)/450+(S.karma<0?.08:0)));
  S.bossN=(S.bossN||0)+1;S.bossY=S.age;setScene('fight');
  const die=how=>{S.deathCause=`ถูก${B.n}สังหาร${how}`;S.hp=0};
@@ -5836,6 +5837,57 @@ function eyeGlowOn(o){if(!o||!o.me||!S)return false;if(typeof DU!=='undefined'&&
  if(adult&&(ri>=2||S.faction)&&!['official','hood'].includes(o.hat)){const C={m:{'มาร':['#16121c','#a0102a'],'ธรรมะ':['#f2f4f8','#5b8def'],'อธรรม':['#3a3028','#c9a050']},x:{'มาร':['#1a1020','#c8183a'],'ธรรมะ':['#eef4ff','#9fe8ff'],'อธรรม':['#2a2238','#b070ff']}}[x?'x':'m'];
   const c=side?C[side]:[shd(o.robe||'#666',-.38),o.trim||shd(o.robe||'#666',.3)];o.coat=c[0];o.coatL=c[1];if(ri>=5)o.coatMark=side==='มาร'?'#d4102e':side==='ธรรมะ'?'#c8a040':o.coatL}
 }catch(e){console.error(e)}return o}}
+
+// ---------- v8.7 ความแข็งแกร่งของโลก · กาลเวลาแดนเทพ · พบผู้เล่นจริง ----------
+const WSTR={m:[{w:18,n:'ยุคยุทธภพเสื่อมถอย',d:'ยอดฝีมือหายาก ศัตรูอ่อนแอกว่าปกติ',m:.5},{w:42,n:'ยุคยุทธภพปกติ',d:'ศัตรูแข็งแกร่งตามปกติ',m:1},{w:24,n:'ยุคยอดฝีมือรุ่งเรือง',d:'ยอดฝีมือผุดขึ้นทุกหัวระแหง ศัตรูแข็งแกร่งขึ้น',m:1.6},{w:12,n:'ยุคที่มารสวรรค์ไร้เทียมทาน',d:'มารสวรรค์และสมุนแข็งแกร่งจนน่าสะพรึง',m:3},{w:4,n:'ยุคสวรรค์ลงทัณฑ์',d:'ศัตรูโคตรโกง ทุกการต่อสู้คือความตาย',m:6}],
+ x:[{w:18,n:'ยุคเต๋าเสื่อม',d:'ปราณฟ้าดินเบาบาง ผู้ฝึกตนอ่อนแอ',m:.5},{w:42,n:'ยุคแดนเซียนปกติ',d:'ศัตรูแข็งแกร่งตามปกติ',m:1},{w:24,n:'ยุคเซียนรุ่งเรือง',d:'ปราณฟ้าดินหนาแน่น ผู้ฝึกตนแข็งแกร่งขึ้น',m:1.6},{w:12,n:'ยุคราชันมารครองฟ้า',d:'จอมราชันมารและกองทัพมารแข็งแกร่งเหนือทุกสิ่ง',m:3},{w:4,n:'ยุคทัณฑ์สวรรค์',d:'ศัตรูโคตรโกง แม้แต่สัตว์อสูรข้างทางก็อาจฆ่าคุณได้',m:6}]};
+function wsGet(){if(!S)return null;if(!S.ws){const L=WSTR[S.xian?'x':'m'];const i=L.indexOf(pickW(L).v);S.ws={i,x:S.xian?1:0}}if(S.ws.x!==(S.xian?1:0)){S.ws={i:S.ws.i,x:S.xian?1:0}}return WSTR[S.ws.x?'x':'m'][S.ws.i]}
+function wsM(){try{const w=wsGet();return w?w.m:1}catch(e){return 1}}
+const WS_NOSCALE=new Set([...BOSS_M,...BOSS_X].map(b=>b.n));
+function wsScale(name,ep){const m=wsM();if(m===1||!S||WS_NOSCALE.has(name))return ep;return Math.round(ep*(ep>=total()*.55?Math.sqrt(m):m))}
+{const _f2=fight;fight=function(name,ep){try{ep=wsScale(name,ep)}catch(e){}return _f2.call(this,name,ep)}}
+{const _d2=duel;duel=function(name,ep,cb){try{ep=wsScale(name,ep)}catch(e){}return _d2.call(this,name,ep,cb)}}
+{const _bl2=beginLife;beginLife=function(){const r=_bl2.apply(this,arguments);try{if(S&&!S.beastMode){S.ws=null;const w=wsGet();setTimeout(()=>{if(S&&S.alive)log(`🌍 <b>${w.n}</b> — ${w.d}${w.m!==1?` (ศัตรู ×${w.m})`:''}`,w.m>=3?'bad':w.m<1?'good':'',true)},400);S.key.push(`0 ปี — เกิดใน${w.n}`);shareInit()}}catch(e){console.error(e)}return r}}
+// ---- กาลเวลาแดนเทพ ----
+function xFast(){return S&&S.xian&&S.alive&&S.age>=1000}
+{const _lm=lifeMax;lifeMax=function(){const v=_lm.apply(this,arguments);try{if(S&&S.xian&&(S.xt&&realmIdx()>=6||S.age>=1000))return Math.max(v,1e6+1)}catch(e){}return v}}
+function xStep(){return S.age>=100000?10000:S.age>=10000?1000:100}
+{const _py9=passYear;passYear=function(){const r=_py9.apply(this,arguments);try{if(xFast()){const st=xStep(),ex=st-1;if(S.xstep!==st){S.xstep=st;log(`⏩ กาลเวลาในแดนเทพไหลเร็วขึ้น — จากนี้หนึ่งก้าวเท่ากับ <b>${fmt(st)} ปี</b>`,'myth',true)}
+  S.age+=ex;S.qi+=+(ex*.01).toFixed(1);S.power+=Math.round((S.power*.00002+5)*ex);S.money+=Math.round(ex*8*(1+realmIdx()*.2));
+  if(S.age>=1e6&&!S.flags.eternal){S.flags.eternal=1;S.age=1e6;keyAdd('หลุดพ้นจากกาลเวลา กลายเป็นอมตะนิรันดร์');setScene('aura');log('♾️ หนึ่งล้านปีผ่านไป ดวงดาวดับแล้วเกิดใหม่นับครั้งไม่ถ้วน — คุณหลุดพ้นจากกาลเวลา กลายเป็น<b>อมตะนิรันดร์</b>','myth',true);S.deathCause='หลุดพ้นจากกาลเวลา กลายเป็นอมตะนิรันดร์';S.hp=0}}}catch(e){console.error(e)}return r}}
+// ---- จักรวาลซ้อนทับกับผู้เล่นในทำเนียบ ----
+async function shareInit(){try{if(!onlineOK||!S||Math.random()>.15)return;const j=await api('board');const L=(j.top||[]).concat(j.prev||[]).filter(e=>e&&e.n&&(e.x?1:0)===(S.xian?1:0)&&!e.bm&&e.n!==pname());if(!L.length||!S||!S.alive)return;
+ const e=ch(L.slice(0,30));const RN=S.xian?XREALM:REALMS.map(r=>r.n);let ri=RN.indexOf(e.r);if(ri<0)ri=Math.min(7,Math.round(Math.log10(Math.max(10,e.s))-1));S.shared={n:e.n,r:e.r||'',f:e.f||'',s:e.s,ri,met:0};
+ log(`🌌 จักรวาลนี้ซ้อนทับกับจักรวาลของ <b>${esc(e.n)}</b> ผู้เล่นในทำเนียบ (${esc(e.r||'')}${e.f?' · '+esc(e.f):''}) — ชื่อของเขาเป็นตำนานในยุคนี้`,'myth',true)}catch(e){}}
+function sharePow(sh){const P=S.xian?XP:REALMS.map(r=>r.p);const lo=P[Math.min(7,sh.ri)]||100,hi=P[Math.min(7,sh.ri+1)]||lo*2;return Math.round((lo+(hi-lo)*.6)*(.9+Math.random()*.3))}
+function shareTick(){const sh=S.shared;if(!sh||sh.met>=2||S.age<18||choice._cur||modalOpen||S.beastMode||Math.random()>.035)return;sh.met++;const ep=sharePow(sh),r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100)));
+ choice(`🌌 พบตำนานจากทำเนียบ`,`ในโรงเตี๊ยมกลางทาง คุณสบตากับ <b>${esc(sh.n)}</b> ${esc(sh.r)}${sh.f?' แห่ง'+esc(sh.f):''} — ผู้ที่ชื่อติดทำเนียบในจักรวาลที่ซ้อนทับกับของคุณ<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของเขา</span>`,[
+  {t:'⚔️ ขอประลอง',s:`โอกาสชนะราว ${pw}%`,f(){duel(sh.n,ep,w=>{if(w){S.fame+=Math.round(200+ep/50);log(`🌌 ชนะ${esc(sh.n)}! ทั้งสองจักรวาลสั่นสะเทือน`,'myth',true);S.key.push(`${S.age} ปี — ชนะตำนานจากทำเนียบ ${sh.n}`)}else log(`🌌 ${esc(sh.n)}ปล่อยให้คุณมีชีวิตรอด "ฝึกมาใหม่แล้วค่อยมาสู้กัน"`,'bad')})}},
+  {t:'🤝 สาบานเป็นพันธมิตร',s:'ใช้เสน่ห์ · พันธมิตรจะมาช่วยตอนจวนตัว',f(){if(roll01(.35+(S.cha||0)/300)){allyAdd(sh.n,'ตำนานจากทำเนียบ');log(`🤝 ${esc(sh.n)}ยอมสาบานเป็นพันธมิตรกับคุณ`,'epic',true)}else log(`${esc(sh.n)}ยิ้มบางๆ แล้วเดินจากไป`)}},
+  {t:'🙇 แยกทาง',s:'ไม่มีผลเสีย',skip:true,f(){log(`คุณกับ${esc(sh.n)}คารวะกันแล้วแยกทาง`)}}])}
+// ---- พันธมิตร ----
+function allyAdd(n,src){S.allies=S.allies||[];if(S.allies.some(a=>a.n===n))return;S.allies.push({n,src,a:S.age});if(S.allies.length>5)S.allies.shift()}
+{const _f3=fight;fight=function(name,ep){const w=_f3.apply(this,arguments);try{if(!w&&S&&S.alive&&S.allies&&S.allies.length&&Math.random()<.22){const a=ch(S.allies);log(`🤝 พันธมิตร <b>${esc(a.n)}</b> (${a.src}) ปรากฏตัวมาช่วยไว้ได้ทันเวลา!`,'epic');return true}}catch(e){}return w}}
+// ---- พบผู้เล่นจริงแบบเรียลไทม์ ----
+let meetC=null,meetT=0;
+async function meetPoll(){try{if(!onlineOK||!S||!S.alive||S.beastMode||paused||document.hidden)return;if(Date.now()-meetT<25000)return;meetT=Date.now();
+ const j=await api('meet',{n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age});meetC=j.o?Object.assign(j.o,{at:Date.now()}):null;
+ (j.inbox||[]).forEach(m=>{if(!S||!S.alive)return;if(m.kind==='ally'){if(m.ok){allyAdd(m.n,'ผู้เล่นจริง');log(`🤝 ผู้เล่น <b>${esc(m.n)}</b> สาบานเป็นพันธมิตรกับคุณข้ามจักรวาล — เขาจะมาช่วยตอนจวนตัว`,'epic',true)}}
+  else{if(m.win){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.08));S.fame=Math.max(0,S.fame-5);log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — คุณพ่ายแพ้ บาดเจ็บเล็กน้อย`,'bad',true)}else{S.fame+=20;log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — แต่คุณเป็นฝ่ายชนะ! ชื่อเสียง +20`,'epic',true)}}});try{render()}catch(e){}}catch(e){}}
+setInterval(meetPoll,5000);
+function meetTick(){if(!meetC||Date.now()-meetC.at>90000||S.age<14||choice._cur||modalOpen||S.beastMode||Math.random()>.06)return;const o=meetC;meetC=null;const RN=S.xian?XREALM:REALMS.map(r=>r.n),ep=Math.max(50,o.p||100),r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100)));
+ choice(`🌐 พบผู้เล่นจริง!`,`รอยแยกมิติเปิดออกชั่วครู่ — <b>${esc(o.n)}</b> ผู้เล่นที่กำลังจำลองชีวิตอยู่ตอนนี้ ก้าวข้ามมาสู่จักรวาลของคุณ<br>${esc(RN[o.ri]||'')} · ${esc(o.f||'')} · อายุ ${fmt(o.age||0)} ปี<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของเขา · สิ่งที่คุณเลือกจะส่งผลถึงเขาด้วย</span>`,[
+  {t:'⚔️ ท้าดวล',s:`โอกาสชนะราว ${pw}%`,f(){const w=fight(o.n,ep);if(w){S.fame+=Math.round(30+ep/80);log(`🌐 ชนะผู้เล่น <b>${esc(o.n)}</b> ในการดวลข้ามจักรวาล!`,'epic',true)}else{S.hp-=Math.round(S.maxHp*.15);log(`🌐 แพ้ผู้เล่น <b>${esc(o.n)}</b> ถูกซัดกลับเข้ารอยแยกมิติ`,'bad',true)}api('meetact',{to:o.k,kind:'fight',win:w?1:0,n:pname(),ri:realmIdx(),x:S.xian?1:0}).catch(()=>{})}},
+  {t:'🤝 ชวนเป็นพันธมิตร',s:'ใช้เสน่ห์ · ทั้งสองฝ่ายจะได้พันธมิตร',f(){const ok=roll01(.45+(S.cha||0)/300);if(ok){allyAdd(o.n,'ผู้เล่นจริง');log(`🤝 คุณกับผู้เล่น <b>${esc(o.n)}</b> สาบานเป็นพันธมิตรข้ามจักรวาล`,'epic',true)}else log(`ผู้เล่น ${esc(o.n)} ยังไม่ไว้ใจคุณ รอยแยกปิดลงก่อนจะได้คุยกัน`);api('meetact',{to:o.k,kind:'ally',ok:ok?1:0,n:pname(),ri:realmIdx(),x:S.xian?1:0}).catch(()=>{})}},
+  {t:'🙇 ปล่อยให้รอยแยกปิดลง',s:'ไม่มีผลเสีย',skip:true,f(){log('คุณมองรอยแยกมิติปิดลงอย่างเงียบๆ')}}])}
+{const _py10=passYear;passYear=function(){const r=_py10.apply(this,arguments);try{if(S&&S.alive){shareTick();meetTick()}}catch(e){console.error(e)}return r}}
+{const _ql2=questList;questList=function(){const L=_ql2.apply(this,arguments);try{if(S&&S.allies&&S.allies.length)L.push({k:'ally',ic:'🤝',n:'พันธมิตร',p:S.allies.map(a=>esc(a.n)).join(' · '),d:'พันธมิตรมีโอกาสมาช่วยตอนจวนตัวในการต่อสู้'});const w=wsGet();if(w)L.push({k:'ws',ic:'🌍',n:w.n,p:w.d,d:w.m!==1?`ศัตรู ×${w.m}`:'ศัตรูปกติ'})}catch(e){}return L}}
+{const add=(cat,arr)=>{const c=ACH.find(x=>x[0]===cat);if(!c)return;arr.forEach(a=>{if(ACH_ALL.some(b=>b.id===a.id))return;const zi=c[1].findIndex(b=>b.id==='z_all');if(zi>=0)c[1].splice(zi,0,a);else c[1].push(a);ACH_ALL.push(a)})};
+ add('??? — เหนือตำนาน',[{id:'z_eternity',n:'อมตะนิรันดร์',d:'มีชีวิตอยู่ครบหนึ่งล้านปีในแดนเทพ',r:6,c:()=>!!S.flags.eternal}]);
+ add('กำเนิด',[{id:'b_hellworld',n:'เกิดผิดยุค',d:'เกิดในยุคที่ศัตรูโคตรโกง (×6)',r:3,c:()=>wsM()>=6},{id:'b_weakworld',n:'ยุคทองของคนธรรมดา',d:'เกิดในยุคที่ศัตรูอ่อนแอ',r:1,c:()=>wsM()<1}]);
+ add('ผู้ข้ามมิติ',[{id:'ow_meet',n:'ข้ามจักรวาล',d:'พบผู้เล่นจริงที่กำลังเล่นอยู่ในเวลาเดียวกัน',r:2,c:()=>(S.key||[]).some(k=>/ผู้เล่นจริง|ข้ามจักรวาล/.test(k))||(S.allies||[]).some(a=>a.src==='ผู้เล่นจริง')},{id:'ow_shared',n:'จักรวาลซ้อนทับ',d:'เกิดในจักรวาลเดียวกับผู้เล่นในทำเนียบ',r:2,c:()=>!!S.shared}])}
+try{TTL_SP.unshift(['eternal',()=>S.flags.eternal,'อมตะนิรันดร์'])}catch(e){}
+try{Object.assign(I18N.d,{'พบผู้เล่นจริง':'Real player encountered','ท้าดวล':'Challenge','ชวนเป็นพันธมิตร':'Invite as ally','พันธมิตร':'Allies','อมตะนิรันดร์':'Eternal Immortal','ยุคยุทธภพปกติ':'Normal martial era','ยุคที่มารสวรรค์ไร้เทียมทาน':'Era of the invincible Heavenly Demon','ยุคสวรรค์ลงทัณฑ์':'Era of Heavenly Punishment','พบตำนานจากทำเนียบ':'Legend from the rankings'})}catch(e){}
 </script>
 </body>
 </html>

@@ -347,6 +347,29 @@ module.exports = async (req, res) => {
       await cmd('HSET', 'bugedit', mid, JSON.stringify({ x, t: now }));
       return res.json({ ok: 1 });
     }
+    if (a === 'meet') {
+      const x = b.x ? 1 : 0, key = 'mp:' + x;
+      const me = { n: clean(b.n, 20) || 'นิรนาม', ri: Math.max(0, Math.min(12, +b.ri || 0)), p: Math.max(0, Math.min(1e13, +b.p || 0)), f: clean(b.f, 30), age: Math.max(0, +b.age || 0), t: now };
+      const [, all, box] = await pipe([['HSET', key, id, JSON.stringify(me)], ['HGETALL', key], ['LRANGE', 'mbox:' + id, 0, 9]]);
+      const cand = [], stale = [];
+      for (let i = 0; i < (all || []).length; i += 2) { const k0 = all[i]; let v = null; try { v = JSON.parse(all[i + 1]) } catch {} if (!v || now - v.t > 120e3) { stale.push(k0); continue } if (k0 !== id) cand.push(Object.assign(v, { k: k0.slice(0, 6) + k0.slice(-4) })) }
+      const L2 = [['EXPIRE', key, 3600]]; if (stale.length) L2.push(['HDEL', key, ...stale.slice(0, 50)]); if (box && box.length) L2.push(['DEL', 'mbox:' + id]);
+      await pipe(L2);
+      const o = cand.length ? cand[Math.floor(Math.random() * cand.length)] : null;
+      return res.json({ o, n: cand.length, inbox: (box || []).map(s0 => { try { return JSON.parse(s0) } catch { return null } }).filter(Boolean) });
+    }
+    if (a === 'meetact') {
+      const ok = await cmd('SET', 'mtl:' + id, 1, 'NX', 'EX', 15);
+      if (!ok) return res.status(429).json({ err: 'rate' });
+      const to = String(b.to || '').replace(/[^a-z0-9]/g, '').slice(0, 12), x = b.x ? 1 : 0;
+      const all = await cmd('HKEYS', 'mp:' + x);
+      const tid = (all || []).find(k0 => k0.slice(0, 6) + k0.slice(-4) === to);
+      if (!tid || tid === id) return res.json({ ok: 0 });
+      const kind = ['fight', 'ally'].includes(b.kind) ? b.kind : 'fight';
+      const m = { kind, n: clean(b.n, 20) || 'นิรนาม', win: b.win ? 1 : 0, ok: b.ok ? 1 : 0, ri: Math.max(0, Math.min(12, +b.ri || 0)), k: id.slice(0, 6) + id.slice(-4), t: now };
+      await pipe([['LPUSH', 'mbox:' + tid, JSON.stringify(m)], ['LTRIM', 'mbox:' + tid, 0, 9], ['EXPIRE', 'mbox:' + tid, 3600]]);
+      return res.json({ ok: 1 });
+    }
     if (a === 'review') {
       const ok = await cmd('SET', 'rvrl:' + id, 1, 'NX', 'EX', 20);
       if (!ok) return res.status(429).json({ err: 'rate' });
