@@ -217,9 +217,23 @@ module.exports = async (req, res) => {
       const [, , w] = await pipe([['ZADD', 'watch:' + full, now, viewer], ['ZREMRANGEBYSCORE', 'watch:' + full, 0, now - 20e3], ['ZCARD', 'watch:' + full], ['EXPIRE', 'watch:' + full, 120]]);
       return res.json({ s: JSON.parse(v), w: w || 0 });
     }
+    if (a === 'clist') {
+      // รายการเซฟบนคลาวด์ของเครื่องนี้ (ต้องมี token ของเครื่อง)
+      if (!okId(id)) return res.json({ l: [] });
+      const tk = String(qOf(req).tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
+      const keys = ['cs2:' + id, ...[1, 2, 3, 4, 5].map(n => 'cs3:' + id + ':' + n)];
+      const [tok, ...vals] = await pipe([['GET', 'ctok:' + id], ...keys.map(k => ['GET', k])]);
+      if (!tok || tok !== tk) return res.json({ l: [] });
+      const meta = v => { try { const d = JSON.parse(Buffer.from(v, 'base64').toString('utf8')); const S = d && d.S; if (!S) return null; return { n: String(S.name || '').slice(0, 40), age: +S.age || 0, x: S.xian ? 1 : 0, t: +d.t || 0, seed: S.seed || 0 } } catch { return null } };
+      const out = [], seen = new Set();
+      vals.forEach((v, i) => { if (!v) return; const m = meta(v); if (!m) return; const sig = m.n + '|' + m.seed + '|' + m.age; if (seen.has(sig)) return; seen.add(sig); out.push({ k: i ? 's' + i : 'cs2', sl: i || 0, n: m.n, age: m.age, x: m.x, t: m.t }) });
+      out.sort((a1, b1) => b1.t - a1.t);
+      return res.json({ l: out });
+    }
     if (a === 'cload') {
       const p0 = String(qOf(req).p || '').replace(/[^a-z0-9]/g, '').slice(0, 24), tk = String(qOf(req).tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
-      const [tok, d] = await pipe([['GET', 'ctok:' + p0], ['GET', 'cs2:' + p0]]);
+      const kq = String(qOf(req).k || 'cs2'), dk = /^s[1-5]$/.test(kq) ? 'cs3:' + p0 + ':' + kq.slice(1) : 'cs2:' + p0;
+      const [tok, d] = await pipe([['GET', 'ctok:' + p0], ['GET', dk]]);
       if (!tok || tok !== tk || !d) return res.status(404).json({ err: 'notfound' });
       return res.json({ d });
     }
@@ -293,7 +307,8 @@ module.exports = async (req, res) => {
       await cmd('SET', 'ctok:' + id, tk, 'NX');
       const tok = await cmd('GET', 'ctok:' + id);
       if (tok !== tk) return res.status(403).json({ err: 'token' });
-      await pipe([['SET', 'cs2:' + id, d, 'EX', 86400 * 90], ['EXPIRE', 'ctok:' + id, 86400 * 90]]);
+      const sl = Math.max(1, Math.min(5, parseInt(b.sl, 10) || 1));
+      await pipe([['SET', 'cs2:' + id, d, 'EX', 86400 * 90], ['SET', 'cs3:' + id + ':' + sl, d, 'EX', 86400 * 90], ['EXPIRE', 'ctok:' + id, 86400 * 90]]);
       return res.json({ ok: 1 });
     }
     if (a === 'profile') {

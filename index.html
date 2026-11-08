@@ -390,8 +390,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='10.5';
+const VERSION='10.6';
 const CHANGELOG=[
+ {v:'10.6',d:'8 พ.ย. 2026',l:['💾 ขออภัย! เซฟที่หายไปจากหน้าแรกตั้งแต่อัปเดต v10.3 ยังอยู่ในเครื่องครบ — ตอนนี้กลับมาแสดงแล้ว (ต้นเหตุคือเกมซ่อนเซฟจากเวอร์ชันที่มันไม่รู้จัก)','🗂️ คลังสำรอง: ช่องเซฟเต็มหรือกดลบ ชีวิตเดิมจะย้ายไปคลังสำรอง กู้คืนได้ (เดิมเขียนทับทิ้งเงียบๆ) · ช่องเซฟเพิ่มเป็น 5 ช่อง','🛟 ทุกช่องมีสำเนาสำรองในเครื่อง ถ้าเซฟหลักเสียหายจะโหลดจากสำเนาแทน · โหลดพังจะไม่ลบอะไรทิ้ง','☁️ กู้จากเซิร์ฟเวอร์: ปุ่มใหม่ที่หน้าแรก ดึงเซฟอัตโนมัติบนคลาวด์ของเครื่องนี้กลับมาลงช่องว่าง · คลาวด์เก็บแยกตามช่องแล้ว ไม่ทับกัน']},
  {v:'10.5',d:'8 พ.ย. 2026',l:['🧪 ตรวจทั้งเกมด้วยการจำลองเล่นอัตโนมัติกว่า 400 ชีวิต (ยุทธภพ เทพเซียน สัตว์ ชะตาประจำวัน สร้างเอง เล่นต่อเป็นลูก/คนอื่น) กดทุกเมนูกว่า 4 หมื่นครั้ง — ไม่พบการค้าง','🐛 เรื่องที่ค้างรอเลือกเกี่ยวกับสำนัก ถ้าออกจากสำนักไปก่อนจะจบลงเองอย่างถูกต้อง ไม่เงียบหายหรือพัง · แก้การสอบเลื่อนขั้น/ถูกใส่ร้ายที่พังเมื่อไม่มีสำนัก','💾 ถ้าพื้นที่เซฟในเครื่องเต็ม เกมจะเตือนทันที (เดิมเงียบและเซฟไม่ติด) และลองบันทึกแบบย่อให้ก่อน','🔁 ลดเหตุการณ์ซ้ำซาก: เทศกาลตามวันจริงไม่เกิน 3 ครั้งต่อชีวิต · คนขอเข้าตำหนักในไม่ถี่เกินไป · ชีวิตคู่ร้าวฉานไม่วนทุกปี · ข้อความติดคอขวด · ประตูมิติชาร์จเก็บได้สูงสุด 5 · เหตุการณ์ชีวิตสัตว์ไม่ซ้ำติดกัน · เนตรวิเศษเจอสมบัติไม่ถี่เกินไป','⏳ โหมดชีวิตสั้น: ตายตอน 30 ปีไม่ขึ้นว่า "ตายด้วยวัยชรา" แล้ว และไม่เผาการ์ดคืนชีพทิ้ง','👶 ผู้บำเพ็ญในโลกเซียนมีลูกได้ตามอายุขัยที่ยาวกว่าคนธรรมดา · คนรักที่ยังไม่แต่งงานไม่นับเป็นเควสมีลูก','🌐 ระบบออนไลน์เลิกใช้คำสั่งเก่าที่ Node.js เตือนว่าจะถูกถอด']},
  {v:'10.4',d:'8 พ.ย. 2026',l:['💕 ระบบคู่รักใหม่: มีคนรักได้ตั้งแต่อายุ 18 ปี คบกันก่อนแล้วค่อยขอแต่งงาน (มีลูกหลังแต่งงาน)','✨ เสน่ห์ยิ่งสูง คนที่เข้ามาหายิ่งอายุน้อย (ไม่ต่ำกว่า 18 ปีเสมอ) · เห็นอายุของทุกคนในหน้าครอบครัว','🏯 มีหลายคนได้ผ่านตำหนักใน — แต่ต้องถามคนรักคนแรกก่อน เธออาจยอมหรือไม่ยอม (ปฏิเสธแล้วถามใหม่ได้ใน 5 ปี) หรือจะแอบคบก็ได้ แต่เสี่ยงถูกจับได้','👥 ไปเน้นครอบครัวขณะมีคนรัก มีโอกาสได้พบคนใหม่ · คนในตำหนักในแก่ตัวและจากไปตามอายุ','☁️ ใช้ได้ทั้งยุทธภพและโลกเทพเซียน — คนรักในโลกเซียนอายุยืนหลายร้อยปี · ตำหนักในไม่ปิดตัวเมื่ออายุเกิน 75 อีก','🐛 เควสอัปเกรดอาวุธในระบบที่สองยังค้างแบบเดิม แก้แล้ว · อีเวนต์รักทุกแบบเริ่มที่ 18 ปี']},
  {v:'10.3',d:'8 พ.ย. 2026',l:['⬆️ เควสอัปเกรดอาวุธ/ชุดเกราะ มีปุ่มอัปเกรดตรงในหน้าระบบ ไม่ต้องหาเองว่าต้องไปไหน','🔨 ตีบวกอาวุธและชุดเกราะชั้นสูงสุดได้ถึง +10 ที่ตลาด — ซื้อจนเต็มชั้นแล้วก็ยังอัปเกรดต่อได้ · ไม่มีเควสอัปเกรดค้างที่ทำไม่ได้อีก','⚡ โลกเทพ: ไม่โดนเรียกข้ามทัณฑ์สวรรค์อีก จนกว่าจะถึงนิรันดร์ขั้นเก้า และเลือกไม่ข้ามแล้วเล่นต่อได้','💞 แต่งงานตอนอายุมาก คู่ชีวิตไม่ตายทันทีแล้ว — อายุคู่สมเหตุผล และอายุยืนตามขั้นพลังของคุณ','🃏 การ์ดคืนชีพถูกใช้ก่อนเสมอเมื่อตาย และถ้าตายเพราะแก่ จะต่ออายุได้จริงแม้ชนเพดานอายุของโลก']},
@@ -1712,7 +1713,7 @@ function inherit(ci){
  render();
 }
 function toTitle(){clearInterval(timer);S=null;renderLegends();show('title')}
-function renderLegends(){$('contBox').innerHTML=[1,2,3].map(n=>{const sv=readSave(n);return sv?`<div class="slotrow"><button class="gbtn cont" onclick="loadGame(${n})">▶ ช่อง ${n}: ${esc(sv.S.name)} (อายุ ${sv.S.age} ปี)${sv.S.xian?' ☁️':''}</button><button class="pbtn slotdel" onclick="askDelSlot(${n})" title="ลบช่อง ${n}">🗑️</button></div>`:''}).join('');
+function renderLegends(){$('contBox').innerHTML=SLOTS.map(n=>{const sv=readSave(n);return sv?`<div class="slotrow"><button class="gbtn cont" onclick="loadGame(${n})">▶ ช่อง ${n}: ${esc(sv.S.name)} (อายุ ${sv.S.age} ปี)${sv.S.xian?' ☁️':''}</button><button class="pbtn slotdel" onclick="askDelSlot(${n})" title="ลบช่อง ${n}">🗑️</button></div>`:''}).join('');
  const L=LS.get('murim_leg',[]);
  setTimeout(titleExtras,0);
  $('legends').innerHTML=L.length?`<h4>🏛️ ชีวิตที่ผ่านมา</h4>`+L.map(l=>`<div class="box"><b>「${l.e}」 ${esc(l.n)}</b>${l.g>1?' · รุ่น '+l.g:''}${l.ow?' 🌌':''}<br>${l.r} · ${l.f} · อายุ ${l.a} · คะแนน ${fmt(l.s)}</div>`).join(''):''}
@@ -3244,8 +3245,8 @@ function playAs(kind,i){const P=S;let o;
 function playAsHTML(){const al=peers.map((p,i)=>[p,i]).filter(([p])=>p.alive&&p.age>=10);const d=S.flags.disciple;if(!al.length&&!d)return '';
  return `<h4 style="margin-top:10px">👻 เล่นต่อเป็นคนอื่นในโลกเดิม</h4><div class="mgrid">${al.map(([p,i])=>`<button class="opt" onclick="playAs('peer',${i})">👤 ${esc(p.name)}<small>อายุ ${p.age} · ${REALMS[p.ri||0].n}${p.fac?' · '+p.fac.n:''}</small></button>`).join('')}${d?`<button class="opt" onclick="playAs('disc')">🧑‍🎓 ${esc(d)}<small>ศิษย์คนแรก · รับวิชาอาจารย์</small></button>`:''}</div>`}
 // ---- 6. หลายช่องเซฟ ----
-const slotKey=n=>n>1?'murim_save_'+n:'murim_save';
-function freeSlot(){for(const n of [1,2,3])if(!readSave(n))return n;let best=1,bt=Infinity;for(const n of [1,2,3]){const d=readSave(n);if(d&&(d.t||0)<bt){bt=d.t||0;best=n}}return best}
+const SLOTS=[1,2,3,4,5],slotKey=n=>n>1?'murim_save_'+n:'murim_save',bakKey=n=>'murim_bak_'+n;
+function freeSlot(){for(const n of SLOTS)if(!readSave(n))return n;let best=1,bt=Infinity;for(const n of SLOTS){const d=readSave(n);if(d&&(d.t||0)<bt){bt=d.t||0;best=n}}const old=readSave(best);if(old&&arcPut(old,'ช่องเซฟเต็ม')){LS.del(slotKey(best));LS.del(bakKey(best));toast(`ช่องเซฟเต็ม — ย้ายชีวิตของ ${old.S.name} ไปไว้ใน 🗂️ คลังสำรองแล้ว`)}return best}
 // ---- 7. ของตกแต่ง ----
 const XTHEME=[['jade','🍃','หยกเขียว','สะสมความสำเร็จ 15 อย่าง',()=>Object.keys(achGot).length>=15],['ember','🩸','โลหิตมาร','ได้ความสำเร็จระดับตำนาน 1 อย่าง',()=>ACH_ALL.some(a=>achGot[a.id]&&a.r>=4)],['gold','✨','ทองเซียน','ได้ความสำเร็จระดับเทพ 1 อย่าง',()=>ACH_ALL.some(a=>achGot[a.id]&&a.r>=5)]];
 function openCosmetic(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎖️ ของตกแต่ง</h3><p class="tag2">ปลดล็อกธีมสีพิเศษจากความสำเร็จ</p>${THEMES.map(t=>{const x=XTHEME.find(y=>y[0]===t[0]);const ok=!x||x[4]();return `<div class="item" style="display:flex;justify-content:space-between;align-items:center;gap:6px"><div><b>${t[1]} ${t[2]}</b>${x?`<br><span class="tag2">${ok?'✅ ปลดล็อกแล้ว':'🔒 '+x[3]}</span>`:''}</div><button class="sysb" style="flex:0 0 auto" ${ok?'':'disabled'} onclick="theme='${t[0]}';LS.set('murim_theme',theme);applyTheme();openCosmetic()">${theme===t[0]?'ใช้อยู่':'ใช้'}</button></div>`}).join('')}`)}
@@ -3933,7 +3934,7 @@ function endAnim(score){const root=$('end');root.classList.remove('endanim');voi
 const ctok=(()=>{let v=LS.get('murim_ctok','');if(!v){v=Math.random().toString(36).slice(2,12)+Math.random().toString(36).slice(2,6);LS.set('murim_ctok',v)}return v})();
 let cloudT=0,cloudBusy=false;
 async function cloudAuto(force){if(!onlineOK||!S||!S.alive||cloudBusy)return;if(!force&&Date.now()-cloudT<90000)return;cloudBusy=true;
- try{const d=saveCodeRaw();if(!d)return;await api('csave',{tk:ctok,d});cloudT=Date.now();LS.set('murim_cloudT',cloudT);const e=$('cloudTag');if(e){e.textContent='☁️';e.title='เซฟบนเซิร์ฟเวอร์แล้ว';e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1500)}}catch(e){}finally{cloudBusy=false}}
+ try{const d=saveCodeRaw();if(!d)return;await api('csave',{tk:ctok,d,sl:S.slot||1});cloudT=Date.now();LS.set('murim_cloudT',cloudT);const e=$('cloudTag');if(e){e.textContent='☁️';e.title='เซฟบนเซิร์ฟเวอร์แล้ว';e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1500)}}catch(e){}finally{cloudBusy=false}}
 function saveCodeRaw(){const d=LS.get(slotKey(S.slot||1),null);if(!d)return'';try{return btoa(unescape(encodeURIComponent(JSON.stringify(d))))}catch(e){return''}}
 const myCloudCode=()=>(pid+'-'+ctok).toUpperCase();
 async function cloudPull(code){const m=/^([A-Z0-9]{6,24})-([A-Z0-9]{6,20})$/.exec(code.trim().toUpperCase());if(!m)return false;
@@ -5015,7 +5016,7 @@ function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tick
 // ============ SAVE / LOAD ============
 function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;const d={t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION};let ok=LS.set(slotKey(S.slot),d);if(!ok){d.feed='';ok=LS.set(slotKey(S.slot),d)}if(!ok){if(!saveGame._warn){saveGame._warn=1;toast('⚠️ พื้นที่เก็บเซฟในเครื่องเต็ม — เกมนี้ยังไม่ถูกบันทึก ลองลบช่องเซฟเก่าหรือภาพในอัลบั้ม');try{log('⚠️ บันทึกเกมไม่สำเร็จ: พื้นที่เก็บข้อมูลของเบราว์เซอร์เต็ม — ลบช่องเซฟเก่าหรือภาพในอัลบั้มที่หน้าแรก แล้วเกมจะบันทึกต่อเอง','bad')}catch(e){}}}else saveGame._warn=0;try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
-function readSave(n=1){const d=LS.get(slotKey(n),null);return d&&['1.4','1.5','1.6','1.7','1.8','1.9','2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','3.0','3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9','4.0','4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','5.0','5.1','5.2','5.3','5.4','5.5','5.6','5.7','5.8','5.9','6.0','6.1','6.2','6.3','6.4','6.5','6.6','6.7','6.8','6.9','7.0','7.1','7.2','7.3','7.4','7.5','7.6','7.7','7.8','7.9','8.0','8.1','8.2','8.3','8.4','8.5','8.6','8.7','8.8','8.9','9.0','9.1','9.2','9.3','9.4','9.5','9.6','9.7','9.8','9.9','10.0','10.1',VERSION].includes(d.v)?d:null}
+function readSave(n=1){const ok=d=>d&&typeof d==='object'&&d.S&&typeof d.S==='object'&&d.S.name!=null&&Array.isArray(d.peers);const d=LS.get(slotKey(n),null);if(ok(d))return d;const b=LS.get(bakKey(n),null);return ok(b)&&b.S.alive!==false?b:null}
 function loadGame(n=1){
  const d=readSave(n);if(!d)return;
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
@@ -5325,6 +5326,41 @@ function askDelSlot(n){const sv=readSave(n);if(!sv)return;modal(`<h3>🗑️ ล
 function delSlot(n){try{localStorage.removeItem(slotKey(n))}catch(e){}closeM();toast(`ลบช่อง ${n} แล้ว`);renderLegends()}
 (function(){const st=document.createElement('style');st.textContent='.slotrow{display:flex;gap:6px;align-items:stretch}.slotrow .cont{flex:1}.slotrow .slotdel{width:auto;flex:0 0 auto;padding:0 12px;font-size:16px}';document.head.appendChild(st)})();
 {const _gc=goalCheck;goalCheck=function(){if(S&&S.goal==='slow'&&!S.goalDone&&S.age%10===0&&S.age>=20&&S._slowY!==S.age){S._slowY=S.age;const j=slowJoy(),k=S.kills||0;if(k>10)log('🍵 ปณิธานสโลไลฟ์ล้มเหลวแล้ว — ชีวิตนี้ผ่านการต่อสู้มามากเกินไป','bad');else log(`🍵 สโลไลฟ์: ความสุขเฉลี่ย ${j} · ต่อสู้ไปแล้ว ${k}/10 ครั้ง${j<65?' — ลองพักผ่อนและอยู่กับครอบครัวให้มากขึ้น':''}`)}return _gc.apply(this,arguments)}}
+try{renderLegends()}catch(e){}
+
+// ============ v10.6 ระบบเซฟปลอดภัย: คลังสำรอง · สำเนาต่อช่อง · กู้จากเซิร์ฟเวอร์ ============
+const ARC_MAX=8;
+function arcList(){const L=LS.get('murim_arc',[]);return Array.isArray(L)?L:[]}
+function arcPut(d,why){try{if(!d||!d.S)return false;const id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);const c=Object.assign({},d,{feed:''});
+  if(!LS.set('murim_arc_'+id,c))return false;const L=arcList();L.unshift({id,n:d.S.name,age:d.S.age,x:!!d.S.xian,t:Date.now(),why:why||''});
+  while(L.length>ARC_MAX){const o=L.pop();LS.del('murim_arc_'+o.id)}LS.set('murim_arc',L);return true}catch(e){return false}}
+function arcRestore(id){const L=arcList(),i=L.findIndex(x=>x.id===id);if(i<0)return;const d=LS.get('murim_arc_'+id,null);if(!d||!d.S){toast('ข้อมูลสำรองเสียหาย');return}
+ const n=freeSlot();d.t=Date.now();if(!LS.set(slotKey(n),d)){toast('พื้นที่เก็บข้อมูลเต็ม กู้คืนไม่ได้');return}
+ const L2=arcList().filter(x=>x.id!==id);LS.set('murim_arc',L2);LS.del('murim_arc_'+id);toast(`กู้ชีวิตของ ${d.S.name} กลับมาที่ช่อง ${n} แล้ว`);closeM();renderLegends()}
+function arcDel(id){LS.set('murim_arc',arcList().filter(x=>x.id!==id));LS.del('murim_arc_'+id);openArchive()}
+function openArchive(){const L=arcList();modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🗂️ คลังสำรอง</h3><p class="tag2">ชีวิตที่ถูกย้ายออกจากช่องเซฟ (ช่องเต็ม หรือกดลบ) จะเก็บไว้ที่นี่ ${ARC_MAX} ชีวิตล่าสุด · กดกู้คืนเพื่อเล่นต่อ</p>`+
+ (L.length?L.map(a=>`<div class="item"><div class="h"><b>${esc(a.n)}${a.x?' ☁️':''}</b><span class="tag2">อายุ ${a.age} ปี</span></div><p class="tag2">${new Date(a.t).toLocaleString('th-TH')} · ${esc(a.why)}</p><div class="brow"><button class="pbtn" onclick="arcRestore('${a.id}')">↩️ กู้คืน</button><button class="gbtn" onclick="arcDel('${a.id}')">ลบถาวร</button></div></div>`).join(''):'<p class="tag2">ยังไม่มีชีวิตในคลังสำรอง</p>'),'archive')}
+// สำเนาต่อช่อง: เก็บสำเนาล่าสุดที่โหลดได้ไว้อีกชุด (ไม่รวมบันทึกฟีด) ทุก 3 ปีในเกม
+function bakTick(d){try{if(!S||!S.slot)return;const c=Object.assign({},d,{feed:''});if(LS.set(bakKey(S.slot),c))S._bakAge=S.age}catch(e){}}
+{const _sg=saveGame;saveGame=function(){const r=_sg.apply(this,arguments);try{if(S&&S.alive&&!saveGame._warn&&(S._bakAge==null||S.age-S._bakAge>=3||S.age<S._bakAge)){const d=LS.get(slotKey(S.slot),null);if(d)bakTick(d)}}catch(e){}return r}}
+{const _cs=clearSave;clearSave=function(){try{if(S&&S.slot)LS.del(bakKey(S.slot))}catch(e){}return _cs.apply(this,arguments)}}
+// ลบเอง = ย้ายไปคลังสำรอง (กู้คืนได้)
+delSlot=function(n){const d=readSave(n);if(d)arcPut(d,'ลบเอง');try{localStorage.removeItem(slotKey(n));localStorage.removeItem(bakKey(n))}catch(e){}closeM();toast(`ย้ายช่อง ${n} ไปคลังสำรองแล้ว — กู้คืนได้ที่ 🗂️`);renderLegends()};
+// โหลดพัง → ไม่ทิ้งเกมไว้ครึ่งๆ กลางๆ ลองสำเนาสำรองแทน
+{const _lg=loadGame;loadGame=function(n=1){try{return _lg.call(this,n)}catch(e){console.error('load failed',e);const b=LS.get(bakKey(n),null);
+ if(b&&b.S&&b._tried!==1){try{b._tried=1;LS.set(slotKey(n),b);toast('เซฟหลักเสียหาย — ใช้สำเนาสำรองแทน');return _lg.call(this,n)}catch(e2){console.error(e2)}}
+ S=null;show('title');renderLegends();toast('โหลดช่องนี้ไม่ได้ — ข้อมูลยังอยู่ ลองกู้จาก 🗂️ คลังสำรอง หรือ ☁️ เซิร์ฟเวอร์');}}}
+// กู้จากเซิร์ฟเวอร์ (เซฟอัตโนมัติบนคลาวด์ของเครื่องนี้)
+async function openCloudRestore(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☁️ กู้เซฟจากเซิร์ฟเวอร์</h3><p class="tag2">กำลังค้นหาเซฟของเครื่องนี้...</p>`,'cloudr');
+ let j=null;try{j=await api('clist&tk='+ctok)}catch(e){}
+ if($('modal').dataset.k!=='cloudr')return;
+ const L=(j&&j.l)||[];modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☁️ กู้เซฟจากเซิร์ฟเวอร์</h3><p class="tag2">เกมสำรองชีวิตที่กำลังเล่นขึ้นเซิร์ฟเวอร์อัตโนมัติ (เก็บ 90 วัน) · กู้แล้วจะลงช่องว่าง ไม่ทับชีวิตที่มีอยู่</p>`+
+  (L.length?L.map(x=>`<div class="item"><div class="h"><b>${esc(x.n||'?')}${x.x?' ☁️':''}</b><span class="tag2">อายุ ${x.age} ปี</span></div><p class="tag2">บันทึกเมื่อ ${x.t?new Date(x.t).toLocaleString('th-TH'):'-'}${x.sl?' · ช่อง '+x.sl:''}</p><button class="pbtn" style="width:100%" onclick="cloudRestore('${x.k}')">↩️ กู้ชีวิตนี้</button></div>`).join(''):`<p>${j?'ไม่พบเซฟบนเซิร์ฟเวอร์ของเครื่องนี้':'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่อีกครั้ง'}</p>`)+
+  `<p class="tag2" style="margin-top:8px">ถ้าเล่นจากเครื่องอื่น ใช้รหัสจากเมนู 💾 ย้ายเซฟ ของเครื่องนั้น</p>`,'cloudr')}
+async function cloudRestore(k){try{const j=await api('cload&p='+pid+'&tk='+ctok+'&k='+encodeURIComponent(k));if(j&&j.d){const d=JSON.parse(decodeURIComponent(escape(atob(j.d))));if(!d||!d.S)throw 0;
+ for(const n of SLOTS){const e=readSave(n);if(e&&e.S&&e.S.name===d.S.name&&e.S.age===d.S.age&&e.S.seed===d.S.seed){toast(`ชีวิตนี้อยู่ในช่อง ${n} อยู่แล้ว`);return}}
+ const n=freeSlot();d.t=Date.now();if(!LS.set(slotKey(n),d)){toast('พื้นที่เก็บข้อมูลเต็ม');return}closeM();toast(`กู้ ${d.S.name} กลับมาที่ช่อง ${n} แล้ว`);renderLegends();return}}catch(e){}toast('กู้ไม่สำเร็จ')}
+{const _rl=renderLegends;renderLegends=function(){const r=_rl.apply(this,arguments);try{const a=arcList().length;$('contBox').insertAdjacentHTML('beforeend',`<div class="brow" style="margin-top:6px"><button class="gbtn" onclick="openArchive()">🗂️ คลังสำรอง${a?' ('+a+')':''}</button><button class="gbtn" onclick="openCloudRestore()">☁️ กู้จากเซิร์ฟเวอร์</button></div>`)}catch(e){}return r}}
 try{renderLegends()}catch(e){}
 
 // ============ v7.0: ดูบันทึกของคนอื่นตั้งแต่เกิด (โหลดครั้งเดียวเมื่อกด) ============
