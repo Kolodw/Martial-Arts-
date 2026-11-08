@@ -390,8 +390,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='10.7';
+const VERSION='10.8';
 const CHANGELOG=[
+ {v:'10.8',d:'8 พ.ย. 2026',l:['📊 โพลในประกาศ: ผู้ดูแลแนบตัวเลือกให้ทุกคนโหวตได้ · กดโหวตในกรอบประกาศแล้วเห็นผลเป็นเปอร์เซ็นต์ทันที เปลี่ยนใจได้ · ปิดไปแล้วกดเปิดใหม่ได้จากแชทโลก']},
  {v:'10.7',d:'8 พ.ย. 2026',l:['💬 แชทโลก: ข้อความของเราอยู่ฝั่งขวาเป็นกรอบสีชมพู ข้อความคนอื่นอยู่ซ้าย ดูง่ายขึ้นว่าเราพิมพ์อะไรไป','📢 ประกาศจากผู้ดูแล: ขึ้นเป็นกรอบสีเหลืองทึบลอยด้านบนให้ทุกคนเห็น ทั้งหน้าแรกและระหว่างเล่น กด "รับทราบ" เพื่อปิด']},
  {v:'10.6',d:'8 พ.ย. 2026',l:['💾 ขออภัย! เซฟที่หายไปจากหน้าแรกตั้งแต่อัปเดต v10.3 ยังอยู่ในเครื่องครบ — ตอนนี้กลับมาแสดงแล้ว (ต้นเหตุคือเกมซ่อนเซฟจากเวอร์ชันที่มันไม่รู้จัก)','🗂️ คลังสำรอง: ช่องเซฟเต็มหรือกดลบ ชีวิตเดิมจะย้ายไปคลังสำรอง กู้คืนได้ (เดิมเขียนทับทิ้งเงียบๆ) · ช่องเซฟเพิ่มเป็น 5 ช่อง','🛟 ทุกช่องมีสำเนาสำรองในเครื่อง ถ้าเซฟหลักเสียหายจะโหลดจากสำเนาแทน · โหลดพังจะไม่ลบอะไรทิ้ง','☁️ กู้จากเซิร์ฟเวอร์: ปุ่มใหม่ที่หน้าแรก ดึงเซฟอัตโนมัติบนคลาวด์ของเครื่องนี้กลับมาลงช่องว่าง · คลาวด์เก็บแยกตามช่องแล้ว ไม่ทับกัน']},
  {v:'10.5',d:'8 พ.ย. 2026',l:['🧪 ตรวจทั้งเกมด้วยการจำลองเล่นอัตโนมัติกว่า 400 ชีวิต (ยุทธภพ เทพเซียน สัตว์ ชะตาประจำวัน สร้างเอง เล่นต่อเป็นลูก/คนอื่น) กดทุกเมนูกว่า 4 หมื่นครั้ง — ไม่พบการค้าง','🐛 เรื่องที่ค้างรอเลือกเกี่ยวกับสำนัก ถ้าออกจากสำนักไปก่อนจะจบลงเองอย่างถูกต้อง ไม่เงียบหายหรือพัง · แก้การสอบเลื่อนขั้น/ถูกใส่ร้ายที่พังเมื่อไม่มีสำนัก','💾 ถ้าพื้นที่เซฟในเครื่องเต็ม เกมจะเตือนทันที (เดิมเงียบและเซฟไม่ติด) และลองบันทึกแบบย่อให้ก่อน','🔁 ลดเหตุการณ์ซ้ำซาก: เทศกาลตามวันจริงไม่เกิน 3 ครั้งต่อชีวิต · คนขอเข้าตำหนักในไม่ถี่เกินไป · ชีวิตคู่ร้าวฉานไม่วนทุกปี · ข้อความติดคอขวด · ประตูมิติชาร์จเก็บได้สูงสุด 5 · เหตุการณ์ชีวิตสัตว์ไม่ซ้ำติดกัน · เนตรวิเศษเจอสมบัติไม่ถี่เกินไป','⏳ โหมดชีวิตสั้น: ตายตอน 30 ปีไม่ขึ้นว่า "ตายด้วยวัยชรา" แล้ว และไม่เผาการ์ดคืนชีพทิ้ง','👶 ผู้บำเพ็ญในโลกเซียนมีลูกได้ตามอายุขัยที่ยาวกว่าคนธรรมดา · คนรักที่ยังไม่แต่งงานไม่นับเป็นเควสมีลูก','🌐 ระบบออนไลน์เลิกใช้คำสั่งเก่าที่ Node.js เตือนว่าจะถูกถอด']},
@@ -6474,6 +6475,55 @@ async function annClear(){if(!admK())return;try{await api('annclear',{key:admK()
 #annBar .annOk{background:#fff}
 #annBar .annDel{background:#ff8fa8}
 @keyframes annIn{from{transform:translate(-50%,-30px);opacity:0}to{transform:translate(-50%,0);opacity:1}}`;document.head.appendChild(st)})();
+
+// ============ v10.8 โพลในประกาศแอดมิน ============
+function annPollHTML(a){if(!a||!Array.isArray(a.poll)||a.poll.length<2)return'';const c=Array.isArray(a.c)?a.c:a.poll.map(()=>0),tot=c.reduce((x,y)=>x+y,0),my=a.my!=null?a.my:-1,show=my>=0||!!admK();
+ return`<div class="annP"><div class="annPh">📊 ${my>=0?'ผลโหวตตอนนี้ · แตะตัวเลือกอื่นเพื่อเปลี่ยนได้':'โหวตเลือก 1 ข้อ'}</div>`+a.poll.map((o,i)=>{const pc=tot?Math.round(c[i]/tot*100):0;
+  return`<button class="annO ${my===i?'mine':''}" onclick="annVote(${i})"><span class="annOb" style="width:${show?pc:0}%"></span><span class="annOt">${my===i?'✅ ':''}${esc(o)}</span>${show?`<span class="annOp">${pc}% · ${fmt(c[i])}</span>`:''}</button>`}).join('')+
+  `<div class="annPt">${show?`ทั้งหมด ${fmt(tot)} โหวต`:'โหวตแล้วจะเห็นผล'}</div></div>`}
+annShow=function(a){annCur=a||null;let el=document.getElementById('annBar');
+ if(!a||!a.i||LS.get('murim_annX','')===a.i){if(el)el.remove();return}
+ if(el&&el.dataset.i===a.i){const p=el.querySelector('.annPw');if(p)p.innerHTML=annPollHTML(a);return}
+ if(el)el.remove();
+ el=document.createElement('div');el.id='annBar';el.dataset.i=a.i;el.setAttribute('role','alert');
+ el.innerHTML=`<div class="annH"><span class="annI">📢</span><b>ประกาศจากผู้ดูแล</b><span class="annT">${new Date(a.t).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</span></div><div class="annX">${esc(a.x)}</div><div class="annPw">${annPollHTML(a)}</div><div class="annB"><button class="annOk" onclick="annDismiss()">รับทราบ</button>${admK()?'<button class="annDel" onclick="annClear()">🗑️ ลบประกาศ (ทุกคน)</button>':''}</div>`;
+ document.body.appendChild(el);try{sfx('rare')}catch(e){}};
+async function annVote(i){const a=annCur;if(!a||!a.poll||annVote._busy)return;if(a.my===i)return;annVote._busy=1;
+ const old=JSON.parse(JSON.stringify(a));try{a.c=a.c||a.poll.map(()=>0);if(a.my>=0)a.c[a.my]=Math.max(0,a.c[a.my]-1);a.c[i]++;a.my=i;annShow(a); // แสดงผลทันที
+  const j=await api('annvote',{ai:a.i,o:i});if(j&&j.ann)annShow(j.ann);toast('โหวตแล้ว ✅')}
+ catch(e){annShow(old);toast(e.message==='gone'?'โพลนี้ปิดไปแล้ว':e.message==='rate'?'กดเร็วเกินไป':'โหวตไม่สำเร็จ')}finally{annVote._busy=0}}
+function annReopen(){LS.del('murim_annX');if(annCur)annShow(annCur);else onlinePing()}
+// ผู้ดูแล: ฟอร์มสร้างประกาศ + โพล
+function annCompose(){if(!admK())return toast('ใช้ได้เฉพาะโหมดแอดมิน');const ci=$('chatIn');const pre=ci?ci.value.replace(/^@everyone\b[\s:,-]*/i,''):'';
+ modal(`<button class="xbtn" onclick="openOnline('chat')">✕</button><h3>📊 ประกาศพร้อมโพล</h3><p class="tag2">ทุกคนจะเห็นประกาศลอยด้านบน และโหวตได้คนละ 1 ข้อ (เปลี่ยนใจได้) · ใส่ตัวเลือก 2–6 ข้อ</p>
+ <textarea id="acMsg" class="ta" rows="3" maxlength="400" placeholder="ข้อความประกาศ เช่น อยากให้อัปเดตอะไรต่อไป?">${esc(pre)}</textarea>
+ <div id="acOpts"></div><button class="gbtn" style="width:100%;margin:6px 0" onclick="annOptAdd()">➕ เพิ่มตัวเลือก</button>
+ <div class="brow"><button class="gbtn" onclick="openOnline('chat')">ยกเลิก</button><button class="pbtn" onclick="annPollSend()">📢 ส่งประกาศ</button></div>`,'anncomp');annOptAdd();annOptAdd()}
+function annOptAdd(){const b=$('acOpts');if(!b)return;const n=b.querySelectorAll('input').length;if(n>=6)return toast('สูงสุด 6 ตัวเลือก');b.insertAdjacentHTML('beforeend',`<div class="acRow"><input class="ta acO" maxlength="60" placeholder="ตัวเลือกที่ ${n+1}"><button class="gbtn" onclick="this.parentNode.remove()" title="ลบ">✕</button></div>`)}
+async function annPollSend(){const x=($('acMsg').value||'').trim(),opts=[...document.querySelectorAll('#acOpts .acO')].map(i=>i.value.trim()).filter(Boolean);
+ if(!x)return toast('พิมพ์ข้อความประกาศก่อน');if(opts.length&&opts.length<2)return toast('โพลต้องมีอย่างน้อย 2 ตัวเลือก');if(new Set(opts).size!==opts.length)return toast('ตัวเลือกซ้ำกัน');
+ if(annPollSend._busy)return;annPollSend._busy=1;
+ try{const j=await api('say',{n:pname(),ti:'ผู้ดูแล',x:'@everyone '+x,k:'msg',key:admK(),poll:opts});LS.del('murim_annX');if(j&&j.ann)annShow(j.ann);toast(opts.length?'📊 ส่งประกาศพร้อมโพลแล้ว':'📢 ส่งประกาศแล้ว');openOnline('chat')}
+ catch(e){toast(e.message==='admin'?'รหัสแอดมินไม่ถูกต้อง':e.message==='poll'?'โพลต้องมีอย่างน้อย 2 ตัวเลือก':'ส่งไม่สำเร็จ')}finally{annPollSend._busy=0}}
+{const _oo4=openOnline;openOnline=function(tab){const r=_oo4.apply(this,arguments);try{if((tab||'chat')==='chat'&&admK()){const h=document.getElementById('annHelp');if(h&&!document.getElementById('annPollBtn'))h.insertAdjacentHTML('afterend','<button id="annPollBtn" class="pbtn" style="width:100%;margin-top:6px" onclick="annCompose()">📊 สร้างประกาศพร้อมโพลให้ผู้เล่นโหวต</button>')}}catch(e){}return r}}
+// ข้อความประกาศในแชท: บอกว่ามีโพล + ปุ่มเปิดดู/โหวต (กรณีปิดไปแล้ว)
+{const _cr2=chatRender;chatRender=function(){const r=_cr2.apply(this,arguments);try{const box=$('chatBox');if(!box)return r;const anns=chatMsgs.filter(m=>m.k==='ann');const nodes=box.querySelectorAll('.cm.cmann');
+ nodes.forEach((n,k)=>{const m=anns[k];if(!m)return;const cur=annCur&&annCur.i===m.i;let h='';if(Array.isArray(m.poll)&&m.poll.length)h+=`<div class="cmpoll">📊 โพล: ${m.poll.map(esc).join(' · ')}</div>`;if(cur)h+=`<button class="cmreopen" onclick="annReopen()">${m.poll&&m.poll.length?'📊 เปิดโหวต / ดูผล':'📢 เปิดดูประกาศ'}</button>`;if(h)n.querySelector('.cmb').insertAdjacentHTML('beforeend',h)})}catch(e){}return r}}
+(function(){const st=document.createElement('style');st.textContent=`
+#annBar .annP{margin-top:9px}
+#annBar .annPh{font-size:14px;font-weight:700;margin-bottom:5px}
+#annBar .annO{position:relative;display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:#fff;border:3px solid #1e1400;border-radius:10px;padding:9px 10px;margin:5px 0;overflow:hidden;font-size:15px}
+#annBar .annO.mine{background:#d9f7dc;border-color:#145a1e}
+#annBar .annOb{position:absolute;left:0;top:0;bottom:0;background:#ffc21a;opacity:.55;transition:width .4s}
+#annBar .annO.mine .annOb{background:#3dbb52}
+#annBar .annOt,#annBar .annOp{position:relative}
+#annBar .annOt{flex:1}
+#annBar .annOp{font-size:13px;font-weight:700;white-space:nowrap}
+#annBar .annPt{font-size:13px;color:#5a4200;text-align:right}
+#annBar{max-height:calc(100vh - 20px);overflow:auto}
+.cm.cmann .cmpoll{margin-top:4px;font-size:.9em}
+.cm.cmann .cmreopen{margin-top:6px;width:100%;font:inherit;font-weight:700;background:#fff;border:2px solid #2a2838;border-radius:8px;padding:5px;cursor:pointer;color:#2a1a00}
+.acRow{display:flex;gap:6px;margin-top:6px}.acRow input{flex:1}.acRow button{width:auto;flex:0 0 auto;padding:0 12px}`;document.head.appendChild(st)})();
 
 </script>
 </body>
