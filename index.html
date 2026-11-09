@@ -7358,6 +7358,119 @@ setInterval(async()=>{try{if(!S||!S.alive||!MT.inv.length||choice._cur||S.beastM
  const j=await api('mtst',{rid:m.rid});if(!j||!j.ok||!j.st||j.st.res)return j&&j.st&&mtApply(j.st);if(modalOpen)closeM();mtShow(j.st);mtWatch(m.rid)}catch(e){}},1000);
 meetTick=function(){if(!meetC||Date.now()-meetC.at>90000||S.age<14||choice._cur||modalOpen||S.beastMode||MT.busy||Math.random()>.06)return;const o=meetC;meetC=null;MT.busy=1;
  api('mtopen',{to:o.k,n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0}).then(j=>{if(j&&j.ok&&j.st&&S&&S.alive&&!choice._cur){mtShow(j.st);mtWatch(j.st.rid)}}).catch(()=>{}).finally(()=>{MT.busy=0})};
+
+// ---- เล่นเองมากขึ้น: ดวลแบบจับเวลา (หลบ/สวนกลับ/อ่านท่า) + มินิเกมรวมปราณตอนเลื่อนขั้น ----
+function actDiff(){const m={hell:1.45,short:1.15,junk:1.1}[S&&S.ch]||1;return m*(S&&S.xt?1.2:S&&S.xian?1.1:1)}
+// ===== 1) ดวล =====
+const DU_TECH={m:['ฝ่ามือพยัคฆ์ดำ','ดาบผ่าภูผา','หมัดเหล็กกล้า','เพลงทวนสายฟ้า','เตะพายุหมุน','กรงเล็บอินทรี','ดาบเงาจันทร์','ฝ่ามือทลายศิลา'],x:['กระบี่บินพันเล่ม','อัสนีเก้าชั้น','ฝ่ามือปราณสวรรค์','เพลิงวิญญาณ','ค่ายกลกระบี่','ธาราแข็งพันปี','วายุตัดวิญญาณ'],g:['หัตถ์ทำลายดารา','ทวนเทพย้อนกาล','อัสนีลงทัณฑ์','ผนึกมิติ','เพลิงบรรพกาล','ดาบตัดเส้นชะตา']};
+const DU_INT={atk:['บุก','⚔️'],heavy:['ท่าหนัก','💥'],feint:['ท่าหลอก','🎭'],def:['ตั้งรับ','🛡️'],chg:['รวมพลัง','🌀']};
+function duTime(){return Math.max(4.5,10/actDiff())}
+function duelIntent(){if(DU.charge)return'heavy';const r=Math.random(),h=S&&S.ch==='hell'?.08:0;return r<.32?'atk':r<.5+h?'heavy':r<.64+h?'feint':r<.84?'def':'chg'}
+function duTech(){return ch(DU_TECH[S.xt?'g':S.xian?'x':'m'])}
+function duHint(e){const t=DU.tech;return{atk:`ขยับเท้าเตรียมใช้《${t}》พุ่งเข้าใส่ตรงๆ`,heavy:`ปราณพลุ่งพล่านรอบตัว — กำลังจะปล่อย《${t}》ท่าหนักที่รับไม่ไหวแน่`,feint:`ขยับไหล่แปลกๆ ทำท่าจะใช้《${t}》… แต่ดูไม่ค่อยจริงจัง`,def:'ตั้งการ์ดแน่นหนา รอจังหวะ',chg:'หลับตารวบรวมลมปราณ'}[e]}
+{const _duel=duel;duel=function(name,ep,cb){const r=_duel.apply(this,arguments);try{if(DU&&!auto){DU.combo=0;DU.best=0;DU.reads=0}}catch(e){}return r}}
+function duClear(){clearInterval(DU&&DU._iv);clearTimeout(DU&&DU._early);if(DU){DU._iv=null;DU._early=null}}
+drawDuel=function(fin){if(!DU)return;duClear();
+ if(!fin){if(!DU.tech||DU._r!==DU.r){DU.tech=duTech();DU._r=DU.r;DU.shown=(tr('eye')||Math.random()<(S.ch==='hell'?.6:.75))?DU.intent:ch(['atk','heavy','feint','def','chg'].filter(x=>x!==DU.intent))}}
+ const bar=(v,c)=>`<div class="hpbar" style="height:10px"><i style="width:${Math.max(0,v)}%;background:${c}"></i></div>`,T=duTime();
+ const B=(a,ic,t,s,dis)=>`<button class="opt" onclick="duelAct('${a}')" ${dis?'disabled style="opacity:.4"':''}>${ic} ${t}<small>${s}</small></button>`;
+ modal(`<h3>⚔️ ดวลกับ ${DU.name}</h3>
+ <div class="tag2">คุณ · ${Math.max(0,Math.round(DU.me))}${DU.combo>1?` · 🔥 คอมโบ ×${DU.combo}`:''}</div>${bar(DU.me,'#5fbf6f')}
+ <div class="tag2" style="margin-top:6px">${DU.name} · ${Math.max(0,Math.round(DU.en))}${DU.charge?' ⚡ รวมพลังแล้ว!':''}</div>${bar(DU.en,'#ff5d73')}
+ <p style="margin-top:10px">${DU.txt||'ทั้งสองฝ่ายจ้องตากัน ลมพัดใบไม้ปลิวผ่าน...'}</p>`+
+ (fin?fin:`<div class="item" style="margin:6px 0;border-left:4px solid #ff5d73"><span class="tag2">ยกที่ ${DU.r}/6 · ศัตรูจะใช้:</span><br> <b>${DU_INT[DU.shown][1]} ${duHint(DU.shown)}</b></div>
+ <div class="hpbar" style="height:7px;margin:4px 0 8px"><i id="duT" style="width:100%;background:#f0c860;transition:width .1s linear"></i></div>
+ <div class="mgrid">${B('atk','⚔️','บุก','ชนะรวมพลัง · ขัดท่าหลอก')}${B('def','🛡️','ตั้งรับ','ลดแรงการบุก')}${B('dodge','💨','หลบ','พ้นท่าหนักแล้วเห็นช่องโหว่')}${B('ctr','↩️','สวนกลับ','ลงโทษการบุก/ท่าหลอก · โดนท่าหนักเจ็บ')}
+ ${B('sec','✨','วิชาลับ',DU.secret?'《'+(DU.art||'')+'》 ใช้ได้ 1 ครั้ง':'ใช้ไปแล้ว / ไม่มีวิชา',!DU.secret)}${B('flee','🏃','หนี','ยอมแพ้ บาดเจ็บน้อย')}</div>${duelXBtns()}
+ <p class="tag2" style="text-align:center">⏳ มี ${T.toFixed(1)} วิ — ช้าไปศัตรูจะลงมือเอง และบางทีมันไม่รอ!</p>`),'duel');
+ if(fin)return;DU._t0=Date.now();const r0=DU.r;
+ DU._iv=setInterval(()=>{if(!DU||DU.r!==r0||$('modal').dataset.k!=='duel'){clearInterval(DU&&DU._iv);return}if(document.hidden){DU._t0+=100;return}const left=1-(Date.now()-DU._t0)/(T*1000),el=$('duT');if(el){el.style.width=Math.max(0,left*100)+'%';el.style.background=left<.3?'#ff5d73':'#f0c860'}if(left<=0){clearInterval(DU._iv);duelAct('none')}},100);
+ const pe=(S.ch==='hell'?.4:.22)*(DU.intent==='atk'||DU.intent==='heavy'?1:.3);if(Math.random()<pe){DU._early=setTimeout(()=>{if(DU&&DU.r===r0&&$('modal').dataset.k==='duel'&&!document.hidden){DU._ea=1;duelAct('none')}},T*1000*(.35+Math.random()*.35))}}
+duelAct=function(a){if(!DU)return;duClear();
+ const e=DU.intent,myP=total()*(has('plasma')?1.6:1),ratio=Math.max(.35,Math.min(3,myP/DU.ep)),rr=()=>.8+Math.random()*.4,fast=DU._t0&&Date.now()-DU._t0<2500;
+ let md=22*Math.pow(ratio,.7)*rr()*(1+.15*Math.min(3,DU.combo||0)),ed=22/Math.pow(ratio,.7)*rr()*(DU.charge?1.8:1)*(S.ch==='hell'?1.15:1);
+ if(a==='flee'){S.hp-=R(5,15);DU.txt='คุณถอยหนีออกจากวงต่อสู้';return duelEnd(false,true)}
+ let t='',good=null;const tn=`《${DU.tech||''}》`;
+ if(duelX(a,e==='heavy'||e==='feint'?'atk':e,md,ed))t=DU._t;
+ else if(a==='none'){const early=DU._ea;DU._ea=0;if(e==='atk'){DU.me-=ed;t=`${early?'⚡ ศัตรูไม่รอ! ':'⏳ ช้าไป! '}${tn}กระแทกเข้าเต็มๆ`}else if(e==='heavy'){DU.me-=ed*1.6;t=`${early?'⚡ ศัตรูชิงลงมือก่อน! ':'⏳ ช้าไป! '}${tn}ท่าหนักซัดคุณกระเด็น`}else if(e==='feint'){DU.me-=ed*.5;t='⏳ คุณลังเล ศัตรูแทงเบาๆ ทิ้งท้ายแล้วถอยออกไป'}else if(e==='chg'){t='⏳ ศัตรูรวมพลังเสร็จโดยไม่มีใครขัด…'}else t='⏳ ต่างฝ่ายต่างจ้องกันจนหมดจังหวะ';good=false;sfx('hit')}
+ else if(a==='atk'){if(e==='atk'){DU.en-=md;DU.me-=ed*.8;t='ทั้งคู่พุ่งเข้าปะทะ! กระบี่กระทบกันเสียงดังสนั่น';good=null}else if(e==='heavy'){DU.en-=md*.8;DU.me-=ed*1.5;t=`คุณบุกสวนทาง${tn}ท่าหนัก — แลกกันแต่คุณเจ็บกว่า`;good=false}else if(e==='feint'){DU.en-=md*1.1;t='ศัตรูแค่หลอก คุณบุกเข้าไปจังๆ!';good=true}else if(e==='def'){DU.en-=md*.35;DU.me-=ed*.4;t='คุณบุก แต่ศัตรูตั้งรับไว้แน่น แล้วสวนกลับมา';good=false}else{DU.en-=md*1.5;t='คุณบุกเข้าไปขณะศัตรูรวมพลัง! ขัดจังหวะได้อย่างสวยงาม';good=true}sfx('hit')}
+ else if(a==='def'){if(e==='atk'){DU.en-=md*.45;DU.me-=ed*.25;t='คุณรับการบุกไว้ได้ แล้วผลักกลับไปเล็กน้อย';good=true}else if(e==='heavy'){DU.me-=ed*.8;t=`${tn}ท่าหนักทุบการ์ดคุณแตก!`;good=false}else if(e==='feint'){t='คุณตั้งรับท่าหลอก เสียจังหวะไปเปล่าๆ';good=false}else if(e==='def'){DU.me=Math.min(100,DU.me+5);t='ทั้งคู่ตั้งการ์ดจ้องกัน ต่างฝ่ายต่างหายใจหอบ'}else{DU.me=Math.min(100,DU.me+3);t='คุณตั้งรับ แต่ศัตรูฉวยโอกาสรวบรวมพลังได้สำเร็จ!';good=false}sfx('block')}
+ else if(a==='dodge'){if(e==='heavy'){DU.en-=md*.5;t=`💨 คุณพลิกตัวหลบ${tn}ได้ฉิวเฉียด แล้วฉวยช่องโหว่ตอบโต้!`;good=true}else if(e==='atk'){DU.en-=md*.15;t='💨 คุณหลบการบุกพ้น แต่ไม่มีจังหวะตอบโต้';good=true}else if(e==='feint'){DU.me-=ed*.3;t='💨 คุณหลบท่าหลอก… ศัตรูตามมาเฉี่ยวได้';good=false}else if(e==='chg'){t='💨 คุณหลบอยู่ทำไม — ศัตรูรวมพลังเสร็จแล้ว!';good=false}else t='💨 คุณกระโดดหลบอากาศว่างเปล่า';sfx('block')}
+ else if(a==='ctr'){if(e==='atk'){DU.en-=md*1.3;DU.me-=ed*.15;t='↩️ สวนกลับจังหวะเดียวกับที่ศัตรูพุ่งเข้ามา!';good=true}else if(e==='feint'){DU.en-=md*1.6;t='↩️ จับได้ว่าเป็นท่าหลอก — สวนกลับเข้ากลางอก!';good=true}else if(e==='heavy'){DU.me-=ed*1.7;DU.en-=md*.3;t=`↩️ คุณพยายามสวน แต่${tn}หนักเกินจะรับ!`;good=false}else if(e==='def'){t='↩️ คุณรอสวนกลับ แต่ศัตรูไม่บุกเข้ามาเลย';good=false}else{t='↩️ คุณรอสวน ศัตรูกลับรวมพลังเสร็จ…';good=false}sfx('hit')}
+ else if(a==='sec'){DU.secret=false;DU.en-=md*(e==='def'?1.9:2.2);if(e==='atk'||e==='heavy')DU.me-=ed*(e==='heavy'?1.1:.7);t=`คุณปล่อยวิชาลับ 《${DU.art}》 ออกไปเต็มกำลัง!`;sfx('rare');good=true}
+ if(good===true){DU.combo=(DU.combo||0)+1;DU.reads=(DU.reads||0)+1;DU.best=Math.max(DU.best||0,DU.combo);if(fast&&a!=='sec'){DU.en-=md*.2;t+=' <b style="color:#f0c860">⚡ เร็ว!</b>'}if(DU.combo>=2)t+=` <span class="tag2">🔥 คอมโบ ×${DU.combo}</span>`}else if(good===false)DU.combo=0;
+ DU.charge=(e==='chg'&&a!=='atk'&&a!=='sec');
+ if(DU.poison){DU.en-=DU.poison;t+=` <span class="tag2">☠️ พิษ −${DU.poison}</span>`}
+ if(DU.me<=0){const g=S.items.find(i=>i.id==='gun'&&i.left>0);if(g){g.left--;S.flags.gun=1;DU.en=0;DU.me=5;t+='<br>จวนตัว! คุณชักปืนออกมา <b>ปัง!</b>'}}
+ DU.txt=t;DU.r++;
+ if(DU.me<=0||DU.en<=0||DU.r>6){if((DU.best||0)>=4&&S)S.flags.duCombo=1;return duelEnd(DU.en<=0||(DU.me>0&&DU.r>6&&DU.me>DU.en))}
+ DU.intent=duelIntent();drawDuel()};
+{const _de=duelEnd;duelEnd=function(){duClear();return _de.apply(this,arguments)}}
+
+// ===== 2) มินิเกมรวมปราณตอนเลื่อนขั้น =====
+const QGM={};
+function qgOk(){return S&&S.alive&&!auto&&!(typeof xFast==='function'&&xFast())&&!choice._cur&&!modalOpen&&!document.hidden&&S.age-(S.qgAt==null?-99:S.qgAt)>=3}
+function qiGame(o,cb){S.qgAt=S.age;const d=o.diff||1,N=S.ch==='hell'?6:5,col=S.xt?['#c79bff','#ffffff','#7d4dff']:S.xian?['#ffe07a','#e9fbff','#56d6ff']:['#8fd3ff','#ffffff','#4a8cff'];
+ Object.assign(QGM,{o,cb,d,N,i:0,res:[],ring:null,parts:[],done:false,t0:performance.now(),col,end:null,flash:0});
+ modal(`<h3>☯️ ${o.title}</h3><p class="tag2">${o.sub}</p>
+ <div style="text-align:center"><canvas id="qgC" width="96" height="96" style="width:264px;height:264px;image-rendering:pixelated;border-radius:10px;background:#0d0a14;touch-action:manipulation;cursor:pointer"></canvas></div>
+ <p id="qgTx" style="text-align:center;min-height:2.6em">แตะ/กด <b>Space</b> ตอนที่วงปราณหดมาทับวงทองพอดี · รวมให้ได้ ${N} สาย</p>
+ <div id="qgSc" style="text-align:center;letter-spacing:4px;font-size:18px">${'▫️'.repeat(N)}</div>
+ <p class="tag2" style="text-align:center">โอกาสพื้นฐาน ${Math.round(o.p*100)}% · ยิ่งรวมเป๊ะ โอกาสยิ่งสูง (สูงสุด ×1.55) · พลาดเยอะโอกาสลดลง</p>
+ <div style="display:flex;gap:6px"><button class="pbtn" id="qgB" style="flex:2" onclick="qgTap()">☯️ รวมปราณ!</button><button class="gbtn" style="flex:1" onclick="qgSkip()">🎲 ปล่อยตามชะตา</button></div>`,'qigame');
+ const cv=$('qgC');cv.addEventListener('pointerdown',e=>{e.preventDefault();qgTap()});
+ if(!QGM.kb){QGM.kb=1;document.addEventListener('keydown',e=>{if(($('modal').dataset.k==='qigame')&&(e.code==='Space'||e.key==='Enter')){e.preventDefault();qgTap()}})}
+ qgNext();requestAnimationFrame(qgDraw)}
+function qgNext(){if(QGM.i>=QGM.N)return qgFinish();QGM.ring={r:44,t0:performance.now(),dur:1700/QGM.d*(.9+Math.random()*.25)}}
+const QG_TG=16;
+function qgTap(){if(QGM.done||!QGM.ring||$('modal').dataset.k!=='qigame')return;const r=QGM.ring.r,w=1/Math.sqrt(QGM.d),dv=Math.abs(r-QG_TG);const g=dv<=2.2*w?2:dv<=5.5*w?1:0;qgMark(g)}
+function qgMark(g){QGM.res.push(g);QGM.ring=null;QGM.i++;const tx=$('qgTx');if(tx)tx.innerHTML=g===2?'<b style="color:#f0c860">✨ เป๊ะ! สายปราณรวมเข้าศูนย์กลาง</b>':g===1?'<b style="color:#8fd18f">ดี — ปราณไหลเข้าแต่ยังไม่นิ่ง</b>':'<b style="color:#ff6b6b">💢 พลาด — สายปราณแตกกระจาย</b>';
+ const sc=$('qgSc');if(sc)sc.textContent=QGM.res.map(x=>x===2?'🌟':x===1?'🔹':'💥').join('')+'▫️'.repeat(QGM.N-QGM.res.length);
+ for(let k=0;k<(g?10:16);k++){const a=Math.random()*6.283;QGM.parts.push({x:48+Math.cos(a)*QG_TG,y:48+Math.sin(a)*QG_TG,vx:g?-Math.cos(a)*.6:Math.cos(a)*(1+Math.random()*1.5),vy:g?-Math.sin(a)*.6:Math.sin(a)*(1+Math.random()*1.5),l:g?20:30,c:g?QGM.col[0]:'#ff6b6b'})}
+ try{sfx(g?'good':'bad')}catch(e){}setTimeout(qgNext,380)}
+function qgFinish(){const s=QGM.res.reduce((a,x)=>a+(x===2?1:x===1?.6:0),0),perf=s/QGM.N,o=QGM.o,pF=clamp(o.p*(.45+1.1*perf),.03,.97);QGM.done=true;QGM.perf=perf;
+ const tx=$('qgTx');if(o.noRoll){if(tx)tx.innerHTML=`รวมปราณได้ <b>${Math.round(perf*100)}%</b>`;setTimeout(()=>{if($('modal').dataset.k==='qigame')closeM();QGM.cb(null,perf,pF)},900);return}
+ const ok=Math.random()<pF;QGM.end={ok,t:performance.now()};if(tx)tx.innerHTML=`รวมปราณได้ ${Math.round(perf*100)}% · โอกาส ${Math.round(o.p*100)}% → <b>${Math.round(pF*100)}%</b><br>${ok?'<b style="color:#f0c860">🌟 ปราณทั้งหมดหลอมเป็นหนึ่ง — ทะลวงสำเร็จ!</b>':'<b style="color:#ff6b6b">💢 แกนปราณสั่นคลอน สายปราณแตกกระจายไปทั่ว…</b>'}`;
+ if(!ok)for(let k=0;k<60;k++){const a=Math.random()*6.283,v=.8+Math.random()*2;QGM.parts.push({x:48,y:48,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:40,c:ch(['#ff6b6b',QGM.col[0],'#888'])})}
+ const b=$('qgB');if(b){b.textContent='ต่อไป';b.onclick=()=>qgClose(ok,perf,pF);const sk=b.nextElementSibling;if(sk)sk.style.display='none'}setTimeout(()=>{if(!QGM.closed&&$('modal').dataset.k==='qigame')qgClose(ok,perf,pF)},2600)}
+function qgClose(ok,perf,pF){if(QGM.closed)return;QGM.closed=1;if($('modal').dataset.k==='qigame')closeM();QGM.cb(ok,perf,pF)}
+function qgSkip(){if(QGM.done)return;QGM.done=true;QGM.closed=1;closeM();const o=QGM.o;QGM.cb(o.noRoll?null:Math.random()<o.p,.5,o.p,1)}
+function qgDraw(ts){const cv=$('qgC');if(!cv||$('modal').dataset.k!=='qigame'){if(!QGM.closed&&!QGM.done){QGM.done=true;QGM.closed=1;const o=QGM.o;QGM.cb(o.noRoll?null:Math.random()<o.p,.5,o.p,1)}return}
+ const c=cv.getContext('2d'),t=performance.now(),P=(x,y,col,s=1)=>{c.fillStyle=col;c.fillRect(Math.round(x),Math.round(y),s,s)};c.fillStyle='#0d0a14';c.fillRect(0,0,96,96);
+ for(let k=0;k<40;k++){const a=k*2.4+t*.0002,r=20+((k*37)%28);P(48+Math.cos(a)*r,48+Math.sin(a)*r,k%3?'#2a2236':'#3a3050')}
+ const good=QGM.res.filter(x=>x).length,cr=4+good*1.3+(QGM.end&&QGM.end.ok?(t-QGM.end.t)/40:0);
+ // สายปราณไหลเข้า
+ if(!QGM.done)for(let k=0;k<3;k++){const a=Math.random()*6.283;QGM.parts.push({x:48+Math.cos(a)*46,y:48+Math.sin(a)*46,vx:-Math.cos(a+.5)*.9,vy:-Math.sin(a+.5)*.9,l:45,c:QGM.col[k%2?0:2],sw:1})}
+ QGM.parts=QGM.parts.filter(p=>{p.x+=p.vx;p.y+=p.vy;if(p.sw){const dx=48-p.x,dy=48-p.y,dd=Math.hypot(dx,dy)||1;p.vx+=dx/dd*.05;p.vy+=dy/dd*.05;if(dd<cr)p.l=0}p.l--;if(p.l>0)P(p.x,p.y,p.c);return p.l>0});
+ // วงเป้าหมาย
+ for(let a=0;a<6.283;a+=.13)P(48+Math.cos(a)*QG_TG,48+Math.sin(a)*QG_TG,'#f0c860');
+ // แกนกลาง
+ for(let y=-cr;y<=cr;y++)for(let x=-cr;x<=cr;x++)if(x*x+y*y<=cr*cr)P(48+x,48+y,(x*x+y*y<cr*cr*.35)?QGM.col[1]:QGM.col[0]);
+ // สายที่รวมแล้วโคจรรอบแกน
+ for(let k=0;k<good;k++){const a=t*.004+k*6.283/Math.max(1,good);P(48+Math.cos(a)*(cr+4),48+Math.sin(a)*(cr+4),QGM.col[1],2)}
+ // วงที่หดเข้า
+ if(QGM.ring&&!QGM.done){const R0=QGM.ring,f=(t-R0.t0)/R0.dur;R0.r=44-f*40;if(R0.r<QG_TG-6*(1/Math.sqrt(QGM.d))){qgMark(0)}else{const near=Math.abs(R0.r-QG_TG)<=5.5/Math.sqrt(QGM.d);for(let a=0;a<6.283;a+=.09)P(48+Math.cos(a)*R0.r,48+Math.sin(a)*R0.r,near?'#ffffff':QGM.col[2])}}
+ if(QGM.end&&QGM.end.ok){const k=Math.min(1,(t-QGM.end.t)/600);c.fillStyle=`rgba(255,250,220,${.5*(1-k)})`;c.fillRect(0,0,96,96)}
+ requestAnimationFrame(qgDraw)}
+function qgNote(perf,skip){return skip?'':perf>=.9?' · ☯️ รวมปราณได้สมบูรณ์แบบ':perf>=.6?' · ☯️ รวมปราณได้ดี':perf<.3?' · ☯️ รวมปราณพลาดหลายจังหวะ':''}
+// ยุทธภพ/โลกเซียน: ทะลวงสู่ขั้นใหญ่
+{const _bt=btTick;btTick=function(){try{if(S&&S.alive&&!S.beastMode&&!S.xt&&qgOk()&&!bagHas('brk')){const raw=rawRealm();if(S.rcap!=null&&raw>S.rcap){const t=S.rcap+1;if(t>1&&REALMS[t]){const p=btChance(t),nm=REALMS[t].n;
+  qiGame({title:`ทะลวงสู่${nm}`,sub:`ปราณในร่างล้นถึงขีด ต้องรวมให้เป็นหนึ่งที่ตันเถียนเพื่อฝ่าคอขวด`,p,diff:actDiff()*(1+t*.03)},(ok,perf,pF,skip)=>{if(!S||!S.alive)return;
+   if(ok){S.rcap=t;log(`🌟 ทะลวงคอขวดสู่<b>${nm}</b>สำเร็จ${qgNote(perf,skip)} <span class="tag2">(โอกาส ${Math.round(pF*100)}%)</span>`,'epic',true);if(perf>=.99&&!skip)S.flags.qgPerfect=1;S.btFail=0}
+   else{S.btFail=(S.btFail||0)+1;const d=Math.round(R(8,20)*t/2*(perf<.3&&!skip?1.4:1));S.hp-=d;if(!(tr('yinyang')||tr('allarts')))S.qi=Math.max(0,S.qi*.95);log(`💢 สายปราณแตกกระจาย ทะลวงสู่<b>${nm}</b>ไม่สำเร็จ${qgNote(perf,skip)} — พลังชีวิต −${d} <span class="tag2">(โอกาส ${Math.round(pF*100)}% · ครั้งหน้าง่ายขึ้น)</span>`,'bad');try{qiDev(false)}catch(e){}}
+   try{render();checkDeath()}catch(e){}});return}}}}catch(e){console.error(e)}return _bt.apply(this,arguments)}}
+// ขั้นย่อยหลังขั้นสูงสุด (ไม่ใช่โลกเทพ)
+{const _pt=postTick;postTick=function(){try{if(S&&S.alive&&!S.beastMode&&!S.xt&&realmIdx()>=7&&qgOk()&&!bagHas('brk')){if(S.pcap==null)S.pcap=-1;const raw=postRaw();if(raw>S.pcap){const t=S.pcap+1,tier=t%9===0,m=(S.talent&&S.talent.m)||1;
+  const p=Math.max(.05,Math.min(.9,(tier?.3:.6)+(m-1)*.08+((S.int||0)-60)/600+((S.happy||60)-50)/500+Math.min(.1,(S.qi||0)/2000)-t/45*.15+(S.btFail||0)*.05+(S.sys?.05:0))),nm=`${RS_PFX[Math.floor(t/9)]}${REALMS[7].n} ขั้น ${t%9+1}`;
+  qiGame({title:`ทะลวงสู่${nm}`,sub:tier?'ขีดจำกัดของโลกอยู่ตรงหน้า ปราณต้องรวมให้นิ่งกว่าทุกครั้ง':'รวมปราณให้เป็นหนึ่งเพื่อก้าวขึ้นอีกขั้น',p,diff:actDiff()*(1+t*.02)*(tier?1.15:1)},(ok,perf,pF,skip)=>{if(!S||!S.alive)return;
+   if(ok){S.pcap=t;S.btFail=0;postUp(t,'');if(!skip&&perf>=.6)log(`☯️ รวมปราณได้ ${Math.round(perf*100)}%`,'')}
+   else{S.btFail=(S.btFail||0)+1;S.hp-=Math.round(S.maxHp*.1);log(`💢 สายปราณแตกกระจาย ทะลวงสู่<b>${nm}</b>ไม่สำเร็จ${qgNote(perf,skip)} <span class="tag2">(โอกาส ${Math.round(pF*100)}%)</span>`,'bad');try{qiDev(tier)}catch(e){}}
+   try{render();checkDeath()}catch(e){}});return}}}catch(e){console.error(e)}return _pt.apply(this,arguments)}}
+// โลกเทพ: ฝ่าทัณฑ์ — รวมปราณก่อนรับอัสนี (ผลการรวมปรับโอกาสผ่าน ±15%)
+{const _tg=tribGo;tribGo=function(k,t){if(!S||!S.alive||auto||S.qgTrib)return _tg.apply(this,arguments);const o=tribOdds(t,k),args=arguments;S.qgAt=S.age;S.tribNext=S.age+1;
+ setTimeout(()=>{if(!S||!S.alive)return;if(modalOpen&&$('modal').dataset.k!=='choice')closeM();qiGame({title:`รวมปราณรับทัณฑ์สู่${tribName(k,t)}`,sub:'เมฆทัณฑ์หมุนวนเหนือศีรษะ — รวมปราณทั้งหมดเป็นเกราะก่อนสายฟ้าสายแรกจะผ่าลงมา',p:o.ps,diff:actDiff()*(1+t*.02),noRoll:1},(ok,perf,pF,skip)=>{if(!S||!S.alive)return;const old=S.tribPill||0;
+  S.tribPill=old+(skip?0:(perf-.5)*.3);S.qgTrib=1;try{_tg.apply(this,args)}finally{S.qgTrib=0;if(S.tribPill)S.tribPill=old}if(!skip)log(`☯️ รวมปราณรับทัณฑ์ได้ ${Math.round(perf*100)}% ${perf>=.5?'(โอกาสผ่านเพิ่มขึ้น)':'(โอกาสผ่านลดลง)'}`,'');try{render();checkDeath()}catch(e){}})},60)}}
+{const L=[{id:'act_combo',n:'อ่านทางขาด',d:'คอมโบ ×4 ในการดวลครั้งเดียว',r:2,c:()=>!!S.flags.duCombo},{id:'act_qg',n:'ปราณเป็นหนึ่ง',d:'รวมปราณเป๊ะทุกจังหวะตอนทะลวงขั้น',r:3,c:()=>!!S.flags.qgPerfect}];const c=ACH.find(x=>x[0]==='กำเนิด');if(c){c[1].push(...L);ACH_ALL.push(...L)}}
 </script>
 </body>
 </html>
