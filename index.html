@@ -6024,7 +6024,7 @@ function allyAdd(n,src){S.allies=S.allies||[];if(S.allies.some(a=>a.n===n))retur
 // ---- พบผู้เล่นจริงแบบเรียลไทม์ ----
 let meetC=null,meetT=0;
 async function meetPoll(){try{if(!onlineOK||!S||!S.alive||S.beastMode||paused||document.hidden)return;if(Date.now()-meetT<45000)return;meetT=Date.now();
- const j=await api('meet',{n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0});meetC=j.o?Object.assign(j.o,{at:Date.now()}):null;
+ const j=await api('meet',{n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0});try{if(typeof paNote==='function')paNote(j)}catch(e){};meetC=j.o?Object.assign(j.o,{at:Date.now()}):null;
  (j.inbox||[]).forEach(m=>{if(!S||!S.alive)return;if(m.kind==='ally'){if(m.ok){allyAdd(m.n,'ผู้เล่นจริง');log(`🤝 ผู้เล่น <b>${esc(m.n)}</b> สาบานเป็นพันธมิตรกับคุณข้ามจักรวาล — เขาจะมาช่วยตอนจวนตัว`,'epic',true)}}
   else if(m.kind==='mmsg'||m.kind==='room'||m.kind==='mres'){try{mtInbox(m)}catch(e){}}else{if(m.win){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.08));S.fame=Math.max(0,S.fame-5);log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — คุณพ่ายแพ้ บาดเจ็บเล็กน้อย`,'bad',true)}else{S.fame+=20;log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — แต่คุณเป็นฝ่ายชนะ! ชื่อเสียง +20`,'epic',true)}}});try{render()}catch(e){}}catch(e){}}
 setInterval(meetPoll,5000);
@@ -7678,6 +7678,101 @@ function huntTick(){const H=S.hunts||[];if(!H.length||choice._cur||modalOpen||S.
    log(`⚠️ ความร่ำรวยของคุณเป็นที่เลื่องลือ — ${nm}บุกเข้ามา!`,'bad');duel(nm,ep,w2=>{if(w2){S.fame+=10;log(`⚔️ ไล่${nm}ไปได้ ทรัพย์สินปลอดภัย`,'good')}else{const m=Math.round(S.money*(.05+Math.random()*.1));S.money-=m;log(`💸 ${nm}ปล้นไป ${fmt(m)} ตำลึง`,'bad')}});return r}
   huntTick();
   if(!choice._cur&&!modalOpen&&!S.beastMode&&S.age>=16&&S.money>ECO_P0[w]*20&&Math.random()<.02){choice('🏺 งานประมูลใหญ่',`ข่าวลือว่ามีงานประมูลใหญ่ที่${typeof townName==='function'?townName():'เมือง'} ของหายากหลายชิ้นจะถูกนำออกมา`,[{t:'🏺 ไปดู',s:'เปิดโรงประมูล',f(){setTimeout(openAuction,50)}},{t:'🚶 ไม่สนใจ',s:'',skip:true,f(){}}])}}}catch(e){console.error(e)}return r}}
+
+// ==== ประมูลทั่วยุทธภพ (ผู้เล่นจริง แบบเรียลไทม์) · สกุลทองคำ ====
+const PA_RATE={m:1e5,x:5e6,g:5e8};
+const paRate=()=>PA_RATE[ECO_W()];
+const PA={sum:null,seen:{},cur:null,poll:null,off:0,shown:{},li:-1,busy:0};
+const PA_PF=['','ต้องห้าม','ศักดิ์สิทธิ์','ที่สาบสูญ','บรรพกาล','ไร้เทียมทาน'];
+const PA_SJ=['จักรพรรดิองค์แรก','เทพกระบี่','จอมมารพันปี','ผู้บรรลุเต๋า','หงส์เพลิง','มังกรทอง','ราชินีจิ้งจอก','กษัตริย์อสูร','เซียนนิรนาม','ดาวตกเก้าดวง','ปรมาจารย์ไร้นาม','เทพธิดาจันทรา','บรรพชนแห่งยุทธภพ','ผู้ฝ่าทัณฑ์หมื่นครั้ง'];
+const PA_CT=[['w','pow',['กระบี่','ทวน','ดาบ','พัด']],['a','hp',['เกราะ','ผ้าคลุม','มงกุฎ']],['p','qi',['โอสถรวมปราณ','แก่นปราณ','น้ำทิพย์']],['p2','life',['ผลไม้อายุวัฒนะ','โอสถยืดชะตา','หยดน้ำอมฤต']],['k','art',['คัมภีร์','ม้วนวิชา','ศิลาจารึก']],['t','fight',['ธงศึก','ยันต์สงคราม','ตราพิชิต']],['s','tal',['ไขกระดูก','หัวใจ','ดวงตา']],['b','brk',['ยาเม็ดทะลวงฟ้า','ศิลาทะลวงขั้น','ค่ายกลทะลวงขีด']],['c','int',['ลูกแก้วปัญญา','ตำราลับ','กระจกส่องจิต']],['c2','cha',['ปิ่นหยก','ถุงหอม','แหวนเสน่ห์']],['x','myst',['หีบปิดผนึก','ไข่ศิลา','ม้วนกระดาษเปล่า']]];
+function paItem(r,k){const g=srng(r*1000003+k*7+13),pk=a=>a[Math.floor(g()*a.length)];let C=pk(PA_CT);if(C[1]==='tal'&&r<4)C=PA_CT[0];if(C[1]==='myst'&&r<6)C=PA_CT[4];
+ const pf=pk(PA_PF);return{r,k,c:C[0],fx:C[1],n:`${pk(C[2])}${pf?pf:''}แห่ง${pk(PA_SJ)}`}}
+function paEff(it){const w=ECO_W(),r=it.r,b=ecoV({r,w,fx:it.fx==='int'?'int':it.fx==='cha'?'cha':it.fx==='life'?'life':it.fx==='qi'?'qi':it.fx==='fight'?'fight':'pow'});
+ switch(it.fx){case'pow':return{v:b.v*1.5,d:`พลังรวมถาวร +${(b.v*150).toFixed(1)}%`};case'hp':return{v:b.v*2.25,d:`พลังชีวิตสูงสุด +${Math.round(b.v*225)}%`};
+  case'qi':case'life':case'int':case'cha':{const v=Math.round(b.v*1.5);return{v,d:b.d.replace(/[\d,]+/,fmt(v))}}
+  case'art':{const v=Math.min(4,Math.floor(r/2)+1);return{v,d:`ได้วิชาระดับ${ART_TIER[v].n}ขึ้นไป 1 วิชา`}}
+  case'fight':{const v=+(1+(b.v-1)*1.5).toFixed(2),y=b.y+3;return{v,y,d:`ต่อสู้ ×${v} นาน ${y} ปี`}}
+  case'tal':{const v=[0,0,0,0,.03,.05,.08,.12][r];return{v,d:`พรสวรรค์ ×${(1+v).toFixed(2)} ถาวร`}}
+  case'brk':{const n=r>=6?3:r>=4?2:1;return{v:n,d:`ยาทะลวงขั้น ×${n} · เตรียมรับทัณฑ์/รวมปราณ +${Math.min(3,n)}`}}
+  case'myst':return{v:0,d:'❔ ไม่มีใครรู้ว่าข้างในคืออะไร — แต่ไม่เคยมีใครเปิดแล้วผิดหวัง'}}return{v:0,d:''}}
+function paApply(it){const e=paEff(it);let t=e.d;
+ switch(it.fx){case'pow':S.power+=Math.round(total()*e.v);break;case'hp':S.maxHp+=Math.max(10,Math.round(S.maxHp*e.v));S.hp=S.maxHp;break;
+  case'qi':S.qi+=e.v;break;case'life':if(S.xt)S.glExtra=(S.glExtra||0)+e.v;else S.lifespan+=e.v;break;case'int':S.int+=e.v;break;case'cha':S.cha+=e.v;break;
+  case'art':{const a=newArt(e.v);S.arts.push(a);t=`ได้ ${artHtml(a)}`;break}
+  case'fight':S.buf=(S.buf||[]).filter(b=>b.k!=='fight'||b.u<=S.age||b.v<e.v);S.buf.push({k:'fight',v:e.v,u:S.age+e.y,n:it.n});break;
+  case'tal':S.talent=Object.assign({},S.talent,{m:+(S.talent.m*(1+e.v)).toFixed(2)});break;
+  case'brk':bagAdd('brk',e.v,true);S.tribPrep=Math.min(3,(S.tribPrep||0)+Math.min(3,e.v));S.btFail=(S.btFail||0)+e.v;break;
+  case'myst':{const x=Math.random();if(x<.4){const g=Math.round(total()*(.35+Math.random()*.3));S.power+=g;t=`พลังยุทธ์ +${fmt(g)}`}else if(x<.7){S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.15).toFixed(2)});t='พรสวรรค์ ×1.15 ถาวร'}else if(x<.9){const a=newArt(4);S.arts.push(a);t=`ได้ ${artHtml(a)}`}else{const v=S.xt?50000:S.xian?800:60;if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;t=`อายุขัย +${fmt(v)} ปี`}break}}
+ return t}
+const paGold=g=>`🪙 ${fmt(g)} ทองคำ`,paCost=g=>Math.round(g*paRate());
+// ---- ประกาศ ----
+(function(){try{const st=document.createElement('style');st.textContent=`
+#paBan{position:fixed;left:50%;top:10px;transform:translateX(-50%);z-index:9999;width:min(92vw,380px);background:linear-gradient(160deg,#2b1d0e,#4a3112 55%,#2b1d0e);border:3px solid #f0c860;border-radius:12px;box-shadow:0 0 0 2px #6b4a14,0 8px 30px rgba(240,200,96,.35);color:#fff3cf;padding:10px 12px;font-size:14px;animation:paIn .35s ease-out}
+#paBan b{color:#ffe08a}#paBan .pbar{height:6px;background:#1a1208;border-radius:4px;overflow:hidden;margin:8px 0}#paBan .pbar i{display:block;height:100%;background:linear-gradient(90deg,#ffe08a,#f0a020);width:100%;transition:width .2s linear}
+#paBan .bt{display:flex;gap:6px}#paBan button{flex:1;border-radius:8px;padding:7px 4px;font-weight:700;border:2px solid #f0c860;background:#f0c860;color:#3a2508;cursor:pointer}#paBan button.n{background:transparent;color:#f0c860}
+@keyframes paIn{from{transform:translate(-50%,-30px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+.paR{background:linear-gradient(180deg,#1c1424,#120d18);border:2px solid #f0c860;border-radius:12px;padding:10px;color:#f4ecd8;margin-top:6px}
+.paLot{border-radius:10px;padding:10px;background:#231a2e;position:relative;overflow:hidden}.paLot .nm{font-size:17px;font-weight:700}.paLot .gl{position:absolute;inset:0;pointer-events:none;opacity:.25;animation:paG 2.4s ease-in-out infinite}
+@keyframes paG{50%{opacity:.5}}
+.paBid{font-size:22px;font-weight:800;color:#ffe08a;text-shadow:0 0 8px rgba(255,200,80,.5)}.paTm{height:8px;background:#0c0810;border-radius:5px;overflow:hidden;margin:6px 0}.paTm i{display:block;height:100%;background:linear-gradient(90deg,#5fd47a,#f0c860,#ff5d73);transition:width .25s linear}
+.paB{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.paB button{flex:1;min-width:70px;border-radius:8px;padding:7px 4px;border:2px solid #f0c860;background:#3a2a10;color:#ffe08a;font-weight:700;cursor:pointer}.paB button:disabled{opacity:.4}
+.paB input{flex:2;min-width:110px;border-radius:8px;border:2px solid #6b5a8a;background:#120d18;color:#fff;padding:6px 8px}
+.paFl{position:relative;height:150px;overflow:hidden;border-radius:10px;background:radial-gradient(ellipse at bottom,#2a1f3a,#140f1c);border:1px solid #4a3a5e;margin-top:8px}
+.pafm{position:absolute;bottom:4px;max-width:78%;background:rgba(255,255,255,.1);border:1px solid rgba(240,200,96,.45);border-radius:12px;padding:3px 9px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:paUp 9s linear forwards;color:#f4ecd8}
+.pafm b{color:#ffe08a}.pafm.me{border-color:#5fd47a}@keyframes paUp{0%{transform:translateY(0);opacity:0}6%{opacity:1}85%{opacity:1}100%{transform:translateY(-150px);opacity:0}}
+.paUp{display:flex;gap:6px;overflow-x:auto;padding:4px 0}.paUp .c{min-width:118px;color:#f4ecd8;background:#231a2e;border-radius:8px;padding:6px;font-size:12px;border:1px solid #3a2f4a}.paUp .c button{margin-top:4px;width:100%;border-radius:6px;border:1px solid #f0c860;background:transparent;color:#f0c860;cursor:pointer}`;document.head.appendChild(st)}catch(e){}})();
+function paCanSee(){return S&&S.alive&&S.ch!=='short'&&!(S.beastMode&&!S.beastMode.human)&&$('game')&&$('game').classList.contains('on')}
+function paNote(j){if(!j)return;PA.sum=j.pa||null;if(j.pw>0)paClaim();const p=j.pa;if(!p||p.phase!=='open'||PA.seen[p.sid]||!paCanSee())return;PA.seen[p.sid]=1;if(Date.now()-p.t0>4*60e3)return;paBanner(p)}
+function paBanner(p){const old=$('paBan');if(old)old.remove();const d=document.createElement('div');d.id='paBan';d.innerHTML=`📢 <b>ประกาศทั่ว${S.xt?'เก้าชั้นฟ้า':S.xian?'โลกเซียน':'ยุทธภพ'}!</b><br>งานประมูลสมบัติล้ำค่าของผู้เล่นทั้งแผ่นดินเริ่มแล้ว · ${p.left} ชิ้นที่หาที่ไหนไม่ได้<div class="pbar"><i id="paBanT"></i></div><div class="bt"><button onclick="paJoin()">🏛️ ไปร่วมประมูล</button><button class="n" onclick="paBanX()">ไม่ไป</button></div>`;document.body.appendChild(d);try{sfx('rare')}catch(e){}
+ const t0=Date.now();PA.banT=setInterval(()=>{const f=1-(Date.now()-t0)/10000,e=$('paBanT');if(e)e.style.width=Math.max(0,f*100)+'%';if(f<=0)paBanX()},200)}
+function paBanX(){clearInterval(PA.banT);const d=$('paBan');if(d)d.remove()}
+function paJoin(){paBanX();if(!S||!S.alive)return;if(S.ch==='short')return toast('โหมดชีวิตสั้นเข้าร่วมประมูลไม่ได้');if(choice._cur)return toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');openPAuc()}
+// ---- ห้องประมูล ----
+function openPAuc(){if(!onlineOK)return toast('ยังเชื่อมต่อเซิร์ฟเวอร์ไม่ได้');PA.li=-1;PA.shown={};
+ modal(`<button class="xbtn" onclick="paLeave()">✕</button><h3>🏛️ ประมูลทั่ว${S.xt?'เก้าชั้นฟ้า':S.xian?'โลกเซียน':'ยุทธภพ'}</h3>
+ <p class="tag2">ผู้เล่นจริงทั้งแผ่นดินแข่งกันเสนอราคา · 1 ทองคำ = ${fmt(paRate())} ตำลึง · เงินของคุณ ≈ <b id="paMy"></b> · ผู้ร่วมงาน <b id="paVw">-</b> คน</p>
+ <div class="paR"><div id="paLot" class="paLot"><div class="tag2">กำลังเชื่อมต่อ…</div></div>
+ <div class="paTm"><i id="paTm" style="width:100%"></i></div><div style="display:flex;justify-content:space-between;align-items:baseline"><span class="tag2" id="paTt"></span><span class="tag2" id="paHi"></span></div>
+ <div class="paBid" id="paBid">—</div>
+ <div class="paB"><button onclick="paBidX(1.05)" id="paB1">+5%</button><button onclick="paBidX(1.15)">+15%</button><button onclick="paBidX(1.4)">+40%</button></div>
+ <div class="paB"><input id="paIn" type="number" min="1" inputmode="numeric" placeholder="พิมพ์ราคาเอง (ทองคำ)" onkeydown="if(event.key==='Enter')paBidIn()"><button onclick="paBidIn()">🔨 เสนอราคา</button></div>
+ <div class="tag2" id="paMsg" style="min-height:1.3em;margin-top:4px"></div></div>
+ <h4 style="margin:10px 0 2px">⭐ โหวตชิ้นถัดไป <span class="tag2">(1 เสียงต่อรอบ · ชิ้นที่ได้เสียงมากสุดจะขึ้นก่อน)</span></h4><div class="paUp" id="paUp"></div>
+ <div class="paFl" id="paFl"></div><div class="paB"><input id="paCh" maxlength="80" placeholder="พิมพ์คุยกับคนในงาน…" onkeydown="if(event.key==='Enter')paChat()" style="flex:3"><button onclick="paChat()">💬 ส่ง</button></div>
+ <div id="paSold" class="tag2" style="margin-top:8px"></div>`,'pauc');
+ paPoll(1);clearInterval(PA.poll);PA.poll=setInterval(()=>{if($('modal').dataset.k!=='pauc'){clearInterval(PA.poll);return}paPoll(0)},2000);clearInterval(PA.tk);PA.tk=setInterval(paTickUI,250)}
+function paLeave(){clearInterval(PA.poll);clearInterval(PA.tk);closeM()}
+async function paPoll(first){if(PA.busy)return;PA.busy=1;try{const j=await api('pa',{join:1});if(!j||!j.ok)return;PA.off=(j.now||Date.now())-Date.now();PA.cur=j;paRender(j);paWins(j.wins)}catch(e){const m=$('paMsg');if(m)m.textContent='เชื่อมต่อสะดุด กำลังลองใหม่…'}finally{PA.busy=0}}
+function paRender(j){if($('modal').dataset.k!=='pauc')return;const c=j.cur;if($('paVw'))$('paVw').textContent=j.vw;if($('paMy'))$('paMy').textContent=paGold(Math.floor((S.money||0)/paRate()));
+ if(!c||c.phase!=='open'){$('paLot').innerHTML=`<div style="text-align:center;padding:14px 0">🕯️ งานรอบนี้ปิดแล้ว<br><span class="tag2">${c&&c.next?'รอบหน้าเริ่มในอีกราว '+Math.max(1,Math.round((c.next-(Date.now()+PA.off))/60000))+' นาที':'รอประกาศรอบหน้า'}</span></div>`;$('paBid').textContent='—';$('paTt').textContent='';$('paHi').textContent='';paSoldRender(c);$('paUp').innerHTML='';return}
+ const L=c.lots[c.li],it=paItem(L.r,L.k),R0=rarC(L.r);
+ if(PA.li!==c.li){PA.li=c.li;$('paLot').innerHTML=`<div class="gl" style="background:radial-gradient(circle at 80% 20%,${R0.c},transparent 70%)"></div><div class="tag2">ชิ้นที่ ${c.lots.filter(x=>x.sold).length+1}/${c.lots.length}</div><div class="nm" style="color:${R0.c}">${esc(it.n)}</div>${rarTag(L.r)}<div style="margin-top:6px">${paEff(it).d}</div><div class="tag2" style="margin-top:4px">ราคาเริ่ม ${paGold(L.g)} (≈ ${fmt(paCost(L.g))} ตำลึง)</div>`;try{sfx('click')}catch(e){}}
+ PA.end=c.end;const b=j.bid;$('paBid').innerHTML=b.hi?`${paGold(b.hi)}`:`${paGold(L.g)} <span class="tag2">ยังไม่มีคนเสนอ</span>`;$('paHi').innerHTML=b.hi?(b.me?'<b style="color:#5fd47a">👑 คุณนำอยู่</b>':`ผู้นำ: <b>${esc(b.bn)}</b>`):'';PA.hi=b.hi;PA.min=b.hi?Math.ceil(b.hi*1.05):L.g;
+ // ชิ้นถัดไป + โหวต
+ $('paUp').innerHTML=c.lots.map((x,i)=>{if(x.sold||i===c.li)return'';const I=paItem(x.r,x.k),v=c.votes['l'+i]||0;return`<div class="c"><b style="color:${rarC(x.r).c}">${esc(I.n)}</b><br>${rarTag(x.r)}<br>${paGold(x.g)}<button onclick="paVote(${i})" ${j.myv>=0?'disabled':''}>${j.myv===i?'✅ ':'⭐ '}${v}</button></div>`}).join('')||'<span class="tag2">ชิ้นสุดท้ายของรอบนี้</span>';
+ paSoldRender(c);
+ for(const m of (j.chat||[])){if(PA.shown[m.i])continue;PA.shown[m.i]=1;paFloat(m)}}
+function paSoldRender(c){const el=$('paSold');if(!el||!c)return;const S0=c.lots.filter(x=>x.sold);el.innerHTML=S0.length?'📜 ขายแล้ว: '+S0.map(x=>`${esc(paItem(x.r,x.k).n)} → ${x.sold.g?paGold(x.sold.g)+' ('+esc(x.sold.n)+')':'ไม่มีผู้ซื้อ'}`).join(' · '):''}
+function paFloat(m){const fl=$('paFl');if(!fl)return;const d=document.createElement('div');d.className='pafm'+(m.n===pname()?' me':'');PA.fl=((PA.fl||0)+1)%4;d.style.left=(3+PA.fl*6+Math.random()*8)+'%';d.style.bottom=(4+PA.fl*24)+'px';d.style.animationDelay=(PA.fl*.35)+'s';d.innerHTML=`<b>${esc(m.n)}</b>: ${esc(m.x)}`;fl.appendChild(d);setTimeout(()=>d.remove(),10000);if(fl.children.length>14)fl.firstChild.remove()}
+function paTickUI(){if($('modal').dataset.k!=='pauc'){clearInterval(PA.tk);return}if(!PA.end)return;const left=PA.end-(Date.now()+PA.off),f=Math.max(0,Math.min(1,left/40000)),e=$('paTm');if(e)e.style.width=f*100+'%';const t=$('paTt');if(t)t.textContent=left>0?`⏳ ${Math.ceil(left/1000)} วิ${left<10000?' — เสนอราคาตอนนี้จะต่อเวลา 10 วิ':''}`:'🔨 ปิดชิ้นนี้…';if(left<-2500&&!PA.busy)paPoll(0)}
+async function paBid(g){const c=PA.cur&&PA.cur.cur;if(!c||c.phase!=='open')return;g=Math.floor(g);const m=$('paMsg');if(g<PA.min){if(m)m.textContent=`ต้องเสนออย่างน้อย ${paGold(PA.min)}`;return}
+ if(paCost(g)>S.money){if(m)m.innerHTML=`<span style="color:#ff6b6b">เงินไม่พอ — ต้องมี ${fmt(paCost(g))} ตำลึง</span>`;return}
+ try{const j=await api('pabid',{sid:c.sid,li:c.li,g,n:pname()});if(m)m.innerHTML=j.ok?`<span style="color:#5fd47a">🔨 เสนอ ${paGold(g)} แล้ว!</span>`:j.code===-1?'ชิ้นนี้ปิดไปแล้ว':j.code===0?`มีคนเสนอสูงกว่าแล้ว (${paGold(j.hi)})`:'เสนอไม่สำเร็จ';if(j.ok)try{sfx('good')}catch(e){}paPoll(0)}catch(e){if(m)m.textContent=e.message==='rate'?'ใจเย็น — เสนอได้ทุก 1 วิ':'เสนอไม่สำเร็จ'}}
+function paBidX(k){paBid(Math.max(PA.min||1,Math.ceil((PA.hi||((PA.cur&&PA.cur.cur&&PA.cur.cur.lots[PA.cur.cur.li].g)||1)/1.05)*k)))}
+function paBidIn(){const v=+(($('paIn')||{}).value||0);if(!(v>0))return;paBid(v);$('paIn').value=''}
+async function paChat(){const el=$('paCh');const x=(el&&el.value||'').trim();if(!x||!PA.cur||!PA.cur.cur)return;el.value='';try{await api('pachat',{sid:PA.cur.cur.sid,x,n:pname()});paPoll(0)}catch(e){toast(e.message==='rate'?'พิมพ์เร็วเกินไป':'ส่งไม่สำเร็จ')}}
+async function paVote(i){if(!PA.cur||!PA.cur.cur)return;try{const j=await api('pavote',{sid:PA.cur.cur.sid,l:i});toast(j.ok?'โหวตแล้ว ⭐':'โหวตไปแล้วในรอบนี้');paPoll(0)}catch(e){}}
+// ---- รับของที่ชนะ ----
+async function paClaim(){if(PA.claiming)return;PA.claiming=1;try{const j=await api('pa',{});if(j&&j.ok)paWins(j.wins)}catch(e){}finally{PA.claiming=0}}
+function paWins(L){if(!L||!L.length||!S||!S.alive)return;S.paDone=S.paDone||[];for(const w of L){let o=null;try{o=JSON.parse(w)}catch(e){}if(!o)continue;const key=o.sid+':'+o.li;if(S.paDone.includes(key)){api('paclaim',{w}).catch(()=>{});continue}
+  S.paDone.push(key);if(S.paDone.length>40)S.paDone.shift();const it=paItem(o.r,o.k),cost=paCost(o.g);
+  if(S.money>=cost){S.money-=cost;const t=paApply(it);log(`🏛️ ชนะการประมูลทั่ว${S.xt?'เก้าชั้นฟ้า':S.xian?'โลกเซียน':'ยุทธภพ'}! ได้ <b>${esc(it.n)}</b> ${rarTag(it.r)} ในราคา ${paGold(o.g)} (${fmt(cost)} ตำลึง) — ${t}`,'myth',true);keyAdd(`ชนะประมูลผู้เล่น ${it.n}`);S.flags.paWin=1}
+  else{S.fame=Math.max(0,S.fame-40);log(`💸 ชนะประมูล <b>${esc(it.n)}</b> แต่เงินไม่พอจ่าย (${fmt(cost)} ตำลึง) — ถูกยึดสิทธิ์และเสียชื่อเสียง −40`,'bad',true)}
+  api('paclaim',{w}).catch(()=>{})}try{render()}catch(e){}}
+// ---- ทางเข้า + ดักผล meet ----
+{const _omPA=openMenu;openMenu=function(){const r=_omPA.apply(this,arguments);try{if(S&&S.ch!=='short'&&PA.sum&&PA.sum.phase==='open'){const gr=$('modal').querySelector('.mgrid');if(gr){const b=document.createElement('button');b.className='opt';b.style.cssText='background:linear-gradient(160deg,#4a3112,#2b1d0e);color:#ffe08a;border-color:#f0c860';b.setAttribute('onclick','paJoin()');b.innerHTML=`🏛️ ประมูลทั่วแผ่นดิน<small style="color:#f0c860">กำลังเปิด · เหลือ ${PA.sum.left} ชิ้น</small>`;gr.insertBefore(b,gr.firstChild)}}}catch(e){console.error(e)}return r}}
+{const L=[{id:'pa_win',n:'เศรษฐีใต้หล้า',d:'ชนะการประมูลทั่วแผ่นดินกับผู้เล่นจริง',r:3,c:()=>!!S.flags.paWin}];const c=ACH.find(x=>x[0]==='ผู้ข้ามมิติ');if(c){c[1].push(...L);ACH_ALL.push(...L)}}
 </script>
 </body>
 </html>
