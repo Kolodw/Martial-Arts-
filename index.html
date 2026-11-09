@@ -7179,6 +7179,93 @@ function crOutTxt(r){const o=r.out;try{if(o.bag)return`${rarName(o.bag)} ×${o.q
  if(o.eq){const e=EQI[o.eq];return e?`${e.ic} ${e.n} — ${e.d}`:o.eq}if(o.fx==='int')return`ปัญญา +${o.v} (ขึ้นกับขั้นที่ได้)`;if(o.fx==='qi')return`ลมปราณ +${o.v} ปี (ขึ้นกับขั้นที่ได้)`;if(o.fx==='life')return`อายุขัย +${o.v} ปี`;
  if(o.fx==='weapon')return'อาวุธที่ใช้อยู่ขึ้นหนึ่งขั้น (ถ้าสุดแล้วได้พลังยุทธ์แทน)';
  if(o.buf){const B={train:`ฝึกยุทธ์ ×${o.v}`,qi:`ฝึกลมปราณ ×${o.v}`,red:`เจ็บน้อยลง ${Math.round(o.v*100)}%`,fight:`ต่อสู้ ×${o.v}`}[o.buf]||r.n;return`${B} นาน ${o.y} ปี`}}catch(e){}return r.n}
+
+// ---- AI ฝังตัวจากโลกอนาคต (หายากมาก: ติดตัวแต่เกิด 2.5% · คนจากอนาคตนำมาให้ 2.5%) ----
+const AI_LV=['อัลฟ่า (Alpha)','นอร์มอล (Normal)','สมบูรณ์ (Complete)'],AI_NX=[100,400];
+const AI_NM=['ไอริส','โนวา','เอคโค่','ซีโร่','ลูมิน่า','เคย์','อาเธน่า','ออรา','ซิกม่า'];
+const AI_ORI=[
+ {n:'ตัวคุณเองในอีกสามพันปีข้างหน้า',d:'ผู้ส่งชิปย้อนเวลากลับมาเพื่อแก้โศกนาฏกรรมที่คุณยังไม่รู้ว่าจะเกิด'},
+ {n:'ศาสตราจารย์หญิงจากเมืองลอยฟ้าปี 2847',d:'ผู้สร้างมันขึ้นมาแล้วซ่อนไว้ในตัวคุณ เพื่อหนีการไล่ล่าของบริษัทที่ต้องการใช้มันเป็นอาวุธ'},
+ {n:'อารยธรรมจักรกลที่ล่มสลายไปแล้ว',d:'ซึ่งส่งมันข้ามมิติมาเป็นเมล็ดพันธุ์สุดท้าย ก่อนดาวของพวกเขาจะดับ'},
+ {n:'ตัว AI เอง',d:'มันคำนวณทุกเส้นเวลาที่เป็นไปได้ และพบว่าคุณคือตัวแปรเดียวที่ทำให้โลกไม่ถึงจุดจบ มันจึงเลือกคุณ'}];
+const AI_NANO={n:'ตระกูลชอนแห่งลัทธิมาร',d:'มันคือนาโนแมชชีนรุ่นต้นแบบที่เคยอยู่ในร่างของ <b>ชอน ชอ ยุน</b> — มันจำเจ้าของเดิมได้เพียงชื่อเดียวนั้น'};
+const AI_CLUE=['บันทึกที่ถูกลบ: พิกัดต้นทาง = <b>[ไม่ใช่โลกนี้]</b>','ไฟล์ซ่อน: ภาพถ่ายมือคู่หนึ่งกำลังฝังชิปลงในทารก — ใบหน้าถูกเบลอไว้','เสียงบันทึก: "ถ้าเจ้าได้ยินสิ่งนี้ แปลว่าเราล้มเหลวในเส้นเวลาแรกแล้ว"','รหัสผู้สร้างถอดออกมาได้ครึ่งหนึ่ง: ลายเซ็นที่ไม่ควรมีอยู่ในยุคนี้'];
+const aiOn=()=>!!(S&&S.ai&&S.alive&&!(S.ai.off&&S.age<S.ai.off)&&!(S.beastMode&&!S.beastMode.human));
+function aiLog(t,c){log(`🤖 <b>[${esc(S.ai.nm)}]</b> ${t}`,c||'epic')}
+function aiPowV(k){return Math.max(Math.round(yrPow0()*k),Math.round(total()*k*.004))}
+function aiGive(src){if(S.ai||S.beastMode)return;const nano=Math.random()<.03;
+ S.ai={lv:0,sync:0,heat:0,on:1,src,nm:ch(AI_NM)+'-'+R(100,999),ori:nano?-1:R(0,AI_ORI.length-1),nano:nano?1:0,clue:0,cp:0,sim:0,hot:0,lost:[],yc:-1,cy:0};
+ aiLog(src==='birth'?'ระบบชีวภาพเชื่อมต่อสำเร็จ… สวัสดี โฮสต์ ฉันอยู่ในตัวคุณมาตั้งแต่ก่อนคุณลืมตา':'การฝังตัวเสร็จสมบูรณ์ — ซิงก์กับระบบประสาทของโฮสต์ 3%… ยินดีที่ได้รู้จัก','myth');
+ log('💡 <b>AI ฝังตัว</b> — คัดลอกวิชาจากการต่อสู้ ฟื้นฟูร่างกาย จำลองการต่อสู้ในห้วงลึก และเลือกทางแทนคุณได้ · ใช้มากจะร้อน ถ้าร้อนเกินขีดอาจตาย · เปิดที่ ☰ เมนู → 🤖 AI','sys');keyAdd(src==='birth'?'เกิดมาพร้อม AI ฝังตัวจากโลกอนาคต':'ได้รับ AI ฝังตัวจากคนจากอนาคต')}
+function aiSync(v){const a=S.ai;a.sync+=v;while(a.lv<2&&a.sync>=AI_NX[a.lv]){a.lv++;S.int+=10*a.lv;aiLog(`อัปเกรดสำเร็จ — ระดับ <b>${AI_LV[a.lv]}</b> · ประมวลผลเร็วขึ้น ฉลาดขึ้น คัดลอกวิชาได้ดีขึ้น และระบายความร้อนได้ดีขึ้น`,'myth');keyAdd(`AI ขึ้นระดับ${AI_LV[a.lv]}`);
+  if(a.lv===2){S.maxHp+=40;S.hp=S.maxHp;if(a.nano&&!a.nanoRev){a.nanoRev=1;a.ori=-1;aiLog('…นาโนแมชชีนขึ้นรูปเป็นร่างโฮโลแกรมเป็นครั้งแรก มันมองหน้าคุณนาน ก่อนพูดว่า <b>"เจ้าของคนก่อนของข้าชื่อ ชอน ชอ ยุน"</b>','myth')}}}
+ const need=[40,130,280,500,800];while(a.clue<5&&a.sync>=need[a.clue])aiClue()}
+function aiClue(){const a=S.ai;a.clue++;if(a.clue<5){aiLog(`🔍 ถอดรหัสความลับได้ ${a.clue}/5 — ${a.clue===4&&a.nano?'สัญญาณจาง ๆ ของวิชามารโบราณในหน่วยความจำ':AI_CLUE[a.clue-1]}`,'epic');return}
+ const o=a.ori<0?AI_NANO:AI_ORI[a.ori];a.rev=1;aiLog(`🔓 <b>ความลับของ AI ถูกเปิดเผย</b> — ผู้ที่ส่งมันมาคือ <b>${o.n}</b> ${o.d}`,'myth');keyAdd('ไขความลับต้นกำเนิดของ AI')}
+function aiHeat(v){const a=S.ai;a.heat=Math.max(0,a.heat+v);if(a.heat<=100){if(a.heat>=85)aiLog(`⚠️ อุณหภูมิแกนประมวลผล ${Math.round(a.heat)}% — ใกล้ถึงขีดอันตราย`,'bad');return false}
+ const p=clamp(((a.heat-100)/60+.06)*(1-a.lv*.2),.03,.6);
+ if(Math.random()<p){S.hp=0;S.deathCause='สมองถูกเผาไหม้จากความร้อนเกินขีดของชิป AI ที่ฝังในร่าง';log('🔥 แกนประมวลผลร้อนเกินขีด — ระบบประสาทของคุณถูกเผาไหม้จากภายใน','bad',true);return true}
+ a.hot=(a.hot||0)+1;a.heat=60;a.off=S.age+R(1,3);S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.35));aiLog('🔥 ร้อนเกินขีด! ตัดการทำงานฉุกเฉินเพื่อรักษาชีวิตโฮสต์ — AI จะออฟไลน์ไปสักพัก','bad');return false}
+function aiTick(st){const a=S.ai;if(!a)return;const y=Math.max(1,st||1);a.heat=Math.max(0,a.heat-(12+a.lv*5)*Math.min(y,10));if(a.off&&S.age>=a.off){a.off=0;aiLog('รีบูตเสร็จสิ้น ระบบกลับมาออนไลน์','good')}
+ if(!aiOn())return;aiSync(Math.round((R(1,3)+Math.min(2,Math.floor((S.int||0)/300)))*(S.xian?.45:1)));
+ const g=aiPowV([.15,.3,.5][a.lv]);S.power+=g;
+ if(Math.random()<[.02,.04,.07][a.lv]){const r=Math.random();if(S.chronic&&r<.4){const n=S.chronic.n;S.chronic=null;aiLog(`ซ่อมแซมเซลล์ที่เสียหาย — หายจาก${n}`,'good')}else if(r<.85){const h=[5,10,20][a.lv];S.maxHp+=h;aiLog(`ปรับโครงสร้างกล้ามเนื้อและกระดูกระหว่างคุณหลับ — พลังชีวิตสูงสุด +${h}`,'good')}else if(a.lv===2){S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.02).toFixed(2)});aiLog('ปรับแต่งเส้นลมปราณให้เหมาะสมที่สุด — ความเร็วฝึก ×1.02 ถาวร','myth')}}}
+{const _fg=fight;fight=function(name,ep){const w=_fg.apply(this,arguments);try{if(aiOn()&&S.alive){const a=S.ai;if(!w){a.lost.unshift(String(name).replace(/<[^>]+>/g,'').slice(0,30));a.lost=a.lost.slice(0,5)}
+  if(a.cy!==S.age&&Math.random()<(w?[.05,.09,.14]:[.025,.05,.08])[a.lv]){a.cy=S.age;const t=newArt(a.lv);t.n=`${t.n} (คัดลอก)`;S.arts.push(t);a.cp++;aiSync(10);aiLog(`วิเคราะห์ท่าของ${name}เสร็จสิ้น — คัดลอกได้ ${artHtml(t)}`,'epic')}}}catch(e){console.error(e)}return w}}
+
+// ---- AI เลือกเส้นทาง ----
+function aiScore(o,c){const a=S.ai,t=(o.t||'')+' '+(o.s||''),low=S.hp<S.maxHp*.4,rk=low?2:1;let sc=Math.random()*[2.5,1.5,.7][a.lv];
+ if(o.skip)sc-=1.2;const ps=t.match(/ผ่าน(?:ราว)?\s*(\d+)%/),pd=t.match(/ตาย(?:ราว)?\s*~?(\d+)%/);if(ps)sc+=+ps[1]/20;if(pd)sc-=+pd[1]/8*rk;
+ if(/อาจตาย|เสี่ยงตาย|แพ้อาจตาย/.test(t))sc-=3*rk;else if(/เสี่ยงสูง|เสี่ยง/.test(t))sc-=1.2*rk;if(/แน่นอน|สำเร็จแน่/.test(t))sc+=3;
+ sc+=(t.match(/\+/g)||[]).length*.6-(t.match(/[−]/g)||[]).length*.5;if(/กรรมชั่ว/.test(t))sc-=S.karma<-40?2:.6;if(/กรรมดี/.test(t))sc+=.5;
+ const m=t.match(/([\d,]+)\s*ตำลึง/);if(m&&/ใช้|จ่าย|ซื้อ|ประมูล|−/.test(t)&&S.money<+m[1].replace(/,/g,''))sc-=6;
+ if(low&&/รักษา|พัก|ฟื้น|ถอย|ปลอดภัย/.test(t))sc+=2;if(/ใช้ตรา|กลืนยา|ยันต์|🔱|💊/.test(o.t||''))sc+=1.5;
+ if(/ทัณฑ์สวรรค์แห่ง/.test(String(c.title))&&ps){const p=+ps[1];if(/เตรียมตัว/.test(t))sc+=p<75&&(S.tribPrep||0)<3?6:-4}
+ return sc}
+function aiPick(c){let b=0,bs=-1e9;c.opts.forEach((o,i)=>{const s=aiScore(o,c);if(s>bs){bs=s;b=i}});return b}
+function aiChoose(){const c=choice._cur;if(!c||!aiOn())return;const i=aiPick(c);addFeed('ev',`🤖 ${esc(S.ai.nm)} วิเคราะห์แล้วเลือก — <b>${String(c.title).replace(/<[^>]+>/g,'')}</b>: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');if(aiHeat(2)){checkDeath();return}choiceRun(i)}
+{const _fc=fateChoice;fateChoice=function(silent){try{const c=choice._cur;if(c&&aiOn()&&S.ai.on){const i=aiPick(c);if(!silent&&!auto)addFeed('ev',`🤖 AI เลือกแทน — <b>${String(c.title).replace(/<[^>]+>/g,'')}</b>: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');S.ai.heat+=1;return choiceRun(i)}}catch(e){console.error(e)}return _fc.apply(this,arguments)}}
+{const _cs=choiceShow;choiceShow=function(){const r=_cs.apply(this,arguments);try{if(aiOn()&&!auto&&choice._cur){const f=$('modal').querySelector('.chfoot');if(f){const b=document.createElement('button');b.className='sysb';b.style.cssText='width:100%;margin:6px 0';b.setAttribute('onclick','aiChoose()');b.innerHTML=`🤖 ให้ ${esc(S.ai.nm)} วิเคราะห์และเลือก (ร้อน +2)`;f.parentNode.insertBefore(b,f)}}}catch(e){console.error(e)}return r}}
+
+// ---- คำสั่ง AI ----
+function aiAct(k,x){if(!aiOn())return toast(S&&S.ai&&S.ai.off?'AI ออฟไลน์อยู่ ต้องรอรีบูต':'ไม่มี AI');if(choice._cur)return toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');const a=S.ai;let died=false;
+ if(k==='heal'){if(S.hp>=S.maxHp&&!S.chronic)return toast('ร่างกายปกติดีอยู่แล้ว');S.hp=S.maxHp;const c=a.lv>=1&&S.chronic?S.chronic.n:null;if(c)S.chronic=null;aiSync(3);aiLog(`ฟื้นฟูร่างกาย 100%${c?` · กำจัด${c}ออกจากร่าง`:''}`,'good');died=aiHeat([35,28,20][a.lv])}
+ else if(k==='dummy'){const g=aiPowV([1,1.5,2][a.lv]);S.power+=g;a.sim++;aiSync(5);aiLog(`🟦 ห้วงลึก: ซ้อมกับหุ่นโฮโลแกรม 1,000 รอบในเวลาจริงไม่ถึงวินาที — พลังยุทธ์ +${fmt(g)}`,'good');died=aiHeat(15)}
+ else if(k==='foe'){const n=x!=null&&a.lost[x]?a.lost[x]:(S.nem&&S.nem.alive?S.nem.n:'ศัตรูที่แข็งแกร่งที่สุดในฐานข้อมูล');a.sim++;aiSync(8);
+  if(Math.random()<[.25,.18,.1][a.lv]){const d=Math.round(S.maxHp*.25);S.hp=Math.max(1,S.hp-d);aiLog(`🟥 ห้วงลึก: โฮโลแกรมของ${esc(n)}แรงเกินคาด ความเจ็บสะท้อนกลับสู่ร่างจริง — พลังชีวิต −${d}`,'bad')}
+  const g=aiPowV([3,4,6][a.lv]);S.power+=g;aiLog(`🟥 ห้วงลึก: จำลองศึกกับ<b>${esc(n)}</b>ซ้ำแล้วซ้ำเล่าจนจับจังหวะได้ — พลังยุทธ์ +${fmt(g)}`,'epic');
+  if(Math.random()<[.05,.1,.15][a.lv]){const t=newArt(a.lv);t.n=`${t.n} (คัดลอก)`;S.arts.push(t);a.cp++;aiLog(`ระหว่างจำลอง คัดลอกท่าของ${esc(n)}ได้ ${artHtml(t)}`,'epic')}died=aiHeat(30)}
+ else if(k==='future'){if(a.lv<2)return;a.sim++;aiSync(10);const g=aiPowV(9);S.power+=g;S.int+=3;aiLog(`🟪 ห้วงลึก: จำลองตัวคุณในอีกร้อยปีข้างหน้าแล้วสู้กับมัน — แพ้ยับ แต่ได้เห็นทางที่ตัวเองจะเดิน · พลังยุทธ์ +${fmt(g)} ปัญญา +3`,'myth');died=aiHeat(45)}
+ else if(k==='art'){if(!S.arts.length)return toast('ยังไม่มีวิชาให้วิเคราะห์');const t=ch(S.arts),p=[.1,.15,.25][a.lv];t.b=Math.round(t.b*(1+p));aiSync(4);aiLog(`วิเคราะห์จุดบกพร่องของ ${artHtml(t)} แล้วปรับแก้ — พลังวิชา +${Math.round(p*100)}%`,'good');died=aiHeat(20)}
+ else if(k==='tog'){a.on=a.on?0:1;toast(a.on?'AI จะเลือกเส้นทางแทนเมื่อชะตาต้องตัดสินและตอนโหมดอัตโนมัติ':'AI จะไม่เลือกแทนแล้ว')}
+ render();if(died||S.hp<=0){closeM();checkDeath();return}openAI()}
+function openAI(){if(!S||!S.ai)return;const a=S.ai,on=aiOn(),nx=a.lv<2?AI_NX[a.lv]:null,hc=a.heat>=85?'#d84a4a':a.heat>=60?'#e8a23a':'#4aa3ff';
+ const B=(k,t,s,h,dis,x)=>`<button class="opt" onclick="aiAct('${k}'${x!=null?','+x:''})" ${dis||!on?'disabled style="opacity:.45"':''}>${t}<small>${s}${h?` · ร้อน +${h}${a.heat+h>100?' ⚠️ เกินขีด เสี่ยงตาย!':''}`:''}</small></button>`;
+ const clues=[];for(let i=1;i<=Math.min(a.clue,4);i++)clues.push(i===4&&a.nano?'สัญญาณจาง ๆ ของวิชามารโบราณในหน่วยความจำ':AI_CLUE[i-1]);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🤖 ${esc(a.nm)}</h3>
+ <div class="item"><b>ระดับ ${AI_LV[a.lv]}</b>${!on?' · <span style="color:#d84a4a">ออฟไลน์</span>':''}<br><span class="tag2">ซิงก์ ${fmt(a.sync)}${nx?` / ${nx} เพื่อขึ้น${AI_LV[a.lv+1]}`:' (สูงสุด)'} · คัดลอกวิชาแล้ว ${a.cp} · จำลองในห้วงลึก ${a.sim} ครั้ง</span>
+ <div class="hpbar" style="height:9px;margin-top:6px"><i style="width:${Math.min(100,a.heat)}%;background:${hc}"></i></div><span class="tag2">🌡️ ความร้อน ${Math.round(a.heat)}% · เย็นลงเองปีละ ${12+a.lv*5}% · เกิน 100% อาจตาย</span></div>
+ <div class="item"><b>🔍 ความลับของ AI ${a.clue}/5</b><br><span class="tag2">${a.rev?(a.ori<0?AI_NANO.n+' — '+AI_NANO.d:AI_ORI[a.ori].n+' — '+AI_ORI[a.ori].d):clues.length?clues.join('<br>'):'ยังถอดรหัสไม่ได้ — ซิงก์มากขึ้นเพื่อปลดล็อก'}</span></div>
+ <div class="mgrid">${B('heal','💠 ฟื้นฟูร่างกาย',a.lv>=1?'พลังชีวิตเต็ม + รักษาโรค':'พลังชีวิตเต็ม',[35,28,20][a.lv])}${B('art','🧠 วิเคราะห์วิชา','พลังวิชาสุ่ม 1 วิชา +'+[10,15,25][a.lv]+'%',20)}
+ ${B('dummy','🟦 ห้วงลึก: หุ่นโฮโลแกรม','ซ้อมปลอดภัย',15)}${B('foe','🟥 ห้วงลึก: ศัตรูที่สู้ไม่ได้',S.nem&&S.nem.alive?esc(S.nem.n):'ศัตรูในฐานข้อมูล',30)}
+ ${a.lost.slice(0,3).map((n,i)=>B('foe','🟥 จำลองศึกกับ '+esc(n),'คนที่เคยชนะคุณ',30,0,i)).join('')}
+ ${a.lv>=2?B('future','🟪 ห้วงลึก: ตัวเองในอนาคต','ได้มากที่สุด',45):''}
+ <button class="opt" onclick="aiAct('tog')">${a.on?'✅':'⬜'} ให้ AI เลือกเส้นทาง<small>ใช้แทน "ชะตาตัดสิน" และตอนเล่นอัตโนมัติ · ฉลาดกว่าการสุ่ม</small></button></div>`,'ai')}
+{const _om2=openMenu;openMenu=function(){const r=_om2.apply(this,arguments);try{if(S&&S.ai){const gr=$('modal').querySelector('.mgrid');if(gr){const a=S.ai,b=document.createElement('button');b.className='opt';b.style.cssText='background:var(--syBg);color:var(--syT);border-color:var(--syA)';b.setAttribute('onclick','openAI()');b.innerHTML=`🤖 AI<small style="color:var(--syB)">${AI_LV[a.lv].split(' ')[0]} · ร้อน ${Math.round(a.heat)}%</small>`;gr.insertBefore(b,gr.firstChild)}}}catch(e){console.error(e)}return r}}
+
+// ---- ได้ AI ----
+{const _bl=beginLife;beginLife=function(){const r=_bl.apply(this,arguments);try{if(S&&!S.beastMode&&!(S.family&&S.family.beast)&&!S.ai){const x=Math.random();if(x<.025)aiGive('birth');else if(x<.05)S.aiAt=R(6,60)}}catch(e){console.error(e)}return r}}
+function aiFuture(){if(!S.aiAt||S.ai||S.age<S.aiAt||choice._cur||modalOpen||S.beastMode)return;S.aiAt=0;const who=ch(['หญิงสาวในชุดเกราะสีเงินที่เปื้อนเลือด','ชายชราที่ตาข้างหนึ่งเป็นแสงสีฟ้า','เด็กหนุ่มที่หน้าตาเหมือนคุณอย่างประหลาด','หุ่นยนต์ครึ่งตัวที่คลานออกมาจากรอยแยกอากาศ']);
+ setScene('portal');choice('🌀 คนจากอนาคต',`อากาศตรงหน้าฉีกขาด ${who}ทรุดลงตรงหน้าคุณ: "ไม่มีเวลาอธิบาย… รับมันไว้ ทั้งโลกขึ้นอยู่กับมัน" — ในมือเป็นชิปเล็ก ๆ ที่เปล่งแสงสีฟ้า`,[
+  {t:'🤖 รับชิปไว้',s:'ได้ AI ฝังตัว',f(){aiGive('future')}},
+  {t:'🙅 ปฏิเสธ',s:'โอกาสนี้จะไม่กลับมาอีก',skip:true,f(){S.aiRefused=1;log(`🙅 ${who}มองคุณด้วยแววตาสิ้นหวัง ก่อนร่างจะสลายเป็นแสงไป`,'')}}])}
+{const _py=passYear;passYear=function(){const a0=S?S.age:0;const r=_py.apply(this,arguments);try{if(S&&S.alive){if(S.ai)aiTick(S.age-a0);else if(S.aiAt)aiFuture()}}catch(e){console.error(e)}return r}}
+{const _ep=epithet;epithet=function(){if(S&&S.ai&&S.ai.nanoRev)return'Nano Machine';return _ep.apply(this,arguments)}}
+{const L=[{id:'ai_get',n:'โฮสต์',d:'ได้รับ AI ฝังตัวจากโลกอนาคต',r:3,c:()=>!!S.ai},{id:'ai_birth',n:'เกิดมาพร้อมชิป',d:'มี AI ติดตัวมาตั้งแต่เกิด',r:4,c:()=>!!(S.ai&&S.ai.src==='birth')},
+ {id:'ai_refuse',n:'ไม่ต้องการอนาคต',d:'ปฏิเสธชิปจากคนจากอนาคต',r:3,c:()=>!!S.aiRefused},{id:'ai_full',n:'สมบูรณ์แบบ',d:'AI ถึงระดับสมบูรณ์ (Complete)',r:4,c:()=>!!(S.ai&&S.ai.lv>=2)},
+ {id:'ai_copy',n:'เครื่องถ่ายเอกสารเดินได้',d:'ให้ AI คัดลอกวิชาได้ 10 วิชา',r:3,c:()=>!!(S.ai&&S.ai.cp>=10)},{id:'ai_hot',n:'ร้อนแต่ไม่ตาย',d:'รอดจาก AI ร้อนเกินขีด',r:2,c:()=>!!(S.ai&&S.ai.hot)},
+ {id:'ai_secret',n:'ความลับของ AI',d:'ไขความลับได้ว่าใครส่ง AI มา',r:5,c:()=>!!(S.ai&&S.ai.rev)},{id:'ai_nano',n:'Nano Machine',d:'AI ขึ้นรูปและเผยชื่อเจ้าของเดิม',r:6,c:()=>!!(S.ai&&S.ai.nanoRev)}];
+ ACH.push(['🤖 AI ฝังตัว',L]);ACH_ALL.push(...L)}
 </script>
 </body>
 </html>
