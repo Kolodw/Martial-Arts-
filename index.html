@@ -47,6 +47,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>1 ใน นวนิยาย — จำลองชีวิตยุทธภพและเทพเซียน</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#14131b">
+<link rel="icon" href="/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="1 ใน นวนิยาย">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link href="https://fonts.googleapis.com/css2?family=Itim&family=Srisakdi:wght@700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f4eee2;--card:#fffdf8;--w:#fff;--ink:#2a2838;--mut:#8a8496;--pink:#ff6b9a;--pinkd:#d94a7a;--line:#2a2838;--grid:#0000000a;
@@ -5773,7 +5781,7 @@ function rpBox(k,m){const r=m.rp,a=!!admK(),id=k+'_'+m.i;let h='';
  if(r&&r.x)h+=`<div class="rpdev"><b>💬 ตอบกลับจากผู้พัฒนา</b><span class="tag2"> · ${ago(r.t)}</span><p>${esc(r.x)}</p></div>`;
  if(a)h+=`<div class="rpadm"><textarea id="rp_${id}" class="crin" rows="2" maxlength="400" placeholder="ตอบกลับ (เว้นว่าง = ลบคำตอบ)">${r&&r.x?esc(r.x):''}</textarea><button class="sysb" onclick="rpSend('${k}','${m.i}')">ส่งคำตอบ</button></div>`;
  return h}
-async function rpSend(k,mid){const el=$('rp_'+k+'_'+mid);if(!el)return;try{await api('reply',{kind:k,mid,x:(el.value||'').trim(),key:admK()});toast('บันทึกคำตอบแล้ว');k==='b'?openReport():openFeedback()}catch(e){toast('ส่งไม่สำเร็จ')}}
+async function rpSend(k,mid){const el=$('rp_'+k+'_'+mid);if(!el)return;try{const j=await api('reply',{kind:k,mid,x:(el.value||'').trim(),key:admK()});const p=j&&j.push;toast(j&&j.del?'ลบคำตอบแล้ว':p&&p.sent?`บันทึกคำตอบแล้ว · แจ้งเตือนเด้งที่ ${p.sent} เครื่อง`:p&&p.owner===0?'บันทึกคำตอบแล้ว (ไม่รู้ว่าใครเขียน — แจ้งเตือนไม่ได้)':'บันทึกคำตอบแล้ว · เขาจะเห็นในเกมตอนกลับมาเล่น');k==='b'?openReport():openFeedback()}catch(e){toast('ส่งไม่สำเร็จ')}}
 {const st=document.createElement('style');st.textContent='.rpdev{margin:6px 0 4px;padding:6px 9px;border-left:3px solid #d8b25a;background:rgba(216,178,90,.1);border-radius:6px}.rpdev p{margin:3px 0 0;white-space:pre-wrap}.rpdev b{color:#b8862a;font-size:.9em}.rpadm{display:flex;gap:6px;align-items:flex-end;margin:6px 0}.rpadm textarea{flex:1;min-height:40px}';document.head.appendChild(st)}
 try{Object.assign(I18N.d,{'ตอบกลับจากผู้พัฒนา':'Developer reply','ตอบกลับ':'Reply','เว้นว่าง':'empty','ลบคำตอบ':'delete reply','ส่งคำตอบ':'Send reply','บันทึกคำตอบแล้ว':'Reply saved'})}catch(e){}
 
@@ -6579,7 +6587,7 @@ chatRender=function(){const box=$('chatBox');if(!box)return;const near=box.scrol
  if(/^@everyone\b/i.test(x)){if(!admK()){toast('@everyone ใช้ได้เฉพาะโหมดแอดมินเท่านั้น');return}
   const body=x.replace(/^@everyone\b[\s:,-]*/i,'').trim();if(!body){toast('พิมพ์ข้อความประกาศต่อท้าย @everyone');return}
   if(chatSend._busy)return;chatSend._busy=1;
-  try{const j=await api('say',{n:pname(),ti:'ผู้ดูแล',x,k:'msg',key:admK()});if($('chatIn')&&text==null)$('chatIn').value='';if(j&&j.ann){LS.del('murim_annX');annShow(j.ann)}toast('📢 ส่งประกาศถึงทุกคนแล้ว');chatPoll()}
+  try{const j=await api('say',{n:pname(),ti:'ผู้ดูแล',x,k:'msg',key:admK()});if($('chatIn')&&text==null)$('chatIn').value='';if(j&&j.ann){LS.del('murim_annX');annShow(j.ann)}toast('📢 ส่งประกาศถึงทุกคนแล้ว'+(j&&j.push&&j.push.sent?` · แจ้งเตือนเด้ง ${j.push.sent} เครื่อง`:''));chatPoll()}
   catch(e){toast(e.message==='admin'?'รหัสแอดมินไม่ถูกต้อง — ส่งประกาศไม่ได้':e.message==='empty'?'ข้อความว่าง':'ส่งประกาศไม่สำเร็จ')}finally{chatSend._busy=0}return}
  return _cs.apply(this,arguments)}}
 // แถบประกาศลอยด้านบน (ทึบ เห็นชัด อยู่เหนือทุกหน้าต่าง)
@@ -8156,6 +8164,7 @@ function openAdmTools(){if(!ADM.ok){admVerify().then(ok=>{if(ok)openAdmTools();e
   <button class="gbtn" onclick="openLiveList()">👁 ดูทุกคนเล่น</button>
   <button class="gbtn" onclick="admPaForce(this)">🔨 เปิดประมูลผู้เล่นทันที</button>
   <button class="gbtn" onclick="openOnline('chat');setTimeout(()=>{const i=$('chatIn');if(i){i.value='@everyone ';i.focus()}},400)">📢 ประกาศถึงทุกคน</button>
+  <button class="gbtn" onclick="admPush()">🔔 ส่งแจ้งเตือนถึงทุกคน</button>
  </div><p class="tag2" style="margin:4px 0 0">ประมูลเปิดทันที ผู้เล่นทุกคนที่อยู่ในชีวิตจะเห็นป้ายภายใน ~20 วิ · ประกาศ @everyone ก็ถึงทุกคนภายใน ~20 วิ</p></div>`,'admtool')}
 async function admPaForce(b){b.disabled=true;try{const j=await api('paforce&key='+encodeURIComponent(admK()));const p=j&&j.pa;
  if(j&&j.st==='open'){toast('🔨 เปิดประมูลแล้ว! ทุกคนจะเห็นประกาศภายใน ~20 วิ');try{PA.sum=p;if(p&&!PA.seen[p.sid]){PA.seen[p.sid]=1;if(paCanSee())paBanner(p);else toast('ℹ️ เข้าไปอยู่ในชีวิตก่อน ถึงจะเห็นป้ายประมูลเอง')}}catch(e){}}
@@ -8348,7 +8357,7 @@ function fateApply(){const r=roll;if(!r)return;const N=1/(r.p*(r.era?r.era.p:1))
 // ============ v13.9 แจ้งเตือนเร็ว: ประมูล + ประกาศ ถึงทุกคนภายใน ~20 วิ (ไม่ต้องรอรอบ 45 วิ/2 นาที) ============
 async function fastTick(){if(document.hidden||fastTick._f)return;fastTick._f=1;try{const j=await api('tick');
  try{const p=j.pa;PA.sum=p||PA.sum;if(p&&p.phase==='open'&&!PA.seen[p.sid]&&paCanSee()&&Date.now()-p.t0<4*60e3){PA.seen[p.sid]=1;paBanner(p)}}catch(e){}
- if(j.av&&j.av!==fastTick._av){fastTick._av=j.av;onlinePing()}else if(!j.av)fastTick._av=''}
+ if(j.av&&j.av!==fastTick._av){fastTick._av=j.av;onlinePing()}else if(!j.av)fastTick._av='';try{if(j.nt&&typeof ntShow==='function')ntShow(j.nt)}catch(e){}}
  catch(e){}finally{fastTick._f=0}}
 setTimeout(fastTick,6000);setInterval(fastTick,20000);
 
@@ -8541,6 +8550,81 @@ Object.assign(FOC_LOC,{patrol:'road',devour:'road',pack:'peak',bond:'road',seclu
 Object.assign(ACT,{hunt:['ซุ่มรอเหยื่อ','ไล่ล่าเหยื่อ','ลับเขี้ยวเล็บ','แบ่งเหยื่อ'],moon:['ดูดซับแสงจันทร์','นั่งนิ่งใต้จันทร์','หายใจตามจังหวะลมปราณ'],roam:['ท่องป่า','ดมกลิ่นตามรอย','สำรวจถ้ำ'],hide:['ขดตัวพักฟื้น','เลียแผล','หลับในโพรง'],human:['แอบดูมนุษย์','ฟังภาษามนุษย์','ซ่อนตัวชายหมู่บ้าน'],
  patrol:['ลาดตระเวนอาณาเขต','ทำลายกับดัก','เฝ้าชายป่า'],devour:['กลืนกินแก่นอสูร','ล่าอสูรตัวอื่น','ดูดซับโลหิต'],pack:['นำฝูงล่าเหยื่อ','สอนลูกฝูง','ขยายอาณาเขต'],bond:['ร่วมทางกับคู่พันธะ','ฝึกคู่กับคู่พันธะ','เฝ้ายามให้คู่พันธะ'],seclude:['เข้าฌาน','เพ่งอักษรบนผนังถ้ำ','บำเพ็ญเงียบ']});
 {const _ba3=blAdvance;blAdvance=function(){try{const m=S.beastMode;if(m&&m.sp==='มังกร'&&((m.st===2&&S.age<40)||(m.st===3&&S.age<80)))return}catch(e){}return _ba3.apply(this,arguments)}}
+// ===== 🔔 แจ้งเตือน: Web Push + กล่องข้อความในเกม + ลิงก์จากแจ้งเตือน =====
+const VAPID_K='BA0yB4qDX3LGZiuhrVOAM1k3kvS8ivDnnzNytvkVkkXJ9rwbT0i8Kj23jgoZ61xWh9MPyTY_s1e6ArwlPnOPLEw';
+let swReg=null;
+function pushEnv(){const ua=navigator.userAgent||'',ios=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+ const sa=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+ return{ios,sa,inApp:/FBAN|FBAV|FB_IAB|FBIOS|Instagram|Line\/|TikTok|musical_ly|Messenger|MicroMessenger/i.test(ua),sup:'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window&&(location.protocol==='https:'||location.hostname==='localhost')}}
+async function swInit(){if(swReg)return swReg;if(!('serviceWorker' in navigator))return null;try{swReg=await navigator.serviceWorker.register('/sw.js');return swReg}catch(e){return null}}
+function vk8(b){const s=(b+'='.repeat((4-b.length%4)%4)).replace(/-/g,'+').replace(/_/g,'/'),r=atob(s),o=new Uint8Array(r.length);for(let i=0;i<r.length;i++)o[i]=r.charCodeAt(i);return o}
+async function pushState(){const E=pushEnv();if(!E.sup)return E.ios&&!E.sa?'ios':E.inApp?'inapp':'nosup';if(Notification.permission==='denied')return'denied';const r=await swInit();if(!r)return'off';try{const s=await r.pushManager.getSubscription();return s&&Notification.permission==='granted'?'on':'off'}catch(e){return'off'}}
+async function pushOn(btn){const E=pushEnv();if(E.inApp)return pushHelp('inapp');if(E.ios&&!E.sa)return pushHelp('ios');if(!E.sup)return pushHelp('nosup');
+ if(!onlineOK){toast('ยังเชื่อมต่อออนไลน์ไม่ได้ ลองใหม่อีกครั้ง');return false}
+ if(btn)btn.disabled=true;
+ try{const p=await Notification.requestPermission();if(p!=='granted'){toast(p==='denied'?'ถูกปฏิเสธ — เปิดได้ที่การตั้งค่าเว็บไซต์ของเบราว์เซอร์':'ยังไม่ได้อนุญาต');if(p==='denied')pushHelp('denied');return false}
+  const r=await swInit();if(!r)throw new Error('sw');await navigator.serviceWorker.ready;let s=await r.pushManager.getSubscription();
+  if(!s)s=await r.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:vk8(VAPID_K)});
+  await api('pushsub',{sub:s.toJSON(),test:1});LS.set('murim_push',1);LS.set('murim_pushD',dayKey()+pid);toast('🔔 เปิดแจ้งเตือนแล้ว — ส่งข้อความทดสอบไปที่เครื่องนี้');return true}
+ catch(e){console.warn(e);toast('เปิดแจ้งเตือนไม่สำเร็จ'+(e&&e.message&&e.message!=='sw'?' ('+String(e.message).slice(0,40)+')':''));return false}
+ finally{if(btn)btn.disabled=false;try{if($('modal').dataset.k==='push')openPush()}catch(e){}}}
+async function pushOff(){try{const r=await swInit();const s=r&&await r.pushManager.getSubscription();if(s){try{await api('pushsub',{sub:s.toJSON(),off:1})}catch(e){}await s.unsubscribe()}}catch(e){}LS.set('murim_push',0);toast('🔕 ปิดแจ้งเตือนแล้ว');try{if($('modal').dataset.k==='push')openPush()}catch(e){}}
+async function pushSync(){try{if(!onlineOK||!pushEnv().sup||Notification.permission!=='granted')return;const r=await swInit();if(!r)return;let s=await r.pushManager.getSubscription();
+ if(!s){if(!LS.get('murim_push',0))return;try{s=await r.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:vk8(VAPID_K)})}catch(e){return}LS.set('murim_pushD','')}
+ const d=dayKey()+pid;if(LS.get('murim_pushD','')===d)return;await api('pushsub',{sub:s.toJSON()});LS.set('murim_pushD',d);LS.set('murim_push',1)}catch(e){}}
+function pushHelp(k){const T={
+ ios:`<h3>📱 iPhone / iPad</h3><p>iPhone รับแจ้งเตือนจากเว็บได้เฉพาะตอนเปิดเกมจาก<b>ไอคอนบนหน้าจอโฮม</b> (iOS 16.4 ขึ้นไป)</p><ol style="padding-left:20px;line-height:1.7"><li><b>ย้ายเซฟก่อน</b> — ไอคอนบนหน้าจอโฮมเก็บเซฟแยกจาก Safari ไปที่ 👤 โปรไฟล์ → 💾 ย้ายเซฟข้ามเครื่อง แล้วจดรหัสไว้</li><li>เปิดเว็บนี้ใน <b>Safari</b> แตะปุ่ม <b>แชร์</b> (สี่เหลี่ยมมีลูกศรขึ้น)</li><li>เลือก <b>เพิ่มไปยังหน้าจอโฮม</b></li><li>เปิดเกมจากไอคอนใหม่ ใส่รหัสเซฟ แล้วกด 🔔 เปิดแจ้งเตือน</li></ol>`,
+ inapp:`<h3>🌐 เปิดในเบราว์เซอร์ก่อน</h3><p>ตอนนี้คุณเปิดเกมผ่านแอป (Facebook / LINE / IG) ซึ่งขอแจ้งเตือนไม่ได้</p><p>แตะเมนู <b>⋯</b> มุมขวาบน → <b>เปิดในเบราว์เซอร์</b> (Chrome / Safari) แล้วกด 🔔 อีกครั้ง</p><p class="tag2">เซฟในแอปกับในเบราว์เซอร์แยกกัน — ย้ายด้วยรหัสที่ 👤 โปรไฟล์ → 💾 ย้ายเซฟข้ามเครื่อง</p><button class="gbtn" style="width:100%" onclick="try{navigator.clipboard.writeText('https://www.1inanovel.com');toast('คัดลอกลิงก์แล้ว')}catch(e){}">📋 คัดลอกลิงก์เว็บ</button>`,
+ denied:`<h3>🔕 แจ้งเตือนถูกปิดไว้</h3><p>เบราว์เซอร์จำไว้ว่าคุณกดปฏิเสธ จึงถามซ้ำไม่ได้</p><p>แตะไอคอน 🔒 ข้างช่องที่อยู่เว็บ → <b>การแจ้งเตือน</b> → <b>อนุญาต</b> แล้วกลับมากด 🔔 อีกครั้ง</p>`,
+ nosup:`<h3>😢 เบราว์เซอร์นี้ไม่รองรับ</h3><p>ลองเปิดด้วย Chrome, Edge, Firefox หรือ Safari เวอร์ชันใหม่</p>`};
+ modal(`<button class="xbtn" onclick="closeM()">✕</button>${T[k]||T.nosup}<button class="pbtn" style="width:100%;margin-top:8px" onclick="closeM()">เข้าใจแล้ว</button>`,'pushhelp');return false}
+async function openPush(){const st=await pushState(),E=pushEnv();
+ const L={on:'🟢 เปิดอยู่ — เครื่องนี้จะได้รับแจ้งเตือน',off:'⚪ ยังไม่เปิด',denied:'🔴 ถูกปฏิเสธไว้',ios:'📱 iPhone ต้องเปิดจากไอคอนหน้าจอโฮม',inapp:'🌐 เปิดผ่านแอปอยู่ ต้องเปิดในเบราว์เซอร์',nosup:'😢 เบราว์เซอร์นี้ไม่รองรับ'};
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🔔 การแจ้งเตือน</h3><div class="box" style="padding:8px 10px">${L[st]||st}</div>
+ <p>รับแจ้งเตือนเมื่อ:</p><ul style="padding-left:20px;line-height:1.7;margin:4px 0"><li>💬 ผู้ดูแลตอบรายงานบัค ข้อเสนอแนะ รีวิว หรือแชทของคุณ</li><li>📢 มีประกาศสำคัญจากผู้ดูแล</li></ul>
+ <p class="tag2">ถึงไม่เปิด ข้อความที่ผู้ดูแลตอบคุณจะเด้งขึ้นในเกมตอนคุณกลับมาเล่น</p>
+ ${st==='on'?`<button class="gbtn" style="width:100%" onclick="pushOff()">🔕 ปิดแจ้งเตือนบนเครื่องนี้</button>`:st==='off'?`<button class="pbtn" style="width:100%" onclick="pushOn(this)">🔔 เปิดแจ้งเตือน</button>`:`<button class="pbtn" style="width:100%" onclick="pushHelp('${st}')">📖 วิธีเปิด</button>`}`,'push')}
+// ถามแบบนุ่มนวลครั้งเดียว (เล่นไปสักพักแล้ว) — ปฏิเสธแล้วจะถามใหม่หลัง 5 วัน
+let _paskT0=Date.now();
+setInterval(async()=>{try{if(!onlineOK||!S||!S.alive||modalOpen||choice._cur||document.hidden||(typeof tutI!=='undefined'&&tutI>=0&&document.getElementById('tut')))return;if(Date.now()-_paskT0<8*60e3)return;
+ const last=+LS.get('murim_pushAsk',0)||0;if(Date.now()-last<5*86400e3)return;const st=await pushState();if(st==='on'||st==='denied'||st==='nosup'){LS.set('murim_pushAsk',Date.now()+1e12);return}
+ LS.set('murim_pushAsk',Date.now());const was=paused;paused=true;
+ modal(`<h3>🔔 รับแจ้งเตือนไหม?</h3><p>ให้เกมเด้งบอกคุณเมื่อ<b>ผู้ดูแลตอบกลับ</b>รายงาน รีวิว หรือแชทของคุณ และเมื่อมี<b>ประกาศสำคัญ</b></p><p class="tag2">ไม่มีโฆษณา ปิดได้ทุกเมื่อที่ ☰ เมนู → 🔔 แจ้งเตือน</p>
+ <div style="display:flex;gap:8px"><button class="gbtn" style="flex:1" onclick="closeM()">ไว้ทีหลัง</button><button class="pbtn" style="flex:1.4" onclick="closeM();pushOn()">🔔 เปิดแจ้งเตือน</button></div>`,'pushask');
+ const t=setInterval(()=>{if(!modalOpen){clearInterval(t);paused=was}},500)}catch(e){}},60e3);
+// กล่องข้อความจากผู้ดูแล (มาทาง tick)
+function ntShow(L){if(!Array.isArray(L)||!L.length)return;const it=L.slice(-5);try{sfx('block')}catch(e){}
+ const show=()=>{if(modalOpen||choice._cur)return setTimeout(show,1500);
+  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📬 ข้อความถึงคุณ</h3>${it.map(m=>`<div class="item"><div class="h"><b>${esc(m.t||'ข้อความ')}</b><span class="tag2">${m.at?new Date(m.at).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}</span></div><p>${esc(m.b||'')}</p>${m.u&&m.u!=='/'?`<button class="gbtn" onclick="closeM();goOpen('${esc(String(new URLSearchParams((m.u.split('?')[1])||'').get('go')||''))}')">เปิดดู ›</button>`:''}</div>`).join('')}
+  <button class="pbtn" style="width:100%;margin-top:6px" onclick="closeM()">รับทราบ</button>`,'ntbox')};show()}
+function goOpen(g){try{if(!g)return;if(g==='chat')openOnline('chat');else if(g==='bugs')openReport();else if(g==='fb')openFeedback()}catch(e){}}
+(function(){try{const g=new URLSearchParams(location.search).get('go');if(g){history.replaceState(null,'',location.pathname);let n=0;const t=setInterval(()=>{n++;if(onlineOK||n>20){clearInterval(t);if(onlineOK)goOpen(g)}},500)}}catch(e){}
+ try{if('serviceWorker' in navigator){navigator.serviceWorker.addEventListener('message',e=>{try{if(e.data&&e.data.go)goOpen(e.data.go)}catch(x){}})}}catch(e){}
+ setTimeout(()=>{try{if(pushEnv().sup&&Notification.permission==='granted')swInit().then(()=>pushSync())}catch(e){}},4000);
+ setInterval(()=>{try{pushSync()}catch(e){}},30*60e3)})();
+// เมนู + โปรไฟล์
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const gr=$('modal').querySelector('.mgrid');if(gr&&!gr.querySelector('.pushTg'))gr.insertAdjacentHTML('beforeend',`<button class="opt pushTg" onclick="openPush()">🔔 แจ้งเตือน<small>${LS.get('murim_push',0)?'เปิดอยู่':'รับข่าวและคำตอบจากผู้ดูแล'}</small></button>`)}catch(e){}return r}}
+{const _op=openProfile;openProfile=function(){const r=_op.apply(this,arguments);try{const m=$('modal'),h=m.querySelector('#modalIn')||m.querySelector('.mbox')||m;if(!m.querySelector('#pfPush')){const d=document.createElement('div');d.id='pfPush';d.className='box';d.style.cssText='padding:8px 10px;margin-top:10px';d.innerHTML=`<b>🔔 การแจ้งเตือน</b><p class="tag2" style="margin:4px 0">รับแจ้งเตือนเมื่อผู้ดูแลตอบกลับคุณ หรือมีประกาศสำคัญ</p><button class="gbtn" style="width:100%" onclick="openPush()">ตั้งค่าแจ้งเตือน ›</button>`;const anchor=[...h.querySelectorAll('h4,h5,b')].find(x=>/ย้ายเซฟข้ามเครื่อง/.test(x.textContent||''));const box=anchor&&anchor.closest('.box,.item,div');if(box&&box.parentNode&&box!==h)box.parentNode.insertBefore(d,box);else h.appendChild(d)}}catch(e){}return r}}
+// แอดมิน: ตอบกลับในแชท → แจ้งเตือนคนนั้น
+let chatRto=null;
+function chatReplyTo(el){try{const pu=el.dataset.pu,n=el.dataset.n;if(!pu)return;chatRto={pu,n};const i=$('chatIn');if(i){i.value='@'+n+' ';i.focus()}toast('↩ ตอบกลับ '+n+' — เขาจะได้รับแจ้งเตือน')}catch(e){}}
+{const _cs2=chatSend;chatSend=async function(kind,text){const x=(text!=null?text:($('chatIn')||{}).value||'').trim();
+ if(chatRto&&admK()&&x&&!/^@everyone\b/i.test(x)&&x.startsWith('@'+chatRto.n)){if(chatSend._rb)return;chatSend._rb=1;const to=chatRto;
+  try{const j=await api('say',{n:pname(),ti:myTitle(),tp:acTp(),tt:(showTtl()||{}).t||'',tr:(showTtl()||{}).r||0,x:x.slice(0,200),k:'msg',key:admK(),rto:to.pu});chatRto=null;if($('chatIn')&&text==null)$('chatIn').value='';
+   const p=j&&j.push;toast(p&&p.sent?`📨 ส่งถึง ${to.n} แล้ว · แจ้งเตือนเด้งที่ ${p.sent} เครื่อง`:p&&p.owner===0?`ส่งแล้ว (หาเจ้าของข้อความไม่เจอ — เขาอาจใช้เวอร์ชันเก่า)`:`ส่งถึง ${to.n} แล้ว — เขายังไม่เปิดแจ้งเตือน จะเห็นในเกมตอนกลับมาเล่น`);chatPoll()}
+  catch(e){toast(e.message==='rate'?'ส่งเร็วเกินไป':'ส่งไม่สำเร็จ')}finally{chatSend._rb=0}return}
+ if(chatRto&&!x.startsWith('@'+chatRto.n))chatRto=null;
+ return _cs2.apply(this,arguments)}}
+{const _cr3=chatRender;chatRender=function(){const r=_cr3.apply(this,arguments);try{if(!admK())return r;const box=$('chatBox');if(!box)return r;const ms=chatMsgs;
+ box.querySelectorAll('.cm.cmp:not(.me) .rep').forEach(btn=>{if(btn.nextElementSibling&&btn.nextElementSibling.classList.contains('rpl'))return;const mid=(btn.getAttribute('onclick')||'').match(/chatRep\('([^']+)'/);const m=mid&&ms.find(z=>z.i===mid[1]);if(!m||!m.pu)return;const b=document.createElement('button');b.className='rep rpl';b.title='ตอบกลับ (แจ้งเตือนคนนี้)';b.textContent='↩';b.dataset.pu=m.pu;b.dataset.n=m.n||'';b.onclick=function(){chatReplyTo(this)};btn.after(b)})}catch(e){}return r}}
+// แอดมิน: ส่งแจ้งเตือนถึงทุกคน
+async function admPush(){let n='?';try{const j=await api('pushstat',{key:admK()});n=j.n+(j.on?'':' (ยังไม่ได้ตั้งค่า VAPID บนเซิร์ฟเวอร์)')}catch(e){}
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🔔 ส่งแจ้งเตือนถึงทุกคน</h3><p class="tag2">เครื่องที่เปิดรับแจ้งเตือนไว้: <b>${n}</b> เครื่อง · แตะแจ้งเตือนแล้วจะเปิดเกมที่แชทโลก</p>
+ <input id="apT" maxlength="60" placeholder="หัวข้อ (เว้นว่าง = 📢 1 ใน นวนิยาย)" style="width:100%;margin:4px 0;padding:8px;border:2px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit">
+ <textarea id="apX" maxlength="200" rows="3" placeholder="ข้อความ (ไม่เกิน 200 ตัว)" style="width:100%;margin:4px 0;padding:8px;border:2px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit"></textarea>
+ <button class="pbtn" style="width:100%" onclick="admPushGo(this)">📨 ส่งเลย</button><p class="tag2" style="margin-top:6px">💡 ประกาศ @everyone ในแชทก็ส่งแจ้งเตือนให้อัตโนมัติอยู่แล้ว · กด ↩ ข้างข้อความในแชท หรือตอบรายงาน/รีวิว = แจ้งเตือนคนนั้นคนเดียว</p>`,'admpush')}
+async function admPushGo(b){const x=($('apX').value||'').trim(),t=($('apT').value||'').trim();if(!x)return toast('พิมพ์ข้อความก่อน');if(!confirm('ส่งแจ้งเตือนถึงทุกคนที่เปิดรับ?'))return;b.disabled=true;b.textContent='กำลังส่ง…';
+ try{const j=await api('pushsend',{key:admK(),t,x});toast(`📨 ส่งสำเร็จ ${j.sent||0} เครื่อง${j.rm?` · ลบเครื่องที่เลิกรับ ${j.rm}`:''}${j.cap?' (ยังส่งต่อเบื้องหลัง)':''}`);closeM()}catch(e){toast(e.message==='admin'?'รหัสแอดมินไม่ถูกต้อง':'ส่งไม่สำเร็จ');b.disabled=false;b.textContent='📨 ส่งเลย'}}
 </script>
 </body>
 </html>

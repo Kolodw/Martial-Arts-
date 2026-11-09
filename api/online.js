@@ -152,7 +152,7 @@ const cip = req => (String(req.headers['x-real-ip'] || '') || String(req.headers
 // ต่อ IP ต่อนาที: เกิน SOFT ตอบ 429 · เกิน HARD แบน 30 นาที · คำสั่งที่เขียนข้อความให้คนอื่นเห็นจำกัดแยก
 // เน็ตมือถือไทยใช้ IP ร่วมกัน (CGNAT) → จำกัดหลักต่อ 'ไอดีผู้เล่น' ส่วนต่อ IP เผื่อไว้สูงมาก (กันแค่ยิงถล่มจริง)
 const IP_SOFT = 8000, IP_HARD = 25000, IP_WMAX = 2000, ID_SOFT = 240, ID_WMAX = 30, NOID_SOFT = 900;
-const IP_WRITE = new Set(['say', 'bug', 'bugedit', 'mtmsg', 'pachat', 'life', 'profile', 'idea', 'fb', 'mtopen', 'meet', 'migput', 'csave', 'save', 'achfirst', 'glogin', 'gunlink', 'profack']);
+const IP_WRITE = new Set(['say', 'bug', 'bugedit', 'mtmsg', 'pachat', 'life', 'profile', 'idea', 'fb', 'mtopen', 'meet', 'migput', 'csave', 'save', 'achfirst', 'glogin', 'gunlink', 'profack', 'pushsub']);
 // รหัสแอดมิน: ใช้ ADMIN_KEY2 ถ้ามี (รหัสเก่า ADMIN_KEY ใช้ไม่ได้อีก)
 const ADM_KEY = process.env.ADMIN_KEY2 || process.env.ADMIN_KEY || '';
 const isAdmKey = k => !!ADM_KEY && String(k || '') === ADM_KEY;
@@ -275,6 +275,60 @@ async function paTick(now) {
 const PA_DAY = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10);
 const paSum = c => c ? { sid: c.sid, phase: c.phase, t0: c.t0, li: c.li, n: c.lots.length, left: c.lots.filter(x => !x.sold).length } : null;
 let QUOTA_AT = 0;
+
+// ---------- 🔔 Web Push (VAPID + aes128gcm เขียนเองไม่ใช้ไลบรารี) + กล่องแจ้งเตือนในเกม ----------
+const crypto = require('crypto');
+const VAPID_PUB = process.env.VAPID_PUB || '', VAPID_PRIV = process.env.VAPID_PRIV || '';
+const PUSH_HOSTS = /^(fcm\.googleapis\.com|android\.googleapis\.com|updates\.push\.services\.mozilla\.com|push\.services\.mozilla\.com|[a-z0-9.-]+\.notify\.windows\.com|web\.push\.apple\.com|[a-z0-9.-]+\.push\.apple\.com)$/;
+const b64u = s => Buffer.from(String(s).replace(/=+$/, '').replace(/-/g, '+').replace(/_/g, '/'), 'base64');
+let _vk = null; const _jwtC = {};
+function vapidKey() { if (_vk) return _vk; const pub = b64u(VAPID_PUB); _vk = crypto.createPrivateKey({ key: { kty: 'EC', crv: 'P-256', d: VAPID_PRIV, x: pub.subarray(1, 33).toString('base64url'), y: pub.subarray(33, 65).toString('base64url') }, format: 'jwk' }); return _vk }
+function vapidAuth(aud) {
+  const n = Math.floor(Date.now() / 1000), c = _jwtC[aud]; if (c && c.e - n > 3600) return c.h;
+  const h = Buffer.from(JSON.stringify({ typ: 'JWT', alg: 'ES256' })).toString('base64url'), p = Buffer.from(JSON.stringify({ aud, exp: n + 12 * 3600, sub: 'https://www.1inanovel.com' })).toString('base64url');
+  const sig = crypto.sign('sha256', Buffer.from(h + '.' + p), { key: vapidKey(), dsaEncoding: 'ieee-p1363' }).toString('base64url');
+  const v = `vapid t=${h}.${p}.${sig}, k=${VAPID_PUB}`; _jwtC[aud] = { h: v, e: n + 12 * 3600 }; return v;
+}
+const hmac = (k, d) => crypto.createHmac('sha256', k).update(d).digest();
+function pushEnc(sub, payload) {
+  const ua = b64u(sub.k.p256dh), auth = b64u(sub.k.auth);
+  const e = crypto.createECDH('prime256v1'); e.generateKeys(); const as = e.getPublicKey(), sh = e.computeSecret(ua);
+  const ikm = hmac(hmac(auth, sh), Buffer.concat([Buffer.from('WebPush: info\0'), ua, as, Buffer.from([1])]));
+  const salt = crypto.randomBytes(16), prk = hmac(salt, ikm);
+  const cek = hmac(prk, Buffer.concat([Buffer.from('Content-Encoding: aes128gcm\0'), Buffer.from([1])])).subarray(0, 16);
+  const nonce = hmac(prk, Buffer.concat([Buffer.from('Content-Encoding: nonce\0'), Buffer.from([1])])).subarray(0, 12);
+  const ci = crypto.createCipheriv('aes-128-gcm', cek, nonce);
+  const ct = Buffer.concat([ci.update(Buffer.concat([Buffer.from(payload), Buffer.from([2])])), ci.final(), ci.getAuthTag()]);
+  const hd = Buffer.alloc(21); salt.copy(hd, 0); hd.writeUInt32BE(4096, 16); hd[20] = 65;
+  return Buffer.concat([hd, as, ct]);
+}
+async function pushOne(sub, msg) {
+  try {
+    const u = new URL(sub.e), body = pushEnc(sub, JSON.stringify(msg));
+    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 6000);
+    const r = await fetch(sub.e, { method: 'POST', signal: ctl.signal, headers: { 'Content-Encoding': 'aes128gcm', 'Content-Type': 'application/octet-stream', TTL: '86400', Urgency: 'high', Authorization: vapidAuth(u.origin) }, body });
+    clearTimeout(tm); return r.status;
+  } catch (e) { return 0 }
+}
+async function pushHashes(hs, msg) {
+  hs = [...new Set(hs || [])]; if (!VAPID_PRIV || !VAPID_PUB || !hs.length) return { sent: 0, fail: 0, rm: 0, n: hs.length };
+  const vals = []; for (let i = 0; i < hs.length; i += 200) vals.push(...((await cmd('HMGET', 'push', ...hs.slice(i, i + 200))) || []));
+  const subs = hs.map((h, i) => { const v = jp(vals[i]); return v ? Object.assign(v, { h }) : null });
+  const rm = hs.filter((h, i) => !subs[i]), L = subs.filter(Boolean); let k = 0, sent = 0, fail = 0;
+  const work = async () => { while (k < L.length) { const s0 = L[k++], st = await pushOne(s0, msg); if (st >= 200 && st < 300) sent++; else { fail++; if (st === 404 || st === 410 || st === 403) rm.push(s0.h) } } };
+  await Promise.all(Array.from({ length: Math.min(25, L.length) }, work));
+  if (rm.length) { const P = [['HDEL', 'push', ...rm]]; for (const s0 of L) if (rm.includes(s0.h)) P.push(['SREM', 'push:id:' + s0.id, s0.h]); try { await pipe(P) } catch (e) {} }
+  return { sent, fail, rm: rm.length, n: hs.length };
+}
+// แจ้งเตือนผู้เล่นคนเดียว: เก็บไว้ในกล่องในเกม (เห็นตอนกลับมาเล่น) + ส่ง push ถึงทุกเครื่องที่อนุญาต
+async function noteTo(pid, msg) {
+  if (!okId(pid)) return { sent: 0 };
+  const it = JSON.stringify(Object.assign({ at: Date.now() }, msg));
+  const [, , , hs] = await pipe([['LPUSH', 'nt:' + pid, it], ['LTRIM', 'nt:' + pid, 0, 9], ['EXPIRE', 'nt:' + pid, 86400 * 30], ['SMEMBERS', 'push:id:' + pid]]);
+  return pushHashes(hs || [], msg);
+}
+const withCap = (p, ms) => Promise.race([p, new Promise(r => setTimeout(() => r({ cap: 1 }), ms))]);
+
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
@@ -332,6 +386,31 @@ module.exports = async (req, res) => {
       const uk = okId(id) ? 'idr:' + id : 'ipn:' + ip, [uc, uw] = await pipe([['INCR', uk + ':' + mk], WR ? ['INCR', uk + ':w:' + mk] : ['GET', uk + ':w:' + mk], ['EXPIRE', uk + ':' + mk, 90], ...(WR ? [['EXPIRE', uk + ':w:' + mk, 90]] : [])]);
       if (+uc > (okId(id) ? ID_SOFT : NOID_SOFT)) return res.status(429).json({ err: 'rate' });
       if (WR && +uw > ID_WMAX) return res.status(429).json({ err: 'rate' });
+    }
+    if (a === 'pushcfg') return res.json({ k: VAPID_PUB });
+    if (a === 'pushsub') {
+      if (!okId(id)) return res.status(400).json({ err: 'id' });
+      const s0 = b.sub || {}, e = String(s0.endpoint || '').slice(0, 900); let host = '';
+      try { const u = new URL(e); if (u.protocol === 'https:') host = u.hostname } catch {}
+      const h = crypto.createHash('sha256').update(e).digest('base64url').slice(0, 22);
+      if (b.off) { const old = jp(await cmd('HGET', 'push', h)); await pipe([['HDEL', 'push', h], ['SREM', 'push:id:' + ((old && old.id) || id), h]]); return res.json({ ok: 1, off: 1 }) }
+      if (!PUSH_HOSTS.test(host)) return res.status(400).json({ err: 'host' });
+      const ks = s0.keys || {}, k = { p256dh: String(ks.p256dh || '').replace(/=+$/, ''), auth: String(ks.auth || '').replace(/=+$/, '') };
+      if (!/^[A-Za-z0-9_-]{80,100}$/.test(k.p256dh) || !/^[A-Za-z0-9_-]{16,30}$/.test(k.auth)) return res.status(400).json({ err: 'keys' });
+      const old = jp(await cmd('HGET', 'push', h)), P = [['HSET', 'push', h, JSON.stringify({ e, k, id, t: now })], ['SADD', 'push:id:' + id, h], ['HSET', 'pupid', id.slice(0, 12), id]];
+      if (old && old.id && old.id !== id) P.push(['SREM', 'push:id:' + old.id, h]);
+      await pipe(P);
+      if (b.test) { const r0 = await pushHashes([h], { t: '🔔 เปิดแจ้งเตือนแล้ว', b: 'คุณจะได้รับแจ้งเตือนเมื่อผู้ดูแลตอบกลับหรือมีประกาศสำคัญ', u: '/', g: 'hello' }); return res.json({ ok: 1, test: r0.sent }) }
+      return res.json({ ok: 1 });
+    }
+    if (a === 'pushsend' || a === 'pushstat') {
+      if (!isAdmKey(b.key || qOf(req).key)) return res.status(403).json({ err: 'admin' });
+      const n = +(await cmd('HLEN', 'push')) || 0;
+      if (a === 'pushstat') return res.json({ n, on: !!(VAPID_PRIV && VAPID_PUB) });
+      const t = clean(b.t, 60) || '📢 1 ใน นวนิยาย', x = clean(b.x, 200);
+      if (!x) return res.status(400).json({ err: 'empty' });
+      const r0 = await withCap(pushHashes(await cmd('HKEYS', 'push'), { t, b: x, u: '/?go=chat', g: 'ann' + now }), 25000);
+      return res.json(Object.assign({ ok: 1, n }, r0));
     }
     if (a === 'ping') {
       if (okId(id)) {
@@ -674,7 +753,8 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
     if (a === 'tick') {
       let pa = null; try { pa = paSum(await paTick(now)) } catch {}
       let av = ''; try { const v = await cmd('GET', 'ann'); if (v) av = (JSON.parse(v) || {}).i || '' } catch {}
-      return res.json({ pa, av });
+      let nt = null; if (okId(id)) { try { const [L0] = await pipe([['LRANGE', 'nt:' + id, 0, 9], ['DEL', 'nt:' + id]]); if (L0 && L0.length) nt = L0.map(jp).filter(Boolean).reverse() } catch {} }
+      return res.json({ pa, av, nt });
     }
     if (a === 'gcfg') return res.json({ cid: process.env.GOOGLE_CLIENT_ID || '' });
     if (a === 'profst') {
@@ -850,7 +930,8 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
         if (poll.length >= 2) ann.poll = poll;
         const m = { i: ann.i, t: now, n: ann.n, ti: 'ผู้ดูแล', x: '@everyone ' + body, k: 'ann', poll: ann.poll, u: String(id || '').slice(0, 4), pu: String(id || '').slice(0, 12) };
         await pipe([['SET', 'ann', JSON.stringify(ann), 'EX', 86400 * 3], ['LPUSH', 'annh', JSON.stringify(ann)], ['LTRIM', 'annh', 0, 29], ['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199]]);
-        return res.json({ ok: 1, ann: await annPoll(ann, id) });
+        let pr = null; if (b.push !== 0) { try { pr = await withCap(pushHashes(await cmd('HKEYS', 'push'), { t: '📢 ประกาศจากผู้ดูแล', b: body.slice(0, 160), u: '/?go=chat', g: 'ann-' + ann.i }), 20000) } catch (e) {} }
+        return res.json({ ok: 1, ann: await annPoll(ann, id), push: pr });
       }
       if (await cmd('GET', 'mute:' + id)) return res.status(429).json({ err: 'muted' });
       const ok = await cmd('SET', 'rl:' + id, 1, 'NX', 'EX', 3);
@@ -858,7 +939,12 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const x = clean(b.x, 200);
       if (!x) return res.status(400).json({ err: 'empty' });
       const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), ...((b.tp || await cmd('SISMEMBER', 'cheaters', id)) ? { tt: '', tr: 0 } : ttlOk(b.tt)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
-      await pipe([['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199]]);
+      await pipe([['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199], ['HSET', 'pupid', id.slice(0, 12), id]]);
+      if (b.rto && isAdmKey(b.key)) {
+        let pr = null;
+        try { const rid = await cmd('HGET', 'pupid', String(b.rto).replace(/[^a-z0-9]/g, '').slice(0, 12)); pr = rid ? await withCap(noteTo(rid, { t: '💬 ผู้ดูแลตอบคุณในแชทโลก', b: x.slice(0, 160), u: '/?go=chat', g: 'chat-' + m.i }), 8000) : { owner: 0 } } catch (e) {}
+        return res.json({ ok: 1, push: pr });
+      }
       return res.json({ ok: 1 });
     }
     if (a === 'report') {
@@ -953,7 +1039,15 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const x = clean(b.x, 400);
       if (!x) { await cmd('HDEL', 'replies', kind + ':' + mid); return res.json({ ok: 1, del: 1 }) }
       await cmd('HSET', 'replies', kind + ':' + mid, JSON.stringify({ x, t: now }));
-      return res.json({ ok: 1 });
+      let pr = null;
+      try {
+        let owner = null;
+        if (kind === 'b') owner = await cmd('HGET', 'bugown', mid);
+        else { const all = await cmd('HGETALL', 'reviews'); for (let i = 0; i < (all || []).length; i += 2) { const v = jp(all[i + 1]); if (v && v.i === mid) { owner = all[i]; break } } }
+        if (owner) pr = await withCap(noteTo(owner, { t: kind === 'b' ? '💬 ผู้ดูแลตอบรายงานของคุณแล้ว' : '💬 ผู้ดูแลตอบรีวิวของคุณแล้ว', b: x.slice(0, 160), u: kind === 'b' ? '/?go=bugs' : '/?go=fb', g: 'rp-' + mid }), 8000);
+        else pr = { owner: 0 };
+      } catch (e) {}
+      return res.json({ ok: 1, push: pr });
     }
     if (a === 'bugedit') {
       const ok = await cmd('SET', 'bgel:' + id, 1, 'NX', 'EX', 8);
