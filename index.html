@@ -8375,6 +8375,26 @@ async function profUndo(){try{const v=localStorage.getItem('murim_prebak');if(!v
 
 // ---- อัปโหลดรูปจากเครื่อง: ปิดไว้สำหรับผู้เล่นทั่วไป (เฉพาะแอดมิน) — รูปตัวละครยังใช้ได้ปกติ ----
 {const _opx=openProfile;openProfile=function(){const r=_opx.apply(this,arguments);try{if(!(typeof ADM!=='undefined'&&ADM.ok)){const m=$('modal');m.querySelectorAll('.pfrule').forEach(e=>e.remove());const ag=m.querySelector('#pfAgree');if(ag&&ag.closest('label'))ag.closest('label').remove();m.querySelectorAll('[onclick="profPickFile()"]').forEach(e=>e.remove());const fi=m.querySelector('#pfFile');if(fi)fi.remove();m.querySelectorAll('p.tag2').forEach(e=>{if(/ระงับการอัปโหลดรูป/.test(e.textContent))e.remove()});const b=m.querySelector('[onclick="profSnap()"]');if(b&&!m.querySelector('.pfnoup'))b.insertAdjacentHTML('afterend','<p class="tag2 pfnoup" style="margin:6px 0 0">📷 อัปโหลดรูปจากเครื่องปิดไว้ชั่วคราว — ใช้รูปตัวละครของคุณเป็นโปรไฟล์ได้เลย</p>')}}catch(e){}return r}}
+// ===== v13.10 beast: system quests + post-อสูรพันปี stages =====
+BL_ST.push('สัตว์ศักดิ์สิทธิ์','สัตว์เทพคุ้มฟ้า','ปฐมสัตว์เทพ');
+const BL_UP=[[150,40,4000,300,500],[300,100,40000,600,1500],[550,200,250000,1200,4000]]; // age,qi,pow,+lifespan,+cap
+const BQ_OK=['power','qi','win','fame','int','karma','karmaDown'];
+{const _qk=qKeys;qKeys=function(){let k=_qk.apply(this,arguments);try{if(S&&S.beastMode&&!S.beastMode.human){k=k.filter(x=>BQ_OK.includes(x));if(!k.length)k=['power','qi','win'].filter(x=>!S.sys.quests.some(q=>q.k===x))}}catch(e){}return k}}
+function beastSys(){const s=S.sys;if(!s||S.age<6)return;sysFix();const gm=sysM();
+ S.power+=(5+s.lv*6)*S.talent.m*gm*(S.xian?1.4:1);S.qi+=.06*s.lv;gainExp(10);s.sp+=R(2,6);
+ for(const q of s.quests.slice()){
+  if(qProg(q)>=q.g){s.quests.splice(s.quests.indexOf(q),1);s.done++;s.sp+=q.sp;sysLog(`เควสสำเร็จ: <b>${q.n}</b> · +${q.rw} EXP · +${q.sp} SP`,'up');gainExp(q.rw);setScene('system')}
+  else if(S.age>=q.dl){s.quests.splice(s.quests.indexOf(q),1);qFail(q)}}
+ if(s.quests.length<(S.xian?3:2)&&Math.random()<.5)newQuest()}
+{const _by=beastYear;beastYear=function(){try{const m=S.beastMode;if(S.sys)beastSys();if(S.focus==='hunt'&&Math.random()<.6)S.kills=(S.kills||0)+1;
+  if(m.king&&m.st>=4)S.power+=Math.round(R(30,70)*S.talent.m*(S.xian?1.4:1)*(m.st-3));}catch(e){console.error(e)}
+  return _by.apply(this,arguments)}}
+{const _ba=blAdvance;blAdvance=function(){_ba.apply(this,arguments);try{const m=S.beastMode;if(!m||m.human||!m.king||m.st<4||m.st>=7)return;const u=BL_UP[m.st-4];
+  if(S.age>=u[0]&&S.qi>=u[1]&&total()>=u[2]){m.st++;S.lifespan+=u[3];S.maxHp+=60;S.hp=S.maxHp;S.fame+=300*(m.st-4);
+   const T=['','','','','','ทัณฑ์ฟ้าเก้าสายผ่านพ้น แสงศักดิ์สิทธิ์ห่อหุ้มร่าง สัตว์ทั้งป่านับถือเป็นเทพเจ้า','เมฆมงคลหนุนใต้เท้า ฟ้าดินรับรู้ว่ามี "สัตว์เทพ" ผู้ค้ำฟ้า','ตำนานปฐมสัตว์เทพที่เล่าขานมาพันปี บัดนี้เป็นจริง'][m.st];
+   log(`🌟 ${S.name} ก้าวสู่ขั้น <b>${BL_ST[m.st]}</b>! — ${T} · อายุขัย +${u[3]} ปี`,'myth',true);S.key.push(`${S.age} ปี — ก้าวสู่${BL_ST[m.st]}`);setScene('aura')}}catch(e){console.error(e)}}}
+{const _l0=lifeMax0;lifeMax0=function(){if(S&&S.beastMode&&!S.beastMode.human&&S.beastMode.st>=5){const st=S.beastMode.st;return Math.min((S.xian?1200:600)+BL_UP.slice(0,st-4).reduce((a,u)=>a+u[4],0),S.lifespan+40)}return _l0.apply(this,arguments)}}
+{const _bs=blStageTxt;blStageTxt=function(){const m=S.beastMode;return m.st>=5?BL_ST[Math.min(BL_ST.length-1,m.st)]+(m.sp?' · '+m.sp:''):_bs.apply(this,arguments)}}
 </script>
 </body>
 </html>
