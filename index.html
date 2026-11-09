@@ -8223,7 +8223,7 @@ function birthDecor(){const r=roll;if(!r)return;birthSetup();BIRTH.look=rollLook
  const tg=$('bTags');if(tg){const F=r.f&&r.f.v,Tl=r.t&&r.t.v,tc=p=>'t'+rarOf(p);tg.innerHTML=`<span>${r.g.v.n==='หญิง'?'♀ หญิง':'♂ ชาย'}</span>${F?`<span class="${tc(r.f.p)}">${esc(F.n)}</span>`:''}${Tl?`<span class="${tc(r.t.p)}">${esc(CFG.xian?(r.root||Tl.n):Tl.n)}</span>`:''}${r.isOw?'<span class="t3">🌌 ผู้ข้ามมิติ</span>':''}${r.os?'<span class="t4">🟦 มีระบบ</span>':''}`;xFix&&xFix(['bTags'])}
  document.querySelectorAll('#birth .trait').forEach((el,i)=>{const o=el.querySelector('.o'),m=o&&(o.className.match(/t(\d)/)||[])[1];el.classList.add('r'+(m||0));const d=el.querySelector('.d');if(d&&d.textContent.length>46)el.classList.add('wide')});
  const ob=$('oddsBox');if(ob){ob.className='box oddsbig o'+tot;const t=$('oddsT');if(t){t.className='ot t'+tot;t.textContent='ระดับชะตา: '+TN[tot]}}
- if(tot>=3)setTimeout(()=>{const b=$('oddsBox');if(!b||b.style.visibility==='hidden')return;const C=['#ffd040','#ff5ad8','#5ab0ff','#7aff9a','#ff8a3a'];for(let i=0;i<(tot>=5?40:22);i++){const e=document.createElement('i');e.className='bconf';e.style.left=Math.random()*100+'%';e.style.background=C[i%C.length];e.style.animationDelay=(Math.random()*.5)+'s';b.appendChild(e);setTimeout(()=>e.remove(),2300)}},(document.querySelectorAll('#birth .trait').length*220)+400);
+ if(false)setTimeout(()=>{const b=$('oddsBox');if(!b||b.style.visibility==='hidden')return;const C=['#ffd040','#ff5ad8','#5ab0ff','#7aff9a','#ff8a3a'];for(let i=0;i<(tot>=5?40:22);i++){const e=document.createElement('i');e.className='bconf';e.style.left=Math.random()*100+'%';e.style.background=C[i%C.length];e.style.animationDelay=(Math.random()*.5)+'s';b.appendChild(e);setTimeout(()=>e.remove(),2300)}},(document.querySelectorAll('#birth .trait').length*220)+400);
  if(!BIRTH.raf)birthLoop()}
 {const _dr2=doRoll;doRoll=function(first){const r=_dr2.apply(this,arguments);try{birthDecor()}catch(e){console.error(e)}return r}}
 // ---- หน้าสร้างตัวละครเอง: ฉากหลังตามชาติกำเนิดที่เลือก ----
@@ -8281,6 +8281,50 @@ function goalFinMul(){if(!S||!S.goal)return 1;const g=goalOf(S.goal);if(!g)retur
 {const _pyG=passYear;passYear=function(){const r=_pyG.apply(this,arguments);try{if(S&&S.alive){if(S.spouse&&S.spouse!==S._sp)S.marN=(S.marN||0)+1;S._sp=S.spouse||null}}catch(e){}return r}}
 
 pickGoalModal=function(){const ids=goalOffer({os:S.sys?1:0,isOw:!!S.ow});choice('🎯 ปณิธานของชีวิตนี้',`${esc(S.name)} ทายาทรุ่นที่ ${S.gen} จะตั้งปณิธานไว้ว่าอย่างไร? (ยิ่งยากยิ่งได้คะแนนมาก)`,ids.map(id=>{const g=goalOf(id);return{t:`${g.n} ${'⭐'.repeat(g.lv)}`,s:`${g.d} · คะแนน ×${goalMul(g)}`,f(){S.goal=id;S.goalDone=false;log(`🎯 ตั้งปณิธาน: <b>${g.n}</b> ${'⭐'.repeat(g.lv)}`,'epic')}}}))};
+
+// ============ v13.8 ระดับชะตา 13 ขั้น (เกณฑ์จากการสุ่มจริง 80,000 ครั้ง) · ยิ่งหายากสียิ่งสวย ============
+// [เกณฑ์ 1 ใน N, ชื่อ, ไอคอน, คำบรรยาย] — สัดส่วนโดยประมาณ: ~50% · 15% · 15% · 10% · 5% · 3% · 1% · 0.5% · 0.3% · 0.1% · 0.05% · ~0.04% · ~0.01%
+const FATE=[[0,'ธุลีดิน','🍂','ชะตาธรรมดาเหมือนฝุ่นใต้ฝ่าเท้า'],[1300,'สามัญชน','🌾','ชีวิตเรียบง่ายแบบคนทั่วไป'],[5000,'ชะตาดี','🍀','ฟ้ายังพอเมตตา'],[50000,'ดวงเด่น','💠','เกิดมาโดดเด่นกว่าคนรอบตัว'],[400000,'หนึ่งในแสน','🔷','ชะตาที่หาได้ยาก'],
+ [3e6,'ดาวรุ่งแห่งยุค','🌟','ยุคนี้ต้องจดจำชื่อคุณ'],[3e7,'วีรชนคู่ฟ้า','🔥','เกิดมาเพื่อเป็นตำนาน'],[1.5e8,'ตำนานมีชีวิต','👑','ชื่อของคุณจะถูกเล่าขานนับพันปี'],[8e8,'บุตรแห่งสวรรค์','☀️','สวรรค์เลือกคุณด้วยตัวเอง'],
+ [5e9,'ลิขิตเทวะ','🌸','เทพเซียนยังต้องเหลียวมอง'],[1.5e10,'เหนือฟ้าลิขิต','🌈','ชะตาที่อยู่เหนือการขีดเขียนของฟ้า'],[5e10,'ฟ้ายังไม่กล้าเขียน','✨','ฟ้าดินสั่นไหวตอนคุณลืมตา'],[1e12,'อนันตชะตา','♾️','หนึ่งเดียวในจักรวาลนับไม่ถ้วน']];
+function fateOf(n){n=+n||0;let i=0;FATE.forEach((f,k)=>{if(n>=f[0])i=k});return i}
+function fateN(odds){return odds>0?1/odds:0}
+(function(){const st=document.createElement('style');st.textContent=`
+.fx0{color:#8a8a96}.fx1{color:#a8b89a}.fx2{color:#5ad06a}.fx3{color:#3ad0d0}.fx4{color:#4a8aff}.fx5{color:#a86aff}.fx6{color:#ff8a2a}
+.fx7,.fx8,.fx9,.fx10,.fx11,.fx12{-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.fx7{background-image:linear-gradient(90deg,#ffd040,#fff0a0,#ffb020,#ffd040);background-size:200% 100%;animation:fxSh 3s linear infinite}
+.fx8{background-image:linear-gradient(90deg,#ff3a4a,#ffb0a0,#ff2a6a,#ff3a4a);background-size:200% 100%;animation:fxSh 2.6s linear infinite}
+.fx9{background-image:linear-gradient(90deg,#ff5ad8,#ffd0f4,#b06bff,#ff5ad8);background-size:200% 100%;animation:fxSh 2.2s linear infinite}
+.fx10{background-image:linear-gradient(90deg,#ff4d4d,#ffd84d,#5dff7a,#4dd8ff,#b06bff,#ff4d4d);background-size:300% 100%;animation:fxSh 3s linear infinite}
+.fx11{background-image:linear-gradient(90deg,#fff,#ffd84d,#5dff7a,#fff,#4dd8ff,#ff5ad8,#fff);background-size:300% 100%;animation:fxSh 1.8s linear infinite;filter:drop-shadow(0 0 4px #fff8)}
+.fx12{background-image:linear-gradient(90deg,#b06bff,#4dd8ff,#fff,#ff5ad8,#ffd84d,#b06bff);background-size:400% 100%;animation:fxSh 1.4s linear infinite;filter:drop-shadow(0 0 6px #b06bffcc)}
+@keyframes fxSh{to{background-position:-200% 0}}
+#birth .oddsbig .n.fx0{color:#9a9aa6}#birth .oddsbig .n.fx1{color:#b0c0a0}#birth .oddsbig .n.fx2{color:#5ad06a}#birth .oddsbig .n.fx3{color:#3ad0d0}#birth .oddsbig .n.fx4{color:#5a96ff}#birth .oddsbig .n.fx5{color:#b07aff}#birth .oddsbig .n.fx6{color:#ff9a3a}
+#birth .oddsbig{--fc:#8a8a96}
+#birth .oddsbig.fb0{--fc:#6a6a76}#birth .oddsbig.fb1{--fc:#8a9a7a}#birth .oddsbig.fb2{--fc:#3ab04a}#birth .oddsbig.fb3{--fc:#2ab0b0}#birth .oddsbig.fb4{--fc:#4a8aff}#birth .oddsbig.fb5{--fc:#a86aff}#birth .oddsbig.fb6{--fc:#ff8a2a}#birth .oddsbig.fb7{--fc:#ffc030}#birth .oddsbig.fb8{--fc:#ff3a5a}#birth .oddsbig.fb9{--fc:#ff5ad8}
+#birth .oddsbig[class*="fb"]{border-color:var(--fc);box-shadow:0 0 0 transparent}
+#birth .oddsbig.fb3,#birth .oddsbig.fb4,#birth .oddsbig.fb5{box-shadow:0 0 10px color-mix(in srgb,var(--fc) 55%,transparent)}
+#birth .oddsbig.fb6,#birth .oddsbig.fb7,#birth .oddsbig.fb8,#birth .oddsbig.fb9{box-shadow:0 0 18px color-mix(in srgb,var(--fc) 70%,transparent);animation:fbP 2.4s ease-in-out infinite}
+#birth .oddsbig.fb10,#birth .oddsbig.fb11,#birth .oddsbig.fb12{border-color:transparent;background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(90deg,#ff4d4d,#ffd84d,#5dff7a,#4dd8ff,#b06bff,#ff4d4d) border-box;background-size:100% 100%,300% 100%;animation:fbR 3s linear infinite;box-shadow:0 0 26px #b06bff88}
+#birth .oddsbig.fb12{background:radial-gradient(circle at 30% 20%,#2a1050,#0a0618 70%) padding-box,linear-gradient(90deg,#b06bff,#4dd8ff,#fff,#ff5ad8,#ffd84d,#b06bff) border-box;background-size:100% 100%,400% 100%;box-shadow:0 0 34px #b06bffcc}
+@keyframes fbP{0%,100%{box-shadow:0 0 12px color-mix(in srgb,var(--fc) 55%,transparent)}50%{box-shadow:0 0 26px color-mix(in srgb,var(--fc) 85%,transparent)}}
+@keyframes fbR{to{background-position:0 0,-300% 0}}
+#birth .oddsbig .ot{font-size:15px;margin-top:4px}#birth .oddsbig .od{font-size:12px;color:var(--mut);margin-top:2px}
+#birth .oddsbig .fbar{display:flex;gap:2px;justify-content:center;margin-top:8px}#birth .oddsbig .fbar i{width:14px;height:5px;border-radius:2px;background:#ffffff18}#birth .oddsbig .fbar i.on{background:var(--fc)}
+#birth .oddsbig.fb10 .fbar i.on,#birth .oddsbig.fb11 .fbar i.on,#birth .oddsbig.fb12 .fbar i.on{background:linear-gradient(90deg,#ff4d4d,#ffd84d,#5dff7a,#4dd8ff,#b06bff)}
+#birth .bstage.sg5{box-shadow:3px 3px 0 var(--line),0 0 12px #a86aff}#birth .bstage.sg6{box-shadow:3px 3px 0 var(--line),0 0 14px #ff8a2a}#birth .bstage.sg7{box-shadow:3px 3px 0 var(--line),0 0 16px #ffc030}#birth .bstage.sg8{box-shadow:3px 3px 0 var(--line),0 0 18px #ff3a5a}#birth .bstage.sg9{box-shadow:3px 3px 0 var(--line),0 0 20px #ff5ad8}
+#birth .bstage.sg10,#birth .bstage.sg11,#birth .bstage.sg12{border-color:transparent;background:linear-gradient(90deg,#ff4d4d,#ffd84d,#5dff7a,#4dd8ff,#b06bff,#ff4d4d) border-box;box-shadow:0 0 24px #b06bffaa}
+.fstar{position:absolute;width:3px;height:3px;background:#fff;border-radius:50%;animation:fsT 1.8s ease-in-out infinite;pointer-events:none}@keyframes fsT{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1.4)}}`;document.head.appendChild(st)})();
+function fateApply(){const r=roll;if(!r)return;const N=1/(r.p*(r.era?r.era.p:1)),f=fateOf(N),F=FATE[f];
+ const st=$('bStage');if(st)st.className='bstage sg'+f;
+ const ob=$('oddsBox');if(ob){ob.className='box oddsbig fb'+f;ob.querySelectorAll('.fstar').forEach(e=>e.remove());const t=$('oddsT');if(t){t.className='ot';t.innerHTML=`${F[2]} <span class="fx${f}">ระดับชะตา: ${F[1]}</span>`}
+  let d=$('oddsD');if(!d){ob.insertAdjacentHTML('beforeend','<div class="od" id="oddsD"></div><div class="fbar" id="oddsBar"></div>');d=$('oddsD')}d.textContent=`${F[3]} · ขั้น ${f+1} จาก ${FATE.length}`;const bar=$('oddsBar');if(bar)bar.innerHTML=FATE.map((x,i)=>`<i class="${i<=f?'on':''}"></i>`).join('');
+  const n=$('oddsN');if(n)n.className='n px fx'+f;
+  if(f>=10)for(let i=0;i<(f-8)*6;i++){const s=document.createElement('i');s.className='fstar';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.animationDelay=(Math.random()*1.8)+'s';ob.appendChild(s)}}
+ const dl=(document.querySelectorAll('#birth .trait').length*220)+400;
+ if(f>=6)setTimeout(()=>{const b=$('oddsBox');if(!b||b.style.visibility==='hidden'||roll!==r)return;const C=f>=10?['#ff4d4d','#ffd84d','#5dff7a','#4dd8ff','#b06bff','#ffffff']:f>=8?['#ff3a5a','#ff5ad8','#ffd040','#ffffff']:['#ffc030','#ff8a2a','#fff0a0'];for(let i=0;i<Math.min(70,(f-4)*9);i++){const e=document.createElement('i');e.className='bconf';e.style.left=Math.random()*100+'%';e.style.background=C[i%C.length];e.style.animationDelay=(Math.random()*.6)+'s';b.appendChild(e);setTimeout(()=>e.remove(),2500)}try{if(f>=8)sfx('ach')}catch(e){}},dl)}
+{const _dr3=doRoll;doRoll=function(first){const r=_dr3.apply(this,arguments);try{document.querySelectorAll('#oddsBox .bconf').forEach(e=>e.remove());fateApply()}catch(e){console.error(e)}return r}}
+{const _ol=oddsLine;oddsLine=function(){const t=_ol.apply(this,arguments);try{if(S&&!S.custom&&S.odds){const F=FATE[fateOf(1/S.odds)];return t+` · ${F[2]} ชะตา${F[1].replace(/^ชะตา/,'')}`}}catch(e){}return t}}
 </script>
 </body>
 </html>
