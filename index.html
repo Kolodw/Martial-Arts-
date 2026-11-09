@@ -5964,7 +5964,7 @@ function phoneUse(id){const P=S.phone,a=PH_APPS.find(x=>x.id===id);if(!P||!a||P.
  add('ผู้ข้ามมิติ',[{id:'ow_phone',n:'สัญญาณหาย แต่แบตยังเหลือ',d:'ข้ามมิติมาพร้อมสมาร์ตโฟนที่ยังใช้ได้',r:1,c:()=>!!S.phone},{id:'ow_phone20',n:'ติดมือถือข้ามภพ',d:'ใช้แอปในสมาร์ตโฟนครบ 20 ครั้งในชาติเดียว',r:2,c:()=>S.phone&&S.phone.n>=20},
   {id:'ow_gun',n:'ดินปืนในยุทธภพ',d:'ได้วรยุทธ์ระดับพิเศษสายปืน',r:2,c:()=>!!(gunArt('craft')||gunArt('shoot'))},{id:'ow_gunboth',n:'คลังแสงเดินได้',d:'มีทั้งศาสตร์สร้างปืนและวิชากระสุนในชาติเดียว',r:3,c:()=>!!(gunArt('craft')&&gunArt('shoot'))},
   {id:'ow_gunpeak',n:'เทพปืนไร้เทียมทาน',d:'ฝึกวรยุทธ์สายปืนจนถึงระดับสุดยอด',r:4,c:()=>(S.arts||[]).some(a=>a&&a.gun&&(a.lv||0)>=3)}]);
- add('??? — เหนือตำนาน',[{id:'z_eternal',n:'ความเป็นอมตะ',d:'บรรลุเซียนอมตะและมีชีวิตอยู่เกิน 500 ปี',r:6,c:()=>!!S.flags.xImm&&S.age>=500}])}
+ add('??? — เหนือตำนาน',[{id:'z_eternal',n:'ความเป็นอมตะ',d:'บรรลุเซียนอมตะและมีชีวิตอยู่เกิน 10,000,000 ปี',r:6,c:()=>!!S.flags.xImm&&S.age>=1e7}])}
 try{Object.assign(I18N.d,{'สมาร์ตโฟน':'Smartphone','ไม่มีสัญญาณ':'No signal','สารานุกรมออฟไลน์':'Offline encyclopedia','คลิปสอนต่อสู้':'Fighting tutorials','เข็มทิศ':'Compass','แผนที่':'Map','กล้องถ่ายรูป':'Camera','เพลงจากโลกเดิม':'Music from home','เกมออฟไลน์':'Offline games','เครื่องคิดเลข':'Calculator','ใช้แล้วปีนี้':'Used this year','แบต':'Battery','ศาสตร์สร้างอาวุธปืน':'Art of Gunsmithing','ศาสตร์หลอมปืนวิญญาณ':'Spirit Gun Forging','วิชากระสุนแทนกระบี่':'Bullets Instead of Blades','วิชากระสุนปราณทะลวงฟ้า':'Qi Bullet Sky-Piercer','สายปืน':'Gun path','พิเศษ':'Special','หนึ่งในพันล้าน':'One in a Billion','ความเป็นอมตะ':'Immortality','เทพปืน':'Gun God'})}catch(e){}
 
 // ---------- v8.3 ประตูมิติ: เปิดต่อเนื่อง / เปิดทั้งหมด ----------
