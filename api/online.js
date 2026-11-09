@@ -209,11 +209,17 @@ function paPick() { const t = PA_RW.reduce((a, b) => a + b, 0); let x = Math.ran
 async function paTick(now) {
   let cur = null; try { const v = await cmd('GET', 'pa:cur'); cur = v ? JSON.parse(v) : null } catch {}
   if (!cur || (cur.phase === 'done' && now >= cur.next)) {
+    // ตัวจัดตารางอัตโนมัติ: เปิดเมื่อมีคนเล่นพร้อมกันอย่างน้อย 2 คน · ไม่เกินวันละ 16 รอบ · คนน้อยของน้อยลง
+    if ((await cmd('SET', 'pa:chk', '1', 'NX', 'PX', 60e3)) !== 'OK') return cur;
+    const act = +(await cmd('ZCOUNT', 'online', now - 180e3, '+inf')) || 0, day = PA_DAY(now), nDay = +(await cmd('GET', 'pa:day:' + day)) || 0;
+    if (act < 2 || nDay >= 16) return cur;
     if ((await cmd('SET', 'pa:lk', '1', 'NX', 'PX', 4000)) !== 'OK') return cur;
     try {
-      const sid = (now.toString(36) + Math.random().toString(36).slice(2, 5)).slice(-9), lots = [];
-      for (let i = 0; i < 6; i++) { const r = paPick(); lots.push({ r, k: Math.floor(Math.random() * 1e6), g: Math.max(1, Math.round(PA_G0[r] * (.8 + Math.random() * .4))) }) }
-      cur = { sid, t0: now, lots, li: 0, phase: 'open' };
+      const sid = (now.toString(36) + Math.random().toString(36).slice(2, 5)).slice(-9), lots = [], nL = act <= 3 ? 3 : act <= 8 ? 4 : act <= 15 ? 5 : 6;
+      let hi6 = 0, hi7 = 0;
+      for (let i = 0; i < nL; i++) { let r = paPick(); if (r === 7 && hi7) r = 6; if (r >= 6 && hi6 >= 2) r = 5; if (r === 7) hi7++; if (r >= 6) hi6++; lots.push({ r, k: Math.floor(Math.random() * 1e6), g: Math.max(1, Math.round(PA_G0[r] * (.8 + Math.random() * .4))) }) }
+      cur = { sid, t0: now, lots, li: 0, phase: 'open', act };
+      await pipe([['INCR', 'pa:day:' + day], ['EXPIRE', 'pa:day:' + day, 172800]]);
       await pipe([['SET', 'pa:cur', JSON.stringify(cur), 'EX', 7200], ['SET', 'pa:end:' + sid, now + 60e3, 'EX', 3600]]);
     } finally { await cmd('DEL', 'pa:lk').catch(() => {}) }
     return cur;
@@ -230,15 +236,16 @@ async function paTick(now) {
     const H = {}; if (Array.isArray(bh)) for (let i = 0; i < bh.length; i += 2) H[bh[i]] = bh[i + 1]; else Object.assign(H, bh || {});
     const V = {}; if (Array.isArray(vh)) for (let i = 0; i < vh.length; i += 2) V[vh[i]] = +vh[i + 1]; else for (const k in (vh || {})) V[k] = +vh[k];
     const L = cur.lots[cur.li], ops = [];
-    if (H.by) { L.sold = { g: +H.hi, n: H.bn }; ops.push(['LPUSH', 'pa:win:' + H.by, JSON.stringify({ sid: cur.sid, li: cur.li, r: L.r, k: L.k, g: +H.hi, t: now })], ['EXPIRE', 'pa:win:' + H.by, 86400]) } else L.sold = { g: 0 };
+    if (H.by) { L.sold = { g: +H.hi, n: H.bn }; const dk = 'pa:wd:' + PA_DAY(now) + ':' + H.by; ops.push(['INCR', dk], ['EXPIRE', dk, 172800], ['HINCRBY', 'pa:ws:' + cur.sid, H.by, 1], ['EXPIRE', 'pa:ws:' + cur.sid, 7200], ['LPUSH', 'pa:win:' + H.by, JSON.stringify({ sid: cur.sid, li: cur.li, r: L.r, k: L.k, g: +H.hi, t: now })], ['EXPIRE', 'pa:win:' + H.by, 86400]) } else L.sold = { g: 0 };
     const rest = cur.lots.map((x, i) => i).filter(i => !cur.lots[i].sold);
-    if (!rest.length) { cur.phase = 'done'; cur.next = now + (10 + Math.random() * 5) * 60e3 }
+    if (!rest.length) { cur.phase = 'done'; const act = +(await cmd('ZCOUNT', 'online', now - 180e3, '+inf')) || 0; cur.next = now + (Math.max(20, Math.min(50, 45 - act * 2)) + Math.random() * 10) * 60e3 }
     else { rest.sort((x, y) => (V['l' + y] || 0) - (V['l' + x] || 0) || x - y); cur.li = rest[0]; ops.push(['SET', 'pa:end:' + cur.sid, now + PA_LOT_MS, 'EX', 3600]); cur.end = now + PA_LOT_MS }
     ops.push(['SET', 'pa:cur', JSON.stringify(cur), 'EX', 7200]);
     await pipe(ops);
   } finally { await cmd('DEL', 'pa:lk').catch(() => {}) }
   return cur;
 }
+const PA_DAY = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10);
 const paSum = c => c ? { sid: c.sid, phase: c.phase, t0: c.t0, li: c.li, n: c.lots.length, left: c.lots.filter(x => !x.sold).length } : null;
 let QUOTA_AT = 0;
 module.exports = async (req, res) => {
@@ -887,6 +894,9 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       if (a === 'pabid') {
         if (String(b.sid) !== sid || +b.li !== cur.li || cur.phase !== 'open') return res.json({ ok: 0, err: 'lot' });
         if ((await cmd('SET', 'pabl:' + id, 1, 'NX', 'PX', 900)) !== 'OK') return res.status(429).json({ err: 'rate' });
+        const [wd, ws] = await pipe([['GET', 'pa:wd:' + PA_DAY(now) + ':' + id], ['HGET', 'pa:ws:' + sid, id]]);
+        if ((+wd || 0) >= 3) return res.json({ ok: 0, code: -2 });
+        if ((+ws || 0) >= 2) return res.json({ ok: 0, code: -3 });
         const g = Math.max(1, Math.min(1e9, Math.floor(+b.g || 0))), L = cur.lots[cur.li];
         const r = await cmd('EVAL', PA_BID_LUA, 2, 'pa:b:' + sid + ':' + cur.li, 'pa:end:' + sid, g, id, clean(b.n, 20) || 'นิรนาม', now, L.g);
         return res.json({ ok: +r[0] === 1 ? 1 : 0, code: +r[0], hi: +r[1] });
