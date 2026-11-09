@@ -267,6 +267,7 @@ module.exports = async (req, res) => {
       const trows = td.map(d => { const h = tr[tk++] || [], c = {}; for (let i = 0; i < h.length; i += 2) c[h[i]] = +h[i + 1]; const u = +tr[tk++] || 0, up = TP.map(p => (+tr[tk++] || 0)); return { d, u, c, up } });
       const tlog = (tr[tk] || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(Boolean);
       const ds = new Set(done || []), bugs = (bl || []).map(x => JSON.parse(x));
+      let brd = []; try { const hid = new Set((await cmd('SMEMBERS', 'bdhide')) || []); hid.add('f18abdmw8fuj8d'); brd = ((await cmd('ZREVRANGE', 'bd2:' + W, 0, 39)) || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(x => x && x.lid && !hid.has(x.lid)) } catch {}
       const e = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
       const K = encodeURIComponent(AK);
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -277,6 +278,8 @@ module.exports = async (req, res) => {
 <h2>การเปิดหน้าออนไลน์ (7 วัน)</h2><p><small>ตัวเลข = คนไม่ซ้ำ / จำนวนครั้ง · เริ่มนับตั้งแต่ v10.2</small></p><table><tr><th>วัน</th><th>คน</th>${TP.map(p => `<th>${p[1]}</th>`).join('')}</tr>${trows.map(r => `<tr><td>${r.d.slice(5)}</td><td>${r.u}</td>${TP.map((p, i) => `<td>${r.up[i]} / ${r.c[p[0]] || 0}</td>`).join('')}</tr>`).join('')}</table>
 <h2>คลิกล่าสุด</h2><table><tr><th>รหัส</th><th>หน้า</th><th>เครื่อง</th><th>เวลา</th></tr>${tlog.map(x => `<tr><td>${e(x.u)}…</td><td>${e((TP.find(p => p[0] === x.p) || [0, x.p])[1])}</td><td>${e(x.d)}</td><td>${new Date(x.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })}</td></tr>`).join('') || '<tr><td colspan=4>ยังไม่มี</td></tr>'}</table>
 <h2>🐞 error จากเครื่องผู้เล่น <small style="font-weight:normal;color:#aaa">· 200 ครั้งล่าสุด จัดกลุ่มตามข้อความ</small></h2>${Object.values(jsg).sort((g1, g2) => g2.last.t - g1.last.t).slice(0, 25).map(g => `<div class="pl" style="border-left:4px solid #ff6b6b"><div class="plh"><b style="color:#ff9b9b">${e(g.last.m)}</b><small>${g.n} ครั้ง · ${g.users.size} คน · v${e([...g.vers].join(', v'))}</small></div><div><small>ล่าสุด ${new Date(g.last.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })} · ${e(g.last.d)}${g.last.l ? ' · บรรทัด ' + g.last.l + ':' + g.last.c : ''} · หน้า ${e(g.last.x.sc)}${g.last.x.md ? ' · หน้าต่าง ' + e(g.last.x.md) : ''}${g.last.x.ch ? ' · เหตุการณ์ ' + e(g.last.x.ch) : ''}${g.last.x.ag ? ' · อายุ ' + g.last.x.ag + ' · ' + e(g.last.x.fo) + ' · ' + e(g.last.x.w) : ''}</small></div>${g.last.s ? `<div><small style="color:#aaa;word-break:break-all">${e(g.last.s)}</small></div>` : ''}</div>`).join('') || '<p><small>ยังไม่มี error</small></p>'}
+<h2>🏆 ทำเนียบสัปดาห์นี้ <small style="font-weight:normal;color:#aaa">· กด 🗑 เพื่อลบรายการที่คะแนนผิดปกติ</small></h2>${brd.length ? brd.map((x, i) => `<div class="pl" id="bd_${e(x.lid)}"><div class="plh"><b>#${i + 1} ${e(x.n)} · ${(+x.s || 0).toLocaleString('th-TH')}</b><button onclick="bdRm('${e(x.lid)}',this)" style="background:#3a1d24;color:#ff9b9b;border:1px solid #c55;border-radius:6px;padding:3px 10px">🗑 ลบ</button></div><small>${e(x.r)} · ${e(x.f)} · อายุ ${(+x.age || 0).toLocaleString('th-TH')}${x.x ? ' · ☁️' : ''} · ${e(x.c)}</small></div>`).join('') : '<p><small>ยังไม่มีชีวิตในทำเนียบสัปดาห์นี้</small></p>'}
+<script>async function bdRm(l,btn){if(!confirm('ลบรายการนี้ออกจากทำเนียบ?'))return;btn.disabled=true;try{const r=await fetch('?a=bdrm&key=${K}&l='+l);const j=await r.json();if(j.ok){const d=document.getElementById('bd_'+l);d.style.opacity=.35;btn.textContent='ลบแล้ว'}else{btn.disabled=false;alert('ลบไม่สำเร็จ')}}catch(x){btn.disabled=false;alert('ลบไม่สำเร็จ')}}</script>
 <h2>กระดานบั๊ก</h2>${bugs.map(b => `<div class="bug ${ds.has(b.i) ? 'done' : ''}">${b.k === 'idea' ? '💡' : '🐞'} <b>${e(b.n)}</b> <small>v${e(b.v)} · ${new Date(b.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })}</small><br>${e(b.x)}<br>${ds.has(b.i) ? `✅ แก้แล้ว · <a href="?a=bugfix&key=${K}&bid=${b.i}&undo=1">ยกเลิก</a>` : `<a href="?a=bugfix&key=${K}&bid=${b.i}">ติด ✅ แก้แล้ว</a>`}</div>`).join('') || '<p>ยังไม่มี</p>'}
 <p><small>หน้านี้เปิดได้เฉพาะลิงก์ที่มีรหัสผู้ดูแล อย่าแชร์ลิงก์นี้</small></p></body></html>`);
     }
@@ -316,12 +319,16 @@ module.exports = async (req, res) => {
       return res.json({ m: ms, p, ann: await annPoll(await annGet(), id) });
     }
     if (a === 'bdrm') {
-      // ผู้ดูแลเท่านั้น: เอาชีวิตออกจากทำเนียบด้วยรหัสชีวิต (lid)
-      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
-      const lid = String(qOf(req).l || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
+      // ผู้ดูแลเท่านั้น: เอาชีวิตออกจากทำเนียบ (ทั้งสัปดาห์นี้และสัปดาห์ก่อน) และกันไม่ให้กลับมาอีก
+      const q = qOf(req);
+      if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
+      const lid = String(q.l || b.l || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
       if (lid.length < 6) return res.json({ err: 'lid' });
+      const prevW = week(new Date(now - 7 * 86400e3)); let removed = 0;
+      for (const k0 of ['bd2:' + W, 'bd2:' + prevW]) { const all = await cmd('ZRANGE', k0, 0, -1); for (const m of (all || [])) { try { if (JSON.parse(m).lid === lid) { await cmd('ZREM', k0, m); removed++ } } catch {} } }
       await cmd('SADD', 'bdhide', lid);
-      return res.json({ ok: 1, lid });
+      if (q.undo === '1') { await cmd('SREM', 'bdhide', lid); return res.json({ ok: 1, undo: 1 }) }
+      return res.json({ ok: 1, removed });
     }
     if (a === 'board') {
       const prevW = week(new Date(now - 7 * 86400e3));
