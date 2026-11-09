@@ -392,8 +392,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='11.3';
+const VERSION='12.0';
 const CHANGELOG=[
+ {v:'12.0',d:'9 พ.ย. 2026',l:['💋 ระบบใหม่: <b>ระบบตัณหา</b> — ภารกิจรักหลากหลาย: ช่วยคนงามจากอันธพาล รับคำท้าประลอง แต่งกลอนในงานชมจันทร์ หายามารักษาคนป่วย ฝึกคู่หยินหยาง และไกล่เกลี่ยศึกในตำหนักใน · ตัวละครชายเจอสาวงาม ตัวละครหญิงเจอบุรุษรูปงาม (อายุ 18 ปีขึ้นไป) · ยิ่งมีคนรักมาก พลังหยินหยางยิ่งเพิ่มทุกปี · มีร้านค้าและเควสหลักของตัวเอง','🟦 ระบบทุกแบบมีระดับสุ่ม 4 ขั้น: ต่ำ · กลาง · สูง · สุดยอด — ระดับสูงได้รางวัลเควสและพลังประจำปีมากขึ้น พร้อมของขวัญ SP/แต้มสถานะตอนผูกมัด (สุดยอดได้การ์ดคืนชีพด้วย)','🌋 เหตุการณ์ใหญ่: ผนึกมารสั่นคลอน · สุสานจักรพรรดิโบราณเปิด · โรคระบาด · สงครามใหญ่ · ทัณฑ์สวรรค์ (แดนเซียน) — เลือกได้ว่าจะร่วมทัพ ไปจัดการเองคนเดียว ใช้ปัญญา ใช้ของในกระเป๋า หรือไม่ไปเลย ทุกทางมีผลต่อชีวิต ชื่อเสียง กรรม และของที่ได้','🧭 ตัวเลือกยืดหยุ่นขึ้น: บางทางจะโผล่เฉพาะเมื่อมีของหรือค่าสถานะที่เหมาะ (เช่น มีตราผนึกมาร มีแผนที่ มีสมุนไพร หรือเดินสายมาร) และบอกโอกาสสำเร็จโดยประมาณ','🎒 กระเป๋าใหม่: ของทุกชิ้นมีระดับ ธรรมดา · ไม่ธรรมดา · แรร์ · อีปิค · เลเจนด์ · มิสติก · ความลับ · ??? (สีต่างกัน) พร้อมคำอธิบายว่าใช้ทำอะไร และมีปุ่ม "ใช้" กดใช้เองได้','🎒 ของใหม่ 9 ชิ้น เช่น ขนหงส์เพลิง (ชุบชีวิตเมื่อพลังชีวิตหมด) · เศษดาราจักร · ตราผนึกมารโบราณ · และของระดับ ??? ที่ไม่มีใครรู้ว่าจะเกิดอะไรขึ้น','🐛 แก้บั๊กตัวเลือก "อยู่ที่เดิม ตอบแทนบุญคุณ" ที่ error ถ้าออกจากสำนักไปก่อนกดเลือก']},
  {v:'11.3',d:'9 พ.ย. 2026',l:['⏳ แดนเทพ (อายุ 1,000 ปีขึ้นไป): กาลเวลาไหลไม่คงที่อีกต่อไป — บางก้าวผ่านไปแค่ 1 ปี บางก้าวนับหมื่นถึงแสนปี ตามสิ่งที่เกิดขึ้น (บาดเจ็บหนัก เพิ่งทะลวงขั้น หรือออกท่องโลก เวลาจะไหลช้าลง) อายุไม่เป็นเลขกลมๆ ตายตัวแล้ว','🧘 เหตุการณ์ใหม่ "ทางแยกแห่งการบำเพ็ญ" — เลือกปิดด่านยาวนับพันนับหมื่นปี (พลัง ×1.25 เสี่ยงธาตุไฟเข้าแทรก) หรือออกท่องโลกให้เวลาไหลช้าลง','🧘 ปิดด่านข้ามเวลาในเมนูปรับระยะตามอายุ (เช่น 400 / 2,000 / 8,000 ปี) ไม่ใช่แค่ 10–100 ปี','📜 ข้ามเวลานานๆ จะเล่าว่าโลกภายนอกเปลี่ยนไปอย่างไร และพ่อแม่/ลูกหลานแก่ตัวและจากไปตามเวลาที่ผ่านไปจริง','🔢 หัวปีแสดง (+จำนวนปีที่ผ่านไป) และใส่จุลภาคให้อายุหลักหมื่นขึ้นไป','🏮 ทายาท: เกิดในโลกเดียวกับพ่อแม่ (ไม่ติดชื่อขั้นพลังโลกเทพมาตั้งแต่เกิดแล้ว) · คะแนนทำเนียบนับเฉพาะชื่อเสียงและทรัพย์ที่หามาเองในชาตินี้ · แก้บั๊กสืบทอดจากพ่อ/แม่ที่ไม่มีคู่ครองแล้วเกมสะดุด']},
  {v:'11.2',d:'9 พ.ย. 2026',l:['🙏 หน้าแรกมีปุ่มสนับสนุนผู้พัฒนา (ใต้ปุ่มออนไลน์) — ไม่บังคับ เล่นได้ครบทุกอย่างเหมือนเดิม','🌐 ย้ายระบบออนไลน์ไปฐานข้อมูลใหม่ที่ไม่มีโควตารายเดือน แชท/ทำเนียบเก่าจะทยอยกลับมา']},
  {v:'11.1',d:'8 พ.ย. 2026',l:['🔄 รีเฟรชเว็บหรือกดโหลดอัปเดตใหม่ระหว่างเล่น จะกลับมาเล่นต่อที่เดิมทันที ไม่เด้งไปหน้าแรก — จำความเร็ว โหมดอัตโนมัติ และการหยุดเกมไว้ด้วย']},
@@ -1289,7 +1290,7 @@ const EVENTS=[
  {w:2.5,c:s=>s.faction&&s.faction.tier==='เล็ก'&&(realmIdx()>=3||s.fame>=200),f(){const bigs=FACTIONS.filter(x=>x.t===S.faction.t&&x.tier!=='เล็ก'&&x.need(S.karma,S));if(!bigs.length)return;const b=ch(bigs);
   choice('🏯 สำนักใหญ่มาทาบทาม',`ชื่อเสียงของคุณดังไปถึง<b>${b.n}</b> ผู้อาวุโสของที่นั่นมาเชิญด้วยตัวเอง "ฝีมือระดับนี้ ไม่ควรอยู่ใน${S.faction.n}"`,[
    {t:`ย้ายไป${b.n}`,s:'ได้ตำแหน่งศิษย์ในทันที · ผู้อาวุโสหลายคนรออยู่',f(){const old=S.faction?S.faction.n:'พเนจร';S.faction=b;S.rank=1;S.merit=MERIT[1];S.smaster=null;S.flags.transfer=1;log(`🏯 ย้ายจาก${old}สู่ <b>${b.n}</b> ในฐานะ${rankName()}`,'myth',true);offerMasters(2,false,`ผู้อาวุโสของ${b.n}ต่างอยากได้ศิษย์ฝีมือดีที่ย้ายมาใหม่`)}},
-   {t:'อยู่ที่เดิม ตอบแทนบุญคุณ',s:'ผลงาน + · ชื่อเสียง +',f(){S.merit+=40;S.fame+=15;S.karma+=3;log(`ปฏิเสธ${b.n} เจ้าสำนัก${S.faction.n}น้ำตาซึมด้วยความซาบซึ้ง`,'good');checkRank()}}])}},
+   {t:'อยู่ที่เดิม ตอบแทนบุญคุณ',s:'ผลงาน + · ชื่อเสียง +',f(){S.fame+=15;S.karma+=3;if(!S.faction){log(`คุณปฏิเสธ${b.n}`,'good');return}S.merit+=40;log(`ปฏิเสธ${b.n} เจ้าสำนัก${S.faction.n}น้ำตาซึมด้วยความซาบซึ้ง`,'good');checkRank()}}])}},
  {w:2,c:s=>!!s.clan&&s.age>=10&&s.age<=18&&!s.flags.clanTest,f(){S.flags.clanTest=1;const c=S.clan;choice(`🏮 บททดสอบของ${c.n}`,`ผู้อาวุโสแห่ง${c.n} เรียกเด็กๆ ในตระกูลมาทดสอบ เพื่อเลือกผู้ที่จะได้เรียนวิชาลับประจำตระกูล`,[
    {t:'แสดงวิชาเต็มกำลัง',s:'ใช้พลัง',f(){if(total()>90+S.age*9){const a=newArt(2);a.n=ch(ART_S)+ch(c.arts);S.arts.push(a);S.fame+=10;log(`ผ่านบททดสอบ! ได้เรียนวิชาลับประจำ${c.n} ${artHtml(a)}`,'epic')}else log('พลังยังไม่พอ ผู้อาวุโสส่ายหน้า','bad')}},
    {t:'แสดงไหวพริบ',s:'ใช้ปัญญา',f(){if(roll01(S.int/120)){const a=newArt(1);a.n=ch(ART_S)+ch(c.arts);S.arts.push(a);S.int+=5;log(`ไหวพริบของคุณทำให้ผู้อาวุโสประทับใจ ได้เรียน ${artHtml(a)}`,'epic')}else log('ตอบผิดไปข้อหนึ่ง ผู้อาวุโสให้กลับไปฝึกใหม่','bad')}},
@@ -6804,6 +6805,166 @@ function resumeClear(){try{LS.del('murim_resume')}catch(e){}}
 function quotaNote(){if(quotaNote._t&&Date.now()-quotaNote._t<600000)return;quotaNote._t=Date.now();onlineOK=false;
  toast('🌐 ระบบออนไลน์ (แชท ทำเนียบ ดูคนอื่นเล่น) ปิดชั่วคราว — เกมยังเล่นได้ปกติ เซฟในเครื่องปลอดภัย');
  try{if($('modal').dataset.k==='online'){const b=$('chatBox')||$('modal').querySelector('.tag2');if(b)b.innerHTML='<div class="tag2">🌐 ระบบออนไลน์ปิดชั่วคราว ข้อมูลทั้งหมดยังอยู่ครบ จะกลับมาเร็วๆ นี้ — ระหว่างนี้เล่นเกมได้ตามปกติ</div>'}}catch(e){}}
+
+// ============ v12: ระดับระบบ 4 ขั้น · ระบบตัณหา · เหตุการณ์ใหญ่ · กระเป๋าระดับความหายาก ============
+// ---- 1. ระดับระบบ: ต่ำ / กลาง / สูง / สุดยอด (ดัชนี 0-2 ยังตรงกับเซฟเก่า) ----
+SYS_GRADE.splice(0,SYS_GRADE.length,
+ {w:42,n:'ระดับต่ำ',m:1,c:'#9fb4c8',gift:0},
+ {w:33,n:'ระดับกลาง',m:1.25,c:'#6fd0ff',gift:1},
+ {w:18,n:'ระดับสูง',m:1.5,c:'#ffd040',gift:2},
+ {w:7,n:'ระดับสุดยอด',m:2,c:'#ff70d0',gift:3});
+{const _bs12=bindSys;bindSys=function(T,G){const r=_bs12.apply(this,arguments);try{if(S&&S.sys){const g=SYS_GRADE[S.sys.gr||0],k=g&&g.gift||0;if(k){const sp=[0,20,50,100][k],pt=[0,3,6,12][k];S.sys.sp+=sp;S.sys.pts+=pt;
+  if(S.age>=6)sysLog(`ระบบ<b style="color:${g.c}">${g.n}</b> — ของขวัญเพิ่มตามระดับ +${sp} SP · แต้มสถานะ +${pt} · รางวัลเควสและผลประจำปี ×${g.m}`,'up')}
+  if(k>=3&&S.age>=6){S.sys.revive++;sysLog('🃏 ระบบระดับสุดยอดมอบ <b>การ์ดคืนชีพ</b> 1 ใบ','myth')}}}catch(e){console.error(e)}return r}}
+
+// ---- 2. ระบบตัณหา ----
+SYS_TYPES.push({id:'lust',n:'ระบบตัณหา',ic:'💋',d:'พิชิตใจเพศตรงข้าม — เควสช่วยเหลือ ประลอง และเอาชนะใจคนงาม ยิ่งมีคนรักมาก พลังหยินหยางยิ่งเพิ่ม',w:1.3,q:['woo','woo','lov','lov','cha','marry','fame']});
+const lovers=()=>(S.spouse?1:0)+((S.harem||[]).length);
+const lzWho=()=>oppG()==='หญิง'?'สาวงาม':'บุรุษรูปงาม',lzPr=()=>oppG()==='หญิง'?'นาง':'เขา';
+Object.assign(QV,{woo:()=>lovers(),lov:()=>(S.sys&&S.sys.lustP)||0});
+Object.assign(QMK,{woo:()=>[`พิชิตใจ${lzWho()}เพิ่มอีก 1 คน`,1,R(5,8)],lov:()=>{const g=R(1,2);return[`ทำภารกิจรักสำเร็จ ${g} ครั้ง`,g,R(4,7)]}});
+Object.assign(QHINT,{woo:'love',lov:'love'});
+Object.assign(QOK,{woo:()=>S.age>=18&&(!S.spouse||!S.haremOK||(S.harem||[]).length<haremCap()),lov:()=>S.age>=18});
+MAINQ.lust=[['มีคนรักรวม 3 คน',()=>lovers()>=3],['ภารกิจรักสำเร็จ 12 ครั้ง',()=>(S.sys.lustP||0)>=12],['มีคนรักรวม 8 คน',()=>lovers()>=8]];
+SHOP.push({id:'perfume',n:'ยาหอมดึงดูดใจ',d:'เสน่ห์ +10',c:40,t:'lust'},{id:'redline',n:'ด้ายแดงลิขิตรัก',d:'ภารกิจรักครั้งถัดไปสำเร็จแน่นอน',c:90,t:'lust'},{id:'yinyang',n:'คัมภีร์หยินหยางคู่บำเพ็ญ',d:'พลังจากคนรักแต่ละคนเพิ่ม ×1.5 ถาวร (ซื้อได้ครั้งเดียว)',c:160,t:'lust',once:'yinyang'});
+{const _bu12=buySys;buySys=function(id){if(!['perfume','redline','yinyang'].includes(id))return _bu12.apply(this,arguments);const s=S.sys,it=SHOP.find(x=>x.id===id);if(s.sp<it.c){toast('SP ไม่พอ');return}if(it.once&&s.upgrades.includes(it.once)){toast('ซื้อไปแล้ว');return}
+ s.sp-=it.c;s.used++;if(id==='perfume')S.cha+=10;else if(id==='redline')s.redline=1;else s.upgrades.push('yinyang');sysLog(`ซื้อ <b>${it.n}</b> สำเร็จ`);sfx('good');render();openSys()}}
+{const _ss12=sysSpecial;sysSpecial=function(){const s=S.sys;if(s&&s.t==='lust'){const L=lovers(),pw=lustPow();return `<h4>💋 ระบบตัณหา</h4><div class="sysq">คนรัก <b>${L}</b> คน${S.harem&&S.harem.length?` (ตำหนักใน ${S.harem.length}/${haremCap()})`:''} · ภารกิจรักสำเร็จ <b>${s.lustP||0}</b> ครั้ง${s.redline?' · 🧶 ด้ายแดงพร้อมใช้':''}<br><span style="opacity:.75">พลังหยินหยางจากคนรัก +${fmt(pw)}/ปี · ลมปราณ +${(L*.04).toFixed(2)} ปี/ปี${S.age<18?' · ภารกิจรักจะเริ่มเมื่ออายุ 18 ปี':''}</span></div>`}return _ss12.apply(this,arguments)}}
+function lustPow(){const s=S.sys;return Math.round(lovers()*(6+s.lv*2)*S.talent.m*sysM()*(s.upgrades.includes('yinyang')?1.5:1))}
+function lustYear(){const s=S.sys,L=lovers();if(L){S.power+=lustPow();S.qi+=+(L*.04).toFixed(2);if(L>=3)S.fame+=L}}
+function lustCtx(){const og=oppG(),H=S.harem||[],pool=(HM_N[og]||[]).filter(x=>x!==S.spouse&&!H.some(g=>g.n===x));const nm=pool.length?ch(pool):anyName(og);return{og,nm,tt:ch(og==='หญิง'?HM_T:HM_TM),ag:loverAge(),who:lzWho(),pr:lzPr()}}
+function lustWin(c,why){const s=S.sys;s.lustP=(s.lustP||0)+1;S.cha+=2;sysReward(70+s.lv*12,R(10,18),`ภารกิจรักสำเร็จ — ${why}`);
+ if(!S.spouse){S.spouse=c.nm;S.spouseP=null;S.sp=mkLover(c.nm,c.tt,{wed:false,age:c.ag});joy(8);log(`💕 <b>${c.nm}</b> ${c.tt} (${c.ag} ปี) ตกลงเป็นคนรักของคุณ`,'epic',true);return}
+ if(S.haremOK&&(S.harem||[]).length<haremCap()){const g=hmMember(c.nm,c.tt);g.age=c.ag;S.harem=S.harem||[];S.harem.push(g);joy(6);log(`🌸 <b>${c.nm}</b> ${c.tt} (${c.ag} ปี) ขอติดตามอยู่ข้างกาย เข้าตำหนักใน (${S.harem.length}/${haremCap()})`,'epic',true);return}
+ const spN=S.sp?S.sp.n:S.spouse;bagAdd('charm',1,1);log(`🌸 ${c.nm}มอบถุงหอมไว้เป็นที่ระลึก "ถ้าวันหนึ่งท่านมีที่ว่างข้างกาย ข้าจะรอ"${!S.haremOK?` — ถ้าจะรับคนรักเพิ่ม ต้องได้รับความยินยอมจาก${spN}ก่อน`:' — ตำหนักในเต็มแล้ว'}`,'good')}
+function lustLose(c,t){const s=S.sys;joy(-3);sysLog(`ภารกิจรักล้มเหลว — ${t}`,'fail');if(Math.random()<.4){const d=Math.min(s.sp,R(5,12));s.sp-=d}}
+function lustEvent(){const s=S.sys;if(S.age<18||choice._cur||modalOpen||(S.beastMode&&!S.beastMode.human))return false;if(s.lzAt!=null&&S.age-s.lzAt<2)return false;if(Math.random()>(s.quests.some(q=>q.k==='woo'||q.k==='lov')?.75:.45))return false;s.lzAt=S.age;
+ const c=lustCtx(),info=`<b>${c.nm}</b> ${c.tt} อายุ ${c.ag} ปี`,sure=()=>{if(s.redline){s.redline=0;log('🧶 ด้ายแดงลิขิตรักเรืองแสง — ฟ้าลิขิตให้สำเร็จ','myth');return true}return false};
+ const ri=realmIdx(),pool=[];
+ pool.push(()=>choice(`💋 ภารกิจ: ช่วย${c.who}`,`[ระบบตัณหา] ${info} ถูกพวกอันธพาลล้อมไว้กลางตลาด — ช่วย${c.pr}ให้ได้`,[
+  {t:'⚔️ เข้าไปช่วยตรงๆ',s:'ต่อสู้ · ชนะแล้วได้ใจ',f(){if(sure()||fight('พวกอันธพาล',total()*R(50,80)/100))lustWin(c,`ช่วย${c.nm}จากอันธพาล`);else lustLose(c,'ถูกอันธพาลรุมจนต้องถอย')}},
+  {t:'🗣️ ใช้ปากเจรจา',s:`ใช้ปัญญา · โอกาสราว ${Math.round(clamp(.3+S.int/300,.1,.9)*100)}%`,f(){if(sure()||roll01(.3+S.int/300))lustWin(c,`เจรจาให้${c.nm}รอดมาได้อย่างแยบยล`);else lustLose(c,'พูดผิดหูจนอันธพาลโกรธ')}},
+  {t:`💰 จ่ายเงินไล่ (${fmt(150+ri*120)})`,s:'ได้ใจน้อยกว่า',f(){const v=150+ri*120;if(S.money<v){log('เงินไม่พอ','bad');return}S.money-=v;if(sure()||Math.random()<.55)lustWin(c,`ยอมเสียเงินช่วย${c.nm}`);else log(`${c.nm}ขอบคุณอย่างสุภาพ แล้วจากไป`)}},
+  {t:'🚶 ไม่ยุ่ง',skip:true,f(){log('คุณเดินผ่านไปเงียบๆ')}}]));
+ pool.push(()=>choice(`💋 ภารกิจ: ${c.who}ท้าประลอง`,`[ระบบตัณหา] ${info} ประกาศว่าจะยอมรับเฉพาะคนที่ชนะ${c.pr}ได้เท่านั้น`,[
+  {t:'⚔️ ประลองเต็มกำลัง',s:'ต่อสู้ยาก',f(){if(sure()||fight(c.nm,total()*R(80,120)/100))lustWin(c,`ชนะการประลองกับ${c.nm}`);else{S.hp-=10;lustLose(c,`แพ้${c.nm}อย่างหมดรูป`)}}},
+  {t:'🌸 ออมมือ แล้วแพ้อย่างสง่างาม',s:`ใช้เสน่ห์ · โอกาสราว ${Math.round(clamp(.25+S.cha/250,.1,.9)*100)}%`,f(){if(sure()||roll01(.25+S.cha/250))lustWin(c,`${c.nm}มองออกว่าคุณออมมือให้`);else lustLose(c,`${c.nm}โกรธที่ถูกดูถูก`)}},
+  {t:'🙇 ปฏิเสธ',skip:true,f(){log(`คุณคารวะ${c.nm}แล้วปฏิเสธการประลอง`)}}]));
+ pool.push(()=>{const o=[{t:'🖋️ แต่งกลอนชมจันทร์',s:`ใช้ปัญญา · โอกาสราว ${Math.round(clamp(.2+S.int/250,.1,.9)*100)}%`,f(){if(sure()||roll01(.2+S.int/250))lustWin(c,`กลอนของคุณทำให้${c.nm}หน้าแดง`);else lustLose(c,'กลอนจืดจนคนหัวเราะทั้งงาน')}}];
+  if(bagHas('gem'))o.push({t:'💎 มอบของมีค่าจากกระเป๋า',s:'ใช้ 💎 1 ชิ้น · โอกาสสูง',f(){bagUse('gem');if(sure()||Math.random()<.8)lustWin(c,`${c.nm}รับของขวัญด้วยรอยยิ้ม`);else lustLose(c,`${c.nm}ไม่ชอบของที่ใช้เงินซื้อ`)}});
+  o.push({t:`🎁 ซื้อของขวัญ (${fmt(300+ri*200)})`,s:'โอกาสราว 50%',f(){const v=300+ri*200;if(S.money<v){log('เงินไม่พอ','bad');return}S.money-=v;if(sure()||Math.random()<.5)lustWin(c,`${c.nm}ประทับใจของขวัญ`);else lustLose(c,`${c.nm}รับไว้อย่างเย็นชา`)}},{t:'🍵 แค่ชมจันทร์เงียบๆ',skip:true,f(){joy(2);log('คืนนี้จันทร์สวยมาก')}});
+  choice('💋 ภารกิจ: งานชมจันทร์',`[ระบบตัณหา] ในงานชมจันทร์ ${info} นั่งอยู่ริมสระบัว — ทำให้${c.pr}ประทับใจ`,o)});
+ pool.push(()=>{const o=[];if(bagHas('herb'))o.push({t:'🌿 ใช้สมุนไพรวิญญาณในกระเป๋า',s:'สำเร็จแน่นอน · ใช้ 🌿 1 ชิ้น',f(){bagUse('herb');lustWin(c,`ช่วยรักษา${c.nm}ด้วยสมุนไพรวิญญาณ`)}});
+  o.push({t:'⛰️ ขึ้นเขาไปเก็บสมุนไพร',s:'ต้องสู้กับสัตว์อสูรเฝ้ายา',f(){if(sure()||fight('สัตว์อสูรเฝ้าสมุนไพร',total()*R(70,110)/100))lustWin(c,`เสี่ยงตายขึ้นเขาเก็บยามารักษา${c.nm}`);else{S.hp-=15;lustLose(c,'ถูกสัตว์อสูรไล่ลงจากเขา')}}},
+   {t:`💰 จ้างหมอเทวดา (${fmt(400+ri*250)})`,s:'โอกาสราว 65%',f(){const v=400+ri*250;if(S.money<v){log('เงินไม่พอ','bad');return}S.money-=v;if(sure()||Math.random()<.65)lustWin(c,`จ้างหมอมารักษา${c.nm}จนหาย`);else lustLose(c,'หมอเทวดาก็ช่วยไม่ไหว')}},{t:'🙏 ทำได้แค่ภาวนา',skip:true,f(){log(`คุณได้แต่ภาวนาให้${c.nm}หายป่วย`)}});
+  choice(`💋 ภารกิจ: ${c.who}ป่วยหนัก`,`[ระบบตัณหา] ${info} ป่วยด้วยพิษเย็น หมอบอกว่าต้องใช้สมุนไพรวิญญาณเท่านั้น`,o)});
+ if(lovers()){const H=S.harem||[],pn=H.length&&Math.random()<.5?ch(H).n:(S.sp?S.sp.n:S.spouse);
+  pool.push(()=>choice('💋 ภารกิจ: ฝึกคู่หยินหยาง',`[ระบบตัณหา] ${esc(pn)}ชวนคุณร่วมฝึกวิชาหยินหยางใต้น้ำตกยามค่ำ — ปราณสองสายไหลเวียนเข้าหากัน`,[
+   {t:'🌀 ฝึกอย่างเต็มที่',s:'ลมปราณมาก · เสี่ยงธาตุไฟเข้าแทรก 15%',f(){if(Math.random()<.15){S.hp-=Math.round(S.maxHp*.2);sysLog('ปราณตีกลับ — บาดเจ็บภายใน','fail')}else{S.qi+=1.5+ri*.4;S.power+=yrPow0()*2;s.lustP=(s.lustP||0)+1;sysReward(50+s.lv*8,8,`ฝึกคู่กับ${esc(pn)}สำเร็จ`)}}},
+   {t:'🍃 ฝึกเบาๆ แล้วพักผ่อนด้วยกัน',s:'ปลอดภัย · ความสุข +',f(){S.qi+=.5;joy(6);if(S.sp&&S.sp.n===pn)S.sp.aff=Math.min(100,(S.sp.aff||70)+5);log(`🍃 คุณกับ${esc(pn)}นั่งฟังเสียงน้ำตกจนรุ่งเช้า`,'good')}},
+   {t:'🙅 ขอฝึกคนเดียว',skip:true,f(){log('คุณขอตัวไปฝึกคนเดียว')}}]));
+  if(H.length>=2)pool.push(()=>{const a=H[0],b=H[1];choice('💋 ภารกิจ: ศึกในตำหนักใน',`[ระบบตัณหา] <b>${esc(a.n)}</b> กับ <b>${esc(b.n)}</b> ทะเลาะกันเรื่องใครได้อยู่กับคุณมากกว่า`,[
+   {t:'🗣️ ไกล่เกลี่ยด้วยคำหวาน',s:`ใช้เสน่ห์ · โอกาสราว ${Math.round(clamp(.3+S.cha/250,.1,.9)*100)}%`,f(){if(roll01(.3+S.cha/250)){s.lustP=(s.lustP||0)+1;joy(4);sysReward(40+s.lv*8,6,'ตำหนักในกลับมาสงบสุข')}else{joy(-5);log('ยิ่งพูดยิ่งทะเลาะกันหนัก','bad')}}},
+   {t:`🎁 ให้ของขวัญทั้งสองคน (${fmt(500+ri*300)})`,s:'สงบแน่นอน',f(){const v=500+ri*300;if(S.money<v){log('เงินไม่พอ','bad');return}S.money-=v;joy(3);log('ทั้งสองคนยิ้มออกและกลับมาคืนดีกัน','good')}},
+   {t:`💔 เข้าข้าง${esc(a.n)}`,s:`${esc(b.n)}อาจจากไป`,f(){if(Math.random()<.5){H.splice(H.indexOf(b),1);joy(-6);log(`🥀 ${esc(b.n)}เสียใจแล้วจากตำหนักในไป`,'bad')}else log(`${esc(b.n)}งอนอยู่หลายวัน`)}}])})}
+ ch(pool)();return true}
+{const _st12=sysTick;sysTick=function(){const r=_st12.apply(this,arguments);try{if(S&&S.sys&&S.sys.t==='lust'&&S.age>=6){if(S.sys.lustP==null)S.sys.lustP=0;lustYear();if(!r&&lustEvent())return true}}catch(e){console.error(e)}return r}}
+
+// ---- 3. กระเป๋า: ระดับความหายาก คำอธิบาย และการใช้ ----
+const RAR=[{n:'ธรรมดา',c:'#8d8d8d'},{n:'ไม่ธรรมดา',c:'#3aa845'},{n:'แรร์',c:'#2f86e0'},{n:'อีปิค',c:'#9b4ff0'},{n:'เลเจนด์',c:'#e88a10'},{n:'มิสติก',c:'#e8337f'},{n:'ความลับ',c:'#13b3a5'},{n:'???',c:'#c86bff',x:1}];
+Object.assign(BAGIT,{charm:{n:'ถุงหอมเสน่ห์',ic:'👛',v:220},wine:{n:'สุราดอกท้อเซียน',ic:'🍶',v:520},dew:{n:'น้ำค้างพันปี',ic:'💧',v:650},elix:{n:'ยาเม็ดเก้ารอบสวรรค์',ic:'🟣',v:2200},scroll:{n:'คัมภีร์ไร้นาม',ic:'📕',v:2600},phx:{n:'ขนหงส์เพลิง',ic:'🪶',v:9000},star:{n:'เศษดาราจักร',ic:'🌠',v:24000},seal:{n:'ตราผนึกมารโบราณ',ic:'🧿',v:36000},void:{n:'เศษเสี้ยวแห่งความว่างเปล่า',ic:'🕳️',v:99999}});
+const healV=()=>80+realmIdx()*45;
+const BAGX={
+ food:{r:0,d:'กินแล้วพลังชีวิต +15 ความสุขเล็กน้อย',use(){S.hp=Math.min(S.maxHp,S.hp+15);joy(2);return'อิ่มท้อง พลังชีวิต +15'}},
+ hp:{r:0,d:()=>`ฟื้นพลังชีวิต +${healV()} · ใช้เองอัตโนมัติเมื่อพลังชีวิตต่ำกว่า 40%`,use(){if(S.hp>=S.maxHp)return null;S.hp=Math.min(S.maxHp,S.hp+healV());return`พลังชีวิต +${healV()}`}},
+ ore:{r:0,d:'วัตถุดิบตีอาวุธ/ชุดเกราะ ใช้ตอนตีบวกและหลอมของ'},ink:{r:0,d:'วัตถุดิบเขียนยันต์ ใช้ตอนหลอมของ'},
+ herb:{r:1,d:'ลมปราณ +0.5 ปี พลังชีวิต +20 · ใช้ในภารกิจรักษาคน และสัตว์เลี้ยงวิญญาณ',use(){S.qi+=.5;S.hp=Math.min(S.maxHp,S.hp+20);return'ลมปราณ +0.5 ปี · พลังชีวิต +20'}},
+ cure:{r:1,d:'รักษาโรคเรื้อรังได้ทันที · ใช้เองอัตโนมัติเมื่อป่วย',use(){if(!S.chronic)return null;const n=S.chronic.n;S.chronic=null;return`หายจาก${n}`}},
+ silk:{r:1,d:'วัตถุดิบทอชุด ใช้ตอนหลอมของ'},hide:{r:1,d:'วัตถุดิบจากอสูร ใช้ตอนหลอมของ'},
+ qi:{r:1,d:'ลมปราณ +2 ปี · ใช้เองบางครั้ง',use(){S.qi+=2;return'ลมปราณ +2 ปี'}},
+ charm:{r:1,d:'เสน่ห์ +3 · ของที่ระลึกจากคนที่หลงรักคุณ',use(){S.cha+=3;return'เสน่ห์ +3'}},
+ tal:{r:2,d:'ติดตัวไว้ — กันการโจมตีถึงตายในการต่อสู้ 1 ครั้งแล้วพลิกเป็นชนะ · ใช้ในการดวลได้'},
+ core:{r:2,d:()=>`พลังยุทธ์ +${fmt(yrPow0())} · สัตว์เลี้ยงวิญญาณใช้วิวัฒนาการ`,use(){S.power+=yrPow0();return`พลังยุทธ์ +${fmt(yrPow0())}`}},
+ jade:{r:2,d:'วัตถุดิบหายาก ใช้หลอมของชั้นดี · ขายได้ราคา'},
+ gem:{r:2,d:'มอบให้คนรัก ความรัก +8 ความสุข + · ใช้เป็นของขวัญในภารกิจรัก',use(){if(!S.sp){return null}S.sp.aff=Math.min(100,(S.sp.aff||70)+8);joy(5);return`มอบให้${S.sp.n} ความรัก +8`}},
+ wine:{r:2,d:'ความสุข +15 ลมปราณ +1 ปี พลังชีวิต +30',use(){joy(15);S.qi+=1;S.hp=Math.min(S.maxHp,S.hp+30);return'เมาเซียนอย่างมีความสุข'}},
+ dew:{r:2,d:'ฟื้นพลังชีวิตเต็มและล้างโรคเรื้อรัง',use(){S.hp=S.maxHp;const c=S.chronic;S.chronic=null;return'พลังชีวิตเต็ม'+(c?` · หายจาก${c.n}`:'')}},
+ map:{r:3,d:'ติดตัวไว้ — เข้ามิติลับแล้วรู้ทางลัด ได้ของมากขึ้น'},
+ brk:{r:3,d:'เมื่อพลังถึง 82% ของขั้นถัดไป ทะลวงขั้นได้ทันที · ใช้เองอัตโนมัติ',use(){const nx=REALMS[realmIdx()+1];if(!nx||total()<nx.p*.82)return null;S.power+=nx.p-total()+1;return`ทะลวงสู่${nx.n}!`}},
+ elix:{r:3,d:()=>`พลังยุทธ์ +${fmt(yrPow0()*6)} ในเม็ดเดียว`,use(){const g=yrPow0()*6;S.power+=g;return`พลังยุทธ์ +${fmt(g)}`}},
+ scroll:{r:3,d:'เปิดอ่านแล้วได้วิชาระดับดีขึ้นไป 1 วิชา',use(){const a=newArt(2);S.arts.push(a);return`ได้ ${artHtml(a)}`}},
+ bcore:{r:4,d:()=>`พลังยุทธ์ +${fmt(yrPow0()*4)} · สัตว์เลี้ยงใช้วิวัฒนาการได้ดีเยี่ยม`,use(){const g=yrPow0()*4;S.power+=g;return`พลังยุทธ์ +${fmt(g)}`}},
+ egg:{r:4,d:'ฟักเป็นสัตว์วิญญาณคู่กาย ช่วยต่อสู้ · ฟักเองได้หรือรอฟักเอง',use(){if(S.pet&&S.pet.spirit)return null;const n=ch(['พยัคฆ์ขาว','จิ้งจอกเพลิง','มังกรน้ำ','หงส์น้ำแข็ง']);S.pet={i:'🐉',n,t:'สัตว์วิญญาณ',age:S.age,spirit:1,lv:0};return`ฟักออกมาเป็น<b>${n}</b>`}},
+ fruit:{r:4,d:'อายุขัย +15 ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ',use(){S.lifespan+=15;return'อายุขัย +15 ปี'}},
+ phx:{r:4,d:'ติดตัวไว้ — เมื่อพลังชีวิตหมด จะลุกเป็นไฟแล้วชุบชีวิตคุณขึ้นมาใหม่ 1 ครั้ง'},
+ star:{r:5,d:'อายุขัย +40 ปี พลังยุทธ์มหาศาล ปัญญา +10',use(){S.lifespan+=40;S.power+=yrPow0()*10;S.int+=10;return'ดวงดาวหลอมรวมเข้ากับวิญญาณ'}},
+ seal:{r:6,d:'ติดตัวไว้ — ปลดล็อกตัวเลือกพิเศษในเหตุการณ์ผนึกมาร ผนึกได้สำเร็จแน่นอน'},
+ void:{r:7,d:'ไม่มีใครรู้ว่ามันคืออะไร… ใช้แล้วจะเกิดอะไรขึ้นก็ได้',use(){const r=Math.random();
+  if(r<.3){S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.2).toFixed(2)});return'พรสวรรค์ของคุณถูกเขียนใหม่ — ฝึกได้ผล ×1.2 ถาวร'}
+  if(r<.55){S.lifespan+=100;return'กาลเวลาลืมคุณไป — อายุขัย +100 ปี'}
+  if(r<.8){const g=Math.round(S.power*.4)+yrPow0()*5;S.power+=g;return`ความว่างเปล่าหลั่งไหลเข้ากาย — พลังยุทธ์ +${fmt(g)}`}
+  if(r<.95){const a=newArt(3);S.arts.push(a);return`เห็นภาพนิมิตของจักรวาลก่อนกำเนิด — ได้ ${artHtml(a)}`}
+  return'มันหายไปพร้อมเสียงหัวเราะเบาๆ… ไม่มีอะไรเกิดขึ้น'}}};
+const bRar=id=>BAGX[id]?BAGX[id].r:1,rarC=r=>RAR[r]||RAR[1];
+function rarTag(r){const R0=rarC(r);return `<span class="rtag rar${r}" style="${R0.x?'':`color:${R0.c};border-color:${R0.c}`}">${R0.n}</span>`}
+function rarName(id){const I=BAGIT[id],r=bRar(id),R0=rarC(r);return `${I.ic} <b class="rar${r}" style="${R0.x?'':`color:${R0.c}`}">${I.n}</b>`}
+(function(){try{const st=document.createElement('style');st.textContent='.rtag{display:inline-block;font-size:10px;padding:0 6px;border:1px solid;border-radius:8px;margin-left:4px;vertical-align:middle;font-weight:600}.rar7{background:linear-gradient(90deg,#ff6b6b,#ffd040,#6bff9b,#6bc8ff,#c86bff,#ff6b6b);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;animation:rarS 3s linear infinite}.rtag.rar7{border-color:#c86bff}@keyframes rarS{to{background-position:200% 0}}.bagit{border-left:3px solid var(--rc,#888)}';document.head.appendChild(st)}catch(e){}})();
+function bagDesc(id){const x=BAGX[id];if(!x)return'';return typeof x.d==='function'?x.d():x.d}
+function bagUseManual(id){if(!S||!S.alive||!S.bag||!S.bag.it[id])return;const x=BAGX[id];if(!x||!x.use)return;const r=x.use();if(r==null){toast(id==='gem'?'ยังไม่มีคนรักให้มอบของ':id==='cure'?'ตอนนี้ไม่ได้ป่วย':id==='hp'?'พลังชีวิตเต็มอยู่แล้ว':id==='brk'?'พลังยังไม่ถึง 82% ของขั้นถัดไป':id==='egg'?'มีสัตว์วิญญาณอยู่แล้ว':'ยังใช้ไม่ได้ตอนนี้');return}
+ bagUse(id);log(`🎒 ใช้ ${rarName(id)} — ${r}`,bRar(id)>=4?'myth':bRar(id)>=2?'epic':'good');sfx('good');render();openBag()}
+function bagRand(lo,hi){const MAT=['ore','ink','silk','hide','jade'];let L=Object.keys(BAGX).filter(k=>BAGIT[k]&&!MAT.includes(k)&&BAGX[k].r>=lo&&BAGX[k].r<=hi);if(!L.length)L=['hp'];const W=L.map(k=>({k,w:[30,18,10,5,2.2,.8,.25,.06][BAGX[k].r]}));return pickW(W).v.k}
+function bagGive(lo,hi,why){const id=bagRand(lo,hi);if(bagAdd(id,1,1))log(`🎁 ${why?why+' — ':''}ได้รับ ${rarName(id)} ${rarTag(bRar(id))}`,bRar(id)>=4?'myth':'epic',bRar(id)>=4);else{const v=Math.round(BAGIT[id].v*.6);S.money+=v;log(`🎁 ${why?why+' — ':''}ได้ ${rarName(id)} แต่กระเป๋าเต็ม จึงขายทันทีได้ ${fmt(v)}`,'good')}return id}
+{const _bl12=bagLoot;bagLoot=function(lv=1){if(S&&S.age>=8&&Math.random()<.06){const r=Math.random();bagGive(r<.6?1:r<.88?2:r<.97?3:r<.995?4:5,r<.6?2:r<.88?3:r<.97?4:r<.995?5:6);return}return _bl12.apply(this,arguments)}}
+{const _cd12=checkDeath;checkDeath=function(){try{if(S&&S.alive&&!S.deathCause&&S.hp<=0&&bagHas('phx')&&bagUse('phx')){S.hp=S.maxHp;log(`🪶 ขนหงส์เพลิงในกระเป๋าลุกเป็นไฟ — เปลวเพลิงห่อร่างคุณแล้วชุบชีวิตขึ้นมาใหม่!`,'myth',true);keyAdd('ฟื้นคืนชีพด้วยขนหงส์เพลิง');return false}}catch(e){console.error(e)}return _cd12.apply(this,arguments)}}
+openBag=function(){if(!S.bag)bagInit();const b=S.bag,ks=Object.keys(b.it).sort((x,y)=>bRar(y)-bRar(x)||BAGIT[y].v-BAGIT[x].v);
+ const row=k=>{const x=BAGX[k]||{},R0=rarC(bRar(k)),sv=Math.round(BAGIT[k].v*b.it[k]*.6*(S.xian?1:.7));
+  return `<div class="item bagit" style="--rc:${R0.x?'#c86bff':R0.c}"><div class="h" style="gap:6px;flex-wrap:wrap"><span>${rarName(k)} ×${b.it[k]} ${rarTag(bRar(k))}</span><span style="display:flex;gap:4px">${x.use?`<button class="sysb" style="padding:4px 10px" onclick="bagUseManual('${k}')">ใช้</button>`:''}<button class="sysb" style="padding:4px 10px" onclick="bagSell('${k}')">ขาย ${fmt(sv)}</button></span></div><p class="tag2" style="margin:4px 0 0">${bagDesc(k)}</p></div>`};
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎒 ${b.nm}</h3><button class="gbtn" style="width:100%;margin-bottom:6px" onclick="openEquip()">⚔️ ชุดสวมใส่ (${eqOn().length} ชิ้น)</button><p class="tag2">${bagCount()}/${b.cap} ช่อง${b.sp?' · ✨ พื้นที่มิติ ไม่มีวันถูกขโมย':' · กระเป๋าธรรมดา อาจถูกปล้นได้'}</p>
+ ${ks.length?ks.map(row).join(''):'<p class="tag2">ยังไม่มีของ</p>'}
+ <details style="margin-top:8px"><summary class="tag2">ระดับความหายาก</summary><p class="tag2">${RAR.map((R0,i)=>rarTag(i)).join(' ')}<br>ยิ่งหายากยิ่งมีผลแรงและขายได้แพง · ของหายากได้จากมิติลับ ศึกใหญ่ ภารกิจ และซากศัตรู</p></details>
+ ${S.xian?xPanel():''}`)};
+
+// ---- 4. เหตุการณ์ใหญ่ (เลือกได้ว่าจะไป ไม่ไป หรือไปจัดการเอง) ----
+function bigFight(name,mult){return fight(name,Math.max(50,total()*mult))}
+function bigHurt(f,why){const d=Math.round(S.maxHp*f);S.hp-=d;log(`🩸 ${why} พลังชีวิต −${d}`,'bad')}
+const BIGEV=[
+ {id:'seal',c:()=>S.age>=16,f(){const ri=realmIdx(),dm=S.karma<=-40||(S.faction&&/มาร/.test(S.faction.t||''));const o=[
+  {t:'⚔️ ร่วมทัพผนึกมาร',s:'สู้ไปกับยอดฝีมือทั่วหล้า · เสี่ยงปานกลาง',f(){if(bigFight('กองทัพมารที่ทะลักออกจากผนึก',R(70,105)/100)){S.fame+=80+ri*60;S.karma+=5;if(S.faction)S.merit=(S.merit||0)+10;log('⚔️ ทัพพันธมิตรผนึกมารสำเร็จ ชื่อคุณถูกจารึกในศิลาวีรชน','epic',true);keyAdd('ร่วมทัพผนึกมาร');bagGive(2,4,'รางวัลจากพันธมิตร')}else{bigHurt(.35,'ถูกมารรุมในแนวหน้า');S.fame+=20;log('แม้จะบาดเจ็บ แต่ผู้คนก็จดจำความกล้าของคุณ')}}},
+  {t:'🗡️ บุกเข้าไปผนึกเองคนเดียว',s:'ยากมาก · ชนะได้รางวัลใหญ่ · แพ้อาจถึงตาย',f(){if(bigFight('จอมมารในผนึก',R(130,175)/100)){S.fame+=300+ri*150;S.karma+=10;S.power+=yrPow0()*3;log('🗡️ คุณฝ่าเข้าไปถึงใจกลางผนึก แล้วตรึงจอมมารไว้ด้วยตัวคนเดียว — ทั่วหล้าตะลึง','myth',true);keyAdd('ผนึกจอมมารเพียงลำพัง');bagGive(4,6,'สมบัติในผนึก')}else bigHurt(.6,'จอมมารฟาดคุณกระเด็นออกจากผนึก')}}];
+  if(bagHas('seal'))o.push({t:'🧿 ใช้ตราผนึกมารโบราณ',s:'สำเร็จแน่นอน · ใช้ไอเท็ม 🧿',f(){bagUse('seal');S.fame+=500+ri*200;S.karma+=15;S.power+=yrPow0()*5;log('🧿 ตราผนึกโบราณเปล่งแสง ผนึกมารกลับคืนสมบูรณ์ในพริบตา — คุณกลายเป็นตำนาน','myth',true);keyAdd('ปิดผนึกมารด้วยตราโบราณ');bagGive(5,7,'ผนึกตอบแทนผู้ปิดผนึก')}});
+  o.push({t:'🧠 วางค่ายกลอยู่แนวหลัง',s:`ใช้ปัญญา · โอกาสราว ${Math.round(clamp(.3+S.int/400,.1,.9)*100)}% · ปลอดภัยกว่า`,f(){if(roll01(.3+S.int/400)){S.fame+=40+ri*25;S.int+=3;log('🧠 ค่ายกลของคุณช่วยให้ทัพหน้ารอด','good');if(Math.random()<.4)bagGive(1,3,'ส่วนแบ่งรางวัล')}else bigHurt(.15,'ค่ายกลแตก ปราณตีกลับ')}});
+  if(dm)o.push({t:'😈 แอบช่วยปลดผนึก',s:'พลังมารมหาศาล · กรรมดิ่ง · ทั่วหล้าจะตามล่า',f(){S.power+=yrPow0()*8;S.karma-=30;S.fame=Math.max(0,S.fame-50);S.dmnUntil=S.age+R(4,8);log('😈 คุณแอบทำลายเสาผนึก ปราณมารไหลเข้ากายอย่างบ้าคลั่ง — แต่ฟ้าจดจำสิ่งนี้','bad',true);keyAdd('ช่วยปลดผนึกมาร')}});
+  o.push({t:'🙈 ไม่ไป',s:'ปลอดภัยตอนนี้ · แต่มารอาจอาละวาดใกล้ตัวหลายปี',skip:true,f(){S.karma-=2;S.dmnUntil=S.age+R(3,6);log('คุณเลือกไม่ยุ่ง ข่าวลือว่ามารบางตัวหลุดรอดออกมาแล้ว','bad')}});
+  choice('🌋 ผนึกมารสั่นคลอน',`ผนึกมารโบราณใต้หุบเขาโลหิตแตกร้าว ไอมารพวยพุ่งขึ้นฟ้า${S.xian?'แดนเซียน':'ยุทธภพ'}ทั้งหมดประกาศรวมพลยอดฝีมือ — คุณจะทำอย่างไร?`,o)}},
+ {id:'tomb',c:()=>S.age>=16,f(){const ri=realmIdx();const o=[
+  {t:'👥 เข้าไปพร้อมกลุ่มนักล่าสมบัติ',s:'เสี่ยงน้อย · แบ่งของกัน',f(){if(bigFight('หุ่นเฝ้าสุสาน',R(60,90)/100)){S.money+=inc(300+ri*300);bagGive(1,3,'ส่วนแบ่งจากสุสาน')}else bigHurt(.2,'กับดักในสุสาน')}},
+  {t:'🗝️ ลอบเข้าไปคนเดียวถึงห้องลึกสุด',s:'เสี่ยงสูง · ได้ของเลอค่ากว่า',f(){if(bigFight('วิญญาณจักรพรรดิโบราณ',R(110,150)/100)){S.fame+=120+ri*60;bagGive(3,5,'สมบัติในห้องลึกสุด');if(Math.random()<.4){const a=newArt(3);S.arts.push(a);log(`📜 พบคัมภีร์บนโลงหยก — ${artHtml(a)}`,'myth')}}else bigHurt(.55,'คำสาปของจักรพรรดิโบราณ')}}];
+  if(bagHas('map'))o.push({t:'🗺️ ใช้แผนที่มิติลับหาทางลับ',s:'ใช้ 🗺️ · ปลอดภัย ได้ของดี',f(){bagUse('map');bagGive(3,5,'ทางลับในสุสาน');S.money+=inc(500+ri*400);log('🗺️ แผนที่พาคุณเลี่ยงกับดักทั้งหมด','epic')}});
+  o.push({t:`💰 ขายข่าวทางเข้าให้คนอื่น`,s:'ได้เงินทันที · ไม่เสี่ยง',f(){S.money+=inc(200+ri*200);S.karma-=1;log('คุณขายแผนผังทางเข้าให้ตระกูลใหญ่')}},{t:'🚶 ไม่สนใจ',skip:true,f(){log('คุณปล่อยให้คนอื่นแย่งชิงกันไป')}});
+  choice('⚱️ สุสานจักรพรรดิโบราณเปิด',`แผ่นดินไหวเปิดทางเข้าสุสานจักรพรรดิเมื่อหมื่นปีก่อน ผู้คนแห่กันไปไม่ขาดสาย`,o)}},
+ {id:'plague',c:()=>S.age>=14,f(){const ri=realmIdx();const o=[
+  {t:'🩺 ลงพื้นที่ช่วยรักษาเอง',s:'กรรมดีมาก · เสี่ยงติดโรค 25%',f(){S.karma+=12;S.fame+=40+ri*20;if(Math.random()<.25)bigHurt(.3,'ติดโรคจากผู้ป่วย');else log('🩺 คุณช่วยชีวิตผู้คนได้นับร้อย ชาวเมืองตั้งศาลให้','epic',true);keyAdd('ช่วยเมืองจากโรคระบาด')}},
+  {t:`💰 บริจาคยาและเสบียง (${fmt(400+ri*300)})`,s:'ปลอดภัย · กรรมดี',f(){const v=400+ri*300;if(S.money<v){log('เงินไม่พอ','bad');return}S.money-=v;S.karma+=6;S.fame+=20+ri*10;log('ยาที่คุณส่งไปช่วยให้หลายบ้านรอด','good')}}];
+  if(bagHas('dew')||bagHas('cure'))o.push({t:'🧪 วิจัยยาจากของในกระเป๋า',s:'ใช้ 💧 หรือ 🧪 · หยุดโรคได้ทั้งเมือง',f(){bagUse(bagHas('dew')?'dew':'cure');S.karma+=15;S.fame+=100+ri*40;S.int+=5;log('🧪 คุณคิดค้นยาต้านโรคได้สำเร็จ — โรคระบาดสงบลงในเดือนเดียว','myth',true);keyAdd('คิดค้นยาหยุดโรคระบาด')}});
+  o.push({t:'🧠 ศึกษาต้นเหตุของโรค',s:`ใช้ปัญญา · โอกาสราว ${Math.round(clamp(.2+S.int/350,.1,.9)*100)}%`,f(){if(roll01(.2+S.int/350)){S.fame+=60+ri*30;S.int+=4;S.karma+=5;log('🧠 คุณพบว่าบ่อน้ำถูกวางยา จับคนร้ายได้ โรคหายไป','epic')}else{S.int+=1;log('หาต้นเหตุไม่เจอ แต่ได้ความรู้ติดตัว')}}},
+   {t:'🏃 หนีออกจากเมือง',s:'ปลอดภัย · กรรมลด',skip:true,f(){S.karma-=3;log('คุณรีบหนีออกจากเมืองก่อนประตูจะถูกปิด')}});
+  choice('☠️ โรคระบาดลุกลาม',`โรคประหลาดระบาดในเมืองใกล้เคียง ผู้คนล้มตายทุกวัน ทางการกำลังจะปิดเมือง`,o)}},
+ {id:'war',c:()=>S.age>=18,f(){const ri=realmIdx();const o=[
+  {t:'⚔️ ร่วมรบฝ่ายป้องกันเมือง',s:'ชื่อเสียง · เสี่ยงบาดเจ็บ',f(){if(bigFight('ทัพศัตรู',R(75,110)/100)){S.fame+=100+ri*50;S.money+=inc(300+ri*200);S.kills+=R(3,8);log('⚔️ คุณนำทัพตีถอยศัตรูได้ ได้รับบำเหน็จ','epic',true);if(Math.random()<.35)bagGive(2,4,'บำเหน็จสงคราม')}else bigHurt(.4,'ถูกลูกธนูกลางสนามรบ')}},
+  {t:'🕊️ เป็นคนกลางเจรจาสงบศึก',s:`ใช้เสน่ห์และปัญญา · โอกาสราว ${Math.round(clamp(.15+(S.cha+S.int)/600,.1,.85)*100)}%`,f(){if(roll01(.15+(S.cha+S.int)/600)){S.fame+=180+ri*60;S.karma+=10;log('🕊️ สองฝ่ายยอมสงบศึกเพราะคำพูดของคุณ','myth',true);keyAdd('เจรจาสงบศึก')}else{S.fame=Math.max(0,S.fame-20);bigHurt(.1,'ทูตถูกทำร้าย')}}},
+  {t:'💰 ค้าขายเสบียงให้ทั้งสองฝ่าย',s:'รวยเร็ว · กรรมลด',f(){S.money+=inc(800+ri*600);S.karma-=6;log('💰 คุณขายเสบียงให้ทั้งสองฝ่ายจนร่ำรวย','bad')}},
+  {t:'🏔️ หลบไปเก็บตัว',skip:true,s:'ปลอดภัย',f(){S.qi+=.5;log('คุณหลบไปเก็บตัวบนเขาจนสงครามสงบ')}}];
+  choice('🔥 สงครามใหญ่ปะทุ',`${S.xian?'นิกายใหญ่สองแห่ง':'สองแคว้น'}ประกาศสงครามกัน กองทัพเคลื่อนผ่านใกล้ที่คุณอยู่`,o)}},
+ {id:'sky',c:()=>S.xian&&realmIdx()>=2,f(){const ri=realmIdx();choice('⚡ ทัณฑ์สวรรค์ผ่าลงใกล้ตัว',`ผู้อาวุโสท่านหนึ่งกำลังรับทัณฑ์สวรรค์อยู่บนยอดเขาใกล้ๆ สายฟ้าเหลือเฟือฟาดลงมารอบด้าน`,[
+  {t:'⚡ เข้าไปดูดซับสายฟ้าที่เหลือ',s:'พลังมาก · เสี่ยงบาดเจ็บหนัก 35%',f(){if(Math.random()<.35)bigHurt(.5,'สายฟ้าฟาดเข้ากลางกาย');else{S.power+=yrPow0()*4;S.qi+=2;log('⚡ คุณหลอมสายฟ้าเข้าเส้นลมปราณสำเร็จ','epic',true)}}},
+  {t:'🛡️ ช่วยผู้อาวุโสรับทัณฑ์',s:'กรรมดี · อาจได้ศิษย์ผู้ใหญ่',f(){if(roll01(.4+ri*.04)){S.karma+=8;S.fame+=80+ri*40;bagGive(2,5,'ผู้อาวุโสมอบของตอบแทน');log('ผู้อาวุโสรอดจากทัณฑ์และสาบานจะตอบแทนบุญคุณ','epic')}else bigHurt(.3,'แรงทัณฑ์สะท้อนใส่')}},
+  {t:'👀 ดูอยู่ห่างๆ เพื่อเรียนรู้',s:'ปลอดภัย · ได้ความเข้าใจ',skip:true,f(){S.int+=2;S.qi+=.5;log('การได้เห็นทัณฑ์สวรรค์ทำให้คุณเข้าใจเต๋ามากขึ้น')}}])}}];
+function bigEvTick(){if(!S||!S.alive||choice._cur||modalOpen||(S.beastMode&&!S.beastMode.human)||S.age<14)return;
+ if(S.dmnUntil&&S.age<=S.dmnUntil&&Math.random()<.25){if(Math.random()<.5){const d=Math.round(S.maxHp*.1);S.hp-=d;log(`👹 มารที่หลุดจากผนึกอาละวาดใกล้บ้าน พลังชีวิต −${d}`,'bad')}else{const d=Math.round(S.money*.08);S.money-=d;log(`👹 มารเผาตลาดใกล้บ้าน เสียหาย ${fmt(d)}`,'bad')}}
+ if(S.bigAt!=null&&S.age-S.bigAt<(S.xian&&S.age>=1000?2:12))return;if(Math.random()>(S.xian&&S.age>=1000?.08:.05))return;
+ const L=BIGEV.filter(e=>e.c()&&e.id!==S.bigLast);if(!L.length)return;const e=ch(L);S.bigAt=S.age;S.bigLast=e.id;try{e.f()}catch(x){console.error(x)}}
+{const _py12=passYear;passYear=function(){const r=_py12.apply(this,arguments);try{if(S&&S.alive)bigEvTick()}catch(e){console.error(e)}return r}}
+
 </script>
 </body>
 </html>
