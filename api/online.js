@@ -3,7 +3,7 @@
 // ถ้าไม่มี จะใช้ Upstash REST เหมือนเดิม (KV_REST_API_URL / KV_REST_API_TOKEN)
 const UP_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const UP_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-const VK_URL = process.env.VALKEY_URL || process.env.REDIS_URL || '';
+const VK_URL = process.env.VALKEY_URL || '';
 const USE_VK = !!VK_URL;
 const URL_ = USE_VK ? VK_URL : UP_URL;
 const TOKEN = USE_VK ? 'vk' : UP_TOKEN;
@@ -100,7 +100,7 @@ async function vkCmd(...args) { await vkConnect(); return vkSend(args) }
 async function vkPipe(list) {
   if (!list.length) return [];
   await vkConnect();
-  return Promise.all(list.map(a => vkSend(a).catch(e => { if (/NOAUTH|WRONGPASS|closed|timeout|not connected/i.test(e.message)) throw e; return undefined })));
+  return Promise.all(list.map(a => vkSend(a).catch(e => { if (/NOAUTH|WRONGPASS|closed|timeout|not connected|max requests limit|max daily request|OOM/i.test(e.message)) throw e; return undefined })));
 }
 
 const cmd = USE_VK ? vkCmd : upCmd;
