@@ -148,6 +148,52 @@ function uaMeta(req, now) {
   const org = String(req.headers['origin'] || req.headers['referer'] || '').replace(/^https?:\/\//, '').split('/')[0].slice(0, 60);
   return { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(qOf(req).v || '').slice(0, 8), c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
 }
+// ย้ายข้อมูลเก่าจาก Upstash -> Valkey ทีละชุด (ไม่ทับของใหม่ ทำซ้ำได้)
+async function migStep(cur) {
+  const cur0 = String(cur || '0').replace(/[^0-9]/g, '') || '0';
+  const r = await upCmd('SCAN', cur0, 'COUNT', 150);
+  const next = String(r[0]), keys = r[1] || [];
+  let copied = 0, skipped = 0; const errs = [];
+  if (keys.length) {
+    const meta = await upPipe(keys.flatMap(k => [['TYPE', k], ['PTTL', k]]));
+    const reads = keys.map((k, i) => { const t = meta[i * 2]; return t === 'string' ? ['GET', k] : t === 'list' ? ['LRANGE', k, 0, -1] : t === 'hash' ? ['HGETALL', k] : t === 'set' ? ['SMEMBERS', k] : t === 'zset' ? ['ZRANGE', k, 0, -1, 'WITHSCORES'] : ['EXISTS', k] });
+    const vals = await upPipe(reads);
+    const ex = await vkPipe(keys.map(k => ['EXISTS', k])), dn = await vkPipe(keys.map(k => ['SISMEMBER', 'mig:done', k]));
+    for (let i = 0; i < keys.length; i++) {
+      const k = keys[i], t = meta[i * 2], ttl = +meta[i * 2 + 1], v = vals[i], has = +ex[i] > 0, ops = [];
+      if (+dn[i] > 0) { skipped++; continue }
+      try {
+        if (t === 'string') { if (!has) ops.push(['SET', k, v]); else if (/^-?\d+$/.test(String(v)) && /^(lives|trk|bv)/.test(k)) ops.push(['INCRBY', k, v]); else { skipped++; continue } }
+        else if (t === 'list') { if (!v || !v.length) { skipped++; continue } ops.push(['RPUSH', k, ...v]) }
+        else if (t === 'hash') { if (!v || !v.length) { skipped++; continue } for (let j = 0; j < v.length; j += 2) ops.push(['HSETNX', k, v[j], v[j + 1]]) }
+        else if (t === 'set') { if (!v || !v.length) { skipped++; continue } ops.push(['SADD', k, ...v]) }
+        else if (t === 'zset') { if (!v || !v.length) { skipped++; continue } const a2 = []; for (let j = 0; j < v.length; j += 2) a2.push(v[j + 1], v[j]); ops.push(['ZADD', k, 'NX', ...a2]) }
+        else { skipped++; continue }
+        if (ttl > 0) ops.push(['PEXPIRE', k, ttl]);
+        ops.push(['SADD', 'mig:done', k]);
+        await vkPipe(ops); copied++;
+      } catch (x) { errs.push(k + ': ' + String(x.message).slice(0, 80)) }
+    }
+  }
+  return { done: next === '0' ? 1 : 0, next, copied, skipped, errs: errs.slice(0, 10) };
+}
+// ย้ายอัตโนมัติ: ทุกครั้งที่มีคน ping จะลองย้ายต่อ 1 ชุด (ล็อกกันชนกัน, Upstash เต็มโควตาจะรอ 15 นาทีแล้วลองใหม่)
+let MIG_T = 0;
+async function autoMig() {
+  if (!USE_VK || !UP_URL || Date.now() - MIG_T < 20e3) return;
+  MIG_T = Date.now();
+  try {
+    const [st, wait] = await vkPipe([['GET', 'mig:cur'], ['EXISTS', 'mig:wait']]);
+    if (st === 'done' || +wait > 0) return;
+    if ((await vkCmd('SET', 'mig:lock', '1', 'NX', 'EX', 25)) !== 'OK') return;
+    try {
+      const r = await migStep(st || '0');
+      await vkPipe([['SET', 'mig:cur', r.done ? 'done' : r.next], ['HINCRBY', 'mig:stat', 'copied', r.copied], ['HINCRBY', 'mig:stat', 'steps', 1], ['HSET', 'mig:stat', 't', Date.now()], ['HSET', 'mig:stat', 'err', '']]);
+    } catch (x) {
+      await vkPipe([['SET', 'mig:wait', '1', 'EX', 900], ['HSET', 'mig:stat', 'err', String(x.message).slice(0, 160)], ['HSET', 'mig:stat', 't', Date.now()]]).catch(() => {});
+    } finally { await vkCmd('DEL', 'mig:lock').catch(() => {}) }
+  } catch {}
+}
 let QUOTA_AT = 0;
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -176,6 +222,7 @@ module.exports = async (req, res) => {
       const [, n, lives, annV] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 600e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann']]);
       let ann = null; try { ann = annV ? JSON.parse(annV) : null } catch {}
       ann = await annPoll(ann, id);
+      await autoMig();
       return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7), ann });
     }
     if (a === 'who' || a === 'admin' || a === 'bugfix') {
@@ -356,37 +403,17 @@ module.exports = async (req, res) => {
       const [, , w] = await pipe([['ZADD', 'watch:' + full, now, viewer], ['ZREMRANGEBYSCORE', 'watch:' + full, 0, now - 20e3], ['ZCARD', 'watch:' + full], ['EXPIRE', 'watch:' + full, 120]]);
       return res.json({ s: JSON.parse(v), w: w || 0 });
     }
+    if (a === 'migstat') {
+      if (!USE_VK) return res.json({ vk: 0 });
+      const [c, w, st] = await vkPipe([['GET', 'mig:cur'], ['TTL', 'mig:wait'], ['HGETALL', 'mig:stat']]);
+      const o = {}; for (let i = 0; st && i < st.length; i += 2) o[st[i]] = st[i + 1];
+      return res.json({ vk: 1, done: c === 'done' ? 1 : 0, waitSec: +w > 0 ? +w : 0, copied: +(o.copied || 0), steps: +(o.steps || 0), err: o.err || '', t: +(o.t || 0) });
+    }
     if (a === 'kvmigrate') {
       // ผู้ดูแลเท่านั้น: ย้ายข้อมูลเก่าจาก Upstash มา Valkey ทีละชุด (เรียกซ้ำจนกว่า done=1)
       if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
       if (!USE_VK || !UP_URL) return res.json({ err: 'ต้องตั้ง VALKEY_URL และยังมี KV_REST_API_URL เดิมอยู่' });
-      const cur0 = String(qOf(req).cur || '0').replace(/[^0-9]/g, '') || '0';
-      let r;
-      try { r = await upCmd('SCAN', cur0, 'COUNT', 150) } catch (x) { return res.json({ err: 'อ่าน Upstash ไม่ได้: ' + String(x.message).slice(0, 160) }) }
-      const next = String(r[0]), keys = r[1] || [];
-      let copied = 0, skipped = 0; const errs = [];
-      if (keys.length) {
-        const meta = await upPipe(keys.flatMap(k => [['TYPE', k], ['PTTL', k]]));
-        const reads = keys.map((k, i) => { const t = meta[i * 2]; return t === 'string' ? ['GET', k] : t === 'list' ? ['LRANGE', k, 0, -1] : t === 'hash' ? ['HGETALL', k] : t === 'set' ? ['SMEMBERS', k] : t === 'zset' ? ['ZRANGE', k, 0, -1, 'WITHSCORES'] : ['EXISTS', k] });
-        const vals = await upPipe(reads);
-        const ex = await vkPipe(keys.map(k => ['EXISTS', k])), dn = await vkPipe(keys.map(k => ['SISMEMBER', 'mig:done', k]));
-        for (let i = 0; i < keys.length; i++) {
-          const k = keys[i], t = meta[i * 2], ttl = +meta[i * 2 + 1], v = vals[i], has = +ex[i] > 0, ops = [];
-          if (+dn[i] > 0) { skipped++; continue }
-          try {
-            if (t === 'string') { if (!has) ops.push(['SET', k, v]); else if (/^-?\d+$/.test(String(v)) && /^(lives|trk|bv)/.test(k)) ops.push(['INCRBY', k, v]); else { skipped++; continue } }
-            else if (t === 'list') { if (!v || !v.length) { skipped++; continue } ops.push(['RPUSH', k, ...v]) }
-            else if (t === 'hash') { if (!v || !v.length) { skipped++; continue } for (let j = 0; j < v.length; j += 2) ops.push(['HSETNX', k, v[j], v[j + 1]]) }
-            else if (t === 'set') { if (!v || !v.length) { skipped++; continue } ops.push(['SADD', k, ...v]) }
-            else if (t === 'zset') { if (!v || !v.length) { skipped++; continue } const a2 = []; for (let j = 0; j < v.length; j += 2) a2.push(v[j + 1], v[j]); ops.push(['ZADD', k, 'NX', ...a2]) }
-            else { skipped++; continue }
-            if (ttl > 0) ops.push(['PEXPIRE', k, ttl]);
-            ops.push(['SADD', 'mig:done', k]);
-            await vkPipe(ops); copied++;
-          } catch (x) { errs.push(k + ': ' + String(x.message).slice(0, 80)) }
-        }
-      }
-      return res.json({ done: next === '0' ? 1 : 0, next, copied, skipped, errs: errs.slice(0, 10) });
+      try { return res.json(await migStep(String(qOf(req).cur || '0'))) } catch (x) { return res.json({ err: 'อ่าน Upstash ไม่ได้: ' + String(x.message).slice(0, 160) }) }
     }
     if (a === 'kvdiag') {
       // ผู้ดูแลเท่านั้น: ดูสภาพฐานข้อมูล (จำนวนคีย์ตามหมวด ขนาด TTL)
