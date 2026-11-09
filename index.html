@@ -8019,6 +8019,60 @@ ttlMake=function(){let weak=null;for(const t of TTL_SP){let ok=false;try{ok=t[1]
  const c=ttlCat();S.ttlPk=S.ttlPk||{};if(S.ttlPk[c]==null)S.ttlPk[c]=R(0,TTL_MOD[c].length-1);return TTL_CORE[S.xian?'x':'m'][ttlPath()][ttlTier()]+TTL_MOD[c][S.ttlPk[c]]};
 // ---- ได้ฉายาใหม่: ป๊อปอัปกรอบสีตามระดับ (ตั้งแต่ระดับกลางขึ้นไป หรือฉายาพิเศษ) ----
 {const _tt=ttlTick;ttlTick=function(){const o=S&&S.ttl;const r=_tt.apply(this,arguments);try{if(S&&S.alive&&S.ttl&&S.ttl!==o){const sp=TTL_SP.some(x=>x[2]===S.ttl),tr=sp?5:ttlTier();if(sp||tr>=3)achPopShow({r:tr,h:'🏷️ ได้รับฉายาใหม่'+(sp?' · ฉายาพิเศษ':''),n:'「'+S.ttl+'」',d:(S.xian?'แดนเซียน':'ยุทธภพ')+'เริ่มเรียกขานคุณ'})}}catch(e){}return r}}
+
+// ============ v13.4 หน้าโปรไฟล์: ชื่อ · รูป (อัปโหลดได้ ต้องผ่านการตรวจ) · ฉายา · กรอบ · ล็อกอิน Google ============
+(function(){const b=document.createElement('button');b.id='profBtn';b.className='langbtn profbtn';b.textContent='👤 โปรไฟล์';b.onclick=()=>openProfile();document.body.appendChild(b);
+ const st=document.createElement('style');st.textContent=`.profbtn{top:46px!important} body:not(.ttl) .profbtn{display:none} body.mdl .langbtn{display:none!important}
+ .pfsec{border-top:1px dashed var(--line);margin-top:12px;padding-top:10px}.pfsec h4{margin:0 0 6px}
+ .pfbad{display:inline-block;font-size:12px;border-radius:6px;padding:1px 7px;margin-top:4px}.pfbad.pend{background:#e0a03022;color:#e0a030;border:1px solid #e0a030}.pfbad.ok{background:#3a9a4a22;color:#3a9a4a;border:1px solid #3a9a4a}.pfbad.bad{background:#d84a4a22;color:#d84a4a;border:1px solid #d84a4a}
+ .pfrule{font-size:12px;background:#d84a4a14;border:1px solid #d84a4a66;border-radius:8px;padding:6px 8px;margin:6px 0}`;document.head.appendChild(st)})();
+let PFST=null;setInterval(()=>{try{document.body.classList.toggle('mdl',!!modalOpen)}catch(e){}},250);
+async function profStat(){if(typeof onlineOK==='undefined'||!onlineOK)return null;try{PFST=await api('profst');try{const d=frGet();if(PFST&&!PFST.pend&&d.avUp&&d.avSt==='pend'&&!PFST.warn){d.avSt='ok';frSet(d)}}catch(e){}return PFST}catch(e){return null}}
+profPush=async function(){if(!onlineOK)return;const d=frGet();try{const j=await api('profile',{av:d.av||'',fr:d.eq||'',up:d.avUp?1:0,alt:d.snap||'',n:pname()});if(j&&j.st)d.avSt=j.st,frSet(d)}catch(e){if(e&&e.message==='avban'){toast('ถูกระงับการอัปโหลดรูปชั่วคราว');const d2=frGet();d2.av=d2.snap||'';d2.avUp=0;frSet(d2)}}};
+{const _ps=profSnap;profSnap=function(){const av=snapAvatar();if(!av)return;const d=frGet();d.av=av;d.snap=av;d.avUp=0;frSet(d);profPush();toast('ตั้งรูปโปรไฟล์แล้ว');openProfile()}}
+function profPickFile(){const i=$('pfFile');if(!i)return;if(!($('pfAgree')||{}).checked){toast('ติ๊กยืนยันกฎก่อนเลือกรูป');return}i.click()}
+function profFile(inp){const f=inp.files&&inp.files[0];inp.value='';if(!f)return;if(!/^image\//.test(f.type)){toast('เลือกไฟล์รูปภาพเท่านั้น');return}if(f.size>12e6){toast('ไฟล์ใหญ่เกินไป');return}
+ const url=URL.createObjectURL(f),im=new Image();im.onload=()=>{try{const c=document.createElement('canvas');c.width=c.height=72;const x=c.getContext('2d'),s=Math.min(im.width,im.height);x.imageSmoothingQuality='high';x.drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,72,72);
+  let q=.86,out=c.toDataURL('image/jpeg',q);while(out.length>11000&&q>.3){q-=.12;out=c.toDataURL('image/jpeg',q)}URL.revokeObjectURL(url);if(out.length>11000){toast('ย่อรูปไม่ได้ ลองรูปอื่น');return}
+  const d=frGet();if(!d.snap&&S)try{d.snap=snapAvatar()}catch(e){}d.av=out;d.avUp=1;d.avSt='pend';frSet(d);profPush().then(()=>{profStat().then(()=>{if($('modal').dataset.k==='profile')openProfile()})});toast('📤 ส่งรูปให้ตรวจแล้ว');openProfile()}catch(e){toast('เปิดรูปไม่ได้')}};
+ im.onerror=()=>{URL.revokeObjectURL(url);toast('เปิดรูปไม่ได้')};im.src=url}
+function profName(v){v=String(v||'').replace(/[<>]/g,'').trim().slice(0,20);if(/ผู้ดูแล|แอดมิน|admin|ทีมงาน|moderator|ผู้พัฒนา|developer/i.test(v)){toast('ใช้ชื่อนี้ไม่ได้');return}LS.set('murim_pname',v);toast(v?'บันทึกชื่อแล้ว':'ใช้ชื่อตัวละคร');profPush()}
+openProfile=function(){const d=frGet(),own=FRAMES.filter(f=>d.own.includes(f.id)),st=PFST||{},cur=typeof showTtl==='function'?showTtl():null;
+ const badge=d.avUp?(st.pend||d.avSt==='pend'?'<span class="pfbad pend">⏳ รอแอดมินตรวจ — ระหว่างนี้คนอื่นเห็นรูปตัวละครแทน</span>':'<span class="pfbad ok">✅ ผ่านการตรวจแล้ว</span>'):'';
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👤 โปรไฟล์</h3>
+  <div style="display:flex;gap:14px;align-items:center;margin:8px 0 6px"><div class="frbig">${frWrap(`<span class="frph big">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,d.eq)}</div><div style="min-width:0"><div style="font-size:18px"><b>${esc(pname())}</b>${cur?tchipH(cur.t,cur.r):''}</div><div class="tag2">${d.eq?'กรอบ: '+esc(frOf(d.eq).n):'ยังไม่มีกรอบ'}</div>${badge}</div></div>
+  <div class="pfsec"><h4>✏️ ชื่อที่แสดง</h4><p class="tag2" style="margin:0 0 4px">ใช้ในแชท ทำเนียบ และตอนคนอื่นดูคุณเล่น (เว้นว่าง = ใช้ชื่อตัวละคร)</p><div style="display:flex;gap:6px"><input class="crin" id="pfName" maxlength="20" value="${esc(LS.get('murim_pname',''))}" placeholder="${esc(S?S.name:'จอมยุทธ์นิรนาม')}" style="flex:1"><button class="pbtn" onclick="profName($('pfName').value)">บันทึก</button></div></div>
+  <div class="pfsec"><h4>🖼️ รูปโปรไฟล์</h4>
+   ${S?`<button class="pbtn" style="width:100%" onclick="profSnap()">📸 ใช้ตัวละครตอนนี้ (${esc(S.name)})</button>`:'<p class="tag2">เริ่มชีวิตก่อน แล้วกดใช้ตัวละครเป็นรูปโปรไฟล์ได้</p>'}
+   <div class="pfrule">🚫 <b>ห้ามรูปโป๊ เปลือย อนาจาร หรือรุนแรงเด็ดขาด</b> — รูปที่อัปโหลดเองต้องผ่านการตรวจก่อนคนอื่นจะเห็น · ไม่ผ่าน = โดนเตือนและต้องเปลี่ยนรูป · โดนเตือนครบ 3 ครั้ง ระงับการอัปโหลด 30 วัน${st.strikes?`<br>⚠️ คุณโดนเตือนแล้ว ${st.strikes} ครั้ง`:''}</div>
+   ${st.ban?`<p class="tag2" style="color:#d84a4a">⛔ ถูกระงับการอัปโหลดรูปอีกราว ${Math.ceil(st.ban/86400)} วัน</p>`:`<label class="tag2" style="display:flex;gap:6px;align-items:center;margin:4px 0"><input type="checkbox" id="pfAgree"> ยืนยันว่ารูปของฉันไม่ผิดกฎข้างบน</label><button class="gbtn" style="width:100%" onclick="profPickFile()">📤 อัปโหลดรูปจากเครื่อง</button><input type="file" id="pfFile" accept="image/*" style="display:none" onchange="profFile(this)">`}</div>
+  <div class="pfsec"><h4>🎖️ ฉายาที่โชว์</h4><div style="display:flex;gap:8px;align-items:center">${cur?tchipH(cur.t,cur.r):'<span class="tag2">ยังไม่ได้เลือก</span>'}<button class="gbtn" style="margin-left:auto;padding:4px 12px" onclick="openShowPick('profile')">เลือกฉายา</button></div></div>
+  <div class="pfsec"><h4>🖼️ กรอบของฉัน (${own.length}/${FRAMES.length})</h4><div class="frlist"><button class="frpick ${!d.eq?'on':''}" onclick="frEquip(null)">${frWrap('<span class="frph">✕</span>',null)}<small>ไม่ใช้กรอบ</small></button>${own.map(f=>`<button class="frpick ${d.eq===f.id?'on':''}" onclick="frEquip('${f.id}')">${frWrap(`<span class="frph">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,f.id)}<small>${f.n}</small></button>`).join('')}</div><button class="gbtn" style="width:100%;margin-top:8px" onclick="openFrameShop()">🖼️ ไปร้านแลกกรอบ</button></div>
+  <div class="pfsec"><h4>🔐 บัญชี Google</h4><div id="gBox"><p class="tag2">กำลังโหลด…</p></div></div>`,'profile');
+ gBoxFill();if(!profStat._t||Date.now()-profStat._t>20000){profStat._t=Date.now();profStat().then(j=>{if(j&&$('modal').dataset.k==='profile')openProfile()})}};
+// เลือกฉายาจากหน้าโปรไฟล์แล้วกลับมาหน้าโปรไฟล์
+{const _sp=openShowPick;openShowPick=function(from){if(from)openShowPick._from=from;_sp.apply(this,arguments);try{if(openShowPick._from==='profile'){const m=$('modal');m.querySelectorAll('[onclick="openBook()"]').forEach(b=>b.setAttribute('onclick',"openShowPick._from=null;openProfile()"))}}catch(e){}}}
+{const _ss=setShowTtl;setShowTtl=function(){const r=_ss.apply(this,arguments);return r}}
+// ---- Google ----
+let GCID=null,GSI=0;
+async function gBoxFill(){const box=$('gBox');if(!box)return;if(typeof onlineOK==='undefined'||!onlineOK){box.innerHTML='<p class="tag2">ต้องต่อระบบออนไลน์ก่อน</p>';return}
+ if(GCID===null){try{GCID=(await api('gcfg')).cid||''}catch(e){GCID=''}}const st=PFST||{};const bx=$('gBox');if(!bx)return;
+ if(!GCID){bx.innerHTML='<p class="tag2">ยังไม่เปิดใช้ (ผู้ดูแลกำลังตั้งค่า)</p>';return}
+ if(st.g){bx.innerHTML=`<p>✅ เชื่อมกับ <b>${esc(st.g.e||'Google')}</b> แล้ว — เปิดเกมเครื่องอื่นแล้วล็อกอินบัญชีเดียวกัน จะดึงเซฟคลาวด์และชื่อออนไลน์ไปเล่นต่อได้</p><button class="gbtn" style="width:100%" onclick="gUnlink()">ยกเลิกการเชื่อม</button>`;return}
+ bx.innerHTML='<p class="tag2" style="margin:0 0 6px">ล็อกอินเพื่อเก็บความคืบหน้าไว้กับบัญชี Google — เปลี่ยนเครื่องก็ดึงเซฟคลาวด์กลับมาได้ (เกมไม่เห็นรหัสผ่านของคุณ)</p><div id="gBtn"></div>';
+ const draw=()=>{try{google.accounts.id.initialize({client_id:GCID,callback:gGot,ux_mode:'popup'});google.accounts.id.renderButton($('gBtn'),{theme:'outline',size:'large',text:'signin_with',locale:'th'})}catch(e){const g=$('gBtn');if(g)g.innerHTML='<p class="tag2">โหลดปุ่ม Google ไม่ได้ ลองใหม่อีกครั้ง</p>'}};
+ if(window.google&&google.accounts&&google.accounts.id)return draw();if(!GSI){GSI=1;const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;s.onload=()=>{if($('gBtn'))draw()};s.onerror=()=>{GSI=0;const g=$('gBtn');if(g)g.innerHTML='<p class="tag2">โหลดปุ่ม Google ไม่ได้ (เน็ตหรือเบราว์เซอร์บล็อก)</p>'};document.head.appendChild(s)}else setTimeout(()=>{if(window.google&&google.accounts)draw()},1500)}
+async function gGot(resp){try{const j=await api('glogin',{cred:resp.credential,tk:ctok});if(!j||!j.ok)throw 0;
+  if(j.linked){toast('✅ เชื่อมบัญชี Google แล้ว');await profStat();openProfile();return}
+  if(j.other){modal(`<h3>🔐 บัญชีนี้มีข้อมูลเกมอยู่แล้ว</h3><p>บัญชี <b>${esc(j.e)}</b> เคยเชื่อมกับข้อมูลเกมจากอีกเครื่อง</p><p class="tag2">สลับไปใช้ชุดนั้น = เครื่องนี้จะใช้ชื่อออนไลน์และเซฟคลาวด์ของบัญชีนี้ แล้วเปิดหน้ากู้เซฟให้เลือก · เซฟที่อยู่ในเครื่องนี้ยังอยู่ครบ ไม่ถูกลบ</p><div class="brow"><button class="gbtn" onclick="openProfile()">ยกเลิก</button><button class="pbtn" onclick='gSwitch(${JSON.stringify(j.other).replace(/'/g,"&#39;")})'>สลับไปใช้บัญชีนี้</button></div>`,'gsw')}}
+ catch(e){toast('ล็อกอินไม่สำเร็จ ลองใหม่อีกครั้ง')}}
+function gSwitch(o){try{if(S&&S.alive)saveGame()}catch(e){}if(!o||!o.id)return;LS.set('murim_pid',o.id);if(o.tk)LS.set('murim_ctok',o.tk);LS.set('murim_gpull',1);location.reload()}
+async function gUnlink(){if(!confirm('ยกเลิกการเชื่อมบัญชี Google?'))return;try{await api('gunlink',{});toast('ยกเลิกแล้ว')}catch(e){toast('ไม่สำเร็จ')}await profStat();openProfile()}
+// หลังสลับบัญชี: เปิดหน้ากู้เซฟคลาวด์ให้ · ถ้ารูปไม่ผ่านการตรวจ: เตือนและให้เปลี่ยนรูป
+setTimeout(async function pfBoot(){if(typeof onlineOK==='undefined'||!onlineOK){if(!pfBoot.n||pfBoot.n<6){pfBoot.n=(pfBoot.n||0)+1;setTimeout(pfBoot,5000)}return}
+ try{if(LS.get('murim_gpull',0)){LS.del('murim_gpull');let n=0;const go=()=>{if(modalOpen&&n++<40)return setTimeout(go,1500);toast('🔐 สลับบัญชีแล้ว — เลือกเซฟที่จะกู้');openCloudRestore()};go()}}catch(e){}
+ const st=await profStat();if(st&&st.warn){const d=frGet();d.av=d.snap||'';d.avUp=0;d.avSt='';frSet(d);try{await api('profack',{})}catch(e){}profPush();
+  const show=()=>{if(modalOpen&&$('modal').dataset.k==='choice')return setTimeout(show,3000);modal(`<h3>⚠️ รูปโปรไฟล์ไม่ผ่านการตรวจ</h3><p>รูปที่คุณอัปโหลดผิดกฎ (ห้ามรูปโป๊ เปลือย อนาจาร หรือรุนแรง) จึงถูกลบออกแล้ว</p><p class="tag2">นี่คือการเตือนครั้งที่ ${st.strikes||1} — ครบ 3 ครั้งจะถูกระงับการอัปโหลดรูป 30 วัน</p><button class="pbtn" style="width:100%" onclick="openProfile()">เปลี่ยนรูปโปรไฟล์</button>`,'pfwarn')};show()}},4000);
 </script>
 </body>
 </html>

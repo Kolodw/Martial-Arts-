@@ -133,6 +133,17 @@ const qOf = r => r._q || (r._q = Object.fromEntries(new URL(r.url || '/', 'http:
 // ฉายาที่มีจริงในเกม (สร้างจากตัวเกม) → เซิร์ฟเวอร์รับเฉพาะชื่อในรายการ และกำหนดสีระดับเอง
 let TITLES = { t: {}, a: {} }; try { TITLES = require('./titles.json') } catch (e) {}
 const ttlOk = (tt) => { const k = String(tt || '').slice(0, 24); return k && Object.prototype.hasOwnProperty.call(TITLES.t, k) ? { tt: k, tr: Math.max(0, Math.min(6, +TITLES.t[k] || 0)) } : { tt: '', tr: 0 } };
+// รูปตัวละครที่เกมวาดเอง: PNG ขนาด 56×62 เท่านั้น
+const avSnapOk = (s) => { if (!/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(s) || s.length > 8000) return false; try { const B = Buffer.from(s.slice(22, 22 + 44), 'base64'); return B.readUInt32BE(16) === 56 && B.readUInt32BE(20) === 62 } catch { return false } };
+// ล็อกอิน Google: ตรวจ ID token กับ Google โดยตรง (ต้องตั้ง GOOGLE_CLIENT_ID)
+async function gVerify(cred) {
+  if (!cred) return null;
+  if (process.env.GLOGIN_TEST === '1' && cred.startsWith('test:')) return { sub: cred.slice(5), email: cred.slice(5) + '@gmail.com' };
+  const cid = process.env.GOOGLE_CLIENT_ID; if (!cid) return null;
+  try { const r = await fetch('https://oauth2.googleapis.com/tokeninfo?id_token=' + encodeURIComponent(cred)); if (!r.ok) return null; const j = await r.json();
+    if (j.aud !== cid || !['accounts.google.com', 'https://accounts.google.com'].includes(j.iss) || +j.exp * 1000 < Date.now()) return null; return { sub: j.sub, email: j.email } } catch { return null }
+}
+const gMask = (e) => { const m = String(e || '').match(/^(.)(.*)(@.*)$/); return m ? m[1] + '***' + m[3] : '' };
 // ผู้เล่นตั้งชื่อ/ฉายาให้เหมือนแอดมินไม่ได้
 const noAdm = x => /ผู้ดูแล|แอดมิน|admin|ทีมงาน|moderator|\bmod\b|ผู้พัฒนา|developer/i.test(String(x || '')) ? '' : x;
 const thDay = (ms, back = 0) => new Date(ms + 7 * 3600e3 - back * 86400e3).toISOString().slice(0, 10);
@@ -140,7 +151,7 @@ const thDay = (ms, back = 0) => new Date(ms + 7 * 3600e3 - back * 86400e3).toISO
 const cip = req => (String(req.headers['x-real-ip'] || '') || String(req.headers['x-forwarded-for'] || '').split(',')[0]).trim().replace(/[^0-9a-fA-F:.]/g, '').slice(0, 45) || 'x';
 // ต่อ IP ต่อนาที: เกิน SOFT ตอบ 429 · เกิน HARD แบน 30 นาที · คำสั่งที่เขียนข้อความให้คนอื่นเห็นจำกัดแยก
 const IP_SOFT = 900, IP_HARD = 3000, IP_WMAX = 40;
-const IP_WRITE = new Set(['say', 'bug', 'bugedit', 'mtmsg', 'pachat', 'life', 'profile', 'idea', 'fb', 'mtopen', 'meet', 'migput', 'csave', 'save', 'achfirst']);
+const IP_WRITE = new Set(['say', 'bug', 'bugedit', 'mtmsg', 'pachat', 'life', 'profile', 'idea', 'fb', 'mtopen', 'meet', 'migput', 'csave', 'save', 'achfirst', 'glogin', 'gunlink', 'profack']);
 const isAdmKey = k => !!process.env.ADMIN_KEY && String(k || '') === process.env.ADMIN_KEY;
 const annGet = async () => { try { const v = await cmd('GET', 'ann'); return v ? JSON.parse(v) : null } catch { return null } };
 const ANN_VOTE_DAYS = 7;
@@ -370,6 +381,11 @@ module.exports = async (req, res) => {
       let brd = []; try { const hid = new Set((await cmd('SMEMBERS', 'bdhide')) || []); hid.add('f18abdmw8fuj8d'); brd = ((await cmd('ZREVRANGE', 'bd2:' + W, 0, 39)) || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(x => x && x.lid && !hid.has(x.lid)) } catch {}
       const e = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
       const K = encodeURIComponent(AK);
+      const avR = (await cmd('HGETALL', 'avq')) || [], avL = [];
+      for (let i = 0; i < avR.length; i += 2) { const v = jp(avR[i + 1]); if (v) avL.push({ u: avR[i], ...v }) }
+      avL.sort((x, y) => x.t - y.t);
+      const avHtml = `<h2>🖼️ รูปโปรไฟล์รอตรวจ <small style="font-weight:normal;color:#aaa">· ${avL.length} รูป · รูปที่อัปโหลดเองจะให้คนอื่นเห็นได้หลังอนุมัติเท่านั้น · ไม่อนุมัติ = เตือนผู้เล่นให้เปลี่ยนรูป (3 ครั้งระงับอัปโหลด 30 วัน)</small></h2>${avL.length ? `<p><small>รูปถูกเบลอไว้ — แตะรูปเพื่อดูชัด</small></p>` + avL.slice(0, 40).map(x => `<div class="pl" id="av_${e(x.u)}" style="display:flex;gap:10px;align-items:center"><img src="${e(x.av)}" onclick="this.style.filter=this.style.filter?'':'blur(10px)'" style="width:72px;height:72px;border-radius:8px;filter:blur(10px);cursor:pointer;flex:none"><div style="flex:1"><b>${e(x.n)}</b><br><small>ไอดี ${e(String(x.id || '').slice(0, 6))}… · ${new Date(x.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })}</small><div style="margin-top:6px;display:flex;gap:6px"><button class="cpb" style="color:#7c7;border-color:#7c7" onclick="avMod('${e(x.u)}',1,this)">✅ อนุมัติ</button><button class="cpb" style="color:#ff8a8a;border-color:#ff8a8a" onclick="avMod('${e(x.u)}',0,this)">⛔ ไม่อนุมัติ + เตือน</button></div></div></div>`).join('') : '<p>ไม่มีรูปรอตรวจ</p>'}
+<script>async function avMod(u,ok,b){if(!ok&&!confirm('ไม่อนุมัติรูปนี้ และเตือนผู้เล่นให้เปลี่ยนรูป?'))return;b.disabled=true;try{const r=await fetch('?a=avmod&key=${K}&u='+u+'&ok='+ok);const j=await r.json();const c=b.closest('.pl');if(j.ok){c.style.opacity=.35;b.parentNode.innerHTML=ok?'✅ อนุมัติแล้ว':'⛔ ไม่อนุมัติแล้ว · เตือนครั้งที่ '+(j.strikes||1)}else b.textContent='ไม่สำเร็จ'}catch(x){b.textContent='ไม่สำเร็จ';b.disabled=false}}</script>`;
       const afR = (await cmd('HGETALL', 'achf')) || [], afL = [];
       for (let i = 0; i < afR.length; i += 2) { const v = jp(afR[i + 1]); if (v) afL.push({ id: afR[i], n: v.n, t: v.t, u: v.u, an: (TITLES.a[afR[i]] || [afR[i]])[0], r: (TITLES.a[afR[i]] || [0, 0])[1] }) }
       afL.sort((x, y) => y.t - x.t);
@@ -394,6 +410,7 @@ module.exports = async (req, res) => {
 <style>.cpb{background:#2a2433;color:#f0c860;border:1px solid #f0c860;border-radius:6px;padding:4px 10px;font-size:13px;cursor:pointer}.pl{background:#211d2a;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:14px}.plh{display:flex;flex-wrap:wrap;gap:6px;justify-content:space-between;align-items:baseline}.plh small,.pl small{color:#aaa}body{font-family:system-ui,sans-serif;background:#16131c;color:#eee;margin:0;padding:14px;max-width:760px;margin:auto}h1{font-size:20px}h2{font-size:16px;margin-top:22px;color:#f0c860}table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:6px;border-bottom:1px solid #333;text-align:left}.c{display:inline-block;background:#2a2433;border-radius:8px;padding:8px 12px;margin:4px 6px 4px 0}.c b{font-size:20px;display:block;color:#f0c860}.bug{background:#221d2a;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:14px}.bug.done{opacity:.55}a{color:#8fd0ff}small{opacity:.6}</style></head><body>
 <h1>🛡️ หน้าผู้ดูแล</h1><div><span class="c"><b>${rows.filter(r => r.b !== 'บอท').length}</b>ออนไลน์ (10 นาที)</span><span class="c"><b>${+(lives || 0)}</b>ชีวิตที่จบแล้ว</span><span class="c"><b>${bugs.length}</b>เรื่องบนกระดานบั๊ก</span><span class="c"><b>${rv || 0}</b>ความคิดเห็น</span></div>
 <h2>คนที่ออนไลน์ตอนนี้ <small style="font-weight:normal;color:#aaa">· รีเฟรชเองทุก 1 นาที</small></h2><p><small>🟢 กำลังเล่น · 🤔/📋 เลือกเหตุการณ์/เปิดหน้าต่าง · ⏸ หยุดเกม · 😴 เปิดทิ้งไว้ · 🙈 สลับแท็บ · 🏠 อยู่หน้าอื่น · 🔴 อาจค้าง/มี error</small></p>${rows.map(r => { const a = r.a || {}; return `<div class="pl" style="border-left:4px solid ${r.s.c}"><div class="plh"><b style="color:${r.s.c}">${e(r.s.t)}</b><small>${e(r.id)} · ${e(r.d)} · ${e(r.b)} · ${e(r.c)} · อัปเดต ${r.ago == null ? '-' : r.ago + ' วิ'}ก่อน${a.v ? ' · v' + e(a.v) : ''}</small></div>${a.nm ? `<div>👤 <b>${e(a.nm)}</b> อายุ ${e(a.ag)} ปี · ${e(WN[a.w] || '')} · ${e(a.ri || '')}${a.sp ? ' · ความเร็ว ' + e(a.sp) + '×' : ''}</div>` : ''}${r.a ? `<div><small>หน้า: ${e(SCN[a.sc] || a.sc || '-')}${a.md ? ' · หน้าต่าง: ' + e(MDN[a.md] || a.md) : ''} · แตะล่าสุด ${mins(a.ia)}ก่อน${a.sc === 'game' && a.yr >= 0 ? ' · ปีในเกมล่าสุดผ่านไปเมื่อ ' + mins(a.yr) + 'ก่อน' : ''}</small></div>` : ''}${r.s.x ? `<div><small style="color:#ff9b9b">error ล่าสุด: ${e(r.s.x)}</small></div>` : ''}</div>` }).join('') || '<p><small>ตอนนี้ไม่มีใครออนไลน์</small></p>'}
+${avHtml}
 ${hvHtml}
 ${secHtml}
 ${afHtml}
@@ -635,6 +652,23 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       if (!v) return res.json({ wait: 1 });
       return res.json({ l: JSON.parse(v) });
     }
+    if (a === 'gcfg') return res.json({ cid: process.env.GOOGLE_CLIENT_ID || '' });
+    if (a === 'profst') {
+      if (!okId(id)) return res.json({});
+      const pu = id.slice(0, 12), [q, w, s, bt, gk] = await pipe([['HEXISTS', 'avq', pu], ['GET', 'avwarn:' + id], ['GET', 'avstrike:' + id], ['TTL', 'avban:' + id], ['GET', 'gof:' + id]]);
+      let g = null; if (gk) { const cur = jp(await cmd('GET', gk)); if (cur && cur.id === id) g = { e: cur.e || '' } }
+      return res.json({ pend: +q ? 1 : 0, warn: w ? 1 : 0, strikes: +s || 0, ban: +bt > 0 ? +bt : 0, g });
+    }
+    if (a === 'avmod') {
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
+      const pu = String(qOf(req).u || '').replace(/[^a-z0-9]/g, '').slice(0, 12), ok = qOf(req).ok === '1';
+      const q = jp(await cmd('HGET', 'avq', pu)); if (!q) return res.json({ ok: 0, err: 'gone' });
+      const pf = jp(await cmd('HGET', 'prof', pu)) || {};
+      if (ok) { await pipe([['HSET', 'prof', pu, JSON.stringify({ av: q.av, fr: pf.fr || '' })], ['HSET', 'avok', pu, JSON.stringify({ av: q.av, t: now })], ['HDEL', 'avq', pu]]); return res.json({ ok: 1 }) }
+      const fid = String(q.id || ''), [n] = await pipe([['INCR', 'avstrike:' + fid], ['EXPIRE', 'avstrike:' + fid, 86400 * 180], ['SET', 'avwarn:' + fid, 1, 'EX', 86400 * 30], ['HDEL', 'avq', pu], ['HSET', 'prof', pu, JSON.stringify({ av: '', fr: pf.fr || '' })]]);
+      if (+n >= 3) await cmd('SET', 'avban:' + fid, 1, 'EX', 86400 * 30);
+      return res.json({ ok: 1, strikes: +n });
+    }
     if (a === 'achfirsts') {
       const h = (await cmd('HGETALL', 'achf')) || [], f = {};
       for (let i = 0; i < h.length; i += 2) { const v = jp(h[i + 1]); if (v) f[h[i]] = v }
@@ -719,11 +753,33 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       return res.json({ ok: 1 });
     }
     if (a === 'profile') {
-      const av = String(b.av || ''), fr = String(b.fr || '').replace(/[^a-z0-9_]/g, '').slice(0, 20);
-      if (av && (av.length > 8000 || !/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(av))) return res.status(400).json({ err: 'av' });
-      await cmd('HSET', 'prof', id.slice(0, 12), JSON.stringify({ av, fr }));
-      return res.json({ ok: 1 });
+      // รูปตัวละครจากเกม (PNG 56×62) ขึ้นได้ทันที · รูปที่อัปโหลดเอง (JPEG/WebP) ต้องรอแอดมินตรวจก่อนคนอื่นจะเห็น
+      const av = String(b.av || ''), alt = String(b.alt || ''), fr = String(b.fr || '').replace(/[^a-z0-9_]/g, '').slice(0, 20), up = b.up ? 1 : 0, pu = id.slice(0, 12);
+      const isUp = /^data:image\/(jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(av);
+      if (av && (av.length > 12000 || !(avSnapOk(av) || isUp))) return res.status(400).json({ err: 'av' });
+      if (alt && (alt.length > 8000 || !avSnapOk(alt))) return res.status(400).json({ err: 'alt' });
+      let pend = 0;
+      if (up && isUp) {
+        if (await cmd('GET', 'avban:' + id)) return res.status(403).json({ err: 'avban' });
+        const cur = jp(await cmd('HGET', 'avok', pu));
+        if (cur && cur.av === av) { await pipe([['HSET', 'prof', pu, JSON.stringify({ av, fr })], ['HDEL', 'avq', pu]]); return res.json({ ok: 1, st: 'ok' }) }
+        await cmd('HSET', 'avq', pu, JSON.stringify({ av, t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', id }));
+        pend = 1;
+      } else await cmd('HDEL', 'avq', pu);
+      const pub = avSnapOk(av) ? av : (alt || '');
+      await cmd('HSET', 'prof', pu, JSON.stringify({ av: pub, fr, pend }));
+      return res.json({ ok: 1, st: pend ? 'pend' : 'ok' });
     }
+    if (a === 'profack') { await cmd('DEL', 'avwarn:' + id); return res.json({ ok: 1 }) }
+    if (a === 'glogin') {
+      const cred = String(b.cred || '').slice(0, 5000), tk = String(b.tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
+      const v = await gVerify(cred);
+      if (!v || !v.sub) return res.status(403).json({ err: 'google' });
+      const gk = 'gacc:' + String(v.sub).replace(/[^0-9a-zA-Z]/g, '').slice(0, 40), cur = jp(await cmd('GET', gk)), em = gMask(v.email);
+      if (!cur || cur.id === id) { await pipe([['SET', gk, JSON.stringify({ id, tk: tk || (cur && cur.tk) || '', t: now, e: em })], ['SET', 'gof:' + id, gk]]); return res.json({ ok: 1, linked: 1, e: em, same: cur ? 1 : 0 }) }
+      return res.json({ ok: 1, other: { id: cur.id, tk: cur.tk || '' }, e: em });
+    }
+    if (a === 'gunlink') { const gk = await cmd('GET', 'gof:' + id); if (gk) { const cur = jp(await cmd('GET', gk)); if (cur && cur.id === id) await cmd('DEL', gk) } await cmd('DEL', 'gof:' + id); return res.json({ ok: 1 }) }
     if (a === 'jserr') {
       if (!okId(id)) return res.json({ ok: 0 });
       const okR = await cmd('SET', 'jsrl:' + id, 1, 'NX', 'EX', 10);
