@@ -562,6 +562,24 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       if (!v) return res.json({ wait: 1 });
       return res.json({ l: JSON.parse(v) });
     }
+    if (a === 'migput') {
+      if (req.method !== 'POST') return res.status(405).json({ err: 'method' });
+      const d = String(b.d || '');
+      if (!d || d.length > 4200000) return res.status(400).json({ err: 'big' });
+      const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim().slice(0, 45) || 'x';
+      const [c] = await pipe([['INCR', 'mgip:' + ip], ['EXPIRE', 'mgip:' + ip, 3600]]);
+      if (+c > 30) return res.status(429).json({ err: 'rate' });
+      const tk = require('crypto').randomBytes(16).toString('hex').slice(0, 24);
+      await cmd('SET', 'mg:' + tk, JSON.stringify({ d, z: b.z ? 1 : 0, n: +b.n || 0, t: now }), 'EX', 86400 * 30);
+      return res.json({ ok: 1, tk });
+    }
+    if (a === 'migget') {
+      const tk = String(qOf(req).tk || '').replace(/[^a-z0-9]/g, '').slice(0, 24);
+      if (tk.length < 16) return res.status(400).json({ err: 'bad' });
+      const v = jp(await cmd('GET', 'mg:' + tk));
+      if (!v || !v.d) return res.status(404).json({ err: 'gone' });
+      return res.json({ ok: 1, d: v.d, z: v.z });
+    }
     if (req.method !== 'POST') return res.status(405).json({ err: 'method' });
     if (!okId(id)) return res.status(400).json({ err: 'id' });
     if (a === 'logreq') {

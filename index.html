@@ -1,6 +1,39 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+<script>
+// ---- ย้ายเซฟจากเว็บเก่า (*.vercel.app) -> 1inanovel.com: อัปโหลดชั่วคราวผ่านเซิร์ฟเวอร์เกม แล้วเขียนลงเครื่องที่โดเมนใหม่ · ไม่ลบของเดิม ----
+(function(){var NEW='1inanovel.com',H=location.hostname,OLD=/^(martial-unknown|hahah-unknown-gt|hahah-git-main-unknown-gt)\.vercel\.app$/.test(H),isNew=H===NEW,SKIP=/^murim_admk$/;
+ function ls(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&!SKIP.test(k))o[k]=localStorage.getItem(k)}}catch(e){}return o}
+ function cover(t){var d=document.getElementById('migCover');if(!d){d=document.createElement('div');d.id='migCover';d.style.cssText='position:fixed;inset:0;z-index:2147483647;background:#0b0f17;color:#f0e6d2;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;padding:24px;text-align:center;font:16px/1.6 system-ui,sans-serif';(document.body||document.documentElement).appendChild(d)}d.innerHTML=t;return d}
+ function uncover(){var d=document.getElementById('migCover');if(d)d.remove()}
+ function tmo(p,ms){return Promise.race([p,new Promise(function(_,r){setTimeout(function(){r(new Error('timeout'))},ms)})])}
+ async function gz(s){if(typeof CompressionStream==='undefined')return{d:s,z:0};var b=await new Response(new Blob([s]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer(),u=new Uint8Array(b),x='';for(var i=0;i<u.length;i+=32768)x+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return{d:btoa(x),z:1}}
+ async function gunz(d,z){if(!z)return d;var bin=atob(d),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text()}
+ var api='https://'+NEW+'/api/online';
+ if(OLD){var q=new URLSearchParams(location.search);if(q.get('stay')==='1'){try{sessionStorage.setItem('mig_stay','1')}catch(e){}}var stay=false;try{stay=sessionStorage.getItem('mig_stay')==='1'}catch(e){}if(stay)return;
+  var go=function(tk){location.replace('https://'+NEW+'/'+(tk?'?mig='+tk:''))};
+  (async function(){try{var r=await tmo(fetch(api+'?a=ping',{cache:'no-store'}),6000);if(!r.ok)return;var j=await r.json();if(!j||j.bd==null)return}catch(e){return}
+   var done=null;try{done=JSON.parse(localStorage.getItem('murim_migrated')||'null')}catch(e){}
+   var all=ls(),n=Object.keys(all).length;
+   if(!n)return go('');
+   if(done&&done.tk&&Date.now()-done.t<25*86400e3)return go(done.tk);
+   cover('<div style="font-size:42px">📦</div><b>เกมย้ายบ้านไปที่ '+NEW+' แล้ว</b><div>กำลังขนเซฟของคุณไปด้วย อย่าเพิ่งปิดหน้านี้…</div>');
+   try{var p=await gz(JSON.stringify(all));if(p.d.length>4e6)throw new Error('big');var r2=await tmo(fetch(api+'?a=migput',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({d:p.d,z:p.z,n:n})}),25000);var j2=await r2.json();if(!r2.ok||!j2.tk)throw new Error(j2.err||r2.status);
+    try{localStorage.setItem('murim_migrated',JSON.stringify({t:Date.now(),tk:j2.tk}))}catch(e){}go(j2.tk)}
+   catch(e){cover('<div style="font-size:42px">⚠️</div><b>ย้ายเซฟไปเว็บใหม่ไม่สำเร็จ</b><div>เซฟของคุณยังอยู่ครบที่นี่ เล่นต่อที่เว็บนี้ได้ตามปกติ แล้วระบบจะลองย้ายให้ใหม่ครั้งหน้า</div><button style="padding:10px 22px;font-size:16px;border-radius:10px;border:0;background:#c9a24a;color:#111" onclick="this.parentNode.remove()">เล่นต่อที่นี่</button>')}})();return}
+ if(isNew){var q2=new URLSearchParams(location.search),tk=(q2.get('mig')||'').replace(/[^a-z0-9]/g,'');if(!tk)return;q2.delete('mig');try{history.replaceState(null,'',location.pathname+(q2.toString()?'?'+q2:'')+location.hash)}catch(e){}
+  var seen=null;try{seen=localStorage.getItem('murim_migin')}catch(e){}if(seen===tk)return;
+  cover('<div style="font-size:42px">📦</div><b>กำลังรับเซฟจากเว็บเก่า…</b>');
+  (async function(){var data;try{var r=await tmo(fetch(api+'?a=migget&tk='+tk,{cache:'no-store'}),20000),j=await r.json();if(!r.ok||!j.d)throw new Error(j.err||r.status);data=JSON.parse(await gunz(j.d,j.z))}catch(e){cover('<div style="font-size:42px">⚠️</div><b>รับเซฟจากเว็บเก่าไม่สำเร็จ</b><div>เซฟเดิมของคุณยังอยู่ที่เว็บเก่าครบ ลองรีเฟรชหน้านี้อีกครั้ง</div><button style="padding:10px 22px;font-size:16px;border-radius:10px;border:0;background:#c9a24a;color:#111" onclick="location.reload()">ลองอีกครั้ง</button><button style="padding:8px 18px;font-size:14px;border-radius:10px;border:1px solid #666;background:none;color:#ccc" onclick="this.parentNode.remove()">ข้ามไปก่อน</button>');return}
+   var mine=ls(),has=Object.keys(mine).some(function(k){return /^murim_(save|bak_|graves|legacy)/.test(k)&&mine[k]&&mine[k]!=='null'&&mine[k]!=='[]'});
+   var apply=function(){try{var keep={};['murim_admk'].forEach(function(k){var v=localStorage.getItem(k);if(v!=null)keep[k]=v});localStorage.clear();for(var k in data)localStorage.setItem(k,data[k]);for(var k2 in keep)localStorage.setItem(k2,keep[k2]);localStorage.setItem('murim_migin',tk);location.reload()}catch(e){cover('<b>⚠️ เขียนเซฟลงเครื่องไม่สำเร็จ ('+String(e&&e.message||e).slice(0,60)+')</b><div>เซฟเดิมยังอยู่ที่เว็บเก่า</div>')}};
+   if(!has)return apply();
+   window.__migYes=apply;window.__migNo=function(){try{localStorage.setItem('murim_migin',tk)}catch(e){}uncover()};
+   cover('<div style="font-size:42px">📦</div><b>เครื่องนี้มีเซฟที่เว็บใหม่อยู่แล้ว</b><div>จะใช้เซฟไหน?</div><button style="padding:12px 22px;font-size:16px;border-radius:10px;border:0;background:#c9a24a;color:#111" onclick="__migYes()">ใช้เซฟจากเว็บเก่า (แทนที่ของที่นี่)</button><button style="padding:10px 22px;font-size:15px;border-radius:10px;border:1px solid #888;background:none;color:#eee" onclick="__migNo()">เก็บเซฟที่นี่ไว้</button><div style="font-size:13px;opacity:.7">เซฟเว็บเก่ายังอยู่ที่ลิงก์เดิมเสมอ เปิดด้วย ?stay=1 เพื่อเข้าไปเล่นที่เดิมได้</div>')})()}
+})();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>1 ใน นวนิยาย — จำลองชีวิตยุทธภพและเทพเซียน</title>
