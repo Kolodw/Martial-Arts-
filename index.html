@@ -2212,12 +2212,12 @@ const QMK={
  power:()=>{const g=Math.max(30,Math.round(yrPow()*(1.6+Math.random())));return[`ฝึกจนพลังยุทธ์เพิ่มขึ้น ${fmt(g)}`,g,R(4,6)]},
  qi:()=>{const g=+(1+S.sys.lv*.2).toFixed(1);return[`สะสมลมปราณเพิ่ม ${g} ปี`,g,R(4,6)]},
  money:()=>{const g=Math.round((80+S.int*1.5+realmIdx()*60)*2/10)*10;return[`หาเงินเพิ่มให้ได้ ${fmt(g)} ตำลึง`,g,R(4,6)]},
- win:()=>{const g=R(1,2);return[`ชนะการต่อสู้ ${g} ครั้ง`,g,R(5,7)]},
+ win:()=>{const g=R(1,2)+Math.floor(Math.max(0,realmIdx())/2)+Math.floor((S.sys?S.sys.lv:0)/8);return[`ชนะการต่อสู้ ${g} ครั้ง`,g,R(5,7)]},
  realm:()=>[`ทะลวงสู่${REALMS[Math.min(7,realmIdx()+1)].n}`,1,R(7,11)],
  art:()=>['ได้วิชาใหม่ 1 วิชา',1,R(5,8)],
  fame:()=>{const g=30+realmIdx()*15;return[`ชื่อเสียงเพิ่มขึ้น ${g}`,g,R(5,7)]},
- karma:()=>['สะสมกรรมดีเพิ่มขึ้น 10',10,R(5,8)],
- karmaDown:()=>['ทำให้กรรมลดลง 10',10,R(5,8)],
+ karma:()=>{const g=Math.min(40,10+(S.sys?S.sys.lv:0)*2);return[`สะสมกรรมดีเพิ่มขึ้น ${g}`,g,R(5,8)]},
+ karmaDown:()=>{const g=Math.min(40,10+(S.sys?S.sys.lv:0)*2);return[`ทำให้กรรมลดลง ${g}`,g,R(5,8)]},
  marry:()=>['แต่งงาน',1,R(5,7)],kid:()=>['มีบุตรเพิ่ม 1 คน',1,R(5,7)],join:()=>['เข้าร่วมสำนักใดก็ได้',1,R(4,6)],rank:()=>['เลื่อนตำแหน่งในสำนัก 1 ขั้น',1,R(5,8)],
  gear:()=>['อัปเกรดอาวุธหรือชุดเกราะ 1 ขั้น',1,R(5,8)],
  house:()=>['ย้ายไปอยู่บ้านที่ดีขึ้น 1 ขั้น',1,R(6,9)],
@@ -3454,7 +3454,7 @@ function questList(){const L=[];if(!S)return L;
  if(S.proj){const P0=PROJ.find(x=>x.id===S.proj.id);if(P0)L.push({k:'proj',ic:'🌌',n:'โครงการ: '+P0.n,p:`${S.proj.prog}/${P0.need}`,d:'เลือกจุดมุ่งหมาย "ความรู้ต่างโลก" เพื่อทำต่อ'})}
  if(S.nem&&S.nem.alive&&!S.nem.peace)L.push({k:'nem',ic:'😈',n:'คู่แค้น: '+S.nem.n,p:`ชนะ ${S.nem.w} · แพ้ ${S.nem.l}`,d:'ศัตรูที่ตามรังควานคุณ'});
  if(S.arc&&S.arc.rival!=null&&peers[S.arc.rival]&&peers[S.arc.rival].alive)L.push({k:'rival',ic:'⚔️',n:'คู่ปรับ: '+peers[S.arc.rival].name,p:`ปะทะ ${S.arc.rivalN||0} ครั้ง · ชนะ ${S.arc.rivalW||0}`,d:'คู่ปรับประจำรุ่น'});
- (S.tq||[]).forEach((q,i)=>{const T=TQ_T.find(t=>t.id===q.id);if(T)L.push({k:'tq'+q.id,ic:'📋',n:'ภารกิจเมือง: '+T.n,p:T.pr(q)+(T.ok(q)?' · ✅ ส่งงานได้ที่เมือง':'')+' · เหลือ '+q.left+' ปี',d:T.d})});
+ (S.tq||[]).forEach((q,i)=>{if(!q.v2)return;const T=tqV(q);L.push({k:'tq'+q.id,ic:'📋',n:'ภารกิจเมือง: '+(T.G?T.G[0]+' ':'')+T.n,p:T.pr+(T.ok&&q.kind!=='fight'?' · ✅ ส่งงานได้ที่เมือง':'')+' · เหลือ '+q.left+' ปี',d:T.d})});
  if(S.ownSect)L.push({k:'sect',ic:'🏯',n:'สำนักของคุณ: '+S.ownSect.n,p:`ศิษย์ ${S.ownSect.dis||0} คน`,d:'ขยายสำนักให้ยิ่งใหญ่'});
  if(S.saga){const d0=SAGA.find(x=>x.id===S.saga.id);if(d0)L.unshift({k:'saga',ic:'📜',n:'เรื่องยาว: '+d0.n,p:`ตอนที่ ${S.saga.step+1}/${d0.ch.length} · ตอนต่อไปอายุ ${S.saga.next}`,d:'เรื่องราวต่อเนื่องหลายปี การเลือกแต่ละตอนเปลี่ยนตอนจบ'})}
  if(S.beast){L.push({k:'beast',ic:'🐾',n:'สัตว์คู่ใจ: '+S.beast.nick,p:`เลเวล ${S.beast.lv} · ${beastStageN()}`,d:'เลเวล 10 วิวัฒนาการ · เลเวล 25 ร่างสูงสุด'})}
@@ -3590,14 +3590,14 @@ function innRest(){if(S.innY===S.age)return toast('ปีนี้พักโ�
 function openTown(p){p=p||'main';openTown._p=p;tqRefresh();crInit();const tn=townName();let h='';
  if(p==='main'){h=`<div class="mgrid">${Object.keys(TSHOP).map(k=>`<button class="opt" onclick="openTown('${k}')">${TSHOP[k].n}<small>วัตถุดิบ ตำรับ เครื่องมือ</small></button>`).join('')}
   <button class="opt" onclick="openMarket()">🛒 ตลาด<small>อาวุธ เกราะ เครื่องประดับ</small></button><button class="opt" onclick="openTown('inn')">🏮 โรงเตี๊ยม<small>พักผ่อน ฟังข่าวลือ</small></button>
-  <button class="opt" onclick="openTown('board')">📋 กระดานภารกิจ<small>${S.tq.filter((q,i)=>TQ_T.find(t=>t.id===q.id).ok(q)).length?'มีงานส่งได้!':S.tq.length+' งาน'}</small></button><button class="opt" onclick="openDungeons()">🏰 ดันเจี้ยน<small>${dgReady()?'พร้อมลง':'พักฟื้นอยู่'}</small></button>
+  <button class="opt" onclick="openTown('board')">📋 กระดานภารกิจ<small>${S.tq.filter(q=>q.v2&&q.kind!=='fight'&&tqV(q).ok).length?'มีงานส่งได้!':S.tq.length+' งาน'}</small></button><button class="opt" onclick="openDungeons()">🏰 ดันเจี้ยน<small>${dgReady()?'พร้อมลง':'พักฟื้นอยู่'}</small></button>
   <button class="opt" onclick="openCraft()">🔨 งานช่าง<small>${S.cr.rec.length} ตำรับ</small></button><button class="opt" onclick="openMap()">🗺️ แผนที่โลก<small>เดินทางไปแดนอื่น</small></button></div>`}
  else if(TSHOP[p]){const sh=TSHOP[p],rc=Object.keys(RCP).filter(id=>RCP[id].k===sh.k&&!S.cr.rec.includes(id)&&RCP[id].lv<=Math.max(2,S.cr.lv[sh.k]+1)).slice(0,3);
   h=`<button class="gbtn" onclick="openTown()">← ${tn}</button><h4 style="margin:10px 0 4px">${sh.n}</h4>`+sh.mats.concat(p==='apo'?['core']:[]).map(m=>`<div class="item"><div class="h"><b>${BAGIT[m].ic} ${BAGIT[m].n} <span class="tag2">มี ${bagN(m)}</span></b><span><button class="sysb" onclick="matBuy('${m}',1)">×1 ${fmt(Math.round(BAGIT[m].v*1.3))}</button> <button class="sysb" onclick="matBuy('${m}',5)">×5</button></span></div></div>`).join('')+
   `<h4 style="margin:10px 0 4px">ตำรับ</h4>`+(rc.length?rc.map(id=>`<div class="item"><div class="h"><b>${RCP[id].n} <span class="tag2">ขั้น ${RCP[id].lv}</span></b><button class="sysb" onclick="rcpBuy('${id}')">${fmt(500*RCP[id].lv)}</button></div><p class="tag2">${Object.keys(RCP[id].m).map(m=>BAGIT[m].ic+BAGIT[m].n+'×'+RCP[id].m[m]).join(' · ')}</p></div>`).join(''):'<p class="tag2">ไม่มีตำรับใหม่ที่เหมาะกับฝีมือตอนนี้</p>')+
   `<button class="gbtn" style="width:100%;margin-top:8px" onclick="openCraft('${sh.k}')">${CRK[sh.k].ic} ${CRK[sh.k].tool}และงาน${CRK[sh.k].n}</button>`}
  else if(p==='inn')h=`<button class="gbtn" onclick="openTown()">← ${tn}</button><div class="item" style="margin-top:8px"><div class="h"><b>🏮 เช่าห้องพัก 1 คืน</b><button class="sysb" onclick="innRest()">50 ตำลึง</button></div><p>พลังชีวิต +40 · อาจได้ยินข่าวลือหรือได้ตำรับ (ปีละครั้ง)</p></div>`;
- else if(p==='board')h=`<button class="gbtn" onclick="openTown()">← ${tn}</button><p class="tag2" style="margin-top:8px">งานใหม่มาทุกปี · แต่ละงานค้างบนกระดานได้ 3 ปี · ส่งงานได้ทุกเมื่อ</p>`+S.tq.map((q,i)=>{const T=TQ_T.find(t=>t.id===q.id),ok=T.ok(q);return`<div class="item ${ok?'pin':''}"><div class="h"><b>${T.n}</b><button class="sysb" onclick="tqDo(${i})" ${ok?'':'disabled style="opacity:.45"'}>ส่งงาน</button></div><p>${T.d}<br><span class="tag2">${T.pr(q)} · เหลือ ${q.left} ปี</span></p></div>`}).join('');
+ else if(p==='board')h=`<button class="gbtn" onclick="openTown()">← ${tn}</button><p class="tag2" style="margin-top:8px">งานใหม่มาทุกปี ตามระดับของคุณ · 🟢 ง่าย ×0.5 · 🟡 กลาง ×1 · 🔴 ยาก ×2 · 💀 อันตราย ×4 · งานที่มี ⏳ เลยกำหนดจะเสียชื่อเสียง · งานที่ง่ายเกินไปจะจบเองแล้วมีงานใหม่มาแทน</p>`+S.tq.map((q,i)=>{const T=tqV(q),ok=T.ok,f=q.kind==='fight';return`<div class="item ${ok&&!f?'pin':''}" style="border-left:4px solid ${['#5fb85f','#e8c86a','#ff6b6b','#b04ad8'][q.g]||'#888'}"><div class="h"><b>${T.G?T.G[0]+' ':''}${esc(T.n)}</b><button class="sysb" onclick="tqDo(${i})" ${ok?'':'disabled style="opacity:.45"'}>${f?'⚔️ ออกปฏิบัติ':'ส่งงาน'}</button></div><p>${esc(T.d)}<br><span class="tag2">${T.G?T.G[1]+' · ':''}${T.pr} · ${q.dl?'⏳ ':''}เหลือ ${q.left} ปี${q.chain?` · 🧩 ตอน ${q.chain.step}/3`:''}<br>รางวัล: ${tqRwTxt(q)}</span></p></div>`}).join('');
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏘️ ${tn}</h3><p class="tag2">💰 ${fmt(S.money)} ตำลึง</p>${h}`,'town')}
 
 // ---------- 8) ครัวเรือนและพงศาวดาร ----------
@@ -7498,6 +7498,63 @@ function secRaidGo(){if(!S.secRaid||!S.alive||choice._cur||modalOpen||S.beastMod
 // ---- ความหายาก: ระบบสุ่มครั้งเดียวต่อชีวิต (ยุทธภพ ~6.5% · ยุคแห่งระบบ 25% · โลกเซียน 10%) แทนการสุ่มทุกปี ----
 function sysLifeRoll(){if(!S||S.sysRolled||S.sys||S.sysEver)return;S.sysRolled=1;if(S.sysFate!=null)return;
  const p=S.xian?.10:(CFG.sys>=.02?.25:.065);if(Math.random()<p)S.sysFate=S.age+(S.xian?R(0,300):R(0,70))}
+
+// ---- ภารกิจเมือง v2: ตามช่วงชีวิต · ป้ายความยาก · เฉพาะแต่ละโลก · งานง่ายเกินจบเอง · เควสต่อเนื่อง · กำหนดเวลา · คนรู้จักมาขอช่วย ----
+const TQG=[['🟢','ง่าย',.5,.5],['🟡','กลาง',.85,1],['🔴','ยาก',1.15,2],['💀','อันตราย',1.45,4]];
+const TQW={
+ m:{fight:['กำจัดโจรภูเขาที่ปล้นหมู่บ้าน','ปราบนักฆ่าพรรคเงาโลหิต','ไล่ล่าจอมโจรเด็ดดอกไม้','กวาดล้างค่ายโจรริมแม่น้ำ','จับตัวศิษย์ทรยศของสำนักใหญ่'],foe:['หัวหน้าโจรภูเขา','นักฆ่าพรรคเงาโลหิต','จอมโจรเด็ดดอกไม้','หัวหน้าค่ายโจร','ศิษย์ทรยศ'],
+  kills:'คุ้มกันคาราวานผ่านเขาอันตราย',item:[['herb','ส่งสมุนไพรให้หมอเมือง'],['ore','หาแร่ให้โรงตีเหล็ก']],donate:'ช่วยชาวบ้านซ่อมเขื่อน',int:'สอนหนังสือเด็กในเมือง',power:'เตรียมรับคำท้าประลองจากสำนักใหญ่',fame:'สร้างชื่อให้ร้านค้าของเศรษฐีในเมือง'},
+ x:{fight:['ปราบอสูรวิญญาณที่อาละวาดนอกเมือง','กำจัดผู้ฝึกตนมารที่ดูดปราณชาวบ้าน','ล่าสัตว์อสูรขั้นสูงในหุบเขา','ทำลายค่ายกลมารใต้ภูเขาลอย'],foe:['อสูรวิญญาณคลั่ง','ผู้ฝึกตนมาร','สัตว์อสูรขั้นสูง','ผู้คุมค่ายกลมาร'],
+  kills:'คุ้มกันศิษย์นิกายเข้ามิติลับ',item:[['herb','เก็บสมุนไพรพันปีให้หอโอสถ'],['core','หาแก่นอสูรให้ค่ายกลของนิกาย'],['jade','ส่งหยกวิญญาณให้หอหลอมอาวุธ']],donate:'บริจาคซ่อมค่ายกลพิทักษ์เมือง',int:'ถอดความคัมภีร์โบราณให้หอคัมภีร์',power:'เตรียมตัวเข้าประลองชิงอันดับนิกาย',fame:'สร้างชื่อในงานชุมนุมเซียน'},
+ g:{fight:['ปราบเทพนอกรีตที่ปล้นแดนล่าง','ผนึกอสูรจากห้วงลึก','สยบมังกรคลั่งแห่งทะเลดารา','จับกุมเทพกบฏตามเทวโองการ'],foe:['เทพนอกรีต','อสูรจากห้วงลึก','มังกรคลั่งแห่งทะเลดารา','เทพกบฏ'],
+  kills:'ภารกิจเทวสภา: ลาดตระเวนเขตแดนสวรรค์',item:[['core','ส่งแก่นอสูรให้หอหลอมของเทวสภา'],['jade','ส่งหยกวิญญาณซ่อมสะพานรุ้ง']],donate:'ตอบคำอธิษฐานของแดนล่าง',int:'ถอดรหัสศิลาจารึกบรรพกาล',power:'เตรียมรับการทดสอบของเทวสภา',fame:'สร้างชื่อในหมู่เทพทั้งเก้าชั้นฟ้า'}};
+const tqW=()=>TQW[S.xt?'g':S.xian?'x':'m'];
+function tqRwBase(){const ri=Math.max(0,realmIdx());return{money:Math.round((300+ri*400)*(S.xian?5:1)*(S.xt?4:1)),fame:10+ri*5+(S.xian?20:0)+(S.xt?60:0),karma:3}}
+function tqGrade(){return pickW([{v:0,w:25},{v:1,w:45},{v:2,w:22},{v:3,w:8}]).v.v}
+function tqWho(){const L=[];if(S.sp&&S.sp.n)L.push(S.sp.n);(S.children||[]).forEach(c=>{if(c.alive!==false&&c.n&&(c.age||0)>=12)L.push(c.n)});(S.allies||[]).forEach(a=>L.push(a.n));if(S.disc&&S.disc.n)L.push(S.disc.n);return L.length&&Math.random()<.3?ch(L):null}
+function tqMake(kind,g,extra){const W=tqW(),B=tqRwBase(),G=TQG[g],q={v2:1,id:'q'+Math.random().toString(36).slice(2,8),kind,g,left:g>=2?R(2,3):R(3,4),dl:g>=2?1:0};
+ if(kind==='fight'){const i=R(0,W.fight.length-1);q.n=W.fight[i];q.foe=W.foe[i];q.ep=Math.round(total()*G[2]*(.92+Math.random()*.16));q.d=`ชนะการต่อสู้กับ${q.foe} (แข็งแรงราว ${Math.round(G[2]*100)}% ของคุณ)`}
+ else if(kind==='kills'){q.n=W.kills;q.need=2+g*2;q.k0=S.kills;q.d=`ชนะการต่อสู้ ${q.need} ครั้ง ภายในเวลาที่กำหนด`}
+ else if(kind==='item'){const [m,n]=ch(W.item);q.n=n;q.m=m;q.need=[2,3,5,8][g];q.d=`มี ${BAGIT[m].ic} ${BAGIT[m].n} ${q.need} ชิ้นในกระเป๋า`}
+ else if(kind==='donate'){q.n=W.donate;q.need=Math.max(200,Math.round((S.money||0)*[.05,.08,.12,.18][g]/10)*10);q.d=`บริจาค ${fmt(q.need)} ตำลึง`}
+ else if(kind==='int'){q.n=W.int;q.need=Math.round((S.int||0)+[10,20,35,55][g]*(1+Math.max(0,realmIdx())*.25));q.d=`ปัญญาถึง ${fmt(q.need)}`}
+ else if(kind==='power'){q.n=W.power;q.need=Math.round(total()*[1.08,1.2,1.4,1.7][g]);q.d=`พลังรวมถึง ${fmt(q.need)}`}
+ else if(kind==='fame'){q.n=W.fame;q.need=Math.round((15+Math.max(0,realmIdx())*10)*[1,2,3.5,6][g]*(S.xian?2:1));q.k0=S.fame;q.d=`ชื่อเสียงเพิ่มขึ้น ${fmt(q.need)}`}
+ const m=G[3];q.rw={money:Math.round(B.money*m*(.85+Math.random()*.3)),fame:Math.round(B.fame*m),karma:kind==='donate'?Math.round(6+g*4):B.karma,item:g>=2?[g+1,g+3]:null};
+ Object.assign(q,extra||{});const who=q.chain?null:tqWho();if(who){q.who=who;q.n=`${who}ขอให้ช่วย: ${q.n}`}return q}
+function tqNew(){if(Math.random()<.15&&!(S.tq||[]).some(q=>q.chain)){const cid='c'+Math.random().toString(36).slice(2,6),W=tqW(),i=R(0,W.foe.length-1);return tqMake(ch(['int','item']),1,{chain:{cid,step:1,of:3,foe:W.foe[i]},n:`เควสต่อเนื่อง ①: สืบหาเบาะแสของ${W.foe[i]}`,left:4,dl:1})}
+ return tqMake(ch(['fight','fight','kills','item','donate','int','power','fame']),tqGrade())}
+function tqV(q){if(!q||!q.v2)return{n:'?',d:'',pr:'',ok:false};let pr='',ok=false;
+ if(q.kind==='fight'){pr='ต้องออกไปต่อสู้';ok=true}
+ else if(q.kind==='kills'){const n=Math.max(0,S.kills-q.k0);pr=`${n}/${q.need}`;ok=n>=q.need}
+ else if(q.kind==='item'){const n=bagN(q.m);pr=`${n}/${q.need}`;ok=n>=q.need}
+ else if(q.kind==='donate'){pr=`${fmt(Math.min(S.money,q.need))}/${fmt(q.need)}`;ok=S.money>=q.need}
+ else if(q.kind==='int'){pr=`${fmt(Math.round(S.int))}/${fmt(q.need)}`;ok=S.int>=q.need}
+ else if(q.kind==='power'){pr=`${fmt(Math.round(total()))}/${fmt(q.need)}`;ok=total()>=q.need}
+ else if(q.kind==='fame'){const n=Math.max(0,S.fame-q.k0);pr=`${fmt(n)}/${fmt(q.need)}`;ok=n>=q.need}
+ const G=TQG[q.g];return{n:q.n,d:q.d,pr,ok,G}}
+function tqRwTxt(q){const r=q.rw,m=q.chain&&q.chain.step===3?3:1;return`${r.money?'💰 '+fmt(r.money*m):''}${r.fame?' · ⭐ ชื่อเสียง +'+(r.fame*m):''}${r.item||m>1?' · 🎁 ของหายาก':''}${S.xt?' · 🏛️ ผลงานเทวสภา':''}`}
+tqRefresh=function(){if(!S)return;if(S.tqY===S.age)return;S.tqY=S.age;const keep=[];
+ for(const q of (S.tq||[])){if(!q.v2)continue;q.left--;
+  if(q.left<0){if(q.dl){const p=5+q.g*5+(q.chain?10:0);S.fame=Math.max(0,S.fame-p);log(`⌛ ภารกิจ「${esc(q.n)}」เลยกำหนด — ชื่อเสียง −${p}`,'bad')}continue}
+  if(q.kind==='fight'&&total()>q.ep*3&&!q.chain){tqPay(q,.3,`⚡ ภารกิจ「${esc(q.n)}」ง่ายเกินไปสำหรับคุณแล้ว — จัดการเสร็จในพริบตา`);continue}
+  keep.push(q)}
+ S.tq=keep;let g=0;const K=q=>q.kind+'|'+(q.foe||q.m||'');while(S.tq.length<3&&g++<30){const q=tqNew();if(g<25&&S.tq.some(x=>K(x)===K(q)))continue;S.tq.push(q)}};
+function tqPay(q,mult,msg){const r=q.rw,m=mult*(q.chain&&q.chain.step===3?3:1),got=[];
+ if(r.money){const v=Math.round(r.money*m);S.money+=v;got.push('+'+fmt(v)+' ตำลึง')}if(r.fame){const v=Math.round(r.fame*m);S.fame+=v;got.push('ชื่อเสียง +'+v)}if(r.karma&&mult>=1){S.karma+=r.karma;got.push('กรรมดี +'+r.karma)}
+ if(q.who){if(S.sp&&S.sp.n===q.who)S.sp.aff=Math.min(100,(S.sp.aff||60)+6);(S.children||[]).forEach(c=>{if(c.n===q.who&&c.rel!=null)c.rel=Math.min(100,c.rel+8)});got.push(`${q.who}ซึ้งใจ`)}
+ if(S.xt&&mult>=1)try{gdMerit(3+q.g*3)}catch(e){}
+ if(q.kind==='donate'&&S.xt&&mult>=1)try{gdBel(R(200,1500))}catch(e){}
+ log(`${msg||'📋 ภารกิจสำเร็จ: <b>'+esc(q.n)+'</b>'}${got.length?' · '+got.join(' · '):''}`,q.g>=2||q.chain?'epic':'good');
+ if(mult>=1&&(r.item||(q.chain&&q.chain.step===3)))try{const lo=q.chain&&q.chain.step===3?4:r.item[0],hi=q.chain&&q.chain.step===3?6:r.item[1];bagGive(Math.min(7,lo),Math.min(7,hi),'รางวัลภารกิจ')}catch(e){}
+ if(q.chain&&mult>=1){const c=q.chain;if(c.step<3){const nx=c.step===1?tqMake('kills',2,{chain:Object.assign({},c,{step:2}),n:`เควสต่อเนื่อง ②: ตามรอย${c.foe}ไปถึงรัง`,left:4,dl:1}):tqMake('fight',2,{chain:Object.assign({},c,{step:3}),left:3,dl:1});
+  if(c.step===2){nx.n=`เควสต่อเนื่อง ③: ดวลชี้ชะตากับ${c.foe}`;nx.foe=c.foe;nx.ep=Math.round(total()*1.2);nx.d=`ชนะ${c.foe} (แข็งแรงราว 120% ของคุณ) · สำเร็จรับรางวัล ×3`}S.tq.push(nx);log(`🧩 เควสต่อเนื่องเดินหน้า — ${esc(nx.n)}`,'epic')}else keyAdd(`จบเควสต่อเนื่องปราบ${c.foe}`)}}
+tqDo=function(i){const q=S.tq[i];if(!q||!q.v2)return;const V=tqV(q);
+ if(q.kind==='fight'){if(choice._cur)return toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');closeM();const foe=q.foe||'ศัตรู';log(`⚔️ ออกปฏิบัติภารกิจ — มุ่งหน้าไปหา${esc(foe)}`,'');
+  duel(foe,q.ep,w=>{const k=S.tq.indexOf(q);if(w){if(k>=0)S.tq.splice(k,1);tqPay(q,1)}else{const d=Math.round(S.maxHp*[.05,.1,.2,.35][q.g]);S.hp-=d;log(`💢 ภารกิจ「${esc(q.n)}」ล้มเหลว — พลังชีวิต −${d}${q.g>=2?' · งานนี้ถูกยกเลิก':' · ลองใหม่ได้'}`,'bad');if(q.g>=2&&k>=0){S.tq.splice(k,1);S.fame=Math.max(0,S.fame-5*q.g)}}});return}
+ if(!V.ok)return toast('ยังทำไม่ครบ');if(q.kind==='item'&&!bagTake(q.m,q.need))return;if(q.kind==='donate'){S.money-=q.need}
+ S.tq.splice(i,1);tqPay(q,1);sfx('good');render();openTown('board')};
+{const _ot=openTown;openTown=function(p){try{if(S){if(!(S.tq||[]).some(q=>q.v2))S.tqY=null;S.tq=(S.tq||[]).filter(q=>q.v2);tqRefresh()}}catch(e){console.error(e)}return _ot.apply(this,arguments)}}
 </script>
 </body>
 </html>
