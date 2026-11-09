@@ -2906,7 +2906,7 @@ function bagTick(){if(!S.bag)bagInit();const b=S.bag;
  if(S.hp<S.maxHp*.4&&bagUse('hp')){S.hp=Math.min(S.maxHp,S.hp+80);log('🎒 💊 กินยาสมานแผล พลังชีวิต +80','good')}
  if(S.chronic&&bagUse('cure')){log(`🎒 🧪 ใช้ยาถอนพิษ — หายจาก${S.chronic.n}`,'good');S.chronic=null}
  if(bagHas('qi')&&Math.random()<.5&&bagUse('qi'))S.qi+=2;
- const nx=REALMS[realmIdx()+1];if(nx&&bagHas('brk')&&total()>=nx.p*.82&&bagUse('brk')){S.power+=nx.p-total()+1;log(`🎒 🔴 กลืนยาทะลวงขั้น — พุ่งสู่${nx.n}!`,'epic')}
+ const nx=REALMS[realmIdx()+1];if(nx&&realmIdx()+1<=5&&bagHas('brk')&&total()>=nx.p*.82&&bagUse('brk')){S.power+=nx.p-total()+1;log(`🎒 🔴 กลืนยาทะลวงขั้น — พุ่งสู่${nx.n}!`,'epic')}
  if(bagHas('fruit')&&S.age>lifeMax()-8&&bagUse('fruit')){S.lifespan+=15;log('🎒 🍑 กินผลไม้อายุวัฒนะ อายุขัย +15 ปี','epic')}
  if(bagHas('egg')&&(!S.pet||!S.pet.spirit)&&Math.random()<.25&&bagUse('egg')){const n=ch(['พยัคฆ์ขาว','จิ้งจอกเพลิง','มังกรน้ำ','หงส์น้ำแข็ง']);S.pet={i:'🐉',n,t:'สัตว์วิญญาณ',age:S.age,spirit:1,lv:0};log(`🥚 ไข่ในกระเป๋าฟักออกมาเป็น<b>${n}</b>ลูกอ่อน!`,'myth')}
  try{bagQTick(b)}catch(e){console.error(e)}
@@ -3781,7 +3781,7 @@ async function openOnline(tab){tab=tab||'chat';clearInterval(chatT);const tabs=[
  const head=`<button class="xbtn" onclick="clearInterval(chatT);closeM()">✕</button><h3>🌐 ออนไลน์</h3><p class="tag2">${onlineOK?`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิต`:Date.now()<_quotaUntil?'🛠️ ระบบออนไลน์ปิดชั่วคราว':'🔴 ยังเชื่อมต่อเซิร์ฟเวอร์ไม่ได้'}${ONL_HOST(location.hostname)?'':' · ระบบออนไลน์ใช้ได้บนเว็บ 1inanovel.com'}</p><div class="tabs">${tabs}</div>`;
  if(!onlineOK){modal(head+`<p class="tag2">${Date.now()<_quotaUntil?'แชทโลก ทำเนียบ และดูคนอื่นเล่น ปิดชั่วคราว ข้อมูลทั้งหมดยังอยู่ครบ จะกลับมาเร็วๆ นี้ — ระหว่างนี้เล่นเกมได้ตามปกติ เซฟในเครื่องปลอดภัย':'ระบบออนไลน์ต้องเปิดฐานข้อมูลก่อน หรือเครือข่ายตอนนี้ใช้ไม่ได้'}</p><button class="gbtn" style="width:100%" onclick="onlinePing().then(()=>openOnline('${tab}'))">ลองใหม่</button>`,'online');return}
  if(tab==='chat'){modal(head+`<div id="chatBox" class="chatbox"><div class="tag2">กำลังโหลด…</div></div><div class="chatin"><input id="chatIn" maxlength="200" placeholder="พิมพ์ข้อความ… (ลิงก์และคำหยาบถูกปิด)" onkeydown="if(event.key==='Enter')chatSend()"><button class="pbtn" onclick="chatSend()">ส่ง</button></div>${S?'<button class="gbtn" style="width:100%;margin-top:6px" onclick="shareLife()">📤 แชร์ชีวิตตอนนี้เข้าแชท</button>':''}<p class="tag2">⚑ รายงานข้อความที่ผิดกฎ · รายงานครบ 5 คนข้อความจะถูกซ่อน</p>`,'online');chatPoll();chatT=setInterval(()=>{if($('modal').dataset.k!=='online'||!$('chatBox'))return clearInterval(chatT);if(!document.hidden)chatPoll()},10000)}
- else if(tab==='board'){modal(head+'<div class="tag2">กำลังโหลด…</div>','online');try{const j=await api('board');const row=(e,i)=>`<div class="item brd ${e.lid?'click':''}" ${e.lid?`onclick="openLifeView('${e.lid}')"`:''}><div class="h"><b>${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${esc(e.n)}</b><span class="px">${fmt(e.s)}</span></div><p class="tag2">${esc(e.r)} · ${esc(e.f)} · อายุ ${e.age}${e.x?' · ☁️ เซียน':''}${e.cu?' · ✍️':''}<br>${esc(e.c||'')}${e.lid?`<br>${e.pub?'👁 แตะเพื่อดูชีวิตนี้':'🔒 ส่วนตัว'}`:''}</p>${e.lid&&admK()?`<button class="sysb" style="margin-top:6px;border-color:#c55;color:#ff9b9b" onclick="event.stopPropagation();bdDelAsk('${e.lid}',this)" data-n="${esc(e.n)}" data-s="${e.s}">🗑 ลบออกจากทำเนียบ (แอดมิน)</button>`:''}</div>`;
+ else if(tab==='board'){modal(head+'<div class="tag2">กำลังโหลด…</div>','online');try{const j=await api('board');const row=(e,i)=>`<div class="item brd ${e.lid?'click':''}" ${e.lid?`onclick="openLifeView('${e.lid}')"`:''}><div class="h"><b>${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${esc(e.n)}</b><span class="px">${fmt(e.s)}</span></div><p class="tag2">${esc(e.r)} · ${esc(e.f)} · อายุ ${e.age}${e.x?' · ☁️ เซียน':''}${e.ga?` · ขึ้นโลกเทพตอนอายุ ${e.ga}`:e.x&&e.xa?` · เหาะสู่โลกเซียนตอนอายุ ${e.xa}`:''}${e.cu?' · ✍️':''}<br>${esc(e.c||'')}${e.lid?`<br>${e.pub?'👁 แตะเพื่อดูชีวิตนี้':'🔒 ส่วนตัว'}`:''}</p>${e.lid&&admK()?`<button class="sysb" style="margin-top:6px;border-color:#c55;color:#ff9b9b" onclick="event.stopPropagation();bdDelAsk('${e.lid}',this)" data-n="${esc(e.n)}" data-s="${e.s}">🗑 ลบออกจากทำเนียบ (แอดมิน)</button>`:''}</div>`;
    const bw=openOnline._bw!=null?openOnline._bw:(S?(S.beastMode?2:S.xt?3:S.xian?1:0):(CFG.xian?1:0));const wf=e=>bw===2?!!e.bm:bw===3?(!e.bm&&!!e.g):(!e.bm&&!e.g&&(e.x?1:0)===bw);const T=(j.top||[]).filter(wf).slice(0,20),Pv=(j.prev||[]).filter(wf).slice(0,3);
    modal(head+`<div class="tabs"><button class="tabb ${bw===0?'on':''}" onclick="openOnline._bw=0;openOnline('board')">⚔️ ยุทธภพ</button><button class="tabb ${bw===1?'on':''}" onclick="openOnline._bw=1;openOnline('board')">☁️ โลกเทพเซียน</button><button class="tabb ${bw===3?'on':''}" onclick="openOnline._bw=3;openOnline('board')">🌟 โลกเทพ</button><button class="tabb ${bw===2?'on':''}" onclick="openOnline._bw=2;openOnline('board')">🐾 สัตว์อสูร</button></div><p class="tag2">คะแนนชีวิตสูงสุดของสัปดาห์นี้ แยกตามโลก (รีเซ็ตทุกวันจันทร์) · ส่งอัตโนมัติเมื่อสิ้นชีวิต</p>${T.map(row).join('')||'<p class="tag2">ยังไม่มีใครขึ้นทำเนียบสัปดาห์นี้</p>'}${Pv.length?`<h4 style="margin:10px 0 4px">สามอันดับแรกสัปดาห์ก่อน</h4>`+Pv.map(row).join(''):''}${(j.arena||[]).length?`<h4 style="margin:10px 0 4px">⚔️ ยอดนักประลองสัปดาห์นี้</h4>`+j.arena.map((e,i)=>`<div class="tag2">${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${esc(e.n)} — ชนะ ${e.w} ครั้ง</div>`).join(''):''}`,'online')}catch(e){modal(head+'<p class="tag2">โหลดไม่ได้</p>','online')}}
  else if(tab==='arena')modal(head+`<p>ส่งเงาของตัวละครไปประลองกับเงาของผู้เล่นคนอื่นในขั้นพลังใกล้เคียงกัน · ชนะได้ชื่อเสียง +10 · ปีละ 3 ครั้ง</p>${S?`<p class="tag2">พลังของคุณ ${fmt(Math.round(myPow()))} · ${REALMS[realmIdx()].n} · ปีนี้ประลองแล้ว ${S.arY===S.age?S.arN||0:0}/3</p><button class="pbtn" style="width:100%" onclick="arenaGo()">⚔️ หาคู่ประลอง</button>`:'<p class="tag2">ต้องอยู่ระหว่างเล่นชีวิตหนึ่งก่อน</p>'}`,'online');
@@ -4034,7 +4034,7 @@ function lifeDetail(score){const ri=realmIdx(),lifeAch=(S.achLife||[]).map(id=>A
   look:{robe:o.robe,trim:o.trim,belt:o.belt,hat:o.hat,skin:o.skin,hair:o.hair,hs:o.hs,g:o.g,age:o.age,mood:'neutral',aura:o.aura,sword:o.sword,staff:o.staff,seed:o.seed}}}
 function lifePubDef(){return LS.get('murim_lifepub',1)}
 async function sendLife(score){if(S&&S.custom){customNote();return}if(!onlineOK||!S||S._sent)return;S._sent=1;S._lid=pid.slice(0,6)+Date.now().toString(36);
- try{await api('life',{n:pname(),s:score,age:S.age,r:(typeof realmLabel==='function'?realmLabel().base:REALMS[realmIdx()].n),f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,g:S.xt?1:0,cu:S.custom?1:0,bm:S.beastMode?1:0,ver:VERSION,tp:acTp(),lid:S._lid,pub:lifePubDef(),det:xT(JSON.stringify(lifeDetail(score)))});lifePrivBox()}catch(e){}}
+ try{await api('life',{n:pname(),s:score,age:S.age,r:(typeof realmLabel==='function'?realmLabel().base:REALMS[realmIdx()].n),f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,g:S.xt?1:0,ga:S.gAge||0,xa:S.xAsc||0,cu:S.custom?1:0,bm:S.beastMode?1:0,ver:VERSION,tp:acTp(),lid:S._lid,pub:lifePubDef(),det:xT(JSON.stringify(lifeDetail(score)))});lifePrivBox()}catch(e){}}
 function customNote(){const end=$('end');if(!end||$('lifePriv'))return;const b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b);b.innerHTML='<b>✍️ ชีวิตที่สร้างเอง — ไม่ติดอันดับทำเนียบ</b><p class="tag2">ชีวิตที่เลือกชาติกำเนิด กระดูก และพรสวรรค์เองจะไม่ถูกส่งขึ้นทำเนียบออนไลน์ เพื่อความยุติธรรมกับคนที่ให้ฟ้าลิขิต · เลือก 🎲 สุ่ม หรือ 🎨 ออกแบบหน้าตา เพื่อลุ้นขึ้นทำเนียบ</p>'}
 function lifePrivBox(){const end=$('end');if(!end||!S||!S._lid)return;let b=$('lifePriv');if(!b){b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b)}
  const pub=lifePubDef();b.innerHTML=`<b>🏆 ชีวิตนี้ขึ้นทำเนียบออนไลน์แล้ว</b><p class="tag2">${pub?'คนอื่นกดดูรายละเอียดชีวิตนี้ได้ (ไทม์ไลน์ ค่าพลัง ของ วิชา ครอบครัว)':'คนอื่นเห็นแค่ชื่อกับคะแนน กดดูรายละเอียดไม่ได้'}</p>
@@ -5297,7 +5297,7 @@ function btChance(t){const q=Math.min(.2,(S.qi||0)/(30*t)),iq=Math.max(-.05,Math
  return Math.max(.1,Math.min(.95,.75-.06*t+q+iq+jy+tal*.08+ov+tr2+(S.btFail||0)*.1+(S.sys?.05:0)))}
 function btTick(){if(!S||!S.alive||S.beastMode)return;const raw=rawRealm();if(S.rcap==null){S.rcap=raw;return}if(raw<=S.rcap)return;const t=S.rcap+1;
  if(t<=1){S.rcap=t;return}const nm=REALMS[t].n;
- if(bagHas&&bagHas('brk')&&bagUse('brk')){S.rcap=t;S.btFail=0;log(`🎒 🔴 กลืนยาทะลวงขั้นตอนติดคอขวด — ทะลวงผ่านไปได้อย่างราบรื่น`,'epic');return}
+ if(t<=5&&bagHas&&bagHas('brk')&&bagUse('brk')){S.rcap=t;S.btFail=0;log(`🎒 🔴 กลืนยาทะลวงขั้นตอนติดคอขวด — ทะลวงผ่านไปได้อย่างราบรื่น`,'epic');return}
  const p=btChance(t);if(Math.random()<p){S.rcap=t;if(S.btFail)log(`🌟 หลังล้มเหลวมา ${S.btFail} ครั้ง ในที่สุดก็ทะลวงคอขวดได้ (โอกาส ${Math.round(p*100)}%)`,'epic');S.btFail=0;return}
  S.btFail=(S.btFail||0)+1;const d=Math.round(R(8,20)*t/2);S.hp-=d;if(!(tr('yinyang')||tr('allarts')))S.qi=Math.max(0,S.qi*.95);
  log(`💢 พยายามทะลวงสู่<b>${nm}</b> แต่ติดคอขวด — ลมปราณแตกพล่าน พลังชีวิต −${d} <span class="tag2">(โอกาส ${Math.round(p*100)}% · ขึ้นกับลมปราณ ปัญญา ความสุข พรสวรรค์ · ครั้งหน้าง่ายขึ้น)</span>`,'bad')}
@@ -6167,7 +6167,7 @@ function qiDev(tier){const m=(S.talent&&S.talent.m)||1,dv=Math.max(.03,Math.min(
  S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));S.power=Math.round(S.power*.95);S.qi=+(S.qi*.9).toFixed(1);log('🔥 ธาตุไฟเข้าแทรกเล็กน้อย ลมปราณไหลย้อน กระอักเลือดออกมาคำใหญ่ — พลังยุทธ์ลดลง 5%','bad')}
 {const _bt=btTick;btTick=function(){const f0=S&&S.btFail||0;const r=_bt.apply(this,arguments);try{if(S&&S.alive&&(S.btFail||0)>f0)qiDev(false)}catch(e){console.error(e)}return r}}
 function postTick(){if(!S||!S.alive||S.beastMode||realmIdx()<7)return;if(S.pcap==null)S.pcap=-1;const raw=postRaw();if(raw<=S.pcap)return;const t=S.pcap+1,tier=t%9===0,m=(S.talent&&S.talent.m)||1;
- if(bagHas&&bagHas('brk')&&bagUse('brk')){S.pcap=t;S.btFail=0;postUp(t,'🎒 กลืนยาทะลวงขั้น ');return}
+ if(t%9!==0&&bagHas&&bagHas('brk')&&bagUse('brk')){S.pcap=t;S.btFail=0;postUp(t,'🎒 กลืนยาทะลวงขั้น ');return}
  const p=Math.max(.05,Math.min(.9,(tier?.3:.6)+(m-1)*.08+((S.int||0)-60)/600+((S.happy||60)-50)/500+Math.min(.1,(S.qi||0)/2000)-t/45*.15+(S.btFail||0)*.05+(S.sys?.05:0)));
  if(Math.random()<p){S.pcap=t;S.btFail=0;postUp(t,'');return}
  S.btFail=(S.btFail||0)+1;S.hp-=Math.round(S.maxHp*.1);const nm=`${RS_PFX[Math.floor(t/9)]}${REALMS[7].n} ขั้น ${t%9+1}`;log(`💢 พยายามทะลวงสู่<b>${nm}</b> แต่ล้มเหลว <span class="tag2">(โอกาส ${Math.round(p*100)}%)</span>`,'bad');qiDev(tier)}
@@ -7629,13 +7629,13 @@ function ecoV(it){const r=it.r,w=it.w,K={qi:{m:1,x:3,g:10},life:{m:1,x:6,g:60},i
 function ecoDesc(it){if(it.c==='x')return`❔ ${it.hint}`;const e=it.fx==='hp'&&it.c==='p'?{d:'ฟื้นพลังชีวิตเต็ม · พลังชีวิตสูงสุด +'+Math.round([.01,.02,.035,.05,.08,.12,.18,.3][it.r]*100)+'%'}:ecoV(it);return e.d}
 function ecoApply(it,src){const e=ecoV(it);let t=e.d;
  if(it.c==='x'){const r=Math.random();if(it.fx==='life'){const v=Math.round((S.xt?20000:S.xian?300:30)*(1+Math.random()));if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;t=`อายุขัย +${fmt(v)} ปี`}
-  else if(it.fx==='pow'){const g=Math.round(total()*(.25+Math.random()*.3));S.power+=g;t=`พลังยุทธ์ +${fmt(g)}`}
+  else if(it.fx==='pow'){const g=pctPow(.25+Math.random()*.3);S.power+=g;t=`พลังยุทธ์ +${fmt(g)}`}
   else if(it.fx==='tal'){const m=1.08+Math.random()*.12;S.talent=Object.assign({},S.talent,{m:+(S.talent.m*m).toFixed(2)});t=`พรสวรรค์ ×${m.toFixed(2)} ถาวร`}
   else if(it.fx==='art'){const a=newArt(3);S.arts.push(a);t=`ได้ ${artHtml(a)}`}
   else if(it.fx==='qi'){const v=+(S.qi*.35+10).toFixed(1);S.qi+=v;t=`ลมปราณ +${fmt(v)} ปี`}
-  else{if(r<.35){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.5));joy(-15);t='คำสาป! พลังชีวิต −50% และความสุขลดฮวบ'}else if(r<.7){const g=Math.round(total()*.4);S.power+=g;t=`สมบัติแท้! พลังยุทธ์ +${fmt(g)}`}else{S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.15).toFixed(2)});S.lifespan+=50;t='สมบัติแท้! พรสวรรค์ ×1.15 และอายุขัย +50 ปี'}}
+  else{if(r<.35){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.5));joy(-15);t='คำสาป! พลังชีวิต −50% และความสุขลดฮวบ'}else if(r<.7){const g=pctPow(.4);S.power+=g;t=`สมบัติแท้! พลังยุทธ์ +${fmt(g)}`}else{S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.15).toFixed(2)});S.lifespan+=50;t='สมบัติแท้! พรสวรรค์ ×1.15 และอายุขัย +50 ปี'}}
   log(`❔ เปิด<b>${esc(it.n)}</b> ${rarTag(it.r)} — ${t}`,'myth',true);return}
- switch(it.fx){case'pow':S.power+=Math.round(total()*e.v);break;case'hp':if(it.c==='p')S.hp=S.maxHp;S.maxHp+=Math.max(5,Math.round(S.maxHp*e.v));S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*e.v));break;
+ switch(it.fx){case'pow':S.power+=pctPow(e.v);break;case'hp':if(it.c==='p')S.hp=S.maxHp;S.maxHp+=Math.max(5,Math.round(S.maxHp*e.v));S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*e.v));break;
   case'qi':S.qi+=e.v;break;case'life':if(S.xt)S.glExtra=(S.glExtra||0)+e.v;else S.lifespan+=e.v;break;case'int':S.int+=e.v;break;case'cha':S.cha+=e.v;break;case'karma':S.karma+=e.v;break;case'fame':S.fame+=e.v;break;
   case'art':{const a=newArt(e.v);S.arts.push(a);t=`ได้ ${artHtml(a)}`;break}
   case'fight':S.buf=(S.buf||[]).filter(b=>b.k!=='fight'||b.u<=S.age||b.v<e.v);S.buf.push({k:'fight',v:e.v,u:S.age+e.y,n:it.n});break;
@@ -7715,13 +7715,13 @@ function paEff(it){const w=ECO_W(),r=it.r,b=ecoV({r,w,fx:it.fx==='int'?'int':it.
   case'brk':{const n=r>=6?3:r>=4?2:1;return{v:n,d:`ยาทะลวงขั้น ×${n} · เตรียมรับทัณฑ์/รวมปราณ +${Math.min(3,n)}`}}
   case'myst':return{v:0,d:'❔ ไม่มีใครรู้ว่าข้างในคืออะไร — แต่ไม่เคยมีใครเปิดแล้วผิดหวัง'}}return{v:0,d:''}}
 function paApply(it){const e=paEff(it);let t=e.d;
- switch(it.fx){case'pow':S.power+=Math.round(total()*e.v);break;case'hp':S.maxHp+=Math.max(10,Math.round(S.maxHp*e.v));S.hp=S.maxHp;break;
+ switch(it.fx){case'pow':S.power+=pctPow(e.v);break;case'hp':S.maxHp+=Math.max(10,Math.round(S.maxHp*e.v));S.hp=S.maxHp;break;
   case'qi':S.qi+=e.v;break;case'life':if(S.xt)S.glExtra=(S.glExtra||0)+e.v;else S.lifespan+=e.v;break;case'int':S.int+=e.v;break;case'cha':S.cha+=e.v;break;
   case'art':{const a=newArt(e.v);S.arts.push(a);t=`ได้ ${artHtml(a)}`;break}
   case'fight':S.buf=(S.buf||[]).filter(b=>b.k!=='fight'||b.u<=S.age||b.v<e.v);S.buf.push({k:'fight',v:e.v,u:S.age+e.y,n:it.n});break;
   case'tal':S.talent=Object.assign({},S.talent,{m:+(S.talent.m*(1+e.v)).toFixed(2)});break;
   case'brk':bagAdd('brk',e.v,true);S.tribPrep=Math.min(3,(S.tribPrep||0)+Math.min(3,e.v));S.btFail=(S.btFail||0)+e.v;break;
-  case'myst':{const x=Math.random();if(x<.4){const g=Math.round(total()*(.35+Math.random()*.3));S.power+=g;t=`พลังยุทธ์ +${fmt(g)}`}else if(x<.7){S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.15).toFixed(2)});t='พรสวรรค์ ×1.15 ถาวร'}else if(x<.9){const a=newArt(4);S.arts.push(a);t=`ได้ ${artHtml(a)}`}else{const v=S.xt?50000:S.xian?800:60;if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;t=`อายุขัย +${fmt(v)} ปี`}break}}
+  case'myst':{const x=Math.random();if(x<.4){const g=pctPow(.35+Math.random()*.3);S.power+=g;t=`พลังยุทธ์ +${fmt(g)}`}else if(x<.7){S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.15).toFixed(2)});t='พรสวรรค์ ×1.15 ถาวร'}else if(x<.9){const a=newArt(4);S.arts.push(a);t=`ได้ ${artHtml(a)}`}else{const v=S.xt?50000:S.xian?800:60;if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;t=`อายุขัย +${fmt(v)} ปี`}break}}
  return t}
 const paGold=g=>`🪙 ${fmt(g)} ทองคำ`,paCost=g=>Math.round(g*paRate());
 // ---- ประกาศ ----
@@ -7826,6 +7826,31 @@ function famTick(st,f0,ls0){const d=S.fame-f0;if(d>0){S.fame=Math.round(f0+d/(1+
 {const _de=duelEnd;duelEnd=function(win,fled){try{if(S&&!win)S.fame=Math.max(0,Math.round(S.fame*(fled?.985:.97)))}catch(e){}return _de.apply(this,arguments)}}
 // ---- คอขวดใหญ่ 2 ขั้นสุดท้ายของยุทธภพ/โลกเซียน ----
 {const _bc=btChance;btChance=function(t){const p=_bc.apply(this,arguments);try{if(t>=6){const st=Math.min(1,.3+.35*Math.min(1,(S.int||0)/(80+t*30))+.35*Math.min(1,(S.qi||0)/(20*t)));return Math.max(.03,p*(t>=7?.5:.7)*st)}}catch(e){}return p}}
+
+// ---- v13.2 บาลานการเลื่อนขั้นข้ามโลก: เกณฑ์อายุก่อนทัณฑ์ · ทัณฑ์โลกเซียนอิงพลัง · ยาทะลวงขั้นไม่ข้ามคอขวดใหญ่ · จำกัดพลัง % ต่อขั้น · มรดก/พลังล้นตอนข้ามโลกถูกกด ----
+const ASC_MIN={m:60,x:150};
+function ascWait(){if(!S||S.xt)return 0;return S.xian?Math.max(0,ASC_MIN.x-(S.age-(S.xAsc||0))):Math.max(0,ASC_MIN.m-S.age)}
+function xTribSc(){return clamp(total()/REALMS[7].p-1,0,1)}
+function xTribP(n){const sc=xTribSc(),st=Math.min(1,(S.int||0)/400)*.08+Math.min(1,(S.tribPrep||0)/3)*.08;return clamp((n===3?.42+S.karma/600:.45)+.45*sc+st,.2,.94)}
+{const _at=ascendTick;ascendTick=function(){if(!S||realmIdx()<7)return _at.apply(this,arguments);if(!S.xt){if((S.ascCd||0)>S.age)return false;const w=ascWait();if(w>0){if(!S._ascHint||S._ascHint<S.age-40){S._ascHint=S.age;log(`🌩️ ร่างกายของคุณแตะขีดสุดของ${S.xian?'โลกเซียน':'โลกมนุษย์'}แล้ว แต่รากฐานยังไม่มั่นคงพอจะรับทัณฑ์สวรรค์ — ต้องบ่มเพาะอีกราว ${w} ปี`,'epic')}return false}}
+ const r=_at.apply(this,arguments);
+ try{if(r&&S.xian&&!S.xt&&choice._cur&&/ทัณฑ์สวรรค์/.test(String(choice._cur.title))){const o=choice._cur.opts[0],p=Math.round(xTribP(1)*100);if(o){o.s=`ไปต่อในโลกเทพ · โอกาสผ่านแต่ละระลอกราว ${p}% · ล้มเหลวเสียพลังบางส่วน`;if(modalOpen&&$('modal').dataset.k==='choice')choiceShow()}}}catch(e){}
+ return r}}
+{const _aw=ascendWave;ascendWave=function(n){if(!S||!S.xian||S.xt||n>3)return _aw.apply(this,arguments);
+ const W=['อัสนีเก้าสาย','เพลิงสวรรค์เผาจิต','มารในใจครั้งสุดท้าย'],p=xTribP(n);
+ if(Math.random()<p){log(`⚡ ระลอกที่ ${n}: ${W[n-1]} — ผ่าน!`,'epic');if(auto)ascendWave(n+1);else choice(`⚡ ทัณฑ์สวรรค์ระลอกที่ ${n+1}`,`ผ่าน${W[n-1]}มาได้ พลังชีวิตเหลือ ${fmt(Math.round(S.hp))} · ระลอกถัดไปโอกาสผ่านราว ${Math.round(xTribP(n+1)*100)}%`,[{t:'ไปต่อ',f(){ascendWave(n+1)}}]);return}
+ const lose=Math.round(S.power*(.05+Math.random()*.05));S.power=Math.max(10,S.power-lose);S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.45));S.ascCd=S.age+R(20,40);S.tribPrep=0;
+ log(`⚡ ${W[n-1]}ฟาดคุณร่วงลงจากฟ้า — รากฐานสั่นคลอน พลังยุทธ์ −${fmt(lose)} · ต้องพักฟื้นอีกหลายสิบปีก่อนเมฆทัณฑ์จะกลับมา`,'bad',true)}}
+// พลังที่ "ล้น" ข้ามโลก: วิชา/อุปกรณ์จากโลกเดิมถูกกดด้วยกฎของโลกใหม่ ไม่ให้ข้ามหลายขั้นทันที
+function ascSquash(why){if(!S)return;const rest=total()-S.power,cap=REALMS[2].p*.7;if(rest<=cap)return;const ab=artBonus(),oth=rest-ab;if(ab<=0)return;const want=Math.max(cap*.3,cap-oth),f=Math.min(1,want/ab);if(f>=1)return;
+ S.arts.forEach(a=>{if(a&&a.b)a.b=Math.max(1,Math.round(a.b*f))});S.power=Math.max(10,REALMS[1].p+60-(total()-S.power));if(S.rcap!=null)S.rcap=Math.min(S.rcap,rawRealm());
+ log(`🌀 ${why} — วิชาที่ติดตัวมาถูกกฎของโลกใหม่กดพลังลง ต้องฝึกให้เข้ากับโลกนี้ใหม่อีกครั้ง`,'epic')}
+{const _ax=ascendToX;ascendToX=function(){const r=_ax.apply(this,arguments);try{ascSquash('ฟ้าดินของโลกเซียนต่างจากโลกมนุษย์')}catch(e){}return r}}
+{const _ag=ascendGod;ascendGod=function(){const a0=S&&S.age;const r=_ag.apply(this,arguments);try{if(S){S.gAge=a0;ascSquash('กฎแห่งโลกเทพกดทับทุกสิ่งที่มาจากเบื้องล่าง')}}catch(e){}return r}}
+// มรดกวิชาของลูก: ร่างเด็กรับพลังเต็มของวิชาบรรพบุรุษไม่ไหว
+{const _ih=inherit;inherit=function(){const r=_ih.apply(this,arguments);try{if(S&&S.arts){const cap=REALMS[2].p*.8,rest=total()-S.power,h=S.arts.find(a=>a&&a.heir);if(h&&rest>cap){const ab=artBonus(),f=Math.max(.02,Math.min(1,(ab-(rest-cap))/ab));if(f<1){h.b=Math.max(1,Math.round(h.b*f));log(`🧒 ร่างเด็กยังรับพลังเต็มของวิชามรดกไม่ไหว — พลังของวิชาจะถูกผนึกไว้บางส่วน`,'')}}}}catch(e){}return r}}
+// พลังรวมถาวร % : ต่อขั้น ได้เต็มรวมไม่เกิน 30% ส่วนเกินได้แค่ 20%
+function pctPow(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx();if(!S._pp||S._pp.k!==k)S._pp={k,a:0};const room=Math.max(0,.3-S._pp.a),full=Math.min(v,room),eff=full+(v-full)*.2;S._pp.a+=v;return Math.round(total()*eff)}
 </script>
 </body>
 </html>
