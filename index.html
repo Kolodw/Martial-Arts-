@@ -473,7 +473,7 @@ function openUpdate(){
 function closeUpdate(){LS.set('murim_seen',VERSION);closeM()}
 
 // ============ SETTINGS ============
-const CFG={len:5000,ow:.12,sys:.006,xian:0,chm:0};
+const CFG={len:5000,ow:.04,sys:.006,xian:0,chm:0};
 document.querySelectorAll('.seg').forEach(sg=>sg.querySelectorAll('button').forEach(b=>b.onclick=()=>{sg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');CFG[sg.dataset.k]=+b.dataset.v;if(sg.dataset.k==='xian')titleMode();updateHints()}));
 
 const rnm=i=>CFG.xian?XREALM[i]:(W0&&W0.realm?W0.realm[i]:REALMS[i].n);
@@ -520,10 +520,10 @@ const FAMILY=[
  {w:1,n:'ทายาทลัทธิมาร',d:'สายเลือดมารไหลเวียนในกาย',money:600,power:80,karma:-40,join:.2,demon:1,inf:.03}];
 const TALENT=[
  {w:25,n:'กระดูกขยะ',d:'ชีพจรอุดตัน ฝึกยุทธ์ยากยิ่ง',m:.6},
- {w:45,n:'กระดูกธรรมดา',d:'คนทั่วไปในยุทธภพ',m:1},
+ {w:52.9,n:'กระดูกธรรมดา',d:'คนทั่วไปในยุทธภพ',m:1},
  {w:20,n:'กระดูกดี',d:'อาจารย์มองเห็นแวว',m:1.4},
- {w:8,n:'อัจฉริยะยุทธ์',d:'ร้อยปีจะมีสักคน',m:2},
- {w:1.8,n:'ชีพจรสวรรค์เก้าสาย',d:'กายาที่ฟ้าประทาน',m:3},
+ {w:1.5,n:'อัจฉริยะยุทธ์',d:'ร้อยปีจะมีสักคน',m:2},
+ {w:.4,n:'ชีพจรสวรรค์เก้าสาย',d:'กายาที่ฟ้าประทาน',m:3},
  {w:.2,n:'กายามารสวรรค์',d:'ร่างที่ถูกลิขิตมาเพื่อครองยุทธภพ',m:4,karma:-20}];
 const WORLDS=[
  {w:35,n:'โลกยุคปัจจุบัน (ค.ศ. 2026)',k:'modern',items:[
@@ -657,7 +657,7 @@ const SOULS={
  zombie:{n:g=>ch(g!=='หญิง'?['มาร์คัส','แจ็ค','ดิเอโก้','วิกเตอร์']:['ซาร่า','ไมยา','เรเชล','แอนนา'])+' '+ch(['ฮัลล์','เรเยส','ซานโตส','โคล','ชิน']),
   d:['ผู้รอดชีวิตปีที่ 7 หลังวันสิ้นโลก','หัวหน้าหน่วยเก็บกวาดเขต 9 ที่ถูกฝูงซอมบี้ล้อม','หมอสนามที่ถูกกัดขณะช่วยเด็ก','ช่างซ่อมรถที่ขับรถพุ่งชนฝูงซอมบี้เพื่อให้คนอื่นหนี']}};
 function genSoul(w,g){const S0=SOULS[w.k];return{n:S0.n(g),d:ch(S0.d)}}
-const ERAS=[{w:80,n:'ยุทธภพปกติ',d:'ยุคที่สงบพอประมาณ',ow:.12,sys:.006},{w:12,n:'ยุคมิติซ้อนทับ',d:'กำแพงมิติบางลง ผู้ข้ามมิติเกิดบ่อย',ow:.45,sys:.006},{w:8,n:'ยุคแห่งระบบ',d:'ระบบลงมาเลือกโฮสต์บ่อยผิดปกติ',ow:.12,sys:.03}];
+const ERAS=[{w:80,n:'ยุทธภพปกติ',d:'ยุคที่สงบพอประมาณ',ow:.04,sys:.006},{w:12,n:'ยุคมิติซ้อนทับ',d:'กำแพงมิติบางลง ผู้ข้ามมิติเกิดบ่อย',ow:.15,sys:.006},{w:8,n:'ยุคแห่งระบบ',d:'ระบบลงมาเลือกโฮสต์บ่อยผิดปกติ',ow:.04,sys:.03}];
 
 // ============ CLANS ============
 const CLANS=[
@@ -2315,7 +2315,7 @@ function qFail(q){const s=S.sys;s.fail++;const r=R(1,4);
  else{const d=Math.min(s.exp,Math.round(expNeed(s.lv)*.3));s.exp-=d;S.hp-=8;sysLog(`เควสล้มเหลว: ${q.n} — บทลงโทษ: ความเจ็บปวดจากการลบความทรงจำ EXP −${d}`,'fail')}}
 function sysTick(){
  if(S.sysRefused||(S.sysEver&&!S.sys))return false;
- if(!S.sys){if((S.sysFate!=null&&S.age>=S.sysFate)||Math.random()<CFG.sys){S.sysFate=null;sysOffer();return S.age>=6}return false}
+ if(!S.sys){sysLifeRoll();if((S.sysFate!=null&&S.age>=S.sysFate)||(!S.sysRolled&&Math.random()<CFG.sys)){S.sysFate=null;sysOffer();return S.age>=6}return false}
  sysFix();
  const s=S.sys,T=sysType(),m=S.talent.m,gm=sysM();
  S.power+=(5+s.lv*6)*m*(T.id==='martial'?1.3:1)*gm;S.qi+=.08*s.lv;gainExp(12);
@@ -2811,7 +2811,7 @@ function ascendToX(){
  peers=[makePeer(),makePeer(),makePeer()].map(p=>{p.age=R(80,400);p.ri=R(1,4);p.power=p.ri*300;p.death=p.age+R(50,300);return p});
  setScene('aura');log('☁️ <b>เหาะสู่โลกเทพเซียน</b> — พลังที่เคยไร้เทียมทานในโลกมนุษย์ ที่นี่เป็นเพียงจุดเริ่มต้นของการฝึกปราณ ทุกอย่างเริ่มใหม่อีกครั้ง','myth',true);
  keyAdd('เหาะขึ้นจากยุทธภพสู่โลกเทพเซียน');S.flags.toXian=1;
- if(CFG.sys<.02)CFG.sys=.02;render()}
+ if(CFG.sys<.02)CFG.sys=.02;if(!S.sys&&!S.sysEver&&S.sysFate==null&&!S.sysXr){S.sysXr=1;if(Math.random()<.1)S.sysFate=S.age+R(1,150)}render()}
 // ---- อีเวนต์เฉพาะโลกเซียน ----
 const XEV=[
  {w:3,cd:6,c:s=>s.xian&&s.age>=12,f(){const it=ch(['หินวิญญาณระดับสูงกองโต','หญ้าวิญญาณเก้าใบ','ผลไม้เซียนพันปี','แก่นอสูรระดับห้า']);choice('💎 สมบัติวิญญาณ',`${whereTxt()} คุณพบ <b>${it}</b> แต่ผู้ฝึกตนอีกคนก็เห็นพร้อมกัน`,[
@@ -5194,7 +5194,7 @@ function sysPop(T,G,inh){try{const old=document.getElementById('sysPop');if(old)
 {const _tt=toTitle;toTitle=function(){try{if(S&&S.alive&&choice._cur){fateChoice(true);try{saveGame()}catch(e){}}clearTimeout(choice._t);clearInterval(choice._cd);choice._cur=null;choice._min=false;try{pendBar()}catch(e){}if(modalOpen)closeM();const sp=document.getElementById('sysPop');if(sp)sp.remove();paused=false}catch(e){console.error(e)}return _tt.apply(this,arguments)}}
 
 // ============ v5.9: ผู้ข้ามมิติพร้อมระบบ + ระบบไม่ซ้ำ ============
-var OW_SYS=.35;
+var OW_SYS=.12;
 function sysPickT(){const last=LS.get('murim_lastsys',null);const pool=SYS_TYPES.filter(x=>x.id!==last);const r=pickW(pool.length?pool:SYS_TYPES);return{v:r.v,p:r.p}}
 {const _so=sysOffer;sysOffer=function(){if(!S||S.sys||S.sysEver)return;const _pw=pickW;let first=true;pickW=function(arr){if(first&&arr===SYS_TYPES){first=false;return sysPickT()}return _pw.apply(this,arguments)};try{_so.apply(this,arguments)}finally{pickW=_pw}}}
 {const _bs2=bindSys;bindSys=function(T,G){if(S&&S.sys)return;_bs2.apply(this,arguments);if(S&&S.sys){S.sysEver=1;try{LS.set('murim_lastsys',S.sys.t)}catch(e){}}}}
@@ -7494,6 +7494,10 @@ function secRaidGo(){if(!S.secRaid||!S.alive||choice._cur||modalOpen||S.beastMod
  const a0=S.age,t0=total(),nx=realmNext();S._secE=secStart();S._secP0=S.power;S._secQ0=S.qi;S._secCap=nx?Math.max(t0,nx*1.2):0;S._secCapped=0;
  try{_sc.apply(this,arguments)}finally{S._secE=0;S._secCap=0}if(S.age>a0){secAfter(S.age-a0);try{render();checkDeath()}catch(e){}}}}
 {const _pySec=passYear;passYear=function(){const sealing=!!(S&&S.xseal>0),a0=S?S.age:0;const r=_pySec.apply(this,arguments);try{if(S&&S.alive){if(sealing&&S.age>a0)secAfter(S.age-a0);else secRaidGo()}}catch(e){console.error(e)}return r}}
+
+// ---- ความหายาก: ระบบสุ่มครั้งเดียวต่อชีวิต (ยุทธภพ ~6.5% · ยุคแห่งระบบ 25% · โลกเซียน 10%) แทนการสุ่มทุกปี ----
+function sysLifeRoll(){if(!S||S.sysRolled||S.sys||S.sysEver)return;S.sysRolled=1;if(S.sysFate!=null)return;
+ const p=S.xian?.10:(CFG.sys>=.02?.25:.065);if(Math.random()<p)S.sysFate=S.age+(S.xian?R(0,300):R(0,70))}
 </script>
 </body>
 </html>
