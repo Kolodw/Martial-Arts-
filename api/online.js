@@ -152,7 +152,9 @@ const cip = req => (String(req.headers['x-real-ip'] || '') || String(req.headers
 // ต่อ IP ต่อนาที: เกิน SOFT ตอบ 429 · เกิน HARD แบน 30 นาที · คำสั่งที่เขียนข้อความให้คนอื่นเห็นจำกัดแยก
 const IP_SOFT = 900, IP_HARD = 3000, IP_WMAX = 40;
 const IP_WRITE = new Set(['say', 'bug', 'bugedit', 'mtmsg', 'pachat', 'life', 'profile', 'idea', 'fb', 'mtopen', 'meet', 'migput', 'csave', 'save', 'achfirst', 'glogin', 'gunlink', 'profack']);
-const isAdmKey = k => !!process.env.ADMIN_KEY && String(k || '') === process.env.ADMIN_KEY;
+// รหัสแอดมิน: ใช้ ADMIN_KEY2 ถ้ามี (รหัสเก่า ADMIN_KEY ใช้ไม่ได้อีก)
+const ADM_KEY = process.env.ADMIN_KEY2 || process.env.ADMIN_KEY || '';
+const isAdmKey = k => !!ADM_KEY && String(k || '') === ADM_KEY;
 const annGet = async () => { try { const v = await cmd('GET', 'ann'); return v ? JSON.parse(v) : null } catch { return null } };
 const ANN_VOTE_DAYS = 7;
 const annHist = async () => { try { return ((await cmd('LRANGE', 'annh', 0, 29)) || []).map(v => { try { return JSON.parse(v) } catch { return null } }).filter(Boolean) } catch { return [] } };
@@ -343,7 +345,7 @@ module.exports = async (req, res) => {
       return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7), ann });
     }
     if (a === 'who' || a === 'admin' || a === 'bugfix') {
-      const AK = process.env.ADMIN_KEY;
+      const AK = ADM_KEY;
       if (!AK || String(qOf(req).key || '') !== AK) return res.status(403).json({ err: 'forbidden' });
       if (a === 'bugfix') {
         const bid = String(qOf(req).bid || '').slice(0, 20);
@@ -440,7 +442,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       return res.json({ ok: 1 });
     }
     if (a === 'trkget') {
-      const AK = process.env.ADMIN_KEY;
+      const AK = ADM_KEY;
       if (!AK || String(qOf(req).key || '') !== AK) return res.status(403).json({ err: 'forbidden' });
       const PAGES = ['chat', 'live', 'board', 'arena', 'me', 'spec'], days = [];
       for (let i = 0; i < 7; i++) days.push(new Date(now + 7 * 3600e3 - i * 86400e3).toISOString().slice(0, 10));
@@ -485,7 +487,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const all = T.concat(Pv).filter(x => x.lid);
       const pubs = all.length ? await cmd('MGET', ...all.map(x => 'lifep:' + x.lid)) : [];
       const pm = {}; all.forEach((x, i) => pm[x.lid] = pubs[i] === '1' ? 1 : pubs[i] === '2' ? 2 : 0);
-      const admB = !!process.env.ADMIN_KEY && String(qOf(req).key || '') === process.env.ADMIN_KEY;
+      const admB = !!ADM_KEY && String(qOf(req).key || '') === ADM_KEY;
       const fix = l => l.map(x => { const v = x.lid ? pm[x.lid] || 0 : 0; const o = Object.assign(x, { pub: v === 1 || (admB && x.lid) ? 1 : 0 }); if (v === 2 && !admB) { o.n = 'ผู้ไม่ประสงค์ออกนาม'; o.f = ''; o.anon = 1 } return o });
       return res.json({ top: fix(T), prev: fix(Pv), arena });
     }
@@ -519,7 +521,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       return res.json({ n: L.length, avg, dist, m: L.slice(0, 80) });
     }
     if (a === 'livelist') {
-      const isAdm = !!process.env.ADMIN_KEY && String(qOf(req).key || '') === process.env.ADMIN_KEY;
+      const isAdm = !!ADM_KEY && String(qOf(req).key || '') === ADM_KEY;
       if (isAdm) {
         const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 90e3, '+inf']]);
         const all = [...(pub || []).map(x => [x, 'live:', 0]), ...(prv || []).filter(x => !(pub || []).includes(x)).map(x => [x, 'livep:', 1])];
@@ -548,7 +550,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
     }
     if (a === 'liveget') {
       const k2 = String(qOf(req).t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-      if (process.env.ADMIN_KEY && String(qOf(req).key || '') === process.env.ADMIN_KEY) {
+      if (ADM_KEY && String(qOf(req).key || '') === ADM_KEY) {
         const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 90e3, '+inf']]);
         const f1 = (pub || []).find(x => x.slice(0, 6) + x.slice(-4) === k2), f2 = (prv || []).find(x => x.slice(0, 6) + x.slice(-4) === k2);
         const v = f1 ? await cmd('GET', 'live:' + f1) : f2 ? await cmd('GET', 'livep:' + f2) : null;
@@ -624,7 +626,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       return res.json({ d });
     }
     if (a === 'boarddel' || a === 'cheatlog') {
-      if (!process.env.ADMIN_KEY || String(qOf(req).key || '') !== process.env.ADMIN_KEY) return res.status(403).json({ err: 'forbidden' });
+      if (!ADM_KEY || String(qOf(req).key || '') !== ADM_KEY) return res.status(403).json({ err: 'forbidden' });
       if (a === 'cheatlog') { const L0 = await cmd('LRANGE', 'cheatlog', 0, 99); return res.json({ l: (L0 || []).map(s0 => JSON.parse(s0)) }) }
       const lid = String(qOf(req).l || '').replace(/[^a-z0-9]/g, '').slice(0, 16), ban = qOf(req).ban === '1';
       const prevW = week(new Date(now - 7 * 86400e3)); let removed = 0;
@@ -636,7 +638,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const lid = String(qOf(req).l || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
       const [pub, d, own] = await pipe([['GET', 'lifep:' + lid], ['GET', 'lifed:' + lid], ['GET', 'lifeo:' + lid]]);
       if (!d) return res.status(404).json({ err: 'notfound' });
-      const admV = !!process.env.ADMIN_KEY && String(qOf(req).key || '') === process.env.ADMIN_KEY;
+      const admV = !!ADM_KEY && String(qOf(req).key || '') === ADM_KEY;
       if (pub !== '1' && own !== id && !admV) return res.status(403).json({ err: 'private' });
       return res.json({ d: JSON.parse(d), pub: pub === '1' ? 1 : 0, mine: own === id ? 1 : 0 });
     }
@@ -645,7 +647,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
     const RPC = [[120, 350, 800, 2200, 5500, 12000, 24000, 24000], [250, 900, 2500, 7000, 18000, 42000, 90000, 90000]];
     const powOk = (p, ri, x, age) => { ri = Math.max(0, Math.min(7, +ri || 0)); if (!(p >= 0) || !isFinite(p) || p > 2e9) return false; if (ri < 7 && p > RPC[x ? 1 : 0][ri] * 8 + 1000) return false; if (age != null && +age < 1000 && p > (x ? 60000 : 25000) * (1 + (+age || 1) / 8) + 300000) return false; return true };
     const isBanned = async () => !!(await cmd('SISMEMBER', 'cheaters', id));
-    const isAdmQ = k => !!process.env.ADMIN_KEY && String(k || '') === process.env.ADMIN_KEY;
+    const isAdmQ = k => !!ADM_KEY && String(k || '') === ADM_KEY;
     if (a === 'logget') {
       const k2 = String(qOf(req).t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
       const full = await findLive(k2, isAdmQ(qOf(req).key));
@@ -931,7 +933,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       return res.json({ n });
     }
     if (a === 'reply') {
-      if (!process.env.ADMIN_KEY || String(b.key || '') !== process.env.ADMIN_KEY) return res.status(403).json({ err: 'forbidden' });
+      if (!ADM_KEY || String(b.key || '') !== ADM_KEY) return res.status(403).json({ err: 'forbidden' });
       const kind = b.kind === 'r' ? 'r' : 'b', mid = String(b.mid || '').replace(/[^a-z0-9]/gi, '').slice(0, 30);
       if (!mid) return res.status(400).json({ err: 'mid' });
       const x = clean(b.x, 400);
