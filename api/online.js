@@ -261,6 +261,22 @@ module.exports = async (req, res) => {
       const [, , w] = await pipe([['ZADD', 'watch:' + full, now, viewer], ['ZREMRANGEBYSCORE', 'watch:' + full, 0, now - 20e3], ['ZCARD', 'watch:' + full], ['EXPIRE', 'watch:' + full, 120]]);
       return res.json({ s: JSON.parse(v), w: w || 0 });
     }
+    if (a === 'kvdiag') {
+      // ผู้ดูแลเท่านั้น: ดูสภาพฐานข้อมูล (จำนวนคีย์ตามหมวด ขนาด TTL)
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
+      const out = { now };
+      try { out.dbsize = await cmd('DBSIZE') } catch (x) { out.dbsizeErr = String(x && x.message || x) }
+      try { const inf = String(await cmd('INFO') || ''); out.info = inf.split('\n').filter(l => /used_memory|maxmemory|evicted|expired|keys=|db0|total_commands|max_|policy|plan/i.test(l)).slice(0, 40) } catch (x) { out.infoErr = String(x && x.message || x) }
+      const pref = {}, big = []; let cur = '0', n = 0;
+      try {
+        do { const r = await cmd('SCAN', cur, 'COUNT', 500); cur = String(r[0]); for (const k of r[1] || []) { n++; const pf = String(k).split(':')[0]; pref[pf] = (pref[pf] || 0) + 1; if (big.length < 4000) big.push(k) } } while (cur !== '0' && n < 60000);
+      } catch (x) { out.scanErr = String(x && x.message || x) }
+      out.scanned = n; out.prefixes = Object.entries(pref).sort((x, y) => y[1] - x[1]);
+      const want = ['lives', 'chat', 'bugs2', 'reviews', 'online', 'om', 'oa', 'ann', 'annh', 'trklog', 'jserr', 'bugdone'];
+      try { const r = await pipe([...want.map(k => ['TYPE', k]), ...want.map(k => ['TTL', k])]); out.keys = want.map((k, i) => [k, r[i], r[i + want.length]]) } catch (x) { out.keysErr = String(x && x.message || x) }
+      try { const smp = big.filter((_, i) => i % Math.max(1, Math.floor(big.length / 300)) === 0).slice(0, 300); const mu = await pipe(smp.map(k => ['MEMORY', 'USAGE', k])); const by = {}; smp.forEach((k, i) => { const pf = String(k).split(':')[0]; by[pf] = (by[pf] || 0) + (+mu[i] || 0) }); out.sampleBytesByPrefix = Object.entries(by).sort((x, y) => y[1] - x[1]).slice(0, 20); out.sampled = smp.length } catch (x) { out.memErr = String(x && x.message || x) }
+      return res.json(out);
+    }
     if (a === 'annget') {
       const ai = String(qOf(req).ai || '').replace(/[^a-z0-9]/g, '').slice(0, 20), f = await annFind(ai);
       if (!f) return res.status(404).json({ err: 'gone' });
