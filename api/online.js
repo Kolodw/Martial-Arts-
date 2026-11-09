@@ -130,6 +130,9 @@ function clean(s, n) {
 }
 // อ่าน query ด้วย WHATWG URL (ไม่แตะ req.query ซึ่งใช้ url.parse ที่เลิกสนับสนุนแล้ว)
 const qOf = r => r._q || (r._q = Object.fromEntries(new URL(r.url || '/', 'http://localhost').searchParams));
+// ฉายาที่มีจริงในเกม (สร้างจากตัวเกม) → เซิร์ฟเวอร์รับเฉพาะชื่อในรายการ และกำหนดสีระดับเอง
+let TITLES = { t: {}, a: {} }; try { TITLES = require('./titles.json') } catch (e) {}
+const ttlOk = (tt) => { const k = String(tt || '').slice(0, 24); return k && Object.prototype.hasOwnProperty.call(TITLES.t, k) ? { tt: k, tr: Math.max(0, Math.min(6, +TITLES.t[k] || 0)) } : { tt: '', tr: 0 } };
 // ผู้เล่นตั้งชื่อ/ฉายาให้เหมือนแอดมินไม่ได้
 const noAdm = x => /ผู้ดูแล|แอดมิน|admin|ทีมงาน|moderator|\bmod\b|ผู้พัฒนา|developer/i.test(String(x || '')) ? '' : x;
 const thDay = (ms, back = 0) => new Date(ms + 7 * 3600e3 - back * 86400e3).toISOString().slice(0, 10);
@@ -285,6 +288,12 @@ module.exports = async (req, res) => {
       res.setHeader('Content-Type', 'text/plain; charset=utf-8'); res.setHeader('Cache-Control', 'no-store');
       res.statusCode = 404; return res.end('The page could not be found\n\nNOT_FOUND\n');
     }
+    if (a === 'achfdel') {
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
+      const aid = String(qOf(req).aid || '').replace(/[^a-z0-9_]/g, '').slice(0, 24);
+      if (aid) await cmd('HDEL', 'achf', aid);
+      return res.json({ ok: 1 });
+    }
     if (a === 'ipban') {
       if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
       const tip = String(qOf(req).ip || '').replace(/[^0-9a-fA-F:.]/g, '').slice(0, 45);
@@ -361,6 +370,11 @@ module.exports = async (req, res) => {
       let brd = []; try { const hid = new Set((await cmd('SMEMBERS', 'bdhide')) || []); hid.add('f18abdmw8fuj8d'); brd = ((await cmd('ZREVRANGE', 'bd2:' + W, 0, 39)) || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(x => x && x.lid && !hid.has(x.lid)) } catch {}
       const e = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
       const K = encodeURIComponent(AK);
+      const afR = (await cmd('HGETALL', 'achf')) || [], afL = [];
+      for (let i = 0; i < afR.length; i += 2) { const v = jp(afR[i + 1]); if (v) afL.push({ id: afR[i], n: v.n, t: v.t, u: v.u, an: (TITLES.a[afR[i]] || [afR[i]])[0], r: (TITLES.a[afR[i]] || [0, 0])[1] }) }
+      afL.sort((x, y) => y.t - x.t);
+      const afHtml = `<h2>👑 คนแรกของเซิร์ฟเวอร์ <small style="font-weight:normal;color:#aaa">· ${afL.length} รายการ · ระดับเทพขึ้นไป · ลบรายการที่น่าสงสัยได้ (คนถัดไปที่ทำได้จะกลายเป็นคนแรกแทน)</small></h2>${afL.length ? afL.slice(0, 60).map(x => `<div class="pl" id="af_${e(x.id)}"><div class="plh"><b>${e(x.an)}</b><span style="color:#aaa">${['ทั่วไป', 'หายาก', 'ล้ำค่า', 'ตำนาน', 'เทพ', 'อมตะ', '???'][x.r] || ''}</span></div><small>👑 ${e(x.n)} · ไอดี ${e(x.u || '?')}… · ${new Date(x.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })}</small><div style="margin-top:6px"><button class="cpb" onclick="afDel('${e(x.id)}',this)">🗑 ลบรายการนี้</button></div></div>`).join('') : '<p>ยังไม่มี</p>'}
+<script>async function afDel(id,b){if(!confirm('ลบ "คนแรกของเซิร์ฟเวอร์" ของความสำเร็จนี้?'))return;b.disabled=true;try{const r=await fetch('?a=achfdel&key=${K}&aid='+encodeURIComponent(id));const j=await r.json();if(j.ok){b.textContent='ลบแล้ว';b.closest('.pl').style.opacity=.35}else b.textContent='ไม่สำเร็จ'}catch(x){b.textContent='ไม่สำเร็จ';b.disabled=false}}</script>`;
       const hvD = [0, 1, 2, 3, 4, 5, 6].map(k => thDay(now, k)), HW = ['new', 'old'];
       const hvR = await pipe([...HW.map(w => ['PFCOUNT', 'hv:' + hvD[0] + ':' + w]), ...HW.map(w => ['PFCOUNT', 'hv:' + hvD[1] + ':' + w]), ...HW.map(w => ['PFCOUNT', ...hvD.map(d => 'hv:' + d + ':' + w)]), ...HW.map(w => ['PFCOUNT', 'hv:all:' + w]), ['GET', 'migst:put:' + hvD[0]], ['GET', 'migst:get:' + hvD[0]], ['GET', 'migst:put:all'], ['GET', 'migst:get:all']]);
       const hvOn = { new: 0, old: 0, other: 0 }; (metas || []).forEach(m => { const o = (jp(m) || {}).o || ''; if ((jp(m) || {}).b === 'บอท') return; hvOn[/1inanovel\.com$/.test(o) ? 'new' : /vercel\.app$/.test(o) ? 'old' : 'other']++ });
@@ -382,6 +396,7 @@ module.exports = async (req, res) => {
 <h2>คนที่ออนไลน์ตอนนี้ <small style="font-weight:normal;color:#aaa">· รีเฟรชเองทุก 1 นาที</small></h2><p><small>🟢 กำลังเล่น · 🤔/📋 เลือกเหตุการณ์/เปิดหน้าต่าง · ⏸ หยุดเกม · 😴 เปิดทิ้งไว้ · 🙈 สลับแท็บ · 🏠 อยู่หน้าอื่น · 🔴 อาจค้าง/มี error</small></p>${rows.map(r => { const a = r.a || {}; return `<div class="pl" style="border-left:4px solid ${r.s.c}"><div class="plh"><b style="color:${r.s.c}">${e(r.s.t)}</b><small>${e(r.id)} · ${e(r.d)} · ${e(r.b)} · ${e(r.c)} · อัปเดต ${r.ago == null ? '-' : r.ago + ' วิ'}ก่อน${a.v ? ' · v' + e(a.v) : ''}</small></div>${a.nm ? `<div>👤 <b>${e(a.nm)}</b> อายุ ${e(a.ag)} ปี · ${e(WN[a.w] || '')} · ${e(a.ri || '')}${a.sp ? ' · ความเร็ว ' + e(a.sp) + '×' : ''}</div>` : ''}${r.a ? `<div><small>หน้า: ${e(SCN[a.sc] || a.sc || '-')}${a.md ? ' · หน้าต่าง: ' + e(MDN[a.md] || a.md) : ''} · แตะล่าสุด ${mins(a.ia)}ก่อน${a.sc === 'game' && a.yr >= 0 ? ' · ปีในเกมล่าสุดผ่านไปเมื่อ ' + mins(a.yr) + 'ก่อน' : ''}</small></div>` : ''}${r.s.x ? `<div><small style="color:#ff9b9b">error ล่าสุด: ${e(r.s.x)}</small></div>` : ''}</div>` }).join('') || '<p><small>ตอนนี้ไม่มีใครออนไลน์</small></p>'}
 ${hvHtml}
 ${secHtml}
+${afHtml}
 <h2>🐞 error จากเครื่องผู้เล่น <small style="font-weight:normal;color:#aaa">· 200 ครั้งล่าสุด จัดกลุ่มตามข้อความ</small></h2>${jsTop.length ? `<p><button class="cpb" onclick="cpErr(-1,this)">📋 ก็อปปี้ error ทั้งหมดไปให้ Claude แก้</button> <small>(ไม่รวมอันที่มาจากเบราว์เซอร์)</small></p>` : ''}${jsTop.map((g, gi) => `<div class="pl" style="border-left:4px solid ${jsNoise(g) ? '#777' : '#ff6b6b'}"><div class="plh"><b style="color:${jsNoise(g) ? '#aaa' : '#ff9b9b'}">${e(g.last.m)}</b><small>${g.n} ครั้ง · ${g.users.size} คน · v${e([...g.vers].join(', v'))}</small></div>${jsNoise(g) ? '<div><small style="color:#e8c86a">🔕 มาจากเบราว์เซอร์ในแอปหรือส่วนขยาย ไม่ใช่บัคของเกม</small></div>' : ''}<div><small>ล่าสุด ${new Date(g.last.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })} · ${e(g.last.d)}${g.last.l ? ' · บรรทัด ' + g.last.l + ':' + g.last.c : ''} · หน้า ${e(g.last.x.sc)}${g.last.x.md ? ' · หน้าต่าง ' + e(g.last.x.md) : ''}${g.last.x.ch ? ' · เหตุการณ์ ' + e(g.last.x.ch) : ''}${g.last.x.ag ? ' · อายุ ' + g.last.x.ag + ' · ' + e(g.last.x.fo) + ' · ' + e(g.last.x.w) : ''}</small></div>${g.last.s ? `<div><small style="color:#aaa;word-break:break-all">${e(g.last.s)}</small></div>` : ''}<div style="margin-top:6px"><button class="cpb" onclick="cpErr(${gi},this)">📋 ก็อปปี้ให้ Claude</button></div></div>`).join('') || '<p><small>ยังไม่มี error</small></p>'}
 <script>const ERR_TX=${JSON.stringify(jsTop.map(g => ({ t: jsText(g), n: jsNoise(g) ? 1 : 0 }))).replace(/</g, '\\u003c')};
 function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกมเหล่านี้ให้หน่อย (จากหน้าผู้ดูแล)\\n\\n'+ERR_TX.filter(x=>!x.n).map((x,k)=>'#'+(k+1)+'\\n'+x.t).join('\\n\\n'):'ช่วยแก้ error นี้ของเกมให้หน่อย\\n\\n'+ERR_TX[i].t;const ok=()=>{const o=b.textContent;b.textContent='✅ ก็อปปี้แล้ว — วางในแชทกับ Claude ได้เลย';setTimeout(()=>b.textContent=o,2500)};
@@ -633,7 +648,9 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
     if (a === 'achfirst') {
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
       const aid = String(b.a || '').replace(/[^a-z0-9_]/g, '').slice(0, 24), n = noAdm(clean(b.n, 20)) || 'นิรนาม';
-      if (aid.length < 2) return res.status(400).json({ err: 'id' });
+      if (aid.length < 2 || (Object.keys(TITLES.a).length && !TITLES.a[aid])) return res.status(400).json({ err: 'id' });
+      if (b.tp || await cmd('SISMEMBER', 'cheaters', id)) return res.json({ first: 0 });
+      if (TITLES.a[aid] && (+TITLES.a[aid][1] || 0) < 4) return res.json({ first: 0 });
       const ok = await cmd('HSETNX', 'achf', aid, JSON.stringify({ n, t: now, u: id.slice(0, 6) }));
       if (+ok === 1) return res.json({ first: 1 });
       return res.json({ first: 0, who: jp(await cmd('HGET', 'achf', aid)) });
@@ -759,7 +776,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       if (!ok) return res.status(429).json({ err: 'rate' });
       const x = clean(b.x, 200);
       if (!x) return res.status(400).json({ err: 'empty' });
-      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), tt: noAdm(clean(b.tt, 24)), tr: Math.max(0, Math.min(6, parseInt(b.tr, 10) || 0)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
+      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), ...((b.tp || await cmd('SISMEMBER', 'cheaters', id)) ? { tt: '', tr: 0 } : ttlOk(b.tt)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
       await pipe([['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199]]);
       return res.json({ ok: 1 });
     }
@@ -771,7 +788,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
     }
     if (a === 'life') {
       const lid = String(b.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
-      const e = { n: clean(b.n, 20) || 'นิรนาม', s: Math.max(0, Math.min(1e12, +b.s || 0)), age: +b.age || 0, r: clean(b.r, 30), f: clean(b.f, 30), c: clean(b.c, 60), x: b.x ? 1 : 0, g: b.g ? 1 : 0, ga: Math.max(0, Math.min(1e9, Math.round(+b.ga || 0))), tt: noAdm(clean(b.tt, 24)), tr: Math.max(0, Math.min(6, parseInt(b.tr, 10) || 0)), xa: Math.max(0, Math.min(1e9, Math.round(+b.xa || 0))), cu: b.cu ? 1 : 0, bm: b.bm ? 1 : 0, t: now, lid };
+      const e = { n: clean(b.n, 20) || 'นิรนาม', s: Math.max(0, Math.min(1e12, +b.s || 0)), age: +b.age || 0, r: clean(b.r, 30), f: clean(b.f, 30), c: clean(b.c, 60), x: b.x ? 1 : 0, g: b.g ? 1 : 0, ga: Math.max(0, Math.min(1e9, Math.round(+b.ga || 0))), ...(b.tp ? { tt: '', tr: 0 } : ttlOk(b.tt)), xa: Math.max(0, Math.min(1e9, Math.round(+b.xa || 0))), cu: b.cu ? 1 : 0, bm: b.bm ? 1 : 0, t: now, lid };
       const key = 'bd2:' + W, L = [['INCR', 'lives'], ['ZADD', key, e.s, JSON.stringify(e)], ['ZREMRANGEBYRANK', key, 0, -101], ['EXPIRE', key, 86400 * 40]];
       if (e.cu || !(parseFloat(b.ver) >= 6.3)) { await cmd('INCR', 'lives'); return res.json({ ok: 1, skip: 1 }) }
       const det = String(b.det || '');
