@@ -13,21 +13,24 @@
  var api='https://'+NEW+'/api/online';
  try{var vid=null;try{vid=JSON.parse(localStorage.getItem('murim_pid')||'null')}catch(e){}if(!vid)vid=localStorage.getItem('murim_vid');if(!vid){vid=Math.random().toString(36).slice(2,14);localStorage.setItem('murim_vid',vid)}if((OLD||(isNew&&!/[?&]mig=/.test(location.search)))&&vid)fetch('/api/online?a=hit&w='+(OLD?'old':'new')+'&vid='+encodeURIComponent(String(vid)),{cache:'no-store',keepalive:true}).catch(function(){})}catch(e){}
  if(OLD){var q=new URLSearchParams(location.search);if(q.get('stay')==='1'){try{sessionStorage.setItem('mig_stay','1')}catch(e){}}var stay=false;try{stay=sessionStorage.getItem('mig_stay')==='1'}catch(e){}if(stay)return;
-  var go=function(tk){var u=new URLSearchParams(location.search);u.delete('stay');u.delete('mig');if(tk)u.set('mig',tk);var qs=u.toString();location.replace('https://'+NEW+location.pathname+(qs?'?'+qs:'')+location.hash)};
+  var go=function(tk){var u=new URLSearchParams(location.search);u.delete('stay');u.delete('mig');u.delete('pull');if(tk)u.set('mig',tk);var qs=u.toString();location.replace('https://'+NEW+location.pathname+(qs?'?'+qs:'')+location.hash)};
   (async function(){try{var r=await tmo(fetch(api+'?a=ping',{cache:'no-store'}),6000);if(!r.ok)return;var j=await r.json();if(!j||j.bd==null)return}catch(e){return}
    var done=null;try{done=JSON.parse(localStorage.getItem('murim_migrated')||'null')}catch(e){}
-   var all=ls(),n=Object.keys(all).length;
-   if(!n)return go('');
-   if(done&&done.tk&&Date.now()-done.t<25*86400e3)return go(done.tk);
+   var all=ls(),n=Object.keys(all).length,real=Object.keys(all).some(function(k){return /^murim_(save|bak_|graves|legacy|ach|codex|stats|arc)/.test(k)&&all[k]&&all[k]!=='null'&&all[k]!=='[]'&&all[k]!=='{}'});
+   if(!n||!real)return go('');
+   if(done&&done.tk&&Date.now()-done.t<25*86400e3&&q.get('pull')!=='1')return go(done.tk);
    cover('<div style="font-size:42px">📦</div><b>เกมย้ายบ้านไปที่ '+NEW+' แล้ว</b><div>กำลังขนเซฟของคุณไปด้วย อย่าเพิ่งปิดหน้านี้…</div>');
    try{var p=await gz(JSON.stringify(all));if(p.d.length>4e6)throw new Error('big');var r2=await tmo(fetch(api+'?a=migput',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({d:p.d,z:p.z,n:n})}),25000);var j2=await r2.json();if(!r2.ok||!j2.tk)throw new Error(j2.err||r2.status);
     try{localStorage.setItem('murim_migrated',JSON.stringify({t:Date.now(),tk:j2.tk}))}catch(e){}go(j2.tk)}
    catch(e){cover('<div style="font-size:42px">⚠️</div><b>ย้ายเซฟไปเว็บใหม่ไม่สำเร็จ</b><div>เซฟของคุณยังอยู่ครบที่นี่ เล่นต่อที่เว็บนี้ได้ตามปกติ แล้วระบบจะลองย้ายให้ใหม่ครั้งหน้า</div><button style="padding:10px 22px;font-size:16px;border-radius:10px;border:0;background:#c9a24a;color:#111" onclick="this.parentNode.remove()">เล่นต่อที่นี่</button>')}})();return}
  if(isNew){var q2=new URLSearchParams(location.search),tk=(q2.get('mig')||'').replace(/[^a-z0-9]/g,'');if(!tk){
   // เข้าเว็บใหม่ตรงๆ แต่เครื่องนี้ยังไม่มีเซฟ → ปุ่มดึงเซฟจากเว็บเก่า (เว็บเก่าจะส่งเซฟกลับมาเอง)
-  var showPull=function(){try{var m=ls(),has=Object.keys(m).some(function(k){return /^murim_(save|bak_|graves|legacy)/.test(k)&&m[k]&&m[k]!=='null'&&m[k]!=='[]'});if(has||localStorage.getItem('murim_mignob')||document.getElementById('migPull'))return}catch(e){return}
+  window.migPullGo=function(){try{localStorage.setItem('murim_migpress',String(Date.now()))}catch(e){}location.href='https://martial-unknown.vercel.app/?pull=1'};
+  var pr=0;try{pr=+localStorage.getItem('murim_migpress')||0;if(pr){localStorage.removeItem('murim_migpress');if(Date.now()-pr<180000)localStorage.setItem('murim_migempty','1')}}catch(e){}
+  var showPull=function(){try{if(pr&&Date.now()-pr<180000&&!document.getElementById('migNone')){var n=document.createElement('div');n.id='migNone';n.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:2147483000;width:min(520px,calc(100% - 24px));background:#241d33;color:#f0e6d2;border:2px solid #888;border-radius:14px;padding:12px 14px;font:14px/1.5 system-ui,sans-serif';n.innerHTML='📭 <b>ไม่พบเซฟที่ลิงก์เก่าในเครื่องนี้</b><br><span style="opacity:.85">เครื่อง/เบราว์เซอร์นี้อาจไม่เคยเล่นที่ลิงก์เก่า — ถ้าเคยเล่นบนเครื่องอื่น ให้เปิดลิงก์เก่าในเครื่องนั้น</span>';document.body.appendChild(n);setTimeout(function(){n.remove()},9000);return}
+   if(localStorage.getItem('murim_migin')||localStorage.getItem('murim_migempty')||document.getElementById('migPull'))return;try{if(sessionStorage.getItem('mig_hide'))return}catch(e){}}catch(e){return}
    var d=document.createElement('div');d.id='migPull';d.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:2147483000;width:min(520px,calc(100% - 24px));background:#241d33;color:#f0e6d2;border:2px solid #c9a24a;border-radius:14px;padding:12px 14px;box-shadow:0 8px 30px rgba(0,0,0,.55);font:15px/1.5 system-ui,sans-serif;display:flex;gap:10px;align-items:center';
-   d.innerHTML='<div style="font-size:30px">📦</div><div style="flex:1"><b>เคยเล่นที่เว็บเก่า?</b><br><span style="font-size:13px;opacity:.85">แตะเพื่อย้ายเซฟจากเว็บเก่ามาที่นี่ (ของเดิมไม่หาย)</span></div><a href="https://martial-unknown.vercel.app/" style="background:#c9a24a;color:#111;border-radius:10px;padding:9px 14px;font-weight:bold;text-decoration:none;white-space:nowrap">ย้ายเซฟ</a><button aria-label="ปิด" style="background:none;border:0;color:#aaa;font-size:20px;padding:4px" onclick="try{localStorage.setItem(\'murim_mignob\',\'1\')}catch(e){}this.parentNode.remove()">✕</button>';
+   d.innerHTML='<div style="font-size:30px">📦</div><div style="flex:1"><b>เคยเล่นที่เว็บเก่า?</b><br><span style="font-size:13px;opacity:.85">แตะเพื่อย้ายเซฟจากเว็บเก่ามาที่นี่ (ของเดิมไม่หาย)</span></div><button onclick="migPullGo()" style="background:#c9a24a;color:#111;border:0;border-radius:10px;padding:9px 14px;font-weight:bold;font-size:15px;white-space:nowrap">ย้ายเซฟ</button><button aria-label="ปิด" style="background:none;border:0;color:#aaa;font-size:20px;padding:4px" onclick="try{sessionStorage.setItem(\'mig_hide\',\'1\')}catch(e){}this.parentNode.remove()">✕</button>';
    document.body.appendChild(d)};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(showPull,600)});else setTimeout(showPull,600);return}q2.delete('mig');try{history.replaceState(null,'',location.pathname+(q2.toString()?'?'+q2:'')+location.hash)}catch(e){}
   var seen=null;try{seen=localStorage.getItem('murim_migin')}catch(e){}if(seen===tk)return;
@@ -7908,6 +7911,11 @@ BAGX.brk.use=function(){const f=brkInfo();
 {const _bc=btChance;btChance=function(t){let p=_bc.apply(this,arguments);try{if(S&&!S.xt&&S.brkB&&t>=6&&S.brkB===t)p=Math.min(.95,p+.15)}catch(e){}return p}}
 {const _xp=xTribP;xTribP=function(n){return clamp(_xp.apply(this,arguments)+(S&&S.xian&&!S.xt?(S.tribPill||0):0),.2,.95)}}
 {const _aw=ascendWave;ascendWave=function(n){try{if(S&&S.xian&&!S.xt&&n===1){S.tribPill=0;if(bagHas('brk')&&bagUse('brk')){S.tribPill=.1;log('🎒 🔴 กลืนยาทะลวงขั้นก่อนรับทัณฑ์สวรรค์ — โอกาสผ่านทุกระลอก +10%','epic')}}}catch(e){}const r=_aw.apply(this,arguments);try{if(S&&(S.xt||(S.ascCd||0)>S.age))S.tribPill=0}catch(e){}return r}}
+
+// ---- ปุ่มย้ายเซฟจากเว็บเก่า ที่หน้าแรก (เฉพาะ 1inanovel.com) ----
+function migTitleBtn(){try{if(/(^|\.)1inanovel\.com$/.test(location.hostname)&&typeof migPullGo==='function'&&$('contBox')&&!$('migTitleBtn'))$('contBox').insertAdjacentHTML('beforeend',`<div class="brow" style="margin-top:6px"><button class="gbtn" id="migTitleBtn" style="width:100%" onclick="migPullAsk()">📦 ย้ายเซฟจากเว็บเก่า (ลิงก์ .vercel.app)</button></div>`)}catch(e){}}
+{const _rl2=renderLegends;renderLegends=function(){const r=_rl2.apply(this,arguments);migTitleBtn();return r}}migTitleBtn();setTimeout(migTitleBtn,1500);
+function migPullAsk(){const done=!!LS.get('murim_migin',null);modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📦 ย้ายเซฟจากเว็บเก่า</h3><p>จะพาไปที่ลิงก์เก่าแป๊บเดียว แล้วขนเซฟทั้งหมดในเครื่องนี้กลับมาที่นี่ให้เอง (ไม่กี่วินาที)</p>${done?'<p class="tag2">เครื่องนี้เคยย้ายมาแล้ว — ถ้าย้ายอีกครั้ง ระบบจะถามก่อนว่าจะใช้เซฟเก่าหรือเก็บเซฟที่นี่ไว้</p>':''}<p class="tag2">เซฟที่เว็บเก่าไม่ถูกลบ · ต้องเป็นเครื่องและเบราว์เซอร์เดียวกับที่เคยเล่นลิงก์เก่า</p><div class="brow"><button class="gbtn" onclick="closeM()">ยกเลิก</button><button class="pbtn" onclick="try{saveGame()}catch(e){}migPullGo()">ย้ายเซฟเลย</button></div>`,'migpull')}
 </script>
 </body>
 </html>
