@@ -8145,6 +8145,95 @@ function openAdmTools(){if(!ADM.ok){admVerify().then(ok=>{if(ok)openAdmTools();e
  </div><p class="tag2" style="margin:4px 0 0">ประมูลจะเริ่มในไม่กี่วินาที (ถ้ามีรอบที่กำลังประมูลอยู่ จะรอให้จบก่อน)</p></div>`,'admtool')}
 async function admPaForce(b){b.disabled=true;try{const j=await api('paforce&key='+encodeURIComponent(admK()));toast(j&&j.ok?'🔨 สั่งเปิดประมูลแล้ว':'ไม่สำเร็จ')}catch(e){toast('ไม่สำเร็จ')}b.disabled=false}
 {const _om3=openMenu;openMenu=function(){const r=_om3.apply(this,arguments);try{if(ADM.ok){const m=$('modal'),gr=m.querySelector('.mgrid');if(gr&&!m.querySelector('.admmenu'))gr.insertAdjacentHTML('afterbegin',`<button class="opt admmenu" style="border-color:#c9a24a" onclick="openAdmTools()">🛠️ เครื่องมือแอดมิน<small>เฉพาะผู้ดูแล</small></button>`)}}catch(e){}return r}}
+
+// ============ v13.6 หน้าสุ่มกำเนิดใหม่: ภาพตัวละครละเอียดตามผลสุ่ม · ฉากตามชาติกำเนิด/โลก · การ์ดสีตามระดับ ============
+(function(){const st=document.createElement('style');st.textContent=`
+#birth h2{margin-bottom:6px}#birth .bwld{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:0 0 10px}
+#birth .bchip{font-size:12px;border:2px solid var(--line);border-radius:20px;padding:2px 10px;background:var(--card)}
+#birth .hcard{padding:14px;position:relative;overflow:hidden}
+#birth .row1{display:flex;gap:14px;align-items:stretch}
+#birth .bstage{position:relative;flex:0 0 auto;width:136px;height:150px;border:3px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:3px 3px 0 var(--line),0 0 0 0 transparent;transition:box-shadow .4s}
+#birth .bstage canvas{width:136px;height:150px;image-rendering:pixelated;display:block}
+#birth .bstage .bcap{position:absolute;left:0;right:0;bottom:0;font-size:10px;text-align:center;color:#fff;background:linear-gradient(transparent,#0009);padding:8px 2px 3px;letter-spacing:.3px}
+#birth .bstage.gl3{box-shadow:3px 3px 0 var(--line),0 0 14px var(--c3)}#birth .bstage.gl4{box-shadow:3px 3px 0 var(--line),0 0 18px var(--c4)}#birth .bstage.gl5,#birth .bstage.gl6{box-shadow:3px 3px 0 var(--line),0 0 22px #ff5ad8}
+#birth .bname{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
+#birth #nameOut{font-size:24px;line-height:1.2;margin:2px 0 4px}
+#birth .btags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}#birth .btags span{font-size:11px;border:1.5px solid currentColor;border-radius:6px;padding:0 6px;line-height:1.6}
+#birth #traits{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+#birth .trait{border:2px solid var(--grid);border-left:5px solid var(--rc,var(--c0));border-radius:10px;padding:8px 10px;background:color-mix(in srgb,var(--rc,var(--c0)) 7%,var(--card));flex-direction:column;gap:4px;transform:translateY(8px) scale(.97)}
+#birth .trait.show{transform:none}#birth .trait .o{align-self:flex-start;margin:2px 0 0}
+#birth .trait.wide{grid-column:1/-1}
+#birth .trait.r0{--rc:var(--c0)}#birth .trait.r1{--rc:var(--c1)}#birth .trait.r2{--rc:var(--c2)}#birth .trait.r3{--rc:var(--c3)}#birth .trait.r4{--rc:var(--c4)}#birth .trait.r5,#birth .trait.r6{--rc:#ff5ad8}
+#birth .trait.r4.show,#birth .trait.r5.show,#birth .trait.r6.show{animation:bShine 2.4s ease-in-out infinite}
+@keyframes bShine{0%,100%{box-shadow:0 0 0 transparent}50%{box-shadow:0 0 12px color-mix(in srgb,var(--rc) 60%,transparent)}}
+#birth .oddsbig{position:relative;overflow:hidden;border-width:3px;transition:box-shadow .4s,border-color .4s}
+#birth .oddsbig .n{font-size:32px}#birth .oddsbig .ot{font-size:12px;margin-top:2px;font-weight:bold}
+#birth .oddsbig.o3{border-color:var(--c3);box-shadow:0 0 14px var(--c3)}#birth .oddsbig.o4{border-color:var(--c4);box-shadow:0 0 18px var(--c4)}#birth .oddsbig.o5,#birth .oddsbig.o6{border-color:#ff5ad8;box-shadow:0 0 24px #ff5ad8}
+#birth .oddsbig.o3 .n{color:var(--c3)}#birth .oddsbig.o4 .n{color:var(--c4)}#birth .oddsbig.o5 .n,#birth .oddsbig.o6 .n{color:#ff5ad8}
+#birth .bconf{position:absolute;width:6px;height:6px;top:-8px;animation:bConf 1.6s ease-in forwards}@keyframes bConf{to{transform:translateY(130px) rotate(540deg);opacity:0}}
+#birth .brow .gbtn,#birth .brow .pbtn{font-size:16px}#birth #startBtn:not(:disabled){animation:bGo 1.8s ease-in-out infinite}@keyframes bGo{0%,100%{transform:none}50%{transform:translateY(-2px)}}
+@media(max-width:380px){#birth #traits{grid-template-columns:1fr}#birth .bstage,#birth .bstage canvas{width:112px;height:124px}}
+#crCv{image-rendering:pixelated}`;document.head.appendChild(st)})();
+// ---- ฉากหลังพิกเซล ----
+function sceneKind(F,xian){if(!F)return xian?'xian':'plain';if(F.demon||F.heirType==='มาร')return'demon';if(F.heirType||/ตระกูลยุทธ์/.test(F.n))return'clan';if(/ขุนนาง/.test(F.n))return'noble';if(/พ่อค้า/.test(F.n))return'merchant';if(F.orphan)return'orphan';if(/ชาวนา/.test(F.n))return'farm';return xian?'xian':'plain'}
+function sceneDraw(kind,xian,T,seed){let s=(seed||7)%9973+1;const rn=()=>(s=(s*9301+49297)%233280)/233280;
+ const SKY=kind==='demon'?['#1a0612','#2a0a1a','#42102a','#5a1830']:xian?['#141c3a','#1e2a52','#2c3c6e','#40528c']:kind==='noble'?['#2a1c3a','#3c2a4e','#5a3e5e','#7a5468']:['#18182c','#22243e','#303454','#424a6c'];
+ SKY.forEach((c,i)=>P(0,i*4,20,4.2,c));
+ // ดาว / ดวงจันทร์
+ for(let i=0;i<14;i++){const x=rn()*17,y=rn()*9,tw=.4+.6*Math.abs(Math.sin(T*1.5+i));g.globalAlpha=tw;P(x,y,.25,.25,'#fff8e0');g.globalAlpha=1}
+ const mc=kind==='demon'?'#e04060':'#f4ecd0';P(12.6,2,2.4,2.4,mc);P(12.2,2.4,3.2,1.6,mc);g.globalAlpha=.25;P(11.8,1.6,4,3.2,mc);g.globalAlpha=1;
+ // ภูเขาไกล
+ const mt=kind==='demon'?'#2a0c1c':xian?'#1a2448':'#1c1e34';for(let x=0;x<17;x+=.5){const h=3+2.2*Math.abs(Math.sin(x*.55+seed))+1.2*Math.abs(Math.sin(x*1.7));P(x,15-h,.55,h+.2,mt)}
+ const gy=15;
+ if(xian){// เมฆ + เกาะลอย
+  for(let i=0;i<3;i++){const cx=((i*6.3+T*.35)%23)-3,cy=4+i*2.6;g.globalAlpha=.55;P(cx,cy,3.4,.9,'#e8ecff');P(cx+.6,cy-.5,2,.6,'#f4f6ff');g.globalAlpha=1}
+  P(1,9,3,.8,'#5a6a4a');P(1.4,9.8,2.2,.8,'#3a3a4a');P(2,10.6,1,.6,'#2a2a3a');P(1.6,8.4,.3,.6,'#2a5a2a');P(2.6,8.2,.4,.8,'#3a7a3a')}
+ const G={farm:['#3e5a26','#4a6a2e'],merchant:['#5a3e26','#6a4a2e'],noble:['#5a2a2a','#6e3434'],orphan:['#3a3a40','#46464c'],demon:['#24101e','#301628'],clan:['#3a3428','#463e30'],xian:['#2a3a5a','#34466a'],plain:['#2a2638','#34304a']}[kind]||['#2a2638','#34304a'];
+ P(0,gy,20,8,G[0]);for(let y=gy;y<gy+6;y+=1.2)P(0,y,20,.4,G[1]);
+ if(kind==='farm'){for(let x=.5;x<17;x+=1.6){P(x,gy+.6,.3,.8,'#7aa040');P(x+.3,gy+.3,.2,.6,'#9ac050')}P(13.5,10.6,3,3.6,'#6a4a2a');P(13,10,4,1,'#8a6a3a');P(14.6,12.4,.9,1.8,'#2a1a10')}
+ else if(kind==='merchant'){P(.5,10.2,4,4.8,'#7a4a2a');P(.2,9.6,4.6,.8,'#a83a2a');P(1,11.2,3,1.2,'#e8c070');const fl=.6+.4*Math.sin(T*6);g.globalAlpha=fl;P(15,9,.9,1.2,'#ff5a3a');g.globalAlpha=.25*fl;P(14.4,8.4,2.1,2.4,'#ffa040');g.globalAlpha=1;P(15.3,8.6,.3,.4,'#3a2a1a')}
+ else if(kind==='noble'){P(0,7.4,17,1,'#c8a040');P(.3,6.8,16.4,.7,'#7a1a1a');[1,15].forEach(x=>{P(x,8.4,1,6.6,'#a82a2a');P(x,8.4,.3,6.6,'#d84a3a')});for(let x=2.4;x<14.6;x+=2.4)P(x,8.4,.3,.6,'#e8c860')}
+ else if(kind==='orphan'){P(0,10,4.5,5,'#4a4a50');for(let y=10;y<15;y+=1)P(y%2?0:.8,y,1.6,.15,'#2e2e34');P(13.6,11.6,1.6,1.2,'#5a4a3a');P(14,11.2,.8,.4,'#6a5a4a')}
+ else if(kind==='demon'){for(let i=0;i<4;i++){const x=(i*4.3+T*.4)%19-1;g.globalAlpha=.18;P(x,gy-1.4+Math.sin(T+i),3.2,1.4,'#c02050');g.globalAlpha=1}P(.6,9.6,.4,5.4,'#1a0810');P(.2,9.2,1.2,.5,'#e04060')}
+ else if(kind==='clan'){[1.2,14.8].forEach((x,i)=>{P(x,7,.25,8,'#3a2a1a');const w=Math.sin(T*2+i)*.2;P(x+.25,7.2,1.6+w,2.6,i?'#3a5ab8':'#b83a3a');P(x+.6,8,.8,.8,'#e8d8a0')})}
+ // หิ่งห้อย/กลีบไม้
+ for(let i=0;i<6;i++){const ph=(T*.12+i/6)%1,x=(i*3.1+Math.sin(T*.8+i)*1.2+17)%17,y=gy-ph*9;g.globalAlpha=.85*(1-ph);P(x,y,.25,.25,kind==='demon'?'#ff5a7a':xian?'#bfe8ff':kind==='noble'?'#ffb0c8':'#e8f080');g.globalAlpha=1}}
+// ---- หน้าตาตัวละครจากผลสุ่ม (ร่างวัยหนุ่มสาว) ----
+function rollLook(r,age){const F=r.f&&r.f.v||{},gd=r.g&&r.g.v&&r.g.v.n||'ชาย',T=r.t&&r.t.v||{},c=avatarCols(r.seed,gd,F.demon||T.m>=4);if(r.look){if(r.look.skin)c.skin=r.look.skin;if(r.look.hair)c.hair=r.look.hair}
+ let o={robe:c.robe,trim:null,belt:'#00000055',hat:null};
+ if(F.heirType==='มาร')o={robe:'#14101a',trim:'#c8183a',belt:'#c8a020',hat:'crown'};else if(F.heirType==='ธรรมะ')o={robe:'#eef2fa',trim:'#c8a040',belt:'#c8a040',hat:'crown'};else if(F.heirType==='อธรรม')o={robe:'#2a2a32',trim:'#c8a040',belt:'#a01020',hat:'crown'};
+ else if(F.demon)o={robe:'#4a1020',trim:'#111',belt:'#111'};else if(/ตระกูลยุทธ์ใหญ่/.test(F.n))o={robe:'#2a5a8a',trim:'#e8d8a0',belt:'#e8d8a0',jade:1};else if(/ตระกูลยุทธ์/.test(F.n))o={robe:'#4a6a4a',trim:'#c8c0a0',belt:'#3a2a1a'};
+ else if(/ขุนนาง/.test(F.n))o={robe:'#3a5aa8',trim:'#e8d8a0',belt:'#e8d8a0',jade:1};else if(/พ่อค้า/.test(F.n))o={robe:'#b8864a',trim:'#6a4a2a',belt:'#6a4a2a'};else if(F.orphan)o={robe:'#7a7a72',trim:null,belt:'#4a4a42',patch:1};else if(/ชาวนา/.test(F.n))o={robe:'#8a6a4a',trim:null,belt:'#5a4a2a',hat:'straw'};
+ if(r.look&&r.look.robe)o=Object.assign({},o,{robe:r.look.robe});
+ if(CFG.xian&&!F.heirType&&!F.demon)o.trim=o.trim||'#bcd8ff';
+ const aura=F.demon||F.heirType==='มาร'?'#ff3060':r.os?'#5ab0ff':(T.m>=2.2?'#ffd040':r.w?'#5ad8ff':null);
+ return Object.assign(o,{hs:r.look?r.look.hs:(r.seed%5),mood:'happy',seed:r.seed,age:age||18,g:gd,skin:c.skin,hair:c.hair,old:false,beard:null,sword:T.m>=1.5?'#c8ccd6':null,glow:T.m>=3,aura})}
+let BIRTH={raf:0,t0:0,look:null,kind:'plain',seed:1};
+function birthDraw(){const cv=$('bAva');if(!cv||!BIRTH.look)return;const ctx=cv.getContext('2d');if(!ctx)return;const sg=g,sp=PS,sf=typeof frame!=='undefined'?frame:0;const T=(performance.now()-BIRTH.t0)/1000;
+ g=ctx;PS=cv.width/28;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;
+ try{frame=T*6.6;g.save();g.scale(28/17,28/17);sceneDraw(BIRTH.kind,!!CFG.xian,T,BIRTH.seed);g.restore();person(10,30,BIRTH.look,'stand')}catch(e){}finally{g=sg;PS=sp;try{frame=sf}catch(e){}}}
+function birthLoop(){cancelAnimationFrame(BIRTH.raf);const step=()=>{if(!$('birth')||!$('birth').classList.contains('on')){BIRTH.raf=0;return}birthDraw();BIRTH.raf=requestAnimationFrame(step)};BIRTH.raf=requestAnimationFrame(step)}
+function birthSetup(){const b=$('birth');if(!b||b.dataset.v2)return;b.dataset.v2=1;const av=$('ava');if(av){av.style.display='none';av.insertAdjacentHTML('beforebegin','<div class="bstage" id="bStage"><canvas id="bAva" width="136" height="150"></canvas><div class="bcap" id="bCap"></div></div>')}
+ const nm=$('nameOut');if(nm&&nm.parentNode){nm.parentNode.classList.add('bname');nm.parentNode.insertAdjacentHTML('beforeend','<div class="btags" id="bTags"></div>')}
+ const h2=b.querySelector('h2');if(h2)h2.insertAdjacentHTML('afterend','<div class="bwld" id="bWld"></div>');const ob=$('oddsBox');if(ob)ob.insertAdjacentHTML('beforeend','<div class="ot" id="oddsT"></div>')}
+function birthDecor(){const r=roll;if(!r)return;birthSetup();BIRTH.look=rollLook(r);BIRTH.kind=sceneKind(r.f&&r.f.v,!!CFG.xian);BIRTH.seed=r.seed||1;BIRTH.t0=performance.now();
+ const tot=rarOf(r.p*(r.era?r.era.p:1)),TN=['ธรรมดา','หายาก','ล้ำค่า','ตำนาน','เทพ','อมตะ','???'];
+ const st=$('bStage');if(st)st.className='bstage gl'+tot;const cap=$('bCap');if(cap)cap.textContent=(CFG.xian?'☁️ ':'⚔️ ')+'ร่างในวัยหนุ่มสาว';
+ const w=$('bWld');if(w)w.innerHTML=`<span class="bchip">${CFG.xian?'☁️ โลกเทพเซียน':'⚔️ ยุทธภพ'}</span>${r.era?`<span class="bchip">🕰️ ${esc(r.era.v.n)}</span>`:''}${r.custom?'<span class="bchip">✏️ สร้างเอง</span>':''}`;
+ const tg=$('bTags');if(tg){const F=r.f&&r.f.v,Tl=r.t&&r.t.v,tc=p=>'t'+rarOf(p);tg.innerHTML=`<span>${r.g.v.n==='หญิง'?'♀ หญิง':'♂ ชาย'}</span>${F?`<span class="${tc(r.f.p)}">${esc(F.n)}</span>`:''}${Tl?`<span class="${tc(r.t.p)}">${esc(CFG.xian?(r.root||Tl.n):Tl.n)}</span>`:''}${r.isOw?'<span class="t3">🌌 ผู้ข้ามมิติ</span>':''}${r.os?'<span class="t4">🟦 มีระบบ</span>':''}`;xFix&&xFix(['bTags'])}
+ document.querySelectorAll('#birth .trait').forEach((el,i)=>{const o=el.querySelector('.o'),m=o&&(o.className.match(/t(\d)/)||[])[1];el.classList.add('r'+(m||0));const d=el.querySelector('.d');if(d&&d.textContent.length>46)el.classList.add('wide')});
+ const ob=$('oddsBox');if(ob){ob.className='box oddsbig o'+tot;const t=$('oddsT');if(t){t.className='ot t'+tot;t.textContent='ระดับชะตา: '+TN[tot]}}
+ if(tot>=3)setTimeout(()=>{const b=$('oddsBox');if(!b||b.style.visibility==='hidden')return;const C=['#ffd040','#ff5ad8','#5ab0ff','#7aff9a','#ff8a3a'];for(let i=0;i<(tot>=5?40:22);i++){const e=document.createElement('i');e.className='bconf';e.style.left=Math.random()*100+'%';e.style.background=C[i%C.length];e.style.animationDelay=(Math.random()*.5)+'s';b.appendChild(e);setTimeout(()=>e.remove(),2300)}},(document.querySelectorAll('#birth .trait').length*220)+400);
+ if(!BIRTH.raf)birthLoop()}
+{const _dr2=doRoll;doRoll=function(first){const r=_dr2.apply(this,arguments);try{birthDecor()}catch(e){console.error(e)}return r}}
+// ---- หน้าสร้างตัวละครเอง: ฉากหลังตามชาติกำเนิดที่เลือก ----
+crPrev=function(){const cv=$('crCv');if(!cv)return;const ctx=cv.getContext('2d');if(!ctx)return;const sg=g,sp=PS;g=ctx;PS=cv.width/28;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);ctx.setTransform(cv.width/28,0,0,cv.width/28,0,0);ctx.imageSmoothingEnabled=false;
+ try{const F=(!C.lookOnly&&FAMILY[C.fam])||null;g.save();g.scale(28/17,28/17);sceneDraw(sceneKind(F,!!CFG.xian),!!CFG.xian,performance.now()/1000,7);g.restore();person(10,29,crLook(),'stand')}catch(e){}g=sg;PS=sp};
+setInterval(()=>{try{if($('create')&&$('create').classList.contains('on'))crPrev()}catch(e){}},120);
+// ---- รูปตัวละคร (หัวจอ/รูปโปรไฟล์): ฉากหลังตามชาติกำเนิด สำนัก และโลก ----
+{const _dp2=drawPortrait;drawPortrait=function(cv,o,full){try{if(full||!S||(S.beastMode&&!S.beastMode.human)||(o&&o.beast))return _dp2.apply(this,arguments);const ctx=cv&&cv.getContext&&cv.getContext('2d');if(!ctx)return;o=o||meLook();
+  const sg=g,sp=PS;g=ctx;PS=cv.width/17;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;
+  try{const kind=S.faction?(S.faction.t==='มาร'?'demon':'clan'):sceneKind(S.family,!!S.xian);sceneDraw(kind,!!S.xian,0,S.seed||7);const ad=o.age<6?-8:o.age<14?-5:o.old?-1:0;person(4.6,25+ad,o,'stand')}finally{g=sg;PS=sp}}catch(e){return _dp2.apply(this,arguments)}}}
 </script>
 </body>
 </html>
