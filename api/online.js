@@ -315,12 +315,24 @@ module.exports = async (req, res) => {
       const p = {}; pus.forEach((u, i) => { if (pv[i]) { try { p[u] = JSON.parse(pv[i]) } catch {} } });
       return res.json({ m: ms, p, ann: await annPoll(await annGet(), id) });
     }
+    if (a === 'bdrm') {
+      // ผู้ดูแลเท่านั้น: เอาชีวิตออกจากทำเนียบด้วยรหัสชีวิต (lid)
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
+      const lid = String(qOf(req).l || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
+      if (lid.length < 6) return res.json({ err: 'lid' });
+      await cmd('SADD', 'bdhide', lid);
+      return res.json({ ok: 1, lid });
+    }
     if (a === 'board') {
       const prevW = week(new Date(now - 7 * 86400e3));
       const [top, prev, ar] = await pipe([['ZREVRANGE', 'bd2:' + W, 0, 99, 'WITHSCORES'], ['ZREVRANGE', 'bd2:' + prevW, 0, 49, 'WITHSCORES'], ['ZREVRANGE', 'arenaW:' + W, 0, 9, 'WITHSCORES']]);
-      const pairs = l => { const o = []; for (let i = 0; i < (l || []).length; i += 2) o.push(l[i]); return o.map(x => JSON.parse(x)) };
+      const hide = new Set(['f18abdmw8fuj8d', ...((await cmd('SMEMBERS', 'bdhide')) || [])]), rm = [];
+      const pairs = (l, k) => { const o = []; for (let i = 0; i < (l || []).length; i += 2) o.push(l[i]); return o.map(x => { const j = JSON.parse(x); if (j.lid && hide.has(j.lid)) { rm.push(['ZREM', k, x]); return null } return j }).filter(Boolean) };
+      const top0 = top, prev0 = prev;
       const arena = []; for (let i = 0; i < (ar || []).length; i += 2) arena.push({ n: ar[i], w: +ar[i + 1] });
-      const T = pairs(top).filter(x => !x.cu).slice(0, 60), Pv = pairs(prev).filter(x => !x.cu).slice(0, 20), all = T.concat(Pv).filter(x => x.lid);
+      const T = pairs(top0, 'bd2:' + W).filter(x => !x.cu).slice(0, 60), Pv = pairs(prev0, 'bd2:' + prevW).filter(x => !x.cu).slice(0, 20);
+      if (rm.length) await pipe(rm);
+      const all = T.concat(Pv).filter(x => x.lid);
       const pubs = all.length ? await cmd('MGET', ...all.map(x => 'lifep:' + x.lid)) : [];
       const pm = {}; all.forEach((x, i) => pm[x.lid] = pubs[i] === '1' ? 1 : pubs[i] === '2' ? 2 : 0);
       const admB = !!process.env.ADMIN_KEY && String(qOf(req).key || '') === process.env.ADMIN_KEY;
