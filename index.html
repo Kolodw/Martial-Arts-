@@ -6961,7 +6961,7 @@ const BAGX={
  wine:{r:2,d:'ความสุข +15 ลมปราณ +1 ปี พลังชีวิต +30',use(){joy(15);S.qi+=1;S.hp=Math.min(S.maxHp,S.hp+30);return'เมาเซียนอย่างมีความสุข'}},
  dew:{r:2,d:'ฟื้นพลังชีวิตเต็มและล้างโรคเรื้อรัง',use(){S.hp=S.maxHp;const c=S.chronic;S.chronic=null;return'พลังชีวิตเต็ม'+(c?` · หายจาก${c.n}`:'')}},
  map:{r:3,d:'ติดตัวไว้ — เข้ามิติลับแล้วรู้ทางลัด ได้ของมากขึ้น'},
- brk:{r:3,d:'เมื่อพลังถึง 82% ของขั้นถัดไป ทะลวงขั้นได้ทันที · ใช้เองอัตโนมัติ',use(){const nx=REALMS[realmIdx()+1];if(!nx||total()<nx.p*.82)return null;S.power+=nx.p-total()+1;return`ทะลวงสู่${nx.n}!`}},
+ brk:{r:3,d:'ทะลวงขั้น 1–5 ได้ทันที (พลังถึง 82%) · คอขวดใหญ่ขั้น 6–7 และทัณฑ์สวรรค์: เพิ่มโอกาสผ่าน · ใช้เองอัตโนมัติ',use(){const nx=REALMS[realmIdx()+1];if(!nx||total()<nx.p*.82)return null;S.power+=nx.p-total()+1;return`ทะลวงสู่${nx.n}!`}},
  elix:{r:3,d:()=>`พลังยุทธ์ +${fmt(yrPow0()*6)} ในเม็ดเดียว`,use(){const g=yrPow0()*6;S.power+=g;return`พลังยุทธ์ +${fmt(g)}`}},
  scroll:{r:3,d:'เปิดอ่านแล้วได้วิชาระดับดีขึ้นไป 1 วิชา',use(){const a=newArt(2);S.arts.push(a);return`ได้ ${artHtml(a)}`}},
  bcore:{r:4,d:()=>`พลังยุทธ์ +${fmt(yrPow0()*4)} · สัตว์เลี้ยงใช้วิวัฒนาการได้ดีเยี่ยม`,use(){const g=yrPow0()*4;S.power+=g;return`พลังยุทธ์ +${fmt(g)}`}},
@@ -7512,13 +7512,13 @@ function qgDraw(ts){const cv=$('qgC');if(!cv||$('modal').dataset.k!=='qigame'){i
  requestAnimationFrame(qgDraw)}
 function qgNote(perf,skip){return skip?'':perf>=.9?' · ☯️ รวมปราณได้สมบูรณ์แบบ':perf>=.6?' · ☯️ รวมปราณได้ดี':perf<.3?' · ☯️ รวมปราณพลาดหลายจังหวะ':''}
 // ยุทธภพ/โลกเซียน: ทะลวงสู่ขั้นใหญ่
-{const _bt=btTick;btTick=function(){try{if(S&&S.alive&&!S.beastMode&&!S.xt&&qgOk()&&!bagHas('brk')){const raw=rawRealm();if(S.rcap!=null&&raw>S.rcap){const t=S.rcap+1;if(t>1&&REALMS[t]){const p=btChance(t),nm=REALMS[t].n;
+{const _bt=btTick;btTick=function(){try{if(S&&S.alive&&!S.beastMode&&!S.xt&&qgOk()&&!(bagHas('brk')&&S.rcap!=null&&S.rcap+1<=5)){const raw=rawRealm();if(S.rcap!=null&&raw>S.rcap){const t=S.rcap+1;if(t>1&&REALMS[t]){const p=btChance(t),nm=REALMS[t].n;
   qiGame({title:`ทะลวงสู่${nm}`,sub:`ปราณในร่างล้นถึงขีด ต้องรวมให้เป็นหนึ่งที่ตันเถียนเพื่อฝ่าคอขวด`,p,diff:actDiff()*(1+t*.03)},(ok,perf,pF,skip)=>{if(!S||!S.alive)return;
    if(ok){S.rcap=t;log(`🌟 ทะลวงคอขวดสู่<b>${nm}</b>สำเร็จ${qgNote(perf,skip)} <span class="tag2">(โอกาส ${Math.round(pF*100)}%)</span>`,'epic',true);if(perf>=.99&&!skip)S.flags.qgPerfect=1;S.btFail=0}
    else{S.btFail=(S.btFail||0)+1;const d=Math.round(R(8,20)*t/2*(perf<.3&&!skip?1.4:1));S.hp-=d;if(!(tr('yinyang')||tr('allarts')))S.qi=Math.max(0,S.qi*.95);log(`💢 สายปราณแตกกระจาย ทะลวงสู่<b>${nm}</b>ไม่สำเร็จ${qgNote(perf,skip)} — พลังชีวิต −${d} <span class="tag2">(โอกาส ${Math.round(pF*100)}% · ครั้งหน้าง่ายขึ้น)</span>`,'bad');try{qiDev(false)}catch(e){}}
    try{render();checkDeath()}catch(e){}});return}}}}catch(e){console.error(e)}return _bt.apply(this,arguments)}}
 // ขั้นย่อยหลังขั้นสูงสุด (ไม่ใช่โลกเทพ)
-{const _pt=postTick;postTick=function(){try{if(S&&S.alive&&!S.beastMode&&!S.xt&&realmIdx()>=7&&qgOk()&&!bagHas('brk')){if(S.pcap==null)S.pcap=-1;const raw=postRaw();if(raw>S.pcap){const t=S.pcap+1,tier=t%9===0,m=(S.talent&&S.talent.m)||1;
+{const _pt=postTick;postTick=function(){try{if(S&&S.alive&&!S.beastMode&&!S.xt&&realmIdx()>=7&&qgOk()&&!(bagHas('brk')&&((S.pcap==null?-1:S.pcap)+1)%9!==0)){if(S.pcap==null)S.pcap=-1;const raw=postRaw();if(raw>S.pcap){const t=S.pcap+1,tier=t%9===0,m=(S.talent&&S.talent.m)||1;
   const p=Math.max(.05,Math.min(.9,(tier?.3:.6)+(m-1)*.08+((S.int||0)-60)/600+((S.happy||60)-50)/500+Math.min(.1,(S.qi||0)/2000)-t/45*.15+(S.btFail||0)*.05+(S.sys?.05:0))),nm=`${RS_PFX[Math.floor(t/9)]}${REALMS[7].n} ขั้น ${t%9+1}`;
   qiGame({title:`ทะลวงสู่${nm}`,sub:tier?'ขีดจำกัดของโลกอยู่ตรงหน้า ปราณต้องรวมให้นิ่งกว่าทุกครั้ง':'รวมปราณให้เป็นหนึ่งเพื่อก้าวขึ้นอีกขั้น',p,diff:actDiff()*(1+t*.02)*(tier?1.15:1)},(ok,perf,pF,skip)=>{if(!S||!S.alive)return;
    if(ok){S.pcap=t;S.btFail=0;postUp(t,'');if(!skip&&perf>=.6)log(`☯️ รวมปราณได้ ${Math.round(perf*100)}%`,'')}
@@ -7890,6 +7890,23 @@ function ascSquash(why){if(!S)return;const rest=total()-S.power,cap=REALMS[2].p*
 {const _ih=inherit;inherit=function(){const r=_ih.apply(this,arguments);try{if(S&&S.arts){const cap=REALMS[2].p*.8,rest=total()-S.power,h=S.arts.find(a=>a&&a.heir);if(h&&rest>cap){const ab=artBonus(),f=Math.max(.02,Math.min(1,(ab-(rest-cap))/ab));if(f<1){h.b=Math.max(1,Math.round(h.b*f));log(`🧒 ร่างเด็กยังรับพลังเต็มของวิชามรดกไม่ไหว — พลังของวิชาจะถูกผนึกไว้บางส่วน`,'')}}}}catch(e){}return r}}
 // พลังรวมถาวร % : ต่อขั้น ได้เต็มรวมไม่เกิน 30% ส่วนเกินได้แค่ 20%
 function pctPow(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx();if(!S._pp||S._pp.k!==k)S._pp={k,a:0};const room=Math.max(0,.3-S._pp.a),full=Math.min(v,room),eff=full+(v-full)*.2;S._pp.a+=v;return Math.round(total()*eff)}
+
+// ---- v13.2b ยาทะลวงขั้น: ใช้เองแล้วต้องทะลวงจริง (ไม่เสียยาฟรี) · คอขวดใหญ่ขั้น 6–7 ได้โอกาส +15% · ทัณฑ์โลกเซียน +10% ----
+function brkInfo(){if(!S)return{k:'none'};if(S.xt)return{k:'god'};const i=realmIdx(),raw=rawRealm();
+ if(S.rcap!=null&&raw>S.rcap){const t=S.rcap+1;return t<=5?{k:'gate',t}:{k:'big',t}}
+ const nx=REALMS[i+1];if(!nx)return{k:'top'};if(i+1>=6)return{k:'big',t:i+1};if(total()<nx.p*.82)return{k:'low',t:i+1};return{k:'jump',t:i+1}}
+BAGX.brk.use=function(){const f=brkInfo();
+ if(f.k==='gate'){S.rcap=f.t;S.btFail=0;return`ทะลวงคอขวดสู่${REALMS[f.t].n}ได้อย่างราบรื่น!`}
+ if(f.k==='jump'){const nx=REALMS[f.t];S.power+=Math.max(0,nx.p-total()+1);if(S.rcap!=null)S.rcap=Math.max(S.rcap,f.t);S.btFail=0;return`ทะลวงสู่${nx.n}!`}
+ return null};
+{const _bum=bagUseManual;bagUseManual=function(id){if(id==='brk'&&S&&S.alive&&S.bag&&S.bag.it.brk){const f=brkInfo();
+  const msg=f.k==='big'?`คอขวดใหญ่สู่${REALMS[f.t]?REALMS[f.t].n:'ขั้นถัดไป'} ยาข้ามให้ไม่ได้ — เก็บไว้ จะกลืนเองตอนฝ่าด่าน เพิ่มโอกาส +15%`:f.k==='top'?'ถึงขั้นสูงสุดของโลกนี้แล้ว — เก็บไว้ จะช่วยเองตอนติดด่านชั้นย่อยและตอนรับทัณฑ์สวรรค์':f.k==='god'?'ในโลกเทพ ยาจะถูกใช้เองตอนรับทัณฑ์ (โอกาสผ่าน +12%)':f.k==='low'?`พลังยังไม่ถึง 82% ของ${REALMS[f.t].n}`:null;
+  if(msg){toast(msg);return}}return _bum.apply(this,arguments)}}
+{const _bt=btTick;btTick=function(){try{if(S&&S.alive&&!S.beastMode&&!S.xt&&S.rcap!=null){const t=S.rcap+1;if(rawRealm()>S.rcap&&t>=6&&S.brkB!==t&&bagHas('brk')&&bagUse('brk')){S.brkB=t;log(`🎒 🔴 กลืนยาทะลวงขั้นประคองลมปราณก่อนฝ่าคอขวดสู่<b>${REALMS[t].n}</b> — โอกาสทะลวง +15% จนกว่าจะผ่าน`,'epic')}}}catch(e){}
+ const r=_bt.apply(this,arguments);try{if(S&&S.brkB&&S.rcap!=null&&S.rcap>=S.brkB)S.brkB=0}catch(e){}return r}}
+{const _bc=btChance;btChance=function(t){let p=_bc.apply(this,arguments);try{if(S&&!S.xt&&S.brkB&&t>=6&&S.brkB===t)p=Math.min(.95,p+.15)}catch(e){}return p}}
+{const _xp=xTribP;xTribP=function(n){return clamp(_xp.apply(this,arguments)+(S&&S.xian&&!S.xt?(S.tribPill||0):0),.2,.95)}}
+{const _aw=ascendWave;ascendWave=function(n){try{if(S&&S.xian&&!S.xt&&n===1){S.tribPill=0;if(bagHas('brk')&&bagUse('brk')){S.tribPill=.1;log('🎒 🔴 กลืนยาทะลวงขั้นก่อนรับทัณฑ์สวรรค์ — โอกาสผ่านทุกระลอก +10%','epic')}}}catch(e){}const r=_aw.apply(this,arguments);try{if(S&&(S.xt||(S.ascCd||0)>S.age))S.tribPill=0}catch(e){}return r}}
 </script>
 </body>
 </html>
