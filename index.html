@@ -6024,7 +6024,7 @@ function allyAdd(n,src){S.allies=S.allies||[];if(S.allies.some(a=>a.n===n))retur
 // ---- พบผู้เล่นจริงแบบเรียลไทม์ ----
 let meetC=null,meetT=0;
 async function meetPoll(){try{if(!onlineOK||!S||!S.alive||S.beastMode||paused||document.hidden)return;if(Date.now()-meetT<45000)return;meetT=Date.now();
- const j=await api('meet',{n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age});meetC=j.o?Object.assign(j.o,{at:Date.now()}):null;
+ const j=await api('meet',{n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0});meetC=j.o?Object.assign(j.o,{at:Date.now()}):null;
  (j.inbox||[]).forEach(m=>{if(!S||!S.alive)return;if(m.kind==='ally'){if(m.ok){allyAdd(m.n,'ผู้เล่นจริง');log(`🤝 ผู้เล่น <b>${esc(m.n)}</b> สาบานเป็นพันธมิตรกับคุณข้ามจักรวาล — เขาจะมาช่วยตอนจวนตัว`,'epic',true)}}
   else if(m.kind==='mmsg'||m.kind==='room'||m.kind==='mres'){try{mtInbox(m)}catch(e){}}else{if(m.win){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.08));S.fame=Math.max(0,S.fame-5);log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — คุณพ่ายแพ้ บาดเจ็บเล็กน้อย`,'bad',true)}else{S.fame+=20;log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — แต่คุณเป็นฝ่ายชนะ! ชื่อเสียง +20`,'epic',true)}}});try{render()}catch(e){}}catch(e){}}
 setInterval(meetPoll,5000);
@@ -7315,41 +7315,49 @@ const MT_OPT=[['fight','⚔️ ท้าดวล','ชนะตามพลั�
 function mtDone(rid){S.mtd=S.mtd||[];return S.mtd.includes(rid)}
 function mtMark(rid){S.mtd=S.mtd||[];S.mtd.push(rid);if(S.mtd.length>30)S.mtd.shift()}
 function mtCountdown(rid,dl){clearInterval(MT.cd);MT.cd=setInterval(()=>{const c=choice._cur;if(!c||c.mt!==rid){clearInterval(MT.cd);return}const left=Math.max(0,Math.ceil((dl-Date.now())/1000));const e=$('chCd');if(e&&$('modal').dataset.k==='choice')e.textContent=`⏳ เหลือ ${left} วิ — ไม่เลือกจะสุ่มให้`;else{const pb=$('pendBar');if(pb&&choice._min)pb.innerHTML=`⏸ 🌐 ผู้เล่นจริงรอคุณอยู่ · เหลือ ${left} วิ — แตะเพื่อเลือก`}
- if(left<=0){clearInterval(MT.cd);const i=Math.floor(Math.random()*c.opts.length);addFeed('ev',`⏳ หมดเวลา — สุ่มให้: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');choiceRun(i)}},250)}
+ if(left<=0){clearInterval(MT.cd);const i=c.mtKeep?0:Math.floor(Math.random()*c.opts.length);addFeed('ev',`⏳ หมดเวลา — ${c.mtKeep?'คงตัวเลือกเดิม':'สุ่มให้'}: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');choiceRun(i)}},250)}
 function mtShow(st){const o=st.o||{},rid=st.rid,RN=S.xian?(typeof XREALM!=='undefined'?XREALM:[]):REALMS.map(r=>r.n),ep=Math.max(50,o.p||100),r=total()/ep;
  const pw=Math.round(Math.max(3,Math.min(97,Math.pow(total(),1.3)/(Math.pow(total(),1.3)+Math.pow(ep,1.3))*100)));
  MT.room={rid,o,ep,side:st.side};setScene('portal');let rv='';const tr=(S.allies||[]).find(x=>x.n===o.n&&x.tr);if(tr){S.allies=S.allies.filter(x=>x!==tr);S.flags.betrayed=1;rv=`<br><b style="color:#ff6b6b">🗡️ คุณจำใบหน้านี้ได้ — ${esc(o.n)} คือคนที่แอบหักหลังคุณตอนสาบานครั้งก่อน!</b>`;log(`🗡️ เจอกันอีกครั้ง… คุณรู้แล้วว่า <b>${esc(o.n)}</b> หักหลังคุณมาตลอด`,'bad',true);keyAdd(`รู้ว่าผู้เล่น ${o.n} หักหลัง`)}
  choice(`🌐 พบผู้เล่นจริง!`,`รอยแยกมิติเปิดออก — <b>${esc(o.n)}</b> ผู้เล่นที่กำลังจำลองชีวิตอยู่ตอนนี้ ยืนอยู่ตรงหน้าคุณ<br>${esc(RN[o.ri]||'')}${o.f?' · '+esc(o.f):''} · อายุ ${fmt(o.age||0)} ปี<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของเขา · เขากำลังเลือกอยู่เหมือนกัน และไม่รู้ว่าคุณเลือกอะไร</span>${rv}`,
   MT_OPT.map(([k,t,s])=>({t,s:k==='fight'?`โอกาสชนะราว ${pw}%`:s,skip:k==='leave',f(){mtPick(rid,k)}})));
  if(choice._cur){choice._cur.mt=rid;if(choice._min&&!auto){choice._min=false;choiceShow()}}mtCountdown(rid,Math.max(Date.now()+3000,Math.min(st.dl||0,Date.now()+10500)))}
-async function mtPick(rid,k){MT.room&&(MT.room.my=k);log(`🌐 คุณเลือก: ${MT_OPT.find(x=>x[0]===k)[1]} — รอดูว่า${esc(MT.room?MT.room.o.n:'อีกฝ่าย')}เลือกอะไร…`,'');try{const j=await api('mtpick',{rid,c:k});if(j&&j.st)mtApply(j.st)}catch(e){}
- mtMsgBox(rid);mtWatch(rid)}
+async function mtPick(rid,k,r2){MT.room&&(MT.room.my=k);log(`🌐 ${r2?'รอบสอง — ':''}คุณเลือก: ${MT_OPT.find(x=>x[0]===k)[1]} — รอดูว่า${esc(MT.room?MT.room.o.n:'อีกฝ่าย')}เลือกอะไร…`,'');try{const j=await api('mtpick',{rid,c:k,r:r2?2:1});if(j&&j.st)mtApply(j.st)}catch(e){}
+ mtWatch(rid)}
+const MT_ST={h:'⚔️ ดูเป็นศัตรู พร้อมจะลงมือ',f:'🤝 ยื่นมือมาเหมือนจะเป็นมิตร',p:'🙇 ดูเหมือนกำลังจะถอยกลับเข้ารอยแยก'};
+function mtShow2(st){const rid=st.rid,o=st.o||{};MT.r2=MT.r2||{};if(MT.r2[rid]||!S||!S.alive)return;MT.r2[rid]=1;if(choice._cur&&choice._cur.mt!==rid)return;const my=st.my1||'leave';
+ const opts=[{t:`✋ คงตัวเลือกเดิม (${MT_OPT.find(x=>x[0]===my)[1]})`,s:'ไม่เปลี่ยนใจ',f(){mtPick(rid,my,1)}}].concat(MT_OPT.filter(x=>x[0]!==my).map(([k,t,s0])=>({t:'🔄 เปลี่ยนเป็น '+t,s:s0,f(){mtPick(rid,k,1)}})));
+ setScene('portal');choice('🌐 ท่าทีขัดกัน — รอบสอง',`คุณกับ <b>${esc(o.n)}</b> ยืนประจันกันอยู่ครู่หนึ่ง… ท่าทีของเขา: <b>${MT_ST[st.ost]||'อ่านไม่ออก'}</b><br><span class="tag2">เปลี่ยนใจได้ครั้งเดียว · เขาก็เห็นท่าทีของคุณเหมือนกัน (แสร้งสาบานจะดูเหมือนเป็นมิตร)</span>`,opts);
+ if(choice._cur){choice._cur.mt=rid;choice._cur.mtKeep=1;if(choice._min&&!auto){choice._min=false;choiceShow()}}mtCountdown(rid,Math.max(Date.now()+2500,Math.min(st.r2dl||0,Date.now()+6500)))}
 function mtMsgBox(rid){if(auto||!S||!S.alive)return;setTimeout(()=>{if(choice._cur||(modalOpen&&$('modal').dataset.k!=='mtmsg'))return;modal(`<h3>💬 ฝากข้อความถึง${esc(MT.room?MT.room.o.n:'อีกฝ่าย')}</h3><p class="tag2">ไม่บังคับ · เขาจะเห็นข้อความนี้ในเกมของเขา · ปิดเองใน <span id="mtmCd">15</span> วิ</p><input class="crin" id="mtmIn" maxlength="120" placeholder="เช่น ไว้เจอกันใหม่นะ / ข้าไม่ไว้ใจเจ้า" onkeydown="if(event.key==='Enter')mtMsgSend('${rid}')"><div style="display:flex;gap:6px;margin-top:8px"><button class="pbtn" style="flex:1" onclick="mtMsgSend('${rid}')">ส่ง</button><button class="gbtn" style="flex:1" onclick="closeM()">ไม่ส่ง</button></div>`,'mtmsg');
  let n=15;clearInterval(MT.mc);MT.mc=setInterval(()=>{if($('modal').dataset.k!=='mtmsg'){clearInterval(MT.mc);return}const inp=$('mtmIn');if(inp&&document.activeElement===inp&&inp.value)return;n--;const e=$('mtmCd');if(e)e.textContent=n;if(n<=0){clearInterval(MT.mc);closeM()}},1000)},50)}
 async function mtMsgSend(rid){const x=(($('mtmIn')||{}).value||'').trim();closeM();if(!x)return;try{await api('mtmsg',{rid,x});log(`💬 คุณฝากข้อความถึง${esc(MT.room?MT.room.o.n:'อีกฝ่าย')}: "${esc(x)}"`,'')}catch(e){toast('ส่งข้อความไม่สำเร็จ')}}
-function mtWatch(rid){clearInterval(MT.poll);let n=0;MT.poll=setInterval(async()=>{n++;if(n>40||!S||mtDone(rid)&&n>8){clearInterval(MT.poll);return}if(document.hidden)return;try{const j=await api('mtst',{rid});if(!j||!j.ok){if(j&&j.gone)clearInterval(MT.poll);return}mtApply(j.st)}catch(e){}},3000)}
+function mtWatch(rid){clearInterval(MT.poll);let n=0,busy=0;MT.poll=setInterval(async()=>{n++;if(n>70||!S||mtDone(rid)&&n>10){clearInterval(MT.poll);return}if(document.hidden||busy||(n>30&&n%2))return;busy=1;try{const j=await api('mtst',{rid});if(!j||!j.ok){if(j&&j.gone)clearInterval(MT.poll);return}mtApply(j.st)}catch(e){}finally{busy=0}},1500)}
 function mtMsgShow(rid,n,x){if(!x||!S)return;const k=rid+'|'+x;if(MT.msg[k])return;MT.msg[k]=1;log(`💬 <b>${esc(n)}</b> ฝากข้อความข้ามมิติมาว่า: "${esc(x)}"`,'epic',true);try{sfx('good')}catch(e){}}
-function mtApply(st){if(!st||!S||!S.alive)return;const o=st.o||{},rid=st.rid;if(st.msg)mtMsgShow(rid,o.n,st.msg);const R0=st.res;if(!R0||mtDone(rid))return;mtMark(rid);
+function mtApply(st){if(!st||!S||!S.alive)return;const o=st.o||{},rid=st.rid;if(st.msg)mtMsgShow(rid,o.n,st.msg);const R0=st.res;if(!R0&&st.ph===2&&!st.picked2){mtShow2(st);return}if(!R0||mtDone(rid))return;mtMark(rid);if(choice._cur&&choice._cur.mt===rid){clearInterval(MT.cd);choice._cur=null;choice._min=false;try{pendBar()}catch(e){}if($('modal').dataset.k==='choice')closeM()}
  const me=st.side,ep=Math.max(50,o.p||100),n=esc(o.n),T={fight:'ท้าดวล',ally:'สาบานเป็นพันธมิตร',betray:'สาบานเป็นพันธมิตร',leave:'ปล่อยให้รอยแยกปิด'};
  if(R0.auto)log('⏳ คุณไม่ได้เลือกทันเวลา ชะตาจึงเลือกให้','');
  if(R0.k==='duel'){const win=R0.w===me;const amb=R0.amb?(R0.amb===me?' (คุณซุ่มตีตอนเขายื่นมือมาเป็นมิตร)':' (เขาซุ่มตีตอนคุณยื่นมือไปเป็นมิตร!)'):'';
+  if(R0.caught)log(R0.caught===me?`🏃 คุณพยายามหนี แต่${n}ตามทัน!`:`🏃 ${n}พยายามหนี แต่คุณตามทัน`,'');if(R0.wary)log(R0.wary===me?`👁️ คุณแสร้งยื่นมือ แต่จับไต๋ได้ว่า${n}จะลงมือ จึงตั้งรับไว้ก่อน`:`👁️ ${n}ไม่ได้ตกใจกับการลงมือของคุณเลย — เหมือนเตรียมรับมือไว้แล้ว`,'');
   if(win){const fm=Math.round(30+Math.sqrt(ep)/2);S.fame+=fm;log(`🌐 ชนะผู้เล่น <b>${n}</b> ในการดวลข้ามจักรวาล${amb} — ชื่อเสียง +${fm}`,'epic',true);keyAdd(`ชนะผู้เล่นจริง ${o.n} ในการดวลข้ามจักรวาล`)}
   else{const d=Math.round(S.maxHp*.15);S.hp=Math.max(1,S.hp-d);log(`🌐 แพ้ผู้เล่น <b>${n}</b>${amb} — ถูกซัดกลับเข้ารอยแยกมิติ พลังชีวิต −${d}`,'bad',true)}}
  else if(R0.k==='flee'){log(R0.w===me?`🏃 ${n}ท้าดวลคุณ แต่คุณหนีกลับเข้ารอยแยกทัน`:`🏃 คุณท้าดวล แต่${n}หนีกลับเข้ารอยแยกไปได้`,'')}
- else if(R0.k==='none'){log(`🌀 ${n}เลือก${T[st.res.their]||'จากไป'} — รอยแยกปิดลงโดยไม่มีอะไรเกิดขึ้น`,'')}
+ else if(R0.k==='none'){log(R0.tried?(R0.tried===me?`🗣️ คุณพยายามเกลี้ยกล่อม${n}ให้เป็นพันธมิตร แต่เขาไม่ยอม และถอยกลับเข้ารอยแยกไป`:`🗣️ ${n}พยายามเกลี้ยกล่อมให้คุณเป็นพันธมิตร แต่คุณไม่ใจอ่อน`):`🌀 รอยแยกปิดลงโดยไม่มีอะไรเกิดขึ้น`,'')}
  else if(R0.k==='pact'){const iB=me==='a'?R0.ba:R0.bb,theyB=me==='a'?R0.bb:R0.ba;
   S.allies=S.allies||[];S.allies=S.allies.filter(a=>a.n!==o.n);S.allies.push({n:o.n,src:'ผู้เล่นจริง',a:S.age,tr:theyB?1:0,bt:iB?1:0});if(S.allies.length>5)S.allies.shift();
   if(iB){const g=Math.max(30,Math.round(total()*.03));S.power+=g;S.karma-=10;log(`🗡️ คุณจับมือสาบานกับ <b>${n}</b> ด้วยรอยยิ้ม — แต่ระหว่างนั้นแอบขโมยเคล็ดวิชาของเขามา พลังยุทธ์ +${fmt(g)} กรรม −10 · เขายังไม่รู้ตัว`,'bad',true)}
-  else log(`🤝 คุณกับผู้เล่น <b>${n}</b> สาบานเป็นพันธมิตรข้ามจักรวาล — เขาจะมาช่วยตอนจวนตัว`,'epic',true);
+  else log(`🤝 ${R0.per?(R0.per===me?`คุณเกลี้ยกล่อม${n}สำเร็จ — `:`${n}เกลี้ยกล่อมจนคุณใจอ่อน — `):''}คุณกับผู้เล่น <b>${n}</b> สาบานเป็นพันธมิตรข้ามจักรวาล — เขาจะมาช่วยตอนจวนตัว`,'epic',true);
+  if(R0.bonus){S.fame+=30;let t='ชื่อเสียง +30';if(Math.random()<.5){const a=newArt(1);a.n=a.n+' (แลกกับ'+o.n+')';S.arts.push(a);t+=` · แลกเปลี่ยนวิชากัน ได้ ${artHtml(a)}`}log(`✨ ไว้ใจกันจริงทั้งสองฝ่าย — ${t}`,'epic')}
   if(theyB)setTimeout(()=>{if(S&&S.alive)log('🕵️ คืนนั้นคุณนอนไม่หลับ… ลางสังหรณ์บอกว่า <b>มีใครบางคนกำลังหักหลังคุณ</b>','bad',true)},1500)}
- try{render()}catch(e){}}
+ {const L=x=>({fight:'⚔️ ท้าดวล',ally:'🤝 สาบาน',betray:'🗡️ แสร้งสาบาน',leave:'🙇 ถอย'}[x]||'-');log(`📜 สรุป: คุณเลือก <b>${L(R0.my)}</b> · ${n}เลือก <b>${L(R0.their)}</b>`,'')}
+ mtMsgBox(rid);try{render()}catch(e){}}
 function mtInbox(m){if(!S||!S.alive||!m)return;if(m.kind==='room'){if(!mtDone(m.rid)&&!MT.inv.some(x=>x.rid===m.rid)&&Date.now()-(m.t||0)<55000)MT.inv.push(m);return}
  if(m.kind==='mmsg'){mtMsgShow(m.rid,m.n,m.x);return}
  if(m.kind==='mres'&&!mtDone(m.rid))api('mtst',{rid:m.rid}).then(j=>{if(j&&j.ok)mtApply(j.st)}).catch(()=>{})}
 setInterval(async()=>{try{if(!S||!S.alive||!MT.inv.length||choice._cur||S.beastMode)return;if(modalOpen&&['choice','duel','specfull'].includes($('modal').dataset.k))return;const m=MT.inv.shift();if(Date.now()-(m.t||0)>58000)return;
  const j=await api('mtst',{rid:m.rid});if(!j||!j.ok||!j.st||j.st.res)return j&&j.st&&mtApply(j.st);if(modalOpen)closeM();mtShow(j.st);mtWatch(m.rid)}catch(e){}},1000);
 meetTick=function(){if(!meetC||Date.now()-meetC.at>90000||S.age<14||choice._cur||modalOpen||S.beastMode||MT.busy||Math.random()>.06)return;const o=meetC;meetC=null;MT.busy=1;
- api('mtopen',{to:o.k,n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age}).then(j=>{if(j&&j.ok&&j.st&&S&&S.alive&&!choice._cur){mtShow(j.st);mtWatch(j.st.rid)}}).catch(()=>{}).finally(()=>{MT.busy=0})};
+ api('mtopen',{to:o.k,n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0}).then(j=>{if(j&&j.ok&&j.st&&S&&S.alive&&!choice._cur){mtShow(j.st);mtWatch(j.st.rid)}}).catch(()=>{}).finally(()=>{MT.busy=0})};
 </script>
 </body>
 </html>
