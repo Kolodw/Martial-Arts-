@@ -2936,7 +2936,7 @@ function caveUp(q){const c=S.cave,cost=caveCost();if(c.lv>=4||S.money<cost){if(!
 function secOpts(){if(!xFast())return[10,50,100];const a=S.age,nice=v=>{const p=Math.pow(10,Math.floor(Math.log10(v)));return Math.round(v/p)*p};return[nice(Math.max(100,a*.01)),nice(Math.max(500,a*.05)),Math.min(100000,nice(Math.max(1000,a*.2)))]}
 function seclude(n){if(xFast()&&n>100){closeM();n=Math.min(n,Math.max(1,1e6-S.age-1));S.xseal=n;log(`🧘 คุณผนึกถ้ำแล้วนั่งลงหลับตา — ตั้งใจจะไม่ออกมาอีก ${fmt(n)} ปี`,'myth');try{render()}catch(e){}return}closeM();const lm=lifeMax();n=Math.min(n,Math.max(0,Math.floor(lm-S.age-1)));if(n<1){toast('อายุขัยเหลือไม่พอ');return}
  const m=S.talent.m,f0=addFeed;addFeed=()=>{};let q0=S.qi,p0=total();const dead=[];
- for(let i=0;i<n;i++){S.age++;const g=(.6+Math.random()*.8)*m*(S.faction?1.3:1)*sysTM()*daoM()*caveM()*1.25;S.qi+=g;S.power+=yrPow0()*.35*daoM();
+ for(let i=0;i<n;i++){S.age++;const g=(.6+Math.random()*.8)*m*(S.faction?1.3:1)*sysTM()*daoM()*caveM()*1.25;S.qi+=g*(S._secE||1);S.power+=yrPow0()*.35*daoM()*(S._secE||1);secCapY();
   if(Math.random()<.04)daoGain('ในความสงัดของการปิดด่าน');(S.children||[]).forEach(c=>{if(c.alive)c.age++});(S.parents||[]).forEach(p=>{if(p.alive&&p.age!=null){p.age++;if(p.age>R(70,95)){p.alive=false;dead.push(p.n||'พ่อแม่')}}});
   peers.forEach(p=>{const was=p.alive;peerYear(p);if(was&&!p.alive)dead.push(p.name)});(S.hist=S.hist||[]).push([S.age,Math.round(total()),Math.round(S.happy==null?60:S.happy)])}
  addFeed=f0;const gq=S.qi-q0;
@@ -5990,7 +5990,7 @@ function xWorldLine(st){return ch(XS_WORLD).replace('{n}',fmt(Math.max(2,Math.ro
   if(S&&S.xian&&S.alive&&S.flags&&S.flags.eternal&&S.age>=1e6){S.hp=0;S.age=1e6-1;const r0=_py9.apply(this,arguments);if(S&&S.age>1e6)S.age=1e6;return r0}
   try{if(xFast()){st=xStep();ex=st-1;seal=S.xsealOn?1:0;S.xsealOn=0;
    if(!S.xstep){S.xstep=1;log(`⏩ ในแดนเทพ กาลเวลาไหลไม่คงที่ — บางครั้งผ่านไปเพียงปีเดียว บางครั้งผ่านไปนับหมื่นปีในพริบตา ขึ้นกับสิ่งที่เกิดขึ้นรอบตัวคุณ`,'myth',true)}
-   ex=Math.max(0,Math.min(ex,1e6-1-S.age));st=ex+1;if(ex>0){const g=seal?1.25:1;S.age+=ex;xFamAge(ex);S.qi+=+(ex*.01*g).toFixed(1);{let pg=Math.round((5+Math.min(S.power*.00002,20))*ex*g);if(S.xt){const nx=realmNext();if(nx)pg=Math.min(pg,Math.max(0,Math.round(nx*1.6-total())))}S.power+=pg}S.money+=Math.round(ex*8*(1+realmIdx()*.2))}
+   ex=Math.max(0,Math.min(ex,1e6-1-S.age));st=ex+1;if(ex>0){const g=seal?1.25*secStart(1):1;S.age+=ex;xFamAge(ex);S.qi+=+(ex*.01*g).toFixed(1);{let pg=Math.round((5+Math.min(S.power*.00002,20))*ex*g);if(S.xt||seal){const nx=realmNext();if(nx){const p1=Math.max(0,Math.round(nx*(seal?1.2:1.6)-total()));if(seal&&pg>p1)S._secCapped=1;pg=Math.min(pg,p1)}}S.power+=pg}S.money+=Math.round(ex*8*(1+realmIdx()*.2))}
   }}catch(e){console.error(e)}
   const r=_py9.apply(this,arguments);
   try{if(S&&S.xian&&ex>0){
@@ -7471,6 +7471,29 @@ function qgNote(perf,skip){return skip?'':perf>=.9?' · ☯️ รวมปร�
  setTimeout(()=>{if(!S||!S.alive)return;if(modalOpen&&$('modal').dataset.k!=='choice')closeM();qiGame({title:`รวมปราณรับทัณฑ์สู่${tribName(k,t)}`,sub:'เมฆทัณฑ์หมุนวนเหนือศีรษะ — รวมปราณทั้งหมดเป็นเกราะก่อนสายฟ้าสายแรกจะผ่าลงมา',p:o.ps,diff:actDiff()*(1+t*.02),noRoll:1},(ok,perf,pF,skip)=>{if(!S||!S.alive)return;const old=S.tribPill||0;
   S.tribPill=old+(skip?0:(perf-.5)*.3);S.qgTrib=1;try{_tg.apply(this,args)}finally{S.qgTrib=0;if(S.tribPill)S.tribPill=old}if(!skip)log(`☯️ รวมปราณรับทัณฑ์ได้ ${Math.round(perf*100)}% ${perf>=.5?'(โอกาสผ่านเพิ่มขึ้น)':'(โอกาสผ่านลดลง)'}`,'');try{render();checkDeath()}catch(e){}})},60)}}
 {const L=[{id:'act_combo',n:'อ่านทางขาด',d:'คอมโบ ×4 ในการดวลครั้งเดียว',r:2,c:()=>!!S.flags.duCombo},{id:'act_qg',n:'ปราณเป็นหนึ่ง',d:'รวมปราณเป๊ะทุกจังหวะตอนทะลวงขั้น',r:3,c:()=>!!S.flags.qgPerfect}];const c=ACH.find(x=>x[0]==='กำเนิด');if(c){c[1].push(...L);ACH_ALL.push(...L)}}
+
+// ---- ปิดด่านแบบสมดุล: ติดคอขวด · ทะลวงตอนออกจากด่าน · ธาตุไฟเข้าแทรก · ศัตรูบุกถ้ำ · ปิดติดกันได้ผลน้อยลง · ความสัมพันธ์จางลง ----
+function secStart(q){const gap=S.age-(S.secEnd==null?-99:S.secEnd);S.secStk=gap<5?(S.secStk||0)+1:0;const e=[1,.7,.5,.35][Math.min(3,S.secStk)];S._secEff=e;return e}
+function secCapY(){if(!S._secCap)return;let ov=total()-S._secCap;if(ov<=0)return;S._secCapped=1;const dp=Math.min(ov,S.power-S._secP0);if(dp>0){S.power-=dp;ov-=dp}if(ov>0)S.qi=Math.max(S._secQ0,S.qi-ov/12)}
+function secAfter(n){if(!S||!S.alive||n<1)return;S.secEnd=S.age;const notes=[];
+ if((S._secEff||1)<1)notes.push(`🌫️ ปิดด่านติดกันโดยไม่ได้ออกไปใช้ชีวิต จิตเริ่มด้านชา — ได้ผลเพียง ${Math.round(S._secEff*100)}%`);
+ if(S._secCapped)notes.push('⛓️ พลังติดคอขวด — สะสมได้แค่ถึงขีดก่อนขั้นถัดไป ต้องทะลวงขั้นให้ได้ก่อนจึงจะเพิ่มได้อีก');
+ if(notes.length)log(notes.join('<br>'),'');S._secEff=1;S._secCapped=0;
+ // ธาตุไฟเข้าแทรก
+ const ch10=Math.max(1,Math.min(5,Math.round(n/10)));let hit=0;for(let i=0;i<ch10;i++){const p=.05+((S.happy==null?60:S.happy)<30?.05:0)+(S.hp<S.maxHp*.5?.04:0)-(S.cave?S.cave.lv*.01:0);if(Math.random()<p)hit++}
+ if(hit){const d=Math.round(S.maxHp*(.15+.08*hit));S.hp-=d;S.qi=+(S.qi*.92).toFixed(1);log(`🔥 ธาตุไฟเข้าแทรก${hit>1?' '+hit+' ครั้ง':''}ระหว่างปิดด่าน — ปราณย้อนกลับเผาเส้นลมปราณ พลังชีวิต −${d} ลมปราณ −8%`,'bad',true);if(S.hp<=0)S.deathCause='ธาตุไฟเข้าแทรกจนสิ้นใจในถ้ำปิดด่าน'}
+ // ความสัมพันธ์จางลง
+ const dr=Math.min(30,Math.round(n*.3));if(dr>=3){let any=0;if(S.sp&&S.sp.aff!=null){S.sp.aff=Math.max(0,S.sp.aff-dr);any=1}(S.children||[]).forEach(c=>{if(c.alive!==false&&c.rel!=null){c.rel=Math.max(0,c.rel-Math.round(dr*.8));any=1}});if(any)log(`🕯️ คนที่บ้านรอคุณมานาน${S.sp?' — '+esc(S.sp.n||'คู่ครอง')+'เริ่มห่างเหิน':''} ความสัมพันธ์ในครอบครัวจางลง`,'')}
+ // ศัตรูบุกถ้ำ (เกิดหลังจากนี้เมื่อว่าง)
+ if(!S.beastMode&&Math.random()<(n>=30?.18:.1))S.secRaid=1;
+ // ออกจากด่าน: ถ้าพลังถึงเกณฑ์ ลองทะลวงขั้นทันที
+ if(S.hp>0&&!S.deathCause)setTimeout(()=>{try{if(!S||!S.alive)return;S.qgAt=null;btTick();if(!modalOpen&&!choice._cur)postTick();render()}catch(e){console.error(e)}},150)}
+function secRaidGo(){if(!S.secRaid||!S.alive||choice._cur||modalOpen||S.beastMode)return;S.secRaid=0;const nm=ch(S.xt?['เทพนอกรีตที่ได้กลิ่นปราณของคุณ','มารร้ายจากห้วงลึก']:S.xian?['ผู้ฝึกตนมารที่หมายชิงสมบัติในถ้ำ','อสูรวิญญาณที่ถูกปราณดึงดูดมา']:['โจรที่รู้ว่าคุณปิดด่านอยู่','ศัตรูเก่าที่ตามรอยมาถึงถ้ำ']),ep=total()*(.7+Math.random()*.5);
+ log(`⚠️ ขณะคุณเพิ่งออกจากด่าน ${nm}บุกเข้ามาในถ้ำ!`,'bad');duel(nm,ep,w=>{if(w){S.fame+=15;log(`⚔️ คุณจัดการ${nm}ได้ ทั้งที่ปราณยังไม่ทันนิ่ง`,'good')}else{const m=Math.round((S.money||0)*.1);S.money-=m;S.qi=+(S.qi*.95).toFixed(1);log(`💢 ${nm}ปล้นของในถ้ำไป ${fmt(m)} ตำลึง และทำให้ปราณของคุณปั่นป่วน`,'bad')}})}
+{const _sc=seclude;seclude=function(n){if(!S||!S.alive)return _sc.apply(this,arguments);if(xFast()&&n>100)return _sc.apply(this,arguments);
+ const a0=S.age,t0=total(),nx=realmNext();S._secE=secStart();S._secP0=S.power;S._secQ0=S.qi;S._secCap=nx?Math.max(t0,nx*1.2):0;S._secCapped=0;
+ try{_sc.apply(this,arguments)}finally{S._secE=0;S._secCap=0}if(S.age>a0){secAfter(S.age-a0);try{render();checkDeath()}catch(e){}}}}
+{const _pySec=passYear;passYear=function(){const sealing=!!(S&&S.xseal>0),a0=S?S.age:0;const r=_pySec.apply(this,arguments);try{if(S&&S.alive){if(sealing&&S.age>a0)secAfter(S.age-a0);else secRaidGo()}}catch(e){console.error(e)}return r}}
 </script>
 </body>
 </html>
