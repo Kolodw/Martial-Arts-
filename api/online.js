@@ -150,7 +150,8 @@ const thDay = (ms, back = 0) => new Date(ms + 7 * 3600e3 - back * 86400e3).toISO
 // IP ของผู้ใช้จริง (Vercel ใส่ x-forwarded-for / x-real-ip ให้)
 const cip = req => (String(req.headers['x-real-ip'] || '') || String(req.headers['x-forwarded-for'] || '').split(',')[0]).trim().replace(/[^0-9a-fA-F:.]/g, '').slice(0, 45) || 'x';
 // ต่อ IP ต่อนาที: เกิน SOFT ตอบ 429 · เกิน HARD แบน 30 นาที · คำสั่งที่เขียนข้อความให้คนอื่นเห็นจำกัดแยก
-const IP_SOFT = 900, IP_HARD = 3000, IP_WMAX = 40;
+// เน็ตมือถือไทยใช้ IP ร่วมกัน (CGNAT) → จำกัดหลักต่อ 'ไอดีผู้เล่น' ส่วนต่อ IP เผื่อไว้สูงมาก (กันแค่ยิงถล่มจริง)
+const IP_SOFT = 8000, IP_HARD = 25000, IP_WMAX = 2000, ID_SOFT = 240, ID_WMAX = 30, NOID_SOFT = 900;
 const IP_WRITE = new Set(['say', 'bug', 'bugedit', 'mtmsg', 'pachat', 'life', 'profile', 'idea', 'fb', 'mtopen', 'meet', 'migput', 'csave', 'save', 'achfirst', 'glogin', 'gunlink', 'profack']);
 // รหัสแอดมิน: ใช้ ADMIN_KEY2 ถ้ามี (รหัสเก่า ADMIN_KEY ใช้ไม่ได้อีก)
 const ADM_KEY = process.env.ADMIN_KEY2 || process.env.ADMIN_KEY || '';
@@ -327,6 +328,10 @@ module.exports = async (req, res) => {
       if (+rc > IP_HARD) { await pipe([['SET', 'ban:' + ip, 'flood', 'EX', 1800], ['ZADD', 'trap:ips', now, ip], ['HSET', 'trap:info', ip, JSON.stringify({ n: +rc, p: ['(ยิง API ถี่เกิน ' + rc + ' ครั้ง/นาที)'], f: now, l: now, ua: String(req.headers['user-agent'] || '').slice(0, 140), fl: 1 })]]); return res.status(429).json({ err: 'rate' }) }
       if (+rc > IP_SOFT) return res.status(429).json({ err: 'rate' });
       if (WR && +wc > IP_WMAX) return res.status(429).json({ err: 'rate' });
+      // จำกัดต่อผู้เล่น (ไอดี) — คนดีที่ใช้ IP เดียวกันไม่โดนลูกหลง
+      const uk = okId(id) ? 'idr:' + id : 'ipn:' + ip, [uc, uw] = await pipe([['INCR', uk + ':' + mk], WR ? ['INCR', uk + ':w:' + mk] : ['GET', uk + ':w:' + mk], ['EXPIRE', uk + ':' + mk, 90], ...(WR ? [['EXPIRE', uk + ':w:' + mk, 90]] : [])]);
+      if (+uc > (okId(id) ? ID_SOFT : NOID_SOFT)) return res.status(429).json({ err: 'rate' });
+      if (WR && +uw > ID_WMAX) return res.status(429).json({ err: 'rate' });
     }
     if (a === 'ping') {
       if (okId(id)) {
@@ -336,7 +341,7 @@ module.exports = async (req, res) => {
         let act = null;
         try { const r = JSON.parse(String(qOf(req).st || '').slice(0, 600) || 'null'); if (r && typeof r === 'object') { const S0 = v => String(v == null ? '' : v).replace(/[<>]/g, '').slice(0, 40), N0 = v => Math.max(-1, Math.min(1e7, Math.round(+v || 0))); act = { sc: S0(r.sc), md: S0(r.md), ch: r.ch ? 1 : 0, hd: r.hd ? 1 : 0, ia: N0(r.ia), er: N0(r.er), em: String(r.em || '').replace(/[<>]/g, '').slice(0, 120), nm: S0(r.nm), ag: N0(r.ag), al: r.al ? 1 : 0, au: r.au ? 1 : 0, pa: r.pa ? 1 : 0, sp: N0(r.sp), w: S0(r.w).slice(0, 1), yr: N0(r.yr), ri: S0(r.ri), v: S0(qOf(req).v).slice(0, 8), t: now } } } catch {}
         const hk = 'ipid:' + ip + ':' + Math.floor(now / 3600e3), [, nid] = await pipe([['SADD', hk, id], ['SCARD', hk], ['EXPIRE', hk, 4000]]);
-        if (meta.b !== 'บอท' && +nid <= 40) await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)], ...(act ? [['HSET', 'oa', id, JSON.stringify(act)]] : [])]);
+        if (meta.b !== 'บอท' && +nid <= 600) await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)], ...(act ? [['HSET', 'oa', id, JSON.stringify(act)]] : [])]);
       }
       const [, n, lives, annV] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 600e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann']]);
       let ann = null; try { ann = annV ? JSON.parse(annV) : null } catch {}
