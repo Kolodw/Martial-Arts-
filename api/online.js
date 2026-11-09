@@ -1,22 +1,111 @@
-// ระบบออนไลน์ของ "1 ในยุทธภพ" — Vercel Function + Upstash Redis (REST)
-// ต้องตั้งค่าตัวแปร KV_REST_API_URL / KV_REST_API_TOKEN (หรือ UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN)
-const URL_ = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-const TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+// ระบบออนไลน์ของ "1 ในยุทธภพ" — Vercel Function + Redis
+// ฐานข้อมูลหลัก: ถ้ามี VALKEY_URL (rediss://user:pass@host:port จาก Aiven) จะใช้ Valkey ผ่าน TCP/TLS
+// ถ้าไม่มี จะใช้ Upstash REST เหมือนเดิม (KV_REST_API_URL / KV_REST_API_TOKEN)
+const UP_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+const UP_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+const VK_URL = process.env.VALKEY_URL || process.env.REDIS_URL || '';
+const USE_VK = !!VK_URL;
+const URL_ = USE_VK ? VK_URL : UP_URL;
+const TOKEN = USE_VK ? 'vk' : UP_TOKEN;
 
-async function cmd(...args) {
-  const r = await fetch(URL_, { method: 'POST', headers: { Authorization: `Bearer ${TOKEN}` }, body: JSON.stringify(args) });
+// ---------- Upstash REST ----------
+async function upCmd(...args) {
+  const r = await fetch(UP_URL, { method: 'POST', headers: { Authorization: `Bearer ${UP_TOKEN}` }, body: JSON.stringify(args) });
   const j = await r.json();
   if (j.error) throw new Error(j.error);
   return j.result;
 }
-async function pipe(list) {
-  const r = await fetch(URL_ + '/pipeline', { method: 'POST', headers: { Authorization: `Bearer ${TOKEN}` }, body: JSON.stringify(list) });
+async function upPipe(list) {
+  if (!list.length) return [];
+  const r = await fetch(UP_URL + '/pipeline', { method: 'POST', headers: { Authorization: `Bearer ${UP_TOKEN}` }, body: JSON.stringify(list) });
   const j = await r.json();
   if (!Array.isArray(j)) throw new Error((j && j.error) || 'kv');
   const bad = j.find(x => x && x.error && /max requests limit|max daily request/i.test(x.error));
   if (bad) throw new Error(bad.error);
   return j.map(x => x.result);
 }
+
+// ---------- Valkey/Redis (RESP2) แบบไม่ต้องลงแพ็กเกจเพิ่ม ----------
+const net = require('net'), tls = require('tls');
+const VK = { sock: null, ready: null, buf: Buffer.alloc(0), q: [] };
+class RErr { constructor(m) { this.message = m } }
+function vkParse(buf, i) {
+  if (i >= buf.length) return null;
+  const t = buf[i], e = buf.indexOf('\r\n', i);
+  if (e < 0) return null;
+  const line = buf.toString('utf8', i + 1, e);
+  if (t === 43) return [line, e + 2];                       // +
+  if (t === 45) return [new RErr(line), e + 2];             // -
+  if (t === 58) return [Number(line), e + 2];               // :
+  if (t === 36) {                                            // $
+    const n = +line; if (n < 0) return [null, e + 2];
+    if (buf.length < e + 2 + n + 2) return null;
+    return [buf.toString('utf8', e + 2, e + 2 + n), e + 2 + n + 2];
+  }
+  if (t === 42) {                                            // *
+    const n = +line; if (n < 0) return [null, e + 2];
+    const arr = []; let p = e + 2;
+    for (let k = 0; k < n; k++) { const r = vkParse(buf, p); if (!r) return null; arr.push(r[0]); p = r[1] }
+    return [arr, p];
+  }
+  throw new Error('resp');
+}
+function vkEnc(args) {
+  let s = '*' + args.length + '\r\n';
+  for (const a of args) { const v = a == null ? '' : typeof a === 'string' ? a : String(a); s += '$' + Buffer.byteLength(v) + '\r\n' + v + '\r\n' }
+  return s;
+}
+function vkDrop(err) {
+  const q = VK.q; VK.q = []; VK.sock = null; VK.ready = null; VK.buf = Buffer.alloc(0);
+  for (const w of q) w.rej(err || new Error('valkey closed'));
+}
+function vkConnect() {
+  if (VK.ready) return VK.ready;
+  VK.ready = new Promise((res, rej) => {
+    let u; try { u = new URL(VK_URL) } catch { return rej(new Error('VALKEY_URL invalid')) }
+    const port = +u.port || 6379, host = u.hostname, secure = u.protocol === 'rediss:';
+    const opt = { host, port, servername: host };
+    if (process.env.VALKEY_CA) opt.ca = process.env.VALKEY_CA;
+    const s = secure ? tls.connect(opt) : net.connect(opt);
+    s.setNoDelay(true); s.setKeepAlive(true, 30000);
+    const to = setTimeout(() => { s.destroy(new Error('valkey connect timeout')) }, 8000);
+    s.on('data', d => {
+      VK.buf = VK.buf.length ? Buffer.concat([VK.buf, d]) : d;
+      let p = 0;
+      for (;;) { const r = vkParse(VK.buf, p); if (!r) break; p = r[1]; const w = VK.q.shift(); if (w) { r[0] instanceof RErr ? w.rej(new Error(r[0].message)) : w.res(r[0]) } }
+      VK.buf = p >= VK.buf.length ? Buffer.alloc(0) : VK.buf.subarray(p);
+    });
+    s.on('error', e => { clearTimeout(to); vkDrop(e); rej(e) });
+    s.on('close', () => { clearTimeout(to); vkDrop() });
+    s.once(secure ? 'secureConnect' : 'connect', async () => {
+      clearTimeout(to); VK.sock = s;
+      try {
+        const user = decodeURIComponent(u.username || ''), pass = decodeURIComponent(u.password || '');
+        if (pass) await vkSend(user ? ['AUTH', user, pass] : ['AUTH', pass]);
+        res(s);
+      } catch (e) { s.destroy(); rej(e) }
+    });
+  });
+  return VK.ready;
+}
+function vkSend(args) {
+  return new Promise((res, rej) => {
+    if (!VK.sock) return rej(new Error('valkey not connected'));
+    const t = setTimeout(() => rej(new Error('valkey timeout')), 8000);
+    VK.q.push({ res: v => { clearTimeout(t); res(v) }, rej: e => { clearTimeout(t); rej(e) } });
+    VK.sock.write(vkEnc(args));
+  });
+}
+async function vkCmd(...args) { await vkConnect(); return vkSend(args) }
+async function vkPipe(list) {
+  if (!list.length) return [];
+  await vkConnect();
+  return Promise.all(list.map(a => vkSend(a).catch(e => { if (/NOAUTH|WRONGPASS|closed|timeout|not connected/i.test(e.message)) throw e; return undefined })));
+}
+
+const cmd = USE_VK ? vkCmd : upCmd;
+const pipe = USE_VK ? vkPipe : upPipe;
+
 function week(d = new Date()) {
   // สัปดาห์เริ่มวันจันทร์ 00:00 เวลาไทย
   const t = new Date(d.getTime() + 7 * 3600e3);
@@ -266,6 +355,38 @@ module.exports = async (req, res) => {
       const viewer = okId(id) ? id : 'anon' + (req.headers['x-forwarded-for'] || '').slice(0, 15);
       const [, , w] = await pipe([['ZADD', 'watch:' + full, now, viewer], ['ZREMRANGEBYSCORE', 'watch:' + full, 0, now - 20e3], ['ZCARD', 'watch:' + full], ['EXPIRE', 'watch:' + full, 120]]);
       return res.json({ s: JSON.parse(v), w: w || 0 });
+    }
+    if (a === 'kvmigrate') {
+      // ผู้ดูแลเท่านั้น: ย้ายข้อมูลเก่าจาก Upstash มา Valkey ทีละชุด (เรียกซ้ำจนกว่า done=1)
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
+      if (!USE_VK || !UP_URL) return res.json({ err: 'ต้องตั้ง VALKEY_URL และยังมี KV_REST_API_URL เดิมอยู่' });
+      const cur0 = String(qOf(req).cur || '0').replace(/[^0-9]/g, '') || '0';
+      let r;
+      try { r = await upCmd('SCAN', cur0, 'COUNT', 150) } catch (x) { return res.json({ err: 'อ่าน Upstash ไม่ได้: ' + String(x.message).slice(0, 160) }) }
+      const next = String(r[0]), keys = r[1] || [];
+      let copied = 0, skipped = 0; const errs = [];
+      if (keys.length) {
+        const meta = await upPipe(keys.flatMap(k => [['TYPE', k], ['PTTL', k]]));
+        const reads = keys.map((k, i) => { const t = meta[i * 2]; return t === 'string' ? ['GET', k] : t === 'list' ? ['LRANGE', k, 0, -1] : t === 'hash' ? ['HGETALL', k] : t === 'set' ? ['SMEMBERS', k] : t === 'zset' ? ['ZRANGE', k, 0, -1, 'WITHSCORES'] : ['EXISTS', k] });
+        const vals = await upPipe(reads);
+        const ex = await vkPipe(keys.map(k => ['EXISTS', k])), dn = await vkPipe(keys.map(k => ['SISMEMBER', 'mig:done', k]));
+        for (let i = 0; i < keys.length; i++) {
+          const k = keys[i], t = meta[i * 2], ttl = +meta[i * 2 + 1], v = vals[i], has = +ex[i] > 0, ops = [];
+          if (+dn[i] > 0) { skipped++; continue }
+          try {
+            if (t === 'string') { if (!has) ops.push(['SET', k, v]); else if (/^-?\d+$/.test(String(v)) && /^(lives|trk|bv)/.test(k)) ops.push(['INCRBY', k, v]); else { skipped++; continue } }
+            else if (t === 'list') { if (!v || !v.length) { skipped++; continue } ops.push(['RPUSH', k, ...v]) }
+            else if (t === 'hash') { if (!v || !v.length) { skipped++; continue } for (let j = 0; j < v.length; j += 2) ops.push(['HSETNX', k, v[j], v[j + 1]]) }
+            else if (t === 'set') { if (!v || !v.length) { skipped++; continue } ops.push(['SADD', k, ...v]) }
+            else if (t === 'zset') { if (!v || !v.length) { skipped++; continue } const a2 = []; for (let j = 0; j < v.length; j += 2) a2.push(v[j + 1], v[j]); ops.push(['ZADD', k, 'NX', ...a2]) }
+            else { skipped++; continue }
+            if (ttl > 0) ops.push(['PEXPIRE', k, ttl]);
+            ops.push(['SADD', 'mig:done', k]);
+            await vkPipe(ops); copied++;
+          } catch (x) { errs.push(k + ': ' + String(x.message).slice(0, 80)) }
+        }
+      }
+      return res.json({ done: next === '0' ? 1 : 0, next, copied, skipped, errs: errs.slice(0, 10) });
     }
     if (a === 'kvdiag') {
       // ผู้ดูแลเท่านั้น: ดูสภาพฐานข้อมูล (จำนวนคีย์ตามหมวด ขนาด TTL)
@@ -596,6 +717,7 @@ module.exports = async (req, res) => {
       if (a === 'admin') { res.setHeader('Content-Type', 'text/html; charset=utf-8'); return res.status(503).send(`<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>ผู้ดูแล · ฐานข้อมูลเต็มโควตา</title><style>body{font-family:system-ui,sans-serif;background:#16131c;color:#eee;padding:16px;max-width:680px;margin:auto;line-height:1.6}.b{background:#3a1d24;border:2px solid #ff6b6b;border-radius:10px;padding:12px 14px}code{background:#2a2433;padding:2px 6px;border-radius:4px}</style></head><body><h1>🛡️ หน้าผู้ดูแล</h1><div class="b"><b>🔴 ระบบออนไลน์หยุดชั่วคราว — ฐานข้อมูล Upstash ใช้โควตาคำสั่งรายเดือนหมดแล้ว</b><br>ข้อมูลทั้งหมดยังอยู่ครบ (แชท ทำเนียบ กระดานบั๊ก ความคิดเห็น) แค่อ่าน/เขียนไม่ได้จนกว่าโควตาจะรีเซ็ต หรืออัปเกรดฐานข้อมูลที่ console.upstash.com<br><small>ข้อความจากฐานข้อมูล: <code>${String(e.message).replace(/[<>]/g, '').slice(0, 200)}</code></small></div><p>ตัวเกมยังเล่นได้ตามปกติ และเซฟในเครื่องผู้เล่นปลอดภัย</p></body></html>`) }
       return res.status(503).json({ err: 'quota' });
     }
+    if (process.env.DEBUG_API) console.error('API_ERR', a, e && e.stack);
     return res.status(500).json({ err: 'server' });
   }
 };
