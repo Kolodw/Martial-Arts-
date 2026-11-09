@@ -1591,7 +1591,7 @@ function checkDeath(){
  if(S.sys&&S.sys.revive>0&&!S.flags.ascended&&!S.flags.eternal&&!(S.ch==='short'&&S.age>=30)){S.sys.revive--;S.hp=S.maxHp;S.deathCause=null;S.chronic=null;if(/วัยชรา/.test(cause)||S.age>=lifeMax()){S.lifespan+=12;S.rvL=(S.rvL||0)+12}S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) — ร่างกายฟื้นคืนสมบูรณ์`,'up');setScene('system');return false}
  try{if(typeof regTry==='function'&&regTry(cause))return false}catch(e){console.error(e)}
  flushReveal();S.alive=false;S.cause=cause;saveLegacy();clearSave();setScene('death');setTimeout(()=>sfx('death'),300);log(`🪦 ${cause}`,'bad');
- setTimeout(()=>{modal(`<h3>ลาก่อน ${esc(S.name)}</h3><p>${cause} ในวัย ${S.age} ปี<br>อยากบอกอะไรกับคนคนนี้เป็นครั้งสุดท้าย?</p><input class="ta" id="byeIn" maxlength="80" placeholder="คำอำลาสุดท้าย"><button class="pbtn" style="width:100%" onclick="endGame()">อำลา</button>`,'bye')},900);
+ const _dn=S;setTimeout(()=>{if(!S||S!==_dn)return;modal(`<h3>ลาก่อน ${esc(S.name)}</h3><p>${cause} ในวัย ${S.age} ปี<br>อยากบอกอะไรกับคนคนนี้เป็นครั้งสุดท้าย?</p><input class="ta" id="byeIn" maxlength="80" placeholder="คำอำลาสุดท้าย"><button class="pbtn" style="width:100%" onclick="endGame()">อำลา</button>`,'bye')},900);
  return true;
 }
 const STAGES=[['👶 วัยเด็ก',0,12],['🧑 วัยหนุ่มสาว',13,30],['🧔 วัยกลางคน',31,60],['👴 วัยชรา',61,999]];
