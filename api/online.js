@@ -209,10 +209,10 @@ function paPick() { const t = PA_RW.reduce((a, b) => a + b, 0); let x = Math.ran
 async function paTick(now) {
   let cur = null; try { const v = await cmd('GET', 'pa:cur'); cur = v ? JSON.parse(v) : null } catch {}
   if (!cur || (cur.phase === 'done' && now >= cur.next)) {
-    // ตัวจัดตารางอัตโนมัติ: เปิดเมื่อมีคนเล่นพร้อมกันอย่างน้อย 2 คน · ไม่เกินวันละ 16 รอบ · คนน้อยของน้อยลง
+    // ตัวจัดตารางอัตโนมัติ: เปิดเมื่อมีคนเล่นพร้อมกันอย่างน้อย 2 คน · ไม่เกินวันละ 120 รอบ · พักระหว่างรอบ = จำนวนคนเล่น (ต่ำสุด 5 สูงสุด 10 นาที) · คนน้อยของน้อยลง
     if ((await cmd('SET', 'pa:chk', '1', 'NX', 'PX', 60e3)) !== 'OK') return cur;
     const act = +(await cmd('ZCOUNT', 'online', now - 180e3, '+inf')) || 0, day = PA_DAY(now), nDay = +(await cmd('GET', 'pa:day:' + day)) || 0;
-    if (act < 2 || nDay >= 16) return cur;
+    if (act < 2 || nDay >= 120) return cur;
     if ((await cmd('SET', 'pa:lk', '1', 'NX', 'PX', 4000)) !== 'OK') return cur;
     try {
       const sid = (now.toString(36) + Math.random().toString(36).slice(2, 5)).slice(-9), lots = [], nL = act <= 3 ? 3 : act <= 8 ? 4 : act <= 15 ? 5 : 6;
@@ -238,7 +238,7 @@ async function paTick(now) {
     const L = cur.lots[cur.li], ops = [];
     if (H.by) { L.sold = { g: +H.hi, n: H.bn }; const dk = 'pa:wd:' + PA_DAY(now) + ':' + H.by; ops.push(['INCR', dk], ['EXPIRE', dk, 172800], ['HINCRBY', 'pa:ws:' + cur.sid, H.by, 1], ['EXPIRE', 'pa:ws:' + cur.sid, 7200], ['LPUSH', 'pa:win:' + H.by, JSON.stringify({ sid: cur.sid, li: cur.li, r: L.r, k: L.k, g: +H.hi, t: now })], ['EXPIRE', 'pa:win:' + H.by, 86400]) } else L.sold = { g: 0 };
     const rest = cur.lots.map((x, i) => i).filter(i => !cur.lots[i].sold);
-    if (!rest.length) { cur.phase = 'done'; const act = +(await cmd('ZCOUNT', 'online', now - 180e3, '+inf')) || 0; cur.next = now + (Math.max(20, Math.min(50, 45 - act * 2)) + Math.random() * 10) * 60e3 }
+    if (!rest.length) { cur.phase = 'done'; const act = +(await cmd('ZCOUNT', 'online', now - 180e3, '+inf')) || 0; cur.next = now + Math.max(5, Math.min(10, act)) * 60e3 }
     else { rest.sort((x, y) => (V['l' + y] || 0) - (V['l' + x] || 0) || x - y); cur.li = rest[0]; ops.push(['SET', 'pa:end:' + cur.sid, now + PA_LOT_MS, 'EX', 3600]); cur.end = now + PA_LOT_MS }
     ops.push(['SET', 'pa:cur', JSON.stringify(cur), 'EX', 7200]);
     await pipe(ops);
