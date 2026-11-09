@@ -230,17 +230,19 @@ const PA_BID_LUA = "local hi=tonumber(redis.call('HGET',KEYS[1],'hi') or '0') lo
 function paPick() { const t = PA_RW.reduce((a, b) => a + b, 0); let x = Math.random() * t; for (let i = 0; i < PA_RW.length; i++) { if ((x -= PA_RW[i]) < 0) return i } return 4 }
 async function paTick(now) {
   let cur = null; try { const v = await cmd('GET', 'pa:cur'); cur = v ? JSON.parse(v) : null } catch {}
-  if (!cur || (cur.phase === 'done' && now >= cur.next)) {
+  const force = await cmd('GET', 'pa:force');
+  if (!cur || (cur.phase === 'done' && (now >= cur.next || force))) {
     // ตัวจัดตารางอัตโนมัติ: เปิดเมื่อมีคนเล่นพร้อมกันอย่างน้อย 2 คน · ไม่เกินวันละ 120 รอบ · พักระหว่างรอบ = จำนวนคนเล่น (ต่ำสุด 5 สูงสุด 10 นาที) · คนน้อยของน้อยลง
-    if ((await cmd('SET', 'pa:chk', '1', 'NX', 'PX', 60e3)) !== 'OK') return cur;
+    if (!force && (await cmd('SET', 'pa:chk', '1', 'NX', 'PX', 60e3)) !== 'OK') return cur;
     const act = +(await cmd('ZCOUNT', 'online', now - 180e3, '+inf')) || 0, day = PA_DAY(now), nDay = +(await cmd('GET', 'pa:day:' + day)) || 0;
-    if (act < 2 || nDay >= 120) return cur;
+    if ((act < 2 && !force) || nDay >= 120) return cur;
     if ((await cmd('SET', 'pa:lk', '1', 'NX', 'PX', 4000)) !== 'OK') return cur;
     try {
       const sid = (now.toString(36) + Math.random().toString(36).slice(2, 5)).slice(-9), lots = [], nL = act <= 3 ? 3 : act <= 8 ? 4 : act <= 15 ? 5 : 6;
       let hi6 = 0, hi7 = 0;
       for (let i = 0; i < nL; i++) { let r = paPick(); if (r === 7 && hi7) r = 6; if (r >= 6 && hi6 >= 2) r = 5; if (r === 7) hi7++; if (r >= 6) hi6++; lots.push({ r, k: Math.floor(Math.random() * 1e6), g: Math.max(1, Math.round(PA_G0[r] * (.8 + Math.random() * .4))) }) }
       cur = { sid, t0: now, lots, li: 0, phase: 'open', act };
+      if (force) await cmd('DEL', 'pa:force');
       await pipe([['INCR', 'pa:day:' + day], ['EXPIRE', 'pa:day:' + day, 172800]]);
       await pipe([['SET', 'pa:cur', JSON.stringify(cur), 'EX', 7200], ['SET', 'pa:end:' + sid, now + 60e3, 'EX', 3600]]);
     } finally { await cmd('DEL', 'pa:lk').catch(() => {}) }
@@ -651,6 +653,13 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const v = await cmd('GET', 'logfull:' + full);
       if (!v) return res.json({ wait: 1 });
       return res.json({ l: JSON.parse(v) });
+    }
+    if (a === 'admchk') return res.json({ ok: isAdmKey(qOf(req).key) ? 1 : 0 });
+    if (a === 'paforce') {
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
+      await pipe([['SET', 'pa:force', '1', 'EX', 180], ['DEL', 'pa:chk']]);
+      await paTick(now).catch(() => {});
+      return res.json({ ok: 1 });
     }
     if (a === 'gcfg') return res.json({ cid: process.env.GOOGLE_CLIENT_ID || '' });
     if (a === 'profst') {

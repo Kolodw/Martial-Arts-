@@ -8073,6 +8073,78 @@ setTimeout(async function pfBoot(){if(typeof onlineOK==='undefined'||!onlineOK){
  try{if(LS.get('murim_gpull',0)){LS.del('murim_gpull');let n=0;const go=()=>{if(modalOpen&&n++<40)return setTimeout(go,1500);toast('🔐 สลับบัญชีแล้ว — เลือกเซฟที่จะกู้');openCloudRestore()};go()}}catch(e){}
  const st=await profStat();if(st&&st.warn){const d=frGet();d.av=d.snap||'';d.avUp=0;d.avSt='';frSet(d);try{await api('profack',{})}catch(e){}profPush();
   const show=()=>{if(modalOpen&&$('modal').dataset.k==='choice')return setTimeout(show,3000);modal(`<h3>⚠️ รูปโปรไฟล์ไม่ผ่านการตรวจ</h3><p>รูปที่คุณอัปโหลดผิดกฎ (ห้ามรูปโป๊ เปลือย อนาจาร หรือรุนแรง) จึงถูกลบออกแล้ว</p><p class="tag2">นี่คือการเตือนครั้งที่ ${st.strikes||1} — ครบ 3 ครั้งจะถูกระงับการอัปโหลดรูป 30 วัน</p><button class="pbtn" style="width:100%" onclick="openProfile()">เปลี่ยนรูปโปรไฟล์</button>`,'pfwarn')};show()}},4000);
+
+// ============ v13.5 เครื่องมือแอดมิน (ขึ้นเฉพาะเมื่อเซิร์ฟเวอร์ยืนยันรหัสแล้ว) ============
+const ADM={ok:false,rr:!!LS.get('murim_adm_rr',0),fix:LS.get('murim_adm_fix',null)||{}};
+async function admVerify(){if(!admK()){ADM.ok=false;return false}try{const j=await api('admchk&key='+encodeURIComponent(admK()));ADM.ok=!!(j&&j.ok)}catch(e){ADM.ok=false}admBtnUpd();return ADM.ok}
+(function(){const b=document.createElement('button');b.id='admBtn';b.className='langbtn admbtn';b.textContent='🛠️ แอดมิน';b.onclick=()=>openAdmTools();b.style.display='none';document.body.appendChild(b);
+ const st=document.createElement('style');st.textContent=`.admbtn{top:82px!important;border-color:#c9a24a!important;color:#c9a24a} body:not(.ttl) .admbtn{display:none!important}
+ .adg{display:grid;grid-template-columns:1fr 1fr;gap:6px}.adg button{font-size:13px;padding:8px 6px}.adsec{border-top:1px dashed var(--line);margin-top:10px;padding-top:8px}.adsec h4{margin:0 0 6px}
+ .adwarn{font-size:12px;background:#c9a24a18;border:1px solid #c9a24a88;border-radius:8px;padding:6px 8px;margin:6px 0}.adsel{width:100%;margin:3px 0}`;document.head.appendChild(st)})();
+function admBtnUpd(){const b=$('admBtn');if(b)b.style.display=ADM.ok?'':'none'}
+setTimeout(admVerify,2500);
+// ---- ทุกเครื่องมือที่แตะชีวิตปัจจุบัน: ชีวิตนี้ไม่ขึ้นทำเนียบ และไม่นับคนแรกของเซิร์ฟเวอร์ ----
+function admMark(){if(!S)return;if(!S.admUsed){S.admUsed=1;S._sent=1;log('🛠️ <span class="lgf fr3">ใช้เครื่องมือแอดมินในชีวิตนี้ — ชีวิตนี้จะไม่ขึ้นทำเนียบ</span>','sys')}}
+{const _af=achFirst;achFirst=function(a){if(S&&S.admUsed)return;return _af.apply(this,arguments)}}
+function admDo(f,msg){if(!ADM.ok){toast('ต้องยืนยันรหัสแอดมินก่อน');return}try{f();if(msg)toast(msg)}catch(e){toast('ไม่สำเร็จ: '+(e&&e.message||e))}try{render()}catch(e){}openAdmTools()}
+// ---- ปลดล็อก (เฉพาะเครื่องนี้ · มีปุ่มคืนค่า) ----
+function admBackup(){if(!LS.get('murim_adm_bak',null))LS.set('murim_adm_bak',{ach:LS.get('murim_ach',{}),fr:frGet(),ttl:LS.get('murim_ttl',{}),kb:kbGet(),bk:LS.get('murim_bkmax',-1)})}
+function admUnlockAll(){admBackup();const now=Date.now();ACH_ALL.forEach(a=>{const g=achGot[a.id];const need=Math.max(3,...(achTh(a)||[3]));achGot[a.id]=g?Object.assign(g,{c:Math.max(need,g.c||1)}):{t:now,n:'แอดมิน',c:need}});LS.set('murim_ach',achGot);
+ const d=frGet();d.own=FRAMES.map(f=>f.id);frSet(d);const T=LS.get('murim_ttl',{});['m','x'].forEach(w=>Object.values(TTL_CORE[w]).forEach(L=>L.forEach(c=>Object.values(TTL_MOD).forEach(M=>M.forEach(m=>{const k=c+m;if(!T[k])T[k]=1})))));TTL_SP.forEach(x=>{if(!T[x[2]])T[x[2]]=1});LS.set('murim_ttl',T);
+ const kb=kbGet();kb.g=Math.max(kb.g,999999);kb.e=Math.max(kb.e,999999);kbSet(kb)}
+function admRestore(){const b=LS.get('murim_adm_bak',null);if(!b){toast('ไม่มีข้อมูลสำรอง');return}if(!confirm('คืนค่าสมุดตำนาน กรอบ ฉายา และคลังกรรม เป็นก่อนกดปลดล็อก?'))return;
+ for(const k in achGot)delete achGot[k];Object.assign(achGot,b.ach||{});LS.set('murim_ach',achGot);frSet(b.fr||frGet());LS.set('murim_ttl',b.ttl||{});kbSet(b.kb||{g:0,e:0});LS.set('murim_bkmax',b.bk==null?-1:b.bk);LS.del('murim_adm_bak');toast('คืนค่าแล้ว');openAdmTools()}
+// ---- สุ่มเกิดใหม่ไม่จำกัด + บังคับผลสุ่ม ----
+{const _dr=doRoll;doRoll=function(first){if(ADM.ok&&ADM.rr&&!first)rerolls=Math.max(rerolls,1);const r=_dr.apply(this,arguments);if(ADM.ok&&ADM.rr){rerolls=Math.max(rerolls,1);const e=$('rr');if(e)e.textContent='∞';setTimeout(()=>{const b=$('rerollBtn');if(b)b.disabled=false},2600)}return r}}
+{const _gb=goBirth;goBirth=function(){const r=_gb.apply(this,arguments);if(ADM.ok&&ADM.rr){rerolls=Math.max(rerolls,1);const e=$('rr');if(e)e.textContent='∞'}return r}}
+{const _gr=genRoll;genRoll=function(){const r=_gr.apply(this,arguments);try{if(ADM.ok&&r){const F=ADM.fix||{};
+  if(F.t!=null&&TALENT[F.t]){r.t={v:TALENT[F.t],p:TALENT[F.t].w/TALENT.reduce((s,x)=>s+x.w,0)}}
+  if(F.f!=null&&FAMILY[F.f]){r.f={v:FAMILY[F.f],p:FAMILY[F.f].w/FAMILY.reduce((s,x)=>s+x.w,0)}}
+  if(F.sys){const T=F.sys==='rnd'?ch(SYS_TYPES):SYS_TYPES.find(x=>x.id===F.sys);if(T)r.os={t:T.id,g:+F.sg||0,p:.01}}
+  if(F.t!=null||F.f!=null||F.sys)r._adm=1}}catch(e){}return r}}
+{const _sl2=startLife;startLife=function(){const r0=roll;const out=_sl2.apply(this,arguments);try{if(r0&&r0._adm&&S)admMark()}catch(e){}return out}}
+function admFix(k,v){ADM.fix=ADM.fix||{};if(v===''||v==null)delete ADM.fix[k];else ADM.fix[k]=v;LS.set('murim_adm_fix',ADM.fix)}
+// ---- เครื่องมือในชีวิตนี้ ----
+{const _cd=checkDeath;checkDeath=function(){if(S&&S.alive&&S.admGod){S.hp=Math.max(S.hp,S.maxHp);S.deathCause=null;if(S.age>=S.lifespan-2)S.lifespan=S.age+100}return _cd.apply(this,arguments)}}
+function admSkip(n){admMark();const was=auto;auto=true;for(let i=0;i<n&&S&&S.alive;i++){let g=0;while(choice._cur&&g++<20){const c=choice._cur;choiceRun(Math.floor(Math.random()*c.opts.length));if(choice._cur===c)choice._cur=null}try{if(modalOpen&&$('modal').dataset.k!=='choice'&&$('modal').dataset.k!=='admtool')closeM()}catch(e){}passYear();if(S&&S.alive&&!choice._cur)checkDeath()}auto=was}
+function admRealmUp(top){admMark();const i=realmIdx(),t=top?7:Math.min(7,i+1);if(S.xt&&top){toast('โลกเทพ: ใช้ปุ่มขั้นถัดไปทีละขั้น');return}const nx=REALMS[t];if(!nx)return;S.power+=Math.max(0,Math.ceil(nx.p*1.02-total()));S.rcap=Math.max(S.rcap==null?t:S.rcap,t);S.btFail=0;log(`🛠️ แอดมินดันพลังสู่ <b>${nx.n}</b>`,'sys')}
+function admGiveItems(){admMark();bagAdd('brk',5,5);['lpill','bpill'].forEach(k=>{try{bagAdd(k,3,3)}catch(e){}});S.money=(S.money||0)+Math.round((S.xt?5e8:S.xian?5e6:1e5)*10)}
+function openAdmTools(){if(!ADM.ok){admVerify().then(ok=>{if(ok)openAdmTools();else toast('รหัสแอดมินไม่ถูกต้อง')});return}
+ const F=ADM.fix||{},alive=S&&S.alive,bak=!!LS.get('murim_adm_bak',null),K=encodeURIComponent(admK());
+ const opt=(arr,sel,lab)=>`<option value="">— ${lab} —</option>`+arr.map((x,i)=>`<option value="${i}" ${sel===i?'selected':''}>${esc(x.n)}</option>`).join('');
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🛠️ เครื่องมือแอดมิน</h3><p class="tag2">ยืนยันรหัสกับเซิร์ฟเวอร์แล้ว · เครื่องมือในชีวิตจะทำให้ชีวิตนั้นไม่ขึ้นทำเนียบ และไม่นับคนแรกของเซิร์ฟเวอร์</p>
+ <div class="adsec"><h4>🔓 ปลดล็อก (เฉพาะเครื่องนี้)</h4><div class="adg"><button class="pbtn" onclick="if(confirm('ปลดสมุดตำนานครบ 3 ดาว · กรอบทั้งหมด · ฉายาทั้งหมด · คลังกรรมเต็ม?'))admDo(admUnlockAll,'🔓 ปลดล็อกทุกอย่างแล้ว')">🔓 ปลดล็อกทุกอย่าง</button><button class="gbtn" ${bak?'':'disabled'} onclick="admRestore()">↩️ คืนค่าก่อนปลดล็อก</button></div><p class="tag2" style="margin:4px 0 0">สมุดตำนาน ★★★ ทุกอัน · กรอบทั้งหมด ${FRAMES.length} แบบ · ฉายาทั้งหมดให้เลือกโชว์ · คลังกรรม 999,999</p></div>
+ <div class="adsec"><h4>🎲 หน้าเกิด</h4><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" ${ADM.rr?'checked':''} onchange="ADM.rr=this.checked;LS.set('murim_adm_rr',this.checked?1:0);toast(this.checked?'สุ่มเกิดใหม่ไม่จำกัด: เปิด':'ปิดแล้ว')"> ♾️ สุ่มเกิดใหม่ไม่จำกัด</label>
+  <p class="tag2" style="margin:6px 0 2px">บังคับผลสุ่ม (ชีวิตที่บังคับผลจะไม่ขึ้นทำเนียบ):</p>
+  <select class="adsel crin" onchange="admFix('t',this.value===''?'':+this.value)">${opt(TALENT,F.t,'พรสวรรค์: สุ่มปกติ')}</select>
+  <select class="adsel crin" onchange="admFix('f',this.value===''?'':+this.value)">${opt(FAMILY,F.f,'ชาติกำเนิด: สุ่มปกติ')}</select>
+  <select class="adsel crin" onchange="admFix('sys',this.value)"><option value="">— ระบบ: สุ่มปกติ —</option><option value="rnd" ${F.sys==='rnd'?'selected':''}>ได้ระบบแน่นอน (สุ่มชนิด)</option>${SYS_TYPES.map(x=>`<option value="${x.id}" ${F.sys===x.id?'selected':''}>${x.ic} ${esc(x.n)}</option>`).join('')}</select>
+  <select class="adsel crin" onchange="admFix('sg',+this.value)">${SYS_GRADE.map((g,i)=>`<option value="${i}" ${(+F.sg||0)===i?'selected':''}>เกรดระบบ: ${g.n}</option>`).join('')}</select>
+  <button class="gbtn" style="width:100%;margin-top:4px" onclick="ADM.fix={};LS.del('murim_adm_fix');openAdmTools()">ล้างการบังคับผลทั้งหมด</button></div>
+ <div class="adsec"><h4>⚡ ชีวิตนี้ ${alive?`· ${esc(S.name)} อายุ ${S.age}`:''}</h4>${alive?`${S.admUsed?'<div class="adwarn">🛠️ ชีวิตนี้ใช้เครื่องมือแอดมินแล้ว — จะไม่ขึ้นทำเนียบ</div>':''}<div class="adg">
+  <button class="${S.admGod?'pbtn':'gbtn'}" onclick="admDo(()=>{admMark();S.admGod=!S.admGod},S.admGod?'ปิดอมตะ':'😇 อมตะ: ไม่ตาย')">😇 อมตะ ${S.admGod?'(เปิด)':'(ปิด)'}</button>
+  <button class="gbtn" onclick="admDo(()=>{admMark();S.hp=S.maxHp;S.qi=Math.max(S.qi||0,100)},'❤️ เต็มแล้ว')">❤️ เลือดเต็ม</button>
+  <button class="gbtn" onclick="admDo(()=>admRealmUp(false),'⬆️ ขั้นถัดไป')">⬆️ ขั้นถัดไป</button>
+  <button class="gbtn" onclick="admDo(()=>admRealmUp(true),'🔝 ขั้นสูงสุด')">🔝 ขั้นสูงสุดของโลก</button>
+  <button class="gbtn" onclick="admDo(()=>{admMark();S.power=Math.round(S.power*2+100)},'💪 พลัง ×2')">💪 พลังยุทธ์ ×2</button>
+  <button class="gbtn" onclick="admDo(admGiveItems,'🎒 ได้ของแล้ว')">🎒 เงิน + ยา</button>
+  <button class="gbtn" onclick="admDo(()=>admSkip(10),'⏩ ข้ามไป 10 ปี')">⏩ ข้าม 10 ปี</button>
+  <button class="gbtn" onclick="admDo(()=>admSkip(50),'⏩ ข้ามไป 50 ปี')">⏩ ข้าม 50 ปี</button>
+  <button class="gbtn" ${S.sys?'disabled':''} onclick="admDo(()=>{admMark();bindSys(ch(SYS_TYPES))},'🟦 ได้ระบบแล้ว')">🟦 ให้ระบบ</button>
+  <button class="gbtn" ${S.ai?'disabled':''} onclick="admDo(()=>{admMark();aiGive('admin')},'🤖 ได้ AI แล้ว')">🤖 ให้ AI ฝังตัว</button>
+  <button class="gbtn" ${S.xian?'disabled':''} onclick="if(confirm('ข้ามไปโลกเซียนทันที?'))admDo(()=>{admMark();ascendToX()})">☁️ ไปโลกเซียน</button>
+  <button class="gbtn" ${!S.xian||S.xt?'disabled':''} onclick="if(confirm('ข้ามไปโลกเทพทันที?'))admDo(()=>{admMark();ascendGod()})">🌟 ไปโลกเทพ</button>
+  <button class="gbtn" onclick="admDo(()=>{admMark();S.age+=10},'อายุ +10')">🎂 อายุ +10</button>
+  <button class="gbtn" style="color:#d84a4a" onclick="if(confirm('จบชีวิตนี้ทันที?')){closeM();admMark();S.admGod=0;S.hp=0;S.deathCause='แอดมินจบชีวิต';checkDeath()}">💀 จบชีวิตนี้</button>
+ </div>`:'<p class="tag2">ยังไม่ได้อยู่ในชีวิต — เริ่มชีวิตก่อนเพื่อใช้เครื่องมือส่วนนี้</p>'}</div>
+ <div class="adsec"><h4>🌐 ออนไลน์</h4><div class="adg">
+  <button class="gbtn" onclick="window.open('/api/online?a=admin&key=${K}','_blank')">📊 หน้าหลังบ้าน</button>
+  <button class="gbtn" onclick="openLiveList()">👁 ดูทุกคนเล่น</button>
+  <button class="gbtn" onclick="admPaForce(this)">🔨 เปิดประมูลผู้เล่นทันที</button>
+  <button class="gbtn" onclick="openOnline('chat');setTimeout(()=>{const i=$('chatIn');if(i){i.value='@everyone ';i.focus()}},400)">📢 ประกาศถึงทุกคน</button>
+ </div><p class="tag2" style="margin:4px 0 0">ประมูลจะเริ่มในไม่กี่วินาที (ถ้ามีรอบที่กำลังประมูลอยู่ จะรอให้จบก่อน)</p></div>`,'admtool')}
+async function admPaForce(b){b.disabled=true;try{const j=await api('paforce&key='+encodeURIComponent(admK()));toast(j&&j.ok?'🔨 สั่งเปิดประมูลแล้ว':'ไม่สำเร็จ')}catch(e){toast('ไม่สำเร็จ')}b.disabled=false}
+{const _om3=openMenu;openMenu=function(){const r=_om3.apply(this,arguments);try{if(ADM.ok){const m=$('modal'),gr=m.querySelector('.mgrid');if(gr&&!m.querySelector('.admmenu'))gr.insertAdjacentHTML('afterbegin',`<button class="opt admmenu" style="border-color:#c9a24a" onclick="openAdmTools()">🛠️ เครื่องมือแอดมิน<small>เฉพาะผู้ดูแล</small></button>`)}}catch(e){}return r}}
 </script>
 </body>
 </html>
