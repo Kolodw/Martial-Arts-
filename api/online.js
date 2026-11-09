@@ -780,6 +780,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       // รูปตัวละครจากเกม (PNG 56×62) ขึ้นได้ทันที · รูปที่อัปโหลดเอง (JPEG/WebP) ต้องรอแอดมินตรวจก่อนคนอื่นจะเห็น
       const av = String(b.av || ''), alt = String(b.alt || ''), fr = String(b.fr || '').replace(/[^a-z0-9_]/g, '').slice(0, 20), up = b.up ? 1 : 0, pu = id.slice(0, 12);
       const isUp = /^data:image\/(jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(av);
+      if (isUp && !isAdmKey(b.key)) return res.status(403).json({ err: 'noup' }); // อัปโหลดรูปเองปิดไว้ — เฉพาะแอดมิน
       if (av && (av.length > 12000 || !(avSnapOk(av) || isUp))) return res.status(400).json({ err: 'av' });
       if (alt && (alt.length > 8000 || !avSnapOk(alt))) return res.status(400).json({ err: 'alt' });
       let pend = 0;

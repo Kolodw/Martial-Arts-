@@ -435,8 +435,12 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='13.8';
+const VERSION='13.9';
 const CHANGELOG=[
+ {v:'13.9',d:'10 พ.ย. 2026',l:['🔐 <b>ล็อกอินด้วย Google ได้แล้ว!</b> ผูกบัญชีที่ 👤 โปรไฟล์ → 🔐 บัญชี Google',
+  '💾 เปลี่ยนเครื่องหรือเบราว์เซอร์ใหม่ แค่ล็อกอิน Google ตัวเดิม ก็กู้เซฟกลับมาได้ทันที ไม่ต้องจำรหัสยาวๆ',
+  '🛡️ เราเก็บแค่รหัสบัญชีกับอีเมลที่ปิดบังบางส่วน ไม่เห็นรหัสผ่าน ไม่แตะข้อมูลอื่นใน Google ของคุณ และยกเลิกผูกได้ทุกเมื่อ',
+  '📦 ย้ายเซฟข้ามเครื่องด้วยรหัสสั้น ย้ายมาอยู่ในหน้าโปรไฟล์แล้ว และพาทั้งโปรไฟล์ไปด้วย (เซฟทุกช่อง สมุดตำนาน ฉายา กรอบ)']},
  {v:'13.8',d:'10 พ.ย. 2026',l:['🌐 <b>ย้ายบ้านแล้ว!</b> เว็บใหม่ <b>1inanovel.com</b> — ใครเคยเล่นเว็บเก่า กดปุ่ม 📦 ย้ายเซฟ ได้เลย ของเดิมตามมาครบ',
   '🔮 <b>ระดับชะตาใหม่ 13 ขั้น</b> — ยิ่งเกิดมายาก สียิ่งสวย… ขั้นบนสุดจะเป็นยังไง ต้องลุ้นเอง ✨',
   '🎨 หน้าสุ่มกำเนิดโฉมใหม่ ภาพตัวละครละเอียดขึ้น มีฉากตามชาติกำเนิด',
@@ -8037,7 +8041,7 @@ ttlMake=function(){let weak=null;for(const t of TTL_SP){let ok=false;try{ok=t[1]
  .pfrule{font-size:12px;background:#d84a4a14;border:1px solid #d84a4a66;border-radius:8px;padding:6px 8px;margin:6px 0}`;document.head.appendChild(st)})();
 let PFST=null;setInterval(()=>{try{document.body.classList.toggle('mdl',!!modalOpen)}catch(e){}},250);
 async function profStat(){if(typeof onlineOK==='undefined'||!onlineOK)return null;try{PFST=await api('profst');try{const d=frGet();if(PFST&&!PFST.pend&&d.avUp&&d.avSt==='pend'&&!PFST.warn){d.avSt='ok';frSet(d)}}catch(e){}return PFST}catch(e){return null}}
-profPush=async function(){if(!onlineOK)return;const d=frGet();try{const j=await api('profile',{av:d.av||'',fr:d.eq||'',up:d.avUp?1:0,alt:d.snap||'',n:pname()});if(j&&j.st)d.avSt=j.st,frSet(d)}catch(e){if(e&&e.message==='avban'){toast('ถูกระงับการอัปโหลดรูปชั่วคราว');const d2=frGet();d2.av=d2.snap||'';d2.avUp=0;frSet(d2)}}};
+profPush=async function(){if(!onlineOK)return;const d=frGet();try{const j=await api('profile',{av:d.av||'',fr:d.eq||'',up:d.avUp?1:0,alt:d.snap||'',n:pname(),key:(typeof ADM!=='undefined'&&ADM.ok)?admK():''});if(j&&j.st)d.avSt=j.st,frSet(d)}catch(e){if(e&&e.message==='noup'){const d2=frGet();d2.av=d2.snap||'';d2.avUp=0;d2.avSt='';frSet(d2);return}if(e&&e.message==='avban'){toast('ถูกระงับการอัปโหลดรูปชั่วคราว');const d2=frGet();d2.av=d2.snap||'';d2.avUp=0;frSet(d2)}}};
 {const _ps=profSnap;profSnap=function(){const av=snapAvatar();if(!av)return;const d=frGet();d.av=av;d.snap=av;d.avUp=0;frSet(d);profPush();toast('ตั้งรูปโปรไฟล์แล้ว');openProfile()}}
 function profPickFile(){const i=$('pfFile');if(!i)return;if(!($('pfAgree')||{}).checked){toast('ติ๊กยืนยันกฎก่อนเลือกรูป');return}i.click()}
 function profFile(inp){const f=inp.files&&inp.files[0];inp.value='';if(!f)return;if(!/^image\//.test(f.type)){toast('เลือกไฟล์รูปภาพเท่านั้น');return}if(f.size>12e6){toast('ไฟล์ใหญ่เกินไป');return}
@@ -8368,6 +8372,9 @@ async function profImportGo(){const o=window._profImp;if(!o||!o.k)return;try{con
  for(const k in o.k)if(/^murim_/.test(k)&&!PROF_SKIP.test(k))localStorage.setItem(k,o.k[k]);try{S=null}catch(e){}toast('นำเข้าแล้ว กำลังโหลดใหม่…');setTimeout(()=>location.reload(),600)}catch(e){toast('นำเข้าไม่สำเร็จ: พื้นที่เครื่องไม่พอ?')}}
 async function profUndo(){try{const v=localStorage.getItem('murim_prebak');if(!v)return;const o=JSON.parse(await punzip(v));const cur=profKeys();for(const k of Object.keys(cur))if(!(k in o.k))localStorage.removeItem(k);for(const k in o.k)localStorage.setItem(k,o.k[k]);localStorage.removeItem('murim_prebak');toast('กู้ข้อมูลเดิมแล้ว กำลังโหลดใหม่…');setTimeout(()=>location.reload(),600)}catch(e){toast('กู้ไม่สำเร็จ')}}
 {const _osc2=openSaveCode;openSaveCode=function(){const r=_osc2.apply(this,arguments);try{if(localStorage.getItem('murim_prebak')){const m=$('modal');m.insertAdjacentHTML('beforeend','<button class="gbtn" style="width:100%;margin-top:8px" onclick="if(confirm(\'กู้ข้อมูลเครื่องนี้กลับเป็นก่อนนำเข้าโปรไฟล์?\'))profUndo()">↩️ กู้ข้อมูลเดิมก่อนนำเข้า</button>')}}catch(e){}return r}}
+
+// ---- อัปโหลดรูปจากเครื่อง: ปิดไว้สำหรับผู้เล่นทั่วไป (เฉพาะแอดมิน) — รูปตัวละครยังใช้ได้ปกติ ----
+{const _opx=openProfile;openProfile=function(){const r=_opx.apply(this,arguments);try{if(!(typeof ADM!=='undefined'&&ADM.ok)){const m=$('modal');m.querySelectorAll('.pfrule').forEach(e=>e.remove());const ag=m.querySelector('#pfAgree');if(ag&&ag.closest('label'))ag.closest('label').remove();m.querySelectorAll('[onclick="profPickFile()"]').forEach(e=>e.remove());const fi=m.querySelector('#pfFile');if(fi)fi.remove();m.querySelectorAll('p.tag2').forEach(e=>{if(/ระงับการอัปโหลดรูป/.test(e.textContent))e.remove()});const b=m.querySelector('[onclick="profSnap()"]');if(b&&!m.querySelector('.pfnoup'))b.insertAdjacentHTML('afterend','<p class="tag2 pfnoup" style="margin:6px 0 0">📷 อัปโหลดรูปจากเครื่องปิดไว้ชั่วคราว — ใช้รูปตัวละครของคุณเป็นโปรไฟล์ได้เลย</p>')}}catch(e){}return r}}
 </script>
 </body>
 </html>
