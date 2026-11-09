@@ -392,8 +392,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='11.2';
+const VERSION='11.3';
 const CHANGELOG=[
+ {v:'11.3',d:'9 พ.ย. 2026',l:['⏳ แดนเทพ (อายุ 1,000 ปีขึ้นไป): กาลเวลาไหลไม่คงที่อีกต่อไป — บางก้าวผ่านไปแค่ 1 ปี บางก้าวนับหมื่นถึงแสนปี ตามสิ่งที่เกิดขึ้น (บาดเจ็บหนัก เพิ่งทะลวงขั้น หรือออกท่องโลก เวลาจะไหลช้าลง) อายุไม่เป็นเลขกลมๆ ตายตัวแล้ว','🧘 เหตุการณ์ใหม่ "ทางแยกแห่งการบำเพ็ญ" — เลือกปิดด่านยาวนับพันนับหมื่นปี (พลัง ×1.25 เสี่ยงธาตุไฟเข้าแทรก) หรือออกท่องโลกให้เวลาไหลช้าลง','🧘 ปิดด่านข้ามเวลาในเมนูปรับระยะตามอายุ (เช่น 400 / 2,000 / 8,000 ปี) ไม่ใช่แค่ 10–100 ปี','📜 ข้ามเวลานานๆ จะเล่าว่าโลกภายนอกเปลี่ยนไปอย่างไร และพ่อแม่/ลูกหลานแก่ตัวและจากไปตามเวลาที่ผ่านไปจริง','🔢 หัวปีแสดง (+จำนวนปีที่ผ่านไป) และใส่จุลภาคให้อายุหลักหมื่นขึ้นไป']},
  {v:'11.2',d:'9 พ.ย. 2026',l:['🙏 หน้าแรกมีปุ่มสนับสนุนผู้พัฒนา (ใต้ปุ่มออนไลน์) — ไม่บังคับ เล่นได้ครบทุกอย่างเหมือนเดิม','🌐 ย้ายระบบออนไลน์ไปฐานข้อมูลใหม่ที่ไม่มีโควตารายเดือน แชท/ทำเนียบเก่าจะทยอยกลับมา']},
  {v:'11.1',d:'8 พ.ย. 2026',l:['🔄 รีเฟรชเว็บหรือกดโหลดอัปเดตใหม่ระหว่างเล่น จะกลับมาเล่นต่อที่เดิมทันที ไม่เด้งไปหน้าแรก — จำความเร็ว โหมดอัตโนมัติ และการหยุดเกมไว้ด้วย']},
  {v:'11.0',d:'8 พ.ย. 2026',l:['🐾 ชีวิตสัตว์อสูรใหม่ทั้งหมด: เหตุการณ์เฉพาะแต่ละสายพันธุ์ — จิ้งจอกงอกหางทีละหาง · งูขาวลอกคราบ/จำศีล · กระเรียนอพยพ/ร่ายรำ · พยัคฆ์ชิงอาณาเขตจนลาย王ขึ้นหน้าผาก · เต่าดำหลับยาวหลายปี · ปลาคาร์ปพยายามกระโดดข้ามประตูมังกร · วานรขโมยลูกท้อเซียน · หมาป่าชิงจ่าฝูง','📖 เรื่องยาวต่อเนื่องทั้งชีวิต: ศัตรูคู่แค้นประจำป่าจนถึงศึกตัดสิน · นายพรานที่ตามล่าคุณ · คู่ชีวิต ลูกๆ ลืมตาดูโลกและออกจากรัง · หมู่บ้านที่บูชาคุณเป็นเทพขุนเขาหรือจ้างนักล่ามาฆ่า','🌲 ข้อความประจำปีผสมกันได้หลายพันแบบตามฤดู เวลา อากาศ ธาตุ ขั้นพลัง และอ้างถึงเรื่องที่เคยเกิดในชีวิตนี้ ("ผ่านที่เดิมที่เคย... เมื่อ 12 ปีก่อน")','🐾 สัตว์ที่ยังไม่แปลงกายเข้าสำนัก ตลาด เมือง ดันเจี้ยนไม่ได้แล้ว (สมเหตุสมผลขึ้น) · ตายแบบสัตว์มีข้อความของสัตว์','💭 คำถาม "กำลังคิดอะไรอยู่" ตามอายุ กด "ไม่ต้องถามอีก" ได้ (เปิดใหม่ได้ที่เมนู ☰)','🔍 ซูมหน้าจอบนมือถือได้แล้ว']},
@@ -829,7 +830,7 @@ function addFeed(type,html,cls=''){html=xT(html);
  if(revealQ.length||S&&S.alive&&!document.hidden)revealPush(e);
  f.scrollTop=f.scrollHeight;
 }
-function ensureHeader(){if(headerAge!==S.age){headerAge=S.age;addFeed('year',`อายุ ${S.age} ปี`)}quiet=null}
+function ensureHeader(){if(headerAge!==S.age){const gap=headerAge>0?S.age-headerAge:0;headerAge=S.age;addFeed('year',`อายุ ${S.age>=10000?fmt(S.age):S.age} ปี${S.xian&&gap>1&&S.age>=1000?` <small style="opacity:.7">(+${fmt(gap)} ปี)</small>`:''}`)}quiet=null}
 function log(t,c='',key){if(S&&S.xian)t=t.replace(/ตำลึง/g,'หินวิญญาณ');try{fxFromLog(t,c)}catch(e){}if(c==='myth'){vib(80);albumSnap(t)}if(S.key&&S.key.length>400)S.key.splice(1,1);ensureHeader();addFeed('ev',t,c);lastNotable=Date.now();sfx(c==='myth'?'rare':c==='epic'?'good':c==='bad'?'bad':'');if(key||c==='myth'||c==='epic')S.key.push(`${S.age} ปี — ${t.replace(/<[^>]+>/g,'')}`)}
 function routine(f,phrase,gain,unit){
  phrase=xT(phrase);unit=xT(unit);const F=ALLF.find(x=>x[0]===f);
@@ -1585,7 +1586,7 @@ function checkDeath(){
  else if(S.age>=lifeMax())cause=S.ch==='short'&&S.age<=30&&lifeMax0()>30?'ชะตาสามสิบปีมาถึงที่สุด ลมหายใจสุดท้ายหลุดลอยไปตามคำสาป':'จากไปอย่างสงบด้วยวัยชรา'+(S.kids?' ท่ามกลางลูกหลาน':'');
  if(!cause)return false;
  try{if(ndSys(cause))return false}catch(e){console.error(e)}
- if(S.sys&&S.sys.revive>0&&!S.flags.ascended&&!(S.ch==='short'&&S.age>=30)){S.sys.revive--;S.hp=S.maxHp;S.deathCause=null;S.chronic=null;if(/วัยชรา/.test(cause)||S.age>=lifeMax()){S.lifespan+=12;S.rvL=(S.rvL||0)+12}S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) — ร่างกายฟื้นคืนสมบูรณ์`,'up');setScene('system');return false}
+ if(S.sys&&S.sys.revive>0&&!S.flags.ascended&&!S.flags.eternal&&!(S.ch==='short'&&S.age>=30)){S.sys.revive--;S.hp=S.maxHp;S.deathCause=null;S.chronic=null;if(/วัยชรา/.test(cause)||S.age>=lifeMax()){S.lifespan+=12;S.rvL=(S.rvL||0)+12}S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) — ร่างกายฟื้นคืนสมบูรณ์`,'up');setScene('system');return false}
  try{if(typeof regTry==='function'&&regTry(cause))return false}catch(e){console.error(e)}
  flushReveal();S.alive=false;S.cause=cause;saveLegacy();clearSave();setScene('death');setTimeout(()=>sfx('death'),300);log(`🪦 ${cause}`,'bad');
  setTimeout(()=>{modal(`<h3>ลาก่อน ${esc(S.name)}</h3><p>${cause} ในวัย ${S.age} ปี<br>อยากบอกอะไรกับคนคนนี้เป็นครั้งสุดท้าย?</p><input class="ta" id="byeIn" maxlength="80" placeholder="คำอำลาสุดท้าย"><button class="pbtn" style="width:100%" onclick="endGame()">อำลา</button>`,'bye')},900);
@@ -2927,7 +2928,8 @@ function caveTick(){if(!S.xian)return false;const c=S.cave;
 const caveCost=()=>Math.round(3000*Math.pow(2.5,S.cave.lv));
 function caveUp(q){const c=S.cave,cost=caveCost();if(c.lv>=4||S.money<cost){if(!q)toast('ไม่พอ');return}S.money-=cost;c.lv++;log(`🏔️ อัปเกรดเป็น<b>${CAVE_N[c.lv]}</b>`,'epic');if(c.lv>=4)S.flags.cave4=1;if(!q){render();openBag()}}
 // ---- 9. ปิดด่านข้ามเวลา ----
-function seclude(n){closeM();const lm=lifeMax();n=Math.min(n,Math.max(0,Math.floor(lm-S.age-1)));if(n<1){toast('อายุขัยเหลือไม่พอ');return}
+function secOpts(){if(!xFast())return[10,50,100];const a=S.age,nice=v=>{const p=Math.pow(10,Math.floor(Math.log10(v)));return Math.round(v/p)*p};return[nice(Math.max(100,a*.01)),nice(Math.max(500,a*.05)),Math.min(100000,nice(Math.max(1000,a*.2)))]}
+function seclude(n){if(xFast()&&n>100){closeM();n=Math.min(n,Math.max(1,1e6-S.age-1));S.xseal=n;log(`🧘 คุณผนึกถ้ำแล้วนั่งลงหลับตา — ตั้งใจจะไม่ออกมาอีก ${fmt(n)} ปี`,'myth');try{render()}catch(e){}return}closeM();const lm=lifeMax();n=Math.min(n,Math.max(0,Math.floor(lm-S.age-1)));if(n<1){toast('อายุขัยเหลือไม่พอ');return}
  const m=S.talent.m,f0=addFeed;addFeed=()=>{};let q0=S.qi,p0=total();const dead=[];
  for(let i=0;i<n;i++){S.age++;const g=(.6+Math.random()*.8)*m*(S.faction?1.3:1)*sysTM()*daoM()*caveM()*1.25;S.qi+=g;S.power+=yrPow0()*.35*daoM();
   if(Math.random()<.04)daoGain('ในความสงัดของการปิดด่าน');(S.children||[]).forEach(c=>{if(c.alive)c.age++});(S.parents||[]).forEach(p=>{if(p.alive&&p.age!=null){p.age++;if(p.age>R(70,95)){p.alive=false;dead.push(p.n||'พ่อแม่')}}});
@@ -2990,11 +2992,11 @@ function xPanel(){const c=S.cave,p=S.prof,ri=realmIdx(),rem=Math.floor(lifeMax()
  <div class="item"><b>🌱 ${S.root||rootOf(S.talent)}</b></div>
  <div class="item"><b>☯️ กฎแห่งเต๋า ${daoSum()} ขั้น</b>${S.dao&&Object.keys(S.dao).length?'<br>'+Object.entries(S.dao).map(([k,v])=>`${k} ${'●'.repeat(v)}${'○'.repeat(5-v)}`).join('<br>'):'<br><span class="tag2">ยังไม่หยั่งรู้กฎใดเลย</span>'}${ri>=4?`<br><span class="tag2">ระดับนี้ต้องการ ${(ri-3)*2} ขั้นจึงจะฝึกได้เต็มที่ ${daoM()<1?'— ⚠️ ติดคอขวด':'✅'}</span>`:''}</div>
  <div class="item"><b>🏔️ ${c?CAVE_N[c.lv]:'ยังไม่มีถ้ำบ่มเพาะ'}</b>${c?`<br><span class="tag2">ลมปราณ +${(.3*(c.lv+1)).toFixed(1)}/ปี · ฝึกได้ผล ×${caveM().toFixed(2)}</span>${c.lv<4?`<br><button class="sysb" style="margin-top:6px" ${S.money>=caveCost()?'':'disabled'} onclick="caveUp()">อัปเกรด (${stoneTxt(caveCost())})</button>`:''}`:'<br><span class="tag2">จะพบได้เมื่อถึงขั้นสร้างรากฐาน</span>'}</div>
- <div class="item"><b>🧘 ปิดด่านข้ามเวลา</b><br><span class="tag2">ข้ามเวลาหลายปีในครั้งเดียว ได้ลมปราณต่อเนื่อง แต่พลาดทุกเหตุการณ์ข้างนอก (อายุขัยเหลือ ~${rem} ปี)</span><div style="display:flex;gap:6px;margin-top:6px">${[10,50,100].map(n=>`<button class="sysb" ${rem>=n?'':'disabled'} onclick="seclude(${n})">${n} ปี</button>`).join('')}</div></div>
+ <div class="item"><b>🧘 ปิดด่านข้ามเวลา</b><br><span class="tag2">ข้ามเวลาหลายปีในครั้งเดียว ได้ลมปราณต่อเนื่อง แต่พลาดทุกเหตุการณ์ข้างนอก (อายุขัยเหลือ ~${rem} ปี)</span><div style="display:flex;gap:6px;margin-top:6px">${secOpts().map(n=>`<button class="sysb" ${rem>=n?'':'disabled'} onclick="seclude(${n})">${fmt(n)} ปี</button>`).join('')}</div></div>
  ${p&&p.t?`<div class="item"><b>${PROF[p.t].ic} ${PROF[p.t].n} ${PROF_LV[p.lv]}</b></div>`:''}
  ${S.pet&&S.pet.spirit?`<div class="item"><b>🐉 ${S.pet.n} — ${PET_LV[S.pet.lv||0]}</b><br><span class="tag2">ช่วยต่อสู้ ×${petM().toFixed(2)} · ป้อนแก่นอสูรเพื่อเร่งวิวัฒนาการ</span></div>`:''}`}
 function xTick(){if(!S.xian)return false;if(rootFixTick()||caveTick()||profTick())return true;
- if(auto&&realmIdx()>=3&&S.age>=60&&Math.random()<.12&&lifeMax()-S.age>15){seclude(R(1,3)*10);return true}return false}
+ if(auto&&!xFast()&&realmIdx()>=3&&S.age>=60&&Math.random()<.12&&lifeMax()-S.age>15){seclude(R(1,3)*10);return true}return false}
 
 // ============ v3.6: แปลงคำให้เป็นโลกเซียน + ข้อความเซียน ============
 const XDICT=[['ประมุขมารสวรรค์ที่ถูกผนึกมาร้อยปีคืนชีพ! ฝ่ายมารลุกฮือทั่วแผ่นดิน','ราชันมารบรรพกาลที่ถูกผนึกใต้ดินแดนมารหมื่นปีทำลายผนึก! เผ่ามารบุกทะลวงทั่วโลกเซียน'],['ลัทธิมารสวรรค์','นิกายเผ่ามาร'],['วังมารสวรรค์','นิกายเผ่ามาร'],['ระบบมารสวรรค์กลืนกิน','ระบบมารกลืนฟ้า'],['บุตรแห่งมารสวรรค์','ทายาทสายเลือดราชันมาร'],['กายามารสวรรค์','กายามารบรรพกาล'],['ประมุขมารสวรรค์','จักรพรรดิมาร'],['คัมภีร์มารสวรรค์','คัมภีร์ราชันมาร'],['มารสวรรค์รุ่นที่','ราชันมารรุ่นที่'],['บัลลังก์<b>มารสวรรค์</b>','บัลลังก์<b>จักรพรรดิมาร</b>'],['มารสวรรค์','ราชันมาร'],['กายาหมื่นวิชา','กายาเต๋าหมื่นศาสตร์'],['หมื่นวิชา','หมื่นศาสตร์'],['กระดูกธรรมดา','รากวิญญาณสามธาตุ'],['กระดูกดี','รากวิญญาณสองธาตุ'],['อัจฉริยะยุทธ์','รากวิญญาณธาตุเดียวบริสุทธิ์'],['ชีพจรสวรรค์เก้าสาย','รากวิญญาณธาตุพิเศษ'],['ตรวจกระดูก','ตรวจรากวิญญาณ'],['กระดูกใช้ได้','รากวิญญาณใช้ได้'],['ชีพจร','เส้นปราณ'],['งานประลองชิงยอดยุทธภพ','งานประลองชิงยอดเซียน'],['ท่องยุทธภพ','ท่องโลกเซียน'],['ยุทธภพ','โลกเซียน'],['จอมยุทธ์','ผู้ฝึกตน'],['วรยุทธ','วิชาเซียน'],['พลังยุทธ์','พลังบ่มเพาะ'],['ฝึกยุทธ์','บ่มเพาะ'],['วิชายุทธ์','วิชาเซียน'],['ท่ายุทธ์','ท่าเซียน'],['ยอดยุทธ์','ยอดเซียน'],['ชุมนุมยุทธ์','ชุมนุมเซียน'],['หัดยุทธ์','หัดบ่มเพาะ'],['ยุทธ์','เซียน'],
@@ -5710,7 +5712,7 @@ function bossTick(){if(!S||!S.alive||S.beastMode||S.age<16||S.age>95||choice._cu
   {t:'🏃 หนีทันที',s:`ใช้ไหวพริบ · โอกาสรอดราว ${Math.round(esc*100)}%`,f(){if(Math.random()<esc)fled();else die('ขณะพยายามหลบหนี')}},
   {t:'🙇 ก้มหัวยอมรับความพ่ายแพ้',s:`ใช้เสน่ห์ · โอกาสถูกไว้ชีวิตราว ${Math.round(spare*100)}% · เสียชื่อเสียง`,f(){if(Math.random()<spare){S.fame=Math.max(0,Math.round((S.fame||0)*.8));joy(-12);S.karma-=5;log(`${B.n}หัวเราะเยาะ แล้วเดินจากไป... ปล่อยให้คุณมีชีวิตอยู่กับความอัปยศ`,'bad',true)}else die('หลังก้มหัวยอมแพ้')}}])}
 {const _py5=passYear;passYear=function(){const r=_py5.apply(this,arguments);try{bossTick()}catch(e){console.error(e)}return r}}
-function ndSys(cause){if(!S||S.sys||S._ndSys||S.beastMode)return false;S._ndSys=1;if(Math.random()>=.3)return false;
+function ndSys(cause){if(!S||S.sys||S._ndSys||S.beastMode||/หลุดพ้นจากกาลเวลา/.test(cause||''))return false;S._ndSys=1;if(Math.random()>=.3)return false;
  const old=/วัยชรา/.test(cause);if(old){const lm=lifeMax();S.lifespan=(S.lifespan||0)+15;if(lifeMax()<=lm){S.lifespan-=15;return false}}S.hp=Math.max(30,Math.round(S.maxHp*.5));S.deathCause=null;S.chronic=null;
  log(`💫 ${old?'ลมหายใจสุดท้ายกำลังจะขาด':'สติกำลังดับวูบ'}... แล้วเสียงกลไกเย็นเยียบก็ดังขึ้นในหัว <span class="px">[ตรวจพบโฮสต์ใกล้เสียชีวิต — เริ่มการผูกมัดฉุกเฉิน]</span> ร่างกายถูกดึงกลับจากความตาย!`,'myth',true);S.flags.ndSys=1;
  bindSys(pickW(SYS_TYPES).v);return true}
@@ -5948,10 +5950,46 @@ function wsScale(name,ep){const m=wsM();if(m===1||!S||WS_NOSCALE.has(name))retur
 // ---- กาลเวลาแดนเทพ ----
 function xFast(){return S&&S.xian&&S.alive&&S.age>=1000}
 {const _lm=lifeMax;lifeMax=function(){const v=_lm.apply(this,arguments);try{if(S&&S.xian&&(S.xt&&realmIdx()>=6||S.age>=1000))return Math.max(v,1e6+1)}catch(e){}return v}}
-function xStep(){return S.age>=100000?10000:S.age>=10000?1000:100}
-{const _py9=passYear;passYear=function(){const r=_py9.apply(this,arguments);try{if(xFast()){const st=xStep(),ex=st-1;if(S.xstep!==st){S.xstep=st;log(`⏩ กาลเวลาในแดนเทพไหลเร็วขึ้น — จากนี้หนึ่งก้าวเท่ากับ <b>${fmt(st)} ปี</b>`,'myth',true)}
-  S.age+=ex;S.qi+=+(ex*.01).toFixed(1);S.power+=Math.round((5+Math.min(S.power*.00002,20))*ex);S.money+=Math.round(ex*8*(1+realmIdx()*.2));
-  if(S.age>=1e6&&!S.flags.eternal){S.flags.eternal=1;S.age=1e6;keyAdd('หลุดพ้นจากกาลเวลา กลายเป็นอมตะนิรันดร์');setScene('aura');log('♾️ หนึ่งล้านปีผ่านไป ดวงดาวดับแล้วเกิดใหม่นับครั้งไม่ถ้วน — คุณหลุดพ้นจากกาลเวลา กลายเป็น<b>อมตะนิรันดร์</b>','myth',true);S.deathCause='หลุดพ้นจากกาลเวลา กลายเป็นอมตะนิรันดร์';S.hp=0}}}catch(e){console.error(e)}return r}}
+// กาลเวลาในแดนเทพไหลไม่คงที่: บางก้าวแค่ปีเดียว บางก้าวนับหมื่นปี ตามสิ่งที่เกิดขึ้นในชีวิต
+function xGauss(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+function xBusy(){let b=0;try{if(S.hp<S.maxHp*.5)b++;if(S.xcalm>0)b++;const ri=realmIdx();if(S.xri==null)S.xri=ri;if(ri!==S.xri){S.xri=ri;S.xcalm=Math.max(S.xcalm||0,3);b++}}catch(e){}return b}
+function xStep(){const a=S.age,cap=Math.max(5,Math.min(100000,Math.floor(a*.35)));
+ if(S.xseal>0){const v=Math.min(S.xseal,Math.max(1,1e6-a));S.xseal=0;S.xsealOn=1;return Math.max(1,v)}
+ const base=Math.pow(a,.85)/12,busy=xBusy();let m=Math.exp(xGauss()*.95);const r=Math.random();
+ if(r<.07)return R(1,3);
+ if(r<.11)m*=8+Math.random()*17;
+ if(busy)m*=Math.pow(.15,busy);
+ if(S.xcalm>0)S.xcalm--;
+ return Math.max(1,Math.min(cap,Math.round(base*m)))}
+// ครอบครัวแก่ตามเวลาที่ข้ามไปจริง (ไม่ค้างอยู่ที่อายุเดิมขณะตัวเราผ่านไปหลายพันปี)
+function xFamAge(ex){const gone=[];
+ (S.parents||[]).forEach(p=>{if(p.alive&&p.age!=null){p.age+=ex;const L=p.life!=null?p.life:R(70,95);if(p.age>=L){p.alive=false;gone.push((p.role||'')+(p.n?' '+p.n:''))}}});
+ (S.children||[]).forEach(c=>{if(c.alive!==false&&c.age!=null){c.age+=ex;if(c.xl==null)c.xl=c.life!=null?c.life:R(150,500);if(c.age>=c.xl){c.alive=false;gone.push(c.n||'ลูก')}}});
+ if(gone.length){joy(-Math.min(20,4*gone.length));log(`🕯️ ระหว่างที่กาลเวลาไหลผ่าน — ${gone.slice(0,3).join(', ')}${gone.length>3?` และอีก ${gone.length-3} คน`:''} จากไปตามอายุขัยแล้ว`,'bad')}}
+const XS_WORLD=['ราชวงศ์ในแดนล่างผลัดเปลี่ยนไปนับ{n}ครั้ง','ดาวดวงหนึ่งบนฟ้าดับลง แล้วดาวดวงใหม่ก็จุดประกายขึ้นแทน','สำนักที่คุณเคยรู้จักล่มสลาย เหลือเพียงซากศาลาใต้เถาวัลย์','มีผู้กล่าวถึงชื่อคุณในตำนานรุ่นหลัง แต่เล่ากันผิดเพี้ยนไปหมด','ทะเลกลายเป็นทุ่งหม่อน ทุ่งหม่อนกลับเป็นทะเล','เซียนรุ่นใหม่ผงาดขึ้นแล้วร่วงหล่นไปนับไม่ถ้วน','ภูเขาที่คุณเคยนั่งสมาธิถูกลมกัดกร่อนจนต่ำลงครึ่งหนึ่ง','สงครามระหว่างแดนเทพปะทุและสงบลงไปหลายรอบ','ต้นท้อเซียนที่คุณปลูกไว้ออกผลไปแล้วนับพันรอบ','มหาสมุทรดาราเปลี่ยนเส้นทางไหลไปทางทิศอื่น'];
+function xWorldLine(st){return ch(XS_WORLD).replace('{n}',fmt(Math.max(2,Math.round(st/R(250,600)))))}
+{const _py9=passYear;passYear=function(){let st=1,ex=0,seal=0;
+  if(S&&S.xian&&S.alive&&S.flags&&S.flags.eternal&&S.age>=1e6){S.hp=0;S.age=1e6-1;const r0=_py9.apply(this,arguments);if(S&&S.age>1e6)S.age=1e6;return r0}
+  try{if(xFast()){st=xStep();ex=st-1;seal=S.xsealOn?1:0;S.xsealOn=0;
+   if(!S.xstep){S.xstep=1;log(`⏩ ในแดนเทพ กาลเวลาไหลไม่คงที่ — บางครั้งผ่านไปเพียงปีเดียว บางครั้งผ่านไปนับหมื่นปีในพริบตา ขึ้นกับสิ่งที่เกิดขึ้นรอบตัวคุณ`,'myth',true)}
+   ex=Math.max(0,Math.min(ex,1e6-1-S.age));st=ex+1;if(ex>0){const g=seal?1.25:1;S.age+=ex;xFamAge(ex);S.qi+=+(ex*.01*g).toFixed(1);S.power+=Math.round((5+Math.min(S.power*.00002,20))*ex*g);S.money+=Math.round(ex*8*(1+realmIdx()*.2))}
+  }}catch(e){console.error(e)}
+  const r=_py9.apply(this,arguments);
+  try{if(S&&S.xian&&ex>0){
+   if(seal){if(Math.random()<.08){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));log(`🧘 ออกจากด่านหลัง <b>${fmt(st)} ปี</b> — แต่ธาตุไฟเข้าแทรกช่วงท้าย บาดเจ็บภายในไม่น้อย`,'bad',true)}else log(`🧘 ออกจากด่านหลังปิดด่าน <b>${fmt(st)} ปี</b> พลังลึกล้ำขึ้นกว่าเดิมมาก — ${xWorldLine(st)}`,'epic',true)}
+   else if(st>=5000)log(`⏳ <b>${fmt(st)} ปี</b>ผ่านไปเหมือนชั่วลมหายใจ — ${xWorldLine(st)}`,'myth');
+   else if(st<=3&&(S.xlast||0)>=300)log(`🕯️ กาลเวลารอบตัวคุณไหลช้าลงอย่างประหลาด — ช่วงนี้แต่ละปีมีความหมาย`,'myth');
+   S.xlast=st}
+  if(S&&S.xian&&S.age>=1e6&&!S.flags.eternal){S.flags.eternal=1;S.age=1e6;keyAdd('หลุดพ้นจากกาลเวลา กลายเป็นอมตะนิรันดร์');setScene('aura');log('♾️ หนึ่งล้านปีผ่านไป ดวงดาวดับแล้วเกิดใหม่นับครั้งไม่ถ้วน — คุณหลุดพ้นจากกาลเวลา กลายเป็น<b>อมตะนิรันดร์</b>','myth',true);S.deathCause='หลุดพ้นจากกาลเวลา กลายเป็นอมตะนิรันดร์';S.hp=0}
+  if(S&&S.alive&&xFast())xSealTick()}catch(e){console.error(e)}
+  return r}}
+// เหตุการณ์ปิดด่าน: ผู้เล่นเลือกเองว่าจะข้ามเวลายาว หรือออกไปใช้ชีวิตช้าๆ
+function xSealTick(){if(S.age<2000||S.age>=990000||choice._cur||modalOpen||S.xseal>0||S.xcalm>0)return;S.xsT=(S.xsT||0)+1;if(S.xsT<12||Math.random()>.05)return;S.xsT=0;
+ const lo=Math.max(500,Math.floor(S.age*.05)),hi=Math.min(100000,Math.max(lo+1,Math.floor(S.age*.5),1e6-S.age-1));const yrs=Math.min(hi,R(lo,Math.max(lo,Math.min(hi,lo*8))));
+ choice('🧘 ทางแยกแห่งการบำเพ็ญ',`ปราณในกายคุณนิ่งงันมานาน ต้องเลือกหนทางต่อไป<br><span class="tag2">ปิดด่านยาวได้พลังมากกว่าปกติ ×1.25 แต่มีโอกาสธาตุไฟเข้าแทรก · ออกท่องโลก เวลาจะไหลช้าลง เจอเหตุการณ์มากขึ้น</span>`,[
+  {t:`🧘 ปิดด่าน ${fmt(yrs)} ปี`,s:'ข้ามเวลายาว · พลัง ×1.25 · เสี่ยงบาดเจ็บ 8%',f(){S.xseal=yrs;log(`🧘 คุณผนึกถ้ำแล้วนั่งลงหลับตา — ตั้งใจจะไม่ออกมาอีก ${fmt(yrs)} ปี`,'myth')}},
+  {t:'🚶 ออกท่องโลก',s:'เวลาไหลช้าลงหลายช่วง · ชื่อเสียงและหินวิญญาณเล็กน้อย',f(){S.xcalm=8;S.fame+=Math.round(50+realmIdx()*30);S.money+=Math.round(2000*(1+realmIdx()));log('🚶 คุณออกจากถ้ำมาเดินดูโลกที่เปลี่ยนไป — กาลเวลาไหลช้าลงให้คุณได้ใช้ชีวิต','good')}},
+  {t:'⏳ ปล่อยตามธรรมชาติ',s:'ไม่มีผลพิเศษ',skip:true,f(){log('คุณปล่อยให้เต๋านำทางตามธรรมชาติ')}}])}
 // ---- จักรวาลซ้อนทับกับผู้เล่นในทำเนียบ ----
 async function shareInit(){try{if(!onlineOK||!S||Math.random()>.15)return;const j=await api('board');const L=(j.top||[]).concat(j.prev||[]).filter(e=>e&&e.n&&(e.x?1:0)===(S.xian?1:0)&&!e.bm&&e.n!==pname());if(!L.length||!S||!S.alive)return;
  const e=ch(L.slice(0,30));const RN=S.xian?XREALM:REALMS.map(r=>r.n);let ri=RN.indexOf(e.r);if(ri<0)ri=Math.min(7,Math.round(Math.log10(Math.max(10,e.s))-1));S.shared={n:e.n,r:e.r||'',f:e.f||'',s:e.s,ri,met:0};
