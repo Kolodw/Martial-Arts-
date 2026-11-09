@@ -364,7 +364,7 @@ details.item summary{cursor:pointer}
     <div id="traits" style="margin-top:8px"></div>
   </div>
   <div class="box oddsbig" id="oddsBox" style="visibility:hidden"><div class="tag2">โอกาสที่จะเกิดมาเป็นคนนี้</div><div class="n px" id="oddsN"></div></div>
-  <div class="box" id="goalBox" style="padding:12px;margin-bottom:12px;visibility:hidden"><div class="tag2" style="margin-bottom:6px">🎯 เลือกปณิธานของชีวิตนี้ — ทำสำเร็จได้คะแนน ×1.5</div><div id="goalOpts"></div></div>
+  <div class="box" id="goalBox" style="padding:12px;margin-bottom:12px;visibility:hidden"><div class="tag2" style="margin-bottom:6px">🎯 เลือกปณิธานของชีวิตนี้ — ยิ่งยากยิ่งได้คะแนนมาก (×1.6 ถึง ×2.5) · ทำได้ 70% ขึ้นไปได้ ×1.1</div><div id="goalOpts"></div></div>
   <div class="brow"><button class="gbtn" id="rerollBtn" onclick="doRoll()">🔄 เกิดใหม่ (<span id="rr">3</span>)</button><button class="pbtn" id="startBtn" onclick="startLife()" disabled>ใช้ชีวิต ▶</button></div>
 </div>
 
@@ -1726,7 +1726,7 @@ function endGame(){
    ${S.spouse?`<li>คู่ครอง ${S.spouse}</li>`:''}${(S.children||[]).length?`<li>ลูก ${(S.children||[]).length} คน (${S.children.map(c=>c.n+(c.alive?'':' †')).join(', ')})${S.grand?` · หลาน ${S.grand} คน`:''}</li>`:''}
    ${(S.parents||[]).length?`<li>พ่อแม่: ${S.parents.map(p=>p.role+' '+p.n+(p.alive?' (ยังมีชีวิต)':'')).join(' · ')}</li>`:''}
    ${S.ow?`<li>ผู้ข้ามมิติจาก${S.world.n}${S.soul?` — วิญญาณของ ${S.soul.n}`:''}${S.done.length?' · สร้าง '+S.done.map(d=>PROJ.find(p=>p.id===d).n).join(', '):''}</li>`:''}
-   ${S.goal?`<li>🎯 ปณิธาน: ${goalOf(S.goal).n} — ${S.goalDone?'<b>✅ สำเร็จ (คะแนน ×1.5)</b>':'❌ ไม่สำเร็จ'}</li>`:''}
+   ${S.goal?`<li>🎯 ปณิธาน: ${goalOf(S.goal).n} — ${S.goalDone?`<b>✅ สำเร็จ (คะแนน ×${goalFinMul()})</b>`:goalFinMul()>1?'🟡 เกือบสำเร็จ (คะแนน ×1.1)':'❌ ไม่สำเร็จ'}</li>`:''}
    ${S.heir?`<li>🩸 ${S.family.n} — ${S.heirLead?'<b>ขึ้นเป็น'+heirTitle()+'</b>':S.heir.defect?'ทิ้งเส้นทางที่ถูกลิขิต':S.heir.hidden?'ซ่อนตัวตนใช้ชีวิตธรรมดา':S.heir.done?'พ่ายแพ้ในศึกชิงบัลลังก์':'ยังไม่ได้ชิงบัลลังก์'}</li>`:''}
    ${S.clan?`<li>🏮 ${S.clanHead?'ประมุข':'คนของ'}${S.clan.n}</li>`:''}
    ${S.sys?`<li>🟦 ${sysName()} Lv.${S.sys.lv} · เควสสำเร็จ ${S.sys.done} (ได้รับตอนอายุ ${S.sys.since})</li>`:''}
@@ -8234,6 +8234,53 @@ setInterval(()=>{try{if($('create')&&$('create').classList.contains('on'))crPrev
 {const _dp2=drawPortrait;drawPortrait=function(cv,o,full){try{if(full||!S||(S.beastMode&&!S.beastMode.human)||(o&&o.beast))return _dp2.apply(this,arguments);const ctx=cv&&cv.getContext&&cv.getContext('2d');if(!ctx)return;o=o||meLook();
   const sg=g,sp=PS;g=ctx;PS=cv.width/17;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;
   try{const kind=S.faction?(S.faction.t==='มาร'?'demon':'clan'):sceneKind(S.family,!!S.xian);sceneDraw(kind,!!S.xian,0,S.seed||7);const ad=o.age<6?-8:o.age<14?-5:o.old?-1:0;person(4.6,25+ad,o,'stand')}finally{g=sg;PS=sp}}catch(e){return _dp2.apply(this,arguments)}}}
+
+// ============ v13.7 ปณิธานใหม่: ยากขึ้น · เกณฑ์ตามโลก · รางวัลตามระดับ (×1.6–×2.5) · ทำได้เกือบสำเร็จได้ ×1.1 · ปณิธานพิเศษตามชะตา ============
+const GMUL={2:1.6,3:2.0,4:2.5};
+const gW=()=>S&&(S.gW||(S.xian?'x':'m'))||(CFG.xian?'x':'m');
+const gV=(m,x)=>gW()==='x'?x:m;
+const gRN=i=>{try{return REALMS[i]?REALMS[i].n:'ขั้น '+i}catch(e){return'ขั้น '+i}};
+const gPct=(a,b)=>Math.max(0,Math.min(1,(+a||0)/b));
+function goalMul(g){return g?(GMUL[g.lv]||1.6):1}
+function gArtTop(){const A=(S&&S.arts)||[];return{god:A.filter(a=>a&&a.r>=4).length,leg:A.filter(a=>a&&a.r>=3).length}}
+const GOALS2=[
+ {id:'long',lv:2,n:()=>gV('อายุยืนร้อยยี่สิบปี','สามร้อยปีไม่ดับสูญ'),d:()=>gV('มีชีวิตอยู่ถึงอายุ 120 ปี','มีชีวิตอยู่ถึงอายุ 300 ปี'),c:()=>S.age>=gV(120,300),pr:()=>gPct(S.age,gV(120,300)),p:()=>`อายุ ${S.age} / ${gV(120,300)}`},
+ {id:'peak',lv:()=>gV(2,3),n:()=>'ยอดฝีมือใต้หล้า',d:()=>`ฝึกจนถึงขั้น${gRN(6)}`,c:()=>realmIdx()>=6,pr:()=>realmIdx()/6,p:()=>`${gRN(realmIdx())} / ${gRN(6)}`},
+ {id:'saint',lv:2,n:()=>'นักบุญแห่งยุทธภพ',d:()=>`สะสมกรรมดีถึง +${gV(150,200)}`,c:()=>S.karma>=gV(150,200),pr:()=>gPct(S.karma,gV(150,200)),p:()=>`กรรม ${Math.round(S.karma)} / +${gV(150,200)}`},
+ {id:'scholar',lv:2,n:()=>'ปราชญ์แห่งยุค',d:()=>`ปัญญาถึง ${fmt(gV(400,650))}`,c:()=>S.int>=gV(400,650),pr:()=>gPct(S.int,gV(400,650)),p:()=>`ปัญญา ${fmt(S.int)} / ${fmt(gV(400,650))}`},
+ {id:'rich',lv:2,n:()=>'เศรษฐีแห่งแผ่นดิน',d:()=>`มีทรัพย์สิน ${fmt(gV(60000,2000000))} ${gV('ตำลึง','ศิลาวิญญาณ')}`,c:()=>S.money>=gV(6e4,2e6),pr:()=>gPct(S.money,gV(6e4,2e6)),p:()=>`${fmt(S.money)} / ${fmt(gV(6e4,2e6))}`},
+ {id:'fame',lv:2,n:()=>'ชื่อก้องแผ่นดิน',d:()=>`ชื่อเสียงถึง ${fmt(gV(3000,9000))}`,c:()=>S.fame>=gV(3000,9000),pr:()=>gPct(S.fame,gV(3000,9000)),p:()=>`ชื่อเสียง ${fmt(S.fame)} / ${fmt(gV(3000,9000))}`},
+ {id:'family',lv:2,n:()=>'ครอบครัวใหญ่',d:()=>'มีบุตร 6 คนขึ้นไป',c:()=>S.kids>=6,pr:()=>gPct(S.kids,6),p:()=>`บุตร ${S.kids||0} / 6`},
+ {id:'slow',lv:2,n:()=>'ใช้ชีวิตสโลไลฟ์',d:()=>`อยู่ถึงอายุ ${gV(80,200)} อย่างสงบ ความสุขเฉลี่ย 70 ขึ้นไป และสู้ไม่เกิน 8 ครั้ง`,c:()=>S.age>=gV(80,200)&&slowJoy()>=70&&(S.kills||0)<=8,pr:()=>(S.kills||0)>8?0:Math.min(gPct(S.age,gV(80,200)),gPct(slowJoy(),70)),p:()=>`อายุ ${S.age}/${gV(80,200)} · ความสุขเฉลี่ย ${slowJoy()}/70 · ต่อสู้ ${S.kills||0}/8${(S.kills||0)>8?' ❌':''}`},
+ {id:'slayer',lv:2,n:()=>'จอมยุทธ์ร้อยศึก',d:()=>`สังหารศัตรูให้ครบ ${gV(70,90)} คน`,c:()=>(S.kills||0)>=gV(70,90),pr:()=>gPct(S.kills,gV(70,90)),p:()=>`สังหาร ${S.kills||0} / ${gV(70,90)}`},
+ {id:'alch',lv:2,n:()=>'เซียนโอสถ',d:()=>'ฝีมือปรุงยาถึงขั้น 8',c:()=>!!(S.cr&&S.cr.lv&&S.cr.lv.alch>=8),pr:()=>gPct(S.cr&&S.cr.lv&&S.cr.lv.alch,8),p:()=>`ปรุงยา ขั้น ${(S.cr&&S.cr.lv&&S.cr.lv.alch)||0} / 8${S.cr?'':' (เริ่มได้ที่โรงช่าง)'}`},
+ {id:'love',lv:2,n:()=>'รักเดียวใจเดียว',d:()=>`แต่งงานครั้งเดียว และอยู่กับคู่จนอายุ ${gV(80,200)}`,c:()=>!!S.spouse&&(S.marN||0)===1&&S.age>=gV(80,200),pr:()=>(S.marN||0)>1?0:(S.spouse?gPct(S.age,gV(80,200)):0),p:()=>(S.marN||0)>1?'❌ แต่งงานมากกว่าหนึ่งครั้งแล้ว':S.spouse?`อยู่กับ ${esc(S.spouse)} · อายุ ${S.age} / ${gV(80,200)}`:'ยังไม่ได้แต่งงาน'},
+ {id:'conquer',lv:2,n:()=>'ครองยุทธภพ',d:()=>'ขึ้นเป็นผู้นำสูงสุดของสำนักหรือพรรค',c:()=>S.faction&&S.rank>=4,pr:()=>S.faction?gPct(S.rank,4):0,p:()=>S.faction?rankName()+' แห่ง'+S.faction.n:'ยังไม่มีสังกัด'},
+ {id:'demon',lv:3,n:()=>'ราชามาร',d:()=>`อยู่ฝ่ายมาร และมีกรรมถึง −${gV(150,250)}`,c:()=>S.faction&&S.faction.t==='มาร'&&S.karma<=-gV(150,250),pr:()=>S.faction&&S.faction.t==='มาร'?gPct(-S.karma,gV(150,250)):0,p:()=>`${S.faction&&S.faction.t==='มาร'?'อยู่ฝ่ายมาร':'ยังไม่อยู่ฝ่ายมาร'} · กรรม ${Math.round(S.karma)} / −${gV(150,250)}`},
+ {id:'free',lv:3,n:()=>'กระบี่ไร้สังกัด',d:()=>`ถึงขั้น${gRN(4)}โดยไม่เคยเข้าสำนักใดเลย`,c:()=>!S.everFac&&realmIdx()>=4,pr:()=>S.everFac?0:realmIdx()/4,p:()=>S.everFac?'❌ เคยเข้าสำนักไปแล้ว':`${gRN(realmIdx())} / ${gRN(4)}`},
+ {id:'founder',lv:3,n:()=>'ปรมาจารย์ผู้ก่อตั้ง',d:()=>`ตั้งสำนักของตัวเองจนมีศิษย์ ${gV(300,500)} คน`,c:()=>S.ownSect&&S.ownSect.dis>=gV(300,500),pr:()=>S.ownSect?gPct(S.ownSect.dis,gV(300,500)):0,p:()=>S.ownSect?`ศิษย์ ${S.ownSect.dis} / ${gV(300,500)}`:'ยังไม่ได้ตั้งสำนัก (เลือกได้ที่ทางแยกชีวิต)'},
+ {id:'official',lv:3,n:()=>'ขุนนางคู่บัลลังก์',d:()=>'รับราชการจนเป็นราชครู',c:()=>S.offRank>=4,pr:()=>gPct(S.offRank,4),p:()=>S.path==='official'?OFF_RANKS[S.offRank]+' / ราชครู':'ยังไม่ได้รับราชการ (เลือกได้ที่ทางแยกชีวิต)'},
+ {id:'art',lv:3,n:()=>'ปรมาจารย์แห่งวิชา',d:()=>'มีวิชาระดับเทพ 2 วิชาพร้อมกัน',c:()=>gArtTop().god>=2,pr:()=>gArtTop().god/2,p:()=>`วิชาระดับเทพ ${gArtTop().god} / 2`},
+ {id:'pacifist',lv:3,n:()=>'มือไม่เปื้อนเลือด',d:()=>`ถึงขั้น${gRN(5)}โดยไม่เคยสังหารใครเลย`,c:()=>(S.kills||0)===0&&realmIdx()>=5,pr:()=>(S.kills||0)?0:realmIdx()/5,p:()=>(S.kills||0)?`❌ สังหารไปแล้ว ${S.kills} คน`:`${gRN(realmIdx())} / ${gRN(5)} · ยังไม่เคยสังหาร`},
+ // ปณิธานพิเศษ (ขึ้นตามชะตาตอนเกิด)
+ {id:'god',lv:4,sp:r=>!!CFG.xian,n:()=>'ฝ่าทัณฑ์สู่โลกเทพ',d:()=>'ฝ่าทัณฑ์สวรรค์ขึ้นสู่โลกเทพให้ได้ในชาตินี้',c:()=>!!S.xt,pr:()=>S.xt?1:Math.min(.95,realmIdx()/7*.9),p:()=>S.xt?'✅ ถึงโลกเทพแล้ว':`${gRN(realmIdx())} / ข้ามทัณฑ์ แล้วฝ่าทัณฑ์สวรรค์`},
+ {id:'sysmax',lv:3,sp:r=>!!(r&&r.os),n:()=>'ผู้คุมระบบ',d:()=>'พาระบบขึ้นถึงเลเวล 25',c:()=>!!(S.sys&&S.sys.lv>=25),pr:()=>gPct(S.sys&&S.sys.lv,25),p:()=>S.sys?`ระบบ Lv.${S.sys.lv} / 25`:'ยังไม่มีระบบ'},
+ {id:'owking',lv:3,sp:r=>!!(r&&r.isOw),n:()=>'ผู้ข้ามมิติที่เปลี่ยนโลก',d:()=>`ใช้ความรู้จากโลกเดิม จนชื่อเสียงถึง ${fmt(gV(6000,20000))} และถึงขั้น${gRN(6)}`,c:()=>S.fame>=gV(6000,20000)&&realmIdx()>=6,pr:()=>Math.min(gPct(S.fame,gV(6000,20000)),realmIdx()/6),p:()=>`ชื่อเสียง ${fmt(S.fame)} / ${fmt(gV(6000,20000))} · ${gRN(realmIdx())} / ${gRN(6)}`}];
+// แทนที่รายการเดิม (ใช้ไอดีเดิม ให้เซฟเก่ายังอ่านได้)
+GOALS.length=0;GOALS2.forEach(G=>{const g={id:G.id,sp:G.sp,c:G.c,pr:G.pr,p:G.p};Object.defineProperty(g,'n',{get:G.n,enumerable:true});Object.defineProperty(g,'d',{get:G.d,enumerable:true});Object.defineProperty(g,'lv',{get:()=>typeof G.lv==='function'?G.lv():G.lv,enumerable:true});GOALS.push(g)});
+goalOffer=function(r0){const r=r0||roll,base=GOALS.filter(g=>!g.sp).sort(()=>Math.random()-.5),spc=GOALS.filter(g=>g.sp&&g.sp(r));let out=base.slice(0,4);
+ if(!out.some(g=>g.lv>=3)){const h=base.find(g=>g.lv>=3);if(h)out[3]=h}
+ spc.forEach((g,i)=>{if(i<2)out[out.length-1-i]=g});return out.map(g=>g.id)};
+renderGoalPick=function(){const box=$('goalOpts');if(!box||!roll)return;setTimeout(()=>xFix(['goalOpts']),0);
+ box.innerHTML=roll.goals.map(id=>{const g=goalOf(id);if(!g)return'';const st='⭐'.repeat(g.lv),sp=g.sp?' <span class="t4">✨ ปณิธานพิเศษตามชะตา</span>':'';return`<button class="opt ${roll.goal===id?'sel':''}" onclick="roll.goal='${id}';renderGoalPick()">🎯 ${g.n} <span class="tag2">${st} · คะแนน ×${goalMul(g)}</span>${sp}<small>${g.d}</small></button>`}).join('')};
+// รางวัลตามระดับ · เกือบสำเร็จ (≥70%) ได้ ×1.1
+function goalFinMul(){if(!S||!S.goal)return 1;const g=goalOf(S.goal);if(!g)return S.goalDone?1.5:1;if(S.goalDone)return goalMul(g);let p=0;try{p=g.pr?g.pr():0}catch(e){}return p>=.7?1.1:1}
+{const _ls=lifeScore;lifeScore=function(){const v=_ls.apply(this,arguments);try{if(!S)return v;return Math.round(v/(S.goalDone?1.5:1)*goalFinMul())}catch(e){return v}}}
+// จำโลกตอนเกิด · นับจำนวนครั้งที่แต่งงาน
+{const _sl3=startLife;startLife=function(){const r=_sl3.apply(this,arguments);try{if(S){S.gW=S.xian?'x':'m';S._sp=S.spouse||null;S.marN=S.spouse?1:0}}catch(e){}return r}}
+{const _pyG=passYear;passYear=function(){const r=_pyG.apply(this,arguments);try{if(S&&S.alive){if(S.spouse&&S.spouse!==S._sp)S.marN=(S.marN||0)+1;S._sp=S.spouse||null}}catch(e){}return r}}
+
+pickGoalModal=function(){const ids=goalOffer({os:S.sys?1:0,isOw:!!S.ow});choice('🎯 ปณิธานของชีวิตนี้',`${esc(S.name)} ทายาทรุ่นที่ ${S.gen} จะตั้งปณิธานไว้ว่าอย่างไร? (ยิ่งยากยิ่งได้คะแนนมาก)`,ids.map(id=>{const g=goalOf(id);return{t:`${g.n} ${'⭐'.repeat(g.lv)}`,s:`${g.d} · คะแนน ×${goalMul(g)}`,f(){S.goal=id;S.goalDone=false;log(`🎯 ตั้งปณิธาน: <b>${g.n}</b> ${'⭐'.repeat(g.lv)}`,'epic')}}}))};
 </script>
 </body>
 </html>

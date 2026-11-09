@@ -870,7 +870,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
           if ((+st.int || 0) > 20000 || (+st.cha || 0) > 20000 || fm > 2e7 || mn > 1e11 || kids > 150 || dis > 2e6 || pw > 2e9) bad = 'stat';
           const powCap = (e.x ? 60000 : 25000) * (1 + ag / 8) + 300000;
           if (!bad && pw > powCap && ag < 1000) bad = 'pow-age';
-          const upper = (pw + fm * 3 + 20 * Math.sqrt(Math.max(0, mn)) + 2500 + kids * 100 + dis * 20 + 4000) * 1.5 * 1.05 + 1000;
+          const upper = (pw + fm * 3 + 20 * Math.sqrt(Math.max(0, mn)) + 2500 + kids * 100 + dis * 20 + 4000) * 2.5 * 1.05 + 1000;
           if (!bad && e.s > upper) bad = 'score';
         }
         if (!bad && !det && e.s > 50000) bad = 'nodet-big';
