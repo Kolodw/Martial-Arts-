@@ -392,8 +392,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='12.0';
+const VERSION='12.1';
 const CHANGELOG=[
+ {v:'12.1',d:'9 พ.ย. 2026',l:['⚡ โลกเทพยากขึ้น: เลื่อนขั้นทุกครั้งต้องฝ่าทัณฑ์สวรรค์ — คิดจากพรสวรรค์ ร่างกาย ลมปราณ ปัญญา กรรม จิตใจ และกฎแห่งเต๋า ค่าสถานะ "กาก" มีโอกาสถูกทัณฑ์ผ่าร่างแหลกสูงมาก · ถอยไปเตรียมตัวก่อนได้ 3 ครั้ง · ยันต์คุ้มกายรับอัสนีถึงตายแทนได้','⏳ อายุขัยโลกเทพผูกกับขั้น (เทพฝึกหัดราว 1,500 ปี) — จะอยู่ถึงล้านปีกลายเป็นอมตะได้ต้องผ่าน ราชาเทพสูงสุด ให้ครบก่อน','💪 ข้ามเวลานานแค่ไหน พลังก็ไม่ทะลุขั้นถ้ายังไม่ผ่านทัณฑ์ · ยาทะลวงขั้นในโลกเทพช่วยเพิ่มโอกาสผ่านแทนการข้ามทัณฑ์']},
  {v:'12.0',d:'9 พ.ย. 2026',l:['💋 ระบบใหม่: <b>ระบบตัณหา</b> — ภารกิจรักหลากหลาย: ช่วยคนงามจากอันธพาล รับคำท้าประลอง แต่งกลอนในงานชมจันทร์ หายามารักษาคนป่วย ฝึกคู่หยินหยาง และไกล่เกลี่ยศึกในตำหนักใน · ตัวละครชายเจอสาวงาม ตัวละครหญิงเจอบุรุษรูปงาม (อายุ 18 ปีขึ้นไป) · ยิ่งมีคนรักมาก พลังหยินหยางยิ่งเพิ่มทุกปี · มีร้านค้าและเควสหลักของตัวเอง','🟦 ระบบทุกแบบมีระดับสุ่ม 4 ขั้น: ต่ำ · กลาง · สูง · สุดยอด — ระดับสูงได้รางวัลเควสและพลังประจำปีมากขึ้น พร้อมของขวัญ SP/แต้มสถานะตอนผูกมัด (สุดยอดได้การ์ดคืนชีพด้วย)','🌋 เหตุการณ์ใหญ่: ผนึกมารสั่นคลอน · สุสานจักรพรรดิโบราณเปิด · โรคระบาด · สงครามใหญ่ · ทัณฑ์สวรรค์ (แดนเซียน) — เลือกได้ว่าจะร่วมทัพ ไปจัดการเองคนเดียว ใช้ปัญญา ใช้ของในกระเป๋า หรือไม่ไปเลย ทุกทางมีผลต่อชีวิต ชื่อเสียง กรรม และของที่ได้','🧭 ตัวเลือกยืดหยุ่นขึ้น: บางทางจะโผล่เฉพาะเมื่อมีของหรือค่าสถานะที่เหมาะ (เช่น มีตราผนึกมาร มีแผนที่ มีสมุนไพร หรือเดินสายมาร) และบอกโอกาสสำเร็จโดยประมาณ','🎒 กระเป๋าใหม่: ของทุกชิ้นมีระดับ ธรรมดา · ไม่ธรรมดา · แรร์ · อีปิค · เลเจนด์ · มิสติก · ความลับ · ??? (สีต่างกัน) พร้อมคำอธิบายว่าใช้ทำอะไร และมีปุ่ม "ใช้" กดใช้เองได้','🎒 ของใหม่ 9 ชิ้น เช่น ขนหงส์เพลิง (ชุบชีวิตเมื่อพลังชีวิตหมด) · เศษดาราจักร · ตราผนึกมารโบราณ · และของระดับ ??? ที่ไม่มีใครรู้ว่าจะเกิดอะไรขึ้น','🐛 แก้บั๊กตัวเลือก "อยู่ที่เดิม ตอบแทนบุญคุณ" ที่ error ถ้าออกจากสำนักไปก่อนกดเลือก']},
  {v:'11.3',d:'9 พ.ย. 2026',l:['⏳ แดนเทพ (อายุ 1,000 ปีขึ้นไป): กาลเวลาไหลไม่คงที่อีกต่อไป — บางก้าวผ่านไปแค่ 1 ปี บางก้าวนับหมื่นถึงแสนปี ตามสิ่งที่เกิดขึ้น (บาดเจ็บหนัก เพิ่งทะลวงขั้น หรือออกท่องโลก เวลาจะไหลช้าลง) อายุไม่เป็นเลขกลมๆ ตายตัวแล้ว','🧘 เหตุการณ์ใหม่ "ทางแยกแห่งการบำเพ็ญ" — เลือกปิดด่านยาวนับพันนับหมื่นปี (พลัง ×1.25 เสี่ยงธาตุไฟเข้าแทรก) หรือออกท่องโลกให้เวลาไหลช้าลง','🧘 ปิดด่านข้ามเวลาในเมนูปรับระยะตามอายุ (เช่น 400 / 2,000 / 8,000 ปี) ไม่ใช่แค่ 10–100 ปี','📜 ข้ามเวลานานๆ จะเล่าว่าโลกภายนอกเปลี่ยนไปอย่างไร และพ่อแม่/ลูกหลานแก่ตัวและจากไปตามเวลาที่ผ่านไปจริง','🔢 หัวปีแสดง (+จำนวนปีที่ผ่านไป) และใส่จุลภาคให้อายุหลักหมื่นขึ้นไป','🏮 ทายาท: เกิดในโลกเดียวกับพ่อแม่ (ไม่ติดชื่อขั้นพลังโลกเทพมาตั้งแต่เกิดแล้ว) · คะแนนทำเนียบนับเฉพาะชื่อเสียงและทรัพย์ที่หามาเองในชาตินี้ · แก้บั๊กสืบทอดจากพ่อ/แม่ที่ไม่มีคู่ครองแล้วเกมสะดุด']},
  {v:'11.2',d:'9 พ.ย. 2026',l:['🙏 หน้าแรกมีปุ่มสนับสนุนผู้พัฒนา (ใต้ปุ่มออนไลน์) — ไม่บังคับ เล่นได้ครบทุกอย่างเหมือนเดิม','🌐 ย้ายระบบออนไลน์ไปฐานข้อมูลใหม่ที่ไม่มีโควตารายเดือน แชท/ทำเนียบเก่าจะทยอยกลับมา']},
@@ -2496,7 +2497,7 @@ function allocPt(k,silent){const s=S.sys;if(!s||s.pts<=0)return;s.pts--;const m=
 function buySys(id){const s=S.sys,it=SHOP.find(x=>x.id===id);if(s.sp<it.c){toast('SP ไม่พอ');return}if(it.once&&s.upgrades.includes(it.once)){toast('ซื้อไปแล้ว');return}s.sp-=it.c;s.used++;
  switch(id){case 'pill':S.power+=150*S.talent.m;break;case 'heal':S.hp=S.maxHp;S.chronic=null;break;case 'qi':S.qi+=8;break;
   case 'art':{const a=newArt(2);S.arts.push(a);log(`<span class="px">[ระบบ]</span> เปิดกล่องคัมภีร์ได้ ${artHtml(a)}`,'sys');break}
-  case 'life':S.lifespan+=15;break;case 'break':{const nx=REALMS[realmIdx()+1];if(nx){S.power+=Math.max(0,nx.p-total()+1);if(S.rcap!=null)S.rcap=Math.max(S.rcap,realmIdx()+1)}break}case 'revive':s.revive++;break;
+  case 'life':S.lifespan+=15;break;case 'break':{if(S.xt){S.tribPill=Math.max(S.tribPill||0,.2);sysLog('ยาทะลวงขั้นของระบบ — ทัณฑ์สวรรค์ครั้งถัดไปโอกาสผ่าน +20%','up');break}const nx=REALMS[realmIdx()+1];if(nx){S.power+=Math.max(0,nx.p-total()+1);if(S.rcap!=null)S.rcap=Math.max(S.rcap,realmIdx()+1)}break}case 'revive':s.revive++;break;
   case 'ticket':s.tk++;break;case 'furnace':s.upgrades.push('furnace');break;
   case 'body':s.hp+=30;S.maxHp+=30;S.hp+=30;s.bodyP=Math.min(.3,(s.bodyP||0)+.1);break;
   case 'mask':s.hate=Math.max(0,s.hate-2);break;
@@ -5954,7 +5955,9 @@ function wsScale(name,ep){const m=wsM();if(m===1||!S||WS_NOSCALE.has(name))retur
 {const _bl2=beginLife;beginLife=function(){const r=_bl2.apply(this,arguments);try{if(S&&!S.beastMode){S.ws=null;const w=wsGet();setTimeout(()=>{if(S&&S.alive)log(`🌍 <b>${w.n}</b> — ${w.d}${w.m!==1?` (ศัตรู ×${w.m})`:''}`,w.m>=3?'bad':w.m<1?'good':'',true)},400);S.key.push(`0 ปี — เกิดใน${w.n}`);shareInit()}}catch(e){console.error(e)}return r}}
 // ---- กาลเวลาแดนเทพ ----
 function xFast(){return S&&S.xian&&S.alive&&S.age>=1000}
-{const _lm=lifeMax;lifeMax=function(){const v=_lm.apply(this,arguments);try{if(S&&S.xian&&(S.xt&&realmIdx()>=6||S.age>=1000))return Math.max(v,1e6+1)}catch(e){}return v}}
+const GOD_LIFE=[1500,2500,4000,7000,15000,40000,120000,300000];
+function godLife(){const ri=realmIdx();if(ri<7)return GOD_LIFE[ri];const L=postLv();return L<0?GOD_LIFE[7]:L>=9?1e6+1:GOD_LIFE[7]+(L+1)*30000}
+{const _lm=lifeMax;lifeMax=function(){const v=_lm.apply(this,arguments);try{if(S&&S.xian&&S.xt){if(S.glExtra==null){const g0=godLife();S.glExtra=S.age>=g0-200?S.age+R(300,800)-g0:0}return Math.max(v,godLife()+S.glExtra)}}catch(e){}return v}}
 // กาลเวลาในแดนเทพไหลไม่คงที่: บางก้าวแค่ปีเดียว บางก้าวนับหมื่นปี ตามสิ่งที่เกิดขึ้นในชีวิต
 function xGauss(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
 function xBusy(){let b=0;try{if(S.hp<S.maxHp*.5)b++;if(S.xcalm>0)b++;const ri=realmIdx();if(S.xri==null)S.xri=ri;if(ri!==S.xri){S.xri=ri;S.xcalm=Math.max(S.xcalm||0,3);b++}}catch(e){}return b}
@@ -5977,7 +5980,7 @@ function xWorldLine(st){return ch(XS_WORLD).replace('{n}',fmt(Math.max(2,Math.ro
   if(S&&S.xian&&S.alive&&S.flags&&S.flags.eternal&&S.age>=1e6){S.hp=0;S.age=1e6-1;const r0=_py9.apply(this,arguments);if(S&&S.age>1e6)S.age=1e6;return r0}
   try{if(xFast()){st=xStep();ex=st-1;seal=S.xsealOn?1:0;S.xsealOn=0;
    if(!S.xstep){S.xstep=1;log(`⏩ ในแดนเทพ กาลเวลาไหลไม่คงที่ — บางครั้งผ่านไปเพียงปีเดียว บางครั้งผ่านไปนับหมื่นปีในพริบตา ขึ้นกับสิ่งที่เกิดขึ้นรอบตัวคุณ`,'myth',true)}
-   ex=Math.max(0,Math.min(ex,1e6-1-S.age));st=ex+1;if(ex>0){const g=seal?1.25:1;S.age+=ex;xFamAge(ex);S.qi+=+(ex*.01*g).toFixed(1);S.power+=Math.round((5+Math.min(S.power*.00002,20))*ex*g);S.money+=Math.round(ex*8*(1+realmIdx()*.2))}
+   ex=Math.max(0,Math.min(ex,1e6-1-S.age));st=ex+1;if(ex>0){const g=seal?1.25:1;S.age+=ex;xFamAge(ex);S.qi+=+(ex*.01*g).toFixed(1);{let pg=Math.round((5+Math.min(S.power*.00002,20))*ex*g);if(S.xt){const nx=realmNext();if(nx)pg=Math.min(pg,Math.max(0,Math.round(nx*1.6-total())))}S.power+=pg}S.money+=Math.round(ex*8*(1+realmIdx()*.2))}
   }}catch(e){console.error(e)}
   const r=_py9.apply(this,arguments);
   try{if(S&&S.xian&&ex>0){
@@ -6965,6 +6968,31 @@ function bigEvTick(){if(!S||!S.alive||choice._cur||modalOpen||(S.beastMode&&!S.b
  const L=BIGEV.filter(e=>e.c()&&e.id!==S.bigLast);if(!L.length)return;const e=ch(L);S.bigAt=S.age;S.bigLast=e.id;try{e.f()}catch(x){console.error(x)}}
 {const _py12=passYear;passYear=function(){const r=_py12.apply(this,arguments);try{if(S&&S.alive)bigEvTick()}catch(e){console.error(e)}return r}}
 
+
+// ---- v12.1: โลกเทพ — เลื่อนขั้นทุกครั้งต้องฝ่าทัณฑ์สวรรค์ ค่าสถานะต่ำมีโอกาสตายสูง ----
+function tribT(k,t){return k==='r'?t:7+t*.25}
+function tribStats(t,k){const T=tribT(k||'r',t),m=(S.talent&&S.talent.m)||1,n=v=>Math.max(0,Math.min(1,v));
+ const parts=[['พรสวรรค์',n((m-.5)/2.5)],['ร่างกาย',n(S.maxHp/(250+T*90))],['ลมปราณ',n((S.qi||0)/(25*Math.pow(T+1,2.2)))],['ปัญญา',n((S.int||0)/(150*Math.pow(1.25,T)))],['กรรม',n(((S.karma||0)+80)/(150+100*Math.pow(1.25,T)))],['จิตใจ',n((S.happy==null?60:S.happy)/95)],['กฎแห่งเต๋า',n(daoSum()/(4+T*1.8))]];
+ const sc=parts.reduce((a,x)=>a+x[1],0)/parts.length;return{sc,parts}}
+function tribOdds(t,k){const T=tribT(k,t),st=tribStats(t,k),pr=(S.tribPrep||0)*.06+(S.tribPill||0),minor=k==='p'&&t%9!==0;return{st,ps:clamp(.14+.62*st.sc+pr+(S.btFail||0)*.03-T*.012+(minor?.08:0),.05,.92),pd:clamp((.55-.75*st.sc-pr*.4+T*.006)*(minor?.4:1),.02,.7)}}
+function tribGrade(sc){return sc<.3?['กาก','#d84a4a']:sc<.5?['พอใช้','#e8a23a']:sc<.7?['ดี','#5fb85f']:['ยอดเยี่ยม','#4aa3ff']}
+function tribName(k,t){return k==='r'?REALMS[t].n:`${RS_PFX[Math.floor(t/9)]}${REALMS[7].n} ขั้น ${t%9+1}`}
+function godTrib(k,t){if(choice._cur||modalOpen)return;if(S.tribNext!=null&&S.age<S.tribNext)return;const nm=tribName(k,t),o=tribOdds(t,k),[gn,gc]=tribGrade(o.st.sc),risk=Math.round((1-o.ps)*o.pd*100);
+ const bars=o.st.parts.map(([a,v])=>`${a} ${'▰'.repeat(Math.round(v*5))}${'▱'.repeat(5-Math.round(v*5))}`).join(' · ');
+ const opts=[{t:'⚡ ฝ่าทัณฑ์สวรรค์ตอนนี้',s:`ผ่านราว ${Math.round(o.ps*100)}% · ถ้าพลาด ตายราว ${Math.round(o.pd*100)}% (รวมเสี่ยงตาย ~${risk}%)`,f(){tribGo(k,t)}}];
+ if((S.tribPrep||0)<3)opts.push({t:'🧘 ถอยไปเตรียมตัวก่อน',s:`โอกาสผ่าน +6% ต่อครั้ง (เตรียมแล้ว ${S.tribPrep||0}/3) · ระหว่างนี้ยังติดคอขวด`,f(){S.tribPrep=(S.tribPrep||0)+1;S.qi+=.5;S.tribNext=S.age+1;log(`🧘 คุณสลายเมฆทัณฑ์แล้วถอยไปปรับลมปราณ (เตรียมตัว ${S.tribPrep}/3)`,'')}});
+ setScene('aura');choice(`⚡ ทัณฑ์สวรรค์แห่งการเลื่อนขั้น`,`พลังของคุณล้นถึงขีดของ<b>${nm}</b> เมฆทัณฑ์สีม่วงดำหมุนวนอยู่เหนือศีรษะ — ในโลกเทพ ทุกขั้นต้องแลกด้วยการฝ่าทัณฑ์<br><span class="tag2">${bars}</span><br>ค่าสถานะรวม: <b style="color:${gc}">${gn}</b> (${Math.round(o.st.sc*100)}/100)${o.st.sc<.3?' — ⚠️ ร่างนี้อาจรับทัณฑ์ไม่ไหว':''}${bagHas('tal')?'<br>📜 ยันต์คุ้มกายในกระเป๋าจะรับอัสนีถึงตายแทนได้ 1 ครั้ง':''}`,opts)}
+function tribGo(k,t){const nm=tribName(k,t),o=tribOdds(t,k);S.tribNext=S.age+1;
+ if(Math.random()<o.ps){if(k==='r')S.rcap=t;else{S.pcap=t;postUp(t,'⚡ ')}S.btFail=0;S.tribPrep=0;S.tribPill=0;S.fame+=30+t*10;if(k==='r')log(`⚡ อัสนีเก้าสายผ่าลงมาครบทุกสาย — คุณยืนหยัดอยู่ได้ และก้าวสู่<b>${nm}</b>`,'myth',true);keyAdd(`ฝ่าทัณฑ์สวรรค์สู่${nm}`);return}
+ S.btFail=(S.btFail||0)+1;
+ if(Math.random()<o.pd){if(bagHas('tal')&&bagUse('tal')){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.6));log('📜 ยันต์คุ้มกายลุกเป็นไฟ รับอัสนีที่จะฆ่าคุณไว้แทน — รอดมาได้อย่างหวุดหวิด','epic',true);return}
+  S.hp=0;S.deathCause=`ถูกทัณฑ์สวรรค์ผ่าร่างแหลกสลายขณะทะลวงสู่${nm}`;setScene('fight');log(`⚡ สายฟ้าสายสุดท้ายผ่าลงกลางกระหม่อม ร่างของคุณรับไม่ไหว…`,'bad',true);return}
+ const d=Math.round(S.maxHp*.45);S.hp=Math.max(1,Math.round(S.hp-d));S.power=Math.round(S.power*.93);S.qi=+(S.qi*.9).toFixed(1);joy(-6);log(`💢 ทัณฑ์สวรรค์ซัดคุณกระเด็น ทะลวงสู่<b>${nm}</b>ไม่สำเร็จ — พลังชีวิต −${d} พลังยุทธ์ −7% ลมปราณ −10%`,'bad',true)}
+{const _ag121=ascendGod;ascendGod=function(){const r=_ag121.apply(this,arguments);try{if(S){S.rcap=rawRealm();S.pcap=-1;S.rcapG=1;S.pcapG=1;S.btFail=0;S.tribPrep=0}}catch(e){}return r}}
+{const _bt121=btTick;btTick=function(){if(S&&S.alive&&S.xt&&!S.beastMode){const raw=rawRealm();if(!S.rcapG){S.rcapG=1;S.rcap=S.rcap==null?raw:Math.min(S.rcap,raw);return}if(S.rcap==null){S.rcap=raw;return}if(raw<=S.rcap)return;const t=S.rcap+1;if(t<=1){S.rcap=t;return}
+  if(!S.tribPill&&bagHas('brk')&&bagUse('brk')){S.tribPill=.12;log('🎒 🔴 กลืนยาทะลวงขั้นเตรียมรับทัณฑ์ — โอกาสผ่าน +12%','epic')}godTrib('r',t);return}return _bt121.apply(this,arguments)}}
+{const _pt121=postTick;postTick=function(){if(S&&S.alive&&S.xt&&!S.beastMode&&realmIdx()>=7){const raw=postRaw();if(!S.pcapG){S.pcapG=1;S.pcap=Math.max(-1,postLv());return}if(S.pcap==null)S.pcap=-1;if(raw<=S.pcap)return;const t=S.pcap+1;
+  if(!S.tribPill&&bagHas('brk')&&bagUse('brk')){S.tribPill=.12;log('🎒 🔴 กลืนยาทะลวงขั้นเตรียมรับทัณฑ์ — โอกาสผ่าน +12%','epic')}godTrib('p',t);return}return _pt121.apply(this,arguments)}}
 </script>
 </body>
 </html>
