@@ -253,6 +253,7 @@ details.item summary{cursor:pointer}
 #recap .rskip{position:absolute;right:14px;bottom:max(18px,env(safe-area-inset-bottom));background:rgba(255,255,255,.1);color:#f4e8d0;border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:6px 14px;font:inherit}
 #end.endanim .rec > *,#end.endanim .rec li,#end.endanim .five > .box,#end.endanim > h4,#end.endanim > button,#end.endanim > .brow,#end.endanim > .box{opacity:0;animation:euIn .55s ease forwards}
 @keyframes euIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.tsupport{position:fixed;top:calc(max(10px,env(safe-area-inset-top)) + 108px);right:12px;z-index:5;width:46px;height:46px;font-size:22px;border:2px solid #e8d8a8;border-radius:10px;background:rgba(20,16,24,.72);color:#f4e4b4;box-shadow:0 3px 0 rgba(0,0,0,.4);display:none;padding:0;line-height:1;cursor:pointer}#title.on .tsupport{display:flex;align-items:center;justify-content:center}
 .tonline{position:fixed;top:calc(max(10px,env(safe-area-inset-top)) + 54px);right:12px;z-index:5;width:46px;height:46px;font-size:22px;border:2px solid #e8d8a8;border-radius:10px;background:rgba(20,16,24,.72);color:#f4e4b4;box-shadow:0 3px 0 rgba(0,0,0,.4);display:none;padding:0;line-height:1;position:fixed}
 #title.on .tonline{display:flex;flex-direction:column;align-items:center;justify-content:center}.tonline small{font-size:9px;margin-top:1px;color:#8fe8a0;font-family:'Silkscreen',monospace}.tonline.on::after{content:'';position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px #4ade80}
 .hudr{display:flex;flex-direction:column;align-items:flex-end;gap:3px;margin-left:4px}.watchb{border:2px solid var(--line);background:var(--w);border-radius:12px;font:inherit;font-size:11px;padding:1px 7px;color:inherit;white-space:nowrap}.watchb.hot{background:#ffe0ec;border-color:var(--pink);animation:pbP 1.6s infinite}.watchb.off{opacity:.55}
@@ -289,6 +290,7 @@ details.item summary{cursor:pointer}
   <canvas id="titleBg" width="90" height="160"></canvas>
   <button class="tmenu" onclick="openTitleMenu()" aria-label="เมนู">☰</button>
   <button class="tonline" onclick="openOnline()" aria-label="ออนไลน์">🌐<small id="tOnN"></small></button>
+  <button class="tsupport" onclick="openSupport()" aria-label="สนับสนุน">🙏</button>
   <canvas class="globe" id="globe" width="32" height="32"></canvas>
   <div class="onlinebadge" id="onlineBadge" style="display:none" onclick="openOnline()"></div>
   <div class="big"><span class="gold">1 ใน นวนิยาย</span><small id="titleSub">วันนี้ จะได้เกิดเป็นใครในยุทธภพ?</small></div>
@@ -390,8 +392,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='11.1';
+const VERSION='11.2';
 const CHANGELOG=[
+ {v:'11.2',d:'9 พ.ย. 2026',l:['🙏 หน้าแรกมีปุ่มสนับสนุนผู้พัฒนา (ใต้ปุ่มออนไลน์) — ไม่บังคับ เล่นได้ครบทุกอย่างเหมือนเดิม','🌐 ย้ายระบบออนไลน์ไปฐานข้อมูลใหม่ที่ไม่มีโควตารายเดือน แชท/ทำเนียบเก่าจะทยอยกลับมา']},
  {v:'11.1',d:'8 พ.ย. 2026',l:['🔄 รีเฟรชเว็บหรือกดโหลดอัปเดตใหม่ระหว่างเล่น จะกลับมาเล่นต่อที่เดิมทันที ไม่เด้งไปหน้าแรก — จำความเร็ว โหมดอัตโนมัติ และการหยุดเกมไว้ด้วย']},
  {v:'11.0',d:'8 พ.ย. 2026',l:['🐾 ชีวิตสัตว์อสูรใหม่ทั้งหมด: เหตุการณ์เฉพาะแต่ละสายพันธุ์ — จิ้งจอกงอกหางทีละหาง · งูขาวลอกคราบ/จำศีล · กระเรียนอพยพ/ร่ายรำ · พยัคฆ์ชิงอาณาเขตจนลาย王ขึ้นหน้าผาก · เต่าดำหลับยาวหลายปี · ปลาคาร์ปพยายามกระโดดข้ามประตูมังกร · วานรขโมยลูกท้อเซียน · หมาป่าชิงจ่าฝูง','📖 เรื่องยาวต่อเนื่องทั้งชีวิต: ศัตรูคู่แค้นประจำป่าจนถึงศึกตัดสิน · นายพรานที่ตามล่าคุณ · คู่ชีวิต ลูกๆ ลืมตาดูโลกและออกจากรัง · หมู่บ้านที่บูชาคุณเป็นเทพขุนเขาหรือจ้างนักล่ามาฆ่า','🌲 ข้อความประจำปีผสมกันได้หลายพันแบบตามฤดู เวลา อากาศ ธาตุ ขั้นพลัง และอ้างถึงเรื่องที่เคยเกิดในชีวิตนี้ ("ผ่านที่เดิมที่เคย... เมื่อ 12 ปีก่อน")','🐾 สัตว์ที่ยังไม่แปลงกายเข้าสำนัก ตลาด เมือง ดันเจี้ยนไม่ได้แล้ว (สมเหตุสมผลขึ้น) · ตายแบบสัตว์มีข้อความของสัตว์','💭 คำถาม "กำลังคิดอะไรอยู่" ตามอายุ กด "ไม่ต้องถามอีก" ได้ (เปิดใหม่ได้ที่เมนู ☰)','🔍 ซูมหน้าจอบนมือถือได้แล้ว']},
  {v:'10.7',d:'8 พ.ย. 2026',l:['💬 แชทโลก: ข้อความของเราอยู่ฝั่งขวาเป็นกรอบสีชมพู ข้อความคนอื่นอยู่ซ้าย ดูง่ายขึ้นว่าเราพิมพ์อะไรไป']},
@@ -3756,6 +3759,7 @@ function v43Tick(){crTick();compTick();hhTick();auTick();tqRefresh()}
 
 // ============ v4.4 · หน้าแรกใหม่ · ฉากหลังพิกเซล · โลก 32×32 · เพลงจีนบรรเลง ============
 // ---------- เมนูขีดสามขีดหน้าแรก ----------
+function openSupport(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🙏 สนับสนุนผู้พัฒนา</h3><div style="text-align:center"><img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:60vh;border-radius:10px;background:#fff" draggable="false"><p style="margin:10px 0 4px">สนับสนุนได้ครับ ขอบคุณสนับสนุนกันครับ 🙏☺️</p><p class="tag2">สแกนด้วยแอปธนาคาร · ไม่บังคับ เล่นเกมได้ครบทุกอย่างฟรี</p><a class="gbtn" href="donate-qr.jpg" download="promptpay-qr.jpg" style="display:inline-block;margin-top:6px;text-decoration:none">⬇️ บันทึกรูป QR</a></div>`,'support')}
 function openTitleMenu(){const th=THEMES.find(x=>x[0]===theme)||['','☀️','ธีม'];
  const B=[['📖','ตำนาน','openBook()'],['🪦','สุสาน','openGraves()'],['📚','สารานุกรม','openCodex()'],['🐉','สมุดสัตว์','openBestiary()'],['📊','สถิติ','openStats()'],['📘','คู่มือ','openGuide()'],['💾','ย้ายเซฟ','openSaveCode()'],['📜','อัปเดต','openUpdate()'],
   [th[1],'ธีม: '+(th[2]||''),'cycleTheme();openTitleMenu()'],['🔊','เสียงและเพลง','openSound()'],['🔠','ตัวอักษร '+FS[fsz],'cycleFs();openTitleMenu()'],['🐞','แจ้งบั๊ก','openReport()'],['💬','ความคิดเห็น','openFeedback()'],['🌐','','']].filter(b=>b[1]);
