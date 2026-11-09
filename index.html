@@ -8151,8 +8151,11 @@ function openAdmTools(){if(!ADM.ok){admVerify().then(ok=>{if(ok)openAdmTools();e
   <button class="gbtn" onclick="openLiveList()">👁 ดูทุกคนเล่น</button>
   <button class="gbtn" onclick="admPaForce(this)">🔨 เปิดประมูลผู้เล่นทันที</button>
   <button class="gbtn" onclick="openOnline('chat');setTimeout(()=>{const i=$('chatIn');if(i){i.value='@everyone ';i.focus()}},400)">📢 ประกาศถึงทุกคน</button>
- </div><p class="tag2" style="margin:4px 0 0">ประมูลจะเริ่มในไม่กี่วินาที (ถ้ามีรอบที่กำลังประมูลอยู่ จะรอให้จบก่อน)</p></div>`,'admtool')}
-async function admPaForce(b){b.disabled=true;try{const j=await api('paforce&key='+encodeURIComponent(admK()));toast(j&&j.ok?'🔨 สั่งเปิดประมูลแล้ว':'ไม่สำเร็จ')}catch(e){toast('ไม่สำเร็จ')}b.disabled=false}
+ </div><p class="tag2" style="margin:4px 0 0">ประมูลเปิดทันที ผู้เล่นทุกคนที่อยู่ในชีวิตจะเห็นป้ายภายใน ~20 วิ · ประกาศ @everyone ก็ถึงทุกคนภายใน ~20 วิ</p></div>`,'admtool')}
+async function admPaForce(b){b.disabled=true;try{const j=await api('paforce&key='+encodeURIComponent(admK()));const p=j&&j.pa;
+ if(j&&j.st==='open'){toast('🔨 เปิดประมูลแล้ว! ทุกคนจะเห็นประกาศภายใน ~20 วิ');try{PA.sum=p;if(p&&!PA.seen[p.sid]){PA.seen[p.sid]=1;if(paCanSee())paBanner(p);else toast('ℹ️ เข้าไปอยู่ในชีวิตก่อน ถึงจะเห็นป้ายประมูลเอง')}}catch(e){}}
+ else if(j&&j.st==='busy')toast(`⏳ มีรอบกำลังประมูลอยู่ (เหลือ ${p?p.left:'?'}/${p?p.n:'?'} ชิ้น) — รอจบก่อน`);
+ else toast('ไม่สำเร็จ'+(j&&j.err?': '+j.err:''))}catch(e){toast('ไม่สำเร็จ: '+(e.message||e))}b.disabled=false}
 {const _om3=openMenu;openMenu=function(){const r=_om3.apply(this,arguments);try{if(ADM.ok){const m=$('modal'),gr=m.querySelector('.mgrid');if(gr&&!m.querySelector('.admmenu'))gr.insertAdjacentHTML('afterbegin',`<button class="opt admmenu" style="border-color:#c9a24a" onclick="openAdmTools()">🛠️ เครื่องมือแอดมิน<small>เฉพาะผู้ดูแล</small></button>`)}}catch(e){}return r}}
 
 // ============ v13.6 หน้าสุ่มกำเนิดใหม่: ภาพตัวละครละเอียดตามผลสุ่ม · ฉากตามชาติกำเนิด/โลก · การ์ดสีตามระดับ ============
@@ -8336,6 +8339,13 @@ function fateApply(){const r=roll;if(!r)return;const N=1/(r.p*(r.era?r.era.p:1))
  if(f>=6)setTimeout(()=>{const b=$('oddsBox');if(!b||b.style.visibility==='hidden'||roll!==r)return;const C=f>=10?['#ff4d4d','#ffd84d','#5dff7a','#4dd8ff','#b06bff','#ffffff']:f>=8?['#ff3a5a','#ff5ad8','#ffd040','#ffffff']:['#ffc030','#ff8a2a','#fff0a0'];for(let i=0;i<Math.min(70,(f-4)*9);i++){const e=document.createElement('i');e.className='bconf';e.style.left=Math.random()*100+'%';e.style.background=C[i%C.length];e.style.animationDelay=(Math.random()*.6)+'s';b.appendChild(e);setTimeout(()=>e.remove(),2500)}try{if(f>=8)sfx('ach')}catch(e){}},dl)}
 {const _dr3=doRoll;doRoll=function(first){const r=_dr3.apply(this,arguments);try{document.querySelectorAll('#oddsBox .bconf').forEach(e=>e.remove());fateApply()}catch(e){console.error(e)}return r}}
 {const _ol=oddsLine;oddsLine=function(){const t=_ol.apply(this,arguments);try{if(S&&!S.custom&&S.odds){const F=FATE[fateOf(1/S.odds)];return t+` · ${F[2]} ชะตา${F[1].replace(/^ชะตา/,'')}`}}catch(e){}return t}}
+
+// ============ v13.9 แจ้งเตือนเร็ว: ประมูล + ประกาศ ถึงทุกคนภายใน ~20 วิ (ไม่ต้องรอรอบ 45 วิ/2 นาที) ============
+async function fastTick(){if(document.hidden||fastTick._f)return;fastTick._f=1;try{const j=await api('tick');
+ try{const p=j.pa;PA.sum=p||PA.sum;if(p&&p.phase==='open'&&!PA.seen[p.sid]&&paCanSee()&&Date.now()-p.t0<4*60e3){PA.seen[p.sid]=1;paBanner(p)}}catch(e){}
+ if(j.av&&j.av!==fastTick._av){fastTick._av=j.av;onlinePing()}else if(!j.av)fastTick._av=''}
+ catch(e){}finally{fastTick._f=0}}
+setTimeout(fastTick,6000);setInterval(fastTick,20000);
 </script>
 </body>
 </html>

@@ -238,7 +238,7 @@ async function paTick(now) {
     // ตัวจัดตารางอัตโนมัติ: เปิดเมื่อมีคนเล่นพร้อมกันอย่างน้อย 2 คน · ไม่เกินวันละ 120 รอบ · พักระหว่างรอบ = จำนวนคนเล่น (ต่ำสุด 5 สูงสุด 10 นาที) · คนน้อยของน้อยลง
     if (!force && (await cmd('SET', 'pa:chk', '1', 'NX', 'PX', 60e3)) !== 'OK') return cur;
     const act = +(await cmd('ZCOUNT', 'online', now - 180e3, '+inf')) || 0, day = PA_DAY(now), nDay = +(await cmd('GET', 'pa:day:' + day)) || 0;
-    if ((act < 2 && !force) || nDay >= 120) return cur;
+    if ((act < 2 || nDay >= 120) && !force) return cur;
     if ((await cmd('SET', 'pa:lk', '1', 'NX', 'PX', 4000)) !== 'OK') return cur;
     try {
       const sid = (now.toString(36) + Math.random().toString(36).slice(2, 5)).slice(-9), lots = [], nL = act <= 3 ? 3 : act <= 8 ? 4 : act <= 15 ? 5 : 6;
@@ -664,9 +664,17 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
     if (a === 'admchk') return res.json({ ok: isAdmKey(qOf(req).key) ? 1 : 0 });
     if (a === 'paforce') {
       if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
-      await pipe([['SET', 'pa:force', '1', 'EX', 180], ['DEL', 'pa:chk']]);
-      await paTick(now).catch(() => {});
-      return res.json({ ok: 1 });
+      let c0 = null; try { const v = await cmd('GET', 'pa:cur'); c0 = v ? JSON.parse(v) : null } catch {}
+      if (c0 && c0.phase === 'open') return res.json({ ok: 1, st: 'busy', pa: paSum(c0) });
+      await pipe([['SET', 'pa:force', '1', 'EX', 180], ['DEL', 'pa:chk'], ['DEL', 'pa:lk']]);
+      let c1 = null; try { c1 = await paTick(now) } catch (e) { return res.json({ ok: 0, err: String(e.message || e).slice(0, 80) }) }
+      const st = c1 && c1.phase === 'open' && (!c0 || c1.sid !== c0.sid) ? 'open' : 'wait';
+      return res.json({ ok: st === 'open' ? 1 : 0, st, pa: paSum(c1) });
+    }
+    if (a === 'tick') {
+      let pa = null; try { pa = paSum(await paTick(now)) } catch {}
+      let av = ''; try { const v = await cmd('GET', 'ann'); if (v) av = (JSON.parse(v) || {}).i || '' } catch {}
+      return res.json({ pa, av });
     }
     if (a === 'gcfg') return res.json({ cid: process.env.GOOGLE_CLIENT_ID || '' });
     if (a === 'profst') {
