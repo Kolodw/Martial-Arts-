@@ -3,7 +3,7 @@
 <head>
 <script>
 // ---- ย้ายเซฟจากเว็บเก่า (*.vercel.app) -> 1inanovel.com: อัปโหลดชั่วคราวผ่านเซิร์ฟเวอร์เกม แล้วเขียนลงเครื่องที่โดเมนใหม่ · ไม่ลบของเดิม ----
-(function(){var NEW='1inanovel.com',H=location.hostname,OLD=/^(martial-unknown|hahah-unknown-gt|hahah-git-main-unknown-gt)\.vercel\.app$/.test(H),isNew=H===NEW,SKIP=/^murim_admk$/;
+(function(){var NEW='www.1inanovel.com',H=location.hostname,OLD=/^(martial-unknown|hahah-unknown-gt|hahah-git-main-unknown-gt)\.vercel\.app$/.test(H),isNew=H===NEW||H==='1inanovel.com',SKIP=/^murim_admk$/;
  function ls(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&!SKIP.test(k))o[k]=localStorage.getItem(k)}}catch(e){}return o}
  function cover(t){var d=document.getElementById('migCover');if(!d){d=document.createElement('div');d.id='migCover';d.style.cssText='position:fixed;inset:0;z-index:2147483647;background:#0b0f17;color:#f0e6d2;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;padding:24px;text-align:center;font:16px/1.6 system-ui,sans-serif';(document.body||document.documentElement).appendChild(d)}d.innerHTML=t;return d}
  function uncover(){var d=document.getElementById('migCover');if(d)d.remove()}
@@ -3796,7 +3796,7 @@ function openSaveCode(){const c=S?saveCode():'';modal(`<button class="xbtn" oncl
  <p class="tag2" style="margin-top:8px">นำเข้าเซฟ: วางรหัสยาว${onlineOK?' · รหัสสั้น 8 ตัว · หรือรหัสประจำเครื่อง':''}</p><textarea id="ldCode" class="crin" rows="2"></textarea><button class="gbtn" style="width:100%;margin-top:6px" onclick="const v=$('ldCode').value.trim();(/^[A-Za-z0-9]{6,24}-[A-Za-z0-9]{6,20}$/.test(v)&&onlineOK)?cloudPull(v):(v.length<=12&&onlineOK?cloudGet(v):loadCode(v))">📥 นำเข้า</button>`,'savecode')}
 
 // ---------- 13) ออนไลน์ ----------
-const ONL_HOST=h=>/vercel\.app$|(^|\.)1inanovel\.com$/.test(h);const API=ONL_HOST(location.hostname)||location.hostname==='localhost'?'/api/online':'https://1inanovel.com/api/online';
+const ONL_HOST=h=>/vercel\.app$|(^|\.)1inanovel\.com$/.test(h);const API=ONL_HOST(location.hostname)||location.hostname==='localhost'?'/api/online':'https://www.1inanovel.com/api/online';
 let onlineOK=false,onlineN=0,onlineLives=0,chatT=null,chatLast=0,chatMsgs=[];
 const pid=(()=>{let v=LS.get('murim_pid','');if(!v){v=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);LS.set('murim_pid',v)}return v})();
 const pname=()=>LS.get('murim_pname','')||(S?S.name:'จอมยุทธ์นิรนาม');
