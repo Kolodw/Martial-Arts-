@@ -3720,9 +3720,10 @@ const API=/vercel\.app$/.test(location.hostname)||location.hostname==='localhost
 let onlineOK=false,onlineN=0,onlineLives=0,chatT=null,chatLast=0,chatMsgs=[];
 const pid=(()=>{let v=LS.get('murim_pid','');if(!v){v=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);LS.set('murim_pid',v)}return v})();
 const pname=()=>LS.get('murim_pname','')||(S?S.name:'จอมยุทธ์นิรนาม');
-async function api(a,body){const o=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({id:pid},body))}:{};const r=await fetch(API+'?a='+a+(body?'':'&id='+pid),o);const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.err||r.status);return j}
+let _quotaUntil=0;
+async function api(a,body){if(Date.now()<_quotaUntil)throw new Error('quota');const o=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({id:pid},body))}:{};const r=await fetch(API+'?a='+a+(body?'':'&id='+pid),o);const j=await r.json().catch(()=>({}));if(!r.ok){if(j.err==='quota'){_quotaUntil=Date.now()+600000;try{quotaNote()}catch(e){}}throw new Error(j.err||r.status)}return j}
 async function onlinePing(){try{let st='';try{st='&st='+encodeURIComponent(actSnap())}catch(e){}window._lastPing=Date.now();const j=await api('ping&v='+VERSION+st);onlineOK=true;onlineN=j.n||0;onlineLives=j.lives||0;try{bdCheck(j.bd)}catch(e){}try{if('ann' in j)annShow(j.ann)}catch(e){}}catch(e){onlineOK=false}{const t=$('tOnN');if(t){t.textContent=onlineOK?fmt(onlineN):'';t.parentNode.classList.toggle('on',onlineOK)}}const el=$('onlineBadge');if(el){el.style.display=onlineOK?'':'none';el.innerHTML=`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิตที่เคยเล่น`}}
-setTimeout(onlinePing,1500);setInterval(()=>{if(!document.hidden)onlinePing()},60000);
+setTimeout(onlinePing,1500);setInterval(()=>{if(!document.hidden)onlinePing()},120000);
 function myTitle(){if(!S)return'';const ri=realmIdx();return REALMS[ri].n}
 function chatRender(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60;box.innerHTML=chatMsgs.map(m=>`<div class="cm ${m.k==='share'?'share':''}"><span class="ct">${new Date(m.t).toTimeString().slice(0,5)}</span> <b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b> ${m.k==='share'?'📤 ':''}${esc(m.x)} <button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div>`).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';if(near)box.scrollTop=box.scrollHeight}
 async function chatPoll(){try{const j=await api('chat');chatMsgs=(j.m||[]).reverse();chatRender()}catch(e){const b=$('chatBox');if(b)b.innerHTML='<div class="tag2">เชื่อมต่อไม่ได้</div>'}}
@@ -3741,9 +3742,9 @@ async function arenaGo(){if(arenaBusy||!S)return;if(S.arY===S.age&&(S.arN||0)>=3
   if(win){S.fame+=10;joy(3)}else S.hp-=R(5,15);api('arenaRes',{w:win?1:0,n:pname(),on:o.n}).catch(()=>{});
   log(`⚔️ ประลองเงา: ${win?'ชนะ':'แพ้'} <b>${esc(o.n)}</b> (${esc(o.r)} · พลัง ${fmt(o.p)})${win?' · ชื่อเสียง +10':''}`,win?'good':'bad');render();openOnline('arena')}catch(e){toast('เชื่อมต่อไม่ได้')}finally{arenaBusy=false}}
 async function openOnline(tab){tab=tab||'chat';clearInterval(chatT);const tabs=[['chat','💬 แชทโลก'],['live','👁 ดูคนอื่นเล่น'],['board','🏆 ทำเนียบ'],['arena','⚔️ ประลองเงา'],['me','⚙️ ชื่อ']].map(t=>`<button class="tabb ${t[0]===tab?'on':''}" onclick="${t[0]==='live'?'openLiveList()':`openOnline('${t[0]}')`}">${t[1]}</button>`).join('');
- const head=`<button class="xbtn" onclick="clearInterval(chatT);closeM()">✕</button><h3>🌐 ออนไลน์</h3><p class="tag2">${onlineOK?`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิต`:'🔴 ยังเชื่อมต่อเซิร์ฟเวอร์ไม่ได้'}${/vercel\.app$/.test(location.hostname)?'':' · ระบบออนไลน์ใช้ได้บนเว็บ hahah-gamma.vercel.app'}</p><div class="tabs">${tabs}</div>`;
- if(!onlineOK){modal(head+`<p class="tag2">ระบบออนไลน์ต้องเปิดฐานข้อมูลก่อน หรือเครือข่ายตอนนี้ใช้ไม่ได้</p><button class="gbtn" style="width:100%" onclick="onlinePing().then(()=>openOnline('${tab}'))">ลองใหม่</button>`,'online');return}
- if(tab==='chat'){modal(head+`<div id="chatBox" class="chatbox"><div class="tag2">กำลังโหลด…</div></div><div class="chatin"><input id="chatIn" maxlength="200" placeholder="พิมพ์ข้อความ… (ลิงก์และคำหยาบถูกปิด)" onkeydown="if(event.key==='Enter')chatSend()"><button class="pbtn" onclick="chatSend()">ส่ง</button></div>${S?'<button class="gbtn" style="width:100%;margin-top:6px" onclick="shareLife()">📤 แชร์ชีวิตตอนนี้เข้าแชท</button>':''}<p class="tag2">⚑ รายงานข้อความที่ผิดกฎ · รายงานครบ 5 คนข้อความจะถูกซ่อน</p>`,'online');chatPoll();chatT=setInterval(()=>{if($('modal').dataset.k!=='online'||!$('chatBox'))return clearInterval(chatT);if(!document.hidden)chatPoll()},6000)}
+ const head=`<button class="xbtn" onclick="clearInterval(chatT);closeM()">✕</button><h3>🌐 ออนไลน์</h3><p class="tag2">${onlineOK?`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิต`:Date.now()<_quotaUntil?'🛠️ ระบบออนไลน์ปิดชั่วคราว':'🔴 ยังเชื่อมต่อเซิร์ฟเวอร์ไม่ได้'}${/vercel\.app$/.test(location.hostname)?'':' · ระบบออนไลน์ใช้ได้บนเว็บ hahah-gamma.vercel.app'}</p><div class="tabs">${tabs}</div>`;
+ if(!onlineOK){modal(head+`<p class="tag2">${Date.now()<_quotaUntil?'แชทโลก ทำเนียบ และดูคนอื่นเล่น ปิดชั่วคราว ข้อมูลทั้งหมดยังอยู่ครบ จะกลับมาเร็วๆ นี้ — ระหว่างนี้เล่นเกมได้ตามปกติ เซฟในเครื่องปลอดภัย':'ระบบออนไลน์ต้องเปิดฐานข้อมูลก่อน หรือเครือข่ายตอนนี้ใช้ไม่ได้'}</p><button class="gbtn" style="width:100%" onclick="onlinePing().then(()=>openOnline('${tab}'))">ลองใหม่</button>`,'online');return}
+ if(tab==='chat'){modal(head+`<div id="chatBox" class="chatbox"><div class="tag2">กำลังโหลด…</div></div><div class="chatin"><input id="chatIn" maxlength="200" placeholder="พิมพ์ข้อความ… (ลิงก์และคำหยาบถูกปิด)" onkeydown="if(event.key==='Enter')chatSend()"><button class="pbtn" onclick="chatSend()">ส่ง</button></div>${S?'<button class="gbtn" style="width:100%;margin-top:6px" onclick="shareLife()">📤 แชร์ชีวิตตอนนี้เข้าแชท</button>':''}<p class="tag2">⚑ รายงานข้อความที่ผิดกฎ · รายงานครบ 5 คนข้อความจะถูกซ่อน</p>`,'online');chatPoll();chatT=setInterval(()=>{if($('modal').dataset.k!=='online'||!$('chatBox'))return clearInterval(chatT);if(!document.hidden)chatPoll()},10000)}
  else if(tab==='board'){modal(head+'<div class="tag2">กำลังโหลด…</div>','online');try{const j=await api('board');const row=(e,i)=>`<div class="item brd ${e.lid?'click':''}" ${e.lid?`onclick="openLifeView('${e.lid}')"`:''}><div class="h"><b>${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${esc(e.n)}</b><span class="px">${fmt(e.s)}</span></div><p class="tag2">${esc(e.r)} · ${esc(e.f)} · อายุ ${e.age}${e.x?' · ☁️ เซียน':''}${e.cu?' · ✍️':''}<br>${esc(e.c||'')}${e.lid?`<br>${e.pub?'👁 แตะเพื่อดูชีวิตนี้':'🔒 ส่วนตัว'}`:''}</p></div>`;
    const bw=openOnline._bw!=null?openOnline._bw:(S?(S.beastMode?2:S.xian?1:0):(CFG.xian?1:0));const wf=e=>bw===2?!!e.bm:(!e.bm&&(e.x?1:0)===bw);const T=(j.top||[]).filter(wf).slice(0,20),Pv=(j.prev||[]).filter(wf).slice(0,3);
    modal(head+`<div class="tabs"><button class="tabb ${bw===0?'on':''}" onclick="openOnline._bw=0;openOnline('board')">⚔️ ยุทธภพ</button><button class="tabb ${bw===1?'on':''}" onclick="openOnline._bw=1;openOnline('board')">☁️ โลกเทพเซียน</button><button class="tabb ${bw===2?'on':''}" onclick="openOnline._bw=2;openOnline('board')">🐾 สัตว์อสูร</button></div><p class="tag2">คะแนนชีวิตสูงสุดของสัปดาห์นี้ แยกตามโลก (รีเซ็ตทุกวันจันทร์) · ส่งอัตโนมัติเมื่อสิ้นชีวิต</p>${T.map(row).join('')||'<p class="tag2">ยังไม่มีใครขึ้นทำเนียบสัปดาห์นี้</p>'}${Pv.length?`<h4 style="margin:10px 0 4px">สามอันดับแรกสัปดาห์ก่อน</h4>`+Pv.map(row).join(''):''}${(j.arena||[]).length?`<h4 style="margin:10px 0 4px">⚔️ ยอดนักประลองสัปดาห์นี้</h4>`+j.arena.map((e,i)=>`<div class="tag2">${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${esc(e.n)} — ชนะ ${e.w} ครั้ง</div>`).join(''):''}`,'online')}catch(e){modal(head+'<p class="tag2">โหลดไม่ได้</p>','online')}}
@@ -3938,7 +3939,7 @@ function endAnim(score){const root=$('end');root.classList.remove('endanim');voi
 // ---------- v4.7 เซฟคลาวด์อัตโนมัติ · ดูคนอื่นเล่น ----------
 const ctok=(()=>{let v=LS.get('murim_ctok','');if(!v){v=Math.random().toString(36).slice(2,12)+Math.random().toString(36).slice(2,6);LS.set('murim_ctok',v)}return v})();
 let cloudT=0,cloudBusy=false;
-async function cloudAuto(force){if(!onlineOK||!S||!S.alive||cloudBusy)return;if(!force&&Date.now()-cloudT<90000)return;cloudBusy=true;
+async function cloudAuto(force){if(!onlineOK||!S||!S.alive||cloudBusy)return;if(!force&&Date.now()-cloudT<300000)return;cloudBusy=true;
  try{const d=saveCodeRaw();if(!d)return;await api('csave',{tk:ctok,d,sl:S.slot||1});cloudT=Date.now();LS.set('murim_cloudT',cloudT);const e=$('cloudTag');if(e){e.textContent='☁️';e.title='เซฟบนเซิร์ฟเวอร์แล้ว';e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1500)}}catch(e){}finally{cloudBusy=false}}
 function saveCodeRaw(){const d=LS.get(slotKey(S.slot||1),null);if(!d)return'';try{return btoa(unescape(encodeURIComponent(JSON.stringify(d))))}catch(e){return''}}
 const myCloudCode=()=>(pid+'-'+ctok).toUpperCase();
@@ -3962,9 +3963,9 @@ function liveSnap(){const ri=realmIdx(),o=meLook();const feed=[...document.query
   q:questList().map(q=>q.ic+' '+q.n+' — '+String(q.p).replace(/<[^>]+>/g,'')).slice(0,12),
   ppl:peopleAll().filter(p=>p.alive).slice(0,14).map(p=>p.role.replace(/<[^>]+>/g,'')+' '+p.n),
   sys:S.sys?sysName()+' Lv.'+S.sys.lv:'',feed}}
-async function liveSend(now){clearTimeout(liveT);if(!onlineOK||!S){liveT=setTimeout(liveSend,20000);liveBadge();return}if(specAllowed()===null&&S.alive&&!modalOpen&&$('game').classList.contains('on')&&!choice._cur)specAsk();
+async function liveSend(now){clearTimeout(liveT);if(!onlineOK||!S||Date.now()<_quotaUntil){liveT=setTimeout(liveSend,60000);liveBadge();return}if(specAllowed()===null&&S.alive&&!modalOpen&&$('game').classList.contains('on')&&!choice._cur)specAsk();
  const v=specAllowed();try{if(!v||!S.alive||!$('game').classList.contains('on')){if(!v&&S.alive&&$('game').classList.contains('on')){const j2=await api('live',{spec:0,s:xT(JSON.stringify(liveSnap()))});if(j2&&j2.lr)logUp()}else if(v===0||!S.alive)await api('live',{spec:0});watchN=0}else{const j=await api('live',{spec:1,s:xT(JSON.stringify(liveSnap()))});watchN=j.w||0;if(j.lr)logUp()}}catch(e){}
- liveBadge();liveT=setTimeout(liveSend,watchN>0?5000:20000)}
+ liveBadge();liveT=setTimeout(liveSend,watchN>0?6000:(document.hidden?180000:60000))}
 setTimeout(liveSend,4000);
 async function openLiveList(){const head=`<button class="xbtn" onclick="closeM()">✕</button><h3>👁 ดูคนอื่นเล่น</h3><p class="tag2">ผู้เล่นที่อนุญาตให้ดู · ดูได้อย่างเดียว กดใช้อะไรไม่ได้</p><div class="tabs"><button class="tabb" onclick="openOnline('chat')">← ออนไลน์</button></div>`;
  modal(head+'<div class="tag2">กำลังโหลด…</div>','online');try{const j=await api('livelist');
@@ -5962,7 +5963,7 @@ function allyAdd(n,src){S.allies=S.allies||[];if(S.allies.some(a=>a.n===n))retur
 {const _f3=fight;fight=function(name,ep){const w=_f3.apply(this,arguments);try{if(!w&&S&&S.alive&&S.allies&&S.allies.length&&Math.random()<.22){const a=ch(S.allies);log(`🤝 พันธมิตร <b>${esc(a.n)}</b> (${a.src}) ปรากฏตัวมาช่วยไว้ได้ทันเวลา!`,'epic');return true}}catch(e){}return w}}
 // ---- พบผู้เล่นจริงแบบเรียลไทม์ ----
 let meetC=null,meetT=0;
-async function meetPoll(){try{if(!onlineOK||!S||!S.alive||S.beastMode||paused||document.hidden)return;if(Date.now()-meetT<25000)return;meetT=Date.now();
+async function meetPoll(){try{if(!onlineOK||!S||!S.alive||S.beastMode||paused||document.hidden)return;if(Date.now()-meetT<90000)return;meetT=Date.now();
  const j=await api('meet',{n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age});meetC=j.o?Object.assign(j.o,{at:Date.now()}):null;
  (j.inbox||[]).forEach(m=>{if(!S||!S.alive)return;if(m.kind==='ally'){if(m.ok){allyAdd(m.n,'ผู้เล่นจริง');log(`🤝 ผู้เล่น <b>${esc(m.n)}</b> สาบานเป็นพันธมิตรกับคุณข้ามจักรวาล — เขาจะมาช่วยตอนจวนตัว`,'epic',true)}}
   else{if(m.win){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.08));S.fame=Math.max(0,S.fame-5);log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — คุณพ่ายแพ้ บาดเจ็บเล็กน้อย`,'bad',true)}else{S.fame+=20;log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — แต่คุณเป็นฝ่ายชนะ! ชื่อเสียง +20`,'epic',true)}}});try{render()}catch(e){}}catch(e){}}
@@ -6737,8 +6738,8 @@ function actSnap(){const n=Date.now(),sc=(document.querySelector('.screen.on')||
  if(S){o.nm=String(S.name||'').slice(0,20);o.ag=S.age;o.al=S.alive?1:0;o.au=auto?1:0;o.pa=paused?1:0;o.sp=speed;o.w=S.beastMode&&!S.beastMode.human?'b':S.xt?'g':S.xian?'x':'m';o.yr=window._lastYr?Math.round((n-window._lastYr)/1000):-1;try{o.ri=REALMS[realmIdx()].n}catch(e){}}
  return JSON.stringify(o)}
 // แท็บซ่อนอยู่ก็ยังรายงานทุก 4 นาที และแจ้งทันทีตอนสลับแท็บ
-setInterval(()=>{if(document.hidden&&Date.now()-(window._lastPing||0)>=240000)onlinePing()},60000);
-document.addEventListener('visibilitychange',()=>{if(Date.now()-(window._lastPing||0)>15000)onlinePing()});
+setInterval(()=>{if(document.hidden&&Date.now()-(window._lastPing||0)>=600000)onlinePing()},120000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Date.now()-(window._lastPing||0)>60000)onlinePing()});
 
 // ---------- รีเฟรชเว็บ/มีอัปเดต แล้วกลับมาเล่นต่อที่เดิม ----------
 function resumeMark(){try{if(S&&S.alive&&S.slot&&$('game').classList.contains('on'))LS.set('murim_resume',{slot:S.slot,t:Date.now(),sp:speed,au:auto?1:0,pa:paused&&!(typeof _awayPaused!=='undefined'&&_awayPaused)?1:0})}catch(e){}}
@@ -6752,6 +6753,11 @@ function resumeClear(){try{LS.del('murim_resume')}catch(e){}}
  loadGame(r.slot);if(!S||!S.alive)return;
  if([0,1,2,4,8,16].includes(r.sp))speed=r.sp;auto=!!r.au;if(r.pa)paused=true;render();
  toast('▶ กลับมาเล่นต่อจากที่ค้างไว้')}catch(e){console.warn('resume failed',e)}})();
+
+// ---------- แจ้งผู้เล่นเมื่อระบบออนไลน์หยุดชั่วคราว ----------
+function quotaNote(){if(quotaNote._t&&Date.now()-quotaNote._t<600000)return;quotaNote._t=Date.now();onlineOK=false;
+ toast('🌐 ระบบออนไลน์ (แชท ทำเนียบ ดูคนอื่นเล่น) ปิดชั่วคราว — เกมยังเล่นได้ปกติ เซฟในเครื่องปลอดภัย');
+ try{if($('modal').dataset.k==='online'){const b=$('chatBox')||$('modal').querySelector('.tag2');if(b)b.innerHTML='<div class="tag2">🌐 ระบบออนไลน์ปิดชั่วคราว ข้อมูลทั้งหมดยังอยู่ครบ จะกลับมาเร็วๆ นี้ — ระหว่างนี้เล่นเกมได้ตามปกติ</div>'}}catch(e){}}
 </script>
 </body>
 </html>

@@ -12,6 +12,9 @@ async function cmd(...args) {
 async function pipe(list) {
   const r = await fetch(URL_ + '/pipeline', { method: 'POST', headers: { Authorization: `Bearer ${TOKEN}` }, body: JSON.stringify(list) });
   const j = await r.json();
+  if (!Array.isArray(j)) throw new Error((j && j.error) || 'kv');
+  const bad = j.find(x => x && x.error && /max requests limit|max daily request/i.test(x.error));
+  if (bad) throw new Error(bad.error);
   return j.map(x => x.result);
 }
 function week(d = new Date()) {
@@ -56,6 +59,7 @@ function uaMeta(req, now) {
   const org = String(req.headers['origin'] || req.headers['referer'] || '').replace(/^https?:\/\//, '').split('/')[0].slice(0, 60);
   return { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(qOf(req).v || '').slice(0, 8), c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
 }
+let QUOTA_AT = 0;
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
@@ -68,6 +72,8 @@ module.exports = async (req, res) => {
   if (typeof b === 'string') { try { b = JSON.parse(b) } catch { b = {} } }
   const id = req.method === 'GET' ? qOf(req).id : b.id;
   const now = Date.now(), W = week();
+  // ฐานข้อมูลเต็มโควตา: ตอบทันทีโดยไม่ยิงซ้ำ (ยกเว้นหน้าผู้ดูแลที่ต้องเห็นสถานะ)
+  if (QUOTA_AT && now - QUOTA_AT < 120e3 && a !== 'admin' && a !== 'kvdiag') return res.status(503).json({ err: 'quota' });
   try {
     if (a === 'ping') {
       if (okId(id)) {
@@ -78,7 +84,7 @@ module.exports = async (req, res) => {
         try { const r = JSON.parse(String(qOf(req).st || '').slice(0, 600) || 'null'); if (r && typeof r === 'object') { const S0 = v => String(v == null ? '' : v).replace(/[<>]/g, '').slice(0, 40), N0 = v => Math.max(-1, Math.min(1e7, Math.round(+v || 0))); act = { sc: S0(r.sc), md: S0(r.md), ch: r.ch ? 1 : 0, hd: r.hd ? 1 : 0, ia: N0(r.ia), er: N0(r.er), em: String(r.em || '').replace(/[<>]/g, '').slice(0, 120), nm: S0(r.nm), ag: N0(r.ag), al: r.al ? 1 : 0, au: r.au ? 1 : 0, pa: r.pa ? 1 : 0, sp: N0(r.sp), w: S0(r.w).slice(0, 1), yr: N0(r.yr), ri: S0(r.ri), v: S0(qOf(req).v).slice(0, 8), t: now } } } catch {}
         if (meta.b !== 'บอท') await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)], ...(act ? [['HSET', 'oa', id, JSON.stringify(act)]] : [])]);
       }
-      const [, n, lives, annV] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 300e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann']]);
+      const [, n, lives, annV] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 600e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann']]);
       let ann = null; try { ann = annV ? JSON.parse(annV) : null } catch {}
       ann = await annPoll(ann, id);
       return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7), ann });
@@ -92,7 +98,7 @@ module.exports = async (req, res) => {
         res.setHeader('Location', '?a=admin&key=' + encodeURIComponent(AK));
         return res.status(302).end();
       }
-      const ids = await cmd('ZRANGEBYSCORE', 'online', now - 300e3, '+inf');
+      const ids = await cmd('ZRANGEBYSCORE', 'online', now - 600e3, '+inf');
       const metas = ids && ids.length ? await cmd('HMGET', 'om', ...ids) : [];
       const acts = ids && ids.length ? await cmd('HMGET', 'oa', ...ids) : [];
       const SCN = { title: 'หน้าแรก', birth: 'หน้าสุ่มชาติกำเนิด', create: 'หน้าสร้างตัวละคร', end: 'หน้าสรุปชีวิต', game: 'ในเกม' };
@@ -100,7 +106,7 @@ module.exports = async (req, res) => {
       const mins = sec => sec >= 3600 ? Math.round(sec / 3600) + ' ชม.' : sec >= 60 ? Math.round(sec / 60) + ' นาที' : sec + ' วิ';
       const stat = (a, seen) => {
         if (!a) return { k: 9, t: '⚪ ไม่มีข้อมูล (ยังใช้เวอร์ชันเก่า)', c: '#888' };
-        if (!a.hd && seen > 150) return { k: 8, t: '⚫ เงียบไป ' + mins(seen) + ' (ปิดเว็บ/เน็ตหลุด)', c: '#888' };
+        if (!a.hd && seen > 300) return { k: 8, t: '⚫ เงียบไป ' + mins(seen) + ' (ปิดเว็บ/เน็ตหลุด)', c: '#888' };
         if (a.er > 0 && a.sc === 'game') return { k: 0, t: '🔴 เจอ error ' + a.er + ' ครั้งใน 10 นาที', c: '#ff6b6b', x: a.em };
         if (a.hd) return { k: 6, t: '🙈 สลับไปแท็บอื่น/ย่อจอ', c: '#aaa' };
         if (a.sc !== 'game') return { k: 5, t: '🏠 อยู่' + (SCN[a.sc] || a.sc || 'หน้าอื่น'), c: '#9ad' };
@@ -128,10 +134,10 @@ module.exports = async (req, res) => {
       const e = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
       const K = encodeURIComponent(AK);
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      return res.status(200).send(`<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="30"><title>ผู้ดูแล · 1 ใน นวนิยาย</title>
+      return res.status(200).send(`<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="60"><title>ผู้ดูแล · 1 ใน นวนิยาย</title>
 <style>.pl{background:#211d2a;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:14px}.plh{display:flex;flex-wrap:wrap;gap:6px;justify-content:space-between;align-items:baseline}.plh small,.pl small{color:#aaa}body{font-family:system-ui,sans-serif;background:#16131c;color:#eee;margin:0;padding:14px;max-width:760px;margin:auto}h1{font-size:20px}h2{font-size:16px;margin-top:22px;color:#f0c860}table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:6px;border-bottom:1px solid #333;text-align:left}.c{display:inline-block;background:#2a2433;border-radius:8px;padding:8px 12px;margin:4px 6px 4px 0}.c b{font-size:20px;display:block;color:#f0c860}.bug{background:#221d2a;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:14px}.bug.done{opacity:.55}a{color:#8fd0ff}small{opacity:.6}</style></head><body>
-<h1>🛡️ หน้าผู้ดูแล</h1><div><span class="c"><b>${rows.filter(r => r.b !== 'บอท').length}</b>ออนไลน์ (5 นาที)</span><span class="c"><b>${+(lives || 0)}</b>ชีวิตที่จบแล้ว</span><span class="c"><b>${bugs.length}</b>เรื่องบนกระดานบั๊ก</span><span class="c"><b>${rv || 0}</b>ความคิดเห็น</span></div>
-<h2>คนที่ออนไลน์ตอนนี้ <small style="font-weight:normal;color:#aaa">· รีเฟรชเองทุก 30 วิ</small></h2><p><small>🟢 กำลังเล่น · 🤔/📋 เลือกเหตุการณ์/เปิดหน้าต่าง · ⏸ หยุดเกม · 😴 เปิดทิ้งไว้ · 🙈 สลับแท็บ · 🏠 อยู่หน้าอื่น · 🔴 อาจค้าง/มี error</small></p>${rows.map(r => { const a = r.a || {}; return `<div class="pl" style="border-left:4px solid ${r.s.c}"><div class="plh"><b style="color:${r.s.c}">${e(r.s.t)}</b><small>${e(r.id)} · ${e(r.d)} · ${e(r.b)} · ${e(r.c)} · อัปเดต ${r.ago == null ? '-' : r.ago + ' วิ'}ก่อน${a.v ? ' · v' + e(a.v) : ''}</small></div>${a.nm ? `<div>👤 <b>${e(a.nm)}</b> อายุ ${e(a.ag)} ปี · ${e(WN[a.w] || '')} · ${e(a.ri || '')}${a.sp ? ' · ความเร็ว ' + e(a.sp) + '×' : ''}</div>` : ''}${r.a ? `<div><small>หน้า: ${e(SCN[a.sc] || a.sc || '-')}${a.md ? ' · หน้าต่าง: ' + e(MDN[a.md] || a.md) : ''} · แตะล่าสุด ${mins(a.ia)}ก่อน${a.sc === 'game' && a.yr >= 0 ? ' · ปีในเกมล่าสุดผ่านไปเมื่อ ' + mins(a.yr) + 'ก่อน' : ''}</small></div>` : ''}${r.s.x ? `<div><small style="color:#ff9b9b">error ล่าสุด: ${e(r.s.x)}</small></div>` : ''}</div>` }).join('') || '<p><small>ตอนนี้ไม่มีใครออนไลน์</small></p>'}
+<h1>🛡️ หน้าผู้ดูแล</h1><div><span class="c"><b>${rows.filter(r => r.b !== 'บอท').length}</b>ออนไลน์ (10 นาที)</span><span class="c"><b>${+(lives || 0)}</b>ชีวิตที่จบแล้ว</span><span class="c"><b>${bugs.length}</b>เรื่องบนกระดานบั๊ก</span><span class="c"><b>${rv || 0}</b>ความคิดเห็น</span></div>
+<h2>คนที่ออนไลน์ตอนนี้ <small style="font-weight:normal;color:#aaa">· รีเฟรชเองทุก 1 นาที</small></h2><p><small>🟢 กำลังเล่น · 🤔/📋 เลือกเหตุการณ์/เปิดหน้าต่าง · ⏸ หยุดเกม · 😴 เปิดทิ้งไว้ · 🙈 สลับแท็บ · 🏠 อยู่หน้าอื่น · 🔴 อาจค้าง/มี error</small></p>${rows.map(r => { const a = r.a || {}; return `<div class="pl" style="border-left:4px solid ${r.s.c}"><div class="plh"><b style="color:${r.s.c}">${e(r.s.t)}</b><small>${e(r.id)} · ${e(r.d)} · ${e(r.b)} · ${e(r.c)} · อัปเดต ${r.ago == null ? '-' : r.ago + ' วิ'}ก่อน${a.v ? ' · v' + e(a.v) : ''}</small></div>${a.nm ? `<div>👤 <b>${e(a.nm)}</b> อายุ ${e(a.ag)} ปี · ${e(WN[a.w] || '')} · ${e(a.ri || '')}${a.sp ? ' · ความเร็ว ' + e(a.sp) + '×' : ''}</div>` : ''}${r.a ? `<div><small>หน้า: ${e(SCN[a.sc] || a.sc || '-')}${a.md ? ' · หน้าต่าง: ' + e(MDN[a.md] || a.md) : ''} · แตะล่าสุด ${mins(a.ia)}ก่อน${a.sc === 'game' && a.yr >= 0 ? ' · ปีในเกมล่าสุดผ่านไปเมื่อ ' + mins(a.yr) + 'ก่อน' : ''}</small></div>` : ''}${r.s.x ? `<div><small style="color:#ff9b9b">error ล่าสุด: ${e(r.s.x)}</small></div>` : ''}</div>` }).join('') || '<p><small>ตอนนี้ไม่มีใครออนไลน์</small></p>'}
 <h2>การเปิดหน้าออนไลน์ (7 วัน)</h2><p><small>ตัวเลข = คนไม่ซ้ำ / จำนวนครั้ง · เริ่มนับตั้งแต่ v10.2</small></p><table><tr><th>วัน</th><th>คน</th>${TP.map(p => `<th>${p[1]}</th>`).join('')}</tr>${trows.map(r => `<tr><td>${r.d.slice(5)}</td><td>${r.u}</td>${TP.map((p, i) => `<td>${r.up[i]} / ${r.c[p[0]] || 0}</td>`).join('')}</tr>`).join('')}</table>
 <h2>คลิกล่าสุด</h2><table><tr><th>รหัส</th><th>หน้า</th><th>เครื่อง</th><th>เวลา</th></tr>${tlog.map(x => `<tr><td>${e(x.u)}…</td><td>${e((TP.find(p => p[0] === x.p) || [0, x.p])[1])}</td><td>${e(x.d)}</td><td>${new Date(x.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })}</td></tr>`).join('') || '<tr><td colspan=4>ยังไม่มี</td></tr>'}</table>
 <h2>🐞 error จากเครื่องผู้เล่น <small style="font-weight:normal;color:#aaa">· 200 ครั้งล่าสุด จัดกลุ่มตามข้อความ</small></h2>${Object.values(jsg).sort((g1, g2) => g2.last.t - g1.last.t).slice(0, 25).map(g => `<div class="pl" style="border-left:4px solid #ff6b6b"><div class="plh"><b style="color:#ff9b9b">${e(g.last.m)}</b><small>${g.n} ครั้ง · ${g.users.size} คน · v${e([...g.vers].join(', v'))}</small></div><div><small>ล่าสุด ${new Date(g.last.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })} · ${e(g.last.d)}${g.last.l ? ' · บรรทัด ' + g.last.l + ':' + g.last.c : ''} · หน้า ${e(g.last.x.sc)}${g.last.x.md ? ' · หน้าต่าง ' + e(g.last.x.md) : ''}${g.last.x.ch ? ' · เหตุการณ์ ' + e(g.last.x.ch) : ''}${g.last.x.ag ? ' · อายุ ' + g.last.x.ag + ' · ' + e(g.last.x.fo) + ' · ' + e(g.last.x.w) : ''}</small></div>${g.last.s ? `<div><small style="color:#aaa;word-break:break-all">${e(g.last.s)}</small></div>` : ''}</div>`).join('') || '<p><small>ยังไม่มี error</small></p>'}
@@ -226,7 +232,7 @@ module.exports = async (req, res) => {
         const l = [];
         all.forEach(([x, , pv], i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, w: cnt[i] || 0, pv, m: (() => { try { return JSON.parse(lms[i]) } catch { return null } })() }) } catch {} });
         await pipe([['ZREMRANGEBYSCORE', 'livezp', 0, now - 180e3]]);
-        const onIds = await cmd('ZRANGEBYSCORE', 'online', now - 300e3, '+inf');
+        const onIds = await cmd('ZRANGEBYSCORE', 'online', now - 600e3, '+inf');
         const liveSet = new Set(all.map(x => x[0]));
         const rest = (onIds || []).filter(x => !liveSet.has(x));
         const metas = rest.length ? await cmd('HMGET', 'om', ...rest) : [];
@@ -585,6 +591,11 @@ module.exports = async (req, res) => {
     }
     return res.status(400).json({ err: 'action' });
   } catch (e) {
+    if (/max requests limit|max daily request/i.test(String(e && e.message))) {
+      QUOTA_AT = Date.now();
+      if (a === 'admin') { res.setHeader('Content-Type', 'text/html; charset=utf-8'); return res.status(503).send(`<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>ผู้ดูแล · ฐานข้อมูลเต็มโควตา</title><style>body{font-family:system-ui,sans-serif;background:#16131c;color:#eee;padding:16px;max-width:680px;margin:auto;line-height:1.6}.b{background:#3a1d24;border:2px solid #ff6b6b;border-radius:10px;padding:12px 14px}code{background:#2a2433;padding:2px 6px;border-radius:4px}</style></head><body><h1>🛡️ หน้าผู้ดูแล</h1><div class="b"><b>🔴 ระบบออนไลน์หยุดชั่วคราว — ฐานข้อมูล Upstash ใช้โควตาคำสั่งรายเดือนหมดแล้ว</b><br>ข้อมูลทั้งหมดยังอยู่ครบ (แชท ทำเนียบ กระดานบั๊ก ความคิดเห็น) แค่อ่าน/เขียนไม่ได้จนกว่าโควตาจะรีเซ็ต หรืออัปเกรดฐานข้อมูลที่ console.upstash.com<br><small>ข้อความจากฐานข้อมูล: <code>${String(e.message).replace(/[<>]/g, '').slice(0, 200)}</code></small></div><p>ตัวเกมยังเล่นได้ตามปกติ และเซฟในเครื่องผู้เล่นปลอดภัย</p></body></html>`) }
+      return res.status(503).json({ err: 'quota' });
+    }
     return res.status(500).json({ err: 'server' });
   }
 };
