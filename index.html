@@ -973,8 +973,9 @@ function autoFocus(){if(S.beastMode&&!S.beastMode.human){S.focus=S.hp<S.maxHp*.4
 }
 
 // ============ MODAL ============
-function modal(html,k=''){$('modal').innerHTML=xT(html);$('modal').dataset.k=k;modalOpen=true;if((k==='choice'||k==='duel')&&revealQ.length){pendModal=true;$('mask').classList.remove('on')}else $('mask').classList.add('on')}
-function closeM(){pendModal=false;$('mask').classList.remove('on');modalOpen=false;$('modal').dataset.k=''}
+var _mSeq=0,_apiS0=null;
+function modal(html,k=''){if(_apiS0!=null&&_apiS0!==_mSeq&&(k==='online'||k==='spec'||k==='lifeview')){_apiS0=null;return}_apiS0=null;_mSeq++;$('modal').innerHTML=xT(html);$('modal').dataset.k=k;modalOpen=true;if((k==='choice'||k==='duel')&&revealQ.length){pendModal=true;$('mask').classList.remove('on')}else $('mask').classList.add('on')}
+function closeM(){_mSeq++;pendModal=false;$('mask').classList.remove('on');modalOpen=false;$('modal').dataset.k=''}
 
 // ============ COMBAT ============
 function fight(name,ep){
@@ -3731,8 +3732,16 @@ let onlineOK=false,onlineN=0,onlineLives=0,chatT=null,chatLast=0,chatMsgs=[];
 const pid=(()=>{let v=LS.get('murim_pid','');if(!v){v=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);LS.set('murim_pid',v)}return v})();
 const pname=()=>LS.get('murim_pname','')||(S?S.name:'จอมยุทธ์นิรนาม');
 let _quotaUntil=0;
-async function api(a,body){if(Date.now()<_quotaUntil)throw new Error('quota');const o=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({id:pid},body))}:{};const r=await fetch(API+'?a='+a+(body?'':'&id='+pid),o);const j=await r.json().catch(()=>({}));if(!r.ok){if(j.err==='quota'){_quotaUntil=Date.now()+600000;try{quotaNote()}catch(e){}}throw new Error(j.err||r.status)}return j}
-async function onlinePing(){try{let st='';try{st='&st='+encodeURIComponent(actSnap())}catch(e){}window._lastPing=Date.now();const j=await api('ping&v='+VERSION+st);onlineOK=true;onlineN=j.n||0;onlineLives=j.lives||0;try{bdCheck(j.bd)}catch(e){}try{if('ann' in j)annShow(j.ann)}catch(e){}}catch(e){onlineOK=false}{const t=$('tOnN');if(t){t.textContent=onlineOK?fmt(onlineN):'';t.parentNode.classList.toggle('on',onlineOK)}}const el=$('onlineBadge');if(el){el.style.display=onlineOK?'':'none';el.innerHTML=`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิตที่เคยเล่น`}}
+const _apiFly={};
+async function api(a,body){if(Date.now()<_quotaUntil)throw new Error('quota');const s0=_mSeq,key=body?null:a;
+ const run=async()=>{for(let t=0;;t++){const ctl=typeof AbortController!=='undefined'?new AbortController():null,tm=setTimeout(()=>{try{ctl&&ctl.abort()}catch(e){}},body?15000:10000);
+  try{const o=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({id:pid},body))}:{};if(ctl)o.signal=ctl.signal;
+   const r=await fetch(API+'?a='+a+(body?'':'&id='+pid),o);const j=await r.json().catch(()=>({}));
+   if(!r.ok){if(j.err==='quota'){_quotaUntil=Date.now()+600000;try{quotaNote()}catch(e){}}const e=new Error(j.err||r.status);e.http=r.status;e.q=j.err==='quota';throw e}return j}
+  catch(e){const net=e.name==='AbortError'||!e.http||e.http>=500;if(body||t>=1||e.q||!net)throw e.name==='AbortError'?new Error('timeout'):e;await new Promise(r=>setTimeout(r,700))}finally{clearTimeout(tm)}}};
+ let p;if(key&&_apiFly[key])p=_apiFly[key];else{p=run();if(key){_apiFly[key]=p;p.then(()=>{delete _apiFly[key]},()=>{delete _apiFly[key]})}}
+ const j=await p;_apiS0=s0;setTimeout(()=>{if(_apiS0===s0)_apiS0=null},0);return j}
+async function onlinePing(){if(onlinePing._f)return;onlinePing._f=1;try{let st='';try{st='&st='+encodeURIComponent(actSnap())}catch(e){}window._lastPing=Date.now();const j=await api('ping&v='+VERSION+st);onlineOK=true;onlineN=j.n||0;onlineLives=j.lives||0;try{bdCheck(j.bd)}catch(e){}try{if('ann' in j)annShow(j.ann)}catch(e){}onlinePing._e=0}catch(e){onlinePing._e=(onlinePing._e||0)+1;if(onlinePing._e>=2||e.message==='quota'||!onlineOK)onlineOK=false;else setTimeout(()=>{onlinePing()},4000)}finally{onlinePing._f=0}{const t=$('tOnN');if(t){t.textContent=onlineOK?fmt(onlineN):'';t.parentNode.classList.toggle('on',onlineOK)}}const el=$('onlineBadge');if(el){el.style.display=onlineOK?'':'none';el.innerHTML=`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิตที่เคยเล่น`}}
 setTimeout(onlinePing,1500);setInterval(()=>{if(!document.hidden)onlinePing()},120000);
 function myTitle(){if(!S)return'';const ri=realmIdx();return REALMS[ri].n}
 function chatRender(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60;box.innerHTML=chatMsgs.map(m=>`<div class="cm ${m.k==='share'?'share':''}"><span class="ct">${new Date(m.t).toTimeString().slice(0,5)}</span> <b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b> ${m.k==='share'?'📤 ':''}${esc(m.x)} <button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div>`).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';if(near)box.scrollTop=box.scrollHeight}

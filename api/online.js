@@ -27,7 +27,7 @@ async function upPipe(list) {
 
 // ---------- Valkey/Redis (RESP2) แบบไม่ต้องลงแพ็กเกจเพิ่ม ----------
 const net = require('net'), tls = require('tls');
-const VK = { sock: null, ready: null, buf: Buffer.alloc(0), q: [] };
+const VK = { sock: null, ready: null, buf: Buffer.alloc(0), q: [], io: 0 };
 class RErr { constructor(m) { this.message = m } }
 function vkParse(buf, i) {
   if (i >= buf.length) return null;
@@ -56,7 +56,7 @@ function vkEnc(args) {
   return s;
 }
 function vkDrop(err) {
-  const q = VK.q; VK.q = []; VK.sock = null; VK.ready = null; VK.buf = Buffer.alloc(0);
+  const q = VK.q; VK.q = []; VK.sock = null; VK.ready = null; VK.cur = null; VK.buf = Buffer.alloc(0);
   for (const w of q) w.rej(err || new Error('valkey closed'));
 }
 function vkConnect() {
@@ -67,18 +67,20 @@ function vkConnect() {
     const opt = { host, port, servername: host };
     if (process.env.VALKEY_CA) opt.ca = process.env.VALKEY_CA;
     const s = secure ? tls.connect(opt) : net.connect(opt);
-    s.setNoDelay(true); s.setKeepAlive(true, 30000);
+    VK.cur = s; s.setNoDelay(true); s.setKeepAlive(true, 30000);
     const to = setTimeout(() => { s.destroy(new Error('valkey connect timeout')) }, 8000);
     s.on('data', d => {
+      if (VK.cur !== s) return;
+      VK.io = Date.now();
       VK.buf = VK.buf.length ? Buffer.concat([VK.buf, d]) : d;
       let p = 0;
       for (;;) { const r = vkParse(VK.buf, p); if (!r) break; p = r[1]; const w = VK.q.shift(); if (w) { r[0] instanceof RErr ? w.rej(new Error(r[0].message)) : w.res(r[0]) } }
       VK.buf = p >= VK.buf.length ? Buffer.alloc(0) : VK.buf.subarray(p);
     });
-    s.on('error', e => { clearTimeout(to); vkDrop(e); rej(e) });
-    s.on('close', () => { clearTimeout(to); vkDrop() });
+    s.on('error', e => { clearTimeout(to); if (VK.cur === s) vkDrop(e); rej(e) });
+    s.on('close', () => { clearTimeout(to); if (VK.cur === s) vkDrop() });
     s.once(secure ? 'secureConnect' : 'connect', async () => {
-      clearTimeout(to); VK.sock = s;
+      clearTimeout(to); VK.sock = s; VK.io = Date.now();
       try {
         const user = decodeURIComponent(u.username || ''), pass = decodeURIComponent(u.password || '');
         if (pass) await vkSend(user ? ['AUTH', user, pass] : ['AUTH', pass]);
@@ -91,18 +93,23 @@ function vkConnect() {
 function vkSend(args) {
   return new Promise((res, rej) => {
     if (!VK.sock) return rej(new Error('valkey not connected'));
-    const t = setTimeout(() => rej(new Error('valkey timeout')), 8000);
+    // ไม่ตอบใน 5 วิ = socket ค้าง (เช่นฟังก์ชันถูกแช่แข็งแล้วปลุกขึ้นมา) → ทิ้ง socket ให้คำสั่งถัดไปต่อใหม่
+    const t = setTimeout(() => { rej(new Error('valkey timeout')); const sk = VK.sock; if (sk) { vkDrop(new Error('valkey timeout')); try { sk.destroy() } catch {} } }, 5000);
     VK.q.push({ res: v => { clearTimeout(t); res(v) }, rej: e => { clearTimeout(t); rej(e) } });
     VK.sock.write(vkEnc(args));
   });
 }
-async function vkCmd(...args) { await vkConnect(); return vkSend(args) }
+// socket ที่เงียบนานเกิน 40 วิ มักถูกปิดฝั่งเซิร์ฟเวอร์ไปแล้วแบบไม่บอก — ต่อใหม่ก่อนส่ง
+function vkFresh() { if (VK.sock && Date.now() - VK.io > 40e3 && !VK.q.length) { const sk = VK.sock; vkDrop(); try { sk.destroy() } catch {} } }
+const vkConnErr = e => /not connected|closed|ECONNRESET|EPIPE|ETIMEDOUT|connect timeout|socket hang up|valkey timeout/i.test(String(e && e.message));
+async function vkTry(fn) { vkFresh(); try { await vkConnect(); return await fn() } catch (e) { if (!vkConnErr(e)) throw e; vkDrop(); await vkConnect(); return fn() } }
+async function vkCmd(...args) { return vkTry(() => vkSend(args)) }
 async function vkPipe(list) {
   if (!list.length) return [];
-  await vkConnect();
-  return Promise.all(list.map(a => vkSend(a).catch(e => { if (/NOAUTH|WRONGPASS|closed|timeout|not connected|max requests limit|max daily request|OOM/i.test(e.message)) throw e; return undefined })));
+  return vkTry(() => Promise.all(list.map(a => vkSend(a).catch(e => { if (/NOAUTH|WRONGPASS|closed|timeout|not connected|max requests limit|max daily request|OOM/i.test(e.message)) throw e; return undefined }))));
 }
 
+const jp = x => { try { const v = JSON.parse(x); return v && typeof v === 'object' ? v : null } catch { return null } };
 const cmd = USE_VK ? vkCmd : upCmd;
 const pipe = USE_VK ? vkPipe : upPipe;
 
@@ -222,7 +229,7 @@ module.exports = async (req, res) => {
       const [, n, lives, annV] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 600e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann']]);
       let ann = null; try { ann = annV ? JSON.parse(annV) : null } catch {}
       ann = await annPoll(ann, id);
-      await autoMig();
+      await Promise.race([autoMig(), new Promise(r => setTimeout(r, 1200))]);
       return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7), ann });
     }
     if (a === 'who' || a === 'admin' || a === 'bugfix') {
@@ -266,7 +273,7 @@ module.exports = async (req, res) => {
       const tr = await pipe(tops); let tk = 0;
       const trows = td.map(d => { const h = tr[tk++] || [], c = {}; for (let i = 0; i < h.length; i += 2) c[h[i]] = +h[i + 1]; const u = +tr[tk++] || 0, up = TP.map(p => (+tr[tk++] || 0)); return { d, u, c, up } });
       const tlog = (tr[tk] || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(Boolean);
-      const ds = new Set(done || []), bugs = (bl || []).map(x => JSON.parse(x));
+      const ds = new Set(done || []), bugs = (bl || []).map(jp).filter(Boolean);
       let brd = []; try { const hid = new Set((await cmd('SMEMBERS', 'bdhide')) || []); hid.add('f18abdmw8fuj8d'); brd = ((await cmd('ZREVRANGE', 'bd2:' + W, 0, 39)) || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(x => x && x.lid && !hid.has(x.lid)) } catch {}
       const e = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
       const K = encodeURIComponent(AK);
@@ -306,13 +313,13 @@ module.exports = async (req, res) => {
       ops.push(['LRANGE', 'trklog', 0, 99]);
       const r = await pipe(ops); let k = 0;
       const out = days.map(d => { const h = r[k++] || []; const clicks = {}; for (let i = 0; i < h.length; i += 2) clicks[h[i]] = +h[i + 1]; const uniq = +r[k++] || 0; const up = {}; PAGES.forEach(p => { up[p] = +r[k++] || 0 }); return { d, uniq, clicks, up } });
-      const log = (r[k] || []).map(x => JSON.parse(x));
+      const log = (r[k] || []).map(jp).filter(Boolean);
       return res.json({ days: out, log });
     }
     if (a === 'chat') {
       const [list, hidden] = await pipe([['LRANGE', 'chat', 0, 79], ['SMEMBERS', 'chat:hidden']]);
       const hs = new Set(hidden || []);
-      const ms = (list || []).map(x => JSON.parse(x)).filter(m => !hs.has(m.i));
+      const ms = (list || []).map(jp).filter(Boolean).filter(m => !hs.has(m.i));
       const pus = [...new Set(ms.map(m => m.pu).filter(Boolean))];
       const pv = pus.length ? await cmd('HMGET', 'prof', ...pus) : [];
       const p = {}; pus.forEach((u, i) => { if (pv[i]) { try { p[u] = JSON.parse(pv[i]) } catch {} } });
@@ -355,7 +362,7 @@ module.exports = async (req, res) => {
     if (a === 'bugs') {
       const [list, hidden] = await pipe([['LRANGE', 'bugs2', 0, 59], ['SMEMBERS', 'chat:hidden']]);
       const hs = new Set(hidden || []);
-      const L = (list || []).map(x => JSON.parse(x)).filter(m => !hs.has(m.i));
+      const L = (list || []).map(jp).filter(Boolean).filter(m => !hs.has(m.i));
       const cnt = L.length ? await pipe(L.map(m => ['SCARD', 'bv:' + m.i])) : [];
       const done = await cmd('SMEMBERS', 'bugdone');
       const ds = new Set(done || []);
@@ -367,7 +374,7 @@ module.exports = async (req, res) => {
     if (a === 'reviews') {
       const [all, hidden] = await pipe([['HVALS', 'reviews'], ['SMEMBERS', 'chat:hidden']]);
       const hs = new Set(hidden || []);
-      const L0 = (all || []).map(x => JSON.parse(x)).filter(m => !hs.has(m.i)).sort((x, y) => y.t - x.t);
+      const L0 = (all || []).map(jp).filter(Boolean).filter(m => !hs.has(m.i)).sort((x, y) => y.t - x.t);
       const rpr = L0.length ? await cmd('HMGET', 'replies', ...L0.map(m => 'r:' + m.i)) : [];
       const myR = 'r' + String(id || '').slice(0, 8);
       const L = L0.map((m, i) => Object.assign(m, { rp: rpr[i] ? JSON.parse(rpr[i]) : null, me: id && m.i === myR ? 1 : 0 }));
