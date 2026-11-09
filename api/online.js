@@ -130,6 +130,7 @@ function clean(s, n) {
 }
 // อ่าน query ด้วย WHATWG URL (ไม่แตะ req.query ซึ่งใช้ url.parse ที่เลิกสนับสนุนแล้ว)
 const qOf = r => r._q || (r._q = Object.fromEntries(new URL(r.url || '/', 'http://localhost').searchParams));
+const thDay = (ms, back = 0) => new Date(ms + 7 * 3600e3 - back * 86400e3).toISOString().slice(0, 10);
 // IP ของผู้ใช้จริง (Vercel ใส่ x-forwarded-for / x-real-ip ให้)
 const cip = req => (String(req.headers['x-real-ip'] || '') || String(req.headers['x-forwarded-for'] || '').split(',')[0]).trim().replace(/[^0-9a-fA-F:.]/g, '').slice(0, 45) || 'x';
 // ต่อ IP ต่อนาที: เกิน SOFT ตอบ 429 · เกิน HARD แบน 30 นาที · คำสั่งที่เขียนข้อความให้คนอื่นเห็นจำกัดแยก
@@ -358,6 +359,13 @@ module.exports = async (req, res) => {
       let brd = []; try { const hid = new Set((await cmd('SMEMBERS', 'bdhide')) || []); hid.add('f18abdmw8fuj8d'); brd = ((await cmd('ZREVRANGE', 'bd2:' + W, 0, 39)) || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(x => x && x.lid && !hid.has(x.lid)) } catch {}
       const e = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
       const K = encodeURIComponent(AK);
+      const hvD = [0, 1, 2, 3, 4, 5, 6].map(k => thDay(now, k)), HW = ['new', 'old'];
+      const hvR = await pipe([...HW.map(w => ['PFCOUNT', 'hv:' + hvD[0] + ':' + w]), ...HW.map(w => ['PFCOUNT', 'hv:' + hvD[1] + ':' + w]), ...HW.map(w => ['PFCOUNT', ...hvD.map(d => 'hv:' + d + ':' + w)]), ...HW.map(w => ['PFCOUNT', 'hv:all:' + w]), ['GET', 'migst:put:' + hvD[0]], ['GET', 'migst:get:' + hvD[0]], ['GET', 'migst:put:all'], ['GET', 'migst:get:all']]);
+      const hvOn = { new: 0, old: 0, other: 0 }; (metas || []).forEach(m => { const o = (jp(m) || {}).o || ''; if ((jp(m) || {}).b === 'บอท') return; hvOn[/1inanovel\.com$/.test(o) ? 'new' : /vercel\.app$/.test(o) ? 'old' : 'other']++ });
+      const hvN = i => +(hvR[i] || 0);
+      const hvHtml = `<h2>🌐 เว็บใหม่ vs เว็บเก่า <small style="font-weight:normal;color:#aaa">· นับเครื่องที่เปิดเว็บ (ไม่นับซ้ำในวันเดียวกัน)</small></h2><div><span class="c"><b>${hvOn.new}</b>ออนไลน์ตอนนี้ที่ 1inanovel.com</span><span class="c"><b>${hvOn.old}</b>ออนไลน์ตอนนี้ที่ลิงก์เก่า</span>${hvOn.other ? `<span class="c"><b>${hvOn.other}</b>ไม่ระบุเว็บ</span>` : ''}</div>
+<table style="border-collapse:collapse;margin:8px 0;font-size:14px;width:100%;max-width:520px"><tr style="color:#aaa"><td style="padding:4px 6px"></td><td style="padding:4px 6px">วันนี้</td><td style="padding:4px 6px">เมื่อวาน</td><td style="padding:4px 6px">7 วัน</td><td style="padding:4px 6px">ทั้งหมด</td></tr><tr><td style="padding:4px 6px">🆕 1inanovel.com</td><td style="padding:4px 6px"><b>${hvN(0)}</b></td><td style="padding:4px 6px">${hvN(2)}</td><td style="padding:4px 6px">${hvN(4)}</td><td style="padding:4px 6px">${hvN(6)}</td></tr><tr><td style="padding:4px 6px">🕰️ ลิงก์เก่า (.vercel.app)</td><td style="padding:4px 6px"><b>${hvN(1)}</b></td><td style="padding:4px 6px">${hvN(3)}</td><td style="padding:4px 6px">${hvN(5)}</td><td style="padding:4px 6px">${hvN(7)}</td></tr></table>
+<p>📦 ย้ายเซฟ: วันนี้ส่งออกจากเว็บเก่า <b>${hvN(8)}</b> · รับเข้าเว็บใหม่สำเร็จ <b>${hvN(9)}</b> · รวมทั้งหมด ส่งออก ${hvN(10)} / รับสำเร็จ ${hvN(11)}<br><small>คนเปิดลิงก์เก่าจะถูกพาไปเว็บใหม่อัตโนมัติ · ตัวเลข "ลิงก์เก่า" ที่ลดลงเรื่อยๆ แปลว่าคนเปลี่ยนมาใช้ลิงก์ใหม่แล้ว · เริ่มนับตั้งแต่ 9 พ.ย. 2569 ค่ำ</small></p>`;
       const tDay = new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
       const tIps = (await cmd('ZREVRANGE', 'trap:ips', 0, 39)) || [], tInf = tIps.length ? await cmd('HMGET', 'trap:info', ...tIps) : [], tTtl = tIps.length ? await pipe(tIps.map(x => ['TTL', 'ban:' + x])) : [], tWl = tIps.length ? await pipe(tIps.map(x => ['EXISTS', 'banx:' + x])) : [];
       const [tN1, tN7] = await pipe([['GET', 'trap:n:' + tDay], ['GET', 'trap:n:' + new Date(now + 7 * 3600e3 - 86400e3).toISOString().slice(0, 10)]]);
@@ -370,6 +378,7 @@ module.exports = async (req, res) => {
 <style>.cpb{background:#2a2433;color:#f0c860;border:1px solid #f0c860;border-radius:6px;padding:4px 10px;font-size:13px;cursor:pointer}.pl{background:#211d2a;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:14px}.plh{display:flex;flex-wrap:wrap;gap:6px;justify-content:space-between;align-items:baseline}.plh small,.pl small{color:#aaa}body{font-family:system-ui,sans-serif;background:#16131c;color:#eee;margin:0;padding:14px;max-width:760px;margin:auto}h1{font-size:20px}h2{font-size:16px;margin-top:22px;color:#f0c860}table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:6px;border-bottom:1px solid #333;text-align:left}.c{display:inline-block;background:#2a2433;border-radius:8px;padding:8px 12px;margin:4px 6px 4px 0}.c b{font-size:20px;display:block;color:#f0c860}.bug{background:#221d2a;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:14px}.bug.done{opacity:.55}a{color:#8fd0ff}small{opacity:.6}</style></head><body>
 <h1>🛡️ หน้าผู้ดูแล</h1><div><span class="c"><b>${rows.filter(r => r.b !== 'บอท').length}</b>ออนไลน์ (10 นาที)</span><span class="c"><b>${+(lives || 0)}</b>ชีวิตที่จบแล้ว</span><span class="c"><b>${bugs.length}</b>เรื่องบนกระดานบั๊ก</span><span class="c"><b>${rv || 0}</b>ความคิดเห็น</span></div>
 <h2>คนที่ออนไลน์ตอนนี้ <small style="font-weight:normal;color:#aaa">· รีเฟรชเองทุก 1 นาที</small></h2><p><small>🟢 กำลังเล่น · 🤔/📋 เลือกเหตุการณ์/เปิดหน้าต่าง · ⏸ หยุดเกม · 😴 เปิดทิ้งไว้ · 🙈 สลับแท็บ · 🏠 อยู่หน้าอื่น · 🔴 อาจค้าง/มี error</small></p>${rows.map(r => { const a = r.a || {}; return `<div class="pl" style="border-left:4px solid ${r.s.c}"><div class="plh"><b style="color:${r.s.c}">${e(r.s.t)}</b><small>${e(r.id)} · ${e(r.d)} · ${e(r.b)} · ${e(r.c)} · อัปเดต ${r.ago == null ? '-' : r.ago + ' วิ'}ก่อน${a.v ? ' · v' + e(a.v) : ''}</small></div>${a.nm ? `<div>👤 <b>${e(a.nm)}</b> อายุ ${e(a.ag)} ปี · ${e(WN[a.w] || '')} · ${e(a.ri || '')}${a.sp ? ' · ความเร็ว ' + e(a.sp) + '×' : ''}</div>` : ''}${r.a ? `<div><small>หน้า: ${e(SCN[a.sc] || a.sc || '-')}${a.md ? ' · หน้าต่าง: ' + e(MDN[a.md] || a.md) : ''} · แตะล่าสุด ${mins(a.ia)}ก่อน${a.sc === 'game' && a.yr >= 0 ? ' · ปีในเกมล่าสุดผ่านไปเมื่อ ' + mins(a.yr) + 'ก่อน' : ''}</small></div>` : ''}${r.s.x ? `<div><small style="color:#ff9b9b">error ล่าสุด: ${e(r.s.x)}</small></div>` : ''}</div>` }).join('') || '<p><small>ตอนนี้ไม่มีใครออนไลน์</small></p>'}
+${hvHtml}
 ${secHtml}
 <h2>🐞 error จากเครื่องผู้เล่น <small style="font-weight:normal;color:#aaa">· 200 ครั้งล่าสุด จัดกลุ่มตามข้อความ</small></h2>${jsTop.length ? `<p><button class="cpb" onclick="cpErr(-1,this)">📋 ก็อปปี้ error ทั้งหมดไปให้ Claude แก้</button> <small>(ไม่รวมอันที่มาจากเบราว์เซอร์)</small></p>` : ''}${jsTop.map((g, gi) => `<div class="pl" style="border-left:4px solid ${jsNoise(g) ? '#777' : '#ff6b6b'}"><div class="plh"><b style="color:${jsNoise(g) ? '#aaa' : '#ff9b9b'}">${e(g.last.m)}</b><small>${g.n} ครั้ง · ${g.users.size} คน · v${e([...g.vers].join(', v'))}</small></div>${jsNoise(g) ? '<div><small style="color:#e8c86a">🔕 มาจากเบราว์เซอร์ในแอปหรือส่วนขยาย ไม่ใช่บัคของเกม</small></div>' : ''}<div><small>ล่าสุด ${new Date(g.last.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })} · ${e(g.last.d)}${g.last.l ? ' · บรรทัด ' + g.last.l + ':' + g.last.c : ''} · หน้า ${e(g.last.x.sc)}${g.last.x.md ? ' · หน้าต่าง ' + e(g.last.x.md) : ''}${g.last.x.ch ? ' · เหตุการณ์ ' + e(g.last.x.ch) : ''}${g.last.x.ag ? ' · อายุ ' + g.last.x.ag + ' · ' + e(g.last.x.fo) + ' · ' + e(g.last.x.w) : ''}</small></div>${g.last.s ? `<div><small style="color:#aaa;word-break:break-all">${e(g.last.s)}</small></div>` : ''}<div style="margin-top:6px"><button class="cpb" onclick="cpErr(${gi},this)">📋 ก็อปปี้ให้ Claude</button></div></div>`).join('') || '<p><small>ยังไม่มี error</small></p>'}
 <script>const ERR_TX=${JSON.stringify(jsTop.map(g => ({ t: jsText(g), n: jsNoise(g) ? 1 : 0 }))).replace(/</g, '\\u003c')};
@@ -609,6 +618,11 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       if (!v) return res.json({ wait: 1 });
       return res.json({ l: JSON.parse(v) });
     }
+    if (a === 'hit') {
+      const w = ['old', 'new'].includes(qOf(req).w) ? qOf(req).w : 'other', v = String(qOf(req).vid || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 24);
+      if (v.length >= 6) { const d = thDay(now); await pipe([['PFADD', 'hv:' + d + ':' + w, v], ['EXPIRE', 'hv:' + d + ':' + w, 86400 * 40], ['PFADD', 'hv:all:' + w, v]]) }
+      return res.json({ ok: 1 });
+    }
     if (a === 'migput') {
       if (req.method !== 'POST') return res.status(405).json({ err: 'method' });
       const d = String(b.d || '');
@@ -618,6 +632,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       if (+c > 30) return res.status(429).json({ err: 'rate' });
       const tk = require('crypto').randomBytes(16).toString('hex').slice(0, 24);
       await cmd('SET', 'mg:' + tk, JSON.stringify({ d, z: b.z ? 1 : 0, n: +b.n || 0, t: now }), 'EX', 86400 * 30);
+      try { const d0 = thDay(now); await pipe([['INCR', 'migst:put:' + d0], ['EXPIRE', 'migst:put:' + d0, 86400 * 40], ['INCR', 'migst:put:all']]) } catch (e) {}
       return res.json({ ok: 1, tk });
     }
     if (a === 'migget') {
@@ -625,6 +640,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       if (tk.length < 16) return res.status(400).json({ err: 'bad' });
       const v = jp(await cmd('GET', 'mg:' + tk));
       if (!v || !v.d) return res.status(404).json({ err: 'gone' });
+      try { if (!(await cmd('SET', 'mgseen:' + tk, 1, 'NX', 'EX', 86400 * 30))) throw 0; const d0 = thDay(now); await pipe([['INCR', 'migst:get:' + d0], ['EXPIRE', 'migst:get:' + d0, 86400 * 40], ['INCR', 'migst:get:all']]) } catch (e) {}
       return res.json({ ok: 1, d: v.d, z: v.z });
     }
     if (req.method !== 'POST') return res.status(405).json({ err: 'method' });
