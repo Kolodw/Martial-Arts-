@@ -8389,12 +8389,158 @@ function beastSys(){const s=S.sys;if(!s||S.age<6)return;sysFix();const gm=sysM()
 {const _by=beastYear;beastYear=function(){try{const m=S.beastMode;if(S.sys)beastSys();if(S.focus==='hunt'&&Math.random()<.6)S.kills=(S.kills||0)+1;
   if(m.king&&m.st>=4)S.power+=Math.round(R(30,70)*S.talent.m*(S.xian?1.4:1)*(m.st-3));}catch(e){console.error(e)}
   return _by.apply(this,arguments)}}
-{const _ba=blAdvance;blAdvance=function(){_ba.apply(this,arguments);try{const m=S.beastMode;if(!m||m.human||!m.king||m.st<4||m.st>=7)return;const u=BL_UP[m.st-4];
+{const _ba=blAdvance;blAdvance=function(){_ba.apply(this,arguments);try{const m=S.beastMode;if(!m||m.human||!(m.king||m.pdone)||m.st<4||m.st>=7)return;const u=BL_UP[m.st-4];
   if(S.age>=u[0]&&S.qi>=u[1]&&total()>=u[2]){m.st++;S.lifespan+=u[3];S.maxHp+=60;S.hp=S.maxHp;S.fame+=300*(m.st-4);
    const T=['','','','','','ทัณฑ์ฟ้าเก้าสายผ่านพ้น แสงศักดิ์สิทธิ์ห่อหุ้มร่าง สัตว์ทั้งป่านับถือเป็นเทพเจ้า','เมฆมงคลหนุนใต้เท้า ฟ้าดินรับรู้ว่ามี "สัตว์เทพ" ผู้ค้ำฟ้า','ตำนานปฐมสัตว์เทพที่เล่าขานมาพันปี บัดนี้เป็นจริง'][m.st];
    log(`🌟 ${S.name} ก้าวสู่ขั้น <b>${BL_ST[m.st]}</b>! — ${T} · อายุขัย +${u[3]} ปี`,'myth',true);S.key.push(`${S.age} ปี — ก้าวสู่${BL_ST[m.st]}`);setScene('aura')}}catch(e){console.error(e)}}}
 {const _l0=lifeMax0;lifeMax0=function(){if(S&&S.beastMode&&!S.beastMode.human&&S.beastMode.st>=5){const st=S.beastMode.st;return Math.min((S.xian?1200:600)+BL_UP.slice(0,st-4).reduce((a,u)=>a+u[4],0),S.lifespan+40)}return _l0.apply(this,arguments)}}
 {const _bs=blStageTxt;blStageTxt=function(){const m=S.beastMode;return m.st>=5?BL_ST[Math.min(BL_ST.length-1,m.st)]+(m.sp?' · '+m.sp:''):_bs.apply(this,arguments)}}
+// ===== v14.0 สัตว์อสูร: สุ่มกำเนิด · เผ่ามังกร · เส้นทางอสูร · อายุยืนหลายเท่า =====
+BL_SP.push(['มังกร','serp','#d8b040','เผ่าที่แข็งแกร่งที่สุดใต้ฟ้า หายากยิ่ง']);
+// เผ่า: น้ำหนักสุ่ม · คูณอายุขัย (เทียบมนุษย์) · คูณพลัง
+const BSPX={'จิ้งจอก':[18,4,1],'งูขาว':[15,5,1],'กระเรียน':[12,6,.9],'พยัคฆ์':[14,3,1.3],'เต่าดำ':[10,10,.8],'ปลาคาร์ป':[12,3,.9],'วานร':[12,3,1.1],'หมาป่า':[14,3,1.15],'มังกร':[.18,15,2.5]};
+const BBLOOD=[{w:68,n:'สายเลือดสามัญ',d:'สัตว์ป่าทั่วไปในพงไพร',m:1,l:1},{w:24,n:'สายเลือดอสูรโบราณ',d:'บรรพบุรุษเคยเป็นอสูรพันปี · พลัง ×1.3 อายุ ×1.3',m:1.3,l:1.3},{w:7,n:'สายเลือดเทพอสูร',d:'มีหยดเลือดสัตว์เทพไหลเวียน · พลัง ×1.7 อายุ ×1.7',m:1.7,l:1.7},{w:1,n:'สายเลือดปฐมกาล',d:'สืบสายตรงจากสัตว์เทพยุคบรรพกาล · พลัง ×2.4 อายุ ×2.5',m:2.4,l:2.5}];
+const BTAL_N=['รากปราณขุ่นมัว','รากปราณสามัญ','รากปราณใส','อัจฉริยะแห่งพงไพร','กายาฟ้าประทาน','กายาอสูรสวรรค์'];
+const BTAL_D=['ลมปราณติดขัด บำเพ็ญได้ช้ากว่าสัตว์ทั่วไป','สัตว์ป่าธรรมดาทั่วไป','ดูดซับแสงจันทร์ได้ไวกว่าตัวอื่นในฝูง','ร้อยปีจะมีสักตัวในพงไพร','กายาที่ฟ้าประทาน ปราณฟ้าดินไหลเข้าหาเอง','ร่างที่ถูกลิขิตมาเพื่อครองพงไพร'];
+const BL_STD=['ลูกมังกร','มังกรหนุ่ม','มังกรเปิดปัญญา','มังกรเฒ่า','ราชามังกร','มังกรศักดิ์สิทธิ์','มังกรเทพ','ปฐมมังกร'];
+const BL_ST0=BL_ST.slice();
+BX['มังกร']={prey:['วัวป่าทั้งตัว','ปลายักษ์ในทะเลสาบ','หมูป่าฝูงหนึ่ง','สัตว์อสูรขั้นต่ำ','ผลึกวิญญาณในถ้ำ'],home:'ถ้ำลึกใต้ทะเลสาบบนยอดเขา',part:'เกล็ด',move:['ม้วนตัวท่ามกลางเมฆหมอก','ว่ายลึกลงก้นทะเลสาบดำมืด','บินเลียดยอดเขาจนเมฆแตกกระจาย','พ่นลมหายใจจนน้ำตกเป็นไอ','นอนขดบนกองผลึกเปล่งประกาย'],rest:['ขดตัวหลับบนกองหินผลึก','จมตัวนิ่งในน้ำเย็นเฉียบ','ลอยตัวนิ่งเหนือเมฆ','กอดไข่มุกไว้แน่นแล้วหลับตา'],call:'เสียงคำรามก้องหุบเขา',kid:'ลูกมังกร',mateF:'มังกรสาวเกล็ดหยก',mateM:'มังกรหนุ่มเกล็ดเงิน'};
+function blIsDragon(){return !!(S&&S.beastMode&&(S.beastMode.sp==='มังกร'))}
+function blNames(){const L=blIsDragon()?BL_STD:BL_ST0;for(let i=0;i<L.length;i++)BL_ST[i]=L[i];BL_ST.length=L.length}
+// ---------- สุ่มกำเนิดสัตว์ (เหมือนมนุษย์) ----------
+let brRoll=null,brRR=3;
+function brGen(){const sw=BL_SP.map((s,i)=>({w:(BSPX[s[0]]||[5])[0],v:i}));const sp=pickW(sw),el=R(0,BEL.length-1),bl=pickW(BBLOOD.map((b,i)=>({w:b.w,v:i}))),t=pickW(TALENT.map((x,i)=>({w:x.w,v:i}))),g=R(0,1),hab=ch(BHAB[CFG.xian?1:0]),tm=R(0,BTMP.length-1);
+ const r={sp:sp.v.v,spP:sp.p,el,elP:1/BEL.length,bl:bl.v.v,blP:bl.p,t:t.v.v,tP:t.p,g,gP:.5,hab,tm,tmP:1/BTMP.length};r.p=r.spP*r.elP*r.blP*r.tP*r.gP;return r}
+function brMul(r){const s=BL_SP[r.sp],x=BSPX[s[0]]||[1,3,1];return{life:x[1]*BBLOOD[r.bl].l,pow:x[2]*BBLOOD[r.bl].m*TALENT[r.t].m}}
+function goBeastLife(){setWorld(!!CFG.xian);brRR=(CFG.chm==1)?0:3;if(typeof ADM!=='undefined'&&ADM.ok&&ADM.rr)brRR=99;brRoll=brGen();brShow(true)}
+function brShow(anim){const r=brRoll,s=BL_SP[r.sp],e=BEL[r.el],b=BBLOOD[r.bl],T=TALENT[r.t],M=brMul(r),dr=s[0]==='มังกร';
+ const row=(k,v,d,p,c)=>{const q=rarOf(p);return`<div class="btr r${q}${anim?'':' on'}"><div><div class="k">${k}</div><div class="v t${q}"${c?` style="color:${c}"`:''}>${v}</div>${d?`<div class="d">${d}</div>`:''}</div><span class="o t${q}">${oddsTxt(p)}</span></div>`};
+ const rows=[row('เผ่าพันธุ์',(dr?'🐉 ':'')+s[0],s[3]+` · อายุขัยราว ${(BSPX[s[0]]||[0,3])[1]} เท่าของมนุษย์`,r.spP,dr?'#ffd040':null),row('ธาตุ',e[0],'ธาตุประจำกาย',r.elP,e[1]),row('สายเลือด',b.n,b.d,r.blP),row('รากปราณ',BTAL_N[r.t]||T.n,BTAL_D[r.t]||'',r.tP),row('เพศ',r.g?'เพศเมีย':'เพศผู้','',r.gP),row('ถิ่นกำเนิด',r.hab,'ที่ที่ลืมตาดูโลก',1),row('นิสัย',BTMP[r.tm][0],'',1)];
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🐾 กำเนิดสัตว์อสูร</h3><p class="tag2">ฟ้าลิขิตว่าคุณจะเกิดเป็นอะไร — สุ่มใหม่ได้ ${brRR>50?'ไม่จำกัด':brRR+' ครั้ง'}</p><div class="brbox">${rows.join('')}</div>
+ <div class="brodds">โอกาสเกิดแบบนี้ <b>1 ใน ${fmt(Math.round(1/r.p))}</b><br><span class="tag2">พลังโดยรวม ×${M.pow.toFixed(1)} · อายุขัย ×${M.life.toFixed(1)} ของมนุษย์</span></div>
+ <div style="display:flex;gap:8px;margin-top:10px"><button class="gbtn" style="flex:1" ${brRR<=0?'disabled':''} onclick="brReroll()">🎲 สุ่มใหม่ (${brRR>50?'∞':brRR})</button><button class="pbtn" style="flex:1.4" onclick="closeM();beastBirth2(brRoll)">🐣 เกิด</button></div>`);
+ if(anim){const L=[...document.querySelectorAll('#modal .btr')];L.forEach((x,i)=>setTimeout(()=>x.classList.add('on'),140*i+60))}
+ try{$('modal').dataset.k='broll'}catch(e){}}
+function brReroll(){if(brRR<=0)return;brRR--;brRoll=brGen();brShow(true)}
+function beastBirth(i){const r=brGen();r.sp=Math.max(0,Math.min(BL_SP.length-1,i|0));beastBirth2(r)}
+function beastBirth2(r){const sp=BL_SP[r.sp],el=BEL[r.el][0],gn=GENDER[r.g]||GENDER[0];crForce=null;const M=brMul(r),B=BBLOOD[r.bl];
+ const fam=Object.assign({},FAMILY[0],{n:'สัตว์ในป่าลึก',d:'เกิดใน'+r.hab+' ไม่มีใครรู้จัก',money:0,orphan:1,beast:1});
+ roll={g:{v:gn,p:.5},f:{v:fam,p:1},t:{v:TALENT[r.t],p:r.tP},isOw:false,op:1,w:null,it:null,trs:{list:[],p:1},p:r.p,seed:R(1,99999),era:{v:ERAS[0],p:1},custom:false,look:null};
+ roll.root=rootOf(roll.t.v);roll.name=sp[0]==='มังกร'?ch(['ฉาง','หลง','อ้าว','เทียน'])+ch(['หยุน','เยว่','ซิง','เหลย','หาน']):ch(['เจ้า','อา','เสี่ยว'])+sp[0]+ch(['น้อย','ขาว','ดำ','ทอง','ไฟ','จันทร์']);roll.soul=null;roll.goals=[GOALS[0].id];roll.goal=GOALS[0].id;rerolls=0;window._bbirth=1;try{startLife()}finally{window._bbirth=0}try{peers=[]}catch(e){}
+ S.beastMode={sp:sp[0],el,st:0,human:0,bl:r.bl,tm:r.tm,hab:r.hab,pm:+((BSPX[sp[0]]||[0,0,1])[2]*B.m).toFixed(2)};
+ S.lifespan=Math.round(S.lifespan*M.life);S.odds=r.p;S.focus='hunt';S.flags.lostParents=1;S.parents=[];S.sibs=[];blNames();
+ if(sp[0]==='มังกร'){S.maxHp+=40;S.hp=S.maxHp;S.flags.bDragon=1}
+ log(`🐾 ${S.name} ลืมตาดูโลกเป็น${BX[sp[0]]&&BX[sp[0]].kid||'ลูก'+sp[0]}ธาตุ${el} ใน${r.hab} · ${B.n}`,'epic',true);
+ if(sp[0]==='มังกร')log(`🐉 ฟ้าร้องก้องเก้าชั้นฟ้าในวันที่ไข่ฟักออก — <b>เผ่ามังกร</b> กำเนิดขึ้นอีกครั้งในรอบพันปี สัตว์ทั้งป่าหมอบราบโดยไม่รู้ตัว`,'myth',true);
+ render()}
+// ---------- อายุขัย: สัตว์อยู่ได้หลายเท่าของมนุษย์ ----------
+{const _l1=lifeMax0;lifeMax0=function(){try{if(S&&S.beastMode){const m=S.beastMode;if(!m.human)return Math.min(1e5,S.lifespan+40);if(m.lk==null)m.lk=Math.min(1e5,S.lifespan+40);return Math.max(_l1.apply(this,arguments),m.lk)}}catch(e){}return _l1.apply(this,arguments)}}
+{const _sc=sickChance;sickChance=function(){if(S&&S.beastMode){const a=S.age,lm=lifeMax();S.age=Math.round(a*Math.min(1,90/Math.max(90,lm)));try{return _sc.apply(this,arguments)}finally{S.age=a}}return _sc.apply(this,arguments)}}
+// ---------- เส้นทางอสูร (บทบาท + เนื้อเรื่อง 6 บท) ----------
+const BF0=BFOCUS.slice(0,5);
+const BPATH={
+ guard:{n:'ผู้พิทักษ์ป่า',ic:'🌲',d:'ปกป้องป่าและผู้อ่อนแอ กรรมดีพอกพูน วันหนึ่งอาจกลายเป็นเทพารักษ์',fo:['patrol','🛡️','ลาดตระเวนอาณาเขต'],end:'เทพารักษ์แห่งพงไพร'},
+ demon:{n:'อสูรกระหายเลือด',ic:'🩸',d:'กลืนกินแก่นอสูรเพื่อพลัง ยิ่งฆ่ายิ่งแกร่ง แต่ทั้งยุทธภพจะตามล่า',fo:['devour','🩸','กลืนกินแก่นอสูร'],end:'จอมอสูรแห่งยุค'},
+ pack:{n:'จ่าฝูงแห่งพงไพร',ic:'🐾',d:'รวบรวมสัตว์เป็นเผ่า ขยายอาณาเขต ทำสงครามกับเผ่าอื่น',fo:['pack','🐾','นำฝูงขยายอาณาเขต'],end:'ราชันย์แห่งร้อยเผ่า'},
+ bond:{n:'สัตว์พันธะ',ic:'🤝',d:'ผูกพันธะกับมนุษย์ผู้บำเพ็ญ ร่วมผจญภัยในยุทธภพ',fo:['bond','🤝','ร่วมทางกับคู่พันธะ'],end:'ตำนานคู่พันธะ'},
+ hermit:{n:'ฤๅษีอสูร',ic:'🌙',d:'ปลีกวิเวกบำเพ็ญเพียร มุ่งสู่การรู้แจ้งแห่งฟ้าดิน',fo:['seclude','🧘','เข้าฌานในถ้ำลึก'],end:'ฤๅษีผู้รู้แจ้ง'}};
+function blFocusSync(){BFOCUS.length=0;BF0.forEach(f=>BFOCUS.push(f));try{const m=S&&S.beastMode;if(m&&!m.human&&m.path&&BPATH[m.path])BFOCUS.push(BPATH[m.path].fo)}catch(e){}}
+function blFight(name,mult,win,lose){const me=total(),ep=Math.max(30,me*mult*(.85+Math.random()*.3)),p=clamp(me/(me+ep)+(S.beastMode.st*.02),.12,.9);
+ if(Math.random()<p){log(`⚔️ ปะทะ <b>${name}</b> — ชนะ! (โอกาส ${Math.round(p*100)}%)`,'epic');S.kills=(S.kills||0)+1;win&&win()}else{S.hp-=R(15,35);log(`⚔️ ปะทะ <b>${name}</b> — พ่ายแพ้ บาดเจ็บสาหัส (โอกาส ${Math.round(p*100)}%)`,'bad');lose&&lose()}}
+const bsc=n=>blSc(n);
+function blPathEnd(){const m=S.beastMode,P=BPATH[m.path];m.pdone=1;S.flags.bPath=1;const add=Math.round(Math.max(100,S.lifespan*.25));S.lifespan+=add;S.fame+=500;S.maxHp+=50;S.hp=S.maxHp;
+ log(`👑 จบเส้นทาง${P.ic} ${P.n} — ได้รับสมญา <b>${P.end}</b> · อายุขัย +${fmt(add)} ปี`,'myth',true);keyAdd(`ได้รับสมญา ${P.end}`);setScene('aura')}
+const BCH={
+ guard:[
+  {st:2,f(){runE(['🛡️ นายพรานบุกป่า','กลุ่มนายพรานวางกับดักทั่วป่า สัตว์เล็กตายไปนับสิบตัวภายในเดือนเดียว',[['ปรากฏตัวไล่นายพรานออกไป',`p+${bsc(30)} k+8 f+20 h-10`,'นายพรานแตกกระเจิง ลือกันว่าป่านี้มีเจ้าป่าคุ้มครอง'],['ทำลายกับดักทั้งหมดในคืนเดียว','k+6 i+3','เช้ามาบ่วงทุกอันถูกกัดขาด ไม่มีใครเห็นตัวคุณ']]])}},
+  {st:2,f(){runE(['🏘️ โรคระบาดในหมู่บ้านชายป่า','เสียงไอดังมาจากหมู่บ้าน เด็กๆ ล้มป่วยทีละคน คุณรู้ว่ามีสมุนไพรวิญญาณขึ้นอยู่ลึกในป่า',[['คาบสมุนไพรไปวางหน้าหมู่บ้าน','k+15 f+30 q-2','ชาวบ้านหายป่วย พวกเขาเรียกคุณว่า "ท่านเทพแห่งป่า"'],['เฝ้ามองอยู่ห่างๆ','i+2','บางเรื่องก็ไม่ใช่ธุระของสัตว์ป่า']]])}},
+  {st:3,f(){runE(['🪓 สำนักตัดป่า','สำนักแห่งหนึ่งจะโค่นต้นไทรพันปีไปสร้างศาลา ต้นไม้ที่สัตว์ทั้งป่าพึ่งพิง',[['ปรากฏกายขู่ต่อหน้าเหล่าศิษย์','',null,()=>blFight('ผู้อาวุโสสำนัก',.9,()=>{S.fame+=60;S.karma+=8;log('ศิษย์ทั้งสำนักถอยกลับ ต้นไทรรอดพ้น','good')},()=>{S.karma+=3})],['เข้าฝันเจ้าสำนักเพื่อต่อรอง','i+5 k+10 q+3','เจ้าสำนักตื่นมาด้วยเหงื่อท่วมตัว แล้วสั่งยกเลิกงานทันที']]])}},
+  {st:3,f(){runE(['⛩️ ศาลเจ้าแห่งแรก','ชาวบ้านสร้างศาลเล็กๆ ไว้ที่ชายป่า วางผลไม้และธูปไว้ให้คุณทุกวันพระ',[['รับเครื่องเซ่น และอวยพรพืชผลให้งอกงาม',`k+10 f+50 q+5 l+${Math.round(S.lifespan*.05)}`,'แรงศรัทธาของมนุษย์ไหลเข้าสู่ร่าง อายุขัยยืดออก'],['ปฏิเสธ — ขอเป็นเพียงสัตว์ป่า','i+4 q+8','คุณหันหลังให้ศาล แต่ใจกลับสงบลงอย่างประหลาด']]])}},
+  {st:4,f(){runE(['🌑 อสูรร้ายจากแดนมาร','อสูรตัวหนึ่งข้ามมาจากแดนมาร ไล่กลืนกินทุกชีวิตที่ขวางทาง มันกำลังมุ่งหน้ามาที่ป่าของคุณ',[['ยืนขวางหน้าประตูป่า','',null,()=>blFight('อสูรแดนมาร',1.05,()=>{S.power+=bsc(150);S.karma+=20;S.fame+=150;log('อสูรมารแตกสลายเป็นเถ้า ป่าทั้งป่าเปล่งเสียงร้องยินดี','myth')},()=>{S.karma+=5})],['นำสัตว์ทั้งป่าอพยพหนี','k+5 i+4 f-20','ทุกชีวิตรอด แต่ป่าเก่าถูกทำลายจนหมด']]])}},
+  {st:4,f(){runE(['🌳 เทพารักษ์แห่งพงไพร','ฟ้าดินรับรู้ถึงคุณงามความดีที่สะสมมานับร้อยปี แสงสีเขียวหยกห่อหุ้มร่างของคุณ',[['ยอมรับหน้าที่เทพารักษ์ชั่วนิรันดร์','k+30 q+15',null,blPathEnd]]])}}],
+ demon:[
+  {st:2,f(){runE(['🩸 แก่นอสูรดวงแรก','คุณฆ่าอสูรตัวหนึ่งได้ แก่นอสูรสีแดงก่ำยังเต้นตุบอยู่ในอก',[['กลืนกินมันทั้งดวง',`p+${bsc(50)} q+4 k-10`,'พลังร้อนแรงไหลทะลักทั่วร่าง ดวงตาของคุณเริ่มแดงฉาน'],['ฝังมันไว้ใต้ต้นไม้','k+6','คุณยังไม่พร้อมจะเป็นสิ่งนั้น']]])}},
+  {st:2,f(){runE(['🏚️ หมู่บ้านในหุบเขา','กลิ่นปศุสัตว์ลอยมาจากหมู่บ้านที่ไร้กำแพง',[['บุกเข้าไปกลางดึก',`p+${bsc(40)} k-15 f+40 h-5`,'เสียงกรีดร้องดังทั้งคืน ชื่อของคุณกลายเป็นคำขู่เด็ก'],['ปล่อยพวกเขาไว้','k+5 j-3','ความหิวกัดกินจนนอนไม่หลับ']]])}},
+  {st:3,f(){runE(['⚔️ นักล่าอสูรจากสำนักธรรมะ','สามศิษย์เอกสำนักธรรมะตามรอยคุณมาถึงถ้ำ "อสูรร้าย ออกมารับความตาย!"',[['ออกไปฉีกพวกมันเป็นชิ้น','',null,()=>blFight('ศิษย์เอกสามคน',1,()=>{S.power+=bsc(90);S.karma-=15;S.fame+=100;log('ลิ้มรสเลือดผู้บำเพ็ญเป็นครั้งแรก พลังพุ่งพรวด','epic')})],['ซ่อนตัวลึกใต้ดิน','i+3 h+10','พวกมันค้นหาสามวันสามคืนแล้วถอดใจ']]])}},
+  {st:3,f(){runE(['😈 เสียงกระซิบจากแดนมาร','ในความฝัน เงาดำขนาดมหึมาเอ่ยว่า "ทำพันธะกับข้า แล้วเจ้าจะไม่มีวันอ่อนแออีก"',[['รับพันธะมาร',`p+${bsc(160)} q+10 k-30`,'รอยสักดำลามทั่วร่าง พลังที่ไม่ใช่ของคุณไหลวนอยู่ข้างใน'],['ปฏิเสธ แล้วกัดลิ้นตัวเองจนตื่น','q+5 k+5 h-5','คุณไม่ยอมเป็นทาสของใคร']]])}},
+  {st:4,f(){runE(['🌋 กองทัพอสูร','อสูรนับร้อยมาหมอบรอหน้าถ้ำ พวกมันยกให้คุณเป็นผู้นำ',[['นำทัพบุกเมืองชายแดน','',null,()=>blFight('ทัพผสมสำนักธรรมะ',1.1,()=>{S.power+=bsc(220);S.fame+=300;S.karma-=25;log('เมืองแตก ธงอสูรปักบนกำแพง ยุทธภพสั่นสะเทือน','myth')})],['ขยายอาณาเขตในป่าลึกเงียบๆ',`p+${bsc(80)} f+80`,'อาณาจักรอสูรเติบโตใต้เงาไม้']]])}},
+  {st:4,f(){runE(['👹 จอมอสูรแห่งยุค','ทั้งยุทธภพยอมรับแล้วว่าไม่มีใครหยุดคุณได้ เมฆดำปกคลุมฟ้าทุกครั้งที่คุณคำราม',[['สถาปนาตนเป็นจอมอสูร',`p+${bsc(200)} k-20`,null,blPathEnd]]])}}],
+ pack:[
+  {st:2,f(){const n=R(3,6);runE(['🐾 ลูกฝูงพลัดหลง',`สัตว์เล็ก ${n} ตัวที่พ่อแม่ถูกล่า เดินตามคุณต้อยๆ มาหลายวันแล้ว`,[['รับเลี้ยงไว้เป็นฝูง','k+6 j+5',`ฝูงแรกของคุณมี ${n} ชีวิต`,()=>{S.beastMode.pk=(S.beastMode.pk||0)+n}],['ไล่ไป — ฝูงคือภาระ','p+'+bsc(10),'พวกมันแยกย้ายไปตามทาง']]])}},
+  {st:2,f(){runE(['💧 ศึกแย่งแหล่งน้ำ','หน้าแล้งมาถึง เผ่าหมูป่าเขาเหล็กยึดลำธารสายสุดท้ายไว้',[['นำฝูงบุกยึด','',null,()=>blFight('จ่าฝูงหมูป่าเขาเหล็ก',.95,()=>{S.beastMode.pk=(S.beastMode.pk||0)+R(4,8);S.fame+=40;log('หมูป่าที่แพ้ยอมเข้าร่วมฝูงของคุณ','good')},()=>{S.beastMode.pk=Math.max(0,(S.beastMode.pk||0)-3)})],['เจรจาแบ่งน้ำคนละครึ่ง','i+4 k+8','ทั้งสองเผ่ารอดหน้าแล้งไปด้วยกัน']]])}},
+  {st:3,f(){runE(['❄️ ฤดูหนาวอดอยาก','หิมะตกหนักที่สุดในรอบร้อยปี อาหารเหลือไม่พอสำหรับทั้งฝูง',[['แบ่งส่วนของตัวเองให้ลูกฝูง','k+15 h-20 f+30','ไม่มีลูกฝูงตายแม้แต่ตัวเดียว ความภักดีของพวกมันไม่มีวันคลอน'],['นำฝูงบุกคอกสัตว์ของมนุษย์',`p+${bsc(30)} k-10`,'ทุกตัวอิ่มท้อง แต่มนุษย์เริ่มรวมตัวตามล่า']]])}},
+  {st:3,f(){runE(['🦅 พันธมิตรเผ่าวิหค','ราชาอินทรีทองบินลงมาเกาะหน้าผา เสนอเป็นพันธมิตรแลกกับดินแดนครึ่งหุบเขา',[['ตกลงเป็นพันธมิตร','i+5 f+60','ฟ้าและดินของหุบเขาเป็นของพวกคุณ',()=>{S.beastMode.pk=(S.beastMode.pk||0)+15}],['ปฏิเสธ — ดินแดนเป็นของเราทั้งหมด','',null,()=>blFight('ราชาอินทรีทอง',1,()=>{S.beastMode.pk=(S.beastMode.pk||0)+20;S.fame+=100})]]])}},
+  {st:4,f(){runE(['⚔️ สงครามร้อยเผ่า','เผ่าสัตว์ทั้งพงไพรแตกเป็นสองฝ่าย ฝ่ายหนึ่งยกให้คุณเป็นผู้นำ',[['นำทัพสู่ศึกตัดสิน','',null,()=>blFight('จักรพรรดิอสูรเผ่าเหนือ',1.1,()=>{S.beastMode.pk=(S.beastMode.pk||0)+60;S.power+=bsc(200);S.fame+=300;log('ร้อยเผ่ายอมสยบ ธงของคุณโบกสะบัดทั่วพงไพร','myth')})],['ตั้งรับในอาณาเขตตัวเอง',`k+5 i+5 p+${bsc(60)}`,'ศึกยืดเยื้อแต่ไม่มีใครบุกเข้ามาได้']]])}},
+  {st:4,f(){runE(['👑 ราชันย์แห่งร้อยเผ่า','สัตว์นับหมื่นตัวมารวมตัวที่ยอดเขา ก้มหัวพร้อมกันเมื่อคุณก้าวขึ้นแท่นหิน',[['รับตำแหน่งราชันย์',`f+300 p+${bsc(150)}`,null,blPathEnd]]])}}],
+ bond:[
+  {st:2,f(){const g=ch(['ชาย','หญิง']),nm=anyName(g);S.beastMode.bn=nm;runE(['🤝 มนุษย์ผู้บาดเจ็บ',`${nm} ผู้บำเพ็ญหนุ่มสาวคนหนึ่งนอนบาดเจ็บอยู่ริมลำธาร ศัตรูกำลังตามมา`,[['ขวางศัตรูไว้แล้วพาไปซ่อน','k+12 h-10',`${nm} ลืมตามองคุณด้วยแววตาที่ไม่มีความกลัวแม้แต่น้อย`],['ทิ้งยาสมุนไพรไว้แล้วจากมา','k+5 i+2','คุณไม่รู้ว่าเขารอดหรือไม่']]])}},
+  {st:2,f(){const nm=S.beastMode.bn||'ผู้บำเพ็ญคนนั้น';runE(['🩸 พันธะสัญญาโลหิต',`${nm} กลับมาที่ป่า ยื่นมือที่มีรอยกรีดให้คุณ "ไปด้วยกันไหม?"`,[['หยดเลือดผูกพันธะ',`i+6 q+5 p+${bsc(30)}`,`วิญญาณของคุณและ${nm}เชื่อมกัน สัมผัสความรู้สึกของกันและกันได้`,()=>{S.beastMode.bd=1}],['ยังไม่พร้อม','i+2','คุณหันหลังเดินเข้าป่า แต่หันกลับมามองอีกครั้ง']]])}},
+  {st:3,f(){const nm=S.beastMode.bn||'คู่พันธะ';runE(['🏯 ลงถ้ำมรดกเซียน',`${nm}พาคุณลงถ้ำมรดกเซียนที่เพิ่งเปิด กับดักและสัตว์เฝ้าถ้ำรออยู่ทุกชั้น`,[['บุกนำหน้า','',null,()=>blFight('หุ่นศิลาเฝ้าถ้ำ',.9,()=>{S.qi+=12;S.power+=bsc(80);log(`พบคัมภีร์และผลึกวิญญาณ — ${nm}ยกส่วนที่ดีที่สุดให้คุณ`,'epic')})],['ระวังหลังให้คู่พันธะ','i+5 q+6 k+3','เดินออกมาครบสองชีวิต พร้อมผลึกวิญญาณกำมือหนึ่ง']]])}},
+  {st:3,f(){const nm=S.beastMode.bn||'คู่พันธะ';runE(['🗡️ การทรยศของสำนัก',`เจ้าสำนักของ${nm}ต้องการตัวคุณไปสกัดแก่นอสูร สั่งให้${nm}ส่งคุณมอบ`,[['สู้ฝ่าออกมาพร้อมคู่พันธะ','',null,()=>blFight('เจ้าสำนัก',1.05,()=>{S.fame+=120;S.karma+=10;log(`${nm}ฉีกป้ายศิษย์ทิ้ง — "ข้าไม่ต้องการสำนัก ข้าต้องการเพื่อน"`,'myth')})],['หนีเข้าป่าลึกตามลำพัง','h+10 j-8',`คุณได้ยิน${nm}ตะโกนเรียกชื่อคุณทั้งคืน`]]])}},
+  {st:4,f(){const nm=S.beastMode.bn||'คู่พันธะ';runE(['⏳ คู่พันธะชราลง',`ผมของ${nm}ขาวโพลน มนุษย์อายุสั้นนัก แต่คุณเพิ่งเริ่มต้นชีวิต`,[['แบ่งอายุขัยผ่านพันธะ',`l-${Math.round(S.lifespan*.1)} k+20 j+10`,`${nm}มีชีวิตต่ออีกหลายสิบปี เดินทางไปด้วยกันจนสุดทาง`],['อยู่เคียงข้างจนวาระสุดท้าย','q+10 i+5 j-10',`${nm}จากไปในอ้อมกอดของคุณ พร้อมรอยยิ้ม`]]])}},
+  {st:4,f(){const nm=S.beastMode.bn||'คู่พันธะ';runE(['📜 ตำนานคู่พันธะ',`เรื่องราวของคุณกับ${nm}กลายเป็นนิทานที่แม่เล่าให้ลูกฟังทั่วยุทธภพ`,[['จารึกตำนานไว้ในใจ','k+15 f+200',null,blPathEnd]]])}}],
+ hermit:[
+  {st:2,f(){runE(['💧 ถ้ำหลังม่านน้ำตก','คุณพบถ้ำที่ลมปราณหนาแน่นผิดปกติ ซ่อนอยู่หลังม่านน้ำตก',[['ยึดเป็นที่บำเพ็ญ','q+8 j+3','เสียงน้ำตกกลบเสียงโลกภายนอกจนหมด'],['ทำเครื่องหมายไว้แล้วออกล่าต่อ',`p+${bsc(20)}`,'วันหนึ่งคุณจะกลับมา']]])}},
+  {st:2,f(){runE(['😶‍🌫️ มารในฌาน','ระหว่างนั่งสมาธิ ภาพแม่ที่ถูกนายพรานฆ่าปรากฏขึ้นซ้ำแล้วซ้ำเล่า',[['เผชิญหน้าและปล่อยวาง','q+10 k+8 i+4','น้ำตาไหลแล้วหยุด — จิตใจใสกระจ่างกว่าเดิม'],['ลืมตาหนีออกจากฌาน','h-10 j-5','ภาพนั้นยังติดตาอยู่หลายปี']]])}},
+  {st:3,f(){runE(['📜 อักษรฟ้าดินบนผนังหิน','ผนังถ้ำเริ่มเรืองแสง อักษรโบราณที่ไม่มีใครอ่านออกเรียงตัวเป็นคัมภีร์',[['เพ่งพินิจสามปีไม่ขยับ','q+20 i+10 h-10','คุณเข้าใจครึ่งหนึ่ง — แต่ครึ่งเดียวก็มากพอจะเปลี่ยนชีวิต'],['จดจำไว้แล้วค่อยศึกษา','q+8 i+5','อักษรเลือนหายไปเมื่อคุณหันหลัง']]])}},
+  {st:3,f(){runE(['🐇 ศิษย์ตัวแรก','กระต่ายขาวตัวหนึ่งมาหมอบหน้าถ้ำทุกเช้า ขอให้คุณสอนวิธีบำเพ็ญ',[['รับเป็นศิษย์','k+12 i+5 j+8','ถ้ำที่เคยเงียบเหงามีเสียงหัวเราะเป็นครั้งแรก'],['ไล่ไป — การบำเพ็ญคือทางเดียวดาย','q+6','มันร้องไห้แล้ววิ่งหายไปในป่า']]])}},
+  {st:4,f(){runE(['⛈️ ทัณฑ์ฟ้าแห่งการรู้แจ้ง','เมฆเก้าสีวนอยู่เหนือถ้ำ ฟ้าจะทดสอบว่าคุณคู่ควรกับการรู้แจ้งหรือไม่',[['ออกไปรับทัณฑ์กลางแจ้ง','',null,()=>blFight('อัสนีเก้าสี',1,()=>{S.qi+=40;S.maxHp+=40;S.hp=S.maxHp;log('อัสนีเก้าสายผ่านร่าง ทิ้งไว้เพียงความสงบอันไร้ขอบเขต','myth')},()=>{S.qi+=10})],['ตั้งค่ายกลรับไว้ในถ้ำ','q+15 i+5 h-20','ถ้ำพังทลาย แต่คุณยังมีชีวิต']]])}},
+  {st:4,f(){runE(['🌌 การรู้แจ้ง','เช้าวันหนึ่งคุณลืมตาขึ้น และเข้าใจทุกสิ่ง — สายลม ใบไม้ และตัวคุณเองไม่ได้แยกจากกัน',[['ก้าวออกจากถ้ำ','q+40 i+20 k+10',null,blPathEnd]]])}}]};
+function blPathOffer(){const m=S.beastMode;if(m.path||m.pOff)return false;m.pOff=1;
+ choice('🐾 เส้นทางของอสูร',`${esc(S.name)}เปิดปัญญาแล้ว — สัตว์ตนหนึ่งจะเดินทางไหนต่อ?<br><span class="tag2">แต่ละเส้นทางมีเนื้อเรื่อง 6 บท และท่าทางฝึกเฉพาะทาง</span>`,Object.keys(BPATH).map(k=>({t:`${BPATH[k].ic} ${BPATH[k].n}`,s:BPATH[k].d,f(){m.path=k;m.pc=0;m.pcY=S.age;blFocusSync();S.focus=BPATH[k].fo[0];log(`${BPATH[k].ic} ${S.name} เลือกเส้นทาง <b>${BPATH[k].n}</b>`,'epic',true);keyAdd('เลือกเส้นทาง'+BPATH[k].n);render()}})));return true}
+function blPathTick(){const m=S.beastMode;if(!m||m.human||choice._cur||modalOpen)return;
+ if(!m.path){if(m.st>=2&&S.age>=6)blPathOffer();return}
+ const L=BCH[m.path];if(!L||(m.pc||0)>=L.length)return;const c=L[m.pc||0];if(m.st<c.st)return;
+ if(S.age-(m.pcY||0)<6+(m.pc||0)*3||Math.random()>.4)return;m.pc=(m.pc||0)+1;m.pcY=S.age;try{c.f()}catch(e){console.error(e)}}
+function blPathYear(){const m=S.beastMode,f=S.focus,mul=S.talent.m*(S.xian?1.4:1),st=m.st||0;
+ if(f==='patrol'){S.power+=Math.round(R(5,12)*mul*(1+st*.6));S.karma+=1;if(Math.random()<.2)S.hp-=R(3,10);S.fame+=1}
+ else if(f==='devour'){S.power+=Math.round(R(14,28)*mul*(1+st*.7));S.karma-=2;if(Math.random()<.35)S.hp-=R(5,15);if(Math.random()<.5)S.kills=(S.kills||0)+1}
+ else if(f==='pack'){m.pk=Math.min(20+st*40,(m.pk||0)+R(0,2));S.power+=Math.round((R(4,9)+(m.pk||0)*.6)*mul*(1+st*.4));S.fame+=1}
+ else if(f==='bond'){S.int+=R(1,3);S.qi+=+(.5*mul).toFixed(1);S.power+=Math.round(R(6,14)*mul*(1+st*.5));joy(2)}
+ else if(f==='seclude'){S.qi+=+(R(10,20)/10*mul*(st>=1?2:1)).toFixed(1);S.int+=1;S.hp=Math.min(S.maxHp,S.hp+10)}}
+{const _by2=beastYear;beastYear=function(){const P0=S.power,Q0=S.qi,pm=(S.beastMode&&S.beastMode.pm)||1;try{blNames();blFocusSync();if(!focusOK(S.focus))S.focus='hunt';blPathYear()}catch(e){console.error(e)}
+ const r=_by2.apply(this,arguments);try{if(S&&S.beastMode&&pm!==1){const dp=S.power-P0,dq=S.qi-Q0;if(dp>0)S.power+=Math.round(dp*(pm-1));if(dq>0)S.qi+=+(dq*(pm-1)*.5).toFixed(1)}if(S&&S.alive&&S.beastMode&&!S.beastMode.human)blPathTick()}catch(e){console.error(e)}return r}}
+{const _af=autoFocus;autoFocus=function(){const r=_af.apply(this,arguments);try{const m=S.beastMode;if(m&&!m.human&&m.path&&S.hp>=S.maxHp*.4&&Math.random()<.45)S.focus=BPATH[m.path].fo[0]}catch(e){}return r}}
+{const _rdB=render;render=function(){try{if(S&&S.beastMode){blNames();blFocusSync()}}catch(e){}return _rdB.apply(this,arguments)}}
+{const _bs2=blStageTxt;blStageTxt=function(){blNames();const m=S.beastMode;let t=m.st>=5?BL_ST[Math.min(BL_ST.length-1,m.st)]:_bs2.apply(this,arguments);if(blIsDragon())t=t.replace(' · ราชาอสูร','');if(m.path&&BPATH[m.path])t+=` · ${BPATH[m.path].ic}${m.pdone?BPATH[m.path].end:BPATH[m.path].n}`;return t}}
+{const _bm=blMe;blMe=function(){const o=_bm.apply(this,arguments);try{if(blIsDragon()){o.f.horn=true;o.f.glow=true;o.f.big=S.beastMode.st>=3;o.t=Math.min(9,S.beastMode.st*2+2)}}catch(e){}return o}}
+// เหตุการณ์เฉพาะเผ่ามังกร
+BLX.push(
+ {id:'drg_pearl',mx:2,sp:'มังกร',c:()=>S.age>=5,gap:12,f(){runE(['🔮 มุกมังกร','ไข่มุกที่อยู่ในคอของคุณตั้งแต่เกิดเริ่มเรืองแสง มันกำลังดูดซับปราณฟ้าดินแทนคุณ',[['บ่มมุกด้วยลมปราณทั้งหมด',`q+12 p+${blSc(60)} h-10`,'มุกมังกรกลายเป็นสีทอง พลังไหลเวียนไม่รู้จบ'],['ซ่อนมุกไว้ใต้ก้นทะเลสาบ','i+4 l+20','ผู้บำเพ็ญหลายคนเริ่มตามหามุกนั้น แต่ไม่มีใครพบ']]])}},
+ {id:'drg_rain',mx:3,sp:'มังกร',c:()=>S.beastMode.st>=1,gap:10,f(){runE(['🌧️ เรียกฝน','แผ่นดินแห้งแล้งมาสามปี ชาวบ้านทำพิธีขอฝนกลางทุ่งพลางร้องเรียก "ท่านมังกร"',[['ม้วนตัวขึ้นฟ้าเรียกฝน','k+15 f+60 q-3','ฝนกระหน่ำทั้งแคว้น ศาลมังกรผุดขึ้นทุกหมู่บ้าน'],['เมินเฉย — มนุษย์ไม่เกี่ยวกับมังกร','q+4','เสียงสวดอ้อนวอนค่อยๆ เงียบลง']]])}},
+ {id:'drg_clan',sp:'มังกร',c:()=>S.beastMode.st>=3&&!blM().dclan,gap:10,f(){runE(['🐲 เผ่ามังกรโบราณ','มังกรเฒ่าเกล็ดดำปรากฏกลางเมฆ "เลือดของเผ่าเรา... มาพิสูจน์ว่าเจ้าคู่ควรจะเป็นเผ่ามังกร"',[['รับการทดสอบ','',null,()=>{blM().dclan=1;blFight('มังกรเฒ่าเกล็ดดำ',1.1,()=>{S.power+=blSc(200);S.lifespan+=Math.round(S.lifespan*.15);S.fame+=200;log('มังกรเฒ่าก้มหัว "ยินดีต้อนรับกลับบ้าน ทายาทแห่งมังกร" — อายุขัยยืดออกอีก','myth',true);keyAdd('ได้รับการยอมรับจากเผ่ามังกรโบราณ')})}],['ปฏิเสธ — ข้าคือข้า ไม่ใช่ของเผ่าใด',`p+${blSc(40)} i+5`,null,()=>{blM().dclan=1}]]])}}
+);
+// ความสำเร็จ
+{const add=(cat,arr)=>{const c=ACH.find(x=>x[0]===cat);if(!c)return;arr.forEach(a=>{if(ACH_ALL.some(b=>b.id===a.id))return;const zi=c[1].findIndex(b=>b.id==='z_all');if(zi>=0)c[1].splice(zi,0,a);else c[1].push(a);ACH_ALL.push(a)})};
+ add('กำเนิด',[{id:'b_dragon',n:'ทายาทมังกร',d:'เกิดเป็นเผ่ามังกร',r:4,c:()=>!!(S.beastMode&&S.beastMode.sp==='มังกร')},{id:'b_primal',n:'เลือดปฐมกาล',d:'เกิดเป็นสัตว์สายเลือดปฐมกาล',r:3,c:()=>!!(S.beastMode&&S.beastMode.bl===3)}]);
+ add('ทางแยกชีวิต',[{id:'w_bpath',n:'ตำนานแห่งพงไพร',d:'จบเส้นทางอสูรครบ 6 บท',r:3,c:()=>!!(S.beastMode&&S.beastMode.pdone)},{id:'w_bdivine',n:'สัตว์ศักดิ์สิทธิ์',d:'บำเพ็ญจนถึงขั้นสัตว์ศักดิ์สิทธิ์',r:4,c:()=>!!(S.beastMode&&S.beastMode.st>=5)},{id:'w_bprime',n:'ปฐมสัตว์เทพ',d:'บำเพ็ญจนถึงขั้นสูงสุดของสัตว์อสูร',r:5,c:()=>!!(S.beastMode&&S.beastMode.st>=7)}])}
+// ปลดล็อก BLOCK message ใช้ BL_ST[4] — ทำให้ชื่อขั้นตรงเผ่า
+// ---------- ผู้ครองสมุดตำนาน: กรอบระดับพระเจ้า ดำ ขาว แดง ----------
+const GOD_T='ผู้ครองสมุดตำนาน';
+{const _tc=tchipH;tchipH=function(t,r){if(String(t)===GOD_T)return`<span class="tchip frgod"><span class="tgod">${esc(GOD_T)}</span></span>`;return _tc.apply(this,arguments)}}
+function godMark(root){try{(root||document).querySelectorAll('.item,.lgf,.tchip,.shpick button,#achPop').forEach(e=>{if(e.classList.contains('frgod'))return;
+ if(e.classList.contains('item')){const b=e.querySelector('.h b');if(!b||!(b.textContent||'').includes(GOD_T))return;e.classList.add('frgod');b.classList.add('tgod');const tl=e.querySelector('.h span.t6');if(tl)tl.textContent='✦ พระเจ้า ✦ ×'+ACH_W[6];return}
+ const tx=e.textContent||'';if(tx.includes(GOD_T)&&tx.length<GOD_T.length+50){e.classList.add('frgod');e.querySelectorAll('.t6,b').forEach(x=>{if((x.textContent||'').includes(GOD_T))x.classList.add('tgod')})}})}catch(e){}}
+{const _lg=log;log=function(t,...a){if(window._bbirth)return;if(typeof t==='string'&&t.includes(GOD_T))t=t.replace(/fr6/g,'fr6 frgod').replace(/class="t6"/g,'class="t6 tgod"').replace(/>\?\?\?</g,'>✦ พระเจ้า ✦<');return _lg.call(this,t,...a)}}
+{let _gq=0;const mo=new MutationObserver(ms=>{if(_gq)return;for(const m of ms)for(const n of m.addedNodes){if(n.nodeType===1&&(n.textContent||'').includes(GOD_T)){_gq=1;requestAnimationFrame(()=>{_gq=0;godMark()});return}}});try{mo.observe(document.body,{childList:true,subtree:true})}catch(e){}}
+(function(){const st=document.createElement('style');st.textContent=`
+.btr{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:8px 10px;margin:6px 0;border:2px solid var(--grid);border-left:5px solid var(--c0);border-radius:10px;background:var(--card);opacity:0;transform:translateY(6px);transition:.3s}
+.btr.on{opacity:1;transform:none}.btr.r1{border-left-color:var(--c1)}.btr.r2{border-left-color:var(--c2)}.btr.r3{border-left-color:var(--c3)}.btr.r4{border-left-color:var(--c4);box-shadow:0 0 10px color-mix(in srgb,var(--c4) 40%,transparent)}
+.btr .k{font-size:11px;opacity:.7}.btr .v{font-weight:bold;font-size:15px}.btr .d{font-size:11px;opacity:.75;margin-top:2px}.btr .o{font-size:11px;white-space:nowrap}
+.brodds{text-align:center;margin-top:8px;padding:8px;border:2px dashed var(--grid);border-radius:10px}
+.frgod{--fc:#ff2436}
+.tchip.frgod,.lgf.frgod,#achPop.frgod,.shpick button.frgod,.item.frgod{border:2px solid transparent!important;color:#fff!important;background:linear-gradient(135deg,#050505,#1c0307 55%,#050505) padding-box,linear-gradient(90deg,#ffffff,#ff1e2d,#0a0a0a,#ff1e2d,#ffffff,#ff1e2d,#0a0a0a) border-box!important;background-size:100% 100%,300% 100%!important;animation:godB 4s linear infinite!important;box-shadow:0 0 12px #ff1e2d99,0 0 2px #fff inset,inset 0 0 14px #ff1e2d40!important}
+.frgod .tag2,.item.frgod p{color:#ffc4c9!important}.item.frgod{opacity:1!important}.item.frgod .bkst{color:#ff2436}
+.tgod,.frgod .tgod{font-weight:900;background:linear-gradient(90deg,#ffffff 0%,#ffffff 30%,#ff2a3a 50%,#ffffff 70%,#ffffff 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;-webkit-text-fill-color:transparent;animation:godT 3s linear infinite;filter:drop-shadow(0 0 3px #ff1e2dcc)}
+.tchip.frgod::before,.tchip.frgod::after{content:'✦';color:#ff2436;margin:0 3px;font-size:.85em;-webkit-text-fill-color:#ff2436}
+@keyframes godB{0%{background-position:0 0,0% 0}100%{background-position:0 0,300% 0}}
+@keyframes godT{0%{background-position:150% 0}100%{background-position:-100% 0}}
+@media (prefers-reduced-motion:reduce){.frgod,.tgod{animation:none!important}}`;document.head.appendChild(st)})();
+
+Object.assign(FOC_LOC,{patrol:'road',devour:'road',pack:'peak',bond:'road',seclude:'waterfall'});
+Object.assign(ACT,{hunt:['ซุ่มรอเหยื่อ','ไล่ล่าเหยื่อ','ลับเขี้ยวเล็บ','แบ่งเหยื่อ'],moon:['ดูดซับแสงจันทร์','นั่งนิ่งใต้จันทร์','หายใจตามจังหวะลมปราณ'],roam:['ท่องป่า','ดมกลิ่นตามรอย','สำรวจถ้ำ'],hide:['ขดตัวพักฟื้น','เลียแผล','หลับในโพรง'],human:['แอบดูมนุษย์','ฟังภาษามนุษย์','ซ่อนตัวชายหมู่บ้าน'],
+ patrol:['ลาดตระเวนอาณาเขต','ทำลายกับดัก','เฝ้าชายป่า'],devour:['กลืนกินแก่นอสูร','ล่าอสูรตัวอื่น','ดูดซับโลหิต'],pack:['นำฝูงล่าเหยื่อ','สอนลูกฝูง','ขยายอาณาเขต'],bond:['ร่วมทางกับคู่พันธะ','ฝึกคู่กับคู่พันธะ','เฝ้ายามให้คู่พันธะ'],seclude:['เข้าฌาน','เพ่งอักษรบนผนังถ้ำ','บำเพ็ญเงียบ']});
+{const _ba3=blAdvance;blAdvance=function(){try{const m=S.beastMode;if(m&&m.sp==='มังกร'&&((m.st===2&&S.age<40)||(m.st===3&&S.age<80)))return}catch(e){}return _ba3.apply(this,arguments)}}
 </script>
 </body>
 </html>
