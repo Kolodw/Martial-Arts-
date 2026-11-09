@@ -6972,9 +6972,9 @@ function bigEvTick(){if(!S||!S.alive||choice._cur||modalOpen||(S.beastMode&&!S.b
 // ---- v12.1: โลกเทพ — เลื่อนขั้นทุกครั้งต้องฝ่าทัณฑ์สวรรค์ ค่าสถานะต่ำมีโอกาสตายสูง ----
 function tribT(k,t){return k==='r'?t:7+t*.25}
 function tribStats(t,k){const T=tribT(k||'r',t),m=(S.talent&&S.talent.m)||1,n=v=>Math.max(0,Math.min(1,v));
- const parts=[['พรสวรรค์',n((m-.5)/2.5)],['ร่างกาย',n(S.maxHp/(250+T*90))],['ลมปราณ',n((S.qi||0)/(25*Math.pow(T+1,2.2)))],['ปัญญา',n((S.int||0)/(150*Math.pow(1.25,T)))],['กรรม',n(((S.karma||0)+80)/(150+100*Math.pow(1.25,T)))],['จิตใจ',n((S.happy==null?60:S.happy)/95)],['กฎแห่งเต๋า',n(daoSum()/(4+T*1.8))]];
+ const parts=[['พรสวรรค์',n((m-.5)/2.5)],['ร่างกาย',n(S.maxHp/(250+T*90))],['ลมปราณ',n((S.qi||0)/(25*Math.pow(T+1,2.2)))],['ปัญญา',n((S.int||0)/(150*Math.pow(1.45,T)))],['กรรม',n(((S.karma||0)+80)/(150+100*Math.pow(1.25,T)))],['จิตใจ',n((S.happy==null?60:S.happy)/95)],['กฎแห่งเต๋า',n(daoSum()/(4+T*3))]];
  const sc=parts.reduce((a,x)=>a+x[1],0)/parts.length;return{sc,parts}}
-function tribOdds(t,k){const T=tribT(k,t),st=tribStats(t,k),pr=(S.tribPrep||0)*.06+(S.tribPill||0),minor=k==='p'&&t%9!==0;return{st,ps:clamp(.14+.62*st.sc+pr+(S.btFail||0)*.03-T*.012+(minor?.08:0),.05,.92),pd:clamp((.55-.75*st.sc-pr*.4+T*.006)*(minor?.4:1),.02,.7)}}
+function tribOdds(t,k){const T=tribT(k,t),st=tribStats(t,k),pr=(S.tribPrep||0)*.06+(S.tribPill||0),minor=k==='p'&&t%9!==0;return{st,ps:clamp(.14+.62*st.sc+pr+(S.btFail||0)*.03-T*.012+(minor?.08:0),.05,.92),pd:clamp((.64-.75*st.sc-pr*.4+T*.006)*(minor?.4:1),.02,.75)}}
 function tribGrade(sc){return sc<.3?['กาก','#d84a4a']:sc<.5?['พอใช้','#e8a23a']:sc<.7?['ดี','#5fb85f']:['ยอดเยี่ยม','#4aa3ff']}
 function tribName(k,t){return k==='r'?REALMS[t].n:`${RS_PFX[Math.floor(t/9)]}${REALMS[7].n} ขั้น ${t%9+1}`}
 function godTrib(k,t){if(choice._cur||modalOpen)return;if(S.tribNext!=null&&S.age<S.tribNext)return;const nm=tribName(k,t),o=tribOdds(t,k),[gn,gc]=tribGrade(o.st.sc),risk=Math.round((1-o.ps)*o.pd*100);
