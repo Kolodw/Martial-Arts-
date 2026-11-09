@@ -7280,9 +7280,9 @@ function relScale(a,k){const ri=Math.max(0,realmIdx()),r=a?a.r||0:0,L=S.xt?Math.
 function relStart(manual){if(!S||!S.alive||choice._cur)return;const P=REL_PL[relWorld()],pl=[...P].sort(()=>Math.random()-.5).slice(0,4);S.relY=S.age;
  setScene('aura');choice('💥 อยากปล่อยพลังสักหน่อย',ch(['พลังในร่างอัดแน่นจนรู้สึกคันไม้คันมือ ไม่มีศัตรูให้สู้ ไม่มีใครให้ประลอง','วันนี้อากาศดี ไม่มีอะไรทำ คุณอยากรู้ว่าตอนนี้ตัวเองแรงแค่ไหน','ฝึกมานานจนไม่เคยได้ใช้เต็มแรงสักครั้ง… ลองดูหน่อยก็ไม่เสียหาย']),
   pl.map(p=>({t:`📍 ${p[0]}`,s:p[2]>=.6?'คนพลุกพล่าน มีคนเห็นแน่':p[2]>=.3?'อาจมีคนผ่านมา':'แทบไม่มีใคร',f(){relArt(p)}})).concat(manual?[]:[{t:'🙅 ไม่ล่ะ เก็บพลังไว้',s:'',skip:true,f(){log('คุณกำหมัดแน่น แล้วคลายออก — วันนี้ไม่เอาดีกว่า','')}}]))}
-function relArt(p){const A=[...(S.arts||[])].sort((x,y)=>(y.r||0)-(x.r||0)||(y.b||0)-(x.b||0)).slice(0,5);
+function relArt(p){const A=[...(S.arts||[])].sort((x,y)=>(y.r||0)-(x.r||0)||(y.b||0)-(x.b||0));
  const o=A.map(a=>({t:artHtml(a),s:`วิชาระดับ${a.tier}`,f(){relPow(p,a)}}));o.push({t:'👊 หมัดเปล่าธรรมดา',s:'ไม่ใช้วิชาอะไรเลย',f(){relPow(p,null)}});
- choice(`🎯 ${p[0]}`,'จะใช้วิชาอะไรดี?',o)}
+ choice(`🎯 ${p[0]}`,`จะใช้วิชาอะไรดี? (มีทั้งหมด ${A.length} วิชา)`,o)}
 function relPow(p,a){choice('⚡ จะปล่อยแรงแค่ไหน?',`${a?artHtml(a):'หมัดเปล่า'} ที่${p[0]}`,REL_K.map((k,i)=>{const sc=relScale(a,i);return{t:k[0],s:`${k[1]} · คาดว่า: ${REL_D[sc].replace('{L}',p[1]).slice(0,38)}…`,f(){relGo(p,a,i)}}}))}
 function relGo(p,a,k){const sc=relScale(a,k),d=REL_D[sc].replace(/\{L\}/g,p[1]),nm=a?artHtml(a):'หมัดเปล่า',ri=Math.max(0,realmIdx());
  const vb=ch(['ยกมือขึ้นช้าๆ แล้วปล่อย','สูดลมหายใจลึก แล้วซัด','กระทืบเท้าหนึ่งครั้ง ก่อนปล่อย','หลับตา แล้วตวัด','ยิ้มมุมปาก แล้วปล่อย']);
