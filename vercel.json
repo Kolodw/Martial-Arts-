@@ -5,8 +5,285 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/:f(\\.env.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.git.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.aws.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.ssh.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.svn.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.hg.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.docker.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.vscode.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.idea.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.npmrc.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.htaccess.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.htpasswd.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.DS_Store.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.anthropic.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.kube.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.terraform.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.circleci.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.config.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.composer.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(\\.bash_history.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*/\\.env.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*/\\.git.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*/\\.aws.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.php.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.asp.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.jsp.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.cgi.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.sql)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.bak)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.old)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.swp)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.ini)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.yml)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.yaml)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.pem)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.key)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.tar.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.zip)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.rar)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*\\.7z)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(wp-.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(wordpress.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(phpmyadmin.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(pma.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(actuator.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(server-status.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(server-info.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(cgi-bin.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(vendor/.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(node_modules.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(config\\.json.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(credentials.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(secrets.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(backup.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(dump.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(xmlrpc.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(telescope.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(_profiler.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(debug/.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(admin/config.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(owa/.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(autodiscover.*)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(api/online\\.js)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(vercel\\.json)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(package\\.json)",
+      "destination": "/api/online?a=trap&p=:f"
+    },
+    {
+      "source": "/:f(.*/config\\.json)",
+      "destination": "/api/online?a=trap&p=:f"
     }
   ]
 }

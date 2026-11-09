@@ -130,6 +130,11 @@ function clean(s, n) {
 }
 // อ่าน query ด้วย WHATWG URL (ไม่แตะ req.query ซึ่งใช้ url.parse ที่เลิกสนับสนุนแล้ว)
 const qOf = r => r._q || (r._q = Object.fromEntries(new URL(r.url || '/', 'http://localhost').searchParams));
+// IP ของผู้ใช้จริง (Vercel ใส่ x-forwarded-for / x-real-ip ให้)
+const cip = req => (String(req.headers['x-real-ip'] || '') || String(req.headers['x-forwarded-for'] || '').split(',')[0]).trim().replace(/[^0-9a-fA-F:.]/g, '').slice(0, 45) || 'x';
+// ต่อ IP ต่อนาที: เกิน SOFT ตอบ 429 · เกิน HARD แบน 30 นาที · คำสั่งที่เขียนข้อความให้คนอื่นเห็นจำกัดแยก
+const IP_SOFT = 900, IP_HARD = 3000, IP_WMAX = 40;
+const IP_WRITE = new Set(['say', 'bug', 'bugedit', 'mtmsg', 'pachat', 'life', 'profile', 'idea', 'fb', 'mtopen', 'meet', 'migput', 'csave', 'save']);
 const isAdmKey = k => !!process.env.ADMIN_KEY && String(k || '') === process.env.ADMIN_KEY;
 const annGet = async () => { try { const v = await cmd('GET', 'ann'); return v ? JSON.parse(v) : null } catch { return null } };
 const ANN_VOTE_DAYS = 7;
@@ -262,7 +267,40 @@ module.exports = async (req, res) => {
   const now = Date.now(), W = week();
   // ฐานข้อมูลเต็มโควตา: ตอบทันทีโดยไม่ยิงซ้ำ (ยกเว้นหน้าผู้ดูแลที่ต้องเห็นสถานะ)
   if (QUOTA_AT && now - QUOTA_AT < 120e3 && a !== 'admin' && a !== 'kvdiag') return res.status(503).json({ err: 'quota' });
+  const ip = cip(req);
   try {
+    // ---- 🛡️ กับดักบอทสแกนไฟล์ (/.env, /.git, *.php …) : จด IP + แบนจากระบบออนไลน์ แล้วตอบ 404 เหมือนไม่มีอะไร ----
+    if (a === 'trap') {
+      const p = String(qOf(req).p || '').slice(0, 120), ua = String(req.headers['user-agent'] || '').slice(0, 140);
+      try {
+        const cur = jp(await cmd('HGET', 'trap:info', ip)) || { n: 0, p: [], f: now };
+        cur.n++; cur.l = now; cur.ua = ua; if (p && !cur.p.includes(p)) { cur.p.push(p); if (cur.p.length > 10) cur.p.shift() }
+        const L = [['HSET', 'trap:info', ip, JSON.stringify(cur)], ['ZADD', 'trap:ips', now, ip], ['ZREMRANGEBYRANK', 'trap:ips', 0, -301], ['INCR', 'trap:n:' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10)], ['EXPIRE', 'trap:n:' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10), 86400 * 35]];
+        if (!(await cmd('GET', 'banx:' + ip))) L.push(['SET', 'ban:' + ip, 'scan', 'EX', 86400 * 7]);
+        await pipe(L);
+      } catch (e) {}
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8'); res.setHeader('Cache-Control', 'no-store');
+      res.statusCode = 404; return res.end('The page could not be found\n\nNOT_FOUND\n');
+    }
+    if (a === 'ipban') {
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
+      const tip = String(qOf(req).ip || '').replace(/[^0-9a-fA-F:.]/g, '').slice(0, 45);
+      if (!tip) return res.status(400).json({ err: 'ip' });
+      if (qOf(req).on === '1') await pipe([['SET', 'ban:' + tip, 'admin', 'EX', 86400 * 30], ['DEL', 'banx:' + tip]]);
+      else if (qOf(req).on === 'del') await pipe([['ZREM', 'trap:ips', tip], ['HDEL', 'trap:info', tip]]);
+      else await pipe([['DEL', 'ban:' + tip], ['SET', 'banx:' + tip, 1, 'EX', 86400 * 30]]);
+      return res.json({ ok: 1 });
+    }
+    // ---- 🛡️ IP ที่ถูกแบน + จำกัดความถี่ต่อ IP (กันสร้างไอดีใหม่มาสแปม) ----
+    const admReq = isAdmKey(qOf(req).key || b.key);
+    if (!admReq && ip !== 'x') {
+      const mk = Math.floor(now / 60000), WR = IP_WRITE.has(a);
+      const [bn, rc, wc] = await pipe([['GET', 'ban:' + ip], ['INCR', 'ipr:' + ip + ':' + mk], WR ? ['INCR', 'ipw:' + ip + ':' + mk] : ['GET', 'ipw:' + ip + ':' + mk], ['EXPIRE', 'ipr:' + ip + ':' + mk, 90], ...(WR ? [['EXPIRE', 'ipw:' + ip + ':' + mk, 90]] : [])]);
+      if (bn) return res.status(403).json({ err: 'banned' });
+      if (+rc > IP_HARD) { await pipe([['SET', 'ban:' + ip, 'flood', 'EX', 1800], ['ZADD', 'trap:ips', now, ip], ['HSET', 'trap:info', ip, JSON.stringify({ n: +rc, p: ['(ยิง API ถี่เกิน ' + rc + ' ครั้ง/นาที)'], f: now, l: now, ua: String(req.headers['user-agent'] || '').slice(0, 140), fl: 1 })]]); return res.status(429).json({ err: 'rate' }) }
+      if (+rc > IP_SOFT) return res.status(429).json({ err: 'rate' });
+      if (WR && +wc > IP_WMAX) return res.status(429).json({ err: 'rate' });
+    }
     if (a === 'ping') {
       if (okId(id)) {
         const ua = String(req.headers['user-agent'] || '');
@@ -270,7 +308,8 @@ module.exports = async (req, res) => {
         const meta = { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(qOf(req).v || '').slice(0, 8), c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
         let act = null;
         try { const r = JSON.parse(String(qOf(req).st || '').slice(0, 600) || 'null'); if (r && typeof r === 'object') { const S0 = v => String(v == null ? '' : v).replace(/[<>]/g, '').slice(0, 40), N0 = v => Math.max(-1, Math.min(1e7, Math.round(+v || 0))); act = { sc: S0(r.sc), md: S0(r.md), ch: r.ch ? 1 : 0, hd: r.hd ? 1 : 0, ia: N0(r.ia), er: N0(r.er), em: String(r.em || '').replace(/[<>]/g, '').slice(0, 120), nm: S0(r.nm), ag: N0(r.ag), al: r.al ? 1 : 0, au: r.au ? 1 : 0, pa: r.pa ? 1 : 0, sp: N0(r.sp), w: S0(r.w).slice(0, 1), yr: N0(r.yr), ri: S0(r.ri), v: S0(qOf(req).v).slice(0, 8), t: now } } } catch {}
-        if (meta.b !== 'บอท') await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)], ...(act ? [['HSET', 'oa', id, JSON.stringify(act)]] : [])]);
+        const hk = 'ipid:' + ip + ':' + Math.floor(now / 3600e3), [, nid] = await pipe([['SADD', hk, id], ['SCARD', hk], ['EXPIRE', hk, 4000]]);
+        if (meta.b !== 'บอท' && +nid <= 40) await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)], ...(act ? [['HSET', 'oa', id, JSON.stringify(act)]] : [])]);
       }
       const [, n, lives, annV] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 600e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann']]);
       let ann = null; try { ann = annV ? JSON.parse(annV) : null } catch {}
@@ -319,11 +358,19 @@ module.exports = async (req, res) => {
       let brd = []; try { const hid = new Set((await cmd('SMEMBERS', 'bdhide')) || []); hid.add('f18abdmw8fuj8d'); brd = ((await cmd('ZREVRANGE', 'bd2:' + W, 0, 39)) || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(x => x && x.lid && !hid.has(x.lid)) } catch {}
       const e = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
       const K = encodeURIComponent(AK);
+      const tDay = new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
+      const tIps = (await cmd('ZREVRANGE', 'trap:ips', 0, 39)) || [], tInf = tIps.length ? await cmd('HMGET', 'trap:info', ...tIps) : [], tTtl = tIps.length ? await pipe(tIps.map(x => ['TTL', 'ban:' + x])) : [], tWl = tIps.length ? await pipe(tIps.map(x => ['EXISTS', 'banx:' + x])) : [];
+      const [tN1, tN7] = await pipe([['GET', 'trap:n:' + tDay], ['GET', 'trap:n:' + new Date(now + 7 * 3600e3 - 86400e3).toISOString().slice(0, 10)]]);
+      const tAgo = ms => { const s = Math.max(0, Math.round((now - ms) / 1000)); return s < 60 ? s + ' วิ' : s < 3600 ? Math.round(s / 60) + ' นาที' : s < 86400 ? Math.round(s / 3600) + ' ชม.' : Math.round(s / 86400) + ' วัน' };
+      const tRows = tIps.map((x, i) => { const f = jp(tInf[i]) || { n: 0, p: [] }, tl = +tTtl[i] || -2; return { ip: x, f, ban: tl > 0 ? tl : 0, wl: +tWl[i] === 1 } });
+      const secHtml = `<h2>🛡️ ผู้บุกรุก / บอทสแกนไฟล์ <small style="font-weight:normal;color:#aaa">· วันนี้ ${+(tN1 || 0)} ครั้ง · เมื่อวาน ${+(tN7 || 0)} ครั้ง</small></h2><p><small>บอทที่พยายามหาไฟล์ลับ (.env, .git, .aws, *.php …) จะได้ 404 เหมือนไม่มีอะไร แล้วถูกแบนจากระบบออนไลน์ 7 วันอัตโนมัติ · คนที่ยิง API ถี่ผิดปกติถูกแบน 30 นาที · ไฟล์ลับจริงไม่มีอยู่บนเว็บ (รหัสทั้งหมดอยู่ใน Environment Variables ของ Vercel)</small></p>${tRows.length ? tRows.map(r => `<div class="pl" id="ip_${e(r.ip).replace(/[:.]/g, '_')}"><div class="plh"><b>${r.f.fl ? '🌊' : '🕷️'} ${e(r.ip)}</b><span>${r.ban ? '<span style="color:#ff6b6b">⛔ แบนอยู่ อีก ' + tAgo(now - r.ban * 1000) + '</span>' : r.wl ? '<span style="color:#7c7">✅ ปลดแล้ว (ยกเว้น)</span>' : '<span style="color:#aaa">หมดเวลาแบน</span>'}</span></div><small>${r.f.n} ครั้ง · ล่าสุด ${tAgo(r.f.l || now)} ก่อน<br>${(r.f.p || []).map(e).join(' · ')}<br><span style="color:#888">${e(r.f.ua || '')}</span></small><div style="margin-top:6px;display:flex;gap:6px">${r.ban ? `<button class="cpb" onclick="ipB('${e(r.ip)}','0',this)">ปลดบล็อก</button>` : `<button class="cpb" onclick="ipB('${e(r.ip)}','1',this)">บล็อก 30 วัน</button>`}<button class="cpb" style="color:#aaa;border-color:#555" onclick="ipB('${e(r.ip)}','del',this)">ลบออกจากรายการ</button></div></div>`).join('') : '<p>ยังไม่มีใครมาสแกน 🎉</p>'}
+<script>async function ipB(ip,on,b){if(on==='1'&&!confirm('บล็อก '+ip+' จากระบบออนไลน์ 30 วัน?'))return;b.disabled=true;try{const r=await fetch('?a=ipban&key=${K}&ip='+encodeURIComponent(ip)+'&on='+on);const j=await r.json();if(j.ok){b.textContent=on==='1'?'บล็อกแล้ว':on==='del'?'ลบแล้ว':'ปลดแล้ว';if(on==='del')b.closest('.pl').style.opacity=.35}else b.textContent='ไม่สำเร็จ'}catch(x){b.textContent='ไม่สำเร็จ';b.disabled=false}}</script>`;
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       return res.status(200).send(`<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="60"><title>ผู้ดูแล · 1 ใน นวนิยาย</title>
 <style>.cpb{background:#2a2433;color:#f0c860;border:1px solid #f0c860;border-radius:6px;padding:4px 10px;font-size:13px;cursor:pointer}.pl{background:#211d2a;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:14px}.plh{display:flex;flex-wrap:wrap;gap:6px;justify-content:space-between;align-items:baseline}.plh small,.pl small{color:#aaa}body{font-family:system-ui,sans-serif;background:#16131c;color:#eee;margin:0;padding:14px;max-width:760px;margin:auto}h1{font-size:20px}h2{font-size:16px;margin-top:22px;color:#f0c860}table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:6px;border-bottom:1px solid #333;text-align:left}.c{display:inline-block;background:#2a2433;border-radius:8px;padding:8px 12px;margin:4px 6px 4px 0}.c b{font-size:20px;display:block;color:#f0c860}.bug{background:#221d2a;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:14px}.bug.done{opacity:.55}a{color:#8fd0ff}small{opacity:.6}</style></head><body>
 <h1>🛡️ หน้าผู้ดูแล</h1><div><span class="c"><b>${rows.filter(r => r.b !== 'บอท').length}</b>ออนไลน์ (10 นาที)</span><span class="c"><b>${+(lives || 0)}</b>ชีวิตที่จบแล้ว</span><span class="c"><b>${bugs.length}</b>เรื่องบนกระดานบั๊ก</span><span class="c"><b>${rv || 0}</b>ความคิดเห็น</span></div>
 <h2>คนที่ออนไลน์ตอนนี้ <small style="font-weight:normal;color:#aaa">· รีเฟรชเองทุก 1 นาที</small></h2><p><small>🟢 กำลังเล่น · 🤔/📋 เลือกเหตุการณ์/เปิดหน้าต่าง · ⏸ หยุดเกม · 😴 เปิดทิ้งไว้ · 🙈 สลับแท็บ · 🏠 อยู่หน้าอื่น · 🔴 อาจค้าง/มี error</small></p>${rows.map(r => { const a = r.a || {}; return `<div class="pl" style="border-left:4px solid ${r.s.c}"><div class="plh"><b style="color:${r.s.c}">${e(r.s.t)}</b><small>${e(r.id)} · ${e(r.d)} · ${e(r.b)} · ${e(r.c)} · อัปเดต ${r.ago == null ? '-' : r.ago + ' วิ'}ก่อน${a.v ? ' · v' + e(a.v) : ''}</small></div>${a.nm ? `<div>👤 <b>${e(a.nm)}</b> อายุ ${e(a.ag)} ปี · ${e(WN[a.w] || '')} · ${e(a.ri || '')}${a.sp ? ' · ความเร็ว ' + e(a.sp) + '×' : ''}</div>` : ''}${r.a ? `<div><small>หน้า: ${e(SCN[a.sc] || a.sc || '-')}${a.md ? ' · หน้าต่าง: ' + e(MDN[a.md] || a.md) : ''} · แตะล่าสุด ${mins(a.ia)}ก่อน${a.sc === 'game' && a.yr >= 0 ? ' · ปีในเกมล่าสุดผ่านไปเมื่อ ' + mins(a.yr) + 'ก่อน' : ''}</small></div>` : ''}${r.s.x ? `<div><small style="color:#ff9b9b">error ล่าสุด: ${e(r.s.x)}</small></div>` : ''}</div>` }).join('') || '<p><small>ตอนนี้ไม่มีใครออนไลน์</small></p>'}
+${secHtml}
 <h2>🐞 error จากเครื่องผู้เล่น <small style="font-weight:normal;color:#aaa">· 200 ครั้งล่าสุด จัดกลุ่มตามข้อความ</small></h2>${jsTop.length ? `<p><button class="cpb" onclick="cpErr(-1,this)">📋 ก็อปปี้ error ทั้งหมดไปให้ Claude แก้</button> <small>(ไม่รวมอันที่มาจากเบราว์เซอร์)</small></p>` : ''}${jsTop.map((g, gi) => `<div class="pl" style="border-left:4px solid ${jsNoise(g) ? '#777' : '#ff6b6b'}"><div class="plh"><b style="color:${jsNoise(g) ? '#aaa' : '#ff9b9b'}">${e(g.last.m)}</b><small>${g.n} ครั้ง · ${g.users.size} คน · v${e([...g.vers].join(', v'))}</small></div>${jsNoise(g) ? '<div><small style="color:#e8c86a">🔕 มาจากเบราว์เซอร์ในแอปหรือส่วนขยาย ไม่ใช่บัคของเกม</small></div>' : ''}<div><small>ล่าสุด ${new Date(g.last.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })} · ${e(g.last.d)}${g.last.l ? ' · บรรทัด ' + g.last.l + ':' + g.last.c : ''} · หน้า ${e(g.last.x.sc)}${g.last.x.md ? ' · หน้าต่าง ' + e(g.last.x.md) : ''}${g.last.x.ch ? ' · เหตุการณ์ ' + e(g.last.x.ch) : ''}${g.last.x.ag ? ' · อายุ ' + g.last.x.ag + ' · ' + e(g.last.x.fo) + ' · ' + e(g.last.x.w) : ''}</small></div>${g.last.s ? `<div><small style="color:#aaa;word-break:break-all">${e(g.last.s)}</small></div>` : ''}<div style="margin-top:6px"><button class="cpb" onclick="cpErr(${gi},this)">📋 ก็อปปี้ให้ Claude</button></div></div>`).join('') || '<p><small>ยังไม่มี error</small></p>'}
 <script>const ERR_TX=${JSON.stringify(jsTop.map(g => ({ t: jsText(g), n: jsNoise(g) ? 1 : 0 }))).replace(/</g, '\\u003c')};
 function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกมเหล่านี้ให้หน่อย (จากหน้าผู้ดูแล)\\n\\n'+ERR_TX.filter(x=>!x.n).map((x,k)=>'#'+(k+1)+'\\n'+x.t).join('\\n\\n'):'ช่วยแก้ error นี้ของเกมให้หน่อย\\n\\n'+ERR_TX[i].t;const ok=()=>{const o=b.textContent;b.textContent='✅ ก็อปปี้แล้ว — วางในแชทกับ Claude ได้เลย';setTimeout(()=>b.textContent=o,2500)};
