@@ -3805,7 +3805,7 @@ async function onlinePing(){if(onlinePing._f)return;onlinePing._f=1;try{let st='
 setTimeout(onlinePing,1500);setInterval(()=>{if(!document.hidden)onlinePing()},120000);
 function myTitle(){if(!S)return'';const ri=realmIdx();return REALMS[ri].n}
 function chatRender(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60;box.innerHTML=chatMsgs.map(m=>`<div class="cm ${m.k==='share'?'share':''}"><span class="ct">${new Date(m.t).toTimeString().slice(0,5)}</span> <b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b> ${m.k==='share'?'📤 ':''}${esc(m.x)} <button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div>`).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';if(near)box.scrollTop=box.scrollHeight}
-async function chatPoll(){try{const j=await api('chat');chatMsgs=(j.m||[]).reverse();chatRender()}catch(e){const b=$('chatBox');if(b)b.innerHTML='<div class="tag2">เชื่อมต่อไม่ได้</div>'}}
+async function chatPoll(){try{const j=await api('chat');chatMsgs=(j.m||[]).slice().sort((x,y)=>(x.t||0)-(y.t||0));chatRender()}catch(e){const b=$('chatBox');if(b)b.innerHTML='<div class="tag2">เชื่อมต่อไม่ได้</div>'}}
 async function chatSend(kind,text){const x=(text!=null?text:($('chatIn')||{}).value||'').trim();if(!x)return;if(Date.now()-chatLast<3000)return toast('ส่งได้ทุก 3 วินาที');chatLast=Date.now();
  try{await api('say',{n:pname(),ti:myTitle(),x:x.slice(0,200),k:kind||'msg'});if($('chatIn')&&text==null)$('chatIn').value='';chatPoll()}catch(e){toast(e.message==='rate'?'ส่งเร็วเกินไป':e.message==='muted'?'ถูกห้ามพูดชั่วคราว':'ส่งไม่สำเร็จ')}}
 function shareLife(){if(!S)return;const t=`${S.name} อายุ ${S.age} · ${REALMS[realmIdx()].n} · ${S.faction?S.faction.n:'พเนจร'} · พลังรวม ${fmt(Math.round(total()))}`;chatSend('share',xT(t));toast('แชร์แล้ว')}
@@ -5715,7 +5715,7 @@ function mobAva(){if(deskOn)return;const top=document.querySelector('#game .top'
 {const _rd6=render;render=function(){const r=_rd6.apply(this,arguments);try{if(S&&$('game').classList.contains('on'))mobAva()}catch(e){}return r}}
 // --- chat with profile pictures ---
 let chatProf={};
-chatPoll=async function(){try{const j=await api('chat');chatMsgs=(j.m||[]).reverse();chatProf=j.p||{};chatRender();try{if('ann' in j)annShow(j.ann)}catch(e){}}catch(e){const b=$('chatBox');if(b)b.innerHTML='<div class="tag2">เชื่อมต่อไม่ได้</div>'}};
+chatPoll=async function(){try{const j=await api('chat');chatMsgs=(j.m||[]).slice().sort((x,y)=>(x.t||0)-(y.t||0));chatProf=j.p||{};chatRender();try{if('ann' in j)annShow(j.ann)}catch(e){}}catch(e){const b=$('chatBox');if(b)b.innerHTML='<div class="tag2">เชื่อมต่อไม่ได้</div>'}};
 chatRender=function(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60;
  box.innerHTML=chatMsgs.map(m=>{const pf=m.pu&&chatProf[m.pu];const av=pf&&pf.av?`<img src="${pf.av}">`:'🙂';return`<div class="cm cmp ${m.k==='share'?'share':''}"><span class="cav">${frWrap(`<span class="frph sm">${av}</span>`,pf&&pf.fr)}</span><div class="cmb"><div><b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b> <span class="ct">${new Date(m.t).toTimeString().slice(0,5)}</span> <button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div><div>${m.k==='share'?'📤 ':''}${esc(m.x)}</div></div></div>`}).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';if(near)box.scrollTop=box.scrollHeight};
 // --- entry points ---
@@ -7926,6 +7926,12 @@ function migPullAsk(){const done=!!LS.get('murim_migin',null);modal(`<button cla
  return _bs.apply(this,arguments)}}
 // ทัณฑ์โลกมนุษย์: พลังยา (ระบบ/กระเป๋า) ช่วยให้ผ่านระลอกได้ง่ายขึ้นด้วย
 {const _aw2=ascendWave;ascendWave=function(n){try{if(S&&!S.xian&&!S.xt&&n>1&&n<=3&&(S.tribPill||0)>0&&Math.random()<S.tribPill){const W=['อัสนีเก้าสาย','เพลิงสวรรค์เผาจิต','มารในใจครั้งสุดท้าย'];log(`⚡ ระลอกที่ ${n}: ${W[n-1]} — พลังยาประคองไว้ ผ่าน!`,'epic');if(auto)return ascendWave(n+1);return choice(`⚡ ทัณฑ์สวรรค์ระลอกที่ ${n+1}`,`ผ่าน${W[n-1]}มาได้ พลังชีวิตเหลือ ${fmt(Math.round(S.hp))}`,[{t:'ไปต่อ',f(){ascendWave(n+1)}}])}}catch(e){}return _aw2.apply(this,arguments)}}
+
+// ---- แชท: เรียงตามเวลาเสมอ (เก่าบน ใหม่ล่าง) — กันลำดับสลับตอนดึงแชทซ้อนกัน · ช่องพิมพ์ทุกช่องตัวอักษรดำบนพื้นขาว ----
+{const _cr=chatRender;chatRender=function(){try{if(Array.isArray(chatMsgs))chatMsgs=chatMsgs.slice().sort((x,y)=>(x.t||0)-(y.t||0))}catch(e){}const box=$('chatBox'),first=box&&!box.dataset.ok;const r=_cr.apply(this,arguments);try{if(box&&first&&chatMsgs.length){box.dataset.ok=1;box.scrollTop=box.scrollHeight}}catch(e){}return r}}
+(function(){const st=document.createElement('style');st.id='inpInk';st.textContent=`input:not([type]),input[type=text],input[type=search],input[type=number],input[type=email],input[type=tel],input[type=url],input[type=password],textarea,select{color:#111!important;-webkit-text-fill-color:#111!important;background-color:#fff!important;caret-color:#111!important}
+input::placeholder,textarea::placeholder{color:#777!important;-webkit-text-fill-color:#777!important;opacity:1!important}
+select option{color:#111;background:#fff}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
