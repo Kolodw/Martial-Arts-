@@ -489,7 +489,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
         const all = [...(pub || []).map(x => [x, 'live:', 0]), ...(prv || []).filter(x => !(pub || []).includes(x)).map(x => [x, 'livep:', 1])];
 
         const vals = all.length ? await cmd('MGET', ...all.map(x => x[1] + x[0])) : [];
-        const cnt = all.length ? await pipe(all.map(x => ['ZCOUNT', 'watch:' + x[0], now - 20e3, '+inf'])) : [];
+        const cnt = all.length ? await pipe(all.map(x => ['ZCOUNT', 'watch:' + x[0], now - 25e3, '+inf'])) : [];
         const lms = all.length ? await cmd('HMGET', 'lm', ...all.map(x => x[0])) : [];
         const l = [];
         all.forEach(([x, , pv], i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, w: cnt[i] || 0, pv, m: (() => { try { return JSON.parse(lms[i]) } catch { return null } })() }) } catch {} });
@@ -504,7 +504,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const ids = await cmd('ZRANGEBYSCORE', 'livez', now - 60e3, '+inf');
       if (!ids || !ids.length) return res.json({ l: [] });
       const vals = await cmd('MGET', ...ids.map(x => 'live:' + x));
-      const cnt = await pipe(ids.map(x => ['ZCOUNT', 'watch:' + x, now - 20e3, '+inf']));
+      const cnt = await pipe(ids.map(x => ['ZCOUNT', 'watch:' + x, now - 25e3, '+inf']));
       const l = [];
       ids.forEach((x, i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, w: cnt[i] || 0 }) } catch {} });
       await cmd('ZREMRANGEBYSCORE', 'livez', 0, now - 120e3);
@@ -517,7 +517,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
         const f1 = (pub || []).find(x => x.slice(0, 6) + x.slice(-4) === k2), f2 = (prv || []).find(x => x.slice(0, 6) + x.slice(-4) === k2);
         const v = f1 ? await cmd('GET', 'live:' + f1) : f2 ? await cmd('GET', 'livep:' + f2) : null;
         if (!v) return res.status(404).json({ err: 'off' });
-        const w = await cmd('ZCOUNT', 'watch:' + (f1 || f2), now - 20e3, '+inf');
+        const [, , w] = await pipe([['ZADD', 'watcha:' + (f1 || f2), now, 'adm'], ['EXPIRE', 'watcha:' + (f1 || f2), 120], ['ZCOUNT', 'watch:' + (f1 || f2), now - 25e3, '+inf']]);
         return res.json({ s: JSON.parse(v), w: w || 0, adm: 1, pv: f1 ? 0 : 1 });
       }
       const ids = await cmd('ZRANGEBYSCORE', 'livez', now - 60e3, '+inf');
@@ -526,7 +526,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const v = await cmd('GET', 'live:' + full);
       if (!v) return res.status(404).json({ err: 'off' });
       const viewer = okId(id) ? id : 'anon' + (req.headers['x-forwarded-for'] || '').slice(0, 15);
-      const [, , w] = await pipe([['ZADD', 'watch:' + full, now, viewer], ['ZREMRANGEBYSCORE', 'watch:' + full, 0, now - 20e3], ['ZCARD', 'watch:' + full], ['EXPIRE', 'watch:' + full, 120]]);
+      const [, , w] = await pipe([['ZADD', 'watch:' + full, now, viewer], ['ZREMRANGEBYSCORE', 'watch:' + full, 0, now - 25e3], ['ZCARD', 'watch:' + full], ['EXPIRE', 'watch:' + full, 120]]);
       return res.json({ s: JSON.parse(v), w: w || 0 });
     }
     if (a === 'migstat') {
@@ -666,15 +666,15 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       if (okId(id)) { try { const lm = uaMeta(req, now); lm.u = String(req.headers['user-agent'] || '').slice(0, 160); await cmd('HSET', 'lm', id, JSON.stringify(lm)) } catch {} }
       if (!b.spec) {
         const ps = String(b.s || '');
-        if (ps && ps.length <= 60000) { try { JSON.parse(ps); const r0 = await pipe([['DEL', 'live:' + id], ['ZREM', 'livez', id], ['SET', 'livep:' + id, ps, 'EX', 100], ['ZADD', 'livezp', now, id], ['GET', 'logreq:' + id]]); return res.json({ w: 0, lr: r0[4] ? 1 : 0 }) } catch {} }
+        if (ps && ps.length <= 60000) { try { JSON.parse(ps); const r0 = await pipe([['DEL', 'live:' + id], ['ZREM', 'livez', id], ['SET', 'livep:' + id, ps, 'EX', 100], ['ZADD', 'livezp', now, id], ['GET', 'logreq:' + id], ['ZCOUNT', 'watcha:' + id, now - 25e3, '+inf']]); return res.json({ w: 0, f: +r0[5] > 0 ? 1 : 0, lr: r0[4] ? 1 : 0 }) } catch {} }
         await pipe([['DEL', 'live:' + id], ['ZREM', 'livez', id], ['DEL', 'livep:' + id], ['ZREM', 'livezp', id]]); return res.json({ w: 0 })
       }
       const snap = String(b.s || '');
       if (snap.length > 60000) return res.status(400).json({ err: 'size' });
       try { JSON.parse(snap) } catch { return res.status(400).json({ err: 'json' }) }
-      const [, , , , w] = await pipe([['SET', 'live:' + id, snap, 'EX', 70], ['ZADD', 'livez', now, id], ['DEL', 'livep:' + id], ['ZREM', 'livezp', id], ['ZCOUNT', 'watch:' + id, now - 20e3, '+inf']]);
-      const lr = await cmd('GET', 'logreq:' + id);
-      return res.json({ w: w || 0, lr: lr ? 1 : 0 });
+      const [, , , , w] = await pipe([['SET', 'live:' + id, snap, 'EX', 70], ['ZADD', 'livez', now, id], ['DEL', 'livep:' + id], ['ZREM', 'livezp', id], ['ZCOUNT', 'watch:' + id, now - 25e3, '+inf']]);
+      const [lr, fa] = await pipe([['GET', 'logreq:' + id], ['ZCOUNT', 'watcha:' + id, now - 25e3, '+inf']]);
+      return res.json({ w: w || 0, f: (+w > 0 || +fa > 0) ? 1 : 0, lr: lr ? 1 : 0 });
     }
     if (a === 'csave') {
       const tk = String(b.tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20), d = String(b.d || '');
