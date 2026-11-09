@@ -8284,9 +8284,10 @@ pickGoalModal=function(){const ids=goalOffer({os:S.sys?1:0,isOw:!!S.ow});choice(
 
 // ============ v13.8 ระดับชะตา 13 ขั้น (เกณฑ์จากการสุ่มจริง 80,000 ครั้ง) · ยิ่งหายากสียิ่งสวย ============
 // [เกณฑ์ 1 ใน N, ชื่อ, ไอคอน, คำบรรยาย] — สัดส่วนโดยประมาณ: ~50% · 15% · 15% · 10% · 5% · 3% · 1% · 0.5% · 0.3% · 0.1% · 0.05% · ~0.04% · ~0.01%
-const FATE=[[0,'ธุลีดิน','🍂','ชะตาธรรมดาเหมือนฝุ่นใต้ฝ่าเท้า'],[1300,'สามัญชน','🌾','ชีวิตเรียบง่ายแบบคนทั่วไป'],[5000,'ชะตาดี','🍀','ฟ้ายังพอเมตตา'],[50000,'ดวงเด่น','💠','เกิดมาโดดเด่นกว่าคนรอบตัว'],[400000,'หนึ่งในแสน','🔷','ชะตาที่หาได้ยาก'],
+const FATE=[[0,'ธุลีดิน','🍂','ชะตาธรรมดาเหมือนฝุ่นใต้ฝ่าเท้า'],[1300,'สามัญชน','🌾','ชีวิตเรียบง่ายแบบคนทั่วไป'],[5000,'ชะตาดี','🍀','ฟ้ายังพอเมตตา'],[50000,'ดวงเด่น','💠','เกิดมาโดดเด่นกว่าคนรอบตัว'],[400000,'ผู้ถูกเลือก','🔷','ชะตาที่หาได้ยาก'],
  [3e6,'ดาวรุ่งแห่งยุค','🌟','ยุคนี้ต้องจดจำชื่อคุณ'],[3e7,'วีรชนคู่ฟ้า','🔥','เกิดมาเพื่อเป็นตำนาน'],[1.5e8,'ตำนานมีชีวิต','👑','ชื่อของคุณจะถูกเล่าขานนับพันปี'],[8e8,'บุตรแห่งสวรรค์','☀️','สวรรค์เลือกคุณด้วยตัวเอง'],
  [5e9,'ลิขิตเทวะ','🌸','เทพเซียนยังต้องเหลียวมอง'],[1.5e10,'เหนือฟ้าลิขิต','🌈','ชะตาที่อยู่เหนือการขีดเขียนของฟ้า'],[5e10,'ฟ้ายังไม่กล้าเขียน','✨','ฟ้าดินสั่นไหวตอนคุณลืมตา'],[1e12,'อนันตชะตา','♾️','หนึ่งเดียวในจักรวาลนับไม่ถ้วน']];
+const FGRADE=['ชั้นธุลี','ชั้นมนุษย์ · ล่าง','ชั้นมนุษย์ · บน','ชั้นปฐพี · ล่าง','ชั้นปฐพี · บน','ชั้นนภา · ล่าง','ชั้นนภา · บน','ชั้นดารา','ชั้นสุริยะ','ชั้นเทวะ','ชั้นเหนือเทวะ','ชั้นฟ้าลิขิต','ชั้นอนันต์'];
 function fateOf(n){n=+n||0;let i=0;FATE.forEach((f,k)=>{if(n>=f[0])i=k});return i}
 function fateN(odds){return odds>0?1/odds:0}
 (function(){const st=document.createElement('style');st.textContent=`
@@ -8299,6 +8300,7 @@ function fateN(odds){return odds>0?1/odds:0}
 .fx11{background-image:linear-gradient(90deg,#fff,#ffd84d,#5dff7a,#fff,#4dd8ff,#ff5ad8,#fff);background-size:300% 100%;animation:fxSh 1.8s linear infinite;filter:drop-shadow(0 0 4px #fff8)}
 .fx12{background-image:linear-gradient(90deg,#b06bff,#4dd8ff,#fff,#ff5ad8,#ffd84d,#b06bff);background-size:400% 100%;animation:fxSh 1.4s linear infinite;filter:drop-shadow(0 0 6px #b06bffcc)}
 @keyframes fxSh{to{background-position:-200% 0}}
+#birth .oddsbig .fgrade{display:inline-block;margin-top:8px;font-weight:800;font-size:16px}
 #birth .oddsbig .n.fx0{color:#9a9aa6}#birth .oddsbig .n.fx1{color:#b0c0a0}#birth .oddsbig .n.fx2{color:#5ad06a}#birth .oddsbig .n.fx3{color:#3ad0d0}#birth .oddsbig .n.fx4{color:#5a96ff}#birth .oddsbig .n.fx5{color:#b07aff}#birth .oddsbig .n.fx6{color:#ff9a3a}
 #birth .oddsbig{--fc:#8a8a96}
 #birth .oddsbig.fb0{--fc:#6a6a76}#birth .oddsbig.fb1{--fc:#8a9a7a}#birth .oddsbig.fb2{--fc:#3ab04a}#birth .oddsbig.fb3{--fc:#2ab0b0}#birth .oddsbig.fb4{--fc:#4a8aff}#birth .oddsbig.fb5{--fc:#a86aff}#birth .oddsbig.fb6{--fc:#ff8a2a}#birth .oddsbig.fb7{--fc:#ffc030}#birth .oddsbig.fb8{--fc:#ff3a5a}#birth .oddsbig.fb9{--fc:#ff5ad8}
@@ -8318,7 +8320,7 @@ function fateN(odds){return odds>0?1/odds:0}
 function fateApply(){const r=roll;if(!r)return;const N=1/(r.p*(r.era?r.era.p:1)),f=fateOf(N),F=FATE[f];
  const st=$('bStage');if(st)st.className='bstage sg'+f;
  const ob=$('oddsBox');if(ob){ob.className='box oddsbig fb'+f;ob.querySelectorAll('.fstar').forEach(e=>e.remove());const t=$('oddsT');if(t){t.className='ot';t.innerHTML=`${F[2]} <span class="fx${f}">ระดับชะตา: ${F[1]}</span>`}
-  let d=$('oddsD');if(!d){ob.insertAdjacentHTML('beforeend','<div class="od" id="oddsD"></div><div class="fbar" id="oddsBar"></div>');d=$('oddsD')}d.textContent=`${F[3]} · ขั้น ${f+1} จาก ${FATE.length}`;const bar=$('oddsBar');if(bar)bar.innerHTML=FATE.map((x,i)=>`<i class="${i<=f?'on':''}"></i>`).join('');
+  let d=$('oddsD');if(!d){ob.insertAdjacentHTML('beforeend','<div class="od" id="oddsD"></div><div class="fbar" id="oddsBar"></div>');d=$('oddsD')}d.textContent=F[3];const bar=$('oddsBar');if(bar){bar.className='fgrade fx'+f;bar.textContent=`⟪ ${FGRADE[f]} ⟫`}
   const n=$('oddsN');if(n)n.className='n px fx'+f;
   if(f>=10)for(let i=0;i<(f-8)*6;i++){const s=document.createElement('i');s.className='fstar';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.animationDelay=(Math.random()*1.8)+'s';ob.appendChild(s)}}
  const dl=(document.querySelectorAll('#birth .trait').length*220)+400;
