@@ -2293,7 +2293,7 @@ const QOK={win:()=>S.age>=12,realm:()=>realmIdx()<7,marry:()=>!S.spouse&&S.age>=
 const SHOP=[
  {id:'pill',n:'ยาเม็ดเสริมพลัง',d:'พลังยุทธ์ +150 × พรสวรรค์',c:30},{id:'heal',n:'ยารักษาทุกโรค',d:'ฟื้นพลังชีวิตเต็ม หายจากโรคเรื้อรัง',c:25},
  {id:'qi',n:'ยาลมปราณร้อยปี',d:'ลมปราณ +8 ปี',c:40},{id:'art',n:'กล่องคัมภีร์ระบบ',d:'วิชาระดับล้ำเลิศขึ้นไป',c:55},
- {id:'life',n:'ยาอายุวัฒนะ',d:'อายุขัย +15 ปี',c:80},{id:'break',n:'ยาทะลวงขั้น',d:'พลังพุ่งถึงระดับถัดไปทันที',c:200},{id:'revive',n:'การ์ดคืนชีพ',d:'ตายแล้วฟื้นคืนชีพ 1 ครั้ง',c:250},
+ {id:'life',n:'ยาอายุวัฒนะ',d:'อายุขัย +15 ปี',c:80},{id:'break',n:'ยาทะลวงขั้น',d:'พลังพุ่งถึงระดับถัดไปทันที (ขั้นสูงสุดแล้ว: ขึ้นชั้นย่อยถัดไป / ทัณฑ์สวรรค์โอกาสผ่าน +20%)',c:200},{id:'revive',n:'การ์ดคืนชีพ',d:'ตายแล้วฟื้นคืนชีพ 1 ครั้ง',c:250},
  {id:'ticket',n:'ตั๋วสุ่มกาชา',d:'สุ่ม 1 ครั้ง',c:15,t:'gacha'},
  {id:'furnace',n:'เตาหลอมเทพ',d:'หลอมยาได้เพิ่มปีละ 1 เม็ด และยาเซียนออกง่ายขึ้น (ซื้อได้ครั้งเดียว)',c:120,t:'alchemy',once:'furnace'},
  {id:'body',n:'ยาหล่อหลอมกายา',d:'ร่างกาย +30 และโอกาสผ่านบททดสอบก้าวข้ามสูงขึ้น',c:60,t:'transcend'},
@@ -7910,12 +7910,22 @@ BAGX.brk.use=function(){const f=brkInfo();
  const r=_bt.apply(this,arguments);try{if(S&&S.brkB&&S.rcap!=null&&S.rcap>=S.brkB)S.brkB=0}catch(e){}return r}}
 {const _bc=btChance;btChance=function(t){let p=_bc.apply(this,arguments);try{if(S&&!S.xt&&S.brkB&&t>=6&&S.brkB===t)p=Math.min(.95,p+.15)}catch(e){}return p}}
 {const _xp=xTribP;xTribP=function(n){return clamp(_xp.apply(this,arguments)+(S&&S.xian&&!S.xt?(S.tribPill||0):0),.2,.95)}}
-{const _aw=ascendWave;ascendWave=function(n){try{if(S&&S.xian&&!S.xt&&n===1){S.tribPill=0;if(bagHas('brk')&&bagUse('brk')){S.tribPill=.1;log('🎒 🔴 กลืนยาทะลวงขั้นก่อนรับทัณฑ์สวรรค์ — โอกาสผ่านทุกระลอก +10%','epic')}}}catch(e){}const r=_aw.apply(this,arguments);try{if(S&&(S.xt||(S.ascCd||0)>S.age))S.tribPill=0}catch(e){}return r}}
+{const _aw=ascendWave;ascendWave=function(n){try{if(S&&!S.xt&&n===1){S.tribPill=S.tribSys||0;S.tribSys=0;if(S.tribPill)log(`🟦 พลังยาทะลวงขั้นของระบบตื่นขึ้น — โอกาสผ่านทุกระลอก +${Math.round(S.tribPill*100)}%`,'sys');if(bagHas('brk')&&bagUse('brk')){S.tribPill+=.1;log('🎒 🔴 กลืนยาทะลวงขั้นก่อนรับทัณฑ์สวรรค์ — โอกาสผ่านทุกระลอก +10%','epic')}}}catch(e){}const r=_aw.apply(this,arguments);try{if(S&&(S.xt||(S.ascCd||0)>S.age))S.tribPill=0}catch(e){}return r}}
 
 // ---- ปุ่มย้ายเซฟจากเว็บเก่า ที่หน้าแรก (เฉพาะ 1inanovel.com) ----
 function migTitleBtn(){try{if(/(^|\.)1inanovel\.com$/.test(location.hostname)&&typeof migPullGo==='function'&&$('contBox')&&!$('migTitleBtn'))$('contBox').insertAdjacentHTML('beforeend',`<div class="brow" style="margin-top:6px"><button class="gbtn" id="migTitleBtn" style="width:100%" onclick="migPullAsk()">📦 ย้ายเซฟจากเว็บเก่า (ลิงก์ .vercel.app)</button></div>`)}catch(e){}}
 {const _rl2=renderLegends;renderLegends=function(){const r=_rl2.apply(this,arguments);migTitleBtn();return r}}migTitleBtn();setTimeout(migTitleBtn,1500);
 function migPullAsk(){const done=!!LS.get('murim_migin',null);modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📦 ย้ายเซฟจากเว็บเก่า</h3><p>จะพาไปที่ลิงก์เก่าแป๊บเดียว แล้วขนเซฟทั้งหมดในเครื่องนี้กลับมาที่นี่ให้เอง (ไม่กี่วินาที)</p>${done?'<p class="tag2">เครื่องนี้เคยย้ายมาแล้ว — ถ้าย้ายอีกครั้ง ระบบจะถามก่อนว่าจะใช้เซฟเก่าหรือเก็บเซฟที่นี่ไว้</p>':''}<p class="tag2">เซฟที่เว็บเก่าไม่ถูกลบ · ต้องเป็นเครื่องและเบราว์เซอร์เดียวกับที่เคยเล่นลิงก์เก่า</p><div class="brow"><button class="gbtn" onclick="closeM()">ยกเลิก</button><button class="pbtn" onclick="try{saveGame()}catch(e){}migPullGo()">ย้ายเซฟเลย</button></div>`,'migpull')}
+
+// ---- ยาทะลวงขั้นของระบบ (SP) ตอนอยู่ขั้นสูงสุดของโลก: เดิมหัก SP แต่ไม่ได้อะไร ----
+{const _bs=buySys;buySys=function(id){try{if(id==='break'&&S&&S.sys&&!S.xt&&realmIdx()>=7){const s=S.sys,it=SHOP.find(x=>x.id==='break');if(it&&s.sp>=it.c){
+  if(S.pcap==null)S.pcap=-1;const t=S.pcap+1,w=typeof ascWait==='function'?ascWait():0;
+  if(t<=RS_MAX){s.sp-=it.c;s.used++;if(total()<postP(t))S.power+=Math.ceil(postP(t)-total()+1);S.pcap=t;S.btFail=0;postUp(t,'🟦 ยาทะลวงขั้นของระบบ ');sysLog(`ซื้อ <b>${it.n}</b> สำเร็จ`);sfx('good');render();openSys();return}
+  if((S.tribSys||0)>=.2){toast('พลังยาทะลวงขั้นของระบบยังค้างอยู่ — จะใช้ตอนรับทัณฑ์สวรรค์ครั้งถัดไป');return}
+  s.sp-=it.c;s.used++;S.tribSys=.2;sysLog(`ยาทะลวงขั้นของระบบ — ถึงขีดสุดของโลกนี้แล้ว พลังยาจะเก็บไว้ช่วยตอนรับทัณฑ์สวรรค์: โอกาสผ่านทุกระลอก +20%${w>0?` (ทัณฑ์สวรรค์จะมาเมื่อบ่มเพาะครบอีกราว ${w} ปี)`:''}`,'up');sfx('good');render();openSys();return}}}catch(e){console.error(e)}
+ return _bs.apply(this,arguments)}}
+// ทัณฑ์โลกมนุษย์: พลังยา (ระบบ/กระเป๋า) ช่วยให้ผ่านระลอกได้ง่ายขึ้นด้วย
+{const _aw2=ascendWave;ascendWave=function(n){try{if(S&&!S.xian&&!S.xt&&n>1&&n<=3&&(S.tribPill||0)>0&&Math.random()<S.tribPill){const W=['อัสนีเก้าสาย','เพลิงสวรรค์เผาจิต','มารในใจครั้งสุดท้าย'];log(`⚡ ระลอกที่ ${n}: ${W[n-1]} — พลังยาประคองไว้ ผ่าน!`,'epic');if(auto)return ascendWave(n+1);return choice(`⚡ ทัณฑ์สวรรค์ระลอกที่ ${n+1}`,`ผ่าน${W[n-1]}มาได้ พลังชีวิตเหลือ ${fmt(Math.round(S.hp))}`,[{t:'ไปต่อ',f(){ascendWave(n+1)}}])}}catch(e){}return _aw2.apply(this,arguments)}}
 </script>
 </body>
 </html>
