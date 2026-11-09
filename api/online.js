@@ -752,6 +752,81 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       await pipe([['LPUSH', 'mbox:' + tid, JSON.stringify(m)], ['LTRIM', 'mbox:' + tid, 0, 9], ['EXPIRE', 'mbox:' + tid, 3600]]);
       return res.json({ ok: 1 });
     }
+    // ---- พบผู้เล่นจริงแบบสองฝ่าย: ห้องพบกัน มีเวลาเลือกฝ่ายละ 10 วิ ไม่เลือกสุ่มให้ ----
+    if (a === 'mtopen' || a === 'mtpick' || a === 'mtmsg' || a === 'mtst') {
+      if (!okId(id)) return res.json({ ok: 0 });
+      if (b.tp || await isBanned()) return res.json({ ok: 0 });
+      const CH = ['fight', 'ally', 'betray', 'leave'];
+      const rnd = () => CH[Math.floor(Math.random() * CH.length)];
+      const resolve = r => {
+        if (r.res) return r;
+        const dA = r.t0 + 15e3, dB = (r.seen ? Math.min(r.seen, r.t0 + 60e3) : r.t0 + 60e3) + 15e3;
+        if (!r.c.a && now > dA) { r.c.a = rnd(); r.auto = (r.auto || '') + 'a' }
+        if (!r.c.b && now > dB) { r.c.b = rnd(); r.auto = (r.auto || '') + 'b' }
+        if (!r.c.a || !r.c.b) return r;
+        const ca = r.c.a, cb = r.c.b, pa = Math.max(1, r.A.p), pb = Math.max(1, r.B.p);
+        let pw = Math.pow(pa, 1.3) / (Math.pow(pa, 1.3) + Math.pow(pb, 1.3));
+        const duel = (bonusA) => { const q = Math.max(.05, Math.min(.95, pw + bonusA)); return { k: 'duel', w: Math.random() < q ? 'a' : 'b' } };
+        let o;
+        if (ca === 'fight' && cb === 'fight') o = duel(0);
+        else if (ca === 'fight' && cb === 'leave') o = Math.random() < .5 ? { k: 'flee', w: 'b' } : duel(0);
+        else if (cb === 'fight' && ca === 'leave') o = Math.random() < .5 ? { k: 'flee', w: 'a' } : duel(0);
+        else if (ca === 'fight') o = Object.assign(duel(.15), { amb: 'a' });          // อีกฝ่ายยื่นมือมาเป็นมิตร แต่โดนซุ่มตี
+        else if (cb === 'fight') o = Object.assign(duel(-.15), { amb: 'b' });
+        else if (ca === 'leave' || cb === 'leave') o = { k: 'none' };
+        else o = { k: 'pact', ba: ca === 'betray' ? 1 : 0, bb: cb === 'betray' ? 1 : 0 };   // สาบานกัน (อาจมีคนแอบหักหลัง)
+        r.res = o; r.rt = now; return r;
+      };
+      const load = async rid => { const v = await cmd('GET', 'mr:' + rid); try { return v ? JSON.parse(v) : null } catch { return null } };
+      const save = (rid, r) => ['SET', 'mr:' + rid, JSON.stringify(r), 'EX', 600];
+      const view = (r, side) => { const os = side === 'a' ? 'b' : 'a'; return { rid: r.rid, side, o: side === 'a' ? r.B : r.A, picked: !!r.c[side], opicked: !!r.c[os], res: r.res ? Object.assign({}, r.res, { my: r.c[side], their: r.res.k === 'pact' ? (r.c[os] === 'betray' ? 'ally' : r.c[os]) : r.c[os], auto: (r.auto || '').includes(side) ? 1 : 0 }) : null, msg: r.m[os] || '', dl: side === 'a' ? r.t0 + 10e3 : (r.seen || now) + 10e3 } };
+      if (a === 'mtopen') {
+        const ok = await cmd('SET', 'mtl:' + id, 1, 'NX', 'EX', 15);
+        if (!ok) return res.status(429).json({ err: 'rate' });
+        const to = String(b.to || '').replace(/[^a-z0-9]/g, '').slice(0, 12), x = b.x ? 1 : 0;
+        const all = await cmd('HGETALL', 'mp:' + x); let tid = null, B = null;
+        for (let i = 0; i < (all || []).length; i += 2) if (all[i].slice(0, 6) + all[i].slice(-4) === to) { tid = all[i]; try { B = JSON.parse(all[i + 1]) } catch {} }
+        if (!tid || tid === id || !B || now - B.t > 150e3) return res.json({ ok: 0 });
+        const A = { n: clean(b.n, 20) || 'นิรนาม', ri: Math.max(0, Math.min(12, +b.ri || 0)), p: Math.max(0, Math.min(1e13, +b.p || 0)), f: clean(b.f, 30), age: Math.max(0, +b.age || 0), k: id.slice(0, 6) + id.slice(-4) };
+        B = { n: B.n, ri: B.ri, p: B.p, f: B.f, age: B.age, k: to };
+        const rid = (now.toString(36) + Math.random().toString(36).slice(2, 6)).slice(-10);
+        const r = { rid, a: id, b: tid, A, B, t0: now, c: {}, m: {}, x };
+        await pipe([save(rid, r), ['LPUSH', 'mbox:' + tid, JSON.stringify({ kind: 'room', rid, n: A.n, t: now })], ['LTRIM', 'mbox:' + tid, 0, 9], ['EXPIRE', 'mbox:' + tid, 3600]]);
+        return res.json({ ok: 1, st: view(r, 'a') });
+      }
+      const rid = String(b.rid || '').replace(/[^a-z0-9]/g, '').slice(0, 12);
+      const r = await load(rid);
+      if (!r) return res.json({ ok: 0, gone: 1 });
+      const side = r.a === id ? 'a' : r.b === id ? 'b' : null;
+      if (!side) return res.status(403).json({ err: 'forbidden' });
+      const os = side === 'a' ? 'b' : 'a', oid = side === 'a' ? r.b : r.a, K = 'mrx:' + rid;
+      // ทุกช่องเขียนแบบ HSETNX (ใครเขียนก่อนได้ก่อน) — สองเครื่องยิงพร้อมกันก็ไม่ทับกัน
+      const W0 = [];
+      if (side === 'b') W0.push(['HSETNX', K, 'seen', now]);
+      if (a === 'mtpick') { const c = String(b.c || ''); W0.push(['HSETNX', K, 'c' + side, CH.includes(c) ? c : rnd()]) }
+      let msgNew = '';
+      if (a === 'mtmsg') { msgNew = clean(b.x, 120); if (msgNew) W0.push(['HSETNX', K, 'm' + side, msgNew]) }
+      W0.push(['EXPIRE', K, 600], ['HGETALL', K]);
+      const out = await pipe(W0), hv = out[out.length - 1] || [], H = {};
+      if (Array.isArray(hv)) for (let k = 0; k < hv.length; k += 2) H[hv[k]] = hv[k + 1]; else Object.assign(H, hv || {});
+      const had = !!H.res;
+      r.seen = +H.seen || 0; r.c = { a: H.ca, b: H.cb }; r.m = { a: H.ma, b: H.mb }; r.auto = H.auto || '';
+      if (H.res) { try { r.res = JSON.parse(H.res) } catch {} }
+      const L = [];
+      if (!r.res) {
+        const c0 = { a: r.c.a, b: r.c.b }; resolve(r);
+        for (const sd of ['a', 'b']) if (!c0[sd] && r.c[sd]) L.push(['HSETNX', K, 'c' + sd, r.c[sd]]);
+        if (r.auto) L.push(['HSET', K, 'auto', r.auto]);
+        if (r.res) L.push(['HSETNX', K, 'res', JSON.stringify(r.res)], ['HGET', K, 'res'], ['HGET', K, 'ca'], ['HGET', K, 'cb']);
+      }
+      if (a === 'mtmsg' && msgNew && H['m' + side] === msgNew) L.push(['LPUSH', 'mbox:' + oid, JSON.stringify({ kind: 'mmsg', rid, n: (side === 'a' ? r.A : r.B).n, x: msgNew, t: now })], ['LTRIM', 'mbox:' + oid, 0, 9], ['EXPIRE', 'mbox:' + oid, 3600]);
+      if (L.length) {
+        const o2 = await pipe(L);
+        if (r.res) { const n = L.length; const ri = L.findIndex(x => x[0] === 'HGET' && x[2] === 'res'); if (ri >= 0) { try { r.res = JSON.parse(o2[ri]) } catch {} r.c.a = o2[ri + 1] || r.c.a; r.c.b = o2[ri + 2] || r.c.b } }
+      }
+      if (r.res && !had) await pipe([['LPUSH', 'mbox:' + oid, JSON.stringify({ kind: 'mres', rid, t: now })], ['LTRIM', 'mbox:' + oid, 0, 9], ['EXPIRE', 'mbox:' + oid, 3600]]);
+      return res.json({ ok: 1, st: view(r, side) });
+    }
     if (a === 'review') {
       const ok = await cmd('SET', 'rvrl:' + id, 1, 'NX', 'EX', 20);
       if (!ok) return res.status(429).json({ err: 'rate' });
