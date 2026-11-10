@@ -9337,6 +9337,128 @@ crPrev=function(){const cv=$('crCv');if(!cv||!C)return;const ctx=cv.getContext('
 {const _st=crStart;crStart=function(){lkInit();const L=lkFromC();if(C.lookOnly){const gb=window.goBirth;window.goBirth=function(){try{if(crForce)crForce.look=L}catch(e){}window.goBirth=gb;return gb.apply(this,arguments)};try{return _st.apply(this,arguments)}finally{window.goBirth=gb}}
  const sl=window.startLife;window.startLife=function(){try{if(roll&&roll.custom)roll.look=L}catch(e){}window.startLife=sl;return sl.apply(this,arguments)};try{return _st.apply(this,arguments)}finally{window.startLife=sl}}}
 
+// ===== v14.7 ปณิธานสัตว์อสูร (100+ เป้าหมาย · ยาก) =====
+let _bgR=null;
+function bgX(){try{if(S&&S.alive&&S.beastMode){const sp=S.beastMode.sp;return{sp,lf:(BSPX[sp]||[0,3])[1],dr:sp==='มังกร',x:!!(S.gW==='x'||S.xian)}}}catch(e){}const r=_bgR||brRoll;const sp=r?BL_SP[r.sp][0]:'หมาป่า';return{sp,lf:(BSPX[sp]||[0,3])[1],dr:sp==='มังกร',x:!!CFG.xian}}
+const bgM=()=>{try{return(S&&S.beastMode&&S.beastMode.mem)||{}}catch(e){return{}}};
+const bgBM=()=>(S&&S.beastMode)||{};
+const bgF=k=>(S&&S.bfy&&S.bfy[k])||0;
+const bgN=(v)=>fmt(Math.round(v));
+const bgA=k=>{const c=bgX();return Math.round(200*Math.pow(c.lf,.8)*(c.dr?1.8:1)*k/10)*10};
+const bgV=(v,dm)=>{const c=bgX();return c.dr?Math.round(v*(dm||1)):v};
+const bgSt=i=>{try{const c=bgX(),L=c.dr?BL_STD:BL_ST0;return L[Math.min(L.length-1,i)]}catch(e){return'ขั้น '+i}};
+const bgPct=(a,b)=>Math.max(0,Math.min(1,(+a||0)/b));
+const BG=[];
+function bgAdd(id,lv,n,en,d,c,pr,p,sp){BG.push({id:'bg_'+id,lv,n,en,d,c,pr,p,sp})}
+// ---- เมตริกหลักแบบหลายระดับ ----
+const BGT=[
+ ['age','อายุ',()=>S.age,[['พันปีไม่ร่วงโรย','Unwithering',2,1.4],['อสูรผู้ข้ามกาลเวลา','Beyond time',3,1.9],['อมตะแห่งพงไพร','Immortal of the wilds',4,2.6]],k=>bgA(k),v=>`มีชีวิตอยู่ถึงอายุ ${bgN(v)} ปี`],
+ ['pow','พลังรวม',()=>total(),[['เขี้ยวเล็บสะเทือนป่า','Forest-shaking fangs',2,150000],['อสูรผู้ทำลายภูผา','Mountain breaker',3,400000],['อสูรผู้สั่นคลอนฟ้าดิน','Heaven shaker',4,1000000],['จ้าวอสูรไร้เทียมทาน','Peerless beast lord',4,3000000]],k=>bgV(k,5),v=>`พลังรวมถึง ${bgN(v)}`],
+ ['qi','ลมปราณ',()=>S.qi,[['ดูดซับแก่นฟ้าดิน','Essence drinker',2,1500],['ทะเลลมปราณไร้ก้น','Bottomless qi sea',3,2500],['แก่นอสูรเจิดจรัส','Radiant demon core',4,4000]],k=>bgV(k,2),v=>`ลมปราณถึง ${bgN(v)}`],
+ ['int','ปัญญา',()=>S.int,[['อสูรผู้รู้ภาษาคน','Speaks the human tongue',2,900],['ปราชญ์แห่งพงไพร','Sage of the wilds',3,1500],['ปัญญาเทียบเซียน','Wisdom of immortals',4,2500]],k=>bgV(k,1.5),v=>`ปัญญาถึง ${bgN(v)}`],
+ ['kill','ล่า',()=>S.kills||0,[['นักล่าร้อยศึก','Hunter of a hundred fights',2,400],['ราชันแห่งการล่า','King of the hunt',3,700],['ตำนานเขี้ยวโลหิต','Legend of the bloody fang',4,1200]],k=>bgV(k,1.5),v=>`ชนะการล่า/ต่อสู้ ${bgN(v)} ครั้ง`],
+ ['good','กรรมดี',()=>S.karma,[['อสูรใจบุญ','Kind-hearted beast',2,800],['เทพารักษ์ผู้เมตตา','Merciful guardian',3,1500],['โพธิสัตว์แห่งพงไพร','Bodhisattva of the wilds',4,2500]],k=>bgV(k,1.5),v=>`สะสมกรรมดีถึง +${bgN(v)}`],
+ ['evil','กรรมชั่ว',()=>-S.karma,[['อสูรกระหายเลือด','Bloodthirsty fiend',2,1000],['ภัยพิบัติมีชีวิต','Living calamity',3,1800],['จอมมารแห่งไพรพฤกษ์','Demon lord of the forest',4,3000]],k=>bgV(k,1.5),v=>`กรรมติดลบถึง −${bgN(v)}`],
+ ['fame','ชื่อเสียง',()=>S.fame,[['ชื่อเลื่องลือในหมู่มนุษย์','Known among men',2,1500],['ตำนานเล่าขานทั่วแคว้น','Told across the realm',3,3000],['อสูรที่ทั้งแผ่นดินหวาดกลัว','Feared by the whole land',4,6000]],k=>k,v=>`ชื่อเสียงถึง ${bgN(v)}`],
+ ['kids','ลูก',()=>S.kids||0,[['ครอกใหญ่แห่งพงไพร','Great litter',2,18],['บรรพบุรุษแห่งเผ่า','Ancestor of a tribe',3,28],['ต้นตระกูลอสูรนับร้อย','Progenitor of hundreds',4,40]],k=>k,v=>`มีลูกรวม ${v} ตัวขึ้นไป`]];
+BGT.forEach(([key,lab,val,tiers,thr,desc])=>tiers.forEach(([n,en,lv,k],i)=>{const T=()=>thr(k);bgAdd(key+i,lv,n,en,()=>desc(T()),()=>val()>=T(),()=>bgPct(val(),T()),()=>`${lab} ${bgN(val())} / ${bgN(T())}`)}));
+// ---- ขั้นการบำเพ็ญ ----
+const stOf=()=>bgBM().st||0;
+bgAdd('st6',3,'ก้าวสู่ขั้นที่เจ็ด','Seventh stage',()=>`บำเพ็ญจนถึงขั้น${bgSt(6)}`,()=>stOf()>=6,()=>stOf()/6,()=>`${bgSt(stOf())} / ${bgSt(6)}`,()=>!bgX().dr);
+bgAdd('st7',4,'ปฐมสัตว์เทพ','Primordial divine beast',()=>`บำเพ็ญจนถึงขั้นสูงสุด ${bgSt(7)}`,()=>stOf()>=7,()=>stOf()/7,()=>`${bgSt(stOf())} / ${bgSt(7)}`,()=>!bgX().dr);
+[[5,'อัจฉริยะแห่งพงไพร','Prodigy of the wilds',2,125],[6,'ผู้ทะยานฟ้า','Sky-soarer',3,240],[7,'เร็วกว่าฟ้าลิขิต','Faster than fate',4,470]].forEach(([s,n,en,lv,k])=>{const A=()=>Math.round(bgV(k,1.8));
+ bgAdd('fast'+s,lv,n,en,()=>`ถึงขั้น${bgSt(s)}ก่อนอายุ ${bgN(A())} ปี`,()=>stOf()>=s&&S.age<=A(),()=>S.age>A()&&stOf()<s?0:stOf()/s,()=>S.age>A()&&stOf()<s?`❌ เลยอายุ ${bgN(A())} แล้ว`:`${bgSt(stOf())} / ${bgSt(s)} · อายุ ${S.age} / ${bgN(A())}`)});
+// ---- เส้นทางอสูร ----
+const pOf=k=>bgBM().path===k,pDone=k=>pOf(k)&&!!bgBM().pdone;
+[['guard','เทพารักษ์แห่งพงไพร','Forest deity',3,'กรรมดี',()=>S.karma,()=>bgV(1200,1.4)],['demon','จอมอสูรแห่งยุค','Demon of the age',4,'ชนะการต่อสู้',()=>S.kills||0,()=>bgV(800,1.4)],['pack','ราชันย์แห่งร้อยเผ่า','King of a hundred tribes',3,'ลูก',()=>S.kids||0,()=>8],['bond','ตำนานคู่พันธะ','Legend of the bond',3,'ปัญญา',()=>S.int,()=>bgV(1200,1.4)],['hermit','ฤๅษีผู้รู้แจ้ง','Enlightened hermit',3,'ลมปราณ',()=>S.qi,()=>bgV(2500,1.6)]].forEach(([k,n,en,lv,lab,v,t])=>{const P=BPATH[k];
+ bgAdd('p_'+k,2,'สายเลือด'+P.n,'Path of '+P.n,()=>`เลือกเส้นทาง${P.ic}${P.n} และจบครบ 6 บท ก่อนอายุ ${bgN(bgA(5))} ปี`,()=>pDone(k)&&S.age<=bgA(5),()=>pOf(k)?((bgBM().pc||0)/6):0,()=>pOf(k)?`บท ${bgBM().pc||0} / 6${bgBM().pdone?' ✅':''} · อายุ ${S.age}/${bgN(bgA(5))}`:'ยังไม่ได้เลือกเส้นทางนี้');
+ bgAdd('pp_'+k,lv,n,en,()=>`จบเส้นทาง${P.ic}${P.n} และ${lab}ถึง ${bgN(t())}`,()=>pDone(k)&&v()>=t(),()=>pOf(k)?Math.min(bgBM().pdone?1:.5,bgPct(v(),t())):0,()=>pOf(k)?`${bgBM().pdone?'✅ จบเส้นทาง':'ยังไม่จบเส้นทาง'} · ${lab} ${bgN(v())} / ${bgN(t())}`:'ยังไม่ได้เลือกเส้นทางนี้')});
+bgAdd('pk300',4,'ฝูงสามร้อยชีวิต','Pack of three hundred',()=>'นำฝูงจนมีสมาชิก 300 ตัว',()=>(bgBM().pk||0)>=300,()=>bgPct(bgBM().pk,300),()=>`สมาชิกฝูง ${bgBM().pk||0} / 300`);
+bgAdd('pk200',3,'จ่าฝูงผู้ยิ่งใหญ่','Great alpha',()=>'นำฝูงจนมีสมาชิก 200 ตัว และมีลูก 6 ตัวขึ้นไป',()=>(bgBM().pk||0)>=200&&(S.kids||0)>=6,()=>Math.min(bgPct(bgBM().pk,200),bgPct(S.kids,6)),()=>`ฝูง ${bgBM().pk||0}/200 · ลูก ${S.kids||0}/6`);
+// ---- แปลงกายเป็นมนุษย์ ----
+const hum=()=>!!bgBM().human,ri=()=>{try{return realmIdx()}catch(e){return 0}};
+bgAdd('h_realm5',3,'อสูรในคราบยอดฝีมือ','Beast among masters',()=>`แปลงกายเป็นมนุษย์ แล้วฝึกจนถึงขั้น${gRN(5)}`,()=>hum()&&ri()>=5,()=>hum()?ri()/5*.9+.1:0,()=>hum()?`${gRN(ri())} / ${gRN(5)}`:'ยังไม่ได้แปลงกาย');
+bgAdd('h_realm7',4,'อสูรผู้ครองยุทธภพ','Beast who rules the world',()=>`แปลงกายเป็นมนุษย์ แล้วฝึกจนถึงขั้น${gRN(7)}`,()=>hum()&&ri()>=7,()=>hum()?ri()/7*.9+.1:0,()=>hum()?`${gRN(ri())} / ${gRN(7)}`:'ยังไม่ได้แปลงกาย');
+bgAdd('h_love',3,'รักต่างเผ่าพันธุ์','Love across kinds',()=>'แปลงกายเป็นมนุษย์ แต่งงาน และมีบุตร 3 คน',()=>hum()&&!!S.spouse&&(S.kids||0)>=3,()=>hum()?(S.spouse?.5+bgPct(S.kids,3)*.5:.3):0,()=>hum()?`${S.spouse?'💍 แต่งงานแล้ว':'ยังไม่แต่งงาน'} · บุตร ${S.kids||0}/3`:'ยังไม่ได้แปลงกาย');
+bgAdd('h_sect',3,'อสูรผู้นำสำนัก','Beast sect leader',()=>'แปลงกายเป็นมนุษย์ แล้วขึ้นเป็นผู้นำสูงสุดของสำนัก',()=>hum()&&S.faction&&S.rank>=4,()=>hum()&&S.faction?bgPct(S.rank,4):0,()=>hum()?(S.faction?rankName()+' แห่ง'+S.faction.n:'ยังไม่มีสังกัด'):'ยังไม่ได้แปลงกาย');
+bgAdd('h_fame',3,'ไม่มีใครรู้ว่าเป็นอสูร','No one knows',()=>'แปลงกายเป็นมนุษย์ และชื่อเสียงถึง 4,000',()=>hum()&&S.fame>=4000,()=>hum()?bgPct(S.fame,4000):0,()=>hum()?`ชื่อเสียง ${bgN(S.fame)} / 4,000`:'ยังไม่ได้แปลงกาย');
+bgAdd('h_rich',2,'อสูรเศรษฐี','Wealthy beast',()=>'แปลงกายเป็นมนุษย์ และมีทรัพย์สิน 100,000',()=>hum()&&S.money>=1e5,()=>hum()?bgPct(S.money,1e5):0,()=>hum()?`${bgN(S.money)} / 100,000`:'ยังไม่ได้แปลงกาย');
+bgAdd('wild',4,'ไม่ยอมเป็นมนุษย์','Forever wild',()=>`ไม่แปลงกายเลยตลอดชีวิต และถึงขั้น${bgSt(7)}`,()=>!hum()&&stOf()>=7,()=>hum()?0:stOf()/7,()=>hum()?'❌ แปลงกายไปแล้ว':`${bgSt(stOf())} / ${bgSt(7)}`);
+bgAdd('king',3,'ราชาอสูร','Beast king',()=>'ครองป่าเป็นราชาอสูร และพลังรวมถึง '+bgN(bgV(300000,5)),()=>!!bgBM().king&&total()>=bgV(3e5,5),()=>(bgBM().king?.4:0)+bgPct(total(),bgV(3e5,5))*.6,()=>`${bgBM().king?'👑 ราชาอสูร':'ยังไม่ได้เป็นราชา'} · พลัง ${bgN(total())} / ${bgN(bgV(3e5,5))}`);
+// ---- โลก ----
+bgAdd('xian',3,'อสูรเหาะสู่โลกเซียน','Beast who ascends',()=>'จากยุทธภพ ขึ้นสู่โลกเซียนให้ได้ในชาตินี้',()=>!!S.xian&&S.gW!=='x',()=>S.xian?1:stOf()/7*.9,()=>S.xian?'✅ ถึงโลกเซียน':`${bgSt(stOf())} · ยังอยู่ยุทธภพ`,()=>!bgX().x);
+bgAdd('xt',4,'อสูรเทพเหนือสวรรค์','Beast above heaven',()=>'ฝ่าทัณฑ์ขึ้นสู่โลกเทพให้ได้ในชาตินี้',()=>!!S.xt,()=>S.xt?1:(S.xian?.6:.2)+stOf()/7*.3,()=>S.xt?'✅ ถึงโลกเทพ':S.xian?'อยู่โลกเซียน':'ยังอยู่ยุทธภพ');
+// ---- ใช้ชีวิต ----
+bgAdd('pace1',3,'อสูรไม่เปื้อนเลือด','Bloodless beast',()=>`ถึงขั้น${bgSt(5)} โดยชนะการต่อสู้ไม่เกิน 12 ครั้ง`,()=>stOf()>=5&&(S.kills||0)<=12,()=>(S.kills||0)>12?0:stOf()/5,()=>`${bgSt(stOf())} / ${bgSt(5)} · ต่อสู้ ${S.kills||0}/12${(S.kills||0)>12?' ❌':''}`);
+bgAdd('pace2',4,'ผู้ไม่เคยกระหาย','Never hungered',()=>`ถึงขั้น${bgSt(6)} โดยชนะการต่อสู้ไม่เกิน 25 ครั้ง`,()=>stOf()>=6&&(S.kills||0)<=25,()=>(S.kills||0)>25?0:stOf()/6,()=>`${bgSt(stOf())} / ${bgSt(6)} · ต่อสู้ ${S.kills||0}/25${(S.kills||0)>25?' ❌':''}`);
+bgAdd('calm1',3,'ชีวิตสงบใต้แสงจันทร์','Quiet moonlit life',()=>`อยู่ถึงอายุ ${bgN(bgA(13))} ปี ความสุขเฉลี่ย 75 ขึ้นไป และสู้ไม่เกิน 100 ครั้ง`,()=>S.age>=bgA(13)&&slowJoy()>=75&&(S.kills||0)<=100,()=>(S.kills||0)>100?0:Math.min(bgPct(S.age,bgA(13)),bgPct(slowJoy(),75)),()=>`อายุ ${S.age}/${bgN(bgA(13))} · สุขเฉลี่ย ${slowJoy()}/75 · สู้ ${S.kills||0}/100`);
+bgAdd('calm2',4,'นิพพานแห่งพงไพร','Nirvana of the wilds',()=>`อยู่ถึงอายุ ${bgN(bgA(18))} ปี ความสุขเฉลี่ย 80 ขึ้นไป และกรรมดี +1,000`,()=>S.age>=bgA(18)&&slowJoy()>=80&&S.karma>=1000,()=>Math.min(bgPct(S.age,bgA(18)),bgPct(slowJoy(),80),bgPct(S.karma,1000)),()=>`อายุ ${S.age}/${bgN(bgA(18))} · สุขเฉลี่ย ${slowJoy()}/80 · กรรม ${Math.round(S.karma)}/1,000`);
+bgAdd('shrine',3,'เทพประจำหมู่บ้าน','Village deity',()=>'ได้รับการบูชาจากชาวบ้าน และกรรมดี +1,000',()=>!!bgM().shrine&&S.karma>=1000,()=>(bgM().shrine?.4:0)+bgPct(S.karma,1000)*.6,()=>`${bgM().shrine?'⛩️ มีศาลบูชาแล้ว':'ยังไม่มีศาลบูชา'} · กรรม ${Math.round(S.karma)}/1,000`);
+bgAdd('terr',3,'เจ้าถิ่นผู้ไม่เคยถอย','Unyielding lord of land',()=>'ป้องกันอาณาเขตสำเร็จ 8 ครั้ง',()=>(bgM().terr||0)>=8,()=>bgPct(bgM().terr,8),()=>`ป้องกันอาณาเขต ${bgM().terr||0} / 8`);
+bgAdd('mates',2,'คู่ครองตลอดกาล','Mate for life',()=>'มีคู่ครอง และมีลูกอย่างน้อย 6 ครอก',()=>(bgM().mates||0)>=1&&((bgM().cubs&&bgM().cubs.gen)||0)>=6,()=>bgPct((bgM().cubs&&bgM().cubs.gen)||0,6),()=>`ครอกที่ ${(bgM().cubs&&bgM().cubs.gen)||0} / 6`);
+// ---- โฟกัสสะสม (ปี) ----
+[['moon','moon','ผู้ดูดกลืนแสงจันทร์','Moon devourer',2,300],['moon','moon','บุตรแห่งดวงจันทร์','Child of the moon',3,700],['roam','roam','ผู้ท่องพงไพรไม่สิ้นสุด','Endless wanderer',2,250],['human','human','ผู้เฝ้ามองมนุษย์','Watcher of men',2,120],['hide','hide','ผู้รอดชีวิตจากทุกภัย','Survivor',2,150],['hunt','hunt','นักล่าไม่รู้เหนื่อย','Tireless hunter',3,600]].forEach(([k,f,n,en,lv,y],i)=>{const FN={moon:'ดูดซับแสงจันทร์',roam:'ท่องป่า',human:'แอบดูมนุษย์',hide:'ซ่อนตัวพักฟื้น',hunt:'ล่าเหยื่อ'}[f];
+ bgAdd('fy'+i,lv,n,en,()=>`ใช้เวลา${FN}รวม ${y} ปี`,()=>bgF(f)>=y,()=>bgPct(bgF(f),y),()=>`${FN} ${bgF(f)} / ${y} ปี`)});
+// ---- ผสม ----
+const CMB=[['ma',3,'อสูรนักปราชญ์ผู้เกรียงไกร','Mighty sage beast',[['พลัง',()=>total(),()=>bgV(2e5,5)],['ปัญญา',()=>S.int,()=>bgV(800,1.5)]]],
+ ['mk',3,'นักล่าผู้มีเมตตา','Merciful hunter',[['ชนะ',()=>S.kills||0,()=>bgV(300,1.5)],['กรรมดี',()=>S.karma,()=>bgV(800,1.5)]]],
+ ['pq',3,'กายาเหล็กใจเทพ','Iron body, divine heart',[['พลัง',()=>total(),()=>bgV(3e5,5)],['ลมปราณ',()=>S.qi,()=>bgV(1500,2)]]],
+ ['qi2',4,'แก่นแท้แห่งฟ้าดิน','Essence of heaven and earth',[['ลมปราณ',()=>S.qi,()=>bgV(3000,2)],['ปัญญา',()=>S.int,()=>bgV(1200,1.5)]]],
+ ['kf',3,'ฝันร้ายของนายพราน','Hunter\'s nightmare',[['ชนะ',()=>S.kills||0,()=>bgV(500,1.5)],['ชื่อเสียง',()=>S.fame,()=>2000]]],
+ ['ef',4,'มหันตภัยที่จารึกในตำนาน','Recorded calamity',[['กรรมชั่ว',()=>-S.karma,()=>bgV(1500,1.5)],['ชื่อเสียง',()=>S.fame,()=>3500]]],
+ ['gf',4,'อสูรศักดิ์สิทธิ์ที่ทุกคนกราบไหว้','Worshipped by all',[['กรรมดี',()=>S.karma,()=>bgV(1500,1.5)],['ชื่อเสียง',()=>S.fame,()=>3500]]],
+ ['ak',3,'บรรพชนผู้ยืนยาว','Long-lived ancestor',[['อายุ',()=>S.age,()=>bgA(15)],['ลูก',()=>S.kids||0,()=>10]]],
+ ['ap',4,'ภูผาที่ไม่มีวันล้ม','Mountain that never falls',[['อายุ',()=>S.age,()=>bgA(20)],['พลัง',()=>total(),()=>bgV(8e5,5)]]],
+ ['all',4,'สมบูรณ์แบบทุกด้าน','Perfect in all',[['พลัง',()=>total(),()=>bgV(4e5,5)],['ลมปราณ',()=>S.qi,()=>bgV(2000,2)],['ปัญญา',()=>S.int,()=>bgV(1000,1.5)]]],
+ ['kq',3,'ราชันเขี้ยวเงิน','Silver-fang sovereign',[['ชนะ',()=>S.kills||0,()=>bgV(450,1.5)],['ลมปราณ',()=>S.qi,()=>bgV(1500,2)]]],
+ ['hk',3,'ผู้คุ้มครองลูกหลาน','Guardian of the brood',[['ลูก',()=>S.kids||0,()=>12],['กรรมดี',()=>S.karma,()=>bgV(600,1.5)]]],
+ ['fi',3,'อสูรผู้เลื่องชื่อด้านปัญญา','Famed for wisdom',[['ปัญญา',()=>S.int,()=>bgV(1000,1.5)],['ชื่อเสียง',()=>S.fame,()=>2000]]],
+ ['ek',4,'ราชาอสูรมาร','Demon beast king',[['กรรมชั่ว',()=>-S.karma,()=>bgV(1200,1.5)],['ชนะ',()=>S.kills||0,()=>bgV(900,1.5)]]],
+ ['qa',3,'ผู้บำเพ็ญยืนยาว','Long cultivator',[['อายุ',()=>S.age,()=>bgA(16)],['ลมปราณ',()=>S.qi,()=>bgV(2000,2)]]],
+ ['pf',3,'เจ้าป่าผู้เลื่องชื่อ','Renowned forest lord',[['พลัง',()=>total(),()=>bgV(2.5e5,5)],['ชื่อเสียง',()=>S.fame,()=>2500]]],
+ ['iq',3,'ผู้หยั่งรู้ฟ้าดิน','Seer of heaven and earth',[['ปัญญา',()=>S.int,()=>bgV(1300,1.5)],['ลมปราณ',()=>S.qi,()=>bgV(1800,2)]]]];
+CMB.forEach(([id,lv,n,en,L])=>bgAdd('c_'+id,lv,n,en,()=>L.map(([a,,t])=>`${a} ${bgN(t())}`).join(' และ '),()=>L.every(([,v,t])=>v()>=t()),()=>Math.min(...L.map(([,v,t])=>bgPct(v(),t()))),()=>L.map(([a,v,t])=>`${a} ${bgN(v())}/${bgN(t())}`).join(' · ')));
+// ---- เฉพาะเผ่าพันธุ์ ----
+const spIs=s=>()=>bgX().sp===s;
+bgAdd('carp1',3,'กระโดดข้ามประตูมังกร','Leap the dragon gate',()=>'ปลาคาร์ปกระโดดข้ามประตูมังกรสำเร็จ',()=>!!bgM().dragon,()=>bgM().dragon?1:bgPct(bgM().gate||0,3)*.8,()=>bgM().dragon?'✅ กลายร่างแล้ว':`พยายามแล้ว ${bgM().gate||0} ครั้ง`,spIs('ปลาคาร์ป'));
+bgAdd('carp2',4,'มังกรจากสายน้ำ','Dragon from the river',()=>`ข้ามประตูมังกร และบำเพ็ญจนถึงขั้น${bgSt(6)}`,()=>!!bgM().dragon&&stOf()>=6,()=>(bgM().dragon?.4:0)+stOf()/6*.6,()=>`${bgM().dragon?'🐉 ข้ามประตูแล้ว':'ยังไม่ข้ามประตูมังกร'} · ${bgSt(stOf())}`,spIs('ปลาคาร์ป'));
+bgAdd('fox1',3,'จิ้งจอกเก้าหาง','Nine-tailed fox',()=>'บำเพ็ญจนมีหางครบ 9 หาง',()=>(bgM().tails||1)>=9,()=>bgPct(bgM().tails||1,9),()=>`หาง ${bgM().tails||1} / 9`,spIs('จิ้งจอก'));
+bgAdd('fox2',4,'เทพจิ้งจอกล่มเมือง','Kingdom-toppling fox',()=>'มีเก้าหาง แปลงกายเป็นมนุษย์ และชื่อเสียงถึง 3,000',()=>(bgM().tails||1)>=9&&hum()&&S.fame>=3000,()=>Math.min(bgPct(bgM().tails||1,9),hum()?1:.5,bgPct(S.fame,3000)),()=>`หาง ${bgM().tails||1}/9 · ${hum()?'แปลงกายแล้ว':'ยังไม่แปลงกาย'} · ชื่อเสียง ${bgN(S.fame)}/3,000`,spIs('จิ้งจอก'));
+bgAdd('tiger1',2,'อักษรราชาบนหน้าผาก','Mark of the king',()=>'ได้อักษร 王 บนหน้าผาก และชนะการต่อสู้ 300 ครั้ง',()=>!!bgM().wang&&(S.kills||0)>=300,()=>(bgM().wang?.4:0)+bgPct(S.kills,300)*.6,()=>`${bgM().wang?'王 ปรากฏแล้ว':'ยังไม่มีอักษร'} · ชนะ ${S.kills||0}/300`,spIs('พยัคฆ์'));
+bgAdd('tiger2',4,'พยัคฆ์ขาวพิทักษ์ทิศตะวันตก','White Tiger of the West',()=>`พยัคฆ์ถึงขั้น${bgSt(7)} และชนะการต่อสู้ 900 ครั้ง`,()=>stOf()>=7&&(S.kills||0)>=900,()=>Math.min(stOf()/7,bgPct(S.kills,900)),()=>`${bgSt(stOf())} · ชนะ ${S.kills||0}/900`,spIs('พยัคฆ์'));
+bgAdd('turtle1',3,'เต่าดำแบกโลก','Black tortoise',()=>`มีชีวิตอยู่ถึงอายุ ${bgN(bgA(28))} ปี`,()=>S.age>=bgA(28),()=>bgPct(S.age,bgA(28)),()=>`อายุ ${S.age} / ${bgN(bgA(28))}`,spIs('เต่าดำ'));
+bgAdd('turtle2',4,'เสวียนอู่พิทักษ์ทิศเหนือ','Xuanwu of the North',()=>`เต่าดำถึงขั้น${bgSt(7)} และลมปราณ 3,500`,()=>stOf()>=7&&S.qi>=3500,()=>Math.min(stOf()/7,bgPct(S.qi,3500)),()=>`${bgSt(stOf())} · ลมปราณ ${bgN(S.qi)}/3,500`,spIs('เต่าดำ'));
+bgAdd('snake1',3,'นางพญางูขาว','White Snake Lady',()=>'แปลงกายเป็นมนุษย์ แต่งงาน และกรรมดี +600',()=>hum()&&!!S.spouse&&S.karma>=600,()=>(hum()?.3:0)+(S.spouse?.2:0)+bgPct(S.karma,600)*.5,()=>`${hum()?'แปลงกายแล้ว':'ยังไม่แปลงกาย'} · ${S.spouse?'💍':'ยังไม่แต่งงาน'} · กรรม ${Math.round(S.karma)}/600`,spIs('งูขาว'));
+bgAdd('snake2',4,'งูขาวกลายเป็นมังกร','Serpent turned dragon',()=>`งูขาวถึงขั้น${bgSt(7)} และลมปราณ 4,000`,()=>stOf()>=7&&S.qi>=4000,()=>Math.min(stOf()/7,bgPct(S.qi,4000)),()=>`${bgSt(stOf())} · ลมปราณ ${bgN(S.qi)}/4,000`,spIs('งูขาว'));
+bgAdd('crane1',3,'กระเรียนพาหนะเซียน','Immortal\'s crane',()=>'ปัญญา 1,200 และขึ้นสู่โลกเซียนหรือโลกเทพ',()=>S.int>=1200&&(S.xian&&S.gW!=='x'||S.xt),()=>Math.min(bgPct(S.int,1200),S.xian?1:.5),()=>`ปัญญา ${bgN(S.int)}/1,200 · ${S.xian?'อยู่โลกเซียน':'ยังอยู่ยุทธภพ'}`,spIs('กระเรียน'));
+bgAdd('ape1',3,'วานรผู้ท้าฟ้า','Monkey who defies heaven',()=>'วานรมีพลัง 500,000 และชนะการต่อสู้ 600 ครั้ง',()=>total()>=5e5&&(S.kills||0)>=600,()=>Math.min(bgPct(total(),5e5),bgPct(S.kills,600)),()=>`พลัง ${bgN(total())}/500,000 · ชนะ ${S.kills||0}/600`,spIs('วานร'));
+bgAdd('wolf1',3,'หมาป่าเดียวดายใต้จันทร์','Lone moon wolf',()=>'ไม่เลือกเส้นทางจ่าฝูง แต่ชนะการต่อสู้ 500 ครั้ง และดูดซับแสงจันทร์ 300 ปี',()=>!pOf('pack')&&(S.kills||0)>=500&&bgF('moon')>=300,()=>pOf('pack')?0:Math.min(bgPct(S.kills,500),bgPct(bgF('moon'),300)),()=>pOf('pack')?'❌ เลือกเส้นทางจ่าฝูงแล้ว':`ชนะ ${S.kills||0}/500 · จันทร์ ${bgF('moon')}/300 ปี`,spIs('หมาป่า'));
+bgAdd('drag1',3,'ปฐมมังกรก่อนพันปี','Primordial before a millennium',()=>`มังกรถึงขั้น${bgSt(7)}ก่อนอายุ 1,500 ปี`,()=>stOf()>=7&&S.age<=1500,()=>S.age>1500&&stOf()<7?0:stOf()/7,()=>S.age>1500&&stOf()<7?'❌ เลย 1,500 ปีแล้ว':`${bgSt(stOf())} · อายุ ${S.age}/1,500`,spIs('มังกร'));
+bgAdd('drag2',4,'มังกรผู้กลืนสวรรค์','Heaven-devouring dragon',()=>'มังกรมีพลังรวม 20,000,000',()=>total()>=2e7,()=>bgPct(total(),2e7),()=>`พลัง ${bgN(total())} / 20,000,000`,spIs('มังกร'));
+bgAdd('drag3',4,'มังกรเทพเหนือโลกา','Dragon god above all',()=>'มังกรขึ้นสู่โลกเทพ และพลังรวม 5,000,000',()=>!!S.xt&&total()>=5e6,()=>Math.min(S.xt?1:.4,bgPct(total(),5e6)),()=>`${S.xt?'✅ โลกเทพ':'ยังไม่ถึงโลกเทพ'} · พลัง ${bgN(total())}/5,000,000`,spIs('มังกร'));
+// ---- ลงทะเบียน ----
+BG.forEach(G=>{const g={id:G.id,beast:1,bsp:G.sp,sp:()=>false,c:()=>{try{return!!G.c()}catch(e){return false}},pr:()=>{try{return G.pr()}catch(e){return 0}},p:()=>{try{return G.p()}catch(e){return''}},en:G.en,lv:G.lv};Object.defineProperty(g,'n',{get:()=>LANG==='en'?G.en:G.n,enumerable:true});Object.defineProperty(g,'d',{get:()=>{try{return G.d()}catch(e){return''}},enumerable:true});GOALS.push(g)});
+try{const D={};BG.forEach(G=>{D[G.n]=G.en});Object.assign(I18N.d,D,{'ปณิธานของสัตว์อสูร':'Beast aspiration','ยิ่งยากยิ่งได้คะแนนมาก':'harder pays more'})}catch(e){}
+function bgOffer(r){_bgR=r;const ok=GOALS.filter(g=>g.beast&&(!g.bsp||g.bsp())),spc=ok.filter(g=>g.bsp).sort(()=>Math.random()-.5),gen=ok.filter(g=>!g.bsp).sort(()=>Math.random()-.5);
+ const out=gen.slice(0,3);if(!out.some(g=>g.lv>=4)){const h=gen.find(g=>g.lv>=4&&!out.includes(g));if(h)out[2]=h}out.push(spc[0]||gen.find(g=>!out.includes(g)));
+ return out.filter(Boolean).map(g=>g.id)}
+// สุ่มกำเนิด: แนบปณิธาน + เลือกในหน้าสุ่ม
+{const _g=brGen;brGen=function(){const r=_g.apply(this,arguments);try{r.goals=bgOffer(r);r.goal=r.goals[0]}catch(e){}return r}}
+function bgPick(id){if(!brRoll)return;brRoll.goal=id;document.querySelectorAll('#brGoal .opt').forEach(b=>b.classList.toggle('sel',b.dataset.g===id))}
+{const _bs=brShow;brShow=function(anim){const r=_bs.apply(this,arguments);try{const R0=brRoll;if(!R0.goals){R0.goals=bgOffer(R0);R0.goal=R0.goals[0]}_bgR=R0;const box=document.querySelector('#brB');if(!box)return r;const btn=box.lastElementChild;
+  const h=`<div class="box" id="brGoal" style="padding:10px 12px;margin-top:10px"><div class="tag2" style="margin-bottom:6px">🎯 ปณิธานของสัตว์อสูร — ยิ่งยากยิ่งได้คะแนนมาก (×1.6 ถึง ×2.5)</div>${R0.goals.map(id=>{const g=goalOf(id);if(!g)return'';return`<button class="opt ${R0.goal===id?'sel':''}" data-g="${id}" onclick="bgPick('${id}')">🎯 ${g.n} <span class="tag2">${'⭐'.repeat(g.lv)} · คะแนน ×${goalMul(g)}</span>${g.bsp?' <span class="t4">✨ เฉพาะ'+esc(bgX().sp)+'</span>':''}<small>${g.d}</small></button>`}).join('')}</div>`;
+  btn.insertAdjacentHTML('beforebegin',h);xFix&&xFix(['brGoal'])}catch(e){console.error(e)}return r}}
+{const _b2=beastBirth2;beastBirth2=function(r){const out=_b2.apply(this,arguments);try{if(S&&S.beastMode){if(!r.goals){r.goals=bgOffer(r);r.goal=r.goals[0]}S.goal=r.goal||r.goals[0];S.goalDone=false;S.bfy={};_bgR=null;const g=goalOf(S.goal);if(g)log(`🎯 ตั้งปณิธาน: <b>${g.n}</b> ${'⭐'.repeat(g.lv)}`,'epic');render()}}catch(e){console.error(e)}return out}}
+// ปีของสัตว์: นับโฟกัส · พ่อแม่ · เหตุการณ์วัยเยาว์ · ตรวจปณิธาน/ความสำเร็จ (ระบบสัตว์ไม่ผ่าน yearEnd)
+{const _by=beastYear;beastYear=function(){try{if(S&&S.beastMode&&!S.beastMode.human){S.bfy=S.bfy||{};S.bfy[S.focus]=(S.bfy[S.focus]||0)+1}}catch(e){}
+ const r=_by.apply(this,arguments);
+ try{if(S&&S.alive&&S.beastMode&&!S.beastMode.human){try{bParYear()}catch(e){}try{if(S.age<=5&&Math.random()<.35)childEvent()}catch(e){}try{cdxTick()}catch(e){}goalCheck();try{achCheck()}catch(e){}}}catch(e){console.error(e)}return r}}
+
+function bParYear(){const m=S&&S.beastMode;if(!(m&&!m.human&&m.par>0&&!m.parGone))return;const who=m.par>1?'พ่อแม่':'แม่';
+ if(S.age>=(m.parY||3)){m.parGone=1;log(`🍃 ถึงวัยต้องแยกทาง — ${who}${m.sp}หันหลังเดินจากไป ปล่อยให้ ${esc(S.name)} ออกไปเผชิญโลกเพียงลำพัง`,'good')}
+ else if(Math.random()<.035&&S.age>=1){S.happy=Math.max(0,S.happy-15);if(m.par>1){m.par=1;log(`💔 พ่อถูกนายพรานล่าไปต่อหน้าต่อตา — เหลือเพียงแม่ที่คอยปกป้อง ${esc(S.name)}`,'bad')}else{m.parGone=1;log(`💔 แม่ถูกนายพรานล่าไปต่อหน้าต่อตา — ${esc(S.name)} ต้องเอาตัวรอดเพียงลำพังตั้งแต่ยังเล็ก`,'bad')}}
+ else{S.happy=Math.min(100,S.happy+3);S.hp=Math.min(S.maxHp,S.hp+5);if(Math.random()<.45)log(`🐾 ${who}${BPAR_FX[R(0,BPAR_FX.length-1)]}`)}}
+
 </script>
 </body>
 </html>
