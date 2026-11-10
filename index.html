@@ -10571,7 +10571,7 @@ const BS_NO=['recruit','deed','hammer','house'];
   if(id==='break'){const s=S.sys,it=SHOP.find(x=>x.id==='break');if(s.sp<it.c)return toast('SP ไม่พอ');s.sp-=it.c;S.qi=+(S.qi+10).toFixed(1);S.power+=Math.round(total()*.25);sysLog('ซื้อ <b>ยาทะลวงขั้น</b> — กลืนลงไปแล้วพลังอสูรพุ่งพล่าน (ลมปราณ +10 ปี · พลัง +25%) ช่วยให้ขึ้นขั้นถัดไปได้เร็วขึ้น','up');try{blAdvance()}catch(e){}if(typeof openSys==='function')openSys();return}}
  return _bs.apply(this,arguments)}}
 function bsysTick(){const m=S.beastMode;if(!m||m.human||!S.alive)return;
- if(!S.sys){if(S.sysRefused||S.sysEver)return;if(S.bsysAt!=null&&S.age>=S.bsysAt){if(bsysOffer())S.bsysAt=null;return}if(S.age>=6&&m.st>=1&&Math.random()<.004)bsysOffer();return}
+ if(!S.sys){if(S.sysRefused||S.sysEver)return;if(S.bsysAt!=null&&S.age>=S.bsysAt){if(bsysOffer())S.bsysAt=null;return}if(S.age>=6&&m.st>=1&&Math.random()<.0006)bsysOffer();return}
  sysFix();const s=S.sys,T=sysType()||{id:''},gm=sysM(),mul=S.talent.m*(1+m.st*.6)*(S.xian?1.4:1);
  S.power+=Math.round((4+s.lv*5)*mul*gm*(T.id==='martial'||T.id==='demon'?1.3:1));S.qi=+(S.qi+.06*s.lv).toFixed(1);gainExp(12);
  if(S.age<6)return;
@@ -10601,7 +10601,7 @@ function bAiGive(why){if(S.ai)return;aiGive._b=1;try{aiGive('birth')}finally{aiG
 // ---------- ทุกปีในร่างสัตว์ ----------
 {const _by=beastYear;beastYear=function(){const r=_by.apply(this,arguments);try{if(S&&S.alive&&bsB()){const M=blM();
  if(M.mate&&!M.mate.bn&&BM_OLD.test(M.mate.n||'')){M.mate.n=bMateName();M.mate.bn=1}
- bsysTick();if(!S.ai&&S.beastMode.st>=1&&Math.random()<.002)bAiGive('star')}}catch(e){console.error(e)}return r}}
+ bsysTick();if(!S.ai&&S.beastMode.st>=1&&Math.random()<.0003)bAiGive('star')}}catch(e){console.error(e)}return r}}
 // ---------- แปลงกาย: คู่ชีวิตแปลงกายตาม · เควสกลับเป็นแบบมนุษย์ ----------
 {const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{bTrChk()}catch(e){console.error(e)}return r}}
 function bTrChk(){const m=S&&S.beastMode;if(!m||!m.human||m.trD)return;m.trD=1;const M=blM();
@@ -10803,6 +10803,104 @@ function balTick(){if(!S||!S.alive||S.custom||(S.beastMode&&!S.beastMode.human))
  if(f==='hunt'||Math.random()<.15)S.bKill=(S.bKill||0)+1;
  if(f==='roam'){S.bSeen=(S.bSeen||0)+1+(Math.random()<.3?1:0);S.fame+=1+bqSt()}
  if(f==='hide'&&Math.random()<.3)S.bSeen=(S.bSeen||0)+1}}catch(e){}return r}}
+
+// ===================== v15.3 สัตว์อสูรปลายทาง: ขั้นย่อย · ขึ้นสวรรค์ · ศาลเจ้า · อาณาจักร · ศึกปลายเกม =====================
+const bmOK=()=>!!(S&&S.alive&&S.beastMode&&!S.beastMode.human);
+const bFree=()=>!(choice._cur||modalOpen);
+function bLs(a){const m=S.beastMode;S.lifespan+=a;S._lsEx=(S._lsEx||0)+a;if(m)m.lsB=(m.lsB||0)+a}
+{const _lm=lifeMax0;lifeMax0=function(){const r=_lm.apply(this,arguments);try{const m=S&&S.beastMode;if(m&&!m.human&&m.lsB)return Math.min(r+m.lsB,S.lifespan+40)}catch(e){}return r}}
+function bPct(p){const m=S.beastMode,k=(m.st||0)+'|'+(m.pst||0)+'|'+(m.heaven?'h'+(m.hs||0):'');if(!m._pp||m._pp.k!==k)m._pp={k,a:0};const room=Math.max(0,.3-m._pp.a),full=Math.min(p,room),eff=full+(p-full)*.1;m._pp.a+=p;return Math.round(total()*eff)}
+const bPm=()=>(S.xian?1.4:1)*((S.talent&&S.talent.m)||1);
+// ---------- 1) ขั้นย่อยหลังปฐมสัตว์เทพ ชั้น 1–9 ----------
+const BPS_N=9,bpsNeed=n=>Math.round(220000*Math.pow(1.45,n)*(S.xian?1.4:1)),bpsQi=n=>200+n*45;
+function bpsTry(){const m=S.beastMode,n=(m.pst||0)+1;if(n>BPS_N||m.heaven)return;if(total()<bpsNeed(n)||S.qi<bpsQi(n)||Math.random()>.25)return;
+ if((m.pstCd||0)>S.age)return;const w=Math.random()<Math.min(.85,.35+(total()/bpsNeed(n)-1)*.6+Math.min(.15,S.qi/bpsQi(n)*.03));
+ if(w){m.pst=n;const add=300+n*120;bLs(add);S.maxHp+=40;S.hp=S.maxHp;S.fame+=80*n;
+  log(`⚡ ฝ่าทัณฑ์ฟ้าชั้นที่ ${n} สำเร็จ — <b>${BL_ST[7]} ชั้น ${n}</b> · อายุขัย +${add} ปี${n===BPS_N?' · ฟ้าดินเริ่มเปิดประตูสวรรค์ให้คุณ...':''}`,'myth',true);S.key.push(`${S.age} ปี — ${BL_ST[7]} ชั้น ${n}`);setScene('aura')}
+ else{m.pstCd=S.age+R(8,15);S.hp=Math.max(1,Math.round(S.hp*.6));S.power=Math.round(S.power*.98);log(`💢 ทัณฑ์ฟ้าชั้นที่ ${n} ซัดคุณกระเด็น — พลังชีวิตลดลง พลัง −2% · ต้องพักฟื้นราว ${m.pstCd-S.age} ปี`,'bad')}}
+// ---------- 2) ทัณฑ์ปฐมกาล → ขึ้นสวรรค์เป็นสัตว์เทพประจำทิศ ----------
+const BDIR={ไฟ:['ทิศใต้','🐦 หงส์แดง'],โลหิต:['ทิศใต้','🐦 หงส์แดง'],ไม้:['ทิศตะวันออก','🐉 มังกรเขียว'],ลม:['ทิศตะวันออก','🐉 มังกรเขียว'],อัสนี:['ทิศตะวันออก','🐉 มังกรเขียว'],
+ โลหะ:['ทิศตะวันตก','🐅 พยัคฆ์ขาว'],แสง:['ทิศตะวันตก','🐅 พยัคฆ์ขาว'],น้ำแข็ง:['ทิศตะวันตก','🐅 พยัคฆ์ขาว'],น้ำ:['ทิศเหนือ','🐢 เต่าดำ'],เงา:['ทิศเหนือ','🐢 เต่าดำ'],พิษ:['ทิศเหนือ','🐢 เต่าดำ'],ดิน:['ศูนย์กลาง','🦄 กิเลนเหลือง']};
+const BH_ST=['เทพสัตว์ฝึกหัด','เทพสัตว์ประจำทิศ','ราชันสัตว์เทพ','จักรพรรดิสัตว์สวรรค์','บรรพสัตว์ฟ้าดิน'];
+const bhNeed=i=>Math.round(bpsNeed(BPS_N)*Math.pow(2,i+1));
+function bAscOffer(){const m=S.beastMode;if(m.heaven||(m.pst||0)<BPS_N||!bFree()||(m.ascCd||0)>S.age)return false;const D=BDIR[m.el]||BDIR['ดิน'];setScene('aura');
+ choice('⚡ ทัณฑ์ปฐมกาล',`ฟ้าเปิดออกเป็นวงกว้างนับพันลี้ สายฟ้าเก้าสีม้วนตัวอยู่เหนือหัว — นี่คือ<b>ทัณฑ์ปฐมกาล</b> ที่ไม่มีสัตว์ตนใดผ่านมาได้นับหมื่นปี<br>ถ้าผ่าน คุณจะขึ้นสวรรค์เป็น <b>${D[1]} สัตว์เทพประจำ${D[0]}</b><br><span class="tag2">ต้องชนะติดกัน 3 ระลอก · ล้มเหลวจะบาดเจ็บหนักและต้องรออีก 30–50 ปี</span>`,[
+  {t:'⚡ รับทัณฑ์',s:'เดิมพันทุกสิ่ง',f(){let ok=true;for(let i=1;i<=3&&ok;i++){ok=Math.random()<.78;log(`⚡ ${['สายฟ้าปฐมกาลระลอกแรก','สายฟ้าปฐมกาลระลอกสอง','สายฟ้าปฐมกาลระลอกสุดท้าย'][i-1]} — ${ok?'ต้านไว้ได้!':'ร่างแตกร้าว...'}`,ok?'epic':'bad')}
+   if(ok)bAscend();else{m.ascCd=S.age+R(30,50);S.hp=Math.max(1,Math.round(S.hp*.3));S.power=Math.round(S.power*.88);log('💥 ทัณฑ์ปฐมกาลบดขยี้ร่างคุณจนเกือบสลาย — พลัง −12% · ต้องรออีกหลายสิบปีถึงจะลองใหม่ได้','bad',true)}}},
+  {t:'🌲 ยังไม่พร้อม',s:'รอสะสมพลังก่อน',skip:true,f(){m.ascCd=S.age+R(10,20);log('คุณก้มหัวให้ฟ้า แล้วถอยกลับเข้าป่า — ไว้วันหน้าค่อยรับทัณฑ์')}}]);return true}
+function bAscend(){const m=S.beastMode,D=BDIR[m.el]||BDIR['ดิน'];m.heaven=1;m.hs=0;m.hsCd=S.age+R(20,40);m.dir=D[0];m.god=D[1];
+ const add=3000;bLs(add);S.maxHp+=300;S.hp=S.maxHp;S.fame+=5000;S.power+=bPct(.3);S.flags.bHeaven=1;
+ log(`🌈 <b>ผ่านทัณฑ์ปฐมกาล!</b> ประตูสวรรค์เปิดออก — คุณขึ้นสวรรค์เป็น <b>${D[1]} สัตว์เทพประจำ${D[0]}</b> · อายุขัย +${add} ปี · พลัง +30%`,'myth',true);S.key.push(`${S.age} ปี — ขึ้นสวรรค์เป็น${D[1].slice(3)} สัตว์เทพประจำ${D[0]}`);keyAdd('ขึ้นสวรรค์เป็นสัตว์เทพประจำทิศ');setScene('aura')}
+function bHeavenYear(){const m=S.beastMode;if(!m.heaven)return;S.power+=Math.round((400+m.hs*400)*bPm());S.qi=+(S.qi+.4+m.hs*.2).toFixed(1);
+ const i=m.hs+1;if(i<BH_ST.length&&S.age>=(m.hsCd||0)&&total()>=bhNeed(i)&&Math.random()<.2){const w=Math.random()<Math.min(.8,.4+(total()/bhNeed(i)-1)*.4);
+  if(w){m.hs=i;m.hsCd=S.age+R(30,60);const add=1500*i;bLs(add);S.maxHp+=120;S.hp=S.maxHp;S.fame+=2000*i;log(`👑 สวรรค์ยอมรับคุณเป็น <b>${BH_ST[i]}</b> · อายุขัย +${add} ปี`,'myth',true);S.key.push(`${S.age} ปี — ${BH_ST[i]}`);setScene('aura')}
+  else{m.hsCd=S.age+R(15,30);S.hp=Math.max(1,Math.round(S.hp*.5));log(`⚔️ แพ้ผู้คุมสวรรค์ ยังไม่ได้รับการยอมรับเป็น${BH_ST[i]} — ลองใหม่อีกครั้งในอีกหลายสิบปี`,'bad')}}
+ if(bFree()&&Math.random()<.12)bHeavenEv()}
+const BHEV=[
+ ()=>['☁️ เทวสภาเรียกตัว','เทวสภาสวรรค์ขอให้คุณนำทัพไปปราบมารที่บุกประตูสวรรค์ทาง'+S.beastMode.dir,[{t:'⚔️ นำทัพ',s:'ศึกใหญ่',f(){const w=fight('แม่ทัพมารสวรรค์',Math.round(total()*1.15));if(w){S.fame+=3000;S.karma+=10;S.power+=bPct(.05);log('🏆 ปราบทัพมารได้ — เทวสภายกย่องคุณ ชื่อเสียง +3,000 · พลัง +5%','epic')}else{S.hp=Math.max(1,Math.round(S.hp*.5));log('ทัพแตก คุณถอยกลับมาพร้อมบาดแผล','bad')}}},{t:'🙅 ปฏิเสธ',s:'เทพบางองค์ไม่พอใจ',skip:true,f(){S.fame=Math.max(0,S.fame-500);log('เทวสภาจดชื่อคุณไว้ในบัญชีดำ (ชื่อเสียง −500)')}}]],
+ ()=>['🍑 งานเลี้ยงท้อสวรรค์','ราชินีแม่แห่งสวรรค์เชิญสัตว์เทพทุกทิศมางานเลี้ยงท้อเซียน',[{t:'🍑 ไปร่วมงาน',f(){const a=R(200,600);bLs(a);joy(20);log(`กินท้อเซียนไปหนึ่งลูก — อายุขัย +${a} ปี`,'epic')}},{t:'🥷 แอบขโมยท้อทั้งสวน',s:'เสี่ยงมาก',f(){if(Math.random()<.4){const a=R(1500,3000);bLs(a);S.karma-=20;log(`🍑 ขโมยสำเร็จ! อายุขัย +${a} ปี · กรรม −20`,'myth')}else{const w=fight('ทหารสวรรค์เฝ้าสวนท้อ',Math.round(total()*1.2));S.karma-=10;S.fame=Math.max(0,S.fame-1000);log(w?'ถูกจับได้ แต่สู้ฝ่าออกมาได้ (ชื่อเสียง −1,000)':'ถูกจับได้และโดนลงทัณฑ์ (ชื่อเสียง −1,000)','bad')}}}]],
+ ()=>['🌟 สัตว์เทพทิศอื่นมาเยือน','สัตว์เทพประจำทิศอีกตนมาท้าประลองเพื่อชิงอันดับหนึ่งแห่งสี่ทิศ',[{t:'⚔️ รับคำท้า',f(){const w=fight('สัตว์เทพต่างทิศ',Math.round(total()*1.1));if(w){S.fame+=4000;S.power+=bPct(.04);log('🏆 ชนะสัตว์เทพต่างทิศ! ชื่อเสียง +4,000','epic')}else log('แพ้อย่างสูสี ทั้งคู่ยอมรับฝีมือกัน')}},{t:'🍵 ดื่มชาคุยกันแทน',f(){S.int+=30;S.qi=+(S.qi+5).toFixed(1);log('แลกเปลี่ยนความรู้เรื่องเต๋ากันทั้งคืน — ปัญญา +30 · ลมปราณ +5 ปี')}}]]];
+function bHeavenEv(){const [t,d,o]=ch(BHEV)();choice(t,d,o)}
+// ---------- 3) ศาลเจ้าและผู้ศรัทธา ----------
+function bShrineYear(){const m=S.beastMode;if(m.st<5)return;if(!m.shr){m.shr={f:R(20,80)};log(`⛩️ ชาวบ้านใกล้ป่าสร้าง<b>ศาลเจ้า</b>บูชาคุณเป็นเทพประจำป่า — มีผู้ศรัทธา ${m.shr.f} คน`,'epic',true);S.key.push(`${S.age} ปี — มีศาลเจ้าบูชาเป็นของตัวเอง`)}
+ const sh=m.shr,evil=S.karma<0;const capF=3000*(m.st-3)*(m.heaven?4+(m.hs||0):1);sh.f=Math.max(0,Math.round(sh.f+Math.max(0,capF-sh.f)*(evil?.012:.025)+R(0,6)));
+ const fp=Math.round(Math.sqrt(sh.f)*(2+m.st)*bPm());S.power+=fp;if(evil)S.karma-=sh.f>500?1:0;else S.karma+=sh.f>500?1:0;if(Math.random()<.3)S.fame+=Math.round(Math.sqrt(sh.f));
+ if(bFree()&&Math.random()<.08)bShrineEv()}
+const BSHEV=[
+ ()=>['🌾 ภัยแล้ง','หมู่บ้านผู้ศรัทธาแล้งมาสามปี ชาวบ้านคุกเข่าอ้อนวอนที่ศาลเจ้า',[{t:'🌧️ เรียกฝน',s:'ใช้ลมปราณ',f(){S.qi=Math.max(0,+(S.qi-8).toFixed(1));S.beastMode.shr.f+=R(30,90);S.karma+=6;log('ฝนตกลงมาทั้งคืน — ผู้ศรัทธาเพิ่มขึ้นมาก · กรรม +6','epic')}},{t:'😑 ปล่อยไป',skip:true,f(){S.beastMode.shr.f=Math.round(S.beastMode.shr.f*.8);log('ชาวบ้านบางส่วนเลิกศรัทธา')}}]],
+ ()=>['☠️ โรคระบาด','โรคร้ายแพร่ในหมู่บ้านใต้ศาลเจ้าของคุณ',[{t:'💚 ใช้พลังรักษา',f(){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.2));S.beastMode.shr.f+=R(40,120);S.karma+=8;log('คุณรักษาชาวบ้านจนหาย — ผู้ศรัทธาเพิ่มขึ้นมาก · กรรม +8','epic')}},{t:'🔥 เผาหมู่บ้านทิ้ง',s:'สายมาร',f(){S.karma-=15;S.power+=bPct(.03);S.beastMode.shr.f=Math.round(S.beastMode.shr.f*.6);log('ไฟลุกทั้งหมู่บ้าน — คนที่เหลือบูชาคุณด้วยความกลัว · กรรม −15','bad')}}]],
+ ()=>['🍖 เครื่องเซ่นชุดใหญ่','เศรษฐีในเมืองนำเครื่องเซ่นมาวางเต็มศาลเจ้า ขอให้คุณคุ้มครองการค้า',[{t:'🙏 รับและคุ้มครอง',f(){S.hp=S.maxHp;S.qi=+(S.qi+3).toFixed(1);S.beastMode.shr.f+=R(20,60);log('อิ่มหนำและได้ผู้ศรัทธาเพิ่ม — พลังชีวิตเต็ม · ลมปราณ +3 ปี')}},{t:'😤 กินแล้วไม่ช่วย',f(){S.karma-=5;S.hp=S.maxHp;log('กินเครื่องเซ่นจนหมดแล้วหลับต่อ · กรรม −5')}}]],
+ ()=>['😠 ผู้ลบหลู่','นักพรตเย่อหยิ่งประกาศว่าศาลเจ้าของคุณเป็นของปลอม แล้วพังรูปปั้นทิ้ง',[{t:'⚔️ สั่งสอน',f(){const w=fight('นักพรตผู้ลบหลู่',Math.round(total()*.7));if(w){S.beastMode.shr.f+=R(40,100);S.fame+=300;log('สั่งสอนนักพรตต่อหน้าชาวบ้าน — ผู้ศรัทธาเพิ่มขึ้น','epic')}else log('นักพรตหนีไปได้')}},{t:'🧘 ให้อภัย',f(){S.karma+=5;S.int+=5;log('คุณให้อภัย — นักพรตสำนึกผิดกลับมาเป็นผู้ศรัทธาคนแรกที่รู้หนังสือ · กรรม +5')}}]]];
+function bShrineEv(){const [t,d,o]=ch(BSHEV)();choice(t,d,o)}
+// ---------- 4) อาณาจักรสัตว์อสูร ----------
+const BKD_T=['ป่ารังเกิด','หุบเขาหมอก','ภูเขาหิมะ','ทะเลสาบใหญ่','ทุ่งหญ้ากว้าง','ป่าดึกดำบรรพ์','หมู่เกาะทะเลใต้','แดนภูเขาไฟ','ทะเลทรายเงา','สันเขาฟ้า'];
+function bKingYear(){const m=S.beastMode;if(m.st<4||(S.kids||0)<3)return;if(!m.kd){m.kd={t:1,w:0};log(`🐾 ลูกหลานของคุณมากพอจะตั้ง<b>เผ่า</b>แล้ว — คุณคือบรรพบุรุษแห่งเผ่า${m.sp} ครองดินแดน${BKD_T[0]}`,'epic',true);S.key.push(`${S.age} ปี — ตั้งเผ่า${m.sp}`)}
+ const k=m.kd;S.power+=Math.round(k.t*(10+m.st*6)*bPm());if(Math.random()<.2)S.fame+=k.t*3;
+ if(bFree()&&Math.random()<.07)bKingEv()}
+function bKingEv(){const m=S.beastMode,k=m.kd,nx=BKD_T[Math.min(BKD_T.length-1,k.t)];const r=Math.random();
+ if(r<.5&&k.t<BKD_T.length)choice('🗺️ ขยายอาณาเขต',`ลูกหลานรุ่นหนุ่มอยากแยกไปครอง<b>${nx}</b> แต่ที่นั่นมีเจ้าถิ่นอยู่แล้ว`,[
+  {t:'⚔️ นำทัพไปเอง',f(){const w=fight(`เจ้าถิ่นแห่ง${nx}`,Math.round(total()*(.6+k.t*.05)));if(w){k.t++;S.fame+=200*k.t;log(`🚩 เผ่าของคุณยึด<b>${nx}</b>ได้ — ครอง ${k.t} ดินแดน`,'epic')}else log('ทัพถอยกลับ ลูกหลานบาดเจ็บหลายตน','bad')}},
+  {t:'🐣 ส่งลูกหลานไปเอง',s:'สำเร็จ 50%',f(){if(Math.random()<.5){k.t++;log(`🚩 ลูกหลานยึด<b>${nx}</b>ได้เอง — ครอง ${k.t} ดินแดน`,'epic')}else{S.kids=Math.max(0,(S.kids||0)-1);log('ลูกหลานพ่ายแพ้ เสียไปหนึ่งตน','bad')}}},
+  {t:'🌲 อยู่ที่เดิม',skip:true,f(){joy(3)}}]);
+ else if(r<.8)choice('⚔️ สงครามเผ่า','เผ่าอสูรเพื่อนบ้านรุกล้ำเข้ามาในดินแดนของคุณ',[
+  {t:'⚔️ ต่อสู้',f(){const w=fight('หัวหน้าเผ่าศัตรู',Math.round(total()*.85));if(w){k.w++;S.fame+=500;S.power+=bPct(.03);log('ชนะสงครามเผ่า! เผ่าศัตรูยอมสยบ','epic')}else{if(k.t>1&&Math.random()<.5){k.t--;log('เสียดินแดนไปหนึ่งแห่ง','bad')}else log('ต้านไว้ได้อย่างหวุดหวิด')}}},
+  {t:'🤝 เจรจาแบ่งแดน',f(){S.karma+=3;S.int+=5;log('ตกลงแบ่งแดนกันได้ — สงบไปอีกนาน')}}]);
+ else choice('🏯 สำนักมนุษย์ขอเป็นพันธมิตร','สำนักใหญ่ของมนุษย์ส่งทูตมาขอเป็นพันธมิตรกับเผ่าของคุณ',[
+  {t:'🤝 รับเป็นพันธมิตร',f(){S.karma+=5;S.int+=10;S.fame+=800;log('พันธมิตรมนุษย์–อสูรครั้งแรกในรอบพันปี · ชื่อเสียง +800','epic')}},
+  {t:'🍖 กินทูตทิ้ง',s:'สายมาร',f(){S.karma-=12;S.power+=bPct(.02);log('ทูตหายเข้าไปในป่าไม่กลับมาอีก · กรรม −12','bad')}}])}
+// สืบสายเลือด: ลูกได้รับอาณาจักรและศาลเจ้าต่อ
+{const _bh=bHeir;bHeir=function(){const m0=S&&S.beastMode,kd=m0&&m0.kd?{...m0.kd}:null,shr=m0&&m0.shr?{...m0.shr}:null;const r=_bh.apply(this,arguments);
+ try{if(S&&S.beastMode&&S.beastMode!==m0){if(kd){S.beastMode.kd=kd;S.power+=Math.round(kd.t*40);log(`🐾 สืบทอดเผ่าที่ครอง ${kd.t} ดินแดน — ลูกหลานทั้งเผ่าคอยปกป้องคุณ`,'epic')}if(shr){S.beastMode.shr0=Math.round(shr.f*.3)}}}catch(e){}return r}}
+// ---------- 5) ศึกปลายเกม ----------
+const BEND_EV=[
+ ()=>['👼 กองทัพสวรรค์','สวรรค์เห็นว่าคุณแข็งแกร่งเกินไป ส่งกองทัพเทพนักล่าสัตว์ลงมาปราบ',[{t:'⚔️ สู้ตาย',f(){const w=fight('แม่ทัพเทพนักล่าสัตว์',Math.round(total()*1.25));if(w){S.fame+=2500;S.power+=bPct(.06);const a=R(100,300);bLs(a);log(`🏆 ทำลายกองทัพสวรรค์! พลัง +6% · อายุขัย +${a} ปี`,'myth',true)}else{S.hp=Math.max(1,Math.round(S.hp*.3));S.power=Math.round(S.power*.9);log('พ่ายแพ้ ต้องหลบลึกเข้าไปในป่าหลายสิบปี (พลัง −10%)','bad')}}},{t:'🌫️ ซ่อนตัว',s:'ปลอดภัยกว่า',f(){if(Math.random()<.6)log('ซ่อนตัวพ้นสายตาเทพได้สำเร็จ');else{S.hp=Math.max(1,Math.round(S.hp*.6));log('ถูกพบตัว ต้องหนีสุดชีวิต','bad')}}}]],
+ ()=>['🐲 ปฐมสัตว์เทพอีกตน','ปฐมสัตว์เทพจากแดนไกลบุกเข้ามาประกาศว่าป่านี้เล็กเกินกว่าจะมีเจ้าสองตน',[{t:'⚔️ ชิงความเป็นหนึ่ง',f(){const w=fight('ปฐมสัตว์เทพผู้รุกราน',Math.round(total()*1.15));if(w){S.fame+=3000;S.power+=bPct(.08);log('🏆 คุณคือหนึ่งเดียวใต้ฟ้า! พลัง +8%','myth',true)}else{S.fame=Math.max(0,S.fame-1500);S.hp=Math.max(1,Math.round(S.hp*.4));log('พ่ายแพ้และเสียหน้า (ชื่อเสียง −1,500)','bad')}}},{t:'🤝 ผูกมิตร',f(){S.int+=20;S.karma+=5;log('สองปฐมสัตว์เทพสาบานเป็นพี่น้อง')}}]],
+ ()=>['🌋 ฟ้าดินแตกร้าว','รอยแยกมิติเปิดกลางป่า พลังปฐมกาลรั่วไหลออกมาจะกลืนโลกทั้งใบ',[{t:'🛡️ ใช้ร่างอุดรอยแยก',s:'สายธรรมะ',f(){S.karma+=25;S.hp=Math.max(1,Math.round(S.hp*.4));const a=R(200,500);bLs(a);S.fame+=4000;log(`🌏 คุณปกป้องโลกไว้ได้ ชาวบ้านทั่วแผ่นดินกราบไหว้ · กรรม +25 · อายุขัย +${a} ปี`,'myth',true)}},{t:'🌀 กลืนพลังปฐมกาล',s:'สายมาร',f(){S.karma-=30;S.power+=bPct(.15);S.qi=+(S.qi+20).toFixed(1);log('คุณกลืนพลังปฐมกาลเข้าร่าง — พลัง +15% · ลมปราณ +20 ปี · แต่หลายเมืองล่มสลาย (กรรม −30)','myth',true)}}]]];
+function bEndYear(){const m=S.beastMode;if(m.st<7)return;if(!bFree()||(m.endCd||0)>S.age||Math.random()>.35)return;m.endCd=S.age+R(70,130);const [t,d,o]=ch(BEND_EV)();choice(t,d,o)}
+// ---------- ทุกปี ----------
+{const _by=beastYear;beastYear=function(){const r=_by.apply(this,arguments);try{if(bmOK()){const m=S.beastMode;
+ if(m.shr0&&!m.shr&&m.st>=5){m.shr={f:m.shr0};m.shr0=0}
+ if(m.st>=7){bpsTry();if(!bAscOffer())bHeavenYear()}bShrineYear();bKingYear();bEndYear()}}catch(e){console.error(e)}return r}}
+// บาลานซ์พลังสัตว์อสูร: เกินเกณฑ์ขั้นถัดไป ×1.5 ได้ผลแค่ 25% (เหมือนฝั่งคน)
+function bCapNext(){const m=S.beastMode;if(m.st<4)return 0;if(m.st<7)return BL_UP[m.st-4][2]*(S.xian?1.4:1);if(!m.heaven)return (m.pst||0)<BPS_N?bpsNeed((m.pst||0)+1):bhNeed(0);return bhNeed(Math.min(BH_ST.length,(m.hs||0)+1))}
+function bBalTick(){if(!bmOK())return;const nx=bCapNext();if(!nx){S._bp0=S.power;return}const capP=nx*1.5;
+ if(S._bp0!=null){const d=S.power-S._bp0;if(d>0){const t=total(),pre=t-d;if(t>capP){const ok=Math.max(0,capP-pre),over=d-ok;if(over>0)S.power-=Math.round(over*.75)}}}S._bp0=S.power}
+{const _pyB=passYear;passYear=function(){const r=_pyB.apply(this,arguments);try{bBalTick()}catch(e){}return r}}
+// ชื่อขั้นที่แสดง
+{const _bst=blStageTxt;blStageTxt=function(){const m=S.beastMode;try{if(m&&m.heaven)return`${m.god||''} ${BH_ST[m.hs||0]} · ประจำ${m.dir||''}`;if(m&&m.st>=7&&m.pst)return _bst.apply(this,arguments)+` ชั้น ${m.pst}`}catch(e){}return _bst.apply(this,arguments)}}
+// ---------- ความสำเร็จ ----------
+{const L=[{id:'bx_ps5',n:'ปฐมสัตว์เทพชั้นห้า',d:'ฝ่าทัณฑ์ฟ้าหลังปฐมสัตว์เทพถึงชั้น 5',r:4,c:()=>!!(S.beastMode&&(S.beastMode.pst||0)>=5)},
+ {id:'bx_ps9',n:'เก้าชั้นฟ้าใต้อุ้งเท้า',d:'ฝ่าทัณฑ์ฟ้าครบ 9 ชั้น',r:5,c:()=>!!(S.beastMode&&(S.beastMode.pst||0)>=9)},
+ {id:'bx_heaven',n:'สัตว์เทพประจำทิศ',d:'ผ่านทัณฑ์ปฐมกาลและขึ้นสวรรค์',r:5,c:()=>!!(S.beastMode&&S.beastMode.heaven)},
+ {id:'bx_hmax',n:'บรรพสัตว์ฟ้าดิน',d:'ไต่ถึงขั้นสูงสุดบนสวรรค์',r:6,c:()=>!!(S.beastMode&&S.beastMode.heaven&&S.beastMode.hs>=BH_ST.length-1)},
+ {id:'bx_shrine',n:'เทพประจำป่า',d:'มีผู้ศรัทธาที่ศาลเจ้า 1,000 คน',r:3,c:()=>!!(S.beastMode&&S.beastMode.shr&&S.beastMode.shr.f>=1000)},
+ {id:'bx_king',n:'บรรพบุรุษแห่งเผ่า',d:'เผ่าของคุณครองครบ 10 ดินแดน',r:4,c:()=>!!(S.beastMode&&S.beastMode.kd&&S.beastMode.kd.t>=10)}];
+ ACH.push(['🌈 สัตว์อสูรปลายทาง',L]);ACH_ALL.push(...L)}
+// ---------- คู่มือ ----------
+try{const g=GD2.find(x=>x.t==='สืบสายเลือดและระบบในร่างสัตว์'),i=g?GD2.indexOf(g)+1:GD2.length;
+ GD2.splice(i,0,{s:'beast',ic:'🌈',t:'หลังปฐมสัตว์เทพ',nw:1,d:'ถึง<b>ปฐมสัตว์เทพ</b>แล้วยังไปต่อได้: ⚡ ฝ่าทัณฑ์ฟ้า<b>ชั้น 1–9</b> → ⚡ <b>ทัณฑ์ปฐมกาล</b> 3 ระลอก ผ่านแล้วขึ้นสวรรค์เป็นสัตว์เทพประจำทิศตามธาตุ (🐦 หงส์แดง 🐉 มังกรเขียว 🐅 พยัคฆ์ขาว 🐢 เต่าดำ 🦄 กิเลนเหลือง) มีอีก 5 ขั้นบนสวรรค์ · ⛩️ ตั้งแต่สัตว์ศักดิ์สิทธิ์มี<b>ศาลเจ้า</b>และผู้ศรัทธา · 🐾 ลูกหลาน 3 ตนขึ้นไปตั้ง<b>เผ่า</b>ยึดดินแดนได้ 10 แห่ง (ลูกที่สืบสายเลือดได้เผ่าต่อ) · 🌋 ศึกปลายเกม: กองทัพสวรรค์ ปฐมสัตว์เทพคู่แข่ง ฟ้าดินแตกร้าว',
+  te:'After Primal Divine Beast',de:'Reaching <b>Primal Divine Beast</b> is not the end: ⚡ pass heavenly tribulations <b>tiers 1–9</b> → ⚡ the 3-wave <b>Primordial Tribulation</b> lifts you to Heaven as a Guardian Beast of your element\'s direction (🐦 Vermilion Bird 🐉 Azure Dragon 🐅 White Tiger 🐢 Black Tortoise 🦄 Yellow Qilin) with 5 more heavenly ranks · ⛩️ from Sacred Beast on, villagers build you a <b>shrine</b> · 🐾 with 3+ offspring you found a <b>tribe</b> and conquer up to 10 lands (your cub heir inherits it) · 🌋 endgame events: heavenly armies, rival primal beasts, a cracking world.'});
+ SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
 </script>
 </body>
 </html>
