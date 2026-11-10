@@ -9030,6 +9030,134 @@ function openGuide(sec){const en=LANG==='en',inLife=!!(S&&S.alive&&$('game')&&$(
  <div class="cxtabs">${tabs}</div><div class="cxbody">${body}</div>
  ${inLife?`<button class="pbtn" style="width:100%;margin-top:8px" onclick="startTut()">❓ ${en?'Replay the button tutorial':'ดูการสอนปุ่มต่างๆ อีกครั้ง'}</button>`:''}`,'guide')}
 
+// ===== v14.5 สัตว์อสูร: ฉากเกิดในถิ่นธรรมชาติ · พ่อแม่/กำพร้า · หน้าสุ่มกำเนิดแบบมนุษย์ =====
+const BHK={'ป่าลึก':'forest','ป่าวิญญาณ':'forest','ภูเขาหิน':'mount','หุบเขาสายฟ้า':'mount','ถ้ำมืด':'cave','หนองน้ำ':'swamp','หุบเขาพิษ':'swamp','แม่น้ำใหญ่':'river','ทะเลสาบหยก':'river','ทะเลทราย':'desert','ทุ่งหิมะ':'snow','เกาะลอยฟ้า':'cloud','ทะเลเมฆ':'cloud','ซากสวรรค์':'cloud','ภูเขาไฟ':'volcano','แดนมาร':'demon'};
+const BHK_EN={'ป่าลึก':'Deep forest','ป่าวิญญาณ':'Spirit forest','ภูเขาหิน':'Rocky mountains','หุบเขาสายฟ้า':'Thunder valley','ถ้ำมืด':'Dark cave','หนองน้ำ':'Marsh','หุบเขาพิษ':'Poison valley','แม่น้ำใหญ่':'Great river','ทะเลสาบหยก':'Jade lake','ทะเลทราย':'Desert','ทุ่งหิมะ':'Snowfield','เกาะลอยฟ้า':'Floating isle','ทะเลเมฆ':'Sea of clouds','ซากสวรรค์':'Heavenly ruins','ภูเขาไฟ':'Volcano','แดนมาร':'Demon land'};
+const BPAR=[{w:38,n:'กำพร้า',d:'ไม่มีพ่อแม่ ต้องเอาตัวรอดตั้งแต่ลืมตา',e:'Orphan',de:'No parents — must survive alone from the first day'},{w:42,n:'แม่เลี้ยงดู',d:'แม่คอยหาอาหารและปกป้องจนโตพอ',e:'Raised by mother',de:'Mother feeds and guards you until you can fend for yourself'},{w:20,n:'พ่อแม่อยู่ครบ',d:'ทั้งพ่อและแม่คอยปกป้อง ปลอดภัยกว่าใคร',e:'Both parents',de:'Both parents protect you — safest start'}];
+function bHabK(h){return BHK[h]||'forest'}
+// ---- วาดถิ่นอาศัย (ใช้ตัวช่วยฉากเดิม: sky/ground/tree/mountains) ----
+function bHabDraw(kind,season,hab){const Y=46;try{
+ switch(kind){
+  case 'forest':sky(season);mountains('#7a9a8a',36,9,1);ground(season);tree(4,Y,season);tree(26,Y-1,season,true);tree(118,Y,season);tree(140,Y-1,season);
+   if(hab==='ป่าวิญญาณ'){for(let i=0;i<10;i++){const a=frame*.05+i;g.globalAlpha=.5+.4*Math.sin(a*2);P(20+((i*29)%120)+Math.sin(a)*3,14+((i*17)%24),1,1,'#b8ffe0');g.globalAlpha=1}}
+   for(let i=0;i<5;i++)P(10+i*34,Y+4+(i%2)*3,8,3,shd(['#5aa04a','#3f8a3a','#b8803a','#dfe8f2'][season],-.15));break;
+  case 'mount':sky(season);mountains('#8a8a9a',42,26,0);mountains('#6a6a7a',47,14,2);ground(season,46,'#8a8478');
+   for(let i=0;i<6;i++){const x=6+i*28;P(x,Y-3+(i%2),9,4,'#6a645a');P(x+1,Y-3+(i%2),5,1,'#a8a294')}
+   if(hab==='หุบเขาสายฟ้า'&&frame%60<4){g.globalAlpha=.25;P(0,0,SW,SH,'#e0e8ff');g.globalAlpha=1;for(let y=0;y<26;y+=2)P(118+Math.round(Math.sin(y)*2),y,1,2,'#fff8a0')}break;
+  case 'cave':{P(0,0,SW,SH,'#241c22');for(let y=0;y<46;y+=4)P(0,y,SW,2,y%8?'#2c2228':'#30262c');
+   P(112,10,40,36,'#3a2e34');P(116,14,32,32,season===3?'#c8d8ea':'#7ab8e0');P(116,34,32,12,season===3?'#eef2f7':'#5fae4f');g.globalAlpha=.18;P(96,14,64,40,'#fff4d0');g.globalAlpha=1;
+   for(let i=0;i<14;i++){const x=4+i*11,h=3+Math.floor(srand(i+40)*7);P(x,0,3,h,'#3a2e34');P(x+1,h,1,2,'#3a2e34')}
+   ground(season,46,'#3a3034');if(isX&&isX())for(let i=0;i<4;i++){const x=14+i*24,gl=.5+.4*Math.sin(frame*.1+i);P(x,Y-3,2,3,'#8af0ff');g.globalAlpha=gl*.35;P(x-2,Y-6,6,6,'#8af0ff');g.globalAlpha=1}break}
+  case 'swamp':sky(season,hab==='หุบเขาพิษ'?'gray':null);mountains('#6a7a6a',38,8,3);ground(season,44,'#5a6a3a');P(14,47,132,7,hab==='หุบเขาพิษ'?'#5a7a3a':'#4a6a5a');
+   for(let x=16;x<146;x+=8)if((x+Math.floor(frame/3))%16<8)P(x,49,4,1,'#8aa89a');for(let i=0;i<9;i++){const x=8+i*18;P(x,Y-6,1,8,'#6a8a3a');P(x+2,Y-4,1,6,'#7a9a4a');P(x,Y-7,1,2,'#8a5a2a')}
+   if(hab==='หุบเขาพิษ'){g.globalAlpha=.2;P(0,20,SW,36,'#8aff6a');g.globalAlpha=1;for(let i=0;i<4;i++){const k=(frame*.5+i*20)%40;g.globalAlpha=Math.max(0,.5-k/80);P(30+i*30,48-k,3,3,'#b8ff8a');g.globalAlpha=1}}break;
+  case 'river':{sky(season);mountains('#8aa0b8',38,12,1);ground(season,44);const wc=hab==='ทะเลสาบหยก'?'#3ab8a0':'#4a98d8';P(0,47,SW,9,wc);
+   for(let x=0;x<SW;x+=6)if((x+Math.floor(frame/2))%12<6)P(x,48+(x%3),4,1,'#e8f6ff');tree(130,Y-2,season);for(let i=0;i<6;i++)P(6+i*5,Y-5+(i%2),1,7,'#5a8a3a');break}
+  case 'desert':sky(2);for(let x=0;x<SW;x++){const h=Math.round(6+4*Math.sin(x*.05)+2*Math.sin(x*.13+1));P(x,40-h,1,h+6,x%2?'#e8c080':'#e0b878')}ground(2,46,'#e4c088');
+   for(let i=0;i<4;i++)P(12+i*40,Y-2,7,3,'#b89860');if(frame%90<45){g.globalAlpha=.15;P(0,30,SW,16,'#fff0c0');g.globalAlpha=1}break;
+  case 'snow':sky(3);mountains('#c8d4e4',40,18,0);ground(3);tree(8,Y,3,true);tree(30,Y,3,true);tree(126,Y,3,true);tree(146,Y-1,3,true);
+   for(let i=0;i<24;i++){const x=(i*37+frame*.4)%SW,y=(i*13+frame*.8)%SH;P(x,y,1,1,'#ffffff')}break;
+  case 'cloud':{sky(season);for(let i=0;i<5;i++){const x=((i*50+frame*.3)%(SW+60))-30;g.globalAlpha=.85;P(x,30+i*4,40,6,'#ffffff');P(x+6,27+i*4,26,4,'#ffffff');g.globalAlpha=1}
+   P(8,46,144,3,'#7cc46a');P(8,49,144,2,'#8a6a4a');for(let x=8;x<152;x+=2){const d=Math.round(7-Math.abs(x-80)/12);if(d>0)P(x,51,2,d,'#7a5a3a')}
+   if(hab==='ซากสวรรค์'){for(let i=0;i<3;i++){P(22+i*52,24,5,22,'#e8e0d0');P(20+i*52,22,9,3,'#d8cfbe');if(i===1)P(70,18,12,4,'#d8cfbe')}}
+   g.globalAlpha=.7;P(0,52,SW,4,'#ffffff');g.globalAlpha=1;break}
+  case 'volcano':sky(season,'dusk');mountains('#4a3030',44,26,0);{const gl=.5+.3*Math.sin(frame*.1);g.globalAlpha=gl;P(66,14,22,4,'#ff6a1a');g.globalAlpha=1}
+   ground(season,46,'#3a2a26');for(let i=0;i<5;i++){const x=10+i*32;P(x,48+(i%2),10,1,'#ff7a2a');P(x+3,49+(i%2),5,1,'#ffd04a')}
+   for(let i=0;i<8;i++){const k=(frame*.6+i*9)%46;P(20+i*17+Math.sin(k*.3)*2,46-k,1,1,'#ffb04a')}break;
+  case 'demon':sky(season,'night');g.globalAlpha=.4;P(0,0,SW,46,'#5a1a4a');g.globalAlpha=1;mountains('#2a1424',40,12,2);ground(season,46,'#2a1a26');
+   for(let i=0;i<3;i++){const x=14+i*60;P(x+3,Y-16,2,16,'#1a0a14');P(x,Y-14,3,1,'#1a0a14');P(x+5,Y-11,4,1,'#1a0a14');P(x+8,Y-13,1,2,'#1a0a14')}
+   P(130,8,8,8,'#c8183a');g.globalAlpha=.25;P(124,2,20,20,'#ff3a5a');g.globalAlpha=1;break;
+  default:sky(season);ground(season)}
+ }catch(e){}}
+// รัง/ที่นอนของลูกสัตว์ตามชนิด
+function bNestDraw(k,kind,x){const Y=46;try{
+ if(k==='bird'){P(x+22,Y-24,3,24,'#6a4426');P(x+6,Y-17,20,2,'#6a4426');P(x+4,Y-19,16,4,'#b89a5a');for(let i=0;i<8;i++)P(x+4+i*2,Y-19+(i%2),1,3,'#8a6a3a');return Y-19}
+ if(k==='fish'){for(let i=0;i<10;i++){const a=frame*.08+i;P(x+4+((i*7)%22),Y+2+Math.round(Math.sin(a)*1.5)+(i%3),1,1,'#fff6c0')}return Y+3}
+ if(k==='serp'||k==='turt'){P(x+2,Y-5,24,5,kind==='cave'?'#4a3c40':'#7a746a');P(x+4,Y-6,18,1,kind==='cave'?'#5a4c50':'#9a948a');P(x+26,Y-2,4,2,'#f4ecd8');P(x+27,Y-3,2,1,'#e0d8c4');P(x+30,Y-1,3,1,'#f4ecd8');return Y}
+ P(x,Y-2,30,3,kind==='cave'?'#8a7a4a':'#b89a5a');for(let i=0;i<14;i++)P(x+1+i*2,Y-3-(i%3===0?1:0),1,2,i%2?'#d8b878':'#8a6a3a');return Y}catch(e){return Y}}
+function bFishPool(kind){if(kind==='river'||kind==='swamp')return;const wc={snow:'#8ac8f0',volcano:'#4ab8b0',cave:'#2a5a7a',desert:'#3aa0d0',demon:'#5a3a7a',cloud:'#8ad0ff'}[kind]||'#4a98d8';
+ P(34,46,92,10,wc);P(34,46,92,1,shd(wc,.3));if(kind==='snow'){P(30,45,100,2,'#f4f8ff');P(32,47,4,2,'#f4f8ff');P(124,47,4,2,'#f4f8ff')}else{P(32,46,2,9,'#6a645a');P(126,46,2,9,'#6a645a')}
+ for(let x=36;x<124;x+=7)if((x+Math.floor(frame/2))%14<7)P(x,49+(x%3),4,1,'#e8f6ff');if(kind==='volcano')for(let i=0;i<4;i++){const k=(frame*.4+i*10)%30;g.globalAlpha=Math.max(0,.4-k/75);P(50+i*16,44-k,5,3,'#ffffff');g.globalAlpha=1}}
+function bFlip(fn,cx){g.save();g.translate(cx*2,0);g.scale(-1,1);try{fn()}finally{g.restore()}}
+function bParLook(b){return Object.assign({},b,{t:Math.max(4,b.t),f:Object.assign({},b.f,{big:b.k!=='bird',glow:false,horn:b.f&&b.f.horn})})}
+// ฉากในเกม
+function bSceneDraw(type){const m=S.beastMode,me=meLook(),b=me.beast||blMe(),season=S.age%4,kind=bHabK(m.hab),Y=46;bHabDraw(kind,season,m.hab);
+ const withPar=m.par>0&&!m.parGone&&S.age<(m.parY||3);if(b.k==='fish')bFishPool(kind);
+ if(type==='bnest'){const nx=58,ny=bNestDraw(b.k,kind,nx);const sc=.8;try{drawBeast(g,Object.assign({},b,{f:Object.assign({},b.f,{big:false})}),Math.round(nx+3),Math.round(ny-21*sc+ (b.k==='fish'?2:0)),sc,frame)}catch(e){}
+  if(withPar){const pl=bParLook(b),ps=b.k==='bird'?1.1:1.35;bFlip(()=>{try{drawBeast(g,pl,Math.round(100-16*ps),Math.round((b.k==='bird'?Y-22:b.k==='fish'?Y+5:Y)-22*ps),ps,frame)}catch(e){}},100);if(m.par>1)try{drawBeast(g,pl,Math.round((b.k==='fish'?44:26)-16*ps),Math.round((b.k==='fish'?Y+5:Y)-22*ps),ps*.95,frame+7)}catch(e){}
+   if(frame%14<7){P(84,Y-20,2,2,'#ff8fb3');P(87,Y-23,2,2,'#ff8fb3')}}
+  else{if(frame%40<20)P(80,Y-22,1,1,'#cfe8ff');g.globalAlpha=.12;P(0,0,SW,SH,'#203050');g.globalAlpha=1}
+  if(S.chronic&&S.hp<S.maxHp*.4){g.globalAlpha=.25;P(0,0,SW,SH,'#203050');g.globalAlpha=1}return}
+ // bhab: ตัวเราในถิ่นอาศัย
+ person(72,b.k==='fish'?51:Y,me,'stand');if(withPar&&b.k!=='fish'){const pl=bParLook(b);bFlip(()=>{try{drawBeast(g,pl,Math.round(112-16*1.3),Math.round(Y-22*1.3),1.3,frame)}catch(e){}},112)}
+ if(type==='bsick'){g.globalAlpha=.25;P(0,0,SW,SH,'#203050');g.globalAlpha=1}}
+LOC.bnest='🪺 รังกำเนิด';LOC.bhab='🌿 ถิ่นอาศัย';LOC.bsick='🤒 ล้มป่วย';
+{const BIN=['home','teahouse','library','workshop','hall','yard','village','farm','market','wedding','birth'];
+ const _st=sceneType;sceneType=function(){const t=_st.apply(this,arguments);try{const m=S&&S.beastMode;if(m&&!m.human&&S.alive){if(t==='cradle')return'bnest';if(t==='sick')return'bsick';if(BIN.includes(t))return(S.age<2?'bnest':'bhab');if(t==='road'||(m.sp&&BL_SP.find(x=>x[0]===m.sp)||[])[1]==='fish'&&(t==='peak'||t==='waterfall'))return'bhab'}}catch(e){}return t}
+ const _ds=drawScene;drawScene=function(ctx,type){if(type==='bnest'||type==='bhab'||type==='bsick'){g=ctx;PS=ctx.canvas.width/SW;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;curMe=meLook();try{bSceneDraw(type)}catch(e){}return}return _ds.apply(this,arguments)}}
+// ---- พ่อแม่/กำพร้า ระหว่างชีวิต ----
+const BPAR_FX=['คาบอาหารมาป้อนจนอิ่มแปล้','เลียขนให้จนหลับใหญ่','ขู่ไล่นักล่าที่ด้อมๆ มองๆ ไปได้','พาออกไปสอนล่าเหยื่อครั้งแรก','กกให้อบอุ่นท่ามกลางลมหนาว','สอนให้ซ่อนตัวจากมนุษย์'];
+{const _bt=bagTick;bagTick=function(){const r=_bt.apply(this,arguments);try{const m=S&&S.beastMode;if(m&&!m.human&&m.par>0&&!m.parGone){const who=m.par>1?'พ่อแม่':'แม่';
+  if(S.age>=(m.parY||3)){m.parGone=1;log(`🍃 ถึงวัยต้องแยกทาง — ${who}${m.sp}หันหลังเดินจากไป ปล่อยให้ ${esc(S.name)} ออกไปเผชิญโลกเพียงลำพัง`,'good')}
+  else if(Math.random()<.035&&S.age>=1){S.happy=Math.max(0,S.happy-15);if(m.par>1){m.par=1;log(`💔 พ่อถูกนายพรานล่าไปต่อหน้าต่อตา — เหลือเพียงแม่ที่คอยปกป้อง ${esc(S.name)}`,'bad')}else{m.parGone=1;log(`💔 แม่ถูกนายพรานล่าไปต่อหน้าต่อตา — ${esc(S.name)} ต้องเอาตัวรอดเพียงลำพังตั้งแต่ยังเล็ก`,'bad')}}
+  else{S.happy=Math.min(100,S.happy+3);S.hp=Math.min(S.maxHp,S.hp+5);if(Math.random()<.45)log(`🐾 ${who}${BPAR_FX[R(0,BPAR_FX.length-1)]}`)}}}catch(e){}return r}}
+// ---- สุ่มกำเนิด: เพิ่มครอบครัว ----
+{const _g=brGen;brGen=function(){const r=_g.apply(this,arguments);const p=pickW(BPAR.map((b,i)=>({w:b.w,v:i})));r.par=p.v.v;r.parP=p.p;r.p*=r.parP;return r}}
+{const _b2=beastBirth2;beastBirth2=function(r){if(r&&r.par==null){r.par=pickW(BPAR.map((b,i)=>({w:b.w,v:i}))).v.v}const out=_b2.apply(this,arguments);try{const m=S.beastMode;m.par=r.par|0;const spx=(BSPX[m.sp]||[0,3])[1];m.parY=Math.max(2,Math.round(R(2,4)*Math.sqrt(Math.max(1,spx)/3)));m.parGone=m.par?0:1;
+  log(m.par?`🪺 ${m.par>1?'พ่อและแม่':'แม่'}${m.sp}คอยเฝ้า${esc(S.name)}ไม่ห่าง ${bHabK(m.hab)==='cave'?'ในซอกถ้ำ':'ในรังกลาง'}${m.hab}`:`🍂 ${esc(S.name)}ลืมตามาโดยไม่มีพ่อแม่ — ต้องเอาตัวรอดใน${m.hab}เพียงลำพังตั้งแต่วันแรก`,m.par?'good':'',true);
+  if(!m.par){S.maxHp+=8;S.hp=S.maxHp}
+  if(typeof mobAva==='function')mobAva._k=null;try{if(typeof _dkSig!=='undefined')_dkSig=null}catch(e){}render()}catch(e){}return out}}
+// mobAva: วาดใหม่เมื่อขั้นสัตว์/ร่างเปลี่ยน
+{const _ma=mobAva;mobAva=function(){try{const m=S&&S.beastMode,k=m?[m.sp,m.st,m.human].join(','):'';if(k!==mobAva._bk){mobAva._bk=k;mobAva._k=null}}catch(e){}return _ma.apply(this,arguments)}}
+// ---- หน้าสุ่มกำเนิด: สไตล์เดียวกับมนุษย์ (คัดลอก CSS ของ #birth) ----
+function brCss(){if(document.getElementById('brCss'))return;let out='';try{for(const sh of document.styleSheets){let rs;try{rs=sh.cssRules}catch(e){continue}if(!rs)continue;for(const r of rs){const t=r.cssText;if(t&&t.includes('#birth')&&r.type===1)out+=t.replace(/#birth #traits/g,'#brB .brtr').replace(/#birth #nameOut/g,'#brB .brnm').replace(/#birth/g,'#brB')+'\n'}}}catch(e){}
+ out+=`#brB .brst{position:relative;border:3px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:3px 3px 0 var(--line);margin-bottom:10px}
+#brB .brst canvas{width:100%;aspect-ratio:160/62;display:block;image-rendering:pixelated}
+#brB .brst .bcap{position:absolute;left:0;right:0;bottom:0;font-size:11px;text-align:center;color:#fff;background:linear-gradient(transparent,#000a);padding:10px 4px 4px}
+#brB .brst.gl3{box-shadow:3px 3px 0 var(--line),0 0 14px var(--c3)}#brB .brst.gl4{box-shadow:3px 3px 0 var(--line),0 0 18px var(--c4)}#brB .brst.gl5,#brB .brst.gl6{box-shadow:3px 3px 0 var(--line),0 0 22px #ff5ad8}
+#brB .brhd{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-bottom:2px}#brB .brnm{font-size:22px;line-height:1.2;font-weight:800}
+#brB .brtr{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+#brB .trait{display:flex;justify-content:space-between;transition:opacity .3s,transform .3s;opacity:0}#brB .trait.show{opacity:1}
+#brB .oddsbig{margin:12px 0 4px}#brB .oddsbig .n{font-size:24px;line-height:1.25}`;
+ const st=document.createElement('style');st.id='brCss';st.textContent=out;document.head.appendChild(st)}
+function brLook(r){const s=BL_SP[r.sp],e=BEL[r.el];return{i:-1,w:CFG.xian?1:0,t:4,n:s[0],sp:s[0],k:s[1],col:s[2],el:e[0],ec:e[1],ad:'',tm:'',f:{wing:s[1]==='bird',horn:true,tail9:s[0]==='จิ้งจอก'&&r.bl>=2,spike:false,eye3:false,head2:false,big:s[1]!=='bird',glow:r.bl>=1}}}
+let brAnim=0;
+function brDrawStage(){const cv=$('brCv');if(!cv||!brRoll){brAnim=0;return}const ctx=cv.getContext('2d'),r=brRoll,sg=g,sp=PS,sf=frame,sm=curMe;
+ try{frame=(performance.now()/150);g=ctx;PS=cv.width/SW;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;const kind=bHabK(r.hab);bHabDraw(kind,1,r.hab);if(BL_SP[r.sp][1]==='fish')bFishPool(kind);
+  const b=brLook(r),sc=b.k==='bird'?1.3:b.sp==='มังกร'?1.7:1.5,Y=(b.k==='fish'?60:46);drawBeast(g,b,Math.round(80-16*sc),Math.round(Y-22*sc),sc,frame);
+  const L=r.bl>=2||b.sp==='มังกร';if(L)for(let i=0;i<10;i++){const a=frame*.08+i*.63;g.globalAlpha=.4+.4*Math.sin(a*3);P(80+Math.cos(a)*26,30+Math.sin(a)*14,1,1,b.sp==='มังกร'?'#ffd040':b.ec);g.globalAlpha=1}
+ }catch(e){}finally{g=sg;PS=sp;frame=sf;curMe=sm}
+ if($('modal').dataset.k==='broll')brAnim=requestAnimationFrame(brDrawStage);else brAnim=0}
+function brShow(anim){brCss();const r=brRoll,s=BL_SP[r.sp],e=BEL[r.el],b=BBLOOD[r.bl],T=TALENT[r.t],M=brMul(r),dr=s[0]==='มังกร',pa=BPAR[r.par|0],en=LANG==='en';
+ const row=(k,v,d,p,c)=>{const q=rarOf(p);return`<div class="trait r${q}${anim?'':' show'}${d&&d.length>46?' wide':''}"><div><div class="k">${k}</div><div class="v t${q}"${c?` style="color:${c}"`:''}>${v}</div>${d?`<div class="d">${d}</div>`:''}</div><span class="o t${q}">${oddsTxt(p)}</span></div>`};
+ const rows=[row('เผ่าพันธุ์',(dr?'🐉 ':'')+s[0],s[3]+` · อายุขัยราว ${(BSPX[s[0]]||[0,3])[1]} เท่าของมนุษย์`,r.spP,dr?'#ffd040':null),row('ธาตุ',e[0],'ธาตุประจำกาย',r.elP,e[1]),row('สายเลือด',b.n,b.d,r.blP),row('รากปราณ',BTAL_N[r.t]||T.n,BTAL_D[r.t]||'',r.tP),row('เพศ',r.g?'เพศเมีย':'เพศผู้','',r.gP),row('ครอบครัว',en?pa.e:pa.n,en?pa.de:pa.d,r.parP||1),row('ถิ่นกำเนิด',r.hab,'ที่ที่ลืมตาดูโลก',1),row('นิสัย',BTMP[r.tm][0],'',1)];
+ const N=1/r.p,f=fateOf(N),F=FATE[f],tot=rarOf(r.p);
+ const stars=f>=10?Array.from({length:(f-8)*6},()=>`<i class="fstar" style="left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*1.8}s"></i>`).join(''):'';
+ const nm=dr?'ลูกมังกร':(BX[s[0]]&&BX[s[0]].kid)||('ลูก'+s[0]);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><div id="brB"><h3>🐾 ${en?'Beast birth':'กำเนิดสัตว์อสูร'}</h3><p class="tag2" style="margin-top:-4px">ฟ้าลิขิตว่าคุณจะเกิดเป็นอะไร — สุ่มใหม่ได้ ${brRR>50?'ไม่จำกัด':brRR+' ครั้ง'}</p>
+ <div class="brst gl${tot}"><canvas id="brCv" width="480" height="186"></canvas><div class="bcap">${CFG.xian?'☁️':'⚔️'} ร่างเมื่อเติบโต · ${esc(r.hab)}</div></div>
+ <div class="brhd"><div><div class="tag2">${en?'Born as':'เกิดเป็น'}</div><div class="brnm t${rarOf(r.spP)}"${dr?' style="color:#ffd040"':''}>${esc(nm)}</div></div><div class="btags"><span>${r.g?'♀':'♂'}</span><span class="t${rarOf(r.blP)}">${esc(b.n)}</span>${r.par?'':'<span>🍂 กำพร้า</span>'}</div></div>
+ <div class="brtr">${rows.join('')}</div>
+ <div class="box oddsbig fb${f}" id="brOdds" style="${anim?'visibility:hidden':''}"><div class="tag2">โอกาสเกิดแบบนี้</div><div class="n px fx${f}">1 ใน ${fmt(Math.round(N))}</div><div class="ot">${F[2]} <span class="fx${f}">ระดับชะตา: ${F[1]}</span></div><div class="od">${F[3]}</div><div class="fgrade fx${f}">⟪ ${FGRADE[f]} ⟫</div><div class="od">พลังโดยรวม ×${M.pow.toFixed(1)} · อายุขัย ×${M.life.toFixed(1)} ของมนุษย์</div>${stars}</div>
+ <div style="display:flex;gap:8px;margin-top:10px"><button class="gbtn" style="flex:1" ${brRR<=0?'disabled':''} onclick="brReroll()">🎲 สุ่มใหม่ (${brRR>50?'∞':brRR})</button><button class="pbtn" style="flex:1.4" onclick="closeM();beastBirth2(brRoll)">🐣 เกิด</button></div></div>`);
+ try{$('modal').dataset.k='broll'}catch(e){}
+ if(!brAnim)brAnim=requestAnimationFrame(brDrawStage);
+ const L=[...document.querySelectorAll('#brB .trait')];if(anim){L.forEach((x,i)=>setTimeout(()=>x.classList.add('show'),130*i+60));setTimeout(()=>{const o=$('brOdds');if(!o||brRoll!==r)return;o.style.visibility='visible';
+  if(f>=6){const C=f>=10?['#ff4d4d','#ffd84d','#5dff7a','#4dd8ff','#b06bff','#ffffff']:f>=8?['#ff3a5a','#ff5ad8','#ffd040','#ffffff']:['#ffc030','#ff8a2a','#fff0a0'];for(let i=0;i<Math.min(70,(f-4)*9);i++){const e=document.createElement('i');e.className='bconf';e.style.left=Math.random()*100+'%';e.style.background=C[i%C.length];e.style.animationDelay=(Math.random()*.6)+'s';o.appendChild(e);setTimeout(()=>e.remove(),2500)}try{if(f>=8)sfx('ach')}catch(e){}}},130*L.length+200)}}
+try{Object.assign(I18N.d,{'กำเนิดสัตว์อสูร':'Beast birth','ครอบครัว':'Family','กำพร้า':'Orphan','แม่เลี้ยงดู':'Raised by mother','พ่อแม่อยู่ครบ':'Both parents','ร่างเมื่อเติบโต':'Grown form','เกิดเป็น':'Born as','รังกำเนิด':'Birth nest','ถิ่นอาศัย':'Habitat','โอกาสเกิดแบบนี้':'Odds of this birth','ระดับชะตา':'Fate tier'});Object.assign(I18N.d,BHK_EN)}catch(e){}
+
+// สัตว์ป่า: ไม่ใช้เหตุการณ์ชีวิตมนุษย์ (เทศกาล/ทารกในบ้าน/ชีวิตประจำวัน) — ใช้เหตุการณ์ธรรมชาติแทน
+const BMINI0=['🐾 ลืมตาเห็นแสงแดดลอดผ่านใบไม้เป็นครั้งแรก','🐾 หัดเดินจนล้มคลุกฝุ่นอยู่หลายรอบ','🐾 ไล่งับผีเสื้อจนเหนื่อยหลับไปเอง','🐾 ตกใจเสียงฟ้าร้องจนซุกตัวแน่น','🐾 ลองดมกลิ่นดอกไม้แปลกๆ แล้วจามไม่หยุด'];
+const BMINI1=['🌿 เจอแหล่งน้ำใสที่ไม่มีสัตว์อื่นรู้จัก','🌿 หลบพายุอยู่ในโพรงจนฟ้าสาง','🌿 ปะทะสายตากับนายพรานแล้วหนีหายเข้าป่าทึบ','🌿 นอนอาบแสงจันทร์ รู้สึกลมปราณไหลเวียนดีขึ้น','🌿 ได้กลิ่นสมุนไพรวิญญาณลอยมาตามลม','🌿 เห็นมนุษย์ผู้บำเพ็ญเหาะผ่านฟ้าไปไกลๆ'];
+{const _ye=yearExtras;yearExtras=function(){const m=S&&S.beastMode;if(m&&!m.human){try{v43Tick()}catch(e){}try{if(Math.random()<.5){const L=S.age<3?BMINI0:BMINI1;log(ch(L));if(S.age<3)joy(2)}}catch(e){}return}return _ye.apply(this,arguments)}}
+
+// สัตว์ป่า: เหตุการณ์วัยเด็กแบบลูกสัตว์ และการป่วยแบบไม่มีหมอ/บ้าน
+const BCHILD=[[1,4,()=>{S.hp-=20;return'🐾 พลัดตกลงไปในลำธาร ตะเกียกตะกายขึ้นฝั่งมาได้อย่างหวุดหวิด'},'bad'],[1,4,()=>{S.power+=8;return'🐾 แย่งเศษอาหารกับสัตว์ตัวอื่นจนชนะเป็นครั้งแรก'}],[1,5,()=>{S.qi+=.4;return'🐾 เผลอหลับใต้ต้นไม้ประหลาด ตื่นมารู้สึกร่างกายอุ่นวาบ'}],[2,5,()=>{S.hp-=30;return'🐾 หลงทางในป่าสามวันสามคืน หิวจนตาลาย กว่าจะหาทางกลับรังได้'},'bad'],[2,5,()=>{S.int+=6;return'🐾 แอบดูนักล่าวางกับดัก แล้วจำได้ว่าต้องหลีกเลี่ยงตรงไหน'}],[2,5,()=>{S.karma+=4;return'🐾 แบ่งอาหารให้ลูกสัตว์ตัวอื่นที่ผอมโซ'}],[3,5,()=>{S.hp-=25;return'🐾 ถูกเหยี่ยวโฉบ รอดมาได้แต่มีแผลเป็นติดตัว'},'bad'],[3,5,()=>{S.power+=12;return'🐾 ฝึกกระโจนจับเหยื่อทุกวันจนคล่องแคล่วขึ้นมาก'}]];
+{const _ce=childEvent;childEvent=function(){const m=S&&S.beastMode;if(m&&!m.human){S.bcUsed=S.bcUsed||[];const pool=BCHILD.map((e,i)=>[e,i]).filter(([e,i])=>S.age>=e[0]&&S.age<=e[1]&&!S.bcUsed.includes(i));if(!pool.length)return;const [e,i]=ch(pool);S.bcUsed.push(i);log(e[2](),e[3]||'');return}return _ce.apply(this,arguments)}}
+{const BREP=[[/พ่อแม่ทุ่มเงินจ้างหมอมารักษา/g,'แม่คาบสมุนไพรป่ามาให้กิน'],[/ครอบครัวไม่มีเงินจ้างหมอ ได้แต่เฝ้าภาวนาอยู่ข้างเตียง/g,'ทำได้เพียงขดตัวนอนซมอยู่ในรัง'],[/พักไม่กี่วันก็กลับมาแข็งแรง/g,'นอนซมไม่กี่วันก็กลับมาวิ่งได้']];
+ const _ac=acute;acute=function(d){const m=S&&S.beastMode;if(!(m&&!m.human))return _ac.apply(this,arguments);const a=S.age,mo=S.money,ol=log,par=m.par>0&&!m.parGone;S.age=Math.min(a,9);S.money=par?1e9:0;
+  window.log=function(t,...r){if(typeof t==='string')BREP.forEach(([x,y])=>t=t.replace(x,y));return ol.call(this,t,...r)};try{return _ac.apply(this,arguments)}finally{window.log=ol;S.age=a;S.money=mo}}}
+
 </script>
 </body>
 </html>
