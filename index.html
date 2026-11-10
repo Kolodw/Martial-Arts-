@@ -9779,6 +9779,84 @@ function paLTag(L){if(!L||!L.w)return'';return`<span class="paWt ${L.nb?'nb':''}
  document.querySelectorAll('#modal .paB button').forEach(b=>{if(/paBid/.test(b.getAttribute('onclick')||''))b.disabled=!!why});const inp=$('paIn');if(inp)inp.disabled=!!why;
  const up=$('paUp');if(up){let k=0;c.lots.forEach((x,i)=>{if(x.sold||i===c.li)return;const el=up.children[k++];if(el&&!el.querySelector('.paWt'))el.insertAdjacentHTML('afterbegin',paLTag(x)+'<br>')})}}catch(e){console.error(e)}return r}}
 (function(){try{const st=document.createElement('style');st.textContent=`.paWt{display:inline-block;font-size:12px;padding:1px 7px;border-radius:9px;background:#3a2f4a;color:#e8d8ff;border:1px solid #6b5a8a;margin-bottom:3px}.paWt.nb{background:#1f3a24;color:#9ff0b0;border-color:#4a9a5a}`;document.head.appendChild(st)}catch(e){}})();
+
+// ===== v15.2 ดูคนอื่นเล่น: แท็บกำเนิด · ประวัติ · จัดหมวดใหม่ =====
+function realmTxt(){try{const B=S.beastMode;if(B&&!B.human){const L=B.sp==='มังกร'?BL_STD:BL_ST;return `${B.sp||'สัตว์อสูร'} · ${(L&&L[B.st])||('ขั้น '+((B.st|0)+1))}`}const L=realmLabel();return L.base+(L.sub?' · '+L.sub:'')}catch(e){return REALMS[realmIdx()].n}}
+function worldTxt(){return S.xt?'✨ แดนเทพ':S.xian?'☁️ โลกเซียน':'⚔️ ยุทธภพ'}
+function birthInfo(){const B=S.beastMode,o=S.odds>0?1/S.odds:0;let fi=0;try{fi=fateOf(o)}catch(e){}
+ const g=S.goal&&typeof goalOf==='function'?goalOf(S.goal):null;
+ return{fam:S.family?S.family.n:'',famD:String((S.family&&S.family.d)||'').replace(/<[^>]+>/g,'').slice(0,90),tal:S.talent?S.talent.n:'',talM:S.talent?+S.talent.m||0:0,g:S.gender||'',
+  odds:S.custom?'✍️ ลิขิตเอง':(o?'1 ใน '+fmt(Math.round(o)):''),oc:fi,cu:S.custom?1:0,
+  traits:(S.traits||[]).map(trOf).filter(Boolean).map(t=>(t.bad?'⚠️ ':'')+t.n).slice(0,10),
+  ow:S.ow&&S.world?('🌌 วิญญาณจาก'+S.world.n+(S.soul?' — '+S.soul.n:'')):'',
+  mode:S.ch==='short'?'⏳ ชีวิตสั้น':B?'🐾 สัตว์อสูร':S.xt?'✨ แดนเทพ':S.xian?'☁️ โลกเซียน':'⚔️ ยุทธภพ',
+  beast:B?{sp:String(B.sp||''),bl:(BBLOOD[B.bl]||{}).n||'',el:String(B.el||''),hab:String(B.hab||'')}:null,
+  goal:g?{n:g.n,d:String(typeof g.d==='function'?g.d():g.d||'').replace(/<[^>]+>/g,'').slice(0,90),done:S.goalDone?1:0,p:String(S.goalDone?'สำเร็จแล้ว':(g.p?g.p():'')).replace(/<[^>]+>/g,'').slice(0,60)}:null,
+  gen:S.gen||1,par:(S.heirParents||[]).map(p=>(p.role||'')+' '+p.n).slice(0,3),sys:S.sys?{n:sysName(),since:S.sys.since}:null}}
+function histInfo(){return{key:(S.key||[]).map(k=>String(k).replace(/<[^>]+>/g,'')).slice(-30),ach:(S.achLife||[]).map(id=>ACH_ALL.find(a=>a.id===id)).filter(Boolean).slice(-20).map(a=>[a.n,a.r]),lin:(S.lineage||[]).slice(-6).map(p=>p.n+(p.e?'「'+p.e+'」':''))}}
+function relInfo(){const kids=(S.children||[]).filter(c=>c.alive!==false);const R=[];
+ if(S.spouse)R.push('💍 คู่ชีวิต: '+(S.sp?S.sp.n+' (ความรัก '+Math.round(S.sp.aff||0)+')':S.spouse));
+ if(S.harem&&S.harem.length)R.push('🏯 ตำหนักใน '+S.harem.length+' คน: '+S.harem.slice(0,6).map(g=>g.n).join(', ')+(S.harem.length>6?' …':''));
+ if(kids.length||S.kids)R.push('👶 บุตร '+Math.max(kids.length,S.kids||0)+' คน'+(kids.length?': '+kids.slice(0,6).map(c=>c.n).join(', '):''));
+ if(S.grand)R.push('👪 หลาน '+S.grand+' คน');
+ if(S.arc&&S.arc.master&&S.arc.master.n)R.push('🧓 อาจารย์: '+S.arc.master.n+(S.arc.master.alive===false?' (ล่วงลับ)':''));
+ if(S.disc&&S.disc.n)R.push('🧑‍🎓 ศิษย์: '+S.disc.n);
+ if(S.beast)R.push('🐾 สัตว์คู่ใจ: '+S.beast.nick+' Lv.'+S.beast.lv);
+ if(S.nem)R.push('😈 คู่แค้น: '+S.nem.n+(S.nem.peace?' (คืนดีแล้ว)':S.nem.alive?' · ชนะ '+S.nem.w+' แพ้ '+S.nem.l:' (ปิดฉากแล้ว)'));
+ if(S.arc&&S.arc.rival!=null&&peers[S.arc.rival])R.push('⚔️ คู่ปรับ: '+peers[S.arc.rival].name);
+ if(S.allies&&S.allies.length)R.push('🤝 พันธมิตร '+S.allies.length+' คน');
+ return R}
+function orgInfo(){const R=[];
+ if(S.faction)R.push('🏯 '+S.faction.n+' · '+rankName());else R.push('🚶 จอมยุทธ์พเนจร');
+ if(S.ownSect)R.push('🏯 เจ้าสำนัก '+S.ownSect.n+' · ศิษย์ '+(S.ownSect.dis||0));
+ try{if(S.est&&(S.est.lv||S.est.prop))R.push('🏞️ '+estLandN(S.est.lv)+' · '+estPrN(S.est.pr||0))}catch(e){}
+ if(S.sys)R.push('🟦 '+sysName()+' Lv.'+S.sys.lv);
+ try{if(S.tw&&S.tw.gov)R.push('🏛️ ยศ '+GOV_T[S.tw.gov-1])}catch(e){}
+ return R}
+const Q_REAL=k=>/^(smain|sq|bagq|rev|proj|saga|tq)/.test(k);
+{const _ls=liveSnap;liveSnap=function(){const o=_ls.apply(this,arguments);try{Object.assign(o,{rl:realmTxt(),wd:worldTxt(),birth:birthInfo(),hist:histInfo(),rel:relInfo(),org:orgInfo(),q2:questList().filter(q=>Q_REAL(q.k)).map(q=>q.ic+' '+q.n+' — '+String(q.p).replace(/<[^>]+>/g,'')).slice(0,12),r:realmTxt()})}catch(e){console.error(e)}return o}}
+{const _ld=lifeDetail;lifeDetail=function(sc){const o=_ld.apply(this,arguments);try{Object.assign(o,{rl:realmTxt(),wd:worldTxt(),birth:birthInfo(),rel:relInfo(),org:orgInfo(),r:realmTxt()})}catch(e){console.error(e)}return o}}
+function birthHtml(b){if(!b)return'<p class="tag2">ผู้เล่นคนนี้ยังใช้เวอร์ชันเก่า — ยังไม่มีข้อมูลตอนกำเนิด</p>';const L=[];
+ L.push(`<div class="item" style="text-align:center"><div class="tag2">โอกาสเกิดแบบนี้</div><div class="oddsbig"><span class="n fx${b.oc|0}" style="font-size:22px">${esc(b.odds||'—')}</span></div><div class="tag2">${esc(b.mode||'')}${b.gen>1?' · ทายาทรุ่นที่ '+b.gen:''}</div></div>`);
+ L.push(`<div class="specgrid"><div>🏠 ชาติกำเนิด <b>${esc(b.fam)}</b></div><div>🦴 กระดูก <b>${esc(b.tal)}</b>${b.talM?` <span class="tag2">×${b.talM}</span>`:''}</div><div>${b.g==='หญิง'?'♀️':'♂️'} เพศ <b>${esc(b.g||'-')}</b></div>${b.beast?`<div>🐾 สายพันธุ์ <b>${esc(b.beast.sp)}</b></div><div>🩸 สายเลือด <b>${esc(b.beast.bl)}</b></div>${b.beast.el?`<div>🌀 ธาตุ <b>${esc(b.beast.el)}</b></div>`:''}`:''}</div>`);
+ if(b.famD)L.push(`<p class="tag2">${esc(b.famD)}</p>`);
+ if(b.traits&&b.traits.length)L.push(`<h4 style="margin:8px 0 2px">✨ พรสวรรค์ติดตัว</h4><ul class="speclist">${b.traits.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`);
+ if(b.ow)L.push(`<p>${esc(b.ow)}</p>`);
+ if(b.par&&b.par.length)L.push(`<p class="tag2">👪 บุตรของ ${esc(b.par.join(' · '))}</p>`);
+ if(b.goal)L.push(`<h4 style="margin:8px 0 2px">🎯 ปณิธานที่เลือกตอนเกิด</h4><div class="item"><b>${esc(b.goal.n)}</b> ${b.goal.done?'✅':''}<p class="tag2">${esc(b.goal.d)}${b.goal.p?' · '+esc(b.goal.p):''}</p></div>`);
+ if(b.sys)L.push(`<p>🟦 ได้รับ<b>${esc(b.sys.n)}</b>ตอนอายุ ${b.sys.since|0} ปี</p>`);
+ return L.join('')}
+function histHtml(h,feedKey){if(!h)return'<p class="tag2">ยังไม่มีข้อมูลประวัติ</p>';let x='';
+ x+='<h4 style="margin:4px 0">📜 เหตุการณ์สำคัญ</h4><div class="specfeed" style="max-height:260px">'+((h.key||[]).map(k=>{const m=/^(\d+) ปี — ([\s\S]*)$/.exec(k);return m?`<div><b class="px">${m[1]}</b> ${esc(m[2])}</div>`:`<div>${esc(k)}</div>`}).join('')||'<div class="tag2">ยังไม่มีเหตุการณ์สำคัญ</div>')+'</div>';
+ x+='<h4 style="margin:10px 0 4px">🏆 ความสำเร็จในชีวิตนี้</h4>'+((h.ach&&h.ach.length)?'<div>'+h.ach.map(([n,r])=>`<span class="tchip fr${Math.min(6,r|0)}" style="margin:2px">${esc(n)}</span>`).join('')+'</div>':'<p class="tag2">ยังไม่ได้ปลดล็อก</p>');
+ if(h.lin&&h.lin.length)x+='<h4 style="margin:10px 0 4px">🌳 บรรพบุรุษ</h4><ul class="speclist">'+h.lin.map(n=>`<li>${esc(n)}</li>`).join('')+'</ul>';return x}
+openSpectate=async function(k,tab){specTarget=k;clearTimeout(specT);tab=tab||openSpectate._tab||'sum';openSpectate._tab=tab;let j;
+ const off=()=>{if($('modal').dataset.k==='spec'||!modalOpen)modal(`<button class="xbtn" onclick="specClose()">✕</button><h3>👁 ดูการเล่น</h3><p class="tag2">ผู้เล่นคนนี้ปิดการให้ดู หรือออกจากเกมไปแล้ว</p><button class="pbtn" style="width:100%;margin-bottom:6px" onclick="openSpectate('${k}')">🔄 ลองอีกครั้ง</button><button class="gbtn" style="width:100%" onclick="openLiveList()">← กลับรายชื่อ</button>`,'spec')};
+ try{j=await api('liveget&t='+encodeURIComponent(k))}catch(e){if(specSoft(k,e&&e.message))return;off();return}
+ if(specTarget!==k)return;if(!j||!j.s||!j.s.st){if(specSoft(k,'off'))return;off();return}
+ const sig=JSON.stringify(j.s)+'|'+j.w+'|'+tab;specOK(k);if(openSpectate._sig===sig&&$('modal').dataset.k==='spec'&&modalOpen){specStamp(j.s);specT=setTimeout(()=>{if($('modal').dataset.k==='spec'&&modalOpen&&specTarget===k)openSpectate(k)},5000);return}
+ openSpectate._sig=sig;const _keep=openSpectate._at===k+'|'+tab,_msc=$('modal').scrollTop,_ofd=document.querySelector('.specfeed'),_fdb=_ofd?_ofd.scrollHeight-_ofd.scrollTop-_ofd.clientHeight<40:true,_fdt=_ofd?_ofd.scrollTop:0;openSpectate._at=k+'|'+tab;
+ const s=j.s,st=s.st;const T=[['sum','📊 ภาพรวม'],['birth','🎲 กำเนิด'],['hist','📜 ประวัติ'],['feed','📰 สด'],['items','🎒 ของ'],['arts','📖 วิชา'],['q','📋 เควส'],['ppl','👪 ผู้คน']];
+ const list=(a,emp)=>a&&a.length?'<ul class="speclist">'+a.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':`<p class="tag2">${emp}</p>`;let body='';
+ if(tab==='sum')body=`<div class="specgrid"><div>⚔️ พลังรวม <b>${fmt(st.pow)}</b></div><div>🌀 ลมปราณ <b>${st.qi}</b></div><div>📖 ปัญญา <b>${st.int}</b></div><div>🌸 เสน่ห์ <b>${st.cha}</b></div><div>💰 เงิน <b>${fmt(st.money)}</b></div><div>⭐ ชื่อเสียง <b>${fmt(st.fame)}</b></div><div>☯️ กรรม <b>${st.karma}</b></div><div>😊 ความสุข <b>${st.joy}</b></div></div>`+(s.org?list(s.org,''):`<p class="tag2">${esc(s.f||'')}${s.sys?' · 🟦 '+esc(s.sys):''}</p>`)+(s.birth&&s.birth.goal?`<p class="tag2">🎯 ปณิธาน: ${esc(s.birth.goal.n)} ${s.birth.goal.done?'✅':'· '+esc(s.birth.goal.p||'')}</p>`:'');
+ else if(tab==='birth')body=birthHtml(s.birth);
+ else if(tab==='hist')body=histHtml(s.hist);
+ else if(tab==='feed')body='<div class="specfeed">'+(s.feed||[]).map(x=>x[0]==='§'?`<div class="sfh">${esc(x.slice(1))}</div>`:`<div>${esc(x)}</div>`).join('')+'</div>';
+ else if(tab==='items')body='<h4 style="margin:4px 0">⚔️ สวมใส่</h4>'+list(s.eq,'ไม่ได้สวมอะไร')+'<h4 style="margin:8px 0 4px">🎒 กระเป๋า</h4>'+list(s.bag,'กระเป๋าว่าง');
+ else if(tab==='arts')body=list(s.arts,'ยังไม่มีวิชา');
+ else if(tab==='q')body=list(s.q2||s.q,'ไม่มีเควสที่กำลังทำ');
+ else body=(s.rel?'<h4 style="margin:4px 0">💞 ความสัมพันธ์</h4>'+list(s.rel,'ยังไม่มี'):'')+'<h4 style="margin:8px 0 4px">👥 คนรอบตัว</h4>'+list(s.ppl,'ไม่มี');
+ modal(`<button class="xbtn" onclick="specClose()">✕</button><div class="spechead"><canvas id="specCv" width="140" height="154"></canvas><div><h3 style="margin:0">${esc(s.n)}${s.tt?tchipH(s.tt,s.tr):''}</h3><div class="tag2">${esc(s.wd||(s.x?'☁️ โลกเทพเซียน':'⚔️ ยุทธภพ'))} · อายุ ${s.age} ปี · ${esc(s.rl||s.r)}</div><div class="tag2">${esc(s.f)}</div><div class="tag2">📍 ${esc(s.cap||'')}${s.fo?' · กำลัง'+esc(s.fo):''}</div>
+  <div class="hpbar" style="margin:4px 0"><i style="width:${Math.max(0,st.hp/st.mhp*100)}%"></i></div><div class="tag2">❤️ ${st.hp}/${st.mhp} · 👁 ${j.w} คนกำลังดู</div></div></div>
+  <div class="tabs" style="flex-wrap:wrap">${T.map(t=>`<button class="tabb ${t[0]===tab?'on':''}" onclick="openSpectate('${k}','${t[0]}')">${t[1]}</button>`).join('')}</div>${body}
+  <p class="tag2" style="text-align:center;margin-top:8px">🔴 ดูสด · ดูได้อย่างเดียว · <span id="specAge"></span></p><p id="specWarn" class="tag2" style="text-align:center;color:#e0a030;display:none"></p><button class="gbtn" style="width:100%" onclick="openLiveList()">← รายชื่อผู้เล่น</button>`,'spec');
+ specDrawAva(s.look);const fd=document.querySelector('.specfeed');if(fd)fd.scrollTop=(_keep&&!_fdb)?_fdt:fd.scrollHeight;if(_keep)$('modal').scrollTop=_msc;specStamp(s);
+ specT=setTimeout(()=>{if($('modal').dataset.k==='spec'&&modalOpen&&specTarget===k)openSpectate(k)},5000)};
+// ทำเนียบ: เพิ่มแท็บกำเนิด และจัดหมวดสรุปใหม่
+{const _olv=openLifeView;openLifeView=async function(lid,tab){if(tab!=='birth'&&tab!=='rel')return _olv.apply(this,arguments).then(()=>lvTabs(lid,tab||'sum'));let j;try{j=await api('lifeview&l='+encodeURIComponent(lid))}catch(e){return _olv.call(this,lid,'sum')}
+ const d=j.d;await _olv.call(this,lid,'sum');const m=$('modal');const tb=m.querySelector('.tabs');let body=tab==='birth'?birthHtml(d.birth):('<h4 style="margin:4px 0">💞 ความสัมพันธ์</h4>'+(d.rel&&d.rel.length?'<ul class="speclist">'+d.rel.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':`<ul class="speclist">${d.spouse?`<li>💍 คู่ครอง ${esc(d.spouse)}</li>`:''}${d.kids&&d.kids.length?`<li>👶 ลูก ${d.kids.length} คน: ${esc(d.kids.join(', '))}</li>`:''}</ul>`)+(d.org&&d.org.length?'<h4 style="margin:8px 0 4px">🏯 สังกัด</h4><ul class="speclist">'+d.org.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':''));
+ if(tb){let n=tb.nextSibling;while(n&&!(n.tagName==='BUTTON'&&/openOnline/.test(n.getAttribute('onclick')||''))){const nx=n.nextSibling;n.remove();n=nx}tb.insertAdjacentHTML('afterend',body)}lvTabs(lid,tab)}}
+function lvTabs(lid,tab){try{const tb=$('modal').querySelector('.tabs');if(!tb||$('modal').dataset.k!=='lifeview')return;const T=[['sum','📊 สรุป'],['birth','🎲 กำเนิด'],['tl','📜 ไทม์ไลน์'],['rel','👪 ครอบครัว'],['item','🎒 ของและวิชา'],['ach','🏆 ความสำเร็จ']];tb.style.flexWrap='wrap';tb.innerHTML=T.map(t=>`<button class="tabb ${t[0]===tab?'on':''}" onclick="openLifeView('${lid}','${t[0]}')">${t[1]}</button>`).join('')}catch(e){}}
 </script>
 </body>
 </html>
