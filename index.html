@@ -7296,8 +7296,8 @@ const GDICT=[['🏠 จดหมายจากบ้าน','🙏 เสีย�
 EQI.t5={s:'trs',n:'เกราะเกล็ดอสูร',ic:'🦎',d:'พลังชีวิตสูงสุด +45 · เจ็บน้อยลง 5%',e:{hp:45,red:.05},v:3000,t:2};
 Object.assign(BAGIT,{lpill:{n:'ยาอายุวัฒนะ',ic:'💮',v:1500},bpill:{n:'ยาแก่นอสูร',ic:'🟤',v:600}});
 Object.assign(BAGX,{lpill:{r:3,d:()=>S&&S.xt?'อายุขัย +500 ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ':S&&S.xian?'อายุขัย +50 ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ':'อายุขัย +10 ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ',use(){const v=S.xt?500:S.xian?50:10;if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;return`อายุขัย +${v} ปี`}},
- bpill:{r:2,d:()=>`พลังยุทธ์ +${fmt(bpillV())} · สกัดจากแก่นอสูร`,use(){const g=bpillV();S.power+=g;return`พลังยุทธ์ +${fmt(g)}`}}});
-function bpillV(){return S&&S.xt?Math.max(100,(typeof pctPow==='function'?pctPow(.02):Math.round(total()*.02))):yrPow0()*3}
+ bpill:{r:2,d:()=>`พลังยุทธ์ +${fmt(bpillV())} · สกัดจากแก่นอสูร (ยิ่งกินในขั้นเดียวกันยิ่งได้ผลน้อยลง)`,use(){const g=S&&S.xt?Math.max(100,pctPow(.02)):yrPow0()*3;S.power+=g;return`พลังยุทธ์ +${fmt(g)}`}}});
+function bpillV(){return S&&S.xt?Math.max(100,Math.round(total()*.02)):yrPow0()*3}
 {const _bt=bagTick;bagTick=function(){const r=_bt.apply(this,arguments);try{if(S&&S.alive&&bagHas('lpill')&&S.age>lifeMax()-(S.xt?60:S.xian?15:4)&&bagUse('lpill')){const m=BAGX.lpill.use();log(`🎒 💮 กลืนยาอายุวัฒนะ — ${m}`,'epic')}}catch(e){console.error(e)}return r}}
 function crOutTxt(r){const o=r.out;try{if(o.bag)return`${rarName(o.bag)} ×${o.q} (ขั้นบน ×${o.q*2} · สุดยอด ×${o.q*3}) — ${bagDesc(o.bag)}`;
  if(o.eq){const e=EQI[o.eq];return e?`${e.ic} ${e.n} — ${e.d}`:o.eq}if(o.fx==='int')return`ปัญญา +${o.v} (ขึ้นกับขั้นที่ได้)`;if(o.fx==='qi')return`ลมปราณ +${o.v} ปี (ขึ้นกับขั้นที่ได้)`;if(o.fx==='life')return`อายุขัย +${o.v} ปี`;
