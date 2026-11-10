@@ -10448,6 +10448,72 @@ function tbChip(t,v){const r=ttlRar(t);return`<span class="tb tb${r}" title="${e
   if(g)g.outerHTML=html||'<p class="tag2">ยังไม่มีฉายา</p>'}catch(e){console.error(e)}return r}}
 // ฉายาใหม่ใน log ใช้สีตามความยากจริง
 {const _tt=ttlTick;ttlTick=function(){const o=S&&S.ttl;const r=_tt.apply(this,arguments);try{if(S&&S.ttl&&S.ttl!==o){const fd=document.querySelectorAll('#feed .lgf');const el=fd[fd.length-1];if(el&&el.textContent.includes(S.ttl)){el.className=el.className.replace(/\bfr\d\b/,'fr'+ttlRar(S.ttl))}}}catch(e){}return r}}
+
+// ===================== v15.8 อัปเดตสารานุกรม + คู่มือ (ของใหม่ v14–v15) =====================
+const CX2_BODY=['yin','dao','undying','myriad','defy'];
+{const _c=cdxTick;cdxTick=function(){try{if(S){
+ const id=typeof tid==='function'?tid():null;if(id&&CX2_BODY.includes(id))cdxAdd('body',id);
+ if(S.sys&&S.sys.gr!=null)cdxAdd('sysg',''+S.sys.gr);
+ const E=S.est;if(E){Object.keys(E.b||{}).forEach(k=>{if(E.b[k]>0)cdxAdd('estb',k)});if(E.tr)cdxAdd('esttr',E.tr)}
+ const a=S.ai;if(a){if(a.per!=null)cdxAdd('aiper',''+a.per);(a.br||[]).forEach(k=>cdxAdd('aibr',k));if(a.end)cdxAdd('aiend',a.end)}
+ if(S.bevN)Object.keys(S.bevN).forEach(k=>cdxAdd('bev',k));
+ if(S.bhWin)cdxAdd('bhunt','win');if(S.bhCore)cdxAdd('bhunt','core');
+ if(S.harem&&S.harem.length>=1)cdxAdd('love','harem')}}catch(e){}return _c.apply(this,arguments)}}
+// สถานที่ในเมือง: บันทึกเมื่อเข้าไป
+{const _tp=twPage;twPage=function(p){try{if(S&&TW[ECO_W()]&&TW[ECO_W()][p])cdxAdd('town',ECO_W()+p)}catch(e){}return _tp.apply(this,arguments)}}
+{const _cc=cxCats;cxCats=function(){const L=_cc.apply(this,arguments);try{
+ const bevN=[...new Set(BEV.map(e=>e.n))];
+ L.push(
+  {g:'pow',ic:'🧬',t:'กายาพิเศษ',te:'Special bodies',cat:'body',L:CX2_BODY.map(id=>{const t=TALENT.find(x=>x.id===id)||{n:id};return[id,t.n,id==='defy']})},
+  {g:'other',ic:'💠',t:'เกรดระบบ',te:'System grades',cat:'sysg',L:SYS_GRADE.map((g,i)=>[''+i,g.n,i>=SYS_GRADE.length-1])},
+  {g:'other',ic:'🤖',t:'นิสัย AI',te:'AI personalities',cat:'aiper',L:AI_PER.map((p,i)=>[''+i,p[1]+' '+p[0],0])},
+  {g:'other',ic:'🌿',t:'สาย AI',te:'AI branches',cat:'aibr',L:Object.entries(AI_BR).map(([k,v])=>[k,v[0],0])},
+  {g:'other',ic:'🔚',t:'บทสรุป AI ตื่นรู้',te:'AI awakening endings',cat:'aiend',L:Object.entries(AI_END).map(([k,v])=>[k,v[0],1])},
+  {g:'beast',ic:'🌲',t:'เหตุการณ์สัตว์อสูร',te:'Beast events',cat:'bev',L:bevN.map(n=>[n,n,0])},
+  {g:'beast',ic:'🏹',t:'ล่าสัตว์อสูรผู้เล่น',te:'Player beast hunts',cat:'bhunt',L:[['win','🛡️ ชนะนักล่าผู้เล่นจริง',0],['core','💎 ล้วงแก่นอสูรผู้เล่นจริง',1]]},
+  {g:'place',ic:'🏙️',t:'สถานที่ในเมือง',te:'Town places',cat:'town',L:['m','x','g'].flatMap(w=>Object.entries(TW[w]).map(([k,n])=>[w+k,n,w==='g']))},
+  {g:'place',ic:'🏯',t:'สิ่งปลูกสร้างในที่ดินตระกูล',te:'Clan estate buildings',cat:'estb',L:Object.entries(EST_B).map(([k,v])=>[k,v.ic+' '+v.n,v.c>=2200])},
+  {g:'place',ic:'📜',t:'ประเพณีตระกูล',te:'Clan traditions',cat:'esttr',L:Object.entries(EST_TRAD).map(([k,v])=>[k,v[0],0])},
+  {g:'other',ic:'💞',t:'ความรัก',te:'Love',cat:'love',L:[['harem','💞 มีคู่ครองหลายคน',0]]})}catch(e){console.error(e)}return L}}
+// ---- คู่มือ: ล้างป้าย ใหม่ ของเก่า แล้วปรับการ์ดเดิมที่ล้าสมัย ----
+GD2.forEach(g=>delete g.nw);
+{const up=(t,o)=>{const g=GD2.find(x=>x.t===t);if(g)Object.assign(g,o,{nw:1})};
+ up('ระบบ (System)',{d:'สุ่มได้ตอนเกิดจากต่างโลก หรือมีโอกาส 30% ตื่นขึ้นตอนกำลังจะตาย · มีเลเวล แต้ม ร้านค้า และสีประจำระบบ · ตอนนี้มีระบบสำนัก ตระกูล ช่างตีเหล็ก นักล่า และ<b>ระบบกาลเวลา</b> (ย้อนเวลาได้) เพิ่มมา · เควสของแต่ละระบบอ้างอิงชนิดระบบ · เกรดสูงสุดใหม่ <b>บรรพกาล</b>',
+  de:'Rolled at birth for otherworlders, or a 30% chance to awaken near death. Has levels, points, a shop and its own colour. New types: Sect, Clan, Smith, Hunter and the <b>Time</b> system (can rewind). Each type now gives quests that fit it. New top grade: <b>Primordial</b>.'});
+ up('สมุดตำนานและฉายา',{d:'ความสำเร็จมี 3 ดาว ทำซ้ำชาติใหม่เพิ่มดาว · ความสำเร็จระดับสูงปลดยากขึ้นมาก (ราว 10 เท่า) และสีตามความยากจริงที่คำนวณจากการจำลองนับพันชีวิต · ฉายากว่า 2,200 แบบ แบ่งเป็น 7 ระดับ',
+  de:'Achievements have 3 stars; repeat them in new lives for more. High-tier achievements are now much harder (about 10×), and their colour reflects true difficulty measured from thousands of simulated lives. Over 2,200 titles in 7 tiers.'});
+ up('ฉายาโชว์',{d:'เลือกฉายาที่จะโชว์บนตัวละครและในแชท · สีฉายาแบ่ง 7 ระดับตามความยาก: ทั่วไป → หายาก → ล้ำค่า → ตำนาน → เทพ → อมตะ → <b>???</b> ยิ่งยากยิ่งสวยและมีอนิเมชั่น · หน้าฉายาในสมุดตำนานจัดกลุ่มตามระดับพร้อมจำนวนที่ได้',
+  de:'Pick the title shown on your character and in chat. Titles come in 7 tiers by difficulty: Common → Rare → Precious → Legend → Divine → Immortal → <b>???</b> — harder ones look better and animate. The titles tab groups them by tier with your counts.'});
+ up('สารานุกรม',{d:'บันทึกทุกสิ่งที่เคยพบ — ระดับพลัง สำนัก ตระกูล ระบบ ของต่างโลก สัตว์อสูร สายเลือด กระเป๋า โรค · เพิ่มใหม่: กายาพิเศษ เกรดระบบ นิสัย/สาย/บทสรุป AI เหตุการณ์สัตว์อสูร สถานที่ในเมือง สิ่งปลูกสร้างและประเพณีตระกูล',
+  de:'Records everything you have met — realms, sects, clans, Systems, otherworld items, beasts, bloodlines, bags, diseases. New: special bodies, System grades, AI personalities/branches/endings, beast events, town places, clan estate buildings and traditions.'});
+ up('เควส',{d:'คนในเรื่องฝากเควสตามช่วงวัย (พ่อแม่ อาจารย์ นายอำเภอ คู่ชีวิต ลูกๆ) — <b>เด็กจะยังไม่ได้รับเควส</b>จนกว่าจะโตพอ · ระบบให้เควสพร้อมเหตุผลตามชนิดระบบ · มีภารกิจล้างแค้นข้ามชาติและภัยเงาที่ต้องจับตา',
+  de:'People in your story give quests by age (parents, masters, magistrates, spouse, children) — <b>young children get no quests</b> until they are old enough. Systems give quests that fit their type. There are also cross-life revenge missions and shadow threats.'})}
+{const at=(after,g)=>{const i=GD2.findIndex(x=>x.t===after);g.nw=1;if(i<0)GD2.push(g);else GD2.splice(i+1,0,g)};
+ at('ภาษาอังกฤษ (Beta)',{s:'base',ic:'🗂️',t:'เมนูแบ่งหมวด',d:'เมนู ☰ ตอนจำลองแบ่งเป็นหมวด — <b>ใช้บ่อย</b> (รวมปุ่ม 🤖 AI) ตัวละคร ครอบครัว เมือง สะสม ออนไลน์ · หาปุ่มได้ง่ายขึ้น',
+  te:'Grouped menu',de:'The ☰ menu during a life is split into groups — <b>Used often</b> (including 🤖 AI), character, family, town, collection, online — so buttons are easier to find.'});
+ at('ระบบ (System)',{s:'grow',ic:'🧬',t:'กายาพิเศษ',d:'พรสวรรค์หายาก 5 แบบ มีทั้งพลังและคำสาป: ❄️ <b>เก้าหยินสุดขั้ว</b> (ลมปราณพุ่ง แต่ต้องถึงขั้นสามก่อนอายุ 25) · ☯️ <b>เต๋าโดยกำเนิด</b> (หยั่งรู้เต๋า แต่ฟ้าผ่าลงเป็นระยะ) · ♾️ <b>อมตะไร้ดับ</b> (ฟื้นได้ทุก 100 ปี แต่ฝึกช้า) · 📚 <b>หมื่นวิชา</b> (วิชาโตไว แต่พลังพื้นฐานต่ำ) · ⚡ <b>ฝืนลิขิตฟ้า</b> (สุดยอดที่สุด แต่สวรรค์ส่งผู้พิทักษ์มาลบทุก 10 ปี)',
+  te:'Special bodies',de:'5 rare talents, each with a power and a curse: ❄️ <b>Nine Yin</b> (fast qi, but must reach the third realm before 25) · ☯️ <b>Innate Dao</b> (grasps the Dao, but lightning strikes now and then) · ♾️ <b>Undying</b> (revives every 100 years, but trains slowly) · 📚 <b>Myriad Arts</b> (arts grow fast, low base power) · ⚡ <b>Heaven-Defying</b> (the greatest talent, but Heaven sends a warden every 10 years).'});
+ at('กายาพิเศษ',{s:'grow',ic:'🤖',t:'AI ตื่นรู้',go:'openAI',life:1,need:()=>S&&S.ai,d:'AI มี<b>นิสัย</b>และ<b>ความผูกพัน</b> · ติดป้ายทำนายผลบนปุ่มตัวเลือก · สแกนศัตรู/ผู้เล่นอื่น หาจุดอ่อน เก็งกำไรตลาด แก้ยีน · เลือก<b>สาย</b> ต่อสู้ ปราชญ์ หรือพ่อค้า · มีเนื้อเรื่องตื่นรู้ 3 บท จบได้ 3 แบบ: 🔗 หลอมรวม (สั่งงาน AI ได้ปีละ 2 ครั้ง มีลูกได้ปกติแต่ไม่มีความสัมพันธ์กับ AI อีก) · 🕊️ ปล่อยเป็นอิสระ · 💾 อัปโหลดส่งต่อทายาท',
+  te:'Awakened AI',de:'Your AI has a <b>personality</b> and a <b>bond</b>. It tags choice buttons with predictions, scans foes and players, finds weak points, plays the market and edits genes. Pick a <b>branch</b>: war, sage or trade. A 3-chapter awakening story ends one of 3 ways: 🔗 Fuse (command it twice a year; children as normal, but no relationship with the AI) · 🕊️ Set free · 💾 Upload to your heir.'});
+ at('เควส',{s:'grow',ic:'💞',t:'คู่ครองไม่จำกัด',go:'openHouse',life:1,d:'มีคู่ครองได้<b>ไม่จำกัด</b> ถ้าอีกฝ่ายรักหรือสนิทกันพอ · คนรุ่นเดียวกันในหน้าคนรู้จักก็จีบเข้าเรือนได้',
+  te:'Unlimited partners',de:'You can have <b>unlimited</b> partners if the other side loves you or is close enough. People of your generation in your contacts can be courted too.'});
+ at('ยุคของโลกและศัตรู',{s:'world',ic:'🏙️',t:'สถานที่ในเมือง',go:'openTown',life:1,d:'เมืองมี 7 สถานที่ใหม่ (ชื่อเปลี่ยนตามโลก): 🏦 โรงรับฝากเงิน (ฝากรับดอกเบี้ย) · 🥋 ลานประลอง · 🎲 บ่อนเต๋า · 🔮 หมอดู · 🍵 โรงน้ำชา (ข่าวลือ) · 🏛️ จวนเจ้าเมือง (รับตำแหน่ง) · 🎪 เทศกาลเมือง',
+  te:'Town places',de:'Towns have 7 new places (names change per world): 🏦 bank (earn interest) · 🥋 arena · 🎲 dice house · 🔮 fortune teller · 🍵 teahouse (rumours) · 🏛️ governor (take office) · 🎪 town festival.'});
+ at('สถานที่ในเมือง',{s:'world',ic:'🏯',t:'ที่ดินตระกูล',go:'openHouse',life:1,d:'ในหน้าบ้าน แท็บ <b>ที่ดินตระกูล</b> สร้างและอัปเกรดสิ่งปลูกสร้าง 16 แบบ (นา เหมือง ลานฝึก หอคัมภีร์ ฯลฯ) ได้ผลทุกปี · เลือก<b>ประเพณีตระกูล</b> 5 แบบ · ที่ดินส่งต่อทายาท',
+  te:'Clan estate',de:'In your home, the <b>Clan estate</b> tab lets you build and upgrade 16 buildings (farms, mines, training ground, library…) that pay out every year. Choose one of 5 <b>clan traditions</b>. The estate passes to your heir.'});
+ at('ที่ดินตระกูล',{s:'world',ic:'💎',t:'ร้านสมบัติ',go:'openShop2',life:1,d:'ร้านสมบัติมีของกว่า 300 ชิ้นต่อโลก แบ่งหมวด: อาวุธ ยา อาหารและสุรา ของขวัญ ทรัพย์สินตระกูล วัตถุดิบ พาหนะ ฯลฯ · ราคาตามโลกที่อยู่',
+  te:'Treasure shop',de:'Over 300 items per world, sorted by category: weapons, pills, food and wine, gifts, clan property, materials, mounts and more. Prices follow your world.'});
+ at('เส้นทางอสูร',{s:'beast',ic:'🎯',t:'ปณิธานสัตว์อสูร',d:'สัตว์อสูรมีปณิธานกว่า 100 เป้าหมาย ยากเป็นขั้นๆ — โตไว ล่าเก่ง มีลูกหลาน บำเพ็ญถึงขั้นสูง',
+  te:'Beast aspirations',de:'Beasts have over 100 aspirations of rising difficulty — grow fast, hunt well, raise offspring, cultivate high.'});
+ at('ปณิธานสัตว์อสูร',{s:'beast',ic:'🌲',t:'เหตุการณ์สัตว์อสูร',d:'ชีวิตสัตว์อสูรมีเหตุการณ์ใหม่หลายสิบแบบ (สุ่มรายละเอียดจนแทบไม่ซ้ำ) — เจอคู่แข่ง ฤดูกาล พายุ นักล่า สมบัติในป่า ถ้ำลับ ฯลฯ · ไปดูที่เคยเจอได้ในสารานุกรม',
+  te:'Beast events',de:'Beast lives have dozens of new events with randomised details — rivals, seasons, storms, hunters, forest treasures, hidden caves. Ones you have met are listed in the Codex.'});
+ at('เหตุการณ์สัตว์อสูร',{s:'beast',ic:'🏹',t:'นักล่าผู้เล่นจริง',d:'ตอนเป็นสัตว์อสูร <b>ผู้เล่นมนุษย์จริง</b>อาจมาล่าแก่นของคุณ (สูงสุด 2 คน) แบบเรียลไทม์ 30 วิ · สัตว์: ⚔️ สู้กลับ 🏃 หนี 🌿 ซ่อน · นักล่า: 🏹 ไล่ล่า 🪤 วางกับดัก · นักล่า 2 คนเลือก 🤝 ร่วมมือ หรือ 🗡️ แย่งชิงได้ · ถูกล้วงแก่นแล้วรอดจะมีภารกิจตามล่าคืน',
+  te:'Real-player hunters',de:'As a beast, <b>real human players</b> (up to 2) may hunt your core in a 30-second realtime round. Beast: ⚔️ fight 🏃 flee 🌿 hide · Hunters: 🏹 chase 🪤 trap — two hunters can 🤝 cooperate or 🗡️ betray. Survive losing your core and you get a revenge hunt.'});
+ at('ออนไลน์',{s:'net',ic:'🔨',t:'ประมูลผู้เล่น',go:'openPAuc',d:'ประมูลแยก<b>ตามโลก</b> ใช้ตำลึง (หลักสิบถึงร้อยล้าน) · ทุกรอบมีของสำหรับมือใหม่ 1 ชิ้น · ระดับสูงประมูลของระดับต่ำไม่ได้ · ไม่มีใครเสนอใน 10 วิ ข้ามไปชิ้นถัดไป',
+  te:'Player auction',de:'Auctions are split <b>per world</b> and use tael (tens up to hundreds of millions). Each round has one newbie lot; high-realm players cannot bid on low lots. If nobody bids within 10 s, the next lot comes up.'});
+ at('ประมูลผู้เล่น',{s:'net',ic:'👁️',t:'ดูคนอื่นเล่น',go:'openOnline',d:'ดูผู้เล่นคนอื่นแบบสด แบ่งแท็บ: สรุป · <b>กำเนิด</b> (สุ่มได้อะไรตอนเกิด) · <b>ประวัติ</b> (เหตุการณ์สำคัญ) · คนรอบตัว · สังกัด · ของ · เควส · ทั้งหมด · ทำเนียบก็เปิดดูกำเนิดและประวัติได้',
+  te:'Spectating',de:'Watch other players live with tabs: summary · <b>birth</b> (what they rolled) · <b>history</b> (key events) · people · affiliations · items · quests · all. The leaderboard also shows birth and history.'})}
+SYS_GUIDE.length=0;GD2.forEach(g=>SYS_GUIDE.push(g));
 </script>
 </body>
 </html>
