@@ -2958,11 +2958,12 @@ function owXAwake(){if(!S.world)return;const k=S.world.k;
 function rebornTick(){if(!has('memshard')||S.age<10||S.age%15)return;const a=newArt(Math.min(4,1+Math.floor(S.age/45)));S.arts.push(a);S.qi+=4;log(`👑 เศษความทรงจำของจักรพรรดิกลับมาอีกส่วน — ${artHtml(a)} · ลมปราณ +4 ปี`,'epic')}
 // ---- 3. กระเป๋า ----
 const BAGIT={hp:{n:'ยาสมานแผล',ic:'💊',v:80},cure:{n:'ยาถอนพิษรักษาโรค',ic:'🧪',v:200},qi:{n:'ยารวมปราณ',ic:'🔵',v:250},brk:{n:'ยาทะลวงขั้น',ic:'🔴',v:1200},tal:{n:'ยันต์คุ้มกาย',ic:'📜',v:300},core:{n:'แก่นอสูร',ic:'🔶',v:400},herb:{n:'สมุนไพรวิญญาณ',ic:'🌿',v:150},food:{n:'เสบียงแห้ง',ic:'🍙',v:20},gem:{n:'ของมีค่า',ic:'💎',v:900},map:{n:'แผนที่มิติลับ',ic:'🗺️',v:600},egg:{n:'ไข่สัตว์วิญญาณ',ic:'🥚',v:2500},fruit:{n:'ผลไม้อายุวัฒนะ',ic:'🍑',v:3000}};
-const BAGN=[['ห่อผ้าเก่าๆ',3],['ย่ามสะพายไหล่',5],['หีบเดินทาง',8],['กระเป๋าหนังอย่างดี',10],['หีบสมบัติประจำตระกูล',14]];
+const BAGN=[['ห่อผ้าเก่าๆ',8],['ย่ามสะพายไหล่',12],['หีบเดินทาง',18],['กระเป๋าหนังอย่างดี',25],['หีบสมบัติประจำตระกูล',35],['หีบเหล็กสลักค่ายกล',50],['คลังสมบัติส่วนตัว',70]];
+const BAGP=[0,300,900,2500,6000,15000,40000];
 function bagInit(){if(S.bag)return;const f=S.family||{},m=f.money||0;let t=m>=4000?3:m>=1200?2:m>=200?1:0;if(f.heirType||(S.clan&&m>=2000))t=4;
  S.bag={sp:0,nm:BAGN[t][0],cap:BAGN[t][1],it:{}};if(m>=1200)bagAdd('hp',2,1);bagAdd('food',1,1)}
 const bagCount=()=>Object.keys(S.bag.it).reduce((a,k)=>a+(['herb','ore','silk','ink','core','jade'].includes(k)?0:S.bag.it[k]),0);
-function bagAdd(id,q=1,quiet){if(!S.bag)bagInit();const b=S.bag,I=BAGIT[id];let got=0;for(let i=0;i<q;i++){if(bagCount()>=b.cap){if(!quiet)log(`🎒 ${b.nm}เต็ม — ต้องทิ้ง${I.n}ไว้ข้างทาง`,'bad');break}b.it[id]=(b.it[id]||0)+1;got++}
+function bagAdd(id,q=1,quiet){if(!S.bag)bagInit();const b=S.bag,I=BAGIT[id];let got=0;for(let i=0;i<q;i++){if(!b.sp&&bagCount()>=b.cap){if(!quiet)log(`🎒 ${b.nm}เต็ม — ต้องทิ้ง${I.n}ไว้ข้างทาง`,'bad');break}b.it[id]=(b.it[id]||0)+1;got++}
  if(got&&!quiet&&Math.random()<.6)log(`🎒 เก็บ ${I.ic} ${I.n}${got>1?' ×'+got:''} ใส่${b.nm}`);return got}
 function bagUse(id){const b=S.bag;if(!b||!b.it[id])return false;b.it[id]--;if(!b.it[id])delete b.it[id];return true}
 const bagHas=id=>!!(S.bag&&S.bag.it[id]);
@@ -2974,12 +2975,15 @@ function bagTick(){if(!S.bag)bagInit();const b=S.bag;
  if(bagHas('fruit')&&S.age>lifeMax()-8&&bagUse('fruit')){S.lifespan+=15;log('🎒 🍑 กินผลไม้อายุวัฒนะ อายุขัย +15 ปี','epic')}
  if(bagHas('egg')&&(!S.pet||!S.pet.spirit)&&Math.random()<.25&&bagUse('egg')){const n=ch(['พยัคฆ์ขาว','จิ้งจอกเพลิง','มังกรน้ำ','หงส์น้ำแข็ง']);S.pet={i:'🐉',n,t:'สัตว์วิญญาณ',age:S.age,spirit:1,lv:0};log(`🥚 ไข่ในกระเป๋าฟักออกมาเป็น<b>${n}</b>ลูกอ่อน!`,'myth')}
  try{bagQTick(b)}catch(e){console.error(e)}
- if(!b.sp&&b.cap<14&&S.money>8000&&Math.random()<.1){const nx=BAGN.find(x=>x[1]>b.cap);if(nx){S.money-=500;b.nm=nx[0];b.cap=nx[1];log(`🎒 ซื้อ${nx[0]}ใบใหม่ (${nx[1]} ช่อง)`)}}}
+ bagFix(b);if(!b.sp&&b.cap<BAGN[BAGN.length-1][1]){const i=BAGN.findIndex(x=>x[1]>b.cap),pr=bagPrice(i);if(i>0&&S.money>pr*6&&Math.random()<.15){S.money-=pr;b.nm=BAGN[i][0];b.cap=BAGN[i][1];log(`🎒 ซื้อ${BAGN[i][0]}ใบใหม่ (${BAGN[i][1]} ช่อง)`)}}}
+function bagPrice(i){return Math.round(BAGP[i]*(S&&S.xian?5:1)*(S&&S.xt?20:1))}
+function bagFix(b){if(!b||b.sp)return;const i=BAGN.findIndex(x=>x[0]===b.nm);if(i>=0&&b.cap<BAGN[i][1])b.cap=BAGN[i][1];else if(i<0){const j=Math.min(BAGN.length-1,Math.max(0,BAGN.findIndex(x=>x[1]>=b.cap)));if(b.cap<BAGN[j][1]){b.cap=BAGN[j][1];b.nm=BAGN[j][0]}}}
+function bagBuy(){const b=S.bag;if(!b||b.sp)return;const i=BAGN.findIndex(x=>x[1]>b.cap);if(i<0)return toast('มีกระเป๋าใบใหญ่ที่สุดแล้ว');const pr=bagPrice(i);if(S.money<pr)return toast(`เงินไม่พอ — ต้องใช้ ${fmt(pr)}`);S.money-=pr;b.nm=BAGN[i][0];b.cap=BAGN[i][1];log(`🎒 ซื้อ${b.nm} (${b.cap} ช่อง) ราคา ${fmt(pr)}`);render();openBag()}
 function bagLoot(lv=1){if(S&&S.age>=8&&Math.random()<.05){eqGet(eqDrop(lv),'ตกอยู่ในซากศพ');return}const r=Math.random();const id=r<.25?'herb':r<.45?'hp':r<.58?'core':r<.68?'qi':r<.76?'cure':r<.84?'tal':r<.9?'gem':r<.94?'map':r<.97?'brk':r<.99?'egg':'fruit';bagAdd(id,1)}
 function bagRob(){if(!S.bag||S.bag.sp||!bagCount())return;const ks=Object.keys(S.bag.it);const k=ch(ks);const n=Math.ceil(S.bag.it[k]/2);S.bag.it[k]-=n;if(S.bag.it[k]<=0)delete S.bag.it[k];log(`🎒 ${BAGIT[k].ic} ${BAGIT[k].n} ${n} ชิ้นถูกชิงไปจาก${S.bag.nm}`,'bad')}
 function bagSell(id){const n=S.bag.it[id]||0;if(!n)return;const v=Math.round(BAGIT[id].v*n*.6*(S.xian?1:.7));S.money+=v;delete S.bag.it[id];toast(`ขาย ${BAGIT[id].n} ×${n} ได้ ${fmt(v)}`);render();openBag()}
 function openBag(){if(!S.bag)bagInit();const b=S.bag,ks=Object.keys(b.it);
- modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎒 ${b.nm}</h3><button class="gbtn" style="width:100%;margin-bottom:6px" onclick="openEquip()">⚔️ ชุดสวมใส่ (${eqOn().length} ชิ้น)</button><p class="tag2">${bagCount()}/${b.cap} ช่อง${b.sp?' · ✨ พื้นที่มิติ ไม่มีวันถูกขโมย':' · กระเป๋าธรรมดา อาจถูกปล้นได้'}${!b.sp?(S.sys?(S.sys.bagQ?' · 🟦 กำลังทำเควสถุงมิติ':' · 🟦 ระบบจะมอบเควสถุงมิติให้'):' · ต้องมีระบบจึงจะได้ถุงมิติ'):''}</p>
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎒 ${b.nm}</h3><button class="gbtn" style="width:100%;margin-bottom:6px" onclick="openEquip()">⚔️ ชุดสวมใส่ (${eqOn().length} ชิ้น)</button><p class="tag2">${b.sp?bagCount()+' ชิ้น · ∞ ไม่จำกัด':bagCount()+'/'+b.cap+' ช่อง'}${b.sp?' · ✨ พื้นที่มิติ ไม่มีวันถูกขโมย':' · กระเป๋าธรรมดา อาจถูกปล้นได้'}${!b.sp?(S.sys?(S.sys.bagQ?' · 🟦 กำลังทำเควสถุงมิติ':' · 🟦 ระบบจะมอบเควสถุงมิติให้'):' · ต้องมีระบบจึงจะได้ถุงมิติ'):''}</p>
  ${ks.length?ks.map(k=>`<div class="item"><div class="h"><b>${BAGIT[k].ic} ${BAGIT[k].n} ×${b.it[k]}</b><button class="sysb" style="flex:0 0 auto;padding:4px 10px" onclick="bagSell('${k}')">ขาย ${fmt(Math.round(BAGIT[k].v*b.it[k]*.6*(S.xian?1:.7)))}</button></div></div>`).join(''):'<p class="tag2">ยังไม่มีของ</p>'}
  <p class="tag2" style="margin-top:8px">ของบางอย่างใช้อัตโนมัติ: 💊 ตอนบาดเจ็บ · 🧪 ตอนป่วย · 🔴 ตอนใกล้ทะลวงขั้น · 📜 ตอนจะแพ้ · 🍑 ตอนใกล้หมดอายุ · 🗺️ ตอนเข้ามิติลับ</p>
  ${S.xian?xPanel():''}`)}
@@ -7015,7 +7019,7 @@ function bagGive(lo,hi,why){const id=bagRand(lo,hi);if(bagAdd(id,1,1))log(`🎁 
 openBag=function(){if(!S.bag)bagInit();const b=S.bag,ks=Object.keys(b.it).sort((x,y)=>bRar(y)-bRar(x)||BAGIT[y].v-BAGIT[x].v);
  const row=k=>{const x=BAGX[k]||{},R0=rarC(bRar(k)),sv=Math.round(BAGIT[k].v*b.it[k]*.6*(S.xian?1:.7));
   return `<div class="item bagit" style="--rc:${R0.x?'#c86bff':R0.c}"><div class="h" style="gap:6px;flex-wrap:wrap"><span>${rarName(k)} ×${b.it[k]} ${rarTag(bRar(k))}</span><span style="display:flex;gap:4px">${x.use?`<button class="sysb" style="padding:4px 10px" onclick="bagUseManual('${k}')">ใช้</button>`:''}<button class="sysb" style="padding:4px 10px" onclick="bagSell('${k}')">ขาย ${fmt(sv)}</button></span></div><p class="tag2" style="margin:4px 0 0">${bagDesc(k)}</p></div>`};
- modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎒 ${b.nm}</h3><button class="gbtn" style="width:100%;margin-bottom:6px" onclick="openEquip()">⚔️ ชุดสวมใส่ (${eqOn().length} ชิ้น)</button><p class="tag2">${bagCount()}/${b.cap} ช่อง${b.sp?' · ✨ พื้นที่มิติ ไม่มีวันถูกขโมย':' · กระเป๋าธรรมดา อาจถูกปล้นได้'}</p>
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎒 ${b.nm}</h3><button class="gbtn" style="width:100%;margin-bottom:6px" onclick="openEquip()">⚔️ ชุดสวมใส่ (${eqOn().length} ชิ้น)</button><p class="tag2">${b.sp?bagCount()+' ชิ้น · ∞ ไม่จำกัด':bagCount()+'/'+b.cap+' ช่อง'}${b.sp?' · ✨ พื้นที่มิติ ไม่มีวันถูกขโมย':' · กระเป๋าธรรมดา อาจถูกปล้นได้'}</p>
  ${ks.length?ks.map(row).join(''):'<p class="tag2">ยังไม่มีของ</p>'}
  <details style="margin-top:8px"><summary class="tag2">ระดับความหายาก</summary><p class="tag2">${RAR.map((R0,i)=>rarTag(i)).join(' ')}<br>ยิ่งหายากยิ่งมีผลแรงและขายได้แพง · ของหายากได้จากมิติลับ ศึกใหญ่ ภารกิจ และซากศัตรู</p></details>
  ${S.xian?xPanel():''}`)};
@@ -7873,14 +7877,14 @@ function qGrade(){const G=pickW([{v:0,w:35},{v:1,w:45},{v:2,w:20}]).v.v;window._
 function sysRefuse(i){const s=S.sys;if(!s||!s.quests[i])return;const q=s.quests[i],c=Math.min(s.sp||0,10);s.sp-=c;s.quests.splice(i,1);sysLog(`ปฏิเสธเควส: ${q.n}${c?` — ระบบหัก SP −${c}`:''}`,'fail');render();openSys()}
 {const _os=openSys;openSys=function(){const r=_os.apply(this,arguments);try{const s=S&&S.sys;if(!s||!s.quests||!s.quests.length)return r;const H=[...document.querySelectorAll('#modal h4')].find(h=>/เควสรอง/.test(h.textContent));if(!H)return r;let el=H.nextElementSibling,i=0;while(el&&el.classList&&el.classList.contains('sysq')&&i<s.quests.length){const b=document.createElement('button');b.className='sysb';b.style.cssText='margin-top:4px;font-size:11px;opacity:.85';b.textContent='✖ ปฏิเสธ (SP −10)';b.setAttribute('onclick',`sysRefuse(${i})`);el.appendChild(b);el=el.nextElementSibling;i++}}catch(e){console.error(e)}return r}}
 // ---- บันไดถุงมิติ: ถุงมิติ → แหวนมิติ → โลกในแหวน (ต้องทำเควสทุกขั้น) ----
-function bagQTick(b){if(!S.sys)return;const t=b.sp||0;if(t>=3)return;const need=[0,12,20][t];if(S.sys.lv<need)return;
- if(!S.sys.bagQ&&S.age>=8&&Math.random()<(t?.2:.35)){const ri=Math.max(0,realmIdx()),W=(S.xian?5:1)*(S.xt?20:1),gm=S.gr?S.gr.money:0,yrs=t?R(6,9):R(5,8);
-  const q={t,k0:S.kills,m0:S.money,dl:S.age+yrs,nk:[3,7,12][t]+Math.floor(ri/2),nm:Math.round(Math.max([800,6000,40000][t]*W,gm*yrs*[.5,.8,1.1][t])/10)*10,it:[null,['core',3],['jade',4]][t]};S.sys.bagQ=q;
+function bagQTick(b){if(!S.sys)return;const t=b.sp||0;if(t>=3)return;const need=[6,16,28][t];if(S.sys.lv<need)return;
+ if(!S.sys.bagQ&&S.age>=8&&Math.random()<(t?.2:.35)){const ri=Math.max(0,realmIdx()),W=(S.xian?5:1)*(S.xt?20:1),gm=S.gr?S.gr.money:0,yrs=t?R(7,10):R(6,9);
+  const q={t,k0:S.kills,m0:S.money,dl:S.age+yrs,nk:[10,22,40][t]+ri,nm:Math.round(Math.max([4000,30000,200000][t]*W,gm*yrs*[1.2,1.8,2.5][t])/10)*10,it:[['core',4],['core',12],['jade',12]][t]};S.sys.bagQ=q;
   sysLog(`🎒 <b>เควสพิเศษ: ${['ปลดล็อกถุงมิติ','ยกระดับเป็นแหวนมิติ','สร้างโลกในแหวน'][t]}</b> — ชนะการต่อสู้ ${q.nk} ครั้ง · หาเงินเพิ่ม ${fmt(q.nm)}${q.it?` · มี ${BAGIT[q.it[0]].ic} ${BAGIT[q.it[0]].n} ${q.it[1]} ชิ้น`:''} ภายใน ${yrs} ปี`,'myth')}
  const q=S.sys.bagQ;if(!q)return;if(q.t==null)q.t=0;if(q.t!==t){S.sys.bagQ=null;return}
  if(q.pz){if(q._lk!=null){q.k0+=S.kills-q._lk;q.m0+=S.money-q._lm}q._lk=S.kills;q._lm=S.money;q.dl++;return}q._lk=null;
  const okI=!q.it||bagN(q.it[0])>=q.it[1];
- if(S.kills-q.k0>=q.nk&&S.money-q.m0>=q.nm&&okI){if(q.it)bagTake(q.it[0],q.it[1]);b.sp=t+1;b.cap=[0,30,60,120][b.sp];b.nm=['','ถุงมิติ','แหวนมิติ','โลกในแหวน'][b.sp];S.sys.bagQ=null;sysLog(`🎒 เควสสำเร็จ! ได้รับ <b>${b.nm}</b> — ${b.cap} ช่อง ไม่มีวันถูกขโมย`,'myth');keyAdd(`ได้รับ${b.nm}จากระบบ`);S.flags.spBag=1}
+ if(S.kills-q.k0>=q.nk&&S.money-q.m0>=q.nm&&okI){if(q.it)bagTake(q.it[0],q.it[1]);b.sp=t+1;b.cap=9999;b.nm=['','ถุงมิติ','แหวนมิติ','โลกในแหวน'][b.sp];S.sys.bagQ=null;sysLog(`🎒 เควสสำเร็จ! ได้รับ <b>${b.nm}</b> — เก็บของได้ไม่จำกัด ไม่มีวันถูกขโมย${['',' ',' · ชนะศัตรูได้ของเพิ่มเป็นสองเท่า',' · สมุนไพรและยางอกเงยในโลกในแหวนทุกปี'][b.sp]}`,'myth');keyAdd(`ได้รับ${b.nm}จากระบบ`);S.flags.spBag=1}
  else if(S.age>=q.dl){S.sys.bagQ=null;const d=Math.min(S.sys.sp||0,8+t*6);S.sys.sp-=d;sysLog(`🎒 เควส${['ถุงมิติ','แหวนมิติ','โลกในแหวน'][t]}ล้มเหลว${d?` — ยึด SP −${d}`:''} · ระบบจะให้โอกาสใหม่ภายหลัง`,'fail')}}
 // ---- ชื่อเสียงมีขึ้นมีลง · อายุขัยจากของซ้อนกันได้น้อยลง ----
 function famF0(){const ri=Math.max(0,realmIdx());return 3000*(1+ri*.5)*(S.xian?3:1)*(S.xt?10:1)}
@@ -8625,6 +8629,11 @@ async function admPush(){let n='?';try{const j=await api('pushstat',{key:admK()}
  <button class="pbtn" style="width:100%" onclick="admPushGo(this)">📨 ส่งเลย</button><p class="tag2" style="margin-top:6px">💡 ประกาศ @everyone ในแชทก็ส่งแจ้งเตือนให้อัตโนมัติอยู่แล้ว · กด ↩ ข้างข้อความในแชท หรือตอบรายงาน/รีวิว = แจ้งเตือนคนนั้นคนเดียว</p>`,'admpush')}
 async function admPushGo(b){const x=($('apX').value||'').trim(),t=($('apT').value||'').trim();if(!x)return toast('พิมพ์ข้อความก่อน');if(!confirm('ส่งแจ้งเตือนถึงทุกคนที่เปิดรับ?'))return;b.disabled=true;b.textContent='กำลังส่ง…';
  try{const j=await api('pushsend',{key:admK(),t,x});toast(`📨 ส่งสำเร็จ ${j.sent||0} เครื่อง${j.rm?` · ลบเครื่องที่เลิกรับ ${j.rm}`:''}${j.cap?' (ยังส่งต่อเบื้องหลัง)':''}`);closeM()}catch(e){toast(e.message==='admin'?'รหัสแอดมินไม่ถูกต้อง':'ส่งไม่สำเร็จ');b.disabled=false;b.textContent='📨 ส่งเลย'}}
+
+// ---- ถุงมิติไม่จำกัด · แหวนมิติ: ของตกเพิ่ม · โลกในแหวน: ของงอกเงยทุกปี ----
+{const _bl=bagLoot;bagLoot=function(lv){const r=_bl.apply(this,arguments);try{if(S&&S.bag&&S.bag.sp>=2&&Math.random()<.5)_bl.call(this,lv)}catch(e){}return r}}
+{const _bt=bagTick;bagTick=function(){const r=_bt.apply(this,arguments);try{const b=S.bag;if(b&&b.sp)b.cap=9999;if(b&&b.sp>=3&&Math.random()<.6){const id=ch(['herb','herb','qi','hp','core','cure']);b.it[id]=(b.it[id]||0)+1;if(Math.random()<.15)log(`🌍 ${BAGIT[id].ic} ${BAGIT[id].n}งอกเงยขึ้นเองในโลกในแหวน`)}}catch(e){}return r}}
+{const _ob=openBag;openBag=function(){try{if(S&&S.bag){bagFix(S.bag);if(S.bag.sp)S.bag.cap=9999}}catch(e){}const r=_ob.apply(this,arguments);try{const b=S.bag;if(b&&!b.sp){const i=BAGN.findIndex(x=>x[1]>b.cap);const h=$('modal').querySelector('h3');if(h&&i>0&&!$('bagBuyB')){h.insertAdjacentHTML('afterend',`<button id="bagBuyB" class="gbtn" style="width:100%;margin-bottom:6px" onclick="bagBuy()">🛒 ซื้อ${BAGN[i][0]} (${BAGN[i][1]} ช่อง) · ${fmt(bagPrice(i))}</button>`)}}}catch(e){}return r}}
 </script>
 </body>
 </html>
