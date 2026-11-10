@@ -1258,7 +1258,7 @@ function yearEnd(){
 // ============ HEALTH ============
 function healthTick(){
  if(!S.chronic&&S.age<55)S.hp=Math.min(S.maxHp,S.hp+R(6,12));
- if(S.age<=6){const r=(S.family.inf||.05)*.6*(INF_DECAY[S.age-1]||0)*(S.talent.m>=3?.5:1);
+ if(S.age<=6){const r=(S.family.inf||.05)*.25*(INF_DECAY[S.age-1]||0)*(S.talent.m>=3?.5:1);
   if(Math.random()<r){S.deathCause=ch(['ไข้สูงตั้งแต่ยังเป็นทารก','ร่างกายอ่อนแอมาตั้งแต่แรกเกิด','ป่วยหนักในฤดูหนาวที่หนาวจัด','โรคท้องร่วงในวัยทารก']);return}}
  const ac=(S.age<6?.008:S.age>60?.01:.005)*(realmIdx()>=4?.3:1)*(tr('lucky')?.5:1)*(tr('unlucky')?2:1);
  if(Math.random()<ac){const a=S.age<12?ch(['พลัดตกน้ำในฤดูน้ำหลาก','ตกต้นไม้','ถูกงูเห่ากัด','ถูกสุนัขบ้ากัด','บ้านไฟไหม้ตอนกลางคืน']):ch(['พลัดตกน้ำในฤดูน้ำหลาก','ตกจากหลังม้า','ถูกงูเห่ากัด','หิมะถล่มขณะเดินทาง','ฟ้าผ่าลงข้างตัว','บ้านไฟไหม้ตอนกลางคืน']);const dmg=Math.round(R(40,95)*(1-gv('armor','red')-eqA('red')-bufA('red'))*(tr('iron')?.8:1));S.hp-=dmg;
@@ -5825,7 +5825,7 @@ function bossTick(){if(!S||!S.alive||S.beastMode||S.age<16||S.age>95||choice._cu
  const x=!!S.xian,B=ch(x?BOSS_X:BOSS_M),base=(x?55000:20000)*(typeof wsM==='function'?wsM():1),ep=Math.round(Math.max(base,total()*.75)*(.9+Math.random()*.3));
  const r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100))),esc=Math.max(.05,Math.min(.55,.06+.35*Math.min(1,r)+(S.int||0)/2500)),spare=Math.max(.05,Math.min(.6,.12+(S.cha||0)/450+(S.karma<0?.08:0)));
  S.bossN=(S.bossN||0)+1;S.bossY=S.age;setScene('fight');
- const die=how=>{S.deathCause=`ถูก${B.n}สังหาร${how}`;S.hp=0};
+ const die=how=>{if(!S.bossSurv&&Math.random()<.6){S.bossSurv=1;S.hp=1;S.power=Math.round(S.power*.9);joy(-15);log(`💀 ${B.n}ทิ้งคุณไว้ให้ตายกลางป่า… แต่คุณรอดมาได้อย่างปาฏิหาริย์ (พลังยุทธ์ −10%)`,'bad',true);return}S.deathCause=`ถูก${B.n}สังหาร${how}`;S.hp=0};
  const fled=()=>{S.hp=Math.max(1,Math.round(S.maxHp*.15));joy(-8);log(`🏃 หนีรอดจาก${B.n}มาได้อย่างหวุดหวิด ร่างกายบาดเจ็บสาหัส`,'bad',true)};
  const won=()=>{S.fame+=x?1500:1200;S.power+=Math.round(total()*.06);joy(15);S.karma+=x?0:5;S.flags.bossKill=1;let a=null;try{a=newArt(3);Array.prototype.push.call(S.arts,a)}catch(e){}
   log(`👑 <b>ล้ม${B.n}ได้ในการดวลตัวต่อตัว!</b> ชื่อของคุณก้องไปทั่ว${x?'ทุกแดนเซียน':'ยุทธภพ'}${a?` — ได้ ${artHtml(a)}`:''}`,'myth',true)};
@@ -7785,9 +7785,9 @@ function huntTick(){const H=S.hunts||[];if(!H.length||choice._cur||modalOpen||S.
   huntTick();
   if(!choice._cur&&!modalOpen&&!S.beastMode&&S.age>=16&&S.money>ECO_P0[w]*20&&Math.random()<.02){choice('🏺 งานประมูลใหญ่',`ข่าวลือว่ามีงานประมูลใหญ่ที่${typeof townName==='function'?townName():'เมือง'} ของหายากหลายชิ้นจะถูกนำออกมา`,[{t:'🏺 ไปดู',s:'เปิดโรงประมูล',f(){setTimeout(openAuction,50)}},{t:'🚶 ไม่สนใจ',s:'',skip:true,f(){}}])}}}catch(e){console.error(e)}return r}}
 
-// ==== ประมูลทั่วยุทธภพ (ผู้เล่นจริง แบบเรียลไทม์) · สกุลทองคำ ====
-const PA_RATE={m:1e5,x:5e6,g:5e8};
-const paRate=()=>PA_RATE[ECO_W()];
+// ==== ประมูลทั่วยุทธภพ (ผู้เล่นจริง แบบเรียลไทม์) · สกุลตำลึง (v15) ====
+const PA_RATE={m:1,x:1,g:1};
+const paRate=()=>1;
 const PA={sum:null,seen:{},cur:null,poll:null,off:0,shown:{},li:-1,busy:0};
 const PA_PF=['','ต้องห้าม','ศักดิ์สิทธิ์','ที่สาบสูญ','บรรพกาล','ไร้เทียมทาน'];
 const PA_SJ=['จักรพรรดิองค์แรก','เทพกระบี่','จอมมารพันปี','ผู้บรรลุเต๋า','หงส์เพลิง','มังกรทอง','ราชินีจิ้งจอก','กษัตริย์อสูร','เซียนนิรนาม','ดาวตกเก้าดวง','ปรมาจารย์ไร้นาม','เทพธิดาจันทรา','บรรพชนแห่งยุทธภพ','ผู้ฝ่าทัณฑ์หมื่นครั้ง'];
@@ -7811,7 +7811,7 @@ function paApply(it){const e=paEff(it);let t=e.d;
   case'brk':bagAdd('brk',e.v,true);S.tribPrep=Math.min(3,(S.tribPrep||0)+Math.min(3,e.v));S.btFail=(S.btFail||0)+e.v;break;
   case'myst':{const x=Math.random();if(x<.4){const g=pctPow(.35+Math.random()*.3);S.power+=g;t=`พลังยุทธ์ +${fmt(g)}`}else if(x<.7){S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.15).toFixed(2)});t='พรสวรรค์ ×1.15 ถาวร'}else if(x<.9){const a=newArt(4);S.arts.push(a);t=`ได้ ${artHtml(a)}`}else{const v=S.xt?50000:S.xian?800:60;if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;t=`อายุขัย +${fmt(v)} ปี`}break}}
  return t}
-const paGold=g=>`🪙 ${fmt(g)} ทองคำ`,paCost=g=>Math.round(g*paRate());
+const paGold=g=>`💰 ${fmt(g)} ตำลึง`,paCost=g=>Math.round(g);
 // ---- ประกาศ ----
 (function(){try{const st=document.createElement('style');st.textContent=`
 #paBan{position:fixed;left:50%;top:10px;transform:translateX(-50%);z-index:9999;width:min(92vw,380px);background:linear-gradient(160deg,#2b1d0e,#4a3112 55%,#2b1d0e);border:3px solid #f0c860;border-radius:12px;box-shadow:0 0 0 2px #6b4a14,0 8px 30px rgba(240,200,96,.35);color:#fff3cf;padding:10px 12px;font-size:14px;animation:paIn .35s ease-out}
@@ -7837,12 +7837,12 @@ function paJoin(){paBanX();if(!S||!S.alive)return;if(S.ch==='short')return toast
 // ---- ห้องประมูล ----
 function openPAuc(){if(!onlineOK)return toast('ยังเชื่อมต่อเซิร์ฟเวอร์ไม่ได้');PA.li=-1;PA.shown={};
  modal(`<button class="xbtn" onclick="paLeave()">✕</button><h3>🏛️ ประมูลทั่ว${S.xt?'เก้าชั้นฟ้า':S.xian?'โลกเซียน':'ยุทธภพ'}</h3>
- <p class="tag2">ผู้เล่นจริงทั้งแผ่นดินแข่งกันเสนอราคา · ชนะได้รอบละ 2 ชิ้น วันละ 3 ชิ้น · 1 ทองคำ = ${fmt(paRate())} ตำลึง · เงินของคุณ ≈ <b id="paMy"></b> · ผู้ร่วมงาน <b id="paVw">-</b> คน</p>
+ <p class="tag2">ผู้เล่นจริงทั้งแผ่นดินแข่งกันเสนอราคา · ชนะได้รอบละ 2 ชิ้น วันละ 3 ชิ้น · ราคาเป็นตำลึง ยิ่งของดียิ่งแพง (10 ถึงหลักร้อยล้าน) · เงินของคุณ <b id="paMy"></b> · ผู้ร่วมงาน <b id="paVw">-</b> คน</p>
  <div class="paR"><div id="paLot" class="paLot"><div class="tag2">กำลังเชื่อมต่อ…</div></div>
  <div class="paTm"><i id="paTm" style="width:100%"></i></div><div style="display:flex;justify-content:space-between;align-items:baseline"><span class="tag2" id="paTt"></span><span class="tag2" id="paHi"></span></div>
  <div class="paBid" id="paBid">—</div>
  <div class="paB"><button onclick="paBidX(1.05)" id="paB1">+5%</button><button onclick="paBidX(1.15)">+15%</button><button onclick="paBidX(1.4)">+40%</button></div>
- <div class="paB"><input id="paIn" type="number" min="1" inputmode="numeric" placeholder="พิมพ์ราคาเอง (ทองคำ)" onkeydown="if(event.key==='Enter')paBidIn()"><button onclick="paBidIn()">🔨 เสนอราคา</button></div>
+ <div class="paB"><input id="paIn" type="number" min="1" inputmode="numeric" placeholder="พิมพ์ราคาเอง (ตำลึง)" onkeydown="if(event.key==='Enter')paBidIn()"><button onclick="paBidIn()">🔨 เสนอราคา</button></div>
  <div class="tag2" id="paMsg" style="min-height:1.3em;margin-top:4px"></div></div>
  <h4 style="margin:10px 0 2px">⭐ โหวตชิ้นถัดไป <span class="tag2">(1 เสียงต่อรอบ · ชิ้นที่ได้เสียงมากสุดจะขึ้นก่อน)</span></h4><div class="paUp" id="paUp"></div>
  <div class="paFl" id="paFl"></div><div class="paB"><input id="paCh" maxlength="80" placeholder="พิมพ์คุยกับคนในงาน…" onkeydown="if(event.key==='Enter')paChat()" style="flex:3"><button onclick="paChat()">💬 ส่ง</button></div>
@@ -7850,10 +7850,10 @@ function openPAuc(){if(!onlineOK)return toast('ยังเชื่อมต่
  paPoll(1);clearInterval(PA.poll);PA.poll=setInterval(()=>{if($('modal').dataset.k!=='pauc'){clearInterval(PA.poll);return}paPoll(0)},2000);clearInterval(PA.tk);PA.tk=setInterval(paTickUI,250)}
 function paLeave(){clearInterval(PA.poll);clearInterval(PA.tk);closeM()}
 async function paPoll(first){if(PA.busy)return;PA.busy=1;try{const j=await api('pa',{join:1});if(!j||!j.ok)return;PA.off=(j.now||Date.now())-Date.now();PA.cur=j;paRender(j);paWins(j.wins)}catch(e){const m=$('paMsg');if(m)m.textContent='เชื่อมต่อสะดุด กำลังลองใหม่…'}finally{PA.busy=0}}
-function paRender(j){if($('modal').dataset.k!=='pauc')return;const c=j.cur;if($('paVw'))$('paVw').textContent=j.vw;if($('paMy'))$('paMy').textContent=paGold(Math.floor((S.money||0)/paRate()));
+function paRender(j){if($('modal').dataset.k!=='pauc')return;const c=j.cur;if($('paVw'))$('paVw').textContent=j.vw;if($('paMy'))$('paMy').textContent=paGold(Math.floor(S.money||0));
  if(!c||c.phase!=='open'){$('paLot').innerHTML=`<div style="text-align:center;padding:14px 0">🕯️ งานรอบนี้ปิดแล้ว<br><span class="tag2">${c&&c.next?'รอบหน้าเริ่มในอีกราว '+Math.max(1,Math.round((c.next-(Date.now()+PA.off))/60000))+' นาที':'รอประกาศรอบหน้า'}</span></div>`;$('paBid').textContent='—';$('paTt').textContent='';$('paHi').textContent='';paSoldRender(c);$('paUp').innerHTML='';return}
  const L=c.lots[c.li],it=paItem(L.r,L.k),R0=rarC(L.r);
- if(PA.li!==c.li){PA.li=c.li;$('paLot').innerHTML=`<div class="gl" style="background:radial-gradient(circle at 80% 20%,${R0.c},transparent 70%)"></div><div class="tag2">ชิ้นที่ ${c.lots.filter(x=>x.sold).length+1}/${c.lots.length}</div><div class="nm" style="color:${R0.c}">${esc(it.n)}</div>${rarTag(L.r)}<div style="margin-top:6px">${paEff(it).d}</div><div class="tag2" style="margin-top:4px">ราคาเริ่ม ${paGold(L.g)} (≈ ${fmt(paCost(L.g))} ตำลึง)</div>`;try{sfx('click')}catch(e){}}
+ if(PA.li!==c.li){PA.li=c.li;$('paLot').innerHTML=`<div class="gl" style="background:radial-gradient(circle at 80% 20%,${R0.c},transparent 70%)"></div><div class="tag2">ชิ้นที่ ${c.lots.filter(x=>x.sold).length+1}/${c.lots.length}</div><div class="nm" style="color:${R0.c}">${esc(it.n)}</div>${rarTag(L.r)}<div style="margin-top:6px">${paEff(it).d}</div><div class="tag2" style="margin-top:4px">ราคาเริ่ม ${paGold(L.g)}</div>`;try{sfx('click')}catch(e){}}
  PA.end=c.end;const b=j.bid;$('paBid').innerHTML=b.hi?`${paGold(b.hi)}`:`${paGold(L.g)} <span class="tag2">ยังไม่มีคนเสนอ</span>`;$('paHi').innerHTML=b.hi?(b.me?'<b style="color:#5fd47a">👑 คุณนำอยู่</b>':`ผู้นำ: <b>${esc(b.bn)}</b>`):'';PA.hi=b.hi;PA.min=b.hi?Math.ceil(b.hi*1.05):L.g;
  // ชิ้นถัดไป + โหวต
  $('paUp').innerHTML=c.lots.map((x,i)=>{if(x.sold||i===c.li)return'';const I=paItem(x.r,x.k),v=c.votes['l'+i]||0;return`<div class="c"><b style="color:${rarC(x.r).c}">${esc(I.n)}</b><br>${rarTag(x.r)}<br>${paGold(x.g)}<button onclick="paVote(${i})" ${j.myv>=0?'disabled':''}>${j.myv===i?'✅ ':'⭐ '}${v}</button></div>`}).join('')||'<span class="tag2">ชิ้นสุดท้ายของรอบนี้</span>';
@@ -7872,8 +7872,8 @@ async function paVote(i){if(!PA.cur||!PA.cur.cur)return;try{const j=await api('p
 // ---- รับของที่ชนะ ----
 async function paClaim(){if(PA.claiming)return;PA.claiming=1;try{const j=await api('pa',{});if(j&&j.ok)paWins(j.wins)}catch(e){}finally{PA.claiming=0}}
 function paWins(L){if(!L||!L.length||!S||!S.alive)return;S.paDone=S.paDone||[];for(const w of L){let o=null;try{o=JSON.parse(w)}catch(e){}if(!o)continue;const key=o.sid+':'+o.li;if(S.paDone.includes(key)){api('paclaim',{w}).catch(()=>{});continue}
-  S.paDone.push(key);if(S.paDone.length>40)S.paDone.shift();const it=paItem(o.r,o.k),cost=paCost(o.g);
-  if(S.money>=cost){S.money-=cost;const t=paApply(it);log(`🏛️ ชนะการประมูลทั่ว${S.xt?'เก้าชั้นฟ้า':S.xian?'โลกเซียน':'ยุทธภพ'}! ได้ <b>${esc(it.n)}</b> ${rarTag(it.r)} ในราคา ${paGold(o.g)} (${fmt(cost)} ตำลึง) — ${t}`,'myth',true);keyAdd(`ชนะประมูลผู้เล่น ${it.n}`);S.flags.paWin=1}
+  S.paDone.push(key);if(S.paDone.length>40)S.paDone.shift();const it=paItem(o.r,o.k),cost=o.u?Math.round(o.g):Math.round(o.g*({m:1e5,x:5e6,g:5e8}[ECO_W()]));
+  if(S.money>=cost){S.money-=cost;const t=paApply(it);log(`🏛️ ชนะการประมูลทั่ว${S.xt?'เก้าชั้นฟ้า':S.xian?'โลกเซียน':'ยุทธภพ'}! ได้ <b>${esc(it.n)}</b> ${rarTag(it.r)} ในราคา ${paGold(cost)} — ${t}`,'myth',true);keyAdd(`ชนะประมูลผู้เล่น ${it.n}`);S.flags.paWin=1}
   else{S.fame=Math.max(0,S.fame-40);log(`💸 ชนะประมูล <b>${esc(it.n)}</b> แต่เงินไม่พอจ่าย (${fmt(cost)} ตำลึง) — ถูกยึดสิทธิ์และเสียชื่อเสียง −40`,'bad',true)}
   api('paclaim',{w}).catch(()=>{})}try{render()}catch(e){}}
 // ---- ทางเข้า + ดักผล meet ----
@@ -9517,6 +9517,247 @@ function peerHarem(p,i){const sp=S.sp,spN=sp?sp.n:S.spouse;
  if(roll01(hmAskP())){S.haremOK=1;S.haremNoAt=null;if(sp)sp.aff=Math.max(0,sp.aff-5);log(`💬 ${spN}ยอมให้${p.name}เข้ามาอยู่ด้วย`,'epic');add()}
  else{S.haremNoAt=S.age;if(sp)sp.aff=Math.max(0,sp.aff-10);joy(-4);log(`💬 ${p.name}ตอบรับ แต่${spN}ไม่ยอม — เรื่องจึงต้องจบลง`,'bad')}}
 try{Object.assign(I18N.d,{'🌸 จีบเข้าตำหนักใน':'🌸 Court into your household','เป็นเพื่อนกันอยู่แล้ว โอกาสสูงขึ้น':'Already friends — better odds','ไม่จำกัดจำนวน':'no limit'})}catch(e){}
+
+// ===================== v15: เควสเด็ก · ร้านค้าขยาย · ที่ดินตระกูล · เมือง · เมนูจัดหมวด · สมดุล =====================
+const W15=()=>({m:1,x:50,g:4000}[ECO_W()]);
+const w15n=(m,x,g)=>({m,x,g}[ECO_W()]);
+// ---------- 1) เควสตอนเด็ก ----------
+const QAGE={power:6,qi:6,int:6,karma:6,cha:8,art:10,pill:10,realm:10,fame:12,win:12,karmaDown:12,join:12,rank:12,money:14,gear:14,house:16,marry:18,kid:18,woo:18,lov:18};
+const qAgeOK=k=>(S.age||0)>=(QAGE[k]!=null?QAGE[k]:14);
+{const _qk=qKeys;qKeys=function(){return _qk.apply(this,arguments).filter(qAgeOK)}}
+{const _tr=tqRefresh;tqRefresh=function(){if(S&&S.age<14){S.tq=[];S.tqY=S.age;return}return _tr.apply(this,arguments)}}
+{const _ot15=openTown;openTown=function(p){const r=_ot15.apply(this,arguments);try{if(p==='board'&&S.age<14){const m=$('modal');m.insertAdjacentHTML('beforeend',`<div class="item" style="margin-top:8px"><b>🧒 ยังเด็กเกินไป</b><p>กระดานภารกิจรับงานได้ตั้งแต่อายุ 14 ปี — ตอนนี้ไปเล่นและเรียนรู้ก่อน (อีก ${14-S.age} ปี)</p></div>`)}}catch(e){}return r}}
+function q15Clean(){if(!S||!S.sys||!S.sys.quests)return;const n0=S.sys.quests.length;S.sys.quests=S.sys.quests.filter(q=>qAgeOK(q.k));if(S.sys.quests.length<n0)sysLog('ระบบยกเลิกเควสที่ยังไม่เหมาะกับวัย — รอโตอีกหน่อยนะโฮสต์')}
+
+// ---------- 3) ร้านสมบัติ: ของมากขึ้น หลากหลายขึ้น ----------
+const ECO_CT2=[['f','🍶 อาหารและสุรา',24],['g','💝 ของขวัญ',20],['e','🌾 ทรัพย์สินตระกูล',16],['m','🧺 วัตถุดิบ',14],['s','🐎 พาหนะและสัตว์',14]];
+const ECO_EX={w:12,a:10,p:15,k:8,c:10,t:8,b:6,x:4};
+const ECO_N2={
+ m:{w:[['ดาบคู่','กระบี่อ่อน','ทวนยาว','หอกสามง่าม','ตะขอคู่','มีดบิน','ลูกดอก','โซ่เหล็ก','ค้อน','กริช'],['ลายเมฆ','เพลิงแดง','วายุ','เงาจันทร์','ลมหนาว','ภูผา','เสือดาว','อินทรี']],
+  a:[['เสื้อเกราะเกล็ด','ผ้าพันแขน','เข็มขัด','เกราะอก','หน้ากาก'],['หนังหมี','ไหมแดง','เหล็กดำ','ทองเหลือง','ขนจิ้งจอก','ใยแมงมุมยักษ์']],
+  p:[['ยาเม็ดทอง','ยาผง','น้ำหวาน','ยาดอง','ยาหอม','ยานัตถุ์'],[['ฟอกเลือด','hp'],['เสริมกระดูก','qi'],['ตาทิพย์','int'],['ร้อยปี','life'],['รวมจิต','int'],['ห้าธาตุ','qi'],['ชุบชีวา','life']]],
+  k:[['คัมภีร์ลับ','ตำราเก่า','บันทึกเดินทาง','ม้วนไหม'],['ทวน','ลมปราณเย็น','เท้า','ลับเฉพาะ','อาวุธลับ','จิตสงบ']],
+  c:[['เข็มกลัด','ตุ้มหู','สร้อยคอ','พู่ห้อย','ตราประทับ'],[['เสน่ห์ล้น','cha'],['เมตตา','karma'],['ลือนาม','fame'],['ปราดเปรื่อง','int']]],
+  t:[['ยันต์กันศัสตรา','ธงสามเหลี่ยม','กลองศึก'],['ใจเหล็ก','ฟ้าผ่า','ร้อยทัพ','ไม่ถอย']],
+  b:[['สร้างบ่อน้ำ','สร้างหอระฆัง','สร้างตลาด'],['ประจำตำบล','กลางเมือง','ริมทาง']],
+  x:[['ขวดแก้วผนึก','ตุ๊กตาไม้แกะ','กุญแจไร้รู'],['','ที่ไม่มีใครจำได้','จากใต้ทะเล']],
+  f:[['สุรา','หมั่นโถว','ขาหมู','ซาลาเปา','ชา','บะหมี่','ขนมไหว้พระจันทร์','เป็ดย่าง','น้ำแกง','เกี๊ยว'],['ดอกท้อ','หมื่นลี้','ร้อยปี','สูตรวัง','ภูเขาเหลือง','ริมทะเลสาบ','ดอกเหมย','ไผ่เขียว']],
+  g:[['ปิ่นหยก','พัดไหม','ผ้าเช็ดหน้าปัก','กล่องดนตรี','ภาพวาด','หวีงาช้าง','แจกันลายคราม','กลอนรัก'],['คู่รัก','จันทร์เต็มดวง','ดอกบัว','นกยูง','ราตรี','ใจเดียว']],
+  e:[['โฉนดที่นา','ห้องแถว','สวนชา','โรงสี','ท่าเรือ','ไร่ม่อน','ร้านผ้า','โกดัง'],['ริมแม่น้ำ','กลางเมือง','เชิงเขา','ชายแดน','ใกล้วัด']],
+  m:[['ห่อ','มัด','กล่อง','กระสอบ'],[['สมุนไพร','herb'],['แร่เหล็ก','ore'],['หยก','jade'],['หมึก','ink'],['ไหม','silk'],['แก่นอสูร','core']]],
+  s:[['ม้า','ล่อ','อินทรี','สุนัขล่าเนื้อ','เหยี่ยว','กระเรียน','ลา','วัวศึก'],['ขาว','ดำ','แดงเพลิง','ลายเสือ','ทุ่งหญ้า','ภูเขา']]},
+ x:{w:[['ดาบเมฆา','เข็มวิญญาณ','กระจกสังหาร','วงแหวนบิน','หอกอัสนี','แส้วิญญาณ'],['ฟ้าคราม','วิญญาณหยก','ทะเลเพลิง','จันทร์เงิน','พันปี','ลมดารา']],
+  a:[['เสื้อคลุมเต๋า','มงกุฎหยก','รองเท้าเมฆ','เข็มขัดวิญญาณ'],['ไหมจันทร์','เกล็ดเต่าวิญญาณ','ขนหงส์','หยกมังกร','ปราณเมฆ']],
+  p:[['ยาเม็ดวิญญาณ','น้ำทิพย์หยก','ผลเซียน','เกสรพันปี','น้ำผึ้งวิญญาณ'],[['หลอมวิญญาณ','qi'],['ชะตายืน','life'],['จิตใส','int'],['ฟื้นกายา','hp'],['ทะลวงเส้น','qi'],['หมื่นปี','life']]],
+  k:[['ตำราลับเซียน','ม้วนดารา','แผ่นหยกจารึก'],['เงาวิญญาณ','กระบี่ใจ','ภูผาเหิน','เพลิงเย็น','ลมสวรรค์']],
+  c:[['ลูกปัดวิญญาณ','กระดิ่งเมฆ','จี้มังกร','ตราเซียน'],[['เสน่ห์จันทร์','cha'],['กุศลพันปี','karma'],['เลื่องลือแดน','fame'],['ญาณเต๋า','int']]],
+  t:[['ค่ายกลกระบี่','ยันต์ผนึกฟ้า','ธงห้าธาตุ'],['พันอสูร','เกราะวิญญาณ','อัสนีฟ้า','ทลายภูผา']],
+  b:[['สร้างสะพานเมฆ','สร้างหอธรรม','สร้างบ่อปราณ'],['ให้ศิษย์','บนเขาวิญญาณ','ในหุบเซียน']],
+  x:[['ไข่มังกรหิน','กล่องหยกปิดตาย','กระดิ่งไร้เสียง'],['','จากยุคบรรพกาล','ที่เซียนทิ้งไว้']],
+  f:[['สุราเซียน','ผลท้อวิญญาณ','ชาเมฆ','ขนมหยก','น้ำค้างดอกไม้','ข้าววิญญาณ','ซุปมังกร'],['พันปี','ยอดเขา','สระมรกต','จันทร์คืนเพ็ญ','ดอกบัวเซียน','วังนภา']],
+  g:[['ปิ่นวิญญาณ','พิณหยก','ดอกบัวนิรันดร์','กระจกคู่ใจ','ผ้าแพรเมฆ','ภาพจันทร์'],['ใจเดียว','พันชาติ','ราตรีดารา','ฟ้าลิขิต']],
+  e:[['เหมืองหยก','สวนสมุนไพรพันปี','ถ้ำวิญญาณ','หุบเขาปราณ','ทะเลสาบหยก','ภูเขาลอย'],['ทางตะวันออก','กลางทะเลเมฆ','ใต้น้ำตก','ริมฟ้า']],
+  m:[['หีบ','ถุงวิญญาณ','กล่องหยก'],[['สมุนไพรพันปี','herb'],['แร่วิญญาณ','ore'],['หยกวิญญาณ','jade'],['หมึกเซียน','ink'],['ไหมฟ้า','silk'],['แก่นอสูรขั้นสูง','core']]],
+  s:[['กระเรียนเมฆ','กิเลนน้อย','เต่าวิญญาณ','หงส์ไฟ','เสือขาว','ม้าบิน','จิ้งจอกเก้าหาง'],['หยก','เมฆา','อัสนี','จันทร์','วารี']]},
+ g:{w:[['ขวานดารา','ดาบสุริยัน','กระบี่เทพนิรนาม','หอกกาลเวลา','ตรีศูลทะเลดาว','จักรเทพ'],['ภพที่เก้า','ไร้สิ้นสุด','รุ่งอรุณแรก','ห้วงลึก','เทวะ','จักรวาล']],
+  a:[['เกราะสวรรค์','ผ้าคลุมดาว','มงกุฎสุริยัน','สนับแขนเทพ'],['หมื่นภพ','ดาวเหนือ','เทวสภา','บรรพกาล','ทะเลเมฆทอง']],
+  p:[['ผลไม้แห่งกาล','โอสถดารา','น้ำทิพย์เทพ','เมล็ดสวรรค์','ยาเม็ดสุริยะ'],[['ปลุกแก่นเทพ','qi'],['อมตะ','life'],['ญาณฟ้า','int'],['หลอมร่างเทพ','hp'],['ดาวรวม','qi'],['กัปกัลป์','life']]],
+  k:[['คัมภีร์เทวะ','ศิลาดาว','ม้วนกาลเวลา'],['สะกดภพ','กระบี่ดาวตก','เทวอัสนี','บรรพกาลเร้น','ทะเลดาว']],
+  c:[['ดวงตาเทพ','เกล็ดดาว','ตราสุริยะ','ลูกแก้วกาล'],[['เสน่ห์ดารา','cha'],['บารมีเทวะ','karma'],['นามจักรวาล','fame'],['ญาณบรรพกาล','int']]],
+  t:[['ค่ายกลจักรวาล','ธงเทวสงคราม','ยันต์ดาวตก'],['ทำลายภพ','กำแพงสวรรค์','พิพากษา','สยบเทพ']],
+  b:[['สร้างดาวตระกูล','สร้างประตูสวรรค์','สร้างวิหารแสง'],['ในห้วงดารา','ให้ผู้ศรัทธา','เหนือเทวสภา']],
+  x:[['เศษดาวดับ','กล่องจักรวาล','เข็มทิศไร้ทิศ'],['','ก่อนกาลเวลา','จากภพที่ล่มสลาย']],
+  f:[['สุราเทพ','ผลท้อหมื่นปี','น้ำอมฤตเย็น','ข้าวทองสวรรค์','ชาดาว','งานเลี้ยงเทวสภา'],['ดาวเหนือ','สุริยันจันทรา','ทะเลดารา','วังเมฆทอง','บรรพกาล']],
+  g:[['ดาวคู่','มงกุฎดอกไม้สวรรค์','พิณดารา','กระจกพันภพ','ผ้าแพรรุ้ง'],['นิรันดร์','หมื่นกัลป์','ดาวลิขิต','เทวะ']],
+  e:[['ดาวเคราะห์น้อย','เกาะลอยฟ้า','ทุ่งดาว','ท่าเรือสวรรค์','เหมืองแก่นดาว','สวนท้อสวรรค์'],['ในห้วงดารา','ข้างเทวสภา','ปลายรุ้ง','ใต้ดาวเหนือ']],
+  m:[['หีบเทพ','ถุงดาว','กล่องดารา'],[['สมุนไพรสวรรค์','herb'],['แร่ดาว','ore'],['หยกเทพ','jade'],['หมึกดารา','ink'],['ไหมรุ้ง','silk'],['แก่นเทพอสูร','core']]],
+  s:[['มังกรทอง','กิเลนสวรรค์','หงส์ดารา','พยัคฆ์ขาวเทพ','ม้าดาวตก','วาฬดารา'],['สุริยะ','ดาวเหนือ','ทะเลดาว','บรรพกาล','รุ้ง']]}};
+const ECO_FX2={f:'joy',g:'gift',e:'estate',m:'mat',s:'mount'};
+{const _ec=ecoCat;ecoCat=function(w){const L=_ec.call(this,w);if(L._x15)return L;L._x15=1;const rnd=srng({m:411,x:522,g:633}[w]),N=ECO_N2[w],N1=ECO_N[w],pk=a=>a[Math.floor(rnd()*a.length)],seen=new Set(L.map(x=>x.n));
+ const rw=[18,18,16,14,12,10,7,5],pr=()=>{let t=rw.reduce((a,b)=>a+b,0),x=rnd()*t;for(let i=0;i<rw.length;i++){if((x-=rw[i])<0)return i}return 0};
+ const mix=(a,b)=>a&&b?a.concat(b):(a||b);
+ const plan=Object.keys(ECO_EX).map(c=>[c,ECO_EX[c]]).concat(ECO_CT2.map(x=>[x[0],x[2]]));
+ for(const [c,cnt] of plan){let made=0,tries=0;const isNew=!!ECO_FX2[c];
+  while(made<cnt&&tries++<cnt*40){let n,fx,mat=null,r=c==='x'?(rnd()<.7?7:6):pr(),hint=null;
+   if(c==='x'){const h=ECO_XH[(made+3)%ECO_XH.length];n=`${pk(N.x[0])}${pk(N.x[1])}`;fx=h[0];hint=h[1]}
+   else if(c==='p'||c==='c'){const e=pk(mix(N1[c][1],N[c][1]));n=`${pk(mix(N1[c][0],N[c][0]))}${e[0]}`;fx=e[1]}
+   else if(c==='m'){const e=pk(N.m[1]);n=`${pk(N.m[0])}${e[0]}`;fx='mat';mat=e[1]}
+   else if(isNew){n=`${pk(N[c][0])}${pk(N[c][1])}`;fx=ECO_FX2[c]}
+   else{n=c==='b'?`${pk(mix(N1.b[0],N.b[0]))}${pk(mix(N1.b[1],N.b[1]))}`:`${pk(mix(N1[c][0],N[c][0]))}${pk(mix(N1[c][1],N[c][1]))}`;fx={w:'pow',a:'hp',k:'art',t:'fight',b:'build'}[c]}
+   if(seen.has(n))continue;seen.add(n);
+   const pm={b:2,k:1.5,f:.25,g:.6,e:2.5,m:.4,s:1.2}[c]||1;
+   const price=Math.max(10,Math.round(ECO_P0[w]*ECO_RM[r]*(.8+rnd()*.4)*pm/10)*10);
+   L.push({id:w+c+'e'+made,w,c,n,r,fx,mat,price,hint});made++}}
+ return L}}
+{const _ev=ecoV;ecoV=function(it){const r=it.r,w=it.w,K={m:1,x:3,g:10}[w];
+ switch(it.fx){case'joy':{const v=[4,6,9,12,16,22,30,40][r];return{v,d:`ความสุข +${v} · ฟื้นพลังชีวิต ${[10,15,20,30,40,55,70,100][r]}%`}}
+  case'gift':{const v=[4,6,9,13,18,25,35,50][r];return{v,d:`มอบให้คนรัก: ความรักของคู่และคนในตำหนัก +${v} · เสน่ห์ +${Math.ceil(v/3)}`}}
+  case'estate':{const v=[1,2,3,5,8,12,18,30][r];return{v,d:`ทรัพย์สินตระกูล: รายได้ตระกูล +${fmt(Math.round(v*60*W15()))}/ปี (ถาวร ส่งต่อทายาทได้)`}}
+  case'mat':{const v=[2,3,4,6,8,11,15,20][r];return{v,d:`ได้${(BAGIT[it.mat]||{}).n||'วัตถุดิบ'} ×${v}`}}
+  case'mount':{const v=[3,5,8,12,16,22,30,40][r];return{v,d:`พาหนะ: ชื่อเสียง +${fmt(v*10*K)} · ความสุข +${Math.ceil(v/2)} · ท่องยุทธภพปลอดภัยขึ้น`}}}
+ return _ev.apply(this,arguments)}}
+{const _ea=ecoApply;ecoApply=function(it,src){const fx=it.fx;if(!['joy','gift','estate','mat','mount'].includes(fx))return _ea.apply(this,arguments);const e=ecoV(it);let t=e.d;
+ if(fx==='joy'){joy(e.v);S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*[10,15,20,30,40,55,70,100][it.r]/100))}
+ else if(fx==='gift'){let who=[];if(S.sp){S.sp.aff=Math.min(100,(S.sp.aff||60)+e.v);who.push(S.sp.n)}(S.harem||[]).forEach(g=>{g.aff=Math.min(100,(g.aff||65)+e.v);who.push(g.n)});S.cha+=Math.ceil(e.v/3);joy(Math.ceil(e.v/3));t=who.length?`มอบให้ ${who.slice(0,4).join(', ')}${who.length>4?' และอีก '+(who.length-4)+' คน':''} — ความรัก +${e.v} · เสน่ห์ +${Math.ceil(e.v/3)}`:`ยังไม่มีคนรักให้มอบ… เก็บไว้เป็นของตัวเอง (เสน่ห์ +${Math.ceil(e.v/3)})`}
+ else if(fx==='estate'){estInit();S.est.prop=(S.est.prop||0)+e.v;t=`ทรัพย์สินตระกูลเพิ่มขึ้น — รายได้รวมจากทรัพย์สิน ${fmt(estPropInc())}/ปี`}
+ else if(fx==='mat'){const got=bagAdd(it.mat,e.v,true)||0;t=`ได้${(BAGIT[it.mat]||{}).n||'วัตถุดิบ'} ×${got}${got<e.v?' (กระเป๋าเต็ม)':''}`}
+ else if(fx==='mount'){S.fame+=e.v*10*({m:1,x:3,g:10}[it.w]);joy(Math.ceil(e.v/2));S.mount15=Math.max(S.mount15||0,it.r+1);t=`ได้พาหนะ ${esc(it.n)} — ${e.d}`}
+ log(`${src||'🏬'} ใช้ <b>${esc(it.n)}</b> ${rarTag(it.r)} — ${t}`,it.r>=5?'myth':it.r>=3?'epic':'good',it.r>=6)}}
+openShop2=function(c){if(!S)return;const CT=ECO_CT.concat(ECO_CT2);c=c||openShop2._c||'w';if(!CT.some(x=>x[0]===c))c='w';openShop2._c=c;const w=ECO_W(),all=ecoCat(w),L=all.filter(x=>x.c===c).sort((a,b)=>a.r-b.r||a.price-b.price);
+ const tabs=CT.map(([k,n])=>`<button class="tabb ${k===c?'on':''}" onclick="openShop2('${k}')">${n}</button>`).join('');
+ const cn=CT.find(x=>x[0]===c)[1];
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏬 ร้านสมบัติ${w==='g'?'แดนเทพ':w==='x'?'เซียน':'ยุทธภพ'}</h3><p class="tag2">💰 ${fmt(S.money)} ตำลึง · ของ ${all.length} อย่างในโลกนี้ · ซื้อซ้ำราคาขึ้น ×1.6 · ของ ??? มีแค่คำใบ้</p><div class="tabs" style="flex-wrap:wrap">${tabs}</div><h4 style="margin:8px 0 4px">${cn} <span class="tag2">${L.length} อย่าง</span></h4>
+ ${L.map(it=>{const p=ecoPrice(it),n=(S.shopN||{})[it.id]||0;return`<div class="item"><div class="h"><b>${esc(it.n)} ${rarTag(it.r)}</b><button class="sysb" onclick="ecoBuy('${it.id}')" ${S.money>=p?'':'disabled style="opacity:.45"'}>${fmt(p)}</button></div><p class="tag2">${ecoDesc(it)}${n?` · ซื้อแล้ว ${n} ครั้ง`:''}</p></div>`}).join('')}`,'shop2')};
+
+// ---------- 4) ที่ดินตระกูล ----------
+const EST_LAND={m:['ยังไม่มีที่ดิน','ที่ดินผืนเล็ก','ไร่นาตระกูล','คฤหาสน์ตระกูล','ป้อมปราการตระกูล','เมืองของตระกูล'],x:['ยังไม่มีแดนตระกูล','ถ้ำบนเขา','หุบเขาวิญญาณ','ยอดเขาลอยฟ้า','แดนลับตระกูล','อาณาจักรเซียนตระกูล'],g:['ยังไม่มีภพตระกูล','ดาวน้อยของตระกูล','เกาะสวรรค์','วังเมฆตระกูล','ดาราจักรตระกูล','ภพของตระกูล']};
+const EST_LC=[0,2000,15000,80000,400000,2500000],EST_SL=[0,3,5,7,10,14],EST_BC=[1,2.6,6.5,16,40];
+const EST_B={
+ farm:{ic:'🌾',n:'นาข้าวและไร่',d:'รายได้ทุกปี',c:600},
+ herb:{ic:'🌿',n:'สวนสมุนไพร',d:'เก็บสมุนไพรวิญญาณทุกปี',c:900},
+ mine:{ic:'⛏️',n:'เหมืองแร่',d:'ได้แร่และเงินทุกปี',c:1400},
+ train:{ic:'🥋',n:'ลานฝึกยุทธ์',d:'พลังยุทธ์เพิ่มเองทุกปี',c:1500},
+ lib:{ic:'📚',n:'หอคัมภีร์ตระกูล',d:'ปัญญาทุกปี · ลุ้นได้วิชา',c:1600},
+ alch:{ic:'⚗️',n:'หอปรุงโอสถ',d:'ลมปราณทุกปี · ลุ้นได้ยา',c:1800},
+ clinic:{ic:'🏥',n:'โรงหมอตระกูล',d:'ฟื้นพลังชีวิตทุกปี · ลูกหลานแข็งแรง',c:1000},
+ garden:{ic:'🌸',n:'สวนดอกไม้และศาลา',d:'ความสุขและความรักของคู่ทุกปี',c:800},
+ market:{ic:'🏪',n:'ร้านค้าตระกูล',d:'รายได้ตามขนาดตระกูล',c:2000},
+ inn:{ic:'🏮',n:'โรงเตี๊ยมตระกูล',d:'เงินและชื่อเสียงทุกปี',c:1700},
+ guard:{ic:'🛡️',n:'กองกำลังตระกูล',d:'ป้องกันโจรบุก · ชื่อเสียง',c:2200},
+ shrine:{ic:'⛩️',n:'ศาลบรรพชน',d:'กรรมดีทุกปี · ทายาทเกิดมาแข็งแกร่งขึ้น',c:1500},
+ school:{ic:'🏫',n:'สำนักศึกษาตระกูล',d:'ทายาทฉลาดขึ้น · ลูกหลานได้ปัญญา',c:1500},
+ vault:{ic:'🏦',n:'คลังสมบัติตระกูล',d:'เงินส่งต่อทายาทมากขึ้น · ดอกผล',c:2500},
+ pond:{ic:'🐟',n:'บ่อปลาหยก',d:'เงินและความสุขเล็กน้อย',c:700},
+ stable:{ic:'🐎',n:'คอกม้าศึก',d:'ชื่อเสียง · ป้องกันโจร · ชนะศึกง่ายขึ้นเล็กน้อย',c:1900}};
+const EST_TRAD={war:['⚔️ ตระกูลนักรบ','พลังยุทธ์จากลานฝึก ×2'],sch:['📜 ตระกูลบัณฑิต','ปัญญาจากหอคัมภีร์ ×2 · ทายาทฉลาด'],mer:['💰 ตระกูลพ่อค้า','รายได้ตระกูลทั้งหมด +40%'],vir:['🙏 ตระกูลคุณธรรม','กรรมดี ×2 · ชื่อเสียง +20%'],lov:['💞 ตระกูลรักใคร่','ความสุข ×1.5 · ลูกหลานมากขึ้น']};
+function estInit(){if(!S.est)S.est={lv:0,b:{},prop:0,pr:0,tr:null,trY:-99,raid:0,ev:[]};return S.est}
+const estLandN=lv=>EST_LAND[ECO_W()][lv];
+const estUsed=()=>Object.keys(estInit().b).length;
+const estLv=k=>(estInit().b[k]||0);
+const estBCost=(k,lv)=>Math.round(EST_B[k].c*EST_BC[lv]*W15()*(1+estInit().lv*.15)/10)*10;
+const estLandCost=lv=>Math.round(EST_LC[lv]*W15());
+function estPropInc(){return Math.round((estInit().prop||0)*60*W15())}
+function estInc(){const E=estInit(),W=W15();let m=estLv('farm')*120*W+estLv('mine')*90*W+estLv('inn')*110*W+estLv('pond')*50*W+estPropInc();m+=estLv('market')*Math.min(S.money*.004,800*W*estLv('market'));if(E.tr==='mer')m*=1.4;return Math.round(m)}
+function estTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human)||S.age<18)return;const E=estInit();if(!E.lv&&!E.prop)return;if(E.y===S.age)return;E.y=S.age;const W=W15(),got=[];
+ const inc=estInc();if(inc){S.money+=inc;got.push('+'+fmt(inc)+' ตำลึง')}
+ if(estLv('herb')){const n=bagAdd('herb',estLv('herb'),true)||0;if(n)got.push('🌿×'+n)}
+ if(estLv('mine')&&BAGIT.ore){const n=bagAdd('ore',estLv('mine'),true)||0;if(n)got.push('⛏️×'+n)}
+ if(estLv('train')){const g=pctPow(.005*estLv('train')*(E.tr==='war'?2:1));S.power+=g;got.push('พลัง +'+fmt(g))}
+ if(estLv('lib')){const v=estLv('lib')*(E.tr==='sch'?2:1);S.int+=v;if(Math.random()<.03*estLv('lib')){const a=newArt(Math.min(3,Math.floor(estLv('lib')/2)));S.arts.push(a);got.push('ได้ '+artHtml(a))}}
+ if(estLv('alch')){S.qi=+(S.qi+.2*estLv('alch')).toFixed(1);if(Math.random()<.08*estLv('alch'))bagAdd(Math.random()<.3?'qi':'hp',1,true)}
+ if(estLv('clinic'))S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.06*estLv('clinic')));
+ if(estLv('garden')){joy(estLv('garden')*(E.tr==='lov'?1.5:1));if(S.sp)S.sp.aff=Math.min(100,(S.sp.aff||60)+estLv('garden'))}
+ if(estLv('shrine'))S.karma+=estLv('shrine')*(E.tr==='vir'?2:1);
+ const fm=Math.round((estLv('inn')*3+estLv('guard')*4+estLv('stable')*3+E.lv*2)*(E.tr==='vir'?1.2:1)*({m:1,x:3,g:10}[ECO_W()]));if(fm){S.fame+=fm}
+ if(estLv('vault'))S.money+=Math.round(Math.min(S.money*.01*estLv('vault'),2000*W*estLv('vault')));
+ if(E.tr==='lov'&&S.spouse&&Math.random()<.05&&S.age<(S.xian?Math.max(55,lifeMax()*.6):55)){S.kids=(S.kids||0)+1;got.push('👶 บุตรเพิ่ม 1')}
+ E.pr=(E.pr||0)+E.lv*2+Object.values(E.b).reduce((a,b)=>a+b,0);
+ if(got.length&&S.age%5===0)log(`🏞️ ${estLandN(E.lv)}ปีนี้: ${got.join(' · ')}`,'good');
+ if(Math.random()<.12&&!choice._cur&&!modalOpen)estEvent()}
+function estDef(){return estLv('guard')*2+estLv('stable')+estInit().lv}
+function estEvent(){const E=estInit(),W=W15(),x=Math.random(),land=estLandN(E.lv);
+ if(x<.25){const need=R(2,10);if(estDef()>=need){S.fame+=Math.round(15*({m:1,x:3,g:10}[ECO_W()]));log(`🛡️ โจรบุก${land} แต่กองกำลังตระกูลตีถอยไปได้ — ชื่อเสียง +`,'good')}else{const l=Math.round(Math.min(S.money*.08,3000*W));S.money-=l;log(`🏴 โจรบุกปล้น${land} เสียเงิน ${fmt(l)} — สร้างกองกำลังตระกูลหรือคอกม้าศึกเพื่อป้องกัน`,'bad')}}
+ else if(x<.45){const g=Math.round((300+estInc()*.5)*1);S.money+=g;joy(4);log(`🌾 ปีนี้${land}เก็บเกี่ยวได้ผลดีเกินคาด +${fmt(g)} ตำลึง`,'good')}
+ else if(x<.6){choice('👴 ญาติห่างๆ มาขอพึ่ง',`ญาติจากต่างเมืองเดินทางมาที่${land} ขอที่พักและเงินตั้งตัว`,[{t:`ช่วยเหลือ (${fmt(Math.round(500*W))} ตำลึง)`,s:'กรรมดี + · ชื่อเสียงตระกูล +',f(){if(S.money<500*W){log('เงินไม่พอช่วย','bad');return}S.money-=Math.round(500*W);S.karma+=6;E.pr+=20;log('ญาติซาบซึ้งใจ สัญญาว่าจะตอบแทนตระกูลในวันหน้า','good')}},{t:'ปฏิเสธ',skip:true,f(){S.karma-=2;log('ญาติจากไปด้วยความผิดหวัง')}}])}
+ else if(x<.75){joy(8);S.fame+=Math.round(10*({m:1,x:3,g:10}[ECO_W()]));log(`🎎 จัดงานเลี้ยงประจำปีของตระกูลที่${land} คนทั้งเมืองมาร่วม — ความสุข +8`,'good')}
+ else if(x<.87){const g=Math.round(1000*W*(1+E.lv));S.money+=g;log(`💎 คนงานขุดพบของมีค่าใน${land} ขายได้ ${fmt(g)} ตำลึง`,'epic')}
+ else{const k=ch(Object.keys(E.b));if(k&&E.b[k]>1&&Math.random()<.5&&!estLv('guard')){E.b[k]--;log(`🔥 ไฟไหม้${EST_B[k].n} ระดับลดลงเหลือ ${E.b[k]} — กองกำลังตระกูลช่วยป้องกันเหตุแบบนี้ได้`,'bad')}else{S.int+=2;log(`📜 พบบันทึกเก่าของบรรพชนในห้องใต้ดิน ปัญญา +2`)}}}
+function estBuyLand(){const E=estInit(),n=E.lv+1;if(n>5)return;const c=estLandCost(n);if(S.money<c)return toast('เงินไม่พอ');S.money-=c;E.lv=n;S.fame+=Math.round(20*n*({m:1,x:3,g:10}[ECO_W()]));log(`🏞️ ขยายเป็น <b>${estLandN(n)}</b> — สร้างสิ่งปลูกสร้างได้ ${EST_SL[n]} หลัง`,'epic',n>=4);sfx('good');render();openHouse('est')}
+function estBuild(k){const E=estInit(),lv=estLv(k);if(lv>=5)return;if(!lv&&estUsed()>=EST_SL[E.lv])return toast('ที่ดินเต็ม — ขยายที่ดินก่อน');if(lv>=E.lv)return toast(`ต้องขยายที่ดินถึงขั้น ${lv+1} ก่อน`);const c=estBCost(k,lv);if(S.money<c)return toast('เงินไม่พอ');S.money-=c;E.b[k]=lv+1;log(`${EST_B[k].ic} ${lv?'ยกระดับ':'สร้าง'}<b>${EST_B[k].n}</b> ระดับ ${lv+1}`,'good');sfx('good');render();openHouse('est')}
+function estTrad(k){const E=estInit();if(S.age-E.trY<10&&E.tr)return toast(`เปลี่ยนประเพณีได้อีกใน ${10-(S.age-E.trY)} ปี`);E.tr=k;E.trY=S.age;log(`🏯 ตระกูลยึดถือประเพณี <b>${EST_TRAD[k][0]}</b> — ${EST_TRAD[k][1]}`,'epic');sfx('good');openHouse('est')}
+function estPrN(p){return p>=5000?'👑 ตระกูลแห่งตำนาน':p>=2000?'🏯 ตระกูลใหญ่แห่งแผ่นดิน':p>=800?'🎏 ตระกูลมีชื่อ':p>=200?'🏠 ตระกูลที่คนรู้จัก':'🌱 ตระกูลเล็กๆ'}
+function estHtml(){const E=estInit(),W=W15(),n=E.lv;let h='';
+ if(S.age<18)return '<p class="tag2">เริ่มสร้างที่ดินตระกูลได้เมื่ออายุ 18 ปี</p>';
+ h+=`<div class="item" style="border-left:4px solid #e8b830"><div class="h"><b>🏞️ ${estLandN(n)}</b><span class="tag2">${estPrN(E.pr||0)} · บารมี ${fmt(E.pr||0)}</span></div><p>สิ่งปลูกสร้าง ${estUsed()}/${EST_SL[n]} · รายได้ตระกูล ${fmt(estInc())}/ปี${E.prop?` (ทรัพย์สิน ${E.prop} แต้ม)`:''} · ป้องกันโจร ${estDef()}</p>${n<5?`<button class="sysb" onclick="estBuyLand()" ${S.money>=estLandCost(n+1)?'':'disabled style="opacity:.45"'}>ขยายเป็น${estLandN(n+1)} · ${fmt(estLandCost(n+1))}</button>`:'<p class="tag2">ที่ดินตระกูลยิ่งใหญ่ที่สุดแล้ว</p>'}</div>`;
+ h+=`<h4 style="margin:10px 0 4px">🏯 ประเพณีตระกูล <span class="tag2">เปลี่ยนได้ทุก 10 ปี</span></h4><div class="mgrid">${Object.keys(EST_TRAD).map(k=>`<button class="opt" onclick="estTrad('${k}')" ${E.tr===k?'style="background:var(--tb4)"':''}>${EST_TRAD[k][0]}<small>${EST_TRAD[k][1]}${E.tr===k?' · ✅ ใช้อยู่':''}</small></button>`).join('')}</div>`;
+ if(!n)return h+'<p class="tag2">ซื้อที่ดินผืนแรกก่อน แล้วจะสร้างนา สวน เหมือง ลานฝึก และอื่นๆ ได้ — ทุกอย่างส่งต่อให้ทายาท</p>';
+ h+=`<h4 style="margin:10px 0 4px">🏗️ สิ่งปลูกสร้าง</h4>`+Object.keys(EST_B).map(k=>{const b=EST_B[k],lv=estLv(k),c=lv<5?estBCost(k,lv):0,can=lv<5&&lv<n&&(lv||estUsed()<EST_SL[n])&&S.money>=c;
+  return`<div class="item ${lv?'pin':''}"><div class="h"><b>${b.ic} ${b.n} ${lv?`<span class="tag2">ระดับ ${lv}/5</span>`:''}</b>${lv<5?`<button class="sysb" onclick="estBuild('${k}')" ${can?'':'disabled style="opacity:.45"'}>${lv?'ยกระดับ':'สร้าง'} ${fmt(c)}</button>`:'<span class="tag2">สูงสุด</span>'}</div><p class="tag2">${b.d}${lv>=n&&lv<5?` · ต้องขยายที่ดินก่อน`:''}</p></div>`}).join('');
+ return h}
+{const _oh=openHouse;openHouse=function(tab){if(tab!=='est'){const r=_oh.apply(this,arguments);_oh15(tab);return r}estInit();modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏡 ตระกูล${(S.name||'').split(' ')[0]}</h3>${estTabs('est')}${estHtml()}`,'house')}
+ function _oh15(tab){try{const m=$('modal'),t=m.querySelector('.tabs');if(t)t.outerHTML=estTabs(tab||'hh');const E=estInit();if((tab||'hh')==='hh'){const h3=m.querySelector('h3');if(h3)h3.insertAdjacentHTML('afterend',`<div class="item" style="border-left:4px solid #e8b830;margin-top:6px"><div class="h"><b>🏞️ ${estLandN(E.lv)}</b><button class="sysb" onclick="openHouse('est')">จัดการ</button></div><p class="tag2">${estPrN(E.pr||0)} · รายได้ตระกูล ${fmt(estInc())}/ปี · สิ่งปลูกสร้าง ${estUsed()}/${EST_SL[E.lv]}${E.tr?' · '+EST_TRAD[E.tr][0]:''}</p></div>`)}
+  if((tab||'hh')==='hh'){const kids=(S.children||[]).filter(c=>c.alive!==false);if(kids.length)m.insertAdjacentHTML('beforeend',`<h4 style="margin:10px 0 4px">👶 ลูกหลาน (${kids.length})</h4>`+kids.slice(0,12).map(c=>`<div class="item"><b>${esc(c.n||'บุตร')}</b> <span class="tag2">${c.age!=null?c.age+' ปี':''}${c.tal?' · '+esc(c.tal.n||''):''}${c.rel!=null?' · ความผูกพัน '+Math.round(c.rel):''}</span></div>`).join(''))}}catch(e){console.error(e)}}}
+function estTabs(tab){return`<div class="tabs"><button class="tabb ${tab==='hh'?'on':''}" onclick="openHouse('hh')">🏠 ครัวเรือน</button><button class="tabb ${tab==='est'?'on':''}" onclick="openHouse('est')">🏞️ ที่ดินตระกูล</button><button class="tabb ${tab==='ch'?'on':''}" onclick="openHouse('ch')">📜 พงศาวดาร</button></div>`}
+{const _inh=inherit;inherit=function(ci){const P=S,E=P.est?JSON.parse(JSON.stringify(P.est)):null,pm=P.money;const r=_inh.apply(this,arguments);try{if(E&&S!==P){E.y=null;E.ev=[];S.est=E;const b=E.b||{};
+  if(b.shrine){S.power+=Math.round((S.power||0)*.12*b.shrine);S.karma+=b.shrine*5}if(b.school){S.int+=b.school*6}if(b.vault){S.money+=Math.round(pm*.08*b.vault)}
+  log(`🏞️ ได้รับมรดก <b>${estLandN(E.lv)}</b> จากบรรพชน${b.shrine?' · ศาลบรรพชนอวยพร (พลัง+)':''}${b.school?' · สำนักศึกษาตระกูล (ปัญญา+)':''}${b.vault?' · คลังสมบัติ (เงิน+)':''}`,'epic')}}catch(e){console.error(e)}return r}}
+// ย้ายโลก: ที่ดินโลกเก่าขายเปลี่ยนเป็นเงินครึ่งหนึ่ง
+function estWorldMove(why){const E=S&&S.est;if(!E||(!E.lv&&!E.prop))return;const W0=E.w||'m';E.w=ECO_W();if(W0===E.w)return;E.lv=0;E.b={};E.prop=0;log(`🏞️ ${why} — ที่ดินตระกูลในโลกเดิมถูกทิ้งไว้ ต้องเริ่มสร้างใหม่ในโลกนี้ (บารมีตระกูลยังอยู่)`,'bad')}
+{const _ax15=ascendToX;ascendToX=function(){const r=_ax15.apply(this,arguments);try{estWorldMove('ขึ้นสู่โลกเซียน')}catch(e){}return r}}
+{const _ag15=ascendGod;ascendGod=function(){const r=_ag15.apply(this,arguments);try{estWorldMove('ขึ้นสู่แดนเทพ')}catch(e){}return r}}
+
+// ---------- 5) เมือง ----------
+const TOWN_X=['เมฆาหยก','ภูผาเซียน','ธาราวิญญาณ','หงส์เพลิง','จันทร์เงิน','วายุหมื่นลี้','ดาราใส','บุปผาพันปี'],TOWN_G=['ดาวเหนือ','สุริยันทอง','รุ้งเก้าสี','ทะเลดารา','วังเมฆ','อรุณนิรันดร์','จักรวาลกลาง','กัลป์พฤกษ์'];
+{const _tn=townName;townName=function(){if(S&&!S.region){const w=ECO_W();if(S.townW!==w){S.townW=w;S.town=w==='g'?'นครเทพ'+ch(TOWN_G):w==='x'?'เมืองเซียน'+ch(TOWN_X):null}if(w==='m'&&S.town&&S.town.startsWith('หมู่บ้าน')&&S.age>=16)S.town='เมือง'+S.town.slice(8)}return _tn.apply(this,arguments)}}
+const TW={m:{bk:'🏦 โรงรับฝากเงิน',ar:'🥋 ลานประลองเมือง',gm:'🎲 บ่อนเต๋า',ft:'🔮 หมอดูตาบอด',tea:'🍵 โรงน้ำชา',gov:'🏛️ จวนเจ้าเมือง',fest:'🎪 เทศกาลเมือง'},x:{bk:'🏦 หอคลังวิญญาณ',ar:'🥋 ลานประลองเซียน',gm:'🎲 หอเสี่ยงโชคดารา',ft:'🔮 ผู้หยั่งชะตา',tea:'🍵 หอชาเมฆา',gov:'🏛️ หอเจ้าเมืองเซียน',fest:'🎪 งานชุมนุมเซียน'},g:{bk:'🏦 คลังเทวสภา',ar:'🥋 สังเวียนเทพ',gm:'🎲 วงล้อโชคชะตา',ft:'🔮 กระจกพันภพ',tea:'🍵 ศาลาน้ำอมฤต',gov:'🏛️ ตำหนักผู้ปกครองนคร',fest:'🎪 งานเฉลิมฉลองแดนเทพ'}};
+const tw=k=>TW[ECO_W()][k];
+const GOV_T=['พลเมืองดีเด่น','ที่ปรึกษาเจ้าเมือง','ขุนนางประจำเมือง','ผู้ช่วยเจ้าเมือง','เจ้าเมืองกิตติมศักดิ์'];
+function twInit(){if(!S.tw)S.tw={bank:0,arY:-1,gmY:-1,gmN:0,ftY:-1,teaY:-1,gov:0,festY:-1};if(S.tw.w!==ECO_W()){S.tw.w=ECO_W();S.tw.gov=0}return S.tw}
+function twMain(){const T=twInit(),W=W15(),fest=S.age%4===0;return`<h4 style="margin:12px 0 4px">🏙️ สถานที่อื่นในเมือง</h4><div class="mgrid">
+ <button class="opt" onclick="openTown('bk')">${tw('bk')}<small>ฝากไว้ ${fmt(T.bank)} · ดอก 2%/ปี</small></button>
+ <button class="opt" onclick="openTown('ar')">${tw('ar')}<small>${T.arY===S.age?'ปีนี้ประลองแล้ว':'ชิงเงินรางวัล'}</small></button>
+ <button class="opt" onclick="openTown('gm')">${tw('gm')}<small>${T.gmY===S.age?'เล่นได้อีก '+Math.max(0,3-T.gmN)+' ครั้ง':'ลองดวงปีละ 3 ครั้ง'}</small></button>
+ <button class="opt" onclick="openTown('ft')">${tw('ft')}<small>${T.ftY===S.age?'ดูแล้วปีนี้':'ทำนายชะตา'}</small></button>
+ <button class="opt" onclick="openTown('tea')">${tw('tea')}<small>${T.teaY===S.age?'นั่งแล้วปีนี้':'ข่าวลือ · พบผู้คน'}</small></button>
+ <button class="opt" onclick="openTown('gov')">${tw('gov')}<small>${T.gov?GOV_T[T.gov-1]:'ซื้อยศกิตติมศักดิ์'}</small></button>
+ <button class="opt" onclick="openTown('fest')" ${fest?'style="background:var(--tb4)"':''}>${tw('fest')}<small>${fest?(T.festY===S.age?'ร่วมแล้วปีนี้':'🎉 กำลังจัดอยู่!'):'จัดทุก 4 ปี (อีก '+(4-S.age%4)+' ปี)'}</small></button></div>`}
+function twPage(p){const T=twInit(),W=W15(),tn=townName(),back=`<button class="gbtn" onclick="openTown()">← ${tn}</button>`,ri=Math.max(0,realmIdx());
+ if(p==='bk'){const cap=Math.round(2e5*W*(1+ri)),pi=Math.round(Math.min(T.bank*.02,cap*.02));return back+`<h4 style="margin:10px 0 4px">${tw('bk')}</h4><p>เงินฝาก <b>${fmt(T.bank)}</b> ตำลึง · ดอกเบี้ย 2%/ปี (ได้ราว ${fmt(pi)}/ปี) · รับฝากสูงสุด ${fmt(cap)} · เงินฝากไม่ถูกโจรปล้นและไม่ถูกใช้จ่ายอัตโนมัติ</p>
+  <div class="mgrid">${[.1,.5,1].map(f=>`<button class="opt" onclick="twBank(${f})">ฝาก ${f*100}%<small>${fmt(Math.round(Math.min(S.money*f,Math.max(0,cap-T.bank))))}</small></button>`).join('')}${[.5,1].map(f=>`<button class="opt" onclick="twBank(-${f})">ถอน ${f*100}%<small>${fmt(Math.round(T.bank*f))}</small></button>`).join('')}</div>`}
+ if(p==='ar'){const done=T.arY===S.age;return back+`<h4 style="margin:10px 0 4px">${tw('ar')}</h4><p class="tag2">ปีละ 1 ครั้ง · แพ้เสียพลังชีวิต · ชนะได้เงินและชื่อเสียง</p>`+[[.85,'🟢 รุ่นทั่วไป',1],[1.1,'🟡 รุ่นยอดฝีมือ',3],[1.4,'🔴 รุ่นจ้าวสังเวียน',8]].map(([k,n,m],i)=>`<div class="item"><div class="h"><b>${n}</b><button class="sysb" onclick="twArena(${i})" ${done?'disabled style="opacity:.45"':''}>ลงสนาม</button></div><p class="tag2">คู่ต่อสู้แข็งแรงราว ${Math.round(k*100)}% ของคุณ · รางวัล ${fmt(twArPrize(m))} ตำลึง</p></div>`).join('')}
+ if(p==='gm'){const n=T.gmY===S.age?T.gmN:0;return back+`<h4 style="margin:10px 0 4px">${tw('gm')}</h4><p class="tag2">ทอยเต๋า 3 ลูก · สูง (11–18) หรือ ต่ำ (3–10) · ตองชนะ ×10 · ปีละ 3 ครั้ง (เหลือ ${3-n})</p><div class="mgrid">`+[100,1000,10000].map(b=>Math.round(b*W)).map(b=>`<button class="opt" onclick="twDice(${b},1)" ${n>=3||S.money<b?'disabled style="opacity:.45"':''}>⬆️ แทงสูง<small>${fmt(b)}</small></button><button class="opt" onclick="twDice(${b},0)" ${n>=3||S.money<b?'disabled style="opacity:.45"':''}>⬇️ แทงต่ำ<small>${fmt(b)}</small></button>`).join('')+'</div>'}
+ if(p==='ft'){const c=Math.round(300*W);return back+`<h4 style="margin:10px 0 4px">${tw('ft')}</h4><p>ค่าดู ${fmt(c)} ตำลึง · ปีละครั้ง · ได้ยินคำทำนายเรื่องอนาคต และได้พรเล็กๆ</p><button class="sysb" onclick="twFort()" ${T.ftY===S.age||S.money<c?'disabled style="opacity:.45"':''}>🔮 ขอดูดวง</button>`}
+ if(p==='tea'){const c=Math.round(80*W);return back+`<h4 style="margin:10px 0 4px">${tw('tea')}</h4><p>ค่าน้ำชา ${fmt(c)} ตำลึง · ปีละครั้ง · ฟังข่าวลือ ฝึกเสน่ห์ อาจได้พบคนที่ถูกชะตา</p><button class="sysb" onclick="twTea()" ${T.teaY===S.age||S.money<c?'disabled style="opacity:.45"':''}>🍵 นั่งจิบชา</button>`}
+ if(p==='gov'){return back+`<h4 style="margin:10px 0 4px">${tw('gov')}</h4><p class="tag2">ซื้อยศกิตติมศักดิ์ของเมือง · ได้ชื่อเสียงทันที และเบี้ยหวัดทุกปี</p>`+GOV_T.map((n,i)=>{const c=twGovC(i);return`<div class="item ${T.gov>i?'pin':''}"><div class="h"><b>${n}</b>${T.gov>i?'<span class="tag2">✅ ได้แล้ว</span>':T.gov===i?`<button class="sysb" onclick="twGov()" ${S.money>=c?'':'disabled style="opacity:.45"'}>${fmt(c)}</button>`:'<span class="tag2">🔒</span>'}</div><p class="tag2">เบี้ยหวัด ${fmt(twGovInc(i+1))}/ปี · ชื่อเสียง +${fmt(twGovFame(i))}</p></div>`}).join('')}
+ if(p==='fest'){const on=S.age%4===0,done=T.festY===S.age;return back+`<h4 style="margin:10px 0 4px">${tw('fest')}</h4>${on?`<p>เทศกาลกำลังคึกคัก! เลือกร่วมกิจกรรมได้ 1 อย่าง</p><div class="mgrid">${[['eat','🍡 ตระเวนชิมอาหาร','ความสุข +12'],['lan','🏮 ปล่อยโคมกับคนรัก','ความรัก + · ความสุข +'],['cmp','🏹 แข่งยิงธนูชิงรางวัล','ลุ้นรางวัลใหญ่'],['don','🙏 บริจาคงานบุญ','กรรมดี + ชื่อเสียง +']].map(([k,n,d])=>`<button class="opt" onclick="twFest('${k}')" ${done?'disabled style="opacity:.45"':''}>${n}<small>${d}</small></button>`).join('')}</div>`:`<p class="tag2">เทศกาลจัดทุก 4 ปี — ครั้งหน้าอีก ${4-S.age%4} ปี</p>`}`}
+ return null}
+const twArPrize=m=>Math.round(250*W15()*m*(1+Math.max(0,realmIdx())*.6));
+const twGovC=i=>Math.round([3000,15000,60000,250000,1000000][i]*W15());
+const twGovInc=lv=>lv?Math.round([0,150,600,2000,6000,15000][lv]*W15()):0;
+const twGovFame=i=>Math.round([30,80,200,500,1200][i]*({m:1,x:3,g:10}[ECO_W()]));
+{const _ot2=openTown;openTown=function(p){p=p||'main';if(S&&['bk','ar','gm','ft','tea','gov','fest'].includes(p)){twInit();openTown._p=p;const h=twPage(p);modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏘️ ${townName()}</h3><p class="tag2">💰 ${fmt(S.money)} ตำลึง</p>${h}`,'town');return}
+ const r=_ot2.apply(this,arguments);try{if(p==='main'){const m=$('modal');m.insertAdjacentHTML('beforeend',twMain())}}catch(e){console.error(e)}return r}}
+function twBank(f){const T=twInit(),cap=Math.round(2e5*W15()*(1+Math.max(0,realmIdx())));if(f>0){const v=Math.round(Math.min(S.money*f,Math.max(0,cap-T.bank)));if(v<=0)return toast(T.bank>=cap?'ฝากเต็มวงเงินแล้ว':'ไม่มีเงินให้ฝาก');S.money-=v;T.bank+=v;toast('ฝาก '+fmt(v))}else{const v=Math.round(T.bank*-f);if(v<=0)return;T.bank-=v;S.money+=v;toast('ถอน '+fmt(v))}sfx('click');render();openTown('bk')}
+function twArena(i){const T=twInit();if(T.arY===S.age)return;if(choice._cur)return toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');T.arY=S.age;const k=[.85,1.1,1.4][i],m=[1,3,8][i],foe=ch(S.xt?['เทพนักรบนิรนาม','จ้าวสังเวียนดารา','เทพอสูรผู้ท้าชิง']:S.xian?['เซียนกระบี่พเนจร','ศิษย์เอกนิกายใหญ่','ผู้ฝึกตนสายมาร']:['นักมวยร่างยักษ์','จอมดาบพเนจร','ศิษย์สำนักใหญ่','หญิงสาวถือแส้']);closeM();
+ duel(foe,Math.round(total()*k*(.92+Math.random()*.16)),w=>{if(w){const g=twArPrize(m);S.money+=g;S.fame+=Math.round(m*8*({m:1,x:3,g:10}[ECO_W()]));log(`🥋 ชนะ${foe}ที่${tw('ar')} — รางวัล ${fmt(g)} ตำลึง`,i>=2?'epic':'good')}else{const d=Math.round(S.maxHp*[.08,.15,.25][i]);S.hp-=d;log(`🥋 แพ้${foe}ที่${tw('ar')} — พลังชีวิต −${d}`,'bad')}render()})}
+function twDice(b,hi){const T=twInit();if(T.gmY!==S.age){T.gmY=S.age;T.gmN=0}if(T.gmN>=3||S.money<b)return;T.gmN++;S.money-=b;const d=[R(1,6),R(1,6),R(1,6)],s=d[0]+d[1]+d[2],trip=d[0]===d[1]&&d[1]===d[2];let msg;
+ if(trip){S.money+=b*10;msg=`🎉 ตอง ${d.join('-')}! ได้ ${fmt(b*10)}`;joy(6)}else if((s>=11)===!!hi){S.money+=b*2;msg=`✅ ${d.join('-')} = ${s} ชนะ! ได้ ${fmt(b*2)}`;joy(2)}else{msg=`❌ ${d.join('-')} = ${s} เสีย ${fmt(b)}`;joy(-2)}
+ log(`🎲 ${tw('gm')}: ${msg}`,trip?'epic':'');toast(msg);sfx('click');render();openTown('gm')}
+const FORT=[['ชะตาปีหน้าสดใส ดวงดาวส่องทางให้','luck'],['ระวังคนใกล้ตัวที่ยิ้มให้ แต่ใจไม่ตรง','warn'],['เงินทองจะไหลมาจากทิศตะวันออก','money'],['คู่ครองของเจ้าอยู่ไม่ไกล หากตั้งใจมองหา','love'],['พลังในกายยังซ่อนอยู่ อีกไม่นานจะแตกหน่อ','pow'],['อายุขัยของเจ้ายืนยาวกว่าที่คิด','life'],['ปีนี้อย่าเพิ่งลงมือเรื่องใหญ่ รอฟ้าเปิดก่อน','calm']];
+function twFort(){const T=twInit(),c=Math.round(300*W15());if(T.ftY===S.age||S.money<c)return;T.ftY=S.age;S.money-=c;const [t,k]=ch(FORT);let ex='';
+ if(k==='luck'){joy(5);ex='ความสุข +5'}else if(k==='money'){const g=Math.round(c*R(2,5));S.money+=g;ex=`เดินออกจากร้านเจอถุงเงินตก +${fmt(g)}`}else if(k==='love'){S.cha+=3;ex='เสน่ห์ +3'}else if(k==='pow'){const g=pctPow(.03);S.power+=g;ex=`พลังยุทธ์ +${fmt(g)}`}else if(k==='life'){const v=S.xt?2000:S.xian?20:3;if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;ex=`อายุขัย +${fmt(v)} ปี`}else if(k==='warn'){S.int+=2;ex='ระวังตัวมากขึ้น ปัญญา +2'}else{S.qi=+(S.qi+.5).toFixed(1);ex='จิตสงบ ลมปราณ +0.5 ปี'}
+ log(`🔮 ${tw('ft')}ทำนาย: "${t}" — ${ex}`,'good');sfx('good');render();openTown('ft')}
+function twTea(){const T=twInit(),c=Math.round(80*W15());if(T.teaY===S.age||S.money<c)return;T.teaY=S.age;S.money-=c;S.cha+=2;const x=Math.random();
+ if(x<.3&&S.age>=18){closeM();log('🍵 ระหว่างจิบชา มีคนเดินมาขอนั่งร่วมโต๊ะ…');setTimeout(()=>{try{haremOffer(true)}catch(e){}},50);return}
+ if(x<.55){S.dgHint=1;log('🍵 ได้ยินพ่อค้าคุยกันเรื่องดันเจี้ยนแห่งใหม่ (เสน่ห์ +2)','good')}else if(x<.75){const g=Math.round(c*R(3,8));S.money+=g;log(`🍵 พ่อค้าชวนลงทุนเล็กๆ ได้กำไร ${fmt(g)} (เสน่ห์ +2)`,'good')}else{S.int+=3;log('🍵 ถกเรื่องยุทธ์กับผู้เฒ่าข้างโต๊ะจนเข้าใจอะไรมากขึ้น ปัญญา +3 · เสน่ห์ +2','good')}
+ sfx('good');render();openTown('tea')}
+function twGov(){const T=twInit(),i=T.gov,c=twGovC(i);if(i>=5||S.money<c)return;S.money-=c;T.gov=i+1;S.fame+=twGovFame(i);log(`🏛️ ได้รับยศ <b>${GOV_T[i]}</b> แห่ง${townName()} — เบี้ยหวัด ${fmt(twGovInc(T.gov))}/ปี`,'epic',i>=3);sfx('good');render();openTown('gov')}
+function twFest(k){const T=twInit();if(T.festY===S.age||S.age%4)return;T.festY=S.age;const W=W15();
+ if(k==='eat'){joy(12);log('🍡 ตระเวนชิมอาหารในเทศกาลจนพุงกาง — ความสุข +12','good')}
+ else if(k==='lan'){joy(8);if(S.sp)S.sp.aff=Math.min(100,(S.sp.aff||60)+10);(S.harem||[]).forEach(g=>g.aff=Math.min(100,(g.aff||65)+5));log(`🏮 ปล่อยโคมลอยฟ้า${S.sp?'กับ'+S.sp.n:'คนเดียวใต้แสงจันทร์'} — ความสุข +8${S.sp?' · ความรัก +10':''}`,'good')}
+ else if(k==='cmp'){const p=.25+Math.min(.5,(S.power>0?Math.log10(total()+1)/20:0)+(S.int||0)/1000);if(Math.random()<p){const g=Math.round(2000*W*(1+Math.max(0,realmIdx())*.5));S.money+=g;S.fame+=Math.round(30*({m:1,x:3,g:10}[ECO_W()]));log(`🏹 ชนะการแข่งยิงธนูของเทศกาล! รางวัล ${fmt(g)} ตำลึง`,'epic')}else{joy(2);log('🏹 ยิงพลาดไปนิดเดียว ได้รางวัลปลอบใจเป็นขนมหนึ่งห่อ')}}
+ else{const c=Math.round(Math.min(S.money*.05,5000*W));S.money-=c;S.karma+=8;S.fame+=Math.round(15*({m:1,x:3,g:10}[ECO_W()]));log(`🙏 บริจาคงานบุญ ${fmt(c)} ตำลึง — กรรมดี +8`,'good')}
+ sfx('good');render();openTown('fest')}
+function twTick(){if(!S||!S.alive||!S.tw)return;const T=S.tw;if(T.w&&T.w!==ECO_W()){S.money+=T.bank;T.bank=0}const ri=Math.max(0,realmIdx()),cap=Math.round(2e5*W15()*(1+ri));if(T.bank>0)T.bank=Math.round(T.bank+Math.min(T.bank*.02,cap*.02));if(T.gov)S.money+=twGovInc(T.gov)}
+
+// ---------- 6) เมนูจัดหมวด ----------
+const MENU_CAT=[
+ ['⭐ ใช้บ่อย',['paJoin','openTown','openShop2','openMarket','openArts','openEquip','openBag','openQuests','openDungeons','openSys','gachaArt']],
+ ['🧘 ตัวละครและการฝึก',['openFaction','openCraft','openBeastComp','openItems','openPortal','openMap','relMenu','nemInfo']],
+ ['👪 ครอบครัวและผู้คน',['openHouse','openFamily','openPeople','openPeers','openRanking']],
+ ['📚 บันทึกและสะสม',['openBook','openBestiary','openCodex','openCosmetic','openFrameShop','openProfile']],
+ ['⚙️ ตั้งค่าและช่วยเหลือ',['openAuto','openGuide','startTut','openUpdate','openSound','cycleTheme','cycleFs','toggleScene','openPush','openSaveCode','openReport','openFeedback']]];
+{const _om15=openMenu;openMenu=function(){const r=_om15.apply(this,arguments);try{const m=$('modal'),gr=m.querySelector('.mgrid');if(!gr)return r;const all=[...m.querySelectorAll('button.opt')].filter(b=>b.closest('.mgrid'));const fnOf=b=>((b.getAttribute('onclick')||'').match(/^\s*([A-Za-z0-9_]+)\(/)||[])[1]||'';
+ const used=new Set(),out=document.createElement('div');out.className='mcat15';
+ MENU_CAT.forEach(([cn,fs],ci)=>{const L=[];fs.forEach(f=>all.forEach(b=>{if(!used.has(b)&&fnOf(b)===f){used.add(b);L.push(b)}}));if(ci===MENU_CAT.length-1)all.forEach(b=>{if(!used.has(b)){used.add(b);L.push(b)}});if(!L.length)return;
+  const h=document.createElement('h4');h.className='mch15';h.textContent=cn;out.appendChild(h);const g=document.createElement('div');g.className='mgrid';L.forEach(b=>g.appendChild(b));out.appendChild(g)});
+ [...m.querySelectorAll('.mgrid')].forEach(g=>{if(!g.children.length)g.remove()});const first=m.querySelector('.mgrid,.mcat15');m.querySelector('h3').insertAdjacentElement('afterend',out);[...m.querySelectorAll('.mgrid')].forEach(g=>{if(!out.contains(g)&&!g.children.length)g.remove()})}catch(e){console.error(e)}return r}}
+(function(){try{const st=document.createElement('style');st.textContent=`.mch15{margin:12px 2px 4px;font-size:14px;opacity:.85;border-bottom:1px dashed rgba(128,128,128,.35);padding-bottom:3px}.mcat15 .mch15:first-child{margin-top:4px;color:#e8b830;opacity:1}`;document.head.appendChild(st)}catch(e){}})();
+
+// ---------- รายปี ----------
+{const _py15=passYear;passYear=function(){const r=_py15.apply(this,arguments);try{if(S&&S.alive){q15Clean();estTick();twTick()}}catch(e){console.error(e)}return r}}
+try{Object.assign(I18N.d,{'🏞️ ที่ดินตระกูล':'🏞️ Clan Estate','🏠 ครัวเรือน':'🏠 Household','📜 พงศาวดาร':'📜 Chronicle','🏯 ประเพณีตระกูล':'🏯 Clan Tradition','🏗️ สิ่งปลูกสร้าง':'🏗️ Buildings','⭐ ใช้บ่อย':'⭐ Most used','🧘 ตัวละครและการฝึก':'🧘 Character & Training','👪 ครอบครัวและผู้คน':'👪 Family & People','📚 บันทึกและสะสม':'📚 Records & Collections','⚙️ ตั้งค่าและช่วยเหลือ':'⚙️ Settings & Help','🏙️ สถานที่อื่นในเมือง':'🏙️ Other places in town','🏬 ร้านสมบัติ':'🏬 Treasure Shop','🍶 อาหารและสุรา':'🍶 Food & Wine','💝 ของขวัญ':'💝 Gifts','🌾 ทรัพย์สินตระกูล':'🌾 Clan Property','🧺 วัตถุดิบ':'🧺 Materials','🐎 พาหนะและสัตว์':'🐎 Mounts & Animals','🏦 โรงรับฝากเงิน':'🏦 Bank','🥋 ลานประลองเมือง':'🥋 Town Arena','🎲 บ่อนเต๋า':'🎲 Dice House','🔮 หมอดูตาบอด':'🔮 Blind Fortune-teller','🍵 โรงน้ำชา':'🍵 Teahouse','🏛️ จวนเจ้าเมือง':'🏛️ Governor\'s Hall','🎪 เทศกาลเมือง':'🎪 Town Festival','🧒 ยังเด็กเกินไป':'🧒 Too young'})}catch(e){}
+
 </script>
 </body>
 </html>
