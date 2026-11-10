@@ -10533,10 +10533,10 @@ Object.assign(QV,{bq_hunt:()=>S.bKill||0,bq_pow:()=>S.power,bq_qi:()=>S.qi,bq_st
  bq_mate:()=>S.beastMode?(blM().mates||0):0,bq_kid:()=>S.kids||0,bq_dex:()=>S.bSeen||0,bq_int:()=>S.int,bq_surv:()=>S.age});
 Object.assign(QMK,{
  bq_hunt:()=>{const g=R(1,3)+Math.floor(bqSt()/2);return[`ล่าเหยื่อหรือเอาชนะสัตว์อื่น ${g} ครั้ง`,g,R(5,8)]},
- bq_pow:()=>{const g=Math.max(40,Math.round(total()*(.07+Math.random()*.06)));return[`เพิ่มพลังอสูรอีก ${fmt(g)}`,g,R(4,6)]},
+ bq_pow:()=>{const g=Math.max(30,Math.round(total()*(.04+Math.random()*.03)));return[`เพิ่มพลังอสูรอีก ${fmt(g)}`,g,R(6,9)]},
  bq_qi:()=>{const g=+(1.2+(S.sys?S.sys.lv:1)*.2).toFixed(1);return[`ดูดซับแสงจันทร์จนลมปราณเพิ่ม ${g} ปี`,g,R(4,6)]},
- bq_st:()=>[`บำเพ็ญสู่ขั้น${BL_ST[Math.min(BL_ST.length-1,bqSt()+1)]}`,1,R(15,25)],
- bq_fame:()=>{const g=8+bqSt()*5;return[`ทำให้ชื่อเสียงในป่าเลื่องลือขึ้น ${g}`,g,R(5,7)]},
+ bq_st:()=>[`บำเพ็ญสู่ขั้น${BL_ST[Math.min(BL_ST.length-1,bqSt()+1)]}`,1,R(25,40)],
+ bq_fame:()=>{const g=4+bqSt()*3;return[`ทำให้ชื่อเสียงในป่าเลื่องลือขึ้น ${g}`,g,R(5,7)]},
  bq_karma:()=>{const g=Math.min(30,8+(S.sys?S.sys.lv:1)*2);return[`ปกป้องผู้อ่อนแอ สะสมกรรมดี ${g}`,g,R(5,8)]},
  bq_kdown:()=>{const g=Math.min(30,8+(S.sys?S.sys.lv:1)*2);return[`ขยายอาณาเขตด้วยคมเขี้ยว (กรรมลดลง ${g})`,g,R(5,8)]},
  bq_mate:()=>['หาคู่ชีวิตในป่า',1,R(8,12)],
@@ -10792,6 +10792,15 @@ function balTick(){if(!S||!S.alive||S.custom||(S.beastMode&&!S.beastMode.human))
  if(S.fame>F0)S.fame=Math.round(S.fame-(S.fame-F0)*.01);
  S._bf0=S.fame}
 {const _pyb=passYear;passYear=function(){const r=_pyb.apply(this,arguments);try{balTick()}catch(e){}return r}}
+
+// ===================== v15.2 เควสระบบทำทันขึ้น (คน + สัตว์อสูร) =====================
+// เวลาในเกมเดินเร็ว: ขยายเส้นตายทุกเควสระบบ ×1.8 (อย่างน้อย +2 ปี)
+{const _mq2=mkQuest;mkQuest=function(k){const q=_mq2.apply(this,arguments);try{if(q&&typeof q.g==='number'&&q.g>3&&!/^bq_/.test(k)){const ng=Math.max(2,Math.round(q.g*.7)),o=fmt(q.g);if(q.n.indexOf(o)>=0){q.n=q.n.replace(o,fmt(ng));q.g=ng}}}catch(e){}try{if(q&&q.dl!=null){const y=Math.max(1,q.dl-S.age);q.dl=S.age+Math.max(y+2,Math.ceil(y*1.8))}}catch(e){}return q}}
+// สัตว์อสูร: ล่าเหยื่อ/ท่องป่า/ชื่อเสียง นับจากทิศทางที่เลือกด้วย
+{const _byq=beastYear;beastYear=function(){const f=S&&S.focus;const r=_byq.apply(this,arguments);try{if(S&&S.alive&&bsB()){
+ if(f==='hunt'||Math.random()<.15)S.bKill=(S.bKill||0)+1;
+ if(f==='roam'){S.bSeen=(S.bSeen||0)+1+(Math.random()<.3?1:0);S.fame+=1+bqSt()}
+ if(f==='hide'&&Math.random()<.3)S.bSeen=(S.bSeen||0)+1}}catch(e){}return r}}
 </script>
 </body>
 </html>
