@@ -6426,18 +6426,18 @@ function blStageTxt(){const m=S.beastMode;const st=BL_ST[Math.min(BL_ST.length-1
 // ---------- v9.5 anti-cheat ----------
 const AC_CAP={int:20000,cha:20000,fame:2e7,money:1e11,qi:5e6};
 let acPrev=null;
-function acSnap(){return{int:+S.int||0,cha:+S.cha||0,fame:+S.fame||0,money:+S.money||0,qi:+S.qi||0,pow:+S.power||0,dis:S.ownSect?+S.ownSect.dis||0:0,kids:+S.kids||0,har:(S.harem||[]).length,age:+S.age||0}}
+function acSnap(){return{int:+S.int||0,cha:+S.cha||0,fame:+S.fame||0,money:+S.money||0,qi:+S.qi||0,pow:(()=>{try{return +total()||0}catch(e){return +S.power||0}})(),dis:S.ownSect?+S.ownSect.dis||0:0,kids:+S.kids||0,har:(S.harem||[]).length,age:+S.age||0}}
 function acFlag(why){if(!S||S._tp)return;S._tp=why;try{console.warn('integrity')}catch(e){}}
 let acObj=null;
-function acCheck(){try{if(!S||!S.alive||S.custom)return;if(S!==acObj){acObj=S;acPrev=null}const c=acSnap();
+function acCheck(){try{if(!S||!S.alive||S.custom)return;if(S!==acObj){const kp=acPrev&&acObj&&acObj.name===S.name&&Math.abs((+S.age||0)-acPrev.age)<=2;acObj=S;if(!kp)acPrev=null}const c=acSnap();
  for(const k in AC_CAP)if(c[k]>AC_CAP[k]||!isFinite(c[k]))return acFlag('cap-'+k);
- if(c.dis>2e6||c.kids>150||c.har>300||c.pow>2e9||!isFinite(c.pow))return acFlag('cap-x');
+ if(c.dis>1e9||c.kids>1e5||c.pow>1e16||!isFinite(c.pow))return acFlag('cap-x');
  if(acPrev&&c.age-acPrev.age<=1){const d=(k)=>c[k]-acPrev[k];
-  if(d('int')>800||d('cha')>800)return acFlag('jump-stat');
-  if(d('fame')>Math.max(30000,acPrev.fame*4))return acFlag('jump-fame');
-  if(d('money')>Math.max(8e6,acPrev.money*20))return acFlag('jump-money');
-  if(d('pow')>Math.max(200000,acPrev.pow*6)&&c.age<1000)return acFlag('jump-pow');
-  if(d('dis')>Math.max(5000,acPrev.dis*5))return acFlag('jump-dis')}
+  if(d('int')>800||d('cha')>800)return acSus('jump-stat');
+  if(d('fame')>Math.max(30000,acPrev.fame*4,c.pow/5))return acSus('jump-fame');
+  if(d('money')>Math.max(8e6*acW(),acPrev.money*20))return acSus('jump-money');
+  if(d('pow')>Math.max(200000,acPrev.pow*6))return acSus('jump-pow');
+  if(d('dis')>Math.max(5000,acPrev.dis*5))return acSus('jump-dis')}
  acPrev=c}catch(e){}}
 setInterval(acCheck,700);
 {const _bl3=beginLife;beginLife=function(){acPrev=null;return _bl3.apply(this,arguments)}}
@@ -6532,11 +6532,11 @@ const EN_TOTAL=EN_SUR.length*(EN_GM.length+EN_GF.length);
 const AC_W=new WeakMap();
 {const _af=acFlag;acFlag=function(why){try{if(S&&!AC_W.has(S))AC_W.set(S,why)}catch(e){}return _af.apply(this,arguments)}}
 function acTp(){try{return(S&&(AC_W.get(S)||S._tp))||''}catch(e){return''}}
-{const _apiAC=api;api=async function(a,b){try{const tp=acTp();if(b&&tp){if(a==='live'&&b.spec)b=Object.assign({},b,{spec:0});if(['meet','meetact','arena','live'].includes(a))b=Object.assign({},b,{tp})}if(b&&!tp&&a==='arena'){acCheck();if(acTp())b=Object.assign({},b,{tp:acTp()})}}catch(e){}const j=await _apiAC.call(this,a,b);try{if(a==='board'&&window._shareCall&&j){j.top=(j.top||[]).filter(e=>!e.anon);j.prev=(j.prev||[]).filter(e=>!e.anon)}}catch(e){}return j}}
+{const _apiAC=api;api=async function(a,b){try{const tp=acTp();if(b&&tp){if(a==='live'&&b.spec)b=Object.assign({},b,{spec:0});if(['meet','meetact','arena','live','pabid','pachat','paforce','pavote','bhopen','bhpick','mtopen','mtpick','mtmsg','achfirst'].includes(a))b=Object.assign({},b,{tp})}if(b&&!tp&&a==='arena'){acCheck();if(acTp())b=Object.assign({},b,{tp:acTp()})}}catch(e){}const j=await _apiAC.call(this,a,b);try{if(a==='board'&&window._shareCall&&j){j.top=(j.top||[]).filter(e=>!e.anon);j.prev=(j.prev||[]).filter(e=>!e.anon)}}catch(e){}return j}}
 {const _sl2=sendLife;sendLife=async function(){try{acCheck()}catch(e){}return _sl2.apply(this,arguments)}}
 {const _py14=passYear;passYear=function(){try{acCheck()}catch(e){}const r=_py14.apply(this,arguments);try{acCheck()}catch(e){}return r}}
 setInterval(()=>{try{acCheck()}catch(e){}},1500);
-try{['acCheck','acFlag','acTp','acSnap','sendLife','api'].forEach(k=>{try{Object.defineProperty(window,k,{writable:false,configurable:false})}catch(e){}})}catch(e){}
+try{['acCheck','acFlag','acTp','acSnap','sendLife','api','acSus','acW','acTrap','acCaller'].forEach(k=>{try{Object.defineProperty(window,k,{writable:false,configurable:false})}catch(e){}})}catch(e){}
 
 // ---------- v10.0 spectate beast portrait
 {const _ls=liveSnap;liveSnap=function(){const r=_ls.apply(this,arguments);try{if(r&&S&&S.beastMode&&!S.beastMode.human){r.look=r.look||{};r.look.beast=blMe()}}catch(e){}return r};
@@ -10757,6 +10757,26 @@ openFrameShop=function(side){const d=frGet(),k=S?Math.round(S.karma):null,kb=kbG
 {const fo=()=>{try{return frGet().own.length}catch(e){return 0}};const L=[{id:'fr_10',n:'นักสะสมกรอบ',d:'มีกรอบรูป 10 แบบ',r:2,c:()=>fo()>=10},{id:'fr_30',n:'หอศิลป์ส่วนตัว',d:'มีกรอบรูป 30 แบบ',r:4,c:()=>fo()>=30},{id:'fr_all',n:'ผู้ครอบครองทุกกรอบ',d:'มีกรอบรูปครบทุกแบบ',r:6,c:()=>fo()>=FRAMES.length},
  {id:'fr_top',n:'ผู้สวมกรอบสูงสุด',d:'แลกกรอบเทพผู้สร้างโลกหรือกรอบราชาอเวจีนิรันดร์',r:5,c:()=>{try{const o=frGet().own;return o.includes('f_supreme')||o.includes('f_endless')}catch(e){return false}}}];
  ACH.push(['🖼️ นักสะสมกรอบ',L]);ACH_ALL.push(...L)}
+
+// ===================== v15.2 anti-cheat 2: จับแก้ค่าผ่านคอนโซล/แก้เซฟ (ทุกเบราว์เซอร์) · เพดานใหม่ไม่ตัดคนเล่นจริง =====================
+Object.assign(AC_CAP,{int:1e6,cha:1e6,fame:1e16,money:1e16,qi:1e9});try{Object.freeze(AC_CAP)}catch(e){}
+function acW(){try{return({m:1,x:50,g:4000})[ECO_W()]||1}catch(e){return 1}}
+const AC_SUS=new WeakMap();
+// สัญญาณอ่อน: ไม่ตัดสิทธิ์ แต่ส่งให้แอดมินตรวจ
+function acSus(why){try{if(!S)return;let m=AC_SUS.get(S);if(!m){m={};AC_SUS.set(S,m)}if(m[why])return;m[why]=1;
+ if(typeof onlineOK!=='undefined'&&onlineOK)api('acsus',{why,n:S.name,age:Math.round(S.age||0),st:{pow:Math.round(total()),fame:Math.round(S.fame||0),money:Math.round(S.money||0)}}).catch(()=>{})}catch(e){}}
+// ---- จับการเขียนค่าที่ไม่ได้มาจากโค้ดเกม (คอนโซล / สคริปต์ภายนอก) ----
+const AC_TK=['power','fame','money','qi','int','cha','age','lifespan','karma'],AC_SYM=Symbol('a'),AC_ORG=location.origin;
+function acCaller(){try{const L=String(new Error().stack||'').split('\n').map(l=>l.trim()).filter(l=>l&&!/^Error\b/.test(l)&&l.indexOf('__acS')<0&&l.indexOf('acCaller')<0);return!L.length||L.some(l=>l.indexOf(AC_ORG)>=0)}catch(e){return true}}
+function acTrap(o){if(!o||typeof o!=='object'||o[AC_SYM])return;try{Object.defineProperty(o,AC_SYM,{value:1});
+ AC_TK.forEach(k=>{const d=Object.getOwnPropertyDescriptor(o,k);if(!d||!('value' in d)||!d.configurable)return;let v=d.value;
+  Object.defineProperty(o,k,{enumerable:true,configurable:false,get(){return v},set:function __acS(n){try{if(typeof n==='number'&&typeof v==='number'&&Math.abs(n-v)>Math.abs(v)*.03+5&&!acCaller()){acFlag('console-'+k);acSus('console-'+k)}}catch(e){}v=n}})})}catch(e){}}
+setInterval(()=>{try{if(S&&S.alive&&!S.custom)acTrap(S)}catch(e){}},400);
+// ---- ลายเซ็นเซฟ: แก้ไฟล์เซฟในเครื่องแล้วโหลด = ติดธง ----
+function acH(t){let h=2166136261;t='m1n'+t+'#q7';for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(36)}
+const acSF=o=>[o.name,Math.round(o.age||0),Math.round(o.power||0),Math.round(o.fame||0),Math.round(o.money||0),Math.round((o.qi||0)*10),Math.round(o.int||0),Math.round(o.cha||0)].join('|');
+{const _sg=saveGame;saveGame=function(){const r=_sg.apply(this,arguments);try{if(S&&S.alive&&!S.custom){const g=LS.get('murim_ui9',{})||{};g[S.slot||1]={h:acH(acSF(S)),a:Math.round(S.age||0)};LS.set('murim_ui9',g)}}catch(e){}return r}}
+{const _lg=loadGame;loadGame=function(n){const r=_lg.apply(this,arguments);try{const g=(LS.get('murim_ui9',{})||{})[n||1];if(S&&g&&g.a===Math.round(S.age||0)&&g.h!==acH(acSF(S))){acFlag('save-edit');acSus('save-edit')}}catch(e){}return r}}
 </script>
 </body>
 </html>

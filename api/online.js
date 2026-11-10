@@ -520,6 +520,13 @@ module.exports = async (req, res) => {
       const tRows = tIps.map((x, i) => { const f = jp(tInf[i]) || { n: 0, p: [] }, tl = +tTtl[i] || -2; return { ip: x, f, ban: tl > 0 ? tl : 0, wl: +tWl[i] === 1 } });
       const secHtml = `<h2>🛡️ ผู้บุกรุก / บอทสแกนไฟล์ <small style="font-weight:normal;color:#aaa">· วันนี้ ${+(tN1 || 0)} ครั้ง · เมื่อวาน ${+(tN7 || 0)} ครั้ง</small></h2><p><small>บอทที่พยายามหาไฟล์ลับ (.env, .git, .aws, *.php …) จะได้ 404 เหมือนไม่มีอะไร แล้วถูกแบนจากระบบออนไลน์ 7 วันอัตโนมัติ · คนที่ยิง API ถี่ผิดปกติถูกแบน 30 นาที · ไฟล์ลับจริงไม่มีอยู่บนเว็บ (รหัสทั้งหมดอยู่ใน Environment Variables ของ Vercel)</small></p>${tRows.length ? tRows.map(r => `<div class="pl" id="ip_${e(r.ip).replace(/[:.]/g, '_')}"><div class="plh"><b>${r.f.fl ? '🌊' : '🕷️'} ${e(r.ip)}</b><span>${r.ban ? '<span style="color:#ff6b6b">⛔ แบนอยู่ อีก ' + tAgo(now - r.ban * 1000) + '</span>' : r.wl ? '<span style="color:#7c7">✅ ปลดแล้ว (ยกเว้น)</span>' : '<span style="color:#aaa">หมดเวลาแบน</span>'}</span></div><small>${r.f.n} ครั้ง · ล่าสุด ${tAgo(r.f.l || now)} ก่อน<br>${(r.f.p || []).map(e).join(' · ')}<br><span style="color:#888">${e(r.f.ua || '')}</span></small><div style="margin-top:6px;display:flex;gap:6px">${r.ban ? `<button class="cpb" onclick="ipB('${e(r.ip)}','0',this)">ปลดบล็อก</button>` : `<button class="cpb" onclick="ipB('${e(r.ip)}','1',this)">บล็อก 30 วัน</button>`}<button class="cpb" style="color:#aaa;border-color:#555" onclick="ipB('${e(r.ip)}','del',this)">ลบออกจากรายการ</button></div></div>`).join('') : '<p>ยังไม่มีใครมาสแกน 🎉</p>'}
 <script>async function ipB(ip,on,b){if(on==='1'&&!confirm('บล็อก '+ip+' จากระบบออนไลน์ 30 วัน?'))return;b.disabled=true;try{const r=await fetch('?a=ipban&key=${K}&ip='+encodeURIComponent(ip)+'&on='+on);const j=await r.json();if(j.ok){b.textContent=on==='1'?'บล็อกแล้ว':on==='del'?'ลบแล้ว':'ปลดแล้ว';if(on==='del')b.closest('.pl').style.opacity=.35}else b.textContent='ไม่สำเร็จ'}catch(x){b.textContent='ไม่สำเร็จ';b.disabled=false}}</script>`;
+      const [acL0, clL0, chS] = await pipe([['LRANGE', 'acsus', 0, 79], ['LRANGE', 'cheatlog', 0, 59], ['SMEMBERS', 'cheaters']]);
+      const chSet = new Set(chS || []);
+      const AC_WHY = w => { w = String(w || '').replace(/^tamper:/, ''); return /^console/.test(w) ? '🔴 แก้ค่าผ่านคอนโซล (' + w.slice(8) + ')' : w === 'save-edit' ? '🔴 แก้ไฟล์เซฟ' : w === 'srv-cap' ? '🔴 ค่าเกินขีดที่เป็นไปได้ (เซิร์ฟเวอร์)' : w === 'srv-jump' ? '🟠 พลังกระโดดเกิน ×1000 ใน 3 ปี (เซิร์ฟเวอร์)' : /^cap/.test(w) ? '🟠 ค่าเกินเพดาน (' + w + ')' : /^jump/.test(w) ? '🟡 ค่ากระโดดเร็ว (' + w.slice(5) + ')' : w === 'banned' ? '🚫 ถูกแบน' : w === 'pow-age' ? '🟡 พลังสูงเกินอายุ' : w === 'stat' ? '🟠 ค่าเกินขีด' : w === 'score' ? '🟠 คะแนนเกินค่าสถานะ' : '⚪ ' + w };
+      const acRow = (x, src) => { const f = x.fid || x.id || '', pre = f.slice(0, 10); return `<div class="pl"><div class="plh"><b>${e(x.n || '-')}</b><small>${tAgo(x.t || now)} ที่แล้ว · ${src}</small></div>${AC_WHY(x.why)} · อายุ ${(+x.age || 0).toLocaleString('th-TH')}${x.st ? ` · ⚔️ ${(+x.st.pow || 0).toLocaleString('en-US')} · ⭐ ${(+x.st.fame || 0).toLocaleString('en-US')}` : x.s ? ` · คะแนน ${(+x.s || 0).toLocaleString('en-US')}` : ''} · <small>${e(pre)}${chSet.has(f) ? ' · 🚫 แบนแล้ว' : ''}</small><br><a class="cpb" style="text-decoration:none" target="_blank" href="?a=acinv&key=${K}&p=${e(pre.slice(0, 8))}&h=1">🔍 ดูประวัติ</a> <button class="cpb" onclick="acB('${e(pre)}','1',this)">🚫 แบน</button> <button class="cpb" onclick="acB('${e(pre)}','0',this)">✅ ล้างธง/ปลดแบน</button></div>` };
+      const acL = (acL0 || []).map(jp).filter(Boolean), clL = (clL0 || []).map(jp).filter(Boolean);
+      const acHtml = `<h2>🕵️ ผู้ต้องสงสัยโกง <small style="font-weight:normal;color:#aaa">· 🔴 = จับได้ชัด (แก้ค่าผ่านคอนโซล/แก้เซฟ) ถูกตัดจากระบบออนไลน์อัตโนมัติ · 🟡🟠 = สัญญาณให้ตรวจเอง</small></h2>${acL.length ? acL.slice(0, 40).map(x => acRow(x, 'ระบบจับ')).join('') : '<p><small>ยังไม่มี</small></p>'}<details><summary>📋 ถูกตัดจากทำเนียบล่าสุด (${clL.length})</summary>${clL.map(x => acRow(x, 'ทำเนียบ')).join('')}</details>
+<script>async function acB(p,on,b){if(!confirm(on==='1'?'แบนผู้เล่นนี้จากระบบออนไลน์ทั้งหมด?':'ล้างธงและปลดแบนผู้เล่นนี้?'))return;b.disabled=true;try{const r=await fetch('?a=acban&key=${K}&p='+p+'&on='+on);const j=await r.json();b.textContent=j.ok?(on==='1'?'แบนแล้ว ('+j.n+')':'ปลดแล้ว ('+j.n+')'):'ไม่สำเร็จ'}catch(x){b.textContent='ไม่สำเร็จ'}}</script>`;
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       return res.status(200).send(`<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="60"><title>ผู้ดูแล · 1 ใน นวนิยาย</title>
 <style>.cpb{background:#2a2433;color:#f0c860;border:1px solid #f0c860;border-radius:6px;padding:4px 10px;font-size:13px;cursor:pointer}.pl{background:#211d2a;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:14px}.plh{display:flex;flex-wrap:wrap;gap:6px;justify-content:space-between;align-items:baseline}.plh small,.pl small{color:#aaa}body{font-family:system-ui,sans-serif;background:#16131c;color:#eee;margin:0;padding:14px;max-width:760px;margin:auto}h1{font-size:20px}h2{font-size:16px;margin-top:22px;color:#f0c860}table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:6px;border-bottom:1px solid #333;text-align:left}.c{display:inline-block;background:#2a2433;border-radius:8px;padding:8px 12px;margin:4px 6px 4px 0}.c b{font-size:20px;display:block;color:#f0c860}.bug{background:#221d2a;border-radius:8px;padding:8px 10px;margin:6px 0;font-size:14px}.bug.done{opacity:.55}a{color:#8fd0ff}small{opacity:.6}</style></head><body>
@@ -528,6 +535,7 @@ module.exports = async (req, res) => {
 ${avHtml}
 ${hvHtml}
 ${secHtml}
+${acHtml}
 ${afHtml}
 <h2>🐞 error จากเครื่องผู้เล่น <small style="font-weight:normal;color:#aaa">· 200 ครั้งล่าสุด จัดกลุ่มตามข้อความ</small></h2>${jsTop.length ? `<p><button class="cpb" onclick="cpErr(-1,this)">📋 ก็อปปี้ error ทั้งหมดไปให้ Claude แก้</button> <small>(ไม่รวมอันที่มาจากเบราว์เซอร์)</small></p>` : ''}${jsTop.map((g, gi) => `<div class="pl" style="border-left:4px solid ${jsNoise(g) ? '#777' : '#ff6b6b'}"><div class="plh"><b style="color:${jsNoise(g) ? '#aaa' : '#ff9b9b'}">${e(g.last.m)}</b><small>${g.n} ครั้ง · ${g.users.size} คน · v${e([...g.vers].join(', v'))}</small></div>${jsNoise(g) ? '<div><small style="color:#e8c86a">🔕 มาจากเบราว์เซอร์ในแอปหรือส่วนขยาย ไม่ใช่บัคของเกม</small></div>' : ''}<div><small>ล่าสุด ${new Date(g.last.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })} · ${e(g.last.d)}${g.last.l ? ' · บรรทัด ' + g.last.l + ':' + g.last.c : ''} · หน้า ${e(g.last.x.sc)}${g.last.x.md ? ' · หน้าต่าง ' + e(g.last.x.md) : ''}${g.last.x.ch ? ' · เหตุการณ์ ' + e(g.last.x.ch) : ''}${g.last.x.ag ? ' · อายุ ' + g.last.x.ag + ' · ' + e(g.last.x.fo) + ' · ' + e(g.last.x.w) : ''}</small></div>${g.last.s ? `<div><small style="color:#aaa;word-break:break-all">${e(g.last.s)}</small></div>` : ''}<div style="margin-top:6px"><button class="cpb" onclick="cpErr(${gi},this)">📋 ก็อปปี้ให้ Claude</button></div></div>`).join('') || '<p><small>ยังไม่มี error</small></p>'}
 <script>const ERR_TX=${JSON.stringify(jsTop.map(g => ({ t: jsText(g), n: jsNoise(g) ? 1 : 0 }))).replace(/</g, '\\u003c')};
@@ -736,9 +744,19 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       if (!tok || tok !== tk || !d) return res.status(404).json({ err: 'notfound' });
       return res.json({ d });
     }
+    if (a === 'acban') {
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'forbidden' });
+      const pre = String(qOf(req).p || '').replace(/[^a-z0-9]/g, '').slice(0, 24), on = String(qOf(req).on || '');
+      if (pre.length < 6) return res.json({ err: 'pre' });
+      const ids = new Set(); if (pre.length >= 12) ids.add(pre);
+      for (const hk of ['lm', 'om']) { let cur = '0', n = 0; do { const r = await cmd('HSCAN', hk, cur, 'MATCH', pre + '*', 'COUNT', 1000); cur = String(r[0]); for (let i = 0; i < r[1].length; i += 2) ids.add(r[1][i]); n++ } while (cur !== '0' && n < 400) }
+      const L = []; for (const x of ids) { if (on === '1') L.push(['SADD', 'cheaters', x]); else L.push(['SREM', 'cheaters', x], ['DEL', 'acf:' + x], ['DEL', 'acp:' + x]) }
+      if (L.length) await pipe(L);
+      return res.json({ ok: 1, n: ids.size });
+    }
     if (a === 'acinv') {
-      // ตรวจสอบผู้เล่นต้องสงสัย (ชั่วคราว) — ใช้โทเคนลับแยกจากรหัสแอดมิน
-      if (crypto.createHash('sha256').update(String(qOf(req).tk || '')).digest('hex') !== '9cf94816bfb591d50412837048ca8c92aeb60576007e24533efa99d4f7f68b39') return res.status(403).json({ err: 'forbidden' });
+      // แอดมิน: ตรวจประวัติผู้เล่นต้องสงสัย (เซฟคลาวด์ · ภาพสด · บันทึกโกง)
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'forbidden' });
       if (qOf(req).all === '1') { const L0 = await cmd('LRANGE', 'cheatlog', 0, 99); return res.json({ l: (L0 || []).map(x => { try { return JSON.parse(x) } catch { return null } }) }) }
       const nm = String(qOf(req).n || '').slice(0, 40);
       if (nm) { const hit = []; const [pub, prv] = await pipe([['ZRANGE', 'livez', 0, -1], ['ZRANGE', 'livezp', 0, -1]]); const ids = [...new Set([...(pub || []), ...(prv || [])])];
@@ -758,7 +776,13 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
         const sl = await pipe([1, 2, 3, 4, 5].map(i => ['GET', 'cs3:' + fid + ':' + i]));
         const cl = ((await cmd('LRANGE', 'cheatlog', 0, 99)) || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(x => x && fid.startsWith(x.id));
         let live = null; try { const z = JSON.parse(lv || lp || 'null'); if (z) live = { n: z.n, age: z.age, r: z.r, x: z.x, st: z.st, sys: z.sys, feed: z.feed, t: z.t } } catch {}
-        out.push({ id: fid.slice(0, 8), lm, om, live, cs2: cs ? sum(cs) : null, slots: sl.map(x => x ? sum(x) : null), cheater: ch, cheatlog: cl, ctok: !!ctk });
+        out.push({ id: fid.slice(0, 8), fid, lm, om, live, cs2: cs ? sum(cs) : null, slots: sl.map(x => x ? sum(x) : null), cheater: ch, cheatlog: cl, ctok: !!ctk, acf: await cmd('GET', 'acf:' + fid), acp: await cmd('GET', 'acp:' + fid) });
+      }
+      if (qOf(req).h === '1') {
+        const E = x => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]), N = v => (+v || 0).toLocaleString('en-US', { maximumFractionDigits: 1 });
+        const sv = (x, h) => x ? `<div class="b"><b>${h}: ${E(x.n)}</b> · อายุ ${N(x.age)} ปี · รุ่นที่ ${E(x.gen || 1)} · โลก ${x.xt ? 'เทพ' : x.xian ? 'เซียน' : 'มนุษย์'} · v${E(x.v)} · เซฟเมื่อ ${new Date(x.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })}<br>⚔️ ${N(x.pow)} · ⭐ ${N(x.fame)} · 💰 ${N(x.money)} · 🌀 ${N(x.qi)} · 📖 ${N(x.int)} · 🌸 ${N(x.cha)} · อายุขัย ${N(x.ls)}${x.sys ? ` · ระบบ ${E(x.sys.t)} Lv.${E(x.sys.lv)}` : ''}${x.adm ? ' · 🛠️ใช้เครื่องมือแอดมิน' : ''}${x.tp ? ' · ⚠️ ' + E(x.tp) : ''}<br><small>สายตระกูล: ${(x.lin || []).map(l => E(l.n) + ' (' + E(l.a) + ')').join(' → ') || '-'}</small><details><summary>เหตุการณ์สำคัญ ${E(x.nkey)} รายการ</summary><small>${[...(x.k0 || []), '…', ...(x.k1 || [])].map(E).join('<br>')}</small></details></div>` : '';
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        return res.status(200).send(`<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>ตรวจประวัติผู้เล่น</title><style>body{font-family:system-ui,sans-serif;background:#16131c;color:#eee;padding:14px;max-width:760px;margin:auto;line-height:1.55}.b{background:#211d2a;border-radius:8px;padding:8px 10px;margin:8px 0;font-size:14px}small{color:#aaa}h2{font-size:16px}</style></head><body><h1>🔍 ตรวจประวัติผู้เล่น ${E(pre)}…</h1><p>พบ ${found.size} เครื่อง</p>${out.map(x => { const m = jp(x.lm) || jp(x.om) || {}; return `<h2>เครื่อง ${E(x.id)}… · ${E(m.d)} · ${E(m.b)} · ${E(m.c)} ${x.cheater ? '· 🚫 แบนแล้ว' : ''} ${x.acf ? '· ⚠️ ติดธง: ' + E(x.acf) : ''}</h2><small>${E(m.u || '')}</small>${x.live ? `<div class="b"><b>🔴 ภาพสดล่าสุด: ${E(x.live.n)}</b> · อายุ ${N(x.live.age)} · ⚔️ ${N(x.live.st && x.live.st.pow)} · ⭐ ${N(x.live.st && x.live.st.fame)} · 💰 ${N(x.live.st && x.live.st.money)}</div>` : ''}${sv(x.cs2, '☁️ เซฟคลาวด์ล่าสุด')}${x.slots.map((y, i) => y && (!x.cs2 || y.t !== x.cs2.t) ? sv(y, 'ช่องเซฟ ' + (i + 1)) : '').join('')}${x.cheatlog.length ? `<div class="b"><b>📋 ถูกตัดจากทำเนียบ</b><br>${x.cheatlog.map(c => `${E(c.n)} · อายุ ${N(c.age)} · คะแนน ${N(c.s)} · ${E(c.why)} · ${new Date(c.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })}`).join('<br>')}</div>` : ''}`}).join('')}</body></html>`);
       }
       return res.json({ n: found.size, out });
     }
@@ -783,7 +807,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
     const findLive = async (k2, adm) => { const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 90e3, '+inf']]); const f1 = (pub || []).find(x => x.slice(0, 6) + x.slice(-4) === k2); if (f1) return f1; if (adm) return (prv || []).find(x => x.slice(0, 6) + x.slice(-4) === k2) || null; return null };
     const RPC = [[120, 350, 800, 2200, 5500, 12000, 24000, 24000], [250, 900, 2500, 7000, 18000, 42000, 90000, 90000]];
     const powOk = (p, ri, x, age) => { ri = Math.max(0, Math.min(7, +ri || 0)); if (!(p >= 0) || !isFinite(p) || p > 2e9) return false; if (ri < 7 && p > RPC[x ? 1 : 0][ri] * 8 + 1000) return false; if (age != null && +age < 1000 && p > (x ? 60000 : 25000) * (1 + (+age || 1) / 8) + 300000) return false; return true };
-    const isBanned = async () => !!(await cmd('SISMEMBER', 'cheaters', id));
+    const isBanned = async () => { const [c0, f0] = await pipe([['SISMEMBER', 'cheaters', id], ['GET', 'acf:' + id]]); return !!(+c0 || f0) };
     const isAdmQ = k => !!ADM_KEY && String(k || '') === ADM_KEY;
     if (a === 'logget') {
       const k2 = String(qOf(req).t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -884,8 +908,24 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       await pipe([['SET', 'logfull:' + id, ls, 'EX', 300], ['DEL', 'logreq:' + id]]);
       return res.json({ ok: 1 });
     }
+    if (a === 'acsus') {
+      if (req.method !== 'POST' || !okId(id)) return res.json({ ok: 0 });
+      const why = String(b.why || '').replace(/[^a-z0-9-]/g, '').slice(0, 24); if (!why) return res.json({ ok: 0 });
+      const fresh = await cmd('SET', 'acsr:' + id + ':' + why, 1, 'NX', 'EX', 3600); if (!fresh) return res.json({ ok: 1 });
+      const st = b.st || {}, hard = /^(console|save-edit)/.test(why);
+      const L = [['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(b.n || ''), 24), age: +b.age || 0, why, st: { pow: +st.pow || 0, fame: +st.fame || 0, money: +st.money || 0 }, t: now })], ['LTRIM', 'acsus', 0, 199]];
+      if (hard) L.push(['SET', 'acf:' + id, why, 'EX', 86400 * 60]);
+      await pipe(L); return res.json({ ok: 1 });
+    }
     if (a === 'live') {
       if (b.spec && (b.tp || await isBanned())) b.spec = 0;
+      try { const z = JSON.parse(String(b.s || 'null')); if (z && z.st && okId(id)) { const p = +z.st.pow || 0, fm = +z.st.fame || 0, mn = +z.st.money || 0, ag = +z.age || 0; let why = '';
+        if (!isFinite(p) || p > 1e16 || fm > 1e16 || mn > 1e16) why = 'srv-cap';
+        const pv = jp(await cmd('GET', 'acp:' + id));
+        if (!why && pv && pv.n === z.n && ag >= pv.a && ag - pv.a <= 3 && p > 1e7 && p > pv.p * 1000) why = 'srv-jump';
+        const L = [['SET', 'acp:' + id, JSON.stringify({ n: z.n, a: ag, p }), 'EX', 86400 * 7]];
+        if (why && !(await cmd('GET', 'acf:' + id))) { L.push(['SET', 'acf:' + id, why, 'EX', 86400 * 60], ['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(z.n || ''), 24), age: ag, why, st: { pow: p, fame: fm, money: mn }, prev: pv, t: now })], ['LTRIM', 'acsus', 0, 199]); b.spec = 0 }
+        await pipe(L) } } catch {}
       if (okId(id)) { try { const lm = uaMeta(req, now); lm.u = String(req.headers['user-agent'] || '').slice(0, 160); await cmd('HSET', 'lm', id, JSON.stringify(lm)) } catch {} }
       if (!b.spec) {
         const ps = String(b.s || '');
@@ -1020,16 +1060,16 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
         if (!bad && det) {
           const D = JSON.parse(det), st = D.st || {}, kids = (D.kids || []).length, dis = +((String(D.sect || '').match(/ศิษย์\s*([0-9]+)/) || [])[1] || 0);
           const pw = +st.pow || 0, fm = +st.fame || 0, mn = +st.money || 0, ag = Math.max(1, +e.age || 1);
-          if ((+st.int || 0) > 20000 || (+st.cha || 0) > 20000 || fm > 2e7 || mn > 1e11 || kids > 150 || dis > 2e6 || pw > 2e9) bad = 'stat';
+          if ((+st.int || 0) > 1e6 || (+st.cha || 0) > 1e6 || fm > 1e16 || mn > 1e16 || kids > 1e5 || dis > 1e9 || pw > 1e16) bad = 'stat';
           const powCap = (e.x ? 60000 : 25000) * (1 + ag / 8) + 300000;
           if (!bad && pw > powCap && ag < 1000) bad = 'pow-age';
           const upper = (pw + fm * 3 + 20 * Math.sqrt(Math.max(0, mn)) + 2500 + kids * 100 + dis * 20 + 4000) * 2.5 * 1.05 + 1000;
           if (!bad && e.s > upper) bad = 'score';
         }
         if (!bad && !det && e.s > 50000) bad = 'nodet-big';
-        if (!bad && await cmd('SISMEMBER', 'cheaters', id)) bad = 'banned';
+        if (!bad && await isBanned()) bad = 'banned';
       } catch { bad = bad || 'parse' }
-      if (bad) { await pipe([['INCR', 'lives'], ['LPUSH', 'cheatlog', JSON.stringify({ id: id.slice(0, 10), n: e.n, s: e.s, age: e.age, why: bad, t: now })], ['LTRIM', 'cheatlog', 0, 99]]); return res.json({ ok: 1, skip: 1, flag: 1 }) }
+      if (bad) { await pipe([['INCR', 'lives'], ['LPUSH', 'cheatlog', JSON.stringify({ id: id.slice(0, 10), fid: id, n: e.n, s: e.s, age: e.age, why: bad, t: now })], ['LTRIM', 'cheatlog', 0, 99]]); return res.json({ ok: 1, skip: 1, flag: 1 }) }
       if (lid.length >= 6 && det && det.length < 40000) { try { JSON.parse(det); L.push(['SET', 'lifed:' + lid, det, 'EX', 86400 * 40], ['SET', 'lifeo:' + lid, id, 'EX', 86400 * 40], ['SET', 'lifep:' + lid, +b.pub === 2 ? '2' : b.pub ? '1' : '0', 'EX', 86400 * 40]) } catch {} }
       await pipe(L);
       return res.json({ ok: 1 });
