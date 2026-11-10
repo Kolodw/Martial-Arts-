@@ -414,7 +414,7 @@ details.item summary{cursor:pointer}
   <div class="feed" id="feed"></div>
   <div class="pendbar" id="pendBar" style="display:none" onclick="openPend()"></div>
   <div class="ctrl">
-    <div class="onrow"><button class="onpill" id="onPill" onclick="openOnline()" aria-label="ออนไลน์"><i class="ondot"></i>🌐 ออนไลน์ <b id="onPillN"></b></button></div>
+    <div class="onrow"><button class="ascpill" id="ascPill" style="display:none" onclick="ascAsk()"></button><button class="onpill" id="onPill" onclick="openOnline()" aria-label="ออนไลน์"><i class="ondot"></i>🌐 ออนไลน์ <b id="onPillN"></b></button></div>
     <div class="crow">
       <button class="cb" id="pauseBtn" onclick="togglePause()">⏸</button>
       <button class="cb px" id="spdBtn" onclick="cycleSpeed()">1×</button>
@@ -8865,6 +8865,28 @@ setInterval(onPillUpd,4000);setTimeout(onPillUpd,1500);
 .ondot{width:8px;height:8px;border-radius:50%;background:#3ad45a;animation:onDot 2s ease-out infinite}.onpill.off .ondot{background:#999;animation:none}
 @keyframes onDot{0%{box-shadow:0 0 0 0 #3ad45a99}70%,100%{box-shadow:0 0 0 7px #3ad45a00}}`;document.head.appendChild(st)})();
 try{Object.assign(I18N.d,{'ออฟไลน์':'Offline'})}catch(e){}
+
+// ===== v14.3 ข้ามโลกด้วยปุ่ม: เงื่อนไขครบปุ่มจึงขึ้น · ไม่มีเหตุการณ์บังคับส่งไปโลกอื่นอีก (อยากอยู่โลกเดิมก็อยู่ได้ตลอด) =====
+function ascEligible(){try{if(!S||!S.alive||!S.realmOn&&S.realmOn===false)return false;if(S.beastMode&&!S.beastMode.human)return false;if(realmIdx()<7||S.age<20)return false;
+ if(S.xt)return postLv()>=RS_MAX&&!S.flags.xtEnd;if((S.ascCd||0)>S.age)return false;return ascWait()<=0}catch(e){return false}}
+function ascDest(){return S.xt?'ก้าวข้ามสามภพ':S.xian?'ขึ้นสู่โลกเทพ':'เหาะสู่โลกเซียน'}
+ascendTick=function(){try{if(!S)return false;const ok=ascEligible();
+ if(ok&&!S._ascRdy){S._ascRdy=1;log(`🌩️ ร่างกายของคุณพร้อมรับทัณฑ์สวรรค์แล้ว — กดปุ่ม <b>⚡ ${ascDest()}</b> เหนือแถบเวลาเมื่อพร้อม · ถ้ายังอยากอยู่${S.xian?'โลกเซียน':'ยุทธภพ'} ก็ไม่ต้องกด`,'myth',true)}
+ else if(!ok){S._ascRdy=0;if(!S.xt&&realmIdx()>=7&&ascWait()>0&&(!S._ascHint||S._ascHint<S.age-40)){S._ascHint=S.age;log(`🌩️ ร่างกายของคุณแตะขีดสุดของ${S.xian?'โลกเซียน':'โลกมนุษย์'}แล้ว แต่รากฐานยังไม่มั่นคงพอจะรับทัณฑ์สวรรค์ (อีกราว ${ascWait()} ปี)`,'epic')}}}catch(e){}return false};
+function ascAsk(){if(!ascEligible())return toast('ยังไม่ถึงเวลา');if(choice._cur)return toast('ตัดสินใจเรื่องตรงหน้าก่อน');const toX=!S.xian;
+ const odds=S.xian&&!S.xt?` · โอกาสผ่านแต่ละระลอกราว ${Math.round(xTribP(1)*100)}% · ล้มเหลวเสียพลังบางส่วน`:' · ล้มเหลว อาจตาย';
+ choice('⚡ ทัณฑ์สวรรค์',`คุณเรียกเมฆทัณฑ์ลงมาเอง สายฟ้าสีม่วงคำรามเหนือศีรษะ — ร่างกายของคุณถึงขีดสุดของ${S.xt?'ทุกชั้นแห่งโลกเทพ':S.xian?'โลกเซียน':'โลกมนุษย์'}แล้ว<br>${toX?'ฝ่าทัณฑ์ 3 ระลอกได้ จะ<b>เหาะขึ้นสู่โลกเทพเซียน</b> แล้วเล่นต่อในโลกใหม่':S.xt?'ฝ่าทัณฑ์ 3 ระลอกได้ จะ<b>ก้าวข้ามสามภพ</b> — ปิดตำนานชีวิตนี้ (ตอนจบสูงสุด)':'ฝ่าทัณฑ์ 3 ระลอกได้ จะ<b>ขึ้นสู่โลกเทพ</b>'}`,[
+  {t:'⚡ ฝ่าทัณฑ์สวรรค์',s:(toX?'ไปต่อในโลกเทพเซียน':S.xt?'ตอนจบสูงสุด':'ไปต่อในโลกเทพ')+odds,f(){S._ascRdy=0;ascendWave(1);setTimeout(ascPillUpd,50)}},
+  {t:'🌏 ยังก่อน',s:'ปุ่มยังอยู่ กดเมื่อพร้อมได้ทุกเมื่อ',skip:true,f(){log('คุณสลายเมฆทัณฑ์ไปก่อน "ยังไม่ใช่ตอนนี้"')}}])}
+function ascPillUpd(){try{const b=$('ascPill');if(!b)return;const ok=ascEligible();b.style.display=ok?'':'none';if(ok){const t='⚡ '+ascDest();if(b.textContent!==t)b.textContent=t}}catch(e){}}
+setInterval(ascPillUpd,1500);{const _rdA=render;render=function(){const r=_rdA.apply(this,arguments);ascPillUpd();return r}}
+(function(){const st=document.createElement('style');st.textContent=`
+.onrow{gap:8px;align-items:center}
+.ascpill{margin-right:auto;border:2px solid #b89cff;border-radius:20px;background:linear-gradient(180deg,#3a2470,#1a0f38);color:#fff;font:inherit;font-size:.86em;font-weight:bold;padding:3px 12px;cursor:pointer;box-shadow:0 0 10px #a07cff88;animation:ascP 2.6s ease-in-out infinite}
+.ascpill:active{transform:translateY(2px)}
+@keyframes ascP{0%,100%{box-shadow:0 0 6px #a07cff66}50%{box-shadow:0 0 16px #d0c0ff,0 0 3px #fff}}
+@media (prefers-reduced-motion:reduce){.ascpill{animation:none}}`;document.head.appendChild(st)})();
+try{Object.assign(I18N.d,{'ร่างกายของคุณพร้อมรับทัณฑ์สวรรค์แล้ว':'Your body is ready for the heavenly tribulation','กดปุ่ม':'tap the button','เหนือแถบเวลาเมื่อพร้อม':'above the time bar when ready','ถ้ายังอยากอยู่':'If you would rather stay in the','ก็ไม่ต้องกด':', just do not tap it','ก้าวข้ามสามภพ':'Transcend the Three Realms','เหาะสู่โลกเซียน':'Ascend to the Immortal World','โลกเทพ':'God World','โลกเซียน':'Immortal World','ยังไม่ถึงเวลา':'Not yet','ตัดสินใจเรื่องตรงหน้าก่อน':'Decide the matter at hand first','คุณเรียกเมฆทัณฑ์ลงมาเอง สายฟ้าสีม่วงคำรามเหนือศีรษะ':'You call the tribulation clouds down yourself; purple lightning roars overhead','ร่างกายของคุณถึงขีดสุดของ':'Your body has reached the limit of','ทุกชั้นแห่งโลกเทพ':'every layer of the God World','โลกมนุษย์':'the mortal world','ฝ่าทัณฑ์':'Pass','ระลอกได้ จะ':'waves and you will','เหาะขึ้นสู่โลกเทพเซียน':'ascend to the Immortal World','แล้วเล่นต่อในโลกใหม่':'and continue in a new world','ปิดตำนานชีวิตนี้':'close the legend of this life','ตอนจบสูงสุด':'the ultimate ending','ขึ้นสู่โลกเทพ':'rise to the God World','ฝ่าทัณฑ์สวรรค์':'Face the tribulation','ไปต่อในโลกเทพเซียน':'Continue in the Immortal World','ไปต่อในโลกเทพ':'Continue in the God World','โอกาสผ่านแต่ละระลอกราว':'chance to pass each wave about','ล้มเหลวเสียพลังบางส่วน':'failure costs some power','ล้มเหลว อาจตาย':'failure may be fatal','ยังก่อน':'Not yet','ปุ่มยังอยู่ กดเมื่อพร้อมได้ทุกเมื่อ':'The button stays; tap it whenever you are ready','คุณสลายเมฆทัณฑ์ไปก่อน':'You dispersed the tribulation clouds for now','ยังไม่ใช่ตอนนี้':'Not now'})}catch(e){}
 </script>
 </body>
 </html>
