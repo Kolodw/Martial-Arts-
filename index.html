@@ -7798,7 +7798,7 @@ const PA={sum:null,seen:{},cur:null,poll:null,off:0,shown:{},li:-1,busy:0};
 const PA_PF=['','ต้องห้าม','ศักดิ์สิทธิ์','ที่สาบสูญ','บรรพกาล','ไร้เทียมทาน'];
 const PA_SJ=['จักรพรรดิองค์แรก','เทพกระบี่','จอมมารพันปี','ผู้บรรลุเต๋า','หงส์เพลิง','มังกรทอง','ราชินีจิ้งจอก','กษัตริย์อสูร','เซียนนิรนาม','ดาวตกเก้าดวง','ปรมาจารย์ไร้นาม','เทพธิดาจันทรา','บรรพชนแห่งยุทธภพ','ผู้ฝ่าทัณฑ์หมื่นครั้ง'];
 const PA_CT=[['w','pow',['กระบี่','ทวน','ดาบ','พัด']],['a','hp',['เกราะ','ผ้าคลุม','มงกุฎ']],['p','qi',['โอสถรวมปราณ','แก่นปราณ','น้ำทิพย์']],['p2','life',['ผลไม้อายุวัฒนะ','โอสถยืดชะตา','หยดน้ำอมฤต']],['k','art',['คัมภีร์','ม้วนวิชา','ศิลาจารึก']],['t','fight',['ธงศึก','ยันต์สงคราม','ตราพิชิต']],['s','tal',['ไขกระดูก','หัวใจ','ดวงตา']],['b','brk',['ยาเม็ดทะลวงฟ้า','ศิลาทะลวงขั้น','ค่ายกลทะลวงขีด']],['c','int',['ลูกแก้วปัญญา','ตำราลับ','กระจกส่องจิต']],['c2','cha',['ปิ่นหยก','ถุงหอม','แหวนเสน่ห์']],['x','myst',['หีบปิดผนึก','ไข่ศิลา','ม้วนกระดาษเปล่า']]];
-function paItem(r,k){const g=srng(r*1000003+k*7+13),pk=a=>a[Math.floor(g()*a.length)];let C=pk(PA_CT);if(C[1]==='tal'&&r<4)C=PA_CT[0];if(C[1]==='myst'&&r<6)C=PA_CT[4];
+function paItem(r,k){const g=srng(r*1000003+k*7+13),pk=a=>a[Math.floor(g()*a.length)];let C=pk(PA_CT);if(C[1]==='tal'&&r<4)C=PA_CT[0];if(C[1]==='myst')C=PA_CT[k%6];
  const pf=pk(PA_PF);return{r,k,c:C[0],fx:C[1],n:`${pk(C[2])}${pf?pf:''}แห่ง${pk(PA_SJ)}`}}
 function paEff(it){const w=ECO_W(),r=it.r,b=ecoV({r,w,fx:it.fx==='int'?'int':it.fx==='cha'?'cha':it.fx==='life'?'life':it.fx==='qi'?'qi':it.fx==='fight'?'fight':'pow'});
  switch(it.fx){case'pow':return{v:b.v*1.5,d:`พลังรวมถาวร +${(b.v*150).toFixed(1)}%`};case'hp':return{v:b.v*2.25,d:`พลังชีวิตสูงสุด +${Math.round(b.v*225)}%`};
@@ -9772,10 +9772,10 @@ setTimeout(()=>{try{const k=LS.get('murim_admk','');if(k&&typeof pid!=='undefine
 const PA_WN={m:'ยุทธภพ',x:'โลกเซียน',g:'แดนเทพ'},PA_WI={m:'⚔️',x:'☁️',g:'✨'};
 function paElig(L){if(!L||!L.w)return'';const w=ECO_W(),ri=Math.max(0,realmIdx());if(L.w!==w)return'ชิ้นนี้สำหรับคนใน'+PA_WN[L.w];if(L.nb&&ri>2)return'ชิ้นมือใหม่ — สำหรับคนที่ยังอยู่ขั้นต้น';if(!L.nb&&L.r<=1&&ri>=5)return'ของระดับต่ำ เก็บไว้ให้มือใหม่';return''}
 function paLTag(L){if(!L||!L.w)return'';return`<span class="paWt ${L.nb?'nb':''}">${L.nb?'🌱 มือใหม่':PA_WI[L.w]+' '+PA_WN[L.w]}</span>`}
-{const _pr=paRender;paRender=function(j){const r=_pr.apply(this,arguments);try{if($('modal').dataset.k!=='pauc')return r;const c=j&&j.cur;if(!c||c.phase!=='open')return r;const L=c.lots[c.li],why=paElig(L);
+{const _pr=paRender;paRender=function(j){const r=_pr.apply(this,arguments);try{if($('modal').dataset.k!=='pauc')return r;const c=j&&j.cur;if(!c||c.phase!=='open')return r;const L=c.lots[c.li],why=paElig(L);const nbW=!(j.bid&&j.bid.hi)&&c.nb>0;if(nbW)PA.end=Math.min(c.end||c.nb,c.nb);
  const lot=$('paLot');if(lot&&!lot.querySelector('.paWt')){const nm=lot.querySelector('.nm');if(nm)nm.insertAdjacentHTML('beforebegin',paLTag(L))}
  let ew=$('paEl');if(!ew){const m=$('paMsg');if(m){m.insertAdjacentHTML('beforebegin','<div id="paEl" class="tag2" style="margin-top:4px"></div>');ew=$('paEl')}}
- if(ew)ew.innerHTML=why?`🚫 <b>${why}</b> — ดูและแชทได้ แต่เสนอราคาไม่ได้`:(L.w?`✅ คุณประมูลชิ้นนี้ได้`:'');
+ if(ew)ew.innerHTML=(why?`🚫 <b>${why}</b> — ดูและแชทได้ แต่เสนอราคาไม่ได้`:(L.w?`✅ คุณประมูลชิ้นนี้ได้`:''))+(nbW?'<br>⏩ ถ้าไม่มีใครเสนอราคาใน 10 วิ จะข้ามไปชิ้นถัดไปทันที':'');
  document.querySelectorAll('#modal .paB button').forEach(b=>{if(/paBid/.test(b.getAttribute('onclick')||''))b.disabled=!!why});const inp=$('paIn');if(inp)inp.disabled=!!why;
  const up=$('paUp');if(up){let k=0;c.lots.forEach((x,i)=>{if(x.sold||i===c.li)return;const el=up.children[k++];if(el&&!el.querySelector('.paWt'))el.insertAdjacentHTML('afterbegin',paLTag(x)+'<br>')})}}catch(e){console.error(e)}return r}}
 (function(){try{const st=document.createElement('style');st.textContent=`.paWt{display:inline-block;font-size:12px;padding:1px 7px;border-radius:9px;background:#3a2f4a;color:#e8d8ff;border:1px solid #6b5a8a;margin-bottom:3px}.paWt.nb{background:#1f3a24;color:#9ff0b0;border-color:#4a9a5a}`;document.head.appendChild(st)}catch(e){}})();

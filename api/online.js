@@ -228,7 +228,7 @@ async function autoMig() {
 }
 
 // ---- ประมูลทั่วยุทธภพ (ผู้เล่นจริง): รอบละ 6 ชิ้น ชิ้นละ 40 วิ (เสนอราคาช่วงท้ายต่อเวลา 10 วิ สูงสุด 3 ครั้ง) · พักรอบละ 10–15 นาที ----
-const PA_RW = [0, 4, 10, 18, 24, 22, 14, 8], PA_G0 = [10, 300, 5000, 80000, 1000000, 8000000, 30000000, 100000000], PA_LOT_MS = 40e3;
+const PA_RW = [0, 4, 10, 18, 24, 22, 14, 0], PA_G0 = [10, 300, 5000, 80000, 1000000, 8000000, 30000000, 100000000], PA_LOT_MS = 40e3, PA_NB_MS = 10e3;
 const PA_GW = { m: [10, 100, 1000, 10000, 80000, 400000, 2000000, 10000000], x: [500, 5000, 50000, 400000, 3000000, 15000000, 50000000, 100000000], g: [20000, 200000, 2000000, 8000000, 25000000, 50000000, 80000000, 100000000] }, PA_NB = [10, 30, 100, 300];
 const PA_WN = { m: 'ยุทธภพ', x: 'โลกเซียน', g: 'แดนเทพ' };
 // ใครประมูลชิ้นนี้ได้: ต้องอยู่โลกเดียวกัน · ชิ้นมือใหม่ = ขั้นไม่เกิน 2 · ของระดับต่ำ (ธรรมดา/หายาก) คนขั้น 5 ขึ้นไปห้ามแย่ง
@@ -251,9 +251,9 @@ async function paTick(now) {
       // ของแต่ละชิ้นมีโลกของมัน (ประมูลได้เฉพาะคนในโลกนั้น) + ชิ้นมือใหม่ 1 ชิ้นต่อรอบ
       const rg = r => Math.max(10, Math.round(r * (.8 + Math.random() * .4) / 10) * 10);
       lots.push({ r: Math.random() < .5 ? 2 : 3, k: Math.floor(Math.random() * 1e6), w: 'm', nb: 1 }); lots[0].g = rg(PA_NB[lots[0].r]);
-      for (let i = 1; i < nL; i++) { let r = paPick(); if (r === 7 && hi7) r = 6; if (r >= 6 && hi6 >= 2) r = 5; if (r === 7) hi7++; if (r >= 6) hi6++; const x = Math.random(), w = x < .5 ? 'm' : x < .8 ? 'x' : 'g'; lots.push({ r, k: Math.floor(Math.random() * 1e6), w, g: rg(PA_GW[w][r]) }) }
+      for (let i = 1; i < nL; i++) { let r = Math.min(6, paPick()); if (r >= 6 && hi6 >= 2) r = 5; if (r === 7) hi7++; if (r >= 6) hi6++; const x = Math.random(), w = x < .5 ? 'm' : x < .8 ? 'x' : 'g'; lots.push({ r, k: Math.floor(Math.random() * 1e6), w, g: rg(PA_GW[w][r]) }) }
       for (let i = lots.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [lots[i], lots[j]] = [lots[j], lots[i]] }
-      cur = { sid, t0: now, lots, li: 0, phase: 'open', act, u: 2 };
+      cur = { sid, t0: now, lots, li: 0, phase: 'open', act, u: 2, ls: now + 10e3 };
       if (force) await cmd('DEL', 'pa:force');
       await pipe([['INCR', 'pa:day:' + day], ['EXPIRE', 'pa:day:' + day, 172800]]);
       await pipe([['SET', 'pa:cur', JSON.stringify(cur), 'EX', 7200], ['SET', 'pa:end:' + sid, now + 60e3, 'EX', 3600]]);
@@ -262,12 +262,15 @@ async function paTick(now) {
   }
   if (cur.phase !== 'open') return cur;
   const end = +(await cmd('GET', 'pa:end:' + cur.sid)) || 0;
-  if (now <= end) { cur.end = end; return cur }
+  // ไม่มีใครเสนอราคาภายใน 10 วิ → ข้ามไปชิ้นถัดไปทันที
+  const nbEnd = (cur.ls || cur.t0 + 10e3) + PA_NB_MS; cur.nbEnd = nbEnd;
+  const noBid = async () => !(+(await cmd('HEXISTS', 'pa:b:' + cur.sid + ':' + cur.li, 'hi')));
+  if (now <= end && !(now > nbEnd && await noBid())) { cur.end = end; return cur }
   if ((await cmd('SET', 'pa:lk', '1', 'NX', 'PX', 4000)) !== 'OK') { cur.end = end; return cur }
   try {
     const v2 = await cmd('GET', 'pa:cur'); try { cur = JSON.parse(v2) } catch {}
     if (cur.phase !== 'open') return cur;
-    const e2 = +(await cmd('GET', 'pa:end:' + cur.sid)) || 0; if (now <= e2) { cur.end = e2; return cur }
+    const e2 = +(await cmd('GET', 'pa:end:' + cur.sid)) || 0, nb2 = (cur.ls || cur.t0 + 10e3) + PA_NB_MS; cur.nbEnd = nb2; if (now <= e2 && !(now > nb2 && !(+(await cmd('HEXISTS', 'pa:b:' + cur.sid + ':' + cur.li, 'hi'))))) { cur.end = e2; return cur }
     const [bh, vh] = await pipe([['HGETALL', 'pa:b:' + cur.sid + ':' + cur.li], ['HGETALL', 'pa:v:' + cur.sid]]);
     const H = {}; if (Array.isArray(bh)) for (let i = 0; i < bh.length; i += 2) H[bh[i]] = bh[i + 1]; else Object.assign(H, bh || {});
     const V = {}; if (Array.isArray(vh)) for (let i = 0; i < vh.length; i += 2) V[vh[i]] = +vh[i + 1]; else for (const k in (vh || {})) V[k] = +vh[k];
@@ -275,7 +278,7 @@ async function paTick(now) {
     if (H.by) { L.sold = { g: +H.hi, n: H.bn }; const dk = 'pa:wd:' + PA_DAY(now) + ':' + H.by; ops.push(['INCR', dk], ['EXPIRE', dk, 172800], ['HINCRBY', 'pa:ws:' + cur.sid, H.by, 1], ['EXPIRE', 'pa:ws:' + cur.sid, 7200], ['LPUSH', 'pa:win:' + H.by, JSON.stringify({ sid: cur.sid, li: cur.li, r: L.r, k: L.k, g: +H.hi, t: now, u: cur.u ? 1 : 0 })], ['EXPIRE', 'pa:win:' + H.by, 86400]) } else L.sold = { g: 0 };
     const rest = cur.lots.map((x, i) => i).filter(i => !cur.lots[i].sold);
     if (!rest.length) { cur.phase = 'done'; const act = +(await cmd('ZCOUNT', 'online', now - 180e3, '+inf')) || 0; cur.next = now + Math.max(5, Math.min(10, act)) * 60e3 }
-    else { rest.sort((x, y) => (V['l' + y] || 0) - (V['l' + x] || 0) || x - y); cur.li = rest[0]; ops.push(['SET', 'pa:end:' + cur.sid, now + PA_LOT_MS, 'EX', 3600]); cur.end = now + PA_LOT_MS }
+    else { rest.sort((x, y) => (V['l' + y] || 0) - (V['l' + x] || 0) || x - y); cur.li = rest[0]; cur.ls = now; cur.nbEnd = now + PA_NB_MS; ops.push(['SET', 'pa:end:' + cur.sid, now + PA_LOT_MS, 'EX', 3600]); cur.end = now + PA_LOT_MS }
     ops.push(['SET', 'pa:cur', JSON.stringify(cur), 'EX', 7200]);
     await pipe(ops);
   } finally { await cmd('DEL', 'pa:lk').catch(() => {}) }
@@ -1232,7 +1235,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const [, , vw, bh, ch0, vh, myv, wins, endV] = await pipe([join ? ['ZADD', 'pa:vw:' + sid, now, id] : ['PING'], ['ZREMRANGEBYSCORE', 'pa:vw:' + sid, 0, now - 15e3], ['ZCARD', 'pa:vw:' + sid], ['HGETALL', 'pa:b:' + sid + ':' + cur.li], ['LRANGE', 'pa:c:' + sid, 0, 24], ['HGETALL', 'pa:v:' + sid], ['HGET', 'pa:vu:' + sid, id], ['LRANGE', 'pa:win:' + id, 0, 9], ['GET', 'pa:end:' + sid]]);
       const H = {}; if (Array.isArray(bh)) for (let i = 0; i < bh.length; i += 2) H[bh[i]] = bh[i + 1]; else Object.assign(H, bh || {});
       const V = {}; if (Array.isArray(vh)) for (let i = 0; i < vh.length; i += 2) V[vh[i]] = +vh[i + 1]; else for (const k in (vh || {})) V[k] = +vh[k];
-      return res.json({ ok: 1, now, cur: { sid, phase: cur.phase, next: cur.next || 0, li: cur.li, end: +endV || cur.end || 0, lots: cur.lots, votes: V }, bid: { hi: +H.hi || 0, bn: H.bn || '', me: H.by === id ? 1 : 0, ext: +H.ext || 0 }, vw: +vw || 0, chat: (ch0 || []).map(jp).filter(Boolean).reverse(), myv: myv == null ? -1 : +myv, wins: (wins || []) });
+      return res.json({ ok: 1, now, cur: { sid, phase: cur.phase, next: cur.next || 0, li: cur.li, end: +endV || cur.end || 0, nb: cur.nbEnd || 0, lots: cur.lots, votes: V }, bid: { hi: +H.hi || 0, bn: H.bn || '', me: H.by === id ? 1 : 0, ext: +H.ext || 0 }, vw: +vw || 0, chat: (ch0 || []).map(jp).filter(Boolean).reverse(), myv: myv == null ? -1 : +myv, wins: (wins || []) });
     }
     if (a === 'review') {
       const ok = await cmd('SET', 'rvrl:' + id, 1, 'NX', 'EX', 20);
