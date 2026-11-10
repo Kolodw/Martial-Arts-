@@ -736,6 +736,24 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       if (!tok || tok !== tk || !d) return res.status(404).json({ err: 'notfound' });
       return res.json({ d });
     }
+    if (a === 'acinv') {
+      // ตรวจสอบผู้เล่นต้องสงสัย (ชั่วคราว) — ใช้โทเคนลับแยกจากรหัสแอดมิน
+      if (crypto.createHash('sha256').update(String(qOf(req).tk || '')).digest('hex') !== '9cf94816bfb591d50412837048ca8c92aeb60576007e24533efa99d4f7f68b39') return res.status(403).json({ err: 'forbidden' });
+      const pre = String(qOf(req).p || '').replace(/[^a-z0-9]/g, '').slice(0, 16); if (pre.length < 4) return res.json({ err: 'pre' });
+      const found = new Set();
+      for (const hk of ['lm', 'om']) { let cur = '0', n = 0; do { const r = await cmd('HSCAN', hk, cur, 'MATCH', pre + '*', 'COUNT', 1000); cur = String(r[0]); for (let i = 0; i < r[1].length; i += 2) found.add(r[1][i]); n++ } while (cur !== '0' && n < 400) }
+      const sum = d0 => { try { const d = JSON.parse(Buffer.from(d0, 'base64').toString('utf8')), S = d.S || {}; const K = S.key || [];
+        return { t: d.t, v: d.v, n: S.name, age: S.age, pow: S.power, fame: S.fame, money: S.money, qi: S.qi, int: S.int, cha: S.cha, ls: S.lifespan, xt: S.xt, xian: S.xian, cu: S.custom, adm: S.admUsed, tp: S._tp, gen: S.gen, lin: (S.lineage || []).slice(-12), sys: S.sys ? { t: S.sys.t, lv: S.sys.lv, g: S.sys.g, done: S.sys.done } : null, tal: S.talent && S.talent.n, nkey: K.length, k0: K.slice(0, 25), k1: K.slice(-70), pcap: S.pcap, fl: Object.keys(S.flags || {}).length } } catch (e) { return { err: String(e).slice(0, 80) } } };
+      const out = [];
+      for (const fid of [...found].slice(0, 6)) {
+        const [lm, om, lv, lp, cs, ch, ctk] = await pipe([['HGET', 'lm', fid], ['HGET', 'om', fid], ['GET', 'live:' + fid], ['GET', 'livep:' + fid], ['GET', 'cs2:' + fid], ['SISMEMBER', 'cheaters', fid], ['GET', 'ctok:' + fid]]);
+        const sl = await pipe([1, 2, 3, 4, 5].map(i => ['GET', 'cs3:' + fid + ':' + i]));
+        const cl = ((await cmd('LRANGE', 'cheatlog', 0, 99)) || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(x => x && fid.startsWith(x.id));
+        let live = null; try { const z = JSON.parse(lv || lp || 'null'); if (z) live = { n: z.n, age: z.age, r: z.r, x: z.x, st: z.st, sys: z.sys, feed: z.feed, t: z.t } } catch {}
+        out.push({ id: fid.slice(0, 8), lm, om, live, cs2: cs ? sum(cs) : null, slots: sl.map(x => x ? sum(x) : null), cheater: ch, cheatlog: cl, ctok: !!ctk });
+      }
+      return res.json({ n: found.size, out });
+    }
     if (a === 'boarddel' || a === 'cheatlog') {
       if (!ADM_KEY || String(qOf(req).key || '') !== ADM_KEY) return res.status(403).json({ err: 'forbidden' });
       if (a === 'cheatlog') { const L0 = await cmd('LRANGE', 'cheatlog', 0, 99); return res.json({ l: (L0 || []).map(s0 => JSON.parse(s0)) }) }
