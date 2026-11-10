@@ -414,6 +414,7 @@ details.item summary{cursor:pointer}
   <div class="feed" id="feed"></div>
   <div class="pendbar" id="pendBar" style="display:none" onclick="openPend()"></div>
   <div class="ctrl">
+    <div class="onrow"><button class="onpill" id="onPill" onclick="openOnline()" aria-label="ออนไลน์"><i class="ondot"></i>🌐 ออนไลน์ <b id="onPillN"></b></button></div>
     <div class="crow">
       <button class="cb" id="pauseBtn" onclick="togglePause()">⏸</button>
       <button class="cb px" id="spdBtn" onclick="cycleSpeed()">1×</button>
@@ -1020,7 +1021,6 @@ function openMenu(){
   <button class="opt" onclick="openCraft()">🔨 งานช่าง<small>${S.cr?S.cr.rec.length+' ตำรับ':'ยังไม่เริ่ม'}</small></button>
   <button class="opt" onclick="openDungeons()">🏰 ดันเจี้ยน<small>${dgReady()?'พร้อมลง':'พักฟื้นอยู่'}</small></button>
   <button class="opt" onclick="openAuto()">⚙️ อัตโนมัติ<small>ตั้งให้ระบบทำแทน</small></button>
-  <button class="opt" onclick="openOnline()">🌐 ออนไลน์<small>${onlineOK?'🟢 '+onlineN+' คน':'แชท · ทำเนียบ · ประลอง'}</small></button>
   <button class="opt" onclick="openEquip()">⚔️ ชุดสวมใส่<small>${eqOn().length} ชิ้นที่สวมอยู่</small></button>
   <button class="opt" onclick="openQuests()">📋 บันทึกเควส<small>${questList().length} เรื่อง</small></button>
   <button class="opt" onclick="openMap()">🗺️ แผนที่<small>${S.xian?'โลกเซียน':'ยุทธภพ'}</small></button>
@@ -5582,7 +5582,7 @@ function hmLeave(why){if(S.harem&&S.harem.length)log(`🌸 คนในตำห
 
 // ============ v7.3: เลย์เอาต์สำหรับหน้าจอคอม + คีย์ลัด ============
 const DESK_W=1100;let deskOn=false;
-const DESK_MENU=[['📖','วิชา','openArts'],['🎒','กระเป๋า','openBag'],['🗡️','ชุดสวมใส่','openEquip'],['📋','เควส','openQuests'],['🏘️','หมู่บ้าน','openTown'],['🔨','งานช่าง','openCraft'],['👥','ผู้คน','openPeople'],['👪','ครอบครัว','openFamily'],['🏯','สำนัก','openFaction'],['🏡','ตระกูล','openHouse'],['🏰','ดันเจี้ยน','openDungeons'],['🐾','สัตว์คู่ใจ','openBeastComp'],['🗺️','แผนที่','openMap'],['📜','บันทึกชีวิต','openLifeLog'],['🏆','ทำเนียบสำนัก','openRanking'],['🌐','ออนไลน์','openOnline'],['⚙️','อัตโนมัติ','openAuto'],['🔊','เสียง','openSound']];
+const DESK_MENU=[['📖','วิชา','openArts'],['🎒','กระเป๋า','openBag'],['🗡️','ชุดสวมใส่','openEquip'],['📋','เควส','openQuests'],['🏘️','หมู่บ้าน','openTown'],['🔨','งานช่าง','openCraft'],['👥','ผู้คน','openPeople'],['👪','ครอบครัว','openFamily'],['🏯','สำนัก','openFaction'],['🏡','ตระกูล','openHouse'],['🏰','ดันเจี้ยน','openDungeons'],['🐾','สัตว์คู่ใจ','openBeastComp'],['🗺️','แผนที่','openMap'],['📜','บันทึกชีวิต','openLifeLog'],['🏆','ทำเนียบสำนัก','openRanking'],['⚙️','อัตโนมัติ','openAuto'],['🔊','เสียง','openSound']];
 function deskBuild(){const g=$('game');if(!g||$('deskL'))return;const L=document.createElement('div'),C=document.createElement('div'),Rr=document.createElement('div');L.id='deskL';C.id='deskC';Rr.id='deskR';
  const top=g.querySelector('.top');[top,$('detail')].forEach(e=>e&&L.appendChild(e));[$('qTrack'),$('sceneBox'),$('feed'),$('pendBar'),g.querySelector('.ctrl')].forEach(e=>e&&C.appendChild(e));
  Rr.innerHTML=`<div class="box dpanel"><h4>☰ เมนู</h4><div class="dmenu">${DESK_MENU.map(m=>`<button class="dmb" data-f="${m[2]}" onclick="try{${m[2]}()}catch(e){}"><span>${m[0]}</span>${m[1]}</button>`).join('')}</div><button class="gbtn" style="width:100%;margin-top:6px" onclick="openMenu()">☰ เมนูทั้งหมด</button></div>
@@ -5640,7 +5640,7 @@ const DK_GROUPS=[
  ['⚔️ ฝึกฝน',[['📖','วิชา','openArts',()=>`${(S.arts||[]).length} วิชา`],['🗡️','ชุดสวมใส่','openEquip',()=>`${eqOn().length} ชิ้น`],['🔨','งานช่าง','openCraft',()=>'หลอมยา · ตีอาวุธ'],['🏰','ดันเจี้ยน','openDungeons',()=>'ล่าของ']]],
  ['🎒 ทรัพย์สิน',[['🎒','กระเป๋า','openBag',()=>`${fmt(S.money)} ${S.xian?'หินวิญญาณ':'ตำลึง'}`],['🏘️','หมู่บ้าน','openTown',()=>'ร้านค้า · ภารกิจ'],['🛒','ตลาด','openMarket',()=>'ซื้อขาย'],['🏡','ตระกูล','openHouse',()=>'ครัวเรือน']]],
  ['👥 ผู้คน',[['👪','ครอบครัว','openFamily',()=>`ความสุข ${Math.round(S.happy)}`],['👥','ผู้คน','openPeople',()=>'คู่หู · มิตร · ศัตรู'],['🏯','สำนัก','openFaction',()=>S.faction?S.faction.n:'ยังไม่มีสังกัด'],['🐾','สัตว์คู่ใจ','openBeastComp',()=>S.beast?S.beast.n||'มีแล้ว':'ยังไม่มี']]],
- ['🗺️ โลก',[['🗺️','แผนที่','openMap',()=>S.xian?'โลกเซียน':'ยุทธภพ'],['📜','บันทึกชีวิต','openLifeLog',()=>'ย้อนดู'],['🏆','ทำเนียบ','openRanking',()=>'สำนักใหญ่'],['🌐','ออนไลน์','openOnline',()=>'แชท · ทำเนียบ']]],
+ ['🗺️ โลก',[['🗺️','แผนที่','openMap',()=>S.xian?'โลกเซียน':'ยุทธภพ'],['📜','บันทึกชีวิต','openLifeLog',()=>'ย้อนดู'],['🏆','ทำเนียบ','openRanking',()=>'สำนักใหญ่']]],
  ['⚙️ ตั้งค่า',[['🤖','อัตโนมัติ','openAuto',()=>auto?'เปิดอยู่':'ปิด'],['🔊','เสียง','openSound',()=>'เพลง · บรรยากาศ'],['☰','เมนูทั้งหมด','openMenu',()=>'ทุกอย่าง']]]];
 function dkAvaDraw(){const cv=$('dkAva');if(!cv||!S)return;const ctx=cv.getContext&&cv.getContext('2d');if(!ctx)return;const o=meLook(),sg=g,sp=PS;g=ctx;PS=cv.width/28;ctx.setTransform(cv.width/28,0,0,cv.width/28,0,0);ctx.imageSmoothingEnabled=false;
  const bg=S.xian?['#1c2440','#2a3460']:['#1c1a28','#2a2638'];P(0,0,40,44,bg[0]);P(0,25,40,8,bg[1]);if(o.aura){ctx.globalAlpha=.25;P(4,4,16,24,o.aura);ctx.globalAlpha=1}try{person(11.5,29,o,'stand')}catch(e){}g=sg;PS=sp}
@@ -8853,6 +8853,18 @@ function achThemeMark(){try{
 @keyframes ctB{0%,76%{background-position:160% 0}86%,100%{background-position:-60% 0}}
 @media (prefers-reduced-motion:reduce){.th,.th::before,.th *{animation:none!important}}`;document.head.appendChild(st)})();
 try{Object.assign(I18N.d,{})}catch(e){}
+
+// ===== ปุ่มออนไลน์ระหว่างเล่น: อยู่ขวาบนแถบเวลา (เอาออกจากเมนูแล้ว) =====
+function onPillUpd(){try{const b=$('onPill'),n=$('onPillN');if(!b||!n)return;b.classList.toggle('off',!onlineOK);n.textContent=onlineOK?onlineN+' คน':'ออฟไลน์'}catch(e){}}
+{const _op2=onlinePing;onlinePing=async function(){const r=await _op2.apply(this,arguments);onPillUpd();return r}}
+setInterval(onPillUpd,4000);setTimeout(onPillUpd,1500);
+(function(){const st=document.createElement('style');st.textContent=`
+.onrow{display:flex;justify-content:flex-end;margin:6px 0 6px}
+.onpill{display:inline-flex;align-items:center;gap:5px;border:2px solid var(--line);border-radius:20px;background:var(--w);color:var(--ink);padding:3px 12px;font:inherit;font-size:.86em;font-weight:bold;cursor:pointer;box-shadow:0 2px 0 var(--line)}
+.onpill:active{transform:translateY(2px);box-shadow:none}.onpill b{color:#2ea84a}.onpill.off b{color:#999}
+.ondot{width:8px;height:8px;border-radius:50%;background:#3ad45a;animation:onDot 2s ease-out infinite}.onpill.off .ondot{background:#999;animation:none}
+@keyframes onDot{0%{box-shadow:0 0 0 0 #3ad45a99}70%,100%{box-shadow:0 0 0 7px #3ad45a00}}`;document.head.appendChild(st)})();
+try{Object.assign(I18N.d,{'ออฟไลน์':'Offline'})}catch(e){}
 </script>
 </body>
 </html>
