@@ -9158,6 +9158,185 @@ const BCHILD=[[1,4,()=>{S.hp-=20;return'🐾 พลัดตกลงไปใ�
  const _ac=acute;acute=function(d){const m=S&&S.beastMode;if(!(m&&!m.human))return _ac.apply(this,arguments);const a=S.age,mo=S.money,ol=log,par=m.par>0&&!m.parGone;S.age=Math.min(a,9);S.money=par?1e9:0;
   window.log=function(t,...r){if(typeof t==='string')BREP.forEach(([x,y])=>t=t.replace(x,y));return ol.call(this,t,...r)};try{return _ac.apply(this,arguments)}finally{window.log=ol;S.age=a;S.money=mo}}}
 
+// ===== v14.6 ออกแบบตัวละคร: ตัวเลือก 150+ แบบ · UI ใหม่ · รายละเอียด pixel =====
+CR_HS.push(['ทวินเทล',5],['เปียยาวพาดไหล่',6],['มวยข้าง',7],['ผมชี้ฟู',8],['ครึ่งมวยผมยาว',9],['มวยสูงริบบิ้น',10],['ผมบ๊อบ',11],['หางม้าสูงยาว',12],['ผมยาวรุงรัง',13],['ผมปัดข้าง',14],['มวยห่วงคู่',15]);
+CR_HC.push(['ทองอร่าม','#d8a830'],['ชมพูซากุระ','#e88aa8'],['เขียวหยก','#3a8a6a'],['ฟ้าน้ำแข็ง','#8ac8e8'],['แดงเลือดนก','#c8283a'],['ม่วงลาเวนเดอร์','#a88ad8'],['เทาเถ้า','#6a6a72'],['น้ำตาลเกาลัด','#6a3a22']);
+CR_SK.push(['ขาวกระเบื้อง','#ffe8d8'],['ขาวซีด','#f4dcc8'],['น้ำตาลเข้ม','#9a6a42'],['ผิวคล้ำ','#7a4e30']);
+CR_RB.push(['น้ำเงินกรมท่า','#2a3a6a'],['เขียวไผ่','#4a8a4a'],['ส้มอิฐ','#c8643a'],['ชมพูกุหลาบ','#d84a7a'],['ฟ้าอ่อน','#a8d0f0'],['ครีม','#e8dcc0'],['เทาหิน','#7a7a86'],['น้ำตาลไม้','#7a5032'],['ม่วงองุ่น','#5a2a6a'],['เขียวมรกต','#1a7a5a'],['แดงเลือดหมู','#6a1a2a']);
+const LK_EYE=[['ดำ',null],['น้ำตาล','#6a4022'],['อำพัน','#c88a2a'],['ทอง','#e8c040'],['แดง','#c8183a'],['ฟ้า','#4a8ad8'],['เขียว','#3a9a5a'],['ม่วง','#8a4ad8'],['เงิน','#c8ccd6'],['ชมพู','#e86aa0']];
+const LK_BROW=[['ปกติ'],['หนาเข้ม'],['คมเฉียงขึ้น'],['เรียวยาว']];
+const LK_MARK=[['ไม่มี'],['แผลเป็นที่แก้ม'],['แผลเป็นพาดตา'],['จุดแดงกลางหน้าผาก'],['ลายบุปผาหน้าผาก'],['ไฝใต้ตา'],['กระบนแก้ม'],['ลายมารใต้ตา'],['ผ้าปิดตาข้างเดียว'],['รอยสักสีครามที่แก้ม']];
+const LK_FH=[['ไม่มี'],['หนวดบาง'],['เคราแพะ'],['เคราสั้นรอบคาง'],['เครายาวแบบปราชญ์']];
+const LK_STY=[['ชุดฮั่นฝูปกติ'],['ชุดคลุมยาวกรอมเท้า'],['ชุดบัณฑิตแขนกว้าง'],['ชุดนักรบเกราะไหล่'],['ผ้าคลุมพเนจร'],['ชุดนักฆ่ารัดกุม'],['จีวรพาดบ่า'],['ชุดขุนนางปักลาย'],['ชุดนางรำผ้าคล้องแขน'],['ชุดขนสัตว์'],['เสื้อกั๊กหนัง']];
+const LK_TRIM=[['ตามชาติกำเนิด',null],['ทอง','#c8a040'],['เงิน','#c8ccd6'],['แดง','#c8283a'],['ดำ','#1a1a22'],['ขาว','#f4f0e6'],['ฟ้า','#5b8def'],['เขียว','#4aa86a'],['ม่วง','#8a4ad8'],['ชมพู','#ff8ab0'],['ส้ม','#e0802a'],['น้ำตาล','#6a4a2a']];
+const LK_BELT=[['ตามชาติกำเนิด',null],['ดำ','#1a1a22'],['น้ำตาล','#5a3a22'],['ทอง','#c8a040'],['แดง','#a01020'],['ขาว','#e8e4dc'],['คราม','#2a3a6a'],['เขียว','#2a5a3a']];
+const LK_PANT=[['ตามชาติกำเนิด',null],['ดำ','#1e1a24'],['เทา','#4a4a54'],['น้ำตาล','#4a3426'],['ขาว','#d8d4cc'],['คราม','#2a3050'],['แดงเข้ม','#5a1a22'],['เขียวเข้ม','#2a4030']];
+const LK_HW=[['ไม่มี',null],['งอบฟาง','straw'],['งอบไผ่','bamboo'],['หมวกนักพรต','taoist'],['ผ้าคาดหน้าผาก','band'],['ดอกไม้ทัดหู','flower'],['ผ้าคลุมศีรษะ','hood'],['ผ้าคลุมหน้า','veil'],['เขาปีศาจ','horn'],['ปิ่นหยก','x:pin'],['โบว์ริบบิ้น','x:ribbon'],['กวานทองครอบมวย','x:gcrown'],['หน้ากากจิ้งจอก','x:fox'],['รัดเกล้าเงินประดับมณี','x:circlet']];
+const LK_ACC=[['ไม่มี'],['หยกห้อยเอว'],['ต่างหูทอง'],['ผ้าพันคอ'],['น้ำเต้าสุรา'],['พัดในมือ'],['ขลุ่ยไผ่'],['ลูกประคำ'],['ม้วนคัมภีร์สะพายหลัง']];
+const LK_EN={'ทวินเทล':'Twin tails','เปียยาวพาดไหล่':'Long braid','มวยข้าง':'Side bun','ผมชี้ฟู':'Spiky','ครึ่งมวยผมยาว':'Half-up long','มวยสูงริบบิ้น':'High bun & ribbon','ผมบ๊อบ':'Bob','หางม้าสูงยาว':'High ponytail','ผมยาวรุงรัง':'Wild long','ผมปัดข้าง':'Side-swept','มวยห่วงคู่':'Double loops','มวยผมกลางศีรษะ':'Topknot','ผมยาวสยาย':'Long flowing','หางม้า':'Ponytail','มวยคู่':'Twin buns','ผมสั้นเรียบ':'Short neat',
+ 'หนาเข้ม':'Thick','คมเฉียงขึ้น':'Sharp','เรียวยาว':'Long slender','แผลเป็นที่แก้ม':'Cheek scar','แผลเป็นพาดตา':'Eye scar','จุดแดงกลางหน้าผาก':'Red forehead dot','ลายบุปผาหน้าผาก':'Forehead flower','ไฝใต้ตา':'Beauty mark','กระบนแก้ม':'Freckles','ลายมารใต้ตา':'Demon marks','ผ้าปิดตาข้างเดียว':'Eyepatch','รอยสักสีครามที่แก้ม':'Indigo tattoo',
+ 'หนวดบาง':'Thin moustache','เคราแพะ':'Goatee','เคราสั้นรอบคาง':'Short beard','เครายาวแบบปราชญ์':'Sage beard','ชุดฮั่นฝูปกติ':'Classic hanfu','ชุดคลุมยาวกรอมเท้า':'Floor-length robe','ชุดบัณฑิตแขนกว้าง':'Scholar robe','ชุดนักรบเกราะไหล่':'Warrior pauldrons','ผ้าคลุมพเนจร':'Wanderer cloak','ชุดนักฆ่ารัดกุม':'Assassin garb','จีวรพาดบ่า':'Monk sash','ชุดขุนนางปักลาย':'Noble embroidery','ชุดนางรำผ้าคล้องแขน':'Dancer ribbons','ชุดขนสัตว์':'Fur trim','เสื้อกั๊กหนัง':'Leather vest',
+ 'งอบฟาง':'Straw hat','งอบไผ่':'Bamboo hat','หมวกนักพรต':'Taoist cap','ผ้าคาดหน้าผาก':'Headband','ดอกไม้ทัดหู':'Flower','ผ้าคลุมศีรษะ':'Hood','ผ้าคลุมหน้า':'Veil','เขาปีศาจ':'Demon horns','ปิ่นหยก':'Jade hairpin','โบว์ริบบิ้น':'Ribbon bow','กวานทองครอบมวย':'Gold crown','หน้ากากจิ้งจอก':'Fox mask','รัดเกล้าเงินประดับมณี':'Silver circlet',
+ 'หยกห้อยเอว':'Jade pendant','ต่างหูทอง':'Gold earrings','ผ้าพันคอ':'Scarf','น้ำเต้าสุรา':'Wine gourd','พัดในมือ':'Hand fan','ขลุ่ยไผ่':'Bamboo flute','ลูกประคำ':'Prayer beads','ม้วนคัมภีร์สะพายหลัง':'Scroll on back',
+ 'อำพัน':'Amber','เงิน':'Silver','ชมพู':'Pink','ทองอร่าม':'Gold','ชมพูซากุระ':'Sakura pink','ฟ้าน้ำแข็ง':'Ice blue','แดงเลือดนก':'Crimson','ม่วงลาเวนเดอร์':'Lavender','เทาเถ้า':'Ash','น้ำตาลเกาลัด':'Chestnut','ขาวกระเบื้อง':'Porcelain','ขาวซีด':'Pale','ผิวคล้ำ':'Dark','ตามชาติกำเนิด':'By origin',
+ 'ออกแบบรูปลักษณ์':'Design your look','พื้นฐาน':'Basics','ทรงผม':'Hairstyle','สีผม':'Hair colour','ใบหน้า':'Face','สีตา':'Eye colour','คิ้ว':'Brows','ร่องรอยบนหน้า':'Face marks','หนวดเครา':'Facial hair','แบบชุด':'Outfit style','สีชุด':'Robe colour','สีขลิบ':'Trim colour','สีเข็มขัด':'Belt colour','สีกางเกง':'Trouser colour','ของสวมศีรษะ':'Headwear','เครื่องประดับ':'Accessory','สุ่มทั้งหมด':'Randomise','รีเซ็ต':'Reset','ยืน':'Stand','เดิน':'Walk','นั่ง':'Sit','สีผิว':'Skin','เพศ':'Gender','ชุด':'Outfit'};
+try{Object.assign(I18N.d,LK_EN)}catch(e){}
+// ---- รวมค่าที่ออกแบบ → look ----
+function lkFromC(){return{hs:CR_HS[C.hs][1],hair:CR_HC[C.hc][1],skin:CR_SK[C.sk][1],robe:CR_RB[C.rb][1],eye:LK_EYE[C.eye|0][1],brow:C.brow|0,mark:C.mark|0,fh:C.fh|0,sty:C.sty|0,trim:LK_TRIM[C.tr|0][1],belt:LK_BELT[C.bt|0][1],pant:LK_PANT[C.pt|0][1],hw:LK_HW[C.hw|0][1],acc:C.acc|0}}
+function lookApply(o,L,age,gd,fac){if(!o||!L||o.beast)return o;try{const ad=age>=12;
+ if(L.eye&&!o.eyeG)o.eye=L.eye;o.ck={brow:L.brow|0,mark:L.mark|0,fh:(gd==='ชาย'&&age>=18)?L.fh|0:0,sty:ad?L.sty|0:0,acc:ad?L.acc|0:0,hw2:null};
+ if(!ad)return o;
+ if(!fac){if(L.trim)o.trim=L.trim;if(L.belt)o.belt=L.belt}if(L.pant)o.pant=L.pant;
+ const s=L.sty|0;if(s===2){o.coat=o.coat||shd(o.robe||'#888',.42);o.coatL=o.coatL||o.trim||shd(o.robe||'#888',.7)}else if(s===3)o.arm=o.arm||'#7a7a86';else if(s===5)o.pant=L.pant||shd(o.robe||'#444',-.5);else if(s===7){o.jade=1;o.emblem=o.trim||'#c8a040'}else if(s===9)o.fur=1;
+ if((L.acc|0)===1)o.jade=1;if((L.fh|0)===4&&o.ck.fh&&!o.beard)o.beard=o.hair;
+ const h=L.hw;if(h&&(!o.hat||o.hat==='straw')){o.hat=null;if(h.startsWith('x:'))o.ck.hw2=h.slice(2);else{o.hat=h;if(h==='band')o.bandC=o.trim||'#c8283a';if(h==='hood')o.hoodC=shd(o.robe||'#666',-.3);if(h==='bald'&&gd==='หญิง')o.hat=null}}
+}catch(e){}return o}
+{const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{if(S&&S.look&&!o.beast)lookApply(o,S.look,o.age,S.gender,!!S.faction)}catch(e){}return o}}
+{const _rl=rollLook;rollLook=function(r,age){const o=_rl.apply(this,arguments);try{if(r&&r.look)lookApply(o,r.look,o.age,o.g,false)}catch(e){}return o}}
+// ---- วาด: ทรงผมใหม่ · ใบหน้า · ชุด · เครื่องประดับ · รายละเอียด ----
+{const HB={5:4,6:4,7:4,8:4,9:3,10:4,11:4,12:4,13:3,14:4,15:4};
+ const _p0=person0;person0=function(x,y,o,pose){
+  if(!o||pose==='lie')return _p0.apply(this,arguments);
+  const child=o.age<12,sit=pose==='sit',walk=pose==='walk';
+  if(o.float&&!sit&&!child&&pose!=='walk')return _p0.apply(this,arguments);
+  const X=Math.round(x*3),Y=Math.round(y*3),T=frame*.15,sd=(o.seed||((o.robe||'').length*7+(o.hair||'').length))%10;
+  const H=child?33:48,hw=child?11:12,hh=child?11:12,tw=child?11:16,th=child?11:18;
+  const bob=walk?(Math.sin(T*8)>0?-1:0):Math.round(Math.sin(T*1.6+sd)*.6);
+  const top=Y-H+(sit?9:0)+(o.old?2:0)+bob,cx=X+12,hx=cx-Math.floor(hw/2),ty=top+hh+1,ly=ty+th,bY=ty+(child?6:9),ey=top+Math.floor(hh*.5),eL=hx+2,eR=hx+hw-4,my=ey+(child?3:4),mx=cx-1;
+  const stn=(pose==='stand'&&!child&&!sit)?o.stance:null,as=walk?Math.round(Math.sin(T*8)*2):Math.round(Math.sin(T*1.6+sd)*.5),aL=child?8:12,aw=o.coat&&!child?5:4,lxA=cx-Math.floor(tw/2)-3-(aw-4),rxA=cx+Math.floor(tw/2)-1;
+  const hair=o.hair||'#222',hD=shd(hair,-.3),hL=shd(hair,.25),robe=o.robe||'#888',rD=shd(robe,-.28),bald=o.hat==='bald',k=o.ck||{},hs=o.hs|0;
+  const hatHide=['hood','mask'].includes(o.hat),backHide=hatHide||o.hat==='veil',topHide=!!o.hat&&!['band','flower'].includes(o.hat),face=o.hat!=='mask';
+  const fl=Math.round(Math.sin(T*3+sd)*1),fl2=Math.round(Math.sin(T*2.2+sd+1)*1.2),sty=k.sty|0,acc=k.acc|0,defArm=!stn&&!sit;
+  // ---------- ชั้นหลัง ----------
+  try{if(!child){
+   if(sty===4&&!sit){const cc=shd(robe,-.45),cd=shd(cc,-.25);for(let yy=ty-1;yy<Y-3;yy++){const kk=(yy-ty)/(Y-ty),w=18+Math.round(kk*6);Q(cx-Math.floor(w/2)+(yy>Y-8?fl:0),yy,w,1,cc);Q(cx-Math.floor(w/2)+w-2,yy,2,1,cd)}}
+   if(acc===8){Q(cx-10,ty-6,4,16,'#e8dcc0');Q(cx-9,ty-6,1,16,'#c8bca0');Q(cx-11,ty-7,6,2,'#8a5a3a');Q(cx-11,ty+10,6,2,'#8a5a3a');Q(cx-8,ty-4,1,1,'#a01020')}
+   if(sty===8){const pc=o.trim||'#ff8ab0';for(let a=0;a<=24;a++){const t=a/24,px=cx-15+t*30,py=ty-1-Math.round(Math.sin(t*Math.PI)*7+Math.sin(T*2+t*6)*1);Q(px,py,2,1,pc)}for(let i=0;i<10;i++){Q(cx-16+Math.round(Math.sin(T*2+i*.5)*1.5),ty+i*1.6,2,2,pc);Q(cx+14+Math.round(Math.sin(T*2+i*.5+1)*1.5),ty+i*1.6,2,2,pc)}}
+   if(!bald&&!backHide){
+    if(hs===13){Q(hx-3,top+4,hw+6,hh+11,hD);Q(hx-2,top+4,hw+4,hh+10,hair);for(let i=0;i<6;i++)Q(hx-3+i*3,top+hh+14+(i%2),2,2,hD)}
+    if(hs===12&&!topHide){for(let j=0;j<18;j++){const wv=Math.round(Math.sin(j*.3+T*1.4)*1);Q(hx+hw+Math.min(3,Math.round(j*.5))+wv,top+j,3,1,j%5===0?hD:hair);if(j%3===0)Q(hx+hw+Math.min(3,Math.round(j*.5))+wv+1,top+j,1,1,hL)}}
+   }}}catch(e){}
+  // ---------- ตัวหลัก ----------
+  const o2=HB[hs]!=null?Object.assign({},o,{hs:child?(o.g==='หญิง'?0:4):HB[hs]}):o;
+  const r=_p0.call(this,x,y,o2,pose);
+  // ---------- ชั้นหน้า ----------
+  try{
+   // รายละเอียดพื้นฐาน (ทุกตัวละครผู้ใหญ่)
+   if(!child){if(!o.coat){Q(cx-1,ty,2,2,'#f4f0e6');Q(cx-1,ty+2,1,1,shd('#f4f0e6',-.15))}
+    if(defArm&&!o.coat){const cf=o.trim||shd(robe,.3);Q(lxA,ty+as+aL,aw,1,cf);Q(rxA,ty-as+aL,aw,1,shd(cf,-.2))}
+    if(!bald&&!hatHide){Q(hx+3,top,2,1,hL);Q(hx+hw-4,top+1,1,1,hD)}
+    if(!sit&&sty!==1){Q(cx-6,Y-2,2,1,'#3a3444');Q(cx+1,Y-2,2,1,'#3a3444')}}
+   // ทรงผมใหม่
+   if(!child&&!bald&&!hatHide){
+    if(hs===5){const tc=o.trim||'#d8283a';[[hx-4,0],[hx+hw+1,1]].forEach(([bx,s])=>{Q(bx,top+1,3,2,tc);for(let j=0;j<16;j++){const wv=Math.round(Math.sin(j*.35+T*1.6+s)*1);Q(bx+wv,top+3+j,3,1,j%5===0?hD:hair)}Q(bx+1,top+4,1,6,hL)})}
+    else if(hs===6){for(let j=0;j<16;j+=2)Q(cx+3+(j>9?1:0),ty-3+j,3,2,(j/2)%2?hair:hD);Q(cx+3,ty+13,4,2,o.trim||'#c8283a');Q(cx+4,ty+15,2,3,hair)}
+    else if(hs===7&&!topHide){Q(hx+hw-2,top-3,5,5,hair);Q(hx+hw-1,top-3,3,1,hL);Q(hx+hw+2,top-1,1,3,hD);Q(hx+hw-4,top-2,8,1,'#e0c060');Q(hx+hw+3,top-1,1,2,'#6ad0a0')}
+    else if(hs===8&&!topHide){for(let i=0;i<5;i++){const sx=hx-1+i*3;Q(sx,top-3,2,3,hair);Q(sx+(i%2),top-5,1,2,i%2?hL:hair)}Q(hx-2,top+2,1,3,hair);Q(hx+hw+1,top+2,1,3,hair);Q(hx-3,top+3,1,1,hair)}
+    else if(hs===9&&!topHide){Q(cx-2,top-4,4,3,hair);Q(cx-1,top-5,2,1,hD);Q(cx-3,top-2,6,1,'#c8a040')}
+    else if(hs===10&&!topHide){const rc=o.trim||'#d8283a';Q(cx-2,top-6,5,5,hair);Q(cx-1,top-6,3,1,hL);Q(cx+2,top-5,1,4,hD);Q(cx-3,top-2,7,1,rc);Q(cx+4,top-2+fl,2,6,rc);Q(cx+6,top-1+fl2,2,5,shd(rc,-.15))}
+    else if(hs===11){Q(hx-2,top+1,3,hh-1,hair);Q(hx+hw-1,top+1,3,hh-1,hair);Q(hx-2,top+hh-1,3,1,hD);Q(hx+hw-1,top+hh-1,3,1,hD);Q(hx,top+2,hw,1,hair);Q(hx-1,top+2,1,4,hL)}
+    else if(hs===12&&!topHide){Q(cx+2,top-2,5,2,hair);Q(cx+3,top-3,3,1,hL);Q(cx+6,top-1,1,1,o.trim||'#c8a040')}
+    else if(hs===13){Q(hx+1,top+2,2,2,hair);Q(hx+5,top+2,2,3,hair);Q(hx+8,top+2,2,2,hair);Q(hx-2,top+3,2,4,hair);Q(hx+hw,top+3,2,4,hair)}
+    else if(hs===14){for(let r0=0;r0<4;r0++)Q(hx+hw-7+r0,top+1+r0,7-r0,1,hair);Q(hx+hw-1,top+1,2,9,hair);Q(hx+hw,top+9,1,2,hD);Q(hx+hw-6,top+1,2,1,hL)}
+    else if(hs===15&&!topHide){[hx-3,hx+hw-2].forEach(lx=>{Q(lx,top-7,5,1,hair);Q(lx,top-3,5,1,hair);Q(lx,top-7,1,5,hair);Q(lx+4,top-7,1,5,hair);Q(lx+1,top-7,2,1,hL);Q(lx+1,top-2,3,3,hD)});Q(cx-1,top-2,2,1,'#e8c040')}
+   }
+   // ใบหน้า
+   if(face){const bc=bald?'#5a4030':hD,b=k.brow|0;
+    if(b===1){Q(eL,ey-3,2,1,bc);Q(eR,ey-3,2,1,bc)}else if(b===2){Q(eL-1,ey-3,1,1,bc);Q(eR+2,ey-3,1,1,bc);Q(eL,ey-2,1,1,bc);Q(eR+1,ey-2,1,1,bc)}else if(b===3){Q(eL-1,ey-2,1,1,bc);Q(eR+2,ey-2,1,1,bc)}
+    const m=k.mark|0;
+    if(m===1){Q(eR+1,ey+2,1,1,'#c87a6a');Q(eR+2,ey+3,1,1,'#c87a6a');Q(eR+3,ey+4,1,1,'#c87a6a')}
+    else if(m===2){Q(eL+1,ey-3,1,7,'#b8605a');Q(eL,ey-2,1,1,'#b8605a');Q(eL+2,ey+2,1,1,'#b8605a')}
+    else if(m===3){Q(cx-1,top+3,2,2,'#d8283a');Q(cx-1,top+3,1,1,'#ff6a7a')}
+    else if(m===4){const c='#e83a6a';Q(cx-1,top+2,2,1,c);Q(cx-2,top+3,1,1,c);Q(cx+1,top+3,1,1,c);Q(cx-1,top+4,2,1,c);Q(cx-1,top+3,2,1,'#ffd040')}
+    else if(m===5)Q(eR+2,ey+3,1,1,'#3a2a2a');
+    else if(m===6){const c=shd(o.skin||'#f1c27d',-.25);[[eL-1,ey+3],[eL+1,ey+3],[eL,ey+4],[eR,ey+3],[eR+2,ey+3],[eR+1,ey+4]].forEach(([a,b2])=>Q(a,b2,1,1,c))}
+    else if(m===7){Q(eL,ey+2,1,2,'#8a1030');Q(eR+1,ey+2,1,2,'#8a1030');Q(eL-1,ey+3,1,1,'#8a1030');Q(eR+2,ey+3,1,1,'#8a1030')}
+    else if(m===8){Q(eL-1,ey-1,4,4,'#1a1a1a');Q(eL,ey,2,1,'#3a3a3a');Q(hx-1,top+3,hw+2,1,'#1a1a1a')}
+    else if(m===9){const c='#3a5aa8';Q(hx+1,ey+3,2,1,c);Q(hx+1,ey+5,2,1,c);Q(hx+hw-3,ey+3,2,1,c);Q(hx+hw-3,ey+5,2,1,c)}
+    const f=k.fh|0,fc=o.old?'#e6e6e6':hD;
+    if(f===1){Q(mx-2,my-1,2,1,fc);Q(mx+2,my-1,2,1,fc);Q(mx-3,my,1,1,fc);Q(mx+4,my,1,1,fc)}
+    else if(f===2){Q(mx-1,my-1,4,1,fc);Q(mx,my+1,2,3,fc);Q(mx,my+4,1,1,fc)}
+    else if(f===3){Q(hx,ey+2,1,4,fc);Q(hx+hw-1,ey+2,1,4,fc);Q(hx+1,my+1,hw-2,2,fc);Q(mx-1,my-1,4,1,fc);Q(mx,my+1,2,1,o.skin)}}
+   // ของสวมศีรษะพิเศษ
+   const w2=k.hw2;
+   if(w2==='pin'&&!hatHide){Q(cx-1,top-3,8,1,'#6ad0a0');Q(cx+6,top-3,1,1,'#b8ffe0');Q(cx+5,top-2,1,3,'#e0c060');Q(cx+5,top+1+(fl>0?1:0),1,1,'#6ad0a0')}
+   else if(w2==='ribbon'){const rc=o.trim||'#ff5a8a';Q(hx+hw-2,top-1,3,3,rc);Q(hx+hw+1,top-2,3,2,rc);Q(hx+hw+1,top+1,3,2,rc);Q(hx+hw,top,1,1,shd(rc,.4));Q(hx+hw+2,top+3+fl,1,3,rc)}
+   else if(w2==='gcrown'){Q(cx-2,top-4,5,3,'#c8a020');Q(cx-1,top-5,3,1,'#e8c840');Q(cx-4,top-2,9,1,'#c8a020');Q(cx,top-3,1,1,'#e0283a');Q(cx-5,top-2,1,4,'#e8c840');Q(cx+5,top-2,1,4,'#e8c840')}
+   else if(w2==='fox'){const fx=hx+hw-3;Q(fx,top-1,5,6,'#f4f0e6');Q(fx,top-3,1,2,'#f4f0e6');Q(fx+4,top-3,1,2,'#f4f0e6');Q(fx+1,top+1,1,1,'#c8183a');Q(fx+3,top+1,1,1,'#c8183a');Q(fx+2,top+3,1,1,'#c8183a');Q(fx,top-1,5,1,'#e8dcc8')}
+   else if(w2==='circlet'){Q(hx-1,top+2,hw+2,1,'#c8ccd6');Q(cx-1,top+2,2,2,'#5ad8ff');Q(cx-1,top+2,1,1,'#d8faff')}
+   // ชุด
+   if(!child){
+    if(sty===1&&!sit){for(let yy=ly-2;yy<Y-1;yy++){const w=tw+4+Math.floor((yy-ly)*.5);const lx=cx-Math.floor(w/2);Q(lx,yy,w,1,robe);Q(lx+w-3,yy,3,1,rD);Q(lx,yy,1,1,shd(robe,.22))}Q(cx-Math.floor((tw+8)/2),Y-2,tw+8,1,o.trim||rD);Q(cx-1,ly,1,Y-ly-2,rD)}
+    if((sty===3||sty===5)&&defArm){const bc=sty===3?'#5a4a3a':'#2a2a2a';Q(lxA,ty+aL-4+as,aw,3,bc);Q(rxA,ty+aL-4-as,aw,3,shd(bc,-.2));if(sty===3){Q(cx-Math.floor(tw/2)-1,bY-1,tw+2,1,'#8a8a96')}}
+    if(sty===5){Q(cx+4,bY+1,3,3,'#3a2a1a');Q(cx-7,bY+1,3,3,'#3a2a1a')}
+    if(sty===6){const sc=o.trim||'#e0a030';for(let r0=0;r0<th-2;r0++)Q(cx-7+Math.floor(r0*.75),ty+r0,3,1,r0%4===0?shd(sc,-.2):sc)}
+    if(sty===7){const ec=o.trim||'#c8a040';for(let i=0;i<tw;i+=3)Q(cx-Math.floor(tw/2)+i,ly-4,2,1,ec);Q(cx-4,ty+8,2,2,ec);Q(cx+3,ty+12,2,2,ec)}
+    if(sty===4&&!sit){const cc=shd(robe,-.45);Q(cx-8,ty-1,16,3,cc);Q(cx-8,ty-1,16,1,shd(cc,.2));Q(cx-1,ty+1,2,2,'#c8a040')}
+    if(sty===10){Q(cx-Math.floor(tw/2),ty+1,5,th-5,'#6a4a2a');Q(cx+Math.floor(tw/2)-5,ty+1,5,th-5,'#5a3a22');Q(cx-Math.floor(tw/2),ty+1,5,1,'#8a6a42');Q(cx-Math.floor(tw/2)+2,ty+5,1,1,'#c8a040');Q(cx+Math.floor(tw/2)-3,ty+5,1,1,'#c8a040')}
+    if(sty===8){const pc=o.trim||'#ff8ab0';Q(lxA-1,ty+4+as,2,2,pc);Q(rxA+aw-1,ty+4-as,2,2,pc)}
+   // เครื่องประดับ
+    if(acc===2&&face){Q(hx-1,ey+3,1,2,'#e0c040');Q(hx+hw,ey+3,1,2,'#e0c040');Q(hx-1,ey+5,1,1,'#ff5a5a');Q(hx+hw,ey+5,1,1,'#ff5a5a')}
+    else if(acc===3){const sc=o.trim||'#c8283a';Q(cx-7,ty-1,14,3,sc);Q(cx-7,ty-1,14,1,shd(sc,.25));Q(cx+3+fl,ty+2,3,7,sc);Q(cx+3+fl,ty+8,3,1,shd(sc,-.25))}
+    else if(acc===4){const gx=cx+Math.floor(tw/2)-2;Q(gx,bY+3,4,4,'#c89a4a');Q(gx+1,bY+1,2,2,'#c89a4a');Q(gx,bY+2,4,1,'#a01020');Q(gx+1,bY+3,1,2,'#e8c070')}
+    else if(acc===5&&defArm){const fx=lxA-3,fy=ty+as+aL-4;Q(fx,fy,7,4,'#f4ecd0');for(let i=0;i<7;i+=2)Q(fx+i,fy,1,4,'#c8b890');Q(fx+2,fy+1,3,1,'#c8283a');Q(fx+3,fy+4,1,2,'#6a4a2a')}
+    else if(acc===6){for(let i=0;i<11;i++)Q(cx-9+i,bY+1+Math.floor(i/4),1,1,i%3===0?'#3a5a2a':'#6a9a4a')}
+    else if(acc===7){[[-4,1],[-3,3],[-2,5],[0,6],[2,5],[3,3],[4,1]].forEach(([dx,dy],i)=>Q(cx+dx-(dx>0?1:0),ty+dy,1,1,i===3?'#e0c040':'#8a4a2a'))}
+   }
+  }catch(e){}
+  return r}}
+// ---- หน้าออกแบบ ----
+{const st=document.createElement('style');st.textContent=`
+#create .crhead.lk{flex-direction:row;align-items:stretch}
+#create .crhead.lk #crCv{width:150px!important;height:166px!important;border-radius:12px;box-shadow:3px 3px 0 var(--line)}
+.lktools{display:flex;flex-direction:column;gap:6px;justify-content:center;flex:1;min-width:0}
+.lktools .lkb{font-size:12px;padding:6px 8px;min-width:0;border:2px solid var(--line);border-radius:8px;background:var(--w);color:var(--ink);font-weight:700;cursor:pointer}
+.lktools .lkb.on{background:var(--ink);color:var(--bg)}.lkpose{display:flex;gap:4px}.lkpose .lkb{flex:1;padding:5px 0}
+.lktabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}.lktabs::-webkit-scrollbar{display:none}
+.lktab{flex:0 0 auto;border:2px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:800;background:var(--w);color:var(--ink);cursor:pointer;min-width:0}
+.lktab.on{background:var(--pink);color:#fff;border-color:var(--line);box-shadow:2px 2px 0 var(--line)}
+.lkf{margin-bottom:14px}.lkl{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:800;margin-bottom:6px}.lkl span{font-weight:600;color:var(--mut);font-size:12px}
+.lkg{display:flex;flex-wrap:wrap;gap:7px}
+.lksw{width:32px;height:32px;border-radius:50%;border:2px solid var(--line);background:var(--c);cursor:pointer;padding:0;min-width:0;position:relative;box-shadow:inset 0 -4px 0 #0002}
+.lksw.nul{background:repeating-linear-gradient(45deg,var(--w) 0 4px,var(--grid) 4px 8px)}
+.lksw.on{outline:3px solid var(--pink);outline-offset:2px}.lksw.on:after{content:'✓';position:absolute;inset:0;display:grid;place-items:center;font-size:14px;font-weight:900;color:#fff;text-shadow:0 0 3px #000}
+.lkt{width:66px;border:2px solid var(--line);border-radius:10px;background:var(--w);padding:3px 3px 4px;cursor:pointer;min-width:0;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:2px}
+.lkt canvas{width:56px;height:56px;image-rendering:pixelated;border-radius:7px;background:#34304a;display:block}.lkt.bd canvas{height:84px}
+.lkt small{font-size:10px;line-height:1.15;text-align:center;min-height:23px;display:flex;align-items:center}
+.lkt.on{border-color:var(--pink);box-shadow:0 0 0 2px var(--pink),2px 2px 0 var(--line);transform:translateY(-1px)}
+.lkseg{display:flex;gap:6px}.lkseg button{flex:1;border:2px solid var(--line);border-radius:10px;padding:9px 0;font-weight:800;background:var(--w);color:var(--ink);cursor:pointer;min-width:0}.lkseg button.on{background:var(--ink);color:var(--bg)}
+body.desk #create .crhead.lk{flex-direction:column}body.desk #create .crhead.lk #crCv{width:260px!important;height:288px!important}body.desk .lktools{width:260px;flex:none;margin:0 auto}
+`;document.head.appendChild(st)}
+const LK_TABS=[['base','👤','พื้นฐาน'],['hair','💇','ทรงผม'],['face','👁️','ใบหน้า'],['wear','👘','ชุด'],['acc','💍','เครื่องประดับ']];
+const LK_F={base:[['g','เพศ','seg'],['sk','สีผิว','col',()=>CR_SK]],hair:[['hs','ทรงผม','head',()=>CR_HS],['hc','สีผม','col',()=>CR_HC]],face:[['eye','สีตา','col',()=>LK_EYE],['brow','คิ้ว','head',()=>LK_BROW],['mark','ร่องรอยบนหน้า','head',()=>LK_MARK],['fh','หนวดเครา','head',()=>LK_FH]],
+ wear:[['sty','แบบชุด','body',()=>LK_STY],['rb','สีชุด','col',()=>CR_RB],['tr','สีขลิบ','col',()=>LK_TRIM],['bt','สีเข็มขัด','col',()=>LK_BELT],['pt','สีกางเกง','col',()=>LK_PANT]],acc:[['hw','ของสวมศีรษะ','head',()=>LK_HW],['acc','เครื่องประดับ','body',()=>LK_ACC]]};
+function lkInit(){['eye','brow','mark','fh','sty','tr','bt','pt','hw','acc'].forEach(k=>{if(C[k]==null)C[k]=0});C.tab=C.tab||'base';C.pose=C.pose||'stand'}
+crLook=function(){lkInit();const L=lkFromC(),o={robe:L.robe||'#8a6a4a',trim:'#f4ecd0',belt:'#00000055',hat:null,mood:'happy',seed:7,age:20,g:GENDER[C.g].n,skin:L.skin,hair:L.hair,hs:L.hs};return lookApply(o,L,20,o.g,false)};
+function lkSet(k,i){C[k]=i;sfx('click');crDraw()}
+function lkRand(){lkInit();const n=(a)=>R(0,a.length-1);C.g=R(0,1);C.hs=n(CR_HS);C.hc=n(CR_HC);C.sk=n(CR_SK);C.eye=n(LK_EYE);C.brow=n(LK_BROW);C.mark=Math.random()<.5?0:n(LK_MARK);C.fh=C.g===0&&Math.random()<.5?n(LK_FH):0;C.sty=n(LK_STY);C.rb=n(CR_RB);C.tr=n(LK_TRIM);C.bt=n(LK_BELT);C.pt=n(LK_PANT);C.hw=Math.random()<.5?0:n(LK_HW);C.acc=Math.random()<.4?0:n(LK_ACC);sfx('click');crDraw()}
+function lkReset(){['hs','hc','eye','brow','mark','fh','sty','rb','tr','bt','pt','hw','acc'].forEach(k=>C[k]=0);C.sk=1;sfx('click');crDraw()}
+function lkThumbs(){document.querySelectorAll('#crBody canvas[data-lk]').forEach(cv=>{const [k,i,mode]=cv.dataset.lk.split(':');const sv=C[k];C[k]=+i;let o;try{o=crLook()}finally{C[k]=sv}
+ const ctx=cv.getContext('2d'),sg=g,sp=PS,sf=frame;try{frame=0;g=ctx;const head=mode==='head',VW=head?13:17,ox=head?9.5:7.5,oy=head?1.2:2.6;PS=cv.width/VW;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.setTransform(PS,0,0,PS,-ox*PS,-oy*PS);ctx.imageSmoothingEnabled=false;P(ox,oy,VW,40,'#34304a');P(ox,head?14:26,VW,10,'#484262');person(10,30,o,'stand')}catch(e){}finally{g=sg;PS=sp;frame=sf}})}
+function lkBody(){lkInit();const en=LANG==='en',tabs=LK_TABS.map(([k,ic,t])=>`<button class="lktab ${C.tab===k?'on':''}" onclick="C.tab='${k}';sfx('click');crDraw()">${ic} ${t}</button>`).join('');
+ const fields=(LK_F[C.tab]||[]).map(([k,lab,mode,lf])=>{if(mode==='seg')return`<div class="lkf"><div class="lkl">${lab}</div><div class="lkseg">${GENDER.map((v,i)=>`<button class="${C.g===i?'on':''}" onclick="lkSet('g',${i})">${i?'♀':'♂'} ${v.n}</button>`).join('')}</div></div>`;
+  const L=lf(),cur=C[k]|0;if(k==='fh'&&C.g===1)return'';
+  const items=L.map((v,i)=>mode==='col'?`<button class="lksw${v[1]?'':' nul'} ${i===cur?'on':''}" style="--c:${v[1]||'transparent'}" title="${esc(v[0])}" onclick="lkSet('${k}',${i})"></button>`
+   :`<button class="lkt${mode==='body'?' bd':''} ${i===cur?'on':''}" onclick="lkSet('${k}',${i})"><canvas data-lk="${k}:${i}:${mode}" width="${mode==='body'?51:48}" height="${mode==='body'?78:48}"></canvas><small>${esc(v[0])}</small></button>`).join('');
+  return`<div class="lkf"><div class="lkl">${lab}<span>${esc(L[cur][0])} · ${cur+1}/${L.length}</span></div><div class="lkg">${items}</div></div>`}).join('');
+ return`<div class="lktabs">${tabs}</div>${fields}`}
+{const _cs=crSteps;crSteps=function(){const s=_cs.apply(this,arguments);return[['ออกแบบรูปลักษณ์','look']].concat(s.filter(x=>!['g','hs','hc','sk','rb'].includes(x[1])))}}
+{const _cd=crDraw;crDraw=function(){const st=crSteps();crStep=Math.max(0,Math.min(st.length-1,crStep));const key=st[crStep][1];lkInit();
+ if(key!=='look'){_cd.apply(this,arguments);const hd=document.querySelector('#create .crhead');if(hd){hd.classList.remove('lk');const t=$('lkTools');if(t)t.style.display='none';const p=hd.children[1];if(p&&p.id!=='lkTools')p.style.display=''}return}
+ const sc=($('crBody')||{}).scrollTop||0;_cd.apply(this,arguments);
+ const hd=document.querySelector('#create .crhead');if(hd){hd.classList.add('lk');{const p=hd.children[1];if(p&&p.id!=='lkTools')p.style.display='none'}let t=$('lkTools');if(!t){hd.insertAdjacentHTML('beforeend','<div class="lktools" id="lkTools"></div>');t=$('lkTools')}t.style.display='';
+  t.innerHTML=`<button class="lkb" onclick="lkRand()">🎲 สุ่มทั้งหมด</button><button class="lkb" onclick="lkReset()">↺ รีเซ็ต</button><div class="lkpose">${[['stand','ยืน'],['walk','เดิน'],['sit','นั่ง']].map(([p,n])=>`<button class="lkb ${C.pose===p?'on':''}" onclick="C.pose='${p}';crDraw()">${n}</button>`).join('')}</div><div class="tag2" style="font-size:11px">${C.lookOnly?'ชาติกำเนิดจะสุ่มตอนเกิด':'แต้มคงเหลือ <b>'+(CR_PTS-crSpent())+'</b>'}</div>`;xFix&&xFix(['lkTools'])}
+ $('crBody').innerHTML=xT(lkBody());lkThumbs();try{$('crBody').scrollTop=sc}catch(e){}}}
+crPrev=function(){const cv=$('crCv');if(!cv||!C)return;const ctx=cv.getContext('2d');if(!ctx)return;const sg=g,sp=PS,sf=frame;g=ctx;PS=cv.width/28;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);ctx.setTransform(cv.width/28,0,0,cv.width/28,0,0);ctx.imageSmoothingEnabled=false;
+ try{frame=performance.now()/150;const F=(!C.lookOnly&&FAMILY[C.fam])||null;g.save();g.scale(28/17,28/17);sceneDraw(sceneKind(F,!!CFG.xian),!!CFG.xian,performance.now()/1000,7);g.restore();const p=C.pose||'stand';person(p==='walk'?8+((performance.now()/90)%12)*0:10,p==='sit'?31:29,crLook(),p)}catch(e){}finally{g=sg;PS=sp;frame=sf}};
+// เริ่มชีวิต: ส่งรูปลักษณ์ทั้งหมด
+{const _st=crStart;crStart=function(){lkInit();const L=lkFromC();if(C.lookOnly){const gb=window.goBirth;window.goBirth=function(){try{if(crForce)crForce.look=L}catch(e){}window.goBirth=gb;return gb.apply(this,arguments)};try{return _st.apply(this,arguments)}finally{window.goBirth=gb}}
+ const sl=window.startLife;window.startLife=function(){try{if(roll&&roll.custom)roll.look=L}catch(e){}window.startLife=sl;return sl.apply(this,arguments)};try{return _st.apply(this,arguments)}finally{window.startLife=sl}}}
+
 </script>
 </body>
 </html>
