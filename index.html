@@ -460,8 +460,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='14.0';
+const VERSION='14.1';
 const CHANGELOG=[
+ {v:'14.1',d:'10 พ.ย. 2026',l:['💞 <b>คู่ครองไม่จำกัดแล้ว!</b> ถ้าอีกฝ่ายรักหรือมีความสัมพันธ์กัน รับเข้าตำหนักในได้ไม่จำกัดจำนวน (ยังต้องถามคู่แรกก่อน และมีค่าเลี้ยงดูตามจำนวนคน)','🌸 คนที่เกิดวินาทีเดียวกันจีบเข้าตำหนักในได้ แม้มีคู่อยู่แล้ว · ถ้าเป็นเพื่อนกันโอกาสสำเร็จสูงขึ้น']},
  {v:'14.0',d:'10 พ.ย. 2026',l:['🎒 <b>กระเป๋าใหญ่ขึ้นทุกใบ!</b> กระเป๋าธรรมดาจุได้มากขึ้นราว 2.5 เท่า เซฟเก่าได้ช่องเพิ่มทันที','🛒 <b>ร้านกระเป๋า</b> ในหน้า 🎒 — ซื้อใบใหญ่ขึ้นได้เอง ข้ามขั้นได้ · ยุทธภพมี 10 ใบ สูงสุด <b>200 ช่อง</b> · โลกเซียนมีชุดของตัวเอง 10 ใบ สูงสุด <b>300 ช่อง</b>','🌌 <b>ถุงมิติเก็บของได้ไม่จำกัด!</b> แหวนมิติชนะศัตรูได้ของเพิ่ม · โลกในแหวนมีสมุนไพรและยางอกเงยเองทุกปี','⚠️ เควสถุงมิติยากขึ้นมาก ทำไม่สำเร็จก็ซื้อกระเป๋าธรรมดาใบใหญ่ไปก่อนได้']},
  {v:'13.9',d:'10 พ.ย. 2026',l:['🔐 <b>ล็อกอินด้วย Google ได้แล้ว!</b> ผูกบัญชีที่ 👤 โปรไฟล์ → 🔐 บัญชี Google',
   '💾 เปลี่ยนเครื่องหรือเบราว์เซอร์ใหม่ แค่ล็อกอิน Google ตัวเดิม ก็กู้เซฟกลับมาได้ทันที ไม่ต้องจำรหัสยาวๆ',
@@ -1333,6 +1334,7 @@ function peerMeet(){
  if(p.rel!=='friend')opts.push({t:'🤝 สาบานเป็นพี่น้อง',s:'อาจมาช่วยคุณตอนจวนตัว',f(){if(Math.random()<.4+S.cha/200||p.rel==='sect'){if(S.arc.rival===i)S.arc.rival=null;p.rel='friend';p.notes.push(`${p.age} ปี: สาบานเป็นพี่น้องกับ${S.name}`);log(`ดื่มสุราสาบานเป็นพี่น้องกับ ${p.name} "แม้ไม่ได้เกิดวันเดียวกัน... อ้อ เราเกิดวันเดียวกันนี่นา"`,'epic')}else log(`${p.name}ยังไม่ไว้ใจคุณพอ`)}});
  if(p.rel!=='rival'&&p.rel!=='friend')opts.push({t:'⚔️ ท้าประลอง',s:'อาจกลายเป็นคู่ปรับตลอดชีวิต',f(){duel(p.name,peerPow(p),w=>{log(`ประลองกับ ${p.name} — ${w?'คุณชนะ!':'คุณแพ้'}`,w?'good':'bad');
    if(S.arc.rival==null){S.arc.rival=i;S.arc.rivalLast=S.age;S.arc.rivalN=1;S.arc.rivalW=w?1:0;p.rel='rival';p.notes.push(`${p.age} ปี: กลายเป็นคู่ปรับของ${S.name}`);log(`⚔️ ${p.name} กลายเป็นคู่ปรับตลอดชีวิตของคุณ`,'epic',true)}})}});
+ if(S.age>=18&&!p.spouse&&p.g!==S.gender&&p.rel!=='rival'&&S.spouse&&S.spouse!==p.name&&!(S.harem||[]).some(g=>g.n===p.name))opts.push({t:'🌸 จีบเข้าตำหนักใน',s:p.rel==='friend'?'เป็นเพื่อนกันอยู่แล้ว โอกาสสูงขึ้น':'ขึ้นกับเสน่ห์',f(){if(Math.random()<.2+S.cha/180+(p.rel==='friend'?.2:0))peerHarem(p,i);else log(`${p.name}ปฏิเสธ "ท่านมีคู่อยู่แล้วไม่ใช่หรือ"`,'bad')}});
  if(S.age>=18&&!S.spouse&&!p.spouse&&p.g!==S.gender&&p.rel!=='rival')opts.push({t:'🌸 จีบ',s:'ขึ้นกับเสน่ห์',f(){if(Math.random()<.3+S.cha/150){p.spouse=true;p.rel='spouse';S.spouse=p.name;S.spouseP=i;S.flags.marryPeer=1;p.notes.push(`${p.age} ปี: แต่งงานกับ${S.name}`);log(`💍 แต่งงานกับ ${p.name} คนที่เกิดในวินาทีเดียวกับคุณ — ชะตาฟ้าลิขิตจริงๆ`,'myth');setScene('wedding')}else log(`${p.name}ปฏิเสธ`,'bad')}});
  opts.push({t:'ทักทายแล้วแยกย้าย',f(){S.cha+=2;log(`คุยกับ ${p.name} สั้นๆ ก่อนแยกย้ายกันไป`)}});
  choice('👤 บังเอิญพบกัน',`คุณได้พบกับ <b>${p.name}</b> ${p.fac?`แห่ง${p.fac.n}`:'จอมยุทธ์พเนจร'} (${REALMS[p.ri].n}) — คนที่เกิดในวินาทีเดียวกับคุณ${p.rel?`<br>ความสัมพันธ์: ${REL[p.rel]}`:''}`,opts);
@@ -5534,7 +5536,7 @@ function youthTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human))return;i
 const HM_N={หญิง:['หลิวอวี่','ซูเหมย','หลินเยว่','ไป๋เสวี่ย','เซี่ยหลาน','เฉินซิน','หวังเหยียน','จ้าวหลิง','ถังอี','เยว่เอ๋อร์'],ชาย:['หลิวเฟิง','ซูหาน','หลินเซียว','ไป๋อวิ๋น','เซี่ยหยาง','เฉินโม่','หวังจือ','จ้าวเหิง','ถังอี้','หยุนเชิน']};
 const HM_T=['บุตรีเจ้าเมือง','นักดนตรีจากหอบุปผา','ศิษย์สำนักกระบี่','ลูกสาวพ่อค้าเกลือ','จอมยุทธ์พเนจร','หมอเทวดาสาว','องค์หญิงจากแคว้นใกล้','นักเต้นจากแดนตะวันตก','ศิษย์หุบเขาดอกท้อ','ธิดาตระกูลยุทธ์'];
 const HM_TM=['บุตรชายเจ้าเมือง','นักกวีจากหอบุปผา','ศิษย์สำนักกระบี่','ลูกชายพ่อค้าเกลือ','จอมยุทธ์พเนจร','หมอเทวดาหนุ่ม','องค์ชายจากแคว้นใกล้','นักดาบจากแดนตะวันตก','ศิษย์หุบเขาดอกท้อ','บุตรตระกูลยุทธ์'];
-function haremCap(){return Math.max(0,1+Math.floor(((S.cha||0)-50)/30)+Math.floor((S.fame||0)/2500)+Math.floor(realmIdx()/2))}
+function haremCap(){return Infinity}
 function hmMember(nm,tt){const g=mkLover(nm,tt);return{n:nm,t:tt,a:S.age,age:g.age,life:g.life,aff:65}}
 function hmAskP(){const sp=S.sp;if(!sp)return .5;let p=.2+(sp.aff||60)/220+(S.cha||0)/700+(S.fame||0)/40000+realmIdx()*.02;if(sp.p==='ขี้หึง')p-=.25;if(sp.p==='ร่าเริง')p+=.08;if(S.xian)p+=.05;return clamp(p,.05,.85)}
 function haremTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human)||S.age<18)return;const H=S.harem;
@@ -5554,11 +5556,11 @@ function haremOffer(active){if(!S||!S.alive||S.age<18||choice._cur||modalOpen||(
  if(!S.spouse){choice(`💕 ${who}สนใจคุณ`,intro,[
    {t:`💕 คบกับ${nm}`,s:'เป็นคนรักคนแรก',f(){S.spouse=nm;S.spouseP=null;S.sp=mkLover(nm,tt,{wed:false,age:g.age});joy(8);log(`💕 เริ่มคบหากับ <b>${nm}</b> (${g.age} ปี)`,'epic')}},
    {t:'ปฏิเสธอย่างสุภาพ',skip:true,f(){S.karma+=1;log(`คุณปฏิเสธ${nm}อย่างนุ่มนวล`)}}]);return true}
- if(cap<1||(H&&H.length>=cap))return false;
+ 
  const sp=S.sp,spN=sp?sp.n:S.spouse,cnt=H?H.length:0;
- if(S.haremOK){choice(`🌸 ${who}ขอเข้าตำหนักใน`,`${intro} (ตอนนี้ ${cnt}/${cap} คน)`,[
+ if(S.haremOK){choice(`🌸 ${who}ขอเข้าตำหนักใน`,`${intro} (ตอนนี้ ${cnt} คน · ไม่จำกัดจำนวน)`,[
    {t:`รับ${nm}เข้าตำหนัก`,s:H?'ค่าเลี้ยงดูเพิ่มขึ้น':`ค่าเปิดตำหนัก ${fmt(Math.round(800*(1+realmIdx()*.4)))}`,f(){if(!H){const cost=Math.round(800*(1+realmIdx()*.4));if(S.money<cost){log('เงินไม่พอเปิดตำหนักใน','bad');return}S.money-=cost;S.harem=[]}
-     if(roll01(.55+(S.cha||0)/1000)){S.harem=S.harem||[];S.harem.push(g);joy(6);if(sp)sp.aff=Math.max(0,sp.aff-3);log(`🌸 <b>${nm}</b> ${tt} (${g.age} ปี) เข้าตำหนักใน (${S.harem.length}/${cap})`,'good',S.harem.length>=5)}else log(`${nm}ทดสอบใจคุณแล้วจากไป — ยังไม่ประทับใจพอ`,'bad')}},
+     if(roll01(.55+(S.cha||0)/1000)){S.harem=S.harem||[];S.harem.push(g);joy(6);if(sp)sp.aff=Math.max(0,sp.aff-3);log(`🌸 <b>${nm}</b> ${tt} (${g.age} ปี) เข้าตำหนักใน (${S.harem.length} คน)`,'good',S.harem.length>=5)}else log(`${nm}ทดสอบใจคุณแล้วจากไป — ยังไม่ประทับใจพอ`,'bad')}},
    {t:'ปฏิเสธ',skip:true,f(){S.karma+=1;log(`คุณปฏิเสธ${nm}`)}}]);return true}
  const cost=Math.round(800*(1+realmIdx()*.4)),cool=S.haremNoAt!=null&&S.age-S.haremNoAt<5,pA=hmAskP(),o=[];
  if(!cool)o.push({t:`💬 ถาม${spN}ก่อนว่าขอเปิดฮาเร็มได้ไหม`,s:`${spN}น่าจะยอมราว ${Math.round(pA*100)}% · ค่าเปิดตำหนัก ${fmt(cost)}`,f(){
@@ -5577,7 +5579,7 @@ function hmLeave(why){if(S.harem&&S.harem.length)log(`🌸 คนในตำห
 {const _ax=ascendToX;ascendToX=function(){const r=_ax.apply(this,arguments);try{hmLeave('ทางของเซียนต้องเริ่มใหม่')}catch(e){}return r}}
 {const _ag=ascendGod;ascendGod=function(){const r=_ag.apply(this,arguments);try{hmLeave('พวกนางรอคุณอยู่ที่โลกเซียน')}catch(e){}return r}}
 {const _py4=passYear;passYear=function(){try{youthTick()}catch(e){console.error(e)}try{haremTick()}catch(e){console.error(e)}return _py4.apply(this,arguments)}}
-{const _of=openFamily;openFamily=function(){const r=_of.apply(this,arguments);try{const H=S.harem;if(H&&H.length){$('modal').insertAdjacentHTML('beforeend',`<h4 style="margin:12px 0 6px">🏯 ตำหนักใน (${H.length}/${haremCap()})</h4>`+H.map(g=>`<div class="item"><b>${esc(g.n)}</b>${g.age!=null?` <span class="tag2">${g.age} ปี</span>`:''} <span class="tag2">${esc(g.t)} · เข้ามาตอนคุณอายุ ${g.a}</span></div>`).join('')+`<p class="tag2">ค่าเลี้ยงดูปีละ ${fmt(H.length*(40+realmIdx()*25))}${S.haremSecret?' · 🤫 ยังเป็นความลับ':S.haremOK&&S.sp?` · ${esc(S.sp.n)}ยอมรับแล้ว`:''}</p>`)}
+{const _of=openFamily;openFamily=function(){const r=_of.apply(this,arguments);try{const H=S.harem;if(H&&H.length){$('modal').insertAdjacentHTML('beforeend',`<h4 style="margin:12px 0 6px">🏯 ตำหนักใน (${H.length} คน)</h4>`+H.map(g=>`<div class="item"><b>${esc(g.n)}</b>${g.age!=null?` <span class="tag2">${g.age} ปี</span>`:''} <span class="tag2">${esc(g.t)} · เข้ามาตอนคุณอายุ ${g.a}</span></div>`).join('')+`<p class="tag2">ค่าเลี้ยงดูปีละ ${fmt(H.length*(40+realmIdx()*25))}${S.haremSecret?' · 🤫 ยังเป็นความลับ':S.haremOK&&S.sp?` · ${esc(S.sp.n)}ยอมรับแล้ว`:''}</p>`)}
  if(S.agelessAt!=null)$('modal').insertAdjacentHTML('beforeend',`<p class="tag2">🌸 คืนสู่วัยเยาว์ — ใบหน้าหยุดไว้ที่ราว ${S.agelessAt} ปี${S.youthBody?' · ร่างกายแข็งแรงเหมือนวัยรุ่น':''}</p>`)}catch(e){}return r}}
 
 // ============ v7.3: เลย์เอาต์สำหรับหน้าจอคอม + คีย์ลัด ============
@@ -6947,13 +6949,13 @@ MAINQ.lust=[['มีคนรักรวม 3 คน',()=>lovers()>=3],['ภา
 SHOP.push({id:'perfume',n:'ยาหอมดึงดูดใจ',d:'เสน่ห์ +10',c:40,t:'lust'},{id:'redline',n:'ด้ายแดงลิขิตรัก',d:'ภารกิจรักครั้งถัดไปสำเร็จแน่นอน',c:90,t:'lust'},{id:'yinyang',n:'คัมภีร์หยินหยางคู่บำเพ็ญ',d:'พลังจากคนรักแต่ละคนเพิ่ม ×1.5 ถาวร (ซื้อได้ครั้งเดียว)',c:160,t:'lust',once:'yinyang'});
 {const _bu12=buySys;buySys=function(id){if(!['perfume','redline','yinyang'].includes(id))return _bu12.apply(this,arguments);const s=S.sys,it=SHOP.find(x=>x.id===id);if(s.sp<it.c){toast('SP ไม่พอ');return}if(it.once&&s.upgrades.includes(it.once)){toast('ซื้อไปแล้ว');return}
  s.sp-=it.c;s.used++;if(id==='perfume')S.cha+=10;else if(id==='redline')s.redline=1;else s.upgrades.push('yinyang');sysLog(`ซื้อ <b>${it.n}</b> สำเร็จ`);sfx('good');render();openSys()}}
-{const _ss12=sysSpecial;sysSpecial=function(){const s=S.sys;if(s&&s.t==='lust'){const L=lovers(),pw=lustPow();return `<h4>💋 ระบบตัณหา</h4><div class="sysq">คนรัก <b>${L}</b> คน${S.harem&&S.harem.length?` (ตำหนักใน ${S.harem.length}/${haremCap()})`:''} · ภารกิจรักสำเร็จ <b>${s.lustP||0}</b> ครั้ง${s.redline?' · 🧶 ด้ายแดงพร้อมใช้':''}<br><span style="opacity:.75">พลังหยินหยางจากคนรัก +${fmt(pw)}/ปี · ลมปราณ +${(L*.04).toFixed(2)} ปี/ปี${S.age<18?' · ภารกิจรักจะเริ่มเมื่ออายุ 18 ปี':''}</span></div>`}return _ss12.apply(this,arguments)}}
+{const _ss12=sysSpecial;sysSpecial=function(){const s=S.sys;if(s&&s.t==='lust'){const L=lovers(),pw=lustPow();return `<h4>💋 ระบบตัณหา</h4><div class="sysq">คนรัก <b>${L}</b> คน${S.harem&&S.harem.length?` (ตำหนักใน ${S.harem.length})`:''} · ภารกิจรักสำเร็จ <b>${s.lustP||0}</b> ครั้ง${s.redline?' · 🧶 ด้ายแดงพร้อมใช้':''}<br><span style="opacity:.75">พลังหยินหยางจากคนรัก +${fmt(pw)}/ปี · ลมปราณ +${(L*.04).toFixed(2)} ปี/ปี${S.age<18?' · ภารกิจรักจะเริ่มเมื่ออายุ 18 ปี':''}</span></div>`}return _ss12.apply(this,arguments)}}
 function lustPow(){const s=S.sys;return Math.round(lovers()*(6+s.lv*2)*S.talent.m*sysM()*(s.upgrades.includes('yinyang')?1.5:1))}
 function lustYear(){const s=S.sys,L=lovers();if(L){S.power+=lustPow();S.qi+=+(L*.04).toFixed(2);if(L>=3)S.fame+=L}}
 function lustCtx(){const og=oppG(),H=S.harem||[],pool=(HM_N[og]||[]).filter(x=>x!==S.spouse&&!H.some(g=>g.n===x));const nm=pool.length?ch(pool):anyName(og);return{og,nm,tt:ch(og==='หญิง'?HM_T:HM_TM),ag:loverAge(),who:lzWho(),pr:lzPr()}}
 function lustWin(c,why){const s=S.sys;s.lustP=(s.lustP||0)+1;S.cha+=2;sysReward(70+s.lv*12,R(10,18),`ภารกิจรักสำเร็จ — ${why}`);
  if(!S.spouse){S.spouse=c.nm;S.spouseP=null;S.sp=mkLover(c.nm,c.tt,{wed:false,age:c.ag});joy(8);log(`💕 <b>${c.nm}</b> ${c.tt} (${c.ag} ปี) ตกลงเป็นคนรักของคุณ`,'epic',true);return}
- if(S.haremOK&&(S.harem||[]).length<haremCap()){const g=hmMember(c.nm,c.tt);g.age=c.ag;S.harem=S.harem||[];S.harem.push(g);joy(6);log(`🌸 <b>${c.nm}</b> ${c.tt} (${c.ag} ปี) ขอติดตามอยู่ข้างกาย เข้าตำหนักใน (${S.harem.length}/${haremCap()})`,'epic',true);return}
+ if(S.haremOK&&(S.harem||[]).length<haremCap()){const g=hmMember(c.nm,c.tt);g.age=c.ag;S.harem=S.harem||[];S.harem.push(g);joy(6);log(`🌸 <b>${c.nm}</b> ${c.tt} (${c.ag} ปี) ขอติดตามอยู่ข้างกาย เข้าตำหนักใน (${S.harem.length} คน)`,'epic',true);return}
  const spN=S.sp?S.sp.n:S.spouse;bagAdd('charm',1,1);log(`🌸 ${c.nm}มอบถุงหอมไว้เป็นที่ระลึก "ถ้าวันหนึ่งท่านมีที่ว่างข้างกาย ข้าจะรอ"${!S.haremOK?` — ถ้าจะรับคนรักเพิ่ม ต้องได้รับความยินยอมจาก${spN}ก่อน`:' — ตำหนักในเต็มแล้ว'}`,'good')}
 function lustLose(c,t){const s=S.sys;joy(-3);sysLog(`ภารกิจรักล้มเหลว — ${t}`,'fail');if(Math.random()<.4){const d=Math.min(s.sp,R(5,12));s.sp-=d}}
 function lustEvent(){const s=S.sys;if(S.age<18||choice._cur||modalOpen||(S.beastMode&&!S.beastMode.human))return false;if(s.lzAt!=null&&S.age-s.lzAt<2)return false;if(Math.random()>(s.quests.some(q=>q.k==='woo'||q.k==='lov')?.75:.45))return false;s.lzAt=S.age;
@@ -9507,6 +9509,14 @@ function bParYear(){const m=S&&S.beastMode;if(!(m&&!m.human&&m.par>0&&!m.parGone
  TTL_SP.forEach(t=>{if(TF[t[0]])t[1]=TF[t[0]]});
 }
 
+
+// ===== v14.9 คู่ครองไม่จำกัด =====
+function peerHarem(p,i){const sp=S.sp,spN=sp?sp.n:S.spouse;
+ const add=()=>{const g=hmMember(p.name,'คนที่เกิดวินาทีเดียวกัน');g.age=p.age;try{g.life=loverLife(p.age)}catch(e){}S.harem=S.harem||[];S.harem.push(g);p.spouse=true;p.rel='spouse';(p.notes=p.notes||[]).push(`${p.age} ปี: เข้าตำหนักในของ${S.name}`);joy(8);if(sp)sp.aff=Math.max(0,(sp.aff||60)-3);S.flags.marryPeer=1;log(`🌸 <b>${p.name}</b> คนที่เกิดในวินาทีเดียวกับคุณ ยอมอยู่ข้างกาย (ตำหนักใน ${S.harem.length} คน)`,'epic',true)};
+ if(S.haremOK||!S.spouse){add();return}
+ if(roll01(hmAskP())){S.haremOK=1;S.haremNoAt=null;if(sp)sp.aff=Math.max(0,sp.aff-5);log(`💬 ${spN}ยอมให้${p.name}เข้ามาอยู่ด้วย`,'epic');add()}
+ else{S.haremNoAt=S.age;if(sp)sp.aff=Math.max(0,sp.aff-10);joy(-4);log(`💬 ${p.name}ตอบรับ แต่${spN}ไม่ยอม — เรื่องจึงต้องจบลง`,'bad')}}
+try{Object.assign(I18N.d,{'🌸 จีบเข้าตำหนักใน':'🌸 Court into your household','เป็นเพื่อนกันอยู่แล้ว โอกาสสูงขึ้น':'Already friends — better odds','ไม่จำกัดจำนวน':'no limit'})}catch(e){}
 </script>
 </body>
 </html>
