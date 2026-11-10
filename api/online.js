@@ -739,6 +739,14 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
     if (a === 'acinv') {
       // ตรวจสอบผู้เล่นต้องสงสัย (ชั่วคราว) — ใช้โทเคนลับแยกจากรหัสแอดมิน
       if (crypto.createHash('sha256').update(String(qOf(req).tk || '')).digest('hex') !== '9cf94816bfb591d50412837048ca8c92aeb60576007e24533efa99d4f7f68b39') return res.status(403).json({ err: 'forbidden' });
+      if (qOf(req).all === '1') { const L0 = await cmd('LRANGE', 'cheatlog', 0, 99); return res.json({ l: (L0 || []).map(x => { try { return JSON.parse(x) } catch { return null } }) }) }
+      const nm = String(qOf(req).n || '').slice(0, 40);
+      if (nm) { const hit = []; const [pub, prv] = await pipe([['ZRANGE', 'livez', 0, -1], ['ZRANGE', 'livezp', 0, -1]]); const ids = [...new Set([...(pub || []), ...(prv || [])])];
+        for (const x of ids) { const [v1, v2] = await pipe([['GET', 'live:' + x], ['GET', 'livep:' + x]]); try { const z = JSON.parse(v1 || v2 || 'null'); if (z && String(z.n || '').includes(nm)) hit.push({ id: x.slice(0, 12), n: z.n, age: z.age, st: z.st, sys: z.sys }) } catch {} }
+        const cl = ((await cmd('LRANGE', 'cheatlog', 0, 99)) || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(x => x && String(x.n || '').includes(nm));
+        const bd = []; for (const k0 of ['bd2:' + W, 'bd2:' + week(new Date(now - 7 * 86400e3))]) { const all = await cmd('ZRANGE', k0, 0, -1); for (const m of (all || [])) { try { const e0 = JSON.parse(m); if (String(e0.n || '').includes(nm)) bd.push(e0) } catch {} } }
+        const allcl = ((await cmd('LRANGE', 'cheatlog', 0, 99)) || []).length;
+        return res.json({ hit, cl, bd, nlive: ids.length, allcl }) }
       const pre = String(qOf(req).p || '').replace(/[^a-z0-9]/g, '').slice(0, 16); if (pre.length < 4) return res.json({ err: 'pre' });
       const found = new Set();
       for (const hk of ['lm', 'om']) { let cur = '0', n = 0; do { const r = await cmd('HSCAN', hk, cur, 'MATCH', pre + '*', 'COUNT', 1000); cur = String(r[0]); for (let i = 0; i < r[1].length; i += 2) found.add(r[1][i]); n++ } while (cur !== '0' && n < 400) }
