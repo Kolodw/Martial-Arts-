@@ -462,7 +462,7 @@ setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?
 // ============ UPDATE LOG ============
 const VERSION='15.1';
 const CHANGELOG=[
- {v:'15.1',d:'10 พ.ย. 2026',l:['🐾 <b>สัตว์อสูรยุคใหม่</b> — สัตว์อสูรมีโอกาสได้<b>ระบบ</b>และ <b>AI</b> แล้ว เควสทุกระบบปรับเป็นแบบสัตว์ (ล่าเหยื่อ แสงจันทร์ บำเพ็ญขั้น หาคู่)','🩸 <b>สืบสายเลือด</b> — ตายตอนมีลูกอสูร เล่นต่อเป็นลูกได้ ได้ธาตุ พลังบางส่วน และอาจตื่นสายเลือดสูงกว่าเดิม','💕 คู่ชีวิตของสัตว์ใช้ชื่อแบบสัตว์ · แปลงกายแล้วคู่แปลงกายตามมาเป็นคู่ครองชื่อแบบคน','🌲 เหตุการณ์สัตว์อสูรใหม่หลายสิบแบบ · 🏹 ผู้เล่นมนุษย์จริงอาจมาล่าแก่นอสูรของคุณแบบเรียลไทม์','🏷️ ฉายามีสี 7 ระดับตามความยาก พร้อมอนิเมชั่น · 📚 สารานุกรมและคู่มือเพิ่มของใหม่','🔧 แก้อายุขัยตอนเลื่อนขั้นสัตว์อสูรไม่ตรงกับที่บอก']},
+ {v:'15.1',d:'10 พ.ย. 2026',l:['🐾 <b>สัตว์อสูรยุคใหม่</b> — สัตว์อสูรมีโอกาสได้<b>ระบบ</b>และ <b>AI</b> แล้ว เควสทุกระบบปรับเป็นแบบสัตว์ (ล่าเหยื่อ แสงจันทร์ บำเพ็ญขั้น หาคู่)','🩸 <b>สืบสายเลือด</b> — ตายตอนมีลูกอสูร เล่นต่อเป็นลูกได้ ได้ธาตุ พลังบางส่วน และอาจตื่นสายเลือดสูงกว่าเดิม','💕 คู่ชีวิตของสัตว์ใช้ชื่อแบบสัตว์ · แปลงกายแล้วคู่แปลงกายตามมาเป็นคู่ครองชื่อแบบคน','🌲 เหตุการณ์สัตว์อสูรใหม่หลายสิบแบบ · 🏹 ผู้เล่นมนุษย์จริงอาจมาล่าแก่นอสูรของคุณแบบเรียลไทม์','🏷️ ฉายามีสี 7 ระดับตามความยาก พร้อมอนิเมชั่น · 📚 สารานุกรมและคู่มือเพิ่มของใหม่','🖼️ <b>กรอบรูปใหม่ 49 แบบ</b> (รวม 60 · ธรรมะ 30 / มาร 30) — แสงหมุน ออร่า ดาวหาง ประกายไฟ กลีบร่วง ตราประจำ ยิ่งแพงยิ่งอลังการ','🔧 แก้อายุขัยตอนเลื่อนขั้นสัตว์อสูรไม่ตรงกับที่บอก']},
  {v:'15.0',d:'10 พ.ย. 2026',l:['🎉 <b>อัปเดตใหญ่ v15!</b> รวมทุกอย่างที่เพิ่มมาช่วงนี้', '🧬 <b>กายาพิเศษใหม่ 5 แบบ</b> — เก้าหยินสุดขั้ว · เต๋าโดยกำเนิด · อมตะไร้ดับ · หมื่นวิชา · ฝืนลิขิตฟ้า แต่ละแบบมีจุดแข็งและราคาที่ต้องจ่าย', '🟦 <b>ระบบใหม่ 5 ชนิด</b> — เจ้าสำนัก · ผู้นำตระกูล · เทพช่าง · นายพรานสัตว์อสูร · ย้อนกาลเวลา และเกรดใหม่ <b>ระดับบรรพกาล</b> · เควสของทุกระบบตรงกับชื่อระบบมากขึ้น มีเหตุการณ์ใหม่ทุกระบบ', '🤖 <b>AI ฉลาดขึ้นและมีชีวิต</b> — ทำนายผลบนตัวเลือก · สแกนโลก · นิสัยและความผูกพัน · สายวิวัฒนาการ 3 สาย · ปรับพันธุกรรม · เรื่องยาว「AI ตื่นรู้」ที่จบได้ 3 แบบ', '🏞️ <b>ที่ดินตระกูล</b> — ขยายที่ดิน 5 ขั้น สร้างสิ่งปลูกสร้าง 16 แบบ เลือกประเพณีตระกูล และส่งต่อให้ทายาทได้', '🏘️ <b>เมืองมีที่ใหม่ 7 แห่ง</b> — โรงรับฝากเงิน · ลานประลอง · บ่อนเต๋า · หมอดู · โรงน้ำชา · จวนเจ้าเมือง · เทศกาลทุก 4 ปี', '🏬 <b>ร้านสมบัติมีของ 311 อย่างต่อโลก</b> — หมวดใหม่ อาหาร ของขวัญคนรัก ทรัพย์สินตระกูล วัตถุดิบ พาหนะ', '🏛️ <b>ประมูลผู้เล่น</b> — ใช้ตำลึง ของแต่ละชิ้นประมูลได้เฉพาะคนในโลกนั้น มีชิ้นมือใหม่ทุกรอบ ไม่มีใครเสนอใน 10 วิข้ามชิ้นทันที', '💞 <b>คู่ครองไม่จำกัด</b> — คนที่เกิดวินาทีเดียวกันก็จีบเข้าตำหนักในได้', '🐾 <b>สัตว์อสูร</b> — ฉากเกิดในป่า ถ้ำ ภูเขา พร้อมพ่อแม่หรือกำพร้า · ปณิธานสัตว์อสูร 101 เป้าหมาย (ยากมาก)', '🎨 <b>ออกแบบตัวละครได้ละเอียดขึ้น</b> — ตัวเลือกกว่า 150 แบบ · ท่าเดินใหม่สง่าแบบผู้บำเพ็ญ', '👁 <b>ดูคนอื่นเล่น / ทำเนียบ</b> — เห็นตอนสุ่มเกิด (โอกาสเกิด กระดูก พรสวรรค์ ปณิธาน) และประวัติชีวิต · จัดหมวดใหม่', '📖 <b>สมุดตำนานยากขึ้นราว 10 เท่า</b> (ยกเว้นระดับทั่วไป) สีระดับจัดใหม่ตามความหายากจริง · สุดยอดแห่ง OP ต้องพลัง 1T · สารานุกรมและคู่มือโฉมใหม่', '☰ <b>เมนูจัดหมวด</b> ของใช้บ่อยอยู่บนสุด · เควสไม่ขึ้นตอนยังเด็ก · ทารกตายน้อยลง และแพ้บอสมารสวรรค์ครั้งแรกมีโอกาสรอด']},
  {v:'14.1',d:'10 พ.ย. 2026',l:['💞 <b>คู่ครองไม่จำกัดแล้ว!</b> ถ้าอีกฝ่ายรักหรือมีความสัมพันธ์กัน รับเข้าตำหนักในได้ไม่จำกัดจำนวน (ยังต้องถามคู่แรกก่อน และมีค่าเลี้ยงดูตามจำนวนคน)','🌸 คนที่เกิดวินาทีเดียวกันจีบเข้าตำหนักในได้ แม้มีคู่อยู่แล้ว · ถ้าเป็นเพื่อนกันโอกาสสำเร็จสูงขึ้น']},
  {v:'14.0',d:'10 พ.ย. 2026',l:['🎒 <b>กระเป๋าใหญ่ขึ้นทุกใบ!</b> กระเป๋าธรรมดาจุได้มากขึ้นราว 2.5 เท่า เซฟเก่าได้ช่องเพิ่มทันที','🛒 <b>ร้านกระเป๋า</b> ในหน้า 🎒 — ซื้อใบใหญ่ขึ้นได้เอง ข้ามขั้นได้ · ยุทธภพมี 10 ใบ สูงสุด <b>200 ช่อง</b> · โลกเซียนมีชุดของตัวเอง 10 ใบ สูงสุด <b>300 ช่อง</b>','🌌 <b>ถุงมิติเก็บของได้ไม่จำกัด!</b> แหวนมิติชนะศัตรูได้ของเพิ่ม · โลกในแหวนมีสมุนไพรและยางอกเงยเองทุกปี','⚠️ เควสถุงมิติยากขึ้นมาก ทำไม่สำเร็จก็ซื้อกระเป๋าธรรมดาใบใหญ่ไปก่อนได้']},
@@ -10636,6 +10636,127 @@ try{const g=GD2.find(x=>x.t==='เหตุการณ์สัตว์อส�
  GD2.splice(i,0,{s:'beast',ic:'🩸',t:'สืบสายเลือดและระบบในร่างสัตว์',nw:1,d:'ตายตอนมี<b>ลูกอสูร</b> เล่นต่อเป็นลูกได้ — สืบสายเลือด ธาตุ พลังบางส่วน และอาจตื่นสายเลือดสูงขึ้น · สัตว์อสูรมีโอกาสได้<b>ระบบ</b>และ <b>AI</b> แต่เควสจะเป็นแบบสัตว์ (ล่าเหยื่อ แสงจันทร์ บำเพ็ญขั้น หาคู่) · แปลงกายแล้วคู่ชีวิตแปลงกายตามมาเป็นคู่ครอง',
   te:'Bloodline heirs & beast Systems',de:'Die with <b>cubs</b> and you can continue as one — inheriting bloodline, element and some power, with a chance of a stronger bloodline. Beasts can now get a <b>System</b> and an <b>AI</b>, with beast-style quests (hunt, moonlight, stages, mates). When you take human form, your mate transforms too and becomes your spouse.'});
  SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
+
+// ===================== v15.2 กรอบรูปใหม่ 49 แบบ (รวม 60 · ธรรมะ 30 / มาร 30) + อนิเมชั่น =====================
+{const G=[ // [id,ชื่อ,ty,c1,c2,c3,pc,badge,คำบรรยาย]
+ ['f_lotus','กรอบบัวทิพย์','glow petal','#ff9ac8','#fff0f6','','#ffc0dc','','กลีบบัวสีชมพูร่วงโปรยรอบกรอบ'],
+ ['f_bamboo2','กรอบไผ่มรกตพลิ้วลม','flow','#2a9a5a','#b8f0c8','#e8fff0','','','แสงไหลผ่านลำไผ่ไม่หยุด'],
+ ['f_moon','กรอบจันทร์เพ็ญ','glow star','#c8d8ff','#ffffff','','#ffffff','','แสงจันทร์นวลพร้อมดาวกะพริบ'],
+ ['f_sun','กรอบตะวันรุ่ง','spin','#ffb040','#fff080','#ff7040','','','วงแสงอรุณหมุนรอบตัว'],
+ ['f_crane','กรอบกระเรียนเมฆา','shift snow','#ffffff','#a0d8ff','','#ffffff','','ขนกระเรียนขาวปลิวลงช้าๆ'],
+ ['f_sakura','กรอบซากุระร่วง','shift petal','#ffb0d0','#ff70a8','','#ffb6d5','','กลีบซากุระร่วงพร้อมสีที่เปลี่ยนไปมา'],
+ ['f_jade2','กรอบหยกจักรพรรดิ','spin corner','#2ad890','#e8fff0','#0a8050','','','หยกเกรดจักรพรรดิหมุนวน มุมทองประดับ'],
+ ['f_aurora','กรอบแสงเหนือ','flow star','#60ffc8','#a070ff','#60c8ff','#e0fff8','','ม่านแสงเหนือไหลวนพร้อมดวงดาว'],
+ ['f_goldd','กรอบมังกรทอง','spin corner badge','#ffd040','#fff4b0','#c08010','','🐉','มังกรทองเฝ้ามุมกรอบ แสงทองหมุนรอบ'],
+ ['f_spring','กรอบวสันตฤดู','rainbow petal','','','','#ffd0e8','','รุ้งพาสเทลหมุนวนกับกลีบดอกไม้'],
+ ['f_thunderg','กรอบอัสนีสวรรค์','flicker orbit','#80c8ff','#ffffff','','','','สายฟ้าสวรรค์แลบแปลบวิ่งรอบกรอบ'],
+ ['f_sage','กรอบปราชญ์ผู้รู้แจ้ง','glow halo','#ffe8a0','#ffffff','#ffd060','','','รัศมีแห่งปัญญาเรืองรองรอบกาย'],
+ ['f_pearl','กรอบไข่มุกทะเลใต้','shift sparkle orbit','#f0e8ff','#a0f0ff','','','','ประกายมุกวิ่งวนรอบกรอบ'],
+ ['f_phoenix2','กรอบหงส์ฟ้าเพลิงนิรันดร์','spin ember halo','#ff5a3a','#ffd84a','#ff2a80','#ffb040','','ไฟหงส์ลุกโชนไม่มีวันดับ ประกายไฟลอยขึ้น'],
+ ['f_qilin','กรอบกิเลนมงคล','flow corner sparkle','#ffb040','#40e0a0','#ff6a4a','','','สัตว์มงคลนำโชค ประกายทองรอบกรอบ'],
+ ['f_heaven9','กรอบเก้าชั้นฟ้า','spin halo star','#a0e8ff','#fff0a0','#ffffff','#ffffff','','แสงจากเก้าชั้นฟ้าหมุนเวียนไม่สิ้นสุด'],
+ ['f_buddha','กรอบพุทธรัศมี','glow halo badge petal','#ffd060','#fff8d0','#ffb030','#ffe8a0','🪷','รัศมีพุทธะเปล่งประกาย บัวทองโปรยปราย'],
+ ['f_galaxy','กรอบทางช้างเผือก','spin star orbit','#6040ff','#ff70e0','#60e0ff','#ffffff','','ทั้งจักรวาลหมุนวนอยู่รอบตัวคุณ'],
+ ['f_rainbow','กรอบรุ้งเจ็ดสีสวรรค์','rainbow halo sparkle','','#ffffff','','','','รุ้งเจ็ดสีหมุนวนพร้อมออร่าสวรรค์'],
+ ['f_emperor','กรอบจักรพรรดิเซียน','spin corner orbit badge','#ffd040','#ff5a5a','#fff4d0','','👑','บัลลังก์ของผู้ปกครองโลกเซียน'],
+ ['f_dao','กรอบเต๋านิรันดร์','spin halo orbit badge','#ffffff','#202020','#a0e8ff','','☯️','หยินหยางหมุนเวียน กฎแห่งเต๋าทั้งปวง'],
+ ['f_primal','กรอบปฐมกาลสวรรค์','rainbow halo orbit star badge','','#ffffff','','#fff8c0','🌟','แสงแรกของฟ้าดินตั้งแต่ก่อนกำเนิดโลก'],
+ ['f_supreme','กรอบเทพผู้สร้างโลก','spin halo orbit sparkle star corner badge','#fff4b0','#a0e8ff','#ff9ae8','#ffffff','✨','กรอบสูงสุดของสายธรรมะ — ทุกแสงในสวรรค์รวมอยู่ที่นี่']];
+ const E=[
+ ['f_rust','กรอบโซ่ตรวนสนิม','pulse','#6a4a3a','#c08050','','','','โซ่ตรวนของนักโทษที่หลบหนี'],
+ ['f_poison','กรอบพิษหมื่นพันธุ์','glow ember','#3ad84a','#a0ff60','','#80ff60','','ไอพิษสีเขียวลอยขึ้นไม่ขาดสาย'],
+ ['f_ghost','กรอบผีเสื้อวิญญาณ','shift star','#60e0d0','#a0a0ff','','#c0fff8','','วิญญาณเรืองแสงวนเวียนรอบกาย'],
+ ['f_skull','กรอบหัวกะโหลกพันศพ','flicker corner','#e8e0d0','#a01a1a','#6a0a0a','','','กะโหลกศัตรูประดับมุมกรอบ'],
+ ['f_bloodmoon','กรอบจันทร์เลือด','glow halo','#ff2a3a','#600010','#ff6070','','','จันทร์สีเลือดคืนที่มารตื่น'],
+ ['f_abyss','กรอบอเวจีไร้ก้น','spin','#20002a','#8a2aff','#000000','','','วังวนแห่งอเวจีกลืนกินทุกแสง'],
+ ['f_ghostfire','กรอบไฟผีน้ำเงิน','flicker ember','#3a6aff','#a0e0ff','','#80b0ff','','เปลวไฟผีสีน้ำเงินลุกไหม้เย็นเยียบ'],
+ ['f_venom','กรอบอสรพิษดำ','flow','#102a10','#50ff70','#000000','','','พิษงูดำไหลวนตามเกล็ด'],
+ ['f_crow','กรอบอีกาทมิฬ','shift petal','#4a3a5a','#a080c0','','#2a2030','','ขนอีกาดำร่วงหล่นลางร้าย'],
+ ['f_chain','กรอบโซ่วิญญาณ','flow corner','#8a8aa0','#d0d0ff','#4a4a60','','','โซ่ที่ล่ามวิญญาณนับพันไว้'],
+ ['f_hellfire','กรอบเพลิงนรก','flicker ember halo','#ff3a00','#ffb000','#ff0000','#ff7a00','','เพลิงจากขุมนรกชั้นลึกสุด'],
+ ['f_bloodlotus','กรอบบัวโลหิต','glow petal','#c0102a','#ff6080','','#ff3050','','บัวแดงที่บานบนกองเลือด'],
+ ['f_eclipse','กรอบสุริยคราส','spin orbit','#000000','#ff6020','#ffd0a0','','','ดวงตะวันถูกกลืน เหลือเพียงวงแหวนไฟ'],
+ ['f_shadow2','กรอบเงาพันหน้า','shift sparkle orbit','#3a0a5a','#ff3ad8','','','','เงานับพันเคลื่อนไหวรอบตัวคุณ'],
+ ['f_ice','กรอบนรกเยือกแข็ง','glow snow','#6ad8ff','#e0f8ff','','#e0f8ff','','ความหนาวของนรกที่แช่แข็งวิญญาณ'],
+ ['f_curse','กรอบอักขระต้องสาป','flow star','#ff2a6a','#6a00ff','#000000','#ff80b0','','อักขระคำสาปเรืองแสงไหลวน'],
+ ['f_demonk','กรอบราชันมาร','spin corner badge','#a0002a','#ff3ad8','#200010','','😈','ผู้ปกครองแห่งลัทธิมารทั้งปวง'],
+ ['f_void','กรอบความว่างเปล่า','spin halo','#000000','#6a6aff','#ff00aa','','','รอยแยกสู่ความว่างเปล่านอกฟ้าดิน'],
+ ['f_reaper','กรอบยมทูต','flicker orbit badge','#1a1a1a','#a0ffe0','','','💀','เคียวของยมทูตกรีดวนรอบกรอบ'],
+ ['f_blooddragon','กรอบมังกรโลหิต','spin ember corner','#ff1a2a','#ffb000','#400008','#ff4020','','มังกรที่อาบเลือดนับหมื่นศพ'],
+ ['f_heavendemon','กรอบมารสวรรค์','spin halo ember','#ff0040','#8a00ff','#000000','#ff3080','','มารที่แม้แต่สวรรค์ยังหวาดกลัว'],
+ ['f_nightmare','กรอบฝันร้ายนิรันดร์','flow halo star orbit','#ff2ad8','#2a0a6a','#00e0ff','#ff80f0','','ฝันร้ายที่ไม่มีวันตื่น'],
+ ['f_asura','กรอบอสูรสามเศียร','flicker halo corner badge','#ff4000','#400000','#ffb000','','👹','พลังของอสูรผู้ท้าทายเทพ'],
+ ['f_doom','กรอบวันสิ้นโลก','spin halo orbit ember','#ff3a00','#20002a','#ffd000','#ff6a00','','ไฟสุดท้ายในวันที่โลกแตกสลาย'],
+ ['f_chaos','กรอบโกลาหลดึกดำบรรพ์','spin halo orbit star badge','#ff0060','#00ffd0','#6000ff','#ffffff','🌀','ความโกลาหลก่อนฟ้าดินแยกจากกัน'],
+ ['f_endless','กรอบราชาอเวจีนิรันดร์','spin halo orbit ember star corner badge','#ff0030','#b000ff','#ffd0ff','#ff5070','🔱','กรอบสูงสุดของสายมาร — ผู้ครองอเวจีชั่วนิรันดร์']];
+ const rnd=v=>{const p=Math.pow(10,Math.max(0,Math.floor(Math.log10(v))-1));return Math.round(v/p)*p};
+ G.forEach((x,i)=>FRAMES.push({id:x[0],n:x[1],side:'g',c:rnd(80000*Math.pow(1.17,i)),ty:x[2],c1:x[3],c2:x[4],c3:x[5],pc:x[6],bd:x[7],d:x[8],nw:1}));
+ E.forEach((x,i)=>FRAMES.push({id:x[0],n:x[1],side:'e',c:rnd(25300*Math.pow(1.2,i)),ty:x[2],c1:x[3],c2:x[4],c3:x[5],pc:x[6],bd:x[7],d:x[8],nw:1}))}
+frSty=function(id){const f=frOf(id);return f?`--c1:${f.c1||'#fff'};--c2:${f.c2||f.c1||'#fff'};--c3:${f.c3||f.c1||'#fff'};--pc:${f.pc||f.c2||'#fff'}`:''};
+{const _fw=frWrap;frWrap=function(inner,id,extra){const h=_fw.apply(this,arguments),f=frOf(id);if(!f)return h;const t=f.ty.split(' ');let x='';
+ const pt=k=>{for(let i=1;i<=5;i++)x+=`<i class="frpt ${k} q${i}"></i>`};
+ if(t.includes('ember'))pt('em');if(t.includes('petal'))pt('pe');if(t.includes('snow'))pt('sn');
+ if(t.includes('star'))for(let i=1;i<=4;i++)x+=`<i class="frst t${i}">✦</i>`;
+ if(t.includes('corner'))for(let i=1;i<=4;i++)x+=`<i class="frc k${i}"></i>`;
+ if(t.includes('badge')&&f.bd)x+=`<i class="frb">${f.bd}</i>`;
+ return x?h.replace(/<\/span>$/,x+'</span>'):h}}
+(function(){const st=document.createElement('style');st.textContent=`
+@property --fa{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes frSpin{to{--fa:360deg}}
+.frw.fr-spin,.frw.fr-rainbow,.frw.fr-flow{border-color:transparent!important;box-shadow:0 0 0 2px var(--line),0 0 10px var(--c2)}
+.frw.fr-spin{background:linear-gradient(#1c1a28,#1c1a28) padding-box,conic-gradient(from var(--fa),var(--c1),var(--c2),var(--c3),var(--c2),var(--c1)) border-box;animation:frSpin 4s linear infinite}
+.frw.fr-rainbow{background:linear-gradient(#1c1a28,#1c1a28) padding-box,conic-gradient(from var(--fa),#ff5a5a,#ffb040,#fff060,#60ff90,#60e0ff,#7a70ff,#ff70e0,#ff5a5a) border-box;animation:frSpin 4s linear infinite;box-shadow:0 0 0 2px var(--line),0 0 12px #ffffffaa}
+.frw.fr-flow{background:linear-gradient(#1c1a28,#1c1a28) padding-box,linear-gradient(90deg,var(--c1),var(--c2),var(--c3),var(--c2),var(--c1)) border-box;background-size:100% 100%,300% 100%;animation:frFlow 4s linear infinite}
+@keyframes frFlow{from{background-position:0 0,0% 50%}to{background-position:0 0,150% 50%}}
+.frw.fr-glow{animation:frGlow 4s ease-in-out infinite}
+@keyframes frGlow{0%,100%{box-shadow:0 0 0 2px var(--line),0 0 6px var(--c1)}50%{box-shadow:0 0 0 2px var(--line),0 0 16px var(--c2),0 0 30px var(--c1)}}
+.frw.fr-flicker{animation:frFlk 4s steps(1) infinite}
+@keyframes frFlk{0%,100%{box-shadow:0 0 0 2px var(--line),0 0 8px var(--c1);border-color:var(--c1)}12%{box-shadow:0 0 0 2px var(--line),0 0 20px var(--c2),0 0 4px #fff;border-color:var(--c2)}15%{box-shadow:0 0 0 2px var(--line),0 0 8px var(--c1);border-color:var(--c1)}18%{box-shadow:0 0 0 2px var(--line),0 0 26px var(--c2),0 0 6px #fff;border-color:#fff}24%{box-shadow:0 0 0 2px var(--line),0 0 10px var(--c1);border-color:var(--c1)}61%{box-shadow:0 0 0 2px var(--line),0 0 18px var(--c2);border-color:var(--c2)}64%{box-shadow:0 0 0 2px var(--line),0 0 8px var(--c1);border-color:var(--c1)}}
+.frw.fr-halo{isolation:isolate}
+.frw.fr-halo::before{content:'';position:absolute;inset:-8px;border-radius:15px;background:conic-gradient(from var(--fa),var(--c1),transparent 30%,var(--c2),transparent 70%,var(--c3),var(--c1));filter:blur(7px);opacity:1;z-index:-1;animation:frSpin 3s linear infinite;pointer-events:none}
+.frw.fr-orbit::after{content:'';position:absolute;inset:-3px;border-radius:10px;padding:3px;background:conic-gradient(from var(--fa),transparent 0 72%,var(--c2) 86%,#fff 94%,transparent 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:frSpin 2.2s linear infinite;pointer-events:none;z-index:2}
+.frpt{position:absolute;pointer-events:none;z-index:3;opacity:0}
+.frpt.em{bottom:-2px;width:4px;height:4px;border-radius:50%;background:radial-gradient(circle,#fff 0 25%,var(--pc) 45%,transparent 75%);animation:frEm 2.6s ease-out infinite}
+@keyframes frEm{0%{opacity:0;transform:translate(0,0) scale(1)}15%{opacity:1}100%{opacity:0;transform:translate(3px,-70px) scale(.3)}}
+.frpt.pe{top:-6px;width:6px;height:6px;border-radius:0 100% 0 100%;background:var(--pc);animation:frPe 4.2s linear infinite}
+@keyframes frPe{0%{opacity:0;transform:translate(0,0) rotate(0)}10%{opacity:.95}100%{opacity:0;transform:translate(-10px,80px) rotate(320deg)}}
+.frpt.sn{top:-5px;width:4px;height:4px;border-radius:50%;background:var(--pc);box-shadow:0 0 3px #fff;animation:frSn 4.8s linear infinite}
+@keyframes frSn{0%{opacity:0;transform:translate(0,0)}10%{opacity:.9}50%{transform:translate(5px,40px)}100%{opacity:0;transform:translate(-3px,80px)}}
+.frpt.q1{left:10%;animation-delay:0s}.frpt.q2{left:32%;animation-delay:-1.1s}.frpt.q3{left:54%;animation-delay:-2.3s}.frpt.q4{left:74%;animation-delay:-.6s}.frpt.q5{left:90%;animation-delay:-1.8s}
+.frpt.pe.q2,.frpt.sn.q2{animation-duration:5.1s}.frpt.pe.q4,.frpt.sn.q4{animation-duration:3.7s}.frpt.em.q3{animation-duration:2.1s}.frpt.em.q5{animation-duration:3.1s}
+.frst{position:absolute;pointer-events:none;z-index:3;font-style:normal;font-size:9px;line-height:1;color:var(--pc);text-shadow:0 0 4px var(--c2),0 0 2px #fff;opacity:0;animation:frSt 3s ease-in-out infinite}
+.frst.t1{top:-6px;left:-5px}.frst.t2{top:-7px;right:-4px;animation-delay:-.8s}.frst.t3{bottom:-5px;right:-6px;animation-delay:-1.6s}.frst.t4{bottom:-6px;left:-4px;animation-delay:-2.3s}
+@keyframes frSt{0%,100%{opacity:0;transform:scale(.3) rotate(0)}45%{opacity:1;transform:scale(1.2) rotate(90deg)}60%{opacity:.8;transform:scale(1) rotate(120deg)}}
+.frc{position:absolute;width:9px;height:9px;pointer-events:none;z-index:3;border:2px solid var(--c3);filter:drop-shadow(0 0 2px var(--c2))}
+.frc.k1{top:-5px;left:-5px;border-right:0;border-bottom:0;border-radius:4px 0 0 0}.frc.k2{top:-5px;right:-5px;border-left:0;border-bottom:0;border-radius:0 4px 0 0}.frc.k3{bottom:-5px;left:-5px;border-right:0;border-top:0;border-radius:0 0 0 4px}.frc.k4{bottom:-5px;right:-5px;border-left:0;border-top:0;border-radius:0 0 4px 0}
+.frb{position:absolute;top:-11px;left:50%;z-index:4;font-style:normal;font-size:12px;line-height:1;transform:translateX(-50%);filter:drop-shadow(0 0 3px var(--c2));animation:frBob 2.4s ease-in-out infinite;pointer-events:none}
+@keyframes frBob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-2px)}}
+.frph.sm~.frb{font-size:9px;top:-8px}.frph.sm~.frst{font-size:7px}.frph.sm~.frc{width:6px;height:6px}
+.frph.big~.frb{font-size:18px;top:-15px}.frph.big~.frst{font-size:12px}
+.frtabs{display:flex;gap:6px;margin:6px 0 8px}.frtabs button{flex:1}
+.frtier{margin:12px 0 6px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}.frtier small{font-weight:400;opacity:.7}
+.frshop .frprev{padding:12px 10px 8px}.frshop .frph{width:54px;height:60px}
+.frnew{display:inline-block;font-size:9px;padding:1px 5px;border-radius:6px;background:var(--pink);color:#fff;margin-left:4px;vertical-align:middle}
+`;document.head.appendChild(st)})();
+// ---------- ร้านแลกกรอบ: แยกฝ่าย + แบ่งระดับตามราคา ----------
+const FR_TY={static:'ปกติ',sparkle:'วิบวับ',shift:'สีเปลี่ยน',pulse:'กะพริบ',spin:'แสงหมุน',rainbow:'รุ้งหมุน',flow:'แสงไหล',glow:'เรืองแสง',flicker:'สายฟ้าแลบ',halo:'ออร่า',orbit:'ดาวหาง',ember:'ประกายไฟ',petal:'กลีบร่วง',snow:'หิมะ/ขนนก',star:'ดาวกะพริบ',corner:'มุมทอง',badge:'ตราประจำ'};
+const FR_TIER=[[0,'⚪ ธรรมดา'],[20000,'🟢 หายาก'],[100000,'🔵 ล้ำค่า'],[350000,'🟣 ตำนาน'],[1000000,'🟠 เทพ'],[2000000,'🔴 สูงสุด']];
+const frTier=c=>{let t=0;FR_TIER.forEach((x,i)=>{if(c>=x[0])t=i});return t};
+openFrameShop=function(side){const d=frGet(),k=S?Math.round(S.karma):null,kb=kbGet();side=side||openFrameShop._s||'g';openFrameShop._s=side;
+ const card=f=>{const own=d.own.includes(f.id),eq=d.eq===f.id,can=kb[f.side]>=f.c,tl=f.ty.split(' ').map(t=>FR_TY[t]||t).join(' · ');
+  return`<div class="item frshop"><div class="frprev">${frWrap(`<span class="frph">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,f.id)}</div><div style="flex:1;min-width:0"><b>${f.n}</b>${f.nw?'<span class="frnew">ใหม่</span>':''}<div class="tag2">✨ ${tl}</div><p class="tag2">${f.d}</p>
+  ${own?(eq?`<button class="gbtn" onclick="frEquip(null)">ถอดกรอบ</button> <span class="tag2">✅ ใช้อยู่</span>`:`<button class="pbtn" onclick="frEquip('${f.id}')">สวมกรอบนี้</button>`):`<button class="${can?'pbtn':'gbtn'}" ${can?'':'disabled'} onclick="frBuy('${f.id}')">แลกด้วย ${f.side==='g'?'☯️':'☠️'} ${fmt(f.c)}</button>${can?'':` <span class="tag2">ขาดอีก ${fmt(f.c-kb[f.side])}</span>`}`}</div></div>`};
+ const L=FRAMES.filter(f=>f.side===side).sort((a,b)=>a.c-b.c),own=L.filter(f=>d.own.includes(f.id)).length;let body='',lt=-1;
+ L.forEach(f=>{const t=frTier(f.c);if(t!==lt){lt=t;const n=L.filter(x=>frTier(x.c)===t);body+=`<div class="frtier">${FR_TIER[t][1]} <small>${n.filter(x=>d.own.includes(x.id)).length}/${n.length}</small></div>`}body+=card(f)});
+ const tb=(s,t)=>{const n=FRAMES.filter(f=>f.side===s);return`<button class="cxtab ${s===side?'on':''}" onclick="openFrameShop('${s}')">${t} <em>${n.filter(f=>d.own.includes(f.id)).length}/${n.length}</em></button>`};
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🖼️ ร้านแลกกรอบ</h3><p class="tag2">ใช้<b>คลังกรรม</b>แลกกรอบรูป — กรรมของทุกชีวิตและดาวในสมุดตำนานเข้าคลังถาวร กรอบเป็นของคุณถาวรทุกชีวิต แสดงที่รูปตัวละครและในแชท · ยิ่งแพงยิ่งมีอนิเมชั่นซ้อนกันหลายชั้น</p>
+  <div class="box" style="padding:8px 10px;margin-bottom:6px">🏦 คลังกรรม: <b style="color:#3a9a4a">☯️ ${fmt(kb.g)}</b> · <b style="color:#d84a4a">☠️ ${fmt(kb.e)}</b>${S&&S.alive?`<br><span class="tag2">ชีวิตนี้กรรม ${k>0?'+':''}${k} — จะเข้าคลังเมื่อจบชีวิต</span>`:''}</div>
+  <div class="frtabs">${tb('g','☯️ สายธรรมะ')}${tb('e','☠️ สายมาร')}</div>${body}
+  <button class="gbtn" style="width:100%;margin-top:8px" onclick="openProfile()">👤 ไปหน้าโปรไฟล์</button>`,'frames')};
+// ความสำเร็จสะสมกรอบ
+{const fo=()=>{try{return frGet().own.length}catch(e){return 0}};const L=[{id:'fr_10',n:'นักสะสมกรอบ',d:'มีกรอบรูป 10 แบบ',r:2,c:()=>fo()>=10},{id:'fr_30',n:'หอศิลป์ส่วนตัว',d:'มีกรอบรูป 30 แบบ',r:4,c:()=>fo()>=30},{id:'fr_all',n:'ผู้ครอบครองทุกกรอบ',d:'มีกรอบรูปครบทุกแบบ',r:6,c:()=>fo()>=FRAMES.length},
+ {id:'fr_top',n:'ผู้สวมกรอบสูงสุด',d:'แลกกรอบเทพผู้สร้างโลกหรือกรอบราชาอเวจีนิรันดร์',r:5,c:()=>{try{const o=frGet().own;return o.includes('f_supreme')||o.includes('f_endless')}catch(e){return false}}}];
+ ACH.push(['🖼️ นักสะสมกรอบ',L]);ACH_ALL.push(...L)}
 </script>
 </body>
 </html>
