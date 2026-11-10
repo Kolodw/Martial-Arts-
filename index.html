@@ -7864,7 +7864,7 @@ function paFloat(m){const fl=$('paFl');if(!fl)return;const d=document.createElem
 function paTickUI(){if($('modal').dataset.k!=='pauc'){clearInterval(PA.tk);return}if(!PA.end)return;const left=PA.end-(Date.now()+PA.off),f=Math.max(0,Math.min(1,left/40000)),e=$('paTm');if(e)e.style.width=f*100+'%';const t=$('paTt');if(t)t.textContent=left>0?`⏳ ${Math.ceil(left/1000)} วิ${left<10000?' — เสนอราคาตอนนี้จะต่อเวลา 10 วิ':''}`:'🔨 ปิดชิ้นนี้…';if(left<-2500&&!PA.busy)paPoll(0)}
 async function paBid(g){const c=PA.cur&&PA.cur.cur;if(!c||c.phase!=='open')return;g=Math.floor(g);const m=$('paMsg');if(g<PA.min){if(m)m.textContent=`ต้องเสนออย่างน้อย ${paGold(PA.min)}`;return}
  if(paCost(g)>S.money){if(m)m.innerHTML=`<span style="color:#ff6b6b">เงินไม่พอ — ต้องมี ${fmt(paCost(g))} ตำลึง</span>`;return}
- try{const j=await api('pabid',{sid:c.sid,li:c.li,g,n:pname()});if(m)m.innerHTML=j.ok?`<span style="color:#5fd47a">🔨 เสนอ ${paGold(g)} แล้ว!</span>`:j.code===-1?'ชิ้นนี้ปิดไปแล้ว':j.code===-2?'วันนี้คุณชนะครบ 3 ชิ้นแล้ว — ให้คนอื่นบ้าง พรุ่งนี้มาใหม่':j.code===-3?'รอบนี้คุณได้ไปแล้ว 2 ชิ้น — เก็บไว้ให้คนอื่นบ้าง':j.code===0?`มีคนเสนอสูงกว่าแล้ว (${paGold(j.hi)})`:'เสนอไม่สำเร็จ';if(j.ok)try{sfx('good')}catch(e){}paPoll(0)}catch(e){if(m)m.textContent=e.message==='rate'?'ใจเย็น — เสนอได้ทุก 1 วิ':'เสนอไม่สำเร็จ'}}
+ try{const j=await api('pabid',{sid:c.sid,li:c.li,g,n:pname(),w:ECO_W(),ri:Math.max(0,realmIdx())});if(m)m.innerHTML=j.ok?`<span style="color:#5fd47a">🔨 เสนอ ${paGold(g)} แล้ว!</span>`:j.code===-1?'ชิ้นนี้ปิดไปแล้ว':j.code===-2?'วันนี้คุณชนะครบ 3 ชิ้นแล้ว — ให้คนอื่นบ้าง พรุ่งนี้มาใหม่':j.code===-3?'รอบนี้คุณได้ไปแล้ว 2 ชิ้น — เก็บไว้ให้คนอื่นบ้าง':j.code===-4?esc(j.why||'ประมูลชิ้นนี้ไม่ได้'):j.code===0?`มีคนเสนอสูงกว่าแล้ว (${paGold(j.hi)})`:'เสนอไม่สำเร็จ';if(j.ok)try{sfx('good')}catch(e){}paPoll(0)}catch(e){if(m)m.textContent=e.message==='rate'?'ใจเย็น — เสนอได้ทุก 1 วิ':'เสนอไม่สำเร็จ'}}
 function paBidX(k){paBid(Math.max(PA.min||1,Math.ceil((PA.hi||((PA.cur&&PA.cur.cur&&PA.cur.cur.lots[PA.cur.cur.li].g)||1)/1.05)*k)))}
 function paBidIn(){const v=+(($('paIn')||{}).value||0);if(!(v>0))return;paBid(v);$('paIn').value=''}
 async function paChat(){const el=$('paCh');const x=(el&&el.value||'').trim();if(!x||!PA.cur||!PA.cur.cur)return;el.value='';try{await api('pachat',{sid:PA.cur.cur.sid,x,n:pname()});paPoll(0)}catch(e){toast(e.message==='rate'?'พิมพ์เร็วเกินไป':'ส่งไม่สำเร็จ')}}
@@ -9761,6 +9761,18 @@ try{Object.assign(I18N.d,{'🏞️ ที่ดินตระกูล':'🏞�
 
 // ---- แอดมินไม่นับเป็นคนแรกของเซิร์ฟเวอร์: ลงทะเบียนไอดีแอดมินและล้างรายการเก่า ----
 setTimeout(()=>{try{const k=LS.get('murim_admk','');if(k&&typeof pid!=='undefined'&&pid)fetch(API+'?a=admreg&id='+encodeURIComponent(pid)+'&key='+encodeURIComponent(k)).then(r=>r.json()).then(j=>{if(j&&j.removed){ACHF={};ACHF_T=0;toast('🛡️ ล้าง "คนแรกของเซิร์ฟเวอร์" ของแอดมินแล้ว '+j.removed+' รายการ')}}).catch(()=>{})}catch(e){}},4000);
+
+// ---- ประมูล v15.1: ของแต่ละชิ้นมีโลกของมัน + ชิ้นมือใหม่ ----
+const PA_WN={m:'ยุทธภพ',x:'โลกเซียน',g:'แดนเทพ'},PA_WI={m:'⚔️',x:'☁️',g:'✨'};
+function paElig(L){if(!L||!L.w)return'';const w=ECO_W(),ri=Math.max(0,realmIdx());if(L.w!==w)return'ชิ้นนี้สำหรับคนใน'+PA_WN[L.w];if(L.nb&&ri>2)return'ชิ้นมือใหม่ — สำหรับคนที่ยังอยู่ขั้นต้น';if(!L.nb&&L.r<=1&&ri>=5)return'ของระดับต่ำ เก็บไว้ให้มือใหม่';return''}
+function paLTag(L){if(!L||!L.w)return'';return`<span class="paWt ${L.nb?'nb':''}">${L.nb?'🌱 มือใหม่':PA_WI[L.w]+' '+PA_WN[L.w]}</span>`}
+{const _pr=paRender;paRender=function(j){const r=_pr.apply(this,arguments);try{if($('modal').dataset.k!=='pauc')return r;const c=j&&j.cur;if(!c||c.phase!=='open')return r;const L=c.lots[c.li],why=paElig(L);
+ const lot=$('paLot');if(lot&&!lot.querySelector('.paWt')){const nm=lot.querySelector('.nm');if(nm)nm.insertAdjacentHTML('beforebegin',paLTag(L))}
+ let ew=$('paEl');if(!ew){const m=$('paMsg');if(m){m.insertAdjacentHTML('beforebegin','<div id="paEl" class="tag2" style="margin-top:4px"></div>');ew=$('paEl')}}
+ if(ew)ew.innerHTML=why?`🚫 <b>${why}</b> — ดูและแชทได้ แต่เสนอราคาไม่ได้`:(L.w?`✅ คุณประมูลชิ้นนี้ได้`:'');
+ document.querySelectorAll('#modal .paB button').forEach(b=>{if(/paBid/.test(b.getAttribute('onclick')||''))b.disabled=!!why});const inp=$('paIn');if(inp)inp.disabled=!!why;
+ const up=$('paUp');if(up){let k=0;c.lots.forEach((x,i)=>{if(x.sold||i===c.li)return;const el=up.children[k++];if(el&&!el.querySelector('.paWt'))el.insertAdjacentHTML('afterbegin',paLTag(x)+'<br>')})}}catch(e){console.error(e)}return r}}
+(function(){try{const st=document.createElement('style');st.textContent=`.paWt{display:inline-block;font-size:12px;padding:1px 7px;border-radius:9px;background:#3a2f4a;color:#e8d8ff;border:1px solid #6b5a8a;margin-bottom:3px}.paWt.nb{background:#1f3a24;color:#9ff0b0;border-color:#4a9a5a}`;document.head.appendChild(st)}catch(e){}})();
 </script>
 </body>
 </html>

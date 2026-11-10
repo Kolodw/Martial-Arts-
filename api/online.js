@@ -229,6 +229,10 @@ async function autoMig() {
 
 // ---- ประมูลทั่วยุทธภพ (ผู้เล่นจริง): รอบละ 6 ชิ้น ชิ้นละ 40 วิ (เสนอราคาช่วงท้ายต่อเวลา 10 วิ สูงสุด 3 ครั้ง) · พักรอบละ 10–15 นาที ----
 const PA_RW = [0, 4, 10, 18, 24, 22, 14, 8], PA_G0 = [10, 300, 5000, 80000, 1000000, 8000000, 30000000, 100000000], PA_LOT_MS = 40e3;
+const PA_GW = { m: [10, 100, 1000, 10000, 80000, 400000, 2000000, 10000000], x: [500, 5000, 50000, 400000, 3000000, 15000000, 50000000, 100000000], g: [20000, 200000, 2000000, 8000000, 25000000, 50000000, 80000000, 100000000] }, PA_NB = [10, 30, 100, 300];
+const PA_WN = { m: 'ยุทธภพ', x: 'โลกเซียน', g: 'แดนเทพ' };
+// ใครประมูลชิ้นนี้ได้: ต้องอยู่โลกเดียวกัน · ชิ้นมือใหม่ = ขั้นไม่เกิน 2 · ของระดับต่ำ (ธรรมดา/หายาก) คนขั้น 5 ขึ้นไปห้ามแย่ง
+function paElig(L, w, ri) { if (!L.w) return ''; if (L.w !== w) return 'ชิ้นนี้สำหรับคนใน' + PA_WN[L.w]; if (L.nb && ri > 2) return 'ชิ้นมือใหม่ — สำหรับคนที่ยังอยู่ขั้นต้น'; if (!L.nb && L.r <= 1 && ri >= 5) return 'ของระดับต่ำ เก็บไว้ให้มือใหม่'; return '' }
 const PA_BID_LUA = "local hi=tonumber(redis.call('HGET',KEYS[1],'hi') or '0') local en=tonumber(redis.call('GET',KEYS[2]) or '0') local now=tonumber(ARGV[4]) if now>en then return {-1,hi} end local g=tonumber(ARGV[1]) local mn=tonumber(ARGV[5]) if hi>0 then mn=math.ceil(hi*1.05) end if g<mn then return {0,hi} end redis.call('HSET',KEYS[1],'hi',g,'by',ARGV[2],'bn',ARGV[3],'t',now) if en-now<10000 then local e=redis.call('HINCRBY',KEYS[1],'ext',1) if e<=3 then redis.call('SET',KEYS[2],now+10000,'EX',3600) end end redis.call('EXPIRE',KEYS[1],3600) return {1,g}";
 function paPick() { const t = PA_RW.reduce((a, b) => a + b, 0); let x = Math.random() * t; for (let i = 0; i < PA_RW.length; i++) { if ((x -= PA_RW[i]) < 0) return i } return 4 }
 async function paTick(now) {
@@ -244,8 +248,12 @@ async function paTick(now) {
     try {
       const sid = (now.toString(36) + Math.random().toString(36).slice(2, 5)).slice(-9), lots = [], nL = act <= 3 ? 3 : act <= 8 ? 4 : act <= 15 ? 5 : 6;
       let hi6 = 0, hi7 = 0;
-      for (let i = 0; i < nL; i++) { let r = paPick(); if (r === 7 && hi7) r = 6; if (r >= 6 && hi6 >= 2) r = 5; if (r === 7) hi7++; if (r >= 6) hi6++; lots.push({ r, k: Math.floor(Math.random() * 1e6), g: Math.max(10, Math.round(PA_G0[r] * (.8 + Math.random() * .4) / 10) * 10) }) }
-      cur = { sid, t0: now, lots, li: 0, phase: 'open', act, u: 1 };
+      // ของแต่ละชิ้นมีโลกของมัน (ประมูลได้เฉพาะคนในโลกนั้น) + ชิ้นมือใหม่ 1 ชิ้นต่อรอบ
+      const rg = r => Math.max(10, Math.round(r * (.8 + Math.random() * .4) / 10) * 10);
+      lots.push({ r: Math.random() < .5 ? 2 : 3, k: Math.floor(Math.random() * 1e6), w: 'm', nb: 1 }); lots[0].g = rg(PA_NB[lots[0].r]);
+      for (let i = 1; i < nL; i++) { let r = paPick(); if (r === 7 && hi7) r = 6; if (r >= 6 && hi6 >= 2) r = 5; if (r === 7) hi7++; if (r >= 6) hi6++; const x = Math.random(), w = x < .5 ? 'm' : x < .8 ? 'x' : 'g'; lots.push({ r, k: Math.floor(Math.random() * 1e6), w, g: rg(PA_GW[w][r]) }) }
+      for (let i = lots.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [lots[i], lots[j]] = [lots[j], lots[i]] }
+      cur = { sid, t0: now, lots, li: 0, phase: 'open', act, u: 2 };
       if (force) await cmd('DEL', 'pa:force');
       await pipe([['INCR', 'pa:day:' + day], ['EXPIRE', 'pa:day:' + day, 172800]]);
       await pipe([['SET', 'pa:cur', JSON.stringify(cur), 'EX', 7200], ['SET', 'pa:end:' + sid, now + 60e3, 'EX', 3600]]);
@@ -1202,6 +1210,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
         if ((+wd || 0) >= 3) return res.json({ ok: 0, code: -2 });
         if ((+ws || 0) >= 2) return res.json({ ok: 0, code: -3 });
         const g = Math.max(1, Math.min(1e13, Math.floor(+b.g || 0))), L = cur.lots[cur.li];
+        { const why = paElig(L, ['m', 'x', 'g'].includes(b.w) ? b.w : 'm', Math.max(0, Math.min(9, Math.floor(+b.ri || 0)))); if (why) return res.json({ ok: 0, code: -4, why }) }
         const r = await cmd('EVAL', PA_BID_LUA, 2, 'pa:b:' + sid + ':' + cur.li, 'pa:end:' + sid, g, id, clean(b.n, 20) || 'นิรนาม', now, L.g);
         return res.json({ ok: +r[0] === 1 ? 1 : 0, code: +r[0], hi: +r[1] });
       }
