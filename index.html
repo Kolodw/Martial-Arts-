@@ -10793,6 +10793,8 @@ function balTick(){if(!S||!S.alive||S.custom||(S.beastMode&&!S.beastMode.human))
  S._bf0=S.fame}
 {const _pyb=passYear;passYear=function(){const r=_pyb.apply(this,arguments);try{balTick()}catch(e){}return r}}
 
+// ระบบสัตว์อสูรรุ่นเก่า (v13.10) ทำงานซ้อนกับระบบใหม่ → ปิดตัวเก่าเมื่อยังเป็นสัตว์
+{const _bsy=beastSys;beastSys=function(){if(bsB())return;return _bsy.apply(this,arguments)}}
 // ===================== v15.2 เควสระบบทำทันขึ้น (คน + สัตว์อสูร) =====================
 // เวลาในเกมเดินเร็ว: ขยายเส้นตายทุกเควสระบบ ×1.8 (อย่างน้อย +2 ปี)
 {const _mq2=mkQuest;mkQuest=function(k){const q=_mq2.apply(this,arguments);try{if(q&&typeof q.g==='number'&&q.g>3&&!/^bq_/.test(k)){const ng=Math.max(2,Math.round(q.g*.7)),o=fmt(q.g);if(q.n.indexOf(o)>=0){q.n=q.n.replace(o,fmt(ng));q.g=ng}}}catch(e){}try{if(q&&q.dl!=null){const y=Math.max(1,q.dl-S.age);q.dl=S.age+Math.max(y+2,Math.ceil(y*1.8))}}catch(e){}return q}}
