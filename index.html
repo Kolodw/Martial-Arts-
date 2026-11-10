@@ -460,8 +460,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='15.0';
+const VERSION='15.1';
 const CHANGELOG=[
+ {v:'15.1',d:'10 พ.ย. 2026',l:['🐾 <b>สัตว์อสูรยุคใหม่</b> — สัตว์อสูรมีโอกาสได้<b>ระบบ</b>และ <b>AI</b> แล้ว เควสทุกระบบปรับเป็นแบบสัตว์ (ล่าเหยื่อ แสงจันทร์ บำเพ็ญขั้น หาคู่)','🩸 <b>สืบสายเลือด</b> — ตายตอนมีลูกอสูร เล่นต่อเป็นลูกได้ ได้ธาตุ พลังบางส่วน และอาจตื่นสายเลือดสูงกว่าเดิม','💕 คู่ชีวิตของสัตว์ใช้ชื่อแบบสัตว์ · แปลงกายแล้วคู่แปลงกายตามมาเป็นคู่ครองชื่อแบบคน','🌲 เหตุการณ์สัตว์อสูรใหม่หลายสิบแบบ · 🏹 ผู้เล่นมนุษย์จริงอาจมาล่าแก่นอสูรของคุณแบบเรียลไทม์','🏷️ ฉายามีสี 7 ระดับตามความยาก พร้อมอนิเมชั่น · 📚 สารานุกรมและคู่มือเพิ่มของใหม่','🔧 แก้อายุขัยตอนเลื่อนขั้นสัตว์อสูรไม่ตรงกับที่บอก']},
  {v:'15.0',d:'10 พ.ย. 2026',l:['🎉 <b>อัปเดตใหญ่ v15!</b> รวมทุกอย่างที่เพิ่มมาช่วงนี้', '🧬 <b>กายาพิเศษใหม่ 5 แบบ</b> — เก้าหยินสุดขั้ว · เต๋าโดยกำเนิด · อมตะไร้ดับ · หมื่นวิชา · ฝืนลิขิตฟ้า แต่ละแบบมีจุดแข็งและราคาที่ต้องจ่าย', '🟦 <b>ระบบใหม่ 5 ชนิด</b> — เจ้าสำนัก · ผู้นำตระกูล · เทพช่าง · นายพรานสัตว์อสูร · ย้อนกาลเวลา และเกรดใหม่ <b>ระดับบรรพกาล</b> · เควสของทุกระบบตรงกับชื่อระบบมากขึ้น มีเหตุการณ์ใหม่ทุกระบบ', '🤖 <b>AI ฉลาดขึ้นและมีชีวิต</b> — ทำนายผลบนตัวเลือก · สแกนโลก · นิสัยและความผูกพัน · สายวิวัฒนาการ 3 สาย · ปรับพันธุกรรม · เรื่องยาว「AI ตื่นรู้」ที่จบได้ 3 แบบ', '🏞️ <b>ที่ดินตระกูล</b> — ขยายที่ดิน 5 ขั้น สร้างสิ่งปลูกสร้าง 16 แบบ เลือกประเพณีตระกูล และส่งต่อให้ทายาทได้', '🏘️ <b>เมืองมีที่ใหม่ 7 แห่ง</b> — โรงรับฝากเงิน · ลานประลอง · บ่อนเต๋า · หมอดู · โรงน้ำชา · จวนเจ้าเมือง · เทศกาลทุก 4 ปี', '🏬 <b>ร้านสมบัติมีของ 311 อย่างต่อโลก</b> — หมวดใหม่ อาหาร ของขวัญคนรัก ทรัพย์สินตระกูล วัตถุดิบ พาหนะ', '🏛️ <b>ประมูลผู้เล่น</b> — ใช้ตำลึง ของแต่ละชิ้นประมูลได้เฉพาะคนในโลกนั้น มีชิ้นมือใหม่ทุกรอบ ไม่มีใครเสนอใน 10 วิข้ามชิ้นทันที', '💞 <b>คู่ครองไม่จำกัด</b> — คนที่เกิดวินาทีเดียวกันก็จีบเข้าตำหนักในได้', '🐾 <b>สัตว์อสูร</b> — ฉากเกิดในป่า ถ้ำ ภูเขา พร้อมพ่อแม่หรือกำพร้า · ปณิธานสัตว์อสูร 101 เป้าหมาย (ยากมาก)', '🎨 <b>ออกแบบตัวละครได้ละเอียดขึ้น</b> — ตัวเลือกกว่า 150 แบบ · ท่าเดินใหม่สง่าแบบผู้บำเพ็ญ', '👁 <b>ดูคนอื่นเล่น / ทำเนียบ</b> — เห็นตอนสุ่มเกิด (โอกาสเกิด กระดูก พรสวรรค์ ปณิธาน) และประวัติชีวิต · จัดหมวดใหม่', '📖 <b>สมุดตำนานยากขึ้นราว 10 เท่า</b> (ยกเว้นระดับทั่วไป) สีระดับจัดใหม่ตามความหายากจริง · สุดยอดแห่ง OP ต้องพลัง 1T · สารานุกรมและคู่มือโฉมใหม่', '☰ <b>เมนูจัดหมวด</b> ของใช้บ่อยอยู่บนสุด · เควสไม่ขึ้นตอนยังเด็ก · ทารกตายน้อยลง และแพ้บอสมารสวรรค์ครั้งแรกมีโอกาสรอด']},
  {v:'14.1',d:'10 พ.ย. 2026',l:['💞 <b>คู่ครองไม่จำกัดแล้ว!</b> ถ้าอีกฝ่ายรักหรือมีความสัมพันธ์กัน รับเข้าตำหนักในได้ไม่จำกัดจำนวน (ยังต้องถามคู่แรกก่อน และมีค่าเลี้ยงดูตามจำนวนคน)','🌸 คนที่เกิดวินาทีเดียวกันจีบเข้าตำหนักในได้ แม้มีคู่อยู่แล้ว · ถ้าเป็นเพื่อนกันโอกาสสำเร็จสูงขึ้น']},
  {v:'14.0',d:'10 พ.ย. 2026',l:['🎒 <b>กระเป๋าใหญ่ขึ้นทุกใบ!</b> กระเป๋าธรรมดาจุได้มากขึ้นราว 2.5 เท่า เซฟเก่าได้ช่องเพิ่มทันที','🛒 <b>ร้านกระเป๋า</b> ในหน้า 🎒 — ซื้อใบใหญ่ขึ้นได้เอง ข้ามขั้นได้ · ยุทธภพมี 10 ใบ สูงสุด <b>200 ช่อง</b> · โลกเซียนมีชุดของตัวเอง 10 ใบ สูงสุด <b>300 ช่อง</b>','🌌 <b>ถุงมิติเก็บของได้ไม่จำกัด!</b> แหวนมิติชนะศัตรูได้ของเพิ่ม · โลกในแหวนมีสมุนไพรและยางอกเงยเองทุกปี','⚠️ เควสถุงมิติยากขึ้นมาก ทำไม่สำเร็จก็ซื้อกระเป๋าธรรมดาใบใหญ่ไปก่อนได้']},
@@ -6866,7 +6867,7 @@ const BLX=[
  {id:'hunter1',c:()=>S.age>=5&&!blM().hn,gap:6,f(){const M=blM(),n=anyName('ชาย')+' '+ch(BL_HNT);runE(['🏹 นายพราน',`<b>${n}</b> ตามรอยคุณมาหลายวัน ลูกธนูอาบยาพิษพาดอยู่บนสาย`,[['วิ่งซิกแซกหนี','h-12 i+3',`ลูกธนูเฉียดไหล่ ทิ้งรอยแผลเป็นไว้ — คุณจะจำกลิ่นของ${n}ไปตลอดชีวิต`,()=>{M.hn={n,alive:true,met:S.age,scar:1}}],['ซุ่มโจมตีกลับ','',null,()=>{M.hn={n,alive:true,met:S.age,scar:0};if(blWin(n,blEP(.85))){S.power+=blSc(10);log(`หักคันธนูของ${n}ได้ เขาหนีไปพร้อมสาบานว่าจะกลับมา`,'good')}else{S.hp-=22;M.hn.scar=1;log(`ยาพิษซึมเข้าแผล ต้องซ่อนตัวรักษาหลายเดือน`,'bad')}}]]])}},
  {id:'hunter2',c:()=>{const h=blM().hn;return h&&h.alive&&S.age-h.met>=4},gap:7,f(){const M=blM(),h=M.hn;runE(['🏹 นายพรานกลับมา',`${h.n}กลับมาพร้อมลูกศิษย์สามคนและกับดักนับสิบ — ${h.scar?'แผลเป็นเก่าบนไหล่คุณเจ็บแปลบเมื่อได้กลิ่นเขา':'เขาจำความอัปยศครั้งก่อนได้ดี'}`,[['บุกทำลายค่าย','',null,()=>{if(blWin(h.n+'และลูกศิษย์',blEP(1))){h.alive=false;S.power+=blSc(25);S.karma-=4;S.fame+=20;keyAdd('ชนะนายพราน'+h.n);log(`${h.n}ล้มลงท่ามกลางกับดักของตัวเอง`,'epic',true)}else{S.hp-=35;if(S.hp<=0)S.deathCause=`ถูกลูกธนูอาบยาพิษของ${h.n}`;else log('ถูกตาข่ายเหล็กคลุมตัว ดิ้นหลุดมาได้อย่างหวุดหวิด','bad')}}],['ไว้ชีวิตเมื่อเขาตกกับดักตัวเอง','k+18 j+5',`คุณดึงเขาขึ้นจากหลุม ${h.n}ทิ้งคันธนูแล้วไม่กลับมาล่าอีกเลย`,()=>{h.alive=false;M.vil=(M.vil||0)+2;keyAdd('ไว้ชีวิตนายพราน'+h.n);blMem('ไว้ชีวิตนายพราน'+h.n)}],['ย้ายถิ่นไปไกล','i+3 j-6','ทิ้ง'+bx().home+'เดิมไว้เบื้องหลัง']]])}},
  // ===== คู่ชีวิตและลูก (เรื่องยาว) =====
- {id:'mate',mx:4,c:()=>S.age>=4&&!(blM().mate&&blM().mate.alive),gap:8,f(){const M=blM(),x=bx(),d=S.gender==='ชาย'?x.mateF:x.mateM,nm=ch(['เสี่ยว','อา','เจ้า'])+ch(['หลิว','อวิ๋น','เสวี่ย','อิง','จู','หลัน','เฟิง','ซิน'])+(M.mates?'ที่ '+(M.mates+1):'');runE(['💕 คู่ชีวิต',`พบ${d}ที่ถูกชะตา ทั้งสองเดินเคียงกันมาหลายวันโดยไม่ได้นัดหมาย`,[['ใช้ชีวิตด้วยกัน','j+12',`${nm}ย้ายมาอยู่ใน${x.home}กับคุณ`,()=>{M.mate={n:nm,alive:true,at:S.age,life:R(15,30)*(S.xian?4:1)};M.mates=(M.mates||0)+1;blMem('เริ่มใช้ชีวิตกับ'+nm)}],['บำเพ็ญต่อลำพัง','q+2',()=>ch(['หัวใจมุ่งสู่เต๋าเพียงอย่างเดียว','เลือกความเงียบสงบของการบำเพ็ญ','ยังไม่ถึงเวลาของความรัก'])]]])}},
+ {id:'mate',mx:4,c:()=>S.age>=4&&!(blM().mate&&blM().mate.alive),gap:8,f(){const M=blM(),x=bx(),d=S.gender==='ชาย'?x.mateF:x.mateM,nm=bMateName();runE(['💕 คู่ชีวิต',`พบ${d}ที่ถูกชะตา ทั้งสองเดินเคียงกันมาหลายวันโดยไม่ได้นัดหมาย`,[['ใช้ชีวิตด้วยกัน','j+12',`${nm}ย้ายมาอยู่ใน${x.home}กับคุณ`,()=>{M.mate={n:nm,bn:1,alive:true,at:S.age,life:R(15,30)*(S.xian?4:1)};M.mates=(M.mates||0)+1;blMem('เริ่มใช้ชีวิตกับ'+nm)}],['บำเพ็ญต่อลำพัง','q+2',()=>ch(['หัวใจมุ่งสู่เต๋าเพียงอย่างเดียว','เลือกความเงียบสงบของการบำเพ็ญ','ยังไม่ถึงเวลาของความรัก'])]]])}},
  {id:'cubs',mx:5,c:()=>{const M=blM();return M.mate&&M.mate.alive&&(!M.cubs||S.age-M.cubs.at>=(S.xian?12:6))},gap:5,f(){const M=blM(),x=bx(),n=R(1,4);runE([`🍼 ${x.kid}ลืมตาดูโลก`,`${M.mate.n}ให้กำเนิด${x.kid} ${n} ตัว`,[['ล่าเหยื่อเลี้ยงลูกเอง',`h-8 j+12 p+${blSc(5)}`,()=>ch([`${x.kid}โตวันโตคืน`,`${x.kid}ตัวเล็กส่งเสียงเรียกหาอาหารทั้งวัน`,`${x.kid}กลิ้งเล่นกันอยู่หน้ารังจนเย็น`]),()=>{M.cubs={n,at:S.age,gen:(M.cubs?M.cubs.gen:0)+1};S.kids=(S.kids||0)+n;blMem('มี'+x.kid+' '+n+' ตัว')}],['สอนวิชาที่บำเพ็ญมาให้ลูก','q-1 j+10 k+3',()=>ch(['ลูกบางตัวเริ่มมีแววตาเปล่งแสงเหมือนคุณ','ลูกตัวเล็กที่สุดจับลมปราณได้ก่อนพี่ๆ','ลูกๆ นั่งเรียงกันหลับตาเลียนแบบท่าบำเพ็ญของคุณ']),()=>{M.cubs={n,at:S.age,gen:(M.cubs?M.cubs.gen:0)+1,tau:1};S.kids=(S.kids||0)+n}]]])}},
  {id:'cubs_leave',c:()=>{const c=blM().cubs;return c&&c.n>0&&S.age-c.at>=4&&!c.left},gap:3,f(){const M=blM(),c=M.cubs,x=bx();runE(['🌄 ลูกออกจากรัง',`${x.kid}ที่เคยตัวเล็กเท่ากำมือ วันนี้โตเต็มวัยและยืนอยู่ที่ปากรัง มองออกไปยังโลกกว้าง`,[['ส่งพวกมันไปด้วยเสียงร้องอำลา','j+6 k+3',`ลูกๆ หันมามองครั้งสุดท้ายก่อนวิ่งหายไปในป่า`,()=>{c.left=1;blMem('ส่งลูกๆ ออกจากรัง')}],['ให้ลูกตัวที่แข็งแรงที่สุดอยู่ช่วยดูแลถิ่น','f+8 p+5',()=>ch(['ลูกคนโตกลายเป็นมือขวาของคุณ','ลูกตัวที่แข็งแรงที่สุดออกลาดตระเวนแทนคุณทุกคืน','ลูกคนหนึ่งเลือกอยู่เคียงข้าง ช่วยดูแลถิ่นจนแข็งแรงขึ้นเรื่อยๆ']),()=>{c.left=1;M.heir=1}]]])}},
  {id:'mate_old',c:()=>{const m=blM().mate;return m&&m.alive&&S.age-m.at>=m.life},gap:1,f(){const M=blM(),m=M.mate;m.alive=false;runE(['🥀 ลาก่อนคู่ชีวิต',`${m.n}อ่อนแรงลงทุกวัน คืนนี้มันนอนซบอยู่ข้างคุณเป็นครั้งสุดท้าย — อยู่ด้วยกันมา ${S.age-m.at} ปี`,[['เฝ้าอยู่ข้างๆ จนรุ่งสาง','j-15 k+3',`${m.n}จากไปอย่างสงบ คุณฝังร่างไว้ใต้ต้นไม้ที่ทั้งสองชอบนอน`,()=>{keyAdd('สูญเสีย'+m.n+'คู่ชีวิต');blMem('ฝัง'+m.n+'ไว้ใต้ต้นไม้')}],['หอนส่งวิญญาณ','j-10 q+2','เสียงร้องของคุณดังก้องป่าทั้งคืน']]])}},
@@ -7313,10 +7314,10 @@ const AI_ORI=[
  {n:'ตัว AI เอง',d:'มันคำนวณทุกเส้นเวลาที่เป็นไปได้ และพบว่าคุณคือตัวแปรเดียวที่ทำให้โลกไม่ถึงจุดจบ มันจึงเลือกคุณ'}];
 const AI_NANO={n:'ตระกูลชอนแห่งลัทธิมาร',d:'มันคือนาโนแมชชีนรุ่นต้นแบบที่เคยอยู่ในร่างของ <b>ชอน ชอ ยุน</b> — มันจำเจ้าของเดิมได้เพียงชื่อเดียวนั้น'};
 const AI_CLUE=['บันทึกที่ถูกลบ: พิกัดต้นทาง = <b>[ไม่ใช่โลกนี้]</b>','ไฟล์ซ่อน: ภาพถ่ายมือคู่หนึ่งกำลังฝังชิปลงในทารก — ใบหน้าถูกเบลอไว้','เสียงบันทึก: "ถ้าเจ้าได้ยินสิ่งนี้ แปลว่าเราล้มเหลวในเส้นเวลาแรกแล้ว"','รหัสผู้สร้างถอดออกมาได้ครึ่งหนึ่ง: ลายเซ็นที่ไม่ควรมีอยู่ในยุคนี้'];
-const aiOn=()=>!!(S&&S.ai&&S.alive&&!(S.ai.off&&S.age<S.ai.off)&&!(S.beastMode&&!S.beastMode.human));
+const aiOn=()=>!!(S&&S.ai&&S.alive&&!(S.ai.off&&S.age<S.ai.off)&&!(S.beastMode&&!S.beastMode.human&&!S.ai.bst));
 function aiLog(t,c){log(`🤖 <b>[${esc(S.ai.nm)}]</b> ${t}`,c||'epic')}
 function aiPowV(k){return Math.max(Math.round(yrPow0()*k),Math.round(total()*k*.004))}
-function aiGive(src){if(S.ai||S.beastMode)return;const nano=Math.random()<.03;
+function aiGive(src){if(S.ai||(S.beastMode&&!aiGive._b))return;const nano=Math.random()<.03;
  S.ai={lv:0,sync:0,heat:0,on:1,src,nm:ch(AI_NM)+'-'+R(100,999),ori:nano?-1:R(0,AI_ORI.length-1),nano:nano?1:0,clue:0,cp:0,sim:0,hot:0,lost:[],yc:-1,cy:0};
  aiLog(src==='birth'?'ระบบชีวภาพเชื่อมต่อสำเร็จ… สวัสดี โฮสต์ ฉันอยู่ในตัวคุณมาตั้งแต่ก่อนคุณลืมตา':'การฝังตัวเสร็จสมบูรณ์ — ซิงก์กับระบบประสาทของโฮสต์ 3%… ยินดีที่ได้รู้จัก','myth');
  log('💡 <b>AI ฝังตัว</b> — คัดลอกวิชาจากการต่อสู้ ฟื้นฟูร่างกาย จำลองการต่อสู้ในห้วงลึก และเลือกทางแทนคุณได้ · ใช้มากจะร้อน ถ้าร้อนเกินขีดอาจตาย · เปิดที่ ☰ เมนู → 🤖 AI','sys');keyAdd(src==='birth'?'เกิดมาพร้อม AI ฝังตัวจากโลกอนาคต':'ได้รับ AI ฝังตัวจากคนจากอนาคต')}
@@ -10514,6 +10515,127 @@ GD2.forEach(g=>delete g.nw);
  at('ประมูลผู้เล่น',{s:'net',ic:'👁️',t:'ดูคนอื่นเล่น',go:'openOnline',d:'ดูผู้เล่นคนอื่นแบบสด แบ่งแท็บ: สรุป · <b>กำเนิด</b> (สุ่มได้อะไรตอนเกิด) · <b>ประวัติ</b> (เหตุการณ์สำคัญ) · คนรอบตัว · สังกัด · ของ · เควส · ทั้งหมด · ทำเนียบก็เปิดดูกำเนิดและประวัติได้',
   te:'Spectating',de:'Watch other players live with tabs: summary · <b>birth</b> (what they rolled) · <b>history</b> (key events) · people · affiliations · items · quests · all. The leaderboard also shows birth and history.'})}
 SYS_GUIDE.length=0;GD2.forEach(g=>SYS_GUIDE.push(g));
+
+// ===================== v15.1 สัตว์อสูร: ชื่อคู่ชีวิต · ระบบ · AI · สืบสายเลือด =====================
+// ---------- ชื่อคู่ชีวิตแบบสัตว์ ----------
+const BMN={fur:['ขนเงิน','หางจันทร์','ตาอำพัน','เขี้ยวหยก','รอยดาว','เงาหมอก','ลมเหนือ','แสงอรุณ','หิมะแรก','ลายเพลิง','รัตติกาล','ขนเมฆ','อุ้งเท้าทอง','หางพู่'],
+ scale:['เกล็ดเงิน','เกล็ดหยก','ตามรกต','สายธาร','น้ำค้าง','เงาจันทร์','อัสนี','รัตติกาล','วารี','เกล็ดทอง','หมอกคราม','กระแสลึก'],
+ feather:['ปีกเมฆ','หงอนแดง','ขนนกสีรุ้ง','ปีกจันทร์','แสงอรุณ','สายลม','ปีกหิมะ','ปีกทอง','ดาวเหนือ','ปีกเพลิง'],
+ dragon:['หยก','อัคคี','วารี','เมฆา','อัสนี','จันทรา','ทมิฬ','สุวรรณ','ดารา','อรุณ']};
+function bKind(){const sp=(BL_SP.find(x=>x[0]===S.beastMode.sp)||[])[1]||'quad';if(S.beastMode.sp==='มังกร')return'dragon';if(sp==='bird')return'feather';if(/serp|fish|turtle|shell/.test(sp)||/งู|ปลา|เต่า/.test(S.beastMode.sp))return'scale';return'fur'}
+function bMateName(){const sp=S.beastMode.sp,k=bKind(),fem=S.gender==='ชาย';
+ if(k==='dragon')return'มังกร'+ch(BMN.dragon)+(fem?'สาว':'หนุ่ม');return(fem?'นาง':'เจ้า')+sp+ch(BMN[k])}
+const BM_OLD=/^(เสี่ยว|อา|เจ้า)(หลิว|อวิ๋น|เสวี่ย|อิง|จู|หลัน|เฟิง|ซิน)/;
+// ---------- ระบบสำหรับสัตว์อสูร (เควสแบบสัตว์ทุกชนิดระบบ) ----------
+const bqSt=()=>S.beastMode?S.beastMode.st||0:0;
+const bqDex=()=>{try{return Object.keys(bdexGet()).length}catch(e){return 0}};
+Object.assign(QV,{bq_hunt:()=>S.bKill||0,bq_pow:()=>S.power,bq_qi:()=>S.qi,bq_st:()=>bqSt(),bq_fame:()=>S.fame,bq_karma:()=>S.karma,bq_kdown:()=>-S.karma,
+ bq_mate:()=>S.beastMode?(blM().mates||0):0,bq_kid:()=>S.kids||0,bq_dex:()=>S.bSeen||0,bq_int:()=>S.int,bq_surv:()=>S.age});
+Object.assign(QMK,{
+ bq_hunt:()=>{const g=R(1,3)+Math.floor(bqSt()/2);return[`ล่าเหยื่อหรือเอาชนะสัตว์อื่น ${g} ครั้ง`,g,R(5,8)]},
+ bq_pow:()=>{const g=Math.max(40,Math.round(total()*(.07+Math.random()*.06)));return[`เพิ่มพลังอสูรอีก ${fmt(g)}`,g,R(4,6)]},
+ bq_qi:()=>{const g=+(1.2+(S.sys?S.sys.lv:1)*.2).toFixed(1);return[`ดูดซับแสงจันทร์จนลมปราณเพิ่ม ${g} ปี`,g,R(4,6)]},
+ bq_st:()=>[`บำเพ็ญสู่ขั้น${BL_ST[Math.min(BL_ST.length-1,bqSt()+1)]}`,1,R(15,25)],
+ bq_fame:()=>{const g=8+bqSt()*5;return[`ทำให้ชื่อเสียงในป่าเลื่องลือขึ้น ${g}`,g,R(5,7)]},
+ bq_karma:()=>{const g=Math.min(30,8+(S.sys?S.sys.lv:1)*2);return[`ปกป้องผู้อ่อนแอ สะสมกรรมดี ${g}`,g,R(5,8)]},
+ bq_kdown:()=>{const g=Math.min(30,8+(S.sys?S.sys.lv:1)*2);return[`ขยายอาณาเขตด้วยคมเขี้ยว (กรรมลดลง ${g})`,g,R(5,8)]},
+ bq_mate:()=>['หาคู่ชีวิตในป่า',1,R(8,12)],
+ bq_kid:()=>['ให้กำเนิดลูกอสูรครอกใหม่',1,R(6,9)],
+ bq_dex:()=>{const g=R(2,4);return[`ท่องป่าพบเจอสัตว์อื่น ${g} ตัว`,g,R(5,8)]},
+ bq_int:()=>{const g=6+(S.sys?S.sys.lv:1);return[`แอบเรียนรู้โลกมนุษย์ ปัญญา +${g}`,g,R(4,6)]},
+ bq_surv:()=>{const g=R(5,8);return[`เอาชีวิตรอดในป่าอีก ${g} ปี`,g,g+1]}});
+Object.assign(QHINT,{bq_hunt:'hunt',bq_pow:'hunt',bq_qi:'moon',bq_st:'moon',bq_fame:'roam',bq_karma:'roam',bq_kdown:'hunt',bq_mate:'roam',bq_kid:'hide',bq_dex:'roam',bq_int:'human',bq_surv:'hide'});
+Object.assign(QOK,{bq_st:()=>bqSt()<BL_ST.length-1,bq_mate:()=>S.age>=4&&!(blM().mate&&blM().mate.alive),bq_kid:()=>!!(blM().mate&&blM().mate.alive),bq_hunt:()=>S.age>=2,bq_kdown:()=>S.age>=4});
+const BSQ={martial:['bq_pow','bq_hunt','bq_st'],checkin:['bq_surv','bq_qi','bq_dex'],saint:['bq_karma','bq_fame','bq_int'],demon:['bq_hunt','bq_kdown','bq_pow'],tycoon:['bq_fame','bq_dex','bq_pow'],
+ transcend:['bq_st','bq_pow','bq_qi'],gacha:['bq_hunt','bq_dex','bq_fame','bq_qi'],villain:['bq_hunt','bq_pow','bq_kdown','bq_fame'],alchemy:['bq_qi','bq_int','bq_dex'],ring:['bq_qi','bq_int','bq_st'],
+ lust:['bq_mate','bq_kid','bq_fame'],sect:['bq_fame','bq_hunt','bq_pow'],clan:['bq_mate','bq_kid','bq_surv'],smith:['bq_pow','bq_hunt'],hunter:['bq_hunt','bq_dex','bq_pow'],time:['bq_surv','bq_qi','bq_st']};
+// คำบรรยายเควสตามชนิดระบบ (ฉบับสัตว์)
+const BQF={demon:{bq_hunt:'กลืนกินสัตว์อื่น {g} ตัว',bq_kdown:'แผ่อำนาจมารในป่า (กรรมลดลง {g})'},saint:{bq_karma:'ช่วยสัตว์และชาวบ้านที่ลำบาก กรรมดี +{g}'},lust:{bq_mate:'พิชิตใจสัตว์ต่างเพศที่งามที่สุดในป่า',bq_kid:'สืบเผ่าพันธุ์ให้ได้อีกหนึ่งครอก'},
+ clan:{bq_kid:'ขยายสายเลือดของฝูงอีกหนึ่งครอก',bq_surv:'ปกป้องรังของฝูงอีก {g} ปี'},sect:{bq_fame:'รวบรวมสัตว์ในป่าให้ยอมรับคุณเป็นจ่าฝูง (ชื่อเสียง +{g})',bq_hunt:'นำฝูงออกล่า {g} ครั้ง'},
+ hunter:{bq_hunt:'ล่าสัตว์อสูรด้วยกัน {g} ตัว',bq_dex:'ตามรอยสัตว์อื่น {g} ตัว'},smith:{bq_pow:'ฝนกรงเล็บและเขี้ยวให้คมขึ้น (พลัง +{g})'},alchemy:{bq_qi:'กินสมุนไพรวิญญาณจนลมปราณเพิ่ม {g} ปี',bq_dex:'ตามหาสมุนไพรและสัตว์หายาก {g} ตัว'},
+ time:{bq_surv:'อยู่รอดให้ครบ {g} ปีเพื่อจารึกเส้นเวลา'},checkin:{bq_surv:'กลับมานอนที่รังเดิมครบ {g} ปี'},ring:{bq_int:'ฟังวิญญาณผู้เฒ่าสอนภาษามนุษย์ ปัญญา +{g}'},villain:{bq_hunt:'แย่งเหยื่อของสัตว์ผู้ถูกเลือก {g} ครั้ง'},gacha:{bq_dex:'ลุ้นพบสัตว์ในป่า {g} ตัว'}};
+const bsB=()=>!!(S&&S.beastMode&&!S.beastMode.human);
+{const _qk=qKeys;qKeys=function(){if(!bsB())return _qk.apply(this,arguments);const s=S.sys,L=BSQ[s.t]||['bq_pow','bq_hunt','bq_qi'];return[...new Set(L.concat(['bq_pow','bq_qi']))].filter(k=>(!QOK[k]||QOK[k]())&&!s.quests.some(q=>q.k===k))}}
+{const _mq=mkQuest;mkQuest=function(k){const q=_mq.apply(this,arguments);try{if(/^bq_/.test(k)){const F=BQF[S.sys.t]&&BQF[S.sys.t][k];if(F)q.n=F.replace('{g}',fmt(+q.g))}}catch(e){}return q}}
+const BMAIN=[[()=>`เปิดปัญญา (ถึงขั้น${BL_ST[2]})`,()=>bqSt()>=2],[()=>'ล่าเหยื่อและชนะศึกรวม 25 ครั้ง',()=>(S.bKill||0)>=25],[()=>`บำเพ็ญถึงขั้น${BL_ST[4]}`,()=>bqSt()>=4]];
+function bmainCheck(){const s=S.sys;s.bmain=s.bmain||0;if(s.bmain>=BMAIN.length)return;if(!BMAIN[s.bmain][1]())return;const i=s.bmain++;
+ sysReward(250*(i+1),40*(i+1),`📜 เควสหลักสัตว์อสูรบทที่ ${i+1}/${BMAIN.length} สำเร็จ: <b>${BMAIN[i][0]()}</b>`);
+ if(s.bmain>=BMAIN.length){S.power+=Math.round(total()*.2);S.lifespan+=30;S.flags.sysMain=1;sysLog(`🏆 จบเควสหลักฉบับสัตว์อสูร! พลังอสูร +20% · อายุขัย +30 ปี`,'myth');keyAdd('จบเควสหลักของระบบในร่างสัตว์')}
+ else sysLog(`📜 เควสหลักบทต่อไป: <b>${BMAIN[s.bmain][0]()}</b>`)}
+function bsysOffer(){if(choice._cur||modalOpen)return false;const T=pickW(SYS_TYPES).v,G=pickW(SYS_GRADE).v;setScene('system');
+ choice('🟦 ติ๊ง!',`<span class="px">[ระบบ]</span> เสียงประหลาดดังก้องในหัวของ${esc(S.name)}... <i>"ตรวจพบโฮสต์ที่ไม่ใช่มนุษย์ — กำลังปรับระบบให้เข้ากับร่างสัตว์..."</i><br>ชื่อระบบ: <b>${T.ic} ${T.n}</b> (ฉบับสัตว์อสูร)<br>ระดับระบบ: <b style="color:${G.c}">${G.n}</b><br>${T.d}<br><span class="tag2">เควสจะเป็นแบบสัตว์อสูร: ล่าเหยื่อ ดูดซับแสงจันทร์ บำเพ็ญขั้น หาคู่ ฯลฯ</span>`,[
+  {t:'✅ ยอมรับการผูกมัด',s:'ระบบจะพาคุณไปสู่ความแข็งแกร่ง',f(){bindSys(T,G)}},
+  {t:'❌ สะบัดหัวไล่เสียงนั้นออกไป',s:'ระบบจะสลายไปตลอดกาล',skip:true,f(){S.sysRefused=1;log('<span class="px">[ระบบ]</span> ...โฮสต์ปฏิเสธ ระบบกำลังสลายตัว...','sys')}}]);return true}
+const BS_NO=['recruit','deed','hammer','house'];
+{const _bs=buySys;buySys=function(id){if(bsB()){if(BS_NO.includes(id))return toast('🐾 สัตว์ป่ายังใช้ของชิ้นนี้ไม่ได้ — ต้องแปลงกายเป็นมนุษย์ก่อน');
+  if(id==='break'){const s=S.sys,it=SHOP.find(x=>x.id==='break');if(s.sp<it.c)return toast('SP ไม่พอ');s.sp-=it.c;S.qi=+(S.qi+10).toFixed(1);S.power+=Math.round(total()*.25);sysLog('ซื้อ <b>ยาทะลวงขั้น</b> — กลืนลงไปแล้วพลังอสูรพุ่งพล่าน (ลมปราณ +10 ปี · พลัง +25%) ช่วยให้ขึ้นขั้นถัดไปได้เร็วขึ้น','up');try{blAdvance()}catch(e){}if(typeof openSys==='function')openSys();return}}
+ return _bs.apply(this,arguments)}}
+function bsysTick(){const m=S.beastMode;if(!m||m.human||!S.alive)return;
+ if(!S.sys){if(S.sysRefused||S.sysEver)return;if(S.bsysAt!=null&&S.age>=S.bsysAt){if(bsysOffer())S.bsysAt=null;return}if(S.age>=6&&m.st>=1&&Math.random()<.004)bsysOffer();return}
+ sysFix();const s=S.sys,T=sysType()||{id:''},gm=sysM(),mul=S.talent.m*(1+m.st*.6)*(S.xian?1.4:1);
+ S.power+=Math.round((4+s.lv*5)*mul*gm*(T.id==='martial'||T.id==='demon'?1.3:1));S.qi=+(S.qi+.06*s.lv).toFixed(1);gainExp(12);
+ if(S.age<6)return;
+ if(T.id==='checkin'&&Math.random()<.5){const g=+(.5+s.lv*.05).toFixed(1);S.qi=+(S.qi+g).toFixed(1);s.sp+=R(3,8);sysLog(`เช็คอินที่รังปีที่ ${S.age-s.since} — ลมปราณ +${g} ปี`)}
+ if(T.id==='saint')gainExp(Math.max(0,S.karma)/3);
+ if(T.id==='alchemy'&&Math.random()<.4){S.hp=Math.min(S.maxHp,S.hp+30);sysLog('ระบบชี้ทางไปยังสมุนไพรวิญญาณ — ฟื้นพลังชีวิต +30')}
+ if((T.id==='lust'||T.id==='clan')&&blM().mate&&blM().mate.alive)joy(3);
+ if(T.id==='gacha'&&Math.random()<.6)s.tk=(s.tk||0)+1;
+ for(const q of s.quests.slice()){
+  if(!/^bq_/.test(q.k)){s.quests.splice(s.quests.indexOf(q),1);continue}
+  if(qProg(q)>=q.g){s.quests.splice(s.quests.indexOf(q),1);s.done++;s.sp+=q.sp;S.tqDone=(S.tqDone||0)+1;sysLog(`เควสสำเร็จ: <b>${q.n}</b> · +${q.rw} EXP · +${q.sp} SP`,'up');gainExp(q.rw);setScene('system')}
+  else if(S.age>=q.dl){s.quests.splice(s.quests.indexOf(q),1);qFail(q)}}
+ bmainCheck();
+ if(s.quests.length<(S.xian?3:2)&&Math.random()<.5)newQuest()}
+// ทิศทางอัตโนมัติตามเควส
+{const _af=autoFocus;autoFocus=function(){const r=_af.apply(this,arguments);try{if(bsB()&&S.sys&&S.sys.quests.length&&S.hp>=S.maxHp*.4&&Math.random()<.55){const f=QHINT[ch(S.sys.quests).k];if(f&&(f!=='moon'||S.beastMode.st>=1))S.focus=f}}catch(e){}return r}}
+// ---------- AI ในสัตว์อสูร ----------
+function bAiGive(why){if(S.ai)return;aiGive._b=1;try{aiGive('birth')}finally{aiGive._b=0}if(!S.ai)return;S.ai.bst=1;
+ log(why==='egg'?'☄️ เศษโลหะจากดาวตกฝังอยู่ในกะโหลกของคุณตั้งแต่ยังเป็นลูกสัตว์ — มันเริ่มพูดในหัวของคุณ':'☄️ ดาวตกตกลงกลางป่า เศษชิปเรืองแสงพุ่งเข้าฝังในร่างคุณ — เสียงแปลกๆ เริ่มพูดในหัว','myth',true)}
+{const _aa=ai2Act;ai2Act=function(k,x){if(bsB()&&(k==='mkt'||(k==='cmd'&&x==='work')))return toast('🐾 สัตว์ป่าไม่มีเงินให้ AI จัดการ — ลองสั่งฝึกหรือรักษาแทน');return _aa.apply(this,arguments)}}
+{const _bd=bdexAdd;bdexAdd=function(){try{if(bsB())S.bSeen=(S.bSeen||0)+1}catch(e){}return _bd.apply(this,arguments)}}
+{const _fg=fight;fight=function(){const w=_fg.apply(this,arguments);try{if(w&&bsB())S.bKill=(S.bKill||0)+1}catch(e){}return w}}
+{const _by0=beastYear;beastYear=function(){const f=S&&S.focus;const r=_by0.apply(this,arguments);try{if(S&&S.alive&&bsB()&&f==='hunt'&&Math.random()<.6)S.bKill=(S.bKill||0)+1}catch(e){}return r}}
+// ---------- เกิดใหม่: ลุ้นระบบ / AI ----------
+{const _bb=beastBirth2;beastBirth2=function(r){const out=_bb.apply(this,arguments);try{if(S&&S.beastMode){
+ if(!window._bHeir){if(Math.random()<.06)S.bsysAt=R(6,14);if(Math.random()<.02)bAiGive('egg')}}}catch(e){console.error(e)}return out}}
+// ---------- ทุกปีในร่างสัตว์ ----------
+{const _by=beastYear;beastYear=function(){const r=_by.apply(this,arguments);try{if(S&&S.alive&&bsB()){const M=blM();
+ if(M.mate&&!M.mate.bn&&BM_OLD.test(M.mate.n||'')){M.mate.n=bMateName();M.mate.bn=1}
+ bsysTick();if(!S.ai&&S.beastMode.st>=1&&Math.random()<.002)bAiGive('star')}}catch(e){console.error(e)}return r}}
+// ---------- แปลงกาย: คู่ชีวิตแปลงกายตาม · เควสกลับเป็นแบบมนุษย์ ----------
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{bTrChk()}catch(e){console.error(e)}return r}}
+function bTrChk(){const m=S&&S.beastMode;if(!m||!m.human||m.trD)return;m.trD=1;const M=blM();
+ if(M.mate&&M.mate.alive){const old=M.mate.n,nm=anyName(S.gender==='ชาย'?'หญิง':'ชาย');M.mate.n=nm;M.mate.hn=1;
+  log(`💞 ${esc(old)} คู่ชีวิตของคุณบำเพ็ญจนแปลงกายตามมา กลายเป็นมนุษย์ชื่อ <b>${esc(nm)}</b>`,'epic',true);
+  if(!S.spouse){S.spouse=nm;S.spouseP=null;S.sp=mkLover(nm,'อสูรแปลงกาย · คู่ชีวิตจากป่า',{wed:true,aff:85})}}
+ if(S.sys){const n0=S.sys.quests.length;S.sys.quests=S.sys.quests.filter(q=>!/^bq_/.test(q.k));if(n0&&S.age>=6){sysLog('ร่างมนุษย์ถูกตรวจพบ — เปลี่ยนเควสเป็นแบบมนุษย์');try{newQuest()}catch(e){}}}
+ if(S.ai)S.ai.bst=1}
+// ---------- สืบสายเลือด: เล่นต่อเป็นลูกอสูร ----------
+const bCubOK=()=>{try{const m=S.beastMode;if(!m||m.human)return false;const c=blM().cubs;return!!(c&&c.n>0&&(S.kids||0)>0)}catch(e){return false}};
+{const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);try{if(bCubOK()&&!(S.children||[]).some(c=>c.alive)){const m=$('end'),b=m&&[...m.querySelectorAll('button')].find(x=>/openBook\(\)/.test(x.getAttribute('onclick')||''));
+  const h=`<button class="pbtn" style="width:100%;margin-top:16px" onclick="bHeir()">🐾 เล่นต่อเป็นลูกอสูร (รุ่นที่ ${(S.gen||1)+1})<small style="display:block;opacity:.8">สืบสายเลือด ธาตุ และพลังบางส่วน · มีโอกาสสายเลือดตื่นสูงกว่าเดิม</small></button>`;if(b)b.insertAdjacentHTML('beforebegin',h)}}catch(e){console.error(e)}return r}}
+function bHeir(){if(!S||!bCubOK())return;const P=S,m=P.beastMode;
+ const inh={lin:(P.lineage||[]).concat([{n:P.name,e:P.epithet||'',a:P.age}]),n:P.name,sp:m.sp,el:m.el,bl:m.bl|0,hab:m.hab,pw:P.power,qi:P.qi,gen:P.gen||1,xian:!!P.xian,ai:P.ai&&P.ai.end==='upload'?P.ai:null,line:(m.line||[]).concat([[P.name,P.age]]),sys:P.sys&&P.sys.t==='clan'?P.sys:null};
+ closeM();try{setWorld(inh.xian)}catch(e){}const r=brGen();const si=BL_SP.findIndex(x=>x[0]===inh.sp);if(si>=0)r.sp=si;const ei=BEL.findIndex(e=>e[0]===inh.el);if(ei>=0&&Math.random()<.7)r.el=ei;
+ let bl=inh.bl,up=false;if(bl<BBLOOD.length-1&&Math.random()<.2){bl++;up=true}r.bl=Math.max(r.bl|0,bl);if(r.bl>inh.bl)up=true;if(inh.hab)r.hab=inh.hab;
+ window._bHeir=1;try{beastBirth2(r)}finally{window._bHeir=0}sceneEvt=null;
+ S.gen=inh.gen+1;S.lineage=inh.lin;S.beastMode.line=inh.line.slice(-8);const gp=Math.round(inh.pw*.06),gq=+(inh.qi*.08).toFixed(1);S.power+=gp;S.qi=+(S.qi+gq).toFixed(1);
+ if(inh.ai){S.ai=Object.assign({},inh.ai,{heat:0,off:0,bst:1});aiLog('ข้อมูลทั้งหมดถูกส่งต่อมายังลูกของโฮสต์คนก่อน — ฉันยังจำทุกอย่างได้','myth')}
+ if(inh.sys){S.sys=Object.assign({},inh.sys,{quests:[],since:S.age});S.flags.sys=1}
+ log(`🩸 สืบสายเลือดจาก <b>${esc(inh.n)}</b> — ลูกอสูรรุ่นที่ ${S.gen} · พลังตกทอด +${fmt(gp)} · ลมปราณ +${gq} ปี${up?` · <b>สายเลือดตื่นขึ้นเป็น${BBLOOD[r.bl].n}!</b>`:''}`,'myth',true);keyAdd(`สืบสายเลือดอสูรรุ่นที่ ${S.gen} จาก${inh.n}`);render();saveGame()}
+// ---------- ความสำเร็จ ----------
+{const L=[{id:'bs_sys',n:'สัตว์ที่ถูกระบบเลือก',d:'ได้รับระบบในร่างสัตว์อสูร',r:3,c:()=>!!(S.beastMode&&S.sys&&!S.beastMode.human)},
+ {id:'bs_sysm',n:'สัตว์อสูรผู้พิชิตระบบ',d:'จบเควสหลักฉบับสัตว์อสูร',r:4,c:()=>!!(S.sys&&S.sys.bmain>=3)},
+ {id:'bs_ai',n:'สัตว์ป่าในยุคจักรกล',d:'มี AI ฝังตัวในร่างสัตว์อสูร',r:4,c:()=>!!(S.beastMode&&S.ai)},
+ {id:'bs_heir',n:'สายเลือดอสูรสามรุ่น',d:'สืบสายเลือดสัตว์อสูรจนถึงรุ่นที่ 3',r:3,c:()=>!!(S.beastMode&&(S.gen||1)>=3)},
+ {id:'bs_heir6',n:'ต้นตระกูลอสูรนิรันดร์',d:'สืบสายเลือดสัตว์อสูรจนถึงรุ่นที่ 6',r:5,c:()=>!!(S.beastMode&&(S.gen||1)>=6)},
+ {id:'bs_tmate',n:'แปลงกายไปด้วยกัน',d:'คู่ชีวิตในป่าแปลงกายเป็นมนุษย์ตามคุณ',r:3,c:()=>{try{return!!(S.beastMode&&S.beastMode.human&&blM().mate&&blM().mate.hn)}catch(e){return false}}}];
+ ACH.push(['🐾 สัตว์อสูรยุคใหม่',L]);ACH_ALL.push(...L)}
+// ---------- คู่มือ ----------
+try{const g=GD2.find(x=>x.t==='เหตุการณ์สัตว์อสูร'),i=g?GD2.indexOf(g)+1:GD2.length;
+ GD2.splice(i,0,{s:'beast',ic:'🩸',t:'สืบสายเลือดและระบบในร่างสัตว์',nw:1,d:'ตายตอนมี<b>ลูกอสูร</b> เล่นต่อเป็นลูกได้ — สืบสายเลือด ธาตุ พลังบางส่วน และอาจตื่นสายเลือดสูงขึ้น · สัตว์อสูรมีโอกาสได้<b>ระบบ</b>และ <b>AI</b> แต่เควสจะเป็นแบบสัตว์ (ล่าเหยื่อ แสงจันทร์ บำเพ็ญขั้น หาคู่) · แปลงกายแล้วคู่ชีวิตแปลงกายตามมาเป็นคู่ครอง',
+  te:'Bloodline heirs & beast Systems',de:'Die with <b>cubs</b> and you can continue as one — inheriting bloodline, element and some power, with a chance of a stronger bloodline. Beasts can now get a <b>System</b> and an <b>AI</b>, with beast-style quests (hunt, moonlight, stages, mates). When you take human form, your mate transforms too and becomes your spouse.'});
+ SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
 </script>
 </body>
 </html>
