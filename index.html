@@ -6888,7 +6888,7 @@ function blYearEvent(){const m=S.beastMode,M=blM();M.evL=M.evL||{};const L=M.evL
 // ---------- สถานะการเล่นสำหรับหน้าผู้ดูแล (ส่งไปกับ ping) ----------
 window._lastIn=Date.now();window._lastYr=0;window._errT=[];window._errM='';
 ['pointerdown','keydown','touchstart','wheel'].forEach(ev=>document.addEventListener(ev,()=>{window._lastIn=Date.now()},{passive:true,capture:true}));
-window.addEventListener('error',e=>{window._errT.push(Date.now());window._errM=(String(e.message||'').slice(0,90)+(e.lineno?' @'+e.lineno+':'+e.colno:''));jsErrSend(e.message,e.error&&e.error.stack,e.lineno,e.colno)});
+window.addEventListener('error',e=>{const fn=String(e.filename||'');const ext=(/^Script error\.?$/i.test(String(e.message||''))&&!e.lineno)||(fn&&!fn.startsWith(location.origin)&&!/^blob:|^data:/.test(fn))||/^(chrome|moz|safari)-extension:|^webkit-masked-url:/.test(fn);if(ext)return;window._errT.push(Date.now());window._errM=(String(e.message||'').slice(0,90)+(e.lineno?' @'+e.lineno+':'+e.colno:''));jsErrSend(e.message,(e.error&&e.error.stack)||(fn?fn.replace(/https?:\/\/[^/]+\//,''):''),e.lineno,e.colno)});
 window.addEventListener('unhandledrejection',e=>{const r=e.reason||{};jsErrSend('Promise: '+(r.message||r),r.stack,0,0)});
 const _jsSent=new Set();let _jsN=0;
 function jsErrSend(msg,stack,ln,col){try{msg=String(msg||'').slice(0,200);if(!msg||_jsN>=6||_jsSent.has(msg))return;_jsSent.add(msg);_jsN++;if(typeof onlineOK!=='undefined'&&!onlineOK)return;
