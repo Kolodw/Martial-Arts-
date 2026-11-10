@@ -376,6 +376,21 @@ module.exports = async (req, res) => {
     }
     // ---- 🛡️ IP ที่ถูกแบน + จำกัดความถี่ต่อ IP (กันสร้างไอดีใหม่มาสแปม) ----
     const admReq = isAdmKey(qOf(req).key || b.key);
+    // แอดมินไม่นับเป็น "คนแรกของเซิร์ฟเวอร์" — จำไอดีของแอดมินไว้ แล้วล้างรายการที่แอดมินเคยได้
+    if (admReq && okId(id)) {
+      try {
+        const isNew = +(await cmd('SADD', 'admids', id)) === 1;
+        if (isNew || a === 'admreg') {
+          const ids = (await cmd('SMEMBERS', 'admids')) || [], pre = new Set(ids.map(x => String(x).slice(0, 6)));
+          const h = (await cmd('HGETALL', 'achf')) || [], del = [];
+          for (let i = 0; i < h.length; i += 2) { const v = jp(h[i + 1]); if (v && pre.has(v.u)) del.push(h[i]) }
+          if (del.length) await cmd('HDEL', 'achf', ...del);
+          if (a === 'admreg') return res.json({ ok: 1, removed: del.length });
+        }
+      } catch (e) {}
+      if (a === 'admreg') return res.json({ ok: 1, removed: 0 });
+    }
+    if (a === 'admreg') return res.status(403).json({ err: 'admin' });
     if (!admReq && ip !== 'x') {
       const mk = Math.floor(now / 60000), WR = IP_WRITE.has(a);
       const [bn, rc, wc] = await pipe([['GET', 'ban:' + ip], ['INCR', 'ipr:' + ip + ':' + mk], WR ? ['INCR', 'ipw:' + ip + ':' + mk] : ['GET', 'ipw:' + ip + ':' + mk], ['EXPIRE', 'ipr:' + ip + ':' + mk, 90], ...(WR ? [['EXPIRE', 'ipw:' + ip + ':' + mk, 90]] : [])]);
@@ -788,7 +803,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
       const aid = String(b.a || '').replace(/[^a-z0-9_]/g, '').slice(0, 24), n = noAdm(clean(b.n, 20)) || 'นิรนาม';
       if (aid.length < 2 || (Object.keys(TITLES.a).length && !TITLES.a[aid])) return res.status(400).json({ err: 'id' });
-      if (b.tp || await cmd('SISMEMBER', 'cheaters', id)) return res.json({ first: 0 });
+      if (b.tp || isAdmKey(b.key) || await cmd('SISMEMBER', 'cheaters', id) || await cmd('SISMEMBER', 'admids', id)) return res.json({ first: 0 });
       if (TITLES.a[aid] && (+TITLES.a[aid][1] || 0) < 4) return res.json({ first: 0 });
       const ok = await cmd('HSETNX', 'achf', aid, JSON.stringify({ n, t: now, u: id.slice(0, 6) }));
       if (+ok === 1) return res.json({ first: 1 });

@@ -8041,7 +8041,7 @@ bookRank=function(){const s=achPts();let i0=0;BOOK_RK.forEach((x,i)=>{if(s>=x[0]
 function achHint(a){const d=String(a.d||''),w=d.split(/\s+/)[0]||'';return`❔ <i>ความลับที่ยังไม่มีใครเล่าให้ฟัง</i> · คำใบ้: 「${esc(w.slice(0,12))}…」`}
 // ---- คนแรกของเซิร์ฟเวอร์ (ระดับเทพขึ้นไป) ----
 let ACHF={},ACHF_T=0;
-function achFirst(a){if(typeof onlineOK==='undefined'||!onlineOK)return;api('achfirst',{a:a.id,n:pname(),tp:acTp()}).then(j=>{if(!j)return;if(j.first){ACHF[a.id]={n:pname(),t:Date.now()};log(`👑 <span class="lgf fr${a.r}">คนแรกของเซิร์ฟเวอร์ที่ปลดล็อก <b class="t${a.r}">${esc(a.n)}</b>!</span>`,'myth',true);achPopShow({r:a.r,h:'👑 คนแรกของเซิร์ฟเวอร์!',n:a.n,d:'ชื่อของคุณถูกจารึกไว้ในสมุดตำนานของทุกคน',ms:4500})}else if(j.who)ACHF[a.id]=j.who}).catch(()=>{})}
+function achFirst(a){if(typeof onlineOK==='undefined'||!onlineOK)return;api('achfirst',{a:a.id,n:pname(),tp:acTp(),key:LS.get('murim_admk','')||undefined}).then(j=>{if(!j)return;if(j.first){ACHF[a.id]={n:pname(),t:Date.now()};log(`👑 <span class="lgf fr${a.r}">คนแรกของเซิร์ฟเวอร์ที่ปลดล็อก <b class="t${a.r}">${esc(a.n)}</b>!</span>`,'myth',true);achPopShow({r:a.r,h:'👑 คนแรกของเซิร์ฟเวอร์!',n:a.n,d:'ชื่อของคุณถูกจารึกไว้ในสมุดตำนานของทุกคน',ms:4500})}else if(j.who)ACHF[a.id]=j.who}).catch(()=>{})}
 function achFirstTag(a){if(a.r<4)return'';const f=ACHF[a.id];return`<br><span class="tag2">👑 ${f?`คนแรกของเซิร์ฟเวอร์: <b>${esc(f.n)}</b> · ${new Date(f.t).toLocaleDateString('th-TH')}`:'ยังไม่มีใครเป็นคนแรกของเซิร์ฟเวอร์'}</span>`}
 // ---- เลือกฉายาโชว์ 1 อัน (แชท · ทำเนียบ · หน้าดูคนอื่นเล่น) ----
 function showTtl(){const v=LS.get('murim_show',null);return v&&v.t?v:null}
@@ -9758,6 +9758,9 @@ const MENU_CAT=[
 {const _py15=passYear;passYear=function(){const r=_py15.apply(this,arguments);try{if(S&&S.alive){q15Clean();estTick();twTick()}}catch(e){console.error(e)}return r}}
 try{Object.assign(I18N.d,{'🏞️ ที่ดินตระกูล':'🏞️ Clan Estate','🏠 ครัวเรือน':'🏠 Household','📜 พงศาวดาร':'📜 Chronicle','🏯 ประเพณีตระกูล':'🏯 Clan Tradition','🏗️ สิ่งปลูกสร้าง':'🏗️ Buildings','⭐ ใช้บ่อย':'⭐ Most used','🧘 ตัวละครและการฝึก':'🧘 Character & Training','👪 ครอบครัวและผู้คน':'👪 Family & People','📚 บันทึกและสะสม':'📚 Records & Collections','⚙️ ตั้งค่าและช่วยเหลือ':'⚙️ Settings & Help','🏙️ สถานที่อื่นในเมือง':'🏙️ Other places in town','🏬 ร้านสมบัติ':'🏬 Treasure Shop','🍶 อาหารและสุรา':'🍶 Food & Wine','💝 ของขวัญ':'💝 Gifts','🌾 ทรัพย์สินตระกูล':'🌾 Clan Property','🧺 วัตถุดิบ':'🧺 Materials','🐎 พาหนะและสัตว์':'🐎 Mounts & Animals','🏦 โรงรับฝากเงิน':'🏦 Bank','🥋 ลานประลองเมือง':'🥋 Town Arena','🎲 บ่อนเต๋า':'🎲 Dice House','🔮 หมอดูตาบอด':'🔮 Blind Fortune-teller','🍵 โรงน้ำชา':'🍵 Teahouse','🏛️ จวนเจ้าเมือง':'🏛️ Governor\'s Hall','🎪 เทศกาลเมือง':'🎪 Town Festival','🧒 ยังเด็กเกินไป':'🧒 Too young'})}catch(e){}
 
+
+// ---- แอดมินไม่นับเป็นคนแรกของเซิร์ฟเวอร์: ลงทะเบียนไอดีแอดมินและล้างรายการเก่า ----
+setTimeout(()=>{try{const k=LS.get('murim_admk','');if(k&&typeof pid!=='undefined'&&pid)fetch(API+'?a=admreg&id='+encodeURIComponent(pid)+'&key='+encodeURIComponent(k)).then(r=>r.json()).then(j=>{if(j&&j.removed){ACHF={};ACHF_T=0;toast('🛡️ ล้าง "คนแรกของเซิร์ฟเวอร์" ของแอดมินแล้ว '+j.removed+' รายการ')}}).catch(()=>{})}catch(e){}},4000);
 </script>
 </body>
 </html>
