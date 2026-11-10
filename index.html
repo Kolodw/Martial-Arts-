@@ -1092,7 +1092,7 @@ function fight(name,ep){
  if(my>=en&&tr('memory')&&Math.random()<.08){const a=newArt(1);S.arts.push(a);log(`🧠 ความจำภาพถ่าย: จดจำท่าของ${name}ได้ทั้งหมด — ได้ ${artHtml(a)}`,'epic')}
  if(my<en&&bagHas('tal')&&bagUse('tal')){log(`📜 ยันต์คุ้มกายลุกเป็นไฟ กันการโจมตีถึงตายจาก${name}ไว้ได้ แล้วคุณสวนกลับจนชนะ`,'epic');my=en+1}
  if(my>=en&&S.xian&&Math.random()<.2)bagAdd(Math.random()<.5?'core':'herb',1,1);
- if(my>=en){S.fame+=Math.round(3+Math.sqrt(Math.max(0,ep))/3);S.money+=inc(R(10,60));S.kills++;return true}
+ if(my>=en){S.fame+=fameR(4);S.money+=inc(R(10,60));S.kills++;return true}
  S.hp-=Math.round(R(15,40)*(1-gv('armor','red')-eqA('red')-bufA('red'))*(tr('iron')?.8:1));joy(-2);if(Math.random()<.15)bagRob();return false;
 }
 
@@ -6129,7 +6129,7 @@ async function shareInit(){try{if(!onlineOK||!S||Math.random()>.15)return;const 
 function sharePow(sh){const P=S.xian?XP:REALMS.map(r=>r.p);const lo=P[Math.min(7,sh.ri)]||100,hi=P[Math.min(7,sh.ri+1)]||lo*2;return Math.round((lo+(hi-lo)*.6)*(.9+Math.random()*.3))}
 function shareTick(){const sh=S.shared;if(!sh||sh.met>=2||S.age<18||choice._cur||modalOpen||S.beastMode||Math.random()>.035)return;sh.met++;const ep=sharePow(sh),r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100)));
  choice(`🌌 พบตำนานจากทำเนียบ`,`ในโรงเตี๊ยมกลางทาง คุณสบตากับ <b>${esc(sh.n)}</b> ${esc(sh.r)}${sh.f?' แห่ง'+esc(sh.f):''} — ผู้ที่ชื่อติดทำเนียบในจักรวาลที่ซ้อนทับกับของคุณ<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของเขา</span>`,[
-  {t:'⚔️ ขอประลอง',s:`โอกาสชนะราว ${pw}%`,f(){duel(sh.n,ep,w=>{if(w){S.fame+=Math.round(200+ep/50);log(`🌌 ชนะ${esc(sh.n)}! ทั้งสองจักรวาลสั่นสะเทือน`,'myth',true)}else log(`🌌 ${esc(sh.n)}ปล่อยให้คุณมีชีวิตรอด "ฝึกมาใหม่แล้วค่อยมาสู้กัน"`,'bad')})}},
+  {t:'⚔️ ขอประลอง',s:`โอกาสชนะราว ${pw}%`,f(){duel(sh.n,ep,w=>{if(w){S.fame+=fameR(200);log(`🌌 ชนะ${esc(sh.n)}! ทั้งสองจักรวาลสั่นสะเทือน`,'myth',true)}else log(`🌌 ${esc(sh.n)}ปล่อยให้คุณมีชีวิตรอด "ฝึกมาใหม่แล้วค่อยมาสู้กัน"`,'bad')})}},
   {t:'🤝 สาบานเป็นพันธมิตร',s:'ใช้เสน่ห์ · พันธมิตรจะมาช่วยตอนจวนตัว',f(){if(roll01(.35+(S.cha||0)/300)){allyAdd(sh.n,'ตำนานจากทำเนียบ');log(`🤝 ${esc(sh.n)}ยอมสาบานเป็นพันธมิตรกับคุณ`,'epic',true)}else log(`${esc(sh.n)}ยิ้มบางๆ แล้วเดินจากไป`)}},
   {t:'🙇 แยกทาง',s:'ไม่มีผลเสีย',skip:true,f(){log(`คุณกับ${esc(sh.n)}คารวะกันแล้วแยกทาง`)}}])}
 // ---- พันธมิตร ----
@@ -6144,7 +6144,7 @@ async function meetPoll(){try{if(!onlineOK||!S||!S.alive||S.beastMode||paused||d
 setInterval(meetPoll,5000);
 function meetTick(){if(!meetC||Date.now()-meetC.at>90000||S.age<14||choice._cur||modalOpen||S.beastMode||Math.random()>.06)return;const o=meetC;meetC=null;const RN=S.xian?XREALM:REALMS.map(r=>r.n),ep=Math.max(50,o.p||100),r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100)));
  choice(`🌐 พบผู้เล่นจริง!`,`รอยแยกมิติเปิดออกชั่วครู่ — <b>${esc(o.n)}</b> ผู้เล่นที่กำลังจำลองชีวิตอยู่ตอนนี้ ก้าวข้ามมาสู่จักรวาลของคุณ<br>${esc(RN[o.ri]||'')} · ${esc(o.f||'')} · อายุ ${fmt(o.age||0)} ปี<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของเขา · สิ่งที่คุณเลือกจะส่งผลถึงเขาด้วย</span>`,[
-  {t:'⚔️ ท้าดวล',s:`โอกาสชนะราว ${pw}%`,f(){const w=fight(o.n,ep);if(w){S.fame+=Math.round(30+ep/80);log(`🌐 ชนะผู้เล่น <b>${esc(o.n)}</b> ในการดวลข้ามจักรวาล!`,'epic',true)}else{S.hp-=Math.round(S.maxHp*.15);log(`🌐 แพ้ผู้เล่น <b>${esc(o.n)}</b> ถูกซัดกลับเข้ารอยแยกมิติ`,'bad',true)}api('meetact',{to:o.k,kind:'fight',win:w?1:0,n:pname(),ri:realmIdx(),x:S.xian?1:0}).catch(()=>{})}},
+  {t:'⚔️ ท้าดวล',s:`โอกาสชนะราว ${pw}%`,f(){const w=fight(o.n,ep);if(w){S.fame+=fameR(30);log(`🌐 ชนะผู้เล่น <b>${esc(o.n)}</b> ในการดวลข้ามจักรวาล!`,'epic',true)}else{S.hp-=Math.round(S.maxHp*.15);log(`🌐 แพ้ผู้เล่น <b>${esc(o.n)}</b> ถูกซัดกลับเข้ารอยแยกมิติ`,'bad',true)}api('meetact',{to:o.k,kind:'fight',win:w?1:0,n:pname(),ri:realmIdx(),x:S.xian?1:0}).catch(()=>{})}},
   {t:'🤝 ชวนเป็นพันธมิตร',s:'ใช้เสน่ห์ · ทั้งสองฝ่ายจะได้พันธมิตร',f(){const ok=roll01(.45+(S.cha||0)/300);if(ok){allyAdd(o.n,'ผู้เล่นจริง');log(`🤝 คุณกับผู้เล่น <b>${esc(o.n)}</b> สาบานเป็นพันธมิตรข้ามจักรวาล`,'epic',true)}else log(`ผู้เล่น ${esc(o.n)} ยังไม่ไว้ใจคุณ รอยแยกปิดลงก่อนจะได้คุยกัน`);api('meetact',{to:o.k,kind:'ally',ok:ok?1:0,n:pname(),ri:realmIdx(),x:S.xian?1:0}).catch(()=>{})}},
   {t:'🙇 ปล่อยให้รอยแยกปิดลง',s:'ไม่มีผลเสีย',skip:true,f(){log('คุณมองรอยแยกมิติปิดลงอย่างเงียบๆ')}}])}
 {const _py10=passYear;passYear=function(){const r=_py10.apply(this,arguments);try{if(S&&S.alive){shareTick();meetTick()}}catch(e){console.error(e)}return r}}
@@ -6177,7 +6177,7 @@ function shTick(){if(!S||!S.alive||!S.xian||S.beastMode||S.age<20||realmIdx()<2)
  sh.tm--;if(sh.tm<=0)shStrike()}
 function shReveal(){const sh=S.shadow;if(!sh)return;const r=total()/sh.p,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100)));setScene('fight');
  const go=()=>choice(`👁️ ตรวจพบภัยเงา!`,`ประสาทสัมผัสของคุณจับได้ถึงปราณที่ถูกกดซ่อนไว้ — <b>${sh.n}</b> ${sh.boss?'ผู้อยู่เบื้องหลังทุกอย่าง ':''}กำลังเฝ้าดูคุณมาตลอด และเตรียมลงมือในอีกไม่นาน<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของมัน${sh.roots>0?' · มันกำลังตามล้างคนใกล้ตัวคุณ':''}</span>`,[
-  {t:'⚔️ ตามล่ากลับก่อนมันลงมือ',s:`โอกาสชนะราว ${pw}%`,f(){duel(sh.n,sh.p,w=>{if(w){S.fame+=Math.round(150+sh.p/100);S.shLv=(S.shLv||0)+1;S.shadow=null;S.shCd=S.age+R(25,60);const a=Math.random()<.5?newArt(3):null;if(a)Array.prototype.push.call(S.arts,a);log(`🗡️ สังหาร<b>${sh.n}</b>ได้สำเร็จ!${a?` ได้ ${artHtml(a)} จากศพของมัน`:''}${sh.boss?'':' แต่จากความทรงจำของมัน คุณรู้ว่ายังมีคนที่แข็งแกร่งกว่าอยู่เบื้องหลัง...'}`,'myth',true);S.flags.shKill=1;if(sh.boss)S.flags.shBoss=1}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));sh.tm=Math.max(1,sh.tm-2);log(`${sh.n}หายตัวไปในความมืด — มันจะกลับมาเร็วกว่าเดิม`,'bad')}})}},
+  {t:'⚔️ ตามล่ากลับก่อนมันลงมือ',s:`โอกาสชนะราว ${pw}%`,f(){duel(sh.n,sh.p,w=>{if(w){S.fame+=fameR(150);S.shLv=(S.shLv||0)+1;S.shadow=null;S.shCd=S.age+R(25,60);const a=Math.random()<.5?newArt(3):null;if(a)Array.prototype.push.call(S.arts,a);log(`🗡️ สังหาร<b>${sh.n}</b>ได้สำเร็จ!${a?` ได้ ${artHtml(a)} จากศพของมัน`:''}${sh.boss?'':' แต่จากความทรงจำของมัน คุณรู้ว่ายังมีคนที่แข็งแกร่งกว่าอยู่เบื้องหลัง...'}`,'myth',true);S.flags.shKill=1;if(sh.boss)S.flags.shBoss=1}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));sh.tm=Math.max(1,sh.tm-2);log(`${sh.n}หายตัวไปในความมืด — มันจะกลับมาเร็วกว่าเดิม`,'bad')}})}},
   {t:'🛡️ วางค่ายกลป้องกันและเฝ้าระวัง',s:'ใช้ปัญญา · ยืดเวลา และถ้ามันลงมือจะรับมือได้ดีขึ้น',f(){if(roll01(.4+(S.int||0)/400)){sh.tm+=R(2,4);sh.roots=0;sh.arr=1;log('🛡️ วางค่ายกลรอบตัวและคนใกล้ตัวแน่นหนา ภัยเงาถอยไปตั้งหลัก','good')}else log('ค่ายกลยังไม่สมบูรณ์ แต่อย่างน้อยคุณก็รู้ตัวแล้ว','')}},
   {t:'🏃 หนีไปซ่อนตัวในแดนไกล',s:'ใช้ไหวพริบ · ทิ้งชื่อเสียงและคนที่รู้จักไว้เบื้องหลัง',f(){if(Math.random()<.45+Math.min(.3,(S.int||0)/500)){S.shadow=null;S.shCd=S.age+R(15,30);S.fame=Math.round((S.fame||0)*.7);joy(-8);log(`🏃 หลบหนีไปซ่อนตัวจนตัดร่องรอยได้ ${sh.n}คลาดกับคุณ...สักพัก`,'')}else{sh.tm=Math.max(1,sh.tm-1);log('ร่องรอยของคุณยังถูกตามได้','bad')}}}]);
  if(choice._cur||modalOpen)setTimeout(()=>{if(S&&S.alive&&S.shadow===sh)go()},1500);else go()}
@@ -6206,7 +6206,7 @@ function revTick(){const R0=S.revenge;if(!R0||!S.alive||S.age<14)return;
  if(S.age>=R0.dl){S.revenge=null;const w=fight(R0.n,Math.round(R0.p*1.2));if(w){S.fame+=150;S.flags.revenged=1;log(`🔥 ชะตาเดิมวนกลับมา <b>${esc(R0.n)}</b>บุกมาเพื่อฆ่าคุณซ้ำ — แต่ครั้งนี้คุณเป็นฝ่ายชนะ! วงจรแห่งความตายถูกทำลาย`,'myth',true)}else{S.hp=0;S.deathCause=`ถูก${R0.n}ฆ่าซ้ำเป็นครั้งที่สอง — ชะตาไม่ให้โอกาสอีกแล้ว`;log(`💀 ชะตาเดิมวนกลับมา คุณล้างแค้นไม่ทัน <b>${esc(R0.n)}</b>มาเอาชีวิตคุณอีกครั้ง`,'bad',true)}return}
  if(choice._cur||modalOpen||Math.random()>.1||R0.met>=3)return;R0.met++;R0.p=Math.round(Math.max(R0.p,total()*.9));const r=total()/R0.p,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100)));
  choice(`🔥 พบศัตรูจากชาติก่อน`,`คุณเห็น <b>${esc(R0.n)}</b> ${R0.betray?'คนที่หักหลังคุณ':'คนที่ฆ่าคุณ'}ในชาติก่อน — เขายังไม่รู้ว่าคุณคือใคร<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของเขา · เหลือเวลาอีก ${R0.dl-S.age} ปีก่อนชะตาเดิมจะวนกลับมา</span>`,[
-  {t:'⚔️ ชำระแค้นตอนนี้',s:`โอกาสชนะราว ${pw}%`,f(){duel(R0.n,R0.p,w=>{if(w){S.revenge=null;S.fame+=Math.round(120+R0.p/80);S.flags.revenged=1;joy(15);const a=newArt(2);Array.prototype.push.call(S.arts,a);log(`🔥 ล้างแค้นข้ามชาติสำเร็จ! <b>${esc(R0.n)}</b>ตายด้วยน้ำมือของคุณ — ได้ ${artHtml(a)} ที่เขาเคยแย่งไป`,'myth',true)}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));log(`${esc(R0.n)}แข็งแกร่งกว่าที่คิด คุณถอยออกมาได้ก่อนเขาจะจำคุณได้`,'bad')}})}},
+  {t:'⚔️ ชำระแค้นตอนนี้',s:`โอกาสชนะราว ${pw}%`,f(){duel(R0.n,R0.p,w=>{if(w){S.revenge=null;S.fame+=fameR(120);S.flags.revenged=1;joy(15);const a=newArt(2);Array.prototype.push.call(S.arts,a);log(`🔥 ล้างแค้นข้ามชาติสำเร็จ! <b>${esc(R0.n)}</b>ตายด้วยน้ำมือของคุณ — ได้ ${artHtml(a)} ที่เขาเคยแย่งไป`,'myth',true)}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));log(`${esc(R0.n)}แข็งแกร่งกว่าที่คิด คุณถอยออกมาได้ก่อนเขาจะจำคุณได้`,'bad')}})}},
   {t:'🕸️ วางแผนใช้ความรู้จากชาติก่อน',s:'ใช้ปัญญา · ถ้าสำเร็จ ศัตรูอ่อนลงและรอบหน้าได้เปรียบ',f(){if(roll01(.4+(S.int||0)/350)){R0.p=Math.round(R0.p*.7);log(`🕸️ คุณใช้สิ่งที่รู้จากชาติก่อนวางกับดัก ตัดกำลังของ${esc(R0.n)}ไปได้มาก`,'epic')}else log('แผนยังไม่สุกงอม ต้องรอโอกาสต่อไป','')}},
   {t:'⏳ รอให้แข็งแกร่งกว่านี้',s:'ไม่มีผลเสีย แต่เวลาเหลือน้อยลง',skip:true,f(){log(`คุณกัดฟันเดินผ่าน${esc(R0.n)}ไป รอวันที่พร้อม`)}}])}
 {const _py12=passYear;passYear=function(){const r=_py12.apply(this,arguments);try{if(S&&S.alive)revTick()}catch(e){console.error(e)}return r}}
@@ -10777,6 +10777,21 @@ function acH(t){let h=2166136261;t='m1n'+t+'#q7';for(let i=0;i<t.length;i++){h^=
 const acSF=o=>[o.name,Math.round(o.age||0),Math.round(o.power||0),Math.round(o.fame||0),Math.round(o.money||0),Math.round((o.qi||0)*10),Math.round(o.int||0),Math.round(o.cha||0)].join('|');
 {const _sg=saveGame;saveGame=function(){const r=_sg.apply(this,arguments);try{if(S&&S.alive&&!S.custom){const g=LS.get('murim_ui9',{})||{};g[S.slot||1]={h:acH(acSF(S)),a:Math.round(S.age||0)};LS.set('murim_ui9',g)}}catch(e){}return r}}
 {const _lg=loadGame;loadGame=function(n){const r=_lg.apply(this,arguments);try{const g=(LS.get('murim_ui9',{})||{})[n||1];if(S&&g&&g.a===Math.round(S.age||0)&&g.h!==acH(acSF(S))){acFlag('save-edit');acSus('save-edit')}}catch(e){}return r}}
+
+// ===================== v15.2 บาลานซ์พลัง/ชื่อเสียง =====================
+// ชื่อเสียงจากการต่อสู้คิดตามขั้นและโลก ไม่ผูกกับพลังศัตรูอีกต่อไป
+function fameR(k){try{const L=typeof postLv==='function'?Math.max(0,postLv()):0;return Math.round(k*(1+Math.max(0,realmIdx())*.6+L*.1)*(({m:1,x:2,g:4})[ECO_W()]||1))}catch(e){return k}}
+function balNext(){const ri=Math.max(0,realmIdx());if(ri<REALMS.length-1)return REALMS[ri+1].p;const L=typeof postLv==='function'?postLv():-1;return postP(Math.min(RS_MAX,Math.max(-1,L)+1))}
+// ทุกปี: พลังที่เกินเพดานขั้นถัดไป ×1.5 ได้ผลแค่ 25% · ชื่อเสียงยิ่งสูงยิ่งเพิ่มยาก และค่อยๆ ลดลงถ้าเกินระดับที่ขั้นนี้ควรมี
+function balTick(){if(!S||!S.alive||S.custom||(S.beastMode&&!S.beastMode.human))return;
+ const capP=Math.max(1000,balNext()*1.5);
+ if(S._bp0!=null){const d=S.power-S._bp0;if(d>0){const t=total(),pre=t-d;if(t>capP){const ok=Math.max(0,capP-pre),over=d-ok;if(over>0)S.power-=Math.round(over*.75)}}}
+ S._bp0=S.power;
+ const ri=Math.max(0,realmIdx()),L=typeof postLv==='function'?Math.max(0,postLv()):0,W=({m:1,x:3,g:10})[ECO_W()]||1,F0=Math.round(400*Math.pow(1+ri,2)*W*(1+L*.15));
+ if(S._bf0!=null){const d=S.fame-S._bf0;if(d>0&&S.fame>F0){const base=Math.max(S._bf0,F0),over=S.fame-base;if(over>0)S.fame=Math.round(base+over*F0/Math.max(F0,base))}}
+ if(S.fame>F0)S.fame=Math.round(S.fame-(S.fame-F0)*.01);
+ S._bf0=S.fame}
+{const _pyb=passYear;passYear=function(){const r=_pyb.apply(this,arguments);try{balTick()}catch(e){}return r}}
 </script>
 </body>
 </html>
