@@ -10404,6 +10404,50 @@ try{BEV.push({w:6,n:'ตามล่าคืนแก่น',c:()=>!!S.bhFoe,g(
 // ---------- ความสำเร็จ ----------
 {const L=[{id:'bh_win',n:'นักล่ากลายเป็นเหยื่อ',d:'ในร่างสัตว์อสูร ชนะนักล่าที่เป็นผู้เล่นจริง',r:3,c:()=>(S.bhWin||0)>=1},{id:'bh_core',n:'ผู้ล้วงแก่นผู้เล่น',d:'ล้วงแก่นอสูรของผู้เล่นจริงสำเร็จ',r:3,c:()=>(S.bhCore||0)>=1},{id:'bh_core3',n:'นายพรานแห่งแผ่นดิน',d:'ล้วงแก่นอสูรของผู้เล่นจริง 3 ครั้งในชาติเดียว',r:4,c:()=>(S.bhCore||0)>=3}];
  ACH.push(['🐾 ล่าสัตว์อสูรผู้เล่น',L]);ACH_ALL.push(...L)}
+// ===================== v15.7 สีฉายาตามความยาก + อนิเมชั่น =====================
+const TTL_SPR={imm:6,trash:6,ow:6,bossX:5,regress:5,asc:5,crip:5,orphan:5,sect:5,kills300:5,rich:5,saint:5,fiend:5,kids:5,harem:5,bossM:4,ndsys:4,revive:4,slowmax:4};
+const TTL_MB={power:0,qi:.5,int:.5,cha:.5,fame:.5,good:.5,evil:.5,money:.6,kills:.6,love:.6,elder:1,hermit:1};
+const TTL_XC=(()=>{const s=new Set();Object.values(TTL_CORE.x).forEach(L=>L.forEach(c=>s.add(c)));return s})();
+const TTL_VALID=(()=>{const st=new Set();['m','x'].forEach(w=>Object.values(TTL_CORE[w]).forEach(L=>L.forEach(c=>Object.values(TTL_MOD).forEach(M=>M.forEach(m=>st.add(c+m))))));TTL_SP.forEach(x=>st.add(x[2]));return st})();
+function ttlRar(t){t=String(t||'');const sp=TTL_SP.find(x=>x[2]===t);if(sp)return TTL_SPR[sp[0]]!=null?TTL_SPR[sp[0]]:4;
+ let best='';for(const c in TTL_PATHOF)if(t.startsWith(c)&&c.length>best.length)best=c;if(!best)return 0;const P=TTL_PATHOF[best],mk=TTL_MODOF[t.slice(best.length)];
+ const xb=TTL_XC.has(best)&&!Object.values(TTL_CORE.m).some(L=>L.includes(best))?1:0;return Math.max(0,Math.min(5,Math.floor(P.i+xb+(TTL_MB[mk]||0))))}
+ttlTierOf=function(t){return ttlRar(t)};
+const TB_N=['ธรรมดา','หายาก','ล้ำค่า','ตำนาน','เทพ','อมตะ','???'],TB_IC=['','✦','◆','❖','✪','❂','☯'];
+(function(){try{const st=document.createElement('style');st.textContent=`
+.tbg{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:6px}
+.tb{position:relative;display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:999px;font-size:13px;font-weight:700;overflow:hidden;border:1.5px solid;isolation:isolate}
+.tb i{font-style:normal;font-size:.9em}.tb .n{position:relative;z-index:2}.tb .x{font-size:.8em;opacity:.7;font-weight:600}
+.tb0{color:#9c8a66;border-color:rgba(156,138,102,.45);background:rgba(156,138,102,.1)}
+.tb1{color:#2fae4c;border-color:rgba(47,174,76,.6);background:rgba(47,174,76,.12)}
+.tb2{color:#9fd2ff;border-color:#4aa3ff;background:linear-gradient(180deg,#123a66,#0a2240)}
+.tb3{color:#e2c2ff;border-color:#a86aff;background:linear-gradient(180deg,#3d1d6e,#220c44);box-shadow:0 0 8px rgba(168,106,255,.55)}
+.tb4{color:#ffe08a;border-color:#f0c040;background:linear-gradient(180deg,#5a3a06,#2e1c02);box-shadow:0 0 10px rgba(240,192,64,.55);animation:tbPulse 2.4s ease-in-out infinite}
+.tb4 .n{background:linear-gradient(90deg,#fff3b0,#f0b030,#fff3b0);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:tbTx 2.8s linear infinite}
+.tb5{color:#fff;border-color:transparent;background:linear-gradient(135deg,#3a0830,#1a0428) padding-box,linear-gradient(90deg,#ff4fd8,#ffb04f,#ff4fd8,#9b4fff,#ff4fd8) border-box;background-size:100% 100%,300% 100%;animation:tbBd 3s linear infinite;box-shadow:0 0 12px rgba(255,79,216,.6)}
+.tb5 .n{background:linear-gradient(90deg,#ffd6f6,#ff7ad8,#fff,#ff7ad8,#ffd6f6);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:tbTx 2.2s linear infinite}
+.tb6{color:#fff;border:2px solid transparent;background:linear-gradient(135deg,#050505,#111 60%,#050505) padding-box,linear-gradient(90deg,#ff4d4d,#ffd84d,#5dff7a,#4dd8ff,#b06bff,#ff4d4d) border-box;background-size:100% 100%,400% 100%;animation:tbBd 2.4s linear infinite,tbGlow 3s ease-in-out infinite}
+.tb6 .n{background:linear-gradient(90deg,#ff6b6b,#ffe66b,#6bff8e,#6bd8ff,#c06bff,#ff6b6b);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:tbTx 2.4s linear infinite}
+.tb2::after,.tb3::after,.tb4::after,.tb5::after,.tb6::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);background-size:250% 100%;animation:tbSw 3.2s ease-in-out infinite}
+.tb2::after{opacity:.35}.tb3::after{opacity:.5;animation-duration:2.8s}.tb5::after,.tb6::after{animation-duration:2.2s}
+.tb5::before,.tb6::before{content:'✦';position:absolute;right:4px;top:-2px;font-size:9px;color:#fff;z-index:3;animation:tbSp 1.8s ease-in-out infinite}
+.tb6::before{content:'✧';color:#ffe66b}
+@keyframes tbTx{to{background-position:-200% 0}}@keyframes tbBd{to{background-position:0 0,-300% 0}}@keyframes tbSw{0%{background-position:150% 0}60%,100%{background-position:-100% 0}}
+@keyframes tbPulse{50%{box-shadow:0 0 16px rgba(240,192,64,.85)}}@keyframes tbGlow{0%,100%{box-shadow:0 0 10px rgba(255,255,255,.35)}50%{box-shadow:0 0 18px rgba(176,107,255,.8),0 0 6px rgba(93,255,122,.6)}}
+@keyframes tbSp{0%,100%{opacity:0;transform:scale(.4) rotate(0)}50%{opacity:1;transform:scale(1.2) rotate(90deg)}}
+.tbh{display:flex;align-items:center;gap:6px;margin:12px 0 6px;font-size:14px}.tbh .c{margin-left:auto;font-size:12px;opacity:.7}
+@media (prefers-reduced-motion:reduce){.tb,.tb *,.tb::after,.tb::before{animation:none!important}}`;document.head.appendChild(st)}catch(e){}})();
+function tbChip(t,v){const r=ttlRar(t);return`<span class="tb tb${r}" title="${esc(TB_N[r])}${v&&v.n?' · '+esc(v.n):''}">${TB_IC[r]?`<i>${TB_IC[r]}</i>`:''}<span class="n">${esc(t)}</span>${v&&v.c>1?`<span class="x">×${v.c}</span>`:''}</span>`}
+{const _ob2=openBook;openBook=function(){const r=_ob2.apply(this,arguments);try{if(BKT!=='ttl'||$('modal').dataset.k!=='book')return r;const m=$('modal'),g=m.querySelector('.ttlg'),TL=LS.get('murim_ttl',{});
+  const tn=Object.keys(TL).filter(t=>TTL_VALID.has(t)).length;const tab=m.querySelector('.tabs .tabb:last-child');if(tab)tab.textContent='🏷️ ฉายา '+tn;
+  const p=g?g.previousElementSibling:m.querySelector('.tabs').nextElementSibling;
+  const L=Object.entries(TL),by=[[],[],[],[],[],[],[]];L.forEach(([t,v])=>by[ttlRar(t)].push([t,v]));by.forEach(a=>a.sort((x,y)=>y[1].t-x[1].t));
+  const tot=[0,0,0,0,0,0,0];TTL_VALID.forEach(t=>tot[ttlRar(t)]++);
+  if(p&&p.tagName==='P')p.innerHTML=`ฉายาที่เคยได้รับ <b>${tn}/${TTL_VALID.size}</b> แบบ — ฉายาเปลี่ยนไปตามสายสำนัก ขั้นพลัง และสิ่งที่เด่นที่สุดในชีวิตนั้น · <b>สียิ่งเท่ ยิ่งได้ยาก</b> (ขั้นพลังสูง · โลกเซียน · ฉายาพิเศษ)`;
+  const html=[6,5,4,3,2,1,0].filter(i=>by[i].length).map(i=>`<div class="tbh"><span class="tb tb${i}" style="padding:2px 9px;font-size:12px">${TB_IC[i]?`<i>${TB_IC[i]}</i>`:''}<span class="n">${TB_N[i]}</span></span><span class="c">${by[i].length}/${tot[i]}</span></div><div class="tbg">${by[i].map(([t,v])=>tbChip(t,v)).join('')}</div>`).join('');
+  if(g)g.outerHTML=html||'<p class="tag2">ยังไม่มีฉายา</p>'}catch(e){console.error(e)}return r}}
+// ฉายาใหม่ใน log ใช้สีตามความยากจริง
+{const _tt=ttlTick;ttlTick=function(){const o=S&&S.ttl;const r=_tt.apply(this,arguments);try{if(S&&S.ttl&&S.ttl!==o){const fd=document.querySelectorAll('#feed .lgf');const el=fd[fd.length-1];if(el&&el.textContent.includes(S.ttl)){el.className=el.className.replace(/\bfr\d\b/,'fr'+ttlRar(S.ttl))}}}catch(e){}return r}}
 </script>
 </body>
 </html>
