@@ -1091,13 +1091,16 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
     if (a === 'meet') {
       const x = b.x ? 1 : 0, key = 'mp:' + x;
       const me = { n: clean(b.n, 20) || 'นิรนาม', ri: Math.max(0, Math.min(12, +b.ri || 0)), p: Math.max(0, Math.min(1e13, +b.p || 0)), f: clean(b.f, 30), age: Math.max(0, +b.age || 0), c: Math.max(0, Math.min(999, Math.round(+b.cha || 0))), t: now };
-      const okMe = !b.tp && powOk(me.p, me.ri, x, me.age) && !(await isBanned());
+      if (b.bm) { me.bm = 1; me.sp = clean(b.sp, 20); me.st = Math.max(0, Math.min(9, +b.st || 0)); me.p = Math.min(me.p, 1e12) }
+      const okMe = !b.tp && (me.bm ? me.p <= 1e12 : powOk(me.p, me.ri, x, me.age)) && !(await isBanned());
       const [, all, box] = await pipe([okMe ? ['HSET', key, id, JSON.stringify(me)] : ['HDEL', key, id], ['HGETALL', key], ['LRANGE', 'mbox:' + id, 0, 9]]);
       const cand = [], stale = [];
       for (let i = 0; i < (all || []).length; i += 2) { const k0 = all[i]; let v = null; try { v = JSON.parse(all[i + 1]) } catch {} if (!v || now - v.t > 120e3) { stale.push(k0); continue } if (k0 !== id) cand.push(Object.assign(v, { k: k0.slice(0, 6) + k0.slice(-4) })) }
       const L2 = [['EXPIRE', key, 3600]]; if (stale.length) L2.push(['HDEL', key, ...stale.slice(0, 50)]); if (box && box.length) L2.push(['DEL', 'mbox:' + id]);
       await pipe(L2);
-      const o = cand.length ? cand[Math.floor(Math.random() * cand.length)] : null;
+      // สัตว์อสูรไม่เป็นฝ่ายเริ่ม · มนุษย์มีโอกาสเจอสัตว์อสูร (ผู้เล่นจริง) มากขึ้นเมื่อมีในเซิร์ฟเวอร์
+      let o = null;
+      if (!me.bm && cand.length) { const bc = cand.filter(c => c.bm), hc = cand.filter(c => !c.bm); const pool = bc.length && (!hc.length || Math.random() < .45) ? bc : hc.length ? hc : bc; o = pool[Math.floor(Math.random() * pool.length)] }
       let pa = null, pw = 0; try { pa = paSum(await paTick(now)); pw = +(await cmd('LLEN', 'pa:win:' + id)) || 0 } catch {}
       return res.json({ pa, pw, o, n: cand.length, inbox: (box || []).map(s0 => { try { return JSON.parse(s0) } catch { return null } }).filter(Boolean) });
     }
@@ -1159,7 +1162,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
         const to = String(b.to || '').replace(/[^a-z0-9]/g, '').slice(0, 12), x = b.x ? 1 : 0;
         const all = await cmd('HGETALL', 'mp:' + x); let tid = null, B = null;
         for (let i = 0; i < (all || []).length; i += 2) if (all[i].slice(0, 6) + all[i].slice(-4) === to) { tid = all[i]; try { B = JSON.parse(all[i + 1]) } catch {} }
-        if (!tid || tid === id || !B || now - B.t > 150e3) return res.json({ ok: 0 });
+        if (!tid || tid === id || !B || now - B.t > 150e3 || B.bm) return res.json({ ok: 0 });
         const A = { n: clean(b.n, 20) || 'นิรนาม', ri: Math.max(0, Math.min(12, +b.ri || 0)), p: Math.max(0, Math.min(1e13, +b.p || 0)), f: clean(b.f, 30), age: Math.max(0, +b.age || 0), c: Math.max(0, Math.min(999, Math.round(+b.cha || 0))), k: id.slice(0, 6) + id.slice(-4) };
         B = { n: B.n, ri: B.ri, p: B.p, f: B.f, age: B.age, c: B.c || 0, k: to };
         const rid = (now.toString(36) + Math.random().toString(36).slice(2, 6)).slice(-10);
@@ -1200,6 +1203,68 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       }
       if (r.res && !had) await pipe([['LPUSH', 'mbox:' + oid, JSON.stringify({ kind: 'mres', rid, t: now })], ['LTRIM', 'mbox:' + oid, 0, 9], ['EXPIRE', 'mbox:' + oid, 3600]]);
       return res.json({ ok: 1, st: view(r, side) });
+    }
+    // ---- 🐾 ล่าสัตว์อสูร (ผู้เล่นมนุษย์ ≤2 คน vs ผู้เล่นสัตว์อสูร แบบเรียลไทม์) ----
+    if (a === 'bhopen' || a === 'bhpick' || a === 'bhst') {
+      if (!okId(id)) return res.json({ ok: 0 });
+      if (a !== 'bhst' && (b.tp || await isBanned())) return res.json({ ok: 0 });
+      const BH_JOIN = 20e3, BH_DL = 30e3;
+      const ld = async k => { const v = await cmd('GET', k); try { return v ? JSON.parse(v) : null } catch { return null } };
+      const sv = (rid, r) => ['SET', 'bhr:' + rid, JSON.stringify(r), 'EX', 900];
+      const P = (x, y) => Math.pow(Math.max(1, x), 1.3) / (Math.pow(Math.max(1, x), 1.3) + Math.pow(Math.max(1, y), 1.3));
+      const resolve = (r, H) => {
+        if (r.res) return r;
+        const nh = r.H.length, end = r.t0 + BH_DL, allIn = H.cb && r.H.every((_, i) => H['c' + i] && (nh < 2 || H['j' + i]));
+        if (!(now > end || (allIn && (nh >= 2 || now > r.t0 + BH_JOIN)))) return r;
+        const rc = a0 => a0[Math.floor(Math.random() * a0.length)];
+        const cb = H.cb || rc(['fight', 'flee', 'hide']), hc = r.H.map((_, i) => H['c' + i] || rc(['hunt', 'trap'])), hj = r.H.map((_, i) => H['j' + i] || rc(['coop', 'steal']));
+        const o = { cb, hc, hj, log: [] }; let alive = r.H.map((_, i) => i), hp = r.H.map(h => h.p);
+        if (nh === 2) {
+          const s0 = hj[0] === 'steal', s1 = hj[1] === 'steal';
+          if (s0 || s1) { const w = (s0 && !s1) ? (Math.random() < .6 + .3 * (P(hp[0], hp[1]) - .5) ? 0 : 1) : (s1 && !s0) ? (Math.random() < .6 + .3 * (P(hp[1], hp[0]) - .5) ? 1 : 0) : (Math.random() < P(hp[0], hp[1]) ? 0 : 1);
+            o.betray = { w, l: 1 - w }; alive = [w]; hp = hp.map((v, i) => i === w ? v * .85 : 0) }
+          else o.coop = 1 }
+        const hunt = alive.reduce((a0, i) => a0 + hp[i], 0) * (o.coop ? .9 : 1), trap = alive.some(i => hc[i] === 'trap'), bp = r.B.p;
+        let bw = null;
+        if (cb === 'fight') { const q = P(bp, hunt) + (trap ? .08 : 0); bw = Math.random() < Math.max(.05, Math.min(.95, q)) ? 'b' : 'h' }
+        else if (cb === 'flee') { const esc = Math.max(.15, Math.min(.85, .35 + .5 * (P(bp, hunt) - .5) - (trap ? .2 : 0))); bw = Math.random() < esc ? 'esc' : 'h' }
+        else { const hid = trap ? .2 : .55; bw = Math.random() < hid ? 'hid' : (Math.random() < P(bp, hunt) * .8 ? 'b' : 'h') }
+        o.k = bw;
+        if (bw === 'h') { let taker = alive[0]; if (alive.length === 2) taker = Math.random() < P(hp[0], hp[1]) ? 0 : 1; o.taker = taker }
+        r.res = o; r.rt = now; return r };
+      const view = (r, H, role) => ({ rid: r.rid, role, B: r.B, H: r.H.map(h => ({ n: h.n, p: h.p })), t0: r.t0, now, join: r.t0 + BH_JOIN, dl: r.t0 + BH_DL, my: role === 'b' ? (H.cb || '') : (H['c' + role.slice(1)] || ''), myj: role === 'b' ? '' : (H['j' + role.slice(1)] || ''), res: r.res || null });
+      if (a === 'bhopen') {
+        if ((await cmd('SET', 'bhl:' + id, 1, 'NX', 'EX', 30)) !== 'OK') return res.status(429).json({ err: 'rate' });
+        const to = String(b.to || '').replace(/[^a-z0-9]/g, '').slice(0, 12), x = b.x ? 1 : 0;
+        const all = await cmd('HGETALL', 'mp:' + x); let tid = null, B = null;
+        for (let i = 0; i < (all || []).length; i += 2) if (all[i].slice(0, 6) + all[i].slice(-4) === to) { tid = all[i]; try { B = JSON.parse(all[i + 1]) } catch {} }
+        if (!tid || tid === id || !B || !B.bm || now - B.t > 150e3) return res.json({ ok: 0 });
+        const me = { id, n: clean(b.n, 20) || 'นิรนาม', p: Math.max(1, Math.min(1e13, +b.p || 1)), k: id.slice(0, 6) + id.slice(-4) };
+        const cur = await cmd('GET', 'bhc:' + tid); let r = cur ? await ld('bhr:' + cur) : null;
+        if (r && !r.res && now - r.t0 < BH_JOIN && r.H.length < 2 && !r.H.some(h => h.id === id)) {
+          r.H.push(me); await pipe([sv(r.rid, r), ['LPUSH', 'mbox:' + r.H[0].id, JSON.stringify({ kind: 'bhj', rid: r.rid, n: me.n, t: now })], ['LTRIM', 'mbox:' + r.H[0].id, 0, 9], ['EXPIRE', 'mbox:' + r.H[0].id, 3600]]);
+          return res.json({ ok: 1, st: view(r, {}, 'h1') }) }
+        if (await cmd('GET', 'bhcd:' + tid)) return res.json({ ok: 0, cd: 1 });
+        const rid = (now.toString(36) + Math.random().toString(36).slice(2, 6)).slice(-10);
+        r = { rid, b: tid, B: { n: B.n, p: B.p, sp: B.sp || '', st: B.st || 0, k: to }, H: [me], t0: now, x };
+        await pipe([sv(rid, r), ['SET', 'bhc:' + tid, rid, 'EX', 120], ['SET', 'bhcd:' + tid, 1, 'EX', 600], ['LPUSH', 'mbox:' + tid, JSON.stringify({ kind: 'bh', rid, n: me.n, t: now })], ['LTRIM', 'mbox:' + tid, 0, 9], ['EXPIRE', 'mbox:' + tid, 3600]]);
+        return res.json({ ok: 1, st: view(r, {}, 'h0') });
+      }
+      const rid = String(b.rid || '').replace(/[^a-z0-9]/g, '').slice(0, 12);
+      let r = await ld('bhr:' + rid); if (!r) return res.json({ ok: 0, gone: 1 });
+      const hi = r.H.findIndex(h => h.id === id), role = r.b === id ? 'b' : hi >= 0 ? 'h' + hi : null;
+      if (!role) return res.status(403).json({ err: 'forbidden' });
+      const K = 'bhx:' + rid, W = [];
+      if (a === 'bhpick') { const c = String(b.c || ''), j = String(b.j || '');
+        if (role === 'b' && ['fight', 'flee', 'hide'].includes(c)) W.push(['HSETNX', K, 'cb', c]);
+        if (role !== 'b') { if (['hunt', 'trap'].includes(c)) W.push(['HSETNX', K, 'c' + hi, c]); if (['coop', 'steal'].includes(j)) W.push(['HSETNX', K, 'j' + hi, j]) } }
+      W.push(['EXPIRE', K, 900], ['HGETALL', K]);
+      const out = await pipe(W), hv = out[out.length - 1] || [], H = {};
+      if (Array.isArray(hv)) for (let k = 0; k < hv.length; k += 2) H[hv[k]] = hv[k + 1]; else Object.assign(H, hv || {});
+      if (H.res) { try { r.res = JSON.parse(H.res) } catch {} }
+      if (!r.res) { resolve(r, H); if (r.res) { const ok = await cmd('HSETNX', K, 'res', JSON.stringify(r.res)); if (+ok !== 1) { try { r.res = JSON.parse(await cmd('HGET', K, 'res')) } catch {} } else {
+        const ids = [r.b, ...r.H.map(h => h.id)].filter(x0 => x0 !== id), L = []; ids.forEach(t => L.push(['LPUSH', 'mbox:' + t, JSON.stringify({ kind: 'bhres', rid, t: now })], ['LTRIM', 'mbox:' + t, 0, 9], ['EXPIRE', 'mbox:' + t, 3600])); L.push(['DEL', 'bhc:' + r.b]); await pipe(L) } } }
+      return res.json({ ok: 1, st: view(r, H, role) });
     }
     if (a === 'pa' || a === 'pabid' || a === 'pachat' || a === 'pavote' || a === 'paclaim') {
       if (!okId(id)) return res.json({ ok: 0 });

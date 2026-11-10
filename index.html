@@ -6139,7 +6139,7 @@ let meetC=null,meetT=0;
 async function meetPoll(){try{if(!onlineOK||!S||!S.alive||S.beastMode||paused||document.hidden)return;if(Date.now()-meetT<45000)return;meetT=Date.now();
  const j=await api('meet',{n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0});try{if(typeof paNote==='function')paNote(j)}catch(e){};meetC=j.o?Object.assign(j.o,{at:Date.now()}):null;
  (j.inbox||[]).forEach(m=>{if(!S||!S.alive)return;if(m.kind==='ally'){if(m.ok){allyAdd(m.n,'ผู้เล่นจริง');log(`🤝 ผู้เล่น <b>${esc(m.n)}</b> สาบานเป็นพันธมิตรกับคุณข้ามจักรวาล — เขาจะมาช่วยตอนจวนตัว`,'epic',true)}}
-  else if(m.kind==='mmsg'||m.kind==='room'||m.kind==='mres'){try{mtInbox(m)}catch(e){}}else{if(m.win){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.08));S.fame=Math.max(0,S.fame-5);log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — คุณพ่ายแพ้ บาดเจ็บเล็กน้อย`,'bad',true)}else{S.fame+=20;log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — แต่คุณเป็นฝ่ายชนะ! ชื่อเสียง +20`,'epic',true)}}});try{render()}catch(e){}}catch(e){}}
+  else if(m.kind==='mmsg'||m.kind==='room'||m.kind==='mres'||/^bh/.test(m.kind||'')){try{mtInbox(m)}catch(e){}}else{if(m.win){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.08));S.fame=Math.max(0,S.fame-5);log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — คุณพ่ายแพ้ บาดเจ็บเล็กน้อย`,'bad',true)}else{S.fame+=20;log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — แต่คุณเป็นฝ่ายชนะ! ชื่อเสียง +20`,'epic',true)}}});try{render()}catch(e){}}catch(e){}}
 setInterval(meetPoll,5000);
 function meetTick(){if(!meetC||Date.now()-meetC.at>90000||S.age<14||choice._cur||modalOpen||S.beastMode||Math.random()>.06)return;const o=meetC;meetC=null;const RN=S.xian?XREALM:REALMS.map(r=>r.n),ep=Math.max(50,o.p||100),r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100)));
  choice(`🌐 พบผู้เล่นจริง!`,`รอยแยกมิติเปิดออกชั่วครู่ — <b>${esc(o.n)}</b> ผู้เล่นที่กำลังจำลองชีวิตอยู่ตอนนี้ ก้าวข้ามมาสู่จักรวาลของคุณ<br>${esc(RN[o.ri]||'')} · ${esc(o.f||'')} · อายุ ${fmt(o.age||0)} ปี<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของเขา · สิ่งที่คุณเลือกจะส่งผลถึงเขาด้วย</span>`,[
@@ -10345,6 +10345,65 @@ function bevTick(){const m=S&&S.beastMode;if(!m||m.human||!S.alive||S.age<2)retu
  const r=Math.random();if(r<.25){const e=bevPick();S.bevN=S.bevN||{};S.bevN[e.n]=(S.bevN[e.n]||0)+1;const [t,x,o]=e.g();choice(t,x,o)}
  else if(r<.55){try{const t=ch(BEV_S)();log(t,'')}catch(e){console.error(e)}}}
 {const _by2=beastYear;beastYear=function(){const r=_by2.apply(this,arguments);try{bevTick()}catch(e){console.error(e)}return r}}
+
+// ===================== v15.6 ล่าสัตว์อสูรผู้เล่นจริง (มนุษย์ ≤2 คน vs สัตว์อสูร) =====================
+const BH={busy:0,inv:[],done:{},poll:null,st:null};
+const bhIsBeast=()=>!!(S&&S.beastMode&&!S.beastMode.human);
+const bhStN=()=>{try{const m=S.beastMode;const L=m.sp==='มังกร'?BL_STD:BL_ST;return L[m.st]||''}catch(e){return''}};
+// สัตว์อสูรเข้าร่วม pool ของการพบผู้เล่น (เป็นฝ่ายถูกล่า)
+{const _mp=meetPoll;meetPoll=async function(){if(!bhIsBeast())return _mp.apply(this,arguments);try{if(!onlineOK||!S||!S.alive||paused||document.hidden)return;if(Date.now()-meetT<45000)return;meetT=Date.now();
+ const m=S.beastMode,j=await api('meet',{n:pname(),ri:m.st|0,x:S.xian?1:0,p:Math.round(total()),f:m.sp||'สัตว์อสูร',age:S.age,cha:0,bm:1,sp:m.sp||'',st:m.st|0});try{if(typeof paNote==='function')paNote(j)}catch(e){}
+ (j.inbox||[]).forEach(x=>{if(x&&/^bh/.test(x.kind))bhInbox(x)})}catch(e){}}}
+// ดัก inbox ฝั่งมนุษย์: meetPoll เดิมส่งต่อเฉพาะชนิดที่รู้จัก → ห่อ mtInbox ให้รับ bh ด้วย
+{const _mi=mtInbox;mtInbox=function(m){if(m&&/^bh/.test(m.kind))return bhInbox(m);return _mi.apply(this,arguments)}}
+function bhInbox(m){if(!m||!S||!S.alive)return;if(BH.done[m.rid])return;if(m.kind==='bh'||m.kind==='bhj'){if(!BH.inv.some(x=>x.rid===m.rid)&&Date.now()-(m.t||0)<28000)BH.inv.push(m);return}
+ if(m.kind==='bhres')api('bhst',{rid:m.rid}).then(j=>{if(j&&j.ok&&j.st&&j.st.res)bhApply(j.st)}).catch(()=>{})}
+setInterval(async()=>{try{if(!S||!S.alive||!BH.inv.length||BH.st)return;if(modalOpen&&['duel','specfull','bh'].includes($('modal').dataset.k))return;const m=BH.inv.shift();if(Date.now()-(m.t||0)>30000)return;
+ const j=await api('bhst',{rid:m.rid});if(!j||!j.ok||!j.st)return;if(j.st.res)return bhApply(j.st);if(choice._cur){try{minChoice()}catch(e){}}if(modalOpen)closeM();bhShow(j.st);bhWatch(m.rid)}catch(e){}},1000);
+// มนุษย์เจอสัตว์อสูรผู้เล่นจริง
+{const _mt=meetTick;meetTick=function(){if(meetC&&meetC.bm&&!bhIsBeast()){if(Date.now()-meetC.at>90000||S.age<14||choice._cur||modalOpen||BH.busy||MT.busy||Math.random()>.08)return;const o=meetC;meetC=null;bhOffer(o);return}return _mt.apply(this,arguments)}}
+function bhOffer(o){const r=total()/Math.max(1,o.p),v=r>1.5?'🟢 คุณเหนือกว่ามาก':r>1.1?'🟢 คุณเหนือกว่า':r>.9?'🟡 สูสี':r>.6?'🟠 มันแกร่งกว่า':'🔴 มันแกร่งกว่ามาก';
+ choice('🐾 สัตว์อสูรของผู้เล่นจริง!',`ระหว่างเดินป่า คุณพบรอยเท้าของ<b>${esc(o.f||'สัตว์อสูร')}</b>ชื่อ <b>${esc(o.n)}</b> — มันคือ<b>ผู้เล่นจริง</b>ที่กำลังใช้ชีวิตเป็นสัตว์อสูร<br><span class="tag2">${v} · ถ้าล่าสำเร็จจะได้แก่นอสูรของมัน · อาจมีผู้เล่นอีกคนมาแย่งด้วย</span>`,[
+  {t:'🏹 ออกล่า',s:'เปิดศึกแบบเรียลไทม์ 30 วิ',f(){BH.busy=1;api('bhopen',{to:o.k,n:pname(),x:S.xian?1:0,p:Math.round(total())}).then(j=>{if(j&&j.ok&&j.st&&S&&S.alive){bhShow(j.st);bhWatch(j.st.rid)}else log(j&&j.cd?'🐾 รอยเท้าเย็นชืดแล้ว — มีคนเพิ่งล่ามันไปเมื่อไม่นานนี้':'🐾 สัตว์ตัวนั้นหายเข้าป่าลึกไปแล้ว','')}).catch(()=>{}).finally(()=>{BH.busy=0})}},
+  {t:'🙏 ปล่อยมันไป',s:'กรรมดี +2',skip:true,f(){S.karma+=2;log(`🐾 คุณปล่อย ${esc(o.n)} ไป — บางทีวันหนึ่งมันอาจจำคุณได้`)}}])}
+// ---------- ห้องล่า ----------
+function bhWatch(rid){clearInterval(BH.poll);BH.poll=setInterval(async()=>{if(!BH.st||BH.st.rid!==rid){clearInterval(BH.poll);return}try{const j=await api('bhst',{rid});if(!j||!j.ok){if(j&&j.gone){clearInterval(BH.poll);BH.st=null;if($('modal').dataset.k==='bh')closeM()}return}if(j.st.res){clearInterval(BH.poll);bhApply(j.st);return}BH.st=j.st;BH.off=j.st.now-Date.now();if($('modal').dataset.k==='bh')bhShow(j.st,1)}catch(e){}},1500)}
+function bhShow(st,soft){BH.st=st;BH.off=st.now-Date.now();const isB=st.role==='b',B=st.B,nh=st.H.length,left=Math.max(0,Math.ceil((st.dl-(Date.now()+BH.off))/1000)),jl=Math.max(0,Math.ceil((st.join-(Date.now()+BH.off))/1000));
+ const btn=(c,t,s,kind)=>`<button class="opt" ${((kind==='j'?st.myj:st.my)===c)?'style="background:var(--tb4)"':''} ${(kind==='j'?st.myj:st.my)?'disabled':''} onclick="bhPick('${kind==='j'?'':c}','${kind==='j'?c:''}')">${t}<small>${s}</small></button>`;
+ const hs=st.H.map((h,i)=>`<div>🏹 <b>${esc(h.n)}</b> <span class="tag2">พลัง ${fmt(h.p)}${!isB&&st.role==='h'+i?' (คุณ)':''}</span></div>`).join('');
+ let body='';
+ if(isB)body=`<p>นักล่า${nh>1?' <b>2 คน</b>':''}ตามกลิ่นคุณมาแล้ว! ถ้าแพ้ <b>แก่นอสูรของคุณจะถูกล้วงไป</b> (พลังและลมปราณลดลงมาก)</p><div class="mgrid">${btn('fight','⚔️ สู้กลับ','ชนะได้พลังและชื่อเสียง')}${btn('flee','🏃 หนีเข้าป่าลึก','กับดักทำให้หนียาก')}${btn('hide','🌿 ซ่อนตัว','กับดักจะหาเจอ')}</div>`;
+ else body=`<p>คุณกำลังล่า <b>${esc(B.n)}</b> (${esc(B.sp||'สัตว์อสูร')}) — มันเป็นผู้เล่นจริงและกำลังตัดสินใจเหมือนกัน</p><div class="mgrid">${btn('hunt','🏹 ไล่ล่าตรงๆ','เข้าปะทะ')}${btn('trap','🪤 วางกับดัก','ดักทางหนีและที่ซ่อน แต่ถ้ามันสู้จะเสียเปรียบ')}</div>`+
+  (nh>1?`<h4 style="margin:8px 0 4px">🤝 มีนักล่าอีกคน!</h4><div class="mgrid">${btn('coop','🤝 ร่วมมือ','รวมพลังกัน · คนที่ได้แก่นคือคนแกร่งกว่า อีกคนได้เนื้อ','j')}${btn('steal','🗡️ แย่งชิง','ลอบโจมตีอีกคนก่อน ชนะได้ล่าคนเดียว','j')}</div>`:`<p class="tag2">⏳ นักล่าคนอื่นอาจเข้ามาร่วมได้อีก ${jl} วิ</p>`);
+ modal(`<h3>🐾 ศึกล่าสัตว์อสูร (ผู้เล่นจริง)</h3><div class="item"><b>🐉 ${esc(B.n)}</b> <span class="tag2">${esc(B.sp||'')} · พลัง ${fmt(B.p)}${isB?' (คุณ)':''}</span>${hs}</div>
+ <div class="paTm"><i style="width:${Math.max(0,Math.min(100,left/30*100))}%"></i></div><p class="tag2" style="text-align:center">⏳ เหลือ ${left} วิ · ไม่เลือก = สุ่มให้</p>${body}`,'bh');
+ if(!soft)try{sfx('click')}catch(e){}}
+async function bhPick(c,jv){const st=BH.st;if(!st)return;try{const j=await api('bhpick',{rid:st.rid,c,j:jv});if(j&&j.ok){if(j.st.res){bhApply(j.st);return}bhShow(j.st,1)}}catch(e){toast('ส่งไม่สำเร็จ')}}
+setInterval(()=>{if(BH.st&&$('modal').dataset.k==='bh'&&modalOpen)bhShow(BH.st,1)},1000);
+function bhApply(st){const R=st.res;if(!R||BH.done[st.rid])return;BH.done[st.rid]=1;clearInterval(BH.poll);BH.st=null;if($('modal').dataset.k==='bh')closeM();if(!S||!S.alive)return;
+ const B=st.B,hn=st.H.map(h=>h.n),C={fight:'⚔️ สู้',flee:'🏃 หนี',hide:'🌿 ซ่อน',hunt:'🏹 ไล่ล่า',trap:'🪤 กับดัก',coop:'🤝 ร่วมมือ',steal:'🗡️ แย่งชิง'};
+ const sum=`สรุป: ${esc(B.n)} เลือก ${C[R.cb]} · ${hn.map((n,i)=>esc(n)+' '+C[R.hc[i]]+(hn.length>1?' '+C[R.hj[i]]:'')).join(' · ')}`;
+ if(st.role==='b'){
+  if(R.k==='h'){const tk=hn[R.taker]||'นักล่า',dp=Math.round(S.power*.15),dq=+(S.qi*.15).toFixed(1);S.power=Math.max(1,S.power-dp);S.qi=Math.max(0,+(S.qi-dq).toFixed(1));S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.4));S.bhFoe=tk;S.bhLost=(S.bhLost||0)+1;
+   log(`💔 ผู้เล่น <b>${esc(tk)}</b> ล้วงแก่นอสูรของคุณไป! — พลังยุทธ์ −${fmt(dp)}${dq>0?' · ลมปราณ −'+dq+' ปี':''} · บาดเจ็บสาหัส · (ไปตามล่าคืนได้ในเหตุการณ์ป่า)`,'bad',true);keyAdd(`ถูกผู้เล่น ${tk} ล้วงแก่นอสูร`)}
+  else if(R.k==='b'){const g=pctPow(.04);S.power+=g;S.fame+=40;S.bhWin=(S.bhWin||0)+1;log(`🐉 คุณขย้ำนักล่า${hn.length>1?'ทั้งสองคน':''} (${hn.map(esc).join(', ')}) จนแตกพ่าย! — พลังยุทธ์ +${fmt(g)} · ชื่อเสียง +40`,'myth',true);keyAdd('ชนะนักล่าผู้เล่นจริง')}
+  else if(R.k==='esc'){S.int+=3;S.fame+=10;log(`🏃 หนีพ้นนักล่าผู้เล่นจริงเข้าป่าลึกได้ — ปัญญา +3`,'good',true)}
+  else{S.int+=2;log('🌿 ซ่อนตัวแนบเนียนจนนักล่าหาไม่เจอ — ปัญญา +2','good',true)}}
+ else{const me=+st.role.slice(1);
+  if(R.betray){if(R.betray.l===me){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.25));log(`🗡️ ถูก <b>${esc(hn[R.betray.w])}</b> ลอบแทงข้างหลังระหว่างล่า — พลังชีวิต −25% · หลุดจากการล่า`,'bad',true);log('📜 '+sum,'');return}
+   else log(`🗡️ คุณจัดการ <b>${esc(hn[R.betray.l])}</b> ได้ก่อน เหลือล่าคนเดียว`,'epic')}
+  if(R.k==='h'){if(R.taker===me){const n=1+(B.st|0);const got=bagAdd('core',n,true)||0;const g=pctPow(.05);S.power+=g;S.fame+=50;S.bhCore=(S.bhCore||0)+1;log(`🏹 ล้วง<b>แก่นอสูรของ ${esc(B.n)}</b> (${esc(B.sp||'สัตว์อสูร')} · ผู้เล่นจริง) ได้สำเร็จ! — แก่นอสูร ×${got} · พลังยุทธ์ +${fmt(g)} · ชื่อเสียง +50`,'myth',true);keyAdd(`ล้วงแก่นอสูรของผู้เล่น ${B.n}`)}
+   else{bagAdd('food',3,true);S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.3));const g=pctPow(.015);S.power+=g;log(`🍖 ${esc(hn[R.taker])}ได้แก่นไป คุณได้เนื้อของ${esc(B.n)}มาแทน — พลังยุทธ์ +${fmt(g)} · เสบียง +3`,'good',true)}}
+  else if(R.k==='b'){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));log(`🐉 ${esc(B.n)} (ผู้เล่นจริง) สู้กลับจนคุณพ่ายแพ้ — พลังชีวิต −30%`,'bad',true)}
+  else log(`🐾 ${esc(B.n)} ${R.k==='esc'?'หนีเข้าป่าลึกไปได้':'ซ่อนตัวจนหาไม่เจอ'} — การล่าครั้งนี้คว้าน้ำเหลว`,'')}
+ log('📜 '+sum,'');try{render();checkDeath()}catch(e){}}
+// ---------- เชื่อมโยง: สัตว์อสูรตามล่าคืนแก่น ----------
+try{BEV.push({w:6,n:'ตามล่าคืนแก่น',c:()=>!!S.bhFoe,g(){const foe=S.bhFoe;return[`🩸 กลิ่นของ${esc(foe)}`,`คุณได้กลิ่นของ<b>${esc(foe)}</b> — นักล่าที่ล้วงแก่นของคุณไป ลอยมาตามลม (เงาที่ระบบจำลองขึ้นจากความแค้นของคุณ)`,[
+ {t:'⚔️ ตามไปแก้แค้น',s:'ชนะ = ได้พลังคืนบางส่วน',f(){bvFight(foe,1.05,()=>{const g=pctPow(.1);S.power+=g;S.qi=+(S.qi+2).toFixed(1);S.bhFoe=null;bvLog(`แก้แค้น${esc(foe)}สำเร็จ แก่นอสูรที่เสียไปฟื้นคืนบางส่วน — พลัง +${fmt(g)} · ลมปราณ +2 ปี`,'myth')},()=>bvLog(`เงาของ${esc(foe)}ยังแข็งแกร่งกว่า — ${BVG.hp(.3)}`,'bad'))}},
+ {t:'🧘 ปล่อยวางความแค้น',s:'กรรมดี · ปัญญา',f(){S.bhFoe=null;bvLog(`ปล่อยวางความแค้น — ${bvJ([BVG.karma(6),BVG.int(4)])}`)}}]]}})}catch(e){console.error(e)}
+// ---------- ความสำเร็จ ----------
+{const L=[{id:'bh_win',n:'นักล่ากลายเป็นเหยื่อ',d:'ในร่างสัตว์อสูร ชนะนักล่าที่เป็นผู้เล่นจริง',r:3,c:()=>(S.bhWin||0)>=1},{id:'bh_core',n:'ผู้ล้วงแก่นผู้เล่น',d:'ล้วงแก่นอสูรของผู้เล่นจริงสำเร็จ',r:3,c:()=>(S.bhCore||0)>=1},{id:'bh_core3',n:'นายพรานแห่งแผ่นดิน',d:'ล้วงแก่นอสูรของผู้เล่นจริง 3 ครั้งในชาติเดียว',r:4,c:()=>(S.bhCore||0)>=3}];
+ ACH.push(['🐾 ล่าสัตว์อสูรผู้เล่น',L]);ACH_ALL.push(...L)}
 </script>
 </body>
 </html>
