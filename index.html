@@ -8887,6 +8887,149 @@ setInterval(ascPillUpd,1500);{const _rdA=render;render=function(){const r=_rdA.a
 @keyframes ascP{0%,100%{box-shadow:0 0 6px #a07cff66}50%{box-shadow:0 0 16px #d0c0ff,0 0 3px #fff}}
 @media (prefers-reduced-motion:reduce){.ascpill{animation:none}}`;document.head.appendChild(st)})();
 try{Object.assign(I18N.d,{'ร่างกายของคุณพร้อมรับทัณฑ์สวรรค์แล้ว':'Your body is ready for the heavenly tribulation','กดปุ่ม':'tap the button','เหนือแถบเวลาเมื่อพร้อม':'above the time bar when ready','ถ้ายังอยากอยู่':'If you would rather stay in the','ก็ไม่ต้องกด':', just do not tap it','ก้าวข้ามสามภพ':'Transcend the Three Realms','เหาะสู่โลกเซียน':'Ascend to the Immortal World','โลกเทพ':'God World','โลกเซียน':'Immortal World','ยังไม่ถึงเวลา':'Not yet','ตัดสินใจเรื่องตรงหน้าก่อน':'Decide the matter at hand first','คุณเรียกเมฆทัณฑ์ลงมาเอง สายฟ้าสีม่วงคำรามเหนือศีรษะ':'You call the tribulation clouds down yourself; purple lightning roars overhead','ร่างกายของคุณถึงขีดสุดของ':'Your body has reached the limit of','ทุกชั้นแห่งโลกเทพ':'every layer of the God World','โลกมนุษย์':'the mortal world','ฝ่าทัณฑ์':'Pass','ระลอกได้ จะ':'waves and you will','เหาะขึ้นสู่โลกเทพเซียน':'ascend to the Immortal World','แล้วเล่นต่อในโลกใหม่':'and continue in a new world','ปิดตำนานชีวิตนี้':'close the legend of this life','ตอนจบสูงสุด':'the ultimate ending','ขึ้นสู่โลกเทพ':'rise to the God World','ฝ่าทัณฑ์สวรรค์':'Face the tribulation','ไปต่อในโลกเทพเซียน':'Continue in the Immortal World','ไปต่อในโลกเทพ':'Continue in the God World','โอกาสผ่านแต่ละระลอกราว':'chance to pass each wave about','ล้มเหลวเสียพลังบางส่วน':'failure costs some power','ล้มเหลว อาจตาย':'failure may be fatal','ยังก่อน':'Not yet','ปุ่มยังอยู่ กดเมื่อพร้อมได้ทุกเมื่อ':'The button stays; tap it whenever you are ready','คุณสลายเมฆทัณฑ์ไปก่อน':'You dispersed the tribulation clouds for now','ยังไม่ใช่ตอนนี้':'Not now'})}catch(e){}
+// ===== v14.4 สารานุกรม + คู่มือ (UI ใหม่) =====
+{const st=document.createElement('style');st.textContent=`
+.cxh{position:relative;border:2px solid var(--line);border-radius:10px;padding:12px 14px;margin:4px 0 10px;background:linear-gradient(135deg,var(--w),var(--card));overflow:hidden}
+.cxh:before{content:'';position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,var(--pink) 0,transparent 70%);opacity:.18}
+.cxh .big{font-size:26px;font-weight:800;line-height:1}.cxh .big small{font-size:13px;font-weight:600;color:var(--mut);margin-left:4px}
+.cxh .sub{font-size:12px;color:var(--mut);margin-top:4px}
+.cxbar{height:9px;border:2px solid var(--line);border-radius:6px;background:var(--bg);overflow:hidden;margin-top:8px}
+.cxbar i{display:block;height:100%;background:linear-gradient(90deg,var(--pinkd),var(--pink));border-radius:3px;transition:width .4s}
+.cxtabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}.cxtabs::-webkit-scrollbar{display:none}
+.cxtab{flex:0 0 auto;border:2px solid var(--line);border-radius:999px;padding:5px 11px;font-size:12px;font-weight:700;background:var(--w);color:var(--ink);cursor:pointer;min-width:0}
+.cxtab.on{background:var(--ink);color:var(--bg)}
+.cxtab em{font-style:normal;opacity:.65;margin-left:4px;font-weight:600}
+.cxsr{width:100%;box-sizing:border-box;border:2px solid var(--line);border-radius:8px;padding:7px 10px;font-size:14px;background:var(--w)!important;color:var(--ink)!important;margin-bottom:8px}
+.cxbody{max-height:56vh;overflow:auto;padding-right:2px}
+.cxc{border:2px solid var(--line);border-radius:10px;background:var(--w);margin-bottom:8px;overflow:hidden}
+.cxc>summary{list-style:none;display:flex;align-items:center;gap:10px;padding:9px 11px;cursor:pointer}
+.cxc>summary::-webkit-details-marker{display:none}
+.cxic{flex:0 0 36px;height:36px;border-radius:9px;display:grid;place-items:center;font-size:19px;background:var(--bg);border:2px solid var(--line)}
+.cxt{flex:1;min-width:0}.cxt b{display:block;font-size:14px}.cxt .cxbar{height:6px;margin-top:5px}
+.cxn{font-size:12px;font-weight:800;white-space:nowrap}.cxn.done{color:var(--pinkd)}
+.cxc>summary:after{content:'▸';font-size:12px;color:var(--mut);transition:transform .2s}.cxc[open]>summary:after{transform:rotate(90deg)}
+.cxg{display:flex;flex-wrap:wrap;gap:5px;padding:2px 11px 11px}
+.cxp{font-size:12px;line-height:1.3;padding:4px 8px;border-radius:7px;border:1.5px solid var(--line);background:var(--card)}
+.cxp.lk{border-style:dashed;opacity:.42;letter-spacing:2px}
+.cxp.rare{border-color:#c9952b;background:linear-gradient(135deg,#fff3c4,#f7d77a);color:#5a3b00;box-shadow:0 0 0 1px #f7d77a66}
+body.dark .cxp.rare,body.jade .cxp.rare{background:linear-gradient(135deg,#4a3510,#7a5a18);color:#ffe9a8}
+.cxp.hit{outline:2px solid var(--pink)}
+.cxempty{text-align:center;color:var(--mut);font-size:13px;padding:18px 0}
+.gdh{border:2px solid var(--line);border-radius:10px;padding:12px 14px;margin:4px 0 10px;background:linear-gradient(135deg,var(--w),var(--card))}
+.gdh p{margin:4px 0 0;font-size:12px;color:var(--mut)}
+.gdsec{font-size:11px;font-weight:800;letter-spacing:1px;color:var(--mut);margin:12px 2px 6px;display:flex;align-items:center;gap:6px}
+.gdsec:after{content:'';flex:1;height:2px;background:var(--line);opacity:.15}
+.gdc{display:flex;gap:10px;border:2px solid var(--line);border-radius:10px;background:var(--w);padding:10px 11px;margin-bottom:7px;position:relative}
+.gdc.gnw{box-shadow:3px 3px 0 var(--pink)}
+.gdc .gdi2{flex:0 0 38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:20px;background:var(--bg);border:2px solid var(--line)}
+.gdc .gdb{flex:1;min-width:0}.gdc .gdb b{font-size:14px}.gdc .gdb p{margin:3px 0 0;font-size:12.5px;line-height:1.55}
+.gdc .gdnew{font-size:10px;font-weight:800;background:var(--pink);color:#fff;border-radius:5px;padding:1px 5px;margin-left:5px;vertical-align:2px}
+.gdc .gdgo{margin-top:7px;padding:4px 10px;min-width:0;font-size:12px}
+`;document.head.appendChild(st)}
+const CX_BSI={'จิ้งจอก':'🦊','งูขาว':'🐍','กระเรียน':'🕊️','พยัคฆ์':'🐅','เต่าดำ':'🐢','ปลาคาร์ป':'🐟','วานร':'🐒','หมาป่า':'🐺','มังกร':'🐉'};
+const CX_SPAT=['ถุงมิติ','แหวนมิติ','โลกในแหวน'];
+{const _c=cdxTick;cdxTick=function(){try{const m=S&&S.beastMode;if(m){if(m.sp)cdxAdd('bsp',m.sp);if(m.bl)cdxAdd('bbl',m.bl);const k=m.sp==='มังกร'?'bsd':'bst';for(let i=0;i<=(m.st||0);i++)cdxAdd(k,''+i);if(m.path)cdxAdd('bpath',m.path)}
+ if(S&&S.bag&&S.bag.nm)cdxAdd('bagT',S.bag.nm)}catch(e){}return _c.apply(this,arguments)}}
+function cxCats(){const W0n=(W0&&W0.realm)||REALMS.map(r=>r.n),en=LANG==='en';
+ const r=(arr,ids)=>arr.map((n,i)=>[ids?ids(i):''+i,n,0]);
+ return[
+ {g:'pow',ic:'⚔️',t:'ระดับพลัง · ยุทธภพ',te:'Realms · Martial world',cat:'realm',L:W0n.map((n,i)=>['m'+i,n,i>=W0n.length-3])},
+ {g:'pow',ic:'☁️',t:'ระดับพลัง · โลกเซียน',te:'Realms · Immortal world',cat:'realm',L:XREALM.map((n,i)=>['x'+i,n,i>=XREALM.length-3])},
+ {g:'pow',ic:'🌟',t:'ระดับพลัง · โลกเทพ',te:'Realms · Divine world',cat:'realm',L:XGOD.map((n,i)=>['g'+i,n,i>=XGOD.length-3])},
+ {g:'beast',ic:'🐾',t:'เผ่าพันธุ์สัตว์',te:'Beast species',cat:'bsp',L:Object.keys(BSPX).map(k=>[k,(CX_BSI[k]||'🐾')+' '+k,k==='มังกร'])},
+ {g:'beast',ic:'🩸',t:'สายเลือด',te:'Bloodlines',cat:'bbl',L:BBLOOD.map((b,i)=>[b.n,b.n,i>=2])},
+ {g:'beast',ic:'🌿',t:'ขั้นของสัตว์อสูร',te:'Beast stages',cat:'bst',L:BL_ST0.map((n,i)=>[''+i,n,i>=BL_ST0.length-3])},
+ {g:'beast',ic:'🐉',t:'ขั้นของมังกร',te:'Dragon stages',cat:'bsd',L:BL_STD.map((n,i)=>[''+i,n,i>=BL_STD.length-3])},
+ {g:'beast',ic:'🧭',t:'เส้นทางอสูร',te:'Beast paths',cat:'bpath',L:Object.entries(BPATH).map(([k,v])=>[k,v.ic+' '+v.n,0])},
+ {g:'place',ic:'🏯',t:'สำนัก',te:'Sects',cat:'sect',L:FACTIONS.map(f=>[f.n0||f.n,(f.n0||f.n)+(XN[f.n0||f.n]?' / '+XN[f.n0||f.n]:''),0])},
+ {g:'place',ic:'🏮',t:'ตระกูล',te:'Clans',cat:'clan',L:CLANS.map(c=>[c.n,c.n,0])},
+ {g:'place',ic:'🏜️',t:'ดินแดนต่างถิ่น',te:'Distant lands',cat:'region',L:Object.entries(REGION).map(([k,v])=>[k,v.ic+' '+v.n,0])},
+ {g:'place',ic:'🛠️',t:'อาชีพเซียน',te:'Immortal professions',cat:'prof',L:Object.entries(PROF).map(([k,v])=>[k,v.ic+' '+v.n,0])},
+ {g:'other',ic:'🟦',t:'ระบบ',te:'Systems',cat:'sys',L:SYS_TYPES.map(t=>[t.id,t.ic+' '+t.n,0])},
+ {g:'other',ic:'🌌',t:'โลกเดิมของผู้ข้ามมิติ',te:'Transmigrator homeworlds',cat:'world',L:WORLDS.map(w=>[w.k,w.n,0])},
+ {g:'other',ic:'🎁',t:'ของติดตัวจากต่างโลก',te:'Otherworld items',cat:'item',L:WORLDS.flatMap(w=>w.items).filter((v,i,a)=>a.findIndex(x=>x.id===v.id)===i).map(i=>[i.id,i.n,0])},
+ {g:'item',ic:'🎒',t:'กระเป๋า',te:'Bags',cat:'bagT',L:BAGN.concat(BAGXN).map((b,i,a)=>[b[0],b[0],0]).concat(CX_SPAT.map(n=>[n,'🌀 '+n,1]))},
+ {g:'item',ic:'🧪',t:'ของในกระเป๋า',te:'Bag items',cat:'bag',L:Object.entries(BAGIT).map(([k,v])=>[k,v.ic+' '+v.n,0])},
+ {g:'item',ic:'🤒',t:'โรค',te:'Diseases',cat:'dis',L:DISEASES.map(d=>[d.id||d.n,d.n,0])}]}
+const CX_G=[['all','✨','ทั้งหมด','All'],['pow','⚔️','พลัง','Power'],['beast','🐾','สัตว์อสูร','Beasts'],['place','🏯','สังกัด/ดินแดน','Places'],['other','🌌','ต่างโลก','Otherworld'],['item','🎒','ข้าวของ','Items']];
+function openCodex(g,q){const C=cdx(),en=LANG==='en';g=g||openCodex._g||'all';openCodex._g=g;q=q==null?(openCodex._q||''):q;openCodex._q=q;
+ const cats=cxCats(),has=(c,id)=>!!(C[c]&&C[c][id]);let got=0,tot=0;const gc={};
+ cats.forEach(c=>{const n=c.L.filter(([id])=>has(c.cat,id)).length;c.got=n;got+=n;tot+=c.L.length;const o=gc[c.g]=gc[c.g]||[0,0];o[0]+=n;o[1]+=c.L.length});gc.all=[got,tot];
+ const pc=x=>tot?Math.round(x*100):0,ql=q.trim().toLowerCase();
+ const tabs=CX_G.map(([k,ic,t,te])=>`<button class="cxtab ${k===g?'on':''}" onclick="openCodex('${k}')">${ic} ${en?te:t}<em>${(gc[k]||[0,0])[0]}/${(gc[k]||[0,0])[1]}</em></button>`).join('');
+ const vis=cats.filter(c=>g==='all'||c.g===g);
+ const body=vis.map(c=>{let L=c.L;const hit=ql?L.filter(([id,n])=>has(c.cat,id)&&(n.toLowerCase().includes(ql)||tEN(n).toLowerCase().includes(ql))):null;if(ql&&!hit.length)return'';
+  const p=c.L.length?c.got/c.L.length:0,done=c.got===c.L.length;
+  const chips=L.map(([id,n,rare])=>has(c.cat,id)?`<span class="cxp${rare?' rare':''}${hit&&hit.some(h=>h[0]===id)?' hit':''}">${esc(n)}</span>`:'<span class="cxp lk">???</span>').join('');
+  return`<details class="cxc"${ql?' open':''}><summary><span class="cxic">${c.ic}</span><span class="cxt"><b>${en?c.te:c.t}</b><div class="cxbar"><i style="width:${p*100}%"></i></div></span><span class="cxn${done?' done':''}">${done?'✓ ':''}${c.got}/${c.L.length}</span></summary><div class="cxg">${chips}</div></details>`}).join('')||`<div class="cxempty">${en?'Nothing found yet':'ยังไม่พบสิ่งที่ค้นหา'}</div>`;
+ const rk=got/tot>=1?(en?'Master of All Records':'ปราชญ์ผู้รู้แจ้งทุกสิ่ง'):got/tot>=.75?(en?'Grand Scholar':'มหาบัณฑิต'):got/tot>=.5?(en?'Scholar':'บัณฑิต'):got/tot>=.25?(en?'Wanderer':'ผู้ท่องโลก'):(en?'Novice':'ผู้เริ่มสำรวจ');
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📚 ${en?'Codex':'สารานุกรม'}</h3>
+ <div class="cxh"><div class="big">${pc(got/tot)}%<small>${got}/${tot}</small></div><div class="sub">🏅 ${rk} · ${en?'Entries unlock the first time you meet them in any life':'ปลดล็อกเมื่อเจอครั้งแรกในชีวิตใดก็ได้'}</div><div class="cxbar"><i style="width:${got/tot*100}%"></i></div></div>
+ <div class="cxtabs">${tabs}</div>
+ <input class="cxsr" id="cxSr" placeholder="🔎 ${en?'Search discovered entries…':'ค้นหาสิ่งที่ค้นพบแล้ว…'}" value="${esc(q)}" oninput="clearTimeout(openCodex._t);openCodex._t=setTimeout(()=>{openCodex(null,this.value);const e=$('cxSr');if(e){e.focus();e.setSelectionRange(e.value.length,e.value.length)}},250)">
+ <div class="cxbody">${body}</div>`,'codex')}
+// ---- คู่มือ ----
+const GD_SEC=[['base','🌱 พื้นฐาน','🌱 BASICS'],['grow','⭐ การเติบโต','⭐ GROWTH'],['world','🌍 โลกและเส้นทาง','🌍 WORLDS & PATHS'],['beast','🐾 สัตว์อสูร','🐾 BEASTS'],['col','📖 สะสมและตกแต่ง','📖 COLLECTION'],['net','🌐 ออนไลน์และบัญชี','🌐 ONLINE & ACCOUNT']];
+const GD2=[
+ {s:'base',ic:'🌱',t:'เริ่มต้นชีวิต',d:'ทุกอย่างสุ่มตอนเกิด — ชาติกำเนิด พรสวรรค์ ยุคสมัย บางคนข้ามมิติมาพร้อมของหรือระบบ · เลือก<b>ปณิธาน</b> แล้วเลือก<b>โฟกัสประจำปี</b> (ฝึกยุทธ์ ลมปราณ หาเงิน ครอบครัว) · ตัวเลือกสำคัญย่อไว้ก่อนได้ ถ้าไม่เลือกชะตาจะเลือกแทน',
+  te:'Starting a life',de:'Everything is rolled at birth — origin, talent, era. Some transmigrate in with items or a System. Pick an <b>aspiration</b>, then a <b>yearly focus</b> (martial, qi, money, family). Big choices can be minimised; if you never pick, fate picks for you.'},
+ {s:'base',ic:'🎒',t:'กระเป๋าและร้านกระเป๋า',d:'กระเป๋าธรรมดามีหลายใบ ใบใหญ่ขึ้นซื้อได้ที่ร้านในกระเป๋า (ราคาตามโลกที่อยู่) · ระบบอาจให้เควส<b>กระเป๋ามิติ</b> (ถุงมิติ → แหวนมิติ → โลกในแหวน) เก็บของได้<b>ไม่จำกัด</b> แต่เควสยากมาก ขั้นสูงได้ของเพิ่มและของในกระเป๋างอกเงยทุกปี',go:'openBag',life:1,nw:1,
+  te:'Bags & the bag shop',de:'There are many ordinary bags — buy bigger ones in the bag shop (price depends on your world). A System may offer the <b>spatial bag</b> quest (pouch → ring → world-in-a-ring): <b>unlimited</b> space but very hard quests; higher tiers give extra loot and items that grow each year.'},
+ {s:'base',ic:'💾',t:'บัญชีและย้ายเครื่อง',d:'ในหน้า<b>โปรไฟล์</b> ล็อกอิน Google เพื่อสำรองเซฟ แล้วล็อกอินบัญชีเดียวกันที่อีกเครื่องเพื่อเล่นต่อ · ตั้งชื่อในออนไลน์และกรอบรูปได้ที่นี่',go:'openProfile',nw:1,
+  te:'Account & moving devices',de:'In <b>Profile</b>, sign in with Google to back up your save, then sign in with the same account on another device to continue.'},
+ {s:'base',ic:'🇬🇧',t:'ภาษาอังกฤษ (Beta)',d:'กดปุ่ม <b>🌐 EN</b> ที่หน้าแรกเพื่อสลับเป็นภาษาอังกฤษ ข้อความส่วนใหญ่แปลแล้ว บางส่วนยังเป็นภาษาไทย',nw:1,
+  te:'English mode (Beta)',de:'Tap <b>🌐 TH</b> on the title screen to switch back to Thai. Most text is translated; a few parts are still Thai.'},
+ {s:'grow',ic:'⭐',t:'ระดับขั้นและการทะลวง',d:'พลังเต็มขั้นแล้วต้อง<b>ทะลวงคอขวด</b> โอกาสขึ้นกับลมปราณ ปัญญา ความสุข พรสวรรค์ · ล้มเหลวอาจโดน<b>ธาตุไฟเข้าแทรก</b> · เหนือขั้นสูงสุดยังมี 45 ขั้น: เทพ → ราชา → บรรพกาล → ราชัน → นิรันดร์',
+  te:'Realms & breakthroughs',de:'When your power fills a realm you must <b>break through</b>; the chance depends on qi, wisdom, happiness and talent. Failing may cause <b>qi deviation</b>. Beyond the top realm lie 45 more: God → King → Primordial → Sovereign → Eternal.'},
+ {s:'grow',ic:'📖',t:'วิชาและความชำนาญ',d:'การเรียนวิชามีโอกาสสำเร็จ/ล้มเหลว วิชาสูงเกินพรสวรรค์เสี่ยงถึงตาย · ฝึกได้ ต่ำ → กลาง → สูง → สุดยอด · มี<b>สายปืน</b>สำหรับผู้ข้ามมิติด้วย',go:'openArts',life:1,
+  te:'Arts & mastery',de:'Learning an art can succeed or fail; arts far above your talent can kill you. Train each from low → mid → high → peak. Transmigrators can also find the <b>gun path</b>.'},
+ {s:'grow',ic:'📋',t:'เควส',d:'คนในเรื่องฝากเควสตามช่วงวัย (พ่อแม่ อาจารย์ นายอำเภอ คู่ชีวิต ลูกๆ) · ระบบให้เควสพร้อมเหตุผล · มีภารกิจล้างแค้นข้ามชาติและภัยเงาที่ต้องจับตา',go:'openQuests',life:1,
+  te:'Quests',de:'People in your story give quests by age (parents, masters, magistrates, spouse, children). Systems give reasoned quests. There are also cross-life revenge missions and shadow threats.'},
+ {s:'grow',ic:'🟦',t:'ระบบ (System)',d:'สุ่มได้ตอนเกิดจากต่างโลก หรือมีโอกาส 30% ตื่นขึ้นตอนกำลังจะตาย · มีเลเวล แต้ม ร้านค้า และสีประจำระบบ',go:'openSys',life:1,need:()=>S&&S.sys,
+  te:'Systems',de:'Rolled at birth for otherworlders, or a 30% chance to awaken near death. Has levels, points, a shop and its own colour.'},
+ {s:'world',ic:'⚡',t:'ข้ามโลก (ยุทธภพ → เซียน → เทพ)',d:'เมื่อเงื่อนไขครบ ปุ่ม <b>⚡ ไปโลก…</b> จะขึ้นเหนือแถบเวลา กดเมื่อพร้อม — ใครอยากอยู่โลกเดิมต่อก็ไม่ต้องกด เกมจะไม่ส่งไปเองแล้ว',nw:1,
+  te:'Ascending worlds',de:'When you qualify, an <b>⚡ Ascend</b> button appears above the time bar. Tap it when ready — if you want to stay in your current world, just don\'t; the story no longer sends you automatically.'},
+ {s:'world',ic:'🌌',t:'ผู้ข้ามมิติ',d:'ผู้มาจากต่างโลกมีของติดตัว เปิด<b>ประตูมิติ</b>ได้ (ชาร์จทุก 8 ปี) · บางคนได้<b>สมาร์ตโฟน</b>ที่ใช้ได้จริง 7 แอป',go:'openItems',life:1,need:()=>S&&S.items&&S.items.length,
+  te:'Transmigrators',de:'Otherworlders bring items and can open a <b>dimension gate</b> (recharges every 8 years). Some get a working <b>smartphone</b> with 7 apps.'},
+ {s:'world',ic:'🌍',t:'ยุคของโลกและศัตรู',d:'ทุกชีวิตสุ่มยุค ศัตรูอ่อน ×0.5 ถึงโคตรโกง ×6 · อาจเจอ<b>มารสวรรค์</b>หรือ<b>จอมราชันมาร</b> (สู้ หนี หรือก้มหัว) · โลกเซียนระวัง<b>ภัยเงา</b> · อายุเกิน 1,000 ปีในแดนเทพ เวลาไหลเร็วขึ้น',
+  te:'World eras & foes',de:'Each life rolls an era: foes from ×0.5 weak to ×6 broken. You may face a <b>Heavenly Demon</b> or <b>Demon Sovereign</b> (fight, flee or bow). Beware <b>shadow threats</b> in the immortal world. Past 1,000 years in the divine realm, time speeds up.'},
+ {s:'world',ic:'⏳',t:'ความตายและการหวนคืน',d:'ใกล้ตายมีโอกาส<b>ได้ระบบ</b> หรือ<b>หวนคืน</b> (ย้อนเวลา / สิงร่าง) พร้อมความทรงจำ · ถูกฆ่าจะได้ภารกิจล้างแค้น · มีลูกแล้วเล่นต่อเป็นลูกได้',
+  te:'Death & return',de:'Near death you may <b>gain a System</b> or <b>return</b> (rewind / possess another body) with your memories. Being killed grants a revenge mission. With children you can continue as your child.'},
+ {s:'beast',ic:'🐾',t:'เกิดเป็นสัตว์',d:'ตอน<b>เริ่มชีวิตใหม่</b> เลือก 🐾 เกิดเป็นสัตว์ จะสุ่มเผ่าพันธุ์ ธาตุ <b>สายเลือด</b> (สามัญ → อสูรโบราณ → เทพอสูร → ปฐมกาล) นิสัย และถิ่นอาศัย สุ่มใหม่ได้ก่อนเกิด · สัตว์อายุยืนกว่ามนุษย์หลายเท่า',nw:1,
+  te:'Born as a beast',de:'When <b>starting a new life</b>, pick 🐾 Born as a beast to roll species, element, <b>bloodline</b> (common → ancient → divine → primordial), temperament and habitat; you can reroll before birth. Beasts live many times longer than humans.'},
+ {s:'beast',ic:'🐉',t:'เผ่ามังกร',d:'หายากที่สุด (ราว 0.2%) และแข็งแกร่งที่สุด มีขั้นของตัวเอง ลูกมังกร → ราชามังกร → <b>ปฐมมังกร</b> และเหตุการณ์เฉพาะมังกร',nw:1,
+  te:'Dragon race',de:'The rarest (about 0.2%) and strongest. Has its own stages, hatchling → Dragon King → <b>Primordial Dragon</b>, and dragon-only events.'},
+ {s:'beast',ic:'🧭',t:'เส้นทางอสูร',d:'เมื่อ<b>เปิดปัญญา</b> เลือกเส้นทาง 5 สาย: 🌲 ผู้พิทักษ์ป่า · 🩸 อสูรกระหายเลือด · 🐾 จ่าฝูง · 🤝 สัตว์พันธะ · 🌙 ฤๅษีอสูร — แต่ละสายมีเนื้อเรื่อง 6 บทและโฟกัสพิเศษ · บำเพ็ญจนถึง<b>ปฐมสัตว์เทพ</b> หรือจะแปลงกายเป็นมนุษย์ก็ได้',nw:1,
+  te:'Beast paths',de:'Once <b>awakened</b>, choose one of 5 paths: 🌲 Forest Guardian · 🩸 Bloodthirsty Demon · 🐾 Pack Alpha · 🤝 Bonded Beast · 🌙 Hermit — each has a 6-chapter story and a special focus. Cultivate up to <b>Primordial Divine Beast</b>, or take human form.'},
+ {s:'beast',ic:'🐕',t:'สัตว์คู่ใจ',d:'ตอนเป็นคน ออกท่องยุทธภพหรือลงดันเจี้ยนแล้วลอง<b>สยบสัตว์</b>มาเป็นคู่ใจ เลี้ยงจนเลเวลขึ้น บางตัวแปลงกายเป็นมนุษย์ได้',go:'openBeastComp',life:1,
+  te:'Companion beasts',de:'As a human, roam or enter dungeons and try to <b>tame</b> a beast. Raise it to level up; some can take human form.'},
+ {s:'col',ic:'📖',t:'สมุดตำนานและฉายา',d:'ความสำเร็จมี 3 ดาว ทำซ้ำชาติใหม่เพิ่มดาว · สีและลายแต่ละอันตาม<b>ธีม</b> (AI นีออน · ระบบ · มาร · ศักดิ์สิทธิ์ · ทอง · สัตว์ · เวลา · รัก · ความตาย · บำเพ็ญ) · ฉายากว่า 2,200 แบบ',go:'openBook',
+  te:'Legend book & titles',de:'Achievements have 3 stars; repeat them in new lives for more. Each is coloured by its <b>theme</b> (neon AI, System, demonic, holy, gold, beast, time, love, death, cultivation). Over 2,200 titles.'},
+ {s:'col',ic:'🏷️',t:'ฉายาโชว์',d:'เลือกฉายาที่จะโชว์บนตัวละครและในแชท · ฉายาหายากมีสีตาม<b>ฝ่าย</b>: ฝ่ายดีฟ้า-ขาว · ฝ่ายร้ายแดงเลือดหมู-ดำ · สายกลางเทา-ขาว · ระดับ ??? เป็นขาว-ดำ',go:'openShowPick',nw:1,
+  te:'Showcase title',de:'Pick the title shown on your character and in chat. Rare titles are coloured by <b>alignment</b>: good is blue-white, evil is maroon-black, neutral is grey-white, and ??? tier is black-and-white.'},
+ {s:'col',ic:'🖼️',t:'กรอบรูปและคลังกรรม',d:'กรรมของทุกชีวิตและดาวในสมุดตำนานเข้า<b>คลังกรรม</b>ถาวร ใช้แลกกรอบรูปที่แสดงบนตัวละครและในแชท',go:'openFrameShop',
+  te:'Frames & karma vault',de:'Karma from every life and stars from the legend book go into the permanent <b>karma vault</b>, spent on frames shown on your character and in chat.'},
+ {s:'col',ic:'📚',t:'สารานุกรม',d:'บันทึกทุกสิ่งที่เคยพบ — ระดับพลัง สำนัก ตระกูล ระบบ ของต่างโลก สัตว์อสูร สายเลือด กระเป๋า โรค ฯลฯ ค้นหาได้และแบ่งหมวด',go:'openCodex',nw:1,
+  te:'Codex',de:'Records everything you have met — realms, sects, clans, Systems, otherworld items, beasts, bloodlines, bags, diseases and more, searchable by category.'},
+ {s:'net',ic:'🌐',t:'ออนไลน์',d:'ปุ่ม <b>🌐 ออนไลน์</b> อยู่เหนือแถบเวลาด้านขวาตอนเล่น · แชท ทำเนียบประจำสัปดาห์ ดูคนอื่นเล่นสด · ระหว่างจำลองอาจ<b>เจอผู้เล่นจริง</b> (ท้าดวลหรือเป็นพันธมิตร)',go:'openOnline',
+  te:'Online',de:'The <b>🌐 online</b> button sits above the time bar on the right while playing: chat, weekly board, live spectating. You may <b>meet real players</b> during a life (duel or ally).'},
+ {s:'net',ic:'🔔',t:'การแจ้งเตือน',d:'เปิดแจ้งเตือนเพื่อรู้ทันทีเมื่อผู้พัฒนาตอบกลับรายงาน/แชทของคุณ หรือมีประกาศ แม้ไม่ได้เปิดเกม · บน iPhone ต้อง<b>เพิ่มลงหน้าจอโฮม</b>ก่อน',go:'openPush',nw:1,
+  te:'Notifications',de:'Turn on notifications to know right away when the developer replies to your report or chat, or posts news — even with the game closed. On iPhone, <b>add to Home Screen</b> first.'},
+ {s:'net',ic:'🔒',t:'ความเป็นส่วนตัว',d:'เลือกได้ว่าชีวิตไหน เปิดสาธารณะ · ซ่อนรายละเอียด · ซ่อนทั้งหมด (ไม่ถูกจับคู่เจอผู้เล่นอื่น) เปลี่ยนได้ตลอดที่สุสาน',go:'openGraves',
+  te:'Privacy',de:'Choose per life: public · hide details · hide everything (never matched with other players). Change it any time in the graveyard.'},
+ {s:'net',ic:'💬',t:'เสียงจากผู้เล่น',d:'แจ้งบั๊ก ขอฟีเจอร์ ให้คะแนนเกม แก้ข้อความตัวเองได้ และผู้พัฒนาตอบกลับได้',go:'openReport',
+  te:'Player feedback',de:'Report bugs, request features, rate the game, edit your own posts — and the developer can reply.'}];
+SYS_GUIDE.length=0;GD2.forEach(g=>SYS_GUIDE.push(g));
+function openGuide(sec){const en=LANG==='en',inLife=!!(S&&S.alive&&$('game')&&$('game').classList.contains('on'));sec=sec||'all';
+ const tabs=[['all','✨ '+(en?'All':'ทั้งหมด')]].concat(GD_SEC.map(s=>[s[0],(en?s[2]:s[1]).replace(/^(\S+) (.*)$/,(m,a,b)=>a+' '+(en?b.charAt(0)+b.slice(1).toLowerCase():b))])).map(([k,t])=>`<button class="cxtab ${k===sec?'on':''}" onclick="openGuide('${k}')">${t}</button>`).join('');
+ const card=g=>{const can=g.go&&typeof window[g.go]==='function'&&(!g.life||inLife)&&(!g.need||g.need());
+  return`<div class="gdc${g.nw?' gnw':''}"><div class="gdi2">${g.ic}</div><div class="gdb"><b>${en?g.te:g.t}</b>${g.nw?`<span class="gdnew">${en?'NEW':'ใหม่'}</span>`:''}<p>${en?g.de:g.d}</p>${can?`<button class="gbtn gdgo" onclick="closeM();setTimeout(()=>${g.go}(),60)">${en?'Open ▶':'เปิดดู ▶'}</button>`:''}</div></div>`};
+ const body=GD_SEC.filter(s=>sec==='all'||s[0]===sec).map(s=>{const L=SYS_GUIDE.filter(g=>g.s===s[0]);return L.length?`<div class="gdsec">${en?s[2]:s[1]}</div>`+L.map(card).join(''):''}).join('');
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📘 ${en?'Game guide':'คู่มือระบบ'}</h3>
+ <div class="gdh"><b>${en?'Lots of systems — read any time from ☰':'ระบบในเกมมีเยอะ — เปิดอ่านได้ทุกเมื่อจากเมนู ☰'}</b><p>${en?'Tap "Open" to jump to that screen · cards marked NEW are recent additions':'กด "เปิดดู" เพื่อไปหน้านั้น · การ์ดที่มีป้าย ใหม่ คือระบบที่เพิ่งเพิ่ม'}</p></div>
+ <div class="cxtabs">${tabs}</div><div class="cxbody">${body}</div>
+ ${inLife?`<button class="pbtn" style="width:100%;margin-top:8px" onclick="startTut()">❓ ${en?'Replay the button tutorial':'ดูการสอนปุ่มต่างๆ อีกครั้ง'}</button>`:''}`,'guide')}
+
 </script>
 </body>
 </html>
