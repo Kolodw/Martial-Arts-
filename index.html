@@ -7297,7 +7297,7 @@ EQI.t5={s:'trs',n:'เกราะเกล็ดอสูร',ic:'🦎',d:'พ�
 Object.assign(BAGIT,{lpill:{n:'ยาอายุวัฒนะ',ic:'💮',v:1500},bpill:{n:'ยาแก่นอสูร',ic:'🟤',v:600}});
 Object.assign(BAGX,{lpill:{r:3,d:()=>S&&S.xt?'อายุขัย +500 ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ':S&&S.xian?'อายุขัย +50 ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ':'อายุขัย +10 ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ',use(){const v=S.xt?500:S.xian?50:10;if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;return`อายุขัย +${v} ปี`}},
  bpill:{r:2,d:()=>`พลังยุทธ์ +${fmt(bpillV())} · สกัดจากแก่นอสูร`,use(){const g=bpillV();S.power+=g;return`พลังยุทธ์ +${fmt(g)}`}}});
-function bpillV(){return S&&S.xt?Math.max(100,Math.round(total()*.02)):yrPow0()*3}
+function bpillV(){return S&&S.xt?Math.max(100,(typeof pctPow==='function'?pctPow(.02):Math.round(total()*.02))):yrPow0()*3}
 {const _bt=bagTick;bagTick=function(){const r=_bt.apply(this,arguments);try{if(S&&S.alive&&bagHas('lpill')&&S.age>lifeMax()-(S.xt?60:S.xian?15:4)&&bagUse('lpill')){const m=BAGX.lpill.use();log(`🎒 💮 กลืนยาอายุวัฒนะ — ${m}`,'epic')}}catch(e){console.error(e)}return r}}
 function crOutTxt(r){const o=r.out;try{if(o.bag)return`${rarName(o.bag)} ×${o.q} (ขั้นบน ×${o.q*2} · สุดยอด ×${o.q*3}) — ${bagDesc(o.bag)}`;
  if(o.eq){const e=EQI[o.eq];return e?`${e.ic} ${e.n} — ${e.d}`:o.eq}if(o.fx==='int')return`ปัญญา +${o.v} (ขึ้นกับขั้นที่ได้)`;if(o.fx==='qi')return`ลมปราณ +${o.v} ปี (ขึ้นกับขั้นที่ได้)`;if(o.fx==='life')return`อายุขัย +${o.v} ปี`;
@@ -10568,7 +10568,7 @@ function bsysOffer(){if(choice._cur||modalOpen)return false;const T=pickW(SYS_TY
   {t:'❌ สะบัดหัวไล่เสียงนั้นออกไป',s:'ระบบจะสลายไปตลอดกาล',skip:true,f(){S.sysRefused=1;log('<span class="px">[ระบบ]</span> ...โฮสต์ปฏิเสธ ระบบกำลังสลายตัว...','sys')}}]);return true}
 const BS_NO=['recruit','deed','hammer','house'];
 {const _bs=buySys;buySys=function(id){if(bsB()){if(BS_NO.includes(id))return toast('🐾 สัตว์ป่ายังใช้ของชิ้นนี้ไม่ได้ — ต้องแปลงกายเป็นมนุษย์ก่อน');
-  if(id==='break'){const s=S.sys,it=SHOP.find(x=>x.id==='break');if(s.sp<it.c)return toast('SP ไม่พอ');s.sp-=it.c;S.qi=+(S.qi+10).toFixed(1);S.power+=Math.round(total()*.25);sysLog('ซื้อ <b>ยาทะลวงขั้น</b> — กลืนลงไปแล้วพลังอสูรพุ่งพล่าน (ลมปราณ +10 ปี · พลัง +25%) ช่วยให้ขึ้นขั้นถัดไปได้เร็วขึ้น','up');try{blAdvance()}catch(e){}if(typeof openSys==='function')openSys();return}}
+  if(id==='break'){const s=S.sys,it=SHOP.find(x=>x.id==='break');if(s.sp<it.c)return toast('SP ไม่พอ');s.sp-=it.c;S.qi=+(S.qi+10).toFixed(1);S.power+=(typeof bPct==='function'?bPct(.25):Math.round(total()*.25));sysLog('ซื้อ <b>ยาทะลวงขั้น</b> — กลืนลงไปแล้วพลังอสูรพุ่งพล่าน (ลมปราณ +10 ปี · พลัง +25%) ช่วยให้ขึ้นขั้นถัดไปได้เร็วขึ้น','up');try{blAdvance()}catch(e){}if(typeof openSys==='function')openSys();return}}
  return _bs.apply(this,arguments)}}
 function bsysTick(){const m=S.beastMode;if(!m||m.human||!S.alive)return;
  if(!S.sys){if(S.sysRefused||S.sysEver)return;if(S.bsysAt!=null&&S.age>=S.bsysAt){if(bsysOffer())S.bsysAt=null;return}if(S.age>=6&&m.st>=1&&Math.random()<.0006)bsysOffer();return}
