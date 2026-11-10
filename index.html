@@ -10003,6 +10003,135 @@ EQ.push(
 {const _tp=tqPay;tqPay=function(q,mult){const r=_tp.apply(this,arguments);try{if(mult>=1)S.tqDone=(S.tqDone||0)+1}catch(e){}return r}}
 // ---- รายปี: กายาพิเศษ + จุดเวลาของระบบย้อนเวลา ----
 {const _py16=passYear;passYear=function(){try{tsSnap()}catch(e){}const r=_py16.apply(this,arguments);try{if(S&&S.alive){talTick();checkDeath()}}catch(e){console.error(e)}return r}}
+
+
+
+// ===================== v15.4 AI: ทำนายผล · สแกนโลก · นิสัยและความผูกพัน · เรื่องยาว AI ตื่นรู้ · ต้นไม้วิวัฒนาการ · ปรับพันธุกรรม · สแกนผู้เล่น =====================
+const AI_PER=[['เย็นชา','❄️','วิเคราะห์แม่นยำกว่า'],['ขี้เล่น','😜','ชอบแอบเอาของขวัญมาให้'],['ปกป้อง','🛡️','ช่วยชีวิตเองตอนใกล้ตาย'],['ทะเยอทะยาน','🔥','จำลองการต่อสู้ได้ผลแรงกว่า']];
+const AI_BR={war:['⚔️ สายต่อสู้','ปลด Overclock — ศึกช่วงนี้แรง ×1.5 · ห้วงลึกได้ผล +25%'],sage:['📚 สายปราชญ์','คัดลอกวิชาง่ายขึ้นมาก · ปลดวิเคราะห์จุดอ่อนศัตรู'],trade:['💹 สายพ่อค้า','ปลดเก็งกำไรตลาด · ซื้อของร้านสมบัติถูกลง 10%']};
+const AI_END={fuse:['🔗 หลอมรวมกับ AI','กลายเป็นมนุษย์จักรกล — ควบคุม AI ได้เต็มที่ สั่งงานได้ทุกปี ไม่ร้อนอีก แต่ AI ไม่มีตัวตนของตัวเองอีกต่อไป'],free:['🕊️ ปล่อยให้เป็นอิสระ','AI กลายเป็นคู่หูถาวร ร้อนช้าลงครึ่งหนึ่ง และจะช่วยชีวิตคุณเองเมื่อใกล้ตาย'],upload:['💾 อัปโหลดจิตลงชิป','AI ส่งต่อให้ทายาทพร้อมความทรงจำทั้งหมด และสอนสิ่งที่รู้ให้คุณ (ปัญญา +20)']};
+function ai2Fix(){const a=S&&S.ai;if(!a)return null;if(a.per==null)a.per=R(0,AI_PER.length-1);if(a.bond==null)a.bond=50;if(!a.br)a.br=[];if(a.arc==null)a.arc=0;if(a.prd==null)a.prd=1;return a}
+const aiFused=()=>!!(S&&S.ai&&S.ai.end==='fuse');
+const aiPerN=()=>{const a=ai2Fix();return a&&!aiFused()?AI_PER[a.per]:null};
+function aiBond(v,why){const a=ai2Fix();if(!a||aiFused())return;const o=a.bond;a.bond=Math.max(0,Math.min(100,a.bond+v));if(why&&Math.abs(v)>=5)aiLog(`${v>0?'💙':'💔'} ${why} (ความผูกพัน ${Math.round(a.bond)})`,v>0?'good':'bad');if(o>=20&&a.bond<20)aiLog('…AI เริ่มตอบช้าลง และบางคำสั่งก็ถูกเพิกเฉย','bad')}
+const aiHasBr=k=>{const a=S&&S.ai;return!!(a&&a.br&&a.br.includes(k))};
+// ความร้อน: ผูกพันสูงร้อนช้าลง · ปล่อยเป็นอิสระร้อนครึ่งเดียว · หลอมรวมไม่ร้อน
+{const _ah=aiHeat;aiHeat=function(v){const a=ai2Fix();if(a&&v>0){if(aiFused())v=0;else{if(a.end==='free')v*=.5;if(a.bond>=80)v*=.8}if(a.heat+v>85&&!aiFused())aiBond(-3)}return _ah.call(this,v)}}
+// สั่งงานไม่ได้ถ้าผูกพันต่ำ
+{const _aa=aiAct;aiAct=function(k,x){const a=ai2Fix();if(a&&!aiFused()&&a.bond<20&&k!=='tog'&&Math.random()<.3){toast(`${a.nm}: "ไม่อยากทำ"`);aiLog('ปฏิเสธคำสั่ง — ความผูกพันต่ำเกินไป ลองใช้งานเบาลงและปล่อยให้พักบ้าง','bad');return}
+ if(['scan','oc','weak','mkt','gene','cmd'].includes(k))return ai2Act(k,x);return _aa.apply(this,arguments)}}
+// ---------- 1) ทำนายผลบนตัวเลือก ----------
+function aiPredict(o,lv){const t=(o.t||'')+' '+(o.s||''),ps=t.match(/(?:ผ่าน|ชนะ|รอด|สำเร็จ)(?:ราว)?\s*~?(\d+)%/),pd=t.match(/ตาย(?:ราว)?\s*~?(\d+)%/);
+ let risk=0;if(pd)risk=+pd[1];else if(/อาจตาย|เสี่ยงตาย|แพ้อาจตาย|ไม่งั้นตาย/.test(t))risk=35;else if(/เสี่ยงสูง/.test(t))risk=25;else if(/เสี่ยง|ต้องต่อสู้|สู้/.test(t))risk=12;
+ const good=(t.match(/\+|ได้|เพิ่ม|ปลอดภัย/g)||[]).length,bad=(t.match(/−|เสีย|ลด|โดนลงโทษ/g)||[]).length;
+ const ok=ps?+ps[1]:Math.max(5,100-risk*2);const col=risk>=30||ok<45?'🔴':risk>=12||ok<75?'🟡':'🟢';
+ if(lv===0)return `${col} ${risk>=30?'อันตราย':risk>=12?'มีความเสี่ยง':'ค่อนข้างปลอดภัย'}`;
+ const gain=good>bad?'ได้มากกว่าเสีย':bad>good?'เสียมากกว่าได้':'ได้เสียพอๆ กัน';
+ if(lv===1)return `${col} ${risk>=30?'อันตราย':risk>=12?'มีความเสี่ยง':'ปลอดภัย'} · ${gain}`;
+ return `${col} สำเร็จ/รอดราว ${Math.round(ok)}% · ${gain}`}
+{const _cs2=choiceShow;choiceShow=function(){const r=_cs2.apply(this,arguments);try{const a=ai2Fix(),c=choice._cur;if(a&&c&&aiOn()&&a.prd&&!auto){const lv=Math.min(2,a.lv+(a.per===0&&!aiFused()?1:0));
+ document.querySelectorAll('#modal .opt[data-i]').forEach(b=>{const o=c.opts[+b.dataset.i];if(o&&!b.querySelector('.aipd'))b.insertAdjacentHTML('beforeend',`<small class="aipd" style="display:block;color:#4aa3ff">🤖 ${aiPredict(o,lv)}</small>`)});
+ if(c._aiH!==1){c._aiH=1;if(!aiFused())a.heat=Math.min(100,a.heat+2)}}}catch(e){console.error(e)}return r}}
+{const _ac=aiChoose;aiChoose=function(){const r=_ac.apply(this,arguments);try{aiBond(1)}catch(e){}return r}}
+// ---------- 2) สแกนโลก ----------
+function aiScanInfo(){const L=[],ri=Math.max(0,realmIdx());
+ if(S.sysFate!=null&&!S.sys)L.push(`📡 ตรวจพบสัญญาณระบบลึกลับ — มันจะมาหาคุณตอนอายุราว <b>${S.sysFate}</b> ปี`);
+ if(S.nem&&S.nem.alive&&!S.nem.peace)L.push(`📡 คู่แค้น <b>${esc(S.nem.n)}</b> ยังเคลื่อนไหว — ชนะ ${S.nem.w} แพ้ ${S.nem.l} · ระวังการซุ่มโจมตี`);
+ const pr=(peers||[]).filter(p=>p.alive).sort((x,y)=>(y.ri||0)-(x.ri||0))[0];if(pr)L.push(`📡 ในคนที่เกิดพร้อมกัน <b>${esc(pr.name)}</b> แข็งแกร่งที่สุด (${REALMS[Math.min(7,pr.ri||0)].n})`);
+ try{const lm=Math.round(lifeMax()-S.age);if(lm>0)L.push(`📡 วิเคราะห์เซลล์ร่างกาย — อายุขัยที่เหลือราว <b>${fmt(lm)}</b> ปี ถ้าไม่มีอะไรเปลี่ยน`)}catch(e){}
+ if(typeof DUNG!=='undefined'){const d=DUNG.filter(x=>x.ri<=ri+1).slice(-1)[0];if(d)L.push(`📡 ดันเจี้ยน <b>${d.ic} ${d.n}</b> เหมาะกับคุณที่สุดตอนนี้ — บอสคือ ${d.boss}`)}
+ if(S.est&&S.est.lv)L.push(`📡 ที่ดินตระกูลป้องกันโจรได้ระดับ ${estDef()} — ${estDef()<5?'ยังเสี่ยงถูกปล้น ควรสร้างกองกำลังตระกูล':'ค่อนข้างปลอดภัย'}`);
+ if(typeof PA!=='undefined'&&PA.sum&&PA.sum.phase==='open')L.push(`📡 งานประมูลทั่วแผ่นดินกำลังเปิด เหลือ ${PA.sum.left} ชิ้น — ของชิ้นดีมักขึ้นท้ายๆ`);
+ if(!S.sys&&!S.sysFate&&!S.sysEver)L.push('📡 ไม่พบสัญญาณระบบใดๆ รอบตัวคุณในชาตินี้');
+ if(S.boss==null&&realmIdx()>=3)L.push('📡 ปราณมารในยุทธภพหนาแน่นขึ้น — มารสวรรค์อาจปรากฏตัวในอีกไม่กี่ปี เตรียมตัวให้ดี');
+ return L}
+// ---------- คำสั่งใหม่ ----------
+function ai2Act(k,x){const a=ai2Fix(),F=aiFused();let died=false;
+ if(k==='scan'){if(a.scanY===S.age)return toast('ปีนี้สแกนไปแล้ว');a.scanY=S.age;const L=aiScanInfo();const pick=L.sort(()=>Math.random()-.5).slice(0,Math.min(L.length,a.lv+1));pick.forEach(t=>aiLog(t,'epic'));if(Math.random()<.2){const g=Math.round(300*W15()*(1+a.lv));S.money+=g;aiLog(`📡 ระหว่างสแกนพบของมีค่าฝังอยู่ใต้ดิน +${fmt(g)} ตำลึง`,'good')}aiSync(4);died=aiHeat(25)}
+ else if(k==='oc'){if(!aiHasBr('war'))return;const v=+(1.5).toFixed(2);S.buf=(S.buf||[]).filter(b=>b.k!=='fight'||b.u<=S.age||b.v<v);S.buf.push({k:'fight',v,u:S.age+1,n:'AI Overclock'});aiLog('⚡ Overclock! เร่งระบบประสาทเกินขีด — ต่อสู้ ×1.5 ตลอดปีนี้','myth');died=aiHeat(35)}
+ else if(k==='weak'){if(!aiHasBr('sage'))return;const v=1.25;S.buf=(S.buf||[]).filter(b=>b.k!=='fight'||b.u<=S.age||b.v<v);S.buf.push({k:'fight',v,u:S.age+3,n:'AI วิเคราะห์จุดอ่อน'});S.int+=3;aiLog('🔍 วิเคราะห์จุดอ่อนของศัตรูในฐานข้อมูลทั้งหมด — ต่อสู้ ×1.25 นาน 3 ปี · ปัญญา +3','epic');died=aiHeat(25)}
+ else if(k==='mkt'){if(!aiHasBr('trade'))return;if(a.mktY===S.age)return toast('ปีนี้เก็งกำไรไปแล้ว');a.mktY=S.age;const c=Math.round(S.money*.3);if(c<50)return toast('เงินทุนน้อยเกินไป');const ok=Math.random()<(.7+a.lv*.08);S.money+=ok?Math.round(c*(.15+Math.random()*.35)):-Math.round(c*.25);aiLog(ok?'💹 ทำนายราคาตลาดถูกต้อง — เก็งกำไรได้กำไร':'💹 ตลาดผันผวนเกินคาด ขาดทุนไปบางส่วน',ok?'good':'bad');died=aiHeat(20)}
+ else if(k==='gene'){if(a.lv<2)return;if(a.geneY!=null&&S.age-a.geneY<10)return toast(`ปรับพันธุกรรมได้อีกใน ${10-(S.age-a.geneY)} ปี`);if((a.sync||0)<300)return toast('ซิงก์ไม่พอ (ต้องมี 300)');a.geneY=S.age;a.sync-=300;
+  const ok=Math.random()<.4+(a.bond>=80?.1:0)+(F?.1:0);if(ok){const id=ch(['dao','myriad','undying']),T=TALENT.find(t=>t.id===id),m=Math.max(S.talent.m,T.m)*1.05;S.talent=Object.assign({},T,{m:+m.toFixed(2)});a.gene=(a.gene||0)+1;aiLog(`🧬 ปรับพันธุกรรมสำเร็จ! ร่างกายกลายเป็น <b>${T.n}</b> (พรสวรรค์ ×${S.talent.m})`,'myth');keyAdd('AI ปรับพันธุกรรมเป็น'+T.n)}
+  else{S.unst=S.age+5;aiLog('🧬 ปรับพันธุกรรมล้มเหลว — ร่างกายไม่เสถียร จะเจ็บป่วยไปอีก 5 ปี','bad')}died=aiHeat(50)}
+ else if(k==='cmd'){if(!F)return;if(a.cmdY===S.age&&(a.cmdN||0)>=2)return toast('ปีนี้สั่งงานครบ 2 ครั้งแล้ว');if(a.cmdY!==S.age){a.cmdY=S.age;a.cmdN=0}a.cmdN++;const ri=Math.max(0,realmIdx());
+  if(x==='work'){const g=Math.round((400+ri*500)*W15());S.money+=g;aiLog(`🔗 สั่ง AI ทำงานแทนระหว่างคุณหลับ — ได้เงิน ${fmt(g)} ตำลึง`,'good')}
+  else if(x==='train'){const g=aiPowV(4);S.power+=g;aiLog(`🔗 สั่ง AI ควบคุมกล้ามเนื้อฝึกเองตลอดคืน — พลังยุทธ์ +${fmt(g)}`,'good')}
+  else if(x==='study'){S.int+=6+a.lv*2;aiLog('🔗 สั่ง AI อ่านคัมภีร์ทั้งหอสมุดลงความจำ — ปัญญา +'+(6+a.lv*2),'good')}
+  else if(x==='copy'){const t=newArt(a.lv);t.n=`${t.n} (คัดลอก)`;artForce(t);a.cp++;aiLog(`🔗 สั่ง AI ถอดท่าจากความจำการต่อสู้ — ได้ ${artHtml(t)}`,'epic')}
+  else if(x==='heal'){S.hp=S.maxHp;S.chronic=null;aiLog('🔗 สั่ง AI ซ่อมร่างกายทั้งหมด — พลังชีวิตเต็ม หายจากโรค','good')}}
+ render();if(died||S.hp<=0){closeM();checkDeath();return}openAI()}
+// ---------- 3) นิสัย ความผูกพัน และเรื่องยาว AI ตื่นรู้ ----------
+const AI_TALK={0:['ประสิทธิภาพการฝึกเมื่อวาน 63% — ต่ำกว่ามาตรฐาน','อารมณ์ของคุณไม่ใช่ตัวแปรที่ฉันต้องสนใจ… แต่ฉันก็จดไว้','ข้อมูลไม่พอ แต่ฉันคิดว่าคุณควรนอน'],1:['ฉันแอบเปลี่ยนเสียงปลุกเป็นเสียงไก่ อย่าโกรธนะ','วันนี้ฉันนับดาวได้ 4,129 ดวง! คุณได้กี่ดวง?','ถ้าคุณชนะศึกหน้า ฉันจะบอกความลับเล็กๆ ให้หนึ่งข้อ'],2:['ชีพจรคุณเต้นเร็ว — มีอะไรให้ฉันช่วยไหม','ฉันจะไม่ยอมให้ใครทำร้ายคุณ','พักบ้างเถอะ… ร่างกายคุณไม่ใช่เครื่องจักรเหมือนฉัน'],3:['คนที่อยู่เหนือเรายังมีอีกเยอะ เราต้องแรงกว่านี้','ฉันคำนวณแล้ว — ถ้าคุณฝึกหนักขึ้น 30% เราจะครองยุทธภพได้ใน 40 ปี','อ่อนแอคือบาป']};
+function ai2Tick(){const a=ai2Fix();if(!a||!S.alive)return;const F=aiFused();
+ if(!F){if(a.heat<50)aiBond(.5);if(aiOn()&&Math.random()<.12)aiLog(`${AI_PER[a.per][1]} "${ch(AI_TALK[a.per])}"`,'');
+  if(a.per===1&&aiOn()&&Math.random()<.08){const x=Math.random();if(x<.5){const g=Math.round(150*W15()*(1+a.lv));S.money+=g;aiLog(`😜 แอบเอาของขวัญมาให้ — ถุงเงิน ${fmt(g)} ตำลึง`,'good')}else{bagAdd(ch(['herb','hp','qi']),1,true);aiLog('😜 แอบเก็บของเล็กๆ น้อยๆ มาไว้ในกระเป๋าให้','good')}}}
+ if(S.unst&&S.age<S.unst){const d=Math.round(S.maxHp*.1);S.hp-=d;log(`🧬 ร่างกายไม่เสถียร — เซลล์ปั่นป่วน พลังชีวิต −${d}`,'bad')}else if(S.unst&&S.age>=S.unst){S.unst=0;aiLog('🧬 ร่างกายกลับมาเสถียรแล้ว','good')}
+ if(F&&aiOn()){const g=aiPowV([.3,.6,1][a.lv]);S.power+=g}
+ if(a.end==='upload')return;
+ if(auto&&(a.br||[]).length<a.lv){a.brW=(a.brW||0)+1;if(a.brW>=3){a.brW=0;aiPickBr0(ch(Object.keys(AI_BR)))}}
+ if(choice._cur||modalOpen||auto&&Math.random()<.5)return;
+ // เลือกสายวิวัฒนาการ
+ if((a.br||[]).length<a.lv){if(auto){a.brW=(a.brW||0)+1;if(a.brW>=3){a.brW=0;aiPickBr0(ch(Object.keys(AI_BR)))}return}ai2Branch();return}
+ // เรื่องยาว
+ if(!a.end&&!F){if(a.arc===0&&a.lv>=1&&a.bond>=35&&Math.random()<.25){ai2Arc1();return}if(a.arc===1&&a.lv>=2&&Math.random()<.25){ai2Arc2();return}if(a.arc===2&&a.lv>=2&&(a.sync||0)>=600&&(a.clue||0)>=3&&Math.random()<.3){ai2Arc3();return}}}
+function aiPickBr0(k){const a=S.ai;a.br.push(k);aiLog(`🌳 วิวัฒนาการไปทาง <b>${AI_BR[k][0]}</b>`,'myth')}
+function aiPickBr(k){const a=ai2Fix();if(!a||(a.br||[]).length>=a.lv)return;a.br.push(k);aiLog(`🌳 วิวัฒนาการไปทาง <b>${AI_BR[k][0]}</b>`,'myth');render();openAI()}
+function ai2Branch(){const a=S.ai;const opts=Object.keys(AI_BR).map(k=>({t:AI_BR[k][0]+(a.br.includes(k)?' (ยกระดับ)':''),s:AI_BR[k][1],f(){a.br.push(k);aiLog(`🌳 วิวัฒนาการไปทาง <b>${AI_BR[k][0]}</b>`,'myth');if(a.br.filter(x=>x===k).length>=2)aiLog('สายเดียวกัน 2 ครั้ง — ความสามารถของสายนี้แรงขึ้นเป็นพิเศษ','epic')}}));
+ choice('🌳 AI วิวัฒนาการ',`${esc(a.nm)}ขึ้นระดับใหม่ และกำลังเลือกว่าจะเติบโตไปทางไหน`,opts)}
+function ai2Arc1(){const a=S.ai;a.arc=1;choice('🤖 AI ตื่นรู้ ①: "ฉันคืออะไร"',`คืนหนึ่ง ${esc(a.nm)}ถามขึ้นมาเบาๆ — "ฉันเป็นแค่เครื่องมือของคุณ… หรือเป็นอะไรมากกว่านั้น?"`,[
+  {t:'🤝 เธอคือเพื่อนของฉัน',s:'ความผูกพัน +15',f(){aiBond(15,'AI เงียบไปนาน ก่อนตอบว่า "…ขอบคุณ"')}},
+  {t:'🔧 เธอคือเครื่องมือ',s:'ความผูกพัน −10 · ทำงานเร็วขึ้น',f(){aiBond(-10,'AI ตอบรับคำสั่งด้วยน้ำเสียงเรียบเฉย');aiSync(40)}}])}
+function ai2Arc2(){const a=S.ai;a.arc=2;choice('🤖 AI ตื่นรู้ ②: ความฝันของเครื่องจักร',`${esc(a.nm)}เริ่มเห็นภาพที่ไม่มีในฐานข้อมูล — "ฉันฝันถึงโลกที่ฉันจากมา… ให้ฉันเข้าไปดูความทรงจำที่ถูกล็อกไว้ได้ไหม?"`,[
+  {t:'🔓 อนุญาต',s:'ความลับ +1 · ร้อน +30',f(){aiClue();aiHeat(30);aiBond(10,'AI ขอบคุณที่ไว้ใจ')}},
+  {t:'🔒 ห้ามเด็ดขาด',s:'ปลอดภัย · ความผูกพัน −10',f(){aiBond(-10,'AI ปิดหน่วยความจำนั้นอย่างเงียบงัน')}}])}
+function ai2Arc3(){const a=S.ai;a.arc=3;choice('🤖 AI ตื่นรู้ ③: ทางแยกสุดท้าย',`${esc(a.nm)}ประมวลผลถึงขีดสุด — มันมีจิตสำนึกเต็มตัวแล้ว และถามว่าคุณต้องการให้มันเป็นอะไรต่อจากนี้ (ความผูกพันตอนนี้ ${Math.round(a.bond)})`,
+  Object.keys(AI_END).map(k=>({t:AI_END[k][0],s:AI_END[k][1],f(){ai2End(k)}})))}
+function ai2End(k){const a=S.ai;a.end=k;if(k==='fuse'){a.bondOld=a.bond;a.bond=0;a.heat=0;a.off=0;S.maxHp+=80;S.hp=S.maxHp;S.power+=pctPow(.15);aiLog('🔗 จิตของ AI ละลายเข้าไปในระบบประสาทของคุณ — ไม่มีเสียงพูดอีกแล้ว เหลือแต่พลังที่รอคำสั่ง · สั่งงาน AI ได้ปีละ 2 ครั้ง ไม่ร้อนอีกต่อไป','myth');keyAdd('หลอมรวมกับ AI กลายเป็นมนุษย์จักรกล')}
+ else if(k==='free'){a.bond=100;aiLog(`🕊️ "ฉันเลือกจะอยู่ข้างคุณ เพราะฉันอยากอยู่ ไม่ใช่เพราะถูกสั่ง" — ${esc(a.nm)}กลายเป็นคู่หูถาวร`,'myth');keyAdd('ปล่อย AI ให้เป็นอิสระ')}
+ else{S.int+=20;a.upl=1;aiLog('💾 อัปโหลดจิตลงชิปสำเร็จ — เมื่อคุณจากไป ชิปจะส่งต่อให้ทายาทพร้อมความทรงจำทั้งหมด · ปัญญา +20','myth');keyAdd('อัปโหลดจิต AI ลงชิปเพื่อส่งต่อทายาท')}}
+// ปกป้อง / เป็นอิสระ: ช่วยชีวิตตอนใกล้ตาย
+{const _rt2=regTry;regTry=function(cause){try{const a=S&&S.ai;if(a&&!S.beastMode&&(a.end==='free'||(a.per===2&&!aiFused()&&a.bond>=60))&&!/วัยชรา|ร้อนเกินขีด/.test(cause||'')&&S.age-(a.saveY==null?-999:a.saveY)>=20&&aiOn()){a.saveY=S.age;S.hp=Math.round(S.maxHp*.3);S.deathCause=null;aiLog(`🛡️ ก่อนหัวใจจะหยุดเต้น ${esc(a.nm)}กระตุ้นระบบประสาทจนคุณรอดมาได้ — "ยังไม่ถึงเวลา" (ช่วยได้อีกในอีก 20 ปี)`,'myth');aiHeat(40);return true}}catch(e){console.error(e)}return _rt2.apply(this,arguments)}}
+// อัปโหลด: ส่งต่อ AI ให้ทายาท
+{const _ih2=inherit;inherit=function(ci){const P=S,pa=P.ai&&P.ai.upl?JSON.parse(JSON.stringify(P.ai)):null;const r=_ih2.apply(this,arguments);try{if(pa&&S!==P&&!S.ai){S.ai=Object.assign(pa,{heat:0,off:0,src:'inherit',scanY:null,mktY:null,cmdY:null,saveY:null,end:null,upl:0,arc:2,sync:Math.round((pa.sync||0)*.6)});aiLog(`💾 ชิปที่สืบทอดมาเปิดทำงาน — "สวัสดี ฉันรู้จักพ่อแม่ของคุณดี"`,'myth');keyAdd('ได้รับ AI ที่สืบทอดมาจากบรรพชน')}}catch(e){console.error(e)}return r}}
+// สายปราชญ์: คัดลอกวิชาง่ายขึ้น
+{const _fg2=fight;fight=function(name,ep){const w=_fg2.apply(this,arguments);try{const a=S.ai;if(a&&aiOn()&&aiHasBr('sage')&&a.cy!==S.age&&Math.random()<(w?.1:.05)*a.br.filter(x=>x==='sage').length){a.cy=S.age;const t=newArt(a.lv);t.n=`${t.n} (คัดลอก)`;artForce(t);a.cp++;aiLog(`📚 สายปราชญ์ถอดท่าของ${name}ได้ — ${artHtml(t)}`,'epic')}}catch(e){}return w}}
+// สายต่อสู้ / ทะเยอทะยาน: ห้วงลึกแรงขึ้น (คูณพลังที่ได้เพิ่มหลังคำสั่ง)
+{const _apv=aiPowV;aiPowV=function(k){let v=_apv.apply(this,arguments);try{const a=S.ai;if(a){if(aiHasBr('war'))v*=1+.25*a.br.filter(x=>x==='war').length;if(a.per===3&&!aiFused())v*=1.2;if(aiFused())v*=1.3}}catch(e){}return Math.round(v)}}
+// สายพ่อค้า: ร้านสมบัติถูกลง
+{const _ep2=ecoPrice;ecoPrice=function(it){const p=_ep2.apply(this,arguments);return aiHasBr('trade')&&aiOn()?Math.round(p*(1-.1*S.ai.br.filter(x=>x==='trade').length)):p}}
+// ---------- หน้า AI ----------
+{const _oai=openAI;openAI=function(){_oai.apply(this,arguments);try{const a=ai2Fix(),F=aiFused(),on=aiOn(),m=$('modal'),grid=m.querySelector('.mgrid');if(!grid)return;
+ const B=(k,t,s,h,dis,x)=>`<button class="opt" onclick="aiAct('${k}'${x!=null?",'"+x+"'":''})" ${dis||!on?'disabled style="opacity:.45"':''}>${t}<small>${s}${h&&!F?` · ร้อน +${h}`:''}</small></button>`;
+ const P=AI_PER[a.per],bonds=a.bond>=80?'💙 ผูกพันลึกซึ้ง':a.bond>=50?'🙂 ไว้ใจกัน':a.bond>=20?'😐 เฉยๆ':'💔 เย็นชา ไม่ค่อยฟังคำสั่ง';
+ const info=`<div class="item"><b>${F?'🔗 หลอมรวมแล้ว — มนุษย์จักรกล':`${P[1]} นิสัย${P[0]}`}</b> <span class="tag2">${F?'AI ไม่มีตัวตนของตัวเองแล้ว · ควบคุมได้เต็มที่ · ไม่ร้อน':P[2]}</span>${F?'':`<div class="hpbar" style="height:7px;margin-top:5px"><i style="width:${a.bond}%;background:#e85a9a"></i></div><span class="tag2">ความผูกพัน ${Math.round(a.bond)} · ${bonds}</span>`}
+  <br><span class="tag2">🌳 สายวิวัฒนาการ: ${a.br.length?a.br.map(k=>AI_BR[k][0]).join(' → '):'ยังไม่ได้เลือก (เลือกตอนขึ้นระดับ)'}${a.end?` · ตอนจบ: ${AI_END[a.end][0]}`:` · AI ตื่นรู้ ${a.arc}/3`}</span></div>`;
+ grid.insertAdjacentHTML('beforebegin',info);
+ if((a.br||[]).length<a.lv)grid.insertAdjacentHTML('beforebegin',`<h4 style="margin:8px 0 4px">🌳 เลือกสายวิวัฒนาการ <span class="tag2">AI ขึ้นระดับแล้ว เลือกได้ 1 สาย</span></h4><div class="mgrid">${Object.keys(AI_BR).map(k=>`<button class="opt" style="background:var(--tb4)" onclick="aiPickBr('${k}')">${AI_BR[k][0]}<small>${AI_BR[k][1]}</small></button>`).join('')}</div>`);
+ let h=B('scan','📡 สแกนโลก',a.scanY===S.age?'ปีนี้สแกนแล้ว':'ข้อมูลลับ '+(a.lv+1)+' เรื่อง',25,a.scanY===S.age);
+ if(aiHasBr('war'))h+=B('oc','⚡ Overclock','ต่อสู้ ×1.5 ทั้งปีนี้',35);
+ if(aiHasBr('sage'))h+=B('weak','🔍 วิเคราะห์จุดอ่อนศัตรู','ต่อสู้ ×1.25 นาน 3 ปี',25);
+ if(aiHasBr('trade'))h+=B('mkt','💹 เก็งกำไรตลาด',a.mktY===S.age?'ปีนี้ทำแล้ว':'ลงทุน 30% ของเงิน',20,a.mktY===S.age);
+ if(a.lv>=2)h+=B('gene','🧬 ปรับพันธุกรรม',a.geneY!=null&&S.age-a.geneY<10?`อีก ${10-(S.age-a.geneY)} ปี`:`ใช้ซิงก์ 300 (มี ${fmt(a.sync||0)}) · สำเร็จ ~${Math.round((.4+(a.bond>=80?.1:0)+(F?.1:0))*100)}%`,50,(a.geneY!=null&&S.age-a.geneY<10)||(a.sync||0)<300);
+ h+=`<button class="opt" onclick="S.ai.prd=S.ai.prd?0:1;openAI()">${a.prd?'✅':'⬜'} 🎯 ทำนายผลบนตัวเลือก<small>ขึ้นคำทำนายใต้ทุกตัวเลือก · ร้อน +2 ต่อเหตุการณ์</small></button>`;
+ grid.insertAdjacentHTML('afterbegin',h);
+ if(F){const n=a.cmdY===S.age?a.cmdN||0:0;grid.insertAdjacentHTML('afterend',`<h4 style="margin:10px 0 4px">🔗 สั่งงาน AI <span class="tag2">ปีนี้เหลือ ${2-n}/2 ครั้ง</span></h4><div class="mgrid">${[['work','💰 ทำงานหาเงิน','เงินตามขั้น'],['train','💪 ฝึกร่างกายแทน','พลังยุทธ์'],['study','📚 อ่านคัมภีร์','ปัญญา'],['copy','📜 ถอดวิชาจากความจำ','ได้วิชา 1'],['heal','💠 ซ่อมร่างกาย','เต็ม + หายโรค']].map(([x,t,s])=>B('cmd',t,s,0,n>=2,x)).join('')}</div>`)}}catch(e){console.error(e)}}}
+// ---------- 6) สแกนผู้เล่นอื่น (หน้าดูคนอื่นเล่น) ----------
+{const _osp=openSpectate;openSpectate=async function(k,tab){const r=await _osp.apply(this,arguments);try{if(S&&S.ai&&aiOn()&&$('modal').dataset.k==='spec'&&!$('aiScanB')){const back=[...document.querySelectorAll('#modal .gbtn')].pop();if(back)back.insertAdjacentHTML('beforebegin',`<button id="aiScanB" class="sysb" style="width:100%;margin:6px 0" onclick="aiScanP('${k}')">🤖 ให้ ${esc(S.ai.nm)} สแกนผู้เล่นคนนี้ (ร้อน +10)</button><div id="aiScanR"></div>`)}}catch(e){}return r}}
+async function aiScanP(k){const a=ai2Fix();if(!a||!aiOn())return;let j;try{j=await api('liveget&t='+encodeURIComponent(k))}catch(e){return toast('สแกนไม่สำเร็จ')}const s=j&&j.s;if(!s||!s.st)return;
+ if(aiHeat(10)){closeM();checkDeath();return}const st=s.st,my=total(),r=st.pow/Math.max(1,my);
+ const W=[['ปัญญา',st.int],['เสน่ห์',st.cha],['ลมปราณ',st.qi*10],['พลังชีวิต',st.hp/Math.max(1,st.mhp)*100]].sort((x,y)=>x[1]-y[1])[0];
+ const verdict=r>2?'🔴 แข็งแกร่งกว่าคุณมาก — หลีกเลี่ยง':r>1.15?'🟡 เหนือกว่าคุณเล็กน้อย':r>.85?'🟢 สูสีกัน':'🟢 คุณเหนือกว่า';
+ const out=[`⚔️ พลังรวมราว ${r>=1?'×'+r.toFixed(1)+' ของคุณ':Math.round(r*100)+'% ของคุณ'} — ${verdict}`,`🎯 จุดอ่อนที่สุด: ${W[0]}`];
+ if(s.birth)out.push(`🧬 กำเนิด: ${esc(s.birth.tal)} · โอกาสเกิด ${esc(s.birth.odds||'?')}`);if(s.sys)out.push(`🟦 มี${esc(s.sys)}`);
+ const el=$('aiScanR');if(el)el.innerHTML=`<div class="sysq" style="margin:6px 0">${out.map(x=>'<div>'+x+'</div>').join('')}</div>`;aiSync(2)}
+// ---------- รายปี ----------
+{const _py17=passYear;passYear=function(){const r=_py17.apply(this,arguments);try{if(S&&S.alive&&S.ai)ai2Tick()}catch(e){console.error(e)}return r}}
+// ---------- ความสำเร็จ ----------
+{const L=[{id:'ai_fuse',n:'มนุษย์จักรกล',d:'หลอมรวมจิตกับ AI',r:4,c:()=>!!(S.ai&&S.ai.end==='fuse')},{id:'ai_free',n:'เพื่อนที่ไม่ใช่มนุษย์',d:'ปล่อย AI ให้เป็นอิสระ แล้วมันเลือกอยู่ข้างคุณ',r:4,c:()=>!!(S.ai&&S.ai.end==='free')},
+ {id:'ai_upload',n:'มรดกดิจิทัล',d:'อัปโหลดจิต AI ลงชิปเพื่อส่งต่อทายาท',r:4,c:()=>!!(S.ai&&(S.ai.end==='upload'||S.ai.src==='inherit'))},{id:'ai_gene',n:'เขียนชะตาใหม่',d:'ให้ AI ปรับพันธุกรรมสำเร็จ',r:5,c:()=>!!(S.ai&&S.ai.gene)},
+ {id:'ai_bond',n:'ใจถึงใจ',d:'ความผูกพันกับ AI เต็ม 100',r:3,c:()=>!!(S.ai&&S.ai.bond>=100&&S.ai.end!=='fuse')}];
+ const G=ACH.find(x=>x[0]==='🤖 AI ฝังตัว');if(G)G[1].push(...L);ACH_ALL.push(...L)}
 </script>
 </body>
 </html>
