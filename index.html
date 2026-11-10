@@ -9508,7 +9508,7 @@ function bParYear(){const m=S&&S.beastMode;if(!(m&&!m.human&&m.par>0&&!m.parGone
  r_5:['ถึงขั้นฮวากยอง',()=>realmIdx()>=5&&nb()],
  r_7:['ถึงขั้นแซงซากยอง',()=>realmIdx()>=7&&nb()],
  v_asc:['เกิดในยุทธภพ เหาะขึ้นแดนเซียน แล้วฝ่าทัณฑ์สวรรค์จนเป็นเซียนอมตะในชาติเดียว',()=>!!S.flags.toXian&&!!S.flags.ascended],
- z_op:['พลังรวมเกิน 1,000,000,000,000 (1T)',()=>total()>=1e12]};
+ z_op:['พลังรวมเกิน 100,000,000,000 (100B)',()=>total()>=1e11]};
  const AR={"w_bdivine":2,"d_100":4,"h_joy":4,"d_last":3,"b_genius":3,"b_heaven":4,"b_demon":5,"b_allarts":3,"b_ow":2,"t_dragon":4,"t_crip3":5,"b_hellworld":2,"d_infant":3,"d_accident":3,"d_180":5,"r_5":1,"r_7":3,"r_trash":4,"w_shadow":4,"w_shadowboss":5,"w_godtier":2,"w_qidev":3,"w_allfx":4,"w_eye":2,"f_d":1,"h_right":5,"h_lost":4,"c_head":4,"r_one":2,"e_surp":3,"f_peach":3,"w_champ":4,"a_master":1,"a_kill":3,"a_spare":3,"a_marry":4,"h_grand":3,"h_filial":4,"l_kids5":4,"l_rich":4,"l_gen3":3,"l_gen5":5,"g_goal":2,"p_ass":4,"w_bpath":1,"w_bprime":3,"s_lv10":3,"x_bag":3,"x_dao":5,"x_sec":5,"x_pet4":5,"x_core":1,"x_pet":3,"x_200":4,"v_mystp":2,"v_sr5":3,"v_reg":5,"v_dyn":3,"v_rlove":5,"v_leg":1,"s_q20":4,"s_gold":2,"s_main":2,"s_hid3":5,"s_tc5":3,"s_ur":3,"s_sage":5,"s_ring":3,"o_gun":3,"o_shop":4,"ow_phone":3,"ow_phone20":4,"ow_gunpeak":3,"o_rise":4,"ai_birth":3,"ai_copy":4,"ai_secret":4};
  ACH_ALL.forEach(a=>{const f=AF[a.id];if(f){a.d=f[0];a.c=f[1]}if(AR[a.id]!=null&&a.r>0&&a.r<6)a.r=AR[a.id]});
  // ฉายาพิเศษ (TTL_SP) ที่มีตัวเลข: ยากขึ้น 10 เท่า
