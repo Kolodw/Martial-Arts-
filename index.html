@@ -4939,7 +4939,7 @@ function person0(x,y,o,pose){
  const sd=(o.seed||((o.robe||'').length*7+(o.hair||'').length))%10;
  if(pose==='lie'){const ly=Y-12;Q(X-2,ly,16,12,o.skin);Q(X-2,ly,16,3,o.hair);Q(X-4,ly+2,3,8,o.hair);Q(X+3,ly+6,2,1,'#2a2030');Q(X+8,ly+6,2,1,'#2a2030');Q(X+14,ly+1,36,11,o.robe);Q(X+14,ly+1,36,2,shd(o.robe,.25));Q(X+14,ly+9,36,2,shd(o.robe,-.25));Q(X+12,ly-2,40,3,'#f4ecd8');return}
  const H=child?33:48,hw=child?11:12,hh=child?11:12,tw=child?11:16,th=child?11:18,walk=pose==='walk',sit=pose==='sit';
- const bob=walk?(Math.sin(T*8)>0?-1:0):Math.round(Math.sin(T*1.6+sd)*.6);
+ const bob=walk?(child?(Math.sin(T*8)>0?-1:0):(Math.abs(Math.sin(T*3.2))>.7?-1:0)):Math.round(Math.sin(T*1.6+sd)*.6);
  const stn=(pose==='stand'&&!child&&!sit)?o.stance:null;
  let top=Y-H+(sit?9:0)+(o.old?2:0)+bob;const cx=X+12;
  if(o.float&&!sit&&!child&&pose!=='walk'){Q(cx-9,Y-1,18,2,'#00000035');g.save();g.translate(0,-(1+(Math.sin(T*2)>0?1:0)));try{o=Object.assign({},o,{float:0});return person0(x,y,o,pose)}finally{g.restore()}}
@@ -4956,6 +4956,8 @@ function person0(x,y,o,pose){
  // legs / lower body
  const ly=ty+th;
  if(sit){Q(cx-11,Y-6,22,6,rD);Q(cx-11,Y-6,22,2,robe);Q(cx-12,Y-2,24,2,'#00000033')}
+ else if(walk&&!child){const lh=Math.max(2,Y-ly),pant=o.pant||'#3a3348',s1=Math.sin(T*3.2),lA=s1>.25?Math.round(s1*3):0,lB=s1<-.25?Math.round(-s1*3):0,st=0;
+  Q(cx-5-st,ly,4,lh-lA,pant);Q(cx+1+st,ly,4,lh-lB,shd(pant,-.15));Q(cx-6-st,Y-2-lA,6,2,'#1e1a24');Q(cx+1+st,Y-2-lB,6,2,'#1e1a24');Q(cx-8,Y,16,1,'#00000022')}
  else{const lh=Math.max(2,Y-ly),sw=walk?Math.round(Math.sin(T*8)*2):0,pant=o.pant||'#3a3348';
   const sp=stn==='ready'?2:0;Q(cx-5+sw-sp,ly,4,lh,pant);Q(cx+1-sw+sp,ly,4,lh,shd(pant,-.15));Q(cx-6+sw-sp,Y-2,6,2,'#1e1a24');Q(cx+1-sw+sp,Y-2,6,2,'#1e1a24')}
  // robe torso (cross collar hanfu)
@@ -4970,7 +4972,8 @@ function person0(x,y,o,pose){
  if(o.jade)Q(cx+3,bY+3,2,4,'#6ad0a0');if(o.emblem)Q(cx+2,ty+4,4,4,o.emblem);
  if(o.patch){Q(cx-5,ty+5,3,3,shd(robe,-.4));Q(cx+3,ty+11,3,3,'#6a7a4a')}
  // hem flutter
- if(!sit&&!child){const fl=Math.round(Math.sin(T*3+sd)*1.2);Q(cx-Math.floor(tw/2)-2+fl,ly-1,2,2,rD)}
+ if(!sit&&!child){const fl=Math.round(Math.sin(T*3+sd)*1.2);Q(cx-Math.floor(tw/2)-2+fl,ly-1,2,2,rD);
+  if(walk){const s1=Math.sin(T*3.2),hw2=Math.floor((tw+hem*2)/2),sx=s1>.3?1:s1<-.3?-1:0;Q(cx-hw2+sx,ly-1,tw+hem*2,2,rD);Q(cx-hw2+sx,ly-1,tw+hem*2,1,robe)}}
  // arms
  if(o.coat&&!child&&!sit){const cc=o.coat,cD=shd(cc,-.25),cL=o.coatL||shd(cc,.3),fl=Math.round(Math.sin(T*2.6+sd)*1.5),fl2=Math.round(Math.sin(T*2.6+sd+1.3)*1.5),bot=Y-3;
   for(let yy=ty;yy<bot;yy++){const k=(yy-ty)/(bot-ty),fx=Math.round(k*k*(walk?2:1)*(yy>ly?1:0)*1.5),wl=6+Math.round(k*2);const L0=cx-Math.floor(tw/2)-1-fx+(yy>bot-5?fl:0),R0=cx+Math.floor(tw/2)+1-wl+fx+(yy>bot-5?fl2:0);
@@ -4982,6 +4985,9 @@ function person0(x,y,o,pose){
  else if(stn==='cross'){Q(lxA,ty+1,aw,7,slv);Q(rxA,ty+1,aw,7,slvD);Q(cx-Math.floor(tw/2)-1,ty+6,tw+2,4,slv);Q(cx-Math.floor(tw/2)-1,ty+9,tw+2,1,slvD);Q(cx-Math.floor(tw/2),ty+6,2,1,shd(slv,.25));Q(cx-Math.floor(tw/2)+2,ty+7,2,2,skin);Q(cx+Math.floor(tw/2)-4,ty+7,2,2,sD)}
  else if(stn==='hilt'){Q(lxA,ty+1+as,aw,aL,slv);Q(lxA,ty+1+as,1,aL,slvD);Q(lxA+1,ty+1+as+aL,3,3,skin);Q(rxA,ty+1,aw,6,slvD);Q(cx+Math.floor(tw/2)-3,ty+6,4,3,slvD);Q(cx+3,ty+8,3,3,sD)}
  else if(stn==='ready'){Q(lxA-4,ty+3,aw+5,4,slv);Q(lxA-4,ty+6,aw+5,1,slvD);Q(lxA-7,ty+3,3,3,skin);Q(rxA,ty+1-as,aw,aL,slvD);Q(rxA+1,ty+1-as+aL,3,3,sD)}
+ else if(walk&&!child){const s1=Math.sin(T*3.2),dy=-Math.round(Math.max(0,s1)*2),ix=s1>.45?1:0;
+  Q(lxA,ty+1,aw,aL-4,slv);Q(lxA,ty+1,1,aL-4,slvD);Q(lxA+1,ty+aL-3,aw-1,1,slvD);Q(lxA+aw-1,ty+aL-5,2,2,slvD);
+  Q(rxA-ix,ty+1,aw,aL+dy,slvD);Q(rxA-ix,ty+aL-3+dy,aw+1,3,slvD);Q(rxA-ix+aw,ty+aL-3+dy,1,3,shd(slvD,-.2));Q(rxA+1-ix,ty+1+aL+dy,3,3,sD)}
  else{Q(lxA,ty+1+as,aw,aL,slv);Q(lxA,ty+1+as,1,aL,slvD);Q(lxA+1,ty+1+as+aL,3,3,skin);
  Q(rxA,ty+1-as,aw,aL,slvD);Q(rxA+1,ty+1-as+aL,3,3,sD);if(aw>4){Q(lxA-1,ty+aL-2+as,aw+1,3,slv);Q(rxA,ty+aL-2-as,aw+1,3,slvD)}}
  if(o.arm){Q(cx-Math.floor(tw/2)-4,ty-1,6,4,o.arm);Q(cx+Math.floor(tw/2)-2,ty-1,6,4,shd(o.arm,-.2));Q(cx-Math.floor(tw/2)-4,ty-1,6,1,shd(o.arm,.3))}
@@ -9203,12 +9209,12 @@ function lookApply(o,L,age,gd,fac){if(!o||!L||o.beast)return o;try{const ad=age>
   if(o.float&&!sit&&!child&&pose!=='walk')return _p0.apply(this,arguments);
   const X=Math.round(x*3),Y=Math.round(y*3),T=frame*.15,sd=(o.seed||((o.robe||'').length*7+(o.hair||'').length))%10;
   const H=child?33:48,hw=child?11:12,hh=child?11:12,tw=child?11:16,th=child?11:18;
-  const bob=walk?(Math.sin(T*8)>0?-1:0):Math.round(Math.sin(T*1.6+sd)*.6);
+  const bob=walk?(child?(Math.sin(T*8)>0?-1:0):(Math.abs(Math.sin(T*3.2))>.7?-1:0)):Math.round(Math.sin(T*1.6+sd)*.6);
   const top=Y-H+(sit?9:0)+(o.old?2:0)+bob,cx=X+12,hx=cx-Math.floor(hw/2),ty=top+hh+1,ly=ty+th,bY=ty+(child?6:9),ey=top+Math.floor(hh*.5),eL=hx+2,eR=hx+hw-4,my=ey+(child?3:4),mx=cx-1;
   const stn=(pose==='stand'&&!child&&!sit)?o.stance:null,as=walk?Math.round(Math.sin(T*8)*2):Math.round(Math.sin(T*1.6+sd)*.5),aL=child?8:12,aw=o.coat&&!child?5:4,lxA=cx-Math.floor(tw/2)-3-(aw-4),rxA=cx+Math.floor(tw/2)-1;
   const hair=o.hair||'#222',hD=shd(hair,-.3),hL=shd(hair,.25),robe=o.robe||'#888',rD=shd(robe,-.28),bald=o.hat==='bald',k=o.ck||{},hs=o.hs|0;
   const hatHide=['hood','mask'].includes(o.hat),backHide=hatHide||o.hat==='veil',topHide=!!o.hat&&!['band','flower'].includes(o.hat),face=o.hat!=='mask';
-  const fl=Math.round(Math.sin(T*3+sd)*1),fl2=Math.round(Math.sin(T*2.2+sd+1)*1.2),sty=k.sty|0,acc=k.acc|0,defArm=!stn&&!sit;
+  const fl=Math.round(Math.sin(T*3+sd)*1),fl2=Math.round(Math.sin(T*2.2+sd+1)*1.2),sty=k.sty|0,acc=k.acc|0,defArm=!stn&&!sit&&!(walk&&!child);
   // ---------- ชั้นหลัง ----------
   try{if(!child){
    if(sty===4&&!sit){const cc=shd(robe,-.45),cd=shd(cc,-.25);for(let yy=ty-1;yy<Y-3;yy++){const kk=(yy-ty)/(Y-ty),w=18+Math.round(kk*6);Q(cx-Math.floor(w/2)+(yy>Y-8?fl:0),yy,w,1,cc);Q(cx-Math.floor(w/2)+w-2,yy,2,1,cd)}}
