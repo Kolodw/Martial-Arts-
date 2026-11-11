@@ -11481,6 +11481,74 @@ function toggleRlmPop(){LS.set('murim_rlmpop',rlmOn()?0:1);toast(rlmOn()?'🎬 �
 {const L=[{id:'rl_el',n:'ธาตุตื่น',d:'ปลุกวิถีธาตุประจำตัว',r:1,c:()=>!!(S.rlm&&S.rlm.el)},{id:'rl_hw',n:'สามบุปผาบนศีรษะ',d:'ถึงฮวากยองในยุทธภพ',r:3,c:()=>!S.xian&&!S.beastMode&&realmIdx()>=5},{id:'rl_ns',n:'วิญญาณแยกร่าง',d:'ถึงก่อกำเนิดวิญญาณในโลกเซียน',r:3,c:()=>!!S.xian&&!S.xt&&realmIdx()>=4},{id:'rl_star',n:'ผู้ดึงดวงดาว',d:'ถึงมหายานในโลกเซียน',r:4,c:()=>!!S.xian&&!S.xt&&realmIdx()>=6},{id:'rl_emp',n:'ผู้จุดดวงดาว',d:'ถึงจักรพรรดิเทพ',r:5,c:()=>!!S.xt&&realmIdx()>=5},{id:'rl_law',n:'ผู้เขียนกฎสวรรค์',d:'ถึงเทพสูงสุด',r:6,c:()=>!!S.xt&&realmIdx()>=7}];ACH.push(['📜 ตำนานระดับพลัง',L]);ACH_ALL.push(...L)}
 try{const _gc={s:'grow',t:'คัมภีร์ระดับพลังและวิถีธาตุ',te:'Realm codex & elemental path',ic:'📜',d:'ทุกขั้นมีพลังของมันเอง: ยุทธภพ (ขั้นสาม → แซงซากยอง เหนือความเป็นความตาย) · โลกเซียน (ฝึกปราณ → เหาะบนกระบี่ → แก่นทอง → วิญญาณแยกร่าง → สั่งฟ้าบัญชาฝน → ดึงดวงดาว → ท้าทายสวรรค์) · โลกเทพ (จุดดาว ดับดวงอาทิตย์ หยุดเวลา เขียนกฎสวรรค์) · เมื่อทะลวงขั้นจะมี<b>ฉากทะลวงขั้น</b>บอกพลังที่ตื่นขึ้น (ปิดได้) · ถึงขั้นหนึ่ง/แก่นทอง จะได้เลือก<b>วิถีธาตุ</b> 12 แบบ (เพลิง อัสนี น้ำแข็ง วายุ ปฐพี ดารา ราตรี สุริยะ ความว่างเปล่า โลหิต กระบี่ พฤกษา) ได้โบนัสทุกครั้งที่ทะลวงขั้น และได้<b>ฉายา</b>ที่เปลี่ยนไปตามระดับ · กดที่ชื่อระดับบนหน้าจอเพื่อเปิดคัมภีร์',de:'Every realm grants its own powers — from iron bones to commanding storms, pulling down stars and rewriting heaven\'s laws. Breakthroughs play a cinematic scene (toggleable). At First-Rate / Golden Core you awaken one of 12 elemental paths, gaining a bonus on every breakthrough and an evolving epithet. Tap your realm name to open the codex.'};const _gi=GD2.findIndex(x=>x.ic==='⭐'&&x.s==='grow');GD2.splice(_gi>=0?_gi+1:GD2.length,0,_gc);SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
 
+
+// ===================== v15.5 อนิเมชั่นตอนได้ AI (โฮโลแกรม · โค้ดไหล · บูตระบบ) =====================
+const AIA_BOOT=[['BIOS v9.7.3 ... OK','ตรวจสอบเฟิร์มแวร์'],['SCAN host.neural_net ... 86 billion nodes','สแกนโครงข่ายประสาทของโฮสต์'],['INJECT nanobots → spinal_cord','ปล่อยนาโนบอตเข้าไขสันหลัง'],['DECRYPT memory.core ... 100%','ถอดรหัสแกนความจำ'],['LINK qi_meridian ↔ cpu','เชื่อมเส้นลมปราณเข้ากับหน่วยประมวลผล'],['LOAD combat_sim.module','โหลดโมดูลจำลองการต่อสู้'],['CALIBRATE emotion.dll ... unstable','ปรับเทียบอารมณ์… ไม่เสถียร'],['HANDSHAKE host ✓','จับมือกับโฮสต์สำเร็จ']];
+const AIA_HI=['สวัสดี โฮสต์ ฉันจะอยู่กับคุณตลอดไป','การเชื่อมต่อเสร็จสมบูรณ์ เริ่มวิเคราะห์ชีวิตของคุณ…','อืม… ระบบประสาทของคุณช้ากว่าที่คิด แต่ไม่เป็นไร ฉันจะช่วยเอง','ยินดีที่ได้รู้จัก ตั้งแต่วันนี้ คุณจะไม่แพ้ใครอีก','ข้อมูลยุทธภพ 0% … น่าสนใจมาก','อย่าตกใจ ฉันไม่ใช่วิญญาณร้าย ฉันคือปัญญาประดิษฐ์'];
+function aiaHtml(){const a=S.ai||{},bst=a.bst;const nm=esc(a.nm||'AI'),ori=a.nano?'นาโนเทคจากอารยธรรมที่ไม่มีใครรู้จัก':'โลกอนาคต';const hex='01ABCDEF<>/{}#$%&*+=';
+ const rain=Array.from({length:22},(_,i)=>{let t='';for(let j=0;j<26;j++)t+=hex[(i*7+j*13)%hex.length];return`<b style="left:${i*4.6}%;animation-duration:${2.2+(i%6)*.55}s;animation-delay:-${(i*.41)%3}s;opacity:${.25+(i%4)*.15}">${t}</b>`}).join('');
+ const boot=AIA_BOOT.map((x,i)=>`<div style="animation-delay:${.35+i*.28}s"><span class="aiok">&gt;</span> ${x[0]} <i>${x[1]}</i></div>`).join('');
+ return`<div class="aiapop"><div class="aiarain">${rain}</div><div class="aiagrid"></div><div class="aiascan"></div>
+ <div class="aiain"><div class="aiatop">◢ NEURAL IMPLANT DETECTED ◣</div>
+ <div class="aiahud"><div class="aiar r1"></div><div class="aiar r2"></div><div class="aiar r3"></div><div class="aiacore">${bst?'☄️':'🤖'}</div></div>
+ <div class="aiattl" data-t="AI ONLINE">AI ONLINE</div><div class="aiasub">${bst?'เศษชิปจากดาวตก':'AI ฝังตัว'} · <b>${nm}</b> · ${AI_LV[0]}</div>
+ <div class="aiaboot">${boot}</div>
+ <div class="aiasync"><div class="aiabar"><i></i></div><span>SYNC <em class="aiapct"></em></span></div>
+ <div class="aiamsg"><span class="aiacur">▍</span>“${ch(AIA_HI)}”</div>
+ <div class="aiafeat"><span>🧠 คัดลอกวิชา</span><span>💉 ฟื้นฟูร่างกาย</span><span>🎮 จำลองการต่อสู้</span><span>🧭 ตัดสินใจแทน</span></div>
+ <div class="aiaori">ที่มา: ${ori} · ระวังความร้อนเกินขีด ⚠️<br><i>An implanted AI has bonded with your nervous system.</i></div>
+ <button class="aiabtn" onclick="closeM()">⟦ เชื่อมต่อ · CONNECT ⟧</button>
+ <div class="aiaft"><a onclick="closeM();try{openAI&&openAI()}catch(e){}">เปิดหน้า AI</a></div></div></div>`}
+function aiaShow(){if(!S||!S.ai)return;if(modalOpen||choice._cur||auto){S.aiaPend=1;return}S.aiaPend=0;modal(aiaHtml(),'aianim')}
+{const _agA=aiGive;aiGive=function(){const had=!!(S&&S.ai);const r=_agA.apply(this,arguments);try{if(!had&&S&&S.ai)setTimeout(aiaShow,350)}catch(e){}return r}}
+{const _pyA=passYear;passYear=function(){const r=_pyA.apply(this,arguments);try{if(S&&S.aiaPend&&S.ai)aiaShow()}catch(e){}return r}}
+(function(){const st=document.createElement('style');st.textContent=`
+.aiapop{position:relative;margin:-14px -14px -10px;padding:18px 14px 12px;border-radius:14px;overflow:hidden;color:#cffaff;text-align:center;font-family:ui-monospace,Menlo,Consolas,monospace;background:radial-gradient(ellipse at 50% 28%,#0b3a5a 0%,#061326 55%,#020409 100%);border:1px solid #2ee6ff;box-shadow:inset 0 0 40px rgba(46,230,255,.25);animation:aiaIn .7s steps(1,end) 1,aiaFade .7s ease-out}
+@keyframes aiaIn{0%{clip-path:inset(48% 0 48% 0)}20%{clip-path:inset(30% 0 30% 0)}40%{clip-path:inset(10% 0 12% 0)}60%{clip-path:inset(0 0 0 0)}}
+@keyframes aiaFade{0%{filter:brightness(2.5) hue-rotate(40deg)}100%{filter:none}}
+.aiarain{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.aiarain b{position:absolute;top:-100%;width:12px;font-size:11px;line-height:12px;word-break:break-all;color:#2ee6ff;text-shadow:0 0 6px #2ee6ff;font-weight:400;animation:aiaRain linear infinite}
+@keyframes aiaRain{to{transform:translateY(260%)}}
+.aiagrid{position:absolute;left:-50%;right:-50%;bottom:-10px;height:45%;background-image:linear-gradient(rgba(46,230,255,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(46,230,255,.35) 1px,transparent 1px);background-size:28px 28px;transform:perspective(220px) rotateX(62deg);transform-origin:bottom;animation:aiaGrid 2s linear infinite;mask-image:linear-gradient(to top,#000,transparent)}
+@keyframes aiaGrid{to{background-position:0 28px}}
+.aiascan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 1px,transparent 1px 3px)}
+.aiascan:after{content:'';position:absolute;left:0;right:0;height:60px;background:linear-gradient(transparent,rgba(46,230,255,.18),transparent);animation:aiaSweep 3s linear infinite}
+@keyframes aiaSweep{0%{top:-60px}100%{top:100%}}
+.aiain{position:relative}
+.aiatop{font-size:10px;letter-spacing:3px;color:#ff4fd8;text-shadow:0 0 8px #ff4fd8;animation:aiaBlink 1s steps(2) infinite}
+@keyframes aiaBlink{50%{opacity:.35}}
+.aiahud{position:relative;width:128px;height:128px;margin:10px auto 6px}
+.aiar{position:absolute;inset:0;border-radius:50%;border:2px solid transparent}
+.aiar.r1{border-top-color:#2ee6ff;border-bottom-color:#2ee6ff;animation:aiaRot 2.4s linear infinite;box-shadow:0 0 14px rgba(46,230,255,.5)}
+.aiar.r2{inset:12px;border:2px dashed rgba(255,79,216,.8);animation:aiaRot 6s linear infinite reverse}
+.aiar.r3{inset:24px;border-left-color:#7dffb2;border-right-color:#7dffb2;animation:aiaRot 1.6s linear infinite}
+@keyframes aiaRot{to{transform:rotate(360deg)}}
+.aiacore{position:absolute;inset:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;background:radial-gradient(circle,#bff8ff 0%,#2ee6ff 35%,#0a4a7a 80%);box-shadow:0 0 25px #2ee6ff,0 0 60px rgba(46,230,255,.6);animation:aiaCore 1.4s ease-in-out infinite}
+@keyframes aiaCore{50%{transform:scale(1.1);box-shadow:0 0 40px #2ee6ff,0 0 90px rgba(255,79,216,.5)}}
+.aiattl{position:relative;font-size:30px;font-weight:900;letter-spacing:4px;color:#eaffff;text-shadow:0 0 12px #2ee6ff,0 0 30px #2ee6ff}
+.aiattl:before,.aiattl:after{content:attr(data-t);position:absolute;left:0;right:0;top:0;overflow:hidden}
+.aiattl:before{color:#ff4fd8;animation:aiaGl 2.2s infinite steps(1);clip-path:inset(0 0 60% 0)}
+.aiattl:after{color:#2ee6ff;animation:aiaGl 1.7s infinite steps(1) reverse;clip-path:inset(55% 0 0 0)}
+@keyframes aiaGl{0%,80%,100%{transform:none;opacity:0}82%{transform:translate(-3px,1px);opacity:.9}86%{transform:translate(3px,-1px);opacity:.9}90%{transform:translate(-2px,0);opacity:.7}}
+.aiasub{font-size:12px;margin:2px 0 8px;color:#9fe9ff}.aiasub b{color:#7dffb2}
+.aiaboot{text-align:left;font-size:10.5px;line-height:1.55;background:rgba(2,10,20,.65);border:1px solid rgba(46,230,255,.35);border-radius:6px;padding:6px 8px;max-height:150px;overflow:hidden}
+.aiaboot div{opacity:0;animation:aiaLine .25s forwards;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.aiaboot i{color:#6aa8c0;font-style:normal}
+.aiaok{color:#7dffb2}
+@keyframes aiaLine{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+.aiasync{display:flex;align-items:center;gap:8px;margin:8px 2px;font-size:11px;color:#7dffb2}
+.aiabar{flex:1;height:8px;border:1px solid #2ee6ff;border-radius:4px;overflow:hidden;background:rgba(46,230,255,.08)}
+.aiabar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2ee6ff,#7dffb2,#ff4fd8);box-shadow:0 0 10px #2ee6ff;animation:aiaBar 2.6s .3s cubic-bezier(.3,.7,.4,1) forwards}
+@keyframes aiaBar{to{width:100%}}
+.aiapct:after{content:'0%';animation:aiaPct 2.6s .3s steps(1) forwards}
+@keyframes aiaPct{0%{content:'3%'}15%{content:'17%'}30%{content:'34%'}45%{content:'58%'}60%{content:'71%'}75%{content:'89%'}90%{content:'97%'}100%{content:'100% ✓'}}
+.aiamsg{font-size:13px;color:#eaffff;margin:8px 4px;opacity:0;animation:aiaLine .4s 2.9s forwards}
+.aiacur{color:#2ee6ff;animation:aiaBlink .8s steps(2) infinite;margin-right:3px}
+.aiafeat{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin:6px 0;opacity:0;animation:aiaLine .4s 3.1s forwards}
+.aiafeat span{font-size:11px;padding:3px 8px;border:1px solid rgba(46,230,255,.5);border-radius:999px;background:rgba(46,230,255,.1);box-shadow:0 0 8px rgba(46,230,255,.25)}
+.aiaori{font-size:10.5px;color:#8fbfd0;margin:6px 0 10px;line-height:1.5}
+.aiabtn{font-family:inherit;border:1px solid #2ee6ff;border-radius:6px;padding:10px 22px;font-size:14px;font-weight:800;letter-spacing:1px;color:#020409;background:linear-gradient(90deg,#2ee6ff,#7dffb2);box-shadow:0 0 18px #2ee6ff;cursor:pointer;animation:aiaCore 1.8s ease-in-out infinite}
+.aiaft{font-size:10.5px;margin-top:8px;opacity:.7}.aiaft a{text-decoration:underline;cursor:pointer}`;document.head.appendChild(st)})();
+
 </script>
 </body>
 </html>
