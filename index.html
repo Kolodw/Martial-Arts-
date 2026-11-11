@@ -12064,7 +12064,7 @@ function benLook(name){try{const n=String(name||'');let sp=null;for(const [k,v] 
 
 // ===================== v15.5 สมุดตำนานใหม่ · ฉายาทำเนียบ (ชั่วคราว) · ปุ่มลอยปิด/ขึ้นบนสำหรับหน้ายาว =====================
 // ---------- ฉายาทำเนียบ ----------
-const RKC={d:['','ราชันย์ประจำวัน','ดาวเด่นประจำวัน','ผู้กล้าประจำวัน'],w:['','จักรพรรดิประจำสัปดาห์','ขุนพลประจำสัปดาห์','วีรชนประจำสัปดาห์'],m:['','เทพเจ้าแห่งเดือน','ราชันย์แห่งเดือน','ตำนานแห่งเดือน']},RKC_TR={d:7,w:8,m:9},RKC_PN={d:'รายวัน',w:'รายสัปดาห์',m:'รายเดือน'};
+const RKC={d:['','ตะวันเจิดจ้า','จันทร์เหนือเมฆ','ดาวประกาย'],w:['','จ้าวยุทธภพ','ขุนศึกไร้พ่าย','ยอดฝีมือผงาด'],m:['','จักรพรรดิเหนือฟ้า','มหาเทพบัญชาสวรรค์','ตำนานผู้ถูกจารึก']},RKC_TR={d:7,w:8,m:9},RKC_PN={d:'รายวัน',w:'รายสัปดาห์',m:'รายเดือน'};
 const RKC_OF=t=>{for(const p in RKC){const r=RKC[p].indexOf(t);if(r>0)return{p,r}}return null};
 function rkList(){const L=(LS.get('murim_rkttl',[])||[]).filter(x=>x&&x.t&&x.exp>Date.now());return L.sort((a,b)=>RKC_TR[b.p]-RKC_TR[a.p]||a.r-b.r)}
 function rkAdd(x){if(!x||!x.t||!RKC_OF(x.t))return;const o=RKC_OF(x.t),L=rkList().filter(y=>y.p!==o.p);L.push({t:x.t,p:o.p,r:o.r,c:x.c||'',exp:+x.exp||Date.now()+86400e3});LS.set('murim_rkttl',L)}
