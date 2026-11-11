@@ -1016,6 +1016,13 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       if (hard) L.push(['SET', 'acf:' + id, why, 'EX', 86400 * 60]);
       await pipe(L); return res.json({ ok: 1 });
     }
+    if (a === 'rgp') {
+      const RG = ['home', 'capital', 'peak', 'forest', 'desert', 'sea', 'snow', 'jungle', 'forbid'], rg = RG.includes(b.rg) ? b.rg : 'home', L = [];
+      if (okId(id)) { for (const r of RG) if (r !== rg) L.push(['ZREM', 'rgz:' + r, id]); L.push(['ZADD', 'rgz:' + rg, now, id], ['EXPIRE', 'rgz:' + rg, 86400]) }
+      for (const r of RG) L.push(['ZREMRANGEBYSCORE', 'rgz:' + r, 0, now - 9e5], ['ZCARD', 'rgz:' + r]);
+      const out = await pipe(L), cnt = out.slice(-RG.length * 2), c = {}; RG.forEach((r, i) => { c[r] = +cnt[i * 2 + 1] || 0 });
+      return res.json({ c });
+    }
     if (a === 'live') {
       if (b.spec && (b.tp || await isBanned())) b.spec = 0;
       try { const z = JSON.parse(String(b.s || 'null')); if (z && z.st && okId(id)) { const p = +z.st.pow || 0, fm = +z.st.fame || 0, mn = +z.st.money || 0, ag = +z.age || 0; let why = '';
