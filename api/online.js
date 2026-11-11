@@ -119,8 +119,9 @@ const CH_OK = ['hell', 'short', 'junk'];
 // ฉายาทำเนียบ (ชั่วคราว): รายวัน/สัปดาห์/เดือน · อันดับ 1–3
 const RKT = { d: ['', 'ตะวันเจิดจ้า', 'จันทร์เหนือเมฆ', 'ดาวประกาย'], w: ['', 'จ้าวยุทธภพ', 'ขุนศึกไร้พ่าย', 'ยอดฝีมือผงาด'], m: ['', 'จักรพรรดิเหนือฟ้า', 'มหาเทพบัญชาสวรรค์', 'ตำนานผู้ถูกจารึก'] };
 const RKT_C = { d: ['', 'ผู้ฝ่าขุมนรก', 'วิญญาณไม่ดับ', 'ผู้ท้าลิขิต'], w: ['', 'ราชันย์ไร้พรสวรรค์', 'จ้าวแห่งเปลวนรก', 'ผู้ทวนชะตา'], m: ['', 'จักรพรรดิผู้ลบลิขิต', 'มารฟ้าทลายกรรม', 'ตำนานจากธุลี'] };
+const RKT_A = { w: ['', 'จ้าวลานหมื่นเงา', 'ราชันย์เงาพิฆาต', 'ดาบเงาไร้เทียมทาน'] };
 const RKT_EXP = { d: 86400e3 * 1.1, w: 86400e3 * 7.2, m: 86400e3 * 31 }, RKT_TR = { d: 7, w: 8, m: 9 };
-const RKT_ALL = new Map(); [RKT, RKT_C].forEach(TT => Object.entries(TT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) })));
+const RKT_ALL = new Map(); [RKT, RKT_C, RKT_A].forEach(TT => Object.entries(TT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) })));
 const bdCat = e => e.bm ? 'b' : e.g ? 'g' : e.x ? 'x' : 'm';
 const bdKey = (c, ms, back = 0) => 'bd3:' + c + ':' + new Date(ms + 7 * 3600e3 - back * 86400e3).toISOString().slice(0, 10);
 const bdKeyW = (c, ms, back = 0) => 'bdw:' + c + ':' + week(new Date(ms - back * 7 * 86400e3));
@@ -1182,6 +1183,49 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const pv = +b.pub === 2 ? 2 : b.pub ? 1 : 0;
       await cmd('SET', 'lifep:' + lid, String(pv), 'KEEPTTL');
       return res.json({ ok: 1, pub: pv });
+    }
+
+    // ===== ลานประลองหมื่นเงา (v15.6) =====
+    const AR_TKM = 5, AR_TKR = 1200e3, arBr = b0 => (b0.bm ? 'b' : b0.x ? 'x' : 'm') + ':' + Math.max(0, Math.min(12, +b0.ri || 0));
+    const arTk = async (use) => { const v = jp(await cmd('HGET', 'artk', id)) || { n: AR_TKM, t: now }; const add = Math.floor((now - v.t) / AR_TKR); if (add > 0) { v.n = Math.min(AR_TKM, v.n + add); v.t = v.n >= AR_TKM ? now : v.t + add * AR_TKR } if (v.n >= AR_TKM) v.t = now;
+      if (use) { if (v.n <= 0) return { ok: 0, n: 0, nx: AR_TKR - (now - v.t) }; if (v.n >= AR_TKM) v.t = now; v.n -= use } if (use || add > 0) await cmd('HSET', 'artk', id, JSON.stringify(v)); return { ok: 1, n: v.n, nx: v.n >= AR_TKM ? 0 : AR_TKR - (now - v.t) } };
+    const arRt = async (who) => +(await cmd('HGET', 'arr:' + W, who)) || 1000;
+    const arSettle = async () => { try { const pw = week(new Date(now - 7 * 86400e3)); if (!(await cmd('SET', 'arset:' + pw, 1, 'NX', 'EX', 86400 * 30))) return; const top = await cmd('ZREVRANGE', 'ars:' + pw, 0, 2, 'WITHSCORES'); for (let i = 0; i < (top || []).length; i += 2) { const own = top[i], r = i / 2 + 1, sc = +top[i + 1]; if (await cmd('SISMEMBER', 'cheaters', own)) continue; const nm = (await cmd('HGET', 'arn', own)) || 'นิรนาม', exp = now + RKT_EXP.w;
+      await pipe([['LPUSH', 'bdrw:' + own, JSON.stringify({ p: 'w', c: 'a', r, d: pw, n: nm, s: sc, tt: RKT_A.w[r], exp })], ['EXPIRE', 'bdrw:' + own, 86400 * 60], ['HSET', 'rkttl:' + own, 'wa', JSON.stringify({ t: RKT_A.w[r], r, c: 'a', exp, at: now })], ['EXPIRE', 'rkttl:' + own, 86400 * 40]]) } } catch {} };
+    const arSnapIn = b0 => { let look = null; try { const L = typeof b0.look === 'string' ? JSON.parse(b0.look) : b0.look; if (L && typeof L === 'object' && JSON.stringify(L).length < 1600) look = L } catch {}
+      return { n: clean(b0.n, 20) || 'นิรนาม', p: Math.max(0, +b0.p || 0), hp: Math.max(1, Math.min(1e9, +b0.hp || 100)), r: clean(b0.r, 30), ri: Math.max(0, Math.min(12, +b0.ri || 0)), x: b0.x ? 1 : 0, bm: b0.bm ? 1 : 0, st: ['atk', 'def', 'trick', 'all'].includes(b0.st) ? b0.st : 'atk', arts: (Array.isArray(b0.arts) ? b0.arts : []).slice(0, 3).map(a => clean(a, 24)).filter(Boolean), el: clean(b0.el, 10), sr: clean(b0.sr, 3), look, t: now } };
+    const arLg = r => r >= 1600 ? 4 : r >= 1400 ? 3 : r >= 1250 ? 2 : r >= 1100 ? 1 : 0;
+    if (a === 'ar2') {
+      if (!okId(id)) return res.json({ err: 'id' }); await arSettle();
+      const [tk, rt, top, dl, dn] = await Promise.all([arTk(0), arRt(id), cmd('ZREVRANGE', 'ars:' + W, 0, 9, 'WITHSCORES'), cmd('LRANGE', 'ardef:' + id, 0, 19), cmd('HGET', 'ardefn', id)]);
+      const ids = []; for (let i = 0; i < (top || []).length; i += 2) ids.push(top[i]); const nms = ids.length ? await cmd('HMGET', 'arn', ...ids) : [];
+      const T = ids.map((x, i) => ({ n: nms[i] || 'นิรนาม', r: +top[i * 2 + 1], me: x === id ? 1 : 0, lg: arLg(+top[i * 2 + 1]) }));
+      const D = (dl || []).map(jp).filter(Boolean).map((e, i) => ({ i, n: e.n, w: e.w, d: e.d, t: e.t, rv: e.rv ? 1 : 0 }));
+      if (+dn) await cmd('HDEL', 'ardefn', id);
+      return res.json({ tk, rt, lg: arLg(rt), top: T, def: D, nw: +dn || 0, wk: W });
+    }
+    if (a === 'ar2go' || a === 'ar2rv') {
+      if (!okId(id)) return res.status(403).json({ err: 'id' });
+      const me = arSnapIn(b); if (b.tp || !powOk(me.p, Math.min(7, me.ri), me.x, null) || await isBanned()) return res.status(403).json({ err: 'integrity' });
+      if (!(await cmd('SET', 'arl2:' + id, 1, 'NX', 'PX', 2500))) return res.status(429).json({ err: 'rate' });
+      const br = arBr(me); await pipe([['SET', 'arsnap:' + id, JSON.stringify(me), 'EX', 86400 * 14], ['SADD', 'ar2:' + br, id], ['EXPIRE', 'ar2:' + br, 86400 * 14], ['HSET', 'arn', id, me.n]]);
+      const myR = await arRt(id); let oid = null, o = null, rv = 0;
+      if (a === 'ar2rv') { const i = Math.max(0, Math.min(19, +b.i || 0)), e = jp(await cmd('LINDEX', 'ardef:' + id, i)); if (!e || !e.a || e.rv) return res.json({ o: null, err: 'gone' }); o = jp(await cmd('GET', 'arsnap:' + e.a)); if (!o) return res.json({ o: null, err: 'gone' }); oid = e.a; rv = 1; e.rv = 1; await cmd('LSET', 'ardef:' + id, i, JSON.stringify(e)) }
+      else { const C = ((await cmd('SRANDMEMBER', 'ar2:' + br, 14)) || []).filter(x => x !== id); if (C.length) { const [sn, rts] = await pipe([['MGET', ...C.map(x => 'arsnap:' + x)], ['HMGET', 'arr:' + W, ...C]]); const L = C.map((x, k) => ({ x, o: jp(sn[k]), r: +rts[k] || 1000 })).filter(q => q.o && q.o.t > now - 86400e3 * 14); L.sort((p1, p2) => (Math.abs(p1.r - myR) + Math.random() * 160) - (Math.abs(p2.r - myR) + Math.random() * 160)); if (L[0]) { oid = L[0].x; o = L[0].o } } }
+      if (!o) return res.json({ o: null, tk: await arTk(0), rt: myR });
+      const tk = await arTk(1); if (!tk.ok) return res.json({ o: null, notk: 1, tk, rt: myR });
+      await cmd('SET', 'arm:' + id, JSON.stringify({ o: oid, rv, t: now }), 'EX', 900);
+      const or = await arRt(oid); delete o.t; return res.json({ o: Object.assign(o, { rt: or, lg: arLg(or) }), rt: myR, tk });
+    }
+    if (a === 'ar2res') {
+      if (!okId(id)) return res.status(403).json({ err: 'id' });
+      const pm = jp(await cmd('GETDEL', 'arm:' + id)); if (!pm || !pm.o) return res.json({ err: 'nomatch' });
+      const w = b.w ? 1 : 0, au = b.au ? 1 : 0, ra = await arRt(id), rb = await arRt(pm.o), ea = 1 / (1 + Math.pow(10, (rb - ra) / 400)), K = 32 * (au ? .5 : 1);
+      const da = Math.round(K * (w - ea)), db = -Math.round(da * .5), na = Math.max(0, ra + da), nb = Math.max(0, rb + db), nm = (await cmd('HGET', 'arn', id)) || 'นิรนาม';
+      const L = [['HSET', 'arr:' + W, id, na, pm.o, nb], ['EXPIRE', 'arr:' + W, 86400 * 40], ['ZADD', 'ars:' + W, na, id, nb, pm.o], ['EXPIRE', 'ars:' + W, 86400 * 40],
+        ['LPUSH', 'ardef:' + pm.o, JSON.stringify({ n: nm, w: w ? 0 : 1, d: db, t: now, a: id })], ['LTRIM', 'ardef:' + pm.o, 0, 19], ['EXPIRE', 'ardef:' + pm.o, 86400 * 14], ['HINCRBY', 'ardefn', pm.o, 1]];
+      if (w) L.push(['ZINCRBY', 'arenaW:' + W, 1, nm], ['EXPIRE', 'arenaW:' + W, 86400 * 40]);
+      await pipe(L); return res.json({ ok: 1, rt: na, d: da, lg: arLg(na), ort: nb });
     }
     if (a === 'arena') {
       const me = { n: clean(b.n, 20) || 'นิรนาม', p: Math.max(0, +b.p || 0), hp: +b.hp || 100, r: clean(b.r, 30), ri: Math.max(0, Math.min(12, +b.ri || 0)), x: b.x ? 1 : 0, t: now };

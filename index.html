@@ -998,7 +998,7 @@ function render(){
  xFix(['gTags','gRealm','stats','arcs','peers','gMini','focus','gAge']);fe.scrollLeft=sl;
  $('spdBtn').textContent=speed?speed+'×':'⚡A';$('pauseBtn').textContent=paused?'▶':'⏸';$('autoBtn').classList.toggle('on',auto);
  $('menuBtn').classList.toggle('dot',S.ow&&S.awake&&S.portal>0);
- {const b=$('sysBtn');b.style.display=S.sys?'':'none';b.classList.toggle('dot',!!(S.sys&&(S.sys.pts>0||S.sys.tk>0)));if(S.sys)b.textContent='🟦'+S.sys.lv}
+ {const b=$('sysBtn');b.style.display=S.sys?'':'none';b.classList.toggle('dot',!!(S.sys&&(S.sys.pts>0||S.sys.tk>0)));if(S.sys)b.textContent='🟦'+((typeof SRK!=='undefined'&&(S.sys.rk|0)>0)?SRK[S.sys.rk].l+'·':'')+S.sys.lv}
 }
 function toggleDetail(){detailOpen=!detailOpen;render()}
 function setFocus(f){S.focus=f;render()}
@@ -2367,8 +2367,8 @@ const HIDQ=[
  {id:'fail',n:'โฮสต์ดื้อด้าน — ทำเควสล้มเหลว 10 ครั้ง แต่ยังไม่ตาย',c:()=>S.sys.fail>=10}];
 const sysType=()=>SYS_TYPES.find(t=>t.id===S.sys.t);
 const sysG=()=>SYS_GRADE[S.sys.gr||0];
-const sysM=()=>sysG().m*(1+.15*(S.sys.evo||0));
-const sysName=()=>sysType().n+(S.sys.evo?` (${EVO_N[S.sys.evo]})`:'');
+const sysM=()=>sysG().m*(1+.15*(S.sys.evo||0))*(1+.06*(S.sys.rk||0));
+const sysName=()=>sysType().n+(S.sys.evo?` (${EVO_N[S.sys.evo]})`:'')+` [อันดับ ${(typeof SRK!=='undefined'&&SRK[S.sys.rk||0]||{l:'F'}).l}]`;
 const sysTM=()=>S.sys?1.25*(1+.05*(S.sys.tc||0)):1;
 const expNeed=lv=>120+lv*90;
 const PROT_SN=['เย่','หลิน','เซียว','ฉิน','หาน','ลู่','มู่','ซู'],PROT_GN=['เทียน','เฟิง','หยาง','เฉิน','อวี่','หลง','ฟาน','เสวียน'];
@@ -2602,7 +2602,7 @@ function eventQuest(){const s=S.sys;s.eqLast=s.eqLast||[];
 function urgentQuest(){return eventQuest()}
 function autoAlloc(){const s=S.sys;while(s.pts>0){allocPt(ch(['pow','pow','qi','int','cha','hp']),true)}}
 function allocPt(k,silent){const s=S.sys;if(!s||s.pts<=0)return;s.pts--;const m=S.talent.m;
- if(k==='pow')S.power+=40*m;if(k==='qi')S.qi+=1.5;if(k==='int')S.int+=8;if(k==='cha')S.cha+=5;if(k==='hp'){s.hp+=15;S.maxHp+=15;S.hp+=15}
+ {const v=srkPt(k);if(k==='pow')S.power+=v;if(k==='qi')S.qi+=v;if(k==='int')S.int+=v;if(k==='cha')S.cha+=v;if(k==='hp'){s.hp+=v;S.maxHp+=v;S.hp+=v}}
  if(!silent){render();openSys()}}
 function buySys(id){const s=S.sys,it=SHOP.find(x=>x.id===id);if(s.sp<it.c){toast('SP ไม่พอ');return}if(it.once&&s.upgrades.includes(it.once)){toast('ซื้อไปแล้ว');return}s.sp-=it.c;s.used++;
  switch(id){case 'pill':S.power+=150*S.talent.m;break;case 'heal':S.hp=S.maxHp;S.chronic=null;break;case 'qi':S.qi+=8;break;
@@ -2632,7 +2632,7 @@ function openSys(){
  <div class="hpbar" style="height:9px;border-color:var(--syA);background:var(--syK)"><i style="width:${s.exp/need*100}%;background:var(--syA)"></i></div><div class="px" style="font-size:10px;opacity:.7">EXP ${s.exp}/${need} · เควสสำเร็จ ${s.done} · ล้มเหลว ${s.fail} · เควสลับ ${s.hid.length}/${HIDQ.length}</div>
  ${sysSpecial()}
  <h4>📜 เควสหลัก ${Math.min(s.main,L.length)}/${L.length}</h4><div class="sysq">${s.main<L.length?`<b>${L[s.main][0]}</b><br><span style="opacity:.75">ไม่มีเวลาจำกัด · รางวัล ${Math.round(250*(s.main+1)*sysM())} EXP</span>`:'✅ จบเควสหลักแล้ว'}</div>
- <h4>แต้มสถานะ: ${s.pts}</h4><div class="sysg">${statB('pow','⚔️ ยุทธ์','+'+Math.round(40*S.talent.m))}${statB('qi','🌀 ลมปราณ','+1.5')}${statB('int','📜 ปัญญา','+8')}${statB('cha','🌸 เสน่ห์','+5')}${statB('hp','❤️ ร่างกาย','+15')}</div>
+ <h4>แต้มสถานะ: ${s.pts}</h4><div class="sysg">${statB('pow','⚔️ ยุทธ์','+'+fmt(srkPt('pow')))}${statB('qi','🌀 ลมปราณ','+'+srkPt('qi'))}${statB('int','📜 ปัญญา','+'+srkPt('int'))}${statB('cha','🌸 เสน่ห์','+'+srkPt('cha'))}${statB('hp','❤️ ร่างกาย','+'+srkPt('hp'))}</div>
  <h4>เควสรอง</h4>${s.quests.length?s.quests.map(q=>`<div class="sysq"><b>${q.n}</b>${q.k==='gear'?(()=>{const n=gearNext();return n?` <button class="sysb" onclick="gearQuick()" ${S.money>=n.c?'':'disabled style="opacity:.5"'}>⬆️ ${n.t==='up'?'ตีบวก':'ซื้อ'} ${n.n} · ${fmt(n.c)}</button>`:' <span style="opacity:.6">· เต็มแล้ว</span>'})():QHINT[q.k]?` <span style="opacity:.6">· แนะนำ: ${(ALLF.find(f=>f[0]===QHINT[q.k])||['','',''])[1]} ${(ALLF.find(f=>f[0]===QHINT[q.k])||['','',''])[2]}</span>`:''}<br><span style="opacity:.75">${fmtG(+qProg(q).toFixed(1))}/${fmtG(q.g)} · เหลือ ${Math.max(0,q.dl-S.age)} ปี · ${q.rw} EXP · ${q.sp} SP</span></div>`).join(''):`<div class="sysq" style="opacity:.6">${S.age<6?'เควสจะเริ่มเมื่ออายุ 6 ปี':'ไม่มีเควสในตอนนี้ — รอระบบมอบหมาย'}</div>`}
  ${s.hid.length?`<h4>🔓 เควสลับที่ปลดล็อก</h4>${s.hid.map(id=>`<div class="sysq">${HIDQ.find(h=>h.id===id).n}</div>`).join('')}`:''}
  <h4>ร้านค้าระบบ</h4>${SHOP.filter(it=>!it.t||it.t===s.t).map(it=>{const own=it.once&&s.upgrades.includes(it.once);return `<div class="sysq" style="display:flex;justify-content:space-between;align-items:center;gap:6px"><div><b>${it.n}</b><br><span style="opacity:.75">${it.d}</span></div><button class="sysb" style="flex:0 0 auto" ${s.sp>=it.c&&!own?'':'disabled'} onclick="buySys('${it.id}')">${own?'มีแล้ว':it.c+' SP'}</button></div>`}).join('')}
@@ -5112,7 +5112,7 @@ function drawScene(ctx,type){
    P(96,Y-12,44,3,'#4a2a14');P(98,Y-9,2,9,'#4a2a14');P(136,Y-9,2,9,'#4a2a14');P(104,Y-14,10,2,'#f4ecd8');P(126,Y-17,2,3,'#f4ecd8');P(126,Y-19-(frame%3?0:1),2,2,'#ffcf5a');person(112,Y,me,'sit');break}
   case 'road':case 'fight':{sky(season,type==='fight'&&S.age%2?'dusk':null);mountains('#9ab0c8',38,10,4);ground(season);
    for(let y=38;y<SH;y++){const w=4+(y-38)*3;P(80-w/2,y,w,1,'#c8a878')}tree(16,Y,season);tree(134,Y,season,true);tree(36,40,season);
-   if(loc==='fight'){person(56,Y,me,'stand');if(sceneEvt&&sceneEvt.data&&sceneEvt.data.beast){const eb=sceneEvt.data.beast,es=eb.k==='bird'||eb.k==='bug'?1.05:1.2;bFlip(()=>drawBeast(g,eb,Math.round(98-16*es),Math.round(Y-22*es),es,frame),98)}else person(96,Y,{age:30,g:'ชาย',skin:'#c8a888',hair:'#111',robe:'#2a2a2a',belt:'#a01020',sword:true},'stand');
+   if(loc==='fight'){person(56,Y,me,'stand');if(sceneEvt&&sceneEvt.data&&sceneEvt.data.beast){const eb=sceneEvt.data.beast,es=eb.k==='bird'||eb.k==='bug'?1.05:1.2;bFlip(()=>drawBeast(g,eb,Math.round(98-16*es),Math.round(Y-22*es),es,frame),98)}else person(96,Y,(sceneEvt&&sceneEvt.data&&sceneEvt.data.en)||{age:30,g:'ชาย',skin:'#c8a888',hair:'#111',robe:'#2a2a2a',belt:'#a01020',sword:true},'stand');
     if(frame%4<2){for(let i=0;i<10;i++)P(70+i,Y-16+i,1,1,'#fff');P(82,Y-12,2,2,'#ffe060');P(66,Y-8,2,2,'#ffe060')}}
    else{mountSprite(60,Y);person(76,Y,me,'walk');petSprite(88,Y)}break}
   case 'war':{sky(season,'dusk');mountains('#5a4a6a',40,10,5);ground(season,44,'#7a6a4a');
@@ -6537,7 +6537,7 @@ const EN_TOTAL=EN_SUR.length*(EN_GM.length+EN_GF.length);
 const AC_W=new WeakMap();
 {const _af=acFlag;acFlag=function(why){try{if(S&&!AC_W.has(S))AC_W.set(S,why)}catch(e){}return _af.apply(this,arguments)}}
 function acTp(){try{return(S&&(AC_W.get(S)||S._tp))||''}catch(e){return''}}
-{const _apiAC=api;api=async function(a,b){try{const tp=acTp();if(b&&tp){if(a==='live'&&b.spec)b=Object.assign({},b,{spec:0});if(['meet','meetact','arena','live','pabid','pachat','paforce','pavote','bhopen','bhpick','mtopen','mtpick','mtmsg','achfirst'].includes(a))b=Object.assign({},b,{tp})}if(b&&!tp&&a==='arena'){acCheck();if(acTp())b=Object.assign({},b,{tp:acTp()})}}catch(e){}const j=await _apiAC.call(this,a,b);try{if(a==='board'&&window._shareCall&&j){j.top=(j.top||[]).filter(e=>!e.anon);j.prev=(j.prev||[]).filter(e=>!e.anon)}}catch(e){}return j}}
+{const _apiAC=api;api=async function(a,b){try{const tp=acTp();if(b&&tp){if(a==='live'&&b.spec)b=Object.assign({},b,{spec:0});if(['meet','meetact','arena','ar2go','ar2rv','live','pabid','pachat','paforce','pavote','bhopen','bhpick','mtopen','mtpick','mtmsg','achfirst'].includes(a))b=Object.assign({},b,{tp})}if(b&&!tp&&(a==='arena'||a==='ar2go'||a==='ar2rv')){acCheck();if(acTp())b=Object.assign({},b,{tp:acTp()})}}catch(e){}const j=await _apiAC.call(this,a,b);try{if(a==='board'&&window._shareCall&&j){j.top=(j.top||[]).filter(e=>!e.anon);j.prev=(j.prev||[]).filter(e=>!e.anon)}}catch(e){}return j}}
 {const _sl2=sendLife;sendLife=async function(){try{acCheck()}catch(e){}return _sl2.apply(this,arguments)}}
 {const _py14=passYear;passYear=function(){try{acCheck()}catch(e){}const r=_py14.apply(this,arguments);try{acCheck()}catch(e){}return r}}
 setInterval(()=>{try{acCheck()}catch(e){}},1500);
@@ -12318,15 +12318,15 @@ const CHB={hell:['🔥','นรก','#ff4a2a'],short:['⏳','ชีวิตส�
 function chBadge(c){const b=CHB[c];return b?`<span class="chbg" style="--c:${b[2]}">${b[0]} ${b[1]}</span>`:''}
 Object.assign(RKC,{dc:['','ผู้ฝ่าขุมนรก','วิญญาณไม่ดับ','ผู้ท้าลิขิต'],wc:['','ราชันย์ไร้พรสวรรค์','จ้าวแห่งเปลวนรก','ผู้ทวนชะตา'],mc:['','จักรพรรดิผู้ลบลิขิต','มารฟ้าทลายกรรม','ตำนานจากธุลี']});
 Object.assign(RKC_TR,{dc:7,wc:8,mc:9});Object.assign(RKC_PN,{dc:'ท้าทายรายวัน',wc:'ท้าทายรายสัปดาห์',mc:'ท้าทายรายเดือน'});
-{const _rkc=rkChip;rkChip=function(t,tr){const o=RKC_OF(String(t||''));if(o&&o.p.length===2){const r=o.r,p=o.p[0];return`<span class="rkchip rkc rkc${p} rr${r}"><i>${p==='m'?'💀':p==='w'?'🔥':'☄️'}${['','①','②','③'][r]}</i>${esc(String(t).slice(0,24))}</span>`}return _rkc.apply(this,arguments)}}
+{const _rkc=rkChip;rkChip=function(t,tr){const o=RKC_OF(String(t||''));if(o&&o.p==='wa'){const r=o.r;return`<span class="rkchip rka rr${r}"><i>⚔️${['','①','②','③'][r]}</i>${esc(String(t).slice(0,24))}</span>`}if(o&&o.p.length===2){const r=o.r,p=o.p[0];return`<span class="rkchip rkc rkc${p} rr${r}"><i>${p==='m'?'💀':p==='w'?'🔥':'☄️'}${['','①','②','③'][r]}</i>${esc(String(t).slice(0,24))}</span>`}return _rkc.apply(this,arguments)}}
 FRAMES.push({id:'f_ch1',n:'กรอบเพลิงนรกันต์',side:'r',c:0,ty:'spin halo orbit sparkle star corner badge',c1:'#ff3a1a',c2:'#ffb040',c3:'#5a0a10',pc:'#ffd080',bd:'🔥',d:'อันดับ 1 ทำเนียบโหมดท้าทาย'},
  {id:'f_ch2',n:'กรอบโซ่ทวนลิขิต',side:'r',c:0,ty:'spin orbit star corner badge',c1:'#a040ff',c2:'#ff70c0',c3:'#2a0a40',pc:'#ffb0f0',bd:'⛓️',d:'อันดับ 2 ทำเนียบโหมดท้าทาย'},
  {id:'f_ch3',n:'กรอบเถ้าธุลีพลิกฟ้า',side:'r',c:0,ty:'spin corner badge',c1:'#8a7a5a',c2:'#ffe0a0',c3:'#3a2a1a',pc:'#ffe8b0',bd:'🗑️',d:'อันดับ 3 ทำเนียบโหมดท้าทาย'});
 BD_CN.c='🔥 ทำเนียบท้าทาย';
 // รางวัลโหมดท้าทายใช้กรอบชุดของตัวเอง (คลังกรรมเท่าทำเนียบปกติ)
 {const _bdcO=BD_FRP;bdClaim=async function(){try{if(!onlineOK)return;const j=await api('bdrw');try{rkSync(j&&j.rk)}catch(e){}const L=(j&&j.l)||[];if(!L.length)return;const d=frGet(),kb=kbGet();let w=LS.get('murim_bdw',0)||0;const lines=[];
- for(const x of L){const r=Math.max(1,Math.min(3,+x.r||3)),pp=_bdcO[x.p]?x.p:'d',isC=x.c==='c',fid=isC?'f_ch'+r:_bdcO[pp]+r,kv=BD_KBP[pp][r];if(!d.own.includes(fid))d.own.push(fid);kb.g+=kv;w++;if(r===1)LS.set('murim_bd1',(LS.get('murim_bd1',0)||0)+1);if(isC)LS.set('murim_bdC',(LS.get('murim_bdC',0)||0)+1);else if(pp!=='d'){const kk=pp==='w'?'murim_bdW':'murim_bdM';LS.set(kk,(LS.get(kk,0)||0)+1)}
-  lines.push(`${['','🥇','🥈','🥉'][r]} อันดับ ${r} ${isC?'🔥 ทำเนียบท้าทาย'+RKC_PN[pp]:'ทำเนียบ'+BD_PN[pp]+' '+(BD_CN[x.c]||'')} (${esc(x.d)}) — ${esc(x.n)}${x.ch?' '+chBadge(x.ch):''} (${fmt(x.s)} คะแนน) · ได้ <b>${frOf(fid).n}</b>${x.tt?' + ฉายา「'+esc(x.tt)+'」':''} + ☯️ ${fmt(kv)}`)}
+ for(const x of L){const r=Math.max(1,Math.min(3,+x.r||3)),pp=_bdcO[x.p]?x.p:'d',isC=x.c==='c',isA=x.c==='a',fid=isA?'f_ar'+r:isC?'f_ch'+r:_bdcO[pp]+r,kv=BD_KBP[pp][r];if(!d.own.includes(fid))d.own.push(fid);kb.g+=kv;w++;if(r===1)LS.set('murim_bd1',(LS.get('murim_bd1',0)||0)+1);if(isC)LS.set('murim_bdC',(LS.get('murim_bdC',0)||0)+1);else if(pp!=='d'){const kk=pp==='w'?'murim_bdW':'murim_bdM';LS.set(kk,(LS.get(kk,0)||0)+1)}
+  lines.push(`${['','🥇','🥈','🥉'][r]} อันดับ ${r} ${isA?'🏟️ ลานประลองหมื่นเงา ซีซั่น':isC?'🔥 ทำเนียบท้าทาย'+RKC_PN[pp]:'ทำเนียบ'+BD_PN[pp]+' '+(BD_CN[x.c]||'')} (${esc(x.d)}) — ${esc(x.n)}${x.ch?' '+chBadge(x.ch):''} (${fmt(x.s)} คะแนน) · ได้ <b>${frOf(fid).n}</b>${x.tt?' + ฉายา「'+esc(x.tt)+'」':''} + ☯️ ${fmt(kv)}`)}
  frSet(d);kbSet(kb);LS.set('murim_bdw',w);profPush();
  const html=`<button class="xbtn" onclick="closeM()">✕</button><h3>🏆 รางวัลทำเนียบ</h3><p>${lines.join('<br>')}</p><p class="tag2">กรอบรางวัลอยู่ใน 👤 โปรไฟล์ และ 🖼️ ร้านแลกกรอบ · คลังกรรมดีเข้าคลังแล้ว</p><button class="pbtn" style="width:100%" onclick="openProfile()">👤 ไปสวมกรอบ</button>`;
  if(!modalOpen)modal(html,'bdrw');else toast('🏆 ได้รางวัลทำเนียบ! ดูกรอบได้ที่โปรไฟล์')}catch(e){}}}
@@ -12347,6 +12347,192 @@ try{if(!GD2.some(x=>x.t==='ทำเนียบโหมดท้าทาย')
 .rkchip.rkc{border:1.5px solid #ffb060;--g:#ff5a20;background-image:linear-gradient(90deg,#5a0a10,#e0301a,#ff9a30,#5a0a10)}
 .rkchip.rkcw{background-image:linear-gradient(90deg,#3a0a50,#c0281a,#ff7aa0,#3a0a50);border-color:#ff90c0}
 .rkchip.rkcm{background-image:linear-gradient(90deg,#120408,#8a0a20,#ffd040,#ff3a1a,#120408);border-color:#ffd060}`;document.head.appendChild(st)})();
+
+// ===================== v15.6 อันดับระบบ F → EX =====================
+const SRK=[{l:'F',lv:1,c:'#9aa4b8',n:'ระบบฝึกหัด'},{l:'E',lv:10,c:'#7ad08a',n:'ระบบตื่นรู้'},{l:'D',lv:20,c:'#4ac0e0',n:'ระบบมั่นคง'},{l:'C',lv:30,c:'#4a8aff',n:'ระบบเหนือสามัญ'},{l:'B',lv:40,c:'#a05aff',n:'ระบบยอดฝีมือ'},
+ {l:'A',lv:50,c:'#ff5ab0',n:'ระบบราชันย์'},{l:'S',lv:60,c:'#ffb020',n:'ระบบเทพ'},{l:'SS',lv:75,c:'#ff6a20',n:'ระบบเหนือเทพ'},{l:'SSS',lv:90,c:'#ff2a3a',n:'ระบบไร้ขีดจำกัด'},{l:'EX',lv:100,c:'#ffffff',n:'ระบบผู้ดูแล'}];
+const SRK_U=['','แต้มสถานะได้ผลมากขึ้น · ลมปราณจากระบบรายปี','รางวัลเควสเพิ่ม · ร่างกายแข็งแกร่ง','🎟️ ระบบสุ่มได้ตั๋วเพิ่ม (ระบบกาชา) / SP พิเศษทุกปี','📜 ได้วิชาระดับสูง 1 วิชา','❤️ พลังชีวิตสูงสุด +150',
+ '🃏 ชีวิตสำรอง +1 (ฟื้นคืนชีพ)','⏳ อายุขัย +30 ปี','📜 วิชาระดับเทพ 2 วิชา · อายุขัย +50','👑 สิทธิ์ผู้ดูแลระบบ: ชีวิตสำรอง +1 · อายุขัย +100 · SP +500'];
+function srkR(){return S&&S.sys?(S.sys.rk|0):0}
+function srkPt(k){const r=srkR(),m=S.talent.m;if(k==='pow'){const nx=REALMS[realmIdx()+1],t=total(),pc=Math.max(40*m,t*.002*(1+.15*r));return Math.round(Math.max(40*m,Math.min(pc,(nx?nx.p:t*3)*.004+40*m)))}
+ if(k==='qi')return +(1.5*(1+.15*r)).toFixed(1);if(k==='int')return Math.round(8*(1+.25*r));if(k==='cha')return Math.round(5*(1+.25*r));return Math.round(15*(1+.3*r))}
+function srkFx(r){try{const o=SRK[r],d=document.createElement('div');d.className='srkfx';d.style.setProperty('--c',o.c);d.innerHTML=`<div class="srkr"></div><div class="srkin"><div class="px srks">[ SYSTEM RANK UP ]</div><div class="srkl">${o.l}</div><div class="srkn">${o.n}</div><div class="srku">${SRK_U[r]}</div></div>`;document.body.appendChild(d);d.onclick=()=>d.remove();setTimeout(()=>{try{d.remove()}catch(e){}},4200);sfx('realm')}catch(e){}}
+function srkUp(){const s=S.sys,to=(s.rk|0)+1,o=SRK[to];if(!o)return;s.rk=to;s.rkT=0;s.sp+=30*to;s.pts+=5*to;S.maxHp+=20*to;S.hp=Math.min(S.maxHp,S.hp+20*to);
+ if(to===4){const a=newArt(3);S.arts.push(a)}if(to===5){S.maxHp+=150;S.hp+=150}if(to===6)s.revive=(s.revive||0)+1;if(to===7){S.lifespan+=30}if(to===8){S.arts.push(newArt(4),newArt(4));S.lifespan+=50}if(to===9){s.revive=(s.revive||0)+1;S.lifespan+=100;s.sp+=500}
+ sysLog(`⚡⚡ <b>ระบบเลื่อนอันดับเป็น ${o.l}</b> — ${o.n}! · SP +${30*to} · แต้มสถานะ +${5*to} · ${SRK_U[to]}`,'myth');keyAdd(`ระบบเลื่อนเป็นอันดับ ${o.l}`);S.flags['srk'+to]=1;srkFx(to);try{render()}catch(e){}}
+function srkDue(){const s=S&&S.alive&&S.sys;if(!s)return false;const nx=SRK[(s.rk|0)+1];return !!(nx&&s.lv>=nx.lv&&S.age>=(s.rkCd||0))}
+function srkTrial(){const s=S.sys,to=(s.rk|0)+1,o=SRK[to];if(!o)return;const B=S.beastMode&&!S.beastMode.human,mult=.85+.06*to;
+ choice(`⚡ บททดสอบเลื่อนอันดับระบบ ${SRK[to-1].l} → ${o.l}`,`<span class="px">[ระบบ]</span> เลเวลของโฮสต์ถึง <b>Lv.${o.lv}</b> แล้ว — แกนกลางระบบต้องการพิสูจน์ว่าโฮสต์คู่ควรกับ <b style="color:${o.c}">${o.n}</b><br><span class="tag2">ผ่านแล้วได้: ${SRK_U[to]} · รางวัลเควส ×${(1+.06*to).toFixed(2)}</span>`,[
+  {t:'⚔️ รับบททดสอบ',s:`สู้กับเงาแห่งระบบ (แข็งแกร่ง ~${Math.round(mult*100)}% ของคุณ)`,f(){const nm=`🟦 เงาแห่งระบบ [${o.l}]`,ep=Math.round(total()*mult);
+    const done=w=>{if(w)srkUp();else{s.rkCd=S.age+2;sysLog(`❌ บททดสอบเลื่อนอันดับ ${o.l} ล้มเหลว — ระบบให้โอกาสใหม่ใน 2 ปี`,'bad')}};
+    if(B){blFight(nm,mult,()=>done(1),()=>done(0));return}setTimeout(()=>{try{duel(nm,ep,done)}catch(e){done(fight(nm,mult))}},350)}},
+  {t:'⏳ เตรียมตัวก่อน',s:'ระบบจะถามอีกครั้งปีหน้า',f(){s.rkCd=S.age+1}}])}
+{const _pyS=passYear;passYear=function(){const r=_pyS.apply(this,arguments);try{const s=S&&S.alive&&S.sys;if(s){if((s.rk|0)>0){S.qi+=.04*s.rk;if(s.rk>=3){s.sp+=s.rk;if(s.t==='gacha'&&Math.random()<.2*s.rk/9)s.tk=(s.tk||0)+1}}
+ if(srkDue()&&!choice._cur){const go=()=>{if(!S||!S.alive||!srkDue())return;if(choice._cur||modalOpen)return setTimeout(go,800);srkTrial()};setTimeout(go,500)}}}catch(e){console.error(e)}return r}}
+{const _osR=openSys;openSys=function(){const r=_osR.apply(this,arguments);try{const s=S.sys,m=$('modal'),bx=m.querySelector('.sysbox');if(!bx)return r;const rk=s.rk|0,o=SRK[rk],nx=SRK[rk+1];bx.classList.add('srkbox');bx.style.setProperty('--rc',o.c);
+ const h=bx.querySelector('h3');const prog=nx?Math.min(100,Math.max(0,(s.lv-o.lv)/(nx.lv-o.lv)*100)):100;
+ h.insertAdjacentHTML('afterend',`<div class="srkcard"><div class="srkbig">${o.l}</div><div style="flex:1;min-width:0"><b>${o.n}</b><div class="srkrow">${SRK.map((x,i)=>`<span class="${i<=rk?'on':''}" style="--c:${x.c}">${x.l}</span>`).join('')}</div>
+  ${nx?`<div class="hpbar" style="height:7px;margin-top:4px;border-color:${nx.c}"><i style="width:${prog}%;background:${nx.c}"></i></div><small>อันดับถัดไป <b style="color:${nx.c}">${nx.l}</b> ที่ Lv.${nx.lv}${s.lv>=nx.lv?(S.age>=(s.rkCd||0)?' · ⚡ <b>พร้อมรับบททดสอบ!</b>':' · รอบททดสอบอีก '+((s.rkCd||0)-S.age)+' ปี'):''} — ได้: ${SRK_U[rk+1]}</small>${s.lv>=nx.lv&&S.age>=(s.rkCd||0)?`<button class="sysb" style="margin-top:6px;width:100%" onclick="closeM();srkTrial()">⚡ เริ่มบททดสอบเลื่อนอันดับ</button>`:''}`:'<small>👑 อันดับสูงสุดแล้ว — โฮสต์คือผู้ดูแลระบบ</small>'}
+  <small style="display:block;opacity:.8">ผลอันดับนี้: รางวัลเควส ×${(1+.06*rk).toFixed(2)} · แต้มสถานะแรงขึ้นตามพลัง${rk?` · ลมปราณ +${(.04*rk).toFixed(2)}/ปี`:''}</small></div></div>`)}catch(e){console.error(e)}return r}}
+// บรรลุ
+try{const L=[{id:'srk_c',n:'ระบบเหนือสามัญ',d:'ระบบถึงอันดับ C',r:2,c:()=>!!(S.sys&&S.sys.rk>=3)},{id:'srk_s',n:'โฮสต์แห่งเทพ',d:'ระบบถึงอันดับ S',r:4,c:()=>!!(S.sys&&S.sys.rk>=6)},{id:'srk_ex',n:'ผู้ดูแลระบบ',d:'ระบบถึงอันดับ EX',r:6,c:()=>!!(S.sys&&S.sys.rk>=9)}];const g=ACH.find(x=>/ระบบ/.test(x[0]));if(g)g[1].push(...L);else ACH.push(['🟦 อันดับระบบ',L]);ACH_ALL.push(...L)}catch(e){}
+try{GD2.push({s:'grow',ic:'🟦',t:'อันดับระบบ F → EX',nw:1,d:'ระบบเลเวลถึง 10/20/30/40/50/60/75/90/100 จะได้<b>บททดสอบเลื่อนอันดับ</b> (สู้กับเงาแห่งระบบ) ผ่านแล้วเลื่อนเป็น F→E→D→C→B→A→S→SS→SSS→<b>EX</b> · ทุกอันดับเพิ่มรางวัลเควส แต้มสถานะคิดตามพลังปัจจุบัน และปลดล็อกของพิเศษ (วิชา ชีวิตสำรอง อายุขัย) · แพ้รอ 2 ปีค่อยลองใหม่',
+ te:'System Rank F → EX',de:'At system Lv.10/20/30/40/50/60/75/90/100 you face a <b>rank-up trial</b> (duel the System Shadow). Pass to climb F→E→D→C→B→A→S→SS→SSS→<b>EX</b>: better quest rewards, stat points that scale with your power, and unlocks (arts, extra lives, lifespan). Fail and retry in 2 years.'});SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
+(function(){const st=document.createElement('style');st.textContent=`
+.srkbox{border-color:var(--rc)!important;box-shadow:0 0 0 2px var(--rc),0 0 22px color-mix(in srgb,var(--rc) 55%,transparent)!important}
+.srkcard{display:flex;gap:10px;align-items:center;margin:8px 0;padding:8px;border-radius:10px;border:2px solid var(--rc);background:rgba(0,0,0,.25);text-align:left}
+.srkbig{min-width:56px;height:56px;display:grid;place-items:center;font:900 30px/1 'Silkscreen',monospace;color:#fff;border-radius:10px;background:radial-gradient(circle,var(--rc),#000a 120%);text-shadow:0 0 10px var(--rc),0 2px 0 #000;animation:srkP 2.2s ease-in-out infinite}
+@keyframes srkP{50%{box-shadow:0 0 18px var(--rc);transform:scale(1.04)}}
+.srkrow{display:flex;flex-wrap:wrap;gap:2px;margin-top:3px}.srkrow span{font:700 10px 'Silkscreen',monospace;padding:1px 4px;border-radius:4px;border:1px solid #fff3;opacity:.35}.srkrow span.on{opacity:1;background:var(--c);color:#000;border-color:var(--c)}
+.srkfx{position:fixed;inset:0;z-index:300;display:grid;place-items:center;background:radial-gradient(circle,color-mix(in srgb,var(--c) 30%,#000c),#000e 70%);animation:srkIn .4s ease-out;cursor:pointer}
+.srkr{position:absolute;width:160vmax;height:160vmax;background:repeating-conic-gradient(from 0deg,color-mix(in srgb,var(--c) 45%,transparent) 0 6deg,transparent 6deg 18deg);animation:srkSpin 6s linear infinite;mask:radial-gradient(circle,#000 0,transparent 60%)}
+.srkin{position:relative;text-align:center;color:#fff;padding:0 16px}.srks{font-size:12px;letter-spacing:3px;opacity:.9;color:var(--c)}
+.srkl{font:900 120px/1 'Silkscreen',monospace;color:#fff;text-shadow:0 0 20px var(--c),0 0 50px var(--c),0 6px 0 #000;animation:srkZ .9s cubic-bezier(.2,1.6,.4,1)}
+.srkn{font-size:22px;font-weight:900;margin-top:6px;text-shadow:0 0 10px var(--c)}.srku{font-size:13px;opacity:.9;margin-top:6px;max-width:340px}
+@keyframes srkIn{from{opacity:0}}@keyframes srkSpin{to{transform:rotate(360deg)}}@keyframes srkZ{0%{transform:scale(3);opacity:0}100%{transform:none;opacity:1}}`;document.head.appendChild(st)})();
+
+// ===================== v15.6 จำศีลบ่มแก่นอสูร (สัตว์อสูร) =====================
+const HIB_DEN=[{id:'cave',ic:'🕳️',n:'ถ้ำลึก',d:'ปลอดภัย ได้น้อย',p:.28,q:.8,risk:.04},{id:'peak',ic:'🏔️',n:'ยอดเขารับฟ้าผ่า',d:'ลมปราณมาก · อาจโดนอัสนีผ่าระหว่างหลับ',p:.4,q:1.35,risk:.16},{id:'lake',ic:'🌊',n:'ใต้ทะเลสาบ / เส้นพลังมังกร',d:'ได้มากที่สุด · อสูรอื่นและนักล่าอาจพบรัง',p:.55,q:1.2,risk:.26}];
+function hibKind(){const m=S.beastMode,sp=BL_SP.find(x=>x[0]===m.sp)||BL_SP[0];return{k:sp[1],sp:m.sp,bear:/หมี/.test(m.sp),turtle:/เต่า/.test(m.sp),serp:sp[1]==='serp',bug:sp[1]==='bug',bird:sp[1]==='bird'}}
+function hibOK(){const m=S&&S.alive&&S.beastMode;if(!m||m.human)return 'ร่างนี้จำศีลไม่ได้';if((m.st|0)<1)return 'ลูกสัตว์ยังต้องอยู่กับพ่อแม่ — โตเป็นสัตว์ป่าก่อน';if(m.hibCd&&S.age<m.hibCd)return `ร่างกายยังไม่พร้อมจำศีลอีก (อีก ${m.hibCd-S.age} ปี)`;return ''}
+function hibNeed(){const m=S.beastMode;if(m.st<4){const n=[[3,0,0],[12,6,0],[0,20,450],[0,45,1500]][m.st];return n?n[2]:0}const u=BL_UP[m.st-4];return u?u[2]:0}
+function hibFat(){const m=S.beastMode;return Math.round(m.fat==null?6:m.fat)}
+function openHib(){const why=hibOK(),m=S.beastMode,K=hibKind(),fat=hibFat(),rem=Math.floor(lifeMax()-S.age-1);
+ const yrs=[5,10,30].filter(n=>n<=rem);const cost=n=>Math.ceil(n*(K.bear||K.turtle?.5:1));
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌙 จำศีลบ่มแก่นอสูร</h3><p class="tag2">หลับใหลหลายปีในครั้งเดียว ร่างกายบ่มพลังเป็น <b>แก่นอสูร</b> — ตื่นแล้วต้องดูดซับเอง · ระหว่างหลับทะลวงขั้นไม่ได้ และโลกข้างนอกยังเดินต่อ</p>
+ <div class="item"><b>🍖 ไขมันสะสม ${fat}</b> <span class="tag2">· ใช้ ${K.bear||K.turtle?'0.5':'1'}/ปีที่หลับ${K.bear?' (หมีจำศีลเก่ง)':K.turtle?' (เต่าหลับนานเก่ง)':''} · ล่าเหยื่อเพื่อสะสมเพิ่ม · ไม่พอจะตื่นกลางคันด้วยความหิว</span></div>
+ ${m.core?`<div class="item"><b>💠 แก่นอสูรค้างอยู่ ${fmt(m.core.p)} พลัง · ลมปราณ ${m.core.q.toFixed(1)}</b><br><button class="pbtn" style="margin-top:6px" onclick="hibAbsorb()">ดูดซับแก่นอสูร</button></div>`:''}
+ ${why?`<p class="tag2" style="color:var(--bad)">⚠️ ${why}</p>`:!yrs.length?'<p class="tag2">อายุขัยเหลือไม่พอจะจำศีล</p>':HIB_DEN.map(d=>`<div class="item hibden"><b>${d.ic} ${d.n}</b><br><span class="tag2">${d.d}</span><div class="brow" style="margin-top:6px">${yrs.map(n=>`<button class="sysb" ${fat<Math.min(cost(n),cost(5))?'disabled':''} onclick="hibGo('${d.id}',${n})">${n} ปี<small> 🍖${cost(n)}</small></button>`).join('')}</div></div>`).join('')}
+ <p class="tag2">พลังที่ได้มีเพดาน (ไม่เกิน ~1.2 เท่าของขั้นถัดไป) · ยิ่งหลับนานยิ่งได้ช้าลง · จำศีลแล้วต้องพักอย่างน้อย 5 ปี</p>`,'hib')}
+function hibGo(den,n){const why=hibOK();if(why)return toast(why);const D=HIB_DEN.find(x=>x.id===den)||HIB_DEN[0],m=S.beastMode,K=hibKind(),per=K.bear||K.turtle?.5:1;
+ closeM();n=Math.min(n,Math.max(1,Math.floor(lifeMax()-S.age-1)));m.fat=hibFat();
+ const t0=total(),need=hibNeed(),cap=Math.max(t0*1.15,need?need*1.2:t0*1.3),mul=S.talent.m*(S.xian?1.4:1)*(K.turtle?1.15:1);const f0=addFeed;addFeed=()=>{};let gp=0,gq=0,slept=0,hurt=0,hungry=0;
+ try{for(let i=0;i<n;i++){if(m.fat<per){hungry=1;break}m.fat-=per;S.age++;slept++;const dim=1/(1+i*.07);
+  const pw=Math.max(yrPow0(),t0*.004)*D.p*dim*(K.bear?1.15:1),q=(.5+Math.random()*.7)*mul*D.q*dim*.6;gp+=pw;gq+=q;
+  if(Math.random()<D.risk*.12){hurt++}
+  (S.children||[]).forEach(c=>{if(c.alive)c.age++});try{peers.forEach(p=>peerYear(p))}catch(e){}(S.hist=S.hist||[]).push([S.age,Math.round(t0+gp),Math.round(S.happy==null?60:S.happy)])}}finally{addFeed=f0}
+ gp=Math.min(gp,Math.max(0,cap-t0));const now=.55;S.power+=Math.round(gp*now);S.qi+=+(gq*now).toFixed(1);
+ m.core={p:Math.round((m.core?m.core.p:0)+gp*(1-now)),q:+(((m.core?m.core.q:0)+gq*(1-now))).toFixed(1)};
+ m.hibCd=S.age+5;m.hibT=(m.hibT||0)+slept;S.flags.seclude=(S.flags.seclude||0)+slept;
+ const out=[];if(hurt){S.hp-=Math.round(S.maxHp*.12*hurt);out.push(`⚡ ระหว่างหลับโดนภัยรบกวน ${hurt} ครั้ง บาดเจ็บ`)}
+ if(hungry){S.hp-=Math.round(S.maxHp*.2);joy(-8);out.push('🍖 ไขมันหมดก่อนกำหนด — ตื่นขึ้นมากลางคันด้วยความหิวโหย')}
+ if(m.shr&&m.shr.f){const l=Math.round(m.shr.f*(1-Math.pow(.97,slept)));m.shr.f-=l;if(l)out.push(`⛩️ ผู้ศรัทธาลดลง ${fmt(l)} คน เพราะไม่เห็นเทพประจำป่ามานาน`)}
+ if(m.kd&&m.kd.t>0){let lost=0;for(let y=0;y<slept;y+=10)if(Math.random()<.3&&m.kd.t>0){m.kd.t--;lost++}if(lost)out.push(`🐾 เผ่าเสียดินแดน ${lost} แห่งระหว่างที่จ่าฝูงหลับ`)}
+ if(S.kids)out.push('🐣 ลูกๆ โตขึ้นโดยไม่มีคุณอยู่ข้างๆ');
+ log(`🌙 <b>${D.ic} จำศีล ${slept} ปี</b> ที่${D.n} — ตื่นตอนอายุ ${S.age} · พลัง +${fmt(Math.round(gp*now))} · ลมปราณ +${(gq*now).toFixed(1)} · 💠 แก่นอสูรบ่มไว้ ${fmt(m.core.p)}${out.length?'<br>'+out.join('<br>'):''}`,'epic');
+ keyAdd(`จำศีล ${slept} ปีที่${D.n}`);try{setScene('aura')}catch(e){}render();checkDeath();if(!S.alive)return;
+ setTimeout(()=>hibWake(D,slept),500)}
+function hibAbsorb(){const m=S.beastMode;if(!m||!m.core)return;closeM();const c=m.core;
+ choice('💠 ดูดซับแก่นอสูร',`แก่นอสูรที่บ่มไว้ระหว่างจำศีล: พลัง <b>${fmt(c.p)}</b> · ลมปราณ <b>${c.q.toFixed(1)}</b>`,[
+  {t:'🔥 ดูดซับรวดเดียว',s:'ได้ครบ 100% · เสี่ยงธาตุแตก 30%',f(){if(roll01(.7)){S.power+=c.p;S.qi+=c.q;log(`💠 ดูดซับแก่นอสูรสำเร็จ! พลังพุ่งขึ้น ${fmt(c.p)}`,'myth')}else{S.power+=Math.round(c.p*.5);S.qi+=c.q*.5;S.hp-=Math.round(S.maxHp*.35);log('💥 ธาตุแตก! พลังครึ่งหนึ่งระเบิดออกจากร่าง บาดเจ็บสาหัส','bad')}m.core=null;render();checkDeath()}},
+  {t:'🌿 ค่อยๆ ย่อย',s:'ได้ 80% · ปลอดภัย',f(){S.power+=Math.round(c.p*.8);S.qi+=c.q*.8;m.core=null;log('💠 ค่อยๆ ย่อยแก่นอสูรจนกลืนเข้ากับร่าง','good');render()}}])}
+function hibWake(D,n){if(!S||!S.alive)return;if(choice._cur||modalOpen)return setTimeout(()=>hibWake(D,n),800);const m=S.beastMode,K=hibKind(),E=[];
+ if(K.serp)E.push(['🐍 ลอกคราบ','คุณตื่นขึ้นพร้อมคราบเก่าที่หลุดลอกออกทั้งตัว เกล็ดใหม่แข็งและวาวกว่าเดิม',[{t:'กินคราบเก่าคืนพลัง',s:'+พลังชีวิตสูงสุด',f(){S.maxHp+=40;S.hp=S.maxHp;m.hibF=Object.assign(m.hibF||{},{spike:1});log('🐍 เกล็ดใหม่งอกเป็นหนามแหลม พลังชีวิตสูงสุด +40','epic')}},{t:'ทิ้งไว้เป็นของขลัง',s:'ชาวบ้านเจอแล้วบูชา · +ชื่อเสียง',f(){S.fame+=120;m.hibF=Object.assign(m.hibF||{},{tint:1});log('🐍 คราบงูยักษ์กลายเป็นของขลังของหมู่บ้าน ชื่อเสียง +120','good')}}]]);
+ if(K.bug)E.push(['🦋 ออกจากดักแด้','ระหว่างหลับ ร่างกายห่อหุ้มเป็นดักแด้ — ตอนนี้มันกำลังแตกออก',[{t:'แหวกดักแด้ออกมา',s:'ร่างใหม่ · +พลัง',f(){S.power+=Math.round(total()*.08);m.hibF=Object.assign(m.hibF||{},{glow:1,tint:1});log('🦋 ร่างใหม่ส่องประกาย ปีกเรืองแสง พลังเพิ่มขึ้น','myth')}}]]);
+ if(K.bear)E.push(['🐻 ตื่นจากจำศีลยาว','ร่างกายผอมลงแต่กล้ามเนื้อแน่นเปรี๊ยะ ความหิวลุกเป็นไฟ',[{t:'ออกล่าทันที',s:'+พลัง · +ฆ่า',f(){S.power+=Math.round(total()*.05);S.kills=(S.kills||0)+R(2,5);m.fat=(m.fat||0)+4;log('🐻 ล่าเหยื่อจนอิ่มหนำ ไขมันสะสม +4','good')}}]]);
+ E.push(['💭 ฝันถึงบรรพบุรุษ','ในความฝันยาวนาน เงาของบรรพสัตว์ปรากฏตัวและจ้องมองคุณ',[{t:'ก้มหัวรับมรดก',s:'อาจปลุกสายเลือดโบราณ',f(){if(roll01(.45)){S.talent.m=+(Math.min(S.talent.m+.15,9)).toFixed(2);m.hibF=Object.assign(m.hibF||{},{eye3:1});log('🩸 สายเลือดโบราณตื่นขึ้น! พรสวรรค์เพิ่ม ดวงตาที่สามปรากฏบนหน้าผาก','myth');keyAdd('สายเลือดโบราณตื่นระหว่างจำศีล')}else{S.qi+=3;log('💭 เงาบรรพบุรุษจางหายไป ทิ้งไว้เพียงลมปราณอุ่นๆ (+3)','good')}}},{t:'ถามถึงอนาคต',s:'+ปัญญา',f(){S.int+=12;log('💭 บรรพบุรุษกระซิบถึงทางข้างหน้า ปัญญา +12','good')}}]]);
+ E.push(['🏘️ หมู่บ้านข้างรัง','ตื่นมาพบว่ามนุษย์มาตั้งหมู่บ้านเล็กๆ ติดกับที่จำศีลของคุณ',[{t:'คุ้มครองพวกเขา',s:'+กรรม · +ผู้ศรัทธา',f(){S.karma+=12;if(m.shr)m.shr.f+=R(80,200);else S.fame+=80;log('🏘️ ชาวบ้านเรียกคุณว่าเทพผู้หลับใหลแห่งขุนเขา','good')}},{t:'ไล่ไปให้พ้น',s:'+พลัง · −กรรม',f(){S.karma-=10;S.power+=Math.round(total()*.03);log('🏘️ เสียงคำรามเพียงครั้งเดียว หมู่บ้านทั้งหมู่บ้านอพยพหนี','bad')}}]]);
+ E.push(['🐣 ผู้อาศัยตัวน้อย','สัตว์ตัวเล็กตัวหนึ่งมาซุกนอนในขนของคุณตลอดหลายปี ตอนนี้มันไม่ยอมไปไหน',[{t:'รับเป็นบริวาร',s:'มีเพื่อนติดตาม · +ความสุข',f(){if(!S.pet)S.pet={i:ch(['🐿️','🐇','🦔','🐦']),n:'บริวารเฝ้ารัง'};joy(10);log('🐣 บริวารตัวน้อยติดตามคุณไปทุกที่','good')}},{t:'ไล่มันไป',s:'',f(){log('🐣 มันวิ่งหายเข้าพงหญ้าไป','')}}]]);
+ if(D.id!=='cave'||Math.random()<.3)E.push(['⚔️ ผู้บุกรุกรัง',D.id==='lake'?'อสูรน้ำตัวหนึ่งยึดทะเลสาบไว้ระหว่างที่คุณหลับ':'กลุ่มนักล่ามนุษย์ตามกลิ่นมาจนพบรังของคุณ',[{t:'สู้ทันที',s:'ชนะ +พลัง +ชื่อเสียง',f(){blFight(D.id==='lake'?'อสูรน้ำผู้ยึดถิ่น':'กองนักล่าอสูร',.95,()=>{S.power+=Math.round(total()*.05);S.fame+=60},()=>{})}},{t:'หนีไปหาที่ใหม่',s:'ปลอดภัย',f(){joy(-4);log('🏃 คุณทิ้งรังเก่าไปหาที่ใหม่','')}}]]);
+ const ev=ch(E);choice(ev[0],ev[1],ev[2]);try{render()}catch(e){}}
+{const _bmH=blMe;blMe=function(){const o=_bmH.apply(this,arguments);try{const F=S.beastMode&&S.beastMode.hibF;if(F){if(F.spike)o.f.spike=true;if(F.glow)o.f.glow=true;if(F.eye3)o.f.eye3=true;if(F.tint&&o.col)o.col=shadeC(o.col,.18)}}catch(e){}return o}}
+{const _byH=beastYear;beastYear=function(){const r=_byH.apply(this,arguments);try{const m=S.beastMode;if(m&&!m.human){m.fat=Math.min(40,(m.fat==null?6:m.fat)+(S.focus==='hunt'?2:S.focus==='devour'?1.5:.5))}}catch(e){}return r}}
+{const _omH=openMenu;openMenu=function(){const r=_omH.apply(this,arguments);try{const m=S&&S.alive&&S.beastMode;if(m&&!m.human){const g=$('modal').querySelector('.mcat15 .mgrid')||$('modal').querySelector('.mgrid');if(g&&!g.querySelector('[data-hib]'))g.insertAdjacentHTML('afterbegin',`<button class="opt" data-hib="1" onclick="openHib()">🌙 จำศีลบ่มแก่น<small>${m.core?'💠 มีแก่นอสูรรอดูดซับ':hibOK()||'ข้ามเวลาหลายปี · 🍖 '+hibFat()}</small></button>`)}}catch(e){}return r}}
+try{const L=[{id:'hib_100',n:'หลับใหลร้อยปี',d:'สัตว์อสูร: จำศีลรวม 100 ปี',r:3,c:()=>!!(S.beastMode&&(S.beastMode.hibT||0)>=100)},{id:'hib_eye',n:'อสูรตื่นจากนิทรา',d:'ปลุกสายเลือดโบราณระหว่างจำศีล',r:4,c:()=>!!(S.beastMode&&S.beastMode.hibF&&S.beastMode.hibF.eye3)}];const g=ACH.find(x=>/สัตว์อสูร/.test(x[0]));if(g)g[1].push(...L);else ACH.push(['🐾 จำศีล',L]);ACH_ALL.push(...L)}catch(e){}
+try{GD2.push({s:'beast',ic:'🌙',t:'จำศีลบ่มแก่นอสูร',nw:1,d:'สัตว์อสูรที่โตแล้วจำศีลได้ที่ ☰ เลือก 🕳️ ถ้ำลึก (ปลอดภัย) · 🏔️ ยอดเขารับฟ้าผ่า · 🌊 ใต้ทะเลสาบ (ได้มากเสี่ยงมาก) นาน 5/10/30 ปี · ใช้ 🍖 ไขมันสะสม (ล่าเหยื่อเพื่อเพิ่ม) · พลังส่วนหนึ่งบ่มเป็น 💠 แก่นอสูร ต้องดูดซับเอง (รวดเดียวเสี่ยงธาตุแตก / ค่อยๆ ย่อยได้ 80%) · ตื่นมามีเหตุการณ์: งูลอกคราบ แมลงออกดักแด้ ฝันถึงบรรพบุรุษ หมู่บ้านข้างรัง ผู้บุกรุก',
+ te:'Beast Hibernation',de:'Grown beasts can hibernate from ☰: 🕳️ deep cave (safe), 🏔️ lightning peak, 🌊 lakebed (best, riskiest) for 5/10/30 years, burning 🍖 stored fat (hunt to gain). Part of the gain becomes a 💠 beast core you must absorb (all at once risks a meltdown; slow digestion gives 80%). Waking brings events: molting, cocoons, ancestor dreams, a village by your den, intruders.'});SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
+
+// ===================== v15.6 ลานประลองหมื่นเงา (rework ประลองเงา) =====================
+const AR_LG=[['🥉','ทองแดง','#c8885a',0],['🥈','เงิน','#c8d4e8',1100],['🥇','ทอง','#ffc840',1250],['💎','เพชร','#60e0ff',1400],['👑','จ้าวลาน','#ff60c0',1600]];
+const AR_ST={atk:['🗡️','บุกดุดัน','บุกและท่าหนักบ่อย'],def:['🛡️','ตั้งรับสวนกลับ','ตั้งการ์ดรอจังหวะ'],trick:['🌀','หลอกล่อ','ท่าหลอกและรวมพลัง'],all:['⚡','ทุ่มสุดตัว','ท่าหนักแรงแต่เปิดช่อง']};
+const AR_BEAT={fire:['ice','life'],ice:['wind'],wind:['earth'],earth:['thunder'],thunder:['sword','ice'],sword:['life','blood'],life:['earth'],light:['dark'],dark:['light'],star:['void'],void:['star'],blood:['fire']};
+const AR_SB={atk:'trick',trick:'def',def:'atk'};
+const arC=()=>+(LS.get('murim_arc',0)||0),arCAdd=n=>{LS.set('murim_arc',Math.max(0,arC()+n))};
+const arSt=()=>{const v=LS.get('murim_arst','atk');return AR_ST[v]?v:'atk'};
+function arEl(){try{return S.rlm&&S.rlm.el||''}catch(e){return''}}
+function arElN(el){const e=(typeof RLM_EL!=='undefined'?RLM_EL:[]).find(x=>x[0]===el);return e?e[1]+' '+e[2]:''}
+function arAdv(a,b){if(!a||!b)return 0;return(AR_BEAT[a]||[]).includes(b)?1:(AR_BEAT[b]||[]).includes(a)?-1:0}
+function arLgH(i,big){const L=AR_LG[i]||AR_LG[0];return`<span class="arlg${big?' big':''}" style="--c:${L[2]}">${L[0]} ${L[1]}</span>`}
+function arSnap(){const B=S.beastMode&&!S.beastMode.human;let look=null;try{look=meLook();look=JSON.parse(JSON.stringify(look))}catch(e){}
+ return{n:pname(),p:Math.round(myPow()),hp:S.maxHp,r:B?BL_ST[S.beastMode.st]:REALMS[realmIdx()].n,ri:realmIdx(),x:S.xian?1:0,bm:B?1:0,st:arSt(),arts:(S.arts||[]).filter(a=>a&&a.n).slice().sort((a,b)=>b.b-a.b).slice(0,3).map(a=>a.n),el:arEl(),sr:S.sys&&typeof SRK!=='undefined'?SRK[S.sys.rk|0].l:'',look}}
+const AR=window.AR={busy:0,info:null};
+function arTkH(tk){if(!tk)return'';const n=tk.n|0;return`<span class="artk">${'🎫'.repeat(n)}${'<i>🎫</i>'.repeat(Math.max(0,5-n))}</span>${n<5&&tk.nx?`<small> · ใบถัดไป ${Math.ceil(tk.nx/60000)} นาที</small>`:''}`}
+async function arPage(){const box=$('arBox');if(!box)return;let j;try{j=await api('ar2',{})}catch(e){box.innerHTML='<p class="tag2">โหลดลานประลองไม่ได้ ลองใหม่อีกครั้ง</p>';return}AR.info=j;if(!$('arBox'))return;
+ const lg=j.lg|0,L=AR_LG[lg],nx=AR_LG[lg+1],st=arSt(),alive=S&&S.alive;const b0=lg?L[3]:900,pr=nx?Math.max(0,Math.min(100,(j.rt-b0)/(nx[3]-b0)*100)):100;
+ box.innerHTML=`<div class="arhero" style="--c:${L[2]}"><div class="arsh"></div><b>🏟️ ลานประลองหมื่นเงา</b><div class="arme">${arLgH(lg,1)}<span class="px">${fmt(j.rt)} แต้ม</span></div>
+  ${nx?`<div class="hpbar" style="height:6px;border-color:${nx[2]}"><i style="width:${pr}%;background:${nx[2]}"></i></div><small>อีก ${fmt(nx[3]-j.rt)} แต้มขึ้น ${nx[0]} ${nx[1]}</small>`:'<small>👑 ลีกสูงสุด</small>'}
+  <div class="arrow2"><span>${arTkH(j.tk)}</span><span>🪙 ${fmt(arC())}</span></div><small>ซีซั่นรีเซ็ตทุกวันจันทร์ · อันดับ 1–3 ได้ฉายา + กรอบประจำลาน</small></div>
+  ${j.nw?`<div class="item arnew">🛡️ ระหว่างที่คุณไม่อยู่ มีคนมาท้าเงาของคุณ ${j.nw} ครั้ง!</div>`:''}
+  <h4>🎭 นิสัยเงาของคุณ <small class="tag2">(คนที่มาท้าจะเจอท่าทีแบบนี้)</small></h4><div class="arst">${Object.entries(AR_ST).map(([k,v])=>`<button class="${k===st?'on':''}" onclick="LS.set('murim_arst','${k}');arPage()">${v[0]} ${v[1]}<small>${v[2]}</small></button>`).join('')}</div>
+  ${alive?`<div class="brow" style="margin-top:8px"><button class="pbtn" style="flex:1" ${j.tk&&j.tk.n>0?'':'disabled'} onclick="arGo(0)">⚔️ สู้เอง<small style="display:block;font-size:11px">ได้แต้มเต็ม · 🪙3</small></button><button class="gbtn" style="flex:1" ${j.tk&&j.tk.n>0?'':'disabled'} onclick="arGo(1)">🤖 ให้เงาสู้แทน<small style="display:block;font-size:11px">แต้มครึ่งเดียว · 🪙1</small></button></div>
+   <p class="tag2">ธาตุของคุณ: ${arElN(arEl())||'— (ยังไม่ตื่นธาตุ)'} · ธาตุชนะทางได้เปรียบ 12% · จับคู่ตามระดับพลังและแต้มใกล้เคียง${S.beastMode&&!S.beastMode.human?' · 🐾 สายสัตว์อสูร':''}</p>`:'<p class="tag2">ต้องอยู่ระหว่างเล่นชีวิตหนึ่งก่อนถึงจะลงสนามได้</p>'}
+  <h4>🛡️ บันทึกการป้องกันของเงา</h4>${(j.def||[]).length?j.def.slice(0,8).map(e=>`<div class="item ardef ${e.w?'ok':'bad'}"><b>${e.w?'🛡️ เงาของคุณชนะ':'💔 เงาของคุณแพ้'}</b> ${esc(e.n)} <small>${e.d>0?'+':''}${e.d} แต้ม</small>${!e.w&&!e.rv&&alive?` <button class="sysb" onclick="arRv(${e.i})">⚔️ ล้างแค้น</button>`:e.rv?' <small>· ล้างแค้นแล้ว</small>':''}</div>`).join(''):'<p class="tag2">ยังไม่มีใครมาท้า — ลงสนามสักครั้งเพื่อส่งเงาเข้าลาน</p>'}
+  <h4>🏆 อันดับซีซั่นนี้</h4>${(j.top||[]).length?j.top.map((e,i)=>`<div class="artop ${e.me?'me':''}"><b>${['🥇','🥈','🥉'][i]||'#'+(i+1)}</b> ${esc(e.n)} ${arLgH(e.lg)}<span class="px">${fmt(e.r)}</span></div>`).join(''):'<p class="tag2">ยังไม่มีใครลงแข่งสัปดาห์นี้</p>'}
+  <div class="arprz">${[1,2,3].map(r=>`<div>${['','🥇','🥈','🥉'][r]} ${rkChip(RKC.wa[r],8)}<small>${frOf('f_ar'+r).n}</small></div>`).join('')}</div>
+  <h4>🪙 ร้านเหรียญลาน <small class="tag2">มี ${fmt(arC())}</small></h4><div class="arshop">${AR_SHOP.map(it=>{const own=it.fr&&frGet().own.includes(it.fr);return`<div class="item"><b>${it.n}</b><br><small class="tag2">${it.d}</small><br><button class="sysb" ${own||arC()<it.c||(it.need&&!alive)?'disabled':''} onclick="arBuy('${it.id}')">${own?'มีแล้ว':'🪙 '+it.c}</button></div>`}).join('')}</div>`}
+const AR_SHOP=[{id:'heal',n:'🧪 ยาฟื้นฟูเต็ม',d:'พลังชีวิตเต็มทันที',c:8,need:1,f(){S.hp=S.maxHp;return'พลังชีวิตเต็มแล้ว'}},{id:'qi',n:'🌀 ลูกกลอนลมปราณ',d:'ลมปราณ +2',c:12,need:1,f(){S.qi+=2;return'ลมปราณ +2'}},{id:'joy',n:'🍵 ชาสงบจิต',d:'ความสุข +15',c:6,need:1,f(){joy(15);return'จิตใจสงบลง'}},
+ {id:'fr1',n:'🖼️ กรอบเงาสลัว',d:'กรอบประจำลาน (ถาวร)',c:40,fr:'f_arc1'},{id:'fr2',n:'🖼️ กรอบหมื่นเงา',d:'กรอบประจำลานระดับสูง (ถาวร)',c:120,fr:'f_arc2'}];
+function arBuy(id){const it=AR_SHOP.find(x=>x.id===id);if(!it||arC()<it.c)return;if(it.need&&!(S&&S.alive))return;if(it.fr){const d=frGet();if(d.own.includes(it.fr))return;d.own.push(it.fr);frSet(d);try{profPush()}catch(e){}arCAdd(-it.c);toast('ได้รับ '+frOf(it.fr).n+' · สวมได้ที่โปรไฟล์');return arPage()}arCAdd(-it.c);toast(it.f());try{render()}catch(e){}arPage()}
+FRAMES.push({id:'f_ar1',n:'กรอบจ้าวลานหมื่นเงา',side:'r',c:0,ty:'spin halo orbit sparkle star corner badge',c1:'#ff60c0',c2:'#ffffff',c3:'#3a1060',pc:'#ffd0f0',bd:'⚔️',d:'อันดับ 1 ซีซั่นลานประลองหมื่นเงา'},{id:'f_ar2',n:'กรอบเงาพิฆาต',side:'r',c:0,ty:'spin orbit star corner badge',c1:'#60e0ff',c2:'#e0fbff',c3:'#103a60',pc:'#c0f4ff',bd:'🗡️',d:'อันดับ 2 ซีซั่นลานประลองหมื่นเงา'},{id:'f_ar3',n:'กรอบดาบเงา',side:'r',c:0,ty:'spin corner badge',c1:'#ffc840',c2:'#fff0b0',c3:'#5a3a10',pc:'#fff0c0',bd:'⚔️',d:'อันดับ 3 ซีซั่นลานประลองหมื่นเงา'},
+ {id:'f_arc1',n:'กรอบเงาสลัว',side:'r',c:0,ty:'corner badge',c1:'#5a5a7a',c2:'#b0b0d0',c3:'#20202a',pc:'#d0d0f0',bd:'🌫️',d:'แลกด้วยเหรียญลาน 40'},{id:'f_arc2',n:'กรอบหมื่นเงา',side:'r',c:0,ty:'spin orbit corner badge',c1:'#8a60ff',c2:'#e0d0ff',c3:'#20104a',pc:'#e0d8ff',bd:'👥',d:'แลกด้วยเหรียญลาน 120'});
+Object.assign(RKC,{wa:['','จ้าวลานหมื่นเงา','ราชันย์เงาพิฆาต','ดาบเงาไร้เทียมทาน']});RKC_TR.wa=8;RKC_PN.wa='ลานประลองรายสัปดาห์';
+BD_CN.a='🏟️ ลานประลอง';
+function arReady(){if(!S||!S.alive)return'ต้องอยู่ระหว่างเล่นชีวิต';if(choice._cur)return'ตัดสินใจเรื่องที่ค้างอยู่ก่อน';if(S.hp<S.maxHp*.2)return'บาดเจ็บหนักเกินไป พักฟื้นก่อน';return''}
+async function arGo(au,rvI){const why=arReady();if(why)return toast(why);if(AR.busy)return;AR.busy=1;let j;
+ try{j=await api(rvI!=null?'ar2rv':'ar2go',Object.assign(arSnap(),rvI!=null?{i:rvI}:{}))}catch(e){AR.busy=0;return toast(e.message==='rate'?'ใจเย็นๆ รอสักครู่':'เชื่อมต่อไม่ได้')}AR.busy=0;
+ if(!j.o){if(j.notk)return toast('ตั๋วประลองหมดแล้ว รอเติมใหม่');if(rvI!=null)return toast('เงาของคนนั้นหายไปจากลานแล้ว');
+  return modal(`<h3>🏟️ ยังไม่มีเงาในรุ่นเดียวกัน</h3><p>ตอนนี้ลานยังไม่มีเงาของผู้เล่นที่พลังใกล้เคียงกับคุณ เงาของคุณถูกส่งเข้าลานแล้ว — คนอื่นจะเจอคุณได้</p><p class="tag2">ระหว่างนี้ลองซ้อมกับ <b>เงาฝึกหัด</b> ได้ (ไม่เสียตั๋ว ไม่มีแต้ม ได้ 🪙1 ถ้าชนะ)</p><div class="brow"><button class="gbtn" onclick="openOnline('arena')">กลับ</button><button class="pbtn" onclick="arTrain()">🥋 ซ้อมกับเงาฝึกหัด</button></div>`,'arpre')}
+ arPre(j.o,au,j)}
+function arRv(i){arGo(0,i)}
+function arTrain(){const p=Math.round(myPow()*(.85+Math.random()*.25));arFight({n:'เงาฝึกหัด',p,r:'หุ่นไม้แห่งลาน',st:ch(['atk','def','trick','all']),arts:['ฝ่ามือหุ่นไม้'],el:'',look:null,train:1},0)}
+function arPre(o,au,j){const me=arEl(),ad=arAdv(me,o.el),sA=AR_ST[o.st]||AR_ST.atk;
+ modal(`<h3>⚔️ เจอคู่ประลองแล้ว!</h3><div class="arvs"><div><canvas id="arCvA" width="112" height="124"></canvas><b>${esc(pname())}</b><small>${fmt(Math.round(myPow()))}</small></div><div class="arvsx">VS</div><div><canvas id="arCvB" width="112" height="124"></canvas><b>${esc(o.n)}</b><small>${fmt(o.p)}</small></div></div>
+  <div class="item"><b>เงาของ ${esc(o.n)}</b> ${arLgH(o.lg|0)} <span class="px">${fmt(o.rt||1000)}</span>${o.sr?` · 🟦${esc(o.sr)}`:''}<br><span class="tag2">${esc(o.r||'')} · นิสัยเงา ${sA[0]} ${sA[1]} · ธาตุ ${arElN(o.el)||'—'}${(o.arts||[]).length?' · วิชา '+o.arts.map(a=>'《'+esc(a)+'》').join(' '):''}</span>
+  ${ad?`<br><b style="color:${ad>0?'#3a9a4a':'#d84a4a'}">${ad>0?'✅ ธาตุของคุณข่มทาง +12%':'⚠️ ธาตุของคุณเสียเปรียบ −12%'}</b>`:''}</div>
+  <div class="brow"><button class="gbtn" onclick="AR.cur=null;arFight(AR.cur0,1)">🤖 ให้เงาสู้แทน</button><button class="pbtn" onclick="arFight(AR.cur0,0)">⚔️ สู้เอง!</button></div><p class="tag2">ตั๋วถูกใช้แล้ว · หนีหรือปิดหน้านี้นับเป็นแพ้</p>`,'arpre');AR.cur0=o;AR.pend=1;
+ setTimeout(()=>{try{arDraw('arCvA',meLook());arDraw('arCvB',o.look)}catch(e){}},30)}
+function arDraw(id,look){const cv=$(id);if(!cv)return;const ctx=cv.getContext('2d'),sg=g,sp=PS;g=ctx;PS=cv.width/28;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;
+ try{P(0,0,40,44,'#1c1a28');P(0,25,40,8,'#2a2638');const o=look||{age:30,g:'ชาย',skin:'#8a8a9a',hair:'#222',robe:'#3a3a4a',belt:'#6a6a7a',sword:true};person(11.5,29,o,'stand')}catch(e){}g=sg;PS=sp}
+function arFight(o,au){if(!o)return;const ad=arAdv(arEl(),o.el),ep=Math.max(10,Math.round(o.p*(1-.12*ad)));AR.cur={o,au,ad};AR.pend=0;
+ const sv={f:S.fame,h:S.hp,k:S.kills,j:S.happy};const fin=w=>{S.fame=sv.f;S.hp=Math.max(S.hp,sv.h*.9);S.kills=sv.k;S.happy=sv.j;arResult(o,au,w)};
+ if(au){const my=myPow()*(1+.12*ad),sb=AR_SB[arSt()]===o.st?1:AR_SB[o.st]===arSt()?-1:0,allv=(o.st==='all'||arSt()==='all')?.12:0;let p=clamp(my/(my+o.p)+sb*.08+(Math.random()-.5)*allv*2,.08,.92);const w=Math.random()<p;
+  const A=AR_ST[arSt()],B=AR_ST[o.st]||AR_ST.atk,lines=[`${A[0]} เงาของคุณ${A[1]} — ${B[0]} เงาของ ${esc(o.n)}${B[1]}`,sb>0?'ท่าทีของคุณข่มอีกฝ่ายได้!':sb<0?'อีกฝ่ายอ่านทางเงาของคุณออก…':'ทั้งสองแลกหมัดกันอย่างดุเดือด',`《${esc((o.arts||[])[0]||'ท่าเงา')}》 ปะทะ 《${esc(((S.arts||[]).slice().sort((a,b)=>b.b-a.b)[0]||{}).n||'หมัดเปล่า')}》`];
+  modal(`<h3>🤖 เงาสู้แทน</h3><div class="arauto">${lines.map((l,i)=>`<p style="animation-delay:${i*.6}s">${l}</p>`).join('')}<p class="arres" style="animation-delay:2s">${w?'🏆 เงาของคุณชนะ!':'💀 เงาของคุณพ่ายแพ้'}</p></div>`,'arauto');setTimeout(()=>{if($('modal').dataset.k==='arauto')arResult(o,au,w)},3000);return}
+ duel(o.train?o.n:`เงาของ ${o.n}`,ep,fin);try{DU.ar=o;setScene('fight',o.look&&o.look.beast?{beast:o.look.beast}:{en:o.look||null})}catch(e){}}
+async function arResult(o,au,w){let r=null;if(!o.train){try{r=await api('ar2res',{w:w?1:0,au:au?1:0})}catch(e){}}const c=o.train?(w?1:0):au?(w?1:0):(w?3:1);if(c)arCAdd(c);
+ try{if(w&&!o.train)S.flags.arW=(S.flags.arW||0)+1}catch(e){}
+ log(`🏟️ ลานประลอง: ${w?'ชนะ':'แพ้'}เงาของ <b>${esc(o.n)}</b>${r&&r.ok?` · ${r.d>0?'+':''}${r.d} แต้ม (${fmt(r.rt)})`:''}${c?` · 🪙+${c}`:''}`,w?'good':'bad');
+ const up=r&&r.ok&&AR.info&&r.lg>(AR.info.lg|0);
+ modal(`<h3>${w?'🏆 ชนะ!':'💀 พ่ายแพ้'}</h3>${up?`<div class="arup">${arLgH(r.lg,1)}<b>เลื่อนลีก!</b></div>`:''}<p>${w?'เงาของ':'คุณแพ้ให้เงาของ'} <b>${esc(o.n)}</b>${w?' แตกสลายเป็นหมอกควัน':''}</p>${r&&r.ok?`<p class="px" style="font-size:20px;color:${r.d>=0?'#3a9a4a':'#d84a4a'}">${r.d>0?'+':''}${r.d} แต้ม → ${fmt(r.rt)}</p>`:o.train?'<p class="tag2">ซ้อม — ไม่มีแต้ม</p>':''}${c?`<p>🪙 +${c} เหรียญลาน</p>`:''}<button class="pbtn" style="width:100%" onclick="openOnline('arena')">กลับลานประลอง</button>`,'arres');try{render()}catch(e){}}
+// ปิดหน้าเตรียมสู้ = แพ้
+{const _cmA=closeM;closeM=function(){const k=$('modal')&&$('modal').dataset.k;const r=_cmA.apply(this,arguments);try{if(k==='arpre'&&AR.pend&&AR.cur0&&!AR.cur0.train){AR.pend=0;const o=AR.cur0;api('ar2res',{w:0,au:0}).catch(()=>{});log(`🏟️ ลานประลอง: ถอนตัวจากการท้าเงาของ ${esc(o.n)} (นับเป็นแพ้)`,'bad')}}catch(e){}return r}}
+// ท่าทีตามนิสัยเงา + ใช้ชื่อวิชาของเงา
+{const _diA=duelIntent;duelIntent=function(){const r=_diA.apply(this,arguments);try{if(DU&&DU.ar&&!DU.charge&&Math.random()<.5){const P={atk:['atk','atk','heavy'],def:['def','def','chg'],trick:['feint','feint','chg'],all:['heavy','heavy','chg']}[DU.ar.st]||['atk'];return ch(P)}}catch(e){}return r}}
+{const _dtA=duTech;duTech=function(){try{if(DU&&DU.ar&&(DU.ar.arts||[]).length)return ch(DU.ar.arts)}catch(e){}return _dtA.apply(this,arguments)}}
+// แท็บประลองเงาใหม่
+{const _ooA=openOnline;openOnline=async function(tab){const r=await _ooA.apply(this,arguments);try{if(tab==='arena'&&onlineOK){const m=$('modal'),tb=m.querySelector('.tabs');if(tb){while(tb.nextSibling)tb.nextSibling.remove();tb.insertAdjacentHTML('afterend','<div id="arBox"><p class="tag2">กำลังเปิดลานประลอง…</p></div>');arPage()}}}catch(e){console.error(e)}return r}}
+// ฉาก duel: ใช้ภาพเงาคู่ต่อสู้ระหว่างดวล (ฉากถูกตั้งใหม่ทุกยก)
+{const _ddA=drawDuel;drawDuel=function(){const r=_ddA.apply(this,arguments);try{if(DU&&DU.ar)setScene('fight',DU.ar.look&&DU.ar.look.beast?{beast:DU.ar.look.beast}:{en:DU.ar.look||null})}catch(e){}return r}}
+try{const L=[{id:'ar_w10',n:'ผู้ท้าหมื่นเงา',d:'ชนะในลานประลองหมื่นเงา 10 ครั้งในชีวิตเดียว',r:3,c:()=>(S.flags.arW||0)>=10}];const g=ACH.find(x=>/ออนไลน์/.test(x[0]));if(g)g[1].push(...L);else ACH.push(['🏟️ ลานประลอง',L]);ACH_ALL.push(...L)}catch(e){}
+try{GD2.push({s:'net',ic:'🏟️',t:'ลานประลองหมื่นเงา',nw:1,d:'ประลองเงาแบบใหม่ (🌐 ออนไลน์ → ⚔️ ประลองเงา): สู้เองด้วยระบบดวลจับเวลา หรือให้เงาสู้แทน · ศัตรูใช้วิชาจริงและท่าทีตาม<b>นิสัยเงา</b>ที่เจ้าของตั้ง (🗡️ บุก 🛡️ รับ 🌀 หลอก ⚡ ทุ่ม) · ธาตุชนะทาง +12% · มี<b>แต้มและลีก</b> 🥉→👑 รีเซ็ตทุกวันจันทร์ อันดับ 1–3 ได้ฉายา+กรอบ · เงาของคุณป้องกันตอนออฟไลน์ แพ้แล้ว <b>ล้างแค้น</b>ได้ · ตั๋ว 5 ใบ เติม 1 ใบทุก 20 นาที · 🪙 เหรียญลานแลกยาและกรอบ',
+ te:'Ten-Thousand Shadows Arena',de:'The new Shadow Arena (🌐 Online → ⚔️ Shadow duel): fight yourself with the timed duel or let your shadow auto-fight · foes use real arts and the <b>shadow style</b> their owner set · element counters +12% · <b>rating & leagues</b> 🥉→👑 reset every Monday, top 3 get titles+frames · your shadow defends while offline, take <b>revenge</b> · 5 tickets, +1 every 20 min · 🪙 arena coins buy potions and frames.'});SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
+(function(){const st=document.createElement('style');st.textContent=`
+.arhero{position:relative;overflow:hidden;margin:8px 0;padding:12px;border-radius:12px;border:2px solid var(--c);background:linear-gradient(160deg,#1a1430,#2a1a40 60%,#0e0a18);color:#f0e8ff}
+.arhero>b{font-size:17px;text-shadow:0 0 8px var(--c)}.arhero small{display:block;font-size:11.5px;opacity:.85;margin-top:3px}
+.arsh{position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 22px,rgba(255,255,255,.04) 22px 26px);animation:arSh 6s linear infinite;pointer-events:none}@keyframes arSh{to{background-position:200px 0}}
+.arme{display:flex;align-items:center;gap:8px;margin:6px 0 4px}.arme .px{font-size:18px}
+.arrow2{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:14px}.artk i{opacity:.25;font-style:normal;filter:grayscale(1)}
+.arlg{display:inline-block;font-weight:900;font-size:.8em;padding:0 7px;border-radius:7px;color:#111;background:var(--c);box-shadow:0 0 8px color-mix(in srgb,var(--c) 60%,transparent)}.arlg.big{font-size:15px;padding:2px 10px}
+.arst{display:grid;grid-template-columns:1fr 1fr;gap:6px}.arst button{border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);padding:6px;font:inherit;font-weight:800;cursor:pointer;text-align:left}.arst button small{display:block;font-weight:400;font-size:11px;opacity:.75}.arst button.on{border-color:#a070ff;box-shadow:0 0 0 2px #a070ff55;background:color-mix(in srgb,#a070ff 15%,var(--card))}
+.ardef{display:flex;align-items:center;flex-wrap:wrap;gap:4px}.ardef.ok{border-left:4px solid #3a9a4a}.ardef.bad{border-left:4px solid #d84a4a}.arnew{border:2px solid #ffb040;animation:srkP 2s infinite}
+.artop{display:flex;align-items:center;gap:6px;padding:4px 6px;border-bottom:1px dashed var(--line)}.artop .px{margin-left:auto}.artop.me{background:color-mix(in srgb,#a070ff 15%,transparent);border-radius:6px}
+.arprz{display:grid;gap:4px;margin:8px 0}.arprz>div{display:flex;align-items:center;flex-wrap:wrap;gap:4px;font-size:13px}.arprz small{opacity:.7}
+.arshop{display:grid;grid-template-columns:1fr 1fr;gap:6px}.arshop .item{margin:0}
+.arvs{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0}.arvs>div{display:flex;flex-direction:column;align-items:center;min-width:0;max-width:42%}.arvs canvas{width:96px;height:106px;image-rendering:pixelated;border-radius:10px;border:2px solid var(--line)}.arvs b{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.arvsx{font:900 26px 'Silkscreen',monospace;color:#ff5a7a;text-shadow:0 0 10px #ff5a7a;animation:srkP 1.2s infinite}
+.arauto p{opacity:0;animation:arF .5s forwards}.arauto .arres{font-size:20px;font-weight:900;text-align:center}@keyframes arF{to{opacity:1}}
+.arup{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0;animation:srkZ .8s cubic-bezier(.2,1.6,.4,1)}
+.rkchip.rka{border:1.5px solid #ff9ae0;--g:#ff60c0;background-image:linear-gradient(90deg,#3a1060,#ff60c0,#60e0ff,#3a1060)}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
