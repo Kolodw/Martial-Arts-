@@ -12228,6 +12228,85 @@ try{const L=[{id:'fq_1',n:'ลูกที่เชื่อฟัง',d:'ทำ
 try{const g=GD2.find(x=>x.s==='beast'&&x.ic==='🐾');if(g){g.d+=' · 🌲 <b>ภารกิจพงไพร</b>: สัตว์ป่ารับภารกิจเมืองไม่ได้จนกว่าจะแปลงกาย แต่จะได้ภารกิจจากพ่อแม่ จ่าฝูง เทพพิทักษ์ป่า คู่ชีวิต ฯลฯ (ล่าเหยื่อ บำเพ็ญแสงจันทร์ สำรวจ ปกป้องรัง ช่วยสัตว์ ตามหาคู่) สำเร็จเองเมื่อทำครบ';g.de=(g.de||'')+' · 🌲 Forest quests: wild beasts cannot take town quests until they transform, but get quests from parents, the pack, forest spirits and mates instead.'}SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
 {const _omQ=openMenu;openMenu=function(){const r=_omQ.apply(this,arguments);try{if(bsB()){const m=$('modal');let b=[...m.querySelectorAll('button[onclick]')].find(x=>/openTown\(/.test(x.getAttribute('onclick')||''));const n=(S.fq||[]).length;if(b)b.innerHTML=`🌲 ภารกิจพงไพร<small>${n} ภารกิจ · เมืองเปิดเมื่อแปลงกาย</small>`;else{const g=m.querySelector('.mcat15 .mgrid')||m.querySelector('.mgrid');if(g&&!g.querySelector('[data-fq]'))g.insertAdjacentHTML('beforeend',`<button class="opt" data-fq="1" onclick="openForestQ()">🌲 ภารกิจพงไพร<small>${n} ภารกิจ</small></button>`)}}}catch(e){}return r}}
 
+
+// ===================== v15.6 ตัวอย่าง "โลกปัจจุบัน" (Coming soon) =====================
+const MW_LINES=['เมื่อยอดฝีมืออันดับหนึ่งแห่งยุทธภพ…','ลืมตาตื่นขึ้นกลางสี่แยกไฟแดงในปี 2026','คำนับไฟจราจรเพราะนึกว่าเทพเจ้าสามตา','จ่ายค่าบะหมี่ด้วยก้อนเงินตำลึง','ไลฟ์สดวิชาตัวเบาจนยอดวิวทะลุล้าน','แต่ศัตรูเก่า… กลับชาติมาเป็นประธานบริษัทยักษ์','และหน่วยลับของรัฐกำลังตามหาคุณ'];
+const MW_FEAT=[['😂','ช็อกวัฒนธรรมนับพัน','ท้าดวลรถเมล์ เรียกมือถือว่ากระจกวิเศษ'],['📱','ยูทูบเบอร์จอมยุทธ์','คลิปเหาะบนตึกไวรัล · ยอดผู้ติดตาม'],['🛵','อาชีพยุคใหม่','ไรเดอร์วิชาตัวเบา สตันท์แมน ซินแส นักสู้ MMA'],['🌀','ปราณเบาบาง','ตามหาจุดพลังลับในวัดเก่า… หรือดูดพลังจากโรงไฟฟ้า'],['🕵️','ความลับรั่วไหล','โชว์พลังมากไป หน่วยลับจะตามล่า'],['⚔️','ปราณกระบี่ปะทะปืน','แก๊งมาเฟีย นักบำเพ็ญมารสายไฮเทค']];
+function mwDraw(c,t){const W=160,H=90;c.setTransform(3,0,0,3,0,0);c.imageSmoothingEnabled=false;const R0=(x,y,w,h,col,a)=>{if(a!=null)c.globalAlpha=a;c.fillStyle=col;c.fillRect(Math.round(x*2)/2,Math.round(y*2)/2,w,h);if(a!=null)c.globalAlpha=1};
+ const gr=c.createLinearGradient(0,0,0,H);gr.addColorStop(0,'#0a0420');gr.addColorStop(.55,'#2a1050');gr.addColorStop(1,'#ff5a8a');c.fillStyle=gr;c.fillRect(0,0,W,H);
+ for(let i=0;i<40;i++){const tw=.4+.6*Math.abs(Math.sin(t*.05+i*1.7));R0(srand(i*3.3)*W,srand(i*5.1)*40,.6,.6,'#ffffff',tw*.9)}
+ c.globalCompositeOperation='lighter';const mg=c.createRadialGradient(128,16,0,128,16,16);mg.addColorStop(0,'rgba(255,240,220,.9)');mg.addColorStop(.35,'rgba(255,200,230,.35)');mg.addColorStop(1,'rgba(255,200,230,0)');c.fillStyle=mg;c.fillRect(110,0,36,34);c.globalCompositeOperation='source-over';R0(124,12,8,8,'#fff0f4');R0(123,13,10,6,'#fff0f4');R0(126,14,2,2,'#f0d0e0');
+ // ตึกไกล (ช้า) / ตึกกลาง (เร็วกว่า)
+ const sky=(off,col,base,hm,wcol,seed)=>{for(let i=0;i<14;i++){const bw=8+srand(i*seed)*10,x=((i*13-off)%(W+30)+W+30)%(W+30)-20,h=hm*(.35+srand(i*seed+2)*.65);R0(x,base-h,bw,h+20,col);
+  for(let wy=base-h+2;wy<base;wy+=3)for(let wx=x+1.5;wx<x+bw-1.5;wx+=2.5){const on=srand(Math.floor(wx*7+wy*13+i))>.55&&((t*.02+wx+wy)|0)%37!==0;if(on)R0(wx,wy,1,1,wcol,.85)}
+  if(srand(i*seed+9)>.7)R0(x+bw/2-.3,base-h-4,.6,4,col);if(srand(i*seed+9)>.7&&(t|0)%40<30)R0(x+bw/2-.5,base-h-4.5,1,1,'#ff3050')}};
+ sky(t*.06,'#1a1238',62,40,'#6a5a9a',3.1);sky(t*.16,'#120c26',70,30,'#ffd070',7.7);
+ // ป้ายไฟนีออน
+ const neon=(x,y,w,col,ph)=>{const on=(Math.sin(t*.3+ph)>-.6)||((t|0)%9<4);c.globalCompositeOperation='lighter';R0(x-1,y-1,w+2,4,col,on?.25:.05);c.globalCompositeOperation='source-over';R0(x,y,w,2,on?col:'#3a2a4a')};
+ neon(((24-t*.16)%(W+30)+W+30)%(W+30)-20,48,10,'#ff3aa8',0);neon(((92-t*.16)%(W+30)+W+30)%(W+30)-20,44,8,'#2af0ff',2);neon(((140-t*.16)%(W+30)+W+30)%(W+30)-20,52,7,'#ffe040',4);
+ // รางรถไฟฟ้า + ขบวนรถ
+ R0(0,66,W,1.4,'#3a3050');for(let x=4;x<W;x+=18)R0(x,67,1.4,8,'#2a2240');const tx=((t*1.6)%(W+120))-90;for(let k=0;k<3;k++){R0(tx+k*25,61.5,24,4.6,'#d8e0f0');R0(tx+k*25,63.6,24,.8,'#2ad0a0');for(let wx=2;wx<22;wx+=3.5)R0(tx+k*25+wx,62.3,2,1.3,'#ffe8a0',.9)}
+ // ถนน + รถ
+ R0(0,76,W,14,'#1a1424');for(let x=((-t*1.2)%12+12)%12-12;x<W;x+=12)R0(x,82.5,5,.6,'#ffd060',.7);
+ for(let k=0;k<3;k++){const cx=((t*(1.2+k*.5)+k*60)%(W+30))-15,cy=78+k%2*5;R0(cx,cy,9,3,['#ff4060','#40a0ff','#f0f0f0'][k]);R0(cx+2,cy-1.5,5,1.8,'#2a2a3a');c.globalCompositeOperation='lighter';R0(cx+9,cy+.6,8,1.6,'#fff6c0',.35);c.globalCompositeOperation='source-over';R0(cx-.5,cy+.8,.8,1,'#ff2020')}
+ // ดาดฟ้าหน้าสุด + จอมยุทธ์
+ R0(0,70,52,20,'#0a0814');R0(0,69,52,1.2,'#3a3050');R0(8,62,6,8,'#0a0814');R0(9,63,4,2,'#ffd070',.6);R0(108,72,52,18,'#0a0814');R0(108,71,52,1.2,'#3a3050');
+ const cyc=t%220,jump=cyc>150&&cyc<200,k=jump?(cyc-150)/50:0,px=cyc<150?30:cyc<200?30+k*100:130,py=(cyc<150?70:cyc<200?70-Math.sin(k*3.14)*22+k*2:72);
+ const sx=cyc>=200?((t%220)>=200?130:30):px;
+ if(jump){for(let j=1;j<7;j++){const kk=Math.max(0,k-j*.04),xx=30+kk*100,yy=70-Math.sin(kk*3.14)*22+kk*2;R0(xx-1,yy-8,2,6,'#c0a0ff',.12*(7-j))}}
+ const sg=g,sp=PS;g=c;PS=3;try{const o=Object.assign({},(S&&typeof meLook==='function'?meLook():null)||{age:25,g:'ชาย',skin:'#f1c27d',hair:'#1a1a1a',robe:'#e8e0f0'},{sword:true,aura:jump?'#c0a0ff':null,mood:'neutral'});if(o.beast)delete o.beast;person(sx,py,o,jump?'walk':'stand')}catch(e){}finally{g=sg;PS=sp}
+ // แฟลชกล้องจากหน้าต่าง (มีคนถ่ายคลิป)
+ if(jump&&(t|0)%7<2){const fx=60+srand(t|0)*60,fy=40+srand((t|0)+5)*20;c.globalCompositeOperation='lighter';R0(fx-2,fy-2,4,4,'#ffffff',.8);c.globalCompositeOperation='source-over'}
+ // ฝนนีออน
+ for(let i=0;i<26;i++){const x=(srand(i*2.2)*W+t*.6)%W,y=(srand(i*4.4)*H+t*2.2)%H;R0(x,y,.4,2,'#a0c8ff',.25)}
+ // ขอบมืด
+ c.setTransform(1,0,0,1,0,0);const vg=c.createRadialGradient(240,135,80,240,135,300);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(5,0,15,.7)');c.fillStyle=vg;c.fillRect(0,0,480,270)}
+let _mwT=0,_mwRaf=0;
+function openMWTeaser(src){const want=!!LS.get('murim_mwwait',0);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="mwbox"><div class="mwcs">COMING SOON · ภาคใหม่</div><h3 style="margin:8px 0 0;font-size:28px">🏙️ <span class="mwh">ยุคปัจจุบัน</span></h3><div class="mwsub">ยอดฝีมือหลงยุค · The Lost Master of 2026</div>
+ <div class="mwcv"><canvas id="mwCv" width="480" height="270"></canvas><div class="mwcap" id="mwCap"></div></div>
+ <div class="mwfeat">${MW_FEAT.map((f,i)=>`<div style="animation-delay:${.15+i*.09}s"><b>${f[0]} ${f[1]}</b><span>${f[2]}</span></div>`).join('')}</div>
+ <div class="mwq">“ตำนานของคุณในยุทธภพจบลงแล้ว… <b>แต่ตำนานบทใหม่ เพิ่งเริ่มต้น</b>”</div>
+ <button class="mwbtn ${want?'on':''}" id="mwBtn" onclick="mwWait()">${want?'✅ รอแล้ว — จะแจ้งทันทีที่เปิด':'🔔 แจ้งเตือนฉันเมื่อเปิด'}</button><div class="mwn" id="mwN"></div>
+ <div class="mwft">ระหว่างรอ… ฝึกให้ถึงขั้นสูงสุด แล้วคุณอาจเห็น<b>รอยแยกสู่อนาคต</b>ก่อนใคร 👀</div></div>`,'mwteaser');
+ _mwT=0;cancelAnimationFrame(_mwRaf);let li=0,ci=0,lt=0;const cv=$('mwCv'),ctx=cv&&cv.getContext('2d');
+ const loop=ts=>{if($('modal').dataset.k!=='mwteaser'||!$('mwCv'))return;_mwT+=fxQ>=2?1:.8;try{mwDraw(ctx,_mwT)}catch(e){}
+  const cap=$('mwCap');if(cap&&ts-lt>55){lt=ts;const L=MW_LINES[li%MW_LINES.length];if(ci<=L.length){cap.textContent=L.slice(0,ci);ci++}else if(ci<L.length+30)ci++;else{li++;ci=0}}
+  _mwRaf=requestAnimationFrame(loop)};_mwRaf=requestAnimationFrame(loop);
+ try{api('mwwait',{on:want?1:0}).then(j=>{const n=$('mwN');if(n&&j&&j.n)n.textContent=`👥 มีผู้เล่นรออยู่ ${fmt(j.n)} คน`}).catch(()=>{})}catch(e){}}
+function mwWait(){const want=!LS.get('murim_mwwait',0);LS.set('murim_mwwait',want?1:0);const b=$('mwBtn');if(b){b.classList.toggle('on',want);b.textContent=want?'✅ รอแล้ว — จะแจ้งทันทีที่เปิด':'🔔 แจ้งเตือนฉันเมื่อเปิด'}toast(want?'🔔 จะแจ้งเตือนทันทีที่โลกปัจจุบันเปิด!':'ยกเลิกการแจ้งเตือนแล้ว');
+ try{api('mwwait',{on:want?1:0}).then(j=>{const n=$('mwN');if(n&&j)n.textContent=`👥 มีผู้เล่นรออยู่ ${fmt(j.n||0)} คน`}).catch(()=>{})}catch(e){}try{if(want&&typeof pushState==='function')pushState().then(st=>{if(st!=='on'&&typeof openPush==='function')setTimeout(()=>toast('💡 เปิดการแจ้งเตือนของเกมไว้ จะได้รู้ทันทีที่เปิด (☰ → 🔔 การแจ้งเตือน)'),1500)}).catch(()=>{})}catch(e){}}
+// 1) ปุ่มที่ 3 ข้างปุ่มเลือกโลกหน้าแรก
+(function(){try{const sg=document.querySelector('.seg[data-k="xian"]');if(sg&&!sg.querySelector('.mwseg')){sg.insertAdjacentHTML('beforeend','<button type="button" class="mwseg" onclick="event.stopPropagation();openMWTeaser(\'title\')">🏙️ ยุคปัจจุบัน<i>เร็วๆ นี้</i></button>')}}catch(e){}})();
+// 2) รอยแยกสู่อนาคต (ถึงขั้นสูงสุด)
+{const _pyM=passYear;passYear=function(){const r=_pyM.apply(this,arguments);try{if(S&&S.alive&&!S.flags.mwRift){const top=S.beastMode&&!S.beastMode.human?(S.beastMode.st|0)>=4&&S.age>200:realmIdx()>=7||(typeof postLv==='function'&&postLv()>=0);
+ if(top&&Math.random()<.08){S.flags.mwRift=1;const me=S;const go=()=>{if(S!==me||!S.alive)return;if(choice._cur||modalOpen)return setTimeout(go,700);choice('🌀 รอยแยกสู่อนาคต','อากาศตรงหน้าแตกร้าวเหมือนกระจก ผ่านรอยแยกนั้นคุณเห็น<b>หอคอยเหล็กสูงเสียดฟ้า</b> แสงสีชมพูฟ้าที่ไม่ใช่ไฟเทียน และ<b>งูเหล็กยาวที่วิ่งบนสะพานลอยฟ้า</b>… ผู้คนในนั้นถือกระจกเรืองแสงไว้ในมือทุกคน',[
+  {t:'👣 ก้าวเข้าไปในรอยแยก',f(){log('🌀 คุณยื่นมือเข้าไปในรอยแยก… แต่มันผลักคุณกลับมาเบาๆ — <b>"ยังไม่ถึงเวลา"</b> เสียงหนึ่งกระซิบ · 🏙️ โลกปัจจุบัน เร็วๆ นี้','myth',true);keyAdd('เห็นรอยแยกสู่อนาคต');setTimeout(()=>{try{if(!modalOpen&&!choice._cur)openMWTeaser('rift')}catch(e){}},500)}},
+  {t:'👁️ จ้องมองจนรอยแยกปิด',f(){S.int+=10;log('👁️ คุณจดจำภาพโลกประหลาดนั้นไว้ในใจ ปัญญา +10 — สักวันประตูนั้นจะเปิด','epic');keyAdd('เห็นรอยแยกสู่อนาคต')}}])};setTimeout(go,300)}}}catch(e){}return r}}
+// 3) ตอนจบ "กลับโลกเดิม" ของผู้ข้ามมิติ → ภาคต่อ
+{const _egM=endGame;endGame=function(){const r=_egM.apply(this,arguments);try{if(S&&S.flags&&S.flags.wentHome){const E=$('end'),b=E&&[...E.querySelectorAll('button')].find(x=>/openBook\(\)/.test(x.getAttribute('onclick')||''));if(b&&!E.querySelector('.mwend'))b.insertAdjacentHTML('beforebegin',`<div class="mwend"><div>🏙️ คุณกลับมาถึงโลกปัจจุบันแล้ว… แต่ร่างกายยังจำวิชายุทธ์ได้ทุกกระบวนท่า</div><b>ภาคต่อ: ยอดฝีมือหลงยุค — เร็วๆ นี้</b><button class="mwbtn" onclick="openMWTeaser('end')">ดูตัวอย่าง ›</button></div>`)}}catch(e){}return r}}
+// 4) กล่องตัวอย่างบนสุดของบันทึกอัปเดต
+{const _ouM=openUpdate;openUpdate=function(){const r=_ouM.apply(this,arguments);try{const m=$('modal'),h=m.querySelector('h3');if(h&&!m.querySelector('.mwupd'))h.insertAdjacentHTML('afterend',`<div class="mwupd" onclick="openMWTeaser('upd')"><span class="mwcs">COMING SOON</span><b>🏙️ ยุคปัจจุบัน — ยอดฝีมือหลงยุค</b><small>จอมยุทธ์ตื่นขึ้นกลางเมืองปี 2026 · แตะเพื่อดูตัวอย่าง ›</small></div>`)}catch(e){}return r}}
+(function(){const st=document.createElement('style');st.textContent=`
+.mwseg{position:relative;opacity:.92;background:linear-gradient(90deg,#2a1050,#4a1a70,#2a1050)!important;background-size:200% 100%!important;color:#ffd0f0!important;animation:mwBg 3s linear infinite;overflow:hidden}
+.mwseg i{display:block;font-style:normal;font-size:9.5px;font-weight:900;letter-spacing:1px;color:#2af0ff;text-shadow:0 0 6px #2af0ff;animation:mwBlink 1.4s ease-in-out infinite}
+.mwseg:after{content:'';position:absolute;top:0;bottom:0;width:35%;left:-50%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);animation:mwShine 2.8s ease-in-out infinite}
+@keyframes mwBg{to{background-position:200% 0}}@keyframes mwBlink{50%{opacity:.45}}@keyframes mwShine{0%{left:-50%}60%,100%{left:130%}}
+.mwbox{margin:-16px -16px -16px;padding:16px;border-radius:8px;background:radial-gradient(ellipse at 50% 0,#3a1470,#120828 70%);color:#f4e8ff;text-align:center}
+.mwcs{display:inline-block;font-size:10.5px;font-weight:900;letter-spacing:3px;color:#120828;background:linear-gradient(90deg,#2af0ff,#ff3aa8,#ffe040,#2af0ff);background-size:300% 100%;border-radius:999px;padding:2px 10px;animation:mwBg 3s linear infinite}
+.mwh{letter-spacing:1px;background:linear-gradient(90deg,#fff,#ff9ad8,#2af0ff,#fff);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:mwBg 4s linear infinite;filter:drop-shadow(0 0 10px rgba(255,90,200,.5))}
+.mwsub{font-size:12px;opacity:.75;margin-bottom:10px}
+.mwcv{position:relative;border-radius:10px;overflow:hidden;border:2px solid #ff3aa8;box-shadow:0 0 18px rgba(255,58,168,.45),0 0 0 1px #2af0ff inset}.mwcv canvas{display:block;width:100%;image-rendering:pixelated}
+.mwcap{position:absolute;left:0;right:0;bottom:0;padding:8px 10px;font-size:13.5px;font-weight:700;text-shadow:0 2px 4px #000;background:linear-gradient(transparent,rgba(10,4,30,.85));min-height:20px}
+.mwfeat{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0;text-align:left}.mwfeat div{background:rgba(255,255,255,.06);border:1px solid rgba(255,90,200,.35);border-radius:9px;padding:6px 8px;opacity:0;animation:mwIn .45s ease-out forwards}.mwfeat b{display:block;font-size:12.5px;color:#fff}.mwfeat span{font-size:11px;opacity:.75}
+@keyframes mwIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.mwq{font-size:14px;font-style:italic;margin:10px 4px;line-height:1.6}.mwq b{color:#ffe040}
+.mwbtn{border:0;border-radius:999px;padding:11px 22px;font-weight:900;font-size:14.5px;color:#120828;background:linear-gradient(90deg,#2af0ff,#ff9ad8);box-shadow:0 0 16px rgba(42,240,255,.5);cursor:pointer;animation:mwPulse 2s ease-in-out infinite}.mwbtn.on{background:linear-gradient(90deg,#6ad06a,#c0ff9a);animation:none}
+@keyframes mwPulse{50%{transform:scale(1.04);box-shadow:0 0 26px rgba(255,90,200,.7)}}
+.mwn{font-size:12px;margin-top:6px;opacity:.85;min-height:16px}.mwft{font-size:11.5px;opacity:.7;margin-top:8px}
+.mwend{margin:14px 0 4px;padding:10px 12px;border-radius:10px;background:linear-gradient(120deg,#2a1050,#120828);color:#f4e8ff;border:2px solid #ff3aa8;text-align:center;animation:mwIn .6s both}.mwend div{font-size:12.5px;opacity:.85}.mwend b{display:block;margin:6px 0 8px;color:#2af0ff}
+.mwupd{display:block;margin:6px 0 12px;padding:9px 12px;border-radius:10px;cursor:pointer;background:linear-gradient(120deg,#2a1050,#4a1a70,#120828);background-size:200% 100%;animation:mwBg 5s linear infinite;color:#f4e8ff;border:2px solid #ff3aa8;box-shadow:0 0 12px rgba(255,58,168,.35)}.mwupd b{display:block;margin-top:4px;font-size:14px}.mwupd small{opacity:.8}`;document.head.appendChild(st)})();
+
 </script>
 </body>
 </html>
