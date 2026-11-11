@@ -12096,10 +12096,10 @@ function rkChip(t,tr){const o=RKC_OF(t),p=o?o.p:tr===9?'m':tr===8?'w':'d',r=o?o.
 // ---------- ปุ่มลอย: ขึ้นบน / ปิด (หน้ายาวทุกหน้า) ----------
 (function(){const f=document.createElement('div');f.id='mFloat';f.innerHTML='<button type="button" class="mfup" aria-label="ขึ้นบนสุด">⬆</button><button type="button" class="mfx" aria-label="ปิด">✕</button>';document.body.appendChild(f);
  const md=()=>document.getElementById('modal');
- f.querySelector('.mfup').onclick=()=>{try{md().scrollTo({top:0,behavior:'smooth'})}catch(e){md().scrollTop=0}};
+ let sel=null;const scEl=()=>{const m=md();return sel&&m&&m.contains(sel)&&document.contains(sel)?sel:m};f.querySelector('.mfup').onclick=()=>{const el=scEl();try{el.scrollTo({top:0,behavior:'smooth'});if(el!==md())md().scrollTo({top:0,behavior:'smooth'})}catch(e){el.scrollTop=0}};
  f.querySelector('.mfx').onclick=()=>{const m=md();const x=m&&[...m.querySelectorAll('.xbtn')].find(b=>!b.classList.contains('qbtn'));if(x)x.click();else closeM();upd()};
- const upd=()=>{try{const m=md();const on=modalOpen&&m&&$('mask').classList.contains('on')&&m.scrollHeight>m.clientHeight+200&&m.scrollTop>140;f.classList.toggle('on',!!on);if(on){const R0=m.getBoundingClientRect();f.style.top=Math.max(8,R0.top+8)+'px';f.style.right=Math.max(8,window.innerWidth-R0.right+8)+'px'}}catch(e){}};
- document.addEventListener('scroll',e=>{if(e.target&&e.target.id==='modal')upd()},true);window.addEventListener('resize',upd);setInterval(upd,600);
+ const upd=()=>{try{const m=md(),el=scEl();const on=modalOpen&&m&&$('mask').classList.contains('on')&&((el.scrollHeight>el.clientHeight+150&&el.scrollTop>120)||(m.scrollHeight>m.clientHeight+150&&m.scrollTop>120));f.classList.toggle('on',!!on);if(on){const R0=m.getBoundingClientRect();f.style.top=Math.max(8,R0.top+8)+'px';f.style.right=Math.max(8,window.innerWidth-R0.right+8)+'px'}}catch(e){}};
+ document.addEventListener('scroll',e=>{const t=e.target,m=md();if(t&&t.nodeType===1&&m&&(t===m||m.contains(t))){if(t!==m)sel=t;upd()}},true);window.addEventListener('resize',upd);setInterval(upd,600);
  const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);f.classList.remove('on');return r}})();
 (function(){const st=document.createElement('style');st.textContent=`
 #mFloat{position:fixed;z-index:60;display:none;gap:6px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35))}#mFloat.on{display:flex;animation:mfIn .2s ease-out}
