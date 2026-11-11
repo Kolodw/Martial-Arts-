@@ -11591,7 +11591,7 @@ function openGfx(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h
 // ---------- ตัวละคร: เส้นขอบ + แสงเงา + หายใจ ----------
 const _fxOff=document.createElement('canvas'),_fxSil=document.createElement('canvas');let _fxIn=0;
 {const _pF=person;person=function(x,y,o,pose){if(fxQ<2||_fxIn||!g||!g.canvas||!isFinite(x)||!isFinite(y))return _pF.apply(this,arguments);
- const ps=PS,bw=50,bh=62,bx=Math.round(x)-25,by=Math.round(y)-54,W=Math.ceil(bw*ps),H=Math.ceil(bh*ps);if(W>1400||H>1400)return _pF.apply(this,arguments);
+ const ps=PS,bb=!!(o&&o.beast),bw=bb?76:50,bh=62,bx=Math.round(x)-(bb?38:25),by=Math.round(y)-54,W=Math.ceil(bw*ps),H=Math.ceil(bh*ps);if(W>1400||H>1400)return _pF.apply(this,arguments);
  if(_fxOff.width!==W||_fxOff.height!==H){_fxOff.width=W;_fxOff.height=H;_fxSil.width=W;_fxSil.height=H}
  const oc=_fxOff.getContext('2d');oc.setTransform(1,0,0,1,0,0);oc.globalCompositeOperation='source-over';oc.clearRect(0,0,W,H);oc.setTransform(ps,0,0,ps,-bx*ps,-by*ps);oc.imageSmoothingEnabled=false;
  const sg=g;g=oc;_fxIn=1;let r;try{r=_pF.apply(this,arguments)}catch(e){}finally{g=sg;_fxIn=0}
@@ -11704,6 +11704,53 @@ function chatRetry(id){const m=_chPend.find(z=>z.i===id);if(!m)return;_chPend=_c
 {const _crF=chatRender;chatRender=function(){try{const L=chatMsgs||[];_chPend=_chPend.filter(p=>{const onSrv=L.some(m=>m!==p&&!m._p&&(m.i===p.i||(m.pu===p.pu&&m.x===p.x&&Math.abs((m.t||0)-p.t)<60000)));if(onSrv){chatMsgs=L.filter(m=>m!==p);return false}if(!L.includes(p))chatMsgs=(chatMsgs||[]).concat([p]);return Date.now()-p.t<120000||p._f});}catch(e){}
  const r=_crF.apply(this,arguments);try{const box=$('chatBox');if(box){const rows=[...box.querySelectorAll('.cm')].reverse(),used=new Set();(chatMsgs||[]).filter(m=>m._p||m._f).forEach(m=>{const el=rows.find(r=>!used.has(r)&&r.textContent.includes(m.x.slice(0,40)));if(!el)return;used.add(el);el.classList.add(m._f?'cmfail':'cmpend');if(!el.querySelector('.cmst'))el.insertAdjacentHTML('beforeend',m._f?`<button class="cmst" onclick="chatRetry('${m.i}')">❌ ${esc(m._f)} · แตะส่งใหม่</button>`:'<span class="cmst">⏳ กำลังส่ง…</span>')})}}catch(e){}return r}}
 (function(){const st=document.createElement('style');st.textContent='.cm.cmpend{opacity:.62}.cm.cmfail{opacity:.85;outline:1px dashed #d84a4a;border-radius:8px}.cmst{display:block;font-size:10.5px;opacity:.85;margin-top:2px;background:none;border:0;color:inherit;padding:0;cursor:pointer;text-align:left}.cm.cmfail .cmst{color:#e05a5a}';document.head.appendChild(st)})();
+
+
+// ===================== v15.5 มังกรจีน (หลง) — ตัวยาวคดเคี้ยว เขากวาง หนวดพลิ้ว แผงคอเปลวไฟ ไข่มุกเพลิง เมฆมงคล =====================
+const isLoong=b=>!!b&&(b.k==='drag'||(b.k==='serp'&&/มังกร/.test(b.sp||'')));
+function drawLoong(c,b,ox,oy,s,fr){const R=(x,y,w,h,col,a)=>{if(a!=null)c.globalAlpha=a;c.fillStyle=col;c.fillRect(ox+x*s,oy+y*s,Math.max(.5,w)*s,Math.max(.5,h)*s);if(a!=null)c.globalAlpha=1};
+ const base=b.col||'#d8b040',ec=b.ec||'#ff5a3a',dk=shadeC(base,-.42),dk2=shadeC(base,-.6),lt=shadeC(base,.3),bel=shadeC(base,.55),horn='#f3e6c0',hornD='#c8b080',t=b.t|0,young=t<2,L=young?.72:t<4?.88:1,ft=fr*.2;
+ const bob=Math.sin(fr*.12)*.8;
+ // ออร่า/แสงทอง
+ if(t>=3||b.f.glow){const gr=c.createRadialGradient(ox+17*s,oy+12*s,0,ox+17*s,oy+12*s,17*s);gr.addColorStop(0,ec+'55');gr.addColorStop(1,ec+'00');c.fillStyle=gr;c.fillRect(ox,oy,34*s,24*s)}
+ // เมฆมงคลด้านหลัง
+ for(let i=0;i<3;i++){const cx=((i*12+fr*.25)%40)-6,cy=17+i%2*3;R(cx,cy,6,1.5,'#ffffff',.55);R(cx+1,cy-1,3,1,'#ffffff',.55);R(cx+4,cy-.5,2,1,'#e8f0ff',.55)}
+ // เส้นทางลำตัว: หางซ้าย → หัวขวา (คลื่นวิ่ง)
+ const N=34,pts=[];for(let i=0;i<=N;i++){const u=i/N,x=.5+u*20*L+(1-L)*6,y=12.5+bob+Math.sin(u*7.2-ft)*3.2*(0.55+u*.45)-u*2.2,r=u<.08?.55:u<.25?.6+u*4.2:u>.9?2.1-(u-.9)*3:1.65+Math.sin(u*3.14)*.65;pts.push({x,y,r,u})}
+ // ขาเกาะลม 4 ขา (หลัง 2 หน้า 2)
+ const leg=(u,ph)=>{const p=pts[Math.round(u*N)],sw=Math.sin(ft*1.3+ph)*1.1;const lx=p.x+.3,ly=p.y+p.r*.6;R(lx,ly,1,1.6,dk);R(lx+sw*.5,ly+1.4,1,1.2,base);R(lx-.4+sw*.5,ly+2.5,.6,.6,horn);R(lx+.3+sw*.5,ly+2.6,.6,.6,horn);R(lx+1+sw*.5,ly+2.4,.6,.6,horn)};
+ leg(.34,0);leg(.42,1.6);
+ // ลำตัว: เกล็ด ท้องสีอ่อน ขอบเข้ม
+ pts.forEach((p,i)=>{if(i===N)return;const top=p.y-p.r,h=p.r*2;R(p.x,top-.4,1.1,h+.8,dk2);R(p.x,top,1.1,h,base);R(p.x,p.y+p.r*.25,1.1,p.r*.75,bel);R(p.x,top,1.1,.45,lt);if(i%2===0)R(p.x+.2,p.y-p.r*.35,.6,.5,dk);if(i%4===1)R(p.x+.2,p.y+p.r*.45,.6,.35,shadeC(bel,-.2))});
+ // ครีบหลังเปลวไฟ
+ pts.forEach((p,i)=>{if(i%2||i<4||i>N-3)return;const fl=Math.sin(ft*2+i)*.35;R(p.x+.1,p.y-p.r-1.1-fl,.6,1.1+fl,ec);R(p.x+.25,p.y-p.r-1.6-fl,.35,.5,shadeC(ec,.35))});
+ leg(.74,2.4);leg(.82,4);
+ // ปลายหางพู่เปลวไฟ
+ {const p=pts[0];for(let j=0;j<5;j++){const fl=Math.sin(ft*2.2+j)*.7;R(p.x-1.2-j*.35,p.y-1.5+j*.7+fl*.4,1.4,.7,j%2?ec:shadeC(ec,.3),.9)}}
+ // หัว
+ const hp=pts[N],hx=hp.x-.5,hy=hp.y-2.6,jaw=Math.max(0,Math.sin(fr*.09))*.9;
+ // แผงคอ (mane) เปลวไฟพลิ้ว
+ for(let j=0;j<7;j++){const fl=Math.sin(ft*2.4+j*.9)*.8;R(hx-1.6-j*.45,hy-.6+j*.75+fl*.3,1.8,.8,j%2?ec:shadeC(ec,-.2),.95)}
+ // เขากวางแตกกิ่ง
+ R(hx+1.2,hy-2.2,.6,2.2,horn);R(hx+.4,hy-3.6,.6,1.6,horn);R(hx+.4,hy-3.6,-.9+1.5,.5,horn);if(!young){R(hx-.6,hy-4.4,.6,1.2,horn);R(hx+1.6,hy-3.2,1,.5,hornD);R(hx-.2,hy-2.6,.8,.5,hornD);if(t>=4){R(hx-1.4,hy-5,.6,1,horn);R(hx+.9,hy-4.6,.6,1,horn)}}
+ R(hx+2.3,hy-1.8,.5,1.8,horn);R(hx+2.1,hy-3,.5,1.3,horn);
+ // กะโหลก + ปาก
+ R(hx-.3,hy-.4,5.2,3.4,dk2);R(hx,hy,5,3,base);R(hx,hy,5,.6,lt);R(hx+4.6,hy+.6,2.4,1.5,base);R(hx+6.6,hy+.6,.5,.9,dk);R(hx+5.9,hy+.45,.6,.4,dk2);
+ // คิ้วโหนก + ตาเรืองแสง
+ R(hx+1.6,hy-.5,2.2,.7,dk);const ey=hy+.7;R(hx+2.4,ey,1.2,.9,'#fff6c0');R(hx+2.9,ey+.1,.6,.7,t>=3?ec:'#1a1010');R(hx+2.5,ey,.3,.3,'#ffffff');
+ if(t>=3){c.globalCompositeOperation='lighter';R(hx+2.2,ey-.2,1.8,1.3,ec,.35);c.globalCompositeOperation='source-over'}
+ // ขากรรไกรล่างอ้าได้ + เขี้ยว + ลิ้น
+ R(hx+1,hy+2.6+jaw,5.6,1.1,dk);R(hx+1.2,hy+2.6+jaw,5.2,.6,bel);if(jaw>.3){R(hx+3,hy+2.4,3,jaw+.3,'#7a1020');R(hx+5.6,hy+2.5+jaw*.5,1.6,.4,'#e84060')}R(hx+5.2,hy+2,.4,.8+jaw*.4,'#ffffff');R(hx+6.2,hy+2,.4,.7+jaw*.4,'#ffffff');R(hx+4.4,hy+2.7+jaw,.4,.5,'#ffffff');
+ // เครา + หนวดยาวพลิ้ว (barbels)
+ for(let j=0;j<4;j++)R(hx+1.5+j*.8,hy+3.5+jaw+j*.35,.6,.9,ec,.85);
+ for(let w=0;w<2;w++)for(let j=0;j<12;j++){const x=hx+6.4-j*.85,y=hy+1.2+w*.7+Math.sin(j*.7-ft*1.6+w)*.9+j*.22-(w?0:.4);R(x,y,.55,.45,w?shadeC(horn,-.1):horn,1-j*.06)}
+ // ไข่มุกเพลิง
+ {const px=hx+9.2,py=hy-1.2+Math.sin(fr*.2)*1;const gr=c.createRadialGradient(ox+(px+.8)*s,oy+(py+.8)*s,0,ox+(px+.8)*s,oy+(py+.8)*s,3.2*s);gr.addColorStop(0,'#ffffffcc');gr.addColorStop(.35,ec+'aa');gr.addColorStop(1,ec+'00');c.fillStyle=gr;c.fillRect(ox+(px-2.4)*s,oy+(py-2.4)*s,6.4*s,6.4*s);R(px,py,1.6,1.6,'#fff4d0');R(px+.3,py+.3,.5,.5,'#ffffff');for(let j=0;j<3;j++){const a=ft*1.5+j*2.1;R(px+.6+Math.cos(a)*1.9,py+.6+Math.sin(a)*1.9,.45,.45,ec)}}
+ // ประกายไฟฟ้า/ทองรอบตัว (ขั้นสูง)
+ if(t>=4)for(let j=0;j<5;j++){const p=pts[(j*7+Math.floor(fr))%N];if((fr+j*3)%6<2)R(p.x+Math.sin(j)*2,p.y-p.r-1.5-j%2,.4,.4,'#ffffff')}
+ if(b.f.head2){R(hx-1,hy-4.5,3.6,2.6,base);R(hx+1.6,hy-3.8,.7,.6,ec)}
+ if(b.f.wing){R(10,4+bob,6,3,lt,.8);R(9,3+bob,3,1.4,ec,.8)}}
+{const _dbL=drawBeast;drawBeast=function(c,b,ox,oy,s,fr){if(isLoong(b)){try{s=s||1;if(b.f&&b.f.big){const gr=c.createRadialGradient(ox+17*s,oy+12*s,0,ox+17*s,oy+12*s,19*s);gr.addColorStop(0,(b.ec||'#fff')+'44');gr.addColorStop(1,(b.ec||'#fff')+'00');c.fillStyle=gr;c.fillRect(ox-2*s,oy-2*s,38*s,28*s)}drawLoong(c,b,ox,oy,s,fr||0);return}catch(e){console.error(e)}}return _dbL.apply(this,arguments)}}
 
 </script>
 </body>
