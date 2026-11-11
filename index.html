@@ -5414,7 +5414,7 @@ function learnP(a,slow){const m=(S.talent&&S.talent.m)||1;let p=ART_BASE[Math.ma
 function learnRisk(a){if(tr('allarts'))return 0;const g=(a.r||0)-learnCap();return g<=0?0:Math.min(.18,.05*g)}
 const _nPush=Array.prototype.push;
 function artLearned(a,how){_nPush.call(S.arts,a);if(Math.random()<.1){a.b=Math.round(a.b*1.25);log(`✨ ฝึก${artHtml(a)}ผ่านอย่างง่ายดาย ราวกับเกิดมาเพื่อวิชานี้ — พลังวิชา +25%`,'epic');return}if(how)log(how,'good')}
-function artPush(...items){if(!S||window._artRaw||!S.alive||S.beastMode||S.age<1)return _nPush.apply(this,items);
+function artPush(...items){if(!S||window._artRaw||!S.alive||(S.beastMode&&!S.beastMode.human)||S.age<1)return _nPush.apply(this,items);
  for(const a of items){if(!a)continue;if(!a.n){_nPush.call(this,a);continue}
   if(this.some(x=>x.n===a.n)){const g=Math.round((a.b||10)/4);S.power+=g;queueMicrotask(()=>{try{log(`📖 《${a.n}》 ซ้ำกับวิชาที่มีอยู่แล้ว — นำมาทบทวนจนชำนาญขึ้น พลัง +${g}`)}catch(e){}});continue}
   if(!window._artForce&&this.length&&(Math.random()<.4||this.length>=artCap())){artMaster(this,a);continue}
@@ -5423,7 +5423,7 @@ function artPush(...items){if(!S||window._artRaw||!S.alive||S.beastMode||S.age<1
   else{S.qi+=.3;queueMicrotask(()=>{try{log(`📖 ฝึก《${a.n}》แต่จับแก่นไม่ได้ — ยังใช้ไม่ได้ (โอกาส ${Math.round(p*100)}% · ขึ้นกับพรสวรรค์และปัญญา)`,'bad')}catch(e){}})}}
  return this.length}
 function artsHook(){if(S&&Array.isArray(S.arts)&&S.arts.some(x=>!x)){const c=S.arts.filter(Boolean);S.arts.length=0;_nPush.apply(S.arts,c)}if(S&&Array.isArray(S.arts)&&S.arts.push!==artPush)Object.defineProperty(S.arts,'push',{value:artPush,enumerable:false,configurable:true,writable:true})}
-function learnTick(){if(!S||!S.alive||S.beastMode)return;artsHook();
+function learnTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human))return;artsHook();
  const sl=(S.learnSlow||[]);for(let k=sl.length-1;k>=0;k--){const it=sl[k];if(S.age<it.until)continue;sl.splice(k,1);
   if(Math.random()<it.p)artLearned(it.a,`📗 ศึกษา${artHtml(it.a)}อย่างค่อยเป็นค่อยไปจนสำเร็จ`);else{it.a.tries=(it.a.tries||0)+1;if(it.a.tries>=3)log(`📕 ศึกษา《${it.a.n}》มาหลายปีก็ยังไม่เข้าใจ — ยอมแพ้และวางคัมภีร์ลง`,'bad');else{(S.learnQ=S.learnQ||[]).push(it.a);log(`📕 ศึกษา《${it.a.n}》ไม่สำเร็จ ต้องลองใหม่ (โอกาส ${Math.round(it.p*100)}%)`,'bad')}}}
  if(choice._cur||modalOpen||!S.learnQ||!S.learnQ.length||S.age<8||S.learnY===S.age)return;S.learnY=S.age;
@@ -5449,7 +5449,7 @@ const AMT=[null,
  ['ท่วงท่า《X》ลื่นไหลขึ้น ไม่ต้องนึกก็ออกท่าได้','ฝึก《X》ซ้ำนับหมื่นครั้งจนร่างกายจำได้เอง','อาจารย์พยักหน้าเมื่อเห็นคุณร่าย《X》'],
  ['《X》ปล่อยปราณออกนอกกายได้แล้ว ใบไม้ห่างสิบก้าวขาดสะบั้น','เข้าใจความหมายที่ซ่อนในคัมภีร์《X》 ท่าเดิมแต่พลังต่างกันลิบ','ฝึก《X》ใต้น้ำตกทั้งฤดู ในที่สุดก็ทะลวงขีดจำกัดของท่า'],
  ['วิชากับใจหลอมเป็นหนึ่ง — 《X》ไร้ท่าแต่ทุกการเคลื่อนไหวคือท่า','คืนหนึ่งใต้แสงจันทร์ คุณร่าย《X》โดยไม่ตั้งใจ ฟ้าดินสั่นสะเทือน','ผู้คนเริ่มเรียกคุณตามชื่อวิชา《X》 เพราะไม่มีใครใช้ได้ถึงขั้นนี้มาร้อยปี']];
-function artTick(){if(!S||!S.alive||S.beastMode||!S.arts||!S.arts.length||S.age<6)return;
+function artTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human)||!S.arts||!S.arts.length||S.age<6)return;
  S.arts.forEach(a=>{if(a&&typeof a==='object'&&a.la==null)a.la=S.age});
  const foc=S.focus==='train'||S.focus==='qi';if(Math.random()>(foc?.6:.2))return;
  const c=S.arts.filter(a=>a&&typeof a==='object'&&(a.lv||0)<3&&S.age-(a.ly!=null?a.ly:a.la)>=AMY[a.lv||0]);if(!c.length)return;
@@ -5982,7 +5982,7 @@ function gunArt(k){return(S.arts||[]).find(a=>a&&a.gun===k)}
 function gunLearn(k,why){if(!S||gunArt(k))return null;const G=GUN_A[k],a={n:S.xian?G.x:G.m,tier:'พิเศษ · สายปืน',b:Math.round(G.b*(1+realmIdx()*.25)),r:3,p:.001,gun:k,lv:0};Array.prototype.push.call(S.arts,a);
  log(`🔫 ${why} — ได้วรยุทธ์ระดับพิเศษ ${artHtml(a)} (${AMN[0]}) · ${G.d}`,'myth',true);return a}
 {const _f=fight;fight=function(name,ep){const g=S&&gunArt('shoot');if(!g)return _f.apply(this,arguments);const add=Math.round(total()*[.1,.2,.35,.55][Math.min(3,g.lv||0)]);S.power+=add;try{return _f.apply(this,arguments)}finally{S.power-=add}}}
-function gunTick(){if(!S||!S.alive||S.beastMode)return;const c=gunArt('craft'),s=gunArt('shoot');
+function gunTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human))return;const c=gunArt('craft'),s=gunArt('shoot');
  if(c){const lv=Math.min(3,c.lv||0);S.money+=Math.round([150,500,1400,4000][lv]*(1+realmIdx()*.2));
   const g=S.items.find(i=>i.id==='gun');if(lv>=1&&!g){addItem({id:'gun',n:S.xian?'ปืนวิญญาณฝีมือตัวเอง':'ปืนคาบศิลาฝีมือตัวเอง',d:'ใช้อัตโนมัติเมื่อจวนตัวในการต่อสู้ — ชนะทันที',uses:2+lv});log(`🔫 ${c.n}: คุณสร้างปืนกระบอกแรกของตัวเองสำเร็จ!`,'epic')}
   else if(g&&lv>=2&&S.age%2===0&&g.left<6){g.left++}}
@@ -6482,7 +6482,7 @@ function artFx(k){if(!S||!S.arts)return 0;let v=0;for(const a of S.arts){if(!a)c
 {const _qd=qiDev;qiDev=function(){const m=artFx('mind');if(m>0&&Math.random()<Math.min(.6,m*.15)){log('🧘 ลมปราณปั่นป่วน แต่จิตที่มั่นคงดึงมันกลับสู่ที่เดิมได้ทัน','good');return}return _qd.apply(this,arguments)}}
 {const _bc=btChance;btChance=function(){return Math.min(.97,_bc.apply(this,arguments)+artFx('mind')*.03)}}
 {const _f4=fight;fight=function(name,ep){const v=artFx('move')*.03+artFx('sound')*.04+artFx('poison')*.04+artFx('summon')*.05+artFx('eye')*.015;if(!S||v<=0)return _f4.apply(this,arguments);const add=Math.round(total()*Math.min(.6,v));S.power+=add;try{return _f4.apply(this,arguments)}finally{S.power-=add}}}
-function uaTick(){if(!S||!S.alive||S.beastMode)return;const h=artFx('heal'),b=artFx('body'),m=artFx('mind'),c=artFx('charm'),e=artFx('eye');
+function uaTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human))return;const h=artFx('heal'),b=artFx('body'),m=artFx('mind'),c=artFx('charm'),e=artFx('eye');
  if(h>0){S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*Math.min(.3,.05*h)));if(S.chronic&&Math.random()<Math.min(.5,.1*h)){log(`💚 วิชาฟื้นฟูรักษา${S.chronic.n}จนหายขาด`,'good');S.chronic=null}}
  if(b>0)S.maxHp+=Math.max(1,Math.round(b*1.5));if(m>0)S.int+=Math.max(1,Math.round(m*.8));if(c>0&&S.cha<9999)S.cha+=Math.max(1,Math.round(c*.6));
  if(e>0&&Math.random()<Math.min(.18,.05*e)){if(Math.random()<.6){const g=Math.round(R(80,300)*(1+realmIdx()*.4));S.money+=g;log(`👁️ เนตรของคุณมองเห็น${ch(['สมุนไพรหายากบนหน้าผาไกลลิบ','หีบสมบัติที่ถูกฝังไว้ใต้ต้นไม้','ถ้ำลับหลังน้ำตก'])} — ได้ ${fmt(g)} ตำลึง`,'good')}else{S.fame+=R(5,15);log(`👁️ เนตรของคุณมองเห็น${ch(['กองโจรซุ่มอยู่ไกลออกไปสิบลี้','ศัตรูที่แฝงตัวในฝูงชน','ค่ายกลกับดักบนทางเดินข้างหน้า'])} จึงเตือนทุกคนให้หลบทัน`,'good')}}}
@@ -6507,7 +6507,7 @@ function fuseGo(){const idx=FU_SEL.slice().sort((a,b)=>b-a),L=idx.map(i=>S.arts[
   log(`🔮 หลอมรวม ${L.map(x=>'《'+x.n+'》').join(' + ')} สำเร็จ! ถือกำเนิดเป็นวิชาใหม่ที่มีเพียงคุณคนเดียวในใต้หล้า — ${artHtml(a)}${r>mr?' ระดับสูงขึ้น!':''}`,'myth',true)}
  else{log(`💢 พยายามหลอมรวม ${L.map(x=>'《'+x.n+'》').join(' + ')} แต่ลมปราณของวิชาต่างสายปะทะกัน — ล้มเหลว <span class="tag2">(โอกาส ${Math.round(p*100)}%)</span>`,'bad');if(Math.random()<.45)qiDev(false)}
  render()}
-{const _oa=openArts;openArts=function(){const r=_oa.apply(this,arguments);try{const m=$('modal'),host=m&&(m.querySelector('#modalIn')||m);if(host&&S&&!S.beastMode){const ua=S.arts.filter(a=>a&&a.fx);const box=document.createElement('div');box.innerHTML=`${ua.length?`<p class="tag2" style="margin-top:6px">วิชาพิเศษ: ${[...new Set(ua.flatMap(a=>Array.isArray(a.fx)?a.fx:[a.fx]))].map(k=>UA[k]?UA[k].ic+' '+UA[k].d:'').join(' · ')}</p>`:''}${S.arts.filter(Boolean).length>=2?`<button class="pbtn" style="width:100%;margin-top:8px" onclick="openFuse()">🔮 รวมวิชา — สร้างวิชาของตัวเอง</button>`:''}`;host.appendChild(box)}}catch(e){}return r}}
+{const _oa=openArts;openArts=function(){const r=_oa.apply(this,arguments);try{const m=$('modal'),host=m&&(m.querySelector('#modalIn')||m);if(host&&S&&!(S.beastMode&&!S.beastMode.human)){const ua=S.arts.filter(a=>a&&a.fx);const box=document.createElement('div');box.innerHTML=`${ua.length?`<p class="tag2" style="margin-top:6px">วิชาพิเศษ: ${[...new Set(ua.flatMap(a=>Array.isArray(a.fx)?a.fx:[a.fx]))].map(k=>UA[k]?UA[k].ic+' '+UA[k].d:'').join(' · ')}</p>`:''}${S.arts.filter(Boolean).length>=2?`<button class="pbtn" style="width:100%;margin-top:8px" onclick="openFuse()">🔮 รวมวิชา — สร้างวิชาของตัวเอง</button>`:''}`;host.appendChild(box)}}catch(e){}return r}}
 {const st=document.createElement('style');st.textContent='.fuit{display:block;margin:4px 0;cursor:pointer}.fuit.on{outline:2px solid var(--pink)}';document.head.appendChild(st)}
 {const add=(cat,arr)=>{const c=ACH.find(x=>x[0]===cat);if(!c)return;arr.forEach(a=>{if(ACH_ALL.some(b=>b.id===a.id))return;const zi=c[1].findIndex(b=>b.id==='z_all');if(zi>=0)c[1].splice(zi,0,a);else c[1].push(a);ACH_ALL.push(a)})};
  add('วิถียุทธ์',[{id:'w_fuse',n:'ผู้สร้างวิชา',d:'หลอมรวมวิชาเป็นวิชาของตัวเองสำเร็จ',r:2,c:()=>(S.flags.fused||0)>=1},{id:'w_fusemaster',n:'ปรมาจารย์ผู้ก่อตั้งวิชา',d:'ฝึกวิชาที่สร้างเองจนถึงระดับสุดยอด',r:4,c:()=>(S.arts||[]).some(a=>a&&a.own&&(a.lv||0)>=3)},{id:'w_allfx',n:'รอบรู้ทุกแขนง',d:'มีวิชาพิเศษครบ 6 แขนงในชาติเดียว',r:3,c:()=>new Set((S.arts||[]).filter(a=>a&&a.fx).flatMap(a=>Array.isArray(a.fx)?a.fx:[a.fx])).size>=6},{id:'w_eye',n:'เนตรพันลี้',d:'ได้วิชาสายเนตร',r:1,c:()=>artFx('eye')>0}])}
