@@ -6503,7 +6503,7 @@ function fuseCore(n){let s=String(n||'').replace(/^วิชายุทธ์�
 function fuseGo(){const idx=FU_SEL.slice().sort((a,b)=>b-a),L=idx.map(i=>S.arts[i]).filter(Boolean);if(L.length<2||(S.fuseY!=null&&S.age-S.fuseY<3))return;const p=fuseP(L);S.fuseY=S.age;FU_SEL=[];closeM();
  if(Math.random()<p){const tot=L.reduce((s,a)=>s+a.b*artM(a),0),mr=Math.max(...L.map(a=>a.r||0)),r=Math.min(4,mr+(Math.random()<.3?1:0)),fx=[...new Set(L.flatMap(a=>a.fx?(Array.isArray(a.fx)?a.fx:[a.fx]):[]))];
   const given=(S.name||'').split(' ').pop(),typ=(ART_S.find(t=>String(L[0].n).startsWith(t))||ch(ART_S));const cu=String(window.FU_NAME||'').replace(/[<>&"'`\\]/g,'').replace(/[《》\[\]]/g,'').replace(/\s+/g,' ').trim().slice(0,24);window.FU_NAME='';const nm=cu||`วิถี${given}: ${typ}${fuseCore(L[0].n)}ผสาน${fuseCore(L[1].n)}${L[2]?'·'+fuseCore(L[2].n):''}`;
-  const a={n:nm,tier:ART_TIER[r].n+' · วิชาของตัวเอง',cn:cu?1:0,b:Math.round(tot*1.05+ART_TIER[r].b*.2),r,p:.0001,lv:0,own:1};if(fx.length)a.fx=fx.length===1?fx[0]:fx;
+  const a={n:nm,tier:ART_TIER[r].n+' · วิชาของตัวเอง',cn:cu?1:0,b:Math.round(tot*1.05+ART_TIER[r].b*.2),r,p:.0001,lv:0,own:1};try{a.src=L.flatMap(x=>x.src&&x.src.length?x.src:[String(x.n)]).slice(0,4)}catch(e){}if(fx.length)a.fx=fx.length===1?fx[0]:fx;
   idx.forEach(i=>S.arts.splice(i,1));Array.prototype.push.call(S.arts,a);S.flags.fused=(S.flags.fused||0)+1;setScene('aura');
   log(`🔮 หลอมรวม ${L.map(x=>'《'+x.n+'》').join(' + ')} สำเร็จ! ถือกำเนิดเป็นวิชาใหม่ที่มีเพียงคุณคนเดียวในใต้หล้า — ${artHtml(a)}${r>mr?' ระดับสูงขึ้น!':''}`,'myth',true)}
  else{log(`💢 พยายามหลอมรวม ${L.map(x=>'《'+x.n+'》').join(' + ')} แต่ลมปราณของวิชาต่างสายปะทะกัน — ล้มเหลว <span class="tag2">(โอกาส ${Math.round(p*100)}%)</span>`,'bad');if(Math.random()<.45)qiDev(false)}
@@ -13165,14 +13165,16 @@ function pxPlay(o){return new Promise(done0=>{const wasP=typeof paused!=='undefi
  const cv=d.querySelector('canvas'),c=cv.getContext('2d');c.imageSmoothingEnabled=false;
  const pre=document.createElement('canvas'),post=document.createElement('canvas');[pre,post].forEach(x=>{x.width=PXW;x.height=PXH});
  pxScene(pre.getContext('2d'),o.type,o.w,o.seed,-1);if(o.mode==='rel')pxScene(post.getContext('2d'),o.type,o.w,o.seed,o.sc);
- const T=o.mode==='rel'?(()=>{const cut=(o.sc|0)>=6?.6:0,shat=(o.sc|0)>=9?.45:0,atk=3.3+cut,hit=atk+.9,flash=hit+shat;return{intro:1.1,charge:2.7,name:3.3,cut,atk,hit,shat,flash,blast:flash+.05,after:flash+1.75}})():{intro:0,walk:2.2,title:.9,end:4.2};
+ const T=o.mode==='rel'?(()=>{const lo=(o.sc|0)<=2,n0=lo?2.0:3.3,cut=(o.sc|0)>=6?.6:0,shat=(o.sc|0)>=9?.45:0,atk=n0+cut,hit=atk+.9,flash=hit+shat,sp0=(o.sc|0)>=9?1.3:0;return{intro:lo?.5:1.1,charge:lo?1.5:2.7,name:n0,cut,atk,hit,shat,flash,blast:flash+.05,space:sp0?flash+.5:0,after:flash+1.75+sp0}})():{intro:0,walk:2.2,title:.9,end:4.2};
  const meCv=document.createElement('canvas');meCv.width=480;meCv.height=270;if(o.mode==='rel'){try{pxMe(meCv.getContext('2d'),80,60)}catch(e){}}
- const P=[],col=o.col||['#ffc840','#fff4c0'],sc=o.sc||0,cx=30,cy=76,tx=112,ty=70;let alive=1,t0=performance.now(),skipT=0,ended=0;
+ const P=[],col=(o.spec&&o.spec.c)||o.col||['#ffc840','#fff4c0'],sc=o.sc||0,cx=30,cy=76,tx=112,ty=70;let alive=1,t0=performance.now(),skipT=0,ended=0;
  const $t=d.querySelector('.pxtop'),$m=d.querySelector('.pxmid'),$b=d.querySelector('.pxbot'),$bub=d.querySelector('.pxbub'),$ui=d.querySelector('.pxui');
  const show=(el,h,cls)=>{el.innerHTML=h;el.className=el.className.split(' ')[0]+' on '+(cls||'')};
  const sp=(x,y,vx,vy,l,cl,s)=>P.push({x,y,vx,vy,l,l0:l,c:cl,s:s||1});
  let st={};
- const fr=now=>{if(!alive)return;let k=(now-t0)/1000+skipT;
+ const fr=now=>{if(!alive)return;let k=(now-t0)/1000+skipT,zm=1;st.frz=0;
+  if(o.mode==='rel'&&sc>=6&&k>=T.hit&&!st.hsd){if(!st.hs)st.hs=now;if(now-st.hs<260){k=T.hit-.001;st.frz=1}else{st.hsd=1;skipT-=.26;k-=.26}}
+  if(o.mode==='rel'&&sc>=6&&k>=T.intro&&k<T.atk+.15){const q=Math.min(1,(k-T.intro)/(T.charge-T.intro));zm=k<T.atk?1+.32*q*q*(3-2*q):1+.32*Math.max(0,1-(k-T.atk)/.15)}
   let shx=0,shy=0;c.setTransform(3,0,0,3,0,0);
   if(o.mode==='rel'){
    const blasted=k>=T.blast;
@@ -13185,17 +13187,23 @@ function pxPlay(o){return new Promise(done0=>{const wasP=typeof paused!=='undefi
    if(!st.chant&&k>=T.intro+.2){st.chant=1;show($b,`<span>${o.chant}</span>`,'chant')}
    if(!st.name&&k>=T.charge){st.name=1;$b.className='pxbot';show($m,`<div class="pxan" style="--c:${col[0]}">《${esc(o.art)}》</div>`,'')}
    if(!st.nh&&k>=T.name){st.nh=1;$m.className='pxmid'}
-   if(k>=T.atk&&k<T.hit+.08){try{pxAtk(c,o.fxk||'beam',Math.min(1,(k-T.atk)/.9),col,sc,sp,cx,cy,tx,ty)}catch(e){}if(o.fxk==='roar'||o.fxk==='tail'||o.fxk==='palm')shx=(Math.random()-.5)*2}
+   if(k>=T.atk&&k<T.hit+.08){try{pxAtkX(c,o,Math.min(1,(k-T.atk)/.9),col,sc,sp,cx,cy,tx,ty)}catch(e){}c.globalAlpha=1;if(o.fxk==='roar'||o.fxk==='tail'||o.fxk==='palm')shx=(Math.random()-.5)*2}
    if(k>=T.flash&&k<T.blast+.6){const a=1-(k-T.flash)/.65;c.fillStyle='#ffffff';c.globalAlpha=Math.max(0,a);c.fillRect(0,0,PXW,PXH);c.globalAlpha=1;$m.className='pxmid'}
-   if(!st.boom&&k>=T.blast+.25){st.boom=1;const n=30+sc*14;for(let i=0;i<n;i++){const a=Math.random()*6.283,v=.4+Math.random()*(1+sc*.35);sp(tx,ty,Math.cos(a)*v,Math.sin(a)*v*.6-.4,30+Math.random()*40,Math.random()<.4?col[1]:Math.random()<.5?col[0]:'#8a6a4a',1+(Math.random()<.2?1:0))}try{sfx(sc>=6?'realm':'hit')}catch(e){}}
+   if(!st.boom&&k>=T.blast+.25){st.boom=1;if(sc<=1)sp(tx,ty-22,.12,.1,170,'#6ab04a',2);const n=30+sc*14;for(let i=0;i<n;i++){const a=Math.random()*6.283,v=.4+Math.random()*(1+sc*.35);sp(tx,ty,Math.cos(a)*v,Math.sin(a)*v*.6-.4,30+Math.random()*40,Math.random()<.4?col[1]:Math.random()<.5?col[0]:'#8a6a4a',1+(Math.random()<.2?1:0))}try{sfx(sc>=6?'realm':'hit')}catch(e){}}
    if(k>=T.blast+.25&&k<T.after){const a=Math.max(0,1-(k-T.blast-.25)/1.4),R0=Math.min(60,5+sc*5)*(1-a*.6);shx=(Math.random()-.5)*a*(2+sc*.6);shy=(Math.random()-.5)*a*(1+sc*.3);c.globalAlpha=a*.85;pxDisc(c,tx,ty,Math.round(R0),col[1]);c.globalAlpha=a*.5;pxDisc(c,tx,ty,Math.round(R0*1.3),col[0]);c.globalAlpha=1}
    if(k>=T.blast+.6&&Math.random()<.5)sp(tx-20+Math.random()*40,ty,(Math.random()-.5)*.2,-.15-Math.random()*.3,90,Math.random()<.5?'#5a5a5a':'#8a8a8a',2);
    if(!st.after&&k>=T.after){st.after=1;$m.className='pxmid';show($t,`<div class="pxg" style="--c:${o.gradeC}"><b>${o.grade}</b><span>${o.gradeN}</span></div>`,'');
     (o.crowd||[]).forEach((q,i)=>setTimeout(()=>{if(!alive)return;const e=document.createElement('div');e.className='pxq';e.style.left=(8+((i*37)%70))+'%';e.style.top=(52+(i%2)*14)+'%';e.textContent=q;$bub.appendChild(e)},350+i*650));
     if(o.ui)$ui.innerHTML=o.ui;ended=1;d.querySelector('.pxtap').textContent='แตะที่ว่างเพื่อปิด'}
-   {const lkH=(()=>{try{return meLook()}catch(e){return null}})();
-    if(typeof heroOK==='function'&&heroOK(lkH)&&!o.beast){try{const pz=heroPoseAt(k,T.intro,T.atk,T.hit,T.after,o.fxk||'beam');pxHeroAura(c,cx,cy+2,pz.st==='charge'?pz.ch:pz.st==='atk'?pz.ch*.6:0,col,k);pxHero(c,cx,cy+2,lkH,pz,o.fxk||'beam',col,k);pxShock(c,tx,ty,(k-T.blast-.2)/.9,col)}catch(e){pxMe(c,cx,cy+2)}}
-    else pxMe(c,cx,cy+2);try{pxVig(c,PXW*3,PXH*3)}catch(e){}c.setTransform(3,0,0,3,0,0)}
+   {const lkH=(()=>{try{return meLook()}catch(e){return null}})(),SP=o.spec,inSp=T.space&&k>=T.space&&k<T.space+1.3;
+    if(inSp){if(!st.spc){st.spc=1;P.length=0}try{pxSpace(c,(k-T.space)/1.3,col,sc,o.w)}catch(e){}}
+    else if(typeof heroOK==='function'&&heroOK(lkH)&&!o.beast){try{const hk=heroKindOf(SP)||o.fxk||'beam',pz=heroPoseAt(k,T.intro,T.atk,T.hit,T.after,hk),au=pz.st==='charge'?pz.ch:pz.st==='atk'?Math.max(pz.ch,.75*Math.max(0,1-(k-T.atk)/1.4)):0;
+      if(sc>=6&&k<T.flash){const dq=Math.min(1,(k-T.intro)/.8);if(dq>0){c.globalAlpha=.42*dq;c.fillStyle='#05030f';c.fillRect(0,0,PXW,PXH);c.globalAlpha=1}}
+      if(SP){pxPhantom(c,cx,cy+2,SP.ph,au,col,k,pz.st==='atk'?Math.min(1,(k-T.atk)/.3):0);pxSideAura(c,cx,cy+2,SP.ph[0],pz.st==='charge'?pz.ch:0,col,k)}
+      pxHeroAura(c,cx,cy+2,pz.st==='charge'?pz.ch:pz.st==='atk'?pz.ch*.6:0,col,k);pxHero(c,cx,cy+2,lkH,pz,SP&&SP.k.includes('sword')?(hk==='slashdown'||hk==='sweep'?hk:'sword'):hk,col,k);pxShock(c,tx,ty,(k-T.blast-.2)/.9,col)}catch(e){pxMe(c,cx,cy+2)}}
+    else pxMe(c,cx,cy+2);
+    if(st.frz){c.setTransform(1,0,0,1,0,0);c.globalCompositeOperation='difference';c.fillStyle='#ffffff';c.fillRect(0,0,PXW*3,PXH*3);c.globalCompositeOperation='source-over'}
+    try{pxVig(c,PXW*3,PXH*3)}catch(e){}c.setTransform(3,0,0,3,0,0)}
    if(T.cut&&k>=T.name&&k<T.atk){const a=(k-T.name)/T.cut,sl=Math.min(1,a*4),bh=17,B=o.beast;c.fillStyle='#000';c.globalAlpha=.72;c.fillRect(0,0,PXW,PXH);c.globalAlpha=1;c.fillStyle='#0a0612';c.fillRect(0,45-bh,PXW,bh*2);c.fillStyle=col[0];c.fillRect(0,45-bh-1,PXW,1);c.fillRect(0,45+bh,PXW,1);
     c.globalAlpha=.5;for(let i=0;i<16;i++){c.fillStyle=i%3?col[0]:'#ffffff';const y=45-bh+2+((i*7+Math.floor(k*60)*3)%(bh*2-4)),x=(i*53+k*900)%(PXW+20);c.fillRect(PXW-x,y,10+i%7,1)}c.globalAlpha=1;
     try{if(B)c.drawImage(meCv,(80-20)*3,(60-28)*3,40*3,24*3,Math.round(-70+122*sl),45-bh,57,34);else c.drawImage(meCv,(80-8)*3,(60-18)*3,16*3,10*3,Math.round(-70+122*sl),45-bh,54,34)}catch(e){}
@@ -13206,7 +13214,7 @@ function pxPlay(o){return new Promise(done0=>{const wasP=typeof paused!=='undefi
    if(!st.t&&k>=T.title){st.t=1;show($m,`<div class="pxrt"><small>${o.sub0||'— เดินทางมาถึง —'}</small><b>${o.title}</b><i>${o.sub||''}</i></div>`,'')}
    if(!st.e&&k>=T.end){st.e=1;ended=1;if(o.ui)$ui.innerHTML=o.ui;d.querySelector('.pxtap').textContent='แตะเพื่อไปต่อ'}}
   for(let i=P.length-1;i>=0;i--){const p=P[i];p.x+=p.vx;p.y+=p.vy;p.vy+=p.s>1?-.002:.01;p.l--;if(p.l<=0||p.y>PXH+4){P.splice(i,1);continue}c.globalAlpha=Math.min(1,p.l/p.l0*1.5);c.fillStyle=p.c;c.fillRect(Math.round(p.x),Math.round(p.y),p.s,p.s)}c.globalAlpha=1;
-  cv.style.transform=`translate(${shx*3}px,${shy*3}px)`;
+  cv.style.transformOrigin='19% 74%';cv.style.transform=`translate(${shx*3}px,${shy*3}px)`+(zm>1.001?` scale(${zm.toFixed(3)})`:'');
   requestAnimationFrame(fr)};
  requestAnimationFrame(fr);
  const close=()=>{if(!alive)return;alive=0;d.classList.add('out');setTimeout(()=>{try{d.remove()}catch(e){}done()},300)};
@@ -13282,8 +13290,8 @@ function relFire(){const why=relCan();if(why)return toast(why);const w=relWorld(
  const crowd=(p[2]>=.25||sc>=7)?[...(sc>=9?REL_CROWD.god:sc>=6?REL_CROWD.hi:sc>=3?REL_CROWD.mid:REL_CROWD.lo)].sort(()=>Math.random()-.5).slice(0,sc>=6?3:2):[];
  const res=relResolve(p,a,k,sc);
  const ui=`<button onclick="relShare()">📤 ส่งเข้าแชท</button><button onclick="relCard()">🖼️ บันทึกภาพ</button><button onclick="window._pxCur&&window._pxCur._close()">✔️ ปิด</button>`;
- window._rlLast={fxk:a?(a.bm?a.fxk:pxKind(a.n)):'fist',col:el,beast:relB(),p,nm,sc,w,seed:(R0.p||0)*31+7,type:PX_TY[p[1]]||'field',t:Date.now()};
- pxPlay({mode:'rel',beast:relB(),fxk:a?(a.bm?a.fxk:pxKind(a.n)):'fist',type:PX_TY[p[1]]||'field',w,seed:(R0.p||0)*31+7,sc,k,col:el,art:nm,chant:relB()?ch(['กรรรร… (เสียงคำรามต่ำในลำคอ)','ป่าทั้งป่าเงียบกริบ…','ดวงตาอสูรลุกเป็นไฟ']):ch(REL_CHANT),grade:G[0],gradeN:G[1],gradeC:G[2],crowd,ui}).then(()=>{try{res.forEach(f=>f())}catch(e){console.error(e)}render();try{checkDeath()}catch(e){}saveGame()})}
+ const spec0=relB()?null:(()=>{try{return relSpec(a)}catch(e){return null}})();window._rlLast={spec:spec0,fxk:a?(a.bm?a.fxk:pxKind(a.n)):'fist',col:el,beast:relB(),p,nm,sc,w,seed:(R0.p||0)*31+7,type:PX_TY[p[1]]||'field',t:Date.now()};
+ pxPlay({spec:spec0,mode:'rel',beast:relB(),fxk:a?(a.bm?a.fxk:pxKind(a.n)):'fist',type:PX_TY[p[1]]||'field',w,seed:(R0.p||0)*31+7,sc,k,col:el,art:nm,chant:relB()?ch(['กรรรร… (เสียงคำรามต่ำในลำคอ)','ป่าทั้งป่าเงียบกริบ…','ดวงตาอสูรลุกเป็นไฟ']):ch(REL_CHANT),grade:G[0],gradeN:G[1],gradeC:G[2],crowd,ui}).then(()=>{try{res.forEach(f=>f())}catch(e){console.error(e)}render();try{checkDeath()}catch(e){}saveGame()})}
 // ผลลัพธ์ (คำนวณก่อนเล่นฉาก แสดงหลังจบฉาก)
 function relResolve(p,a,k,sc){const out=[],d=REL_D[sc].replace(/\{L\}/g,p[1]),nm=a?(a.bm?`<b>${esc(a.n)}</b>`:artHtml(a)):'หมัดเปล่า',ri=Math.max(0,realmIdx()),G=REL_GR[sc];
  out.push(()=>{log(`💥 ที่${p[0]} คุณปล่อย${nm}${k>=3?'เต็มกำลัง':k===2?'อย่างแรง':k===1?'':'เบาๆ'} — ${d} <b style="color:${G[2]}">[${G[0]}]</b>`,sc>=9?'myth':sc>=5?'epic':'good',sc>=7);joy(3+k*3)});
@@ -13519,7 +13527,7 @@ function heroPoseAt(k,a0,a1,a2,a3,fx){const P=HERO_P,sm=v=>{v=Math.max(0,Math.mi
  if(k<a2+.35)return{p:mix(P.charge,atk,sm((k-a1)/.16)),ch:Math.max(0,1-(k-a1)/.5),st:'atk',a:Math.min(1,(k-a1)/Math.max(.1,a2-a1))};
  return{p:mix(atk,P.after,sm((k-a2-.35)/.7)),ch:0,st:'after'}}
 function pxHero(c,x,y,lk,pz,fx,col,tm){
- lk=lk||{};const Z=3,ox=Math.round(x*Z),oy=Math.round(y*Z),fem=lk.g==='หญิง',p=pz.p,ch=pz.ch||0,T=tm||0;
+ lk=lk||{};const Z=3,ox=Math.round(x*Z),oyG=Math.round(y*Z),oy=oyG-Math.round(pz.p[9]||0),fem=lk.g==='หญิง',p=pz.p,ch=pz.ch||0,T=tm||0;
  const skin=/^#/.test(String(lk.skin))?lk.skin:'#ffd9b8',hair=/^#/.test(String(lk.hair))?lk.hair:'#2a2838',robe=/^#/.test(String(lk.robe))?String(lk.robe).slice(0,7):'#6a6aa8',trim=/^#/.test(String(lk.trim))?String(lk.trim).slice(0,7):heroLite(robe,.45),belt=/^#[0-9a-fA-F]{6}$/.test(String(lk.belt))?lk.belt:heroShade(robe,.45);
  const robeD=heroShade(robe,.32),robeL=heroLite(robe,.18),skinD=heroShade(skin,.22),hairL=heroLite(hair,.22),ink='#16101e',pant=heroShade(robe,.5),boot='#241a22';
  const TH=20,SH=20,UA=13,FA=12,TOR=27,sn=Math.sin,cs=Math.cos;
@@ -13536,7 +13544,7 @@ function pxHero(c,x,y,lk,pz,fx,col,tm){
  const limb=(x1,y1,x2,y2,w,cl,w2)=>{seg(x1,y1,x2,y2,w+2,ink,w2?w2+2:0);seg(x1,y1,x2,y2,w,cl,w2)};
  c.save();c.setTransform(1,0,0,1,0,0);c.globalAlpha=1;
  // เงาใต้เท้า
- c.globalAlpha=.32;c.fillStyle='#000000';for(let i=-3;i<=3;i++){const w=Math.round((22+Math.abs(LF.fx-LB.fx)*.5)*Math.sqrt(1-(i*i)/12));c.fillRect(ox-w+Math.round((LF.fx+LB.fx)/2),oy+i-1,w*2,1)}c.globalAlpha=1;
+ c.globalAlpha=.32;c.fillStyle='#000000';for(let i=-3;i<=3;i++){const w=Math.round((22+Math.abs(LF.fx-LB.fx)*.5)*Math.sqrt(1-(i*i)/12));c.fillRect(ox-w+Math.round((LF.fx+LB.fx)/2),oyG+i-1,w*2,1)}c.globalAlpha=1;
  // ผมยาวด้านหลัง (ปลิวตามลม/พลัง)
  const hcx=nx+sn(p[0])*7,hcy=ny-8,hl=fem?30:(lk.old?10:19),lift=ch*.9+(pz.st==='atk'?.5:0);
  for(let s=0;s<(fem?4:3);s++){let px=hcx-4-s,py=hcy-2+s*2;for(let i=0;i<hl;i++){const t=i/hl,wv=Math.sin(T*5+i*.35+s*1.3)*(1.2+lift*2.2)*t;const dx=-(.25+lift*.75+p[0]*.9),dy=1-lift*.85;px+=dx;py+=dy;c.fillStyle=(i+s)%5===0?hairL:hair;c.fillRect(ox+Math.round(px+wv*.4),oy+Math.round(py+wv),i<hl*.7?2:1,2)}}
@@ -13569,7 +13577,7 @@ function pxHero(c,x,y,lk,pz,fx,col,tm){
  const hxp=AF.wx+sn(AF.ang)*2,hyp=AF.wy+cs(AF.ang)*2;R(hxp-3,hyp-3,6,6,ink);R(hxp-2,hyp-2,4,4,skin);
  if(fx==='palm'&&pz.st==='atk'){R(hxp+1,hyp-5,4,10,ink);R(hxp+2,hyp-4,2,8,skin)}
  // กระบี่
- if(fx==='sword'){const a=pz.st==='atk'?AF.ang+.1:pz.st==='charge'?AF.ang-2.2:AF.ang+2.6,L=34,bx=hxp+sn(a)*L,by=hyp+cs(a)*L;seg(hxp,hyp,bx,by,4,ink,2);seg(hxp+sn(a)*3,hyp+cs(a)*3,bx,by,2,'#f4f8ff',1);seg(hxp+sn(a)*3,hyp+cs(a)*3+1,bx,by+1,1,(col&&col[0])||'#9ad0ff');R(hxp-3+sn(a)*3,hyp-3+cs(a)*3,6,6,'#c8a040')}
+ if(fx==='sword'||fx==='slashdown'||fx==='sweep'){const a=pz.st==='atk'?AF.ang+.1:pz.st==='charge'?AF.ang-2.2:AF.ang+2.6,L=34,bx=hxp+sn(a)*L,by=hyp+cs(a)*L;seg(hxp,hyp,bx,by,4,ink,2);seg(hxp+sn(a)*3,hyp+cs(a)*3,bx,by,2,'#f4f8ff',1);seg(hxp+sn(a)*3,hyp+cs(a)*3+1,bx,by+1,1,(col&&col[0])||'#9ad0ff');R(hxp-3+sn(a)*3,hyp-3+cs(a)*3,6,6,'#c8a040')}
  c.restore()}
 // ออร่าหลังตัวละคร + วงแหวนพื้น ตอนรวมพลัง
 function pxHeroAura(c,x,y,a,col,T){if(a<=0)return;const Z=3,ox=Math.round(x*Z),oy=Math.round(y*Z);c.save();c.setTransform(1,0,0,1,0,0);
@@ -13582,36 +13590,113 @@ function pxShock(c,tx,ty,a,col){if(a<=0||a>=1)return;const Z=3,ox=tx*Z,oy=ty*Z,r
 let _pxVig=null;function pxVig(c,W,H){try{if(!_pxVig||_pxVig.width!==W){_pxVig=document.createElement('canvas');_pxVig.width=W;_pxVig.height=H;const v=_pxVig.getContext('2d'),gr=v.createRadialGradient(W/2,H*.52,H*.35,W/2,H*.52,W*.62);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(4,2,12,.55)');v.fillStyle=gr;v.fillRect(0,0,W,H)}c.save();c.setTransform(1,0,0,1,0,0);c.globalAlpha=1;c.drawImage(_pxVig,0,0);c.restore()}catch(e){}}
 const heroOK=lk=>!!lk&&typeof lk==='object'&&!lk.beast&&!(+lk.age<12);
 
+// ===================== v15.9f ปลดปล่อยพลัง: ท่าเฉพาะสายตามชื่อวิชา (รวมวิชาหลอมรวม) · ความอลังการตามเกรด · ร่างเงายักษ์/ออร่าประจำฝ่าย =====================
+Object.keys(HERO_P).forEach(k=>{while(HERO_P[k].length<10)HERO_P[k].push(0)});
+Object.assign(HERO_P,{raise:[-.08,.30,.25,-.30,.25,2.90,.10,2.70,.15,0],point:[-.05,.20,.10,-.20,.10,2.95,0,-.30,.60,0],stomp:[.30,1.05,1.25,-.50,.30,.40,.50,-.60,.40,0],slashdown:[.45,.55,.95,-.40,.95,1.05,.10,-.80,.40,18],sweep:[.22,.70,.45,-.62,.18,1.30,.25,-1.20,.20,0]});
+const PXK=[['sword',/กระบี่|ดาบ|ทวน|หอก|มีด|ขวาน|แส้|ง้าว|คม|ตัด|ฟัน/],['dragon',/มังกร|หงส์|พยัคฆ์|นาค|กิเลน|วานร|อินทรี|งู|เสือ/],['palm',/ฝ่ามือ|ฝ่า|นิ้ว|ดัชนี/],['fist',/หมัด|มวย|เตะ|ศอก|เข่า|เพลง|พิณ|คำราม/],
+ ['fire',/เพลิง|ไฟ|แดด|ตะวัน|อัคคี/],['ice',/น้ำแข็ง|หิมะ|เยือก|เกล็ด/],['thunder',/อัสนี|สายฟ้า|ฟ้าผ่า|ฟ้าร้อง/],['dark',/มาร|โลหิต|เลือด|ทมิฬ|พิษ|อเวจี|วิญญาณ|เงา/],['wind',/ลม|พายุ|เมฆ|ตัวเบา|วายุ/],['star',/จันทร์|ดารา|ดาว|ราตรี|สวรรค์|ฟ้า/],['water',/น้ำ|คลื่น|สมุทร|ทะเล|ธารา/]];
+const PXK_FORM=['sword','dragon','palm','fist'],PXK_ALL=PXK.map(x=>x[0]).concat(['beam']);
+const PXK_COL={fire:['#ff6a20','#ffd070'],ice:['#6ad8ff','#e8fbff'],thunder:['#ffe040','#ffffff'],dark:['#c01848','#ff80a0'],sword:['#9ad0ff','#ffffff'],wind:['#8af0c0','#f0fff8'],star:['#b08aff','#f0e8ff'],water:['#3a9aff','#c8e8ff'],dragon:['#ffc840','#fff4c0'],palm:['#ffc840','#fff4c0'],fist:['#ffb060','#fff0d0'],beam:['#ffc840','#fff4c0']};
+const PXK_NV={sword:3,palm:2,fist:2,fire:3,ice:2,thunder:2,dark:2,wind:2,star:2,water:2,dragon:2,beam:2};
+function pxKinds(t){t=String(t||'');const L=[];PXK.forEach(([k,re])=>{const m=re.exec(t);if(m)L.push([m.index,k])});return L.sort((a,b)=>a[0]-b[0]).map(x=>x[1])}
+function relPh(){try{const ri=Math.max(0,realmIdx()),ft=S.faction?S.faction.t:(S.family&&S.family.heirType)||(S.family&&S.family.demon?'มาร':'');const sd=ft==='ธรรมะ'?'d':ft==='มาร'?'m':ft==='อธรรม'?'u':'';
+ return[sd,S.xt?3:S.xian?(ri>=6?3:ri>=4?2:ri>=2?1:0):(ri>=7?2:ri>=5?1:0)]}catch(e){return['',0]}}
+// สเปกของท่า: อ่านจากชื่อวิชา + ชื่อวิชาต้นทางของวิชาหลอมรวม
+function relSpec(a){const fz=!!(a&&a.own),txt=a?String(a.n||'')+' '+((a.src||[]).join(' ')):'';let ks=pxKinds(txt);
+ const form=ks.find(k=>PXK_FORM.includes(k)),els=ks.filter(k=>!PXK_FORM.includes(k));let k=[];
+ if(!a)k=['fist'];else{if(form)k.push(form);els.forEach(e=>{if(k.length<(fz?3:2))k.push(e)});if(fz&&k.length<2){const f2=ks.filter(x=>PXK_FORM.includes(x)&&x!==form)[0];if(f2)k.push(f2)}if(!k.length)k=['beam']}
+ const ce=k.find(x=>!PXK_FORM.includes(x)),c=ce?PXK_COL[ce]:(a?pxEl(a.n):PXK_COL.fist);
+ return{k,v:Math.floor(Math.random()*3),fz:fz?1:0,ph:relPh(),c:[c[0],c[1]]}}
+function relSpecIn(sp){if(!sp||typeof sp!=='object'||!Array.isArray(sp.k))return null;const k=sp.k.filter(x=>PXK_ALL.includes(x)).slice(0,3);if(!k.length)return null;const ph=Array.isArray(sp.ph)?sp.ph:[];
+ return{k,v:Math.max(0,Math.min(2,+sp.v|0)),fz:sp.fz?1:0,ph:[['d','m','u'].includes(ph[0])?ph[0]:'',Math.max(0,Math.min(3,+ph[1]|0))]}}
+function heroKindOf(sp){if(!sp)return null;const k=sp.k[0],v=sp.v%(PXK_NV[k]||1);
+ return k==='sword'?(v===1?'slashdown':v===2?'sweep':'sword'):k==='palm'?(v?'palm':'raise'):k==='fist'?'fist':k==='fire'?(v===0?'raise':v===1?'palm':'stomp'):k==='ice'?(v?'raise':'stomp'):k==='thunder'?(v?'beam':'point'):k==='dark'?(v?'stomp':'beam'):k==='wind'?'sweep':k==='star'?'point':k==='water'?(v?'palm':'beam'):k==='dragon'?(v?'raise':'beam'):'beam'}
+{const _hp=heroPoseAt;heroPoseAt=function(k,a0,a1,a2,a3,fx){if(!HERO_P[fx]||['sword','palm','fist','beam','roar'].includes(fx))return _hp.apply(this,arguments);
+ const P=HERO_P,sm=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v)},mix=(A,B,t)=>A.map((v,i)=>v+((B[i]||0)-v)*t),atk=P[fx];
+ if(k<a1)return _hp.apply(this,arguments);
+ if(k<a2+.35){if(fx==='slashdown'){const t=(k-a1)/Math.max(.1,a2-a1),up=P.raise.slice();up[9]=26;return{p:t<.45?mix(P.charge,up,sm(t/.3)):mix(up,atk.map((v,i)=>i===9?0:v),sm((t-.45)/.25)),ch:Math.max(0,1-(k-a1)/.5),st:'atk'}}
+  if(fx==='stomp'){const t=(k-a1)/Math.max(.1,a2-a1),dn=P.charge.slice();return{p:t<.4?mix(P.charge,atk,sm(t/.3)):mix(atk,dn,sm((t-.4)/.15)),ch:Math.max(0,1-(k-a1)/.5),st:'atk'}}
+  return{p:mix(P.charge,atk,sm((k-a1)/.16)),ch:Math.max(0,1-(k-a1)/.5),st:'atk'}}
+ return{p:mix(fx==='slashdown'?atk.map((v,i)=>i===9?0:v):fx==='stomp'?P.charge:atk,P.after,sm((k-a2-.35)/.7)),ch:0,st:'after'}}}
+// ---------- ท่าโจมตีแบบต่างๆ ต่อสาย ----------
+function pxAtkV(c,kind,v,a,col,sc,sp,cx,cy,tx,ty){const e=Math.min(1,a*1.25),my=cy-8,r=Math.random;v=v%(PXK_NV[kind]||1);if(!v)return pxAtk(c,kind,a,col,sc,sp,cx,cy,tx,ty);
+ switch(kind){
+ case'sword':if(v===1){const w=Math.round(2+sc*.5),y1=Math.round(-46+(ty+50)*Math.min(1,e*e*1.2)),L=46+sc*3;c.fillStyle=col[0];c.fillRect(tx-w-1,y1-L,w*2+2,L);c.fillStyle='#ffffff';c.fillRect(tx-w+1,y1-L,Math.max(1,w*2-2),L);c.fillStyle=col[1];c.fillRect(tx-1,y1-L,2,L);
+   for(let i=0;i<w+2;i++){c.fillStyle=i%2?col[0]:'#ffffff';c.fillRect(tx-w+i,y1+i,Math.max(1,(w-i)*2),1)}c.fillStyle='#c8a040';c.fillRect(tx-w-4,y1-L-3,w*2+8,3);if(e>=1)for(let i=0;i<4;i++)sp(tx+(r()-.5)*20,ty,(r()-.5)*2.4,-r()*1.6,16,r()<.5?col[1]:'#c8b89a',1)}
+  else{for(let i=0;i<3+Math.min(3,sc>>2);i++){const p=Math.min(1,Math.max(0,e*2.4-i*.38));if(p<=0)continue;const ang=(i%2?-.7:.7)+(i*.31),L=30+sc*2.5,x0=tx-Math.cos(ang)*L/2,y0=ty-14-Math.sin(ang)*L/2;pxLine(c,x0,y0,x0+Math.cos(ang)*L*p,y0+Math.sin(ang)*L*p,col[0],3);pxLine(c,x0,y0,x0+Math.cos(ang)*L*p,y0+Math.sin(ang)*L*p,'#ffffff',1);if(p<1)sp(x0+Math.cos(ang)*L*p,y0+Math.sin(ang)*L*p,(r()-.5),(r()-.5),8,col[1],1)}}break;
+ case'palm':{const s=Math.round(2+sc*.35),x0=Math.round(cx+12+(tx-cx-12-4*s)*e),y0=my-3*s;c.globalAlpha=.9;c.fillStyle=col[0];c.fillRect(x0,y0,5*s,6*s);for(let i=0;i<4;i++)c.fillRect(x0+5*s,y0+i*Math.round(1.5*s),4*s+(i===1||i===2?s:0),Math.max(1,Math.round(1.1*s)));c.fillRect(x0+s,y0-2*s,Math.round(2.5*s),2*s);c.fillStyle=col[1];c.fillRect(x0+s,y0+s,3*s,4*s);c.globalAlpha=1;for(let i=0;i<2;i++)sp(x0,y0+r()*6*s,-1-r(),(r()-.5)*.4,12,col[1],1);break}
+ case'fist':{const n=6+sc;for(let i=0;i<n;i++){const p=e*n-i;if(p<=0||p>2.6)continue;const x=tx-18+srand(i+5)*36,y=ty-26+srand(i+17)*26,rr=2+p*2;c.globalAlpha=Math.max(0,1-p/2.2);pxRing(c,x,y,rr,rr,col[0]);c.fillStyle=col[1];c.fillRect(Math.round(x)-2,Math.round(y)-2,5,4);c.fillStyle='#ffffff';c.fillRect(Math.round(x)+1,Math.round(y)-1,2,2);c.globalAlpha=1}if(r()<.6)sp(tx+(r()-.5)*30,ty-r()*24,(r()-.5)*1.6,-r(),10,col[1],1);break}
+ case'fire':if(v===1){for(let i=0;i<3;i++){const p=e*1.5-i*.22;if(p<=0||p>1.05)continue;const q=Math.min(1,p),x=cx+10+(tx-cx-10)*q,y=my-Math.sin(q*3.1416)*(22+i*7),rr=3+Math.round(sc*.3);pxDisc(c,Math.round(x),Math.round(y),rr+1,col[0]);pxDisc(c,Math.round(x),Math.round(y),Math.max(1,rr-1),col[1]);c.fillStyle='#ffffff';c.fillRect(Math.round(x),Math.round(y)-1,2,2);sp(x-2,y,-.4-r()*.4,(r()-.5)*.4,12,r()<.5?col[0]:'#5a2a10',1);if(q>=1)for(let j=0;j<3;j++)sp(tx,ty-4,(r()-.5)*2.5,-r()*2,14,col[1],1)}}
+  else{const front=cx+10+(PXW-cx)*e,H=Math.round(10+sc*2.4);for(let x=cx+8;x<front&&x<PXW;x++){const d=front-x,hh=Math.round(H*Math.min(1,d/8)*(.55+.45*Math.abs(Math.sin(x*.9+a*40))));c.fillStyle=col[0];c.fillRect(x,cy+4-hh,1,hh);c.fillStyle=col[1];c.fillRect(x,cy+4-Math.round(hh*.55),1,Math.round(hh*.55));if(x%5===0){c.fillStyle='#ffffff';c.fillRect(x,cy+3,1,1)}}if(r()<.8)sp(front-r()*20,cy-r()*H,(r()-.5)*.5,-.8-r(),14,col[1],1)}break;
+ case'ice':{const y0=Math.round(-34+(ty+30)*Math.min(1,e*1.25)),hh=Math.round(16+sc*2.6),w=Math.round(5+sc);for(let y=0;y<hh;y++){const t=y/hh,ww=Math.max(1,Math.round(w*(t<.3?t/.3:1-(t-.3)/.7)));c.fillStyle=col[0];c.fillRect(tx-ww,y0-hh+y+6,ww*2,1);c.fillStyle=col[1];c.fillRect(tx-ww,y0-hh+y+6,Math.max(1,Math.round(ww*.7)),1);c.fillStyle='#ffffff';c.fillRect(tx-Math.round(ww*.5),y0-hh+y+6,1,1)}
+  if(e>=.8){const q=(e-.8)/.2;for(let i=-3;i<=3;i++){if(!i)continue;const h2=Math.round((5+sc)*q*(1-Math.abs(i)/5));for(let y=0;y<h2;y++){c.fillStyle=y%2?col[0]:col[1];c.fillRect(tx+i*6-1,ty+3-y,Math.max(1,3-Math.floor(y/3)),1)}}}break}
+ case'thunder':{let x=cx+12,y=my;const xe=cx+12+(tx+10-cx-12)*e;while(x<xe){const nx=Math.min(xe,x+4+r()*6),ny=my+(r()-.5)*(8+sc);pxLine(c,x,y,nx,ny,'#ffffff',sc>=6?2:1);pxLine(c,x,y+1,nx,ny+1,col[0],1);if(r()<.2)pxLine(c,nx,ny,nx+3+r()*5,ny+(r()<.5?-1:1)*(4+r()*6),col[0],1);x=nx;y=ny}pxDisc(c,Math.round(xe),Math.round(y),2+(sc>=6?1:0),'#ffffff');if(r()<.3){c.globalAlpha=.2;c.fillStyle='#fff';c.fillRect(0,0,PXW,PXH);c.globalAlpha=1}break}
+ case'dark':{const s=Math.round(2+sc*.3),h=Math.round((10+sc*1.6)*e),bx=tx-3*s,by=ty+4;c.fillStyle=col[0];c.fillRect(bx-1,by-h-1,6*s+2,h+1);c.fillStyle='#08040c';c.fillRect(bx,by-h,6*s,h);for(let i=0;i<4;i++){const fh=Math.round((5+(i%2?2:0))*s*.5*e);c.fillStyle=col[0];c.fillRect(bx+i*Math.round(1.55*s)-1,by-h-fh-1,Math.round(1.2*s)+2,fh+1);c.fillStyle='#08040c';c.fillRect(bx+i*Math.round(1.55*s),by-h-fh,Math.max(1,Math.round(1.2*s)),fh)}
+  c.fillStyle=col[1];c.fillRect(bx+2*s,by-Math.round(h*.6),2*s,1);for(let i=0;i<3;i++)sp(tx+(r()-.5)*8*s,by,(r()-.5)*.4,-.6-r(),16,r()<.5?col[0]:'#1a0a20',1);break}
+ case'wind':{for(let i=0;i<4;i++){const p=e*1.5-i*.18;if(p<=0||p>1.1)continue;const x=cx+10+(tx+16-cx-10)*Math.min(1,p),yy=my-12+i*7,h=5+Math.round(sc*.6);c.globalAlpha=.85;for(let y=-h;y<=h;y++){const off=Math.round(Math.sqrt(Math.max(0,h*h-y*y))*.7);c.fillStyle=col[0];c.fillRect(x+off-2,yy+y,2,1);c.fillStyle=col[1];c.fillRect(x+off,yy+y,1,1)}c.globalAlpha=1;sp(x,yy+(r()-.5)*h,-.8,0,8,col[1],1)}break}
+ case'star':{const p=Math.min(1,e),x=tx-70+70*p,y=-14+(ty+10)*p,rr=5+Math.round(sc*.7);for(let i=0;i<6;i++)pxLine(c,x-(18+i*5),y-(14+i*4)+i*2,x-2,y-2+i-3,i%2?col[0]:col[1],2);pxDisc(c,Math.round(x),Math.round(y),rr+1,col[0]);pxDisc(c,Math.round(x),Math.round(y),rr-1,col[1]);pxDisc(c,Math.round(x)+1,Math.round(y)+1,Math.max(1,rr-3),'#ffffff');for(let i=0;i<2;i++)sp(x-rr,y-rr,-1-r(),-.6-r()*.6,14,r()<.5?col[0]:'#ffffff',1);break}
+ case'water':return pxAtk(c,'dragon',a,col,sc,sp,cx,cy,tx,ty);
+ case'dragon':{for(let i=26;i>=0;i--){const p=e*1.15-i*.02;if(p<=0)continue;const q=Math.min(1,p),x=Math.round(tx+Math.cos(q*9)*(26*(1-q))),y=Math.round(-12+(ty+4)*q),rr=i===0?4+Math.round(sc*.3):Math.max(1,3-Math.floor(i/9));pxDisc(c,x,y,rr,i%2?col[0]:col[1]);if(i===0){c.fillStyle='#fff';c.fillRect(x-1,y+1,1,1);c.fillRect(x+1,y+1,1,1);c.fillStyle=col[1];c.fillRect(x-rr-1,y-2,2,1);c.fillRect(x+rr,y-2,2,1)}}break}
+ default:{const hx2=cx+12,rr=Math.round(2+sc*.6);if(a<.4){const q=a/.4;pxDisc(c,hx2,my-2,Math.round(rr*q)+1,col[0]);pxDisc(c,hx2,my-2,Math.max(1,Math.round(rr*q)-1),col[1]);for(let i=0;i<2;i++){const t=r()*6.283;sp(hx2+Math.cos(t)*14,my-2+Math.sin(t)*10,-Math.cos(t)*1.2,-Math.sin(t)*.9,10,col[1],1)}}
+  else{const q=Math.min(1,(a-.4)/.5),x=hx2+(tx-hx2)*q,y=my-2+(ty-6-my)*q;pxLine(c,x-12,y,x,y,col[0],3);pxDisc(c,Math.round(x),Math.round(y),rr+1,col[0]);pxDisc(c,Math.round(x),Math.round(y),Math.max(1,rr-1),'#ffffff')}}}}
+function pxAtkX(c,o,a,col,sc,sp,cx,cy,tx,ty){const s=o.spec;if(!s)return pxAtk(c,o.fxk||'beam',a,col,sc,sp,cx,cy,tx,ty);
+ s.k.forEach((kd,i)=>{const lag=i*.22,ai=Math.max(0,(a-lag)/(1-lag));if(ai<=0)return;try{pxAtkV(c,kd,s.v+i,ai,i===0?col:(PXK_COL[kd]||col),i?Math.max(0,sc-1):sc,sp,cx,cy,tx,ty)}catch(e){}c.globalAlpha=1});
+ if(s.fz&&a<.75){const q=a/.75,n=Math.min(3,s.k.length);for(let i=0;i<n;i++){const ph=q*10+i*6.283/n,rad=(1-q)*14+2,x=cx+12+(tx-cx-12)*q+Math.cos(ph)*rad*.6,y=cy-10+Math.sin(ph)*rad,cl=(PXK_COL[s.k[i]]||col);pxDisc(c,Math.round(x),Math.round(y),2,cl[0]);c.fillStyle='#ffffff';c.fillRect(Math.round(x),Math.round(y),1,1);sp(x,y,0,0,7,cl[1],1)}}}
+// ---------- ร่างเงายักษ์ (ตามฝ่าย) + ออร่าประจำฝ่าย ----------
+const PH_BM={d:['....ooooooo....','...o.......o...','..o...###...o..','..o..#####..o..','..o..#e#e#..o..','...o.#####.o...','....o.###.o....','...#########...','..###########..','.####.###.####.','.###..###..###.','.##...###...##.','......###......','.....#####.....','....#######....','...#########...'],
+ m:['.#...........#.','.##.........##.','..##.#####.##..','...#########...','...##e###e##...','...#########...','....##ooo##....','..###########..','.#############.','###.#######.###','##..#######..##','#...#######...#','o...#######...o','....#######....','...#########...','..###########..'],
+ u:['.......#.......','......###......','.....#####.....','....#######....','...###ooo###...','...##oeoeo##...','...##ooooo##...','...###ooo###...','..###########..','.#############.','.#############.','###############','###############','.#############.','..###########..','...#########...'],
+ n:['......###......','......###......','.....#####.....','....#######....','....#e###e#....','....#######....','.....#####.....','...#########...','..###########..','.#####.#.#####.','.####..#..####.','.###...#...###.','.......#.......','......###......','.....#####.....','....#######....']};
+function pxPhantom(c,x,y,ph,a,col,T,lunge){if(!ph||ph[1]<1||a<=0)return;const tier=ph[1],B=PH_BM[ph[0]||'n'],U=4+tier*2,W=15*U,ox=Math.round(x*3-W/2-8+(lunge||0)*22),oy=Math.round(y*3-B.length*U-10-Math.sin(T*2)*3);c.save();c.setTransform(1,0,0,1,0,0);
+ for(let j=0;j<B.length;j++){const row=B[j],wob=Math.round(Math.sin(T*4+j*.6)*1.5);for(let i=0;i<row.length;i++){const ch2=row[i];if(ch2==='.')continue;c.globalAlpha=(ch2==='e'?.95:ch2==='o'?.5+.08*tier:.2+.07*tier)*a*(ch2==='#'?(.82+.18*Math.sin(T*9+i+j)):1);c.fillStyle=ch2==='e'?(ph[0]==='m'?'#ff2030':'#ffffff'):ch2==='o'?col[1]:col[0];c.fillRect(ox+i*U+wob,oy+j*U,U,U)}}c.restore()}
+function pxSideAura(c,x,y,sd,a,col,T){if(!sd||a<=0)return;const ox=Math.round(x*3),oy=Math.round(y*3);c.save();c.setTransform(1,0,0,1,0,0);
+ if(sd==='d'){const R0=20+a*6;for(let i=0;i<12;i++){const t=T*1.6+i*.5236;c.globalAlpha=.85*a;c.fillStyle=i%2?col[1]:'#ffffff';c.fillRect(ox-2+Math.round(Math.cos(t)*R0),oy-76+Math.round(Math.sin(t)*R0),3,3)}c.globalAlpha=.25*a;for(let i=0;i<36;i++){const t=i*.1745;c.fillStyle=col[1];c.fillRect(ox-1+Math.round(Math.cos(t)*(R0-5)),oy-76+Math.round(Math.sin(t)*(R0-5)),2,2)}}
+ else if(sd==='m'){for(let i=0;i<7;i++){let px=ox+(i-3)*9,py=oy;for(let j=0;j<26;j++){px+=Math.sin(T*5+j*.4+i*2)*1.6;py-=3*a+.6;c.globalAlpha=(.55-j*.02)*a;c.fillStyle=j%4===0?'#c01848':'#12060f';c.fillRect(Math.round(px),Math.round(py),4-Math.floor(j/9),3)}}}
+ else{for(let i=0;i<3;i++){const t=T*3.2+i*2.094,bx=ox+Math.cos(t)*30,by=oy-40+Math.sin(t)*13,front=Math.sin(t)>0;c.globalAlpha=(front?.95:.4)*a;c.fillStyle='#e8e0d0';for(let j=0;j<12;j++)c.fillRect(Math.round(bx-6+j),Math.round(by-3+j*.5),2,2);c.fillStyle=col[0];c.fillRect(Math.round(bx-8),Math.round(by-4),3,3)}}
+ c.restore()}
+// ---------- เกรดเทพ: ตัดไปมุมมองจากห้วงอวกาศ ----------
+function pxSpace(c,a,col,sc,w){c.fillStyle='#02020a';c.fillRect(0,0,PXW,PXH);for(let i=0;i<70;i++){c.globalAlpha=.3+srand(i+9)*.7;c.fillStyle=i%7?'#ffffff':'#ffe9a0';c.fillRect(Math.floor(srand(i+1)*PXW),Math.floor(srand(i+33)*PXH),1,1)}c.globalAlpha=1;
+ const pc=w==='g'?['#3a2a6a','#6a4aa8','#c8a8ff']:w==='x'?['#1a5a6a','#3a9a8a','#bff0e0']:['#1a4a8a','#2a8a4a','#c8f0ff'],split=sc>=11?Math.round(a*5):0,px=80,py=152,R0=98;
+ for(let y=-R0;y<=0;y++){const ww=Math.floor(Math.sqrt(R0*R0-y*y)),yy=py+y;if(yy<0||yy>=PXH)continue;c.fillStyle=pc[0];c.fillRect(px-ww-split,yy,ww,1);c.fillRect(px+split,yy,ww,1);c.fillStyle=pc[1];for(let i=0;i<5;i++){const lx=px-ww+Math.floor(srand(y*3+i)*ww*2),lw=3+Math.floor(srand(y+i*7)*9);if(srand(y*5+i*3)<.35)c.fillRect(lx+(lx<px?-split:split),yy,lw,1)}c.fillStyle=pc[2];c.fillRect(px-ww-split-1,yy,2,1);c.fillRect(px+ww+split-1,yy,2,1)}
+ const L=Math.round(150*Math.min(1,a*1.6)),x0=6;let cy2=py-R0+16;for(let i=0;i<L;i+=2){const xx=x0+i,yy=Math.round(cy2+Math.sin(i*.21)*3+Math.pow((xx-px)/80,2)*22-6);c.fillStyle=col[0];c.fillRect(xx,yy-1,2,3);c.fillStyle='#ffffff';c.fillRect(xx,yy,2,1);if(i===L-2||i===L-1){c.globalAlpha=.6;pxDisc(c,xx,yy,3,col[1]);c.globalAlpha=1}}
+ if(sc>=10){pxDisc(c,128,20,9,'#c8c8d8');pxDisc(c,125,18,2,'#9a9aae');pxDisc(c,131,23,1,'#9a9aae');const m=Math.round(18*Math.min(1,Math.max(0,a*2-.5)));pxLine(c,120,26,120+m,26-m,col[0],2);pxLine(c,120,26,120+m,26-m,'#ffffff',1)}
+ if(a<.15){c.globalAlpha=1-a/.15;c.fillStyle='#ffffff';c.fillRect(0,0,PXW,PXH);c.globalAlpha=1}}
+
 // ===================== v15.9c แชร์การปลดปล่อยพลัง → ฉาก pixel เคลื่อนไหวในแชท (วนซ้ำเหมือน gif · แตะเพื่อเล่นใหม่) =====================
 const RLV={m:new Map(),run:0,last:0};
 function rlvPack(){const L=window._rlLast;if(!L)return null;let lk=null;try{lk=JSON.parse(JSON.stringify(meLook()));if(JSON.stringify(lk).length>1700)lk=null}catch(e){lk=null}
- return{ty:L.type,w:L.w,sd:L.seed,sc:L.sc,fx:L.fxk||'fist',c:L.col||['#ffc840','#fff4c0'],b:L.beast?1:0,lk}}
+ const sp0=L.spec?{k:L.spec.k,v:L.spec.v,fz:L.spec.fz,ph:L.spec.ph}:null;return{ty:L.type,w:L.w,sd:L.seed,sc:L.sc,fx:L.fxk||'fist',c:(L.spec&&L.spec.c)||L.col||['#ffc840','#fff4c0'],b:L.beast?1:0,lk,sp:sp0}}
 relShare=function(){const L=window._rlLast;if(!L)return;if(!onlineOK)return toast('ต้องออนไลน์ก่อน');if(L.shared)return toast('ส่งเข้าแชทไปแล้ว');if(Date.now()-chatLast<1800)return toast('ส่งถี่เกินไป รอแป๊บนึงนะ');
  L.shared=1;const G=REL_GR[L.sc];let rl=null;try{rl=rlvPack()}catch(e){}chatSend('share',`💥 ${S.name} ปลดปล่อย《${L.nm}》ที่${L.p[0]} — เกรด ${G[0]} · ${G[1]}`,rl?{rl}:null);toast('ส่งเข้าแชทแล้ว')};
 function rlvWho(c,x,y,lk,z){if(lk&&typeof lk==='object'){const g0=g,p0=PS;try{g=c;PS=z;c.save();person(x,y,lk);c.restore();g=g0;PS=p0;return}catch(e){try{c.restore()}catch(e2){}g=g0;PS=p0}}
  c.fillStyle='#e8e0d0';c.fillRect(x-2,y-14,5,14);c.fillStyle='#2a2030';c.fillRect(x-2,y-16,5,3)}
 function rlvNew(rl){const hx=v=>/^#[0-9a-fA-F]{6}$/.test(String(v))?String(v):null,cc=Array.isArray(rl.c)?rl.c:[];
- return{o:{ty:typeof rl.ty==='string'?rl.ty:'field',w:['m','x','g'].includes(rl.w)?rl.w:'m',sd:(+rl.sd|0)||7,fx:typeof rl.fx==='string'?rl.fx:'fist',lk:rl.lk&&typeof rl.lk==='object'?rl.lk:null},
+ return{o:{ty:typeof rl.ty==='string'?rl.ty:'field',w:['m','x','g'].includes(rl.w)?rl.w:'m',sd:(+rl.sd|0)||7,fx:typeof rl.fx==='string'?rl.fx:'fist',lk:rl.lk&&typeof rl.lk==='object'?rl.lk:null,spec:(()=>{try{return relSpecIn(rl.sp)}catch(e){return null}})()},
   sc:Math.max(0,Math.min(REL_GR.length-1,+rl.sc|0)),col:[hx(cc[0])||'#ffc840',hx(cc[1])||'#fff4c0'],t0:performance.now(),P:[],boom:0,pk:0,cv:null,pre:null,post:null,bad:0}}
-function rlvFrame(st,now){const cv=st.cv,c=cv.getContext('2d'),o=st.o,z=3,col=st.col,sc=st.sc,cx=30,cy=76,tx=112,ty=70,LOOP=7;
+function rlvFrame(st,now){const cv=st.cv,c=cv.getContext('2d'),o=st.o,z=3,col=st.col,sc=st.sc,cx=30,cy=76,tx=112,ty=70,SPC=sc>=9?1.2:0,LOOP=7+SPC;
  if(!st.pre){const mk=()=>{const x=document.createElement('canvas');x.width=PXW;x.height=PXH;return x};st.pre=mk();st.post=mk();
   try{pxScene(st.pre.getContext('2d'),o.ty,o.w,o.sd,-1);pxScene(st.post.getContext('2d'),o.ty,o.w,o.sd,sc)}catch(e){try{pxScene(st.pre.getContext('2d'),'field','m',7,-1);pxScene(st.post.getContext('2d'),'field','m',7,sc)}catch(e2){}}}
- const k=((now-st.t0)/1000)%LOOP;if(k<st.pk){st.P=[];st.boom=0}st.pk=k;
+ const k=((now-st.t0)/1000)%LOOP;if(k<st.pk){st.P=[];st.boom=0;st.spc=0}st.pk=k;
  const sp=(x,y,vx,vy,l,cl,s)=>{if(st.P.length<240)st.P.push({x,y,vx,vy,l,l0:l,c:cl,s:s||1})};
  let shx=0,shy=0;c.imageSmoothingEnabled=false;c.setTransform(z,0,0,z,0,0);c.globalAlpha=1;
  c.drawImage(k>=3?st.post:st.pre,0,0);
  if(k>=.6&&k<2){const a=Math.min(1,(k-.6)/1.1);shx=(Math.random()-.5)*a*1.4;for(let i=0;i<1+Math.round(a*4);i++)sp(cx+(Math.random()-.5)*14,cy+2,(Math.random()-.5)*.3,-.6-Math.random()*1.3*a,26,Math.random()<.5?col[0]:col[1],1);
   c.globalAlpha=.25+.25*Math.sin(k*18);pxDisc(c,cx,cy-8,Math.round(6+a*6),col[0]);c.globalAlpha=1}
- if(k>=2&&k<2.98){try{pxAtk(c,o.fx,Math.min(1,(k-2)/.9),col,sc,sp,cx,cy,tx,ty)}catch(e){o.fx='fist'}c.globalAlpha=1}
+ if(k>=2&&k<2.98){try{pxAtkX(c,{spec:o.spec,fxk:o.fx},Math.min(1,(k-2)/.9),col,sc,sp,cx,cy,tx,ty)}catch(e){o.spec=null;o.fx='fist'}c.globalAlpha=1}
  if(k>=2.9&&k<3.55){c.fillStyle='#ffffff';c.globalAlpha=Math.max(0,1-(k-2.9)/.65);c.fillRect(0,0,PXW,PXH);c.globalAlpha=1}
  if(!st.boom&&k>=3.2&&k<4){st.boom=1;const n=24+sc*8;for(let i=0;i<n;i++){const a=Math.random()*6.283,v=.6+Math.random()*(1.4+sc*.5);sp(tx,ty,Math.cos(a)*v,Math.sin(a)*v*.6-.6,20+Math.random()*28,Math.random()<.4?col[1]:Math.random()<.5?col[0]:'#8a6a4a',1+(Math.random()<.2?1:0))}}
  if(k>=3.2&&k<4.7){const a=Math.max(0,1-(k-3.2)/1.4),R0=Math.min(60,5+sc*5)*(1-a*.6);shx=(Math.random()-.5)*a*(2+sc*.6);shy=(Math.random()-.5)*a*(1+sc*.3);c.globalAlpha=a*.85;pxDisc(c,tx,ty,Math.round(R0),col[1]);c.globalAlpha=a*.5;pxDisc(c,tx,ty,Math.round(R0*1.3),col[0]);c.globalAlpha=1}
  if(k>=3.6&&k<6.4&&Math.random()<.4)sp(tx-20+Math.random()*40,ty,(Math.random()-.5)*.3,-.25-Math.random()*.4,50,Math.random()<.5?'#5a5a5a':'#8a8a8a',2);
- if(heroOK(o.lk)){try{const pz=heroPoseAt(k,.6,2,2.9,3.7,o.fx);pxHeroAura(c,cx,cy+2,pz.st==='charge'?pz.ch:pz.st==='atk'?pz.ch*.6:0,col,k);pxHero(c,cx,cy+2,o.lk,pz,o.fx,col,k);pxShock(c,tx,ty,(k-3.15)/.9,col)}catch(e){rlvWho(c,cx,cy+2,o.lk,z)}}
+ const inSp=SPC&&k>=3.5&&k<3.5+SPC;
+ if(inSp){if(!st.spc){st.spc=1;st.P=[]}try{pxSpace(c,(k-3.5)/SPC,col,sc,o.w)}catch(e){}}
+ else if(heroOK(o.lk)){st.spc=0;try{const SP=o.spec,hk=heroKindOf(SP)||o.fx,pz=heroPoseAt(k,.6,2,2.9,3.7+SPC,hk),au=pz.st==='charge'?pz.ch:pz.st==='atk'?Math.max(pz.ch,.75*Math.max(0,1-(k-2)/1.4)):0;
+   if(sc>=6&&k<2.9){const dq=Math.min(1,(k-.6)/.8);if(dq>0){c.globalAlpha=.42*dq;c.fillStyle='#05030f';c.fillRect(0,0,PXW,PXH);c.globalAlpha=1}}
+   if(SP){pxPhantom(c,cx,cy+2,SP.ph,au,col,k,pz.st==='atk'?Math.min(1,(k-2)/.3):0);pxSideAura(c,cx,cy+2,SP.ph[0],pz.st==='charge'?pz.ch:0,col,k)}
+   pxHeroAura(c,cx,cy+2,pz.st==='charge'?pz.ch:pz.st==='atk'?pz.ch*.6:0,col,k);pxHero(c,cx,cy+2,o.lk,pz,SP&&SP.k.includes('sword')?(hk==='slashdown'||hk==='sweep'?hk:'sword'):hk,col,k);pxShock(c,tx,ty,(k-3.15)/.9,col)}catch(e){rlvWho(c,cx,cy+2,o.lk,z)}}
  else rlvWho(c,cx,cy+2,o.lk,z);c.setTransform(z,0,0,z,0,0);c.globalAlpha=1;
  for(let i=st.P.length-1;i>=0;i--){const p=st.P[i];p.x+=p.vx;p.y+=p.vy;p.vy+=p.s>1?-.004:.02;p.l--;if(p.l<=0||p.y>PXH+4){st.P.splice(i,1);continue}c.globalAlpha=Math.min(1,p.l/p.l0*1.5);c.fillStyle=p.c;c.fillRect(Math.round(p.x),Math.round(p.y),p.s,p.s)}c.globalAlpha=1;
  try{pxVig(c,cv.width,cv.height)}catch(e){}
- if(k>=3.7){const G=REL_GR[sc],a=Math.min(1,(k-3.7)/.3);c.setTransform(1,0,0,1,0,0);c.globalAlpha=a;c.textAlign='right';c.textBaseline='top';c.lineJoin='round';
+ if(k>=3.7+SPC){const G=REL_GR[sc],a=Math.min(1,(k-3.7-SPC)/.3);c.setTransform(1,0,0,1,0,0);c.globalAlpha=a;c.textAlign='right';c.textBaseline='top';c.lineJoin='round';
   c.font='bold 60px monospace';c.lineWidth=9;c.strokeStyle='#000000';c.strokeText(G[0],cv.width-12,8);c.fillStyle=G[2];c.fillText(G[0],cv.width-12,8);
   c.font='bold 22px sans-serif';c.lineWidth=6;c.strokeText(G[1],cv.width-12,74);c.fillStyle='#ffffff';c.fillText(G[1],cv.width-12,74);c.globalAlpha=1;c.textAlign='left'}
  cv.style.transform=(shx||shy)?`translate(${shx*1.5}px,${shy*1.5}px)`:''}
