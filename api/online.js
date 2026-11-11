@@ -136,6 +136,11 @@ function bdScore(D, e) {
   let sw = 0, sv = 0; for (const [w, v] of C) { sw += w; sv += w * (isFinite(v) ? v : 0) }
   return Math.round(100000 * sv / sw);
 }
+function bdScoreShort(D, e) { // ชีวิตสั้น: คิดจากความเร็ว — ทำได้มากในเวลาน้อยยิ่งได้คะแนน
+  const st = (D && D.st) || {}, ag = Math.max(10, +e.age || 30), k = 30 / ag, sc = v => (+v || 0) * k;
+  const D2 = Object.assign({}, D, { st: Object.assign({}, st, { pow: sc(st.pow), fame: sc(st.fame), money: sc(st.money), int: sc(st.int), kills: sc(st.kills) }) });
+  return bdScore(D2, Object.assign({}, e, { age: Math.min(10000, sc(st.pow) / 500) }));
+}
 function week(d = new Date()) {
   // สัปดาห์เริ่มวันจันทร์ 00:00 เวลาไทย
   const t = new Date(d.getTime() + 7 * 3600e3);
@@ -1168,8 +1173,9 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const e = { n: clean(b.n, 20) || 'นิรนาม', s: Math.max(0, Math.min(1e12, +b.s || 0)), age: +b.age || 0, r: clean(b.r, 30), f: clean(b.f, 30), c: clean(b.c, 60), x: b.x ? 1 : 0, g: b.g ? 1 : 0, ga: Math.max(0, Math.min(1e9, Math.round(+b.ga || 0))), ...(b.tp ? { tt: '', tr: 0 } : ttlOk(b.tt)), xa: Math.max(0, Math.min(1e9, Math.round(+b.xa || 0))), cu: b.cu ? 1 : 0, bm: b.bm ? 1 : 0, kl: Math.max(0, Math.min(9, Math.floor(+b.kl || 0))), t: now, lid };
       { const c0 = String(b.ch || ''); if (CH_OK.includes(c0) && !(c0 === 'short' && e.age > 31)) e.ch = c0 }
       try { e.s = bdScore(JSON.parse(String(b.det || '{}')), e) } catch { e.s = 0 }
+      let ejC = null; if (e.ch === 'short') { try { ejC = JSON.stringify(Object.assign({}, e, { s: bdScoreShort(JSON.parse(String(b.det || '{}')), e), sp: 1 })) } catch {} }
       const cat = bdCat(e), ej = JSON.stringify(e), L = [['INCR', 'lives']];
-      for (const cc of e.ch ? [cat, 'c'] : [cat]) for (const [kk, ex] of [[bdKey(cc, now), 4], [bdKeyW(cc, now), 20], [bdKeyM(cc, now), 70]]) L.push(['ZADD', kk, e.s, ej], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]);
+      for (const cc of e.ch ? [cat, 'c'] : [cat]) { const useC = cc === 'c' && ejC, sv = useC ? JSON.parse(ejC).s : e.s, jj = useC ? ejC : ej; for (const [kk, ex] of [[bdKey(cc, now), 4], [bdKeyW(cc, now), 20], [bdKeyM(cc, now), 70]]) L.push(['ZADD', kk, sv, jj], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]) }
       await bdSettle();
       if (e.cu || !(parseFloat(b.ver) >= 6.3)) { await cmd('INCR', 'lives'); return res.json({ ok: 1, skip: 1 }) }
       const det = String(b.det || '');
@@ -1259,7 +1265,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       }
       if (!o) return res.json({ o: null, tk: await arTk(0), rt: myR });
       const tk = await arTk(1); if (!tk.ok) return res.json({ o: null, notk: 1, tk, rt: myR });
-      await cmd('SET', 'arm:' + id, JSON.stringify({ o: oid, rv, t: now, bot }), 'EX', 900);
+      await cmd('SET', 'arm:' + id, JSON.stringify({ o: oid, rv, t: now, bot, ch: ['hell', 'short', 'junk'].includes(b.ch) ? b.ch : '' }), 'EX', 900);
       const or = bot ? Math.max(900, myR - 30) : await arRt(oid); delete o.t; return res.json({ o: Object.assign(o, { rt: or, lg: arLg(or) }), rt: myR, tk });
     }
     if (a === 'arlesson') {
@@ -1312,14 +1318,14 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
         ['LPUSH', 'ardef:' + pm.o, JSON.stringify({ n: nm, w: w ? 0 : 1, d: db, t: now, a: id })], ['LTRIM', 'ardef:' + pm.o, 0, 19], ['EXPIRE', 'ardef:' + pm.o, 86400 * 14], ['HINCRBY', 'ardefn', pm.o, 1]];
       if (w) L.push(['ZINCRBY', 'arenaW:' + W, 1, nm], ['EXPIRE', 'arenaW:' + W, 86400 * 40], ['ZINCRBY', 'arwin:' + W, 1, id], ['EXPIRE', 'arwin:' + W, 86400 * 40]);
       await pipe(L);
-      let g = 0, bonus = 0, qg = 0, v = null; try { for (let t = 0; t < 4 && !(await arLock()); t++) await new Promise(r0 => setTimeout(r0, 300)); v = await arWal(); g = au ? (w ? 1 : 0) : (w ? 3 : 1);
+      let g = 0, bonus = 0, qg = 0, v = null; try { for (let t = 0; t < 4 && !(await arLock()); t++) await new Promise(r0 => setTimeout(r0, 300)); v = await arWal(); g = au ? (w ? 1 : 0) : (w ? 3 : 1); const chM = { hell: 1.5, junk: 1.5, short: 1.3 }[pm.ch] || 1; if (g && chM > 1) g = Math.max(g + 1, Math.round(g * chM));
         if (w) { v.stk = (v.stk | 0) + 1; if (v.stk >= 3) bonus = Math.min(5, v.stk - 2) } else v.stk = 0;
         const ev = { w, au, ad: +b.ad > 0, rv: !!pm.rv, best: Math.max(0, Math.min(99, +b.cb || 0)) };
         v.q.q.forEach(q => { if (q.done) return; const need = AR_QN[q.id] || 1; let inc = 0; if (q.id === 'w3' && ev.w) inc = 1; if (q.id === 'man2' && !ev.au) inc = 1; if (q.id === 'adv' && ev.w && ev.ad) inc = 1; if (q.id === 'rv' && ev.w && ev.rv) inc = 1; if (q.id === 'cb3' && ev.best >= 3 && !ev.au) inc = 1; if (q.id === 'any5') inc = 1;
           if (inc) { q.p = Math.min(need, q.p + inc); if (q.p >= need) { q.done = 1; qg += 8 } } });
         if (!v.q.all && v.q.q.every(q => q.done)) { v.q.all = 1; qg += 15 }
         v.c += g + bonus + qg; await arWalSet(v) } catch (e) {} finally { await arUnlock() }
-      return res.json({ ok: 1, rt: na, d: da, lg: arLg(na), ort: nb, g, bonus, qg, wal: v ? arWalPub(v) : null });
+      return res.json({ ok: 1, rt: na, d: da, lg: arLg(na), ort: nb, g, bonus, qg, chm: pm.ch || '', wal: v ? arWalPub(v) : null });
     }
     if (a === 'arena') {
       const me = { n: clean(b.n, 20) || 'นิรนาม', p: Math.max(0, +b.p || 0), hp: +b.hp || 100, r: clean(b.r, 30), ri: Math.max(0, Math.min(12, +b.ri || 0)), x: b.x ? 1 : 0, t: now };
