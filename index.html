@@ -1812,7 +1812,7 @@ function inherit(ci){
  S=baseState({name:kid?kid.n:genName(fam,g.v.n,sur),gender:g.v.n,family:fam,talent:t.v,ow:false,world:null,seed:R(1,99999),odds:t.p*g.p,
   power:fam.power+R(0,15),int:R(10,25)+Math.round(P.int*.1),money:fam.money,karma:fam.karma,fame:Math.round(P.fame*.3),
   gen:P.gen+1,lineage:P.lineage.concat([{n:P.name,e:P.epithet,a:P.age}])});
- if(heirArt)Array.prototype.push.call(S.arts,{...heirArt,heir:1});
+ if(heirArt)Array.prototype.push.call(S.arts,{...heirArt,heir:1,la:0,ly:0});
  S.gear=Object.assign({},P.gear||{});S.gup=Object.assign({},P.gup||{});if(Object.keys(S.gear).length)S._gearInh=1;
  {const fr=rollTraits().list;const good=(P.traits||[]).filter(x=>!trOf(x).bad);if(good.length&&Math.random()<.3){const x=ch(good);if(!fr.includes(x))fr.push(x)}S.traits=fr;applyTraitsStart()}
  S.heirParents=[{n:P.name,title:ptitle,role:P.gender==='หญิง'?'แม่':'พ่อ',g:P.gender,age:P.age,life:P.age,alive:false,p:'ผู้ล่วงลับ',rel:80}];
@@ -5450,7 +5450,7 @@ const AMT=[null,
  ['《X》ปล่อยปราณออกนอกกายได้แล้ว ใบไม้ห่างสิบก้าวขาดสะบั้น','เข้าใจความหมายที่ซ่อนในคัมภีร์《X》 ท่าเดิมแต่พลังต่างกันลิบ','ฝึก《X》ใต้น้ำตกทั้งฤดู ในที่สุดก็ทะลวงขีดจำกัดของท่า'],
  ['วิชากับใจหลอมเป็นหนึ่ง — 《X》ไร้ท่าแต่ทุกการเคลื่อนไหวคือท่า','คืนหนึ่งใต้แสงจันทร์ คุณร่าย《X》โดยไม่ตั้งใจ ฟ้าดินสั่นสะเทือน','ผู้คนเริ่มเรียกคุณตามชื่อวิชา《X》 เพราะไม่มีใครใช้ได้ถึงขั้นนี้มาร้อยปี']];
 function artTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human)||!S.arts||!S.arts.length||S.age<6)return;
- S.arts.forEach(a=>{if(a&&typeof a==='object'&&a.la==null)a.la=S.age});
+ S.arts.forEach(a=>{if(a&&typeof a==='object'){if(a.la==null||a.la>S.age)a.la=S.age;if(a.ly!=null&&a.ly>S.age)a.ly=S.age}});
  const foc=S.focus==='train'||S.focus==='qi';if(Math.random()>(foc?.6:.2))return;
  const c=S.arts.filter(a=>a&&typeof a==='object'&&(a.lv||0)<3&&S.age-(a.ly!=null?a.ly:a.la)>=AMY[a.lv||0]);if(!c.length)return;
  c.sort((x,y)=>(x.lv||0)-(y.lv||0)||y.b-x.b);const a=Math.random()<.7?c[0]:ch(c);const p=artUpP(a);
