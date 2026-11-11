@@ -602,7 +602,46 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
 <h2>🏆 ทำเนียบสัปดาห์นี้ <small style="font-weight:normal;color:#aaa">· กด 🗑 เพื่อลบรายการที่คะแนนผิดปกติ</small></h2>${brd.length ? brd.map((x, i) => `<div class="pl" id="bd_${e(x.lid)}"><div class="plh"><b>#${i + 1} ${e(x.n)} · ${(+x.s || 0).toLocaleString('th-TH')}</b><button onclick="bdRm('${e(x.lid)}',this)" style="background:#3a1d24;color:#ff9b9b;border:1px solid #c55;border-radius:6px;padding:3px 10px">🗑 ลบ</button></div><small>${e(x.r)} · ${e(x.f)} · อายุ ${(+x.age || 0).toLocaleString('th-TH')}${x.x ? ' · ☁️' : ''} · ${e(x.c)}</small></div>`).join('') : '<p><small>ยังไม่มีชีวิตในทำเนียบสัปดาห์นี้</small></p>'}
 <script>async function bdRm(l,btn){if(!confirm('ลบรายการนี้ออกจากทำเนียบ?'))return;btn.disabled=true;try{const r=await fetch('?a=bdrm&key=${K}&l='+l);const j=await r.json();if(j.ok){const d=document.getElementById('bd_'+l);d.style.opacity=.35;btn.textContent='ลบแล้ว'}else{btn.disabled=false;alert('ลบไม่สำเร็จ')}}catch(x){btn.disabled=false;alert('ลบไม่สำเร็จ')}}</script>
 <h2>กระดานบั๊ก</h2>${bugs.map(b => `<div class="bug ${ds.has(b.i) ? 'done' : ''}">${b.k === 'idea' ? '💡' : '🐞'} <b>${e(b.n)}</b> <small>v${e(b.v)} · ${new Date(b.t).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })}</small><br>${e(b.x)}<br>${ds.has(b.i) ? `✅ แก้แล้ว · <a href="?a=bugfix&key=${K}&bid=${b.i}&undo=1">ยกเลิก</a>` : `<a href="?a=bugfix&key=${K}&bid=${b.i}">ติด ✅ แก้แล้ว</a>`}</div>`).join('') || '<p>ยังไม่มี</p>'}
-<p><small>หน้านี้เปิดได้เฉพาะลิงก์ที่มีรหัสผู้ดูแล อย่าแชร์ลิงก์นี้</small></p></body></html>`);
+<p><small>หน้านี้เปิดได้เฉพาะลิงก์ที่มีรหัสผู้ดูแล อย่าแชร์ลิงก์นี้</small></p><style>
+body.adtab{max-width:1200px}
+#adNav{position:sticky;top:0;z-index:20;background:#16131cf2;backdrop-filter:blur(6px);margin:0 -14px 10px;padding:8px 14px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid #2e2838}
+#adNav button{background:#211d2a;color:#ddd;border:1px solid #3a3346;border-radius:18px;padding:6px 12px;font-size:13px;cursor:pointer;font-family:inherit}
+#adNav button.on{background:#f0c860;color:#16131c;border-color:#f0c860;font-weight:700}
+#adNav button i{font-style:normal;background:#ff5a6a;color:#fff;border-radius:9px;padding:0 6px;margin-left:4px;font-size:11px}
+#adNav .adq{flex:1;min-width:150px;background:#211d2a;color:#eee;border:1px solid #3a3346;border-radius:18px;padding:6px 12px;font-size:13px}
+.adP{display:none}.adP.on{display:block}
+.adP .adg2{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:8px}
+.adP .adg2>.pl,.adP .adg2>.bug{margin:0}
+.adP h2{margin-top:8px;display:flex;align-items:baseline;gap:8px;cursor:pointer}
+.adP h2::before{content:'▾';color:#888;font-size:12px}.adP h2.cl::before{content:'▸'}
+.adP .adBody.cl{display:none}
+.adSum{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:6px 0 12px}.adSum .c{margin:0}
+@media(max-width:720px){.adP .adg2{grid-template-columns:1fr}}
+</style>
+<script>(function(){try{
+var CAT=[['ov','📊 ภาพรวม',/ออนไลน์ตอนนี้/],['sec','🛡️ ความปลอดภัย',/ผู้บุกรุก|ผู้ต้องสงสัยโกง/],['mod','🖼️ ตรวจเนื้อหา',/รูปโปรไฟล์|คนแรกของเซิร์ฟเวอร์|ทำเนียบ/],['bug','🐞 บั๊ก & error',/error|กระดานบั๊ก/],['biz','💰 สนับสนุน & สถิติ',/สนับสนุน|เว็บใหม่/]];
+var b=document.body;b.classList.add('adtab');var h1=b.querySelector('h1'),sum=h1&&h1.nextElementSibling;if(sum)sum.classList.add('adSum');
+var nav=document.createElement('div');nav.id='adNav';var P={};
+CAT.concat([['all','🗂️ ทั้งหมด',null]]).forEach(function(c){var bt=document.createElement('button');bt.dataset.k=c[0];bt.textContent=c[1];nav.appendChild(bt);if(c[0]!=='all'){var p=document.createElement('div');p.className='adP';p.dataset.k=c[0];P[c[0]]=p}});
+var q=document.createElement('input');q.className='adq';q.placeholder='🔎 ค้นหาในหน้านี้ (ชื่อ / id / ข้อความ)';nav.appendChild(q);
+(sum||h1).insertAdjacentElement('afterend',nav);
+var host=document.createElement('div');nav.insertAdjacentElement('afterend',host);CAT.forEach(function(c){host.appendChild(P[c[0]])});
+var hs=[].slice.call(b.querySelectorAll('body>h2'));
+hs.forEach(function(h){var t=h.textContent,k='ov';for(var i=0;i<CAT.length;i++)if(CAT[i][2].test(t)){k=CAT[i][0];break}
+ var body=document.createElement('div');body.className='adBody';var n=h.nextSibling,items=[];while(n&&!(n.nodeType===1&&n.tagName==='H2')&&!(n.nodeType===1&&n.tagName==='P'&&/อย่าแชร์ลิงก์/.test(n.textContent))){var nx=n.nextSibling;items.push(n);n=nx}
+ var grid=null;items.forEach(function(el){if(el.nodeType===1&&(el.classList.contains('pl')||el.classList.contains('bug'))){if(!grid){grid=document.createElement('div');grid.className='adg2';body.appendChild(grid)}grid.appendChild(el)}else{grid=null;body.appendChild(el)}});
+ P[k].appendChild(h);P[k].appendChild(body);
+ var key='adcl:'+t.slice(0,20);try{if(localStorage.getItem(key)==='1'){h.classList.add('cl');body.classList.add('cl')}}catch(e){}
+ h.addEventListener('click',function(){h.classList.toggle('cl');body.classList.toggle('cl');try{localStorage.setItem(key,h.classList.contains('cl')?'1':'0')}catch(e){}})});
+// ตัวเลขแจ้งเตือนบนแท็บ
+CAT.forEach(function(c){var p=P[c[0]],n=0;if(c[0]==='sec')n=p.querySelectorAll('.pl').length;if(c[0]==='bug')n=p.querySelectorAll('.bug:not(.done)').length;if(c[0]==='mod')n=(p.textContent.match(/รอตรวจ[^0-9]*(\\d+)/)||[0,0])[1]|0;var bt=nav.querySelector('[data-k="'+c[0]+'"]');if(n&&bt){var i=document.createElement('i');i.textContent=n;bt.appendChild(i)}if(!p.children.length&&bt)bt.style.display='none'});
+function show(k){try{localStorage.setItem('adtab',k)}catch(e){}[].forEach.call(nav.querySelectorAll('button'),function(x){x.classList.toggle('on',x.dataset.k===k)});Object.keys(P).forEach(function(x){P[x].classList.toggle('on',k==='all'||x===k)})}
+nav.addEventListener('click',function(e){var t=e.target.closest('button');if(t){show(t.dataset.k);window.scrollTo({top:0})}});
+var k0='ov';try{k0=localStorage.getItem('adtab')||'ov'}catch(e){}show(P[k0]||k0==='all'?k0:'ov');
+q.addEventListener('input',function(){var v=q.value.trim().toLowerCase();if(v)show('all');[].forEach.call(document.querySelectorAll('.adP .pl,.adP .bug'),function(el){el.style.display=!v||el.textContent.toLowerCase().indexOf(v)>=0?'':'none'})});
+try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window.addEventListener('beforeunload',function(){sessionStorage.setItem('adsy',window.scrollY)})}catch(e){}
+}catch(e){console.error(e)}})();</script>
+</body></html>`);
     }
     if (a === 'trk') {
       const pg = String(qOf(req).p || '');

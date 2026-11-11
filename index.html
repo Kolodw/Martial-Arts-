@@ -460,8 +460,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='15.9';
+const VERSION='16.0';
 const CHANGELOG=[
+ {v:'16.0',d:'12 พ.ย. 2026',l:['🍃 ยุทธภพอยู่ได้เกิน 200 ปี — ขั้น<b>จาเยินกยอง</b> · <b>ปันโรฮวานดง</b> คืนวัยหนุ่ม · เหตุการณ์ปรมาจารย์แห่งยุค และทางเลือกปลายชีวิต','💀 rework <b>โหมดนรก ชีวิตสั้น รากขยะ</b> — นรกระบบ/AI หายาก ทัณฑ์ซ้อน · ชีวิตสั้นโอกาสพิเศษสูง ปลดปล่อยปีละ 2 ครั้ง เผาผลาญอายุ · รากขยะมีโชคของขยะและแรงฮึด · ลานประลองได้เหรียญเพิ่ม · ทำเนียบชีวิตสั้นคิดจากความเร็ว','🏮 ชื่อเสียงมีเพดานตามโลกและแสดงเป็นระดับ · เป้าหมายชื่อเสียงสูงขึ้น','📱 ปรับขนาดหน้าจอได้ที่ ☰ → ขนาดหน้าจอ','🎖️ หน้าเลือกฉายาใหม่ แบ่งหมวด ค้นหาได้ ลื่นขึ้น · ฉายา <b>Nano Machine</b> โฉมใหม่','🏛️ ประมูลทั่วยุทธภพเวลาต่อชิ้นนานขึ้น พิมพ์ราคาได้ง่ายขึ้น · 🛠️ แก้บั๊กเงินติดลบหลังย้อนเวลา และภาพหลุมศพค้าง']},
  {v:'15.9',d:'11 พ.ย. 2026',l:['💥 ปลดปล่อยพลังมี<b>ท่าเฉพาะสาย</b> — กระบี่ฟันฉาก ฝ่ามือยักษ์ตกจากฟ้า เสาเพลิง หนามน้ำแข็ง ฟ้าผ่า หลุมดำ มังกรพุ่ง · สัตว์อสูรพ่นไฟ คำราม ฟาดหาง กรงเล็บ · เกรดสูงมีฉากตัดหน้าตัวละครและจอแตก','❓ <b>สอนเล่นแบบพาทัวร์</b> เปิดหน้าจริงให้ดูทีละหน้า ดูซ้ำได้ที่ ☰ → วิธีเล่น','🛠️ วิชาของสัตว์ที่แปลงกายและวิชามรดกรุ่นลูกพัฒนาขั้นได้แล้ว']},
  {v:'15.8',d:'11 พ.ย. 2026',l:['💥 <b>ปลดปล่อยพลัง</b> โฉมใหม่ — ปุ่มอยู่หน้าเล่น เลือกที่ เลือกวิชา แล้วดูฉาก pixel ตอนพลังถล่มป่าหรือผ่าภูเขา มีเกรด F → ∞ ร่องรอยบนแผ่นดิน และแชร์เข้าแชทได้ · สัตว์อสูรก็ปล่อยได้','🗺️ <b>แผนที่ท่องดินแดน</b> — เดินทางไปนครหลวง ยอดเขา ป่า ทะเลทราย ทะเล แดนหิมะ แดนเถื่อน และแดนต้องห้าม แต่ละที่ได้ของดีต่างกัน ท้าจ้าวถิ่นชิงฉายา ระวังค่าหัวและนักล่าค่าหัว','🏛️ ประมูลทั่วยุทธภพมี<b>สมบัติชื่อเฉพาะ 100 ชิ้น</b> · ชนะแล้วเข้าคลังสมบัติ กดใช้เองทีหลังได้','🐾 สัตว์ที่แปลงกายแล้ว<b>คืนร่างอสูร</b>ได้ ปุ่มอยู่หน้าเล่น · ปรับสมดุลของที่ปั๊มพลังได้ไม่จำกัด']},
  {v:'15.7',d:'11 พ.ย. 2026',l:['♾️ <b>วัฏจักรกัลป์</b> — อายุถึงล้านปีไม่ตัดจบแล้ว ฝ่าภัยสิ้นกัลป์ไปต่อได้ถึง 9 กัลป์ หรือเลือกละสังขารให้ลูกหลานได้มรดก','🐾 สัตว์อสูรอายุแสนปีเจอ<b>ทางแยกอสูรแสนปี</b> ฝ่าทัณฑ์เพื่อยืดอายุต่อได้']},
@@ -14024,6 +14025,14 @@ const NANO_T='Nano Machine';
 @media (prefers-reduced-motion:reduce){.tchip.tnano,.tchip.tnano::before,.tnano *{animation:none!important}}
 .sp2c[data-nano],.sp2c.nano{background:linear-gradient(115deg,#07040b,#2a0712 50%,#3a0f3f)!important;color:#ffd0dc!important}
 `;document.head.appendChild(st)})();
+
+// ===================== v16.4 เครื่องมือแอดมินในเกม: แบ่งแท็บ ไม่ต้องเลื่อน =====================
+{const _oat=openAdmTools;openAdmTools=function(){const r=_oat.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='admtool')return r;const secs=[...m.querySelectorAll('.adsec')];if(secs.length<2||m.querySelector('.adtabs'))return r;
+ const nav=document.createElement('div');nav.className='adtabs';const cur=LS.get('murim_admtab',0)|0;
+ secs.forEach((s,i)=>{const h=s.querySelector('h4'),b=document.createElement('button');b.textContent=(h?h.textContent:'ส่วน '+(i+1)).split('·')[0].trim();b.onclick=()=>{LS.set('murim_admtab',i);secs.forEach((x,j)=>x.style.display=j===i?'':'none');[...nav.children].forEach((x,j)=>x.classList.toggle('on',j===i))};nav.appendChild(b)});
+ secs[0].insertAdjacentElement('beforebegin',nav);const k=Math.min(cur,secs.length-1);secs.forEach((x,j)=>x.style.display=j===k?'':'none');nav.children[k].classList.add('on')}catch(e){}return r}}
+(()=>{const st=document.createElement('style');st.textContent=`.adtabs{display:flex;gap:4px;flex-wrap:wrap;margin:8px 0;position:sticky;top:-16px;background:var(--card);z-index:3;padding:6px 0}.adtabs button{font-size:12px;padding:6px 10px;border-radius:16px;border:2px solid var(--line);background:var(--card);color:var(--ink);font-family:inherit}.adtabs button.on{background:var(--ink);color:var(--card)}
+#modal[data-k="admtool"] .adg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px}#modal[data-k="admtool"] .adg button{margin:0}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
