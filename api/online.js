@@ -562,9 +562,9 @@ module.exports = async (req, res) => {
       const spIds = spR[9] || [], spPay = spIds.length ? ((await cmd('HMGET', 'suppay', ...spIds)) || []).map(jp).filter(Boolean) : [], spEv = (spR[10] || []).map(jp).filter(Boolean);
       const spSum = spPay.filter(x => x.st === 'ok').reduce((a, x) => a + (+x.amt || 0), 0);
       const spRow = x => `<div class="pl" style="${x.st === 'ok' ? 'border-left:4px solid #6ad06a' : x.st === 'no' ? 'border-left:4px solid #d05a5a;opacity:.6' : 'border-left:4px solid #f0c860'}"><div class="plh"><b>💰 ${x.amt ? (+x.amt).toLocaleString('th-TH') + ' บาท' : 'ไม่ระบุยอด'}</b><small>${tAgo(x.t)} ที่แล้ว · ${x.st === 'ok' ? '✅ ยืนยันแล้ว' : x.st === 'no' ? '❌ ไม่พบยอด' : '⏳ รอตรวจ'}</small></div>ชื่อบัญชีที่โอน: <b>${e(x.pn || '-')}</b> · เวลาโอน ${e(x.tm || '-')}<br>ผู้เล่น: ${e(x.n)} <small>(${e(String(x.fid || '').slice(0, 10))} · ${e(x.dev || '')}${x.src ? ' · เปิดจาก' + e(x.src) : ''})</small>${x.msg ? `<br>💬 “${e(x.msg)}”` : ''}${x.img ? `<br><a href="?a=supimg&key=${K}&i=${x.i}" target="_blank"><img src="?a=supimg&key=${K}&i=${x.i}" style="max-width:140px;max-height:200px;border-radius:6px;margin-top:4px;border:1px solid #444" loading="lazy"></a>` : ''}<div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap"><button class="cpb" onclick="spM('${x.i}','ok',this)">✅ ยืนยันว่าได้รับ</button><button class="cpb" onclick="spM('${x.i}','no',this)">❌ ไม่พบยอด</button><button class="cpb" onclick="spM('${x.i}','',this)">↩️ รอตรวจ</button><button class="cpb" onclick="spM('${x.i}','del',this)">🗑️ ลบ</button></div></div>`;
-      const EVN = { view: '👀 เปิดดู QR', save: '⬇️ บันทึกรูป QR' };
+      const EVN = { view: '👀 เปิดดู QR', save: '⬇️ บันทึกรูป QR', stay: '⏱️ เปิด QR ค้างไว้นาน (น่าจะกำลังสแกน)' };
       const supHtml = `<h2>🙏 ค่าสนับสนุน <small style="font-weight:normal;color:#aaa">· สแกน QR เกิดในแอปธนาคาร เว็บจึงรู้ได้แค่ว่าใคร <b>เปิดดู/บันทึก QR</b> และใคร <b>กดแจ้งว่าโอนแล้ว</b> — เอาชื่อบัญชี เวลา และยอดไปเทียบกับรายการในแอปธนาคาร</small></h2>
-<div><span class="c"><b>${spT.view || 0}</b>เปิดดู QR วันนี้ (${+spR[7] || 0} คน)</span><span class="c"><b>${spT.save || 0}</b>บันทึก QR วันนี้</span><span class="c"><b>${spT.paid || 0}</b>แจ้งโอนวันนี้</span><span class="c"><b>${sp7.view}</b>เปิดดู 7 วัน (${+spR[8] || 0} คน)</span><span class="c"><b>${sp7.paid}</b>แจ้งโอน 7 วัน</span><span class="c"><b>${spSum.toLocaleString('th-TH')}</b>บาทที่ยืนยันแล้ว</span></div>
+<div><span class="c"><b>${spT.view || 0}</b>เปิดดู QR วันนี้ (${+spR[7] || 0} คน)</span><span class="c"><b>${spT.stay || 0}</b>เปิดค้าง (น่าจะสแกน) วันนี้</span><span class="c"><b>${spT.save || 0}</b>บันทึก QR วันนี้</span><span class="c"><b>${spT.paid || 0}</b>แจ้งโอนวันนี้</span><span class="c"><b>${sp7.view}</b>เปิดดู 7 วัน (${+spR[8] || 0} คน)</span><span class="c"><b>${sp7.paid}</b>แจ้งโอน 7 วัน</span><span class="c"><b>${spSum.toLocaleString('th-TH')}</b>บาทที่ยืนยันแล้ว</span></div>
 <h3>📨 แจ้งว่าโอนแล้ว (${spPay.length})</h3>${spPay.length ? spPay.map(spRow).join('') : '<p><small>ยังไม่มีคนแจ้ง</small></p>'}
 <details><summary>👀 คนที่เปิดดู/บันทึก QR ล่าสุด (${spEv.length})</summary>${spEv.map(x => `<div class="pl"><div class="plh"><b>${e(x.n)}</b><small>${tAgo(x.t)} ที่แล้ว</small></div>${EVN[x.e] || e(x.e)} · <small>${e(String(x.fid || '').slice(0, 10))} · ${e(x.dev || '')}${x.src ? ' · เปิดจาก' + e(x.src) : ''}</small></div>`).join('') || '<p><small>ยังไม่มี</small></p>'}</details>
 <script>async function spM(i,v,b){if(v==='del'&&!confirm('ลบรายการนี้?'))return;b.disabled=true;try{const r=await fetch('?a=supmark&key=${K}&i='+i+'&v='+v);const j=await r.json();b.textContent=j.ok?'✓ บันทึกแล้ว':'ไม่สำเร็จ';if(j.ok)setTimeout(()=>location.reload(),500)}catch(x){b.textContent='ไม่สำเร็จ'}}</script>`;
@@ -972,12 +972,15 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const L = (await cmd('LRANGE', 'acsus', 0, 199)) || []; const keep = L.filter(x => { try { return JSON.parse(x).why !== 'save-edit' } catch { return true } }); await cmd('DEL', 'acsus'); if (keep.length) await cmd('RPUSH', 'acsus', ...keep); await cmd('SET', 'acfix15log', JSON.stringify({ del, kept: keep.length, t: now })) } catch {} };
     if (a === 'acsus' || a === 'live') await acFix();
     if (a === 'sup') {
-      const ev = ['view', 'save', 'paid'].includes(b.e) ? b.e : ''; if (!ev) return res.json({ ok: 0 });
+      const ev = ['view', 'save', 'stay', 'paid'].includes(b.e) ? b.e : ''; if (!ev) return res.json({ ok: 0 });
       const ua = String(req.headers['user-agent'] || ''), dev = (/iPhone|iPad/.test(ua) ? 'iOS' : /Android/.test(ua) ? 'Android' : /Windows/.test(ua) ? 'Windows' : /Mac OS/.test(ua) ? 'Mac' : /Linux/.test(ua) ? 'Linux' : 'อื่นๆ') + ' · ' + (/SamsungBrowser/.test(ua) ? 'Samsung' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /Firefox\//.test(ua) ? 'Firefox' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'เบราว์เซอร์อื่น');
       const d0 = thDay(now), base = { fid: id, n: clean(String(b.n || ''), 24) || 'นิรนาม', src: clean(String(b.src || ''), 20), dev, t: now };
+      const supNote = async (t, bd) => { try { if (isAdmKey(b.key)) return; const ids = ((await cmd('SMEMBERS', 'admids')) || []).filter(x => x !== id); if (!ids.length) return; await withCap(Promise.all(ids.slice(0, 5).map(x => noteTo(x, { t, b: bd.slice(0, 160), u: '/?go=sup', g: 'sup-' + id }))), 6000) } catch (e) {} };
       if (ev !== 'paid') {
-        const fresh = await cmd('SET', 'supr:' + ev + ':' + id, 1, 'NX', 'EX', ev === 'view' ? 600 : 3600); if (!fresh) return res.json({ ok: 1 });
+        const fresh = await cmd('SET', 'supr:' + ev + ':' + id, 1, 'NX', 'EX', ev === 'view' ? 600 : ev === 'stay' ? 1800 : 3600); if (!fresh) return res.json({ ok: 1 });
         await pipe([['LPUSH', 'supev', JSON.stringify({ ...base, e: ev })], ['LTRIM', 'supev', 0, 499], ['HINCRBY', 'supd:' + d0, ev, 1], ['EXPIRE', 'supd:' + d0, 86400 * 120], ['PFADD', 'supu:' + d0 + ':' + ev, id], ['EXPIRE', 'supu:' + d0 + ':' + ev, 86400 * 120]]);
+        if (ev === 'stay') await supNote('🙏 มีคนเปิด QR สนับสนุนค้างไว้', `${base.n} เปิด QR ค้างไว้นาน — อาจกำลังสแกนโอน · ${dev} · ${new Date(now + 7 * 3600e3).toISOString().slice(11, 16)} น. ลองเช็กแอปธนาคารดู`);
+        if (ev === 'save') await supNote('⬇️ มีคนบันทึกรูป QR สนับสนุน', `${base.n} บันทึกรูป QR ไว้ (มักใช้สแกนจากแอปธนาคารในเครื่องเดียวกัน) · ${dev} · ${new Date(now + 7 * 3600e3).toISOString().slice(11, 16)} น.`);
         return res.json({ ok: 1 });
       }
       const fresh = await cmd('SET', 'supr:paid:' + id, 1, 'NX', 'EX', 60); if (!fresh) return res.status(429).json({ err: 'rate' });
@@ -986,7 +989,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const rec = { ...base, i: sid, amt: Math.max(0, Math.min(1e7, Math.round((+b.amt || 0) * 100) / 100)), pn: clean(String(b.pn || ''), 40), tm: clean(String(b.tm || ''), 20), msg: clean(String(b.msg || ''), 200), img: hasImg ? 1 : 0, st: '' };
       const L = [['HSET', 'suppay', sid, JSON.stringify(rec)], ['ZADD', 'suppayz', now, sid], ['HINCRBY', 'supd:' + d0, 'paid', 1], ['EXPIRE', 'supd:' + d0, 86400 * 120]];
       if (hasImg) L.push(['SET', 'supimg:' + sid, img, 'EX', 86400 * 120]);
-      await pipe(L); return res.json({ ok: 1, i: sid });
+      await pipe(L); await supNote('💰 มีคนแจ้งว่าสนับสนุนแล้ว!', `${base.n} แจ้งโอน ${rec.amt ? rec.amt.toLocaleString('th-TH') + ' บาท' : '(ไม่ระบุยอด)'}${rec.pn ? ' · ชื่อบัญชี ' + rec.pn : ''}${rec.tm ? ' · เวลา ' + rec.tm : ''}${rec.img ? ' · มีสลิป' : ''}`); return res.json({ ok: 1, i: sid });
     }
     if (a === 'acsus') {
       if (req.method !== 'POST' || !okId(id)) return res.json({ ok: 0 });

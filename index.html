@@ -8633,7 +8633,7 @@ function ntShow(L){if(!Array.isArray(L)||!L.length)return;const it=L.slice(-5);t
  const show=()=>{if(modalOpen||choice._cur)return setTimeout(show,1500);
   modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📬 ข้อความถึงคุณ</h3>${it.map(m=>`<div class="item"><div class="h"><b>${esc(m.t||'ข้อความ')}</b><span class="tag2">${m.at?new Date(m.at).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}</span></div><p>${esc(m.b||'')}</p>${m.u&&m.u!=='/'?`<button class="gbtn" onclick="closeM();goOpen('${esc(String(new URLSearchParams((m.u.split('?')[1])||'').get('go')||''))}')">เปิดดู ›</button>`:''}</div>`).join('')}
   <button class="pbtn" style="width:100%;margin-top:6px" onclick="closeM()">รับทราบ</button>`,'ntbox')};show()}
-function goOpen(g){try{if(!g)return;if(g==='chat')openOnline('chat');else if(g==='bugs')openReport();else if(g==='fb')openFeedback()}catch(e){}}
+function goOpen(g){try{if(!g)return;if(g==='sup'){if(admK())window.open('/api/online?a=admin&key='+encodeURIComponent(admK()),'_blank');return}if(g==='chat')openOnline('chat');else if(g==='bugs')openReport();else if(g==='fb')openFeedback()}catch(e){}}
 (function(){try{const g=new URLSearchParams(location.search).get('go');if(g){history.replaceState(null,'',location.pathname);let n=0;const t=setInterval(()=>{n++;if(onlineOK||n>20){clearInterval(t);if(onlineOK)goOpen(g)}},500)}}catch(e){}
  try{if('serviceWorker' in navigator){navigator.serviceWorker.addEventListener('message',e=>{try{if(e.data&&e.data.go)goOpen(e.data.go)}catch(x){}})}}catch(e){}
  setTimeout(()=>{try{if(pushEnv().sup&&Notification.permission==='granted')swInit().then(()=>pushSync())}catch(e){}},4000);
@@ -11756,7 +11756,7 @@ function drawLoong(c,b,ox,oy,s,fr){const R=(x,y,w,h,col,a)=>{if(a!=null)c.global
 // ===================== v15.5 ระบบติดตามค่าสนับสนุน (เปิดดู QR · บันทึก QR · แจ้งโอน) =====================
 function supSrc(){try{return $('game')&&$('game').classList.contains('on')?'ระหว่างเล่น':'หน้าแรก'}catch(e){return''}}
 function supEv(e){try{if(typeof onlineOK!=='undefined'&&onlineOK===false)return;api('sup',{e,n:pname(),src:supSrc()}).catch(()=>{})}catch(e2){}}
-{const _osS=openSupport;openSupport=function(){const r=_osS.apply(this,arguments);try{supEv('view');const m=$('modal'),dl=m.querySelector('a[download]');if(dl)dl.addEventListener('click',()=>supEv('save'));
+{const _osS=openSupport;openSupport=function(){const r=_osS.apply(this,arguments);try{supEv('view');clearTimeout(window._supStay);window._supStay=setTimeout(()=>{try{if($('modal').dataset.k==='support')supEv('stay')}catch(e){}},12000);if(!window._supVis){window._supVis=1;document.addEventListener('visibilitychange',()=>{try{if(document.hidden&&$('modal').dataset.k==='support')supEv('stay')}catch(e){}})}const m=$('modal'),dl=m.querySelector('a[download]');if(dl)dl.addEventListener('click',()=>supEv('save'));
  const now=new Date(),hh=String(now.getHours()).padStart(2,'0'),mm=String(now.getMinutes()).padStart(2,'0');
  m.insertAdjacentHTML('beforeend',`<details class="supbox" style="margin-top:12px"><summary>📨 โอนแล้ว? กดแจ้งผู้พัฒนาตรงนี้</summary><div class="tag2" style="margin:6px 0">ไม่บังคับ · ช่วยให้ผู้พัฒนารู้ว่าเงินมาจากใคร จะได้ขอบคุณถูกคน · ข้อมูลนี้ผู้พัฒนาเห็นคนเดียว</div>
   <label class="supl">💰 จำนวนเงิน (บาท)<input id="supAmt" type="number" inputmode="decimal" min="0" placeholder="เช่น 50"></label>
