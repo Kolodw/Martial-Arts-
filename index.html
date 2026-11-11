@@ -13193,7 +13193,9 @@ function pxPlay(o){return new Promise(done0=>{const wasP=typeof paused!=='undefi
    if(!st.after&&k>=T.after){st.after=1;$m.className='pxmid';show($t,`<div class="pxg" style="--c:${o.gradeC}"><b>${o.grade}</b><span>${o.gradeN}</span></div>`,'');
     (o.crowd||[]).forEach((q,i)=>setTimeout(()=>{if(!alive)return;const e=document.createElement('div');e.className='pxq';e.style.left=(8+((i*37)%70))+'%';e.style.top=(52+(i%2)*14)+'%';e.textContent=q;$bub.appendChild(e)},350+i*650));
     if(o.ui)$ui.innerHTML=o.ui;ended=1;d.querySelector('.pxtap').textContent='แตะที่ว่างเพื่อปิด'}
-   pxMe(c,cx,cy+2);
+   {const lkH=(()=>{try{return meLook()}catch(e){return null}})();
+    if(typeof heroOK==='function'&&heroOK(lkH)&&!o.beast){try{const pz=heroPoseAt(k,T.intro,T.atk,T.hit,T.after,o.fxk||'beam');pxHeroAura(c,cx,cy+2,pz.st==='charge'?pz.ch:pz.st==='atk'?pz.ch*.6:0,col,k);pxHero(c,cx,cy+2,lkH,pz,o.fxk||'beam',col,k);pxShock(c,tx,ty,(k-T.blast-.2)/.9,col)}catch(e){pxMe(c,cx,cy+2)}}
+    else pxMe(c,cx,cy+2);try{pxVig(c,PXW*3,PXH*3)}catch(e){}c.setTransform(3,0,0,3,0,0)}
    if(T.cut&&k>=T.name&&k<T.atk){const a=(k-T.name)/T.cut,sl=Math.min(1,a*4),bh=17,B=o.beast;c.fillStyle='#000';c.globalAlpha=.72;c.fillRect(0,0,PXW,PXH);c.globalAlpha=1;c.fillStyle='#0a0612';c.fillRect(0,45-bh,PXW,bh*2);c.fillStyle=col[0];c.fillRect(0,45-bh-1,PXW,1);c.fillRect(0,45+bh,PXW,1);
     c.globalAlpha=.5;for(let i=0;i<16;i++){c.fillStyle=i%3?col[0]:'#ffffff';const y=45-bh+2+((i*7+Math.floor(k*60)*3)%(bh*2-4)),x=(i*53+k*900)%(PXW+20);c.fillRect(PXW-x,y,10+i%7,1)}c.globalAlpha=1;
     try{if(B)c.drawImage(meCv,(80-20)*3,(60-28)*3,40*3,24*3,Math.round(-70+122*sl),45-bh,57,34);else c.drawImage(meCv,(80-8)*3,(60-18)*3,16*3,10*3,Math.round(-70+122*sl),45-bh,54,34)}catch(e){}
@@ -13497,6 +13499,89 @@ function fameSoft(){if(!S)return;const f=+S.fame||0,p=S._fq;if(p==null||!isFinit
 {const _rFm=render;render=function(){try{fameSoft()}catch(e){}return _rFm.apply(this,arguments)}}
 {const _pyFm=passYear;passYear=function(){try{fameSoft()}catch(e){}const r=_pyFm.apply(this,arguments);try{fameSoft()}catch(e){}return r}}
 
+// ===================== v15.9d ตัวละครฉากปลดปล่อยพลัง: สัดส่วนร่างกายจริง (≈7.5 หัว) + ท่าทางตามจังหวะ + เอฟเฟกต์ฉาก =====================
+// วาดที่ความละเอียดจริงของ canvas (ฉาก ×3) · (x,y) = ตำแหน่งเท้าในหน่วยฉาก
+const HERO_P={ // [เอนตัว, ต้นขาหน้า, งอเข่าหน้า, ต้นขาหลัง, งอเข่าหลัง, ไหล่หน้า, ศอกหน้า, ไหล่หลัง, ศอกหลัง]
+ idle:[.02,.14,.06,-.14,.06,.10,.18,-.12,.14],
+ charge:[.10,.62,.62,-.58,.55,-.25,1.55,-.55,1.35],
+ sword:[.38,.98,.62,-.78,.10,1.50,.06,-1.05,.35],
+ palm:[.26,.78,.55,-.66,.14,1.46,.02,-.45,1.45],
+ fist:[.30,.82,.58,-.70,.12,1.50,.04,-.60,1.60],
+ beam:[.20,.66,.50,-.60,.20,1.42,.10,1.18,.32],
+ roar:[-.16,.50,.40,-.52,.42,-.70,.50,-1.00,.40],
+ after:[-.02,.16,.05,-.14,.05,.14,.22,-.55,.95]};
+function heroShade(c,t){try{if(/^#[0-9a-fA-F]{6}/.test(String(c)))return pxMix(String(c).slice(0,7),'#000000',t)}catch(e){}return'#1a1420'}
+function heroLite(c,t){try{if(/^#[0-9a-fA-F]{6}/.test(String(c)))return pxMix(String(c).slice(0,7),'#ffffff',t)}catch(e){}return'#f0e8d8'}
+function heroPoseAt(k,a0,a1,a2,a3,fx){const P=HERO_P,sm=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v)},mix=(A,B,t)=>A.map((v,i)=>v+(B[i]-v)*t);
+ const atk=P[fx==='sword'?'sword':fx==='palm'?'palm':fx==='fist'?'fist':fx==='roar'||fx==='tail'?'roar':'beam'];
+ if(k<a0)return{p:P.idle,ch:0,st:'idle'};
+ if(k<a1)return{p:mix(P.idle,P.charge,sm((k-a0)/.4)),ch:sm((k-a0)/.5),st:'charge'};
+ if(k<a2+.35)return{p:mix(P.charge,atk,sm((k-a1)/.16)),ch:Math.max(0,1-(k-a1)/.5),st:'atk',a:Math.min(1,(k-a1)/Math.max(.1,a2-a1))};
+ return{p:mix(atk,P.after,sm((k-a2-.35)/.7)),ch:0,st:'after'}}
+function pxHero(c,x,y,lk,pz,fx,col,tm){
+ lk=lk||{};const Z=3,ox=Math.round(x*Z),oy=Math.round(y*Z),fem=lk.g==='หญิง',p=pz.p,ch=pz.ch||0,T=tm||0;
+ const skin=/^#/.test(String(lk.skin))?lk.skin:'#ffd9b8',hair=/^#/.test(String(lk.hair))?lk.hair:'#2a2838',robe=/^#/.test(String(lk.robe))?String(lk.robe).slice(0,7):'#6a6aa8',trim=/^#/.test(String(lk.trim))?String(lk.trim).slice(0,7):heroLite(robe,.45),belt=/^#[0-9a-fA-F]{6}$/.test(String(lk.belt))?lk.belt:heroShade(robe,.45);
+ const robeD=heroShade(robe,.32),robeL=heroLite(robe,.18),skinD=heroShade(skin,.22),hairL=heroLite(hair,.22),ink='#16101e',pant=heroShade(robe,.5),boot='#241a22';
+ const TH=20,SH=20,UA=13,FA=12,TOR=27,sn=Math.sin,cs=Math.cos;
+ // โครงกระดูก (พิกัดเทียบสะโพก y ลงเป็นบวก)
+ const leg=(a,b)=>{const kx=TH*sn(a),ky=TH*cs(a),fx2=kx+SH*sn(a-b),fy=ky+SH*cs(a-b);return{kx,ky,fx:fx2,fy}};
+ const LF=leg(p[1],p[2]),LB=leg(p[3],p[4]),hipY=-Math.max(LF.fy,LB.fy)-3,hx=0,hy=hipY;
+ const breath=pz.st==='idle'||pz.st==='after'?Math.sin(T*2.4)*.6:Math.sin(T*30)*ch*.7;
+ const nx=hx+TOR*sn(p[0]),ny=hy-TOR*cs(p[0])+breath,sw=fem?5:7;
+ const shF={x:nx+sw*.55*cs(p[0])-1,y:ny+4+sw*.4*sn(p[0])},shB={x:nx-sw*.55*cs(p[0])-1,y:ny+4-sw*.4*sn(p[0])};
+ const arm=(s,a,e)=>{const ex=s.x+UA*sn(a),ey=s.y+UA*cs(a),wx=ex+FA*sn(a+e),wy=ey+FA*cs(a+e);return{ex,ey,wx,wy,ang:a+e}};
+ const AF=arm(shF,p[5]+p[0]*.5,p[6]),AB=arm(shB,p[7]+p[0]*.5,p[8]);
+ const R=(X,Y,W,H,cl)=>{c.fillStyle=cl;c.fillRect(ox+Math.round(X),oy+Math.round(Y),W,H)};
+ const seg=(x1,y1,x2,y2,w,cl,w2)=>{const n=Math.max(1,Math.ceil(Math.hypot(x2-x1,y2-y1)));c.fillStyle=cl;for(let i=0;i<=n;i++){const t=i/n,ww=w2?Math.round(w+(w2-w)*t):w;c.fillRect(ox+Math.round(x1+(x2-x1)*t-ww/2),oy+Math.round(y1+(y2-y1)*t-ww/2),ww,ww)}};
+ const limb=(x1,y1,x2,y2,w,cl,w2)=>{seg(x1,y1,x2,y2,w+2,ink,w2?w2+2:0);seg(x1,y1,x2,y2,w,cl,w2)};
+ c.save();c.setTransform(1,0,0,1,0,0);c.globalAlpha=1;
+ // เงาใต้เท้า
+ c.globalAlpha=.32;c.fillStyle='#000000';for(let i=-3;i<=3;i++){const w=Math.round((22+Math.abs(LF.fx-LB.fx)*.5)*Math.sqrt(1-(i*i)/12));c.fillRect(ox-w+Math.round((LF.fx+LB.fx)/2),oy+i-1,w*2,1)}c.globalAlpha=1;
+ // ผมยาวด้านหลัง (ปลิวตามลม/พลัง)
+ const hcx=nx+sn(p[0])*7,hcy=ny-8,hl=fem?30:(lk.old?10:19),lift=ch*.9+(pz.st==='atk'?.5:0);
+ for(let s=0;s<(fem?4:3);s++){let px=hcx-4-s,py=hcy-2+s*2;for(let i=0;i<hl;i++){const t=i/hl,wv=Math.sin(T*5+i*.35+s*1.3)*(1.2+lift*2.2)*t;const dx=-(.25+lift*.75+p[0]*.9),dy=1-lift*.85;px+=dx;py+=dy;c.fillStyle=(i+s)%5===0?hairL:hair;c.fillRect(ox+Math.round(px+wv*.4),oy+Math.round(py+wv),i<hl*.7?2:1,2)}}
+ // ชายเสื้อคลุมด้านหลัง
+ {const n=24,fl=ch*.9+(pz.st==='atk'?.7:0);for(let i=0;i<n;i++){const t=i/n,w=Math.round(6+t*9),wv=Math.sin(T*6+i*.4)*(1+fl*2.5)*t,bx=hx-3-t*(7+fl*12+Math.max(0,p[0])*10)+wv,by=hy-3+t*(21-fl*11);c.fillStyle=ink;c.fillRect(ox+Math.round(bx-w/2)-1,oy+Math.round(by),w+2,2);c.fillStyle=i%6===5?robeL:robeD;c.fillRect(ox+Math.round(bx-w/2),oy+Math.round(by),w,2)}
+  for(let i=20;i<24;i++){const t=i/24,w=Math.round(6+t*9),wv=Math.sin(T*6+i*.4)*(1+fl*2.5)*t,bx=hx-3-t*(7+fl*12+Math.max(0,p[0])*10)+wv,by=hy-3+t*(21-fl*11);c.fillStyle=trim;c.fillRect(ox+Math.round(bx-w/2),oy+Math.round(by),w,1)}}
+ // แขนหลัง
+ limb(shB.x,shB.y,AB.ex,AB.ey,5,robeD);limb(AB.ex,AB.ey,AB.wx,AB.wy,5,robeD,6);R(AB.wx-2,AB.wy-2,4,4,ink);R(AB.wx-1,AB.wy-1,3,3,skinD);
+ // ขาหลัง → ขาหน้า (ต้นขา · แข้ง · รองเท้า)
+ const drawLeg=(L,cl)=>{limb(hx-1,hy,hx+L.kx,hy+L.ky,7,cl,6);limb(hx+L.kx,hy+L.ky,hx+L.fx,hy+L.fy,5,cl,4);const fx2=hx+L.fx,fy=hy+L.fy;R(fx2-3,fy-1,9,5,ink);R(fx2-2,fy,7,3,boot);R(fx2-2,fy-4,5,4,boot)};
+ drawLeg(LB,heroShade(pant,.25));drawLeg(LF,pant);
+ // ลำตัว: ไหล่กว้าง → เอวคอด → สะโพก
+ for(let i=0;i<=TOR;i++){const t=i/TOR,cxr=nx+(hx-nx)*t,cyr=ny+(hy-ny)*t+2,w=fem?(t<.25?9+t*8:t<.7?11-(t-.25)*9:7+(t-.7)*10):(t<.2?11+t*12:t<.75?13.4-(t-.2)*8:9+(t-.75)*6),W=Math.round(w);
+  c.fillStyle=ink;c.fillRect(ox+Math.round(cxr-W/2)-1,oy+Math.round(cyr),W+2,2);c.fillStyle=robe;c.fillRect(ox+Math.round(cxr-W/2),oy+Math.round(cyr),W,2);
+  c.fillStyle=robeD;c.fillRect(ox+Math.round(cxr-W/2),oy+Math.round(cyr),Math.max(2,Math.round(W*.3)),2);c.fillStyle=robeL;c.fillRect(ox+Math.round(cxr+W/2)-2,oy+Math.round(cyr),1,2);
+  if(t<.72){c.fillStyle=trim;c.fillRect(ox+Math.round(cxr+W*.12-t*3),oy+Math.round(cyr),2,2)}
+  if(t>=.72&&t<.84){c.fillStyle=belt;c.fillRect(ox+Math.round(cxr-W/2),oy+Math.round(cyr),W,2)}}
+ // ชายเสื้อด้านหน้า (สั้น เห็นขา)
+ for(let i=0;i<9;i++){const t=i/9,W=Math.round((fem?9:10)+t*3);c.fillStyle=ink;c.fillRect(ox+Math.round(hx-W/2+1+t*2)-1,oy+Math.round(hy+1+i),W+2,1);c.fillStyle=i===8?trim:robe;c.fillRect(ox+Math.round(hx-W/2+1+t*2),oy+Math.round(hy+1+i),W,1)}
+ // คอ + หัว (หันขวา)
+ const hx0=nx+sn(p[0])*5,hy0=ny-3;R(hx0-2,hy0-1,4,5,skinD);
+ const HX=hx0-5+sn(p[0])*2,HY=hy0-12;
+ R(HX-1,HY+1,12,10,ink);R(HX,HY-0,10,12,ink);R(HX,HY+1,10,10,skin);R(HX+1,HY,8,12,skin);R(HX,HY+8,3,3,skinD);
+ R(HX-1,HY-2,11,5,hair);R(HX-2,HY,4,9,hair);R(HX+1,HY-3,8,2,hair);R(HX+2,HY-2,5,1,hairL);R(HX+7,HY+2,3,2,hair);
+ if(!fem&&!lk.old){R(HX+2,HY-6,4,4,hair);R(HX+2,HY-4,4,1,trim)}else if(fem){R(HX-3,HY+2,2,12,hair);R(HX+3,HY-5,3,3,hair);R(HX+4,HY-5,1,1,'#ffd870')}
+ const eg=lk.eyeG&&/^#/.test(String(lk.eyeG))&&(ch>.3||pz.st==='atk');R(HX+7,HY+5,2,2,eg?lk.eyeG:'#1a1420');if(eg){c.globalAlpha=.5;R(HX+6,HY+4,4,4,lk.eyeG);c.globalAlpha=1}R(HX+6,HY+4,3,1,hair);
+ if(lk.beard&&/^#/.test(String(lk.beard)))R(HX+5,HY+10,5,4,lk.beard);else R(HX+7,HY+9,2,1,skinD);
+ // แขนหน้า + มือ
+ limb(shF.x,shF.y,AF.ex,AF.ey,6,robe);limb(AF.ex,AF.ey,AF.wx,AF.wy,5,robe,7);seg(AF.ex+(AF.wx-AF.ex)*.8,AF.ey+(AF.wy-AF.ey)*.8,AF.wx,AF.wy,7,trim);
+ const hxp=AF.wx+sn(AF.ang)*2,hyp=AF.wy+cs(AF.ang)*2;R(hxp-3,hyp-3,6,6,ink);R(hxp-2,hyp-2,4,4,skin);
+ if(fx==='palm'&&pz.st==='atk'){R(hxp+1,hyp-5,4,10,ink);R(hxp+2,hyp-4,2,8,skin)}
+ // กระบี่
+ if(fx==='sword'){const a=pz.st==='atk'?AF.ang+.1:pz.st==='charge'?AF.ang-2.2:AF.ang+2.6,L=34,bx=hxp+sn(a)*L,by=hyp+cs(a)*L;seg(hxp,hyp,bx,by,4,ink,2);seg(hxp+sn(a)*3,hyp+cs(a)*3,bx,by,2,'#f4f8ff',1);seg(hxp+sn(a)*3,hyp+cs(a)*3+1,bx,by+1,1,(col&&col[0])||'#9ad0ff');R(hxp-3+sn(a)*3,hyp-3+cs(a)*3,6,6,'#c8a040')}
+ c.restore()}
+// ออร่าหลังตัวละคร + วงแหวนพื้น ตอนรวมพลัง
+function pxHeroAura(c,x,y,a,col,T){if(a<=0)return;const Z=3,ox=Math.round(x*Z),oy=Math.round(y*Z);c.save();c.setTransform(1,0,0,1,0,0);
+ for(let i=0;i<9;i++){const fx2=(i-4)*7+Math.sin(T*9+i*2)*3,h=Math.round((40+((i*37)%30)+Math.sin(T*13+i)*12)*a*(1-Math.abs(i-4)*.13));for(let j=0;j<h;j+=3){const t=j/h,w=Math.max(1,Math.round(7*(1-t)));c.globalAlpha=(.34*(1-t)+.06)*a;c.fillStyle=t>.55?col[1]:col[0];c.fillRect(ox+Math.round(fx2+Math.sin(T*11+j*.12+i)*2.5*t-w/2),oy-j-3,w,3)}}
+ const rw=Math.round(18+a*26+Math.sin(T*10)*3);c.globalAlpha=.75*a;c.fillStyle=col[1];for(let i=-rw;i<=rw;i+=1){const yy=Math.round(Math.sqrt(Math.max(0,1-(i*i)/(rw*rw)))*7);c.fillRect(ox+i,oy-yy+1,1,1);c.fillRect(ox+i,oy+yy+1,1,1)}
+ c.globalAlpha=.25*a;c.fillStyle=col[0];for(let i=-5;i<=5;i++){const w=Math.round(rw*Math.sqrt(1-(i*i)/36));c.fillRect(ox-w,oy+i+1,w*2,1)}c.restore()}
+// คลื่นกระแทก + ขอบมืด
+function pxShock(c,tx,ty,a,col){if(a<=0||a>=1)return;const Z=3,ox=tx*Z,oy=ty*Z,rw=Math.round(20+a*210),rh=Math.round(rw*.34);c.save();c.setTransform(1,0,0,1,0,0);c.globalAlpha=(1-a)*.9;
+ for(let k2=0;k2<2;k2++){const r1=rw-k2*10,r2=Math.round(r1*.34);if(r1<4)continue;c.fillStyle=k2?col[1]:'#ffffff';for(let i=-r1;i<=r1;i+=1){const yy=Math.round(Math.sqrt(Math.max(0,1-(i*i)/(r1*r1)))*r2);c.fillRect(ox+i,oy-yy,2,2);c.fillRect(ox+i,oy+yy,2,2)}}c.restore()}
+let _pxVig=null;function pxVig(c,W,H){try{if(!_pxVig||_pxVig.width!==W){_pxVig=document.createElement('canvas');_pxVig.width=W;_pxVig.height=H;const v=_pxVig.getContext('2d'),gr=v.createRadialGradient(W/2,H*.52,H*.35,W/2,H*.52,W*.62);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(4,2,12,.55)');v.fillStyle=gr;v.fillRect(0,0,W,H)}c.save();c.setTransform(1,0,0,1,0,0);c.globalAlpha=1;c.drawImage(_pxVig,0,0);c.restore()}catch(e){}}
+const heroOK=lk=>!!lk&&typeof lk==='object'&&!lk.beast&&!(+lk.age<12);
+
 // ===================== v15.9c แชร์การปลดปล่อยพลัง → ฉาก pixel เคลื่อนไหวในแชท (วนซ้ำเหมือน gif · แตะเพื่อเล่นใหม่) =====================
 const RLV={m:new Map(),run:0,last:0};
 function rlvPack(){const L=window._rlLast;if(!L)return null;let lk=null;try{lk=JSON.parse(JSON.stringify(meLook()));if(JSON.stringify(lk).length>1700)lk=null}catch(e){lk=null}
@@ -13508,7 +13593,7 @@ function rlvWho(c,x,y,lk,z){if(lk&&typeof lk==='object'){const g0=g,p0=PS;try{g=
 function rlvNew(rl){const hx=v=>/^#[0-9a-fA-F]{6}$/.test(String(v))?String(v):null,cc=Array.isArray(rl.c)?rl.c:[];
  return{o:{ty:typeof rl.ty==='string'?rl.ty:'field',w:['m','x','g'].includes(rl.w)?rl.w:'m',sd:(+rl.sd|0)||7,fx:typeof rl.fx==='string'?rl.fx:'fist',lk:rl.lk&&typeof rl.lk==='object'?rl.lk:null},
   sc:Math.max(0,Math.min(REL_GR.length-1,+rl.sc|0)),col:[hx(cc[0])||'#ffc840',hx(cc[1])||'#fff4c0'],t0:performance.now(),P:[],boom:0,pk:0,cv:null,pre:null,post:null,bad:0}}
-function rlvFrame(st,now){const cv=st.cv,c=cv.getContext('2d'),o=st.o,z=2,col=st.col,sc=st.sc,cx=30,cy=76,tx=112,ty=70,LOOP=7;
+function rlvFrame(st,now){const cv=st.cv,c=cv.getContext('2d'),o=st.o,z=3,col=st.col,sc=st.sc,cx=30,cy=76,tx=112,ty=70,LOOP=7;
  if(!st.pre){const mk=()=>{const x=document.createElement('canvas');x.width=PXW;x.height=PXH;return x};st.pre=mk();st.post=mk();
   try{pxScene(st.pre.getContext('2d'),o.ty,o.w,o.sd,-1);pxScene(st.post.getContext('2d'),o.ty,o.w,o.sd,sc)}catch(e){try{pxScene(st.pre.getContext('2d'),'field','m',7,-1);pxScene(st.post.getContext('2d'),'field','m',7,sc)}catch(e2){}}}
  const k=((now-st.t0)/1000)%LOOP;if(k<st.pk){st.P=[];st.boom=0}st.pk=k;
@@ -13522,11 +13607,13 @@ function rlvFrame(st,now){const cv=st.cv,c=cv.getContext('2d'),o=st.o,z=2,col=st
  if(!st.boom&&k>=3.2&&k<4){st.boom=1;const n=24+sc*8;for(let i=0;i<n;i++){const a=Math.random()*6.283,v=.6+Math.random()*(1.4+sc*.5);sp(tx,ty,Math.cos(a)*v,Math.sin(a)*v*.6-.6,20+Math.random()*28,Math.random()<.4?col[1]:Math.random()<.5?col[0]:'#8a6a4a',1+(Math.random()<.2?1:0))}}
  if(k>=3.2&&k<4.7){const a=Math.max(0,1-(k-3.2)/1.4),R0=Math.min(60,5+sc*5)*(1-a*.6);shx=(Math.random()-.5)*a*(2+sc*.6);shy=(Math.random()-.5)*a*(1+sc*.3);c.globalAlpha=a*.85;pxDisc(c,tx,ty,Math.round(R0),col[1]);c.globalAlpha=a*.5;pxDisc(c,tx,ty,Math.round(R0*1.3),col[0]);c.globalAlpha=1}
  if(k>=3.6&&k<6.4&&Math.random()<.4)sp(tx-20+Math.random()*40,ty,(Math.random()-.5)*.3,-.25-Math.random()*.4,50,Math.random()<.5?'#5a5a5a':'#8a8a8a',2);
- rlvWho(c,cx,cy+2,o.lk,z);c.setTransform(z,0,0,z,0,0);c.globalAlpha=1;
+ if(heroOK(o.lk)){try{const pz=heroPoseAt(k,.6,2,2.9,3.7,o.fx);pxHeroAura(c,cx,cy+2,pz.st==='charge'?pz.ch:pz.st==='atk'?pz.ch*.6:0,col,k);pxHero(c,cx,cy+2,o.lk,pz,o.fx,col,k);pxShock(c,tx,ty,(k-3.15)/.9,col)}catch(e){rlvWho(c,cx,cy+2,o.lk,z)}}
+ else rlvWho(c,cx,cy+2,o.lk,z);c.setTransform(z,0,0,z,0,0);c.globalAlpha=1;
  for(let i=st.P.length-1;i>=0;i--){const p=st.P[i];p.x+=p.vx;p.y+=p.vy;p.vy+=p.s>1?-.004:.02;p.l--;if(p.l<=0||p.y>PXH+4){st.P.splice(i,1);continue}c.globalAlpha=Math.min(1,p.l/p.l0*1.5);c.fillStyle=p.c;c.fillRect(Math.round(p.x),Math.round(p.y),p.s,p.s)}c.globalAlpha=1;
+ try{pxVig(c,cv.width,cv.height)}catch(e){}
  if(k>=3.7){const G=REL_GR[sc],a=Math.min(1,(k-3.7)/.3);c.setTransform(1,0,0,1,0,0);c.globalAlpha=a;c.textAlign='right';c.textBaseline='top';c.lineJoin='round';
-  c.font='bold 40px monospace';c.lineWidth=6;c.strokeStyle='#000000';c.strokeText(G[0],cv.width-8,6);c.fillStyle=G[2];c.fillText(G[0],cv.width-8,6);
-  c.font='bold 15px sans-serif';c.lineWidth=4;c.strokeText(G[1],cv.width-8,50);c.fillStyle='#ffffff';c.fillText(G[1],cv.width-8,50);c.globalAlpha=1;c.textAlign='left'}
+  c.font='bold 60px monospace';c.lineWidth=9;c.strokeStyle='#000000';c.strokeText(G[0],cv.width-12,8);c.fillStyle=G[2];c.fillText(G[0],cv.width-12,8);
+  c.font='bold 22px sans-serif';c.lineWidth=6;c.strokeText(G[1],cv.width-12,74);c.fillStyle='#ffffff';c.fillText(G[1],cv.width-12,74);c.globalAlpha=1;c.textAlign='left'}
  cv.style.transform=(shx||shy)?`translate(${shx*1.5}px,${shy*1.5}px)`:''}
 function rlvLoop(now){let box=$('chatBox');if(box&&box.offsetParent===null)box=null;let any=0;
  if(box&&box.isConnected&&now-RLV.last>=40){RLV.last=now;const br=box.getBoundingClientRect();
@@ -13536,7 +13623,7 @@ function rlvLoop(now){let box=$('chatBox');if(box&&box.offsetParent===null)box=n
 function rlvAttach(){const box=$('chatBox');if(!box)return 0;const rows=box.querySelectorAll('.cm'),L=chatMsgs||[];if(rows.length!==L.length)return 0;let n=0;
  L.forEach((m,i)=>{if(!m||m.k!=='share'||!m.rl||typeof m.rl!=='object')return;const row=rows[i];if(!row||row.querySelector('.rlv'))return;const host=row.querySelector('.cmx')||row;
   let st=RLV.m.get(m.i);if(!st){try{st=rlvNew(m.rl)}catch(e){return}RLV.m.set(m.i,st);if(RLV.m.size>40)RLV.m.delete(RLV.m.keys().next().value)}
-  const w=document.createElement('div');w.className='rlv';w.title='แตะเพื่อเล่นใหม่';const cv=document.createElement('canvas');cv.width=PXW*2;cv.height=PXH*2;w.appendChild(cv);
+  const w=document.createElement('div');w.className='rlv';w.title='แตะเพื่อเล่นใหม่';const cv=document.createElement('canvas');cv.width=PXW*3;cv.height=PXH*3;w.appendChild(cv);
   w.onclick=()=>{st.t0=performance.now();st.P=[];st.boom=0;st.pk=0};host.appendChild(w);st.cv=cv;n++;try{rlvFrame(st,performance.now())}catch(e){}});
  if(n&&!RLV.run){RLV.run=1;requestAnimationFrame(rlvLoop)}return n}
 {const _crR=chatRender;chatRender=function(){const b0=$('chatBox'),near=b0?(b0.scrollHeight-b0.scrollTop-b0.clientHeight<80||!b0.dataset.ok):false;const r=_crR.apply(this,arguments);
