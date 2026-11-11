@@ -11690,6 +11690,21 @@ const fxCv=()=>g&&g.canvas&&(g.canvas.id==='scene'||g.canvas.id==='endScene'||g.
 {const _otF=openTitleMenu;openTitleMenu=function(){const r=_otF.apply(this,arguments);try{const gr=$('modal').querySelector('.tmgrid');if(gr&&!gr.querySelector('[data-gfx]')){const bug=[...gr.querySelectorAll('.cb')].find(b=>/แจ้งบั๊ก|Bug/i.test(b.textContent));const h=`<button class="cb" data-gfx="1" onclick="openGfx()"><i>🎨</i>ภาพ: ${fxQ===2?'สวยสุด':'ประหยัด'}</button>`;if(bug)bug.insertAdjacentHTML('beforebegin',h);else gr.insertAdjacentHTML('beforeend',h)}}catch(e){}return r}}
 {const _ogF=openGfx;openGfx=function(){const fromT=$('title')&&$('title').classList.contains('on');const r=_ogF.apply(this,arguments);try{const x=$('modal').querySelector('.xbtn');if(x&&fromT)x.setAttribute('onclick','openTitleMenu()')}catch(e){}return r}}
 
+
+// ===================== v15.5 แชทส่งทันที (ไม่ต้องรอเซิร์ฟเวอร์) =====================
+window._chPend=[];
+chatSend=async function(kind,text){const inp=$('chatIn'),x=(text!=null?text:(inp||{}).value||'').trim();if(!x)return;
+ if(Date.now()-chatLast<1800)return toast('ส่งถี่เกินไป รอแป๊บนึงนะ');chatLast=Date.now();if(inp&&text==null){inp.value='';try{inp.focus()}catch(e){}}
+ const t0=Date.now(),loc={i:'loc'+t0.toString(36),t:t0,n:pname(),ti:myTitle(),x:x.slice(0,200),k:kind||'msg',pu:(typeof myPu==='function'?myPu():pid.slice(0,12)),u:pid.slice(0,4),_p:1};
+ _chPend.push(loc);chatMsgs=(chatMsgs||[]).concat([loc]);chatRender();try{const b=$('chatBox');if(b)b.scrollTop=b.scrollHeight}catch(e){}
+ try{const tt=(showTtl()||{});const j=await api('say',{n:loc.n,ti:loc.ti,tp:acTp(),tt:tt.t||'',tr:tt.r||0,x:loc.x,k:loc.k});loc._p=0;loc._ok=1;if(j&&j.m){loc.i=j.m.i;loc.t=j.m.t;loc.tt=j.m.tt;loc.tr=j.m.tr}chatRender();setTimeout(()=>{try{chatPoll()}catch(e){}},250)}
+ catch(e){loc._p=0;loc._f=e.message==='rate'?'ส่งถี่เกินไป':e.message==='muted'?'ถูกห้ามพูดชั่วคราว':e.message==='timeout'?'เน็ตช้า ส่งไม่ทัน':'ส่งไม่สำเร็จ';chatRender();toast('💬 '+loc._f+' — แตะข้อความเพื่อส่งใหม่')}};
+function chatRetry(id){const m=_chPend.find(z=>z.i===id);if(!m)return;_chPend=_chPend.filter(z=>z!==m);chatMsgs=(chatMsgs||[]).filter(z=>z!==m);chatLast=0;chatSend(m.k,m.x)}
+// รวมข้อความที่ยังส่งไม่เสร็จเข้ากับรายการจากเซิร์ฟเวอร์ + แสดงสถานะ
+{const _crF=chatRender;chatRender=function(){try{const L=chatMsgs||[];_chPend=_chPend.filter(p=>{const onSrv=L.some(m=>m!==p&&!m._p&&(m.i===p.i||(m.pu===p.pu&&m.x===p.x&&Math.abs((m.t||0)-p.t)<60000)));if(onSrv){chatMsgs=L.filter(m=>m!==p);return false}if(!L.includes(p))chatMsgs=(chatMsgs||[]).concat([p]);return Date.now()-p.t<120000||p._f});}catch(e){}
+ const r=_crF.apply(this,arguments);try{const box=$('chatBox');if(box){const rows=[...box.querySelectorAll('.cm')].reverse(),used=new Set();(chatMsgs||[]).filter(m=>m._p||m._f).forEach(m=>{const el=rows.find(r=>!used.has(r)&&r.textContent.includes(m.x.slice(0,40)));if(!el)return;used.add(el);el.classList.add(m._f?'cmfail':'cmpend');if(!el.querySelector('.cmst'))el.insertAdjacentHTML('beforeend',m._f?`<button class="cmst" onclick="chatRetry('${m.i}')">❌ ${esc(m._f)} · แตะส่งใหม่</button>`:'<span class="cmst">⏳ กำลังส่ง…</span>')})}}catch(e){}return r}}
+(function(){const st=document.createElement('style');st.textContent='.cm.cmpend{opacity:.62}.cm.cmfail{opacity:.85;outline:1px dashed #d84a4a;border-radius:8px}.cmst{display:block;font-size:10.5px;opacity:.85;margin-top:2px;background:none;border:0;color:inherit;padding:0;cursor:pointer;text-align:left}.cm.cmfail .cmst{color:#e05a5a}';document.head.appendChild(st)})();
+
 </script>
 </body>
 </html>

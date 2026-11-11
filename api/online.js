@@ -1061,19 +1061,19 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
         let pr = null; if (b.push !== 0) { try { pr = await withCap(pushHashes(await cmd('HKEYS', 'push'), { t: '📢 ประกาศจากผู้ดูแล', b: body.slice(0, 160), u: '/?go=chat', g: 'ann-' + ann.i }), 20000) } catch (e) {} }
         return res.json({ ok: 1, ann: await annPoll(ann, id), push: pr });
       }
-      if (await cmd('GET', 'mute:' + id)) return res.status(429).json({ err: 'muted' });
-      const ok = await cmd('SET', 'rl:' + id, 1, 'NX', 'EX', 3);
-      if (!ok) return res.status(429).json({ err: 'rate' });
       const x = clean(b.x, 200);
       if (!x) return res.status(400).json({ err: 'empty' });
-      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), ...((b.tp || await cmd('SISMEMBER', 'cheaters', id)) ? { tt: '', tr: 0 } : ttlOk(b.tt)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
+      const [mu, ok, chx] = await pipe([['GET', 'mute:' + id], ['SET', 'rl:' + id, 1, 'NX', 'PX', 1800], ['SISMEMBER', 'cheaters', id]]);
+      if (mu) return res.status(429).json({ err: 'muted' });
+      if (!ok) return res.status(429).json({ err: 'rate' });
+      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), ...((b.tp || +chx) ? { tt: '', tr: 0 } : ttlOk(b.tt)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
       await pipe([['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199], ['HSET', 'pupid', id.slice(0, 12), id]]);
       if (b.rto && isAdmKey(b.key)) {
         let pr = null;
         try { const rid = await cmd('HGET', 'pupid', String(b.rto).replace(/[^a-z0-9]/g, '').slice(0, 12)); pr = rid ? await withCap(noteTo(rid, { t: '💬 ผู้ดูแลตอบคุณในแชทโลก', b: x.slice(0, 160), u: '/?go=chat', g: 'chat-' + m.i }), 8000) : { owner: 0 } } catch (e) {}
-        return res.json({ ok: 1, push: pr });
+        return res.json({ ok: 1, push: pr, m });
       }
-      return res.json({ ok: 1 });
+      return res.json({ ok: 1, m });
     }
     if (a === 'report') {
       const mid = String(b.mid || '').slice(0, 20);
