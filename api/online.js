@@ -1197,12 +1197,13 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
     const arLg = r => r >= 1600 ? 4 : r >= 1400 ? 3 : r >= 1250 ? 2 : r >= 1100 ? 1 : 0;
     if (a === 'ar2') {
       if (!okId(id)) return res.json({ err: 'id' }); await arSettle();
-      const [tk, rt, top, dl, dn] = await Promise.all([arTk(0), arRt(id), cmd('ZREVRANGE', 'ars:' + W, 0, 9, 'WITHSCORES'), cmd('LRANGE', 'ardef:' + id, 0, 19), cmd('HGET', 'ardefn', id)]);
+      const [tk, rt, top, dl, dn, wt] = await Promise.all([arTk(0), arRt(id), cmd('ZREVRANGE', 'ars:' + W, 0, 9, 'WITHSCORES'), cmd('LRANGE', 'ardef:' + id, 0, 19), cmd('HGET', 'ardefn', id), cmd('ZREVRANGE', 'arwin:' + W, 0, 9, 'WITHSCORES')]);
       const ids = []; for (let i = 0; i < (top || []).length; i += 2) ids.push(top[i]); const nms = ids.length ? await cmd('HMGET', 'arn', ...ids) : [];
       const T = ids.map((x, i) => ({ n: nms[i] || 'นิรนาม', r: +top[i * 2 + 1], me: x === id ? 1 : 0, lg: arLg(+top[i * 2 + 1]) }));
+      const wids = []; for (let i = 0; i < (wt || []).length; i += 2) wids.push(wt[i]); const wn = wids.length ? await cmd('HMGET', 'arn', ...wids) : []; const WT = wids.map((x, i) => ({ n: wn[i] || 'นิรนาม', w: +wt[i * 2 + 1], me: x === id ? 1 : 0 }));
       const D = (dl || []).map(jp).filter(Boolean).map((e, i) => ({ i, n: e.n, w: e.w, d: e.d, t: e.t, rv: e.rv ? 1 : 0 }));
       if (+dn) await cmd('HDEL', 'ardefn', id);
-      return res.json({ tk, rt, lg: arLg(rt), top: T, def: D, nw: +dn || 0, wk: W });
+      return res.json({ tk, rt, lg: arLg(rt), top: T, wins: WT, def: D, nw: +dn || 0, wk: W });
     }
     if (a === 'ar2go' || a === 'ar2rv') {
       if (!okId(id)) return res.status(403).json({ err: 'id' });
@@ -1224,7 +1225,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const da = Math.round(K * (w - ea)), db = -Math.round(da * .5), na = Math.max(0, ra + da), nb = Math.max(0, rb + db), nm = (await cmd('HGET', 'arn', id)) || 'นิรนาม';
       const L = [['HSET', 'arr:' + W, id, na, pm.o, nb], ['EXPIRE', 'arr:' + W, 86400 * 40], ['ZADD', 'ars:' + W, na, id, nb, pm.o], ['EXPIRE', 'ars:' + W, 86400 * 40],
         ['LPUSH', 'ardef:' + pm.o, JSON.stringify({ n: nm, w: w ? 0 : 1, d: db, t: now, a: id })], ['LTRIM', 'ardef:' + pm.o, 0, 19], ['EXPIRE', 'ardef:' + pm.o, 86400 * 14], ['HINCRBY', 'ardefn', pm.o, 1]];
-      if (w) L.push(['ZINCRBY', 'arenaW:' + W, 1, nm], ['EXPIRE', 'arenaW:' + W, 86400 * 40]);
+      if (w) L.push(['ZINCRBY', 'arenaW:' + W, 1, nm], ['EXPIRE', 'arenaW:' + W, 86400 * 40], ['ZINCRBY', 'arwin:' + W, 1, id], ['EXPIRE', 'arwin:' + W, 86400 * 40]);
       await pipe(L); return res.json({ ok: 1, rt: na, d: da, lg: arLg(na), ort: nb });
     }
     if (a === 'arena') {
