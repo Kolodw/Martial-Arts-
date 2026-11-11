@@ -13955,6 +13955,46 @@ try{TTL_SP.unshift(['chh7',()=>chH()&&realmIdx()>=7,'ผู้ฝ่านรก
 // ===================== v16.1b โหมดท้าทาย: โบนัสเหรียญลาน · ทำเนียบชีวิตสั้นคิดจากความเร็ว =====================
 {const _asC=arSnap;arSnap=function(){const o=_asC.apply(this,arguments);try{if(S&&S.alive&&['hell','short','junk'].includes(S.ch))o.ch=S.ch}catch(e){}return o}}
 {const _arC=arResult;arResult=async function(){const r=await _arC.apply(this,arguments);try{const x=window._arRes;if(x&&x.ok&&x.chm){const m=$('modal'),bt=m&&m.dataset.k==='arres'&&m.querySelector('.pbtn');if(bt&&!m.querySelector('.archm'))bt.insertAdjacentHTML('beforebegin',`<p class="archm tag2">${CH_N[x.chm]||''} · โบนัสโหมดท้าทาย เหรียญลาน ×${x.chm==='short'?'1.3':'1.5'}</p>`)}}catch(e){}return r}}
+
+// ===================== v16.2 หน้าเลือกฉายา: แบ่งหมวด · คอลัมน์ · ค้นหา · เปิดลื่น =====================
+const SP2={q:'',tab:'all',rar:0,more:{}};
+function sp2Data(){const out=[];try{const cur=showTtl();
+ try{(rkList()||[]).forEach(x=>out.push({t:x.t,r:RKC_TR[x.p],k:'rk',g:'🏆 ฉายาทำเนียบ (ชั่วคราว)',tab:'rk',sub:RKC_PN[x.p]+' · '+rkLeft(x)}))}catch(e){}
+ try{const o=arOwn();AR_TT.filter(x=>(o.tt||[]).includes(x[0])).forEach(([t,rr])=>out.push({t,r:rr,k:'ar',g:'🏟️ ฉายาลาน',tab:'ar'}))}catch(e){}
+ const gOf={};try{ACH.forEach(([g,L])=>L.forEach(a=>{gOf[a.id]=g}))}catch(e){}
+ ACH_ALL.filter(a=>achGot[a.id]).forEach(a=>out.push({t:a.n,r:a.r,k:'a',g:gOf[a.id]||'🏆 สมุดตำนาน',tab:'a'}));
+ Object.keys(LS.get('murim_ttl',{})).forEach(t=>out.push({t,r:+ttlTierOf(t)||0,k:'t',g:'🏷️ ฉายาที่เคยถูกเรียกขาน',tab:'t'}));
+ const seen=new Set();return out.filter(x=>{const k=x.t+'|'+x.k;if(seen.has(k))return false;seen.add(k);return true}).map(x=>Object.assign(x,{on:!!(cur&&cur.t===x.t)}))}catch(e){console.error(e);return out}}
+const SP2_RC=['#9aa0a8','#9aa0a8','#5ac06a','#4a9aff','#b070ff','#ffb020','#ff5ac0','#ff3a3a','#40c8ff','#ffd040'];
+function sp2List(){const box=$('sp2L');if(!box)return;const D=sp2Data(),q=SP2.q.trim().toLowerCase();
+ let L=D.filter(x=>(SP2.tab==='all'||x.tab===SP2.tab)&&(!SP2.rar||(SP2.rar===6?x.r>=6:x.r===SP2.rar))&&(!q||x.t.toLowerCase().includes(q)||(x.g||'').toLowerCase().includes(q)));
+ const G={};L.forEach(x=>{(G[x.g]=G[x.g]||[]).push(x)});const keys=Object.keys(G).sort((a,b)=>{const o=s=>/ทำเนียบ/.test(s)?0:/ลาน/.test(s)?1:/เรียกขาน/.test(s)?3:2;return o(a)-o(b)||G[b].length-G[a].length});
+ const cnt=$('sp2N');if(cnt)cnt.textContent=`${L.length} ฉายา`;
+ if(!L.length){box.innerHTML='<p class="tag2" style="text-align:center;padding:16px 0">ไม่พบฉายาที่ค้นหา</p>';return}
+ box.innerHTML=keys.map(g=>{const A=G[g].sort((a,b)=>(b.r||0)-(a.r||0)||a.t.localeCompare(b.t,'th')),lim=SP2.more[g]||(q?999:24),sh=A.slice(0,lim);
+  return`<details class="sp2g" open><summary>${esc(g)} <small>${A.length}</small></summary><div class="sp2grid">${sh.map(x=>`<button class="sp2c ${x.on?'on':''}" style="--c:${SP2_RC[Math.min(9,x.r||0)]}" onclick='setShowTtl(${JSON.stringify(x.t).replace(/'/g,"&#39;")},${x.r||0},"${x.k}")'><b>${esc(x.t)}</b><small>${'★'.repeat(Math.min(6,Math.max(1,x.r||1)))}${x.sub?' · '+esc(x.sub):''}</small></button>`).join('')}</div>${A.length>lim?`<button class="gbtn sp2more" onclick="SP2.more[${JSON.stringify(g).replace(/"/g,'&quot;')}]=999;sp2List()">แสดงอีก ${A.length-lim} อัน</button>`:''}</details>`}).join('')}
+openShowPick=function(from){if(from)openShowPick._from=from;const sc0=(modalOpen&&$('modal').dataset.k==='showpick')?$('modal').scrollTop:0;setTimeout(()=>{try{if(sc0&&$('modal').dataset.k==='showpick')$('modal').scrollTop=sc0}catch(e){}},0);const cur=showTtl(),D=sp2Data(),back=openShowPick._from==='profile'?"openShowPick._from=null;openProfile()":'openBook()';
+ const tabs=[['all','ทั้งหมด'],['rk','🏆 ทำเนียบ'],['ar','🏟️ ลาน'],['a','📖 สมุดตำนาน'],['t','🏷️ ถูกเรียกขาน']].filter(([k])=>k==='all'||D.some(x=>x.tab===k));
+ if(!tabs.some(x=>x[0]===SP2.tab))SP2.tab='all';
+ modal(`<button class="xbtn" onclick="${back}">✕</button><h3>🎖️ เลือกฉายาที่จะโชว์</h3><p class="tag2">โชว์ข้างชื่อคุณในแชทโลก ทำเนียบ และตอนคนอื่นดูคุณเล่น · เลือกได้ทีละ 1 อัน</p>
+ <div class="sp2cur">ตอนนี้: ${cur?tchipH(cur.t,cur.r):'<span class="tag2">— ไม่โชว์ —</span>'} ${cur?`<button class="gbtn" style="padding:3px 10px" onclick="setShowTtl('',0,'')">ไม่โชว์</button>`:''}</div>
+ <div class="sp2bar"><input id="sp2Q" type="search" placeholder="🔎 ค้นหาฉายา…" value="${esc(SP2.q)}" oninput="SP2.q=this.value;clearTimeout(SP2._t);SP2._t=setTimeout(sp2List,120)"><span class="tag2" id="sp2N"></span></div>
+ <div class="sp2tabs">${tabs.map(([k,n])=>`<button class="${SP2.tab===k?'on':''}" onclick="SP2.tab='${k}';openShowPick()">${n}</button>`).join('')}</div>
+ <div class="sp2tabs sp2r">${[[0,'ทุกระดับ'],[1,'★1'],[2,'★2'],[3,'★3'],[4,'★4'],[5,'★5'],[6,'★6+']].map(([k,n])=>`<button class="${SP2.rar===k?'on':''}" onclick="SP2.rar=${k};openShowPick()">${n}</button>`).join('')}</div>
+ <div id="sp2L"></div>
+ <button class="gbtn" style="width:100%;margin-top:12px" onclick="${back}">← กลับ</button>`,'showpick');sp2List()};
+(()=>{const st=document.createElement('style');st.textContent=`
+.sp2cur{margin:6px 0}.sp2bar{display:flex;gap:6px;align-items:center;margin:6px 0}.sp2bar input{flex:1;padding:7px 10px;border-radius:8px;border:2px solid var(--line);background:var(--card);color:var(--ink);font-family:inherit;font-size:14px}
+.sp2tabs{display:flex;gap:4px;overflow-x:auto;margin:4px 0;scrollbar-width:none}.sp2tabs::-webkit-scrollbar{display:none}
+.sp2tabs button{flex:0 0 auto;font-size:12px;padding:4px 10px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink);font-family:inherit}
+.sp2tabs button.on{background:var(--ink);color:var(--card)}.sp2r button{font-size:11px;padding:3px 8px}
+.sp2g{margin:8px 0;border:2px solid var(--line);border-radius:10px;padding:4px 8px;content-visibility:auto;contain-intrinsic-size:auto 200px}
+.sp2g summary{cursor:pointer;font-weight:700;padding:4px 0;font-size:14px}.sp2g summary small{opacity:.6;font-weight:400}
+.sp2grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;padding:4px 0 6px}
+.sp2c{text-align:left;border:2px solid var(--c);border-left-width:5px;border-radius:8px;padding:5px 7px;background:var(--card);color:var(--ink);font-family:inherit;cursor:pointer;min-width:0}
+.sp2c b{display:block;font-size:13px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sp2c small{display:block;font-size:10px;color:var(--c);opacity:.95;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp2c.on{background:color-mix(in srgb,var(--c) 22%,var(--card));box-shadow:0 0 0 2px var(--c)}
+.sp2more{width:100%;margin:2px 0 6px;font-size:12px!important;padding:5px!important}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
