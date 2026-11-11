@@ -11007,6 +11007,107 @@ FR_TY.ring2='วงแหวนคู่';FR_TY.aura2='ออร่าใหญ�
 .frph.sm~.frr{inset:-4px}.frph.sm~.fra{inset:-8px}`;document.head.appendChild(st)})();
 {const L=[{id:'bd_wk',n:'ราชันแห่งสัปดาห์',d:'ติดอันดับ 1–3 ของทำเนียบประจำสัปดาห์',r:5,c:()=>(LS.get('murim_bdW',0)||0)>=1},
  {id:'bd_mo',n:'ตำนานแห่งเดือน',d:'ติดอันดับ 1–3 ของทำเนียบประจำเดือน',r:6,c:()=>(LS.get('murim_bdM',0)||0)>=1}];ACH.push(['🏆 ทำเนียบระยะยาว',L]);ACH_ALL.push(...L)}
+
+// ===================== v15.4 ตัวเลือกสนุกขึ้น: ตัวเลือกลับ · สายพันธุ์สัตว์ · ผลกรรมย้อนหลัง · ทุ่มสุดตัว · มินิเควสต์ · บุคลิก =====================
+// ---- ตัวช่วย "ได้เปรียบ": ทำให้ตัวเลือกเดิมสำเร็จง่ายขึ้น ----
+window._chBoost=0;
+{const _sa=statAdj;statAdj=function(){return _sa.apply(this,arguments)+(window._chBoost||0)}}
+{const _f=fight;fight=function(name,ep){return _f.call(this,name,(window._chBoost?ep*(1-window._chBoost):ep))}}
+{const _blf=blFight;blFight=function(name,mult,win,lose){return _blf.call(this,name,(window._chBoost?mult*(1-window._chBoost):mult),win,lose)}}
+{const _bvf=bvFight;bvFight=function(name,mul,win,lose){return _bvf.call(this,name,(window._chBoost?mul*(1-window._chBoost):mul),win,lose)}}
+function chBoosted(o,b,fn){window._chBoost=b;try{return o.f()}finally{window._chBoost=0;try{fn&&fn()}catch(e){}}}
+const chMain=opts=>opts.find(o=>!o.skip&&!o._x&&typeof o.f==='function');
+const chClean=t=>String(t||'').replace(/<[^>]+>/g,'').slice(0,40);
+// ---- 1) ตัวเลือกลับตามตัวละคร ----
+const CH_TR=[ // [เงื่อนไข, ไอคอน+ชื่อ, ป้ายปลด, ได้เปรียบ, โบนัส]
+ [()=>S.int>=300,'🧠 วางแผนหลอกล่อ',()=>`ปัญญา ${fmt(S.int)}`,.28,()=>{S.int+=2;return'ปัญญา +2'}],
+ [()=>S.cha>=250,'💋 ใช้เสน่ห์เจรจา',()=>`เสน่ห์ ${fmt(S.cha)}`,.25,()=>{S.cha+=2;return'เสน่ห์ +2'}],
+ [()=>!!(S.ai&&(typeof aiOn!=='function'||aiOn())),'🤖 ให้ AI คำนวณทางที่ดีที่สุด',()=>'มี AI',.3,()=>{try{gainExp&&0}catch(e){}return'AI วิเคราะห์สำเร็จ'}],
+ [()=>!!(S.sys&&S.sys.sp>=20),'🟦 ใช้แต้มระบบแก้สถานการณ์',()=>`SP ${S.sys.sp}`,.35,()=>{S.sys.sp-=20;return'SP −20'}],
+ [()=>S.karma<=-60,'😈 ใช้วิธีสกปรก',()=>`กรรม ${S.karma}`,.3,()=>{S.karma-=4;S.power+=pctPow(.01);return'กรรม −4'}],
+ [()=>S.karma>=80,'🙏 อธิษฐานขอฟ้าคุ้มครอง',()=>`กรรม +${S.karma}`,.2,()=>{S.karma+=4;futAdd('kind','ผู้ที่คุณให้อภัย');return'กรรมดี +4'}],
+ [()=>!!(S.pet&&!S.beastMode),'🐉 ส่งสัตว์คู่ใจไปจัดการ',()=>`มี${S.pet.n}`,.25,()=>{try{if(S.pet)S.pet.bond=(S.pet.bond||0)+2}catch(e){}return`${S.pet.n}ภูมิใจ`}],
+ [()=>!!(S.bag&&S.bag.it&&S.bag.it.tal),'🧿 ใช้ยันต์คุ้มภัย',()=>'มียันต์ในกระเป๋า',.35,()=>{bagUse('tal');return'ใช้ยันต์ไป 1 แผ่น'}],
+ [()=>{const p=typeof persTop==='function'&&persTop();return!!(p&&p[0]==='cun')},'🦊 ใช้เล่ห์กล',()=>'บุคลิกเจ้าเล่ห์',.25,()=>{S.money+=Math.round(R(20,120)*(typeof W15==='function'?W15():1));return'ได้เงินติดมือ'}],
+ [()=>{const p=typeof persTop==='function'&&persTop();return!!(p&&p[0]==='brave')},'🔥 พุ่งเข้าใส่อย่างไม่เกรงกลัว',()=>'บุคลิกกล้าหาญ',.22,()=>{S.fame+=fameR(6);return'ชื่อเสียง +'}],
+ [()=>{const p=typeof persTop==='function'&&persTop();return!!(p&&p[0]==='calm')},'🍃 นิ่งสงบแล้วหาจังหวะ',()=>'บุคลิกรักสงบ',.2,()=>{S.qi=+(S.qi+.5).toFixed(1);return'ลมปราณ +0.5'}]];
+// ---- 2) ตัวเลือกตามสายพันธุ์สัตว์ ----
+const CH_SP={bird:['🕊️ บินหนีขึ้นฟ้าแล้วโฉบกลับ',.3,()=>{joy(3);return'ความสุข +3'}],serp:['🐍 ฉีดพิษจากเงามืด',.3,()=>{S.power+=pctPow(.01);return'พลัง +'}],turtle:['🐢 หดเข้ากระดองรอจังหวะ',.25,()=>{S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.2));return'ฟื้นเลือด +20%'}],
+ quad:['🐺 หอนเรียกฝูงมาช่วย',.28,()=>{S.fame+=2;return'ชื่อเสียง +2'}],dragon:['🐉 พ่นลมปราณมังกร',.35,()=>{S.qi=Math.max(0,+(S.qi-1).toFixed(1));return'ลมปราณ −1'}],ape:['🐒 ฉกของแล้วหนี',.25,()=>{try{bagLoot(1)}catch(e){}return'ได้ของติดมือ'}],fish:['🐟 ดำดิ่งลงน้ำลึก',.25,()=>{S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.1));return'ฟื้นเลือด +10%'}]};
+function chBeastKind(){try{const m=S.beastMode;if(m.sp==='มังกร')return'dragon';const k=(BL_SP.find(x=>x[0]===m.sp)||[])[1]||'quad';if(/serp/.test(k)||/งู/.test(m.sp))return'serp';if(/turtle|shell/.test(k)||/เต่า/.test(m.sp))return'turtle';if(/fish/.test(k)||/ปลา/.test(m.sp))return'fish';if(k==='bird')return'bird';if(k==='ape')return'ape';return'quad'}catch(e){return'quad'}}
+// ---- 4) ทุ่มสุดตัว ----
+function chRiskP(){let p=.3+Math.min(.15,(S.talent&&S.talent.m||1)*.03)+(S.karma>0?.04:0)+Math.min(.1,S.int/4000);if(S.beastMode&&!S.beastMode.human)p+=S.beastMode.st*.015;return Math.max(.15,Math.min(.65,p))}
+// ---- แทรกตัวเลือกเพิ่มเข้าไปในทุกเหตุการณ์ ----
+const CH_SKIP=/ทัณฑ์ปฐมกาล|ทางแยกของอสูรพันปี|ติ๊ง|ระบบ|เลือกเส้นทาง|สืบทอด|ทายาท|ประมูล|ดวล|ศาล|AI/;
+{const _ch=choice;choice=function(title,text,opts){if(Array.isArray(opts))opts=opts.slice();try{if(S&&S.alive&&Array.isArray(opts)&&opts.length>=2&&opts.length<=4&&!CH_SKIP.test(chClean(title))&&!opts.some(o=>o._x)){
+ const main=chMain(opts);if(main){const add=[],beast=S.beastMode&&!S.beastMode.human,mt=chClean(main.t);
+  const tr=CH_TR.filter(x=>{try{return x[0]()}catch(e){return false}});
+  if(tr.length&&Math.random()<.55){const x=ch(tr);add.push({_x:1,t:`${x[1]} <small>🔓 ${x[2]()}</small>`,s:`ทำ "${mt}" แบบได้เปรียบ`,f(){let msg='';chBoosted(main,x[3],()=>{msg=x[4]()});if(msg)log(`${x[1].split(' ')[0]} ${msg}`,'good')}})}
+  if(beast){const sp=CH_SP[chBeastKind()];if(sp&&Math.random()<.6)add.push({_x:1,t:`${sp[0]} <small>🔓 ${S.beastMode.sp}</small>`,s:`สัญชาตญาณสายพันธุ์ · ทำ "${mt}" แบบได้เปรียบ`,f(){let msg='';chBoosted(main,sp[1],()=>{msg=sp[2]()});if(msg)log(`🐾 ${msg}`,'good')}});
+   const sk=opts.find(o=>o.skip);if(add.length<2&&Math.random()<.35)add.push({_x:1,t:'💀 แกล้งตาย',s:'เลี่ยงเรื่องนี้อย่างปลอดภัย · ฟื้นเลือดเล็กน้อย',f(){S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.08));log('💀 คุณนอนแน่นิ่งจนทุกอย่างผ่านไป แล้วค่อยลุกขึ้นอย่างปลอดภัย','good');if(sk)try{sk.f()}catch(e){}}});
+   if(add.length<2&&S.beastMode.st>=2&&S.qi>=3&&Math.random()<.35)add.push({_x:1,t:`✨ ใช้พลังธาตุ${S.beastMode.el||''}`,s:`ลมปราณ −2 · ทำ "${mt}" แบบได้เปรียบมาก`,f(){S.qi=Math.max(0,+(S.qi-2).toFixed(1));chBoosted(main,.4)}})}
+  if(add.length<2&&Math.random()<.22){const p=chRiskP();add.push({_x:1,t:`🔥 ทุ่มสุดตัว <small>โอกาส ${Math.round(p*100)}%</small>`,s:'สำเร็จได้รางวัลก้อนโต · พลาดเจ็บหนัก',f(){if(Math.random()<p){chBoosted(main,.5);const g=pctPow(.03);S.power+=g;S.fame+=fameR(10);if(!S.beastMode||S.beastMode.human)S.money+=Math.round(R(80,300)*(typeof W15==='function'?W15():1));log(`🔥 ทุ่มสุดตัวสำเร็จ! ได้รางวัลก้อนโต — พลัง +${fmt(g)}`,'epic');S._riskW=(S._riskW||0)+1}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));joy(-5);if(S.money>0)S.money=Math.round(S.money*.9);log('💥 ทุ่มสุดตัวแต่พลาดท่า — บาดเจ็บหนัก เสียของไปบางส่วน','bad')}}})}
+  if(add.length){const ix=opts.findIndex(o=>o.skip);if(ix>=0)opts.splice(ix,0,...add);else opts.push(...add)}}}}catch(e){console.error(e)}
+ // ---- 3) จำทางเลือกไว้ให้กรรมตามสนองภายหลัง ----
+ try{if(S&&Array.isArray(opts))opts.forEach(o=>{if(o._w||typeof o.f!=='function')return;const f0=o.f;o._w=1;o.f=function(){try{futNote(o.t,title)}catch(e){}return f0.apply(this,arguments)}})}catch(e){}
+ return _ch.call(this,title,text,opts)}}
+// ---- 3) ผลกรรมย้อนกลับมาทีหลัง ----
+const FUT_K=/ช่วย|รักษา|ไว้ชีวิต|ปล่อย|แบ่ง|ให้อาหาร|รับเลี้ยง|บริจาค|อภัย|ปกป้อง/,FUT_E=/ฆ่า|สังหาร|ปล้น|ขโมย|ทำลาย|กิน|ฉีก|ทรมาน|ทิ้ง|ไล่/;
+function futAdd(k,who){S.fut=S.fut||[];if(S.fut.length>=4)return;S.fut.push({k,at:S.age+R(5,30),who:String(who||'').slice(0,30)})}
+function futNote(t,title){if(!S||!S.alive)return;const s=chClean(t),w=chClean(title).replace(/^\S+\s/,'');const pr=S.beastMode&&!S.beastMode.human?.08:.3;if(FUT_K.test(s)&&Math.random()<pr)futAdd('kind',w);else if(FUT_E.test(s)&&Math.random()<pr)futAdd('foe',w)}
+function futTick(){if(!S||!S.alive||!S.fut||!S.fut.length||choice._cur||modalOpen)return;const i=S.fut.findIndex(x=>S.age>=x.at);if(i<0)return;const F=S.fut.splice(i,1)[0],beast=S.beastMode&&!S.beastMode.human,yrs=Math.max(1,S.age-(F.at-R(5,30)));
+ if(F.k==='kind'){const who=beast?ch(['สัตว์ตัวน้อยที่คุณเคยช่วย','ลูกนกที่คุณเคยไว้ชีวิต','หมอยาที่คุณเคยช่วยไว้']):ch(['เด็กขอทานที่คุณเคยช่วย','ชาวบ้านที่คุณเคยไว้ชีวิต','ศิษย์ตกยากที่คุณเคยช่วยเหลือ']);
+  choice('🌸 กรรมดีตามสนอง',`${who}ใน "<b>${esc(F.who)}</b>" เมื่อหลายปีก่อน ตอนนี้กลับมาหาคุณ${beast?'ในร่างที่แข็งแรงขึ้นมาก':' ในฐานะผู้มีหน้ามีตา'}`,[
+   {t:'🎁 รับน้ำใจ',f(){const g=pctPow(.04);S.power+=g;S.karma+=3;if(!beast)S.money+=Math.round(R(200,800)*(typeof W15==='function'?W15():1));log(`🌸 เขาตอบแทนบุญคุณ — พลัง +${fmt(g)}${beast?'':' · ได้เงินก้อนหนึ่ง'}`,'epic');keyAdd('กรรมดีตามสนอง')}},
+   {t:'🤝 ชวนมาเป็นพวก',f(){S.fame+=fameR(20);S.int+=4;joy(8);log(`🤝 ${who}กลายเป็นพวกพ้องคนสำคัญ — ชื่อเสียงและปัญญาเพิ่ม`,'epic')}}])}
+ else{const who=beast?ch(['แม่ของเหยื่อที่คุณเคยกิน','สัตว์อสูรที่คุณเคยไล่ออกจากถิ่น','ลูกของนายพรานที่คุณเคยฆ่า']):ch(['ลูกของคนที่คุณเคยฆ่า','ลูกศิษย์ของคนที่คุณเคยปล้น','ญาติของเหยื่อในอดีต']);
+  choice('⚔️ กรรมชั่วตามสนอง',`${who}ใน "<b>${esc(F.who)}</b>" ตามหาคุณมาหลายปี วันนี้มายืนอยู่ตรงหน้าพร้อมความแค้น`,[
+   {t:'⚔️ สู้',f(){const w=fight(who,total()*(.8+Math.random()*.4));if(w){S.fame+=fameR(15);S.power+=pctPow(.02);log('⚔️ คุณปิดฉากความแค้นได้ — แต่เวรกรรมยังคงวนเวียน','epic')}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.35));log(`💥 ${who}ล้างแค้นสำเร็จ คุณบาดเจ็บสาหัส`,'bad')}}},
+   {t:'🙇 ขอขมา',s:'ยอมเสียบางอย่าง',f(){S.karma+=8;if(!beast&&S.money>0)S.money=Math.round(S.money*.85);else S.hp=Math.max(1,Math.round(S.hp*.8));log('🙇 คุณก้มหัวขอขมา ความแค้นคลายลง · กรรมดี +8','good')}},
+   {t:'🏃 หนี',skip:true,f(){if(Math.random()<.5){log('🏃 หนีพ้น แต่เขายังไม่เลิกตามหา');futAdd('foe',F.who)}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.2));log('🏃 หนีไม่พ้น โดนลอบทำร้ายไปหลายแผล','bad')}}}])}}
+// ---- 5) มินิเควสต์หลายฉาก ----
+const MQ_H=[
+ {t:'🕳️ ถ้ำลับหลังน้ำตก',s:[['ในถ้ำมีทางแยกสองทาง ซ้ายมีเสียงคำราม ขวามีแสงทองระยิบ',[['⬅️ ทางซ้าย (เสียงคำราม)','A'],['➡️ ทางขวา (แสงทอง)','B']]],
+  {A:['คุณเจอสัตว์อสูรเฝ้าคัมภีร์ มันลืมตาขึ้นช้าๆ',[['⚔️ สู้แย่งคัมภีร์','fight'],['🤫 ย่องเอาคัมภีร์','sneak'],['🙇 ค้อมคำนับแล้วถอย','calm']]],B:['แสงทองมาจากกองสมบัติ แต่มีกับดักกลไกรอบๆ',[['💰 กวาดสมบัติให้หมด','greed'],['🔧 ปลดกับดักก่อน','smart'],['🪙 หยิบแค่ชิ้นเดียว','calm']]]}]},
+ {t:'🏮 ตลาดมืดใต้ดิน',s:[['พ่อค้าหน้ากากยื่นกล่องปริศนาสามใบ "ราคาเท่ากัน แต่ข้างในไม่เท่ากัน"',[['📦 กล่องแดง','A'],['📦 กล่องดำ','B'],['🙅 ไม่ซื้อ แอบสะกดรอยพ่อค้า','C']]],
+  {A:['ในกล่องมีเม็ดยาเรืองแสง พ่อค้ากระซิบว่า "กินตอนนี้ หรือขายต่อก็ได้"',[['💊 กินเลย','pill'],['💰 ขายต่อ','sell']]],B:['กล่องว่างเปล่า! พ่อค้ายิ้มเยาะ',[['😤 เอาเรื่องพ่อค้า','fight'],['😑 ยอมรับว่าโดนหลอก','calm']]],C:['คุณตามไปถึงโกดังลับของพ่อค้า เต็มไปด้วยของเถื่อน',[['🦊 ขโมยของมาบางส่วน','sneak'],['📯 แจ้งทางการ','good']]]}]},
+ {t:'📚 หอคัมภีร์ต้องห้าม',s:[['ยามหลับอยู่หน้าหอคัมภีร์ต้องห้ามของสำนักใหญ่',[['🤫 แอบเข้าไป','A'],['🍶 มอมเหล้ายามก่อน','B']]],
+  {A:['ข้างในมีคัมภีร์สองเล่ม เล่มหนึ่งเปื้อนเลือด อีกเล่มห่อด้วยผ้าไหม',[['🩸 เล่มเปื้อนเลือด','dark'],['📜 เล่มห่อผ้าไหม','smart']]],B:['ยามเมาแล้วพูดพล่ามถึงความลับของสำนัก',[['👂 ฟังความลับ','smart'],['📚 รีบเข้าไปอ่านคัมภีร์','fight']]]}]},
+ {t:'🎭 งานเลี้ยงขุนนาง',s:[['คุณได้รับเชิญไปงานเลี้ยงของขุนนางใหญ่ ทุกคนแต่งตัวหรูหรา',[['🍷 ร่วมดื่มกับขุนนาง','A'],['👀 สังเกตแขกแปลกหน้า','B']]],
+  {A:['ขุนนางเมาแล้วเสนอให้ลูกสาวแต่งงานกับคุณ — หรือจะขอตำแหน่งแทน?',[['💕 รับข้อเสนอแต่งงาน','love'],['🏛️ ขอตำแหน่งแทน','good'],['🙅 ปฏิเสธอย่างสุภาพ','calm']]],B:['แขกแปลกหน้าคือมือสังหารที่จะลอบฆ่าขุนนาง!',[['🛡️ ปกป้องขุนนาง','fight'],['🦊 แบล็คเมล์มือสังหาร','sneak'],['🏃 หนีออกจากงาน','calm']]]}]}];
+const MQ_B=[
+ {t:'🐲 ถ้ำมังกรหลับ',s:[['กลิ่นลมปราณหนาแน่นลอยออกมาจากถ้ำ ข้างในมีมังกรแก่นอนหลับอยู่บนกองผลึก',[['💎 ย่องเข้าไปขโมยผลึก','A'],['🙇 ปลุกมังกรอย่างนอบน้อม','B']]],
+  {A:['มังกรขยับหาง ผลึกก้อนใหญ่อยู่ใต้กรงเล็บมัน',[['⚔️ แย่งก้อนใหญ่','fight'],['💎 เก็บก้อนเล็กแล้วถอย','calm']]],B:['มังกรลืมตา "เจ้าตัวน้อย กล้าดีนัก... ข้าจะทดสอบเจ้า"',[['⚔️ รับการทดสอบ','fight'],['🧠 ตอบปริศนามังกร','smart']]]}]},
+ {t:'🍑 หุบเขาผลไม้วิญญาณ',s:[['ต้นไม้วิญญาณออกผลแล้ว สัตว์อสูรหลายตัวจ้องอยู่รอบๆ',[['🌙 รอจนดึกแล้วค่อยไป','A'],['⚔️ บุกเลยก่อนใคร','B']]],
+  {A:['กลางดึกมีสัตว์อีกตัวมาเหมือนกัน มันบาดเจ็บและหิวโหย',[['🍑 แบ่งผลไม้ให้มัน','good'],['⚔️ ไล่มันไป','fight'],['🤫 แอบเก็บแล้วหนี','sneak']]],B:['สัตว์อสูรทุกตัวหันมาที่คุณพร้อมกัน!',[['⚔️ สู้กับทุกตัว','fight'],['🍑 คาบผลไม้ลูกเดียวแล้ววิ่ง','calm']]]}]},
+ {t:'🪤 หมู่บ้านนายพราน',s:[['คุณพบหมู่บ้านนายพรานที่เต็มไปด้วยกรงขังสัตว์',[['🌙 แอบเข้าไปตอนกลางคืน','A'],['👀 เฝ้าดูจากพุ่มไม้','B']]],
+  {A:['ในกรงมีลูกสัตว์อสูรหลายตัว และมีหนังสัตว์แขวนเต็มผนัง',[['🔓 ปล่อยลูกสัตว์ทั้งหมด','good'],['🍖 ขโมยเนื้อตากแห้ง','sneak'],['🔥 เผาหมู่บ้าน','dark']]],B:['คุณเรียนรู้ว่านายพรานวางกับดักไว้ที่ไหนบ้าง',[['🧠 จำแผนที่กับดักไว้','smart'],['⚔️ ดักซุ่มนายพราน','fight']]]}]}];
+function mqEnd(k,beast){const W=typeof W15==='function'?W15():1;const O={
+ fight:()=>{const w=fight('ผู้เฝ้า',total()*(.85+Math.random()*.4));if(w){const g=pctPow(.05);S.power+=g;S.fame+=fameR(12);beast?0:bagLoot(2);return[`⚔️ ชนะ! พลัง +${fmt(g)}`,'epic']}S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));return['💥 พ่ายแพ้ บาดเจ็บหนัก','bad']},
+ sneak:()=>{if(roll01(.5)){if(beast){S.qi=+(S.qi+R(2,5)).toFixed(1);return['🤫 สำเร็จ! ลมปราณเพิ่ม','good']}S.money+=Math.round(R(200,900)*W);S.karma-=3;return['🦊 สำเร็จ! ได้ของมีค่า · กรรม −3','good']}S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.2));return['😖 ถูกจับได้ ต้องหนีสุดชีวิต','bad']},
+ calm:()=>{S.qi=+(S.qi+1).toFixed(1);joy(3);return['🍃 ปลอดภัย ได้ลมปราณเล็กน้อย','good']},
+ greed:()=>{if(Math.random()<.4){S.money+=Math.round(R(1000,3000)*W);return['💰 กวาดได้หมดเกลี้ยง!','epic']}S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.4));return['💥 กับดักทำงาน บาดเจ็บสาหัส','bad']},
+ smart:()=>{S.int+=R(5,12);if(roll01(.55)){const g=pctPow(.03);S.power+=g;return[`🧠 สำเร็จอย่างแนบเนียน ปัญญาเพิ่ม · พลัง +${fmt(g)}`,'epic']}return['🧠 ได้ความรู้ แต่ไม่ได้ของ','good']},
+ pill:()=>{if(Math.random()<.7){const g=pctPow(.04);S.power+=g;return[`💊 ยาวิเศษจริง! พลัง +${fmt(g)}`,'epic']}S.hp=Math.max(1,Math.round(S.hp*.7));return['🤢 ยาปลอม ท้องเสียไปสามวัน','bad']},
+ sell:()=>{S.money+=Math.round(R(400,1200)*W);return['💰 ขายต่อได้กำไรงาม','good']},
+ good:()=>{S.karma+=8;S.fame+=fameR(10);futAdd('kind','เรื่องที่คุณช่วยไว้');return['☯️ ทำสิ่งที่ถูกต้อง · กรรมดี +8','good']},
+ dark:()=>{S.karma-=8;const g=pctPow(.04);S.power+=g;futAdd('foe','เรื่องที่คุณทำไว้');return[`🩸 ได้พลังมืด +${fmt(g)} · กรรม −8`,'epic']},
+ love:()=>{joy(10);S.cha+=5;if(!S.spouse&&!S.beastMode){try{const nm=anyName(S.gender==='ชาย'?'หญิง':'ชาย');S.spouse=nm;S.sp=mkLover(nm,'บุตรีขุนนาง',{wed:true,aff:70});return[`💕 แต่งงานกับ ${nm} บุตรีขุนนาง`,'epic']}catch(e){}}return['💕 ได้ความรักและความสุข','good']}};
+ const r=(O[k]||O.calm)();log(r[0],r[1])}
+function mqRun(q,beast,step,br){try{if(step===0){const [d,o]=q.s[0];choice(q.t,d,o.map(([t,b])=>({t,f(){setTimeout(()=>mqRun(q,beast,1,b),350)}})));return}
+ const [d,o]=q.s[1][br];choice(q.t,d,o.map(([t,k])=>({t,f(){mqEnd(k,beast)}})))}catch(e){console.error(e)}}
+function mqTick(){if(!S||!S.alive||choice._cur||modalOpen||S.age<14)return;const beast=S.beastMode&&!S.beastMode.human;if(Math.random()>(beast?.05:.04))return;
+ S.mqL=S.mqL||{};const P=(beast?MQ_B:MQ_H).filter(q=>S.age-(S.mqL[q.t]??-99)>=25);if(!P.length)return;const q=ch(P);S.mqL[q.t]=S.age;mqRun(q,beast,0)}
+// ---- รายปี ----
+{const _pyC=passYear;passYear=function(){const r=_pyC.apply(this,arguments);try{futTick();mqTick()}catch(e){console.error(e)}return r}}
+// เหตุการณ์สัตว์ไม่ซ้ำบ่อยเกินไป
+try{BLX.forEach(e=>{e.gap=Math.max(e.gap||6,12)})}catch(e){}
+// ---- 6) บุคลิกสะสม: นับสำหรับสัตว์ด้วย + ความสำเร็จ ----
+{const L=[['kind','💗 ผู้มีเมตตา'],['ruth','🩸 ผู้โหดเหี้ยม'],['cun','🦊 จิ้งจอกเฒ่า'],['calm','🍃 ผู้รักสงบ'],['brave','🔥 ผู้กล้าไร้พ่าย']].map(([k,n])=>({id:'ps_'+k,n,d:`บุคลิก${(PERS.find(x=>x[0]===k)||[])[1]||''}ชัดเจนจนผู้คนเลื่องลือ (เลือกแนวนี้ 20 ครั้ง)`,r:3,c:()=>!!(S.pers&&(S.pers[k]||0)>=20)}));
+ L.push({id:'ch_risk',n:'นักเสี่ยงโชค',d:'ทุ่มสุดตัวสำเร็จ 5 ครั้งในชีวิตเดียว',r:4,c:()=>(S._riskW||0)>=5});ACH.push(['🎭 ทางเลือกและบุคลิก',L]);ACH_ALL.push(...L)}
+try{const g=GD2.find(x=>x.t==='เควส'),i=g?GD2.indexOf(g)+1:GD2.length;GD2.splice(i,0,{s:'grow',ic:'🔓',t:'ตัวเลือกพิเศษและกรรมตามสนอง',nw:1,
+ d:'เหตุการณ์จะมี<b>ตัวเลือกลับ</b>โผล่เพิ่มตามสิ่งที่คุณมี (🧠 ปัญญาสูง 💋 เสน่ห์สูง 🤖 AI 🟦 แต้มระบบ 🧿 ยันต์ 🐉 สัตว์คู่ใจ 🗡️ กรรมติดลบ 🙏 กรรมดีมาก และบุคลิก) — ทำทางเลือกหลักแบบได้เปรียบ · สัตว์มีตัวเลือกตามสายพันธุ์ แกล้งตาย ใช้พลังธาตุ · 🔥 <b>ทุ่มสุดตัว</b> โชว์โอกาสสำเร็จ ได้รางวัลก้อนโตหรือเจ็บหนัก · ⏳ สิ่งที่เลือกอาจย้อนกลับมาในอีก 5–30 ปี (คนที่เคยช่วยมาตอบแทน คนที่เคยทำร้ายมาล้างแค้น) · 🧭 มีเหตุการณ์หลายฉากให้ตัดสินใจต่อเนื่อง',
+ te:'Special choices & karma',de:'Events gain <b>hidden options</b> based on what you have (🧠 high wisdom 💋 charm 🤖 AI 🟦 System points 🧿 talisman 🐉 pet 🗡️ bad karma 🙏 good karma, personality) — doing the main option with an edge · beasts get species instincts, play dead and element powers · 🔥 <b>All-in</b> shows its success chance: big reward or heavy injury · ⏳ choices can return 5–30 years later (people you helped repay you, those you wronged seek revenge) · 🧭 multi-stage events.'});SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
 </script>
 </body>
 </html>
