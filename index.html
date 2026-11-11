@@ -2998,7 +2998,7 @@ function bagTick(){if(!S.bag)bagInit();const b=S.bag;
  if(S.chronic&&bagUse('cure')){log(`🎒 🧪 ใช้ยาถอนพิษ — หายจาก${S.chronic.n}`,'good');S.chronic=null}
  if(bagHas('qi')&&Math.random()<.5&&bagUse('qi'))S.qi+=2;
  const nx=REALMS[realmIdx()+1];if(!(S.beastMode&&!S.beastMode.human)&&nx&&realmIdx()+1<=5&&bagHas('brk')&&total()>=nx.p*.82&&bagUse('brk')){S.power+=nx.p-total()+1;log(`🎒 🔴 กลืนยาทะลวงขั้น — พุ่งสู่${nx.n}!`,'epic')}
- if(bagHas('fruit')&&S.age>lifeMax()-8&&bagUse('fruit')){S.lifespan+=15;log('🎒 🍑 กินผลไม้อายุวัฒนะ อายุขัย +15 ปี','epic')}
+ if(bagHas('fruit')&&S.age>lifeMax()-8&&bagUse('fruit')){S.lifespan+=15;S.lsI=(S.lsI||0)+15;log('🎒 🍑 กินผลไม้อายุวัฒนะ อายุขัย +15 ปี','epic')}
  if(bagHas('egg')&&(!S.pet||!S.pet.spirit)&&Math.random()<.25&&bagUse('egg')){const n=ch(['พยัคฆ์ขาว','จิ้งจอกเพลิง','มังกรน้ำ','หงส์น้ำแข็ง']);S.pet={i:'🐉',n,t:'สัตว์วิญญาณ',age:S.age,spirit:1,lv:0};log(`🥚 ไข่ในกระเป๋าฟักออกมาเป็น<b>${n}</b>ลูกอ่อน!`,'myth')}
  try{bagQTick(b)}catch(e){console.error(e)}
  bagFix(b);const BL=bagL();if(!b.sp&&b.cap<BL[BL.length-1][1]){const i=BL.findIndex(x=>x[1]>b.cap),pr=bagPrice(i);if(i>0&&S.money>pr*6&&Math.random()<.15){S.money-=pr;b.nm=BL[i][0];b.cap=BL[i][1];log(`🎒 ซื้อ${BL[i][0]}ใบใหม่ (${BL[i][1]} ช่อง)`)}}}
@@ -12398,19 +12398,21 @@ function hibOK(){const m=S&&S.alive&&S.beastMode;if(!m||m.human)return 'ร่�
 function hibNeed(){const m=S.beastMode;if(m.st<4){const n=[[3,0,0],[12,6,0],[0,20,450],[0,45,1500]][m.st];return n?n[2]:0}const u=BL_UP[m.st-4];return u?u[2]:0}
 function hibFat(){const m=S.beastMode;return Math.round(m.fat==null?6:m.fat)}
 function openHib(){const why=hibOK(),m=S.beastMode,K=hibKind(),fat=hibFat(),rem=Math.floor(lifeMax()-S.age-1);
- const yrs=[5,10,30].filter(n=>n<=rem);const cost=n=>Math.ceil(n*(K.bear||K.turtle?.5:1));
+ const yrs=hibYrs(rem);const cost=n=>hibCost(n,K);
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌙 จำศีลบ่มแก่นอสูร</h3><p class="tag2">หลับใหลหลายปีในครั้งเดียว ร่างกายบ่มพลังเป็น <b>แก่นอสูร</b> — ตื่นแล้วต้องดูดซับเอง · ระหว่างหลับทะลวงขั้นไม่ได้ และโลกข้างนอกยังเดินต่อ</p>
- <div class="item"><b>🍖 ไขมันสะสม ${fat}</b> <span class="tag2">· ใช้ ${K.bear||K.turtle?'0.5':'1'}/ปีที่หลับ${K.bear?' (หมีจำศีลเก่ง)':K.turtle?' (เต่าหลับนานเก่ง)':''} · ล่าเหยื่อเพื่อสะสมเพิ่ม · ไม่พอจะตื่นกลางคันด้วยความหิว</span></div>
+ <div class="item"><b>🍖 ไขมันสะสม ${fat}</b> <span class="tag2">/ ${hibFatCap()} · หลับนานใช้มากขึ้นแต่ไม่ถึงปีละหน่วย${K.bear?' · หมีจำศีลเก่ง ใช้ครึ่งเดียว':K.turtle?' · เต่าหลับนานเก่ง ใช้ครึ่งเดียว':''} · ล่าเหยื่อเพื่อสะสมเพิ่ม · ไม่พอจะตื่นกลางคันด้วยความหิว</span></div>
  ${m.core?`<div class="item"><b>💠 แก่นอสูรค้างอยู่ ${fmt(m.core.p)} พลัง · ลมปราณ ${m.core.q.toFixed(1)}</b><br><button class="pbtn" style="margin-top:6px" onclick="hibAbsorb()">ดูดซับแก่นอสูร</button></div>`:''}
- ${why?`<p class="tag2" style="color:var(--bad)">⚠️ ${why}</p>`:!yrs.length?'<p class="tag2">อายุขัยเหลือไม่พอจะจำศีล</p>':HIB_DEN.map(d=>`<div class="item hibden"><b>${d.ic} ${d.n}</b><br><span class="tag2">${d.d}</span><div class="brow" style="margin-top:6px">${yrs.map(n=>`<button class="sysb" ${fat<Math.min(cost(n),cost(5))?'disabled':''} onclick="hibGo('${d.id}',${n})">${n} ปี<small> 🍖${cost(n)}</small></button>`).join('')}</div></div>`).join('')}
- <p class="tag2">พลังที่ได้มีเพดาน (ไม่เกิน ~1.2 เท่าของขั้นถัดไป) · ยิ่งหลับนานยิ่งได้ช้าลง · จำศีลแล้วต้องพักอย่างน้อย 5 ปี</p>`,'hib')}
+ ${why?`<p class="tag2" style="color:var(--bad)">⚠️ ${why}</p>`:!yrs.length?'<p class="tag2">อายุขัยเหลือไม่พอจะจำศีล</p>':HIB_DEN.map(d=>`<div class="item hibden"><b>${d.ic} ${d.n}</b><br><span class="tag2">${d.d}</span><div class="brow" style="margin-top:6px">${yrs.map(n=>`<button class="sysb" ${fat<cost(n)?'disabled':''} onclick="hibGo('${d.id}',${n})">${fmt(n)} ปี<small> 🍖${cost(n)}</small></button>`).join('')}</div></div>`).join('')}
+ <p class="tag2">พลังที่ได้มีเพดาน (ยิ่งหลับนานเพดานยิ่งสูงขึ้น แต่ได้ต่อปีช้าลง) · สัตว์อายุยืนหลับได้ถึงหลักหมื่น–แสนปี · จำศีลแล้วต้องพักอย่างน้อย 5 ปี</p>`,'hib')}
 function hibGo(den,n){const why=hibOK();if(why)return toast(why);const D=HIB_DEN.find(x=>x.id===den)||HIB_DEN[0],m=S.beastMode,K=hibKind(),per=K.bear||K.turtle?.5:1;
  closeM();n=Math.min(n,Math.max(1,Math.floor(lifeMax()-S.age-1)));m.fat=hibFat();
- const t0=total(),need=hibNeed(),cap=Math.max(t0*1.15,need?need*1.2:t0*1.3),mul=S.talent.m*(S.xian?1.4:1)*(K.turtle?1.15:1);const f0=addFeed;addFeed=()=>{};let gp=0,gq=0,slept=0,hurt=0,hungry=0;
- try{for(let i=0;i<n;i++){if(m.fat<per){hungry=1;break}m.fat-=per;S.age++;slept++;const dim=1/(1+i*.07);
-  const pw=Math.max(yrPow0(),t0*.004)*D.p*dim*(K.bear?1.15:1),q=(.5+Math.random()*.7)*mul*D.q*dim*.6;gp+=pw;gq+=q;
-  if(Math.random()<D.risk*.12){hurt++}
-  (S.children||[]).forEach(c=>{if(c.alive)c.age++});try{peers.forEach(p=>peerYear(p))}catch(e){}(S.hist=S.hist||[]).push([S.age,Math.round(t0+gp),Math.round(S.happy==null?60:S.happy)])}}finally{addFeed=f0}
+ const t0=total(),need=hibNeed(),cap=Math.max(t0*(1.1+.1*Math.log10(Math.max(1,n))),need?need*1.2:0),mul=S.talent.m*(S.xian?1.4:1)*(K.turtle?1.15:1);const f0=addFeed;addFeed=()=>{};let gp=0,gq=0,slept=0,hurt=0,hungry=0;
+ const fc=hibCost(n,K);if(m.fat<fc){let lo=1,hi=n;while(lo<hi){const md=Math.ceil((lo+hi)/2);if(hibCost(md,K)<=m.fat)lo=md;else hi=md-1}hungry=1;n=Math.max(1,lo)}m.fat=Math.max(0,m.fat-hibCost(n,K));
+ try{const H=Math.log(1+.035*n)/.035,base=Math.max(yrPow0(),t0*.004)*D.p*(K.bear?1.15:1),qb=(.5+Math.random()*.7)*mul*D.q*.6;gp=base*H;gq=qb*H;slept=n;S.age+=n;
+  hurt=Math.min(3,[...Array(Math.min(n,60))].filter(()=>Math.random()<D.risk*.12*Math.max(1,n/60)).length);
+  (S.children||[]).forEach(c=>{if(c.alive)c.age+=n});try{for(let y=0;y<Math.min(n,300);y++)peers.forEach(p=>peerYear(p))}catch(e){}
+  const hs=S.hist=S.hist||[],stp=Math.max(1,Math.ceil(n/40));for(let y=stp;y<=n;y+=stp)hs.push([S.age-n+y,Math.round(t0+gp*Math.log(1+.035*y)/.035/H),Math.round(S.happy==null?60:S.happy)]);
+ }finally{addFeed=f0}
  gp=Math.min(gp,Math.max(0,cap-t0));const now=.55;S.power+=Math.round(gp*now);S.qi+=+(gq*now).toFixed(1);
  m.core={p:Math.round((m.core?m.core.p:0)+gp*(1-now)),q:+(((m.core?m.core.q:0)+gq*(1-now))).toFixed(1)};
  m.hibCd=S.age+5;m.hibT=(m.hibT||0)+slept;S.flags.seclude=(S.flags.seclude||0)+slept;
@@ -12436,7 +12438,7 @@ function hibWake(D,n){if(!S||!S.alive)return;if(choice._cur||modalOpen)return se
  if(D.id!=='cave'||Math.random()<.3)E.push(['⚔️ ผู้บุกรุกรัง',D.id==='lake'?'อสูรน้ำตัวหนึ่งยึดทะเลสาบไว้ระหว่างที่คุณหลับ':'กลุ่มนักล่ามนุษย์ตามกลิ่นมาจนพบรังของคุณ',[{t:'สู้ทันที',s:'ชนะ +พลัง +ชื่อเสียง',f(){blFight(D.id==='lake'?'อสูรน้ำผู้ยึดถิ่น':'กองนักล่าอสูร',.95,()=>{S.power+=Math.round(total()*.05);S.fame+=60},()=>{})}},{t:'หนีไปหาที่ใหม่',s:'ปลอดภัย',f(){joy(-4);log('🏃 คุณทิ้งรังเก่าไปหาที่ใหม่','')}}]]);
  const ev=ch(E);choice(ev[0],ev[1],ev[2]);try{render()}catch(e){}}
 {const _bmH=blMe;blMe=function(){const o=_bmH.apply(this,arguments);try{const F=S.beastMode&&S.beastMode.hibF;if(F){if(F.spike)o.f.spike=true;if(F.glow)o.f.glow=true;if(F.eye3)o.f.eye3=true;if(F.tint&&o.col)o.col=shadeC(o.col,.18)}}catch(e){}return o}}
-{const _byH=beastYear;beastYear=function(){const r=_byH.apply(this,arguments);try{const m=S.beastMode;if(m&&!m.human){m.fat=Math.min(40,(m.fat==null?6:m.fat)+(S.focus==='hunt'?2:S.focus==='devour'?1.5:.5))}}catch(e){}return r}}
+{const _byH=beastYear;beastYear=function(){const r=_byH.apply(this,arguments);try{const m=S.beastMode;if(m&&!m.human){m.fat=Math.min(hibFatCap(),(m.fat==null?6:m.fat)+(S.focus==='hunt'?2:S.focus==='devour'?1.5:.5))}}catch(e){}return r}}
 {const _omH=openMenu;openMenu=function(){const r=_omH.apply(this,arguments);try{const m=S&&S.alive&&S.beastMode;if(m&&!m.human){const g=$('modal').querySelector('.mcat15 .mgrid')||$('modal').querySelector('.mgrid');if(g&&!g.querySelector('[data-hib]'))g.insertAdjacentHTML('afterbegin',`<button class="opt" data-hib="1" onclick="openHib()">🌙 จำศีลบ่มแก่น<small>${m.core?'💠 มีแก่นอสูรรอดูดซับ':hibOK()||'ข้ามเวลาหลายปี · 🍖 '+hibFat()}</small></button>`)}}catch(e){}return r}}
 try{const L=[{id:'hib_100',n:'หลับใหลร้อยปี',d:'สัตว์อสูร: จำศีลรวม 100 ปี',r:3,c:()=>!!(S.beastMode&&(S.beastMode.hibT||0)>=100)},{id:'hib_eye',n:'อสูรตื่นจากนิทรา',d:'ปลุกสายเลือดโบราณระหว่างจำศีล',r:4,c:()=>!!(S.beastMode&&S.beastMode.hibF&&S.beastMode.hibF.eye3)}];const g=ACH.find(x=>/สัตว์อสูร/.test(x[0]));if(g)g[1].push(...L);else ACH.push(['🐾 จำศีล',L]);ACH_ALL.push(...L)}catch(e){}
 try{GD2.push({s:'beast',ic:'🌙',t:'จำศีลบ่มแก่นอสูร',nw:1,d:'สัตว์อสูรที่โตแล้วจำศีลได้ที่ ☰ เลือก 🕳️ ถ้ำลึก (ปลอดภัย) · 🏔️ ยอดเขารับฟ้าผ่า · 🌊 ใต้ทะเลสาบ (ได้มากเสี่ยงมาก) นาน 5/10/30 ปี · ใช้ 🍖 ไขมันสะสม (ล่าเหยื่อเพื่อเพิ่ม) · พลังส่วนหนึ่งบ่มเป็น 💠 แก่นอสูร ต้องดูดซับเอง (รวดเดียวเสี่ยงธาตุแตก / ค่อยๆ ย่อยได้ 80%) · ตื่นมามีเหตุการณ์: งูลอกคราบ แมลงออกดักแด้ ฝันถึงบรรพบุรุษ หมู่บ้านข้างรัง ผู้บุกรุก',
@@ -12557,6 +12559,15 @@ BAGX.star.d=()=>`อายุขัย +40 ปี · พลังยุทธ์
 BAGX.scroll.use=function(){const a=newArt(2),full=S.arts.length>=artCap();const q0=(S.learnQ||[]).length;window._artForce=!full;try{S.arts.push(a)}finally{window._artForce=false}if((S.learnQ||[]).length>q0)return`ได้คัมภีร์${artHtml(a)} — ต้องฝึกให้สำเร็จก่อนจึงจะใช้ได้ (ดูที่วิชา)`;return full?`ความจำเรื่องวิชาเต็ม — นำ${artHtml(a)}ไปเสริมวิชาเดิม`:`ได้ ${artHtml(a)}`};
 // ไข่สัตว์วิญญาณ/ผลไม้: สัตว์ใช้ได้เหมือนคน · อัญมณี: สัตว์มอบให้คู่ครอง
 {const _gmU=BAGX.gem.use;BAGX.gem.use=function(){if(S&&S.beastMode&&!S.beastMode.human){if(!S.kids&&!S.bMate)return null;joy(8);S.cha+=2;return'มอบอัญมณีให้คู่ครอง — ความสุข +8 · เสน่ห์ +2'}return _gmU.apply(this,arguments)}}
+
+// ===================== v15.6b อายุขัยจากยา · จำศีลยาว =====================
+// ยาอายุขัยของคน: เดิมเพิ่ม lifespan แต่ติดเพดานตามระดับ (เช่น 150) ตัวเลขไม่ขยับ → ปีที่ได้จากของบวกเหนือเพดาน
+['fruit','lpill','star','void'].forEach(id=>{const X=BAGX[id];if(!X||!X.use)return;const u=X.use;X.use=function(){const a=S.lifespan;const r=u.apply(this,arguments);try{const d=S.lifespan-a;if(d>0)S.lsI=(S.lsI||0)+d}catch(e){}return r}});
+{const _lmI=lifeMax0;lifeMax0=function(){const r1=_lmI.apply(this,arguments);try{const L=S&&S.lsI;if(!L||(S.beastMode&&!S.beastMode.human))return r1;S.lifespan-=L;let r0;try{r0=_lmI.apply(this,arguments)}finally{S.lifespan+=L}return Math.max(r1,r0+L)}catch(e){return r1}}}
+function hibFatCap(){const m=S.beastMode;return 40+(m.st|0)*20}
+function hibCost(n,K){const b=Math.ceil(n<=30?n:30+12*Math.log2(n/30));return Math.ceil(b*(K&&(K.bear||K.turtle)?.5:1))}
+function hibYrs(rem){const A=[5,10,30,100,300,1000,3000,10000,30000,100000,300000],lim=Math.max(30,S.age);const L=A.filter(n=>n<=rem&&n<=lim);return L.length>5?[L[0]].concat(L.slice(-4)):L}
+{const _byF=beastYear;beastYear=function(){const r=_byF.apply(this,arguments);try{const m=S.beastMode;if(m&&!m.human&&m.fat>hibFatCap())m.fat=hibFatCap()}catch(e){}return r}}
 </script>
 </body>
 </html>
