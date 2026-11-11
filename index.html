@@ -13201,6 +13201,9 @@ function pxPlay(o){return new Promise(done0=>{const wasP=typeof paused!=='undefi
       if(sc>=6&&k<T.flash){const dq=Math.min(1,(k-T.intro)/.8);if(dq>0){c.globalAlpha=.42*dq;c.fillStyle='#05030f';c.fillRect(0,0,PXW,PXH);c.globalAlpha=1}}
       if(SP){pxPhantom(c,cx,cy+2,SP.ph,au,col,k,pz.st==='atk'?Math.min(1,(k-T.atk)/.3):0);pxSideAura(c,cx,cy+2,SP.ph[0],pz.st==='charge'?pz.ch:0,col,k)}
       pxHeroAura(c,cx,cy+2,pz.st==='charge'?pz.ch:pz.st==='atk'?pz.ch*.6:0,col,k);pxHero(c,cx,cy+2,lkH,pz,SP&&SP.k.includes('sword')?(hk==='slashdown'||hk==='sweep'?hk:'sword'):hk,col,k);pxShock(c,tx,ty,(k-T.blast-.2)/.9,col)}catch(e){pxMe(c,cx,cy+2)}}
+    else if(o.beast&&lkH&&lkH.beast&&typeof pxBeastHero==='function'){try{const pz=beastPoseAt(k,T.intro,T.atk,T.hit,T.after,o.fxk),au=pz.st==='charge'?pz.ch:pz.st==='atk'?Math.max(pz.ch,.75*Math.max(0,1-(k-T.atk)/1.4)):0;
+      if(sc>=6&&k<T.flash){const dq=Math.min(1,(k-T.intro)/.8);if(dq>0){c.globalAlpha=.42*dq;c.fillStyle='#05030f';c.fillRect(0,0,PXW,PXH);c.globalAlpha=1}}
+      pxHeroAura(c,cx,cy+2,pz.st==='charge'?pz.ch:pz.st==='atk'?pz.ch*.6:0,col,k);pxBeastHero(c,cx,cy+2,lkH.beast,pz,col,k,SP?SP.ph[1]:0,au);pxShock(c,tx,ty,(k-T.blast-.2)/.9,col)}catch(e){pxMe(c,cx,cy+2)}}
     else pxMe(c,cx,cy+2);
     if(st.frz){c.setTransform(1,0,0,1,0,0);c.globalCompositeOperation='difference';c.fillStyle='#ffffff';c.fillRect(0,0,PXW*3,PXH*3);c.globalCompositeOperation='source-over'}
     try{pxVig(c,PXW*3,PXH*3)}catch(e){}c.setTransform(3,0,0,3,0,0)}
@@ -13290,7 +13293,7 @@ function relFire(){const why=relCan();if(why)return toast(why);const w=relWorld(
  const crowd=(p[2]>=.25||sc>=7)?[...(sc>=9?REL_CROWD.god:sc>=6?REL_CROWD.hi:sc>=3?REL_CROWD.mid:REL_CROWD.lo)].sort(()=>Math.random()-.5).slice(0,sc>=6?3:2):[];
  const res=relResolve(p,a,k,sc);
  const ui=`<button onclick="relShare()">📤 ส่งเข้าแชท</button><button onclick="relCard()">🖼️ บันทึกภาพ</button><button onclick="window._pxCur&&window._pxCur._close()">✔️ ปิด</button>`;
- const spec0=relB()?null:(()=>{try{return relSpec(a)}catch(e){return null}})();window._rlLast={spec:spec0,fxk:a?(a.bm?a.fxk:pxKind(a.n)):'fist',col:el,beast:relB(),p,nm,sc,w,seed:(R0.p||0)*31+7,type:PX_TY[p[1]]||'field',t:Date.now()};
+ const spec0=(()=>{try{return relB()?relSpecB(a):relSpec(a)}catch(e){return null}})();window._rlLast={spec:spec0,fxk:a?(a.bm?a.fxk:pxKind(a.n)):'fist',col:el,beast:relB(),p,nm,sc,w,seed:(R0.p||0)*31+7,type:PX_TY[p[1]]||'field',t:Date.now()};
  pxPlay({spec:spec0,mode:'rel',beast:relB(),fxk:a?(a.bm?a.fxk:pxKind(a.n)):'fist',type:PX_TY[p[1]]||'field',w,seed:(R0.p||0)*31+7,sc,k,col:el,art:nm,chant:relB()?ch(['กรรรร… (เสียงคำรามต่ำในลำคอ)','ป่าทั้งป่าเงียบกริบ…','ดวงตาอสูรลุกเป็นไฟ']):ch(REL_CHANT),grade:G[0],gradeN:G[1],gradeC:G[2],crowd,ui}).then(()=>{try{res.forEach(f=>f())}catch(e){console.error(e)}render();try{checkDeath()}catch(e){}saveGame()})}
 // ผลลัพธ์ (คำนวณก่อนเล่นฉาก แสดงหลังจบฉาก)
 function relResolve(p,a,k,sc){const out=[],d=REL_D[sc].replace(/\{L\}/g,p[1]),nm=a?(a.bm?`<b>${esc(a.n)}</b>`:artHtml(a)):'หมัดเปล่า',ri=Math.max(0,realmIdx()),G=REL_GR[sc];
@@ -13640,7 +13643,7 @@ function pxAtkV(c,kind,v,a,col,sc,sp,cx,cy,tx,ty){const e=Math.min(1,a*1.25),my=
  default:{const hx2=cx+12,rr=Math.round(2+sc*.6);if(a<.4){const q=a/.4;pxDisc(c,hx2,my-2,Math.round(rr*q)+1,col[0]);pxDisc(c,hx2,my-2,Math.max(1,Math.round(rr*q)-1),col[1]);for(let i=0;i<2;i++){const t=r()*6.283;sp(hx2+Math.cos(t)*14,my-2+Math.sin(t)*10,-Math.cos(t)*1.2,-Math.sin(t)*.9,10,col[1],1)}}
   else{const q=Math.min(1,(a-.4)/.5),x=hx2+(tx-hx2)*q,y=my-2+(ty-6-my)*q;pxLine(c,x-12,y,x,y,col[0],3);pxDisc(c,Math.round(x),Math.round(y),rr+1,col[0]);pxDisc(c,Math.round(x),Math.round(y),Math.max(1,rr-1),'#ffffff')}}}}
 function pxAtkX(c,o,a,col,sc,sp,cx,cy,tx,ty){const s=o.spec;if(!s)return pxAtk(c,o.fxk||'beam',a,col,sc,sp,cx,cy,tx,ty);
- s.k.forEach((kd,i)=>{const lag=i*.22,ai=Math.max(0,(a-lag)/(1-lag));if(ai<=0)return;try{pxAtkV(c,kd,s.v+i,ai,i===0?col:(PXK_COL[kd]||col),i?Math.max(0,sc-1):sc,sp,cx,cy,tx,ty)}catch(e){}c.globalAlpha=1});
+ s.k.forEach((kd,i)=>{const lag=i*.22,ai=Math.max(0,(a-lag)/(1-lag));if(ai<=0)return;try{pxAtkV(c,kd,s.v+i,ai,i===0||s.bm?col:(PXK_COL[kd]||col),i?Math.max(0,sc-1):sc,sp,cx,cy,tx,ty)}catch(e){}c.globalAlpha=1});
  if(s.fz&&a<.75){const q=a/.75,n=Math.min(3,s.k.length);for(let i=0;i<n;i++){const ph=q*10+i*6.283/n,rad=(1-q)*14+2,x=cx+12+(tx-cx-12)*q+Math.cos(ph)*rad*.6,y=cy-10+Math.sin(ph)*rad,cl=(PXK_COL[s.k[i]]||col);pxDisc(c,Math.round(x),Math.round(y),2,cl[0]);c.fillStyle='#ffffff';c.fillRect(Math.round(x),Math.round(y),1,1);sp(x,y,0,0,7,cl[1],1)}}}
 // ---------- ร่างเงายักษ์ (ตามฝ่าย) + ออร่าประจำฝ่าย ----------
 const PH_BM={d:['....ooooooo....','...o.......o...','..o...###...o..','..o..#####..o..','..o..#e#e#..o..','...o.#####.o...','....o.###.o....','...#########...','..###########..','.####.###.####.','.###..###..###.','.##...###...##.','......###......','.....#####.....','....#######....','...#########...'],
@@ -13662,10 +13665,39 @@ function pxSpace(c,a,col,sc,w){c.fillStyle='#02020a';c.fillRect(0,0,PXW,PXH);for
  if(sc>=10){pxDisc(c,128,20,9,'#c8c8d8');pxDisc(c,125,18,2,'#9a9aae');pxDisc(c,131,23,1,'#9a9aae');const m=Math.round(18*Math.min(1,Math.max(0,a*2-.5)));pxLine(c,120,26,120+m,26-m,col[0],2);pxLine(c,120,26,120+m,26-m,'#ffffff',1)}
  if(a<.15){c.globalAlpha=1-a/.15;c.fillStyle='#ffffff';c.fillRect(0,0,PXW,PXH);c.globalAlpha=1}}
 
+// ===================== v15.9g สัตว์อสูรปลดปล่อยพลัง: ท่าหลากหลายตามท่า+ธาตุ · ตัวใหญ่ขึ้นมีแสงเรือง/เงา/ท่าทาง · ร่างบรรพอสูรยักษ์ · แชร์เข้าแชทได้ =====================
+const BEL_K={'ไฟ':'fire','น้ำแข็ง':'ice','อัสนี':'thunder','ลม':'wind','ดิน':'ice','น้ำ':'water','พิษ':'dark','เงา':'dark','แสง':'star','ไม้':'wind','โลหะ':'sword','โลหิต':'dark'};
+Object.assign(PXK_NV,{breath:3,roar:2,tail:2,claw:2,moon:2});
+function relSpecB(a){const m=S.beastMode,st=m.st|0,mv=(a&&a.fxk)||'claw',ek=BEL_K[m.el],k=[mv];if(ek&&ek!==mv)k.push(ek);let ec='#ffc840';try{ec=blMe().ec||ec}catch(e){}
+ if(!/^#[0-9a-fA-F]{6}$/.test(ec))ec='#ffc840';return{k,v:Math.floor(Math.random()*3),fz:0,bm:1,ph:['b',st>=5?3:st>=4?2:st>=3?1:0],c:[ec,heroLite(ec,.55)]}}
+{const _si=relSpecIn;relSpecIn=function(sp){if(sp&&typeof sp==='object'&&sp.bm&&Array.isArray(sp.k)){const ok=PXK_ALL.concat(PX_BK),k=sp.k.filter(x=>ok.includes(x)).slice(0,2);if(!k.length)return null;const ph=Array.isArray(sp.ph)?sp.ph:[];return{k,v:Math.max(0,Math.min(2,+sp.v|0)),fz:0,bm:1,ph:['b',Math.max(0,Math.min(3,+ph[1]|0))]}}return _si.apply(this,arguments)}}
+{const _av=pxAtkV;pxAtkV=function(c,kind,v,a,col,sc,sp,cx,cy,tx,ty){if(!PX_BK.includes(kind)||kind==='thunder')return _av.apply(this,arguments);const e=Math.min(1,a*1.25),my=cy-8,r=Math.random;v=v%(PXK_NV[kind]||1);if(!v)return pxAtk(c,kind,a,col,sc,sp,cx,cy,tx,ty);
+ switch(kind){
+ case'breath':if(v===1)return _av(c,'fire',1,a,col,sc,sp,cx,cy,tx,ty);{const ang=-.55+e*.75,L=150,w=Math.round(4+sc*.7),x0=cx+14,y0=my-4;for(let i=0;i<L;i+=2){const x=x0+Math.cos(ang)*i,y=y0+Math.sin(ang)*i,ww=Math.round(w*(.5+i/L));c.globalAlpha=.85;c.fillStyle=col[0];c.fillRect(Math.round(x),Math.round(y-ww/2),2,ww);c.fillStyle='#ffffff';c.fillRect(Math.round(x),Math.round(y-ww/4),2,Math.max(1,Math.round(ww/2)))}c.globalAlpha=1;
+   const gx=x0+(cy+4-y0)/Math.max(.05,Math.tan(Math.max(.05,ang)));if(ang>.05&&gx<PXW)for(let i=0;i<3;i++)sp(gx+(r()-.5)*6,cy+2,(r()-.5)*2,-1-r()*1.5,16,r()<.5?col[1]:'#c8b89a',1);break}
+ case'roar':{for(let i=0;i<5;i++){const rr=e*110-i*16;if(rr<=2)continue;c.globalAlpha=Math.max(.12,1-rr/110);pxRing(c,cx+8,my-2,rr,rr*.5,i%2?col[1]:col[0]);pxRing(c,cx+8,my-2,rr-1,(rr-1)*.5,col[0])}c.globalAlpha=1;if(r()<.7)sp(cx+8+r()*100,cy+3,(r()-.5)*.6,-.8-r(),14,'#c8b89a',1);break}
+ case'tail':{const xe=cx+12+(tx+26-cx-12)*e;let x=cx+12,y=cy+4;while(x<xe){const nx=Math.min(xe,x+3+r()*4),ny=cy+4+(r()-.5)*4;pxLine(c,x,y,nx,ny,'#120a08',3);pxLine(c,x,y-1,nx,ny-1,col[0],1);x=nx;y=ny}
+   const n=Math.floor((xe-cx-12)/9);for(let i=0;i<n;i++){const bx=cx+16+i*9,hh=Math.round((4+sc*.9+(i*5)%5)*Math.min(1,(xe-bx)/14));for(let yy=0;yy<hh;yy++){const ww=Math.max(1,Math.round(3*(1-yy/hh)));c.fillStyle=yy%3?'#6a5a4a':col[1];c.fillRect(bx-ww,cy+4-yy,ww*2,1)}}if(r()<.8)sp(xe,cy+2,(r()-.5)*1.6,-1-r()*1.4,14,r()<.5?'#8a6a4a':col[0],1);break}
+ case'claw':return _av(c,'sword',2,a,col,sc,sp,cx,cy,tx,ty);
+ case'moon':return _av(c,'star',1,a,col,sc,sp,cx,cy,tx,ty)}}}
+function beastPoseAt(k,a0,a1,a2,a3,mv){const sm=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v)},z={dx:0,dy:Math.sin(k*2.4)*.4,rot:0,fl:1,sq:1,ch:0,st:'idle'};
+ if(k<a0)return z;if(k<a1){const ch=sm((k-a0)/.5);return{dx:-2*ch+(Math.random()-.5)*ch*.8,dy:0,rot:.05*ch,fl:1,sq:1-.1*ch,ch,st:'charge'}}
+ const t=Math.min(1,(k-a1)/Math.max(.1,a2-a1)),back=k<a2+.35?0:sm((k-a2-.35)/.6),st=back>0?'after':'atk',ch=Math.max(0,1-(k-a1)/.5);let o;
+ if(mv==='claw')o={dx:26*sm(t*2.2),dy:-Math.sin(Math.min(1,t*2.2)*3.1416)*18,rot:.3*Math.sin(Math.min(1,t*2.2)*3.1416),fl:1,sq:1};
+ else if(mv==='tail'){const sp2=Math.min(1,t*1.6);o={dx:6*sm(t*2),dy:-Math.sin(sp2*3.1416)*4,rot:0,fl:Math.cos(sp2*6.283),sq:1}}
+ else if(mv==='roar')o={dx:2,dy:0,rot:-.22*sm(t*5)+Math.sin(k*60)*.02,fl:1,sq:1+.06*Math.sin(k*40)};
+ else o={dx:-3*sm(t*6)+1,dy:-2*sm(t*4),rot:-.3*sm(t*4),fl:1,sq:1};
+ return{dx:o.dx*(1-back),dy:o.dy*(1-back),rot:o.rot*(1-back),fl:back>0?1:(Math.abs(o.fl)<.15?.15*Math.sign(o.fl||1):o.fl),sq:1+(o.sq-1)*(1-back),ch,st}}
+function pxBeastHero(c,x,y,b,pz,col,T,tier,au){const s=b.f&&b.f.big?1.75:(+b.t>=4?1.5:1.3),fr=(typeof frame==='number'?frame:Math.floor(T*30));c.save();c.setTransform(3,0,0,3,0,0);c.globalAlpha=1;
+ c.globalAlpha=.3;c.fillStyle='#000000';for(let i=-2;i<=2;i++){const w=Math.round(15*s*Math.sqrt(1-(i*i)/5.5));c.fillRect(Math.round(x+pz.dx*.6)-w,y+i+1,w*2,1)}c.globalAlpha=1;
+ if(tier>=1&&au>0){const S2=Math.min(2.8,s*(1.35+tier*.2));c.save();c.globalAlpha=(.1+.045*tier)*au;c.translate(x+12-pz.dx*.2,y-5-Math.sin(T*2)*1.5);try{c.shadowColor=col[0];c.shadowBlur=14}catch(e){}try{drawBeast(c,b,Math.round(-16*S2),Math.round(-23*S2),S2,fr)}catch(e){}c.restore()}
+ c.translate(x+pz.dx,y+pz.dy);c.rotate(pz.rot||0);c.scale(pz.fl||1,pz.sq||1);const glow=Math.max(pz.ch||0,pz.st==='atk'?.6:0);if(glow>0){try{c.shadowColor=col[0];c.shadowBlur=4+12*glow}catch(e){}}
+ drawBeast(c,b,Math.round(-16*s),Math.round(-22*s),s,fr);c.restore()}
+
 // ===================== v15.9c แชร์การปลดปล่อยพลัง → ฉาก pixel เคลื่อนไหวในแชท (วนซ้ำเหมือน gif · แตะเพื่อเล่นใหม่) =====================
 const RLV={m:new Map(),run:0,last:0};
 function rlvPack(){const L=window._rlLast;if(!L)return null;let lk=null;try{lk=JSON.parse(JSON.stringify(meLook()));if(JSON.stringify(lk).length>1700)lk=null}catch(e){lk=null}
- const sp0=L.spec?{k:L.spec.k,v:L.spec.v,fz:L.spec.fz,ph:L.spec.ph}:null;return{ty:L.type,w:L.w,sd:L.seed,sc:L.sc,fx:L.fxk||'fist',c:(L.spec&&L.spec.c)||L.col||['#ffc840','#fff4c0'],b:L.beast?1:0,lk,sp:sp0}}
+ const sp0=L.spec?{k:L.spec.k,v:L.spec.v,fz:L.spec.fz,ph:L.spec.ph,bm:L.spec.bm?1:0}:null;return{ty:L.type,w:L.w,sd:L.seed,sc:L.sc,fx:L.fxk||'fist',c:(L.spec&&L.spec.c)||L.col||['#ffc840','#fff4c0'],b:L.beast?1:0,lk,sp:sp0}}
 relShare=function(){const L=window._rlLast;if(!L)return;if(!onlineOK)return toast('ต้องออนไลน์ก่อน');if(L.shared)return toast('ส่งเข้าแชทไปแล้ว');if(Date.now()-chatLast<1800)return toast('ส่งถี่เกินไป รอแป๊บนึงนะ');
  L.shared=1;const G=REL_GR[L.sc];let rl=null;try{rl=rlvPack()}catch(e){}chatSend('share',`💥 ${S.name} ปลดปล่อย《${L.nm}》ที่${L.p[0]} — เกรด ${G[0]} · ${G[1]}`,rl?{rl}:null);toast('ส่งเข้าแชทแล้ว')};
 function rlvWho(c,x,y,lk,z){if(lk&&typeof lk==='object'){const g0=g,p0=PS;try{g=c;PS=z;c.save();person(x,y,lk);c.restore();g=g0;PS=p0;return}catch(e){try{c.restore()}catch(e2){}g=g0;PS=p0}}
@@ -13693,6 +13725,9 @@ function rlvFrame(st,now){const cv=st.cv,c=cv.getContext('2d'),o=st.o,z=3,col=st
    if(sc>=6&&k<2.9){const dq=Math.min(1,(k-.6)/.8);if(dq>0){c.globalAlpha=.42*dq;c.fillStyle='#05030f';c.fillRect(0,0,PXW,PXH);c.globalAlpha=1}}
    if(SP){pxPhantom(c,cx,cy+2,SP.ph,au,col,k,pz.st==='atk'?Math.min(1,(k-2)/.3):0);pxSideAura(c,cx,cy+2,SP.ph[0],pz.st==='charge'?pz.ch:0,col,k)}
    pxHeroAura(c,cx,cy+2,pz.st==='charge'?pz.ch:pz.st==='atk'?pz.ch*.6:0,col,k);pxHero(c,cx,cy+2,o.lk,pz,SP&&SP.k.includes('sword')?(hk==='slashdown'||hk==='sweep'?hk:'sword'):hk,col,k);pxShock(c,tx,ty,(k-3.15)/.9,col)}catch(e){rlvWho(c,cx,cy+2,o.lk,z)}}
+ else if(o.lk&&o.lk.beast&&typeof o.lk.beast==='object'&&!st.bbad){st.spc=0;try{const SP=o.spec,pz=beastPoseAt(k,.6,2,2.9,3.7+SPC,(SP&&SP.k[0])||o.fx),au=pz.st==='charge'?pz.ch:pz.st==='atk'?Math.max(pz.ch,.75*Math.max(0,1-(k-2)/1.4)):0;
+   if(sc>=6&&k<2.9){const dq=Math.min(1,(k-.6)/.8);if(dq>0){c.globalAlpha=.42*dq;c.fillStyle='#05030f';c.fillRect(0,0,PXW,PXH);c.globalAlpha=1}}
+   pxHeroAura(c,cx,cy+2,pz.st==='charge'?pz.ch:pz.st==='atk'?pz.ch*.6:0,col,k);pxBeastHero(c,cx,cy+2,o.lk.beast,pz,col,k,SP?SP.ph[1]:0,au);pxShock(c,tx,ty,(k-3.15)/.9,col)}catch(e){st.bbad=1;try{c.restore()}catch(e2){}rlvWho(c,cx,cy+2,o.lk,z)}}
  else rlvWho(c,cx,cy+2,o.lk,z);c.setTransform(z,0,0,z,0,0);c.globalAlpha=1;
  for(let i=st.P.length-1;i>=0;i--){const p=st.P[i];p.x+=p.vx;p.y+=p.vy;p.vy+=p.s>1?-.004:.02;p.l--;if(p.l<=0||p.y>PXH+4){st.P.splice(i,1);continue}c.globalAlpha=Math.min(1,p.l/p.l0*1.5);c.fillStyle=p.c;c.fillRect(Math.round(p.x),Math.round(p.y),p.s,p.s)}c.globalAlpha=1;
  try{pxVig(c,cv.width,cv.height)}catch(e){}
