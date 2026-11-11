@@ -13842,6 +13842,25 @@ function arWhy(o,au,w){if(au){const A=AR_ST[arSt()],B=AR_ST[o.st]||AR_ST.atk,sb=
 // ===================== v15.9c ฉากหลุมศพค้างทั้งที่ยังมีชีวิต =====================
 {const _pyMn=passYear;passYear=function(){const r=_pyMn.apply(this,arguments);try{if(S&&(!(S.money>=0)))S.money=0}catch(e){}return r}}
 {const _stD=sceneType;sceneType=function(){try{if(S&&S.alive&&sceneEvt&&sceneEvt.type==='death')sceneEvt=null}catch(e){}return _stD.apply(this,arguments)}}
+
+// ===================== v15.9e ปรับขนาดหน้าจอ (มือถือจอเล็ก/ใหญ่) =====================
+const UISZ=[[.8,'เล็กมาก'],[.88,'เล็ก'],[1,'ปกติ'],[1.1,'ใหญ่'],[1.2,'ใหญ่มาก']];
+let uiZ=(()=>{const v=+LS.get('murim_uiz',0);return v>=.7&&v<=1.4?v:1})();
+function uiZApply(){try{const z=uiZ;document.documentElement.style.zoom=z===1?'':String(z);document.documentElement.style.setProperty('--uiz',z);document.documentElement.classList.toggle('uizon',z!==1)}catch(e){}}
+function setUiZ(v){uiZ=Math.max(.7,Math.min(1.4,+(+v).toFixed(2)));LS.set('murim_uiz',uiZ);uiZApply();try{window.dispatchEvent(new Event('resize'))}catch(e){}}
+function openUiZ(){const pct=Math.round(uiZ*100);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📱 ขนาดหน้าจอ</h3><p class="tag2">ปรับให้พอดีกับมือถือของคุณ — จอเล็กลองลดขนาด จอใหญ่/แท็บเล็ตลองเพิ่มขนาด · ตั้งค่าเก็บไว้ในเครื่องนี้</p>
+ <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:8px 0">${UISZ.map(([z,n])=>`<button class="opt ${Math.abs(uiZ-z)<.01?'on':''}" style="padding:8px 2px;text-align:center" onclick="setUiZ(${z});openUiZ()"><b style="font-size:${Math.round(11*z)}px">Aa</b><small>${n}<br>${Math.round(z*100)}%</small></button>`).join('')}</div>
+ <div style="display:flex;align-items:center;gap:8px;margin:8px 0"><span>🔎</span><input type="range" min="70" max="140" step="2" value="${pct}" style="flex:1" oninput="this.nextElementSibling.textContent=this.value+'%'" onchange="setUiZ(this.value/100);openUiZ()"><b style="min-width:44px;text-align:right">${pct}%</b></div>
+ <div class="brow"><button class="gbtn" onclick="setUiZ(uiZAuto());openUiZ()">✨ พอดีจออัตโนมัติ</button><button class="gbtn" onclick="setUiZ(1);openUiZ()">↺ คืนค่าปกติ</button></div>
+ <p class="tag2" style="margin-top:8px">ถ้าปรับแล้วปุ่มล้นจอ ให้กด "คืนค่าปกติ" ได้เสมอ</p>`,'uiz')}
+function uiZAuto(){const w=Math.min(screen.width||innerWidth,innerWidth*(uiZ||1));return w<350?.86:w<380?.92:w<430?1:w<600?1.08:1.15}
+(()=>{const st=document.createElement('style');st.textContent=`html.uizon{width:calc(100vw / var(--uiz));overflow-x:hidden}html.uizon body{width:100%;overflow-x:hidden}
+html.uizon .modal{max-height:calc(86vh / var(--uiz))}html.uizon .scene{max-height:calc(42vh / var(--uiz))}html.uizon .mask,html.uizon #mask{width:calc(100vw / var(--uiz));height:calc(100vh / var(--uiz))}
+html.uizon .pxs{width:calc(100vw / var(--uiz));height:calc(100vh / var(--uiz))}`;document.head.appendChild(st)})();
+uiZApply();
+{const _omZ=openMenu;openMenu=function(){const r=_omZ.apply(this,arguments);try{const m=$('modal'),g=m.querySelector('[data-gfx]');if(g&&!m.querySelector('[data-uiz]'))g.insertAdjacentHTML('afterend',`<button class="opt" data-uiz="1" onclick="openUiZ()">📱 ขนาดหน้าจอ<small>${Math.round(uiZ*100)}%</small></button>`)}catch(e){}return r}}
+{const _otZ=openTitleMenu;openTitleMenu=function(){const r=_otZ.apply(this,arguments);try{const m=$('modal'),g=m.querySelector('[data-gfx]');if(g&&!m.querySelector('[data-uiz]'))g.insertAdjacentHTML('afterend',`<button class="cb" data-uiz="1" onclick="openUiZ()"><i>📱</i>ขนาดจอ: ${Math.round(uiZ*100)}%</button>`)}catch(e){}return r}}
 </script>
 </body>
 </html>
