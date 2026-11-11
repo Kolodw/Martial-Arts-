@@ -940,6 +940,9 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       await pipe([['SET', 'logfull:' + id, ls, 'EX', 300], ['DEL', 'logreq:' + id]]);
       return res.json({ ok: 1 });
     }
+    const acFix = async () => { try { if (!(await cmd('SET', 'acfix15', 1, 'NX'))) return; let cur = '0', n = 0, del = 0; do { const r = await cmd('SCAN', cur, 'MATCH', 'acf:*', 'COUNT', 500); cur = String(r[0]); const ks = r[1] || []; if (ks.length) { const vs = await pipe(ks.map(k => ['GET', k])); const bad = ks.filter((k, i) => String(vs[i] || '') === 'save-edit'); if (bad.length) { await cmd('DEL', ...bad); del += bad.length } } n++ } while (cur !== '0' && n < 400);
+      const L = (await cmd('LRANGE', 'acsus', 0, 199)) || []; const keep = L.filter(x => { try { return JSON.parse(x).why !== 'save-edit' } catch { return true } }); await cmd('DEL', 'acsus'); if (keep.length) await cmd('RPUSH', 'acsus', ...keep); await cmd('SET', 'acfix15log', JSON.stringify({ del, kept: keep.length, t: now })) } catch {} };
+    if (a === 'acsus' || a === 'live') await acFix();
     if (a === 'acsus') {
       if (req.method !== 'POST' || !okId(id)) return res.json({ ok: 0 });
       const why = String(b.why || '').replace(/[^a-z0-9-]/g, '').slice(0, 24); if (!why) return res.json({ ok: 0 });

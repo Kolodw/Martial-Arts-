@@ -5493,7 +5493,7 @@ function bakTick(d){try{if(!S||!S.slot)return;const c=Object.assign({},d,{feed:'
 delSlot=function(n){const d=readSave(n);if(d)arcPut(d,'ลบเอง');try{localStorage.removeItem(slotKey(n));localStorage.removeItem(bakKey(n))}catch(e){}closeM();toast(`ย้ายช่อง ${n} ไปคลังสำรองแล้ว — กู้คืนได้ที่ 🗂️`);renderLegends()};
 // โหลดพัง → ไม่ทิ้งเกมไว้ครึ่งๆ กลางๆ ลองสำเนาสำรองแทน
 {const _lg=loadGame;loadGame=function(n=1){try{return _lg.call(this,n)}catch(e){console.error('load failed',e);const b=LS.get(bakKey(n),null);
- if(b&&b.S&&b._tried!==1){try{b._tried=1;LS.set(slotKey(n),b);toast('เซฟหลักเสียหาย — ใช้สำเนาสำรองแทน');return _lg.call(this,n)}catch(e2){console.error(e2)}}
+ if(b&&b.S&&b._tried!==1){try{b._tried=1;try{const m0=LS.get(slotKey(n),null);if(m0&&m0.S&&typeof arcPut==='function')arcPut(m0,'โหลดไม่ขึ้น')}catch(x){}window._acBak=1;LS.set(slotKey(n),b);toast('เซฟหลักเสียหาย — ใช้สำเนาสำรองแทน');return _lg.call(this,n)}catch(e2){console.error(e2)}}
  S=null;show('title');renderLegends();toast('โหลดช่องนี้ไม่ได้ — ข้อมูลยังอยู่ ลองกู้จาก 🗂️ คลังสำรอง หรือ ☁️ เซิร์ฟเวอร์');}}}
 // กู้จากเซิร์ฟเวอร์ (เซฟอัตโนมัติบนคลาวด์ของเครื่องนี้)
 async function openCloudRestore(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☁️ กู้เซฟจากเซิร์ฟเวอร์</h3><p class="tag2">กำลังค้นหาเซฟของเครื่องนี้...</p>`,'cloudr');
@@ -6926,11 +6926,11 @@ function resumeClear(){try{LS.del('murim_resume')}catch(e){}}
 {const _ttR=toTitle;toTitle=function(){resumeClear();return _ttR.apply(this,arguments)}}
 {const _lgR=loadGame;loadGame=function(){const r=_lgR.apply(this,arguments);resumeMark();return r}}
 ['pagehide','beforeunload'].forEach(ev=>window.addEventListener(ev,()=>{try{if(S&&S.alive&&$('game').classList.contains('on'))saveGame()}catch(e){}}));
-(function(){try{const r=LS.get('murim_resume',null);if(!r||!r.slot)return;if(Date.now()-(r.t||0)>7*86400e3){resumeClear();return}
+setTimeout(function(){try{const r=LS.get('murim_resume',null);if(!r||!r.slot)return;if(Date.now()-(r.t||0)>7*86400e3){resumeClear();return}
  const d=readSave(r.slot);if(!d||!d.S||d.S.alive===false){resumeClear();return}
  loadGame(r.slot);if(!S||!S.alive)return;
  if([0,1,2,4,8,16].includes(r.sp))speed=r.sp;auto=!!r.au;if(r.pa)paused=true;render();
- toast('▶ กลับมาเล่นต่อจากที่ค้างไว้')}catch(e){console.warn('resume failed',e)}})();
+ toast('▶ กลับมาเล่นต่อจากที่ค้างไว้')}catch(e){console.warn('resume failed',e)}},0);
 
 // ---------- แจ้งผู้เล่นเมื่อระบบออนไลน์หยุดชั่วคราว ----------
 function quotaNote(){if(quotaNote._t&&Date.now()-quotaNote._t<600000)return;quotaNote._t=Date.now();onlineOK=false;
@@ -10778,8 +10778,8 @@ setInterval(()=>{try{if(S&&S.alive&&!S.custom)acTrap(S)}catch(e){}},400);
 // ---- ลายเซ็นเซฟ: แก้ไฟล์เซฟในเครื่องแล้วโหลด = ติดธง ----
 function acH(t){let h=2166136261;t='m1n'+t+'#q7';for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(36)}
 const acSF=o=>[o.name,Math.round(o.age||0),Math.round(o.power||0),Math.round(o.fame||0),Math.round(o.money||0),Math.round((o.qi||0)*10),Math.round(o.int||0),Math.round(o.cha||0)].join('|');
-{const _sg=saveGame;saveGame=function(){const r=_sg.apply(this,arguments);try{if(S&&S.alive&&!S.custom){const g=LS.get('murim_ui9',{})||{};g[S.slot||1]={h:acH(acSF(S)),a:Math.round(S.age||0)};LS.set('murim_ui9',g)}}catch(e){}return r}}
-{const _lg=loadGame;loadGame=function(n){const r=_lg.apply(this,arguments);try{const g=(LS.get('murim_ui9',{})||{})[n||1];if(S&&g&&g.a===Math.round(S.age||0)&&g.h!==acH(acSF(S))){acFlag('save-edit');acSus('save-edit')}}catch(e){}return r}}
+{const _sg=saveGame;saveGame=function(){const r=_sg.apply(this,arguments);try{if(S&&S.alive&&!S.custom){const g=LS.get('murim_ui9',{})||{};let t0=0;try{const raw=localStorage.getItem(slotKey(S.slot||1))||'';const mm=raw.slice(0,40).match(/"t":(\d+)/);t0=mm?+mm[1]:0}catch(x){}g[S.slot||1]={h:acH(acSF(S)),a:Math.round(S.age||0),t:t0};LS.set('murim_ui9',g)}}catch(e){}return r}}
+{const _lg=loadGame;loadGame=function(n){let t1=0;try{const raw=localStorage.getItem(slotKey(n||1))||'';const mm=raw.slice(0,40).match(/"t":(\d+)/);t1=mm?+mm[1]:0}catch(x){}window._acBak=0;const r=_lg.apply(this,arguments);try{if(S&&S._tp==='save-edit'&&!S._tpFx){S._tp=null;S._tpFx=1}const g=(LS.get('murim_ui9',{})||{})[n||1];if(S&&g&&g.t&&t1&&g.t===t1&&!window._acBak&&g.a===Math.round(S.age||0)&&g.h!==acH(acSF(S))){S._tpFx=1;acFlag('save-edit');acSus('save-edit')}}catch(e){}window._acBak=0;return r}}
 
 // ===================== v15.2 บาลานซ์พลัง/ชื่อเสียง =====================
 // ชื่อเสียงจากการต่อสู้คิดตามขั้นและโลก ไม่ผูกกับพลังศัตรูอีกต่อไป
