@@ -980,7 +980,7 @@ function render(){
  $('gRealm').innerHTML=`⚔ <b>${REALMS[ri].n}</b> · พลังรวม <span class="px">${fmt(total())}</span>${nx?` / ${fmt(nx.p)}`:''}`;
  $('gHp').style.width=Math.max(0,S.hp/S.maxHp*100)+'%';
  const st=[['❤️ ชีวิต',`${Math.max(0,Math.round(S.hp))}`],['🌀 ลมปราณ',S.qi.toFixed(1)],['📜 ปัญญา',fmt(S.int)],['🌸 เสน่ห์',fmt(S.cha)],
-  ['🏮 ชื่อเสียง',fmt(S.fame)],['☯ กรรม',(S.karma>0?'+':'')+Math.round(S.karma)],['💰 ตำลึง',fmt(S.money)],[moodOf(S.happy)[0]+' สุข',Math.round(S.happy)]];
+  ['🏮 ชื่อเสียง',fameTierH()],['☯ กรรม',(S.karma>0?'+':'')+Math.round(S.karma)],['💰 ตำลึง',fmt(S.money)],[moodOf(S.happy)[0]+' สุข',Math.round(S.happy)]];
  $('stats').innerHTML=st.map(s=>`<div class="st">${s[0]}<b class="px">${s[1]}</b></div>`).join('');
  const A=S.arc,ar=[];
  if(S.sys)ar.push(`🟦 ${sysName()} Lv.${S.sys.lv} · เควส ${S.sys.quests.length} · SP ${S.sys.sp}`);
@@ -2352,7 +2352,7 @@ const SHOP=[
 const MAINQ={
  martial:[['ทะลวงสู่ขั้นหนึ่ง',()=>realmIdx()>=3],['ชนะการต่อสู้รวม 30 ครั้ง',()=>S.kills>=30],['บรรลุฮวากยอง',()=>realmIdx()>=5]],
  checkin:[['เช็คอินครบ 10 ปี',()=>S.age-S.sys.since>=10],['เช็คอินครบ 30 ปี',()=>S.age-S.sys.since>=30],['เช็คอินครบ 60 ปี',()=>S.age-S.sys.since>=60]],
- saint:[['สะสมกรรมดีถึง +50',()=>S.karma>=50],['ชื่อเสียงถึง 300',()=>S.fame>=300],['สะสมกรรมดีถึง +150',()=>S.karma>=150]],
+ saint:[['สะสมกรรมดีถึง +50',()=>S.karma>=50],['ชื่อเสียงถึง 1,500',()=>S.fame>=1500],['สะสมกรรมดีถึง +150',()=>S.karma>=150]],
  demon:[['กรรมดิ่งถึง −50',()=>S.karma<=-50],['ชนะการต่อสู้รวม 40 ครั้ง',()=>S.kills>=40],['บรรลุฮวากยอง',()=>realmIdx()>=5]],
  tycoon:[['มีเงิน 20,000 ตำลึง',()=>S.money>=20000],['ได้อยู่จวนใหญ่',()=>houseT()>=3],['มีเงิน 200,000 ตำลึง',()=>S.money>=200000]],
  transcend:[['ก้าวข้ามขีดจำกัดขั้นที่ 1',()=>S.sys.tc>=1],['ก้าวข้ามขีดจำกัดขั้นที่ 3',()=>S.sys.tc>=3],['ก้าวข้ามขีดจำกัดขั้นที่ 5',()=>S.sys.tc>=5]],
@@ -4109,7 +4109,7 @@ function specDrawAva(o){const cv=$('specCv');if(!cv||!cv.getContext('2d'))return
 async function openSpectate(k,tab){specTarget=k;clearTimeout(specT);tab=tab||openSpectate._tab||'sum';openSpectate._tab=tab;let j;try{j=await api('liveget&t='+encodeURIComponent(k))}catch(e){if(specSoft(k,e&&e.message))return;if($('modal').dataset.k==='spec'||!modalOpen)modal(`<button class="xbtn" onclick="specClose()">✕</button><h3>👁 ดูการเล่น</h3><p class="tag2">ผู้เล่นคนนี้ปิดการให้ดู หรือออกจากเกมไปแล้ว</p><button class="pbtn" style="width:100%;margin-bottom:6px" onclick="openSpectate('${k}')">🔄 ลองอีกครั้ง</button><button class="gbtn" style="width:100%" onclick="openLiveList()">← กลับรายชื่อ</button>`,'spec');return}
  if(specTarget!==k)return;if(!j||!j.s||!j.s.st){if(specSoft(k,'off'))return;if($('modal').dataset.k==='spec'||!modalOpen)modal(`<button class="xbtn" onclick="specClose()">✕</button><h3>👁 ดูการเล่น</h3><p class="tag2">ผู้เล่นคนนี้ปิดการให้ดู หรือออกจากเกมไปแล้ว</p><button class="pbtn" style="width:100%;margin-bottom:6px" onclick="openSpectate('${k}')">🔄 ลองอีกครั้ง</button><button class="gbtn" style="width:100%" onclick="openLiveList()">← กลับรายชื่อ</button>`,'spec');return}const sig=JSON.stringify(j.s)+'|'+j.w+'|'+tab;specOK(k);if(openSpectate._sig===sig&&$('modal').dataset.k==='spec'&&modalOpen){specStamp(j.s);specT=setTimeout(()=>{if($('modal').dataset.k==='spec'&&modalOpen&&specTarget===k)openSpectate(k)},5000);return}openSpectate._sig=sig;const _keep=openSpectate._at===k+'|'+tab,_msc=$('modal').scrollTop,_ofd=document.querySelector('.specfeed'),_fdb=_ofd?_ofd.scrollHeight-_ofd.scrollTop-_ofd.clientHeight<40:true,_fdt=_ofd?_ofd.scrollTop:0;openSpectate._at=k+'|'+tab;const s=j.s,st=s.st;const T=[['sum','ภาพรวม'],['feed','บันทึก'],['bag','ของ'],['arts','วิชา'],['q','เควส'],['ppl','ผู้คน']];
  const list=(a,emp)=>a&&a.length?'<ul class="speclist">'+a.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':`<p class="tag2">${emp}</p>`;
- let body='';if(tab==='sum')body=`<div class="specgrid"><div>⚔️ พลังรวม <b>${fmt(st.pow)}</b></div><div>🌀 ลมปราณ <b>${st.qi}</b></div><div>📖 ปัญญา <b>${st.int}</b></div><div>🌸 เสน่ห์ <b>${st.cha}</b></div><div>💰 เงิน <b>${fmt(st.money)}</b></div><div>⭐ ชื่อเสียง <b>${fmt(st.fame)}</b></div><div>☯️ กรรม <b>${st.karma}</b></div><div>😊 ความสุข <b>${st.joy}</b></div></div><p class="tag2">${esc(s.fam)} · ${esc(s.tal)}${s.sys?' · 🟦 '+esc(s.sys):''}</p><h4 style="margin:6px 0 2px">สวมใส่</h4>${list(s.eq,'ไม่มี')}`;
+ let body='';if(tab==='sum')body=`<div class="specgrid"><div>⚔️ พลังรวม <b>${fmt(st.pow)}</b></div><div>🌀 ลมปราณ <b>${st.qi}</b></div><div>📖 ปัญญา <b>${st.int}</b></div><div>🌸 เสน่ห์ <b>${st.cha}</b></div><div>💰 เงิน <b>${fmt(st.money)}</b></div><div>⭐ ชื่อเสียง <b>${fmt(st.fame)}</b> <small class="tag2">${(typeof fameTier==='function'?fameTier(+st.fame||0):[0,'','']).slice(1).join(' ')}</small></div><div>☯️ กรรม <b>${st.karma}</b></div><div>😊 ความสุข <b>${st.joy}</b></div></div><p class="tag2">${esc(s.fam)} · ${esc(s.tal)}${s.sys?' · 🟦 '+esc(s.sys):''}</p><h4 style="margin:6px 0 2px">สวมใส่</h4>${list(s.eq,'ไม่มี')}`;
  else if(tab==='feed')body='<div class="specfeed">'+(s.feed||[]).map(x=>x[0]==='§'?`<div class="sfh">${esc(x.slice(1))}</div>`:`<div>${esc(x)}</div>`).join('')+'</div>';
  else if(tab==='bag')body=list(s.bag,'กระเป๋าว่าง');else if(tab==='arts')body=list(s.arts,'ยังไม่มีวิชา');else if(tab==='q')body=list(s.q,'ไม่มีเควส');else body=list(s.ppl,'ไม่มี');
  modal(`<button class="xbtn" onclick="specClose()">✕</button><div class="spechead"><canvas id="specCv" width="140" height="154"></canvas><div><h3 style="margin:0">${esc(s.n)}${s.tt?tchipH(s.tt,s.tr):''}</h3><div class="tag2">${s.x?'☁️ โลกเทพเซียน':'⚔️ ยุทธภพ'} · อายุ ${s.age} ปี · ${esc(s.r)}</div><div class="tag2">${esc(s.f)}</div><div class="tag2">📍 ${esc(s.cap||'')}</div>
@@ -4140,7 +4140,7 @@ function lifePrivBox(){const end=$('end');if(!end||!S||!S._lid)return;let b=$('l
 async function lifePub(v){LS.set('murim_lifepub',v);lifePrivBox();if(!S||!S._lid)return;try{await api('lifepub',{lid:S._lid,pub:v});toast(v?'เปิดให้คนอื่นดูแล้ว':'ตั้งเป็นส่วนตัวแล้ว')}catch(e){toast('เปลี่ยนไม่สำเร็จ')}}
 async function openLifeView(lid,tab){tab=tab||'sum';let j;try{j=await api('lifeview&l='+encodeURIComponent(lid))}catch(e){modal(`<button class="xbtn" onclick="openOnline('board')">✕</button><h3>${e.message==='private'?'🔒 ชีวิตนี้เป็นส่วนตัว':'ไม่พบข้อมูล'}</h3><p class="tag2">${e.message==='private'?'เจ้าของตั้งไม่ให้คนอื่นดูรายละเอียด':'ข้อมูลอาจหมดอายุแล้ว (เก็บไว้ 40 วัน)'}</p><button class="gbtn" style="width:100%" onclick="openOnline('board')">← ทำเนียบ</button>`,'lifeview');return}
  const d=j.d,st=d.st||{};const T=[['sum','สรุป'],['tl','ไทม์ไลน์'],['item','ของและวิชา'],['ach','ความสำเร็จ']];const list=(a,emp)=>a&&a.length?'<ul class="speclist">'+a.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':`<p class="tag2">${emp}</p>`;
- let body='';if(tab==='sum')body=`<div class="specgrid"><div>⚔️ พลังรวม <b>${fmt(st.pow||0)}</b></div><div>📖 ปัญญา <b>${st.int}</b></div><div>🌸 เสน่ห์ <b>${st.cha}</b></div><div>💰 เงิน <b>${fmt(st.money||0)}</b></div><div>⭐ ชื่อเสียง <b>${fmt(st.fame||0)}</b></div><div>☯️ กรรม <b>${st.karma}</b></div><div>⚔️ ชนะศึก <b>${st.kills}</b></div><div>😊 สุขเฉลี่ย <b>${st.joy}</b></div></div>
+ let body='';if(tab==='sum')body=`<div class="specgrid"><div>⚔️ พลังรวม <b>${fmt(st.pow||0)}</b></div><div>📖 ปัญญา <b>${st.int}</b></div><div>🌸 เสน่ห์ <b>${st.cha}</b></div><div>💰 เงิน <b>${fmt(st.money||0)}</b></div><div>⭐ ชื่อเสียง <b>${fmt(st.fame||0)}</b> <small class="tag2">${(typeof fameTier==='function'?fameTier(+st.fame||0):[0,'','']).slice(1).join(' ')}</small></div><div>☯️ กรรม <b>${st.karma}</b></div><div>⚔️ ชนะศึก <b>${st.kills}</b></div><div>😊 สุขเฉลี่ย <b>${st.joy}</b></div></div>
   <ul class="speclist"><li>${esc(d.fam)} · ${esc(d.tal)}${d.gen>1?' · รุ่นที่ '+d.gen:''}</li><li>${esc(d.f)}</li>${d.traits&&d.traits.length?`<li>พรสวรรค์: ${esc(d.traits.join(' · '))}</li>`:''}${d.ow?`<li>🌌 ${esc(d.ow)}</li>`:''}${d.spouse?`<li>💍 คู่ครอง ${esc(d.spouse)}</li>`:''}${d.kids&&d.kids.length?`<li>👶 ลูก ${d.kids.length} คน: ${esc(d.kids.join(', '))}</li>`:''}${d.goal?`<li>🎯 ปณิธาน: ${esc(d.goal)}</li>`:''}${d.sys?`<li>🟦 ${esc(d.sys)}</li>`:''}${d.sect?`<li>🏯 ${esc(d.sect)}</li>`:''}</ul>${d.bye?`<p style="font-style:italic;text-align:center">"${esc(d.bye)}"</p>`:''}`;
  else if(tab==='tl')body='<div class="specfeed">'+(d.key||[]).map(k=>{const m=/^(\d+) ปี — ([\s\S]*)$/.exec(k);return m?`<div><b class="px">${m[1]}</b> ${esc(m[2])}</div>`:`<div>${esc(k)}</div>`}).join('')+`<div class="sfh">🪦 ${esc(d.cause)} · อายุ ${d.age}</div></div>`;
  else if(tab==='item')body='<h4 style="margin:4px 0">สวมใส่</h4>'+list(d.eq,'ไม่มี')+'<h4 style="margin:8px 0 4px">วิชา</h4>'+list(d.arts,'ไม่มีวิชา');else body=list(d.ach,'ไม่ได้ปลดล็อกอะไรในชีวิตนี้');
@@ -4631,7 +4631,7 @@ const GOALS=[
  {id:'demon',n:'ราชามาร',d:'อยู่ฝ่ายมาร และมีกรรมถึง −80',c:()=>S.faction&&S.faction.t==='มาร'&&S.karma<=-80,p:()=>`${S.faction&&S.faction.t==='มาร'?'อยู่ฝ่ายมาร':'ยังไม่อยู่ฝ่ายมาร'} · กรรม ${Math.round(S.karma)} / −80`},
  {id:'long',n:'ร้อยปีไม่ตาย',d:'มีชีวิตอยู่ถึง 100 ปี',c:()=>S.age>=100,p:()=>`อายุ ${S.age} / 100`},
  {id:'scholar',n:'ปราชญ์แห่งยุค',d:'ปัญญาถึง 300',c:()=>S.int>=300,p:()=>`ปัญญา ${fmt(S.int)} / 300`},
- {id:'fame',n:'ชื่อก้องแผ่นดิน',d:'ชื่อเสียงถึง 1,500',c:()=>S.fame>=1500,p:()=>`ชื่อเสียง ${fmt(S.fame)} / 1,500`},
+ {id:'fame',n:'ชื่อก้องแผ่นดิน',d:'ชื่อเสียงถึง 7,500',c:()=>S.fame>=7500,p:()=>`ชื่อเสียง ${fmt(S.fame)} / 7,500`},
  {id:'free',n:'กระบี่ไร้สังกัด',d:'ถึงขั้นหนึ่งโดยไม่เคยเข้าสำนักใดเลย',c:()=>!S.everFac&&realmIdx()>=3,p:()=>S.everFac?'❌ เคยเข้าสำนักไปแล้ว':REALMS[realmIdx()].n+' / ขั้นหนึ่ง'},
  {id:'founder',n:'ปรมาจารย์ผู้ก่อตั้ง',d:'ตั้งสำนักของตัวเองจนมีศิษย์ 100 คน',c:()=>S.ownSect&&S.ownSect.dis>=100,p:()=>S.ownSect?`ศิษย์ ${S.ownSect.dis} / 100`:'ยังไม่ได้ตั้งสำนัก (เลือกได้ที่ทางแยกชีวิต)'},
  {id:'slow',n:'ใช้ชีวิตสโลไลฟ์',d:'อยู่ถึงอายุ 70 ปีอย่างสงบ ความสุขเฉลี่ยตลอดชีวิต 65 ขึ้นไป และชนะการต่อสู้ไม่เกิน 10 ครั้ง',c:()=>S.age>=70&&slowJoy()>=65&&(S.kills||0)<=10,p:()=>`อายุ ${S.age}/70 · ความสุขเฉลี่ย ${slowJoy()}/65 · ต่อสู้ ${S.kills||0}/10${(S.kills||0)>10?' ❌':''}`},
@@ -4745,7 +4745,7 @@ const ACH=[
   {id:'t_three',n:'ฟ้าลำเอียง',d:'เกิดมาพร้อมพรสวรรค์พิเศษ 3 อย่าง',r:3,c:()=>(S.traits||[]).length>=3},
   {id:'t_dragon',n:'สายเลือดมังกร',d:'เกิดมาพร้อมสายเลือดมังกร',r:3,c:()=>(S.traits||[]).includes('dragon')},
   {id:'t_cripsys',n:'ขยะที่ระบบเลือก',d:'ชีพจรตายด้าน แต่ได้ระบบมาซ่อมแซม',r:3,c:()=>!!S.cured},
-  {id:'t_crip3',n:'ไร้วรยุทธก็ยิ่งใหญ่ได้',d:'ชีพจรตายด้านไม่ได้ระบบ แต่มีชื่อเสียงถึง 500',r:3,c:()=>tr('crippled')&&!S.cured&&S.fame>=500},
+  {id:'t_crip3',n:'ไร้วรยุทธก็ยิ่งใหญ่ได้',d:'ชีพจรตายด้านไม่ได้ระบบ แต่มีชื่อเสียงถึง 2,500',r:3,c:()=>tr('crippled')&&!S.cured&&S.fame>=2500},
   {id:'b_million',n:'หนึ่งในสิบล้าน',d:'เกิดด้วยโอกาส 1 ในสิบล้านหรือยากกว่า',r:3,c:()=>S.odds<=1e-7}]],
  ['ความตาย',[
   {id:'d_infant',n:'ดาวที่ดับเร็วเกินไป',d:'ตายตั้งแต่ยังเป็นทารก',r:1,end:1,c:()=>S.age<2},
@@ -4780,11 +4780,11 @@ const ACH=[
   {id:'e_perf',n:'สอบเข้าคะแนนเต็ม',d:'ผ่านการสอบเข้าสำนักใหญ่ครบทั้ง 3 ด่าน',r:2,c:()=>!!S.flags.examPerfect},
   {id:'e_mate',n:'สอบรุ่นเดียวกัน',d:'สอบเข้าสำนักพร้อมคนที่เกิดในวินาทีเดียวกัน',r:1,c:()=>!!S.flags.examMate},
   {id:'e_trans',n:'จากเล็กสู่ใหญ่',d:'ย้ายจากสำนักเล็กไปสำนักใหญ่',r:2,c:()=>!!S.flags.transfer},
-  {id:'e_surp',n:'ศิษย์เหนือครู',d:'มีพลังแซงหน้าอาจารย์ในสำนัก และมีชื่อเสียงถึง 1,500',r:2,c:()=>!!S.flags.surpass&&S.fame>=1500},
+  {id:'e_surp',n:'ศิษย์เหนือครู',d:'มีพลังแซงหน้าอาจารย์ในสำนัก และมีชื่อเสียงถึง 7,500',r:2,c:()=>!!S.flags.surpass&&S.fame>=7500},
   {id:'f_peach',n:'บุปผาแห่งหุบเขา',d:'เป็นศิษย์หุบเขาดอกท้อ',r:1,c:()=>S.faction&&S.faction.n0==='หุบเขาดอกท้อ'},
   {id:'f_war',n:'วีรชนแห่งสงคราม',d:'ชนะศึกระหว่างพรรค',r:1,c:()=>!!S.flags.warWin},
-  {id:'w_seal',n:'ผู้ผนึกมาร',d:'ร่วมพันธมิตรผนึกประมุขมารได้สำเร็จ ถึงขั้นบุปผาหลอมรวม และมีชื่อเสียงถึง 1,500',r:3,c:()=>!!S.flags.demonSeal&&realmIdx()>=5&&S.fame>=1500},
-  {id:'w_champ',n:'อันดับหนึ่งแห่งยุค',d:'ชนะงานชุมนุมยุทธ์แห่งยุค และมีชื่อเสียงถึง 2,000',r:3,c:()=>!!S.flags.champion&&S.fame>=2000}]],
+  {id:'w_seal',n:'ผู้ผนึกมาร',d:'ร่วมพันธมิตรผนึกประมุขมารได้สำเร็จ ถึงขั้นบุปผาหลอมรวม และมีชื่อเสียงถึง 7,500',r:3,c:()=>!!S.flags.demonSeal&&realmIdx()>=5&&S.fame>=7500},
+  {id:'w_champ',n:'อันดับหนึ่งแห่งยุค',d:'ชนะงานชุมนุมยุทธ์แห่งยุค และมีชื่อเสียงถึง 10,000',r:3,c:()=>!!S.flags.champion&&S.fame>=10000}]],
  ['สายเรื่อง',[
   {id:'a_master',n:'มรดกของอาจารย์',d:'ได้รับลมปราณทั้งชีวิตจากอาจารย์',r:2,c:()=>!!S.flags.masterQi},
   {id:'a_revenge',n:'แค้นนี้ต้องชำระ',d:'ล้างแค้นได้สำเร็จ',r:2,c:()=>!!S.flags.revenge},
@@ -4813,7 +4813,7 @@ const ACH=[
   {id:'s_lv10',n:'โฮสต์ระดับสูง',d:'ระบบเลเวล 10',r:2,c:()=>S.sys&&S.sys.lv>=10},
   {id:'s_lv25',n:'เหนือระบบ',d:'ระบบเลเวล 25',r:4,c:()=>S.sys&&S.sys.lv>=25},
   {id:'n_kill',n:'จบความแค้น',d:'ปิดฉากศัตรูคู่ชะตาในศึกตัดสิน',r:3,c:()=>!!S.flags.nemKill},
-  {id:'n_peace',n:'ศัตรูกลายเป็นมิตร',d:'คืนดีกับศัตรูคู่แค้น และมีชื่อเสียงถึง 3,000',r:3,c:()=>!!(S.flags.nemPeace||S.flags.nemSpare)&&S.fame>=3000},
+  {id:'n_peace',n:'ศัตรูกลายเป็นมิตร',d:'คืนดีกับศัตรูคู่แค้น และมีชื่อเสียงถึง 15,000',r:3,c:()=>!!(S.flags.nemPeace||S.flags.nemSpare)&&S.fame>=15000},
   {id:'p_as',n:'ผ่านสายตาคนอื่น',d:'เล่นต่อเป็นคนอื่นในโลกเดิม',r:2,c:()=>!!S.flags.playAs},
   {id:'c_hell',n:'รอดจากนรก',d:'โหมดนรก: มีชีวิตถึง 60 ปี',r:4,c:()=>!!S.flags.chHell},
   {id:'c_short',n:'สั้นแต่เข้มข้น',d:'โหมดชีวิตสั้น: ถึงระดับขั้นสองภายใน 30 ปี',r:3,c:()=>!!S.flags.chShort},
@@ -4839,7 +4839,7 @@ const ACH=[
   {id:'v_sr5',n:'ใจกลางมิติลับ',d:'ลงไปถึงชั้นที่ 5 ของมิติลับ',r:4,c:()=>!!S.flags.sr5},
   {id:'v_reg',n:'ท่องสี่ทิศ',d:'เดินทางไปครบทั้ง 4 ดินแดนต่างถิ่น',r:4,c:()=>!!S.flags.allRegions},
   {id:'v_dyn',n:'ผู้ก่อตั้งราชวงศ์',d:'ร่วมโค่นราชวงศ์และได้เป็นอ๋อง',r:4,c:()=>!!S.flags.newDynasty},
-  {id:'v_war',n:'วีรบุรุษสงคราม',d:'ชนะศึกตัดสินชะตาแผ่นดิน ถึงขั้นบุปผาหลอมรวม และมีชื่อเสียงถึง 1,500',r:3,c:()=>!!S.flags.warHero&&realmIdx()>=5&&S.fame>=1500},
+  {id:'v_war',n:'วีรบุรุษสงคราม',d:'ชนะศึกตัดสินชะตาแผ่นดิน ถึงขั้นบุปผาหลอมรวม และมีชื่อเสียงถึง 7,500',r:3,c:()=>!!S.flags.warHero&&realmIdx()>=5&&S.fame>=7500},
   {id:'v_biz',n:'เจ้าสัวแห่งแคว้น',d:'ขยายกิจการถึงระดับสูงสุด',r:3,c:()=>!!S.flags.bizMax},
   {id:'v_peerw',n:'ชะตาข้ามรุ่น',d:'ลูกแต่งงานกับลูกของคนที่เกิดวินาทีเดียวกับคุณ',r:3,c:()=>!!S.flags.peerWed},
   {id:'v_rlove',n:'คู่ปรับคู่รัก',d:'แต่งงานกับคู่ปรับตลอดกาล',r:3,c:()=>!!S.flags.rivalLove},
@@ -5944,7 +5944,7 @@ const TTL_MOD={power:['ทลายภูผา','พันชั่ง','กา
  good:['เมตตา','ทรงธรรม','ใจพุทธะ','แสงอรุณ','บัวขาว'],evil:['โลหิต','ไร้ปรานี','อเวจี','เงามรณะ','กระดูกขาว'],fame:['ก้องหล้า','ใต้หล้า','ไร้เทียมทาน','สิบทิศ','ผู้เลื่องชื่อ'],money:['ทองคำ','หมื่นตำลึง','หยกพันชั่ง','มือทอง','ไข่มุกราตรี'],
  kills:['พันศพ','สังหารร้อย','มรณะ','ยมทูต','ทะเลเลือด'],love:['รักเดียว','ตำหนักใน','คู่จันทร์','สายใยรัก','ร้อยบุปผา'],elder:['อายุยืน','ผมขาว','ร้อยปี','อมตะ','กาลเวลา'],hermit:['สันโดษ','ภูผาเงียบ','สายลม','เมฆลอย','ธารน้ำใส']};
 const TTL_SP=[['bossM',()=>S.flags.bossKill&&!S.xian,'ผู้สังหารมารสวรรค์'],['bossX',()=>S.flags.bossKill&&S.xian,'ผู้ล้มราชันมารแห่งอเวจี'],['ndsys',()=>S.flags.ndSys&&S.sys&&realmIdx()>=4,'ผู้ที่ระบบดึงกลับจากความตาย'],
- ['orphan',()=>S.family&&S.family.orphan&&realmIdx()>=5,'ลูกกำพร้าผู้ท้าฟ้า'],['trash',()=>S.talent.m<=.6&&realmIdx()>=6,'ขยะผู้พลิกชะตาฟ้า'],['crip',()=>tr('crippled')&&!S.cured&&S.fame>=500,'ผู้ยิ่งใหญ่ไร้วรยุทธ'],['harem',()=>(S.harem||[]).length>=5,'ราชันแห่งตำหนักใน'],
+ ['orphan',()=>S.family&&S.family.orphan&&realmIdx()>=5,'ลูกกำพร้าผู้ท้าฟ้า'],['trash',()=>S.talent.m<=.6&&realmIdx()>=6,'ขยะผู้พลิกชะตาฟ้า'],['crip',()=>tr('crippled')&&!S.cured&&S.fame>=2500,'ผู้ยิ่งใหญ่ไร้วรยุทธ'],['harem',()=>(S.harem||[]).length>=5,'ราชันแห่งตำหนักใน'],
  ['revive',()=>S.flags.revived,'ผู้กลับมาจากความตาย'],['ow',()=>S.ow&&S.awake&&realmIdx()>=6,'ผู้มาจากต่างโลกผู้ไร้เทียมทาน'],['regress',()=>S.flags.regress&&realmIdx()>=6,'ผู้ย้อนเวลามาแก้ชะตา'],['slowmax',()=>S.goal==='slow'&&S.age>=70&&(S.kills||0)<=10,'ฤๅษีผู้ไม่แตะต้องโลก'],
  ['kills300',()=>(S.kills||0)>=300,'ยมทูตเดินดิน'],['rich',()=>(S.money||0)>=1e6,'เจ้าสัวใต้หล้า'],['saint',()=>(S.karma||0)>=300,'พระโพธิสัตว์เดินดิน'],['fiend',()=>(S.karma||0)<=-300,'มารร้ายในร่างคน'],['sect',()=>!!S.ownSect&&realmIdx()>=5,'ปรมาจารย์ผู้ก่อตั้งสำนัก'],
  ['imm',()=>S.flags.xImm,'เซียนอมตะ'],['asc',()=>S.flags.ascended&&!S.xian,'ผู้เหาะขึ้นสู่แดนเซียน'],['kids',()=>(S.kids||0)>=8,'บิดามารดาแห่งร้อยบุตร']];
@@ -9400,7 +9400,7 @@ bgAdd('h_realm5',3,'อสูรในคราบยอดฝีมือ','Bea
 bgAdd('h_realm7',4,'อสูรผู้ครองยุทธภพ','Beast who rules the world',()=>`แปลงกายเป็นมนุษย์ แล้วฝึกจนถึงขั้น${gRN(7)}`,()=>hum()&&ri()>=7,()=>hum()?ri()/7*.9+.1:0,()=>hum()?`${gRN(ri())} / ${gRN(7)}`:'ยังไม่ได้แปลงกาย');
 bgAdd('h_love',3,'รักต่างเผ่าพันธุ์','Love across kinds',()=>'แปลงกายเป็นมนุษย์ แต่งงาน และมีบุตร 3 คน',()=>hum()&&!!S.spouse&&(S.kids||0)>=3,()=>hum()?(S.spouse?.5+bgPct(S.kids,3)*.5:.3):0,()=>hum()?`${S.spouse?'💍 แต่งงานแล้ว':'ยังไม่แต่งงาน'} · บุตร ${S.kids||0}/3`:'ยังไม่ได้แปลงกาย');
 bgAdd('h_sect',3,'อสูรผู้นำสำนัก','Beast sect leader',()=>'แปลงกายเป็นมนุษย์ แล้วขึ้นเป็นผู้นำสูงสุดของสำนัก',()=>hum()&&S.faction&&S.rank>=4,()=>hum()&&S.faction?bgPct(S.rank,4):0,()=>hum()?(S.faction?rankName()+' แห่ง'+S.faction.n:'ยังไม่มีสังกัด'):'ยังไม่ได้แปลงกาย');
-bgAdd('h_fame',3,'ไม่มีใครรู้ว่าเป็นอสูร','No one knows',()=>'แปลงกายเป็นมนุษย์ และชื่อเสียงถึง 4,000',()=>hum()&&S.fame>=4000,()=>hum()?bgPct(S.fame,4000):0,()=>hum()?`ชื่อเสียง ${bgN(S.fame)} / 4,000`:'ยังไม่ได้แปลงกาย');
+bgAdd('h_fame',3,'ไม่มีใครรู้ว่าเป็นอสูร','No one knows',()=>'แปลงกายเป็นมนุษย์ และชื่อเสียงถึง 20,000',()=>hum()&&S.fame>=20000,()=>hum()?bgPct(S.fame,20000):0,()=>hum()?`ชื่อเสียง ${bgN(S.fame)} / 20,000`:'ยังไม่ได้แปลงกาย');
 bgAdd('h_rich',2,'อสูรเศรษฐี','Wealthy beast',()=>'แปลงกายเป็นมนุษย์ และมีทรัพย์สิน 100,000',()=>hum()&&S.money>=1e5,()=>hum()?bgPct(S.money,1e5):0,()=>hum()?`${bgN(S.money)} / 100,000`:'ยังไม่ได้แปลงกาย');
 bgAdd('wild',4,'ไม่ยอมเป็นมนุษย์','Forever wild',()=>`ไม่แปลงกายเลยตลอดชีวิต และถึงขั้น${bgSt(7)}`,()=>!hum()&&stOf()>=7,()=>hum()?0:stOf()/7,()=>hum()?'❌ แปลงกายไปแล้ว':`${bgSt(stOf())} / ${bgSt(7)}`);
 bgAdd('king',3,'ราชาอสูร','Beast king',()=>'ครองป่าเป็นราชาอสูร และพลังรวมถึง '+bgN(bgV(300000,5)),()=>!!bgBM().king&&total()>=bgV(3e5,5),()=>(bgBM().king?.4:0)+bgPct(total(),bgV(3e5,5))*.6,()=>`${bgBM().king?'👑 ราชาอสูร':'ยังไม่ได้เป็นราชา'} · พลัง ${bgN(total())} / ${bgN(bgV(3e5,5))}`);
@@ -9442,7 +9442,7 @@ const spIs=s=>()=>bgX().sp===s;
 bgAdd('carp1',3,'กระโดดข้ามประตูมังกร','Leap the dragon gate',()=>'ปลาคาร์ปกระโดดข้ามประตูมังกรสำเร็จ',()=>!!bgM().dragon,()=>bgM().dragon?1:bgPct(bgM().gate||0,3)*.8,()=>bgM().dragon?'✅ กลายร่างแล้ว':`พยายามแล้ว ${bgM().gate||0} ครั้ง`,spIs('ปลาคาร์ป'));
 bgAdd('carp2',4,'มังกรจากสายน้ำ','Dragon from the river',()=>`ข้ามประตูมังกร และบำเพ็ญจนถึงขั้น${bgSt(6)}`,()=>!!bgM().dragon&&stOf()>=6,()=>(bgM().dragon?.4:0)+stOf()/6*.6,()=>`${bgM().dragon?'🐉 ข้ามประตูแล้ว':'ยังไม่ข้ามประตูมังกร'} · ${bgSt(stOf())}`,spIs('ปลาคาร์ป'));
 bgAdd('fox1',3,'จิ้งจอกเก้าหาง','Nine-tailed fox',()=>'บำเพ็ญจนมีหางครบ 9 หาง',()=>(bgM().tails||1)>=9,()=>bgPct(bgM().tails||1,9),()=>`หาง ${bgM().tails||1} / 9`,spIs('จิ้งจอก'));
-bgAdd('fox2',4,'เทพจิ้งจอกล่มเมือง','Kingdom-toppling fox',()=>'มีเก้าหาง แปลงกายเป็นมนุษย์ และชื่อเสียงถึง 3,000',()=>(bgM().tails||1)>=9&&hum()&&S.fame>=3000,()=>Math.min(bgPct(bgM().tails||1,9),hum()?1:.5,bgPct(S.fame,3000)),()=>`หาง ${bgM().tails||1}/9 · ${hum()?'แปลงกายแล้ว':'ยังไม่แปลงกาย'} · ชื่อเสียง ${bgN(S.fame)}/3,000`,spIs('จิ้งจอก'));
+bgAdd('fox2',4,'เทพจิ้งจอกล่มเมือง','Kingdom-toppling fox',()=>'มีเก้าหาง แปลงกายเป็นมนุษย์ และชื่อเสียงถึง 15,000',()=>(bgM().tails||1)>=9&&hum()&&S.fame>=15000,()=>Math.min(bgPct(bgM().tails||1,9),hum()?1:.5,bgPct(S.fame,15000)),()=>`หาง ${bgM().tails||1}/9 · ${hum()?'แปลงกายแล้ว':'ยังไม่แปลงกาย'} · ชื่อเสียง ${bgN(S.fame)}/15,000`,spIs('จิ้งจอก'));
 bgAdd('tiger1',2,'อักษรราชาบนหน้าผาก','Mark of the king',()=>'ได้อักษร 王 บนหน้าผาก และชนะการต่อสู้ 300 ครั้ง',()=>!!bgM().wang&&(S.kills||0)>=300,()=>(bgM().wang?.4:0)+bgPct(S.kills,300)*.6,()=>`${bgM().wang?'王 ปรากฏแล้ว':'ยังไม่มีอักษร'} · ชนะ ${S.kills||0}/300`,spIs('พยัคฆ์'));
 bgAdd('tiger2',4,'พยัคฆ์ขาวพิทักษ์ทิศตะวันตก','White Tiger of the West',()=>`พยัคฆ์ถึงขั้น${bgSt(7)} และชนะการต่อสู้ 900 ครั้ง`,()=>stOf()>=7&&(S.kills||0)>=900,()=>Math.min(stOf()/7,bgPct(S.kills,900)),()=>`${bgSt(stOf())} · ชนะ ${S.kills||0}/900`,spIs('พยัคฆ์'));
 bgAdd('turtle1',3,'เต่าดำแบกโลก','Black tortoise',()=>`มีชีวิตอยู่ถึงอายุ ${bgN(bgA(28))} ปี`,()=>S.age>=bgA(28),()=>bgPct(S.age,bgA(28)),()=>`อายุ ${S.age} / ${bgN(bgA(28))}`,spIs('เต่าดำ'));
@@ -9480,16 +9480,16 @@ function bParYear(){const m=S&&S.beastMode;if(!(m&&!m.human&&m.par>0&&!m.parGone
 
 // ===== v14.8 สมุดตำนาน: เงื่อนไขยากขึ้น ~10 เท่า (ยกเว้นระดับทั่วไป) + จัดระดับสีตามความหายากจริง =====
 {const nb=()=>!S.beastMode||!!S.beastMode.human;const AF={
- t_crip3:['ชีพจรตายด้านไม่ได้ระบบ แต่มีชื่อเสียงถึง 5,000',()=>tr('crippled')&&!S.cured&&S.fame>=5000],
+ t_crip3:['ชีพจรตายด้านไม่ได้ระบบ แต่มีชื่อเสียงถึง 25,000',()=>tr('crippled')&&!S.cured&&S.fame>=25000],
  d_100:['มีชีวิตถึงอายุ 215 ปีในโลกมนุษย์',()=>S.age>=215&&!S.xian&&nb()],
  d_180:['มีชีวิตถึงอายุ 5,000 ปี',()=>S.age>=5000],
  d_last:['อยู่จนคนที่เกิดพร้อมกันทั้ง 4 คนจากไปหมด และมีอายุถึง 215 ปี',()=>peers.length===4&&peers.every(p=>!p.alive)&&S.age>=215&&nb()],
  r_trash:['เกิดมาด้วยกระดูกขยะ แต่ฝึกจนถึงขั้นแซงซากยอง',()=>S.talent.m<=.6&&realmIdx()>=7&&nb()],
- e_surp:['มีพลังแซงหน้าอาจารย์ในสำนัก และมีชื่อเสียงถึง 5,000',()=>!!S.flags.surpass&&S.fame>=5000],
- w_seal:['ร่วมพันธมิตรผนึกประมุขมารได้สำเร็จ ถึงขั้นบุปผาหลอมรวม และมีชื่อเสียงถึง 5,000',()=>!!S.flags.demonSeal&&realmIdx()>=5&&S.fame>=5000],
- w_champ:['ชนะงานชุมนุมยุทธ์แห่งยุค และมีชื่อเสียงถึง 6,500',()=>!!S.flags.champion&&S.fame>=6500],
- n_peace:['คืนดีกับศัตรูคู่แค้น และมีชื่อเสียงถึง 6,000',()=>!!(S.flags.nemPeace||S.flags.nemSpare)&&S.fame>=6000],
- v_war:['ชนะศึกตัดสินชะตาแผ่นดิน ถึงขั้นบุปผาหลอมรวม และมีชื่อเสียงถึง 5,000',()=>!!S.flags.warHero&&realmIdx()>=5&&S.fame>=5000],
+ e_surp:['มีพลังแซงหน้าอาจารย์ในสำนัก และมีชื่อเสียงถึง 25,000',()=>!!S.flags.surpass&&S.fame>=25000],
+ w_seal:['ร่วมพันธมิตรผนึกประมุขมารได้สำเร็จ ถึงขั้นบุปผาหลอมรวม และมีชื่อเสียงถึง 25,000',()=>!!S.flags.demonSeal&&realmIdx()>=5&&S.fame>=25000],
+ w_champ:['ชนะงานชุมนุมยุทธ์แห่งยุค และมีชื่อเสียงถึง 32,500',()=>!!S.flags.champion&&S.fame>=32500],
+ n_peace:['คืนดีกับศัตรูคู่แค้น และมีชื่อเสียงถึง 30,000',()=>!!(S.flags.nemPeace||S.flags.nemSpare)&&S.fame>=30000],
+ v_war:['ชนะศึกตัดสินชะตาแผ่นดิน ถึงขั้นบุปผาหลอมรวม และมีชื่อเสียงถึง 25,000',()=>!!S.flags.warHero&&realmIdx()>=5&&S.fame>=25000],
  h_joy:['ความสุขเฉลี่ยตลอดชีวิต 90 ขึ้นไป',()=>S.hN>5&&S.hSum/S.hN>=90],
  h_grand:['มีหลาน 18 คนขึ้นไป',()=>(S.grand||0)>=18],
  h_filial:['ดูแลพ่อแม่ยามเจ็บป่วย 6 ครั้ง',()=>(S.flags.filial||0)>=6],
@@ -9522,7 +9522,7 @@ function bParYear(){const m=S&&S.beastMode;if(!(m&&!m.human&&m.par>0&&!m.parGone
  ACH_ALL.forEach(a=>{const f=AF[a.id];if(f){a.d=f[0];a.c=f[1]}if(AR[a.id]!=null&&a.r>0&&a.r<6)a.r=AR[a.id]});
  // ฉายาพิเศษ (TTL_SP) ที่มีตัวเลข: ยากขึ้น 10 เท่า
  const TF={kills300:()=>(S.kills||0)>=3000,rich:()=>(S.money||0)>=1e7,saint:()=>(S.karma||0)>=3000,fiend:()=>(S.karma||0)<=-3000,kids:()=>(S.kids||0)>=40,harem:()=>(S.harem||[]).length>=20,
-  slowmax:()=>S.goal==='slow'&&S.age>=150&&(S.kills||0)<=1,crip:()=>tr('crippled')&&!S.cured&&S.fame>=5000,orphan:()=>S.family&&S.family.orphan&&realmIdx()>=7,sect:()=>!!S.ownSect&&realmIdx()>=7};
+  slowmax:()=>S.goal==='slow'&&S.age>=150&&(S.kills||0)<=1,crip:()=>tr('crippled')&&!S.cured&&S.fame>=25000,orphan:()=>S.family&&S.family.orphan&&realmIdx()>=7,sect:()=>!!S.ownSect&&realmIdx()>=7};
  TTL_SP.forEach(t=>{if(TF[t[0]])t[1]=TF[t[0]]});
 }
 
@@ -9849,7 +9849,7 @@ openSpectate=async function(k,tab){specTarget=k;clearTimeout(specT);tab=tab||ope
  openSpectate._sig=sig;const _keep=openSpectate._at===k+'|'+tab,_msc=$('modal').scrollTop,_ofd=document.querySelector('.specfeed'),_fdb=_ofd?_ofd.scrollHeight-_ofd.scrollTop-_ofd.clientHeight<40:true,_fdt=_ofd?_ofd.scrollTop:0;openSpectate._at=k+'|'+tab;
  const s=j.s,st=s.st;const T=[['sum','📊 ภาพรวม'],['birth','🎲 กำเนิด'],['hist','📜 ประวัติ'],['feed','📰 สด'],['items','🎒 ของ'],['arts','📖 วิชา'],['q','📋 เควส'],['ppl','👪 ผู้คน']];
  const list=(a,emp)=>a&&a.length?'<ul class="speclist">'+a.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':`<p class="tag2">${emp}</p>`;let body='';
- if(tab==='sum')body=`<div class="specgrid"><div>⚔️ พลังรวม <b>${fmt(st.pow)}</b></div><div>🌀 ลมปราณ <b>${st.qi}</b></div><div>📖 ปัญญา <b>${st.int}</b></div><div>🌸 เสน่ห์ <b>${st.cha}</b></div><div>💰 เงิน <b>${fmt(st.money)}</b></div><div>⭐ ชื่อเสียง <b>${fmt(st.fame)}</b></div><div>☯️ กรรม <b>${st.karma}</b></div><div>😊 ความสุข <b>${st.joy}</b></div></div>`+(s.org?list(s.org,''):`<p class="tag2">${esc(s.f||'')}${s.sys?' · 🟦 '+esc(s.sys):''}</p>`)+(s.birth&&s.birth.goal?`<p class="tag2">🎯 ปณิธาน: ${esc(s.birth.goal.n)} ${s.birth.goal.done?'✅':'· '+esc(s.birth.goal.p||'')}</p>`:'');
+ if(tab==='sum')body=`<div class="specgrid"><div>⚔️ พลังรวม <b>${fmt(st.pow)}</b></div><div>🌀 ลมปราณ <b>${st.qi}</b></div><div>📖 ปัญญา <b>${st.int}</b></div><div>🌸 เสน่ห์ <b>${st.cha}</b></div><div>💰 เงิน <b>${fmt(st.money)}</b></div><div>⭐ ชื่อเสียง <b>${fmt(st.fame)}</b> <small class="tag2">${(typeof fameTier==='function'?fameTier(+st.fame||0):[0,'','']).slice(1).join(' ')}</small></div><div>☯️ กรรม <b>${st.karma}</b></div><div>😊 ความสุข <b>${st.joy}</b></div></div>`+(s.org?list(s.org,''):`<p class="tag2">${esc(s.f||'')}${s.sys?' · 🟦 '+esc(s.sys):''}</p>`)+(s.birth&&s.birth.goal?`<p class="tag2">🎯 ปณิธาน: ${esc(s.birth.goal.n)} ${s.birth.goal.done?'✅':'· '+esc(s.birth.goal.p||'')}</p>`:'');
  else if(tab==='birth')body=birthHtml(s.birth);
  else if(tab==='hist')body=histHtml(s.hist);
  else if(tab==='feed')body='<div class="specfeed">'+(s.feed||[]).map(x=>x[0]==='§'?`<div class="sfh">${esc(x.slice(1))}</div>`:`<div>${esc(x)}</div>`).join('')+'</div>';
@@ -13486,6 +13486,16 @@ try{TUT.push(
    return setTimeout(()=>{if(tutI<0)return;const m=$('modal');if(m&&m.scrollTo)try{m.scrollTop=0}catch(e){}_td()},450)}}
  return _td()}}
 (()=>{const st=document.createElement('style');st.textContent='#tut .tut-tip{z-index:1000}';document.head.appendChild(st)})();
+
+// ===================== v15.9b ชื่อเสียง: เพดานอ่อนตามโลก · ระดับชื่อเสียง =====================
+const FAME_T=[[0,'🌱','ไร้นาม'],[100,'🏘️','คนในหมู่บ้านรู้จัก'],[1500,'🏯','ดังทั่วเมือง'],[15000,'⚔️','ลือลั่นยุทธภพ'],[200000,'🌏','ทั่วแผ่นดินรู้จัก'],[1e6,'☁️','เลื่องลือถึงโลกเซียน'],[1e8,'✨','ชื่อจารึกบนฟ้า'],[1e10,'🌌','ตำนานเหนือกาลเวลา']];
+function fameTier(v){v=v==null?(S?S.fame:0):v;let t=FAME_T[0];for(const x of FAME_T)if(v>=x[0])t=x;return t}
+function fameTierH(){const t=fameTier();return`<span style="font-size:11px;line-height:1.25;display:block" title="${fmt(S.fame)}">${t[1]} ${t[2]}</span><small style="display:block;font-size:10px;opacity:.65">${fmt(S.fame)}</small>`}
+const fameCap=()=>S&&S.xt?1e10:S&&S.xian?1e8:1e6;
+// ส่วนที่เกินเพดาน: ยิ่งมากยิ่งได้น้อยลง (ไม่ลดของเดิม)
+function fameSoft(){if(!S)return;const f=+S.fame||0,p=S._fq;if(p==null||!isFinite(p)){S._fq=f;return}const d=f-p;if(d>0){const cap=fameCap();if(f>cap){const under=Math.max(0,cap-p),over=d-under,base=Math.max(cap,p);S.fame=Math.round(p+under+over*cap/(base+over)*.5)}}S._fq=S.fame}
+{const _rFm=render;render=function(){try{fameSoft()}catch(e){}return _rFm.apply(this,arguments)}}
+{const _pyFm=passYear;passYear=function(){try{fameSoft()}catch(e){}const r=_pyFm.apply(this,arguments);try{fameSoft()}catch(e){}return r}}
 </script>
 </body>
 </html>
