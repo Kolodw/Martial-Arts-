@@ -12568,6 +12568,8 @@ function hibFatCap(){const m=S.beastMode;return 40+(m.st|0)*20}
 function hibCost(n,K){const b=Math.ceil(n<=30?n:30+12*Math.log2(n/30));return Math.ceil(b*(K&&(K.bear||K.turtle)?.5:1))}
 function hibYrs(rem){const A=[5,10,30,100,300,1000,3000,10000,30000,100000,300000],lim=Math.max(30,S.age);const L=A.filter(n=>n<=rem&&n<=lim);return L.length>5?[L[0]].concat(L.slice(-4)):L}
 {const _byF=beastYear;beastYear=function(){const r=_byF.apply(this,arguments);try{const m=S.beastMode;if(m&&!m.human&&m.fat>hibFatCap())m.fat=hibFatCap()}catch(e){}return r}}
+
+{const _ldAI=lifeDetail;lifeDetail=function(){const o=_ldAI.apply(this,arguments);try{if(o&&S&&S.ai)o.ai=1}catch(e){}return o}}
 </script>
 </body>
 </html>

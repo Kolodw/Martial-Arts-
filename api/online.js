@@ -1164,7 +1164,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
           const D = JSON.parse(det), st = D.st || {}, kids = (D.kids || []).length, dis = +((String(D.sect || '').match(/ศิษย์\s*([0-9]+)/) || [])[1] || 0);
           const pw = +st.pow || 0, fm = +st.fame || 0, mn = +st.money || 0, ag = Math.max(1, +e.age || 1);
           if ((+st.int || 0) > 1e6 || (+st.cha || 0) > 1e6 || fm > 1e16 || mn > 1e16 || kids > 1e5 || dis > 1e9 || pw > 1e16) bad = 'stat';
-          const powCap = ((e.x ? 60000 : 25000) * (1 + ag / 8) + 300000) * (e.bm ? 4 : 1) * (D.sys ? 3 : 1);
+          const powCap = ((e.x ? 60000 : 25000) * (1 + ag / 8) + 300000) * (e.bm ? 6 : 1) * (D.sys ? 3 : 1) * (D.ai ? 3 : 1);
           if (!bad && pw > powCap && ag < 1000) bad = 'pow-age';
           const upper = (pw + fm * 3 + 20 * Math.sqrt(Math.max(0, mn)) + 2500 + kids * 100 + dis * 20 + 4000) * 2.5 * 1.05 + 1000;
         }
