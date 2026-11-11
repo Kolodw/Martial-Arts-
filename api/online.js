@@ -114,11 +114,13 @@ const cmd = USE_VK ? vkCmd : upCmd;
 const pipe = USE_VK ? vkPipe : upPipe;
 
 // ===== ทำเนียบรายวัน (v15.3): แยก 4 หมวด · คะแนนจากค่าเฉลี่ยทุกด้าน · รางวัลอันดับ 1–3 =====
-const BD_CATS = ['m', 'x', 'g', 'b'];
+const BD_CATS = ['m', 'x', 'g', 'b', 'c']; // c = ทำเนียบโหมดท้าทาย (นรก/ชีวิตสั้น/รากขยะ)
+const CH_OK = ['hell', 'short', 'junk'];
 // ฉายาทำเนียบ (ชั่วคราว): รายวัน/สัปดาห์/เดือน · อันดับ 1–3
 const RKT = { d: ['', 'ตะวันเจิดจ้า', 'จันทร์เหนือเมฆ', 'ดาวประกาย'], w: ['', 'จ้าวยุทธภพ', 'ขุนศึกไร้พ่าย', 'ยอดฝีมือผงาด'], m: ['', 'จักรพรรดิเหนือฟ้า', 'มหาเทพบัญชาสวรรค์', 'ตำนานผู้ถูกจารึก'] };
+const RKT_C = { d: ['', 'ผู้ฝ่าขุมนรก', 'วิญญาณไม่ดับ', 'ผู้ท้าลิขิต'], w: ['', 'ราชันย์ไร้พรสวรรค์', 'จ้าวแห่งเปลวนรก', 'ผู้ทวนชะตา'], m: ['', 'จักรพรรดิผู้ลบลิขิต', 'มารฟ้าทลายกรรม', 'ตำนานจากธุลี'] };
 const RKT_EXP = { d: 86400e3 * 1.1, w: 86400e3 * 7.2, m: 86400e3 * 31 }, RKT_TR = { d: 7, w: 8, m: 9 };
-const RKT_ALL = new Map(); Object.entries(RKT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) }));
+const RKT_ALL = new Map(); [RKT, RKT_C].forEach(TT => Object.entries(TT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) })));
 const bdCat = e => e.bm ? 'b' : e.g ? 'g' : e.x ? 'x' : 'm';
 const bdKey = (c, ms, back = 0) => 'bd3:' + c + ':' + new Date(ms + 7 * 3600e3 - back * 86400e3).toISOString().slice(0, 10);
 const bdKeyW = (c, ms, back = 0) => 'bdw:' + c + ':' + week(new Date(ms - back * 7 * 86400e3));
@@ -648,9 +650,9 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const R1 = await pipe(BD_CATS.map(c => ['ZREVRANGE', bdKeyP(p, c, now, 1), 0, 9])), lab = flag.split(':').slice(1).join(':');
       for (let k = 0; k < BD_CATS.length; k++) { const L1 = (R1[k] || []).map(jp).filter(x => x && x.lid && !x.cu); const seen = new Set(); let r = 0;
         for (const x of L1) { if (r >= 3) break; const own = await cmd('GET', 'lifeo:' + x.lid); if (!own || seen.has(own) || await cmd('SISMEMBER', 'cheaters', own)) continue; seen.add(own); r++;
-          const cur = jp(await cmd('HGET', 'rkttl:' + own, p)), nt = { t: RKT[p][r], r, c: BD_CATS[k], exp: now + RKT_EXP[p], at: now };
-          const L2 = [['LPUSH', 'bdrw:' + own, JSON.stringify({ p, c: BD_CATS[k], r, d: lab, n: x.n, s: x.s, tt: RKT[p][r], exp: nt.exp })], ['EXPIRE', 'bdrw:' + own, 86400 * 60], ['HINCRBY', 'bdwins', own, 1]];
-          if (!cur || cur.exp < now || r <= cur.r) L2.push(['HSET', 'rkttl:' + own, p, JSON.stringify(nt)], ['EXPIRE', 'rkttl:' + own, 86400 * 40]);
+          const isC = BD_CATS[k] === 'c', TT = isC ? RKT_C : RKT, hf = isC ? p + 'c' : p, cur = jp(await cmd('HGET', 'rkttl:' + own, hf)), nt = { t: TT[p][r], r, c: BD_CATS[k], exp: now + RKT_EXP[p], at: now };
+          const L2 = [['LPUSH', 'bdrw:' + own, JSON.stringify({ p, c: BD_CATS[k], r, d: lab, n: x.n, s: x.s, tt: TT[p][r], exp: nt.exp, ...(x.ch ? { ch: x.ch } : {}) })], ['EXPIRE', 'bdrw:' + own, 86400 * 60], ['HINCRBY', 'bdwins', own, 1]];
+          if (!cur || cur.exp < now || r <= cur.r) L2.push(['HSET', 'rkttl:' + own, hf, JSON.stringify(nt)], ['EXPIRE', 'rkttl:' + own, 86400 * 40]);
           await pipe(L2) } } } catch {} };
     const bdSettle = async () => { const yk = new Date(now + 7 * 3600e3 - 86400e3).toISOString().slice(0, 10);
       await bdSettle1('d', 'bdset:' + yk, 7); await bdSettle1('w', 'bdsetw:' + week(new Date(now - 7 * 86400e3)), 30); await bdSettle1('m', 'bdsetm:' + bdMon(now, 1), 90) };
@@ -663,14 +665,14 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const R0 = await pipe(Q);
       const hide = new Set(['f18abdmw8fuj8d', ...((await cmd('SMEMBERS', 'bdhide')) || [])]);
       const pj = l => (l || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(j => j && !j.cu && !(j.lid && hide.has(j.lid)));
-      let T = [], Pv = []; BD_CATS.forEach((c, k) => { T = T.concat(pj(R0[k * 2]).slice(0, 20)); Pv = Pv.concat(pj(R0[k * 2 + 1]).slice(0, 3)) });
+      let T = [], Pv = [], CT = [], CP = []; BD_CATS.forEach((c, k) => { const a1 = pj(R0[k * 2]).slice(0, 20), a2 = pj(R0[k * 2 + 1]).slice(0, 3); if (c === 'c') { CT = a1; CP = a2 } else { T = T.concat(a1); Pv = Pv.concat(a2) } });
       const arena = []; for (let i = 0; i < (ar || []).length; i += 2) arena.push({ n: ar[i], w: +ar[i + 1] });
-      const all = T.concat(Pv).filter(x => x.lid);
+      const all = T.concat(Pv, CT, CP).filter(x => x.lid);
       const pubs = all.length ? await cmd('MGET', ...all.map(x => 'lifep:' + x.lid)) : [];
       const pm = {}; all.forEach((x, i) => pm[x.lid] = pubs[i] === '1' ? 1 : pubs[i] === '2' ? 2 : 0);
       const admB = !!ADM_KEY && String(qOf(req).key || '') === ADM_KEY;
       const fix = l => l.map(x => { const v = x.lid ? pm[x.lid] || 0 : 0; const o = Object.assign(x, { pub: v === 1 || (admB && x.lid) ? 1 : 0 }); if (v === 2 && !admB) { o.n = 'ผู้ไม่ประสงค์ออกนาม'; o.f = ''; o.anon = 1 } return o });
-      return res.json({ top: fix(T), prev: fix(Pv), arena, daily: 1, p: per });
+      return res.json({ top: fix(T), prev: fix(Pv), ctop: fix(CT), cprev: fix(CP), arena, daily: 1, p: per });
     }
     if (a === 'bdrw') {
       if (!okId(id)) return res.json({ l: [] });
@@ -1145,9 +1147,10 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
     if (a === 'life') {
       const lid = String(b.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
       const e = { n: clean(b.n, 20) || 'นิรนาม', s: Math.max(0, Math.min(1e12, +b.s || 0)), age: +b.age || 0, r: clean(b.r, 30), f: clean(b.f, 30), c: clean(b.c, 60), x: b.x ? 1 : 0, g: b.g ? 1 : 0, ga: Math.max(0, Math.min(1e9, Math.round(+b.ga || 0))), ...(b.tp ? { tt: '', tr: 0 } : ttlOk(b.tt)), xa: Math.max(0, Math.min(1e9, Math.round(+b.xa || 0))), cu: b.cu ? 1 : 0, bm: b.bm ? 1 : 0, t: now, lid };
+      { const c0 = String(b.ch || ''); if (CH_OK.includes(c0) && !(c0 === 'short' && e.age > 31)) e.ch = c0 }
       try { e.s = bdScore(JSON.parse(String(b.det || '{}')), e) } catch { e.s = 0 }
       const cat = bdCat(e), ej = JSON.stringify(e), L = [['INCR', 'lives']];
-      for (const [kk, ex] of [[bdKey(cat, now), 4], [bdKeyW(cat, now), 20], [bdKeyM(cat, now), 70]]) L.push(['ZADD', kk, e.s, ej], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]);
+      for (const cc of e.ch ? [cat, 'c'] : [cat]) for (const [kk, ex] of [[bdKey(cc, now), 4], [bdKeyW(cc, now), 20], [bdKeyM(cc, now), 70]]) L.push(['ZADD', kk, e.s, ej], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]);
       await bdSettle();
       if (e.cu || !(parseFloat(b.ver) >= 6.3)) { await cmd('INCR', 'lives'); return res.json({ ok: 1, skip: 1 }) }
       const det = String(b.det || '');
