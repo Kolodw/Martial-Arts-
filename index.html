@@ -11924,7 +11924,7 @@ function bTail(R,P,x0,y0,H){const {base,dk,dk2,bel,pc,ec,T,fr,V,b}=P;const ty=y0
   else if(V.tail==='tuft'){for(let j=0;j<6;j++)R(x0-.5-j*.6,ty+j*.6+Math.sin(fr*.25-j)*.2,.6,.6,base);R(x0-4.4+Math.sin(fr*.25)*.3,ty+3.4,1.4,1.4,V.mane||dk2)}
   else if(V.tail==='flame'){for(let j=0;j<6;j++){const f=Math.sin(fr*.4+j)*.5;R(x0-.8-j*.7,ty-j*.4+f*.3,1.3,1,j%2?ec:shadeC(ec,.3),0,.95)}}}}
 // ---------- นก ----------
-function bBird(R,P){const {base,dk,dk2,lt,bel,ec,T,fr,V}=P,v=V.v||'crane',cub=T===0,FY=20.6;
+function bBird(R,P){const {base,dk,dk2,lt,bel,ec,T,fr,V}=P,v=V.v||'crane',cub=T===0,FY=20.6;if(v==='crane')return bCrane(R,P);
  if(v==='bat'){const fl=Math.sin(fr*.6),y=10+Math.sin(fr*.2)*1.2;const wy=fl*2.2;
   for(let side=0;side<2;side++){const d=side?1:-1;for(let j=0;j<5;j++){const x=16+d*(2+j*1.6)-(side?0:1.4),yy=y-.5+wy*(j/4)*(side?1:1)-Math.abs(j-2)*.3;R(x,yy,1.6,2.8-j*.3,j%2?dk:base)}R(16+d*9.5-(side?0:.6),y-.8+wy,.6,.6,dk2,1)}
   R(14.6,y-1,2.8,3.6,dk);R(15,y-2.6,2,1.8,base);R(14.8,y-3.4,.6,1,base);R(16.6,y-3.4,.6,1,base);R(15.3,y-2.1,.5,.5,T>=2?ec:'#ff3030',1);R(16.2,y-2.1,.5,.5,T>=2?ec:'#ff3030',1);R(15.5,y-1.1,.3,.5,'#ffffff',1);R(16.2,y-1.1,.3,.5,'#ffffff',1);return}
@@ -12025,7 +12025,7 @@ function bBug(R,P){const {base,dk,dk2,lt,bel,ec,T,fr,V}=P,v=V.v||'beetle',FY=20.
  if(v==='butterfly'){const cy=11+Math.sin(fr*.2)*1.4,fl=Math.abs(Math.cos(fr*.5));const ww=7*k*(.35+.65*fl);
   for(let sd=0;sd<2;sd++){const d=sd?1:-1;const wx=sd?16.4:16-ww;R(wx,cy-6*k,ww,5*k,base);R(wx+(sd?0:ww*.15),cy-.6,ww*.85,3.6*k,shadeC(base,-.15));R(wx+ww*.3,cy-4.6*k,ww*.4,1.6*k,ec,1);R(wx+ww*.35,cy+.6,ww*.3,1.2*k,'#ffffff',1,.85);R(sd?wx+ww-1:wx,cy-6*k,1,5*k,dk2,1)}
   R(15.6,cy-4,1,6,dk2);R(15.7,cy-5.4,.4,1.6,dk2);R(15.1,cy-6.4,.4,1.2,dk2);R(16.4,cy-6.4,.4,1.2,dk2);if(T>=2)for(let j=0;j<4;j++)R(16+Math.sin(fr*.3+j)*4,cy+3+j*1.4,.5,.5,ec,1,.7);return}
- if(v==='spider'){const cy=FY-4;for(let i=0;i<8;i++){const sd=i<4?-1:1,j=i%4,a=Math.sin(fr*.5+i*1.3)*.4,bx0=sd<0?13.5-j*.6:17+j*.9;const kx=bx0+sd*(2.2+j*.4),ky=cy-3.4-j*.2+a;for(let q=0;q<4;q++)R(bx0+(kx-bx0)*q/4,cy-.6+(ky-cy+.6)*q/4,.6,.6,dk2);for(let q=0;q<5;q++)R(kx+sd*q*.35,ky+q*(FY-ky)/5,.6,.7,dk2)}
+ if(v==='spider'){bSpider(R,P);return;const cy=FY-4;for(let i=0;i<8;i++){const sd=i<4?-1:1,j=i%4,a=Math.sin(fr*.5+i*1.3)*.4,bx0=sd<0?13.5-j*.6:17+j*.9;const kx=bx0+sd*(2.2+j*.4),ky=cy-3.4-j*.2+a;for(let q=0;q<4;q++)R(bx0+(kx-bx0)*q/4,cy-.6+(ky-cy+.6)*q/4,.6,.6,dk2);for(let q=0;q<5;q++)R(kx+sd*q*.35,ky+q*(FY-ky)/5,.6,.7,dk2)}
   R(11.6,cy-2.6,6,5,base);R(12.2,cy-3,4.8,.6,lt,1);if(T>=1){R(14,cy-1.4,1.4,.8,ec,1);R(14.4,cy-.6,.6,1.2,ec,1)}R(17.2,cy-1.6,3.4,3,dk);for(let j=0;j<4;j++)R(18.3+(j%2)*.8,cy-1.2+Math.floor(j/2)*.7,.5,.5,T>=2?ec:'#e02a2a',1);return}
  if(v==='centipede'){const N=12;for(let i=0;i<N;i++){const x=4+i*2,y=FY-2.6+Math.sin(i*.8-fr*.35)*1;R(x,y,2.1,1.8,i%2?base:dk);R(x+.3,y-.2,1.4,.4,lt,1);const lm=Math.sin(fr*.6+i)*.4;R(x+.4+lm,y+1.6,.4,1.2,'#e0a030');R(x+1.2-lm,y+1.6,.4,1.2,'#e0a030');if(T>=2&&i%3===0)R(x+.6,y+.5,.6,.6,ec,1)}
   const hx=4+N*2,hy=FY-2.8+Math.sin(N*.8-fr*.35);R(hx,hy-.2,2.4,2.2,'#a02a20');bEye(R,P,hx+1.2,hy+.2);R(hx+2.2,hy+1.4,1,.4,'#1a1010',1);R(hx+1.6,hy-1.6,.4,1.6,dk2);R(hx+2.2,hy-1.4,.4,1.4,dk2);return}
@@ -12122,6 +12122,55 @@ function rkChip(t,tr){const o=RKC_OF(t),p=o?o.p:tr===9?'m':tr===8?'w':'d',r=o?o.
 .bkh{display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;top:-16px;background:var(--card);padding:6px 0;z-index:2}.bkhb{flex:1;min-width:60px;max-width:140px;height:6px;border-radius:9px;background:rgba(128,128,128,.25);overflow:hidden}.bkhb i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),#ffb020)}
 .bknewbox{margin:8px 0;padding:8px 10px;border-radius:10px;border:2px solid #ffb020;background:linear-gradient(100deg,rgba(255,176,32,.16),rgba(255,79,138,.1));animation:bkPop .6s both}.bknewbox div{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}.bknewbox a{font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid currentColor;border-radius:999px;padding:1px 8px}`;document.head.appendChild(st)})();
 try{const g=GD2.find(x=>x.ic==='📖'&&x.s==='col');if(g){g.d+=' · <b>ใหม่</b>: ความสำเร็จที่เพิ่งปลดล็อกมีป้าย NEW เรืองแสง และหมวดที่มีของใหม่ขึ้นก่อน · ติดอันดับ 1–3 ทำเนียบรายวัน/สัปดาห์/เดือน ได้<b>ฉายาทำเนียบสีพิเศษ</b> (ชั่วคราว จนกว่ารอบถัดไปจะตัดสิน) เลือกโชว์ได้ที่ 🎖️ เลือกฉายา';g.de=(g.de||'')+' · NEW: freshly unlocked achievements glow with a NEW badge; top-3 on the daily/weekly/monthly boards earns temporary animated leaderboard titles.'}SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
+
+
+// ===================== v15.5 เกลาแมงมุม + กระเรียน =====================
+function bLn(R,x1,y1,x2,y2,w,col,no,a){const d=Math.hypot(x2-x1,y2-y1),n=Math.max(1,Math.ceil(d/.4));for(let i=0;i<=n;i++){const t=i/n;R(x1+(x2-x1)*t-w/2,y1+(y2-y1)*t-w/2,w,w,col,no,a)}}
+function bSpider(R,P){const {base,dk,dk2,lt,ec,T,fr}=P,FY=20.6,cub=T===0,k=cub?.8:1;
+ // ใยแมงมุมด้านหลัง
+ const wx=22,wy=5;for(let i=0;i<8;i++){const a=i/8*6.28;bLn(R,wx,wy,wx+Math.cos(a)*9,wy+Math.sin(a)*7,.25,'#ffffff',1,.35)}
+ for(let r=2;r<=8;r+=2)for(let i=0;i<8;i++){const a1=i/8*6.28,a2=(i+1)/8*6.28;bLn(R,wx+Math.cos(a1)*r,wy+Math.sin(a1)*r*.78,wx+Math.cos(a2)*r,wy+Math.sin(a2)*r*.78,.22,'#ffffff',1,.3)}
+ const walk=fr*.45,cx=16,cy=FY-4.6*k;
+ // ขา 8 ข้าง: ข้อเข่าโก่งสูงแบบแมงมุมจริง (ขาไกลสีเข้มกว่า วาดก่อน)
+ const leg=(i,far)=>{const j=i%4,dir=j<2?1:-1,ph=Math.sin(walk+i*1.57+(far?1.2:0)),bx=cx+1.6-j*.7,by=cy-.4,kx=bx+dir*(2.6+Math.abs(j-1.5)*.9)*k+(far?.5:0),ky=cy-4.8*k-(j===0||j===3?.2:1.1)+(ph>0?-ph*.7:0),fx=bx+dir*(5.6+Math.abs(j-1.5)*1.8)*k+(far?.8:0),fy=FY-(ph>0?ph*.8:0);
+  const col=far?'#2a2430':'#120e18',hl=far?'#4a4256':'#5a5068';bLn(R,bx,by,kx,ky,far?.42:.55,col,1);bLn(R,kx,ky,fx,fy,far?.36:.46,col,1);bLn(R,bx,by-.15,kx,ky-.15,.18,hl,1,.8);R(kx-.3,ky-.3,.6,.6,hl,1)};
+ for(let i=0;i<4;i++)leg(i,1);
+ // ท้อง (abdomen) กลมใหญ่ + ลาย
+ const ax=cx-5.6*k,aw=6.6*k,ah=5.4*k,ay=cy-ah*.62+Math.sin(fr*.12)*.15;for(let i=0;i<=aw;i+=.5){const u=i/aw,h=ah*Math.sqrt(Math.max(0,1-Math.pow(u*2-1,2)));R(ax+i,ay+ah/2-h/2,.6,h,base)}
+ R(ax+1,ay+.6,aw-2.4,.6,lt,1);R(ax+aw*.35,ay+ah*.3,aw*.3,ah*.18,T>=1?ec:'#c8283a',1);R(ax+aw*.42,ay+ah*.48,aw*.16,ah*.22,T>=1?ec:'#c8283a',1);R(ax+aw*.33,ay+ah*.68,aw*.34,ah*.14,T>=1?ec:'#c8283a',1);
+ if(T>=2)R(ax-.5,ay-.5,aw+1,ah+1,ec,1,.18);
+ // ส่วนหัว-อก
+ const hx=cx+.6,hw=4*k,hh=3.2*k,hy=cy-hh*.55;R(hx,hy+.3,hw,hh-.3,dk);R(hx+.4,hy,hw-.8,.5,dk);R(hx+.5,hy+.3,hw-1.4,.4,lt,1);
+ // ตา 8 ดวง + เขี้ยว
+ const ec2=T>=2?ec:'#ff3040';[[hw-1,.5],[hw-1.7,.4],[hw-1,1.2],[hw-1.7,1.1]].forEach(([ex,ey])=>R(hx+ex,hy+ey,.55,.55,ec2,1));R(hx+hw-.6,hy+.75,.4,.4,'#ffffff',1);
+ const fg=Math.max(0,Math.sin(fr*.3))*.3;R(hx+hw-.8,hy+hh-.4,.6,1+fg,dk2);R(hx+hw-.1,hy+hh-.5,.5,.9+fg,dk2);
+ for(let i=0;i<4;i++)leg(i,0);
+ // เส้นใยห้อย (ขั้นสูง)
+ if(T>=3){bLn(R,ax+aw*.1,ay+ah*.5,ax-2,ay-6,.25,'#ffffff',1,.6)}}
+function bCrane(R,P){const {base,dk,dk2,lt,ec,T,fr}=P,FY=20.6,cub=T===0,k=cub?.82:1;const blk='#1c1c24',red='#e0283a';
+ const flap=(fr%46)<12,fl=flap?Math.sin(fr*.9):0,oneLeg=!flap&&(fr%120)>70;
+ const bx=9.5,bw=10*k,bh=5.2*k,legH=6.4*k,by=FY-legH-bh;
+ R(bx+2,FY-.3,bw-2,.7,'#000000',1,.16);
+ // ขายาว (เข่าพับหลัง)
+ const lx1=bx+bw*.48,lx2=bx+bw*.6;const legC='#34343e';
+ bLn(R,lx1,by+bh-.6,lx1-.6,by+bh+legH*.48,.5,legC,1);bLn(R,lx1-.6,by+bh+legH*.48,lx1+.2,FY,.45,legC,1);R(lx1-.6,FY-.3,2,.35,legC,1);
+ if(oneLeg){bLn(R,lx2,by+bh-.6,lx2-1,by+bh+legH*.4,.5,legC,1);bLn(R,lx2-1,by+bh+legH*.4,lx2+.6,by+bh+legH*.55,.45,legC,1)}
+ else{bLn(R,lx2,by+bh-.6,lx2-.4,by+bh+legH*.5,.5,legC,1);bLn(R,lx2-.4,by+bh+legH*.5,lx2+.6,FY,.45,legC,1);R(lx2,FY-.3,2,.35,legC,1)}
+ // ขนหางพู่ดำ (bustle) ด้านหลัง
+ for(let j=0;j<6;j++){const sw=Math.sin(fr*.15+j)*.2;bLn(R,bx+1.4,by+bh*.45,bx-1.6-j*.25+sw,by+bh*.7+j*.55,.9,j%2?blk:'#2e2e38')}
+ // ลำตัวรูปไข่เรียบ
+ for(let i=0;i<=bw;i+=.5){const u=i/bw,h=bh*Math.sin(Math.min(1,u*1.05+.02)*3.14)*(u<.5?.85+u*.3:1)+.2,y=by+bh-h-(u>.6?(u-.6)*1.6:0);R(bx+i,y,.6,h,base)}
+ R(bx+1.5,by+.4,bw-4,.5,lt,1);R(bx+1.2,by+bh-1.2,bw-3,.8,shadeC(base,-.08),1);
+ // ปีกพับ/กระพือ
+ if(flap){const wy=fl*3;for(let j=0;j<7;j++){const x=bx+1.5+j*1.25;bLn(R,x,by+.8,x-1.2-j*.15,by-2.6-wy*(.5+j*.08),1,j>4?blk:base)}R(bx+1,by-3.4-wy*.9,6,.9,lt,1)}
+ else{bLn(R,bx+2,by+1.4,bx+bw-2.4,by+.8,1.2,shadeC(base,-.05));for(let j=0;j<3;j++)bLn(R,bx+1.6+j*.6,by+1.8+j*.4,bx-.4+j*.3,by+bh*.6+j*.5,.6,blk)}
+ // คอยาวรูปตัว S (เส้นโค้งเรียบ)
+ const nx0=bx+bw-1.4,ny0=by+1,hx=bx+bw+1.6+Math.sin(fr*.1)*.4,hy=by-8.6*k+Math.sin(fr*.13)*.3;let px=nx0,py=ny0;
+ for(let i=1;i<=14;i++){const t=i/14,x=nx0+(hx-nx0)*t+Math.sin(t*3.14*1.4)*1.3,y=ny0+(hy-ny0)*t;bLn(R,px,py,x,y,1.05,t<.45?blk:base);px=x;py=y}
+ // หัว + กระหม่อมแดง + จะงอยยาว
+ R(hx-.9,hy-.9,2.6,2,base);R(hx-.6,hy-1.4,1.8,.7,red);if(T>=2)R(hx-.9,hy-1.8,2.4,1.4,ec,1,.35);R(hx-1,hy+.3,1.2,1.2,blk,1);
+ bEye(R,P,hx+.6,hy-.5);bLn(R,hx+1.6,hy+.1,hx+5.2,hy+.8+(fr%60<8?.6:0),.5,'#c8b070');R(hx+1.6,hy+.35,.6,.25,'#8a7a50',1);
+ if(T>=3)for(let j=0;j<3;j++)R(bx+2+j*3+Math.sin(fr*.2+j),by-1.8-j,.5,.5,ec,1,.8)}
 
 </script>
 </body>
