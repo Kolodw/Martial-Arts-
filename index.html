@@ -10915,9 +10915,9 @@ function bdExtra(){return{kc:S.beastMode?(S.kids||0):(S.children||[]).length,an:
 {const _ldB=lifeDetail;lifeDetail=function(){const o=_ldB.apply(this,arguments);try{Object.assign(o,bdExtra())}catch(e){}return o}}
 lifeScore=function(){try{const D={st:{pow:Math.round(total()),fame:S.fame,money:S.money,int:S.int,cha:S.cha,karma:S.karma,kills:S.kills||0,joy:Math.round(S.hN?S.hSum/S.hN:60)},...bdExtra()};return bdScoreC(D,{bm:S.beastMode?1:0,age:S.age})}catch(e){return 0}};
 // กรอบรางวัล (ได้จากทำเนียบเท่านั้น)
-FRAMES.push({id:'f_rk1',n:'กรอบแชมป์ทำเนียบ',side:'r',c:0,ty:'spin halo orbit sparkle star corner badge',c1:'#ffd040',c2:'#fff4b0',c3:'#ff9a20',pc:'#fff6c0',bd:'🥇',d:'อันดับ 1 ของทำเนียบประจำวัน'},
- {id:'f_rk2',n:'กรอบรองแชมป์ทำเนียบ',side:'r',c:0,ty:'spin orbit star corner badge',c1:'#d8e0f0',c2:'#ffffff',c3:'#8a9ab8',pc:'#ffffff',bd:'🥈',d:'อันดับ 2 ของทำเนียบประจำวัน'},
- {id:'f_rk3',n:'กรอบอันดับสามทำเนียบ',side:'r',c:0,ty:'spin corner badge',c1:'#d8884a',c2:'#ffc890',c3:'#8a4a20',pc:'#ffc890',bd:'🥉',d:'อันดับ 3 ของทำเนียบประจำวัน'});
+FRAMES.push({id:'f_rk1',n:'กรอบตะวันทอง',side:'r',c:0,ty:'spin halo orbit sparkle star corner badge',c1:'#ffd040',c2:'#fff4b0',c3:'#ff9a20',pc:'#fff6c0',bd:'🥇',d:'อันดับ 1 ของทำเนียบประจำวัน'},
+ {id:'f_rk2',n:'กรอบจันทร์เงิน',side:'r',c:0,ty:'spin orbit star corner badge',c1:'#d8e0f0',c2:'#ffffff',c3:'#8a9ab8',pc:'#ffffff',bd:'🥈',d:'อันดับ 2 ของทำเนียบประจำวัน'},
+ {id:'f_rk3',n:'กรอบดาวทองแดง',side:'r',c:0,ty:'spin corner badge',c1:'#d8884a',c2:'#ffc890',c3:'#8a4a20',pc:'#ffc890',bd:'🥉',d:'อันดับ 3 ของทำเนียบประจำวัน'});
 {const _ofs=openFrameShop;openFrameShop=function(){const r=_ofs.apply(this,arguments);try{const d=frGet(),m=$('modal'),bt=[...m.querySelectorAll('button')].pop();const L=FRAMES.filter(f=>f.side==='r');
  const h=`<div class="frtier">🏆 กรอบรางวัลทำเนียบ <small>${L.filter(f=>d.own.includes(f.id)).length}/${L.length} · แลกไม่ได้ ต้องติดอันดับ 1–3 ของวัน</small></div>`+L.map(f=>{const own=d.own.includes(f.id),eq=d.eq===f.id;return`<div class="item frshop"><div class="frprev">${frWrap(`<span class="frph">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,f.id)}</div><div style="flex:1;min-width:0"><b>${f.n}</b><p class="tag2">${f.d}</p>${own?(eq?'<span class="tag2">✅ ใช้อยู่</span>':`<button class="pbtn" onclick="frEquip('${f.id}')">สวมกรอบนี้</button>`):'<span class="tag2">🔒 ยังไม่ได้รับ</span>'}</div></div>`}).join('');
  if(bt)bt.insertAdjacentHTML('beforebegin',h)}catch(e){}return r}}
@@ -10995,12 +10995,12 @@ function openAdvice(){if(!S||!S.alive)return toast('ต้องอยู่ร�
 
 // ---- กรอบรางวัลรายสัปดาห์ / รายเดือน (สวยกว่ารายวัน: วงแหวนคู่ + ออร่าใหญ่) ----
 FRAMES.push(
- {id:'f_wk1',n:'กรอบจักรพรรดิแห่งสัปดาห์',side:'r',c:0,ty:'spin halo orbit ring2 aura2 sparkle star ember corner badge',c1:'#ffd040',c2:'#b070ff',c3:'#fff4b0',pc:'#ffe080',bd:'👑',d:'อันดับ 1 ของทำเนียบประจำสัปดาห์'},
- {id:'f_wk2',n:'กรอบราชาแห่งสัปดาห์',side:'r',c:0,ty:'spin halo orbit ring2 sparkle star snow corner badge',c1:'#a0f0ff',c2:'#ffffff',c3:'#4a8aff',pc:'#e0faff',bd:'💎',d:'อันดับ 2 ของทำเนียบประจำสัปดาห์'},
- {id:'f_wk3',n:'กรอบขุนพลแห่งสัปดาห์',side:'r',c:0,ty:'spin halo orbit ring2 ember corner badge',c1:'#ff7a3a',c2:'#ffd0a0',c3:'#b02a10',pc:'#ffa060',bd:'🔶',d:'อันดับ 3 ของทำเนียบประจำสัปดาห์'},
- {id:'f_mo1',n:'กรอบเทพผู้ครองเดือน',side:'r',c:0,ty:'rainbow halo orbit ring2 aura2 sparkle star petal corner badge',c1:'#ff70e0',c2:'#ffffff',c3:'#ffd040',pc:'#fff0a0',bd:'🌟',d:'อันดับ 1 ของทำเนียบประจำเดือน — กรอบที่หายากที่สุดในเกม'},
- {id:'f_mo2',n:'กรอบเซียนผู้ครองเดือน',side:'r',c:0,ty:'spin halo orbit ring2 aura2 sparkle star snow corner badge',c1:'#c8d8ff',c2:'#ffffff',c3:'#7a60ff',pc:'#ffffff',bd:'🌙',d:'อันดับ 2 ของทำเนียบประจำเดือน'},
- {id:'f_mo3',n:'กรอบยอดยุทธ์ผู้ครองเดือน',side:'r',c:0,ty:'spin halo orbit ring2 aura2 star ember corner badge',c1:'#ffb040',c2:'#fff080',c3:'#ff4020',pc:'#ffd060',bd:'☀️',d:'อันดับ 3 ของทำเนียบประจำเดือน'});
+ {id:'f_wk1',n:'กรอบมงกุฎจักรพรรดิ',side:'r',c:0,ty:'spin halo orbit ring2 aura2 sparkle star ember corner badge',c1:'#ffd040',c2:'#b070ff',c3:'#fff4b0',pc:'#ffe080',bd:'👑',d:'อันดับ 1 ของทำเนียบประจำสัปดาห์'},
+ {id:'f_wk2',n:'กรอบวายุน้ำแข็ง',side:'r',c:0,ty:'spin halo orbit ring2 sparkle star snow corner badge',c1:'#a0f0ff',c2:'#ffffff',c3:'#4a8aff',pc:'#e0faff',bd:'💎',d:'อันดับ 2 ของทำเนียบประจำสัปดาห์'},
+ {id:'f_wk3',n:'กรอบเปลวศึก',side:'r',c:0,ty:'spin halo orbit ring2 ember corner badge',c1:'#ff7a3a',c2:'#ffd0a0',c3:'#b02a10',pc:'#ffa060',bd:'🔶',d:'อันดับ 3 ของทำเนียบประจำสัปดาห์'},
+ {id:'f_mo1',n:'กรอบรุ้งเก้าสวรรค์',side:'r',c:0,ty:'rainbow halo orbit ring2 aura2 sparkle star petal corner badge',c1:'#ff70e0',c2:'#ffffff',c3:'#ffd040',pc:'#fff0a0',bd:'🌟',d:'อันดับ 1 ของทำเนียบประจำเดือน — กรอบที่หายากที่สุดในเกม'},
+ {id:'f_mo2',n:'กรอบจันทราเหมันต์',side:'r',c:0,ty:'spin halo orbit ring2 aura2 sparkle star snow corner badge',c1:'#c8d8ff',c2:'#ffffff',c3:'#7a60ff',pc:'#ffffff',bd:'🌙',d:'อันดับ 2 ของทำเนียบประจำเดือน'},
+ {id:'f_mo3',n:'กรอบเพลิงตำนาน',side:'r',c:0,ty:'spin halo orbit ring2 aura2 star ember corner badge',c1:'#ffb040',c2:'#fff080',c3:'#ff4020',pc:'#ffd060',bd:'☀️',d:'อันดับ 3 ของทำเนียบประจำเดือน'});
 FR_TY.ring2='วงแหวนคู่';FR_TY.aura2='ออร่าใหญ่';
 {const _fw3=frWrap;frWrap=function(inner,id){const h=_fw3.apply(this,arguments),f=frOf(id);if(!f)return h;const t=f.ty.split(' ');let x='';if(t.includes('ring2'))x+='<i class="frr"></i>';if(t.includes('aura2'))x+='<i class="fra"></i>';return x?h.replace(/<\/span>$/,x+'</span>'):h}}
 (function(){const st=document.createElement('style');st.textContent=`
