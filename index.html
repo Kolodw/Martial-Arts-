@@ -3395,7 +3395,7 @@ const TUT=[['.box.top','📋 แถบสถานะ','อายุ ระด�
 let tutI=-1,tutWasPaused=false;
 function startTut(){closeM();tutI=0;tutWasPaused=paused;paused=true;let o=document.getElementById('tut');if(!o){o=document.createElement('div');o.id='tut';document.body.appendChild(o)}tutDraw()}
 function tutDraw(){const o=document.getElementById('tut');if(tutI<0||tutI>=TUT.length){if(o)o.remove();tutI=-1;LS.set('murim_tut',1);paused=tutWasPaused;render&&S&&render();return}
- const [sel,t,d]=TUT[tutI],el=document.querySelector(sel);if(!el||!el.offsetParent){tutI++;return tutDraw()}
+ const [sel,t,d]=TUT[tutI],el=document.querySelector(sel);if(!el||!(el.offsetParent||(el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden'&&(sel!=='#modal'||modalOpen)))){tutI++;return tutDraw()}
  const r=el.getBoundingClientRect(),vh=window.innerHeight,below=r.top<vh/2;
  o.innerHTML=`<div class="tut-hole" style="left:${r.left-4}px;top:${r.top-4}px;width:${r.width+8}px;height:${r.height+8}px"></div><div class="tut-tip" style="${below?`top:${Math.min(vh-170,r.bottom+12)}px`:`bottom:${Math.min(vh-170,vh-r.top+12)}px`}"><div class="tag2">${tutI+1}/${TUT.length}</div><b>${t}</b><div style="margin:4px 0 10px">${d}</div><div style="display:flex;gap:8px"><button class="gbtn" style="flex:1" onclick="tutI=-1;tutDraw()">ข้าม</button><button class="pbtn" style="flex:2" onclick="tutI++;tutDraw()">${tutI===TUT.length-1?'เริ่มเล่น!':'ถัดไป ▶'}</button></div></div>`}
 
@@ -6318,7 +6318,7 @@ function guideAsk(n){if(LS.get('murim_guide_seen',0))return;if(modalOpen||tutI>=
 {const st=document.createElement('style');st.textContent='.gdi .h{display:flex;justify-content:space-between;align-items:center;gap:8px}.gdgo{padding:4px 10px;min-width:0;font-size:12px;flex-shrink:0}';document.head.appendChild(st)}
 try{Object.assign(I18N.d,{'คู่มือระบบสำคัญ':'Key systems guide','คู่มือระบบ':'Systems guide','เปิดดู':'Open','ระบบสำคัญทั้งหมด':'All key systems','อยากรู้จักระบบสำคัญไหม':'Want a tour of the key systems','ไว้ทีหลัง':'Later','เปิดคู่มือ':'Open guide'})}catch(e){}
 
-{let tutQ=[];const _md2=modal;modal=function(html,k){try{if(tutI>=0&&!['guide','guideask'].includes(k)){tutQ.push([html,k]);if(tutQ.length>4)tutQ.shift();return}}catch(e){}return _md2.apply(this,arguments)};
+{let tutQ=[];const _md2=modal;modal=function(html,k){try{if(tutI>=0&&!window._tutQ&&!['guide','guideask'].includes(k)){tutQ.push([html,k]);if(tutQ.length>4)tutQ.shift();return}}catch(e){}return _md2.apply(this,arguments)};
  const _td2=tutDraw;tutDraw=function(){const was=tutI>=0;const r=_td2.apply(this,arguments);try{if(was&&tutI<0&&tutQ.length){const q=tutQ.filter(x=>x[1]!=='choice');tutQ=[];const last=q[q.length-1];if(last)setTimeout(()=>{if(!modalOpen)_md2(last[0],last[1])},200)}}catch(e){}return r}}
 
 // ---------- v9.3 สัตว์อสูรพิกเซลความละเอียดสูง ----------
@@ -13078,7 +13078,7 @@ openVault=function(){const V=S.vault||[];
  ${V.length?V.map((v,i)=>{const it=vItem(v);if(!it)return'';const d=v.pa?paEff(it).d:ecoDesc(it);return`<div class="item"><div class="h"><b>${esc(it.n)} ${rarTag(it.r)}${v.pa?' <span class="tag2">🏛️</span>':''}</b><span><button class="sysb" onclick="vaultUse(${i})">ใช้</button> <button class="sysb" onclick="vaultSell(${i})">ขาย ${fmt(Math.round((v.paid||0)*.5))}</button></span></div><p class="tag2">${d}</p></div>`}).join(''):'<p class="tag2">ยังว่างเปล่า</p>'}
  ${(S.hunts||[]).length?`<p class="tag2" style="color:#ff6b6b">⚠️ มีคนกำลังตามล่าคุณ ${S.hunts.length} ราย</p>`:''}`,'vault')};
 // ปุ่มคลังสมบัติในกระเป๋า
-{const _obV=openBag;openBag=function(){const r=_obV.apply(this,arguments);try{const m=$('modal'),g=m&&m.querySelector('.gbtn');if(g&&!m.querySelector('[data-vlt]')){const n=(S.vault||[]).length;g.insertAdjacentHTML('afterend',`<button class="gbtn" data-vlt="1" style="width:100%;margin-bottom:6px" onclick="openVault()">🗝️ คลังสมบัติ (${n} ชิ้น)${n?' · กดใช้ได้':''}</button>`)}}catch(e){}return r}}
+{const _obV=openBag;openBag=function(){const r=_obV.apply(this,arguments);try{const m=$('modal'),g=m&&(m.querySelector('.gbtn[onclick^="openEquip"]')||m.querySelector('.gbtn'));if(g&&!m.querySelector('[data-vlt]')){const n=(S.vault||[]).length;g.insertAdjacentHTML('afterend',`<button class="gbtn" data-vlt="1" style="width:100%;margin-bottom:6px" onclick="openVault()">🗝️ คลังสมบัติ (${n} ชิ้น)${n?' · กดใช้ได้':''}</button>`)}}catch(e){}return r}}
 
 
 // ===================== v15.8 ฉาก pixel · ปลดปล่อยพลัง · ท่องดินแดน =====================
@@ -13463,6 +13463,28 @@ function pxAtk(c,kind,a,col,sc,sp,cx,cy,tx,ty){const e=Math.min(1,a*1.25),my=cy-
  case'claw':{for(let i=0;i<3;i++){const p=Math.min(1,Math.max(0,e*1.8-i*.25));if(p<=0)continue;const x0=tx-34+i*16,y0=6;pxLine(c,x0,y0,x0+46*p,y0+(ty+6)*p,col[0],3+(sc>=6?1:0));pxLine(c,x0+1,y0,x0+1+46*p,y0+(ty+6)*p,'#ffffff',1)}break}
  case'moon':{const mx=tx,m0=11,w=Math.round((2+sc*.8)*e),h=Math.round((ty+4-m0)*Math.min(1,a*2));c.globalAlpha=.8;c.fillStyle=col[0];c.fillRect(mx-w-1,m0,w*2+2,h);c.fillStyle=col[1];c.fillRect(mx-w,m0,w*2,h);c.fillStyle='#ffffff';c.fillRect(mx-Math.ceil(w/2),m0,w,h);c.globalAlpha=1;pxDisc(c,mx,m0,9+Math.round(e*2),col[0]);pxDisc(c,mx,m0,8+Math.round(e*2),col[1]);pxDisc(c,mx+4,m0-2,7+Math.round(e*2),pxMix(col[0],'#1a1030',.7));break}
  default:{const th=Math.min(14,2+sc*.9);c.fillStyle=col[0];c.fillRect(cx+6,my-th/2,(tx-cx)*e,th);c.fillStyle=col[1];c.fillRect(cx+6,my-th/4,(tx-cx)*e,Math.max(1,th/2))}}}
+
+// ===================== v15.8c สอนเล่นแบบพาเข้าหน้าจริง =====================
+{const _tq=toast;toast=function(){if(window._tutQ)return;return _tq.apply(this,arguments)}}
+try{TUT.push(
+ ['#focus','💥 ปลดปล่อย · 🗺️ แผนที่','ต้นแถบนี้จะมีปุ่มพิเศษโผล่ขึ้นมาเมื่อโตพอ — <b>💥 ปลดปล่อย</b> (อายุ 10+) ปล่อยวิชาใส่ป่าหรือภูเขาดูความแรง · <b>🗺️ แผนที่</b> (อายุ 14+) เดินทางไปดินแดนต่างๆ · สัตว์อสูรมีปุ่ม <b>🧑 แปลงกาย</b>'],
+ ['#modal','🎒 ข้างในกระเป๋า','ของที่เก็บได้ ขายได้ · ปุ่ม <b>⚔️ ชุดสวมใส่</b> เปลี่ยนอาวุธ/เกราะ · <b>🗝️ คลังสมบัติ</b> เก็บของที่ชนะประมูล กดใช้ตอนไหนก็ได้',()=>openBag()],
+ ['#modal','📋 เควส','เป้าหมายประจำชีวิตและเควสที่รับมา ทำสำเร็จได้รางวัล · ถ้ามี 🟦 ระบบ เควสของระบบจะอยู่ที่นี่ด้วย',()=>openQuests()],
+ ['#modal','📖 วิชายุทธ์','วิชาทั้งหมดของคุณ แต่ละวิชาพัฒนาเองได้ ระดับต่ำ → กลาง → สูง → สุดยอด · โฟกัส <b>ฝึกยุทธ์</b> หรือ <b>ลมปราณ</b> จะพัฒนาเร็วขึ้น',()=>openArts()],
+ ['#modal','☰ เมนูหลัก','ทุกอย่างอยู่ที่นี่ — สำนัก ตลาด ครอบครัว บ้าน สัตว์คู่ใจ สมุดตำนาน การตั้งค่า · ลองกดเข้าไปดูทีละหมวดได้เลย',()=>openMenu()],
+ ['#modal','🗺️ แผนที่ยุทธภพ','เลือกดินแดนแล้วกด <b>🧭 เดินทาง</b> แต่ละที่ได้โบนัสต่างกัน · อยู่ที่ไหนกด <b>⚔️ ท้าจ้าวถิ่น</b> ชิงฉายาได้ · ระวังค่าหัวถ้าทำตัวเกเร',()=>openMap()],
+ ['#modal','💥 ปลดปล่อยพลัง','เลือกสถานที่ วิชา และความแรง แล้วกดปลดปล่อย — ดูฉาก pixel ตอนพลังถล่ม ได้เกรด F → ∞ ปีละครั้ง',()=>relOpen()],
+ ['#modal','💬 ออนไลน์ · แชทโลก','คุยกับผู้เล่นคนอื่น แชร์ชีวิต และดูคนอื่นเล่นสดได้จากแถบด้านบน',()=>openOnline('chat')],
+ ['#modal','🏆 ทำเนียบ','ชีวิตที่จบแล้วคะแนนสูงจะขึ้นที่นี่ แยกตามโลก มนุษย์ เซียน เทพ สัตว์อสูร และโหมดท้าทาย · ติดอันดับได้ฉายาและกรอบพิเศษ',()=>openOnline('board')],
+ ['#modal','⚔️ ลานประลองหมื่นเงา','สู้กับเงาของผู้เล่นอื่นเพื่อแต้มและลีก · ได้ 🪙 เหรียญลานไปแลกฉายา กรอบ ออร่า และหีบลาน · ทำภารกิจรายวันได้เหรียญเพิ่ม',()=>openOnline('arena')],
+ ['.box.top','✨ พร้อมแล้ว!','กด <b>❓ วิธีเล่น</b> ในเมนูเพื่อดูการสอนนี้อีกครั้งได้ทุกเมื่อ — ขอให้ชีวิตนี้เป็นตำนาน!'])}catch(e){}
+{const _td=tutDraw;tutDraw=function(){const st=TUT[tutI];
+ if(tutI<0||tutI>=TUT.length){tutDraw._pi=-2;if(tutDraw._open){tutDraw._open=0;window._tutQ=0;try{closeM()}catch(e){}}return _td()}
+ if(st&&tutI!==tutDraw._pi){tutDraw._pi=tutI;if(tutDraw._open){tutDraw._open=0;window._tutQ=0;try{closeM()}catch(e){}}
+  if(st[3]){window._tutQ=1;try{flushReveal()}catch(e){}try{st[3]()}catch(e){}tutDraw._open=1;const o=document.getElementById('tut');if(o)o.innerHTML='<div class="tut-hole" style="left:50%;top:50%;width:0;height:0"></div>';
+   return setTimeout(()=>{if(tutI<0)return;const m=$('modal');if(m&&m.scrollTo)try{m.scrollTop=0}catch(e){}_td()},450)}}
+ return _td()}}
+(()=>{const st=document.createElement('style');st.textContent='#tut .tut-tip{z-index:1000}';document.head.appendChild(st)})();
 </script>
 </body>
 </html>
