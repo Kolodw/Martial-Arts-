@@ -8046,8 +8046,8 @@ function achFlush(){if(!ACHQ.length||!S)return;const L=ACHQ.splice(0),tot=L.redu
 function achEndHtml(L){const s=L.slice().sort((a,b)=>b.r-a.r),top=s.slice(0,3),rest=s.slice(3);
  return`<h5>🏆 ปลดล็อกในชีวิตนี้ (${L.length})</h5>${top.map(a=>`<div class="lgf fr${a.r}" style="display:block;margin:6px 0;text-align:left"><b class="t${a.r}">${esc(a.n)}</b> <span class="tag2">${TIER_N[a.r]}</span><br><span class="tag2">${esc(a.d)}</span></div>`).join('')}${rest.length?`<details style="margin-top:4px"><summary class="tag2" style="cursor:pointer">ดูอีก ${rest.length} อัน</summary><div style="margin-top:4px">${rest.map(a=>`<span class="tchip fr${a.r}">${esc(a.n)}</span>`).join('')}</div></details>`:''}`}
 // ---- แต้มตำนานตามความยาก (ระดับนักบันทึกไม่ลดจากที่เคยได้) ----
-function achPts(){return ACH_ALL.reduce((s,a)=>s+achStar(a)*ACH_W[a.r],0)}
-function achPtsMax(){return ACH_ALL.reduce((s,a)=>s+3*ACH_W[a.r],0)}
+function achPts(){return ACH_ALL.reduce((s,a)=>s+achStar(a)*(ACH_W[a.r]||8),0)}
+function achPtsMax(){return ACH_ALL.reduce((s,a)=>s+3*(ACH_W[a.r]||8),0)}
 {const P=[0,.07,.16,.28,.42,.58,.75],M=achPtsMax();BOOK_RK.forEach((x,i)=>{x[0]=Math.round((P[i]||0)*M)})}
 bookRank=function(){const s=achPts();let i0=0;BOOK_RK.forEach((x,i)=>{if(s>=x[0])i0=i});let mx=0;try{mx=+LS.get('murim_bkmax',-1)}catch(e){}
  if(mx<0){mx=0;try{const old=achStars(),OLD=[0,30,70,120,180,250,330];OLD.forEach((v,i)=>{if(old>=v)mx=i})}catch(e){}LS.set('murim_bkmax',mx)}
@@ -12658,7 +12658,7 @@ function bCross(){const m=S.beastMode;if(m.heaven||choice._cur||modalOpen)return
 // ---------- แสดงผล ----------
 {const _rK=render;render=function(){const r=_rK.apply(this,arguments);try{const K=S&&S.kalpa;if(K&&K.n>=1){const t=$('gTags');if(t&&!t.querySelector('.klb'))t.insertAdjacentHTML('afterbegin',`<span class="tag klb" style="--c:${KAL_C[K.n]}">♾️ ${KAL_N[K.n]} · ${KAL_T[K.n]}${K.role?' · '+KROLE[K.role]:''}</span>`)}}catch(e){}return r}}
 {const _ldK=lifeDetail;lifeDetail=function(){const o=_ldK.apply(this,arguments);try{if(o&&S&&S.kalpa&&S.kalpa.n)o.kl=S.kalpa.n}catch(e){}return o}}
-try{const L=[{id:'kal2',n:'ผู้รอดพ้นสิ้นกัลป์',d:'ฝ่าภัยสิ้นกัลป์เข้าสู่กัลป์ที่สอง',r:6,c:()=>!!(S.kalpa&&S.kalpa.n>=1)},{id:'kal5',n:'เทพเหนือห้ากัลป์',d:'ไปถึงกัลป์ที่ห้า',r:6,c:()=>!!(S.kalpa&&S.kalpa.n>=4)},{id:'kal9',n:'ผู้อยู่เหนือกาลเวลา',d:'ผ่านวัฏจักรกัลป์ทั้งเก้า',r:7,c:()=>!!S.flags.kTop},{id:'kalr',n:'แสงดาวของบรรพบุรุษ',d:'ละสังขารอย่างสมบูรณ์ที่ขอบกัลป์',r:5,c:()=>!!S.flags.kRest},{id:'bx100k',n:'อสูรผู้ฝ่าแสนปี',d:'สัตว์อสูรฝ่าทัณฑ์แสนปีสำเร็จ',r:5,c:()=>!!(S.beastMode&&(S.beastMode.capX||0)>=1)}];
+try{const L=[{id:'kal2',n:'ผู้รอดพ้นสิ้นกัลป์',d:'ฝ่าภัยสิ้นกัลป์เข้าสู่กัลป์ที่สอง',r:6,c:()=>!!(S.kalpa&&S.kalpa.n>=1)},{id:'kal5',n:'เทพเหนือห้ากัลป์',d:'ไปถึงกัลป์ที่ห้า',r:6,c:()=>!!(S.kalpa&&S.kalpa.n>=4)},{id:'kal9',n:'ผู้อยู่เหนือกาลเวลา',d:'ผ่านวัฏจักรกัลป์ทั้งเก้า',r:6,c:()=>!!S.flags.kTop},{id:'kalr',n:'แสงดาวของบรรพบุรุษ',d:'ละสังขารอย่างสมบูรณ์ที่ขอบกัลป์',r:5,c:()=>!!S.flags.kRest},{id:'bx100k',n:'อสูรผู้ฝ่าแสนปี',d:'สัตว์อสูรฝ่าทัณฑ์แสนปีสำเร็จ',r:5,c:()=>!!(S.beastMode&&(S.beastMode.capX||0)>=1)}];
  const g=ACH.find(x=>/เหนือตำนาน/.test(x[0]));if(g)g[1].push(...L);else ACH.push(['♾️ วัฏจักรกัลป์',L]);ACH_ALL.push(...L)}catch(e){}
 try{TTL_SP.unshift(['kalpa9',()=>S.flags.kTop,'ผู้อยู่เหนือกาลเวลา'],['kalpa2',()=>!!(S.kalpa&&S.kalpa.n>=1),'ผู้รอดพ้นสิ้นกัลป์'])}catch(e){}
 try{GD2.push({s:'world',ic:'♾️',t:'วัฏจักรกัลป์',nw:1,d:'มีชีวิตถึง <b>1,000,000 ปี</b> ไม่ตัดจบอีกแล้ว — เลือก 🌌 <b>ก้าวข้ามกัลป์</b> (ฝ่าภัยสิ้นกัลป์ 3 ระลอก ผ่าน 2 ใน 3 ด้วยพลัง/ปัญญา/จิต/ของวิเศษ) หรือ 🌅 ละสังขาร (ลูกหลานได้มรดก) · แต่ละกัลป์ยาวล้านปี มีเหตุการณ์ใหม่: ร่างเกิดใหม่ของลูกหลาน คนรักเก่า ศาลเทพโบราณ ผู้ท้าทาย · เลือกบทบาท ผู้สร้าง/ผู้พิทักษ์/มารสิ้นกัลป์ · สูงสุด 9 กัลป์ · 🐾 สัตว์อสูรอายุถึงแสนปีเจอ<b>ทางแยกอสูรแสนปี</b> ฝ่าทัณฑ์เพื่อยืดอายุทีละแสนปี จนถึงล้านปีแล้วเข้าวัฏจักรกัลป์เหมือนคน',
@@ -12726,6 +12726,42 @@ FR_TY.rk1='มงกุฎ · รัศมี · ประกายทอง';FR
 @keyframes rkGold{0%,100%{box-shadow:0 0 5px #ffd040,0 0 10px var(--g,#ffb020)}50%{box-shadow:0 0 10px #fff0a0,0 0 22px var(--g,#ffb020),0 0 30px #ffd04088}}
 @keyframes rkSil{0%,100%{box-shadow:0 0 3px rgba(220,235,255,.6)}50%{box-shadow:0 0 8px rgba(230,240,255,.95)}}
 @keyframes rkCrown{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-1.5px) rotate(8deg)}}`;document.head.appendChild(st)})();
+
+// ===================== v15.7d สมุดตำนาน: คอลัมน์ · ค้นหา · พับหมวด · ทางลัดหมวด =====================
+window._bkQ=window._bkQ||'';window._bkF=window._bkF||'all';
+function bkCol(){try{return new Set(LS.get('murim_bkcol',null)||[])}catch(e){return new Set()}}
+function bkColSet(S0){LS.set('murim_bkcol',[...S0])}
+{const _obC=openBook;openBook=function(){const r=_obC.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='book')return r;const tabs=m.querySelector('.tabs');if(!tabs)return r;
+ const H=[...m.querySelectorAll('h4')].filter(h=>h.closest('#modal')===m&&!h.closest('.bkgrid'));const col=bkCol(),first=!LS.get('murim_bkcol',null);
+ const G=[];H.forEach(h=>{const items=[];let el=h.nextElementSibling;while(el&&el.tagName!=='H4'){if(el.classList.contains('item'))items.push(el);el=el.nextElementSibling}if(!items.length)return;
+  const g=document.createElement('div');g.className='bkgrid';h.after(g);items.forEach(i=>g.appendChild(i));const key=h.textContent.replace(/[⭐\d\/\s+ใหม่]+$/,'').trim().slice(0,40);h.dataset.key=key;h.classList.add('bkhc');
+  const hasNew=items.some(i=>i.classList.contains('bknew'));if((first&&!hasNew&&G.length>0)||(!first&&col.has(key)&&!hasNew))h.classList.add('shut');
+  h.onclick=()=>{h.classList.toggle('shut');const c=bkCol();if(h.classList.contains('shut'))c.add(key);else c.delete(key);bkColSet(c)};G.push([h,g,key])});
+ if(first&&G.length){const c=new Set(G.filter(x=>x[0].classList.contains('shut')).map(x=>x[2]));bkColSet(c)}
+ const chips=G.map(([h,g,key],i)=>{const t=h.firstChild&&h.firstChild.nodeType===3?h.firstChild.textContent.trim():key;return`<button class="bkj" onclick="bkJump(${i})">${esc(t.slice(0,18))}</button>`}).join('');
+ tabs.insertAdjacentHTML('afterend',`<div class="bksearch"><input id="bkQ" type="search" placeholder="🔍 ค้นหาความสำเร็จ / ฉายา / คำอธิบาย…" value="${esc(window._bkQ)}" oninput="window._bkQ=this.value;bkFilter()"><div class="bkfl">${[['all','ทั้งหมด'],['got','✅ ได้แล้ว'],['no','🔒 ยังไม่ได้']].map(([k,t])=>`<button class="${window._bkF===k?'on':''}" onclick="window._bkF='${k}';bkFilter();this.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===this))">${t}</button>`).join('')}<button onclick="bkAll(1)">⊕ เปิดทุกหมวด</button><button onclick="bkAll(0)">⊖ พับทุกหมวด</button></div>${G.length>1?`<div class="bkjs">${chips}</div>`:''}<div class="tag2" id="bkCnt"></div></div>`);
+ window._bkG=G;bkFilter()}catch(e){console.error(e)}return r}}
+function bkJump(i){const g=(window._bkG||[])[i];if(!g)return;g[0].classList.remove('shut');const c=bkCol();c.delete(g[2]);bkColSet(c);g[0].scrollIntoView({behavior:'smooth',block:'start'})}
+function bkAll(open){const c=bkCol();(window._bkG||[]).forEach(([h,g,k])=>{h.classList.toggle('shut',!open);if(open)c.delete(k);else c.add(k)});bkColSet(c)}
+function bkFilter(){const q=String(window._bkQ||'').trim().toLowerCase(),f=window._bkF||'all',m=$('modal');if(!m)return;let n=0,tot=0;
+ const one=it=>{const got=it.classList.contains('bkgot')||!/🔒/.test(it.querySelector('.h b')?it.querySelector('.h b').textContent:'');const okF=f==='all'||(f==='got'?got:!got);const okQ=!q||it.textContent.toLowerCase().includes(q);const on=okF&&okQ;it.style.display=on?'':'none';tot++;if(on)n++;return on};
+ const G=window._bkG||[];if(G.length){G.forEach(([h,g])=>{let k=0;[...g.children].forEach(it=>{if(one(it))k++});h.style.display=k?'':'none';g.style.display=k?'':'none';h.classList.toggle('qopen',!!q&&k>0)})}
+ else m.querySelectorAll('.item').forEach(one);
+ const c=$('bkCnt');if(c)c.textContent=q||f!=='all'?`เจอ ${n} จาก ${tot} รายการ`:''}
+(function(){const st=document.createElement('style');st.textContent=`
+.bksearch{position:sticky;top:-14px;z-index:5;background:var(--w);margin:6px -4px 8px;padding:8px 4px 6px;border-bottom:2px solid var(--line)}
+.bksearch input{width:100%;box-sizing:border-box;padding:9px 12px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:14px}
+.bkfl,.bkjs{display:flex;gap:5px;overflow-x:auto;margin-top:6px;padding-bottom:2px;scrollbar-width:none}.bkfl::-webkit-scrollbar,.bkjs::-webkit-scrollbar{display:none}
+.bkfl button,.bkj{flex:0 0 auto;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:3px 10px;font:inherit;font-size:12px;cursor:pointer;white-space:nowrap}
+.bkfl button.on{background:var(--pink);color:#fff;border-color:var(--pink)}.bkj{font-size:11.5px;opacity:.9}
+.bkhc{cursor:pointer;user-select:none;position:relative;padding-right:22px!important}.bkhc:after{content:'▾';position:absolute;right:4px;top:50%;transform:translateY(-50%);transition:transform .2s;opacity:.7}
+.bkhc.shut:after{transform:translateY(-50%) rotate(-90deg)}.bkhc.shut:not(.qopen)+.bkgrid{display:none!important}
+body:has(#mFloat.on) .bksearch{padding-right:92px}
+.bkgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:10px}
+@media(min-width:720px){.bkgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.bkgrid .item{margin:0!important;padding:7px 8px!important;min-width:0}.bkgrid .item .h{flex-direction:column;align-items:flex-start;gap:2px}
+.bkgrid .item .h b{font-size:12.5px;line-height:1.3;word-break:break-word}.bkgrid .item .h>span{font-size:11px}.bkgrid .item p{font-size:11.5px;line-height:1.35;margin:4px 0 0;word-break:break-word}
+.bkgrid .item button{font-size:11px;padding:3px 6px}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
