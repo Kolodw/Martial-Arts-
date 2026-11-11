@@ -10921,7 +10921,7 @@ FRAMES.push({id:'f_rk1',n:'กรอบแชมป์ทำเนียบ',sid
  const h=`<div class="frtier">🏆 กรอบรางวัลทำเนียบ <small>${L.filter(f=>d.own.includes(f.id)).length}/${L.length} · แลกไม่ได้ ต้องติดอันดับ 1–3 ของวัน</small></div>`+L.map(f=>{const own=d.own.includes(f.id),eq=d.eq===f.id;return`<div class="item frshop"><div class="frprev">${frWrap(`<span class="frph">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,f.id)}</div><div style="flex:1;min-width:0"><b>${f.n}</b><p class="tag2">${f.d}</p>${own?(eq?'<span class="tag2">✅ ใช้อยู่</span>':`<button class="pbtn" onclick="frEquip('${f.id}')">สวมกรอบนี้</button>`):'<span class="tag2">🔒 ยังไม่ได้รับ</span>'}</div></div>`}).join('');
  if(bt)bt.insertAdjacentHTML('beforebegin',h)}catch(e){}return r}}
 const BD_CN={m:'⚔️ ยุทธภพ',x:'☁️ โลกเทพเซียน',g:'🌟 โลกเทพ',b:'🐾 สัตว์อสูร'},BD_KB=[0,30000,15000,8000],BD_KBP={d:[0,30000,15000,8000],w:[0,120000,60000,30000],m:[0,400000,200000,100000]},BD_FRP={d:'f_rk',w:'f_wk',m:'f_mo'},BD_PN={d:'ประจำวัน',w:'ประจำสัปดาห์',m:'ประจำเดือน'};
-async function bdClaim(){try{if(!onlineOK)return;const j=await api('bdrw');const L=(j&&j.l)||[];if(!L.length)return;const d=frGet(),kb=kbGet();let w=LS.get('murim_bdw',0)||0;const lines=[];
+async function bdClaim(){try{if(!onlineOK)return;const j=await api('bdrw');try{rkSync(j&&j.rk)}catch(e){}const L=(j&&j.l)||[];if(!L.length)return;const d=frGet(),kb=kbGet();let w=LS.get('murim_bdw',0)||0;const lines=[];
  for(const x of L){const r=Math.max(1,Math.min(3,+x.r||3)),pp=BD_FRP[x.p]?x.p:'d',fid=BD_FRP[pp]+r,kv=BD_KBP[pp][r];if(!d.own.includes(fid))d.own.push(fid);kb.g+=kv;w++;if(r===1)LS.set('murim_bd1',(LS.get('murim_bd1',0)||0)+1);if(pp!=='d'){const kk=pp==='w'?'murim_bdW':'murim_bdM';LS.set(kk,(LS.get(kk,0)||0)+1)}
   lines.push(`${['','🥇','🥈','🥉'][r]} อันดับ ${r} ทำเนียบ${BD_PN[pp]} ${BD_CN[x.c]||''} (${esc(x.d)}) — ${esc(x.n)} (${fmt(x.s)} คะแนน) · ได้ <b>${frOf(fid).n}</b> + ☯️ ${fmt(kv)}`)}
  frSet(d);kbSet(kb);LS.set('murim_bdw',w);profPush();
@@ -12060,6 +12060,68 @@ function benLook(name){try{const n=String(name||'');let sp=null;for(const [k,v] 
  return{i:-1,w:S.xian?1:0,t:Math.min(9,my*2+R(-1,2)),n:sp,sp,k:s[1],col:s[2],el:e[0],ec:e[1],ad:'',tm:'',f:{wing:s[1]==='bird',horn:my>=3,tail9:false,spike:false,eye3:false,head2:false,big:false,glow:my>=2}}}catch(e){return null}}
 {const _fgB=fight;fight=function(name){window._fEnemy=name;try{return _fgB.apply(this,arguments)}finally{setTimeout(()=>{window._fEnemy=null},50)}}}
 {const _ssB=setScene;setScene=function(type,data){if(type==='fight'&&!(data&&data.beast)&&window._fEnemy){const bl=benLook(window._fEnemy);if(bl)data=Object.assign({},data||{},{beast:bl})}return _ssB.call(this,type,data)}}
+
+
+// ===================== v15.5 สมุดตำนานใหม่ · ฉายาทำเนียบ (ชั่วคราว) · ปุ่มลอยปิด/ขึ้นบนสำหรับหน้ายาว =====================
+// ---------- ฉายาทำเนียบ ----------
+const RKC={d:['','ราชันย์ประจำวัน','ดาวเด่นประจำวัน','ผู้กล้าประจำวัน'],w:['','จักรพรรดิประจำสัปดาห์','ขุนพลประจำสัปดาห์','วีรชนประจำสัปดาห์'],m:['','เทพเจ้าแห่งเดือน','ราชันย์แห่งเดือน','ตำนานแห่งเดือน']},RKC_TR={d:7,w:8,m:9},RKC_PN={d:'รายวัน',w:'รายสัปดาห์',m:'รายเดือน'};
+const RKC_OF=t=>{for(const p in RKC){const r=RKC[p].indexOf(t);if(r>0)return{p,r}}return null};
+function rkList(){const L=(LS.get('murim_rkttl',[])||[]).filter(x=>x&&x.t&&x.exp>Date.now());return L.sort((a,b)=>RKC_TR[b.p]-RKC_TR[a.p]||a.r-b.r)}
+function rkAdd(x){if(!x||!x.t||!RKC_OF(x.t))return;const o=RKC_OF(x.t),L=rkList().filter(y=>y.p!==o.p);L.push({t:x.t,p:o.p,r:o.r,c:x.c||'',exp:+x.exp||Date.now()+86400e3});LS.set('murim_rkttl',L)}
+function rkSync(rk){if(!Array.isArray(rk))return;const had=new Set(rkList().map(x=>x.t+x.exp));rk.forEach(rkAdd);const nw=rkList().filter(x=>!had.has(x.t+x.exp));
+ const cur=showTtl();if(nw.length&&(!cur||(cur.r<7)||(RKC_TR[nw[0].p]>=cur.r))){const b=nw[0];LS.set('murim_show',{t:b.t,r:RKC_TR[b.p],k:'rk'});toast('🏆 สวมฉายาทำเนียบ「'+b.t+'」ให้แล้ว (ชั่วคราว)')}
+ nw.forEach(x=>{try{achPopShow({r:6,h:'🏆 ฉายาทำเนียบ'+RKC_PN[x.p],n:'「'+x.t+'」',d:'โชว์ในแชทและตอนคนอื่นดูคุณเล่น · หมดอายุ '+rkLeft(x)})}catch(e){}})}
+function rkLeft(x){const ms=x.exp-Date.now();if(ms<=0)return'หมดแล้ว';const d=Math.floor(ms/86400e3),h=Math.floor(ms%86400e3/3600e3);return d?`อีก ${d} วัน ${h} ชม.`:`อีก ${h} ชม. ${Math.floor(ms%3600e3/60e3)} นาที`}
+function rkChip(t,tr){const o=RKC_OF(t),p=o?o.p:tr===9?'m':tr===8?'w':'d',r=o?o.r:1;return`<span class="rkchip rk${p} rr${r}"><i>${p==='m'?'👑':p==='w'?'💠':'✦'}${['','①','②','③'][r]}</i>${esc(String(t).slice(0,24))}</span>`}
+{const _tcR=tchipH;tchipH=function(t,r){if(+r>=7||RKC_OF(String(t||'')))return rkChip(t,+r);return _tcR.apply(this,arguments)}}
+{const _stR=showTtl;showTtl=function(){const v=_stR.apply(this,arguments);try{if(v&&(v.r>=7||v.k==='rk')){const ok=rkList().some(x=>x.t===v.t);if(!ok){LS.del('murim_show');return null}}}catch(e){}return v}}
+{const _spR=openShowPick;openShowPick=function(){const r=_spR.apply(this,arguments);try{const m=$('modal'),L=rkList(),cur=showTtl();const h4=[...m.querySelectorAll('h4')][0];
+ const html=`<h4 style="margin:10px 0 6px">🏆 ฉายาทำเนียบ · ชั่วคราว (${L.length})</h4>${L.length?`<div class="shpick">${L.map(x=>`<button class="rkpick ${cur&&cur.t===x.t?'on':''}" onclick="setShowTtl(${JSON.stringify(x.t).replace(/"/g,'&quot;')},${RKC_TR[x.p]},'rk')">${rkChip(x.t,RKC_TR[x.p])}<small>${RKC_PN[x.p]} · ${rkLeft(x)}</small></button>`).join('')}</div>`:'<p class="tag2">ติดอันดับ 1–3 ของทำเนียบรายวัน/รายสัปดาห์/รายเดือน เพื่อรับฉายาสีพิเศษ — ใช้ได้จนกว่ารอบถัดไปจะตัดสิน</p>'}`;
+ if(h4)h4.insertAdjacentHTML('beforebegin',html)}catch(e){}return r}}
+// ---------- สมุดตำนาน: ของใหม่มีอนิเมชั่น · สีตามระดับ · จัดเรียงใหม่ ----------
+{const _obN=openBook;openBook=function(){const r=_obN.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='book'||(typeof BKT!=='undefined'&&BKT==='ttl'))return r;
+ const fresh=[];{const sv=LS.get('murim_bookseen',null),seen0=new Set(Array.isArray(sv)?sv:Object.keys(achGot)),add=Object.keys(achGot).filter(id=>!seen0.has(id));if(!window._bkNS||(Date.now()-window._bkNS.t>300000&&!add.length))window._bkNS={t:Date.now(),s:new Set()};if(add.length){add.forEach(id=>window._bkNS.s.add(id));window._bkNS.t=Date.now()}}const seen={has:id=>!window._bkNS.s.has(id)};
+ const H=[...m.querySelectorAll('h4')];let ai=0;const groups=[];
+ // จับคู่หัวข้อหมวด/รายการ ตามลำดับ ACH
+ H.forEach((h,gi)=>{const cat=ACH[gi];if(!cat)return;const items=[];let el=h.nextElementSibling;while(el&&el.tagName!=='H4'){if(el.classList.contains('item'))items.push(el);el=el.nextElementSibling}groups.push([h,cat,items])});
+ groups.forEach(([h,[cat,list],items])=>{if(items.length!==list.length)return;const pair=list.map((a,i)=>({a,el:items[i],g:!!achGot[a.id],nw:!!achGot[a.id]&&!seen.has(a.id)}));
+  pair.forEach(p=>{p.el.classList.add('bk2','bkr'+(p.a.r|0));if(p.g)p.el.classList.add('bkgot');if(p.nw){p.el.classList.add('bknew');fresh.push(p.a);const hb=p.el.querySelector('.h b');if(hb)hb.insertAdjacentHTML('afterbegin','<span class="bknb">NEW</span>')}p.el.id='bk_'+p.a.id});
+  pair.sort((x,y)=>(y.nw-x.nw)||(y.g-x.g)||(x.g?(y.a.r-x.a.r):(x.a.r-y.a.r)));let at=h;pair.forEach(p=>{at.after(p.el);at=p.el});
+  const gN=pair.filter(p=>p.g).length,nN=pair.filter(p=>p.nw).length;h.classList.add('bkh');h.insertAdjacentHTML('beforeend',`<span class="bkhb"><i style="width:${Math.round(gN/Math.max(1,pair.length)*100)}%"></i></span>${nN?`<span class="bknb">+${nN} ใหม่</span>`:''}`)});
+ // หมวดที่มีของใหม่ขึ้นก่อน
+ const box=H[0]&&H[0].parentNode;if(box){const withNew=groups.filter(g=>g[2].some(e=>e.classList.contains('bknew')));let anchor=H[0];withNew.reverse().forEach(([h])=>{const nodes=[h];let el=h.nextElementSibling;while(el&&el.tagName!=='H4'){nodes.push(el);el=el.nextElementSibling}if(h===H[0])return;nodes.reverse().forEach(n=>anchor.before(n));anchor=h})}
+ if(fresh.length){const tabs=m.querySelector('.tabs');const nb=`<div class="bknewbox"><b>✨ ปลดล็อกใหม่ ${fresh.length} อย่าง</b><div>${fresh.slice(0,12).map(a=>`<a class="t${a.r}" onclick="document.getElementById('bk_${a.id}').scrollIntoView({behavior:'smooth',block:'center'})">🏆 ${esc(a.n)}</a>`).join('')}</div></div>`;if(tabs)tabs.insertAdjacentHTML('afterend',nb)}
+ LS.set('murim_bookseen',Object.keys(achGot))}catch(e){console.error(e)}return r}}
+// ---------- ปุ่มลอย: ขึ้นบน / ปิด (หน้ายาวทุกหน้า) ----------
+(function(){const f=document.createElement('div');f.id='mFloat';f.innerHTML='<button type="button" class="mfup" aria-label="ขึ้นบนสุด">⬆</button><button type="button" class="mfx" aria-label="ปิด">✕</button>';document.body.appendChild(f);
+ const md=()=>document.getElementById('modal');
+ f.querySelector('.mfup').onclick=()=>{try{md().scrollTo({top:0,behavior:'smooth'})}catch(e){md().scrollTop=0}};
+ f.querySelector('.mfx').onclick=()=>{const m=md();const x=m&&[...m.querySelectorAll('.xbtn')].find(b=>!b.classList.contains('qbtn'));if(x)x.click();else closeM();upd()};
+ const upd=()=>{try{const m=md();const on=modalOpen&&m&&$('mask').classList.contains('on')&&m.scrollHeight>m.clientHeight+200&&m.scrollTop>140;f.classList.toggle('on',!!on);if(on){const R0=m.getBoundingClientRect();f.style.top=Math.max(8,R0.top+8)+'px';f.style.right=Math.max(8,window.innerWidth-R0.right+8)+'px'}}catch(e){}};
+ document.addEventListener('scroll',e=>{if(e.target&&e.target.id==='modal')upd()},true);window.addEventListener('resize',upd);setInterval(upd,600);
+ const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);f.classList.remove('on');return r}})();
+(function(){const st=document.createElement('style');st.textContent=`
+#mFloat{position:fixed;z-index:60;display:none;gap:6px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35))}#mFloat.on{display:flex;animation:mfIn .2s ease-out}
+#mFloat button{width:38px;height:38px;border-radius:10px;border:2px solid var(--line);background:var(--w);color:var(--ink);font-size:16px;font-weight:800;cursor:pointer}#mFloat .mfx{background:var(--pink);color:#fff}
+@keyframes mfIn{from{transform:translateY(-8px);opacity:0}to{transform:none;opacity:1}}
+.rkchip{position:relative;display:inline-flex;align-items:center;gap:3px;font-size:.78em;font-weight:900;border-radius:8px;padding:0 7px;margin:0 4px;line-height:1.6;white-space:nowrap;overflow:hidden;color:#fff;vertical-align:1px;background-size:300% 100%;animation:rkMove 4s linear infinite,rkGlow 2s ease-in-out infinite;text-shadow:0 1px 1px rgba(0,0,0,.45)}
+.rkchip i{font-style:normal}.rkchip:after{content:'';position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);animation:rkShine 2.4s ease-in-out infinite}
+.rkchip.rkd{background-image:linear-gradient(90deg,#1ec8ff,#4a7bff,#22e0c8,#1ec8ff);border:1.5px solid #9cf0ff;--g:#3ad8ff}
+.rkchip.rkw{background-image:linear-gradient(90deg,#c040ff,#ff4fa8,#7a4aff,#c040ff);border:1.5px solid #f0b0ff;--g:#e060ff}
+.rkchip.rkm{background-image:linear-gradient(90deg,#ff3a3a,#ffb020,#ffe060,#ff6a20,#ff3a3a);border:1.5px solid #fff0a0;--g:#ffc040;color:#3a1400;text-shadow:0 1px 0 rgba(255,255,255,.5)}
+.rkchip.rr1{outline:1px solid rgba(255,255,255,.6);outline-offset:1px}
+@keyframes rkMove{to{background-position:300% 0}}@keyframes rkGlow{0%,100%{box-shadow:0 0 5px var(--g)}50%{box-shadow:0 0 14px var(--g),0 0 2px #fff}}@keyframes rkShine{0%{left:-60%}60%,100%{left:130%}}
+.rkpick{display:flex;flex-direction:column;align-items:flex-start;gap:2px;border:2px solid var(--line);border-radius:10px;padding:6px 8px;background:var(--w);cursor:pointer}.rkpick.on{border-color:var(--pink);box-shadow:0 0 0 2px var(--pink)}.rkpick small{font-size:11px;opacity:.75;color:var(--ink)}
+.bk2{transition:transform .2s}.bk2.bkgot{border-left-width:5px;background:linear-gradient(100deg,color-mix(in srgb,var(--bkc) 16%,var(--w)),var(--w) 65%);border-left-color:var(--bkc)}
+.bkr0{--bkc:#9c8a66}.bkr1{--bkc:#4aa060}.bkr2{--bkc:#3a8ad8}.bkr3{--bkc:#a050e0}.bkr4{--bkc:#e09020}.bkr5{--bkc:#e0405a}.bkr6{--bkc:#ff40c0}
+.bk2.bkgot.bkr5,.bk2.bkgot.bkr6{background-image:linear-gradient(100deg,color-mix(in srgb,var(--bkc) 22%,var(--w)),var(--w) 70%);box-shadow:0 0 0 1px color-mix(in srgb,var(--bkc) 40%,transparent)}
+.bk2.bknew{position:relative;overflow:hidden;animation:bkPop .7s cubic-bezier(.2,1.6,.4,1) both,bkPulse 2.2s ease-in-out .7s infinite;border-color:var(--bkc)}
+.bk2.bknew:after{content:'';position:absolute;top:0;bottom:0;width:35%;left:-50%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);animation:rkShine 2.6s ease-in-out infinite;pointer-events:none}
+@keyframes bkPop{0%{transform:scale(.85);opacity:0}100%{transform:none;opacity:1}}@keyframes bkPulse{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 12px 1px var(--bkc)}}
+.bknb{display:inline-block;font-size:10px;font-weight:900;color:#fff;background:linear-gradient(90deg,#ff4f8a,#ffb020);border-radius:999px;padding:0 6px;margin:0 6px 0 0;animation:bkBlink 1.2s steps(2) infinite;vertical-align:1px}@keyframes bkBlink{50%{filter:brightness(1.5)}}
+.bkh{display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;top:-16px;background:var(--card);padding:6px 0;z-index:2}.bkhb{flex:1;min-width:60px;max-width:140px;height:6px;border-radius:9px;background:rgba(128,128,128,.25);overflow:hidden}.bkhb i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),#ffb020)}
+.bknewbox{margin:8px 0;padding:8px 10px;border-radius:10px;border:2px solid #ffb020;background:linear-gradient(100deg,rgba(255,176,32,.16),rgba(255,79,138,.1));animation:bkPop .6s both}.bknewbox div{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}.bknewbox a{font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid currentColor;border-radius:999px;padding:1px 8px}`;document.head.appendChild(st)})();
+try{const g=GD2.find(x=>x.ic==='📖'&&x.s==='col');if(g){g.d+=' · <b>ใหม่</b>: ความสำเร็จที่เพิ่งปลดล็อกมีป้าย NEW เรืองแสง และหมวดที่มีของใหม่ขึ้นก่อน · ติดอันดับ 1–3 ทำเนียบรายวัน/สัปดาห์/เดือน ได้<b>ฉายาทำเนียบสีพิเศษ</b> (ชั่วคราว จนกว่ารอบถัดไปจะตัดสิน) เลือกโชว์ได้ที่ 🎖️ เลือกฉายา';g.de=(g.de||'')+' · NEW: freshly unlocked achievements glow with a NEW badge; top-3 on the daily/weekly/monthly boards earns temporary animated leaderboard titles.'}SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
 
 </script>
 </body>

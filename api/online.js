@@ -115,6 +115,10 @@ const pipe = USE_VK ? vkPipe : upPipe;
 
 // ===== ทำเนียบรายวัน (v15.3): แยก 4 หมวด · คะแนนจากค่าเฉลี่ยทุกด้าน · รางวัลอันดับ 1–3 =====
 const BD_CATS = ['m', 'x', 'g', 'b'];
+// ฉายาทำเนียบ (ชั่วคราว): รายวัน/สัปดาห์/เดือน · อันดับ 1–3
+const RKT = { d: ['', 'ราชันย์ประจำวัน', 'ดาวเด่นประจำวัน', 'ผู้กล้าประจำวัน'], w: ['', 'จักรพรรดิประจำสัปดาห์', 'ขุนพลประจำสัปดาห์', 'วีรชนประจำสัปดาห์'], m: ['', 'เทพเจ้าแห่งเดือน', 'ราชันย์แห่งเดือน', 'ตำนานแห่งเดือน'] };
+const RKT_EXP = { d: 86400e3 * 1.1, w: 86400e3 * 7.2, m: 86400e3 * 31 }, RKT_TR = { d: 7, w: 8, m: 9 };
+const RKT_ALL = new Map(); Object.entries(RKT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) }));
 const bdCat = e => e.bm ? 'b' : e.g ? 'g' : e.x ? 'x' : 'm';
 const bdKey = (c, ms, back = 0) => 'bd3:' + c + ':' + new Date(ms + 7 * 3600e3 - back * 86400e3).toISOString().slice(0, 10);
 const bdKeyW = (c, ms, back = 0) => 'bdw:' + c + ':' + week(new Date(ms - back * 7 * 86400e3));
@@ -148,6 +152,7 @@ function clean(s, n) {
 const qOf = r => r._q || (r._q = Object.fromEntries(new URL(r.url || '/', 'http://localhost').searchParams));
 // ฉายาที่มีจริงในเกม (สร้างจากตัวเกม) → เซิร์ฟเวอร์รับเฉพาะชื่อในรายการ และกำหนดสีระดับเอง
 let TITLES = { t: {}, a: {} }; try { TITLES = require('./titles.json') } catch (e) {}
+const rkOk = (tt, h) => { try { const k = String(tt || ''), m = RKT_ALL.get(k); if (!m || !Array.isArray(h)) return null; for (let i = 0; i < h.length; i += 2) { const v = JSON.parse(h[i + 1] || 'null'); if (v && v.t === k && v.exp > Date.now()) return { tt: k, tr: RKT_TR[m.p] } } } catch (e) {} return null };
 const ttlOk = (tt) => { const k = String(tt || '').slice(0, 24); return k && Object.prototype.hasOwnProperty.call(TITLES.t, k) ? { tt: k, tr: Math.max(0, Math.min(6, +TITLES.t[k] || 0)) } : { tt: '', tr: 0 } };
 // รูปตัวละครที่เกมวาดเอง: PNG ขนาด 56×62 เท่านั้น
 const avSnapOk = (s) => { if (!/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(s) || s.length > 8000) return false; try { const B = Buffer.from(s.slice(22, 22 + 44), 'base64'); return B.readUInt32BE(16) === 56 && B.readUInt32BE(20) === 62 } catch { return false } };
@@ -643,7 +648,10 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const R1 = await pipe(BD_CATS.map(c => ['ZREVRANGE', bdKeyP(p, c, now, 1), 0, 9])), lab = flag.split(':').slice(1).join(':');
       for (let k = 0; k < BD_CATS.length; k++) { const L1 = (R1[k] || []).map(jp).filter(x => x && x.lid && !x.cu); const seen = new Set(); let r = 0;
         for (const x of L1) { if (r >= 3) break; const own = await cmd('GET', 'lifeo:' + x.lid); if (!own || seen.has(own) || await cmd('SISMEMBER', 'cheaters', own)) continue; seen.add(own); r++;
-          await pipe([['LPUSH', 'bdrw:' + own, JSON.stringify({ p, c: BD_CATS[k], r, d: lab, n: x.n, s: x.s })], ['EXPIRE', 'bdrw:' + own, 86400 * 60], ['HINCRBY', 'bdwins', own, 1]]) } } } catch {} };
+          const cur = jp(await cmd('HGET', 'rkttl:' + own, p)), nt = { t: RKT[p][r], r, c: BD_CATS[k], exp: now + RKT_EXP[p], at: now };
+          const L2 = [['LPUSH', 'bdrw:' + own, JSON.stringify({ p, c: BD_CATS[k], r, d: lab, n: x.n, s: x.s, tt: RKT[p][r], exp: nt.exp })], ['EXPIRE', 'bdrw:' + own, 86400 * 60], ['HINCRBY', 'bdwins', own, 1]];
+          if (!cur || cur.exp < now || r <= cur.r) L2.push(['HSET', 'rkttl:' + own, p, JSON.stringify(nt)], ['EXPIRE', 'rkttl:' + own, 86400 * 40]);
+          await pipe(L2) } } } catch {} };
     const bdSettle = async () => { const yk = new Date(now + 7 * 3600e3 - 86400e3).toISOString().slice(0, 10);
       await bdSettle1('d', 'bdset:' + yk, 7); await bdSettle1('w', 'bdsetw:' + week(new Date(now - 7 * 86400e3)), 30); await bdSettle1('m', 'bdsetm:' + bdMon(now, 1), 90) };
     const bdWipe = async () => { try { if (!(await cmd('SET', 'bd3init', 1, 'NX'))) return; let cur = '0', n = 0; do { const r = await cmd('SCAN', cur, 'MATCH', 'bd2:*', 'COUNT', 500); cur = String(r[0]); if (r[1].length) await cmd('DEL', ...r[1]); n++ } while (cur !== '0' && n < 200); await cmd('DEL', 'bdhide') } catch {} };
@@ -667,8 +675,9 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
     if (a === 'bdrw') {
       if (!okId(id)) return res.json({ l: [] });
       await bdSettle();
-      const [l] = await pipe([['LRANGE', 'bdrw:' + id, 0, 49], ['DEL', 'bdrw:' + id]]);
-      return res.json({ l: (l || []).map(jp).filter(Boolean) });
+      const [l, , rh] = await pipe([['LRANGE', 'bdrw:' + id, 0, 49], ['DEL', 'bdrw:' + id], ['HGETALL', 'rkttl:' + id]]);
+      const rk = []; for (let i = 0; i < (rh || []).length; i += 2) { const v = jp(rh[i + 1]); if (v && v.exp > now) rk.push(Object.assign({ p: rh[i] }, v)) }
+      return res.json({ l: (l || []).map(jp).filter(Boolean), rk });
     }
     if (a === 'load') {
       const code = String(qOf(req).code || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
@@ -1111,10 +1120,10 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       }
       const x = clean(b.x, 200);
       if (!x) return res.status(400).json({ err: 'empty' });
-      const [mu, ok, chx] = await pipe([['GET', 'mute:' + id], ['SET', 'rl:' + id, 1, 'NX', 'PX', 1800], ['SISMEMBER', 'cheaters', id]]);
+      const [mu, ok, chx, rkh] = await pipe([['GET', 'mute:' + id], ['SET', 'rl:' + id, 1, 'NX', 'PX', 1800], ['SISMEMBER', 'cheaters', id], ['HGETALL', 'rkttl:' + id]]);
       if (mu) return res.status(429).json({ err: 'muted' });
       if (!ok) return res.status(429).json({ err: 'rate' });
-      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), ...((b.tp || +chx) ? { tt: '', tr: 0 } : ttlOk(b.tt)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
+      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), ...((b.tp || +chx) ? { tt: '', tr: 0 } : rkOk(b.tt, rkh) || ttlOk(b.tt)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
       await pipe([['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199], ['HSET', 'pupid', id.slice(0, 12), id]]);
       if (b.rto && isAdmKey(b.key)) {
         let pr = null;
