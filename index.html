@@ -5111,7 +5111,7 @@ function drawScene(ctx,type){
    P(96,Y-12,44,3,'#4a2a14');P(98,Y-9,2,9,'#4a2a14');P(136,Y-9,2,9,'#4a2a14');P(104,Y-14,10,2,'#f4ecd8');P(126,Y-17,2,3,'#f4ecd8');P(126,Y-19-(frame%3?0:1),2,2,'#ffcf5a');person(112,Y,me,'sit');break}
   case 'road':case 'fight':{sky(season,type==='fight'&&S.age%2?'dusk':null);mountains('#9ab0c8',38,10,4);ground(season);
    for(let y=38;y<SH;y++){const w=4+(y-38)*3;P(80-w/2,y,w,1,'#c8a878')}tree(16,Y,season);tree(134,Y,season,true);tree(36,40,season);
-   if(loc==='fight'){person(56,Y,me,'stand');if(sceneEvt&&sceneEvt.data&&sceneEvt.data.beast)drawBeast(g,sceneEvt.data.beast,82,Y-25,1,frame);else person(96,Y,{age:30,g:'ชาย',skin:'#c8a888',hair:'#111',robe:'#2a2a2a',belt:'#a01020',sword:true},'stand');
+   if(loc==='fight'){person(56,Y,me,'stand');if(sceneEvt&&sceneEvt.data&&sceneEvt.data.beast){const eb=sceneEvt.data.beast,es=eb.k==='bird'||eb.k==='bug'?1.05:1.2;bFlip(()=>drawBeast(g,eb,Math.round(98-16*es),Math.round(Y-22*es),es,frame),98)}else person(96,Y,{age:30,g:'ชาย',skin:'#c8a888',hair:'#111',robe:'#2a2a2a',belt:'#a01020',sword:true},'stand');
     if(frame%4<2){for(let i=0;i<10;i++)P(70+i,Y-16+i,1,1,'#fff');P(82,Y-12,2,2,'#ffe060');P(66,Y-8,2,2,'#ffe060')}}
    else{mountSprite(60,Y);person(76,Y,me,'walk');petSprite(88,Y)}break}
   case 'war':{sky(season,'dusk');mountains('#5a4a6a',40,10,5);ground(season,44,'#7a6a4a');
@@ -11772,6 +11772,294 @@ async function supPaid(btn){const amt=+(($('supAmt')||{}).value||0),pn=(($('supP
   btn.textContent='✅ ส่งแล้ว ขอบคุณมากครับ 🙏';toast('🙏 ขอบคุณที่สนับสนุนครับ — ผู้พัฒนาได้รับแจ้งแล้ว');try{sfx('good')}catch(e){}}
  catch(e){btn.disabled=false;btn.textContent='📨 แจ้งว่าสนับสนุนแล้ว';toast(e.message==='rate'?'เพิ่งส่งไป รอสักครู่แล้วลองใหม่':'ส่งไม่สำเร็จ ลองใหม่อีกครั้ง')}}
 (function(){const st=document.createElement('style');st.textContent='.supbox{text-align:left;border:2px dashed var(--line);border-radius:10px;padding:8px 10px}.supbox summary{cursor:pointer;font-weight:700}.supl{display:block;font-size:13px;margin:6px 0}.supl input{display:block;width:100%;box-sizing:border-box;margin-top:3px;padding:8px;border-radius:8px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:inherit}';document.head.appendChild(st)})();
+
+
+// ===================== v15.5 สัตว์อสูรพิกเซลใหม่ทั้งหมด + เผ่าใหม่ 33 เผ่า =====================
+// ---------- รูปร่างแต่ละเผ่า ----------
+const ZBV={
+ 'จิ้งจอก':{k:'quad',ear:'point',tail:'bush',pat:'fox',sn:2.4,hw:5.4,hh:4.6,L:12.5},
+ 'พยัคฆ์':{k:'quad',ear:'round',tail:'thin',pat:'stripe',pc:'#2a1a10',c2:'#f6ecd8',sn:1.7,hw:6.2,hh:5.2,L:14.5,leg:3.8},
+ 'หมาป่า':{k:'quad',ear:'point',tail:'bush2',sn:2.7,hw:5.6,hh:4.8,L:14,c2:'#d8d8de'},
+ 'งูขาว':{k:'serp',pat:'pearl',eye:'#e0303a'},'กระเรียน':{k:'bird',v:'crane'},'เต่าดำ':{k:'turt',v:'xuanwu'},'ปลาคาร์ป':{k:'fish',v:'carp'},'วานร':{k:'ape',v:'monkey',fc:'#e8b890'},
+ 'กวางวิญญาณ':{k:'quad',ear:'point',tail:'puff',horn:'antler',pat:'spot',pc:'#f6eee0',sn:2.2,hw:4.8,hh:4.2,L:12.5,leg:5.2,neck:2,hoof:1},
+ 'หมีดำ':{k:'quad',ear:'round',tail:'puff',sn:2,hw:6.4,hh:5.6,L:14,H:7.6,leg:3.2,c2:'#3a302c',moon:1},
+ 'แพนด้า':{k:'quad',ear:'round',tail:'puff',pat:'panda',sn:1.6,hw:6.6,hh:5.8,L:13.5,H:7.4,leg:3,c2:'#ffffff'},
+ 'สิงโตหิมะ':{k:'quad',ear:'round',tail:'tuft',mane:'#9ad0e8',sn:1.9,hw:6,hh:5.2,L:14.5,leg:4,c2:'#ffffff'},
+ 'เสือดาว':{k:'quad',ear:'round',tail:'thin',pat:'rosette',pc:'#3a2410',c2:'#f8eed8',sn:1.6,hw:5.2,hh:4.4,L:13.5,leg:3.6},
+ 'กระต่ายหยก':{k:'quad',ear:'long',tail:'puff',sn:1.2,hw:5,hh:4.6,L:8.5,H:5.6,leg:2.2,c2:'#ffffff',hop:1},
+ 'แมวป่า':{k:'quad',ear:'point',tail:'thin',pat:'stripe',pc:'#5a4a38',sn:1.3,hw:5,hh:4.4,L:11,H:5.4,leg:3},
+ 'หมูป่า':{k:'quad',ear:'point',tail:'thin',tusk:1,sn:2.6,hw:5.6,hh:4.8,L:13.5,H:6.8,leg:2.8,hoof:1,mane:'#3a2a20',maneS:1},
+ 'ม้าเมฆ':{k:'quad',ear:'point',tail:'hair',mane:'#ffffff',sn:2.8,hw:5,hh:4.2,L:14.5,H:6,leg:5.6,neck:3,hoof:1,cloud:1},
+ 'วัวป่า':{k:'quad',ear:'round',tail:'tuft',horn:'ox',sn:2.4,hw:6,hh:5,L:15,H:7.4,leg:4,hoof:1},
+ 'หนูทอง':{k:'quad',ear:'round',tail:'thin',sn:1.8,hw:4.4,hh:3.8,L:8,H:4.6,leg:1.8,c2:'#fff0c0'},
+ 'เสือขาว':{k:'quad',ear:'round',tail:'thin',pat:'stripe',pc:'#1a1a2a',c2:'#ffffff',sn:1.7,hw:6.2,hh:5.2,L:14.5,leg:3.8},
+ 'กิเลน':{k:'quad',ear:'point',tail:'flame',horn:'qilin',pat:'scale',sn:2.4,hw:5.2,hh:4.4,L:13.5,leg:5,neck:2,hoof:1,mane:'flame'},
+ 'อินทรีทอง':{k:'bird',v:'eagle'},'นกฮูกจันทร์':{k:'bird',v:'owl'},'นกยูง':{k:'bird',v:'peacock'},'อีกาสามขา':{k:'bird',v:'crow'},'หงส์เพลิง':{k:'bird',v:'phoenix'},'ค้างคาวรัตติกาล':{k:'bird',v:'bat'},
+ 'ปลาดุกยักษ์':{k:'fish',v:'catfish'},'ฉลามทะเลลึก':{k:'fish',v:'shark'},
+ 'งูเหลือม':{k:'serp',pat:'blotch',pc:'#3a2a10',big:1},'งูเห่า':{k:'serp',pat:'band',hood:1,pc:'#2a2010'},'ปลาไหลอัสนี':{k:'serp',pat:'eel',fin:1},
+ 'ตะพาบ':{k:'turt',v:'soft'},'ลิงขาวหิมะ':{k:'ape',v:'snow',fc:'#a8c8e8'},'ลิงทอง':{k:'ape',v:'golden',fc:'#78a8e0'},
+ 'แมงป่องพิษ':{k:'bug',v:'scorpion'},'ผีเสื้อวิญญาณ':{k:'bug',v:'butterfly'},'แมงมุมดำ':{k:'bug',v:'spider'},'ตะขาบยักษ์':{k:'bug',v:'centipede'},'แมงป่อง':{k:'bug',v:'scorpion'},'ผีเสื้อ':{k:'bug',v:'butterfly'},
+ 'คางคกทอง':{k:'frog',v:'toad3'},'กบหยก':{k:'frog',v:'frog'}};
+// ---------- เผ่าใหม่: ชื่อ · ชนิด · สี · คำอธิบาย · [น้ำหนักสุ่ม, อายุขัย×, พลัง×] · ไอคอน · เหยื่อ · ถิ่น · อวัยวะ · เสียง ----------
+const BNEW=[
+ ['กวางวิญญาณ','quad','#c8945a','อ่อนโยน ใกล้ชิดฟ้าดิน เขาเรืองแสงในคืนเพ็ญ',[10,6,.9],'🦌',['ใบไม้อ่อน','เห็ดป่า','ผลท้อป่า','หญ้าน้ำค้าง','ดอกไม้วิญญาณ'],'ทุ่งหญ้าในหุบเขาหมอก','เขา','เสียงร้องใสก้องหุบ'],
+ ['หมีดำ','quad','#2e2622','พลังมหาศาล หลับยาวทั้งฤดูหนาว',[10,4,1.25],'🐻',['รังผึ้ง','ปลาแซลมอนในธาร','ลูกไม้ป่า','หน่อไม้','รากไม้หวาน'],'ถ้ำใหญ่ใต้ภูเขาสน','อุ้งมือ','เสียงคำรามทุ้มต่ำ'],
+ ['แพนด้า','quad','#f4f4f2','ดูขี้เกียจแต่แข็งแกร่งเกินคาด',[7,5,1.1],'🐼',['หน่อไม้','ใบไผ่','ลำไผ่อ่อน','ผลไม้ป่า','น้ำผึ้งป่า'],'ดงไผ่บนภูเขาหมอก','อุ้งมือ','เสียงครางเบาๆ'],
+ ['สิงโตหิมะ','quad','#f0eee6','ผู้พิทักษ์ยอดเขาหิมะ ขนแผงคอสีคราม',[5,5,1.35],'🦁',['แกะภูเขา','จามรีป่า','กวางหิมะ','แพะหิน','ไก่ฟ้าหิมะ'],'ถ้ำน้ำแข็งบนยอดเขา','แผงคอ','เสียงคำรามจนหิมะถล่ม'],
+ ['เสือดาว','quad','#e0b050','ว่องไวที่สุดในป่า ปีนต้นไม้เก่ง',[9,3,1.2],'🐆',['ลิงป่า','กวางเล็ก','นกยูงป่า','หมูป่า','กระต่าย'],'คาคบไม้ใหญ่กลางป่าดิบ','กรงเล็บ','เสียงขู่เบาแต่น่ากลัว'],
+ ['กระต่ายหยก','quad','#f6f2ee','บริวารของเทพธิดาจันทรา ตำยาอายุวัฒนะ',[9,5,.75],'🐇',['หญ้าน้ำค้าง','แครอทป่า','ดอกโคลเวอร์','สมุนไพรวิญญาณ','ใบหม่อน'],'โพรงใต้ต้นอบเชยในแสงจันทร์','หู','เสียงกระทืบเท้าเบาๆ'],
+ ['แมวป่า','quad','#9a8a6c','เจ้าเล่ห์ เงียบกริบ มีเก้าชีวิตตามตำนาน',[11,4,.95],'🐈',['หนูนา','นกกระจอก','ปลาในลำธาร','จิ้งจก','แมลงกลางคืน'],'โพรงใต้หินริมลำธาร','หนวด','เสียงร้องเหมียวแหบ'],
+ ['หมูป่า','quad','#6a4c3a','บ้าระห่ำ เขี้ยวงอนแหลม พุ่งชนไม่ยั้ง',[11,3,1.15],'🐗',['รากไม้','หัวมันป่า','ลูกโอ๊ก','หนอนใต้ดิน','เห็ดป่า'],'ปลักโคลนกลางดงไม้','เขี้ยว','เสียงฮึดฮัดดุดัน'],
+ ['ม้าเมฆ','quad','#f2f2fa','ม้าเทพที่วิ่งบนก้อนเมฆได้',[4,5,1.2],'🐎',['หญ้าบนยอดเขา','น้ำค้างบนเมฆ','ผลไม้สวรรค์','ดอกไม้ฟ้า','ใบหยกสาลี่'],'ทุ่งหญ้าเหนือทะเลเมฆ','แผงคอ','เสียงร้องฮี้ก้องฟ้า'],
+ ['วัวป่า','quad','#5a3a28','อึด ทน เขาโค้งใหญ่ ไม่มีใครกล้าขวาง',[10,4,1.2],'🐂',['หญ้าทุ่ง','ใบไม้แห้ง','ต้นอ้อ','หญ้าริมน้ำ','รากหญ้า'],'ทุ่งหญ้ากว้างริมแม่น้ำ','เขา','เสียงร้องมอทุ้ม'],
+ ['หนูทอง','quad','#d8a840','ตัวเล็กแต่ดวงดี หาสมบัติเก่ง',[10,2,.6],'🐀',['เมล็ดข้าว','ถั่วป่า','เศษขนม','เมล็ดสน','ข้าวโพดป่า'],'รูใต้คลังข้าวร้าง','หาง','เสียงจี๊ดๆ'],
+ ['เสือขาว','quad','#f4f4f6','หนึ่งในสี่สัตว์เทพ ผู้พิทักษ์ทิศตะวันตก',[1.2,6,1.7],'🐅',['กวางป่า','วัวกระทิง','หมูป่ายักษ์','สัตว์อสูรขั้นต่ำ','ละมั่ง'],'ถ้ำหินขาวบนเขาทิศตะวันตก','กรงเล็บ','เสียงคำรามสะเทือนฟ้า'],
+ ['กิเลน','quad','#e0c040','สัตว์มงคล ปรากฏเมื่อแผ่นดินร่มเย็น',[.4,10,2],'🦄',['ดอกบัวสวรรค์','หญ้าเซียน','น้ำค้างยามเช้า','ผลท้อสวรรค์','เมฆมงคล'],'ทุ่งดอกไม้เหนือสายรุ้ง','เกล็ด','เสียงระฆังแว่ว'],
+ ['อินทรีทอง','bird','#7a5430','เจ้าเวหา ตาคมเห็นเหยื่อจากพันลี้',[8,4,1.15],'🦅',['กระต่ายป่า','แพะภูเขา','งูพิษ','ปลาในทะเลสาบ','ไก่ฟ้า'],'รังบนหน้าผาสูงชัน','ปีก','เสียงร้องแหลมก้องหุบ'],
+ ['นกฮูกจันทร์','bird','#8a7050','ปราชญ์แห่งรัตติกาล รู้ความลับของป่า',[9,5,.85],'🦉',['หนูนา','แมลงกลางคืน','กิ้งก่า','ค้างคาว','นกเล็ก'],'โพรงไม้เก่าพันปี','ดวงตา','เสียงฮูกๆ ยามดึก'],
+ ['นกยูง','bird','#1e8a8a','สง่างาม หางรำแพนดั่งดวงตาพันดวง',[7,4,.95],'🦚',['เมล็ดพืช','แมลง','งูเล็ก','ผลไม้ป่า','ดอกไม้'],'ป่าโปร่งริมลำธาร','ขนหาง','เสียงร้องแหลมยาว'],
+ ['อีกาสามขา','bird','#22222e','นกแห่งดวงอาทิตย์ มีสามขา',[3,6,1.3],'🐦‍⬛',['ซากสัตว์','เมล็ดพืช','แมลง','ไข่นก','ผลไม้สุก'],'รังบนต้นหม่อนแห่งตะวัน','ขา','เสียงกาก้องลางร้าย'],
+ ['หงส์เพลิง','bird','#e8502a','นกเพลิงอมตะ ตายแล้วเกิดใหม่จากเถ้า',[.5,12,1.9],'🔥',['ผลไม้เพลิง','เมล็ดตะวัน','น้ำค้างทอง','ดอกไม้ไฟ','ผลึกเพลิง'],'รังบนต้นอู๋ถงกลางทะเลเพลิง','ขนหาง','เสียงขับขานดั่งเพลงสวรรค์'],
+ ['ค้างคาวรัตติกาล','bird','#4a3a4e','บินในความมืด ได้ยินแม้เสียงหัวใจเต้น',[9,3,.9],'🦇',['แมลงกลางคืน','ผลไม้สุก','น้ำหวานดอกไม้','ยุงยักษ์','ผีเสื้อกลางคืน'],'ถ้ำมืดใต้ภูเขา','ปีก','เสียงแหลมที่มนุษย์ไม่ได้ยิน'],
+ ['ปลาดุกยักษ์','fish','#5a5a48','เจ้าแห่งโคลนตม หนวดยาวรับรู้ทุกสิ่ง',[9,4,.95],'🐟',['หอยโข่ง','ซากปลา','ตัวอ่อนแมลง','กุ้งฝอย','ปลาเล็ก'],'โคลนตมก้นบึงลึก','หนวด','เสียงฟองอากาศผุด'],
+ ['ฉลามทะเลลึก','fish','#6a7a8c','นักล่าแห่งทะเลลึก ได้กลิ่นเลือดจากไกลลิบ',[5,4,1.4],'🦈',['ปลาทูน่า','หมึกยักษ์','แมวน้ำ','ปลาฝูง','ซากวาฬ'],'ร่องลึกใต้ทะเลมืด','ฟัน','เสียงคลื่นแหวก'],
+ ['งูเหลือม','serp','#8a7038','รัดเหยื่อจนกระดูกแหลก กลืนได้ทั้งตัว',[9,5,1.15],'🐍',['หมูป่า','กวางเล็ก','ไก่ป่า','หนูยักษ์','ลิงป่า'],'โพรงใต้รากไทรยักษ์','เกล็ด','เสียงขู่ฟ่อยาว'],
+ ['งูเห่า','serp','#5a4a2c','พิษร้ายแรง แผ่แม่เบี้ยข่มขวัญศัตรู',[10,4,1.1],'🐍',['หนูนา','กบ','กิ้งก่า','ไข่นก','งูเล็ก'],'จอมปลวกร้างกลางทุ่ง','เขี้ยวพิษ','เสียงขู่ฟ่อดุดัน'],
+ ['ปลาไหลอัสนี','serp','#3a5a9a','ปล่อยกระแสไฟฟ้าช็อตเหยื่อทั้งบึง',[7,4,1.05],'⚡',['ปลาเล็ก','กุ้ง','กบ','ปลาไหลเล็ก','ตัวอ่อนแมลง'],'ซอกหินใต้บึงพายุ','ประจุไฟฟ้า','เสียงไฟฟ้าแปลบ'],
+ ['ตะพาบ','turt','#7a8a5a','ปากไวกัดไม่ปล่อย ซ่อนตัวใต้ทรายเก่ง',[9,7,.85],'🐢',['ปลาเล็ก','หอย','กุ้ง','ลูกกบ','หนอนน้ำ'],'พื้นทรายใต้แม่น้ำใส','กระดอง','เสียงฟู่ใต้น้ำ'],
+ ['ลิงขาวหิมะ','ape','#e8eaf2','อาศัยบนเขาหิมะ ฝึกวิชาเลียนแบบมนุษย์',[6,4,1.1],'🐒',['ผลไม้หิมะ','ถั่วสน','ไข่นก','รากไม้','น้ำผึ้งน้ำแข็ง'],'ถ้ำร้อนใต้ยอดเขาหิมะ','มือ','เสียงร้องโหยหวน'],
+ ['ลิงทอง','ape','#e0a030','ขนทองระยิบ ซุกซนเหนือใคร',[8,4,1],'🐒',['ลูกไม้ป่า','ไลเคน','ใบไม้อ่อน','ดอกไม้','เมล็ดสน'],'ยอดไม้สูงในป่าเมฆ','หาง','เสียงร้องเจี๊ยกแหลม'],
+ ['แมงป่องพิษ','bug','#7a3424','หางพิษร้ายแรง ฆ่าได้แม้สัตว์ใหญ่',[9,3,1.05],'🦂',['แมงมุม','ตั๊กแตน','จิ้งหรีด','หนอน','ตะขาบเล็ก'],'ซอกหินกลางทะเลทราย','เหล็กไน','เสียงกรีดแกรก'],
+ ['ผีเสื้อวิญญาณ','bug','#6ad0f0','ปีกเรืองแสง พาวิญญาณข้ามภพ',[7,2,.8],'🦋',['น้ำหวานดอกไม้','น้ำค้าง','ละอองเกสร','น้ำหวานบุปผาวิญญาณ','ผลไม้หมัก'],'ทุ่งดอกไม้ในหุบเขาวิญญาณ','ปีก','เสียงกระพือปีกแผ่วเบา'],
+ ['แมงมุมดำ','bug','#2a2830','ชักใยเป็นค่ายกล จับได้แม้นกบิน',[9,3,1],'🕷️',['แมลงวัน','ผีเสื้อกลางคืน','ตั๊กแตน','จิ้งหรีด','นกเล็ก'],'ใยยักษ์กลางป่ามืด','ใย','เสียงเส้นใยสั่น'],
+ ['ตะขาบยักษ์','bug','#8a3420','ร้อยขา พิษร้อนแรง เลื้อยไวเกินตามอง',[8,3,1.05],'🐛',['แมงป่อง','จิ้งจก','หนู','แมลงสาบ','งูเล็ก'],'ใต้ก้อนหินชื้นในถ้ำ','เขี้ยวพิษ','เสียงขาเกาะหินกรอบแกรบ'],
+ ['คางคกทอง','frog','#d0a030','คางคกสามขานำโชค คาบเหรียญทองไว้ในปาก',[6,5,.85],'🐸',['แมลงวัน','หิ่งห้อย','หนอน','จิ้งหรีด','เหรียญทองที่ตกน้ำ'],'บ่อน้ำในสวนเศรษฐีร้าง','ลิ้น','เสียงร้องอ๊บๆ ก้อง'],
+ ['กบหยก','frog','#4ac06a','กระโดดข้ามสระได้ในทีเดียว ผิวใสดั่งหยก',[10,3,.75],'🐸',['แมลงวัน','ยุง','หนอน','จิ้งหรีด','แมงปอ'],'ใบบัวกลางสระมรกต','ขา','เสียงอ๊บๆ ไพเราะ']];
+const BX_MV={quad:[['ย่องผ่านพุ่มไม้อย่างไร้เสียง','เดินตรวจอาณาเขต','วิ่งเลาะริมลำธาร','ดมกลิ่นตามรอยเท้าสัตว์อื่น','ปีนขึ้นเนินหินมองไกล'],['นอนหมอบบนหินอุ่น','ขดตัวหลับใต้ต้นไม้ใหญ่','เลียขนจนเงางาม','นอนหรี่ตาฟังเสียงลม']],
+ bird:[['บินร่อนเหนือยอดไม้','เกาะกิ่งสูงมองทั่วป่า','โฉบลงต่ำเหนือผิวน้ำ','กางปีกรับลมบนหน้าผา','บินวนเป็นวงกว้าง'],['ซุกหัวใต้ปีก','ไซ้ขนบนกิ่งไม้','ยืนนิ่งกลางสายหมอก','หลับตาฟังเสียงลม']],
+ fish:[['ว่ายทวนกระแสน้ำ','ว่ายวนรอบรากไม้ใต้น้ำ','ดำดิ่งลงที่ลึก','ไล่ฝูงปลาเล็ก','ลอยขึ้นมาหายใจที่ผิวน้ำ'],['ลอยนิ่งในวังน้ำลึก','ซ่อนใต้รากไม้','นอนนิ่งบนพื้นทราย','ปล่อยตัวลอยตามกระแส']],
+ serp:[['เลื้อยผ่านใบไม้แห้งไร้เสียง','พันกิ่งไม้รอเหยื่อ','แลบลิ้นรับกลิ่นในอากาศ','เลื้อยข้ามลำธาร','ซุ่มนิ่งใต้กองหิน'],['ขดตัวอาบแดดบนหิน','ลอกคราบใต้ร่มไม้','ขดนิ่งในโพรง','พันกิ่งไม้หลับ']],
+ turt:[['คลานช้าๆ ไปตามริมน้ำ','ลอยตัวนิ่งในน้ำ','ขุดทรายหาอาหาร','ปีนขึ้นขอนไม้ทีละก้าว','ว่ายตามกระแสน้ำเอื่อยๆ'],['หดหัวเข้ากระดอง','อาบแดดบนขอนไม้','จมนิ่งอยู่ก้นน้ำ','ฝังตัวใต้ทราย']],
+ ape:[['โหนเถาวัลย์ข้ามหุบ','ปีนยอดไม้สูง','ขว้างลูกไม้ใส่นก','แอบเลียนท่าทางมนุษย์','ห้อยหัวบนกิ่งไม้'],['นอนบนคาคบไม้','นั่งมองพระอาทิตย์ตก','กอดเข่านั่งบนหิน','หาเห็บให้เพื่อนในฝูง']],
+ bug:[['คลานไต่ตามซอกหิน','ซุ่มรอเหยื่อนิ่งๆ','ชักใยหรือขุดรูใหม่','บินหรือไต่ไปตามกลิ่นอาหาร','ไต่ขึ้นยอดหญ้ารับแสงจันทร์'],['ซ่อนตัวใต้ใบไม้','พักนิ่งในโพรงหิน','ขดตัวหลับใต้เปลือกไม้','เกาะนิ่งรอฝนหยุด']],
+ frog:[['กระโดดข้ามใบบัว','ซุ่มรอแมลงบนก้อนหิน','ดำน้ำหนีศัตรู','ร้องเรียกฝนยามเย็น','แลบลิ้นจับแมลงกลางอากาศ'],['นั่งนิ่งบนใบบัว','แช่ตัวในน้ำเย็น','ซุกตัวใต้โคลน','หลับตาฟังเสียงฝน']]};
+const BK_KID={quad:'ลูก',bird:'ลูกนก',fish:'ลูกปลา',serp:'ลูกงู',turt:'ลูกเต่า',ape:'ลูกลิง',bug:'ตัวอ่อน',frog:'ลูกอ๊อด'};
+BNEW.forEach(n=>{const [nm,k,col,d,sx,ic,prey,home,part,call]=n;if(BL_SP.some(x=>x[0]===nm))return;BL_SP.push([nm,k,col,d]);BSPX[nm]=sx;try{CX_BSI[nm]=ic}catch(e){}
+ const mv=BX_MV[k]||BX_MV.quad;BX[nm]={prey,home,part,move:mv[0],rest:mv[1],call,kid:(BK_KID[k]==='ลูก'?'ลูก'+nm:BK_KID[k]||'ลูก'+nm),mateF:nm+'สาว'+ch(['ตาอำพัน','ขนเงิน','ลายงาม','แสงจันทร์']),mateM:nm+'หนุ่ม'+ch(['ร่างกำยำ','ตาคม','ลายเพลิง','สง่างาม'])}});
+{const _bkB=bKind;bKind=function(){try{const k=(BL_SP.find(x=>x[0]===S.beastMode.sp)||[])[1];if(k==='bug'||k==='frog')return'scale';if(S.beastMode.sp==='ค้างคาวรัตติกาล')return'fur'}catch(e){}return _bkB.apply(this,arguments)}}
+// ---------- เครื่องวาด: วาดแบบมีขอบเข้ม (display list) ----------
+function bvOf(b){return ZBV[b.sp]||ZBV[b.n]||{k:b.k==='qilin'?'quad':b.k,horn:b.k==='qilin'?'qilin':null,mane:b.k==='qilin'?'flame':null,pat:b.k==='qilin'?'scale':null,ear:'point',tail:b.k==='qilin'?'flame':'thin',hoof:b.k==='qilin'?1:0,leg:b.k==='qilin'?5:3.6,neck:b.k==='qilin'?2:0}}
+const bTier=b=>{const t=b.t|0;return t<2?0:t<4?1:t<6?2:3};
+function drawBeast2(c,b,ox,oy,s,fr){const V=bvOf(b),k=V.k||b.k,T=bTier(b),O=[],seed=((b.sp||'').length*7)%13;
+ const R=(x,y,w,h,col,no,a)=>O.push([x,y,w,h,col,no,a]);
+ const base=b.col||'#888',dk=shadeC(base,-.3),dk2=shadeC(base,-.66),lt=shadeC(base,.3),bel=V.c2||shadeC(base,.5),pc=V.pc||shadeC(base,-.55),ec=b.ec||'#ffd040';
+ const P={base,dk,dk2,lt,bel,pc,ec,T,fr,seed,V,b};
+ // ออร่า/แสงเรือง
+ if(b.f&&b.f.glow||T>=3){const gr=c.createRadialGradient(ox+16*s,oy+13*s,0,ox+16*s,oy+13*s,(T>=3?17:13)*s);gr.addColorStop(0,ec+(T>=3?'55':'30'));gr.addColorStop(1,ec+'00');c.fillStyle=gr;c.fillRect(ox-2*s,oy-2*s,36*s,28*s)}
+ const fn={quad:bQuad,bird:bBird,fish:bFish,serp:bSerp,turt:bTurt,ape:bApe,bug:bBug,frog:bFrog}[k]||bQuad;fn(R,P);
+ // อนุภาคธาตุรอบตัว (ขั้นสูง)
+ if(T>=2)for(let i=0;i<(T>=3?6:3);i++){const a=fr*.07+i*(6.28/(T>=3?6:3)),rr=9+Math.sin(fr*.1+i)*2;R(16+Math.cos(a)*rr*1.2,12+Math.sin(a)*rr*.55,.6,.6,i%2?ec:'#ffffff',1,.75)}
+ // วาด: ขอบเข้มก่อน แล้วค่อยเติมสี
+ const dark='#1a1420';c.fillStyle=dark;O.forEach(o=>{if(o[5]||(o[6]!=null&&o[6]<.9))return;c.fillRect(ox+(o[0]-.5)*s,oy+(o[1]-.5)*s,(Math.max(.4,o[2])+1)*s,(Math.max(.4,o[3])+1)*s)});
+ O.forEach(o=>{if(o[6]!=null)c.globalAlpha=o[6];c.fillStyle=o[4];c.fillRect(ox+o[0]*s,oy+o[1]*s,Math.max(.4,o[2])*s,Math.max(.4,o[3])*s);if(o[6]!=null)c.globalAlpha=1})}
+const bBlink=(fr,sd)=>((fr*.11+sd)%6)<.32;
+function bEye(R,P,x,y,big){const {fr,seed,T,ec}=P;const sz=big?1.4:1;if(bBlink(fr,seed)){R(x,y+sz*.45,sz+.1,.35,'#1a1010',1);return}R(x,y,sz,sz,P.V.eye||(T>=2?ec:'#1a1010'),1);if(T>=2)R(x+sz*.35,y+sz*.35,sz*.4,sz*.4,'#1a1010',1);R(x,y,sz*.4,sz*.4,'#ffffff',1);if(T>=3)R(x-.5,y-.5,sz+1,sz+1,ec,1,.3)}
+// ---------- สัตว์สี่ขา ----------
+function bQuad(R,P){const {base,dk,dk2,lt,bel,pc,ec,T,fr,V,b}=P;const cub=T===0,FY=20.6;
+ let L=(V.L||13.5)*(cub?.72:1),H=(V.H||6.2)*(cub?.88:1),lg=(V.leg||3.6)*(cub?.75:1),hs=cub?1.22:1,hw=(V.hw||5.6)*hs,hh=(V.hh||4.8)*hs,sn=(V.sn||2)*(cub?.75:1);
+ const walk=!V.hop,ph=fr*.32,hop=V.hop?Math.max(0,Math.sin(fr*.25))*1.6:0,bob=walk?Math.abs(Math.sin(ph))*.35:0;
+ const x0=13.5-L/2,y0=FY-lg-H-bob-hop,nk=V.neck||0;const hx=x0+L-2.4,hy=y0-hh+2.2-nk;
+ R(x0+1,FY-.3,L,.8,'#000000',1,.18);
+ // ขาไกล
+ const LX=[x0+1.1,x0+2.9,x0+L-4.3,x0+L-2.5],OF=[0,Math.PI,Math.PI,0];
+ const legC=V.pat==='panda'?'#1a1a1e':null,hoof=V.hoof?'#2a2020':dk2;
+ const leg=(i,col)=>{const a=ph+OF[i],lift=walk?Math.max(0,Math.sin(a))*.9:0,sw=walk?Math.cos(a)*.45:0;const tl=lg+1-lift;R(LX[i]+sw,y0+H-1,1.3,tl,col);R(LX[i]+sw-.1,y0+H-1+tl-.7,1.5,.7,hoof)};
+ leg(1,legC||dk);leg(3,legC||dk);
+ // หาง
+ bTail(R,P,x0,y0,H);
+ // ตัว
+ R(x0,y0+.7,L,H-.7,base);R(x0+.7,y0,L-1.4,.9,base);R(x0+1,y0+H-1.7,L-2,1.4,bel,1);R(x0+1.2,y0+.35,L-3,.6,lt,1);R(x0,y0+1,1.1,H-2.2,dk,1);
+ if(V.pat==='stripe')for(let x=x0+1.6;x<x0+L-1.5;x+=2.1){R(x,y0+.2,.6,H*.5,pc,1);R(x+.5,y0+H*.45,.5,H*.25,pc,1)}
+ if(V.pat==='spot')for(let i=0;i<7;i++)R(x0+1.5+((i*3.1)%(L-3)),y0+1+((i*1.7)%(H-2.8)),.7,.7,pc,1);
+ if(V.pat==='rosette')for(let i=0;i<9;i++){const x=x0+1.3+((i*2.7)%(L-2.6)),y=y0+.8+((i*1.9)%(H-2.6));R(x,y,1.2,1.2,pc,1);R(x+.35,y+.35,.5,.5,shadeC(base,.15),1)}
+ if(V.pat==='scale')for(let i=0;i<12;i++)R(x0+1+((i*2.2)%(L-2)),y0+.8+((i*1.3)%(H-2.4)),.9,.5,lt,1);
+ if(V.pat==='fox'){R(x0+L-3,y0+2,2.4,H-2.2,bel,1)}
+ if(V.pat==='panda'){R(x0+L-5.2,y0,2.6,H,'#1a1a1e',1)}
+ if(V.moon)R(x0+L-4,y0+1.6,2.4,.8,'#f4f0e0',1);
+ if(T>=1&&!V.pat)for(let i=0;i<3;i++)R(x0+3+i*2.6,y0+1.2+(i%2),.6,.6,ec,1,.9);
+ if(T>=2){R(x0+2,y0+.5,L-5,.4,ec,1,.8);if(V.pat==='stripe')for(let x=x0+2.2;x<x0+L-2;x+=4.2)R(x,y0+.3,.4,H*.4,ec,1,.6)}
+ // ปีก/หนาม
+ if(b.f&&b.f.wing){const fl=Math.sin(fr*.4)*1.2;R(x0+3,y0-3-fl,5,2.4,lt);R(x0+2.4,y0-4-fl,3,1.2,ec);R(x0+7,y0-2.2-fl,2,1.2,lt)}
+ if(b.f&&b.f.spike)for(let i=0;i<5;i++)R(x0+1.5+i*2,y0-1.1,.8,1.3,ec);
+ // ขาใกล้
+ leg(0,legC||base);leg(2,legC||base);
+ if(V.cloud){for(let i=0;i<4;i++)R(LX[i]-.8,FY-.6,3,1,'#ffffff',1,.75)}
+ // คอ + แผงคอ
+ if(nk)R(x0+L-4,y0-nk-.4,3.2,nk+2,base);
+ if(V.mane){const mc=V.mane==='flame'?ec:V.mane;for(let j=0;j<7;j++){const f=Math.sin(fr*.3+j)*.4;R(hx-1.4-j*.15+f*.3,hy+.2+j*(V.maneS?.5:.85),V.maneS?2:2.6,1.1,j%2?mc:shadeC(mc,-.18))}}
+ // หัว
+ R(hx,hy+.6,hw,hh-.6,base);R(hx+.6,hy,hw-1.2,.7,base);R(hx+.5,hy+hh-1.7,hw-1,1.2,bel,1);R(hx+.5,hy+.3,hw-1.6,.5,lt,1);
+ if(V.pat==='panda'){R(hx+hw-2.9,hy+hh*.3,1.7,1.5,'#1a1a1e',1)}
+ R(hx+hw-.5,hy+hh*.45,sn,hh*.45,V.pat==='panda'||V.c2?bel:shadeC(base,.15));R(hx+hw-.6+sn-.7,hy+hh*.45,.8,.7,'#2a1a1a',1);R(hx+hw-.2,hy+hh*.9-.25,sn*.75,.3,dk2,1);
+ if(V.tusk){R(hx+hw+sn-1.6,hy+hh*.62,.5,1.1,'#fff8e8',1);R(hx+hw+sn-1.3,hy+hh*.5,.4,.4,'#fff8e8',1)}
+ bEye(R,P,hx+hw-2.5,hy+hh*.36,cub);if(b.f&&b.f.eye3)R(hx+hw*.5,hy+.6,.8,.8,ec,1);
+ // หู
+ const tw=(Math.floor(fr+P.seed)%41)<2?.6:0;const earC=V.pat==='panda'?'#1a1a1e':base,inC='#e8a0a0';
+ if(V.ear==='point'){R(hx+.8,hy-1.8,1.3,2,earC);R(hx+1.1,hy-2.5,.7,.8,earC);R(hx+1.15,hy-1.2,.6,1,inC,1);R(hx+2.8,hy-1.7+tw,1.3,1.9,earC);R(hx+3.1,hy-2.4+tw,.7,.8,earC)}
+ else if(V.ear==='round'){R(hx+.6,hy-1,1.6,1.4,earC);R(hx+.9,hy-.7,.8,.7,inC,1);R(hx+2.9,hy-1+tw,1.6,1.4,earC)}
+ else if(V.ear==='long'){const fl=Math.sin(fr*.2)*.4;R(hx+1,hy-4.4,1.2,4.6,earC);R(hx+1.3,hy-4,.6,3.6,'#f0b0c0',1);R(hx+2.6+fl,hy-4+tw,1.2,4.2,earC)}
+ // เขา
+ if(V.horn==='antler'){const hc=T>=2?ec:'#f2e4c0';R(hx+1.4,hy-2.6,.6,2.6,hc);R(hx+.4,hy-3.8,.6,1.6,hc);R(hx+.4,hy-3.8,1.6,.5,hc);R(hx+2.8,hy-3,.6,3,hc);R(hx+3.4,hy-4.4,.6,1.6,hc);R(hx+2.4,hy-4,1.4,.5,hc);if(T>=2){R(hx-.4,hy-4.6,.6,1,hc);R(hx+4,hy-5.2,.6,1,hc)}}
+ else if(V.horn==='ox'){const hc='#efe4c6';R(hx+.2,hy-.8,1.4,.8,hc);R(hx-.6,hy-1.8,1,1.2,hc);R(hx-.9,hy-2.8,.7,1,shadeC(hc,-.2));R(hx+3.4,hy-.8,1.4,.8,hc);R(hx+4.4,hy-1.8,1,1.2,hc)}
+ else if(V.horn==='qilin'){R(hx+2,hy-3,.8,3,'#f6eccc');R(hx+2.2,hy-3.8,.4,.8,ec)}
+ else if(b.f&&b.f.horn&&T>=2){R(hx+1.2,hy-1.6,.6,1.6,ec);R(hx+3.4,hy-1.6,.6,1.6,ec)}
+ if(b.f&&b.f.head2){R(hx-2.6,hy-2.2,hw-1.4,hh-1,dk);R(hx-.8,hy-1.2,.8,.8,ec,1)}}
+function bTail(R,P,x0,y0,H){const {base,dk,dk2,bel,pc,ec,T,fr,V,b}=P;const ty=y0+1.2;
+ const nine=/จิ้งจอก/.test(b.sp||'')&&((b.f&&b.f.tail9)||T>=3),tails=nine?(T>=3?9:5):1;
+ for(let n=0;n<tails;n++){const ang=tails>1?(n-(tails-1)/2)*.32:0;
+  if(V.tail==='bush'||V.tail==='bush2'){for(let j=0;j<7;j++){const w=Math.sin(fr*.22-j*.45+n)*.35*j/3,dx=-1-j*.85,dy=-j*.55;const x=x0+dx*Math.cos(ang)-dy*Math.sin(ang)+w,y=ty+dx*Math.sin(ang)+dy*Math.cos(ang);const th=1.1+Math.sin(j/6*3.14)*1.1;R(x,y-th/2,1.2,th,V.tail==='bush'&&j>=5?(nine?ec:'#fff6ee'):j>=5?dk:base)}}
+  else if(V.tail==='thin'){for(let j=0;j<9;j++){const x=x0-.5-j*.75,y=ty+.4-j*.5+Math.sin(fr*.28-j*.6)*.35*j/4;R(x,y,.8,.8,V.pat==='stripe'&&j%2?pc:j===8?dk2:base)}}
+  else if(V.tail==='puff'){R(x0-1.2,y0+.7,1.9,1.8,V.pat==='panda'?'#ffffff':bel)}
+  else if(V.tail==='hair'){for(let j=0;j<8;j++)R(x0-.8-j*.35+Math.sin(fr*.25-j*.5)*.4,ty+j*.85,1.5,1,V.mane||dk)}
+  else if(V.tail==='tuft'){for(let j=0;j<6;j++)R(x0-.5-j*.6,ty+j*.6+Math.sin(fr*.25-j)*.2,.6,.6,base);R(x0-4.4+Math.sin(fr*.25)*.3,ty+3.4,1.4,1.4,V.mane||dk2)}
+  else if(V.tail==='flame'){for(let j=0;j<6;j++){const f=Math.sin(fr*.4+j)*.5;R(x0-.8-j*.7,ty-j*.4+f*.3,1.3,1,j%2?ec:shadeC(ec,.3),0,.95)}}}}
+// ---------- นก ----------
+function bBird(R,P){const {base,dk,dk2,lt,bel,ec,T,fr,V}=P,v=V.v||'crane',cub=T===0,FY=20.6;
+ if(v==='bat'){const fl=Math.sin(fr*.6),y=10+Math.sin(fr*.2)*1.2;const wy=fl*2.2;
+  for(let side=0;side<2;side++){const d=side?1:-1;for(let j=0;j<5;j++){const x=16+d*(2+j*1.6)-(side?0:1.4),yy=y-.5+wy*(j/4)*(side?1:1)-Math.abs(j-2)*.3;R(x,yy,1.6,2.8-j*.3,j%2?dk:base)}R(16+d*9.5-(side?0:.6),y-.8+wy,.6,.6,dk2,1)}
+  R(14.6,y-1,2.8,3.6,dk);R(15,y-2.6,2,1.8,base);R(14.8,y-3.4,.6,1,base);R(16.6,y-3.4,.6,1,base);R(15.3,y-2.1,.5,.5,T>=2?ec:'#ff3030',1);R(16.2,y-2.1,.5,.5,T>=2?ec:'#ff3030',1);R(15.5,y-1.1,.3,.5,'#ffffff',1);R(16.2,y-1.1,.3,.5,'#ffffff',1);return}
+ const flap=(fr%40)<12,fl=flap?Math.sin(fr*.9):0;
+ const owl=v==='owl',lgL=v==='crane'?6:v==='peacock'?3.4:2.4,bw=(owl?7:v==='peacock'?8:9)*(cub?.8:1),bh=(owl?8:6)*(cub?.85:1),bx=owl?12.5:10.5,by=FY-lgL-bh;
+ R(bx,FY-.3,bw,.7,'#000000',1,.18);
+ // หาง
+ if(v==='peacock'){const disp=(fr%70)<30;if(disp){for(let r=0;r<3;r++)for(let a=0;a<9;a++){const an=-2.6+a*.33,rr=6+r*2.4;const x=bx+2+Math.cos(an)*rr,y=by+2+Math.sin(an)*rr*.9;R(x,y,1.4,1.4,r===2?'#2a7a5a':'#2a9a8a');R(x+.35,y+.35,.7,.7,r===2?ec:'#ffd040',1)}}else for(let j=0;j<10;j++)R(bx-1-j*.9,by+bh-1+j*.45+Math.sin(fr*.2-j*.4)*.2,1.4,1.2,j%3===2?'#ffd040':'#2a8a6a')}
+ else if(v==='phoenix'){for(let n=0;n<4;n++)for(let j=0;j<11;j++){const x=bx-.5-j*.9,y=by+bh*.4+n*.9+j*.35+Math.sin(fr*.25-j*.5+n)*.8;R(x,y,1.1,.8,[ec,'#ff8a2a','#ffd040','#ff4a2a'][(j+n)%4],0,.95);if(j===10)R(x-.6,y-.2,1.2,1.2,'#fff0a0',1,.9)}}
+ else if(v==='crane'){R(bx-2.2,by+1,3,2.4,'#1a1a1e')}
+ else if(v==='eagle'){for(let j=0;j<4;j++)R(bx-2-j*.4,by+2+j*.6,2.6,.9,j%2?dk:base)}
+ else if(v==='crow'){R(bx-2.4,by+2,3,1.4,dk)}
+ else R(bx-1.6,by+bh-2.5,2.4,1.4,dk);
+ // ขา
+ const legc=v==='crane'?'#3a3a42':'#d8a838';const nl=v==='crow'?3:2;for(let i=0;i<nl;i++){const lx=bx+bw*.35+i*1.4;R(lx,by+bh-.4,.5,lgL+.4,legc);R(lx-.5,FY-.4,1.5,.4,legc)}
+ // ตัว
+ R(bx,by+.6,bw,bh-.6,base);R(bx+.6,by,bw-1.2,.8,base);R(bx+1,by+bh*.55,bw-2,bh*.35,owl?bel:shadeC(bel,.1),1);R(bx+1,by+.3,bw-3,.5,lt,1);
+ if(owl)for(let i=0;i<6;i++)R(bx+1.5+(i%3)*1.6,by+bh*.55+Math.floor(i/3)*1.2,.6,.5,dk,1);
+ // ปีก (พับ/กระพือ)
+ if(flap&&!owl){const wy=fl*2.6;R(bx+1,by-2.5-wy,bw-2,2.6,lt);R(bx+.4,by-3.6-wy*1.3,bw-4,1.4,v==='phoenix'?ec:lt);for(let j=0;j<4;j++)R(bx+.4+j*1.8,by-4.4-wy*1.4,.8,1.2,v==='crane'?'#1a1a1e':v==='phoenix'?'#ffd040':dk)}
+ else{R(bx+1,by+1.2,bw-3,bh-2.4,dk);for(let j=0;j<3;j++)R(bx+1.4+j*1.8,by+bh-1.6,1.2,.5,v==='crane'?'#1a1a1e':dk2,1);if(v==='phoenix')R(bx+1.2,by+1.4,bw-4,.5,ec,1)}
+ // คอ+หัว
+ let hx,hy;if(v==='crane'){const sw=Math.sin(fr*.15)*.4;for(let j=0;j<6;j++)R(bx+bw-2+j*.25+sw*j/6,by-j*1.1,1.2,1.4,base);hx=bx+bw-1.4+sw;hy=by-8.4}
+ else if(owl){hx=bx+.4;hy=by-4.2}else{hx=bx+bw-2.2;hy=by-2.8}
+ const hw=owl?6.2:3.8,hh=owl?4.8:3.2;R(hx,hy+.4,hw,hh-.4,v==='eagle'?'#f4f0e6':base);R(hx+.4,hy,hw-.8,.6,v==='eagle'?'#f4f0e6':base);
+ if(owl){R(hx+.5,hy+.8,2.4,2.4,bel,1);R(hx+3.3,hy+.8,2.4,2.4,bel,1);bEye(R,P,hx+1.1,hy+1.3,1);bEye(R,P,hx+3.9,hy+1.3,1);R(hx+2.7,hy+2.6,.8,1,'#e0a030',1);R(hx-.2,hy-1.2,1.2,1.4,dk);R(hx+hw-1,hy-1.2,1.2,1.4,dk)}
+ else{bEye(R,P,hx+hw-1.8,hy+1);const bc=v==='crane'?'#d8c890':v==='crow'?'#2a2a30':v==='phoenix'?'#ffd040':'#e0a030';
+  if(v==='crane')R(hx+hw-.4,hy+1.6,4,.7,bc);else if(v==='eagle'){R(hx+hw-.4,hy+1.2,1.8,1.2,bc);R(hx+hw+1,hy+1.8,.6,.9,bc)}else R(hx+hw-.4,hy+1.4,1.8,.9,bc);
+  if(v==='crane'){R(hx+1,hy-.4,1.6,.8,'#e02a2a',1);R(hx-1,hy+.5,1.4,2,'#1a1a1e')}
+  if(v==='peacock')for(let j=0;j<3;j++){R(hx+.8+j*.9,hy-2-j*.2,.3,1.8,'#2a8a6a',1);R(hx+.6+j*.9,hy-2.6-j*.2,.7,.7,ec,1)}
+  if(v==='phoenix')for(let j=0;j<4;j++){const f=Math.sin(fr*.4+j)*.4;R(hx+.4+j*.7,hy-1.6-j*.3+f,.7,1.6,j%2?ec:'#ffd040',0,.95)}
+  if(v==='crow'&&T>=2)R(hx+hw-1.8,hy+1,1,1,'#ff4020',1)}}
+// ---------- ปลา ----------
+function bFish(R,P){const {base,dk,dk2,lt,bel,ec,T,fr,V}=P,v=V.v||'carp',cub=T===0;
+ const L=(v==='shark'?18:v==='catfish'?15:13.5)*(cub?.75:1),H=(v==='shark'?5.4:v==='catfish'?4.6:6.2)*(cub?.8:1),cx=16,cy=12+Math.sin(fr*.15)*.8,x0=cx-L/2;
+ const wv=Math.sin(fr*.42);
+ // หาง
+ const tw=v==='shark'?3.6:3;R(x0-1.4,cy-.7+wv*.3,2,1.4,dk);for(let j=-3;j<=3;j++){const y=cy+j*H*.17*(1+wv*.12)-.6+wv*.5,len=tw*(.55+Math.abs(j)*.15);R(x0-1-len,y,len+.4,1.3,Math.abs(j)<1?dk:v==='carp'?ec:shadeC(base,-.15))}
+ // ตัว: คอลัมน์ไล่ความหนา
+ for(let i=0;i<=L;i+=.8){const u=i/L,h=H*(v==='shark'?(u<.75?.5+u*.55:1-(u-.75)*1.8):Math.sin(Math.min(1,u*1.1+.05)*3.14)*.95+.05),y=cy-h/2+Math.sin(u*3-fr*.42)*.35*(1-u);
+  R(x0+i,y,.9,h,base);R(x0+i,y+h*.58,.9,h*.42,v==='shark'?'#eef2f4':bel,1);R(x0+i,y,.9,.45,lt,1);
+  if(v==='carp'&&Math.floor(i/.8)%2===0)R(x0+i+.2,y+h*.25,.5,.5,lt,1);if(v==='carp'&&T>=1&&i>L*.3&&i<L*.7&&Math.floor(i)%3===0)R(x0+i,y+h*.15,.8,h*.35,'#ffffff',1,.85)}
+ // ครีบ
+ if(v==='shark'){R(cx-1,cy-H/2-3,1.6,3,base);R(cx-1.6,cy-H/2-1.4,1,1.4,base);for(let j=0;j<3;j++)R(cx+L*.25+j*.6,cy-.8,.3,1.8,dk2,1)}
+ else{R(cx-2.4,cy-H/2-1.4+wv*.2,4,1.4,v==='carp'?ec:dk);R(cx-1.6,cy-H/2-2,2.2,.8,v==='carp'?ec:dk)}
+ R(cx+1.4,cy+H*.25+Math.sin(fr*.6)*.4,2,1,v==='carp'?ec:dk,0,.95);
+ // หัว ตา ปาก หนวด
+ const hx=x0+L-.6;bEye(R,P,hx-2.4,cy-H*.15);R(hx+.2,cy+H*.08,.6,.4,dk2,1);
+ if(v==='shark'&&(fr%30)<8){R(hx-1.4,cy+H*.15,1.8,.7,'#5a1020',1);R(hx-1.2,cy+H*.15,1.4,.25,'#ffffff',1)}
+ if(v==='carp'||v==='catfish'){const n=v==='catfish'?2:1,len=v==='catfish'?7:4;for(let w=0;w<n*2;w++)for(let j=0;j<len;j++)R(hx+.3+j*.25-(w%2)*.2,cy+H*.15+j*.4+Math.sin(fr*.3-j*.6+w)*.35+(w>1?.8:0),.4,.4,v==='catfish'?dk2:shadeC(base,-.1),1)}
+ if(T>=2&&(fr%24)<10)for(let j=0;j<3;j++)R(hx-1+j*.4,cy-H/2-1.5-((fr%24)*.5+j*1.3)%6,.5,.5,'#e8f8ff',1,.8)}
+// ---------- งู ----------
+function bSerp(R,P){const {base,dk,dk2,lt,bel,pc,ec,T,fr,V}=P,cub=T===0,FY=20.2,ft=fr*.22,big=V.big?1.2:1;
+ const N=30,pts=[];for(let i=0;i<=N;i++){const u=i/N;let x,y,r;if(u<.72){x=2+u*24*(cub?.8:1);y=FY-1.4+Math.sin(u*9-ft)*1.5*(.4+u)}else{const k2=(u-.72)/.28;x=2+.72*24*(cub?.8:1)+k2*3.5;y=FY-1.4+Math.sin(.72*9-ft)*1.5*1.1-k2*7.5}r=(u<.12?.35+u*5:u>.78?1.05:1.2)*big*(cub?.85:1);pts.push({x,y,r,u})}
+ if(V.fin)pts.forEach((p,i)=>{if(i%2||i>N-2)return;R(p.x,p.y-p.r-.8+Math.sin(ft*2+i)*.2,1,.8,lt,1,.85)});
+ pts.forEach((p,i)=>{if(i===N)return;const hood=V.hood&&p.u>.8&&T>=1?1.1:0,r=p.r+hood;R(p.x,p.y-r,1.1,r*2,base);R(p.x,p.y+r*.2,1.1,r*.8,bel,1);R(p.x,p.y-r,1.1,.4,lt,1);
+  if(V.pat==='blotch'&&i%3===0&&p.u<.78)R(p.x,p.y-r*.7,1.1,r*.9,pc,1);if(V.pat==='band'&&i%4===0&&p.u<.78)R(p.x,p.y-r,.5,r*2,pc,1);if(V.pat==='pearl'&&i%2)R(p.x+.3,p.y-r*.6,.4,.4,'#ffffff',1,.9);
+  if(hood&&i%2===0)R(p.x,p.y-.5,1,1,ec,1,.8);if(T>=2&&i%5===0&&p.u<.75)R(p.x+.2,p.y-r*.3,.6,.6,ec,1,.85)});
+ const hp=pts[N],hx=hp.x-.4,hy=hp.y-1.7;R(hx,hy,3.8,2.6,base);R(hx+.4,hy-.4,2.6,.6,base);R(hx+.4,hy+1.8,3.2,.8,bel,1);bEye(R,P,hx+2,hy+.5);
+ if((fr%22)<5){R(hx+3.8,hy+1.6,1.4,.3,'#e8303a',1);R(hx+5.1,hy+1.3,.5,.3,'#e8303a',1);R(hx+5.1,hy+1.9,.5,.3,'#e8303a',1)}
+ if(V.pat==='eel'&&T>=1&&(fr%9)<3)for(let j=0;j<4;j++){const p=pts[(j*7+Math.floor(fr))%N];R(p.x+(j%2?1:-1),p.y-p.r-1.4,.4,1.2,'#fff060',1)}}
+// ---------- เต่า ----------
+function bTurt(R,P){const {base,dk,dk2,lt,bel,ec,T,fr,V}=P,v=V.v||'xuanwu',cub=T===0,FY=20.6,soft=v==='soft';
+ const L=(soft?13:14.5)*(cub?.72:1),H=(soft?4:6.2)*(cub?.8:1),x0=15-L/2,y0=FY-1.6-H;const ph=fr*.15;
+ R(x0,FY-.3,L+2,.7,'#000000',1,.2);
+ for(let i=0;i<4;i++){const lx=[x0+.6,x0+2.2,x0+L-3.4,x0+L-1.6][i],sw=Math.sin(ph+(i%2?3.14:0))*.5;R(lx+sw,FY-2.2,1.6,2,i%2?dk:shadeC(base,.1))}
+ R(x0-1.6+Math.sin(ph)*.2,FY-2.4,1.8,.8,shadeC(base,.05));
+ // หัว
+ const hx=x0+L-.4+Math.max(0,Math.sin(fr*.05))*.8,hy=FY-4.4;R(x0+L-1.4,FY-3.6,2.6,1.6,shadeC(base,.1));R(hx,hy,soft?3.4:3,2.4,shadeC(base,.12));if(soft)R(hx+3.2,hy+.9,1,.6,shadeC(base,.12));bEye(R,P,hx+1.6,hy+.6);R(hx+1,hy+1.8,1.6,.3,dk2,1);
+ // กระดอง
+ const sc=soft?shadeC(base,.05):base;for(let i=0;i<=L;i+=.8){const u=i/L,h=H*Math.sin(Math.min(1,u*1.02)*3.14)*.95+.6;R(x0+i,y0+H-h,.9,h,sc)}
+ R(x0-.2,y0+H-.9,L+.4,1,soft?shadeC(base,.2):bel);
+ if(!soft){const pl=T>=2?ec:lt;for(let r=0;r<2;r++)for(let i=0;i<(r?3:4);i++){const px=x0+1.6+i*3.1+(r?1.5:0),py=y0+H*.22+r*H*.38;R(px,py,2.4,.35,pl,1,.9);R(px,py,.35,H*.3,pl,1,.9);R(px+2.1,py,.35,H*.3,pl,1,.9)}R(x0+L*.3,y0+.6,L*.4,.5,lt,1)}
+ else for(let i=0;i<8;i++)R(x0+1.5+((i*2.3)%(L-3)),y0+H*.5+((i*1.1)%1.6),.5,.5,dk,1);
+ // เสวียนอู่: งูพันกระดอง (ขั้นสูง)
+ if(v==='xuanwu'&&T>=2){const sb='#2a4a3a';for(let j=0;j<18;j++){const a=j/18*6.28+fr*.08,x=15+Math.cos(a)*L*.42,y=y0+H*.5+Math.sin(a)*H*.38-(j>14?(j-14)*1.4:0);R(x,y,1.1,1.1,j%2?sb:shadeC(sb,.2))}const sx=15+L*.42*Math.cos(fr*.08+6),sy=y0-4.4;R(sx-1,sy,2.6,1.8,sb);R(sx+.9,sy+.4,.6,.6,ec,1);if((fr%20)<4)R(sx+1.6,sy+1.2,1.2,.3,'#e8303a',1)}}
+// ---------- วานร ----------
+function bApe(R,P){const {base,dk,dk2,lt,bel,ec,T,fr,V}=P,cub=T===0,FY=20.6,fc=V.fc||'#e8b890';const k=cub?.8:1,ph=fr*.3;
+ const bx=12.5,bw=7*k,bh=7.5*k,lg=4*k,by=FY-lg-bh,sw=Math.sin(ph)*.8;
+ R(bx-.5,FY-.3,bw+1,.7,'#000000',1,.2);
+ // หาง
+ for(let j=0;j<9;j++)R(bx-1-j*.5+Math.sin(fr*.2-j*.5)*.4,by+bh-2-j*.7+(j>6?(j-6)*.9:0),.8,.8,dk);
+ // ขา
+ R(bx+1,by+bh-.4,1.8,lg+.4,dk);R(bx+bw-2.8,by+bh-.4,1.8,lg+.4,dk);R(bx+.6,FY-.6,2.4,.7,dk2);R(bx+bw-3.2,FY-.6,2.4,.7,dk2);
+ // แขนหลัง
+ const scratch=(fr%60)<10;R(bx-1.2,by+1.4+sw,1.6,bh,dk);
+ // ตัว
+ R(bx,by+.6,bw,bh-.6,base);R(bx+.6,by,bw-1.2,.8,base);R(bx+1.5,by+2,bw-3,bh-3,bel,1);R(bx+.8,by+.3,bw-2.4,.5,lt,1);
+ // หัว
+ const hw=5.6*(cub?1.15:1),hh=5*(cub?1.15:1),hx=bx+bw/2-hw/2+.6,hy=by-hh+.8;R(hx,hy+.5,hw,hh-.5,base);R(hx+.5,hy,hw-1,.6,base);R(hx+.8,hy+1.4,hw-1.6,hh-1.8,fc);R(hx-.7,hy+1.6,1,1.4,fc);R(hx+hw-.3,hy+1.6,1,1.4,fc);
+ bEye(R,P,hx+1.4,hy+2);bEye(R,P,hx+hw-2.4,hy+2);R(hx+hw/2-.6,hy+3.4,1.2,.4,dk2,1);R(hx+hw/2-1,hy+hh-1,2,.35,dk2,1);
+ if(V.v==='snow'){R(hx-.3,hy-.6,hw+.6,1,'#ffffff')}if(V.v==='golden'){for(let j=0;j<5;j++)R(hx-.6+j*1.5,hy-.6+Math.sin(fr*.3+j)*.2,1,.8,'#ffd060')}
+ if(T>=2){R(hx+hw/2-.4,hy+.8,.8,.8,ec,1);R(hx-.2,hy+.2,hw+.4,.4,ec,1,.7)}
+ // แขนหน้า
+ if(scratch){R(bx+bw-1,hy+1,1.6,bh-1,base);R(bx+bw-1.2,hy+.2,2,1.4,fc)}else{R(bx+bw-.6,by+1.4-sw,1.6,bh,base);R(bx+bw-.8,by+bh+1-sw,2,1.2,fc)}}
+// ---------- แมลง ----------
+function bBug(R,P){const {base,dk,dk2,lt,bel,ec,T,fr,V}=P,v=V.v||'beetle',FY=20.6,cub=T===0,k=cub?.8:1;
+ if(v==='butterfly'){const cy=11+Math.sin(fr*.2)*1.4,fl=Math.abs(Math.cos(fr*.5));const ww=7*k*(.35+.65*fl);
+  for(let sd=0;sd<2;sd++){const d=sd?1:-1;const wx=sd?16.4:16-ww;R(wx,cy-6*k,ww,5*k,base);R(wx+(sd?0:ww*.15),cy-.6,ww*.85,3.6*k,shadeC(base,-.15));R(wx+ww*.3,cy-4.6*k,ww*.4,1.6*k,ec,1);R(wx+ww*.35,cy+.6,ww*.3,1.2*k,'#ffffff',1,.85);R(sd?wx+ww-1:wx,cy-6*k,1,5*k,dk2,1)}
+  R(15.6,cy-4,1,6,dk2);R(15.7,cy-5.4,.4,1.6,dk2);R(15.1,cy-6.4,.4,1.2,dk2);R(16.4,cy-6.4,.4,1.2,dk2);if(T>=2)for(let j=0;j<4;j++)R(16+Math.sin(fr*.3+j)*4,cy+3+j*1.4,.5,.5,ec,1,.7);return}
+ if(v==='spider'){const cy=FY-4;for(let i=0;i<8;i++){const sd=i<4?-1:1,j=i%4,a=Math.sin(fr*.5+i*1.3)*.4,bx0=sd<0?13.5-j*.6:17+j*.9;const kx=bx0+sd*(2.2+j*.4),ky=cy-3.4-j*.2+a;for(let q=0;q<4;q++)R(bx0+(kx-bx0)*q/4,cy-.6+(ky-cy+.6)*q/4,.6,.6,dk2);for(let q=0;q<5;q++)R(kx+sd*q*.35,ky+q*(FY-ky)/5,.6,.7,dk2)}
+  R(11.6,cy-2.6,6,5,base);R(12.2,cy-3,4.8,.6,lt,1);if(T>=1){R(14,cy-1.4,1.4,.8,ec,1);R(14.4,cy-.6,.6,1.2,ec,1)}R(17.2,cy-1.6,3.4,3,dk);for(let j=0;j<4;j++)R(18.3+(j%2)*.8,cy-1.2+Math.floor(j/2)*.7,.5,.5,T>=2?ec:'#e02a2a',1);return}
+ if(v==='centipede'){const N=12;for(let i=0;i<N;i++){const x=4+i*2,y=FY-2.6+Math.sin(i*.8-fr*.35)*1;R(x,y,2.1,1.8,i%2?base:dk);R(x+.3,y-.2,1.4,.4,lt,1);const lm=Math.sin(fr*.6+i)*.4;R(x+.4+lm,y+1.6,.4,1.2,'#e0a030');R(x+1.2-lm,y+1.6,.4,1.2,'#e0a030');if(T>=2&&i%3===0)R(x+.6,y+.5,.6,.6,ec,1)}
+  const hx=4+N*2,hy=FY-2.8+Math.sin(N*.8-fr*.35);R(hx,hy-.2,2.4,2.2,'#a02a20');bEye(R,P,hx+1.2,hy+.2);R(hx+2.2,hy+1.4,1,.4,'#1a1010',1);R(hx+1.6,hy-1.6,.4,1.6,dk2);R(hx+2.2,hy-1.4,.4,1.4,dk2);return}
+ if(v==='scorpion'){const by=FY-3.4;for(let i=0;i<8;i++){const lx=8+i*1.4,a=Math.sin(fr*.5+i)*.4;R(lx,by+1.8+a,.4,1.6,dk2)}
+  for(let i=0;i<4;i++)R(7.5+i*2.6,by-.4,2.7,3,i%2?base:dk);R(8,by-.6,9,.5,lt,1);
+  const ts=Math.sin(fr*.18)*.12,cxs=10.5,cys=by-.2,rs=4.4;for(let j=0;j<7;j++){const a=Math.PI-j*(Math.PI*.78/6)+ts,x=cxs+Math.cos(a)*rs*1.1,y=cys-Math.sin(a)*rs;R(x-.7,y-.7,1.6-j*.05,1.6-j*.05,j%2?base:dk)}
+  {const a=Math.PI-Math.PI*.86+ts,x=cxs+Math.cos(a)*rs*1.1,y=cys-Math.sin(a)*rs;R(x-.2,y,1.2,1.2,T>=1?ec:dk2);R(x+.6,y+1,.6,.9,T>=1?ec:dk2);if(T>=2)R(x-.6,y-.6,2.2,2.2,ec,1,.3)}
+  const op=Math.max(0,Math.sin(fr*.3))*.8;R(18,by,2.6,2.2,base);bEye(R,P,19.4,by+.3);R(20.4,by-1.4,2.6,1.2,base);R(22.4,by-1.8-op,1.6,1,dk);R(22.4,by-.6+op,1.6,.8,dk);R(20.4,by+1.6,2.6,1.2,base);R(22.4,by+1.2-op,1.6,.8,dk);R(22.4,by+2.4+op,1.6,1,dk);return}
+ const cy=FY-3.2;for(let i=0;i<6;i++)R(11+i*1.8,cy+2.4+Math.sin(fr*.5+i)*.3,.4,1.4,dk2);R(10,cy-1,10,4.4,base);R(10.5,cy-1.4,9,.6,base);R(11,cy-.6,7,.5,lt,1);R(14.8,cy-1.4,.3,5,dk2,1);R(20,cy,2.6,2.6,dk);bEye(R,P,21.4,cy+.5);if(b&&b.f&&b.f.wing)R(11,cy-3+Math.sin(fr*.8),8,2,lt+'aa',1)}
+// ---------- กบ/คางคก ----------
+function bFrog(R,P){const {base,dk,dk2,lt,bel,ec,T,fr,V}=P,cub=T===0,FY=20.6,k=cub?.8:1,toad=V.v==='toad3';
+ const hop=(fr%50)<6?Math.sin((fr%50)/6*3.14)*3:0,bw=11*k,bh=6*k,bx=16-bw/2,by=FY-bh-.6-hop;
+ R(bx,FY-.3,bw,.7,'#000000',1,.2);
+ R(bx-1.2,by+bh-2.4,3.6,2.4,dk);R(bx-1.8,FY-.8,3.2,.8,dk);if(!toad||T>=0)R(bx+bw-2.4,by+bh-2.4,3,2.4,dk);
+ R(bx,by+.8,bw,bh-.8,base);R(bx+.8,by,bw-1.6,1,base);R(bx+1,by+bh-1.8,bw-2,1.4,bel,1);R(bx+1,by+.4,bw-3,.5,lt,1);
+ for(let i=0;i<(toad?9:4);i++)R(bx+1.4+((i*2.3)%(bw-2.8)),by+1+((i*1.3)%(bh-3)),.6,.6,toad?shadeC(base,.25):dk,1);
+ const sac=toad&&(fr%30)<12?Math.sin((fr%30)/12*3.14)*1.6:0;if(sac)R(bx+bw-3.4,by+bh-2.4,2.6+sac,1.6+sac*.6,shadeC(bel,.2),1);
+ R(bx+bw-3.2,by-1.4,2,2,base);R(bx+bw-6,by-1.4,2,2,base);bEye(R,P,bx+bw-2.8,by-1,1);bEye(R,P,bx+bw-5.6,by-1,1);R(bx+bw-4,by+2,3.6,.35,dk2,1);
+ R(bx+bw-1.4,by+bh-1.6,1.8,1.6,base);R(bx+bw-.2,FY-.8,2.4,.8,dk);
+ if(toad){R(bx+bw-1,by+1.4,1.8,1.8,'#ffe060');R(bx+bw-.5,by+1.9,.8,.8,'#a07a20',1)}
+ if((fr%40)<3)R(bx+bw,by+2,4,.4,'#e86080',1);if(T>=2)R(bx+2,by+.3,bw-4,.4,ec,1,.85)}
+// ---------- ใช้แทนของเดิม (ยกเว้นมังกรที่มีตัวใหม่อยู่แล้ว) ----------
+{const _dbB=drawBeast;drawBeast=function(c,b,ox,oy,s,fr){if(!b||isLoong(b))return _dbB.apply(this,arguments);try{drawBeast2(c,b,ox,oy,s||1,fr||0);return}catch(e){console.error(e)}return _dbB.apply(this,arguments)}}
+try{const g=GD2.find(x=>x.s==='beast'&&x.ic==='🐾');if(g){g.d+=' · <b>ใหม่</b>: เผ่าเพิ่มเป็น '+BL_SP.length+' เผ่า (กวางวิญญาณ หมีดำ แพนด้า สิงโตหิมะ เสือขาว กิเลน อินทรีทอง หงส์เพลิง อีกาสามขา ฉลาม งูเห่า ปลาไหลอัสนี แมงป่อง ผีเสื้อวิญญาณ คางคกทอง ฯลฯ) · ภาพสัตว์วาดใหม่ทั้งหมด เดินจริง กะพริบตา และหน้าตาเปลี่ยนตามขั้น';g.de=(g.de||'')+' · NEW: '+BL_SP.length+' species with all-new animated pixel art that evolves with each stage.'}SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
+// ---------- ฉากต่อสู้: ศัตรูที่เป็นสัตว์ให้วาดเป็นสัตว์ (หันหน้าเข้าหาเรา) ----------
+const BEN_AL=[['เสือดาว','เสือดาว'],['เสือขาว','เสือขาว'],['สิงโต','สิงโตหิมะ'],['อินทรี','อินทรีทอง'],['เหยี่ยว','อินทรีทอง'],['นกฮูก','นกฮูกจันทร์'],['นกยูง','นกยูง'],['อีกา','อีกาสามขา'],['หงส์','หงส์เพลิง'],['กระเรียน','กระเรียน'],['ค้างคาว','ค้างคาวรัตติกาล'],['หมาป่า','หมาป่า'],['จิ้งจอก','จิ้งจอก'],['แพนด้า','แพนด้า'],['หมี','หมีดำ'],['หมูป่า','หมูป่า'],['กวาง','กวางวิญญาณ'],['วัว','วัวป่า'],['กระทิง','วัวป่า'],['ม้า','ม้าเมฆ'],['กระต่าย','กระต่ายหยก'],['หนู','หนูทอง'],['แมว','แมวป่า'],['กิเลน','กิเลน'],['งูเหลือม','งูเหลือม'],['งูเห่า','งูเห่า'],['งู','งูขาว'],['ปลาไหล','ปลาไหลอัสนี'],['ฉลาม','ฉลามทะเลลึก'],['ปลาดุก','ปลาดุกยักษ์'],['ปลา','ปลาคาร์ป'],['ตะพาบ','ตะพาบ'],['เต่า','เต่าดำ'],['ลิง','วานร'],['วานร','วานร'],['แมงป่อง','แมงป่องพิษ'],['แมงมุม','แมงมุมดำ'],['ตะขาบ','ตะขาบยักษ์'],['ผีเสื้อ','ผีเสื้อวิญญาณ'],['คางคก','คางคกทอง'],['กบ','กบหยก'],['มังกร','มังกร'],['พยัคฆ์','พยัคฆ์'],['เสือ','พยัคฆ์']];
+const BEN_HUM=/นักล่า|จอมยุทธ์|ศิษย์|ผู้|นาย|ชาย|หญิง|คน|มนุษย์|ทหาร|โจร|พระ|นักพรต|เจ้าสำนัก|ผู้อาวุโส|ผู้เฒ่า|องค์|ฮ่องเต้|ขุนนาง|ตัวเอก|อาจารย์|หมอ|เซียน(?!สัตว์)/;
+function benLook(name){try{const n=String(name||'');let sp=null;for(const [k,v] of BEN_AL)if(n.includes(k)){sp=v;break}
+ const meB=S&&S.beastMode&&!S.beastMode.human;if(!sp){if(!meB||BEN_HUM.test(n))return null;if(/อสูร|สัตว์|สัตว์ร้าย|ราชา|เจ้าป่า|ฝูง/.test(n)||meB)sp=ch(BL_SP.filter(x=>x[0]!=='มังกร'))[0]}
+ if(BEN_HUM.test(n)&&!/อสูร|สัตว์/.test(n)&&!BEN_AL.some(([k])=>n.includes(k)))return null;
+ const s=BL_SP.find(x=>x[0]===sp);if(!s)return null;const e=ch(BEL),my=meB?(S.beastMode.st|0):Math.min(4,realmIdx());
+ return{i:-1,w:S.xian?1:0,t:Math.min(9,my*2+R(-1,2)),n:sp,sp,k:s[1],col:s[2],el:e[0],ec:e[1],ad:'',tm:'',f:{wing:s[1]==='bird',horn:my>=3,tail9:false,spike:false,eye3:false,head2:false,big:false,glow:my>=2}}}catch(e){return null}}
+{const _fgB=fight;fight=function(name){window._fEnemy=name;try{return _fgB.apply(this,arguments)}finally{setTimeout(()=>{window._fEnemy=null},50)}}}
+{const _ssB=setScene;setScene=function(type,data){if(type==='fight'&&!(data&&data.beast)&&window._fEnemy){const bl=benLook(window._fEnemy);if(bl)data=Object.assign({},data||{},{beast:bl})}return _ssB.call(this,type,data)}}
 
 </script>
 </body>
