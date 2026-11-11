@@ -7158,7 +7158,7 @@ function gdTick(st){const g=gdInit(),y=Math.max(1,Math.min(st||1,5000));
  const grow=(3+g.lv*4+Math.min(S.fame,5000)/400)*Math.sqrt(y)+g.bel*.0015*Math.min(y,40)*(S.karma>=0?1:.4);g.bel=Math.round(g.bel+grow*(Math.random()*.8+.6));
  if(S.karma<-60&&Math.random()<.2){const l=Math.round(g.bel*.08);g.bel-=l}
  g.fp=+(g.fp+(g.bel/400+g.rk*.6)*Math.min(y,60)*.05*(1+g.lv*.25)).toFixed(1);
- if(g.lv>0){S.power+=Math.round(total()*.0015*g.lv);S.qi+=+(g.lv*.05).toFixed(2)}}
+ if(g.lv>0){S.power+=pctPow(.0015*g.lv*Math.min(y,5));S.qi+=+(g.lv*.05).toFixed(2)}}
 function gdUp(q){const g=gdInit();if(g.lv>=9)return;const c=GD_COST[g.lv+1];if(g.fp<c)return toast('พลังศรัทธาไม่พอ');g.fp=+(g.fp-c).toFixed(1);g.lv++;if(!g.nm)g.nm=gPl();
  log(`🏯 คุณขยายแดนเทพ <b>${esc(g.nm)}</b> เป็น<b>${GD_LV[g.lv]}</b> — ${ch(['แผ่นดินใหม่ผุดขึ้นจากทะเลเมฆ','ดวงดาวดวงใหม่จุดประกายในฟ้าของคุณ','สายน้ำทิพย์ไหลรินลงมาจากยอดเขา','สัตว์เทพบินมาทำรังนับพันตัว','ผู้ศรัทธาจากแดนล่างเห็นนิมิตเป็นวังของคุณ'])}`,'myth',true);sfx('good');if(!q)openGodRealm()}
 function gdUse(k){const g=gdInit();const C={pow:30,prep:50,bless:20,heal:15}[k];if(g.fp<C)return toast('พลังศรัทธาไม่พอ');
@@ -7953,7 +7953,7 @@ function ascSquash(why){if(!S)return;const rest=total()-S.power,cap=REALMS[2].p*
 // มรดกวิชาของลูก: ร่างเด็กรับพลังเต็มของวิชาบรรพบุรุษไม่ไหว
 {const _ih=inherit;inherit=function(){const r=_ih.apply(this,arguments);try{if(S&&S.arts){const cap=REALMS[2].p*.8,rest=total()-S.power,h=S.arts.find(a=>a&&a.heir);if(h&&rest>cap){const ab=artBonus(),f=Math.max(.02,Math.min(1,(ab-(rest-cap))/ab));if(f<1){h.b=Math.max(1,Math.round(h.b*f));log(`🧒 ร่างเด็กยังรับพลังเต็มของวิชามรดกไม่ไหว — พลังของวิชาจะถูกผนึกไว้บางส่วน`,'')}}}}catch(e){}return r}}
 // พลังรวมถาวร % : ต่อขั้น ได้เต็มรวมไม่เกิน 30% ส่วนเกินได้แค่ 20%
-function pctPow(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx();if(!S._pp||S._pp.k!==k)S._pp={k,a:0};const room=Math.max(0,.3-S._pp.a),full=Math.min(v,room),eff=full+(v-full)*.2;S._pp.a+=v;return Math.round(total()*eff)}
+function pctPow(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx();if(!S._pp||S._pp.k!==k)S._pp={k,a:0};const room=Math.max(0,.3-S._pp.a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,S._pp.a));S._pp.a+=v;return Math.round(total()*eff)}
 
 // ---- v13.2b ยาทะลวงขั้น: ใช้เองแล้วต้องทะลวงจริง (ไม่เสียยาฟรี) · คอขวดใหญ่ขั้น 6–7 ได้โอกาส +15% · ทัณฑ์โลกเซียน +10% ----
 function brkInfo(){if(!S)return{k:'none'};if(S.xt)return{k:'god'};const i=realmIdx(),raw=rawRealm();
@@ -10816,7 +10816,7 @@ const bmOK=()=>!!(S&&S.alive&&S.beastMode&&!S.beastMode.human);
 const bFree=()=>!(choice._cur||modalOpen);
 function bLs(a){const m=S.beastMode;S.lifespan+=a;S._lsEx=(S._lsEx||0)+a;if(m)m.lsB=(m.lsB||0)+a}
 {const _lm=lifeMax0;lifeMax0=function(){const r=_lm.apply(this,arguments);try{const m=S&&S.beastMode;if(m&&!m.human&&m.lsB)return Math.min(r+m.lsB,S.lifespan+40)}catch(e){}return r}}
-function bPct(p){const m=S.beastMode,k=(m.st||0)+'|'+(m.pst||0)+'|'+(m.heaven?'h'+(m.hs||0):'');if(!m._pp||m._pp.k!==k)m._pp={k,a:0};const room=Math.max(0,.3-m._pp.a),full=Math.min(p,room),eff=full+(p-full)*.1;m._pp.a+=p;return Math.round(total()*eff)}
+function bPct(p){const m=S.beastMode,k=(m.st||0)+'|'+(m.pst||0)+'|'+(m.heaven?'h'+(m.hs||0):'');if(!m._pp||m._pp.k!==k)m._pp={k,a:0};const room=Math.max(0,.3-m._pp.a),full=Math.min(p,room),eff=full+(p-full)*.1*Math.min(1,.6/Math.max(.3,m._pp.a));m._pp.a+=p;return Math.round(total()*eff)}
 const bPm=()=>(S.xian?1.4:1)*((S.talent&&S.talent.m)||1);
 // ---------- 1) ขั้นย่อยหลังปฐมสัตว์เทพ ชั้น 1–9 ----------
 const BPS_N=9,bpsNeed=n=>Math.round(220000*Math.pow(1.45,n)*(S.xian?1.4:1)),bpsQi=n=>200+n*45;
