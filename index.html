@@ -11752,6 +11752,27 @@ function drawLoong(c,b,ox,oy,s,fr){const R=(x,y,w,h,col,a)=>{if(a!=null)c.global
  if(b.f.wing){R(10,4+bob,6,3,lt,.8);R(9,3+bob,3,1.4,ec,.8)}}
 {const _dbL=drawBeast;drawBeast=function(c,b,ox,oy,s,fr){if(isLoong(b)){try{s=s||1;if(b.f&&b.f.big){const gr=c.createRadialGradient(ox+17*s,oy+12*s,0,ox+17*s,oy+12*s,19*s);gr.addColorStop(0,(b.ec||'#fff')+'44');gr.addColorStop(1,(b.ec||'#fff')+'00');c.fillStyle=gr;c.fillRect(ox-2*s,oy-2*s,38*s,28*s)}drawLoong(c,b,ox,oy,s,fr||0);return}catch(e){console.error(e)}}return _dbL.apply(this,arguments)}}
 
+
+// ===================== v15.5 ระบบติดตามค่าสนับสนุน (เปิดดู QR · บันทึก QR · แจ้งโอน) =====================
+function supSrc(){try{return $('game')&&$('game').classList.contains('on')?'ระหว่างเล่น':'หน้าแรก'}catch(e){return''}}
+function supEv(e){try{if(typeof onlineOK!=='undefined'&&onlineOK===false)return;api('sup',{e,n:pname(),src:supSrc()}).catch(()=>{})}catch(e2){}}
+{const _osS=openSupport;openSupport=function(){const r=_osS.apply(this,arguments);try{supEv('view');const m=$('modal'),dl=m.querySelector('a[download]');if(dl)dl.addEventListener('click',()=>supEv('save'));
+ const now=new Date(),hh=String(now.getHours()).padStart(2,'0'),mm=String(now.getMinutes()).padStart(2,'0');
+ m.insertAdjacentHTML('beforeend',`<details class="supbox" style="margin-top:12px"><summary>📨 โอนแล้ว? กดแจ้งผู้พัฒนาตรงนี้</summary><div class="tag2" style="margin:6px 0">ไม่บังคับ · ช่วยให้ผู้พัฒนารู้ว่าเงินมาจากใคร จะได้ขอบคุณถูกคน · ข้อมูลนี้ผู้พัฒนาเห็นคนเดียว</div>
+  <label class="supl">💰 จำนวนเงิน (บาท)<input id="supAmt" type="number" inputmode="decimal" min="0" placeholder="เช่น 50"></label>
+  <label class="supl">🏦 ชื่อบัญชีที่ใช้โอน <small>(ให้ตรงกับในสลิป)</small><input id="supPn" maxlength="40" placeholder="เช่น นาย ก. ใจดี"></label>
+  <label class="supl">🕐 เวลาที่โอนโดยประมาณ<input id="supTm" maxlength="20" value="${hh}:${mm}"></label>
+  <label class="supl">💬 ฝากถึงผู้พัฒนา<input id="supMsg" maxlength="200" placeholder="ไม่ใส่ก็ได้"></label>
+  <label class="supl">🧾 แนบสลิป <small>(ไม่ใส่ก็ได้)</small><input id="supImg" type="file" accept="image/*"></label>
+  <button class="pbtn" style="width:100%;margin-top:8px" onclick="supPaid(this)">📨 แจ้งว่าสนับสนุนแล้ว</button></details>`)}catch(e){}return r}}
+function supShrink(file){return new Promise(res=>{if(!file)return res('');const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,900/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);let q=.7,d=cv.toDataURL('image/jpeg',q);while(d.length>380000&&q>.3){q-=.1;d=cv.toDataURL('image/jpeg',q)}res(d.length<390000?d:'')};im.onerror=()=>res('');im.src=fr.result};fr.onerror=()=>res('');fr.readAsDataURL(file)})}
+async function supPaid(btn){const amt=+(($('supAmt')||{}).value||0),pn=(($('supPn')||{}).value||'').trim(),tm=(($('supTm')||{}).value||'').trim(),msg=(($('supMsg')||{}).value||'').trim(),f=$('supImg')&&$('supImg').files&&$('supImg').files[0];
+ if(!amt&&!pn&&!f)return toast('ใส่จำนวนเงิน ชื่อบัญชี หรือแนบสลิปอย่างน้อยหนึ่งอย่างนะ');btn.disabled=true;btn.textContent='⏳ กำลังส่ง…';
+ try{const img=await supShrink(f);await api('sup',{e:'paid',n:pname(),src:supSrc(),amt,pn,tm,msg,img});LS.set('murim_supd',(LS.get('murim_supd',0)||0)+1);
+  btn.textContent='✅ ส่งแล้ว ขอบคุณมากครับ 🙏';toast('🙏 ขอบคุณที่สนับสนุนครับ — ผู้พัฒนาได้รับแจ้งแล้ว');try{sfx('good')}catch(e){}}
+ catch(e){btn.disabled=false;btn.textContent='📨 แจ้งว่าสนับสนุนแล้ว';toast(e.message==='rate'?'เพิ่งส่งไป รอสักครู่แล้วลองใหม่':'ส่งไม่สำเร็จ ลองใหม่อีกครั้ง')}}
+(function(){const st=document.createElement('style');st.textContent='.supbox{text-align:left;border:2px dashed var(--line);border-radius:10px;padding:8px 10px}.supbox summary{cursor:pointer;font-weight:700}.supl{display:block;font-size:13px;margin:6px 0}.supl input{display:block;width:100%;box-sizing:border-box;margin-top:3px;padding:8px;border-radius:8px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:inherit}';document.head.appendChild(st)})();
+
 </script>
 </body>
 </html>

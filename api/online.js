@@ -386,6 +386,21 @@ module.exports = async (req, res) => {
       res.setHeader('Content-Type', 'text/plain; charset=utf-8'); res.setHeader('Cache-Control', 'no-store');
       res.statusCode = 404; return res.end('The page could not be found\n\nNOT_FOUND\n');
     }
+    if (a === 'supmark') {
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
+      const sid = String(qOf(req).i || '').replace(/[^a-z0-9]/g, '').slice(0, 20), v = String(qOf(req).v || '');
+      if (!sid) return res.json({ ok: 0 });
+      if (v === 'del') await pipe([['HDEL', 'suppay', sid], ['ZREM', 'suppayz', sid], ['DEL', 'supimg:' + sid]]);
+      else { const cur = jp(await cmd('HGET', 'suppay', sid)); if (cur) { cur.st = v === 'ok' ? 'ok' : v === 'no' ? 'no' : ''; cur.mt = now; await cmd('HSET', 'suppay', sid, JSON.stringify(cur)) } }
+      return res.json({ ok: 1 });
+    }
+    if (a === 'supimg') {
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
+      const d = String((await cmd('GET', 'supimg:' + String(qOf(req).i || '').replace(/[^a-z0-9]/g, '').slice(0, 20))) || '');
+      const m = d.match(/^data:(image\/(?:jpeg|png|webp));base64,(.+)$/);
+      if (!m) { res.statusCode = 404; return res.end('none') }
+      res.setHeader('Content-Type', m[1]); res.setHeader('Cache-Control', 'private, max-age=3600'); return res.end(Buffer.from(m[2], 'base64'));
+    }
     if (a === 'achfdel') {
       if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
       const aid = String(qOf(req).aid || '').replace(/[^a-z0-9_]/g, '').slice(0, 24);
@@ -541,6 +556,18 @@ module.exports = async (req, res) => {
       const AC_WHY = w => { w = String(w || '').replace(/^tamper:/, ''); return /^console/.test(w) ? '🔴 แก้ค่าผ่านคอนโซล (' + w.slice(8) + ')' : w === 'save-edit' ? '🔴 แก้ไฟล์เซฟ' : w === 'srv-cap' ? '🔴 ค่าเกินขีดที่เป็นไปได้ (เซิร์ฟเวอร์)' : w === 'srv-jump' ? '🟠 พลังกระโดดเกิน ×1000 ใน 3 ปี (เซิร์ฟเวอร์)' : /^cap/.test(w) ? '🟠 ค่าเกินเพดาน (' + w + ')' : /^jump/.test(w) ? '🟡 ค่ากระโดดเร็ว (' + w.slice(5) + ')' : w === 'banned' ? '🚫 ถูกแบน' : w === 'pow-age' ? '🟡 พลังสูงเกินอายุ' : w === 'stat' ? '🟠 ค่าเกินขีด' : w === 'score' ? '🟠 คะแนนเกินค่าสถานะ' : '⚪ ' + w };
       const acRow = (x, src) => { const f = x.fid || x.id || '', pre = f.slice(0, 10); return `<div class="pl"><div class="plh"><b>${e(x.n || '-')}</b><small>${tAgo(x.t || now)} ที่แล้ว · ${src}</small></div>${AC_WHY(x.why)} · อายุ ${(+x.age || 0).toLocaleString('th-TH')}${x.st ? ` · ⚔️ ${(+x.st.pow || 0).toLocaleString('en-US')} · ⭐ ${(+x.st.fame || 0).toLocaleString('en-US')}` : x.s ? ` · คะแนน ${(+x.s || 0).toLocaleString('en-US')}` : ''} · <small>${e(pre)}${chSet.has(f) ? ' · 🚫 แบนแล้ว' : ''}</small><br><a class="cpb" style="text-decoration:none" target="_blank" href="?a=acinv&key=${K}&p=${e(pre.slice(0, 8))}&h=1">🔍 ดูประวัติ</a> <button class="cpb" onclick="acB('${e(pre)}','1',this)">🚫 แบน</button> <button class="cpb" onclick="acB('${e(pre)}','0',this)">✅ ล้างธง/ปลดแบน</button></div>` };
       const acL = (acL0 || []).map(jp).filter(Boolean), clL = (clL0 || []).map(jp).filter(Boolean);
+      const spD = [0, 1, 2, 3, 4, 5, 6].map(k => thDay(now, k));
+      const spR = await pipe([...spD.map(d => ['HGETALL', 'supd:' + d]), ['PFCOUNT', 'supu:' + spD[0] + ':view'], ['PFCOUNT', ...spD.map(d => 'supu:' + d + ':view')], ['ZREVRANGE', 'suppayz', 0, 59], ['LRANGE', 'supev', 0, 59]]);
+      const spH = i => { const r = spR[i] || [], o = {}; for (let k = 0; k < r.length; k += 2)o[r[k]] = +r[k + 1] || 0; return o }, spT = spH(0), sp7 = { view: 0, save: 0, paid: 0 }; for (let i = 0; i < 7; i++) { const o = spH(i); for (const k in sp7) sp7[k] += o[k] || 0 }
+      const spIds = spR[9] || [], spPay = spIds.length ? ((await cmd('HMGET', 'suppay', ...spIds)) || []).map(jp).filter(Boolean) : [], spEv = (spR[10] || []).map(jp).filter(Boolean);
+      const spSum = spPay.filter(x => x.st === 'ok').reduce((a, x) => a + (+x.amt || 0), 0);
+      const spRow = x => `<div class="pl" style="${x.st === 'ok' ? 'border-left:4px solid #6ad06a' : x.st === 'no' ? 'border-left:4px solid #d05a5a;opacity:.6' : 'border-left:4px solid #f0c860'}"><div class="plh"><b>💰 ${x.amt ? (+x.amt).toLocaleString('th-TH') + ' บาท' : 'ไม่ระบุยอด'}</b><small>${tAgo(x.t)} ที่แล้ว · ${x.st === 'ok' ? '✅ ยืนยันแล้ว' : x.st === 'no' ? '❌ ไม่พบยอด' : '⏳ รอตรวจ'}</small></div>ชื่อบัญชีที่โอน: <b>${e(x.pn || '-')}</b> · เวลาโอน ${e(x.tm || '-')}<br>ผู้เล่น: ${e(x.n)} <small>(${e(String(x.fid || '').slice(0, 10))} · ${e(x.dev || '')}${x.src ? ' · เปิดจาก' + e(x.src) : ''})</small>${x.msg ? `<br>💬 “${e(x.msg)}”` : ''}${x.img ? `<br><a href="?a=supimg&key=${K}&i=${x.i}" target="_blank"><img src="?a=supimg&key=${K}&i=${x.i}" style="max-width:140px;max-height:200px;border-radius:6px;margin-top:4px;border:1px solid #444" loading="lazy"></a>` : ''}<div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap"><button class="cpb" onclick="spM('${x.i}','ok',this)">✅ ยืนยันว่าได้รับ</button><button class="cpb" onclick="spM('${x.i}','no',this)">❌ ไม่พบยอด</button><button class="cpb" onclick="spM('${x.i}','',this)">↩️ รอตรวจ</button><button class="cpb" onclick="spM('${x.i}','del',this)">🗑️ ลบ</button></div></div>`;
+      const EVN = { view: '👀 เปิดดู QR', save: '⬇️ บันทึกรูป QR' };
+      const supHtml = `<h2>🙏 ค่าสนับสนุน <small style="font-weight:normal;color:#aaa">· สแกน QR เกิดในแอปธนาคาร เว็บจึงรู้ได้แค่ว่าใคร <b>เปิดดู/บันทึก QR</b> และใคร <b>กดแจ้งว่าโอนแล้ว</b> — เอาชื่อบัญชี เวลา และยอดไปเทียบกับรายการในแอปธนาคาร</small></h2>
+<div><span class="c"><b>${spT.view || 0}</b>เปิดดู QR วันนี้ (${+spR[7] || 0} คน)</span><span class="c"><b>${spT.save || 0}</b>บันทึก QR วันนี้</span><span class="c"><b>${spT.paid || 0}</b>แจ้งโอนวันนี้</span><span class="c"><b>${sp7.view}</b>เปิดดู 7 วัน (${+spR[8] || 0} คน)</span><span class="c"><b>${sp7.paid}</b>แจ้งโอน 7 วัน</span><span class="c"><b>${spSum.toLocaleString('th-TH')}</b>บาทที่ยืนยันแล้ว</span></div>
+<h3>📨 แจ้งว่าโอนแล้ว (${spPay.length})</h3>${spPay.length ? spPay.map(spRow).join('') : '<p><small>ยังไม่มีคนแจ้ง</small></p>'}
+<details><summary>👀 คนที่เปิดดู/บันทึก QR ล่าสุด (${spEv.length})</summary>${spEv.map(x => `<div class="pl"><div class="plh"><b>${e(x.n)}</b><small>${tAgo(x.t)} ที่แล้ว</small></div>${EVN[x.e] || e(x.e)} · <small>${e(String(x.fid || '').slice(0, 10))} · ${e(x.dev || '')}${x.src ? ' · เปิดจาก' + e(x.src) : ''}</small></div>`).join('') || '<p><small>ยังไม่มี</small></p>'}</details>
+<script>async function spM(i,v,b){if(v==='del'&&!confirm('ลบรายการนี้?'))return;b.disabled=true;try{const r=await fetch('?a=supmark&key=${K}&i='+i+'&v='+v);const j=await r.json();b.textContent=j.ok?'✓ บันทึกแล้ว':'ไม่สำเร็จ';if(j.ok)setTimeout(()=>location.reload(),500)}catch(x){b.textContent='ไม่สำเร็จ'}}</script>`;
       const acHtml = `<h2>🕵️ ผู้ต้องสงสัยโกง <small style="font-weight:normal;color:#aaa">· 🔴 = จับได้ชัด (แก้ค่าผ่านคอนโซล/แก้เซฟ) ถูกตัดจากระบบออนไลน์อัตโนมัติ · 🟡🟠 = สัญญาณให้ตรวจเอง</small></h2>${acL.length ? acL.slice(0, 40).map(x => acRow(x, 'ระบบจับ')).join('') : '<p><small>ยังไม่มี</small></p>'}<details><summary>📋 ถูกตัดจากทำเนียบล่าสุด (${clL.length})</summary>${clL.map(x => acRow(x, 'ทำเนียบ')).join('')}</details>
 <script>async function acB(p,on,b){if(!confirm(on==='1'?'แบนผู้เล่นนี้จากระบบออนไลน์ทั้งหมด?':'ล้างธงและปลดแบนผู้เล่นนี้?'))return;b.disabled=true;try{const r=await fetch('?a=acban&key=${K}&p='+p+'&on='+on);const j=await r.json();b.textContent=j.ok?(on==='1'?'แบนแล้ว ('+j.n+')':'ปลดแล้ว ('+j.n+')'):'ไม่สำเร็จ'}catch(x){b.textContent='ไม่สำเร็จ'}}</script>`;
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -549,6 +576,7 @@ module.exports = async (req, res) => {
 <h1>🛡️ หน้าผู้ดูแล</h1><div><span class="c"><b>${rows.filter(r => r.b !== 'บอท').length}</b>ออนไลน์ (10 นาที)</span><span class="c"><b>${+(lives || 0)}</b>ชีวิตที่จบแล้ว</span><span class="c"><b>${bugs.length}</b>เรื่องบนกระดานบั๊ก</span><span class="c"><b>${rv || 0}</b>ความคิดเห็น</span></div>
 <h2>คนที่ออนไลน์ตอนนี้ <small style="font-weight:normal;color:#aaa">· รีเฟรชเองทุก 1 นาที</small></h2><p><small>🟢 กำลังเล่น · 🤔/📋 เลือกเหตุการณ์/เปิดหน้าต่าง · ⏸ หยุดเกม · 😴 เปิดทิ้งไว้ · 🙈 สลับแท็บ · 🏠 อยู่หน้าอื่น · 🔴 อาจค้าง/มี error</small></p>${rows.map(r => { const a = r.a || {}; return `<div class="pl" style="border-left:4px solid ${r.s.c}"><div class="plh"><b style="color:${r.s.c}">${e(r.s.t)}</b><small>${e(r.id)} · ${e(r.d)} · ${e(r.b)} · ${e(r.c)} · อัปเดต ${r.ago == null ? '-' : r.ago + ' วิ'}ก่อน${a.v ? ' · v' + e(a.v) : ''}</small></div>${a.nm ? `<div>👤 <b>${e(a.nm)}</b> อายุ ${e(a.ag)} ปี · ${e(WN[a.w] || '')} · ${e(a.ri || '')}${a.sp ? ' · ความเร็ว ' + e(a.sp) + '×' : ''}</div>` : ''}${r.a ? `<div><small>หน้า: ${e(SCN[a.sc] || a.sc || '-')}${a.md ? ' · หน้าต่าง: ' + e(MDN[a.md] || a.md) : ''} · แตะล่าสุด ${mins(a.ia)}ก่อน${a.sc === 'game' && a.yr >= 0 ? ' · ปีในเกมล่าสุดผ่านไปเมื่อ ' + mins(a.yr) + 'ก่อน' : ''}</small></div>` : ''}${r.s.x ? `<div><small style="color:#ff9b9b">error ล่าสุด: ${e(r.s.x)}</small></div>` : ''}</div>` }).join('') || '<p><small>ตอนนี้ไม่มีใครออนไลน์</small></p>'}
 ${avHtml}
+${supHtml}
 ${hvHtml}
 ${secHtml}
 ${acHtml}
@@ -943,6 +971,23 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
     const acFix = async () => { try { if (!(await cmd('SET', 'acfix15', 1, 'NX'))) return; let cur = '0', n = 0, del = 0; do { const r = await cmd('SCAN', cur, 'MATCH', 'acf:*', 'COUNT', 500); cur = String(r[0]); const ks = r[1] || []; if (ks.length) { const vs = await pipe(ks.map(k => ['GET', k])); const bad = ks.filter((k, i) => String(vs[i] || '') === 'save-edit'); if (bad.length) { await cmd('DEL', ...bad); del += bad.length } } n++ } while (cur !== '0' && n < 400);
       const L = (await cmd('LRANGE', 'acsus', 0, 199)) || []; const keep = L.filter(x => { try { return JSON.parse(x).why !== 'save-edit' } catch { return true } }); await cmd('DEL', 'acsus'); if (keep.length) await cmd('RPUSH', 'acsus', ...keep); await cmd('SET', 'acfix15log', JSON.stringify({ del, kept: keep.length, t: now })) } catch {} };
     if (a === 'acsus' || a === 'live') await acFix();
+    if (a === 'sup') {
+      const ev = ['view', 'save', 'paid'].includes(b.e) ? b.e : ''; if (!ev) return res.json({ ok: 0 });
+      const ua = String(req.headers['user-agent'] || ''), dev = (/iPhone|iPad/.test(ua) ? 'iOS' : /Android/.test(ua) ? 'Android' : /Windows/.test(ua) ? 'Windows' : /Mac OS/.test(ua) ? 'Mac' : /Linux/.test(ua) ? 'Linux' : 'อื่นๆ') + ' · ' + (/SamsungBrowser/.test(ua) ? 'Samsung' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /Firefox\//.test(ua) ? 'Firefox' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'เบราว์เซอร์อื่น');
+      const d0 = thDay(now), base = { fid: id, n: clean(String(b.n || ''), 24) || 'นิรนาม', src: clean(String(b.src || ''), 20), dev, t: now };
+      if (ev !== 'paid') {
+        const fresh = await cmd('SET', 'supr:' + ev + ':' + id, 1, 'NX', 'EX', ev === 'view' ? 600 : 3600); if (!fresh) return res.json({ ok: 1 });
+        await pipe([['LPUSH', 'supev', JSON.stringify({ ...base, e: ev })], ['LTRIM', 'supev', 0, 499], ['HINCRBY', 'supd:' + d0, ev, 1], ['EXPIRE', 'supd:' + d0, 86400 * 120], ['PFADD', 'supu:' + d0 + ':' + ev, id], ['EXPIRE', 'supu:' + d0 + ':' + ev, 86400 * 120]]);
+        return res.json({ ok: 1 });
+      }
+      const fresh = await cmd('SET', 'supr:paid:' + id, 1, 'NX', 'EX', 60); if (!fresh) return res.status(429).json({ err: 'rate' });
+      const sid = now.toString(36) + Math.random().toString(36).slice(2, 6), img = String(b.img || '');
+      const hasImg = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(img) && img.length < 400000;
+      const rec = { ...base, i: sid, amt: Math.max(0, Math.min(1e7, Math.round((+b.amt || 0) * 100) / 100)), pn: clean(String(b.pn || ''), 40), tm: clean(String(b.tm || ''), 20), msg: clean(String(b.msg || ''), 200), img: hasImg ? 1 : 0, st: '' };
+      const L = [['HSET', 'suppay', sid, JSON.stringify(rec)], ['ZADD', 'suppayz', now, sid], ['HINCRBY', 'supd:' + d0, 'paid', 1], ['EXPIRE', 'supd:' + d0, 86400 * 120]];
+      if (hasImg) L.push(['SET', 'supimg:' + sid, img, 'EX', 86400 * 120]);
+      await pipe(L); return res.json({ ok: 1, i: sid });
+    }
     if (a === 'acsus') {
       if (req.method !== 'POST' || !okId(id)) return res.json({ ok: 0 });
       const why = String(b.why || '').replace(/[^a-z0-9-]/g, '').slice(0, 24); if (!why) return res.json({ ok: 0 });
