@@ -11319,6 +11319,168 @@ try{QMAP.tm='ผู้ข้ามมิติ'}catch(e){}
  {id:'tm_home',n:'กลับบ้าน',d:'เดินทางกลับโลกเดิมสำเร็จ',r:6,c:()=>!!(S.flags&&S.flags.wentHome)},{id:'tm_stay',n:'ที่นี่คือบ้าน',d:'เลือกอยู่ต่อในโลกนิยาย',r:5,c:()=>!!(S.flags&&S.flags.stayed)},{id:'tm_code',n:'เครือข่ายผู้ข้ามมิติ',d:'มีพันธมิตรผู้ข้ามมิติ 3 คน',r:4,c:()=>!!(S.tm&&S.tm.code.ally>=3)}];ACH.push(['🌌 ผู้ข้ามมิติ 2.0',L]);ACH_ALL.push(...L)}
 try{const g=GD2.find(x=>x.t==='ผู้ข้ามมิติ');if(g){g.nw=1;g.go='openTM';g.need=()=>tmOn();g.d+=' · <b>ใหม่</b> (☰ → 🌌 ผู้ข้ามมิติ): 📖 บางคน<b>เคยอ่านนิยายเรื่องนี้</b> รู้เหตุการณ์ล่วงหน้า แย่ง/ช่วย/ขัดขวางตัวเอกได้ แต่ระวัง<b>แรงแก้บท</b> · 🛒 ร้านข้ามมิติ ขายของโลกนี้ซื้อของโลกเดิม ราคาขึ้นลงทุกปี · 💡 ประดิษฐ์ของผิดยุค 20 อย่าง (สบู่ → จรวด) ระวังมิติบิดเบี้ยว · 🍵 ธุรกิจยุคใหม่ 12 แบบ · 🏠 ตามหาทางกลับบ้าน 5 ขั้น แล้วเลือกกลับหรืออยู่ต่อ · 🔑 คนแปลกหน้าพูดรหัสลับ ตอบถูกจะเจอผู้ข้ามมิติด้วยกัน';g.de=(g.de||'')+' · NEW (☰ → 🌌): novel foreknowledge & the protagonist, a cross-world shop, 20 anachronistic inventions, 12 modern businesses, a 5-stage way home, and secret phrases to find fellow transmigrators.'}SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
 
+
+// ===================== v15.5 ตำนานระดับพลัง: ฉากทะลวงขั้น · คัมภีร์ระดับ · วิถีธาตุ · ฉายา =====================
+// [ไอคอน, ฉายาขั้น, คำอธิบายเบียวๆ, [พลังที่ตื่นขึ้น x3], คำพูด, [สี1,สี2], อังกฤษ]
+const RLM_M=[
+ ['🧍','ผู้ยังไม่ตื่น','ร่างกายของคนธรรมดา ปราณในตัวยังหลับใหล ทว่าในทุกตำนาน… ยอดคนล้วนเริ่มจากจุดนี้','["หายใจเข้าออกอย่างคนธรรมดา","ฝันถึงยุทธภพทุกคืน","มีเพียงความมุ่งมั่นเป็นอาวุธ"]','วันหนึ่ง… ข้าจะยืนอยู่เหนือทุกคน','#8a8a8a','#4a4a4a','The Unawakened — an ordinary body, qi still asleep.'],
+ ['🥋','ผู้ก้าวสู่ยุทธภพ','ปราณสายแรกไหลเวียนในเส้นลมปราณ หมัดหนักพอจะหักกิ่งไม้ วิ่งได้เร็วกว่าม้า ชาวบ้านเริ่มเรียกว่า "จอมยุทธ์"','["หมัดหักกิ่งไม้ได้ในทีเดียว","กระโดดข้ามกำแพงสูงสองเท่าตัว","ได้ยินเสียงฝีเท้าศัตรูในความมืด"]','นี่สินะ… พลังที่ไหลอยู่ในตัวข้า','#5aa0d8','#2a5a8a','Third-Rate — the first strand of qi flows.'],
+ ['⚔️','ผู้เดินบนหลังคา','ปราณหนาแน่นจนกระดูกแข็งดั่งเหล็ก เหยียบหลังคาไร้เสียง ฟันดาบหนึ่งครั้งตัดเสาไม้ขาด','["วิชาตัวเบา วิ่งบนหลังคาไร้เสียง","กระดูกแข็งดั่งเหล็กกล้า","ปราณคุ้มกายรับคมดาบธรรมดาได้"]','เงาของข้าเร็วกว่าเสียงลม','#4ac0a0','#1a6a5a','Second-Rate — bones like iron, steps without sound.'],
+ ['🗡️','ยอดฝีมือชั้นหนึ่ง','ปราณเริ่มไหลออกนอกกายได้ ปลายกระบี่ส่งคลื่นปราณเฉือนหินห่างสิบก้าว ผู้คนหลีกทางเมื่อเห็นคุณเดินมา','["ปล่อยปราณกระบี่ตัดหินจากระยะไกล","สะกดจุดศัตรูด้วยนิ้วเดียว","ตื่นรับรู้วิถีธาตุประจำตัว"]','ระยะสิบก้าว… อยู่ในคมกระบี่ของข้าทั้งหมด','#e0a040','#8a5010','First-Rate — qi leaves the body; sword waves cleave stone.'],
+ ['🌟','ขั้นสุดยอด','ปราณกับกายผสานเป็นหนึ่ง กระบี่ส่องแสงปราณสีรุ้ง เพียงปลดปล่อยแรงกดดันก็ทำให้คนธรรมดาคุกเข่า','["แสงปราณห่อหุ้มอาวุธดั่งไฟ","แรงกดดันทำให้ศัตรูขาสั่น","ฟื้นฟูบาดแผลด้วยลมหายใจ"]','คุกเข่า… หรือจะให้ข้าทำให้','#f0d050','#a07010','Peak Master — aura that brings foes to their knees.'],
+ ['🌸','ฮวากยอง · สามบุปผาบนศีรษะ','ดอกไม้แห่งปราณสามดอกผลิบานเหนือศีรษะ จิต ปราณ กาย หลอมรวมเป็นหนึ่งเดียว แค่สายตาก็หยุดศัตรูได้ ดาบไม่ต้องออกจากฝัก','["สามบุปผาบนศีรษะ — พลังไร้ช่องโหว่","สายตาเดียวสยบศัตรูทั้งกองทัพ","รับรู้ทุกสิ่งในรัศมีพันก้าว"]','ข้าไม่จำเป็นต้องชักดาบ','#f080c0','#902060','Hwagyeong — three flowers bloom above the head.'],
+ ['🌀','ฮยอนกยอง · คืนสู่ความลึกล้ำ','ร่างกายย้อนกลับสู่วัยหนุ่มสาว พลังทั้งหมดกลับเข้าสู่ภายในจนดูเหมือนคนธรรมดา — แต่หนึ่งก้าวของคุณทำให้แผ่นดินร้าว','["ร่างย้อนวัย อายุขัยยาวไกล","ซ่อนพลังจนไม่มีใครมองออก","ทุกการเคลื่อนไหวคือวิชาขั้นสูงสุด"]','ยิ่งลึกล้ำ… ยิ่งดูธรรมดา','#a080f0','#402090','Hyeongyeong — returning to youth; power hidden within.'],
+ ['☯️','แซงซากยอง · เหนือความเป็นความตาย','ก้าวพ้นวงจรเกิดตาย ลมหายใจเดียวเปลี่ยนสภาพอากาศทั้งเมือง ฟ้าดินโค้งคำนับ ยุทธภพจารึกชื่อคุณไว้ในตำนานนิรันดร์','["ลมหายใจเปลี่ยนฟ้าเปลี่ยนฝน","ความตายเอื้อมมาไม่ถึง","ทุกวิชาในใต้หล้าเข้าใจได้ในพริบตา"]','ความตาย… เป็นเพียงคำที่ข้าลืมไปแล้ว','#ffffff','#7080a0','Saengsagyeong — beyond life and death.']];
+const RLM_X=[
+ ['🧍','กายเนื้อมนุษย์','ยังไม่มีรากวิญญาณตื่น ฟ้าดินมองผ่านคุณไปเหมือนฝุ่นละออง… จนกว่าจะถึงวันนั้น','["มองเห็นเพียงโลกของมนุษย์","อายุขัยเพียงร้อยปี","แต่เต๋าไม่เคยปิดประตูใส่ใคร"]','ฟ้ามองข้าเป็นฝุ่นหรือ… ดี','#8a8a8a','#4a4a4a','Mortal — no spirit root awakened yet.'],
+ ['💨','ฝึกปราณ · สัมผัสฟ้าดิน','ปราณวิญญาณจากฟ้าดินไหลเข้าสู่ร่าง ผิวพรรณผ่องใส สิ่งสกปรกในกายถูกขับออกมา คุณเริ่มมองเห็นสายปราณลอยอยู่ในอากาศ','["มองเห็นสายปราณวิญญาณในอากาศ","ขับสิ่งสกปรกออกจากร่าง","ใช้ยันต์และอาคมพื้นฐานได้"]','อากาศ… มีชีวิต','#70d0f0','#205a8a','Qi Refining — sensing heaven and earth.'],
+ ['🗡️','สร้างรากฐาน · เหาะบนกระบี่','รากฐานเต๋าก่อตัวในตันเถียน คุณยืนบนกระบี่แล้วเหาะทะยานผ่านเมฆ อายุขัยยืดออกเป็นสองร้อยปี','["เหาะบนกระบี่ผ่านทะเลเมฆ","อายุขัยทะลุสองร้อยปี","เก็บของไว้ในแหวนมิติ"]','ทะเลเมฆอยู่ใต้เท้าข้าแล้ว','#60e0b0','#1a7a5a','Foundation Establishment — flying on the sword.'],
+ ['🟡','แก่นทอง · ดวงตะวันในตันเถียน','ปราณทั้งหมดอัดแน่นจนกลายเป็นแก่นทองคำ หมุนวนดั่งดวงอาทิตย์ดวงน้อยในท้อง คุณควบคุมธาตุได้ด้วยจิต','["แก่นทองหมุนวนส่องแสงในกาย","ควบคุมธาตุประจำตัวด้วยจิต","ตื่นรับรู้วิถีธาตุของตน"]','ในกายข้า… มีดวงตะวันดวงหนึ่ง','#ffd040','#a06000','Golden Core — a sun spinning within.'],
+ ['👶','ก่อกำเนิดวิญญาณ · วิญญาณแยกร่าง','แก่นทองแตกออกกลายเป็นทารกวิญญาณที่หน้าตาเหมือนคุณ วิญญาณออกจากร่างท่องไปพันลี้ได้ ร่างพังก็ยังไม่ตาย','["วิญญาณออกจากร่างท่องไปพันลี้","ร่างพังวิญญาณยังอยู่ — เกิดใหม่ได้","จิตสัมผัสครอบคลุมทั้งเมือง"]','ทำลายร่างข้าได้… แต่ฆ่าข้าไม่ได้','#f0a0ff','#6a2a9a','Nascent Soul — the soul leaves the body.'],
+ ['⛈️','แปรวิญญาณ · สั่งฟ้าบัญชาฝน','วิญญาณหลอมรวมกับฟ้าดิน คุณเรียกลมเรียกฝน ฟ้าผ่าตามคำสั่ง ภูเขาสั่นไหวตามอารมณ์ ทั้งแคว้นอยู่ใต้ฝ่ามือ','["เรียกพายุ ฟ้าผ่า ฝนลูกเห็บได้ทั้งแคว้น","ภูเขาสั่นตามใจปรารถนา","ย่อพันลี้ให้เหลือหนึ่งก้าว"]','ฟ้าจะร้องไห้ ก็ต่อเมื่อข้าอนุญาต','#80a0ff','#202a8a','Spirit Transformation — commanding wind and rain.'],
+ ['🌌','มหายาน · ดึงดวงดาวลงมา','ร่างกายเชื่อมกับดวงดาว คุณฉีกมิติเดินทาง ดึงพลังดาราลงมาทับศัตรู ในคืนที่คุณโกรธ ดาวตกทั่วฟ้า','["ฉีกมิติเดินทางข้ามโลก","ดึงดาวตกลงมาเป็นอาวุธ","อายุขัยนับเป็นพันปี"]','ดวงดาวทุกดวง… คือกระบี่ของข้า','#c0a0ff','#1a1040','Mahayana — pulling down the stars.'],
+ ['⚡','ข้ามทัณฑ์ · ท้าทายสวรรค์','ฟ้าไม่ยอมให้คุณเป็นเซียน สายฟ้าเก้าสีเก้าสิบเก้าสายฟาดลงมา — และคุณยืนรับมันด้วยรอยยิ้ม ประตูแห่งสวรรค์สั่นไหว','["ยืนรับทัณฑ์สายฟ้าเก้าสี","ร่างกายเกือบเป็นอมตะ","ประตูโลกเทพเปิดรอ"]','สวรรค์… ถ้าอยากหยุดข้า ก็ลงมาเองสิ','#ffffff','#5040a0','Tribulation Transcendence — defying heaven itself.']];
+const RLM_G=[
+ ['✨','เทพฝึกหัด','ร่างกายถูกหลอมด้วยเปลวไฟเทพ ปราณกลายเป็นพลังเทพ แต่ในโลกเทพ… คุณยังเป็นเพียงผู้มาใหม่','["พลังเทพไหลแทนปราณ","ร่างไม่แก่ไม่โรย","มองเห็นเส้นด้ายแห่งโชคชะตา"]','จุดเริ่มต้นอีกครั้ง… ก็ดี','#f0e0a0','#806020','Novice God — reborn in divine fire.'],
+ ['🔆','เทพแท้','แสงเทพเปล่งออกจากผิวกาย ทุกย่างก้าวทิ้งรอยดอกบัวทองบนพื้น สัตว์อสูรหมอบเมื่อคุณเดินผ่าน','["ก้าวเดินทิ้งรอยบัวทอง","แสงเทพขับไล่สิ่งชั่วร้าย","เข้าใจภาษาสรรพสัตว์"]','แสงนี้ไม่ใช่ของใคร… เป็นของข้า','#fff0a0','#a08020','True God — golden lotus blooms where you walk.'],
+ ['☁️','เทพสวรรค์','ครองฟ้าหนึ่งชั้น สร้างวังเมฆของตนเอง สายฝนในโลกเบื้องล่างตกตามดำริ','["สร้างวังบนฟ้าได้ด้วยจิต","กำหนดฤดูกาลของแคว้น","ประทานพรให้มนุษย์"]','ชั้นฟ้านี้ ข้าเป็นผู้กำหนด','#a0e0ff','#2060a0','Heavenly God — ruler of a sky.'],
+ ['👁️','จ้าวเทพ','ดวงตาเทพที่สามเปิดออก มองทะลุอดีตและอนาคตของสรรพสิ่ง เทพนับร้อยมาคุกเข่าเป็นบริวาร','["ดวงตาที่สามมองทะลุกาลเวลา","บัญชาเทพนับร้อย","อ่านกรรมของผู้อื่นได้"]','อนาคตของเจ้า… ข้าเห็นหมดแล้ว','#ffa0a0','#802040','God Lord — the third eye opens.'],
+ ['👑','ราชาเทพ','หนึ่งโลกทั้งใบอยู่ในฝ่ามือ ดวงดาวโคจรตามจังหวะหัวใจ เมื่อคุณขมวดคิ้ว สุริยะยังหรี่แสง','["ถือโลกทั้งใบไว้ในฝ่ามือ","ดวงดาวโคจรตามหัวใจ","สร้างชีวิตจากธุลี"]','ดวงดาวทั้งหลาย… จงหมุนไปตามข้า','#ffd080','#904010','God King — a world in your palm.'],
+ ['🌠','จักรพรรดิเทพ','ทางช้างเผือกคือเสื้อคลุม คุณจุดดาวดวงใหม่ด้วยปลายนิ้ว และดับมันด้วยลมหายใจ อาณาจักรเทพนับพันโค้งคำนับ','["จุดดาวดวงใหม่ด้วยปลายนิ้ว","ดับดวงอาทิตย์ด้วยลมหายใจ","ทางช้างเผือกคือเสื้อคลุม"]','ดาวดวงนั้นสว่างเกินไป… ดับเสีย','#d0a0ff','#301060','God Emperor — kindling and extinguishing stars.'],
+ ['🗿','เทพบรรพกาล','อยู่มาก่อนที่จักรวาลนี้จะมีชื่อ คุณหยุดเวลาได้หนึ่งอึดใจ ย้อนแม่น้ำแห่งกาลเวลาได้หนึ่งก้าว','["หยุดกาลเวลาได้หนึ่งอึดใจ","ย้อนแม่น้ำกาลเวลา","จดจำจักรวาลก่อนหน้านี้"]','ก่อนที่ฟ้าจะมีชื่อ… ข้าอยู่ที่นี่แล้ว','#c0c0c0','#303040','Primordial God — before the universe had a name.'],
+ ['♾️','เทพสูงสุด','เขียนกฎสวรรค์ได้ด้วยปลายพู่กัน คุณประกาศว่า "ที่นี่ห้ามตาย" — และความตายก็หลีกทาง ทุกสรรพสิ่งคือบทกวีที่คุณแต่ง','["เขียนกฎสวรรค์ใหม่ได้","สร้างและทำลายจักรวาล","ความตายต้องขออนุญาต"]','กฎสวรรค์ข้อใหม่… ข้าเป็นคนเขียน','#ffffff','#000000','Supreme God — writing the laws of heaven.']];
+const RLM_P=[['🔱','ชั้นเทพ','ทะลุขีดจำกัดของโลกนี้ พลังเกินกว่าที่ฟ้าดินจะรองรับ ทุกครั้งที่ทะลวงขั้น แผ่นดินไหวทั่วทวีป','["ทะลุขีดจำกัดที่โลกกำหนด","แผ่นดินไหวทุกครั้งที่ทะลวงขั้น","ฟ้าดินเริ่มเกรงกลัว"]','ขีดจำกัด… มีไว้ให้ทำลาย','#ffd060','#904000','God Tier — beyond the world\'s limit.'],
+ ['👑','ชั้นราชา','พลังกลายเป็นอาณาเขต รอบตัวคุณพันลี้คือ "โลกของข้า" ที่กฎทุกข้อเป็นไปตามใจ','["สร้างอาณาเขตพันลี้ที่กฎเป็นของคุณ","ศัตรูในอาณาเขตอ่อนแรง","เรียกวิญญาณบรรพชนมาช่วยรบ"]','ที่นี่… คืออาณาเขตของข้า','#ff9060','#802010','King Tier — a domain of your own law.'],
+ ['🗿','ชั้นบรรพกาล','พลังย้อนไปถึงต้นกำเนิดของฟ้าดิน หมัดหนึ่งแยกทะเล ฝ่ามือหนึ่งปิดดวงอาทิตย์','["หมัดเดียวแยกทะเล","ฝ่ามือบดบังดวงอาทิตย์","สัมผัสต้นกำเนิดของเต๋า"]','ข้าคือเสียงสะท้อนจากวันที่ฟ้าแยกจากดิน','#c0a080','#403020','Primordial Tier — the origin of heaven and earth.'],
+ ['🐉','ชั้นราชัน','เหนือราชาทั้งปวง ดวงดาวเป็นหมากบนกระดาน กาลเวลาเป็นเพียงสายน้ำที่ไหลผ่านนิ้ว','["ใช้ดวงดาวเป็นหมากกระดาน","กาลเวลาไหลช้าลงรอบกาย","ทลายมิติด้วยเสียงคำราม"]','ราชาทั้งหลาย… จงก้มหัว','#ff6080','#600020','Sovereign Tier — stars as game pieces.'],
+ ['♾️','ชั้นนิรันดร์','จุดสูงสุดของพลังในจักรวาล คุณไม่ได้อยู่ในโลก — โลกต่างหากที่อยู่ในคุณ','["โลกทั้งใบอยู่ในตัวคุณ","ไม่มีวันดับสูญ","ชื่อของคุณกลายเป็นกฎสวรรค์"]','ข้า… คือนิรันดร์','#ffffff','#2a0050','Eternal Tier — the world exists within you.']];
+const RLM_B=[['🐾','ลูกสัตว์','ตัวเล็ก ขนยังอ่อน แต่ในดวงตามีประกายที่สัตว์ทั่วไปไม่มี','["ดมกลิ่นอันตรายได้ไกล","ซ่อนตัวในพุ่มไม้","กินแล้วโตไว"]','กรร… (เสียงเล็กๆ)','#a0c080','#405020','Cub'],
+ ['🐺','สัตว์ป่า','กล้ามเนื้อแข็งแรง เขี้ยวคม ครองอาณาเขตเล็กๆ ของตัวเอง','["เขี้ยวเล็บฉีกหนังเหล็กได้","ครองอาณาเขตป่า","สัตว์ทั่วไปหลบหนี"]','ป่านี้… เป็นของข้า','#c0a060','#604010','Wild Beast'],
+ ['🧠','สัตว์อสูรเปิดปัญญา','ปัญญาตื่นขึ้น เข้าใจคำพูดมนุษย์ ดูดซับแสงจันทร์เป็นพลัง ธาตุประจำสายเลือดเริ่มปรากฏ','["เข้าใจภาษามนุษย์","ดูดแสงจันทร์เป็นปราณ","ปล่อยพลังธาตุประจำสายเลือด"]','มนุษย์… พวกเจ้าคิดว่าข้าโง่หรือ','#80c0e0','#204060','Awakened Beast'],
+ ['🔥','อสูรขั้นสูง','ร่างใหญ่เท่าบ้าน เสียงคำรามทำให้นกทั้งป่าบินหนี เริ่มแปลงกายเป็นมนุษย์ได้','["คำรามจนป่าทั้งป่าเงียบ","แปลงกายเป็นมนุษย์","ปล่อยพายุธาตุ"]','จงฟังเสียงแห่งพงไพร','#f08040','#702010','High Beast'],
+ ['🌕','อสูรพันปี','มีชีวิตมาพันปี สายเลือดโบราณตื่นเต็มที่ ราชาแห่งพงไพรที่มนุษย์บูชาเป็นเทพ','["สายเลือดโบราณตื่นเต็มที่","มนุษย์สร้างศาลบูชา","กลืนจันทร์ได้ในคืนเพ็ญ"]','พันปีแล้ว… ยังไม่มีใครข้ามข้าไปได้','#f0e0ff','#402060','Millennium Beast'],
+ ['🐉','สัตว์เทพ','ก้าวข้ามความเป็นสัตว์ กลายเป็นตำนาน ฟ้าดินยอมรับในฐานะเทพ','["เรียกเมฆเรียกฝน","สายเลือดเทพเปล่งแสง","เป็นตำนานของพงไพร"]','ข้าไม่ใช่สัตว์อีกแล้ว','#ffe080','#805000','Divine Beast'],
+ ['🌌','สัตว์เทพบรรพกาล','สายเลือดย้อนไปถึงต้นกำเนิดจักรวาล','["ร่างใหญ่บดบังฟ้า","คำรามจนดาวสั่น","เกิดใหม่จากเถ้าถ่าน"]','จักรวาลจำชื่อข้าได้','#c0a0ff','#200040','Primordial Beast'],
+ ['♾️','ปฐมสัตว์เทพ','สัตว์ตัวแรกแห่งฟ้าดิน','["ทุกสายพันธุ์สืบจากคุณ","ไม่มีวันสูญสิ้น","ฟ้าดินเกิดพร้อมคุณ"]','ข้าคือต้นกำเนิด','#ffffff','#101010','Primal Beast']];
+// ---------- วิถีธาตุ ----------
+// [id, ไอคอน, ชื่อ, คำในฉายา, สี, คำบรรยายพลัง 4 ระดับ, โบนัสทุกครั้งที่ทะลวง, ข้อความโบนัส]
+const RLM_EL=[
+ ['fire','🔥','เพลิง',['เพลิง','อัคคี','เพลิงนรก','สุริยเพลิง'],'#ff6030',['ฝ่ามือลุกเป็นไฟ หมัดทิ้งรอยไหม้','เปลวเพลิงวนรอบกายเป็นมังกรไฟ','ทะเลเพลิงเผาทั้งหุบเขา','เพลิงต้นกำเนิดที่เผาได้แม้แต่ดวงดาว'],'pow','พลัง +3%'],
+ ['thunder','⚡','อัสนี',['อัสนี','สายฟ้า','ฟ้าคำราม','อสนีบาต'],'#a070ff',['ประกายไฟฟ้าแลบตามปลายนิ้ว','ร่างกลายเป็นสายฟ้า เคลื่อนไหวเร็วกว่าตามอง','เรียกฟ้าผ่าพันสายลงกลางสนามรบ','สายฟ้าลงทัณฑ์ของสวรรค์ — ตอนนี้เป็นของคุณ'],'pow','พลัง +3%'],
+ ['ice','❄️','น้ำแข็ง',['หิมะ','น้ำแข็ง','เหมันต์','ธารน้ำแข็ง'],'#60d0ff',['ลมหายใจกลายเป็นไอเย็น','ทุกก้าวแช่แข็งพื้นดิน','ทั้งเมืองกลายเป็นเมืองน้ำแข็งในพริบตา','แช่แข็งได้แม้แต่กาลเวลา'],'hp','พลังชีวิตสูงสุด +6%'],
+ ['wind','🌪️','วายุ',['วายุ','พายุ','ลมกรด','พายุทมิฬ'],'#70e0b0',['ลมพัดตามเมื่อคุณเหวี่ยงมือ','เหยียบลมเหาะได้','ทอร์นาโดพันลูกตามคำสั่ง','ลมที่พัดผ่านทุกมิติ'],'life','อายุขัย +4 ปี'],
+ ['earth','⛰️','ปฐพี',['ปฐพี','ขุนเขา','ศิลา','แผ่นดิน'],'#c0a060',['ผิวแข็งดั่งหิน','ยกภูเขาลูกเล็กได้','แผ่นดินแยกตามจังหวะก้าว','ทวีปทั้งทวีปคือร่างกายของคุณ'],'hp','พลังชีวิตสูงสุด +6%'],
+ ['star','🌌','ดารา',['ดารา','ดวงดาว','ทางช้างเผือก','จักรราศี'],'#c0a0ff',['ดวงตาเปล่งแสงดาว','ดึงแสงดาวมาเสริมกำลัง','เรียกดาวตกลงมาทับศัตรู','ดวงดาวทั้งฟ้าโคจรรอบตัวคุณ'],'int','ปัญญา +6'],
+ ['dark','🌑','ราตรี',['ราตรี','เงา','ทมิฬ','อนธการ'],'#8060a0',['หายเข้าไปในเงาได้','เงาของคุณมีชีวิตและต่อสู้แทน','ดับแสงทั้งเมืองให้มืดมิด','ความมืดก่อนจักรวาลจะถือกำเนิด'],'pow','พลัง +3%'],
+ ['light','☀️','สุริยะ',['สุริยะ','แสงทอง','รุ่งอรุณ','รัศมี'],'#ffd040',['ร่างเปล่งแสงอ่อนๆ ในความมืด','แสงทองรักษาบาดแผล','รัศมีขับไล่มารนับหมื่น','คุณคือดวงอาทิตย์ดวงที่สอง'],'karma','กรรมดี +5'],
+ ['void','🕳️','ความว่างเปล่า',['ความว่าง','สุญตา','ไร้ตัวตน','มิติว่าง'],'#a0a0c0',['บางครั้งศัตรูมองไม่เห็นคุณ','ฉีกช่องว่างเล็กๆ ในอากาศ','ลบสิ่งของออกจากความเป็นจริง','ทุกสิ่งเกิดจากความว่าง และกลับสู่ความว่างตามคำสั่งคุณ'],'qi','ลมปราณ +1 ปี'],
+ ['blood','🩸','โลหิต',['โลหิต','เลือด','ชาด','โลหิตาราชัน'],'#e03040',['บาดแผลหายเร็วผิดปกติ','ควบคุมเลือดของตนเป็นอาวุธ','ดูดพลังจากศัตรูที่บาดเจ็บ','เลือดของคุณคือแม่น้ำแห่งชีวิตของโลก'],'hp','พลังชีวิตสูงสุด +6%'],
+ ['sword','🗡️','กระบี่',['กระบี่','คมดาบ','กระบี่เทพ','หมื่นกระบี่'],'#d0e0f0',['ทุกสิ่งในมือกลายเป็นกระบี่ได้','ปราณกระบี่ร้อยเล่มลอยรอบกาย','หนึ่งกระบี่ผ่าภูเขา','เจตจำนงกระบี่ตัดได้แม้แต่โชคชะตา'],'pow','พลัง +3%'],
+ ['life','🌿','พฤกษา',['พฤกษา','ชีวา','บุปผา','ต้นไม้โลก'],'#70d070',['ดอกไม้บานเมื่อคุณเดินผ่าน','รักษาคนอื่นได้ด้วยการสัมผัส','ป่าทั้งป่างอกขึ้นในคืนเดียว','คุณคือต้นไม้โลกที่ค้ำจักรวาล'],'life','อายุขัย +4 ปี']];
+const RLM_PRE=[['ศิษย์','จอมยุทธ์','อัศวิน','ผู้พิทักษ์','ยอดฝีมือ'],['ราชันย์','จ้าว','เจ้าแห่ง','ราชสีห์','จอมราชันย์'],['จักรพรรดิ','เทพ','มหาเทพ','ราชาเทพ','จักรพรรดิเทพ'],['บรรพเทพ','ผู้สร้าง','ปฐมจักรพรรดิ','ต้นกำเนิด','เทพเจ้าสูงสุด']];
+const RLM_SUF=['เก้าสวรรค์','นิรันดร์','พันโลก','ไร้พ่าย','แห่งยุค','หมื่นปี','ทลายฟ้า','เหนือฟ้า','สิบทิศ','ไร้เทียมทาน','ผู้โดดเดี่ยว','แห่งจุดจบ','พันชาติ','สามภพ','ไร้นาม'];
+// ปรากฏการณ์บนฟ้า (ผสมกันเป็นพันแบบ)
+const RLM_SKY=[['เมฆขาวรวมตัวเป็นวงเหนือศีรษะ','ใบไม้ทั้งป่าสั่นไหวพร้อมกัน','สายลมหยุดนิ่งไปหนึ่งลมหายใจ','น้ำในบ่อเดือดขึ้นเอง','นกทั้งฝูงบินวนรอบตัวคุณ','กลิ่นดอกไม้ลอยมาไม่ทราบที่มา'],
+ ['เมฆเจ็ดสีปกคลุมทั้งเมือง','ฟ้าผ่าลงรอบตัวเป็นวงกลม','ภูเขาด้านหลังร้าวเป็นทางยาว','ดอกบัวทองผุดขึ้นกลางอากาศ','แสงรุ้งพาดผ่านฟ้าทั้งที่ไม่มีฝน','แม่น้ำไหลย้อนกลับหนึ่งชั่วยาม'],
+ ['ดวงดาวเรียงเป็นแนวเดียวกลางวันแสกๆ','ท้องฟ้าแยกออกเป็นสองซีก','ดวงจันทร์เปลี่ยนเป็นสีเงินสว่างจ้า','ทะเลทั้งทะเลสงบนิ่งดั่งกระจก','มังกรเมฆปรากฏบนฟ้าแล้วโค้งคำนับ','หิมะตกกลางฤดูร้อนทั่วทั้งแคว้น'],
+ ['ดาวตกนับพันดวงพุ่งผ่านฟ้า','ดวงอาทิตย์หรี่แสงราวกับเกรงกลัว','กาลเวลาหยุดนิ่งไปชั่วอึดใจ','ทางช้างเผือกหมุนวนเหนือศีรษะ','ประตูทองคำปรากฏกลางฟ้าแล้วเปิดออก','เสียงระฆังสวรรค์ดังก้องทั่วทุกภพ']];
+const RLM_REACT=['ชาวบ้านทั้งหมู่บ้านคุกเข่าลงพร้อมกัน','ศิษย์สำนักใกล้เคียงหยุดฝึกแล้วหันมามอง','ยอดฝีมือที่ซ่อนตัวอยู่ลืมตาขึ้นในความมืด','เด็กน้อยชี้ฟ้าแล้วร้องว่า "มีเทพลงมา!"','สัตว์อสูรทั่วป่าหมอบนิ่ง','ศัตรูของคุณที่อยู่ไกลออกไปรู้สึกหนาวสั่นโดยไม่รู้สาเหตุ','หมอดูทั่วเมืองต่างทำไม้ทำนายหัก','คนในโรงเตี๊ยมทำจอกเหล้าหล่นพร้อมกัน','เหล่าผู้อาวุโสพึมพำว่า "อัจฉริยะแห่งยุค…"','แม้แต่ฟ้าเองก็เหมือนจะกลั้นหายใจ'];
+const RLM_SUBLN=['ปราณในกายหมุนวนแรงขึ้นอีกระดับ','รอยร้าวบนพื้นแผ่ออกไปไกลกว่าเดิม','แสงในดวงตาคุณสว่างขึ้นอีกเล็กน้อย','ฟ้าดินส่งเสียงครางเบาๆ ตอบรับพลังของคุณ','อากาศรอบตัวหนักอึ้งขึ้น','เงาของคุณยาวกว่าปกติอยู่ครู่หนึ่ง'];
+// ---------- ข้อมูลระดับปัจจุบัน ----------
+const rlmOn=()=>LS.get('murim_rlmpop',1)!==0;
+function rlmWorld(){if(S.beastMode&&!S.beastMode.human)return'b';return S.xt?'g':S.xian?'x':'m'}
+function rlmList(w){return w==='x'?RLM_X:w==='g'?RLM_G:w==='b'?RLM_B:RLM_M}
+function rlmNames(w){try{if(w==='x')return XREALM;if(w==='g')return XGOD;if(w==='b')return(S&&S.beastMode&&S.beastMode.sp==='มังกร')?BL_STD:BL_ST;return(W0&&W0.realm)||REALMS.map(r=>r.n)}catch(e){return[]}}
+function rlmCur(){const w=rlmWorld();if(w==='b')return{w,i:Math.min(RLM_B.length-1,(S.beastMode.st|0)),L:-1};return{w,i:realmIdx(),L:postLv()}}
+function rlmKey(){const c=rlmCur();return({m:0,x:1,g:2,b:0}[c.w])*1000+c.i*50+(c.L+1)}
+function rlmBand(){const c=rlmCur();if(c.L>=0)return 3;if(c.w==='g')return c.i>=4?3:2;if(c.w==='x')return c.i>=6?3:c.i>=4?2:c.i>=2?1:0;if(c.w==='b')return Math.min(3,c.i>>1);return c.i>=6?2:c.i>=4?1:0}
+function rlmEl(){return S.rlm&&S.rlm.el?RLM_EL.find(e=>e[0]===S.rlm.el):null}
+function rlmTitle(){const E=rlmEl();if(!E)return'';const b=rlmBand(),r=S.rlm;if(r.tb!==b||!r.tt){r.tb=b;r.tt=ch(RLM_PRE[b])+ch(E[3])+ch(RLM_SUF)}return E[1]+' '+r.tt}
+function rlmFix(){if(!S.rlm)S.rlm={k:null,el:null,tt:'',tb:-1,pend:null,n:0,ask:0};return S.rlm}
+// ---------- ฉากทะลวงขั้น ----------
+const rlmJ=s=>{try{return JSON.parse(s)}catch(e){return[]}};
+function rlmEntry(){const c=rlmCur();if(c.L>=0){const T=RLM_P[Math.min(RLM_P.length-1,Math.floor(c.L/9))];return{e:T,nm:realmLabel().base}}const L=rlmList(c.w);return{e:L[Math.min(L.length-1,c.i)],nm:rlmNames(c.w)[c.i]||''}}
+function rlmPopHtml(){const {e,nm}=rlmEntry(),E=rlmEl(),b=rlmBand(),ab=rlmJ(e[3]);
+ const sky=ch(RLM_SKY[b]),sky2=ch(RLM_SKY[Math.max(0,b-1)]),re=ch(RLM_REACT);const ec=E?E[4]:e[5];
+ const pts=Array.from({length:14},(_,i)=>`<i style="left:${(i*7.3+3)%96}%;animation-delay:${(i*.37)%3}s;animation-duration:${2.6+(i%5)*.5}s;background:${i%2?ec:e[5]}"></i>`).join('');
+ return`<div class="rlmpop" style="--c1:${e[5]};--c2:${e[6]};--ce:${ec}"><div class="rlmaura"></div><div class="rlmpt">${pts}</div>
+ <div class="rlmin"><div class="rlmsm">✦ ทะลวงขั้นสำเร็จ · BREAKTHROUGH ✦</div><div class="rlmic">${e[0]}</div><div class="rlmnm">${esc(nm)}</div><div class="rlmti">— ${e[1]} —</div>
+ <div class="rlmsky">🌤️ ${sky} · ${sky2}<br>👥 ${re}</div>
+ <div class="rlmd">${e[2]}</div>
+ <div class="rlmabh">⚜️ พลังที่ตื่นขึ้น</div><div class="rlmab">${ab.map(a=>`<div>✦ ${a}</div>`).join('')}${E?`<div style="color:var(--ce)">${E[1]} วิถี${E[2]}: ${E[5][b]}</div>`:''}</div>
+ ${E?`<div class="rlmtt">ฉายา: <b>${rlmTitle()}</b></div>`:''}
+ <div class="rlmq">“${e[4]}”</div><div class="rlmen">${e[7]}</div>
+ <button class="rlmbtn" onclick="closeM();try{rlmAfter()}catch(e){}">⚡ รับพลัง</button>
+ <div class="rlmft"><a onclick="closeM();openRealm()">📜 ดูคัมภีร์ระดับทั้งหมด</a> · <a onclick="LS.set('murim_rlmpop',0);closeM();toast('ปิดฉากทะลวงขั้นแล้ว — เปิดใหม่ได้ที่ ☰')">ปิดฉากนี้</a></div></div></div>`}
+function rlmAfter(){const R0=rlmFix();if(!R0.el&&!R0.ask&&rlmCanEl())setTimeout(()=>{try{if(!modalOpen&&!choice._cur)rlmElOffer()}catch(e){}},250)}
+function rlmCanEl(){const c=rlmCur();if(c.w==='b')return false;return c.w!=='m'&&c.w!=='x'?true:c.i>=3}
+function rlmBonus(){const E=rlmEl();if(!E)return'';const k=E[6];if(k==='pow'){const g=pctPow(.03);S.power+=g;return`พลัง +${fmt(g)}`}if(k==='hp'){const g=Math.round(S.maxHp*.06);S.maxHp+=g;S.hp+=g;return`พลังชีวิตสูงสุด +${fmt(g)}`}if(k==='life'){S.lifespan+=4;return'อายุขัย +4 ปี'}if(k==='int'){S.int+=6;return'ปัญญา +6'}if(k==='karma'){S.karma+=5;return'กรรมดี +5'}if(k==='qi'){S.qi=+(S.qi+1).toFixed(1);return'ลมปราณ +1 ปี'}return''}
+function rlmTick(){if(!S||!S.alive)return;const R0=rlmFix(),k=rlmKey();if(R0.k==null||k<R0.k){R0.k=k;return}
+ if(k===R0.k){if(R0.pend&&!modalOpen&&!choice._cur&&!auto){R0.pend=null;modal(rlmPopHtml(),'rlm')}else if(!R0.el&&!R0.ask&&rlmCanEl()&&!modalOpen&&!choice._cur)rlmElOffer();return}
+ const old=R0.k;R0.k=k;R0.n++;const c=rlmCur(),major=Math.floor(old/50)!==Math.floor(k/50)||(c.L>=0&&(c.L%9===0||Math.floor((old%50-1)/9)!==Math.floor(c.L/9)));
+ const bn=rlmBonus(),E=rlmEl();
+ if(!major){log(`✦ ${ch(RLM_SUBLN)}${E?` — ${E[1]} วิถี${E[2]}แผ่ซ่าน`:''}${bn?` <span class="tag2">(${bn})</span>`:''}`,'');return}
+ const {e,nm}=rlmEntry();log(`${e[0]} <b>${esc(nm)}</b> — ${e[1]}: ${ch(rlmJ(e[3]))}${bn?` <span class="tag2">(${E[1]} ${bn})</span>`:''}`,'myth',true);
+ if(rlmOn()&&!auto){if(!modalOpen&&!choice._cur)modal(rlmPopHtml(),'rlm');else R0.pend=1}}
+{const _pyR=passYear;passYear=function(){const r=_pyR.apply(this,arguments);try{rlmTick()}catch(e){console.error(e)}return r}}
+{const _slR=startLife;startLife=function(){const r=_slR.apply(this,arguments);try{if(S){S.rlm=null;rlmFix().k=rlmKey()}}catch(e){}return r}}
+// ---------- เลือกวิถีธาตุ ----------
+function rlmElOffer(){const R0=rlmFix();if(R0.el)return;R0.ask=1;const pick=RLM_EL.slice().sort(()=>Math.random()-.5).slice(0,4);
+ choice('🔮 วิถีธาตุตื่นขึ้น',`ปราณของคุณเริ่มมี "นิสัย" — มันตอบสนองกับธาตุบางอย่างแรงกว่าธาตุอื่น นี่คือวิถีที่จะติดตัวคุณไปจนสุดทางยุทธ์ เลือกให้ดี…<br><span class="tag2">ทุกครั้งที่ทะลวงขั้นจะได้โบนัสตามธาตุ · ได้ฉายาประจำตัว</span>`,pick.map(E=>({t:`${E[1]} วิถี${E[2]}`,s:`${E[5][0]} · ทะลวงขั้นได้ ${E[7]}`,f(){R0.el=E[0];R0.tt='';const t=rlmTitle();keyAdd(`ตื่นวิถี${E[2]} — ได้ฉายา ${t}`);log(`${E[1]} <b>วิถี${E[2]}ตื่นขึ้น!</b> ${E[5][rlmBand()]} — ยุทธภพเริ่มเรียกคุณว่า <b>"${t.slice(E[1].length+1)}"</b>`,'myth',true)}})).concat([{t:'🎲 ให้ฟ้าลิขิต',s:'สุ่มธาตุให้',skip:true,f(){const E=ch(RLM_EL);R0.el=E[0];R0.tt='';const t=rlmTitle();log(`🎲 ฟ้าลิขิตให้คุณเดิน<b>วิถี${E[2]}</b> ${E[1]} — ฉายา <b>"${t.slice(E[1].length+1)}"</b>`,'myth',true)}}]))}
+// ---------- คัมภีร์ระดับ ----------
+function openRealm(tab){if(!S)return;const c=rlmCur();tab=tab||openRealm._t||c.w;openRealm._t=tab;const E=rlmEl();
+ const tabs=[['m','⚔️ ยุทธภพ'],['x','☁️ โลกเซียน'],['g','✨ โลกเทพ'],['p','♾️ เหนือขีดจำกัด'],['b','🐾 สัตว์อสูร']].map(([k,t])=>`<button class="cxtab ${k===tab?'on':''}" onclick="openRealm('${k}')">${t}</button>`).join('');
+ const L=tab==='p'?RLM_P:rlmList(tab),N=tab==='p'?RS_PFX.map(x=>x+(REALMS[7]?REALMS[7].n:'')+' ขั้น 1–9'):rlmNames(tab);
+ const curI=tab==='p'?(c.L>=0?Math.floor(c.L/9):-1):(tab===c.w&&c.L<0?c.i:(tab===c.w?L.length:-1));
+ const passedW=({m:0,x:1,g:2}[c.w]??-1)>({m:0,x:1,g:2}[tab]??9);
+ const cards=L.map((e,i)=>{const done=passedW||i<curI||(tab==='p'&&c.L>=0&&i<curI),cur=i===curI,lock=!done&&!cur&&i>Math.max(curI,0)+1;
+  return`<div class="rlmc ${cur?'cur':''} ${lock?'lk':''}" style="--c1:${e[5]};--c2:${e[6]}"><div class="rlmch"><span class="rlmci">${lock?'🔒':e[0]}</span><div><b>${lock?'???':esc(N[i]||e[1])}</b>${cur?' <span class="rlmnow">ตอนนี้</span>':done?' ✅':''}<div class="tag2">${lock?'ขั้นที่ยังไม่มีใครเล่าให้ฟัง…':e[1]}</div></div></div>
+  ${lock?'':`<div class="rlmcd">${e[2]}</div><div class="rlmca">${rlmJ(e[3]).map(a=>`<span>✦ ${a}</span>`).join('')}</div><div class="rlmcq">“${e[4]}”</div>`}</div>`}).join('');
+ const elx=E?`<div class="rlmel" style="--ce:${E[4]}">${E[1]} <b>วิถี${E[2]}</b> · ฉายา <b>${rlmTitle().slice(E[1].length+1)}</b><br><span class="tag2">${E[5][rlmBand()]} · ทะลวงขั้นทุกครั้ง ${E[7]}</span></div>`:(rlmCanEl()?`<div class="rlmel"><button class="gbtn" onclick="closeM();rlmElOffer()">🔮 ปลุกวิถีธาตุ</button></div>`:`<div class="rlmel tag2">🔮 วิถีธาตุจะตื่นเมื่อถึง${(c.w==='x'?XREALM[3]:(rlmNames('m')[3]||'ขั้นหนึ่ง'))} (สัตว์อสูรมีธาตุตามสายเลือด)</div>`);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📜 คัมภีร์ระดับพลัง</h3><p class="tag2">ระดับยิ่งสูง พลังยิ่งกว้าง: ร่างกาย → ปราณ → ธาตุ → ธรรมชาติ → โลก → ดวงดาว → กฎสวรรค์</p>${elx}<div class="cxtabs">${tabs}</div><div class="cxbody">${cards}</div>
+ <div class="rlmel"><button class="gbtn" onclick="LS.set('murim_rlmpop',rlmOn()?0:1);openRealm()">🎬 ฉากทะลวงขั้น: ${rlmOn()?'เปิด':'ปิด'}</button></div>`,'rlmbook')}
+function toggleRlmPop(){LS.set('murim_rlmpop',rlmOn()?0:1);toast(rlmOn()?'🎬 เปิดฉากทะลวงขั้นแล้ว':'🎬 ปิดฉากทะลวงขั้นแล้ว')}
+// ---------- แสดงฉายา + กดชื่อระดับเพื่อเปิดคัมภีร์ ----------
+{const _rdR=render;render=function(){const r=_rdR.apply(this,arguments);try{const g=$('gRealm');if(g&&!g.dataset.rlm){g.dataset.rlm=1;g.style.cursor='pointer';g.title='📜 คัมภีร์ระดับพลัง';g.addEventListener('click',()=>openRealm())}
+ if(g&&S&&!g.querySelector('.rlmhint'))g.insertAdjacentHTML('beforeend',' <span class="rlmhint">📜</span>');
+ const t=$('gTags'),E=S&&S.rlm&&rlmEl();if(t&&E&&!t.querySelector('.rlmtag'))t.insertAdjacentHTML('afterbegin',`<span class="tag rlmtag" style="--ce:${E[4]}" onclick="openRealm()">${rlmTitle()}</span>`)}catch(e){}return r}}
+{const _omR=openMenu;openMenu=function(){const r=_omR.apply(this,arguments);try{const g=$('modal').querySelector('.mcat15 .mgrid')||$('modal').querySelector('.mgrid');if(g&&S&&!g.querySelector('[data-rlm]'))g.insertAdjacentHTML('beforeend','<button class="opt" data-rlm="1" onclick="openRealm()">📜 คัมภีร์ระดับ<small>ระดับพลัง · วิถีธาตุ</small></button>')}catch(e){}return r}}
+// ---------- สไตล์ ----------
+(function(){const st=document.createElement('style');st.textContent=`
+.rlmpop{position:relative;margin:-14px -14px -10px;padding:22px 16px 14px;border-radius:14px;overflow:hidden;color:#fff;text-align:center;background:radial-gradient(ellipse at 50% 30%,var(--c1) -40%,var(--c2) 45%,#07060c 100%);animation:rlmIn .6s ease-out}
+@keyframes rlmIn{0%{transform:scale(.85);opacity:0;filter:brightness(3)}60%{filter:brightness(1.6)}100%{transform:scale(1);opacity:1;filter:none}}
+.rlmaura{position:absolute;left:50%;top:22%;width:520px;height:520px;margin:-260px 0 0 -260px;background:conic-gradient(from 0deg,transparent,var(--ce),transparent 25%,var(--c1),transparent 50%,var(--ce),transparent 75%,var(--c1),transparent);opacity:.28;border-radius:50%;animation:rlmSpin 9s linear infinite;filter:blur(6px)}
+@keyframes rlmSpin{to{transform:rotate(360deg)}}
+.rlmpt i{position:absolute;bottom:-10px;width:4px;height:4px;border-radius:50%;box-shadow:0 0 8px currentColor;opacity:0;animation:rlmUp 3s linear infinite}
+@keyframes rlmUp{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-480px);opacity:0}}
+.rlmin{position:relative}
+.rlmsm{font-size:10.5px;letter-spacing:2px;opacity:.8}
+.rlmic{font-size:58px;line-height:1.1;margin:6px 0 2px;filter:drop-shadow(0 0 18px var(--ce));animation:rlmPulse 2s ease-in-out infinite}
+@keyframes rlmPulse{50%{transform:scale(1.12);filter:drop-shadow(0 0 30px var(--ce))}}
+.rlmnm{font-size:24px;font-weight:900;background:linear-gradient(90deg,#fff,var(--c1),var(--ce),#fff);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rlmSh 3s linear infinite;text-shadow:none}
+@keyframes rlmSh{to{background-position:300% 0}}
+.rlmti{font-size:13px;opacity:.9;margin-bottom:8px;font-style:italic}
+.rlmsky{font-size:11.5px;opacity:.85;background:rgba(0,0,0,.28);border-radius:8px;padding:6px 8px;margin:6px 0;line-height:1.5}
+.rlmd{font-size:13px;line-height:1.6;margin:8px 2px}
+.rlmabh{font-size:12px;font-weight:800;margin-top:8px;color:var(--ce);letter-spacing:1px}
+.rlmab{text-align:left;font-size:12.5px;line-height:1.7;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:6px 10px;margin:4px 0}
+.rlmtt{margin:8px 0 2px;font-size:13px}.rlmtt b{color:var(--ce)}
+.rlmq{font-size:14px;font-style:italic;margin:8px 0 2px;opacity:.95}.rlmen{font-size:10.5px;opacity:.6;margin-bottom:10px}
+.rlmbtn{border:0;border-radius:999px;padding:11px 30px;font-weight:900;font-size:15px;color:#1a1020;background:linear-gradient(90deg,#fff,var(--c1),#fff);box-shadow:0 0 20px var(--ce);cursor:pointer;animation:rlmPulse 2.4s ease-in-out infinite}
+.rlmft{font-size:11px;opacity:.7;margin-top:10px}.rlmft a{text-decoration:underline;cursor:pointer}
+.rlmc{border-radius:10px;padding:9px 10px;margin:7px 0;border:2px solid var(--line);background:linear-gradient(135deg,color-mix(in srgb,var(--c1) 18%,transparent),transparent 70%)}
+.rlmc.cur{border-color:var(--c1);box-shadow:0 0 0 2px var(--c1),0 0 16px var(--c1)}
+.rlmc.lk{opacity:.55;filter:grayscale(.8)}
+.rlmch{display:flex;gap:9px;align-items:center}.rlmci{font-size:28px}
+.rlmnow{font-size:10px;padding:1px 7px;border-radius:999px;background:var(--c1);color:#111;font-weight:800}
+.rlmcd{font-size:12.5px;line-height:1.55;margin:5px 0}.rlmca{display:flex;flex-direction:column;font-size:12px;opacity:.9}.rlmcq{font-size:12px;font-style:italic;opacity:.75;margin-top:4px}
+.rlmel{margin:6px 0 4px;padding:7px 9px;border-radius:9px;border:2px dashed var(--ce,var(--line));font-size:12.5px}
+.rlmtag{background:linear-gradient(90deg,var(--ce),#222)!important;color:#fff!important;cursor:pointer;font-weight:700;box-shadow:0 0 8px var(--ce)}
+.rlmhint{font-size:.85em;opacity:.7}`;document.head.appendChild(st)})();
+// ---------- ความสำเร็จ + คู่มือ ----------
+{const L=[{id:'rl_el',n:'ธาตุตื่น',d:'ปลุกวิถีธาตุประจำตัว',r:1,c:()=>!!(S.rlm&&S.rlm.el)},{id:'rl_hw',n:'สามบุปผาบนศีรษะ',d:'ถึงฮวากยองในยุทธภพ',r:3,c:()=>!S.xian&&!S.beastMode&&realmIdx()>=5},{id:'rl_ns',n:'วิญญาณแยกร่าง',d:'ถึงก่อกำเนิดวิญญาณในโลกเซียน',r:3,c:()=>!!S.xian&&!S.xt&&realmIdx()>=4},{id:'rl_star',n:'ผู้ดึงดวงดาว',d:'ถึงมหายานในโลกเซียน',r:4,c:()=>!!S.xian&&!S.xt&&realmIdx()>=6},{id:'rl_emp',n:'ผู้จุดดวงดาว',d:'ถึงจักรพรรดิเทพ',r:5,c:()=>!!S.xt&&realmIdx()>=5},{id:'rl_law',n:'ผู้เขียนกฎสวรรค์',d:'ถึงเทพสูงสุด',r:6,c:()=>!!S.xt&&realmIdx()>=7}];ACH.push(['📜 ตำนานระดับพลัง',L]);ACH_ALL.push(...L)}
+try{const _gc={s:'grow',t:'คัมภีร์ระดับพลังและวิถีธาตุ',te:'Realm codex & elemental path',ic:'📜',d:'ทุกขั้นมีพลังของมันเอง: ยุทธภพ (ขั้นสาม → แซงซากยอง เหนือความเป็นความตาย) · โลกเซียน (ฝึกปราณ → เหาะบนกระบี่ → แก่นทอง → วิญญาณแยกร่าง → สั่งฟ้าบัญชาฝน → ดึงดวงดาว → ท้าทายสวรรค์) · โลกเทพ (จุดดาว ดับดวงอาทิตย์ หยุดเวลา เขียนกฎสวรรค์) · เมื่อทะลวงขั้นจะมี<b>ฉากทะลวงขั้น</b>บอกพลังที่ตื่นขึ้น (ปิดได้) · ถึงขั้นหนึ่ง/แก่นทอง จะได้เลือก<b>วิถีธาตุ</b> 12 แบบ (เพลิง อัสนี น้ำแข็ง วายุ ปฐพี ดารา ราตรี สุริยะ ความว่างเปล่า โลหิต กระบี่ พฤกษา) ได้โบนัสทุกครั้งที่ทะลวงขั้น และได้<b>ฉายา</b>ที่เปลี่ยนไปตามระดับ · กดที่ชื่อระดับบนหน้าจอเพื่อเปิดคัมภีร์',de:'Every realm grants its own powers — from iron bones to commanding storms, pulling down stars and rewriting heaven\'s laws. Breakthroughs play a cinematic scene (toggleable). At First-Rate / Golden Core you awaken one of 12 elemental paths, gaining a bonus on every breakthrough and an evolving epithet. Tap your realm name to open the codex.'};const _gi=GD2.findIndex(x=>x.ic==='⭐'&&x.s==='grow');GD2.splice(_gi>=0?_gi+1:GD2.length,0,_gc);SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
+
 </script>
 </body>
 </html>
