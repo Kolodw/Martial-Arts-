@@ -1188,7 +1188,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
 
     // ===== ลานประลองหมื่นเงา (v15.6) =====
     const AR_TKM = 5, AR_TKR = 1200e3, arBr = b0 => (b0.bm ? 'b' : b0.x ? 'x' : 'm') + ':' + Math.max(0, Math.min(12, +b0.ri || 0));
-    const arTk = async (use) => { const v = jp(await cmd('HGET', 'artk', id)) || { n: AR_TKM, t: now }; const add = Math.floor((now - v.t) / AR_TKR); if (add > 0) { v.n = Math.min(AR_TKM, v.n + add); v.t = v.n >= AR_TKM ? now : v.t + add * AR_TKR } if (v.n >= AR_TKM) v.t = now;
+    const arTk = async (use) => { const v = jp(await cmd('HGET', 'artk', id)) || { n: AR_TKM, t: now }; const add = Math.floor((now - v.t) / AR_TKR); if (add > 0) { v.n = Math.max(v.n, Math.min(AR_TKM, v.n + add)); v.t = v.n >= AR_TKM ? now : v.t + add * AR_TKR } if (v.n >= AR_TKM) v.t = now;
       if (use) { if (v.n <= 0) return { ok: 0, n: 0, nx: AR_TKR - (now - v.t) }; if (v.n >= AR_TKM) v.t = now; v.n -= use } if (use || add > 0) await cmd('HSET', 'artk', id, JSON.stringify(v)); return { ok: 1, n: v.n, nx: v.n >= AR_TKM ? 0 : AR_TKR - (now - v.t) } };
     const arRt = async (who) => +(await cmd('HGET', 'arr:' + W, who)) || 1000;
     const arSettle = async () => { try { const pw = week(new Date(now - 7 * 86400e3)); if (!(await cmd('SET', 'arset:' + pw, 1, 'NX', 'EX', 86400 * 30))) return; const top = await cmd('ZREVRANGE', 'ars:' + pw, 0, 2, 'WITHSCORES'); for (let i = 0; i < (top || []).length; i += 2) { const own = top[i], r = i / 2 + 1, sc = +top[i + 1]; if (await cmd('SISMEMBER', 'cheaters', own)) continue; const nm = (await cmd('HGET', 'arn', own)) || 'นิรนาม', exp = now + RKT_EXP.w;
@@ -1196,7 +1196,7 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       // รางวัลจบซีซั่นตามลีก (ทุกคนที่ลงแข่ง)
       const all = (await cmd('ZRANGE', 'ars:' + pw, 0, 1999, 'WITHSCORES')) || []; let Q = []; for (let i = 0; i < all.length; i += 2) { const own = all[i], sc = +all[i + 1]; Q.push(['LPUSH', 'bdrw:' + own, JSON.stringify({ p: 'w', c: 'al', lg: arLg(sc), d: pw, s: sc })], ['EXPIRE', 'bdrw:' + own, 86400 * 60]); if (Q.length >= 200) { await pipe(Q); Q = [] } } if (Q.length) await pipe(Q) } catch {} };
     const arSnapIn = b0 => { let look = null; try { const L = typeof b0.look === 'string' ? JSON.parse(b0.look) : b0.look; if (L && typeof L === 'object' && JSON.stringify(L).length < 1600) look = L } catch {}
-      return { n: clean(b0.n, 20) || 'นิรนาม', p: Math.max(0, +b0.p || 0), hp: Math.max(1, Math.min(1e9, +b0.hp || 100)), r: clean(b0.r, 30), ri: Math.max(0, Math.min(12, +b0.ri || 0)), x: b0.x ? 1 : 0, bm: b0.bm ? 1 : 0, st: ['atk', 'def', 'trick', 'all'].includes(b0.st) ? b0.st : 'atk', arts: (Array.isArray(b0.arts) ? b0.arts : []).slice(0, 3).map(a => clean(a, 24)).filter(Boolean), el: clean(b0.el, 10), sr: clean(b0.sr, 3), look, t: now } };
+      return { n: clean(b0.n, 20) || 'นิรนาม', p: Math.max(0, +b0.p || 0), hp: Math.max(1, Math.min(1e9, +b0.hp || 100)), r: clean(b0.r, 30), ri: Math.max(0, Math.min(12, +b0.ri || 0)), x: b0.x ? 1 : 0, bm: b0.bm ? 1 : 0, st: ['atk', 'def', 'trick', 'all'].includes(b0.st) ? b0.st : 'atk', arts: (Array.isArray(b0.arts) ? b0.arts : []).slice(0, 3).map(a => clean(a, 24)).filter(Boolean), el: clean(b0.el, 10), sr: clean(b0.sr, 3), qo: clean(b0.qo, 50), qw: clean(b0.qw, 50), au: ['fire', 'thunder', 'dark', 'ice'].includes(b0.au) ? b0.au : '', look, t: now } };
     const arLg = r => r >= 1600 ? 4 : r >= 1400 ? 3 : r >= 1250 ? 2 : r >= 1100 ? 1 : 0;
     if (a === 'ar2') {
       if (!okId(id)) return res.json({ err: 'id' }); await arSettle();
@@ -1220,6 +1220,13 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const tk = await arTk(1); if (!tk.ok) return res.json({ o: null, notk: 1, tk, rt: myR });
       await cmd('SET', 'arm:' + id, JSON.stringify({ o: oid, rv, t: now }), 'EX', 900);
       const or = await arRt(oid); delete o.t; return res.json({ o: Object.assign(o, { rt: or, lg: arLg(or) }), rt: myR, tk });
+    }
+    if (a === 'artkbuy') {
+      if (!okId(id)) return res.status(403).json({ err: 'id' });
+      const dk = 'artkb:' + id + ':' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10), [c] = await pipe([['INCR', dk], ['EXPIRE', dk, 86400 * 2]]);
+      if (+c > 2) return res.json({ err: 'limit' });
+      const v = jp(await cmd('HGET', 'artk', id)) || { n: AR_TKM, t: now }; await arTk(0); const v2 = jp(await cmd('HGET', 'artk', id)) || v; v2.n = Math.min(AR_TKM + 2, (v2.n | 0) + 1); await cmd('HSET', 'artk', id, JSON.stringify(v2));
+      return res.json({ ok: 1, tk: await arTk(0), left: 2 - +c });
     }
     if (a === 'ar2res') {
       if (!okId(id)) return res.status(403).json({ err: 'id' });

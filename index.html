@@ -12903,6 +12903,88 @@ try{const d=frGet();if(!admK()&&d){const o=d.own.length;d.own=d.own.filter(x=>!/
 @keyframes xcWave{0%{transform:scale(.4);opacity:0}8%{opacity:1}55%{transform:scale(1.9);opacity:0}100%{opacity:0}}
 .xc-core{position:absolute;inset:-12%;border-radius:50%;z-index:3;pointer-events:none;background:radial-gradient(circle,rgba(230,200,255,.9),rgba(140,60,255,.5) 35%,transparent 60%);mix-blend-mode:screen;opacity:0;animation:xcCore 3.6s ease-out infinite}
 @keyframes xcCore{0%{opacity:.9;transform:scale(.4)}25%{opacity:0;transform:scale(1.2)}100%{opacity:0}}`;document.head.appendChild(st)})();
+
+// ===================== v15.7h ร้านเหรียญลานใหม่: ฉายา · กรอบ · แต่งเงา · หีบลาน · ตั๋วเสริม =====================
+FRAMES.push({id:'f_arc3',n:'กรอบเงาพายุ',side:'r',c:0,ty:'spin orbit ring2 snow corner badge rk2',c1:'#40e0d0',c2:'#e0fffb',c3:'#106a80',pc:'#c0fff6',bd:'🌪️',d:'ร้านเหรียญลาน 250'},
+ {id:'f_arc4',n:'กรอบเงาจันทรา',side:'r',c:0,ty:'spin halo orbit ring2 aura2 sparkle star corner badge rk2',c1:'#c8c0ff',c2:'#ffffff',c3:'#5a4aa8',pc:'#f0ecff',bd:'🌙',d:'ร้านเหรียญลาน 400'},
+ {id:'f_arc5',n:'กรอบบัลลังก์หมื่นเงา',side:'r',c:0,ty:'rainbow halo orbit ring2 aura2 sparkle star ember corner badge rk1',c1:'#ffd040',c2:'#ff60c0',c3:'#3a1060',pc:'#fff0a0',bd:'👑',d:'ร้านเหรียญลาน 1,000 — ของคนที่เล่นลานจริงจัง'},
+ {id:'f_box1',n:'กรอบหีบมรกต',side:'r',c:0,ty:'spin orbit sparkle petal corner badge rk2',c1:'#30d070',c2:'#d0ffe0',c3:'#0a5a2a',pc:'#c0ffd0',bd:'💚',d:'สุ่มได้จากหีบลานเท่านั้น'},
+ {id:'f_box2',n:'กรอบหีบทับทิม',side:'r',c:0,ty:'spin halo orbit ring2 sparkle ember corner badge rk2',c1:'#ff2a5a',c2:'#ffd0dc',c3:'#6a0018',pc:'#ffc0d0',bd:'❤️',d:'สุ่มได้จากหีบลานเท่านั้น'},
+ {id:'f_box3',n:'กรอบหีบนิลกาฬ',side:'r',c:0,ty:'spin halo orbit ring2 aura2 sparkle star corner badge rk1',c1:'#2a2a3a',c2:'#c0c0ff',c3:'#000000',pc:'#e0e0ff',bd:'🖤',d:'สุ่มได้จากหีบลานเท่านั้น (หายากมาก)'});
+const AR_TT=[['นักล่าเงา',3,80],['ผู้ไม่เคยถอย',4,200],['ตำนานแห่งลาน',5,500]];
+const AR_AU={fire:['🔥','ออร่าเพลิง',120],ice:['❄️','ออร่าน้ำแข็ง',120],thunder:['⚡','ออร่าสายฟ้า',200],dark:['🌑','ออร่าเงามืด',300]};
+function arOwn(){const o=LS.get('murim_arown',null)||{};o.tt=o.tt||[];o.au=o.au||[];return o}
+function arOwnSet(o){LS.set('murim_arown',o)}
+function arSel(){return LS.get('murim_arsel',null)||{}}
+AR_SHOP.length=0;
+function arShopHtml(){const o=arOwn(),c=arC(),sel=arSel(),d=frGet(),alive=S&&S.alive;const btn=(dis,lab,on)=>`<button class="sysb" ${dis?'disabled':''} onclick="${on}">${lab}</button>`;
+ const frc=(id,cost)=>{const f=frOf(id),own=d.own.includes(id);return`<div class="item arsi"><div class="arfr">${frWrap(`<span class="frph">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,id)}</div><b>${f.n}</b><small class="tag2">${cost?'🪙 '+fmt(cost):f.d}</small>${own?(d.eq===id?'<span class="tag2">✅ ใช้อยู่</span>':btn(0,'สวม',`frEquip('${id}');arPage()`)):cost?btn(c<cost,'แลก',`arBuy2('fr','${id}',${cost})`):'<span class="tag2">🔒 หีบลาน</span>'}</div>`};
+ return`<div class="arsh2">
+ <h5>🏷️ ฉายาลาน <small>ใส่โชว์ในแชทได้ถาวร</small></h5><div class="arshop">${AR_TT.map(([t,r,cost])=>{const own=o.tt.includes(t);return`<div class="item arsi"><div class="arttl">${tchipH(t,r)}</div><small class="tag2">🪙 ${fmt(cost)}</small>${own?btn(0,'โชว์ฉายานี้',`setShowTtl('${t}',${r},'ar');openOnline('arena')`):btn(c<cost,'แลก',`arBuy2('tt','${t}',${cost})`)}</div>`}).join('')}</div>
+ <h5>🖼️ กรอบ</h5><div class="arshop">${[['f_arc1',40],['f_arc2',120],['f_arc3',250],['f_arc4',400],['f_arc5',1000]].map(([id,cost])=>frc(id,cost)).join('')}</div>
+ <h5>🎭 แต่งเงา <small>คนที่มาท้าจะเห็น</small></h5><div class="arshop">
+  <div class="item arsi"><b>💬 คำพูดเงา</b><small class="tag2">ประโยคเปิดฉาก + ตอนชนะ</small>${o.qt?btn(0,'✏️ ตั้งคำพูด','arQuoteEd()'):btn(c<50,'แลก 🪙50',`arBuy2('qt','qt',50)`)}${o.qt&&sel.qo?`<small class="tag2">「${esc(sel.qo)}」</small>`:''}</div>
+  ${Object.entries(AR_AU).map(([k,[ic,n,cost]])=>{const own=o.au.includes(k),on=sel.au===k;return`<div class="item arsi"><div class="arau-prev arau-${k}"><span>${ic}</span></div><b>${n}</b>${own?btn(0,on?'✅ ใช้อยู่ (ถอด)':'ใช้ออร่านี้',`arAuSet('${on?'':k}')`):btn(c<cost,'แลก 🪙'+cost,`arBuy2('au','${k}',${cost})`)}</div>`}).join('')}</div>
+ <h5>🎁 หีบลาน & ของใช้</h5><div class="arshop">
+  <div class="item arsi archest"><div class="archest-ic">🎁</div><b>หีบลาน</b><small class="tag2">ยา · เหรียญ · ของหายาก · กรอบเฉพาะหีบ · การันตีของหายากทุก 20 หีบ (อีก ${20-(LS.get('murim_arpity',0)||0)})</small>${btn(c<30,'เปิด 🪙30','arChest()')}</div>
+  <div class="item arsi"><b>🎫 ตั๋วเสริม +1</b><small class="tag2">แลกได้วันละ 2 ใบ</small>${btn(c<20,'แลก 🪙20','arTkBuy()')}</div>
+  <div class="item arsi"><b>🧪 ยาฟื้นฟูเต็ม</b><small class="tag2">พลังชีวิตเต็มทันที</small>${btn(c<8||!alive,'แลก 🪙8',`arBuy2('use','heal',8)`)}</div>
+  <div class="item arsi"><b>🌀 ลูกกลอนลมปราณ</b><small class="tag2">ลมปราณ +2</small>${btn(c<12||!alive,'แลก 🪙12',`arBuy2('use','qi',12)`)}</div>
+  <div class="item arsi"><b>🍵 ชาสงบจิต</b><small class="tag2">ความสุข +15</small>${btn(c<6||!alive,'แลก 🪙6',`arBuy2('use','joy',6)`)}</div></div></div>`}
+function arBuy2(k,id,cost){if(arC()<cost)return toast('เหรียญลานไม่พอ');const o=arOwn();
+ if(k==='fr'){const d=frGet();if(d.own.includes(id))return;d.own.push(id);frSet(d);try{profPush()}catch(e){}toast('ได้รับ '+frOf(id).n)}
+ else if(k==='tt'){if(o.tt.includes(id))return;o.tt.push(id);arOwnSet(o);toast('ได้ฉายา「'+id+'」 — กดโชว์ได้เลย')}
+ else if(k==='qt'){o.qt=1;arOwnSet(o);arCAdd(-cost);return arQuoteEd()}
+ else if(k==='au'){if(o.au.includes(id))return;o.au.push(id);arOwnSet(o);const s0=arSel();s0.au=id;LS.set('murim_arsel',s0);toast('ได้'+AR_AU[id][1]+' และใส่ให้แล้ว')}
+ else if(k==='use'){if(!(S&&S.alive))return;if(id==='heal')S.hp=S.maxHp;if(id==='qi')S.qi+=2;if(id==='joy')joy(15);toast('ใช้แล้ว');try{render()}catch(e){}}
+ arCAdd(-cost);try{sfx('good')}catch(e){}arPage()}
+function arAuSet(k){const s0=arSel();s0.au=k||'';LS.set('murim_arsel',s0);arPage()}
+function arQuoteEd(){const s0=arSel();modal(`<h3>💬 คำพูดเงา</h3><p class="tag2">ขึ้นตอนคนอื่นเจอเงาของคุณ (ไม่เกิน 50 ตัวอักษร · คำหยาบถูกกรอง)</p><label class="supl">เปิดฉาก<input id="arQo" maxlength="50" value="${esc(s0.qo||'')}" placeholder="เช่น เจ้ายังอ่อนหัดนัก"></label><label class="supl">ตอนชนะ<input id="arQw" maxlength="50" value="${esc(s0.qw||'')}" placeholder="เช่น กลับไปฝึกมาใหม่เถอะ"></label><div class="brow"><button class="gbtn" onclick="openOnline('arena')">ยกเลิก</button><button class="pbtn" onclick="const s1=arSel();s1.qo=$('arQo').value.trim().slice(0,50);s1.qw=$('arQw').value.trim().slice(0,50);LS.set('murim_arsel',s1);toast('บันทึกคำพูดเงาแล้ว');openOnline('arena')">💾 บันทึก</button></div>`,'arqt')}
+async function arTkBuy(){if(arC()<20)return toast('เหรียญลานไม่พอ');try{const j=await api('artkbuy',{});if(j.err==='limit')return toast('วันนี้แลกตั๋วเสริมครบ 2 ใบแล้ว');if(j.ok){arCAdd(-20);toast(`🎫 ได้ตั๋วเสริม +1 · วันนี้แลกได้อีก ${j.left} ใบ`);arPage()}}catch(e){toast('เชื่อมต่อไม่ได้')}}
+// ---------- หีบลาน ----------
+const AR_BOXF=['f_box1','f_box2','f_box3'];
+function arChest(){if(arC()<30)return toast('เหรียญลานไม่พอ');arCAdd(-30);let pity=(LS.get('murim_arpity',0)||0)+1;const d=frGet(),left=AR_BOXF.filter(x=>!d.own.includes(x));let r=Math.random(),res;
+ const rare=()=>{if(left.length){const id=Math.random()<.15&&left.includes('f_box3')?'f_box3':ch(left.filter(x=>x!=='f_box3').length?left.filter(x=>x!=='f_box3'):left);d.own.push(id);frSet(d);try{profPush()}catch(e){}return{t:5,ic:'🖼️',n:frOf(id).n,s:'กรอบเฉพาะหีบ!'}}arCAdd(80);return{t:4,ic:'🪙',n:'เหรียญลาน 80',s:'มีกรอบหีบครบแล้ว — รับเหรียญแทน'}};
+ if(pity>=20){res=rare();pity=0}
+ else if(r<.07){res=rare();pity=0}
+ else if(r<.2&&S&&S.alive){const id=bagGive(3,5,'หีบลาน');res={t:3,ic:'🎒',n:BAGIT[id]?BAGIT[id].n:'ของหายาก',s:'ของหายากเข้ากระเป๋า'}}
+ else if(r<.5){const v=R(15,45);arCAdd(v);res={t:v>=30?2:1,ic:'🪙',n:'เหรียญลาน '+v,s:v>30?'กำไร!':'ได้คืนบางส่วน'}}
+ else if(S&&S.alive){const id=ch(['hp','hp','qi','herb','cure']);bagAdd(id,1,1);res={t:1,ic:'🧪',n:BAGIT[id].n,s:'เข้ากระเป๋าแล้ว'}}
+ else{const v=R(10,25);arCAdd(v);res={t:1,ic:'🪙',n:'เหรียญลาน '+v,s:''}}
+ LS.set('murim_arpity',pity);const C=['#aaa','#8fd0ff','#7a8cff','#b070ff','#ffb020','#ff60c0'][res.t];
+ modal(`<div class="chest" style="--c:${C}"><div class="chest-box"><div class="chest-lid"></div><div class="chest-body"></div><div class="chest-glow"></div></div><div class="chest-res"><div class="chest-ic">${res.ic}</div><b>${esc(res.n)}</b><small>${esc(res.s)}</small></div>
+ <div class="brow" style="margin-top:12px"><button class="gbtn" onclick="openOnline('arena')">กลับลาน</button><button class="pbtn" ${arC()<30?'disabled':''} onclick="arChest()">เปิดอีก 🪙30</button></div><p class="tag2" style="text-align:center">เหลือ 🪙 ${fmt(arC())} · การันตีของหายากอีก ${20-pity} หีบ</p></div>`,'archest');try{sfx(res.t>=4?'rare':'good')}catch(e){}}
+// ---------- ส่งข้อมูลแต่งเงาไปกับเงา + แสดงผล ----------
+{const _snA=arSnap;arSnap=function(){const o=_snA.apply(this,arguments);try{const s0=arSel(),ow=arOwn();if(ow.qt){o.qo=s0.qo||'';o.qw=s0.qw||''}if(s0.au&&ow.au.includes(s0.au))o.au=s0.au}catch(e){}return o}}
+{const _apS=arPage;arPage=async function(){const r=await _apS.apply(this,arguments);try{const box=$('arBox');const sh=box&&box.querySelector('.arshop');if(sh){const h=sh.previousElementSibling;sh.outerHTML=arShopHtml();}}catch(e){console.error(e)}return r}}
+{const _ppA=arPre;arPre=function(o){const r=_ppA.apply(this,arguments);try{const m=$('modal'),vs=m.querySelector('.arvs');if(vs){const cv=vs.querySelectorAll('canvas'),me=arSel().au;if(me&&arOwn().au.includes(me)&&cv[0])cv[0].parentNode.classList.add('arau-'+me);if(o.au&&cv[1])cv[1].parentNode.classList.add('arau-'+o.au);if(o.qo)vs.insertAdjacentHTML('afterend',`<div class="arquote">💬 <b>${esc(o.n)}:</b> 「${esc(o.qo)}」</div>`)}}catch(e){}return r}}
+{const _rsQ=arResult;arResult=async function(o,au,w){const r=await _rsQ.apply(this,arguments);try{if(!w&&o.qw){const m=$('modal');const bt=m.querySelector('.pbtn');if(bt)bt.insertAdjacentHTML('beforebegin',`<div class="arquote">💬 <b>${esc(o.n)}:</b> 「${esc(o.qw)}」</div>`)}}catch(e){}return r}}
+{const _dfQ=drawDuel;drawDuel=function(fin){try{if(DU&&DU.ar&&DU.ar.qo&&DU.r===1&&!DU._q){DU._q=1;DU.txt=`💬 「${esc(DU.ar.qo)}」 — เงาของ ${esc(DU.ar.n)}`}}catch(e){}return _dfQ.apply(this,arguments)}}
+// ฉายาลานใน "เลือกฉายาที่จะโชว์"
+{const _spA=openShowPick;openShowPick=function(){const r=_spA.apply(this,arguments);try{const o=arOwn();if(!o.tt.length)return r;const m=$('modal'),h4=[...m.querySelectorAll('h4')][0],cur=showTtl();
+ if(h4)h4.insertAdjacentHTML('beforebegin',`<h4 style="margin:10px 0 6px">🏟️ ฉายาลาน (${o.tt.length})</h4><div class="shpick">${AR_TT.filter(x=>o.tt.includes(x[0])).map(([t,rr])=>`<button class="rkpick ${cur&&cur.t===t?'on':''}" onclick="setShowTtl('${t}',${rr},'ar')">${tchipH(t,rr)}</button>`).join('')}</div>`)}catch(e){}return r}}
+(function(){const st=document.createElement('style');st.textContent=`
+.arsh2 h5{margin:12px 0 6px;font-size:14px}.arsh2 h5 small{font-weight:400;opacity:.7;font-size:11px}
+.arsi{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;margin:0!important}.arsi b{font-size:13px}.arsi small{font-size:11px}
+.arfr{padding:10px 6px 4px}.arfr .frph{display:inline-grid;place-items:center;width:46px;height:46px;font-size:24px;background:#2a2638;border-radius:8px;overflow:hidden}.arfr .frph img{width:100%;height:100%;object-fit:cover}
+.arttl{padding:6px 0}
+.arau-prev{width:46px;height:46px;border-radius:10px;display:grid;place-items:center;font-size:22px;background:#1a1628;position:relative}
+.arvs>div{position:relative;border-radius:12px}
+.arau-fire,.arau-prev.arau-fire{box-shadow:0 0 10px #ff6a20,0 0 22px #ff3a1a;animation:auFire 1s ease-in-out infinite alternate}
+.arau-ice,.arau-prev.arau-ice{box-shadow:0 0 10px #a0f0ff,0 0 22px #4ab0ff;animation:auIce 2.4s ease-in-out infinite}
+.arau-thunder,.arau-prev.arau-thunder{box-shadow:0 0 10px #d0a0ff,0 0 22px #ffe040;animation:auTh 1.3s steps(2) infinite}
+.arau-dark,.arau-prev.arau-dark{box-shadow:0 0 12px #000,0 0 26px #6a20c0;animation:auDk 3s ease-in-out infinite}
+@keyframes auFire{to{box-shadow:0 0 16px #ffb020,0 0 34px #ff3a1a}}@keyframes auIce{50%{box-shadow:0 0 16px #ffffff,0 0 30px #4ab0ff}}
+@keyframes auTh{0%{box-shadow:0 0 6px #d0a0ff,0 0 14px #ffe040}50%{box-shadow:0 0 18px #ffffff,0 0 36px #ffe040}}@keyframes auDk{50%{box-shadow:0 0 20px #000,0 0 40px #8a3aff}}
+.arquote{margin:6px 0;padding:8px 10px;border-radius:10px;background:var(--card);border-left:4px solid #a070ff;font-size:13px;animation:arF .5s both}
+.archest-ic{font-size:30px;animation:chB 1.6s ease-in-out infinite}@keyframes chB{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-4px) rotate(4deg)}}
+.chest{text-align:center;padding-top:6px}.chest-box{position:relative;width:110px;height:90px;margin:10px auto 0}
+.chest-body{position:absolute;left:5px;right:5px;bottom:0;height:52px;border-radius:6px;background:linear-gradient(#a0602a,#6a3a14);border:3px solid #ffd060;box-shadow:inset 0 -6px 0 #4a2408}
+.chest-lid{position:absolute;left:0;right:0;top:12px;height:30px;border-radius:14px 14px 4px 4px;background:linear-gradient(#c07a3a,#8a4a1a);border:3px solid #ffd060;transform-origin:10% 100%;animation:chLid .9s .2s cubic-bezier(.3,1.6,.5,1) forwards;z-index:2}
+@keyframes chLid{to{transform:rotate(-38deg) translate(-4px,-10px)}}
+.chest-glow{position:absolute;left:50%;top:30px;width:20px;height:20px;margin-left:-10px;border-radius:50%;background:var(--c);box-shadow:0 0 30px 20px var(--c);opacity:0;animation:chGlow 1.2s .5s ease-out forwards}
+@keyframes chGlow{0%{opacity:0;transform:scale(.2)}40%{opacity:1;transform:scale(1.8)}100%{opacity:.35;transform:scale(1.2)}}
+.chest-res{opacity:0;animation:arF .5s 1s forwards;margin-top:8px}.chest-ic{font-size:42px;animation:srkZ .7s 1s both cubic-bezier(.2,1.6,.4,1)}.chest-res b{display:block;font-size:17px;color:var(--c);text-shadow:0 0 6px var(--c)}.chest-res small{opacity:.8}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
