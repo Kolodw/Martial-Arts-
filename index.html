@@ -2420,7 +2420,7 @@ function qProg(q){return Math.max(0,QV[q.k]()-q.b)}
 function qFail(q){const s=S.sys;s.fail++;const r=R(1,4);
  if(r===1){const d=R(15,30);S.hp-=d;sysLog(`เควสล้มเหลว: ${q.n} — บทลงโทษ: กระแสไฟฟ้าไหลผ่านร่าง พลังชีวิต −${d}`,'fail')}
  else if(r===2){const d=Math.min(s.sp,R(15,30));s.sp-=d;sysLog(`เควสล้มเหลว: ${q.n} — บทลงโทษ: ยึด SP −${d}`,'fail')}
- else if(r===3){const d=Math.round(S.power*.04);S.power-=d;sysLog(`เควสล้มเหลว: ${q.n} — บทลงโทษ: ผนึกพลังยุทธ์ −${fmt(d)}`,'fail')}
+ else if(r===3){const d=Math.round(Math.min(S.power*.04,Math.max(300,(5+s.lv*6)*S.talent.m*sysM()*3)));S.power-=d;sysLog(`เควสล้มเหลว: ${q.n} — บทลงโทษ: ผนึกพลังยุทธ์ −${fmt(d)}`,'fail')}
  else{const d=Math.min(s.exp,Math.round(expNeed(s.lv)*.3));s.exp-=d;S.hp-=8;sysLog(`เควสล้มเหลว: ${q.n} — บทลงโทษ: ความเจ็บปวดจากการลบความทรงจำ EXP −${d}`,'fail')}}
 function sysTick(){
  if(S.sysRefused||(S.sysEver&&!S.sys))return false;
@@ -2997,7 +2997,7 @@ function bagTick(){if(!S.bag)bagInit();const b=S.bag;
  if(S.hp<S.maxHp*.4&&bagUse('hp')){S.hp=Math.min(S.maxHp,S.hp+80);log('🎒 💊 กินยาสมานแผล พลังชีวิต +80','good')}
  if(S.chronic&&bagUse('cure')){log(`🎒 🧪 ใช้ยาถอนพิษ — หายจาก${S.chronic.n}`,'good');S.chronic=null}
  if(bagHas('qi')&&Math.random()<.5&&bagUse('qi'))S.qi+=2;
- const nx=REALMS[realmIdx()+1];if(nx&&realmIdx()+1<=5&&bagHas('brk')&&total()>=nx.p*.82&&bagUse('brk')){S.power+=nx.p-total()+1;log(`🎒 🔴 กลืนยาทะลวงขั้น — พุ่งสู่${nx.n}!`,'epic')}
+ const nx=REALMS[realmIdx()+1];if(!(S.beastMode&&!S.beastMode.human)&&nx&&realmIdx()+1<=5&&bagHas('brk')&&total()>=nx.p*.82&&bagUse('brk')){S.power+=nx.p-total()+1;log(`🎒 🔴 กลืนยาทะลวงขั้น — พุ่งสู่${nx.n}!`,'epic')}
  if(bagHas('fruit')&&S.age>lifeMax()-8&&bagUse('fruit')){S.lifespan+=15;log('🎒 🍑 กินผลไม้อายุวัฒนะ อายุขัย +15 ปี','epic')}
  if(bagHas('egg')&&(!S.pet||!S.pet.spirit)&&Math.random()<.25&&bagUse('egg')){const n=ch(['พยัคฆ์ขาว','จิ้งจอกเพลิง','มังกรน้ำ','หงส์น้ำแข็ง']);S.pet={i:'🐉',n,t:'สัตว์วิญญาณ',age:S.age,spirit:1,lv:0};log(`🥚 ไข่ในกระเป๋าฟักออกมาเป็น<b>${n}</b>ลูกอ่อน!`,'myth')}
  try{bagQTick(b)}catch(e){console.error(e)}
@@ -12533,6 +12533,30 @@ try{GD2.push({s:'net',ic:'🏟️',t:'ลานประลองหมื่น
 .arauto p{opacity:0;animation:arF .5s forwards}.arauto .arres{font-size:20px;font-weight:900;text-align:center}@keyframes arF{to{opacity:1}}
 .arup{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0;animation:srkZ .8s cubic-bezier(.2,1.6,.4,1)}
 .rkchip.rka{border:1.5px solid #ff9ae0;--g:#ff60c0;background-image:linear-gradient(90deg,#3a1060,#ff60c0,#60e0ff,#3a1060)}`;document.head.appendChild(st)})();
+
+// ===================== v15.6 แก้ระบบสัตว์อสูร: ใช้ของอัตโนมัติ · ยาทะลวงขั้น · ของเพิ่มพลังตามระดับ =====================
+// สัตว์ไม่ผ่าน yearEnd → ของในกระเป๋าไม่เคยใช้เอง (ยาฟื้นพลัง ยาอายุวัฒนะ ไข่สัตว์ ฯลฯ) และสัตว์วิญญาณไม่โต
+function bBrkNeed(){const m=S.beastMode;if(!m||m.human)return null;if(m.st<4){const n=[[3,0,0],[12,6,0],[0,20,450],[0,45,1500]][m.st];return n?{age:n[0],qi:n[1],pow:n[2]}:null}if(!(m.king||m.pdone)||m.st>=7)return null;const u=BL_UP[m.st-4];return u?{age:u[0],qi:u[1],pow:u[2]}:null}
+function bBrk(chk){const n=bBrkNeed();if(!n)return null;if(S.age<n.age)return chk?null:null;if(total()<n.pow*.82||S.qi<n.qi*.82)return null;if(chk)return 1;
+ if(total()<n.pow)S.power+=n.pow-total()+1;if(S.qi<n.qi)S.qi=n.qi;try{blAdvance()}catch(e){}return`ร่างกายพลุ่งพล่าน — ทะลวงสู่ <b>${BL_ST[S.beastMode.st]}</b>`}
+{const _brU=BAGX.brk.use;BAGX.brk.use=function(){if(S&&S.beastMode&&!S.beastMode.human)return bBrk();return _brU.apply(this,arguments)};
+ const _brD=BAGX.brk.d;BAGX.brk.d=function(){if(S&&S.beastMode&&!S.beastMode.human){const n=bBrkNeed();return n?`สัตว์อสูร: ทะลวงสู่ ${BL_ST[S.beastMode.st+1]} ทันทีเมื่อพลังและลมปราณถึง 82% ของที่ต้องใช้${n.age?` (ต้องอายุ ${n.age} ปีขึ้นไป)`:''} · ใช้เองอัตโนมัติ`:'สัตว์อสูร: ใช้ได้เมื่อมีขั้นถัดไปให้ทะลวง'}return typeof _brD==='function'?_brD():_brD}}
+{const _byI=beastYear;beastYear=function(){const r=_byI.apply(this,arguments);try{if(S&&S.alive&&S.beastMode&&!S.beastMode.human){try{bagTick()}catch(e){console.error(e)}try{petTick()}catch(e){}
+  if(typeof has==='function'&&has('nano'))S.hp=Math.min(S.maxHp,S.hp+15);
+  if(bagHas('brk')&&bBrk(1)&&bagUse('brk')){const t=bBrk();if(t)log('🎒 🔴 กลืนยาทะลวงขั้น — '+t,'epic')}}}catch(e){console.error(e)}return r}}
+// ของเพิ่มพลังยุทธ์: เดิมให้ค่าตายตัว (หลักสิบ–ร้อย) แทบไม่มีผลเมื่อพลังสูง → คิดตามพลังปัจจุบัน (มีลดผลเมื่อกินซ้ำในขั้นเดียวกัน)
+const IPW={core:[1,.004],bpill:[3,.012],bcore:[4,.02],elix:[6,.025],star:[10,.05]};
+function ipPrev(id){const [k,p]=IPW[id];return Math.max(yrPow0()*k,Math.round(total()*p))}
+function ipGet(id){const [k,p]=IPW[id];return Math.max(yrPow0()*k,pctPow(p))}
+BAGX.core.d=()=>`พลังยุทธ์ +${fmt(ipPrev('core'))} (≈0.4% ของพลัง) · สัตว์เลี้ยงวิญญาณใช้วิวัฒนาการ`;BAGX.core.use=function(){const g=ipGet('core');S.power+=g;return`พลังยุทธ์ +${fmt(g)}`};
+BAGX.bpill.d=()=>`พลังยุทธ์ +${fmt(ipPrev('bpill'))} (≈1.2% ของพลัง) · สกัดจากแก่นอสูร (ยิ่งกินในขั้นเดียวกันยิ่งได้ผลน้อยลง)`;BAGX.bpill.use=function(){const g=ipGet('bpill');S.power+=g;return`พลังยุทธ์ +${fmt(g)}`};
+BAGX.bcore.d=()=>`พลังยุทธ์ +${fmt(ipPrev('bcore'))} (≈2% ของพลัง) · สัตว์เลี้ยงใช้วิวัฒนาการได้ดีเยี่ยม`;BAGX.bcore.use=function(){const g=ipGet('bcore');S.power+=g;return`พลังยุทธ์ +${fmt(g)}`};
+BAGX.elix.d=()=>`พลังยุทธ์ +${fmt(ipPrev('elix'))} ในเม็ดเดียว (≈2.5% ของพลัง)`;BAGX.elix.use=function(){const g=ipGet('elix');S.power+=g;return`พลังยุทธ์ +${fmt(g)}`};
+BAGX.star.d=()=>`อายุขัย +40 ปี · พลังยุทธ์ +${fmt(ipPrev('star'))} (≈5%) · ปัญญา +10`;BAGX.star.use=function(){S.lifespan+=40;const g=ipGet('star');S.power+=g;S.int+=10;return`ดวงดาวหลอมรวมเข้ากับวิญญาณ — พลังยุทธ์ +${fmt(g)} · อายุขัย +40 · ปัญญา +10`};
+// คัมภีร์ไร้นาม: บอกว่าได้วิชาใหม่ ต้องได้จริง (ไม่ถูกสุ่มรวมเข้าวิชาเดิม เว้นแต่ความจำเต็ม)
+BAGX.scroll.use=function(){const a=newArt(2),full=S.arts.length>=artCap();const q0=(S.learnQ||[]).length;window._artForce=!full;try{S.arts.push(a)}finally{window._artForce=false}if((S.learnQ||[]).length>q0)return`ได้คัมภีร์${artHtml(a)} — ต้องฝึกให้สำเร็จก่อนจึงจะใช้ได้ (ดูที่วิชา)`;return full?`ความจำเรื่องวิชาเต็ม — นำ${artHtml(a)}ไปเสริมวิชาเดิม`:`ได้ ${artHtml(a)}`};
+// ไข่สัตว์วิญญาณ/ผลไม้: สัตว์ใช้ได้เหมือนคน · อัญมณี: สัตว์มอบให้คู่ครอง
+{const _gmU=BAGX.gem.use;BAGX.gem.use=function(){if(S&&S.beastMode&&!S.beastMode.human){if(!S.kids&&!S.bMate)return null;joy(8);S.cha+=2;return'มอบอัญมณีให้คู่ครอง — ความสุข +8 · เสน่ห์ +2'}return _gmU.apply(this,arguments)}}
 </script>
 </body>
 </html>
