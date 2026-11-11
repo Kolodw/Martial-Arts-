@@ -4957,7 +4957,7 @@ function person0(x,y,o,pose){
  if(o.sword){if(o.glow){g.globalAlpha=.25+.2*Math.sin(T*3);Q(cx+5,ty-10,7,th+14,o.sword);g.globalAlpha=1}Q(cx+7,ty-6,2,th+8,o.sword);Q(cx+8,ty-6,1,th+8,shd(o.sword,-.3));Q(cx+5,ty-8,6,2,'#6a4a2a');Q(cx+7,ty-13,2,5,'#4a2a1a');Q(cx+6,ty-14,4,2,'#c8a040')}
  if(o.staff&&!child){Q(cx+13,top-6,2,Y-top+6,o.staff);Q(cx+12,top-8,4,3,shd(o.staff,.3))}
  // long hair behind
- if(!bald&&((fem&&o.hs!==4&&o.hs!==1)||o.hs===3)&&!['hood','mask','veil'].includes(o.hat)){Q(hx-1,top+3,hw+2,hh+(child?3:9),hD);Q(hx,top+3,hw,hh+(child?2:8),hair)}
+ if(!bald&&((fem&&o.hs!==4&&o.hs!==1)||o.hs===3)&&!['hood','mask','veil'].includes(o.hat)){Q(hx-1,top+3,hw+2,hh+(child?3:9),hD);Q(hx,top+3,hw,hh+(child?2:8),hair);const hs=Math.round(Math.sin(T*2.2+sd)*1.4+(walk?-1:0));if(hs){const hb=top+3+hh+(child?2:8);Q(hx-1+hs,hb-4,hw+2,5,hD);Q(hx+hs,hb-4,hw,4,hair);Q(hx+(hs>0?hw+1:-2)+hs,hb-2,1,3,hair);Q(hx+hs+2,hb,2,1,hD)}}
  // legs / lower body
  const ly=ty+th;
  if(sit){Q(cx-11,Y-6,22,6,rD);Q(cx-11,Y-6,22,2,robe);Q(cx-12,Y-2,24,2,'#00000033')}
@@ -4979,6 +4979,7 @@ function person0(x,y,o,pose){
  // hem flutter
  if(!sit&&!child){const fl=Math.round(Math.sin(T*3+sd)*1.2);Q(cx-Math.floor(tw/2)-2+fl,ly-1,2,2,rD);
   if(walk){const s1=Math.sin(T*3.2),hw2=Math.floor((tw+hem*2)/2),sx=s1>.3?1:s1<-.3?-1:0;Q(cx-hw2+sx,ly-1,tw+hem*2,2,rD);Q(cx-hw2+sx,ly-1,tw+hem*2,1,robe)}}
+ if(!sit&&!child&&!walk){const wf=Math.round(Math.sin(T*2+sd)*1.1);if(wf){const hw2=Math.floor((tw+hem*2)/2);Q(cx-hw2+wf,ly-2,tw+hem*2,2,robe);Q(cx-hw2+wf,ly-1,tw+hem*2,1,rD);Q(cx-hw2+wf+(wf>0?tw+hem*2-1:0),ly-3,1,2,rD)}}
  // arms
  if(o.coat&&!child&&!sit){const cc=o.coat,cD=shd(cc,-.25),cL=o.coatL||shd(cc,.3),fl=Math.round(Math.sin(T*2.6+sd)*1.5),fl2=Math.round(Math.sin(T*2.6+sd+1.3)*1.5),bot=Y-3;
   for(let yy=ty;yy<bot;yy++){const k=(yy-ty)/(bot-ty),fx=Math.round(k*k*(walk?2:1)*(yy>ly?1:0)*1.5),wl=6+Math.round(k*2);const L0=cx-Math.floor(tw/2)-1-fx+(yy>bot-5?fl:0),R0=cx+Math.floor(tw/2)+1-wl+fx+(yy>bot-5?fl2:0);
@@ -5001,7 +5002,7 @@ function person0(x,y,o,pose){
  Q(cx-2,ty-2,4,3,sD);
  Q(hx,top,hw,hh,skin);Q(hx+hw-2,top+1,2,hh-2,sD);Q(hx+1,top+hh,hw-2,1,skin);Q(hx-1,top+3,1,hh-5,skin);Q(hx+hw,top+3,1,hh-5,sD);
  // face
- const ey=top+Math.floor(hh*.5),blink=(T*1.3+sd)%4<.12,mood=o.mood||'neutral';
+ const ey=top+Math.floor(hh*.5),blink=(()=>{const bp=(T*1.3+sd)%4;return bp<.24||(sd%3===0&&bp>.42&&bp<.6)})(),mood=o.mood||'neutral';
  const eL=hx+2,eR=hx+hw-4;
  const eg=o.eyeG&&!child&&typeof eyeGlowOn==='function'&&eyeGlowOn(o);
  if(blink&&!eg){Q(eL,ey+1,2,1,'#2a2030');Q(eR,ey+1,2,1,'#2a2030')}
@@ -5018,11 +5019,11 @@ function person0(x,y,o,pose){
  // hair front
  if(!bald&&!['hood','mask'].includes(o.hat)){Q(hx-1,top-1,hw+2,3,hair);Q(hx-1,top+1,2,4,hair);Q(hx+hw-1,top+1,2,4,hair);Q(hx+1,top+2,3,1,hair);Q(hx+hw-5,top+2,2,1,hair);Q(hx,top-1,hw,1,shd(hair,.2));
   if(child){Q(hx-2,top-2,3,3,hair);Q(hx+hw-1,top-2,3,3,hair)}
-  else if(!o.hat&&o.hs===1){Q(cx+2,top-3,4,3,hair);Q(cx+2,top-1,6,1,'#c8a040');Q(hx+hw,top+1,3,hh+5,hair);Q(hx+hw+2,top+2,1,hh+4,hD)}
+  else if(!o.hat&&o.hs===1){Q(cx+2,top-3,4,3,hair);Q(cx+2,top-1,6,1,'#c8a040');Q(hx+hw,top+1,3,hh+5,hair);Q(hx+hw+2,top+2,1,hh+4,hD);const ps2=Math.round(Math.sin(T*2.6+sd)*1.6+(walk?1:0));if(ps2){Q(hx+hw+ps2,top+hh+2,3,5,hair);Q(hx+hw+2+ps2,top+hh+2,1,5,hD)}}
   else if(!o.hat&&o.hs===2){Q(hx-1,top-3,4,4,hair);Q(hx+hw-3,top-3,4,4,hair);Q(hx,top-3,2,1,shd(hair,.2));Q(hx+hw-2,top-3,2,1,shd(hair,.2))}
   else if(!o.hat&&(o.hs===3||o.hs===4)){}
-  else if(!fem&&!o.hat){Q(cx-2,top-4,4,3,hair);Q(cx-1,top-5,2,1,hD);Q(cx-3,top-2,6,1,'#c8a040')}
-  else if(fem&&!o.hat){Q(cx+2,top-3,3,3,hair);Q(cx+4,top-4,1,3,'#e8c040')}}
+  else if(!fem&&!o.hat){Q(cx-2,top-4,4,3,hair);Q(cx-1,top-5,2,1,hD);Q(cx-3,top-2,6,1,'#c8a040');const rf=Math.round(Math.sin(T*3.4+sd)*1.2);Q(cx+3,top-2,2,1,'#c8a040');Q(cx+4+rf,top-1,2,1,'#c8a040');Q(cx+5+rf*2,top,1,2,'#a88030')}
+  else if(fem&&!o.hat){Q(cx+2,top-3,3,3,hair);Q(cx+4,top-4,1,3,'#e8c040');const tf=Math.round(Math.sin(T*2.8+sd)*1);Q(cx+5+tf,top-1,1,3,'#e8c040');Q(cx+5+tf,top+2,1,1,'#ff6a8a')}}
  else if(bald){Q(hx+2,top+1,1,1,'#c89a7a');Q(hx+4,top+1,1,1,'#c89a7a');Q(hx+3,top+3,1,1,'#c89a7a')}
  // headwear
  const hc=o.hat;
@@ -5058,7 +5059,7 @@ function sky(season,mode){
  for(let y=0;y<SH;y++){const t=Math.min(1,y/46);P(0,y,SW,1,t<.5?C[0]:(t<.55&&y%2)?C[0]:C[1])}
  if(!mode){xianSky();festSky()}
 }
-function mountains(col,base,amp,ph){for(let x=0;x<SW;x++){const h=Math.max(0,Math.round(amp*(.6+.4*Math.sin(x*.07+ph)+.25*Math.sin(x*.19+ph*2))));if(h)P(x,base-h,1,h,col)}}
+function mountains(col,base,amp,ph){const mo=(window._mOff||0)*(.35+amp/30);for(let x=0;x<SW;x++){const xx=x+mo,h=Math.max(0,Math.round(amp*(.6+.4*Math.sin(xx*.07+ph)+.25*Math.sin(xx*.19+ph*2))));if(h)P(x,base-h,1,h,col)}}
 function ground(season,y=46,c){P(0,y,SW,SH-y,c||['#7cc46a','#5fae4f','#c99a4a','#eef2f7'][season]);P(0,y,SW,1,'#00000022')}
 function tree(x,y,season,pine){P(x+3,y-9,2,9,'#6a4426');
  if(pine||season===3){const c=season===3?'#2f5a3a':'#2f6a3a';for(let i=0;i<4;i++)P(x+3-i*1.5,y-18+i*3,2+i*3,3,c);if(season===3)for(let i=0;i<4;i++)P(x+3-i*1.5,y-18+i*3,2+i*3,1,'#fff');return}
@@ -11667,6 +11668,23 @@ let _specS=null,_specIv=null;
 // ปุ่มในเมนูตั้งค่า
 {const _omF=openMenu;openMenu=function(){const r=_omF.apply(this,arguments);try{const m=$('modal'),gs=[...m.querySelectorAll('.mcat15 .mgrid')],gr=gs[gs.length-1]||m.querySelector('.mgrid');if(gr&&!gr.querySelector('[data-gfx]'))gr.insertAdjacentHTML('afterbegin',`<button class="opt" data-gfx="1" onclick="openGfx()">🎨 คุณภาพภาพ<small>${fxQ===2?'✨ สวยสุด':'🔋 ประหยัด'}</small></button>`)}catch(e){}return r}}
 try{GD2.push({s:'base',ic:'🎨',t:'คุณภาพภาพ',d:'☰ → ตั้งค่า → 🎨 คุณภาพภาพ · <b>✨ สวยสุด</b> (เครื่องรุ่นใหม่): ตัวละครมีเส้นขอบ แสงเงา ขยับหายใจ ฟ้าเปลี่ยนเช้า–เย็น–ค่ำตามช่วงปี มีดาว หิ่งห้อย ลำแสง ออร่าสีตามวิถีธาตุ และฉากสู้มีรอยดาบ ประกายไฟ ตัวเลขดาเมจ · <b>🔋 ประหยัด</b> (เครื่องรุ่นเก่า): ภาพแบบเดิม ลื่นและประหยัดแบต · หน้าดูคนอื่นเล่นมีภาพฉากพิกเซลของสิ่งที่เขากำลังทำ',te:'Graphics quality',de:'☰ → Settings → 🎨 Graphics. <b>HD</b>: outlined, shaded, breathing characters, a day–dusk–night cycle, stars, fireflies, light rays, element-coloured auras and sword trails/sparks/damage numbers in fights. <b>Eco</b>: the classic look, smoother and battery-friendly. Spectating now shows a pixel scene of what the player is doing.'});SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
+
+
+// ===================== v15.5 ฉากหลังหลายชั้น (parallax) =====================
+const FX_TRAVEL=new Set(['road']);
+const fxCv=()=>g&&g.canvas&&(g.canvas.id==='scene'||g.canvas.id==='endScene'||g.canvas.id==='specScn');
+// ชั้นไกลสุด: สันเขาจางๆ + เมฆบาง เลื่อนช้ากว่าภูเขา
+{const _skX=sky;sky=function(season,mode){const r=_skX.apply(this,arguments);try{if(fxQ>=2&&fxCv()){const off=(window._mOff||0)*.18+frame*.04,col=mode==='night'?'#2a2a56':mode==='dusk'?'#a07898':mode==='gray'?'#8a8a94':['#bcd2ec','#a8c8ea','#e8bca0','#cdd6e2'][season|0];
+  for(let x=0;x<SW;x++){const xx=x+off,h=Math.round(7+4*Math.sin(xx*.031)+2.5*Math.sin(xx*.093+1.7));P(x,36-h,1,h+10,col)}
+  const hz=mode==='night'?'rgba(140,140,220,.18)':'rgba(255,255,255,.28)';g.fillStyle=hz;g.fillRect(0,30,SW,4);
+  for(let i=0;i<5;i++){const cx=((i*41+frame*(.08+i*.03)+(window._mOff||0)*.3)%(SW+40))-40;g.globalAlpha=mode==='night'?.25:.5;P(cx,3+i*3,16+i*3,1,'#ffffff');P(cx+5,2+i*3,8,1,'#ffffff');g.globalAlpha=1}}}catch(e){}return r}}
+// กล้องเคลื่อนในฉากเดินทาง: ชั้นต่างๆ เลื่อนด้วยความเร็วไม่เท่ากัน
+{const _dsX=drawScene;drawScene=function(ctx,type){try{window._mOff=fxQ>=2&&FX_TRAVEL.has(type)&&!sceneEvt?frame*.9:0}catch(e){window._mOff=0}const r=_dsX.apply(this,arguments);window._mOff=0;return r}}
+// ชั้นหน้าสุด: พุ่มหญ้า/ดอกไม้ไหวลม (เลื่อนเร็วสุดตอนเดินทาง)
+{const _fpX=fxPost;fxPost=function(c,type){try{if(['road','village','farm','market'].includes(type)&&!sceneEvt){const sea=S.age%4,tr=FX_TRAVEL.has(type),off=tr?frame*2.2:0,cs=['#3f8a3a','#2f7a30','#9a6a22','#c8d2de'][sea],cl=['#6ac05a','#4aa040','#c89040','#ffffff'][sea],fl=['#ff9ac0','#ffe060','#e0503a','#ffffff'][sea];
+  for(let i=0;i<13;i++){const x=((i*17.3-off)%(SW+24)+SW+24)%(SW+24)-12,sw=Math.round(Math.sin(frame*.35+i)*1)/2,big=i%4===0,hgt=big?5:3;
+   for(let b=0;b<(big?6:3);b++){const bx=x+b*1.5,bh=hgt-(b%2);P(bx+sw,SH-bh,.5,bh,b%2?cs:cl)}
+   if(big){P(x+1,SH-4,4,4,cs);P(x+1.5+sw,SH-6,1,1,fl);P(x+4+sw,SH-5,1,1,fl)}}}}catch(e){}return _fpX.apply(this,arguments)}}
 
 </script>
 </body>
