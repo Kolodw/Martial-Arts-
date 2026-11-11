@@ -11108,6 +11108,31 @@ try{BLX.forEach(e=>{e.gap=Math.max(e.gap||6,12)})}catch(e){}
 try{const g=GD2.find(x=>x.t==='เควส'),i=g?GD2.indexOf(g)+1:GD2.length;GD2.splice(i,0,{s:'grow',ic:'🔓',t:'ตัวเลือกพิเศษและกรรมตามสนอง',nw:1,
  d:'เหตุการณ์จะมี<b>ตัวเลือกลับ</b>โผล่เพิ่มตามสิ่งที่คุณมี (🧠 ปัญญาสูง 💋 เสน่ห์สูง 🤖 AI 🟦 แต้มระบบ 🧿 ยันต์ 🐉 สัตว์คู่ใจ 🗡️ กรรมติดลบ 🙏 กรรมดีมาก และบุคลิก) — ทำทางเลือกหลักแบบได้เปรียบ · สัตว์มีตัวเลือกตามสายพันธุ์ แกล้งตาย ใช้พลังธาตุ · 🔥 <b>ทุ่มสุดตัว</b> โชว์โอกาสสำเร็จ ได้รางวัลก้อนโตหรือเจ็บหนัก · ⏳ สิ่งที่เลือกอาจย้อนกลับมาในอีก 5–30 ปี (คนที่เคยช่วยมาตอบแทน คนที่เคยทำร้ายมาล้างแค้น) · 🧭 มีเหตุการณ์หลายฉากให้ตัดสินใจต่อเนื่อง',
  te:'Special choices & karma',de:'Events gain <b>hidden options</b> based on what you have (🧠 high wisdom 💋 charm 🤖 AI 🟦 System points 🧿 talisman 🐉 pet 🗡️ bad karma 🙏 good karma, personality) — doing the main option with an edge · beasts get species instincts, play dead and element powers · 🔥 <b>All-in</b> shows its success chance: big reward or heavy injury · ⏳ choices can return 5–30 years later (people you helped repay you, those you wronged seek revenge) · 🧭 multi-stage events.'});SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
+
+// ===================== v15.4 สรุปก่อนตัดสินใจ (สำหรับคนขี้เกียจอ่าน · เปิด/ปิดได้) =====================
+const CS_ON=()=>LS.get('murim_chsum',1)!==0;
+window._csL=[];
+{const _lg=log;log=function(t,c){try{if(S&&S.alive&&['epic','myth','bad','good','sys','up'].includes(c||'')){window._csL.push({t:String(t),c:c||'',a:S.age});if(window._csL.length>40)window._csL.shift()}}catch(e){}return _lg.apply(this,arguments)}}
+function csSnap(){if(!S)return null;return{a:S.age,p:Math.round(total()),q:+S.qi||0,m:+S.money||0,f:+S.fame||0,h:Math.round(S.hp),i:+S.int||0,k:+S.karma||0,o:S}}
+function csDelta(){const s0=window._cs0;if(!s0||s0.o!==S)return null;const d=(a,b)=>b-a;return{y:S.age-s0.a,p:d(s0.p,Math.round(total())),q:+(d(s0.q,+S.qi||0)).toFixed(1),m:d(s0.m,+S.money||0),f:d(s0.f,+S.fame||0),h:d(s0.h,Math.round(S.hp)),i:d(s0.i,+S.int||0),k:d(s0.k,+S.karma||0)}}
+function csHtml(){if(!S||!S.alive)return'';const D=csDelta(),L=window._csL.slice(-30);
+ const pick=[...L.filter(x=>x.c==='myth'),...L.filter(x=>x.c==='epic'),...L.filter(x=>x.c==='bad'),...L.filter(x=>x.c==='good'||x.c==='up')].slice(0,4).sort((a,b)=>a.a-b.a);
+ const short=t=>{let s=String(t).replace(/<br\s*\/?>/g,' ').replace(/<(?!\/?b>)[^>]+>/g,'');const plain=s.replace(/<[^>]+>/g,'');if(plain.length>70){s=plain.slice(0,68)+'…'}return s};
+ const sg=v=>v>0?'+'+fmt(v):fmt(v),ch=[];
+ if(D){if(D.p)ch.push(`⚔️ ${sg(D.p)}`);if(D.q)ch.push(`🌀 ${D.q>0?'+':''}${D.q}`);if(D.m&&(!S.beastMode||S.beastMode.human))ch.push(`💰 ${sg(D.m)}`);if(D.f)ch.push(`⭐ ${sg(D.f)}`);if(D.i)ch.push(`📖 ${sg(D.i)}`);if(D.k)ch.push(`☯️ ${sg(D.k)}`);if(D.h<0)ch.push(`❤️ ${sg(D.h)}`)}
+ if(!pick.length&&!ch.length)return'';
+ const yrs=D&&D.y>0?`${D.y} ปีที่ผ่านมา`:'ช่วงนี้';
+ return`<div class="csbox"><div class="csh">📜 สรุป${yrs} <button class="cscl" onclick="event.stopPropagation();LS.set('murim_chsum',0);this.closest('.csbox').remove();toast('ปิดสรุปแล้ว — เปิดใหม่ได้ที่ ☰ → ⚙️ ตั้งค่า')">ปิดสรุป ✕</button></div>${pick.map(x=>`<div class="csi">• ${short(x.t)}</div>`).join('')}${ch.length?`<div class="csd">${ch.join(' · ')}</div>`:''}</div>`}
+(function(){const st=document.createElement('style');st.textContent=`.csbox{margin:4px 0 8px;padding:7px 9px;border-radius:8px;border:1px dashed var(--line);font-size:12px;line-height:1.45;background:rgba(128,128,128,.07)}.csh{font-weight:700;margin-bottom:2px;display:flex;justify-content:space-between;align-items:center;gap:6px}.cscl{font-size:10.5px;padding:1px 7px;border-radius:6px;border:1px solid var(--line);background:transparent;color:inherit;opacity:.75;cursor:pointer}.csi{opacity:.9}.csd{margin-top:3px;font-weight:600}`;document.head.appendChild(st)})();
+{const _cs=choiceShow;choiceShow=function(){const r=_cs.apply(this,arguments);try{if(CS_ON()&&!auto&&$('modal').dataset.k==='choice'){const h=csHtml();const top=$('modal').querySelector('.chtop');if(h&&top)top.insertAdjacentHTML('afterend',h)}}catch(e){}return r}}
+// เริ่มนับรอบใหม่หลังเลือกเสร็จ / เริ่มชีวิตใหม่
+{const _cr=choiceRun;choiceRun=function(){const r=_cr.apply(this,arguments);try{window._cs0=csSnap();window._csL=[]}catch(e){}return r}}
+{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{window._cs0=csSnap();window._csL=[]}catch(e){}return r}}
+{const _pyS=passYear;passYear=function(){try{if(S&&(!window._cs0||window._cs0.o!==S)){window._cs0=csSnap();window._csL=[]}}catch(e){}return _pyS.apply(this,arguments)}}
+// สวิตช์ในเมนูตั้งค่า
+function toggleChSum(){const on=!CS_ON();LS.set('murim_chsum',on?1:0);toast(on?'📜 เปิดสรุปก่อนตัดสินใจแล้ว':'📜 ปิดสรุปก่อนตัดสินใจแล้ว');try{if($('modal').dataset.k==='menu')openMenu()}catch(e){}}
+{const _omS=openMenu;openMenu=function(){const r=_omS.apply(this,arguments);try{const m=$('modal'),gs=[...m.querySelectorAll('.mcat15 .mgrid')],g=gs[gs.length-1]||m.querySelector('.mgrid');if(g&&!g.querySelector('[data-csum]'))g.insertAdjacentHTML('afterbegin',`<button class="opt" data-csum="1" onclick="toggleChSum()">📜 สรุปก่อนตัวเลือก<small>${CS_ON()?'เปิดอยู่':'ปิดอยู่'}</small></button>`)}catch(e){}return r}}
+try{const g=GD2.find(x=>x.t==='ตัวเลือกพิเศษและกรรมตามสนอง');if(g){g.d+=' · 📜 ก่อนตัวเลือกจะมี<b>สรุปสั้นๆ</b> ว่าช่วงที่ผ่านมาเกิดอะไรขึ้นบ้างและค่าเปลี่ยนไปเท่าไหร่ (ปิดได้ที่ ☰ → ตั้งค่า)';g.de+=' · 📜 A <b>short recap</b> of what happened appears above each choice (toggle in ☰ → settings)'}}catch(e){}
 </script>
 </body>
 </html>
