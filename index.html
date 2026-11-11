@@ -10954,7 +10954,7 @@ function goalHtml(){const g=goalInfo();if(!g)return'';const en=LANG==='en';
 (function(){const st=document.createElement('style');st.textContent=`#goalBox{visibility:visible!important;margin:4px 0;padding:6px 9px;border:1px dashed var(--line);border-radius:8px;font-size:12px;line-height:1.4;cursor:pointer}#goalBox .glh{margin-bottom:3px}
 #goalBox .gl2{position:relative;margin:2px 0;padding:1px 0 3px}#goalBox .gl2 i{position:absolute;left:0;bottom:0;height:2px;border-radius:2px;transition:width .4s}#goalBox small{opacity:.75}#goalBox.gmin .gl2,#goalBox.gmin .tag2{display:none}
 .fc small.fch{display:block;font-size:9.5px;opacity:.7;line-height:1.1;margin-top:1px;font-weight:400}
-.qbtn{position:absolute;top:10px;right:52px;width:34px;height:34px;border-radius:9px;border:2px solid var(--line);background:transparent;color:inherit;font-size:15px;cursor:pointer;z-index:3}
+.xbtn.qbtn{right:48px;font-weight:700;color:inherit;line-height:1;padding:0;z-index:3}
 .gdc.gflash{outline:3px solid var(--pink);outline-offset:2px;transition:outline .3s}
 .adv1{padding:7px 9px;border-left:3px solid var(--pink);margin:6px 0;background:rgba(255,255,255,.03);border-radius:6px}`;document.head.appendChild(st)})();
 {const _rg=render;render=function(){const r=_rg.apply(this,arguments);try{const fe=$('focus');if(fe&&S&&S.alive){
@@ -10972,9 +10972,9 @@ function btutShow(i){i=i||0;const p=BTUT[i];if(!p)return;modal(`<h3>${p[0]}</h3>
 const QMAP={sys:'ระบบ (System)',town:'สถานที่ในเมือง',shop2:'ร้านสมบัติ',house:'ที่ดินตระกูล',pauc:'ประมูลผู้เล่น',frames:'กรอบรูปและคลังกรรม',bdex:'เกิดเป็นสัตว์',spec:'ดูคนอื่นเล่น',profile:'บัญชีและย้ายเครื่อง',family:'คู่ครองไม่จำกัด'};
 const QH=[[/🤖|AI/,'AI ตื่นรู้'],[/ระบบ|SYSTEM/,'ระบบ (System)'],[/กระเป๋า|ถุงมิติ|แหวนมิติ/,'กระเป๋าและร้านกระเป๋า'],[/วิชา/,'วิชาและความชำนาญ'],[/เควส/,'เควส'],[/สมุดตำนาน|ฉายา/,'สมุดตำนานและฉายา'],[/สารานุกรม/,'สารานุกรม'],[/ออนไลน์/,'ออนไลน์'],[/สัตว์คู่ใจ/,'สัตว์คู่ใจ'],[/ทำเนียบ/,'ออนไลน์']];
 function openGuideCard(t){const g=GD2.find(x=>x.t===t);if(!g)return openGuide();openGuide(g.s);setTimeout(()=>{try{const el=[...document.querySelectorAll('#modal .gdc')].find(c=>{const b=c.querySelector('b');return b&&(b.textContent===t||b.textContent===g.te)});if(el){el.scrollIntoView({block:'center'});el.classList.add('gflash');setTimeout(()=>el.classList.remove('gflash'),1800)}}catch(e){}},80)}
-{const _md=modal;modal=function(html,k){const r=_md.apply(this,arguments);try{if(['guide','choice','duel','btut','advice','menu','bdrw','update','tmenu'].includes(k||''))return r;const M=$('modal');if(!M.querySelector('.xbtn')||M.querySelector('.qbtn'))return r;
+{const _md=modal;modal=function(html,k){const r=_md.apply(this,arguments);try{if(['guide','choice','duel','btut','advice','menu','bdrw','update','tmenu'].includes(k||''))return r;const M=$('modal');if(!M.querySelector('.xbtn:not(.qbtn)')||M.querySelector('.qbtn'))return r;
  let t=QMAP[k||''];if(!t){const h=(M.querySelector('h3')||{}).textContent||'';const q=QH.find(x=>x[0].test(h));t=q&&q[1]}
- if(t&&GD2.some(x=>x.t===t))M.querySelector('.xbtn').insertAdjacentHTML('afterend',`<button class="qbtn" title="คู่มือ" onclick="openGuideCard('${t.replace(/'/g,"\\'")}')">❓</button>`)}catch(e){}return r}}
+ if(t&&GD2.some(x=>x.t===t))M.querySelector('.xbtn:not(.qbtn)').insertAdjacentHTML('afterend',`<button class="xbtn qbtn" title="คู่มือ" onclick="openGuideCard('${t.replace(/'/g,"\\'")}')">?</button>`)}catch(e){}return r}}
 // ---------- 5) ทำอะไรดี? ----------
 function adviceList(){const A=[],en=LANG==='en';if(!S||!S.alive)return A;const g=goalInfo();
  if(g){const miss=g.L.filter(x=>x.c<x.n);if(miss.length)miss.forEach(x=>A.push(`🎯 ${esc(g.t)}: ${x.l}ยังขาดอีก <b>${fmt(Math.ceil(x.n-x.c))}</b>${x.h?` → ลอง <b>${x.h}</b>`:''}`));else if(g.note)A.push(`🎯 ${esc(g.t)}: ${g.note}`)}
