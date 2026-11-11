@@ -11686,6 +11686,10 @@ const fxCv=()=>g&&g.canvas&&(g.canvas.id==='scene'||g.canvas.id==='endScene'||g.
    for(let b=0;b<(big?6:3);b++){const bx=x+b*1.5,bh=hgt-(b%2);P(bx+sw,SH-bh,.5,bh,b%2?cs:cl)}
    if(big){P(x+1,SH-4,4,4,cs);P(x+1.5+sw,SH-6,1,1,fl);P(x+4+sw,SH-5,1,1,fl)}}}}catch(e){}return _fpX.apply(this,arguments)}}
 
+// ปุ่มคุณภาพภาพในเมนูหน้าแรกด้วย
+{const _otF=openTitleMenu;openTitleMenu=function(){const r=_otF.apply(this,arguments);try{const gr=$('modal').querySelector('.tmgrid');if(gr&&!gr.querySelector('[data-gfx]')){const bug=[...gr.querySelectorAll('.cb')].find(b=>/แจ้งบั๊ก|Bug/i.test(b.textContent));const h=`<button class="cb" data-gfx="1" onclick="openGfx()"><i>🎨</i>ภาพ: ${fxQ===2?'สวยสุด':'ประหยัด'}</button>`;if(bug)bug.insertAdjacentHTML('beforebegin',h);else gr.insertAdjacentHTML('beforeend',h)}}catch(e){}return r}}
+{const _ogF=openGfx;openGfx=function(){const fromT=$('title')&&$('title').classList.contains('on');const r=_ogF.apply(this,arguments);try{const x=$('modal').querySelector('.xbtn');if(x&&fromT)x.setAttribute('onclick','openTitleMenu()')}catch(e){}return r}}
+
 </script>
 </body>
 </html>
