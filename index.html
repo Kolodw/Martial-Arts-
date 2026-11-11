@@ -4285,8 +4285,8 @@ const BL_EV=[
 function blAdvance(){const m=S.beastMode;const need=[[3,0,0],[12,6,0],[0,20,450],[0,45,1500]];if(m.st>=4)return;const [age,qi,pow]=need[m.st];
  if(S.age>=age&&S.qi>=qi&&total()>=pow){m.st++;log(`🌟 ${S.name} ก้าวสู่ขั้น <b>${BL_ST[m.st]}</b>!${m.st===2?' — เริ่มเข้าใจภาษามนุษย์ และมีความคิดเป็นของตัวเอง':m.st===4?' — ทัณฑ์ฟ้าผ่านพ้น พลังเทียบเท่ายอดฝีมือมนุษย์':''}`,'myth',true);S.maxHp+=20;S.hp=S.maxHp;
   if(m.st===4){const tryC=()=>{if(choice._cur||modalOpen)return setTimeout(tryC,600);choice('🌙 ทางแยกของอสูรพันปี',`พลังของ${esc(S.name)}มาถึงขีดที่แปลงกายได้แล้ว<br>จะทิ้งร่างสัตว์ไปใช้ชีวิตเป็นมนุษย์ หรือครองป่าเป็นราชาอสูร?`,[
-   {t:'🧑 แปลงกายเป็นมนุษย์',s:'เล่นต่อในร่างคน พลังเดิมติดตัว',f(){m.human=1;const g0=S.gender;S.name=anyName(g0);S.family=Object.assign({},S.family,{n:'อสูรแปลงกาย'});S.focus='train';S.flags.transformed=1;log(`✨ ร่างสัตว์สลายเป็นแสง กลายเป็นมนุษย์รูปงามชื่อ <b>${S.name}</b> — ก้าวเข้าสู่โลกมนุษย์`,'myth',true);setScene('aura');render()}},
-   {t:'👑 ครองป่าเป็นราชาอสูร',s:'อยู่ในร่างสัตว์ต่อ ขยายอาณาเขต',f(){m.king=1;S.fame+=200;log(`👑 ${S.name} ประกาศตนเป็นราชาอสูรแห่ง${ch(BHAB[S.xian?1:0])} สัตว์ทั้งป่าก้มหัวให้`,'myth',true)}}])};setTimeout(tryC,400)}}}
+   {t:'🧑 แปลงกายเป็นมนุษย์',s:'เล่นต่อในร่างคน พลังเดิมติดตัว · ⚠️ ต้องเลือกเอง ชะตาจะไม่เลือกให้ · ตอนสืบทอดยังเลือกให้ลูกเป็นร่างสัตว์ได้',noFate:1,f(){m.human=1;const g0=S.gender;S.name=anyName(g0);S.family=Object.assign({},S.family,{n:'อสูรแปลงกาย'});S.focus='train';S.flags.transformed=1;log(`✨ ร่างสัตว์สลายเป็นแสง กลายเป็นมนุษย์รูปงามชื่อ <b>${S.name}</b> — ก้าวเข้าสู่โลกมนุษย์`,'myth',true);setScene('aura');render()}},
+   {t:'👑 ครองป่าเป็นราชาอสูร',s:'อยู่ในร่างสัตว์ต่อ ขยายอาณาเขต · แปลงกายทีหลังได้ที่ ☰',f(){m.king=1;S.fame+=200;log(`👑 ${S.name} ประกาศตนเป็นราชาอสูรแห่ง${ch(BHAB[S.xian?1:0])} สัตว์ทั้งป่าก้มหัวให้`,'myth',true)}}])};setTimeout(tryC,400)}}}
 function beastYear(){yearSum();yearSnap();const m=S.beastMode,f=S.focus;const mul=S.talent.m*(S.xian?1.4:1);
  if(f==='hunt'){S.power+=Math.round(R(8,18)*mul*(1+m.st*.6));if(Math.random()<.25)S.hp-=R(4,12);joy(2)}else if(f==='moon'){S.qi+=+(R(6,14)/10*mul*(m.st>=1?1.5:.6)).toFixed(1)}else if(f==='roam'){S.int+=R(1,3);if(Math.random()<.35){const b=beastPick(true);bdexAdd(b,'see');addFeed('ev',`🐾 พบ${b.n}ระหว่างท่องป่า แอบมองแล้วจากมา`,'sum')}}else if(f==='hide'){S.hp=Math.min(S.maxHp,S.hp+25);joy(3)}else if(f==='human'){S.int+=R(2,5);S.cha+=1;if(Math.random()<.2){S.hp-=R(10,20);log('🏘️ ชาวบ้านเห็นเข้า ไล่ตีด้วยไม้และคบไฟ','bad')}}
  S.age++;ensureHeader();S.hp=Math.min(S.maxHp,S.hp+R(4,9));
@@ -10614,8 +10614,8 @@ function bTrChk(){const m=S&&S.beastMode;if(!m||!m.human||m.trD)return;m.trD=1;c
  if(S.sys){const n0=S.sys.quests.length;S.sys.quests=S.sys.quests.filter(q=>!/^bq_/.test(q.k));if(n0&&S.age>=6){sysLog('ร่างมนุษย์ถูกตรวจพบ — เปลี่ยนเควสเป็นแบบมนุษย์');try{newQuest()}catch(e){}}}
  if(S.ai)S.ai.bst=1}
 // ---------- สืบสายเลือด: เล่นต่อเป็นลูกอสูร ----------
-const bCubOK=()=>{try{const m=S.beastMode;if(!m||m.human)return false;const c=blM().cubs;return!!(c&&c.n>0&&(S.kids||0)>0)}catch(e){return false}};
-{const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);try{if(bCubOK()&&!(S.children||[]).some(c=>c.alive)){const m=$('end'),b=m&&[...m.querySelectorAll('button')].find(x=>/openBook\(\)/.test(x.getAttribute('onclick')||''));
+const bCubOK=()=>{try{const m=S.beastMode;if(!m)return false;let c=null;try{c=blM().cubs}catch(e){}return!!((c&&c.n>0)||(S.kids||0)>0||(S.children||[]).some(x=>x.alive))}catch(e){return false}};
+{const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);try{if(bCubOK()){const m=$('end'),b=m&&[...m.querySelectorAll('button')].find(x=>/openBook\(\)/.test(x.getAttribute('onclick')||''));
   const h=`<button class="pbtn" style="width:100%;margin-top:16px" onclick="bHeir()">🐾 เล่นต่อเป็นลูกอสูร (รุ่นที่ ${(S.gen||1)+1})<small style="display:block;opacity:.8">สืบสายเลือด ธาตุ และพลังบางส่วน · มีโอกาสสายเลือดตื่นสูงกว่าเดิม</small></button>`;if(b)b.insertAdjacentHTML('beforebegin',h)}}catch(e){console.error(e)}return r}}
 function bHeir(){if(!S||!bCubOK())return;const P=S,m=P.beastMode;
  const inh={lin:(P.lineage||[]).concat([{n:P.name,e:P.epithet||'',a:P.age}]),n:P.name,sp:m.sp,el:m.el,bl:m.bl|0,hab:m.hab,pw:P.power,qi:P.qi,gen:P.gen||1,xian:!!P.xian,ai:P.ai&&P.ai.end==='upload'?P.ai:null,line:(m.line||[]).concat([[P.name,P.age]]),sys:P.sys&&P.sys.t==='clan'?P.sys:null};
@@ -11548,6 +11548,34 @@ function aiaShow(){if(!S||!S.ai)return;if(modalOpen||choice._cur||auto){S.aiaPen
 .aiaori{font-size:10.5px;color:#8fbfd0;margin:6px 0 10px;line-height:1.5}
 .aiabtn{font-family:inherit;border:1px solid #2ee6ff;border-radius:6px;padding:10px 22px;font-size:14px;font-weight:800;letter-spacing:1px;color:#020409;background:linear-gradient(90deg,#2ee6ff,#7dffb2);box-shadow:0 0 18px #2ee6ff;cursor:pointer;animation:aiaCore 1.8s ease-in-out infinite}
 .aiaft{font-size:10.5px;margin-top:8px;opacity:.7}.aiaft a{text-decoration:underline;cursor:pointer}`;document.head.appendChild(st)})();
+
+
+// ===================== v15.5 สืบสายเลือดอสูร 2: เลือกร่างลูก · ชะตาไม่แปลงกายแทน · สายเลือดต่อเนื่อง =====================
+// ชะตาจะไม่เลือกตัวเลือกที่ติด noFate (เช่น แปลงกาย)
+{const _fcB=fateChoice;fateChoice=function(silent){const c=choice._cur;try{if(c&&c.opts.some(o=>o.noFate)){const v=c.opts.map((o,i)=>i).filter(i=>!c.opts[i].skip&&!c.opts[i].noFate);if(v.length){const i=ch(v);if(!silent&&!auto)addFeed('ev',`🎲 ปล่อยให้ชะตาเลือก — <b>${c.title.replace(/<[^>]+>/g,'')}</b>: ${c.opts[i].t.replace(/<[^>]+>/g,'')}`,'sum');return choiceRun(i)}}}catch(e){}return _fcB.apply(this,arguments)}}
+// แปลงกายทีหลังจากเมนู (สำหรับอสูรพันปีที่เลือกครองป่า)
+function bTransform(){const m=S&&S.beastMode;if(!m||m.human||(m.st|0)<4)return toast('ต้องเป็นอสูรพันปีขึ้นไปก่อน');
+ choice('🧑 แปลงกายเป็นมนุษย์?','ร่างสัตว์จะสลายเป็นแสง แล้วคุณจะใช้ชีวิตในโลกมนุษย์<br><span class="tag2">ลูกที่เกิดหลังจากนี้จะเป็นคน · ตอนสืบทอดยังเลือกให้ลูกเกิดในร่างสัตว์ได้</span>',[
+  {t:'✨ แปลงกาย',noFate:1,f(){m.human=1;S.name=anyName(S.gender);S.family=Object.assign({},S.family,{n:'อสูรแปลงกาย'});S.focus='train';S.flags.transformed=1;log(`✨ ร่างสัตว์สลายเป็นแสง กลายเป็นมนุษย์รูปงามชื่อ <b>${esc(S.name)}</b> — ก้าวเข้าสู่โลกมนุษย์`,'myth',true);setScene('aura');render()}},
+  {t:'🌲 ยังไม่ใช่ตอนนี้',f(){log('คุณมองไปทางหมู่บ้านมนุษย์อยู่นาน แล้วหันกลับเข้าป่า')}}])}
+{const _omB=openMenu;openMenu=function(){const r=_omB.apply(this,arguments);try{const m=S&&S.alive&&S.beastMode;if(m&&!m.human&&(m.st|0)>=4){const g=$('modal').querySelector('.mcat15 .mgrid')||$('modal').querySelector('.mgrid');if(g&&!g.querySelector('[data-btr]'))g.insertAdjacentHTML('beforeend','<button class="opt" data-btr="1" onclick="closeM();bTransform()">🧑 แปลงกาย<small>ทิ้งร่างสัตว์ไปเป็นคน</small></button>')}}catch(e){}return r}}
+// สายเลือดต่อเนื่อง: สืบทอดในร่างสัตว์ติดกันหลายรุ่น
+const BSK_MS={3:'สายเลือดสามรุ่นตื่นพร้อมกัน',5:'ห้ารุ่นแห่งพงไพร — สายเลือดสั่นสะเทือน',8:'แปดรุ่นไม่ขาดสาย — ฟ้าดินยอมรับเผ่าพันธุ์นี้',12:'สิบสองรุ่น — ตำนานแห่งเผ่าพันธุ์'};
+{const _bhB=bHeir;bHeir=function(){const m0=S&&S.beastMode,pB=m0&&!m0.human,sk0=(m0&&m0.bsk)||0,wantH=!!window._bHumanHeir;const r=_bhB.apply(this,arguments);
+ try{const m=S&&S.beastMode;if(m&&m!==m0){
+  if(wantH){m.human=1;m.trD=1;m.bsk=0;S.name=anyName(S.gender);S.family=Object.assign({},S.family,{n:'ลูกครึ่งอสูร'});S.flags.transformed=1;S.flags.halfBeast=1;log(`🧑 ลูกถือกำเนิดในร่างมนุษย์ชื่อ <b>${esc(S.name)}</b> — แต่ในเลือดยังมีพลังของ${esc(m.sp||'อสูร')}ไหลเวียน`,'myth',true);render();return r}
+  const sk=pB?sk0+1:1;m.bsk=sk;let up=0;
+  if(m.bl<BBLOOD.length-1&&Math.random()<Math.min(.3,.04*sk))up=1;
+  if(BSK_MS[sk]){if(m.bl<BBLOOD.length-1)up=1;const g=Math.round(S.power*.25)+200*sk;S.power+=g;S.qi=+(S.qi+sk).toFixed(1);log(`🩸 <b>${BSK_MS[sk]}</b> — สืบในร่างสัตว์ติดกัน ${sk} รุ่น · พลัง +${fmt(g)} · ลมปราณ +${sk} ปี`,'myth',true);keyAdd(`สายเลือดอสูรต่อเนื่อง ${sk} รุ่น`)}
+  if(up){const o=BBLOOD[m.bl],n=BBLOOD[m.bl+1];m.bl++;try{S.lifespan=Math.round(S.lifespan*(n.l/o.l))}catch(e){}log(`✨ สายเลือดตื่นขึ้นเป็น <b>${n.n}</b>! ${n.d}`,'myth',true)}
+  if(sk>=2)log(`🐾 สายเลือดร่างสัตว์ต่อเนื่อง <b>${sk} รุ่น</b> — ยิ่งต่อเนื่อง สายเลือดยิ่งตื่นง่าย (รุ่นที่ 3 · 5 · 8 · 12 มีโบนัสใหญ่)`,'');render()}}catch(e){console.error(e)}return r}}
+function bHeirH(){window._bHumanHeir=1;try{bHeir()}finally{window._bHumanHeir=0}}
+// หน้าตอนตาย: เลือกร่างของลูก
+{const _egB=endGame;endGame=function(){const r=_egB.apply(this,arguments);try{if(bCubOK()){const E=$('end'),m=S.beastMode,b0=E&&[...E.querySelectorAll('button')].find(x=>/bHeir\(\)/.test(x.getAttribute('onclick')||''));
+ if(b0){const sk=(!m.human?((m.bsk)||1):0)+1,nx=[3,5,8,12].find(x=>x>=sk);b0.innerHTML=`🐾 ลูกเกิดในร่างสัตว์ (รุ่นที่ ${(S.gen||1)+1})<small style="display:block;opacity:.8">${esc(m.sp||'อสูร')} · สืบสายเลือด ธาตุ พลังบางส่วน${m.human?' · เริ่มนับสายเลือดใหม่':` · ต่อเนื่อง ${sk} รุ่น${nx?` (โบนัสใหญ่ที่รุ่น ${nx})`:''}`}</small>`;
+  if(!m.human&&!(S.children||[]).some(c=>c.alive))b0.insertAdjacentHTML('afterend',`<button class="gbtn" style="width:100%;margin-top:8px" onclick="bHeirH()">🧑 ลูกครึ่งอสูรร่างคน<small style="display:block;opacity:.8">เกิดเป็นมนุษย์ที่มีเลือดอสูร · เล่นแบบคน</small></button>`)}}}catch(e){console.error(e)}return r}}
+try{const L=[{id:'bs_sk3',n:'สามรุ่นแห่งพงไพร',d:'สืบทอดในร่างสัตว์ติดกัน 3 รุ่น',r:3,c:()=>!!(S.beastMode&&(S.beastMode.bsk||0)>=3)},{id:'bs_sk8',n:'เผ่าพันธุ์ที่ฟ้ายอมรับ',d:'สืบทอดในร่างสัตว์ติดกัน 8 รุ่น',r:5,c:()=>!!(S.beastMode&&(S.beastMode.bsk||0)>=8)},{id:'bs_half',n:'ลูกครึ่งอสูร',d:'เกิดเป็นลูกครึ่งอสูรในร่างคน',r:2,c:()=>!!(S.flags&&S.flags.halfBeast)}];ACH.push(['🩸 สายเลือดอสูร 2',L]);ACH_ALL.push(...L)}catch(e){}
+try{const g=GD2.find(x=>x.ic==='🩸'&&x.s==='beast');if(g){g.d+=' · <b>ใหม่</b>: ตอนตายเลือกได้ว่าลูกจะเกิดใน<b>ร่างสัตว์</b>หรือ<b>ร่างคน</b> (แม้เคยแปลงกาย) · สืบในร่างสัตว์ติดกันหลายรุ่น สายเลือดยิ่งตื่นง่าย รุ่นที่ 3·5·8·12 ได้โบนัสใหญ่ · ชะตาจะไม่เลือกแปลงกายแทน และแปลงกายทีหลังได้ที่ ☰';g.de+=' · NEW: choose whether your heir is born in beast or human form; consecutive beast-form generations awaken the bloodline (big bonuses at gen 3/5/8/12); fate never transforms you, and you can transform later from ☰.'}SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
 
 </script>
 </body>
