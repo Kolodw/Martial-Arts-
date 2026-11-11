@@ -12763,6 +12763,10 @@ function bkFilter(){const q=String(window._bkQ||'').trim().toLowerCase(),f=windo
 .bkgrid .item{margin:0!important;padding:7px 8px!important;min-width:0}.bkgrid .item .h{flex-direction:column;align-items:flex-start;gap:2px}
 .bkgrid .item .h b{font-size:12.5px;line-height:1.3;word-break:break-word}.bkgrid .item .h>span{font-size:11px}.bkgrid .item p{font-size:11.5px;line-height:1.35;margin:4px 0 0;word-break:break-word}
 .bkgrid .item button{font-size:11px;padding:3px 6px}`;document.head.appendChild(st)})();
+
+// ปุ่มลอย ⬆/✕: แสดงเฉพาะตอนปุ่มปิดเดิมของหน้าเลื่อนพ้นจอไปแล้ว (หน้าที่หัวค้างอยู่ เช่น สารานุกรม คู่มือ คัมภีร์ระดับ จะไม่โผล่มาทับ)
+(function(){const chk=()=>{try{const F=$('mFloat'),m=$('modal');if(!F||!m)return;let hide=false;if(F.classList.contains('on')){const x=[...m.querySelectorAll('.xbtn')].find(b=>!b.classList.contains('qbtn')&&b.offsetParent);if(x){const R=x.getBoundingClientRect(),M=m.getBoundingClientRect();if(R.bottom>M.top+4&&R.top<M.bottom&&R.height>0){const el=document.elementsFromPoint(R.left+R.width/2,R.top+R.height/2).find(e=>!F.contains(e));if(el&&(el===x||x.contains(el)))hide=true}}}F.classList.toggle('mfhide',hide)}catch(e){}};setInterval(chk,250);document.addEventListener('scroll',chk,true);try{const F=$('mFloat');if(F)new MutationObserver(m=>{if(m.some(x=>x.attributeName==='class'&&!/mfhide/.test(String(x.oldValue||''))===false||true))chk()}).observe(F,{attributes:true,attributeFilter:['class','style']})}catch(e){}})();
+(function(){const st=document.createElement('style');st.textContent='#mFloat.mfhide{display:none!important}';document.head.appendChild(st)})();
 </script>
 </body>
 </html>
