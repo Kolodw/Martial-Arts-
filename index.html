@@ -3850,7 +3850,7 @@ const pname=()=>LS.get('murim_pname','')||(S?S.name:'จอมยุทธ์น
 let _quotaUntil=0;
 const _apiFly={};
 async function api(a,body){if(Date.now()<_quotaUntil)throw new Error('quota');const s0=_mSeq,key=body?null:a;
- const run=async()=>{for(let t=0;;t++){const ctl=typeof AbortController!=='undefined'?new AbortController():null,tm=setTimeout(()=>{try{ctl&&ctl.abort()}catch(e){}},body?15000:10000);
+ const run=async()=>{for(let t=0;;t++){const ctl=typeof AbortController!=='undefined'?new AbortController():null,tm=setTimeout(()=>{try{if(ctl){const er=new Error('timeout');er.name='AbortError';er._quiet=1;ctl.abort(er)}}catch(e){}},body?15000:10000);
   try{const o=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({id:pid},body))}:{};if(ctl)o.signal=ctl.signal;
    const r=await fetch(API+'?a='+a+(body?'':'&id='+pid),o);const j=await r.json().catch(()=>({}));
    if(!r.ok){if(j.err==='quota'){_quotaUntil=Date.now()+600000;try{quotaNote()}catch(e){}}const e=new Error(j.err||r.status);e.http=r.status;e.q=j.err==='quota';throw e}return j}
@@ -6909,7 +6909,7 @@ function blYearEvent(){const m=S.beastMode,M=blM();M.evL=M.evL||{};const L=M.evL
 window._lastIn=Date.now();window._lastYr=0;window._errT=[];window._errM='';
 ['pointerdown','keydown','touchstart','wheel'].forEach(ev=>document.addEventListener(ev,()=>{window._lastIn=Date.now()},{passive:true,capture:true}));
 window.addEventListener('error',e=>{const fn=String(e.filename||'');const ext=(/^Script error\.?$/i.test(String(e.message||''))&&!e.lineno)||(fn&&!fn.startsWith(location.origin)&&!/^blob:|^data:/.test(fn))||/^(chrome|moz|safari)-extension:|^webkit-masked-url:/.test(fn);if(ext)return;window._errT.push(Date.now());window._errM=(String(e.message||'').slice(0,90)+(e.lineno?' @'+e.lineno+':'+e.colno:''));jsErrSend(e.message,(e.error&&e.error.stack)||(fn?fn.replace(/https?:\/\/[^/]+\//,''):''),e.lineno,e.colno)});
-window.addEventListener('unhandledrejection',e=>{const r=e.reason||{};jsErrSend('Promise: '+(r.message||r),r.stack,0,0)});
+window.addEventListener('unhandledrejection',e=>{const r=e.reason||{};if(r&&(r.name==='AbortError'||r._quiet||/signal is aborted|The user aborted|^timeout$|^rate$|^quota$/.test(String(r.message||r)))){try{e.preventDefault()}catch(x){}return}jsErrSend('Promise: '+(r.message||r),r.stack,0,0)});
 const _jsSent=new Set();let _jsN=0;
 function jsErrSend(msg,stack,ln,col){try{msg=String(msg||'').slice(0,200);if(!msg||_jsN>=6||_jsSent.has(msg))return;_jsSent.add(msg);_jsN++;if(typeof onlineOK!=='undefined'&&!onlineOK)return;
  const st=String(stack||'').split('\n').slice(0,4).map(x=>x.trim().replace(/https?:\/\/[^/]+\//,'')).join(' | ').slice(0,400);
