@@ -14033,6 +14033,37 @@ const NANO_T='Nano Machine';
  secs[0].insertAdjacentElement('beforebegin',nav);const k=Math.min(cur,secs.length-1);secs.forEach((x,j)=>x.style.display=j===k?'':'none');nav.children[k].classList.add('on')}catch(e){}return r}}
 (()=>{const st=document.createElement('style');st.textContent=`.adtabs{display:flex;gap:4px;flex-wrap:wrap;margin:8px 0;position:sticky;top:-16px;background:var(--card);z-index:3;padding:6px 0}.adtabs button{font-size:12px;padding:6px 10px;border-radius:16px;border:2px solid var(--line);background:var(--card);color:var(--ink);font-family:inherit}.adtabs button.on{background:var(--ink);color:var(--card)}
 #modal[data-k="admtool"] .adg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px}#modal[data-k="admtool"] .adg button{margin:0}`;document.head.appendChild(st)})();
+
+// ===================== v16.5 คราฟสมดุล: ตลาดวัตถุดิบจำกัด · ยาดื้อ · ขั้นสูงยากขึ้น · คราฟวิกฤติ =====================
+const CRW=()=>S&&S.xt?1000:S&&S.xian?30:1,MAT_LIM={herb:8,ore:8,ink:8,silk:8,core:2,jade:2};
+function matStk(){if(!S.mstk||S.mstk.y!==S.age)S.mstk={y:S.age,n:{}};return S.mstk}
+function matPrice(m,k){const b=matStk().n[m]||0;return Math.round(BAGIT[m].v*1.3*CRW()*Math.pow(1.3,b+(k||0)))}
+function matLeft(m){return Math.max(0,(MAT_LIM[m]||6)-(matStk().n[m]||0))}
+matBuy=function(m,n){const left=matLeft(m);if(!left)return toast('ของหมดแล้วปีนี้ — รอปีหน้าร้านจะเติมของ');n=Math.min(n,left);let c=0;for(let i=0;i<n;i++)c+=matPrice(m,i);if(S.money<c)return toast(`เงินไม่พอ — ต้องใช้ ${fmt(c)} ตำลึง`);
+ const got=bagAdd(m,n,true)||0;let paid=0;for(let i=0;i<got;i++)paid+=matPrice(m,i);S.money-=paid;matStk().n[m]=(matStk().n[m]||0)+got;if(got<n)toast('กระเป๋าเต็ม');sfx('click');openTown(openTown._p)};
+// แสดงราคาจริง + ของที่เหลือในร้าน
+{const _otC=openTown;openTown=function(){const r=_otC.apply(this,arguments);try{const m=$('modal');m.querySelectorAll('button[onclick^="matBuy("]').forEach(b=>{const mm=/matBuy\('(\w+)',(\d+)\)/.exec(b.getAttribute('onclick'));if(!mm)return;const k=mm[1],n=+mm[2],left=matLeft(k);if(!left){b.disabled=true;b.style.opacity=.5;b.textContent=n===1?'หมดแล้วปีนี้':'—';return}
+  if(n===1)b.textContent='×1 '+fmt(matPrice(k));else{const nn=Math.min(n,left);let c=0;for(let i=0;i<nn;i++)c+=matPrice(k,i);b.textContent=`×${nn} ${fmt(c)}`}
+  const row=b.closest('.item');if(row&&!row.querySelector('.mleft'))row.querySelector('.h b')?.insertAdjacentHTML('beforeend',` <span class="tag2 mleft">· ร้านเหลือ ${left}/${MAT_LIM[k]||6}${k==='jade'||k==='core'?' · ของหายาก หาเพิ่มได้จากจ้าวถิ่น ยอดเขา แดนต้องห้าม':''}</span>`)})}catch(e){}return r}}
+// ยาอายุวัฒนะ: กินซ้ำได้น้อยลง + เพดานต่อชีวิต
+try{const LX=BAGX.lpill,_u=LX.use;LX.use=function(){const base=S.xt?500:S.xian?50:10,cap=S.xt?1500:S.xian?150:30,n=S.lpN||0,got=S.lpT||0;let v=Math.round(base*Math.pow(.5,n));v=Math.max(0,Math.min(v,cap-got));S.lpN=n+1;S.lpT=got+v;
+  if(v<=0)return'ร่างกายดื้อยาอายุวัฒนะแล้ว — กินเพิ่มไม่ได้ผลอีก';if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;return`อายุขัย +${v} ปี${S.lpN>1?' (ร่างกายเริ่มดื้อยา)':''}`};
+ const _d=LX.d;LX.d=()=>{const base=S&&S.xt?500:S&&S.xian?50:10,cap=S&&S.xt?1500:S&&S.xian?150:30,n=(S&&S.lpN)||0,v=Math.max(0,Math.min(Math.round(base*Math.pow(.5,n)),cap-((S&&S.lpT)||0)));return v?`อายุขัย +${v} ปี (เม็ดต่อไป) · ได้จากยารวมสูงสุด ${cap} ปีต่อชีวิต`:'ร่างกายดื้อยาแล้ว — ไม่ได้ผลอีก'}}catch(e){}
+// ขั้นสูงต้องใช้วัตถุดิบมากขึ้น: ยาทะลวงขั้น (ตามขั้นพลัง) · ตีอาวุธ (ตามขั้นอาวุธ)
+try{Object.defineProperty(RCP.a4,'m',{configurable:true,get(){const ri=Math.max(0,S?realmIdx():0);return{herb:3+ri,core:2+Math.floor(ri/2),jade:1+Math.floor(ri/3)}}});
+ Object.defineProperty(RCP.f6,'m',{configurable:true,get(){let i=-1;try{const c=gearOf('weapon');i=c?GEAR.weapon.indexOf(c):-1}catch(e){}const t=Math.max(0,i+1);return t<4?{ore:4,core:1}:{ore:4+(t-3)*2,core:1+Math.floor((t-2)/2),...(t>=6?{jade:t-5}:{})}}})}catch(e){}
+{const _coC=crOdds;crOdds=function(id){let p=_coC.apply(this,arguments);try{if(id==='f6'){const c=gearOf('weapon'),i=c?GEAR.weapon.indexOf(c):-1;p-=Math.max(0,i-2)*.05}if(id==='a4')p-=Math.max(0,realmIdx()-3)*.04}catch(e){}return Math.max(.08,p)}}
+// ยาปัญญา/ยันต์ลมปราณ: ปีละ 2 ครั้งได้เต็ม · เกินนั้นได้ 30%
+{const _crO=crOnce;crOnce=function(id){const r=RCP[id],fx=r&&r.out&&r.out.fx,i0=S.int,q0=S.qi;const res=_crO.apply(this,arguments);try{if(res&&res.ok&&(fx==='int'||fx==='qi')){if(!S.crFx||S.crFx.y!==S.age)S.crFx={y:S.age,int:0,qi:0};S.crFx[fx]++;if(S.crFx[fx]>2){if(fx==='int')S.int=i0+Math.round((S.int-i0)*.3);else S.qi=+(q0+(S.qi-q0)*.3).toFixed(1);res.tired=1}}
+  if(res&&res.ok&&res.gr===3){try{sfx('realm')}catch(e){}try{setScene('aura')}catch(e){}toast(`✨ คราฟวิกฤติ! ${r.n} ระดับขั้นสุดยอด`);S.flags.crCrit=(S.flags.crCrit||0)+1}}catch(e){}return res}}
+// แหล่งวัตถุดิบหายากใหม่
+{const _pyCr=passYear;passYear=function(){const r=_pyCr.apply(this,arguments);try{if(S&&S.alive&&typeof rgAt==='function'){const k=rgAt();if(k==='peak'&&Math.random()<.12)bagAdd('jade',1,true);if(k==='forbid'&&Math.random()<.15)bagAdd(Math.random()<.5?'jade':'core',1,true);if(k==='forest'&&Math.random()<.08)bagAdd('core',1,true)}}catch(e){}return r}}
+{const _dCr=duel;duel=function(nm,ep,cb){return _dCr.call(this,nm,ep,function(w){try{if(w&&typeof RG2!=='undefined'&&Object.values(RG2).some(R=>R.boss.includes(nm))){const a=bagAdd('jade',2,true)||0,b=bagAdd('core',2,true)||0;if(a||b)log(`💠 ได้วัตถุดิบหายากจากจ้าวถิ่น — หยก ×${a} · แก่นอสูร ×${b}`,'good')}}catch(e){}return cb&&cb.apply(this,arguments)})}}
+// ---------- กันปั๊มตอนรีเกม: ถ้ามีหน้าต่างเลือกค้างจากเหตุการณ์ประจำปี เซฟค่าสถานะก่อนเหตุการณ์นั้น ----------
+const PYK=['power','qi','int','cha','money','fame','lifespan','karma','maxHp','kills'];
+{const _pyP=passYear;passYear=function(){let sn=null;try{if(S&&S.alive){sn={a:S.age,n:(S.arts||[]).length};PYK.forEach(k=>sn[k]=S[k])}}catch(e){}window._pySnap=sn;window._inPY=(window._inPY||0)+1;try{return _pyP.apply(this,arguments)}finally{window._inPY--}}}
+{const _chP=choice;choice=function(){const r=_chP.apply(this,arguments);try{if(window._inPY>0&&choice._cur&&window._pySnap&&!choice._cur._py)choice._cur._py=window._pySnap}catch(e){}return r}}
+{const _sgP=saveGame;saveGame=function(){const c=choice._cur;if(S&&S.alive&&c&&c._py&&c._py.a===S.age){const bak={},arts=S.arts;PYK.forEach(k=>{bak[k]=S[k];if(typeof c._py[k]==='number')S[k]=Math.min(S[k],c._py[k])});try{if(Array.isArray(arts)&&arts.length>c._py.n)S.arts=arts.slice(0,c._py.n)}catch(e){}try{return _sgP.apply(this,arguments)}finally{PYK.forEach(k=>S[k]=bak[k]);S.arts=arts}}return _sgP.apply(this,arguments)}}
 </script>
 </body>
 </html>
