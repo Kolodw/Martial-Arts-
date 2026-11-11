@@ -13629,6 +13629,97 @@ function rlvAttach(){const box=$('chatBox');if(!box)return 0;const rows=box.quer
 {const _crR=chatRender;chatRender=function(){const b0=$('chatBox'),near=b0?(b0.scrollHeight-b0.scrollTop-b0.clientHeight<80||!b0.dataset.ok):false;const r=_crR.apply(this,arguments);
  try{const n=rlvAttach();const box=$('chatBox');if(n&&box&&near)box.scrollTop=box.scrollHeight}catch(e){}return r}}
 (()=>{const st=document.createElement('style');st.textContent='.rlv{margin-top:5px;border-radius:8px;overflow:hidden;border:2px solid #0008;max-width:320px;line-height:0;background:#120e1e;cursor:pointer}.rlv canvas{width:100%;display:block;image-rendering:pixelated}';document.head.appendChild(st)})();
+
+// ===================== v15.9e ลานหมื่นเงา: เริ่มง่าย (ปลดทีละส่วน) · บทเรียนสู้ทีละขั้น · ตัวช่วยมือใหม่ · บอกเหตุผลที่แพ้ =====================
+const arN=()=>+(LS.get('murim_arn',0)||0);
+const AR_CT={atk:{ok:['ctr','def'],best:'ctr',why:'ศัตรูพุ่งเข้ามาตรงๆ — <b>↩️ สวนกลับ</b> จังหวะเดียวกันเจ็บที่สุด (<b>🛡️ ตั้งรับ</b> ก็ปลอดภัย)'},
+ heavy:{ok:['dodge'],best:'dodge',why:'ท่าหนักรับไม่ไหวและสวนไม่ได้ — ต้อง <b>💨 หลบ</b> อย่างเดียว แล้วจะเห็นช่องโหว่'},
+ feint:{ok:['ctr','atk'],best:'ctr',why:'ศัตรูแค่แกล้งทำท่า — <b>↩️ สวนกลับ</b> หรือ <b>⚔️ บุก</b> ใส่ได้เลย อย่าตั้งรับหรือหลบ'},
+ def:{ok:['sec'],best:'sec',why:'ศัตรูตั้งการ์ด บุกไปจะโดนสวน — ใช้ <b>✨ วิชาลับ</b> เจาะ (ถ้าไม่มี/ใช้ไปแล้ว ให้ <b>🛡️ ตั้งรับ</b> พักหายใจ)'},
+ chg:{ok:['atk','sec'],best:'atk',why:'ศัตรูกำลังรวมพลัง — <b>⚔️ บุก</b> ขัดจังหวะทันที ไม่งั้นยกหน้าจะโดนท่าหนักที่แรงขึ้น'}};
+const AR_BTN={atk:['⚔️','บุก','ขัดการรวมพลัง · ลงโทษท่าหลอก'],def:['🛡️','ตั้งรับ','ลดแรงการบุก'],dodge:['💨','หลบ','พ้นท่าหนัก'],ctr:['↩️','สวนกลับ','ลงโทษการบุก/ท่าหลอก'],sec:['✨','วิชาลับ','เจาะการ์ด · ใช้ได้ 1 ครั้ง']};
+const AR_LH={atk:'ขยับเท้าเตรียมพุ่งเข้าใส่ตรงๆ',heavy:'ปราณพลุ่งพล่านรอบตัว — กำลังจะปล่อยท่าหนักที่รับไม่ไหวแน่',feint:'ขยับไหล่แปลกๆ ทำท่าจะบุก… แต่ดูไม่ค่อยจริงจัง',def:'ตั้งการ์ดแน่นหนา รอจังหวะ',chg:'หลับตารวบรวมลมปราณ'};
+function arCheatH(){return`<table class="arct"><tr><th>เห็นศัตรูจะ…</th><th>ให้กด</th></tr>${Object.keys(AR_CT).map(e=>`<tr><td>${DU_INT[e][1]} ${DU_INT[e][0]}</td><td>${AR_CT[e].ok.map(a=>AR_BTN[a][0]+' '+AR_BTN[a][1]).join(' หรือ ')}</td></tr>`).join('')}</table>`}
+// ---------- บทเรียนสู้ทีละขั้น (ไม่จับเวลา · กดผิดไม่เสียอะไร) ----------
+function arLesson(){const hasArt=!!(S&&S.arts&&S.arts.length);const L=window._arL={i:0,wrong:0,done:0,hasArt,steps:['atk','heavy','feint','chg','def'].map(e=>({e,teach:1})).concat(['heavy','atk','chg','feint'].sort(()=>Math.random()-.5).slice(0,2).map(e=>({e,teach:0}))),en:100};arLessonDraw()}
+function arLessonOk(e){const L=window._arL;if(e==='def')return L.hasArt?['sec']:['def'];if(e==='chg')return L.hasArt?['atk','sec']:['atk'];return AR_CT[e].ok}
+function arLessonDraw(res){const L=window._arL;if(!L)return;const st=L.steps[L.i],e=st.e,ok=arLessonOk(e),N=L.steps.length,hl=st.teach&&(L.i===0||L.wrong>0)||(!st.teach&&L.wrong>1);
+ const bar=(v,c)=>`<div class="hpbar" style="height:10px"><i style="width:${Math.max(0,v)}%;background:${c}"></i></div>`;
+ const B=a=>`<button class="opt ${hl&&ok.includes(a)&&!res?'arhl':''}" ${res||(a==='sec'&&!L.hasArt)?'disabled style="opacity:.45"':''} onclick="arLessonAct('${a}')">${AR_BTN[a][0]} ${AR_BTN[a][1]}<small>${AR_BTN[a][2]}</small></button>`;
+ modal(`<button class="xbtn" onclick="openOnline('arena')">✕</button><h3>🎓 บทเรียนสู้ · ขั้น ${L.i+1}/${N}</h3>
+ <div class="tag2">คุณ · 100</div>${bar(100,'#5fbf6f')}<div class="tag2" style="margin-top:6px">หุ่นไม้แห่งลาน · ${Math.round(L.en)}</div>${bar(L.en,'#ff5d73')}
+ <p class="tag2" style="margin:8px 0 2px">${st.teach?'👇 อ่านกล่องสีแดงก่อนทุกครั้ง — มันบอกว่าศัตรูกำลังจะทำอะไร':'🧪 ทดสอบ: รอบนี้ไม่มีคำใบ้ ลองอ่านเองดู'}</p>
+ <div class="item" style="margin:6px 0;border-left:4px solid #ff5d73"><span class="tag2">ศัตรูจะใช้:</span><br><b>${DU_INT[e][1]} ${DU_INT[e][0]}</b> — ${AR_LH[e]}</div>
+ ${res?`<div class="arlres ${res.ok?'ok':'bad'}">${res.ok?'✅ ถูกต้อง! ':'❌ ยังไม่ใช่ — '}${res.t}</div>`:st.teach?`<div class="artip">💡 เห็น <b>${DU_INT[e][1]} ${DU_INT[e][0]}</b> → กด <b>${ok.map(a=>AR_BTN[a][0]+' '+AR_BTN[a][1]).join('</b> หรือ <b>')}</b></div>`:''}
+ <div class="mgrid">${['atk','def','dodge','ctr','sec'].map(B).join('')}</div>
+ ${res&&res.ok?`<button class="pbtn" style="width:100%;margin-top:8px" onclick="arLessonNext()">${L.i>=N-1?'จบบทเรียน 🎉':'ต่อไป →'}</button>`:res?`<button class="gbtn" style="width:100%;margin-top:8px" onclick="arLessonDraw()">ลองใหม่</button>`:''}
+ <p class="tag2" style="text-align:center">⏸️ บทเรียนไม่จับเวลา · กดผิดไม่เสียอะไร</p>`,'arles')}
+function arLessonAct(a){const L=window._arL;if(!L)return;const st=L.steps[L.i],ok=arLessonOk(st.e);if(ok.includes(a)){L.en=Math.max(5,L.en-100/L.steps.length);try{sfx(a==='sec'?'rare':'hit')}catch(e){}arLessonDraw({ok:1,t:AR_CT[st.e].why})}
+ else{L.wrong++;try{sfx('bad')}catch(e){}const bad={atk:'บุกตรงๆ ตอนนี้จะเสียเปรียบ',def:'ตั้งรับตอนนี้เสียจังหวะเปล่า',dodge:'หลบตอนนี้ไม่ได้อะไร',ctr:'รอสวนตอนนี้ไม่ได้ผล',sec:'เก็บวิชาลับไว้ใช้ตอนศัตรูตั้งการ์ดดีกว่า'}[a];arLessonDraw({ok:0,t:bad+' · '+AR_CT[st.e].why})}}
+function arLessonNext(){const L=window._arL;if(!L)return;L.i++;L.wrong=0;if(L.i<L.steps.length)return arLessonDraw();arLessonEnd()}
+async function arLessonEnd(){const first=!LS.get('murim_arles',0);LS.set('murim_arles',1);LS.set('murim_artut',1);let got=0;
+ if(first){try{const r=await api('arlesson',{});if(r&&r.ok){got=r.g|0;try{if(r.wal)arWalApply(r.wal)}catch(e){}}}catch(e){}}
+ const alive=S&&S.alive,T=(()=>{try{return duTime().toFixed(0)}catch(e){return'8'}})();
+ modal(`<div class="tut"><div class="tut-ic">🎉</div><h3>จบบทเรียน!</h3>${got?`<p>🪙 +${got} เหรียญลาน</p>`:''}<p>จำแค่ตารางนี้ก็สู้ได้แล้ว (ระหว่างดวลกด <b>📖 ตารางแก้ทาง</b> ดูได้ตลอด)</p>${arCheatH()}
+ <p class="tag2">ในสนามจริงต่างกัน 2 อย่าง: ⏳ มีเวลาคิดราว ${T} วินาทีต่อยก · 🎭 ท่าทีที่เห็นอาจเป็นของปลอมราว 1 ใน 4 ครั้ง<br>5 ครั้งแรกจะมี <b>ตัวช่วยมือใหม่</b> บอกปุ่มที่ควรกดและให้เวลาเพิ่ม</p>
+ <div class="brow">${alive?`<button class="gbtn" onclick="arTrain()">🥋 ซ้อมก่อน</button><button class="pbtn" onclick="openOnline('arena').then(()=>{})">⚔️ ไปลงสนาม</button>`:`<button class="pbtn" onclick="openOnline('arena')">เข้าใจแล้ว</button>`}</div></div>`,'arles')}
+function arHelp(){modal(`<button class="xbtn" onclick="openOnline('arena')">✕</button><h3>❓ ลานหมื่นเงา — วิธีเล่น</h3><p><b>"เงา"</b> คือสำเนาตัวละครของผู้เล่นคนอื่น คุณกดลงสนามเพื่อสู้กับเงา ชนะได้แต้มไต่ลีก ส่วนเงาของคุณจะรับคำท้าแทนตอนคุณไม่อยู่</p>
+ <div class="mgrid"><button class="opt" onclick="arLesson()">🎓 บทเรียนสู้ทีละขั้น<small>1 นาที · ไม่จับเวลา</small></button><button class="opt" onclick="arTut(0)">📜 ระบบลาน<small>ตั๋ว · ลีก · นิสัยเงา · ล้างแค้น</small></button></div><h4>📖 ตารางแก้ทาง</h4>${arCheatH()}<p class="tag2">⚡ ตอบถูกภายใน 2.5 วิ ได้ดาเมจเพิ่ม · ตอบถูกติดกันเป็นคอมโบ ยิ่งแรง</p>`,'arhelp')}
+// ---------- หน้าเพจ: ครั้งแรกเห็นแค่ปุ่มลงสนาม · ส่วนอื่นปลดเมื่อเล่นครบ 1 และ 3 ครั้ง ----------
+{const _apO=arPage;arPage=async function(){try{if(!LS.get('murim_artut',0))LS.set('murim_artut',1)}catch(e){}const r=await _apO.apply(this,arguments);try{const box=$('arBox');if(!box||!box.querySelector('.arhero'))return r;const j=AR.info||{};
+ if(LS.get('murim_arn',null)==null){const exp=(j.rt&&j.rt!==1000)||(j.def||[]).length||arC()>0;LS.set('murim_arn',exp?3:0);if(exp)LS.set('murim_arles',1)}
+ const n=arN(),all=!!LS.get('murim_arall',0),stage=all||n>=3?2:n>=1?1:0,les=!!LS.get('murim_arles',0),hero=box.querySelector('.arhero');
+ const hb=hero.querySelector(':scope>b');if(hb)hb.textContent='🏟️ ลานหมื่นเงา';const hp=hero.querySelector('.arhelp');if(hp)hp.setAttribute('onclick','arHelp()');
+ // จัดกลุ่มส่วนต่างๆ
+ let grp='top';const hide=new Set(stage===0?['quest','style','def','rank','shop','other']:stage===1?['rank','shop','other']:[]);let hidden=0;
+ [...box.children].forEach(el=>{if(el===hero)return;const tx=el.textContent||'';
+  if(el.tagName==='H4')grp=/นิสัยเงา/.test(tx)?'style':/บันทึกการป้องกัน/.test(tx)?'def':/อันดับ/.test(tx)?'rank':/ร้าน/.test(tx)?'shop':'other';
+  let k=grp;if(el.classList.contains('arq'))k='quest';else if(el.classList.contains('arnew'))k='def';else if(el.classList.contains('arshop')||el.classList.contains('arsh2'))k='shop';
+  else if(grp==='style'&&(el.classList.contains('brow')||(el.tagName==='P'&&/ธาตุของคุณ|ต้องอยู่ระหว่างเล่น/.test(tx))))k='top';
+  if(k!=='top'&&hide.has(k)){el.style.display='none';hidden++}});
+ if(stage<2)hero.insertAdjacentHTML('afterend',`<div class="arintro"><b>👥 ลานนี้คืออะไร?</b> สู้กับ <b>"เงา"</b> — สำเนาตัวละครของผู้เล่นคนอื่น · ชนะได้แต้มไต่ลีก · ตอนคุณไม่อยู่ เงาของคุณจะรับคำท้าแทน</div>`);
+ const brow=[...box.querySelectorAll(':scope>.brow')].find(b=>b.querySelector('[onclick^="arGo"]'));
+ if(!les){const h=`<button class="pbtn arles-b" onclick="arLesson()">🎓 เรียนวิธีสู้ก่อน<small>1 นาที · ไม่จับเวลา · จบแล้วรับ 🪙5</small></button>`;if(brow)brow.insertAdjacentHTML('beforebegin',h);else box.querySelector('.arintro,.arhero').insertAdjacentHTML('afterend',h)}
+ if(hidden)box.insertAdjacentHTML('beforeend',`<div class="armore">🔒 ${stage===0?'ลงสนามครั้งแรกเพื่อปลดล็อก <b>นิสัยเงา · ภารกิจรายวัน · บันทึกป้องกัน</b> · ครบ 3 ครั้งปลด <b>อันดับ · ร้านเหรียญ</b>':`ลงสนามอีก ${3-n} ครั้งเพื่อปลดล็อก <b>อันดับ · ร้านเหรียญลาน</b>`}<br><button class="sysb" onclick="LS.set('murim_arall',1);arPage()">แสดงทุกอย่างเลย</button></div>`)}catch(e){console.error(e)}return r}}
+// ชื่อแท็บให้ตรงกันทั้งเกม
+{const _ooN=openOnline;openOnline=function(){const fix=()=>{try{$('modal').querySelectorAll('.tabs .tabb').forEach(b=>{if(/ประลองเงา/.test(b.textContent))b.textContent='🏟️ ลานหมื่นเงา'})}catch(e){}};const r=_ooN.apply(this,arguments);fix();try{if(r&&r.then)r.then(fix,()=>{})}catch(e){}return r}}
+// ---------- ระหว่างดวลในลาน: ตารางแก้ทาง (ทุกคน) + ตัวช่วยมือใหม่ 5 ครั้งแรก (บอกปุ่ม · เวลาเพิ่ม · ศัตรูไม่ชิงลงมือ) ----------
+{const _ddH=drawDuel;drawDuel=function(fin){const r=_ddH.apply(this,arguments);try{if(fin||!DU||!DU.ar)return r;const m=$('modal'),g=m.querySelector('.mgrid');if(!g)return r;
+ if(!m.querySelector('.arcd'))g.insertAdjacentHTML('afterend',`<details class="arcd"><summary>📖 ตารางแก้ทาง</summary>${arCheatH()}</details>`);
+ const help=!DU.ar.tut&&(DU.ar.train||arN()<5);if(help){clearTimeout(DU._early);DU._early=null;if(DU._hx!==DU.r){DU._hx=DU.r;DU._t0+=4000}
+  if(!m.querySelector('.artip')){const c=AR_CT[DU.shown]||AR_CT.atk,ok=c.ok.filter(a=>a!=='sec'||DU.secret),best=ok[0]||'def';
+   g.insertAdjacentHTML('beforebegin',`<div class="artip">💡 <b>ตัวช่วยมือใหม่${DU.ar.train?'':` (เหลือ ${Math.max(1,5-arN())} ครั้ง)`}:</b> เห็น ${DU_INT[DU.shown][1]} <b>${DU_INT[DU.shown][0]}</b> → กด <b>${AR_BTN[best][0]} ${AR_BTN[best][1]}</b> <small>⚠️ ท่าทีที่เห็นอาจเป็นของปลอมบ้าง</small></div>`);
+   [...g.querySelectorAll('.opt')].forEach(b=>{if((b.getAttribute('onclick')||'').includes(`'${best}'`))b.classList.add('arhl')})}}}catch(e){}return r}}
+// ---------- จดว่าแต่ละยกกดอะไรใส่ท่าไหน → สรุปเหตุผลตอนแพ้ ----------
+{const _daH=duelAct;duelAct=function(a){try{if(DU&&DU.ar&&a!=='flee'){(DU.hist=DU.hist||[]).push({a,e:DU.intent,s:DU.shown})}}catch(e){}return _daH.apply(this,arguments)}}
+{const _deH=duelEnd;duelEnd=function(){try{window._arHist=DU&&DU.ar?{h:DU.hist||[],ep:DU.ep,me:DU.me,en:DU.en}:null}catch(e){}return _deH.apply(this,arguments)}}
+function arWhy(o,au,w){if(au){const A=AR_ST[arSt()],B=AR_ST[o.st]||AR_ST.atk,sb=AR_SB[arSt()]===o.st?1:AR_SB[o.st]===arSt()?-1:0;if(w)return'';
+  return`<div class="arwhy"><b>🔎 ทำไมถึงแพ้</b><br>เงาสู้แทนตัดสินจากพลังเป็นหลัก (คุณ ${fmt(Math.round(myPow()))} · เขา ${fmt(o.p)})${sb<0?` และนิสัยเงาของคุณ (${A[0]} ${A[1]}) <b>แพ้ทาง</b> ${B[0]} ${B[1]} — ลองเปลี่ยนนิสัยเงา`:''}<br><small>ทางข่ม: 🗡️ บุก › 🌀 หลอก › 🛡️ รับ › 🗡️ บุก · หรือลอง <b>⚔️ สู้เอง</b> อ่านท่าถูกชนะคนพลังมากกว่าได้</small></div>`}
+ const H=window._arHist;if(!H||!H.h.length)return'';const h=H.h;let good=0,to=0,fooled=0;const bad={heavy:0,def:0,chg:0,feint:0,atk:0};
+ h.forEach(x=>{const c=AR_CT[x.e];if(x.a==='none'){to++;return}if(c&&c.ok.includes(x.a)){good++;return}if(x.s!==x.e&&AR_CT[x.s]&&AR_CT[x.s].ok.includes(x.a)){fooled++;return}bad[x.e]=(bad[x.e]||0)+1});
+ const head=`อ่านท่าถูก <b>${good}/${h.length}</b> ยก`;if(w)return arN()<=5?`<div class="arwhy ok">✅ ${head}${fooled?` · โดนหลอก ${fooled} ครั้ง`:''}</div>`:'';
+ const tips=[];if(to>=2)tips.push(`⏳ กดไม่ทัน ${to} ครั้ง — ถ้าไม่แน่ใจให้กด <b>🛡️ ตั้งรับ</b> ไว้ก่อน ดีกว่าปล่อยหมดเวลา`);
+ const top=Object.entries(bad).sort((p,q)=>q[1]-p[1])[0];if(top&&top[1]>0){const e=top[0];tips.push(`${DU_INT[e][1]} เจอ<b>${DU_INT[e][0]}</b>แล้วกดผิด ${top[1]} ครั้ง — ${AR_CT[e].why}`)}
+ if(fooled>=2)tips.push(`🎭 โดนท่าทีปลอมหลอก ${fooled} ครั้ง — อันนี้เป็นดวง ไม่ใช่ความผิดคุณ`);
+ if(!tips.length||(good>=h.length-1&&H.ep>myPow()*1.15))tips.push(`💪 คุณอ่านท่าได้ดีแล้ว แต่คู่นี้พลังสูงกว่า (คุณ ${fmt(Math.round(myPow()))} · เขา ${fmt(Math.round(H.ep))}) — เลือกคู่ที่ธาตุได้เปรียบ หรือฝึกพลังเพิ่มก่อน`);
+ return`<div class="arwhy"><b>🔎 ทำไมถึงแพ้</b> · ${head}<br>${tips.slice(0,2).join('<br>')}</div>`}
+{const _arO=arResult;arResult=async function(o,au,w){let n0=arN();if(!o.train){LS.set('murim_arn',n0+1)}const r=await _arO.apply(this,arguments);try{const m=$('modal');if(m.dataset.k==='arres'){const bt=m.querySelector('.pbtn');let h=arWhy(o,au,w);
+  if(!o.train){const n=n0+1;if(n===1)h+='<div class="arunl">🔓 ปลดล็อกแล้ว: <b>นิสัยเงา · ภารกิจรายวัน · บันทึกป้องกัน</b></div>';else if(n===3&&!LS.get('murim_arall',0))h+='<div class="arunl">🔓 ปลดล็อกครบแล้ว: <b>อันดับ · ร้านเหรียญลาน</b></div>'}
+  if(!w&&!au&&!LS.get('murim_arles',0))h+='<button class="gbtn" style="width:100%;margin-bottom:6px" onclick="arLesson()">🎓 เรียนวิธีสู้ (1 นาที)</button>';
+  if(bt&&h)bt.insertAdjacentHTML('beforebegin',h)}}catch(e){}window._arHist=null;return r}}
+// เงาของลาน (เมื่อยังไม่มีผู้เล่นรุ่นเดียวกัน) — บอกให้ชัดในหน้าเจอคู่
+{const _ppB=arPre;arPre=function(o){const r=_ppB.apply(this,arguments);try{if(o&&o.bot){const m=$('modal'),it=m.querySelector('.item');if(it)it.insertAdjacentHTML('afterend','<p class="tag2">🏟️ ตอนนี้ยังไม่มีเงาของผู้เล่นรุ่นเดียวกับคุณ — ลานจึงส่ง <b>เงาประจำลาน</b> มาให้สู้แทน (นับแต้มและเหรียญตามปกติ แต้มขึ้นลงน้อยกว่าเล็กน้อย)</p>')}}catch(e){}return r}}
+(function(){const st=document.createElement('style');st.textContent=`
+.arintro{margin:8px 0;padding:9px 11px;border-radius:10px;border:2px dashed var(--line);background:var(--card);font-size:13.5px;line-height:1.5}
+.arles-b{display:block;width:100%;margin:8px 0;padding:12px;font-size:16px;animation:arLp 1.6s ease-in-out infinite}.arles-b small{display:block;font-size:11.5px;font-weight:400;opacity:.9}
+@keyframes arLp{50%{box-shadow:0 0 0 5px #f0c86055}}
+.armore{margin:12px 0 4px;padding:10px;border-radius:10px;background:var(--card);border:2px dashed var(--line);font-size:13px;text-align:center;line-height:1.6}.armore .sysb{margin-top:6px}
+.arct{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0}.arct th,.arct td{padding:5px 6px;border-bottom:1px solid var(--line);text-align:left}.arct th{font-size:12px;opacity:.7}
+.arcd{margin:6px 0;font-size:13px}.arcd summary{cursor:pointer;padding:5px 8px;border-radius:8px;border:1.5px solid var(--line);display:inline-block}
+.arlres{margin:6px 0;padding:8px 10px;border-radius:10px;font-size:13.5px;line-height:1.5}.arlres.ok{background:#3a9a4a22;border:2px solid #3a9a4a}.arlres.bad{background:#d84a4a1c;border:2px solid #d84a4a}
+.arwhy{margin:8px 0;padding:9px 11px;border-radius:10px;border-left:4px solid #d84a4a;background:var(--card);font-size:13px;line-height:1.55;text-align:left}.arwhy.ok{border-left-color:#3a9a4a}
+.arunl{margin:6px 0;padding:8px 10px;border-radius:10px;background:#f0c86022;border:2px solid #f0c860;font-size:13px}
+`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>

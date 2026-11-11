@@ -1249,10 +1249,24 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
       const myR = await arRt(id); let oid = null, o = null, rv = 0;
       if (a === 'ar2rv') { const i = Math.max(0, Math.min(19, +b.i || 0)), e = jp(await cmd('LINDEX', 'ardef:' + id, i)); if (!e || !e.a || e.rv) return res.json({ o: null, err: 'gone' }); o = jp(await cmd('GET', 'arsnap:' + e.a)); if (!o) return res.json({ o: null, err: 'gone' }); oid = e.a; rv = 1; e.rv = 1; await cmd('LSET', 'ardef:' + id, i, JSON.stringify(e)) }
       else { const C = ((await cmd('SRANDMEMBER', 'ar2:' + br, 14)) || []).filter(x => x !== id); if (C.length) { const [sn, rts] = await pipe([['MGET', ...C.map(x => 'arsnap:' + x)], ['HMGET', 'arr:' + W, ...C]]); const L = C.map((x, k) => ({ x, o: jp(sn[k]), r: +rts[k] || 1000 })).filter(q => q.o && q.o.t > now - 86400e3 * 14); L.sort((p1, p2) => (Math.abs(p1.r - myR) + Math.random() * 160) - (Math.abs(p2.r - myR) + Math.random() * 160)); if (L[0]) { oid = L[0].x; o = L[0].o } } }
+      if (!o && a === 'ar2go') { // รุ่นเดียวกันไม่มีใคร → ลองรุ่นข้างเคียงที่พลังใกล้กัน
+        try { const base = me.bm ? 'b' : me.x ? 'x' : 'm'; for (const d of [-1, 1, -2, 2]) { const r2 = me.ri + d; if (o || r2 < 0 || r2 > 12) continue; const C2 = ((await cmd('SRANDMEMBER', 'ar2:' + base + ':' + r2, 8)) || []).filter(x => x !== id); if (!C2.length) continue; const sn2 = await cmd('MGET', ...C2.map(x => 'arsnap:' + x)); for (let k = 0; k < C2.length && !o; k++) { const q = jp(sn2[k]); if (q && q.t > now - 86400e3 * 14 && q.p >= me.p * .55 && q.p <= me.p * 1.7) { oid = C2[k]; o = q } } } } catch (e) {}
+      }
+      let bot = 0;
+      if (!o && a === 'ar2go') { // ยังไม่มีอีก → เงาประจำลาน (มีคู่ให้สู้เสมอ)
+        bot = 1; oid = '~bot';
+        o = { n: ['ผู้พิทักษ์ลาน', 'นักดาบเร่ร่อน', 'ผู้เฒ่าไร้นาม', 'ศิษย์ลานหมื่นเงา', 'จอมยุทธ์ปิดหน้า', 'เงาไร้เจ้าของ'][Math.floor(Math.random() * 6)], p: Math.max(10, Math.round(me.p * (.8 + Math.random() * .3))), hp: me.hp, r: me.r, ri: me.ri, x: me.x, bm: me.bm, st: ['atk', 'def', 'trick', 'all'][Math.floor(Math.random() * 4)], arts: [['ฝ่ามือเงาสลัว', 'เพลงดาบไร้เงา', 'หมัดหมื่นเงา'][Math.floor(Math.random() * 3)]], el: '', sr: '', qo: '', qw: '', au: '', look: null, bot: 1, t: now };
+      }
       if (!o) return res.json({ o: null, tk: await arTk(0), rt: myR });
       const tk = await arTk(1); if (!tk.ok) return res.json({ o: null, notk: 1, tk, rt: myR });
-      await cmd('SET', 'arm:' + id, JSON.stringify({ o: oid, rv, t: now }), 'EX', 900);
-      const or = await arRt(oid); delete o.t; return res.json({ o: Object.assign(o, { rt: or, lg: arLg(or) }), rt: myR, tk });
+      await cmd('SET', 'arm:' + id, JSON.stringify({ o: oid, rv, t: now, bot }), 'EX', 900);
+      const or = bot ? Math.max(900, myR - 30) : await arRt(oid); delete o.t; return res.json({ o: Object.assign(o, { rt: or, lg: arLg(or) }), rt: myR, tk });
+    }
+    if (a === 'arlesson') {
+      if (!okId(id)) return res.status(403).json({ err: 'id' });
+      if (!(await cmd('SET', 'arles:' + id, 1, 'NX'))) return res.json({ ok: 1, g: 0 });
+      let v = null; try { for (let t = 0; t < 4 && !(await arLock()); t++) await new Promise(r0 => setTimeout(r0, 300)); v = await arWal(); v.c += 5; await arWalSet(v) } catch (e) { await cmd('DEL', 'arles:' + id); return res.json({ ok: 0 }) } finally { await arUnlock() }
+      return res.json({ ok: 1, g: 5, wal: v ? arWalPub(v) : null });
     }
     if (a === 'artkbuy') {
       if (!okId(id)) return res.status(403).json({ err: 'id' });
@@ -1292,9 +1306,9 @@ function cpErr(i,b){const t=i<0?'ช่วยแก้ error ของเกม�
     if (a === 'ar2res') {
       if (!okId(id)) return res.status(403).json({ err: 'id' });
       const pm = jp(await cmd('GETDEL', 'arm:' + id)); if (!pm || !pm.o) return res.json({ err: 'nomatch' });
-      const w = b.w ? 1 : 0, au = b.au ? 1 : 0, ra = await arRt(id), rb = await arRt(pm.o), ea = 1 / (1 + Math.pow(10, (rb - ra) / 400)), K = 32 * (au ? .5 : 1);
+      const bot = !!pm.bot || pm.o === '~bot', w = b.w ? 1 : 0, au = b.au ? 1 : 0, ra = await arRt(id), rb = bot ? Math.max(900, ra - 30) : await arRt(pm.o), ea = 1 / (1 + Math.pow(10, (rb - ra) / 400)), K = 32 * (au ? .5 : 1) * (bot ? .7 : 1);
       const da = Math.round(K * (w - ea)), db = -Math.round(da * .5), na = Math.max(0, ra + da), nb = Math.max(0, rb + db), nm = (await cmd('HGET', 'arn', id)) || 'นิรนาม';
-      const L = [['HSET', 'arr:' + W, id, na, pm.o, nb], ['EXPIRE', 'arr:' + W, 86400 * 40], ['ZADD', 'ars:' + W, na, id, nb, pm.o], ['EXPIRE', 'ars:' + W, 86400 * 40],
+      const L = bot ? [['HSET', 'arr:' + W, id, na], ['EXPIRE', 'arr:' + W, 86400 * 40], ['ZADD', 'ars:' + W, na, id], ['EXPIRE', 'ars:' + W, 86400 * 40]] : [['HSET', 'arr:' + W, id, na, pm.o, nb], ['EXPIRE', 'arr:' + W, 86400 * 40], ['ZADD', 'ars:' + W, na, id, nb, pm.o], ['EXPIRE', 'ars:' + W, 86400 * 40],
         ['LPUSH', 'ardef:' + pm.o, JSON.stringify({ n: nm, w: w ? 0 : 1, d: db, t: now, a: id })], ['LTRIM', 'ardef:' + pm.o, 0, 19], ['EXPIRE', 'ardef:' + pm.o, 86400 * 14], ['HINCRBY', 'ardefn', pm.o, 1]];
       if (w) L.push(['ZINCRBY', 'arenaW:' + W, 1, nm], ['EXPIRE', 'arenaW:' + W, 86400 * 40], ['ZINCRBY', 'arwin:' + W, 1, id], ['EXPIRE', 'arwin:' + W, 86400 * 40]);
       await pipe(L);
