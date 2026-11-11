@@ -13904,6 +13904,51 @@ function mrTick(){if(!mrOK()||choice._cur||modalOpen)return;const ri=realmIdx(),
 try{const L=[{id:'mr_jyk',n:'ผู้หลอมรวมกับฟ้าดิน',d:'บรรลุจาเยินกยอง ขั้นเหนือแซงซากยอง',r:5,c:()=>!!S.jyk},{id:'mr_prh',n:'ผู้คืนสู่วัยเยาว์',d:'ปันโรฮวานดง — ร่างกายคืนสู่วัยหนุ่มสาว',r:4,c:()=>!!S.prh},{id:'mr_250',n:'ผู้อยู่ค้ำสามราชวงศ์',d:'มีชีวิตถึงอายุ 250 ปีในโลกยุทธภพ',r:4,c:()=>!S.xian&&!S.beastMode&&S.age>=250},
  {id:'mr_leg',n:'ตำนานที่ยังมีชีวิต',d:'ผนึกมารฟ้าคืนชีพในวัยชรา',r:5,c:()=>!!S.flags.mrLeg},{id:'mr_last',n:'ตำนานศึกสุดท้าย',d:'ชนะศึกสุดท้ายของชีวิต',r:5,c:()=>!!S.flags.mrLast}];ACH.push(['🍃 ปรมาจารย์แห่งยุค',L]);ACH_ALL.push(...L)}catch(e){}
 try{TTL_SP.unshift(['mr_jyk',()=>!!S.jyk,'ผู้หลอมรวมกับฟ้าดิน'],['mr_leg',()=>!!S.flags.mrLeg,'ตำนานที่ยังมีชีวิต'],['mr_last',()=>!!S.flags.mrLast,'ตำนานศึกสุดท้าย'],['mr_prh',()=>!!S.prh,'ผู้คืนสู่วัยเยาว์'],['mr_250',()=>!S.xian&&!S.beastMode&&S.age>=250,'ผู้อยู่ค้ำสามราชวงศ์'])}catch(e){}
+
+// ===================== v16.1 โหมดท้าทาย rework: นรก · ชีวิตสั้น · รากขยะ =====================
+const chH=()=>chOn('hell'),chS=()=>chOn('short'),chJ=()=>chOn('junk');
+// ---- โอกาสพิเศษตามโหมด: นรก ระบบ/AI ~2% ต่อชีวิต · โอกาสอื่น ~9–14% | ชีวิตสั้น 30–50% ----
+function chLuck(){if(!S)return;if(S.chSysOK==null){S.chSysOK=chH()?(Math.random()<.02?1:0):1}return S.chSysOK}
+{const _bsC=bindSys;bindSys=function(){if(S&&chH()&&!chLuck()){if(!S._chSysMsg){S._chSysMsg=1;log('🔥 <span class="px">[ระบบ]</span> …สัญญาณขาดหาย — ฟ้าในนรกไม่ประทานระบบให้ใคร','bad')}return}return _bsC.apply(this,arguments)}}
+{const _soC=sysOffer;sysOffer=function(){if(S&&chH()&&!chLuck())return;return _soC.apply(this,arguments)}}
+{const _aiC=aiGive;aiGive=function(){if(S&&chH()&&!chLuck())return;return _aiC.apply(this,arguments)}}
+{const _slC=sysLifeRoll;sysLifeRoll=function(){if(S&&chS()&&!S.sysRolled&&!S.sys&&!S.sysEver){S.sysRolled=1;if(S.sysFate==null&&Math.random()<.3)S.sysFate=S.age+R(0,14);return}return _slC.apply(this,arguments)}}
+{const _rtC=regTry;regTry=function(cause){if(S&&!S.beastMode&&(S.regN||0)<1){if(chH()&&Math.random()>.46){S.regN=(S.regN||0)+1;return false}if(chS()&&Math.random()<.35){const r0=Math.random;let first=1;Math.random=()=>{if(first){first=0;return 0}return r0()};try{return _rtC.apply(this,arguments)}finally{Math.random=r0}}}return _rtC.apply(this,arguments)}}
+{const _ndC=ndSys;ndSys=function(cause){if(S&&(chS()||chJ())&&!S.sys&&!S._ndSys&&!S.beastMode&&Math.random()<(chS()?.1:.2)){const r0=Math.random;let first=1;Math.random=()=>{if(first){first=0;return 0}return r0()};try{return _ndC.apply(this,arguments)}finally{Math.random=r0}}return _ndC.apply(this,arguments)}}
+// ---- นรก: ค่าหัว ×2 · จ้าวถิ่น ×1.4 · ทัณฑ์สวรรค์ซ้อน ----
+{const _baC=bountyAdd;bountyAdd=function(f,why){return _baC.call(this,chH()?f*2:f,why)}}
+{const _pyC=passYear;passYear=function(){const ri0=S&&S.alive?realmIdx():0,a0=S?S.age:0;const r=_pyC.apply(this,arguments);try{if(!S||!S.alive||!S.ch||S.ch==='normal')return r;const ri=realmIdx();
+ if(chH()&&ri>ri0&&Math.random()<.22){const h=Math.round(S.maxHp*.3);S.hp=Math.max(1,S.hp-h);log(`⚡ <b>ทัณฑ์สวรรค์ซ้อน!</b> ฟ้านรกไม่ยอมให้ใครทะลวงขั้นง่ายๆ — สายฟ้าระลอกที่สองผ่าลงมา พลังชีวิต −${h}`,'bad',true)}
+ if(chH()&&S.bty>0&&Math.random()<.06){const nm='นักล่าค่าหัวจากนรก',ep=total()*(.9+Math.random()*.4);if(fight(nm,ep)){S.fame+=20;log(`📜 ${nm}ไล่ล่าคุณถึงที่ — แต่ต้องกลับไปมือเปล่า`,'epic')}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.25));log(`📜 ${nm}ไล่ล่าคุณจนบาดเจ็บสาหัส`,'bad')}}
+ // ชีวิตสั้น: ทุกปีแน่นขึ้น · AI 30–50%
+ if(chS()&&!S.ai&&!S.beastMode&&S.age>=6&&S.age<=26&&Math.random()<.025){try{aiGive('implant')}catch(e){}}
+ if(chS()&&!choice._cur&&!modalOpen){
+  if(Math.random()<.4){const k=R(0,5),g=[()=>{const q=+(1+Math.random()*2).toFixed(1);S.qi=+(S.qi+q).toFixed(1);return`🌀 เวลาเหลือน้อย คุณนั่งสมาธิทั้งคืน — ลมปราณ +${q} ปี`},()=>{const p=pctPow(.03);S.power+=p;return`⚔️ ฝึกหนักเหมือนไม่มีพรุ่งนี้ — พลัง +${fmt(p)}`},()=>{const m=inc(R(80,300));S.money+=m;return`💰 รับงานด่วนได้ค่าจ้าง ${fmt(m)} ตำลึง`},()=>{S.int+=R(2,5);return'📖 อ่านคัมภีร์ข้ามคืน ปัญญาเพิ่มขึ้น'},()=>{joy(6);return'🌸 ใช้วันว่างอย่างคุ้มค่ากับคนที่รัก'},()=>{if(Math.random()<.35){const a=newArt(1);S.arts.push(a);return`📜 บังเอิญได้${artHtml(a)}จากนักเดินทาง`}S.fame+=5;return'🏮 ชื่อของคุณเริ่มมีคนพูดถึง'}][k];try{addFeed('ev',g(),'sum')}catch(e){}}
+  if(S.age>=24&&!S.chBurn&&S.age<=lifeMax()-1&&Math.random()<.35){S.chBurn=1;const ep=total()*(1.6+Math.random()*.4);
+   choice('🔥 เผาผลาญอายุ','เหลือเวลาอีกไม่กี่ปี… ยอดฝีมือที่แข็งแกร่งที่สุดในแคว้นมาขวางทาง — จะ<b>เผาอายุขัยที่เหลือทั้งหมด</b>แลกพลังระเบิดในศึกเดียวหรือไม่?',[
+    {t:'🔥 เผาผลาญ!',s:'พลังทวีคูณ · หลังศึกจะเหลือเวลาแค่ปีเดียว',f(){S.lifespan=Math.min(S.lifespan,S.age+1);S._lsEx=0;const bak=S.power;S.power+=total()*1.5;duel('ยอดฝีมืออันดับหนึ่งแห่งแคว้น',ep,w=>{S.power=bak+Math.round((S.power-bak)*.15);if(w){S.flags.chBurnW=1;S.fame+=Math.round(fameR(150));log('🔥 <b>ชีวิตที่สั้นที่สุดกลายเป็นตำนานที่ยาวที่สุด</b> — คุณเผาอายุทั้งชีวิตแลกชัยชนะครั้งนี้','myth',true);keyAdd('เผาผลาญอายุขัยแลกชัยชนะ')}else log('🌅 แม้จะเผาทั้งชีวิตก็ยังไม่พอ — แต่ไม่มีใครลืมศึกนี้','bad',true);render()})}},
+    {t:'🍃 ใช้เวลาที่เหลืออย่างสงบ',f(){joy(15)}}])}}
+ // รากขยะ: โชคของขยะ · ความแค้น · ฝ่าขีดจำกัด
+ if(chJ()){if(ri>ri0){const p=pctPow(.06);S.power+=p;S.flags.chJb=(S.flags.chJb||0)+1;log(`🗑️ <b>ฝ่าขีดจำกัดของรากขยะ!</b> คนที่บอกว่าคุณทำไม่ได้ต้องหุบปาก — พลัง +${fmt(p)}`,'epic',true)}
+  if((S.grudge||0)>=5){S.grudge=0;const p=pctPow(.12);S.power+=p;S.qi=+(S.qi+2).toFixed(1);S.flags.chJg=(S.flags.chJg||0)+1;log(`😤 <b>แรงฮึดจากความแค้น!</b> ทุกคำดูถูกกลายเป็นเชื้อเพลิง — พลัง +${fmt(p)} · ลมปราณ +2 ปี`,'myth',true)}
+  if(S.age>=8&&Math.random()<.06){const k=R(0,3);if(k===0){const a=newArt(Math.random()<.3?3:2);S.arts.push(a);log(`🕳️ <b>โชคของขยะ</b> — ตกหน้าผาแต่ไม่ตาย กลับพบถ้ำของยอดฝีมือในอดีต ได้${artHtml(a)}`,'myth',true)}
+   else if(k===1){S.qi=+(S.qi+4).toFixed(1);S.int+=5;log('🧓 <b>โชคของขยะ</b> — ชายชราขี้เมาที่คุณเลี้ยงข้าวคือยอดฝีมือเร้นกาย สอนลมปราณให้คืนหนึ่ง (ลมปราณ +4 · ปัญญา +5)','myth',true)}
+   else if(k===2){S.talent=Object.assign({},S.talent,{m:+Math.min(2.5,(S.talent.m||.5)+.08).toFixed(2)});log(`💊 <b>โชคของขยะ</b> — กลืนผลไม้ประหลาดที่ไม่มีใครกล้ากิน รากของคุณดีขึ้นเล็กน้อย (พรสวรรค์ ×${S.talent.m})`,'myth',true)}
+   else{S.grudge=(S.grudge||0)+2;log('🗣️ ศิษย์สำนักใหญ่หัวเราะเยาะกลางตลาด "รากขยะอย่างเจ้าฝึกไปก็เท่านั้น" — ความแค้น +2','bad')}}}
+}catch(e){console.error(e)}return r}}
+{const _fgC=fight;fight=function(name,ep){const w=_fgC.apply(this,arguments);try{if(!w&&chJ())S.grudge=(S.grudge||0)+1}catch(e){}return w}}
+// ---- ปลดปล่อยพลัง: ชีวิตสั้นได้ปีละ 2 ครั้ง · รากขยะมีคนดูถูกก่อนปล่อย ----
+{const _rcC=relCan;relCan=function(){if(S&&S.alive&&chS()){if(S.relY===S.age&&(S.relC||1)<2)return'';if(S.age<6)return'ยังเด็กเกินไป';if(S.relY!==S.age)return(relB()&&(S.beastMode.st|0)<1)?'ยังเป็นสัตว์ตัวน้อย พลังยังไม่พอ':''}return _rcC.apply(this,arguments)}}
+{const _rfC=relFire;relFire=function(){if(S&&chS())S.relC=S.relY===S.age?(S.relC||1)+1:1;return _rfC.apply(this,arguments)}}
+{const _ppC=pxPlay;pxPlay=function(o){try{if(o&&o.mode==='rel'&&S&&chJ()){o.chant=ch(['พวกเขาเรียกข้าว่าขยะ… วันนี้จะได้เห็นกัน','รากขยะ? งั้นดูขยะชิ้นนี้ให้ดี','สิบปีที่ถูกเหยียบ — จะคืนให้ในหมัดเดียว']);o.crowd=[ch(['ไหนว่าเป็นรากขยะ!?','ขยะ…ทำแบบนี้ได้ยังไง','ข้าตาฝาดไปหรือเปล่า']),...(o.crowd||[])].slice(0,3)}}catch(e){}return _ppC.apply(this,arguments)}}
+// ---- จ้าวถิ่นในนรกแข็งขึ้น ----
+{const _dC=duel;duel=function(nm,ep,cb){try{if(S&&chH()&&typeof nm==='string'&&Object.values(RG2).some(R=>R.boss.includes(nm)))ep*=1.4}catch(e){}return _dC.call(this,nm,ep,cb)}}
+// ---- สมุดตำนาน + ฉายา ----
+try{const L=[{id:'chh5',n:'ผู้รอดจากนรก',d:'โหมดนรก: ถึงฮวากยองขึ้นไป',r:4,c:()=>chH()&&realmIdx()>=5},{id:'chh7',n:'ผู้ฝ่านรกถึงยอด',d:'โหมดนรก: ถึงขั้นสูงสุดของโลก',r:5,c:()=>chH()&&realmIdx()>=7},
+ {id:'chs4',n:'ผู้ใช้สามสิบปีให้คุ้ม',d:'โหมดชีวิตสั้น: ถึงขั้นสุดยอดขึ้นไป',r:4,c:()=>chS()&&realmIdx()>=4},{id:'chsb',n:'ผู้เผาชีวิตเป็นตำนาน',d:'โหมดชีวิตสั้น: เผาผลาญอายุแล้วชนะศึกสุดท้าย',r:5,c:()=>!!S.flags.chBurnW},
+ {id:'chj3',n:'ขยะผู้ไม่ยอมแพ้',d:'โหมดรากขยะ: ฝ่าขีดจำกัดรากขยะ 3 ครั้ง',r:3,c:()=>chJ()&&(S.flags.chJb||0)>=3},{id:'chj7',n:'ขยะผู้ทะลวงฟ้า',d:'โหมดรากขยะ: ถึงขั้นสูงสุดของโลก',r:5,c:()=>chJ()&&realmIdx()>=7}];
+ ACH.push(['💀 ผู้ผ่านด่านโหด',L]);ACH_ALL.push(...L)}catch(e){}
+try{TTL_SP.unshift(['chh7',()=>chH()&&realmIdx()>=7,'ผู้ฝ่านรกถึงยอด'],['chsb',()=>!!S.flags.chBurnW,'ผู้เผาชีวิตเป็นตำนาน'],['chj7',()=>chJ()&&realmIdx()>=7,'ขยะผู้ทะลวงฟ้า'],['chh5',()=>chH()&&realmIdx()>=5,'ผู้รอดจากนรก'])}catch(e){}
 </script>
 </body>
 </html>
