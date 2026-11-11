@@ -13846,7 +13846,12 @@ function arWhy(o,au,w){if(au){const A=AR_ST[arSt()],B=AR_ST[o.st]||AR_ST.atk,sb=
 // ===================== v15.9e ปรับขนาดหน้าจอ (มือถือจอเล็ก/ใหญ่) =====================
 const UISZ=[[.8,'เล็กมาก'],[.88,'เล็ก'],[1,'ปกติ'],[1.1,'ใหญ่'],[1.2,'ใหญ่มาก']];
 let uiZ=(()=>{const v=+LS.get('murim_uiz',0);return v>=.7&&v<=1.4?v:1})();
-function uiZApply(){try{const z=uiZ;document.documentElement.style.zoom=z===1?'':String(z);document.documentElement.style.setProperty('--uiz',z);document.documentElement.classList.toggle('uizon',z!==1)}catch(e){}}
+const uiZMob=()=>{try{return (navigator.maxTouchPoints>0||'ontouchstart' in window)&&Math.min(screen.width,screen.height)<900}catch(e){return false}};
+function uiZApply(){try{const z=uiZ,H=document.documentElement,mob=uiZMob();
+ if(mob){let m=document.querySelector('meta[name=viewport]');if(!m){m=document.createElement('meta');m.name='viewport';document.head.appendChild(m)}
+  const sw=Math.min(screen.width,screen.height),sh=Math.max(screen.width,screen.height),land=(screen.orientation&&/landscape/.test(screen.orientation.type))||Math.abs(window.orientation||0)===90,dw=land?sh:sw;m.setAttribute('content',z===1?'width=device-width,initial-scale=1':`width=${Math.round(dw/z)},initial-scale=${z},minimum-scale=${z},maximum-scale=${z}`);H.style.zoom='';H.classList.remove('uizon')}
+ else{H.style.zoom=z===1?'':String(z);H.classList.toggle('uizon',z!==1)}
+ H.style.setProperty('--uiz',z)}catch(e){}}
 function setUiZ(v){uiZ=Math.max(.7,Math.min(1.4,+(+v).toFixed(2)));LS.set('murim_uiz',uiZ);uiZApply();try{window.dispatchEvent(new Event('resize'))}catch(e){}}
 function openUiZ(){const pct=Math.round(uiZ*100);
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📱 ขนาดหน้าจอ</h3><p class="tag2">ปรับให้พอดีกับมือถือของคุณ — จอเล็กลองลดขนาด จอใหญ่/แท็บเล็ตลองเพิ่มขนาด · ตั้งค่าเก็บไว้ในเครื่องนี้</p>
@@ -13857,10 +13862,48 @@ function openUiZ(){const pct=Math.round(uiZ*100);
 function uiZAuto(){const w=Math.min(screen.width||innerWidth,innerWidth*(uiZ||1));return w<350?.86:w<380?.92:w<430?1:w<600?1.08:1.15}
 (()=>{const st=document.createElement('style');st.textContent=`html.uizon{width:calc(100vw / var(--uiz));overflow-x:hidden}html.uizon body{width:100%;overflow-x:hidden}
 html.uizon .modal{max-height:calc(86vh / var(--uiz))}html.uizon .scene{max-height:calc(42vh / var(--uiz))}html.uizon .mask,html.uizon #mask{width:calc(100vw / var(--uiz));height:calc(100vh / var(--uiz))}
-html.uizon .pxs{width:calc(100vw / var(--uiz));height:calc(100vh / var(--uiz))}`;document.head.appendChild(st)})();
-uiZApply();
+html.uizon .pxs,html.uizon #tut,html.uizon #titleBg,html.uizon #recap,html.uizon .srkfx,html.uizon .kfx{width:calc(100vw / var(--uiz))!important;height:calc(100vh / var(--uiz))!important;right:auto;bottom:auto}
+html.uizon,html.uizon body{min-height:calc(100vh / var(--uiz))}`;document.head.appendChild(st)})();
+uiZApply();try{(screen.orientation||{}).addEventListener?.('change',()=>setTimeout(uiZApply,200));window.addEventListener('orientationchange',()=>setTimeout(uiZApply,200))}catch(e){}
 {const _omZ=openMenu;openMenu=function(){const r=_omZ.apply(this,arguments);try{const m=$('modal'),g=m.querySelector('[data-gfx]');if(g&&!m.querySelector('[data-uiz]'))g.insertAdjacentHTML('afterend',`<button class="opt" data-uiz="1" onclick="openUiZ()">📱 ขนาดหน้าจอ<small>${Math.round(uiZ*100)}%</small></button>`)}catch(e){}return r}}
 {const _otZ=openTitleMenu;openTitleMenu=function(){const r=_otZ.apply(this,arguments);try{const m=$('modal'),g=m.querySelector('[data-gfx]');if(g&&!m.querySelector('[data-uiz]'))g.insertAdjacentHTML('afterend',`<button class="cb" data-uiz="1" onclick="openUiZ()"><i>📱</i>ขนาดจอ: ${Math.round(uiZ*100)}%</button>`)}catch(e){}return r}}
+
+// ===================== v16.0 ยุทธภพเกิน 200 ปี: จาเยินกยอง · ปันโรฮวานดง · ปรมาจารย์แห่งยุค · ทางเลือกปลายชีวิต =====================
+const mrOK=()=>!!(S&&S.alive&&!S.xian&&!(S.beastMode&&!S.beastMode.human)&&S.ch!=='short');
+{const _lmM=lifeMax0;lifeMax0=function(){const r=_lmM.apply(this,arguments);try{if(mrOK()&&S.mrL)return r+S.mrL}catch(e){}return r}}
+// แสดงขั้นธรรมชาติต่อท้ายขั้นพลัง
+{const _rMR=render;render=function(){const r=_rMR.apply(this,arguments);try{if(S&&!S.xian&&S.jyk){const g=$('gRealm');if(g&&!g.querySelector('.jyk'))g.insertAdjacentHTML('beforeend',' <span class="tag jyk" style="background:linear-gradient(90deg,#3a8a4a,#8ad08a);color:#fff;border:none">🍃 จาเยินกยอง</span>')}}catch(e){}return r}}
+function mrTick(){if(!mrOK()||choice._cur||modalOpen)return;const ri=realmIdx(),a=S.age;S.flags=S.flags||{};
+ // 1) จาเยินกยอง — หลอมรวมกับฟ้าดิน
+ if(!S.jyk&&ri>=7&&a>=90&&total()>=REALMS[7].p*3&&(S.jykY==null||a-S.jykY>=10)&&Math.random()<.22){S.jykY=a;const need=[['พลังรวม',total(),REALMS[7].p*3],['ลมปราณ',S.qi,90],['ปัญญา',S.int,120]],ok=need.every(x=>x[1]>=x[2]),pr=clamp(.25+(S.int-120)/600+(S.qi-90)/500+(S.karma>0?.08:0),.12,.7);
+  return choice('🍃 เสียงของฟ้าดิน',`ระหว่างนั่งสมาธิบนยอดเขา คุณได้ยินเสียงลมหายใจของภูเขา เสียงน้ำ เสียงใบไม้ — ราวกับทุกสิ่งกำลังเรียกให้คุณ<b>หลอมรวม</b><br><span class="tag2">ขั้นเหนือแซงซากยอง: <b>จาเยินกยอง</b> · อายุขัย +80 ปี · ${need.map(x=>`${x[0]} ${fmt(Math.round(x[1]))}/${fmt(x[2])} ${x[1]>=x[2]?'✅':'❌'}`).join(' · ')}${ok?` · โอกาสสำเร็จ ~${Math.round(pr*100)}%`:''}</span>`,[
+   {t:'🍃 ปล่อยใจหลอมรวม',s:ok?'ลุ้น · ล้มเหลวบาดเจ็บ':'ยังไม่พร้อม',f(){if(!ok){log('🍂 คุณพยายามปล่อยใจ แต่จิตยังผูกติดกับโลก — ยังไม่ถึงเวลา','');return}
+     if(Math.random()<pr){S.jyk=1;S.mrL=(S.mrL||0)+80;S.power+=REALMS[7].p;S.qi=+(S.qi+20).toFixed(1);log('🍃 <b>บรรลุจาเยินกยอง!</b> ร่างกายของคุณกลายเป็นส่วนหนึ่งของฟ้าดิน ลมหยุดพัดเมื่อคุณหายใจ — อายุขัย +80 ปี · ลมปราณ +20','myth',true);keyAdd('บรรลุจาเยินกยอง ขั้นที่หลอมรวมกับฟ้าดิน');try{setScene('aura')}catch(e){}try{sfx('realm')}catch(e){}}
+     else{const h=Math.round(S.maxHp*.35);S.hp=Math.max(1,S.hp-h);log(`🌪️ ฟ้าดินไม่ยอมรับ — ลมปราณย้อนกลับทำร้ายร่าง พลังชีวิต −${h} · ลองใหม่ได้ในอีก 10 ปี`,'bad')}}},
+   {t:'⏳ ยังไม่ใช่ตอนนี้',f(){}}])}
+ // 2) ปันโรฮวานดง — คืนสู่วัยหนุ่ม
+ if(!S.prh&&ri>=7&&a>=150&&Math.random()<(S.jyk?.09:.04)){S.prh=1;S.mrL=(S.mrL||0)+40;S.agelessAt=R(20,26);S.agelessNo=0;S.hp=S.maxHp;joy(25);
+  log(`🌸 <b>ปันโรฮวานดง!</b> คืนหนึ่งผิวหนังที่เหี่ยวย่นหลุดลอกออกเหมือนคราบงู ผมขาวกลับดำขลับ — ร่างกายของคุณกลับเป็นหนุ่มสาวอีกครั้ง · อายุขัย +40 ปี`,'myth',true);keyAdd('ปันโรฮวานดง ร่างกายคืนสู่วัยเยาว์ตอนอายุ '+a);try{setScene('aura')}catch(e){}return}
+ // 3) ปรมาจารย์แห่งยุค (อายุ 200+)
+ if(a>=200&&Math.random()<.2){const k=R(0,3);
+  if(k===0){const n=R(3,12);if(S.ownSect){S.ownSect.dis=(S.ownSect.dis||0)+n;log(`👴 ศิษย์รุ่นที่ ${R(3,5)} ของสำนัก ${n} คน เดินทางมากราบขอคำชี้แนะจาก「ปรมาจารย์ผู้ยังมีชีวิต」`,'epic')}else{S.int+=3;log(`👴 หลานศิษย์ของศิษย์ที่คุณเคยสอนเมื่อร้อยปีก่อน ${n} คน มากราบขอคำชี้แนะ — ปัญญา +3`,'epic')}S.fame+=Math.round(fameR?fameR(30):30)}
+  else if(k===1){log(ch([`📜 ราชวงศ์ที่ปกครองตอนคุณเกิดล่มสลายไปนานแล้ว — คุณยืนดูราชวงศ์ที่สามขึ้นครองบัลลังก์`,`🕯️ คู่ปรับทุกคนในวัยหนุ่มของคุณจากไปหมดแล้ว เหลือแต่คุณที่ยังยืนอยู่`,`🏚️ สำนักใหญ่ที่เคยรุ่งเรืองตอนคุณยังเด็ก ตอนนี้เหลือแค่ซากกำแพง`,`🍶 คุณจิบชาอยู่ใต้ต้นไม้ที่ปลูกไว้ตอนอายุ 30 — ตอนนี้มันสูงกว่าหอคอยแล้ว`]),'');joy(-3);S.int+=2}
+  else if(k===2){const nm=ch(['อัจฉริยะหนุ่มจากสำนักภูเขาคุนหลุน','บุตรสาวเจ้าตระกูลถังผู้ไม่เคยแพ้','ศิษย์เอกนิกายมาร','ยอดฝีมือพเนจรนิรนาม']),ep=total()*(.85+Math.random()*.45);
+   return choice('⚔️ ผู้ท้าชิงรุ่นใหม่',`${nm}เดินทางมาท้าดวล "ตำนานที่ยังมีชีวิต" — ทั้งยุทธภพจับตามอง`,[{t:'⚔️ รับคำท้า',f(){duel(nm,ep,w=>{if(w){S.fame+=Math.round(fameR?fameR(120):120);S.flags.mrDuel=(S.flags.mrDuel||0)+1;log(`🏆 คุณชนะ${nm} — ตำนานยังไม่ตาย`,'epic')}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.25));log(`🌅 ${nm}ชนะคุณได้ — คุณยิ้ม ยุคใหม่มาถึงแล้วจริงๆ`,'');joy(5)}render()})}},{t:'🍵 ชี้แนะแทนการดวล',f(){S.karma+=5;S.int+=2;log(`🍵 คุณชี้แนะ${nm}แทน — วันหนึ่งเขาจะเล่าเรื่องคุณให้ศิษย์ฟัง`,'good')}}])}
+  else if(!S.flags.mrEra&&a>=210){S.flags.mrEra=1;const ep=total()*(1.3+Math.random()*.3);
+   return choice('🌑 ภัยระดับยุค',`มารฟ้าที่ถูกผนึกเมื่อสามร้อยปีก่อนกลับมาเกิดใหม่ สำนักใหญ่ทั้งเก้าล่มในหนึ่งเดือน — ทั้งยุทธภพหันมามองคุณ คนเดียวที่ยังเหลืออยู่จากยุคก่อน`,[{t:'⚔️ ออกไปเผชิญ',f(){duel('มารฟ้าคืนชีพ',ep,w=>{if(w){S.flags.mrLeg=1;S.fame+=Math.round(fameR?fameR(500):500);S.karma+=30;log('🌄 <b>คุณผนึกมารฟ้าได้อีกครั้ง</b> — ยุทธภพเรียกคุณว่า「ตำนานที่ยังมีชีวิต」','myth',true);keyAdd('ผนึกมารฟ้าคืนชีพ กลายเป็นตำนานที่ยังมีชีวิต')}else{S.hp=Math.max(1,Math.round(S.maxHp*.2));log('🩸 คุณถอยออกมาเกือบตาย แต่ซื้อเวลาให้คนรุ่นหลังรวมพลังผนึกมันได้','bad')}render()})}},{t:'🏔️ ไม่ยุ่ง',f(){S.karma-=10;log('🏔️ คุณปิดประตูเก็บตัว — ได้ยินเสียงสำนักต่างๆ ล่มสลายไกลๆ','bad')}}])}}
+ // 4) ทางเลือกปลายชีวิต
+ if(!S.mrEnd&&ri>=7&&a>=160&&lifeMax()-a<=18&&Math.random()<.3){S.mrEnd=1;
+  return choice('🌅 ฤดูสุดท้ายของชีวิต',`ร่างกายบอกคุณว่าเวลาเหลือไม่มากแล้ว — คุณอยากใช้ช่วงสุดท้ายนี้อย่างไร?`,[
+   {t:'🌄 เก็บตัวบนยอดเขา',s:'ได้วิชาสุดท้าย',f(){const art=newArt(4);art.n='วิชาสุดท้ายแห่ง'+S.name;S.arts.push(art);S.qi=+(S.qi+15).toFixed(1);S.flags.mrSec=1;log(`🌄 คุณขึ้นไปนั่งอยู่บนยอดเขาเพียงลำพัง — ก่อนหิมะจะปกคลุม คุณเข้าใจ${artHtml(art)}`,'myth',true)}},
+   {t:'📜 ถ่ายทอดทุกอย่าง',s:'กรรมดี + ชื่อเสียง',f(){S.karma+=25;S.fame+=Math.round(fameR?fameR(200):200);S.flags.mrPass=1;log('📜 คุณเรียกศิษย์และลูกหลานมาทั้งหมด แล้วถ่ายทอดทุกสิ่งที่รู้ — เปลวไฟไม่ได้ดับ แค่เปลี่ยนตะเกียง','myth',true)}},
+   {t:'⚔️ ศึกสุดท้าย',s:'ชนะได้ฉายาตำนาน · แพ้ตายอย่างสง่างาม',f(){const ep=total()*(1.25+Math.random()*.3);duel('ยอดฝีมือที่แข็งแกร่งที่สุดในยุค',ep,w=>{if(w){S.flags.mrLast=1;S.fame+=Math.round(fameR?fameR(400):400);log('⚔️ <b>ศึกสุดท้ายจบลงด้วยชัยชนะ</b> — ยุทธภพจารึกชื่อคุณไว้เหนือทุกคน','myth',true);keyAdd('ชนะศึกสุดท้ายของชีวิต')}else{S.hp=0;S.deathCause='สิ้นใจอย่างสง่างามในศึกสุดท้ายของชีวิต';log('🌅 คุณล้มลงพร้อมรอยยิ้ม — ศึกสุดท้ายที่สมบูรณ์แบบ','myth',true);try{checkDeath()}catch(e){}}render()})}},
+   {t:'☁️ ใช้ชีวิตเรียบง่าย',f(){joy(30);log('☁️ คุณปลูกผัก เลี้ยงไก่ เล่นกับหลาน — ช่วงเวลาที่สงบที่สุดในชีวิต','good')}}])}}
+{const _pyMR=passYear;passYear=function(){const r=_pyMR.apply(this,arguments);try{mrTick()}catch(e){console.error(e)}return r}}
+// ฉายา + สมุดตำนาน
+try{const L=[{id:'mr_jyk',n:'ผู้หลอมรวมกับฟ้าดิน',d:'บรรลุจาเยินกยอง ขั้นเหนือแซงซากยอง',r:5,c:()=>!!S.jyk},{id:'mr_prh',n:'ผู้คืนสู่วัยเยาว์',d:'ปันโรฮวานดง — ร่างกายคืนสู่วัยหนุ่มสาว',r:4,c:()=>!!S.prh},{id:'mr_250',n:'ผู้อยู่ค้ำสามราชวงศ์',d:'มีชีวิตถึงอายุ 250 ปีในโลกยุทธภพ',r:4,c:()=>!S.xian&&!S.beastMode&&S.age>=250},
+ {id:'mr_leg',n:'ตำนานที่ยังมีชีวิต',d:'ผนึกมารฟ้าคืนชีพในวัยชรา',r:5,c:()=>!!S.flags.mrLeg},{id:'mr_last',n:'ตำนานศึกสุดท้าย',d:'ชนะศึกสุดท้ายของชีวิต',r:5,c:()=>!!S.flags.mrLast}];ACH.push(['🍃 ปรมาจารย์แห่งยุค',L]);ACH_ALL.push(...L)}catch(e){}
+try{TTL_SP.unshift(['mr_jyk',()=>!!S.jyk,'ผู้หลอมรวมกับฟ้าดิน'],['mr_leg',()=>!!S.flags.mrLeg,'ตำนานที่ยังมีชีวิต'],['mr_last',()=>!!S.flags.mrLast,'ตำนานศึกสุดท้าย'],['mr_prh',()=>!!S.prh,'ผู้คืนสู่วัยเยาว์'],['mr_250',()=>!S.xian&&!S.beastMode&&S.age>=250,'ผู้อยู่ค้ำสามราชวงศ์'])}catch(e){}
 </script>
 </body>
 </html>
