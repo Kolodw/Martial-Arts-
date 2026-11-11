@@ -12456,7 +12456,7 @@ const AR_LG=[['🥉','ทองแดง','#c8885a',0],['🥈','เงิน','#
 const AR_ST={atk:['🗡️','บุกดุดัน','บุกและท่าหนักบ่อย'],def:['🛡️','ตั้งรับสวนกลับ','ตั้งการ์ดรอจังหวะ'],trick:['🌀','หลอกล่อ','ท่าหลอกและรวมพลัง'],all:['⚡','ทุ่มสุดตัว','ท่าหนักแรงแต่เปิดช่อง']};
 const AR_BEAT={fire:['ice','life'],ice:['wind'],wind:['earth'],earth:['thunder'],thunder:['sword','ice'],sword:['life','blood'],life:['earth'],light:['dark'],dark:['light'],star:['void'],void:['star'],blood:['fire']};
 const AR_SB={atk:'trick',trick:'def',def:'atk'};
-const arC=()=>+(LS.get('murim_arc',0)||0),arCAdd=n=>{LS.set('murim_arc',Math.max(0,arC()+n))};
+const AR_CB={c:+(LS.get('murim_arc',0)||0),own:null,ok:0},arC=()=>AR_CB.c,arCAdd=n=>{AR_CB.c=Math.max(0,AR_CB.c+n)};
 const arSt=()=>{const v=LS.get('murim_arst','atk');return AR_ST[v]?v:'atk'};
 function arEl(){try{return S.rlm&&S.rlm.el||''}catch(e){return''}}
 function arElN(el){const e=(typeof RLM_EL!=='undefined'?RLM_EL:[]).find(x=>x[0]===el);return e?e[1]+' '+e[2]:''}
@@ -12508,7 +12508,7 @@ function arFight(o,au){if(!o)return;if(!arFight._d){arFight._d=1;setTimeout(()=>
   const A=AR_ST[arSt()],B=AR_ST[o.st]||AR_ST.atk,lines=[`${A[0]} เงาของคุณ${A[1]} — ${B[0]} เงาของ ${esc(o.n)}${B[1]}`,sb>0?'ท่าทีของคุณข่มอีกฝ่ายได้!':sb<0?'อีกฝ่ายอ่านทางเงาของคุณออก…':'ทั้งสองแลกหมัดกันอย่างดุเดือด',`《${esc((o.arts||[])[0]||'ท่าเงา')}》 ปะทะ 《${esc(((S.arts||[]).slice().sort((a,b)=>b.b-a.b)[0]||{}).n||'หมัดเปล่า')}》`];
   modal(`<h3>🤖 เงาสู้แทน</h3><div class="arauto">${lines.map((l,i)=>`<p style="animation-delay:${i*.6}s">${l}</p>`).join('')}<p class="arres" style="animation-delay:2s">${w?'🏆 เงาของคุณชนะ!':'💀 เงาของคุณพ่ายแพ้'}</p></div>`,'arauto');setTimeout(()=>{if($('modal').dataset.k==='arauto')arResult(o,au,w)},3000);return}
  duel(o.train?o.n:`เงาของ ${o.n}`,ep,fin);try{DU.ar=o;DU.tech=null;setScene('fight',o.look&&o.look.beast?{beast:o.look.beast}:{en:o.look||null});drawDuel()}catch(e){}}
-async function arResult(o,au,w){let r=null;if(!o.train){try{r=await api('ar2res',{w:w?1:0,au:au?1:0})}catch(e){}}const c=o.train?(w?1:0):au?(w?1:0):(w?3:1);if(c)arCAdd(c);
+async function arResult(o,au,w){let r=null;if(!o.train){try{r=await api('ar2res',{w:w?1:0,au:au?1:0,ad:(AR.cur&&AR.cur.ad)||0,cb:window._arBestL|0});window._arRes=r;try{if(r&&r.wal)arWalApply(r.wal)}catch(e){}}catch(e){}}const c=o.train?0:(r&&r.ok&&r.g!=null)?r.g:0;
  try{if(w&&!o.train)S.flags.arW=(S.flags.arW||0)+1}catch(e){}
  log(`🏟️ ลานประลอง: ${w?'ชนะ':'แพ้'}เงาของ <b>${esc(o.n)}</b>${r&&r.ok?` · ${r.d>0?'+':''}${r.d} แต้ม (${fmt(r.rt)})`:''}${c?` · 🪙+${c}`:''}`,w?'good':'bad');
  const up=r&&r.ok&&AR.info&&r.lg>(AR.info.lg|0);
@@ -12834,7 +12834,7 @@ function arQHtml(){const D=arDay();return`<div class="arq"><b>📋 ภารก�
 function arStk(){return +(LS.get('murim_arstk',0)||0)}
 function arStkH(){const k=arStk();return k>=2?`<span class="arstk">🔥 ชนะ ${k} ติด</span>`:''}
 {const _arR=arResult;arResult=async function(o,au,w){let bonus=0,stk=arStk();if(!o.train){if(w){stk++;if(stk>=3)bonus=Math.min(5,stk-2)}else stk=0;LS.set('murim_arstk',stk);if(bonus)arCAdd(bonus)}
- const best=(window._arBest|0);window._arBest=0;const ad=(AR.cur&&AR.cur.ad)||0;let qg=0;if(!o.train)qg=arQAdd({w,au,ad,rv:!!o._rv,best});
+ const best=(window._arBest|0);window._arBestL=best;window._arBest=0;const ad=(AR.cur&&AR.cur.ad)||0;let qg=0;if(!o.train)qg=arQAdd({w,au,ad,rv:!!o._rv,best});
  const r=await _arR.apply(this,arguments);try{const m=$('modal');if(m.dataset.k==='arres'){const bt=m.querySelector('.pbtn');const extra=`${stk>=2&&w?`<p class="arstk big">🔥 ชนะติดกัน ${stk} ครั้ง!${bonus?` · โบนัส 🪙+${bonus}`:''}</p>`:''}${!w&&!o.train&&arStk()===0&&stk===0?'':''}${qg?`<p>📋 ภารกิจลาน 🪙+${qg}</p>`:''}`;if(bt&&extra)bt.insertAdjacentHTML('beforebegin',extra)}}catch(e){}return r}}
 {const _deA=duelEnd;duelEnd=function(){try{if(DU&&DU.ar)window._arBest=DU.best||0}catch(e){}return _deA.apply(this,arguments)}}
 // ---------- หน้าเพจ: แทรกภารกิจ · สตรีค · ปุ่มสอนเล่น ----------
@@ -13387,6 +13387,41 @@ try{const L=[{id:'rel1',n:'ปลดปล่อยครั้งแรก',d:'
  ACH.push(['💥 ปลดปล่อย · ท่องดินแดน',L]);ACH_ALL.push(...L)}catch(e){}
 try{TTL_SP.unshift(['rel11',()=>(S.flags.relMax||-1)>=11,'ผู้ทำลายดวงดาว'],['rel9',()=>(S.flags.relMax||-1)>=9,'ผู้ทำฟ้าแตก'],['rel6',()=>(S.flags.relMax||-1)>=6,'ผู้ผ่าภูผา'],['rgbf',()=>!!S.flags.rb_forbid,'ราชันแดนต้องห้าม'],
  ...['capital','peak','forest','desert','sea','snow','jungle'].map(k=>['rb_'+k,()=>!!S.flags['rb_'+k],RG2[k].tt]),['rgv',()=>Object.keys(RG2).every(k=>(S.visited||[]).includes(k)),'ผู้ท่องทั่วแผ่นดิน'],['bty',()=>(S.bty||0)>=BTY_U()*20,'ผู้มีค่าหัวทั่วแผ่นดิน'])}catch(e){}
+
+// ===================== v15.8 เหรียญลานเก็บที่เซิร์ฟเวอร์ =====================
+function arWalApply(w){if(!w)return;AR_CB.c=+w.c||0;AR_CB.own=w.own||{tt:[],au:[],qt:0,fr:[]};AR_CB.q=w.q||null;AR_CB.stk=w.stk|0;AR_CB.ok=1;
+ try{LS.set('murim_arc',AR_CB.c);LS.set('murim_arstk',AR_CB.stk);LS.set('murim_arpity',w.pity|0);LS.set('murim_arown',Object.assign({},AR_CB.own))}catch(e){}
+ try{const d=frGet();let ch0=0;(AR_CB.own.fr||[]).forEach(f=>{if(!d.own.includes(f)){d.own.push(f);ch0=1}});if(ch0)frSet(d)}catch(e){}}
+async function arSync(){if(!onlineOK)return null;try{const o=LS.get('murim_arown',null)||{},d=frGet();
+ const mig={c:+(LS.get('murim_arc',0)||0),tt:o.tt||[],au:o.au||[],qt:o.qt?1:0,fr:(d.own||[]).filter(x=>/^f_(arc|box|lg)\d/.test(x)),pity:LS.get('murim_arpity',0)||0};
+ const j=await api('arcoin',{mig});if(j&&j.wal)arWalApply(j.wal);return j}catch(e){return null}}
+arOwn=function(){const o=AR_CB.ok&&AR_CB.own?JSON.parse(JSON.stringify(AR_CB.own)):(LS.get('murim_arown',null)||{});o.tt=o.tt||[];o.au=o.au||[];return o};
+arOwnSet=function(o){};
+arQAdd=function(){return 0};
+arDay=function(){if(AR_CB.ok&&AR_CB.q)return AR_CB.q;const k=new Date(Date.now()+7*3600e3).toISOString().slice(0,10);return{k,q:[],all:0}};
+arBuy2=async function(k,id,cost){if(!onlineOK)return toast('ต้องออนไลน์ก่อน');if(arC()<cost)return toast('เหรียญลานไม่พอ');if(arBuy2._b)return;arBuy2._b=1;let j;try{j=await api('arbuy',{k,it:id})}catch(e){arBuy2._b=0;return toast('เชื่อมต่อไม่ได้')}arBuy2._b=0;
+ if(j&&j.wal)arWalApply(j.wal);if(!j||!j.ok){toast(j&&j.err==='coin'?'เหรียญลานไม่พอ':j&&j.err==='own'?'มีอยู่แล้ว':'แลกไม่สำเร็จ');return arPage()}
+ if(k==='fr'){const d=frGet();if(!d.own.includes(id)){d.own.push(id);frSet(d)}try{profPush()}catch(e){}toast('ได้รับ '+frOf(id).n)}
+ else if(k==='tt')toast('ได้ฉายา「'+id+'」 — กดโชว์ได้เลย');
+ else if(k==='qt'){try{sfx('good')}catch(e){}return arQuoteEd()}
+ else if(k==='au'){const s0=arSel();s0.au=id;LS.set('murim_arsel',s0);toast('ได้'+AR_AU[id][1]+' และใส่ให้แล้ว')}
+ else if(k==='use'){if(S&&S.alive){if(id==='heal')S.hp=S.maxHp;if(id==='qi')S.qi+=2;if(id==='joy')joy(15);toast('ใช้แล้ว');try{render()}catch(e){}}}
+ try{sfx('good')}catch(e){}arPage()};
+arChest=async function(){if(!onlineOK)return toast('ต้องออนไลน์ก่อน');if(arC()<30)return toast('เหรียญลานไม่พอ');if(arChest._b)return;arChest._b=1;let j;try{j=await api('archest',{alive:S&&S.alive?1:0})}catch(e){arChest._b=0;return toast('เชื่อมต่อไม่ได้')}arChest._b=0;
+ if(j&&j.wal)arWalApply(j.wal);if(!j||!j.ok)return toast(j&&j.err==='coin'?'เหรียญลานไม่พอ':'เปิดหีบไม่สำเร็จ');const x=j.res||{};let res;
+ if(x.k==='fr'){const d=frGet();if(!d.own.includes(x.id)){d.own.push(x.id);frSet(d)}try{profPush()}catch(e){}res={t:5,ic:'🖼️',n:frOf(x.id).n,s:'กรอบเฉพาะหีบ!'}}
+ else if(x.k==='coin')res=x.full?{t:4,ic:'🪙',n:'เหรียญลาน 80',s:'มีกรอบหีบครบแล้ว — รับเหรียญแทน'}:{t:x.v>=30?2:1,ic:'🪙',n:'เหรียญลาน '+x.v,s:x.v>30?'กำไร!':'ได้คืนบางส่วน'};
+ else if(x.k==='item'&&S&&S.alive){const id=bagGive(3,5,'หีบลาน');res={t:3,ic:'🎒',n:BAGIT[id]?BAGIT[id].n:'ของหายาก',s:'ของหายากเข้ากระเป๋า'}}
+ else if(S&&S.alive){const id=ch(['hp','hp','qi','herb','cure']);bagAdd(id,1,1);res={t:1,ic:'🧪',n:BAGIT[id].n,s:'เข้ากระเป๋าแล้ว'}}else res={t:1,ic:'🎁',n:'ของเล็กน้อย',s:''};
+ const pity=(j.wal&&j.wal.pity)|0,C=['#aaa','#8fd0ff','#7a8cff','#b070ff','#ffb020','#ff60c0'][res.t];
+ modal(`<div class="chest" style="--c:${C}"><div class="chest-box"><div class="chest-lid"></div><div class="chest-body"></div><div class="chest-glow"></div></div><div class="chest-res"><div class="chest-ic">${res.ic}</div><b>${esc(res.n)}</b><small>${esc(res.s)}</small></div>
+ <div class="brow" style="margin-top:12px"><button class="gbtn" onclick="openOnline('arena')">กลับลาน</button><button class="pbtn" ${arC()<30?'disabled':''} onclick="arChest()">เปิดอีก 🪙30</button></div><p class="tag2" style="text-align:center">เหลือ 🪙 ${fmt(arC())} · การันตีของหายากอีก ${20-pity} หีบ</p></div>`,'archest');try{sfx(res.t>=4?'realm':'good')}catch(e){}};
+{const _tkB=arTkBuy;arTkBuy=async function(){const r=await _tkB.apply(this,arguments);try{await arSync();arPage()}catch(e){}return r}}
+{const _apW=arPage;arPage=async function(){try{await arSync()}catch(e){}return _apW.apply(this,arguments)}}
+{const _arW=arResult;arResult=async function(o,au,w){const q0=JSON.stringify((AR_CB.q&&AR_CB.q.q||[]).map(q=>q.done));window._arRes=null;const r=await _arW.apply(this,arguments);try{const x=window._arRes;if(x&&x.ok){
+  const m=$('modal'),bt=m&&m.dataset.k==='arres'&&m.querySelector('.pbtn');let h='';if(x.qg)h+=`<p>📋 ภารกิจลาน 🪙+${x.qg}</p>`;if(bt&&h&&!m.querySelector('.arqg'))bt.insertAdjacentHTML('beforebegin',`<div class="arqg">${h}</div>`);
+  if(x.qg)(x.wal&&x.wal.q&&x.wal.q.q||[]).forEach((q,i)=>{if(q.done&&!(JSON.parse(q0)[i]))toast('📋 ภารกิจลานสำเร็จ: '+ARQ[q.id][0]+' · 🪙8')})}}catch(e){}return r}}
+setTimeout(()=>{try{if(onlineOK)arSync()}catch(e){}},6000);
 </script>
 </body>
 </html>
