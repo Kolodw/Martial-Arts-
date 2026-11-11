@@ -12186,6 +12186,48 @@ try{const g=GD2.find(x=>x.t==='AI ตื่นรู้');if(g){g.d+=' · ตอ
  const o=GD2.find(x=>x.t==='ออนไลน์');if(o){o.d+=' · แชทส่งทันทีไม่ต้องรอ ถ้าส่งไม่สำเร็จแตะข้อความเพื่อส่งใหม่ · หน้ายาวทุกหน้ามีปุ่มลอย ⬆ ขึ้นบน / ✕ ปิด';o.de=(o.de||'')+' · Chat messages appear instantly (tap to resend on failure). Long pages get floating ⬆/✕ buttons.'}
  SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
 
+
+// ===================== v15.5 ภารกิจพงไพร (สัตว์อสูร) — แทนภารกิจเมืองจนกว่าจะแปลงกาย =====================
+const FQ_GIVER=()=>{const a=S.age|0,L=[];if(a<25){L.push(['แม่','🐾'],['พ่อ','🐾'])}L.push(['จ่าฝูง','👑'],['เทพพิทักษ์ป่า','🌳'],['ผู้เฒ่าเต่าพันปี','🐢'],['วิญญาณภูเขา','⛰️'],['นกสื่อสารแห่งพงไพร','🕊️']);try{const M=blM();if(M.mate&&M.mate.alive!==false)L.push([M.mate.n||'คู่ชีวิต','💞']);if((S.kids||0)>0)L.push(['ลูกของคุณ','🍼'])}catch(e){}return ch(L)};
+const FQ_FOE=['งูเหลือมยักษ์ที่บุกรัง','หมาป่าฝูงพเนจร','เหยี่ยวที่จ้องจับลูกสัตว์','หมีบ้าคลั่งจากป่าข้างเคียง','สัตว์อสูรต่างถิ่น','นายพรานมนุษย์ผู้วางกับดัก','อสูรพิษจากหนองน้ำ','จ่าฝูงคู่แข่ง'];
+const FQ_T=[
+ {k:'hunt',w:5,mk:()=>{const n=R(2,5);return{n:`ล่า${ch(bx().prey)}ให้ได้ ${n} ครั้ง`,need:n,base:S.bKill||0,d:'ฝึกสัญชาตญาณนักล่า — เลือกโฟกัส 🍖 ล่าเหยื่อจะเร็วขึ้น'}},prog:q=>(S.bKill||0)-q.base},
+ {k:'moon',w:4,mk:()=>{const n=+(R(2,5)*(1+(S.beastMode.st|0)*.5)).toFixed(1);return{n:`ดูดซับแสงจันทร์ให้ลมปราณเพิ่ม ${n} ปี`,need:n,base:S.qi||0,d:'คืนเพ็ญคือเวลาบำเพ็ญที่ดีที่สุด — เลือกโฟกัส 🌕'}},prog:q=>+((S.qi||0)-q.base).toFixed(1)},
+ {k:'roam',w:3,mk:()=>{const n=R(2,3);return{n:`สำรวจ${ch(['ป่าลึกทางเหนือ','หุบเขาหมอก','ถ้ำใต้น้ำตก','ทุ่งดอกไม้วิญญาณ','ซากวัดร้างกลางป่า'])}ให้ครบ ${n} ปี`,need:n,cnt:0,d:'ท่องป่าเพื่อหาสมุนไพรและความลับ — เลือกโฟกัส 🗺️'}},prog:q=>q.cnt||0,tick:q=>{if(S.focus==='roam')q.cnt=(q.cnt||0)+1}},
+ {k:'hide',w:2,mk:()=>({n:'ซ่อนตัวจากนายพรานที่เข้ามาล่าในป่า 2 ปี',need:2,cnt:0,d:'อยู่เงียบๆ อย่าให้มนุษย์เห็น — เลือกโฟกัส 🌿'}),prog:q=>q.cnt||0,tick:q=>{if(S.focus==='hide')q.cnt=(q.cnt||0)+1}},
+ {k:'grow',w:2,c:()=>(S.beastMode.st|0)<4,mk:()=>({n:`บำเพ็ญจนถึงขั้น ${BL_ST[Math.min(4,(S.beastMode.st|0)+1)]}`,need:Math.min(4,(S.beastMode.st|0)+1),d:'ความแข็งแกร่งคือสิ่งเดียวที่ป่ายอมรับ',left:8}),prog:q=>S.beastMode.st|0},
+ {k:'fight',w:4,mk:()=>({n:`ปกป้องรังจาก${ch(FQ_FOE)}`,need:1,foe:null,d:'ศัตรูจะมาเยือนเร็วๆ นี้ — เตรียมตัวให้ดี'}),prog:q=>q.won?1:0},
+ {k:'save',w:2,mk:()=>({n:`ช่วย${ch(['ลูกกวางที่ติดกับดัก','นกน้อยปีกหัก','ลูกสัตว์พลัดฝูง','เต่าที่ถูกพลิกหงาย'])}`,need:1,d:'ความเมตตาทำให้ฟ้าดินเอ็นดู'}),prog:q=>q.done?1:0},
+ {k:'mate',w:1,c:()=>{try{return !blM().mate&&(S.age|0)>=6}catch(e){return false}},mk:()=>({n:'ตามหาคู่ชีวิตในพงไพร',need:1,d:'ฤดูผสมพันธุ์มาถึงแล้ว'}),prog:q=>{try{return blM().mate?1:0}catch(e){return 0}}}];
+function fqRw(){const st=S.beastMode.st|0;return{p:.02+st*.004,q:+(1+st*.6).toFixed(1),f:Math.round(20*(1+st)),k:R(1,4)}}
+function fqNew(){const L=FQ_T.filter(t=>!t.c||t.c());const t=pickW(L.map(x=>({w:x.w,v:x}))).v.v;const g=FQ_GIVER(),q=Object.assign({id:'f'+Math.random().toString(36).slice(2,7),k:t.k,g:g[0],gi:g[1],left:4},t.mk());q.rw=fqRw();return q}
+function fqT(q){return FQ_T.find(t=>t.k===q.k)}
+function fqPay(q){const r=q.rw||fqRw();const g=Math.max(1,Math.round(typeof bPct==='function'?bPct(r.p):total()*r.p));S.power+=g;S.qi=+((S.qi||0)+r.q).toFixed(1);S.fame+=r.f;S.karma+=r.k;S.fqDone=(S.fqDone||0)+1;
+ log(`${q.gi} ภารกิจพงไพรสำเร็จ — <b>${esc(q.n)}</b> (${esc(q.g)}) · พลัง +${fmt(g)} · ลมปราณ +${r.q} ปี · ชื่อเสียง +${r.f}`,'epic');try{sfx('good')}catch(e){}}
+function fqTick(){if(!bsB())return;S.fq=S.fq||[];const keep=[];
+ for(const q of S.fq){const T=fqT(q);if(!T)continue;if(T.tick)T.tick(q);
+  if(T.prog(q)>=q.need){fqPay(q);continue}
+  if(--q.left<0){log(`🍂 ภารกิจ「${esc(q.n)}」ของ${esc(q.g)}หมดเวลา — ไม่เป็นไร พงไพรยังรอคุณอยู่`,'');continue}keep.push(q)}
+ S.fq=keep;let n=0;while(S.fq.length<3&&n++<10){const q=fqNew();if(!S.fq.some(x=>x.k===q.k))S.fq.push(q)}
+ // เหตุการณ์ของภารกิจต่อสู้/ช่วยเหลือ
+ if(!choice._cur&&!modalOpen){const f=S.fq.find(q=>q.k==='fight'&&!q.won&&Math.random()<.45);if(f){const foe=f.n.replace(/^ปกป้องรังจาก/,'');choice('⚔️ ภารกิจพงไพร: '+foe,`${esc(f.g)}ส่งเสียงเตือน — <b>${esc(foe)}</b>มาถึงหน้ารังแล้ว!`,[
+   {t:'⚔️ สู้เพื่อปกป้องรัง',f(){if(fight(foe,total()*(.8+Math.random()*.4))){f.won=1;log(`🛡️ ไล่${esc(foe)}ไปได้ ${esc(f.g)}มองคุณด้วยความภูมิใจ`,'good')}else{S.hp=Math.max(1,Math.round(S.hp*.6));log(`💥 สู้${esc(foe)}ไม่ได้ ต้องพาครอบครัวหนีไปซ่อน`,'bad')}}},
+   {t:'🌿 พาครอบครัวหลบหนี',f(){f.left=0;S.karma-=1;log('🌿 คุณพาครอบครัวหลบไปอยู่ที่อื่นชั่วคราว','')}}]);return}
+  const s=S.fq.find(q=>q.k==='save'&&!q.done&&Math.random()<.5);if(s){const tg=s.n.replace(/^ช่วย/,'');choice('🌱 ภารกิจพงไพร',`ระหว่างทางคุณพบ<b>${esc(tg)}</b>`,[
+   {t:'🤲 ช่วยเหลือ',f(){s.done=1;S.karma+=3;log(`🤲 คุณช่วย${esc(tg)}ไว้ได้`,'good')}},{t:'🚶 เดินผ่านไป',f(){S.karma-=2;s.left=0;log('🚶 คุณเดินผ่านไปโดยไม่หันกลับมามอง','')}}])}}}
+{const _pyF=passYear;passYear=function(){const r=_pyF.apply(this,arguments);try{if(S&&S.alive)fqTick()}catch(e){console.error(e)}return r}}
+// สัตว์ป่ายังเข้าเมืองไม่ได้: ไม่สร้าง/ไม่แสดงภารกิจเมือง
+{const _tqF=tqRefresh;tqRefresh=function(){if(bsB())return;return _tqF.apply(this,arguments)}}
+{const _otF=openTown;openTown=function(){if(bsB())return openForestQ();return _otF.apply(this,arguments)}}
+{const _qlF=questList;questList=function(){let L=_qlF.apply(this,arguments);try{if(bsB()){L=L.filter(q=>!/^tq/.test(q.k));(S.fq||[]).forEach(q=>{const T=fqT(q);if(!T)return;L.push({k:'fq'+q.id,ic:'🌲',n:'ภารกิจพงไพร: '+q.n,p:`${q.gi} จาก${q.g} · ${Math.min(q.need,T.prog(q))}/${q.need} · เหลือ ${Math.max(0,q.left)} ปี`,d:q.d})})}}catch(e){}return L}}
+function openForestQ(){if(!S)return;S.fq=S.fq||[];if(!S.fq.length)fqTick();
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌲 ภารกิจพงไพร</h3><p class="tag2">สัตว์ป่ายังเข้าเมืองมนุษย์ไม่ได้ — ภารกิจเมืองจะเปิดเมื่อ<b>แปลงกายเป็นมนุษย์</b>แล้ว · ระหว่างนี้รับภารกิจจากครอบครัว ฝูง และเทพพิทักษ์ป่าแทน (สำเร็จเองเมื่อทำครบ)</p>
+ ${S.fq.map(q=>{const T=fqT(q),pv=Math.min(q.need,T?T.prog(q):0);return`<div class="item"><div class="h"><b>${q.gi} ${esc(q.n)}</b><span class="tag2">เหลือ ${Math.max(0,q.left)} ปี</span></div><p class="tag2">จาก <b>${esc(q.g)}</b> · ${esc(q.d)}</p><div class="hpbar" style="height:7px"><i style="width:${Math.round(pv/q.need*100)}%;background:#4ab060"></i></div><p class="tag2">${pv}/${q.need} · รางวัล: พลัง ลมปราณ ชื่อเสียง กรรมดี</p></div>`}).join('')||'<p class="tag2">ยังไม่มีภารกิจ — ปีหน้าจะมีใหม่</p>'}
+ <p class="tag2">✅ ทำสำเร็จแล้ว ${S.fqDone||0} ภารกิจ</p>`,'fquest')}
+try{const L=[{id:'fq_1',n:'ลูกที่เชื่อฟัง',d:'ทำภารกิจพงไพรสำเร็จ 1 ภารกิจ',r:1,c:()=>(S.fqDone||0)>=1},{id:'fq_10',n:'ผู้พิทักษ์แห่งพงไพร',d:'ทำภารกิจพงไพรสำเร็จ 10 ภารกิจ',r:3,c:()=>(S.fqDone||0)>=10}];ACH.push(['🌲 ภารกิจพงไพร',L]);ACH_ALL.push(...L)}catch(e){}
+try{const g=GD2.find(x=>x.s==='beast'&&x.ic==='🐾');if(g){g.d+=' · 🌲 <b>ภารกิจพงไพร</b>: สัตว์ป่ารับภารกิจเมืองไม่ได้จนกว่าจะแปลงกาย แต่จะได้ภารกิจจากพ่อแม่ จ่าฝูง เทพพิทักษ์ป่า คู่ชีวิต ฯลฯ (ล่าเหยื่อ บำเพ็ญแสงจันทร์ สำรวจ ปกป้องรัง ช่วยสัตว์ ตามหาคู่) สำเร็จเองเมื่อทำครบ';g.de=(g.de||'')+' · 🌲 Forest quests: wild beasts cannot take town quests until they transform, but get quests from parents, the pack, forest spirits and mates instead.'}SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
+{const _omQ=openMenu;openMenu=function(){const r=_omQ.apply(this,arguments);try{if(bsB()){const m=$('modal');let b=[...m.querySelectorAll('button[onclick]')].find(x=>/openTown\(/.test(x.getAttribute('onclick')||''));const n=(S.fq||[]).length;if(b)b.innerHTML=`🌲 ภารกิจพงไพร<small>${n} ภารกิจ · เมืองเปิดเมื่อแปลงกาย</small>`;else{const g=m.querySelector('.mcat15 .mgrid')||m.querySelector('.mgrid');if(g&&!g.querySelector('[data-fq]'))g.insertAdjacentHTML('beforeend',`<button class="opt" data-fq="1" onclick="openForestQ()">🌲 ภารกิจพงไพร<small>${n} ภารกิจ</small></button>`)}}}catch(e){}return r}}
+
 </script>
 </body>
 </html>
