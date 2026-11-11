@@ -11577,6 +11577,97 @@ function bHeirH(){window._bHumanHeir=1;try{bHeir()}finally{window._bHumanHeir=0}
 try{const L=[{id:'bs_sk3',n:'สามรุ่นแห่งพงไพร',d:'สืบทอดในร่างสัตว์ติดกัน 3 รุ่น',r:3,c:()=>!!(S.beastMode&&(S.beastMode.bsk||0)>=3)},{id:'bs_sk8',n:'เผ่าพันธุ์ที่ฟ้ายอมรับ',d:'สืบทอดในร่างสัตว์ติดกัน 8 รุ่น',r:5,c:()=>!!(S.beastMode&&(S.beastMode.bsk||0)>=8)},{id:'bs_half',n:'ลูกครึ่งอสูร',d:'เกิดเป็นลูกครึ่งอสูรในร่างคน',r:2,c:()=>!!(S.flags&&S.flags.halfBeast)}];ACH.push(['🩸 สายเลือดอสูร 2',L]);ACH_ALL.push(...L)}catch(e){}
 try{const g=GD2.find(x=>x.ic==='🩸'&&x.s==='beast');if(g){g.d+=' · <b>ใหม่</b>: ตอนตายเลือกได้ว่าลูกจะเกิดใน<b>ร่างสัตว์</b>หรือ<b>ร่างคน</b> (แม้เคยแปลงกาย) · สืบในร่างสัตว์ติดกันหลายรุ่น สายเลือดยิ่งตื่นง่าย รุ่นที่ 3·5·8·12 ได้โบนัสใหญ่ · ชะตาจะไม่เลือกแปลงกายแทน และแปลงกายทีหลังได้ที่ ☰';g.de+=' · NEW: choose whether your heir is born in beast or human form; consecutive beast-form generations awaken the bloodline (big bonuses at gen 3/5/8/12); fate never transforms you, and you can transform later from ☰.'}SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
 
+
+// ===================== v15.5 ภาพพิกเซล HD: เส้นขอบ · แสงเงา · หายใจ · เวลากลางวัน/คืน · อนุภาค · ออร่า · ฉากสู้ · โหมดเครื่องเก่า/ใหม่ =====================
+// คุณภาพภาพ: 1 = ประหยัด (เครื่องรุ่นเก่า) · 2 = สวยสุด (เครื่องรุ่นใหม่)
+let fxQ=(()=>{let v=LS.get('murim_gfx',null);if(v!==1&&v!==2){const hc=navigator.hardwareConcurrency||2,dm=navigator.deviceMemory||4;v=(hc>=4&&dm>=4)?2:1}return v})();
+function setGfx(v){fxQ=v===1?1:2;LS.set('murim_gfx',fxQ);toast(fxQ===2?'🎨 ภาพสวยสุด (เครื่องรุ่นใหม่) — เส้นขอบ แสงเงา อนุภาค ออร่า':'🔋 ภาพประหยัด (เครื่องรุ่นเก่า) — ลื่นขึ้น ประหยัดแบต');try{if($('modal').dataset.k==='menu')openMenu()}catch(e){}}
+function openGfx(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎨 คุณภาพภาพ</h3><p class="tag2">เลือกให้เหมาะกับเครื่อง · Graphics quality</p>
+ <button class="opt ${fxQ===2?'on':''}" onclick="setGfx(2);openGfx()">✨ สวยสุด · เครื่องรุ่นใหม่ ${fxQ===2?'✅':''}<small>เส้นขอบตัวละคร แสงเงา หายใจ เช้า–เย็น–ค่ำ หิ่งห้อย ดวงดาว ออร่าตามธาตุ เอฟเฟกต์ฉากต่อสู้ · 30 fps</small></button>
+ <button class="opt ${fxQ===1?'on':''}" onclick="setGfx(1);openGfx()">🔋 ประหยัด · เครื่องรุ่นเก่า ${fxQ===1?'✅':''}<small>ภาพพิกเซลแบบเดิม ไม่มีเอฟเฟกต์เสริม · 15 fps ลื่นและประหยัดแบต</small></button>`,'gfx')}
+// โหมดประหยัด: วาดฉากครึ่งหนึ่งของเฟรม
+{const _tsF=tickScene;let k=0;tickScene=function(){if(fxQ===1&&(k++&1))return;return _tsF.apply(this,arguments)}}
+// ---------- ตัวละคร: เส้นขอบ + แสงเงา + หายใจ ----------
+const _fxOff=document.createElement('canvas'),_fxSil=document.createElement('canvas');let _fxIn=0;
+{const _pF=person;person=function(x,y,o,pose){if(fxQ<2||_fxIn||!g||!g.canvas||!isFinite(x)||!isFinite(y))return _pF.apply(this,arguments);
+ const ps=PS,bw=50,bh=62,bx=Math.round(x)-25,by=Math.round(y)-54,W=Math.ceil(bw*ps),H=Math.ceil(bh*ps);if(W>1400||H>1400)return _pF.apply(this,arguments);
+ if(_fxOff.width!==W||_fxOff.height!==H){_fxOff.width=W;_fxOff.height=H;_fxSil.width=W;_fxSil.height=H}
+ const oc=_fxOff.getContext('2d');oc.setTransform(1,0,0,1,0,0);oc.globalCompositeOperation='source-over';oc.clearRect(0,0,W,H);oc.setTransform(ps,0,0,ps,-bx*ps,-by*ps);oc.imageSmoothingEnabled=false;
+ const sg=g;g=oc;_fxIn=1;let r;try{r=_pF.apply(this,arguments)}catch(e){}finally{g=sg;_fxIn=0}
+ // แสงจากซ้ายบน เงาขวาล่าง
+ oc.setTransform(1,0,0,1,0,0);oc.globalCompositeOperation='source-atop';const cx=(x-bx)*ps,cy=(y-by)*ps;const lg=oc.createLinearGradient(cx-10*ps,cy-30*ps,cx+10*ps,cy);lg.addColorStop(0,'rgba(255,246,220,.16)');lg.addColorStop(.45,'rgba(255,255,255,0)');lg.addColorStop(1,'rgba(24,10,48,.30)');oc.fillStyle=lg;oc.fillRect(0,0,W,H);oc.globalCompositeOperation='source-over';
+ const sc=_fxSil.getContext('2d');sc.setTransform(1,0,0,1,0,0);sc.globalCompositeOperation='source-over';sc.clearRect(0,0,W,H);sc.drawImage(_fxOff,0,0);sc.globalCompositeOperation='source-in';sc.fillStyle='rgba(22,16,34,.92)';sc.fillRect(0,0,W,H);sc.globalCompositeOperation='source-over';
+ const sm=g.imageSmoothingEnabled;g.imageSmoothingEnabled=false;const d=.5;
+ g.drawImage(_fxSil,bx-d,by,bw,bh);g.drawImage(_fxSil,bx+d,by,bw,bh);g.drawImage(_fxSil,bx,by-d,bw,bh);g.drawImage(_fxSil,bx,by+d,bw,bh);
+ const br=(pose==='stand'||pose==null)&&!(o&&o.beast)&&Math.sin(frame*.33+((o&&o.seed)||0)%7)>.55?.5:0;
+ if(br){const sy=y-11-by,sp=Math.round(sy*ps);g.drawImage(_fxOff,0,sp,W,H-sp,bx,y-11,bw,bh-sy);g.drawImage(_fxOff,0,0,W,sp,bx,by+br,bw,sy)}else g.drawImage(_fxOff,bx,by,bw,bh);
+ g.imageSmoothingEnabled=sm;return r}}
+// ---------- หลังวาดฉาก: เวลา · บรรยากาศ · อนุภาค · ออร่า · ฉากสู้ ----------
+const FX_IN=new Set(['cradle','home','teahouse','library','workshop','sick','read','study','love','rest']);
+const FX_DAILY=new Set(Object.values(FOC_LOC).concat(['sick','cradle']));
+let fxP=[],fxHit={t:-9,n:''},fxVg=null;
+function fxTod(){try{return Math.max(0,Math.min(1,acc/CFG.len))}catch(e){return .4}}
+function fxNW(t){const K=[[0,.55,.35],[.12,.15,.6],[.22,0,0],[.6,0,0],[.7,0,.8],[.8,.45,.35],[.88,.85,0],[1,.55,.35]];for(let i=0;i<K.length-1;i++){const a=K[i],b=K[i+1];if(t>=a[0]&&t<=b[0]){const k=(t-a[0])/(b[0]-a[0]);return{n:a[1]+(b[1]-a[1])*k,w:a[2]+(b[2]-a[2])*k}}}return{n:0,w:0}}
+function fxElc(){try{const E=typeof rlmEl==='function'&&S&&S.rlm?rlmEl():null;if(E)return E[4]}catch(e){}return S&&S.xian?'#b090ff':'#ffd060'}
+function fxGlow(c,x,y,r,col,a){const gr=c.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,col);gr.addColorStop(1,'rgba(0,0,0,0)');c.globalAlpha=a;c.globalCompositeOperation='lighter';c.fillStyle=gr;c.fillRect(x-r,y-r,r*2,r*2);c.globalAlpha=1;c.globalCompositeOperation='source-over'}
+function fxPart(c,kind,n,col){while(fxP.filter(p=>p.k===kind).length<n)fxP.push({k:kind,x:Math.random()*SW,y:Math.random()*SH,vx:(Math.random()-.5)*.25,vy:kind==='spark'?-(.3+Math.random()*.5):kind==='mote'?(Math.random()-.5)*.08:(Math.random()-.5)*.15,ph:Math.random()*6.28,col});
+ fxP.filter(p=>p.k===kind).forEach(p=>{p.x+=p.vx*fdt+Math.sin(frame*.1+p.ph)*.05;p.y+=p.vy*fdt;if(p.y<-2||p.y>SH+2||p.x<-2||p.x>SW+2){p.x=kind==='spark'?(meX||80)+(Math.random()-.5)*18:Math.random()*SW;p.y=kind==='spark'?(meY||47)-Math.random()*6:Math.random()*SH}
+  const tw=.5+.5*Math.sin(frame*.4+p.ph);if(kind==='fly'){if(tw<.25)return;fxGlow(c,p.x,p.y,2.6,'rgba(220,255,120,.9)',tw*.8);c.fillStyle='#f0ffa0';c.fillRect(p.x,p.y,.5,.5)}else if(kind==='spark'){c.globalCompositeOperation='lighter';c.fillStyle=p.col||'#ffd060';c.globalAlpha=.4+tw*.6;c.fillRect(Math.round(p.x*2)/2,Math.round(p.y*2)/2,.5,.5+(p.ph>3?.5:0));c.globalAlpha=1;c.globalCompositeOperation='source-over'}else{c.fillStyle='rgba(255,250,230,'+(.25+tw*.35)+')';c.fillRect(Math.round(p.x*2)/2,Math.round(p.y*2)/2,.5,.5)}});
+ if(fxP.length>160)fxP=fxP.slice(-160)}
+function fxVig(c,str){c.save();c.setTransform(1,0,0,1,0,0);const W=c.canvas.width,H=c.canvas.height;if(!fxVg||fxVg.W!==W||fxVg.c!==c){const gr=c.createRadialGradient(W/2,H*.55,H*.35,W/2,H*.55,W*.62);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(12,6,24,1)');fxVg={W,c,gr}}c.globalAlpha=str;c.fillStyle=fxVg.gr;c.fillRect(0,0,W,H);c.restore()}
+function fxPost(c,type){const daily=FX_DAILY.has(type)&&!sceneEvt,indoor=FX_IN.has(type),season=S.age%4;
+ // เวลา เช้า–กลางวัน–เย็น–ค่ำ (ภายนอกอาคาร)
+ if(daily&&!indoor){const {n,w}=fxNW(fxTod());
+  if(w>0){c.globalCompositeOperation='multiply';c.globalAlpha=w*.45;c.fillStyle=n>.3?'#ff8a70':'#ffc890';c.fillRect(-4,0,SW+8,SH);c.globalCompositeOperation='overlay';c.globalAlpha=w*.3;c.fillStyle='#ff9a50';c.fillRect(-4,0,SW+8,SH);c.globalAlpha=1;c.globalCompositeOperation='source-over'}
+  if(n<.15){c.globalCompositeOperation='lighter';for(let i=0;i<3;i++){const x0=20+i*46+Math.sin(frame*.02+i)*4;c.globalAlpha=.045*(1-n*6);c.fillStyle='#fff6d0';c.beginPath();c.moveTo(x0,0);c.lineTo(x0+9,0);c.lineTo(x0+30,SH);c.lineTo(x0+14,SH);c.closePath();c.fill()}c.globalAlpha=1;c.globalCompositeOperation='source-over'}
+  if(n>0){c.globalCompositeOperation='multiply';c.globalAlpha=Math.min(.9,n*.95);c.fillStyle='#1e2a6e';c.fillRect(-4,0,SW+8,SH);c.globalAlpha=1;c.globalCompositeOperation='source-over';
+   if(n>.4){for(let i=0;i<22;i++){const sx=srand(i*3.1)*SW,sy=srand(i*7.7)*14,tw=.5+.5*Math.sin(frame*.3+i);c.fillStyle=`rgba(255,255,240,${(n-.4)*tw})`;c.fillRect(Math.round(sx),Math.round(sy),.5,.5)}}
+   if(meX)fxGlow(c,meX,(meY||47)-12,22,'rgba(255,200,140,.55)',n*.5);
+   if(season===1||season===2)fxPart(c,'fly',Math.round(10*n),null)}
+  else fxPart(c,'mote',8,null)}
+ else if(indoor){fxPart(c,'mote',6,null);fxGlow(c,SW-14,10,26,'rgba(255,190,110,.6)',.25)}
+ // ออร่าตามขั้น/ธาตุ
+ try{const ri=S.beastMode&&!S.beastMode.human?(S.beastMode.st|0):realmIdx(),col=fxElc();
+  if(type==='aura'){const mX=meX,mY=meY;meX=75;meY=41;const pu=.75+.25*Math.sin(frame*.5);fxGlow(c,meX,meY-12,30*pu,col,.5);fxGlow(c,meX,meY-12,12,'#ffffff',.12);fxPart(c,'spark',26,col);
+   c.globalCompositeOperation='lighter';for(let i=0;i<6;i++){const a=frame*.05+i*1.047;c.globalAlpha=.07;c.fillStyle=col;c.beginPath();c.moveTo(meX,meY-12);c.lineTo(meX+Math.cos(a)*60,meY-12+Math.sin(a)*60);c.lineTo(meX+Math.cos(a+.18)*60,meY-12+Math.sin(a+.18)*60);c.closePath();c.fill()}c.globalAlpha=1;c.globalCompositeOperation='source-over';meX=mX;meY=mY}
+  else if(meX&&ri>=4&&type!=='death')fxGlow(c,meX,meY-12,10+ri*1.5,col,.22+.06*Math.sin(frame*.4))}catch(e){}
+ // ฉากต่อสู้: รอยดาบ ประกายไฟ ตัวเลขดาเมจ จอสั่น
+ if(type==='fight'&&meX){const cyc=frame%9,hx=meX+24,hy=meY-14;
+  if(cyc<fxHit.t||cyc-fxHit.t>8)fxHit.t=-9;
+  if(cyc<1.2&&fxHit.t<0){fxHit.t=cyc;fxHit.n=fmt(Math.max(R(8,40),Math.round(total()*(.03+Math.random()*.06))));fxHit.cr=Math.random()<.2;shakeT=Math.max(shakeT,1.4);for(let i=0;i<14;i++){const a=Math.random()*6.28,v=.4+Math.random()*1.1;fxP.push({k:'hit',x:hx,y:hy,vx:Math.cos(a)*v,vy:Math.sin(a)*v-.3,ph:Math.random()*6.28,life:6+Math.random()*4,col:Math.random()<.5?'#fff2a0':'#ff8a30'})}}
+  if(cyc<2.2){const k=cyc/2.2;c.globalCompositeOperation='lighter';c.strokeStyle=`rgba(255,255,255,${1-k})`;c.lineWidth=1.2*(1-k)+.3;c.beginPath();c.arc(hx-4,hy+2,11,-1.9+k*.4,-1.9+.4+k*2.2);c.stroke();c.strokeStyle=`rgba(160,220,255,${(1-k)*.8})`;c.lineWidth=.5;c.beginPath();c.arc(hx-4,hy+2,13,-1.8+k*.4,-1.8+.4+k*2.1);c.stroke();c.globalCompositeOperation='source-over'}
+  if(cyc<.6){c.globalAlpha=.22*(1-cyc/.6);c.fillStyle='#fff';c.fillRect(-4,0,SW+8,SH);c.globalAlpha=1}
+  fxP.filter(p=>p.k==='hit').forEach(p=>{p.x+=p.vx*fdt;p.y+=p.vy*fdt;p.vy+=.06*fdt;p.life-=fdt;c.globalCompositeOperation='lighter';c.fillStyle=p.col;c.globalAlpha=Math.max(0,Math.min(1,p.life/5));c.fillRect(Math.round(p.x*2)/2,Math.round(p.y*2)/2,.5,.5);c.globalAlpha=1;c.globalCompositeOperation='source-over'});fxP=fxP.filter(p=>p.k!=='hit'||p.life>0);
+  if(fxHit.t>=0){const k=(cyc-fxHit.t)/6;if(k>=0&&k<1){c.globalAlpha=1-k*k;c.font=`bold ${fxHit.cr?6:4.5}px monospace`;c.textAlign='center';c.lineWidth=1.2;c.strokeStyle='#1a1020';const tx=hx+14,ty=hy-8-k*8,t=(fxHit.cr?'💥 ':'')+'-'+fxHit.n;c.strokeText(t,tx,ty);c.fillStyle=fxHit.cr?'#ffdd40':'#ffffff';c.fillText(t,tx,ty);c.globalAlpha=1}}}
+ fxVig(c,type==='death'?.6:indoor?.38:.3)}
+{const _dsF=drawScene;drawScene=function(ctx,type){const r=_dsF.apply(this,arguments);try{if(fxQ>=2&&S&&ctx&&ctx.canvas&&(ctx.canvas.id==='scene'||ctx.canvas.id==='endScene'))fxPost(ctx,type)}catch(e){}return r}}
+// ---------- ดูคนอื่นเล่น: ภาพฉากพิกเซลแบบเดียวกับการจำลอง ----------
+const SPEC_IN=new Set(['cradle','home','teahouse','library','workshop','sick']);
+function specScene(cv,s){const ctx=cv&&cv.getContext&&cv.getContext('2d');if(!ctx||!s)return;const sg=g,sp=PS;g=ctx;PS=cv.width/SW;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;
+ const loc=s.loc||'road',sea=(s.age|0)%4,Y=47;
+ try{if(SPEC_IN.has(loc)){interior();windowV(16,8,sea);lantern(144,4);if(loc==='library'){for(let i=0;i<3;i++){P(96+i*16,8,12,30,'#6a4022');for(let j=0;j<5;j++)P(97+i*16,10+j*6,10,4,['#b8283a','#3a6aa8','#e0a040','#4a8a5a'][(i+j)%4])}}else{P(92,Y-10,30,3,'#6a4022');P(94,Y-7,2,7,'#6a4022');P(118,Y-7,2,7,'#6a4022')}}
+  else{const night=['portal','death','soulp','villain','time'].includes(loc);try{sky(sea,night?'night':['war','fight','volcano'].includes(loc)?'dusk':undefined)}catch(e){}
+   if(s.x)for(let i=0;i<4;i++)P(((frame*.3+i*47)%(SW+30))-30,6+i*4,18,3,'#ffffffaa');
+   mountains(loc==='peak'?'#7a8ab0':'#9ab0c8',loc==='peak'?44:40,loc==='peak'?18:10,(s.age|0)%5);mountains('#7a90a8',44,6,2.3);
+   if(loc==='peak'){P(56,Y-6,48,6,'#8a8a96');P(60,Y-8,40,2,'#a0a0aa');ground(sea,Y,'#9a9aa6')}
+   else if(loc==='waterfall'){ground(sea);P(120,6,14,Y-6,'#8ac8f0');for(let i=0;i<6;i++)P(121+i*2,6+((frame*2+i*7)%40),1,4,'#ffffff');P(108,Y,40,6,'#5aa0d8')}
+   else if(loc==='road'||loc==='fight'||loc==='war'){ground(sea);P(60,Y,40,9,'#c8a878');tree(20,Y,sea);tree(130,Y,sea,true)}
+   else if(loc==='market'||loc==='village'){ground(sea);house(12,Y,26);house(120,Y,24,'#3a5a6a');tree(52,Y,sea);P(60,Y,40,9,'#c8a878')}
+   else if(loc==='farm'){ground(sea);for(let i=0;i<5;i++)P(0,Y+1+i*2,SW,1,['#5a9a3a','#8ac85a','#d8b050','#ffffff'][sea]);house(126,Y,22)}
+   else if(loc==='yard'||loc==='hall'){P(0,16,SW,26,'#e0d0b0');P(-4,9,SW+8,8,'#3a5a6a');for(let x=8;x<SW;x+=30)P(x,17,3,25,'#b8283a');ground(sea,Y,'#b89a70')}
+   else if(loc==='portal'){ground(sea,Y,'#2a2040');const r0=8+Math.sin(frame*.3)*1.5;for(let i=0;i<4;i++){ctx.strokeStyle=['#ff6ad8','#6ad8ff','#b06aff','#ffffff'][i];ctx.lineWidth=.6;ctx.beginPath();ctx.arc(118,26,r0+i*2.4,0,6.28);ctx.stroke()}}
+   else{ground(sea);tree(24,Y,sea);tree(126,Y,sea)}
+   try{particles(sea)}catch(e){}}
+  person(78,Y,Object.assign({belt:'#00000055'},s.look||{}),'stand');
+  if(fxQ>=2){fxPart(ctx,'mote',6,null);if(/ฮวากยอง|ฮยอนกยอง|แซงซากยอง|แก่นทอง|วิญญาณ|มหายาน|ทัณฑ์|เทพ|ราชา|นิรันดร์|บรรพกาล/.test(s.r||''))fxGlow(ctx,78,Y-12,16,s.x?'#b090ff':'#ffd060',.3+.08*Math.sin(frame*.4));fxVig(ctx,.32)}
+  ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='rgba(10,8,20,.55)';ctx.fillRect(0,cv.height-22,cv.width,22);ctx.font='bold 13px sans-serif';ctx.fillStyle='#fff';ctx.textAlign='left';ctx.fillText(String(s.cap||'').slice(0,40),8,cv.height-7)}catch(e){console.error(e)}finally{g=sg;PS=sp}}
+let _specS=null,_specIv=null;
+{const _stF=specStamp;specStamp=function(s){let r;try{r=_stF.apply(this,arguments)}catch(e){}try{_specS=s;const hd=$('modal').querySelector('.spechead');if(hd&&!$('specScn'))hd.insertAdjacentHTML('beforebegin','<canvas id="specScn" width="480" height="168" style="width:100%;display:block;image-rendering:pixelated;border:2px solid var(--line);border-radius:10px;margin:0 0 8px"></canvas>');
+ specScene($('specScn'),s);if(!_specIv)_specIv=setInterval(()=>{const c=$('specScn');if(!c||$('modal').dataset.k!=='spec'){clearInterval(_specIv);_specIv=null;return}if(!$('game').classList.contains('on'))frame+=fxQ>=2?.7:1.4;specScene(c,_specS)},fxQ>=2?110:220)}catch(e){console.error(e)}return r}}
+// ปุ่มในเมนูตั้งค่า
+{const _omF=openMenu;openMenu=function(){const r=_omF.apply(this,arguments);try{const m=$('modal'),gs=[...m.querySelectorAll('.mcat15 .mgrid')],gr=gs[gs.length-1]||m.querySelector('.mgrid');if(gr&&!gr.querySelector('[data-gfx]'))gr.insertAdjacentHTML('afterbegin',`<button class="opt" data-gfx="1" onclick="openGfx()">🎨 คุณภาพภาพ<small>${fxQ===2?'✨ สวยสุด':'🔋 ประหยัด'}</small></button>`)}catch(e){}return r}}
+try{GD2.push({s:'base',ic:'🎨',t:'คุณภาพภาพ',d:'☰ → ตั้งค่า → 🎨 คุณภาพภาพ · <b>✨ สวยสุด</b> (เครื่องรุ่นใหม่): ตัวละครมีเส้นขอบ แสงเงา ขยับหายใจ ฟ้าเปลี่ยนเช้า–เย็น–ค่ำตามช่วงปี มีดาว หิ่งห้อย ลำแสง ออร่าสีตามวิถีธาตุ และฉากสู้มีรอยดาบ ประกายไฟ ตัวเลขดาเมจ · <b>🔋 ประหยัด</b> (เครื่องรุ่นเก่า): ภาพแบบเดิม ลื่นและประหยัดแบต · หน้าดูคนอื่นเล่นมีภาพฉากพิกเซลของสิ่งที่เขากำลังทำ',te:'Graphics quality',de:'☰ → Settings → 🎨 Graphics. <b>HD</b>: outlined, shaded, breathing characters, a day–dusk–night cycle, stars, fireflies, light rays, element-coloured auras and sword trails/sparks/damage numbers in fights. <b>Eco</b>: the classic look, smoother and battery-friendly. Spectating now shows a pixel scene of what the player is doing.'});SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
+
 </script>
 </body>
 </html>
