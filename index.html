@@ -3859,7 +3859,7 @@ async function api(a,body){if(Date.now()<_quotaUntil)throw new Error('quota');co
   catch(e){const net=e.name==='AbortError'||!e.http||e.http>=500;if(body||t>=1||e.q||!net)throw e.name==='AbortError'?new Error('timeout'):e;await new Promise(r=>setTimeout(r,700))}finally{clearTimeout(tm)}}};
  let p;if(key&&_apiFly[key])p=_apiFly[key];else{p=run();if(key){_apiFly[key]=p;p.then(()=>{delete _apiFly[key]},()=>{delete _apiFly[key]})}}
  const j=await p;_apiS0=s0;setTimeout(()=>{if(_apiS0===s0)_apiS0=null},0);return j}
-async function onlinePing(){if(onlinePing._f)return;onlinePing._f=1;try{let st='';try{st='&st='+encodeURIComponent(actSnap())}catch(e){}window._lastPing=Date.now();const j=await api('ping&v='+VERSION+st);onlineOK=true;onlineN=j.n||0;onlineLives=j.lives||0;try{bdCheck(j.bd)}catch(e){}try{if('ann' in j)annShow(j.ann)}catch(e){}onlinePing._e=0}catch(e){onlinePing._e=(onlinePing._e||0)+1;if(onlinePing._e>=2||e.message==='quota'||!onlineOK)onlineOK=false;else setTimeout(()=>{onlinePing()},4000)}finally{onlinePing._f=0}{const t=$('tOnN');if(t){t.textContent=onlineOK?fmt(onlineN):'';t.parentNode.classList.toggle('on',onlineOK)}}const el=$('onlineBadge');if(el){el.style.display=onlineOK?'':'none';el.innerHTML=`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิตที่เคยเล่น`}}
+async function onlinePing(){if(onlinePing._f)return;onlinePing._f=1;try{let st='';try{st='&st='+encodeURIComponent(actSnap())}catch(e){}window._lastPing=Date.now();const j=await api('ping&v='+VERSION+st);onlineOK=true;onlineN=j.n||0;onlineLives=j.lives||0;try{bdCheck(j.bd)}catch(e){}try{if('ann' in j)annShow(j.ann)}catch(e){}try{if(j.tg&&j.tg.length)tagShow(j.tg)}catch(e){}onlinePing._e=0}catch(e){onlinePing._e=(onlinePing._e||0)+1;if(onlinePing._e>=2||e.message==='quota'||!onlineOK)onlineOK=false;else setTimeout(()=>{onlinePing()},4000)}finally{onlinePing._f=0}{const t=$('tOnN');if(t){t.textContent=onlineOK?fmt(onlineN):'';t.parentNode.classList.toggle('on',onlineOK)}}const el=$('onlineBadge');if(el){el.style.display=onlineOK?'':'none';el.innerHTML=`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิตที่เคยเล่น`}}
 setTimeout(onlinePing,1500);setInterval(()=>{if(!document.hidden)onlinePing()},120000);
 function myTitle(){if(!S)return'';const ri=realmIdx();return REALMS[ri].n}
 function chatRender(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60;box.innerHTML=chatMsgs.map(m=>`<div class="cm ${m.k==='share'?'share':''}"><span class="ct">${new Date(m.t).toTimeString().slice(0,5)}</span> <b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b> ${m.k==='share'?'📤 ':''}${esc(m.x)} <button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div>`).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';if(near)box.scrollTop=box.scrollHeight}
@@ -11739,7 +11739,7 @@ chatSend=async function(kind,text,ext){const inp=$('chatIn'),x=(text!=null?text:
  if(Date.now()-chatLast<1800)return toast('ส่งถี่เกินไป รอแป๊บนึงนะ');chatLast=Date.now();if(inp&&text==null){inp.value='';try{inp.focus()}catch(e){}}
  const t0=Date.now(),loc={i:'loc'+t0.toString(36),t:t0,n:pname(),ti:myTitle(),x:x.slice(0,200),k:kind||'msg',pu:(typeof myPu==='function'?myPu():pid.slice(0,12)),u:pid.slice(0,4),_p:1};if(ext&&ext.rl)loc.rl=ext.rl;
  _chPend.push(loc);chatMsgs=(chatMsgs||[]).concat([loc]);chatRender();try{const b=$('chatBox');if(b)b.scrollTop=b.scrollHeight}catch(e){}
- try{const tt=(showTtl()||{});const j=await api('say',{n:loc.n,ti:loc.ti,tp:acTp(),tt:tt.t||'',tr:tt.r||0,x:loc.x,k:loc.k,rl:loc.rl});loc._p=0;loc._ok=1;if(j&&j.m){loc.i=j.m.i;loc.t=j.m.t;loc.tt=j.m.tt;loc.tr=j.m.tr}chatRender();setTimeout(()=>{try{chatPoll()}catch(e){}},250)}
+ try{const tt=(showTtl()||{});const TG=(window._chTag&&admK())?window._chTag:null;if(TG){loc.to=TG.pu;loc.ton=TG.n;window._chTag=null;try{chTagBar()}catch(e){}}const j=await api('say',Object.assign({n:loc.n,ti:loc.ti,tp:acTp(),tt:tt.t||'',tr:tt.r||0,x:loc.x,k:loc.k,rl:loc.rl},TG?{to:TG.pu,re:TG.i,ton:TG.n,key:admK()}:{}));loc._p=0;loc._ok=1;if(j&&j.m){loc.i=j.m.i;loc.t=j.m.t;loc.tt=j.m.tt;loc.tr=j.m.tr}chatRender();setTimeout(()=>{try{chatPoll()}catch(e){}},250)}
  catch(e){loc._p=0;loc._f=e.message==='rate'?'ส่งถี่เกินไป':e.message==='muted'?'ถูกห้ามพูดชั่วคราว':e.message==='timeout'?'เน็ตช้า ส่งไม่ทัน':'ส่งไม่สำเร็จ';chatRender();toast('💬 '+loc._f+' — แตะข้อความเพื่อส่งใหม่')}};
 function chatRetry(id){const m=_chPend.find(z=>z.i===id);if(!m)return;_chPend=_chPend.filter(z=>z!==m);chatMsgs=(chatMsgs||[]).filter(z=>z!==m);chatLast=0;chatSend(m.k,m.x,m.rl?{rl:m.rl}:null)}
 // รวมข้อความที่ยังส่งไม่เสร็จเข้ากับรายการจากเซิร์ฟเวอร์ + แสดงสถานะ
@@ -14552,7 +14552,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
 // ===================== v16.3 พื้นหลังหน้าแรกใหม่: คมเท่าฉากในเกม · ฉากซ้อนชั้น · เวลาจริง/ฤดู · พารัลแลกซ์ · ฉากเปลี่ยนโลก =====================
 (()=>{const st=document.createElement('style');st.textContent=`
 #titleBg{display:none!important}
-#tbg2{position:fixed;left:0;top:0;z-index:-1;image-rendering:pixelated;image-rendering:crisp-edges;pointer-events:none}
+#tbg2{position:fixed;left:0;top:0;right:0;max-width:100%;z-index:-1;image-rendering:pixelated;image-rendering:crisp-edges;pointer-events:none}
 #title .globe,#title #onlineBadge{display:none!important}
 #title .big{position:relative;z-index:1}
 #title .big::before{content:'';position:absolute;left:50%;top:50%;width:120%;height:170%;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(8,5,18,.55) 0%,rgba(8,5,18,.25) 45%,transparent 70%);z-index:-1;pointer-events:none}
@@ -14611,7 +14611,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
   // อนุภาค
   parts=[];const np=fxQ>=2?Math.round(W*H/900):0;for(let i=0;i<np;i++)parts.push({x:Math.random()*W,y:Math.random()*H,v:.2+Math.random()*.5,p:Math.random()*6.28})}
  function ensure(){if(!cv){cv=document.createElement('canvas');cv.id='tbg2';const t=$('title');(t||document.body).prepend(cv);cx=cv.getContext('2d')}
-  const w=Math.ceil(innerWidth/PX),h=Math.ceil(innerHeight/PX)+2;const k=[w,h,world(),tod(),season(),fxQ].join('|');if(k!==key){const wdPrev=L.wd;W=w;H=h;cv.width=W;cv.height=H;cv.style.width=W*PX+'px';cv.style.height=H*PX+'px';cx.imageSmoothingEnabled=false;build();if(wdPrev&&wdPrev!==L.wd&&fxQ>=1)wipe={t0:performance.now()};key=k}}
+  const vw0=Math.min(innerWidth,document.documentElement.clientWidth||innerWidth),w=Math.ceil(vw0/PX),h=Math.ceil(innerHeight/PX)+2;const k=[w,h,world(),tod(),season(),fxQ].join('|');if(k!==key){const wdPrev=L.wd;W=w;H=h;cv.width=W;cv.height=H;cv.style.width='100%';cv.style.height=H*PX+'px';cx.imageSmoothingEnabled=false;build();if(wdPrev&&wdPrev!==L.wd&&fxQ>=1)wipe={t0:performance.now()};key=k}}
  function draw(now){if(!$('title')||!$('title').classList.contains('on'))return;ensure();const T=now/1000,sc=Math.min(60,(scrollY||0)/PX),still=fxQ<2||matchMedia('(prefers-reduced-motion: reduce)').matches;
   const oy=f=>Math.round(-Math.min(14,sc*.25)*f),ox=f=>Math.round(tilt*f*4);
   cx.drawImage(L.sky,0,Math.round(-sc*.05));
@@ -14734,6 +14734,22 @@ function openMyCard(tab){if(!S)return;openSpectate('@me',tab||'birth')}
   if(!m.querySelector('.mycardN')){const t=m.querySelector('.tabs');if(t)t.insertAdjacentHTML('beforebegin','<p class="tag2 mycardN" style="text-align:center;margin:4px 0">🪪 การ์ดตัวละครของคุณ — คนที่เข้ามาดูการเล่นของคุณจะเห็นแบบนี้</p>')}}}catch(e){}return r}}
 if(typeof specClose==='function'){const _sc=specClose;specClose=function(){if(specTarget==='@me'){specTarget=null;clearTimeout(specT);return closeM()}return _sc.apply(this,arguments)}}
 {const _omC=openMenu;openMenu=function(){const r=_omC.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g&&S&&!g.querySelector('.mycardB'))g.insertAdjacentHTML('afterbegin','<button class="opt mycardB" onclick="openMyCard()">🪪 การ์ดตัวละคร<small>กำเนิด กระดูก สายเลือด โอกาสเกิด</small></button>')}catch(e){}return r}}
+
+(()=>{const st=document.createElement('style');st.textContent='html,body{overflow-x:clip;max-width:100%}';document.head.appendChild(st)})();
+
+// ---------- แอดมินแท็กตอบกลับในแชท → คนที่ถูกแท็กได้รับแจ้งเตือน ----------
+function chTag(i){if(!admK())return;const m=(chatMsgs||[]).find(z=>z.i===i);if(!m||!m.pu)return;window._chTag={pu:m.pu,n:m.n,i:m.i};chTagBar();const inp=$('chatIn');if(inp){try{inp.focus()}catch(e){}}}
+function chTagBar(){const inp=$('chatIn');if(!inp)return;let b=$('chTagB');const T=window._chTag;if(!T){if(b)b.remove();return}if(!b){b=document.createElement('div');b.id='chTagB';inp.parentNode.insertBefore(b,inp)}b.innerHTML=`↩️ ตอบกลับ <b>@${esc(T.n)}</b> <span class="tag2">(เขาจะได้รับแจ้งเตือน)</span> <button class="sysb" onclick="window._chTag=null;chTagBar()">✕</button>`}
+function tagShow(L){const last=L[0];try{sfx('good')}catch(e){}let el=$('tagBar');if(el)el.remove();el=document.createElement('div');el.id='tagBar';
+ el.innerHTML=`<b>🔔 ผู้ดูแลแท็กคุณในแชท${L.length>1?' ('+L.length+' ข้อความ)':''}</b><div>${esc(String(last.x||'').slice(0,120))}</div><div class="brow"><button class="pbtn" onclick="document.getElementById('tagBar').remove();openOnline('chat')">💬 เปิดแชท</button><button class="gbtn" onclick="document.getElementById('tagBar').remove()">ปิด</button></div>`;document.body.appendChild(el)}
+{const _crT=chatRender;chatRender=function(){const r=_crT.apply(this,arguments);try{const box=$('chatBox');if(!box)return r;const rows=box.querySelectorAll('.cm'),L=chatMsgs||[];if(rows.length!==L.length)return r;const me=myPu(),adm=!!admK();
+ L.forEach((m,i)=>{const row=rows[i];if(!row||m.k==='ann')return;
+  if(m.to&&!row.querySelector('.cmto')){const h=row.querySelector('.cmx');if(h)h.insertAdjacentHTML('beforebegin',`<div class="cmto">↩️ ตอบ <b>@${esc(m.ton||'ผู้เล่น')}</b></div>`);if(m.to===me)row.classList.add('tagme')}
+  if(adm&&m.pu&&m.pu!==me&&!row.querySelector('.cmtag')){const h=row.querySelector('.cmh');if(h)h.insertAdjacentHTML('beforeend',`<button class="rep cmtag" onclick="chTag('${esc(m.i)}')" title="แท็กตอบกลับ">↩️</button>`)}});
+ if(window._chTag)chTagBar()}catch(e){}return r}}
+(()=>{const st=document.createElement('style');st.textContent=`.cmto{font-size:11.5px;opacity:.8;margin:1px 0 2px}.cm.tagme .cmb{box-shadow:0 0 0 2px #f0c860,0 0 10px #f0c86088}
+#chTagB{font-size:12.5px;padding:5px 8px;margin:4px 0;border-radius:8px;border:1.5px dashed var(--gold,#f0c860);display:flex;align-items:center;gap:6px;flex-wrap:wrap}#chTagB .sysb{margin-left:auto;padding:2px 8px}
+#tagBar{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:9999;width:min(92vw,420px);background:#2a2433;color:#fff2c8;border:2px solid #f0c860;border-radius:12px;padding:10px 12px;box-shadow:0 6px 24px #000a;font-size:13.5px}#tagBar .brow{margin-top:8px}#tagBar .gbtn{color:#2a2433}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>

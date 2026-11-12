@@ -531,10 +531,11 @@ module.exports = async (req, res) => {
         if (meta.b !== 'บอท' && +nid <= 600) await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)], ...(act ? [['HSET', 'oa', id, JSON.stringify(act)]] : [])]);
       }
       const [, n, lives, annV] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 600e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann']]);
+      let tg = null; if (okId(id)) { try { const tq = await cmd('LRANGE', 'tagq:' + id, 0, 9); if (tq && tq.length) { await cmd('DEL', 'tagq:' + id); tg = tq.map(jp).filter(Boolean) } } catch (e) {} }
       let ann = null; try { ann = annV ? JSON.parse(annV) : null } catch {}
       ann = await annPoll(ann, id);
       await Promise.race([autoMig(), new Promise(r => setTimeout(r, 1200))]);
-      return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7), ann });
+      return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7), ann, ...(tg ? { tg } : {}) });
     }
     if (a === 'who' || a === 'admin' || a === 'bugfix') {
       const AK = ADM_KEY;
@@ -1237,7 +1238,10 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
           if (rl && JSON.stringify(rl).length <= 2600) m.rl = rl;
         } catch (e) {}
       }
+      let tagTo = null;
+      if (b.to && isAdmKey(b.key)) { const pu0 = String(b.to).replace(/[^a-z0-9]/g, '').slice(0, 12); if (pu0.length === 12) { m.to = pu0; m.ton = clean(b.ton, 20) || ''; m.re = String(b.re || '').replace(/[^a-z0-9]/g, '').slice(0, 20); tagTo = await cmd('HGET', 'pupid', pu0) } }
       await pipe([['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199], ['HSET', 'pupid', id.slice(0, 12), id]]);
+      if (tagTo && okId(tagTo)) { try { const ev = JSON.stringify({ i: m.i, n: m.n, x: m.x.slice(0, 160), t: now }); await pipe([['LPUSH', 'tagq:' + tagTo, ev], ['LTRIM', 'tagq:' + tagTo, 0, 9], ['EXPIRE', 'tagq:' + tagTo, 86400 * 14]]); const hs = await cmd('SMEMBERS', 'push:id:' + tagTo); if (hs && hs.length) await withCap(pushHashes(hs, { t: '💬 ผู้ดูแลตอบคุณในแชท', b: m.x.slice(0, 160), u: '/?go=chat', g: 'tag-' + m.i }), 8000) } catch (e) {} }
       if (b.rto && isAdmKey(b.key)) {
         let pr = null;
         try { const rid = await cmd('HGET', 'pupid', String(b.rto).replace(/[^a-z0-9]/g, '').slice(0, 12)); pr = rid ? await withCap(noteTo(rid, { t: '💬 ผู้ดูแลตอบคุณในแชทโลก', b: x.slice(0, 160), u: '/?go=chat', g: 'chat-' + m.i }), 8000) : { owner: 0 } } catch (e) {}
