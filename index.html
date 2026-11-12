@@ -18690,6 +18690,13 @@ function brkUpd(){try{let b=$('brkPill');const a=$('ascPill');if(!b&&a){a.insert
 setInterval(brkUpd,1500);{const _rdB=render;render=function(){const r=_rdB.apply(this,arguments);brkUpd();return r}}
 try{SYS_GUIDE.push({s:'world',nw:1,ic:'⚡',t:'ปุ่มทะลวงขั้น (แดนเทพ)',d:'ในแดนเทพ เมื่อพลังถึงขีดของขั้นถัดไปแล้ว ปุ่ม <b>⚡ ทะลวงสู่…</b> จะขึ้นข้างแถบเวลา กดฝ่าทัณฑ์ได้ทันทีโดยไม่ต้องรอให้ทัณฑ์มาเอง · โอกาสผ่านและเสี่ยงตายเท่าเดิม (ดูแถบค่าสถานะก่อนกด) · ถ้าพลาดต้องรอปีถัดไป · มียาทะลวงขั้นในกระเป๋าจะกลืนให้อัตโนมัติ (+12%)'})}catch(e){}
 {const _ouT=openUpdate;openUpdate=function(){const r=_ouT.apply(this,arguments);try{if(typeof MW_PUBLIC!=='undefined'&&MW_PUBLIC){document.querySelectorAll('#modal .mwupd').forEach(e=>e.remove())}}catch(e){}return r}}
+// ---------- v17.1b แก้: อายุขัยขั้นเหนือสุดแดนเทพเพิ่มตามขั้น · ตัวเลือกซ้อนต่อคิวแทนการสุ่มเลือกเอง ----------
+{const _gL=godLife;godLife=function(){try{if(S&&realmIdx()>=7){const L=postLv();if(L>=9)return 1e6+(L-8)*150000+(L>=RS_MAX?500000:0)}}catch(e){}return _gL.apply(this,arguments)}}
+function glWatch(){try{if(!S||!S.alive||!S.xian||!S.xt)return;const p=S.pcap==null?-1:S.pcap;if(S._glP==null){S._glP=p;S._glV=godLife();return}if(p!==S._glP){const v=godLife(),d=v-(S._glV||v);S._glP=p;S._glV=v;if(d>0)log(`⏳ ทะลวงขั้นสำเร็จ — อายุขัยเพิ่มขึ้น <b>+${fmt(d)} ปี</b> (อายุขัยตามขั้น ${fmt(lifeMax())} ปี)`,'myth')}}catch(e){}}
+setInterval(glWatch,1500);
+{const _chQ=choice,nc=function(title,text,opts){try{if(choice._cur&&!auto&&S&&S.alive){if(choice._cur.title===title)return;if(nc._q.length<6){nc._q.push([title,text,opts,S]);return}}}catch(e){}return _chQ.apply(this,arguments)};for(const k in _chQ)nc[k]=_chQ[k];nc._q=[];choice=nc}
+function chDeq(){try{if(choice._cur||!choice._q||!choice._q.length)return;const q=choice._q.shift();if(q[3]!==S||!S||!S.alive){return chDeq()}setTimeout(()=>{if(choice._cur){choice._q.unshift(q);return}if(q[3]===S&&S&&S.alive)choice(q[0],q[1],q[2])},250)}catch(e){}}
+{const _crQ=choiceRun;choiceRun=function(){const r=_crQ.apply(this,arguments);try{chDeq()}catch(e){}return r}}
 </script>
 </body>
 </html>
