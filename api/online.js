@@ -1371,6 +1371,11 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       await cmd('SET', 'arm:' + id, JSON.stringify({ o: oid, rv, t: now, bot, ch: ['hell', 'short', 'junk'].includes(b.ch) ? b.ch : '' }), 'EX', 900);
       const or = bot ? Math.max(900, myR - 30) : await arRt(oid); delete o.t; return res.json({ o: Object.assign(o, { rt: or, lg: arLg(or) }), rt: myR, tk });
     }
+    if (a === 'mwclk') {
+      const n = Math.max(0, Math.min(5, b.n | 0)); let c;
+      if (n && okId(id) && (await cmd('SET', 'mwck:' + id, 1, 'NX', 'EX', 15))) c = await cmd('INCRBY', 'mwclock', n); else c = await cmd('GET', 'mwclock');
+      return res.json({ ok: 1, c: +c || 0, g: 50000 });
+    }
     if (a === 'arlesson') {
       if (!okId(id)) return res.status(403).json({ err: 'id' });
       if (!(await cmd('SET', 'arles:' + id, 1, 'NX'))) return res.json({ ok: 1, g: 0 });

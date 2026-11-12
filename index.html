@@ -15623,6 +15623,168 @@ try{FRAMES.push({id:'f_lg1',n:'กรอบลีกเงิน',side:'r',c:0,t
  // ส่วน "ฉายาลีก" ในร้านลาน
  const _sh=arShopHtml;arShopHtml=function(){let h=_sh.apply(this,arguments);try{const o=arOwn(),L=o.tt.filter(t=>LT[t]||isLeg(t));const sec=`<h5>🏅 ฉายาลีก <small>ได้เมื่อจบซีซั่นในลีกทองขึ้นไป · ตำนานลาน = 10 อันดับแรก</small></h5>${L.length?`<div class="arshop">${L.map(t=>{const r=isLeg(t)?6:LT[t][0];return`<div class="item arsi"><div class="arttl">${tchipH(t,r)}</div><button class="sysb" onclick="setShowTtl('${esc(t)}',${r},'ar');openOnline('arena')">โชว์ฉายานี้</button></div>`}).join('')}</div>`:`<p class="tag2">ยังไม่มี — ${Object.keys(LT).map((t,i)=>`${AR_LG[i+2][0]} ${AR_LG[i+2][1]}: 「${t}」`).join(' · ')} · 🏯 ตำนานลาน: 「ตำนานลานซีซั่น ?」</p>`}`;const i=h.indexOf('<h5>🏷️ ฉายาลาน');h=i>=0?h.slice(0,i)+sec+h.slice(i):h+sec}catch(e){}return h}}
 
+
+// ===================== ยุคปัจจุบัน องก์ 1 — ยอดฝีมือหลงยุค (ทดสอบ: เฉพาะโหมดแอดมิน) =====================
+// ค่าใหม่: S.mw = {y ปีในยุคนี้, sec ความลับรั่ว 0-100, fame ชื่อเสียงออนไลน์, adapt ความคุ้นเคยยุคใหม่ 0-100, qi ปราณ, lin ความผูกพันกับหลิน, past ข้อมูลจริงจากชีวิตก่อน}
+const MW_Y0=2026,MW_GATE=50000;
+const mwOn=()=>!!(S&&S.mw);
+const mwTxt=h=>String(h||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+function mwPast(){const P={n:S.name,age:S.age,ri:realmIdx(),realm:'',xian:!!S.xian,xt:!!S.xt};try{P.realm=REALMS[P.ri].n}catch(e){}
+ try{const w=gearOf('weapon');P.wpn=w?w.n:null}catch(e){}
+ try{const a=(S.arts||[]).slice().sort((x,y)=>(y.b||0)-(x.b||0))[0];P.art=a?mwTxt(a.n):null}catch(e){}
+ if(!P.wpn)P.wpn=P.art&&/กระบี่|ดาบ/.test(P.art)?'กระบี่ที่ใช้ร่าย'+P.art:'กระบี่ประจำตัว';
+ if(S.ownSect){P.sect=S.ownSect.n;P.sectUp=(S.ownSect.lv||1)>=3||(S.ownSect.dis||0)>=60;P.founder=1}
+ else if(S.faction){P.sect=S.faction.n;P.sectUp=(S.rank||0)>=4}
+ else if(S._mwFac){P.sect=S._mwFac;P.sectUp=true}
+ const sp=String(S.name||'').split(' ');P.sur=sp.length>1?sp[0]:null;
+ const mom=(S.parents||[]).find(p=>p.role==='แม่');P.mom=mom?mom.n:null;
+ const kid=(S.children||S.kids||[]).find(k=>k&&(k.g==='หญิง'))||(S.children||S.kids||[])[0];P.kid=kid&&kid.n?kid.n:null;P.kidG=kid&&kid.g||null;
+ const rv=(typeof peers!=='undefined'?peers:[]).find(p=>p.rel==='rival');P.foe=S.revenge&&S.revenge.n?S.revenge.n:rv?rv.name:null;
+ P.fam=S.family&&S.family.n||'';
+ try{P.keys=(S.key||[]).slice(-6).map(mwTxt).filter(x=>x.length>6).slice(-3)}catch(e){P.keys=[]}
+ let h=0;for(const c of String(S.name))h=(h*31+c.charCodeAt(0))%997;P.yr=1260+h%280;
+ return P}
+// ---------- เข้าสู่ยุคปัจจุบัน ----------
+function mwEnter(how){if(!S||!S.alive||S.mw)return;if(!admK()){toast('ยุคปัจจุบันยังไม่เปิด');return}
+ const P=mwPast();P.how=how||'rift';P.pow0=Math.round(total());
+ S.mw={y:0,sec:0,fame:0,adapt:4,qi:Math.max(1,Math.round((S.qi||0)*.01*10)/10),lin:0,linMet:0,past:P,seen:{},q:[],fl:{},end:S.age+R(55,80),clk:0};
+ S.power=Math.max(5,Math.round((S.power||0)*.01));S.qi=S.mw.qi;S.xian=false;S.xt=0;CFG.xian=0;try{setWorld(false)}catch(e){}
+ S.faction=null;S.ownSect=null;S.custom=true;S.mwTest=1;S.focus='mwjob';S.wev2=null;S.wPend=null;
+ try{peers=[]}catch(e){}if(choice._cur){choice._cur=null}if(modalOpen)closeM();
+ log(`🌀 <b>คุณก้าวผ่านรอยแยก…</b> แสงสีขาวกลืนทุกอย่าง เสียงสุดท้ายที่ได้ยินจากยุคของคุณคือเสียงลมบน${P.xian?'ยอดเขาเซียน':'ยอดเขา'}`,'myth',true);
+ render();mwQ(['e1','e2']);saveGame()}
+// ---------- ค่า และผลลัพธ์ ----------
+const mwCl=(v,a,b)=>Math.max(a,Math.min(b,v));
+function mwFx(o){const M=S.mw;if(!M)return'';const out=[];
+ if(o.sec){M.sec=mwCl(M.sec+o.sec,0,100);out.push(`🤫 ความลับรั่ว ${o.sec>0?'+':''}${o.sec}`)}
+ if(o.fame){M.fame=Math.max(0,Math.round(M.fame+o.fame));out.push(`📈 ผู้ติดตาม ${o.fame>0?'+':''}${fmt(o.fame)}`)}
+ if(o.adapt){M.adapt=mwCl(M.adapt+o.adapt,0,100);out.push(`🏙️ ความคุ้นเคย ${o.adapt>0?'+':''}${o.adapt}`)}
+ if(o.qi){M.qi=Math.max(0,+(M.qi+o.qi).toFixed(1));S.qi=M.qi;out.push(`🌀 ปราณ ${o.qi>0?'+':''}${o.qi}`)}
+ if(o.lin){M.lin=mwCl(M.lin+o.lin,0,100);out.push(`🧒 หลิน ${o.lin>0?'+':''}${o.lin}`)}
+ if(o.mon){S.money=Math.max(0,(S.money||0)+o.mon);out.push(`💵 ${o.mon>0?'+':''}${fmt(o.mon)} บาท`)}
+ if(o.joy)joy(o.joy);
+ return out.length?` <span class="tag2">(${out.join(' · ')})</span>`:''}
+function mwSay(t,cls,o,big){log(t+(o?mwFx(o):''),cls||'',big)}
+// คิวเหตุการณ์ (หลายเรื่องในปีเดียว เล่นต่อกันทีละเรื่อง)
+function mwQ(ids){const M=S.mw;if(!M)return;ids.forEach(id=>{if(!M.seen[id]&&!M.q.includes(id))M.q.push(id)});mwRun()}
+let _mwRun=0;function mwRun(){if(_mwRun)return;_mwRun=1;const me=S;const go=()=>{if(S!==me||!S||!S.alive||!S.mw){_mwRun=0;return}if(choice._cur||(modalOpen&&/choice|duel|mwask/.test($('modal').dataset.k||'')))return setTimeout(go,700);const M=S.mw;const id=M.q.shift();if(!id){_mwRun=0;return}const E=MW_EV[id];if(!E||M.seen[id])return go();M.seen[id]=M.y+1;
+  try{setScene('mw')}catch(e){}try{E.go(M,M.past)}catch(e){console.error(e)}setTimeout(go,600)};setTimeout(go,250)}
+// ---------- 15 เหตุการณ์ ----------
+const MW_EV={
+ e1:{go(M,P){choice('🚦 เทพเจ้าสามตา',`คุณลืมตากลาง<b>สี่แยกอโศก</b> เสียงแตรดังรอบทิศ เหล็กมีล้อวิ่งผ่านเร็วกว่าม้าศึก บนเสาสูงมี<b>ดวงตาสามดวง</b>สลับสีจ้องคุณอยู่ — ดวงบนสุดเพิ่งเปลี่ยนเป็นสีแดง${P.how==='rift'?' · ร่างกายหนักอึ้ง ปราณที่เคยไหลเวียนเหมือนแม่น้ำเหลือแค่ลำธารเล็กๆ':''}`,[
+  {t:'🙇 คำนับดวงตาสีแดง',s:'คนรอบข้างหยิบกระจกเรืองแสงขึ้นมาถ่าย',f(){mwSay('🙇 คุณคุกเข่าคำนับเทพเจ้าสามตาอย่างนอบน้อม เทพเปลี่ยนเป็นสีเขียว ฝูงคนเดินผ่านคุณไปพร้อมเสียงหัวเราะ','',{fame:3000,sec:4})}},
+  {t:'🦅 กระโดดข้ามรถไปยืนบนป้ายรถเมล์',s:'ทางที่เร็วที่สุด',f(){mwSay('🦅 คุณแตะหลังคารถสองคันแล้วลอยขึ้นไปยืนบนป้ายรถเมล์ สูงสามวา เสียงกรีดร้องดังกว่าแตร — <b>คลิปนี้ไวรัลภายในคืนเดียว</b>','epic',{fame:180000,sec:18});M.fl.viral=1}},
+  {t:'🚶 เดินตามฝูงคนข้ามทางม้าลายเงียบๆ',s:'สังเกตก่อน ค่อยลงมือ',f(){mwSay('🚶 คุณเดินตามฝูงชนไปเงียบๆ จำได้ว่าพวกเขาหยุดเมื่อดวงตาแดง และเดินเมื่อดวงตาเขียว — กฎข้อแรกของยุคนี้','good',{adapt:6})}}])}},
+ e2:{go(M,P){choice('🍜 ก้อนเงินตำลึง','ท้องร้องจนตาลาย ควันจากหม้อต้มไก่ข้างทางหอมเหมือนโรงเตี๊ยมบ้านเกิด คุณยื่น<b>ก้อนเงินจริงหนึ่งตำลึง</b>ให้แม่ค้า "ข้าวมันไก่ชามหนึ่ง"',[
+  {t:'รอดูว่านางจะทำอะไร',s:'ปล่อยให้ชะตาเลือก',f(){if(Math.random()<.6){M.fl.pa=1;mwSay('⚖️ <b>ป้าแดง</b> แม่ค้าข้าวมันไก่เอาก้อนเงินไปชั่งบนตาชั่งของร้านทอง ก่อนกลับมาพร้อมเงินกระดาษเป็นปึก "ลุงเอาของจริงมาจากไหนเนี่ย" — ร้านนี้กลายเป็นที่ประจำของคุณ','good',{mon:18000,adapt:3})}else{M.fl.som=1;mwSay('🚓 แม่ค้าตกใจโทรเรียกตำรวจ คุณได้นั่งในห้องเย็นๆ ทั้งคืนกับ<b>จ่าสมชาย</b> ผู้จดทุกคำที่คุณพูดลงสมุดด้วยสีหน้าแปลกๆ "ยุทธภพ… สะกดยังไงนะลุง"','',{sec:6,adapt:2})}}},
+  {t:'เล่าว่าตัวเองมาจากปี '+P.yr,s:'พูดความจริง',f(){M.fl.som=1;M.fl.pa=1;mwSay(`🍜 ป้าแดงหัวเราะจนน้ำตาไหล "ลุงเล่นละครเก่งนะ" แต่ก็ตักข้าวให้ฟรีหนึ่งชาม คืนนั้น<b>จ่าสมชาย</b>ที่นั่งโต๊ะข้างๆ ได้ยินทุกคำ`,'',{sec:5,joy:4})}}])}},
+ e3:{go(M,P){choice('📱 กระจกวิเศษ',`เด็กมัธยมผมยุ่งคนหนึ่งยื่นกระจกเรืองแสงให้ดู ในนั้นมี<b>${M.fl.viral?'คลิปคนกระโดดข้ามรถไปยืนบนป้ายรถเมล์':'คลิปคนคุกเข่าคำนับไฟแดง'}</b> — คนในคลิปคือคุณ "ลุงคือคนนี้ใช่ป่ะ ผมชื่อ<b>หลิน</b>"`,[
+  {t:'ขอให้เด็กสอนใช้กระจกวิเศษ',s:'หลินจะเป็นผู้ช่วยของคุณ',f(){M.linMet=1;mwSay('🧒 หลินสอนคุณปัดหน้าจอ พิมพ์ด้วยนิ้วเดียว และอธิบายว่า "ไม่มีวิญญาณอยู่ในนั้นครับลุง" — คุณยังไม่เชื่อทั้งหมด','good',{adapt:12,lin:55})}},
+  {t:'ทุบกระจกทิ้ง เพราะมันขังวิญญาณคน',s:'ปกป้องเด็ก',f(){M.linMet=1;mwSay('💥 กระจกแตกเป็นเสี่ยงในฝ่ามือคุณ หลินอ้าปากค้าง… แล้วหัวเราะจนน้ำตาไหล "มือถือผมเพิ่งผ่อนหมดเมื่อวาน" คุณต้องชดใช้ แต่เด็กคนนี้ไม่หนีไปไหน','',{mon:-12000,lin:35,adapt:3})}}])}},
+ e4:{go(M,P){M.fl.goal=1;mwSay(`🌫️ <b>ปราณเบาบาง</b> — คุณนั่งสมาธิครั้งแรกบนดาดฟ้า ปราณในอากาศบางจนแทบหายใจไม่ออก พลังที่เคยมีในฐานะ<b>${esc(P.realm||'ยอดฝีมือ')}</b>เหลือราว <b>1 ใน 100</b> (จาก ${fmt(P.pow0)} เหลือ ${fmt(Math.round(total()))}) · เป้าหมายแรกของยุคนี้: <b>ตามหาจุดที่ปราณยังเหลืออยู่</b>`,'myth',null,true)}},
+ e5:{go(M,P){const hook=M.sec>=35;choice('🛵 ไรเดอร์ตัวเบา','คุณสมัครเป็นไรเดอร์ส่งอาหาร ระบบให้ดาวเต็มทุกออเดอร์ เพราะของถึงก่อนลูกค้าวางโทรศัพท์',[
+  {t:'วิ่งบนหลังคาตึก ส่งไวสามนาที',s:'เงินดี · ความลับรั่ว',f(){mwSay('🏙️ คุณกระโดดข้ามหลังคาตึกแถวทั้งซอย ส่งเร็วจนแอปขึ้นเตือนว่า "ตรวจพบความเร็วผิดปกติ"','',{mon:42000,sec:10});if(hook)M.fl.roof=1}},
+  {t:'ขี่มอเตอร์ไซค์เหมือนคนปกติ',s:'ปลอดภัย · ช้ากว่า',f(){mwSay('🛵 คุณขี่มอเตอร์ไซค์ติดไฟแดงเหมือนทุกคน ช้า เหนื่อย แต่ไม่มีใครถ่ายคลิป','good',{mon:16000,adapt:7})}}].concat(hook?[{t:'📦 รับออเดอร์ไปตึกร้างตอนเที่ยงคืน',s:'ลูกค้ารายนี้ทิปสูงผิดปกติ',f(){M.fl.roof=1;mwSay('🏚️ บนดาดฟ้าตึกร้าง ไม่มีใครมารับอาหาร มีแค่ก้นบุหรี่ที่ยังอุ่นอยู่ และนามบัตรว่างเปล่าสีเทาวางทับไว้ใต้ถุงอาหาร','bad',{sec:12})}}]:[]))}},
+ e6:{go(M,P){const ks=P.keys&&P.keys.length?P.keys:null;choice('🏛️ พิพิธภัณฑ์แห่งชาติ',`หลินลากคุณไปทัศนศึกษา ในตู้กระจกห้องสุดท้าย คือ<b>${esc(P.wpn)}</b>ที่คุณเคยพกทุกวัน ป้ายเขียนว่า "อาวุธของจอมยุทธ์นิรนาม ราว ค.ศ. ${P.yr}"`,[
+  {t:'ยืนดูเงียบๆ จนพิพิธภัณฑ์ปิด',s:'',f(){mwSay(`🏛️ คุณยืนอยู่หน้าตู้จนไฟดับ ความทรงจำไหลกลับมาทีละภาพ — ${ks?ks.map(k=>'<i>'+esc(k)+'</i>').join(' · '):`วันที่${esc(P.n)}ยังเป็น${esc(P.realm||'จอมยุทธ์')}`}${P.sect?` · ศิษย์แห่ง${esc(P.sect)}ที่เรียกคุณว่าอาจารย์`:''} · เจ็ดร้อยปี กลายเป็นแค่ป้ายหนึ่งแผ่นที่ไม่มีชื่อ`,'',null)}},
+  {t:`บอกภัณฑารักษ์ว่าเจ้าของชื่อ ${P.n}`,s:'ปีหน้าป้ายอาจเปลี่ยน',f(){M.fl.plaque=M.y+1;mwSay(`🖋️ ภัณฑารักษ์จดชื่อ <b>${esc(P.n)}</b> ไว้อย่างสงสัย "คุณรู้ได้ยังไงคะ"`,'',{sec:6})}},
+  {t:'คืนนั้นแอบเอากระบี่กลับมา',s:'ได้อาวุธเดิม · ข่าวโจรกรรม',f(){M.fl.sword=1;S.power=Math.round(S.power*1.15)+5;mwSay(`🌙 กระจกนิรภัยไม่เคยกันจอมยุทธ์ได้ ${esc(P.wpn)}กลับมาอยู่ในมือคุณ เช้าวันรุ่งขึ้นข่าวทุกช่อง: <b>"โจรกรรมไร้ร่องรอย ประตูทุกบานยังล็อกอยู่"</b>`,'epic',{sec:28,fame:20000})}}])}},
+ e7:{go(M,P){if(P.sect&&P.sectUp){choice('🏢 สำนักที่กลายเป็นบริษัท',`ป้ายโฆษณาบนตึกสามสิบชั้น: <b>${esc(P.sect)} กรุ๊ป</b> — "ก่อตั้งตั้งแต่สมัยราชวงศ์หมิง" ตราบนป้ายคือตราที่คุณ${P.founder?'ออกแบบเอง':'เคยปักบนเสื้อ'}`,[
+  {t:'ไปสมัครงานที่นั่น',s:'อยากเห็นหน้าประธาน',f(){M.fl.heir=1;mwSay(`🏢 ประธานบริษัทสวมแหวนตรา${esc(P.sect)}แบบเดียวกับของคุณ เขามองมือคุณนานผิดปกติตอนจับมือทักทาย — <b>"ท่าจับมือแบบนี้ ปู่ทวดผมสอนไว้ว่ามีแค่คนในสำนักที่ทำ"</b>`,'epic',{mon:30000,sec:5})}},
+  {t:'ยืนดูจากอีกฝั่งถนน แล้วเดินจากไป',s:'',f(){mwSay(`🏢 พนักงานใส่สูทหลายร้อยคนเดินเข้าตึกของ${esc(P.sect)} ไม่มีใครรู้ว่าผู้ก่อตั้งยืนอยู่ฝั่งตรงข้าม ถือกาแฟเย็นแก้วละห้าสิบบาท`,'',{joy:-2})}}])}
+  else{const nm=P.sect||(P.fam?'ตระกูลของ'+P.fam:'วิชาของคุณ');choice('🏮 ยิมไทเก็กในซอย',`ในซอยแคบหลังตลาด มีป้ายไม้ผุๆ: <b>"${esc(P.sect||'สำนักมวย')}"</b> ครูอายุเจ็ดสิบสอนเด็กห้าคน ท่าที่สอน… ผิดไปครึ่งหนึ่ง แต่ลมหายใจท่าเปิดยังเป็นของ${esc(nm)}`,[
+  {t:'สอนท่าที่ถูกให้ครูชรา',s:'ยิมนี้จะเป็นฐานของคุณ',f(){M.fl.gym=1;mwSay('🥋 ครูชราทำท่าที่คุณแก้ให้ได้ในครั้งที่สาม แล้วร้องไห้ "พ่อผมบอกว่าท่านี้หายไปตั้งแต่สมัยปู่" — ยิมนี้มีห้องว่างให้คุณนอน','good',{adapt:4,joy:8,qi:.3})}},
+  {t:'ยืนดูอยู่หน้าประตู แล้วจากไป',s:'',f(){mwSay('🥋 คุณยืนดูจนเด็กกลับบ้านหมด ไม่ได้พูดอะไรสักคำ','',null)}}])}}},
+ e8:{go(M,P){choice('⛩️ วัดเก่าบนดอย','หลินส่งโพสต์มาให้: "วัดร้างบนดอยที่โทรศัพท์ไม่มีสัญญาณ ใครไปแล้วนอนหลับลึกผิดปกติ" — คุณรู้ทันทีว่าเพราะอะไร',[
+  {t:'ไปบำเพ็ญที่นั่น',s:'ปราณเพิ่มมาก · ห่างจากเมืองและหลิน',f(){M.fl.temple=1;mwSay('⛩️ ปราณบนดอยหนาแน่นเหมือนสมัยก่อน ครั้งแรกในยุคนี้ที่ลมปราณไหลเต็มชีพจร','epic',{qi:6,lin:-8,adapt:-2})}},
+  {t:'บอกต่อในกลุ่มลับ',s:'มีคนตามไป',f(){M.fl.temple=1;M.fl.others=1;mwSay('🕯️ สัปดาห์ต่อมา คนแปลกหน้าสามคนมานั่งสมาธิในวัดเดียวกัน คนหนึ่งเดินโดยเท้าไม่แตะใบไม้แห้ง อีกคนหายใจครั้งเดียวต่อหนึ่งนาที — <b>คุณไม่ได้อยู่คนเดียวในยุคนี้</b>','myth',{qi:3,sec:4},true)}}])}},
+ e9:{go(M,P){choice('📺 ยูทูบเบอร์จอมยุทธ์','หลินเสนอให้เปิดช่อง <b>"ปู่จอมยุทธ์สอนชีวิต"</b> "ลุงแค่พูดเรื่องเก่าๆ หน้ากล้อง ที่เหลือผมจัดการเอง"',[
+  {t:'ทำคลิปสอนวิชาตัวเบาจริง',s:'ยอดวิวพุ่ง · ความลับรั่วมาก',f(){M.fl.ch='real';mwSay('📺 คลิปแรกมีคนดูสามล้านในสองวัน คอมเมนต์อันดับหนึ่ง: "ตัดต่อเนียนมาก ขอสายสลิงรุ่นนี้"','epic',{fame:900000,mon:60000,sec:22,lin:6})}},
+  {t:'เล่าเรื่องยุทธภพเป็น "นิทาน"',s:'คนดูเชื่อว่าแต่ง',f(){M.fl.ch='tale';mwSay(`📖 คุณเล่าเรื่อง${P.sect?esc(P.sect):'ยุทธภพ'}ทีละตอน คนดูไม่มาก แต่มีแฟนประจำคนหนึ่งชื่อ "ศิษย์รุ่นที่ 38" ที่ถามแต่คำถามที่คนนอกไม่น่าจะรู้`,'good',{fame:60000,mon:9000,lin:6})}},
+  {t:'ปฏิเสธ',s:'หลินผิดหวัง',f(){mwSay('📵 หลินพยักหน้าเงียบๆ แล้วไม่พูดเรื่องนี้อีก','',{lin:-14})}}])}},
+ e10:{go(M,P){const mom=P.mom;choice('🍵 รสชาติที่หายไป',`คุณพยายามทำขนมที่${mom?'แม่ — <b>'+esc(mom)+'</b> —':'คนในชีวิตก่อน'}เคยทำทุกเทศกาล แต่ไม่มีร้านไหนขายแป้งแบบนั้นอีกแล้ว`,[
+  {t:'ตามหาวัตถุดิบทั่วเยาวราช',s:'',f(){if(Math.random()<.55){mwSay(`🍵 ร้านยาจีนห้องแถวสุดท้ายในซอยยังมีแป้งชนิดนั้นถุงสุดท้าย ขนมที่ออกมาไม่เหมือนเดิมทั้งหมด แต่คุณกินคำแรกแล้วพูดออกมาโดยไม่รู้ตัว — <b>"${mom?esc(mom.split(' ').pop()):'แม่'}…"</b>`,'myth',null,true)}else mwSay('🍵 คุณเดินจนร้านปิดหมดทั้งถนน กลับห้องมือเปล่า แล้วนั่งเงียบๆ ทั้งคืน','',{joy:-4})}},
+  {t:'ซื้อขนมสำเร็จรูปจากเซเว่นแทน',s:'',f(){mwSay('🏪 ขนมห่อพลาสติกหวานเกินไป คุณกินจนหมดอยู่ดี','',{adapt:3})}}])}},
+ e11:{go(M,P){const sur=P.sur;const who=P.kid?`${P.kidG==='ชาย'?'ลูกชาย':'ลูกสาว'}ของคุณ — <b>${esc(P.kid)}</b>`:'คนที่คุณรักในชีวิตก่อน';
+  choice('🧓 ลูกหลานคนสุดท้าย',`หญิงชรา${sur?'นามสกุล <b>'+esc(sur)+'</b> ':''}ขายพระเครื่องอยู่ที่ตลาดนัด ใบหน้าคล้าย${who}จนคุณยืนนิ่งไปนาน`,[
+  {t:'บอกความจริง',s:'',f(){M.fl.fam=1;mwSay('🧓 เธอไม่เชื่อสักคำ แต่หัวเราะแล้วชวนกินข้าวด้วยกันทุกวันอาทิตย์ "ลุงเล่าเก่งดี เหมือนตาทวดฉันเลย"','good',{joy:10,sec:3})}},
+  {t:'เฝ้าดูอยู่ห่างๆ',s:'',f(){M.fl.famW=M.y+3;mwSay('🧓 คุณซื้อพระเครื่องจากเธอองค์หนึ่ง ทุกเดือน','',null)}}])}},
+ e12:{go(M,P){const at=M.fl.pa?'ร้านข้าวมันไก่ของป้าแดง':'ที่โต๊ะประจำของคุณ';choice('🕴️ ชายในสูทสีเทา',`ชายคนหนึ่งนั่งรอคุณ${at} สูทสีเทาเหมือนนามบัตรใบนั้น "ผมตามหาคุณมา${M.fl.viral?'ตั้งแต่คลิปป้ายรถเมล์':'สามปี'} คุณ${esc(P.n)} — เราไม่ได้มาจับ เรามาเสนองาน"`,[
+  {t:'ร่วมมือกับหน่วยลับ',s:'เงินเดือน · ต้องรายงานผู้ฝึกตนคนอื่น',f(){M.fl.agency=1;mwSay(`🕴️ คุณได้บัตรผ่านสีเทาและเงินเดือนประจำ งานแรกคือส่งรายชื่อ "ผู้มีพฤติกรรมผิดธรรมชาติ"${M.fl.others?' — รายชื่อที่คุณรู้ดีที่สุดคือคนในวัดบนดอย':''}`,'',{mon:120000,sec:-25,lin:-5})}},
+  {t:'หนีไปอยู่วัดบนดอย',s:'ชีวิตในเมืองหายไปทั้งหมด',f(){M.fl.fled=1;M.fl.temple=1;mwSay('⛰️ คืนนั้นคุณหายตัวไปจากเมือง ห้องเช่าว่างเปล่า มือถือที่หลินซื้อให้ถูกวางไว้บนโต๊ะ','bad',{sec:-30,lin:-20,qi:2})}},
+  {t:'ไลฟ์สดเปิดเผยตัวต่อโลก',s:'คนทั้งโลกจะจ้องมอง',f(){M.fl.public=1;mwSay(`🔴 คุณเดินขึ้นไปยืนกลางอากาศเหนือสะพานพระราม 8 แล้วกดไลฟ์ <b>"ข้าชื่อ${esc(P.n)} มาจากปี ${P.yr}"</b> ผู้ชมพร้อมกันสี่สิบล้านคน ชายในสูทสีเทาทำได้แค่มองจากข้างล่าง`,'myth',{fame:12000000,sec:100},true)}}])}},
+ e13:{go(M,P){const foe=P.foe;mwSay(`📰 <b>ศัตรูเก่าในชุดสูท</b> — ข่าวเศรษฐกิจภาคค่ำ: ประธานบริษัทยักษ์คนใหม่ ใบหน้าเดียวกับ<b>${foe?esc(foe):'คนที่เคยฆ่าคุณในชีวิตก่อน'}</b> เขามองตรงกล้องแล้วยิ้ม — ปีนี้บริษัทเขากว้านซื้อที่ดินรอบวัดเก่าทั่วประเทศ${M.fl.temple?' รวมถึงดอยที่คุณเคยไปบำเพ็ญ':''} · <b>เขารู้ว่าประตูจะเปิดที่ไหน</b>`,'myth',null,true);M.fl.foe=1}},
+ e14:{go(M,P){mwSay('🌀 <b>รอยร้าวกลางอากาศ</b> — กลางดึก ท้องฟ้าเหนือสะพานพระราม 8 แตกร้าวเหมือนกระจก แบบเดียวกับรอยแยกที่คุณเคยเห็นก่อนก้าวมายุคนี้ แต่คราวนี้<b>มีบางอย่างมองกลับมาจากอีกฝั่ง</b>','myth',null,true);
+  mwClock(0).then(j=>{if(!j||!S||!S.mw)return;const p=Math.min(100,Math.round(j.c/j.g*100));addFeed('ev',`🌀 รอยร้าวกว้างขึ้น ${p}% — ${p>=100?'มันจะไม่ปิดอีกแล้ว':'มันค่อยๆ ปิดลง… แต่ใหญ่กว่าครั้งก่อนทุกครั้งที่มีคนในยุคนี้เห็นมัน'} <span class="tag2">(ผู้เล่นในยุคนี้ใช้ชีวิตรวม ${fmt(j.c)} / ${fmt(j.g)} ปี)</span>`,'sum')}).catch(()=>{})}},
+ e15:{go(M,P){if(!M.linMet||M.lin<25){mwSay('🫂 หลินเรียนจบแล้ว เขาย้ายออกไปจากซอยโดยไม่บอกลา ห้องข้างๆ มีคนใหม่มาอยู่ คุณไม่รู้แม้แต่ว่าเขาไปที่ไหน','bad',{joy:-8});mwAct1End(0);return}
+  choice('🫂 หลินโตแล้ว','เด็กมัธยมผมยุ่งเมื่อสิบปีก่อนสวมชุดครุยมาหาคุณ เขาถามเบาๆ "ปู่จะกลับไปยุคของปู่ไหม ถ้ากลับได้"',[
+  {t:'"ยุคของข้าอยู่ที่นี่แล้ว"',s:'ปิดองก์แรก',f(){mwSay('🫂 หลินยิ้มกว้างแบบวันที่สอนคุณใช้มือถือ — คืนนั้นคุณนอนหลับโดยไม่ฝันถึงยุทธภพเป็นครั้งแรก','myth',{adapt:100,joy:15},true);keyAdd('ยุคปัจจุบันกลายเป็นบ้าน');mwAct1End(1)}},
+  {t:'"ข้ายังต้องกลับ"',s:'เป้าหมาย: หาทางกลับ',f(){M.fl.goBack=1;mwSay('🕰️ หลินพยักหน้า "งั้นผมช่วยหา" — เป้าหมายใหม่: <b>หาทางกลับไปยุคของคุณ</b>','epic',{lin:5},true);keyAdd('ตั้งใจหาทางกลับสู่ยุคเดิม');mwAct1End(2)}}])}}};
+// ลำดับปี (ปีในยุคนี้ → เหตุการณ์ที่ควรเกิด)
+const MW_PLAN=[[1,['e3','e4']],[2,['e5']],[3,['e6','e7']],[4,['e8','e9']],[5,['e10']],[6,['e11']],[8,['e13']],[9,['e14']],[10,['e15']]];
+function mwAct1End(k){const M=S.mw;M.act1=k||0;LS.set('murim_mw_a1',(LS.get('murim_mw_a1',0)||0)+1);addFeed('ev','🎬 <b>จบองก์แรก · ยอดฝีมือหลงยุค</b> — ชีวิตในยุคนี้ยังดำเนินต่อ… จนกว่าประตูจะเปิด','sum')}
+// ---------- ปีหนึ่งในยุคปัจจุบัน ----------
+const MW_FOC=[['mwjob','💼','ทำงาน'],['mwqi','🧘','นั่งสมาธิ'],['mwnet','📱','ทำคอนเทนต์'],['mwlearn','📚','เรียนรู้ยุคใหม่'],['mwlow','🍵','ใช้ชีวิตเงียบๆ'],['mwlin','🧒','อยู่กับหลิน']];
+const MW_FILL={lo:['🥫 คุณพยายามฟันกระป๋องน้ำอัดลมด้วยฝ่ามือเพราะเปิดไม่เป็น น้ำหวานพุ่งเต็มเพดาน','🚇 คุณยืนท้ารถไฟฟ้าที่ไม่ยอมหยุดให้ จนพนักงานต้องมาพาออกไปจากชานชาลา','🧊 ตู้เย็นคือถ้ำน้ำแข็งพกพา คุณนั่งสมาธิหน้าตู้เย็นทั้งบ่าย','🎤 รถแห่หาเสียงผ่านหน้าบ้าน คุณนึกว่าเป็นกองทัพขุนนางบุกเมือง','🔥 คุณจุดไฟในห้องเช่าเพื่อต้มน้ำชา สัญญาณกันไฟร้องลั่นตึก','📺 คุณดูละครจีนกำลังภายในแล้วตะโกนว่า "ท่านั้นผิด!" ใส่จอทั้งเรื่อง'],
+ mid:['🌧️ ฝนตกหนัก คุณยืนใต้กันสาดร้านสะดวกซื้อกับคนแปลกหน้าที่ยื่นร่มให้','🚌 คุณเริ่มจำสายรถเมล์ได้ครบทุกสายที่ผ่านซอย','💡 คุณเรียนรู้ว่าบิลค่าไฟคือศัตรูที่น่ากลัวกว่ายอดฝีมือคนไหน','🏸 เด็กในซอยขอให้คุณสอนตีแบดมินตัน ลูกขนไก่ไม่เคยตกพื้นเลยทั้งชั่วโมง'],
+ hi:['🌙 คืนที่ไฟดับทั้งซอย ดาวบนฟ้ากรุงเทพฯ น้อยกว่าที่บ้านเกิดหลายพันดวง','📷 คุณเจอรูปถ่ายขาวดำเก่าในร้านของมือสอง คนในรูปไม่มีใครที่คุณรู้จักอีกแล้ว','🕯️ วันเกิดของคุณในยุคนี้ไม่มีใครรู้ คุณซื้อขนมเค้กชิ้นเล็กๆ มากินคนเดียว','🎐 เสียงกระดิ่งลมจากร้านข้างบ้าน คล้ายเสียงกระดิ่งหน้าสำนักในวันที่ฝนตก']};
+function mwYear(){const M=S.mw;yearSum&&0;S.age++;M.y++;ensureHeader();const f=S.focus,lt=M.linMet;
+ if(f==='mwjob'){const pay=R(90,180)*1000*(M.fl.agency?2:1);mwFx({mon:pay,adapt:2});addFeed('ev',`💼 ทำงาน${M.fl.agency?'ให้หน่วยลับ':'รับจ้างทั่วไป'}ทั้งปี · +${fmt(pay)} บาท`,'sum')}
+ else if(f==='mwqi'){const q=M.fl.temple?R(10,20)/10:R(1,3)/10;mwFx({qi:q});S.power+=Math.round(q*20);addFeed('ev',`🧘 นั่งสมาธิ${M.fl.temple?'ที่วัดบนดอย':'บนดาดฟ้า'} · ปราณ +${q}`,'sum')}
+ else if(f==='mwnet'){const g=Math.round((4000+M.fame*.06)*(M.fl.ch==='tale'?.5:1)*(.7+Math.random()*.6)),sec=M.fl.ch==='tale'?R(0,2):R(4,9);mwFx({fame:g,sec,mon:Math.round(g*.4)});addFeed('ev',`📱 ทำคอนเทนต์ทั้งปี · ผู้ติดตาม +${fmt(g)} · ความลับรั่ว +${sec}`,'sum')}
+ else if(f==='mwlearn'){const a=R(6,10);mwFx({adapt:a});S.int+=R(2,5);addFeed('ev',`📚 เรียนรู้ยุคใหม่ · ความคุ้นเคย +${a}`,'sum')}
+ else if(f==='mwlow'){const d=R(5,9);mwFx({sec:-d,joy:3});S.hp=Math.min(S.maxHp,S.hp+20);addFeed('ev',`🍵 ใช้ชีวิตเงียบๆ ไม่มีใครสนใจคุณ · ความลับรั่ว −${d}`,'sum')}
+ else if(f==='mwlin'&&lt){mwFx({lin:R(6,10),adapt:3});addFeed('ev','🧒 ใช้เวลากับหลิน — '+ch(['ช่วยเขาทำการบ้านเลข ที่คุณเองก็ไม่เข้าใจ','กินหมูกระทะด้วยกันครั้งแรก','ฟังเขาบ่นเรื่องสอบเข้ามหาลัย','ไปดูหนังโรงด้วยกัน คุณสะดุ้งทุกครั้งที่เสียงดัง']),'sum')}
+ // ผลค้างจากปีก่อน
+ if(M.fl.plaque&&M.y>=M.fl.plaque+1){M.fl.plaque=0;addFeed('ev',`🏛️ ป้ายในตู้กระจกเปลี่ยนแล้ว: <b>"อาวุธของ${esc(M.past.n)} ราว ค.ศ. ${M.past.yr}"</b> — มีคนมาถ่ายรูปป้ายนี้มากขึ้นทุกวัน`,'sum');mwFx({sec:4})}
+ if(M.fl.famW&&M.y>=M.fl.famW){M.fl.famW=0;log('🕯️ หญิงชราที่ตลาดนัดจากไปอย่างสงบ ในงานศพมีคนมาไม่ถึงสิบคน — คุณเป็นคนเดียวที่รู้ว่าเธอเป็นใคร','bad',true);joy(-12)}
+ // ความลับรั่วถึงขีด
+ if(M.sec>=60&&!M.seen.e12&&!M.q.includes('e12')&&M.y>=4)mwQ(['e12']);
+ // เหตุการณ์ตามแผน
+ const pl=MW_PLAN.find(x=>x[0]===M.y);if(pl){const L=pl[1].filter(id=>!(id==='e10'&&M.adapt<30));mwQ(L);if(pl[1].includes('e10')&&M.adapt<30)M.fl.e10late=1}
+ if(M.fl.e10late&&M.adapt>=30&&!M.seen.e10){M.fl.e10late=0;mwQ(['e10'])}
+ // เรื่องเล็กๆ ตามความคุ้นเคย (มุกช็อกวัฒนธรรมหมดได้)
+ if(!M.q.length&&Math.random()<.65){const b=M.adapt<35?'lo':M.adapt<70?'mid':'hi',used=M.fu=M.fu||[];const L=MW_FILL[b].filter((x,i)=>!used.includes(b+i));if(L.length){const t=ch(L);used.push(b+MW_FILL[b].indexOf(t));addFeed('ev',t,'sum')}}
+ // นาฬิกาเซิร์ฟเวอร์
+ if(M.q.length)mwRun(); M.clk=(M.clk||0)+1;if(M.clk>=1)mwClock(M.clk).then(j=>{if(j&&j.ok&&S&&S.mw)S.mw.clk=0}).catch(()=>{});
+ S.hp=Math.min(S.maxHp,S.hp+R(3,8));render();checkDeath();saveGame()}
+let _mwCk=0;
+async function mwClock(n){if(typeof onlineOK==='undefined'||!onlineOK)return null;if(n&&Date.now()-_mwCk<20000)return null;if(n)_mwCk=Date.now();return api('mwclk',{n:Math.min(5,n|0)})}
+// ---------- เชื่อมกับเกมหลัก ----------
+{const _pyW=passYear;passYear=function(){if(mwOn()){try{mwYear()}catch(e){console.error(e);S.age++;saveGame()}return}return _pyW.apply(this,arguments)}}
+{const _lmW=lifeMax;lifeMax=function(){if(mwOn())return S.mw.end;return _lmW.apply(this,arguments)}}
+{const _foW=focusOK;focusOK=function(k){if(mwOn()){if(k==='mwlin')return!!S.mw.linMet;return MW_FOC.some(f=>f[0]===k)}if(/^mw/.test(String(k)))return false;return _foW.apply(this,arguments)}}
+{const _afW=autoFocus;autoFocus=function(){if(mwOn()){const M=S.mw;S.focus=M.sec>=50?'mwlow':M.adapt<30?'mwlearn':M.linMet&&M.lin<40?'mwlin':ch(['mwjob','mwjob','mwqi','mwnet','mwlearn']);return}return _afW.apply(this,arguments)}}
+{const _rnW=render;render=function(){const r=_rnW.apply(this,arguments);try{if(!mwOn()){const h=$('mwHud');if(h)h.remove();const gb=$('goalBox');if(gb&&gb.style.display==='none')gb.style.display='';return r}const M=S.mw,fe=$('focus');
+ if(fe){fe.innerHTML=MW_FOC.map(f=>`<button class="fc ${S.focus===f[0]?'on':''}" ${focusOK(f[0])?'':'disabled'} onclick="setFocus('${f[0]}')">${f[1]} ${f[2]}</button>`).join('');
+  let h=$('mwHud');if(!h){h=document.createElement('div');h.id='mwHud';fe.parentNode.insertBefore(h,fe)}
+  const bar=(ic,n,v,col,max)=>`<div class="mwh1"><span>${ic} ${n}</span><b>${max?Math.round(v):fmt(v)}${max?'/'+max:''}</b>${max?`<i style="width:${Math.min(100,v/max*100)}%;background:${col}"></i>`:''}</div>`;
+  h.innerHTML=`<div class="mwhT">🏙️ กรุงเทพฯ · ค.ศ. ${MW_Y0+M.y} · ปีที่ ${M.y} ในยุคนี้ <span class="tag2">(ทดสอบแอดมิน)</span></div><div class="mwhG">${bar('🤫','ความลับรั่ว',M.sec,M.sec>=60?'#ff4a5a':'#e8a23a',100)}${bar('🏙️','ความคุ้นเคย',M.adapt,'#4ab0ff',100)}${bar('📈','ผู้ติดตาม',M.fame)}${bar('🌀','ปราณ',M.qi)}${M.linMet?bar('🧒','หลิน',M.lin,'#6ad08a',100):''}</div>`}
+ const gb=$('goalBox');if(gb)gb.style.display='none'; const gr=$('gRealm');if(gr)gr.textContent=`ยอดฝีมือหลงยุค · อดีต${M.past.realm||''}`}catch(e){console.error(e)}return r}}
+{const _dsW=drawScene;let off=null;drawScene=function(ctx,type){if(!mwOn()||type==='death')return _dsW.apply(this,arguments);try{if(!off){off=document.createElement('canvas');off.width=480;off.height=270}const o=off.getContext('2d');mwDraw(o,frame*1.4);const W=ctx.canvas.width,H=ctx.canvas.height,sh=Math.round(270*H/(W*270/480));ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;ctx.drawImage(off,0,Math.round((270-sh)*.6),480,sh,0,0,W,H)}catch(e){return _dsW.apply(this,arguments)}}}
+{const _scW=sceneCap;sceneCap=function(t){if(mwOn()&&t!=='death'){const f=MW_FOC.find(x=>x[0]===S.focus);return`🏙️ กรุงเทพฯ ${MW_Y0+S.mw.y} · กำลัง: ${f?f[2]:'ใช้ชีวิต'}`}return _scW.apply(this,arguments)}}
+// ทางเข้า 1: รอยแยกสู่อนาคต (แอดมินก้าวเข้าไปได้)
+{const _chW=choice;choice=function(title,text,opts){if(admK()&&/รอยแยกสู่อนาคต/.test(String(title||''))&&Array.isArray(opts)&&opts[0]&&!S.mw){opts=opts.slice();opts[0]={t:'👣 ก้าวเข้าไปในรอยแยก (แอดมิน: เข้ายุคปัจจุบัน)',s:'เก็บวิชาไว้ แต่พลังจะเหลือเพียงเล็กน้อย',f(){setTimeout(()=>mwEnter('rift'),300)}}}return _chW.call(this,title,text,opts)};Object.keys(_chW).forEach(k=>{try{choice[k]=_chW[k]}catch(e){}});
+ try{Object.defineProperty(choice,'_cur',{get(){return _chW._cur},set(v){_chW._cur=v},configurable:true});Object.defineProperty(choice,'_min',{get(){return _chW._min},set(v){_chW._min=v},configurable:true})}catch(e){}}
+// ทางเข้า 2: เมนูในเกม (แอดมิน) — พาตัวละครที่กำลังเล่นข้ามยุค
+{const _omW=openMenu;openMenu=function(){const r=_omW.apply(this,arguments);try{if(!admK()||!S||!S.alive)return r;const gd=$('modal').querySelector('.mgrid');if(gd&&!gd.querySelector('.mwadmB'))gd.insertAdjacentHTML('afterbegin',S.mw?`<button class="opt mwadmB" onclick="mwInfo()">🏙️ ยุคปัจจุบัน<small>ดูสถานะองก์แรก</small></button>`:`<button class="opt mwadmB" onclick="mwAsk()">🌀 หลงยุคสู่ปี ${MW_Y0}<small>แอดมิน · ทดสอบยุคปัจจุบัน</small></button>`)}catch(e){}return r}}
+function mwAsk(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌀 หลงยุคสู่ปี ${MW_Y0}</h3><p><b>${esc(S.name)}</b> จะข้ามไปยุคปัจจุบัน พร้อมความทรงจำและวิชาทั้งหมด แต่พลังเหลือราว 1 ใน 100 เพราะปราณเบาบาง</p><p class="tag2">ทดสอบเฉพาะแอดมิน · ชีวิตนี้จะไม่ขึ้นทำเนียบ · ย้อนกลับไม่ได้</p><div class="brow"><button class="gbtn" onclick="closeM()">ยกเลิก</button><button class="pbtn" onclick="closeM();mwEnter('menu')">ข้ามยุค</button></div>`,'mwask')}
+function mwInfo(){const M=S.mw,P=M.past,done=Object.keys(M.seen).length;modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏙️ ยอดฝีมือหลงยุค · องก์แรก</h3><p>ปีที่ ${M.y} ในยุคนี้ · เหตุการณ์หลักที่ผ่านมา ${done}/15${M.act1!=null?' · จบองก์แรกแล้ว':''}</p><p class="tag2">อดีต: ${esc(P.n)} · ${esc(P.realm||'')} ${P.sect?'· '+esc(P.sect):''} ${P.foe?'· ศัตรู '+esc(P.foe):''}</p><button class="pbtn" style="width:100%" onclick="closeM()">ปิด</button>`,'mwinfo')}
+// ทางเข้า 3: ปุ่ม "ยุคปัจจุบัน" หน้าแรก (แอดมิน) — เริ่มเป็นยอดฝีมือหลงยุคจากชีวิตล่าสุดที่จบไป
+{const _otW=openMWTeaser;openMWTeaser=function(src){if(!admK()||src==='rift'||src==='end')return _otW.apply(this,arguments);const L=(LS.get('murim_legacy',[])||[])[0];
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏙️ ยุคปัจจุบัน <span class="tag2">(ทดสอบแอดมิน)</span></h3><p>ผู้เล่นทั่วไปยังเห็นหน้าตัวอย่าง "เร็วๆ นี้" เหมือนเดิม</p>
+ <div class="mgrid"><button class="opt" onclick="mwNewLost()">🌀 ยอดฝีมือหลงยุค<small>${L?`ใช้ชีวิตล่าสุด: ${esc(L.n)} (${L.a} ปี)`:'สร้างยอดฝีมือขึ้นมาใหม่'}</small></button><button class="opt" onclick="_mwTeaser()">🎬 ดูหน้าตัวอย่าง<small>แบบที่ผู้เล่นทั่วไปเห็น</small></button></div><p class="tag2">หรือระหว่างเล่น: ☰ เมนู → 🌀 หลงยุคสู่ปี ${MW_Y0} เพื่อพาตัวละครที่เล่นอยู่ข้ามยุค (ใช้ประวัติจริงทั้งหมด)</p>`,'mwadm')}
+ window._mwTeaser=()=>_otW('title')}
+function mwNewLost(){const L=(LS.get('murim_legacy',[])||[])[0];closeM();try{CFG.xian=L&&L.ri>=0&&false?1:0;goBirth();doRoll(true);startLife()}catch(e){console.error(e);return}
+ setTimeout(()=>{try{if(choice._cur)choice._cur=null;if(modalOpen)closeM();if(L){S.name=L.n;if(L.fac){const f=(typeof FACTIONS!=='undefined'?FACTIONS:[]).find(x=>x.n===L.fac||x.n0===L.fac);if(f){S.faction=f;S.rank=4}}if(L.art){const a=newArt(Math.max(0,Math.min(3,(L.art.r|0)-1)));a.n=L.art.n;S.arts.push(a)}}
+  S.age=L?Math.max(30,Math.min(90,L.a||45)):45;S.power=Math.max(S.power,R(30000,80000));S.qi=Math.max(S.qi,200);S.int+=60;
+  if(!S.parents||!S.parents.length)try{mkFamily()}catch(e){}if(L&&L.fac&&!S.faction)S._mwFac=L.fac;keyAdd('ยอดฝีมืออันดับต้นแห่งยุค');mwEnter('new')}catch(e){console.error(e)}},700)}
+(function(){const st=document.createElement('style');st.textContent=`
+#mwHud{margin:6px 0;padding:8px 10px;border-radius:10px;background:linear-gradient(135deg,#1a1236,#2a1450);border:1.5px solid #6a4ab0;color:#efe6ff;font-size:12.5px}
+.mwhT{font-weight:700;margin-bottom:5px}.mwhG{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
+.mwh1{position:relative;display:flex;justify-content:space-between;gap:6px;padding-bottom:4px}.mwh1 b{font-variant-numeric:tabular-nums}
+.mwh1 i{position:absolute;left:0;bottom:0;height:3px;border-radius:2px}.mwh1::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;border-radius:2px;background:#ffffff1a;z-index:-1}`;document.head.appendChild(st)})();
+
 </script>
 </body>
 </html>
