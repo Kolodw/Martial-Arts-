@@ -14856,6 +14856,50 @@ function relMidBG(c,pre,k,sc,col,RP){c.drawImage(pre,0,0,64,36,0,0,PXW,PXH);c.gl
    if(ch0&&!S.ch)S.ch=ch0;
    if(got.length)log(`🏮 มรดกตระกูลส่งต่อถึงรุ่นที่ ${S.gen}: ${got.join(' · ')}`,'epic',true);render();try{saveGame()}catch(e){}}}catch(e){console.error(e)}return r}}
 
+
+// ===================== v16.7 ท่าไม้ตายประจำสาย (ช็อตกว้าง) · รากฐานร้อยปี (ยุทธภพ→เซียน) =====================
+{const ip=Math.round,PX=(c,x,y,w,h,cl)=>{c.fillStyle=cl;c.fillRect(ip(x),ip(y),w,h)},C1=v=>Math.max(0,Math.min(1,v)),EZ=q=>q*q*(3-2*q),TX=112,TY=70;
+ const HAND=['.#.#.#...','.#.#.#.#.','.#.#.#.#.','.#######.','########.','#########','.#######.','.#######.','..#####..','..#####..'];
+ const SIG={
+  dragon(c,q,R,col,sc,k){const L=14+Math.min(10,sc*2),a0=.45*26,x0=R.x+Math.cos(a0)*7.2,y0=R.y-5-11.7+Math.sin(a0)*3.24;
+   const pos=s=>{if(s<.45){const a=s*26,r=9-s*4;return[R.x+Math.cos(a)*r,R.y-5-s*26+Math.sin(a)*r*.45]}const u=(s-.45)/.55;return[x0+(TX-x0)*u,y0+(TY-8-y0)*u+Math.sin(u*9)*6*(1-u)-Math.sin(u*3.14)*14]};
+   const hd=Math.min(1,q*1.15);for(let j=L;j>=0;j--){const s=hd-j*.022;if(s<0)continue;const p=pos(s),w=j<2?3:j>L-3?1:2;PX(c,p[0]-w/2,p[1]-w/2,w,w,j%3?col[0]:col[1]);if(j%4==2)PX(c,p[0],p[1]-w/2-1,1,1,'#ffffff')}
+   const h=pos(hd),pp=pos(Math.max(0,hd-.02)),d=h[0]>=pp[0]?1:-1,hx=h[0],hy=h[1];PX(c,hx-2,hy-2,5,4,col[0]);PX(c,hx+d*2,hy-1,2,2,col[1]);PX(c,hx,hy-2,1,1,'#ff2020');PX(c,hx-d*2,hy-4,1,2,col[1]);PX(c,hx-d*3,hy-5,1,1,col[1]);c.globalAlpha=.6;PX(c,hx+d*4,hy,2,1,'#ffffff')},
+  sword(c,q,R,col,sc,k){const n=5+Math.min(7,sc);for(let i=0;i<n;i++){const a=k*4+i*6.283/n,f=C1((q-.4-i*.035)/.3);if(f>=1)continue;
+    if(f<=0){const x=R.x+Math.cos(a)*11,y=R.y-8+Math.sin(a)*5.5;c.globalAlpha=.85;for(let t=0;t<5;t++)PX(c,x,y-t,1,1,t<4?(t?col[1]:'#ffffff'):'#8a6a3a');PX(c,x-1,y-1,3,1,'#c8a050')}
+    else{const b=i*6.283/n,sx=R.x+Math.cos(b)*11,sy=R.y-8,x=sx+(TX-sx)*f*f,y=sy+(TY-4-sy)*f*f-(1-f)*f*20,dx=TX-x,dy=TY-4-y,dd=Math.hypot(dx,dy)||1;c.globalAlpha=.95;for(let t=0;t<7;t++)PX(c,x-dx/dd*t,y-dy/dd*t,1,1,t<5?(t?col[1]:'#ffffff'):'#8a6a3a')}}},
+  palm(c,q,R,col,sc,k){const U=2+(sc>=6?1:0)+(sc>=9?1:0),W=9*U,H=HAND.length*U,yb=-6+(TY+4)*EZ(C1(q*1.2)),x0=TX-W/2,y0=yb-H;
+   for(let j=0;j<HAND.length;j++)for(let i=0;i<9;i++){if(HAND[j][i]!=='#')continue;const edge=j===0||HAND[j][i-1]!=='#'||HAND[j][i+1]!=='#'||!HAND[j-1]||HAND[j-1][i]!=='#';c.globalAlpha=edge?.9:.45;PX(c,x0+i*U,y0+j*U,U,U,edge?col[1]:col[0])}
+   if(q>.8){const e=(q-.8)/.2;c.globalAlpha=.7*(1-e);c.strokeStyle='#ffffff';c.lineWidth=1;c.beginPath();c.ellipse(TX,TY+2,6+e*30,2+e*6,0,0,6.283);c.stroke()}},
+  fist(c,q,R,col,sc,k){const N=10+sc*3,n=ip(q*N);for(let i=0;i<n;i++){const x=R.x+8+(TX-R.x-8)*((i/N+k*2.2)%1),y=R.y-6+(srand(i*7+1)-.5)*14+(TY-R.y)*((i/N+k*2.2)%1)*.4;c.globalAlpha=.35+.5*srand(i+3);PX(c,x,y,3,3,col[0]);PX(c,x+3,y+1,1,1,col[1]);PX(c,x-3,y+1,3,1,col[1])}},
+  fire(c,q,R,col,sc,k){if(q<.5){const s=EZ(q/.5);for(const w of[-1,1])for(let i=0;i<7;i++){const a=-1.5708+w*(.25+i*.2)*s,L=5+i*1.6+sc*.4;c.globalAlpha=.8;pxLine(c,R.x+w,R.y-9,R.x+w+Math.cos(a)*L,R.y-9+Math.sin(a)*L*.8,i%2?col[0]:col[1],1)}}
+   else{const u=EZ((q-.5)/.5),x=R.x+(TX-R.x)*u,y=R.y-12+(TY-6-R.y+12)*u-Math.sin(u*3.14)*12,fl=Math.sin(k*20)*4;c.globalAlpha=.95;PX(c,x-2,y-1,5,3,col[0]);PX(c,x+3,y-1,2,1,col[1]);pxLine(c,x,y,x-6,y-6-fl,col[1],1);pxLine(c,x,y,x-6,y+5+fl,col[1],1);pxLine(c,x-1,y,x-5,y-4-fl,col[0],1);for(let t=1;t<10;t++){c.globalAlpha=.6*(1-t/10);PX(c,x-3-t*2.2,y+Math.sin(t+k*9),2,1,t%2?col[0]:'#ffffff')}}},
+  ice(c,q,R,col,sc,k){const n=8+Math.min(6,sc),gy=TY+2;for(let i=0;i<n;i++){const f=C1(q*1.4-i/n*.9),x=R.x+10+(TX-R.x-6)*i/(n-1),h=ip(f*(6+i*1.4+sc));c.globalAlpha=.95;for(let t=0;t<h;t++){const w=Math.max(1,ip((h-t)/3));PX(c,x-w/2,gy-t,w,1,t>h-3?'#ffffff':(t%2?col[0]:col[1]))}}},
+  thunder(c,q,R,col,sc,k){const n=1+Math.min(4,Math.floor(sc/2));for(let b=0;b<n;b++){const t0=.12+b*.16;if(q<t0||q>t0+.18)continue;const sd=b*9+Math.floor(k*24);let x=TX+(srand(sd)-.5)*24,y=0;
+    while(y<TY){const nx=x+(srand(y*3+sd)-.5)*9,ny=Math.min(TY,y+5+srand(y+sd)*4);pxLine(c,x,y,nx,ny,'#ffffff',2);pxLine(c,x,y,nx,ny,col[0],1);x=nx;y=ny}c.globalAlpha=.12;c.fillStyle='#ffffff';c.fillRect(0,0,PXW,PXH);c.globalAlpha=1}},
+  wind(c,q,R,col,sc,k){const x0=R.x+8+(TX-R.x-8)*EZ(q),y0=TY+2-(TY-R.y)*(1-EZ(q))*.6,H=18+sc*2;for(let j=0;j<H;j+=1){const w=2+j*.45,a=k*14+j*.5;c.globalAlpha=.65;PX(c,x0+Math.cos(a)*w,y0-j,2,1,j%4?col[0]:'#ffffff');PX(c,x0-Math.cos(a)*w,y0-j,1,1,col[1])}},
+  dark(c,q,R,col,sc,k){const n=3+Math.min(4,Math.floor(sc/2));for(let i=0;i<n;i++){const f=C1(q*1.6-i*.12),x=TX-14+i*28/(n-1),h=ip(f*(10+srand(i)*8+sc));c.globalAlpha=.9;
+    for(let t=0;t<h;t++)PX(c,x+Math.sin(t*.5+k*6+i)*1.2,TY+2-t,2,1,t%3?'#12060f':col[0]);if(h>4){const hx=x+Math.sin(h*.5+k*6+i)*1.2,hy=TY+2-h;PX(c,hx-2,hy-3,1,3,'#12060f');PX(c,hx+3,hy-3,1,3,'#12060f');PX(c,hx,hy-4,1,3,'#12060f');PX(c,hx+1,hy-1,1,1,col[1])}}},
+  star(c,q,R,col,sc,k){const P=[];for(let i=0;i<7;i++)P.push([86+srand(i+40)*60,6+srand(i+50)*22]);const m=Math.min(7,Math.floor(q*14));c.globalAlpha=.95;
+   for(let i=0;i<m;i++){PX(c,P[i][0]-1,P[i][1],3,1,'#ffffff');PX(c,P[i][0],P[i][1]-1,1,3,'#ffffff');if(i)pxLine(c,P[i-1][0],P[i-1][1],P[i][0],P[i][1],col[0],1)}
+   if(q>.55){const u=EZ((q-.55)/.45),x=P[6][0]+(TX-P[6][0])*u,y=P[6][1]+(TY-P[6][1])*u;for(let t=1;t<12;t++){c.globalAlpha=.7*(1-t/12);PX(c,x-(TX-P[6][0])*.03*t,y-(TY-P[6][1])*.03*t,2,2,t%2?col[0]:col[1])}c.globalAlpha=1;pxDisc(c,ip(x),ip(y),2+Math.min(3,sc>>2),'#ffffff')}},
+  water(c,q,R,col,sc,k){const xf=R.x+(TX+12-R.x)*q,H=12+sc*2;c.globalAlpha=.85;for(let x=ip(R.x);x<xf;x++){const h=ip(H*Math.exp(-(xf-x)/18)*(1+.2*Math.sin(x*.4+k*8)));for(let t=0;t<h;t++)PX(c,x,TY+2-t,1,1,t>h-2?'#ffffff':t%3?col[0]:col[1])}},
+  beam(c,q,R,col,sc,k){c.lineWidth=1;for(let i=0;i<3;i++){const e=(q*2+i/3)%1;c.globalAlpha=.6*(1-e);c.strokeStyle=i%2?col[1]:col[0];c.beginPath();c.ellipse(R.x+4+e*6,R.y-6,2+e*4,4+e*10,0,0,6.283);c.stroke()}},
+  claw(c,q,R,col,sc,k){if(q<.35)return;const u=C1((q-.35)/.3);for(let i=0;i<3;i++){const x1=TX-12+i*7,y1=TY-26;pxLine(c,x1,y1,x1+12*u,y1+28*u,'#ffffff',2);pxLine(c,x1+1,y1,x1+1+12*u,y1+28*u,col[0],1)}},
+  roar(c,q,R,col,sc,k){c.lineWidth=1;for(let i=0;i<4;i++){const e=(q*1.5+i*.25)%1,x=R.x+8+(TX-R.x-8)*e;c.globalAlpha=.7*(1-e);c.strokeStyle=col[i%2];c.beginPath();c.ellipse(x,R.y-6+(TY-R.y)*e*.5,2+e*4,5+e*14,0,0,6.283);c.stroke()}},
+  tail(c,q,R,col,sc,k){const a=-2.6+3.2*EZ(C1(q*1.3)),r=26+sc*2;for(let i=0;i<12;i++){const b=a-i*.09;c.globalAlpha=.85*(1-i/12);PX(c,R.x+18+Math.cos(b)*r,R.y-4+Math.sin(b)*r*.55,3,2,i?col[0]:'#ffffff')}},
+  moon(c,q,R,col,sc,k){const y=40-28*EZ(C1(q*1.5));c.globalAlpha=.8;pxDisc(c,TX,ip(y),9,'#eef0ff');c.globalAlpha=.35;pxDisc(c,TX,ip(y),12,col[1]);if(q>.6){const u=(q-.6)/.4;c.globalAlpha=.6*(1-u*.5);c.fillStyle=col[1];c.fillRect(TX-3,ip(y)+9,7,TY-ip(y)-9);c.fillStyle='#ffffff';c.fillRect(TX-1,ip(y)+9,3,TY-ip(y)-9)}}};
+ SIG.breath=SIG.fire;window.PX_SIG=SIG;
+ const _rw=relWide;relWide=function(c,o,k,T,lk,col,sc,RP,beast){const r=_rw.apply(this,arguments);
+  try{if(sc>=1&&k>=T.atk-.05&&k<T.hit+.3){const kd=beast?o.fxk:((o.spec&&o.spec.k&&o.spec.k[0])||o.fxk||'beam'),f=SIG[kd];if(f){const q=C1((k-T.atk+.05)/(T.hit-T.atk+.35));c.save();c.globalAlpha=1;f(c,q,RP,col,sc,k);c.restore();c.globalAlpha=1}}}catch(e){}return r}}
+
+// ---- รากฐานร้อยปี: จะเหาะขึ้นโลกเซียนต้องอายุ 100 ปี + เหนือขีดจำกัดโลกมนุษย์ขั้น 3 · ปุ่มขึ้นโลกเทพเช็ครากฐานพันปีด้วย ----
+{const MN={a:100,p:2};
+ window.xianReady=()=>{if(!S||S.xian||S.ch==='short')return{ok:true};const tOK=S.age>=MN.a,pl=postLv(),pOK=pl>=MN.p;return{ok:tOK&&pOK,tOK,pOK,left:Math.max(0,MN.a-S.age),pl}};
+ const _ae=ascEligible;ascEligible=function(){const r=_ae.apply(this,arguments);if(!r)return r;try{if(S.xian&&!S.xt)return !!godReady().ok;if(!S.xian)return !!xianReady().ok}catch(e){}return r};
+ const _at=ascendTick;ascendTick=function(){try{if(S&&!S.xian&&realmIdx()>=7&&!(S.beastMode&&!S.beastMode.human)&&ascWait()<=0){const g=xianReady();if(!g.ok){if(!S._xqY||S.age-S._xqY>=20){S._xqY=S.age;addFeed('ev',`☁️ ทัณฑ์สวรรค์สู่โลกเซียนยังไม่มา — ${!g.pOK?`ต้องผ่าน<b>เหนือขีดจำกัดของโลกมนุษย์ถึงขั้น 3</b> (ตอนนี้ ${g.pl<0?'ยังไม่เริ่ม':'ขั้น '+(g.pl%9+1)})`:''}${!g.pOK&&!g.tOK?' และ ':''}${!g.tOK?`<b>รากฐานต้องบ่มครบร้อยปี</b> (เหลืออีก ${g.left} ปี)`:''}`,'sum')}}}}catch(e){}return _at.apply(this,arguments)};
+ try{SYS_GUIDE.push({s:'world',nw:1,ic:'🌩️',t:'รากฐานร้อยปี — ขึ้นโลกเซียน',d:'จะเหาะขึ้นโลกเซียนได้ต้อง <b>1)</b> อายุครบ 100 ปี และ <b>2)</b> ผ่านเหนือขีดจำกัดของโลกมนุษย์ถึงขั้น 3 · ครบแล้วปุ่ม ⚡ เหาะสู่โลกเซียน จะขึ้นเหนือแถบเวลา',te:'Hundred-year foundation',de:'To ascend to the xian world: reach age 100 and mortal beyond-limit stage 3.'})}catch(e){}}
+
 </script>
 </body>
 </html>
