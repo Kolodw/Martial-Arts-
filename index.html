@@ -14405,7 +14405,7 @@ const nb=(k,i)=>` <button onclick="nameAsk('${k}',${i})" style="font-size:12px;p
 :root{--gold:#e8b54a;--goldL:#ffd98a;--goldG:rgba(232,181,74,.45)}
 /* ---- G: ปุ่มเลือกแบบขอบทอง ---- */
 #title .seg button,#title .mwseg{transition:border-color .18s,box-shadow .18s,background .18s,color .18s,transform .08s}
-#title .seg button.on{background:rgba(232,181,74,.16)!important;font-weight:800!important;color:var(--ink,#2a2030)!important;text-shadow:none!important;border-color:var(--gold)!important;box-shadow:0 0 0 1px var(--gold),0 0 12px var(--goldG)!important}
+#title .seg button.on{text-shadow:none!important}
 #title .mwseg{filter:grayscale(.7);opacity:.75}
 #title .mwseg::after{content:' 🔒';font-size:.85em}
 /* ---- B: แถบบน ---- */
@@ -14518,6 +14518,31 @@ button.errf{box-shadow:0 0 0 2px #e04050!important}
  document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(!b)return;setTimeout(()=>{if(Date.now()-lastSfx>120)try{sfx('click')}catch(_){}},10)},true);
  // 3: ปุ่มที่รอเซิร์ฟเวอร์
 }
+
+// ===================== v16.2 สไตล์เดียวทั้งเกม: สีเน้นทอง · ปุ่มหลักทอง · ตัวเลือกขอบเรืองแสง =====================
+(()=>{const st=document.createElement('style');st.textContent=`
+:root{--pink:#e0a032;--pinkd:#a86e12;--onacc:#2a1a04}
+body.dark{--pink:#e8b54a;--pinkd:#b8801e}
+body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a04}
+/* หน้าแรก: เอาปุ่มลอยด้านขวาออก (มีในแถบล่างแล้ว) */
+#title .tmenu,#title .tonline{display:none!important}
+#title #tTop{max-width:calc(100% - 20px)}
+/* ตัวหนังสือบนพื้นสีเน้น */
+.pbtn,.fc.on,.item button,.new,.tabb.on,.dgbar i.on,.gdc .gdnew,.lktab.on,.frnew,#mFloat .mfx,.bkfl button.on,.bkrow .bkx,.item .tabb.on{color:var(--onacc)!important}
+/* ปุ่มหลัก: ทองไล่สี */
+.pbtn{background:var(--pink);background:linear-gradient(180deg,color-mix(in srgb,var(--pink) 55%,#fff) 0%,var(--pink) 55%,var(--pinkd) 100%);border-color:var(--pinkd)!important;box-shadow:0 4px 0 var(--pinkd),0 0 14px color-mix(in srgb,var(--pink) 35%,transparent)!important;font-weight:800;text-shadow:0 1px 0 rgba(255,255,255,.25)}
+.pbtn:active{box-shadow:0 1px 0 var(--pinkd)!important}
+#tDock .tgo{background:linear-gradient(180deg,color-mix(in srgb,var(--pink) 55%,#fff),var(--pink) 55%,var(--pinkd));border-color:var(--pinkd);box-shadow:0 4px 0 var(--pinkd),0 0 18px color-mix(in srgb,var(--pink) 45%,transparent);color:var(--onacc)}
+#tDock .tcont,#tTop .tav{border-color:var(--pink)}#tDock .tcont b{color:var(--pink)}
+/* ตัวเลือกที่เลือกอยู่: พื้นทองจาง + ขอบเรืองแสง (ไม่ใช่พื้นดำทึบ) */
+.cb.on,.cxtab.on,.sp2tabs button.on,.tabb.on,.item .tabb.on,.lktab.on,.bkfl button.on,#title .seg button.on,.seg button.on{background:color-mix(in srgb,var(--pink) 18%,var(--card))!important;color:var(--ink)!important;border-color:var(--pink)!important;box-shadow:0 0 0 1px var(--pink),0 0 10px color-mix(in srgb,var(--pink) 45%,transparent)!important;font-weight:800}
+.fc.on{background:linear-gradient(180deg,color-mix(in srgb,var(--pink) 60%,#fff),var(--pink));box-shadow:inset 0 -3px 0 var(--pinkd),0 0 10px color-mix(in srgb,var(--pink) 40%,transparent)}
+.opt:hover,.gbtn:hover,.cb:hover{border-color:color-mix(in srgb,var(--pink) 70%,var(--line))}
+.opt.sel{background:color-mix(in srgb,var(--pink) 14%,var(--w))!important}
+/* หน้าต่าง: แถบเน้นด้านบน + หัวข้อมีเส้นทอง */
+.modal{border-top:3px solid var(--pink)}
+.modal>h3:first-of-type{padding-bottom:6px;border-bottom:2px solid color-mix(in srgb,var(--pink) 40%,transparent);margin-right:44px}
+`;document.head.appendChild(st)})();
 
 </script>
 </body>
