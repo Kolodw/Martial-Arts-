@@ -919,7 +919,7 @@ function beginLife(){
  render();startTimer();saveGame();achCheck();
  if(!S.goal)setTimeout(pickGoalModal,300);
 }
-function addItem(it){const x={...it};if(!x.passive)x.left=x.uses;S.items.push(x);if(x.id==='nano')S.lifespan+=20;if(x.id==='system')S.int+=10}
+function addItem(it){const x={...it};if(!x.passive)x.left=x.uses;S.items.push(x);if(x.id==='nano')lsAdd(20);if(x.id==='system')S.int+=10}
 const has=id=>S.items.some(i=>i.id===id&&(i.passive||i.left>0));
 const artBonus=()=>Math.round(S.arts.map(a=>a.b*artM(a)).sort((x,y)=>y-x).reduce((s,v,i)=>s+(i<5?v:v*.25),0)*(S.clan&&S.clan.b&&S.clan.b.art||1)*(tr('fastlearn')?1.15:1)*(tr('crippled')?.2:1));
 const total=()=>gv('weapon')+eqA('pow')+S.power+S.qi*12+artBonus()+(has('axe')?80:0)+(S.done.includes('powder')?150:0);
@@ -7336,7 +7336,7 @@ const GDICT=[['🏠 จดหมายจากบ้าน','🙏 เสีย�
 // ---- v12.2: ยาจากงานช่างมีชิ้นของตัวเอง ----
 EQI.t5={s:'trs',n:'เกราะเกล็ดอสูร',ic:'🦎',d:'พลังชีวิตสูงสุด +45 · เจ็บน้อยลง 5%',e:{hp:45,red:.05},v:3000,t:2};
 Object.assign(BAGIT,{lpill:{n:'ยาอายุวัฒนะ',ic:'💮',v:1500},bpill:{n:'ยาแก่นอสูร',ic:'🟤',v:600}});
-Object.assign(BAGX,{lpill:{r:3,d:()=>S&&S.xt?'อายุขัย +500 ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ':S&&S.xian?'อายุขัย +50 ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ':'อายุขัย +10 ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ',use(){const v=S.xt?500:S.xian?50:10;if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;return`อายุขัย +${v} ปี`}},
+Object.assign(BAGX,{lpill:{r:3,d:()=>S&&S.xt?'อายุขัย +500 ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ':S&&S.xian?'อายุขัย +50 ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ':'อายุขัย +10 ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ',use(){const v=S.xt?500:S.xian?50:10;if(S.xt)S.glExtra=(S.glExtra||0)+v;else lsAdd(v);return`อายุขัย +${v} ปี`}},
  bpill:{r:2,d:()=>`พลังยุทธ์ +${fmt(bpillV())} · สกัดจากแก่นอสูร (ยิ่งกินในขั้นเดียวกันยิ่งได้ผลน้อยลง)`,use(){const g=S&&S.xt?Math.max(100,pctPow(.02)):yrPow0()*3;S.power+=g;return`พลังยุทธ์ +${fmt(g)}`}}});
 function bpillV(){return S&&S.xt?Math.max(100,Math.round(total()*.02)):yrPow0()*3}
 {const _bt=bagTick;bagTick=function(){const r=_bt.apply(this,arguments);try{if(S&&S.alive&&bagHas('lpill')&&S.age>lifeMax()-(S.xt?60:S.xian?15:4)&&bagUse('lpill')){const m=BAGX.lpill.use();log(`🎒 💮 กลืนยาอายุวัฒนะ — ${m}`,'epic')}}catch(e){console.error(e)}return r}}
@@ -7765,7 +7765,7 @@ function ecoV(it){const r=it.r,w=it.w,K={qi:{m:1,x:3,g:10},life:{m:1,x:6,g:60},i
   default:return{v:0,d:''}}}
 function ecoDesc(it){if(it.c==='x')return`❔ ${it.hint}`;const e=it.fx==='hp'&&it.c==='p'?{d:'ฟื้นพลังชีวิตเต็ม · พลังชีวิตสูงสุด +'+Math.round([.01,.02,.035,.05,.08,.12,.18,.3][it.r]*100)+'%'}:ecoV(it);return e.d}
 function ecoApply(it,src){const e=ecoV(it);let t=e.d;
- if(it.c==='x'){const r=Math.random();if(it.fx==='life'){const v=Math.round((S.xt?20000:S.xian?300:30)*(1+Math.random()));if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;t=`อายุขัย +${fmt(v)} ปี`}
+ if(it.c==='x'){const r=Math.random();if(it.fx==='life'){const v=Math.round((S.xt?20000:S.xian?300:30)*(1+Math.random()));if(S.xt)S.glExtra=(S.glExtra||0)+v;else lsAdd(v);t=`อายุขัย +${fmt(v)} ปี`}
   else if(it.fx==='pow'){const g=pctPow(.25+Math.random()*.3);S.power+=g;t=`พลังยุทธ์ +${fmt(g)}`}
   else if(it.fx==='tal'){const m=1.08+Math.random()*.12;S.talent=Object.assign({},S.talent,{m:+(S.talent.m*m).toFixed(2)});t=`พรสวรรค์ ×${m.toFixed(2)} ถาวร`}
   else if(it.fx==='art'){const a=newArt(3);S.arts.push(a);t=`ได้ ${artHtml(a)}`}
@@ -7773,7 +7773,7 @@ function ecoApply(it,src){const e=ecoV(it);let t=e.d;
   else{if(r<.35){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.5));joy(-15);t='คำสาป! พลังชีวิต −50% และความสุขลดฮวบ'}else if(r<.7){const g=pctPow(.4);S.power+=g;t=`สมบัติแท้! พลังยุทธ์ +${fmt(g)}`}else{S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.15).toFixed(2)});S.lifespan+=50;t='สมบัติแท้! พรสวรรค์ ×1.15 และอายุขัย +50 ปี'}}
   log(`❔ เปิด<b>${esc(it.n)}</b> ${rarTag(it.r)} — ${t}`,'myth',true);return}
  switch(it.fx){case'pow':S.power+=pctPow(e.v);break;case'hp':if(it.c==='p')S.hp=S.maxHp;S.maxHp+=Math.max(5,Math.round(S.maxHp*e.v));S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*e.v));break;
-  case'qi':S.qi+=e.v;break;case'life':if(S.xt)S.glExtra=(S.glExtra||0)+e.v;else S.lifespan+=e.v;break;case'int':S.int+=e.v;break;case'cha':S.cha+=e.v;break;case'karma':S.karma+=e.v;break;case'fame':S.fame+=e.v;break;
+  case'qi':S.qi+=e.v;break;case'life':if(S.xt)S.glExtra=(S.glExtra||0)+e.v;else lsAdd(e.v);break;case'int':S.int+=e.v;break;case'cha':S.cha+=e.v;break;case'karma':S.karma+=e.v;break;case'fame':S.fame+=e.v;break;
   case'art':{const a=newArt(e.v);S.arts.push(a);t=`ได้ ${artHtml(a)}`;break}
   case'fight':S.buf=(S.buf||[]).filter(b=>b.k!=='fight'||b.u<=S.age||b.v<e.v);S.buf.push({k:'fight',v:e.v,u:S.age+e.y,n:it.n});break;
   case'build':S.karma+=e.v;S.fame+=e.f;if(S.xt){try{gdInit().fp+=Math.round(ECO_RM[it.r]*3);gdBel(R(500,3000)*(it.r+1))}catch(x){}}break}
@@ -7853,12 +7853,12 @@ function paEff(it){const w=ECO_W(),r=it.r,b=ecoV({r,w,fx:it.fx==='int'?'int':it.
   case'myst':return{v:0,d:'❔ ไม่มีใครรู้ว่าข้างในคืออะไร — แต่ไม่เคยมีใครเปิดแล้วผิดหวัง'}}return{v:0,d:''}}
 function paApply(it){const e=paEff(it);let t=e.d;
  switch(it.fx){case'pow':S.power+=pctPow(e.v);break;case'hp':S.maxHp+=Math.max(10,Math.round(S.maxHp*e.v));S.hp=S.maxHp;break;
-  case'qi':S.qi+=e.v;break;case'life':if(S.xt)S.glExtra=(S.glExtra||0)+e.v;else S.lifespan+=e.v;break;case'int':S.int+=e.v;break;case'cha':S.cha+=e.v;break;
+  case'qi':S.qi+=e.v;break;case'life':if(S.xt)S.glExtra=(S.glExtra||0)+e.v;else lsAdd(e.v);break;case'int':S.int+=e.v;break;case'cha':S.cha+=e.v;break;
   case'art':{const a=newArt(e.v);S.arts.push(a);t=`ได้ ${artHtml(a)}`;break}
   case'fight':S.buf=(S.buf||[]).filter(b=>b.k!=='fight'||b.u<=S.age||b.v<e.v);S.buf.push({k:'fight',v:e.v,u:S.age+e.y,n:it.n});break;
   case'tal':S.talent=Object.assign({},S.talent,{m:+(S.talent.m*(1+e.v)).toFixed(2)});break;
   case'brk':bagAdd('brk',e.v,true);S.tribPrep=Math.min(3,(S.tribPrep||0)+Math.min(3,e.v));S.btFail=(S.btFail||0)+e.v;break;
-  case'myst':{const x=Math.random();if(x<.4){const g=pctPow(.35+Math.random()*.3);S.power+=g;t=`พลังยุทธ์ +${fmt(g)}`}else if(x<.7){S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.15).toFixed(2)});t='พรสวรรค์ ×1.15 ถาวร'}else if(x<.9){const a=newArt(4);S.arts.push(a);t=`ได้ ${artHtml(a)}`}else{const v=S.xt?50000:S.xian?800:60;if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;t=`อายุขัย +${fmt(v)} ปี`}break}}
+  case'myst':{const x=Math.random();if(x<.4){const g=pctPow(.35+Math.random()*.3);S.power+=g;t=`พลังยุทธ์ +${fmt(g)}`}else if(x<.7){S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.15).toFixed(2)});t='พรสวรรค์ ×1.15 ถาวร'}else if(x<.9){const a=newArt(4);S.arts.push(a);t=`ได้ ${artHtml(a)}`}else{const v=S.xt?50000:S.xian?800:60;if(S.xt)S.glExtra=(S.glExtra||0)+v;else lsAdd(v);t=`อายุขัย +${fmt(v)} ปี`}break}}
  return t}
 const paGold=g=>`💰 ${fmt(g)} ตำลึง`,paCost=g=>Math.round(g);
 // ---- ประกาศ ----
@@ -9776,7 +9776,7 @@ function twDice(b,hi){const T=twInit();if(T.gmY!==S.age){T.gmY=S.age;T.gmN=0}if(
  log(`🎲 ${tw('gm')}: ${msg}`,trip?'epic':'');toast(msg);sfx('click');render();openTown('gm')}
 const FORT=[['ชะตาปีหน้าสดใส ดวงดาวส่องทางให้','luck'],['ระวังคนใกล้ตัวที่ยิ้มให้ แต่ใจไม่ตรง','warn'],['เงินทองจะไหลมาจากทิศตะวันออก','money'],['คู่ครองของเจ้าอยู่ไม่ไกล หากตั้งใจมองหา','love'],['พลังในกายยังซ่อนอยู่ อีกไม่นานจะแตกหน่อ','pow'],['อายุขัยของเจ้ายืนยาวกว่าที่คิด','life'],['ปีนี้อย่าเพิ่งลงมือเรื่องใหญ่ รอฟ้าเปิดก่อน','calm']];
 function twFort(){const T=twInit(),c=Math.round(300*W15());if(T.ftY===S.age||S.money<c)return;T.ftY=S.age;S.money-=c;const [t,k]=ch(FORT);let ex='';
- if(k==='luck'){joy(5);ex='ความสุข +5'}else if(k==='money'){const g=Math.round(c*R(2,5));S.money+=g;ex=`เดินออกจากร้านเจอถุงเงินตก +${fmt(g)}`}else if(k==='love'){S.cha+=3;ex='เสน่ห์ +3'}else if(k==='pow'){const g=pctPow(.03);S.power+=g;ex=`พลังยุทธ์ +${fmt(g)}`}else if(k==='life'){const v=S.xt?2000:S.xian?20:3;if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;ex=`อายุขัย +${fmt(v)} ปี`}else if(k==='warn'){S.int+=2;ex='ระวังตัวมากขึ้น ปัญญา +2'}else{S.qi=+(S.qi+.5).toFixed(1);ex='จิตสงบ ลมปราณ +0.5 ปี'}
+ if(k==='luck'){joy(5);ex='ความสุข +5'}else if(k==='money'){const g=Math.round(c*R(2,5));S.money+=g;ex=`เดินออกจากร้านเจอถุงเงินตก +${fmt(g)}`}else if(k==='love'){S.cha+=3;ex='เสน่ห์ +3'}else if(k==='pow'){const g=pctPow(.03);S.power+=g;ex=`พลังยุทธ์ +${fmt(g)}`}else if(k==='life'){const v=S.xt?2000:S.xian?20:3;if(S.xt)S.glExtra=(S.glExtra||0)+v;else lsAdd(v);ex=`อายุขัย +${fmt(v)} ปี`}else if(k==='warn'){S.int+=2;ex='ระวังตัวมากขึ้น ปัญญา +2'}else{S.qi=+(S.qi+.5).toFixed(1);ex='จิตสงบ ลมปราณ +0.5 ปี'}
  log(`🔮 ${tw('ft')}ทำนาย: "${t}" — ${ex}`,'good');sfx('good');render();openTown('ft')}
 function twTea(){const T=twInit(),c=Math.round(80*W15());if(T.teaY===S.age||S.money<c)return;T.teaY=S.age;S.money-=c;S.cha+=2;const x=Math.random();
  if(x<.3&&S.age>=18){closeM();log('🍵 ระหว่างจิบชา มีคนเดินมาขอนั่งร่วมโต๊ะ…');setTimeout(()=>{try{haremOffer(true)}catch(e){}},50);return}
@@ -10195,7 +10195,7 @@ function bvFoe(k){let best=null;try{const st=bvSt();for(let i=0;i<6;i++){const b
 const bvN=b=>b&&b.n?b.n:'สัตว์ปริศนา';
 // ผลลัพธ์
 const BVG={pow:k=>{const g=pctPow(k);S.power+=g;return`พลัง +${fmt(g)}`},qi:v=>{v=+(v*(S.xian?2:1)).toFixed(1);S.qi=+(S.qi+v).toFixed(1);return`ลมปราณ +${v} ปี`},hp:f=>{const d=Math.round(S.maxHp*f);S.hp-=d;return`พลังชีวิต −${d}`},heal:f=>{S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*f));return'ฟื้นตัว'},
- life:v=>{S.lifespan+=v;return`อายุขัย +${v} ปี`},karma:v=>{S.karma+=v;return`กรรม${v>=0?'ดี +':' '}${v}`},fame:v=>{S.fame+=v;return`ชื่อเสียง +${v}`},joy:v=>{joy(v);return v>=0?`ความสุข +${v}`:`ความสุข ${v}`},int:v=>{S.int+=v;return`ปัญญา +${v}`},
+ life:v=>{lsAdd(v);return`อายุขัย +${v} ปี`},karma:v=>{S.karma+=v;return`กรรม${v>=0?'ดี +':' '}${v}`},fame:v=>{S.fame+=v;return`ชื่อเสียง +${v}`},joy:v=>{joy(v);return v>=0?`ความสุข +${v}`:`ความสุข ${v}`},int:v=>{S.int+=v;return`ปัญญา +${v}`},
  item:(id,n)=>{const g=bagAdd(id,n||1,true)||0;return g?`ได้${(BAGIT[id]||{}).n||id} ×${g}`:'กระเป๋าเต็ม'},kill:()=>{S.kills=(S.kills||0)+1;return''},dex:(b,h)=>{try{if(b&&b.i>=0)bdexAdd(b,h||'see')}catch(e){}return''}};
 const bvJ=a=>a.filter(Boolean).join(' · ');
 function bvFight(name,mul,win,lose){const ep=Math.round(total()*mul*(.9+Math.random()*.2));if(fight(name,ep)){BVG.kill();win()}else lose()}
@@ -12605,7 +12605,9 @@ BAGX.scroll.use=function(){const a=newArt(2),full=S.arts.length>=artCap();const 
 
 // ===================== v15.6b อายุขัยจากยา · จำศีลยาว =====================
 // ยาอายุขัยของคน: เดิมเพิ่ม lifespan แต่ติดเพดานตามระดับ (เช่น 150) ตัวเลขไม่ขยับ → ปีที่ได้จากของบวกเหนือเพดาน
-['fruit','lpill','star','void'].forEach(id=>{const X=BAGX[id];if(!X||!X.use)return;const u=X.use;X.use=function(){const a=S.lifespan;const r=u.apply(this,arguments);try{const d=S.lifespan-a;if(d>0)S.lsI=(S.lsI||0)+d}catch(e){}return r}});
+['fruit','lpill','star','void'].forEach(id=>{const X=BAGX[id];if(!X||!X.use)return;const u=X.use;X.use=function(){const a=S.lifespan,i0=S.lsI||0;const r=u.apply(this,arguments);try{const d=S.lifespan-a;if(d>0&&(S.lsI||0)===i0){S.lsI=i0+d;lsMw(d)}}catch(e){}return r}});
+function lsMw(v){try{if(v>0&&typeof mwOn==='function'&&mwOn()&&S.mw&&S.mw.end)S.mw.end+=v}catch(e){}}
+function lsAdd(v){S.lifespan+=v;if(v>0){S.lsI=(S.lsI||0)+v;lsMw(v)}}
 {const _lmI=lifeMax0;lifeMax0=function(){const r1=_lmI.apply(this,arguments);try{const L=S&&S.lsI;if(!L||(S.beastMode&&!S.beastMode.human))return r1;S.lifespan-=L;let r0;try{r0=_lmI.apply(this,arguments)}finally{S.lifespan+=L}return Math.max(r1,r0+L)}catch(e){return r1}}}
 function hibFatCap(){const m=S.beastMode;return 40+(m.st|0)*20}
 function hibCost(n,K){const b=Math.ceil(n<=30?n:30+12*Math.log2(n/30));return Math.ceil(b*(K&&(K.bear||K.turtle)?.5:1))}
@@ -14081,7 +14083,7 @@ matBuy=function(m,n){const left=matLeft(m);if(!left)return toast('ของห�
   const row=b.closest('.item');if(row&&!row.querySelector('.mleft'))row.querySelector('.h b')?.insertAdjacentHTML('beforeend',` <span class="tag2 mleft">· ร้านเหลือ ${left}/${MAT_LIM[k]||6}${k==='jade'||k==='core'?' · ของหายาก หาเพิ่มได้จากจ้าวถิ่น ยอดเขา แดนต้องห้าม':''}</span>`)})}catch(e){}return r}}
 // ยาอายุวัฒนะ: กินซ้ำได้น้อยลง + เพดานต่อชีวิต
 try{const LX=BAGX.lpill,_u=LX.use;LX.use=function(){const base=S.xt?500:S.xian?50:10,cap=S.xt?1500:S.xian?150:30,n=S.lpN||0,got=S.lpT||0;let v=Math.round(base*Math.pow(.5,n));v=Math.max(0,Math.min(v,cap-got));S.lpN=n+1;S.lpT=got+v;
-  if(v<=0)return'ร่างกายดื้อยาอายุวัฒนะแล้ว — กินเพิ่มไม่ได้ผลอีก';if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;return`อายุขัย +${v} ปี${S.lpN>1?' (ร่างกายเริ่มดื้อยา)':''}`};
+  if(v<=0)return'ร่างกายดื้อยาอายุวัฒนะแล้ว — กินเพิ่มไม่ได้ผลอีก';if(S.xt)S.glExtra=(S.glExtra||0)+v;else lsAdd(v);return`อายุขัย +${v} ปี${S.lpN>1?' (ร่างกายเริ่มดื้อยา)':''}`};
  const _d=LX.d;LX.d=()=>{const base=S&&S.xt?500:S&&S.xian?50:10,cap=S&&S.xt?1500:S&&S.xian?150:30,n=(S&&S.lpN)||0,v=Math.max(0,Math.min(Math.round(base*Math.pow(.5,n)),cap-((S&&S.lpT)||0)));return v?`อายุขัย +${v} ปี (เม็ดต่อไป) · ได้จากยารวมสูงสุด ${cap} ปีต่อชีวิต`:'ร่างกายดื้อยาแล้ว — ไม่ได้ผลอีก'}}catch(e){}
 // ขั้นสูงต้องใช้วัตถุดิบมากขึ้น: ยาทะลวงขั้น (ตามขั้นพลัง) · ตีอาวุธ (ตามขั้นอาวุธ)
 try{Object.defineProperty(RCP.a4,'m',{configurable:true,get(){const ri=Math.max(0,S?realmIdx():0);return{herb:3+ri,core:2+Math.floor(ri/2),jade:1+Math.floor(ri/3)}}});
@@ -15027,7 +15029,7 @@ const PA_OP=[
  const _pA=paApply;paApply=function(it){if(!it||it.fx!=='op'||!PA_OP[it.op])return _pA(it);const P=parts(it),out=[];
   P.forEach(p=>{try{const v=p.v;switch(p.fx){
    case'pow':S.power+=pctPow(v);break;case'hp':S.maxHp+=Math.max(10,Math.round(S.maxHp*v));S.hp=S.maxHp;break;
-   case'qi':S.qi+=v;break;case'life':if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;break;case'int':S.int+=v;break;case'cha':S.cha+=v;break;
+   case'qi':S.qi+=v;break;case'life':if(S.xt)S.glExtra=(S.glExtra||0)+v;else lsAdd(v);break;case'int':S.int+=v;break;case'cha':S.cha+=v;break;
    case'money':S.money+=v;break;case'fame':S.fame+=v;break;
    case'tal':S.talent=Object.assign({},S.talent,{m:+(S.talent.m*(1+v)).toFixed(2)});break;
    case'fight':S.buf=(S.buf||[]).filter(b=>b.k!=='fight'||b.u<=S.age||b.v<v);S.buf.push({k:'fight',v,u:S.age+p.y,n:it.n});break;
@@ -15049,7 +15051,7 @@ paTickUI=function(){if($('modal').dataset.k!=='pauc'){clearInterval(PA.tk);retur
   if(o.pw){S.power+=pctPow(o.pw);t.push(`พลังรวม ${o.pw>0?'+':''}${Math.round(o.pw*100)}%`)}
   if(o.hp){S.maxHp=Math.max(10,Math.round(S.maxHp*(1+o.hp)));S.hp=o.hp>0?S.maxHp:Math.min(S.hp,S.maxHp);t.push(`พลังชีวิตสูงสุด ${o.hp>0?'+':''}${Math.round(o.hp*100)}%`)}
   if(o.qi){const v=Math.round(o.qi*QU());S.qi+=v;t.push(`ลมปราณ ${sg(v)} ปี`)}
-  if(o.life){const v=Math.round(o.life*LU());if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;t.push(`อายุขัย ${sg(v)} ปี`)}
+  if(o.life){const v=Math.round(o.life*LU());if(S.xt)S.glExtra=(S.glExtra||0)+v;else lsAdd(v);t.push(`อายุขัย ${sg(v)} ปี`)}
   if(o.mon){const v=Math.max(-(S.money||0),Math.round(o.mon*MU()));S.money=(S.money||0)+v;t.push(`เงิน ${sg(v)} ตำลึง`)}
   if(o.monP){const v=Math.round((S.money||0)*o.monP);S.money=(S.money||0)+v;t.push(`เงิน ${sg(v)} ตำลึง`)}
   if(o.fame){S.fame+=o.fame;t.push(`ชื่อเสียง ${sg(o.fame)}`)}
@@ -15781,7 +15783,7 @@ function mwInfo(){const M=S.mw,P=M.past,done=Object.keys(M.seen).length;modal(`<
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏙️ ยุคปัจจุบัน <span class="tag2">${mwTag()}</span></h3><p>${admK()&&!MW_PUBLIC?'ผู้เล่นทั่วไปยังเห็นหน้าตัวอย่าง "เร็วๆ นี้" เหมือนเดิม':'ข้ามยุคไปใช้ชีวิตในโลกปัจจุบัน — ระบบนี้ยังเป็นเบต้า เจอบั๊กแจ้งได้ที่ ☰ → 🐞 แจ้งบั๊ก'}</p>
  <div class="mgrid"><button class="opt" onclick="mwNewLost()">🌀 ยอดฝีมือหลงยุค<small>${L?`ใช้ชีวิตล่าสุด: ${esc(L.n)} (${L.a} ปี)`:'สร้างยอดฝีมือขึ้นมาใหม่'}</small></button><button class="opt" onclick="_mwTeaser()">🎬 ดูหน้าตัวอย่าง<small>แบบที่ผู้เล่นทั่วไปเห็น</small></button></div><p class="tag2">หรือระหว่างเล่น: ☰ เมนู → 🌀 หลงยุคสู่ปี ${MW_Y0} เพื่อพาตัวละครที่เล่นอยู่ข้ามยุค (ใช้ประวัติจริงทั้งหมด)</p>`,'mwadm')}
  window._mwTeaser=()=>_otW('title')}
-function mwNewLost(){const L=(LS.get('murim_legacy',[])||[])[0];closeM();try{CFG.xian=L&&L.ri>=0&&false?1:0;goBirth();doRoll(true);startLife()}catch(e){console.error(e);return}
+function mwNewLost(){const L=(LS.get('murim_legacy',[])||[])[window._mwLI|0];window._mwLI=0;closeM();try{CFG.xian=L&&L.ri>=0&&false?1:0;goBirth();doRoll(true);startLife()}catch(e){console.error(e);return}
  setTimeout(()=>{try{if(choice._cur)choice._cur=null;if(modalOpen)closeM();if(L){S.name=L.n;if(L.fac){const f=(typeof FACTIONS!=='undefined'?FACTIONS:[]).find(x=>x.n===L.fac||x.n0===L.fac);if(f){S.faction=f;S.rank=4}}if(L.art){const a=newArt(Math.max(0,Math.min(3,(L.art.r|0)-1)));a.n=L.art.n;S.arts.push(a)}}
   S.age=L?Math.max(30,Math.min(90,L.a||45)):45;S.power=Math.max(S.power,R(30000,80000));S.qi=Math.max(S.qi,200);S.int+=60;
   if(!S.parents||!S.parents.length)try{mkFamily()}catch(e){}if(L&&L.fac&&!S.faction)S._mwFac=L.fac;keyAdd('ยอดฝีมืออันดับต้นแห่งยุค');mwEnter('new')}catch(e){console.error(e)}},700)}
@@ -17176,6 +17178,35 @@ function mwOutfitSet(i){S.mw.outfit=i;closeM();toast('เปลี่ยนช�
 // ===================== เปิดยุคปัจจุบันให้ทุกคน =====================
 MW_PUBLIC=true;
 
+
+// ===================== ยุคปัจจุบัน: หน้าเริ่ม — สุ่มเกิดเป็นคนยุคนี้ · เลือกชีวิตจากชาติที่แล้ว · ป้ายประมูลไม่บังจอ =====================
+MW_R.forEach(e=>{if(/^hr\d/.test(e.id)){const c0=e.c;e.c=M=>!M.rnd&&c0(M)}});
+{const _otS=openMWTeaser;openMWTeaser=function(src){if(!mwAllowed()||src==='rift'||src==='end')return _otS.apply(this,arguments);const L=LS.get('murim_legacy',[])||[];
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏙️ ยุคปัจจุบัน <span class="tag2">${mwTag()}</span></h3><p>ใช้ชีวิตในโลกปัจจุบัน — ระบบนี้ยังเป็นเบต้า เจอบั๊กแจ้งได้ที่ ☰ → 🐞 แจ้งบั๊ก</p>
+ <div class="mgrid"><button class="opt" onclick="mwRandNative()">🎲 สุ่มเกิดเป็นคนยุคปัจจุบัน<small>คนธรรมดา สุ่มประเทศ ครอบครัว และอายุ</small></button>
+ <button class="opt" onclick="window._mwLI=0;mwNewLost()">🌀 ยอดฝีมือหลงยุค<small>${L[0]?`ใช้ชีวิตล่าสุด: ${esc(L[0].n)} (${L[0].a} ปี)`:'สร้างยอดฝีมือขึ้นมาใหม่'}</small></button>
+ <button class="opt" onclick="mwPickPast()">📜 เลือกชีวิตจากชาติที่แล้ว<small>${L.length?`มี ${L.length} ชาติให้เลือก`:'ยังไม่มีชีวิตที่จบไป'}</small></button></div>
+ <p class="tag2">หรือระหว่างเล่น: ☰ เมนู → 🌀 หลงยุคสู่ปี ${MW_Y0} เพื่อพาตัวละครที่เล่นอยู่ข้ามยุค</p>`,'mwadm')}}
+function mwPickPast(){const L=LS.get('murim_legacy',[])||[];if(!L.length)return toast('ยังไม่มีชีวิตที่จบไป — เล่นให้จบสักชาติก่อน');
+ modal(`<button class="xbtn" onclick="openMWTeaser('title')">←</button><h3>📜 เลือกชีวิตจากชาติที่แล้ว</h3><p class="tag2">ยอดฝีมือคนนั้นจะหลงยุคมาพร้อมชื่อ สำนัก และวิชาเด่นของชาตินั้น</p><div class="mgrid">${L.map((l,i)=>{let rl='';try{rl=REALMS[l.ri].n}catch(e){}return`<button class="opt" onclick="window._mwLI=${i};mwNewLost()">${esc(l.n)}<small>${l.a} ปี${rl?' · '+esc(rl):''}${l.fac?' · '+esc(l.fac):''}${l.art?' · '+esc(mwTxt(l.art.n)):''}</small></button>`}).join('')}</div>`,'mwpast')}
+function mwRandNative(){closeM();const ks=Object.keys(MW_CC),cc=ch(ks);try{CFG.xian=0;goBirth();doRoll(true);startLife()}catch(e){console.error(e);return}
+ setTimeout(()=>{try{if(choice._cur)choice._cur=null;if(modalOpen)closeM();
+  const fam=Math.random(),rich=fam>.88,poor=fam<.3,gift=Math.random()<.08;
+  const M0={cc};S.name=mwNm(M0,0);S.age=R(18,24);S.power=R(20,60);S.qi=gift?1:0;S.custom=true;S.mwTest=1;S.xian=false;S.xt=0;S.faction=null;S.ownSect=null;
+  S.mw={y:0,sec:0,fame:0,adapt:100,qi:S.qi,lin:0,linMet:0,native:1,rnd:1,cc,uni:Math.random()<.15?1:0,qlv:0,past:{n:S.name,realm:'',yr:MW_Y0-S.age,how:'native',pow0:S.power},seen:{e1:1,e2:1,e3:1,e4:1,e5:1,e6:1,e7:1,e8:1,e9:1,e10:1,e11:1,e12:1,e13:1,e14:1,e15:1},q:[],fl:{},end:S.age+R(72,92),clk:0,hum:1,mon0:0,
+   par:null,ast:{h:rich?2:0,bike:0,car:rich?1:0,ins:0,mort:0,mortY:0,save:0},lives:[]};
+  S.money=mwToB(MW_MIN[cc]*(rich?12:poor?.3:1.5),S.mw);S.focus='mwlearn';
+  const C=mwCC();
+  log(`🎲 คุณเกิดเป็นคน${C.n}ธรรมดาคนหนึ่งใน${C.city} — ${rich?'ครอบครัวมีฐานะ บ้านหลังใหญ่และรถหนึ่งคัน':poor?'ครอบครัวหาเช้ากินค่ำ ต้องดิ้นรนตั้งแต่เด็ก':'ครอบครัวชนชั้นกลางทั่วไป'} · ตอนนี้อายุ ${S.age} ปี${gift?' · บางคืนคุณรู้สึกถึงไออุ่นแปลกๆ ไหลเวียนในตัว…':''}`,'myth',true);
+  addFeed('ev',`${C.f} ${esc(S.name)} — คน${C.n}แท้ๆ เกิดใน${C.city}`,'sum');try{mwAcHold(3000)}catch(e){}render();saveGame()}catch(e){console.error(e)}},700)}
+// ประมูลทั่วยุทธภพ: ไม่ขึ้นในยุคปัจจุบัน/โลกฮันเตอร์ แม้ป้ายจะขึ้นมาก่อนข้ามยุค
+{const _pbn=paBanner;paBanner=function(){if(notWuxia()||(typeof mwOn==='function'&&mwOn()))return;return _pbn.apply(this,arguments)}}
+{const _mwE2=mwEnter;mwEnter=function(){try{paBanX()}catch(e){}return _mwE2.apply(this,arguments)}}
+setInterval(()=>{try{if($('paBan')&&(notWuxia()||mwOn()))paBanX()}catch(e){}},1000);
+// ป้ายประกาศประมูลบนมือถือ: เล็กลง ไม่บังฉาก
+(function(){const st=document.createElement('style');st.textContent=`@media (max-width:640px){#paBan{top:calc(4px + env(safe-area-inset-top));width:min(94vw,360px);padding:6px 9px;font-size:12px;line-height:1.35;border-width:2px}#paBan br{display:none}#paBan .pbar{height:4px;margin:5px 0}#paBan button{padding:5px 4px;font-size:12px}}`;document.head.appendChild(st)})();
+{const _mt2=mwTitle;mwTitle=function(M){const r=_mt2.apply(this,arguments);return M&&M.rnd&&r==='ทายาทคนหลงยุค'?'คนยุคปัจจุบัน':r}}
+{const _rn2=render;render=function(){const r=_rn2.apply(this,arguments);try{const M=S&&S.mw;if(M&&M.native&&S.alive){const g=$('gRealm');if(g)g.textContent=(M.rnd?'คนยุคปัจจุบัน':'ทายาทคนหลงยุค')+(mwQi(M)>0?' · '+MW_QR[mwQi(M)][1]:'')}}catch(e){}return r}}
 </script>
 </body>
 </html>
