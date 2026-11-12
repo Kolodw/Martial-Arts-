@@ -15992,6 +15992,102 @@ function mwSkin(c,t){const cc=S.mw.cc;if(!cc||cc==='th')return;const C=mwCC();c.
  c.restore();c.save();c.globalCompositeOperation='overlay';c.globalAlpha=.22;c.fillStyle=C.col;c.fillRect(0,0,480,270);c.restore()}
 {const _mdC=mwDraw;mwDraw=function(c,t){const r=_mdC.apply(this,arguments);try{if(mwOn())mwSkin(c,t)}catch(e){}return r}}
 
+
+// ===================== ฝังสมบัติ + ชาติก่อน + จักรวาลซ้อน (ยุคปัจจุบัน · ทดสอบแอดมิน) =====================
+const TB_LOC={sect:['🏯','ใต้ลานสำนัก'],cave:['⛰️','ในถ้ำบนภูเขา'],home:['🏠','ใต้บ้านเกิด'],river:['🌊','ริมฝั่งแม่น้ำ']};
+const TB_IT={gold:'💰 เงินตำลึง',art:'📜 คัมภีร์คัดลอก',letter:'✉️ จดหมายถึงอนาคต'};
+const tbYr=n=>{let h=0;for(const c of String(n||''))h=(h*31+c.charCodeAt(0))%997;return 1260+h%280};
+const tbLocal=()=>LS.get('murim_tb',[])||[];
+const tbUsed=()=>LS.get('murim_tbd',{})||{};
+function tbMark(k){const d=tbUsed();d[k]=Date.now();LS.set('murim_tbd',d)}
+// ---------- ยุทธภพ: ฝังสมบัติ ----------
+function tbCan(){return admK()&&S&&S.alive&&!S.mw&&!S.xian&&!(S.beastMode&&!S.beastMode.human)&&S.age>=16}
+function openBury(){if(!tbCan())return;const n=S.tbN||0;if(n>=3)return toast('ชาตินี้ฝังสมบัติครบ 3 ครั้งแล้ว');
+ const best=(S.arts||[]).slice().sort((a,b)=>(b.b||0)-(a.b||0))[0],m=S.money||0;
+ const locs=Object.entries(TB_LOC).filter(([k])=>k!=='sect'||S.faction||S.ownSect);
+ window._tbSel={it:'gold',v:Math.round(m*.3),loc:locs[0][0]};
+ const itB=(it,lab,sub,dis)=>`<button class="opt tbIt" data-it="${it}" ${dis?'disabled style="opacity:.5"':''} onclick="tbPick('it','${it}',this)">${lab}<small>${sub}</small></button>`;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>⛏️ ฝังสมบัติ</h3><p class="tag2">ของที่ฝังไว้จะรอคุณ (หรือใครบางคน) อยู่ในยุคปัจจุบัน · เหลือ ${3-n}/3 ครั้งในชาตินี้</p>
+ <b>ฝังอะไร</b><div class="mgrid">${itB('gold','💰 เงินตำลึง',`30% ของที่มี · ${fmt(Math.round(m*.3))}`,m<100)}${itB('art','📜 คัมภีร์คัดลอก',best?esc(mwTxt(best.n)):'ยังไม่มีวิชา',!best)}${itB('letter','✉️ จดหมายถึงอนาคต','เขียนได้ 80 ตัวอักษร')}</div>
+ <textarea id="tbTx" maxlength="80" placeholder="ถึงใครก็ตามที่ขุดเจอ..." style="width:100%;display:none;margin:6px 0;min-height:54px"></textarea>
+ <b>ฝังที่ไหน</b><div class="mgrid">${locs.map(([k,v])=>`<button class="opt tbLoc" data-loc="${k}" onclick="tbPick('loc','${k}',this)">${v[0]} ${v[1]}</button>`).join('')}</div>
+ <div class="brow"><button class="gbtn" onclick="closeM()">ยกเลิก</button><button class="pbtn" onclick="doBury()">⛏️ ฝัง</button></div>`,'bury');
+ setTimeout(()=>{const a=document.querySelector('.tbIt:not([disabled])');if(a)tbPick('it',a.dataset.it,a);const l=document.querySelector('.tbLoc');if(l)tbPick('loc',l.dataset.loc,l)},10)}
+function tbPick(k,v,el){window._tbSel[k]=v;document.querySelectorAll(k==='it'?'.tbIt':'.tbLoc').forEach(b=>b.style.outline='');if(el)el.style.outline='2px solid #e8a23a';if(k==='it'){const t=$('tbTx');if(t)t.style.display=v==='letter'?'block':'none'}}
+async function doBury(){const sel=window._tbSel||{};const best=(S.arts||[]).slice().sort((a,b)=>(b.b||0)-(a.b||0))[0];
+ const r={n:S.name,it:sel.it,loc:sel.loc,yr:tbYr(S.name)+Math.min(80,S.age),fac:S.faction?S.faction.n:S.ownSect?S.ownSect.n:'',rl:(REALMS[realmIdx()]||{}).n||''};
+ if(r.it==='gold'){r.v=Math.round((S.money||0)*.3);if(r.v<100)return toast('เงินไม่พอ');S.money-=r.v}
+ else if(r.it==='art'){if(!best)return;r.an=mwTxt(best.n);r.ar=best.r|0}
+ else{r.tx=String(($('tbTx')||{}).value||'').trim().slice(0,80);if(r.tx.length<2)return toast('เขียนจดหมายก่อน')}
+ let k=null;try{const j=await api('tbury',r);if(j&&j.k)k=j.k}catch(e){}
+ if(!k)k='L'+Math.random().toString(36).slice(2,10);
+ const L=tbLocal();L.unshift(Object.assign({k,on:r.n,t:Date.now()},r,{n:undefined}));LS.set('murim_tb',L.slice(0,40));
+ S.tbN=(S.tbN||0)+1;closeM();
+ log(`⛏️ คุณฝัง<b>${TB_IT[r.it]}</b>ไว้${TB_LOC[r.loc][1]} ${r.it==='letter'?`— <i>"${esc(r.tx)}"</i>`:''} · สักวันหนึ่งในอีกหลายร้อยปี จะมีคนขุดมันขึ้นมา`,'myth',true);keyAdd('ฝังสมบัติไว้'+TB_LOC[r.loc][1]);render();saveGame()}
+{const _omT=openMenu;openMenu=function(){const r=_omT.apply(this,arguments);try{if(!tbCan())return r;const gd=$('modal').querySelector('.mgrid');if(gd&&!gd.querySelector('.tbB'))gd.insertAdjacentHTML('afterbegin',`<button class="opt tbB" onclick="openBury()">⛏️ ฝังสมบัติ<small>ส่งของไปถึงยุคปัจจุบัน · แอดมิน</small></button>`)}catch(e){}return r}}
+// ---------- ยุคปัจจุบัน: โหลดข้อมูลตอนข้ามยุค ----------
+function mwLives(){const cur=S.mw&&S.mw.past?S.mw.past.n:S.name,M={};
+ (LS.get('murim_graves',[])||[]).forEach(g=>{if(g&&g.n&&g.n!==cur&&!M[g.n])M[g.n]={n:g.n,e:mwTxt(g.e||''),a:g.a,c:mwTxt(g.c||''),rl:g.r||''}});
+ (LS.get('murim_legacy',[])||[]).forEach(l=>{if(!l||!l.n||l.n===cur)return;const o=M[l.n]||(M[l.n]={n:l.n,a:l.a});o.e=o.e||mwTxt(l.ep||'');o.fac=l.fac||o.fac;o.art=l.art?mwTxt(l.art.n):o.art;if(!o.rl)try{o.rl=REALMS[l.ri].n}catch(e){}});
+ return Object.values(M).slice(0,40)}
+async function mwTbLoad(){const M=S.mw;if(!M)return;const used=tbUsed();let L=tbLocal().map(r=>Object.assign({},r));
+ try{const j=await api('tbmine',{});if(j&&j.l){const by={};L.forEach(r=>by[r.k]=r);j.l.forEach(r=>{by[r.k]=Object.assign(by[r.k]||{},r)});L=Object.values(by)}}catch(e){}
+ if(!S.mw)return;M.tbs=L.filter(r=>!used[r.k]).map(r=>({k:r.k,on:r.on,it:r.it,loc:r.loc,v:r.v,an:r.an,ar:r.ar,tx:r.tx,fac:r.fac,yr:r.yr,d:r.d||0}));
+ if(M.uni){try{const j=await api('mwfind',{});if(j&&S.mw){M.oth=(j.tb||[]).filter(r=>!r.d);M.ppl=j.ppl||[]}}catch(e){}
+  try{const P=M.past||{};api('mwreg',{n:P.n,rl:P.realm,fac:P.sect||'',cc:M.cc||'th',yr:P.yr})}catch(e){}}
+ saveGame()}
+{const _meT=mwEnter;mwEnter=function(){const r=_meT.apply(this,arguments);try{const M=S.mw;if(M&&M.uni==null){M.uni=Math.random()<.3?1:0;M.lives=mwLives();
+ addFeed('ev',M.uni?'🔗 <b>จักรวาลซ้อน</b> — ยุคนี้ดูคุ้นเคยแปลกๆ เหมือนมีคนอื่นจากยุทธภพเคยมาถึงก่อนคุณ':'🌐 <b>จักรวาลของคุณเอง</b> — โลกนี้ถูกสร้างจากเรื่องราวของคุณคนเดียว','sum');setTimeout(()=>mwTbLoad(),50)}}catch(e){console.error(e)}return r}}
+// ---------- ให้รางวัลจากสมบัติ ----------
+function tbReward(r,mine){const M=S.mw,who=mine?'คุณในชาติก่อน':'<b>'+esc(r.on)+'</b>';
+ if(r.it==='gold'){const b=Math.max(20000,Math.min(2e7,Math.round((r.v||0)*1500)));mwSay(`💰 ใต้ดินลึกสองศอกคือหีบไม้ผุๆ ข้างในเป็นก้อนเงินตำลึงที่${who}ฝังไว้ราว ค.ศ. ${r.yr} — ร้านทองตีราคาเป็นของโบราณ`,'epic',{mon:b,sec:3},true)}
+ else if(r.it==='art'){const p=30*((r.ar|0)+1);S.power+=p;mwSay(`📜 ในกระบอกไม้ไผ่ที่ผนึกด้วยขี้ผึ้ง คือคัมภีร์<b>${esc(r.an||'ไร้ชื่อ')}</b>ที่${who}คัดลอกไว้ — คุณอ่านจบในคืนเดียว ร่างกายจำท่าได้ก่อนสมอง (พลัง +${p})`,'epic',{qi:1+(r.ar|0)*.5,adapt:-1},true)}
+ else mwSay(`✉️ ในโถดินเผาปิดสนิทมีกระดาษแผ่นเดียว ลายมือของ${who} ราว ค.ศ. ${r.yr}:<br><i>"${esc(r.tx||'')}"</i>`,'myth',{joy:mine?10:6},true)}
+async function tbDig(r,mine){const M=S.mw;tbMark(r.k);M.tbs=(M.tbs||[]).filter(x=>x.k!==r.k);M.oth=(M.oth||[]).filter(x=>x.k!==r.k);
+ if(!M.uni||String(r.k)[0]==='L'){if(mine&&Math.random()<.12){mwSay(`🏺 ตรงจุดนั้นมีหลุมเก่าที่ถูกถมไว้แล้ว ป้ายข้างๆ เขียนว่า "แหล่งขุดค้นทางโบราณคดี" — สมบัติของคุณไปอยู่ในพิพิธภัณฑ์ มีคนดูวันละหลายร้อยคน โดยไม่มีใครรู้ว่าเจ้าของยังมีชีวิตอยู่`,'',{joy:3});return}tbReward(r,mine);return}
+ try{const j=await api('tbdig',{k:r.k,n:M.past.n});if(!S.mw)return;if(j&&j.gone){const by=j.by||{};mwSay(`🕳️ หลุมว่างเปล่า มีคนขุดไปก่อนแล้ว… บนก้อนหินข้างหลุมมีรอยสลักใหม่: <b>"${esc(by.n||'ใครบางคน')} มาถึงก่อน"</b> — ในจักรวาลซ้อน คุณไม่ใช่ผู้มาจากยุทธภพคนเดียว`,'bad',{joy:-4},true);return}
+  if(j&&j.r){tbReward(j.r,mine);return}}catch(e){}
+ tbReward(r,mine)}
+// ---------- เหตุการณ์ ----------
+const TB_MOD={sect:'ที่ตั้งสำนักเก่ากลายเป็นลานจอดรถของห้างสรรพสินค้า',cave:'ถ้ำบนภูเขากลายเป็นเขตอุทยานแห่งชาติ มีรั้วและป้ายห้ามเข้า',home:'บ้านเกิดกลายเป็นคอนโดสามสิบชั้น',river:'ริมฝั่งแม่น้ำกลายเป็นสวนสาธารณะที่มีคนวิ่งออกกำลังทุกเช้า'};
+function tbGo(r,mine){const M=S.mw,who=mine?(r.on===M.past.n?'คุณ':`คุณในชาติก่อน — <b>${esc(r.on)}</b> —`):`ผู้ที่ชื่อ <b>${esc(r.on)}</b>`;
+ choice(mine?'⛏️ สมบัติจากชาติก่อน':'🔗 สมบัติของคนอื่น',`${mine?`ความทรงจำผุดขึ้นกลางดึก: ${who}เคยฝัง<b>${TB_IT[r.it]||'ของ'}</b>ไว้${(TB_LOC[r.loc]||TB_LOC.cave)[1]} ราว ค.ศ. ${r.yr}`:`ปราณจางๆ ที่ไม่ใช่ของคุณดึงคุณไปยังจุดหนึ่ง — ${who}${r.fac?' แห่ง'+esc(r.fac):''} เคยฝังบางอย่างไว้${(TB_LOC[r.loc]||TB_LOC.cave)[1]} ราว ค.ศ. ${r.yr}`} · วันนี้${TB_MOD[r.loc]||TB_MOD.cave}`,[
+  mwC('ขุดตอนตีสาม ไม่ให้ใครเห็น',()=>{mwFx({sec:r.loc==='cave'?3:8});tbDig(r,mine)},{s:'ความลับรั่วเล็กน้อย'}),
+  mwC('หาทางขุดแบบถูกกฎหมาย',()=>{const c=r.loc==='cave'?15000:r.loc==='river'?30000:120000;if((S.money||0)<c){mwSay('📄 คุณยื่นเอกสารขออนุญาตขุดค้น เจ้าหน้าที่ขอค่าธรรมเนียมและหลักฐานที่คุณไม่มี — ยังขุดไม่ได้','',{adapt:3});M.tbs=M.tbs||[];return}mwFx({mon:-c,adapt:2});tbDig(r,mine)},{s:'เสียเงิน · ไม่มีความเสี่ยง'}),
+  mwC(mine?'ปล่อยไว้ใต้ดินแบบนั้น':'ไม่ใช่ของเรา ปล่อยไว้',()=>{if(!mine){tbMark(r.k);M.oth=(M.oth||[]).filter(x=>x.k!==r.k)}else M.tbs=(M.tbs||[]).filter(x=>x.k!==r.k);mwSay(mine?'🍂 บางอย่างควรเป็นของอดีต คุณเดินกลับบ้านมือเปล่า':`🙏 คุณปล่อยสมบัติของ${esc(r.on)}ไว้ให้เจ้าของ เผื่อเขาจะมาถึงยุคนี้สักวัน`,'',{joy:mine?0:4})})])}
+const ancPick=M=>{const L=(M.lives||[]).filter(l=>!(M.ancU||[]).includes(l.n));if(!L.length)return null;const l=ch(L);(M.ancU=M.ancU||[]).push(l.n);return l};
+MW_R.push(
+ {id:'tbmine',w:14,cd:2,c:M=>M.y>=2&&(M.tbs||[]).length,go(M){const r=M.tbs[0];tbGo(r,true)}},
+ {id:'tboth',w:6,cd:4,c:M=>M.uni&&M.y>=3&&(M.oth||[]).length,go(M){tbGo(M.oth[0],false)}},
+ {id:'ppl',w:6,cd:5,c:M=>M.uni&&M.y>=2&&(M.ppl||[]).length,go(M){const p=M.ppl.shift(),C=MW_CC[p.cc]||MW_CC.th,same=p.cc===(M.cc||'th');
+  choice('🔗 คนจากยุทธภพอีกคน',`${same?'ในร้านกาแฟใกล้บ้าน':'ในงานประชุมนานาชาติที่คุณบังเอิญไปช่วยงาน'} มีชายคนหนึ่งจับถ้วยกาแฟแบบจับถ้วยชา — <b>${esc(p.n)}</b>${p.rl?' อดีต'+esc(p.rl):''}${p.fac?' แห่ง'+esc(p.fac):''} ราว ค.ศ. ${p.yr}${same?'':` เขาบอกว่าตื่นขึ้นที่${C.city} ประเทศ${C.n}`} · เขามองคุณแล้วรู้ทันทีเหมือนกัน`,[
+  mwC('เข้าไปทักด้วยการคารวะแบบยุทธภพ',()=>{(M.fr=M.fr||[]).push(p.n);mwSay(`🤝 คุณกับ${esc(p.n)}คุยกันจนร้านปิด เรื่องยุทธภพของเขาไม่ตรงกับของคุณสักเรื่อง — เหมือนมาจากคนละประวัติศาสตร์ แต่ทั้งคู่จำรสชาติชาที่ดีได้เหมือนกัน`,'myth',{joy:12,sec:3},true)}),
+  mwC('แกล้งทำเป็นไม่เห็น',()=>mwSay(`👀 คุณเดินออกจากร้านโดยไม่หันกลับไป แต่รู้สึกได้ถึงสายตาของ${esc(p.n)}ตามหลังมาจนสุดถนน`,'',{sec:-2}))])}},
+ {id:'anc1',w:5,cd:0,c:M=>M.y>=2&&(M.lives||[]).length,go(M){const l=ancPick(M);if(!l)return;const sur=String(l.n).split(' ')[0];
+  choice('🪧 ป้ายร้านที่คุ้นตา',`ร้านยาจีนเก่าในซอยแขวนป้ายไม้ว่า <b>"${esc(sur)}"</b> — นามสกุลของ<b>${esc(l.n)}</b> คุณในชาติก่อน${l.e?' ผู้ได้ฉายา '+esc(l.e):''} · เจ้าของร้านมีไฝใต้ตาซ้ายตำแหน่งเดียวกับเขา`,[
+  mwC('เข้าไปซื้อยา แล้วชวนคุย',()=>mwSay(`🌿 เจ้าของร้านเล่าว่าบรรพบุรุษคนแรกของตระกูลเป็นจอมยุทธ์ที่${l.c?esc(l.c.replace(/^จากไป|^สิ้นใจ/,'')):'จากไปอย่างลึกลับ'} — เรื่องเล่าในตระกูลผิดไปครึ่งหนึ่ง แต่คุณไม่แก้`,'myth',{joy:10},true)),
+  mwC('มองจากหน้าร้าน แล้วเดินผ่าน',()=>mwSay(`🚶 ลูกหลานของ${esc(l.n)}ยังอยู่ดี แค่นั้นก็พอ`,'',{joy:4}))])}},
+ {id:'anc2',w:4,cd:0,c:M=>M.y>=4&&(M.lives||[]).length>=2,go(M){const a=ancPick(M),b=ancPick(M);if(!a||!b)return;
+  mwSay(`🏛️ พิพิธภัณฑ์จัดนิทรรศการ "ยอดฝีมือที่ถูกลืม" ในห้องเดียวกันมีชื่อ<b>${esc(a.n)}</b>${a.rl?' ('+esc(a.rl)+')':''} และ<b>${esc(b.n)}</b>${b.rl?' ('+esc(b.rl)+')':''} ติดอยู่บนผนัง — ทั้งสองคนคือคุณ ในชาติที่ต่างกัน · ภัณฑารักษ์สงสัยว่าทำไมคุณยืนหน้าป้ายนั้นนานจนพิพิธภัณฑ์ปิด`,'myth',{joy:6},true)}},
+ {id:'anc3',w:4,cd:6,c:M=>M.y>=3&&(M.lives||[]).length,go(M){const l=ancPick(M);if(!l)return;
+  choice('🪦 ป้ายหลุมศพในป่า',`ระหว่างเดินป่า คุณสะดุดแท่นหินที่ถูกรากไม้กลืนไปครึ่งหนึ่ง ตัวอักษรเลือนๆ อ่านได้ว่า <b>"${esc(l.n)}"</b>${l.a?` อายุ ${l.a} ปี`:''}${l.c?` — ${esc(l.c)}`:''}`,[
+  mwC('ทำความสะอาดหลุมศพตัวเอง',()=>mwSay(`🧹 คุณถอนวัชพืชออกจากหลุมศพของตัวเองในชาติก่อนจนบ่ายคล้อย แล้วจุดธูปให้${esc(l.n)} — แปลกดี ที่ไม่รู้สึกแปลกเลย`,'myth',{joy:8,qi:.3},true)),
+  mwC('ถ่ายรูปเก็บไว้ แล้วเดินต่อ',()=>mwSay('📷 รูปนั้นอยู่ในมือถือคุณไปตลอด คุณเปิดดูบ่อยกว่าที่คิด','',{joy:3}))])}},
+ {id:'anc4',w:4,cd:0,c:M=>M.y>=5&&(M.lives||[]).some(l=>l.fac||l.art),go(M){const L=(M.lives||[]).filter(l=>(l.fac||l.art)&&!(M.ancU||[]).includes(l.n));const l=L.length?ch(L):null;if(!l)return;(M.ancU=M.ancU||[]).push(l.n);
+  mwSay(`📚 นักประวัติศาสตร์คนหนึ่งออกหนังสือเรื่อง${l.fac?'<b>'+esc(l.fac)+'</b>':'จอมยุทธ์ที่ถูกลืม'} ในบทที่เจ็ดพูดถึง<b>${esc(l.n)}</b>${l.art?` เจ้าของวิชา<b>${esc(l.art)}</b>`:''} ว่าเป็น "ตัวละครในตำนานที่อาจไม่เคยมีตัวตน" — คุณเขียนอีเมลไปแย้งหนึ่งย่อหน้า แล้วลบทิ้งก่อนกดส่ง`,'',{joy:5})}},
+ {id:'anc5',w:3,cd:7,c:M=>(M.lives||[]).length>=3,go(M){const l=ch(M.lives);
+  mwSay(`🌙 คืนนี้คุณฝันว่าเป็น<b>${esc(l.n)}</b>อีกครั้ง${l.e?' — '+esc(l.e):''} ตื่นมามือยังจำน้ำหนักของอาวุธที่ไม่ได้จับมาหลายร้อยปี`,'',{joy:-1})}});
+// ---------- แสดงจักรวาลบน HUD + ทดสอบสลับ ----------
+{const _rnT=render;render=function(){const r=_rnT.apply(this,arguments);try{if(mwOn()){const t=document.querySelector('#mwHud .mwhT');if(t&&!t.querySelector('.mwUni'))t.insertAdjacentHTML('beforeend',` <span class="mwUni tag2">${S.mw.uni?'🔗 จักรวาลซ้อน':'🌐 จักรวาลของคุณ'}</span>`)}}catch(e){}return r}}
+{const _miT=mwInfo;mwInfo=function(){_miT.apply(this,arguments);try{const M=S.mw,b=$('modal').querySelector('.pbtn');if(b)b.insertAdjacentHTML('beforebegin',`<p class="tag2">${M.uni?'🔗 จักรวาลซ้อน — อาจเจอผู้เล่นคนอื่นและสมบัติของพวกเขา':'🌐 จักรวาลของคุณเอง'} · สมบัติของคุณที่ยังไม่ได้ขุด ${(M.tbs||[]).length} · ชาติก่อนที่จำได้ ${(M.lives||[]).length}</p><button class="gbtn" style="width:100%;margin-bottom:6px" onclick="S.mw.uni=S.mw.uni?0:1;mwTbLoad();closeM();render();toast('สลับจักรวาลแล้ว (ทดสอบ)')">🔀 สลับจักรวาล (ทดสอบแอดมิน)</button>`)}catch(e){}}}
+
+
+// เรื่องสำคัญที่ต้องได้เจอแน่นอน (ครั้งแรก) — หลังจากนั้นค่อยสุ่มซ้ำ
+const MW_FORCE=[[2,'tbmine'],[3,'ppl'],[5,'anc1'],[6,'tboth'],[8,'anc3'],[12,'anc2']];
+{const _myF=mwYear;mwYear=function(){const M=S&&S.mw,rs0=M?Object.keys(M.rs||{}).length:0;const r=_myF.apply(this,arguments);try{if(S&&S.alive&&S.mw&&!S.mw.q.length){const M=S.mw;M.rs=M.rs||{};
+ if(Object.keys(M.rs).length>rs0)return r; // ปีนี้มีเหตุการณ์สุ่มแล้ว
+ for(const [y,id] of MW_FORCE){if(M.y<y||M.rs[id]!=null)continue;const e=MW_R.find(x=>x.id===id);let ok=0;try{ok=e&&e.c(M,M.past)}catch(x){}if(!ok)continue;M.rs[id]=M.y;const me=S;setTimeout(()=>{const go=()=>{if(S!==me||!S||!S.alive||!S.mw)return;if(choice._cur)return setTimeout(go,700);try{e.go(S.mw,S.mw.past)}catch(x){console.error(x)}};go()},900);break}}}catch(e){console.error(e)}return r}}
+
 </script>
 </body>
 </html>

@@ -1371,6 +1371,48 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       await cmd('SET', 'arm:' + id, JSON.stringify({ o: oid, rv, t: now, bot, ch: ['hell', 'short', 'junk'].includes(b.ch) ? b.ch : '' }), 'EX', 900);
       const or = bot ? Math.max(900, myR - 30) : await arRt(oid); delete o.t; return res.json({ o: Object.assign(o, { rt: or, lg: arLg(or) }), rt: myR, tk });
     }
+    // ---- ยุคปัจจุบัน: ฝังสมบัติ / จักรวาลซ้อน ----
+    if (a === 'tbury' || a === 'tbmine' || a === 'tbdig' || a === 'mwreg' || a === 'mwfind') {
+      if (!okId(id)) return res.status(403).json({ err: 'id' });
+      const hid = crypto.createHash('sha256').update('tb|' + id).digest('hex').slice(0, 12);
+      const pub = r => { const o = Object.assign({}, r); delete o.o; return o };
+      if (a === 'tbury') {
+        if (!(await cmd('SET', 'tbr:' + id, 1, 'NX', 'EX', 15))) return res.json({ err: 'rate' });
+        if ((+(await cmd('HLEN', 'tb:' + id)) || 0) >= 40) return res.json({ err: 'full' });
+        const it = ['gold', 'art', 'letter'].includes(b.it) ? b.it : 'gold', loc = ['sect', 'cave', 'home', 'river'].includes(b.loc) ? b.loc : 'cave';
+        const k = crypto.randomBytes(6).toString('hex');
+        const r = { k, o: hid, on: clean(b.n, 20) || 'นิรนาม', it, loc, v: Math.max(0, Math.min(1e9, Math.round(+b.v || 0))), an: clean(b.an, 30), ar: Math.max(0, Math.min(6, b.ar | 0)), tx: clean(b.tx, 80), fac: clean(b.fac, 30), rl: clean(b.rl, 20), yr: Math.max(1000, Math.min(1900, b.yr | 0)), t: now };
+        const j = JSON.stringify(r);
+        await pipe([['HSET', 'tb:' + id, k, j], ['HSET', 'tball', k, j], ['LPUSH', 'tbpool', j], ['LTRIM', 'tbpool', 0, 1999]]);
+        return res.json({ ok: 1, k });
+      }
+      if (a === 'tbmine') {
+        const L = ((await cmd('HVALS', 'tb:' + id)) || []).map(jp).filter(Boolean).sort((x, y) => x.t - y.t);
+        const D = L.length ? await cmd('MGET', ...L.map(r => 'tbd:' + r.k)) : [];
+        return res.json({ ok: 1, l: L.map((r, i) => Object.assign(pub(r), { d: D[i] ? jp(D[i]) || 1 : 0 })) });
+      }
+      if (a === 'tbdig') {
+        const k = String(b.k || '').replace(/[^a-f0-9]/g, '').slice(0, 12), r = jp(await cmd('HGET', 'tball', k));
+        if (!r) return res.json({ err: 'none' });
+        const by = { n: clean(b.n, 20) || 'นิรนาม', t: now, own: r.o === hid ? 1 : 0 };
+        if (!(await cmd('SET', 'tbd:' + k, JSON.stringify(by), 'NX'))) return res.json({ ok: 1, gone: 1, by: jp(await cmd('GET', 'tbd:' + k)), r: pub(r) });
+        return res.json({ ok: 1, r: pub(r), own: by.own });
+      }
+      if (a === 'mwreg') {
+        if (!(await cmd('SET', 'mwrr:' + id, 1, 'NX', 'EX', 60))) return res.json({ ok: 1 });
+        const r = { o: hid, n: clean(b.n, 20) || 'นิรนาม', rl: clean(b.rl, 20), fac: clean(b.fac, 30), cc: String(b.cc || '').replace(/[^a-z]/g, '').slice(0, 2), yr: Math.max(1000, Math.min(1900, b.yr | 0)), t: now };
+        await pipe([['LPUSH', 'mwppl', JSON.stringify(r)], ['LTRIM', 'mwppl', 0, 499]]);
+        return res.json({ ok: 1 });
+      }
+      if (a === 'mwfind') {
+        const [T0, P0] = await pipe([['LRANGE', 'tbpool', 0, 299], ['LRANGE', 'mwppl', 0, 149]]);
+        const sm = (l, n) => { l = l.slice(); for (let i = l.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [l[i], l[j]] = [l[j], l[i]] } return l.slice(0, n) };
+        const T = sm((T0 || []).map(jp).filter(r => r && r.o !== hid), 4), P = sm((P0 || []).map(jp).filter(r => r && r.o !== hid), 4);
+        const seen = new Set(); const P2 = P.filter(r => !seen.has(r.n + r.o) && seen.add(r.n + r.o));
+        const D = T.length ? await cmd('MGET', ...T.map(r => 'tbd:' + r.k)) : [];
+        return res.json({ ok: 1, tb: T.map((r, i) => Object.assign(pub(r), { d: D[i] ? 1 : 0 })), ppl: P2.map(pub) });
+      }
+    }
     if (a === 'mwclk') {
       const n = Math.max(0, Math.min(5, b.n | 0)); let c;
       if (n && okId(id) && (await cmd('SET', 'mwck:' + id, 1, 'NX', 'EX', 15))) c = await cmd('INCRBY', 'mwclock', n); else c = await cmd('GET', 'mwclock');
