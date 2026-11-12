@@ -1,0 +1,19 @@
+# 1 ใน นวนิยาย — ตั้งค่าสำหรับย้ายไป Cloudflare Workers (ยังไม่ได้ใช้ · เว็บจริงยังรันบน Vercel)
+# วิธีใช้ดูที่ cloudflare/README.md
+name = "1inanovel"
+main = "worker.js"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ไฟล์หน้าเว็บ (index.html, รูป, เพลง ฯลฯ) = โฟลเดอร์หลักของ repo · ไฟล์ที่ไม่ควรเปิดให้โหลดอยู่ใน ../.assetsignore
+[assets]
+directory = "../"
+binding = "ASSETS"
+html_handling = "drop-trailing-slash"
+not_found_handling = "none"
+
+[observability]
+enabled = true
+
+# ค่าลับ (ใส่ด้วยคำสั่ง wrangler secret put ไม่ต้องเขียนในไฟล์นี้):
+#   VALKEY_URL, ADMIN_KEY, และตัวแปรอื่นที่ตั้งไว้ใน Vercel (ดูรายชื่อใน README)

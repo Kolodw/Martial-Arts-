@@ -1,0 +1,4 @@
+# ไฟล์สำหรับ Cloudflare เท่านั้น ไม่ต้องขึ้น Vercel
+cloudflare
+_headers
+.assetsignore

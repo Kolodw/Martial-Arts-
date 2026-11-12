@@ -109,6 +109,8 @@ async function vkPipe(list) {
   return vkTry(() => Promise.all(list.map(a => vkSend(a).catch(e => { if (/NOAUTH|WRONGPASS|closed|timeout|not connected|max requests limit|max daily request|OOM/i.test(e.message)) throw e; return undefined }))));
 }
 
+// ใช้ตอนรันบน Cloudflare Workers: socket ใช้ข้ามคำขอไม่ได้ → ปิดทิ้งทุกครั้งที่เริ่ม/จบคำขอ (Vercel ไม่ได้เรียกใช้)
+const vkReset = () => { const s = VK.sock || VK.cur; vkDrop(); try { s && s.destroy() } catch {} };
 const jp = x => { try { const v = JSON.parse(x); return v && typeof v === 'object' ? v : null } catch { return null } };
 const cmd = USE_VK ? vkCmd : upCmd;
 const pipe = USE_VK ? vkPipe : upPipe;
@@ -1783,3 +1785,4 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     return res.status(500).json({ err: 'server' });
   }
 };
+module.exports.vkReset = vkReset;

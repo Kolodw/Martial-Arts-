@@ -1,0 +1,14 @@
+# ไฟล์ที่ไม่เปิดให้โหลดเมื่อรันบน Cloudflare (Vercel ไม่ได้ใช้ไฟล์นี้)
+api
+cloudflare
+promo
+.git
+.github
+node_modules
+dump.rdb
+*.log
+*.md
+vercel.json
+.assetsignore
+.vercelignore
+.vercelignore

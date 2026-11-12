@@ -1,0 +1,11 @@
+# หัวข้อ HTTP สำหรับ Cloudflare (เหมือน headers ใน vercel.json · Vercel ไม่ได้ใช้ไฟล์นี้)
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+/sw.js
+  ! Cache-Control
+  Cache-Control: no-cache
+  Service-Worker-Allowed: /
+/manifest.webmanifest
+  Content-Type: application/manifest+json; charset=utf-8
