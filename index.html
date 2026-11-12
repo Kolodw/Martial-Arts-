@@ -15567,6 +15567,35 @@ paTickUI=function(){if($('modal').dataset.k!=='pauc'){clearInterval(PA.tk);retur
  try{SYS_GUIDE.push({s:'life',nw:1,ic:'🏠',t:'ลูกบุญธรรม',d:'กด <b>🏠 รับลูกบุญธรรม</b> ในหน้าครอบครัว (อายุ 25 ขึ้นไป) หรือรับจากเรื่องราว: เด็กรอดจากภัยพิบัติ · ลูกที่เพื่อนฝากก่อนตาย · ศิษย์เอก · แต่งงานนานไม่มีลูก · ลูกบุญธรรมสืบทอดเป็นทายาทได้ แต่ความผูกพันต่ำอาจหนีออกจากบ้าน · 1 ใน 4 มีชาติกำเนิดลับ · ก่อตั้ง<b>บ้านเด็กกำพร้า</b>เพื่อเดินสาย "ร้อยชีวิต"',te:'Adoption',de:'Adopt children from the family screen (age 25+). Bond matters; some have secret origins. Found an orphanage for the hundred-lives path.'})}catch(e){}
 }
 
+
+// ===================== v17.3 สัตว์อสูรรับลูกสัตว์กำพร้า: ต่างเผ่าได้ · ไม่ได้สายเลือดตรง · ลูกราชาอสูรที่ซ่อนอยู่ =====================
+{const bOK=()=>S&&S.alive&&S.beastMode&&!S.beastMode.human&&S.age>=(S.ch==='short'?6:12);
+ const STORY=[['🏹','นักล่ามนุษย์ฆ่าแม่ของมัน','ลูกสัตว์ตัวน้อยนอนกอดร่างแม่ที่เย็นชืดอยู่ข้างกับดัก'],['🔥','ไฟป่าเผารังของมัน','ลูกสัตว์ตัวเดียวที่รอดจากไฟป่า ขนไหม้เกรียมครึ่งตัว'],['🌊','น้ำป่าพัดพามันมา','ลูกสัตว์ลอยมาติดกิ่งไม้หน้ารังของคุณ ยังหายใจอยู่'],['🐺','ฝูงของมันทอดทิ้ง','ลูกสัตว์ตัวที่อ่อนแอที่สุด ถูกฝูงทิ้งไว้กลางหิมะ'],['⚔️','พ่อแม่มันตายในศึกอสูร','ลูกของอสูรที่ตายในศึกแย่งถิ่น มองคุณด้วยดวงตาหวาดกลัว']];
+ const mkCub=()=>{const other=Math.random()<.3,sp=other?BL_SP[Math.floor(Math.random()*BL_SP.length)][0]:S.beastMode.sp;const t=Math.floor(Math.random()*CUB_TR.length);
+  return{n:cubName(),t,at:S.age,sx:Math.random()<.5?'♂':'♀',ad:1,osp:sp!==S.beastMode.sp?sp:null,king:Math.random()<.2?1:0,st:STORY[Math.floor(Math.random()*STORY.length)]}};
+ const take=(c,why)=>{const L=cubL();L.push(c);while(L.length>24)L.shift();S.kids=(S.kids||0)+1;S.kidsA=(S.kidsA||0)+1;joy(10);const T=CUB_TR[c.t]||CUB_TR[0];
+  log(`🐾 ${why||'คุณรับลูกสัตว์กำพร้ามาเลี้ยง'}: <b>${esc(c.n)}</b> ${c.sx} · ${T[0]} ${T[1]}${c.osp?` · <b>เป็นลูก${esc(c.osp)}</b> ต่างเผ่าจากคุณ`:''}`,'epic',true);try{const M=blM();if(M.mate&&M.mate.alive)M.mate.bd=Math.min(100,(M.mate.bd==null?60:M.mate.bd)+5)}catch(e){}render();saveGame()};
+ const ask=(why0)=>{const a=mkCub(),b=mkCub(),T=c=>CUB_TR[c.t]||CUB_TR[0];choice(`🐾 ลูกสัตว์กำพร้า`,`${a.st[0]} <b>${a.st[1]}</b> — ${a.st[2]}${b?'<br>ใกล้ๆ กันมีอีกตัวหนึ่งซ่อนอยู่ในพุ่มไม้':''}`,[
+   {t:`รับ ${a.n} ${a.sx}`,s:`${T(a)[0]} ${T(a)[1]}${a.osp?' · ลูก'+a.osp:''}`,f(){take(a,why0)}},
+   {t:`รับ ${b.n} ${b.sx}`,s:`${T(b)[0]} ${T(b)[1]}${b.osp?' · ลูก'+b.osp:''}`,f(){take(b,why0)}},
+   {t:'รับทั้งสองตัว',s:'ต้องหาอาหารเลี้ยงสองปาก · ความผูกพันกับคู่ลดลง',f(){take(a,why0);take(b,why0);try{const M=blM();if(M.mate&&M.mate.alive)M.mate.bd=Math.max(0,(M.mate.bd||60)-12)}catch(e){}}},
+   {t:'ปล่อยให้มันไปตามชะตา',f(){log('คุณหันหลังเดินจากไป เสียงร้องของลูกสัตว์ค่อยๆ เบาลง','');S.karma-=2}}]);return true};
+ window.bAdoptSeek=function(){if(!bOK())return toast('ยังเด็กเกินไปที่จะเลี้ยงลูกตัวอื่น');if(choice._cur)return toast('ตัดสินใจเรื่องตรงหน้าก่อน');const M=blM();if((M.adY||-99)>S.age-5)return toast(`เพิ่งออกตามหาไปเมื่อไม่นาน — อีก ${M.adY+5-S.age} ปี`);M.adY=S.age;closeM();
+  if(Math.random()<.75)ask('คุณออกตามหาลูกสัตว์กำพร้าในป่า แล้วพบเจอ');else{log('คุณตามหาทั่วป่า แต่ไม่พบลูกสัตว์กำพร้าตัวไหน','');render()}};
+ // ปีของสัตว์: บางปีเจอลูกสัตว์กำพร้าเอง
+ {const _by=beastYear;beastYear=function(){const r=_by.apply(this,arguments);try{if(bOK()&&!choice._cur&&Math.random()<.04){const M=blM();if((M.adY||-99)<=S.age-4){M.adY=S.age;ask('ลูกสัตว์กำพร้าเดินเข้ามาในรังของคุณ')}}}catch(e){}return r}}
+ // หน้ารัง: ปุ่มตามหา + ป้ายบอกลูกรับเลี้ยง
+ {const _on=openNest;openNest=function(){const r=_on.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='nest')return r;const L=cubL();
+   m.querySelectorAll('.cubc').forEach(el=>{const b=el.querySelector('b');const c=L.find(x=>x.ad&&b&&b.textContent.includes(x.n));if(c)el.insertAdjacentHTML('beforeend',`<small>🏠 รับเลี้ยง${c.osp?' · ลูก'+esc(c.osp):''}</small>`)});
+   const M=blM(),cd=Math.max(0,(M.adY||-99)+5-S.age);m.insertAdjacentHTML('beforeend',`<button class="pbtn" style="width:100%;margin-top:8px" ${bOK()&&!cd?'':'disabled'} onclick="bAdoptSeek()">🐾 ออกตามหาลูกสัตว์กำพร้า${cd?` (อีก ${cd} ปี)`:''}</button><p class="tag2" style="text-align:center">ลูกรับเลี้ยงสืบทอดเป็นรุ่นถัดไปได้ · อาจเป็นต่างเผ่า · ไม่ได้สายเลือดตรงของคุณ</p>`)}catch(e){}return r}}
+ // ตอนสืบทอด: ลูกต่างเผ่าเปลี่ยนเผ่า · ลูกรับเลี้ยงสายเลือดเจือจาง · ลูกราชาอสูรที่ซ่อนอยู่
+ {const _bh=bHeir;bHeir=function(){const c=window._bCub,P=S;let sp0=null;try{if(c&&c.ad&&c.osp&&P&&P.beastMode){sp0=P.beastMode.sp;P.beastMode.sp=c.osp}}catch(e){}
+   const r=_bh.apply(this,arguments);try{if(c&&c.ad&&S&&S!==P&&S.beastMode){const m=S.beastMode;m.bl=Math.floor((m.bl|0)/2);
+     if(c.king&&typeof BBLOOD!=='undefined'){m.bl=Math.min(BBLOOD.length-1,Math.max(m.bl|0,(P.beastMode.bl|0)+1));log(`👑 ความลับของ <b>${esc(c.n)}</b> ถูกเปิดเผย — มันคือลูกของ<b>ราชาอสูร</b>ที่หายสาบสูญ! สายเลือดตื่นเป็น${BBLOOD[m.bl].n}`,'myth',true)}
+     else log(`🏠 ${esc(c.n)} ไม่ได้สายเลือดตรงจากพ่อแม่บุญธรรม แต่ได้ทุกสิ่งที่พวกเขาสอนไว้`,'epic');S.flags.adopted=1;try{render();saveGame()}catch(e){}}}catch(e){console.error(e)}
+   try{if(sp0&&P&&P.beastMode)P.beastMode.sp=sp0}catch(e){}return r}}
+}
+
 </script>
 </body>
 </html>
