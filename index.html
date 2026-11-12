@@ -9875,8 +9875,9 @@ function histHtml(h,feedKey){if(!h)return'<p class="tag2">ยังไม่ม�
  if(h.lin&&h.lin.length)x+='<h4 style="margin:10px 0 4px">🌳 บรรพบุรุษ</h4><ul class="speclist">'+h.lin.map(n=>`<li>${esc(n)}</li>`).join('')+'</ul>';return x}
 openSpectate=async function(k,tab){specTarget=k;clearTimeout(specT);tab=tab||openSpectate._tab||'sum';openSpectate._tab=tab;let j;
  const off=()=>{if($('modal').dataset.k==='spec'||!modalOpen)modal(`<button class="xbtn" onclick="specClose()">✕</button><h3>👁 ดูการเล่น</h3><p class="tag2">ผู้เล่นคนนี้ปิดการให้ดู หรือออกจากเกมไปแล้ว</p><button class="pbtn" style="width:100%;margin-bottom:6px" onclick="openSpectate('${k}')">🔄 ลองอีกครั้ง</button><button class="gbtn" style="width:100%" onclick="openLiveList()">← กลับรายชื่อ</button>`,'spec')};
- try{j=await api('liveget&t='+encodeURIComponent(k))}catch(e){if(specSoft(k,e&&e.message))return;off();return}
- if(specTarget!==k)return;if(!j||!j.s||!j.s.st){if(specSoft(k,'off'))return;off();return}
+ if(k==='@me'){if(!S){closeM();return}try{j={s:JSON.parse(JSON.stringify(liveSnap())),w:typeof watchN==='number'?watchN:0}}catch(e){toast('เปิดการ์ดไม่สำเร็จ');return}}
+ else{try{j=await api('liveget&t='+encodeURIComponent(k))}catch(e){if(specSoft(k,e&&e.message))return;off();return}}
+ if(specTarget!==k)return;if(!j||!j.s||!j.s.st){if(k==='@me'){toast('เปิดการ์ดไม่สำเร็จ');return}if(specSoft(k,'off'))return;off();return}
  const sig=JSON.stringify(j.s)+'|'+j.w+'|'+tab;specOK(k);if(openSpectate._sig===sig&&$('modal').dataset.k==='spec'&&modalOpen){specStamp(j.s);specT=setTimeout(()=>{if($('modal').dataset.k==='spec'&&modalOpen&&specTarget===k)openSpectate(k)},5000);return}
  openSpectate._sig=sig;const _keep=openSpectate._at===k+'|'+tab,_msc=$('modal').scrollTop,_ofd=document.querySelector('.specfeed'),_fdb=_ofd?_ofd.scrollHeight-_ofd.scrollTop-_ofd.clientHeight<40:true,_fdt=_ofd?_ofd.scrollTop:0;openSpectate._at=k+'|'+tab;
  const s=j.s,st=s.st;const T=[['sum','📊 ภาพรวม'],['birth','🎲 กำเนิด'],['hist','📜 ประวัติ'],['feed','📰 สด'],['items','🎒 ของ'],['arts','📖 วิชา'],['q','📋 เควส'],['ppl','👪 ผู้คน']];
@@ -14724,6 +14725,15 @@ function lifeQAdd(P){const q=(LS.get('murim_lifeq',[])||[]).filter(x=>x&&x.lid!=
 async function lifeQFlush(){if(lifeQFlush._b||typeof onlineOK==='undefined'||!onlineOK)return;const q=LS.get('murim_lifeq',[])||[];if(!q.length)return;lifeQFlush._b=1;
  try{const left=[];for(const P of q){if(Date.now()-(P._q||0)>14*86400e3)continue;try{const B=Object.assign({},P);delete B._q;const r=await api('life',B);if(!r||!r.ok)left.push(P);else if(!r.skip){try{toast('🏆 ส่งชีวิต '+(P.n||'')+' ขึ้นทำเนียบแล้ว')}catch(e){}}}catch(e){left.push(P)}}LS.set('murim_lifeq',left)}finally{lifeQFlush._b=0}}
 setTimeout(()=>{try{lifeQFlush()}catch(e){}},8000);setInterval(()=>{try{lifeQFlush()}catch(e){}},120000);
+
+// ---------- การ์ดตัวละครของตัวเอง (หน้าตาเหมือนตอนดูคนอื่น · ข้อมูลจากเกมในเครื่อง) ----------
+function openMyCard(tab){if(!S)return;openSpectate('@me',tab||'birth')}
+{const _osM=openSpectate;openSpectate=async function(k,tab){const r=await _osM.apply(this,arguments);try{if(k==='@me'&&$('modal').dataset.k==='spec'){const m=$('modal');
+  m.querySelectorAll('.sfbtn,#aiScanB,#aiScanR').forEach(e=>e.remove());[...m.querySelectorAll('button')].forEach(b=>{const oc=b.getAttribute('onclick')||'';if(/openLiveList|specFull/.test(oc))b.remove()});
+  const x=m.querySelector('.xbtn');if(x)x.setAttribute('onclick','closeM()');
+  if(!m.querySelector('.mycardN')){const t=m.querySelector('.tabs');if(t)t.insertAdjacentHTML('beforebegin','<p class="tag2 mycardN" style="text-align:center;margin:4px 0">🪪 การ์ดตัวละครของคุณ — คนที่เข้ามาดูการเล่นของคุณจะเห็นแบบนี้</p>')}}}catch(e){}return r}}
+if(typeof specClose==='function'){const _sc=specClose;specClose=function(){if(specTarget==='@me'){specTarget=null;clearTimeout(specT);return closeM()}return _sc.apply(this,arguments)}}
+{const _omC=openMenu;openMenu=function(){const r=_omC.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g&&S&&!g.querySelector('.mycardB'))g.insertAdjacentHTML('afterbegin','<button class="opt mycardB" onclick="openMyCard()">🪪 การ์ดตัวละคร<small>กำเนิด กระดูก สายเลือด โอกาสเกิด</small></button>')}catch(e){}return r}}
 </script>
 </body>
 </html>
