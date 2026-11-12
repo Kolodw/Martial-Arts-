@@ -14064,6 +14064,32 @@ const PYK=['power','qi','int','cha','money','fame','lifespan','karma','maxHp','k
 {const _pyP=passYear;passYear=function(){let sn=null;try{if(S&&S.alive){sn={a:S.age,n:(S.arts||[]).length};PYK.forEach(k=>sn[k]=S[k])}}catch(e){}window._pySnap=sn;window._inPY=(window._inPY||0)+1;try{return _pyP.apply(this,arguments)}finally{window._inPY--}}}
 {const _chP=choice;choice=function(){const r=_chP.apply(this,arguments);try{if(window._inPY>0&&choice._cur&&window._pySnap&&!choice._cur._py)choice._cur._py=window._pySnap}catch(e){}return r}}
 {const _sgP=saveGame;saveGame=function(){const c=choice._cur;if(S&&S.alive&&c&&c._py&&c._py.a===S.age){const bak={},arts=S.arts;PYK.forEach(k=>{bak[k]=S[k];if(typeof c._py[k]==='number')S[k]=Math.min(S[k],c._py[k])});try{if(Array.isArray(arts)&&arts.length>c._py.n)S.arts=arts.slice(0,c._py.n)}catch(e){}try{return _sgP.apply(this,arguments)}finally{PYK.forEach(k=>S[k]=bak[k]);S.arts=arts}}return _sgP.apply(this,arguments)}}
+// ===== ตั้งชื่อสัตว์เลี้ยง / ลูก (ไม่บังคับ) =====
+{const nmClean=s=>String(s||'').replace(/[<>&"'`\\\n\r\t]/g,'').replace(/\s+/g,' ').trim().slice(0,20);
+const busy=()=>{try{if(choice._cur)return'ทำตัวเลือกที่ค้างอยู่ให้เสร็จก่อนนะ'}catch(e){}if(modalOpen&&/^(choice|duel)$/.test($('modal').dataset.k||''))return'ทำตัวเลือกที่ค้างอยู่ให้เสร็จก่อนนะ';return''};
+window.nameAsk=function(kind,i,back){const b=busy();if(b)return toast(b);let cur='',ttl='',hint='',sur='';
+ if(kind==='pet'){if(!S.pet)return toast('ไม่มีสัตว์เลี้ยง');cur=S.pet.n||'';ttl=`${S.pet.i||'🐾'} ตั้งชื่อ${S.pet.t||'สัตว์เลี้ยง'}`;hint='ชื่อจะโผล่ในเหตุการณ์ บทสนทนา และฉากปล่อยพลัง'}
+ else{const c=(S.children||[])[i];if(!c)return toast('ไม่พบลูกคนนี้');sur=surOf()||'';cur=sur&&c.n.startsWith(sur+' ')?c.n.slice(sur.length+1):c.n;ttl=`${c.g==='หญิง'?'👧':'👦'} ตั้งชื่อลูก`;hint=sur?`นามสกุล <b>${esc(sur)}</b> จะใส่ให้อัตโนมัติ — พิมพ์แค่ชื่อตัว`:'พิมพ์ชื่อที่อยากตั้ง'}
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>${ttl}</h3><p class="tag2">${hint}</p>
+ <input id="nmIn" maxlength="20" value="${esc(cur)}" placeholder="ชื่อใหม่" autocomplete="off" style="width:100%;box-sizing:border-box;padding:10px;font-size:16px;border-radius:8px;border:1px solid #6a5a3a;background:#1b1712;color:#f3e6c8;margin:8px 0">
+ <button class="opt" onclick="nameSave('${kind}',${i|0},${back?1:0})">✔️ ตั้งชื่อนี้</button>
+ <button class="opt" onclick="${back?'openFamily()':'closeM()'}">ไม่ตั้งดีกว่า ใช้ชื่อเดิม</button>`,'naming');
+ setTimeout(()=>{try{const e=$('nmIn');e.focus();e.select();e.onkeydown=ev=>{if(ev.key==='Enter')nameSave(kind,i|0,back?1:0)}}catch(e){}},60)};
+window.nameSave=function(kind,i,back){const v=nmClean(($('nmIn')||{}).value);if(!v)return toast('ยังไม่ได้พิมพ์ชื่อ');
+ if(kind==='pet'){if(!S.pet)return closeM();const o=S.pet.n;S.pet.n=v;S.pet.named=1;if(o!==v)log(`✏️ ตั้งชื่อ${S.pet.t||'สัตว์เลี้ยง'}ว่า <b>${esc(v)}</b>`,'good')}
+ else{const c=(S.children||[])[i];if(!c)return closeM();const sur=surOf()||'',full=sur&&!v.startsWith(sur+' ')?sur+' '+v:v;if((S.children||[]).some((x,j)=>j!==i&&x.n===full))return toast('มีลูกชื่อนี้อยู่แล้ว');const o=c.n;c.n=full;c.named=1;
+  if(o!==full)log(`✏️ ตั้งชื่อลูกใหม่ว่า <b>${esc(full)}</b>`,'good')}
+ sfx('good');try{saveGame()}catch(e){}try{render()}catch(e){}back?openFamily():closeM()};
+// ปุ่มตอนได้สัตว์เลี้ยง/ลูกใหม่
+const nb=(k,i)=>` <button onclick="nameAsk('${k}',${i})" style="font-size:12px;padding:2px 8px;border-radius:10px;border:1px solid #c9a24a;background:#2a2214;color:#ffd77a;cursor:pointer">✏️ ตั้งชื่อเอง</button>`;
+{const _s=syncFamily;syncFamily=function(){const n0=(S.children||[]).length;_s.apply(this,arguments);const L=S.children||[];if(S.age>0)for(let j=n0;j<L.length;j++)try{addFeed('ev',`👶 อยากตั้งชื่อ <b>${esc(L[j].n)}</b> เองไหม?${nb('kid',j)} <span class="tag2">(ไม่ตั้งก็ได้)</span>`,'sum')}catch(e){}}}
+{let lastPet=null;const chk=()=>{try{if(!S||!S.pet){lastPet=null;return}if(S.pet===lastPet)return;const first=lastPet===null&&!S._petSeen;lastPet=S.pet;if(S.pet._ask||S.pet.named){S._petSeen=1;return}S.pet._ask=1;S._petSeen=1;if(first&&S.age<1)return;addFeed('ev',`${S.pet.i||'🐾'} อยากตั้งชื่อ<b>${esc(S.pet.n||'สัตว์เลี้ยง')}</b>เองไหม?${nb('pet',0)} <span class="tag2">(ไม่ตั้งก็ได้)</span>`,'sum')}catch(e){}};
+ const _r=render;render=function(){const x=_r.apply(this,arguments);chk();return x}}
+// ปุ่มในหน้าครอบครัว
+{const _o=openFamily;openFamily=function(){_o.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='family')return;const hs=[...m.querySelectorAll('h4')];const hk=hs.find(h=>/^ลูก/.test(h.textContent));if(hk){let el=hk.nextElementSibling,i=0;const L=S.children||[];while(el&&el.tagName!=='H4'){if(el.classList.contains('item')){const c=L[i];if(c&&c.alive!==false){const b=el.querySelector('.h b');if(b)b.insertAdjacentHTML('afterend',`<button onclick="nameAsk('kid',${i},1)" style="font-size:12px;padding:2px 8px;border-radius:10px;border:1px solid #c9a24a;background:#2a2214;color:#ffd77a;cursor:pointer;margin-left:6px">✏️</button>`)}i++}el=el.nextElementSibling}}
+  if(S.pet){m.insertAdjacentHTML('beforeend',`<h4 style="margin:10px 0 6px">สัตว์คู่ใจ</h4><div class="item"><div class="h"><b>${S.pet.i||'🐾'} ${esc(S.pet.n||'สัตว์เลี้ยง')}</b><button onclick="nameAsk('pet',0,1)" style="font-size:12px;padding:2px 8px;border-radius:10px;border:1px solid #c9a24a;background:#2a2214;color:#ffd77a;cursor:pointer">✏️ ตั้งชื่อ</button></div><p class="tag2">${esc(S.pet.t||'')}</p></div>`)}}catch(e){}}}
+}
+
 </script>
 </body>
 </html>
