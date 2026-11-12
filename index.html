@@ -18438,6 +18438,248 @@ SA_ARCS.push(
 // แดนเทพ: ใช้ภาคของแดนเทพ ไม่ใช้ภาคโลกเซียน
 SA_ARCS.forEach(D=>{if(/^x/.test(D.id)&&!/2$/.test(D.id)){const c0=D.c;D.c=()=>!S.xt&&c0()}});
 try{const g=SYS_GUIDE.find(x=>x.t==='ภาคเรื่องราว (แนวมังฮวาจีน)');if(g)g.d+='<br><b>แดนเทพ</b> มีภาคระดับดวงดาว 10 ภาค และภาคต่อจากโลกเซียน 4 ภาค · ฉากพิกเซลแดนเทพเป็นอวกาศ เปลี่ยนตามสิ่งที่ทำและภาคที่กำลังเล่น'}catch(e){}
+
+
+// ===================== v17.6 แชทลื่นขึ้น =====================
+{const _crP=chatRender;let sig='';chatRender=function(){try{const box=$('chatBox');const s=(chatMsgs||[]).map(m=>(m.i||'')+(m._p?'p':'')+(m._f?'f':'')+((m.x||'').length)+(m.e?'e':'')+(m.poll?JSON.stringify(m.poll).length:'')).join('|')+'#'+(typeof chatProf==='object'&&chatProf?Object.keys(chatProf).length:0);
+ if(box&&box.dataset.ok&&box.children.length&&s===sig&&!window._chForce)return;sig=s;window._chForce=0}catch(e){}const r=_crP.apply(this,arguments);try{chatObs()}catch(e){}return r}}
+let _chIO=null;function chatObs(){const box=$('chatBox');if(!box||typeof IntersectionObserver==='undefined')return;if(_chIO&&_chIO._b!==box){_chIO.disconnect();_chIO=null}
+ if(!_chIO){_chIO=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('cmOff',!e.isIntersecting)),{root:box,rootMargin:'80px 0px'});_chIO._b=box}
+ box.querySelectorAll('.cm:not([data-io])').forEach(el=>{el.dataset.io=1;el.classList.add('cmOff');_chIO.observe(el)})}
+(function(){const st=document.createElement('style');st.textContent=`#chatBox{contain:content;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}#chatBox .cm{content-visibility:auto;contain-intrinsic-size:auto 72px}#chatBox .cm.cmOff,#chatBox .cm.cmOff *,#chatBox .cm.cmOff *::before,#chatBox .cm.cmOff *::after{animation-play-state:paused!important}#chatBox .cav{contain:layout paint}`;document.head.appendChild(st)})();
+
+// ===================== v17.6 ฉายาเปลี่ยนตามชีวิต · เลือกฉายาเอง · ข้อความรากขยะไม่ซ้ำ =====================
+try{TTL_SP.forEach(t=>{if(t[2]==='ขยะผู้ทะลวงฟ้า')t[2]='ราชันไร้ราก';if(t[2]==='ขยะผู้พลิกชะตาฟ้า')t[2]='ผู้พลิกลิขิตฟ้า'});
+ const gg=(m,f)=>S.gender==='หญิง'?f:m;
+ TTL_SP.unshift(['chjX',()=>chJ()&&S.xt,'เทพผู้ไม่ต้องการราก'],['chjS',()=>chJ()&&S.xian&&!S.xt,'ราชันไร้รากแห่งเก้าฟ้า']);
+ const i7=TTL_SP.findIndex(t=>t[0]==='chj7');TTL_SP.splice(i7>=0?i7+1:TTL_SP.length,0,['chj5',()=>chJ()&&realmIdx()>=5,'ผู้พลิกลิขิต'],['chj3',()=>chJ()&&(S.flags.chJb||0)>=2&&realmIdx()>=3,'ผู้ไม่ยอมก้มหัว']);
+ TTL_SP.push(['d500',()=>(S.kills||0)>=500,'ราชันหมื่นศพ'],['d100',()=>(S.kills||0)>=150&&!!S.flags.epD100,'กระบี่ร้อยศพ'],['kg3',()=>S.karma>=400,'โพธิสัตว์เดินดิน'],['km3',()=>S.karma<=-400,'มารผู้กลืนกรรม'],
+  ['kid8',()=>(S.kids||0)>=8,'ต้นตระกูลร้อยสาย'],['dao',()=>!!(S.flags&&S.flags.dao35),'ผู้หยั่งรู้มหาเต๋า'],['sfin',()=>!!(S.flags&&S.flags.sysfin),'ผู้พิชิตระบบ'],['arc3',()=>(S.arcDone||[]).length>=3,'ผู้ผ่านสามตำนาน'],
+  ['bw3',()=>!!(S.bw&&S.bw.st>=3),'ผู้ถือ'+'อาวุธเทพคู่ชีวิต'],['pet4',()=>!!(S.beast&&S.beast.st>=2),'นายแห่งสัตว์เทพ'],['lore',()=>(Object.keys(LS.get('murim_lore',{})||{}).length>=12),'ผู้รู้ตำนานบรรพกาล'],['prim',()=>!!(S.flags&&S.flags.primGod),'บรรพกาลเทพองค์ใหม่']);
+ ['d500','kg3','km3','kid8','arc3','pet4'].forEach(k=>TTL_WEAK.add(TTL_SP.find(t=>t[0]===k)[2]))}catch(e){console.error(e)}
+{const _tmL=ttlMake;ttlMake=function(){try{if(S&&S.ttlLock)return S.ttlLock;const bw=S.bw&&S.bw.st>=3?S.bw.n:null;const r=_tmL.apply(this,arguments);return r==='ผู้ถืออาวุธเทพคู่ชีวิต'&&bw?'ผู้ถือ'+bw:r}catch(e){return _tmL.apply(this,arguments)}}}
+{const _ttH=ttlTick;ttlTick=function(){const r=_ttH.apply(this,arguments);try{if(S&&S.ttl){S.ttlHist=S.ttlHist||[];if(!S.ttlHist.includes(S.ttl)){S.ttlHist.push(S.ttl);if(S.ttlHist.length>30)S.ttlHist.shift()}}if(S&&(S.kills||0)>=100&&!S.flags.epD100&&Math.random()<.5)S.flags.epD100=1}catch(e){}return r}}
+function openTtlMine(){if(!S)return;const H=(S.ttlHist||[]).slice().reverse();modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏷️ ฉายาในชีวิตนี้</h3><p class="tag2">ยุทธภพตั้งฉายาให้ตามสิ่งที่คุณทำ (ทุก 2 ปี) — ฉายาพัฒนาไปตามเส้นทาง เช่น รากขยะ → ผู้ไม่ยอมก้มหัว → ผู้พลิกลิขิต → ราชันไร้ราก → เทพผู้ไม่ต้องการราก · เลือกฉายาที่ชอบแล้ว<b>ล็อกไว้</b>ได้</p>
+ ${S.ttl?`<div class="sysq">ตอนนี้: <b>「${esc(S.ttl)}」</b>${S.ttlLock?' 🔒 ล็อกไว้':''}</div>`:''}
+ <div class="mgrid">${H.map(t=>`<button class="opt" onclick="ttlLockSet(${JSON.stringify(t).replace(/"/g,'&quot;')})">「${esc(t)}」<small>${S.ttlLock===t?'🔒 ล็อกอยู่':'แตะเพื่อใช้และล็อก'}</small></button>`).join('')||'<p class="tag2">ยังไม่มีฉายา (เริ่มตอนอายุ 15 เมื่อเริ่มมีชื่อเสียง)</p>'}</div>
+ ${S.ttlLock?'<button class="gbtn" style="width:100%;margin-top:6px" onclick="ttlLockSet(null)">🔓 ปลดล็อก ให้ยุทธภพตั้งให้ใหม่</button>':''}`,'ttlmine')}
+function ttlLockSet(t){S.ttlLock=t||null;if(t){S.ttl=t}else{S.ttl=null;try{ttlTick()}catch(e){}}try{const g=$('gName');const sp=g&&g.querySelector('.ttl');if(sp)sp.remove()}catch(e){}render();openTtlMine()}
+// ข้อความรากขยะ: หลายแบบ + ไม่ถี่
+const CHJ_VAR=[[/หัวเราะเยาะกลางตลาด/,['🗣️ ลูกศิษย์สำนักใหญ่โยนเหรียญใส่เท้าคุณ "ขยะก็ควรอยู่กับขยะ" — ความแค้น +2','🗣️ สาวใช้ของตระกูลใหญ่ยังหัวเราะใส่คุณ "รากแบบนี้ ทำไร่ยังไม่รอด" — ความแค้น +2','🗣️ คนในตลาดซุบซิบว่าคุณคือ "ขยะที่หลงคิดว่าตัวเองเป็นมังกร" — ความแค้น +2','🗣️ อาจารย์สำนักหนึ่งปฏิเสธคุณต่อหน้าทุกคน "เสียเวลาสอนขยะ" — ความแค้น +2','🗣️ ศิษย์รุ่นน้องที่คุณเคยช่วย หันหลังให้คุณเพราะอายที่รู้จักคนรากขยะ — ความแค้น +2']],
+ [/ฝ่าขีดจำกัดของรากขยะ/,['🗑️ <b>ฝ่าขีดจำกัดอีกขั้น!</b> ทุกตำราบอกว่ารากแบบคุณทำไม่ได้ — ตำราผิด','🗑️ <b>ทะลวงขั้นสำเร็จ!</b> หมอดูที่เคยทำนายว่าคุณจะไม่มีวันถึงขั้นนี้ เผาตำราทิ้งทั้งตู้','🗑️ <b>ข้ามกำแพงที่ไม่ควรข้ามได้!</b> เสียงหัวเราะเยาะที่เคยได้ยิน กลายเป็นเสียงกระซิบด้วยความกลัว','🗑️ <b>รากขยะ? ฟ้าเริ่มสงสัยแล้วว่าใครกันแน่ที่เป็นขยะ</b>']],
+ [/แรงฮึดจากความแค้น/,['😤 <b>คำดูถูกทั้งหมดถูกเผาเป็นเชื้อไฟ!</b>','😤 <b>คุณจำทุกหน้าที่เคยหัวเราะใส่คุณได้</b> — และวันนี้มันคือพลัง','😤 <b>ความแค้นที่สะสมระเบิดออกมาเป็นลมปราณ</b>']]];
+{const _lgV=log;log=function(t,c,k){try{if(typeof t==='string'&&S&&typeof chJ==='function'&&chJ()){for(const[re,L]of CHJ_VAR)if(re.test(t)){S._cjY=S._cjY||{};const key=String(re);if(re.source.includes('หัวเราะเยาะ')&&S._cjY[key]!=null&&S.age-S._cjY[key]<3)return;S._cjY[key]=S.age;const tail=(t.match(/ — (พลัง.*|ความแค้น.*)$/)||[])[1];const v=ch(L);t=re.source.includes('หัวเราะเยาะ')?v:v+(tail?' — '+tail:'');break}}}catch(e){}return _lgV.call(this,t,c,k)}}
+
+// ===================== v17.6 ป้อนแก่นอสูรให้สัตว์คู่ใจ =====================
+function bcFeed(k){const B=S.beast;if(!B)return;if(S.bcFeedY!==S.age){S.bcFeedY=S.age;S.bcFeedN=0}if((S.bcFeedN||0)>=3)return toast('ปีนี้ป้อนครบ 3 ครั้งแล้ว');if(!bagHas(k)||!bagUse(k))return toast('ไม่มีแก่นอสูร');
+ S.bcFeedN=(S.bcFeedN||0)+1;const xp=k==='bcore'?Math.max(10,B.lv*2):Math.max(3,Math.round(B.lv*.7));B.xp+=xp;B.bond=Math.min(100,B.bond+(k==='bcore'?8:3));const lv0=B.lv;while(B.xp>=B.lv*2&&B.lv<60){B.xp-=B.lv*2;B.lv++}
+ try{const st0=B.st;beastCompTick();B.xp=Math.max(0,B.xp-1);B.bond=Math.max(0,B.bond-1)}catch(e){}
+ log(`🐾 ${esc(B.nick)} กลืน${k==='bcore'?'แก่นอสูรโบราณ':'แก่นอสูร'}ลงไป ดวงตาเปล่งแสง — EXP +${xp}${B.lv>lv0?` · เลเวล ${lv0} → <b>${B.lv}</b>`:''} · ความผูกพัน +${k==='bcore'?8:3}`,'epic');render();openBeastComp()}
+{const _obc=openBeastComp;openBeastComp=function(){const r=_obc.apply(this,arguments);try{if(S&&S.beast){const m=$('modal'),br=m.querySelector('.brow');const n=S.bcFeedY===S.age?(S.bcFeedN||0):0;const c1=bagHas('core'),c2=bagHas('bcore');
+ if(br&&!m.querySelector('.bcFeed'))br.insertAdjacentHTML('beforebegin',`<div class="bcFeed sysq" style="background:none;border:1px solid var(--line)">🍖 <b>ป้อนแก่นอสูร</b> <span class="tag2">(ปีนี้ ${n}/3)</span><br><span class="tag2">แก่นอสูร: EXP ≈ เลเวล×0.7 · แก่นอสูรโบราณ: EXP ≈ เลเวล×2 และผูกพัน +8</span><div class="brow" style="margin-top:6px"><button class="gbtn" ${c1&&n<3?'':'disabled'} onclick="bcFeed('core')">🔶 แก่นอสูร</button><button class="gbtn" ${c2&&n<3?'':'disabled'} onclick="bcFeed('bcore')">🔮 แก่นโบราณ</button></div></div>`)}}catch(e){console.error(e)}return r}}
+
+// ===================== v17.6 หลอมเข้าวิชาหลัก (EXP · ดาว ★) =====================
+function artStarM(a){return 1+.08*((a&&a.star)|0)}
+{const _am=artM;artM=function(a){return _am.apply(this,arguments)*artStarM(a)}}
+function fuseMain(){const idx=FU_SEL.slice();if(idx.length<2)return toast('เลือกวิชาหลักก่อน แล้วเลือกวิชาที่จะหลอมเข้าไป');if(S.fmY===S.age)return toast('ปีนี้หลอมเข้าวิชาหลักไปแล้ว');
+ const main=S.arts[idx[0]],food=idx.slice(1).map(i=>S.arts[i]).filter(Boolean);if(!main||!food.length)return;
+ let xp=food.reduce((s,a)=>s+(a.b||0)*(typeof artM==='function'?artM(a):1)*(a.sect?.6:.4),0);main.fxp=(main.fxp||0)+Math.round(xp);const ups=[];
+ const need=()=>Math.round((main.b||20)*(.6+.3*((main.lv|0)+(main.star|0))));
+ while(main.fxp>=need()){main.fxp-=need();if((main.lv|0)<3){main.lv=(main.lv|0)+1;ups.push(AMN[main.lv])}else if((main.star|0)<5){main.star=(main.star|0)+1;ups.push('★'+main.star)}else{main.fxp=0;break}}
+ idx.slice(1).sort((a,b)=>b-a).forEach(i=>S.arts.splice(i,1));S.fmY=S.age;FU_SEL=[];closeM();
+ log(`📈 หลอม ${food.map(a=>'《'+esc(a.n)+'》').join(' ')} เข้าสู่《${esc(main.n)}》 — วิชาหลักดูดซับความเข้าใจทั้งหมด${ups.length?` · ขึ้นเป็น <b>${ups.join(' → ')}</b>`:` · EXP ${fmt(main.fxp)}/${fmt(need())}`}`,'epic');try{acPrev=null}catch(e){}render()}
+{const _ofM=openFuse;openFuse=function(){const r=_ofM.apply(this,arguments);try{const m=$('modal'),b=m.querySelector('.pbtn');const sel=FU_SEL.map(i=>S.arts[i]).filter(Boolean);if(b&&!m.querySelector('.fuMain')){b.insertAdjacentHTML('afterend',`<button class="gbtn fuMain" style="width:100%;margin-top:6px" ${sel.length>=2&&S.fmY!==S.age?'':'disabled'} onclick="fuseMain()">📈 หลอมเข้าวิชาหลัก${sel.length?`: 《${esc(sel[0].n)}》`:''}<br><small>วิชาแรกที่เลือก = วิชาหลัก · วิชาที่เหลือกลายเป็น EXP ความชำนาญ (เลยระดับสุดยอดได้เป็นดาว ★1–★5 · ★ละ +8%) · พลังเฟ้อน้อยกว่า · ปีละครั้ง · วิชาประจำสำนักให้ EXP มากกว่า</small></button>`)}
+ m.querySelectorAll('.fuit').forEach(el=>{const t=el.querySelector('b');if(!t)return;const mt=t.textContent.match(/《(.+?)》/);const a=mt&&S.arts.find(x=>x&&x.n===mt[1]);if(a&&(a.star||a.sect)&&!el.querySelector('.fstar'))t.insertAdjacentHTML('beforeend',` <span class="fstar tag2">${a.star?'★'.repeat(a.star):''}${a.sect?' 🏯':''}</span>`)})}catch(e){}return r}}
+{const _fp=fuseP;fuseP=function(L){let p=_fp.apply(this,arguments);try{p=Math.min(.92,p+.07*L.filter(a=>a&&a.sect).length)}catch(e){}return p}}
+{const _fc=fuseCan;fuseCan=function(a){return _fc.apply(this,arguments)||!!(a&&a.sect)}}
+
+// ===================== v17.6 ฝากตัวเรียนต่างสำนัก =====================
+function guestCost(){return Math.round(sxBiz()*.4)}
+function openGuest(){if(!S)return;const done=S.guestS||[];const L=(typeof FACTIONS!=='undefined'?FACTIONS:[]).filter(f=>f&&f.arts&&f.arts.length&&(!S.faction||(f.n0||f.n)!==(S.faction.n0||S.faction.n)));
+ modal(`<button class="xbtn" onclick="openArts()">←</button><h3>🏯 ฝากตัวเรียนต่างสำนัก</h3><p class="tag2">ไปเป็นศิษย์รับเชิญ เรียน<b>วิชาประจำสำนัก</b>ได้สำนักละ 1 วิชา (ปีละ 1 แห่ง · ค่าฝากตัว ${S.xian?stoneTxt(guestCost()):fmt(guestCost())+' ตำลึง'} · อายุ 14+) · วิชาประจำสำนักใช้รวมวิชาได้แม้ยังไม่ชำนาญ และหลอมเข้าวิชาหลักได้ EXP มากกว่า · ไปเรียนสำนักต่างฝ่าย สำนักของคุณอาจไม่พอใจ</p>
+ <div class="mgrid">${L.map(f=>{const k=f.n0||f.n,d=done.includes(k);return`<button class="opt" ${d||S.guestY===S.age?'disabled style="opacity:.5"':''} onclick="guestGo(${JSON.stringify(k).replace(/"/g,'&quot;')})">${esc(f.n)}<small>${d?'✅ เรียนแล้ว':esc(f.t||'')+' · '+esc((f.arts||[]).slice(0,2).join(' / '))}</small></button>`}).join('')}</div>`,'guest')}
+function guestGo(k){const f=FACTIONS.find(x=>(x.n0||x.n)===k);if(!f||S.age<14)return toast('ยังเด็กเกินไป');if(S.guestY===S.age)return toast('ปีนี้ไปเรียนมาแล้ว');const c=guestCost();if(S.money<c)return toast('เงินไม่พอ');
+ S.money-=c;S.guestY=S.age;S.guestS=(S.guestS||[]).concat([k]);const r=Math.max(0,Math.min(4,Math.floor(realmIdx()/2)+(Math.random()<.25?1:0)));const a=newArt(r);a.n=ch(f.arts);a.sect=f.n;a.lv=Math.max(a.lv|0,0);a.tier=(a.tier||'')+' · วิชาประจำสำนัก';
+ const full=S.arts.filter(Boolean).length>=artCap();if(full){closeM();return toast('ความจำวิชาเต็ม — ลืมหรือหลอมวิชาก่อน')}Array.prototype.push.call(S.arts,a);
+ let note='';if(S.faction&&S.faction.t&&f.t&&S.faction.t!==f.t){S.fame=Math.max(0,S.fame-30);note=` · สำนัก${esc(S.faction.n)}ไม่พอใจที่คุณไปเรียนกับฝ่าย${esc(f.t)} (ชื่อเสียง −30)`}
+ log(`🏯 คุณฝากตัวเป็นศิษย์รับเชิญที่<b>${esc(f.n)}</b>หนึ่งฤดู — ได้เรียน${artHtml(a)} วิชาประจำสำนัก${note}`,'epic');closeM();render();openArts()}
+{const _oaG=openArts;openArts=function(){const r=_oaG.apply(this,arguments);try{if(S&&!(S.beastMode&&!S.beastMode.human)&&!(typeof mwOn==='function'&&mwOn())){const m=$('modal');if(!m.querySelector('.guestB'))m.insertAdjacentHTML('beforeend',`<button class="gbtn guestB" style="width:100%;margin-top:6px" onclick="openGuest()">🏯 ฝากตัวเรียนต่างสำนัก<small style="display:block" class="tag2">เรียนแล้ว ${(S.guestS||[]).length} สำนัก</small></button>`);m.querySelectorAll('.item b').forEach(b=>{const mt=b.textContent.match(/《(.+?)》/);const a=mt&&S.arts.find(x=>x&&x.n===mt[1]);if(a&&a.star&&!b.querySelector('.astar'))b.insertAdjacentHTML('beforeend',` <span class="astar" style="color:#ffd040">${'★'.repeat(a.star)}</span>`)})}}catch(e){}return r}}
+
+// ===================== v17.6 อาวุธคู่ชีวิต + ของคู่ชีวิต =====================
+const BW_ST=['ผูกวิญญาณ','ตื่นรู้','วิญญาณอาวุธ','อาวุธเทพคู่ชีวิต'],BW_NEED=[0,25,50,100],BW_SK=['','ท่าตื่นรู้: ฟันพร้อมปราณ','ท่าวิญญาณ: อาวุธสู้เองได้ชั่วขณะ','ท่าเทพ: ฟาดฟันข้ามมิติ'];
+const bwM=()=>S&&S.bw?1+.05*S.bw.st+.03*(S.bw.lv|0)+Math.min(.1,(S.bw.bond|0)*.001):1;
+const KEEP={ring_shard:['💍','เศษแหวนอาจารย์','ปัญญา +1/ปี',{int:1}],dragon_scale:['🐉','เกล็ดมังกรเกล็ดสุดท้าย','ต่อสู้ +6%',{fight:.06}],jade_red:['🧧','หยกหมั้นต่อด้วยด้ายแดง','ความสุข +2/ปี',{joy:2}],noodle:['🍜','ชามบะหมี่ใบเก่า','พลังชีวิตฟื้น 10%/ปี',{heal:.1}],mask:['🎭','หน้ากากเงา','ต่อสู้ +4% · ความลับ',{fight:.04}],coffin_charm:['🧿','เครื่องรางจากเพื่อนช่างพูด','กรรมดี +1/ปี',{karma:1}],lore_seal:['📜','ตราบรรพกาล','ลมปราณ +0.5/ปี',{qi:.5}],star_shard:['🌠','เศษดาวจากดาวผู้บูชา','ชื่อเสียง +10/ปี',{fame:10}],crown:['👑','มงกุฎเล็กขององค์ชายน้อย','กรรมดี +2/ปี',{karma:2}],scroll:['📕','สมุดพินัยกรรมฉบับที่เจ็ด','อายุขัย +1 ทุก 10 ปี',{life:.1}],fang:['🦷','เขี้ยวราชาพงไพร','ต่อสู้ +5%',{fight:.05}],rival:['⚔️','กระบี่หักของคู่ปรับ','ต่อสู้ +5%',{fight:.05}],kidp:['🧸','ของเล่นไม้ที่ลูกแกะให้','ความสุข +3/ปี',{joy:3}]};
+const KEEP_ARC={ring:{shattered:'ring_shard',heir:'ring_shard',free:'ring_shard'},xdra:{slay:'dragon_scale',bond:'dragon_scale',sky:'dragon_scale'},rise:{love:'jade_red'},xlov:{memory:'noodle',reborn:'noodle'},xcau:{shadow:'mask'},xcof:{one:'coffin_charm',all:'coffin_charm'},gwor:{god:'star_shard',friend:'star_shard',exodus:'star_shard'},gthr:{cold:'crown',regent:'crown'},bking:{king:'fang',guard:'fang'},peer:{win:'rival',bond:'rival'},kid:{proud:'kidp',back:'kidp'},wpri:{seal:'lore_seal',read:'lore_seal'}};
+function keepAdd(id){if(!KEEP[id])return;S.keep=S.keep||[];if(S.keep.includes(id))return;S.keep.push(id);const K=KEEP[id];log(`🎐 ได้ของคู่ชีวิต <b>${K[0]} ${K[1]}</b> — ${K[2]} (สวมได้ที่ ☰ → 🎐 ของคู่ชีวิต)`,'epic');if(!S.keepEq)S.keepEq=[];if(S.keepEq.length<2)S.keepEq.push(id)}
+{const _seK=saEnd;saEnd=function(A,k){try{const m=KEEP_ARC[A.id];if(m&&m[k])setTimeout(()=>{try{keepAdd(m[k])}catch(e){}},200)}catch(e){}return _seK.apply(this,arguments)}}
+{const _em=eqM;eqM=function(k){let m=_em.apply(this,arguments);try{if(k==='fight'&&S){m*=bwM();(S.keepEq||[]).forEach(id=>{const f=KEEP[id]&&KEEP[id][3];if(f&&f.fight)m*=1+f.fight})}}catch(e){}return m}}
+function keepYear(){if(!S||!S.alive)return;(S.keepEq||[]).forEach(id=>{const f=KEEP[id]&&KEEP[id][3];if(!f)return;if(f.int)S.int+=f.int;if(f.joy)joy(f.joy);if(f.heal)S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*f.heal));if(f.karma)S.karma+=f.karma;if(f.qi)S.qi+=f.qi;if(f.fame)S.fame+=f.fame;if(f.life&&Math.random()<f.life)sxLife(1)});
+ const B=S.bw;if(B){if(['train','drill','adv','hunt','mission'].includes(S.focus))B.bond=Math.min(150,(B.bond|0)+1);bwCheck()}}
+function bwCheck(){const B=S.bw;if(!B)return;while(B.st<3&&B.bond>=BW_NEED[B.st+1]){B.st++;S.power+=pctPow(.04);log(`⚔️ <b>${esc(B.n)}</b> ตื่นขั้นเป็น <b>${BW_ST[B.st]}</b>! ${BW_SK[B.st]} · พลังยุทธ์ +4%`,'myth',true);keyAdd(`อาวุธคู่ชีวิต ${B.n} ตื่นเป็น${BW_ST[B.st]}`)}}
+{const _fgB=fight;fight=function(n,ep){const w=_fgB.apply(this,arguments);try{if(w&&S&&S.bw){S.bw.bond=Math.min(150,(S.bw.bond|0)+1);S.bw.kills=(S.bw.kills|0)+1;bwCheck()}}catch(e){}return w}}
+{const _pyK=passYear;passYear=function(){const r=_pyK.apply(this,arguments);try{keepYear()}catch(e){}return r}}
+function bwBind(){if(S.bw)return;const w=typeof gearOf==='function'?gearOf('weapon'):null;if(S.age<14)return toast('ต้องอายุ 14 ขึ้นไป');const nm=(($('bwName')||{}).value||'').replace(/[<>&"'`\\《》]/g,'').trim().slice(0,20)||(w?w.n:ch(['กระบี่','ดาบ','ทวน'])+ch(['เงาจันทร์','มังกรคราม','ไร้นาม','เพลิงพันปี']));
+ S.bw={n:nm,base:w?w.n:'อาวุธเปล่า',bond:5,st:0,lv:0,kills:0,at:S.age};log(`⚔️ คุณหยดเลือดลงบน<b>${esc(nm)}</b> — วิญญาณของคุณกับอาวุธผูกกันแล้ว นับจากนี้มันจะเติบโตไปพร้อมคุณ`,'myth',true);keyAdd('ผูกวิญญาณกับอาวุธคู่ชีวิต '+nm);openKeep()}
+function bwRefine(){const B=S.bw;if(!B)return;if((B.lv|0)>=10)return toast('ตีบวกเต็มแล้ว');const c=Math.round(sxBiz()*.3*Math.pow(1.5,B.lv|0));const ore=bagHas('ore');if(!ore&&S.money<c)return toast('ต้องมีแร่ หรือเงินพอ');if(ore)bagUse('ore');else S.money-=c;B.lv=(B.lv|0)+1;log(`🔨 ตีบวก<b>${esc(B.n)}</b>เป็น +${B.lv} — ต่อสู้ +3%`,'epic');openKeep()}
+function bwRename(){const B=S.bw;if(!B)return;const nm=(($('bwName')||{}).value||'').replace(/[<>&"'`\\《》]/g,'').trim().slice(0,20);if(!nm)return toast('พิมพ์ชื่อก่อน');B.n=nm;toast('ตั้งชื่อแล้ว');openKeep()}
+function keepEqTog(id){S.keepEq=S.keepEq||[];const i=S.keepEq.indexOf(id);if(i>=0)S.keepEq.splice(i,1);else{if(S.keepEq.length>=2)S.keepEq.shift();S.keepEq.push(id)}openKeep()}
+function openKeep(){if(!S)return;const B=S.bw,w=typeof gearOf==='function'?gearOf('weapon'):null;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎐 ของคู่ชีวิต</h3>
+ <h4>⚔️ อาวุธคู่ชีวิต</h4>${B?`<div class="sysq"><b style="font-size:16px">${esc(B.n)}</b> ${B.lv?'+'+B.lv:''} <span class="tag2">· ${BW_ST[B.st]}</span><br>ความผูกพัน <b>${B.bond|0}</b>${B.st<3?` / ${BW_NEED[B.st+1]} (ขั้นถัดไป)`:' (สูงสุด)'} · สังหารด้วยกัน ${B.kills|0} ครั้ง<div class="hpbar" style="height:7px;margin:4px 0"><i style="width:${B.st<3?Math.min(100,(B.bond|0)/BW_NEED[B.st+1]*100):100}%;background:#ffd040"></i></div><span class="tag2">ต่อสู้ ×${bwM().toFixed(2)} · ${B.st?BW_SK[B.st]:'ชนะการต่อสู้และฝึกยุทธ์จะเพิ่มความผูกพัน'} · ตายแล้วส่งต่อให้ลูก</span>
+  <div style="margin-top:6px"><input class="crin" id="bwName" maxlength="20" placeholder="ตั้งชื่อใหม่" style="margin-bottom:4px"><div class="brow"><button class="gbtn" onclick="bwRename()">✍️ ตั้งชื่อ</button><button class="gbtn" onclick="bwRefine()" ${(B.lv|0)>=10?'disabled':''}>🔨 ตีบวก (${bagHas('ore')?'ใช้แร่ 1':fmt(Math.round(sxBiz()*.3*Math.pow(1.5,B.lv|0)))})</button></div></div></div>`
+ :`<div class="sysq">ยังไม่มีอาวุธคู่ชีวิต — หยดเลือดผูกวิญญาณกับ${w?'<b>'+esc(w.n)+'</b> ที่ถืออยู่':'อาวุธ'} แล้วมันจะเติบโตไปกับคุณ: ตื่นขั้นที่ความผูกพัน 25 / 50 / 100 · ตั้งชื่อเอง · ตีบวก · ส่งต่อทายาท<input class="crin" id="bwName" maxlength="20" placeholder="ตั้งชื่ออาวุธ (ไม่บังคับ)" style="margin:6px 0"><button class="pbtn" style="width:100%" onclick="bwBind()" ${S.age<14?'disabled':''}>🩸 ผูกวิญญาณ</button></div>`}
+ <h4>🎐 เครื่องรางจากเรื่องราว</h4><p class="tag2">ได้จากตอนจบของภาคเรื่องราว · สวมได้ 2 ชิ้น</p>${(S.keep||[]).length?(S.keep||[]).map(id=>{const K=KEEP[id];if(!K)return'';const on=(S.keepEq||[]).includes(id);return`<button class="item" style="width:100%;text-align:left" onclick="keepEqTog('${id}')"><b>${on?'✅ ':''}${K[0]} ${K[1]}</b> <span class="tag2">— ${K[2]}</span></button>`}).join(''):'<p class="tag2">ยังไม่มี</p>'}`,'keep')}
+{const _ihW=inherit;inherit=function(ci){const P=S,bw=P&&P.bw?JSON.parse(JSON.stringify(P.bw)):null;const r=_ihW.apply(this,arguments);try{if(bw&&S!==P&&!S.bw){bw.bond=Math.floor((bw.bond|0)/2);bw.st=Math.max(0,bw.st-1);bw.lv=Math.max(0,(bw.lv|0)-2);S.bw=bw;setTimeout(()=>{try{log(`⚔️ <b>${esc(bw.n)}</b> อาวุธคู่ชีวิตของ${esc(P.name)} ส่งต่อมาถึงมือคุณ — มันยังจำเจ้าของเดิมได้`,'myth',true)}catch(e){}},700)}}catch(e){}return r}}
+{const _omK=openMenu;openMenu=function(){const r=_omK.apply(this,arguments);try{if(S&&!(typeof mwOn==='function'&&mwOn())&&!(S.beastMode&&!S.beastMode.human)){const g=document.querySelector('#modal .mgrid');if(g&&!g.querySelector('.keepOpt'))g.insertAdjacentHTML('afterbegin',`<button class="opt keepOpt" onclick="openKeep()">🎐 ของคู่ชีวิต<small>${S.bw?esc(S.bw.n)+' · '+BW_ST[S.bw.st]:'อาวุธคู่ชีวิต · เครื่องราง'}</small></button><button class="opt keepOpt" onclick="openTtlMine()">🏷️ ฉายาของฉัน<small>${S.ttl?'「'+esc(S.ttl)+'」':'ยังไม่มี'}</small></button>`)}}catch(e){}return r}}
+try{SYS_GUIDE.push(
+ {s:'grow',nw:1,ic:'🎐',t:'อาวุธคู่ชีวิต · เครื่องราง',go:'openKeep',life:1,d:'☰ → 🎐 ของคู่ชีวิต · <b>อาวุธคู่ชีวิต</b>: หยดเลือดผูกวิญญาณกับอาวุธ (อายุ 14+) ความผูกพันเพิ่มทุกครั้งที่ชนะและเมื่อฝึกยุทธ์/ออกท่อง · ตื่นขั้นที่ 25 / 50 / 100 (ต่อสู้ +5% ต่อขั้น และพลัง +4%) · ตั้งชื่อเอง · ตีบวก +10 ด้วยแร่หรือเงิน (+3% ต่อขั้น) · ตายแล้วส่งต่อลูก (ลดลงครึ่งหนึ่ง)<br><b>เครื่องราง</b>: ได้จากตอนจบภาคเรื่องราวบางแบบ สวมได้ 2 ชิ้น ผลทำงานทุกปี'},
+ {s:'grow',nw:1,ic:'🏷️',t:'ฉายาในชีวิต',go:'openTtlMine',life:1,d:'ทุก 2 ปียุทธภพจะตั้งฉายาให้ตามเส้นทางและสิ่งที่ทำ เช่น ชนะร้อยครั้ง กรรมดีมาก ลูกหลานเยอะ จบภาคเรื่องราว หยั่งรู้เต๋า · รากขยะมีเส้นทางฉายา: ผู้ไม่ยอมก้มหัว → ผู้พลิกลิขิต → ราชันไร้ราก → ราชันไร้รากแห่งเก้าฟ้า → เทพผู้ไม่ต้องการราก · ☰ → 🏷️ ฉายาของฉัน เลือกฉายาที่เคยได้แล้วล็อกไว้ได้'},
+ {s:'grow',nw:1,ic:'📈',t:'หลอมเข้าวิชาหลัก · ฝากตัวเรียนต่างสำนัก',go:'openFuse',life:1,d:'ในหน้า 🔮 รวมวิชา เลือกวิชาหลักก่อน แล้วเลือกวิชาที่จะหลอมเข้าไป กด <b>📈 หลอมเข้าวิชาหลัก</b> — วิชาที่ถูกหลอมกลายเป็น EXP ความชำนาญ เลยระดับสุดยอดเป็นดาว ★1–★5 (★ละ +8%) ปีละครั้ง พลังเฟ้อน้อยกว่าสร้างวิชาใหม่<br><b>🏯 ฝากตัวเรียนต่างสำนัก</b> (หน้าวิชา): เรียนวิชาประจำสำนักได้สำนักละ 1 วิชา ปีละ 1 แห่ง มีค่าฝากตัว · วิชาประจำสำนักรวมได้แม้ยังไม่ชำนาญ เพิ่มโอกาสรวมสำเร็จ และให้ EXP มากกว่า'},
+ {s:'beast',nw:1,ic:'🍖',t:'ป้อนแก่นอสูรให้สัตว์คู่ใจ',go:'openBeastComp',life:1,d:'หน้า 🐾 สัตว์คู่ใจ กดป้อนแก่นอสูรจากกระเป๋าได้ปีละ 3 ครั้ง · แก่นอสูร EXP ≈ เลเวล×0.7 · แก่นอสูรโบราณ EXP ≈ เลเวล×2 และความผูกพัน +8 · เลเวล 10 ตื่นรู้ · 25 ร่างสูงสุด'})}catch(e){}
+
+
+// ===================== v17.6 ตำนานบรรพกาล (หน้าตำนาน 12 หน้า) + ภาคใหม่: บรรพกาล 3 โลก · สัตว์อสูร · คู่ปรับ · ครอบครัว · นรก · ชีวิตสั้น · ชาติก่อน =====================
+const LORE=[
+ ['ศิลาแผ่นแรก','ก่อนจะมีฟ้า ก่อนจะมีดิน มีผู้ยืนอยู่ในความว่างเปล่าเก้าตน พวกเขาไม่มีชื่อ เพราะยังไม่มีใครให้เรียก'],
+ ['ศิลาแผ่นที่สอง','ผู้ไร้นามทั้งเก้าแบ่งความว่างเปล่าออกเป็นสามชั้น ชั้นล่างให้มนุษย์ ชั้นกลางให้ผู้บำเพ็ญ ชั้นบนเก็บไว้ให้ตัวเอง — นั่นคือยุทธภพ โลกเซียน และแดนเทพ'],
+ ['ศิลาแผ่นที่สาม','พวกเขาถูกเรียกว่า "บรรพกาลเทพ" โดยสิ่งมีชีวิตแรกที่ลืมตาขึ้นมาเห็นพวกเขา และสิ่งมีชีวิตนั้นคือบรรพบุรุษของมนุษย์ทุกคน'],
+ ['ม้วนไหมผนึก','บรรพกาลเทพองค์ที่เจ็ดรักมนุษย์มากเกินไป นางแอบมอบ "ราก" ให้มนุษย์บำเพ็ญได้ — รากวิญญาณทุกเส้นในโลกนี้คือเศษเสี้ยวของนาง'],
+ ['ม้วนไหมผนึกที่สอง','บรรพกาลเทพที่เหลือโกรธ พวกเขากลัวว่าสักวันมนุษย์จะขึ้นมาถึงชั้นบน จึงสร้างทัณฑ์สวรรค์ขึ้นมาเป็นประตูกั้น'],
+ ['ม้วนไหมผนึกที่สาม','องค์ที่เจ็ดถูกผนึกไว้ใต้โลกเซียน ร่างของนางกลายเป็นภูเขาที่ผู้บำเพ็ญทั้งหลายนั่งสมาธิอยู่บนนั้นโดยไม่รู้ตัว'],
+ ['ความทรงจำดวงดาว','แต่การสร้างทัณฑ์มีราคา ทุกครั้งที่ทัณฑ์ผ่าลง พลังของบรรพกาลเทพจะลดลงเล็กน้อย — พวกเขาไม่รู้ว่ามนุษย์จะฝ่าทัณฑ์บ่อยขนาดนี้'],
+ ['ความทรงจำดวงดาวที่สอง','หนึ่งกัลป์ผ่านไป บรรพกาลเทพอ่อนแรงจนต้องหลับใหล พวกเขาสร้าง "ผู้ล่าเทพ" ไว้เฝ้าแดนเทพ ให้ลงทัณฑ์ทุกคนที่ขึ้นมาถึง'],
+ ['ความทรงจำดวงดาวที่สาม','ผู้ล่าเทพไม่ได้รู้จักความแตกต่างระหว่างผู้บุกรุกกับเทพ มันจึงฆ่าทุกองค์ — รวมถึงผู้สร้างมันในการตื่นครั้งถัดมา'],
+ ['หยดน้ำตาบรรพกาล','เหลือเพียงองค์ที่เจ็ดที่ถูกผนึก จึงรอดจากผู้ล่าเทพ นางรอคนที่ฝ่าได้ทั้งสามโลก เพื่อตัดสินว่าบรรพกาลควรกลับมาหรือไม่'],
+ ['หยดน้ำตาบรรพกาลที่สอง','"ถ้ามนุษย์ผู้นั้นขึ้นมาถึงด้วยความโลภ จงผนึกข้าตลอดไป ถ้าขึ้นมาด้วยความเมตตา จงปลุกข้า ถ้าขึ้นมาด้วยความกล้า… จงแทนที่ข้า"'],
+ ['หน้าสุดท้าย','หน้านี้ว่างเปล่า มีเพียงคำเดียวที่เขียนด้วยลายมือของคนที่อ่านทุกหน้ามาจนถึงตรงนี้: ชื่อของคุณ']];
+function loreGot(){return LS.get('murim_lore',{})||{}}
+function loreAdd(i,why){const L=loreGot();if(L[i])return false;L[i]=1;LS.set('murim_lore',L);const n=Object.keys(L).length;log(`📜 พบ<b>${LORE[i][0]}</b>แห่งตำนานบรรพกาล${why?' — '+why:''} <span class="tag2">(${n}/12 · ☰ → 📜 ตำนานบรรพกาล)</span>`,'myth',true);return true}
+function loreNext(range){const L=loreGot();const r=range.filter(i=>!L[i]);return r.length?r[0]:null}
+function loreYear(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human)||(typeof mwOn==='function'&&mwOn()))return;if(S.loreY===S.age)return;S.loreY=S.age;
+ const rg=S.xt?[6,7,8,9,10]:S.xian?[3,4,5]:[0,1,2];const i=loreNext(rg);if(i==null)return;const p=['adv','roam','hunt','study','read','qi'].includes(S.focus)?.035:.015;if(Math.random()<p)loreAdd(i,S.xt?'ความทรงจำลอยมาจากซากดาวที่ดับแล้ว':S.xian?'ซ่อนอยู่ในถ้ำใต้ภูเขาที่ปราณหนาแน่นผิดปกติ':'สลักอยู่บนศิลาเก่าในป่าลึก')}
+{const _pyL=passYear;passYear=function(){const r=_pyL.apply(this,arguments);try{loreYear()}catch(e){}return r}}
+function openLore(){const L=loreGot(),n=Object.keys(L).length;modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📜 ตำนานบรรพกาล</h3><p class="tag2">หน้าตำนานกระจายอยู่ทั้งสามโลก (เก็บข้ามทุกชีวิต) · ยุทธภพ 3 หน้า · โลกเซียน 3 หน้า · แดนเทพ 5 หน้า · หน้าสุดท้ายต้องจบภาคบรรพกาล · พบแล้ว <b>${n}/12</b> · ออกท่องเที่ยว ศึกษา นั่งสมาธิ เจอบ่อยขึ้น และภาคบรรพกาลจะให้หน้าตำนาน</p>
+ ${LORE.map((p,i)=>L[i]?`<details class="item"><summary><b>📜 ${p[0]}</b></summary><p style="line-height:1.7">${p[1]}</p></details>`:`<div class="item" style="opacity:.45"><b>🔒 ???</b> <span class="tag2">${i<3?'ยุทธภพ':i<6?'โลกเซียน':i<11?'แดนเทพ':'จบภาคบรรพกาลเทพ'}</span></div>`).join('')}`,'lore')}
+{const _omL=openMenu;openMenu=function(){const r=_omL.apply(this,arguments);try{if(S&&!(typeof mwOn==='function'&&mwOn())){const g=document.querySelector('#modal .mgrid');if(g&&!g.querySelector('.loreOpt'))g.insertAdjacentHTML('beforeend',`<button class="opt loreOpt" onclick="openLore()">📜 ตำนานบรรพกาล<small>${Object.keys(loreGot()).length}/12 หน้า</small></button>`)}}catch(e){}return r}}
+// ภาคเรื่องราวรองรับสัตว์อสูรและชีวิตสั้น
+const saBeast=()=>!!(S&&S.beastMode&&!S.beastMode.human);
+saOK=function(){return !!(S&&S.alive&&!(typeof mwOn==='function'&&mwOn()))};
+SA_ARCS.forEach(D=>{const c0=D.c;D.c=()=>!saBeast()&&S.ch!=='short'&&c0()});
+const saPeer=()=>(peers||[]).find(p=>p&&p.alive&&p.name);
+SA_ARCS.push(
+// ---------------- บรรพกาล: ยุทธภพ
+{id:'wpri',ic:'🗿',n:'ศิลาบรรพกาล',c:()=>!saBeast()&&S.ch!=='short'&&!S.xian&&S.age>=16,
+ init(A){A.nm.o='ผู้เฒ่าเฝ้าศิลา'},hint:['','📖 ศิลาในฝันเรืองแสงอีกครั้ง','📖 มีคนตามล่าผู้ที่อ่านศิลาได้'],
+ ch:[
+ A=>saScene(A,'ศิลาที่ไม่มีใครอ่านออก',`ในป่าลึก คุณพบศิลาสูงเท่าภูเขา จารึกด้วยอักษรที่ไม่มีใครในยุทธภพอ่านออก — แต่คุณอ่านได้ <b>${A.nm.o}</b> ที่เฝ้าศิลามาหกสิบปีมองคุณตาค้าง "เจ้า… อ่านมันได้?"`,[
+  {t:'📖 อ่านออกเสียง',s:'',f(){loreAdd(loreNext([0,1,2])??0,'อ่านจากศิลาบรรพกาล');A.v.read=1;saNext(A,2,4)}},{t:'🤐 แกล้งอ่านไม่ออก',s:'ความลับนี้อันตราย',f(){A.v.hide=1;saSay('🤐 คุณจดไว้ในใจทุกตัวอักษร',{int:5});saNext(A,2,4)}}]),
+ A=>saScene(A,'ผู้ตามล่า','นิกายลับที่บูชาบรรพกาลเทพต้องการตัวคนที่อ่านศิลาได้ พวกเขาเชื่อว่าคนนั้นคือ "กุญแจ"',[
+  {t:'⚔️ สู้',s:'',f(){if(saF('เจ้านิกายบรรพกาล',1.1)){loreAdd(loreNext([0,1,2])??1,'จากคัมภีร์ของนิกายลับ');A.v.win=1}else saSay('💥 คุณหนีรอดมาได้',{hp:-.3});saNext(A,2,4)}},{t:'🙇 ยอมไปกับพวกเขา',s:'อยากรู้ความจริง',f(){A.v.go=1;loreAdd(loreNext([0,1,2])??2,'จากห้องลับของนิกาย');saNext(A,2,4)}}]),
+ A=>saScene(A,'กุญแจ','ศิลาทั้งแผ่นเรืองแสงเมื่อคุณแตะ — ข้างในมีประตูที่นำไปสู่ "ราก" ของโลก',[
+  {t:'🚪 เปิดประตู',s:'',f(){saEnd(A,'read')}},{t:'🔒 ผนึกศิลาไว้',s:'ยังไม่ถึงเวลา',f(){saEnd(A,'seal')}}])],
+ end:{read:{n:'ผู้อ่านศิลา',d:'คุณเห็นภาพเทพเก้าองค์ในความว่างเปล่า ก่อนที่ประตูจะปิดลง — ความรู้นั้นยังอยู่ในหัวคุณ และจะตามคุณไปทุกโลก',fx:{tal:.06,int:12}},seal:{n:'ผู้เฝ้าศิลา',d:'คุณผนึกศิลาแล้วนั่งลงข้างผู้เฒ่า สักวันจะมีคนที่พร้อมกว่ามาเปิดมัน หรือคุณในชาติหน้า',fx:{karma:20,int:8}}}},
+// ---------------- บรรพกาล: โลกเซียน
+{id:'xpri',ic:'⛰️',n:'ภูเขาที่หายใจ',c:()=>!saBeast()&&S.xian&&!S.xt&&Object.keys(loreGot()).length>=2,
+ init(A){},hint:['','📖 ภูเขาใต้ถ้ำบำเพ็ญของคุณสะอื้นตอนกลางคืน','📖 นิกายใหญ่สามนิกายกำลังจะดูดปราณจากภูเขาจนหมด'],
+ ch:[
+ A=>saScene(A,'ภูเขาที่หายใจ','ภูเขาที่ผู้บำเพ็ญนับหมื่นนั่งสมาธิมาหลายพันปี… หายใจ คุณได้ยินเสียงผู้หญิงจากใต้ดิน "ในที่สุด ก็มีคนได้ยินข้า"',[
+  {t:'👂 ฟังนาง',s:'',f(){loreAdd(loreNext([3,4,5])??3,'เสียงจากใต้ภูเขา');A.v.listen=1;saNext(A,2,4)}},{t:'🏃 หนีไปบอกนิกาย',s:'',f(){A.v.tell=1;saSay('🏃 นิกายหัวเราะใส่คุณ แต่คืนนั้นผู้อาวุโสสามคนแอบไปขุดภูเขา',{});saNext(A,2,4)}}]),
+ A=>saScene(A,'นิกายดูดปราณ','สามนิกายใหญ่วางค่ายกลดูดปราณจากภูเขาให้หมดในครั้งเดียว — ถ้าทำสำเร็จ พวกเขาจะแข็งแกร่งที่สุดในโลกเซียน และสิ่งที่อยู่ใต้ภูเขาจะตาย',[
+  {t:'⚔️ ทำลายค่ายกล',s:'',f(){if(saF('ผู้อาวุโสสามนิกาย',1.15)){A.v.save=1;loreAdd(loreNext([3,4,5])??4,'เสียงขอบคุณจากใต้ภูเขา')}else saSay('💥 ค่ายกลทำงานไปครึ่งหนึ่ง',{hp:-.4});saNext(A,2,4)}},{t:'🤝 เข้าร่วมดูดปราณ',s:'ได้ส่วนแบ่ง',f(){A.v.join=1;saSay('🤝 ปราณมหาศาลไหลเข้าสู่ร่าง เสียงใต้ภูเขาเงียบลง',{qi:20,karma:-40});saNext(A,2,4)}}]),
+ A=>saScene(A,'องค์ที่เจ็ด',A.v.join?'ภูเขาแตกออก หญิงร่างโปร่งแสงลอยขึ้นมาอย่างอ่อนแรง มองคุณด้วยความผิดหวัง':'ภูเขาแตกออก หญิงร่างโปร่งแสงลอยขึ้นมา "ข้าคือผู้ให้รากแก่มนุษย์… ขอบใจที่ปกป้องข้า"',[
+  {t:'🙏 ถามความจริง',s:'',f(){loreAdd(loreNext([3,4,5])??5,'จากปากของบรรพกาลเทพองค์ที่เจ็ด');saEnd(A,A.v.join?'shame':'truth')}},{t:'🔒 ผนึกนางกลับ',s:'',f(){saEnd(A,'reseal')}}])],
+ end:{truth:{n:'ผู้รับรู้ความจริง',d:'องค์ที่เจ็ดเล่าทุกอย่าง แล้วกลับเข้าไปหลับใต้ภูเขา "ขึ้นไปให้ถึงแดนเทพ แล้วเจ้าจะได้ตัดสิน"',fx:{tal:.08,karma:30}},shame:{n:'ผู้ดูดเลือดบรรพกาล',d:'นางไม่โกรธ แค่เสียใจ "มนุษย์ก็เป็นแบบนี้เสมอ" แล้วจางหายไป พลังที่คุณได้มาหนักอึ้งไปตลอดชีวิต',fx:{pow:.12,karma:-20}},reseal:{n:'ผู้ผนึก',d:'คุณผนึกนางกลับใต้ภูเขา ความลับยังปลอดภัย และนางก็ยังรอ',fx:{int:10}}}},
+// ---------------- บรรพกาล: แดนเทพ
+{id:'gpri',ic:'🌌',n:'บรรพกาลเทพ',c:()=>!saBeast()&&S.xt&&Object.keys(loreGot()).length>=6,
+ init(A){},hint:['','📖 ดวงดาวเก้าดวงที่ดับไปนานเรืองแสงพร้อมกัน','📖 ผู้ล่าเทพตื่นอีกครั้ง — คราวนี้มันตามหาคุณ'],
+ ch:[
+ A=>saScene(A,'ดาวเก้าดวง','ดาวเก้าดวงที่ดับไปตั้งแต่ก่อนกัลป์แรกเรืองแสงพร้อมกัน เป็นทางนำไปสู่ใจกลางความว่างเปล่า ที่ที่บรรพกาลเทพยืนอยู่ก่อนจะมีทุกสิ่ง',[
+  {t:'🌌 เดินตามทางดาว',s:'',f(){loreAdd(loreNext([6,7,8,9,10])??6,'แสงดาวเล่าเรื่อง');saNext(A,1,3)}}]),
+ A=>saScene(A,'ผู้ล่าเทพตัวแรก','สิ่งที่บรรพกาลเทพสร้างไว้เฝ้าทาง ขวางหน้าคุณ — มันไม่มีรูปร่าง มีแต่ความเกลียดชังต่อทุกสิ่งที่ขึ้นมาถึง',[
+  {t:'⚔️ สู้',s:'',f(){saD(A,'ผู้ล่าเทพตัวแรก',1.15,w=>{if(!w)return saEnd(A,'fall');loreAdd(loreNext([6,7,8,9,10])??8,'จากซากผู้ล่าเทพ');saNext(A,1,2)})}}]),
+ A=>{loreAdd(loreNext([6,7,8,9,10])??9,'น้ำตาขององค์ที่เจ็ด');saScene(A,'ใจกลางความว่างเปล่า','องค์ที่เจ็ดรออยู่ "เจ้าผ่านทั้งสามโลกมาถึงที่นี่ จงตัดสิน — ปลุกบรรพกาลกลับมา ผนึกพวกเราตลอดไป หรือ… แทนที่พวกเรา"',[
+  {t:'🌅 ปลุกบรรพกาล',s:'ด้วยความเมตตา',f(){saEnd(A,'wake')}},{t:'🔒 ผนึกตลอดกาล',s:'โลกควรเป็นของคนที่อยู่ในนั้น',f(){saEnd(A,'seal')}},{t:'👑 แทนที่บรรพกาลเทพ',s:'ด้วยความกล้า',f(){S.flags.primGod=1;saEnd(A,'heir')}}])}],
+ end:{wake:{n:'รุ่งอรุณของบรรพกาล',d:'บรรพกาลเทพทั้งเก้าตื่นขึ้น แต่โลกที่พวกเขาสร้างเปลี่ยนไปแล้ว — พวกเขาไม่ได้กลับมาปกครอง แต่มาเป็นครู',fx:{karma:60,fame:600,tal:.1}},seal:{n:'ผู้ปิดยุคบรรพกาล',d:'คุณผนึกบรรพกาลเทพตลอดกาล องค์ที่เจ็ดยิ้มก่อนหลับไป "ข้าเลือกคนไม่ผิด" — ทัณฑ์สวรรค์ทั่วสามโลกเบาลงในวันนั้น',fx:{karma:40,fame:500,int:15}},heir:{n:'บรรพกาลเทพองค์ใหม่',d:'คุณก้าวเข้าสู่ความว่างเปล่า แล้วกลายเป็นผู้ยืนอยู่ก่อนทุกสิ่ง — หน้าสุดท้ายของตำนานบรรพกาลเขียนชื่อคุณไว้แล้ว',fx:{pow:.25,tal:.15,fame:800}},fall:{n:'ยังไม่ถึงเวลา',d:'ผู้ล่าเทพเหวี่ยงคุณกลับลงไปในแดนเทพ ดาวเก้าดวงดับลงอีกครั้ง รอการตื่นครั้งหน้า',fx:{hp:-.6,tal:.05}}}},
+// ---------------- สัตว์อสูร: ราชาพงไพร
+{id:'bking',ic:'🐺',n:'ราชาแห่งพงไพร',c:()=>saBeast()&&S.age>=8,
+ init(A){A.nm.k='จ่าฝูง'+ch(['เขี้ยวเงิน','ตาเดียว','หางดำ']);A.nm.h='นายพราน'+ch(PROT_GN)},hint:['','📖 ป่าเงียบผิดปกติ — มนุษย์ตัดต้นไม้ลึกเข้ามาทุกปี','📖 {k}เริ่มแก่ แต่ยังไม่ยอมลงจากตำแหน่ง'],
+ ch:[
+ A=>saScene(A,'เสียงขวานในป่า',`มนุษย์ตัดป่าลึกเข้ามาทุกปี สัตว์หลายเผ่าหนีตาย <b>${A.nm.k}</b> จ่าฝูงชรายังยืนกรานว่า "หลบไปเรื่อยๆ ก็พอ"`,[
+  {t:'⚔️ ท้าชิงตำแหน่งจ่าฝูง',s:'ป่าต้องการผู้นำคนใหม่',f(){if(saF(A.nm.k,1)){A.v.king=1;saSay(`⚔️ ${A.nm.k}ยอมก้มหัวให้คุณ ทั้งป่าคำรามรับราชาองค์ใหม่`,{fame:40})}else saSay(`💥 ${A.nm.k}ยังแข็งแกร่งกว่า`,{hp:-.3});saNext(A,2,4)}},
+  {t:'🌿 ไปสำรวจหมู่บ้านมนุษย์',s:'รู้เขารู้เรา',f(){A.v.scout=1;saSay('🌿 คุณเห็นเด็กมนุษย์ป่วยหนัก หมู่บ้านอดอยาก พวกเขาตัดป่าเพราะไม่มีทางเลือก',{int:5});saNext(A,2,4)}}]),
+ A=>saScene(A,'นายพรานใหญ่',`<b>${A.nm.h}</b> นายพรานมือหนึ่งพาคนเข้าป่า เป้าหมายคือแก่นอสูรของคุณ`,[
+  {t:'⚔️ นำฝูงสู้',s:'',f(){saD(A,A.nm.h,1.05,w=>saEnd(A,w?(A.v.king?'king':'guard'):'flee'))}},
+  {t:'🍃 นำโรคร้ายในหมู่บ้านไปให้หมอสมุนไพร',s:A.v.scout?'สันติด้วยความเข้าใจ':'',f(){saEnd(A,A.v.scout?'pact':'flee')}}])],
+ end:{king:{n:'ราชาพงไพร',d:'มนุษย์ถอยออกจากป่า และไม่กล้ากลับมาอีกตราบที่คุณยังเป็นราชา',fx:{pow:.12,fame:200}},guard:{n:'ผู้พิทักษ์ป่า',d:'คุณไม่ใช่จ่าฝูง แต่ทุกตัวในป่ารู้ว่าใครปกป้องพวกมัน',fx:{karma:30,pow:.08}},pact:{n:'สัญญาป่ากับคน',d:'มนุษย์กับป่าตกลงกันได้ หมู่บ้านปลูกป่าทดแทน และสร้างศาลให้ "อสูรผู้ใจดี"',fx:{karma:50,joy:20}},flee:{n:'ป่าที่หายไป',d:'ฝูงต้องอพยพข้ามภูเขา ป่าเก่ากลายเป็นทุ่งนา คุณมองมันจากยอดเขาเป็นครั้งสุดท้าย',fx:{joy:-20,int:6}}}},
+// ---------------- สัตว์อสูร: รักต่างเผ่า
+{id:'blove',ic:'💞',n:'รักต่างเผ่า',c:()=>saBeast()&&S.age>=10,
+ init(A){A.nm.p=saNm()},hint:['','📖 คนนั้นกลับมาที่ลำธารทุกวัน','📖 ชาวบ้านเริ่มสงสัยว่าทำไมคนนั้นหายเข้าป่าบ่อย'],
+ ch:[
+ A=>saScene(A,'มนุษย์ที่ช่วยคุณ',`คุณติดกับดักนายพราน มนุษย์คนหนึ่งชื่อ <b>${A.nm.p}</b> แอบตัดเชือกปล่อยคุณ แล้วทำแผลให้ทั้งที่มือสั่น`,[
+  {t:'🐾 กลับไปหาที่ลำธารทุกวัน',s:'',f(){A.v.meet=1;saSay(`🐾 คุณกับ${A.nm.p}นั่งดูลำธารด้วยกันทุกเย็น ไม่ต้องพูดกันก็เข้าใจ`,{joy:15});saNext(A,2,4)}},{t:'🌲 หายเข้าป่า',s:'มนุษย์อันตราย',f(){saEnd(A,'apart')}}]),
+ A=>saScene(A,'หมู่บ้านล่าอสูร',`ชาวบ้านรู้เรื่อง ${A.nm.p}ถูกกล่าวหาว่าคบอสูร และถูกจับมัดรอเผา`,[
+  {t:'🔥 บุกหมู่บ้าน',s:'',f(){saD(A,'ชาวบ้านล่าอสูร',.9,w=>saEnd(A,w?'run':'loss'))}},{t:'🧑 แปลงกายเป็นคนไปพูด',s:'ต้องมีปัญญาพอ',f(){saEnd(A,(S.int||0)>=40||Math.random()<.4?'accept':'loss')}}])],
+ end:{run:{n:'หนีไปด้วยกัน',d:'คุณพาคนนั้นหนีเข้าป่าลึก ทั้งคู่สร้างบ้านเล็กๆ ที่มนุษย์และอสูรไม่เคยหาเจอ',fx:{joy:35,karma:10}},accept:{n:'หมู่บ้านที่ยอมรับ',d:'ชาวบ้านวางคบไฟลง เด็กๆ เริ่มเอาผลไม้มาวางให้คุณที่ชายป่าทุกเช้า',fx:{joy:30,karma:40}},loss:{n:'ไฟในคืนนั้น',d:'คุณไปไม่ทัน… ทุกปีในคืนนั้น คุณจะไปนั่งที่ลำธารคนเดียว',fx:{joy:-35,pow:.08}},apart:{n:'ต่างเผ่าต่างทาง',d:'คุณไม่เคยกลับไปที่ลำธารอีก แต่บางคืนก็ได้ยินเสียงคนเรียกจากชายป่า',fx:{joy:-5}}}},
+// ---------------- คู่ปรับวินาทีเดียวกัน
+{id:'peer',ic:'⚔️',n:'คู่ปรับวินาทีเดียวกัน',c:()=>!saBeast()&&S.ch!=='short'&&S.age>=15&&!!saPeer(),
+ init(A){const p=saPeer();A.nm.r=p?p.name:saNm()},hint:['','📖 ชื่อของ{r}ดังขึ้นทั่วแคว้น ทุกคนเอาไปเปรียบกับคุณ','📖 {r}ส่งจดหมายท้าดวลครั้งที่สอง','📖 คุณได้ข่าวว่า{r}ป่วยหนัก'],
+ ch:[
+ A=>saScene(A,'คนที่เกิดวินาทีเดียวกัน',`<b>${A.nm.r}</b> คนที่เกิดวินาทีเดียวกับคุณ ปรากฏตัวที่งานประลอง "ทุกคนบอกว่าเรามีชะตาคู่กัน — ข้าอยากรู้ว่าใครเป็นตัวจริง"`,[
+  {t:'⚔️ รับคำท้า',s:'',f(){A.v.w1=saF(A.nm.r,1)?1:0;saSay(A.v.w1?`⚔️ คุณชนะครั้งแรก ${A.nm.r}ยิ้ม "ครั้งหน้าข้าไม่แพ้"`:`💥 ${A.nm.r}ชนะ "ข้ารอเจ้าอยู่"`,{fame:30});saNext(A,6,12)}},{t:'🍶 ชวนดื่มแทน',s:'',f(){A.v.drink=1;saSay('🍶 สองคนดื่มจนเมา คุยกันเรื่องฝันวัยเด็กที่เหมือนกันแปลกๆ',{joy:10});saNext(A,6,12)}}]),
+ A=>saScene(A,'ศึกครั้งที่สอง',`สิบปีต่อมา ทั่วแคว้นพูดถึงแต่คุณกับ${A.nm.r} — งานประลองใหญ่จัดขึ้นเพื่อดูว่าใครจะเป็นอันดับหนึ่ง`,[
+  {t:'⚔️ ดวลเต็มรูปแบบ',s:'',f(){saD(A,A.nm.r,1.05,w=>{A.v.w2=w?1:0;saNext(A,6,15)})}},{t:'🤝 ขอสู้เคียงข้างกันในศึกจริงแทน',s:'',f(){A.v.ally=1;saSay('🤝 สองคนบุกรังโจรด้วยกัน ศัตรูที่ไม่มีใครล้มได้ล้มในคืนเดียว',{fame:80,karma:10});saNext(A,6,15)}}]),
+ A=>saScene(A,'ครั้งสุดท้าย',`${A.nm.r}มาหาคุณ ผมขาวไปครึ่งหัว "ข้าเหลือเวลาไม่มาก… ขอดวลกับเจ้าเป็นครั้งสุดท้าย"`,[
+  {t:'⚔️ ดวลเต็มที่ ให้เกียรติเขา',s:'',f(){saD(A,A.nm.r,1,w=>saEnd(A,w?'win':'lose'))}},{t:'🫂 นั่งลงข้างเขา',s:'ไม่ต้องสู้แล้ว',f(){saEnd(A,'bond')}}])],
+ end:{win:{n:'ผู้ชนะวินาทีเดียวกัน',d:'คู่ปรับยิ้มขณะล้มลง "ชะตาเลือกเจ้า" — คุณเก็บกระบี่หักของเขาไว้ตลอดชีวิต',fx:{fame:200,pow:.1}},lose:{n:'พ่ายให้คู่ปรับ',d:'คุณแพ้ครั้งสุดท้าย และพบว่าไม่เสียใจเลย — มีคนหนึ่งในโลกที่เข้าใจคุณมากกว่าใคร',fx:{tal:.05,joy:10}},bond:{n:'ชะตาคู่กัน',d:'สองคนนั่งดูพระอาทิตย์ตกด้วยกันจนวันสุดท้ายของเขา คนทั้งแคว้นเรียกพวกคุณว่า "ดาวคู่"',fx:{karma:30,joy:25,fame:120}}}},
+// ---------------- ลูกเกเร
+{id:'kid',ic:'👶',n:'ลูกที่ไม่เหมือนพ่อแม่',c:()=>!saBeast()&&(S.children||[]).some(c=>c&&c.alive!==false&&(c.age||0)>=12),
+ init(A){const c=(S.children||[]).find(c=>c&&c.alive!==false&&(c.age||0)>=12);A.nm.k=c?c.n:'ลูก'},hint:['','📖 {k}กลับบ้านดึกขึ้นทุกวัน','📖 {k}ไม่ยอมพูดกับคุณมาสามเดือนแล้ว'],
+ ch:[
+ A=>saScene(A,'ลูกที่หนีออกจากบ้าน',`<b>${A.nm.k}</b> ทิ้งจดหมายไว้ "ข้าไม่อยากเป็นเงาของท่าน" แล้วหนีไปเข้าแก๊งในเมือง`,[
+  {t:'🏃 ตามไปลากกลับมา',s:'',f(){A.v.drag=1;saSay(`🏃 ${A.nm.k}ตะโกนใส่คุณกลางตลาด "ท่านไม่เคยถามว่าข้าอยากเป็นอะไร!"`,{joy:-10});saNext(A,2,4)}},{t:'👀 ตามดูห่างๆ',s:'',f(){A.v.watch=1;saSay(`👀 คุณเห็น${A.nm.k}แบ่งข้าวให้เด็กขอทาน — ลูกไม่ได้เลวอย่างที่กลัว`,{int:4});saNext(A,2,4)}}]),
+ A=>saScene(A,'ลูกในอันตราย',`แก๊งที่${A.nm.k}อยู่ทำงานให้นิกายมาร คืนนี้พวกเขาจะใช้ลูกคุณเป็นเหยื่อล่อ`,[
+  {t:'⚔️ บุกช่วย',s:'',f(){saD(A,'หัวหน้าแก๊งนิกายมาร',.95,w=>saEnd(A,w?(A.v.watch?'back':'proud'):'scar'))}},{t:'💬 ให้ลูกเลือกเอง',s:'เชื่อในลูก',f(){saEnd(A,Math.random()<.6?'grow':'scar')}}])],
+ end:{back:{n:'บ้านที่รอ',d:'ลูกกลับบ้านมาเอง ไม่ใช่เพราะถูกลาก แต่เพราะเห็นว่าพ่อแม่ไม่เคยเลิกรอ — วันหนึ่งลูกแกะของเล่นไม้มาให้คุณ',fx:{joy:35,karma:20}},proud:{n:'พ่อแม่ผู้บุกรังโจร',d:'คุณช่วยลูกออกมาได้ ลูกมองคุณด้วยสายตาใหม่ "ท่าน… เก่งขนาดนี้เลยเหรอ"',fx:{joy:25,fame:60}},grow:{n:'ลูกเลือกเอง',d:'ลูกหักหลังแก๊งด้วยตัวเอง แล้วพาเด็กคนอื่นหนีออกมาด้วย — คุณรู้ว่าลูกไม่ใช่เงาของใครอีกแล้ว',fx:{joy:30,karma:30}},scar:{n:'แผลระหว่างพ่อแม่กับลูก',d:'ลูกรอดแต่ไม่ยอมกลับบ้าน บางปีส่งจดหมายมาสั้นๆ แค่บรรทัดเดียว',fx:{joy:-20,int:5}}}},
+// ---------------- ความลับของคู่ชีวิต
+{id:'spouse',ic:'💔',n:'ความลับของคู่ชีวิต',c:()=>!saBeast()&&!!S.spouse&&S.age>=20,
+ init(A){A.nm.s=S.spouse},hint:['','📖 {s}ออกไปข้างนอกทุกคืนวันเพ็ญ','📖 คุณเจอรอยสักแปลกๆ บนหลังของ{s}'],
+ ch:[
+ A=>saScene(A,'คืนวันเพ็ญ',`<b>${A.nm.s}</b> ออกจากบ้านทุกคืนวันเพ็ญ กลับมาพร้อมกลิ่นเลือด`,[
+  {t:'🕵️ แอบตาม',s:'',f(){A.v.follow=1;saSay(`🕵️ ${A.nm.s}ไปพบคนสวมหน้ากากที่สุสาน — สัญลักษณ์บนหน้ากากคือของนิกายนักฆ่า`,{int:4});saNext(A,1,3)}},{t:'🗣️ ถามตรงๆ',s:'',f(){A.v.ask=1;saSay(`🗣️ ${A.nm.s}นิ่งไปนาน "ถ้าข้าบอก เจ้าจะยังรักข้าไหม"`,{});saNext(A,1,3)}}]),
+ A=>saScene(A,'อดีตนักฆ่า',`${A.nm.s}เคยเป็นนักฆ่าอันดับหนึ่ง และเป้าหมายสุดท้ายที่ไม่ได้ฆ่า… คือคุณ นิกายมาทวงงานคืนนี้`,[
+  {t:'🛡️ สู้เคียงข้างคู่ชีวิต',s:'',f(){saD(A,'เจ้านิกายนักฆ่า',1,w=>saEnd(A,w?'together':'sacrifice'))}},{t:'💔 ไม่ให้อภัยที่โกหก',s:'',f(){saEnd(A,'break')}}])],
+ end:{together:{n:'สองคนกับหนึ่งนิกาย',d:'นิกายนักฆ่าล่มในคืนนั้น คู่ชีวิตไม่ต้องหนีอดีตอีกต่อไป และคุณรักเขามากกว่าเดิม',fx:{joy:35,fame:80}},sacrifice:{n:'โล่มนุษย์',d:'คู่ชีวิตรับดาบแทนคุณ… รอดมาได้หวุดหวิด แผลเป็นนั้นกลายเป็นสิ่งที่ทั้งคู่จูบทุกคืน',fx:{joy:10,karma:20,hp:-.4}},break:{n:'รักที่แตก',d:'คุณไล่เขาออกจากบ้าน หลายปีต่อมาได้ข่าวว่าเขาตายขณะปกป้องหมู่บ้านที่คุณอยู่ โดยไม่เคยบอกใคร',fx:{joy:-35,int:8}}}},
+// ---------------- นรก
+{id:'hell',ic:'🔥',n:'ผู้คุมนรกที่สงสาร',c:()=>!saBeast()&&typeof chOn==='function'&&chOn('hell')&&S.age>=18,
+ init(A){A.nm.g='ผู้คุมนรก'+ch(['หัววัว','หน้าม้า','ไร้หน้า'])},hint:['','📖 {g}มองคุณนานกว่าคนอื่นทุกครั้งที่ประตูนรกเปิด'],
+ ch:[
+ A=>saScene(A,'ผู้คุมที่ไม่ฟาดแส้',`<b>${A.nm.g}</b> ผู้คุมนรกชั้นนี้ไม่ฟาดแส้ใส่คุณ มันกระซิบว่า "ข้าเคยเป็นมนุษย์… ข้ารู้ทางออกจากที่นี่"`,[
+  {t:'🤝 เชื่อมัน',s:'',f(){A.v.trust=1;saNext(A,2,4)}},{t:'⚔️ มันคือกับดัก',s:'',f(){if(saF(A.nm.g,1.1))saSay('⚔️ คุณล้มผู้คุมได้ มันหัวเราะก่อนสลาย "เจ้าแกร่งพอจะหาทางเองแล้ว"',{pow:.08});saNext(A,2,4)}}]),
+ A=>saScene(A,'ประตูหลังนรก','ทางออกมีจริง แต่เปิดได้ครั้งเดียว ผ่านได้คนเดียว — ข้างหลังคุณมีวิญญาณนับร้อยมองตาม',[
+  {t:'🚪 ผ่านไปเอง',s:'',f(){saEnd(A,'out')}},{t:'🙏 ให้วิญญาณเด็กที่ร้องไห้ผ่านแทน',s:'',f(){saEnd(A,'kind')}},...(A.v.trust?[{t:'🔥 ทุบประตูให้ทุกคนออก',s:'',f(){saD(A,'ประตูนรกชั้นลึก',1.2,w=>saEnd(A,w?'break':'kind'))}}]:[])])],
+ end:{out:{n:'ผู้หนีจากนรก',d:'คุณผ่านประตูออกมา นรกชั้นนี้ไม่มีผลกับคุณอีก แต่เสียงวิญญาณข้างหลังยังดังในหัวเวลาหลับ',fx:{pow:.1,joy:-10}},kind:{n:'ผู้เลือกอยู่ต่อ',d:'คุณให้เด็กคนนั้นออกไปแทน ผู้คุมนรกคุกเข่าให้คุณ — แม้ในนรก ก็ยังมีคนที่เลือกความเมตตา',fx:{karma:80,tal:.06}},break:{n:'ผู้ทุบประตูนรก',d:'ประตูแตก วิญญาณนับร้อยหลุดพ้นพร้อมกัน นรกชั้นนี้จารึกชื่อคุณเป็นครั้งแรกในประวัติศาสตร์',fx:{karma:100,fame:300,pow:.12}}}},
+// ---------------- ชีวิตสั้น
+{id:'short',ic:'⏳',n:'ปีสุดท้ายที่ยาวที่สุด',c:()=>!saBeast()&&S.ch==='short'&&S.age>=12,
+ init(A){A.nm.f=saNm()},hint:['','📖 {f}ยังไม่รู้ว่าคุณเหลือเวลาไม่มาก'],
+ ch:[
+ A=>saScene(A,'รายการก่อนตาย',`คุณรู้ว่าเหลือเวลาไม่มาก คุณเขียนรายการสิ่งที่อยากทำไว้สามข้อ — และ <b>${A.nm.f}</b> เพื่อนสนิทเห็นมันเข้า "ข้อแรก: ชนะคนที่เก่งที่สุดในเมือง? บ้าไปแล้ว… งั้นข้าช่วย"`,[
+  {t:'⚔️ ข้อแรก: ชนะยอดฝีมือของเมือง',s:'',f(){saD(A,'ยอดฝีมืออันดับหนึ่งของเมือง',1.05,w=>{A.v.w=w?1:0;saNext(A,1,2)})}},{t:'🌸 ข้อแรก: บอกรักใครสักคน',s:'',f(){A.v.love=1;saSay('🌸 คุณบอกรักคนที่แอบชอบมาตลอด เขายิ้มแล้วจับมือคุณ',{joy:30});saNext(A,1,2)}}]),
+ A=>saScene(A,'ข้อสุดท้าย',`${A.nm.f}ถามว่า "ข้อสุดท้ายคืออะไร" — คุณยังไม่ได้เขียน`,[
+  {t:'✍️ "ให้ทุกคนจำชื่อข้าได้"',s:'',f(){saEnd(A,A.v.w?'legend':'try')}},{t:'✍️ "ให้เจ้าใช้ชีวิตแทนข้าให้คุ้ม"',s:'',f(){saEnd(A,'friend')}}])],
+ end:{legend:{n:'ชื่อที่ยาวกว่าชีวิต',d:'ชีวิตของคุณสั้น แต่ชื่อของคุณถูกเล่าต่ออีกหลายร้อยปี',fx:{fame:300,joy:20}},try:{n:'คนที่พยายามจนวินาทีสุดท้าย',d:'คุณไม่ได้ทำครบทุกข้อ แต่ทุกคนที่เห็นคุณพยายาม จำมันได้ไปตลอดชีวิต',fx:{joy:15,karma:20}},friend:{n:'ชีวิตที่ส่งต่อ',d:'เพื่อนสนิทเก็บรายการของคุณไว้ แล้วทำทุกข้อให้สำเร็จในนามของคุณ',fx:{joy:30,karma:40}}}},
+// ---------------- ชาติก่อนตามมา
+{id:'reborn',ic:'🔁',n:'คนจากชาติก่อน',c:()=>!saBeast()&&S.ch!=='short'&&S.age>=18&&(LS.get('murim_legacy',[])||[]).length>=1,
+ init(A){const L=(LS.get('murim_legacy',[])||[])[0]||{};A.nm.p=L.n||'ชีวิตก่อน';A.nm.x=saNm()},hint:['','📖 คุณฝันถึงชื่อ{p}ซ้ำๆ','📖 {x}มองคุณเหมือนรู้จักกันมานาน'],
+ ch:[
+ A=>saScene(A,'ชื่อในความฝัน',`คุณฝันว่าตัวเองชื่อ <b>${A.nm.p}</b> — ชีวิตที่จบไปแล้วของคุณ แล้ววันหนึ่งคนแปลกหน้าชื่อ <b>${A.nm.x}</b> ก็เรียกคุณด้วยชื่อนั้นกลางถนน`,[
+  {t:'😳 "เจ้ารู้จักชื่อนี้ได้ยังไง"',s:'',f(){A.v.ask=1;saSay(`😳 ${A.nm.x}ร้องไห้ "ข้ารอท่านกลับมามาตลอด"`,{});saNext(A,1,3)}},{t:'🚶 เดินหนี',s:'',f(){saEnd(A,'forget')}}]),
+ A=>saScene(A,'สัญญาจากชาติก่อน',`${A.nm.x}เล่าว่าในชาติก่อน ${A.nm.p}ช่วยชีวิตเขาไว้ และสัญญาว่าจะกลับมา — เขารอมาทั้งชีวิตเพื่อตอบแทน`,[
+  {t:'🤝 รับการตอบแทน',s:'',f(){saEnd(A,'repay')}},{t:'🫂 "ไม่ต้องตอบแทนหรอก แค่อยู่ด้วยกันก็พอ"',s:'',f(){saEnd(A,'family')}}])],
+ end:{repay:{n:'หนี้ข้ามชาติ',d:'เขามอบทุกอย่างที่สะสมมาทั้งชีวิตให้คุณ "ชาตินี้ข้าได้ใช้หนี้แล้ว"',fx:{mon:2,art:2,joy:15}},family:{n:'ครอบครัวข้ามชาติ',d:'คนแปลกหน้าคนนั้นกลายเป็นคนที่สนิทที่สุดในชีวิตนี้ — บางความผูกพันไม่ได้จบตามชีวิต',fx:{joy:35,karma:30}},forget:{n:'ปล่อยอดีตไว้ข้างหลัง',d:'คุณเลือกที่จะเป็นคนใหม่ทั้งหมด เขามองคุณเดินจากไปด้วยรอยยิ้มเศร้าๆ',fx:{int:6}}}});
+// หน้าสุดท้ายของตำนาน: จบภาคบรรพกาลเทพ
+{const _seP=saEnd;saEnd=function(A,k){try{if(A.id==='gpri'&&k!=='fall')setTimeout(()=>{try{loreAdd(11,'ชื่อของคุณถูกเขียนลงบนหน้าสุดท้าย')}catch(e){}},300)}catch(e){}return _seP.apply(this,arguments)}}
+try{SYS_GUIDE.push({s:'world',nw:1,ic:'📜',t:'ตำนานบรรพกาล',go:'openLore',d:'หน้าตำนาน 12 หน้ากระจายอยู่ทั้งสามโลก เก็บข้ามทุกชีวิต — ยุทธภพ 3 หน้า (ศิลาโบราณ) · โลกเซียน 3 หน้า (ภูเขาที่หายใจ) · แดนเทพ 5 หน้า (ความทรงจำดวงดาว) · หน้าสุดท้ายได้จากการจบภาคบรรพกาลเทพ · เจอบ่อยขึ้นตอนออกท่อง ศึกษา นั่งสมาธิ · มีภาคเรื่องราว 3 ภาคเชื่อมกัน: 🗿 ศิลาบรรพกาล (ยุทธภพ) → ⛰️ ภูเขาที่หายใจ (โลกเซียน ต้องมี 2 หน้า) → 🌌 บรรพกาลเทพ (แดนเทพ ต้องมี 6 หน้า) ตอนจบให้เลือก ปลุก · ผนึก · หรือแทนที่บรรพกาลเทพ'});
+ const g=SYS_GUIDE.find(x=>x.t==='ภาคเรื่องราว (แนวมังฮวาจีน)');if(g)g.d+='<br>ภาคเพิ่มเติม: 🐺 ราชาพงไพร และ 💞 รักต่างเผ่า (ร่างสัตว์อสูร) · ⚔️ คู่ปรับวินาทีเดียวกัน · 👶 ลูกที่ไม่เหมือนพ่อแม่ · 💔 ความลับของคู่ชีวิต · 🔥 ผู้คุมนรกที่สงสาร (โหมดนรก) · ⏳ ปีสุดท้ายที่ยาวที่สุด (ชีวิตสั้น) · 🔁 คนจากชาติก่อน'}catch(e){}
 </script>
 </body>
 </html>
