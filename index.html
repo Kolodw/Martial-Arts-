@@ -16953,6 +16953,83 @@ function openMwQuests(){const M=S.mw;if(!M)return;
 // ซ่อนปุ่ม "ล่าเกต" ถ้ายังไม่ได้เป็นฮันเตอร์
 {const _rnFG=render;render=function(){const r=_rnFG.apply(this,arguments);try{if(mwOn()&&!focusOK('mwgate')){const b=document.querySelector('#focus [onclick*="mwgate"]');if(b)b.remove()}}catch(e){}return r}}
 
+
+// ===================== ยุคปัจจุบัน: ภาษา · ผู้ข้ามมิติกลับบ้าน · ใช้ชีวิตไม่เด่น (ซ่อนพลัง) =====================
+// ---------- ภาษา (คนหลงยุคจากยุทธภพ) ----------
+const MW_LANG0={cn:22,tw:32,jp:12,th:4,kr:4,us:3};
+const MW_LNAME={th:'ภาษาไทย',us:'ภาษาอังกฤษ',cn:'ภาษาจีนกลาง',jp:'ภาษาญี่ปุ่น',kr:'ภาษาเกาหลี',tw:'ภาษาจีนกลาง (ไต้หวัน)'};
+const mwTmHome=()=>!!(S&&S.ow&&S.awake&&S.world&&S.world.k==='modern');
+{const _meL=mwEnter;mwEnter=function(){const had=S&&S.mw,tm=mwTmHome(),soul=S&&S.soul?S.soul.n:null;const r=_meL.apply(this,arguments);try{const M=S.mw;if(M&&!had&&M.lang==null){const cc=M.cc||'th';
+ if(tm){M.tm=1;M.soul=soul;M.lang=cc==='th'?100:cc==='us'?45:15;M.adapt=Math.max(M.adapt,75);['e1','e2','e3','e10'].forEach(k=>{M.seen[k]=M.seen[k]||1});M.q=(M.q||[]).filter(k=>!['e1','e2','e3','e10'].includes(k));setTimeout(()=>{if(S&&S.mw)mwRunTm(S.mw)},500)}
+ else M.lang=MW_LANG0[cc]||5;render();saveGame()}}catch(e){console.error(e)}return r}}
+{const _hgL=mwHeirGo;mwHeirGo=function(){const r=_hgL.apply(this,arguments);setTimeout(()=>{if(S&&S.mw&&S.mw.native&&S.mw.lang==null)S.mw.lang=100},830);return r}}
+const mwLangOK=M=>M.native||(M.lang||0)>=100;
+{const _myL=mwYear;mwYear=function(){const foc=S&&S.focus;const r=_myL.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(M&&!mwLangOK(M)){const g=Math.min(10,(foc==='mwlearn'?R(5,8):foc==='mwjob'?2:1)+(M.linMet?2:0)+(M.bf?1:0)+(M.sp?2:0));const b=M.lang;M.lang=Math.min(100,Math.max(b||0,M.lang0y===M.y?(M.lang||0):(M.lang||0)+g));M.lang0y=M.y;
+ if(b<30&&M.lang>=30)addFeed('ev',`🗣️ คุณเริ่มสั่งอาหารเองได้โดยไม่ต้องชี้รูป — ${MW_LNAME[M.cc||'th']}ระดับเอาตัวรอด`,'sum');if(b<60&&M.lang>=60)mwSay(`💭 คืนนี้คุณฝันเป็น${MW_LNAME[M.cc||'th']}เป็นครั้งแรก ตื่นมาแล้วนั่งนิ่งอยู่นาน — ภาษาในยุทธภพเริ่มเลือนจากความฝันแล้ว`,'myth',{adapt:3});if(b<100&&M.lang>=100)addFeed('ev',`🗣️ คนแปลกหน้าถามทางคุณ และไม่สังเกตเลยว่าคุณไม่ใช่คนที่นี่`,'sum')}}catch(e){console.error(e)}return r}}
+{const _jrL=mwJobReq;mwJobReq=function(J,M){const w=_jrL.apply(this,arguments);if(w)return w;const id=Object.keys(MW_JOBS).find(k=>MW_JOBS[k]===J),need={office:70,heal:50,coach:40,guard:30}[id]||0;if(need&&!mwLangOK(M)&&(M.lang||0)<need)return`ต้องพูด${MW_LNAME[M.cc||'th']}ได้ระดับ ${need}+ (ตอนนี้ ${M.lang||0})`;return''}}
+{const _mvL=mwMove;mwMove=function(M){const cc0=M.cc;const r=_mvL.apply(this,arguments);try{if(M.cc!==cc0&&!M.native){M.lang=Math.min(60,(MW_LANG0[M.cc]||5)+(M.tm&&M.cc==='th'?100:10));addFeed('ev',`🗣️ ประเทศใหม่ ภาษาใหม่ — ${MW_LNAME[M.cc]}ของคุณตอนนี้ ${M.lang}/100`,'sum')}}catch(e){}return r}}
+MW_R.push(
+ {id:'lg1',w:30,cd:0,c:M=>!M.native&&!M.tm&&(M.lang||0)<30&&M.y>=0,go(M){const L=MW_LNAME[M.cc||'th'];choice('🗣️ ฟังไม่ออกสักคำ',`ทุกคนรอบตัวพูดเร็วและพูดเสียงแปลกๆ — นี่คือ${L} ที่คุณไม่เคยได้ยินมาก่อนในชีวิต ป้ายทุกป้ายอ่านไม่ออก${['cn','tw','jp'].includes(M.cc)?' (ยกเว้นตัวอักษรบางตัวที่หน้าตาคุ้นเคย)':''}`,[
+  mwC('ใช้ภาษามือกับรอยยิ้ม',()=>mwSay('🤲 คุณชี้ ยิ้ม พยักหน้า และโค้ง — ได้ข้าวกล่องมาหนึ่งกล่องกับน้ำหนึ่งขวด และคนขายยิ้มกลับมา ภาษาแรกที่ใช้ได้ทุกยุค','good',{joy:4,lang:3}),{s:'ปลอดภัย'}),
+  mwC('จดเสียงที่ได้ยินลงกระดาษ ท่องทุกคืน',()=>{M.lang=(M.lang||0)+8;mwSay('📝 คุณจดเสียงที่ได้ยินเป็นตัวอักษรของยุคตัวเอง ท่องทุกคืนเหมือนท่องคัมภีร์ — ความจำของยอดฝีมือมีประโยชน์ในทุกยุค','good',{adapt:3})}),
+  mwC('พูดภาษาของยุคตัวเองดังๆ เผื่อมีคนเข้าใจ',()=>mwSay(`📢 คนรอบตัวหันมามอง ${M.cc==='cn'||M.cc==='tw'?'ชายชราคนหนึ่งตอบกลับมาด้วยสำนวนโบราณครึ่งประโยค แล้วหัวเราะ "เหมือนในงิ้วเลย"':'ไม่มีใครเข้าใจสักคน แต่มีคนถ่ายคลิปลงโซเชียล'}`,'',{sec:2,fame:3000}))])}},
+ {id:'lg2',w:9,cd:0,c:M=>!M.native&&!M.tm&&(M.lang||0)<45&&M.y>=1,go(M){choice('😅 เข้าใจผิดครั้งใหญ่',ch(['คุณตั้งใจพูดว่า "ขอบคุณ" กับเจ้าของห้อง แต่ออกเสียงผิดจนกลายเป็นคำที่ทำให้เธอหน้าแดงแล้วปิดประตูใส่','ตำรวจถามว่า "ไปไหนมา" คุณได้ยินเป็น "จะสู้ไหม" แล้วตั้งท่าพร้อมรบกลางถนน','คุณสั่ง "น้ำเปล่า" แต่ได้เบียร์มาหกขวด และบิลที่ทำให้ตาลาย']),[
+  mwC('หัวเราะไปกับมัน',()=>mwSay('😂 ทุกคนหัวเราะ คุณก็หัวเราะ — คำนั้นคุณจะไม่มีวันลืมไปตลอดชีวิต','good',{joy:4,lang:4})),
+  mwC('ขอโทษด้วยการคำนับแบบยุทธภพ',()=>mwSay('🙇 คุณคำนับลึกเก้าสิบองศาแบบศิษย์คารวะอาจารย์ อีกฝ่ายงงยิ่งกว่าเดิม แต่หายโกรธ','',{joy:2})),
+  mwC(`ขอให้${mwCC().lin}ช่วยเป็นล่าม`,()=>{if(!M.linMet)return mwSay('📱 คุณยังไม่มีใครช่วยเป็นล่าม ได้แต่เปิดแอปแปลภาษาที่แปลผิดครึ่งหนึ่ง','',{adapt:3});mwSay(`🧒 ${mwCC().lin}มาช่วยอธิบายจนเข้าใจตรงกัน แล้วสอนคุณเพิ่มอีกสิบคำ`,'good',{lin:4,lang:5})})])}},
+ {id:'lg3',w:7,cd:0,c:M=>!M.native&&!M.tm&&['cn','tw','jp'].includes(M.cc||'th')&&M.y>=2,go(M){mwSay({cn:'📖 คุณเจอหนังสือในร้าน — ตัวอักษรเหมือนของยุคคุณแต่ถูกตัดขีดออกไปครึ่งหนึ่ง (ตัวย่อ) อ่านเหมือนอ่านคัมภีร์ที่หนอนแทะ แต่พออ่านไปสักพักก็เดาความหมายได้',tw:'📖 คุณเปิดหนังสือพิมพ์แล้วอ่านออกเกือบทุกตัว — ไต้หวันยังใช้ตัวอักษรแบบเต็มเหมือนยุคของคุณ แค่สำนวนเปลี่ยนไปหมด คุณอ่านข่าวการเมืองได้ แต่ไม่เข้าใจว่าข่าวพูดถึงอะไร',jp:'📖 ป้ายในสถานีมีตัวอักษรที่คุณรู้จักปนกับตัวอักษรหยึกหยักที่ไม่เคยเห็น (คานะ) คุณอ่านชื่อสถานีได้ แต่อ่านออกเสียงผิดทุกชื่อ'}[M.cc],'myth',{lang:6,adapt:2})}},
+ {id:'lg4',w:6,cd:0,c:M=>!M.native&&!M.tm&&(M.lang||0)>=50&&(M.fame||0)>=5000,go(M){mwSay('🎙️ สำเนียงของคุณกลายเป็นเอกลักษณ์ คนดูคลิปชอบฟังคุณพูด เพราะมันฟังเหมือนตัวละครในหนังพีเรียด — มีคนขอให้อัดเสียงอ่านนิทานก่อนนอน','good',{fame:30000,joy:4})}});
+MW_FORCE.unshift([0,'lg1']);
+{const _mfL=mwFx;mwFx=function(o){if(o&&o.lang&&S.mw){S.mw.lang=Math.min(100,(S.mw.lang||0)+o.lang);o=Object.assign({},o);delete o.lang}return _mfL.call(this,o)}}
+// ลงทะเบียนฮันเตอร์/เอกสาร ตอนภาษายังไม่ได้ → ต้องมีล่าม
+{const _g4=MW_R.find(e=>e.id==='gd4');if(_g4){const g0=_g4.go;_g4.go=function(M){if(!mwLangOK(M)&&(M.lang||0)<30)addFeed('ev',`🗣️ คุณฟังเจ้าหน้าที่สมาคมไม่ออก ต้องเสียค่าล่าม ${mwLocal(MW_MIN[M.cc||'th']*.2,M)}`,'sum'),S.money=Math.max(0,(S.money||0)-mwToB(MW_MIN[M.cc||'th']*.2,M));return g0.apply(this,arguments)}}}
+// HUD
+{const _rnL=render;render=function(){const r=_rnL.apply(this,arguments);try{if(mwOn()&&!mwLangOK(S.mw)){const g=document.querySelector('#mwHud .mwhG');if(g&&!g.querySelector('.mwLang'))g.insertAdjacentHTML('beforeend',`<div class="mwh1 mwLang"><span>🗣️ ภาษา</span><b>${S.mw.lang||0}/100</b><i style="width:${S.mw.lang||0}%;background:#e080ff"></i></div>`)}}catch(e){}return r}}
+// ---------- ผู้ข้ามมิติกลับบ้าน (เคยมาจากโลกปัจจุบัน) ----------
+function mwRunTm(M){mwQ([]);const sn=M.soul||'คุณ';choice('🏠 กลับมาแล้ว',`คุณลืมตากลาง${mwCC().city} — เสียงแตร กลิ่นท่อไอเสีย แสงจอโฆษณา ทุกอย่างคุ้นเคยจนน้ำตาไหล คุณเคยใช้ชีวิตอยู่ที่นี่ในชื่อ <b>${esc(sn)}</b> ก่อนจะข้ามมิติไปอยู่ในนิยาย · แต่ร่างที่คุณอยู่ตอนนี้คือร่างของ<b>${esc(M.past.n)}</b> — ไม่มีใครในโลกนี้จำหน้านี้ได้`,[
+ mwC('ตรงไปที่ห้องเก่าทันที',()=>{M.fl.tmHome=1;mwSay(`🚪 ห้องเก่าของ${esc(sn)}มีคนอื่นอยู่แล้ว เจ้าของตึกบอกว่า "คนเช่าเดิมเสียชีวิตไปหลายปีแล้ว ไม่มีญาติมารับของ" — ของของคุณถูกขายทอดตลาดไปหมด`,'bad',{joy:-6})}),
+ mwC('ซื้อมือถือ ค้นชื่อตัวเองในอินเทอร์เน็ต',()=>{M.fl.tmNews=1;mwSay(`📱 คุณพิมพ์ชื่อ "${esc(sn)}" ผลค้นหาแรกคือข่าวเก่า: "พบผู้เสียชีวิตในห้องเช่า คาดว่าทำงานหนักจนหัวใจวาย" — ข่าวนั้นมีคนกดไลก์สิบสองคน`,'myth',{joy:-4,adapt:3},true)}),
+ mwC('สูดอากาศลึกๆ แล้วไปกินอาหารที่คิดถึงที่สุด',()=>mwSay('🍜 ร้านเดิมยังอยู่ ราคาขึ้นมาสิบบาท รสชาติเหมือนเดิมทุกอย่าง คุณกินสามชามโดยไม่พูดอะไรสักคำ','good',{joy:12}))])}
+const MW_TM=[
+ ['tm1',2,M=>{const sn=M.soul||'คุณ';choice('👨‍👩‍👧 ครอบครัวเก่า',`คุณตามหาบ้านพ่อแม่ของ${esc(sn)}เจอ พวกท่านแก่ลงมาก แม่ยังตั้งรูปของ${esc(sn)}ไว้บนหิ้งพระ — แต่คนที่ยืนอยู่หน้าประตูตอนนี้คือคนแปลกหน้าในสายตาท่าน`,[
+  mwC('บอกความจริง',()=>{if(Math.random()<.35){M.fl.tmFam=1;mwSay(`😭 คุณเล่าเรื่องที่มีแค่${esc(sn)}กับแม่เท่านั้นที่รู้ แม่มองหน้าคุณนาน แล้วกอดคุณไว้แน่น "ลูกแม่ กลับมาแล้ว" — พ่อยังไม่เชื่อ แต่ก็ยกเก้าอี้ให้คุณนั่งกินข้าว`,'myth',{joy:25},true);keyAdd('ครอบครัวเก่าจำได้')}else mwSay('🚪 พ่อปิดประตูใส่ "อย่ามาหลอกคนแก่" — คุณยืนอยู่หน้าบ้านจนไฟในบ้านดับ','bad',{joy:-12})},{s:'อาจไม่มีใครเชื่อ'}),
+  mwC('แนะนำตัวว่าเป็น "เพื่อนเก่าของลูก"',()=>{M.fl.tmFam=2;mwSay(`🍵 แม่ชวนเพื่อนเก่าของลูกเข้าบ้าน เล่าเรื่องของ${esc(sn)}ให้ฟังทั้งบ่าย คุณได้ฟังชีวิตตัวเองจากปากแม่ — และรู้ว่าแม่ภูมิใจในตัวคุณมากกว่าที่คิด หลังจากนั้นคุณแวะมาทุกเดือน`,'good',{joy:12})}),
+  mwC('มองอยู่ห่างๆ แล้วส่งเงินช่วยแบบไม่ระบุชื่อ',()=>mwSay('📮 ทุกเดือนจะมีซองเงินไม่ระบุชื่อส่งไปที่บ้านหลังนั้น แม่บอกเพื่อนบ้านว่าคงเป็นลูกที่ส่งมาจากสวรรค์','',{joy:4}))])}],
+ ['tm2',3,M=>mwSay(`🏢 คุณผ่านตึกที่${esc(M.soul||'คุณ')}เคยทำงาน โต๊ะเดิมมีเด็กจบใหม่นั่งอยู่ หน้าจอยังเป็นโปรแกรมเดิม เจ้านายคนเดิมยังตะโกนแบบเดิม — คุณยิ้มให้ตัวเองในอดีตแล้วเดินผ่านไป ไม่ต้องกลับไปตรงนั้นอีกแล้ว`,'myth',{joy:6},true)],
+ ['tm3',4,M=>{choice('📚 นิยายเรื่องนั้น',`ในร้านหนังสือ คุณเห็นนิยายเรื่องที่คุณเคยข้ามมิติเข้าไปอยู่วางบนชั้นขายดี — ตัวละคร "${esc(M.past.n)}" มีอยู่ในเล่มสาม เป็นตัวประกอบที่ตายตอนที่สอง`,[
+  mwC('ซื้อมาอ่าน',()=>mwSay('📖 เนื้อเรื่องในหนังสือต่างจากชีวิตที่คุณใช้มาทั้งหมด ในหนังสือ ตัวละครตัวนี้ไม่เคยมีชีวิตยืนยาวขนาดนั้น — คุณเปลี่ยนบทนิยายมาแล้วทั้งเรื่อง','myth',{joy:8},true)),
+  mwC('ไปหาผู้แต่งในงานแจกลายเซ็น',()=>{M.fl.tmAuth=1;mwSay(`✍️ ผู้แต่งเงยหน้าขึ้นมาเห็นคุณ แล้วชะงักไปนาน "คุณ... หน้าเหมือน${esc(M.past.n)}ที่ฉันวาดไว้ในหัวเลย" เธอเซ็นชื่อแล้วเขียนเพิ่มว่า "ขอบคุณที่มีชีวิตอยู่"`,'myth',{joy:10,sec:2},true)})])}],
+ ['tm4',5,M=>{const biz=S.tm&&S.tm.biz&&Object.keys(S.tm.biz).length;mwSay(biz?'💼 ความรู้ธุรกิจที่คุณเคยใช้ปั้นกิจการในยุทธภพ ใช้ได้ผลยิ่งกว่าในยุคนี้ — คุณเปิดร้านเล็กๆ แล้วทำกำไรตั้งแต่เดือนแรก':'🧠 คุณเคยใช้ความรู้จากโลกนี้ไปปฏิวัติยุทธภพ ตอนนี้กลับกัน — ความรู้จากยุทธภพทำให้คุณเห็นสิ่งที่คนยุคนี้มองข้าม','epic',biz?{mon:mwS(300000),joy:6}:{adapt:4,joy:4})}],
+ ['tm5',7,M=>mwSay(`🪦 คุณไปเยี่ยมหลุมศพของ${esc(M.soul||'ตัวเอง')} ป้ายหินเล็กกว่าที่คิด มีดอกไม้แห้งที่แม่เอามาวางไว้ คุณวางดอกไม้ใหม่ แล้วบอกกับหลุมศพว่า "ชีวิตต่อจากนั้นสนุกมากเลยนะ"`,'myth',{joy:6},true)]];
+MW_TM.forEach(([id,y,go])=>{MW_R.push({id,w:9,cd:0,c:M=>M.tm&&M.y>=y,go});MW_FORCE.push([y,id])});
+// ผู้ข้ามมิติไม่โดนมุกช็อกวัฒนธรรมแบบคนยุทธภพ
+['lg1','lg2','lg3'].forEach(id=>{const e=MW_R.find(x=>x.id===id);if(e){const c0=e.c;e.c=M=>!M.tm&&c0(M)}});
+{const _jbT=MW_R.find(e=>e.id==='id1');if(_jbT){const c0=_jbT.c;_jbT.c=M=>c0(M)}}
+// ---------- ใช้ชีวิตไม่เด่น / ซ่อนพลัง ----------
+function mwLowToggle(){const M=S.mw;M.low=M.low?0:1;closeM();if(M.low)mwSay('🕶️ <b>โหมดซ่อนพลัง</b> — ตั้งแต่วันนี้ คุณคือคนธรรมดาที่ไม่มีใครสนใจ ถ้าจะใช้วิชา ก็ใช้ในที่ที่ไม่มีใครเห็น','myth',null,true);else mwSay('😎 คุณเลิกซ่อนแล้ว ปล่อยให้โลกรู้ว่าคุณเป็นใครก็ได้','',null);render();saveGame()}
+{const _mfLo=mwFx;mwFx=function(o){if(o&&S.mw&&S.mw.low){o=Object.assign({},o);if(o.sec>0)o.sec=Math.round(o.sec*.5);if(o.fame>0)o.fame=Math.round(o.fame*.3)}return _mfLo.call(this,o)}}
+{const _myLo=mwYear;mwYear=function(){const r=_myLo.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(M&&M.low){joy(1);if((M.fame||0)>0)M.fame=Math.round(M.fame*.8)}}catch(e){}return r}}
+MW_XO.push([M=>!!M.low,'🕶️','แก้ปัญหาจากเงามืด',M=>{M.lowD=(M.lowD||0)+1;return{sec:-4,joy:3}},'ไม่มีใครรู้ว่าเป็นคุณ']);
+{const _btL=mwBattle;mwBattle=function(M,o){if(M.low&&((M.qi||0)>=1||(S.power||0)>=100)){const w0=o.win;o=Object.assign({},o,{win:h=>{if(h==='shadow'){M.lowD=(M.lowD||0)+1}w0&&w0(h)}});const me=mwStr(M),foe=me*o.foe,base=me/(me+foe);
+ const _c=choice;let injected=false;choice=function(t,x,opts){if(!injected&&t===o.t){injected=true;opts=opts.concat([mwC('🕶️ จัดการแบบไม่มีใครเห็น',()=>{if(Math.random()<Math.max(.05,Math.min(.95,base*1.15))){o.win&&o.win('shadow');addFeed('ev','🕶️ ไม่มีใครเห็นว่าใครเป็นคนทำ','sum')}else{S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.35));o.lose&&o.lose('shadow')}},{s:'ไม่รั่วความลับ · ชนะยากกว่าสู้เต็มที่นิดหน่อย'})])}choice=_c;return _c.call(this,t,x,opts)};try{return _btL.call(this,M,o)}finally{choice=_c}}return _btL.apply(this,arguments)}}
+MW_R.push(
+ {id:'lw1',w:8,cd:6,c:M=>M.low&&!!M.job,go(M){choice('🙄 คนที่ดูถูกคุณ',`หัวหน้าทีมคนใหม่ประกาศกลางที่ประชุมว่าคุณ "ผลงานแย่ที่สุด ไม่มีอะไรโดดเด่น" ทุกคนหันมามอง — คืนก่อนหน้านั้น คุณเพิ่งช่วยลูกสาวของเขาจากรถที่เสียหลักโดยไม่มีใครเห็นหน้า`,[
+  mwC('ก้มหน้ารับ "ครับ ผมจะพยายาม"',()=>{M.lowD=(M.lowD||0)+1;mwSay('😌 คุณยิ้มบางๆ เขาไม่มีวันรู้ ซึ่งคือสิ่งที่คุณต้องการ — ความสุขแปลกๆ ของคนเก่งที่ไม่มีใครรู้','myth',{joy:6},true)}),
+  mwC('ทำงานชิ้นต่อไปให้สมบูรณ์แบบเงียบๆ',()=>{if(M.job)M.job.perf=mwCl(M.job.perf+12,0,100);mwSay('📊 งานชิ้นต่อไปของคุณไร้ที่ติจนหัวหน้าเงียบไป เขาไม่ขอโทษ แต่ไม่เคยพูดแบบนั้นอีก','good',{joy:4})})])}},
+ {id:'lw2',w:8,cd:0,c:M=>M.low&&(M.lowD||0)>=2,go(M){M.fl.legend=1;mwSay(`👻 ในเมืองเริ่มมีตำนานเมืองเรื่องใหม่: <b>"ผู้พิทักษ์ไร้นาม"</b> — คนที่โผล่มาช่วยตอนเกิดเรื่อง แล้วหายไปก่อนใครจะเห็นหน้า มีคนวาดภาพจากคำบอกเล่า หน้าไม่เหมือนคุณเลยสักนิด`,'myth',{joy:8},true)}},
+ {id:'lw3',w:7,cd:0,c:M=>M.low&&M.fl.legend&&M.y>=6,go(M){choice('🔍 มีคนตามหา "ผู้พิทักษ์ไร้นาม"',`นักข่าวสาวคนหนึ่งตามสืบตำนานผู้พิทักษ์ไร้นามมาสองปี วันนี้เธอมานั่งโต๊ะข้างคุณในร้านกาแฟ แล้วพูดเบาๆ "ฉันรู้ว่าเป็นคุณ"`,[
+  mwC('"ผมแค่พนักงานธรรมดาครับ"',()=>{const ok=Math.random()<.7;mwSay(ok?'☕ คุณพูดเรื่องโปรโมชันกาแฟอยู่ครึ่งชั่วโมงจนเธอเริ่มลังเล เธอขีดชื่อคุณออกจากสมุด — ตำนานยังเป็นตำนาน':'📸 เธอยิ้ม แล้ววางรูปถ่ายเบลอๆ ลงบนโต๊ะ "ฉันจะไม่เขียน แต่อยากให้คุณรู้ว่ามีคนเห็น"','',ok?{joy:4}:{sec:6})}),
+  mwC('ยอมรับ แล้วขอให้เธอเก็บเป็นความลับ',()=>mwSay('🤝 เธอเก็บความลับนั้นไว้ตลอดชีวิต และกลายเป็นคนเดียวที่รู้ — ทุกปีเธอส่งการ์ดมาเขียนแค่ว่า "ขอบคุณจากเมืองนี้"','good',{joy:8})),
+  mwC('เปิดตัวต่อโลกเลย ถึงเวลาแล้ว',()=>{M.low=0;M.fl.public=1;mwSay('🎤 คุณเดินออกจากร้านกาแฟไปยืนกลางถนน แล้วปล่อยปราณให้ทั้งเมืองสัมผัสได้ — ผู้พิทักษ์ไร้นามมีหน้าตาแล้ว','myth',{fame:3000000,sec:100},true)})])}},
+ {id:'lw4',w:9,cd:4,c:M=>hwOn(M)&&M.H&&M.H.hide&&M.H.r>=0,go(M){choice('🕶️ ฮันเตอร์แรงก์ E ที่ไม่ธรรมดา',`ทีมที่คุณตามไปขนของในเกตแรงก์ C เจอบอสที่แข็งแกร่งเกินคาด หัวหน้าทีมแรงก์ B ล้มลงแล้ว ทุกคนกำลังจะตาย — ไม่มีใครหันมามองแรงก์ E ที่ยืนอยู่ข้างหลัง`,[
+  mwC('จัดการบอสตอนทุกคนหลับตาเพราะแสงระเบิด',()=>{M.lowD=(M.lowD||0)+1;M.H.cl++;M.H.ess+=5;mwSay('💥 ฝุ่นจางลง บอสนอนตายอยู่กลางห้อง ไม่มีใครรู้ว่าเกิดอะไรขึ้น หัวหน้าทีมได้เครดิตทั้งหมด และเขาจ่ายส่วนแบ่งให้คุณ "เพราะช่วยแบกของ"','myth',{joy:10},true)}),
+  mwC('ปล่อยพลังจริงต่อหน้าทุกคน',()=>{M.H.hide=0;M.H.r=hRank(hStr(M));mwSay(`⚡ ทั้งทีมเห็นแรงก์ E ล้มบอสด้วยมือเปล่า สมาคมฮันเตอร์ประเมินใหม่ทันที — <b>แรงก์ ${HR[M.H.r]}</b> ข่าว "แรงก์ E ที่จริงคือ${HR[M.H.r]}" ดังทั่วประเทศ`,'myth',{fame:500000,sec:20},true)})])}},
+ {id:'lw5',w:6,cd:5,c:M=>M.low&&M.y>=3,go(M){mwSay(ch(['🕶️ คุณแกล้งวิ่งช้ากว่าคนอื่นในงานวิ่งการกุศล จนเข้าเส้นชัยที่สี่ร้อยสิบสอง — การแข่งที่ยากที่สุดในชีวิต','🕶️ ในงานเลี้ยงบริษัท คุณแกล้งแพ้มวยปล้ำแขนให้เด็กฝึกงาน ทุกคนหัวเราะ คุณหัวเราะดังที่สุด','🕶️ ไม่มีใครในตึกรู้ว่าทำไมลิฟต์ที่ค้างเมื่อคืนถึงกลับมาทำงานได้เองก่อนช่างจะมา','🕶️ คุณถือถุงช้อปปิ้งยี่สิบใบด้วยนิ้วเดียว แล้วรีบเปลี่ยนเป็นสองมือเมื่อเห็นมีคนมอง']),'',{joy:4})}});
+MW_GOALS.push(['shadow','🕶️ ทำเรื่องดีจากเงามืด 8 ครั้งโดยไม่มีใครรู้',M=>(M.lowD||0)>=8]);
+{const _mt=mwTitle;mwTitle=function(M){if(M.low&&(M.lowD||0)>=5)return'ยอดฝีมือในเงา';if(M.tm)return'ผู้ข้ามมิติที่กลับบ้าน';return _mt.apply(this,arguments)}}
+{const _omLo=openMenu;openMenu=function(){const r=_omLo.apply(this,arguments);try{if(mwOn()){const gd=$('modal').querySelector('.mgrid');if(gd&&!gd.querySelector('.mwLoB')){const M=S.mw,last=[...gd.querySelectorAll('.mwMB')].pop();const h=`<button class="opt mwMB mwLoB" onclick="mwLowToggle()">🕶️ ซ่อนพลัง<small>${M.low?`เปิดอยู่ · ทำเรื่องดีลับๆ ${M.lowD||0} ครั้ง`:'ใช้ชีวิตไม่เด่น'}</small></button>`;if(last)last.insertAdjacentHTML('afterend',h);else gd.insertAdjacentHTML('afterbegin',h)}}}catch(e){}return r}}
+{const _rnLo=render;render=function(){const r=_rnLo.apply(this,arguments);try{if(mwOn()&&S.mw.low){const t=document.querySelector('#mwHud .mwhT');if(t&&!t.querySelector('.mwLoT'))t.insertAdjacentHTML('beforeend',' <span class="mwLoT tag2">🕶️ ซ่อนพลัง</span>')}}catch(e){}return r}}
+
 </script>
 </body>
 </html>
