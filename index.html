@@ -5580,7 +5580,7 @@ function haremTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human)||S.age<1
  if(H&&H.length){
   for(const g of H.slice()){if(g.age==null){g.age=loverAge();g.life=loverLife(g.age)}g.age++;if(g.age>=g.life){H.splice(H.indexOf(g),1);joy(-8);log(`🥀 <b>${g.n}</b> คนในตำหนักในจากไปด้วยวัย ${g.age} ปี`,'bad',true)}}
   const up=H.length*(40+realmIdx()*25);if(S.money>=up){S.money-=up;joy(Math.min(8,2*H.length))}else if(H.length){const g=H.pop();log(`🌸 เงินไม่พอเลี้ยงดูตำหนักใน — ${g.n} ขอลาจากไป`,'bad')}
-  if(S.sp)S.sp.aff=Math.max(0,(S.sp.aff||70)-(S.haremSecret?Math.min(4,H.length):Math.min(3,Math.ceil(H.length/3))));if(H.length&&!S.noKids&&S.age<(S.xian?Math.max(55,lifeMax()*.7):60)&&Math.random()<Math.min(.25,.03*H.length)){S.kids=(S.kids||0)+1;log(`👶 ${ch(H).n}ให้กำเนิดบุตรแก่คุณ`,'good')}
+  if(S.sp)S.sp.aff=Math.max(0,(S.sp.aff||70)-(S.haremSecret?Math.min(4,H.length):Math.min(3,Math.ceil(H.length/3))));if(H.length&&!S.noKids&&S.age<(S.xian?Math.max(55,lifeMax()*.7):60)&&Math.random()<Math.min(.25,.03*H.length)){{const hm=ch(H);S.kids=(S.kids||0)+1;let c=null;try{syncFamily();c=S.children[S.children.length-1];if(c)c.mo=hm.n}catch(e){}log(`👶 ${hm.n}ให้กำเนิดบุตรแก่คุณ${c?` — <b>${esc(c.n)}</b> <span class="tag2">(อยู่ใน 👪 ครอบครัว › ลูก)</span>`:''}`,'good')}}
   if(S.haremSecret&&S.spouse&&!choice._cur&&!modalOpen&&Math.random()<.25){hmCaught();return}}
  if(S.haremSecret&&(!H||!H.length))S.haremSecret=0;
  if(choice._cur||modalOpen||(S.cha||0)<55)return;
@@ -9792,7 +9792,7 @@ function twTick(){if(!S||!S.alive||!S.tw)return;const T=S.tw;if(T.w&&T.w!==ECO_W
 
 // ---------- 6) เมนูจัดหมวด ----------
 const MENU_CAT=[
- ['⭐ ใช้บ่อย',['paJoin','openAI','openTown','openShop2','openMarket','openArts','openEquip','openBag','openQuests','openDungeons','openSys','gachaArt']],
+ ['⭐ ใช้บ่อย',['paJoin','openAI','openGodRealm','openTown','openShop2','openMarket','openArts','openEquip','openBag','openQuests','openDungeons','openSys','gachaArt']],
  ['🧘 ตัวละครและการฝึก',['openFaction','openCraft','openBeastComp','openItems','openPortal','openMap','relMenu','nemInfo']],
  ['👪 ครอบครัวและผู้คน',['openHouse','openFamily','openPeople','openPeers','openRanking']],
  ['📚 บันทึกและสะสม',['openBook','openBestiary','openCodex','openCosmetic','openFrameShop','openProfile']],
@@ -15560,7 +15560,7 @@ paTickUI=function(){if($('modal').dataset.k!=='pauc'){clearInterval(PA.tk);retur
      S.flags.adopted=1;render();saveGame()}}catch(e){console.error(e)}return r}}
  // ---------- ปุ่มในหน้าครอบครัว + ป้ายบอกลูกบุญธรรม ----------
  {const _of=openFamily;openFamily=function(){const r=_of.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='family')return r;
-   m.querySelectorAll('.item').forEach(it=>{const b=it.querySelector('b');if(!b)return;const c=(S.children||[]).find(x=>x.adopt&&b.textContent.includes(x.n));if(c){const p=it.querySelector('p');if(p)p.insertAdjacentHTML('beforeend',` · <span class="tag2">🏠 ลูกบุญธรรม${c.alive?` · ผูกพัน ${Math.round(c.bond)}`:c.gone?' · หนีออกจากบ้าน':''}${c.rev&&c.orig?' · '+ORIG[c.orig][0]+' '+ORIG[c.orig][1]:''}</span>`)}});
+   m.querySelectorAll('.item').forEach(it=>{const b=it.querySelector('b');if(!b)return;try{const k=(S.children||[]).find(x=>x.mo&&!x.adopt&&b.textContent.includes(x.n));if(k){const p=it.querySelector('p');if(p)p.insertAdjacentHTML('beforeend',` · <span class="tag2">🏯 เกิดจาก${esc(k.mo)}</span>`)}}catch(e){}const c=(S.children||[]).find(x=>x.adopt&&b.textContent.includes(x.n));if(c){const p=it.querySelector('p');if(p)p.insertAdjacentHTML('beforeend',` · <span class="tag2">🏠 ลูกบุญธรรม${c.alive?` · ผูกพัน ${Math.round(c.bond)}`:c.gone?' · หนีออกจากบ้าน':''}${c.rev&&c.orig?' · '+ORIG[c.orig][0]+' '+ORIG[c.orig][1]:''}</span>`)}});
    if(!(S.beastMode&&!S.beastMode.human))m.insertAdjacentHTML('beforeend',`<div style="margin-top:10px"><button class="pbtn" style="width:100%" onclick="openAdopt()">🏠 รับลูกบุญธรรม${S.orph?' · บ้านเด็กกำพร้า':''}</button>${ok()?'':`<p class="tag2" style="text-align:center">รับลูกบุญธรรมได้เมื่ออายุ ${S.ch==='short'?18:25} ปีขึ้นไป</p>`}</div>`)}catch(e){}return r}}
  // ---------- คะแนน 60% · ฉายาร้อยบุตรนับครึ่ง · ฉายาสายร้อยชีวิต ----------
  try{TTL_SP.unshift(['or500',()=>!!(S.orph&&S.orph.tot>=500),'บิดามารดาของแผ่นดิน'],['or100',()=>!!(S.orph&&S.orph.tot>=100),'ผู้อุปถัมภ์ร้อยชีวิต'],['or20',()=>!!(S.orph&&S.orph.tot>=20),'บ้านอุ่นของเด็กไร้บ้าน'],['ad3',()=>(S.kidsA||0)>=3,'สายใยที่ไม่ใช่สายเลือด']);Object.assign(TTL_SPR,{or500:6,or100:5,or20:3,ad3:3})}catch(e){}
