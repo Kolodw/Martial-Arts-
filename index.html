@@ -17222,6 +17222,21 @@ setInterval(()=>{try{if($('paBan')&&(notWuxia()||mwOn()))paBanX()}catch(e){}},10
 {const _rnA=render;render=function(){const r=_rnA.apply(this,arguments);try{const M=S&&S.mw;if(M&&M.agB===2&&S.alive&&mwOn()){const el=$('gAge');if(el){const left=M.end-S.age;el.style.fontSize=M.ageless?'27px':'';
   el.innerHTML=M.ageless?`∞<div class="lsp" title="ไม่แก่ลง">อมตะ · ดูอายุ ${S.age}</div>`:`${S.age}<small>ปี</small><div class="lsp" title="อายุขัยตามขั้นที่เหลือ">${M.fz?'ตามขั้น ':''}เหลือ ~${fmt(left)}</div>`;el.title=M.ageless?'อายุจริง '+fmt((M.real0||0)+M.y)+' ปี':'อายุที่ดูภายนอก / อายุขัยที่เหลือ'}}}catch(e){}return r}}
 {const _lsM=lsMw;lsMw=function(v){try{if(S&&S.mw&&S.mw.ageless)return}catch(e){}return _lsM.apply(this,arguments)}}
+
+// ===================== ยุคปัจจุบัน: ปิดระบบ/กลไกของยุทธภพทั้งหมด =====================
+// ระบบ · AI คู่ใจ · สัตว์วิญญาณ · ผู้เล่นจริงข้ามมิติ/ดวล/นักล่าค่าหัว ไม่โผล่ในยุคปัจจุบันและโลกฮันเตอร์ (เก็บไว้ในความทรงจำชาติเก่า ไม่ลบทิ้ง)
+function mwNoWux(){try{if(!S||!S.mw||!mwOn())return;const M=S.mw;M.stash=M.stash||{};let ch=0;
+ ['sys','ai','shadow'].forEach(k=>{if(S[k]){if(!M.stash[k])M.stash[k]=S[k];S[k]=null;ch=1}});
+ if(S.pet&&(S.pet.spirit||/วิญญาณ|อสูร|เทพ/.test(S.pet.t||''))){if(!M.stash.pet)M.stash.pet=S.pet;S.pet=null;ch=1}
+ if(typeof MT!=='undefined'&&MT.inv&&MT.inv.length)MT.inv.length=0;if(typeof BH!=='undefined'&&BH.inv&&BH.inv.length)BH.inv.length=0;
+ if(typeof meetC!=='undefined'&&meetC)meetC=null;
+ const b=$('sysBtn');if(b&&b.style.display!=='none')b.style.display='none';
+ if(ch){try{mwAcOk()}catch(e){}}return ch}catch(e){}}
+{const _meN=mwEnter;mwEnter=function(){const r=_meN.apply(this,arguments);try{if(mwNoWux())render()}catch(e){}return r}}
+{const _myN=mwYear;mwYear=function(){mwNoWux();const r=_myN.apply(this,arguments);mwNoWux();return r}}
+{const _rnN=render;render=function(){mwNoWux();return _rnN.apply(this,arguments)}}
+setInterval(mwNoWux,800);
+['meetTick','mtShow','bhShow','bhOffer','nqOffer','openSys','openAI','milestone','crossroad'].forEach(n=>{try{const f=window[n];if(typeof f!=='function')return;window[n]=function(){try{if(S&&S.mw&&mwOn()){if(n==='openSys'||n==='openAI')toast('ยุคนี้ไม่มีระบบจากยุทธภพ');return}}catch(e){}return f.apply(this,arguments)}}catch(e){}});
 </script>
 </body>
 </html>
