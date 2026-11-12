@@ -460,8 +460,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='16.0';
+const VERSION='16.1';
 const CHANGELOG=[
+ {v:'16.1',d:'12 พ.ย. 2026',l:['🏮 <b>ชาติกำเนิดใหม่ 8 แบบ</b> มีเนื้อเรื่องเฉพาะ — ล่าบัญชีแค้นล้างตระกูล · ปรมาจารย์กลับชาติ · บุตรลับจักรพรรดิชิงบัลลังก์ · เด็กที่สัตว์อสูรเลี้ยง · แหกคุกใต้ดิน · บุตรหมอเทวดา · เด็กคืนสุริยคราส · ทายาทเศรษฐี','✨ <b>พรสวรรค์ใหม่ 8 แบบ</b> — บานช้า · กลืนกิน · เนตรลอกเลียน · กายาสายฟ้า · ชีพจรเดียวดาย · กระดูกแตกแล้วแกร่ง · เซียนสุรา · หยกเย็นนิรันดร์','🌟 <b>ฉากกาชา</b>ตอนเกิด N→UR · <b>คอมโบลับ</b> 8 คู่พร้อมฉายา · <b>ชาติกำเนิดลับ</b> 3 แบบต้องปลดล็อก · ลูกสืบทอดพรสวรรค์ได้','🏟️ <b>ฉายาลาน</b>โฉมใหม่ อนิเมชั่นอลังการตามราคา · เพิ่มฉายาใหม่ 4 แบบ ถึง <b>จักรพรรดิแห่งเงา</b>','👪 <b>ตั้งชื่อลูกและสัตว์เลี้ยงเอง</b>ได้ (ไม่ตั้งก็ได้) · 🍼 เลือกได้ว่าจะมีลูกหรือไม่ แต่คู่ชีวิตจะผิดหวัง','⚗️ ของคราฟต์สายโกงทำยากขึ้น วัตถุดิบมีจำกัดต่อปี · 🏮 ชื่อเสียงลดตามความดังเบาลงและบอกยอดจริง · 📚 คู่มือและสารานุกรมเพิ่มหมวดชาติกำเนิด พรสวรรค์ คอมโบ · 🛠️ แก้บั๊กภาพสัตว์อสูร']},
  {v:'16.0',d:'12 พ.ย. 2026',l:['🍃 ยุทธภพอยู่ได้เกิน 200 ปี — ขั้น<b>จาเยินกยอง</b> · <b>ปันโรฮวานดง</b> คืนวัยหนุ่ม · เหตุการณ์ปรมาจารย์แห่งยุค และทางเลือกปลายชีวิต','💀 rework <b>โหมดนรก ชีวิตสั้น รากขยะ</b> — นรกระบบ/AI หายาก ทัณฑ์ซ้อน · ชีวิตสั้นโอกาสพิเศษสูง ปลดปล่อยปีละ 2 ครั้ง เผาผลาญอายุ · รากขยะมีโชคของขยะและแรงฮึด · ลานประลองได้เหรียญเพิ่ม · ทำเนียบชีวิตสั้นคิดจากความเร็ว','🏮 ชื่อเสียงมีเพดานตามโลกและแสดงเป็นระดับ · เป้าหมายชื่อเสียงสูงขึ้น','📱 ปรับขนาดหน้าจอได้ที่ ☰ → ขนาดหน้าจอ','🎖️ หน้าเลือกฉายาใหม่ แบ่งหมวด ค้นหาได้ ลื่นขึ้น · ฉายา <b>Nano Machine</b> โฉมใหม่','🏛️ ประมูลทั่วยุทธภพเวลาต่อชิ้นนานขึ้น พิมพ์ราคาได้ง่ายขึ้น · 🛠️ แก้บั๊กเงินติดลบหลังย้อนเวลา และภาพหลุมศพค้าง']},
  {v:'15.9',d:'11 พ.ย. 2026',l:['💥 ปลดปล่อยพลังมี<b>ท่าเฉพาะสาย</b> — กระบี่ฟันฉาก ฝ่ามือยักษ์ตกจากฟ้า เสาเพลิง หนามน้ำแข็ง ฟ้าผ่า หลุมดำ มังกรพุ่ง · สัตว์อสูรพ่นไฟ คำราม ฟาดหาง กรงเล็บ · เกรดสูงมีฉากตัดหน้าตัวละครและจอแตก','❓ <b>สอนเล่นแบบพาทัวร์</b> เปิดหน้าจริงให้ดูทีละหน้า ดูซ้ำได้ที่ ☰ → วิธีเล่น','🛠️ วิชาของสัตว์ที่แปลงกายและวิชามรดกรุ่นลูกพัฒนาขั้นได้แล้ว']},
  {v:'15.8',d:'11 พ.ย. 2026',l:['💥 <b>ปลดปล่อยพลัง</b> โฉมใหม่ — ปุ่มอยู่หน้าเล่น เลือกที่ เลือกวิชา แล้วดูฉาก pixel ตอนพลังถล่มป่าหรือผ่าภูเขา มีเกรด F → ∞ ร่องรอยบนแผ่นดิน และแชร์เข้าแชทได้ · สัตว์อสูรก็ปล่อยได้','🗺️ <b>แผนที่ท่องดินแดน</b> — เดินทางไปนครหลวง ยอดเขา ป่า ทะเลทราย ทะเล แดนหิมะ แดนเถื่อน และแดนต้องห้าม แต่ละที่ได้ของดีต่างกัน ท้าจ้าวถิ่นชิงฉายา ระวังค่าหัวและนักล่าค่าหัว','🏛️ ประมูลทั่วยุทธภพมี<b>สมบัติชื่อเฉพาะ 100 ชิ้น</b> · ชนะแล้วเข้าคลังสมบัติ กดใช้เองทีหลังได้','🐾 สัตว์ที่แปลงกายแล้ว<b>คืนร่างอสูร</b>ได้ ปุ่มอยู่หน้าเล่น · ปรับสมดุลของที่ปั๊มพลังได้ไม่จำกัด']},
@@ -14252,6 +14253,82 @@ const nb=(k,i)=>` <button onclick="nameAsk('${k}',${i})" style="font-size:12px;p
  TTL_SP.unshift(['o_rev',()=>!!S.flags.oRev,'ผู้ฟื้นคืนตระกูล'],['o_reg',()=>!!S.flags.oReg,'ปรมาจารย์สองชาติ'],['o_emp',()=>!!S.flags.oEmp,'จักรพรรดิแห่งยุทธภพ'],['o_wolf',()=>!!S.flags.oWolf,'บุตรแห่งอสูร'],['o_jail',()=>!!S.flags.oJail,'นักโทษผู้แหกคุกนรก'],['o_doc',()=>!!S.flags.oDoc,'หมอเทวดา'],['o_sun',()=>!!S.flags.oSun,'บุตรสวรรค์'],['o_moon',()=>!!S.flags.oMoon,'ราชามารสุริยคราส'],['o_rich',()=>!!S.flags.oRich,'ราชาแห่งการค้า'],
   ...Object.entries(COMBO).map(([k,v])=>['cb_'+k.replace('+','_'),()=>S.combo===k,v[0]]));
 }
+
+// ===== v16.1 คู่มือ + สารานุกรม: ชาติกำเนิด/พรสวรรค์/คอมโบ =====
+{const famKey=f=>{if(!f)return null;const b=FAMILY.find(x=>(x.oid&&x.oid===f.oid)||(x.heirType&&x.heirType===f.heirType)||(x.clan&&f.clanObj)||x.n===f.n);return b?b.n:null};
+ const COMBO_L=[['massacre+devour','ปีศาจล้างแค้น'],['regress+late','ปรมาจารย์ผู้รอคอย'],['prince+lone','จักรพรรดิกระบี่เดียว'],['eclipse+thunder','บุตรอัสนีสุริยคราส'],['prison+mirror','นักโทษหมื่นวิชา'],['beastkid+shatter','อสูรร่างเหล็ก'],['doctor+jade','หมอเทวดาหยกเย็น'],['merchant+drunk','เศรษฐีเมาเหล้าพันไห']];
+ const rec=()=>{try{if(!S)return;const k=famKey(S.family);if(k)cdxAdd('fam',k);if(S.talent&&S.talent.n)cdxAdd('tal',S.talent.n);if(S.combo)cdxAdd('combo',S.combo);LS.set('murim_codex',cdx())}catch(e){}};
+ {const _s=startLife;startLife=function(){const r=_s.apply(this,arguments);rec();return r}}
+ {const _b=beginLife;beginLife=function(){const r=_b.apply(this,arguments);setTimeout(rec,50);return r}}
+ {const _c=cxCats;cxCats=function(){const L=_c.apply(this,arguments);try{L.push(
+  {g:'other',ic:'🏮',t:'ชาติกำเนิด',te:'Origins',cat:'fam',L:FAMILY.map(f=>[f.n,f.n,(f.w||0)<1.5||!!f.oid])},
+  {g:'other',ic:'✨',t:'พรสวรรค์',te:'Talents',cat:'tal',L:TALENT.map(t=>[t.n,t.n,t.w<2])},
+  {g:'other',ic:'🌟',t:'คอมโบลับ',te:'Secret combos',cat:'combo',L:COMBO_L.map(([k,n])=>[k,n,1])})}catch(e){}return L}}
+ try{SYS_GUIDE.push(
+  {s:'base',nw:1,ic:'🏮',t:'ชาติกำเนิดใหม่ 8 แบบ',go:'openCodex',d:'แต่ละแบบมี<b>เนื้อเรื่องของตัวเอง</b> · 🩸 <b>ผู้รอดจากตระกูลที่ถูกล้างบาง</b> ล่าบัญชีแค้น 5 ชื่อตามดินแดน (ดูในแผนที่) · 🔁 <b>ปรมาจารย์กลับชาติ</b> จำอนาคตได้ ศัตรูชาติก่อนตามมา · 👑 <b>บุตรลับจักรพรรดิ</b> อายุ 18 ชิงบัลลังก์ได้ · 🐺 <b>เด็กที่สัตว์อสูรเลี้ยง</b> ปลุกร่างครึ่งอสูร · ⛓️ <b>เกิดในคุกใต้ดิน</b> ได้วิชาต้องห้ามแล้วแหกคุก · 💊 <b>บุตรหมอเทวดา</b> ต้านพิษ ตามหายาแก้พิษไร้นาม · 🌑 <b>เด็กคืนสุริยคราส</b> อายุ 20 กลายเป็นบุตรสวรรค์หรือราชามารตามกรรม · 💰 <b>ทายาทเศรษฐี</b> ของหายากและสงครามการค้า',
+   te:'8 new origins',de:'Each has its own storyline: last survivor of a massacred clan (hunt 5 names across the map), reincarnated grandmaster, secret imperial heir (claim the throne at 18), raised by beasts, born in a dungeon, divine doctor\'s child, eclipse child (heaven\'s son or demon king at 20 by karma), merchant heir.'},
+  {s:'base',nw:1,ic:'✨',t:'พรสวรรค์ใหม่ 8 แบบ',go:'openCodex',d:'🌸 <b>บานช้า</b> ก่อน 40 ปี ×0.5 หลังจากนั้น ×3 · 🩸 <b>กลืนกิน</b> ชนะแล้วดูดพลัง กรรมลด · 👁️ <b>เนตรลอกเลียน</b> ชนะ 3 ครั้งลอกวิชา · ⚡ <b>กายาสายฟ้า</b> ทัณฑ์สวรรค์กลายเป็นพลัง · 🗡️ <b>ชีพจรเดียวดาย</b> วิชาเดียว แรง ×4 · 🦴 <b>กระดูกแตกแล้วแกร่ง</b> บาดเจ็บหนักแล้วเลือดเพิ่มถาวร · 🍶 <b>เซียนสุรา</b> ปีที่เมาศัตรูอ่อนลง 30% · 🧊 <b>หยกเย็น</b> อายุขัย ×1.5 แต่รักยาก',
+   te:'8 new talents',de:'Late bloomer (×0.5 before 40, ×3 after), devouring body, mirror eyes (copy arts), thunder body (tribulations empower you), lone meridian (one art ×4), shatter bones (max HP grows when badly hurt), drunken immortal, eternal jade bones (lifespan ×1.5).'},
+  {s:'base',nw:1,ic:'🌟',t:'กาชาเกิด · คอมโบลับ · ชาติลับ',go:'openCodex',d:'ได้ของหายากตอนสุ่มเกิดจะมี<b>ฉากกาชา</b>บอกเกรด N→UR · ชาติกำเนิดคู่กับพรสวรรค์ที่เข้ากันได้ <b>คอมโบลับ</b> (8 คู่) — ได้ฉายาระดับสูงสุดและโบนัสพิเศษ · <b>ชาติกำเนิดลับ</b> 3 แบบต้องปลดล็อกก่อน: 🐺 เล่นเป็นสัตว์อสูร 2 ชาติ · 🔁 ถึงขั้นสูงหรืออายุ 150 · 👑 ล้มจ้าวถิ่นนครหลวง · พ่อแม่มีพรสวรรค์หายาก ลูกมีโอกาส 30% <b>สืบสายเลือด</b>',
+   te:'Birth gacha · secret combos · hidden origins',de:'Rare rolls get a gacha reveal (N→UR). Matching origin+talent pairs form 8 secret combos with top titles and bonuses. 3 hidden origins unlock via achievements. Children may inherit a rare talent (30%).'},
+  {s:'grow',nw:1,ic:'👪',t:'ตั้งชื่อ · วางแผนครอบครัว',go:'openFamily',life:1,d:'ได้ลูกหรือสัตว์เลี้ยงใหม่ กด <b>✏️ ตั้งชื่อเอง</b> ในเหตุการณ์ได้ (ไม่ตั้งก็ได้) หรือแก้ทีหลังในหน้าครอบครัว · กล่อง <b>🍼 วางแผนครอบครัว</b> เลือก "ยังไม่อยากมีลูก" ได้ — ลูกจะไม่เกิดเอง แต่คู่ชีวิตผิดหวัง ความรักลดทุกปี',
+   te:'Naming · family planning',de:'Name new children and pets yourself (optional) from the feed or the Family page. Family planning lets you choose no children — but your spouse\'s love drops every year.'},
+  {s:'grow',nw:1,ic:'🏮',t:'ชื่อเสียงยิ่งดังยิ่งเพิ่มช้า',d:'ชื่อเสียงที่ได้ในปีเดียวจะถูกลดลงบ้างเมื่อดังมากอยู่แล้ว · ถ้าลดเยอะ เกมจะบอก <b>ยอดจริงที่ได้</b>ในเหตุการณ์ · เพดานชื่อเสียงขึ้นกับโลก',
+   te:'Fame slows as you grow famous',de:'Yearly fame gains shrink a little when you are already famous; the feed shows the real amount gained when it is reduced.'})}catch(e){}}
+
+// ===== v16.1 ฉายาลาน: อนิเมชั่นตามราคา + ฉายาใหม่ 4 =====
+{const AR_FX={'นักล่าเงา':1,'ผู้ไม่เคยถอย':2,'ตำนานแห่งลาน':3,'ราชันเงาอสูร':4,'เทพสงครามแห่งลาน':5,'ผู้ยืนหนึ่งเหนือพันศึก':6,'จักรพรรดิแห่งเงา':7};
+ AR_TT.push(['ราชันเงาอสูร',5,1000],['เทพสงครามแห่งลาน',6,2000],['ผู้ยืนหนึ่งเหนือพันศึก',6,3500],['จักรพรรดิแห่งเงา',6,6000]);
+ const IC={1:'🗡',2:'🔥',3:'👑',4:'☾',5:'☀',6:'❄',7:'✦'};
+ {const _t=tchipH;tchipH=function(t,r){const k=AR_FX[String(t||'').trim()];if(!k)return _t.apply(this,arguments);const sp=k>=6?'<b class="tsp"></b><b class="tsp"></b><b class="tsp"></b><b class="tsp"></b>':'';
+   return`<span class="tchip tar tar${k}" style="--ph:${(Date.now()%5000)/-1000}s"><i class="tai">${IC[k]}</i><span class="tax">${esc(t)}</span>${sp}</span>`}}
+ const st=document.createElement('style');st.textContent=`
+@property --tara{syntax:'<angle>';inherits:false;initial-value:0deg}
+.tchip.tar{position:relative;display:inline-flex;align-items:center;gap:4px;padding:2px 10px 2px 7px;border-radius:8px;isolation:isolate;overflow:hidden;vertical-align:middle;font-weight:800;letter-spacing:.3px;border:none!important;color:#fff}
+.tchip.tar .tai{font-style:normal;font-size:.9em;filter:drop-shadow(0 0 3px currentColor)}
+.tchip.tar .tax{position:relative;z-index:1}
+.tchip.tar::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1.6px;z-index:-1;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.tchip.tar::after{content:'';position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:taSh 3.2s ease-in-out infinite;animation-delay:var(--ph);z-index:0;pointer-events:none}
+@keyframes taSh{0%,55%{left:-60%}100%{left:130%}}
+@keyframes taRot{to{--tara:360deg}}
+@keyframes taBg{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes taPul{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3)}}
+/* 1 นักล่าเงา — เหล็กเงา น้ำเงินเทา */
+.tar1{background:linear-gradient(120deg,#141b26,#24364d,#141b26);background-size:200% 100%;animation:taBg 5s ease-in-out infinite;color:#cfe3ff;box-shadow:0 0 6px #4d7fb366}
+.tar1::before{background:linear-gradient(90deg,#5f86b3,#c8dcf5,#5f86b3)}
+.tar1 .tai{color:#9cc4ff}
+/* 2 ผู้ไม่เคยถอย — เปลวเพลิง */
+.tar2{background:linear-gradient(0deg,#3a0505,#7a1405 45%,#c2410c 75%,#3a0505);background-size:100% 220%;animation:taBg 1.6s ease-in-out infinite;color:#fff3e0;text-shadow:0 0 6px #ff6a00;box-shadow:0 0 8px #ff4d0099,0 -2px 10px #ff9a0055}
+.tar2::before{background:linear-gradient(90deg,#ff3b1f,#ffb347,#ff3b1f);animation:taPul 1.2s infinite}
+.tar2 .tai{color:#ffb347;animation:taPul .8s infinite}
+/* 3 ตำนานแห่งลาน — ทองหมุนรอบ */
+.tar3{background:linear-gradient(120deg,#2b1d05,#5a3d0a,#8a6512,#5a3d0a,#2b1d05);background-size:250% 100%;animation:taBg 4s ease-in-out infinite;color:#fff4c7;text-shadow:0 0 6px #ffcc33;box-shadow:0 0 10px #ffc83d88}
+.tar3::before{background:conic-gradient(from var(--tara),#ffd34d,#7a5200 25%,#fff6c9 40%,#b8860b 60%,#ffd34d);animation:taRot 3s linear infinite}
+.tar3 .tai{color:#ffd34d}
+/* 4 ราชันเงาอสูร — ม่วงมืด เงาสั่น */
+.tar4{background:radial-gradient(circle at 30% 50%,#4b1a7a,#14061f 70%);color:#f0d9ff;text-shadow:0 0 8px #b04dff,1px 0 #ff2fd0,-1px 0 #4d8bff;box-shadow:0 0 12px #9b30ffaa,inset 0 0 10px #000;animation:taGl 2.8s infinite}
+.tar4::before{background:conic-gradient(from var(--tara),#b04dff,#1a0030 30%,#ff2fd0 50%,#1a0030 70%,#b04dff);animation:taRot 2.4s linear infinite}
+.tar4 .tai{color:#d38bff}
+@keyframes taGl{0%,90%,100%{transform:none}92%{transform:translate(1px,-1px) skewX(-6deg)}94%{transform:translate(-1px,1px)}96%{transform:skewX(4deg)}}
+/* 5 เทพสงครามแห่งลาน — ตะวันแดงทอง ออร่าเต้น */
+.tar5{background:linear-gradient(120deg,#3d0a00,#9a1f00,#e06b00,#ffc34d,#e06b00,#9a1f00,#3d0a00);background-size:300% 100%;animation:taBg 3s ease-in-out infinite,taAu 1.8s ease-in-out infinite;color:#fff;text-shadow:0 0 6px #fff3,0 0 10px #ff8800}
+.tar5::before{background:conic-gradient(from var(--tara),#fff2a8,#ff5500 20%,#ffd000 40%,#b31200 60%,#fff2a8 80%,#ff5500);animation:taRot 1.8s linear infinite}
+.tar5 .tai{color:#fff2a8;animation:taPul 1s infinite}
+@keyframes taAu{0%,100%{box-shadow:0 0 10px #ff7a00aa,0 0 20px #ff3d0055}50%{box-shadow:0 0 16px #ffc400dd,0 0 32px #ff3d0088}}
+/* 6 ผู้ยืนหนึ่งเหนือพันศึก — น้ำแข็งปริซึม มีประกาย */
+.tar6{background:linear-gradient(120deg,#021426,#073a5e,#126f9e,#2aa8d8,#126f9e,#073a5e,#021426);background-size:300% 100%;animation:taBg 3.6s ease-in-out infinite;color:#f2fdff;text-shadow:0 0 4px #00c8ff,0 0 10px #7fe7ff;box-shadow:0 0 12px #5fd8ffbb,0 0 26px #a07bff55}
+.tar6::before{background:conic-gradient(from var(--tara),#fff,#5fd8ff 15%,#a07bff 35%,#ff9bf0 50%,#5fd8ff 70%,#fff);animation:taRot 2.2s linear infinite}
+.tar6 .tai{color:#fff}
+/* 7 จักรพรรดิแห่งเงา — จักรวาลดำทอง ออโรร่ารุ้ง ดาวกะพริบ */
+.tar7{background:radial-gradient(ellipse at 50% 120%,#3a1d6e 0%,transparent 60%),linear-gradient(120deg,#050208,#1b0b2e,#0b0414);color:#ffe9a8;text-shadow:0 0 6px #ffcf4d,0 0 14px #ff4df0;box-shadow:0 0 14px #ffcf4daa,0 0 30px #8a4dff88;animation:taAu7 3s ease-in-out infinite}
+.tar7::before{padding:2px;background:conic-gradient(from var(--tara),#ff4d4d,#ffcf4d,#7dff6a,#4dd8ff,#8a4dff,#ff4df0,#ff4d4d);animation:taRot 1.6s linear infinite}
+.tar7 .tax{background:linear-gradient(90deg,#ffe9a8,#fff,#ffcf4d,#ff9bf0,#ffe9a8);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:taBg 2.4s linear infinite;text-shadow:none;filter:drop-shadow(0 0 4px #ffcf4d)}
+.tar7 .tai{color:#ffcf4d;animation:taPul .9s infinite}
+@keyframes taAu7{0%,100%{box-shadow:0 0 12px #ffcf4daa,0 0 26px #8a4dff77}50%{box-shadow:0 0 18px #ff4df0cc,0 0 38px #4dd8ff88}}
+.tchip.tar .tsp{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 6px #fff;opacity:0;animation:taTw 2.2s infinite;z-index:2;pointer-events:none}
+.tchip.tar .tsp:nth-of-type(1){left:12%;top:20%;animation-delay:0s}.tchip.tar .tsp:nth-of-type(2){left:38%;top:70%;animation-delay:.55s}.tchip.tar .tsp:nth-of-type(3){left:66%;top:25%;animation-delay:1.1s}.tchip.tar .tsp:nth-of-type(4){left:88%;top:65%;animation-delay:1.65s}
+@keyframes taTw{0%,100%{opacity:0;transform:scale(.3)}40%{opacity:1;transform:scale(1.3)}60%{opacity:.6;transform:scale(.8)}}
+@media (prefers-reduced-motion:reduce){.tchip.tar,.tchip.tar *,.tchip.tar::before,.tchip.tar::after{animation:none!important}}`;document.head.appendChild(st)}
 
 </script>
 </body>

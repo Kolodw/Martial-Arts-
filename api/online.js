@@ -1184,7 +1184,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (mu) return res.status(429).json({ err: 'muted' });
       if (!ok) return res.status(429).json({ err: 'rate' });
       const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), ...((b.tp || +chx) ? { tt: '', tr: 0 } : rkOk(b.tt, rkh) || ttlOk(b.tt)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
-      if (['นักล่าเงา', 'ผู้ไม่เคยถอย', 'ตำนานแห่งลาน'].includes(m.tt)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.tt || []).includes(m.tt)) { m.tt = ''; m.tr = 0 } }
+      if (['นักล่าเงา', 'ผู้ไม่เคยถอย', 'ตำนานแห่งลาน', 'ราชันเงาอสูร', 'เทพสงครามแห่งลาน', 'ผู้ยืนหนึ่งเหนือพันศึก', 'จักรพรรดิแห่งเงา'].includes(m.tt)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.tt || []).includes(m.tt)) { m.tt = ''; m.tr = 0 } }
       // แชร์การปลดปล่อยพลัง: แนบข้อมูลฉาก pixel (ตัวเลข/สี/คำสั้นๆ เท่านั้น) ให้คนอื่นเล่นซ้ำในแชทได้
       if (m.k === 'share' && b.rl && typeof b.rl === 'object') {
         try {
@@ -1261,7 +1261,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       return { n: clean(b0.n, 20) || 'นิรนาม', p: Math.max(0, +b0.p || 0), hp: Math.max(1, Math.min(1e9, +b0.hp || 100)), r: clean(b0.r, 30), ri: Math.max(0, Math.min(12, +b0.ri || 0)), x: b0.x ? 1 : 0, bm: b0.bm ? 1 : 0, st: ['atk', 'def', 'trick', 'all'].includes(b0.st) ? b0.st : 'atk', arts: (Array.isArray(b0.arts) ? b0.arts : []).slice(0, 3).map(a => clean(a, 24)).filter(Boolean), el: clean(b0.el, 10), sr: clean(b0.sr, 3), qo: clean(b0.qo, 50), qw: clean(b0.qw, 50), au: ['fire', 'thunder', 'dark', 'ice'].includes(b0.au) ? b0.au : '', look, t: now } };
     const arLg = r => r >= 1600 ? 4 : r >= 1400 ? 3 : r >= 1250 ? 2 : r >= 1100 ? 1 : 0;
     // ---- กระเป๋าเหรียญลาน (เก็บที่เซิร์ฟเวอร์) ----
-    const AR_P = { tt: { 'นักล่าเงา': 80, 'ผู้ไม่เคยถอย': 200, 'ตำนานแห่งลาน': 500 }, fr: { f_arc1: 40, f_arc2: 120, f_arc3: 250, f_arc4: 400, f_arc5: 1000 }, qt: { qt: 50 }, au: { fire: 120, ice: 120, thunder: 200, dark: 300 }, use: { heal: 8, qi: 12, joy: 6 } };
+    const AR_P = { tt: { 'นักล่าเงา': 80, 'ผู้ไม่เคยถอย': 200, 'ตำนานแห่งลาน': 500, 'ราชันเงาอสูร': 1000, 'เทพสงครามแห่งลาน': 2000, 'ผู้ยืนหนึ่งเหนือพันศึก': 3500, 'จักรพรรดิแห่งเงา': 6000 }, fr: { f_arc1: 40, f_arc2: 120, f_arc3: 250, f_arc4: 400, f_arc5: 1000 }, qt: { qt: 50 }, au: { fire: 120, ice: 120, thunder: 200, dark: 300 }, use: { heal: 8, qi: 12, joy: 6 } };
     const AR_FRX = /^f_(arc[1-5]|box[1-3]|lg[2-4])$/, AR_QN = { w3: 3, man2: 2, adv: 1, rv: 1, cb3: 1, any5: 5 };
     const arDayK = () => new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
     const arQDay = v => { const k = arDayK(); if (!v.q || v.q.k !== k) { const ids = Object.keys(AR_QN).sort(() => Math.random() - .5).slice(0, 3); v.q = { k, q: ids.map(i => ({ id: i, p: 0, done: 0 })), all: 0 } } return v };
