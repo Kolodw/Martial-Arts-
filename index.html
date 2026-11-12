@@ -12487,7 +12487,7 @@ try{GD2.push({s:'beast',ic:'🌙',t:'จำศีลบ่มแก่นอส�
  te:'Beast Hibernation',de:'Grown beasts can hibernate from ☰: 🕳️ deep cave (safe), 🏔️ lightning peak, 🌊 lakebed (best, riskiest) for 5/10/30 years, burning 🍖 stored fat (hunt to gain). Part of the gain becomes a 💠 beast core you must absorb (all at once risks a meltdown; slow digestion gives 80%). Waking brings events: molting, cocoons, ancestor dreams, a village by your den, intruders.'});SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
 
 // ===================== v15.6 ลานประลองหมื่นเงา (rework ประลองเงา) =====================
-const AR_LG=[['🥉','ทองแดง','#c8885a',0],['🥈','เงิน','#c8d4e8',1100],['🥇','ทอง','#ffc840',1250],['💎','เพชร','#60e0ff',1400],['👑','จ้าวลาน','#ff60c0',1600]];
+const AR_LG=[['🥉','ทองแดง','#c8885a',0],['🥈','เงิน','#c8d4e8',1100],['🥇','ทอง','#ffc840',1250],['💎','เพชร','#60e0ff',1400],['👑','จ้าวลาน','#ff60c0',1600],['🐉','ปรมาจารย์เงา','#40d8b0',1800],['⚔️','ราชันลาน','#ff6a3a',2000],['🌌','เทพยุทธ์','#a080ff',2250],['🏯','ตำนานลาน','#ffd890',0]];
 const AR_ST={atk:['🗡️','บุกดุดัน','บุกและท่าหนักบ่อย'],def:['🛡️','ตั้งรับสวนกลับ','ตั้งการ์ดรอจังหวะ'],trick:['🌀','หลอกล่อ','ท่าหลอกและรวมพลัง'],all:['⚡','ทุ่มสุดตัว','ท่าหนักแรงแต่เปิดช่อง']};
 const AR_BEAT={fire:['ice','life'],ice:['wind'],wind:['earth'],earth:['thunder'],thunder:['sword','ice'],sword:['life','blood'],life:['earth'],light:['dark'],dark:['light'],star:['void'],void:['star'],blood:['fire']};
 const AR_SB={atk:'trick',trick:'def',def:'atk'};
@@ -12502,9 +12502,9 @@ function arSnap(){const B=S.beastMode&&!S.beastMode.human;let look=null;try{look
 const AR=window.AR={busy:0,info:null};
 function arTkH(tk){if(!tk)return'';const n=tk.n|0;return`<span class="artk">${'🎫'.repeat(n)}${'<i>🎫</i>'.repeat(Math.max(0,5-n))}</span>${n<5&&tk.nx?`<small> · ใบถัดไป ${Math.ceil(tk.nx/60000)} นาที</small>`:''}`}
 async function arPage(){const box=$('arBox');if(!box)return;let j;try{j=await api('ar2',{})}catch(e){box.innerHTML='<p class="tag2">โหลดลานประลองไม่ได้ ลองใหม่อีกครั้ง</p>';return}AR.info=j;if(!$('arBox'))return;
- const lg=j.lg|0,L=AR_LG[lg],nx=AR_LG[lg+1],st=arSt(),alive=S&&S.alive;const b0=lg?L[3]:900,pr=nx?Math.max(0,Math.min(100,(j.rt-b0)/(nx[3]-b0)*100)):100;
+ const lg=j.lg|0,L=AR_LG[lg],nx=lg<7?AR_LG[lg+1]:null,st=arSt(),alive=S&&S.alive;const b0=lg?L[3]:900,pr=nx?Math.max(0,Math.min(100,(j.rt-b0)/(nx[3]-b0)*100)):100;
  box.innerHTML=`<div class="arhero" style="--c:${L[2]}"><div class="arsh"></div><b>🏟️ ลานประลองหมื่นเงา</b><div class="arme">${arLgH(lg,1)}<span class="px">${fmt(j.rt)} แต้ม</span></div>
-  ${nx?`<div class="hpbar" style="height:6px;border-color:${nx[2]}"><i style="width:${pr}%;background:${nx[2]}"></i></div><small>อีก ${fmt(nx[3]-j.rt)} แต้มขึ้น ${nx[0]} ${nx[1]}</small>`:'<small>👑 ลีกสูงสุด</small>'}
+  ${nx?`<div class="hpbar" style="height:6px;border-color:${nx[2]}"><i style="width:${pr}%;background:${nx[2]}"></i></div><small>อีก ${fmt(nx[3]-j.rt)} แต้มขึ้น ${nx[0]} ${nx[1]}</small>`:'<small>🌌 ลีกสูงสุดตามแต้ม · ติด 10 อันดับแรกของซีซั่นเพื่อเป็น 🏯 ตำนานลาน</small>'}
   <div class="arrow2"><span>${arTkH(j.tk)}</span><span>🪙 ${fmt(arC())}</span></div><small>ซีซั่นรีเซ็ตทุกวันจันทร์ · อันดับ 1–3 ได้ฉายา + กรอบประจำลาน</small></div>
   ${j.nw?`<div class="item arnew">🛡️ ระหว่างที่คุณไม่อยู่ มีคนมาท้าเงาของคุณ ${j.nw} ครั้ง!</div>`:''}
   <h4>🎭 นิสัยเงาของคุณ <small class="tag2">(คนที่มาท้าจะเจอท่าทีแบบนี้)</small></h4><div class="arst">${Object.entries(AR_ST).map(([k,v])=>`<button class="${k===st?'on':''}" onclick="LS.set('murim_arst','${k}');arPage()">${v[0]} ${v[1]}<small>${v[2]}</small></button>`).join('')}</div>
@@ -12853,11 +12853,11 @@ try{GD2.push({s:'beast',ic:'💕',t:'ครอบครัวสัตว์อ�
 
 // ===================== v15.7f ลานประลอง: สอนเล่น · ภารกิจรายวัน · ชนะติดกัน · รางวัลจบซีซั่นตามลีก =====================
 // ---------- รางวัลลีก ----------
-const AR_LGC=[5,15,30,60,100];
+const AR_LGC=[5,15,30,60,100,150,220,300,400];
 FRAMES.push({id:'f_lg2',n:'กรอบลีกทอง',side:'r',c:0,ty:'spin corner badge rk3',c1:'#ffc840',c2:'#fff0b0',c3:'#8a5a10',pc:'#fff0c0',bd:'🥇',d:'จบซีซั่นลานประลองในลีกทอง'},
  {id:'f_lg3',n:'กรอบลีกเพชร',side:'r',c:0,ty:'spin orbit ring2 corner badge rk2',c1:'#60e0ff',c2:'#ffffff',c3:'#2060c0',pc:'#d0f8ff',bd:'💎',d:'จบซีซั่นลานประลองในลีกเพชร'},
  {id:'f_lg4',n:'กรอบจ้าวลาน',side:'r',c:0,ty:'spin halo orbit ring2 aura2 sparkle star corner badge rk1',c1:'#ff60c0',c2:'#ffe0f4',c3:'#7a20c0',pc:'#ffd0f0',bd:'👑',d:'จบซีซั่นลานประลองในลีกจ้าวลาน'});
-function arLgReward(x,d){const lg=Math.max(0,Math.min(4,x.lg|0)),c=AR_LGC[lg];arCAdd(c);let fr='';if(lg>=2){const id='f_lg'+lg;if(!d.own.includes(id)){d.own.push(id);fr=` + <b>${frOf(id).n}</b>`}}return`🏟️ จบซีซั่นลานประลอง (${esc(x.d)}) ในลีก ${AR_LG[lg][0]} ${AR_LG[lg][1]} (${fmt(x.s)} แต้ม) · ได้ 🪙 ${c}${fr}`}
+function arLgReward(x,d){const lg=Math.max(0,Math.min(8,x.lg|0)),c=AR_LGC[lg];arCAdd(c);let fr='';if(x.tt){try{const o=arOwn();if(!o.tt.includes(x.tt)){o.tt.push(x.tt);LS.set('murim_arown',o)}}catch(e){}fr+=` + ฉายา <b>「${esc(x.tt)}」</b>`}if(lg>=1){const id='f_lg'+lg;if(!d.own.includes(id)){d.own.push(id);fr+=` + <b>${frOf(id).n}</b>`}}return`🏟️ จบซีซั่นลานประลอง (${esc(x.d)}) ในลีก ${AR_LG[lg][0]} ${AR_LG[lg][1]} (${fmt(x.s)} แต้ม) · ได้ 🪙 ${c}${fr}`}
 // ---------- ภารกิจรายวัน ----------
 const ARQ={w3:['⚔️ ชนะ 3 ครั้ง',3],man2:['🥋 สู้เองจนจบ 2 ครั้ง',2],adv:['🌀 ชนะด้วยธาตุข่มทาง',1],rv:['😤 ล้างแค้นสำเร็จ',1],cb3:['🔥 ทำคอมโบ ×3 ในการดวล',1],any5:['🎫 ลงสนาม 5 ครั้ง',5]};
 function arDay(){const k=new Date(Date.now()+7*3600e3).toISOString().slice(0,10);let D=LS.get('murim_arq',null);if(!D||D.k!==k){const ids=Object.keys(ARQ).sort(()=>Math.random()-.5).slice(0,3);D={k,q:ids.map(id=>({id,p:0,done:0})),all:0};LS.set('murim_arq',D)}return D}
@@ -15608,6 +15608,20 @@ paTickUI=function(){if($('modal').dataset.k!=='pauc'){clearInterval(PA.tk);retur
  const _de=duelEnd;duelEnd=function(win,fled){try{if(DU&&DU.ar&&!fled&&DU.me>0&&DU.en>0&&DU.r>6){const gap=DU.me-DU.en,k=DU._k||1;win=gap>=12?true:gap<=-12?false:k>=1}}catch(e){}return _de.call(this,win,fled)}}
 // อัปเดตพลังเงาเองระหว่างเล่น (ทุก ~3 นาที เฉพาะคนที่เคยลงลาน)
 {let last=0;const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive&&onlineOK&&Date.now()-last>180e3){let on=0;try{on=+localStorage.murim_arIn}catch(e){}if(on){last=Date.now();api('ar2snap',arSnap()).catch(()=>{})}}}catch(e){}return r}}
+
+
+// ===================== v17.5 ลานประลอง 9 ลีก · กรอบทุกลีกตั้งแต่เงิน · ฉายาลีกตั้งแต่ทอง · ตำนานลาน = 10 อันดับแรกของซีซั่น =====================
+try{FRAMES.push({id:'f_lg1',n:'กรอบลีกเงิน',side:'r',c:0,ty:'glow corner badge',c1:'#c8d4e8',c2:'#ffffff',c3:'#6a7a90',pc:'#e8eef8',bd:'🥈',d:'จบซีซั่นลานประลองในลีกเงิน'},
+ {id:'f_lg5',n:'กรอบมังกรเงาพันรอบ',side:'r',c:0,ty:'spin halo orbit ring2 ember corner badge rk1',c1:'#40d8b0',c2:'#d0fff0',c3:'#106050',pc:'#a0ffe0',bd:'🐉',d:'จบซีซั่นลานประลองในลีกปรมาจารย์เงา'},
+ {id:'f_lg6',n:'กรอบบัลลังก์กระบี่',side:'r',c:0,ty:'spin halo orbit ring2 aura2 sparkle corner badge rk1',c1:'#ff6a3a',c2:'#ffe0a0',c3:'#801a10',pc:'#ffd0a0',bd:'⚔️',d:'จบซีซั่นลานประลองในลีกราชันลาน'},
+ {id:'f_lg7',n:'กรอบดาราหมุนวน',side:'r',c:0,ty:'spin halo orbit ring2 aura2 sparkle star corner badge rk1',c1:'#a080ff',c2:'#e0f0ff',c3:'#3020a0',pc:'#ffffff',bd:'🌌',d:'จบซีซั่นลานประลองในลีกเทพยุทธ์'},
+ {id:'f_lg8',n:'กรอบตำนานลาน',side:'r',c:0,ty:'rainbow halo orbit ring2 aura2 sparkle star corner badge rk1',c1:'#ffd890',c2:'#ffffff',c3:'#a06020',pc:'#fff4c0',bd:'🏯',d:'ติด 10 อันดับแรกของซีซั่นลานประลอง'})}catch(e){}
+{const LT={'ผู้ไต่ลานทองคำ':[3,2],'เพชรแห่งลานเงา':[4,3],'จ้าวลานประลอง':[5,4],'ปรมาจารย์ผู้ไร้เงา':[5,5],'ราชันหมื่นเงา':[6,6],'เทพยุทธ์แห่งยุค':[6,7]};const isLeg=t=>/^ตำนานลานซีซั่น \d+$/.test(t);
+ // อนิเมชั่นฉายาลีกใช้ระดับเดียวกับฉายาแลกในลาน
+ try{const _t=tchipH;tchipH=function(t,r){const k=String(t||'').trim();if(LT[k]||isLeg(k)){const fx=isLeg(k)?7:LT[k][1];try{return tchipH0(k,r,fx)}catch(e){}}return _t.apply(this,arguments)};
+  window.tchipH0=(k,r,fx)=>{const map={2:'ผู้ไม่เคยถอย',3:'ตำนานแห่งลาน',4:'ราชันเงาอสูร',5:'เทพสงครามแห่งลาน',6:'ผู้ยืนหนึ่งเหนือพันศึก',7:'จักรพรรดิแห่งเงา'},ref=map[fx]||map[2];const h=_t.call(this,ref,r);return h.split(ref).join(esc(k))}}catch(e){}
+ // ส่วน "ฉายาลีก" ในร้านลาน
+ const _sh=arShopHtml;arShopHtml=function(){let h=_sh.apply(this,arguments);try{const o=arOwn(),L=o.tt.filter(t=>LT[t]||isLeg(t));const sec=`<h5>🏅 ฉายาลีก <small>ได้เมื่อจบซีซั่นในลีกทองขึ้นไป · ตำนานลาน = 10 อันดับแรก</small></h5>${L.length?`<div class="arshop">${L.map(t=>{const r=isLeg(t)?6:LT[t][0];return`<div class="item arsi"><div class="arttl">${tchipH(t,r)}</div><button class="sysb" onclick="setShowTtl('${esc(t)}',${r},'ar');openOnline('arena')">โชว์ฉายานี้</button></div>`}).join('')}</div>`:`<p class="tag2">ยังไม่มี — ${Object.keys(LT).map((t,i)=>`${AR_LG[i+2][0]} ${AR_LG[i+2][1]}: 「${t}」`).join(' · ')} · 🏯 ตำนานลาน: 「ตำนานลานซีซั่น ?」</p>`}`;const i=h.indexOf('<h5>🏷️ ฉายาลาน');h=i>=0?h.slice(0,i)+sec+h.slice(i):h+sec}catch(e){}return h}}
 
 </script>
 </body>
