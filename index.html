@@ -17237,6 +17237,13 @@ function mwNoWux(){try{if(!S||!S.mw||!mwOn())return;const M=S.mw;M.stash=M.stash
 {const _rnN=render;render=function(){mwNoWux();return _rnN.apply(this,arguments)}}
 setInterval(mwNoWux,800);
 ['meetTick','mtShow','bhShow','bhOffer','nqOffer','openSys','openAI','milestone','crossroad'].forEach(n=>{try{const f=window[n];if(typeof f!=='function')return;window[n]=function(){try{if(S&&S.mw&&mwOn()){if(n==='openSys'||n==='openAI')toast('ยุคนี้ไม่มีระบบจากยุทธภพ');return}}catch(e){}return f.apply(this,arguments)}}catch(e){}});
+
+// ===================== ยุคปัจจุบัน: ย่อ/ขยายกรอบสถานะ (ไม่บังเหตุการณ์) =====================
+function mwHudTog(e){if(e)e.stopPropagation();LS.set('murim_mwhmin',!LS.get('murim_mwhmin',false));render()}
+{const _rnHm=render;render=function(){const r=_rnHm.apply(this,arguments);try{const h=$('mwHud');if(h&&mwOn()){const mn=!!LS.get('murim_mwhmin',false);h.classList.toggle('mwMin',mn);
+ const t=h.querySelector('.mwhT');if(t){t.style.cursor='pointer';t.onclick=mwHudTog;let b=t.querySelector('.mwHmB');if(!b){t.insertAdjacentHTML('afterbegin','<span class="mwHmB"></span>');b=t.querySelector('.mwHmB')}b.textContent=mn?'▸':'▾';
+  let s=t.querySelector('.mwHmS');if(mn){if(!s){t.insertAdjacentHTML('beforeend','<span class="mwHmS"></span>');s=t.querySelector('.mwHmS')}s.textContent='แตะเพื่อดูทั้งหมด'}else if(s)s.remove()}}}catch(e){}return r}}
+(function(){const st=document.createElement('style');st.textContent=`#mwHud.mwMin{padding:5px 10px}#mwHud.mwMin>*:not(.mwhT){display:none!important}#mwHud.mwMin .mwhT{margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#mwHud .mwHmB{display:inline-block;width:16px;color:#c9b4ff}#mwHud .mwHmS{margin-left:6px;font-weight:400;font-size:11px;color:#c9b4ff}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
