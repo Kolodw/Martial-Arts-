@@ -16825,6 +16825,134 @@ function openIdMW(){const M=S.mw,id=M.id||0;modal(`<button class="xbtn" onclick=
 // HUD: เป้าหมาย + เอกสาร
 {const _rnG=render;render=function(){const r=_rnG.apply(this,arguments);try{if(mwOn()){const h=$('mwHud');if(h&&!h.querySelector('.mwGoalR')){const M=S.mw,g=(M.goals||[]).filter(x=>x.d).length;h.insertAdjacentHTML('beforeend',`<div class="mwJob mwGoalR">🎯 เป้าหมาย ${g}/${(M.goals||[]).length} · 🪪 ${MW_IDN[M.id||0]} <button class="gbtn mwJobB" onclick="openGoals()">ดู</button></div>`)}}}catch(e){}return r}}
 
+
+// ===================== โลกฮันเตอร์ (ทดสอบแอดมิน) =====================
+// ตอนเข้ายุคปัจจุบัน: 50% โลกปกติ / 50% เกิดในโลกฮันเตอร์เลย · โลกปกติมีโอกาส 1% ที่เกตจะเปิดระหว่างชีวิต (ไม่งั้นปกติจนตาย)
+const MW_HW_P=.5,MW_GATE_P=.01;
+const HR=['E','D','C','B','A','S'],HR_T=[0,300,900,2200,5500,12000];
+const hwOn=M=>M&&M.hw>0;
+const hRank=v=>{let i=0;HR_T.forEach((t,k)=>{if(v>=t)i=k});return i};
+const hStr=M=>mwStr(M)+(M.H?M.H.pw||0:0);
+function hwInit(M,born){M.H=M.H||{r:-1,ess:0,cl:0,gu:null,aw:null,rp:0,def:0,pw:0};if(born){M.hw=1;M.hwSince=MW_Y0-R(10,25)}}
+// ---------- สุ่มโลกตอนข้ามยุค ----------
+{const _meH=mwEnter;mwEnter=function(){const had=S&&S.mw;const r=_meH.apply(this,arguments);try{const M=S.mw;if(M&&!had&&M.hw==null){if(Math.random()<MW_HW_P){hwInit(M,true);addFeed('ev',`🌀 <b>โลกนี้มีเกต</b> — รอยแยกบนท้องฟ้านับร้อยเปิดมาตั้งแต่ปี ${M.hwSince} ผู้คนอยู่กับมันจนชิน มีสมาคมฮันเตอร์ มีกิลด์ มีอันดับฮันเตอร์ทางทีวีทุกคืน`,'sum')}else{M.hw=0;M.gateY=Math.random()<MW_GATE_P?R(2,35):0}render();saveGame()}}catch(e){console.error(e)}return r}}
+// ทายาทรับโลกเดียวกับพ่อแม่
+{const _cdHW=checkDeath;checkDeath=function(){const was=S&&S.alive;const r=_cdHW.apply(this,arguments);try{if(was&&S&&!S.alive&&S.mw){const h=LS.get('murim_mwheir',null);if(h){h.hw=S.mw.hw||0;h.hwSince=S.mw.hwSince;h.gateY=S.mw.hw?0:(S.mw.gateY?Math.max(1,S.mw.gateY-S.mw.y):0);LS.set('murim_mwheir',h)}}}catch(e){}return r}}
+{const _hgHW=mwHeirGo;mwHeirGo=function(){const h=LS.get('murim_mwheir',null);const r=_hgHW.apply(this,arguments);setTimeout(()=>{try{const M=S&&S.mw;if(M&&M.native&&h&&M.hw==null){if(h.hw){hwInit(M,false);M.hw=1;M.hwSince=h.hwSince||MW_Y0}else{M.hw=0;M.gateY=h.gateY||0}render();saveGame()}}catch(e){console.error(e)}},820);return r}}
+// ---------- เกตเปิด (โลกปกติ → โลกฮันเตอร์) ----------
+const HW_NEWS0=['📺 ข่าวด่วนทุกช่อง: "วัตถุเรืองแสงไม่ทราบชนิดปรากฏกลางเมือง" รัฐบาลขอให้ประชาชนอยู่ในบ้าน','📉 ตลาดหุ้นทั่วโลกร่วงหนักที่สุดในประวัติศาสตร์ ตลาดปิดทำการสามวัน','🛒 ซูเปอร์มาร์เก็ตทุกแห่งของหมดเกลี้ยงภายในหกชั่วโมง คนต่อคิวซื้อน้ำดื่มยาวสองกิโลเมตร','⛪ กลุ่มศาสนาใหม่ผุดขึ้นนับสิบ ประกาศว่า "วันพิพากษามาถึงแล้ว"','✈️ สนามบินแน่นขนัด คนรวยเช่าเครื่องบินส่วนตัวหนีไปประเทศที่ยังไม่มีเกต — แต่ไม่มีประเทศไหนไม่มีเกต','📱 คลิป "มนุษย์ยิงไฟจากมือ" ยอดวิวทะลุพันล้านในวันเดียว','🎖️ รัฐบาลประกาศกฎอัยการศึก ทหารตั้งด่านรอบเกตทุกแห่ง','🏛️ สหประชาชาติประชุมฉุกเฉิน ตั้ง "สมาคมฮันเตอร์นานาชาติ"','💎 "หินเวทมนตร์" จากเกตแรกขายทอดตลาดได้ราคาเท่าตึกหนึ่งหลัง'];
+const HW_NEWS=['📺 อันดับฮันเตอร์ประจำสัปดาห์: แรงก์ S คนใหม่ของประเทศอายุแค่ 19 ปี','⚠️ เกตแตกที่ชานเมือง ผู้ประสบภัยสามร้อยคน กิลด์ใหญ่ถูกวิจารณ์ว่ามาช้า','💎 ราคาหินเวทมนตร์ร่วงหนัก หลังพบเกตเหมืองแร่ระดับ A','🏫 โรงเรียนฮันเตอร์เปิดรับสมัคร คนสมัครสามแสนคน รับสามพัน','🗳️ พรรคการเมืองใหม่เสนอให้ฮันเตอร์จ่ายภาษีเพิ่ม','🎬 ซีรีส์ชีวิตฮันเตอร์แรงก์ E ดังทั่วโลก','🏥 ประกันภัยเกตแตกขายดีที่สุดในประวัติศาสตร์ประกันภัย','🕵️ แก๊งค้าแก่นเวทมนตร์เถื่อนถูกจับได้ที่ท่าเรือ','🔴 เกตสีแดงปรากฏ ฮันเตอร์สิบสองคนติดอยู่ข้างในเป็นวันที่สาม'];
+MW_R.push(
+ {id:'gd1',w:99,cd:0,c:M=>M.hw===0&&M.gateY&&M.y>=M.gateY,go(M){M.hw=2;M.hwSince=MW_Y0+M.y;hwInit(M,false);const C=mwCC();
+  choice('🌀 ท้องฟ้าแตก',`บ่ายวันอังคารธรรมดาๆ ท้องฟ้าเหนือ${C.city}แตกร้าวเหมือนกระจก รอยแยกสีม่วงขนาดเท่าสนามฟุตบอลลอยนิ่งอยู่กลางอากาศ — เหมือนรอยแยกที่${M.native?'พ่อแม่เคยเขียนถึงในสมุดบันทึก':'คุณเคยเห็นก่อนข้ามยุคมาที่นี่'} · ทั้งเมืองหยุดนิ่ง แล้วเสียงกรีดร้องก็เริ่มขึ้น`,[
+  mwC('วิ่งไปใกล้รอยแยก ดูให้ชัด',()=>mwSay('👁️ ปราณที่ไหลออกมาจากรอยแยกหนาแน่นกว่ายุทธภพเสียอีก — และมีบางอย่างขยับอยู่ในนั้น ตำรวจไล่ทุกคนออกจากรัศมีห้ากิโลเมตร','myth',{qi:2,sec:3},true)),
+  mwC('พาคนรอบตัวหนีออกจากเมือง',()=>mwSay(`🚗 ถนนออกนอกเมืองติดยาวห้าสิบกิโลเมตร คุณพา${M.linMet?mwCC().lin+'และ':''}เพื่อนบ้านไปพักที่วัดนอกเมือง`,'good',{joy:-4,adapt:3})),
+  mwC('อยู่บ้าน เปิดข่าวดู',()=>mwSay('📺 ทุกช่องตัดเข้าข่าวด่วน ผู้ประกาศข่าวมือสั่นขณะอ่านข่าว','',{joy:-6}))]);keyAdd('เห็นเกตแรกเปิดขึ้นในโลก')}},
+ {id:'gd2',w:99,cd:0,c:M=>M.hw===2&&M.y>=(M.hwSince-MW_Y0)+1,go(M){choice('👹 เกตแตกครั้งแรก','หนึ่งเดือนต่อมา สัตว์ประหลาดตัวแรกออกมาจากรอยแยก — ตัวสูงสามเมตร ผิวเหมือนหิน กระสุนปืนไม่ระคายผิว มันกำลังเดินมาทางย่านที่คุณอยู่',[
+  mwC('ออกไปสู้มันต่อหน้าทุกคน',()=>mwBattle(M,{t:'👹 สัตว์ประหลาดจากเกต',txt:'มันคำรามจนกระจกตึกแตกทั้งแถว',foe:.4+Math.random()*.6,pub:1,win:()=>{M.H.def++;M.H.rp+=30;mwSay('⚔️ สัตว์ประหลาดล้มลงต่อหน้ากล้องนับร้อย ทั้งโลกเห็นคุณเป็น "มนุษย์คนแรกที่ล้มสัตว์จากเกต"','myth',{fame:3000000,sec:100,joy:10},true);M.fl.public=1},lose:()=>mwSay('🩸 คุณถูกเหวี่ยงกระเด็นไปชนกำแพง ทหารมาถึงพร้อมรถถังทันเวลา','bad',{joy:-6})})),
+  mwC('พาคนในย่านหลบลงใต้ดิน',()=>{M.H.def++;mwSay('🚇 คุณพาคนสองร้อยคนหลบลงสถานีรถไฟใต้ดิน ปิดประตูเหล็กไว้ทั้งคืน ไม่มีใครในกลุ่มนั้นเสียชีวิต','good',{joy:8})}),
+  mwC('หนี',()=>mwSay('🏃 คุณหนีออกมาได้ ข่าวเช้ารายงานผู้เสียชีวิตสี่สิบคนในย่านที่คุณเคยอยู่','bad',{joy:-10}))])}},
+ {id:'gd3',w:99,cd:0,c:M=>M.hw===2&&M.y>=(M.hwSince-MW_Y0)+2&&!M.H.aw,go(M){hwAwaken(M)}},
+ {id:'gd4',w:99,cd:0,c:M=>M.hw>0&&M.H&&M.H.r<0&&!M.H.no&&M.H.aw!=='none'&&((M.H.aw&&M.H.aw!=='none')||(!M.native&&((M.qi||0)>=2||(S.power||0)>=150)))&&S.age>=16&&(M.hw===1||M.y>=(M.hwSince-MW_Y0)+2),go(M){const r=hRank(hStr(M));choice('🏛️ สมาคมฮันเตอร์',`สมาคมฮันเตอร์เปิดให้ผู้มีพลังลงทะเบียน วัดพลังด้วยเครื่องตรวจวัดค่าเวทมนตร์ — ถ้าคุณลงทะเบียน ผลน่าจะออกมาราว <b>แรงก์ ${HR[r]}</b>`,[
+  mwC('ลงทะเบียนเป็นฮันเตอร์',()=>{M.H.r=r;mwSay(`🪪 เครื่องวัดค่าพลังร้องเตือนเสียงดัง — <b>แรงก์ ${HR[r]}</b> ${r>=4?'เจ้าหน้าที่ทั้งชั้นหันมามอง ภายในชั่วโมงเดียว กิลด์ใหญ่สามแห่งโทรมาหาคุณ':'คุณได้บัตรฮันเตอร์พร้อมรูปถ่ายหน้าตึง'}`,'epic',{sec:r>=4?20:6,joy:6},true);keyAdd('ลงทะเบียนเป็นฮันเตอร์แรงก์ '+HR[r]);if((M.id||0)<1){M.id=2;addFeed('ev','🪪 สมาคมฮันเตอร์ออกบัตรประจำตัวให้ — ตัวตนของคุณถูกต้องตามกฎหมายแล้ว','sum')}if(!focusOK(S.focus))S.focus='mwgate'}),
+  mwC('ปิดพลัง ลงทะเบียนเป็นแรงก์ E',()=>{M.H.r=0;M.H.hide=1;mwSay('🤫 คุณกดปราณให้เงียบที่สุดตอนวัด เครื่องขึ้นแรงก์ E เจ้าหน้าที่บอกว่า "แรงก์ E ส่วนใหญ่ทำงานขนของในเกตนะครับ"','',{sec:-6})},{s:'ซ่อนพลังจริง'}),
+  mwC('ไม่ลงทะเบียน ใช้ชีวิตแบบพลเรือน',()=>{M.H.no=1;mwSay('🏠 คุณเลือกเป็นพลเรือน ในโลกที่ฮันเตอร์คือฮีโร่ และพลเรือนคือคนที่ต้องหนีเมื่อเกตแตก','',{joy:-2})})])}},
+ {id:'hw0',w:99,cd:0,c:M=>M.hw===1&&M.y>=1&&!M.fl.hw0,go(M){M.fl.hw0=1;if(!M.native&&M.H&&!M.H.aw)M.H.aw='cult';mwSay(`🌀 ${M.native?'คุณเกิดมาในโลกที่มีเกต':'คุณเพิ่งรู้ว่ายุคนี้ไม่ได้มีแค่ตึกสูงกับรถไฟฟ้า'} — ทุกเช้าข่าวรายงาน "พยากรณ์เกต" เหมือนพยากรณ์อากาศ ทุกเมืองมีหลุมหลบภัย เด็กๆ ฝันอยากเป็นฮันเตอร์แรงก์ S${M.native?'':' · ปราณที่ไหลออกจากเกตทำให้อากาศในยุคนี้ไม่เบาบางอย่างที่คิด'}`,'myth',M.native?null:{qi:1.5},true)}});
+MW_FORCE.unshift([0,'gd1'],[0,'gd2'],[0,'gd3'],[0,'hw0'],[0,'gd4']);
+// ข่าวลือ/ความตื่นตระหนกของคนรอบตัว ช่วงปีแรกๆ หลังเกตเปิด
+{const _myN=mwYear;mwYear=function(){const r=_myN.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(M&&M.hw>0){const yrs=MW_Y0+M.y-M.hwSince;let t;if(M.hw===2&&yrs<=4){t=HW_NEWS0[Math.min(HW_NEWS0.length-1,yrs*2+R(0,1))];
+  const C=mwCC(),np=[M.linMet?`📱 ${C.lin}โทรมาถามทุกวันว่า "ลุงไม่เป็นไรใช่ไหม"`:null,M.fl.pa?`🍜 ${mwLoc('ป้าแดง')}ปิดร้านไปสองเดือน กลับมาเปิดใหม่พร้อมป้าย "ลดราคาให้ฮันเตอร์"`:null,M.fl.som?`👮 ${mwLoc('จ่าสมชาย')}ถูกเรียกตัวไปเฝ้าด่านรอบเกต ไม่ได้กลับบ้านมาสามเดือน`:null,M.bf?`🤝 ${esc(M.bf.n)}ตื่นพลังเป็นแรงก์ E วันนี้มาอวดว่าจุดไฟแช็กได้ด้วยนิ้ว`:null,'🏢 ที่ทำงานประกาศหยุดงานไม่มีกำหนด ทุกคนไปต่อคิวตรวจพลัง'].filter(Boolean);if(Math.random()<.7)addFeed('ev',ch(np),'sum')}
+ else if(Math.random()<.5)t=ch(HW_NEWS);if(t)addFeed('ev',`📰 ${t}`,'sum')}}catch(e){console.error(e)}return r}}
+// ---------- ตื่นพลัง / ระบบ (คนยุคนี้ เมื่อโลกกลายเป็นโลกฮันเตอร์) ----------
+const HW_SYS=['ระบบเลเวลอัป','ระบบภารกิจรายวัน','ระบบผู้สืบทอด']; // รายละเอียดแต่ละประเภทจะเพิ่มทีหลัง
+function hwAwaken(M){const cult=!M.native&&((M.qi||0)>=1||(S.power||0)>=100);if(cult){M.H.aw='cult';return mwSay('🌀 คนทั้งโลกแห่ไปตรวจหาพลังที่เพิ่งตื่นขึ้น — คุณไม่ต้องตรวจ ปราณที่ฝึกมาเจ็ดร้อยปีทำให้คุณเป็น "ผู้ตื่นพลัง" มาตั้งแต่ก่อนเกตจะเปิด','myth',{qi:1},true)}
+ const x=Math.random();if(x<.08){M.H.aw='sys';M.H.sys=ch(HW_SYS);M.H.pw=R(150,400);mwSay(`🟦 <span class="px">[ตรวจพบโฮสต์ที่เหมาะสม — ${M.H.sys} เริ่มทำงาน]</span> หน้าต่างสีฟ้าโปร่งแสงลอยอยู่ตรงหน้าคุณ มีแค่คุณที่มองเห็น เสียงที่ไม่มีเพศ ไม่มีอายุ พูดว่า "ยินดีต้อนรับ"`,'myth',{joy:10},true);keyAdd('ได้รับ'+M.H.sys)}
+ else if(x<.33){M.H.aw='aw';M.H.pw=R(100,900)+(M.native&&(M.qi||0)>=2?400:0);mwSay(`⚡ คืนนั้นคุณไข้ขึ้นสูงสามวัน พอตื่นขึ้นมา แก้วน้ำในมือแตกเพราะคุณบีบเบาเกินไป — <b>คุณตื่นพลังแล้ว</b>`,'epic',{joy:8},true);keyAdd('ตื่นพลังหลังเกตเปิด')}
+ else{M.H.aw='none';mwSay('😶 คุณไปต่อคิวตรวจพลังสามครั้ง ผลออกมาเหมือนเดิมทุกครั้ง: "ไม่ตรวจพบ" — คุณเป็นหนึ่งในเก้าสิบเปอร์เซ็นต์ของมนุษย์ที่ไม่ได้อะไรเลย','',{joy:-4})}}
+// คนที่เกิดในโลกฮันเตอร์: ตื่นพลังตอนอายุ 15+
+MW_R.push({id:'hwaw',w:99,cd:0,c:M=>M.hw===1&&M.native&&!M.H.aw&&S.age>=15,go(M){hwAwaken(M)}});MW_FORCE.unshift([0,'hwaw']);
+// ---------- ล่าเกต ----------
+const HG_NM=['ถ้ำก็อบลิน','ป่าหมาป่าเงา','สุสานโครงกระดูก','ทะเลทรายแมงป่องยักษ์','ปราสาทอัศวินมืด','รังมังกร'];
+function hGateRun(M,g,why){const st=hStr(M),gs=HR_T[g]*1.1+50,p=Math.max(.05,Math.min(.97,st/(st+gs)*1.25+(M.H.gu?.08:0)));const ok=Math.random()<p;const C=mwCC();
+ if(ok){const ess=R(1,3)*(g+1),mon=MW_MIN[M.cc||'th']*(.3+g*g*.8)*R(1,3);M.H.ess+=ess;M.H.cl++;M.H.rp+=10*(g+1);mwFx({mon:mwToB(mon,M),joy:2});addFeed('ev',`🗡️ ${why||'ล้างเกต'}แรงก์ ${HR[g]} สำเร็จ · แก่นเวทมนตร์ +${ess} · ขายหินเวทได้ ${mwLocal(mon,M)}`,'sum');return 1}
+ const over=g>M.H.r,die=over?.18*(g-M.H.r):.02;if(Math.random()<die){S.deathCause=`เสียชีวิตในเกตแรงก์ ${HR[g]} — ${ch(['ร่างไม่ได้กลับออกมา','กิลด์นำป้ายชื่อกลับมาให้ครอบครัว','เกตปิดลงพร้อมคุณอยู่ข้างใน'])}`;log(`☠️ <b>เกตแรงก์ ${HR[g]}</b> โหดร้ายเกินกว่าที่คิด…`,'bad',true);setTimeout(()=>{try{checkDeath()}catch(e){}},300);return 0}
+ S.hp=Math.max(5,Math.round(S.hp-S.maxHp*(.25+.1*Math.max(0,g-M.H.r))));mwFx({joy:-4});addFeed('ev',`🩸 ล้มเหลวในเกตแรงก์ ${HR[g]} — บาดเจ็บหนัก ต้องพักรักษาตัว`,'sum');return 0}
+{const i=MW_FOC.findIndex(f=>f[0]==='mwgate');if(i<0)MW_FOC.push(['mwgate','🗡️','ล่าเกต'])}
+{const _foH=focusOK;focusOK=function(k){if(k==='mwgate')return mwOn()&&hwOn(S.mw)&&S.mw.H&&S.mw.H.r>=0&&S.age>=16;return _foH.apply(this,arguments)}}
+{const _myG=mwYear;mwYear=function(){const foc=S&&S.focus;const r=_myG.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(M&&hwOn(M)&&M.H&&M.H.r>=0){
+ if(foc==='mwgate'){const n=R(2,4);for(let i=0;i<n&&S.alive;i++)hGateRun(M,Math.max(0,M.H.r-(Math.random()<.4?1:0)));if(M.H.gu){const sal=MW_MIN[M.cc||'th']*12*(.5+M.H.r*.6);mwFx({mon:mwToB(sal,M)});addFeed('ev',`🏢 เงินประจำจากกิลด์${esc(M.H.gu)} ${mwLocal(sal,M)}`,'sum')}}
+ if(M.H.ess>=5&&!M.H.hide&&Math.random()<.6){const u=Math.floor(M.H.ess/2);M.H.ess-=u;M.H.pw=(M.H.pw||0)+u*25;addFeed('ev',`💠 ดูดซับแก่นเวทมนตร์ ${u} ชิ้น — พลังเพิ่มขึ้น`,'sum')}
+ const nr=hRank(hStr(M));if(!M.H.hide&&nr>M.H.r&&M.H.rp>=40*(M.H.r+1)){M.H.r=nr;M.H.rp=0;log(`📈 <b>ประเมินแรงก์ใหม่: แรงก์ ${HR[nr]}</b> — ชื่อของคุณขึ้นในอันดับฮันเตอร์ของประเทศ`,'epic',true);keyAdd('ฮันเตอร์แรงก์ '+HR[nr]);mwFx({fame:20000*(nr+1),sec:4})}
+ if(M.H.aw==='sys'){M.H.pw+=R(10,40)}}}catch(e){console.error(e)}return r}}
+MW_R.push(
+ {id:'hg0',w:8,cd:2,c:M=>hwOn(M)&&M.H&&M.H.r>=0&&S.age>=16,go(M){const r=M.H.r,ops=[];for(let g=Math.max(0,r-1);g<=Math.min(5,r+2);g++)ops.push(mwC(`🌀 เกตแรงก์ ${HR[g]} · ${HG_NM[g]}`,()=>hGateRun(M,g),{s:g>r?`เกินแรงก์คุณ · เสี่ยงตาย ${Math.round(18*(g-r))}%`:g<r?'ปลอดภัย · รางวัลน้อย':'สมน้ำสมเนื้อ'}));
+  choice('🗺️ เลือกเกตที่จะบุก',`สมาคมฮันเตอร์ประกาศเกตใหม่ในเขตของคุณ · แรงก์ของคุณ <b>${HR[r]}</b> · พลัง ~${fmt(Math.round(hStr(M)))}`,ops.slice(0,4))}},
+ {id:'hg1',w:7,cd:0,c:M=>hwOn(M)&&M.H&&M.H.r>=1&&!M.H.gu,go(M){const G=[['กิลด์มังกรทอง','ใหญ่ที่สุดในประเทศ เงินเดือนสูง แต่ต้องทำตามคำสั่งทุกอย่าง'],['กิลด์ดาบเงา','กลาง เน้นเกตอันตราย แบ่งรางวัลยุติธรรม'],['กิลด์เล็กของคนในซอย','สมาชิกห้าคน เงินน้อยแต่เหมือนครอบครัว']];
+  choice('🏢 กิลด์มาชวน','หลังผลงานล่าสุด กิลด์สามแห่งส่งคนมาชวนเข้าร่วม',G.map(g=>mwC(`${g[0]}`,()=>{M.H.gu=g[0];mwSay(`🏢 คุณเข้าร่วม<b>${g[0]}</b> — ${g[1]}`,'good',{joy:5})},{s:g[1]})).concat([mwC('อยู่แบบฮันเตอร์อิสระ',()=>mwSay('🗡️ คุณเลือกเดินคนเดียว เหมือนสมัยเป็นจอมยุทธ์พเนจร','',{joy:2}))]))}},
+ {id:'hg2',w:6,cd:5,c:M=>hwOn(M)&&M.y>=1,go(M){const civ=!M.H||M.H.r<0;choice('🚨 เกตแตกกลางเมือง',`เกตแรงก์ ${HR[Math.min(5,(M.H&&M.H.r>=0?M.H.r:0)+1)]} ในย่านใกล้บ้านแตก สัตว์ประหลาดทะลักออกมาก่อนกิลด์จะมาถึง${civ?' — คุณไม่ได้เป็นฮันเตอร์':''}`,[
+  mwC('เข้าไปปกป้องผู้คน',()=>mwBattle(M,{t:'🚨 เกตแตก',txt:'สัตว์ประหลาดฝูงหนึ่งไล่ล่าคนบนถนน',foe:.5+Math.random()*.8,pub:1,win:()=>{if(M.H){M.H.def++;M.H.rp+=25}mwSay('🛡️ คุณยืนขวางฝูงสัตว์ประหลาดไว้จนกิลด์มาถึง ผู้คนบนถนนรอดทั้งหมด','epic',{fame:150000,joy:10,mon:mwToB(MW_MIN[M.cc||'th']*3,M)},true)},lose:()=>mwSay('🩸 คุณถูกฝูงสัตว์ประหลาดรุมจนล้ม ฮันเตอร์จากกิลด์ลากคุณออกมาได้ทันเวลา','bad',{joy:-6})})),
+  mwC('พาคนหลบเข้าหลุมหลบภัย',()=>{if(M.H)M.H.def++;mwSay('🚇 คุณพาเด็กและคนแก่ลงหลุมหลบภัยได้สามสิบคน','good',{joy:6})}),
+  mwC('หนีให้เร็วที่สุด',()=>mwSay('🏃 คุณรอด บ้านของคุณไม่รอด',(mwAst(M).h===2?'bad':''),{joy:-8,mon:-mwToB(MW_MIN[M.cc||'th']*(mwAst(M).h===2?6:1),M)}))])}},
+ {id:'hg3',w:6,cd:0,c:M=>hwOn(M)&&M.H&&M.H.r>=1&&(M.lives||[]).length,go(M){const l=ch(M.lives);mwSay(`🌀 เกตใหม่แรงก์ ${HR[Math.min(5,M.H.r+1)]} ถูกตั้งชื่อตามจารึกที่ทางเข้า: <b>"สุสานของ${esc(l.n)}"</b> — ข้างในเป็นสำนักโบราณที่คุณจำได้ทุกตารางนิ้ว สัตว์ประหลาดสวมชุดศิษย์สำนักที่ผุพัง และบนบัลลังก์คือร่างของคุณในชาติก่อน${l.e?' — '+esc(l.e):''}`,'myth',{joy:-2},true);setTimeout(()=>{if(S&&S.mw)hGateRun(S.mw,Math.min(5,M.H.r+1),'ล้างเกต "สุสานของ'+mwTxt(l.n)+'"')},900)}},
+ {id:'hg4',w:5,cd:7,c:M=>hwOn(M)&&M.H&&M.H.r>=0,go(M){choice('🔴 เกตสีแดง',`เกตที่คุณเพิ่งเข้าไปเปลี่ยนเป็นสีแดง — ทางออกปิดลง ข้างในเป็นแดนหิมะที่ไม่มีวันสิ้นสุด ทีมของคุณเหลือห้าคน`,[
+  mwC('นำทีมฝ่าออกไปหาบอส',()=>{const ok=hGateRun(M,Math.min(5,M.H.r+1),'ฝ่าเกตสีแดง');if(ok)mwSay('❄️ คุณนำทีมออกมาได้ครบทุกคน หลังติดอยู่สิบสองวัน','epic',{fame:80000,joy:8},true)}),
+  mwC('ตั้งค่ายรอทีมกู้ภัย',()=>{if(Math.random()<.6)mwSay('⛺ ทีมกู้ภัยเจาะเข้ามาได้ในวันที่ยี่สิบ สองคนในทีมไม่รอด','bad',{joy:-10});else hGateRun(M,Math.min(5,M.H.r+1),'เอาตัวรอดในเกตสีแดง')})])}},
+ {id:'hg5',w:5,cd:6,c:M=>hwOn(M)&&M.H&&M.H.r<0,go(M){mwSay(ch(['🏠 ค่าเช่าห้องใกล้เกตถูกลงครึ่งหนึ่ง คุณย้ายมาอยู่ใกล้รอยแยกเพราะเงินไม่พอ — ทุกคืนได้ยินเสียงคำรามแผ่วๆ','🛡️ ประกันภัยเกตแตกขึ้นราคาอีกเท่าตัว เพื่อนบ้านคุณยกเลิกประกันเพราะจ่ายไม่ไหว','📺 คุณนั่งดูถ่ายทอดสดฮันเตอร์แรงก์ S ล้างเกต แล้วนึกถึงสนามประลองในยุทธภพ','🎒 เด็กๆ ในซอยเล่น "ฮันเตอร์กับสัตว์ประหลาด" แทนตำรวจจับผู้ร้าย']),'',{joy:-1})}},
+ {id:'hg6',w:7,cd:0,c:M=>hwOn(M)&&M.H&&M.H.r>=3&&M.y>=8,go(M){choice('🌑 เกตแรงก์ S ระดับชาติ','เกตแรงก์ S ที่ใหญ่ที่สุดในประวัติศาสตร์เปิดกลางมหาสมุทร คลื่นปราณทำให้ทุกเกตในประเทศสั่นไหว รัฐบาลเรียกฮันเตอร์แรงก์สูงทุกคนเข้าร่วมปฏิบัติการ',[
+  mwC('เข้าร่วมปฏิบัติการ',()=>{const ok=hGateRun(M,5,'ปฏิบัติการเกตแรงก์ S');if(ok){mwSay('🌅 เกตแรงก์ S ปิดลง ชื่อของคุณอยู่ในรายชื่อผู้กอบกู้ชาติ','myth',{fame:2000000,joy:15},true);keyAdd('ร่วมปิดเกตแรงก์ S')}}),
+  mwC('ปฏิเสธ',()=>mwSay('📵 สมาคมฮันเตอร์ปรับแรงก์ของคุณลงหนึ่งขั้นฐานปฏิเสธคำสั่งฉุกเฉิน','bad',{joy:-4},M.H.r=Math.max(0,M.H.r-1)))])}},
+ {id:'hg7',w:6,cd:3,c:M=>hwOn(M)&&M.H&&M.H.aw==='sys',go(M){mwSay(`🟦 <span class="px">[${esc(M.H.sys)}: ภารกิจพิเศษ — ล้างเกตให้สำเร็จหนึ่งแห่งภายในปีนี้ · รางวัล: ค่าสถานะ +]</span> ไม่มีใครในโลกเห็นหน้าต่างนี้นอกจากคุณ`,'myth',null);if(M.H.r>=0)setTimeout(()=>{if(S&&S.mw&&hGateRun(S.mw,S.mw.H.r,'ภารกิจระบบ'))S.mw.H.pw+=R(80,200)},900)}});
+MW_CHAIN.unshift('gd1','gd2','gd3','hwaw','gd4');
+// ---------- HUD / ฉาก ----------
+{const _rnHW=render;render=function(){const r=_rnHW.apply(this,arguments);try{if(mwOn()&&hwOn(S.mw)){const h=$('mwHud'),M=S.mw,H=M.H||{};if(h&&!h.querySelector('.mwHW'))h.insertAdjacentHTML('afterbegin',`<div class="mwJob mwHW" style="border:none;margin:0 0 6px;padding:0">🌀 <b>โลกฮันเตอร์</b> · ${H.r>=0?`แรงก์ <b>${HR[H.r]}</b>${H.hide?' (ซ่อนพลัง)':''} · แก่น ${H.ess} · ล้างเกต ${H.cl}${H.gu?' · '+esc(H.gu):''}`:H.no?'พลเรือน':H.aw==='none'?'ไม่มีพลัง':'ยังไม่ลงทะเบียน'}${H.aw==='sys'?' · 🟦 '+esc(H.sys):''}</div>`)}}catch(e){}return r}}
+function mwSkin3(c,t){const M=S.mw;if(!hwOn(M))return;c.save();c.setTransform(3,0,0,3,0,0);const cx=100,cy=31,R0=10+Math.sin(t*.05)*1.2;c.globalCompositeOperation='lighter';
+ for(let i=0;i<3;i++){c.globalAlpha=.25-.06*i;c.strokeStyle=['#c050ff','#7a40ff','#ff40c0'][i];c.lineWidth=1.4;c.beginPath();c.ellipse(cx,cy,R0+i*2.5,R0*.55+i*1.4,Math.sin(t*.02)*.2,0,7);c.stroke()}
+ const g=c.createRadialGradient(cx,cy,0,cx,cy,R0);g.addColorStop(0,'rgba(255,220,255,.55)');g.addColorStop(.5,'rgba(150,60,255,.35)');g.addColorStop(1,'rgba(80,0,160,0)');c.fillStyle=g;c.globalAlpha=1;c.beginPath();c.ellipse(cx,cy,R0,R0*.55,0,0,7);c.fill();
+ for(let i=0;i<8;i++){const a=t*.04+i*.8;c.fillStyle='#e0b0ff';c.globalAlpha=.6;c.fillRect(cx+Math.cos(a)*(R0+4),cy+Math.sin(a)*(R0*.55+3),.8,.8)}c.restore()}
+{const _mdHW=mwDraw;mwDraw=function(c,t){const r=_mdHW.apply(this,arguments);try{if(mwOn())mwSkin3(c,t)}catch(e){}return r}}
+// แอดมินทดสอบ
+{const _miHW=mwInfo;mwInfo=function(){_miHW.apply(this,arguments);try{const M=S.mw,b=$('modal').querySelector('.pbtn');if(b)b.insertAdjacentHTML('beforebegin',`<p class="tag2">โลก: ${M.hw===1?'🌀 โลกฮันเตอร์ (มีเกตตั้งแต่แรก)':M.hw===2?'🌀 กลายเป็นโลกฮันเตอร์ปี '+M.hwSince:M.gateY?'โลกปกติ · เกตจะเปิดในปีที่ '+M.gateY+' (สุ่มได้ 1%)':'โลกปกติตลอดชีวิต'}</p>${M.hw?'':`<button class="gbtn" style="width:100%;margin-bottom:6px" onclick="S.mw.gateY=S.mw.y+1;closeM();toast('เกตจะเปิดปีหน้า (ทดสอบ)')">🌀 บังคับให้เกตเปิดปีหน้า (ทดสอบแอดมิน)</button>`}`)}catch(e){}}}
+
+
+// ===================== ยุคปัจจุบัน: เควสแบบใหม่ — วิเคราะห์โลก/สถานการณ์ แล้วให้เควสที่เข้ากับชีวิตตอนนี้ =====================
+// แต่ละแม่แบบ: [id, เงื่อนไขว่าเข้ากับสถานการณ์ไหม, สร้างเควส(M)->{t, v:ฟังก์ชันวัดค่าปัจจุบัน(key), tgt, dl, rw}]
+const MWQ_V={money:M=>S.money||0,lv:M=>M.job?M.job.lv:-1,job:M=>M.job?1:0,qi:M=>M.qi||0,sec:M=>-(M.sec||0),fame:M=>M.fame||0,stones:M=>M.stones||0,vis:M=>Object.keys(M.vis||{}).length,id:M=>M.id||0,dis:M=>M.dis||0,home:M=>(M.ast||{}).h||0,lin:M=>M.lin||0,cl:M=>M.H?M.H.cl:0,hr:M=>M.H?M.H.r:-1,ess:M=>M.H?M.H.ess+(M.H.pw||0)/25:0,gu:M=>M.H&&M.H.gu?1:0,def:M=>M.H?M.H.def:0,kids:M=>(M.kids||[]).length,save:M=>(M.ast||{}).save||0};
+const MWQ_T=[
+ ['save',M=>S.age>=18,M=>{const g=mwToB(mwYearCost(M).yr*1.5,M);return{t:`เก็บเงินเพิ่มอีก ${mwLocal(g*mwCC().rate,M)}`,v:'money',tgt:(S.money||0)+g,dl:3,rw:{joy:6,mon:Math.round(g*.1)}}}],
+ ['job',M=>!M.job&&S.age>=18&&S.age<70,M=>({t:'หางานประจำให้ได้',v:'job',tgt:1,dl:2,rw:{joy:5,adapt:4}})],
+ ['promo',M=>M.job&&M.job.lv<2,M=>({t:`เลื่อนตำแหน่งในงาน${mwTxt(mwJP(MW_JOBS[M.job.id],M)[0]).split(' ')[0]}`,v:'lv',tgt:M.job.lv+1,dl:4,rw:{joy:8,mon:mwToB(MW_MIN[M.cc||'th']*2,M)}})],
+ ['qi',M=>mwQi(M)<5,M=>({t:`สะสมปราณเพิ่มอีก 3 (ตอนนี้ ${M.qi})`,v:'qi',tgt:(M.qi||0)+3,dl:3,rw:{qi:1,joy:4}})],
+ ['hide',M=>(M.sec||0)>=40&&!M.fl.public,M=>({t:`ลดความลับรั่วให้เหลือต่ำกว่า ${Math.round(M.sec-15)}%`,v:'sec',tgt:-(M.sec-15),dl:3,rw:{joy:6}})],
+ ['fame',M=>(M.fame||0)>=10000&&(M.fame||0)<5e6,M=>({t:`เพิ่มผู้ติดตามเป็น ${fmt(M.fame*2)}`,v:'fame',tgt:M.fame*2,dl:3,rw:{mon:mwToB(MW_MIN[M.cc||'th']*3,M),joy:4}})],
+ ['stone',M=>(M.qi||0)>=2,M=>({t:'หาหินปราณให้ได้อีก 1 ก้อน',v:'stones',tgt:(M.stones||0)+1,dl:4,rw:{qi:2}})],
+ ['trv',M=>(M.id||0)>=1&&S.age<85,M=>({t:'ไปเที่ยวประเทศใหม่ 1 ประเทศ',v:'vis',tgt:Object.keys(M.vis||{}).length+1,dl:4,rw:{joy:8,adapt:3}})],
+ ['id',M=>(M.id||0)===0&&!M.native,M=>({t:'หาเอกสารตัวตนให้ได้',v:'id',tgt:1,dl:3,rw:{joy:6,adapt:5}})],
+ ['dis',M=>M.y>=5&&mwQi(M)>=1,M=>({t:'รับศิษย์ในยุคนี้เพิ่ม 1 คน',v:'dis',tgt:(M.dis||0)+1,dl:5,rw:{joy:8,qi:1}})],
+ ['home',M=>(M.ast||{}).h<2&&(M.id||0)>=1&&(S.money||0)>mwToB(mwCO(M).home[1]*.2,M),M=>({t:'ซื้อบ้านเป็นของตัวเอง',v:'home',tgt:2,dl:5,rw:{joy:10}})],
+ ['lin',M=>M.linMet&&M.lin<85,M=>({t:`ใช้เวลากับ${mwCC().lin}ให้ผูกพันกันมากขึ้น`,v:'lin',tgt:Math.min(100,M.lin+15),dl:3,rw:{joy:6}})],
+ ['ret',M=>S.age>=50&&((M.ast||{}).save||0)<mwToB(mwYearCost(M).yr*5,M),M=>({t:'เก็บเงินออมเกษียณให้ได้ 5 ปีของค่าครองชีพ',v:'save',tgt:mwToB(mwYearCost(M).yr*5,M),dl:8,rw:{joy:8}})],
+ // โลกฮันเตอร์
+ ['gate',M=>hwOn(M)&&M.H&&M.H.r>=0,M=>({t:'ล้างเกตให้สำเร็จอีก 3 แห่ง',v:'cl',tgt:M.H.cl+3,dl:2,rw:{mon:mwToB(MW_MIN[M.cc||'th']*(2+M.H.r*2),M),joy:5}})],
+ ['rank',M=>hwOn(M)&&M.H&&M.H.r>=0&&M.H.r<5&&!M.H.hide,M=>({t:`ขึ้นเป็นฮันเตอร์แรงก์ ${HR[M.H.r+1]}`,v:'hr',tgt:M.H.r+1,dl:5,rw:{joy:12,fame:50000}})],
+ ['guild',M=>hwOn(M)&&M.H&&M.H.r>=1&&!M.H.gu,M=>({t:'เข้าร่วมกิลด์ฮันเตอร์',v:'gu',tgt:1,dl:3,rw:{joy:5}})],
+ ['def',M=>hwOn(M),M=>({t:'ปกป้องผู้คนจากเกตแตกให้ได้ 1 ครั้ง',v:'def',tgt:(M.H?M.H.def:0)+1,dl:4,rw:{joy:10,fame:30000}})],
+ ['reg',M=>hwOn(M)&&M.H&&M.H.r<0&&!M.H.no&&M.H.aw&&M.H.aw!=='none',M=>({t:'ลงทะเบียนกับสมาคมฮันเตอร์',v:'hr',tgt:0,dl:2,rw:{joy:4}})]];
+function mwQGen(M){M.qs=M.qs||[];const have=new Set(M.qs.map(q=>q.k)),L=MWQ_T.filter(t=>!have.has(t[0])&&!(M.qDone&&M.qDone[t[0]]>=M.y-2)&&(()=>{try{return t[1](M)}catch(e){return false}})());
+ const hwFirst=L.filter(t=>['gate','rank','guild','def','reg'].includes(t[0]));let n=0;
+ while(M.qs.length<3&&L.length&&n++<6){const pool=hwOn(M)&&hwFirst.length&&Math.random()<.6?hwFirst:L,t=pool[Math.floor(Math.random()*pool.length)];[L,hwFirst].forEach(a=>{const i=a.indexOf(t);if(i>=0)a.splice(i,1)});
+  try{const q=t[2](M);q.k=t[0];q.dl=M.y+q.dl;M.qs.push(q);addFeed('ev',`📋 เควสใหม่: <b>${esc(q.t)}</b> <span class="tag2">(ภายใน ${q.dl-M.y} ปี)</span>`,'sum')}catch(e){}}}
+function mwQCheck(M){if(!M.qs)return;M.qs=M.qs.filter(q=>{let cur=0;try{cur=MWQ_V[q.v](M)}catch(e){}
+ if(cur>=q.tgt){mwFx(q.rw||{});(M.qDone=M.qDone||{})[q.k]=M.y;M.qN=(M.qN||0)+1;log(`📋 <b>เควสสำเร็จ:</b> ${esc(q.t)}`,'good',true);return false}
+ if(M.y>q.dl){addFeed('ev',`📋 เควสหมดเวลา: ${esc(q.t)}`,'sum');joy(-2);(M.qDone=M.qDone||{})[q.k]=M.y;return false}return true})}
+{const _myQ=mwYear;mwYear=function(){const r=_myQ.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(M&&S.age>=12){mwQCheck(M);if(M.y>=2)mwQGen(M)}}catch(e){console.error(e)}return r}}
+function openMwQuests(){const M=S.mw;if(!M)return;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📋 เควสในยุคนี้</h3><p class="tag2">เควสถูกสร้างจากสถานการณ์ตอนนี้ของคุณ${hwOn(M)?' และโลกฮันเตอร์':''} · สำเร็จแล้ว ${M.qN||0} เควส</p><div class="jobL">${(M.qs||[]).map(q=>{let cur=0;try{cur=MWQ_V[q.v](M)}catch(e){}const sh=q.v==='money'||q.v==='save'?v=>mwLocal(v*mwCC().rate,M):q.v==='sec'?v=>Math.round(-v)+'%':q.v==='hr'?v=>v>=0?'แรงก์ '+HR[v]:'ยังไม่ลงทะเบียน':v=>fmt(Math.round(v*10)/10);return `<div class="jobC"><b>${esc(q.t)}</b><div class="tag2">ตอนนี้ ${sh(cur)} · เป้า ${sh(q.tgt)} · เหลือ ${Math.max(0,q.dl-M.y)} ปี</div></div>`}).join('')||'<p class="tag2">ยังไม่มีเควส — เควสใหม่จะมาทุกปี</p>'}</div><button class="gbtn" style="width:100%;margin-top:8px" onclick="closeM();openGoals()">🎯 ดูเป้าหมายชีวิต</button>`,'mwq')}
+// ปุ่ม 📋 ด้านล่าง → เควสยุคนี้ · เมนูเพิ่ม 📋 เควส
+{const _rnQB=render;render=function(){const r=_rnQB.apply(this,arguments);try{if(mwOn()){const b=document.querySelector('#game button[data-mwo="openQuests()"]');if(b){b.setAttribute('onclick','openMwQuests()');b.innerHTML='📋'}}}catch(e){}return r}}
+{const _omQ=openMenu;openMenu=function(){const r=_omQ.apply(this,arguments);try{if(mwOn()){const gd=$('modal').querySelector('.mgrid');if(gd&&!gd.querySelector('.mwQB')){const M=S.mw,a=gd.querySelector('.mwMB');const h=`<button class="opt mwMB mwQB" onclick="openMwQuests()">📋 เควส<small>${(M.qs||[]).length} เควสที่ทำอยู่</small></button>`;if(a)a.insertAdjacentHTML('beforebegin',h);else gd.insertAdjacentHTML('afterbegin',h)}}}catch(e){}return r}}
+// ซ่อนปุ่ม "ล่าเกต" ถ้ายังไม่ได้เป็นฮันเตอร์
+{const _rnFG=render;render=function(){const r=_rnFG.apply(this,arguments);try{if(mwOn()&&!focusOK('mwgate')){const b=document.querySelector('#focus [onclick*="mwgate"]');if(b)b.remove()}}catch(e){}return r}}
+
 </script>
 </body>
 </html>
