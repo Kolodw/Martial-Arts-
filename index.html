@@ -4945,7 +4945,7 @@ function meLook(){
 }
 const shd=(c,a)=>{if(!c||c[0]!=='#'||c.length<7)return c;const n=parseInt(c.slice(1,7),16),r=n>>16,gg=n>>8&255,b=n&255;const f=v=>Math.max(0,Math.min(255,Math.round(a<0?v*(1+a):v+(255-v)*a)));return '#'+[f(r),f(gg),f(b)].map(v=>v.toString(16).padStart(2,'0')).join('')};
 const Q=(x,y,w,h,c)=>P(x/3,y/3,w/3,h/3,c);
-function person(x,y,o,pose='stand'){if(o&&o===curMe){meX=x;meY=y}if(o&&o.beast){try{drawBeast(g,o.beast,Math.round(x)-16,Math.round(y)-26,1,frame)}catch(e){}return}x=Math.round(x);y=Math.round(y);g.save();g.translate(x,y);g.scale(1.5,1.5);g.translate(-x,-y);try{person0(x,y,o,pose)}finally{g.restore()}}
+function person(x,y,o,pose='stand'){if(o&&o===curMe){meX=x;meY=y}if(o&&o.beast){try{drawBeast(g,o.beast,Math.round(x)-16,Math.round(y)-26,1,frame)}catch(e){}return}x=Math.round(x);y=Math.round(y);const ps0=PS,k=1.5,q=(k-1)*ps0,ax=Math.round(x*q)/q,ay=Math.round(y*q)/q;g.save();g.translate(ax,ay);g.scale(k,k);g.translate(-ax,-ay);PS=ps0*k;try{person0(x,y,o,pose)}finally{PS=ps0;g.restore()}}
 function person0(x,y,o,pose){
  const X=Math.round(x*3),Y=Math.round(y*3),child=o.age<12,T=frame*.15;
  const sd=(o.seed||((o.robe||'').length*7+(o.hair||'').length))%10;
@@ -14172,12 +14172,12 @@ const nb=(k,i)=>` <button onclick="nameAsk('${k}',${i})" style="font-size:12px;p
 @keyframes gaF{from{opacity:0}}@keyframes gaR{to{transform:rotate(360deg)}}@keyframes gaP{from{transform:scale(3);opacity:0}}@keyframes gaU{from{transform:translateY(20px);opacity:0}}@keyframes gaX{to{opacity:0}}`;document.head.appendChild(css);
  window.gachaShow=function(L){if(!L.length)return;document.querySelectorAll('#gachaO').forEach(x=>x.remove());const [g,c]=L[0].gr;const o=document.createElement('div');o.id='gachaO';o.style.setProperty('--gc',c);
   o.innerHTML=`<div class="ray"></div><div class="fl"></div><div class="gr">${g}</div>${L.map(x=>`<div class="nm"><span style="color:${x.gr[1]};font-size:14px">[${x.gr[0]}]</span> ${esc(x.k)} · ${esc(x.n)}</div><div class="sb">${esc(x.d||'')}</div>`).join('')}<div class="tp">แตะเพื่อดำเนินต่อ</div>`;
-  o.onclick=()=>o.remove();document.body.appendChild(o);try{sfx('rare');vib(120)}catch(e){}setTimeout(()=>{try{o.remove()}catch(e){}},7000)};
+  o.onclick=()=>o.remove();{const iv=setInterval(()=>{const bs=$('birth');if(!bs||!bs.classList.contains('on')){clearInterval(iv);o.remove()}if(!o.isConnected)clearInterval(iv)},300)}document.body.appendChild(o);try{sfx('rare');vib(120)}catch(e){}setTimeout(()=>{try{o.remove()}catch(e){}},7000)};
  {const _d=doRoll;doRoll=function(first){const r=_d.apply(this,arguments);try{if(!roll)return r;const L=[],fp=roll.f.p,tp=roll.t.p,fg=GR(fp),tg=GR(tp);
    if(roll.f.v.oid||fg[0]==='UR'||fg[0]==='SSR')L.push({k:'ชาติกำเนิด',n:roll.f.v.n,d:roll.f.v.d,gr:fg,p:fp});
    if(roll.t.v.id||tg[0]==='UR'||tg[0]==='SSR')L.push({k:'พรสวรรค์',n:roll.t.v.n,d:roll.t.v.d,gr:tg,p:tp});
    L.sort((a,b)=>a.p-b.p);const ck=roll.f.v.oid&&roll.t.v.id&&COMBO[roll.f.v.oid+'+'+roll.t.v.id];if(ck)L.unshift({k:'🌟 คอมโบลับ',n:ck[0],d:ck[1],gr:['UR','#ff3df0'],p:0});
-   const n=document.querySelectorAll('#traits .trait').length;if(L.length)setTimeout(()=>{if($('traits')&&document.querySelector('#traits'))gachaShow(L)},220*n+300);
+   const n=document.querySelectorAll('#traits .trait').length;if(L.length){const rr=roll;setTimeout(()=>{const bs=$('birth');if(bs&&bs.classList.contains('on')&&roll===rr)gachaShow(L)},220*n+300)}
    const lk=Object.keys(ULK).filter(k=>!oUnl(k));if(lk.length)$('traits').insertAdjacentHTML('beforeend',`<div class="tag2" style="margin:6px 4px;font-size:11px;opacity:.75">🔒 ชาติกำเนิดลับที่ยังไม่ปลดล็อก ${lk.length} แบบ — ${lk.map(k=>ULK[k].t).join(' · ')}</div>`)}catch(e){console.error(e)}return r}}
  // ---- ปลดล็อกชาติลับ ----
  {const _c=checkDeath;checkDeath=function(){const r=_c.apply(this,arguments);try{if(S&&!S.alive&&!S._oc){S._oc=1;const o=OUN(),b={};for(const k in ULK)b[k]=oUnl(k);if(S.beastMode||S.family&&S.family.beast)o.beast=(o.beast||0)+1;o.rmax=Math.max(o.rmax||0,S.xian||S.xt?7:realmIdx());o.amax=Math.max(o.amax||0,S.age);if(S.flags&&S.flags.rb_capital)o.cap=1;ounSet(o);
@@ -14379,6 +14379,18 @@ const nb=(k,i)=>` <button onclick="nameAsk('${k}',${i})" style="font-size:12px;p
 {const HS_F=[0,0,3,1,2,5,6,7,6,3],HS_M=[0,0,0,4,1,3,8,8,4,0];window.hsAuto=(seed,g)=>{const L=g==='หญิง'?HS_F:HS_M;return L[Math.abs((seed|0)*7+3)%L.length]};
  {const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{if(o&&!(S.look&&S.look.hs!=null))o.hs=hsAuto(S.seed,S.gender)}catch(e){}return o}}
  {const _rl=rollLook;rollLook=function(r){const o=_rl.apply(this,arguments);try{if(o&&!(r&&r.look&&r.look.hs!=null))o.hs=hsAuto(r.seed,r.g&&r.g.v&&r.g.v.n)}catch(e){}return o}}}
+
+// ===== ระยะ 3: สัตว์อสูรทุกหน้ามีเส้นขอบ + แสงเงาแบบเดียวกับตัวละคร (โหมดสวยสุด) =====
+{const bOff=document.createElement('canvas'),bSil=document.createElement('canvas');let bIn=0;
+ const _db=drawBeast;drawBeast=function(c,b,ox,oy,s,fr){s=s||1;if(fxQ<2||bIn||_fxIn||!c||!c.getTransform||!isFinite(ox)||!isFinite(oy))return _db.apply(this,arguments);
+  try{const M=c.getTransform(),r=Math.max(1,Math.min(6,Math.round(Math.hypot(M.a,M.b))||1)),bx=ox-14*s,by=oy-22*s,bw=72*s,bh=58*s,W=Math.ceil(bw*r),H=Math.ceil(bh*r);if(W>1600||H>1600||W<4)return _db.apply(this,arguments);
+   if(bOff.width!==W||bOff.height!==H){bOff.width=W;bOff.height=H;bSil.width=W;bSil.height=H}
+   const oc=bOff.getContext('2d');oc.setTransform(1,0,0,1,0,0);oc.globalCompositeOperation='source-over';oc.globalAlpha=1;oc.clearRect(0,0,W,H);oc.setTransform(r,0,0,r,-bx*r,-by*r);oc.imageSmoothingEnabled=false;
+   bIn=1;let out;try{out=_db.call(this,oc,b,ox,oy,s,fr)}finally{bIn=0}
+   oc.setTransform(1,0,0,1,0,0);oc.globalCompositeOperation='source-atop';const lg=oc.createLinearGradient(0,0,W,H);lg.addColorStop(0,'rgba(255,246,220,.14)');lg.addColorStop(.5,'rgba(255,255,255,0)');lg.addColorStop(1,'rgba(24,10,48,.26)');oc.fillStyle=lg;oc.fillRect(0,0,W,H);oc.globalCompositeOperation='source-over';
+   const sc=bSil.getContext('2d');sc.setTransform(1,0,0,1,0,0);sc.globalCompositeOperation='source-over';sc.clearRect(0,0,W,H);sc.drawImage(bOff,0,0);sc.globalCompositeOperation='source-in';sc.fillStyle='rgba(22,16,34,.92)';sc.fillRect(0,0,W,H);sc.globalCompositeOperation='source-over';
+   const sm=c.imageSmoothingEnabled;c.imageSmoothingEnabled=false;const d=Math.max(.5,s*.5);
+   c.drawImage(bSil,bx-d,by,bw,bh);c.drawImage(bSil,bx+d,by,bw,bh);c.drawImage(bSil,bx,by-d,bw,bh);c.drawImage(bSil,bx,by+d,bw,bh);c.drawImage(bOff,bx,by,bw,bh);c.imageSmoothingEnabled=sm;return out}catch(e){bIn=0;return _db.apply(this,arguments)}}}
 
 </script>
 </body>
