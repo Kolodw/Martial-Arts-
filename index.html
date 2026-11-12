@@ -6277,7 +6277,7 @@ try{Object.assign(I18N.d,{'ก่อนเกิดใหม่':'Before rebirth
 const RS_SUB=['ระดับต่ำ','ระดับกลาง','ระดับสูง','ใกล้เลื่อนขั้น','สมบูรณ์'],RS_PFX=['เทพ','ราชา','บรรพกาล','ราชัน','นิรันดร์'],RS_G=1.27,RS_MAX=44;
 function postP(L){return REALMS[7].p*Math.pow(RS_G,L+1)}
 function postRaw(){const top=REALMS[7].p,p=total();if(p<postP(0))return -1;return Math.min(RS_MAX,Math.floor(Math.log(p/top)/Math.log(RS_G))-1)}
-function postLv(){if(!S||S.beastMode||realmIdx()<7||S.pcap==null)return -1;return Math.min(postRaw(),S.pcap)}
+function postLv(){if(!S||(S.beastMode&&!S.beastMode.human)||realmIdx()<7||S.pcap==null)return -1;return Math.min(postRaw(),S.pcap)}
 function realmSub(){if(!S)return 0;const ri=realmIdx(),p=total();let lo,hi,blocked;
  if(ri<7){blocked=rawRealm()>ri;lo=REALMS[ri].p;hi=REALMS[ri+1].p}else{const L=postLv();blocked=postRaw()>L&&L<RS_MAX;lo=L<0?REALMS[7].p:postP(L);hi=L>=RS_MAX?lo*RS_G:postP(L+1)}
  if(blocked)return 4;const f=(p-lo)/Math.max(1,hi-lo);return f<.3?0:f<.6?1:f<.88?2:3}
@@ -6289,16 +6289,16 @@ function qiDev(tier){const m=(S.talent&&S.talent.m)||1,dv=Math.max(.03,Math.min(
  if(r<.3){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.6));S.power=Math.round(S.power*.88);S.qi=+(S.qi*.85).toFixed(1);joy(-10);log('🔥 <b>ธาตุไฟเข้าแทรก!</b> ลมปราณปั่นป่วนทำลายเส้นลมปราณไปหลายเส้น — พลังยุทธ์ลดลง 12% ลมปราณลดลง 15%','bad',true);return}
  S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));S.power=Math.round(S.power*.95);S.qi=+(S.qi*.9).toFixed(1);log('🔥 ธาตุไฟเข้าแทรกเล็กน้อย ลมปราณไหลย้อน กระอักเลือดออกมาคำใหญ่ — พลังยุทธ์ลดลง 5%','bad')}
 {const _bt=btTick;btTick=function(){const f0=S&&S.btFail||0;const r=_bt.apply(this,arguments);try{if(S&&S.alive&&(S.btFail||0)>f0)qiDev(false)}catch(e){console.error(e)}return r}}
-function postTick(){if(!S||!S.alive||S.beastMode||realmIdx()<7)return;if(S.pcap==null)S.pcap=-1;const raw=postRaw();if(raw<=S.pcap)return;const t=S.pcap+1,tier=t%9===0,m=(S.talent&&S.talent.m)||1;
+function postTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human)||realmIdx()<7)return;if(S.pcap==null)S.pcap=-1;const raw=postRaw();if(raw<=S.pcap)return;const t=S.pcap+1,tier=t%9===0,m=(S.talent&&S.talent.m)||1;
  if(t%9!==0&&bagHas&&bagHas('brk')&&bagUse('brk')){S.pcap=t;S.btFail=0;postUp(t,'🎒 กลืนยาทะลวงขั้น ');return}
  const p=Math.max(.05,Math.min(.9,(tier?.3:.6)+(m-1)*.08+((S.int||0)-60)/600+((S.happy||60)-50)/500+Math.min(.1,(S.qi||0)/2000)-t/45*.15+(S.btFail||0)*.05+(S.sys?.05:0)));
  if(Math.random()<p){S.pcap=t;S.btFail=0;postUp(t,'');return}
  S.btFail=(S.btFail||0)+1;S.hp-=Math.round(S.maxHp*.1);const nm=`${RS_PFX[Math.floor(t/9)]}${REALMS[7].n} ขั้น ${t%9+1}`;log(`💢 พยายามทะลวงสู่<b>${nm}</b> แต่ล้มเหลว <span class="tag2">(โอกาส ${Math.round(p*100)}%)</span>`,'bad');qiDev(tier)}
 function postUp(t,pre){const nm=`${RS_PFX[Math.floor(t/9)]}${REALMS[7].n} ขั้น ${t%9+1}`;if(t%9===0){setScene('aura');log(`${pre}🌌 พลังทะลุขีดจำกัดของโลก — ก้าวสู่ชั้น <b>${RS_PFX[t/9]}</b> · ${nm} ฟ้าดินสั่นสะเทือน`,'myth',true)}else log(`${pre}⭐ ทะลวงสู่<b>${nm}</b>`,'epic')}
-{const _py13=passYear;passYear=function(){const r=_py13.apply(this,arguments);try{if(S&&S.alive&&!S.beastMode){postTick();const si=realmSub(),k=realmIdx()*100+postLv();if(S.rsK===k&&si>(S.rsS||0)&&si<4)log(`🔹 ลมปราณมั่นคงขึ้น — ${realmLabel().base} <b>${RS_SUB[si]}</b>`,'');if(S.rsK!==k||si>(S.rsS||0)){S.rsK=k;S.rsS=si}}}catch(e){console.error(e)}return r}}
+{const _py13=passYear;passYear=function(){const r=_py13.apply(this,arguments);try{if(S&&S.alive&&!(S.beastMode&&!S.beastMode.human)){postTick();const si=realmSub(),k=realmIdx()*100+postLv();if(S.rsK===k&&si>(S.rsS||0)&&si<4)log(`🔹 ลมปราณมั่นคงขึ้น — ${realmLabel().base} <b>${RS_SUB[si]}</b>`,'');if(S.rsK!==k||si>(S.rsS||0)){S.rsK=k;S.rsS=si}}}catch(e){console.error(e)}return r}}
 function rsHTML(){const l=realmLabel();return`<b>${l.base}</b> <span class="rsub rs${l.si}">${l.sub}</span>`}
-{const _rd3=render;render=function(){const r=_rd3.apply(this,arguments);try{if(S&&!S.beastMode&&$('gRealm')){const nx=realmNext();$('gRealm').innerHTML=`${S.xian?'☁':'⚔'} ${rsHTML()} · พลังรวม <span class="px">${fmt(total())}</span>${nx?` / ${fmt(Math.round(nx))}`:''}`;xFix(['gRealm'])}}catch(e){}return r}}
-{const _dl2=dkLeft;dkLeft=function(){let h=_dl2.apply(this,arguments);try{if(S&&!S.beastMode){const n=REALMS[realmIdx()].n;h=h.replace('<b>'+n+'</b></div>',rsHTML()+'</div>')}}catch(e){}return h}}
+{const _rd3=render;render=function(){const r=_rd3.apply(this,arguments);try{if(S&&!(S.beastMode&&!S.beastMode.human)&&$('gRealm')){const nx=realmNext();$('gRealm').innerHTML=`${S.xian?'☁':'⚔'} ${rsHTML()} · พลังรวม <span class="px">${fmt(total())}</span>${nx?` / ${fmt(Math.round(nx))}`:''}`;xFix(['gRealm'])}}catch(e){}return r}}
+{const _dl2=dkLeft;dkLeft=function(){let h=_dl2.apply(this,arguments);try{if(S&&!(S.beastMode&&!S.beastMode.human)){const n=REALMS[realmIdx()].n;h=h.replace('<b>'+n+'</b></div>',rsHTML()+'</div>')}}catch(e){}return h}}
 {const st=document.createElement('style');st.textContent='.rsub{font-size:.78em;padding:1px 6px;border-radius:8px;background:rgba(127,127,127,.15);white-space:nowrap}.rs1{color:#5b8def}.rs2{color:#8b4fd8}.rs3{color:#e08a20;background:rgba(224,138,32,.14)}.rs4{color:#fff;background:linear-gradient(90deg,#d8a83a,#e05a8a);animation:rsGlow 1.6s ease-in-out infinite}@keyframes rsGlow{50%{filter:brightness(1.35)}}';document.head.appendChild(st)}
 {const add=(cat,arr)=>{const c=ACH.find(x=>x[0]===cat);if(!c)return;arr.forEach(a=>{if(ACH_ALL.some(b=>b.id===a.id))return;const zi=c[1].findIndex(b=>b.id==='z_all');if(zi>=0)c[1].splice(zi,0,a);else c[1].push(a);ACH_ALL.push(a)})};
  add('วิถียุทธ์',[{id:'w_godtier',n:'ทะลุขีดจำกัดของโลก',d:'ก้าวสู่ชั้นเทพเหนือขั้นสูงสุด',r:3,c:()=>postLv()>=0},{id:'w_kingtier',n:'ราชาเหนือราชา',d:'ก้าวสู่ชั้นราชันเหนือขั้นสูงสุด',r:5,c:()=>postLv()>=27},{id:'w_qidev',n:'รอดจากธาตุไฟเข้าแทรก',d:'โดนธาตุไฟเข้าแทรกแล้วยังรอดชีวิต',r:1,c:()=>(S.flags.qiDev||0)>=1&&S.alive}]);
@@ -7143,7 +7143,7 @@ function tribGo(k,t){const nm=tribName(k,t),o=tribOdds(t,k);S.tribNext=S.age+1;
 {const _ag121=ascendGod;ascendGod=function(){const r=_ag121.apply(this,arguments);try{if(S){S.rcap=rawRealm();S.pcap=-1;S.rcapG=1;S.pcapG=1;S.btFail=0;S.tribPrep=0}}catch(e){}return r}}
 {const _bt121=btTick;btTick=function(){if(S&&S.alive&&S.xt&&!S.beastMode){const raw=rawRealm();if(!S.rcapG){S.rcapG=1;S.rcap=S.rcap==null?raw:Math.min(S.rcap,raw);return}if(S.rcap==null){S.rcap=raw;return}if(raw<=S.rcap)return;const t=S.rcap+1;if(t<=1){S.rcap=t;return}
   if(!S.tribPill&&bagHas('brk')&&bagUse('brk')){S.tribPill=.12;log('🎒 🔴 กลืนยาทะลวงขั้นเตรียมรับทัณฑ์ — โอกาสผ่าน +12%','epic')}godTrib('r',t);return}return _bt121.apply(this,arguments)}}
-{const _pt121=postTick;postTick=function(){if(S&&S.alive&&S.xt&&!S.beastMode&&realmIdx()>=7){const raw=postRaw();if(!S.pcapG){S.pcapG=1;S.pcap=Math.max(-1,postLv());return}if(S.pcap==null)S.pcap=-1;if(raw<=S.pcap)return;const t=S.pcap+1;
+{const _pt121=postTick;postTick=function(){if(S&&S.alive&&S.xt&&!(S.beastMode&&!S.beastMode.human)&&realmIdx()>=7){const raw=postRaw();if(!S.pcapG){S.pcapG=1;S.pcap=Math.max(-1,postLv());return}if(S.pcap==null)S.pcap=-1;if(raw<=S.pcap)return;const t=S.pcap+1;
   if(!S.tribPill&&bagHas('brk')&&bagUse('brk')){S.tribPill=.12;log('🎒 🔴 กลืนยาทะลวงขั้นเตรียมรับทัณฑ์ — โอกาสผ่าน +12%','epic')}godTrib('p',t);return}return _pt121.apply(this,arguments)}}
 
 // ---- v12.2: โลกเทพ — เหตุการณ์เฉพาะโลกเทพ · แดนเทพส่วนตัว · ผู้ศรัทธา · ตำแหน่งเทวสภาสวรรค์ ----
