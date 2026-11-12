@@ -2374,7 +2374,7 @@ const HIDQ=[
  {id:'fail',n:'โฮสต์ดื้อด้าน — ทำเควสล้มเหลว 10 ครั้ง แต่ยังไม่ตาย',c:()=>S.sys.fail>=10}];
 const sysType=()=>SYS_TYPES.find(t=>t.id===S.sys.t);
 const sysG=()=>SYS_GRADE[S.sys.gr||0];
-const sysM=()=>sysG().m*(1+.15*(S.sys.evo||0))*(1+.06*(S.sys.rk||0));
+const sysM=()=>sysG().m*(1+.15*(S.sys.evo||0))*(1+.06*(S.sys.rk||0))*(S.sys.fin?1.25:1)*(S.sys.hf?1.1:1);
 const sysName=()=>sysType().n+(S.sys.evo?` (${EVO_N[S.sys.evo]})`:'')+` [อันดับ ${(typeof SRK!=='undefined'&&SRK[S.sys.rk||0]||{l:'F'}).l}]`;
 const sysTM=()=>S.sys?1.25*(1+.05*(S.sys.tc||0)):1;
 const expNeed=lv=>120+lv*90;
@@ -9919,7 +9919,7 @@ function talTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human))return;con
    else if(S.age===15||S.age===20||S.age===23)log(`❄️ ปราณเย็นในกายเริ่มกำเริบ — ต้องถึงยอดฝีมือขั้นหนึ่งก่อนอายุ 25 (อีก ${25-S.age} ปี)`,'bad',true);
    else if(S.age>=25){S.deathCause='ปราณเก้าหยินแช่แข็งชีพจรทั้งร่าง ก่อนจะทะลวงขั้นได้ทัน';S.hp=0}}}
  if(id==='dao'){if(S.age>=8&&Math.random()<.07)try{daoGain('กายาเต๋าสัมผัสกฎของฟ้าดินเองโดยไม่ต้องตั้งใจ')}catch(e){}S.qi=+(S.qi+.1).toFixed(1);
-  if(S.age>=12&&Math.random()<.035){const d=Math.round(S.maxHp*.25);S.hp-=d;log(`⚡ ฟ้าริษยากายาเต๋า — สายฟ้าฟาดลงกลางวันแสกๆ พลังชีวิต −${d}`,'bad')}}
+  if(S.age>=12)daoBolt();}
  if(id==='myriad'&&S.age>=10&&Math.random()<.06){const a=newArt(Math.min(3,Math.floor(S.age/40)));S.arts.push(a);log(`📚 กายาหมื่นวิชาเข้าใจวิชาใหม่เองจากการมองผู้อื่น — ได้ ${artHtml(a)}`,'epic')}
  if(id==='defy'&&S.age>=20&&S.age%10===0&&S.defyY!==S.age&&!choice._cur&&!modalOpen){S.defyY=S.age;const ep=Math.round(total()*(1+Math.min(.6,S.age/400)));const foe=ch(['ผู้พิทักษ์ลิขิตฟ้า','ทูตสวรรค์ลงทัณฑ์','เทพผู้ลบชะตา']);
   log(`🌌 สวรรค์ส่ง${foe}ลงมา — "ผู้ฝืนลิขิตต้องถูกลบ"`,'myth',true);duel(foe,ep,w=>{if(w){S.fame+=50;S.power+=pctPow(.06);log(`🌌 ล้ม${foe}ได้! ฟ้ายิ่งจับตามอง แต่คุณก็แข็งแกร่งขึ้น (พลังยุทธ์ +6%)`,'myth',true)}else{const d=Math.round(S.maxHp*.6);S.hp-=d;log(`🌌 พ่ายให้${foe} — พลังชีวิต −${d}`,'bad',true);try{checkDeath()}catch(e){}}render()})}}
@@ -17244,6 +17244,204 @@ function mwHudTog(e){if(e)e.stopPropagation();LS.set('murim_mwhmin',!LS.get('mur
  const t=h.querySelector('.mwhT');if(t){t.style.cursor='pointer';t.onclick=mwHudTog;let b=t.querySelector('.mwHmB');if(!b){t.insertAdjacentHTML('afterbegin','<span class="mwHmB"></span>');b=t.querySelector('.mwHmB')}b.textContent=mn?'▸':'▾';
   let s=t.querySelector('.mwHmS');if(mn){if(!s){t.insertAdjacentHTML('beforeend','<span class="mwHmS"></span>');s=t.querySelector('.mwHmS')}s.textContent='แตะเพื่อดูทั้งหมด'}else if(s)s.remove()}}}catch(e){}return r}}
 (function(){const st=document.createElement('style');st.textContent=`#mwHud.mwMin{padding:5px 10px}#mwHud.mwMin>*:not(.mwhT){display:none!important}#mwHud.mwMin .mwhT{margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#mwHud .mwHmB{display:inline-block;width:16px;color:#c9b4ff}#mwHud .mwHmS{margin-left:6px;font-weight:400;font-size:11px;color:#c9b4ff}`;document.head.appendChild(st)})();
+
+
+// ===================== v17.1 ระบบ 2.0: กลไกเฉพาะทุกระบบ · ทางแยกวิวัฒนาการ · บทสุดท้าย EX · ตัวเลขชัด · พรสวรรค์ · เต๋า =====================
+const SX_FX_N={pow:'พลังจากระบบ',qi:'ลมปราณ',money:'เงิน',fame:'ชื่อเสียง',karma:'กรรม',hp:'พลังชีวิตสูงสุด',int:'ปัญญา',cha:'เสน่ห์',exp:'EXP',sp:'SP',life:'อายุขัย'};
+// ---- ทางแยกวิวัฒนาการ: Lv.10 และ Lv.20 เลือก 1 ใน 2 สาย (เลือกสายเดิมซ้ำ = ทุ่มสุดตัว ผลเป็นสองเท่า) ----
+const SX_BR={
+ martial:[['🗡️ สายกระบี่','พลังจากระบบรายปี +40%',{pow:.4}],['🛡️ สายกาย','พลังชีวิตสูงสุด +6/ปี · พลัง +15%',{hp:6,pow:.15}]],
+ checkin:[['💰 เช็คอินทรัพย์','เงินรายปีเพิ่ม',{money:1}],['🌀 เช็คอินปราณ','ลมปราณรายปีเพิ่ม',{qi:1}]],
+ saint:[['🪷 พระโพธิสัตว์','กรรมดี +2/ปี · ชื่อเสียงรายปี',{karma:2,fame:1}],['💚 ผู้รักษา','พลังชีวิต +5/ปี · ลมปราณ',{hp:5,qi:.6}]],
+ demon:[['🩸 กลืนพลัง','พลัง +50% แต่กรรม −2/ปี',{pow:.5,karma:-2}],['🌑 มารสงบ','พลัง +25% ไม่เสียกรรม',{pow:.25}]],
+ tycoon:[['🏪 พ่อค้า','เงินรายปี ×2',{money:2}],['💹 ผู้ลงทุนยุทธ์','เงิน + พลัง',{money:.8,pow:.25}]],
+ transcend:[['💪 ร่างทะลุขีด','พลังชีวิต +8/ปี · พลัง +20%',{hp:8,pow:.2}],['🧠 จิตทะลุขีด','ปัญญา +1/ปี · ลมปราณ',{int:1,qi:.6}]],
+ gacha:[['🍀 โชคเทพ','SP +8/ปี',{sp:8}],['📦 นักสะสม','EXP รายปี ×2.5',{exp:1.5}]],
+ villain:[['🎭 ตัวร้ายมีเสน่ห์','เสน่ห์ +1/ปี · ชื่อเสียง',{cha:1,fame:1}],['💀 ตัวร้ายไร้ปรานี','พลัง +45% · กรรม −1/ปี',{pow:.45,karma:-1}]],
+ alchemy:[['🩺 หมอเทวดา','พลังชีวิต +5/ปี · กรรมดี +1/ปี',{hp:5,karma:1}],['🔥 โอสถพลัง','พลัง +20% · ลมปราณ',{pow:.2,qi:.5}]],
+ ring:[['🙇 ศิษย์ผู้ภักดี','EXP รายปี ×2.5',{exp:1.5}],['📜 ผู้สืบทอดวิชา','พลัง +35%',{pow:.35}]],
+ lust:[['☯️ คู่บำเพ็ญ','ลมปราณรายปีเพิ่ม',{qi:.8}],['🌸 เสน่ห์ล่มเมือง','เสน่ห์ +1/ปี · ชื่อเสียง',{cha:1,fame:1}]],
+ sect:[['⚔️ สำนักยุทธ์','พลัง +35%',{pow:.35}],['🏯 สำนักใหญ่','ชื่อเสียง + เงิน',{fame:2,money:1}]],
+ clan:[['💰 ตระกูลมั่งคั่ง','เงินรายปี ×2.5',{money:1.5}],['⚔️ ตระกูลยุทธ์','พลัง +30%',{pow:.3}]],
+ smith:[['🗡️ ช่างอาวุธ','พลัง +35%',{pow:.35}],['🏪 ช่างค้าขาย','เงินรายปี ×2.5',{money:1.5}]],
+ hunter:[['🏹 พรานล่า','พลัง +35%',{pow:.35}],['🐾 ผู้ฝึกสัตว์','พลังชีวิต +6/ปี',{hp:6}]],
+ time:[['🔮 ผู้รู้อนาคต','ปัญญา +1/ปี · เงิน',{int:1,money:1}],['⏸️ ผู้หยุดกาล','อายุขัย +1 ทุก 5 ปี',{life:.2}]]};
+// ---- บทสุดท้าย (อันดับ EX) ----
+const sxMon=()=>S.xt?1e9:S.xian?5e7:1e7;
+const SX_FIN={
+ martial:['ชนะการต่อสู้รวม 300 ครั้ง',()=>S.kills>=300,'เทพยุทธ์ไร้พ่าย'],
+ checkin:['เช็คอินกับระบบครบ 150 ปี',()=>S.age-(S.sys.since||S.age)>=150,'ผู้เฝ้าระบบนิรันดร์'],
+ saint:['สะสมกรรมดีถึง +500',()=>S.karma>=500,'พระโพธิสัตว์แห่งยุค'],
+ demon:['กรรมดิ่งถึง −500',()=>S.karma<=-500,'มารสวรรค์กลืนฟ้า'],
+ tycoon:[()=>`มีเงินถึง ${fmt(sxMon())}`,()=>S.money>=sxMon(),'เจ้าสัวค้ำฟ้า'],
+ transcend:['ก้าวข้ามขีดจำกัดครบ 5 ขั้น และอยู่อันดับ EX',()=>(S.sys.tc||0)>=5,'ผู้ไร้ขีดจำกัด'],
+ gacha:['สุ่มได้ UR รวม 5 ชิ้น',()=>(S.sys.ur||0)>=5,'บุตรแห่งโชคชะตา'],
+ villain:['ชิงชะตาสำเร็จ 15 ครั้ง และจบเรื่องกับบุตรแห่งสวรรค์ (สังหารหรือสาบานเป็นพี่น้อง)',()=>(S.sys.steal||0)>=15&&S.sys.prot&&(!S.sys.prot.alive||S.sys.prot.friend),'ตัวร้ายผู้เขียนบทเอง'],
+ alchemy:['หลอมยารวม 200 เม็ด',()=>(S.sys.pillN||0)>=200,'ราชันโอสถ'],
+ ring:['คืนร่างให้ผู้เฒ่าในแหวน และความไว้ใจเต็ม 100',()=>S.sys.ringBody&&sxX().tr>=100,'ศิษย์คนสุดท้ายของผู้เฒ่า'],
+ lust:['มีคนรักพร้อมกัน 5 คน',()=>lovers()>=5,'ราชันแห่งความรัก'],
+ sect:['สำนักมีศิษย์ 1,000 คน',()=>S.ownSect&&(S.ownSect.dis||0)>=1000,'ปรมาจารย์ก่อตั้งสำนักใหญ่'],
+ clan:['มีบุตรรวม 10 คน',()=>(S.kids||0)>=10,'บรรพชนผู้ยิ่งใหญ่'],
+ smith:['หลอมอาวุธมีชื่อครบ 5 เล่ม',()=>(sxX().wn||[]).length>=5,'เทพช่างแห่งยุค'],
+ hunter:['บันทึกการล่าครบ 100',()=>(sxX().tr||0)>=100,'ราชาพรานแห่งพงไพร'],
+ time:['สะสมความทรงจำข้ามเวลา 30',()=>(sxX().mem||0)>=30,'ผู้อยู่เหนือกาลเวลา']};
+const sxX=()=>{const s=S.sys;s.sx=s.sx||{};return s.sx};
+const sxEX=()=>(typeof SRK!=='undefined')?SRK.length-1:9;
+// ---- ตัวคูณระบบ: จบบทสุดท้าย ×1.25 · ทายาทของระบบที่จบแล้ว ×1.1 ----
+
+// ---- กลไกเฉพาะของแต่ละระบบ ----
+function sxTal(f){S.talent=Object.assign({},S.talent,{m:+(S.talent.m*f).toFixed(2)})}
+function sxLife(v){if(S.xt)S.glExtra=(S.glExtra||0)+v*50;else lsAdd(v)}
+const SX={
+ martial:{n:'⚔️ แต้มท้าประลอง',d:'ชนะการต่อสู้ 1 ครั้ง = 1 แต้ม · ครบ 10 / 30 / 60 / 120 แต้ม ปลดท่าไม้ตายของระบบ (พลังถาวร +8% ต่อท่า)',
+  yr(s,x){const k=S.kills||0;if(x.k0==null)x.k0=k;const g=Math.max(0,k-x.k0);x.k0=k;x.pt=(x.pt||0)+g;const M=[10,30,60,120],N=['กระบี่ทลายฟ้า','หมัดสะท้านภพ','ก้าวพันเงา','ดาบเทพไร้นาม'];x.u=x.u||0;while(x.u<4&&x.pt>=M[x.u]){S.power+=pctPow(.08);sysLog(`⚔️ ปลดท่าไม้ตาย <b>${N[x.u]}</b>! (แต้มท้าประลอง ${x.pt}) · พลังยุทธ์ +8% ถาวร`,'myth');keyAdd('ปลดท่าไม้ตายของระบบ: '+N[x.u]);x.u++}},
+  box(s,x){const M=[10,30,60,120],N=['กระบี่ทลายฟ้า','หมัดสะท้านภพ','ก้าวพันเงา','ดาบเทพไร้นาม'];return`แต้มท้าประลอง <b>${x.pt||0}</b><br>${N.map((n,i)=>`${(x.u||0)>i?'✅':'🔒'} ${n} (${M[i]})`).join(' · ')}`}},
+ checkin:{n:'📅 รางวัลเช็คอินต่อเนื่อง',d:'อยู่กับระบบครบ 10 / 50 / 100 ปี ได้กล่องใหญ่ (วิชา · พรสวรรค์ · อายุขัย)',
+  yr(s,x){const y=S.age-(s.since||S.age);x.g=x.g||{};
+   if(y>=10&&!x.g[10]){x.g[10]=1;S.arts.push(newArt(2));sxLife(10);sysLog('🎁 กล่องเช็คอินครบ 10 ปี — วิชาระดับสูง 1 เล่ม · อายุขัย +10 ปี','myth')}
+   if(y>=50&&!x.g[50]){x.g[50]=1;S.arts.push(newArt(3));sxTal(1.1);sysLog('🎁 กล่องเช็คอินครบ 50 ปี — วิชาระดับตำนาน · พรสวรรค์ ×1.1 ถาวร','myth')}
+   if(y>=100&&!x.g[100]){x.g[100]=1;S.arts.push(newArt(4));sxLife(50);sysLog('🎁 กล่องเช็คอินครบ 100 ปี — วิชาระดับเทพ · อายุขัย +50 ปี','myth')}},
+  box(s,x){const y=S.age-(s.since||S.age),g=x.g||{};return`เช็คอินต่อเนื่อง <b>${y}</b> ปี<br>${[10,50,100].map(v=>`${g[v]?'✅':'🎁'} ${v} ปี`).join(' · ')}`}},
+ saint:{n:'🪷 แต้มบุญและศาลเจ้า',d:'กรรมดีที่เพิ่มขึ้นแต่ละปีกลายเป็นแต้มบุญ · บุญ 100 มีคนสร้างศาลให้ (ได้แรงศรัทธาทุกปี) · ใช้บุญ 40 แลกพรได้',
+  yr(s,x){const k=S.karma||0;if(x.k0==null)x.k0=k;x.m=(x.m||0)+Math.max(0,k-x.k0);x.k0=k;
+   if(!x.sh&&x.m>=100){x.sh=1;sysLog('⛩️ ชาวบ้านสร้างศาลเจ้าให้คุณ — ได้แรงศรัทธาทุกปี','myth');keyAdd('มีศาลเจ้าของตัวเอง')}
+   if(x.sh){S.fame+=10+s.lv;S.qi+=.3}},
+  box(s,x){return`แต้มบุญ <b>${Math.floor(x.m||0)}</b> · ศาลเจ้า ${x.sh?'⛩️ มีแล้ว (ชื่อเสียง + ลมปราณทุกปี)':'ยังไม่มี (ต้อง 100)'}<div style="margin-top:6px"><button class="sysb" ${(x.m||0)>=40?'':'disabled'} onclick="sxAct('saint')">🙏 แลกพร (บุญ 40)</button></div>`},
+  act(s,x){if((x.m||0)<40)return;x.m-=40;const r=Math.random();if(r<.4){S.maxHp+=30;S.hp=S.maxHp;return'พรแห่งสุขภาพ — พลังชีวิตสูงสุด +30 และหายเจ็บ'}if(r<.75){joy(15);S.cha+=3;return'พรแห่งความสุข — ความสุข +15 · เสน่ห์ +3'}sxLife(5);return'พรแห่งอายุ — อายุขัย +5 ปี'}},
+ demon:{n:'🩸 เกจคลั่ง',d:'ชนะ 1 ครั้ง เกจ +6 · ลดเองปีละ 10 · เต็ม 100 = คลั่ง 1 ปี: พลัง +15% ถาวร แต่กรรม −20 และความสุข −10 · ใช้ SP 30 สะกดได้',
+  yr(s,x){const k=S.kills||0;if(x.k0==null)x.k0=k;x.r=Math.max(0,(x.r||0)+Math.max(0,k-x.k0)*6-10);x.k0=k;
+   if(x.r>=100){x.r=0;S.power+=pctPow(.15);S.karma-=20;joy(-10);x.n=(x.n||0)+1;sysLog('🩸 <b>คลั่ง!</b> พลังมารพุ่งพล่านจนเสียสติไปทั้งปี — พลังยุทธ์ +15% ถาวร · กรรม −20 · ความสุข −10','myth')}},
+  box(s,x){return`เกจคลั่ง <b>${Math.round(x.r||0)}</b>/100 · คลั่งมาแล้ว ${x.n||0} ครั้ง<div class="hpbar" style="height:7px;margin-top:4px"><i style="width:${Math.min(100,x.r||0)}%;background:#d83a4a"></i></div><button class="sysb" style="margin-top:6px" ${s.sp>=30&&(x.r||0)>0?'':'disabled'} onclick="sxAct('demon')">🧘 สะกดจิต (30 SP · −40)</button>`},
+  act(s,x){if(s.sp<30)return;s.sp-=30;x.r=Math.max(0,(x.r||0)-40);return'สะกดพลังมารลงได้ — เกจคลั่ง −40'}},
+ tycoon:{n:'🏪 กิจการหลายสาขา',d:'เปิดสาขาได้สูงสุด 8 สาขา · ทุกปีได้กำไรตามจำนวนสาขา × ภาวะตลาด (×0.5 ถึง ×2 สุ่มทุกปี)',
+  yr(s,x){x.mk=+(0.5+Math.random()*1.5).toFixed(2);if(x.b){const g=inc(Math.round(sxBiz()*.12*x.b*x.mk));S.money+=g;if(x.mk>=1.7||x.mk<=.6)sysLog(`${x.mk>=1.7?'📈 ตลาดบูม':'📉 ตลาดซบ'} (×${x.mk}) — กิจการ ${x.b} สาขาทำกำไร ${fmt(g)}`)}},
+  box(s,x){const c=sxBizC(x);return`สาขา <b>${x.b||0}</b>/8 · ตลาดปีนี้ ×${x.mk||1}<br><span style="opacity:.75">กำไรปีละราว ${fmt(Math.round(sxBiz()*.12*(x.b||0)*(x.mk||1)))}</span><div style="margin-top:6px"><button class="sysb" ${(x.b||0)<8&&S.money>=c?'':'disabled'} onclick="sxAct('tycoon')">🏪 เปิดสาขาใหม่ (${fmt(c)})</button></div>`},
+  act(s,x){const c=sxBizC(x);if((x.b||0)>=8||S.money<c)return;S.money-=c;x.b=(x.b||0)+1;return`เปิดสาขาที่ ${x.b} แล้ว`}},
+ transcend:{n:'🌠 แรงกดดันขีดจำกัด',d:'ทุกปีสะสมแรงกดดัน (ยิ่งฝึกยุทธ์/ลมปราณยิ่งเร็ว) · เต็ม 100 = ทลายขีดจำกัดชั่วคราว: พลัง +10% ถาวร · อายุขัย +2 · แต่มีโอกาส 20% บาดเจ็บ',
+  yr(s,x){x.p=(x.p||0)+R(6,12)+(['train','qi'].includes(S.focus)?8:0)+(s.tc||0)*2;if(x.p>=100){x.p=0;S.power+=pctPow(.1);sxLife(2);if(Math.random()<.2){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.3));sysLog('🌠 ทลายขีดจำกัด — พลัง +10% · อายุขัย +2 แต่ร่างกายรับไม่ไหว บาดเจ็บหนัก','myth')}else sysLog('🌠 ทลายขีดจำกัดชั่วคราว — พลังยุทธ์ +10% ถาวร · อายุขัย +2 ปี','myth')}},
+  box(s,x){return`แรงกดดัน <b>${x.p||0}</b>/100<div class="hpbar" style="height:7px;margin-top:4px"><i style="width:${Math.min(100,x.p||0)}%;background:#ffd040"></i></div>`}},
+ gacha:{n:'🎴 สะสมชุด',d:'SSR ครบ 5 ชิ้น = พรสวรรค์ ×1.05 · SSR ครบ 15 = พลัง +10% · UR ครบ 3 = อายุขัย +20 · (การันตี SSR ทุก 50 ครั้งยังอยู่)',
+  yr(s,x){x.g=x.g||{};if((s.ssr||0)>=5&&!x.g.a){x.g.a=1;sxTal(1.05);sysLog('🎴 สะสม SSR ครบ 5 — พรสวรรค์ ×1.05 ถาวร','myth')}if((s.ssr||0)>=15&&!x.g.b){x.g.b=1;S.power+=pctPow(.1);sysLog('🎴 สะสม SSR ครบ 15 — พลังยุทธ์ +10%','myth')}if((s.ur||0)>=3&&!x.g.c){x.g.c=1;sxLife(20);sysLog('🎴 สะสม UR ครบ 3 — อายุขัย +20 ปี','myth')}},
+  box(s,x){const g=x.g||{};return`${g.a?'✅':'⬜'} SSR 5 (${s.ssr||0}) · ${g.b?'✅':'⬜'} SSR 15 · ${g.c?'✅':'⬜'} UR 3 (${s.ur||0})`}},
+ villain:{n:'📖 แถบชะตา',d:'ชิงชะตาได้ทีละส่วน (เต็ม 15) · ถ้าชิงไม่ครบก่อนบุตรแห่งสวรรค์อายุ 60 ปี เขาจะตื่นรู้และกลับมาเป็นบอสตอนจบ',
+  yr(s,x){const p=s.prot;if(!p||!p.alive||p.friend||x.boss)return;if(S.age-(s.since||0)>=45&&(s.steal||0)<15&&!choice._cur){x.boss=1;const ep=Math.round(total()*(1.1+(15-(s.steal||0))*.04));eqRun('📖 บุตรแห่งสวรรค์ตื่นรู้',`<b>${esc(p.n)}</b> ทวงชะตาที่เหลือคืน — "บทของเจ้าจบแล้ว ตัวร้าย"`,[{t:'⚔️ สู้ตามบท',s:'ชนะ = ชะตาทั้งหมดเป็นของคุณ',f(){if(fight(p.n,ep)){p.alive=0;s.steal=Math.max(s.steal||0,15);S.power+=pctPow(.2);sysLog(`💀 ล้ม${esc(p.n)}ได้ — ชะตาทั้งหมดเป็นของคุณ พลัง +20%`,'myth')}else{S.hp=Math.max(1,Math.round(S.hp*.4));S.fame=Math.round(S.fame*.8);sysLog('💥 แพ้ตามบท… ตัวร้ายมักแพ้ในตอนจบ','fail')}}},{t:'🤝 ฉีกบททิ้ง ขอเป็นพี่น้อง',s:'กรรมดี',f(){p.friend=1;S.karma+=30;sysLog('🤝 คุณฉีกบทตัวร้ายทิ้ง — บุตรแห่งสวรรค์กลายเป็นพี่น้องร่วมสาบาน','myth')}}])}},
+  box(s,x){const p=s.prot,v=Math.min(15,s.steal||0);return`ชะตาที่ชิงมา <b>${v}</b>/15<div class="hpbar" style="height:7px;margin-top:4px"><i style="width:${v/15*100}%;background:#a050ff"></i></div>${p&&p.alive&&!p.friend?`<span style="opacity:.75">ถ้ายังไม่ครบ 15 เมื่ออยู่กับระบบครบ 45 ปี เขาจะกลับมาเป็นบอส${x.boss?' (เกิดแล้ว)':''}</span>`:''}`}},
+ alchemy:{n:'📜 สูตรยาลับ',d:'ทุกปีมีโอกาสค้นพบสูตรใหม่ (ปัญญาช่วย) · มี 6 สูตร แต่ละสูตรให้ผลทุกปี · สูตรที่ 6 ยาเซียนมีโอกาสระเบิด',
+  yr(s,x){x.r=x.r||0;if(x.r<6&&Math.random()<.18+Math.min(.3,(S.int||0)/1500)){x.r++;sysLog(`📜 ค้นพบสูตรยาลับ <b>${SX_REC[x.r-1][0]}</b> — ${SX_REC[x.r-1][1]}`,'epic')}
+   if(x.r>=1)S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.1));if(x.r>=2)S.qi+=.3;if(x.r>=3&&S.age%5===0)sxLife(1);if(x.r>=4)S.power+=pctPow(.01);if(x.r>=5)S.int+=1;
+   if(x.r>=6&&Math.random()<.25){if(Math.random()<.12){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.3));sysLog('💥 ยาเซียนระเบิดในเตา — พลังชีวิต −30%','fail')}else{sxTal(1.02);s.sage=(s.sage||0)+1;sysLog('✨ หลอมยาเซียนสำเร็จ — พรสวรรค์ ×1.02','epic')}}},
+  box(s,x){return SX_REC.map((r,i)=>`${(x.r||0)>i?'✅':'🔒'} ${r[0]}`).join(' · ')}},
+ ring:{n:'🤝 ความไว้ใจของผู้เฒ่า',d:'ความไว้ใจเพิ่มทุกปี (ทำดีเพิ่มเร็ว) · เต็ม 100 ตอน Lv.12+ เลือกตอนจบ: รับการถ่ายทอด หรือปลดปล่อยวิญญาณ · ถ้าต่ำกว่า 20 ตอน Lv.15 ผู้เฒ่าจะพยายามแย่งร่าง',
+  yr(s,x){x.tr=Math.max(0,Math.min(100,(x.tr==null?40:x.tr)+R(2,6)+(S.karma>50?2:S.karma<-50?-4:0)));
+   if(!x.end&&x.tr>=100&&s.lv>=12&&!choice._cur){x.end=1;eqRun(`💍 ${s.elder}: คำขอสุดท้าย`,'"ข้าไว้ใจเจ้าแล้ว จะให้ข้าทำอะไรต่อ"',[{t:'📜 ถ่ายทอดวิชาทั้งหมด',s:'วิชาระดับเทพ · พรสวรรค์ ×1.1',f(){S.arts.push(newArt(4));sxTal(1.1);sysLog(`📜 ${s.elder}ถ่ายทอดวิชาทั้งชีวิตให้คุณ — พรสวรรค์ ×1.1`,'myth')}},{t:'🕊️ ปลดปล่อยวิญญาณ',s:'กรรมดี +50 · อายุขัย +20',f(){S.karma+=50;sxLife(20);sysLog(`🕊️ ${s.elder}ยิ้มเป็นครั้งแรกในพันปี แล้วจางหายไปอย่างสงบ`,'myth')}}])}
+   if(!x.sz&&x.tr<20&&s.lv>=15&&!choice._cur){x.sz=1;const ep=Math.round(total()*1.05);eqRun('💍 ผู้เฒ่าแย่งร่าง!','วิญญาณในแหวนพุ่งเข้าครอบงำจิตคุณกลางดึก',[{t:'🧠 ต้านด้วยจิตใจ',s:'ชนะ = วิญญาณสลาย ได้พลังที่เหลือ',f(){if(fight(s.elder,ep)){S.power+=pctPow(.15);x.tr=0;sysLog('🧠 คุณขับไล่วิญญาณออกไปได้ — พลังที่เหลือของเขาไหลเข้าสู่คุณ','myth')}else{S.hp=Math.max(1,Math.round(S.hp*.3));S.int=Math.max(0,S.int-10);sysLog('😵 เกือบถูกแย่งร่าง — ปัญญา −10','fail')}}}])}},
+  box(s,x){const t=x.tr==null?40:x.tr;return`ความไว้ใจ <b>${Math.round(t)}</b>/100<div class="hpbar" style="height:7px;margin-top:4px"><i style="width:${t}%;background:${t<20?'#d83a4a':'#4ac0e0'}"></i></div>`}},
+ lust:{n:'💞 สายใยรัก',d:'คนรักแต่ละคนเพิ่มสายใยทุกปี · ครบ 50 / 150 / 300 ได้พลังคู่บำเพ็ญถาวร',
+  yr(s,x){x.b=(x.b||0)+lovers()*R(2,4);const M=[50,150,300];x.u=x.u||0;while(x.u<3&&x.b>=M[x.u]){S.qi+=5*(x.u+1);S.power+=pctPow(.05*(x.u+1));sysLog(`💞 สายใยรักถึง ${M[x.u]} — คู่บำเพ็ญ: ลมปราณ +${5*(x.u+1)} · พลัง +${5*(x.u+1)}%`,'myth');x.u++}},
+  box(s,x){return`สายใยรัก <b>${x.b||0}</b> · ${[50,150,300].map((v,i)=>`${(x.u||0)>i?'✅':'⬜'} ${v}`).join(' · ')}`}},
+ sect:{n:'🧑‍🎓 ศิษย์เอกสามคน',d:'สำนักมีศิษย์เอก 3 คน ฝีมือโตทุกปี · ส่งไปทำภารกิจได้ปีละครั้ง (เงิน · ชื่อเสียง · วิชา แต่อาจบาดเจ็บ)',
+  yr(s,x){if(!S.ownSect)return;x.d=x.d||[0,1,2].map(()=>({n:ch(PROT_SN)+ch(PROT_GN),p:R(5,15)}));x.d.forEach(d=>d.p=Math.min(100,d.p+R(1,4)+(d.hurt?-2:0)));x.d.forEach(d=>{if(d.hurt)d.hurt--});x.used=0},
+  box(s,x){if(!S.ownSect)return'ต้องมีสำนักของตัวเองก่อน';x.d=x.d||[0,1,2].map(()=>({n:ch(PROT_SN)+ch(PROT_GN),p:R(5,15)}));return x.d.map((d,i)=>`<b>${esc(d.n)}</b> ฝีมือ ${d.p}${d.hurt?' 🤕':''} <button class="sysb" style="padding:2px 6px" ${x.used||d.hurt?'disabled':''} onclick="sxAct('sect',${i})">ส่งไปภารกิจ</button>`).join('<br>')},
+  act(s,x,i){const d=(x.d||[])[i];if(!d||x.used||d.hurt)return;x.used=1;const ok=Math.random()<.35+d.p/160;if(ok){const g=inc(Math.round(sxBiz()*.05*(1+d.p/30)));S.money+=g;S.fame+=10+d.p;if(Math.random()<d.p/400){S.arts.push(newArt(2));return`${d.n}สำเร็จ! ได้ ${fmt(g)} · ชื่อเสียง +${10+d.p} · พบคัมภีร์ด้วย`}return`${d.n}สำเร็จ! ได้ ${fmt(g)} · ชื่อเสียง +${10+d.p}`}d.hurt=2;return`${d.n}พลาด บาดเจ็บ ต้องพัก 2 ปี`}},
+ clan:{n:'🏞️ บารมีตระกูล',d:'บารมีเพิ่มทุกปีตามจำนวนลูก ที่ดิน และชื่อเสียง · ครบ 50 / 150 / 300 ได้ฉายาตระกูลและรายได้เพิ่ม',
+  yr(s,x){x.p=(x.p||0)+2+(S.kids||0)*2+Math.floor((S.fame||0)/2000);const M=[50,150,300],N=['ตระกูลมีชื่อ','ตระกูลใหญ่','ตระกูลค้ำแผ่นดิน'];x.u=x.u||0;while(x.u<3&&x.p>=M[x.u]){S.fame+=100*(x.u+1);sysLog(`🏞️ บารมีตระกูลถึง ${M[x.u]} — ได้เป็น <b>${N[x.u]}</b>`,'myth');keyAdd(N[x.u]);x.u++}if(x.u)S.money+=inc(Math.round(sxBiz()*.03*x.u))},
+  box(s,x){const N=['ตระกูลมีชื่อ','ตระกูลใหญ่','ตระกูลค้ำแผ่นดิน'];return`บารมี <b>${x.p||0}</b> · ${[50,150,300].map((v,i)=>`${(x.u||0)>i?'✅':'⬜'} ${N[i]} (${v})`).join(' · ')}`}},
+ smith:{n:'🗡️ อาวุธมีชื่อ',d:'ทุกปีมีโอกาสหลอมอาวุธในตำนานที่มีชื่อของมันเอง (สูงสุด 5 เล่ม) · แต่ละเล่มพลัง +4% ถาวร',
+  yr(s,x){x.wn=x.wn||[];if(x.wn.length<5&&Math.random()<.08+s.lv*.004){const n=ch(['กระบี่','ดาบ','ทวน','พัด','ขวาน'])+ch(['มังกรคราม','เพลิงอเวจี','จันทร์เสี้ยว','ไร้เงา','ทลายภพ','หิมะพันปี','อัสนี']);if(x.wn.includes(n))return;x.wn.push(n);S.power+=pctPow(.04);sysLog(`🔨 หลอม <b>${n}</b> สำเร็จ — อาวุธมีชื่อเล่มที่ ${x.wn.length} · พลัง +4%`,'myth');keyAdd('หลอมอาวุธมีชื่อ: '+n)}},
+  box(s,x){const w=x.wn||[];return`อาวุธมีชื่อ <b>${w.length}</b>/5${w.length?'<br>'+w.map(esc).join(' · '):''}`}},
+ hunter:{n:'📕 บันทึกการล่า',d:'ล่าได้ทุกปี (ยิ่งเลเวลสูงยิ่งเยอะ) · ครบ 10 / 30 / 60 ได้สัตว์คู่หู · พลัง · อายุขัย',
+  yr(s,x){x.tr=(x.tr||0)+R(0,2)+Math.floor(s.lv/10)+(S.focus==='travel'?1:0);const M=[10,30,60];x.u=x.u||0;while(x.u<3&&x.tr>=M[x.u]){if(x.u===0){if(!S.pet){S.pet={i:'🐺',n:'หมาป่าเงา',t:'สัตว์คู่หู',age:S.age,lv:0}}sysLog('📕 ล่าครบ 10 — ได้สัตว์คู่หู','epic')}if(x.u===1){S.power+=pctPow(.1);sysLog('📕 ล่าครบ 30 — สัญชาตญาณนักล่า พลัง +10%','epic')}if(x.u===2){sxLife(10);sysLog('📕 ล่าครบ 60 — กินแก่นอสูรพันปี อายุขัย +10','myth')}x.u++}},
+  box(s,x){return`ล่าแล้ว <b>${x.tr||0}</b> · ${[10,30,60].map((v,i)=>`${(x.u||0)>i?'✅':'⬜'} ${v}`).join(' · ')}`}},
+ time:{n:'🔮 ความทรงจำข้ามเวลา',d:'ทุกปีสะสมความทรงจำ (ย้อนเวลา 1 ครั้ง +3) · ครบ 10 ปลด "รู้อนาคต": มีโอกาสทุกปีใช้ความรู้อนาคตทำเงิน/ชื่อเสียง และหลบภัย',
+  yr(s,x){x.mem=+((x.mem||0)+.5+Math.max(0,((s.used||0)-(x.u0||0)))*3).toFixed(1);x.u0=s.used||0;if(x.mem>=10&&Math.random()<.2){const g=inc(Math.round(sxBiz()*.08));S.money+=g;S.fame+=15;S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.2));sysLog(`🔮 รู้อนาคต — เลี่ยงภัยและทำกำไรได้ ${fmt(g)}`)}},
+  box(s,x){return`ความทรงจำ <b>${x.mem||0}</b> · รู้อนาคต ${(x.mem||0)>=10?'✅':'🔒 (10)'}`}}};
+const SX_REC=[['ยาฟื้นกาย','ฟื้นพลังชีวิต 10% ทุกปี'],['ยารวมปราณ','ลมปราณ +0.3 ทุกปี'],['ยาชะลอวัย','อายุขัย +1 ทุก 5 ปี'],['ยาหลอมกระดูก','พลัง +1% ทุกปี'],['ยาเปิดปัญญา','ปัญญา +1 ทุกปี'],['ยาเซียน','ลุ้นพรสวรรค์ ×1.02 (มีโอกาสระเบิด)']];
+function sxBiz(){return Math.max(500,(S.xt?2e6:S.xian?5e4:2000)*(1+realmIdx()*.5))}
+function sxBizC(x){return Math.round(sxBiz()*Math.pow(1.8,x.b||0))}
+function sxAct(t,i){const s=S&&S.sys;if(!s||s.t!==t||!SX[t]||!SX[t].act)return;const r=SX[t].act(s,sxX(),i);if(r){sysLog(r,'up');toast(r.replace(/<[^>]+>/g,'').slice(0,60))}render();openSys()}
+// ---- รายปี: กลไกเฉพาะ + สาย + บทสุดท้าย ----
+function sxYear(){const s=S&&S.alive&&S.sys;if(!s||S.age<6)return;const x=sxX(),T=SX[s.t];
+ try{if(T)T.yr(s,x)}catch(e){console.error(e)}
+ (s.br||[]).forEach(bi=>{const b=(SX_BR[s.t]||[])[bi];if(!b)return;const f=b[2],m=S.talent.m,gm=sysM(),base=(5+s.lv*6)*m*gm;
+  if(f.pow)S.power+=base*f.pow;if(f.qi)S.qi+=.08*s.lv*f.qi;if(f.money)S.money+=inc(Math.round(sxBiz()*.02*f.money*(1+s.lv/20)));if(f.fame)S.fame+=Math.round((3+s.lv/2)*f.fame);
+  if(f.karma)S.karma+=f.karma;if(f.hp){S.maxHp+=f.hp;S.hp=Math.min(S.maxHp,S.hp+f.hp)}if(f.int)S.int+=f.int;if(f.cha)S.cha+=f.cha;if(f.exp)gainExp(12*f.exp);if(f.sp)s.sp+=Math.round(f.sp);if(f.life&&Math.random()<f.life)sxLife(1)});
+ const F=SX_FIN[s.t];if(F&&(s.rk|0)>=sxEX()&&!s.fin){if(!s.fq){s.fq=1;sysLog(`👑 <b>บทสุดท้ายของระบบเปิดแล้ว</b> — ${typeof F[0]==='function'?F[0]():F[0]}`,'myth')}
+  else if(F[1]()){s.fin=1;sxTal(1.1);sxLife(30);S.flags['sysfin_'+s.t]=1;S.flags.sysfin=1;sysLog(`🏆 <b>จบบทสุดท้าย!</b> ได้ฉายา <b>「${F[2]}」</b> · พรสวรรค์ ×1.1 · อายุขัย +30 · ผลระบบ ×1.25 ถาวร · ระบบจะส่งต่อให้ทายาทได้`,'myth');keyAdd(`จบบทสุดท้ายของระบบ — ได้ฉายา「${F[2]}」`)}}}
+function sxBranch(){const s=S&&S.alive&&S.sys;if(!s||choice._cur||modalOpen)return false;s.br=s.br||[];if((s.evo||0)<=s.br.length)return false;const B=SX_BR[s.t];if(!B)return false;
+ const tier=s.br.length+1;eqRun(`⚡ ทางแยกวิวัฒนาการ (ขั้นที่ ${tier})`,`ระบบวิวัฒนาการเป็น <b>${EVO_N[tier]||'ขั้นใหม่'}</b> — เลือกเส้นทางของระบบ${tier>1?' (เลือกสายเดิมซ้ำ = ผลเป็นสองเท่า · เลือกอีกสาย = ได้ทั้งสองอย่าง)':''}`,B.map((b,i)=>({t:b[0],s:b[1],f(){s.br.push(i);sysLog(`⚡ ระบบเลือกเส้นทาง <b>${b[0]}</b> — ${b[1]}`,'myth');keyAdd('ระบบเลือกเส้นทาง '+b[0])}})));return true}
+{const _st=sysTick;sysTick=function(){const r=_st.apply(this,arguments);try{if(S&&S.sys){sxYear();if(!r&&sxBranch())return true}}catch(e){console.error(e)}return r}}
+// ---- ทายาทรับระบบที่จบบทสุดท้ายแล้ว ----
+{const _ihF=inherit;inherit=function(ci){const P=S,ps=P&&P.sys&&P.sys.fin&&P.sys.t!=='clan'?JSON.parse(JSON.stringify(P.sys)):null;const r=_ihF.apply(this,arguments);try{if(ps&&S!==P&&!S.sys){S.sys=Object.assign(ps,{lv:Math.max(1,Math.floor(ps.lv*.6)),exp:0,quests:[],since:S.age,main:0,rk:Math.max(0,(ps.rk|0)-3),fin:0,fq:0,hf:1,sx:{},br:[],evo:0});S.flags.sys=1;S.sysEver=1;log(`👑 <b>${sysType().n}</b> ที่จบบทสุดท้ายแล้ว ส่งต่อมาถึงทายาท — Lv.${S.sys.lv} · ผลระบบ ×1.1`,'myth',true)}}catch(e){console.error(e)}return r}}
+// ---- หน้าระบบ: ตัวเลขชัด + กลไกเฉพาะ + สาย + บทสุดท้าย ----
+{const _ssx=sysSpecial;sysSpecial=function(){let h='';try{h=_ssx.apply(this,arguments)||''}catch(e){}try{const s=S.sys,x=sxX(),T=SX[s.t],G=sysG(),box=t=>`<div class="sysq">${t}</div>`;
+ if(T)h+=`<h4>${T.n}</h4>`+box(`<span style="opacity:.8">${T.d}</span><br>${T.box(s,x)}`);
+ const B=SX_BR[s.t]||[],br=s.br||[];h+=`<h4>🌿 เส้นทางระบบ</h4>`+box(br.length?br.map((i,k)=>`ขั้น ${k+1}: <b>${B[i][0]}</b> — ${B[i][1]}`).join('<br>'):`ยังไม่ได้เลือก — ถึง Lv.10 และ Lv.20 จะได้เลือก 1 ใน 2 สาย<br><span style="opacity:.75">${B.map(b=>b[0]+': '+b[1]).join(' · ')}</span>`);
+ const F=SX_FIN[s.t];if(F){const ex=(s.rk|0)>=sxEX();h+=`<h4>👑 บทสุดท้าย</h4>`+box(s.fin?`🏆 จบแล้ว — ฉายา <b>「${F[2]}」</b> · ผลระบบ ×1.25`:ex?`เป้าหมาย: <b>${typeof F[0]==='function'?F[0]():F[0]}</b> ${F[1]()?'✅ (สำเร็จปีนี้)':''}<br><span style="opacity:.75">รางวัล: ฉายา「${F[2]}」 · พรสวรรค์ ×1.1 · อายุขัย +30 · ผลระบบ ×1.25 · ส่งต่อทายาท</span>`:`🔒 เปิดเมื่อระบบถึงอันดับ EX (Lv.100 แล้วผ่านบททดสอบ)<br><span style="opacity:.75">เป้าหมาย: ${typeof F[0]==='function'?F[0]():F[0]} · ฉายา「${F[2]}」</span>`)}
+ const ev=1+.15*(s.evo||0),rk=1+.06*(s.rk||0),base=(5+s.lv*6)*S.talent.m*(s.t==='martial'?1.3:1)*sysM(),nx=typeof SRK!=='undefined'?SRK[(s.rk|0)+1]:null;
+ h+=`<details class="item" style="margin-top:6px"><summary><b>📊 ตัวเลขของระบบ</b></summary><div class="sysq" style="margin-top:4px">ตัวคูณระบบรวม <b>×${sysM().toFixed(2)}</b> = เกรด ${G.n} ×${G.m} · วิวัฒนาการ ×${ev.toFixed(2)} · อันดับ ×${rk.toFixed(2)}${s.fin?' · บทสุดท้าย ×1.25':''}${s.hf?' · มรดกระบบ ×1.1':''}<br>
+ พลังที่ระบบให้ทุกปี ≈ <b>${fmt(base)}</b> (= (5 + Lv×6) × พรสวรรค์ ×${S.talent.m}${s.t==='martial'?' × 1.3 เทพยุทธ์':''} × ตัวคูณระบบ) · ลมปราณ +${(.08*s.lv).toFixed(2)} ปี/ปี<br>
+ EXP ถึงเลเวลถัดไป ${s.exp}/${expNeed(s.lv)} · ${nx?`อันดับถัดไป <b>${nx.l}</b> ต้อง Lv.${nx.lv} แล้วผ่านบททดสอบ`:'อันดับสูงสุดแล้ว'}<br>
+ ตัวคูณนี้คูณ EXP · SP · รางวัลเควส และพลังรายปีของระบบ</div></details>`}catch(e){console.error(e)}return h}}
+// ---- อันดับระบบ: อายุขัยจากการเลื่อนอันดับไม่ติดเพดานอีก ----
+{const _su=srkUp;srkUp=function(){const a=S&&S.lifespan,i0=S&&(S.lsI||0);const r=_su.apply(this,arguments);try{const d=S.lifespan-a;if(d>0&&(S.lsI||0)===i0){S.lsI=i0+d;lsMw(d)}}catch(e){}return r}}
+
+// ===================== พรสวรรค์ (กระดูก/กายา): ตัวเลขจริง + ประวัติว่าได้มาจากอะไร =====================
+function talBase(){try{const t=TALENT.find(x=>(S.talent.id&&x.id===S.talent.id)||x.n===S.talent.n);return t?t.m:S.talent.m}catch(e){return 1}}
+{const _rnT2=render;render=function(){const r=_rnT2.apply(this,arguments);try{if(S&&S.talent&&S.alive){const m=+S.talent.m;if(S._tm==null){S._tm=m;S.talH=S.talH||[]}else if(Math.abs(m-S._tm)>.001){const why=[...document.querySelectorAll('#feed .bub')].slice(-4).map(e=>e.textContent).reverse().find(t=>/พรสวรรค์|ร่าง|ระบบ|กายา|ยา|สมบัติ/.test(t))||'เหตุการณ์ในชีวิต';S.talH=S.talH||[];S.talH.push({a:S.age,f:S._tm,t:m,w:why.replace(/\s+/g,' ').slice(0,80)});if(S.talH.length>40)S.talH.shift();S._tm=m}}}catch(e){}return r}}
+function openTalent(){if(!S)return;const m=+S.talent.m,b=talBase(),T=(S.traits||[]).map(id=>TRAITS.find(t=>t.id===id)).filter(Boolean);
+ const lvl=m>=4?'ระดับตำนาน':m>=3?'ระดับสวรรค์':m>=2?'อัจฉริยะ':m>=1.4?'ดี':m>=1?'ธรรมดา':'ต่ำกว่าคนทั่วไป';
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🦴 พรสวรรค์ของฉัน</h3>
+ <div class="box" style="padding:10px"><b>${esc(S.talent.n)}</b><br><span class="tag2">${esc(S.talent.d||'')}</span>
+ <p style="margin:8px 0 4px;font-size:22px"><b>×${m.toFixed(2)}</b> <span class="tag2">${lvl}</span></p>
+ <span class="tag2">ตอนเกิด ×${b} · ${m>b?`โตขึ้น <b>+${Math.round((m/b-1)*100)}%</b>`:m<b?`ลดลง ${Math.round((1-m/b)*100)}%`:'ยังไม่เปลี่ยน'}</span></div>
+ <p class="tag2">ตัวเลขนี้คือ <b>ตัวคูณผลการฝึก</b> — ×2 แปลว่าฝึกยุทธ์ 1 ปีได้พลังเท่ากับคนกระดูกธรรมดา (×1) ฝึก 2 ปี · ยังช่วยโอกาสผ่านทัณฑ์สวรรค์ และคูณพลังรายปีจากระบบ · เพิ่มได้จากยาเปลี่ยนกระดูก สมบัติ ระบบ เหตุการณ์ต่างๆ (บอกเป็น "พรสวรรค์ ×1.1" = คูณเพิ่มจากที่มี ไม่ใช่บวก)</p>
+ ${T.length?`<h4>✨ พรสวรรค์พิเศษติดตัว</h4>${T.map(t=>`<div class="sysq" style="background:none;border:1px solid var(--line)"><b>${esc(t.n)}</b> — ${esc(t.d)}</div>`).join('')}`:''}
+ <h4>📈 ประวัติการเปลี่ยนแปลง</h4>${(S.talH||[]).length?`<div style="max-height:30vh;overflow:auto">${S.talH.slice().reverse().map(h=>`<div class="tag2" style="padding:3px 0;border-bottom:1px dashed var(--line)">อายุ ${fmt(h.a)} · ×${h.f.toFixed(2)} → <b>×${h.t.toFixed(2)}</b> — ${esc(h.w)}</div>`).join('')}</div>`:'<p class="tag2">ยังไม่มีการเปลี่ยนแปลงในชีวิตนี้ (เริ่มบันทึกตั้งแต่อัปเดตนี้)</p>'}`,'talent')}
+{const _omT=openMenu;openMenu=function(){const r=_omT.apply(this,arguments);try{if(S&&!(typeof mwOn==='function'&&mwOn())&&!(S.beastMode&&!S.beastMode.human)){const g=document.querySelector('#modal .mgrid');if(g&&!g.querySelector('.talOpt'))g.insertAdjacentHTML('afterbegin',`<button class="opt talOpt" onclick="openTalent()">🦴 พรสวรรค์ของฉัน<small>×${(+S.talent.m).toFixed(2)} · ${esc(S.talent.n)}</small></button>${S.dao&&daoSum()>0||tid()==='dao'?`<button class="opt talOpt" onclick="openDao()">☯️ กฎแห่งเต๋า<small>${daoSum()}/35 ขั้น</small></button>`:''}`)}}catch(e){}return r}}
+
+// ===================== กฎแห่งเต๋า: แต่ละกฎมีผลจริง · ครบแล้วฟ้าไม่ผ่ากายาเต๋า =====================
+const DAO_FX={'กฎกระบี่':['พลังยุทธ์ +0.4% ต่อขั้น ทุกปี',l=>{S.power+=pctPow(.004*l)}],'กฎเพลิง':['ลมปราณ +0.1 ต่อขั้น ทุกปี',l=>{S.qi+=.1*l}],'กฎวารี':['ฟื้นพลังชีวิต 4% ต่อขั้น ทุกปี',l=>{S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.04*l))}],
+ 'กฎสายฟ้า':['ผ่านทัณฑ์สวรรค์ง่ายขึ้น 3% และตายยากขึ้น 10% ต่อขั้น · ลดสายฟ้าที่ฟาดกายาเต๋า',null],'กฎกาลเวลา':['อายุขัย +3 ปีต่อขั้น (ได้ตอนหยั่งรู้)',null],'กฎอวกาศ':['มีโอกาสเก็บของวิเศษจากรอยแยกทุกปี (3% ต่อขั้น)',l=>{if(Math.random()<.03*l)try{bagAdd(ch(['herb','brk','fruit']),1,1)}catch(e){}}],'กฎชีวิตและความตาย':['พลังชีวิตสูงสุด +4 ต่อขั้น ทุกปี',l=>{S.maxHp+=4*l}]};
+function daoLv(k){return(S.dao&&S.dao[k])||0}
+{const _dg=daoGain;daoGain=function(){const k0=JSON.stringify(S.dao||{});const r=_dg.apply(this,arguments);try{const D=S.dao||{},O=JSON.parse(k0);for(const k in D){const d=(D[k]||0)-(O[k]||0);if(d>0&&k==='กฎกาลเวลา')sxLife(3*d);if(d>0&&D[k]===5){S.fame+=200;log(`☯️ <b>บรรลุ${k}โดยสมบูรณ์</b> — ${DAO_FX[k]?DAO_FX[k][0]:''}`,'myth');keyAdd('บรรลุ'+k+'สมบูรณ์')}}if(daoSum()>=35&&!S.flags.dao35){S.flags.dao35=1;sxTal(1.15);log('☯️ <b>หยั่งรู้มหาเต๋าครบทั้งเจ็ดกฎ</b> — ฟ้าไม่ริษยาอีกต่อไป สายฟ้ากลายเป็นพลังของคุณ · พรสวรรค์ ×1.15','myth',true);keyAdd('หยั่งรู้มหาเต๋าครบเจ็ดกฎ')}}catch(e){}return r}}
+function daoYear(){if(!S||!S.alive||!S.dao)return;for(const k in DAO_FX){const l=daoLv(k),f=DAO_FX[k][1];if(l&&f)try{f(l)}catch(e){}}}
+{const _tt=talTick;talTick=function(){const r=_tt.apply(this,arguments);try{daoYear()}catch(e){}return r}}
+function daoBolt(){const sum=typeof daoSum==='function'?daoSum():0,lt=daoLv('กฎสายฟ้า');
+ if(sum>=35||lt>=5){if(Math.random()<.035){S.power+=pctPow(.02);S.qi+=1;log('⚡ สายฟ้าฟาดลงมา… แต่ถูกกายาเต๋าดูดกลืน กลายเป็นพลังของคุณ (พลัง +2% · ลมปราณ +1)','epic')}return}
+ const p=.035*Math.max(.15,1-sum/35);if(Math.random()<p){const d=Math.round(S.maxHp*.25*Math.max(.2,1-lt*.15-sum/70));S.hp-=d;log(`⚡ ฟ้าริษยากายาเต๋า — สายฟ้าฟาดลงกลางวันแสกๆ พลังชีวิต −${d}${sum?` (เต๋า ${sum}/35 ช่วยลดลงแล้ว)`:''}`,'bad')}}
+{const _to=tribOdds;tribOdds=function(t,k){const o=_to.apply(this,arguments);try{const l=daoLv('กฎสายฟ้า');if(l){o.ps=Math.min(.95,o.ps+.03*l);o.pd=o.pd*(1-.1*l)}if(S.flags&&S.flags.dao35){o.ps=Math.min(.97,o.ps+.08);o.pd*=.5}}catch(e){}return o}}
+{const _xp=xTribP;xTribP=function(){let v=_xp.apply(this,arguments);try{v=Math.min(.97,v+.03*daoLv('กฎสายฟ้า')+(S.flags&&S.flags.dao35?.08:0))}catch(e){}return v}}
+function openDao(){const D=S.dao||{};modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☯️ กฎแห่งเต๋า</h3><p class="tag2">หยั่งรู้แล้ว <b>${daoSum()}</b>/35 ขั้น (7 กฎ × 5 ขั้น) · หยั่งรู้ได้จากการนั่งสมาธิในโลกเซียน ถ้ำบ่มเพาะ เหตุการณ์ และกายาเต๋า · ครบทุกกฎ = ฟ้าไม่ผ่ากายาเต๋าอีก สายฟ้ากลายเป็นพลัง · ผ่านทัณฑ์ง่ายขึ้นมาก · พรสวรรค์ ×1.15</p>
+ ${DAO.map(k=>{const l=D[k]||0;return`<div class="sysq" style="background:none;border:1px solid var(--line)"><b>${k}</b> ${'●'.repeat(l)}${'○'.repeat(5-l)}<br><span class="tag2">${DAO_FX[k]?DAO_FX[k][0]:''}${l===5?' · ✅ สมบูรณ์':''}</span></div>`}).join('')}
+ ${S.xian&&realmIdx()>=4?`<p class="tag2">โลกเซียนตั้งแต่ระดับที่ 5: ต้องหยั่งรู้เต๋าอย่างน้อย ${(realmIdx()-3)*2} ขั้น ไม่งั้นฝึกได้ผลแค่ 40% (ติดคอขวด)</p>`:''}`,'dao')}
+
+// ===================== คู่มือ: อธิบายทุกอย่างที่ยังไม่ชัด + สารานุกรมแบบมีรายละเอียด =====================
+try{if(!GD_SEC.some(x=>x[0]==='mw'))GD_SEC.push(['mw','🏙️ ยุคปัจจุบัน','🏙️ MODERN']);if(!GD_SEC.some(x=>x[0]==='life'))GD_SEC.push(['life','👪 ชีวิตและครอบครัว','👪 LIFE'])}catch(e){}
+try{const tw=()=>{const t=TALENT.reduce((a,x)=>a+x.w,0);return x=>{const p=x.w/t*100;return p>=1?p.toFixed(1)+'%':p>=.1?p.toFixed(2)+'%':'≈1 ใน '+fmt(Math.round(100/p))}};
+ const od=tw(),base=TALENT.filter(x=>!x.id).map(x=>`<b>${x.n}</b> ×${x.m} (${od(x)})`).join(' · '),sp=TALENT.filter(x=>x.id).map(x=>`<b>${x.n}</b> ×${x.m} — ${x.d}`).join('<br>');
+ SYS_GUIDE.push(
+ {s:'grow',nw:1,ic:'🦴',t:'พรสวรรค์ (กระดูก/กายา) อ่านยังไง',go:'openTalent',life:1,d:`ตัวเลข ×… คือ<b>ตัวคูณผลการฝึก</b>ทุกปี — ×2 = ฝึก 1 ปีได้เท่าคนกระดูกธรรมดาฝึก 2 ปี · ยังคูณพลังรายปีจากระบบ และช่วยโอกาสผ่านทัณฑ์สวรรค์<br>ข้อความ "พรสวรรค์ ×1.1" ในเหตุการณ์ = <b>คูณเพิ่ม</b>จากที่มีอยู่ (×2 → ×2.2) ไม่ใช่บวก · ดูตัวเลขตอนนี้ ตอนเกิด และประวัติว่าโตมาจากอะไรได้ที่ ☰ → 🦴 พรสวรรค์ของฉัน<br><br>กระดูกพื้นฐาน (โอกาสตอนเกิด): ${base}`},
+ {s:'grow',nw:1,ic:'🧬',t:'กายาพิเศษทั้งหมด (ตัวคูณจริง)',d:sp},
+ {s:'grow',nw:1,ic:'✨',t:'พรสวรรค์พิเศษติดตัว',d:TRAITS.map(t=>`<b>${t.n}</b> — ${t.d}`).join('<br>')},
+ {s:'grow',nw:1,ic:'🟦',t:'ระบบ 2.0 — กลไกเฉพาะของแต่ละระบบ',go:'openSys',life:1,need:()=>!!(S&&S.sys),d:'ทุกระบบมีกลไกของตัวเอง ดูความคืบหน้าได้ในหน้า 🟦<br>'+SYS_TYPES.map(t=>SX[t.id]?`${t.ic} <b>${t.n}</b> · ${SX[t.id].n} — ${SX[t.id].d}`:'').filter(Boolean).join('<br>')},
+ {s:'grow',nw:1,ic:'🌿',t:'ทางแยกวิวัฒนาการของระบบ',d:'ระบบถึง <b>Lv.10</b> และ <b>Lv.20</b> จะวิวัฒนาการและให้เลือกเส้นทาง 1 ใน 2 สาย · ครั้งที่สองเลือก<b>สายเดิมซ้ำ = ผลสองเท่า</b> หรือเลือกอีกสาย = ได้ทั้งคู่ · ผลของสายทำงานทุกปี<br>'+SYS_TYPES.map(t=>SX_BR[t.id]?`${t.ic} ${t.n}: ${SX_BR[t.id].map(b=>b[0]+' ('+b[1]+')').join(' / ')}`:'').filter(Boolean).join('<br>')},
+ {s:'grow',nw:1,ic:'👑',t:'บทสุดท้ายของระบบ (อันดับ EX)',d:'เมื่อระบบเลื่อนถึง<b>อันดับ EX</b> (Lv.100 + ผ่านบททดสอบ) จะเปิด<b>เป้าหมายสุดท้าย</b>ตามชนิดระบบ ทำสำเร็จได้ฉายาเฉพาะ · พรสวรรค์ ×1.1 · อายุขัย +30 · ผลระบบ ×1.25 ถาวร · และ<b>ส่งระบบต่อให้ทายาท</b>ได้ (ลูกได้ Lv. 60% · ผล ×1.1)<br>'+SYS_TYPES.map(t=>{const F=SX_FIN[t.id];return F?`${t.ic} ${t.n}: ${typeof F[0]==='function'?'มีเงินถึงเกณฑ์ (ยุทธภพ 10 ล้าน · เซียน 50 ล้าน · เทพ 1,000 ล้าน)':F[0]} → 「${F[2]}」`:''}).filter(Boolean).join('<br>')},
+ {s:'grow',nw:1,ic:'📊',t:'ตัวคูณระบบ · EXP · SP คืออะไร',d:'<b>ตัวคูณระบบ</b> = เกรด (สามัญ ×1 · ทองคำ ×1.25 · ศักดิ์สิทธิ์ ×1.5 · บรรพกาลสูงกว่า) × วิวัฒนาการ (+15% ต่อขั้น) × อันดับ (+6% ต่ออันดับ) × บทสุดท้าย ×1.25 · คูณ EXP · SP · รางวัลเควส และพลังรายปีของระบบ<br><b>พลังจากระบบต่อปี</b> = (5 + Lv×6) × พรสวรรค์ × ตัวคูณระบบ (เทพยุทธ์ ×1.3)<br><b>EXP</b> ใช้ขึ้นเลเวล (ต้อง 120 + Lv×90) · ขึ้นเลเวลได้แต้มสถานะ 5 · SP 10 · <b>SP</b> ใช้ซื้อของในร้านระบบ · <b>แต้มสถานะ</b> กดเพิ่ม ยุทธ์/ลมปราณ/ปัญญา/เสน่ห์/ร่างกาย · ดูตัวเลขทั้งหมดได้ที่ 🟦 → 📊 ตัวเลขของระบบ'},
+ {s:'grow',nw:1,ic:'☯️',t:'กฎแห่งเต๋า (7 กฎ × 5 ขั้น)',go:'openDao',life:1,d:'หยั่งรู้จากการนั่งสมาธิในโลกเซียน ถ้ำบ่มเพาะ เหตุการณ์ และ<b>กายาเต๋า</b> (หยั่งรู้เองได้ทุกโลก) · แต่ละกฎให้ผลทุกปีตามขั้น:<br>'+Object.entries(DAO_FX).map(([k,v])=>`<b>${k}</b> — ${v[0]}`).join('<br>')+'<br>บรรลุกฎใดครบ 5 ขั้น = ชื่อเสียง +200 · <b>ครบทั้ง 35 ขั้น</b> = พรสวรรค์ ×1.15 · ผ่านทัณฑ์ง่ายขึ้นมาก · <b>กายาเต๋าจะไม่ถูกฟ้าผ่าอีก</b> สายฟ้ากลายเป็นพลังแทน · ยิ่งหยั่งรู้มาก ฟ้าผ่ายิ่งน้อยและเบาลง (กฎสายฟ้าช่วยมากที่สุด) · โลกเซียนตั้งแต่ระดับที่ 5 ต้องมีเต๋าพอ ไม่งั้นติดคอขวด (ฝึกได้ 40%)'},
+ {s:'grow',nw:1,ic:'⚡',t:'ทัณฑ์สวรรค์ — อะไรช่วยให้รอด',d:'โอกาสผ่านคิดจาก 6 อย่าง: <b>พรสวรรค์ · ร่างกาย (พลังชีวิตสูงสุด) · ลมปราณ · ปัญญา · กรรม · พลัง</b> (หน้าทัณฑ์โชว์เป็นแถบ ▰▱ และเกรด) · เพิ่มได้ด้วยการเตรียมตัว (ปีที่เลื่อนออกไป) · ยาฝ่าทัณฑ์ · <b>กฎสายฟ้า</b> (+3% ผ่าน · ตายยากขึ้น 10% ต่อขั้น) · หยั่งรู้มหาเต๋าครบ · ล้มเหลวครั้งก่อนจะได้โบนัสครั้งถัดไป'},
+ {s:'grow',nw:1,ic:'⏳',t:'อายุขัยและเพดานอายุ',d:'อายุขัยมาจากระดับพลัง + ลมปราณ + พรสวรรค์ · มีเพดานตามโลก: ยุทธภพ 150 ปี (ระดับสูงสุด 200) · โลกเซียน 380–480 · โลกเทพ 800–1,000 และเพิ่มตามรากฐาน · <b>ยาและของเพิ่มอายุขัยที่ซื้อหรือได้รับ บวกเหนือเพดานได้จริง</b> (ร้านสมบัติ · ประมูล · ยาอายุวัฒนะ · อันดับระบบ · กล่องเช็คอิน) · ตัวเลขใต้อายุมุมซ้ายบนคืออายุขัยโดยประมาณ (แดง = ใกล้หมด)'},
+ {s:'mw',nw:1,ic:'🏙️',t:'เข้ายุคปัจจุบันได้ 4 ทาง',d:'1) ถึงขั้นสูงสุดของยุทธภพแล้ว<b>ก้าวเข้ารอยแยก</b> (หรือ ☰ → 🌀 หลงยุค) · 2) ปลายเกมแดนเทพมีโอกาสเจอ<b>มิติปริศนา</b> · 3) หน้าแรก → ปุ่ม 🏙️ ยุคปัจจุบัน: <b>🎲 สุ่มเกิดเป็นคนยุคนี้</b> · <b>🌀 ยอดฝีมือหลงยุค</b> (ชีวิตล่าสุด) · <b>📜 เลือกชีวิตจากชาติที่แล้ว</b> · 4) ตายในยุคนี้แล้ว<b>เล่นต่อเป็นลูก</b> · ประเทศสุ่ม: ไทย อเมริกา จีน ญี่ปุ่น เกาหลีใต้ ไต้หวัน · ชีวิตในยุคนี้ไม่ขึ้นทำเนียบ (เบต้า)'},
+ {s:'mw',nw:1,ic:'📊',t:'กรอบสถานะยุคปัจจุบัน',d:'แตะแถวบนสุดของกรอบเพื่อ<b>ย่อ/ขยาย</b> · 🤫 <b>ความลับรั่ว</b> — คนเริ่มสงสัยว่าคุณไม่ใช่คนธรรมดา ถึง 100 จะถูกหน่วยงานตามตัว (ใช้ชีวิตเงียบๆ / ย้ายเมืองช่วยลด) · 🏙️ <b>ความคุ้นเคย</b> — ปรับตัวกับยุคนี้ได้แค่ไหน ยิ่งสูงยิ่งหางานง่าย · 📈 <b>ผู้ติดตาม</b> — ชื่อเสียงในโซเชียล · 🌀 <b>ปราณ</b> — ขั้นปราณของยุคนี้ (ปราณเบาบางมาก) · 🗣️ <b>ภาษา</b> — คนข้ามมิติเริ่มฟังไม่ออก ต้องเรียนถึงจะทำงานดีๆ ได้'},
+ {s:'mw',nw:1,ic:'💼',t:'งาน · เงิน · ค่าครองชีพ',d:'แต่ละประเทศมีอาชีพจริง 8 สาย 3 ระดับ เงินเดือนอ้างอิงค่าแรงปี 2026 · ทุกปีหักค่าครองชีพ (ห้องเช่า กิน เดินทาง) · เงินไม่พอจะเริ่มเป็นหนี้ หนี้นอกระบบดอกโหด · 🏠 ทรัพย์สิน: บ้าน รถ ประกัน เงินออมเกษียณ · ไม่มีเอกสารตัวตนจะทำได้แค่งานนอกระบบ'},
+ {s:'mw',nw:1,ic:'🪪',t:'เอกสารตัวตน',d:'คนหลงยุคเริ่มแบบ<b>ไม่มีตัวตน</b> · ทำ<b>เอกสารปลอม</b> (เร็วแต่ถูกจับได้) · ขอ<b>ตัวตนถูกกฎหมาย</b> (ช้า ต้องมีคนช่วย) · หรือเข้าสังกัด<b>หน่วยงานลับ</b> · เอกสารมีผลกับงาน ธนาคาร การเดินทาง'},
+ {s:'mw',nw:1,ic:'🌀',t:'โลกฮันเตอร์',d:'ยอดฝีมือหลงยุคมีโอกาสราวครึ่งหนึ่งที่จะตื่นมาในโลกที่มี<b>เกต</b>และ<b>ฮันเตอร์</b>อยู่แล้ว · โลกปกติก็มีโอกาสราว 1% ที่เกตจะเปิดกลางชีวิต · ลงทะเบียนฮันเตอร์ได้แรงก์ E → S · เข้ากิลด์ · ล้างเกต · บางคนได้พลังเหนือมนุษย์หรือ "ระบบ" จากตัวตนปริศนา · ซ่อนพลังเป็นฮันเตอร์อ่อนๆ ได้'},
+ {s:'mw',nw:1,ic:'⏳',t:'อายุในยุคปัจจุบัน',d:'<b>มนุษย์ธรรมดา</b>มีอายุขัยแบบคน · <b>เซียนหรือคนที่อายุเกินมนุษย์</b>ใช้อายุขัยตามขั้นของตัวเองที่เหลืออยู่ หน้าตาไม่แก่ (ดูอายุ 22–32) จนเหลือ 40 ปีสุดท้าย · <b>เทพจากแดนเทพ</b>เป็นอมตะ (อายุโชว์ ∞) · ของเพิ่มอายุขัยใช้ได้กับมนุษย์และเซียน'},
+ {s:'mw',nw:1,ic:'🚫',t:'สิ่งที่ไม่มีในยุคปัจจุบัน',d:'ระบบจากยุทธภพ · AI คู่ใจ · สัตว์วิญญาณ · ประมูลทั่วยุทธภพ · ผู้เล่นจริงข้ามมิติ · นักล่าค่าหัว — ถูกเก็บไว้เป็นความทรงจำชาติเก่า ดูได้ที่ 📜 ชีวิตก่อน · ระบบเฉพาะของยุคนี้คือระบบจากตัวตนปริศนาในโลกฮันเตอร์ และเควสของยุคนี้'})}catch(e){console.error(e)}
+// สารานุกรม: รายละเอียดกระดูก/กายา และกลไกระบบ
+{const _ocD=openCodex;openCodex=function(){const r=_ocD.apply(this,arguments);try{const C=cdx(),box=document.querySelector('#modal .cxbody')||document.querySelector('#modal div[style*="max-height"]');if(box&&!box.querySelector('.cdxDet')&&(!arguments[0]||arguments[0]==='all')){const tot=TALENT.reduce((a,x)=>a+x.w,0);
+ const tal=TALENT.map(t=>{const k=C.tal&&C.tal[t.n];return`<div class="tag2" style="padding:3px 0;border-bottom:1px dashed var(--line)">${k?`<b>${esc(t.n)}</b> ×${t.m} · โอกาส ${(t.w/tot*100).toFixed(t.w/tot*100>=1?1:2)}% — ${esc(t.d||'')}`:'??? — ยังไม่เคยเกิดด้วยกระดูกนี้'}</div>`}).join('');
+ const sy=SYS_TYPES.map(t=>{const k=C.sys&&C.sys[t.id],X=SX[t.id],F=SX_FIN[t.id];return`<div class="tag2" style="padding:3px 0;border-bottom:1px dashed var(--line)">${k?`${t.ic} <b>${esc(t.n)}</b> — ${esc(t.d)}${X?`<br>กลไก: ${X.n} — ${X.d}`:''}${F?`<br>บทสุดท้าย: 「${F[2]}」`:''}`:'??? — ยังไม่เคยได้ระบบนี้'}</div>`}).join('');
+ box.insertAdjacentHTML('beforeend',`<details class="item cdxDet"><summary><b>🦴 กระดูกและกายา (รายละเอียด)</b></summary>${tal}</details><details class="item cdxDet"><summary><b>🟦 ระบบ (รายละเอียด)</b></summary>${sy}</details>`)}}catch(e){console.error(e)}return r}}
 </script>
 </body>
 </html>
