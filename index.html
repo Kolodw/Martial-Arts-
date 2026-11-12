@@ -14957,6 +14957,20 @@ ${M} .focus .fc small.fch{display:none}
  // กล่องเป้าหมาย: บนมือถือย่อเหลือบรรทัดเดียว แตะเพื่อกาง/ย่อ
  document.addEventListener('click',e=>{const gb=e.target.closest&&e.target.closest('#game #goalBox');if(!gb||!MQ())return;e.stopPropagation();gb.classList.toggle('gmx');gb.classList.remove('gmin')},true)}
 
+
+// ===================== v16.9 หน้าแรก: แถบเมนูล่างแบบแคปซูลลอย (เลือกกลับเป็นแบบเดิมได้ในเมนู) =====================
+(function(){const st=document.createElement('style');st.textContent=`
+body.dkcap #tDock .nav{max-width:430px;margin:10px auto 0;padding:5px 6px;border-radius:26px;background:rgba(20,15,32,.74);-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);border:1px solid color-mix(in srgb,var(--pink) 55%,transparent);box-shadow:0 8px 22px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.09)}
+body.dkcap #tDock .nav button{font-size:10px;padding:5px 0 4px;border-radius:20px;gap:2px;color:#e8dcc0;transition:transform .12s ease,background .15s}
+body.dkcap #tDock .nav button i{font-size:18px;line-height:1.05;filter:saturate(.85)}
+body.dkcap #tDock .nav button:active{transform:scale(.9);background:rgba(255,255,255,.09)}
+@media (hover:hover){body.dkcap #tDock .nav button:hover{background:rgba(255,255,255,.06)}}
+body.dkcap #tDock{padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+`;document.head.appendChild(st)})();
+{const ap=()=>{try{document.body.classList.toggle('dkcap',LS.get('murim_dock','cap')!=='old')}catch(e){}};ap();window.dockStyleApply=ap;
+ window.dockToggle=()=>{const v=LS.get('murim_dock','cap')==='old'?'cap':'old';LS.set('murim_dock',v);ap();try{toast(v==='cap'?'💊 แถบเมนูล่าง: แบบแคปซูล':'▭ แถบเมนูล่าง: แบบเดิม')}catch(e){}openTitleMenu()};
+ const _otD=openTitleMenu;openTitleMenu=function(){const r=_otD.apply(this,arguments);try{const gr=$('modal').querySelector('.tmgrid');if(gr&&!gr.querySelector('[data-dock]')){const old=LS.get('murim_dock','cap')==='old';gr.insertAdjacentHTML('beforeend',`<button class="cb" data-dock="1" onclick="dockToggle()"><i>${old?'▭':'💊'}</i>แถบล่าง: ${old?'แบบเดิม':'แคปซูล'}</button>`)}}catch(e){}return r}}
+
 </script>
 </body>
 </html>
