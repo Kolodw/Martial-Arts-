@@ -15975,7 +15975,7 @@ function mwLoc(x){if(typeof x!=='string'||!x||!mwOn())return x;const C=mwCC();if
 {const _meC=mwEnter;mwEnter=function(how,cc){const r=_meC.apply(this,arguments);try{if(S.mw&&!S.mw.cc){const k=cc||window._mwCC;S.mw.cc=MW_CC[k]?k:ch(Object.keys(MW_CC));window._mwCC=null;const C=mwCC();addFeed('ev',`${C.f} คุณตื่นขึ้นในประเทศ<b>${C.n}</b> — เมือง${C.city} ปี ${MW_Y0}`,'sum');render();saveGame()}}catch(e){console.error(e)}return r}}
 function mwPickCC(nx){window._mwNx=nx;modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌍 จะตื่นขึ้นที่ไหน</h3><div class="mgrid">${Object.entries(MW_CC).map(([k,C])=>`<button class="opt" onclick="window._mwCC='${k}';closeM();setTimeout(window._mwNx,150)">${C.f} ${C.n}<small>${C.city}</small></button>`).join('')}<button class="opt" onclick="window._mwCC=null;closeM();setTimeout(window._mwNx,150)">🎲 สุ่ม<small>ให้รอยแยกเลือก</small></button></div>`,'mwcc')}
 // ปุ่มข้ามยุคในเมนู และหน้าแรก → เลือกประเทศก่อน
-mwAsk=function(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌀 หลงยุคสู่ปี ${MW_Y0}</h3><p><b>${esc(S.name)}</b> จะข้ามไปยุคปัจจุบัน พร้อมความทรงจำและวิชาทั้งหมด แต่พลังเหลือราว 1 ใน 100 เพราะปราณเบาบาง</p><p class="tag2">ทดสอบเฉพาะแอดมิน · ชีวิตนี้จะไม่ขึ้นทำเนียบ · ย้อนกลับไม่ได้</p><div class="brow"><button class="gbtn" onclick="closeM()">ยกเลิก</button><button class="pbtn" onclick="closeM();setTimeout(()=>mwPickCC(()=>mwEnter('menu',window._mwCC)),150)">เลือกประเทศ →</button></div>`,'mwask')};
+mwAsk=function(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌀 หลงยุคสู่ปี ${MW_Y0}</h3><p><b>${esc(S.name)}</b> จะข้ามไปยุคปัจจุบัน พร้อมความทรงจำและวิชาทั้งหมด แต่พลังเหลือราว 1 ใน 100 เพราะปราณเบาบาง</p><p class="tag2">ทดสอบเฉพาะแอดมิน · ชีวิตนี้จะไม่ขึ้นทำเนียบ · ย้อนกลับไม่ได้</p><div class="brow"><button class="gbtn" onclick="closeM()">ยกเลิก</button><button class="pbtn" onclick="closeM();setTimeout(()=>mwPickCC(()=>mwEnter('menu',window._mwCC)),150)">ข้ามยุค</button></div>`,'mwask')};
 {const _nlC=mwNewLost;mwNewLost=function(){if(window._mwPicked){window._mwPicked=0;const k=window._mwCC;_nlC.apply(this,arguments);window._mwCC=k;return}closeM();setTimeout(()=>mwPickCC(()=>{window._mwPicked=1;mwNewLost()}),150)}}
 // HUD / ป้ายฉาก ตามประเทศ
 {const _rnC=render;render=function(){const r=_rnC.apply(this,arguments);try{if(mwOn()){const C=mwCC(),t=document.querySelector('#mwHud .mwhT');if(t&&C.city!=='กรุงเทพฯ')t.innerHTML=t.innerHTML.replace('🏙️ กรุงเทพฯ',`${C.f} ${C.city}`);else if(t)t.innerHTML=t.innerHTML.replace('🏙️ กรุงเทพฯ',`${C.f} กรุงเทพฯ`);
@@ -16088,6 +16088,9 @@ const MW_FORCE=[[2,'tbmine'],[3,'ppl'],[5,'anc1'],[6,'tboth'],[8,'anc3'],[12,'an
  if(Object.keys(M.rs).length>rs0)return r; // ปีนี้มีเหตุการณ์สุ่มแล้ว
  for(const [y,id] of MW_FORCE){if(M.y<y||M.rs[id]!=null)continue;const e=MW_R.find(x=>x.id===id);let ok=0;try{ok=e&&e.c(M,M.past)}catch(x){}if(!ok)continue;M.rs[id]=M.y;const me=S;setTimeout(()=>{const go=()=>{if(S!==me||!S||!S.alive||!S.mw)return;if(choice._cur)return setTimeout(go,700);try{e.go(S.mw,S.mw.past)}catch(x){console.error(x)}};go()},900);break}}}catch(e){console.error(e)}return r}}
 
+
+// ประเทศสุ่มเสมอ (ไม่ให้เลือก)
+mwPickCC=function(nx){window._mwCC=null;nx()};
 </script>
 </body>
 </html>
