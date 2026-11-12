@@ -460,8 +460,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='16.1';
+const VERSION='16.2';
 const CHANGELOG=[
+ {v:'16.2',d:'12 พ.ย. 2026',l:['🏠 <b>หน้าแรกใหม่</b> — ปุ่มเกิดใหม่/เล่นต่อด้านล่าง · เมนูลัด · แถบข่าวยุทธภพ · ตัวละครล่าสุดยืนกลางฉาก','🌄 <b>พื้นหลังหน้าแรกวาดใหม่</b> ทั้งยุทธภพและโลกเซียน คมขึ้น เปลี่ยนตามเวลาจริงและฤดูกาล','✨ ปุ่มมีอนิเมชั่นตอนกด · ทั้งเกมเปลี่ยนเป็นสไตล์ทองเดียวกัน','🔥 <b>โหมดนรก 18 ชั้น</b> — ประตูนรก คำสาป แก่นนรกแลกพร สัญญาปีศาจ กฎประจำสัปดาห์ ทำเนียบนับจากชั้นที่ลงได้ลึกสุด','👩 ตัวละครหญิงใส่กระโปรงยาว หน้าตาชัดขึ้น · ทรงผมใหม่ 4 แบบ · ภาพตัวละครและสัตว์อสูรคมขึ้น','🐉 อสูรแปลงกายไปต่อขั้นเหนือขีดจำกัดได้ · ขึ้นโลกเซียนได้มรดกตามความแกร่ง · ชื่อขั้น มหาเทพสูงสุด']},
  {v:'16.1',d:'12 พ.ย. 2026',l:['🏮 <b>ชาติกำเนิดใหม่ 8 แบบ</b> มีเนื้อเรื่องเฉพาะ — ล่าบัญชีแค้นล้างตระกูล · ปรมาจารย์กลับชาติ · บุตรลับจักรพรรดิชิงบัลลังก์ · เด็กที่สัตว์อสูรเลี้ยง · แหกคุกใต้ดิน · บุตรหมอเทวดา · เด็กคืนสุริยคราส · ทายาทเศรษฐี','✨ <b>พรสวรรค์ใหม่ 8 แบบ</b> — บานช้า · กลืนกิน · เนตรลอกเลียน · กายาสายฟ้า · ชีพจรเดียวดาย · กระดูกแตกแล้วแกร่ง · เซียนสุรา · หยกเย็นนิรันดร์','🌟 <b>ฉากกาชา</b>ตอนเกิด N→UR · <b>คอมโบลับ</b> 8 คู่พร้อมฉายา · <b>ชาติกำเนิดลับ</b> 3 แบบต้องปลดล็อก · ลูกสืบทอดพรสวรรค์ได้','🏟️ <b>ฉายาลาน</b>โฉมใหม่ อนิเมชั่นอลังการตามราคา · เพิ่มฉายาใหม่ 4 แบบ ถึง <b>จักรพรรดิแห่งเงา</b>','👪 <b>ตั้งชื่อลูกและสัตว์เลี้ยงเอง</b>ได้ (ไม่ตั้งก็ได้) · 🍼 เลือกได้ว่าจะมีลูกหรือไม่ แต่คู่ชีวิตจะผิดหวัง','⚗️ ของคราฟต์สายโกงทำยากขึ้น วัตถุดิบมีจำกัดต่อปี · 🏮 ชื่อเสียงลดตามความดังเบาลงและบอกยอดจริง · 📚 คู่มือและสารานุกรมเพิ่มหมวดชาติกำเนิด พรสวรรค์ คอมโบ · 🛠️ แก้บั๊กภาพสัตว์อสูร']},
  {v:'16.0',d:'12 พ.ย. 2026',l:['🍃 ยุทธภพอยู่ได้เกิน 200 ปี — ขั้น<b>จาเยินกยอง</b> · <b>ปันโรฮวานดง</b> คืนวัยหนุ่ม · เหตุการณ์ปรมาจารย์แห่งยุค และทางเลือกปลายชีวิต','💀 rework <b>โหมดนรก ชีวิตสั้น รากขยะ</b> — นรกระบบ/AI หายาก ทัณฑ์ซ้อน · ชีวิตสั้นโอกาสพิเศษสูง ปลดปล่อยปีละ 2 ครั้ง เผาผลาญอายุ · รากขยะมีโชคของขยะและแรงฮึด · ลานประลองได้เหรียญเพิ่ม · ทำเนียบชีวิตสั้นคิดจากความเร็ว','🏮 ชื่อเสียงมีเพดานตามโลกและแสดงเป็นระดับ · เป้าหมายชื่อเสียงสูงขึ้น','📱 ปรับขนาดหน้าจอได้ที่ ☰ → ขนาดหน้าจอ','🎖️ หน้าเลือกฉายาใหม่ แบ่งหมวด ค้นหาได้ ลื่นขึ้น · ฉายา <b>Nano Machine</b> โฉมใหม่','🏛️ ประมูลทั่วยุทธภพเวลาต่อชิ้นนานขึ้น พิมพ์ราคาได้ง่ายขึ้น · 🛠️ แก้บั๊กเงินติดลบหลังย้อนเวลา และภาพหลุมศพค้าง']},
  {v:'15.9',d:'11 พ.ย. 2026',l:['💥 ปลดปล่อยพลังมี<b>ท่าเฉพาะสาย</b> — กระบี่ฟันฉาก ฝ่ามือยักษ์ตกจากฟ้า เสาเพลิง หนามน้ำแข็ง ฟ้าผ่า หลุมดำ มังกรพุ่ง · สัตว์อสูรพ่นไฟ คำราม ฟาดหาง กรงเล็บ · เกรดสูงมีฉากตัดหน้าตัวละครและจอแตก','❓ <b>สอนเล่นแบบพาทัวร์</b> เปิดหน้าจริงให้ดูทีละหน้า ดูซ้ำได้ที่ ☰ → วิธีเล่น','🛠️ วิชาของสัตว์ที่แปลงกายและวิชามรดกรุ่นลูกพัฒนาขั้นได้แล้ว']},
@@ -14437,12 +14438,12 @@ body.ttl #langBtn,body.ttl #admBtn,body.ttl #profBtn,#title .tsupport{display:no
 #title details.tadv>summary::-webkit-details-marker{display:none}
 #title details.tadv[open]>summary{margin-bottom:6px}
 /* ---- A + F: แถบล่าง ---- */
-#tDock{position:fixed;left:0;right:0;bottom:0;z-index:55;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(10,8,18,0),rgba(10,8,18,.92) 28%);display:none}
+#tDock{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(10,8,18,0),rgba(10,8,18,.92) 28%);display:none}
 body.ttl #tDock{display:block}
 #tDock .row{display:flex;gap:8px;max-width:640px;margin:0 auto}
 #tDock .tgo{flex:1.4;font:inherit;font-weight:800;font-size:19px;color:#1d1405;background:linear-gradient(180deg,#ffe29a,#e8b54a 55%,#c98d22);border:2px solid #7a5512;border-radius:14px;padding:11px 8px;box-shadow:0 4px 0 #7a5512,0 0 18px var(--goldG);cursor:pointer;position:relative;overflow:hidden}
 #tDock .tgo i{display:inline-block;font-style:normal}
-#tDock .tgo.spin i{animation:tDice .5s cubic-bezier(.3,1.6,.5,1)}
+#tDock .tgo.dspin i{animation:tDice .5s cubic-bezier(.3,1.6,.5,1)}
 @keyframes tDice{0%{transform:rotate(0) scale(1)}60%{transform:rotate(540deg) scale(1.35)}100%{transform:rotate(720deg) scale(1)}}
 #tDock .tcont{flex:1;font:inherit;font-size:13px;color:#f6ead0;background:rgba(30,24,44,.95);border:2px solid var(--gold);border-radius:14px;padding:6px 8px;cursor:pointer;text-align:left;line-height:1.25;min-width:0;box-shadow:0 4px 0 #3a2a10}
 #tDock .tcont b{display:block;font-size:14px;color:var(--goldL);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -14471,7 +14472,7 @@ button.errf,.lockshake{animation:bErr .4s}
 button.errf{box-shadow:0 0 0 2px #e04050!important}
 /* ---- 4: แท็บเลื่อนนุ่ม ---- */
 .cxtab,.sp2tabs button,.seg button{transition:border-color .18s,box-shadow .18s,background-color .18s,color .18s}
-@media (prefers-reduced-motion:reduce){.rpl,.bpx,#tNews span,#tDock .tgo.spin i,button.okf,button.errf,.lockshake{animation:none!important}}
+@media (prefers-reduced-motion:reduce){.rpl,.bpx,#tNews span,#tDock .tgo.dspin i,button.okf,button.errf,.lockshake{animation:none!important}}
 `;document.head.appendChild(st)})();
 {const lastSave=()=>{let best=null;try{SLOTS.forEach(n=>{const sv=readSave(n);if(sv&&sv.S&&sv.S.alive!==false&&(!best||(sv.t||0)>(best.sv.t||0)))best={n,sv}})}catch(e){}return best};
  const LK='murim_lastLook';
@@ -14497,7 +14498,7 @@ button.errf{box-shadow:0 0 0 2px #e04050!important}
   // A + F: แถบล่าง
   if(!$('tDock'))document.body.insertAdjacentHTML('beforeend',`<div id="tDock"><div class="row"><button class="tcont" id="tCont" style="display:none"></button><button class="tgo" id="tGo"><i>🎲</i> เกิดใหม่</button></div>
    <div class="nav"><button onclick="goDaily()"><i>📅</i>ชะตาวันนี้</button><button onclick="openBook()"><i>📖</i>สมุดตำนาน</button><button onclick="openOnline('arena')"><i>🏟️</i>ลาน</button><button onclick="openOnline()"><i>🌐</i>ออนไลน์</button><button onclick="openTitleMenu()"><i>☰</i>เมนู</button></div></div>`);
-  $('tGo').onclick=function(){this.classList.remove('spin');void this.offsetWidth;this.classList.add('spin');setTimeout(()=>goBirthPick(),260)};
+  $('tGo').onclick=function(){this.classList.remove('dspin');void this.offsetWidth;this.classList.add('dspin');setTimeout(()=>{this.classList.remove('dspin');goBirthPick()},520)};
   const ls=lastSave(),tc=$('tCont');if(ls&&tc){tc.style.display='';tc.innerHTML=`<b>▶ เล่นต่อ</b><small>${esc(ls.sv.S.name)} · ${ls.sv.S.age} ปี${ls.sv.S.xian?' ☁️':''}</small>`;tc.onclick=()=>loadGame(ls.n)}else if(tc)tc.style.display='none'}
  window.tRedo=build;
  {const _sh=show;show=function(id){const r=_sh.apply(this,arguments);if(id==='title')setTimeout(build,30);return r}}
