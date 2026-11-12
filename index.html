@@ -13970,13 +13970,13 @@ function sp2Data(){const out=[];try{const cur=showTtl();
 const SP2_RC=['#9aa0a8','#9aa0a8','#5ac06a','#4a9aff','#b070ff','#ffb020','#ff5ac0','#ff3a3a','#40c8ff','#ffd040'];
 function sp2List(){const box=$('sp2L');if(!box)return;const D=sp2Data(),q=SP2.q.trim().toLowerCase();
  let L=D.filter(x=>(SP2.tab==='all'||x.tab===SP2.tab)&&(!SP2.rar||(SP2.rar===6?x.r>=6:x.r===SP2.rar))&&(!q||x.t.toLowerCase().includes(q)||(x.g||'').toLowerCase().includes(q)));
- const G={};L.forEach(x=>{(G[x.g]=G[x.g]||[]).push(x)});const keys=Object.keys(G).sort((a,b)=>{const o=s=>/ทำเนียบ/.test(s)?0:/ลาน/.test(s)?1:/เรียกขาน/.test(s)?3:2;return o(a)-o(b)||G[b].length-G[a].length});
+ const G={};L.forEach(x=>{(G[x.g]=G[x.g]||[]).push(x)});const keys=Object.keys(G).sort((a,b)=>{const o=s=>/ทำเนียบ|อันดับ/.test(s)?0:/ลาน/.test(s)?1:/อีเวนต์/.test(s)?1.5:/เรียกขาน/.test(s)?3:2;return o(a)-o(b)||G[b].length-G[a].length});
  const cnt=$('sp2N');if(cnt)cnt.textContent=`${L.length} ฉายา`;
  if(!L.length){box.innerHTML='<p class="tag2" style="text-align:center;padding:16px 0">ไม่พบฉายาที่ค้นหา</p>';return}
  box.innerHTML=keys.map(g=>{const A=G[g].sort((a,b)=>(b.r||0)-(a.r||0)||a.t.localeCompare(b.t,'th')),lim=SP2.more[g]||(q?999:24),sh=A.slice(0,lim);
   return`<details class="sp2g" open><summary>${esc(g)} <small>${A.length}</small></summary><div class="sp2grid">${sh.map(x=>`<button class="sp2c ${x.on?'on':''} ${x.t==='Nano Machine'?'nano':''}" style="--c:${x.t==='Nano Machine'?'#ff1e3c':SP2_RC[Math.min(9,x.r||0)]}" onclick='setShowTtl(${JSON.stringify(x.t).replace(/'/g,"&#39;")},${x.r||0},"${x.k}")'><b>${esc(x.t)}</b><small>${'★'.repeat(Math.min(6,Math.max(1,x.r||1)))}${x.sub?' · '+esc(x.sub):''}</small></button>`).join('')}</div>${A.length>lim?`<button class="gbtn sp2more" onclick="SP2.more[${JSON.stringify(g).replace(/"/g,'&quot;')}]=999;sp2List()">แสดงอีก ${A.length-lim} อัน</button>`:''}</details>`}).join('')}
 openShowPick=function(from){if(from)openShowPick._from=from;const sc0=(modalOpen&&$('modal').dataset.k==='showpick')?$('modal').scrollTop:0;setTimeout(()=>{try{if(sc0&&$('modal').dataset.k==='showpick')$('modal').scrollTop=sc0}catch(e){}},0);const cur=showTtl(),D=sp2Data(),back=openShowPick._from==='profile'?"openShowPick._from=null;openProfile()":'openBook()';
- const tabs=[['all','ทั้งหมด'],['rk','🏆 ทำเนียบ'],['ar','🏟️ ลาน'],['a','📖 สมุดตำนาน'],['t','🏷️ ถูกเรียกขาน']].filter(([k])=>k==='all'||D.some(x=>x.tab===k));
+ const tabs=[['all','ทั้งหมด'],['rk','🏆 อันดับ'],['ar','🏟️ ฉายาแลก'],['a','📖 สมุดตำนาน'],['t','🏷️ ถูกเรียกขาน'],['ev','🎉 อีเวนต์/พิเศษ']].filter(([k])=>k==='all'||D.some(x=>x.tab===k));
  if(!tabs.some(x=>x[0]===SP2.tab))SP2.tab='all';
  modal(`<button class="xbtn" onclick="${back}">✕</button><h3>🎖️ เลือกฉายาที่จะโชว์</h3><p class="tag2">โชว์ข้างชื่อคุณในแชทโลก ทำเนียบ และตอนคนอื่นดูคุณเล่น · เลือกได้ทีละ 1 อัน</p>
  <div class="sp2cur">ตอนนี้: ${cur?tchipH(cur.t,cur.r):'<span class="tag2">— ไม่โชว์ —</span>'} ${cur?`<button class="gbtn" style="padding:3px 10px" onclick="setShowTtl('',0,'')">ไม่โชว์</button>`:''}</div>
@@ -14329,6 +14329,22 @@ const nb=(k,i)=>` <button onclick="nameAsk('${k}',${i})" style="font-size:12px;p
 .tchip.tar .tsp:nth-of-type(1){left:12%;top:20%;animation-delay:0s}.tchip.tar .tsp:nth-of-type(2){left:38%;top:70%;animation-delay:.55s}.tchip.tar .tsp:nth-of-type(3){left:66%;top:25%;animation-delay:1.1s}.tchip.tar .tsp:nth-of-type(4){left:88%;top:65%;animation-delay:1.65s}
 @keyframes taTw{0%,100%{opacity:0;transform:scale(.3)}40%{opacity:1;transform:scale(1.3)}60%{opacity:.6;transform:scale(.8)}}
 @media (prefers-reduced-motion:reduce){.tchip.tar,.tchip.tar *,.tchip.tar::before,.tchip.tar::after{animation:none!important}}`;document.head.appendChild(st)}
+
+// ===== แอดมิน: มีฉายาครบทุกอัน · หมวดฉายาอันดับ / ฉายาแลก / อีเวนต์ =====
+{const isA=()=>!!admK();
+ {const _st=showTtl;showTtl=function(){if(isA()){const v=LS.get('murim_show',null);return v&&v.t?v:null}return _st.apply(this,arguments)}}
+ {const _api=api;api=function(a,b){if(a==='say'&&b&&!b.key&&isA())b=Object.assign({},b,{key:admK()});return _api.apply(this,[a,b,...[].slice.call(arguments,2)])}}
+ {const _sd=sp2Data;sp2Data=function(){const out=_sd.apply(this,arguments);if(!isA())return out;try{const cur=showTtl(),add=x=>out.push(Object.assign(x,{on:!!(cur&&cur.t===x.t)}));
+   const PN={d:'รายวัน',w:'รายสัปดาห์',m:'รายเดือน',dc:'ท้าทาย·รายวัน',wc:'ท้าทาย·รายสัปดาห์',mc:'ท้าทาย·รายเดือน',wa:'ลาน·รายสัปดาห์'};
+   for(const p in RKC)(RKC[p]||[]).forEach((t,i)=>{if(t)add({t,r:RKC_TR[p]||(/^m/.test(p)?9:/^w/.test(p)?8:7),k:'rk',g:'🏆 ฉายาอันดับ (แอดมิน)',tab:'rk',sub:(PN[p]||p)+' · อันดับ '+i})});
+   AR_TT.forEach(([t,r,c])=>add({t,r,k:'ar',g:'🏟️ ฉายาแลก (ลานประลอง)',tab:'ar',sub:'🪙 '+fmt(c)}));
+   const ev=[];try{if(typeof GOD_T!=='undefined')ev.push([GOD_T,6])}catch(e){}try{if(typeof NANO_T!=='undefined')ev.push([NANO_T,6])}catch(e){}
+   try{TTL_SP.forEach(x=>{if(x&&x[2])ev.push([x[2],5])})}catch(e){}
+   ev.forEach(([t,r])=>add({t,r,k:'t',g:'🎉 ฉายาอีเวนต์ · พิเศษ',tab:'ev'}));
+   try{const gOf={};ACH.forEach(([g,L])=>L.forEach(a=>{gOf[a.id]=g}));ACH_ALL.forEach(a=>add({t:a.n,r:a.r,k:'a',g:gOf[a.id]||'🏆 สมุดตำนาน',tab:'a'}))}catch(e){}
+   const seen=new Set();return out.filter(x=>{const k=x.t+'|'+x.k;if(seen.has(k))return false;seen.add(k);return true})}catch(e){console.error(e);return out}}}
+ {const _op=openShowPick;openShowPick=function(){const r=_op.apply(this,arguments);try{if(!isA())return r;const m=$('modal');const h=m.querySelector('h3');if(h&&!m.querySelector('.sp2adm'))h.insertAdjacentHTML('afterend','<p class="sp2adm tag2" style="color:#ff8fd0">👑 โหมดแอดมิน — ใช้ฉายาได้ทุกอัน รวมฉายาอันดับ ฉายาแลก และฉายาอีเวนต์</p>')}catch(e){}return r}}
+}
 
 </script>
 </body>
