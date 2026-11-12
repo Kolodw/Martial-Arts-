@@ -14843,6 +14843,19 @@ function relMidBG(c,pre,k,sc,col,RP){c.drawImage(pre,0,0,64,36,0,0,PXW,PXH);c.gl
  try{SYS_GUIDE.push({s:'world',nw:1,ic:'☁️',t:'รากฐานพันปี — ขึ้นโลกเทพ',d:'จะขึ้นโลกเทพได้ต้อง <b>1)</b> ผ่านเหนือขีดจำกัดของโลกเซียนครบขั้น 9 และ <b>2)</b> อยู่ในโลกเซียนครบ 800 ปี หรืออายุรวม 1,000 ปี (ชีวิตสั้น 300/400 · นรก 500/700) · ถึงขั้นสุดท้ายของโลกเซียนอายุขัย +300 ปี และขั้นเหนือขีดจำกัดแต่ละขั้น +100 ปี',te:'Thousand-year foundation',de:'To ascend to the god realm: clear xian beyond-limit stage 9 and spend 800 years in the xian world (or reach age 1000).'})}catch(e){}
 }
 
+// ===== สืบสายเลือดอสูร: มรดกตระกูล (ที่ดิน เงิน ตระกูล วิชา คลังสมบัติ) ส่งต่อด้วย =====
+{const _bhL=bHeir;bHeir=function(){const P=S;let E=null,pm=0,cl=null,art=null,va=null,ch0=null,hd=0;
+ try{E=P.est?JSON.parse(JSON.stringify(P.est)):null;pm=+P.money||0;cl=P.clan?JSON.parse(JSON.stringify(P.clan)):null;hd=P.clanHead?1:0;const A=(P.arts||[]).slice().sort((x,y)=>(y.b||0)-(x.b||0));art=A[0]?JSON.parse(JSON.stringify(A[0])):null;va=P.vault&&P.vault.length?JSON.parse(JSON.stringify(P.vault)):null;ch0=P.ch}catch(e){}
+ const r=_bhL.apply(this,arguments);
+ try{if(S&&S!==P){const got=[];
+   if(E){E.y=null;E.ev=[];S.est=E;got.push('🏞️ '+(typeof estLandN==='function'?estLandN(E.lv):'ที่ดินตระกูล'))}
+   if(pm>0){const m=Math.round(pm*.5);S.money=(S.money||0)+m;got.push(`💰 ${fmt(m)} ตำลึง`)}
+   if(cl){S.clan=cl;if(hd&&Math.random()<.5)S.clanHead=true;const hu=S.beastMode&&S.beastMode.human;if(hu)S.family=Object.assign({},S.family,{n:cl.n+' (รุ่นที่ '+S.gen+')'});got.push('🏯 '+esc(cl.n))}
+   if(art&&!(S.arts||[]).some(a=>a.n===art.n)){Array.prototype.push.call(S.arts,Object.assign(art,{heir:1,la:0,ly:0}));got.push('📜 '+artHtml(art))}
+   if(va){S.vault=(S.vault||[]).concat(va);got.push(`🏺 คลังสมบัติ ${va.length} ชิ้น`)}
+   if(ch0&&!S.ch)S.ch=ch0;
+   if(got.length)log(`🏮 มรดกตระกูลส่งต่อถึงรุ่นที่ ${S.gen}: ${got.join(' · ')}`,'epic',true);render();try{saveGame()}catch(e){}}}catch(e){console.error(e)}return r}}
+
 </script>
 </body>
 </html>
