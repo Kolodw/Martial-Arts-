@@ -7526,7 +7526,7 @@ function duHint(e){const t=DU.tech;return{atk:`ขยับเท้าเตร
 {const _duel=duel;duel=function(name,ep,cb){const r=_duel.apply(this,arguments);try{if(DU&&!auto){DU.combo=0;DU.best=0;DU.reads=0}}catch(e){}return r}}
 function duClear(){clearInterval(DU&&DU._iv);clearTimeout(DU&&DU._early);if(DU){DU._iv=null;DU._early=null}}
 drawDuel=function(fin){if(!DU)return;duClear();
- if(!fin){if(!DU.tech||DU._r!==DU.r){DU.tech=duTech();DU._r=DU.r;DU.shown=(tr('eye')||Math.random()<(S.ch==='hell'?.6:.75))?DU.intent:ch(['atk','heavy','feint','def','chg'].filter(x=>x!==DU.intent))}}
+ if(!fin){if(!DU.tech||DU._r!==DU.r){DU.tech=duTech();DU._r=DU.r;DU.shown=(Math.random()<(DU.ar&&DU._wk?(tr('eye')?.85:.55):(tr('eye')?1:(S.ch==='hell'?.6:.75))))?DU.intent:ch(['atk','heavy','feint','def','chg'].filter(x=>x!==DU.intent))}}
  const bar=(v,c)=>`<div class="hpbar" style="height:10px"><i style="width:${Math.max(0,v)}%;background:${c}"></i></div>`,T=duTime();
  const B=(a,ic,t,s,dis)=>`<button class="opt" onclick="duelAct('${a}')" ${dis?'disabled style="opacity:.4"':''}>${ic} ${t}<small>${s}</small></button>`;
  modal(`<h3>⚔️ ดวลกับ ${DU.name}</h3>
@@ -7542,7 +7542,7 @@ drawDuel=function(fin){if(!DU)return;duClear();
  DU._iv=setInterval(()=>{if(!DU||DU.r!==r0||$('modal').dataset.k!=='duel'){clearInterval(DU&&DU._iv);return}if(document.hidden){DU._t0+=100;return}const left=1-(Date.now()-DU._t0)/(T*1000),el=$('duT');if(el){el.style.width=Math.max(0,left*100)+'%';el.style.background=left<.3?'#ff5d73':'#f0c860'}if(left<=0){clearInterval(DU._iv);duelAct('none')}},100);
  const pe=(S.ch==='hell'?.4:.22)*(DU.intent==='atk'||DU.intent==='heavy'?1:.3);if(Math.random()<pe){DU._early=setTimeout(()=>{if(DU&&DU.r===r0&&$('modal').dataset.k==='duel'&&!document.hidden){DU._ea=1;duelAct('none')}},T*1000*(.35+Math.random()*.35))}}
 duelAct=function(a){if(!DU)return;duClear();
- const e=DU.intent,myP=total()*(has('plasma')?1.6:1),ratio=Math.max(.35,Math.min(3,myP/DU.ep)),rr=()=>.8+Math.random()*.4,fast=DU._t0&&Date.now()-DU._t0<2500;
+ const e=DU.intent,myP=(DU.ar?myPow():total())*(has('plasma')?1.6:1),ratio=DU.ar?Math.max(.05,Math.min(20,myP/DU.ep)):Math.max(.35,Math.min(3,myP/DU.ep)),rr=()=>.8+Math.random()*.4,fast=DU._t0&&Date.now()-DU._t0<2500;
  let md=22*Math.pow(ratio,.7)*rr()*(1+.15*Math.min(3,DU.combo||0)),ed=22/Math.pow(ratio,.7)*rr()*(DU.charge?1.8:1)*(S.ch==='hell'?1.15:1);
  if(a==='flee'){S.hp-=R(5,15);DU.txt='คุณถอยหนีออกจากวงต่อสู้';return duelEnd(false,true)}
  let t='',good=null;const tn=`《${DU.tech||''}》`;
@@ -12498,7 +12498,7 @@ function arElN(el){const e=(typeof RLM_EL!=='undefined'?RLM_EL:[]).find(x=>x[0]=
 function arAdv(a,b){if(!a||!b)return 0;return(AR_BEAT[a]||[]).includes(b)?1:(AR_BEAT[b]||[]).includes(a)?-1:0}
 function arLgH(i,big){const L=AR_LG[i]||AR_LG[0];return`<span class="arlg${big?' big':''}" style="--c:${L[2]}">${L[0]} ${L[1]}</span>`}
 function arSnap(){const B=S.beastMode&&!S.beastMode.human;let look=null;try{look=meLook();look=JSON.parse(JSON.stringify(look))}catch(e){}
- return{n:pname(),p:Math.round(myPow()),hp:S.maxHp,r:B?BL_ST[S.beastMode.st]:REALMS[realmIdx()].n,ri:realmIdx(),x:S.xian?1:0,bm:B?1:0,st:arSt(),arts:(S.arts||[]).filter(a=>a&&a.n).slice().sort((a,b)=>b.b-a.b).slice(0,3).map(a=>a.n),el:arEl(),sr:S.sys&&typeof SRK!=='undefined'?SRK[S.sys.rk|0].l:'',look}}
+ return{n:pname(),p:Math.round(myPow()),pl:typeof postLv==='function'?postLv():-1,hp:S.maxHp,r:B?BL_ST[S.beastMode.st]:REALMS[realmIdx()].n,ri:realmIdx(),x:S.xian?1:0,bm:B?1:0,st:arSt(),arts:(S.arts||[]).filter(a=>a&&a.n).slice().sort((a,b)=>b.b-a.b).slice(0,3).map(a=>a.n),el:arEl(),sr:S.sys&&typeof SRK!=='undefined'?SRK[S.sys.rk|0].l:'',look}}
 const AR=window.AR={busy:0,info:null};
 function arTkH(tk){if(!tk)return'';const n=tk.n|0;return`<span class="artk">${'🎫'.repeat(n)}${'<i>🎫</i>'.repeat(Math.max(0,5-n))}</span>${n<5&&tk.nx?`<small> · ใบถัดไป ${Math.ceil(tk.nx/60000)} นาที</small>`:''}`}
 async function arPage(){const box=$('arBox');if(!box)return;let j;try{j=await api('ar2',{})}catch(e){box.innerHTML='<p class="tag2">โหลดลานประลองไม่ได้ ลองใหม่อีกครั้ง</p>';return}AR.info=j;if(!$('arBox'))return;
@@ -12539,7 +12539,7 @@ function arDraw(id,look){const cv=$(id);if(!cv)return;const ctx=cv.getContext('2
  try{P(0,0,40,44,'#1c1a28');P(0,25,40,8,'#2a2638');const o=look||{age:30,g:'ชาย',skin:'#8a8a9a',hair:'#222',robe:'#3a3a4a',belt:'#6a6a7a',sword:true};person(11.5,29,o,'stand')}catch(e){}g=sg;PS=sp}
 function arFight(o,au){if(!o)return;if(!arFight._d){arFight._d=1;setTimeout(()=>{try{arFight(o,au)}finally{arFight._d=0}},30);return}const ad=arAdv(arEl(),o.el),ep=Math.max(10,Math.round(o.p*(1-.12*ad)));AR.cur={o,au,ad};AR.pend=0;
  const sv={f:S.fame,h:S.hp,k:S.kills,j:S.happy};const fin=w=>{S.fame=sv.f;S.hp=Math.max(S.hp,sv.h*.9);S.kills=sv.k;S.happy=sv.j;arResult(o,au,w)};
- if(au){const my=myPow()*(1+.12*ad),sb=AR_SB[arSt()]===o.st?1:AR_SB[o.st]===arSt()?-1:0,allv=(o.st==='all'||arSt()==='all')?.12:0;let p=clamp(my/(my+o.p)+sb*.08+(Math.random()-.5)*allv*2,.08,.92);const w=Math.random()<p;
+ if(au){const my=myPow()*(1+.12*ad),sb=AR_SB[arSt()]===o.st?1:AR_SB[o.st]===arSt()?-1:0,allv=(o.st==='all'||arSt()==='all')?.12:0;let p=clamp(my/(my+o.p)+sb*.08*Math.min(1,2*Math.min(my,o.p)/Math.max(my,o.p))+(Math.random()-.5)*allv*2,.02,.98);const w=Math.random()<p;
   const A=AR_ST[arSt()],B=AR_ST[o.st]||AR_ST.atk,lines=[`${A[0]} เงาของคุณ${A[1]} — ${B[0]} เงาของ ${esc(o.n)}${B[1]}`,sb>0?'ท่าทีของคุณข่มอีกฝ่ายได้!':sb<0?'อีกฝ่ายอ่านทางเงาของคุณออก…':'ทั้งสองแลกหมัดกันอย่างดุเดือด',`《${esc((o.arts||[])[0]||'ท่าเงา')}》 ปะทะ 《${esc(((S.arts||[]).slice().sort((a,b)=>b.b-a.b)[0]||{}).n||'หมัดเปล่า')}》`];
   modal(`<h3>🤖 เงาสู้แทน</h3><div class="arauto">${lines.map((l,i)=>`<p style="animation-delay:${i*.6}s">${l}</p>`).join('')}<p class="arres" style="animation-delay:2s">${w?'🏆 เงาของคุณชนะ!':'💀 เงาของคุณพ่ายแพ้'}</p></div>`,'arauto');setTimeout(()=>{if($('modal').dataset.k==='arauto')arResult(o,au,w)},3000);return}
  duel(o.train?o.n:`เงาของ ${o.n}`,ep,fin);try{DU.ar=o;DU.tech=null;setScene('fight',o.look&&o.look.beast?{beast:o.look.beast}:{en:o.look||null});drawDuel()}catch(e){}}
@@ -15595,6 +15595,19 @@ paTickUI=function(){if($('modal').dataset.k!=='pauc'){clearInterval(PA.tk);retur
      else log(`🏠 ${esc(c.n)} ไม่ได้สายเลือดตรงจากพ่อแม่บุญธรรม แต่ได้ทุกสิ่งที่พวกเขาสอนไว้`,'epic');S.flags.adopted=1;try{render();saveGame()}catch(e){}}}catch(e){console.error(e)}
    try{if(sp0&&P&&P.beastMode)P.beastMode.sp=sp0}catch(e){}return r}}
 }
+
+
+// ===================== v17.4 ลานประลองเงา: พลังมีผลจริง · เงาเล่นตามสไตล์เจ้าของ · ครบ 6 ยกฝ่ายแกร่งได้เปรียบ · อัปเดตพลังเงาเอง =====================
+{const _af=arFight;arFight=function(o,au){try{if(o&&!o.train){try{localStorage.murim_arIn=1}catch(e){}}}catch(e){}const r=_af.apply(this,arguments);try{if(DU&&DU.ar){const k=myPow()/Math.max(1,DU.ep);DU._wk=k<.5?1:0;DU._k=k}}catch(e){}return r};
+ // เงาของอีกฝ่ายเลือกท่าตามสไตล์เจ้าของ · ยิ่งแกร่งกว่ามากยิ่งใช้ท่าหนักบ่อย
+ const W={atk:{atk:.42,heavy:.2,feint:.08,def:.15,chg:.15},def:{atk:.18,heavy:.1,feint:.07,def:.45,chg:.2},trick:{atk:.2,heavy:.1,feint:.35,def:.15,chg:.2},all:{atk:.26,heavy:.16,feint:.16,def:.22,chg:.2}};
+ const _di=duelIntent;duelIntent=function(){try{if(DU&&DU.ar&&!DU.charge){const w=Object.assign({},W[DU.ar.st]||W.all),k=DU._k||1;if(k<.5){w.heavy*=1.8;w.def*=.7}const t=Object.values(w).reduce((a,b)=>a+b,0);let x=Math.random()*t;for(const q in w){if((x-=w[q])<0)return q}}}catch(e){}return _di.apply(this,arguments)};
+ // แรงกดดันจากพลังที่ต่างกัน: ฝ่ายที่อ่อนกว่าเสียพลังชีวิตทุกยกแม้อ่านทางถูก (ห่าง 2 เท่า ~7/ยก · 3 เท่า ~13 · 10 เท่า ~40)
+ const _da=duelAct;duelAct=function(a){try{if(DU&&DU.ar&&a!=='flee'&&DU.me>0&&DU.en>0){const k=Math.max(.05,Math.min(20,DU._k||1)),pr=x=>Math.min(40,11*(Math.pow(1/x,.7)-1));if(k<1)DU.me-=pr(k);else if(k>1)DU.en-=pr(1/k)}}catch(e){}return _da.apply(this,arguments)};
+ // ครบ 6 ยก: ต้องนำห่างพอ ถ้าสูสีกันฝ่ายที่พลังมากกว่าชนะ
+ const _de=duelEnd;duelEnd=function(win,fled){try{if(DU&&DU.ar&&!fled&&DU.me>0&&DU.en>0&&DU.r>6){const gap=DU.me-DU.en,k=DU._k||1;win=gap>=12?true:gap<=-12?false:k>=1}}catch(e){}return _de.call(this,win,fled)}}
+// อัปเดตพลังเงาเองระหว่างเล่น (ทุก ~3 นาที เฉพาะคนที่เคยลงลาน)
+{let last=0;const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive&&onlineOK&&Date.now()-last>180e3){let on=0;try{on=+localStorage.murim_arIn}catch(e){}if(on){last=Date.now();api('ar2snap',arSnap()).catch(()=>{})}}}catch(e){}return r}}
 
 </script>
 </body>

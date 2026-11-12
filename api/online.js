@@ -1301,7 +1301,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     }
 
     // ===== ลานประลองหมื่นเงา (v15.6) =====
-    const AR_TKM = 5, AR_TKR = 1200e3, arBr = b0 => (b0.bm ? 'b' : b0.x ? 'x' : 'm') + ':' + Math.max(0, Math.min(12, +b0.ri || 0));
+    const AR_TKM = 5, AR_TKR = 1200e3, arBr = b0 => (b0.bm ? 'b' : b0.x ? 'x' : 'm') + ':' + Math.max(0, Math.min(12, +b0.ri || 0)) + ((+b0.ri || 0) >= 7 && +b0.pl >= 0 ? ':t' + Math.min(4, Math.floor(+b0.pl / 9)) : '');
     const arTk = async (use) => { const v = jp(await cmd('HGET', 'artk', id)) || { n: AR_TKM, t: now }; const add = Math.floor((now - v.t) / AR_TKR); if (add > 0) { v.n = Math.max(v.n, Math.min(AR_TKM, v.n + add)); v.t = v.n >= AR_TKM ? now : v.t + add * AR_TKR } if (v.n >= AR_TKM) v.t = now;
       if (use) { if (v.n <= 0) return { ok: 0, n: 0, nx: AR_TKR - (now - v.t) }; if (v.n >= AR_TKM) v.t = now; v.n -= use } if (use || add > 0) await cmd('HSET', 'artk', id, JSON.stringify(v)); return { ok: 1, n: v.n, nx: v.n >= AR_TKM ? 0 : AR_TKR - (now - v.t) } };
     const arRt = async (who) => +(await cmd('HGET', 'arr:' + W, who)) || 1000;
@@ -1310,7 +1310,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       // รางวัลจบซีซั่นตามลีก (ทุกคนที่ลงแข่ง)
       const all = (await cmd('ZRANGE', 'ars:' + pw, 0, 1999, 'WITHSCORES')) || []; let Q = []; for (let i = 0; i < all.length; i += 2) { const own = all[i], sc = +all[i + 1]; Q.push(['LPUSH', 'bdrw:' + own, JSON.stringify({ p: 'w', c: 'al', lg: arLg(sc), d: pw, s: sc })], ['EXPIRE', 'bdrw:' + own, 86400 * 60]); { const lg = arLg(sc); Q.push(['HINCRBY', 'arpend', own, [5, 15, 30, 60, 100][lg]]); if (lg >= 2) Q.push(['SADD', 'arpfr:' + own, 'f_lg' + lg], ['EXPIRE', 'arpfr:' + own, 86400 * 60]) } if (Q.length >= 200) { await pipe(Q); Q = [] } } if (Q.length) await pipe(Q) } catch {} };
     const arSnapIn = b0 => { let look = null; try { const L = typeof b0.look === 'string' ? JSON.parse(b0.look) : b0.look; if (L && typeof L === 'object' && JSON.stringify(L).length < 1600) look = L } catch {}
-      return { n: clean(b0.n, 20) || 'นิรนาม', p: Math.max(0, +b0.p || 0), hp: Math.max(1, Math.min(1e9, +b0.hp || 100)), r: clean(b0.r, 30), ri: Math.max(0, Math.min(12, +b0.ri || 0)), x: b0.x ? 1 : 0, bm: b0.bm ? 1 : 0, st: ['atk', 'def', 'trick', 'all'].includes(b0.st) ? b0.st : 'atk', arts: (Array.isArray(b0.arts) ? b0.arts : []).slice(0, 3).map(a => clean(a, 24)).filter(Boolean), el: clean(b0.el, 10), sr: clean(b0.sr, 3), qo: clean(b0.qo, 50), qw: clean(b0.qw, 50), au: ['fire', 'thunder', 'dark', 'ice'].includes(b0.au) ? b0.au : '', look, t: now } };
+      return { n: clean(b0.n, 20) || 'นิรนาม', p: Math.max(0, +b0.p || 0), hp: Math.max(1, Math.min(1e9, +b0.hp || 100)), r: clean(b0.r, 30), ri: Math.max(0, Math.min(12, +b0.ri || 0)), x: b0.x ? 1 : 0, bm: b0.bm ? 1 : 0, st: ['atk', 'def', 'trick', 'all'].includes(b0.st) ? b0.st : 'atk', arts: (Array.isArray(b0.arts) ? b0.arts : []).slice(0, 3).map(a => clean(a, 24)).filter(Boolean), el: clean(b0.el, 10), sr: clean(b0.sr, 3), qo: clean(b0.qo, 50), qw: clean(b0.qw, 50), au: ['fire', 'thunder', 'dark', 'ice'].includes(b0.au) ? b0.au : '', pl: Math.max(-1, Math.min(44, Math.floor(+b0.pl)))||(+b0.pl===0?0:-1), look, t: now } };
     const arLg = r => r >= 1600 ? 4 : r >= 1400 ? 3 : r >= 1250 ? 2 : r >= 1100 ? 1 : 0;
     // ---- กระเป๋าเหรียญลาน (เก็บที่เซิร์ฟเวอร์) ----
     const AR_P = { tt: { 'นักล่าเงา': 80, 'ผู้ไม่เคยถอย': 200, 'ตำนานแห่งลาน': 500, 'ราชันเงาอสูร': 1000, 'เทพสงครามแห่งลาน': 2000, 'ผู้ยืนหนึ่งเหนือพันศึก': 3500, 'จักรพรรดิแห่งเงา': 6000 }, fr: { f_arc1: 40, f_arc2: 120, f_arc3: 250, f_arc4: 400, f_arc5: 1000 }, qt: { qt: 50 }, au: { fire: 120, ice: 120, thunder: 200, dark: 300 }, use: { heal: 8, qi: 12, joy: 6 } };
@@ -1337,6 +1337,16 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (+dn) await cmd('HDEL', 'ardefn', id);
       return res.json({ tk, rt, lg: arLg(rt), top: T, wins: WT, def: D, nw: +dn || 0, wk: W });
     }
+    if (a === 'ar2snap') { // อัปเดตพลังเงาระหว่างเล่น (เฉพาะคนที่มีเงาอยู่แล้ว)
+      if (!okId(id)) return res.status(403).json({ err: 'id' });
+      const old = jp(await cmd('GET', 'arsnap:' + id)); if (!old) return res.json({ ok: 0 });
+      const me = arSnapIn(b); if (b.tp || !powOk(me.p, Math.min(7, me.ri), me.x, null) || await isBanned()) return res.status(403).json({ err: 'integrity' });
+      if (!(await cmd('SET', 'arl3:' + id, 1, 'NX', 'EX', 120))) return res.json({ ok: 0, rate: 1 });
+      me.au = old.au || ''; me.qo = old.qo || ''; me.qw = old.qw || '';
+      const ob = arBr(old), nb = arBr(me), ops = [['SET', 'arsnap:' + id, JSON.stringify(me), 'EX', 86400 * 14]];
+      if (ob !== nb) ops.push(['SREM', 'ar2:' + ob, id], ['SADD', 'ar2:' + nb, id], ['EXPIRE', 'ar2:' + nb, 86400 * 14]);
+      await pipe(ops); return res.json({ ok: 1 });
+    }
     if (a === 'ar2go' || a === 'ar2rv') {
       if (!okId(id)) return res.status(403).json({ err: 'id' });
       const me = arSnapIn(b); if (b.tp || !powOk(me.p, Math.min(7, me.ri), me.x, null) || await isBanned()) return res.status(403).json({ err: 'integrity' });
@@ -1347,7 +1357,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (a === 'ar2rv') { const i = Math.max(0, Math.min(19, +b.i || 0)), e = jp(await cmd('LINDEX', 'ardef:' + id, i)); if (!e || !e.a || e.rv) return res.json({ o: null, err: 'gone' }); o = jp(await cmd('GET', 'arsnap:' + e.a)); if (!o) return res.json({ o: null, err: 'gone' }); oid = e.a; rv = 1; e.rv = 1; await cmd('LSET', 'ardef:' + id, i, JSON.stringify(e)) }
       else { const C = ((await cmd('SRANDMEMBER', 'ar2:' + br, 14)) || []).filter(x => x !== id); if (C.length) { const [sn, rts] = await pipe([['MGET', ...C.map(x => 'arsnap:' + x)], ['HMGET', 'arr:' + W, ...C]]); const L = C.map((x, k) => ({ x, o: jp(sn[k]), r: +rts[k] || 1000 })).filter(q => q.o && q.o.t > now - 86400e3 * 14); L.sort((p1, p2) => (Math.abs(p1.r - myR) + Math.random() * 160) - (Math.abs(p2.r - myR) + Math.random() * 160)); if (L[0]) { oid = L[0].x; o = L[0].o } } }
       if (!o && a === 'ar2go') { // รุ่นเดียวกันไม่มีใคร → ลองรุ่นข้างเคียงที่พลังใกล้กัน
-        try { const base = me.bm ? 'b' : me.x ? 'x' : 'm'; for (const d of [-1, 1, -2, 2]) { const r2 = me.ri + d; if (o || r2 < 0 || r2 > 12) continue; const C2 = ((await cmd('SRANDMEMBER', 'ar2:' + base + ':' + r2, 8)) || []).filter(x => x !== id); if (!C2.length) continue; const sn2 = await cmd('MGET', ...C2.map(x => 'arsnap:' + x)); for (let k = 0; k < C2.length && !o; k++) { const q = jp(sn2[k]); if (q && q.t > now - 86400e3 * 14 && q.p >= me.p * .55 && q.p <= me.p * 1.7) { oid = C2[k]; o = q } } } } catch (e) {}
+        try { const base = me.bm ? 'b' : me.x ? 'x' : 'm', tier = me.ri >= 7 && me.pl >= 0 ? Math.min(4, Math.floor(me.pl / 9)) : -1; const keys = tier >= 0 ? [1, -1, 2, -2].map(d => tier + d).filter(t => t >= 0 && t <= 4).map(t => base + ':' + me.ri + ':t' + t).concat([base + ':' + me.ri]) : [-1, 1, -2, 2].map(d => me.ri + d).filter(r2 => r2 >= 0 && r2 <= 12).map(r2 => base + ':' + r2); for (const kk of keys) { if (o) continue; const C2 = ((await cmd('SRANDMEMBER', 'ar2:' + kk, 8)) || []).filter(x => x !== id); if (!C2.length) continue; const sn2 = await cmd('MGET', ...C2.map(x => 'arsnap:' + x)); for (let k = 0; k < C2.length && !o; k++) { const q = jp(sn2[k]); if (q && q.t > now - 86400e3 * 14 && q.p >= me.p * .55 && q.p <= me.p * 1.7) { oid = C2[k]; o = q } } } } catch (e) {}
       }
       let bot = 0;
       if (!o && a === 'ar2go') { // ยังไม่มีอีก → เงาประจำลาน (มีคู่ให้สู้เสมอ)
