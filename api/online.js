@@ -386,12 +386,15 @@ module.exports = async (req, res) => {
     if (global._mfB) return res.json({ ok: 0 }); global._mfB = 1; const t0 = Date.now(); let dd = 0, zz = 0, sv = 0, seen = 0;
     try { let cur = String(global._mfC || '0');
       do { const r = await cmd('SCAN', cur, 'MATCH', 'cs*', 'COUNT', 200); cur = String(r[0]); const ks = (r[1] || []).filter(k => /^cs[23]?:/.test(k));
-        for (const k of ks) { if (Date.now() - t0 > 8500) break; seen++;
-          const [v, ttl] = await pipe([['GET', k], ['TTL', k]]); if (v == null || /^zb?:/.test(String(v)) || /^@[1-5]$/.test(String(v))) continue;
+        const pre = ks.length ? await pipe(ks.map(k => ['GETRANGE', k, 0, 2])) : [];
+        const todo = ks.filter((k, i) => pre[i] != null && !/^(zb:|z:|@)/.test(String(pre[i])));
+        const one = async k => { if (Date.now() - t0 > 8500) return; seen++;
+          const [v, ttl] = await pipe([['GET', k], ['TTL', k]]); if (v == null || /^zb?:/.test(String(v)) || /^@[1-5]$/.test(String(v))) return;
           const ex = +ttl > 0 ? +ttl : 86400 * 30;
           if (k.startsWith('cs2:')) { const fid = k.slice(4); const ls = await pipe([1, 2, 3, 4, 5].map(n => ['GET', 'cs3:' + fid + ':' + n])); const hit = ls.findIndex(x => x != null && (x === v || zUnpack(x) === v));
-            if (hit >= 0) { await cmd('DEL', k); await cmd('SET', k, '@' + (hit + 1), 'EX', ex); dd++; sv += String(v).length; continue } }
-          const z = zPack(v); if (z.length < String(v).length * .9) { await cmd('DEL', k); await cmd('SET', k, z, 'EX', ex); zz++; sv += String(v).length - z.length } }
+            if (hit >= 0) { await cmd('DEL', k); await cmd('SET', k, '@' + (hit + 1), 'EX', ex); dd++; sv += String(v).length; return } }
+          const z = zPack(v); if (z.length < String(v).length * .9) { await cmd('DEL', k); await cmd('SET', k, z, 'EX', ex); zz++; sv += String(v).length - z.length } };
+        for (let i = 0; i < todo.length && Date.now() - t0 < 8500; i += 6) await Promise.all(todo.slice(i, i + 6).map(k => one(k).catch(() => {})));
         global._mfC = cur; if (Date.now() - t0 > 8500) break } while (cur !== '0');
       if (cur === '0') global._mfC = '0';
       console.error('MEMFIX seen=' + seen + ' dedup=' + dd + ' zip=' + zz + ' saved=' + Math.round(sv / 1048576) + 'M cursor=' + global._mfC);
