@@ -17125,7 +17125,56 @@ function openOldMW(){const M=S.mw,O=M.old;if(!O)return toast('ไม่มีข
 setInterval(()=>{try{if(MW_PUBLIC)document.querySelectorAll('.mwseg i').forEach(i=>{if(i.textContent!=='เบต้า')i.textContent='เบต้า'})}catch(e){}},1500);
 // บันทึกอัปเดต: ขึ้นเฉพาะตอนเปิดสาธารณะ (ไม่มีฟีเจอร์แอดมิน/ระบบกันโกง)
 const MW_CHANGELOG={v:'17.0',d:'',l:['🏙️ <b>ยุคปัจจุบัน (เบต้า)</b> — ยอดฝีมือหลงยุค: ข้ามรอยแยกจากขั้นสูงสุด หรือมิติปริศนาในแดนเทพ หรือเริ่มจากปุ่มหน้าแรก · พลังเหลือนิดเดียว แต่เก็บตัวตนจากยุคเก่าไว้','🌍 6 ประเทศ (ไทย อเมริกา จีน ญี่ปุ่น เกาหลีใต้ ไต้หวัน) · ภาษา · เอกสารตัวตน · อาชีพจริง 8 อาชีพพร้อมเงินเดือนสกุลท้องถิ่น · ค่าครองชีพ บ้าน รถ ประกัน','💞 ความรัก แต่งงาน ลูก เล่นต่อเป็นลูก · หลิน เพื่อนสนิท สำนักของคุณในยุคนี้ · ฝังสมบัติในยุทธภพแล้วขุดในยุคปัจจุบัน · จักรวาลซ้อนกับผู้เล่นคนอื่น','🌀 ปราณยุคใหม่ 5 ขั้น · ต่อสู้ · ซ่อนพลังใช้ชีวิตไม่เด่น · เควสตามสถานการณ์ · เป้าหมายชีวิตและความสำเร็จ','🗡️ โลกฮันเตอร์: บางโลกมีเกตตั้งแต่แรก บางโลกเกตเปิดกลางชีวิต (หายาก) · ตื่นพลัง · แรงก์ E–S · กิลด์ · เกตแตก','🏠 ผู้ข้ามมิติที่มาจากโลกปัจจุบันได้เส้นเรื่อง "กลับบ้าน" ของตัวเอง']};
-{const _ouC=typeof openUpdate==='function'?openUpdate:null;if(_ouC)openUpdate=function(){const r=_ouC.apply(this,arguments);try{if(MW_PUBLIC){const m=$('modal'),h3=m&&m.querySelector('h3');if(h3&&!m.querySelector('.mwCL'))h3.insertAdjacentHTML('afterend',`<div class="mwCL box" style="padding:8px 10px;margin:6px 0;border-color:#6a4ab0"><b>v${MW_CHANGELOG.v} · ยุคปัจจุบัน (เบต้า)</b><ul style="margin:4px 0 0 16px;padding:0">${MW_CHANGELOG.l.map(x=>`<li>${x}</li>`).join('')}</ul></div>`)}}catch(e){}return r}}
+{const _ouC=typeof openUpdate==='function'?openUpdate:null;if(_ouC)openUpdate=function(){const r=_ouC.apply(this,arguments);try{if(MW_PUBLIC){const m=$('modal'),h3=m&&m.querySelector('h3');if(h3&&!m.querySelector('.mwCL'))h3.insertAdjacentHTML('afterend',`<div class="mwCL box" style="padding:8px 10px;margin:6px 0;border-color:#6a4ab0"><b>🆕 ยุคปัจจุบัน (เบต้า)</b><ul style="margin:4px 0 0 16px;padding:0">${MW_CHANGELOG.l.map(x=>`<li>${x}</li>`).join('')}</ul></div>`)}}catch(e){}return r}}
+
+
+// ===================== ยุคปัจจุบัน: ชุดยุคใหม่ 30 ชุด (ชาย 15 · หญิง 15) =====================
+const MW_OUTFITS=[
+ // ---- ชาย ----
+ {n:'เสื้อยืดขาว ยีนส์',g:'m',robe:'#f2f2f2',pant:'#3a5a8a',belt:'#5a4030'},
+ {n:'สตรีทดำล้วน',g:'m',robe:'#1e1e22',pant:'#2a2a30',belt:'#2a2a30',emblem:'#e83a3a'},
+ {n:'ฮู้ดดี้เทา',g:'m',robe:'#7a7a84',pant:'#2a2a38',belt:'#6a6a74',hat:'hood',hoodC:'#6a6a74'},
+ {n:'เชิ้ตลายสก็อต',g:'m',robe:'#b83a3a',stripe:1,pant:'#3a5a8a',belt:'#4a3020'},
+ {n:'สูทดำเนกไทแดง',g:'m',robe:'#ececf2',trim:'#c82a2a',coat:'#22232a',coatL:'#3a3b44',pant:'#22232a',belt:'#22232a'},
+ {n:'สูทกรมท่า',g:'m',robe:'#e0e8f4',trim:'#2a6ad0',coat:'#2a3550',coatL:'#3a4870',pant:'#2a3550',belt:'#2a3550'},
+ {n:'แจ็กเก็ตยีนส์',g:'m',robe:'#f0f0f0',coat:'#4a6a9a',coatL:'#6a8aba',pant:'#2a2a3a',belt:'#2a2a3a'},
+ {n:'แจ็กเก็ตหนัง',g:'m',robe:'#2a2a2a',coat:'#1a1414',coatL:'#5a4a4a',pant:'#2a3a5a',belt:'#2a3a5a'},
+ {n:'โปโล กางเกงชิโน',g:'m',robe:'#2a3a6a',pant:'#c8b088',belt:'#4a3020',emblem:'#e8e8f0'},
+ {n:'ชุดวอร์มกีฬา',g:'m',robe:'#2a6ad0',pant:'#2a6ad0',belt:'#2a6ad0',stripe:1,emblem:'#ffffff'},
+ {n:'เสื้อฮาวาย',g:'m',robe:'#f0a030',patch:1,pant:'#e8dcc0',belt:'#e8dcc0'},
+ {n:'สเวตเตอร์ไหมพรม',g:'m',robe:'#8a5a3a',trim:'#c8b090',pant:'#4a4a54',belt:'#8a5a3a'},
+ {n:'โค้ทยาวสีกากี',g:'m',robe:'#f0e8d8',coat:'#a8885a',coatL:'#c8a878',pant:'#3a3a44',belt:'#3a3a44'},
+ {n:'ชุดนักศึกษา',g:'m',robe:'#f8f8f8',pant:'#1e1e24',belt:'#111',emblem:'#2a3a8a'},
+ {n:'เสื้อกล้ามสปอร์ต',g:'m',robe:'#e83a5a',pant:'#1e1e24',belt:'#1e1e24',emblem:'#ffffff'},
+ // ---- หญิง ----
+ {n:'เดรสลายดอก',g:'f',robe:'#f0a0b8',skirt:'#f0a0b8',patch:1,belt:'#e87898'},
+ {n:'เสื้อยืด กระโปรงยีนส์',g:'f',robe:'#f6f6f6',skirt:'#4a6a9a',belt:'#4a6a9a'},
+ {n:'ชุดนักศึกษา (กระโปรง)',g:'f',robe:'#f8f8f8',skirt:'#1e1e24',belt:'#111',emblem:'#2a3a8a'},
+ {n:'สูทกางเกงหญิง',g:'f',robe:'#f0f0f6',coat:'#22232a',coatL:'#3a3b44',pant:'#22232a',belt:'#22232a',noSkirt:1},
+ {n:'คาร์ดิแกน กระโปรงพลีท',g:'f',robe:'#f4ecd8',coat:'#c88aa0',coatL:'#e0a8b8',skirt:'#6a5a8a',belt:'#6a5a8a',noSkirt:0},
+ {n:'ฮู้ดดี้ชมพู เลกกิ้ง',g:'f',robe:'#f0a8c8',hat:'hood',hoodC:'#e898b8',pant:'#2a2a30',belt:'#e898b8',noSkirt:1},
+ {n:'เดรสดำ',g:'f',robe:'#1e1a24',skirt:'#1e1a24',sash:'#c8a040',belt:'#1e1a24'},
+ {n:'เสื้อครอป ยีนส์',g:'f',robe:'#ffd040',pant:'#4a6a9a',belt:'#4a3020',noSkirt:1},
+ {n:'โค้ทยาวสีครีม',g:'f',robe:'#3a3a44',coat:'#e8e4dc',coatL:'#fffaf0',pant:'#2a2a34',belt:'#2a2a34',noSkirt:1},
+ {n:'เดรสขาวลูกไม้',g:'f',robe:'#fafafa',trim:'#e8d0e0',skirt:'#fafafa',belt:'#f0e0ea'},
+ {n:'สเวตเตอร์เขียว กระโปรงยาว',g:'f',robe:'#6a9a7a',skirt:'#d8c8a8',belt:'#6a9a7a'},
+ {n:'ชุดวอร์มม่วง',g:'f',robe:'#8a5ad0',pant:'#8a5ad0',belt:'#8a5ad0',stripe:1,emblem:'#ffffff',noSkirt:1},
+ {n:'เชิ้ตลายทาง กางเกงขาม้า',g:'f',robe:'#e8eef8',stripe:1,pant:'#c8b088',belt:'#8a6a40',noSkirt:1},
+ {n:'แจ็กเก็ตหนังหญิง',g:'f',robe:'#c82a3a',coat:'#1a1414',coatL:'#5a4a4a',pant:'#1e1e24',belt:'#1e1e24',noSkirt:1},
+ {n:'เดรสยาวสีแดง',g:'f',robe:'#c82a3a',skirt:'#c82a3a',sash:'#f0c040',belt:'#a01e2a'}];
+const mwOF=o=>{const r={robe:o.robe,pant:o.pant||'#2a2a34',trim:o.trim||o.robe,belt:o.belt||o.robe,coat:o.coat||null,coatL:o.coatL||null,hat:o.hat||null,hoodC:o.hoodC||null,stripe:o.stripe||0,emblem:o.emblem||null,patch:o.patch||0,sash:o.sash||null,skirt:o.skirt||null,noSkirt:o.g==='m'?1:(o.noSkirt||0)};return r};
+const mwOFFor=(g,seed)=>{const L=MW_OUTFITS.map((o,i)=>i).filter(i=>MW_OUTFITS[i].g===(g==='หญิง'?'f':'m'));return L[Math.abs(seed)%L.length]};
+// ชุดประจำตัวผู้เล่น (นอกเวลางาน) + เปลี่ยนชุดเองได้
+{const _ofP=mwOutfit;mwOutfit=function(M){const f=S.focus,work=f==='mwjob'&&M.job||f==='mwgate';if(work)return _ofP.apply(this,arguments);if(M.outfit==null)M.outfit=mwOFFor(S.gender,mwHash(S.name)+M.y);const r=mwOF(MW_OUTFITS[M.outfit]||MW_OUTFITS[0]);if(f==='mwqi'&&!M.outfitQi)return Object.assign({},r,{coat:null,hat:null});return r}}
+{const _npO=mwNpc;mwNpc=function(seed,g,age,robe){const o=_npO.apply(this,arguments);if(robe)return Object.assign(o,{trim:robe,belt:shd(robe,-.15),noSkirt:g==='หญิง'?0:1});const of=mwOF(MW_OUTFITS[mwOFFor(g,seed)]);return Object.assign(o,of)}}
+function mwOutfitMenu(){const M=S.mw;if(!M)return;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👕 ชุดแต่งกาย</h3><p class="tag2">ชุดที่ใส่นอกเวลางาน (ตอนทำงานจะใส่ชุดตามอาชีพ)</p><div class="ofGrid">${MW_OUTFITS.map((o,i)=>`<button class="ofB${M.outfit===i?' on':''}" onclick="mwOutfitSet(${i})"><canvas class="ofC" data-i="${i}" width="72" height="96"></canvas><span>${esc(o.n)}</span></button>`).join('')}</div>`,'outfit');
+ setTimeout(()=>{document.querySelectorAll('.ofC').forEach(cv=>{const i=+cv.dataset.i,c=cv.getContext('2d'),sg=g,sp=PS;g=c;PS=3;c.imageSmoothingEnabled=false;c.fillStyle='#ece6f4';c.fillRect(0,0,72,96);try{const me=mwLookMe(M,'stand');const o=Object.assign({},me,mwOF(MW_OUTFITS[i]),{g:MW_OUTFITS[i].g==='f'?'หญิง':'ชาย',hs:MW_OUTFITS[i].g==='f'?3:4,aura:null});c.setTransform(3,0,0,3,0,0);person(8,31,o,'stand')}catch(e){}finally{g=sg;PS=sp}})},30)}
+function mwOutfitSet(i){S.mw.outfit=i;closeM();toast('เปลี่ยนชุดเป็น '+MW_OUTFITS[i].n);render();saveGame()}
+{const _omOF=openMenu;openMenu=function(){const r=_omOF.apply(this,arguments);try{if(mwOn()){const gd=$('modal').querySelector('.mgrid');if(gd&&!gd.querySelector('.mwOfB')){const last=[...gd.querySelectorAll('.mwMB')].pop(),M=S.mw,h=`<button class="opt mwMB mwOfB" onclick="mwOutfitMenu()">👕 ชุดแต่งกาย<small>${esc((MW_OUTFITS[M.outfit]||{}).n||'เลือกชุด')}</small></button>`;if(last)last.insertAdjacentHTML('afterend',h)}}}catch(e){}return r}}
+(function(){const st=document.createElement('style');st.textContent=`.ofGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-height:64vh;overflow:auto}.ofB{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px;border:1.5px solid #8884;border-radius:10px;background:none;font-size:11px;line-height:1.2}.ofB.on{border-color:#e8a23a;background:#e8a23a18}.ofC{width:54px;height:72px;image-rendering:pixelated;border-radius:6px}`;document.head.appendChild(st)})();
+// ===================== เปิดยุคปัจจุบันให้ทุกคน =====================
+MW_PUBLIC=true;
 
 </script>
 </body>
