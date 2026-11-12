@@ -14971,6 +14971,34 @@ body.dkcap #tDock{padding-bottom:calc(10px + env(safe-area-inset-bottom))}
  window.dockToggle=()=>{const v=LS.get('murim_dock','cap')==='old'?'cap':'old';LS.set('murim_dock',v);ap();try{toast(v==='cap'?'💊 แถบเมนูล่าง: แบบแคปซูล':'▭ แถบเมนูล่าง: แบบเดิม')}catch(e){}openTitleMenu()};
  const _otD=openTitleMenu;openTitleMenu=function(){const r=_otD.apply(this,arguments);try{const gr=$('modal').querySelector('.tmgrid');if(gr&&!gr.querySelector('[data-dock]')){const old=LS.get('murim_dock','cap')==='old';gr.insertAdjacentHTML('beforeend',`<button class="cb" data-dock="1" onclick="dockToggle()"><i>${old?'▭':'💊'}</i>แถบล่าง: ${old?'แบบเดิม':'แคปซูล'}</button>`)}}catch(e){}return r}}
 
+
+// ===================== เมนูหน้าแรก: แยกหมวด (บันทึก/ความรู้ · บัญชี · ตั้งค่า · ติดต่อ · แอดมิน) =====================
+(function(){const st=document.createElement('style');st.textContent=`
+#modal .tmsec{margin-top:10px}#modal .tmsec:first-of-type{margin-top:4px}
+#modal .tmh{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--pink);margin:0 2px 6px;letter-spacing:.2px}
+#modal .tmh::after{content:'';flex:1;height:1px;background:color-mix(in srgb,var(--pink) 35%,transparent)}
+#modal .tmsec .tmgrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}#modal .tmsec .tmgrid .cb{min-height:56px;padding:6px 2px;font-size:10.5px;white-space:normal;line-height:1.2}#modal .tmsec .tmgrid .cb i{font-size:18px}
+`;document.head.appendChild(st)})();
+{const SEC=[['rec','📚 บันทึกและความรู้','Records & guides',/openBook|openGraves|openCodex|openBestiary|openStats|openGuide|openUpdate/],
+  ['acc','👤 บัญชีและเซฟ','Account & saves',/openProfile|openSaveCode|frmenu2/],
+  ['set','⚙️ ตั้งค่า','Settings',/toggleLang|cycleTheme|openSound|cycleFs|openGfx|openUiZ|dockToggle/],
+  ['con','💬 ติดต่อและสนับสนุน','Contact & support',/openSupport|openReport|openFeedback/],
+  ['adm','🛠️ แอดมิน','Admin',/openAdmTools/]];
+ const _otS=openTitleMenu;openTitleMenu=function(){const r=_otS.apply(this,arguments);try{const m=$('modal'),gr=m&&m.querySelector('.tmgrid');if(!gr||m.querySelector('.tmsec'))return r;
+  const btns=[...gr.querySelectorAll(':scope > button')];
+  // ปุ่มเต็มแถวที่ซ้ำกับในตาราง: ภาษา (langopt) · คู่มือระบบ → เอาออก · โปรไฟล์ → ย้ายเข้าตาราง
+  m.querySelectorAll(':scope > button.langopt').forEach(b=>b.remove());
+  [...m.querySelectorAll(':scope > button.gbtn')].forEach(b=>{if(b.onclick===openGuide||/คู่มือระบบ/.test(b.textContent))b.remove()});
+  const pf=m.querySelector(':scope > button.frmenu2');if(pf){const nb=document.createElement('button');nb.className='cb frmenu2';nb.innerHTML='<i>👤</i>'+(LANG==='en'?'Profile & frames':'โปรไฟล์และกรอบ');nb.onclick=()=>openProfile();pf.remove();btns.unshift(nb)}
+  const key=b=>(b.getAttribute('onclick')||'')+' '+b.className,box={},left=[];
+  btns.forEach(b=>{const s=SEC.find(x=>x[3].test(key(b)));if(s)(box[s[0]]=box[s[0]]||[]).push(b);else left.push(b)});
+  // คู่มือกับอัปเดตไว้ท้ายหมวดบันทึก · ภาษาไว้ท้ายหมวดตั้งค่า
+  const wt=b=>/openGuide|openUpdate|toggleLang/.test(key(b))?1:0;['rec','set'].forEach(k=>box[k]&&box[k].sort((a,b)=>wt(a)-wt(b)));
+  if(left.length)(box.set=box.set||[]).push(...left);
+  const host=document.createElement('div');host.className='tmsecs';
+  SEC.forEach(s=>{const L=box[s[0]];if(!L||!L.length)return;const d=document.createElement('div');d.className='tmsec';d.innerHTML=`<div class="tmh">${LANG==='en'?s[2]:s[1]}</div>`;const g=document.createElement('div');g.className='tmgrid';L.forEach(b=>g.appendChild(b));d.appendChild(g);host.appendChild(d)});
+  gr.replaceWith(host)}catch(e){console.error(e)}return r}}
+
 </script>
 </body>
 </html>
