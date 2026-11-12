@@ -3870,7 +3870,7 @@ function shareLife(){if(!S)return;const t=`${S.name} อายุ ${S.age} · ${
 async function chatRep(i){try{await api('report',{mid:i});toast('รายงานแล้ว')}catch(e){toast('รายงานไม่ได้')}}
 async function cloudPut(){try{const j=await api('save',{d:saveCode()});modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☁️ ฝากเซฟแล้ว</h3><p>รหัสของคุณ</p><div class="px" style="font-size:30px;text-align:center;letter-spacing:4px">${j.code}</div><p class="tag2">ใช้ได้ 30 วัน · ใส่รหัสนี้ในเครื่องอื่นที่เมนู 💾 ย้ายเซฟ</p>`)}catch(e){toast('ฝากไม่สำเร็จ')}}
 async function cloudGet(c){try{const j=await api('load&code='+encodeURIComponent(c.toUpperCase()));if(j.d)loadCode(j.d);closeM()}catch(e){toast('ไม่พบรหัสนี้')}}
-function lifeScore(){const ih=S.inh||{f:0,m:0},fm=Math.max(0,S.fame-ih.f)+Math.min(S.fame,ih.f)*.05,mn=Math.max(0,S.money-ih.m)+Math.min(S.money,ih.m)*.01;return Math.round((total()+fm*3+(mn<=1e6?20*Math.sqrt(Math.max(0,mn)):20000+6000*Math.log10(mn/1e6))+(S.faction?S.rank*500:0)+S.kids*100+(S.ownSect?S.ownSect.dis*20:0)+(S.offRank||0)*400)*(S.goalDone?1.5:1))}
+function lifeScore(){const ih=S.inh||{f:0,m:0},fm=Math.max(0,S.fame-ih.f)+Math.min(S.fame,ih.f)*.05,mn=Math.max(0,S.money-ih.m)+Math.min(S.money,ih.m)*.01;return Math.round((total()+fm*3+(mn<=1e6?20*Math.sqrt(Math.max(0,mn)):20000+6000*Math.log10(mn/1e6))+(S.faction?S.rank*500:0)+((S.kids||0)-(S.kidsA||0)*.4)*100+(S.orph?(S.orph.tot||0)*20:0)+(S.ownSect?S.ownSect.dis*20:0)+(S.offRank||0)*400)*(S.goalDone?1.5:1))}
 function onlineLife(){}
 let arenaBusy=false;
 async function arenaGo(){if(arenaBusy||!S)return;if(S.arY===S.age&&(S.arN||0)>=3)return toast('ปีนี้ประลองครบ 3 ครั้งแล้ว');arenaBusy=true;
@@ -5966,7 +5966,7 @@ const TTL_SP=[['bossM',()=>S.flags.bossKill&&!S.xian,'ผู้สังหา�
  ['orphan',()=>S.family&&S.family.orphan&&realmIdx()>=5,'ลูกกำพร้าผู้ท้าฟ้า'],['trash',()=>S.talent.m<=.6&&realmIdx()>=6,'ขยะผู้พลิกชะตาฟ้า'],['crip',()=>tr('crippled')&&!S.cured&&S.fame>=10000,'ผู้ยิ่งใหญ่ไร้วรยุทธ'],['harem',()=>(S.harem||[]).length>=5,'ราชันแห่งตำหนักใน'],
  ['revive',()=>S.flags.revived,'ผู้กลับมาจากความตาย'],['ow',()=>S.ow&&S.awake&&realmIdx()>=6,'ผู้มาจากต่างโลกผู้ไร้เทียมทาน'],['regress',()=>S.flags.regress&&realmIdx()>=6,'ผู้ย้อนเวลามาแก้ชะตา'],['slowmax',()=>S.goal==='slow'&&S.age>=70&&(S.kills||0)<=10,'ฤๅษีผู้ไม่แตะต้องโลก'],
  ['kills300',()=>(S.kills||0)>=300,'ยมทูตเดินดิน'],['rich',()=>(S.money||0)>=1e6,'เจ้าสัวใต้หล้า'],['saint',()=>(S.karma||0)>=300,'พระโพธิสัตว์เดินดิน'],['fiend',()=>(S.karma||0)<=-300,'มารร้ายในร่างคน'],['sect',()=>!!S.ownSect&&realmIdx()>=5,'ปรมาจารย์ผู้ก่อตั้งสำนัก'],
- ['imm',()=>S.flags.xImm,'เซียนอมตะ'],['asc',()=>S.flags.ascended&&!S.xian,'ผู้เหาะขึ้นสู่แดนเซียน'],['kids',()=>(S.kids||0)>=8,'บิดามารดาแห่งร้อยบุตร']];
+ ['imm',()=>S.flags.xImm,'เซียนอมตะ'],['asc',()=>S.flags.ascended&&!S.xian,'ผู้เหาะขึ้นสู่แดนเซียน'],['kids',()=>kidsHalf()>=8,'บิดามารดาแห่งร้อยบุตร']];
 function ttlPath(){if(S.goal==='slow')return'free';return S.faction&&TTL_CORE.m[S.faction.t]?S.faction.t:'free'}
 function ttlTier(){const ri=realmIdx();return ri<=1?0:ri<=3?1:ri<=5?2:ri<=6?3:4}
 function ttlCat(){const sc={power:1.5},x=!!S.xian;
@@ -9554,7 +9554,7 @@ function bParYear(){const m=S&&S.beastMode;if(!(m&&!m.human&&m.par>0&&!m.parGone
  const AR={"w_bdivine":2,"d_100":4,"h_joy":4,"d_last":3,"b_genius":3,"b_heaven":4,"b_demon":5,"b_allarts":3,"b_ow":2,"t_dragon":4,"t_crip3":5,"b_hellworld":2,"d_infant":3,"d_accident":3,"d_180":5,"r_5":1,"r_7":3,"r_trash":4,"w_shadow":4,"w_shadowboss":5,"w_godtier":2,"w_qidev":3,"w_allfx":4,"w_eye":2,"f_d":1,"h_right":5,"h_lost":4,"c_head":4,"r_one":2,"e_surp":3,"f_peach":3,"w_champ":4,"a_master":1,"a_kill":3,"a_spare":3,"a_marry":4,"h_grand":3,"h_filial":4,"l_kids5":4,"l_rich":4,"l_gen3":3,"l_gen5":5,"g_goal":2,"p_ass":4,"w_bpath":1,"w_bprime":3,"s_lv10":3,"x_bag":3,"x_dao":5,"x_sec":5,"x_pet4":5,"x_core":1,"x_pet":3,"x_200":4,"v_mystp":2,"v_sr5":3,"v_reg":5,"v_dyn":3,"v_rlove":5,"v_leg":1,"s_q20":4,"s_gold":2,"s_main":2,"s_hid3":5,"s_tc5":3,"s_ur":3,"s_sage":5,"s_ring":3,"o_gun":3,"o_shop":4,"ow_phone":3,"ow_phone20":4,"ow_gunpeak":3,"o_rise":4,"ai_birth":3,"ai_copy":4,"ai_secret":4};
  ACH_ALL.forEach(a=>{const f=AF[a.id];if(f){a.d=f[0];a.c=f[1]}if(AR[a.id]!=null&&a.r>0&&a.r<6)a.r=AR[a.id]});
  // ฉายาพิเศษ (TTL_SP) ที่มีตัวเลข: ยากขึ้น 10 เท่า
- const TF={kills300:()=>(S.kills||0)>=3000,rich:()=>(S.money||0)>=1e7,saint:()=>(S.karma||0)>=3000,fiend:()=>(S.karma||0)<=-3000,kids:()=>(S.kids||0)>=40,harem:()=>(S.harem||[]).length>=20,
+ const TF={kills300:()=>(S.kills||0)>=3000,rich:()=>(S.money||0)>=1e7,saint:()=>(S.karma||0)>=3000,fiend:()=>(S.karma||0)<=-3000,kids:()=>kidsHalf()>=40,harem:()=>(S.harem||[]).length>=20,
   slowmax:()=>S.goal==='slow'&&S.age>=150&&(S.kills||0)<=1,crip:()=>tr('crippled')&&!S.cured&&S.fame>=100000,orphan:()=>S.family&&S.family.orphan&&realmIdx()>=7,sect:()=>!!S.ownSect&&realmIdx()>=7};
  TTL_SP.forEach(t=>{if(TF[t[0]])t[1]=TF[t[0]]});
 }
@@ -14126,7 +14126,7 @@ const nb=(k,i)=>` <button onclick="nameAsk('${k}',${i})" style="font-size:12px;p
 
 // ===== วางแผนครอบครัว: เลือกไม่มีลูกได้ แต่คู่ชีวิตไม่พอใจ =====
 {window.kidPlan=function(v){if(!S)return;const was=!!S.noKids;S.noKids=v?1:0;if(was!==!!v){const sp=S.sp;if(v){if(sp)sp.aff=Math.max(0,(sp.aff||70)-8);log(`🍼 ตัดสินใจว่า<b>ยังไม่อยากมีลูก</b>${sp?` — ${esc(sp.n)}ดูผิดหวัง (ความรัก −8)`:''}`,'bad')}else{if(sp)sp.aff=Math.min(100,(sp.aff||70)+5);joy(4);log(`🍼 ตัดสินใจว่า<b>พร้อมมีลูกแล้ว</b>${sp?` — ${esc(sp.n)}ยิ้มกว้าง (ความรัก +5)`:''}`,'good')}sfx('click');try{saveGame()}catch(e){}}openFamily()};
- const _py=passYear;passYear=function(){const a0=S&&S.age,r=_py.apply(this,arguments);try{if(S&&S.alive&&S.noKids&&S.age!==a0){const sp=S.sp,want=sp&&sp.wed!==false;if(want){const d=R(1,3)+(S.path==='family'?1:0);sp.aff=Math.max(0,(sp.aff||70)-d);if(!S._nkY||S.age-S._nkY>=5){S._nkY=S.age;addFeed('ev',`🍼 ${esc(sp.n)}ยังอยากมีลูก แต่คุณยังไม่พร้อม — ความรักลดลงทุกปี (−${d})`,'sum')}}
+ const _py=passYear;passYear=function(){const a0=S&&S.age,r=_py.apply(this,arguments);try{if(S&&S.alive&&S.noKids&&S.age!==a0){const sp=S.sp,want=sp&&sp.wed!==false;if(want&&!(S.kidsA>0)){const d=R(1,3)+(S.path==='family'?1:0);sp.aff=Math.max(0,(sp.aff||70)-d);if(!S._nkY||S.age-S._nkY>=5){S._nkY=S.age;addFeed('ev',`🍼 ${esc(sp.n)}ยังอยากมีลูก แต่คุณยังไม่พร้อม — ความรักลดลงทุกปี (−${d})`,'sum')}}
   (S.harem||[]).forEach(g=>{if(g&&typeof g.aff==='number')g.aff=Math.max(0,g.aff-1)})}}catch(e){}return r};
  const _of=openFamily;openFamily=function(){_of.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='family'||!(S.sp||(S.harem&&S.harem.length)))return;const hs=[...m.querySelectorAll('h4')],hk=hs.find(h=>/^ลูก/.test(h.textContent));if(!hk)return;const on=!!S.noKids,bs='font-size:13px;padding:5px 10px;border-radius:10px;cursor:pointer;margin:2px;border:1px solid #c9a24a;';
   hk.insertAdjacentHTML('beforebegin',`<div class="item" style="margin-top:8px"><div class="h"><b>🍼 วางแผนครอบครัว</b><span class="tag2">${on?'ยังไม่อยากมีลูก':'พร้อมมีลูก'}</span></div><div><button onclick="kidPlan(0)" style="${bs}background:${on?'#2a2214;color:#ffd77a':'#c9a24a;color:#1b1712;font-weight:700'}">👶 อยากมีลูก</button><button onclick="kidPlan(1)" style="${bs}background:${on?'#c9a24a;color:#1b1712;font-weight:700':'#2a2214;color:#ffd77a'}">🚫 ยังไม่อยากมีลูก</button></div><p class="tag2" style="margin-top:4px">${on?'จะไม่มีลูกเกิดเอง แต่คู่ชีวิตจะผิดหวัง ความรักลดลงทุกปี (ถ้าต่ำมากชีวิตคู่อาจร้าวฉาน)':'ลูกจะเกิดตามโชคชะตาเหมือนเดิม · ถ้าเลือกไม่มี ความรักลด −8 ทันที และลดทุกปี'}<br>รับเลี้ยงเด็กจากเหตุการณ์ยังทำได้ตามปกติ</p></div>`)}catch(e){}}}
@@ -15472,6 +15472,100 @@ paTickUI=function(){if($('modal').dataset.k!=='pauc'){clearInterval(PA.tk);retur
  const _wt2=worldTick;worldTick=function(){const pv=S&&S.wev,had=!!pv,r=_wt2.apply(this,arguments);try{if(!r&&!had&&S&&S.wev&&!choice._cur){const id=S.wev.id;
    if(id==='comet'){choice('☄️ ดาวหางสีเลือด','ดาวหางพาดฟ้าทั้งคืน ปราณในอากาศปั่นป่วน',[{t:'ฝึกลมปราณใต้แสงดาวหาง',s:'ลมปราณ · เสี่ยงปราณแปรปรวน',f(){if(chance(.75))say('ปราณจากดาวหางไหลเข้ากายคุณ','good',{qi:3});else say('ปราณแปรปรวนจนกระอักเลือด','bad',{hurt:.2,qi:1})}},{t:'ทำพิธีปัดเป่าให้ชาวบ้าน',s:'กรรมดี · เสน่ห์',f(){say('ชาวบ้านอุ่นใจขึ้นมาก','good',{karma:8,cha:3})}},{t:'ช่างมัน',f(){}}]);return true}
    if(id==='emperor'){choice('👑 ศึกชิงบัลลังก์','เหล่าองค์ชายส่งคนมาทาบทามยอดฝีมือทุกคน',[{t:'หนุนองค์ชายใหญ่',s:'เดิมพัน · ชนะได้ยศ แพ้ถูกล่า',f(){if(chance(.5))say('องค์ชายใหญ่ขึ้นครองราชย์! คุณได้รับบำเหน็จ','epic',{mon:500,fame:150});else say('องค์ชายใหญ่แพ้ คนที่หนุนเขาถูกล่า','bad',{hurt:.25,monP:-.15})}},{t:'หนุนองค์ชายเล็ก',s:'เดิมพันสูง · ได้มากกว่า',f(){if(chance(.35))say('ม้ามืดชนะ! องค์ชายเล็กขึ้นครองราชย์ คุณคือขุนนางคนสนิท','myth',{mon:900,fame:250});else say('องค์ชายเล็กถูกสังหาร คุณหนีตายมาได้','bad',{hurt:.3,fame:-30})}},{t:'วางตัวเป็นกลาง',f(){}}]);if(chance(.6))S.wNext='heir';return true}}}catch(e){}return r}}
+
+
+// ===================== v17.2 ลูกบุญธรรม: 5 ทางรับเลี้ยง · ความผูกพัน · ชาติกำเนิดลับ · บ้านเด็กกำพร้า =====================
+{const MU=()=>S&&S.xt?5000:S&&S.xian?50:1,chance=p=>Math.random()<p;
+ const ok=()=>S&&S.alive&&!(S.beastMode&&!S.beastMode.human)&&S.age>=(S.ch==='short'?18:25);
+ const nA=()=>(S.children||[]).filter(c=>c.adopt).length;
+ const cost=()=>Math.round(300*MU()*Math.pow(1.6,nA()));
+ const TRAIT=['ขี้อาย แต่ช่างสังเกต','ซนจนไม่มีใครเอาอยู่','เงียบขรึมเกินวัย','ยิ้มเก่ง ใครเห็นก็รัก','ดื้อรั้น แต่ไม่เคยร้องไห้','ชอบขโมยขนม แต่แบ่งให้เพื่อน','จ้องมองกระบี่ทุกครั้งที่เห็น','ท่องจำตำราได้ตั้งแต่ห้าขวบ','ชอบช่วยสัตว์บาดเจ็บ','ไม่ยอมบอกชื่อเดิมของตัวเอง'];
+ const ORIG={prince:['👑','สายเลือดราชวงศ์ที่หายไป','ราชสำนักส่งคนมาตามหา — เด็กคนนี้คือรัชทายาทที่หายไปเมื่อสิบกว่าปีก่อน'],
+  enemy:['🗡️','ลูกของศัตรูที่คุณเคยฆ่า','เด็กพบจดหมายของพ่อแท้ๆ — พ่อของเขาตายด้วยมือของคุณ'],
+  demon:['🩸','สายเลือดสำนักมาร','ลมปราณมารในกายเด็กตื่นขึ้น — เขาเป็นทายาทสายตรงของสำนักมารที่ล่มสลาย'],
+  body:['✨','กายาพิเศษที่ไม่มีใครรู้','ร่างกายของเด็กเปล่งแสงในคืนเดือนเพ็ญ — เขามีกายาพิเศษที่หาได้ยากในรอบพันปี'],
+  sage:['📜','ศิษย์คนสุดท้ายของปรมาจารย์','เด็กท่องวิชาที่ไม่เคยมีใครสอนออกมาได้ — ปรมาจารย์ผู้ล่วงลับฝากวิชาไว้ในตัวเขา']};
+ const hint=t=>t.m>=1.6?'ดูฉลาดเกินวัยจนน่าขนลุก':t.m>=1.3?'เรียนรู้เร็วกว่าเด็กทั่วไป':t.m>=1?'เด็กธรรมดาที่ร่าเริง':'ร่างกายอ่อนแอกว่าเด็กทั่วไป';
+ function mkKid(o){o=o||{};const g=o.g||ch(['ชาย','หญิง']),sur=surOf();let given;try{given=anyName(g).split(' ').slice(-1)[0]}catch(e){given=ch(['หลิน','เฟย','ชิง','เหยียน','หลาน','ซิน'])}
+  const gen=chance(o.gp||.08),tal=o.tal||(gen?pickW(TALENT.filter(t=>t.m>=1.5)).v:pickW(TALENT).v);
+  return{n:o.n||(sur?sur+' '+given:anyName(g)),g,age:o.age!=null?o.age:R(0,10),alive:true,tal,fac:null,married:false,grand:0,adopt:1,bond:o.bond||45,src:o.src||'orph',trait:o.trait||TRAIT[Math.floor(Math.random()*TRAIT.length)],orig:o.orig!==undefined?o.orig:(chance(.25)?Object.keys(ORIG)[Math.floor(Math.random()*5)]:null),rev:0}}
+ function addKid(c,msg){S.children=S.children||[];S.children.push(c);S.kids=(S.kids||0)+1;S.kidsA=(S.kidsA||0)+1;joy(12);
+  log(`🏠 ${msg||'รับเด็กมาเป็นลูกบุญธรรม'}: <b>${esc(c.n)}</b> (${c.age} ปี · ${esc(c.trait)})${S.noKids&&S.sp?' — คู่ชีวิตยิ้มทั้งน้ำตา':''}`,'epic',true);
+  try{if(S.sp&&S.noKids)S.sp.aff=Math.min(100,(S.sp.aff||60)+10)}catch(e){}render();saveGame()}
+ window.kidsHalf=()=>Math.max(0,(S&&S.kids||0)-(S&&S.kidsA||0)*.5);
+ // ---------- หอเด็กกำพร้า (เลือก 1 จาก 3) ----------
+ window.openAdopt=function(){if(!S)return;if(!ok())return toast(S.beastMode&&!S.beastMode.human?'สัตว์อสูรรับเด็กมนุษย์ไม่ได้':`ต้องอายุ ${S.ch==='short'?18:25} ปีขึ้นไป`);
+  const own=S.orph&&S.orph.n>0;if(!S.orphC||S.orphC.y!==S.age)S.orphC={y:S.age,L:[mkKid(),mkKid(),mkKid()]};const L=S.orphC.L,cs=own?0:cost(),kb=S.karma<-60;
+  modal(`<button class="xbtn" onclick="openFamily()">✕</button><h3>🏠 ${own?'บ้านเด็กกำพร้าของคุณ':'หอเด็กกำพร้าในเมือง'}</h3>
+  <p class="tag2">${own?`เด็กในอุปการะ ${fmt(S.orph.n)} คน — รับเป็นลูกบุญธรรมได้โดยไม่เสียเงิน`:`ค่าบริจาค <b>${fmt(cs)}</b> ตำลึง · ยิ่งรับมาก ค่าบริจาคยิ่งแพง`} · ลูกบุญธรรมตอนนี้ ${nA()} คน<br>ยิ่งมีลูกบุญธรรมมาก ความใส่ใจของคุณยิ่งถูกแบ่ง — เด็กที่ผูกพันน้อยอาจหนีออกจากบ้าน</p>
+  ${kb?'<p class="bad">⚠️ หอเด็กกำพร้าไม่ไว้ใจคนที่มีชื่อเสียงชั่วร้ายแบบคุณ (กรรมต่ำกว่า −60)</p>':''}
+  ${L.map((c,i)=>`<div class="item"><div class="h"><b>${c.g==='หญิง'?'👧':'👦'} ${esc(c.n)}</b><span class="tag2">${c.age} ปี</span></div><p>${esc(c.trait)} · <i>${hint(c.tal)}</i></p>${c.taken?'<p class="tag2">✅ รับไปแล้ว</p>':`<button class="pbtn" style="width:100%" ${kb||(!own&&(S.money||0)<cs)?'disabled':''} onclick="adoptPick(${i})">รับเป็นลูก</button>`}</div>`).join('')}
+  <p class="tag2" style="margin-top:8px">เด็กชุดใหม่จะมาทุกปี · ลูกบุญธรรมสืบทอดเป็นทายาทได้เหมือนลูกแท้ แต่ไม่ได้สายเลือดและพรสวรรค์จากคุณ</p>
+  ${own?'':`<button class="cb" style="width:100%;margin-top:6px" onclick="orphFound()">🏯 ก่อตั้งบ้านเด็กกำพร้าของตัวเอง (${fmt(4000*MU())} ตำลึง)</button>`}
+  ${own?`<button class="cb" style="width:100%;margin-top:6px" onclick="orphView()">🏯 ดูบ้านเด็กกำพร้า</button>`:''}`,'adopt')};
+ window.adoptPick=function(i){const L=S.orphC&&S.orphC.L,c=L&&L[i];if(!c||c.taken)return;const own=S.orph&&S.orph.n>0,cs=own?0:cost();if(S.karma<-60)return toast('หอเด็กกำพร้าไม่ยอมให้คุณรับ');if((S.money||0)<cs)return toast('เงินไม่พอ');
+  S.money-=cs;if(own)S.orph.n=Math.max(0,S.orph.n-1);c.taken=1;const k=Object.assign({},c);delete k.taken;addKid(k,own?'รับเด็กจากบ้านเด็กกำพร้ามาเป็นลูก':'รับเด็กจากหอเด็กกำพร้ามาเป็นลูกบุญธรรม');try{nameAsk('kid',S.children.length-1)}catch(e){openFamily()}};
+ // ---------- บ้านเด็กกำพร้า (สาย "ร้อยชีวิต") ----------
+ window.orphFound=function(){const c=4000*MU();if((S.money||0)<c)return toast('เงินไม่พอ');S.money-=c;S.orph={n:R(3,6),lv:1,tot:0,y0:S.age};S.orph.tot=S.orph.n;log('🏯 คุณก่อตั้ง<b>บ้านเด็กกำพร้า</b> เด็กไร้บ้านกลุ่มแรกเดินเข้ามาอย่างหวาดๆ','myth',true);rw0({karma:15});render();saveGame();orphView()};
+ const cap=()=>S.orph?S.orph.lv*25:0,upk=()=>S.orph?Math.round(S.orph.n*8*MU()):0;
+ window.orphView=function(){const O=S.orph;if(!O)return openAdopt();const up=Math.round(3000*MU()*O.lv);
+  modal(`<button class="xbtn" onclick="openAdopt()">✕</button><h3>🏯 บ้านเด็กกำพร้า ขั้น ${O.lv}</h3>
+  <p>เด็กในอุปการะ <b>${fmt(O.n)}</b>/${cap()} คน · เลี้ยงโตจนออกไปแล้วทั้งหมด <b>${fmt(O.tot)}</b> ชีวิต</p>
+  <p class="tag2">ค่าเลี้ยงดูปีละ ${fmt(upk())} ตำลึง (จ่ายไม่ไหวเด็กจะต้องแยกย้าย) · ทุกปีได้กรรมดีและชื่อเสียง · เด็กใหม่มาเองทุกปี · รับเด็กในบ้านเป็นลูกได้ฟรี</p>
+  <p class="tag2">ฉายาสาย "ร้อยชีวิต": อุปการะรวม 20 · 100 · 500 ชีวิต</p>
+  <button class="pbtn" style="width:100%" onclick="orphUp()">⬆️ ขยายบ้าน (${fmt(up)} ตำลึง) — รับได้ ${(O.lv+1)*25} คน</button>
+  <button class="cb" style="width:100%;margin-top:6px" onclick="openAdopt()">👶 เลือกเด็กมาเป็นลูกบุญธรรม</button>`,'adopt')};
+ window.orphUp=function(){const O=S.orph,up=Math.round(3000*MU()*O.lv);if((S.money||0)<up)return toast('เงินไม่พอ');S.money-=up;O.lv++;toast('ขยายบ้านเด็กกำพร้าแล้ว');orphView()};
+ function rw0(o){if(o.karma)S.karma+=o.karma;if(o.fame)S.fame+=o.fame;if(o.mon)S.money=Math.max(0,(S.money||0)+o.mon)}
+ // ---------- ข้อเสนอรับเด็กจากเรื่องราว ----------
+ function offer(title,text,o,yes){if(!ok()||choice._cur)return false;const c=mkKid(o);choice(title,text+`<br><span class="tag2">${c.g==='หญิง'?'👧':'👦'} ${c.age} ปี · ${esc(c.trait)} · ${hint(c.tal)}</span>`,[
+  {t:'รับมาเลี้ยงเป็นลูก',s:'ลูกบุญธรรม',f(){addKid(c,yes)}},{t:'ฝากให้คนอื่นดูแล',f(){log('คุณฝากเด็กไว้กับวัดใกล้เมือง','',false)}}]);return true}
+ // เหตุการณ์ใหญ่ที่เป็นภัยพิบัติ → เด็กกำพร้ารอดชีวิต
+ const DIS=['sectwar','plague','flood','famine2','beastTide','purge','x_drought','beastwar','g_demon','stardie','chaos','x_demon','threewar'];
+ {const _wt=worldTick;worldTick=function(){const w0=S&&S.wev2&&S.wev2.id,h0=S&&S.wHist?S.wHist.length:0,r=_wt.apply(this,arguments);
+   try{if(S&&!S.wev2&&!S.wPend){const hn=S.wHist?S.wHist.length:0,last=S.wHist&&S.wHist[hn-1],oneShot=hn>h0&&last&&!S.wev2;const id=w0&&!S.wev2?w0:(oneShot?last:null);if(id&&DIS.includes(id)&&chance(.4))S._orOff={k:'dis',at:S.age+1}}}catch(e){}return r}}
+ {const _ft=familyTick;familyTick=function(){const r=_ft.apply(this,arguments);if(r)return r;try{if(!S||!S.alive)return r;
+   const A=(S.children||[]).filter(c=>c.adopt&&c.alive);
+   // ความผูกพัน: ลดเองช้าๆ · เลี้ยงดูแบ่งตามจำนวนเด็ก
+   A.forEach(c=>{if(c.age<20)c.bond=Math.max(0,(c.bond||45)-1)});
+   const young=A.filter(c=>c.age<18);
+   if(young.length&&chance(.28)){const n=young.length;choice('🏠 ลูกบุญธรรม',`ลูกบุญธรรม ${n} คนกำลังเติบโต${n>3?' — เยอะจนคุณดูแลไม่ทั่วถึง':''}<br><span class="tag2">${young.slice(0,6).map(c=>`${esc(c.n.split(' ').slice(-1)[0])} ผูกพัน ${Math.round(c.bond)}`).join(' · ')}</span>`,[
+     {t:'ใช้เวลาอยู่กับลูกๆ ทั้งปี',s:`ความผูกพัน +${Math.round(24/n)} ต่อคน · พลังไม่เพิ่ม`,f(){young.forEach(c=>c.bond=Math.min(100,c.bond+Math.round(24/n)));joy(8);log('คุณใช้เวลาทั้งปีอยู่กับลูกๆ','good')}},
+     {t:'สอนวิชาให้',s:`ความผูกพัน +${Math.round(14/n)} · ลูกได้วิชา`,f(){young.forEach(c=>{c.bond=Math.min(100,c.bond+Math.round(14/n));c.taught=(c.taught||0)+1});log('คุณสอนวิชาพื้นฐานให้ลูกๆ ทุกเช้า','good')}},
+     {t:'ปล่อยให้โตเอง',s:'ความผูกพัน −3',f(){young.forEach(c=>c.bond=Math.max(0,c.bond-3))}}]);return true}
+   for(const c of A){
+    if(c.orig&&!c.rev&&c.age>=15){c.rev=1;const O=ORIG[c.orig];
+     if(c.orig==='enemy'){if(c.bond>=60){log(`${O[0]} <b>${esc(c.n)}</b>: ${O[2]}<br>เขาฉีกจดหมายทิ้ง "พ่อของข้าคือคนที่เลี้ยงข้ามา"`,'myth',true);c.bond=100;S.karma+=10}else{c.alive=false;c.gone=1;S._adEnemy={n:c.n,at:S.age+R(4,9)};log(`${O[0]} <b>${esc(c.n)}</b>: ${O[2]}<br>เขาหายไปกลางดึก ทิ้งกระบี่ไว้ปักบนโต๊ะ`,'bad',true)}}
+     else{log(`${O[0]} ชาติกำเนิดลับของ <b>${esc(c.n)}</b>: ${O[2]}`,'myth',true);if(c.orig==='body')c.tal=pickW(TALENT.filter(t=>t.m>=1.6)).v;if(c.orig==='prince'){S.fame+=200;S.money+=Math.round(500*MU())}if(c.orig==='demon')S.karma-=10}
+     return true}
+    if(c.bond<20&&c.age>=13&&chance(.15)){c.alive=false;c.gone=1;joy(-15);log(`💔 ลูกบุญธรรม <b>${esc(c.n)}</b> หนีออกจากบ้าน ทิ้งจดหมายไว้ว่า "ท่านไม่เคยเห็นข้าอยู่ในสายตา"`,'bad',true);if(c.orig==='enemy'||chance(.3))S._adEnemy={n:c.n,at:S.age+R(5,10)};return true}}
+   if(S._adEnemy&&S.age>=S._adEnemy.at){const e=S._adEnemy;S._adEnemy=null;duel(`${e.n} ลูกบุญธรรมที่กลับมาแก้แค้น`,Math.round(total()*1.1),w=>{log(w?`คุณชนะ แต่ไม่อาจลงมือฆ่า${esc(e.n)}ได้ เขาเดินจากไปพร้อมน้ำตา`:`${esc(e.n)}เอาชนะคุณได้ "นี่คือสิ่งที่ท่านสอนข้า — การไม่สนใจใคร"`,w?'epic':'bad');if(!w)S.hp=Math.max(1,S.hp-S.maxHp*.3)});return true}
+   // บ้านเด็กกำพร้า
+   if(S.orph){const O=S.orph,u=upk();if((S.money||0)>=u){S.money-=u;const nw=Math.min(cap()-O.n,R(1,3)+O.lv);if(nw>0){O.n+=nw;O.tot+=nw}const gr=Math.floor(O.n*.08);if(gr>0)O.n-=gr;S.karma+=Math.min(12,1+O.n/6);S.fame+=Math.round(O.n*2)}
+    else if(O.n){const lv=Math.ceil(O.n*.3);O.n-=lv;log(`🏯 เงินไม่พอเลี้ยงดู เด็ก ${lv} คนต้องแยกย้ายออกจากบ้านเด็กกำพร้า`,'bad')}}
+   if(!ok())return r;
+   // ข้อเสนอ: ภัยพิบัติ · เพื่อนที่ตาย · ศิษย์ · แต่งงานนานไม่มีลูก
+   if(S._orOff&&S.age>=S._orOff.at){S._orOff=null;return offer('🧒 เด็กรอดชีวิต','หลังภัยพิบัติผ่านไป เด็กตัวมอมแมมคนหนึ่งเกาะชายเสื้อคุณไม่ยอมปล่อย พ่อแม่ของเขาไม่รอด',{src:'dis',age:R(3,9)},'รับเด็กรอดชีวิตจากภัยพิบัติมาเป็นลูก')}
+   const dead=(typeof peers!=='undefined'?peers:[]).filter(p=>!p.alive).length;if(S._pdN==null)S._pdN=dead;
+   if(dead>S._pdN){S._pdN=dead;if(chance(.22)){const p=peers.filter(x=>!x.alive).slice(-1)[0];if(p)return offer('🕯️ คำฝากฝังสุดท้าย',`ก่อนสิ้นใจ <b>${esc(p.name)}</b> ที่เกิดพร้อมคุณ ฝากลูกคนเดียวไว้กับคุณ "ช่วยดูแลเขาแทนข้าด้วย"`,{src:'peer',age:R(1,10),bond:55},`รับลูกของ${p.name}มาเป็นลูก`)}}
+   if(S.ownSect&&(S.ownSect.dis||0)>=10&&S.age>=40&&!S.flags.adDis&&chance(.1)){S.flags.adDis=1;return offer('🥋 ศิษย์เอกผู้สืบทอด','ศิษย์เอกของสำนักคุกเข่าขอเรียกคุณว่า "ท่านพ่อ" — เขาเป็นกำพร้ามาตั้งแต่เด็ก และอยากสืบทอดวิชาของคุณ',{src:'dis',age:R(16,20),bond:65,gp:.35},'รับศิษย์เอกเป็นลูกบุญธรรม')}
+   if(S.sp&&S.sp.wed!==false){if(S._mar0==null)S._mar0=S.age;if(!(S.kids>0)&&S.age-S._mar0>=10&&!S.flags.adChild&&chance(.3)){S.flags.adChild=1;return offer('🍼 สิบปีที่รอคอย','สิบปีผ่านไปยังไม่มีลูก คู่ชีวิตของคุณยืนมองเด็กกำพร้าที่หน้าวัดอยู่นาน',{src:'wait',age:R(0,4),bond:55},'รับเด็กจากหน้าวัดมาเป็นลูก')}}
+  }catch(e){console.error(e)}return r}}
+ // ---------- สืบทอดเป็นลูกบุญธรรม: มรดกตามความผูกพัน · ชาติกำเนิดลับติดตัว ----------
+ {const _ih=inherit;inherit=function(ci){const P=S,kid=ci!=null&&P.children?P.children[ci]:null,ad=kid&&kid.adopt?Object.assign({},kid):null;const r=_ih.apply(this,arguments);
+   try{if(ad&&S&&S!==P){const b=ad.bond||45;if(b<50){const cut=Math.round((S.money||0)*(1-b/50)*.6);S.money-=cut;log(`🏠 ในฐานะลูกบุญธรรมที่ไม่ค่อยสนิทกับพ่อแม่ ญาติๆ แย่งมรดกไปบางส่วน (−${fmt(cut)} ตำลึง)`,'bad')}
+     else if(b>=80){S.money=Math.round((S.money||0)*1.2);S.fame+=50;log('🏠 ลูกบุญธรรมผู้กตัญญู — ทุกคนในตระกูลยอมรับคุณเป็นทายาทเต็มตัว','good')}
+     if(ad.taught){try{const a=newArt(Math.min(3,1+Math.floor(ad.taught/2)));a.n='วิชาที่พ่อบุญธรรมสอน';S.arts.push(a)}catch(e){}}
+     if(ad.orig&&ad.rev){S.flags.adOrig=ad.orig;if(ad.orig==='prince')S.fame+=300;if(ad.orig==='demon'){S.power+=Math.round(S.power*.1);S.karma-=20}if(ad.orig==='sage')try{const a=newArt(3);a.n='วิชาของปรมาจารย์ผู้ล่วงลับ';S.arts.push(a)}catch(e){}}
+     S.flags.adopted=1;render();saveGame()}}catch(e){console.error(e)}return r}}
+ // ---------- ปุ่มในหน้าครอบครัว + ป้ายบอกลูกบุญธรรม ----------
+ {const _of=openFamily;openFamily=function(){const r=_of.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='family')return r;
+   m.querySelectorAll('.item').forEach(it=>{const b=it.querySelector('b');if(!b)return;const c=(S.children||[]).find(x=>x.adopt&&b.textContent.includes(x.n));if(c){const p=it.querySelector('p');if(p)p.insertAdjacentHTML('beforeend',` · <span class="tag2">🏠 ลูกบุญธรรม${c.alive?` · ผูกพัน ${Math.round(c.bond)}`:c.gone?' · หนีออกจากบ้าน':''}${c.rev&&c.orig?' · '+ORIG[c.orig][0]+' '+ORIG[c.orig][1]:''}</span>`)}});
+   if(!(S.beastMode&&!S.beastMode.human))m.insertAdjacentHTML('beforeend',`<div style="margin-top:10px"><button class="pbtn" style="width:100%" onclick="openAdopt()">🏠 รับลูกบุญธรรม${S.orph?' · บ้านเด็กกำพร้า':''}</button>${ok()?'':`<p class="tag2" style="text-align:center">รับลูกบุญธรรมได้เมื่ออายุ ${S.ch==='short'?18:25} ปีขึ้นไป</p>`}</div>`)}catch(e){}return r}}
+ // ---------- คะแนน 60% · ฉายาร้อยบุตรนับครึ่ง · ฉายาสายร้อยชีวิต ----------
+ try{TTL_SP.unshift(['or500',()=>!!(S.orph&&S.orph.tot>=500),'บิดามารดาของแผ่นดิน'],['or100',()=>!!(S.orph&&S.orph.tot>=100),'ผู้อุปถัมภ์ร้อยชีวิต'],['or20',()=>!!(S.orph&&S.orph.tot>=20),'บ้านอุ่นของเด็กไร้บ้าน'],['ad3',()=>(S.kidsA||0)>=3,'สายใยที่ไม่ใช่สายเลือด']);Object.assign(TTL_SPR,{or500:6,or100:5,or20:3,ad3:3})}catch(e){}
+ try{SYS_GUIDE.push({s:'life',nw:1,ic:'🏠',t:'ลูกบุญธรรม',d:'กด <b>🏠 รับลูกบุญธรรม</b> ในหน้าครอบครัว (อายุ 25 ขึ้นไป) หรือรับจากเรื่องราว: เด็กรอดจากภัยพิบัติ · ลูกที่เพื่อนฝากก่อนตาย · ศิษย์เอก · แต่งงานนานไม่มีลูก · ลูกบุญธรรมสืบทอดเป็นทายาทได้ แต่ความผูกพันต่ำอาจหนีออกจากบ้าน · 1 ใน 4 มีชาติกำเนิดลับ · ก่อตั้ง<b>บ้านเด็กกำพร้า</b>เพื่อเดินสาย "ร้อยชีวิต"',te:'Adoption',de:'Adopt children from the family screen (age 25+). Bond matters; some have secret origins. Found an orphanage for the hundred-lives path.'})}catch(e){}
+}
 
 </script>
 </body>
