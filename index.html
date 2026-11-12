@@ -7320,7 +7320,7 @@ const GEV=[
   setScene('aura');choice('🕳️ เงาจากความว่างเปล่า',ch(['บางสิ่งที่ไม่มีรูปร่างยืนอยู่ปลายเตียงของคุณ มันไม่มีหน้า แต่คุณรู้ว่ามันกำลังยิ้ม','ดวงดาวรอบตัวหายไปทีละดวง เหลือเพียงความมืดที่มีรูปร่างคล้ายคน มันยื่นมือมาหาคุณ']),o)}}
 ];
 function gevTick(st){if(!S||!S.alive||!S.xian||!S.xt||S.beastMode)return;const g=gdInit();g.n=(g.n||0)+1;try{gdTick(st)}catch(e){console.error(e)}
- if(choice._cur||modalOpen||S.hp<=0)return;if(gdAsk())return;if(g.n-(g.at||-9)<2||Math.random()>.35)return;
+ if(choice._cur||modalOpen||S.hp<=0)return;if(gdAsk())return;if(g.n-(g.at||-9)<2||Math.random()>.5)return;
  const e=gevPick();if(e)try{e.f()}catch(x){console.error(x)}}
 function gevPick(){const g=gdInit(),L=GEV.filter(e=>(!e.c||e.c())&&!g.ev.includes(e.id));if(!L.length)return null;const e=pickW(L).v;g.at=g.n;g.ev.push(e.id);if(g.ev.length>6)g.ev.shift();return e}
 const G_MORTAL=/เควสฉุกเฉิน|เควส: (ชิมอาหาร|ตบหน้าคุณชาย|คุ้มกันคาราวาน|ยอมแพ้ให้เด็กน้อย|ช่วยศิษย์ที่ถูกรังแก|เข้าพบผู้งามล่มเมือง|ปราบสัตว์อสูร|สมาธิใต้น้ำตก|งานประมูลใต้ดิน|ปริศนาในถ้ำโบราณ)|สำนักเปิดรับศิษย์|งานชุมนุมยุทธ์|กองคาราวาน|จดหมายจากบ้าน|ลัทธิมารเกณฑ์คน|ทุพภิกขภัย|ขอเข้าตำหนักใน/;
@@ -17667,6 +17667,48 @@ function openArcBook(){const B=LS.get('murim_arcbook',{})||{};let got=0,tot=0;
 {const _omB=openMenu;openMenu=function(){const r=_omB.apply(this,arguments);try{if(S&&saOK()){const g=document.querySelector('#modal .mgrid');if(g&&!g.querySelector('.arcOpt')){const B=LS.get('murim_arcbook',{})||{},n=Object.values(B).reduce((a,o)=>a+Object.keys(o).length,0);g.insertAdjacentHTML('afterbegin',`<button class="opt arcOpt" onclick="openArcBook()">📖 สมุดนิยาย<small>${S.sarc?'กำลังอยู่ในภาค · ':''}ตอนจบ ${n} แบบ</small></button>`)}}}catch(e){}return r}}
 try{SYS_GUIDE.push({s:'grow',nw:1,ic:'📖',t:'ภาคเรื่องราว (แนวมังฮวาจีน)',go:'openArcBook',d:'ระหว่างชีวิต (อายุ 14+) จะมี<b>ภาคเรื่องราว</b>เริ่มเอง ชีวิตละไม่เกิน 3 ภาค ภาคละ 5 บท ห่างกันบทละ 2–5 ปี · มีลางบอกเหตุในบันทึกก่อนบทใหม่ 1 ปี · <b>ตัวเลือกในบทแรกๆ ส่งผลถึงตอนจบ</b> แต่ละภาคมี 4–8 ตอนจบ · จุดพีคเป็นการดวลจริง · ตายกลางภาคแล้วเล่นต่อเป็นลูก ลูกจะสานต่อภาคนั้น · ดูตอนจบที่ค้นพบได้ที่ ☰ → 📖 สมุดนิยาย<br>ภาคตอนนี้: '+SA_ARCS.map(a=>a.ic+' '+a.n+' ('+Object.keys(a.end).length+' ตอนจบ)').join(' · ')})}catch(e){}
 (function(){const st=document.createElement('style');st.textContent=`.arcCard{text-align:center;padding:6px 2px}.arcCard .arcT{font-size:12px;letter-spacing:3px;color:#e8a23a}.arcCard h3{margin:6px 0}.arcCard .arcE{display:inline-block;margin:4px 0 8px;padding:6px 12px;border-radius:10px;background:linear-gradient(90deg,#3a1a0a,#6a3a0a);color:#ffe08a;font-weight:700}.arcCard .arcNew{background:#ff3a5a;color:#fff;border-radius:6px;padding:1px 6px;font-size:11px;margin-left:4px}.arcCard p{line-height:1.6}`;document.head.appendChild(st)})();
+
+
+// ===================== v17.3 ลบวิชา: ลืม · สลายเป็นพลัง · ถ่ายทอด =====================
+const artVal=a=>Math.round((a.b||0)*(typeof artM==='function'?artM(a):1));
+function artFind(n){return S.arts.findIndex(a=>a&&a.n===n)}
+function artMenu(n){const i=artFind(n),a=S.arts[i];if(!a)return;const lv=a.lv||0,rate=Math.min(.5,.3+lv*.07),gain=Math.round(artVal(a)*rate),kids=(S.children||[]).filter(c=>c&&c.alive!==false&&(c.age||0)>=6);
+ const fy=S.forgetY===S.age,my=S.meltY===S.age,only=S.arts.filter(Boolean).length<=1;
+ modal(`<button class="xbtn" onclick="openArts()">←</button><h3>《${esc(a.n)}》</h3><p class="tag2">${esc(a.tier||'')} · ${AMN[lv]||''} · พลังรวม +${fmt(artVal(a))}${a.heir?' · 🏮 วิชามรดกตระกูล':''}</p>
+ ${only?'<p class="tag2">⚠️ เหลือวิชาเดียว ลบไม่ได้</p>':''}
+ <div class="mgrid">
+ <button class="opt" ${only||fy?'disabled style="opacity:.5"':''} onclick="artDo('forget',${JSON.stringify(a.n).replace(/"/g,'&quot;')})">🗑️ ลืมวิชา<small>${fy?'ปีนี้ลืมไปแล้ว (ปีละ 1 ครั้ง)':'ฟรี · ไม่ได้อะไรคืน · ปีละ 1 ครั้ง'}</small></button>
+ <button class="opt" ${only||my?'disabled style="opacity:.5"':''} onclick="artDo('melt',${JSON.stringify(a.n).replace(/"/g,'&quot;')})">🔥 สลายเป็นพลัง<small>${my?'ปีนี้สลายไปแล้ว':`ได้พลังยุทธ์ +${fmt(gain)} (${Math.round(rate*100)}%) · ใช้ทั้งปี · เสี่ยงธาตุไฟเข้าแทรก 10%`}</small></button>
+ <button class="opt" ${only||!kids.length?'disabled style="opacity:.5"':''} onclick="artGiveUI(${JSON.stringify(a.n).replace(/"/g,'&quot;')})">📜 ถ่ายทอดให้ลูก<small>${kids.length?`ชื่อเสียง + กรรมดี · ถ้าเล่นต่อเป็นลูกคนนั้นจะได้วิชานี้`:'ต้องมีลูกอายุ 6 ปีขึ้นไป'}</small></button>
+ </div>${a.heir?'<p class="tag2">🏮 ลืมหรือสลายวิชามรดก บรรพบุรุษจะผิดหวัง (กรรม −10) และลูกหลานจะไม่ได้รับวิชานี้</p>':''}<p class="tag2">ความจำวิชา ${S.arts.filter(Boolean).length}/${artCap()} · ช่องเต็มแล้ววิชาใหม่จะถูกนำไปเสริมวิชาเดิมแทน — ลบวิชาอ่อนๆ ทิ้งเพื่อเปิดที่ให้วิชาดีๆ</p>`,'artmenu')}
+function artDo(k,n){const i=artFind(n),a=S.arts[i];if(!a||S.arts.filter(Boolean).length<=1)return;
+ if(k==='forget'){if(S.forgetY===S.age)return toast('ปีนี้ลืมไปแล้ว');
+  return modal(`<h3>🗑️ ลืม《${esc(a.n)}》?</h3><p>พลังรวม −${fmt(artVal(a))} และไม่ได้อะไรคืน · ย้อนกลับไม่ได้</p><div class="brow"><button class="gbtn" onclick="artMenu(${JSON.stringify(n).replace(/"/g,'&quot;')})">ยกเลิก</button><button class="pbtn" onclick="artDo('forgetOK',${JSON.stringify(n).replace(/"/g,'&quot;')})">ลืม</button></div>`,'artok')}
+ if(k==='forgetOK'){S.arts.splice(i,1);S.forgetY=S.age;if(a.heir){S.karma-=10;S.flags.heirLost=1}log(`🗑️ คุณปล่อยให้《${esc(a.n)}》เลือนหายไปจากความทรงจำ${a.heir?' — บรรพบุรุษคงผิดหวัง (กรรม −10)':''}`,'');try{mwAcOk&&0;acPrev=null}catch(e){}render();return openArts()}
+ if(k==='melt'){if(S.meltY===S.age)return toast('ปีนี้สลายไปแล้ว');const lv=a.lv||0,rate=Math.min(.5,.3+lv*.07),gain=Math.round(artVal(a)*rate);
+  return modal(`<h3>🔥 สลาย《${esc(a.n)}》?</h3><p>พลังรวม −${fmt(artVal(a))} → พลังยุทธ์ +${fmt(gain)} · ใช้เวลาทั้งปี · โอกาส 10% ธาตุไฟเข้าแทรก (พลังชีวิต −30%)</p><div class="brow"><button class="gbtn" onclick="artMenu(${JSON.stringify(n).replace(/"/g,'&quot;')})">ยกเลิก</button><button class="pbtn" onclick="artDo('meltOK',${JSON.stringify(n).replace(/"/g,'&quot;')})">สลาย</button></div>`,'artok')}
+ if(k==='meltOK'){const lv=a.lv||0,rate=Math.min(.5,.3+lv*.07),gain=Math.round(artVal(a)*rate);S.arts.splice(i,1);S.meltY=S.age;S.power+=gain;if(a.heir){S.karma-=10;S.flags.heirLost=1}
+  if(Math.random()<.1){const d=Math.round(S.maxHp*.3);S.hp=Math.max(1,S.hp-d);log(`🔥 สลาย《${esc(a.n)}》กลายเป็นพลังยุทธ์ +${fmt(gain)} — แต่ปราณตีกลับ ธาตุไฟเข้าแทรก พลังชีวิต −${d}`,'bad')}
+  else log(`🔥 คุณสลาย《${esc(a.n)}》ทีละกระบวนท่า หลอมกลับเป็นพลังดิบ — พลังยุทธ์ +${fmt(gain)}`,'epic');try{acPrev=null}catch(e){}render();return openArts()}}
+function artGiveUI(n){const kids=(S.children||[]).filter(c=>c&&c.alive!==false&&(c.age||0)>=6);modal(`<button class="xbtn" onclick="artMenu(${JSON.stringify(n).replace(/"/g,'&quot;')})">←</button><h3>📜 ถ่ายทอด《${esc(n)}》ให้…</h3><div class="mgrid">${kids.map(c=>`<button class="opt" onclick="artGive(${JSON.stringify(n).replace(/"/g,'&quot;')},${JSON.stringify(c.n).replace(/"/g,'&quot;')})">${esc(c.n)}<small>${c.age} ปี${(c.gifts||[]).length?' · มีวิชาแล้ว '+c.gifts.length:''}</small></button>`).join('')}</div>`,'artgive')}
+function artGive(n,cn){const i=artFind(n),a=S.arts[i],c=(S.children||[]).find(x=>x.n===cn);if(!a||!c||S.arts.filter(Boolean).length<=1)return;S.arts.splice(i,1);c.gifts=(c.gifts||[]).concat([JSON.parse(JSON.stringify(a))]);if(c.rel!=null)c.rel=Math.min(100,c.rel+10);S.fame+=20;S.karma+=5;joy(5);
+ log(`📜 คุณสอน《${esc(a.n)}》ให้<b>${esc(c.n)}</b>ทุกกระบวนท่าจนเขาใช้ได้คล่อง — ชื่อเสียง +20 · กรรมดี +5`,'epic');render();openArts()}
+{const _ihG=inherit;inherit=function(ci){const P=S,kid=ci!=null&&P&&P.children?P.children[ci]:null,gifts=kid&&kid.gifts?JSON.parse(JSON.stringify(kid.gifts)):null;const r=_ihG.apply(this,arguments);try{if(gifts&&S!==P){gifts.forEach(a=>{if(!S.arts.some(x=>x.n===a.n)){a.lv=Math.max(0,(a.lv||0)-1);S.arts.push(a)}});setTimeout(()=>{try{log(`📜 วิชาที่${esc(P.name)}ถ่ายทอดให้ยังติดตัวคุณ: ${gifts.map(a=>'《'+esc(a.n)+'》').join(' ')}`,'epic')}catch(e){}},600)}}catch(e){}return r}}
+function learnCancel(n){const q=S.learnQ||[];const i=q.findIndex(a=>a.n===n);if(i>=0){q.splice(i,1);log(`📕 คุณวางคัมภีร์《${esc(n)}》ลง เลิกฝึก`,'');render();openArts()}}
+{const _oaF=openArts;openArts=function(){const r=_oaF.apply(this,arguments);try{if(!S)return r;const m=$('modal'),used={};const h=m.querySelector('h3');if(h&&!m.querySelector('.artCapL'))h.insertAdjacentHTML('afterend',`<p class="tag2 artCapL">ความจำวิชา <b>${S.arts.filter(Boolean).length}/${artCap()}</b> · ลืมได้อีก ${S.forgetY===S.age?0:1} ครั้งปีนี้ · แตะ ⋯ ที่วิชาเพื่อลืม/สลาย/ถ่ายทอด</p>`);
+ let qMode=false;[...m.children].forEach(el=>{if(el.tagName==='H4'&&/ยังฝึกไม่สำเร็จ/.test(el.textContent))qMode=true;if(!el.classList||!el.classList.contains('item'))return;const b=el.querySelector('b');if(!b)return;const mt=b.textContent.match(/《(.+?)》/);if(!mt)return;const n=mt[1];
+  if(qMode){if((S.learnQ||[]).some(a=>a.n===n)&&!el.querySelector('.artX'))b.insertAdjacentHTML('afterend',` <button class="gbtn artX" style="padding:1px 8px;font-size:11px" onclick="learnCancel(${JSON.stringify(n).replace(/"/g,'&quot;')})">ยกเลิก</button>`);return}
+  if(used[n]||artFind(n)<0||el.querySelector('.artX'))return;used[n]=1;const hd=el.querySelector('.h')||el;hd.insertAdjacentHTML('beforeend',`<button class="gbtn artX" style="padding:0 9px;margin-left:6px;font-size:14px;line-height:1.4" onclick="event.stopPropagation();artMenu(${JSON.stringify(n).replace(/"/g,'&quot;')})">⋯</button>`)})}catch(e){console.error(e)}return r}}
+try{SYS_GUIDE.push({s:'grow',nw:1,ic:'🗑️',t:'ลืม · สลาย · ถ่ายทอดวิชา',go:'openArts',life:1,d:'ความจำวิชามีจำกัด (6 ช่อง + 1 ทุกปัญญา 60 สูงสุด 20) ช่องเต็มแล้ววิชาใหม่จะไปเสริมวิชาเดิม · ในหน้า 📖 วิชา แตะ <b>⋯</b> ที่วิชา:<br>🗑️ <b>ลืม</b> — ฟรี ไม่ได้อะไรคืน ปีละ 1 ครั้ง<br>🔥 <b>สลายเป็นพลัง</b> — ได้พลังยุทธ์คืน 30–50% ของพลังที่วิชาให้ (ยิ่งชำนาญยิ่งได้มาก) ปีละ 1 ครั้ง เสี่ยงธาตุไฟเข้าแทรก 10%<br>📜 <b>ถ่ายทอดให้ลูก</b> (อายุ 6+) — ชื่อเสียง + กรรมดี และถ้าเล่นต่อเป็นลูกคนนั้น จะได้วิชานี้ติดตัว<br>เหลือวิชาเดียวลบไม่ได้ · ลบวิชามรดก 🏮 กรรม −10 · คัมภีร์ที่ยังฝึกไม่สำเร็จกด "ยกเลิก" ได้ฟรี'})}catch(e){}
+
+// ===================== แดนเทพ: กาลเวลาช้าลง · ทัณฑ์ทันเวลา · ผลงานเทวสภาขึ้นง่ายขึ้น =====================
+{const _xs=xStep;xStep=function(){let r=_xs.apply(this,arguments);try{if(S.xsealOn)return r;r=Math.max(1,Math.round(r*.45));
+ let pend=false;try{if(S.xt&&realmIdx()>=7&&typeof postRaw==='function'&&S.pcap!=null&&postRaw()>S.pcap)pend=true;if(typeof rawRealm==='function'&&S.rcap!=null&&rawRealm()>S.rcap)pend=true}catch(e){}
+ const left=Math.max(1,Math.round(lifeMax()-S.age));if(pend)r=Math.min(r,Math.max(1,Math.round(left/6)));else if(left<r*4)r=Math.max(1,Math.round(left/5))}catch(e){}return r}}
+try{const NM=[0,8,22,48,95,170,280,440,99999];NM.forEach((v,i)=>GD_MER[i]=v)}catch(e){}
+{const _gm=gdMerit;gdMerit=function(v,why){return _gm.call(this,v>0?Math.round(v*1.3):v,why)}}
+{const _gt=gdTick;gdTick=function(st){const r=_gt.apply(this,arguments);try{const g=gdInit();if(S.karma>=0&&(g.bel||0)>1000&&Math.random()<.35)_gm0(1)}catch(e){}return r}}
+function _gm0(v){try{const g=gdInit();g.mer=(g.mer||0)+v;while(g.rk<7&&g.mer>=GD_MER[g.rk+1]){g.rk++;S.fame+=40*g.rk;log(`🏛️ ผลงานสะสมจากการดูแลผู้ศรัทธา — เทวสภาเลื่อนตำแหน่งคุณเป็น <b>${GD_RK[g.rk]}</b>`,'myth',true);keyAdd(`ได้รับตำแหน่ง${GD_RK[g.rk]}`)}}catch(e){}}
 </script>
 </body>
 </html>
