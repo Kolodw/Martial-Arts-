@@ -260,13 +260,13 @@ async function autoMig() {
   } catch {}
 }
 
-// ---- ประมูลทั่วยุทธภพ (ผู้เล่นจริง): รอบละ 6 ชิ้น ชิ้นละ 40 วิ (เสนอราคาช่วงท้ายต่อเวลา 10 วิ สูงสุด 3 ครั้ง) · พักรอบละ 10–15 นาที ----
+// ---- ประมูลทั่วยุทธภพ (ผู้เล่นจริง): รอบละ 6 ชิ้น ชิ้นละ 60 วิ · มีคนเสนอราคาแล้วนับถอยหลังใหม่ 20 วิทุกครั้ง · สมบัติระดับเทพ (k>=9e8) โอกาส 22% ต่อชิ้นระดับ 4+ สูงสุด 1 ชิ้นต่อรอบ ราคาเริ่ม ×2.5 · พักรอบละ 10–15 นาที ----
 const PA_RW = [0, 4, 10, 18, 24, 22, 14, 0], PA_G0 = [10, 300, 5000, 80000, 1000000, 8000000, 30000000, 100000000], PA_LOT_MS = 60e3, PA_NB_MS = 10e3;
 const PA_GW = { m: [10, 100, 1000, 10000, 80000, 400000, 2000000, 10000000], x: [500, 5000, 50000, 400000, 3000000, 15000000, 50000000, 100000000], g: [20000, 200000, 2000000, 8000000, 25000000, 50000000, 80000000, 100000000] }, PA_NB = [10, 30, 100, 300];
 const PA_WN = { m: 'ยุทธภพ', x: 'โลกเซียน', g: 'แดนเทพ' };
 // ใครประมูลชิ้นนี้ได้: ต้องอยู่โลกเดียวกัน · ชิ้นมือใหม่ = ขั้นไม่เกิน 2 · ของระดับต่ำ (ธรรมดา/หายาก) คนขั้น 5 ขึ้นไปห้ามแย่ง
 function paElig(L, w, ri) { if (!L.w) return ''; if (L.w !== w) return 'ชิ้นนี้สำหรับคนใน' + PA_WN[L.w]; if (L.nb && ri > 2) return 'ชิ้นมือใหม่ — สำหรับคนที่ยังอยู่ขั้นต้น'; if (!L.nb && L.r <= 1 && ri >= 5) return 'ของระดับต่ำ เก็บไว้ให้มือใหม่'; return '' }
-const PA_BID_LUA = "local hi=tonumber(redis.call('HGET',KEYS[1],'hi') or '0') local en=tonumber(redis.call('GET',KEYS[2]) or '0') local now=tonumber(ARGV[4]) if now>en then return {-1,hi} end local g=tonumber(ARGV[1]) local mn=tonumber(ARGV[5]) if hi>0 then mn=math.ceil(hi*1.05) end if g<mn then return {0,hi} end redis.call('HSET',KEYS[1],'hi',g,'by',ARGV[2],'bn',ARGV[3],'t',now) if en-now<10000 then local e=redis.call('HINCRBY',KEYS[1],'ext',1) if e<=3 then redis.call('SET',KEYS[2],now+10000,'EX',3600) end end redis.call('EXPIRE',KEYS[1],3600) return {1,g}";
+const PA_BID_LUA = "local hi=tonumber(redis.call('HGET',KEYS[1],'hi') or '0') local en=tonumber(redis.call('GET',KEYS[2]) or '0') local now=tonumber(ARGV[4]) if now>en then return {-1,hi} end local g=tonumber(ARGV[1]) local mn=tonumber(ARGV[5]) if hi>0 then mn=math.ceil(hi*1.05) end if g<mn then return {0,hi} end redis.call('HSET',KEYS[1],'hi',g,'by',ARGV[2],'bn',ARGV[3],'t',now) redis.call('SET',KEYS[2],now+20000,'EX',3600) redis.call('EXPIRE',KEYS[1],3600) return {1,g}";
 function paPick() { const t = PA_RW.reduce((a, b) => a + b, 0); let x = Math.random() * t; for (let i = 0; i < PA_RW.length; i++) { if ((x -= PA_RW[i]) < 0) return i } return 4 }
 async function paTick(now) {
   let cur = null; try { const v = await cmd('GET', 'pa:cur'); cur = v ? JSON.parse(v) : null } catch {}
@@ -280,11 +280,11 @@ async function paTick(now) {
     if ((await cmd('SET', 'pa:lk', '1', 'NX', 'PX', 4000)) !== 'OK') return cur;
     try {
       const sid = (now.toString(36) + Math.random().toString(36).slice(2, 5)).slice(-9), lots = [], nL = act <= 3 ? 3 : act <= 8 ? 4 : act <= 15 ? 5 : 6;
-      let hi6 = 0, hi7 = 0;
+      let hi6 = 0, hi7 = 0, opN = 0;
       // ของแต่ละชิ้นมีโลกของมัน (ประมูลได้เฉพาะคนในโลกนั้น) + ชิ้นมือใหม่ 1 ชิ้นต่อรอบ
       const rg = r => Math.max(10, Math.round(r * (.8 + Math.random() * .4) / 10) * 10);
       lots.push({ r: Math.random() < .5 ? 2 : 3, k: Math.floor(Math.random() * 1e6), w: 'm', nb: 1 }); lots[0].g = rg(PA_NB[lots[0].r]);
-      for (let i = 1; i < nL; i++) { let r = Math.min(6, paPick()); if (r >= 6 && hi6 >= 2) r = 5; if (r === 7) hi7++; if (r >= 6) hi6++; const x = Math.random(), w = x < .5 ? 'm' : x < .8 ? 'x' : 'g'; lots.push({ r, k: Math.floor(Math.random() * 1e6), w, g: rg(PA_GW[w][r]) }) }
+      for (let i = 1; i < nL; i++) { let r = Math.min(6, paPick()); if (r >= 6 && hi6 >= 2) r = 5; if (r === 7) hi7++; if (r >= 6) hi6++; const x = Math.random(), w = x < .5 ? 'm' : x < .8 ? 'x' : 'g'; const op = r >= 4 && !opN && Math.random() < .22; if (op) opN = 1; lots.push({ r, k: op ? 9e8 + Math.floor(Math.random() * 1e6) : Math.floor(Math.random() * 1e6), w, g: rg(PA_GW[w][r] * (op ? 2.5 : 1)) }) }
       for (let i = lots.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [lots[i], lots[j]] = [lots[j], lots[i]] }
       cur = { sid, t0: now, lots, li: 0, phase: 'open', act, u: 2, ls: now + 10e3 };
       if (force) await cmd('DEL', 'pa:force');

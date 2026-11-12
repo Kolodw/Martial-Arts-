@@ -14999,6 +14999,45 @@ body.dkcap #tDock{padding-bottom:calc(10px + env(safe-area-inset-bottom))}
   SEC.forEach(s=>{const L=box[s[0]];if(!L||!L.length)return;const d=document.createElement('div');d.className='tmsec';d.innerHTML=`<div class="tmh">${LANG==='en'?s[2]:s[1]}</div>`;const g=document.createElement('div');g.className='tmgrid';L.forEach(b=>g.appendChild(b));d.appendChild(g);host.appendChild(d)});
   gr.replaceWith(host)}catch(e){console.error(e)}return r}}
 
+
+// ===================== v17.0 ประมูลทั่วยุทธภพ: สมบัติระดับเทพ (หลายผลในชิ้นเดียว · ราคาเริ่ม ×2.5 · รอบละไม่เกิน 1 ชิ้น) · เสนอราคาแล้วนับใหม่ 20 วิ =====================
+// [ไอคอน, ชื่อ, คำบรรยาย, [[ผล, ตัวคูณ]...]]
+const PA_OP=[
+ ['🐲','ไข่มังกรบรรพกาล','ฟักไม่ออก แต่พลังที่รั่วออกมาก็พอจะเปลี่ยนชะตาคนทั้งตระกูล',[['pow',1],['hp',1],['life',1]]],
+ ['☀️','แก่นตะวันดวงที่สิบ','ดวงอาทิตย์ดวงสุดท้ายที่ไม่ถูกยิงร่วง หลบมาซ่อนในหินก้อนนี้',[['pow',1.6],['fight',1]]],
+ ['🌌','คัมภีร์ฟ้าดินไร้ขอบ','อ่านจบหนึ่งหน้า ฟ้าเปลี่ยนสีหนึ่งครั้ง',[['art',1],['int',1.5],['qi',1]]],
+ ['🧬','โลหิตบรรพชนเทพ','หยดเดียวจากเส้นเลือดของผู้สร้างวิชายุทธ์คนแรก',[['tal',1.5],['hp',.8]]],
+ ['⏳','นาฬิกาทรายสวนกาล','เม็ดทรายไหลย้อน — เวลาของคุณก็เช่นกัน',[['life',2],['qi',1.2]]],
+ ['⚡','ตราอภิสิทธิ์สวรรค์','ประทับตรานี้แล้ว ทัณฑ์สวรรค์ยังต้องเกรงใจ',[['brk',1],['trib',1],['pow',.6]]],
+ ['🪞','กระจกกลืนวิญญาณ','กลืนวิชาและปัญญาของผู้แข็งแกร่งพันคนเก็บไว้',[['pow',1],['qi',1],['int',1],['cha',1]]],
+ ['👑','ตราหยกจักรพรรดิองค์แรก','ใครถือไว้ ทั้งแผ่นดินต้องคุกเข่า',[['money',1.5],['fame',1.5],['cha',1.2]]],
+ ['🔥','ขนนกฟีนิกซ์ไม่มอดไหม้','เผาไหม้มาหมื่นปี ยังไม่เคยกลายเป็นเถ้า',[['hp',1.8],['life',1.3]]],
+ ['🌀','ประตูมิติว่างเปล่า','เปิดแล้วจะได้อะไร… ขึ้นกับว่ามิติไหนตอบรับ',[['rnd',3]]],
+ ['🗡️','กระบี่ผู้พิชิตเก้าสวรรค์','ฟันเทพตกสวรรค์มาแล้วเก้าองค์',[['pow',1.3],['fight',1.4]]],
+ ['🐢','กระดองเต่าค้ำโลก','เต่าที่แบกแผ่นดินไว้ ผลัดกระดองทุกหมื่นปี',[['hp',1.5],['life',1.5],['qi',.8]]]];
+{const LB={pow:v=>`พลังรวมถาวร +${(v*100).toFixed(1)}%`,hp:v=>`พลังชีวิตสูงสุด +${Math.round(v*100)}%`,qi:v=>`ลมปราณ +${fmt(v)} ปี`,life:v=>`อายุขัย +${fmt(v)} ปี`,int:v=>`ปัญญา +${fmt(v)}`,cha:v=>`เสน่ห์ +${fmt(v)}`,money:v=>`เงิน +${fmt(v)} ตำลึง`,fame:v=>`ชื่อเสียง +${fmt(v)}`,tal:v=>`พรสวรรค์ ×${(1+v).toFixed(2)} ถาวร`};
+ const RND=['pow','hp','qi','life','int','cha'];
+ const parts=it=>{const o=PA_OP[it.op];let L=o[3];if(L[0][0]==='rnd'){const g=srng(it.k*31+7),P=RND.slice();L=[];for(let i=0;i<3;i++)L.push([P.splice(Math.floor(g()*P.length),1)[0],1.1])}
+  return L.map(([fx,m])=>{if(fx==='trib')return{fx,v:.25,d:'ทัณฑ์สวรรค์ครั้งถัดไป: โอกาสผ่านทุกระลอก +25%'};const e=paEff({r:it.r,k:it.k,fx});
+   if(fx==='art'||fx==='brk')return{fx,v:e.v,d:e.d};if(fx==='fight'){const v=+(1+(e.v-1)*m).toFixed(2);return{fx,v,y:e.y,d:`ต่อสู้ ×${v} นาน ${e.y} ปี`}}
+   const v=/pow|hp|tal/.test(fx)?+(e.v*m).toFixed(4):Math.round(e.v*m);return{fx,v,d:LB[fx]?LB[fx](v):e.d}})};
+ const _pI=paItem;paItem=function(r,k){if(k>=9e8){const op=Math.floor(k-9e8)%PA_OP.length,o=PA_OP[op];return{r,k,c:'op',fx:'op',op,n:'🌟 '+o[0]+' '+o[1]}}return _pI(r,k)};
+ const _pE=paEff;paEff=function(it){if(it&&it.fx==='op'&&PA_OP[it.op]){const P=parts(it);return{v:0,P,d:`<b class="paop">✨ สมบัติระดับเทพ — หลายผลในชิ้นเดียว</b><br>${P.map(p=>'• '+p.d).join('<br>')} <i class="tag2">— ${PA_OP[it.op][2]}</i>`}}return _pE(it)};
+ const _pA=paApply;paApply=function(it){if(!it||it.fx!=='op'||!PA_OP[it.op])return _pA(it);const P=parts(it),out=[];
+  P.forEach(p=>{try{const v=p.v;switch(p.fx){
+   case'pow':S.power+=pctPow(v);break;case'hp':S.maxHp+=Math.max(10,Math.round(S.maxHp*v));S.hp=S.maxHp;break;
+   case'qi':S.qi+=v;break;case'life':if(S.xt)S.glExtra=(S.glExtra||0)+v;else S.lifespan+=v;break;case'int':S.int+=v;break;case'cha':S.cha+=v;break;
+   case'money':S.money+=v;break;case'fame':S.fame+=v;break;
+   case'tal':S.talent=Object.assign({},S.talent,{m:+(S.talent.m*(1+v)).toFixed(2)});break;
+   case'fight':S.buf=(S.buf||[]).filter(b=>b.k!=='fight'||b.u<=S.age||b.v<v);S.buf.push({k:'fight',v,u:S.age+p.y,n:it.n});break;
+   case'art':{const a=newArt(v);S.arts.push(a);out.push(`ได้ ${artHtml(a)}`);return}
+   case'brk':bagAdd('brk',v,true);S.tribPrep=Math.min(3,(S.tribPrep||0)+Math.min(3,v));break;
+   case'trib':S.tribSys=Math.min(.5,(S.tribSys||0)+v);break}out.push(p.d)}catch(e){}});
+  return out.join(' · ')};
+ const st=document.createElement('style');st.textContent=`.paop{display:inline-block;padding:1px 8px;border-radius:8px;background:linear-gradient(90deg,#ffe08a,#ff9ad0,#9ad8ff,#ffe08a);background-size:300% 100%;color:#2a1a00;font-size:.88em;animation:paOp 3s linear infinite}@keyframes paOp{to{background-position:300% 0}}@media (prefers-reduced-motion:reduce){.paop{animation:none}}`;document.head.appendChild(st)}
+// ตัวจับเวลา: มีคนเสนอแล้ว = นับถอยหลัง 20 วิ (เสนอใหม่เริ่มนับใหม่)
+paTickUI=function(){if($('modal').dataset.k!=='pauc'){clearInterval(PA.tk);return}if(!PA.end)return;const left=PA.end-(Date.now()+PA.off),hb=!!PA.hi,f=Math.max(0,Math.min(1,left/(hb?20000:60000))),e=$('paTm');if(e)e.style.width=f*100+'%';const t=$('paTt');if(t)t.textContent=left>0?`⏳ ${Math.ceil(left/1000)} วิ${hb?' — เสนอสูงกว่านี้ นับใหม่ 20 วิ':''}`:'🔨 ปิดชิ้นนี้…';if(left<-2500&&!PA.busy)paPoll(0)};
+
 </script>
 </body>
 </html>
