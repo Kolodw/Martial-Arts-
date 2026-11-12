@@ -17207,6 +17207,21 @@ setInterval(()=>{try{if($('paBan')&&(notWuxia()||mwOn()))paBanX()}catch(e){}},10
 (function(){const st=document.createElement('style');st.textContent=`@media (max-width:640px){#paBan{top:calc(4px + env(safe-area-inset-top));width:min(94vw,360px);padding:6px 9px;font-size:12px;line-height:1.35;border-width:2px}#paBan br{display:none}#paBan .pbar{height:4px;margin:5px 0}#paBan button{padding:5px 4px;font-size:12px}}`;document.head.appendChild(st)})();
 {const _mt2=mwTitle;mwTitle=function(M){const r=_mt2.apply(this,arguments);return M&&M.rnd&&r==='ทายาทคนหลงยุค'?'คนยุคปัจจุบัน':r}}
 {const _rn2=render;render=function(){const r=_rn2.apply(this,arguments);try{const M=S&&S.mw;if(M&&M.native&&S.alive){const g=$('gRealm');if(g)g.textContent=(M.rnd?'คนยุคปัจจุบัน':'ทายาทคนหลงยุค')+(mwQi(M)>0?' · '+MW_QR[mwQi(M)][1]:'')}}catch(e){}return r}}
+
+// ===================== ยุคปัจจุบัน: อายุของผู้ที่เกินมนุษย์ (เซียน/เทพ/อายุยืนตามขั้น) =====================
+// มนุษย์ธรรมดาเท่านั้นที่มีอายุขัยแบบคน · ผู้ข้ามยุคที่อายุเกินมนุษย์ เก็บอายุขัยตามขั้นของตัวเอง รูปลักษณ์ไม่แก่ลง
+{const _meL=mwEnter;mwEnter=function(){let a0=0,lm0=0,xt0=false,xi0=false;try{if(S&&S.alive&&!S.mw){a0=+S.age||0;lm0=Math.round(lifeMax())||0;xt0=!!S.xt;xi0=!!S.xian}}catch(e){}
+ const r=_meL.apply(this,arguments);
+ try{const M=S&&S.mw;if(M&&!M.native&&a0&&!M.agB){M.agB=1;
+  if(xt0||xi0||a0>120||lm0>150){const rem=Math.max(80,lm0-a0);M.agB=2;M.real0=a0;M.ageless=(xt0||rem>=100000)?1:0;
+   const ap=R(22,32);S.age=ap;M.end=ap+rem;M.fz=1;M.ap=ap;
+   log(M.ageless?`♾️ ร่างของคุณไม่รู้จักความแก่อีกแล้ว — ในยุคนี้คุณดูเหมือนคนอายุ ${ap} ปี แต่จริงๆ ผ่านมาแล้ว ${fmt(a0)} ปี`:`⏳ ร่างผู้บำเพ็ญยังคงอยู่ — ดูเหมือนคนอายุ ${ap} ปี (อายุจริง ${fmt(a0)} ปี) · อายุขัยตามขั้นเหลืออีกราว ${fmt(rem)} ปี`,'myth');
+   try{mwAcOk()}catch(e){}render();saveGame()}}}catch(e){console.error(e)}return r}}
+{const _myL=mwYear;mwYear=function(){const r=_myL.apply(this,arguments);try{const M=S&&S.mw;if(M&&M.fz&&S.alive){S.age--;M.end--;if(!M.ageless&&M.end-S.age<=40){M.fz=0}}}catch(e){}return r}}
+{const _afL=addFeed;addFeed=function(type,html,cls){try{if(type==='year'&&typeof mwOn==='function'&&mwOn()&&S.mw&&S.mw.agB===2)html=`ปีที่ ${S.mw.y} ในยุคนี้ · ค.ศ. ${MW_Y0+S.mw.y}`}catch(e){}return _afL.call(this,type,html,cls)}}
+{const _rnA=render;render=function(){const r=_rnA.apply(this,arguments);try{const M=S&&S.mw;if(M&&M.agB===2&&S.alive&&mwOn()){const el=$('gAge');if(el){const left=M.end-S.age;el.style.fontSize=M.ageless?'27px':'';
+  el.innerHTML=M.ageless?`∞<div class="lsp" title="ไม่แก่ลง">อมตะ · ดูอายุ ${S.age}</div>`:`${S.age}<small>ปี</small><div class="lsp" title="อายุขัยตามขั้นที่เหลือ">${M.fz?'ตามขั้น ':''}เหลือ ~${fmt(left)}</div>`;el.title=M.ageless?'อายุจริง '+fmt((M.real0||0)+M.y)+' ปี':'อายุที่ดูภายนอก / อายุขัยที่เหลือ'}}}catch(e){}return r}}
+{const _lsM=lsMw;lsMw=function(v){try{if(S&&S.mw&&S.mw.ageless)return}catch(e){}return _lsM.apply(this,arguments)}}
 </script>
 </body>
 </html>
