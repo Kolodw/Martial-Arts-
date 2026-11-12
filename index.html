@@ -3859,8 +3859,9 @@ async function api(a,body){if(Date.now()<_quotaUntil)throw new Error('quota');co
   catch(e){const net=e.name==='AbortError'||!e.http||e.http>=500;if(body||t>=1||e.q||!net)throw e.name==='AbortError'?new Error('timeout'):e;await new Promise(r=>setTimeout(r,700))}finally{clearTimeout(tm)}}};
  let p;if(key&&_apiFly[key])p=_apiFly[key];else{p=run();if(key){_apiFly[key]=p;p.then(()=>{delete _apiFly[key]},()=>{delete _apiFly[key]})}}
  const j=await p;_apiS0=s0;setTimeout(()=>{if(_apiS0===s0)_apiS0=null},0);return j}
+window._act=Date.now();['pointerdown','keydown','wheel','touchstart'].forEach(ev=>addEventListener(ev,()=>{window._act=Date.now()},{passive:true,capture:true}));const idleMs=()=>Date.now()-(window._act||0);
 async function onlinePing(){if(onlinePing._f)return;onlinePing._f=1;try{let st='';try{st='&st='+encodeURIComponent(actSnap())}catch(e){}window._lastPing=Date.now();const j=await api('ping&v='+VERSION+st);onlineOK=true;onlineN=j.n||0;onlineLives=j.lives||0;try{bdCheck(j.bd)}catch(e){}try{if('ann' in j)annShow(j.ann)}catch(e){}try{if(j.tg&&j.tg.length)tagShow(j.tg)}catch(e){}onlinePing._e=0}catch(e){onlinePing._e=(onlinePing._e||0)+1;if(onlinePing._e>=2||e.message==='quota'||!onlineOK)onlineOK=false;else setTimeout(()=>{onlinePing()},4000)}finally{onlinePing._f=0}{const t=$('tOnN');if(t){t.textContent=onlineOK?fmt(onlineN):'';t.parentNode.classList.toggle('on',onlineOK)}}const el=$('onlineBadge');if(el){el.style.display=onlineOK?'':'none';el.innerHTML=`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิตที่เคยเล่น`}}
-setTimeout(onlinePing,1500);setInterval(()=>{if(!document.hidden)onlinePing()},120000);
+setTimeout(onlinePing,1500);setInterval(()=>{if(!document.hidden&&Date.now()-(window._lastPing||0)>=(idleMs()>300000?600000:240000)-5000)onlinePing()},60000);
 function myTitle(){if(!S)return'';const ri=realmIdx();return REALMS[ri].n}
 function chatRender(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60;box.innerHTML=chatMsgs.map(m=>`<div class="cm ${m.k==='share'?'share':''}"><span class="ct">${new Date(m.t).toTimeString().slice(0,5)}</span> <b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b> ${m.k==='share'?'📤 ':''}${esc(m.x)} <button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div>`).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';if(near)box.scrollTop=box.scrollHeight}
 async function chatPoll(){try{const j=await api('chat');chatMsgs=(j.m||[]).slice().sort((x,y)=>(x.t||0)-(y.t||0));chatRender()}catch(e){const b=$('chatBox');if(b)b.innerHTML='<div class="tag2">เชื่อมต่อไม่ได้</div>'}}
@@ -4077,7 +4078,7 @@ function endAnim(score){const root=$('end');root.classList.remove('endanim');voi
 // ---------- v4.7 เซฟคลาวด์อัตโนมัติ · ดูคนอื่นเล่น ----------
 const ctok=(()=>{let v=LS.get('murim_ctok','');if(!v){v=Math.random().toString(36).slice(2,12)+Math.random().toString(36).slice(2,6);LS.set('murim_ctok',v)}return v})();
 let cloudT=0,cloudBusy=false;
-async function cloudAuto(force){if(!onlineOK||!S||!S.alive||cloudBusy)return;if(!force&&Date.now()-cloudT<300000)return;cloudBusy=true;
+async function cloudAuto(force){if(!onlineOK||!S||!S.alive||cloudBusy)return;if(!force&&Date.now()-cloudT<600000)return;cloudBusy=true;
  try{const d=saveCodeRaw();if(!d)return;await api('csave',{tk:ctok,d,sl:S.slot||1});cloudT=Date.now();LS.set('murim_cloudT',cloudT);const e=$('cloudTag');if(e){e.textContent='☁️';e.title='เซฟบนเซิร์ฟเวอร์แล้ว';e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1500)}}catch(e){}finally{cloudBusy=false}}
 function saveCodeRaw(){const d=LS.get(slotKey(S.slot||1),null);if(!d)return'';try{return btoa(unescape(encodeURIComponent(JSON.stringify(d))))}catch(e){return''}}
 const myCloudCode=()=>(pid+'-'+ctok).toUpperCase();
@@ -4103,7 +4104,7 @@ function liveSnap(){const ri=realmIdx(),o=meLook();const feed=[...document.query
   sys:S.sys?sysName()+' Lv.'+S.sys.lv:'',feed,t:Date.now(),tt:(typeof showTtl==='function'&&showTtl()||{}).t||'',tr:(typeof showTtl==='function'&&showTtl()||{}).r||0}}
 async function liveSend(now){clearTimeout(liveT);if(!onlineOK||!S||Date.now()<_quotaUntil){liveT=setTimeout(liveSend,60000);liveBadge();return}if(specAllowed()===null&&S.alive&&!modalOpen&&$('game').classList.contains('on')&&!choice._cur)specAsk();
  const v=specAllowed();try{if(!v||!S.alive||!$('game').classList.contains('on')){if(!v&&S.alive&&$('game').classList.contains('on')){const j2=await api('live',{spec:0,s:xT(JSON.stringify(liveSnap()))});if(j2&&j2.lr)logUp();liveSend._f=j2&&j2.f?1:0}else if(v===0||!S.alive)await api('live',{spec:0});watchN=0}else{const j=await api('live',{spec:1,s:xT(JSON.stringify(liveSnap()))});watchN=j.w||0;liveSend._f=j.f?1:0;if(j.lr)logUp()}}catch(e){}
- liveBadge();liveT=setTimeout(liveSend,(watchN>0||liveSend._f)?5000:(document.hidden?180000:20000))}
+ liveBadge();liveT=setTimeout(liveSend,(watchN>0||liveSend._f)?8000:(document.hidden?900000:(idleMs()>300000?300000:(v?45000:120000))))}
 setTimeout(liveSend,4000);
 async function openLiveList(){const head=`<button class="xbtn" onclick="closeM()">✕</button><h3>👁 ดูคนอื่นเล่น</h3><p class="tag2">ผู้เล่นที่อนุญาตให้ดู · ดูได้อย่างเดียว กดใช้อะไรไม่ได้</p><div class="tabs"><button class="tabb" onclick="openOnline('chat')">← ออนไลน์</button></div>`;
  modal(head+'<div class="tag2">กำลังโหลด…</div>','online');try{const j=await api('livelist');
@@ -6165,7 +6166,7 @@ function allyAdd(n,src){S.allies=S.allies||[];if(S.allies.some(a=>a.n===n))retur
 {const _f3=fight;fight=function(name,ep){const w=_f3.apply(this,arguments);try{if(!w&&S&&S.alive&&S.allies&&S.allies.length&&Math.random()<.22){const a=ch(S.allies);if(a.tr){S.allies=S.allies.filter(x=>x!==a);const d=Math.round(S.maxHp*.2),mn=Math.round((S.money||0)*.1);S.hp=Math.max(1,S.hp-d);S.money-=mn;log(`🗡️ <b>${esc(a.n)}</b> พันธมิตรที่รีบมาถึง… กลับแทงข้างหลังคุณ! ที่แท้เขาหักหลังคุณมาตั้งแต่วันสาบาน — พลังชีวิต −${d} เงิน −${fmt(mn)}`,'bad',true);keyAdd(`ถูกผู้เล่น ${a.n} หักหลัง`);S.flags.betrayed=1;return false}if(a.bt)log(`😶 ${esc(a.n)} ยังมาช่วยคุณ… ทั้งที่คุณเคยแอบหักหลังเขา`,'');log(`🤝 พันธมิตร <b>${esc(a.n)}</b> (${a.src}) ปรากฏตัวมาช่วยไว้ได้ทันเวลา!`,'epic');return true}}catch(e){}return w}}
 // ---- พบผู้เล่นจริงแบบเรียลไทม์ ----
 let meetC=null,meetT=0;
-async function meetPoll(){try{if(!onlineOK||!S||!S.alive||S.beastMode||paused||document.hidden)return;if(Date.now()-meetT<45000)return;meetT=Date.now();
+async function meetPoll(){try{if(!onlineOK||!S||!S.alive||S.beastMode||paused||document.hidden)return;if(Date.now()-meetT<(idleMs()>300000?300000:90000))return;meetT=Date.now();
  const j=await api('meet',{n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0});try{if(typeof paNote==='function')paNote(j)}catch(e){};meetC=j.o?Object.assign(j.o,{at:Date.now()}):null;
  (j.inbox||[]).forEach(m=>{if(!S||!S.alive)return;if(m.kind==='ally'){if(m.ok){allyAdd(m.n,'ผู้เล่นจริง');log(`🤝 ผู้เล่น <b>${esc(m.n)}</b> สาบานเป็นพันธมิตรกับคุณข้ามจักรวาล — เขาจะมาช่วยตอนจวนตัว`,'epic',true)}}
   else if(m.kind==='mmsg'||m.kind==='room'||m.kind==='mres'||/^bh/.test(m.kind||'')){try{mtInbox(m)}catch(e){}}else{if(m.win){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.08));S.fame=Math.max(0,S.fame-5);log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — คุณพ่ายแพ้ บาดเจ็บเล็กน้อย`,'bad',true)}else{S.fame+=20;log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — แต่คุณเป็นฝ่ายชนะ! ชื่อเสียง +20`,'epic',true)}}});try{render()}catch(e){}}catch(e){}}
@@ -6951,7 +6952,7 @@ function actSnap(){const n=Date.now(),sc=(document.querySelector('.screen.on')||
  if(S){o.nm=String(S.name||'').slice(0,20);o.ag=S.age;o.al=S.alive?1:0;o.au=auto?1:0;o.pa=paused?1:0;o.sp=speed;o.w=S.beastMode&&!S.beastMode.human?'b':S.xt?'g':S.xian?'x':'m';o.yr=window._lastYr?Math.round((n-window._lastYr)/1000):-1;try{o.ri=REALMS[realmIdx()].n}catch(e){}}
  return JSON.stringify(o)}
 // แท็บซ่อนอยู่ก็ยังรายงานทุก 4 นาที และแจ้งทันทีตอนสลับแท็บ
-setInterval(()=>{if(document.hidden&&Date.now()-(window._lastPing||0)>=600000)onlinePing()},120000);
+setInterval(()=>{if(document.hidden&&Date.now()-(window._lastPing||0)>=1200000)onlinePing()},300000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Date.now()-(window._lastPing||0)>60000)onlinePing()});
 
 // ---------- รีเฟรชเว็บ/มีอัปเดต แล้วกลับมาเล่นต่อที่เดิม ----------
@@ -8433,7 +8434,7 @@ async function fastTick(){if(document.hidden||fastTick._f)return;fastTick._f=1;t
  try{const p=j.pa;PA.sum=p||PA.sum;if(p&&p.phase==='open'&&!PA.seen[p.sid]&&paCanSee()&&Date.now()-p.t0<4*60e3){PA.seen[p.sid]=1;paBanner(p)}}catch(e){}
  if(j.av&&j.av!==fastTick._av){fastTick._av=j.av;onlinePing()}else if(!j.av)fastTick._av='';try{if(j.nt&&typeof ntShow==='function')ntShow(j.nt)}catch(e){}}
  catch(e){}finally{fastTick._f=0}}
-setTimeout(fastTick,6000);setInterval(fastTick,20000);
+setTimeout(fastTick,6000);{let ftL=0;setInterval(()=>{const busy=!!(PA.sum&&PA.sum.phase==='open'),iv=busy?20000:(idleMs()>300000?180000:45000);if(Date.now()-ftL<iv-1000)return;ftL=Date.now();fastTick()},20000)}
 
 // ---- ย้ายเซฟข้ามเครื่อง: เปิดจากหน้าโปรไฟล์ → มีปุ่มกลับโปรไฟล์ ----
 {const _osc=openSaveCode;openSaveCode=function(){const fr=openSaveCode._from;openSaveCode._from=null;const r=_osc.apply(this,arguments);try{if(fr==='profile'){const m=$('modal'),h=m.querySelector('h3');if(h&&!m.querySelector('.scback'))h.insertAdjacentHTML('beforebegin','<button class="gbtn scback" style="margin-bottom:6px;padding:4px 12px" onclick="openProfile()">← กลับโปรไฟล์</button>')}}catch(e){}return r}}
@@ -10395,7 +10396,7 @@ const BH={busy:0,inv:[],done:{},poll:null,st:null};
 const bhIsBeast=()=>!!(S&&S.beastMode&&!S.beastMode.human);
 const bhStN=()=>{try{const m=S.beastMode;const L=m.sp==='มังกร'?BL_STD:BL_ST;return L[m.st]||''}catch(e){return''}};
 // สัตว์อสูรเข้าร่วม pool ของการพบผู้เล่น (เป็นฝ่ายถูกล่า)
-{const _mp=meetPoll;meetPoll=async function(){if(!bhIsBeast())return _mp.apply(this,arguments);try{if(!onlineOK||!S||!S.alive||paused||document.hidden)return;if(Date.now()-meetT<45000)return;meetT=Date.now();
+{const _mp=meetPoll;meetPoll=async function(){if(!bhIsBeast())return _mp.apply(this,arguments);try{if(!onlineOK||!S||!S.alive||paused||document.hidden)return;if(Date.now()-meetT<(idleMs()>300000?300000:90000))return;meetT=Date.now();
  const m=S.beastMode,j=await api('meet',{n:pname(),ri:m.st|0,x:S.xian?1:0,p:Math.round(total()),f:m.sp||'สัตว์อสูร',age:S.age,cha:0,bm:1,sp:m.sp||'',st:m.st|0});try{if(typeof paNote==='function')paNote(j)}catch(e){}
  (j.inbox||[]).forEach(x=>{if(x&&/^bh/.test(x.kind))bhInbox(x)})}catch(e){}}}
 // ดัก inbox ฝั่งมนุษย์: meetPoll เดิมส่งต่อเฉพาะชนิดที่รู้จัก → ห่อ mtInbox ให้รับ bh ด้วย
@@ -15607,7 +15608,7 @@ paTickUI=function(){if($('modal').dataset.k!=='pauc'){clearInterval(PA.tk);retur
  // ครบ 6 ยก: ต้องนำห่างพอ ถ้าสูสีกันฝ่ายที่พลังมากกว่าชนะ
  const _de=duelEnd;duelEnd=function(win,fled){try{if(DU&&DU.ar&&!fled&&DU.me>0&&DU.en>0&&DU.r>6){const gap=DU.me-DU.en,k=DU._k||1;win=gap>=12?true:gap<=-12?false:k>=1}}catch(e){}return _de.call(this,win,fled)}}
 // อัปเดตพลังเงาเองระหว่างเล่น (ทุก ~3 นาที เฉพาะคนที่เคยลงลาน)
-{let last=0;const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive&&onlineOK&&Date.now()-last>180e3){let on=0;try{on=+localStorage.murim_arIn}catch(e){}if(on){last=Date.now();api('ar2snap',arSnap()).catch(()=>{})}}}catch(e){}return r}}
+{let last=0;const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive&&onlineOK&&!document.hidden&&Date.now()-last>600e3){let on=0;try{on=+localStorage.murim_arIn}catch(e){}if(on){last=Date.now();api('ar2snap',arSnap()).catch(()=>{})}}}catch(e){}return r}}
 
 
 // ===================== v17.5 ลานประลอง 9 ลีก · กรอบทุกลีกตั้งแต่เงิน · ฉายาลีกตั้งแต่ทอง · ตำนานลาน = 10 อันดับแรกของซีซั่น =====================
