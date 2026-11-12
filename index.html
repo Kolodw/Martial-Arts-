@@ -7450,7 +7450,7 @@ function relPow(p,a){choice('⚡ จะปล่อยแรงแค่ไห�
 function relGo(p,a,k){const sc=relScale(a,k),d=REL_D[sc].replace(/\{L\}/g,p[1]),nm=a?artHtml(a):'หมัดเปล่า',ri=Math.max(0,realmIdx());
  const vb=ch(['ยกมือขึ้นช้าๆ แล้วปล่อย','สูดลมหายใจลึก แล้วซัด','กระทืบเท้าหนึ่งครั้ง ก่อนปล่อย','หลับตา แล้วตวัด','ยิ้มมุมปาก แล้วปล่อย']);
  log(`💥 ที่${p[0]} คุณ${vb}${nm}${k>=3?'เต็มกำลัง':k===2?'อย่างแรง':k===1?'':'เบาๆ'} — ${d}`,sc>=9?'myth':sc>=5?'epic':'good',sc>=7);setScene(sc>=5?'fight':'aura');joy(3+k*3);
- if(a&&Math.random()<.25){a.b=Math.round(a.b*1.03);log(`💡 ได้ปล่อยเต็มที่แบบนี้ทำให้เข้าใจ${artHtml(a)}ลึกขึ้นอีกนิด`,'good')}
+ if(a&&(a.rl||0)<20&&Math.random()<.25){a.rl=(a.rl||0)+1;a.b=Math.round(a.b*1.03);log(`💡 ได้ปล่อยเต็มที่แบบนี้ทำให้เข้าใจ${artHtml(a)}ลึกขึ้นอีกนิด`,'good')}
  if(k===3&&sc<ri+3&&Math.random()<.35){const h=Math.round(S.maxHp*.15);S.hp=Math.max(1,S.hp-h);log(`🩸 ใช้แรงเกินตัว เส้นลมปราณสั่นสะท้าน — พลังชีวิต −${h}`,'bad')}
  const see=clamp(p[2]*(.4+k*.25)+(sc>=7?.25:0),0,.97),r=Math.random();
  if(r<see*.45){const fm=Math.round((5+sc*sc)*(S.xian?1.5:1));S.fame+=fm;log(`👀 ${ch(S.xt?['เทพยามที่เฝ้าเขตแดนเห็นทุกอย่าง','นางฟ้าที่บินผ่านทำพานดอกไม้หล่น','เทพผู้จดบันทึกสวรรค์จดไว้ทันที','โอรสเทพกลุ่มหนึ่งยืนอ้าปากค้าง']:S.xian?['ศิษย์นิกายกลุ่มหนึ่งเห็นเต็มสองตา','ผู้ฝึกตนพเนจรทรุดลงกับพื้น','เซียนเฒ่าบนยอดเขาลืมตาขึ้นมามอง','สัตว์วิญญาณตัวหนึ่งวิ่งไปฟ้องเจ้าของ']:['ชาวบ้านกลุ่มหนึ่งเห็นเต็มสองตา','เด็กเลี้ยงควายแอบดูอยู่หลังพุ่มไม้','ศิษย์สำนักหนึ่งผ่านมาพอดี','พ่อค้าที่เดินทางผ่านทรุดลงกับพื้น'])} — ข่าวลือว่ามียอดฝีมือแบบคุณแพร่ไปทั่ว ชื่อเสียง +${fm}`,'epic');
@@ -13331,7 +13331,7 @@ function relFire(){const why=relCan();if(why)return toast(why);const w=relWorld(
 function relResolve(p,a,k,sc){const out=[],d=REL_D[sc].replace(/\{L\}/g,p[1]),nm=a?(a.bm?`<b>${esc(a.n)}</b>`:artHtml(a)):'หมัดเปล่า',ri=Math.max(0,realmIdx()),G=REL_GR[sc];
  out.push(()=>{log(`💥 ที่${p[0]} คุณปล่อย${nm}${k>=3?'เต็มกำลัง':k===2?'อย่างแรง':k===1?'':'เบาๆ'} — ${d} <b style="color:${G[2]}">[${G[0]}]</b>`,sc>=9?'myth':sc>=5?'epic':'good',sc>=7);joy(3+k*3)});
  S.flags.relN=(S.flags.relN||0)+1;S.flags.relMax=Math.max(S.flags.relMax==null?-1:S.flags.relMax,sc);
- if(a&&!a.bm&&Math.random()<.25)out.push(()=>{a.b=Math.round(a.b*1.03);log(`💡 ได้ปล่อยเต็มที่แบบนี้ทำให้เข้าใจ${artHtml(a)}ลึกขึ้นอีกนิด`,'good')});
+ if(a&&!a.bm&&(a.rl||0)<20&&Math.random()<.25)out.push(()=>{a.rl=(a.rl||0)+1;a.b=Math.round(a.b*1.03);log(`💡 ได้ปล่อยเต็มที่แบบนี้ทำให้เข้าใจ${artHtml(a)}ลึกขึ้นอีกนิด${a.rl>=20?' <span class="tag2">(เข้าใจถึงขีดสุดจากการปลดปล่อยแล้ว)</span>':''}`,'good')});
  if(k===3&&sc<ri+3&&Math.random()<.35)out.push(()=>{const h=Math.round(S.maxHp*.15);S.hp=Math.max(1,S.hp-h);log(`🩸 ใช้แรงเกินตัว เส้นลมปราณสั่นสะท้าน — พลังชีวิต −${h}`,'bad')});
  const see=clamp(p[2]*(.4+k*.25)+(sc>=7?.25:0),0,.97),r=Math.random();
  if(r<see){const fm=Math.round((5+sc*sc)*(S.xian?1.5:1)*(S.xt?2:1));out.push(()=>{S.fame+=fm;log(`👀 มีคนเห็นเต็มสองตา — ข่าวลือว่ามียอดฝีมือแบบคุณแพร่ไปทั่ว ชื่อเสียง +${fmt(fm)}`,'epic')});
