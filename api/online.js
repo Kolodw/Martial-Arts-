@@ -378,6 +378,20 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (!URL_ || !TOKEN) return res.status(503).json({ err: 'nodb' });
   const a = qOf(req).a;
+  if (a === 'memdiag') { // ตรวจขนาดฐานข้อมูล → เขียนลง log ฝั่งเซิร์ฟเวอร์เท่านั้น ไม่คืนข้อมูล
+    if (global._mdT && Date.now() - global._mdT < 60e3) return res.json({ ok: 0 });
+    global._mdT = Date.now();
+    try { const info = String(await cmd('INFO', 'memory') || ''); const pick = k => (info.match(new RegExp(k + ':([^\\r\\n]+)')) || [])[1];
+      const agg = {}, big = []; let cur = '0', n = 0, keys = 0; const t0 = Date.now();
+      do { const r = await cmd('SCAN', cur, 'COUNT', 1000); cur = String(r[0]); const ks = r[1] || []; keys += ks.length;
+        if (ks.length) { const sz = await pipe(ks.map(k => ['MEMORY', 'USAGE', k])); ks.forEach((k, i) => { const v = +sz[i] || 0, p = k.split(':')[0]; const g = agg[p] || (agg[p] = [0, 0]); g[0]++; g[1] += v; if (v > 300000) big.push([k.slice(0, 40), v]) }) }
+        n++ } while (cur !== '0' && Date.now() - t0 < 8000);
+      const top = Object.entries(agg).sort((x, y) => y[1][1] - x[1][1]).slice(0, 30).map(([p, [c, v]]) => p + '=' + c + '/' + Math.round(v / 1024) + 'K').join(' ');
+      console.error('MEMDIAG used=' + pick('used_memory_human') + ' max=' + pick('maxmemory_human') + ' pol=' + pick('maxmemory_policy') + ' keys=' + keys + ' done=' + (cur === '0') + ' | ' + top);
+      console.error('MEMDIAG big ' + big.sort((x, y) => y[1] - x[1]).slice(0, 25).map(x => x[0] + '=' + Math.round(x[1] / 1024) + 'K').join(' '));
+    } catch (e) { console.error('MEMDIAG err', String(e && e.message)) }
+    return res.json({ ok: 1 });
+  }
   let b = req.body || {};
   if (typeof b === 'string') { try { b = JSON.parse(b) } catch { b = {} } }
   const id = req.method === 'GET' ? qOf(req).id : b.id;
