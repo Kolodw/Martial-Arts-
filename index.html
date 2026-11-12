@@ -6565,6 +6565,13 @@ function acTp(){try{return(S&&(AC_W.get(S)||S._tp))||''}catch(e){return''}}
 {const _sl2=sendLife;sendLife=async function(){try{acCheck()}catch(e){}return _sl2.apply(this,arguments)}}
 {const _py14=passYear;passYear=function(){try{acCheck()}catch(e){}const r=_py14.apply(this,arguments);try{acCheck()}catch(e){}return r}}
 setInterval(()=>{try{acCheck()}catch(e){}},1500);
+// ---- ตัวห่อ api (ต้องอยู่ก่อนล็อกกันโกง): แนบรหัสแอดมินตอนส่งแชท · ปุ่มรอเซิร์ฟเวอร์ ----
+{const WR=/^(say|arbuy|archest|arcoin|artkbuy|pa\w+|csave|save|profile|mtmsg|bug|bugedit|idea|fb|meet|annvote|achfirst|ar2go|arm)$/;const _apiU=api;
+ api=function(a,b){try{if(a==='say'&&b&&!b.key&&typeof admK==='function'&&admK())b=Object.assign({},b,{key:admK()})}catch(e){}
+  const lb=window._lastBtn,act=String(a||'').split('&')[0];const p=_apiU.apply(this,[a,b,...[].slice.call(arguments,2)]);
+  try{if(lb&&Date.now()-lb.t<600&&WR.test(act)&&lb.el&&lb.el.isConnected&&lb.el.tagName==='BUTTON'&&!lb.el.classList.contains('busy')){const el=lb.el;window._lastBtn=null;const t0=setTimeout(()=>el.classList.add('busy'),120);
+   const done=ok=>{clearTimeout(t0);el.classList.remove('busy');if(!el.isConnected)return;const c=ok?'okf':'errf';el.classList.remove('okf','errf');void el.offsetWidth;el.classList.add(c);setTimeout(()=>el.classList.remove(c),650)};
+   Promise.resolve(p).then(j=>done(!(j&&j.err)),()=>done(false))}}catch(e){}return p}}
 try{['acCheck','acFlag','acTp','acSnap','sendLife','api','acSus','acW','acTrap','acCaller'].forEach(k=>{try{Object.defineProperty(window,k,{writable:false,configurable:false})}catch(e){}})}catch(e){}
 
 // ---------- v10.0 spectate beast portrait
@@ -14351,7 +14358,6 @@ const nb=(k,i)=>` <button onclick="nameAsk('${k}',${i})" style="font-size:12px;p
 // ===== แอดมิน: มีฉายาครบทุกอัน · หมวดฉายาอันดับ / ฉายาแลก / อีเวนต์ =====
 {const isA=()=>!!admK();
  {const _st=showTtl;showTtl=function(){if(isA()){const v=LS.get('murim_show',null);return v&&v.t?v:null}return _st.apply(this,arguments)}}
- {const _api=api;api=function(a,b){if(a==='say'&&b&&!b.key&&isA())b=Object.assign({},b,{key:admK()});return _api.apply(this,[a,b,...[].slice.call(arguments,2)])}}
  {const _sd=sp2Data;sp2Data=function(){const out=_sd.apply(this,arguments);if(!isA())return out;try{const cur=showTtl(),add=x=>out.push(Object.assign(x,{on:!!(cur&&cur.t===x.t)}));
    const PN={d:'รายวัน',w:'รายสัปดาห์',m:'รายเดือน',dc:'ท้าทาย·รายวัน',wc:'ท้าทาย·รายสัปดาห์',mc:'ท้าทาย·รายเดือน',wa:'ลาน·รายสัปดาห์'};
    for(const p in RKC)(RKC[p]||[]).forEach((t,i)=>{if(t)add({t,r:RKC_TR[p]||(/^m/.test(p)?9:/^w/.test(p)?8:7),k:'rk',g:'🏆 ฉายาอันดับ (แอดมิน)',tab:'rk',sub:(PN[p]||p)+' · อันดับ '+i})});
@@ -14393,6 +14399,125 @@ const nb=(k,i)=>` <button onclick="nameAsk('${k}',${i})" style="font-size:12px;p
    const sc=bSil.getContext('2d');sc.setTransform(1,0,0,1,0,0);sc.globalCompositeOperation='source-over';sc.clearRect(0,0,W,H);sc.drawImage(bOff,0,0);sc.globalCompositeOperation='source-in';sc.fillStyle='rgba(22,16,34,.92)';sc.fillRect(0,0,W,H);sc.globalCompositeOperation='source-over';
    const sm=c.imageSmoothingEnabled;c.imageSmoothingEnabled=false;const d=Math.max(.5,s*.5);
    c.drawImage(bSil,bx-d,by,bw,bh);c.drawImage(bSil,bx+d,by,bw,bh);c.drawImage(bSil,bx,by-d,bw,bh);c.drawImage(bSil,bx,by+d,bw,bh);c.drawImage(bOff,bx,by,bw,bh);c.imageSmoothingEnabled=sm;return out}catch(e){bIn=0;return _db.apply(this,arguments)}}}
+
+// ===================== v16.2 หน้าแรกใหม่ + อนิเมชั่นปุ่ม =====================
+(()=>{const st=document.createElement('style');st.textContent=`
+:root{--gold:#e8b54a;--goldL:#ffd98a;--goldG:rgba(232,181,74,.45)}
+/* ---- G: ปุ่มเลือกแบบขอบทอง ---- */
+#title .seg button,#title .mwseg{transition:border-color .18s,box-shadow .18s,background .18s,color .18s,transform .08s}
+#title .seg button.on{background:rgba(232,181,74,.16)!important;font-weight:800!important;color:var(--ink,#2a2030)!important;text-shadow:none!important;border-color:var(--gold)!important;box-shadow:0 0 0 1px var(--gold),0 0 12px var(--goldG)!important}
+#title .mwseg{filter:grayscale(.7);opacity:.75}
+#title .mwseg::after{content:' 🔒';font-size:.85em}
+/* ---- B: แถบบน ---- */
+body.ttl #langBtn,body.ttl #admBtn,body.ttl #profBtn,#title .tsupport{display:none!important}
+#tTop{position:absolute;left:10px;top:10px;z-index:5;display:flex;align-items:center;gap:8px;max-width:62%}
+#tTop .tav{display:flex;align-items:center;gap:8px;background:rgba(14,10,24,.72);border:2px solid var(--gold);border-radius:12px;padding:4px 10px 4px 4px;cursor:pointer;color:#f6ead0;font:inherit;box-shadow:0 0 10px var(--goldG);min-width:0}
+#tTop canvas{width:34px;height:38px;image-rendering:pixelated;border-radius:8px;background:#1c1a28;flex:none}
+#tTop .tav b{display:block;font-size:13px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:42vw}
+#tTop .tav small{display:block;font-size:10px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:42vw}
+/* ---- C: ตัวละครล่าสุดแทนลูกโลก ---- */
+#title.hasHero .globe{display:none!important}
+#tHero{display:block;margin:4px auto -4px;width:84px;height:93px;image-rendering:pixelated;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45));position:relative;z-index:1}
+#tHeroCap{text-align:center;font-size:11px;color:#f4e8d0;opacity:.85;text-shadow:0 1px 3px #000;margin-top:2px;position:relative;z-index:1}
+/* ---- E: แถบข่าว ---- */
+#tNews{position:relative;z-index:1;margin:10px auto 0;max-width:560px;background:rgba(14,10,24,.66);border:1px solid rgba(232,181,74,.5);border-radius:999px;padding:6px 14px;font-size:12px;color:#f6ead0;overflow:hidden;height:30px;box-sizing:border-box;cursor:pointer}
+#tNews span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:tnIn .45s ease-out}
+@keyframes tnIn{from{transform:translateY(100%);opacity:0}to{transform:none;opacity:1}}
+/* ---- D: ตั้งค่ากะทัดรัด ---- */
+#title .box.opts .lb{font-size:12px;margin-bottom:4px}
+#title .box.opts .lb.sep{margin-top:10px}
+#title .box.opts .seg button{padding:7px 4px!important;font-size:13px!important;min-height:0!important}
+#title .box.opts .hint{font-size:11px!important;margin-top:4px}
+#title .box.opts .hint *{font-size:11px!important}
+#title .box.opts .hint .hic,#title .box.opts .hint b,#title .box.opts .hint .htg{display:none!important}
+#title .box.opts .hint{padding:6px 10px!important;min-height:0!important;margin-top:6px!important;border-width:1px!important}
+#title .box.opts .hint .hd{white-space:normal;line-height:1.35}
+#title details.tadv{margin-top:10px;border-top:1px dashed rgba(232,181,74,.35);padding-top:8px}
+#title details.tadv>summary{cursor:pointer;font-size:13px;color:var(--goldL);list-style:none;text-align:center;padding:4px}
+#title details.tadv>summary::-webkit-details-marker{display:none}
+#title details.tadv[open]>summary{margin-bottom:6px}
+/* ---- A + F: แถบล่าง ---- */
+#tDock{position:fixed;left:0;right:0;bottom:0;z-index:55;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(10,8,18,0),rgba(10,8,18,.92) 28%);display:none}
+body.ttl #tDock{display:block}
+#tDock .row{display:flex;gap:8px;max-width:640px;margin:0 auto}
+#tDock .tgo{flex:1.4;font:inherit;font-weight:800;font-size:19px;color:#1d1405;background:linear-gradient(180deg,#ffe29a,#e8b54a 55%,#c98d22);border:2px solid #7a5512;border-radius:14px;padding:11px 8px;box-shadow:0 4px 0 #7a5512,0 0 18px var(--goldG);cursor:pointer;position:relative;overflow:hidden}
+#tDock .tgo i{display:inline-block;font-style:normal}
+#tDock .tgo.spin i{animation:tDice .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes tDice{0%{transform:rotate(0) scale(1)}60%{transform:rotate(540deg) scale(1.35)}100%{transform:rotate(720deg) scale(1)}}
+#tDock .tcont{flex:1;font:inherit;font-size:13px;color:#f6ead0;background:rgba(30,24,44,.95);border:2px solid var(--gold);border-radius:14px;padding:6px 8px;cursor:pointer;text-align:left;line-height:1.25;min-width:0;box-shadow:0 4px 0 #3a2a10}
+#tDock .tcont b{display:block;font-size:14px;color:var(--goldL);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tDock .tcont small{display:block;font-size:11px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tDock .nav{display:flex;justify-content:space-around;max-width:640px;margin:8px auto 0}
+#tDock .nav button{flex:1;font:inherit;font-size:11px;color:#e8dcc0;background:none;border:none;cursor:pointer;padding:2px 0;display:flex;flex-direction:column;align-items:center;gap:1px;border-radius:10px}
+#tDock .nav button i{font-style:normal;font-size:20px;line-height:1.1}
+#title.redo{padding-bottom:150px!important}
+#title.redo>.pbtn,#title.redo>.gbtn[onclick="goDaily()"]{display:none!important}
+/* ---- 1: คลื่นแสงตอนกด ---- */
+.rpl-host{position:relative;overflow:hidden}
+.rpl{position:absolute;border-radius:50%;pointer-events:none;transform:scale(0);background:radial-gradient(circle,rgba(255,236,180,.55),rgba(255,236,180,0) 70%);animation:rplA .42s ease-out forwards;z-index:3}
+@keyframes rplA{to{transform:scale(1);opacity:0}}
+button:active:not([disabled]){filter:brightness(1.08)}
+/* ---- 2: ประกายปุ่มสำคัญ ---- */
+.bpx{position:fixed;width:5px;height:5px;pointer-events:none;z-index:9998;image-rendering:pixelated;animation:bpxA .6s ease-out forwards}
+@keyframes bpxA{to{transform:translate(var(--dx),var(--dy)) scale(.4);opacity:0}}
+/* ---- 3: ปุ่มรอเซิร์ฟเวอร์ ---- */
+button.busy{pointer-events:none;position:relative;color:transparent!important}
+button.busy::after{content:'';position:absolute;left:50%;top:50%;width:16px;height:16px;margin:-9px 0 0 -9px;border:2px solid var(--gold);border-top-color:transparent;border-radius:50%;animation:bSpin .7s linear infinite}
+@keyframes bSpin{to{transform:rotate(360deg)}}
+button.okf{animation:bOk .6s}
+@keyframes bOk{30%{box-shadow:0 0 0 3px #4ad07a,0 0 16px #4ad07a}}
+button.errf,.lockshake{animation:bErr .4s}
+@keyframes bErr{20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+button.errf{box-shadow:0 0 0 2px #e04050!important}
+/* ---- 4: แท็บเลื่อนนุ่ม ---- */
+.cxtab,.sp2tabs button,.seg button{transition:border-color .18s,box-shadow .18s,background-color .18s,color .18s}
+@media (prefers-reduced-motion:reduce){.rpl,.bpx,#tNews span,#tDock .tgo.spin i,button.okf,button.errf,.lockshake{animation:none!important}}
+`;document.head.appendChild(st)})();
+{const lastSave=()=>{let best=null;try{SLOTS.forEach(n=>{const sv=readSave(n);if(sv&&sv.S&&sv.S.alive!==false&&(!best||(sv.t||0)>(best.sv.t||0)))best={n,sv}})}catch(e){}return best};
+ const LK='murim_lastLook';
+ {const _sg=saveGame;saveGame=function(){const r=_sg.apply(this,arguments);try{if(S&&S.alive&&!(S.beastMode&&!S.beastMode.human))LS.set(LK,{lk:meLook(),n:S.name,a:S.age,r:(()=>{try{return realmLabel().base}catch(e){return ''}})(),x:!!S.xian})}catch(e){}return r}}
+ function drawLk(cv,lk){if(!cv||!lk)return;const ctx=cv.getContext('2d');const sg=g,sp=PS;try{g=ctx;PS=cv.width/28;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;ctx.clearRect(0,0,28,31);const o=Object.assign({},lk,{beast:null,aura:null,mood:'happy'});person(9,29,o,'stand')}catch(e){}finally{g=sg;PS=sp}}
+ const NEWS=()=>{const L=[];try{const n=$('tOnN')&&$('tOnN').textContent;if(n)L.push(`🌐 ตอนนี้มี ${n} คนกำลังท่องยุทธภพ — กดเพื่อเข้าแชท`)}catch(e){}
+  try{(CHANGELOG[0].l||[]).slice(0,4).forEach(x=>L.push(`✨ v${CHANGELOG[0].v} · `+String(x).replace(/<[^>]+>/g,'')))}catch(e){}
+  try{const d=$('dailyInfo')&&$('dailyInfo').textContent;if(d)L.push('📅 ชะตาประจำวัน · '+d)}catch(e){}
+  try{const ls=lastSave();if(ls)L.push(`▶ ${ls.sv.S.name} ยังรอคุณอยู่ — อายุ ${ls.sv.S.age} ปี`)}catch(e){}
+  L.push('🏟️ ลานประลองเงา — สู้กับเงาของผู้เล่นอื่น เก็บเหรียญแลกฉายา');L.push('🏛️ ประมูลทั่วยุทธภพ — ของหายากจากผู้เล่นทั้งแผ่นดิน');return L};
+ let nI=0,nT=null;
+ function tickNews(){const el=$('tNews');if(!el||!$('title').classList.contains('on'))return;const L=NEWS();if(!L.length)return;nI=(nI+1)%L.length;el.innerHTML=`<span>${esc(L[nI])}</span>`;el.onclick=()=>{const t=L[nI]||'';if(/แชท|คนกำลัง/.test(t))openOnline();else if(/ลาน/.test(t))openOnline('arena');else if(/ประมูล/.test(t))openOnline();else if(/ชะตา/.test(t))goDaily();else if(/รอคุณ/.test(t)){const ls=lastSave();if(ls)loadGame(ls.n)}else openUpdate()}}
+ function build(){const T=$('title');if(!T)return;T.classList.add('redo');
+  // B: แถบบน
+  if(!$('tTop')){T.insertAdjacentHTML('afterbegin','<div id="tTop"><button class="tav" onclick="openProfile()"><canvas id="tTopAv" width="56" height="62"></canvas><span><b id="tTopN">ผู้ท่องยุทธภพ</b><small id="tTopS">กดเพื่อดูโปรไฟล์</small></span></button></div>')}
+  // C: ตัวละครล่าสุด
+  const ll=LS.get(LK,null);if(ll&&ll.lk){T.classList.add('hasHero');if(!$('tHero')){const gl=T.querySelector('.globe');(gl||T.querySelector('.big')).insertAdjacentHTML(gl?'afterend':'beforebegin','<canvas id="tHero" width="112" height="124"></canvas><div id="tHeroCap"></div>')}drawLk($('tHero'),ll.lk);$('tHeroCap').textContent=`${ll.n} · ${ll.r||''}`}
+  try{const d=frGet();const cv=$('tTopAv');if(cv){const c=cv.getContext('2d');c.clearRect(0,0,56,62);if(d.av){const im=new Image();im.onload=()=>c.drawImage(im,0,0,56,62);im.src=d.av}else if(ll&&ll.lk)drawPortrait(cv,Object.assign({},ll.lk,{beast:null}))}$('tTopN').textContent=(typeof pname==='function'&&pname())||(ll&&ll.n)||'ผู้ท่องยุทธภพ';$('tTopS').textContent=ll?`ล่าสุด: ${ll.n} · ${ll.a} ปี`:'กดเพื่อดูโปรไฟล์'}catch(e){}
+  // E: ข่าว
+  if(!$('tNews')){const big=T.querySelector('.big');if(big)big.insertAdjacentHTML('afterend','<div id="tNews"></div>');nI=-1;tickNews();clearInterval(nT);nT=setInterval(tickNews,4200)}
+  // D: ตัวเลือกขั้นสูง
+  const box=T.querySelector('.box.opts');if(box&&!box.querySelector('details.tadv')){const segC=box.querySelector('.seg[data-k="chm"]');if(segC){const lb=segC.previousElementSibling,hn=box.querySelector('#hint-chm');const dt=document.createElement('details');dt.className='tadv';dt.innerHTML='<summary>⚙️ ตัวเลือกการเกิด (โหมดท้าทาย) ▾</summary>';if(lb&&lb.classList.contains('lb'))dt.appendChild(lb);dt.appendChild(segC);if(hn)dt.appendChild(hn);const tip=[...box.children].find(x=>/ถูกสุ่มตอนเกิด/.test(x.textContent||''));if(tip)dt.appendChild(tip);box.appendChild(dt);try{if(+CFG.chm)dt.open=true}catch(e){}}}
+  // A + F: แถบล่าง
+  if(!$('tDock'))document.body.insertAdjacentHTML('beforeend',`<div id="tDock"><div class="row"><button class="tcont" id="tCont" style="display:none"></button><button class="tgo" id="tGo"><i>🎲</i> เกิดใหม่</button></div>
+   <div class="nav"><button onclick="goDaily()"><i>📅</i>ชะตาวันนี้</button><button onclick="openBook()"><i>📖</i>สมุดตำนาน</button><button onclick="openOnline('arena')"><i>🏟️</i>ลาน</button><button onclick="openOnline()"><i>🌐</i>ออนไลน์</button><button onclick="openTitleMenu()"><i>☰</i>เมนู</button></div></div>`);
+  $('tGo').onclick=function(){this.classList.remove('spin');void this.offsetWidth;this.classList.add('spin');setTimeout(()=>goBirthPick(),260)};
+  const ls=lastSave(),tc=$('tCont');if(ls&&tc){tc.style.display='';tc.innerHTML=`<b>▶ เล่นต่อ</b><small>${esc(ls.sv.S.name)} · ${ls.sv.S.age} ปี${ls.sv.S.xian?' ☁️':''}</small>`;tc.onclick=()=>loadGame(ls.n)}else if(tc)tc.style.display='none'}
+ window.tRedo=build;
+ {const _sh=show;show=function(id){const r=_sh.apply(this,arguments);if(id==='title')setTimeout(build,30);return r}}
+ {const _otm=openTitleMenu;openTitleMenu=function(){const r=_otm.apply(this,arguments);try{const gr=$('modal').querySelector('.tmgrid');if(gr&&!gr.querySelector('.tmx')){const ad=(typeof ADM!=='undefined'&&ADM.ok)||admK();gr.insertAdjacentHTML('afterbegin',`<button class="cb tmx" onclick="closeM();toggleLang()"><i>🌐</i>${LANG==='en'?'ภาษาไทย':'English (Beta)'}</button><button class="cb tmx" onclick="closeM();openSupport()"><i>🙏</i>สนับสนุนเกม</button>${ad?'<button class="cb tmx" onclick="closeM();openAdmTools()"><i>🛠️</i>แอดมิน</button>':''}`)}}catch(e){}return r}}
+ if(document.readyState==='complete')setTimeout(build,60);else window.addEventListener('load',()=>setTimeout(build,60));
+ setTimeout(build,1500);
+}
+// ---------- อนิเมชั่นปุ่ม ----------
+{let lastSfx=0;{const _sf=sfx;sfx=function(){lastSfx=Date.now();return _sf.apply(this,arguments)}}
+ const BIG=/goBirthPick|ascendWave|tribGo|relGo|relOpen|openRelease|bAscend/;
+ const BIGT=/⚡ ฝ่าทัณฑ์|ชิงบัลลังก์|ชำระแค้น|แหกคุก|ปลุกสายเลือด|💥 ปลดปล่อย|เกิดใหม่/;
+ function burst(el){if(fxQ<2)return;const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,C=['#ffe29a','#e8b54a','#fff6d8','#ff9f4a'];for(let i=0;i<14;i++){const p=document.createElement('i');p.className='bpx';const a=Math.PI*2*i/14+Math.random()*.4,d=r.width*.45+20+Math.random()*24;p.style.cssText=`left:${cx}px;top:${cy}px;background:${C[i%4]};--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d*.7}px`;document.body.appendChild(p);setTimeout(()=>p.remove(),650)}}
+ document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('button,.opt,.cb,.sysb');if(!b)return;
+  if(b.disabled||b.getAttribute('aria-disabled')==='true'||b.classList.contains('lock')||b.closest('.lock')){b.classList.remove('lockshake');void b.offsetWidth;b.classList.add('lockshake');try{vib(15)}catch(_){}return}
+  window._lastBtn={el:b,t:Date.now()};
+  if(fxQ>=2&&b.offsetWidth>24&&!b.closest('#gachaO')){const r=b.getBoundingClientRect(),s=Math.max(r.width,r.height)*1.6,cs=getComputedStyle(b);if(cs.position==='static')b.classList.add('rpl-host');else if(cs.overflow!=='hidden')b.style.overflow='hidden';const w=document.createElement('span');w.className='rpl';w.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`;b.appendChild(w);setTimeout(()=>w.remove(),450)}
+  const oc=b.getAttribute('onclick')||'';if(BIG.test(oc)||BIGT.test(b.textContent||'')||b.id==='tGo'){burst(b);try{vib(30)}catch(_){}}},{passive:true,capture:true});
+ document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(!b)return;setTimeout(()=>{if(Date.now()-lastSfx>120)try{sfx('click')}catch(_){}},10)},true);
+ // 3: ปุ่มที่รอเซิร์ฟเวอร์
+}
 
 </script>
 </body>
