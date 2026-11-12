@@ -3451,7 +3451,7 @@ let crForce=null;
 
 // ---------- 2) สร้างตัวละครเอง ----------
 const CR_PTS=15;
-const CR_HS=[['มวยผมกลางศีรษะ',0],['ผมยาวสยาย',3],['หางม้า',1],['มวยคู่',2],['ผมสั้นเรียบ',4]];
+const CR_HS=[['มวยผมกลางศีรษะ',0],['ผมยาวสยาย',3],['หางม้า',1],['มวยคู่',2],['ผมสั้นเรียบ',4],['เปียยาว',5],['ครึ่งมวยปักปิ่น',6],['ผมยาวผูกริบบิ้น',7],['ครอบมวยขุนนาง',8]];
 const CR_HC=[['ดำ','#2a2838'],['น้ำตาลเข้ม','#4a3426'],['น้ำตาลทอง','#8a5a2f'],['ครามเข้ม','#1f2b4a'],['เทาเงิน','#a8a8b4'],['ขาวหิมะ','#eeeef4'],['แดงเพลิง','#9a2a2a'],['ม่วงราตรี','#4a2a6a']];
 const CR_SK=[['ขาวอมชมพู','#ffd9b8'],['ขาวเหลือง','#f1c27d'],['สองสี','#e0ac69'],['ผิวแทน','#c68642']];
 const CR_RB=[['ตามชาติกำเนิด',null],['ฟ้าคราม','#5b8def'],['ชมพูท้อ','#ff6b9a'],['เขียวหยก','#6fbf73'],['เหลืองทอง','#e0a030'],['ม่วง','#8b4fd8'],['ขาว','#eef0f4'],['ดำ','#2a2a32'],['แดงชาด','#a8282a']];
@@ -4987,6 +4987,13 @@ function person0(x,y,o,pose){
  if(!sit&&!child){const fl=Math.round(Math.sin(T*3+sd)*1.2);Q(cx-Math.floor(tw/2)-2+fl,ly-1,2,2,rD);
   if(walk){const s1=Math.sin(T*3.2),hw2=Math.floor((tw+hem*2)/2),sx=s1>.3?1:s1<-.3?-1:0;Q(cx-hw2+sx,ly-1,tw+hem*2,2,rD);Q(cx-hw2+sx,ly-1,tw+hem*2,1,robe)}}
  if(!sit&&!child&&!walk){const wf=Math.round(Math.sin(T*2+sd)*1.1);if(wf){const hw2=Math.floor((tw+hem*2)/2);Q(cx-hw2+wf,ly-2,tw+hem*2,2,robe);Q(cx-hw2+wf,ly-1,tw+hem*2,1,rD);Q(cx-hw2+wf+(wf>0?tw+hem*2-1:0),ly-3,1,2,rD)}}
+ // ชุดผู้หญิง: กระโปรงยาว (หรูฉวิน) + ผ้าคาดเอวพลิ้ว
+ if(fem&&!sit&&!o.coat&&!o.noSkirt){const sk0=ly-3,sk1=Y-2,wT=tw+hem*2,ws=walk?Math.sin(T*3.2):Math.sin(T*2+sd)*.5,skc=o.skirt||robe,skD=shd(skc,-.25),skL=shd(skc,.18),spr=child?4:8;
+  Q(cx-Math.floor(wT/2)-1,sk0,wT+2,sk1-sk0+1,skc);Q(cx-Math.floor((wT+spr)/2)+2,Math.round((sk0+sk1)/2),wT+spr-4,Math.ceil((sk1-sk0)/2)+1,skc);
+  for(let yy=sk0;yy<=sk1;yy++){const k=(yy-sk0)/Math.max(1,sk1-sk0),w=Math.round(wT+k*spr),off=Math.round(ws*1.6*k),lx=cx-Math.floor(w/2)+off;Q(lx,yy,w,1,skc);Q(lx+w-3,yy,3,1,skD);Q(lx,yy,1,1,skL);if(yy>sk0+1){Q(lx+Math.floor(w*.36),yy,1,1,skD);Q(lx+Math.floor(w*.68),yy,1,1,shd(skc,-.12))}}
+  const wB=wT+spr,lxB=cx-Math.floor(wB/2)+Math.round(ws*1.6);Q(lxB,sk1-1,wB,2,o.trim||skD);Q(lxB,sk1+1,wB,1,'#00000022');
+  const fs=walk?Math.round(ws*2):0;Q(cx-4+fs,Y-1,3,1,'#3a1e2a');Q(cx+1-fs,Y-1,3,1,'#3a1e2a');
+  const sh=o.sash||'#e8708f',bY2=ty+(child?6:9),rf2=Math.round(Math.sin(T*2.4+sd)*1.3+(walk?-1:0));if(!child){Q(cx-2,bY2+2,1,7,sh);Q(cx-2+rf2,bY2+8,1,4,sh);Q(cx+1,bY2+2,1,6,shd(sh,-.2));Q(cx+1+rf2,bY2+7,1,4,shd(sh,-.2))}}
  // arms
  if(o.coat&&!child&&!sit){const cc=o.coat,cD=shd(cc,-.25),cL=o.coatL||shd(cc,.3),fl=Math.round(Math.sin(T*2.6+sd)*1.5),fl2=Math.round(Math.sin(T*2.6+sd+1.3)*1.5),bot=Y-3;
   for(let yy=ty;yy<bot;yy++){const k=(yy-ty)/(bot-ty),fx=Math.round(k*k*(walk?2:1)*(yy>ly?1:0)*1.5),wl=6+Math.round(k*2);const L0=cx-Math.floor(tw/2)-1-fx+(yy>bot-5?fl:0),R0=cx+Math.floor(tw/2)+1-wl+fx+(yy>bot-5?fl2:0);
@@ -5021,6 +5028,7 @@ function person0(x,y,o,pose){
  else if(mood==='sad'){Q(mx,my,2,1,'#6a3a3a');Q(mx-1,my+1,1,1,'#6a3a3a');Q(mx+2,my+1,1,1,'#6a3a3a');if((T|0)%3===0)Q(eR+1,ey+2,1,2,'#8ad0ff')}
  else if(mood==='hurt'){Q(mx-1,my,4,1,'#6a3a3a');Q(eL-1,ey-1,1,4,'#c8283a')}
  else Q(mx,my,2,1,'#8a4a4a');
+ if(fem&&!child&&o.hat!=='mask'){Q(eL-1,ey-1,1,1,'#2a2030');Q(eR+2,ey-1,1,1,'#2a2030');if(!blink){Q(eL,ey-1,2,1,'#2a2030');Q(eR,ey-1,2,1,'#2a2030')}if(!['happy','sad','hurt'].includes(mood))Q(mx,my,2,1,'#d0506a');g.globalAlpha=.3;Q(eL-1,ey+2,2,1,'#ff7a9a');Q(eR+1,ey+2,2,1,'#ff7a9a');g.globalAlpha=1}
  if(o.old&&!child){Q(hx+1,top+2,3,1,sD);Q(eR+2,ey+2,1,1,sD)}
  if(o.beard&&!child){Q(hx+2,my+1,hw-4,child?2:5,o.beard);Q(hx+3,my+6,hw-6,2,o.beard);Q(hx+1,my-1,2,2,o.beard);Q(hx+hw-3,my-1,2,2,o.beard)}
  // hair front
@@ -5032,6 +5040,14 @@ function person0(x,y,o,pose){
   else if(!fem&&!o.hat){Q(cx-2,top-4,4,3,hair);Q(cx-1,top-5,2,1,hD);Q(cx-3,top-2,6,1,'#c8a040');const rf=Math.round(Math.sin(T*3.4+sd)*1.2);Q(cx+3,top-2,2,1,'#c8a040');Q(cx+4+rf,top-1,2,1,'#c8a040');Q(cx+5+rf*2,top,1,2,'#a88030')}
   else if(fem&&!o.hat){Q(cx+2,top-3,3,3,hair);Q(cx+4,top-4,1,3,'#e8c040');const tf=Math.round(Math.sin(T*2.8+sd)*1);Q(cx+5+tf,top-1,1,3,'#e8c040');Q(cx+5+tf,top+2,1,1,'#ff6a8a')}}
  else if(bald){Q(hx+2,top+1,1,1,'#c89a7a');Q(hx+4,top+1,1,1,'#c89a7a');Q(hx+3,top+3,1,1,'#c89a7a')}
+ // ผมเสริม: ปอยข้างแก้ม · ดอกไม้ · ทรงใหม่ (เปีย/ครึ่งมวยปักปิ่น/ริบบิ้น/ครอบมวยขุนนาง)
+ if(!bald&&!o.hat&&!child){const fc=o.flower||['#ff8fb3','#ffd860','#8ad0ff','#c8a0ff','#7ae0a8'][sd%5];
+  if(fem&&o.hs!==4){Q(hx-1,top+3,2,hh-1,hair);Q(hx+hw-1,top+3,2,hh-1,hD);if(o.hs!==7){Q(hx-1,top,2,2,fc);Q(hx,top-1,1,1,shd(fc,.3))}}
+  const hsw=Math.round(Math.sin(T*2.4+sd)*1.2+(walk?1:0));
+  if(o.hs===5){for(let i=0;i<8;i++){const bx=hx+hw-1+Math.round(hsw*i/7),by=top+hh-2+i*2;Q(bx,by,3,2,i%2?hair:hD);Q(bx+1,by,1,1,shd(hair,.25))}Q(hx+hw-1+hsw,top+hh+14,3,1,fc)}
+  else if(o.hs===6){Q(cx-3,top-4,6,3,hair);Q(cx-2,top-5,4,1,shd(hair,.2));Q(cx-7,top-3,14,1,'#e8d070');Q(cx+7,top-4,2,2,'#6ad0a0');Q(cx-8,top-3,1,2,'#c8a040')}
+  else if(o.hs===7){const rb=o.ribbon||'#e8406a';Q(hx+hw-4,top-3,3,3,rb);Q(hx+hw-1,top-4,4,3,rb);Q(hx+hw-8,top-4,4,3,rb);Q(hx+hw-3,top-2,1,1,shd(rb,-.3));Q(hx+hw-2+hsw,top,1,5,rb);Q(hx+hw-4+hsw,top,1,4,shd(rb,-.2))}
+  else if(o.hs===8){Q(cx-4,top-6,8,5,'#1e1a24');Q(cx-3,top-7,6,1,'#2e2838');Q(cx-3,top-5,6,1,'#3a3448');Q(cx-4,top-2,8,1,'#c8a040');Q(cx-6,top-4,2,1,'#d8b050');Q(cx+4,top-4,2,1,'#d8b050');Q(cx-1,top-4,2,1,'#e8d070')}}
  // headwear
  const hc=o.hat;
  if(hc==='taoist'){Q(hx,top-5,hw,4,'#3a3a5a');Q(hx+2,top-8,hw-4,3,'#3a3a5a');Q(cx-1,top-7,2,4,'#e8e0ff')}
@@ -13569,7 +13585,7 @@ function pxHero(c,x,y,lk,pz,fx,col,tm){
   if(t<.72){c.fillStyle=trim;c.fillRect(ox+Math.round(cxr+W*.12-t*3),oy+Math.round(cyr),2,2)}
   if(t>=.72&&t<.84){c.fillStyle=belt;c.fillRect(ox+Math.round(cxr-W/2),oy+Math.round(cyr),W,2)}}
  // ชายเสื้อด้านหน้า (สั้น เห็นขา)
- for(let i=0;i<9;i++){const t=i/9,W=Math.round((fem?9:10)+t*3);c.fillStyle=ink;c.fillRect(ox+Math.round(hx-W/2+1+t*2)-1,oy+Math.round(hy+1+i),W+2,1);c.fillStyle=i===8?trim:robe;c.fillRect(ox+Math.round(hx-W/2+1+t*2),oy+Math.round(hy+1+i),W,1)}
+ {const nn=fem?22:9;for(let i=0;i<nn;i++){const t=i/nn,W=Math.round((fem?9:10)+t*(fem?12:3)),sw3=fem?Math.sin(T*6+i*.35)*(1+ch*2)*t*1.6:0,xx=hx-W/2+1+t*2+sw3;c.fillStyle=ink;c.fillRect(ox+Math.round(xx)-1,oy+Math.round(hy+1+i),W+2,1);c.fillStyle=i===nn-1?trim:(fem&&i%5===3?robeD:robe);c.fillRect(ox+Math.round(xx),oy+Math.round(hy+1+i),W,1)}}
  // คอ + หัว (หันขวา)
  const hx0=nx+sn(p[0])*5,hy0=ny-3;R(hx0-2,hy0-1,4,5,skinD);
  const HX=hx0-5+sn(p[0])*2,HY=hy0-12;
@@ -14357,6 +14373,12 @@ const nb=(k,i)=>` <button onclick="nameAsk('${k}',${i})" style="font-size:12px;p
  {const _py=passYear;passYear=function(){comp();return _py.apply(this,arguments)}}
 
 }
+
+
+// ===== ทรงผมสุ่มตามเพศสำหรับชีวิตที่ไม่ได้ออกแบบหน้าตาเอง =====
+{const HS_F=[0,0,3,1,2,5,6,7,6,3],HS_M=[0,0,0,4,1,3,8,8,4,0];window.hsAuto=(seed,g)=>{const L=g==='หญิง'?HS_F:HS_M;return L[Math.abs((seed|0)*7+3)%L.length]};
+ {const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{if(o&&!(S.look&&S.look.hs!=null))o.hs=hsAuto(S.seed,S.gender)}catch(e){}return o}}
+ {const _rl=rollLook;rollLook=function(r){const o=_rl.apply(this,arguments);try{if(o&&!(r&&r.look&&r.look.hs!=null))o.hs=hsAuto(r.seed,r.g&&r.g.v&&r.g.v.n)}catch(e){}return o}}}
 
 </script>
 </body>
