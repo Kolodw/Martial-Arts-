@@ -1127,7 +1127,7 @@ function doFocus(){
   case 'rest':{let g=Math.max(0,Math.min(S.maxHp-S.hp,R(30,50)));S.hp+=g;S.cha+=R(1,3);routine('rest',genLine('rest'),g,g>0?'พลังชีวิต':'');break}
   case 'love':{const c=R(3,7);S.cha+=c;S.hp=Math.min(S.maxHp,S.hp+15);
    if(S.spouse&&S.sp&&S.sp.wed===false){if(!choice._cur&&Math.random()<.3+S.sp.aff/400){const sp=S.sp;choice('💍 ขอแต่งงาน',`คบกับ<b>${sp.n}</b> (${sp.age} ปี) มาสักพักแล้ว ความรัก ${Math.round(sp.aff)}/100 — จะขอแต่งงานเลยไหม`,[{t:'💍 ขอแต่งงาน',s:'ขึ้นกับความรักและเสน่ห์',f(){if(roll01(.35+sp.aff/160+S.cha/600)){sp.wed=true;marry(sp.n,'คุกเข่าขอแต่งงาน — ได้แต่งงานกับ')}else{sp.aff=Math.max(0,sp.aff-5);log(`${sp.n}ยิ้มเขินๆ "ขอเวลาอีกหน่อยนะ"`)}}},{t:'ยังไม่ใช่ตอนนี้',skip:true,f(){log(`คุณกับ${sp.n}ยังคบกันแบบคนรักต่อไป`)}}])}else{routine('love',genLine('love'),c,'เสน่ห์')}if(Math.random()<.12)try{haremOffer(true)}catch(e){}}
-   else if(S.spouse){if(Math.random()<.1)try{haremOffer(true)}catch(e){}if(Math.random()<(S.path==='family'?.5:.35)*(S.xian?Math.max(.04,1/(1+S.kids*.5)):1)&&S.age<(S.xian?Math.max(55,lifeMax()*.7):55)){S.kids++;log(`บุตรคนที่ ${S.kids} ถือกำเนิดขึ้น 👶`,'epic');setScene('birth')}else routine('love',genLine('love'),c,'เสน่ห์')}
+   else if(S.spouse){if(Math.random()<.1)try{haremOffer(true)}catch(e){}if(!S.noKids&&Math.random()<(S.path==='family'?.5:.35)*(S.xian?Math.max(.04,1/(1+S.kids*.5)):1)&&S.age<(S.xian?Math.max(55,lifeMax()*.7):55)){S.kids++;log(`บุตรคนที่ ${S.kids} ถือกำเนิดขึ้น 👶`,'epic');setScene('birth')}else routine('love',genLine('love'),c,'เสน่ห์')}
    else{if(S.age>=18&&Math.random()<.3+S.cha/200){const nm=anyName(S.gender==='ชาย'?'หญิง':'ชาย');S.spouse=nm;S.spouseP=null;S.sp=mkLover(nm,'',{wed:false});log(`💕 พบรักกับ <b>${nm}</b> (${S.sp.age} ปี) — เริ่มคบหาเป็นคนรัก`,'epic')}else routine('love',ch(['ออกไปพบปะผู้คน แต่ยังไม่พบคนที่ใช่','ไปงานเทศกาลจับคู่ กลับมามือเปล่า','แม่สื่อพามาดูตัวสามคน ไม่มีใครถูกใจ','แอบชอบคนขายเต้าหู้ แต่ไม่กล้าพูด','เขียนจดหมายรักแล้วฉีกทิ้งทุกฉบับ']),c,'เสน่ห์')}
    break}
  }
@@ -5562,7 +5562,7 @@ function haremTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human)||S.age<1
  if(H&&H.length){
   for(const g of H.slice()){if(g.age==null){g.age=loverAge();g.life=loverLife(g.age)}g.age++;if(g.age>=g.life){H.splice(H.indexOf(g),1);joy(-8);log(`🥀 <b>${g.n}</b> คนในตำหนักในจากไปด้วยวัย ${g.age} ปี`,'bad',true)}}
   const up=H.length*(40+realmIdx()*25);if(S.money>=up){S.money-=up;joy(Math.min(8,2*H.length))}else if(H.length){const g=H.pop();log(`🌸 เงินไม่พอเลี้ยงดูตำหนักใน — ${g.n} ขอลาจากไป`,'bad')}
-  if(S.sp)S.sp.aff=Math.max(0,(S.sp.aff||70)-(S.haremSecret?Math.min(4,H.length):Math.min(3,Math.ceil(H.length/3))));if(H.length&&S.age<(S.xian?Math.max(55,lifeMax()*.7):60)&&Math.random()<Math.min(.25,.03*H.length)){S.kids=(S.kids||0)+1;log(`👶 ${ch(H).n}ให้กำเนิดบุตรแก่คุณ`,'good')}
+  if(S.sp)S.sp.aff=Math.max(0,(S.sp.aff||70)-(S.haremSecret?Math.min(4,H.length):Math.min(3,Math.ceil(H.length/3))));if(H.length&&!S.noKids&&S.age<(S.xian?Math.max(55,lifeMax()*.7):60)&&Math.random()<Math.min(.25,.03*H.length)){S.kids=(S.kids||0)+1;log(`👶 ${ch(H).n}ให้กำเนิดบุตรแก่คุณ`,'good')}
   if(S.haremSecret&&S.spouse&&!choice._cur&&!modalOpen&&Math.random()<.25){hmCaught();return}}
  if(S.haremSecret&&(!H||!H.length))S.haremSecret=0;
  if(choice._cur||modalOpen||(S.cha||0)<55)return;
@@ -9670,7 +9670,7 @@ function estTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human)||S.age<18)
  if(estLv('shrine'))S.karma+=estLv('shrine')*(E.tr==='vir'?2:1);
  const fm=Math.round((estLv('inn')*3+estLv('guard')*4+estLv('stable')*3+E.lv*2)*(E.tr==='vir'?1.2:1)*({m:1,x:3,g:10}[ECO_W()]));if(fm){S.fame+=fm}
  if(estLv('vault'))S.money+=Math.round(Math.min(S.money*.01*estLv('vault'),2000*W*estLv('vault')));
- if(E.tr==='lov'&&S.spouse&&Math.random()<.05&&S.age<(S.xian?Math.max(55,lifeMax()*.6):55)){S.kids=(S.kids||0)+1;got.push('👶 บุตรเพิ่ม 1')}
+ if(E.tr==='lov'&&S.spouse&&!S.noKids&&Math.random()<.05&&S.age<(S.xian?Math.max(55,lifeMax()*.6):55)){S.kids=(S.kids||0)+1;got.push('👶 บุตรเพิ่ม 1')}
  E.pr=(E.pr||0)+E.lv*2+Object.values(E.b).reduce((a,b)=>a+b,0);
  if(got.length&&S.age%5===0)log(`🏞️ ${estLandN(E.lv)}ปีนี้: ${got.join(' · ')}`,'good');
  if(Math.random()<.12&&!choice._cur&&!modalOpen)estEvent()}
@@ -12792,7 +12792,7 @@ function cubAdd(n){const L=cubL();for(let i=0;i<n;i++){const t=Math.random()<.12
   const f=S.focus;mt.bd=Math.max(0,Math.min(100,mt.bd+(f==='hide'||f==='bond'?2:f==='roam'?1:-.4)));
   if(!choice._cur&&!modalOpen&&Math.random()<.05)bMateEv();
   if(mt.bd<12&&Math.random()<.25){mt.alive=false;mt.left=1;joy(-12);log(`💔 ${esc(mt.n)}ทิ้งรังไปแล้ว — คุณไม่ค่อยอยู่ด้วยกันเลย`,'bad');blMem(mt.n+'จากไปเพราะห่างเหิน')}
-  else if(mt.bd>=80&&M.cubs&&S.age-M.cubs.at>=bCubGap()&&Math.random()<.04){const n=R(1,3);M.cubs={n,at:S.age,gen:(M.cubs.gen||0)+1};S.kids=(S.kids||0)+n;M._kc=S.kids;cubAdd(n);log(`🍼 ความรักที่อบอุ่นของคุณกับ${esc(mt.n)} — ลูกน้อยเกิดใหม่อีก ${n} ตัว`,'good')}}
+  else if(mt.bd>=80&&!S.noKids&&M.cubs&&S.age-M.cubs.at>=bCubGap()&&Math.random()<.04){const n=R(1,3);M.cubs={n,at:S.age,gen:(M.cubs.gen||0)+1};S.kids=(S.kids||0)+n;M._kc=S.kids;cubAdd(n);log(`🍼 ความรักที่อบอุ่นของคุณกับ${esc(mt.n)} — ลูกน้อยเกิดใหม่อีก ${n} ตัว`,'good')}}
  bKinWarn()}catch(e){console.error(e)}return r}}
 function bMateEv(){const M=blM(),mt=M.mate,x=bx();const E=[
  ['🌙 คืนจันทร์เต็มดวง',`${esc(mt.n)}นั่งรออยู่บนก้อนหินที่ทั้งสองชอบ มองมาทางคุณเหมือนรออะไรบางอย่าง`,[['นั่งดูจันทร์ด้วยกันจนรุ่งเช้า','j+10 q+1',`${mt.n}ซบลงข้างคุณ`,()=>{mt.bd=Math.min(100,mt.bd+15)}],['ขอตัวไปบำเพ็ญ','q+2','เสียงถอนหายใจเบาๆ ดังตามหลังมา',()=>{mt.bd=Math.max(0,mt.bd-12)}]]],
@@ -14089,6 +14089,14 @@ const nb=(k,i)=>` <button onclick="nameAsk('${k}',${i})" style="font-size:12px;p
 {const _o=openFamily;openFamily=function(){_o.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='family')return;const hs=[...m.querySelectorAll('h4')];const hk=hs.find(h=>/^ลูก/.test(h.textContent));if(hk){let el=hk.nextElementSibling,i=0;const L=S.children||[];while(el&&el.tagName!=='H4'){if(el.classList.contains('item')){const c=L[i];if(c&&c.alive!==false){const b=el.querySelector('.h b');if(b)b.insertAdjacentHTML('afterend',`<button onclick="nameAsk('kid',${i},1)" style="font-size:12px;padding:2px 8px;border-radius:10px;border:1px solid #c9a24a;background:#2a2214;color:#ffd77a;cursor:pointer;margin-left:6px">✏️</button>`)}i++}el=el.nextElementSibling}}
   if(S.pet){m.insertAdjacentHTML('beforeend',`<h4 style="margin:10px 0 6px">สัตว์คู่ใจ</h4><div class="item"><div class="h"><b>${S.pet.i||'🐾'} ${esc(S.pet.n||'สัตว์เลี้ยง')}</b><button onclick="nameAsk('pet',0,1)" style="font-size:12px;padding:2px 8px;border-radius:10px;border:1px solid #c9a24a;background:#2a2214;color:#ffd77a;cursor:pointer">✏️ ตั้งชื่อ</button></div><p class="tag2">${esc(S.pet.t||'')}</p></div>`)}}catch(e){}}}
 }
+
+
+// ===== วางแผนครอบครัว: เลือกไม่มีลูกได้ แต่คู่ชีวิตไม่พอใจ =====
+{window.kidPlan=function(v){if(!S)return;const was=!!S.noKids;S.noKids=v?1:0;if(was!==!!v){const sp=S.sp;if(v){if(sp)sp.aff=Math.max(0,(sp.aff||70)-8);log(`🍼 ตัดสินใจว่า<b>ยังไม่อยากมีลูก</b>${sp?` — ${esc(sp.n)}ดูผิดหวัง (ความรัก −8)`:''}`,'bad')}else{if(sp)sp.aff=Math.min(100,(sp.aff||70)+5);joy(4);log(`🍼 ตัดสินใจว่า<b>พร้อมมีลูกแล้ว</b>${sp?` — ${esc(sp.n)}ยิ้มกว้าง (ความรัก +5)`:''}`,'good')}sfx('click');try{saveGame()}catch(e){}}openFamily()};
+ const _py=passYear;passYear=function(){const a0=S&&S.age,r=_py.apply(this,arguments);try{if(S&&S.alive&&S.noKids&&S.age!==a0){const sp=S.sp,want=sp&&sp.wed!==false;if(want){const d=R(1,3)+(S.path==='family'?1:0);sp.aff=Math.max(0,(sp.aff||70)-d);if(!S._nkY||S.age-S._nkY>=5){S._nkY=S.age;addFeed('ev',`🍼 ${esc(sp.n)}ยังอยากมีลูก แต่คุณยังไม่พร้อม — ความรักลดลงทุกปี (−${d})`,'sum')}}
+  (S.harem||[]).forEach(g=>{if(g&&typeof g.aff==='number')g.aff=Math.max(0,g.aff-1)})}}catch(e){}return r};
+ const _of=openFamily;openFamily=function(){_of.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='family'||!(S.sp||(S.harem&&S.harem.length)))return;const hs=[...m.querySelectorAll('h4')],hk=hs.find(h=>/^ลูก/.test(h.textContent));if(!hk)return;const on=!!S.noKids,bs='font-size:13px;padding:5px 10px;border-radius:10px;cursor:pointer;margin:2px;border:1px solid #c9a24a;';
+  hk.insertAdjacentHTML('beforebegin',`<div class="item" style="margin-top:8px"><div class="h"><b>🍼 วางแผนครอบครัว</b><span class="tag2">${on?'ยังไม่อยากมีลูก':'พร้อมมีลูก'}</span></div><div><button onclick="kidPlan(0)" style="${bs}background:${on?'#2a2214;color:#ffd77a':'#c9a24a;color:#1b1712;font-weight:700'}">👶 อยากมีลูก</button><button onclick="kidPlan(1)" style="${bs}background:${on?'#c9a24a;color:#1b1712;font-weight:700':'#2a2214;color:#ffd77a'}">🚫 ยังไม่อยากมีลูก</button></div><p class="tag2" style="margin-top:4px">${on?'จะไม่มีลูกเกิดเอง แต่คู่ชีวิตจะผิดหวัง ความรักลดลงทุกปี (ถ้าต่ำมากชีวิตคู่อาจร้าวฉาน)':'ลูกจะเกิดตามโชคชะตาเหมือนเดิม · ถ้าเลือกไม่มี ความรักลด −8 ทันที และลดทุกปี'}<br>รับเลี้ยงเด็กจากเหตุการณ์ยังทำได้ตามปกติ</p></div>`)}catch(e){}}}
 
 </script>
 </body>
