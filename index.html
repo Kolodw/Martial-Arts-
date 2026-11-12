@@ -16668,6 +16668,163 @@ const MW_CCEV=[
   mwC('พาคนในป้ายรถเมล์หลบเข้าตึก',()=>mwSay('🏃 คุณจูงทุกคนเข้าล็อบบี้ตึกได้ก่อนป้ายร่วงลงมาสามวินาที ไม่มีใครเห็นว่าคุณวิ่งเร็วแค่ไหน','good',{joy:8,sec:2}))])}]];
 MW_CCEV.forEach(([cc,id,y,go])=>{MW_R.push({id,w:7,cd:0,c:M=>(M.cc||'th')===cc&&M.y>=y,go});MW_FORCE.push([y+1,id])});
 
+
+// ===================== ยุคปัจจุบัน v2: สมดุล · เอกสารตัวตน · เป้าหมาย · ต่อสู้/ปราณ · โลกเปลี่ยน · ภัยพิบัติ · คนรอบตัว · ตัวเลือกเสริม · เมนู =====================
+// ---------- สมดุล ----------
+MW_QR[2][0]=10;MW_QR[3][0]=25;MW_QR[4][0]=50;MW_QR[5][0]=90;            // ปราณขึ้นช้าลง ขั้นสุดท้ายต้องลงทุนจริง
+{const _meB=mwEnter;mwEnter=function(){const had=S&&S.mw;const r=_meB.apply(this,arguments);try{const M=S.mw;if(M&&!had&&!M.b2){M.b2=1;M.end=Math.max(S.age+15,R(78,95));M.id=0;M.goals=mwGoalPick(M);M.vis={};M.vis[M.cc||'th']=1}}catch(e){console.error(e)}return r}}
+{const _hgB=mwHeirGo;mwHeirGo=function(){const h=LS.get('murim_mwheir',null);const r=_hgB.apply(this,arguments);setTimeout(()=>{try{const M=S&&S.mw;if(M&&M.native&&!M.b2){M.b2=1;M.end=Math.max(S.age+10,R(78,95));M.id=2;M.goals=mwGoalPick(M);M.vis={};M.vis[M.cc]=1;if(h&&h.loan){M.loan=Math.round(h.loan*.8);log(`💀 หลังงานศพ ชายสามคนมายืนรอหน้าบ้าน — หนี้นอกระบบของ${esc(h.par)}ตกมาถึงคุณ ${mwLocal(M.loan*mwCC().rate,M)}`,'bad',true)}saveGame()}}catch(e){console.error(e)}},800);return r}}
+// หนี้ตอนตาย → ส่งต่อทายาท / เจ้าหนี้มางานศพ
+{const _cdB=checkDeath;checkDeath=function(){const was=S&&S.alive;const r=_cdB.apply(this,arguments);try{if(was&&S&&!S.alive&&S.mw&&(S.mw.loan||0)>0){const h=LS.get('murim_mwheir',null);if(h){h.loan=S.mw.loan;LS.set('murim_mwheir',h)}log(`💀 ในงานศพมีแขกที่ไม่ได้รับเชิญสามคน ยืนอยู่หลังสุด — หนี้ ${mwLocal(S.mw.loan*mwCC().rate,S.mw)} ยังไม่ได้ใช้คืน`,'bad')}}catch(e){}return r}}
+// ความสุขมีผล
+{const _myB=mwYear;mwYear=function(){const r=_myB.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(M){const h=S.happy||50;M.lowJ=h<28?(M.lowJ||0)+1:0;
+ if(M.lowJ>=2){if(M.job)M.job.perf=mwCl(M.job.perf-8,0,100);S.hp=Math.max(10,S.hp-8);addFeed('ev','😮‍💨 ความสุขต่ำมาหลายปี — ทำงานไม่ค่อยได้ ร่างกายทรุดลง','sum')}else if(h>=80&&M.job)M.job.perf=mwCl(M.job.perf+3,0,100);
+ if(M.fl.agency&&(M.id||0)<3){M.id=3;addFeed('ev','🪪 หน่วยลับออกเอกสารตัวตนให้คุณ ถูกต้องตามกฎหมายทุกอย่าง — แต่ชื่อของคุณอยู่ในแฟ้มของพวกเขาตลอดไป','sum')}
+ if(M.idP&&M.y>=M.idP&&(M.id||0)<2){M.id=2;M.idP=0;log('🪪 <b>ได้บัตรประชาชนแล้ว!</b> หลังรอเอกสารมาหลายปี ในที่สุดคุณก็ "มีตัวตน" ในยุคนี้อย่างถูกกฎหมาย','epic',true);keyAdd('ได้สัญชาติในยุคปัจจุบัน')}
+ if(M.id===1&&Math.random()<.06)setTimeout(()=>{if(S&&S.mw&&!choice._cur)mwFakeCaught(S.mw)},1500);
+ mwGoalCheck(M)}}catch(e){console.error(e)}return r}}
+// ---------- เอกสารตัวตน ----------
+const MW_IDN=['ไม่มีเอกสาร','เอกสารปลอม','บัตรประชาชนถูกกฎหมาย','เอกสารจากหน่วยลับ'];
+MW_R.push({id:'id1',w:5,cd:0,c:M=>!M.native&&(M.id||0)===0&&!M.idP&&M.y>=1,go(M){const fk=MW_MIN[M.cc||'th']*3;choice('🪪 คุณไม่มีตัวตน',`ไม่มีบัตรประชาชน ไม่มีพาสปอร์ต ไม่มีประวัติในระบบใดๆ — เปิดบัญชีธนาคารไม่ได้ เซ็นสัญญาเช่าไม่ได้ งานประจำส่วนใหญ่ไม่รับ ในสายตาของรัฐ คุณไม่มีอยู่จริง`,[
+ mwC('ยื่นเรื่องขอสถานะบุคคลไร้สัญชาติ',()=>{M.idP=M.y+R(3,6);mwSay(`📄 เจ้าหน้าที่ยื่นแบบฟอร์มให้สิบสองฉบับ "รอผลประมาณ ${M.idP-M.y} ปีครับ" — ระหว่างนี้คุณยังทำได้แค่งานรายวันและงานที่ไม่ถามเอกสาร`,'',{adapt:4})},{s:'ถูกกฎหมาย · ต้องรอหลายปี'}),
+ mwC('ซื้อเอกสารปลอม',()=>{const b=mwToB(fk,M);if((S.money||0)<b)return mwSay('💸 เงินไม่พอจ่ายคนทำเอกสาร','',null);S.money-=b;M.id=1;mwSay(`🪪 ชายในร้านถ่ายเอกสารหลังตลาดทำบัตรให้ในสองวัน ชื่อในบัตรไม่ใช่ชื่อคุณ — ใช้งานได้ แต่ถ้าโดนตรวจละเอียดเมื่อไหร่ จบ`,'',{sec:3})},{s:`${mwLocal(fk,M)} · มีโอกาสโดนจับ`}),
+ mwC('ใช้ชีวิตแบบไม่มีเอกสารไปก่อน',()=>mwSay('🕳️ คุณรับเงินสด นอนห้องที่ไม่ต้องเซ็นสัญญา และเรียนรู้ว่าในเมืองใหญ่ มีคนแบบคุณอยู่มากกว่าที่คิด','',{adapt:3,joy:-2}))])}});
+MW_FORCE.unshift([1,'id1']);
+function mwFakeCaught(M){choice('🚨 เอกสารปลอมถูกตรวจพบ','เจ้าหน้าที่ตรวจบัตรของคุณกับฐานข้อมูล แล้วเงยหน้าขึ้นช้าๆ "บัตรใบนี้เป็นของคนที่เสียชีวิตไปแล้วเมื่อสิบปีก่อนครับ"',[
+ mwC('ยอมรับ จ่ายค่าปรับ',()=>{M.id=0;mwFx({mon:-mwToB(MW_MIN[M.cc||'th']*4,M),sec:6});if(M.job&&['office','guard','heal'].includes(M.job.id)){M.job=null;mwSay('📉 ถูกยึดบัตร เสียค่าปรับ และถูกเลิกจ้างทันที','bad',{joy:-8})}else mwSay('🧾 ถูกยึดบัตรและเสียค่าปรับ','bad',{joy:-4})}),
+ mwC('หนีออกจากที่นั่นทันที',()=>{M.id=0;mwSay('🏃 คุณหายตัวไปจากสำนักงานก่อนเจ้าหน้าที่จะลุกจากเก้าอี้ ใบหน้าคุณอยู่ในกล้องวงจรปิดแล้ว','',{sec:12,joy:-4})},{s:'ความลับรั่ว'})])}
+{const _jrB=mwJobReq;mwJobReq=function(J,M){const w=_jrB.apply(this,arguments);if(w)return w;const id=Object.keys(MW_JOBS).find(k=>MW_JOBS[k]===J);if(['office','guard','heal'].includes(id)&&(M.id||0)<1)return'ต้องมีบัตรประชาชน (หรือเอกสารสักอย่าง)';return''}}
+{const _asB=mwAs;mwAs=function(k){const M=S.mw,id=M.id||0;if(k==='mort'&&id<2)return toast('กู้ซื้อบ้านต้องมีบัตรประชาชนถูกกฎหมาย');if(['cash','car','ins'].includes(k)&&id<1)return toast('ต้องมีเอกสารตัวตนก่อน');return _asB.apply(this,arguments)}}
+{const _mvB=mwMove;mwMove=function(M,why){const id=M.id||0;if(id===0){const c=mwToB(MW_MIN[M.cc||'th']*5,M);if((S.money||0)<c){mwSay('🚫 ไม่มีพาสปอร์ต และไม่มีเงินพอจ้างคนลักลอบพาข้ามแดน — คุณหนีไปไหนไม่ได้','bad',{sec:5,joy:-6});return}S.money-=c;M.sec=mwCl(M.sec+5,0,100)}
+ if(id===1&&Math.random()<.3){mwFx({mon:-mwToB(MW_MIN[M.cc||'th']*3,M),sec:8});mwSay('🛂 ตม. ตรวจพบพาสปอร์ตปลอมที่สนามบิน คุณถูกปรับและถูกส่งกลับ — หนีไม่สำเร็จ','bad',{joy:-8});M.id=0;return}
+ const r=_mvB.apply(this,arguments);if(id>=2)M.id=1;M.vis=M.vis||{};M.vis[M.cc]=1;return r}}
+{const _l3=MW_R.find(e=>e.id==='love3');if(_l3){const g0=_l3.go;_l3.go=function(M){g0.apply(this,arguments);setTimeout(()=>{if(S&&S.mw&&S.mw.sp&&(S.mw.id||0)<2&&!S.mw.idP){S.mw.idP=S.mw.y+2;addFeed('ev','🪪 คู่ชีวิตช่วยยื่นเรื่องขอสถานะให้คุณ — อีกราวสองปีจะได้บัตรประชาชน','sum')}},2500)}}}
+// ---------- เป้าหมายชีวิต + ความสำเร็จ ----------
+const MW_GOALS=[
+ ['home','🏠 มีบ้านเป็นของตัวเอง',M=>(M.ast||{}).h===2],['qi3','🌀 ทะลวงปราณถึงขั้นวงจรใหญ่',M=>mwQi(M)>=3],['top','💼 ไต่ถึงตำแหน่งสูงสุดของอาชีพ',M=>M.job&&M.job.lv>=2],
+ ['wed','💍 แต่งงาน',M=>!!M.sp],['kid','👶 มีลูก',M=>(M.kids||[]).length>0],['id','🪪 ได้บัตรประชาชนถูกกฎหมาย',M=>(M.id||0)>=2],
+ ['fame','📈 มีผู้ติดตามหนึ่งล้าน',M=>(M.fame||0)>=1e6],['rich','🐷 มีเงินเก็บเท่าค่าครองชีพ 10 ปี',M=>(S.money||0)+((M.ast||{}).save||0)>=mwToB(mwYearCost(M).yr*10,M)],
+ ['trv','✈️ ไปเที่ยวต่างประเทศ 3 ประเทศ',M=>Object.keys(M.vis||{}).length>=4],['sect','🏯 กลับไปเป็นปรมาจารย์ของสำนัก',M=>M.fl.sect==='elder'],
+ ['dis','🥋 มีศิษย์ในยุคนี้ 3 คน',M=>(M.dis||0)>=3],['friend','🤝 มีเพื่อนสนิทที่รู้ความลับ',M=>M.bf&&M.bf.k],['old','🎂 อยู่ถึงอายุ 90',M=>S.age>=90],
+ ['quiet','🤫 ใช้ชีวิตยี่สิบปีโดยความลับรั่วไม่ถึง 30%',M=>M.y>=20&&(M.secMax||0)<30],['stone','💎 สะสมหินปราณ 5 ก้อน',M=>(M.stones||0)>=5],['hob','🎣 มีงานอดิเรกที่ทำมาสิบปี',M=>M.hob&&M.y-M.hob.y>=10]];
+function mwGoalPick(M){const pool=MW_GOALS.filter(g=>!(M.native&&['sect','quiet','id'].includes(g[0]))).map(g=>g[0]);const out=[];while(out.length<3&&pool.length)out.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);return out.map(id=>({id,d:0}))}
+function mwGoalCheck(M){M.secMax=Math.max(M.secMax||0,M.sec||0);(M.goals||[]).forEach(g=>{if(g.d)return;const G=MW_GOALS.find(x=>x[0]===g.id);let ok=0;try{ok=G&&G[2](M)}catch(e){}if(ok){g.d=M.y||1;joy(10);log(`🎯 <b>สำเร็จเป้าหมาย:</b> ${G[1]}`,'epic',true);keyAdd('สำเร็จ: '+mwTxt(G[1]));const A=LS.get('murim_mwach',{})||{};if(!A[g.id]){A[g.id]=Date.now();LS.set('murim_mwach',A);toast('🏆 ความสำเร็จยุคปัจจุบันใหม่!')}}});
+ if((M.goals||[]).length&&M.goals.every(g=>g.d)&&!M.fl.gAll){M.fl.gAll=1;log('🏆 <b>ทำเป้าหมายครบทั้งสามข้อ!</b> ชีวิตในยุคนี้มีความหมายแล้ว — เป้าหมายใหม่ปรากฏขึ้น','myth',true);const more=mwGoalPick(M).filter(n=>!M.goals.some(g=>g.id===n.id)).slice(0,2);M.goals=M.goals.concat(more)}}
+function openGoals(){const M=S.mw;if(!M)return;const A=LS.get('murim_mwach',{})||{};
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎯 เป้าหมายในยุคนี้</h3><div class="jobL">${(M.goals||[]).map(g=>{const G=MW_GOALS.find(x=>x[0]===g.id);return `<div class="jobC${g.d?' on':''}"><b>${g.d?'✅':'⬜'} ${G?G[1]:g.id}</b>${g.d?`<div class="tag2">สำเร็จปีที่ ${g.d}</div>`:''}</div>`}).join('')}</div>
+ <h3 style="margin-top:10px">🏆 ความสำเร็จยุคปัจจุบัน ${Object.keys(A).length}/${MW_GOALS.length}</h3><div class="tag2">${MW_GOALS.map(g=>`${A[g[0]]?'🏆':'🔒'} ${A[g[0]]?g[1]:'???'}`).join('<br>')}</div>`,'goals')}
+// ---------- ต่อสู้: พลังและปราณมีผลจริง ----------
+const mwStr=M=>((S.power||0)+(M.qi||0)*40)*(1+mwQi(M)*.25);
+function mwBattle(M,o){const me=mwStr(M),foe=me*o.foe,pw=x=>Math.max(.05,Math.min(.95,x));const base=me/(me+foe);
+ const end=(win,how)=>{if(win){o.win&&o.win(how)}else{S.hp=Math.max(5,S.hp-Math.round(S.maxHp*(.3+Math.random()*.2)));o.lose&&o.lose(how)}};
+ const opts=[mwC('⚔️ สู้เต็มกำลัง',()=>{mwFx({sec:o.pub?10:5});end(Math.random()<pw(base*1.35),'full')},{s:`โอกาสชนะสูง · ความลับรั่ว`})];
+ if((M.qi||0)>=2)opts.push(mwC('🌀 สู้พร้อมปราณ (ปราณ −2)',()=>{mwFx({qi:-2,sec:o.pub?6:3});end(Math.random()<pw(base*1.35+.2),'qi')},{s:'โอกาสชนะสูงสุด'}));
+ opts.push(mwC('🥋 สู้แบบคนธรรมดา ซ่อนวิชา',()=>end(Math.random()<pw(base*.75),'hide'),{s:'ไม่มีใครสงสัย · ชนะยากกว่า'}));
+ opts.push(mwC('🏃 หนี',()=>{if(Math.random()<.65)mwSay('💨 คุณหายไปในตรอกก่อนอีกฝ่ายจะทันตั้งตัว','',{joy:-2});else end(false,'flee')}));
+ if(o.talk)opts.push(mwC('🗣️ เจรจา',()=>o.talk()));
+ choice(o.t,`${o.txt}<br><span class="tag2">พลังของคุณ ~${fmt(Math.round(me))} · อีกฝ่าย ~${fmt(Math.round(foe))}</span>`,opts)}
+MW_R.push(
+ {id:'cb1',w:5,cd:6,c:M=>M.y>=5&&(M.qi||0)>=3,go(M){mwBattle(M,{t:'⚔️ ผู้ฝึกตนท้าประลอง',txt:'ชายหนุ่มที่มีปราณแน่นหนาดักรอคุณบนดาดฟ้า "ได้ยินว่ามียอดฝีมือรุ่นเก่าอยู่ในเมืองนี้ ข้าอยากรู้ว่ายุคเก่าเก่งจริงไหม"',foe:.6+Math.random()*.9,
+  win:()=>{M.stones=(M.stones||0)+1;mwSay('🏆 ชายหนุ่มคุกเข่ายอมแพ้ ยื่นหินปราณให้หนึ่งก้อนเป็นค่าบทเรียน — "ยุคเก่าเก่งจริง"','epic',{qi:1,joy:6})},lose:()=>mwSay('🩸 คุณแพ้ ชายหนุ่มดูดปราณของคุณไปส่วนหนึ่งก่อนจากไป','bad',{qi:-2,joy:-8})})}},
+ {id:'cb2',w:6,cd:8,c:M=>M.fl.foe&&M.y>=9,go(M,P){mwBattle(M,{t:'🗡️ นักฆ่าจากศัตรูเก่า',txt:`ตีสาม หน้าต่างห้องเปิดออกเงียบๆ ชายชุดดำถือมีดสั้นที่อาบพิษแบบโบราณ — ${P.foe?esc(P.foe):'ศัตรูเก่า'}ส่งมา`,foe:.8+Math.random(),
+  win:()=>mwSay('🌑 นักฆ่าหนีไปพร้อมแขนที่หัก ทิ้งมีดสั้นไว้หนึ่งเล่ม ด้ามสลักตราของตระกูลศัตรูเก่า','epic',{sec:4,joy:4}),lose:()=>mwSay('☠️ พิษในมีดทำให้คุณนอนซมสามเดือน ปราณที่สะสมไว้หายไปครึ่งหนึ่ง','bad',{qi:-Math.round((M.qi||0)/2),joy:-10})})}},
+ {id:'cb3',w:6,cd:6,c:M=>M.y>=2&&!!M.job,go(M){mwBattle(M,{t:'👊 แก๊งเก็บค่าคุ้มครอง',txt:'แก๊งวัยรุ่นห้าคนมาเก็บ "ค่าคุ้มครอง" จากที่ทำงานของคุณ คนเป็นหัวหน้าถือไม้เบสบอล',foe:.05+Math.random()*.1,pub:1,
+  win:(h)=>mwSay(h==='hide'?'🥋 คุณล้มทั้งห้าคนด้วยท่าที่ดูเหมือนบังเอิญลื่น เจ้านายคุณขึ้นเงินเดือนให้':'💥 ทั้งห้าคนวิ่งหนีโดยไม่เหลียวหลัง คลิปจากกล้องหน้าร้านถูกแชร์ทั้งย่าน','good',{joy:6,fame:h==='hide'?0:20000}),
+  lose:()=>mwSay('🤕 คุณออมมือมากเกินไปจนโดนตีหัว ต้องจ่ายค่าคุ้มครองไปหนึ่งเดือน','bad',{mon:-mwToB(MW_MIN[M.cc||'th']*.5,M)}),talk:()=>mwSay('🗣️ คุณคุยกับหัวหน้าแก๊งครึ่งชั่วโมง เขากลับไปพร้อมความคิดที่จะเลิกเก็บค่าคุ้มครอง — หรืออย่างน้อยก็เลิกเก็บที่นี่','good',{joy:4})})}},
+ {id:'cb4',w:7,cd:8,c:M=>M.sec>=60&&!M.fl.agency,go(M){mwBattle(M,{t:'🕴️ นักล่าผู้ฝึกตน',txt:'ทีมชุดดำสี่คนพร้อมปืนยิงตาข่ายไฟฟ้าล้อมคุณในลานจอดรถ "คุณถูกเชิญไปให้ข้อมูล — ด้วยความสมัครใจหรือไม่ก็ได้"',foe:.4+Math.random()*.6,
+  win:()=>mwSay('⚡ ตาข่ายไฟฟ้าทั้งสี่ลูกพลาดเป้า ทีมชุดดำถอยกลับไปรายงานว่า "เป้าหมายอันตรายกว่าที่ประเมิน"','epic',{sec:8}),lose:()=>{M.fl.agency=1;mwSay('🧷 คุณตื่นขึ้นในห้องสีขาว สามเดือนต่อมาคุณได้ออกมา พร้อมสัญญาจ้างที่ไม่มีทางเลือก','bad',{sec:-20,joy:-12})}})}},
+ {id:'cb5',w:4,cd:5,c:M=>M.y>=1,go(M){mwBattle(M,{t:'🔪 ถูกดักปล้นตอนดึก',txt:'คนถือมีดสองคนดักคุณในซอยเปลี่ยวตอนเดินกลับบ้าน "เอากระเป๋าตังค์มา"',foe:.03,
+  win:(h)=>mwSay(h==='hide'?'🥋 มีดหลุดจากมือทั้งสองคนพร้อมกัน พวกเขาวิ่งหนีโดยไม่เข้าใจว่าเกิดอะไรขึ้น':'💥 สองคนนั้นตื่นมาอีกทีในโรงพยาบาล จำอะไรไม่ได้นอกจากมือที่เร็วกว่าตาเห็น','',{joy:3}),
+  lose:()=>mwSay('💸 คุณยอมให้กระเป๋าไป เพราะออมมือจนพลาดโดนมีดเฉี่ยว','bad',{mon:-mwToB(MW_MIN[M.cc||'th']*.3,M)}),talk:()=>mwSay('🗣️ คุณยื่นเงินให้พวกเขาครึ่งหนึ่ง พร้อมเบอร์ศูนย์หางาน หนึ่งในนั้นร้องไห้','',{mon:-mwToB(MW_MIN[M.cc||'th']*.1,M),joy:4})})}},
+ {id:'cb6',w:4,cd:6,c:M=>M.y>=4&&(S.power||0)>200,go(M){const pr=MW_MIN[M.cc||'th']*6;choice('🥊 ไฟต์ใต้ดิน',`มีคนชวนไปชกรายการใต้ดิน เงินรางวัล ${mwLocal(pr,M)} ไม่มีกฎ ไม่มีกล้อง ไม่มีกรรมการ`,[
+  mwC('ไปชก',()=>mwBattle(M,{t:'🥊 เวทีใต้ดิน',txt:'คู่ชกเป็นอดีตทหารรับจ้างตัวใหญ่สองเท่าคุณ คนดูร้อยคนตะโกนลั่นโกดัง',foe:.1+Math.random()*.3,
+   win:()=>mwSay('💰 คุณชนะในสิบวินาที เจ้าของรายการขอให้มาชกทุกเดือน','epic',{mon:mwToB(pr,M),fame:5000,sec:3}),lose:()=>mwSay('🩹 คุณออมมือจนแพ้ ไม่ได้เงินสักบาท','bad',{joy:-5})})),
+  mwC('ไม่ไป',()=>mwSay('🚶 คุณไม่ไป ตำแหน่งนั้นมีคนอื่นไปแทน และถูกหามออกมา','',null))])}});
+// ---------- ปราณ: ใช้ความสามารถได้เอง (ปีละครั้งต่ออย่าง) ----------
+const MW_QA=[[1,'heal','💚 ปราณรักษา','รักษาคนป่วยหนักที่หมอยอมแพ้ (ปราณ −1.5 · ความลับรั่ว)'],[1,'sense','👁️ สัมผัสปราณ','ออกตามหาหินปราณหรือจุดพลัง (ปราณ −0.5)'],[2,'calm','🧘 สงบจิต','ล้างความเครียดทั้งปี (ปราณ −1)'],[3,'hide','🌫️ ซ่อนตัวตน','ลบร่องรอยตัวเองออกจากผู้คน (ปราณ −2 · ความลับรั่ว −15)'],[4,'awaken','✨ ปลุกปราณให้ศิษย์','เปิดชีพจรให้คนที่มีพรสวรรค์ (ปราณ −4 · ได้ศิษย์)'],[5,'peak','⚔️ คืนพลังยอดฝีมือหนึ่งวัน','ใช้พลังเต็มที่หนึ่งวัน (ปราณ −10)']];
+function openQiMW(){const M=S.mw;if(!M)return;const lv=mwQi(M),used=(M.qa&&M.qa.y===M.y)?M.qa.u:{};
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌀 ปราณ: ${MW_QR[lv][1]} (${M.qi})</h3><p class="tag2">${MW_QR.slice(1).map((r,i)=>`${lv>=i+1?'✅':'⬜'} ${r[1]} (${r[0]})`).join(' · ')}</p><div class="jobL">${MW_QA.map(a=>{const ok=lv>=a[0],u=used[a[1]];return `<div class="jobC"><b>${a[2]}</b><div class="tag2">${a[3]}</div>${!ok?`<div class="jobX">🔒 ต้องถึงขั้น ${MW_QR[a[0]][1]}</div>`:u?'<div class="tag2">✅ ใช้แล้วปีนี้</div>':`<button class="gbtn jobA" onclick="mwQA('${a[1]}')">ใช้</button>`}</div>`}).join('')}</div>`,'qimw')}
+function mwQA(k){const M=S.mw;M.qa=M.qa&&M.qa.y===M.y?M.qa:{y:M.y,u:{}};M.qa.u[k]=1;closeM();
+ if(k==='heal'){mwSay(`💚 เด็กหญิงที่หมอบอกว่าจะไม่ฟื้นลืมตาขึ้นหลังคุณกุมมือไว้ห้านาที พ่อแม่ของเธอคุกเข่าขอบคุณ — เรื่องนี้ไปถึงหูคนที่ไม่ควรรู้`,'myth',{qi:-1.5,sec:8,joy:12,fame:15000},true)}
+ else if(k==='sense'){if(Math.random()<.45){M.stones=(M.stones||0)+1;mwSay('👁️ คุณตามปราณจางๆ ไปจนเจอหินปราณก้อนเล็กฝังอยู่ใต้รากต้นไทรเก่า','epic',{qi:-.5})}else if(!M.fl.ley&&Math.random()<.5){M.fl.ley=1;mwSay('📍 คุณสัมผัสได้ถึงจุดพลังใต้สวนสาธารณะ — ที่ใหม่สำหรับนั่งสมาธิทุกคืน','epic',{qi:-.5})}else mwSay('👁️ คุณเดินตามปราณทั้งคืน เจอแค่แมวจรที่ปราณแรงผิดปกติ','',{qi:-.5,joy:2})}
+ else if(k==='calm'){S.happy=Math.max(S.happy||50,70);mwSay('🧘 คุณหลับตาสามวันสามคืน ความเครียดของทั้งปีละลายหายไป','good',{qi:-1})}
+ else if(k==='hide'){mwSay('🌫️ คนที่เคยเห็นคุณทำเรื่องประหลาดเริ่มจำหน้าคุณไม่ได้ทีละคน คลิปเก่าๆ ดูเบลอลงอย่างอธิบายไม่ได้','epic',{qi:-2,sec:-15})}
+ else if(k==='awaken'){M.dis=(M.dis||0)+1;mwSay('✨ คุณกดจุดเปิดชีพจรให้เด็กหนุ่มที่มีพรสวรรค์ เขาเห็นโลกเปลี่ยนสีเป็นครั้งแรก — ศิษย์คนใหม่ของคุณในยุคนี้','myth',{qi:-4,joy:8},true)}
+ else if(k==='peak'){const p=S.power;S.power=Math.max(S.power,M.past.pow0||S.power);setTimeout(()=>{if(S&&S.mw)S.power=p},50);mwSay('⚔️ หนึ่งวันที่คุณกลับมาเป็นยอดฝีมือเต็มตัว เมฆทั้งเมืองหมุนวนเหนือหัวคุณ นักอุตุนิยมวิทยาทั้งประเทศงงกับพายุที่ไม่มีที่มา','myth',{qi:-10,sec:10,joy:15},true)}
+ render();saveGame()}
+// ---------- โลกเปลี่ยนตามเวลา ----------
+const MW_WT=[[2031,'wt1','🤖 AI ผู้ช่วยมีอยู่ในทุกบ้าน มันตอบทุกคำถามได้ ยกเว้นคำถามของคุณว่า "ยุทธภพยังอยู่ไหม"',M=>mwFx({adapt:3})],
+ [2034,'wt2','🛵 หุ่นยนต์ส่งอาหารเริ่มวิ่งเต็มเมือง ค่ารอบของไรเดอร์ลดลงทั่วประเทศ',M=>{M.fl.robo=1}],
+ [2038,'wt3','🚗 รถไร้คนขับวิ่งเกินครึ่งของรถบนถนน อุบัติเหตุลดลง แต่คุณยังสะดุ้งทุกครั้งที่เห็นรถวิ่งโดยไม่มีคน',M=>mwFx({adapt:2})],
+ [2042,'wt4','👵 สังคมสูงวัยเต็มรูปแบบ รัฐบาลประกาศลดเงินบำนาญลง ทุกคนต้องทำงานนานขึ้น',M=>{M.fl.penCut=1}],
+ [2046,'wt5','🌡️ คลื่นความร้อนทำลายสถิติทุกปี ช่วงหน้าร้อนคนทั้งเมืองออกจากบ้านเฉพาะกลางคืน',M=>{M.fl.heat=1}],
+ [2050,'wt6','🧠 AI ทำงานออฟฟิศแทนคนได้เกือบหมด บริษัทเลิกจ้างพนักงานครึ่งหนึ่ง',M=>{M.fl.aiOff=1}],
+ [2056,'wt7','🚀 ทัวร์อวกาศราคาเท่ารถยนต์หนึ่งคัน คุณมองดาวจากดาดฟ้าแล้วคิดว่าบนนั้นมีปราณไหม',M=>mwFx({joy:3})],
+ [2063,'wt8','🦾 คนรุ่นใหม่ฝังชิปในสมอง เรียนภาษาได้ในหนึ่งคืน — แต่ไม่มีชิปไหนสอนวิชาตัวเบาได้',M=>mwFx({adapt:-4})],
+ [2072,'wt9','🌏 โลกเงียบลง ประชากรลดลงเป็นครั้งแรกในรอบสองร้อยปี เมืองครึ่งหนึ่งว่างเปล่า ปราณในเมืองร้างหนาขึ้นอย่างประหลาด',M=>mwFx({qi:1})]];
+MW_WT.forEach(([yr,id,tx,fx])=>MW_R.push({id,w:30,cd:0,c:M=>MW_Y0+M.y>=yr,go(M){try{fx(M)}catch(e){}mwSay(`📰 <b>ค.ศ. ${MW_Y0+M.y}</b> — ${tx}`,'myth',null)}}));
+{const _jyW=mwJobYear;mwJobYear=function(M){const m0=S.money||0;const r=_jyW.apply(this,arguments);try{if(M.job){const d=(S.money||0)-m0;let cut=0,why='';if(M.fl.robo&&M.job.id==='rider'){cut=.25;why='หุ่นยนต์ส่งอาหารแย่งงาน'}if(M.fl.aiOff&&M.job.id==='office'){cut=.15;why='AI ทำงานแทนบางส่วน'}if(cut&&d>0){S.money-=Math.round(d*cut);addFeed('ev',`📉 รายได้ลดลง ${Math.round(cut*100)}% — ${why}`,'sum')}if(M.fl.aiOff&&M.job.id==='office'&&Math.random()<.08){M.job=null;log('📦 บริษัทเลิกจ้างคุณ — AI ทำงานในตำแหน่งนี้แทนแล้ว','bad',true)}}}catch(e){}return r}}
+{const _myW=mwYear;mwYear=function(){const r=_myW.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(M&&M.fl.heat&&mwQi(M)<3)S.hp=Math.max(10,S.hp-4)}catch(e){}return r}}
+// ---------- ภัยพิบัติตามประเทศ ----------
+const MW_DIS={jp:['🌋 แผ่นดินไหว 7.4','ตึกสั่นจนของในห้องหล่นทุกชิ้น อาคารเก่าฝั่งตรงข้ามถล่มลงครึ่งหลัง มีเสียงคนร้องอยู่ใต้ซาก'],tw:['🌋 แผ่นดินไหวที่ฮัวเหลียน','ทางหลวงริมผาถล่ม รถบัสนักท่องเที่ยวติดอยู่ในอุโมงค์ที่กำลังจะพัง'],th:['😷 ฝุ่น PM2.5 วิกฤต','ค่าฝุ่นเกินสามร้อยติดต่อกันหนึ่งเดือน โรงพยาบาลเต็มไปด้วยเด็กและคนแก่ที่หายใจไม่ออก'],us:['🔥 ไฟป่าลามถึงชานเมือง','ควันไฟปกคลุมทั้งเมืองจนท้องฟ้าเป็นสีส้ม บ้านพักคนชราชานเมืองยังอพยพไม่หมด'],cn:['🌊 น้ำท่วมใหญ่','แม่น้ำล้นตลิ่ง รถไฟใต้ดินสายหนึ่งน้ำทะลักเข้ามา มีผู้โดยสารติดอยู่ในขบวน'],kr:['🌡️ คลื่นความร้อนทุบสถิติ','อุณหภูมิเกินสี่สิบองศาสิบวันติดต่อกัน คนแก่ที่อยู่ห้องเดี่ยวใต้ดินล้มป่วยทั่วเมือง']};
+MW_R.push({id:'dis',w:5,cd:9,c:M=>M.y>=3,go(M){const D=MW_DIS[M.cc||'th'];choice(D[0],D[1],[
+ mwC('ใช้วิชาช่วยคนเต็มที่',()=>mwSay('🦸 คุณช่วยคนออกมาได้หลายสิบคนด้วยความเร็วและแรงที่ไม่ใช่มนุษย์ ภาพของคุณอยู่ในข่าวทุกช่อง หน่วยกู้ภัยตามหา "อาสาสมัครปริศนา"','epic',{sec:15,fame:200000,joy:12},true),{s:'ช่วยได้มาก · ความลับรั่วมาก'}),
+ mwC('ช่วยเงียบๆ เท่าที่คนปกติทำได้',()=>mwSay('🤝 คุณช่วยแบกของ ช่วยหาที่พัก ช่วยได้ไม่กี่คน แต่ไม่มีใครถามว่าคุณเป็นใคร','good',{joy:6,sec:1})),
+ ...((M.qi||0)>=3?[mwC('🌀 ใช้ปราณช่วยแบบไร้ร่องรอย (ปราณ −2)',()=>mwSay('🌫️ คุณเคลื่อนไหวเร็วจนกล้องจับได้แค่เงาเบลอ ช่วยคนได้มากโดยไม่มีใครเห็นหน้า','epic',{qi:-2,sec:4,joy:10}))]:[]),
+ mwC('ดูแลตัวเองและคนใกล้ตัวก่อน',()=>mwSay('🏠 คุณดูแลคนในบ้านและเพื่อนบ้านจนผ่านพ้นไป ข่าวรายงานยอดผู้เสียชีวิตทุกคืน','',{joy:-6}))])}});
+// ---------- คนรอบตัว: เพื่อนสนิท · เพื่อนร่วมงาน · เที่ยว · งานอดิเรก · โรคเรื้อรัง ----------
+MW_R.push(
+ {id:'fr1',w:7,cd:0,c:M=>M.y>=2&&!M.bf,go(M){const n=mwNm(M,0);M.bf={n,y:M.y};mwSay(`🤝 <b>${esc(n)}</b> — คนที่นั่งข้างคุณในร้านประจำมาครึ่งปี วันหนึ่งเขาแบ่งกับข้าวให้ ตั้งแต่นั้นคุณก็มีเพื่อนสนิทคนแรกในยุคนี้`,'good',{joy:8})}},
+ {id:'fr2',w:6,cd:0,c:M=>M.bf&&!M.bf.d&&M.y-M.bf.y>=3,go(M){const n=M.bf.n,v=MW_MIN[M.cc||'th']*4;choice('💸 เพื่อนขอยืมเงิน',`${esc(n)}ตกงานกะทันหัน ขอยืมเงิน ${mwLocal(v,M)} "สัญญาว่าจะคืนภายในปีนี้"`,[
+  mwC('ให้ยืม',()=>{const b=mwToB(v,M);if((S.money||0)<b)return mwSay('💸 คุณมีไม่พอ ให้ได้ครึ่งเดียว เขาขอบคุณจนน้ำตาซึม','',{mon:-Math.round(b/2),joy:2});S.money-=b;M.bf.debt=b;mwSay(`🤝 คุณโอนให้ทันที ${esc(n)}ส่งสติกเกอร์กอดมาสิบอัน`,'good',{joy:4})}),
+  mwC('ให้เลย ไม่ต้องคืน',()=>{const b=mwToB(v,M);if((S.money||0)<b)return mwSay('💸 เงินไม่พอ','',null);S.money-=b;M.bf.gift=1;mwSay(`🎁 ${esc(n)}เงียบไปนาน แล้วบอกว่า "ไม่มีใครเคยทำแบบนี้ให้ฉันเลย"`,'good',{joy:8})}),
+  mwC('ปฏิเสธ',()=>{M.bf.cold=1;mwSay(`😶 ${esc(n)}บอกว่าเข้าใจ แต่หลังจากนั้นก็นัดกินข้าวกันน้อยลง`,'',{joy:-4})})])}},
+ {id:'fr3',w:6,cd:0,c:M=>M.bf&&!M.bf.d&&!M.bf.cold&&M.y-M.bf.y>=6,go(M){const n=M.bf.n;choice('🤫 เพื่อนเห็นความลับ',`${esc(n)}เห็นคุณกระโดดจากชั้นห้าลงมายืนบนพื้นโดยไม่มีรอยขีดข่วน เขายืนอ้าปากค้าง`,[
+  mwC('เล่าความจริงทั้งหมด',()=>{M.bf.k=1;mwSay(`💬 ${esc(n)}ฟังจนจบ แล้วพูดประโยคเดียว "งั้นที่แกกินเผ็ดไม่เป็นก็เพราะยุคก่อนไม่มีพริกใช่ไหม" — ทั้งคู่หัวเราะจนน้ำตาไหล`,'myth',{joy:12,sec:2},true)}),
+  mwC('บอกว่าเขาตาฝาด',()=>mwSay(`🙄 ${esc(n)}ไม่เชื่อ แต่ไม่ถามต่อ มิตรภาพยังอยู่ แต่มีบางอย่างที่ไม่เหมือนเดิม`,'',{joy:-2}))])}},
+ {id:'fr4',w:5,cd:0,c:M=>M.bf&&!M.bf.d&&M.bf.debt&&M.y-M.bf.y>=5,go(M){const ok=Math.random()<.6;if(ok){S.money+=M.bf.debt;mwSay(`💵 ${esc(M.bf.n)}โอนเงินคืนครบพร้อมกล่องขนมหนึ่งกล่อง "ช้าไปหน่อย แต่ไม่เคยลืม"`,'good',{joy:6})}else mwSay(`🍂 ${esc(M.bf.n)}ไม่เคยคืนเงิน และเลิกติดต่อไปเฉยๆ`,'bad',{joy:-6});M.bf.debt=0}},
+ {id:'fr5',w:6,cd:0,c:M=>M.bf&&!M.bf.d&&S.age>=80,go(M){M.bf.d=1;mwSay(`🕯️ <b>${esc(M.bf.n)}</b>เพื่อนสนิทคนแรกในยุคนี้จากไปแล้ว ${M.bf.k?'เขาเป็นคนเดียวนอกครอบครัวที่รู้ว่าคุณเป็นใคร และไม่เคยบอกใครเลย':'เขาไม่เคยรู้ว่าคุณเป็นใคร แต่รู้ว่าคุณเป็นเพื่อนที่ดี'}`,'bad',{joy:-14},true)}},
+ {id:'cw1',w:5,cd:7,c:M=>!!M.job&&M.y>=3,go(M){const n=mwNm(M,0);choice('🏢 เพื่อนร่วมงาน',`<b>${esc(n)}</b> เพื่อนร่วมงานรุ่นน้อง แอบเอาผลงานของคุณไปเสนอหัวหน้าในชื่อตัวเอง`,[
+  mwC('เผชิญหน้าตรงๆ',()=>{if(M.job)M.job.perf=mwCl(M.job.perf+6,0,100);mwSay(`🗣️ คุณพูดต่อหน้าทุกคนในที่ประชุมอย่างใจเย็น ${esc(n)}หน้าแดงแล้วยอมรับ`,'good',{joy:3})}),
+  mwC('ปล่อยไป ผลงานจริงพิสูจน์ตัวเอง',()=>{if(M.job)M.job.perf=mwCl(M.job.perf-4,0,100);mwSay(`🍵 คุณไม่พูดอะไร สองปีต่อมา ${esc(n)}มาขอโทษ และกลายเป็นคนที่ช่วยคุณมากที่สุดในที่ทำงาน`,'',{joy:2})}),
+  mwC('สอนงานให้เขาจริงๆ',()=>{M.dis=(M.dis||0)+1;mwSay(`📚 คุณเรียก${esc(n)}มาสอนงานทีละขั้น — แบบเดียวกับที่สอนศิษย์ในยุทธภพ เขาเปลี่ยนไปเป็นคนละคน`,'good',{joy:6})})])}},
+ {id:'trv',w:5,cd:4,c:M=>M.y>=3&&S.age<88,go(M){const ks=Object.keys(MW_CC).filter(k=>k!==(M.cc||'th'));const pick=[];while(pick.length<3&&ks.length)pick.push(ks.splice(Math.floor(Math.random()*ks.length),1)[0]);const cost=MW_MIN[M.cc||'th']*2;
+  choice('✈️ เที่ยวต่างประเทศ',`วันหยุดยาวมาถึง ตั๋วเครื่องบินกับที่พักรวมราว ${mwLocal(cost,M)}${(M.id||0)<1?' · <b>แต่คุณไม่มีพาสปอร์ต</b>':''}`,[...pick.map(k=>mwC(`${MW_CC[k].f} ไป${MW_CC[k].city}`,()=>{if((M.id||0)<1)return mwSay('🛂 ไม่มีพาสปอร์ต ไปไหนไม่ได้ คุณดูวิดีโอเที่ยว'+MW_CC[k].city+'ในมือถือแทนทั้งคืน','',{joy:-2});if(M.id===1&&Math.random()<.15){mwFakeCaught(M);return}const b=mwToB(cost,M);if((S.money||0)<b)return mwSay('💸 เงินไม่พอ','',null);S.money-=b;M.vis=M.vis||{};M.vis[k]=1;mwSay(`${MW_CC[k].f} ห้าวันใน${MW_CC[k].city} ${ch(['คุณกินทุกอย่างที่ขวางหน้า','คุณนั่งดูผู้คนในสวนสาธารณะทั้งบ่าย','คุณหลงทางสามครั้งและไม่เสียใจเลยสักครั้ง','คุณเจอวัดเก่าที่ปราณแรงกว่าที่คาด'])}`,'good',{joy:12,adapt:3})})),mwC('อยู่บ้าน',()=>mwSay('🛋️ คุณนอนดูซีรีส์ทั้งวันหยุด ก็ดีเหมือนกัน','',{joy:3}))])}},
+ {id:'hob',w:5,cd:0,c:M=>M.y>=3&&!M.hob,go(M){const H=[['🎣','ตกปลา'],['♟️','หมากล้อม'],['🌱','ปลูกต้นไม้'],['🍳','ทำอาหาร'],['🎮','เล่นเกม'],['🖌️','เขียนพู่กันจีน']];const P=[];const L=H.slice();while(P.length<4)P.push(L.splice(Math.floor(Math.random()*L.length),1)[0]);
+  choice('🎨 งานอดิเรก','ชีวิตในยุคนี้มีเวลาว่างมากกว่าในยุทธภพ ที่ซึ่งทุกวันคือการฝึกและการเอาตัวรอด — คุณอยากลองทำอะไร',P.map(h=>mwC(`${h[0]} ${h[1]}`,()=>{M.hob={n:h[1],ic:h[0],y:M.y};mwSay(`${h[0]} คุณเริ่ม${h[1]} ${h[1]==='เล่นเกม'?'— เกมแรกที่เล่นคือเกมกำลังภายใน คุณบ่นว่าท่าไม่สมจริงทั้งคืน':h[1]==='หมากล้อม'?'— ในหนึ่งปีคุณชนะทุกคนในสวนสาธารณะ':h[1]==='เขียนพู่กันจีน'?'— ลายมือของคุณถูกถามว่า "ลอกมาจากพิพิธภัณฑ์ไหน"':'— ครั้งแรกในรอบหลายร้อยปีที่ทำอะไรสักอย่างโดยไม่มีเป้าหมาย'}`,'good',{joy:8})})))}},
+ {id:'hob2',w:4,cd:6,c:M=>M.hob&&M.y-M.hob.y>=3,go(M){const h=M.hob;mwSay(`${h.ic} ${ch([`คุณชนะการแข่งขัน${h.n}ระดับเมือง กรรมการถามว่าฝึกมากี่ปี คุณตอบว่า "${M.y-h.y} ปี" — ไม่นับเจ็ดร้อยปีก่อนหน้านั้น`,`มีเด็กข้างบ้านมาขอเรียน${h.n}กับคุณทุกเสาร์`,`${h.n}ทำให้คุณลืมนับปีไปหนึ่งปีเต็ม — เป็นปีที่สงบที่สุดตั้งแต่มาถึงยุคนี้`])}`,'good',{joy:6})}},
+ {id:'hc1',w:4,cd:0,c:M=>S.age>=55&&!M.chr&&mwQi(M)<3,go(M){const n=ch(['ความดันโลหิตสูง','เบาหวาน','ข้อเข่าเสื่อม']);M.chr={n,y:M.y};mwSay(`🩺 ผลตรวจประจำปี: <b>${n}</b> — หมอบอกว่าต้องรักษาต่อเนื่องไปตลอด ร่างกายในยุคนี้แก่ลงแบบคนธรรมดาจริงๆ`,'bad',{joy:-5})}},
+ {id:'hc2',w:4,cd:0,c:M=>M.chr&&S.age>=72&&!M.chr.big,go(M){M.chr.big=1;mwSay(`🚑 ${mwMedBill(M,MW_MIN[M.cc||'th']*8,`อาการของ${M.chr.n}กำเริบหนัก ต้องผ่าตัดด่วน`)}`,'bad',{joy:-8});S.hp=Math.max(10,Math.round(S.hp*.5))}});
+{const _plH=mwPayLife;mwPayLife=function(M){const r=_plH.apply(this,arguments);try{if(M.chr){if(mwQi(M)>=3){addFeed('ev',`🌀 ปราณวงจรใหญ่ชำระร่างกาย — อาการ${M.chr.n}หายไปจนหมอประหลาดใจ`,'sum');M.chr=null}else{const v=MW_MIN[M.cc||'th']*((M.ast||{}).ins?.3:1.5);S.money=Math.max(0,(S.money||0)-mwToB(v,M));addFeed('ev',`💊 ค่ารักษา${M.chr.n}ทั้งปี ${mwLocal(v,M)}${(M.ast||{}).ins?' (ประกันช่วยจ่าย)':''}`,'sum')}}
+ if(M.fl.penCut&&M.retired)S.money=Math.max(0,(S.money||0)-mwToB(MW_MIN[M.cc||'th']*.35*12*.2,M))}catch(e){}return r}}
+MW_CHAIN.push('fr2','fr3','fr4','fr5','hc2','id1');
+// ---------- ตัวเลือกเสริมตามสถานการณ์ (ให้ตัวเลือกหลากหลายขึ้น) ----------
+const MW_XO=[
+ [M=>(M.qi||0)>=3,'🌀','ใช้ปราณช่วย',M=>({qi:-1,joy:3}),'ปราณ −1 · ทำได้ดีขึ้น'],
+ [M=>(S.money||0)>=mwToB(MW_MIN[M.cc||'th']*3,M),'💵','ใช้เงินแก้ปัญหา',M=>({mon:-mwToB(MW_MIN[M.cc||'th']*.8,M),sec:-3}),'เสียเงิน · เรื่องเงียบกว่า'],
+ [M=>M.linMet&&M.lin>=40,'📱','ปรึกษาหลินก่อน',M=>({sec:-3,lin:2}),'ความลับรั่วน้อยลง'],
+ [M=>(M.id||0)===3,'🪪','อ้างบัตรหน่วยลับ',M=>({sec:-5}),'ไม่มีใครกล้าถามต่อ'],
+ [M=>M.bf&&!M.bf.d&&!M.bf.cold,'🤝','ชวนเพื่อนสนิทไปด้วย',M=>({joy:4}),'สนุกขึ้น'],
+ [M=>M.sp&&!M.sp.d,'💍','ปรึกษาคู่ชีวิตก่อน',M=>({joy:3,sec:-2}),'ใจเย็นลง'],
+ [M=>M.adapt>=70,'🧠','ใช้ความรู้ยุคใหม่',M=>({adapt:2,sec:-2}),'ทำแบบคนยุคนี้'],
+ [M=>(M.fame||0)>=300000,'📣','ใช้ชื่อเสียงช่วย',M=>({fame:20000,sec:2}),'คนรู้จักคุณ']];
+{const _chXO=choice;choice=function(title,text,opts){try{if(mwOn()&&Array.isArray(opts)&&opts.length>=2&&opts.length<=4&&!opts.some(o=>o&&o._xo)&&Math.random()<.5){const M=S.mw,main=opts.find(o=>o&&!o.skip&&typeof o.f==='function');const L=MW_XO.filter(x=>{try{return x[0](M)}catch(e){return false}});
+ if(main&&L.length){const x=ch(L),mt=mwTxt(main.t).replace(/^[^\wก-๙"]+/,'').slice(0,28);opts=opts.concat([{_xo:1,t:`${x[1]} ${x[2]}: "${mt}"`,s:x[4],f(){main.f();setTimeout(()=>{if(S&&S.mw){const fx=x[3](S.mw);mwFx(fx);addFeed('ev',`${x[1]} ${x[2]} — ผลดีขึ้นกว่าปกติ`,'sum')}},60)}}])}}}catch(e){console.error(e)}return _chXO.call(this,title,text,opts)};for(const k of Object.keys(_chXO))try{choice[k]=_chXO[k]}catch(e){}}
+// ---------- เมนูในยุคปัจจุบัน: เอาของยุทธภพออก เพิ่มของยุคนี้ ----------
+const MW_HIDE=/^(openAdvice|openTown|openMarket|openArts|openEquip|openQuests|openDungeons|gachaArt|openRealm|openFaction|openCraft|openBeastComp|openMap|relMenu|openHouse|openFamily|openPeople|openPeers|openRanking|openBestiary|openBury)\(/;
+function openPeopleMW(){const M=S.mw,C=mwCC(),R=[];if(M.linMet)R.push(['🧒',C.lin,`ความผูกพัน ${M.lin}/100`]);if(M.sp)R.push(['💍',M.sp.n,M.sp.d?'จากไปแล้ว':M.sp.k?'คู่ชีวิต · รู้ความลับ':'คู่ชีวิต']);if(M.dt)R.push(['💞',M.dt.n,'กำลังคบหา']);(M.kids||[]).forEach(k=>R.push(['👶',k.n,`ลูก · อายุ ${M.y-k.b} ปี${k.qi?' · มีปราณ':''}`]));
+ if(M.bf)R.push(['🤝',M.bf.n,M.bf.d?'จากไปแล้ว':M.bf.k?'เพื่อนสนิท · รู้ความลับ':'เพื่อนสนิท']);if(M.fl.pa)R.push(['🍜',mwLoc('ป้าแดง'),M.seen&&M.rs&&M.rs.pa2!=null?'จากไปแล้ว':'ร้านประจำ']);if(M.fl.som)R.push(['👮',mwLoc('จ่าสมชาย'),M.rs&&M.rs.som2!=null?'จากไปแล้ว':M.fl.somF?'เพื่อนฟังตำนาน':'คนรู้จัก']);if(M.par)R.push(['🕯️',M.par.n,'พ่อ/แม่ (คนหลงยุค)']);if(M.fl.sectN)R.push(['🏯',M.fl.sectN,M.fl.sect==='elder'?'คุณคือปรมาจารย์':'สำนักของคุณในอดีต']);(Array.isArray(M.fr)?M.fr:[]).forEach(n=>R.push(['🔗',n,'คนจากยุทธภพอีกคน']));R.push(['🥋','ศิษย์ในยุคนี้',`${M.dis||0} คน`]);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👥 คนรอบตัว</h3><div class="jobL">${R.map(r=>`<div class="jobC"><b>${r[0]} ${esc(r[1])}</b><div class="tag2">${r[2]}</div></div>`).join('')}</div>`,'peoplemw')}
+function openIdMW(){const M=S.mw,id=M.id||0;modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🪪 เอกสารตัวตน</h3><p><b>${MW_IDN[id]}</b>${M.idP?` · กำลังรอผลยื่นเรื่อง (อีก ${Math.max(0,M.idP-M.y)} ปี)`:''}</p><p class="tag2">${['ทำงานประจำ เปิดบัญชี ซื้อบ้าน/รถ ทำประกัน และเดินทางต่างประเทศไม่ได้','ใช้ได้เกือบทุกอย่าง แต่มีโอกาสถูกตรวจพบทุกปี และกู้ซื้อบ้านไม่ได้','ทำได้ทุกอย่างตามกฎหมาย','ทำได้ทุกอย่าง และไม่มีใครกล้าตรวจสอบ — แต่หน่วยลับรู้ทุกการเคลื่อนไหว'][id]}</p><p class="tag2">ประเทศที่เคยไป: ${Object.keys(M.vis||{}).map(k=>MW_CC[k].f).join(' ')}</p>`,'idmw')}
+{const _omMW=openMenu;openMenu=function(){const r=_omMW.apply(this,arguments);try{if(!mwOn())return r;const gd=$('modal').querySelector('.mgrid');if(!gd)return r;
+ $('modal').querySelectorAll('.mgrid').forEach(g=>{[...g.querySelectorAll('button.opt')].forEach(b=>{if(MW_HIDE.test(b.getAttribute('onclick')||''))b.remove()});if(g!==gd&&!g.querySelector('button')){const p=g.previousElementSibling;if(p&&!p.matches('.mgrid,button'))p.style.display='none';g.style.display='none'}});
+ if(!gd.querySelector('.mwMB')){const M=S.mw,J=mwJobOf(M),g=(M.goals||[]).filter(x=>x.d).length;
+  gd.insertAdjacentHTML('afterbegin',`<button class="opt mwMB" onclick="openJobs()">💼 งาน<small>${J?esc(mwTxt(mwJP(J,M)[0])):'ยังไม่มีงานประจำ'}</small></button><button class="opt mwMB" onclick="openAssets()">🏠 บ้านและทรัพย์สิน<small>${mwLocal((S.money||0)*mwCC().rate,M)}</small></button><button class="opt mwMB" onclick="openGoals()">🎯 เป้าหมาย<small>${g}/${(M.goals||[]).length} สำเร็จ</small></button><button class="opt mwMB" onclick="openQiMW()">🌀 ปราณ<small>${MW_QR[mwQi(M)][1]}</small></button><button class="opt mwMB" onclick="openPeopleMW()">👥 คนรอบตัว<small>ครอบครัว เพื่อน ศิษย์</small></button><button class="opt mwMB" onclick="openIdMW()">🪪 เอกสารตัวตน<small>${MW_IDN[M.id||0]}</small></button>`)}}catch(e){console.error(e)}return r}}
+// ปุ่มล่าง: 🎒 กระเป๋า → 🏠 ทรัพย์สิน · 📋 เควส → 🎯 เป้าหมาย (เฉพาะยุคปัจจุบัน)
+{const _rnMB=render;render=function(){const r=_rnMB.apply(this,arguments);try{const on=mwOn();[['openBag()','🏠','openAssets()'],['openQuests()','🎯','openGoals()']].forEach(([o,ic,n])=>{const b=document.querySelector(`#game button[data-mwo="${o}"]`)||document.querySelector(`#game button[onclick="${o}"]`);if(!b)return;if(on){if(!b.dataset.mwo){b.dataset.mwo=o;b.dataset.mwt=b.innerHTML}b.setAttribute('onclick',n);b.innerHTML=ic}else if(b.dataset.mwo){b.setAttribute('onclick',b.dataset.mwo);b.innerHTML=b.dataset.mwt;delete b.dataset.mwo}})}catch(e){}return r}}
+// HUD: เป้าหมาย + เอกสาร
+{const _rnG=render;render=function(){const r=_rnG.apply(this,arguments);try{if(mwOn()){const h=$('mwHud');if(h&&!h.querySelector('.mwGoalR')){const M=S.mw,g=(M.goals||[]).filter(x=>x.d).length;h.insertAdjacentHTML('beforeend',`<div class="mwJob mwGoalR">🎯 เป้าหมาย ${g}/${(M.goals||[]).length} · 🪪 ${MW_IDN[M.id||0]} <button class="gbtn mwJobB" onclick="openGoals()">ดู</button></div>`)}}}catch(e){}return r}}
+
 </script>
 </body>
 </html>
