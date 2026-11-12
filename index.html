@@ -2776,7 +2776,7 @@ function peerLifeTick(){if(S.age<18||Math.random()>.09)return false;
  log(`👥 ${p.name} ${rel} มีลูกคนแรกแล้ว`);return false}
 // ---- 11. ทัณฑ์สวรรค์ / เหาะเป็นเซียน ----
 function ascendTick(){if(realmIdx()<7||S.flags.ascendNo>=2||S.age<20||Math.random()>.25)return false;if(S.xt&&postLv()<RS_MAX)return false;const toX=!S.xian;
- choice('⚡ ทัณฑ์สวรรค์','เมฆดำก่อตัวเหนือศีรษะ สายฟ้าสีม่วงคำรามไม่หยุด — ร่างกายของคุณถึงขีดสุดของ'+(S.xt?'ทุกชั้นแห่งโลกเทพ (นิรันดร์ขั้นเก้า)':S.xian?'โลกเซียน':'โลกมนุษย์')+'แล้ว<br>'+(toX?'ฝ่าทัณฑ์สวรรค์ 3 ระลอกได้ จะ<b>เหาะขึ้นสู่โลกเทพเซียน</b> แล้วเล่นต่อในโลกใหม่ · ล้มเหลว อาจตาย':S.xt?'ฝ่าทัณฑ์สวรรค์ 3 ระลอกได้ จะ<b>ก้าวข้ามสามภพ</b> — ปิดตำนานชีวิตนี้ (ตอนจบสูงสุด) · ไม่ฝ่าก็เล่นต่อได้ตามปกติ':'ฝ่าทัณฑ์สวรรค์ 3 ระลอกได้ จะ<b>ขึ้นสู่โลกเทพ</b> · ล้มเหลว อาจตาย'),[
+ choice('⚡ ทัณฑ์สวรรค์','เมฆดำก่อตัวเหนือศีรษะ สายฟ้าสีม่วงคำรามไม่หยุด — ร่างกายของคุณถึงขีดสุดของ'+(S.xt?'ทุกชั้นแห่งโลกเทพ (นิรันดร์ขั้นเก้า)':S.xian?'โลกเซียน':'โลกมนุษย์')+'แล้ว<br>'+(toX?'ฝ่าทัณฑ์สวรรค์ 3 ระลอกได้ จะ<b>เหาะขึ้นสู่โลกเทพเซียน</b> แล้วเล่นต่อในโลกใหม่ · ล้มเหลว อาจตาย<br><span class="tag2">⚠️ ขึ้นไปแล้ว พลัง ลมปราณ และวิชาจะถูก<b>หลอมใหม่</b>ให้เข้ากับฟ้าดินเซียน (เริ่มที่ขั้นต้นของโลกเซียน) — ยิ่งแกร่งในโลกมนุษย์ ยิ่งได้<b>มรดก</b>ติดไปมาก · สำนักและคู่ชีวิตไม่ตามขึ้นไป · ชื่อเสียงยังอยู่</span>':S.xt?'ฝ่าทัณฑ์สวรรค์ 3 ระลอกได้ จะ<b>ก้าวข้ามสามภพ</b> — ปิดตำนานชีวิตนี้ (ตอนจบสูงสุด) · ไม่ฝ่าก็เล่นต่อได้ตามปกติ':'ฝ่าทัณฑ์สวรรค์ 3 ระลอกได้ จะ<b>ขึ้นสู่โลกเทพ</b> · ล้มเหลว อาจตาย'),[
   {t:'⚡ ฝ่าทัณฑ์สวรรค์',s:toX?'ไปต่อในโลกเทพเซียน':S.xt?'ตอนจบสูงสุด':'ไปต่อในโลกเทพ',f(){ascendWave(1)}},
   {t:S.xt?'🌏 ยังไม่ก้าวข้าม ใช้ชีวิตต่อ':S.xian?'🌏 อยู่ในโลกเซียนต่อ':'🌏 อยู่ปกป้องโลกมนุษย์ต่อ',skip:true,f(){S.flags.ascendNo=(S.flags.ascendNo||0)+1;S.karma+=5;log('คุณกดเมฆทัณฑ์ให้สลายไป "ข้ายังมีคนที่ต้องดูแลอยู่ที่นี่"','epic')}}]);return true}
 function ascendWave(n){const W=['อัสนีเก้าสาย','เพลิงสวรรค์เผาจิต','มารในใจครั้งสุดท้าย'];
@@ -14344,6 +14344,18 @@ const nb=(k,i)=>` <button onclick="nameAsk('${k}',${i})" style="font-size:12px;p
    try{const gOf={};ACH.forEach(([g,L])=>L.forEach(a=>{gOf[a.id]=g}));ACH_ALL.forEach(a=>add({t:a.n,r:a.r,k:'a',g:gOf[a.id]||'🏆 สมุดตำนาน',tab:'a'}))}catch(e){}
    const seen=new Set();return out.filter(x=>{const k=x.t+'|'+x.k;if(seen.has(k))return false;seen.add(k);return true})}catch(e){console.error(e);return out}}}
  {const _op=openShowPick;openShowPick=function(){const r=_op.apply(this,arguments);try{if(!isA())return r;const m=$('modal');const h=m.querySelector('h3');if(h&&!m.querySelector('.sp2adm'))h.insertAdjacentHTML('afterend','<p class="sp2adm tag2" style="color:#ff8fd0">👑 โหมดแอดมิน — ใช้ฉายาได้ทุกอัน รวมฉายาอันดับ ฉายาแลก และฉายาอีเวนต์</p>')}catch(e){}return r}}
+}
+
+// ===== มรดกโลกมนุษย์ตอนเหาะสู่โลกเซียน (ยิ่งแกร่งยิ่งได้มาก) + ชดเชยคนที่ขึ้นไปแล้ว =====
+{const legOf=r=>Math.min(1.6,.35*Math.log2(Math.max(1,r)+1));
+ function ascLeg(r,comp){const k=legOf(r),pw=Math.round(XP[2]*k),q=+(Math.min(60,4+6*Math.log2(Math.max(1,r)+1))).toFixed(1),hp=Math.round(40*k);
+  S.power+=pw;S.qi=+((S.qi||0)+q).toFixed(1);S.maxHp+=hp;S.hp=Math.min(S.maxHp,(S.hp||0)+hp);S.flags.ascLeg=1;
+  log(`🌄 <b>มรดกจากโลกมนุษย์</b>${comp?' (ชดเชยย้อนหลัง)':''} — รากฐานที่สั่งสมมาไม่ได้หายไปไหน แค่ต้องหลอมใหม่ให้เข้ากับฟ้าดินเซียน · พลังยุทธ์ +${fmt(pw)} · ลมปราณ +${q} · พลังชีวิตสูงสุด +${hp}`,'myth',true)}
+ {const _ax=ascendToX;ascendToX=function(){let r=1;try{const top=(W0&&W0.rp&&W0.rp[7])||REALMS[7].p;r=total()/Math.max(1,top)}catch(e){}const out=_ax.apply(this,arguments);try{if(S&&!S.flags.ascLeg)ascLeg(r)}catch(e){console.error(e)}return out}}
+ const comp=()=>{try{if(S&&S.alive&&S.xian&&S.flags&&S.flags.toXian&&!S.flags.ascLeg&&!S.xt){const bm=!!S.beastMode||!!S.flags.transformed;ascLeg(bm?12:5,1);try{saveGame()}catch(e){}}}catch(e){}};
+ {const _lg=loadGame;loadGame=function(){const r=_lg.apply(this,arguments);setTimeout(comp,800);return r}}
+ {const _py=passYear;passYear=function(){comp();return _py.apply(this,arguments)}}
+
 }
 
 </script>
