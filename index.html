@@ -6276,13 +6276,14 @@ try{Object.assign(I18N.d,{'ก่อนเกิดใหม่':'Before rebirth
 
 // ---------- v9.1 ระดับขั้นย่อย · ชั้นเหนือขั้นสูงสุด · ธาตุไฟเข้าแทรก ----------
 const RS_SUB=['ระดับต่ำ','ระดับกลาง','ระดับสูง','ใกล้เลื่อนขั้น','สมบูรณ์'],RS_PFX=['เทพ','ราชา','บรรพกาล','ราชัน','นิรันดร์'],RS_G=1.27,RS_MAX=44;
+function rsG(){try{return S&&S.xian&&!S.xt?1.15:RS_G}catch(e){return RS_G}}
 function rsPF(L){const pf=RS_PFX[Math.max(0,Math.min(RS_PFX.length-1,Math.floor(L/9)))]||'',n=REALMS[7].n||'';return n.startsWith(pf)?'มหา':pf}
 function rsPN(L){return rsPF(L)+REALMS[7].n}
-function postP(L){return REALMS[7].p*Math.pow(RS_G,L+1)}
-function postRaw(){const top=REALMS[7].p,p=total();if(p<postP(0))return -1;return Math.min(RS_MAX,Math.floor(Math.log(p/top)/Math.log(RS_G))-1)}
+function postP(L){return REALMS[7].p*Math.pow(rsG(),L+1)}
+function postRaw(){const top=REALMS[7].p,p=total();if(p<postP(0))return -1;return Math.min(RS_MAX,Math.floor(Math.log(p/top)/Math.log(rsG()))-1)}
 function postLv(){if(!S||(S.beastMode&&!S.beastMode.human)||realmIdx()<7||S.pcap==null)return -1;return Math.min(postRaw(),S.pcap)}
 function realmSub(){if(!S)return 0;const ri=realmIdx(),p=total();let lo,hi,blocked;
- if(ri<7){blocked=rawRealm()>ri;lo=REALMS[ri].p;hi=REALMS[ri+1].p}else{const L=postLv();blocked=postRaw()>L&&L<RS_MAX;lo=L<0?REALMS[7].p:postP(L);hi=L>=RS_MAX?lo*RS_G:postP(L+1)}
+ if(ri<7){blocked=rawRealm()>ri;lo=REALMS[ri].p;hi=REALMS[ri+1].p}else{const L=postLv();blocked=postRaw()>L&&L<RS_MAX;lo=L<0?REALMS[7].p:postP(L);hi=L>=RS_MAX?lo*rsG():postP(L+1)}
  if(blocked)return 4;const f=(p-lo)/Math.max(1,hi-lo);return f<.3?0:f<.6?1:f<.88?2:3}
 function realmLabel(){const ri=realmIdx(),L=postLv();const mx=L>=RS_MAX;return{base:L>=0?`${rsPN(L)} ขั้น ${L%9+1}`:REALMS[ri].n,sub:mx?'จุดสูงสุด':RS_SUB[realmSub()],si:mx?4:realmSub(),L,tier:L>=0?Math.floor(L/9):-1}}
 function realmNext(){const ri=realmIdx();if(ri<7)return REALMS[ri+1].p;const L=postLv();return L>=RS_MAX?null:postP(L+1)}
@@ -14830,6 +14831,17 @@ function relWide(c,o,k,T,lk,col,sc,RP,beast){const ch=k>=T.intro&&k<T.after?Math
 function relMidBG(c,pre,k,sc,col,RP){c.drawImage(pre,0,0,64,36,0,0,PXW,PXH);c.globalAlpha=.38;c.fillStyle='#0a0614';c.fillRect(0,0,PXW,PXH);c.globalAlpha=1;
  if(RP.fl){for(let i=0;i<14;i++){const y=(i*29+k*110)%(PXH+20)-10,x=(i*47)%PXW;c.globalAlpha=.35;c.fillStyle='#ffffff';c.fillRect(x,y,18+(i%4)*6,2);c.globalAlpha=1}}
  else{c.globalAlpha=.25;c.fillStyle=col[1];for(let i=0;i<10;i++){const y=(i*11+Math.floor(k*40)*3)%PXH;c.fillRect(70+((i*37)%80),y,12+(i%5)*4,1)}c.globalAlpha=1}}
+
+// ===================== v16.6 รากฐานพันปี: เงื่อนไขขึ้นโลกเทพ =====================
+{const need=()=>S&&S.ch==='short'?{y:300,a:400}:S&&S.ch==='hell'?{y:500,a:700}:{y:800,a:1000};
+ const xYrs=()=>{if(!S||!S.xian)return 0;if(S.xAge==null)S.xAge=Math.max(0,S.age-200);return S.age-S.xAge};
+ window.godReady=()=>{if(!S||!S.xian||S.xt)return{ok:true};const n=need(),y=xYrs(),tOK=y>=n.y||S.age>=n.a,pl=postLv(),pOK=pl>=8;return{ok:tOK&&pOK,tOK,pOK,left:Math.max(0,Math.min(n.y-y,n.a-S.age)),pl,n}};
+ {const _ax=ascendToX;ascendToX=function(){const r=_ax.apply(this,arguments);try{if(S&&S.xian)S.xAge=S.age}catch(e){}return r}}
+ // อายุขัยโลกเซียน: ขั้นเหนือขีดจำกัดแต่ละขั้น +70 ปี (ให้รากฐานพันปีทำได้จริง)
+ {const _lm=lifeMax0;lifeMax0=function(){const v=_lm.apply(this,arguments);try{if(S&&S.xian&&!S.xt&&!(S.beastMode&&!S.beastMode.human)){const pl=postLv();if(realmIdx()>=7)return v+300+100*Math.min(9,Math.max(0,pl+1))}}catch(e){}return v}}
+ {const _at=ascendTick;ascendTick=function(){try{if(S&&S.xian&&!S.xt&&realmIdx()>=7){const g=godReady();if(!g.ok){if(!S._gqY||S.age-S._gqY>=50){S._gqY=S.age;addFeed('ev',`☁️ ทัณฑ์สวรรค์สู่โลกเทพยังไม่มา — ${!g.pOK?`ต้องผ่าน<b>เหนือขีดจำกัดของโลกเซียนให้ครบขั้น 9</b> (ตอนนี้ ${g.pl<0?'ยังไม่เริ่ม':'ขั้น '+(g.pl%9+1)})`:''}${!g.pOK&&!g.tOK?' และ ':''}${!g.tOK?`ฟ้ายังไม่ยอมรับ — <b>รากฐานเซียนต้องหยั่งลึก ${g.n.y} ปีในโลกเซียน</b> หรืออายุ ${fmt(g.n.a)} ปี (เหลืออีก ${fmt(g.left)} ปี)`:''}`,'sum')}return false}}}catch(e){}return _at.apply(this,arguments)}}
+ try{SYS_GUIDE.push({s:'world',nw:1,ic:'☁️',t:'รากฐานพันปี — ขึ้นโลกเทพ',d:'จะขึ้นโลกเทพได้ต้อง <b>1)</b> ผ่านเหนือขีดจำกัดของโลกเซียนครบขั้น 9 และ <b>2)</b> อยู่ในโลกเซียนครบ 800 ปี หรืออายุรวม 1,000 ปี (ชีวิตสั้น 300/400 · นรก 500/700) · ถึงขั้นสุดท้ายของโลกเซียนอายุขัย +300 ปี และขั้นเหนือขีดจำกัดแต่ละขั้น +100 ปี',te:'Thousand-year foundation',de:'To ascend to the god realm: clear xian beyond-limit stage 9 and spend 800 years in the xian world (or reach age 1000).'})}catch(e){}
+}
 
 </script>
 </body>
