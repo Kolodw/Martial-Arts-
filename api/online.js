@@ -1212,7 +1212,9 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const e = { n: clean(b.n, 20) || 'นิรนาม', s: Math.max(0, Math.min(1e12, +b.s || 0)), age: +b.age || 0, r: clean(b.r, 30), f: clean(b.f, 30), c: clean(b.c, 60), x: b.x ? 1 : 0, g: b.g ? 1 : 0, ga: Math.max(0, Math.min(1e9, Math.round(+b.ga || 0))), ...(b.tp ? { tt: '', tr: 0 } : ttlOk(b.tt)), xa: Math.max(0, Math.min(1e9, Math.round(+b.xa || 0))), cu: b.cu ? 1 : 0, bm: b.bm ? 1 : 0, kl: Math.max(0, Math.min(9, Math.floor(+b.kl || 0))), t: now, lid };
       { const c0 = String(b.ch || ''); if (CH_OK.includes(c0) && !(c0 === 'short' && e.age > 31)) e.ch = c0 }
       try { e.s = bdScore(JSON.parse(String(b.det || '{}')), e) } catch { e.s = 0 }
-      let ejC = null; if (e.ch === 'short') { try { ejC = JSON.stringify(Object.assign({}, e, { s: bdScoreShort(JSON.parse(String(b.det || '{}')), e), sp: 1 })) } catch {} }
+      if (e.ch === 'hell') { const hl = Math.max(0, Math.min(18, Math.floor(+b.hl || 0))); e.hl = (+e.age || 0) >= 16 + 6 * Math.max(0, hl - 1) || hl === 0 ? hl : 0 }
+      let ejC = null; if (e.ch === 'hell') { try { ejC = JSON.stringify(Object.assign({}, e, { s: (e.hl || 0) * 200000 + bdScore(JSON.parse(String(b.det || '{}')), e), hd: 1 })) } catch {} }
+      if (e.ch === 'short') { try { ejC = JSON.stringify(Object.assign({}, e, { s: bdScoreShort(JSON.parse(String(b.det || '{}')), e), sp: 1 })) } catch {} }
       const cat = bdCat(e), ej = JSON.stringify(e), L = [['INCR', 'lives']];
       for (const cc of e.ch ? [cat, 'c'] : [cat]) { const useC = cc === 'c' && ejC, sv = useC ? JSON.parse(ejC).s : e.s, jj = useC ? ejC : ej; for (const [kk, ex] of [[bdKey(cc, now), 4], [bdKeyW(cc, now), 20], [bdKeyM(cc, now), 70]]) L.push(['ZADD', kk, sv, jj], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]) }
       await bdSettle();
