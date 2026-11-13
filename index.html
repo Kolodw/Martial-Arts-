@@ -19936,17 +19936,21 @@ function bxGroups(m){const out=[];[m,...m.querySelectorAll('*')].forEach(c=>{if(
  let on=B.filter(bxIsOn);if(on.length===1&&!c.matches('.stbar .brow')){const f=on[0].classList[0];if(f&&f!=='on'&&f!=='sel')B=B.filter(x=>x.classList.contains(f));if(B.length<2)return}if(c.matches('.stbar .brow')){on=B.filter(b=>b.classList.contains('pbtn'))}if(on.length!==1)return;if(B.length>2&&on.length===1&&B.filter(bxIsOn).length!==1&&!c.matches('.stbar .brow'))return;out.push([c,B,on[0]])});return out}
 function bxSetup(m){if(!tuOn())return;const k=m.dataset.k||'';bxGroups(m).forEach(([c,B,on],gi)=>{c._bx=1;if(c===m){m._bxH=m.querySelector(':scope>h3');m.querySelectorAll(':scope>.bxPill').forEach(x=>x.remove())}c.classList.add('bxRow');on.classList.add('bxOn');const key=k+':'+gi+':'+B.length;
  const p=document.createElement('span');p.className='bxPill';c.prepend(p);const now=bxRect(c,on),o=BXU.pos[key];
- if(o&&(o.x!==now.x||o.y!==now.y)){bxPut(p,o,false);requestAnimationFrame(()=>{bxPut(p,bxRect(c,on),true)})}else bxPut(p,now,false);BXU.pos[key]=now;
+ if(o&&(o.x!==now.x||o.y!==now.y)){bxPut(p,o,false);c.classList.add('bxMove');requestAnimationFrame(()=>{bxPut(p,bxRect(c,on),true)});setTimeout(()=>c.classList.remove('bxMove'),420)}else bxPut(p,now,false);BXU.pos[key]=now;
  // เปลี่ยนในที่ (ไม่วาดใหม่)
- c.addEventListener('click',()=>setTimeout(()=>{if(!c.isConnected)return;const B2=[...c.children].filter(x=>x.tagName==='BUTTON');let n=B2.find(bxIsOn);if(c.matches('.stbar .brow'))n=B2.find(b=>b.classList.contains('pbtn'));if(n){B2.forEach(b=>b.classList.toggle('bxOn',b===n));const r=bxRect(c,n);bxPut(p,r,true);BXU.pos[key]=r}},30));
+ c.addEventListener('click',()=>setTimeout(()=>{if(!c.isConnected)return;const B2=[...c.children].filter(x=>x.tagName==='BUTTON');let n=B2.find(bxIsOn);if(c.matches('.stbar .brow'))n=B2.find(b=>b.classList.contains('pbtn'));if(n){const r0=BXU.pos[key];B2.forEach(b=>b.classList.toggle('bxOn',b===n));const r=bxRect(c,n);if(r0&&(r0.x!==r.x||r0.y!==r.y)){c.classList.add('bxMove');setTimeout(()=>c.classList.remove('bxMove'),420)}bxPut(p,r,true);BXU.pos[key]=r}},30));
  // ลากได้เมื่อมีไม่เกิน 6 ช่อง
- if(B.length<=6){c.style.touchAction='pan-y';let st=null;
-  c.addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(!b||b.parentElement!==c||!b.classList.contains('bxOn'))return;st={id:e.pointerId,x0:e.clientX,y0:e.clientY,drag:false,cur:b}},{passive:true});
-  c.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;if(!st.drag){if(Math.hypot(e.clientX-st.x0,e.clientY-st.y0)<8)return;st.drag=true;c.classList.add('bxDrag');try{c.setPointerCapture(e.pointerId)}catch(x){}tuBuzz()}
-   const rc=c.getBoundingClientRect(),x=e.clientX-rc.left,y=e.clientY-rc.top;const n=tuNear(B.filter(b=>!b.disabled),x,y);if(!n)return;if(n!==st.cur){st.cur=n;tuBuzz()}B.forEach(b=>b.classList.toggle('tuHot',b===n));
-   p.style.width=n.offsetWidth+'px';p.style.height=n.offsetHeight+'px';p.style.transform=`translate(${x-n.offsetWidth/2}px,${y-n.offsetHeight/2}px) scale(.96)`});
-  const end=()=>{if(!st)return;const s=st;st=null;if(!s.drag)return;c.classList.remove('bxDrag');B.forEach(b=>b.classList.remove('tuHot'));c._no=1;setTimeout(()=>c._no=0,80);bxPut(p,bxRect(c,s.cur),true);BXU.pos[key]=bxRect(c,s.cur);if(!s.cur.classList.contains('bxOn'))setTimeout(()=>{c._no=0;s.cur.click()},150)};
-  c.addEventListener('pointerup',end);c.addEventListener('pointercancel',end);c.addEventListener('click',e=>{if(c._no){e.stopPropagation();e.preventDefault()}},true)}})}
+ {let st=null,tm=0;const live=()=>[...c.children].filter(x=>x.tagName==='BUTTON'&&B.includes(x)&&!x.disabled);
+  c.addEventListener('contextmenu',e=>{if(e.target.closest('button'))e.preventDefault()});
+  c.addEventListener('pointerdown',e=>{if(!tuOn()||e.button>0)return;const b=e.target.closest('button');if(!b||b.parentElement!==c||!B.includes(b))return;st={id:e.pointerId,x0:e.clientX,y0:e.clientY,x:e.clientX,y:e.clientY,drag:false,cur:b};clearTimeout(tm);
+   tm=setTimeout(()=>{if(!st||Math.hypot(st.x-st.x0,st.y-st.y0)>9)return;st.drag=true;c.classList.add('bxDrag');try{c.setPointerCapture(st.id)}catch(x){}bxPut(p,bxRect(c,st.cur),false);st.cur.classList.add('tuHot');tuBuzz()},300)},{passive:true});
+  c.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;st.x=e.clientX;st.y=e.clientY;if(!st.drag){if(Math.hypot(st.x-st.x0,st.y-st.y0)>9){clearTimeout(tm);st=null}return}
+   const t=document.elementFromPoint(e.clientX,e.clientY);const n=t&&t.closest&&t.closest('button');if(!n||n.parentElement!==c||!live().includes(n)||n===st.cur)return;st.cur.classList.remove('tuHot');st.cur=n;n.classList.add('tuHot');bxPut(p,bxRect(c,n),true);tuBuzz()});
+  const end=e=>{clearTimeout(tm);if(!st)return;const s=st;st=null;if(!s.drag)return;c.classList.remove('bxDrag');s.cur.classList.remove('tuHot');c._no=1;setTimeout(()=>c._no=0,90);c.classList.add('bxMove');setTimeout(()=>c.classList.remove('bxMove'),420);BXU.pos[key]=bxRect(c,s.cur);
+   if(!s.cur.classList.contains('bxOn'))setTimeout(()=>{c._no=0;s.cur.click()},160)};
+  c.addEventListener('pointerup',end);c.addEventListener('pointercancel',end);
+  c.addEventListener('touchmove',e=>{if(st&&st.drag)e.preventDefault()},{passive:false});
+  c.addEventListener('click',e=>{if(c._no){e.stopPropagation();e.preventDefault()}},true)}})}
 // ---------------- เมนู (ในเกม + หน้าแรก) ----------------
 const MNU={q:''};
 function mnKey(b){return(b.getAttribute('onclick')||b.className||b.textContent).slice(0,120)}
@@ -19960,19 +19964,17 @@ function mnUI(m){const k=m.dataset.k;const H=m.querySelector(':scope>h3');if(!(k
  if(top.length){const s=document.createElement('div');s.className='mnFav';s.innerHTML=`<div class="mnFavH">⭐ เปิดบ่อยของคุณ</div><div class="${G[0].className} mnFavG"></div>`;const g=s.querySelector('.mnFavG');top.forEach(b=>{const c=b.cloneNode(true);c.classList.add('mnFavB');g.appendChild(c)});anchor.after(s)}
  // หมวดพับได้
  const col=LS.get('murim_mncol',{})||{};m.querySelectorAll('.mch15,.tmh').forEach(h=>{const g=h.matches('.tmh')?h.parentElement.querySelector('.tmgrid'):h.nextElementSibling;if(!g||!g.matches('.mgrid,.tmgrid'))return;const id=k+'|'+h.textContent.trim();h.classList.add('mnH');h.insertAdjacentHTML('beforeend','<i class="mnChev">▾</i>');
-  const ap=()=>{const c=!!col[id];g.classList.toggle('mnCol',c);h.classList.toggle('mnColH',c)};ap();h.onclick=()=>{col[id]=!col[id];LS.set('murim_mncol',col);ap();tuBuzz();setTimeout(mnGhost,320)}});
+  const ap=()=>{const c=!!col[id];g.classList.toggle('mnCol',c);h.classList.toggle('mnColH',c)};ap();h.onclick=()=>{col[id]=!col[id];LS.set('murim_mncol',col);ap();tuBuzz();0}});
  // จุดแดง
  allB().forEach(b=>{const s=(b.querySelector('small')||{}).textContent||'';if(/พร้อมลง|เหลือ [1-9]\d* ครั้ง|ใหม่!|รับได้/.test(s))b.classList.add('mnDot')});
- // ไหลเข้าทีละใบ
- allB().forEach((b,i)=>b.style.setProperty('--i',Math.min(i,24)));
  // ค้นหา
  const inp=sb.querySelector('input');const filt=()=>{const q=inp.value.trim().toLowerCase();MNU.q=inp.value;m.classList.toggle('mnQ',!!q);allB().forEach(b=>{b.classList.toggle('mnHide',!!q&&!b.textContent.toLowerCase().includes(q))});
-  m.querySelectorAll('.mch15,.tmh,.mnFavH').forEach(h=>{const g=h.matches('.tmh')?h.parentElement.querySelector('.tmgrid'):h.matches('.mnFavH')?h.nextElementSibling:h.nextElementSibling;if(!g)return;const any=[...g.children].some(b=>!b.classList.contains('mnHide'));h.style.display=any?'':'none';if(q)g.classList.remove('mnCol');else if(h.classList.contains('mnColH'))g.classList.add('mnCol')});mnGhost()};
+  m.querySelectorAll('.mch15,.tmh,.mnFavH').forEach(h=>{const g=h.matches('.tmh')?h.parentElement.querySelector('.tmgrid'):h.matches('.mnFavH')?h.nextElementSibling:h.nextElementSibling;if(!g)return;const any=[...g.children].some(b=>!b.classList.contains('mnHide'));h.style.display=any?'':'none';if(q)g.classList.remove('mnCol');else if(h.classList.contains('mnColH'))g.classList.add('mnCol')});};
  inp.oninput=filt;sb.querySelector('.mnX').onclick=()=>{inp.value='';filt();inp.focus()};if(MNU.q)filt();
  // นับการใช้ + จำอันล่าสุด
  m.addEventListener('click',e=>{const b=e.target.closest('.mgrid>button,.tmgrid>button');if(!b||m._mnNo)return;const kk=k+'|'+mnKey(b);const c=LS.get('murim_mnc',{})||{};c[kk]=(c[kk]||0)+1;LS.set('murim_mnc',c);LS.set('murim_mnlast_'+k,mnKey(b))},true);
  // กรอบทอง
- const p=document.createElement('span');p.className='mnPill';m.appendChild(p);mnGhost();mnDrag(m)}
+ const p=document.createElement('span');p.className='mnPill';m.appendChild(p);mnDrag(m)}
 function mnPos(m,b){const rm=m.getBoundingClientRect(),rb=b.getBoundingClientRect();return{x:rb.left-rm.left+m.scrollLeft-m.clientLeft,y:rb.top-rm.top+m.scrollTop-m.clientTop,w:rb.width,h:rb.height}}
 function mnGhost(){const m=$('modal');if(!m||!m._mn)return;const p=m.querySelector(':scope>.mnPill');if(!p||m.classList.contains('mnDragging'))return;const last=LS.get('murim_mnlast_'+m.dataset.k,'');const b=last&&[...m.querySelectorAll('.mgrid>button,.tmgrid>button')].find(x=>mnKey(x)===last&&x.offsetParent&&!x.classList.contains('mnFavB'));
  if(!b){p.classList.remove('show');return}bxPut(p,mnPos(m,b),p.classList.contains('show'));p.classList.add('show','ghost')}
@@ -19984,10 +19986,10 @@ function mnDrag(m){let st=null,tm=0,raf=0;const pill=()=>m.querySelector(':scope
    const loop=()=>{if(!st||!st.drag)return;const rm=m.getBoundingClientRect();const d=st.y<rm.top+60?-1:st.y>rm.bottom-60?1:0;if(d){m.scrollTop+=d*9;hot(at(st.x,st.y))}raf=requestAnimationFrame(loop)};raf=requestAnimationFrame(loop)},300)},{passive:true});
  m.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;st.x=e.clientX;st.y=e.clientY;if(!st.drag){if(Math.hypot(st.x-st.x0,st.y-st.y0)>9){clearTimeout(tm);st=null}return}hot(at(st.x,st.y))});
  const end=e=>{clearTimeout(tm);cancelAnimationFrame(raf);if(!st)return;const s=st;st=null;if(!s.drag)return;m.classList.remove('mnDragging');const p=pill();if(p)p.classList.remove('lift');m.querySelectorAll('.mnHot').forEach(x=>x.classList.remove('mnHot'));
-  m._mnNo=1;setTimeout(()=>m._mnNo=0,90);const b=s.cur;if(!b)return;b.classList.add('mnFlash');setTimeout(()=>{m._mnNo=0;try{b.click()}catch(x){}},170)};
+  m._mnNo=1;setTimeout(()=>m._mnNo=0,90);const b=s.cur;setTimeout(()=>{const q=pill();if(q)q.classList.remove('show')},380);if(!b)return;b.classList.add('mnFlash');setTimeout(()=>{m._mnNo=0;try{b.click()}catch(x){}},170)};
  m.addEventListener('pointerup',end);m.addEventListener('pointercancel',end);
  m.addEventListener('touchmove',e=>{if(st&&st.drag)e.preventDefault()},{passive:false});
- m.addEventListener('contextmenu',e=>{if(st)e.preventDefault()});
+ m.addEventListener('contextmenu',e=>{if(st||at(e.clientX,e.clientY))e.preventDefault()});
  m.addEventListener('click',e=>{if(m._mnNo){e.stopPropagation();e.preventDefault()}},true)}
 // ---------------- ตัวเรียก ----------------
 (()=>{let t=0;const run=()=>{const m=$('modal');if(!m||!modalOpen)return;try{mnUI(m)}catch(e){console.error(e)}try{bxSetup(m)}catch(e){console.error(e)}};
@@ -19995,16 +19997,14 @@ function mnDrag(m){let st=null,tm=0,raf=0;const pill=()=>m.querySelector(':scope
  {const _oL=openLove;openLove=function(){const r=_oL.apply(this,arguments);try{$('modal').querySelectorAll('.opt').forEach(b=>{if(/outline/.test(b.getAttribute('style')||'')){b.classList.add('on');b.style.outline='none'}})}catch(e){}return r}}})();
 (()=>{const st=document.createElement('style');st.textContent=`
 body.tuOn .bxRow{position:relative;isolation:isolate}
-body.tuOn .bxRow>.bxPill{position:absolute;left:0;top:0;z-index:3;pointer-events:none;border-radius:12px;border:2px solid var(--pink);background:color-mix(in srgb,var(--pink) 14%,transparent);box-shadow:0 0 14px color-mix(in srgb,var(--pink) 50%,transparent),inset 0 0 10px color-mix(in srgb,var(--pink) 25%,transparent);box-sizing:border-box;transition:transform .38s cubic-bezier(.3,1.35,.5,1),width .3s,height .3s;will-change:transform}
-body.tuOn .bxRow.bxDrag>.bxPill{transition:transform .06s linear,width .18s,height .18s}
-body.tuOn .bxRow>button.bxOn{outline:none!important;border-color:transparent!important;box-shadow:none!important}
+body.tuOn .bxRow>.bxPill{position:absolute;left:0;top:0;z-index:3;pointer-events:none;border-radius:12px;border:2px solid var(--pink);background:color-mix(in srgb,var(--pink) 14%,transparent);box-shadow:0 0 14px color-mix(in srgb,var(--pink) 50%,transparent),inset 0 0 10px color-mix(in srgb,var(--pink) 25%,transparent);box-sizing:border-box;opacity:0;transition:transform .38s cubic-bezier(.3,1.35,.5,1),width .3s,height .3s,opacity .25s;will-change:transform}
+body.tuOn .bxRow.bxMove>.bxPill,body.tuOn .bxRow.bxDrag>.bxPill{opacity:1}
+body.tuOn .bxRow.bxDrag>.bxPill{box-shadow:0 8px 20px rgba(0,0,0,.4),0 0 18px color-mix(in srgb,var(--pink) 60%,transparent)}
+body.tuOn .bxRow>button{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 body.tuOn .bxRow>button.tuHot{filter:brightness(1.15)}
 /* ---- เมนูแคปซูล ---- */
-body.tuOn #modal.mnTu .mgrid,body.tuOn #modal.mnTu .tmgrid{gap:8px;transition:max-height .3s ease,opacity .2s;overflow:hidden}
-body.tuOn #modal.mnTu .mgrid>button{border-radius:20px!important;border:1px solid color-mix(in srgb,var(--line) 70%,transparent)!important;background:color-mix(in srgb,var(--card) 82%,transparent);box-shadow:0 2px 8px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.06);display:grid!important;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:8px;align-items:center;text-align:left!important;padding:9px 12px!important;min-height:0!important;font-size:13.5px;position:relative;animation:mnIn .32s cubic-bezier(.3,1.3,.5,1) backwards;animation-delay:calc(var(--i,0)*16ms);transition:transform .2s cubic-bezier(.3,1.5,.5,1),filter .2s}
-body.tuOn #modal.mnTu .mgrid>button small{grid-column:1/-1;font-size:11px;opacity:.7;margin-top:1px;line-height:1.25;text-align:left}
-body.tuOn #modal.mnTu .tmgrid>button{border-radius:20px!important;border:1px solid color-mix(in srgb,var(--line) 70%,transparent)!important;background:color-mix(in srgb,var(--card) 82%,transparent);box-shadow:0 2px 8px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.06);position:relative;animation:mnIn .32s cubic-bezier(.3,1.3,.5,1) backwards;animation-delay:calc(var(--i,0)*16ms);transition:transform .2s cubic-bezier(.3,1.5,.5,1)}
-@keyframes mnIn{from{transform:translateY(8px) scale(.97);opacity:0}}
+body.tuOn #modal.mnTu .mgrid,body.tuOn #modal.mnTu .tmgrid{transition:max-height .3s ease,opacity .2s}
+body.tuOn #modal.mnTu .mgrid>button,body.tuOn #modal.mnTu .tmgrid>button{position:relative;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;transition:transform .2s cubic-bezier(.3,1.5,.5,1)}
 body.tuOn #modal.mnTu .mnHot{transform:scale(1.04)}
 body.tuOn #modal.mnTu .mnFlash{animation:mnFl .2s ease}@keyframes mnFl{50%{filter:brightness(1.6)}}
 body.tuOn #modal.mnTu .mnDot::after{content:'';position:absolute;top:7px;right:9px;width:8px;height:8px;border-radius:50%;background:#ff4a5a;box-shadow:0 0 0 2px var(--card),0 0 8px #ff4a5a}
