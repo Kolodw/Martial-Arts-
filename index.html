@@ -21463,6 +21463,21 @@ g:['ข้าถามฟ้าว่าข้าเกิดมาเพื่�
 };
 (()=>{for(const s in QQ_ADD){QQ[s]=QQ[s]||{};for(const w in QQ_ADD[s]){QQ[s][w]=QQ[s][w]||[];const st=QQ[s][w].length;QQ_ADD[s][w].forEach((t,i)=>{QQ[s][w].push(t);try{QQ_ALL.push([s+'.'+w+'.'+(st+i),t])}catch(e){}})}}})();
 
+
+// ===================== โอกาสฝ่าทัณฑ์ของสัตว์อสูร =====================
+function bTribP(){try{const m=S&&S.beastMode;if(!m||m.human)return null;
+ if((m.st|0)>=7&&!m.heaven){const n=(m.pst||0)+1;
+  if(n<=BPS_N){const ok=total()>=bpsNeed(n)&&S.qi>=bpsQi(n);const p=Math.min(.85,.35+(total()/bpsNeed(n)-1)*.6+Math.min(.15,S.qi/bpsQi(n)*.03));return{k:'ps',n,ok,p:Math.max(0,p),t:`ฝ่าทัณฑ์ฟ้าชั้นที่ ${n}`}}
+  return{k:'asc',ok:true,p:Math.pow(.78,3),t:'ทัณฑ์ปฐมกาล'}}
+ if(m.heaven){const i=(m.hs||0)+1;if(i<BH_ST.length){const ok=total()>=bhNeed(i);return{k:'hs',ok,p:Math.max(0,Math.min(.8,.4+(total()/bhNeed(i)-1)*.4)),t:`ทดสอบสู่ ${BH_ST[i]}`}}}}catch(e){}return null}
+const bTribTxt=()=>{const b=bTribP();if(!b)return'';const pc=Math.round(b.p*100),c=pc>=70?'#5ad87a':pc>=45?'#f0c860':'#ff7a6a';
+ return b.ok?`⚡ โอกาสผ่านตอนนี้ <b style="color:${c}">~${pc}%</b>${b.k==='asc'?' (ระลอกละ 78% · ต้องผ่านครบ 3)':b.k==='ps'?' · ยิ่งพลังเกินเกณฑ์ยิ่งสูง (สูงสุด 85%)':' · สูงสุด 80%'}`:`⚡ ค่ายังไม่ถึงเกณฑ์ — ถึงแล้วโอกาสเริ่มที่ ~${b.k==='ps'?35:40}%`};
+{const _giB=goalInfo;goalInfo=function(){const g=_giB.apply(this,arguments);try{if(g&&S&&S.beastMode&&!S.beastMode.human){const t=bTribTxt();if(t)g.note=(g.note?g.note+'<br>':'')+t}}catch(e){}return g}}
+// ทัณฑ์ปฐมกาล: บอกโอกาสในตัวเลือก
+{const _chB=choice;choice=function(title,text,opts){try{if(/ทัณฑ์ปฐมกาล/.test(String(title))&&Array.isArray(opts)){opts=opts.map(o=>o&&/รับทัณฑ์/.test(o.t)?{...o,s:(o.s||'')+' · โอกาสผ่านรวม ~47%'}:o);text=String(text).replace('ต้องชนะติดกัน 3 ระลอก','ต้องชนะติดกัน 3 ระลอก (ระลอกละ 78% · รวม ~47%)')}}catch(e){}return _chB.call(this,title,text,opts)}}
+// บอกโอกาสใน log ตอนฝ่าทัณฑ์ชั้น / ทดสอบสวรรค์
+{const _bps=bpsTry;bpsTry=function(){const b=bTribP();const n0=S.beastMode?S.beastMode.pst:0,c0=S.beastMode?S.beastMode.pstCd:0;const r=_bps.apply(this,arguments);try{const m=S.beastMode;if(b&&b.k==='ps'&&m&&(m.pst!==n0||m.pstCd!==c0))log(`<span class="tag2">⚡ โอกาสผ่านครั้งนี้ ~${Math.round(b.p*100)}%</span>`,'')}catch(e){}return r}}
+
 </script>
 </body>
 </html>
