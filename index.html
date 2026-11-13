@@ -21517,6 +21517,90 @@ setTimeout(()=>{try{if(!LS.get('murim_pacehint',0)&&S&&S.alive){LS.set('murim_pa
 setInterval(()=>{try{const m=$('modal');if(!m||m.dataset.k!=='qigame'){QGM._stT=0;return}if(QGM.done){QGM._stT=QGM._stT||Date.now();if(Date.now()-QGM._stT>4000){const ok=QGM.end?QGM.end.ok:null,pf=QGM.perf||.5;QGM._stT=0;if(!QGM._cbDone){QGM.closed=0;qgClose(ok,pf,QGM.o?QGM.o.p:.5)}else closeM()}}else QGM._stT=0}catch(e){}},1000);
 {const _qgc=qgClose;qgClose=function(){if(QGM.closed)return;QGM._cbDone=1;return _qgc.apply(this,arguments)}}
 {const _qgg=qiGame;qiGame=function(){QGM._cbDone=0;QGM._stT=0;return _qgg.apply(this,arguments)}}
+
+// ===================== 🏝️ เกาะ v2: เปลี่ยนรูปเป็นจังหวะ · ต่อกันไม่หด · รวมของซ้ำ · จุดคิว · ปัดซ้ายขวา/กดค้าง · ดันหัวจอ · ตำแหน่งบนคอม =====================
+const ISL2={t0:0,lp:0,x0:null,y0:null};
+// 1) รวมแจ้งเตือนเล็กที่ไอคอน+ประเภทเดียวกันใน 1.5 วิ
+{const _isl2=island;island=function(n){try{const c=ISL.cur;if(n&&c&&!c.live&&!c.big&&!n.big&&!n.pri&&!n.sticky&&n.ic&&n.ic===c.ic&&(n.kind||'info')===(c.kind||'info')&&n.key!==c.key&&Date.now()-ISL2.t0<1500&&((n.kind==='ok')||/^\s*(ได้|เก็บ|\+)/.test(String(n.t).replace(/<[^>]+>/g,'')))&&((c.kind==='ok')||/^\s*(ได้|เก็บ|\+)/.test(String(c.t).replace(/<[^>]+>/g,'')))){c.t=n.t;c.n=(c.n||1)+1;ISL2.t0=Date.now();islRender(c,true);clearTimeout(ISL.t);ISL.t=setTimeout(()=>islNext(),Math.max(1400,c.ms||2000));return}}catch(e){}const r=_isl2.apply(this,arguments);try{islQDots()}catch(e){}return r}}
+{const _inx2=islNext;islNext=function(){const r=_inx2.apply(this,arguments);ISL2.t0=Date.now();try{islQDots()}catch(e){}return r}}
+// 2) จุดบอกคิว
+function islQDots(){let q=document.getElementById('islQ');const e=document.getElementById('isl');const n=Math.min(5,ISL.q.length);
+ if(!e||!e.classList.contains('on')||!n||document.body.classList.contains('islFloat')){if(q)q.classList.remove('on');return}
+ if(!q){q=document.createElement('div');q.id='islQ';document.body.appendChild(q)}q.innerHTML='<i></i>'.repeat(n);
+ const r=e.getBoundingClientRect(),tgt=e.style.height?parseFloat(e.style.height):r.height;const bottom=document.body.classList.contains('islBottom');
+ q.style.left=(r.left+r.width/2)+'px';q.style.top=bottom?(r.top-10)+'px':(r.top+tgt+5)+'px';q.classList.add('on')}
+// 3) ดันหัวจอลงตอนเกาะขยายใหญ่ (มือถือ · ตำแหน่งบน · อยู่บนสุดของหน้า)
+function islPush(){try{const e=document.getElementById('isl'),g=$('game');if(!g)return;const big=e&&e.classList.contains('on')&&e.classList.contains('big');
+ const ok=big&&!deskOn&&!document.body.classList.contains('islBottom')&&!document.body.classList.contains('islFloat')&&window.scrollY<40&&!modalOpen;
+ const h=ok?Math.max(0,Math.min(110,(parseFloat(e.style.height)||e.offsetHeight)-26)):0;g.style.setProperty('--islPush',h+'px');g.classList.toggle('islPushOn',h>0)}catch(e){}}
+// 4) ตำแหน่งบนคอม: แจ้งเตือนสั้นอยู่หัวคอลัมน์กลาง · เรื่องยาวเป็นการ์ดมุมขวาล่าง
+function islDeskPos(){try{const e=document.getElementById('isl');if(!e)return;if(!deskOn||document.body.classList.contains('islBottom')||document.body.classList.contains('islFloat')){e.style.removeProperty('--islX');e.style.removeProperty('--islTop');return}
+ const C=$('deskC');if(!C)return;const r=C.getBoundingClientRect();e.style.setProperty('--islX',(r.left+r.width/2)+'px');e.style.setProperty('--islTop',Math.max(8,r.top+8)+'px')}catch(e){}}
+const islLongD=n=>!!(n&&n.big&&!n.live&&!(n.btns&&n.btns.length)&&(n.sticky||n.act||(n.d&&String(n.d).replace(/<[^>]+>/g,'').length>30)));
+function islCard(n){let w=document.getElementById('islCards');if(!w){w=document.createElement('div');w.id='islCards';document.body.appendChild(w)}
+ const old=w.querySelector('.islCard:not(.out)');if(old){old.classList.add('out');setTimeout(()=>old.remove(),260)}
+ if(!n)return;const c=document.createElement('div');c.className='islCard k-'+(n.kind||'info');
+ c.innerHTML=`<div class="icI">${n.ic||'🔔'}</div><div class="icB">${n.h?`<div class="icH">${n.h}</div>`:''}<div class="icT">${n.t}</div>${n.st?`<div class="icS">${n.st}</div>`:''}${n.d?`<div class="icD">${n.d}</div>`:''}${n.act?`<div class="icA">${n.act.t}</div>`:''}</div><b class="icX">✕</b>${n.sticky?'':`<i class="icP" style="animation-duration:${(n.ms||3800)}ms"></i>`}`;
+ c.querySelector('.icX').onclick=ev=>{ev.stopPropagation();islNext(true)};c.onclick=()=>{if(n.act){try{n.act.f()}catch(x){}}islNext(true)};w.appendChild(c)}
+{const _ir2=islRender;islRender=function(n,morph){try{if(deskOn&&islOn()&&islLongD(n)&&!document.body.classList.contains('islFloat')){islCard(n);const e=document.getElementById('isl');if(e&&e.classList.contains('on')){e.style.width='36px';e.style.height='34px';e.classList.add('bye');setTimeout(()=>{if(ISL.cur===n){e.className='';const c=e.querySelector('.islC');if(c)c.innerHTML=''}},300)}return}islCard(null)}catch(x){}
+ const e0=document.getElementById('isl');const was=!!(e0&&e0.classList.contains('on'));
+ const r=_ir2.apply(this,arguments);try{const e=document.getElementById('isl');e.classList.toggle('morph',was);islDeskPos();islQDots();islPush()}catch(x){}return r}}
+{const _ih2=islHide;islHide=function(){const r=_ih2.apply(this,arguments);try{islCard(null);const q=document.getElementById('islQ');if(q)q.classList.remove('on');setTimeout(islPush,60)}catch(e){}return r}}
+addEventListener('resize',()=>{islDeskPos();islQDots()});addEventListener('scroll',()=>{islDeskPos();islPush()},{passive:true});
+// 5) ท่าทาง: ปัดซ้าย/ขวา = ถัดไป · กดค้าง = ประวัติแจ้งเตือน
+(()=>{const bind=()=>{const e=document.getElementById('isl');if(!e||e._g2)return;e._g2=1;let x0=null,y0=null,lpT=0,moved=false;
+ e.addEventListener('pointerdown',ev=>{x0=ev.clientX;y0=ev.clientY;moved=false;clearTimeout(lpT);lpT=setTimeout(()=>{if(moved||!ISL.cur)return;ISL2.lp=Date.now();try{tuBuzz()}catch(x){}try{islHistory()}catch(x){}},520)},{passive:true});
+ e.addEventListener('pointermove',ev=>{if(x0==null)return;const dx=ev.clientX-x0,dy=ev.clientY-y0;if(Math.abs(dx)>8||Math.abs(dy)>8){moved=true;clearTimeout(lpT)}
+  if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.4){x0=null;e.classList.remove('swL','swR');void e.offsetWidth;e.classList.add(dx<0?'swL':'swR');setTimeout(()=>e.classList.remove('swL','swR'),360);islNext(true)}},{passive:true});
+ ['pointerup','pointercancel','pointerleave'].forEach(t=>e.addEventListener(t,()=>{clearTimeout(lpT);x0=null},{passive:true}));
+ e.addEventListener('click',ev=>{if(Date.now()-ISL2.lp<700){ev.stopImmediatePropagation();ev.preventDefault()}},true)};
+ bind();new MutationObserver(bind).observe(document.body,{childList:true})})();
+// สไตล์
+(()=>{const st=document.createElement('style');st.textContent=`
+#isl{transition:width .46s cubic-bezier(.3,1.22,.5,1),height .42s cubic-bezier(.3,1.08,.5,1),transform .42s cubic-bezier(.3,1.3,.5,1),opacity .2s,border-radius .3s,box-shadow .3s,left .35s cubic-bezier(.3,1.1,.5,1),top .35s cubic-bezier(.3,1.1,.5,1)}
+#isl:not(.lite).morph .islC>.islIn{animation:isl2In .32s .08s cubic-bezier(.2,.9,.3,1) both}
+#isl:not(.lite) .islC>.islOut{animation:isl2Out .14s cubic-bezier(.4,0,1,1) both!important}
+@keyframes isl2In{from{opacity:0;transform:translateY(9px) scale(.97);filter:blur(2px)}to{opacity:1;transform:none;filter:none}}
+@keyframes isl2Out{to{opacity:0;transform:translateY(-9px) scale(.97);filter:blur(2px)}}
+#isl.swL .islC>.islIn{animation:isl2SwL .34s cubic-bezier(.2,.9,.3,1) both!important}#isl.swR .islC>.islIn{animation:isl2SwR .34s cubic-bezier(.2,.9,.3,1) both!important}
+@keyframes isl2SwL{from{opacity:0;transform:translateX(22px)}}@keyframes isl2SwR{from{opacity:0;transform:translateX(-22px)}}
+#islQ{position:fixed;z-index:99989;transform:translateX(-50%) scale(.6);display:flex;gap:4px;opacity:0;pointer-events:none;transition:opacity .25s,transform .3s cubic-bezier(.3,1.4,.5,1),top .35s cubic-bezier(.3,1.1,.5,1)}
+#islQ.on{opacity:.8;transform:translateX(-50%) scale(1)}#islQ i{width:5px;height:5px;border-radius:50%;background:#f5ecd8;box-shadow:0 0 4px rgba(0,0,0,.6)}
+#game{transition:padding-top .38s cubic-bezier(.3,1.1,.5,1)}#game.islPushOn{padding-top:var(--islPush,0px)!important}
+body.desk:not(.islBottom):not(.islFloat) #isl{left:var(--islX,50%);top:var(--islTop,8px)}
+#islCards{position:fixed;right:18px;bottom:18px;z-index:99990;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
+.islCard{pointer-events:auto;position:relative;display:flex;gap:10px;align-items:flex-start;width:340px;padding:12px 30px 12px 12px;border-radius:16px;background:#0b0810;color:#f5ecd8;box-shadow:0 14px 34px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.07);overflow:hidden;cursor:pointer;animation:icIn .42s cubic-bezier(.3,1.25,.5,1) both}
+.islCard.out{animation:icOut .24s cubic-bezier(.4,0,1,1) both}
+@keyframes icIn{from{opacity:0;transform:translateX(40px) scale(.96)}}@keyframes icOut{to{opacity:0;transform:translateX(40px) scale(.96)}}
+.islCard .icI{font-size:26px;line-height:1}.islCard .icH{font-size:11.5px;opacity:.65}.islCard .icT{font-weight:700;font-size:14px;line-height:1.35}.islCard .icD{font-size:12px;opacity:.8;margin-top:3px;line-height:1.4}.islCard .icS{margin-top:2px}
+.islCard .icA{margin-top:6px;font-size:12px;color:#ffd76a}.islCard .icX{position:absolute;right:10px;top:8px;font-size:12px;opacity:.5}.islCard .icX:hover{opacity:1}
+.islCard .icP{position:absolute;left:0;bottom:0;height:2px;width:100%;background:currentColor;opacity:.35;transform-origin:left;animation:icP linear both}@keyframes icP{to{transform:scaleX(0)}}
+.islCard.k-gold{box-shadow:0 14px 34px rgba(0,0,0,.45),0 0 0 1px #ffd76a99,0 0 22px #ffc23a44}.islCard.k-rainbow{box-shadow:0 14px 34px rgba(0,0,0,.45),0 0 0 1.5px #ffd76a,0 0 26px #ff6ad555}.islCard.k-bad{box-shadow:0 14px 34px rgba(0,0,0,.45),0 0 0 1px #ff5a5aaa}.islCard.k-ok{box-shadow:0 14px 34px rgba(0,0,0,.45),0 0 0 1px #6fc3a0aa}
+@media (prefers-reduced-motion:reduce){.islCard,.islCard.out{animation:none}#game{transition:none}}`;document.head.appendChild(st)})();
+// ===================== แอดมิน: ทดสอบเกาะทุกแบบ (เฉพาะเครื่องนี้) =====================
+const ISL_TESTS=[
+ ['สั้น · ทั่วไป',()=>island({ic:'💬',t:'ข้อความทดสอบแบบสั้น',kind:'info'})],
+ ['สั้น · สำเร็จ',()=>island({ic:'✅',t:'บันทึกเซฟแล้ว',kind:'ok'})],
+ ['สั้น · เตือน',()=>island({ic:'⚠️',t:'เงินไม่พอซื้อของชิ้นนี้',kind:'bad'})],
+ ['ใหญ่ · ทอง',()=>island({big:1,ic:'⚡',h:'ทะลวงขั้น',t:'ก้าวสู่ขั้นหนึ่ง — ลมปราณไหลเวียนทั่วร่าง',kind:'gold',ms:3600})],
+ ['ใหญ่ · รุ้ง + ดาว',()=>island({big:1,pri:1,ic:'🏆',h:'ความสำเร็จใหม่',t:'ตำนานแห่งยุค',st:typeof starH==='function'?starH(3):'★★★',d:'มีชีวิตครบ 1,000 ปีโดยไม่เคยแพ้ศึกใหญ่',kind:'rainbow',ms:4600})],
+ ['ใหญ่ · เตือนแดง',()=>island({big:1,pri:1,ic:'🩸',h:'เลือดต่ำ',t:'พลังชีวิตเหลือ 12%',d:'กดค้าง 🎒 เพื่อกินยาด่วน',kind:'bad',ms:2600})],
+ ['แตะเพื่อขยาย',()=>island({ic:'📜',t:'มีรายละเอียด แตะเพื่อดู',d:'นี่คือรายละเอียดที่ซ่อนไว้ แตะเกาะเพื่อขยายดูข้อความยาวๆ แบบนี้ได้',kind:'info',ms:4000})],
+ ['ปุ่มกด (ค้าง)',()=>island({big:1,pri:1,sticky:1,ic:'🔄',h:'อัปเดตใหม่',t:'มีเวอร์ชันใหม่พร้อมแล้ว (ทดสอบ)',kind:'info',act:{t:'แตะเพื่อปิดการทดสอบ',f:()=>toast('✅ กดปุ่มในเกาะแล้ว')},key:'isltest_act'})],
+ ['ปุ่มเลือก (โพล)',()=>island({big:1,pri:1,ic:'🗳️',h:'โพลทดสอบ',t:'ชอบโลกไหนที่สุด?',kind:'gold',ms:6000,key:'isltest_poll',btns:[{t:'🏯 ยุทธภพ',f:()=>toast('เลือก ยุทธภพ')},{t:'☁️ เซียน',f:()=>toast('เลือก เซียน')}]})],
+ ['รวมของซ้ำ ×5',()=>{['ได้สมุนไพร','ได้แร่','ได้หินวิญญาณ','ได้เกล็ดอสูร','ได้ยาสมานแผล'].forEach((t,i)=>setTimeout(()=>island({ic:'🎒',t,kind:'ok'}),i*220))}],
+ ['คิวยาว 6 อัน',()=>{[['💬','ข้อความที่ 1'],['⚔️','ชนะศึกเล็ก'],['💰','ได้เงิน 500 ตำลึง'],['🌸','ฤดูใบไม้ผลิมาถึง'],['📜','ได้ตำราใหม่'],['🍵','พักผ่อนเต็มที่']].forEach(([ic,t],i)=>island({ic,t,kind:'info',key:'qt'+i}))}],
+ ['แทรกคิวด่วน',()=>{island({ic:'💬',t:'ข้อความธรรมดากำลังแสดง',kind:'info',ms:3000});setTimeout(()=>island({big:1,pri:1,ic:'🌟',h:'ด่วน',t:'เหตุการณ์สำคัญแทรกคิว',kind:'gold',ms:2600}),700)}],
+ ['ข้อความยาวมาก',()=>island({ic:'📣',t:'ข้อความยาวมากๆ เพื่อทดสอบว่าเกาะตัดคำและขยายความกว้างได้ถูกต้องบนจอเล็ก ไม่ล้นออกนอกจอ',kind:'info',ms:3500})],
+ ['ทะลวงขั้นผ่าน log',()=>{try{log('⚡ ทดสอบ: ก้าวสู่ขั้นใหม่ (ทดสอบเกาะ)','epic')}catch(e){toast('ต้องอยู่ในเกม')}}],
+ ['กิจกรรมค้าง (ออโต้)',()=>{if(!S||!S.alive)return toast('ต้องอยู่ในเกม');if(!auto)toggleAuto();toast('เปิดออโต้แล้ว — เกาะจะบินไปเกาะข้างชื่อ')}],
+ ['ชิปแชทข้างชื่อ',()=>{try{const c=islChip('chat',{ic:'💬'});if(c){let em=c.querySelector('em');if(!em){em=document.createElement('em');c.appendChild(em)}em.textContent=String((+em.textContent||0)+1)}}catch(e){toast('ต้องอยู่ในเกม')}}],
+ ['ล้างทั้งหมด',()=>{ISL.q=[];ISL.cur=null;try{islHide()}catch(e){}try{islCard(null)}catch(e){}document.querySelectorAll('#islDock .islChip[data-k="chat"]').forEach(x=>x.remove())}]];
+function islTestAll(){let t=0;ISL_TESTS.slice(0,13).forEach(([,f])=>{setTimeout(f,t);t+=1600})}
+{const _mdI=modal;modal=function(html,k){const r=_mdI.apply(this,arguments);try{if(typeof html==='string'&&html.indexOf('🔓 ปลดล็อก (เฉพาะเครื่องนี้)')>=0&&!document.querySelector('#modal .islTestSec')){const sec=[...document.querySelectorAll('#modal .adsec')].find(x=>/ปลดล็อก \(เฉพาะเครื่องนี้\)/.test(x.textContent));
+  const h=`<div class="adsec islTestSec"><h4>🏝️ ทดสอบ Dynamic Island (เฉพาะเครื่องนี้)</h4><div class="adg">${ISL_TESTS.map((x,i)=>`<button class="${i===ISL_TESTS.length-1?'gbtn':'sysb'}" onclick="ISL_TESTS[${i}][1]()">${x[0]}</button>`).join('')}<button class="pbtn" onclick="closeM();islTestAll()">▶ เล่นทุกแบบต่อกัน</button></div><p class="tag2" style="margin:4px 0 0">ปิดหน้าต่างนี้ก่อนเพื่อดูเกาะชัดๆ · บนจอกว้าง เรื่องยาวจะขึ้นเป็นการ์ดมุมขวาล่าง · ปัดซ้าย/ขวาที่เกาะ = ข้าม · กดค้าง = ประวัติ</p></div>`;
+  if(sec)sec.insertAdjacentHTML('afterend',h);else{const m=$('modal');if(m)m.insertAdjacentHTML('beforeend',h)}}}catch(e){}return r}}
+
 </script>
 </body>
 </html>
