@@ -21178,6 +21178,42 @@ function lsGive(g){const b=lifeMax();S.lifespan+=g;S._lsEx=(S._lsEx||0)+g;const 
 // ยาอายุวัฒนะ (ร้านระบบเดิม): แดนเทพ/ยุคปัจจุบันใช้ได้จริง · ไม่ถูกลดตามกฎยาซ้อน
 {const _bsL=buySys;buySys=function(id){if(id!=='life'||!S||!S.sys)return _bsL.apply(this,arguments);const ls0=S.lifespan,L0=lifeMax(),sp0=S.sys.sp;const r=_bsL.apply(this,arguments);try{if(S.sys.sp<sp0){const add=S.lifespan-ls0;if(add>0){if(mwOn&&mwOn()){S.lifespan=ls0;S.mw.end+=add}else if(S.xt){S.lifespan=ls0;const g=Math.max(add,Math.round(L0*.02));S.glExtra=(S.glExtra||0)+g}else{S.lifespan=ls0;lsGive(add)}log(`<span class="px">[ระบบ]</span> ⏳ อายุขัยตอนนี้ ${fmt(lifeMax())} ปี`,'sys');try{render()}catch(e){}}}}catch(e){console.error(e)}return r}}
 
+
+// ===================== กดค้างปุ่มจุดมุ่งหมาย = คำอธิบายสั้นๆ =====================
+const FDESC={
+ train:()=>[`เพิ่ม${S&&S.xian?'พลังบ่มเพาะ':'พลังยุทธ์'}ตรงๆ ได้เยอะต่อปี ยิ่งโต มีสำนัก มีอาจารย์ ยิ่งได้มาก`,'มีโอกาสบาดเจ็บระหว่างฝึกเล็กน้อย'],
+ qi:()=>['เพิ่มลมปราณทีละน้อย แต่ลมปราณ 1 แต้ม = พลังรวม 12','ช่วยผ่านด่านในจิต ต้านพลังมาร และเหตุการณ์ใหญ่ · ปราณสูงแล้วระวังธาตุไฟเข้าแทรก'],
+ study:()=>['เพิ่มปัญญาเป็นหลัก ได้พลังนิดหน่อย','ปัญญาช่วยให้เลือกทางรอดในเหตุการณ์ หาเงินได้มากขึ้น และเรียนวิชาเร็วขึ้น'],
+ adv:()=>[`ออก${S&&S.xian?'ท่องโลกเซียน':'ท่องยุทธภพ'} เจอเหตุการณ์สุ่ม ของ วิชา คนรู้จัก หรือศัตรู`,'ได้ของดีบ่อยสุด แต่เสี่ยงบาดเจ็บหรือเจอเรื่องใหญ่'],
+ mission:()=>[`ทำงานให้${S&&S.xian?'นิกาย':'สำนัก'} ได้ผลงาน เลื่อนตำแหน่ง และรางวัลจากสำนัก`,'ต้องเข้าสำนักก่อน'],
+ tech:()=>['ใช้ความรู้จากโลกเดิม สร้างของแปลกใหม่ ได้เงิน ชื่อเสียง หรือของพิเศษ','เฉพาะผู้ข้ามมิติ'],
+ work:()=>['หาเงินทั้งปี ปัญญาและระดับพลังยิ่งสูงยิ่งได้มาก','เงินใช้ซื้อยา อุปกรณ์ ที่ดิน และของในตลาด'],
+ rest:()=>['พักฟื้น เลือดและความสุขกลับมา','เหมาะตอนบาดเจ็บหนัก ป่วย หรือแก่มาก'],
+ love:()=>['ใช้เวลากับครอบครัว หาคู่ เลี้ยงลูก เพิ่มความสัมพันธ์','ครอบครัวดีช่วยเรื่องความสุขและทายาท'],
+ craft:()=>['ทำงานช่างทั้งปี (ปรุงยา ตีเหล็ก ค่ายกล เขียนยันต์) ได้ 6 ครั้ง','ต้องมีตำรับ เครื่องมือ และวัตถุดิบ · ฝีมือขึ้นขั้นจะได้ชื่อขั้นใหม่'],
+ hhunt:()=>['ออกล่าสัตว์อสูรและโจร ได้ชัยชนะ วัตถุดิบ และของจากซาก','เสี่ยงบาดเจ็บ ยิ่งพลังสูงยิ่งเจอตัวแรง'],
+ play:()=>['เล่นซนกับเด็กๆ เพิ่มเสน่ห์ เลือดฟื้น'],read:()=>['หัดอ่านเขียน เพิ่มปัญญา'],drill:()=>['หัดยุทธ์ตั้งแต่เด็ก เพิ่มพลังทีละนิด'],chores:()=>['ช่วยงานบ้าน ได้เงินนิดหน่อยและกรรมดี'],
+ hunt:()=>['ล่าเหยื่อ เพิ่มพลังและเลือด','เสี่ยงเจอนักล่าหรือมนุษย์'],moon:()=>['ดูดซับแสงจันทร์ เพิ่มลมปราณ เร่งการเปิดปัญญา'],roam:()=>['ท่องป่า เจอเหตุการณ์ สมุนไพร และสัตว์อื่น'],hide:()=>['ซ่อนตัวพักฟื้น เลือดกลับมา ปลอดภัยขึ้น'],human:()=>['แอบดูมนุษย์ เรียนรู้ภาษาและวิถีมนุษย์ ใกล้การแปลงกาย'],
+ mwjob:()=>['ทำงานในยุคปัจจุบัน ได้เงินเดือน'],mwqi:()=>['นั่งสมาธิ รักษาพลังที่เหลือและฟื้นฟูลมปราณ'],mwnet:()=>['ทำคอนเทนต์ลงโซเชียล ได้ผู้ติดตาม เงิน และอาจดังเกินคาด'],mwlearn:()=>['เรียนรู้ของยุคใหม่ ใช้มือถือ เทคโนโลยี และกฎหมาย'],mwlow:()=>['ใช้ชีวิตเงียบๆ ไม่ดึงดูดความสนใจ ลดความเสี่ยง'],mwlin:()=>['ใช้เวลากับเด็กที่ดูแลอยู่ เพิ่มความผูกพัน']
+};
+function fdSpec(btn,id){const lb=btn.textContent.replace(/\s+/g,' ').trim();const m=lb.match(/^(\S+)\s+(.*)$/);const ic=m?m[1]:'🎯',t=(m?m[2]:lb).replace(/\+.*$/,'').trim();
+ const d=FDESC[id]?FDESC[id]():['เลือกเป็นสิ่งที่ทำทั้งปี'];let gh='';try{gh=(window.GH||GH||{})[id]||''}catch(e){}
+ const rows=d.map(x=>({info:x}));const on=S&&S.focus===id,ok=!btn.disabled;rows.push({sep:1});
+ rows.push(on?{info:'✅ กำลังทำอยู่'}:ok?{ic:'🎯',t:'เลือกอันนี้',r:'›',f:()=>{setFocus(id);try{qmClose()}catch(e){}}}:{info:'🔒 ยังเลือกไม่ได้ตอนนี้'});
+ return{ic,t,sub:gh,rows}}
+(()=>{let tm=0,st=null,fired=0;const sel='#focus .fc';
+ const idOf=b=>{const m=(b.getAttribute('onclick')||'').match(/setFocus\('(\w+)'\)/);return m&&m[1]};
+ const open=b=>{const id=idOf(b);if(!id)return;fired=1;try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}
+  if(typeof qmOpen==='function')qmOpen(b,()=>fdSpec(b,id));else{const s=fdSpec(b,id);toast(s.t+': '+s.rows[0].info)}};
+ document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest(sel);if(!b||e.button>0||!idOf(b))return;fired=0;st={x:e.clientX,y:e.clientY,b};clearTimeout(tm);tm=setTimeout(()=>{if(st)open(st.b)},420)},true);
+ document.addEventListener('pointermove',e=>{if(st&&Math.hypot(e.clientX-st.x,e.clientY-st.y)>10){clearTimeout(tm);st=null}},true);
+ ['pointerup','pointercancel'].forEach(ev=>document.addEventListener(ev,()=>{clearTimeout(tm);st=null},true));
+ document.addEventListener('click',e=>{if(fired&&e.target.closest&&e.target.closest(sel)){e.preventDefault();e.stopPropagation();fired=0}},true);
+ document.addEventListener('contextmenu',e=>{const b=e.target.closest&&e.target.closest(sel);if(b&&idOf(b)){e.preventDefault();if(!fired&&!(typeof QM!=='undefined'&&QM.el))open(b)}},true);
+ const css=document.createElement('style');css.textContent=`#focus .fc{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}`;document.head.appendChild(css);
+ {const _sf=setFocus;setFocus=function(){const r=_sf.apply(this,arguments);try{if(!LS.get('murim_fchint',0)){LS.set('murim_fchint',1);toast('💡 กดค้างที่ปุ่มเพื่อดูว่าแต่ละอย่างได้อะไร')}}catch(e){}return r}}
+})();
+
 </script>
 </body>
 </html>
