@@ -21059,6 +21059,75 @@ openSound=function(){const tr=bgmTrack(),wx={clear:'☀️ แจ่มใส',r
 .sndTest{margin-top:8px;border:1.5px solid var(--line);background:transparent;color:inherit;border-radius:999px;padding:3px 12px;font:inherit;font-size:12px;cursor:pointer}.sndTest[disabled]{opacity:.4}
 .sndWx{margin-top:8px;font-size:12px;opacity:.8}`;document.head.appendChild(st)})();
 
+
+// ===================== อนิเมชั่นหน้าต่างแบบ iOS: sheet ไถขึ้น · ขยายจากปุ่ม · push/pop · alert · ของข้างในทยอยเข้า · ปัดลงปิด · ปัดขอบซ้ายย้อนกลับ =====================
+const MA={stack:[],tap:null,closed:null,mode:''};
+const maOn=()=>{try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return 0;if(typeof tuOn==='function'&&!tuOn())return 0;return (typeof fxQ!=='undefined'&&fxQ<2)?1:2}catch(e){return 0}};
+const MA_ALERT=/^(delslot|svlbl|mwask|sysswap|annview|confirm|ask|del|warn)/;
+const MA_LOCK=k=>k==='choice'||k==='duel'||k==='qigame';
+document.addEventListener('pointerdown',e=>{MA.tap={x:e.clientX,y:e.clientY,t:Date.now(),inM:!!(e.target.closest&&e.target.closest('#modal'))}},{capture:true,passive:true});
+function maSnap(){const M=$('modal');if(!M||!M.firstChild)return null;const r=M.getBoundingClientRect();const c=M.cloneNode(true);c.removeAttribute('id');c.querySelectorAll('[id]').forEach(x=>x.removeAttribute('id'));return{c,r,sc:M.scrollTop}}
+function maGhost(sn,cls,ms,inMask){if(!sn)return null;const g0=sn.c;g0.classList.add('maGhost',cls);Object.assign(g0.style,{position:'fixed',left:sn.r.left+'px',top:sn.r.top+'px',width:sn.r.width+'px',height:sn.r.height+'px',maxHeight:'none',margin:'0',pointerEvents:'none',overflow:'hidden'});
+ (inMask?$('mask'):document.body).appendChild(g0);try{g0.scrollTop=sn.sc}catch(e){}setTimeout(()=>{try{g0.remove()}catch(e){}},ms);return g0}
+function maKind(k,M){if(MA_LOCK(k))return'sheet';if(MA_ALERT.test(k||''))return'alert';const big=M.querySelector('.tabs,.mgrid,.tmgrid,.sysbox,#chatBox,.gdc,.item');if(!big&&(M.textContent||'').length<420&&M.querySelector('.brow'))return'alert';
+ const t=MA.tap;if(t&&!t.inM&&Date.now()-t.t<600&&t.y<innerHeight*.58)return'zoom';return'sheet'}
+function maStagger(M){let i=0;[...M.children].forEach(ch=>{if(ch.classList.contains('xbtn')||ch.classList.contains('maGrab')||ch.classList.contains('maGhost'))return;ch.style.setProperty('--i',Math.min(i++,14))})}
+function maGrab(M,k){if(M.querySelector(':scope>.maGrab'))return;M.insertAdjacentHTML('afterbegin',`<div class="maGrab${MA_LOCK(k)?' lock':''}"><i></i></div>`)}
+function maRun(M,cls){M.classList.remove('maSheet','maZoom','maAlert','maPush','maPop','maIn','maLite');void M.offsetWidth;cls.split(' ').forEach(c=>c&&M.classList.add(c));clearTimeout(M._maT);M._maT=setTimeout(()=>{M.classList.remove('maSheet','maZoom','maAlert','maPush','maPop','maIn','maLite');M.style.transformOrigin=''},700)}
+{const _mdA=modal;modal=function(html,k){const M=$('modal'),on=maOn();let wasOpen=modalOpen&&$('mask').classList.contains('on'),prevK=M.dataset.k||'',sn=null;
+ const cl=MA.closed;if(!wasOpen&&cl&&Date.now()-cl.t<120){wasOpen=true;prevK=cl.k;sn=cl.sn;try{cl.g&&cl.g.remove();cl.bd&&cl.bd.remove()}catch(e){}MA.closed=null}
+ else if(wasOpen&&on&&(k||'')!==prevK)sn=maSnap();
+ const f0=M.firstChild;const r=_mdA.apply(this,arguments);
+ try{if(M.firstChild===f0||!on)return r;k=k||'';const shown=$('mask').classList.contains('on');
+  if(on===1){if(!wasOpen&&shown)maRun(M,'maLite');return r}
+  if(!wasOpen){MA.stack=[k];const kind=maKind(k,M);MA.mode=kind;if(kind!=='alert')maGrab(M,k);maStagger(M);
+   if(kind==='zoom'){const rc=M.getBoundingClientRect(),t=MA.tap;M.style.transformOrigin=`${Math.round(t.x-rc.left)}px ${Math.round(t.y-rc.top)}px`}
+   if(shown)maRun(M,'ma'+kind[0].toUpperCase()+kind.slice(1)+(kind==='alert'?'':' maIn'))}
+  else if(k===prevK){if(MA.mode!=='alert')maGrab(M,k)}
+  else{const st=MA.stack,pop=st.length>=2&&st[st.length-2]===k;if(pop)st.pop();else{st.push(k);if(st.length>8)st.shift()}
+   if(MA.mode!=='alert'&&!MA_ALERT.test(k))maGrab(M,k);maStagger(M);maGhost(sn,pop?'maPopOut':'maPushOut',360,true);maRun(M,(pop?'maPop':'maPush')+' maIn')}}catch(e){console.error(e)}return r}}
+{const _cmA=closeM;closeM=function(){const M=$('modal'),on=maOn()===2,was=$('mask').classList.contains('on')&&modalOpen,k=M.dataset.k||'';const sn=on&&was?maSnap():null;const r=_cmA.apply(this,arguments);
+ try{if(sn){const mode=MA.mode||'sheet',bd=document.createElement('div');bd.className='maBdOut';document.body.appendChild(bd);setTimeout(()=>{try{bd.remove()}catch(e){}},300);
+  const cls=mode==='zoom'?'maZoomOut':mode==='alert'?'maAlertOut':'maSheetOut';if(mode==='zoom')sn.c.style.transformOrigin=M.style.transformOrigin||'50% 50%';const g=maGhost(sn,cls,300,false);MA.closed={t:Date.now(),k,sn:maSnap0(sn),g,bd};MA.stack=[]}}catch(e){}return r}}
+function maSnap0(sn){try{const c=sn.c.cloneNode(true);c.classList.remove('maGhost','maSheetOut','maZoomOut','maAlertOut');['position','left','top','width','height','maxHeight','margin','pointerEvents','overflow','transformOrigin'].forEach(p=>c.style[p]='');return{c,r:sn.r,sc:sn.sc}}catch(e){return null}}
+// ปัดลงเพื่อปิด (ที่ขีดจับ/หัวข้อ) · ปัดจากขอบซ้ายเพื่อย้อนกลับ
+(()=>{let d=null;const M=()=>$('modal');
+ const xb=()=>{const m=M();return m&&[...m.querySelectorAll(':scope>.xbtn')][0]};
+ const isBack=b=>b&&(/←/.test(b.textContent)||!/closeM\(\)\s*$/.test((b.getAttribute('onclick')||'').trim()));
+ document.addEventListener('pointerdown',e=>{if(maOn()!==2||!modalOpen)return;const m=M();if(!m||!$('mask').classList.contains('on'))return;const inM=e.target.closest&&e.target.closest('#modal');
+  if(inM&&(e.target.closest('.maGrab')||(e.target.closest('h3')&&m.scrollTop<=0))&&!e.target.closest('button,input,textarea,a')){d={t:'down',y0:e.clientY,x0:e.clientX,id:e.pointerId,lock:MA_LOCK(m.dataset.k||'')||!xb(),t0:Date.now()};return}
+  const rc=m.getBoundingClientRect();if(e.clientX-rc.left<26&&e.clientX>=rc.left-10&&isBack(xb())&&MA.stack.length>1){d={t:'back',x0:e.clientX,y0:e.clientY,id:e.pointerId,t0:Date.now()}}},{passive:true});
+ document.addEventListener('pointermove',e=>{if(!d||e.pointerId!==d.id)return;const m=M();if(!m)return;
+  if(d.t==='down'){let dy=e.clientY-d.y0;if(dy<0)dy=dy*.2;if(d.lock)dy=dy>0?Math.pow(dy,.7):dy;m.style.transition='none';m.style.transform=`translateY(${dy}px)`;d.dy=dy}
+  else{const dx=Math.max(0,e.clientX-d.x0);if(Math.abs(e.clientY-d.y0)>60&&dx<20){d=null;return}m.style.transition='none';m.style.transform=`translateX(${dx}px)`;m.style.opacity=String(1-Math.min(.4,dx/600));d.dx=dx}},{passive:true});
+ const up=e=>{if(!d)return;const m=M(),dd=d;d=null;if(!m)return;const v=dd.t==='down'?(dd.dy||0)/Math.max(1,Date.now()-dd.t0):(dd.dx||0)/Math.max(1,Date.now()-dd.t0);
+  const go=dd.t==='down'?(!dd.lock&&((dd.dy||0)>110||v>.6)):((dd.dx||0)>90||v>.6);
+  m.style.transition='transform .32s cubic-bezier(.2,1.2,.4,1),opacity .25s';
+  if(go){if(dd.t==='down'){MA.mode='sheet';m.style.transform='';m.style.transition='';const b=xb();if(b)b.click();else closeM()}else{m.style.transform='';m.style.opacity='';m.style.transition='';const b=xb();if(b)b.click()}}
+  else{m.style.transform='';m.style.opacity='';setTimeout(()=>{if(m)m.style.transition=''},340)}};
+ document.addEventListener('pointerup',up,{passive:true});document.addEventListener('pointercancel',up,{passive:true})})();
+(()=>{const st=document.createElement('style');st.textContent=`
+body.tuOn .mask.on{animation:maBd .3s ease both}@keyframes maBd{from{background-color:rgba(0,0,0,0)}}
+body.tuOn.fxHi .mask.on{backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.maBdOut{position:fixed;inset:0;z-index:49;background:#000a;pointer-events:none;animation:maBdO .28s ease forwards}@keyframes maBdO{to{background-color:rgba(0,0,0,0)}}
+#modal.maSheet{animation:maSheet .46s cubic-bezier(.18,.9,.25,1) both!important}@keyframes maSheet{0%{transform:translateY(58vh);opacity:.3}62%{transform:translateY(-7px);opacity:1}82%{transform:translateY(2px)}100%{transform:none}}
+#modal.maZoom{animation:maZoom .42s cubic-bezier(.2,.9,.3,1) both!important}@keyframes maZoom{0%{transform:scale(.18);opacity:0;border-radius:40px}65%{transform:scale(1.025);opacity:1}100%{transform:none}}
+#modal.maAlert{animation:maAlert .24s cubic-bezier(.2,.9,.3,1) both!important}@keyframes maAlert{from{transform:scale(1.12);opacity:0}to{transform:none;opacity:1}}
+#modal.maPush{animation:maPushIn .34s cubic-bezier(.2,.9,.3,1) both!important}@keyframes maPushIn{from{transform:translateX(40%);opacity:0}to{transform:none;opacity:1}}
+#modal.maPop{animation:maPopIn .34s cubic-bezier(.2,.9,.3,1) both!important}@keyframes maPopIn{from{transform:translateX(-30%);opacity:0}to{transform:none;opacity:1}}
+#modal.maLite{animation:maLite .2s ease both!important}@keyframes maLite{from{opacity:0}}
+.maGhost{z-index:0;box-sizing:border-box}.mask>#modal{z-index:1}
+.maPushOut{animation:maPushOut .34s cubic-bezier(.4,0,.6,1) forwards}@keyframes maPushOut{to{transform:translateX(-26%) scale(.96);opacity:0}}
+.maPopOut{animation:maPopOut .34s cubic-bezier(.4,0,.6,1) forwards}@keyframes maPopOut{to{transform:translateX(38%);opacity:0}}
+.maSheetOut{z-index:51;animation:maSheetOut .28s cubic-bezier(.4,0,.8,.6) forwards}@keyframes maSheetOut{to{transform:translateY(46vh);opacity:0}}
+.maZoomOut{z-index:51;animation:maZoomOut .26s cubic-bezier(.4,0,.8,.6) forwards}@keyframes maZoomOut{to{transform:scale(.2);opacity:0}}
+.maAlertOut{z-index:51;animation:maAlertOut .18s ease forwards}@keyframes maAlertOut{to{transform:scale(.94);opacity:0}}
+#modal.maIn>*:not(.xbtn):not(.maGrab):not(.maGhost){animation:maItem .4s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(var(--i,0) * 28ms + 70ms)}@keyframes maItem{from{opacity:0;transform:translateY(10px)}}
+#modal>.maGrab{position:sticky;top:-16px;margin:-12px auto 4px;width:100%;height:16px;display:flex;justify-content:center;align-items:center;touch-action:none;cursor:grab;z-index:3}
+#modal>.maGrab i{display:block;width:38px;height:5px;border-radius:999px;background:color-mix(in srgb,var(--ink,#ccc) 30%,transparent)}#modal>.maGrab.lock i{opacity:.35}
+body:not(.tuOn) #modal>.maGrab{display:none}`;document.head.appendChild(st)})();
+setInterval(()=>{try{document.body.classList.toggle('fxHi',typeof fxQ!=='undefined'&&fxQ>=2)}catch(e){}},1500);
+
 </script>
 </body>
 </html>
