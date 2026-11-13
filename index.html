@@ -21637,6 +21637,12 @@ function specCapTx(ctx,cv,cap){let t=String(cap||'');let f=13;ctx.fillStyle='#ff
 
 // เกาะขยายแล้วไม่ดึงหน้าเล่นเกมลง (ผู้เล่นไม่ชอบ) — เกาะลอยทับด้านบนแทน
 islPush=function(){try{const g=$('game');if(g){g.classList.remove('islPushOn');g.style.removeProperty('--islPush')}}catch(e){}};try{islPush()}catch(e){}
+
+// ===================== นรก 18 ชั้น: ประตูที่ถึงเวลาแล้วไม่ถูกเลื่อนไปเรื่อยๆ =====================
+// เดิมประตูจะเปิดเฉพาะปีที่ไม่มีเหตุการณ์อื่นค้าง → ในแดนเทพที่มีเหตุการณ์ทุกปี ประตูไม่เคยมา · ตอนนี้รอจนว่างแล้วเปิดทันที
+setInterval(()=>{try{if(!S||!S.alive||paused&&!auto)return;const h=typeof hellInfo==='function'?hellInfo():null;if(!h||h.lv>=18||S.age<h.next)return;if(choice._cur||modalOpen||document.hidden||document.querySelector('.kfx'))return;if(h._gT&&Date.now()-h._gT<4000)return;h._gT=Date.now();gate()}catch(e){}},1200);
+// ===================== แดนเทพ: สัตว์อสูรก็มีผู้ศรัทธาเพิ่มขึ้น =====================
+{const _gvB=gevTick;gevTick=function(st){try{if(S&&S.alive&&S.xian&&S.xt&&S.beastMode){if(S.beastMode.human){const bm=S.beastMode;S.beastMode=null;try{return _gvB.apply(this,arguments)}finally{S.beastMode=bm}}const g=gdInit();g.n=(g.n||0)+1;gdTick(st);return}}catch(e){console.error(e)}return _gvB.apply(this,arguments)}}
 </script>
 </body>
 </html>
