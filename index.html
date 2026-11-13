@@ -21784,6 +21784,15 @@ function openWuxia(){if(!S)return;const L=grudges(),live=L.filter(x=>!x.done),do
 {const _omW=openMenu;openMenu=function(){const r=_omW.apply(this,arguments);try{const m=$('modal'),gr=m.querySelector('.mgrid');if(gr&&!gr.querySelector('[data-wx]')&&wxOk()){const n=grudges().filter(x=>!x.done).length;gr.insertAdjacentHTML('afterbegin',`<button class="opt" data-wx="1" onclick="openWuxia()">🀄 วิถียุทธ์<small>${n?'📕 แค้น '+n+' · ':''}${flames().length?'🔥 '+flames().length+' · ':''}${S.alias?'🎭 '+esc(S.alias.n):hideOn()?'🫥 ซ่อนพลัง':'แค้น · หน้ากาก · ไฟ · กาย'}</small></button>`)}}catch(e){}return r}}
 try{GD2.push({s:'base',ic:'🀄',t:'วิถียุทธ์',nw:1,d:'☰ → 🀄 วิถียุทธ์ · 📕 บัญชีแค้น (คนที่ทำร้ายคุณถูกจดเอง แข็งแกร่งขึ้นทุกปี ชำระได้) · 🫥 ซ่อนพลัง (มีคนหยิ่งมาหาเรื่อง ตบกลับได้ชื่อเสียงก้อนใหญ่) · 🎭 ตัวตนลับ · 🔥 เปลวไฟสวรรค์ 24 อันดับ · ✨ ดวงวิญญาณอาวุธ · 🪨 หลอมกาย · 👁️ มารในใจตอนทะลวงขั้นใหญ่ · 📜 บางชีวิตถูกถอนหมั้นตอนวัยรุ่น'})}catch(e){}
 
+
+// ===================== ผู้ย้อนกาล: บาลานซ์ความยาก — จบรอบเดียวไม่ได้อีก =====================
+const RG_MIN={protector:2,lonely:3,breaker:3},RG_FPL=2;
+{const _rgE=rgEnd;rgEnd=function(kind){try{const G=S.rg,need=RG_MIN[kind]||1;if(G&&!G.free&&G.loop<need){const nm={protector:'🌅 ผู้พิทักษ์',lonely:'👑 ราชันผู้โดดเดี่ยว',breaker:'🔓 ผู้ทำลายวงจร'}[kind];
+  if(kind==='lonely')G.lonely=0;if(kind==='breaker')G.brk=0;G.early=(G.early||0)+1;
+  log(`⏳ ประตู${nm}เปิดออกครึ่งหนึ่ง แล้วปิดลงต่อหน้า — <b>วงจรยังหมุนไม่ครบ</b> ฟ้ายังไม่เชื่อว่าคนที่ยังไม่เคยเห็นความตายของตัวเองมากพอจะออกไปได้ (ต้องผ่านอย่างน้อย ${need} รอบ · ตอนนี้รอบที่ ${G.loop})`,'myth',true);
+  try{island({big:1,pri:1,ic:'⏳',h:'วงจรยังไม่ยอมปล่อย',t:`ต้องผ่านอย่างน้อย ${need} รอบ`,d:`ตอนนี้รอบที่ ${G.loop} — ตายแล้วย้อนกลับมาใหม่เพื่อไปต่อ`,kind:'bad',ms:4200})}catch(e){}return}}catch(e){console.error(e)}return _rgE.apply(this,arguments)}}
+{const _rgF=rgFrag;rgFrag=function(f,i){try{const G=S.rg;if(G&&!G.frag[i]){G.fragL=G.fragL||{};const n=G.fragL[G.loop]||0;if(n>=RG_FPL){if(!G.fragFull||G.fragFull!==G.loop){G.fragFull=G.loop;log(`🌀 คุณสัมผัสได้ถึงเศษปริศนาอีกชิ้นที่「${f.t}」 แต่ความทรงจำรอบนี้รับไม่ไหวแล้ว — ต้องย้อนกลับไปเริ่มใหม่ถึงจะจำเพิ่มได้ (รอบละ ${RG_FPL} ชิ้น)`,'')}return false}
+  const had=!!G.frag[i];const r=_rgF.apply(this,arguments);if(!had&&G.frag[i])G.fragL[G.loop]=n+1;return r}}catch(e){console.error(e)}return _rgF.apply(this,arguments)}}
 </script>
 </body>
 </html>
