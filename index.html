@@ -20154,7 +20154,7 @@ const ISL={q:[],cur:null,t:0,live:null,last:{}};
 function islOn(){try{return tuOn()}catch(e){return true}}
 function islLite(){try{return (typeof fxQ!=='undefined'&&fxQ===1)||matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}}
 function islEl(){let e=document.getElementById('isl');if(!e){e=document.createElement('div');e.id='isl';e.innerHTML='<div class="islC"></div>';document.body.appendChild(e);
-  e.addEventListener('click',()=>{const c=ISL.cur;if(!c)return;if(c.act){try{c.act.f()}catch(x){}islNext(true);return}if(!c.big&&c.d){c.big=1;islRender(c,true);clearTimeout(ISL.t);ISL.t=setTimeout(()=>islNext(),3200)}else islNext(true)});
+  e.addEventListener('click',()=>{const c=ISL.cur;if(!c)return;if(c.act){try{c.act.f()}catch(x){}islNext(true);return}if(!c.big&&c.d){c.big=1;islRender(c,true);clearTimeout(ISL.t);ISL.t=setTimeout(()=>islNext(),3200)}else{e.classList.remove('bnc');void e.offsetWidth;e.classList.add('bnc');clearTimeout(ISL.t);ISL.t=setTimeout(()=>islNext(),1800)}});
   let y0=null;e.addEventListener('touchstart',ev=>{y0=ev.touches[0].clientY},{passive:true});e.addEventListener('touchmove',ev=>{if(y0!=null&&y0-ev.touches[0].clientY>18){y0=null;islNext(true)}},{passive:true})}
  e.classList.toggle('lite',islLite());return e}
 function islHtml(n){const k=n.kind||'info';
@@ -20301,6 +20301,95 @@ body.isl-jade .islChip{background:#0f2e24}
 .islGhost{position:fixed;z-index:99991;pointer-events:none;border-radius:20px;background:#050407;display:flex;align-items:center;justify-content:center;font-size:16px;transform-origin:center;box-shadow:0 0 16px rgba(111,195,160,.5)}
 body.isl-scroll .islGhost{border-radius:5px;background:#1e140c;box-shadow:0 0 0 1px #e8b54a,0 0 16px #e8b54a66}
 body.isl-jade .islGhost{background:#123a2e;box-shadow:0 0 0 1px #e8c46a,0 0 16px #6fc3a066}`;document.head.appendChild(st)})();
+// ===================== 🏝️ ลูกเล่นเกาะ: บีบ · ปัด · โยน · แตะรัว · หายใจ · เอฟเฟกต์เหตุการณ์ · หน้าตัวละคร · ชิปเพิ่ม · เสียง/สั่น · ย้อนหลัง · โหมดเงียบ =====================
+ISL.hist=[];ISL.silent=0;
+const ISL_Q=['ดาบที่คมที่สุด คือดาบที่ไม่ต้องชัก','ฟ้ามิได้ลิขิตทุกสิ่ง บางอย่างต้องลิขิตเอง','ภูเขาไม่เคยรีบ แต่ก็ไม่เคยแพ้สายลม','ผู้ชนะร้อยครั้ง ยังแพ้ใจตนได้ในครั้งเดียว','น้ำนิ่งไหลลึก คนเงียบมีวิชา','ศัตรูที่น่ากลัวที่สุด คือเมื่อวานของตัวเอง','ลมปราณมิใช่เพียงลมหายใจ หากคือเจตจำนง','เดินช้าไม่เป็นไร ขอแค่อย่าหยุดเดิน','ชื่อเสียงคือเงา ยิ่งไล่ยิ่งหนี','จอมยุทธ์แท้ ไม่วัดกันที่กระบี่ แต่วัดที่ใจ'];
+const islSnd=()=>LS.get('murim_islsnd',1);
+// ---------- รับเรื่องเข้าเกาะ: ประวัติ · โหมดเงียบ · อัปเดตสด · เอฟเฟกต์ ----------
+{const _isF=island;island=function(n){if(!n||!n.t)return;try{
+  if(n.upd&&ISL.cur&&ISL.cur.key===n.key){Object.assign(ISL.cur,{t:n.t,d:n.d,p:n.p});islRender(ISL.cur,true);clearTimeout(ISL.t);ISL.t=setTimeout(()=>islNext(),n.ms||1400);return}
+  if(n.key==='fate'){const q=ISL.q.find(x=>x.key==='fate');if(q){Object.assign(q,{t:n.t,p:n.p,kind:n.kind});return}}
+  if(!n.upd&&n.key!=='fate'){ISL.hist.push({ic:n.ic,h:n.h,t:n.t,d:n.d,kind:n.kind,act:n.act,at:Date.now()});if(ISL.hist.length>20)ISL.hist.shift()}
+  if(Date.now()<ISL.silent&&!n.pri&&!n.upd)return;
+  if(!n.fx){if(n.h==='ทะลวงขั้น')n.fx='bolt';else if(n.kind==='rainbow')n.fx='burst'}}catch(e){}return _isF.apply(this,arguments)}}
+// ---------- หน้าตัวละครในเกาะ ----------
+{const _ihF=islHtml;islHtml=function(n){let h=_ihF.apply(this,arguments);try{if(n.big&&S&&LS.get('murim_lastLook',null))h=h.replace('<div class="islIc">','<div class="islFace"><canvas width="56" height="62"></canvas></div><div class="islIc">')}catch(e){}return h}}
+function islFaceDraw(cv,kind){try{const lk=LS.get('murim_lastLook',null);if(!cv||!lk||typeof person!=='function')return;const ctx=cv.getContext('2d');const sg=g,sp=PS;try{g=ctx;PS=cv.width/28;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;ctx.clearRect(0,0,28,31);const o=Object.assign({},lk,{beast:null,aura:null,mood:kind==='bad'?(lk.mood||'sad'):'happy'});person(9,29,o,'stand')}finally{g=sg;PS=sp}}catch(e){}}
+// ---------- หลังวาด: ขนาด · จุดคิว · เอฟเฟกต์ · เสียง/สั่น ----------
+{const _irF=islRender;islRender=function(n){const r=_irF.apply(this,arguments);try{const e=$('isl');document.documentElement.style.setProperty('--islH',e.style.height||'34px');
+  const cv=e.querySelector('.islIn:last-child .islFace canvas');if(cv)islFaceDraw(cv,n.kind);islDots();
+  if(n.p!=null){e.style.setProperty('--islP',Math.max(0,Math.min(1,n.p)));e.classList.add('prog')}else e.classList.remove('prog');
+  if(!n._shown){n._shown=1;islFx(n);islFeel(n)}}catch(x){}return r}}
+function islDots(){let d=document.getElementById('islDots');if(!d){d=document.createElement('div');d.id='islDots';document.body.appendChild(d)}const k=Math.min(5,ISL.q.filter(x=>x.key!=='fate').length);d.innerHTML=k&&ISL.cur?'<i></i>'.repeat(k):'';d.classList.toggle('on',!!(k&&ISL.cur))}
+function islFeel(n){try{if(n.big&&islSnd()&&typeof sfx==='function'){if(n.kind==='rainbow')sfx('rare');else if(n.kind==='gold')sfx('ach');else if(n.kind==='bad')sfx('bad')}
+  const P={ok:[12],gold:[12,40,12],rainbow:[15,40,15,40,25],bad:[60]}[n.kind];if(P&&(n.big||n.pri)&&navigator.vibrate)navigator.vibrate(P)}catch(e){}}
+function islFx(n){if(!n.fx||islLite())return;const e=$('isl');const r=e.getBoundingClientRect();const cx=innerWidth/2,cy=r.top+parseFloat(e.style.height||34)/2;
+ const sp=(txt,cls)=>{const s=document.createElement('div');s.className='islFx '+(cls||'');s.textContent=txt;s.style.left=cx+'px';s.style.top=cy+'px';document.body.appendChild(s);return s};
+ if(n.fx==='bolt'){const b=document.createElement('div');b.className='islBolt';b.style.left=(cx-14)+'px';b.style.height=(cy+4)+'px';b.innerHTML='<svg viewBox="0 0 28 100" preserveAspectRatio="none"><polyline points="16,0 8,38 18,42 6,100" fill="none" stroke="#fff6c8" stroke-width="3"/><polyline points="16,0 8,38 18,42 6,100" fill="none" stroke="#ffd76a" stroke-width="7" opacity=".45"/></svg>';document.body.appendChild(b);setTimeout(()=>b.remove(),520);
+  const gm=$('game');if(gm){gm.classList.remove('islShake');void gm.offsetWidth;gm.classList.add('islShake');setTimeout(()=>gm.classList.remove('islShake'),420)}e.classList.add('flash');setTimeout(()=>e.classList.remove('flash'),500)}
+ else if(n.fx==='coins'){for(let i=0;i<4;i++){const s=sp('🪙');const dx=(i-1.5)*34+(Math.random()*16-8),up=-30-Math.random()*20;s.animate([{transform:'translate(-50%,-50%) scale(.4)',opacity:0},{transform:`translate(calc(-50% + ${dx*.6}px),calc(-50% + ${up}px)) scale(1)`,opacity:1,offset:.35},{transform:`translate(calc(-50% + ${dx}px),calc(-50% + 90px)) scale(.8) rotate(${dx*4}deg)`,opacity:0}],{duration:900+i*60,easing:'cubic-bezier(.2,.7,.4,1)'}).onfinish=()=>s.remove()}}
+ else if(n.fx==='leaf'){const s=sp('🍂');s.animate([{transform:'translate(-50%,-50%) rotate(0)',opacity:0},{opacity:1,offset:.15},{transform:'translate(calc(-50% + 40px),calc(-50% + 120px)) rotate(200deg)',opacity:.8,offset:.6},{transform:'translate(calc(-50% - 10px),calc(-50% + 200px)) rotate(320deg)',opacity:0}],{duration:2600,easing:'ease-in-out'}).onfinish=()=>s.remove()}
+ else if(n.fx==='burst'){for(let i=0;i<14;i++){const s=sp('','islSpark');const a=i/14*Math.PI*2,d=60+Math.random()*40;s.animate([{transform:'translate(-50%,-50%) scale(1)',opacity:1},{transform:`translate(calc(-50% + ${Math.cos(a)*d}px),calc(-50% + ${Math.sin(a)*d*.6}px)) scale(.2)`,opacity:0}],{duration:700+Math.random()*300,easing:'cubic-bezier(.1,.8,.3,1)'}).onfinish=()=>s.remove()}}}
+// ---------- ท่าทางบนเกาะ: บีบ · ปัด · โยน · ดึงลง · แตะรัว ----------
+(()=>{const e=islEl();let st=null,taps=[];
+ const setv=(gx,gy,gr,gs,tr)=>{e.style.transition=tr||'';e.style.setProperty('--gx',gx+'px');e.style.setProperty('--gy',gy+'px');e.style.setProperty('--gr',gr+'deg');e.style.setProperty('--gs',gs)};
+ e.addEventListener('pointerdown',ev=>{if(!ISL.cur)return;st={x0:ev.clientX,y0:ev.clientY,t0:performance.now(),dx:0,dy:0,g:0,hold:0};e.classList.add('sq');
+  st.tm=setTimeout(()=>{if(!st||st.g)return;st.hold=1;st.g=1;e.classList.remove('sq');const c=ISL.cur;if(c&&!c.big){c.big=1;if(!c.h)c.h='รายละเอียด';islRender(c,true)}clearTimeout(ISL.t);ISL.t=setTimeout(()=>islNext(),5000);tuBuzz()},600)});
+ e.addEventListener('pointermove',ev=>{if(!st)return;st.dx=ev.clientX-st.x0;st.dy=ev.clientY-st.y0;if(Math.hypot(st.dx,st.dy)>10){clearTimeout(st.tm);e.classList.remove('sq')}
+  if(Math.abs(st.dx)>Math.abs(st.dy)&&Math.abs(st.dx)>8){st.g=1;setv(st.dx*.6,0,st.dx*.04,1,'none')}else if(st.dy>8){st.g=1;setv(0,Math.min(40,st.dy*.5),0,1+Math.min(.06,st.dy/900),'none')}});
+ const end=ev=>{if(!st)return;const s=st;st=null;clearTimeout(s.tm);e.classList.remove('sq');const dt=Math.max(1,performance.now()-s.t0),vx=s.dx/dt;
+  if(!s.g){e.classList.remove('bnc');void e.offsetWidth;e.classList.add('bnc');return}
+  e._g=1;setTimeout(()=>e._g=0,60);
+  if(Math.abs(s.dx)>Math.abs(s.dy)&&(Math.abs(vx)>.9||Math.abs(s.dx)>90)){const dir=Math.sign(s.dx);setv(dir*innerWidth*.8,-10,dir*28,.9,'transform .26s cubic-bezier(.4,0,1,1),opacity .26s');e.style.opacity='0';setTimeout(()=>{setv(0,0,0,1,'none');e.style.opacity='';islNext(true)},270);return}
+  if(Math.abs(s.dx)>Math.abs(s.dy)&&Math.abs(s.dx)>40){setv(0,0,0,1);if(s.dx<0)islNext(true);else{const h=ISL.hist.slice(0,-1).reverse().find(x=>x.t!==(ISL.cur&&ISL.cur.t));if(h)island({ic:h.ic,h:h.h,t:h.t,d:h.d,kind:h.kind,act:h.act,big:!!h.h,pri:1,key:'h'+h.at})}return}
+  setv(0,0,0,1);if(s.dy>34)islHistory()};
+ e.addEventListener('pointerup',end);e.addEventListener('pointercancel',end);
+ e.addEventListener('click',ev=>{if(e._g){ev.stopImmediatePropagation();ev.preventDefault();return}const t=Date.now();taps=taps.filter(x=>t-x<1500);taps.push(t);if(taps.length>=5){taps=[];ev.stopImmediatePropagation();e.classList.remove('shake');void e.offsetWidth;e.classList.add('shake');setTimeout(()=>island({big:1,pri:1,ic:'🍃',h:'ปรัชญายุทธภพ',t:ISL_Q[Math.floor(Math.random()*ISL_Q.length)],kind:'gold',ms:4200,key:'q'+t}),380)}},true)})();
+// ---------- ประวัติแจ้งเตือน + โหมดเงียบ ----------
+function islHistory(){const L=ISL.hist.slice().reverse(),now=Date.now(),ago=t=>{const s=Math.round((now-t)/1000);return s<60?s+' วิ':s<3600?Math.round(s/60)+' นาที':Math.round(s/3600)+' ชม.'};const sil=Date.now()<ISL.silent;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏝️ แจ้งเตือนล่าสุด</h3><div class="brow" style="margin-bottom:8px"><button class="${sil?'pbtn':'gbtn'}" onclick="ISL.silent=${sil?0:'Date.now()+600000'};islHistory()">${sil?'🔔 เลิกเงียบ':'🔕 เงียบ 10 นาที'}</button><button class="gbtn" onclick="LS.set('murim_islsnd',islSnd()?0:1);islHistory()">${islSnd()?'🔊 เสียงเกาะ: เปิด':'🔇 เสียงเกาะ: ปิด'}</button></div>${sil?'<p class="tag2">เงียบอยู่ — ขึ้นเฉพาะเรื่องสำคัญ</p>':''}`+(L.length?L.map((x,i)=>`<div class="item islHi ${x.act?'click':''}" data-i="${i}"><div class="h"><b>${x.ic||'🔔'} ${x.h?x.h+' · ':''}${x.t}</b><span class="tag2">${ago(x.at)}</span></div>${x.d?`<p class="tag2">${x.d}</p>`:''}</div>`).join(''):'<p class="tag2">ยังไม่มีแจ้งเตือน</p>'),'islh');
+ document.querySelectorAll('#modal .islHi.click').forEach(d=>d.onclick=()=>{const x=L[+d.dataset.i];closeM();try{x.act.f()}catch(e){}})}
+// ---------- เหตุการณ์: เงินก้อนใหญ่ · คนสนิทจากไป ----------
+{const _pyF=passYear;passYear=function(){const m0=S&&S.money;const r=_pyF.apply(this,arguments);try{if(islOn()&&S&&S.alive&&m0!=null&&!window._inQmFF){const d=S.money-m0;if(d>Math.max(5000,m0*.5)&&S.age>=12)island({ic:'💰',t:`ได้เงินก้อนใหญ่ +${fmt(Math.round(d))}`,kind:'gold',fx:'coins',ms:2400})}}catch(e){}return r}}
+{const _lgF=log;log=function(t,c){const r=_lgF.apply(this,arguments);try{if(islOn()&&S&&S.alive&&c==='bad'&&/เสียชีวิต|จากไป|สิ้นใจ|สิ้นลม/.test(t)&&!/คุณ(?:ตาย|เสียชีวิต)/.test(t)&&Date.now()-(ISL.last.leaf||0)>4000){ISL.last.leaf=Date.now();island({ic:'🕯️',t:esc(String(t).replace(/<[^>]+>/g,'').slice(0,60)),kind:'grey',fx:'leaf',ms:3200})}}catch(e){}return r}}
+// ---------- ชิปค้างเพิ่ม: ข้ามเวลา · ประมูล · นับถอยหลังชะตา ----------
+function islChipX(k,ic,txt,onTap){const d=islDockEl();if(!d)return null;let c=d.querySelector(`[data-k="${k}"]`);if(!c){c=document.createElement('span');c.className='islChip pop';c.dataset.k=k;c.innerHTML=`<i>${ic}</i><em></em>`;c.onclick=ev=>{ev.stopPropagation();onTap&&onTap()};d.appendChild(c);setTimeout(()=>c.classList.remove('pop'),500)}c.querySelector('em').textContent=txt;return c}
+function islChipOff(k){const c=document.querySelector(`#islDock [data-k="${k}"]`);if(c){c.classList.add('bye');setTimeout(()=>c.remove(),360)}}
+qmFF=function(n,until){if(!S||!S.alive)return;flushReveal();let k=0;const r0=realmIdx(),p0=typeof postLv==='function'?postLv():0;
+ const step=()=>{if(k<n&&S&&S.alive&&!choice._cur&&!modalOpen){window._inQmFF=1;try{passYear()}catch(e){console.error(e)}finally{window._inQmFF=0}k++;const c=islChipX('ff','⏩',`${k}/${n}`);if(c)c.style.setProperty('--p',k/n);
+  if(!(until&&(realmIdx()>r0||(typeof postLv==='function'&&postLv()>p0)))){setTimeout(step,until?30:70);return}}
+  islChipOff('ff');flushReveal();render();toast(k?`⏩ ข้ามไป ${k} ปี${choice._cur||modalOpen?' — มีเรื่องให้ตัดสินใจ':''}`:'มีเรื่องรอให้ตัดสินใจก่อน')};step()};
+setInterval(()=>{try{if(!islOn())return;const g=$('game'),inG=!!(S&&S.alive&&g&&g.classList.contains('on'));
+ const pa=typeof PA!=='undefined'&&PA.sum&&PA.sum.phase==='open'&&inG;if(pa)islChipX('pa','🏛️',String(PA.sum.left!=null?PA.sum.left:''),()=>{try{paJoin()}catch(e){}});else islChipOff('pa');
+ const m=$('modal');const e=$('chCd');const nn=m&&m.dataset.k==='choice'&&modalOpen&&e?+((e.textContent.match(/(\d+)\s*วิ/)||[])[1]):0;
+ if(nn&&nn<=5){const fs=fateSec()||nn;island({key:'fate',upd:ISL.cur&&ISL.cur.key==='fate'?1:0,ic:'⏳',t:`ชะตาจะตัดสินใน ${nn}`,p:nn/Math.max(nn,Math.min(5,fs)),kind:nn<=2?'bad':'info',ms:1300})}
+ const d=document.getElementById('islDock');if(d&&S)d.style.setProperty('--gl',Math.min(1,(realmIdx()||0)/9).toFixed(2))}catch(x){}},500);
+// ---------- สไตล์ ----------
+(()=>{const st=document.createElement('style');st.textContent=`
+#isl{--gx:0px;--gy:0px;--gr:0deg;--gs:1;touch-action:none}
+#isl.on{transform:translateX(calc(-50% + var(--gx))) translateY(var(--gy)) rotate(var(--gr)) scale(var(--gs))}
+#isl.on.sq{transform:translateX(-50%) scale(.92,.88)!important;transition:transform .5s cubic-bezier(.3,0,.3,1)!important}
+#isl.on.bnc{animation:islBnc .45s cubic-bezier(.3,1.8,.5,1)}@keyframes islBnc{0%{transform:translateX(-50%) scale(.9,.86)}55%{transform:translateX(-50%) scale(1.06,1.08)}100%{transform:translateX(-50%) scale(1)}}
+#isl.on.shake{animation:islShk .38s ease}@keyframes islShk{20%{transform:translateX(calc(-50% - 7px)) rotate(-3deg)}40%{transform:translateX(calc(-50% + 7px)) rotate(3deg)}60%{transform:translateX(calc(-50% - 5px))}80%{transform:translateX(calc(-50% + 4px))}}
+#isl.flash{filter:brightness(1.8)}#isl{transition-property:width,height,transform,opacity,border-radius,box-shadow,filter}
+#isl.k-grey{--ik:#8a8a96;filter:saturate(.3)}#isl.k-grey .islT{color:#c8c8d0!important}
+#isl.prog::after{content:'';position:absolute;left:10%;right:10%;bottom:3px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--ik,#6fc3a0) calc(var(--islP)*100%),rgba(255,255,255,.12) 0);transition:background .3s}
+#islDots{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 12px + var(--islH,34px));z-index:99990;display:flex;gap:4px;opacity:0;transition:opacity .2s,top .4s;pointer-events:none}
+#islDots.on{opacity:1}#islDots i{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 0 4px rgba(0,0,0,.6)}
+#isl .islFace{width:26px;height:24px;overflow:hidden;flex:0 0 auto;border-radius:6px;background:rgba(255,255,255,.06);animation:islFace .5s cubic-bezier(.3,1.7,.5,1) .15s backwards;margin-right:-4px}
+#isl .islFace canvas{width:52px;height:58px;margin:-2px 0 0 -12px;image-rendering:pixelated}
+@keyframes islFace{from{transform:translateY(14px);opacity:0}}
+.islFx{position:fixed;z-index:99992;pointer-events:none;font-size:18px;transform:translate(-50%,-50%)}
+.islSpark{width:6px;height:6px;border-radius:50%;background:radial-gradient(#fff,#ffd76a 60%,transparent);box-shadow:0 0 8px #ffd76a}
+.islBolt{position:fixed;top:0;width:28px;z-index:99989;pointer-events:none;animation:islBolt .5s steps(2,end) forwards;filter:drop-shadow(0 0 6px #ffd76a)}
+.islBolt svg{width:100%;height:100%}@keyframes islBolt{0%{opacity:1}30%{opacity:.2}45%{opacity:1}100%{opacity:0}}
+#game.islShake{animation:islGm .4s ease}@keyframes islGm{20%{transform:translate(-3px,1px)}40%{transform:translate(3px,-1px)}60%{transform:translate(-2px,0)}80%{transform:translate(2px,1px)}}
+#islDock .islChip{animation:islBreath 3.2s ease-in-out infinite}
+@keyframes islBreath{50%{transform:scale(1.06);box-shadow:0 2px 6px rgba(0,0,0,.35),0 0 calc(4px + 10px*var(--gl,0)) rgba(255,215,106,calc(.25 + .5*var(--gl,0)))}}
+#islDock .islChip.pop{animation:islChipPop .45s cubic-bezier(.3,1.8,.5,1)}#islDock .islChip.bye{animation:islChipBye .35s ease-in forwards}#islDock .islChip.wait{animation:none}
+.islChip em{font-style:normal;font-size:10px;font-weight:700;opacity:.9}
+.islChip[data-k="ff"]{background:conic-gradient(#6fc3a0 calc(var(--p,0)*360deg),#0b0810 0) border-box}
+#isl.lite .islFace{animation:none}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
