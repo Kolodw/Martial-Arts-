@@ -984,7 +984,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     const findLive = async (k2, adm) => { const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 90e3, '+inf']]); const f1 = (pub || []).find(x => x.slice(0, 6) + x.slice(-4) === k2); if (f1) return f1; if (adm) return (prv || []).find(x => x.slice(0, 6) + x.slice(-4) === k2) || null; return null };
     const RPC = [[120, 350, 800, 2200, 5500, 12000, 24000, 24000], [250, 900, 2500, 7000, 18000, 42000, 90000, 90000]];
     const powOk = (p, ri, x, age) => { ri = Math.max(0, Math.min(7, +ri || 0)); if (!(p >= 0) || !isFinite(p) || p > 1e16) return false; if (ri < 7 && p > RPC[x ? 1 : 0][ri] * 8 + 1000) return false; if (age != null && +age < 1000 && p > (x ? 60000 : 25000) * (1 + (+age || 1) / 8) + 300000) return false; return true };
-    const isBanned = async () => { const [c0, f0] = await pipe([['SISMEMBER', 'cheaters', id], ['GET', 'acf:' + id]]); return !!(+c0 || f0) };
+    const isBanned = async () => { const [c0, f0] = await pipe([['SISMEMBER', 'cheaters', id], ['GET', 'acf:' + id]]); return !!(+c0 || (f0 && !/^(srv-jump|srv-cap|jump|pow-age|stat|cap)/.test(String(f0)))) };
     const isAdmQ = k => !!ADM_KEY && String(k || '') === ADM_KEY;
     if (a === 'logget') {
       const k2 = String(qOf(req).t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -1131,11 +1131,11 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     if (a === 'live') {
       if (b.spec && (b.tp || await isBanned())) b.spec = 0;
       try { const z = JSON.parse(String(b.s || 'null')); if (z && z.st && okId(id)) { const p = +z.st.pow || 0, fm = +z.st.fame || 0, mn = +z.st.money || 0, ag = +z.age || 0; let why = '';
-        if (!isFinite(p) || p > 1e16 || fm > 1e16 || mn > 1e16) why = 'srv-cap';
+        if (!isFinite(p) || !isFinite(fm) || !isFinite(mn) || p > 1e30 || fm > 1e30 || mn > 1e30) why = 'srv-cap';
         const pv = jp(await cmd('GET', 'acp:' + id));
         if (!why && pv && pv.n === z.n && ag >= pv.a && ag - pv.a <= 3 && p > 1e7 && p > pv.p * 1000) why = 'srv-jump';
         const L = [['SET', 'acp:' + id, JSON.stringify({ n: z.n, a: ag, p }), 'EX', 86400 * 7]];
-        if (why && !(await cmd('GET', 'acf:' + id))) { L.push(['SET', 'acf:' + id, why, 'EX', 86400 * 60], ['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(z.n || ''), 24), age: ag, why, st: { pow: p, fame: fm, money: mn }, prev: pv, t: now })], ['LTRIM', 'acsus', 0, 199]); b.spec = 0 }
+        if (why && !(await cmd('GET', 'acf:' + id))) { if (why === 'srv-cap') L.push(['SET', 'acf:' + id, why, 'EX', 86400 * 60]); L.push(['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(z.n || ''), 24), age: ag, why, st: { pow: p, fame: fm, money: mn }, prev: pv, t: now })], ['LTRIM', 'acsus', 0, 199]); if (why === 'srv-cap') b.spec = 0 }
         await pipe(L) } } catch {}
       if (okId(id)) { try { const lm = uaMeta(req, now); lm.u = String(req.headers['user-agent'] || '').slice(0, 160); await cmd('HSET', 'lm', id, JSON.stringify(lm)) } catch {} }
       if (!b.spec) {
@@ -1296,9 +1296,9 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (!bad && det) {
           const D = JSON.parse(det), st = D.st || {}, kids = (D.kids || []).length, dis = +((String(D.sect || '').match(/ศิษย์\s*([0-9]+)/) || [])[1] || 0);
           const pw = +st.pow || 0, fm = +st.fame || 0, mn = +st.money || 0, ag = Math.max(1, +e.age || 1);
-          if ((+st.int || 0) > 1e6 || (+st.cha || 0) > 1e6 || fm > 1e16 || mn > 1e16 || kids > 1e5 || dis > 1e9 || pw > 1e16) bad = 'stat';
+          const BIG = v => !isFinite(v) || v > 1e30; if (BIG(+st.int || 0) || BIG(+st.cha || 0) || BIG(fm) || BIG(mn) || kids > 1e7 || BIG(dis) || BIG(pw)) bad = 'stat';
           const powCap = ((e.x ? 60000 : 25000) * (1 + ag / 8) + 300000) * (e.bm ? 12 : 1) * (D.sys ? 3 : 1) * (D.ai ? 3 : 1);
-          if (!bad && pw > powCap && ag < 1000) bad = 'pow-age';
+          if (!bad && pw > powCap && ag < 1000) { try { await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(e.n || ''), 24), age: ag, why: 'pow-age', st: { pow: pw, fame: fm, money: mn }, t: now, info: 1 })], ['LTRIM', 'acsus', 0, 199]]) } catch {} }
           const upper = (pw + fm * 3 + 20 * Math.sqrt(Math.max(0, mn)) + 2500 + kids * 100 + dis * 20 + 4000) * 2.5 * 1.05 + 1000;
         }
         if (!bad && !det) bad = 'nodet';

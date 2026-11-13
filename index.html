@@ -6458,14 +6458,14 @@ function blStageTxt(){const m=S.beastMode;const st=BL_ST[Math.min(BL_ST.length-1
 {const _dl3=dkLeft;dkLeft=function(){let h=_dl3.apply(this,arguments);try{if(S&&S.beastMode&&!S.beastMode.human){const m=S.beastMode;h=h.replace(/(<div class="dk-realm">🐾 )<b>[^<]*<\/b>/,`$1<b>${blStageTxt()}</b> <span class="rsub rs${realmSub()}">${RS_SUB[realmSub()]}</span>`).replace('<div class="dk-sub">ไร้สังกัด</div>',`<div class="dk-sub">${esc(m.sp)} · ธาตุ${esc(m.el)}</div>`)}}catch(e){}return h}}
 
 // ---------- v9.5 anti-cheat ----------
-const AC_CAP={int:20000,cha:20000,fame:2e7,money:1e11,qi:5e6};
+const AC_CAP={int:1e30,cha:1e30,fame:1e30,money:1e30,qi:1e30};
 let acPrev=null;
 function acSnap(){return{int:+S.int||0,cha:+S.cha||0,fame:+S.fame||0,money:+S.money||0,qi:+S.qi||0,pow:(()=>{try{return +total()||0}catch(e){return +S.power||0}})(),dis:S.ownSect?+S.ownSect.dis||0:0,kids:+S.kids||0,har:(S.harem||[]).length,age:+S.age||0}}
 function acFlag(why){if(!S||S._tp)return;S._tp=why;try{console.warn('integrity')}catch(e){}}
 let acObj=null;
-function acCheck(){try{if(!S||!S.alive||S.custom)return;if(S!==acObj){const kp=acPrev&&acObj&&acObj.name===S.name&&Math.abs((+S.age||0)-acPrev.age)<=2;acObj=S;if(!kp)acPrev=null}const c=acSnap();
+function acCheck(){try{if(!S||!S.alive||S.custom)return;if(S._tp&&/^(cap-|save-jump)/.test(String(S._tp)))delete S._tp;if(S!==acObj){const kp=acPrev&&acObj&&acObj.name===S.name&&Math.abs((+S.age||0)-acPrev.age)<=2;acObj=S;if(!kp)acPrev=null}const c=acSnap();
  for(const k in AC_CAP)if(c[k]>AC_CAP[k]||!isFinite(c[k]))return acFlag('cap-'+k);
- if(c.dis>1e9||c.kids>1e5||c.pow>1e16||!isFinite(c.pow))return acFlag('cap-x');
+ if(c.dis>1e30||c.kids>1e9||c.pow>1e30||!isFinite(c.pow))return acFlag('cap-x');
  if(acPrev&&c.age-acPrev.age<=1){const d=(k)=>c[k]-acPrev[k];
   if(d('int')>800||d('cha')>800)return acSus('jump-stat');
   if(d('fame')>Math.max(30000,acPrev.fame*4,c.pow/5))return acSus('jump-fame');
@@ -6565,7 +6565,7 @@ const EN_TOTAL=EN_SUR.length*(EN_GM.length+EN_GF.length);
 // ---------- v9.6 anti-cheat ขยาย: ระบบออนไลน์อื่นๆ ----------
 const AC_W=new WeakMap();
 {const _af=acFlag;acFlag=function(why){try{if(S&&!AC_W.has(S))AC_W.set(S,why)}catch(e){}return _af.apply(this,arguments)}}
-function acTp(){try{return(S&&(AC_W.get(S)||S._tp))||''}catch(e){return''}}
+function acTp(){try{const w=(S&&(AC_W.get(S)||S._tp))||'';return /^(cap-|save-jump)/.test(String(w))?'':w}catch(e){return''}}
 {const _apiAC=api;api=async function(a,b){try{const tp=acTp();if(b&&tp){if(a==='live'&&b.spec)b=Object.assign({},b,{spec:0});if(['meet','meetact','arena','ar2go','ar2rv','live','pabid','pachat','paforce','pavote','bhopen','bhpick','mtopen','mtpick','mtmsg','achfirst'].includes(a))b=Object.assign({},b,{tp})}if(b&&!tp&&(a==='arena'||a==='ar2go'||a==='ar2rv')){acCheck();if(acTp())b=Object.assign({},b,{tp:acTp()})}}catch(e){}const j=await _apiAC.call(this,a,b);try{if(a==='board'&&window._shareCall&&j){j.top=(j.top||[]).filter(e=>!e.anon);j.prev=(j.prev||[]).filter(e=>!e.anon)}}catch(e){}return j}}
 {const _sl2=sendLife;sendLife=async function(){try{acCheck()}catch(e){}return _sl2.apply(this,arguments)}}
 {const _py14=passYear;passYear=function(){try{acCheck()}catch(e){}const r=_py14.apply(this,arguments);try{acCheck()}catch(e){}return r}}
@@ -14728,7 +14728,7 @@ function svCheck(o){try{const c=o&&o._sg;if(!c||typeof c!=='object')return'';if(
   const over=(i,mul,add)=>n[i]>Math.abs(v[i])*mul+add;
   if(over(0,f?20:3,f?1e6:5e4)||over(1,f?5:2,f?500:50)||n[2]>v[2]+(f?3000:300)||n[3]>v[3]+(f?3000:300)||over(4,f?20:3,f?1e5:5000)||over(5,f?100:5,f?1e9:1e7)||n[6]>v[6]+(f?600:100)||over(7,f?10:2,f?5000:500)||over(8,f?10:2,f?5000:3000)||over(12,f?20:3,f?1e6:1e5))return'save-jump';return''}catch(e){return''}}
 {const _lsS=LS.set;LS.set=function(k,v){try{if(v&&typeof v==='object'&&v.S&&typeof v.S==='object'&&v.cfg===CFG&&v.v===VERSION&&S&&v.S.name===S.name){const vec=svVec(v.S);v.S._sg={v:vec,h:svHash(vec,v.S)}}}catch(e){}return _lsS.apply(this,arguments)}}
-{const _lgS=loadGame;loadGame=function(n){let bad='';try{const d=readSave(n==null?1:n);if(d&&d.S)bad=svCheck(d.S)}catch(e){}const r=_lgS.apply(this,arguments);try{if(bad&&S&&S.alive&&!S.custom){acFlag(bad);try{acSus(bad)}catch(e){}}}catch(e){}return r}}
+{const _lgS=loadGame;loadGame=function(n){let bad='';try{const d=readSave(n==null?1:n);if(d&&d.S)bad=svCheck(d.S)}catch(e){}const r=_lgS.apply(this,arguments);try{if(bad&&S&&S.alive&&!S.custom){if(bad!=='save-jump')acFlag(bad);try{acSus(bad)}catch(e){}}}catch(e){}return r}}
 
 // ---------- ส่งชีวิตขึ้นทำเนียบไม่สำเร็จ (เน็ตหลุด/เซิร์ฟเวอร์ขัดข้อง) → เก็บไว้แล้วส่งใหม่เองภายหลัง ----------
 function lifeQAdd(P){const q=(LS.get('murim_lifeq',[])||[]).filter(x=>x&&x.lid!==P.lid);q.push(Object.assign({},P,{_q:Date.now()}));while(q.length>3)q.shift();LS.set('murim_lifeq',q);
