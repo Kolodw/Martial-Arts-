@@ -21643,6 +21643,21 @@ islPush=function(){try{const g=$('game');if(g){g.classList.remove('islPushOn');g
 setInterval(()=>{try{if(!S||!S.alive||paused&&!auto)return;const h=typeof hellInfo==='function'?hellInfo():null;if(!h||h.lv>=18||S.age<h.next)return;if(choice._cur||modalOpen||document.hidden||document.querySelector('.kfx'))return;if(h._gT&&Date.now()-h._gT<4000)return;h._gT=Date.now();gate()}catch(e){}},1200);
 // ===================== แดนเทพ: สัตว์อสูรก็มีผู้ศรัทธาเพิ่มขึ้น =====================
 {const _gvB=gevTick;gevTick=function(st){try{if(S&&S.alive&&S.xian&&S.xt&&S.beastMode){if(S.beastMode.human){const bm=S.beastMode;S.beastMode=null;try{return _gvB.apply(this,arguments)}finally{S.beastMode=bm}}const g=gdInit();g.n=(g.n||0)+1;gdTick(st);return}}catch(e){console.error(e)}return _gvB.apply(this,arguments)}}
+
+// ===================== นรก 18 ชั้น: ล็อกเหตุการณ์ — ถึงเวลาประตูนรก เวลาหยุดจนกว่าจะสู้ =====================
+const hellDue=()=>{try{const h=typeof hellInfo==='function'?hellInfo():null;return !!(h&&S&&S.alive&&h.lv<18&&S.age>=h.next)}catch(e){return false}};
+function hellOpen(){try{const h=hellInfo();if(!h||!hellDue())return false;if(choice._cur||modalOpen||document.querySelector('.kfx'))return false;if(h._gT&&Date.now()-h._gT<2500)return false;h._gT=Date.now();
+ try{if(ISL.cur&&ISL.cur.key==='hellgate')islNext(true);ISL.q=ISL.q.filter(x=>x.key!=='hellgate')}catch(e){}gate();return true}catch(e){console.error(e);return false}}
+function hellWaitNote(){try{if(!islOn()||(ISL.cur&&ISL.cur.key==='hellgate')||ISL.q.some(x=>x.key==='hellgate'))return;const h=hellInfo();island({big:1,pri:1,sticky:1,key:'hellgate',ic:'🔥',h:'ประตูนรกกำลังเปิด',t:`ชั้นที่ ${h.lv+1}/18 — เวลาหยุดรอ`,d:'ตัดสินใจเรื่องที่ค้างให้เสร็จ แล้วประตูจะเปิดทันที',kind:'bad'})}catch(e){}}
+{const _pyH=passYear;passYear=function(){try{if(hellDue()){if(!hellOpen())hellWaitNote();return}}catch(e){}return _pyH.apply(this,arguments)}}
+setInterval(()=>{try{if(!hellDue())return;if(!hellOpen()&&(choice._cur||modalOpen))hellWaitNote()}catch(e){}},700);
+
+// ระหว่างรอประตูนรก: เหตุการณ์อื่นที่จะเด้งใหม่ถูกพักไว้ก่อน แล้วค่อยขึ้นหลังสู้เสร็จ
+window._hdq=[];
+{const _chH=choice;choice=function(title){try{if(hellDue()&&!/นรก|ประตู|ยม/.test(String(title))){window._hdq.push([this,arguments]);if(window._hdq.length>6)window._hdq.shift();return}}catch(e){}return _chH.apply(this,arguments)}}
+setInterval(()=>{try{if(hellDue()||!window._hdq.length||choice._cur||modalOpen)return;const [t,a]=window._hdq.shift();choice.apply(t,a)}catch(e){}},900);
+
+{const _xsH=xStep;xStep=function(){const r=_xsH.apply(this,arguments);try{const h=typeof hellInfo==='function'?hellInfo():null;if(h&&h.lv<18&&h.next>S.age)return Math.max(1,Math.min(r,h.next-S.age))}catch(e){}return r}}
 </script>
 </body>
 </html>
