@@ -20165,7 +20165,7 @@ function islRender(n,morph){const e=islEl(),c=e.querySelector('.islC');const ow=
  const w=document.createElement('div');w.className='islIn';w.innerHTML=islHtml(n);c.appendChild(w);
  e.className='on k-'+(n.kind||'info')+(n.big?' big':'')+(islLite()?' lite':'');
  // วัดขนาดใหม่ แล้วยืดจากขนาดเดิมแบบสปริง
- e.style.transition='none';e.style.width='auto';e.style.height='auto';w.style.position='static';const nw=Math.min(innerWidth-16,Math.max(w.scrollWidth+28,n.big?240:96)),nh=Math.max(w.scrollHeight+(n.big?18:12),34);
+ e.style.transition='none';e.style.width='auto';e.style.height='auto';w.style.position='static';w.style.height='auto';w.style.display='inline-flex';const nw=Math.min(innerWidth-16,Math.max(w.scrollWidth+28,n.big?240:96)),nh=Math.max(w.scrollHeight+(n.big?18:0),34);w.style.position='';w.style.height='';w.style.display='';
  if(!was){e.style.width='36px';e.style.height='34px'}else{e.style.width=ow+'px';e.style.height=oh+'px'}void e.offsetWidth;e.style.transition='';e.style.width=nw+'px';e.style.height=nh+'px'}
 function island(n){if(!n||!n.t)return;n.ms=n.ms||(n.big?3800:2000);const key=n.key||(n.ic||'')+n.t;
  if(ISL.cur&&!ISL.cur.live&&(ISL.cur.key===key)){ISL.cur.n=(ISL.cur.n||1)+1;islRender(ISL.cur,true);clearTimeout(ISL.t);ISL.t=setTimeout(()=>islNext(),ISL.cur.ms);return}
@@ -20227,6 +20227,17 @@ setInterval(()=>{try{if(!islOn())return;const g=$('game');const on=!!(S&&S.alive
 #isl.lite,#isl.lite.on.bye{transition:opacity .2s!important;transform:translateX(-50%)!important}#isl.lite:not(.on){opacity:0}
 #isl.lite .islIn,#isl.lite .islIc{animation:none!important}
 body.tuOn #toast{display:none!important}body.tuOn #achPop{display:none!important}`;document.head.appendChild(st)})();
+// เกาะ: ประมูลทั่วแผ่นดิน + จัดกลาง
+{const _pbI=paBanner;paBanner=function(p){const r=_pbI.apply(this,arguments);try{if(!islOn())return r;const d=$('paBan');if(d)d.style.display='none';const w=S&&S.xt?'เก้าชั้นฟ้า':S&&S.xian?'โลกเซียน':'ยุทธภพ';
+ island({big:1,pri:1,ic:'🏛️',h:'📢 ประกาศทั่ว'+w,t:'งานประมูลสมบัติล้ำค่าเริ่มแล้ว',d:`${p.left} ชิ้นที่หาที่ไหนไม่ได้ · ปัดขึ้นเพื่อข้าม`,kind:'gold',ms:12000,key:'pa',act:{t:'แตะเพื่อไปร่วมประมูล',f:()=>{try{paJoin()}catch(e){}}}})}catch(e){}return r}}
+(()=>{const st=document.createElement('style');st.textContent=`
+#isl .islIn{height:100%;display:flex;align-items:center;justify-content:center;box-sizing:border-box}
+#isl .islOut{height:100%;display:flex;align-items:center;justify-content:center}
+#isl .islSm{justify-content:center;width:100%;line-height:1}
+#isl .islSm .islIc,#isl .islBig .islIc{display:flex;align-items:center;justify-content:center;line-height:1}
+#isl .islSm .islIc{width:18px;height:18px}
+#isl .islBig{justify-content:center;text-align:left;margin:0 auto}
+#isl .islBig .islIc{width:34px;height:34px}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
