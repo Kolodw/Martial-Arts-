@@ -610,7 +610,7 @@ module.exports = async (req, res) => {
       const chSet = new Set(chS || []);
       const AC_WHY = w => { w = String(w || '').replace(/^tamper:/, ''); return /^console/.test(w) ? '🔴 แก้ค่าผ่านคอนโซล (' + w.slice(8) + ')' : w === 'save-edit' ? '🔴 แก้ไฟล์เซฟ' : w === 'srv-cap' ? '🔴 ค่าเกินขีดที่เป็นไปได้ (เซิร์ฟเวอร์)' : w === 'srv-jump' ? '🟠 พลังกระโดดเกิน ×1000 ใน 3 ปี (เซิร์ฟเวอร์)' : /^cap/.test(w) ? '🟠 ค่าเกินเพดาน (' + w + ')' : /^jump/.test(w) ? '🟡 ค่ากระโดดเร็ว (' + w.slice(5) + ')' : w === 'banned' ? '🚫 ถูกแบน' : w === 'pow-age' ? '🟡 พลังสูงเกินอายุ' : w === 'stat' ? '🟠 ค่าเกินขีด' : w === 'score' ? '🟠 คะแนนเกินค่าสถานะ' : '⚪ ' + w };
       const acRow = (x, src) => { const f = x.fid || x.id || '', pre = f.slice(0, 10); return `<div class="pl"><div class="plh"><b>${e(x.n || '-')}</b><small>${tAgo(x.t || now)} ที่แล้ว · ${src}</small></div>${AC_WHY(x.why)} · อายุ ${(+x.age || 0).toLocaleString('th-TH')}${x.st ? ` · ⚔️ ${(+x.st.pow || 0).toLocaleString('en-US')} · ⭐ ${(+x.st.fame || 0).toLocaleString('en-US')}` : x.s ? ` · คะแนน ${(+x.s || 0).toLocaleString('en-US')}` : ''} · <small>${e(pre)}${chSet.has(f) ? ' · 🚫 แบนแล้ว' : ''}</small><br><a class="cpb" style="text-decoration:none" target="_blank" href="?a=acinv&key=${K}&p=${e(pre.slice(0, 8))}&h=1">🔍 ดูประวัติ</a> <button class="cpb" onclick="acB('${e(pre)}','1',this)">🚫 แบน</button> <button class="cpb" onclick="acB('${e(pre)}','0',this)">✅ ล้างธง/ปลดแบน</button></div>` };
-      const acL = (acL0 || []).map(jp).filter(Boolean), clL = (clL0 || []).map(jp).filter(Boolean);
+      const acL = (acL0 || []).map(jp).filter(x => x && !/^(jump|cap|pow-age|srv-jump|score|stat)/.test(String(x.why || '').replace(/^tamper:/, ''))), clL = (clL0 || []).map(jp).filter(Boolean);
       const spD = [0, 1, 2, 3, 4, 5, 6].map(k => thDay(now, k));
       const spR = await pipe([...spD.map(d => ['HGETALL', 'supd:' + d]), ['PFCOUNT', 'supu:' + spD[0] + ':view'], ['PFCOUNT', ...spD.map(d => 'supu:' + d + ':view')], ['ZREVRANGE', 'suppayz', 0, 59], ['LRANGE', 'supev', 0, 59], ['SCARD', 'mwwait']]);
       const spH = i => { const r = spR[i] || [], o = {}; for (let k = 0; k < r.length; k += 2)o[r[k]] = +r[k + 1] || 0; return o }, spT = spH(0), sp7 = { view: 0, save: 0, paid: 0 }; for (let i = 0; i < 7; i++) { const o = spH(i); for (const k in sp7) sp7[k] += o[k] || 0 }
@@ -1115,6 +1115,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     if (a === 'acsus') {
       if (req.method !== 'POST' || !okId(id)) return res.json({ ok: 0 });
       const why = String(b.why || '').replace(/[^a-z0-9-]/g, '').slice(0, 24); if (!why) return res.json({ ok: 0 });
+      // ค่าที่ขึ้นเร็วจากการเล่นจริง (กระโดด/เกินเพดานแบบนุ่ม) ไม่บันทึก ไม่ติดธง — บันทึกเฉพาะการแก้ค่า/แก้ไฟล์
+      if (/^(jump|cap|pow-age|srv-jump|score|stat)/.test(why)) return res.json({ ok: 1 });
       const fresh = await cmd('SET', 'acsr:' + id + ':' + why, 1, 'NX', 'EX', 3600); if (!fresh) return res.json({ ok: 1 });
       const st = b.st || {}, hard = /^(console|save-edit)/.test(why);
       const L = [['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(b.n || ''), 24), age: +b.age || 0, why, st: { pow: +st.pow || 0, fame: +st.fame || 0, money: +st.money || 0 }, t: now })], ['LTRIM', 'acsus', 0, 199]];
@@ -1133,7 +1135,6 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       try { const z = JSON.parse(String(b.s || 'null')); if (z && z.st && okId(id)) { const p = +z.st.pow || 0, fm = +z.st.fame || 0, mn = +z.st.money || 0, ag = +z.age || 0; let why = '';
         if (!isFinite(p) || !isFinite(fm) || !isFinite(mn) || p > 1e30 || fm > 1e30 || mn > 1e30) why = 'srv-cap';
         const pv = jp(await cmd('GET', 'acp:' + id));
-        if (!why && pv && pv.n === z.n && ag >= pv.a && ag - pv.a <= 3 && p > 1e7 && p > pv.p * 1000) why = 'srv-jump';
         const L = [['SET', 'acp:' + id, JSON.stringify({ n: z.n, a: ag, p }), 'EX', 86400 * 7]];
         if (why && !(await cmd('GET', 'acf:' + id))) { if (why === 'srv-cap') L.push(['SET', 'acf:' + id, why, 'EX', 86400 * 60]); L.push(['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(z.n || ''), 24), age: ag, why, st: { pow: p, fame: fm, money: mn }, prev: pv, t: now })], ['LTRIM', 'acsus', 0, 199]); if (why === 'srv-cap') b.spec = 0 }
         await pipe(L) } } catch {}
