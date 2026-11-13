@@ -21634,6 +21634,9 @@ const specIsGod=s=>!!(s&&(s.xt||s.gk||/แดนเทพ/.test(String(s.cap||''
 
 function specCapTx(ctx,cv,cap){let t=String(cap||'');let f=13;ctx.fillStyle='#fff';ctx.textAlign='left';ctx.font=`bold ${f}px sans-serif`;while(f>9&&ctx.measureText(t).width>cv.width-16){f--;ctx.font=`bold ${f}px sans-serif`}while(t.length>4&&ctx.measureText(t).width>cv.width-16)t=t.slice(0,-2);if(t!==String(cap||''))t=t.replace(/.$/,'…');ctx.fillText(t,8,cv.height-7)}
 (()=>{const st=document.createElement('style');st.textContent='#modal #specScn{margin-top:46px!important}';document.head.appendChild(st)})();
+
+// เกาะขยายแล้วไม่ดึงหน้าเล่นเกมลง (ผู้เล่นไม่ชอบ) — เกาะลอยทับด้านบนแทน
+islPush=function(){try{const g=$('game');if(g){g.classList.remove('islPushOn');g.style.removeProperty('--islPush')}}catch(e){}};try{islPush()}catch(e){}
 </script>
 </body>
 </html>
