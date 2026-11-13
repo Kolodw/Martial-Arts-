@@ -20845,13 +20845,23 @@ const shopDisc=()=>{SHOP.forEach(it=>{if(it.c0==null)it.c0=it.c;it.c=sgPrice(it.
 #chatBox .cm .rep.cmtag:hover{background:color-mix(in srgb,var(--pink,#f0c860) 30%,transparent)}`;document.head.appendChild(st)})();
 
 
-// ===================== ประกาศ/โพลของผู้ดูแล → Dynamic Island (แตะตัวเลือกโหวตได้จากเกาะ) =====================
-{const _asI=annShow;annShow=function(a){const r=_asI.apply(this,arguments);try{if(!a||!a.i||typeof islOn!=='function'||!islOn())return r;const el=$('annBar');if(!el||el.dataset.i!==a.i)return r;
- el.style.display='none';if(window._annIsl===a.i)return r;window._annIsl=a.i;
- const poll=Array.isArray(a.poll)&&a.poll.length>=2&&a.open!==0,voted=a.my!=null&&a.my>=0;
- const btns=poll&&!voted?a.poll.slice(0,4).map((o,i)=>({t:'🗳️ '+esc(String(o).slice(0,18)),f:()=>{Promise.resolve(annVote(i,a.i)).then(()=>{try{toast('🗳️ โหวต "'+String(o).slice(0,20)+'" แล้ว')}catch(e){}})}})):[{t:'📢 เปิดอ่าน',f:()=>annOpen(a.i)},{t:'รับทราบ',f:()=>annDismiss()}];
- if(poll&&!voted&&a.poll.length>4)btns.push({t:'ดูทั้งหมด',f:()=>annOpen(a.i)});
- island({big:1,pri:1,sticky:1,ic:poll?'🗳️':'📢',h:poll?'โพลจากผู้ดูแล':'ประกาศจากผู้ดูแล',t:esc(String(a.x||'').slice(0,140))+(String(a.x||'').length>140?'…':''),kind:'gold',btns,key:'ann'})}catch(e){console.error(e)}return r}}
+// ===================== ประกาศ/โพลของผู้ดูแล → Dynamic Island (โหวตได้ · เห็นผลโหวตแต่ละตัวเลือก) =====================
+function annIslRes(a){const c=Array.isArray(a.c)?a.c:a.poll.map(()=>0),tot=c.reduce((x,y)=>x+y,0),mx=Math.max(1,...c),my=a.my!=null?a.my:-1;
+ return`<div class="aiR">${a.poll.map((o,i)=>{const p=tot?Math.round(c[i]/tot*100):0;return`<div class="aiO${i===my?' me':''}${c[i]===mx&&tot?' top':''}"><i style="width:${p}%"></i><span>${i===my?'✔ ':''}${esc(String(o))}</span><b>${c[i]} คน · ${p}%</b></div>`}).join('')}<div class="aiT">👥 โหวตแล้ว ${tot} คน${my>=0?' · คุณเลือกแล้ว':''}${a.open===0?' · ปิดโหวตแล้ว':''}</div></div>`}
+function annIslNode(a){const poll=Array.isArray(a.poll)&&a.poll.length>=2,voted=a.my!=null&&a.my>=0,open=a.open!==0;
+ const btns=poll&&!voted&&open?a.poll.slice(0,4).map((o,i)=>({t:'🗳️ '+esc(String(o).slice(0,18)),f:()=>{const ai=a.i;Promise.resolve(annVote(i,ai)).then(()=>{try{toast('🗳️ โหวต "'+String(o).slice(0,20)+'" แล้ว');const cur=[annCur,annView].find(x=>x&&x.i===ai);if(cur){window._annIsl=null;annIslShow(cur,1)}}catch(e){}})}})):[{t:'📢 เปิดอ่าน',f:()=>annOpen(a.i)},{t:'รับทราบ',f:()=>annDismiss()}];
+ if(poll&&!voted&&open&&a.poll.length>4)btns.push({t:'ดูทั้งหมด',f:()=>annOpen(a.i)});
+ return{big:1,pri:1,sticky:1,ic:poll?'🗳️':'📢',h:poll?'โพลจากผู้ดูแล':'ประกาศจากผู้ดูแล',t:esc(String(a.x||'').slice(0,140))+(String(a.x||'').length>140?'…':''),d:poll?annIslRes(a):'',kind:'gold',btns,key:'ann',aid:a.i}}
+function annIslShow(a,force){if(!a||!a.i)return;const n=annIslNode(a);
+ if(ISL.cur&&ISL.cur.key==='ann'&&ISL.cur.aid===a.i){Object.assign(ISL.cur,n);try{islRender(ISL.cur,true)}catch(e){}return}
+ if(!force&&window._annIsl===a.i)return;window._annIsl=a.i;island(n)}
+{const _asI=annShow;annShow=function(a){const r=_asI.apply(this,arguments);try{if(!a||!a.i||typeof islOn!=='function'||!islOn())return r;const el=$('annBar');if(!el||el.dataset.i!==a.i)return r;el.style.display='none';annIslShow(a)}catch(e){console.error(e)}return r}}
+(()=>{const st=document.createElement('style');st.textContent=`#isl .aiR{margin-top:6px;display:flex;flex-direction:column;gap:4px;min-width:220px}
+#isl .aiO{position:relative;display:flex;justify-content:space-between;gap:8px;padding:3px 8px;border-radius:7px;background:rgba(255,255,255,.07);font-size:12.5px;overflow:hidden;text-align:left}
+#isl .aiO i{position:absolute;left:0;top:0;bottom:0;background:rgba(255,215,106,.28);border-radius:7px;transition:width .5s cubic-bezier(.3,1.2,.5,1)}
+#isl .aiO.top i{background:rgba(255,215,106,.45)}#isl .aiO.me{box-shadow:inset 0 0 0 1.5px #7ad48a}#isl .aiO.me i{background:rgba(110,210,130,.38)}
+#isl .aiO span,#isl .aiO b{position:relative;z-index:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#isl .aiO b{flex:none;font-variant-numeric:tabular-nums;opacity:.9}
+#isl .aiT{font-size:11.5px;opacity:.75;text-align:left}#isl .islD:has(.aiR){opacity:1}#isl .aiO{color:#fff3d6}#isl .aiT{color:#f0dcb0}`;document.head.appendChild(st)})();
 
 </script>
 </body>
