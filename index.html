@@ -9896,7 +9896,7 @@ openSpectate=async function(k,tab){specTarget=k;clearTimeout(specT);tab=tab||ope
  else if(tab==='arts')body=list(s.arts,'ยังไม่มีวิชา');
  else if(tab==='q')body=list(s.q2||s.q,'ไม่มีเควสที่กำลังทำ');
  else body=(s.rel?'<h4 style="margin:4px 0">💞 ความสัมพันธ์</h4>'+list(s.rel,'ยังไม่มี'):'')+'<h4 style="margin:8px 0 4px">👥 คนรอบตัว</h4>'+list(s.ppl,'ไม่มี');
- modal(`<button class="xbtn" onclick="specClose()">✕</button><div class="spechead"><canvas id="specCv" width="140" height="154"></canvas><div><h3 style="margin:0">${esc(s.n)}${s.tt?tchipH(s.tt,s.tr):''}</h3><div class="tag2">${esc(s.wd||(s.x?'☁️ โลกเทพเซียน':'⚔️ ยุทธภพ'))} · อายุ ${s.age} ปี · ${esc(s.rl||s.r)}</div><div class="tag2">${esc(s.f)}</div><div class="tag2">📍 ${esc(s.cap||'')}${s.fo?' · กำลัง'+esc(s.fo):''}</div>
+ modal(`<button class="xbtn" onclick="specClose()">✕</button><div class="spechead"><canvas id="specCv" width="140" height="154"></canvas><div><h3 style="margin:0">${esc(s.n)}${s.tt?tchipH(s.tt,s.tr):''}</h3><div class="tag2">${esc(s.wd||(s.x?'☁️ โลกเทพเซียน':'⚔️ ยุทธภพ'))} · อายุ ${s.age} ปี · ${esc(s.rl||s.r)}</div><div class="tag2">${esc(s.f)}</div><div class="tag2">📍 ${esc(s.cap||'')}${s.fo&&!/กำลัง/.test(s.cap||'')?' · กำลัง'+esc(s.fo):''}</div>
   <div class="hpbar" style="margin:4px 0"><i style="width:${Math.max(0,st.hp/st.mhp*100)}%"></i></div><div class="tag2">❤️ ${st.hp}/${st.mhp} · 👁 ${j.w} คนกำลังดู</div></div></div>
   <div class="tabs" style="flex-wrap:wrap">${T.map(t=>`<button class="tabb ${t[0]===tab?'on':''}" onclick="openSpectate('${k}','${t[0]}')">${t[1]}</button>`).join('')}</div>${body}
   <p class="tag2" style="text-align:center;margin-top:8px">🔴 ดูสด · ดูได้อย่างเดียว · <span id="specAge"></span></p><p id="specWarn" class="tag2" style="text-align:center;color:#e0a030;display:none"></p><button class="gbtn" style="width:100%" onclick="openLiveList()">← รายชื่อผู้เล่น</button>`,'spec');
@@ -11709,7 +11709,7 @@ function specScene(cv,s){const ctx=cv&&cv.getContext&&cv.getContext('2d');if(!ct
    try{particles(sea)}catch(e){}}
   person(78,Y,Object.assign({belt:'#00000055'},s.look||{}),'stand');
   if(fxQ>=2){fxPart(ctx,'mote',6,null);if(/ฮวากยอง|ฮยอนกยอง|แซงซากยอง|แก่นทอง|วิญญาณ|มหายาน|ทัณฑ์|เทพ|ราชา|นิรันดร์|บรรพกาล/.test(s.r||''))fxGlow(ctx,78,Y-12,16,s.x?'#b090ff':'#ffd060',.3+.08*Math.sin(frame*.4));fxVig(ctx,.32)}
-  ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='rgba(10,8,20,.55)';ctx.fillRect(0,cv.height-22,cv.width,22);ctx.font='bold 13px sans-serif';ctx.fillStyle='#fff';ctx.textAlign='left';ctx.fillText(String(s.cap||'').slice(0,40),8,cv.height-7)}catch(e){console.error(e)}finally{g=sg;PS=sp}}
+  ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='rgba(10,8,20,.55)';ctx.fillRect(0,cv.height-22,cv.width,22);specCapTx(ctx,cv,s.cap)}catch(e){console.error(e)}finally{g=sg;PS=sp}}
 let _specS=null,_specIv=null;
 {const _stF=specStamp;specStamp=function(s){let r;try{r=_stF.apply(this,arguments)}catch(e){}try{_specS=s;const hd=$('modal').querySelector('.spechead');if(hd&&!$('specScn'))hd.insertAdjacentHTML('beforebegin','<canvas id="specScn" width="480" height="168" style="width:100%;display:block;image-rendering:pixelated;border:2px solid var(--line);border-radius:10px;margin:0 0 8px"></canvas>');
  specScene($('specScn'),s);if(!_specIv)_specIv=setInterval(()=>{const c=$('specScn');if(!c||$('modal').dataset.k!=='spec'){clearInterval(_specIv);_specIv=null;return}if(!$('game').classList.contains('on'))frame+=fxQ>=2?.7:1.4;specScene(c,_specS)},fxQ>=2?110:220)}catch(e){console.error(e)}return r}}
@@ -21618,6 +21618,22 @@ islFly=function(fromEl,toEl,done){try{if(islLite()||!fromEl||!toEl||!fromEl.getB
  const an=g.animate(F,{duration:720,easing:'linear',fill:'forwards'});const sp=g.querySelector('span');if(sp)sp.animate([{transform:'scale(1)'},{transform:'scale(1.25)',offset:.4},{transform:'scale(1)'}],{duration:720});
  an.onfinish=()=>{g.remove();done()}}catch(e){try{done()}catch(x){}}};
 (()=>{const st=document.createElement('style');st.textContent='.islGhost{display:flex!important;align-items:center;justify-content:center;overflow:hidden}.islGhost>span{display:inline-block;line-height:1}';document.head.appendChild(st)})();
+
+// ===================== ดูคนอื่นเล่น: ฉากพิกเซลตามโลกของคนที่ดู (ยุทธภพ · โลกเซียน · แดนเทพ) =====================
+{const _lsS=liveSnap;liveSnap=function(){const o=_lsS.apply(this,arguments);try{o.xt=S.xt?1:0;o.mw=(typeof mwOn==='function'&&mwOn())?1:0;if(typeof gsOn==='function'&&gsOn())o.gk=gsKind(sceneType())}catch(e){}return o}}
+function specGodKind(s){if(s.gk&&GS_CAP[s.gk])return s.gk;const c=String(s.cap||'');for(const k in GS_CAP)if(c.indexOf(GS_CAP[k])>=0)return k;return'void'}
+const specIsGod=s=>!!(s&&(s.xt||s.gk||/แดนเทพ/.test(String(s.cap||''))));
+{const _ssc=specScene;let off=null;specScene=function(cv,s){if(!cv||!s)return _ssc.apply(this,arguments);
+ if(specIsGod(s)){const ctx=cv.getContext&&cv.getContext('2d');if(!ctx)return;const gk0=gsKind,ml0=meLook;try{if(!off)off=document.createElement('canvas');off.width=480;const lh=Math.max(30,Math.min(90,Math.round(160*cv.height/cv.width)));off.height=lh*3;
+   const kind=specGodKind(s),lk=Object.assign({},s.look||{});gsKind=()=>kind;meLook=()=>lk;try{gsDraw(off.getContext('2d'),s.loc||'road',lh)}finally{gsKind=gk0;meLook=ml0}
+   ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(off,0,0,480,lh*3,0,0,cv.width,cv.height);
+   ctx.fillStyle='rgba(10,8,20,.55)';ctx.fillRect(0,cv.height-22,cv.width,22);specCapTx(ctx,cv,s.cap);return}catch(e){console.error(e);gsKind=gk0;meLook=ml0}}
+ // ยุทธภพ/โลกเซียน: วาดตามโลกของคนที่ดู ไม่ใช่โลกของเราเอง
+ const has=!!S,sx=has?S.xian:0,sxt=has?S.xt:0;if(has){S.xian=!!s.x;S.xt=0}try{return _ssc.apply(this,arguments)}finally{if(has){S.xian=sx;S.xt=sxt}}}}
+
+
+function specCapTx(ctx,cv,cap){let t=String(cap||'');let f=13;ctx.fillStyle='#fff';ctx.textAlign='left';ctx.font=`bold ${f}px sans-serif`;while(f>9&&ctx.measureText(t).width>cv.width-16){f--;ctx.font=`bold ${f}px sans-serif`}while(t.length>4&&ctx.measureText(t).width>cv.width-16)t=t.slice(0,-2);if(t!==String(cap||''))t=t.replace(/.$/,'…');ctx.fillText(t,8,cv.height-7)}
+(()=>{const st=document.createElement('style');st.textContent='#modal #specScn{margin-top:46px!important}';document.head.appendChild(st)})();
 </script>
 </body>
 </html>
