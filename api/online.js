@@ -264,12 +264,12 @@ async function autoMig() {
 }
 
 // ---- ประมูลทั่วยุทธภพ (ผู้เล่นจริง): รอบละ 6 ชิ้น ชิ้นละ 60 วิ · มีคนเสนอราคาแล้วนับถอยหลังใหม่ 20 วิทุกครั้ง · สมบัติระดับเทพ (k>=9e8) โอกาส 22% ต่อชิ้นระดับ 4+ สูงสุด 1 ชิ้นต่อรอบ ราคาเริ่ม ×2.5 · พักรอบละ 10–15 นาที ----
-const PA_RW = [0, 4, 10, 18, 24, 22, 14, 0], PA_G0 = [10, 300, 5000, 80000, 1000000, 8000000, 30000000, 100000000], PA_LOT_MS = 60e3, PA_NB_MS = 10e3;
+const PA_RW = [0, 4, 10, 18, 24, 22, 14, 0], PA_G0 = [10, 300, 5000, 80000, 1000000, 8000000, 30000000, 100000000], PA_LOT_MS = 60e3, PA_NB_MS = 25e3, PA_GRACE_MS = 1500;
 const PA_GW = { m: [10, 100, 1000, 10000, 80000, 400000, 2000000, 10000000], x: [500, 5000, 50000, 400000, 3000000, 15000000, 50000000, 100000000], g: [20000, 200000, 2000000, 8000000, 25000000, 50000000, 80000000, 100000000] }, PA_NB = [10, 30, 100, 300];
 const PA_WN = { m: 'ยุทธภพ', x: 'โลกเซียน', g: 'แดนเทพ' };
 // ใครประมูลชิ้นนี้ได้: ต้องอยู่โลกเดียวกัน · ชิ้นมือใหม่ = ขั้นไม่เกิน 2 · ของระดับต่ำ (ธรรมดา/หายาก) คนขั้น 5 ขึ้นไปห้ามแย่ง
 function paElig(L, w, ri) { if (!L.w) return ''; if (L.w !== w) return 'ชิ้นนี้สำหรับคนใน' + PA_WN[L.w]; if (L.nb && ri > 2) return 'ชิ้นมือใหม่ — สำหรับคนที่ยังอยู่ขั้นต้น'; if (!L.nb && L.r <= 1 && ri >= 5) return 'ของระดับต่ำ เก็บไว้ให้มือใหม่'; return '' }
-const PA_BID_LUA = "local hi=tonumber(redis.call('HGET',KEYS[1],'hi') or '0') local en=tonumber(redis.call('GET',KEYS[2]) or '0') local now=tonumber(ARGV[4]) if now>en then return {-1,hi} end local g=tonumber(ARGV[1]) local mn=tonumber(ARGV[5]) if hi>0 then mn=math.ceil(hi*1.05) end if g<mn then return {0,hi} end redis.call('HSET',KEYS[1],'hi',g,'by',ARGV[2],'bn',ARGV[3],'t',now) redis.call('SET',KEYS[2],now+20000,'EX',3600) redis.call('EXPIRE',KEYS[1],3600) return {1,g}";
+const PA_BID_LUA = "local hi=tonumber(redis.call('HGET',KEYS[1],'hi') or '0') local en=tonumber(redis.call('GET',KEYS[2]) or '0') local now=tonumber(ARGV[4]) if now>en then return {-1,hi} end local g=tonumber(ARGV[1]) local mn=tonumber(ARGV[5]) if hi>0 then mn=math.ceil(hi*1.05) end if g<mn then return {0,hi} end redis.call('HSET',KEYS[1],'hi',g,'by',ARGV[2],'bn',ARGV[3],'t',now) redis.call('SET',KEYS[2],now+25000,'EX',3600) redis.call('EXPIRE',KEYS[1],3600) return {1,g}";
 function paPick() { const t = PA_RW.reduce((a, b) => a + b, 0); let x = Math.random() * t; for (let i = 0; i < PA_RW.length; i++) { if ((x -= PA_RW[i]) < 0) return i } return 4 }
 async function paTick(now) {
   let cur = null; try { const v = await cmd('GET', 'pa:cur'); cur = v ? JSON.parse(v) : null } catch {}
@@ -298,7 +298,7 @@ async function paTick(now) {
   }
   if (cur.phase !== 'open') return cur;
   const end = +(await cmd('GET', 'pa:end:' + cur.sid)) || 0;
-  // ไม่มีใครเสนอราคาภายใน 10 วิ → ข้ามไปชิ้นถัดไปทันที
+  // ไม่มีใครเสนอราคาภายใน 25 วิ → ข้ามไปชิ้นถัดไปทันที
   const nbEnd = (cur.ls || cur.t0 + 10e3) + PA_NB_MS; cur.nbEnd = nbEnd;
   const noBid = async () => !(+(await cmd('HEXISTS', 'pa:b:' + cur.sid + ':' + cur.li, 'hi')));
   if (now <= end && !(now > nbEnd && await noBid())) { cur.end = end; return cur }
@@ -314,7 +314,7 @@ async function paTick(now) {
     if (H.by) { L.sold = { g: +H.hi, n: H.bn }; const dk = 'pa:wd:' + PA_DAY(now) + ':' + H.by; ops.push(['INCR', dk], ['EXPIRE', dk, 172800], ['HINCRBY', 'pa:ws:' + cur.sid, H.by, 1], ['EXPIRE', 'pa:ws:' + cur.sid, 7200], ['LPUSH', 'pa:win:' + H.by, JSON.stringify({ sid: cur.sid, li: cur.li, r: L.r, k: L.k, g: +H.hi, t: now, u: cur.u ? 1 : 0 })], ['EXPIRE', 'pa:win:' + H.by, 86400]) } else L.sold = { g: 0 };
     const rest = cur.lots.map((x, i) => i).filter(i => !cur.lots[i].sold);
     if (!rest.length) { cur.phase = 'done'; const act = +(await cmd('ZCOUNT', 'online', now - 180e3, '+inf')) || 0; cur.next = now + Math.max(5, Math.min(10, act)) * 60e3 }
-    else { rest.sort((x, y) => (V['l' + y] || 0) - (V['l' + x] || 0) || x - y); cur.li = rest[0]; cur.ls = now; cur.nbEnd = now + PA_NB_MS; ops.push(['SET', 'pa:end:' + cur.sid, now + PA_LOT_MS, 'EX', 3600]); cur.end = now + PA_LOT_MS }
+    else { rest.sort((x, y) => (V['l' + y] || 0) - (V['l' + x] || 0) || x - y); cur.li = rest[0]; const ls0 = now + PA_GRACE_MS; cur.ls = ls0; cur.nbEnd = ls0 + PA_NB_MS; ops.push(['SET', 'pa:end:' + cur.sid, ls0 + PA_LOT_MS, 'EX', 3600]); cur.end = ls0 + PA_LOT_MS }
     ops.push(['SET', 'pa:cur', JSON.stringify(cur), 'EX', 7200]);
     await pipe(ops);
   } finally { await cmd('DEL', 'pa:lk').catch(() => {}) }
