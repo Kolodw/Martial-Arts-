@@ -116,14 +116,15 @@ const cmd = USE_VK ? vkCmd : upCmd;
 const pipe = USE_VK ? vkPipe : upPipe;
 
 // ===== ทำเนียบรายวัน (v15.3): แยก 4 หมวด · คะแนนจากค่าเฉลี่ยทุกด้าน · รางวัลอันดับ 1–3 =====
-const BD_CATS = ['m', 'x', 'g', 'b', 'c']; // c = ทำเนียบโหมดท้าทาย (นรก/ชีวิตสั้น/รากขยะ)
+const BD_CATS = ['m', 'x', 'g', 'b', 'c', 'r']; // c = ทำเนียบโหมดท้าทาย (นรก/ชีวิตสั้น/รากขยะ)
 const CH_OK = ['hell', 'short', 'junk', 'regress'];
 // ฉายาทำเนียบ (ชั่วคราว): รายวัน/สัปดาห์/เดือน · อันดับ 1–3
 const RKT = { d: ['', 'ตะวันเจิดจ้า', 'จันทร์เหนือเมฆ', 'ดาวประกาย'], w: ['', 'จ้าวยุทธภพ', 'ขุนศึกไร้พ่าย', 'ยอดฝีมือผงาด'], m: ['', 'จักรพรรดิเหนือฟ้า', 'มหาเทพบัญชาสวรรค์', 'ตำนานผู้ถูกจารึก'] };
 const RKT_C = { d: ['', 'ผู้ฝ่าขุมนรก', 'วิญญาณไม่ดับ', 'ผู้ท้าลิขิต'], w: ['', 'ราชันย์ไร้พรสวรรค์', 'จ้าวแห่งเปลวนรก', 'ผู้ทวนชะตา'], m: ['', 'จักรพรรดิผู้ลบลิขิต', 'มารฟ้าทลายกรรม', 'ตำนานจากธุลี'] };
 const RKT_A = { w: ['', 'จ้าวลานหมื่นเงา', 'ราชันย์เงาพิฆาต', 'ดาบเงาไร้เทียมทาน'] };
+const RKT_R = { d: ['', 'ผู้หมุนเข็มกาล', 'เงาที่ไม่ยอมดับ', 'ผู้ตื่นซ้ำแล้วซ้ำเล่า'], w: ['', 'ผู้ฉีกวงจรแห่งกาล', 'ผู้กลืนกินความตาย', 'ผู้ทวนกระแสกาล'], m: ['', 'ผู้อยู่เหนือกาลเวลา', 'จักรพรรดิแห่งวันวาน', 'ผู้จดจำร้อยชาติ'] };
 const RKT_EXP = { d: 86400e3 * 1.1, w: 86400e3 * 7.2, m: 86400e3 * 31 }, RKT_TR = { d: 7, w: 8, m: 9 };
-const RKT_ALL = new Map(); [RKT, RKT_C, RKT_A].forEach(TT => Object.entries(TT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) })));
+const RKT_ALL = new Map(); [RKT, RKT_C, RKT_A, RKT_R].forEach(TT => Object.entries(TT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) })));
 const bdCat = e => e.bm ? 'b' : e.g ? 'g' : e.x ? 'x' : 'm';
 const bdKey = (c, ms, back = 0) => 'bd3:' + c + ':' + new Date(ms + 7 * 3600e3 - back * 86400e3).toISOString().slice(0, 10);
 const bdKeyW = (c, ms, back = 0) => 'bdw:' + c + ':' + week(new Date(ms - back * 7 * 86400e3));
@@ -735,7 +736,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const R1 = await pipe(BD_CATS.map(c => ['ZREVRANGE', bdKeyP(p, c, now, 1), 0, 9])), lab = flag.split(':').slice(1).join(':');
       for (let k = 0; k < BD_CATS.length; k++) { const L1 = (R1[k] || []).map(jp).filter(x => x && x.lid && !x.cu); const seen = new Set(); let r = 0;
         for (const x of L1) { if (r >= 3) break; const own = await cmd('GET', 'lifeo:' + x.lid); if (!own || seen.has(own) || await cmd('SISMEMBER', 'cheaters', own)) continue; seen.add(own); r++;
-          const isC = BD_CATS[k] === 'c', TT = isC ? RKT_C : RKT, hf = isC ? p + 'c' : p, cur = jp(await cmd('HGET', 'rkttl:' + own, hf)), nt = { t: TT[p][r], r, c: BD_CATS[k], exp: now + RKT_EXP[p], at: now };
+          const isC = BD_CATS[k] === 'c', isR = BD_CATS[k] === 'r', TT = isC ? RKT_C : isR ? RKT_R : RKT, hf = isC ? p + 'c' : isR ? p + 'r' : p, cur = jp(await cmd('HGET', 'rkttl:' + own, hf)), nt = { t: TT[p][r], r, c: BD_CATS[k], exp: now + RKT_EXP[p], at: now };
           const L2 = [['LPUSH', 'bdrw:' + own, JSON.stringify({ p, c: BD_CATS[k], r, d: lab, n: x.n, s: x.s, tt: TT[p][r], exp: nt.exp, ...(x.ch ? { ch: x.ch } : {}) })], ['EXPIRE', 'bdrw:' + own, 86400 * 60], ['HINCRBY', 'bdwins', own, 1]];
           if (!cur || cur.exp < now || r <= cur.r) L2.push(['HSET', 'rkttl:' + own, hf, JSON.stringify(nt)], ['EXPIRE', 'rkttl:' + own, 86400 * 40]);
           await pipe(L2) } } } catch {} };
@@ -743,14 +744,17 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       await bdSettle1('d', 'bdset:' + yk, 7); await bdSettle1('w', 'bdsetw:' + week(new Date(now - 7 * 86400e3)), 30); await bdSettle1('m', 'bdsetm:' + bdMon(now, 1), 90) };
     const bdWipe = async () => { try { if (!(await cmd('SET', 'bd3init', 1, 'NX'))) return; let cur = '0', n = 0; do { const r = await cmd('SCAN', cur, 'MATCH', 'bd2:*', 'COUNT', 500); cur = String(r[0]); if (r[1].length) await cmd('DEL', ...r[1]); n++ } while (cur !== '0' && n < 200); await cmd('DEL', 'bdhide') } catch {} };
     if (a === 'rgboard') {
-      const per = String(b.p || qOf(req).p || 'all') === 'w' ? 'w' : 'all';
-      const key = per === 'w' ? 'rgb:w:' + week(new Date(now)) : 'rgb:all';
+      await bdSettle();
+      const p0 = String(b.p || qOf(req).p || 'd'), per = ['d', 'w', 'm', 'all'].includes(p0) ? p0 : 'd';
+      const key = per === 'all' ? 'rgb:all' : bdKeyP(per, 'r', now);
       const raw = (await cmd('ZREVRANGE', key, 0, 49)) || [];
+      const prevRaw = per === 'all' ? [] : ((await cmd('ZREVRANGE', bdKeyP(per, 'r', now, 1), 0, 2)) || []);
       const hide = new Set(['f18abdmw8fuj8d', ...((await cmd('SMEMBERS', 'bdhide')) || [])]);
       const L0 = raw.map(x => { try { return JSON.parse(x) } catch { return null } }).filter(j => j && !(j.lid && hide.has(j.lid)));
       const pubs = L0.length ? await cmd('MGET', ...L0.map(x => 'lifep:' + (x.lid || 'x'))) : [];
       const top = L0.slice(0, 30).map((x, i) => { const v = pubs[i]; const o = Object.assign({}, x, { pub: v === '1' ? 1 : 0 }); if (v === '2') { o.n = 'ผู้ไม่ประสงค์ออกนาม'; o.anon = 1 } return o });
-      return res.json({ ok: 1, top, p: per });
+      const prev = prevRaw.map(x => { try { return JSON.parse(x) } catch { return null } }).filter(j => j && !(j.lid && hide.has(j.lid)));
+      return res.json({ ok: 1, top, prev, p: per });
     }
     if (a === 'board') {
       await bdWipe(); await bdSettle();
@@ -760,7 +764,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const R0 = await pipe(Q);
       const hide = new Set(['f18abdmw8fuj8d', ...((await cmd('SMEMBERS', 'bdhide')) || [])]);
       const pj = l => (l || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(j => j && !j.cu && !(j.lid && hide.has(j.lid)));
-      let T = [], Pv = [], CT = [], CP = []; BD_CATS.forEach((c, k) => { const a1 = pj(R0[k * 2]).slice(0, 20), a2 = pj(R0[k * 2 + 1]).slice(0, 3); if (c === 'c') { CT = a1; CP = a2 } else { T = T.concat(a1); Pv = Pv.concat(a2) } });
+      let T = [], Pv = [], CT = [], CP = []; BD_CATS.forEach((c, k) => { const a1 = pj(R0[k * 2]).slice(0, 20), a2 = pj(R0[k * 2 + 1]).slice(0, 3); if (c === 'c') { CT = a1; CP = a2 } else if (c === 'r') { } else { T = T.concat(a1); Pv = Pv.concat(a2) } });
       const arena = []; for (let i = 0; i < (ar || []).length; i += 2) arena.push({ n: ar[i], w: +ar[i + 1] });
       const all = T.concat(Pv, CT, CP).filter(x => x.lid);
       const pubs = all.length ? await cmd('MGET', ...all.map(x => 'lifep:' + x.lid)) : [];
@@ -1278,7 +1282,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (e.ch === 'short') { try { ejC = JSON.stringify(Object.assign({}, e, { s: bdScoreShort(JSON.parse(String(b.det || '{}')), e), sp: 1 })) } catch {} }
       if (e.ch === 'regress') { try { const D0 = JSON.parse(String(b.det || '{}')), G = D0.rg || {}, rl = Math.max(1, Math.min(999, Math.floor(+G.loop || 1))), rf = G.free && (+e.age || 0) >= 15 ? 1 : 0; e.rl = rl; e.rf = rf; const vn = { r5: ' ⏪', nomem: ' 🧠', lim10: ' 🔟' }[String(G.var || '')] || ''; e.c = (rf ? '🔁 หลุดพ้นวงจรใน ' + rl + ' รอบ' : '🔁 ย้อนกาล ' + rl + ' รอบ') + vn + (e.c ? ' · ' + e.c : ''); e.c = e.c.slice(0, 80); ejC = JSON.stringify(Object.assign({}, e, { s: (rf ? 5e8 - rl * 1e6 : 0) + Math.min(4e8, bdScore(D0, e)), rg: 1 })) } catch {} }
       const cat = bdCat(e), ej = JSON.stringify(e), L = [['INCR', 'lives']];
-      for (const cc of e.ch ? [cat, 'c'] : [cat]) { const useC = cc === 'c' && ejC, sv = useC ? JSON.parse(ejC).s : e.s, jj = useC ? ejC : ej; for (const [kk, ex] of [[bdKey(cc, now), 4], [bdKeyW(cc, now), 20], [bdKeyM(cc, now), 70]]) L.push(['ZADD', kk, sv, jj], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]) }
+      let rjB = null; if (e.ch === 'regress' && e.rf) { try { const G0 = (JSON.parse(String(b.det || '{}')).rg) || {}, en0 = ['breaker', 'protector', 'lonely'].includes(G0.end) ? G0.end : 'lonely', vr0 = ['normal', 'r5', 'nomem', 'lim10'].includes(G0.var) ? G0.var : 'normal'; rjB = Object.assign({}, e, { end: en0, var: vr0, s: ({ breaker: 3, protector: 2, lonely: 1 })[en0] * 1e8 - Math.min(999, e.rl || 1) * 1e5 + ({ lim10: 3, nomem: 2, r5: 1, normal: 0 })[vr0] * 1e4 }) } catch {} }
+      for (const cc of e.ch === 'regress' ? (rjB ? [cat, 'r'] : [cat]) : e.ch ? [cat, 'c'] : [cat]) { if (cc === 'r') { const jj = JSON.stringify(rjB); for (const [kk, ex] of [[bdKey('r', now), 4], [bdKeyW('r', now), 20], [bdKeyM('r', now), 70]]) L.push(['ZADD', kk, rjB.s, jj], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]); continue } const useC = cc === 'c' && ejC, sv = useC ? JSON.parse(ejC).s : e.s, jj = useC ? ejC : ej; for (const [kk, ex] of [[bdKey(cc, now), 4], [bdKeyW(cc, now), 20], [bdKeyM(cc, now), 70]]) L.push(['ZADD', kk, sv, jj], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]) }
       await bdSettle();
       if (e.cu || !(parseFloat(b.ver) >= 6.3)) { await cmd('INCR', 'lives'); return res.json({ ok: 1, skip: 1 }) }
       const det = String(b.det || '');
