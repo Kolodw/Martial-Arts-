@@ -6084,7 +6084,7 @@ function rvEdit(){const m=window.MYRV;if(!m)return;RV.r=m.r;document.querySelect
 {const st=document.createElement('style');st.textContent='.edtag{font-size:.78em;opacity:.6;font-style:italic}.bued{margin:4px 0 6px}';document.head.appendChild(st)}
 try{Object.assign(I18N.d,{'แก้ไข':'Edit','แก้ไขแล้ว':'edited','บันทึกการแก้ไข':'Save changes','แก้ไขความเห็นของฉัน':'Edit my review','แก้ข้อความด้านบนแล้วกดบันทึก':'Edit the text above and save'})}catch(e){}
 
-// ---------- v8.6 ท่ายืน สีตา และเสื้อคลุมยาวสไตล์มังฮวา ----------
+// ---------- v8.6 ท่ายืน สีตา และเสื้อคลุมยาว ----------
 function eyeGlowOn(o){if(!o||!o.me||!S)return false;if(typeof DU!=='undefined'&&DU)return true;const se=sceneEvt;if(se&&['fight','war','aura','realm','master'].includes(se.type)&&Date.now()<se.t)return true;if(S.focus==='train'&&(frame*.15)%7<1.6)return true;return false}
 {const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{if(!S||o.beast)return o;const ri=realmIdx(),x=!!S.xian,ft=S.faction?S.faction.t:(S.family&&S.family.heirType)||null,dem=ft==='มาร'||(S.sys&&S.sys.t==='demon')||(!ft&&S.family&&S.family.demon),adult=S.age>=16;
  const side=dem?'มาร':ft==='อธรรม'||S.path==='assassin'?'อธรรม':ft==='ธรรมะ'?'ธรรมะ':null;o.me=1;
@@ -20907,7 +20907,7 @@ function sysReroll(i){const s=S.sys;if(!s||!s.quests[i])return;if(s.rrY!=null&&S
 #chatBox .cm .cmh:not(:has(.cmtag)):not(:has(.rpl)) .rep{margin-left:auto!important}`;document.head.appendChild(st)})();
 
 
-// ===================== ขั้นพลังแบบมังฮัว: ขั้นย่อย · ฝึกปราณชั้น 1–9 · โลกเซียนครบ 10 ขั้น (แบ่งครึ่งขั้น 5 และ 6) =====================
+// ===================== ขั้นพลังแบบใหม่: ขั้นย่อย · ฝึกปราณชั้น 1–9 · โลกเซียนครบ 10 ขั้น (แบ่งครึ่งขั้น 5 และ 6) =====================
 RS_SUB.splice(0,RS_SUB.length,'ขั้นต้น','ขั้นกลาง','ขั้นปลาย','สมบูรณ์','สมบูรณ์');
 const XSPL={5:['แปรวิญญาณ','ฝึกความว่าง'],6:['รวมกาย','มหายาน']};
 const xsOn=()=>S&&S.xian&&!S.xt&&!(S.beastMode&&!S.beastMode.human);
