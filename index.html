@@ -19197,6 +19197,83 @@ mvDraw=function(c,m,a,sc,sp,cx,cy,tx,ty){const el=m.el,R=fxRamp(m.col);FX2.R=R;c
    if(q>.45&&q<1){const L=20+sc*2,dd=i%2?.5:-.5;for(let k=-L;k<=L;k++){const th=Math.round((1-Math.abs(k)/L)*2);for(let w=-th;w<=th;w++)fxPx(c,tx+k*.95,ty-9+k*dd+w,R[Math.abs(w)?2:0],(1-Math.abs(k)/L)+.3)}fxLit(tx,ty-9,L,R[1],.6)}}
   if(a>.35&&r()<.7)sp(tx+(r()-.5)*28,ty-8-(r()-.5)*18,(r()-.5)*1.4,(r()-.5)*1.4,12,R[1],1);if(a>.85)fxImpact(c,tx,ty-8,(a-.85)/.15,R,12);break}}
  fxFlush(c)};
+// ===================== v17.4 🔁 โหมดผู้ย้อนกาล (แนวเรื่องผู้ย้อนเวลาไม่สิ้นสุด · เนื้อเรื่องต้นฉบับของเกม) =====================
+try{CH_N.regress='🔁 ผู้ย้อนกาล';if(!CH_KEYS.includes('regress'))CH_KEYS.push('regress');OPT_INFO.chm[4]=()=>['🔁','ผู้ย้อนกาล','เกิดมาพร้อมพรสวรรค์ต่ำสุด แต่ตายเมื่อไหร่ก็ย้อนกลับไปอายุ 15 ปี ปีที่ความทรงจำโลกเดิมตื่นขึ้น โลกสายหลักเหมือนเดิมทุกรอบ จำเหตุการณ์ได้ ช่วยเพื่อนร่วมชะตา 6 คนให้รอดในรอบเดียวเพื่อหลุดพ้นวงจร',[['ตายแล้วย้อนกลับ','g'],['พรสวรรค์ต่ำสุด','r'],['จิตเหนื่อยล้าทุกรอบ','r']]]}catch(e){}
+(()=>{try{const sg=document.querySelector('.seg[data-k="chm"]');if(sg&&!sg.querySelector('[data-v="4"]')){const b=document.createElement('button');b.dataset.v='4';b.textContent='🔁 ผู้ย้อนกาล';sg.appendChild(b);b.onclick=()=>{sg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');CFG.chm=4;updateHints()};sg.classList.add('seg5')}const st=document.createElement('style');st.textContent='.seg5{flex-wrap:wrap}.seg5 button{flex:1 1 30%}';document.head.appendChild(st)}catch(e){}})();
+const RG_TAL=['ดาบเกิดมาคู่กาย','รากวิญญาณสวรรค์','กายาอสูรหลับใหล','ตาเห็นปราณ','นักปรุงยาโดยกำเนิด','จิตแข็งดั่งเหล็ก','ผู้ถูกเลือกของค่ายกล','สายเลือดหงส์ไฟ'];
+const RG_EV=[ // id, ชื่อ, อายุฐาน, เพื่อนที่เกี่ยวข้อง
+ ['trial','การทดสอบเข้าสำนัก',16],['cave','ถ้ำต้องสาป',19],['plague','โรคระบาดในเมือง',23],['herb','งานประมูลของหลงยุค',26],['frame','ใส่ร้ายกลางสำนัก',29],['tide','กระแสอสูรบุกเมือง',33],['qidev','ธาตุไฟเข้าแทรก',37]];
+function rgOn(){return!!(S&&S.ch==='regress'&&S.rg&&!S.rg.free)}
+function rgInit(){if(S.rg)return S.rg;const R0=pxRng((S.seed|0)*7+13),pick=a=>a[Math.floor(R0()*a.length)];const tl={};RG_EV.forEach(([id,,a])=>tl[id]=a+Math.floor(R0()*3)-1);const tals=RG_TAL.slice().sort(()=>R0()-.5);
+ const comp=['trial','cave','plague','frame','tide','qidev'].map((ev,i)=>({n:anyName(R0()<.5?'ชาย':'หญิง'),tal:tals[i],ev,saved:0}));
+ return S.rg={id:(S.seed|0)+'_'+Date.now().toString(36),loop:1,fat:0,tl,comp,know:{},mem:[],peak:0,snap:0,best:0}}
+function rgSnapKey(){return'murim_rgsnap_'+S.rg.id}
+function rgSaveSnap(){try{const d={S:{...S,faction:S.faction?S.faction.n:null,rg:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null}))};if(LS.set(rgSnapKey(),d))S.rg.snap=1;else toast('⚠️ พื้นที่เก็บข้อมูลเต็ม — การย้อนกาลจะใช้แบบย่อ')}catch(e){}}
+function rgComp(ev){return S.rg.comp.find(c=>c.ev===ev)}
+function rgStartLoop(){const G=S.rg;G.comp.forEach(c=>{c.saved=0;c.dead=0});G.herb=0;G.seen={};}
+// ---------- เหตุการณ์สายหลัก (เกิดซ้ำทุกรอบ) ----------
+function rgEvent(id){const G=S.rg,kn=!!G.know[id],C=rgComp(id),nm=C?`<b>${esc(C.n)}</b>`:'',learn=()=>{if(!G.know[id]){G.know[id]=1;log(`📔 จดลงสมุดความทรงจำ: 「${RG_EV.find(x=>x[0]===id)[1]}」 อายุ ${S.age} ปี — รอบหน้าคุณจะรู้ล่วงหน้า`,'epic')}};
+ const lose=(why)=>{if(C){C.dead=1;log(`🕯️ ${nm} (${esc(C.tal)}) ${why}`,'bad',true)}learn()},save=(why)=>{if(C){C.saved=1;log(`🌱 ${nm} รอดชีวิตในรอบนี้ — ${why} (รอดแล้ว ${G.comp.filter(c=>c.saved).length}/6)`,'myth',true)}};
+ const fore=kn?'<br><span class="tag2">🔮 คุณจำเหตุการณ์นี้ได้จากรอบก่อน</span>':'';const O=[];
+ if(id==='trial'){O.push({t:'📜 สอบตามปกติ',f(){if(roll01(.5+S.int/400)){S.fame+=20;log('ผ่านการทดสอบ ได้ชื่อเสียง')}else log('สอบไม่ผ่าน','bad');lose('ถูกสัตว์อสูรของผู้คุมสอบขย้ำจนตายต่อหน้าคุณ')}});
+  if(kn)O.unshift({t:'🔮 เตือนเพื่อนเรื่องสัตว์อสูรในด่านสาม',s:'รู้ทางผ่านล่วงหน้า',f(){S.fame+=30;S.int+=3;save('คุณบอกทางหลบสัตว์อสูรล่วงหน้า')}});
+  choice('🔁 การทดสอบเข้าสำนัก',`สำนักใหญ่เปิดรับศิษย์ ผู้คนนับพันมารวมตัว ในนั้นมี ${nm} เพื่อนร่วมชะตาจากโลกเดิมที่ยังไม่รู้จักคุณ${fore}`,O);return true}
+ if(id==='cave'){O.push({t:'🚶 ปล่อยให้เขาไปเอง',f(){lose('เข้าไปในถ้ำต้องสาปแล้วไม่ได้กลับออกมา')}});
+  O.unshift({t:kn?'🔮 ไปก่อนแล้วจัดการผู้พิทักษ์ถ้ำ':'⚔️ ตามเข้าไปด้วย',s:kn?'รู้จุดอ่อนของผู้พิทักษ์ (ศัตรูอ่อนลง)':'ดวลกับผู้พิทักษ์ถ้ำ',f(){duel('ผู้พิทักษ์ถ้ำต้องสาป',Math.round(total()*(kn?.8:1.15)),w=>{if(w){const a=newArt(Math.min(4,2+Math.floor(realmIdx()/3)));Array.prototype.push.call(S.arts,a);log(`🗝️ ผู้พิทักษ์ล้มลง ในถ้ำมี ${artHtml(a)}`,'epic',true);save('คุณเคลียร์ถ้ำก่อนเขาเข้าไป')}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.4));lose('ตายในถ้ำ ขณะที่คุณหนีออกมาได้คนเดียว')}learn()})}});
+  choice('🔁 ถ้ำต้องสาป',`ข่าวลือเรื่องสมบัติในถ้ำทางเหนือแพร่ไปทั่ว ${nm} กำลังจะเข้าไปคนเดียว${fore}`,O);return true}
+ if(id==='plague'){const cst=Math.round(sxBiz()*1.2);O.push({t:'🏃 หนีออกจากเมือง',f(){lose('ติดโรคระบาดตายในเมืองที่ถูกปิด')}});
+  if(kn)O.unshift({t:'🔮 กักตุนยารักษาไว้ก่อนโรคมา',s:`ใช้เงิน ${S.xian?stoneTxt(cst):fmt(cst)} · ช่วยทั้งเมือง`,f(){S.money=Math.max(0,S.money-cst);S.karma+=30;S.fame+=80;save('คุณแจกยาที่เตรียมไว้ก่อนโรคระบาดมาถึง')}});
+  else O.unshift({t:'🩺 อยู่ช่วยรักษาผู้ป่วย',s:'กรรม + · เสี่ยงติดโรค',f(){S.karma+=10;if(Math.random()<.4){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.35));log('คุณติดโรคไปด้วย ป่วยหนักหลายเดือน','bad')}lose('ไม่รอด — ยาที่มีไม่พอ')}});
+  choice('🔁 โรคระบาดในเมือง',`ไข้ดำระบาดในเมืองที่ ${nm} อาศัยอยู่ ทางการสั่งปิดเมือง${fore}`,O);return true}
+ if(id==='herb'){const cst=Math.round(sxBiz()*.6);O.push({t:'🙅 ไม่สนใจ',f(){learn()}});O.unshift({t:kn?'🔮 ประมูล "รากไม้แห้ง" ที่ไม่มีใครสนใจ':'💰 ประมูลของแปลกๆ ชิ้นหนึ่ง',s:`${S.xian?stoneTxt(cst):fmt(cst)}${kn?' · มันคือโสมพันปีที่จะช่วยเพื่อนในอนาคต':''}`,f(){if(S.money<cst){log('เงินไม่พอ','bad');learn();return}S.money-=cst;if(kn||Math.random()<.3){G.herb=1;log('🌿 ได้ "โสมสงบจิตพันปี" มา — ดูเหมือนรากไม้แห้งธรรมดา','epic')}else log('ได้ของธรรมดา เสียเงินเปล่า');learn()}});
+  choice('🔁 งานประมูลของหลงยุค',`งานประมูลประจำปีมีของเก่ามากมาย${fore}`,O);return true}
+ if(id==='frame'){O.push({t:'🙈 ไม่ยุ่ง',f(){lose('ถูกใส่ร้ายว่าขโมยคัมภีร์ และถูกประหารกลางลานสำนัก')}});
+  O.unshift({t:kn?'🔮 เปิดโปงผู้อาวุโสที่อยู่เบื้องหลัง':'🔍 สืบหาความจริง',s:kn?'รู้ว่าใครเป็นคนทำ (ง่ายขึ้นมาก)':`ปัญญาช่วย (${Math.round(Math.min(.8,.2+S.int/500)*100)}%)`,f(){if(kn||roll01(Math.min(.8,.2+S.int/500))){S.fame+=60;save('คุณเปิดโปงผู้อาวุโสที่ใส่ร้ายเขา')}else lose('หาหลักฐานไม่ทัน เขาถูกประหาร');learn()}});
+  choice('🔁 ใส่ร้ายกลางสำนัก',`${nm} ถูกกล่าวหาว่าขโมยคัมภีร์ต้องห้าม และจะถูกประหารในอีกสามวัน${fore}`,O);return true}
+ if(id==='tide'){O.push({t:'🏃 พาคนหนี',f(){S.karma+=5;lose('อยู่ป้องกันประตูเมืองจนลมหายใจสุดท้าย')}});
+  O.unshift({t:kn?'🔮 วางค่ายกลไว้ก่อนแล้วสู้ราชาอสูร':'⚔️ สู้กับราชาอสูร',s:kn?'ราชาอสูรอ่อนลงมาก':'ดวลจริง แข็งแกร่งมาก',f(){duel('ราชาอสูรผู้นำกระแส',Math.round(total()*(kn?.85:1.3)),w=>{if(w){S.fame+=120;S.kills=(S.kills||0)+1;save('คุณสังหารราชาอสูรก่อนประตูเมืองแตก')}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.45));lose('ตายตอนประตูเมืองแตก')}learn()})}});
+  choice('🔁 กระแสอสูรบุกเมือง',`สัตว์อสูรนับหมื่นบุกจากป่าลึก ${nm} อาสาเฝ้าประตูเมือง${fore}`,O);return true}
+ if(id==='qidev'){if(G.herb){save('คุณป้อนโสมสงบจิตพันปีให้ทันเวลา');learn();return false}
+  choice('🔁 ธาตุไฟเข้าแทรก',`${nm} ฝึกวิชาจนธาตุไฟเข้าแทรก เส้นลมปราณกำลังแตก${G.know.qidev?'<br><span class="tag2">🔮 รอบก่อนคุณรู้แล้วว่าต้องใช้ "โสมสงบจิตพันปี" จากงานประมูล — แต่รอบนี้ไม่ได้ซื้อไว้</span>':''}`,[{t:'🤲 ถ่ายลมปราณช่วย',s:'เสียพลังบางส่วน · ช่วยไม่ได้แน่นอน',f(){S.qi=Math.max(0,S.qi*.85);if(Math.random()<.25)save('ลมปราณของคุณประคองเขาไว้ได้อย่างหวุดหวิด');else lose('ระเบิดลมปราณตายในอ้อมแขนคุณ — ก่อนตายเขาพึมพำถึงรากไม้แห้งในงานประมูล');learn()}}]);return true}
+ return false}
+// ---------- ทุกปี ----------
+function rgYear(){if(!rgOn()||!S.alive)return false;const G=S.rg;
+ if(S.age>=15&&!G.awake){G.awake=1;rgStartLoop();if(!G.snap)rgSaveSnap();log(`🌀 <b>ความทรงจำโลกเดิมตื่นขึ้น</b> — คุณจำได้ว่าเคยเป็นคนธรรมดาบนโลกอีกใบ และไม่ได้มาคนเดียว มีอีก 6 คนที่ตกลงมาพร้อมกัน ทุกคนมีพรสวรรค์ ยกเว้นคุณ${G.loop>1?` · <b>รอบที่ ${G.loop}</b>`:''}`,'myth',true);return false}
+ if(!G.awake)return false;G.seen=G.seen||{};
+ for(const[id]of RG_EV){if(!G.seen[id]&&S.age>=G.tl[id]){G.seen[id]=1;if(rgEvent(id))return true}}
+ if(G.fat>0&&S.happy>70&&Math.random()<.5)G.fat=Math.max(0,G.fat-1);
+ if(G.fat>=60&&Math.random()<.08){joy(-6);log(`😶 ฝันร้ายจากรอบก่อนตามหลอกหลอน — คุณเห็นตัวเองตายซ้ำแล้วซ้ำเล่า (จิตเหนื่อยล้า ${G.fat}/100)`,'bad')}
+ const sv=G.comp.filter(c=>c.saved).length;if(sv>=6&&!G.offer&&realmIdx()>=5&&S.age<=50){G.offer=1;rgEscapeOffer();return true}
+ G.peak=Math.max(G.peak||0,total());return false}
+function rgEscapeOffer(){choice('🌅 ประตูนอกวงจร',`เพื่อนร่วมชะตาทั้ง 6 คนยังมีชีวิตอยู่พร้อมกันเป็นครั้งแรก ในวันนั้นท้องฟ้าแตกเป็นรอยร้าว แสงจากโลกเดิมส่องลงมา — คุณรู้สึกได้ว่าถ้าก้าวผ่าน <b>วงจรจะสิ้นสุด</b> จากนี้ไปตายคือตายจริง`,[
+ {t:'🌅 ก้าวผ่าน หลุดพ้นวงจร',s:'จบโหมดย้อนกาล · ได้รางวัลใหญ่',f(){const G=S.rg;G.free=1;S.flags.rgFree=1;S.fame+=500;S.int+=40;const a=newArt(4);Array.prototype.push.call(S.arts,a);lsAdd(50);keyAdd(`หลุดพ้นวงจรย้อนกาลหลังผ่านไป ${G.loop} รอบ`);log(`🌅 <b>หลุดพ้นวงจรแล้ว!</b> ใช้ไป ${G.loop} รอบ · ได้ ${artHtml(a)} · อายุขัย +50 · เพื่อนทั้ง 6 คนจำคุณได้เป็นครั้งแรก`,'myth',true);try{const B=LS.get('murim_rgbest',0);if(!B||G.loop<B)LS.set('murim_rgbest',G.loop)}catch(e){}try{setScene('aura')}catch(e){}}},
+ {t:'⏳ ยังไม่ไป',s:'ประตูจะเปิดอีกครั้งเมื่อพร้อม',skip:true,f(){S.rg.offer=0;log('คุณหันหลังให้ประตู รอยร้าวบนฟ้าค่อยๆ ปิดลง')}}])}
+// ---------- ตาย → ย้อนกาล ----------
+function rgRegress(cause){const G=S.rg,old=S,oldAge=S.age,oldPow=total(),mem=(S.arts||[]).filter(a=>a&&typeof a==='object').slice().sort((a,b)=>(b.b||0)-(a.b||0)).slice(0,Math.min(3,1+Math.floor(G.loop/3))).map(a=>Object.assign({},a,{lv:Math.max(0,(a.lv|0)-1)}));
+ const gInt=Math.max(0,(S.int||0)-(G.int0||S.int||0));G.loop++;G.fat=Math.min(100,G.fat+(/วัยชรา/.test(cause)?6:11));G.peak=Math.max(G.peak||0,oldPow);G.awake=0;G.offer=0;
+ if(G.fat>=100){log('💔 จิตของคุณแตกสลายหลังตายมานับครั้งไม่ถ้วน — ครั้งนี้ไม่มีการย้อนกลับอีกแล้ว','bad',true);G.free=1;S.flags.rgBroken=1;return false}
+ let d=null;try{d=G.snap?LS.get(rgSnapKey(),null):null}catch(e){}
+ if(d&&d.S){const fac=n=>n?FACTIONS.find(f=>f.n===n)||null:null;const slot=S.slot,lid=S._lid;S=Object.assign(baseState({}),JSON.parse(JSON.stringify(d.S)));S.slot=slot;S.flags=S.flags||{};S.faction=fac(S.faction);peers=d.peers.map(p=>({...p,fac:fac(p.fac)}));S.rg=G;if(lid)S._lid=lid}
+ else{S.age=15;S.power=Math.round(S.power*.3)+50;S.faction=null;S.rank=0;S.merit=0;S.spouse=null;S.sp=null;S.children=[];S.kids=0;S.hp=S.maxHp}
+ S.alive=true;S.deathCause=null;S.chronic=null;S.ch='regress';rgStartLoop();
+ const pb=Math.round(Math.min(G.peak*.05,total()*2));S.power+=pb;S.int+=Math.round(gInt*.25)+5;mem.forEach(a=>{if(!S.arts.some(x=>x&&x.n===a.n))Array.prototype.push.call(S.arts,a)});G.int0=S.int;
+ try{acPrev=null}catch(e){}try{choice._cur=null;choice._q=[]}catch(e){}
+ log(`🔁 <b>${esc(cause)}</b>… ความมืดกลืนทุกอย่าง แล้วคุณก็สะดุ้งตื่นในวันที่อายุ 15 ปีอีกครั้ง — <b>รอบที่ ${G.loop}</b><br>ความทรงจำติดตัวมา: วิชา ${mem.map(a=>artHtml(a)).join(' ')||'—'} · ปัญญา + · พลังกายจำได้ +${fmt(pb)} · จิตเหนื่อยล้า ${G.fat}/100`,'myth',true);
+ try{keyAdd(`ตายตอนอายุ ${oldAge} (${cause}) แล้วย้อนกลับสู่อายุ 15 — รอบที่ ${G.loop}`)}catch(e){}try{setScene('portal')}catch(e){}try{rgFx()}catch(e){}setTimeout(()=>{try{acPrev=null;render()}catch(e){}},50);return true}
+{const _rt=regTry;regTry=function(cause){try{if(S&&S.ch==='regress'&&S.rg&&!S.rg.free&&!/บรรลุ|อมตะ|ทะลวงสู่|ก้าวข้าม|หลุดพ้น/.test(cause||'')){if(S.age<15)return false;return rgRegress(cause)}}catch(e){console.error(e)}return _rt.apply(this,arguments)}}
+function rgFx(){try{kfx('gate',`รอบที่ ${S.rg.loop}`,'กาลเวลาหมุนกลับ — ทุกอย่างเริ่มใหม่ ยกเว้นความทรงจำของคุณ','#8ad0ff',3200);const L=document.querySelectorAll('.kfx .kfxs');if(L.length)L[L.length-1].textContent='〔 ย้อนกาล 〕'}catch(e){}}
+// ---------- hooks ----------
+{const _cs=chStart;chStart=function(){const r=_cs.apply(this,arguments);try{if(S.ch==='regress'){const lo=TALENT.slice().sort((a,b)=>a.m-b.m)[0];S.talent=Object.assign({},lo);if(S.xian)S.root='รากวิญญาณห้าธาตุปน (ขยะ)';rgInit();log('🔁 <b>โหมดผู้ย้อนกาล</b> — คุณเกิดมาไม่มีพรสวรรค์ แต่โลกนี้จะไม่ยอมให้คุณตายจริง… จนกว่าจะหลุดพ้นวงจร (ดูที่ ☰ → 🔁 วงจรย้อนกาล)','myth',true)}}catch(e){console.error(e)}return r}}
+{const _pyR=passYear;passYear=function(){const r=_pyR.apply(this,arguments);try{if(rgOn())rgYear()}catch(e){console.error(e)}return r}}
+function openRegress(){if(!S||!S.rg)return;const G=S.rg,sv=G.comp.filter(c=>c.saved).length,best=LS.get('murim_rgbest',0);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🔁 วงจรย้อนกาล</h3><div class="specgrid"><div>🔁 รอบที่ <b>${G.loop}</b></div><div>😶 จิตเหนื่อยล้า <b>${G.fat}/100</b></div><div>🌱 รอดรอบนี้ <b>${sv}/6</b></div><div>🏆 สถิติหลุดพ้นเร็วสุด <b>${best?best+' รอบ':'—'}</b></div></div>
+ <p class="tag2">${G.free?(S.flags.rgFree?'🌅 คุณหลุดพ้นวงจรแล้ว — ตายคือตายจริง':'💔 จิตแตกสลาย วงจรสิ้นสุด'):'ตายเมื่อไหร่ย้อนกลับไปอายุ 15 · เหตุการณ์สายหลักเกิดซ้ำทุกรอบ อายุเดิม · ช่วยเพื่อนครบ 6 คนในรอบเดียวและถึง'+REALMS[5].n+'ก่อนอายุ 50 จะเปิดประตูนอกวงจร · จิตเหนื่อยล้าถึง 100 = จบ'}</p>
+ <h4 style="margin:8px 0 4px">👥 เพื่อนร่วมชะตา</h4>${G.comp.map(c=>`<div class="item"><b>${esc(c.n)}</b> <span class="tag2">${esc(c.tal)}</span> — ${c.saved?'🌱 รอดแล้ว':c.dead?'🕯️ ตายในรอบนี้':'⏳ ยังไม่ถึงเวลา'} <span class="tag2">· ชะตา: ${G.know[c.ev]?RG_EV.find(x=>x[0]===c.ev)[1]+' (อายุ '+G.tl[c.ev]+')':'???'}</span></div>`).join('')}
+ <h4 style="margin:8px 0 4px">📔 สมุดความทรงจำ</h4>${RG_EV.map(([id,n])=>`<div class="tag2" style="padding:2px 0">${G.know[id]?`✅ อายุ ${G.tl[id]} — ${n}`:'🔒 ??? — ยังไม่เคยเจอ'}</div>`).join('')}`,'regress')}
+{const _omR=openMenu;openMenu=function(){const r=_omR.apply(this,arguments);try{if(S&&S.rg){const g0=document.querySelector('#modal .mgrid');if(g0&&!g0.querySelector('.rgOpt'))g0.insertAdjacentHTML('afterbegin',`<button class="opt rgOpt" onclick="openRegress()">🔁 วงจรย้อนกาล<small>รอบที่ ${S.rg.loop} · รอด ${S.rg.comp.filter(c=>c.saved).length}/6</small></button>`)}}catch(e){}return r}}
+{const _ldR=lifeDetail;lifeDetail=function(){const o=_ldR.apply(this,arguments);try{if(o&&S&&S.rg)o.rg={loop:S.rg.loop,free:S.flags.rgFree?1:0,broken:S.flags.rgBroken?1:0}}catch(e){}return o}}
+try{SYS_GUIDE.push({s:'life',nw:1,ic:'🔁',t:'โหมดผู้ย้อนกาล',go:'openRegress',d:'เลือกที่หน้าเกิด → โหมดการเล่น → 🔁 ผู้ย้อนกาล · เกิดมาพรสวรรค์ต่ำสุด อายุ 15 ความทรงจำโลกเดิมตื่นขึ้น พร้อมเพื่อนร่วมชะตาอีก 6 คนที่มีพรสวรรค์ · <b>ตายเมื่อไหร่ย้อนกลับไปอายุ 15</b> (ฟื้นสภาพตอนนั้นทั้งหมด) · ติดตัวข้ามรอบ: วิชาที่ดีที่สุด 1–3 วิชา (ลดขั้น 1) ปัญญาบางส่วน พลังกายจำได้ 5% ของพลังสูงสุดที่เคยมี · <b>เหตุการณ์สายหลัก 7 เรื่องเกิดซ้ำทุกรอบที่อายุเดิม</b> เจอครั้งแรกเพื่อนมักตาย แต่จะจดลงสมุดความทรงจำ รอบต่อไปมีตัวเลือก 🔮 ใช้ความรู้ล่วงหน้า · ช่วยเพื่อนครบ 6 คนในรอบเดียวและถึงขั้น '+REALMS[5].n+' ก่อนอายุ 50 → ประตูนอกวงจร · จิตเหนื่อยล้า +6–11 ต่อรอบ ลดลงเมื่อมีความสุข ถึง 100 วงจรจบ'})}catch(e){}
+{const _pyQ=passYear;passYear=function(){try{if(!choice._cur&&choice._q&&choice._q.length){const q=choice._q.shift();if(q[3]===S&&S&&S.alive){choice(q[0],q[1],q[2]);return}}}catch(e){}return _pyQ.apply(this,arguments)}}
 </script>
 </body>
 </html>
