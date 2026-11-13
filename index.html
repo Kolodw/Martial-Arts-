@@ -20075,6 +20075,33 @@ body.tuOn #modal.chTu>.chPill.arm{border-color:#ff6a4a;background:rgba(255,90,60
 body.tuOn #modal.chTu.chDragging .chHot,body.tuOn #modal.chTu.chDragging .chSrc,body.tuOn #modal.chTu .chArm,body.tuOn #modal.chTu .chFateB{border-color:transparent!important;box-shadow:none!important;outline:none!important}
 body.tuOn #modal.chTu .chHot small{opacity:1!important;color:var(--goldL,#ffd98a)}
 body.tuOn #modal.chTu .chFlash{animation:chFl .2s ease}@keyframes chFl{50%{filter:brightness(1.6)}}`;document.head.appendChild(st)})();
+// ===================== หน้าตัวเลือกที่วาดเอง (ดวล · ล่า · เลือกทายาท · เลือกเกิด · ลงทุน · แดนเทพ · AI ฯลฯ): กรอบทองแบบหน้าแรก =====================
+function actUI(m){if(!m||!modalOpen||!tuOn())return;const k=m.dataset.k||'';if(k==='choice'||k==='menu'||k==='tmenu')return;
+ const G=new Map();m.querySelectorAll('button.opt').forEach(b=>{const p=b.parentElement;if(!p||p._act||p._bx||p.classList.contains('bxRow')||p.closest('#qm'))return;if(!G.has(p))G.set(p,[]);G.get(p).push(b)});
+ G.forEach((B,p)=>{if(B.length<2||B.some(b=>bxIsOn(b)))return;p._act=1;p.classList.add('actRow');actDrag(p)})}
+function actPill(p,b,anim){let q=p.querySelector(':scope>.actPill');if(!q){q=document.createElement('span');q.className='actPill';p.appendChild(q)}q.style.borderRadius=getComputedStyle(b).borderRadius;bxPut(q,{x:b.offsetLeft,y:b.offsetTop,w:b.offsetWidth,h:b.offsetHeight},anim);return q}
+function actDrag(p){let st=null,tm=0;const ok=b=>b&&b.tagName==='BUTTON'&&b.classList.contains('opt')&&b.parentElement===p&&!b.disabled;
+ const at=(x,y)=>{const t=document.elementFromPoint(x,y);const b=t&&t.closest&&t.closest('button.opt');if(!ok(b))return null;const r=b.getBoundingClientRect(),ix=r.width*.1,iy=r.height*.12;return(x>r.left+ix&&x<r.right-ix&&y>r.top+iy&&y<r.bottom-iy)?b:null};
+ const hot=b=>{if(b===st.cur)return;const first=!st.cur;if(st.cur)st.cur.classList.remove('actHot');st.cur=b;const q=p.querySelector(':scope>.actPill');if(!b){if(q)q.classList.add('off');return}b.classList.add('actHot');const n=actPill(p,b,!first);n.classList.remove('off');n.classList.add('show');tuBuzz()};
+ p.addEventListener('contextmenu',e=>{if(e.target.closest&&e.target.closest('button.opt'))e.preventDefault()});
+ p.addEventListener('pointerdown',e=>{if(!tuOn()||e.button>0)return;const b=e.target.closest&&e.target.closest('button.opt');if(!ok(b))return;st={id:e.pointerId,x0:e.clientX,y0:e.clientY,x:e.clientX,y:e.clientY,drag:false,cur:null};clearTimeout(tm);
+  tm=setTimeout(()=>{if(!st||Math.hypot(st.x-st.x0,st.y-st.y0)>9)return;st.drag=true;p.classList.add('actDrag');try{p.setPointerCapture(st.id)}catch(x){}b.classList.add('actSrc');hot(b);const q=p.querySelector(':scope>.actPill');if(q)q.classList.add('lift')},300)},{passive:true});
+ p.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;st.x=e.clientX;st.y=e.clientY;if(!st.drag){if(Math.hypot(st.x-st.x0,st.y-st.y0)>9){clearTimeout(tm);st=null}return}hot(at(st.x,st.y))});
+ const end=()=>{clearTimeout(tm);if(!st)return;const s=st;st=null;if(!s.drag)return;p.classList.remove('actDrag');p.querySelectorAll('.actHot,.actSrc').forEach(x=>x.classList.remove('actHot','actSrc'));const q=p.querySelector(':scope>.actPill');if(q)q.classList.remove('lift');p._no=1;setTimeout(()=>p._no=0,90);
+  const b=s.cur;if(!b){if(q)q.classList.remove('show','off');return}b.classList.add('actFlash');setTimeout(()=>{if(q)q.classList.remove('show')},380);setTimeout(()=>{p._no=0;try{b.click()}catch(x){}},170)};
+ p.addEventListener('pointerup',end);p.addEventListener('pointercancel',end);
+ p.addEventListener('touchmove',e=>{if(st&&st.drag)e.preventDefault()},{passive:false});
+ p.addEventListener('click',e=>{if(p._no){e.stopPropagation();e.preventDefault()}},true)}
+(()=>{let t=0;const go=()=>{const m=$('modal');if(!m){setTimeout(go,500);return}new MutationObserver(()=>{cancelAnimationFrame(t);t=requestAnimationFrame(()=>{try{actUI(m)}catch(e){console.error(e)}})}).observe(m,{childList:true,subtree:true})};go()})();
+(()=>{const st=document.createElement('style');st.textContent=`
+body.tuOn .actRow{position:relative}
+body.tuOn .actRow>button.opt{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;transition:border-color .15s,box-shadow .15s}
+body.tuOn .actRow>.actPill{position:absolute;left:0;top:0;z-index:5;pointer-events:none;border:2px solid var(--pink);box-sizing:border-box;background:color-mix(in srgb,var(--pink) 14%,transparent);box-shadow:0 0 14px color-mix(in srgb,var(--pink) 50%,transparent),inset 0 0 10px color-mix(in srgb,var(--pink) 25%,transparent);opacity:0;transition:transform .38s cubic-bezier(.3,1.35,.5,1),width .3s,height .3s,opacity .25s;will-change:transform}
+body.tuOn .actRow>.actPill.show{opacity:1}body.tuOn .actRow>.actPill.off{opacity:.25}
+body.tuOn .actRow>.actPill.lift{box-shadow:0 8px 22px rgba(0,0,0,.4),0 0 20px color-mix(in srgb,var(--pink) 60%,transparent)}
+body.tuOn .actRow.actDrag>.actHot,body.tuOn .actRow.actDrag>.actSrc{border-color:transparent!important;box-shadow:none!important;outline:none!important}
+body.tuOn .actRow .actHot small{opacity:1!important;color:var(--goldL,#ffd98a)}
+body.tuOn .actRow .actFlash{animation:actFl .2s ease}@keyframes actFl{50%{filter:brightness(1.6)}}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
