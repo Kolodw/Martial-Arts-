@@ -19256,7 +19256,7 @@ function rgEscapeOffer(){choice('🌅 ประตูนอกวงจร',`เ
  {t:'⏳ ยังไม่ไป',s:'ประตูจะเปิดอีกครั้งเมื่อพร้อม',skip:true,f(){S.rg.offer=0;log('คุณหันหลังให้ประตู รอยร้าวบนฟ้าค่อยๆ ปิดลง')}}])}
 // ---------- ตาย → ย้อนกาล ----------
 function rgRegress(cause){const G=S.rg,old=S,oldAge=S.age,oldPow=total(),mem=(S.arts||[]).filter(a=>a&&typeof a==='object').slice().sort((a,b)=>(b.b||0)-(a.b||0)).slice(0,Math.min(3,1+Math.floor(G.loop/3))).map(a=>Object.assign({},a,{lv:Math.max(0,(a.lv|0)-1)}));
- const gInt=Math.max(0,(S.int||0)-(G.int0||S.int||0));G.loop++;G.fat=Math.min(100,G.fat+(/วัยชรา/.test(cause)?6:11));G.peak=Math.max(G.peak||0,oldPow);G.awake=0;G.offer=0;
+ const gInt=Math.max(0,(S.int||0)-(G.int0||S.int||0));G.loop++;G.fat=Math.min(100,G.fat+(/วัยชรา/.test(cause)?1:2.5));G.peak=Math.max(G.peak||0,oldPow);G.awake=0;G.offer=0;
  if(G.fat>=100){log('💔 จิตของคุณแตกสลายหลังตายมานับครั้งไม่ถ้วน — ครั้งนี้ไม่มีการย้อนกลับอีกแล้ว','bad',true);G.free=1;S.flags.rgBroken=1;return false}
  let d=null;try{d=G.snap?LS.get(rgSnapKey(),null):null}catch(e){}
  if(d&&d.S){const fac=n=>n?FACTIONS.find(f=>f.n===n)||null:null;const slot=S.slot,lid=S._lid;S=Object.assign(baseState({}),JSON.parse(JSON.stringify(d.S)));S.slot=slot;S.flags=S.flags||{};S.faction=fac(S.faction);peers=d.peers.map(p=>({...p,fac:fac(p.fac)}));S.rg=G;if(lid)S._lid=lid}
@@ -21786,13 +21786,26 @@ try{GD2.push({s:'base',ic:'🀄',t:'วิถียุทธ์',nw:1,d:'☰ →
 
 
 // ===================== ผู้ย้อนกาล: บาลานซ์ความยาก — จบรอบเดียวไม่ได้อีก =====================
-const RG_MIN={protector:2,lonely:3,breaker:3},RG_FPL=2;
-{const _rgE=rgEnd;rgEnd=function(kind){try{const G=S.rg,need=RG_MIN[kind]||1;if(G&&!G.free&&G.loop<need){const nm={protector:'🌅 ผู้พิทักษ์',lonely:'👑 ราชันผู้โดดเดี่ยว',breaker:'🔓 ผู้ทำลายวงจร'}[kind];
+const RG_MIN={protector:6,lonely:8,breaker:10},RG_FPL=2,RG_INS={protector:70,lonely:85,breaker:100};
+{const _rgE=rgEnd;rgEnd=function(kind){try{const G=S.rg,need=RG_MIN[kind]||1,ni=RG_INS[kind]||0;if(G&&!G.free&&(G.loop<need||(G.ins||0)<ni)){const nm={protector:'🌅 ผู้พิทักษ์',lonely:'👑 ราชันผู้โดดเดี่ยว',breaker:'🔓 ผู้ทำลายวงจร'}[kind];
   if(kind==='lonely')G.lonely=0;if(kind==='breaker')G.brk=0;G.early=(G.early||0)+1;
-  log(`⏳ ประตู${nm}เปิดออกครึ่งหนึ่ง แล้วปิดลงต่อหน้า — <b>วงจรยังหมุนไม่ครบ</b> ฟ้ายังไม่เชื่อว่าคนที่ยังไม่เคยเห็นความตายของตัวเองมากพอจะออกไปได้ (ต้องผ่านอย่างน้อย ${need} รอบ · ตอนนี้รอบที่ ${G.loop})`,'myth',true);
-  try{island({big:1,pri:1,ic:'⏳',h:'วงจรยังไม่ยอมปล่อย',t:`ต้องผ่านอย่างน้อย ${need} รอบ`,d:`ตอนนี้รอบที่ ${G.loop} — ตายแล้วย้อนกลับมาใหม่เพื่อไปต่อ`,kind:'bad',ms:4200})}catch(e){}return}}catch(e){console.error(e)}return _rgE.apply(this,arguments)}}
+  log(`⏳ ประตู${nm}เปิดออกครึ่งหนึ่ง แล้วปิดลงต่อหน้า — <b>วงจรยังหมุนไม่ครบ</b> ฟ้ายังไม่เชื่อว่าคนที่ยังไม่เคยเห็นความตายของตัวเองมากพอจะออกไปได้ (ต้องผ่านอย่างน้อย ${need} รอบ และความเข้าใจวงจร ${ni} · ตอนนี้รอบที่ ${G.loop} · เข้าใจ ${G.ins||0})`,'myth',true);
+  try{island({big:1,pri:1,ic:'⏳',h:'วงจรยังไม่ยอมปล่อย',t:`ต้อง ${need} รอบ · เข้าใจวงจร ${ni}`,d:`ตอนนี้รอบที่ ${G.loop} · เข้าใจ ${G.ins||0} — ค้นพบสิ่งใหม่ในแต่ละรอบเพื่อเข้าใจเพิ่ม`,kind:'bad',ms:4200})}catch(e){}return}}catch(e){console.error(e)}return _rgE.apply(this,arguments)}}
 {const _rgF=rgFrag;rgFrag=function(f,i){try{const G=S.rg;if(G&&!G.frag[i]){G.fragL=G.fragL||{};const n=G.fragL[G.loop]||0;if(n>=RG_FPL){if(!G.fragFull||G.fragFull!==G.loop){G.fragFull=G.loop;log(`🌀 คุณสัมผัสได้ถึงเศษปริศนาอีกชิ้นที่「${f.t}」 แต่ความทรงจำรอบนี้รับไม่ไหวแล้ว — ต้องย้อนกลับไปเริ่มใหม่ถึงจะจำเพิ่มได้ (รอบละ ${RG_FPL} ชิ้น)`,'')}return false}
   const had=!!G.frag[i];const r=_rgF.apply(this,arguments);if(!had&&G.frag[i])G.fragL[G.loop]=n+1;return r}}catch(e){console.error(e)}return _rgF.apply(this,arguments)}}
+
+// ===================== ผู้ย้อนกาล: 🧠 ความเข้าใจวงจร — ได้จากการค้นพบจริง ไม่ใช่แค่ตายซ้ำ =====================
+function rgIns(G,cause){try{G.ins=G.ins||0;G.insK=G.insK||{};const K=G.insK;let add=2;const why=['ตายอีกครั้ง +2'];const got=(k,v,t)=>{if(K[k])return;K[k]=1;add+=v;why.push(t+' +'+v)};
+ (G.comp||[]).forEach((c,i)=>{if(c.found)got('f'+i,3,'รู้จัก'+(c.n||'เพื่อน'));if(c.saved)got('s'+i,4,'ช่วย'+(c.n||'เพื่อน')+'รอด')});
+ Object.keys(G.frag||{}).forEach(i=>got('g'+i,4,'เศษปริศนา'));
+ const dc=String(cause||'').replace(/<[^>]+>/g,'').replace(/[0-9,]+/g,'').trim().slice(0,14);if(dc)got('d'+dc,3,'รู้จักความตายแบบใหม่');
+ if(G.rv&&(G.rv.beat||0)>0)got('rv'+G.rv.beat,5,'ชนะผู้ย้อนกาลอีกคน');
+ const lived=(S.age||0)-15;if(lived>=40)add+=2,why.push('อยู่รอดนาน +2');
+ G.ins+=add;G.insLast=add;return why}catch(e){return[]}}
+{const _rgR=rgRegress;rgRegress=function(cause){const G=S&&S.rg;let why=null;try{if(G&&!G.free)why=rgIns(G,cause)}catch(e){}const r=_rgR.apply(this,arguments);try{if(why&&S&&S.rg&&!S.rg.free)setTimeout(()=>{try{log(`🧠 <b>ความเข้าใจวงจร +${S.rg.insLast}</b> (รวม ${S.rg.ins}) — ${why.join(' · ')}`,'sys')}catch(e){}},1200)}catch(e){}return r}}
+{const _orG=openRegress;openRegress=function(){const r=_orG.apply(this,arguments);try{const G=S.rg,m=$('modal');const gr=m.querySelector('.specgrid');if(gr&&!m.querySelector('.rgIns')){const v=G.ins||0;gr.insertAdjacentHTML('afterend',`<div class="rgIns box" style="margin:8px 0;padding:8px 10px"><b>🧠 ความเข้าใจวงจร ${v}</b><div class="hpbar" style="margin:4px 0"><i style="width:${Math.min(100,v)}%;background:#b090ff"></i></div><span class="tag2">🌅 ผู้พิทักษ์ ${RG_INS.protector} (≥${RG_MIN.protector} รอบ) · 👑 ราชันผู้โดดเดี่ยว ${RG_INS.lonely} (≥${RG_MIN.lonely} รอบ) · 🔓 ผู้ทำลายวงจร ${RG_INS.breaker} (≥${RG_MIN.breaker} รอบ)<br>ได้จากสิ่งที่ค้นพบครั้งแรก: รู้จักเพื่อน +3 · ช่วยรอด +4 · เศษปริศนา +4 · ความตายแบบใหม่ +3 · ชนะผู้ย้อนกาล +5 · แค่ตายซ้ำได้ +2</span></div>`)}}catch(e){}return r}}
+
+try{SYS_GUIDE.push({s:'life',nw:1,ic:'🧠',t:'ผู้ย้อนกาล: ความเข้าใจวงจร',go:'openRegress',d:'ตอนจบต้องมีทั้ง<b>จำนวนรอบ</b>และ<b>ความเข้าใจวงจร</b>: 🌅 ผู้พิทักษ์ 70 (≥6 รอบ) · 👑 ราชันผู้โดดเดี่ยว 85 (≥8 รอบ) · 🔓 ผู้ทำลายวงจร 100 (≥10 รอบ) · ความเข้าใจได้จาก<b>สิ่งที่ค้นพบครั้งแรก</b>: รู้จักเพื่อนร่วมชะตา +3 · ช่วยรอด +4 · เศษปริศนา +4 (รอบละ 2 ชิ้น) · ความตายแบบใหม่ +3 · ชนะผู้ย้อนกาลอีกคน +5 · ตายซ้ำเฉยๆ ได้แค่ +2 · จิตล้าเพิ่มช้าลง (+2.5 ต่อการตาย)'})}catch(e){}
 </script>
 </body>
 </html>
