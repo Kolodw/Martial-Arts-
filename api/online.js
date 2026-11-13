@@ -194,7 +194,10 @@ const zPack = d => { d = String(d); try { if (/^[A-Za-z0-9+/]+=*$/.test(d)) { co
 const zUnpack = v => { if (v == null) return v; v = String(v); try { if (v.startsWith('zr:')) return zlib.brotliDecompressSync(Buffer.from(v.slice(3), 'base64')).toString('base64'); if (v.startsWith('zt:')) return zlib.brotliDecompressSync(Buffer.from(v.slice(3), 'base64')).toString('utf8'); if (v.startsWith('zb:')) return zlib.gunzipSync(Buffer.from(v.slice(3), 'base64')).toString('base64'); if (v.startsWith('z:')) return zlib.gunzipSync(Buffer.from(v.slice(2), 'base64')).toString('utf8') } catch { return null } return v };
 // เซฟบนคลาวด์: ตัดบันทึกเหตุการณ์ (feed) ให้เหลือส่วนท้าย — สถานะเกมไม่ถูกแตะ · เซฟในเครื่องผู้เล่นยังครบ
 const FEED_MAX = 40000;
-const saveTrim = d => { try { d = String(d || ''); if (!/^[A-Za-z0-9+/]+=*$/.test(d)) return d; const j = JSON.parse(Buffer.from(d, 'base64').toString('utf8')); if (!j || !j.S || typeof j.feed !== 'string' || j.feed.length <= FEED_MAX) return d; const f = j.feed, i = f.indexOf('<div class="', f.length - FEED_MAX); j.feed = i > 0 ? f.slice(i) : ''; return Buffer.from(JSON.stringify(j), 'utf8').toString('base64') } catch { return d } };
+const saveTrim = d => { try { d = String(d || ''); if (!/^[A-Za-z0-9+/]+=*$/.test(d)) return d; const j = JSON.parse(Buffer.from(d, 'base64').toString('utf8')); if (!j || !j.S) return d; let ch = 0;
+  if (typeof j.feed === 'string' && j.feed.length > FEED_MAX) { const f = j.feed, i = f.indexOf('<div class="', f.length - FEED_MAX); j.feed = i > 0 ? f.slice(i) : ''; ch = 1 }
+  const al = j.S.album; if (Array.isArray(al) && al.length > 3) al.forEach((p, i) => { if (p && p.u && i > 0 && i < al.length - 2) { p.u = ''; ch = 1 } }); // อัลบั้ม: เก็บภาพแรก + 2 ภาพล่าสุด · คำบรรยายครบ
+  return ch ? Buffer.from(JSON.stringify(j), 'utf8').toString('base64') : d } catch { return d } };
 const isAdmKey = k => !!ADM_KEY && String(k || '') === ADM_KEY;
 const annGet = async () => { try { const v = await cmd('GET', 'ann'); return v ? JSON.parse(v) : null } catch { return null } };
 const ANN_VOTE_DAYS = 7;
@@ -412,8 +415,8 @@ module.exports = async (req, res) => {
     if (global._mf2B) return res.json({ ok: 0 }); global._mf2B = 1; const t0 = Date.now(); let seen = 0, done = 0, sv = 0, err = 0;
     try { let cur = String(global._mf2C || (await cmd('GET', 'mf2:cur').catch(() => null)) || '0');
       do { const r = await cmd('SCAN', cur, 'MATCH', 'cs*', 'COUNT', 300); cur = String(r[0]); const ks = (r[1] || []).filter(k => /^cs[23]?:/.test(k));
-        const pre = ks.length ? await pipe(ks.map(k => ['GETRANGE', k, 0, 2])) : [];
-        const todo = ks.filter((k, i) => pre[i] != null && !/^(zr:|zt:|@)/.test(String(pre[i])));
+        const pre = ks.length ? await pipe(ks.map(k => ['STRLEN', k])) : [];
+        const todo = ks.filter((k, i) => +pre[i] > 45000);
         const one = async k => { if (Date.now() - t0 > 8000) return; seen++;
           const [v, ttl] = await pipe([['GET', k], ['TTL', k]]); if (v == null || /^@[1-5]$/.test(String(v))) return;
           const raw = zUnpack(v); if (raw == null) { err++; return }
