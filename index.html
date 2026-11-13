@@ -19927,6 +19927,104 @@ body.tuOn .crow .ybar{-webkit-user-select:none;user-select:none;-webkit-touch-ca
 #qm .qmSw.on{background:var(--pink)}#qm .qmSw.on::after{transform:translateX(14px)}
 #qm .qmSegR{cursor:default;flex-wrap:wrap}#qm .qmSeg{display:flex;gap:2px;background:rgba(255,255,255,.07);border-radius:9px;padding:2px}
 #qm .qmSeg b{font-weight:600;font-size:11.5px;padding:4px 8px;border-radius:7px;cursor:pointer;transition:background .2s,color .2s}#qm .qmSeg b.on{background:var(--pink);color:var(--onacc)}`;document.head.appendChild(st)})();
+// ===================== กรอบทองไหลระหว่างกล่องแยก (ทั้งเว็บ) + เมนูแคปซูล =====================
+const BXU={pos:{}};
+function bxIsOn(b){return b.classList.contains('on')||b.classList.contains('sel')||/outline/.test(b.getAttribute('style')||'')}
+function bxRect(c,b){return{x:b.offsetLeft,y:b.offsetTop,w:b.offsetWidth,h:b.offsetHeight}}
+function bxPut(p,o,anim){if(!anim)p.style.transition='none';p.style.width=o.w+'px';p.style.height=o.h+'px';p.style.transform=`translate(${o.x}px,${o.y}px)`;if(!anim){void p.offsetWidth;p.style.transition=''}}
+function bxGroups(m){const out=[];[m,...m.querySelectorAll('*')].forEach(c=>{if((c._bx&&(c!==m||m._bxH===m.querySelector(':scope>h3')))||c.matches('.tabs,.mgrid,.tmgrid,.seg,#focus,.qmBody,.nav,.crow,.chips')||c.closest('#qm'))return;let B=[...c.children].filter(x=>x.tagName==='BUTTON'&&x.offsetParent&&!x.matches('.xbtn,.mnX'));if(B.length<2)return;
+ let on=B.filter(bxIsOn);if(on.length===1&&!c.matches('.stbar .brow')){const f=on[0].classList[0];if(f&&f!=='on'&&f!=='sel')B=B.filter(x=>x.classList.contains(f));if(B.length<2)return}if(c.matches('.stbar .brow')){on=B.filter(b=>b.classList.contains('pbtn'))}if(on.length!==1)return;if(B.length>2&&on.length===1&&B.filter(bxIsOn).length!==1&&!c.matches('.stbar .brow'))return;out.push([c,B,on[0]])});return out}
+function bxSetup(m){if(!tuOn())return;const k=m.dataset.k||'';bxGroups(m).forEach(([c,B,on],gi)=>{c._bx=1;if(c===m){m._bxH=m.querySelector(':scope>h3');m.querySelectorAll(':scope>.bxPill').forEach(x=>x.remove())}c.classList.add('bxRow');on.classList.add('bxOn');const key=k+':'+gi+':'+B.length;
+ const p=document.createElement('span');p.className='bxPill';c.prepend(p);const now=bxRect(c,on),o=BXU.pos[key];
+ if(o&&(o.x!==now.x||o.y!==now.y)){bxPut(p,o,false);requestAnimationFrame(()=>{bxPut(p,bxRect(c,on),true)})}else bxPut(p,now,false);BXU.pos[key]=now;
+ // เปลี่ยนในที่ (ไม่วาดใหม่)
+ c.addEventListener('click',()=>setTimeout(()=>{if(!c.isConnected)return;const B2=[...c.children].filter(x=>x.tagName==='BUTTON');let n=B2.find(bxIsOn);if(c.matches('.stbar .brow'))n=B2.find(b=>b.classList.contains('pbtn'));if(n){B2.forEach(b=>b.classList.toggle('bxOn',b===n));const r=bxRect(c,n);bxPut(p,r,true);BXU.pos[key]=r}},30));
+ // ลากได้เมื่อมีไม่เกิน 6 ช่อง
+ if(B.length<=6){c.style.touchAction='pan-y';let st=null;
+  c.addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(!b||b.parentElement!==c||!b.classList.contains('bxOn'))return;st={id:e.pointerId,x0:e.clientX,y0:e.clientY,drag:false,cur:b}},{passive:true});
+  c.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;if(!st.drag){if(Math.hypot(e.clientX-st.x0,e.clientY-st.y0)<8)return;st.drag=true;c.classList.add('bxDrag');try{c.setPointerCapture(e.pointerId)}catch(x){}tuBuzz()}
+   const rc=c.getBoundingClientRect(),x=e.clientX-rc.left,y=e.clientY-rc.top;const n=tuNear(B.filter(b=>!b.disabled),x,y);if(!n)return;if(n!==st.cur){st.cur=n;tuBuzz()}B.forEach(b=>b.classList.toggle('tuHot',b===n));
+   p.style.width=n.offsetWidth+'px';p.style.height=n.offsetHeight+'px';p.style.transform=`translate(${x-n.offsetWidth/2}px,${y-n.offsetHeight/2}px) scale(.96)`});
+  const end=()=>{if(!st)return;const s=st;st=null;if(!s.drag)return;c.classList.remove('bxDrag');B.forEach(b=>b.classList.remove('tuHot'));c._no=1;setTimeout(()=>c._no=0,80);bxPut(p,bxRect(c,s.cur),true);BXU.pos[key]=bxRect(c,s.cur);if(!s.cur.classList.contains('bxOn'))setTimeout(()=>{c._no=0;s.cur.click()},150)};
+  c.addEventListener('pointerup',end);c.addEventListener('pointercancel',end);c.addEventListener('click',e=>{if(c._no){e.stopPropagation();e.preventDefault()}},true)}})}
+// ---------------- เมนู (ในเกม + หน้าแรก) ----------------
+const MNU={q:''};
+function mnKey(b){return(b.getAttribute('onclick')||b.className||b.textContent).slice(0,120)}
+function mnUI(m){const k=m.dataset.k;const H=m.querySelector(':scope>h3');if(!(k==='menu'||k==='tmenu')||!tuOn()||(m._mn&&m._mnH===H))return;const G=[...m.querySelectorAll('.mgrid,.tmgrid')];if(!G.length)return;m._mn=1;m._mnH=H;m.querySelectorAll(':scope>.mnSearch,:scope>.mnFav,:scope>.mnPill').forEach(x=>x.remove());m.classList.add('mnTu');
+ const allB=()=>[...m.querySelectorAll('.mgrid>button,.tmgrid>button')];const cnt=LS.get('murim_mnc',{})||{};
+ // ⭐ เปิดบ่อยของคุณ
+ const top=allB().filter(b=>(cnt[k+'|'+mnKey(b)]||0)>=2).sort((a,b)=>(cnt[k+'|'+mnKey(b)]||0)-(cnt[k+'|'+mnKey(a)]||0)).slice(0,4);
+ const h3=m.querySelector(':scope>h3');let anchor=h3;
+ // 🔍 ค้นหา
+ const sb=document.createElement('div');sb.className='mnSearch';sb.innerHTML=`<span>🔍</span><input type="search" placeholder="ค้นหาเมนู…" value="${esc(MNU.q)}"><button type="button" class="mnX">✕</button>`;if(anchor)anchor.after(sb);else m.prepend(sb);anchor=sb;
+ if(top.length){const s=document.createElement('div');s.className='mnFav';s.innerHTML=`<div class="mnFavH">⭐ เปิดบ่อยของคุณ</div><div class="${G[0].className} mnFavG"></div>`;const g=s.querySelector('.mnFavG');top.forEach(b=>{const c=b.cloneNode(true);c.classList.add('mnFavB');g.appendChild(c)});anchor.after(s)}
+ // หมวดพับได้
+ const col=LS.get('murim_mncol',{})||{};m.querySelectorAll('.mch15,.tmh').forEach(h=>{const g=h.matches('.tmh')?h.parentElement.querySelector('.tmgrid'):h.nextElementSibling;if(!g||!g.matches('.mgrid,.tmgrid'))return;const id=k+'|'+h.textContent.trim();h.classList.add('mnH');h.insertAdjacentHTML('beforeend','<i class="mnChev">▾</i>');
+  const ap=()=>{const c=!!col[id];g.classList.toggle('mnCol',c);h.classList.toggle('mnColH',c)};ap();h.onclick=()=>{col[id]=!col[id];LS.set('murim_mncol',col);ap();tuBuzz();setTimeout(mnGhost,320)}});
+ // จุดแดง
+ allB().forEach(b=>{const s=(b.querySelector('small')||{}).textContent||'';if(/พร้อมลง|เหลือ [1-9]\d* ครั้ง|ใหม่!|รับได้/.test(s))b.classList.add('mnDot')});
+ // ไหลเข้าทีละใบ
+ allB().forEach((b,i)=>b.style.setProperty('--i',Math.min(i,24)));
+ // ค้นหา
+ const inp=sb.querySelector('input');const filt=()=>{const q=inp.value.trim().toLowerCase();MNU.q=inp.value;m.classList.toggle('mnQ',!!q);allB().forEach(b=>{b.classList.toggle('mnHide',!!q&&!b.textContent.toLowerCase().includes(q))});
+  m.querySelectorAll('.mch15,.tmh,.mnFavH').forEach(h=>{const g=h.matches('.tmh')?h.parentElement.querySelector('.tmgrid'):h.matches('.mnFavH')?h.nextElementSibling:h.nextElementSibling;if(!g)return;const any=[...g.children].some(b=>!b.classList.contains('mnHide'));h.style.display=any?'':'none';if(q)g.classList.remove('mnCol');else if(h.classList.contains('mnColH'))g.classList.add('mnCol')});mnGhost()};
+ inp.oninput=filt;sb.querySelector('.mnX').onclick=()=>{inp.value='';filt();inp.focus()};if(MNU.q)filt();
+ // นับการใช้ + จำอันล่าสุด
+ m.addEventListener('click',e=>{const b=e.target.closest('.mgrid>button,.tmgrid>button');if(!b||m._mnNo)return;const kk=k+'|'+mnKey(b);const c=LS.get('murim_mnc',{})||{};c[kk]=(c[kk]||0)+1;LS.set('murim_mnc',c);LS.set('murim_mnlast_'+k,mnKey(b))},true);
+ // กรอบทอง
+ const p=document.createElement('span');p.className='mnPill';m.appendChild(p);mnGhost();mnDrag(m)}
+function mnPos(m,b){const rm=m.getBoundingClientRect(),rb=b.getBoundingClientRect();return{x:rb.left-rm.left+m.scrollLeft-m.clientLeft,y:rb.top-rm.top+m.scrollTop-m.clientTop,w:rb.width,h:rb.height}}
+function mnGhost(){const m=$('modal');if(!m||!m._mn)return;const p=m.querySelector(':scope>.mnPill');if(!p||m.classList.contains('mnDragging'))return;const last=LS.get('murim_mnlast_'+m.dataset.k,'');const b=last&&[...m.querySelectorAll('.mgrid>button,.tmgrid>button')].find(x=>mnKey(x)===last&&x.offsetParent&&!x.classList.contains('mnFavB'));
+ if(!b){p.classList.remove('show');return}bxPut(p,mnPos(m,b),p.classList.contains('show'));p.classList.add('show','ghost')}
+function mnDrag(m){let st=null,tm=0,raf=0;const pill=()=>m.querySelector(':scope>.mnPill');
+ const at=(x,y)=>{const t=document.elementFromPoint(x,y);return t&&t.closest?t.closest('.mgrid>button,.tmgrid>button'):null};
+ const hot=b=>{if(!b||b===st.cur)return;st.cur=b;m.querySelectorAll('.mnHot').forEach(x=>x.classList.remove('mnHot'));b.classList.add('mnHot');const p=pill();if(p){p.classList.remove('ghost');p.classList.add('show');bxPut(p,mnPos(m,b),true)}tuBuzz()};
+ m.addEventListener('pointerdown',e=>{if(!tuOn()||e.button>0)return;const b=at(e.clientX,e.clientY);if(!b)return;st={id:e.pointerId,x0:e.clientX,y0:e.clientY,x:e.clientX,y:e.clientY,drag:false,cur:null};clearTimeout(tm);
+  tm=setTimeout(()=>{if(!st||st.drag||Math.hypot(st.x-st.x0,st.y-st.y0)>9)return;st.drag=true;m.classList.add('mnDragging');try{m.setPointerCapture(st.id)}catch(x){}hot(b);const p=pill();if(p)p.classList.add('lift');
+   const loop=()=>{if(!st||!st.drag)return;const rm=m.getBoundingClientRect();const d=st.y<rm.top+60?-1:st.y>rm.bottom-60?1:0;if(d){m.scrollTop+=d*9;hot(at(st.x,st.y))}raf=requestAnimationFrame(loop)};raf=requestAnimationFrame(loop)},300)},{passive:true});
+ m.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;st.x=e.clientX;st.y=e.clientY;if(!st.drag){if(Math.hypot(st.x-st.x0,st.y-st.y0)>9){clearTimeout(tm);st=null}return}hot(at(st.x,st.y))});
+ const end=e=>{clearTimeout(tm);cancelAnimationFrame(raf);if(!st)return;const s=st;st=null;if(!s.drag)return;m.classList.remove('mnDragging');const p=pill();if(p)p.classList.remove('lift');m.querySelectorAll('.mnHot').forEach(x=>x.classList.remove('mnHot'));
+  m._mnNo=1;setTimeout(()=>m._mnNo=0,90);const b=s.cur;if(!b)return;b.classList.add('mnFlash');setTimeout(()=>{m._mnNo=0;try{b.click()}catch(x){}},170)};
+ m.addEventListener('pointerup',end);m.addEventListener('pointercancel',end);
+ m.addEventListener('touchmove',e=>{if(st&&st.drag)e.preventDefault()},{passive:false});
+ m.addEventListener('contextmenu',e=>{if(st)e.preventDefault()});
+ m.addEventListener('click',e=>{if(m._mnNo){e.stopPropagation();e.preventDefault()}},true)}
+// ---------------- ตัวเรียก ----------------
+(()=>{let t=0;const run=()=>{const m=$('modal');if(!m||!modalOpen)return;try{mnUI(m)}catch(e){console.error(e)}try{bxSetup(m)}catch(e){console.error(e)}};
+ const go=()=>{const m=$('modal');if(!m){setTimeout(go,500);return}new MutationObserver(()=>{const k=m.dataset.k;if(k!=='menu'&&k!=='tmenu')m.classList.remove('mnTu','mnQ','mnDragging');cancelAnimationFrame(t);t=requestAnimationFrame(run)}).observe(m,{childList:true,subtree:true})};go();
+ {const _oL=openLove;openLove=function(){const r=_oL.apply(this,arguments);try{$('modal').querySelectorAll('.opt').forEach(b=>{if(/outline/.test(b.getAttribute('style')||'')){b.classList.add('on');b.style.outline='none'}})}catch(e){}return r}}})();
+(()=>{const st=document.createElement('style');st.textContent=`
+body.tuOn .bxRow{position:relative;isolation:isolate}
+body.tuOn .bxRow>.bxPill{position:absolute;left:0;top:0;z-index:3;pointer-events:none;border-radius:12px;border:2px solid var(--pink);background:color-mix(in srgb,var(--pink) 14%,transparent);box-shadow:0 0 14px color-mix(in srgb,var(--pink) 50%,transparent),inset 0 0 10px color-mix(in srgb,var(--pink) 25%,transparent);box-sizing:border-box;transition:transform .38s cubic-bezier(.3,1.35,.5,1),width .3s,height .3s;will-change:transform}
+body.tuOn .bxRow.bxDrag>.bxPill{transition:transform .06s linear,width .18s,height .18s}
+body.tuOn .bxRow>button.bxOn{outline:none!important;border-color:transparent!important;box-shadow:none!important}
+body.tuOn .bxRow>button.tuHot{filter:brightness(1.15)}
+/* ---- เมนูแคปซูล ---- */
+body.tuOn #modal.mnTu .mgrid,body.tuOn #modal.mnTu .tmgrid{gap:8px;transition:max-height .3s ease,opacity .2s;overflow:hidden}
+body.tuOn #modal.mnTu .mgrid>button{border-radius:20px!important;border:1px solid color-mix(in srgb,var(--line) 70%,transparent)!important;background:color-mix(in srgb,var(--card) 82%,transparent);box-shadow:0 2px 8px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.06);display:grid!important;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:8px;align-items:center;text-align:left!important;padding:9px 12px!important;min-height:0!important;font-size:13.5px;position:relative;animation:mnIn .32s cubic-bezier(.3,1.3,.5,1) backwards;animation-delay:calc(var(--i,0)*16ms);transition:transform .2s cubic-bezier(.3,1.5,.5,1),filter .2s}
+body.tuOn #modal.mnTu .mgrid>button small{grid-column:1/-1;font-size:11px;opacity:.7;margin-top:1px;line-height:1.25;text-align:left}
+body.tuOn #modal.mnTu .tmgrid>button{border-radius:20px!important;border:1px solid color-mix(in srgb,var(--line) 70%,transparent)!important;background:color-mix(in srgb,var(--card) 82%,transparent);box-shadow:0 2px 8px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.06);position:relative;animation:mnIn .32s cubic-bezier(.3,1.3,.5,1) backwards;animation-delay:calc(var(--i,0)*16ms);transition:transform .2s cubic-bezier(.3,1.5,.5,1)}
+@keyframes mnIn{from{transform:translateY(8px) scale(.97);opacity:0}}
+body.tuOn #modal.mnTu .mnHot{transform:scale(1.04)}
+body.tuOn #modal.mnTu .mnFlash{animation:mnFl .2s ease}@keyframes mnFl{50%{filter:brightness(1.6)}}
+body.tuOn #modal.mnTu .mnDot::after{content:'';position:absolute;top:7px;right:9px;width:8px;height:8px;border-radius:50%;background:#ff4a5a;box-shadow:0 0 0 2px var(--card),0 0 8px #ff4a5a}
+body.tuOn #modal.mnTu .mnH{cursor:pointer;display:flex;align-items:center;-webkit-user-select:none;user-select:none}
+body.tuOn #modal.mnTu .mnChev{font-style:normal;margin-left:auto;padding-left:8px;opacity:.6;transition:transform .25s;font-size:12px}
+body.tuOn #modal.mnTu .tmh .mnChev{order:3}body.tuOn #modal.mnTu .mnColH .mnChev{transform:rotate(-90deg)}
+body.tuOn #modal.mnTu .mnCol{max-height:0!important;opacity:0;margin:0!important;padding:0!important}
+body.tuOn #modal.mnTu .mnSearch{display:flex;align-items:center;gap:6px;margin:6px 0 10px;padding:6px 10px;border-radius:14px;border:1px solid color-mix(in srgb,var(--line) 70%,transparent);background:color-mix(in srgb,var(--card) 70%,transparent)}
+body.tuOn #modal.mnTu .mnHide,body.tuOn #modal.mnTu .mgrid>button.mnHide,body.tuOn #modal.mnTu .tmgrid>button.mnHide{display:none!important}
+body.tuOn #modal.mnTu .mnSearch input{flex:1;min-width:0;border:0!important;background:transparent!important;box-shadow:none!important;padding:2px 0!important;color:var(--ink)!important;-webkit-text-fill-color:var(--ink)!important;font:inherit;font-size:14px;outline:none}
+body.tuOn #modal.mnTu .mnSearch input::-webkit-search-cancel-button{display:none}
+body.tuOn #modal.mnTu .mnX{border:0;background:transparent;color:inherit;opacity:.5;font-size:13px;padding:2px 4px}
+body.tuOn #modal.mnTu .mnFav{margin-bottom:8px}body.tuOn #modal.mnTu .mnFavH{font-size:12px;font-weight:700;color:var(--pink);margin:0 2px 6px}
+body.tuOn #modal.mnTu>.mnPill{position:absolute;left:0;top:0;z-index:5;pointer-events:none;border-radius:20px;border:2px solid var(--pink);box-sizing:border-box;background:color-mix(in srgb,var(--pink) 10%,transparent);box-shadow:0 0 16px color-mix(in srgb,var(--pink) 50%,transparent);opacity:0;transition:transform .36s cubic-bezier(.3,1.3,.5,1),width .28s,height .28s,opacity .25s}
+body.tuOn #modal.mnTu>.mnPill.show{opacity:1}body.tuOn #modal.mnTu>.mnPill.show.ghost{opacity:.4;box-shadow:none;border-style:dashed}
+body.tuOn #modal.mnTu>.mnPill.lift{box-shadow:0 8px 22px rgba(0,0,0,.4),0 0 20px color-mix(in srgb,var(--pink) 60%,transparent)}
+body.tuOn #modal.mnTu.mnDragging{-webkit-user-select:none;user-select:none}`;document.head.appendChild(st)})();
+// คำแนะนำครั้งแรก: กดค้างปุ่มควบคุม
+{let shown=false;const _rnH=render;render=function(){const r=_rnH.apply(this,arguments);try{if(!shown&&tuOn()&&S&&S.alive&&S.age>=3&&!modalOpen&&!LS.get('murim_qmhint',0)){shown=true;LS.set('murim_qmhint',1);const c=document.querySelector('.crow');if(c){const d=document.createElement('div');d.className='qmHint';d.innerHTML='💡 <b>กดค้าง</b>ปุ่มด้านล่างเพื่อเปิดทางลัด';document.body.appendChild(d);const rc=c.getBoundingClientRect();d.style.bottom=(innerHeight-rc.top+10)+'px';d.onclick=()=>d.remove();setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),300)},6000)}}}catch(e){}return r}}
+(()=>{const st=document.createElement('style');st.textContent=`.qmHint{position:fixed;left:50%;transform:translateX(-50%);z-index:9000;background:rgba(22,17,34,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#f2e8d2;border:1px solid color-mix(in srgb,var(--pink) 60%,transparent);border-radius:14px;padding:8px 14px;font-size:13px;box-shadow:0 8px 22px rgba(0,0,0,.5);animation:qmHi .4s cubic-bezier(.3,1.4,.5,1);white-space:nowrap}.qmHint b{color:var(--goldL,#ffd98a)}.qmHint.out{opacity:0;transition:opacity .3s}@keyframes qmHi{from{transform:translate(-50%,10px);opacity:0}}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
