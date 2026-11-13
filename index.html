@@ -5394,9 +5394,6 @@ function bdCheck(bd){if(!bd)return;if(_bd0===null){_bd0=bd;return}if(bd===_bd0)r
  if($('title')&&$('title').classList.contains('on')&&!modalOpen){location.reload();return}
  if(document.getElementById('updBar'))return;const e=document.createElement('div');e.id='updBar';e.style.cssText='position:fixed;left:50%;bottom:76px;transform:translateX(-50%);z-index:80;background:#2a2433;color:#ffe08a;border:2px solid #ffc23a;border-radius:10px;padding:8px 14px;font-size:13px;cursor:pointer;box-shadow:0 0 12px #ffc23a88';
  e.textContent='🔄 มีอัปเดตใหม่ — แตะเพื่อโหลด (บันทึกให้อัตโนมัติ)';e.onclick=()=>{try{if(S&&S.alive)saveGame()}catch(x){}location.reload()};document.body.appendChild(e)}
-{const _oll=openLiveList;openLiveList=async function(){await _oll.apply(this,arguments);try{if(!admK())return;const j=await api('livelist');if(!j.adm||!j.idle||!j.idle.length)return;const m=$('modal');if(!m||m.dataset.k!=='online')return;
- const h=`<h4 style="margin:12px 0 6px">💤 ออนไลน์อยู่แต่ยังไม่มีภาพสด (${j.idle.length})</h4><p class="tag2">อยู่หน้าแรก / ยังไม่เริ่มชีวิต หรือเปิดเว็บเวอร์ชันเก่าค้างไว้ (เวอร์ชันเก่ากว่า 6.1 ส่งภาพสดแบบส่วนตัวไม่ได้ ต้องรีเฟรชก่อน)</p>`+j.idle.map(x=>`<div class="item"><b>${esc(x.id)}…</b> <span class="tag2">${esc(x.d||'')} · ${esc(x.b||'')} · ${x.v?'v'+esc(x.v):'เวอร์ชันเก่า'} · ${x.ago} วิที่แล้ว</span></div>`).join('');
- const btns=m.querySelectorAll('.gbtn');const ref=btns[btns.length-1];if(ref)ref.insertAdjacentHTML('beforebegin',h);else m.insertAdjacentHTML('beforeend',h)}catch(e){}}}
 
 // ============ v6.4: โอกาสสำเร็จตามค่าสถานะ + คอขวดทะลวงขั้น ============
 const STK=[
