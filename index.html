@@ -6196,7 +6196,7 @@ function shSpawn(){const lv=S.shLv||0,boss=lv>=2,ri=realmIdx();const p=Math.roun
  S.shadow={n:boss?ch(SH_M):ch(SH_N),p,st:40+ri*18+R(0,40)+(boss?40:0),tm:R(3,6),seen:0,boss:boss?1:0,roots:boss?R(1,2):0,at:S.age};S.shN=(S.shN||0)+1}
 function shKillRoot(){const sh=S.shadow;const opts=[];(S.parents||[]).forEach(x=>{if(x.alive)opts.push(['par',x])});(S.children||[]).forEach(c=>{if(c.alive)opts.push(['kid',c])});if(S.spouse)opts.push(['spo']);if(S.ownSect&&(S.ownSect.dis||0)>3)opts.push(['sect']);(S.allies||[]).forEach(a=>opts.push(['ally',a]));
  if(!opts.length)return;const o=ch(opts);let who='';
- if(o[0]==='par'){o[1].alive=false;who=`${o[1].role} ${o[1].n}`}else if(o[0]==='kid'){o[1].alive=false;who=`ลูกของคุณ ${o[1].n}`;S.kids=Math.max(0,(S.kids||1)-1)}else if(o[0]==='spo'){who=`คู่ชีวิต ${S.spouse}`;S.spouse=null}else if(o[0]==='sect'){const d=Math.ceil(S.ownSect.dis*.4);S.ownSect.dis-=d;who=`ศิษย์ในสำนักของคุณ ${d} คน`}else{S.allies=S.allies.filter(a=>a!==o[1]);who=`พันธมิตร ${o[1].n}`}
+ if(o[0]==='par'){o[1].alive=false;who=`${o[1].role} ${o[1].n}`}else if(o[0]==='kid'){o[1].alive=false;who=`ลูกของคุณ ${o[1].n}`}else if(o[0]==='spo'){who=`คู่ชีวิต ${S.spouse}`;S.spouse=null}else if(o[0]==='sect'){const d=Math.ceil(S.ownSect.dis*.4);S.ownSect.dis-=d;who=`ศิษย์ในสำนักของคุณ ${d} คน`}else{S.allies=S.allies.filter(a=>a!==o[1]);who=`พันธมิตร ${o[1].n}`}
  joy(-15);log(`🩸 ${who}ถูกพบเสียชีวิตอย่างปริศนา ไม่มีบาดแผล ไม่มีร่องรอย — ${sh.seen?`ฝีมือของ<b>${sh.n}</b>`:'ไม่มีใครรู้ว่าใครเป็นคนลงมือ'}`,'bad',true)}
 function shStrike(){const sh=S.shadow;const def=total()*(1+(sh.seen?(sh.arr?.7:.45):0))*(.85+Math.random()*.3),atk=sh.p*(.85+Math.random()*.3);
  if(atk>def){if(sh.seen){S.hp=0;S.deathCause=`ถูก${sh.n}สังหาร`;log(`💀 แม้จะรู้ตัวก่อน แต่<b>${sh.n}</b>ก็แข็งแกร่งเกินต้าน`,'bad',true)}else{S.hp=0;S.deathCause='ถูกลอบสังหารโดยไม่ทันรู้ตัว — ไม่มีใครรู้ว่าใครเป็นคนลงมือ';S.key.push(`${S.age} ปี — ผู้ลงมือคือ ${sh.n} (ไม่มีใครรู้)`);log('🌑 ...','bad')}S.shadow=null;return}
@@ -14576,12 +14576,12 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
  const hx=h=>{h=h.replace('#','');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]};
  const mix=(a,b,t)=>{const A=hx(a),Bc=hx(b);return'#'+A.map((v,i)=>Math.round(v+(Bc[i]-v)*t).toString(16).padStart(2,'0')).join('')};
  const sr=s=>{let x=Math.sin(s*127.1+311.7)*43758.5453;return x-Math.floor(x)};
- const world=()=>{try{if(window._tbModern)return'modern';return CFG.xian?'x':'m'}catch(e){return'm'}};
+ const world=()=>{try{if(window._tbModern||CFG.mw)return'modern';return CFG.xian?'x':'m'}catch(e){return'm'}};
  const tod=()=>{if(window._tbTod)return window._tbTod;const h=new Date().getHours();return h>=5&&h<8?'dawn':h>=8&&h<16?'day':h>=16&&h<19?'dusk':'night'};
  const season=()=>{if(window._tbSn)return window._tbSn;const m=new Date().getMonth()+1;return m>=3&&m<=5?'spring':m>=6&&m<=8?'summer':m>=9&&m<=11?'autumn':'winter'};
  const SKY={m:{dawn:['#2b3a67','#6a5d8f','#e69a7a','#f8d29a'],day:['#3f7fd0','#6fa6e6','#a8d2f2','#e2f2f8'],dusk:['#241f4a','#5f3b78','#c85f78','#f2a35e'],night:['#070b20','#141a42','#262a5c','#3e3670']},
   x:{dawn:['#6f8fe0','#a8a8ec','#efc0da','#ffe4c4'],day:['#5f9ae8','#93bdf2','#cfe0fa','#f4f0ff'],dusk:['#3a3a8a','#8a5aa8','#e08aa8','#ffc8a0'],night:['#141a48','#2e2e70','#5a4a92','#a07aaa']},
-  modern:{dawn:['#1a1838','#3a2a5a','#8a4a7a','#e08a7a'],day:['#1a1838','#3a2a5a','#8a4a7a','#e08a7a'],dusk:['#120f2a','#2a1a4a','#6a2a6a','#c04a7a'],night:['#06051a','#100c2e','#2a1550','#5a1f6a']}};
+  modern:{dawn:['#2c3566','#76679c','#ee9c8a','#ffd9a6'],day:['#2f7fd6','#5ea8ea','#9fd2f6','#e4f4fb'],dusk:['#231b4a','#6e3576','#de6478','#ffb46e'],night:['#04071a','#0b1236','#1a1d4c','#33285e']}};
  function mk(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.imageSmoothingEnabled=false;return[c,x]}
  function skyGrad(x,w,h,pal,y1){const id=x.createImageData(w,h),d=id.data,n=pal.length-1,P=pal.map(hx),Q=12;const col=t=>{const i=Math.min(n-1,Math.floor(t)),f=t-i;return P[i].map((v,j)=>v+(P[i+1][j]-v)*f)};for(let y=0;y<h;y++){const t=Math.min(1,y/(y1||h))*n,q=t*Q,qi=Math.floor(q),qf=q-qi,c0=col(Math.min(n,qi/Q)),c1=col(Math.min(n,(qi+1)/Q));for(let xx=0;xx<w;xx++){const c=qf>B4[(y&3)*4+(xx&3)]?c1:c0,k=(y*w+xx)*4;d[k]=c[0];d[k+1]=c[1];d[k+2]=c[2];d[k+3]=255}}x.putImageData(id,0,0)}
  function disc(x,cx0,cy0,r,col,glow){if(glow)for(let k=3;k>=1;k--){x.globalAlpha=.10*k/3+.04;x.fillStyle=glow;for(let yy=-r-k*4;yy<=r+k*4;yy++){const ww=Math.floor(Math.sqrt(Math.max(0,(r+k*4)**2-yy*yy)));x.fillRect(cx0-ww,cy0+yy,ww*2+1,1)}}x.globalAlpha=1;x.fillStyle=col;for(let yy=-r;yy<=r;yy++){const ww=Math.floor(Math.sqrt(r*r-yy*yy));x.fillRect(cx0-ww,cy0+yy,ww*2+1,1)}}
@@ -14595,7 +14595,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
  function build(){const wd=world(),td=tod(),sn=season(),night=td==='night',pal=SKY[wd][td];L={wd,td,sn};
   // ชั้นฟ้า
   const[sk,sx]=mk(W,H);skyGrad(sx,W,H,pal,H*.46);
-  if(night||wd==='modern')for(let i=0;i<Math.round(W*H/180);i++){const y=Math.round(sr(i*3.1)*H*.5),xx=Math.round(sr(i*5.7)*W);sx.fillStyle=sr(i)>.85?'#fff8e0':'#c8c8f0';sx.fillRect(xx,y,1,1)}
+  if(night)for(let i=0;i<Math.round(W*H/180);i++){const y=Math.round(sr(i*3.1)*H*.5),xx=Math.round(sr(i*5.7)*W);sx.fillStyle=sr(i)>.85?'#fff8e0':'#c8c8f0';sx.fillRect(xx,y,1,1)}
   const sunY=Math.round(H*(td==='day'?.12:td==='dusk'?.3:td==='dawn'?.28:.13)),sunX=Math.round(W*(wd==='x'?.72:.7));
   disc(sx,sunX,sunY,Math.round(W*(night?.075:.09)),night?'#f4ecd0':td==='dusk'?'#ffd27a':'#fff4d0',night?'#c8d0ff':'#fff0c0');
   if(night){sx.fillStyle='#e0d8b8';sx.fillRect(sunX-3,sunY-2,3,2);sx.fillRect(sunX+2,sunY+3,2,2)}
@@ -14617,12 +14617,13 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
    island(mx,Math.round(W*.08),Math.round(H*.16),Math.round(W*.09),3,night);island(mx,Math.round(W*.92),Math.round(H*.24),Math.round(W*.1),7,night);island(mx,Math.round(W*.7),Math.round(H*.4),Math.round(W*.06),11,night);
    L.falls=[[Math.round(W*.08)+Math.round(W*.07),Math.round(H*.16)+4],[Math.round(W*.92)-Math.round(W*.08),Math.round(H*.24)+4]];
    L.c1=cloudStrip(W,Math.round(H*.08),'#ece6fb','#cfc6ee',5,9);L.c2=cloudStrip(W,Math.round(H*.1),'#f6f2ff','#ddd4f4',17,8);L.c3=cloudStrip(W,Math.round(H*.12),'#ffffff','#e6def8',29,7)}
+  else if(window.tbModernBuild){try{window.tbModernBuild({fx,mx,nx,W,H,td,sn,pal,night,L,mix,sr,disc,mist,ridge,mk})}catch(e){console.error(e)}}
   else{for(let i=0;i<Math.ceil(W/9);i++){const bw=6+Math.round(sr(i)*8),bh=Math.round(H*(.12+sr(i*3)*.25)),bx=i*9-2,by=Math.round(H*.72)-bh;mx.fillStyle=i%2?'#1a1430':'#22183c';mx.fillRect(bx,by,bw,bh+H);for(let wy=by+3;wy<by+bh;wy+=4)for(let wx=bx+1;wx<bx+bw-1;wx+=3)if(sr(i*31+wy*7+wx)>.55){mx.fillStyle=sr(wx+wy)>.8?'#ff5ac8':'#ffd27a';mx.fillRect(wx,wy,1,2)}}nx.fillStyle='#0c0818';nx.fillRect(0,Math.round(H*.74),W,H)}
   L.far=fa;L.mid=mi;L.near=ne;
   // อนุภาค
   parts=[];const np=fxQ>=2?Math.round(W*H/900):0;for(let i=0;i<np;i++)parts.push({x:Math.random()*W,y:Math.random()*H,v:.2+Math.random()*.5,p:Math.random()*6.28})}
  function ensure(){if(!cv){cv=document.createElement('canvas');cv.id='tbg2';const t=$('title');(t||document.body).prepend(cv);cx=cv.getContext('2d')}
-  const vw0=Math.min(innerWidth,document.documentElement.clientWidth||innerWidth),w=Math.ceil(vw0/PX),h=Math.ceil(innerHeight/PX)+2;const k=[w,h,world(),tod(),season(),fxQ].join('|');if(k!==key){const wdPrev=L.wd;W=w;H=h;cv.width=W;cv.height=H;cv.style.width='100%';cv.style.height=H*PX+'px';cx.imageSmoothingEnabled=false;build();if(wdPrev&&wdPrev!==L.wd&&fxQ>=1)wipe={t0:performance.now()};key=k}}
+  const vw0=Math.min(innerWidth,document.documentElement.clientWidth||innerWidth),w=Math.ceil(vw0/PX),h=Math.ceil(innerHeight/PX)+2;const k=[w,h,world(),tod(),season(),fxQ,window._tbMvar||''].join('|');if(k!==key){const wdPrev=L.wd;W=w;H=h;cv.width=W;cv.height=H;cv.style.width='100%';cv.style.height=H*PX+'px';cx.imageSmoothingEnabled=false;build();if(wdPrev&&wdPrev!==L.wd&&fxQ>=1)wipe={t0:performance.now()};key=k}}
  function draw(now){if(!$('title')||!$('title').classList.contains('on'))return;ensure();const T=now/1000,sc=Math.min(60,(scrollY||0)/PX),still=fxQ<2||matchMedia('(prefers-reduced-motion: reduce)').matches;
   const oy=f=>Math.round(-Math.min(14,sc*.25)*f),ox=f=>Math.round(tilt*f*4);
   cx.drawImage(L.sky,0,Math.round(-sc*.05));
@@ -14638,11 +14639,12 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
    // โคมแดงแกว่ง
    const lx=Math.round(W*.92)+ox(.9),ly=Math.round(H*.4)+oy(.5),sw=Math.round(Math.sin(T*1.6)*2);cx.fillStyle='#1a1424';cx.fillRect(lx,ly-6,1,6);cx.globalAlpha=.25;cx.fillStyle='#ff9a4a';cx.fillRect(lx-4+sw,ly-2,9,9);cx.globalAlpha=1;cx.fillStyle='#d8343a';cx.fillRect(lx-2+sw,ly,5,5);cx.fillStyle='#ffcf6a';cx.fillRect(lx+sw,ly+1,1,3);cx.fillStyle='#1a1424';cx.fillRect(lx-1+sw,ly-1,3,1);cx.fillRect(lx-1+sw,ly+5,3,1)}
   if(!still){// อนุภาคตามฤดู/โลก
-   const kind=L.wd==='x'?'petal':L.wd==='modern'?'neon':L.sn==='winter'?'snow':L.sn==='spring'?'petal':L.sn==='autumn'?'leaf':(L.td==='night'||L.td==='dusk'?'fly':'petal');
-   parts.forEach(p=>{if(kind==='fly'){p.x+=Math.sin(T+p.p)*.15;p.y+=Math.cos(T*.7+p.p)*.1;const a=.5+.5*Math.sin(T*3+p.p);cx.globalAlpha=a;cx.fillStyle='#e8ff8a';cx.fillRect(Math.round(p.x),Math.round(p.y),1,1);cx.globalAlpha=1}
+   if(L.wd==='modern'&&window.tbModernDraw){try{window.tbModernDraw({cx,W,H,T,L,ox,oy,disc,mix})}catch(e){}}
+   const kind=L.wd==='x'?'petal':L.wd==='modern'?'none':L.sn==='winter'?'snow':L.sn==='spring'?'petal':L.sn==='autumn'?'leaf':(L.td==='night'||L.td==='dusk'?'fly':'petal');
+   if(kind!=='none')parts.forEach(p=>{if(kind==='fly'){p.x+=Math.sin(T+p.p)*.15;p.y+=Math.cos(T*.7+p.p)*.1;const a=.5+.5*Math.sin(T*3+p.p);cx.globalAlpha=a;cx.fillStyle='#e8ff8a';cx.fillRect(Math.round(p.x),Math.round(p.y),1,1);cx.globalAlpha=1}
     else{p.y+=p.v*(kind==='snow'?.6:.45);p.x+=Math.sin(T*.8+p.p)*.35+(kind==='snow'?0:.15);if(p.y>H){p.y=-2;p.x=Math.random()*W}if(p.x>W)p.x=0;cx.fillStyle=kind==='snow'?'#ffffff':kind==='leaf'?(p.p>3?'#e08a3a':'#c8502a'):kind==='neon'?(p.p>3?'#ff5ac8':'#5ad8ff'):(p.p>3?'#ffc0d8':'#ff9ac0');cx.fillRect(Math.round(p.x),Math.round(p.y),kind==='snow'?1:2,1)}});
    // จอมยุทธ์เหาะ / นกกระเรียน
-   const cyc=(T%16)/16;if(cyc<.45){const k=cyc/.45,fx1=Math.round(-10+k*(W+20)),fy1=Math.round(H*(L.wd==='x'?.18:.22)-Math.sin(k*3.14)*H*.05);cx.fillStyle=L.wd==='x'?'#ffffff':'#1a1424';if(L.wd==='x'){for(let i=0;i<3;i++){const bx=fx1-i*6,by=fy1+i*3,f=Math.sin(T*8+i)>0?1:0;cx.fillRect(bx-2,by-f,2,1);cx.fillRect(bx,by,1,1);cx.fillRect(bx+1,by-f,2,1)}}else{cx.fillRect(fx1,fy1,2,2);cx.fillRect(fx1-3,fy1+2,7,1);cx.fillStyle='#e8e0c0';cx.fillRect(fx1+3,fy1+1,4,1);cx.globalAlpha=.4;cx.fillStyle='#fff0c0';for(let i=1;i<7;i++)cx.fillRect(fx1-i*3,fy1+2,2,1);cx.globalAlpha=1}}}
+   const cyc=(T%16)/16;if(cyc<.45&&L.wd!=='modern'){const k=cyc/.45,fx1=Math.round(-10+k*(W+20)),fy1=Math.round(H*(L.wd==='x'?.18:.22)-Math.sin(k*3.14)*H*.05);cx.fillStyle=L.wd==='x'?'#ffffff':'#1a1424';if(L.wd==='x'){for(let i=0;i<3;i++){const bx=fx1-i*6,by=fy1+i*3,f=Math.sin(T*8+i)>0?1:0;cx.fillRect(bx-2,by-f,2,1);cx.fillRect(bx,by,1,1);cx.fillRect(bx+1,by-f,2,1)}}else{cx.fillRect(fx1,fy1,2,2);cx.fillRect(fx1-3,fy1+2,7,1);cx.fillStyle='#e8e0c0';cx.fillRect(fx1+3,fy1+1,4,1);cx.globalAlpha=.4;cx.fillStyle='#fff0c0';for(let i=1;i<7;i++)cx.fillRect(fx1-i*3,fy1+2,2,1);cx.globalAlpha=1}}}
   // เปลี่ยนโลก: เมฆม้วนผ่าน
   if(wipe){const k=(performance.now()-wipe.t0)/750;if(k>=1)wipe=null;else{const x0=Math.round((k*1.6-.3)*W);cx.fillStyle='#f6f2ff';for(let y=0;y<H;y+=6){const r=10+Math.round(sr(y)*10);disc(cx,x0+Math.round(Math.sin(y*.2)*8),y,r,'#ffffff','#e6e0fa')}cx.globalAlpha=Math.max(0,.9-Math.abs(k-.5)*1.8);cx.fillStyle='#ffffff';cx.fillRect(0,0,W,H);cx.globalAlpha=1}}}
  function loop(now){requestAnimationFrame(loop);const iv=fxQ>=2?33:250;if(now-last<iv)return;last=now;try{draw(now)}catch(e){}}
@@ -14750,7 +14752,7 @@ if(typeof specClose==='function'){const _sc=specClose;specClose=function(){if(sp
 
 // ---------- แอดมินแท็กตอบกลับในแชท → คนที่ถูกแท็กได้รับแจ้งเตือน ----------
 function chTag(i){const m=(chatMsgs||[]).find(z=>z.i===i);if(!m||!m.pu||m.pu===myPu())return;window._chTag={pu:m.pu,n:m.n,i:m.i,x:String(m.x||'').replace(/^@\S+\s*/,'').slice(0,60)};try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}chTagBar();const inp=$('chatIn');if(inp){try{inp.focus()}catch(e){}}}
-function chTagBar(){const inp=$('chatIn');if(!inp)return;let b=$('chTagB');const T=window._chTag;if(!T){if(b)b.remove();return}if(!b){b=document.createElement('div');b.id='chTagB';inp.parentNode.insertBefore(b,inp)}b.innerHTML=`↩️ ตอบกลับ <b>@${esc(T.n)}</b>${T.x?` <span class="tag2 chTq">“${esc(T.x.slice(0,40))}”</span>`:''} <button class="sysb" onclick="window._chTag=null;chTagBar()">✕</button>`}
+function chTagBar(){const inp=$('chatIn');if(!inp)return;let b=$('chTagB');const T=window._chTag;if(!T){if(b)b.remove();return}if(!b){b=document.createElement('div');b.id='chTagB';const row=inp.closest('.chatin')||inp;row.parentNode.insertBefore(b,row)}b.innerHTML=`<span class="chTi">↩️</span><span class="chTn">ตอบ <b>@${esc(T.n)}</b>${T.x?` <span class="tag2 chTq">“${esc(T.x.slice(0,60))}”</span>`:''}</span><button class="sysb" onclick="window._chTag=null;chTagBar()">✕</button>`}
 function chJump(i){try{if(!i)return;const L=chatMsgs||[],k=L.findIndex(z=>z.i===i);const rows=$('chatBox').querySelectorAll('.cm');const r=rows[k];if(k<0||!r)return toast('ข้อความต้นทางเลื่อนหายไปแล้ว');r.scrollIntoView({behavior:'smooth',block:'center'});r.classList.remove('chJ');void r.offsetWidth;r.classList.add('chJ')}catch(e){}}
 function tagShow(L){const last=L[0];try{sfx('good')}catch(e){}let el=$('tagBar');if(el)el.remove();el=document.createElement('div');el.id='tagBar';
  el.innerHTML=`<b>${last.a?'🔔 ผู้ดูแลตอบคุณในแชท':'💬 '+esc(last.n||'มีคน')+' ตอบกลับคุณในแชท'}${L.length>1?' ('+L.length+' ข้อความ)':''}</b><div>${esc(String(last.x||'').slice(0,120))}</div><div class="brow"><button class="pbtn" onclick="document.getElementById('tagBar').remove();openOnline('chat')">💬 เปิดแชท</button><button class="gbtn" onclick="document.getElementById('tagBar').remove()">ปิด</button></div>`;document.body.appendChild(el)}
@@ -14760,7 +14762,7 @@ function tagShow(L){const last=L[0];try{sfx('good')}catch(e){}let el=$('tagBar')
   if(m.pu&&m.pu!==me&&!m._p&&!row.querySelector('.cmtag')){const h=row.querySelector('.cmh');if(h)h.insertAdjacentHTML('beforeend',`<button class="rep cmtag" onclick="chTag('${esc(m.i)}')" title="แท็กตอบกลับ">↩️</button>`)}});
  if(window._chTag)chTagBar()}catch(e){}return r}}
 (()=>{const st=document.createElement('style');st.textContent=`.cmto{font-size:11.5px;opacity:.85;margin:1px 0 3px;cursor:pointer;border-left:3px solid var(--gold,#f0c860);padding:1px 6px;border-radius:3px;background:rgba(240,200,96,.08)}.cmrq{display:block;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px}.chTq{max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:inline-block;vertical-align:bottom}.cm.chJ .cmb{animation:chJ 1.2s ease}@keyframes chJ{0%,60%{box-shadow:0 0 0 2px #f0c860,0 0 14px #f0c860}100%{box-shadow:none}}.cm.tagme .cmb{box-shadow:0 0 0 2px #f0c860,0 0 10px #f0c86088}
-#chTagB{font-size:12.5px;padding:5px 8px;margin:4px 0;border-radius:8px;border:1.5px dashed var(--gold,#f0c860);display:flex;align-items:center;gap:6px;flex-wrap:wrap}#chTagB .sysb{margin-left:auto;padding:2px 8px}
+#chTagB{font-size:12.5px;padding:4px 6px 4px 10px;margin:6px 0 4px;border-radius:10px;border-left:3px solid var(--gold,#f0c860);background:rgba(240,200,96,.1);display:flex;align-items:center;gap:6px;flex-wrap:nowrap;width:100%;box-sizing:border-box;animation:chTb .18s ease-out}@keyframes chTb{from{opacity:0;transform:translateY(4px)}}#chTagB .chTn{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#chTagB .chTq{display:inline;max-width:none}#chTagB .sysb{margin-left:auto;padding:2px 9px;flex:none}
 #tagBar{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:9999;width:min(92vw,420px);background:#2a2433;color:#fff2c8;border:2px solid #f0c860;border-radius:12px;padding:10px 12px;box-shadow:0 6px 24px #000a;font-size:13.5px}#tagBar .brow{margin-top:8px}#tagBar .gbtn{color:#2a2433}`;document.head.appendChild(st)})();
 
 // ===================== กรอบแอดมิน: Nano Machine (ใส่ได้เฉพาะแอดมิน) =====================
@@ -20490,7 +20492,7 @@ CFG.mw=0;
 function mwSegFix(){try{const sg=document.querySelector('#title .seg[data-k="xian"]');if(!sg)return;
  const old=sg.querySelector('.mwseg');if(old)old.remove();
  let b=sg.querySelector('.mwopt');if(!b){b=document.createElement('button');b.type='button';b.className='mwopt';b.dataset.v='2';b.innerHTML='🏙️ ยุคปัจจุบัน<i>เบต้า</i>';sg.appendChild(b);
-  b.onclick=e=>{if(!mwAllowed()){toast('ยุคปัจจุบันยังไม่เปิด');return}sg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');CFG.mw=1;CFG.xian=0;try{titleMode()}catch(_){}try{updateHints()}catch(_){}try{const a=$('titleSub');if(a)a.textContent='วันนี้ จะได้เกิดเป็นใครในโลกปัจจุบัน?'}catch(_){}};try{segPills()}catch(_){}
+  b.onclick=e=>{if(!mwAllowed()){toast('ยุคปัจจุบันยังไม่เปิด');return}if(!CFG.mw)try{tbModernNext()}catch(_){}sg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');CFG.mw=1;CFG.xian=0;try{titleMode()}catch(_){}try{updateHints()}catch(_){}try{const a=$('titleSub');if(a)a.textContent='วันนี้ จะได้เกิดเป็นใครในโลกปัจจุบัน?'}catch(_){}};try{segPills()}catch(_){}
   sg.querySelectorAll('button:not(.mwopt)').forEach(x=>{const f=x.onclick;x.onclick=function(ev){CFG.mw=0;return f&&f.call(this,ev)}})}
  if(!mwAllowed())b.style.display='none'}catch(e){console.error(e)}}
 mwSegFix();setTimeout(mwSegFix,800);
@@ -20504,6 +20506,233 @@ mwSegFix();setTimeout(mwSegFix,800);
 {const _qgM=qmGo;qmGo=function(cfg){if(cfg&&(cfg.xian===0||cfg.xian===1))CFG.mw=0;return _qgM.apply(this,arguments)}}
 (()=>{const st=document.createElement('style');st.textContent=`#title .seg .mwopt{position:relative;line-height:1.15}#title .seg .mwopt i{display:block;font-style:normal;font-size:9.5px;font-weight:900;letter-spacing:1px;color:#2af0ff;text-shadow:0 0 6px #2af0ff88}
 #title .seg .mwopt.on i{color:inherit;text-shadow:none;opacity:.8}`;document.head.appendChild(st)})();
+
+
+// ===================== ฉากหลังหน้าแรก: ยุคปัจจุบัน (4 ฉาก × เช้า/กลางวัน/เย็น/ดึก) =====================
+(function(){
+ const MV=['river','harbor','downtown','hill'];
+ const dayIdx=()=>{const d=new Date();return Math.floor((d-new Date(d.getFullYear(),0,0))/864e5)};
+ window._tbMvar=window._tbMvar||MV[dayIdx()%MV.length];
+ window.tbModernNext=function(){const i=MV.indexOf(window._tbMvar);let j=Math.floor(Math.random()*MV.length);if(j===i)j=(j+1)%MV.length;window._tbMvar=MV[j]};
+ const TDC={
+  dawn:{b:['#3c3b62','#4a4570','#544a76','#403e66'],edge:'#f4ab8c',glass:'#d496a8',lit:.16,water:'#6c6c9c',wl:'#ffc8a8',gnd:'#262640',far:.55},
+  day:{b:['#6d7d9c','#7f8fae','#5e6e8e','#8a98b4'],edge:'#e4f0fa',glass:'#b4d6f0',lit:0,water:'#3a7cbc',wl:'#a8dcf6',gnd:'#3a4658',far:.45},
+  dusk:{b:['#30264a','#3c2c52','#463258','#2a2244'],edge:'#ffa070',glass:'#f4986e',lit:.24,water:'#8a4a70',wl:'#ffbc84',gnd:'#1c1630',far:.55},
+  night:{b:['#121a34','#161e3c','#1b2244','#0f1630'],edge:null,glass:null,lit:.42,water:'#0a1230',wl:'#ffd890',gnd:'#090b18',far:.6}};
+ const LITC=['#ffd890','#fff0c0','#ffe0a0','#a8d8ff','#ffc070'];
+ function bldg(x,o,bx,by,bw,bh,ci,seed){const{td,sr,mix,M}=o,C=TDC[td],col=C.b[ci%C.b.length];
+  x.fillStyle=col;x.fillRect(bx,by-bh,bw,bh+2);
+  const top=Math.floor(sr(seed*3.3)*5);
+  if(top===1&&bw>5){x.fillRect(bx+2,by-bh-Math.round(bh*.12),bw-4,Math.round(bh*.12));if(bw>9)x.fillRect(bx+4,by-bh-Math.round(bh*.2),bw-8,Math.round(bh*.08))}
+  else if(top===2){const ax=bx+Math.floor(bw/2),ah=Math.round(6+sr(seed)*8);x.fillRect(ax,by-bh-ah,1,ah);M.av.push([ax,by-bh-ah-1,sr(seed*7)*6])}
+  else if(top===3&&bw>4){for(let k=0;k<Math.min(bw,6);k++)x.fillRect(bx+k,by-bh-(Math.min(bw,6)-k),1,Math.min(bw,6)-k)}
+  else if(top===4&&bw>6){x.fillStyle=mix(col,'#000000',.25);x.fillRect(bx+1,by-bh-3,3,3);x.fillRect(bx+bw-4,by-bh-2,2,2)}
+  if(C.edge){x.fillStyle=mix(col,C.edge,.45);x.fillRect(bx,by-bh,1,bh);x.fillStyle=mix(col,C.edge,.2);x.fillRect(bx+1,by-bh,1,bh)}
+  x.fillStyle=mix(col,'#000000',.22);x.fillRect(bx+bw-1,by-bh,1,bh);
+  const st=bw>10?3:2;
+  for(let wy=by-bh+2;wy<by-1;wy+=3)for(let wx=bx+2;wx<bx+bw-2;wx+=st){const r=sr(seed*91+wy*7.1+wx*3.7);
+   if(C.lit&&r<C.lit){x.fillStyle=LITC[Math.floor(sr(wx*1.3+wy)*LITC.length)];x.fillRect(wx,wy,1,2);if(td==='night'&&r<C.lit*.25)M.ref.push([wx,x.fillStyle])}
+   else if(C.glass){x.fillStyle=mix(col,C.glass,(wx-bx)%(st*2)<st?.32:.16);x.fillRect(wx,wy,1,2)}
+   else{x.fillStyle=mix(col,'#000000',.18);x.fillRect(wx,wy,1,2)}}
+  if(td!=='day'&&bw>8&&sr(seed*5.5)>.82){const nc=sr(seed)>.5?'#ff5ac8':'#5ae0ff',ny=by-bh+Math.round(bh*.3);M.neon.push({x:bx+2,y:ny,w:bw-4,h:2,c:nc,p:sr(seed)*6})}}
+ function skyline(x,o,base,hMin,hMax,gap,ci0,seed0,dense){const{W,sr}=o;let bx=-3,i=0;while(bx<W+3){const bw=dense?5+Math.round(sr(seed0+i*1.7)*9):4+Math.round(sr(seed0+i*1.7)*8),bh=Math.round(hMin+sr(seed0+i*2.9)*(hMax-hMin));bldg(x,o,bx,base,bw,bh,ci0+i,seed0+i);bx+=bw+(sr(seed0+i*4.1)<gap?1+Math.round(sr(i)*3):0);i++}}
+ function farLine(x,o,base,hMax,seed){const{W,sr,mix,pal,td}=o,C=TDC[td];const col=mix(pal[2],C.b[0],C.far);x.fillStyle=col;let bx=0,i=0;while(bx<W){const bw=3+Math.round(sr(seed+i)*5),bh=Math.round(hMax*(.3+sr(seed+i*3)*.7));x.fillRect(bx,base-bh,bw,bh+3);if(td==='night'){for(let k=0;k<3;k++)if(sr(seed+i*11+k)>.55){x.fillStyle='#e8c88a';x.fillRect(bx+1+Math.round(sr(i+k)*(bw-2)),base-bh+2+Math.round(sr(i*k+3)*(bh-3)),1,1);x.fillStyle=col}}bx+=bw;i++}}
+ function clouds(x,o,n,seed){const{W,H,sr,disc,td}=o;if(td==='night')return;const col=td==='day'?'#ffffff':td==='dawn'?'#ffd8c8':'#ffb898',sh=td==='day'?'#dceaf6':td==='dawn'?'#c898b0':'#c86a88';
+  for(let i=0;i<n;i++){const cx0=Math.round(sr(seed+i)*W),cy0=Math.round(H*(.06+sr(seed+i*5)*.2)),r=2+Math.round(sr(seed+i*9)*3);for(let k=0;k<4;k++){disc(x,cx0+k*r-r,cy0+1,r,sh);disc(x,cx0+k*r-r,cy0,r-1,col)}}}
+ function lamp(x,o,lx,ly,h){const{td}=o;x.fillStyle=td==='day'?'#3a4250':'#0c0e1a';x.fillRect(lx,ly-h,1,h);x.fillRect(lx,ly-h,3,1);if(td!=='day'){x.globalAlpha=.22;x.fillStyle='#ffd890';x.fillRect(lx-1,ly-h+1,6,5);x.globalAlpha=1;x.fillStyle='#fff0c0';x.fillRect(lx+2,ly-h+1,1,1)}}
+ function palm(x,cx0,by,h,col){x.fillStyle=col;for(let k=0;k<h;k++)x.fillRect(cx0+Math.round(Math.sin(k*.12)*1.5),by-k,1,1);const tx=cx0+Math.round(Math.sin(h*.12)*1.5),ty=by-h;[[-5,1],[-4,-1],[4,-1],[5,1],[-2,-2],[2,-2],[-6,3],[6,3]].forEach(([dx,dy])=>{const n=Math.abs(dx);for(let k=0;k<=n;k++)x.fillRect(tx+Math.round(dx*k/n),ty+Math.round(dy*k/n)+(k>n*.6?1:0),1,1)})}
+ function tree(x,cx0,by,r,col,disc){x.fillStyle=col;x.fillRect(cx0,by-r,1,r);disc(x,cx0,by-r-1,r,col)}
+ window.tbModernBuild=function(o){const{fx,mx,nx,W,H,td,pal,L,mix,sr,disc,ridge}=o,C=TDC[td],night=td==='night',v=window._tbMvar||'river';
+  const M={v,av:[],ref:[],neon:[],roads:[],boats:null,train:null,wheel:null};o.M=M;L.m=M;const hz=Math.round(H*.55);M.hz=hz;
+  clouds(fx,o,v==='hill'?5:4,dayIdx()+3);
+  if(v==='hill')ridge(fx,W,H,hz-Math.round(H*.07),Math.round(H*.07),2.4,mix(pal[2],'#3a4a6a',.5),mix(pal[2],'#ffffff',.2),1);
+  farLine(fx,o,hz-1,Math.round(H*(v==='downtown'?.12:.09)),17);
+  if(v==='river'){
+   skyline(mx,o,hz,Math.round(H*.05),Math.round(H*.17),.35,0,31,false);
+   // พระปรางค์ริมน้ำ
+   const px=Math.round(W*.18),gold=night?'#e8b860':td==='dusk'?'#e0a060':'#d8a848',gd=mix(gold,'#000000',.3),ph=Math.round(H*.16);
+   if(night){mx.globalAlpha=.18;mx.fillStyle='#ffd890';mx.fillRect(px-12,hz-ph-2,25,ph+2);mx.globalAlpha=1}
+   for(let k=0;k<ph;k++){const t=k/ph,w=Math.max(0,Math.round(9*(1-t)**1.25+(k%5===0?1:0)));mx.fillStyle=k%5===0?gd:gold;mx.fillRect(px-w,hz-k,w*2+1,1)}mx.fillStyle=gold;mx.fillRect(px,hz-ph-4,1,4);
+   for(const d of[-1,1]){const sx=px+d*13,sh=Math.round(ph*.55);for(let k=0;k<sh;k++){const w=Math.max(0,Math.round(4*(1-k/sh)**1.2));mx.fillStyle=k%4===0?gd:gold;mx.fillRect(sx-w,hz-k,w*2+1,1)}}
+   // แม่น้ำ
+   const rh=Math.round(H*.075);mx.fillStyle=C.water;mx.fillRect(0,hz,W,rh);mx.fillStyle=mix(C.water,C.wl,.35);for(let i=0;i<W;i+=5)mx.fillRect(i+(i*7)%4,hz+2+(i*3)%(rh-3),2+(i%3),1);
+   M.water={y:hz,h:rh};M.boats={y:hz+Math.round(rh*.45)};
+   nx.fillStyle=C.gnd;nx.fillRect(0,hz+rh,W,H);nx.fillStyle=mix(C.gnd,'#ffffff',.18);nx.fillRect(0,hz+rh,W,1);for(let i=0;i<W;i+=4)nx.fillRect(i,hz+rh-3,1,3);nx.fillRect(0,hz+rh-3,W,1);
+   for(let i=8;i<W;i+=22)lamp(nx,o,i,hz+rh,9);
+   const pc=night?'#05060e':mix(C.gnd,'#1a3a2a',.5);palm(nx,Math.round(W*.04),hz+rh+2,Math.round(H*.12),pc);palm(nx,Math.round(W*.93),hz+rh+2,Math.round(H*.15),pc);palm(nx,Math.round(W*.84),hz+rh+2,Math.round(H*.09),pc)}
+  else if(v==='harbor'){
+   skyline(mx,o,hz,Math.round(H*.06),Math.round(H*.2),.25,1,57,true);
+   mx.fillStyle=C.water;mx.fillRect(0,hz,W,H);for(let y=hz+2;y<H;y+=3){mx.fillStyle=mix(C.water,C.wl,.25+.15*((y/3)%2));for(let i=(y*5)%7;i<W;i+=9)mx.fillRect(i,y,3,1)}
+   M.water={y:hz,h:Math.round(H*.12)};
+   // สะพานขึง
+   const dy=hz+Math.round(H*.035),t1=Math.round(W*.3),t2=Math.round(W*.64),th=Math.round(H*.13),bc=night?'#2a3050':td==='day'?'#e8ecf2':mix(C.b[0],'#ffffff',.25);
+   mx.fillStyle=bc;mx.fillRect(0,dy,W,2);for(const tx of[t1,t2]){mx.fillRect(tx-1,dy-th,3,th+Math.round(H*.05));mx.fillRect(tx-2,dy+Math.round(H*.05)-1,5,2);
+    mx.fillStyle=mix(bc,'#000000',.15);for(let k=1;k<=7;k++){const L1=k*Math.round(W*.028);for(let s=0;s<=1;s++){const ex=tx+(s?L1:-L1);const n=Math.abs(ex-tx);for(let j=0;j<=n;j+=1){const yy=Math.round(dy-th+3+(th-3)*(j/n));mx.fillRect(tx+(s?j:-j),yy,1,1)}}}mx.fillStyle=bc;M.av.push([tx,dy-th-1,tx*.1])}
+   if(night){for(let i=2;i<W;i+=6){mx.fillStyle=i%12?'#ffd890':'#fff';mx.fillRect(i,dy-1,1,1)}}
+   M.roads.push({y:dy,lay:'mid',n:5,sp:9});M.boats={y:hz+Math.round(H*.07),big:1};
+   // ท่าเรือ + ชิงช้าสวรรค์
+   const py=hz+Math.round(H*.1);nx.fillStyle=C.gnd;nx.fillRect(0,py,W,H);nx.fillStyle=mix(C.gnd,'#ffffff',.15);nx.fillRect(0,py,W,1);for(let i=3;i<W;i+=26)lamp(nx,o,i,py,8);
+   const wx=Math.round(W*.89),wr=Math.round(H*.065),wy=py-wr-4;nx.fillStyle=night?'#1a1e34':'#c8ccd8';for(let k=0;k<wr+4;k++){nx.fillRect(wx-Math.round(k*.45),wy+k,1,1);nx.fillRect(wx+Math.round(k*.45),wy+k,1,1)}M.wheel={x:wx,y:wy,r:wr}}
+  else if(v==='downtown'){
+   farLine(fx,o,hz-Math.round(H*.02),Math.round(H*.16),71);
+   skyline(mx,o,hz+Math.round(H*.02),Math.round(H*.1),Math.round(H*.26),.18,2,91,true);
+   const ty=hz+Math.round(H*.02),gc=night?'#0d1020':td==='day'?'#9aa2b4':mix(C.b[1],'#000000',.2);
+   nx.fillStyle=gc;nx.fillRect(0,ty,W,3);nx.fillStyle=mix(gc,'#ffffff',.2);nx.fillRect(0,ty,W,1);nx.fillStyle=gc;for(let i=6;i<W;i+=24){nx.fillRect(i,ty+3,3,Math.round(H*.05));nx.fillRect(i-1,ty+3,5,1)}
+   M.train={y:ty-3};
+   const ry=ty+Math.round(H*.05);nx.fillStyle=night?'#0b0c16':'#3c4250';nx.fillRect(0,ry,W,Math.round(H*.04));nx.fillStyle=night?'#6a6a40':'#e8e0a0';for(let i=0;i<W;i+=8)nx.fillRect(i,ry+Math.round(H*.02),4,1);
+   M.roads.push({y:ry+2,lay:'near',n:5,sp:22,dir:1},{y:ry+Math.round(H*.03),lay:'near',n:4,sp:18,dir:-1});
+   const sy=ry+Math.round(H*.04);nx.fillStyle=C.gnd;nx.fillRect(0,sy,W,H);nx.fillStyle=mix(C.gnd,'#ffffff',.2);for(let i=0;i<W;i+=6)nx.fillRect(i,sy,4,1);
+   // ร้านสะดวกซื้อเปิดไฟ + ไฟจราจร
+   const shx=Math.round(W*.08);nx.fillStyle=night?'#1a1c2c':'#5a6070';nx.fillRect(shx,sy-14,26,14);nx.fillStyle=night?'#fff4d0':'#cfe4f2';nx.fillRect(shx+2,sy-9,22,8);nx.fillStyle='#2ab060';nx.fillRect(shx,sy-14,26,2);nx.fillStyle='#ff8a2a';nx.fillRect(shx,sy-12,26,1);
+   if(night){nx.globalAlpha=.15;nx.fillStyle='#fff4d0';nx.fillRect(shx-4,sy-12,34,14);nx.globalAlpha=1}
+   const tlx=Math.round(W*.86);nx.fillStyle='#14161e';nx.fillRect(tlx,sy-18,1,18);nx.fillRect(tlx-1,sy-20,3,6);M.tl={x:tlx,y:sy-19}}
+  else{ // hill
+   skyline(mx,o,hz+Math.round(H*.035),Math.round(H*.02),Math.round(H*.1),.4,3,113,false);
+   // หอส่งสัญญาณโครงเหล็ก
+   const tx=Math.round(W*.6),tb=hz+Math.round(H*.035),th=Math.round(H*.24);
+   for(let k=0;k<th;k++){const w=Math.round(5*(1-k/th)**1.4),band=Math.floor(k/Math.max(3,Math.round(th/9)))%2;mx.fillStyle=night?(band?'#3a2030':'#24203a'):band?'#e84a3a':'#f4f0ec';mx.fillRect(tx-w,tb-k,1,1);mx.fillRect(tx+w,tb-k,1,1);if(k%4===0)mx.fillRect(tx-w,tb-k,w*2+1,1)}
+   mx.fillStyle=night?'#ffd890':'#f4f0ec';mx.fillRect(tx-3,tb-Math.round(th*.62),7,2);mx.fillRect(tx,tb-th-6,1,6);M.av.push([tx,tb-th-7,0]);
+   // เนินชมวิว
+   const gc=night?'#070a12':td==='day'?'#3e6a3a':td==='dawn'?'#2e3e48':'#22202e';nx.fillStyle=gc;for(let xx=0;xx<W;xx++){const y=Math.round(hz+H*.06+Math.pow(xx/W,1.6)*H*.05-Math.sin(xx*.04)*2);nx.fillRect(xx,y,1,H)}
+   if(td==='day'){nx.fillStyle=mix(gc,'#ffffff',.18);for(let xx=0;xx<W;xx+=3)nx.fillRect(xx,Math.round(hz+H*.06+Math.pow(xx/W,1.6)*H*.05-Math.sin(xx*.04)*2),1,1)}
+   const tc=night?'#04060c':mix(gc,'#000000',.35),bY=Math.round(hz+H*.075);tree(nx,Math.round(W*.1),bY+6,Math.round(H*.035),tc,disc);tree(nx,Math.round(W*.2),bY+8,Math.round(H*.022),tc,disc);
+   nx.fillStyle=tc;nx.fillRect(Math.round(W*.32),bY+4,10,1);nx.fillRect(Math.round(W*.32),bY+5,1,3);nx.fillRect(Math.round(W*.32)+9,bY+5,1,3);nx.fillRect(Math.round(W*.32),bY+1,1,3);lamp(nx,o,Math.round(W*.5),bY+9,12)}
+ };
+ window.tbModernDraw=function(o){const{cx,W,H,T,L,ox,oy,mix,disc}=o,M=L.m;if(!M)return;const td=L.td,night=td==='night',dark=night||td==='dusk';
+  // แสงเตือนอากาศยาน
+  M.av.forEach(([x,y,p])=>{if(((T+p)%1.4)<.5){cx.fillStyle='#ff3a3a';cx.fillRect(x+ox(.5),y+oy(.3),1,1);if(dark){cx.globalAlpha=.3;cx.fillRect(x+ox(.5)-1,y+oy(.3)-1,3,3);cx.globalAlpha=1}}});
+  // นีออน
+  M.neon.forEach(n=>{const on=Math.sin(T*6+n.p)>-.85&&!(Math.sin(T*1.3+n.p*3)>.97);if(!on)return;cx.fillStyle=n.c;cx.fillRect(n.x+ox(.5),n.y+oy(.3),n.w,1);cx.globalAlpha=.25;cx.fillRect(n.x+ox(.5)-1,n.y+oy(.3)-1,n.w+2,3);cx.globalAlpha=1});
+  // แสงสะท้อนบนน้ำ
+  if(M.water){const wy=M.water.y+oy(.3);if(night)M.ref.forEach(([x,c],i)=>{cx.fillStyle=c;for(let k=0;k<M.water.h;k+=2){cx.globalAlpha=Math.max(0,.55-k/M.water.h*.5)*(.6+.4*Math.sin(T*3+i+k));cx.fillRect(x+ox(.5)+Math.round(Math.sin(T*2+k*.7)),wy+1+k,1,1)}});
+   else{cx.fillStyle=td==='day'?'#ffffff':'#ffe0b0';for(let i=0;i<10;i++){cx.globalAlpha=.35+.35*Math.sin(T*2.3+i*1.7);cx.fillRect(Math.round((i*37+T*3)%W),wy+2+(i*5)%Math.max(3,M.water.h-2),2,1)}}cx.globalAlpha=1}
+  // เรือ
+  if(M.boats){for(let i=0;i<2;i++){const sp=(i?5:3.5)*(i?-1:1),len=M.boats.big?(i?16:9):(i?10:7),bx=Math.round(((T*sp+i*70)%(W+len*2)+(W+len*2))%(W+len*2))-len,by=M.boats.y+i*3+oy(.3);
+    cx.fillStyle=night?'#1a1c2c':td==='day'?'#f4f0e8':'#3a2a3a';cx.fillRect(bx,by,len,2);cx.fillRect(bx+2,by-2,Math.round(len*.5),2);cx.fillStyle=mix('#000000',night?'#000000':'#ffffff',.2);cx.fillRect(bx+1,by+2,len-2,1);
+    if(dark){cx.fillStyle='#ffd890';for(let k=3;k<len*.5;k+=2)cx.fillRect(bx+k,by-1,1,1);cx.fillStyle='#ff4a4a';cx.fillRect(bx,by-1,1,1)}}}
+  // รถ
+  M.roads.forEach((r,ri)=>{const lay=r.lay==='mid',dir=r.dir||(ri%2?-1:1);for(let i=0;i<r.n;i++){const span=W+12,x0=Math.round(((T*r.sp*dir*(1+i*.07)+i*span/r.n)%span+span)%span)-6,x=x0+(lay?ox(.5):ox(.9)),y=r.y+(lay?oy(.3):oy(.5))-1;
+    if(dark){cx.fillStyle=dir>0?'#ff4a3a':'#fff4c0';cx.fillRect(x,y,1,1);cx.fillStyle=dir>0?'#fff4c0':'#ff4a3a';cx.fillRect(x+3,y,1,1);cx.fillStyle='#14161e';cx.fillRect(x+1,y,2,1);if(dir>0){cx.globalAlpha=.25;cx.fillStyle='#fff4c0';cx.fillRect(x+4,y,4,1);cx.globalAlpha=1}}
+    else{cx.fillStyle=['#e84a3a','#f4f0e8','#3a6ad8','#f0c040','#2a2a34'][(i+ri)%5];cx.fillRect(x,y-1,4,2);cx.fillStyle='#a8d4f0';cx.fillRect(x+1,y-1,2,1)}}});
+  // รถไฟลอยฟ้า
+  if(M.train){const cyc=(T%14)/14;if(cyc<.42){const len=Math.round(W*.42),k=cyc/.42,tx=Math.round(-len+k*(W+len)),ty=M.train.y+oy(.5);cx.fillStyle=night?'#2a3048':'#e8ecf2';cx.fillRect(tx+ox(.9),ty,len,3);cx.fillStyle='#2a8ad8';cx.fillRect(tx+ox(.9),ty+2,len,1);
+    for(let i=2;i<len-1;i+=3){cx.fillStyle=night?'#fff0c0':'#2a3a5a';cx.fillRect(tx+ox(.9)+i,ty+1,2,1)}for(let i=12;i<len;i+=12){cx.fillStyle=night?'#1a1e30':'#c8ccd6';cx.fillRect(tx+ox(.9)+i,ty,1,3)}}}
+  // ชิงช้าสวรรค์
+  if(M.wheel){const{x,y,r}=M.wheel,X=x+ox(.9),Y=y+oy(.5),n=10;cx.fillStyle=night?'#3a3e5a':'#e4e6ee';for(let a=0;a<64;a++){const t=a/64*6.283;cx.fillRect(Math.round(X+Math.cos(t)*r),Math.round(Y+Math.sin(t)*r),1,1)}
+   for(let i=0;i<n;i++){const t=T*.25+i/n*6.283,ex=Math.round(X+Math.cos(t)*r),ey=Math.round(Y+Math.sin(t)*r);if(i%2===0){cx.fillStyle=night?'#2a2e48':'#cfd2dc';for(let k=1;k<r;k+=2)cx.fillRect(Math.round(X+Math.cos(t)*k),Math.round(Y+Math.sin(t)*k),1,1)}
+    cx.fillStyle=night?['#ff5ac8','#5ae0ff','#ffd860','#7aff8a'][(i+Math.floor(T*2))%4]:['#e84a3a','#3a8ad8','#f0c040','#40b060'][i%4];cx.fillRect(ex-1,ey+1,3,2)}cx.fillStyle=night?'#ffd890':'#8a8ea0';cx.fillRect(X-1,Y-1,2,2)}
+  // ไฟจราจร
+  if(M.tl){const ph=(T%9)/9,c=ph<.45?'#3aff6a':ph<.55?'#ffd23a':'#ff3a3a',X=M.tl.x+ox(.9),Y=M.tl.y+oy(.5);cx.fillStyle=c;cx.fillRect(X,Y+(ph<.45?2:ph<.55?1:0),1,1);if(dark){cx.globalAlpha=.3;cx.fillRect(X-1,Y-1+(ph<.45?2:ph<.55?1:0),3,3);cx.globalAlpha=1}}
+  // เครื่องบิน / นก
+  {const cyc=(T%22)/22;if(cyc<.5){const k=cyc/.5,px=Math.round(W+6-k*(W+12)),py=Math.round(H*.1+k*H*.04);if(night){if((T%1)<.5){cx.fillStyle='#ff4a4a';cx.fillRect(px,py,1,1)}cx.fillStyle='#ffffff';if((T%1.6)<.2)cx.fillRect(px+2,py,1,1)}else{cx.fillStyle='#f4f6fa';cx.fillRect(px,py,4,1);cx.fillRect(px+1,py-1,1,1);cx.fillRect(px+2,py+1,1,1);cx.globalAlpha=.35;cx.fillRect(px+4,py,Math.round(10*k)+3,1);cx.globalAlpha=1}}}
+  if(!night){for(let i=0;i<4;i++){const bx=Math.round((T*(4+i)+i*33)%(W+10))-5,by=Math.round(H*(.16+i*.02)+Math.sin(T*.8+i)*2),f=Math.sin(T*9+i)>0?1:0;cx.fillStyle=td==='day'?'#2a2e3a':'#1a1424';cx.fillRect(bx-1,by-f,1,1);cx.fillRect(bx,by,1,1);cx.fillRect(bx+1,by-f,1,1)}}
+ };
+})();
+
+
+// ===================== ยุคปัจจุบัน: ผู้อยู่ยงข้ามศตวรรษ (อายุจริง 200 ปีขึ้นไป) =====================
+// M.imm = {ta อายุจริงตอนข้ามยุค, rate ร่างแก่ 1 ปีต่อกี่ปี, id มีบัตรหรือไม่, fake, kin, org, hunt, ally, dis, heir, lang}
+const imOn=()=>!!(S&&S.mw&&S.mw.imm);
+const imTA=M=>(M.imm.ta||M.real0||0)+(M.y||0);
+function imGen(P){return Math.max(4,Math.round((MW_Y0-(P.yr||1400))/27))}
+{const _meI=mwEnter;mwEnter=function(how){let ta=0;try{if(S&&S.alive&&!S.mw){ta=window._mwTApend||0;if(ta)S.age=ta}}catch(e){}window._mwTApend=0;
+ const r=_meI.apply(this,arguments);
+ try{const M=S.mw;const real=M&&M.agB===2?M.real0:0;if(M&&!M.imm&&real>=200){M.imm={ta:real};M.adapt=Math.min(M.adapt||4,2);S.int+=Math.min(200,Math.round(real/8));
+  log(`🪪 ในยุคนี้ไม่มีใครเกิดก่อนคุณสักคนเดียว — และไม่มีเอกสารใดยืนยันว่าคนที่มีชีวิตมา ${fmt(real)} ปีมีตัวตน`,'epic');render();saveGame()}}catch(e){console.error(e)}return r}}
+{const _myI=mwYear;mwYear=function(){const r=_myI.apply(this,arguments);try{if(S&&S.alive&&S.mw&&S.mw.imm)imYear(S.mw)}catch(e){console.error(e)}return r}}
+function imYear(M){const im=M.imm;let inc=0,why=[];
+ if(im.lang){inc+=mwS(R(9000,16000));why.push('แปลจารึก')}
+ if(im.dis){inc+=mwS(R(4000,9000));why.push('สำนักฝึก')}
+ if(inc){S.money=(S.money||0)+inc;if(Math.random()<.35)addFeed('ev',`📜 รายได้จาก${why.join(' + ')} · +${fmt(inc)}`,'sum')}}
+// ปรับตัวช้า (แต่ปัญญาสูง)
+{const _mfI=mwFx;mwFx=function(o){if(o&&o.adapt>0&&imOn()){o=Object.assign({},o);o.adapt=Math.max(1,Math.round(o.adapt*.7))}return _mfI.call(this,o)}}
+// HUD: อายุจริง
+{const _rnI=render;render=function(){const r=_rnI.apply(this,arguments);try{if(imOn()){const M=S.mw,h=$('mwHud');if(h&&!h.querySelector('.imAge')){const t=h.querySelector('.mwhT');if(t)t.insertAdjacentHTML('afterend',`<div class="imAge">⏳ อายุจริง <b>${fmt(imTA(M))}</b> ปี · ร่าง ${S.age} ปี · ${(M.id||0)>0?'🪪 มีบัตร':'🚫 ไม่มีตัวตนในระบบ'}${M.imm.org>=2?' · 👁️ มีคนตามล่า':''}</div>`)}const gr=$('gRealm');if(gr&&!/ผู้อยู่ยง/.test(gr.textContent))gr.textContent='ผู้อยู่ยงข้ามศตวรรษ · '+gr.textContent}}catch(e){}return r}}
+// ไม่ให้เหตุการณ์ "ที่สุดท้าย" แบบคนธรรมดาทับตอนจบของผู้อยู่ยง
+MW_R.forEach(e=>{if(e.id==='old5'){const c0=e.c;e.c=M=>!M.imm&&c0(M)}});
+const IM=M=>!!M.imm;
+MW_R.push(
+ // ---------- 1) ใบหน้าที่ไม่แก่ ----------
+ {id:'imFace',w:8,cd:12,c:M=>IM(M)&&M.y>=10,go(M){choice('🪞 ใบหน้าที่ไม่เคยแก่',`เพื่อนร่วมงานยื่นรูปงานเลี้ยงเมื่อ ${M.y>=20?'สิบห้า':'สิบ'} ปีก่อนให้ดู ทุกคนในรูปแก่ลง ยกเว้นคุณ "นายใช้ครีมยี่ห้ออะไร" เขาถาม — แต่สายตาไม่ได้ล้อเล่น`,[
+  mwC('ย้ายเมือง เปลี่ยนชื่อ เริ่มใหม่',()=>{mwSay('🧳 คุณทิ้งห้อง ทิ้งงาน ทิ้งชื่อเดิมไว้ข้างหลัง — เป็นครั้งที่เท่าไหร่ในชีวิตแล้วก็ไม่รู้','',{sec:-35,adapt:-8,mon:-mwS(20000),joy:-6})},{s:'ความลับกลับมาปลอดภัย'}),
+  mwC('แต่งหน้าให้ดูแก่ ย้อมผมขาว',()=>mwSay('🎭 คุณเรียนแต่งหน้าจากคลิปออนไลน์ ทุกเช้าต้องวาดริ้วรอยให้ตัวเองก่อนออกจากบ้าน','',{sec:-12,adapt:3,joy:-3}),{s:'ประวิงเวลา'}),
+  mwC('เล่าความจริงให้เพื่อนคนนี้ฟัง',()=>{M.imm.conf=(M.imm.conf||0)+1;mwSay('🍻 เขาเงียบไปนาน แล้วสั่งเบียร์เพิ่มอีกสองขวด "งั้นเล่าเรื่องสมัยก่อนให้ฟังหน่อยสิ" — คืนนั้นคุณมีเพื่อนแท้เพิ่มหนึ่งคน','good',{sec:8,joy:10})},{s:'มีคนรู้ความลับเพิ่ม'})])}},
+ // ---------- 2) อดีตที่ตามมา ----------
+ {id:'imGrave',w:12,cd:0,c:M=>IM(M)&&M.y>=1,go(M,P){const who=P.mom?'แม่ — '+esc(P.mom):P.kid?(P.kidG==='หญิง'?'ลูกสาว':'ลูก')+' — '+esc(P.kid):'คนที่คุณรักที่สุด';choice('🪦 สุสานเมื่อหลายร้อยปีก่อน',`ตรงที่คุณจำได้ว่าฝัง${who}ไว้ ตอนนี้กลายเป็น${ch(['ลานจอดรถห้าง','สวนสาธารณะ','คอนโดสามสิบชั้น','วัดเก่าที่ยังอยู่'])} ไม่มีป้ายใดบอกว่าเคยมีใครนอนอยู่ตรงนี้`,[
+  mwC('นั่งลงตรงนั้น จุดธูปสามดอก',()=>mwSay(`🕯️ ผู้คนเดินผ่านมองคุณแปลกๆ แต่คุณนั่งอยู่จนธูปหมด — บอกเขาว่าคุณยังอยู่ และยังจำได้ทุกอย่าง`,'',{joy:-6,qi:.3}),{s:'ปราณสงบลง'}),
+  mwC('สลักชื่อลงบนหินก้อนเล็กแล้ววางไว้',()=>mwSay('🪨 หินก้อนนั้นอยู่ได้แค่สองวันก่อนพนักงานทำความสะอาดเก็บไป แต่คุณสลักไว้ในใจแล้ว','',{joy:-3}),{s:''})])}},
+ {id:'imKin',w:12,cd:0,c:M=>IM(M)&&M.y>=2,go(M,P){const g=imGen(P),rich=Math.random()<.5,sur=P.sur||esc(P.n).split(' ')[0];M.imm.kin={rich,y:M.y,g};choice('🧬 สายเลือดรุ่นที่ '+g,`ผลตรวจ DNA จากชุดทดสอบออนไลน์ที่คุณสั่งมาเล่นๆ พบญาติที่ตรงกันมากผิดปกติ — ครอบครัวแซ่<b>${sur}</b> ${rich?'เจ้าของเครือบริษัทใหญ่ในเมือง':'ที่เปิดร้านข้าวต้มเล็กๆ ในชุมชนแออัด'} สืบได้ว่าเป็นลูกหลานคุณรุ่นที่ ${g}`,[
+  mwC('ไปหาในฐานะ "ญาติห่างๆ จากต่างจังหวัด"',()=>{M.imm.kin.met=1;mwSay(rich?'🏢 ประธานบริษัทวัยหกสิบเชิญคุณกินข้าว เขามีจมูกและคิ้วแบบเดียวกับคุณ — แบบเดียวกับแม่ของคุณ':'🍲 ป้าเจ้าของร้านตักข้าวต้มให้ฟรีชามหนึ่ง "หน้าเหมือนตาทวดในรูปบนหิ้งเลย" เธอพูดยิ้มๆ','good',{joy:12,sec:3})},{s:'ได้ครอบครัวกลับมา'}),
+  mwC('เฝ้ามองอยู่ห่างๆ',()=>{M.imm.kin.far=1;mwSay('👀 คุณเดินผ่านหน้าบ้านพวกเขาทุกเดือน ไม่มีใครรู้ว่าบรรพบุรุษของพวกเขาเดินผ่านไปผ่านมา','',{joy:3,sec:-2})},{s:'ปลอดภัย'}),
+  mwC('ลบผลตรวจทิ้ง',()=>{M.imm.kin=null;mwSay('🗑️ บางสายสัมพันธ์ควรจบลงในยุคของมัน','',{joy:-4})},{s:''})])}},
+ {id:'imKin2',w:10,cd:0,c:M=>IM(M)&&M.imm.kin&&M.imm.kin.met&&M.y-M.imm.kin.y>=3,go(M){const k=M.imm.kin;choice(k.rich?'📉 ตระกูลกำลังล่ม':'🏥 หลานป่วยหนัก',k.rich?'บริษัทของตระกูลถูกกลุ่มทุนต่างชาติไล่ฮุบ ประธานแอบโทรมาปรึกษาคุณกลางดึก — เขาบอกว่าไม่รู้ทำไมถึงไว้ใจ "ญาติห่างๆ" คนนี้':'เด็กชายตัวเล็กในร้านข้าวต้มป่วยเป็นโรคที่ต้องผ่าตัด ค่ารักษาเกินกว่าที่ครอบครัวจะหาไหว',[
+  mwC(k.rich?'ใช้ประสบการณ์ศึกตระกูลหลายร้อยปีช่วยวางแผน':'จ่ายค่ารักษาให้ทั้งหมด',()=>{if(k.rich)mwSay('♟️ สงครามธุรกิจก็คือสงครามสำนักที่ใช้สัญญาแทนกระบี่ — ตระกูลรอด ประธานมอบหุ้นจำนวนหนึ่งให้คุณ','epic',{mon:mwS(300000),joy:10});else mwSay('💊 การผ่าตัดสำเร็จ เด็กชายยิ้มให้คุณผ่านหน้าต่างห้องผู้ป่วย — สายเลือดของคุณยังไปต่อได้','epic',{mon:-mwS(400000),joy:18})},{s:k.rich?'ได้ส่วนแบ่ง':'เสียเงินก้อนใหญ่'}),
+  mwC('ถ่ายปราณรักษาลับๆ',()=>mwSay('🌀 คุณใช้ปราณที่มีอยู่น้อยนิดประคองร่างของลูกหลาน — '+(k.rich?'ประธานหายจากความเครียดที่กัดกินมาหลายปี':'หมอบอกว่าอาการดีขึ้นแบบอธิบายไม่ได้'),'good',{qi:-.8,joy:10,sec:5}),{s:'ใช้ปราณ'}),
+  mwC('ไม่ยุ่ง ปล่อยให้เป็นไปตามทาง',()=>mwSay('🌧️ คุณเคยเห็นตระกูลรุ่งและล่มมานับไม่ถ้วน แต่ครั้งนี้มันเจ็บกว่าที่คิด','bad',{joy:-10}),{s:''})])}},
+ {id:'imRelic',w:10,cd:0,c:M=>IM(M)&&M.y>=3,go(M,P){const it=P.art?'คัมภีร์ "'+esc(P.art)+'"':esc(P.wpn||'กระบี่ประจำตัว');M.imm.relic=1;choice('🏺 สมบัติของคุณขึ้นประมูล',`โรงประมูลใหญ่ประกาศนำ <b>${it}</b> "จากราว ค.ศ. ${P.yr}" ออกประมูล ราคาเปิด ${fmt(mwS(2500000))} — ของที่คุณเคยพกทุกวันเมื่อหลายร้อยปีก่อน`,[
+  mwC('ลอบเข้าไปเอาคืนในคืนก่อนประมูล',()=>{if(Math.random()<.65){M.imm.relicOwn=1;mwSay('🌙 สัญญาณกันขโมยยี่สิบจุด ไม่มีจุดไหนดังเลย — เช้าวันรุ่งขึ้นตู้กระจกว่างเปล่า มีเพียงกลิ่นธูปจางๆ ที่ไม่มีใครอธิบายได้','epic',{sec:20,qi:.5,joy:12})}else{M.imm.org=Math.max(M.imm.org||0,1);mwSay('🚨 กล้องอินฟราเรดจับภาพคุณได้ครึ่งตัว คุณหนีออกมาได้มือเปล่า และมีคนเก็บภาพนั้นไว้','bad',{sec:30})}},{s:'65% สำเร็จ'}),
+  mwC('สู้ราคาอย่างเปิดเผย',()=>{if((S.money||0)>=mwS(2500000)){M.imm.relicOwn=1;mwSay('🔨 ค้อนเคาะครั้งที่สาม ของของคุณกลับมาเป็นของคุณ — ในราคาที่แพงกว่าตอนซื้อครั้งแรกหลายแสนเท่า','epic',{mon:-mwS(2500000),joy:15})}else mwSay('💸 คุณยกป้ายได้สามรอบก่อนราคาจะเกินเงินที่มีทั้งชีวิต ของของคุณไปอยู่ในตู้เศรษฐีที่ไม่รู้ด้วยซ้ำว่ามันใช้ยังไง','bad',{joy:-8})},{s:`ต้องมีอย่างน้อย ${fmt(mwS(2500000))}`}),
+  mwC('อาสาเป็นที่ปรึกษาตรวจของโบราณ',()=>{M.imm.lang=M.imm.lang||1;mwSay('🔍 คุณอธิบายรอยสึกบนด้ามจับและที่มาของทุกรอยบิ่นได้ละเอียดจนผู้เชี่ยวชาญอึ้ง — โรงประมูลจ้างคุณประจำ','good',{fame:15000,adapt:4})},{s:'ได้งานประจำ'})])}},
+ {id:'imLegend',w:9,cd:0,c:M=>IM(M)&&M.y>=4,go(M,P){choice('🎬 ตำนานที่ถูกบิดเบือน',`ซีรีส์ฟอร์มยักษ์เรื่องใหม่ใช้ชื่อ <b>${esc(P.n)}</b> เป็นตัวร้ายใจโฉด ในเรื่องคุณฆ่าอาจารย์ตัวเองและทรยศ${P.sect?esc(P.sect):'สำนัก'} — ไม่มีสักฉากที่เป็นความจริง`,[
+  mwC('ไปออดิชันเล่นบทตัวเอง',()=>{if(Math.random()<.6)mwSay('🎭 ผู้กำกับให้คุณเล่นบทแทนตัวร้าย "ท่ารำกระบี่ของเขาเหมือนคนที่ฝึกมาทั้งชีวิต" — ซีรีส์ดังระเบิด คุณกลายเป็นดาราหน้าใหม่','epic',{fame:400000,mon:mwS(200000),sec:15});else mwSay('🎭 คุณไม่ผ่าน เพราะ "ไม่เข้ากับคาแรกเตอร์"','',{joy:-4})},{s:'60% ได้บท'}),
+  mwC('เขียนจดหมายแก้ข้อมูลถึงทีมเขียนบท',()=>mwSay('✉️ ทีมเขียนบทตอบกลับมาว่าข้อมูลของคุณ "ละเอียดเกินกว่าที่นักประวัติศาสตร์คนไหนจะรู้" — ซีซั่นสองตัวร้ายกลายเป็นวีรบุรุษผู้ถูกใส่ร้าย','good',{fame:30000,joy:10,sec:4}),{s:'แก้ชื่อเสียง'}),
+  mwC('ดูจนจบแล้วหัวเราะ',()=>mwSay('📺 นักแสดงนำหล่อกว่าคุณมาก — แค่นั้นก็พอให้อภัยได้แล้ว','',{joy:6}),{s:''})])}},
+ // ---------- 3) ช่องว่างระหว่างยุค ----------
+ {id:'imLang',w:10,cd:0,c:M=>IM(M)&&!M.imm.lang&&M.y>=2,go(M){choice('📜 ภาษาที่ตายไปแล้ว','มหาวิทยาลัยติดประกาศหาผู้ช่วยอ่านจารึกโบราณที่ "ไม่มีใครอ่านออกมาร้อยกว่าปี" คุณอ่านมันออกตั้งแต่ยืนอยู่หน้าบอร์ด — เป็นใบเสร็จค่าข้าวสารธรรมดาๆ',[
+  mwC('สมัครเป็นผู้ช่วยวิจัย',()=>{M.imm.lang=1;mwSay('🎓 อาจารย์ประจำภาควิชาเรียกคุณว่า "อัจฉริยะ" ทั้งที่คุณแค่อ่านภาษาแม่ — มีรายได้ประจำทุกปี','good',{adapt:5,sec:3})},{s:'รายได้ทุกปี'}),
+  mwC('แอบแก้คำแปลผิดๆ ในพิพิธภัณฑ์ทางเน็ต',()=>mwSay('⌨️ บัญชีนิรนาม "คนแก่ไม่ยอมตาย" กลายเป็นตำนานในเว็บบอร์ดประวัติศาสตร์','',{fame:8000,joy:5}),{s:''})])}},
+ {id:'imLand',w:8,cd:0,c:M=>IM(M)&&M.y>=3,go(M){choice('🗺️ ใต้ลานจอดรถนั่น…','คุณจำได้แม่นว่าตรงนี้เคยเป็นที่ซ่อนหีบเงินของพ่อค้าใหญ่ที่ถูกปล้นฆ่าเมื่อหลายร้อยปีก่อน ไม่มีใครเคยหาเจอ',[
+  mwC('ขุดตอนตีสาม',()=>{if(Math.random()<.55)mwSay('💰 จอบกระทบไม้ผุ — เงินตำลึงเก่าเต็มหีบ นักสะสมแย่งกันซื้อ','epic',{mon:mwS(R(400000,900000)),sec:8});else mwSay('🚧 ขุดลงไปเจอแค่ท่อประปา และ รปภ. ที่ถือไฟฉาย','bad',{sec:6,mon:-mwS(5000)})},{s:'55%'}),
+  mwC('แจ้งกรมศิลปากร',()=>mwSay('🏛️ การขุดค้นพบหีบจริง ข่าวขึ้นหน้าหนึ่ง "ผู้แจ้งเบาะแสขอไม่เปิดเผยชื่อ" ได้รางวัลนำจับก้อนหนึ่ง','good',{mon:mwS(150000),fame:5000,joy:6}),{s:'ปลอดภัย'})])}},
+ // ---------- 4) องค์กรลับ ผู้อยู่ยงคนอื่น ศิษย์ ----------
+ {id:'imOrg',w:9,cd:0,c:M=>IM(M)&&!M.imm.org2&&(M.sec>=40||M.imm.org>=1||M.y>=9),go(M){const im=M.imm;im.org2=1;choice('🧪 สถาบันวิจัยอายุขัย','ชายใส่สูทยื่นนามบัตร "สถาบันวิจัยชีวภาพเอกชน" เขารู้ว่าคุณอายุเท่าไหร่ — <b>รู้มากกว่าที่ควรรู้</b> "ขอแค่ตัวอย่างเลือดหลอดเดียว เราจ่ายให้ตามที่คุณเรียก"',[
+  mwC('ปฏิเสธ',()=>{im.org=2;mwSay('🚪 เขายิ้ม เก็บนามบัตรคืน "เดี๋ยวคุณก็เปลี่ยนใจ" — คืนนั้นมีรถตู้สีดำจอดหน้าตึกจนเช้า','bad',{sec:6})},{s:'พวกเขาจะตามล่า'}),
+  mwC('ให้เลือดปลอม (เลือดไก่ผสมปราณ)',()=>{if(Math.random()<.5){im.org=0;mwSay('🐔 ผลแล็บออกมาประหลาดจนนักวิจัยเลิกสนใจ "ตัวอย่างปนเปื้อน" — เงินเข้าบัญชีเรียบร้อย','good',{mon:mwS(500000),joy:6})}else{im.org=3;mwSay('🧫 พวกเขารู้ทันในสองสัปดาห์ และตอนนี้โกรธมาก','bad',{mon:mwS(500000),sec:12})}},{s:'50% เนียน'}),
+  mwC('ยอมให้เลือดจริง',()=>{im.org=1;im.blood=1;M.end=Math.max(S.age+3,M.end-R(3,8));mwSay('💉 เงินก้อนใหญ่ที่สุดในชีวิตยุคนี้ — แต่ความฝันคืนนั้นเต็มไปด้วยห้องสีขาว และร่างที่หน้าตาเหมือนคุณนับสิบนอนเรียงกัน','bad',{mon:mwS(3000000),qi:-1})},{s:'รวยทันที · อายุขัยลดลง'})])}},
+ {id:'imHunt',w:14,cd:5,c:M=>IM(M)&&M.imm.org>=2&&(M.imm.hunt||0)<3,go(M){const im=M.imm,al=im.ally;choice('🕵️ พวกเขามาอีกแล้ว',`ทีมชายชุดดำสี่คนพร้อมปืนยิงยาสลบดักรอคุณใน${ch(['ลานจอดรถใต้ดิน','ซอยหลังที่ทำงาน','สวนสาธารณะตอนเช้ามืด'])}${al?' — แต่วันนี้คุณไม่ได้มาคนเดียว':''}`,[
+  mwC('สู้ ให้รู้ว่ายอดฝีมือคืออะไร',()=>{im.hunt=(im.hunt||0)+1;const ok=Math.random()<(al?.95:.7);if(ok)mwSay('🥋 ลูกดอกยาสลบสี่ดอกปักอยู่ที่กำแพงข้างหลังคุณ ชายทั้งสี่นอนเรียงกันบนพื้น'+(al?' สหายเก่าของคุณปัดฝุ่นที่แขนเสื้อ':''),'epic',{sec:8,joy:4});else{M.end=Math.max(S.age+2,M.end-R(2,5));mwSay('💉 ลูกดอกดอกหนึ่งเฉียดต้นคอ คุณหนีรอดแต่ร่างกายไม่เหมือนเดิม','bad',{qi:-.5,sec:6})}},{s:al?'95% · มีสหายช่วย':'70%'}),
+  mwC('หายตัว ซ่อนให้มิด',()=>{im.hunt=(im.hunt||0)+1;mwSay('🌫️ คุณย้ายที่นอนทุกสามคืนอยู่หลายเดือน ไม่มีใครหาคุณเจอ แต่ก็ไม่ได้ใช้ชีวิตเหมือนกัน','',{sec:-20,joy:-6,adapt:-3})},{s:'ปลอดภัย · ชีวิตสะดุด'}),
+  mwC('เจรจากับหัวหน้าทีม',()=>{im.hunt=(im.hunt||0)+1;mwSay('🤝 หัวหน้าทีมอายุห้าสิบ ลูกสาวป่วยเป็นโรคที่สถาบันสัญญาว่าจะรักษา — คุณเข้าใจเขา ทั้งคู่จากกันโดยไม่มีใครเจ็บ','',{joy:3,sec:3})},{s:''})])}},
+ {id:'imOrgEnd',w:20,cd:0,c:M=>IM(M)&&M.imm.org>=2&&(M.imm.hunt||0)>=3&&!M.imm.orgDone,go(M){const im=M.imm;im.orgDone=1;choice('🏢 ชั้นใต้ดินของสถาบัน','คุณตามรอยรถตู้ไปจนถึงตึกกระจกนอกเมือง ชั้นใต้ดินมีตู้แช่เย็นนับร้อย ป้ายชื่อแต่ละตู้คือคนที่หายตัวไปในประวัติศาสตร์ — ผู้ฝึกตนที่หลงยุคมาเหมือนคุณ',[
+  mwC('ทำลายข้อมูลทั้งหมด ปลดปล่อยทุกคน',()=>{im.org=0;mwSay('🔥 เซิร์ฟเวอร์ทั้งชั้นดับลง ประตูตู้แช่เปิดออก — สามคนยังหายใจอยู่ พวกเขาคุกเข่าคำนับคุณตามธรรมเนียมที่ไม่มีใครในยุคนี้ใช้แล้ว','myth',{sec:15,joy:20,qi:1},true);keyAdd('ปิดสถาบันล่าผู้อยู่ยง')},{s:'จบการตามล่า'}),
+  mwC('ทำข้อตกลง: ข้อมูลแลกความสงบ',()=>{im.org=0;mwSay('📜 คุณสอนวิธีหายใจแบบเดินปราณขั้นแรกให้นักวิจัย แลกกับการลบชื่อคุณออกจากทุกฐานข้อมูล — ยุคนี้อาจได้ผู้ฝึกตนรุ่นใหม่จากห้องแล็บ','epic',{sec:-30,mon:mwS(800000)})},{s:'ปลอดภัย + เงิน'})])}},
+ {id:'imOther',w:9,cd:0,c:M=>IM(M)&&M.y>=5,go(M,P){const foe=P.foe;M.imm.met=1;choice('🍵 ร้านชาเก่าแก่ในย่านเมืองเก่า',`เจ้าของร้านชารินชาให้คุณด้วยท่ารินที่ไม่มีใครในยุคนี้ใช้ เขามองตาคุณแล้วพูดภาษาที่ตายไปแล้ว — ${foe?`<b>${esc(foe)}</b> ศัตรูคู่แค้นของคุณ ยังไม่ตาย`:'อีกคนหนึ่งที่หลงยุคมาเหมือนคุณ และอยู่มานานกว่าคุณเสียอีก'}`,[
+  mwC(foe?'วางความแค้นลง ดื่มชาด้วยกัน':'จับมือเป็นสหาย',()=>{M.imm.ally=1;mwSay(foe?'🍵 สองคนที่เคยอยากฆ่ากันนั่งดื่มชาถึงเช้า บ่นเรื่องค่าไฟเหมือนคนแก่ทั่วไป — ในยุคนี้ มีแค่พวกเขาสองคนที่จำโลกเก่าได้':'🤝 เขาสอนคุณว่าจะซ่อนตัวในยุคนี้อย่างไร และสาบานว่าถ้าวันหนึ่งใครมาตามล่า จะยืนข้างคุณ','good',{joy:15,adapt:8,sec:-5})},{s:'ได้สหาย (ช่วยตอนถูกตามล่า)'}),
+  mwC(foe?'ชำระแค้นให้จบ':'ประลองฝีมือ',()=>{const w=Math.random()<.6;mwSay(w?'⚔️ ศึกบนดาดฟ้าที่ไม่มีใครเห็น จบลงในสิบกระบวนท่า — ผู้ชนะยืนอยู่คนเดียวใต้แสงไฟเมือง':'🩸 คุณแพ้ เป็นครั้งแรกในรอบหลายร้อยปี เขาไม่ฆ่าคุณ แค่หันหลังเดินจากไป','epic',w?{qi:.8,joy:6}:{qi:-.5,joy:-8})},{s:'60% ชนะ'}),
+  mwC('จ่ายค่าชา แล้วไม่กลับไปอีก',()=>mwSay('🚪 บางคนควรปล่อยให้อยู่ในอดีต','',null),{s:''})])}},
+ {id:'imDis',w:10,cd:0,c:M=>IM(M)&&!M.imm.dis&&M.y>=4,go(M){choice('🥋 เปิดคลาสฝึกร่างกาย','ค่าเช่าห้องแพงขึ้นทุกปี — คุณคิดว่าจะเปิดคลาสสอนอะไรสักอย่าง เพื่อหารายได้ และเผื่อจะเจอคนที่มีรากวิญญาณ',[
+  mwC('คลาสกังฟูเด็ก',()=>{M.imm.dis=1;M.imm.disY=M.y;mwSay('🧒 เด็กสิบสองคนวิ่งรอบสนาม ร้องว่า "ซือฟุ!" ไม่หยุด — คุณเหนื่อยกว่าตอนรบกับทัพหมื่นคน','good',{joy:10,adapt:4})},{s:'รายได้ทุกปี · หาศิษย์'}),
+  mwC('คลาสโยคะ/ไทเก็กสำหรับผู้ใหญ่',()=>{M.imm.dis=1;M.imm.disY=M.y;mwSay('🧘 สาวออฟฟิศและลุงเกษียณมาเต็มห้องทุกเสาร์ คนในคลาสบอกว่าหายปวดหลังแบบไม่น่าเชื่อ','good',{joy:6,mon:mwS(10000)})},{s:'รายได้ทุกปี · หาศิษย์'})])}},
+ {id:'imDisG',w:14,cd:0,c:M=>IM(M)&&M.imm.dis&&!M.imm.heir&&M.y-(M.imm.disY||0)>=3,go(M){const nm=mwNm({cc:M.cc||'th'},Math.random()<.5?0:1);choice('✨ รากวิญญาณในยุคไร้ปราณ',`<b>${esc(nm)}</b> นักเรียนอายุสิบห้าในคลาสของคุณ หายใจได้จังหวะเดียวกับปราณโดยไม่มีใครสอน — คนแรกที่คุณเจอในยุคนี้`,[
+  mwC('รับเป็นศิษย์สายตรง สอนวิชาจริงทั้งหมด',()=>{M.imm.heir=nm;mwSay(`🏯 ${esc(nm)}คุกเข่าคำนับสามครั้งบนพื้นห้องเช่า — สำนักของคุณมีศิษย์คนแรกในรอบหลายร้อยปี`,'myth',{qi:.5,joy:18,sec:4},true);keyAdd('รับศิษย์คนแรกในยุคปัจจุบัน')},{s:'มีผู้สืบทอด'}),
+  mwC('ปล่อยให้เขาใช้ชีวิตแบบคนธรรมดา',()=>mwSay('🌱 คุณสอนแค่วิธีหายใจ ไม่บอกว่ามันคืออะไร — เผื่อวันหนึ่งเขาจะค้นพบเอง','',{joy:3}),{s:''})])}},
+ // ---------- ตอนจบของผู้อยู่ยง ----------
+ {id:'imEnd',w:40,cd:0,c:M=>IM(M)&&(mwLeft(M)<=6||(M.ageless&&M.y>=150))&&!M.imm.endPick,go(M){const im=M.imm;im.endPick=1;choice('⏳ ปราณที่ประคองร่างเริ่มหมด',`หลัง ${fmt(imTA(M))} ปี คุณรู้สึกได้ว่าปราณที่ทำให้ร่างนี้ไม่แก่ กำลังจะหมดลง — ทางเลือกสุดท้ายของผู้อยู่ยง`,[
+  mwC('ดึงปราณครั้งสุดท้าย อยู่ให้เห็นยุคถัดไป',()=>{im.endK='future';M.end+=R(40,70);M.fz=1;mwSay('🌌 คุณนั่งสมาธิเก้าสิบวันไม่ลุก — ร่างกลับมาหนุ่มอีกครั้ง โลกจะเปลี่ยนไปอีกแค่ไหน คุณอยากเห็น','myth',{qi:-1},true)},{s:'อยู่ต่ออีกหลายสิบปี'}),
+  mwC('ปล่อยปราณ แล้วแก่ลงอย่างคนธรรมดา',()=>{im.endK='mortal';M.fz=0;M.ageless=0;M.end=S.age+R(6,10);mwSay('🍂 ผมขาวเส้นแรกขึ้นในเช้าวันรุ่งขึ้น คุณมองมันในกระจกนาน แล้วยิ้ม — ในที่สุดก็ได้แก่เหมือนคนอื่นเสียที','good',{joy:15},true)},{s:'ชีวิตสุดท้ายแบบมนุษย์'}),
+  mwC('ตามหารอยแยก กลับสู่ยุทธภพ',()=>{im.endK='return';if(M.end-S.age>8)M.end=S.age+R(3,6);mwSay('🌀 คุณเริ่มตามหาร่องรอยของประตูที่พาคุณมา — มีคนเห็นแสงประหลาดบนดอยสูงในคืนเดือนมืด','epic',{qi:.5},true)},{s:'จบแบบกลับบ้าน'})])}}
+);
+// เหตุตายของผู้อยู่ยง
+{const _cdI=checkDeath;checkDeath=function(){try{if(imOn()&&S.alive&&!S.deathCause&&S.age>=S.mw.end){const M=S.mw,im=M.imm,ta=fmt(imTA(M)),h=im.heir?` ศิษย์${esc(im.heir)}สืบทอดวิชาต่อ`:'';
+ S.deathCause=im.endK==='return'?`ก้าวเข้าสู่รอยแยกบนยอดดอยในคืนเดือนมืด หายไปจากยุคปัจจุบันหลังมีชีวิตมา ${ta} ปี${h}`:im.endK==='mortal'?`จากไปอย่างสงบด้วยวัยชราแบบมนุษย์ หลังมีชีวิตมา ${ta} ปี${h}`:im.endK==='future'?`ได้เห็นโลกปี ค.ศ. ${MW_Y0+M.y} ก่อนปราณสุดท้ายจะหมดลง รวมอายุ ${ta} ปี${h}`:`ปราณที่ประคองร่างหมดลงหลังมีชีวิตมา ${ta} ปี${h}`;
+ try{keyAdd(`ผู้อยู่ยง ${ta} ปี`)}catch(e){}}}catch(e){}return _cdI.apply(this,arguments)}}
+// ทางเข้าใหม่: เริ่มเป็นผู้อยู่ยงอายุหลายร้อยปี
+function mwNewAncient(){window._mwLI=-1;window._mwTApend=R(200,900);mwNewLost()}
+{const _otI=openMWTeaser;openMWTeaser=function(src){if(src==='title')window._mwTApend=0;const r=_otI.apply(this,arguments);try{if(src==='title'&&mwAllowed()){const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.imB'))g.insertAdjacentHTML('beforeend','<button class="opt imB" onclick="mwNewAncient()">⏳ ผู้อยู่ยงข้ามศตวรรษ<small>อายุจริง 200–900 ปี · ไม่มีตัวตนในยุคนี้</small></button>')}}catch(e){}return r}}
+// เลือกชาติที่แล้วที่อายุ 200+ → เป็นผู้อยู่ยงด้วยอายุจริง
+{const _nlI=mwNewLost;mwNewLost=function(){try{const i=window._mwLI|0;if(i>=0){const L=(LS.get('murim_legacy',[])||[])[i];if(L&&L.a>=200)window._mwTApend=L.a}}catch(e){}return _nlI.apply(this,arguments)}}
+(()=>{const st=document.createElement('style');st.textContent=`.imAge{font-size:12px;margin:-2px 0 6px;color:#ffe2a8}`;document.head.appendChild(st)})();
+
+
+// ===================== แก้: ลูกเกิดใหม่ไม่เพิ่มในหน้าครอบครัว (ตัวนับลูกเคยถูกลดตอนลูกตาย) · ทะลวงขั้นโลกเทพค้าง =====================
+{const _sfF=syncFamily;syncFamily=function(){try{if(S&&!(S.beastMode&&!S.beastMode.human)){const n=(S.children||[]).length;if(!S._kFix){S._kFix=1;if((S.kids||0)<n){S.kids=n;S._kSeen=n;S._kLen=n}}}}catch(e){}return _sfF.apply(this,arguments)}}
+// ทะลวงขั้นโลกเทพ: ถ้าพลังถึงแล้ว ให้ทัณฑ์ขึ้นทุกปีเมื่อว่าง · คิวที่ค้างหลังโหลดเซฟถูกปลุกใหม่ · ปุ่มทะลวงขึ้นเสมอ
+function brkSafe(){try{if(!S||!S.alive||!S.xt||(S.beastMode&&!S.beastMode.human))return;const p=brkPend();if(!p){S._tribQ=null;return}
+ if(S.tribNext!=null&&(!isFinite(S.tribNext)||S.tribNext>S.age+2))S.tribNext=S.age+1;
+ if(choice._cur||modalOpen||document.querySelector('.kfx'))return;if(S.tribNext!=null&&S.age<S.tribNext)return;if(S._brkY===S.age)return;S._brkY=S.age;S._tribQ=null;godTrib(p[0],p[1])}catch(e){console.error(e)}}
+{const _pyS=passYear;passYear=function(){const r=_pyS.apply(this,arguments);setTimeout(brkSafe,260);return r}}
+setInterval(()=>{try{if(S&&S.alive&&S._tribQ&&!window._tribPoll&&!choice._cur&&!modalOpen)brkSafe()}catch(e){}},2500);
+{const _rnS=render;render=function(){const r=_rnS.apply(this,arguments);try{if(S&&S.alive&&S.xt&&!$('brkPill')&&!$('ascPill')){const g=$('gRealm');const p=brkPend();if(g&&p)g.insertAdjacentHTML('afterend','<button id="brkPill" class="ascpill" style="margin:4px 0;border-color:#ffd060;background:linear-gradient(180deg,#5a3a10,#2a1808)" onclick="brkGo()">⚡ ทะลวงสู่'+esc(tribName(p[0],p[1]))+'</button>')}else{const b=$('brkPill');if(b&&!$('ascPill')&&!brkPend())b.remove()}}catch(e){}return r}}
 
 </script>
 </body>
