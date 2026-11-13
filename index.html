@@ -19794,6 +19794,139 @@ function dkUI(){const nav=document.querySelector('#tDock .nav');if(!nav)return;c
 {const sync=()=>{try{LS.set('murim_dock',tuOn()?'cap':'old');if(window.dockStyleApply)dockStyleApply()}catch(e){}};sync();
  const _t=window.tabUiToggle;window.tabUiToggle=function(){_t.apply(this,arguments);sync()};
  const _om=openTitleMenu;openTitleMenu=function(){const r=_om.apply(this,arguments);try{const d=$('modal').querySelector('[data-dock]');if(d)d.remove()}catch(e){}return r}}
+// ===================== ⚡ ทางลัดกดค้าง (แบบ iOS) — ปุ่มควบคุมในเกม =====================
+const QM={el:null,mask:null,btn:null,spec:null,hold:false,pid:null,hot:null};
+// ---------- ตัวการ์ด ----------
+function qmRows(sp){return sp.rows.map((r,i)=>{if(r.sep)return`<div class="qmSep"></div>`;if(r.info)return`<div class="qmInfo" style="--d:${i}">${r.info}</div>`;
+ if(r.seg)return`<div class="qmR qmSegR" style="--d:${i}"><span class="qmI">${r.ic||''}</span><span class="qmT">${r.t}</span><span class="qmSeg">${r.seg.o.map((o,j)=>`<b class="${r.seg.cur===j?'on':''}" data-sg="${i}:${j}">${o}</b>`).join('')}</span></div>`;
+ return`<div class="qmR ${r.dis?'dis':''} ${r.tog!=null?'qmTog':''}" data-i="${i}" style="--d:${i}"><span class="qmI">${r.ic||''}</span><span class="qmT">${r.t}${r.s?`<small>${r.s}</small>`:''}</span><span class="qmRt">${r.tog!=null?`<i class="qmSw ${r.tog?'on':''}"></i>`:(r.r||'')}</span></div>`}).join('')}
+function qmHtml(sp){return`<div class="qmH"><span class="qmHi">${sp.ic}</span><b>${sp.t}</b><span class="qmHs">${sp.sub||''}</span></div><div class="qmBody"><span class="qmPill"></span>${qmRows(sp)}</div><i class="qmArr"></i>`}
+function qmOpen(btn,make){qmClose(true);let sp;try{sp=make()}catch(e){console.error(e);return}if(!sp)return;QM.btn=btn;QM.make=make;QM.spec=sp;
+ const mk=document.createElement('div');mk.id='qmMask';mk.onclick=()=>qmClose();document.body.appendChild(mk);QM.mask=mk;
+ const c=document.createElement('div');c.id='qm';c.innerHTML=qmHtml(sp);document.body.appendChild(c);QM.el=c;
+ const rc=btn.getBoundingClientRect(),w=Math.min(innerWidth-16,300);c.style.width=w+'px';const L=Math.max(8,Math.min(innerWidth-w-8,rc.left+rc.width/2-w/2));c.style.left=L+'px';
+ const below=rc.top<innerHeight*.35;if(below){c.style.top=(rc.bottom+12)+'px';c.classList.add('dn')}else c.style.bottom=(innerHeight-rc.top+12)+'px';
+ const ax=rc.left+rc.width/2-L;c.style.setProperty('--ax',Math.max(18,Math.min(w-18,ax))+'px');c.style.transformOrigin=`${ax}px ${below?'0%':'100%'}`;
+ btn.classList.add('qmPop');tuBuzz();qmWire()}
+function qmRefresh(){if(!QM.el||!QM.make)return;try{QM.spec=QM.make();QM.el.querySelector('.qmBody').innerHTML='<span class="qmPill"></span>'+qmRows(QM.spec);QM.el.classList.add('still');qmWire()}catch(e){console.error(e)}}
+function qmClose(now){const c=QM.el,m=QM.mask,b=QM.btn;QM.el=QM.mask=null;QM.hot=null;if(b)b.classList.remove('qmPop','qmPress');if(!c)return;if(now){c.remove();m&&m.remove();return}c.classList.add('out');m&&m.classList.add('out');setTimeout(()=>{c.remove();m&&m.remove()},170)}
+function qmHot(row){if(!QM.el)return;const p=QM.el.querySelector('.qmPill');QM.el.querySelectorAll('.qmR.hot').forEach(x=>x.classList.remove('hot'));if(!row||row.classList.contains('dis')||row.classList.contains('qmSegR')){QM.hot=null;if(p)p.style.opacity=0;return}
+ row.classList.add('hot');if(QM.hot!==row)tuBuzz();QM.hot=row;if(p){p.style.opacity=1;p.style.height=row.offsetHeight+'px';p.style.transform=`translateY(${row.offsetTop}px)`}}
+function qmRun(row){const sp=QM.spec;if(!sp||!row)return;const r=sp.rows[+row.dataset.i];if(!r||r.dis)return;row.classList.add('flash');
+ if(r.tog!=null&&r.keep){try{r.f()}catch(e){console.error(e)}setTimeout(qmRefresh,90);return}
+ setTimeout(()=>{qmClose();try{r.f()}catch(e){console.error(e)}},r.tog!=null?120:110)}
+function qmWire(){const c=QM.el;if(!c)return;c.querySelectorAll('.qmR[data-i]').forEach(r=>{r.onclick=e=>{e.stopPropagation();qmRun(r)}});
+ c.querySelectorAll('[data-sg]').forEach(b=>{b.onclick=e=>{e.stopPropagation();const [i,j]=b.dataset.sg.split(':').map(Number);const r=QM.spec.rows[i];try{r.seg.f(j)}catch(x){}tuBuzz();setTimeout(qmRefresh,40)}})}
+// ---------- การกดค้าง ----------
+const QM_SEL='#pauseBtn,#bagBtn,#questBtn,#autoBtn,#skipBtn,#logBtn,#menuBtn,.crow .ybar';
+function qmSpecFor(el){if(el.matches('#pauseBtn'))return qmPlay;if(el.matches('#bagBtn'))return qmBag;if(el.matches('#questBtn'))return qmQuest;if(el.matches('#autoBtn'))return qmAuto;if(el.matches('#skipBtn'))return qmSkip;if(el.matches('#logBtn'))return qmLog;if(el.matches('#menuBtn'))return qmMenu;if(el.matches('.ybar'))return qmYear;return null}
+(()=>{let tm=0,lp=false,x0=0,y0=0;
+ document.addEventListener('pointerdown',e=>{if(!tuOn()||!S||!S.alive)return;const b=e.target.closest&&e.target.closest(QM_SEL);if(!b||e.button>0)return;lp=false;QM.pid=e.pointerId;x0=e.clientX;y0=e.clientY;b.classList.add('qmPress');clearTimeout(tm);
+  tm=setTimeout(()=>{const mk=qmSpecFor(b);if(!mk)return;lp=true;QM.hold=true;b.classList.remove('qmPress');qmOpen(b,mk);if(!LS.get('murim_qmhint',0))LS.set('murim_qmhint',1)},380)},true);
+ document.addEventListener('pointermove',e=>{if(e.pointerId!==QM.pid)return;if(!lp){if(Math.hypot(e.clientX-x0,e.clientY-y0)>10){clearTimeout(tm);document.querySelectorAll('.qmPress').forEach(x=>x.classList.remove('qmPress'))}return}
+  if(!QM.el)return;const t=document.elementFromPoint(e.clientX,e.clientY);qmHot(t&&t.closest?t.closest('#qm .qmR'):null)},true);
+ const up=e=>{clearTimeout(tm);document.querySelectorAll('.qmPress').forEach(x=>x.classList.remove('qmPress'));if(e.pointerId!==QM.pid)return;QM.pid=null;if(lp&&QM.el&&QM.hot){const r=QM.hot;qmRun(r)}QM.hold=false};
+ document.addEventListener('pointerup',up,true);document.addEventListener('pointercancel',e=>{clearTimeout(tm);if(!lp)document.querySelectorAll('.qmPress').forEach(x=>x.classList.remove('qmPress'))},true);
+ document.addEventListener('touchmove',e=>{if(lp&&QM.hold&&QM.el)e.preventDefault()},{passive:false,capture:true});
+ document.addEventListener('click',e=>{if(lp&&e.target.closest&&e.target.closest(QM_SEL)){e.stopPropagation();e.preventDefault();lp=false}},true);
+ document.addEventListener('contextmenu',e=>{const b=e.target.closest&&e.target.closest(QM_SEL);if(!b||!tuOn()||!S||!S.alive)return;e.preventDefault();const mk=qmSpecFor(b);if(mk&&!QM.el)qmOpen(b,mk)},true);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&QM.el)qmClose()});
+ window.addEventListener('resize',()=>qmClose(true));})();
+// ---------- ⏸/▶ เล่น ----------
+let qmStopAt=null;
+function qmPlayFor(n){qmStopAt=S.age+n;paused=false;render();toast(`▶ เล่นต่อ ${n} ปีแล้วหยุด`)}
+function qmApz(){return LS.get('murim_apz',0)}
+{const _pyQ=passYear;passYear=function(){const r=_pyQ.apply(this,arguments);try{if(qmStopAt!=null&&S&&S.age>=qmStopAt){qmStopAt=null;paused=true;render();toast('⏸ ครบตามที่ตั้งไว้ — หยุดแล้ว')}
+ if(S&&S.alive&&LS.get('murim_apzhp',0)&&S.hp<S.maxHp*.25&&!paused&&S._apzHp!==S.age){S._apzHp=S.age;paused=true;render();toast('⏸ พลังชีวิตต่ำ — หยุดให้ตัดสินใจ')}}catch(e){}return r}}
+{const _lgQ=log;log=function(t,c){const r=_lgQ.apply(this,arguments);try{if(qmApz()&&S&&S.alive&&!paused&&(c==='myth'||c==='epic')&&!window._inQmFF){paused=true;setTimeout(()=>{try{render();toast('⏸ มีเหตุการณ์สำคัญ — หยุดให้อ่าน')}catch(e){}},0)}}catch(e){}return r}}
+function qmPlay(){return{ic:paused?'▶':'⏸',t:paused?'หยุดอยู่':'กำลังเล่น',sub:`อายุ ${S.age} ปี`,rows:[
+ {ic:paused?'▶':'⏸',t:paused?'เล่นต่อ':'หยุด',f:togglePause},
+ {ic:'1️⃣',t:'เล่นต่อ 1 ปีแล้วหยุด',f:()=>qmPlayFor(1)},
+ {ic:'5️⃣',t:'เล่นต่อ 5 ปีแล้วหยุด',f:()=>qmPlayFor(5)},
+ {ic:'🎂',t:'เล่นถึงอายุ '+(Math.floor(S.age/10)*10+10),s:'หยุดเมื่อถึงวัยถัดไป',f:()=>qmPlayFor(Math.floor(S.age/10)*10+10-S.age)},
+ {sep:1},
+ {ic:'⭐',t:'หยุดเมื่อมีเหตุการณ์สำคัญ',tog:qmApz(),keep:1,f:()=>{LS.set('murim_apz',qmApz()?0:1)}},
+ {ic:'❤️',t:'หยุดเมื่อพลังชีวิตต่ำ',s:'ต่ำกว่า 25%',tog:LS.get('murim_apzhp',0),keep:1,f:()=>{LS.set('murim_apzhp',LS.get('murim_apzhp',0)?0:1)}}]}}
+// ---------- 🎒 กระเป๋า ----------
+const QM_USE={hp:{ok:()=>S.hp<S.maxHp,go:()=>{S.hp=Math.min(S.maxHp,S.hp+80);log('🎒 💊 กินยาสมานแผล พลังชีวิต +80','good')},why:'เลือดเต็มอยู่'},
+ cure:{ok:()=>!!S.chronic,go:()=>{log(`🎒 🧪 ใช้ยาถอนพิษ — หายจาก${S.chronic.n}`,'good');S.chronic=null},why:'ไม่ได้ป่วย'},
+ qi:{ok:()=>true,go:()=>{S.qi+=2;log('🎒 🔵 กินยารวมปราณ ลมปราณ +2','good')},why:''}};
+function qmUse(k){const u=QM_USE[k];if(!u||!u.ok()||!bagUse(k))return;u.go();render();try{saveGame()}catch(e){}}
+function qmBag(){if(!S.bag)bagInit();const b=S.bag,ks=Object.keys(b.it).filter(k=>BAGIT[k]);const use=ks.filter(k=>QM_USE[k]),oth=ks.filter(k=>!QM_USE[k]);
+ const rows=use.map(k=>{const u=QM_USE[k],ok=u.ok();return{ic:BAGIT[k].ic,t:`${BAGIT[k].n} ×${b.it[k]}`,s:ok?'':u.why,r:ok?'ใช้':'',dis:!ok,f:()=>qmUse(k)}});
+ if(oth.length)rows.push({info:oth.slice(0,8).map(k=>`${BAGIT[k].ic}×${b.it[k]}`).join(' · ')});if(!ks.length)rows.push({info:'กระเป๋ายังว่าง'});
+ rows.push({sep:1},{ic:'🎒',t:'เปิดกระเป๋าเต็ม',r:'›',f:openBag},{ic:'⚔️',t:'ชุดสวมใส่',r:'›',f:openEquip});
+ return{ic:'🎒',t:b.nm||'กระเป๋า',sub:b.sp?`${bagCount()} ชิ้น`:`${bagCount()}/${b.cap}`,rows}}
+// ---------- 📋 ภารกิจ ----------
+function qmQuest(){const L=questList().filter(x=>!x.done);const rows=L.slice(0,4).map(x=>({ic:x.ic,t:x.n+(S.qPin===x.k?' 📌':''),s:String(x.p||'').replace(/<[^>]+>/g,'').slice(0,60),r:S.qPin===x.k?'เลิกติดตาม':'ติดตาม',f:()=>{qPin(x.k);render()}}));
+ if(!rows.length)rows.push({info:'ยังไม่มีเควสที่กำลังทำ'});if(L.length>4)rows.push({info:`และอีก ${L.length-4} รายการ`});rows.push({sep:1},{ic:'📋',t:'เปิดบันทึกเควส',r:'›',f:openQuests});
+ return{ic:'📋',t:'เควสที่ทำอยู่',sub:`${L.length} รายการ`,rows}}
+// ---------- 🤖 ออโต้ ----------
+function qmAuto(){auInit();const a=S.au,fs=fateSec();return{ic:'🤖',t:'อัตโนมัติ',sub:auto?'เปิดอยู่':'ปิดอยู่',rows:[
+ {ic:auto?'⏹':'▶',t:auto?'ปิดโหมดอัตโนมัติ':'เปิดโหมดอัตโนมัติ',f:toggleAuto},
+ {ic:'⏳',t:'ชะตาตัดสินแทน',seg:{o:FATE_L.map(v=>v?v+'วิ':'ปิด'),cur:Math.max(0,FATE_L.indexOf(fs)),f:j=>LS.set('murim_fate',FATE_L[j])}},
+ {ic:'💊',t:'ซื้อยาเมื่อบาดเจ็บหนัก',tog:a.potion?1:0,keep:1,f:()=>{a.potion=a.potion?0:1}},
+ {ic:'📦',t:'ขายวัตถุดิบที่เกิน 20',tog:a.sell?1:0,keep:1,f:()=>{a.sell=a.sell?0:1}},
+ {ic:'🏰',t:'ลงดันเจี้ยนเองตอนออโต้',tog:a.dung?1:0,keep:1,f:()=>{a.dung=a.dung?0:1}},
+ {sep:1},{ic:'⚙️',t:'ตั้งค่าอัตโนมัติทั้งหมด',r:'›',f:openAuto}]}}
+// ---------- ⏭ ข้าม ----------
+function qmFF(n,until){if(!S||!S.alive)return;flushReveal();window._inQmFF=1;let k=0;const r0=realmIdx(),p0=typeof postLv==='function'?postLv():0;
+ try{while(k<n&&S.alive&&!choice._cur&&!modalOpen){passYear();k++;if(until&&(realmIdx()>r0||(typeof postLv==='function'&&postLv()>p0)))break}}catch(e){console.error(e)}finally{window._inQmFF=0}
+ flushReveal();render();toast(k?`⏩ ข้ามไป ${k} ปี${choice._cur||modalOpen?' — มีเรื่องให้ตัดสินใจ':''}`:'มีเรื่องรอให้ตัดสินใจก่อน')}
+function qmSkip(){const busy=!!(choice._cur||modalOpen);return{ic:'⏭',t:'ข้ามเวลา',sub:busy?'มีเรื่องรอตัดสินใจ':`อายุ ${S.age}`,rows:[
+ {ic:'💬',t:'แสดงข้อความที่ค้างทั้งหมด',f:flushReveal},{sep:1},
+ {ic:'⏩',t:'ข้ามไปปีหน้า',dis:busy,f:()=>qmFF(1)},{ic:'⏩',t:'ข้าม 5 ปี',dis:busy,f:()=>qmFF(5)},{ic:'⏩',t:'ข้าม 10 ปี',dis:busy,f:()=>qmFF(10)},
+ {ic:'⚡',t:'ข้ามจนทะลวงขั้นถัดไป',s:'ไม่เกิน 30 ปี',dis:busy,f:()=>qmFF(30,true)},
+ {info:'หยุดเองทันทีเมื่อมีเรื่องให้ตัดสินใจ'}]}}
+// ---------- 📜 บันทึก ----------
+function qmLog(){const rows=LOGF.slice(0,7).map(x=>({ic:'',t:x[1],r:'›',f:()=>openLifeLog(x[0])}));rows.push({sep:1},{ic:'⤒',t:'เลื่อนไปข้อความแรก',f:()=>{const f=$('feed');if(f)f.scrollTo({top:0,behavior:'smooth'})}},{ic:'⤓',t:'เลื่อนไปล่าสุด',f:()=>{const f=$('feed');if(f)f.scrollTo({top:f.scrollHeight,behavior:'smooth'})}});
+ return{ic:'📜',t:'บันทึกชีวิต',sub:`${(S.key||[]).length} เหตุการณ์`,rows}}
+// ---------- ☰ เมนู: หน้าที่ใช้บ่อย ----------
+const QM_MN=[['openFamily','👪','ครอบครัว'],['openArts','📚','วิชา'],['openPeople','👥','ผู้คน'],['openHouse','🏠','ตระกูล'],['openFaction','🏯','สำนัก'],['openMarket','🏪','ตลาด'],['openEquip','⚔️','ชุดสวมใส่'],['openDungeons','🏰','ดันเจี้ยน'],['openMap','🗺️','แผนที่'],['openCraft','🔨','งานช่าง'],['openRegress','🔁','วงจรย้อนกาล']];
+QM_MN.forEach(([fn])=>{try{const o=window[fn];if(typeof o!=='function')return;window[fn]=function(){try{if(S&&S.alive){const c=LS.get('murim_qmc',{})||{};c[fn]=(c[fn]||0)+1;LS.set('murim_qmc',c)}}catch(e){}return o.apply(this,arguments)}}catch(e){}});
+function qmMenu(){const c=LS.get('murim_qmc',{})||{};const L=QM_MN.filter(([fn])=>typeof window[fn]==='function'&&(fn!=='openRegress'||(S.ch==='regress'))).sort((a,b)=>(c[b[0]]||0)-(c[a[0]]||0)).slice(0,4);
+ return{ic:'☰',t:'ทางลัด',sub:'หน้าที่ใช้บ่อย',rows:[...L.map(([fn,ic,t])=>({ic,t,r:'›',f:()=>window[fn]()})),{sep:1},{ic:'💾',t:'เซฟตอนนี้',f:()=>{saveGame();toast('💾 บันทึกแล้ว')}},{ic:'📤',t:'แชร์ชีวิตเข้าแชท',f:()=>{try{shareLife()}catch(e){openOnline('chat')}}},{ic:'☰',t:'เปิดเมนูเต็ม',r:'›',f:openMenu}]}}
+// ---------- แถบปี ----------
+function qmYear(){const ri=realmIdx(),nx=REALMS[ri+1],tot=total();let pr='';try{if(nx&&nx.p)pr=Math.min(100,Math.round(tot/nx.p*100))+'%'}catch(e){}
+ const left=Math.max(0,Math.round(lifeMax()-S.age));const rows=[{info:`🎂 อายุ <b>${S.age}</b> ปี · ${esc(($('ymon')||{}).textContent||'')}`},{info:`⏳ อายุขัยเหลือราว <b>${fmt(left)}</b> ปี`},
+ {info:`⚔️ ${esc(realmLabel?realmLabel().base:REALMS[ri].n)}${nx?` · ไป${esc(nx.n)} <b>${pr}</b>`:''}`}];
+ try{if(typeof brkPend==='function'&&brkPend())rows.push({ic:'⚡',t:'ติดคอขวด — ทะลวงขั้นตอนนี้',f:brkGo})}catch(e){}
+ if(S.chronic)rows.push({info:`🤒 ป่วย: ${esc(S.chronic.n)}`});return{ic:'📅',t:'ปีนี้',sub:paused?'หยุดอยู่':'กำลังเล่น',rows}}
+// ---------- สไตล์ ----------
+(()=>{const st=document.createElement('style');st.textContent=`
+body.tuOn .crow :is(#pauseBtn,#bagBtn,#questBtn,#autoBtn,#skipBtn,#logBtn,#menuBtn){position:relative;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;transition:transform .16s cubic-bezier(.3,1.5,.5,1),box-shadow .2s}
+body.tuOn .crow :is(#pauseBtn,#bagBtn,#questBtn,#autoBtn,#skipBtn,#logBtn,#menuBtn,#spdBtn)::after{content:'';position:absolute;right:4px;top:4px;width:4px;height:4px;border-radius:50%;background:color-mix(in srgb,var(--pink) 75%,transparent);opacity:.7}
+body.tuOn .crow .ybar{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.qmPress{transform:scale(.9)!important;transition:transform .35s ease-out!important}
+.qmPop{transform:scale(1.08)!important;box-shadow:0 0 0 2px var(--pink),0 0 18px color-mix(in srgb,var(--pink) 60%,transparent)!important;z-index:10001}
+#qmMask{position:fixed;inset:0;z-index:9998;background:rgba(6,4,12,.38);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);animation:qmF .22s ease-out}
+#qmMask.out{animation:qmFo .17s ease-in forwards}
+#qm{position:fixed;z-index:9999;background:rgba(22,17,34,.9);-webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);border:1px solid color-mix(in srgb,var(--pink) 55%,transparent);border-radius:18px;box-shadow:0 14px 40px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08);color:#f2e8d2;padding:8px 6px 6px;animation:qmIn .3s cubic-bezier(.3,1.4,.5,1)}
+#qm.still{animation:none}#qm.out{animation:qmOut .16s ease-in forwards}
+@keyframes qmIn{from{transform:scale(.55) translateY(10px);opacity:0}60%{opacity:1}}
+@keyframes qmOut{to{transform:scale(.8) translateY(8px);opacity:0}}
+@keyframes qmF{from{opacity:0}}@keyframes qmFo{to{opacity:0}}
+#qm .qmArr{position:absolute;left:var(--ax);bottom:-7px;width:12px;height:12px;margin-left:-6px;background:rgba(22,17,34,.95);border-right:1px solid color-mix(in srgb,var(--pink) 55%,transparent);border-bottom:1px solid color-mix(in srgb,var(--pink) 55%,transparent);transform:rotate(45deg)}
+#qm.dn .qmArr{bottom:auto;top:-7px;transform:rotate(225deg)}
+#qm .qmH{display:flex;align-items:center;gap:7px;padding:2px 8px 7px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:4px}
+#qm .qmHi{font-size:18px}#qm .qmH b{font-size:14px;color:var(--goldL,#ffd98a)}#qm .qmHs{margin-left:auto;font-size:11px;opacity:.65}
+#qm .qmBody{position:relative;isolation:isolate;max-height:55vh;overflow:auto;scrollbar-width:none}
+#qm .qmPill{position:absolute;left:0;right:0;top:0;z-index:0;border-radius:11px;background:color-mix(in srgb,var(--pink) 30%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--pink) 70%,transparent);opacity:0;pointer-events:none;transition:transform .22s cubic-bezier(.3,1.3,.5,1),height .2s,opacity .15s}
+#qm .qmR{position:relative;z-index:1;display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:11px;cursor:pointer;font-size:13.5px;animation:qmRow .32s cubic-bezier(.3,1.3,.5,1) backwards;animation-delay:calc(var(--d)*22ms + 40ms)}
+#qm.still .qmR,#qm.still .qmInfo{animation:none}
+@keyframes qmRow{from{transform:translateY(6px);opacity:0}}
+#qm .qmR:active{background:rgba(255,255,255,.06)}#qm .qmR.dis{opacity:.42;cursor:default}
+#qm .qmR.flash{animation:qmFl .22s ease}@keyframes qmFl{50%{background:color-mix(in srgb,var(--pink) 55%,transparent)}}
+#qm .qmI{width:22px;text-align:center;font-size:16px;flex:0 0 auto}
+#qm .qmT{flex:1;min-width:0;line-height:1.25}#qm .qmT small{display:block;font-size:10.5px;opacity:.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#qm .qmRt{font-size:11.5px;opacity:.75;white-space:nowrap}#qm .qmR.hot .qmRt{opacity:1;color:var(--goldL,#ffd98a)}
+#qm .qmSep{height:1px;background:rgba(255,255,255,.08);margin:4px 8px}
+#qm .qmInfo{position:relative;z-index:1;font-size:12px;opacity:.8;padding:5px 10px;animation:qmRow .32s backwards;animation-delay:calc(var(--d)*22ms + 40ms)}
+#qm .qmSw{display:inline-block;width:34px;height:20px;border-radius:20px;background:rgba(255,255,255,.18);position:relative;transition:background .2s;vertical-align:middle}
+#qm .qmSw::after{content:'';position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.4);transition:transform .25s cubic-bezier(.3,1.5,.5,1)}
+#qm .qmSw.on{background:var(--pink)}#qm .qmSw.on::after{transform:translateX(14px)}
+#qm .qmSegR{cursor:default;flex-wrap:wrap}#qm .qmSeg{display:flex;gap:2px;background:rgba(255,255,255,.07);border-radius:9px;padding:2px}
+#qm .qmSeg b{font-weight:600;font-size:11.5px;padding:4px 8px;border-radius:7px;cursor:pointer;transition:background .2s,color .2s}#qm .qmSeg b.on{background:var(--pink);color:var(--onacc)}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
