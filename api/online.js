@@ -189,8 +189,12 @@ const IP_WRITE = new Set(['say', 'bug', 'bugedit', 'mtmsg', 'pachat', 'life', 'p
 const ADM_KEY = process.env.ADMIN_KEY2 || process.env.ADMIN_KEY || '';
 const zlib = require('zlib');
 // เซฟบนคลาวด์: เก็บแบบบีบอัด (ขึ้นต้น z:) · cs2 เก็บเป็นตัวชี้ไปยังช่อง cs3 (@n) ไม่เก็บซ้ำ
-const zPack = d => { d = String(d); try { if (/^[A-Za-z0-9+/]+=*$/.test(d)) { const raw = Buffer.from(d, 'base64'); if (raw.toString('base64') === d) return 'zb:' + zlib.gzipSync(raw, { level: 6 }).toString('base64') } return 'z:' + zlib.gzipSync(Buffer.from(d, 'utf8'), { level: 6 }).toString('base64') } catch { return d } };
-const zUnpack = v => { if (v == null) return v; v = String(v); try { if (v.startsWith('zb:')) return zlib.gunzipSync(Buffer.from(v.slice(3), 'base64')).toString('base64'); if (v.startsWith('z:')) return zlib.gunzipSync(Buffer.from(v.slice(2), 'base64')).toString('utf8') } catch { return null } return v };
+const BRQ = q => ({ params: { [zlib.constants.BROTLI_PARAM_QUALITY]: q, [zlib.constants.BROTLI_PARAM_LGWIN]: 24 } });
+const zPack = d => { d = String(d); try { if (/^[A-Za-z0-9+/]+=*$/.test(d)) { const raw = Buffer.from(d, 'base64'); if (raw.toString('base64') === d) return 'zr:' + zlib.brotliCompressSync(raw, BRQ(raw.length > 300000 ? 9 : 11)).toString('base64') } const u = Buffer.from(d, 'utf8'); return 'zt:' + zlib.brotliCompressSync(u, BRQ(u.length > 300000 ? 9 : 11)).toString('base64') } catch { return d } };
+const zUnpack = v => { if (v == null) return v; v = String(v); try { if (v.startsWith('zr:')) return zlib.brotliDecompressSync(Buffer.from(v.slice(3), 'base64')).toString('base64'); if (v.startsWith('zt:')) return zlib.brotliDecompressSync(Buffer.from(v.slice(3), 'base64')).toString('utf8'); if (v.startsWith('zb:')) return zlib.gunzipSync(Buffer.from(v.slice(3), 'base64')).toString('base64'); if (v.startsWith('z:')) return zlib.gunzipSync(Buffer.from(v.slice(2), 'base64')).toString('utf8') } catch { return null } return v };
+// เซฟบนคลาวด์: ตัดบันทึกเหตุการณ์ (feed) ให้เหลือส่วนท้าย — สถานะเกมไม่ถูกแตะ · เซฟในเครื่องผู้เล่นยังครบ
+const FEED_MAX = 40000;
+const saveTrim = d => { try { d = String(d || ''); if (!/^[A-Za-z0-9+/]+=*$/.test(d)) return d; const j = JSON.parse(Buffer.from(d, 'base64').toString('utf8')); if (!j || !j.S || typeof j.feed !== 'string' || j.feed.length <= FEED_MAX) return d; const f = j.feed, i = f.indexOf('<div class="', f.length - FEED_MAX); j.feed = i > 0 ? f.slice(i) : ''; return Buffer.from(JSON.stringify(j), 'utf8').toString('base64') } catch { return d } };
 const isAdmKey = k => !!ADM_KEY && String(k || '') === ADM_KEY;
 const annGet = async () => { try { const v = await cmd('GET', 'ann'); return v ? JSON.parse(v) : null } catch { return null } };
 const ANN_VOTE_DAYS = 7;
@@ -390,9 +394,9 @@ module.exports = async (req, res) => {
     try { let cur = String(global._mfC || '0');
       do { const r = await cmd('SCAN', cur, 'MATCH', 'cs*', 'COUNT', 200); cur = String(r[0]); const ks = (r[1] || []).filter(k => /^cs[23]?:/.test(k));
         const pre = ks.length ? await pipe(ks.map(k => ['GETRANGE', k, 0, 2])) : [];
-        const todo = ks.filter((k, i) => pre[i] != null && !/^(zb:|z:|@)/.test(String(pre[i])));
+        const todo = ks.filter((k, i) => pre[i] != null && !/^(zb:|z:|zr:|zt:|@)/.test(String(pre[i])));
         const one = async k => { if (Date.now() - t0 > 8500) return; seen++;
-          const [v, ttl] = await pipe([['GET', k], ['TTL', k]]); if (v == null || /^zb?:/.test(String(v)) || /^@[1-5]$/.test(String(v))) return;
+          const [v, ttl] = await pipe([['GET', k], ['TTL', k]]); if (v == null || /^(zb?|zr|zt):/.test(String(v)) || /^@[1-5]$/.test(String(v))) return;
           const ex = +ttl > 0 ? +ttl : 86400 * 30;
           if (k.startsWith('cs2:')) { const fid = k.slice(4); const ls = await pipe([1, 2, 3, 4, 5].map(n => ['GET', 'cs3:' + fid + ':' + n])); const hit = ls.findIndex(x => x != null && (x === v || zUnpack(x) === v));
             if (hit >= 0) { await cmd('DEL', k); await cmd('SET', k, '@' + (hit + 1), 'EX', ex); dd++; sv += String(v).length; return } }
@@ -402,6 +406,24 @@ module.exports = async (req, res) => {
       if (cur === '0') global._mfC = '0';
       console.error('MEMFIX seen=' + seen + ' dedup=' + dd + ' zip=' + zz + ' saved=' + Math.round(sv / 1048576) + 'M cursor=' + global._mfC);
     } catch (e) { console.error('MEMFIX err', String(e && e.message)) } finally { global._mfB = 0 }
+    return res.json({ ok: 1 });
+  }
+  if (a === 'memfix2') { // ย่อเซฟคลาวด์เดิม: ตัด feed เก่า + บีบอัด brotli (ทำซ้ำได้ปลอดภัย) · ผลเขียนลง log เท่านั้น
+    if (global._mf2B) return res.json({ ok: 0 }); global._mf2B = 1; const t0 = Date.now(); let seen = 0, done = 0, sv = 0, err = 0;
+    try { let cur = String(global._mf2C || (await cmd('GET', 'mf2:cur').catch(() => null)) || '0');
+      do { const r = await cmd('SCAN', cur, 'MATCH', 'cs*', 'COUNT', 300); cur = String(r[0]); const ks = (r[1] || []).filter(k => /^cs[23]?:/.test(k));
+        const pre = ks.length ? await pipe(ks.map(k => ['GETRANGE', k, 0, 2])) : [];
+        const todo = ks.filter((k, i) => pre[i] != null && !/^(zr:|zt:|@)/.test(String(pre[i])));
+        const one = async k => { if (Date.now() - t0 > 8000) return; seen++;
+          const [v, ttl] = await pipe([['GET', k], ['TTL', k]]); if (v == null || /^@[1-5]$/.test(String(v))) return;
+          const raw = zUnpack(v); if (raw == null) { err++; return }
+          const z = zPack(saveTrim(raw)); if (!/^z[rt]:/.test(z) || z.length >= String(v).length) return;
+          const ex = +ttl > 0 ? +ttl : 86400 * 30; await cmd('DEL', k); await cmd('SET', k, z, 'EX', ex); done++; sv += String(v).length - z.length };
+        for (let i = 0; i < todo.length && Date.now() - t0 < 8000; i += 4) await Promise.all(todo.slice(i, i + 4).map(k => one(k).catch(() => { err++ })));
+        if (Date.now() - t0 > 8000) break; global._mf2C = cur; } while (cur !== '0');
+      global._mf2C = cur === '0' ? '0' : global._mf2C; try { await cmd('SET', 'mf2:cur', global._mf2C || '0', 'EX', 86400) } catch {}
+      console.error('MEMFIX2 seen=' + seen + ' done=' + done + ' err=' + err + ' saved=' + Math.round(sv / 1048576) + 'M cursor=' + global._mf2C);
+    } catch (e) { console.error('MEMFIX2 err', String(e && e.message)) } finally { global._mf2B = 0 }
     return res.json({ ok: 1 });
   }
   if (a === 'memdiag') { // ตรวจขนาดฐานข้อมูล → เขียนลง log ฝั่งเซิร์ฟเวอร์เท่านั้น ไม่คืนข้อมูล
@@ -1159,7 +1181,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (tok !== tk) return res.status(403).json({ err: 'token' });
       const sl = Math.max(1, Math.min(5, parseInt(b.sl, 10) || 1));
       await pipe([['DEL', 'cs2:' + id], ['DEL', 'cs3:' + id + ':' + sl]]);
-      await pipe([['SET', 'cs3:' + id + ':' + sl, zPack(d), 'EX', 86400 * 90], ['SET', 'cs2:' + id, '@' + sl, 'EX', 86400 * 90], ['EXPIRE', 'ctok:' + id, 86400 * 90]]);
+      await pipe([['SET', 'cs3:' + id + ':' + sl, zPack(saveTrim(d)), 'EX', 86400 * 90], ['SET', 'cs2:' + id, '@' + sl, 'EX', 86400 * 90], ['EXPIRE', 'ctok:' + id, 86400 * 90]]);
       return res.json({ ok: 1 });
     }
     if (a === 'profile') {
@@ -1526,7 +1548,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (!ok) return res.status(429).json({ err: 'rate' });
       const AB = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
       let code = ''; for (let i = 0; i < 8; i++) code += AB[Math.floor(Math.random() * AB.length)];
-      await cmd('SET', 'cs:' + code, zPack(d), 'EX', 86400 * 30);
+      await cmd('SET', 'cs:' + code, zPack(saveTrim(d)), 'EX', 86400 * 30);
       return res.json({ code });
     }
     if (a === 'bug') {
