@@ -1310,7 +1310,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (e.ch === 'regress' && e.rf) { try { const G = (JSON.parse(det || '{}').rg) || {}, en = ['breaker', 'protector', 'lonely'].includes(G.end) ? G.end : 'lonely', vr = ['normal', 'r5', 'nomem', 'lim10'].includes(G.var) ? G.var : 'normal'; const rj = JSON.stringify({ n: e.n, lid: e.lid, rl: e.rl, end: en, var: vr, age: e.age, r: e.r, t: now, x: e.x, g: e.g }); const rs = ({ breaker: 3, protector: 2, lonely: 1 })[en] * 1e8 - Math.min(999, e.rl || 1) * 1e5 + ({ lim10: 3, nomem: 2, r5: 1, normal: 0 })[vr] * 1e4 - Math.min(9999, Math.floor((now % 1e9) / 1e5)); L.push(['ZADD', 'rgb:all', rs, rj], ['ZREMRANGEBYRANK', 'rgb:all', 0, -201], ['ZADD', 'rgb:w:' + week(new Date(now)), rs, rj], ['ZREMRANGEBYRANK', 'rgb:w:' + week(new Date(now)), 0, -101], ['EXPIRE', 'rgb:w:' + week(new Date(now)), 86400 * 21]) } catch {} }
       await pipe(L);
       if (lid.length >= 6) { try { await cmd('SET', 'lsent:' + lid, 1, 'EX', 86400 * 20) } catch {} }
-      return res.json({ ok: 1 });
+      let rk = null; try { const r0 = await cmd('ZREVRANK', bdKey(cat, now), ej); if (r0 != null) rk = +r0 + 1 } catch {}
+      return res.json({ ok: 1, ...(rk ? { rk } : {}) });
     }
     if (a === 'lifepub') {
       const lid = String(b.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
@@ -1318,8 +1319,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (!own || own !== id) return res.status(403).json({ err: 'owner' });
       const pv = +b.pub === 2 ? 2 : b.pub ? 1 : 0;
       await cmd('SET', 'lifep:' + lid, String(pv), 'KEEPTTL');
-      let rk = null; try { const r0 = await cmd('ZREVRANK', bdKey(cat, now), ej); if (r0 != null) rk = +r0 + 1 } catch {}
-      return res.json({ ok: 1, pub: pv, ...(rk ? { rk } : {}) });
+      return res.json({ ok: 1, pub: pv });
     }
 
     // ===== ลานประลองหมื่นเงา (v15.6) =====
