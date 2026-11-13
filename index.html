@@ -20966,6 +20966,70 @@ function admUnlockCodex(){let n=0;try{const C=cdx();(cxCats()||[]).forEach(c=>{i
 function profDel(){const d=frGet();if(!d.av&&!d.snap)return toast('ยังไม่มีรูปโปรไฟล์');if(!confirm('ลบรูปโปรไฟล์? (คนอื่นจะเห็นเป็น 🙂 แทน)'))return;d.av='';d.snap='';d.avUp=0;d.avSt='';frSet(d);try{profPush()}catch(e){}toast('🗑️ ลบรูปโปรไฟล์แล้ว');openProfile()}
 {const _opD=openProfile;openProfile=function(){const r=_opD.apply(this,arguments);try{const d=frGet(),m=$('modal');if((d.av||d.snap)&&!m.querySelector('.pfDel')){const sec=[...m.querySelectorAll('.pfsec')].find(x=>/รูปโปรไฟล์/.test((x.querySelector('h4')||{}).textContent||''));if(sec){const h=sec.querySelector('button.pbtn')||sec.querySelector('h4');h.insertAdjacentHTML('afterend','<button class="gbtn pfDel" style="width:100%;margin:6px 0;color:#d84a4a;border-color:#d84a4a88" onclick="profDel()">🗑️ ลบรูปโปรไฟล์</button>')}}}catch(e){console.error(e)}return r}}
 
+
+// ===================== หน้าแรก: การ์ดเซฟแบบใหม่ (รูปตัวละคร · โลก · ขั้น · โหมด · เล่นล่าสุด · กดค้าง/⋯ = เมนู) =====================
+const SV_W=['ไร้ระดับ','ขั้นสาม','ขั้นสอง','ขั้นหนึ่ง','ขั้นสุดยอด','ฮวากยอง','ฮยอนกยอง','แซงซากยอง'];
+function svAgo(t){if(!t)return'';const s=Math.max(0,(Date.now()-t)/1000);return s<60?'เมื่อกี้':s<3600?Math.round(s/60)+' นาทีก่อน':s<86400?Math.round(s/3600)+' ชม.ก่อน':Math.round(s/86400)+' วันก่อน'}
+function svInfo(d){const S0=d.S||{},ri=Math.max(0,Math.min(7,S0.lastRealm|0));let w,wc,rl;
+ if(S0.mw){w='🏙️ ยุคปัจจุบัน';wc='mw';rl=(S0.mw.imm?'⏳ ผู้อยู่ยง':S0.mw.native?'คนยุคปัจจุบัน':'ยอดฝีมือหลงยุค')}
+ else if(S0.beastMode&&!S0.beastMode.human){w='🐾 สัตว์อสูร';wc='bst';rl=S0.beastMode.sp||'สัตว์อสูร'}
+ else if(S0.xt){w='🌟 โลกเทพ';wc='g';rl=XGOD[ri]}else if(S0.xian){w='☁️ โลกเซียน';wc='x';rl=XREALM[ri]}else{w='🏯 ยุทธภพ';wc='m';rl=SV_W[ri]}
+ const ch=S0.ch&&S0.ch!=='normal'?(CH_N[S0.ch]||(S0.ch==='regress'?'🔁 ผู้ย้อนกาล':'')):'';return{w,wc,rl,ch}}
+const svLbl=()=>LS.get('murim_slotlbl',{})||{};
+function svDraw(cv,look){try{const c=cv.getContext('2d'),sg=g,sp=PS;try{g=c;PS=cv.width/28;c.setTransform(PS,0,0,PS,0,0);c.imageSmoothingEnabled=false;c.clearRect(0,0,28,31);person(9,29,look||{robe:'#3a3448',trim:'#5a5068',skin:'#c8a88a',hair:'#1a1424',age:25,g:'ชาย',seed:3,mood:'neutral'},'stand')}finally{g=sg;PS=sp}}catch(e){}}
+function svMenu(n){const d=readSave(n);if(!d)return null;const I=svInfo(d),L=svLbl();return{ic:'💾',t:`ช่อง ${n}: ${d.S.name}`,sub:`${I.w} · ${d.S.age} ปี`,rows:[
+ {ic:'▶',t:'เล่นต่อ',f:()=>loadGame(n)},
+ {ic:'📝',t:L[n]?'แก้ป้ายช่อง':'ตั้งป้ายช่อง',s:L[n]?esc(L[n]):'เช่น "สายมาร" "ลองโหมดนรก"',f:()=>svRename(n)},
+ {sep:1},
+ {ic:'🗂️',t:'ย้ายเข้าคลังสำรอง',s:'ช่องว่างลง กู้คืนได้ทุกเมื่อ',f:()=>{if(confirm(`ย้ายช่อง ${n} (${d.S.name}) เข้าคลังสำรอง?`))delSlot(n)}},
+ {ic:'🗑️',t:'ลบช่องนี้',s:'ต้องยืนยันอีกครั้ง',f:()=>askDelSlot(n)}]}}
+function svRename(n){const L=svLbl();modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📝 ป้ายช่อง ${n}</h3><p class="tag2">ป้ายสั้นๆ ไว้จำว่าช่องนี้เล่นแนวไหน (เว้นว่าง = ลบป้าย)</p><input class="crin" id="svLb" maxlength="16" value="${esc(L[n]||'')}" style="width:100%;margin:6px 0"><div class="brow"><button class="gbtn" onclick="closeM()">ยกเลิก</button><button class="pbtn" onclick="const v=$('svLb').value.replace(/[<>]/g,'').trim().slice(0,16);const L=svLbl();if(v)L[${n}]=v;else delete L[${n}];LS.set('murim_slotlbl',L);closeM();renderLegends()">บันทึก</button></div>`,'svlbl');setTimeout(()=>{try{$('svLb').focus()}catch(e){}},50)}
+function svClearNew(){const L=SLOTS.filter(n=>{const d=readSave(n);return d&&(d.S.age|0)<1});if(!L.length)return;if(!confirm(`ล้างช่องที่ยังไม่เริ่ม ${L.length} ช่อง? (ย้ายเข้าคลังสำรอง กู้คืนได้)`))return;L.forEach(n=>{try{const d=readSave(n);if(d)arcPut(d,'ยังไม่เริ่ม');localStorage.removeItem(slotKey(n));localStorage.removeItem(bakKey(n))}catch(e){}});toast(`ล้างแล้ว ${L.length} ช่อง`);renderLegends()}
+function svBuild(){const box=$('contBox');if(!box)return;const all=SLOTS.map(n=>({n,d:readSave(n)})).filter(x=>x.d);
+ box.querySelectorAll('.slotrow').forEach(e=>e.remove());const old=box.querySelector('.svWrap');if(old)old.remove();
+ const used=all.length,lb=svLbl(),fresh=all.filter(x=>(x.d.S.age|0)<1),live=all.filter(x=>(x.d.S.age|0)>=1).sort((a,b)=>(b.d.t||0)-(a.d.t||0));
+ if(!used)return;
+ let h=`<div class="svWrap"><div class="svTop"><span>💾 ช่องเซฟ <b>${used}/${SLOTS.length}</b></span>${used>=SLOTS.length?'<span class="svFull">เต็มแล้ว — ย้ายบางช่องเข้าคลังสำรองก่อนเกิดใหม่</span>':''}</div>`;
+ live.forEach((x,i)=>{const S0=x.d.S,I=svInfo(x.d);h+=`<div class="svc w-${I.wc}${i===0?' last':''}" data-n="${x.n}"><canvas class="svAv" width="56" height="62"></canvas><div class="svI"><div class="svN"><b>${esc(S0.name)}</b> · ${fmt(S0.age)} ปี${i===0?'<span class="svL">ล่าสุด</span>':''}</div><div class="svR">${esc(I.rl||'')}</div><div class="svT"><span>${I.w}</span>${I.ch?`<span>${I.ch}</span>`:''}${lb[x.n]?`<span class="lb">🏷️ ${esc(lb[x.n])}</span>`:''}<span class="ago">🕐 ${svAgo(x.d.t)}</span></div></div><button class="svM" aria-label="เมนูช่อง ${x.n}" data-m="${x.n}">⋯</button></div>`});
+ fresh.forEach(x=>{h+=`<div class="svf" data-n="${x.n}"><span>🍼 ช่อง ${x.n} · ยังไม่เริ่ม <span class="tag2">(${esc(x.d.S.name)})</span></span><button class="svPlay" data-p="${x.n}">▶</button><button class="svX" data-x="${x.n}" aria-label="ล้างช่อง ${x.n}">✕</button></div>`});
+ if(fresh.length>=2)h+=`<button class="svClr" onclick="svClearNew()">🧹 ล้างช่องที่ยังไม่เริ่ม (${fresh.length})</button>`;
+ h+='</div>';box.insertAdjacentHTML('afterbegin',h);
+ live.forEach(x=>{const cv=box.querySelector(`.svc[data-n="${x.n}"] .svAv`);if(cv)svDraw(cv,x.d.S.look)});
+ // ปุ่มล่าง: รวมเป็นแถวเล็ก
+ try{const rows=[...box.querySelectorAll(':scope>.brow')];const ar=rows.find(r=>/คลังสำรอง/.test(r.textContent)),mg=rows.find(r=>r.querySelector('#migTitleBtn'));
+  if(ar&&!box.querySelector('.svBot')){const bot=document.createElement('div');bot.className='svBot';ar.querySelectorAll('button').forEach(b=>{b.className='svChip';bot.appendChild(b)});if(mg){const b=mg.querySelector('#migTitleBtn');b.className='svChip';b.textContent='📦 เซฟเว็บเก่า';b.style.width='';bot.appendChild(b);mg.remove()}ar.replaceWith(bot)}}catch(e){}}
+{const _rlS=renderLegends;renderLegends=function(){const r=_rlS.apply(this,arguments);try{svBuild()}catch(e){console.error(e)}return r}}
+{const _mtS=migTitleBtn;migTitleBtn=function(){const r=_mtS.apply(this,arguments);try{const box=$('contBox'),bot=box&&box.querySelector('.svBot'),b=$('migTitleBtn');if(bot&&b&&!bot.contains(b)){const row=b.closest('.brow');b.className='svChip';b.textContent='📦 เซฟเว็บเก่า';b.style.width='';bot.appendChild(b);if(row)row.remove()}}catch(e){}return r}}
+// แตะ = เล่นต่อ · กดค้าง / ⋯ = เมนู
+(()=>{let t=0,st=null,fired=0;const box=()=>$('contBox');
+ const open=(el,n)=>{try{if(typeof qmOpen==='function')qmOpen(el,()=>svMenu(n));try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}}catch(e){console.error(e)}};
+ document.addEventListener('pointerdown',e=>{const c=e.target.closest&&e.target.closest('#contBox .svc');if(!c||e.target.closest('.svM'))return;fired=0;st={x:e.clientX,y:e.clientY,c};clearTimeout(t);c.classList.add('press');t=setTimeout(()=>{fired=1;c.classList.remove('press');open(c,+c.dataset.n)},430)},{passive:true});
+ document.addEventListener('pointermove',e=>{if(st&&Math.hypot(e.clientX-st.x,e.clientY-st.y)>9){clearTimeout(t);st.c.classList.remove('press');st=null}},{passive:true});
+ const up=()=>{clearTimeout(t);if(st)st.c.classList.remove('press');st=null};document.addEventListener('pointerup',up,{passive:true});document.addEventListener('pointercancel',up,{passive:true});
+ document.addEventListener('click',e=>{const m=e.target.closest&&e.target.closest('#contBox .svM');if(m){e.stopPropagation();open(m,+m.dataset.m);return}
+  const p=e.target.closest&&e.target.closest('#contBox .svPlay');if(p){loadGame(+p.dataset.p);return}const x=e.target.closest&&e.target.closest('#contBox .svX');if(x){askDelSlot(+x.dataset.x);return}
+  const c=e.target.closest&&e.target.closest('#contBox .svc');if(c){if(fired){fired=0;e.preventDefault();return}loadGame(+c.dataset.n)}},true);
+ document.addEventListener('contextmenu',e=>{if(e.target.closest&&e.target.closest('#contBox .svc'))e.preventDefault()});})();
+(()=>{const st=document.createElement('style');st.textContent=`
+#contBox .svWrap{display:flex;flex-direction:column;gap:8px;margin-bottom:6px}
+#contBox .svTop{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;padding:4px 10px;border-radius:999px;background:rgba(10,8,16,.6);color:#f4ecd8;align-self:stretch}#contBox .svFull{color:#ffc860;font-size:11.5px;text-align:right}
+#contBox .svc{position:relative;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 10px;border:2px solid var(--line);border-radius:14px;background:var(--card,#1f1d2b);cursor:pointer;text-align:left;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;transition:transform .12s,box-shadow .2s}
+#contBox .svc.press{transform:scale(.97)}#contBox .svc:active{transform:scale(.98)}
+#contBox .svc.last{border-color:transparent;background:linear-gradient(var(--card,#1f1d2b),var(--card,#1f1d2b)) padding-box,linear-gradient(90deg,#f0c860,#a8701e,#ffe08a,#f0c860) border-box;background-size:auto,300% 100%;animation:svGl 4s linear infinite;box-shadow:0 0 12px rgba(240,200,96,.25)}
+@keyframes svGl{to{background-position:0 0,300% 0}}
+#contBox .svAv{width:52px;height:58px;flex:none;border-radius:10px;background:rgba(255,255,255,.05);image-rendering:pixelated}
+#contBox .svc.w-x .svAv{background:rgba(160,190,255,.12)}#contBox .svc.w-g .svAv{background:rgba(255,215,106,.12)}#contBox .svc.w-mw .svAv{background:rgba(180,120,255,.14)}#contBox .svc.w-bst .svAv{background:rgba(120,200,120,.12)}
+#contBox .svI{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+#contBox .svN{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#contBox .svL{margin-left:6px;font-size:10.5px;padding:1px 6px;border-radius:999px;background:#f0c860;color:#2a1a00;font-weight:700;vertical-align:2px}
+#contBox .svR{font-size:12.5px;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#contBox .svT{display:flex;flex-wrap:wrap;gap:4px;font-size:11px}#contBox .svT span{padding:1px 6px;border-radius:999px;background:rgba(255,255,255,.08);white-space:nowrap}#contBox .svT .ago{opacity:.75;background:none;padding-left:0}#contBox .svT .lb{background:rgba(240,200,96,.18)}
+#contBox .svM{flex:none;align-self:stretch;width:34px;border:0;border-radius:10px;background:transparent;color:inherit;font-size:20px;font-weight:900;opacity:.6;cursor:pointer}#contBox .svM:active{background:rgba(255,255,255,.08)}
+#contBox .svf{display:flex;align-items:center;gap:6px;padding:5px 6px 5px 10px;border:1.5px dashed var(--line);border-radius:10px;font-size:12.5px}#contBox .svf>span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#contBox .svf button,#contBox .svChip,#contBox .svClr{border:1.5px solid var(--line);background:transparent;color:inherit;border-radius:999px;padding:3px 10px;font:inherit;font-size:12px;cursor:pointer}#contBox .svf .svX{opacity:.6}
+#contBox .svClr{align-self:center}
+#contBox .svBot{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px}#contBox .svChip{width:auto!important;margin:0}`;document.head.appendChild(st)})();
+try{renderLegends()}catch(e){}
+
 </script>
 </body>
 </html>
