@@ -20149,6 +20149,84 @@ function qmSpeed(){const L=[[1,'1×','ช้าสุด อ่านได้�
 @keyframes qmPop{0%{transform:scale(.9)}55%{transform:scale(1.12)}100%{transform:scale(1.07)}}
 #tCont,#tGo{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;position:relative}
 body.tuOn #tCont::after,body.tuOn #tGo::after{content:'';position:absolute;right:9px;top:8px;width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.35}`;document.head.appendChild(st)})();
+// ===================== 🏝️ Dynamic Island — แจ้งเตือนทุกอย่างรวมเป็นเกาะเดียว =====================
+const ISL={q:[],cur:null,t:0,live:null,last:{}};
+function islOn(){try{return tuOn()}catch(e){return true}}
+function islLite(){try{return (typeof fxQ!=='undefined'&&fxQ===1)||matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}}
+function islEl(){let e=document.getElementById('isl');if(!e){e=document.createElement('div');e.id='isl';e.innerHTML='<div class="islC"></div>';document.body.appendChild(e);
+  e.addEventListener('click',()=>{const c=ISL.cur;if(!c)return;if(c.act){try{c.act.f()}catch(x){}islNext(true);return}if(!c.big&&c.d){c.big=1;islRender(c,true);clearTimeout(ISL.t);ISL.t=setTimeout(()=>islNext(),3200)}else islNext(true)});
+  let y0=null;e.addEventListener('touchstart',ev=>{y0=ev.touches[0].clientY},{passive:true});e.addEventListener('touchmove',ev=>{if(y0!=null&&y0-ev.touches[0].clientY>18){y0=null;islNext(true)}},{passive:true})}
+ e.classList.toggle('lite',islLite());return e}
+function islHtml(n){const k=n.kind||'info';
+ if(n.big)return`<div class="islBig k-${k}"><div class="islIc">${n.ic||'🔔'}</div><div class="islTx"><div class="islH">${n.h||''}</div><div class="islT">${n.t}</div>${n.st?`<div class="islSt">${n.st}</div>`:''}${n.d?`<div class="islD">${n.d}</div>`:''}${n.act?`<div class="islAct">${n.act.t}</div>`:''}</div></div>`;
+ return`<div class="islSm k-${k}"><span class="islIc">${n.ic||''}</span><span class="islT">${n.t}</span>${n.n>1?`<b class="islN">×${n.n}</b>`:''}${n.live?'<i class="islDot"></i>':''}</div>`}
+function islRender(n,morph){const e=islEl(),c=e.querySelector('.islC');const ow=e.offsetWidth,oh=e.offsetHeight,was=e.classList.contains('on');
+ const old=c.firstElementChild;if(old&&was&&!islLite()){old.classList.add('islOut');setTimeout(()=>{if(old.parentNode)old.remove()},180)}else c.innerHTML='';
+ const w=document.createElement('div');w.className='islIn';w.innerHTML=islHtml(n);c.appendChild(w);
+ e.className='on k-'+(n.kind||'info')+(n.big?' big':'')+(islLite()?' lite':'');
+ // วัดขนาดใหม่ แล้วยืดจากขนาดเดิมแบบสปริง
+ e.style.transition='none';e.style.width='auto';e.style.height='auto';w.style.position='static';const nw=Math.min(innerWidth-16,Math.max(w.scrollWidth+28,n.big?240:96)),nh=Math.max(w.scrollHeight+(n.big?18:12),34);
+ if(!was){e.style.width='36px';e.style.height='34px'}else{e.style.width=ow+'px';e.style.height=oh+'px'}void e.offsetWidth;e.style.transition='';e.style.width=nw+'px';e.style.height=nh+'px'}
+function island(n){if(!n||!n.t)return;n.ms=n.ms||(n.big?3800:2000);const key=n.key||(n.ic||'')+n.t;
+ if(ISL.cur&&!ISL.cur.live&&(ISL.cur.key===key)){ISL.cur.n=(ISL.cur.n||1)+1;islRender(ISL.cur,true);clearTimeout(ISL.t);ISL.t=setTimeout(()=>islNext(),ISL.cur.ms);return}
+ const q=ISL.q.find(x=>x.key===key);if(q){q.n=(q.n||1)+1;return}n.key=key;n.n=1;
+ if(n.pri)ISL.q.unshift(n);else ISL.q.push(n);while(ISL.q.length>6){const i=ISL.q.findIndex(x=>!x.pri);ISL.q.splice(i>=0?i:0,1)}
+ if(!ISL.cur||ISL.cur.live||(n.pri&&!ISL.cur.pri))islNext()}
+function islNext(user){clearTimeout(ISL.t);const n=ISL.q.shift();if(!n){ISL.cur=null;if(ISL.live){ISL.cur=ISL.live;islRender(ISL.live,true);return}islHide();return}
+ if(user&&ISL.cur&&ISL.cur.live){ISL.live=null}ISL.cur=n;islRender(n,true);try{if(n.big&&n.kind!=='info')tuBuzz()}catch(e){}if(!n.sticky)ISL.t=setTimeout(()=>islNext(),n.ms)}
+function islHide(){const e=document.getElementById('isl');if(!e||!e.classList.contains('on'))return;const c=e.querySelector('.islC');const f=c.firstElementChild;if(f)f.classList.add('islOut');
+ setTimeout(()=>{e.style.width='36px';e.style.height='34px';e.classList.add('bye')},islLite()?0:120);setTimeout(()=>{if(ISL.cur)return;e.className='';c.innerHTML=''},islLite()?200:420)}
+// ---------- แทนป้ายแจ้งเตือนเดิม ----------
+function islSplit(t){t=String(t||'');const m=t.match(/^\s*((?:\p{Extended_Pictographic}|\p{Emoji_Presentation})(?:️|‍(?:\p{Extended_Pictographic}|\p{Emoji_Presentation}))*)\s*/u);return m?[m[1],t.slice(m[0].length)]:['',t]}
+function islKind(t){return/ไม่สำเร็จ|ล้มเหลว|ผิดพลาด|ไม่ได้|ไม่พอ|เตือน|⚠️|❌|🚫|ตาย|หมด/.test(t)?'bad':/สำเร็จ|ได้รับ|✅|🏆|⭐|ปลดล็อก|บันทึกแล้ว/.test(t)?'ok':'info'}
+{const _toI=toast;toast=function(t){if(!islOn()||window._tutQ)return _toI.apply(this,arguments);try{const s=typeof xT==='function'?xT(String(t)):String(t);const [ic,tx]=islSplit(s);island({ic,t:esc(tx),kind:islKind(s)})}catch(e){return _toI.apply(this,arguments)}}}
+const ISL_RK=['info','info','info','ok','gold','gold','rainbow'];
+{const _apI=achPopShow;achPopShow=function(h){if(!islOn())return _apI.apply(this,arguments);try{const [ic,hh]=islSplit(h.h||'');island({big:1,pri:h.r>=5,ic:ic||'🏆',h:esc(hh),t:esc(h.n||''),st:h.s?starH(h.s):'',d:h.d?esc(h.d):'',kind:ISL_RK[Math.max(0,Math.min(6,h.r|0))],ms:h.ms||(h.r>=5?4600:3600)})}catch(e){return _apI.apply(this,arguments)}}}
+// แถบ "มีอัปเดตใหม่" → เกาะค้างพร้อมปุ่ม
+new MutationObserver(()=>{const b=document.getElementById('updBar');if(!b||b._isl||!islOn())return;b._isl=1;b.style.display='none';island({big:1,pri:1,sticky:1,ic:'🔄',h:'อัปเดตใหม่',t:'มีเวอร์ชันใหม่พร้อมแล้ว',kind:'info',act:{t:'แตะเพื่อโหลด (บันทึกให้อัตโนมัติ)',f:()=>{try{if(S&&S.alive)saveGame()}catch(x){}location.reload()}},key:'upd'})}).observe(document.body,{childList:true});
+// ป้ายแนะนำกดค้าง → เกาะ
+new MutationObserver(ms=>{ms.forEach(m=>m.addedNodes.forEach(x=>{if(x.classList&&x.classList.contains('qmHint')&&islOn()){x.remove();island({ic:'💡',t:'<b>กดค้าง</b>ปุ่มด้านล่างเพื่อเปิดทางลัด',ms:5000,kind:'info'})}}))}).observe(document.body,{childList:true});
+// ทะลวงขั้นสำเร็จ · เลือดต่ำ
+{const _lgI=log;log=function(t,c){const r=_lgI.apply(this,arguments);try{if(islOn()&&S&&S.alive&&(c==='epic'||c==='myth')&&/ทะลวง|ก้าวสู่|บรรลุ|ฝ่าทัณฑ์/.test(t)&&!/ไม่สำเร็จ|ล้มเหลว/.test(t)&&Date.now()-(ISL.last.brk||0)>2500){ISL.last.brk=Date.now();const p=String(t).replace(/<[^>]+>/g,'');const [ic,tx]=islSplit(p);island({big:1,pri:1,ic:ic||'⚡',h:'ทะลวงขั้น',t:esc(tx.slice(0,70)),kind:'gold',ms:3600})}}catch(e){}return r}}
+{const _pyI=passYear;passYear=function(){const r=_pyI.apply(this,arguments);try{if(islOn()&&S&&S.alive&&S.hp<S.maxHp*.2&&ISL.last.hp!==S.age){ISL.last.hp=S.age;island({ic:'❤️',t:`พลังชีวิตเหลือ ${Math.max(0,Math.round(S.hp/S.maxHp*100))}%`,kind:'bad',pri:1,ms:2600,d:'กดค้าง 🎒 เพื่อกินยาด่วน'})}}catch(e){}return r}}
+// ---------- กิจกรรมค้าง (Live Activity) ----------
+setInterval(()=>{try{if(!islOn())return;const g=$('game');const on=!!(S&&S.alive&&auto&&g&&g.classList.contains('on'));if(on&&!ISL.live){ISL.live={live:1,ic:'🤖',t:'ออโต้กำลังเล่น',kind:'info',key:'live',d:'แตะอีกครั้งเพื่อหยุด',act:null};if(!ISL.cur)islNext()}
+ else if(!on&&ISL.live){const was=ISL.cur===ISL.live;ISL.live=null;if(was){ISL.cur=null;islNext()}}}catch(e){}},1000);
+// แตะเกาะออโต้ = ขยาย → แตะอีกครั้ง = หยุดออโต้
+{const e0=islEl();e0.addEventListener('click',ev=>{const c=ISL.cur;if(c&&c.live&&c.key==='live'){ev.stopImmediatePropagation();if(c.big){toggleAuto()}else{c.big=1;c.h='โหมดอัตโนมัติ';c.t='🤖 ชีวิตกำลังดำเนินไปเอง';c.act={t:'แตะเพื่อหยุดออโต้',f:toggleAuto};islRender(c,true);setTimeout(()=>{if(ISL.cur===c){c.big=0;c.t='ออโต้กำลังเล่น';c.act=null;islRender(c,true)}},3500)}}},true)}
+// ---------- สไตล์ ----------
+(()=>{const st=document.createElement('style');st.textContent=`
+#isl{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 8px);z-index:99990;transform:translateX(-50%) scale(.4);opacity:0;pointer-events:none;width:36px;height:34px;border-radius:22px;background:#050407;color:#f5ecd8;box-shadow:0 8px 26px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.06);overflow:hidden;contain:layout paint style;will-change:width,height,transform;
+ transition:width .5s cubic-bezier(.34,1.45,.55,1),height .45s cubic-bezier(.34,1.35,.55,1),transform .42s cubic-bezier(.34,1.5,.55,1),opacity .2s,border-radius .3s,box-shadow .3s;font-size:13px;cursor:pointer;-webkit-user-select:none;user-select:none}
+#isl.on{transform:translateX(-50%) scale(1);opacity:1;pointer-events:auto}
+#isl.on.bye{transform:translateX(-50%) scale(.5);opacity:0;transition:width .26s cubic-bezier(.5,0,.75,0),height .26s cubic-bezier(.5,0,.75,0),transform .26s cubic-bezier(.5,0,.75,0),opacity .22s .06s}
+#isl.big{border-radius:26px}
+#isl.k-ok{box-shadow:0 8px 26px rgba(0,0,0,.45),0 0 0 1px #6ad08a55,0 0 16px #5fd08a33}
+#isl.k-bad{box-shadow:0 8px 26px rgba(0,0,0,.45),0 0 0 1px #ff5a5a88;animation:islBad 1.2s ease-in-out infinite}
+@keyframes islBad{50%{box-shadow:0 8px 26px rgba(0,0,0,.45),0 0 0 1px #ff5a5aaa,0 0 20px #ff4a4a66}}
+#isl.k-gold{box-shadow:0 8px 26px rgba(0,0,0,.45),0 0 0 1px #ffd76a99,0 0 22px #ffc23a55}
+#isl.k-rainbow{box-shadow:0 8px 26px rgba(0,0,0,.45),0 0 0 1.5px #ffd76a,0 0 26px #ff6ad566,0 0 34px #6ad8ff44}
+#isl .islC{position:relative;width:100%;height:100%}
+#isl .islIn{position:absolute;left:0;right:0;top:0;padding:0 14px;animation:islTx .32s cubic-bezier(.3,1.3,.5,1) .1s backwards}
+#isl.big .islIn{padding:9px 16px}
+#isl .islOut{position:absolute;left:0;right:0;top:0;animation:islTxO .16s ease-in forwards}
+@keyframes islTx{from{opacity:0;transform:translateY(8px) scale(.96);filter:blur(3px)}}
+@keyframes islTxO{to{opacity:0;transform:translateY(-8px) scale(.96)}}
+#isl .islSm{display:flex;align-items:center;gap:7px;height:34px;white-space:nowrap}
+#isl .islSm .islIc{font-size:15px}#isl .islSm .islT{overflow:hidden;text-overflow:ellipsis;max-width:calc(100vw - 110px)}
+#isl .islN{margin-left:2px;font-size:11px;padding:1px 6px;border-radius:9px;background:rgba(255,255,255,.14)}
+#isl .islDot{width:7px;height:7px;border-radius:50%;background:#5fd08a;box-shadow:0 0 8px #5fd08a;animation:islDot 1.4s ease-in-out infinite;margin-left:2px}
+@keyframes islDot{50%{opacity:.35}}
+#isl .islBig{display:flex;gap:11px;align-items:center;max-width:calc(100vw - 48px)}
+#isl .islBig .islIc{font-size:28px;flex:0 0 auto;filter:drop-shadow(0 0 8px rgba(255,215,106,.45));animation:islIc .6s cubic-bezier(.3,1.6,.5,1) .12s backwards}
+@keyframes islIc{from{transform:scale(.3) rotate(-20deg);opacity:0}}
+#isl .islTx{min-width:0}#isl .islH{font-size:10.5px;opacity:.65;letter-spacing:.3px}#isl .islT{font-size:14px;font-weight:700;line-height:1.3}
+#isl .k-gold .islT,#isl .k-rainbow .islT{color:#ffe08a}#isl .k-ok .islT{color:#a8f0bc}#isl .k-bad .islT{color:#ff9a8a}
+#isl .islSt{color:#e0a030;font-size:12px}#isl .islD{font-size:11.5px;opacity:.75;line-height:1.35;margin-top:1px}
+#isl .islAct{margin-top:5px;font-size:11.5px;color:#ffd76a;font-weight:700}
+#isl.lite,#isl.lite.on.bye{transition:opacity .2s!important;transform:translateX(-50%)!important}#isl.lite:not(.on){opacity:0}
+#isl.lite .islIn,#isl.lite .islIc{animation:none!important}
+body.tuOn #toast{display:none!important}body.tuOn #achPop{display:none!important}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
