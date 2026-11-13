@@ -20484,6 +20484,27 @@ body.islFloat #isl:not(.on){opacity:0}
 .islChip[data-k="chat"]{border-color:#7ab0ff!important}.islChip[data-k="chat"] em{background:#e0503c;color:#fff;border-radius:7px;padding:0 4px}
 .islSet{margin:4px 0 10px}.islSet summary{cursor:pointer;font-size:13px;opacity:.85;padding:4px 2px}.islSet .item{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:space-between}
 .islSeg{display:inline-flex;gap:2px;background:rgba(128,128,128,.15);border-radius:9px;padding:2px}.islSeg b{font-weight:600;font-size:12px;padding:4px 9px;border-radius:7px;cursor:pointer}.islSeg b.on{background:var(--pink);color:var(--onacc)}`;document.head.appendChild(st)})();
+
+// ===================== ยุคปัจจุบัน: เป็นตัวเลือกโลกจริง (กรอบทองเลือกได้) · กดเกิดใหม่ค่อยเปิดหน้ายุคปัจจุบัน =====================
+CFG.mw=0;
+function mwSegFix(){try{const sg=document.querySelector('#title .seg[data-k="xian"]');if(!sg)return;
+ const old=sg.querySelector('.mwseg');if(old)old.remove();
+ let b=sg.querySelector('.mwopt');if(!b){b=document.createElement('button');b.type='button';b.className='mwopt';b.dataset.v='2';b.innerHTML='🏙️ ยุคปัจจุบัน<i>เบต้า</i>';sg.appendChild(b);
+  b.onclick=e=>{if(!mwAllowed()){toast('ยุคปัจจุบันยังไม่เปิด');return}sg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');CFG.mw=1;CFG.xian=0;try{titleMode()}catch(_){}try{updateHints()}catch(_){}try{const a=$('titleSub');if(a)a.textContent='วันนี้ จะได้เกิดเป็นใครในโลกปัจจุบัน?'}catch(_){}};try{segPills()}catch(_){}
+  sg.querySelectorAll('button:not(.mwopt)').forEach(x=>{const f=x.onclick;x.onclick=function(ev){CFG.mw=0;return f&&f.call(this,ev)}})}
+ if(!mwAllowed())b.style.display='none'}catch(e){console.error(e)}}
+mwSegFix();setTimeout(mwSegFix,800);
+{const _uhM=updateHints;updateHints=function(){const r=_uhM.apply(this,arguments);try{const el=$('hint-xian');if(el&&CFG.mw){el.style.display='';el.innerHTML=`<div class="hic">🏙️</div><div style="min-width:0"><b>ยุคปัจจุบัน (เบต้า)</b><div class="hd">ใช้ชีวิตในโลกปี ${typeof MW_Y0!=='undefined'?MW_Y0:2026} — งาน เงินเดือน บ้าน รถ ความรัก ครอบครัว กดเกิดใหม่แล้วเลือกได้ว่าจะเป็นคนยุคนี้ หรือยอดฝีมือหลงยุค</div><div class="htg"><span>🎲 สุ่มประเทศ</span><span>🌀 หลงยุค</span><span>📜 ชาติที่แล้ว</span></div></div>`}}catch(e){}return r}}
+{const _gbpM=goBirthPick;goBirthPick=function(){if(CFG.mw&&mwAllowed())return openMWTeaser('title');return _gbpM.apply(this,arguments)}}
+// หน้ายุคปัจจุบัน: เอาบรรทัดตัวอย่างท้ายหน้าออก
+{const _otP=openMWTeaser;openMWTeaser=function(src){const r=_otP.apply(this,arguments);try{if(src==='title'){const m=$('modal');[...m.querySelectorAll('p.tag2')].forEach(p=>{if(/หรือระหว่างเล่น/.test(p.textContent))p.remove()})}}catch(e){}return r}}
+// การ์ดกดค้าง "เกิดใหม่": โลก 3 ตัวเลือก
+{const _qbM=qmBorn;qmBorn=function(){const o=_qbM.apply(this,arguments);try{if(mwAllowed()){const w=o.rows.find(x=>x.seg&&x.t==='โลก');if(w){w.seg.o=['🏯 ยุทธภพ','☁️ เซียน','🏙️ ปัจจุบัน'];w.seg.cur=CFG.mw?2:CFG.xian?1:0;w.seg.f=j=>qmSetCfg('xian',j)}
+ if(CFG.mw)o.sub='🏙️ ยุคปัจจุบัน';const L=o.rows.find(x=>x.t==='เกิดแบบเดิมอีกครั้ง');if(L&&CFG.mw)L.s=L.s}}catch(e){}return o}}
+{const _qgM=qmGo;qmGo=function(cfg){if(cfg&&(cfg.xian===0||cfg.xian===1))CFG.mw=0;return _qgM.apply(this,arguments)}}
+(()=>{const st=document.createElement('style');st.textContent=`#title .seg .mwopt{position:relative;line-height:1.15}#title .seg .mwopt i{display:block;font-style:normal;font-size:9.5px;font-weight:900;letter-spacing:1px;color:#2af0ff;text-shadow:0 0 6px #2af0ff88}
+#title .seg .mwopt.on i{color:inherit;text-shadow:none;opacity:.8}`;document.head.appendChild(st)})();
+
 </script>
 </body>
 </html>
