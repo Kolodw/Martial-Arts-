@@ -20950,6 +20950,17 @@ try{const G=t=>GD2.find(x=>x.t===t),ap=(t,th,en)=>{const g=G(t);if(!g)return;if(
 ['rotBuy','pctBuy','onceBuy'].forEach(fn=>{try{const f0=window[fn];if(typeof f0!=='function')return;window[fn]=function(a){let id=a;try{if(fn==='rotBuy'){const R0=rotGet();id=R0.L[a]}}catch(e){}const sp0=S&&S.sys?S.sys.sp:0;const r=f0.apply(this,arguments);try{if(S&&S.sys&&S.sys.sp<sp0&&id)cdxAdd('sysshop',id)}catch(e){}return r}}catch(e){}});
 {const _ocN=openCodex;openCodex=function(){try{if(S){(S.cr&&S.cr.rec||[]).forEach(id=>cdxAdd('rcp',id));Object.keys(S.eqInv||{}).forEach(id=>cdxAdd('eq',id));Object.values(S.eq||{}).forEach(id=>{if(id)cdxAdd('eq',id)})}}catch(e){}return _ocN.apply(this,arguments)}}
 
+
+// ===================== แอดมิน: ปลดล็อกทุกอย่าง + สารานุกรม + สมุดสัตว์ (เฉพาะเครื่องนี้ ไม่กระทบผู้เล่นอื่น) =====================
+{const _ab=admBackup;admBackup=function(){const had=!!LS.get('murim_adm_bak',null);_ab.apply(this,arguments);try{if(!had){const b=LS.get('murim_adm_bak',null);if(b&&b.cdx==null){b.cdx=JSON.parse(JSON.stringify(LS.get('murim_codex',{})||{}));b.bdx=LS.get('murim_bdex',{})||{};LS.set('murim_adm_bak',b)}}}catch(e){}}}
+function admUnlockCodex(){let n=0;try{const C=cdx();(cxCats()||[]).forEach(c=>{if(!c||!c.cat||!Array.isArray(c.L))return;C[c.cat]=C[c.cat]||{};c.L.forEach(z=>{if(z&&z[0]!=null&&!C[c.cat][z[0]]){C[c.cat][z[0]]=1;n++}})});LS.set('murim_codex',C)}catch(e){console.error(e)}
+ try{const d=bdexGet();beasts().forEach(b=>{if((d[b.i]||0)<3){d[b.i]=3;n++}});LS.set('murim_bdex',d)}catch(e){console.error(e)}return n}
+{const _au=admUnlockAll;admUnlockAll=function(){const r=_au.apply(this,arguments);try{admUnlockCodex()}catch(e){}return r}}
+{const _ar=admRestore;admRestore=function(){const b=LS.get('murim_adm_bak',null);const cd=b&&b.cdx,bd=b&&b.bdx;const r=_ar.apply(this,arguments);try{if(!LS.get('murim_adm_bak',null)&&b){if(cd){LS.set('murim_codex',cd);try{CODEX=null}catch(e){}}if(bd)LS.set('murim_bdex',bd)}}catch(e){}return r}}
+{const _oat=openAdmTools;openAdmTools=function(){const r=_oat.apply(this,arguments);try{const m=$('modal'),b=[...m.querySelectorAll('button')].find(x=>/ปลดล็อกทุกอย่าง/.test(x.textContent));if(b){b.setAttribute('onclick',"if(confirm('ปลดล็อกทุกอย่างบนเครื่องนี้: สมุดตำนาน ★★★ · กรอบ · ฉายา · คลังกรรม · สารานุกรมทุกหมวด · สมุดสัตว์ทุกตัว? (ไม่กระทบผู้เล่นคนอื่น กดคืนค่าได้)'))admDo(admUnlockAll,'🔓 ปลดล็อกทุกอย่างแล้ว')");
+ const p=b.closest('.adsec')&&b.closest('.adsec').querySelector('p.tag2');if(p&&!p.querySelector('.adCdx'))p.insertAdjacentHTML('beforeend',' · <span class="adCdx">📚 สารานุกรมทุกหมวด · 🐉 สมุดสัตว์ทุกตัว (เฉพาะเครื่องนี้ ไม่กระทบผู้เล่นคนอื่น)</span>');
+ if(!m.querySelector('.adCdxB'))b.insertAdjacentHTML('afterend',`<button class="gbtn adCdxB" onclick="admBackup();const n=admUnlockCodex();toast('📚 ปลดสารานุกรม + สมุดสัตว์แล้ว '+n+' รายการ');openAdmTools()">📚 ปลดเฉพาะสารานุกรม + สมุดสัตว์</button>`)}}catch(e){console.error(e)}return r}}
+
 </script>
 </body>
 </html>
