@@ -426,6 +426,20 @@ module.exports = async (req, res) => {
     } catch (e) { console.error('MEMFIX2 err', String(e && e.message)) } finally { global._mf2B = 0 }
     return res.json({ ok: 1 });
   }
+  if (a === 'memdiag2') { // ดูว่าฟิลด์ไหนในเซฟคลาวด์ใหญ่ (ขนาดเท่านั้น ไม่มีเนื้อหา) → log
+    if (global._md2T && Date.now() - global._md2T < 30e3) return res.json({ ok: 0 }); global._md2T = Date.now();
+    try { const big = []; let cur = '0'; const t0 = Date.now();
+      do { const r = await cmd('SCAN', cur, 'MATCH', 'cs3:*', 'COUNT', 500); cur = String(r[0]); const ks = r[1] || []; if (ks.length) { const sz = await pipe(ks.map(k => ['STRLEN', k])); ks.forEach((k, i) => big.push([k, +sz[i] || 0])) } } while (cur !== '0' && Date.now() - t0 < 4000);
+      big.sort((x, y) => y[1] - x[1]); const agg = {}, aggS = {}; let n = 0;
+      for (const [k] of big.slice(0, 12)) { const raw = zUnpack(await cmd('GET', k)); if (!raw) continue; let j; try { j = JSON.parse(Buffer.from(raw, 'base64').toString('utf8')) } catch { continue } n++;
+        for (const f in j) agg[f] = (agg[f] || 0) + JSON.stringify(j[f] == null ? '' : j[f]).length;
+        if (j.S) for (const f in j.S) aggS[f] = (aggS[f] || 0) + JSON.stringify(j.S[f] == null ? '' : j.S[f]).length }
+      const fm = o => Object.entries(o).sort((x, y) => y[1] - x[1]).slice(0, 25).map(([f, v]) => f + '=' + Math.round(v / n / 1024) + 'K').join(' ');
+      console.error('MEMDIAG2 n=' + n + ' avgStored=' + Math.round(big.slice(0, 12).reduce((x, y) => x + y[1], 0) / 12 / 1024) + 'K top: ' + fm(agg));
+      console.error('MEMDIAG2 S: ' + fm(aggS));
+    } catch (e) { console.error('MEMDIAG2 err', String(e && e.message)) }
+    return res.json({ ok: 1 });
+  }
   if (a === 'memdiag') { // ตรวจขนาดฐานข้อมูล → เขียนลง log ฝั่งเซิร์ฟเวอร์เท่านั้น ไม่คืนข้อมูล
     if (global._mdT && Date.now() - global._mdT < 60e3) return res.json({ ok: 0 });
     global._mdT = Date.now();
