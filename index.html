@@ -19630,6 +19630,53 @@ if(typeof openRgBoard==='function'){const _orU=openRgBoard;openRgBoard=async fun
 #modal .item.brd.onCompact>p.tag2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px;margin:1px 0 0}
 #modal .rgbr.onCompact{padding-top:6px;padding-bottom:6px;min-height:0}#modal .rgbr.onCompact .rgbt{font-size:10.5px}#modal .rgbr.onCompact .tag2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #modal .rgbr.onCompact .rgbm{min-width:0}`;document.head.appendChild(st)})();
+// ===================== แท็บแบบลื่น (iOS) ทั้งเว็บ · สลับกลับแบบเดิมได้ในเมนู =====================
+const TU={pos:{},act:/^\s*(←|🔄|ส่ง|ลองใหม่|ส่งขึ้น|ส่งที่)/};
+function tuOn(){try{return LS.get('murim_tabui','ios')!=='old'}catch(e){return true}}
+function tuKey(r){return [...r.querySelectorAll(':scope>.tabb')].map(b=>b.textContent.trim()).join('|').slice(0,200)}
+function tuPlace(r,b,anim){const p=r.querySelector(':scope>.tuPill');if(!p||!b)return;if(!anim)p.style.transition='none';p.style.width=b.offsetWidth+'px';p.style.height=b.offsetHeight+'px';p.style.transform=`translate(${b.offsetLeft}px,${b.offsetTop}px)`;if(!anim){void p.offsetWidth;p.style.transition=''}TU.pos[r._tuK]={x:b.offsetLeft,y:b.offsetTop,w:b.offsetWidth,h:b.offsetHeight}}
+function tuSetup(r){if(r._tu)return;const tabs=[...r.querySelectorAll(':scope>.tabb')];const on=tabs.find(b=>b.classList.contains('on'));if(!on||tabs.length<2)return;r._tu=1;
+ // ปุ่มคำสั่งที่ปนอยู่ในแถวแท็บ → แยกออกเป็นปุ่มปกติ
+ tabs.filter(b=>TU.act.test(b.textContent)&&!b.classList.contains('on')).forEach(b=>{b.classList.add('tuAct');r.before(b)});
+ const T=[...r.querySelectorAll(':scope>.tabb')];if(T.length<2)return;
+ let mode=r.classList.contains('onStrip')?'strip':(r.classList.contains('onNav')||r.classList.contains('onSeg'))?'seg':null;
+ if(!mode){if(T.length<=5){r.classList.add('tuSeg');mode='seg';if(T.some(b=>b.scrollWidth>b.clientWidth+2)||r.scrollWidth>r.clientWidth+2){r.classList.remove('tuSeg');mode='strip'}}else mode='strip';if(mode==='strip')r.classList.add('tuStrip')}
+ r.classList.add('tuRow');r._tuK=(r.closest('[data-k]')?.dataset.k||'')+':'+tuKey(r);const p=document.createElement('span');p.className='tuPill';r.prepend(p);
+ const o=TU.pos[r._tuK];if(o){p.style.transition='none';p.style.width=o.w+'px';p.style.height=o.h+'px';p.style.transform=`translate(${o.x}px,${o.y}px)`;void p.offsetWidth;p.style.transition='';requestAnimationFrame(()=>tuPlace(r,on,true))}else tuPlace(r,on,false);
+ if(mode==='strip'){setTimeout(()=>{try{r.scrollLeft=Math.max(0,on.offsetLeft-r.clientWidth/2+on.offsetWidth/2)}catch(e){}},0);return}
+ // ลากกรอบตามนิ้ว
+ let st=null;const near=x=>{let best=null,d=1e9;for(const b of T){const c=b.offsetLeft+b.offsetWidth/2,dd=Math.abs(c-x);if(dd<d){d=dd;best=b}}return best};
+ r.addEventListener('pointerdown',e=>{const b=e.target.closest('.tabb');if(!b||!T.includes(b))return;const rc=r.getBoundingClientRect();st={x0:e.clientX,rx:rc.left-r.scrollLeft,on:b.classList.contains('on')?b:on,drag:false,cur:on,id:e.pointerId}},{passive:true});
+ r.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;const dx=e.clientX-st.x0;if(!st.drag){if(Math.abs(dx)<7)return;if(!(st.on===on))return;st.drag=true;try{r.setPointerCapture(e.pointerId)}catch(x){}r.classList.add('tuDrag')}
+  const x=e.clientX-st.rx,w=on.offsetWidth,lo=T[0].offsetLeft,hi=T[T.length-1].offsetLeft+T[T.length-1].offsetWidth-w;const nx=Math.max(lo,Math.min(hi,x-w/2));const n=near(x);
+  if(n!==st.cur){st.cur=n;try{navigator.vibrate&&navigator.vibrate(6)}catch(x){}T.forEach(b=>b.classList.toggle('tuHot',b===n))}
+  p.style.width=n.offsetWidth+'px';p.style.transform=`translate(${nx}px,${n.offsetTop}px) scale(.94)`});
+ const end=e=>{if(!st)return;const s=st;st=null;if(!s.drag)return;r.classList.remove('tuDrag');T.forEach(b=>b.classList.remove('tuHot'));r._tuNoClick=1;setTimeout(()=>r._tuNoClick=0,60);const n=s.cur||on;tuPlace(r,n,true);if(n!==on)setTimeout(()=>{try{r._tuNoClick=0;n.click()}catch(x){}},170)};
+ r.addEventListener('pointerup',end);r.addEventListener('pointercancel',end);
+ r.addEventListener('click',e=>{if(r._tuNoClick){e.stopPropagation();e.preventDefault()}},true)}
+function tuScan(){if(!tuOn())return;try{document.querySelectorAll('#modal .tabs').forEach(r=>{if(r.style.display==='none')return;tuSetup(r)})}catch(e){console.error(e)}}
+(()=>{let t=0;const mo=new MutationObserver(()=>{cancelAnimationFrame(t);t=requestAnimationFrame(tuScan)});const go=()=>{const m=$('modal');if(m)mo.observe(m,{childList:true,subtree:true});else setTimeout(go,500)};go();
+ window.addEventListener('resize',()=>{document.querySelectorAll('#modal .tuRow').forEach(r=>{const b=r.querySelector('.tabb.on');if(b)tuPlace(r,b,false)})})})();
+// ปิดแบบใหม่ทั้งหมด (รวมหน้าออนไลน์) เมื่อเลือกแบบเดิม
+{const ap=()=>{try{document.body.classList.toggle('tuOn',tuOn())}catch(e){}};ap();
+ if(typeof onlUI==='function'){const _ou=onlUI;onlUI=function(){if(!tuOn())return;return _ou.apply(this,arguments)}}
+ window.tabUiToggle=()=>{const v=tuOn()?'old':'ios';LS.set('murim_tabui',v);ap();try{toast(v==='ios'?'🫧 แท็บ: แบบลื่น (เลื่อนตามนิ้ว)':'▭ แท็บ: แบบเดิม')}catch(e){}openTitleMenu()};
+ const _otT=openTitleMenu;openTitleMenu=function(){const r=_otT.apply(this,arguments);try{const g=$('modal').querySelector('[data-dock]');if(g&&!$('modal').querySelector('[data-tabui]')){const on=tuOn();g.insertAdjacentHTML('afterend',`<button class="cb" data-tabui="1" onclick="tabUiToggle()"><i>${on?'🫧':'▭'}</i>แท็บ: ${on?'แบบลื่น':'แบบเดิม'}</button>`)}}catch(e){}return r}}
+(()=>{const st=document.createElement('style');st.textContent=`
+body.tuOn #modal .tabs.tuRow{position:relative;isolation:isolate}
+body.tuOn #modal .tuPill{position:absolute;left:0;top:0;z-index:0;border-radius:10px;background:var(--pink);box-shadow:0 3px 10px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.25);pointer-events:none;transition:transform .38s cubic-bezier(.3,1.35,.5,1),width .3s cubic-bezier(.3,1.2,.5,1),height .3s;will-change:transform}
+body.tuOn #modal .tuRow.tuDrag .tuPill{transition:width .18s,transform .06s linear;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+body.tuOn #modal .tuRow>.tabb{position:relative;z-index:1;transition:color .2s,transform .15s}
+body.tuOn #modal .tuRow>.tabb.on{background:transparent!important;box-shadow:none!important}
+body.tuOn #modal .tuRow>.tabb.tuHot{color:var(--onacc)}body.tuOn #modal .tuRow.tuDrag>.tabb.on:not(.tuHot){color:inherit!important}
+body.tuOn #modal .tabs.tuSeg{flex-wrap:nowrap;gap:3px;border:2px solid var(--line);border-radius:12px;padding:3px;background:var(--w);touch-action:pan-y}
+body.tuOn #modal .tuSeg>.tabb{flex:1 1 0;min-width:0;border:0;border-radius:9px;padding:6px 4px;text-align:center;background:transparent;overflow:hidden;text-overflow:ellipsis}
+body.tuOn #modal .onNav,body.tuOn #modal .onSeg{touch-action:pan-y}
+body.tuOn #modal .onStrip .tuPill,body.tuOn #modal .tuStrip .tuPill{border-radius:999px}
+body.tuOn #modal .tabs.tuStrip{flex-wrap:nowrap;overflow-x:auto;gap:6px;padding:2px 2px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+body.tuOn #modal .tuStrip::-webkit-scrollbar{display:none}body.tuOn #modal .tuStrip>.tabb{flex:0 0 auto;border-radius:999px;padding:5px 12px}
+body.tuOn #modal .tuStrip>.tabb.on,body.tuOn #modal .onStrip>.tabb.on{border-color:transparent}
+body.tuOn #modal .tabb.tuAct{display:inline-block;margin:0 0 6px;border-radius:999px;padding:4px 12px;font-size:.8em;opacity:.85}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
