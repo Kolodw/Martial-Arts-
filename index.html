@@ -20029,6 +20029,52 @@ body.tuOn #modal.mnTu.mnDragging{-webkit-user-select:none;user-select:none}`;doc
 // คำแนะนำครั้งแรก: กดค้างปุ่มควบคุม
 {let shown=false;const _rnH=render;render=function(){const r=_rnH.apply(this,arguments);try{if(!shown&&tuOn()&&S&&S.alive&&S.age>=3&&!modalOpen&&!LS.get('murim_qmhint',0)){shown=true;LS.set('murim_qmhint',1);const c=document.querySelector('.crow');if(c){const d=document.createElement('div');d.className='qmHint';d.innerHTML='💡 <b>กดค้าง</b>ปุ่มด้านล่างเพื่อเปิดทางลัด';document.body.appendChild(d);const rc=c.getBoundingClientRect();d.style.bottom=(innerHeight-rc.top+10)+'px';d.onclick=()=>d.remove();setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),300)},6000)}}}catch(e){}return r}}
 (()=>{const st=document.createElement('style');st.textContent=`.qmHint{position:fixed;left:50%;transform:translateX(-50%);z-index:9000;background:rgba(22,17,34,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#f2e8d2;border:1px solid color-mix(in srgb,var(--pink) 60%,transparent);border-radius:14px;padding:8px 14px;font-size:13px;box-shadow:0 8px 22px rgba(0,0,0,.5);animation:qmHi .4s cubic-bezier(.3,1.4,.5,1);white-space:nowrap}.qmHint b{color:var(--goldL,#ffd98a)}.qmHint.out{opacity:0;transition:opacity .3s}@keyframes qmHi{from{transform:translate(-50%,10px);opacity:0}}`;document.head.appendChild(st)})();
+// ===================== ตัวเลือกเหตุการณ์: กรอบทองแบบหน้าแรก · กดค้างลาก · ชะตาบอกล่วงหน้า · แตะ 2 ครั้งเมื่อเสี่ยง =====================
+const CHU={risk:/ตาย|ทัณฑ์|เดิมพัน|สละชีพ|ถาวร|สังหาร|ทรยศ|ออกจากสำนัก|ย้ายสำนัก|ล้างแค้น|ฆ่า|ชีวิตเป็นเดิมพัน/};
+function chuOn2(){return LS.get('murim_ch2',0)}
+function chuOpts(m){return [...m.querySelectorAll(':scope>.opt[data-i]')].filter(b=>b.offsetParent)}
+function chuPill(m){let p=m.querySelector(':scope>.chPill');if(!p){p=document.createElement('span');p.className='chPill';m.appendChild(p)}return p}
+function chuPut(m,b,anim){const p=chuPill(m);p.style.borderRadius=getComputedStyle(b).borderRadius;bxPut(p,{x:b.offsetLeft,y:b.offsetTop,w:b.offsetWidth,h:b.offsetHeight},anim);return p}
+function chuRisky(c,i){try{const o=c.opts[i];return CHU.risk.test(String(o.t)+' '+String(o.s||''))}catch(e){return false}}
+function chuPredict(c){try{if(typeof aiOn==='function'&&aiOn()&&S.ai&&S.ai.on&&typeof aiPick==='function')return{i:aiPick(c),force:false}}catch(e){}
+ const valid=c.opts.map((o,i)=>i).filter(i=>!c.opts[i].skip);const nf=valid.filter(i=>!c.opts[i].noFate);const L=c.opts.some(o=>o.noFate)&&nf.length?nf:valid;if(!L.length)return null;return{i:L[Math.floor(Math.random()*L.length)],L,force:true}}
+// ชะตาเลือกตามที่บอกไว้ล่วงหน้า
+{const _fcU=fateChoice;fateChoice=function(){const c=choice._cur;const pr=c&&c._fate;if(pr&&pr.force&&pr.L){const pos=pr.L.indexOf(pr.i);if(pos>=0){const R=Math.random;let used=false;Math.random=function(){if(!used){used=true;Math.random=R;return(pos+.5)/pr.L.length}return R()};try{return _fcU.apply(this,arguments)}finally{Math.random=R}}}return _fcU.apply(this,arguments)}}
+function chuSetup(){const m=$('modal');if(!m||m.dataset.k!=='choice'||!tuOn())return;const c=choice._cur;if(!c)return;const B=chuOpts(m);if(!B.length||m._chu===B[0])return;m._chu=B[0];m.classList.add('chTu');
+ // ปุ่มตั้งค่าแตะ 2 ครั้ง
+ const f=m.querySelector('.chfoot');if(f&&!f.querySelector('.ch2b')){f.insertAdjacentHTML('beforeend',`<button class="sysb ch2b" onclick="LS.set('murim_ch2',chuOn2()?0:1);this.textContent='✌️ แตะ 2 ครั้งเมื่อเสี่ยง: '+(chuOn2()?'เปิด':'ปิด')">✌️ แตะ 2 ครั้งเมื่อเสี่ยง: ${chuOn2()?'เปิด':'ปิด'}</button>`)}
+ // ชะตาบอกล่วงหน้า (3 วิสุดท้าย)
+ if(!auto&&fateSec()){c._fate=chuPredict(c);clearInterval(m._chuT);m._chuT=setInterval(()=>{if(!m.isConnected||m.dataset.k!=='choice'||choice._cur!==c){clearInterval(m._chuT);return}const e=$('chCd');const n=e&&+((e.textContent.match(/(\d+)\s*วิ/)||[])[1]);
+  if(n&&n<=3&&c._fate&&!m.classList.contains('chDragging')&&!m._arm){const b=chuOpts(m).find(x=>+x.dataset.i===c._fate.i);if(b){const p=chuPut(m,b,p0());p.classList.add('show','fate');m.querySelectorAll('.chFateB').forEach(x=>x!==b&&x.classList.remove('chFateB'));b.classList.add('chFateB')}}},250)}
+ function p0(){const p=m.querySelector(':scope>.chPill');return!!(p&&p.classList.contains('show'))}
+ // แตะ 2 ครั้งเมื่อเสี่ยง
+ m.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('.opt[data-i]');if(!b||b.parentElement!==m)return;if(m._chuNo){e.stopPropagation();e.preventDefault();return}
+  const i=+b.dataset.i;if(!chuOn2()||!chuRisky(c,i)||m._arm===b)return;e.stopPropagation();e.preventDefault();m._arm=b;m.querySelectorAll('.chArm').forEach(x=>x.classList.remove('chArm'));b.classList.add('chArm');const p=chuPut(m,b,p0());p.classList.remove('fate');p.classList.add('show','arm');tuBuzz();try{toast('⚠️ ตัวเลือกนี้เสี่ยง — แตะอีกครั้งเพื่อยืนยัน')}catch(x){}},true);
+ // กดค้างแล้วลาก
+ let st=null,tm=0;const at=(x,y)=>{const t=document.elementFromPoint(x,y);const b=t&&t.closest&&t.closest('.opt[data-i]');if(!b||b.parentElement!==m)return null;const r=b.getBoundingClientRect(),iy=r.height*.12;return(y>r.top+iy&&y<r.bottom-iy)?b:null};
+ const hot=b=>{if(b===st.cur)return;const first=!st.cur;if(st.cur)st.cur.classList.remove('chHot');st.cur=b;if(!b){const p=m.querySelector(':scope>.chPill');if(p)p.classList.add('off');return}b.classList.add('chHot');const p=chuPut(m,b,!first);p.classList.remove('fate','arm','off');p.classList.add('show');tuBuzz()};
+ m.addEventListener('pointerdown',e=>{if(e.button>0)return;const b=e.target.closest&&e.target.closest('.opt[data-i]');if(!b||b.parentElement!==m)return;st={id:e.pointerId,x0:e.clientX,y0:e.clientY,x:e.clientX,y:e.clientY,drag:false,cur:null,src:b};clearTimeout(tm);
+  tm=setTimeout(()=>{if(!st||Math.hypot(st.x-st.x0,st.y-st.y0)>9)return;st.drag=true;m.classList.add('chDragging');try{m.setPointerCapture(st.id)}catch(x){}b.classList.add('chSrc');hot(b);const p=m.querySelector(':scope>.chPill');if(p)p.classList.add('lift')},300)},{passive:true});
+ m.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;st.x=e.clientX;st.y=e.clientY;if(!st.drag){if(Math.hypot(st.x-st.x0,st.y-st.y0)>9){clearTimeout(tm);st=null}return}hot(at(st.x,st.y))});
+ const end=()=>{clearTimeout(tm);if(!st)return;const s=st;st=null;if(!s.drag)return;m.classList.remove('chDragging');m.querySelectorAll('.chHot,.chSrc').forEach(x=>x.classList.remove('chHot','chSrc'));const p=m.querySelector(':scope>.chPill');if(p)p.classList.remove('lift');m._chuNo=1;setTimeout(()=>m._chuNo=0,90);
+  const b=s.cur;if(!b){if(p)p.classList.remove('show','off');return}b.classList.add('chFlash');m._arm=b;setTimeout(()=>{m._chuNo=0;try{b.click()}catch(x){}},170)};
+ m.addEventListener('pointerup',end);m.addEventListener('pointercancel',end);
+ m.addEventListener('touchmove',e=>{if(st&&st.drag)e.preventDefault()},{passive:false});
+ m.addEventListener('contextmenu',e=>{if(e.target.closest&&e.target.closest('.opt[data-i]'))e.preventDefault()})}
+{const _csU=choiceShow;choiceShow=function(){const r=_csU.apply(this,arguments);try{const m=$('modal');m._chu=null;m._arm=null;requestAnimationFrame(chuSetup)}catch(e){}return r}}
+(()=>{const go=()=>{const m=$('modal');if(!m){setTimeout(go,500);return}new MutationObserver(()=>{if(m.dataset.k!=='choice'){m.classList.remove('chTu','chDragging');clearInterval(m._chuT)}else requestAnimationFrame(chuSetup)}).observe(m,{childList:true})};go()})();
+(()=>{const st=document.createElement('style');st.textContent=`
+body.tuOn #modal.chTu .opt[data-i]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;transition:border-color .15s,box-shadow .15s,transform .15s}
+body.tuOn #modal.chTu>.chPill{position:absolute;left:0;top:0;z-index:5;pointer-events:none;border:2px solid var(--pink);box-sizing:border-box;background:color-mix(in srgb,var(--pink) 14%,transparent);box-shadow:0 0 14px color-mix(in srgb,var(--pink) 50%,transparent),inset 0 0 10px color-mix(in srgb,var(--pink) 25%,transparent);opacity:0;transition:transform .38s cubic-bezier(.3,1.35,.5,1),width .3s,height .3s,opacity .25s;will-change:transform}
+body.tuOn #modal.chTu>.chPill.show{opacity:1}body.tuOn #modal.chTu>.chPill.off{opacity:.25}
+body.tuOn #modal.chTu>.chPill.lift{box-shadow:0 8px 22px rgba(0,0,0,.4),0 0 20px color-mix(in srgb,var(--pink) 60%,transparent)}
+body.tuOn #modal.chTu>.chPill.fate{border-style:dashed;animation:chFate 1s ease-in-out infinite}
+@keyframes chFate{50%{box-shadow:0 0 22px color-mix(in srgb,var(--pink) 75%,transparent)}}
+body.tuOn #modal.chTu>.chPill.arm{border-color:#ff6a4a;background:rgba(255,90,60,.14);box-shadow:0 0 16px rgba(255,90,60,.55);animation:chArm .7s ease-in-out infinite}
+@keyframes chArm{50%{box-shadow:0 0 24px rgba(255,90,60,.85)}}
+body.tuOn #modal.chTu.chDragging .chHot,body.tuOn #modal.chTu.chDragging .chSrc,body.tuOn #modal.chTu .chArm,body.tuOn #modal.chTu .chFateB{border-color:transparent!important;box-shadow:none!important;outline:none!important}
+body.tuOn #modal.chTu .chHot small{opacity:1!important;color:var(--goldL,#ffd98a)}
+body.tuOn #modal.chTu .chFlash{animation:chFl .2s ease}@keyframes chFl{50%{filter:brightness(1.6)}}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
