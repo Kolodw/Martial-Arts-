@@ -14667,7 +14667,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
  const hsh=s=>{let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
  const rngOf=seed=>{let x=seed||1;return()=>{x^=x<<13;x>>>=0;x^=x>>17;x^=x<<5;x>>>=0;return x/4294967296}};
  const H=()=>S&&S.ch==='hell'&&S.hell;const wm=()=>WM[(S&&S.hell&&S.hell.wm)||0]||WM[5];
- const free=()=>S&&S.alive&&!choice._cur&&!modalOpen&&!(S.beastMode&&!S.beastMode.human);
+ const free=()=>S&&S.alive&&!choice._cur&&!modalOpen;
  const ncur=k=>(S.hell.cur||[]).filter(x=>x===k).length;
  window.hellInfo=()=>H()?S.hell:null;
  function hInit(){if(!S||S.ch!=='hell'||S.hell)return;const wk=wkKey(),sd=hsh('hell'+wk);S.hell={lv:0,next:16,cur:[],ess:0,boon:{},fail:0,wk,sd,wm:sd%WM.length,burnF:0,lifeB:0,lifeP:0,rev:0,pactY:-99};}
@@ -14704,7 +14704,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
    pow:{t:'⚔️ สัญญาพลังมาร',s:'พลังยุทธ์ +30% · แลกกับกรรม −60 และคำสาปค่าหัวจากนรก',f(){const g=pctPow(.3);S.power+=g;S.karma-=60;addCurse('hunt');log(`📜 พลังมารไหลทะลักเข้าร่าง — พลังยุทธ์ +${fmt(g)}`,'myth',true)}},
    life:{t:'🌿 สัญญาอายุยืน',s:'อายุขัยสูงสุด +50% · แลกกับคำสาปสุ่ม 1 ข้อ',f(){h.lifeB+=.5;const ks=Object.keys(CUR).filter(x=>ncur(x)<3);addCurse(ch(ks));log('📜 ปีศาจต่อเส้นชีวิตให้คุณ — แต่ทิ้งรอยไหม้ไว้บนวิญญาณ','myth',true)}}}[k];
   choice('😈 ปีศาจเสนอสัญญา',`เงาสีดำนั่งลงตรงข้ามคุณ "ในนรก ไม่มีอะไรได้มาฟรี… แต่ข้าใจดีพอจะ<b>ขาย</b>ให้"`,[Object.assign({noFate:1},O),{t:'ปฏิเสธ',s:'ไม่แลกอะไรกับปีศาจ',skip:true,f(){S.karma+=3;log('😈 ปีศาจยักไหล่แล้วสลายไปในควัน "แล้วเจ้าจะกลับมาหาข้าเอง"','')}}])}
- function tick(){const h=H();if(!h||!S.alive||(S.beastMode&&!S.beastMode.human))return;
+ function tick(){const h=H();if(!h||!S.alive)return;
   // คำสาปรายปี
   const k=c=>ncur(c);if(k('qi'))S.qi=+(S.qi*Math.pow(.98,k('qi'))).toFixed(1);if(k('burn'))h.burnF=Math.min(.85,h.burnF+.01*k('burn')*(wm().burn||1));if(k('poor'))S.money=Math.max(0,Math.round(S.money*Math.pow(.95,k('poor'))));if(k('fame'))S.fame=Math.max(0,Math.round(S.fame*Math.pow(.97,k('fame'))));if(k('love')&&S.sp)S.sp.aff=Math.max(0,(S.sp.aff||60)-2*k('love'));
   if(k('hunt')&&S.age>=14&&Math.random()<Math.min(.3,.04*k('hunt')+(S.fame||0)/1e6)){const w=fight('มือสังหารจากนรก',total()*.9);if(!w)S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.3));log(`👁️ มือสังหารที่นรกส่งมาตามค่าหัว — ${w?'คุณฆ่ามันได้':'คุณบาดเจ็บสาหัส'}`,w?'good':'bad')}
@@ -21601,6 +21601,23 @@ function islTestAll(){let t=0;ISL_TESTS.slice(0,13).forEach(([,f])=>{setTimeout(
   const h=`<div class="adsec islTestSec"><h4>🏝️ ทดสอบ Dynamic Island (เฉพาะเครื่องนี้)</h4><div class="adg">${ISL_TESTS.map((x,i)=>`<button class="${i===ISL_TESTS.length-1?'gbtn':'sysb'}" onclick="ISL_TESTS[${i}][1]()">${x[0]}</button>`).join('')}<button class="pbtn" onclick="closeM();islTestAll()">▶ เล่นทุกแบบต่อกัน</button></div><p class="tag2" style="margin:4px 0 0">ปิดหน้าต่างนี้ก่อนเพื่อดูเกาะชัดๆ · บนจอกว้าง เรื่องยาวจะขึ้นเป็นการ์ดมุมขวาล่าง · ปัดซ้าย/ขวาที่เกาะ = ข้าม · กดค้าง = ประวัติ</p></div>`;
   if(sec)sec.insertAdjacentHTML('afterend',h);else{const m=$('modal');if(m)m.insertAdjacentHTML('beforeend',h)}}}catch(e){}return r}}
 
+
+// ===================== แก้: สัตว์ร่างคนในแดนเทพ — ปุ่มทะลวงชี้ขั้นต่ำกว่าที่เป็นอยู่ =====================
+// ขั้นของสัตว์ไม่ถูกจำกัดด้วย rcap (realmIdx ไม่ใช้ rcap ตอนเป็นสัตว์) → ซิงก์ rcap ให้ตรงขั้นจริงก่อนเช็คทะลวง
+function brkSyncCap(){try{if(!S||!S.alive)return;if(S.beastMode){const ri=realmIdx();if(S.rcap==null||S.rcap<ri)S.rcap=ri}if(realmIdx()>=7&&S.pcap!=null&&typeof postRaw==='function'){/* pcap ปกติ */}}catch(e){}}
+{const _bpd=brkPend;brkPend=function(){brkSyncCap();const p=_bpd.apply(this,arguments);try{if(p&&p[0]==='r'&&p[1]<=realmIdx()){S.rcap=Math.max(S.rcap||0,realmIdx());return _bpd.apply(this,arguments)}}catch(e){}return p}}
+{const _gtR=godTrib;godTrib=function(k,t){try{brkSyncCap();if(k==='r'&&t<=realmIdx()){const p=brkPend();if(!p)return;return _gtR.call(this,p[0],p[1])}}catch(e){}return _gtR.apply(this,arguments)}}
+// ===================== เกาะบินไปข้างชื่อ: เส้นโค้ง + ค่อยๆ เปลี่ยนรูปเป็นชิป (ไอคอนไม่ยืด) =====================
+islFly=function(fromEl,toEl,done){try{if(islLite()||!fromEl||!toEl||!fromEl.getBoundingClientRect().width){done();return}
+ const a=fromEl.getBoundingClientRect(),b=toEl.getBoundingClientRect();const g=document.createElement('div');g.className='islGhost '+(document.getElementById('isl').className||'');
+ g.innerHTML=`<span>${(toEl.querySelector('i')||{}).innerHTML||''}</span>`;Object.assign(g.style,{left:'0px',top:'0px',width:a.width+'px',height:a.height+'px',transform:'none'});document.body.appendChild(g);
+ const P0=[a.left+a.width/2,a.top+a.height/2],P2=[b.left+b.width/2,b.top+b.height/2],P1=[P0[0]+(P2[0]-P0[0])*.85,P0[1]+(P2[1]-P0[1])*.05-14];
+ const ez=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2,F=[],N=16;
+ for(let i=0;i<=N;i++){const t=ez(i/N),u=1-t,x=u*u*P0[0]+2*u*t*P1[0]+t*t*P2[0],y=u*u*P0[1]+2*u*t*P1[1]+t*t*P2[1],k=Math.pow(t,.75),w=a.width+(b.width-a.width)*k,h=a.height+(b.height-a.height)*k;
+  F.push({left:(x-w/2)+'px',top:(y-h/2)+'px',width:w+'px',height:h+'px',borderRadius:Math.min(h/2,22)+'px',opacity:i===N?.92:1,offset:i/N})}
+ const an=g.animate(F,{duration:720,easing:'linear',fill:'forwards'});const sp=g.querySelector('span');if(sp)sp.animate([{transform:'scale(1)'},{transform:'scale(1.25)',offset:.4},{transform:'scale(1)'}],{duration:720});
+ an.onfinish=()=>{g.remove();done()}}catch(e){try{done()}catch(x){}}};
+(()=>{const st=document.createElement('style');st.textContent='.islGhost{display:flex!important;align-items:center;justify-content:center;overflow:hidden}.islGhost>span{display:inline-block;line-height:1}';document.head.appendChild(st)})();
 </script>
 </body>
 </html>
