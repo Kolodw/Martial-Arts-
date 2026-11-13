@@ -533,12 +533,13 @@ module.exports = async (req, res) => {
         const hk = 'ipid:' + ip + ':' + Math.floor(now / 3600e3), [, nid] = await pipe([['SADD', hk, id], ['SCARD', hk], ['EXPIRE', hk, 4000]]);
         if (meta.b !== 'บอท' && +nid <= 600) await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)], ...(act ? [['HSET', 'oa', id, JSON.stringify(act)]] : [])]);
       }
-      const [, n, lives, annV] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 600e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann']]);
+      const [, n, lives, annV, cl0] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 600e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann'], ['LINDEX', 'chat', 0]]);
+      let cl = null; try { const m = jp(cl0); if (m && m.i) cl = { i: m.i, t: m.t, n: String(m.n || '').slice(0, 20), x: String(m.x || '').slice(0, 90) } } catch {}
       let tg = null; if (okId(id)) { try { const tq = await cmd('LRANGE', 'tagq:' + id, 0, 9); if (tq && tq.length) { await cmd('DEL', 'tagq:' + id); tg = tq.map(jp).filter(Boolean) } } catch (e) {} }
       let ann = null; try { ann = annV ? JSON.parse(annV) : null } catch {}
       ann = await annPoll(ann, id);
       await Promise.race([autoMig(), new Promise(r => setTimeout(r, 1200))]);
-      return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7), ann, ...(tg ? { tg } : {}) });
+      return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7), ann, ...(tg ? { tg } : {}), ...(cl ? { cl } : {}) });
     }
     if (a === 'who' || a === 'admin' || a === 'bugfix') {
       const AK = ADM_KEY;
@@ -1317,7 +1318,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (!own || own !== id) return res.status(403).json({ err: 'owner' });
       const pv = +b.pub === 2 ? 2 : b.pub ? 1 : 0;
       await cmd('SET', 'lifep:' + lid, String(pv), 'KEEPTTL');
-      return res.json({ ok: 1, pub: pv });
+      let rk = null; try { const r0 = await cmd('ZREVRANK', bdKey(cat, now), ej); if (r0 != null) rk = +r0 + 1 } catch {}
+      return res.json({ ok: 1, pub: pv, ...(rk ? { rk } : {}) });
     }
 
     // ===== ลานประลองหมื่นเงา (v15.6) =====

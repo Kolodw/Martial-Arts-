@@ -20390,6 +20390,93 @@ setInterval(()=>{try{if(!islOn())return;const g=$('game'),inG=!!(S&&S.alive&&g&&
 .islChip em{font-style:normal;font-size:10px;font-weight:700;opacity:.9}
 .islChip[data-k="ff"]{background:conic-gradient(#6fc3a0 calc(var(--p,0)*360deg),#0b0810 0) border-box}
 #isl.lite .islFace{animation:none}`;document.head.appendChild(st)})();
+// ===================== 🏝️ เกาะ ภาค 3: ออนไลน์ · ตอบจากเกาะ · กรอบของฉัน · ฤดู · ตำแหน่ง/ขนาด · คอมโบ · หัวใจเต้น · ใกล้ถึงเป้า · สรุปตอนกลับมา · แจ้งเตือนเครื่อง · ลอย =====================
+// ---------- ปุ่มในเกาะ ----------
+{const _ihM=islHtml;islHtml=function(n){let h=_ihM.apply(this,arguments);try{if(n.big&&n.btns&&n.btns.length)h=h.replace(/<\/div><\/div>$/,`<div class="islBtns">${n.btns.map((b,i)=>`<b class="islBtn" data-b="${i}">${b.t}</b>`).join('')}</div></div></div>`)}catch(e){}return h}}
+islEl().addEventListener('click',ev=>{const b=ev.target.closest&&ev.target.closest('.islBtn');if(!b)return;ev.stopImmediatePropagation();const c=ISL.cur;const f=c&&c.btns&&c.btns[+b.dataset.b];b.classList.add('hit');setTimeout(()=>{islNext(true);try{f&&f.f()}catch(e){console.error(e)}},140)},true);
+// ---------- ตัวดักผลจากเซิร์ฟเวอร์ (ไม่ยิงเพิ่ม) ----------
+{const _fM=window.fetch;if(_fM)window.fetch=function(u){const p=_fM.apply(this,arguments);try{const s=String(u&&u.url||u||'');const m=/[?&]a=(ping|life)\b/.exec(s);if(m)p.then(r=>{try{r.clone().json().then(j=>{try{if(m[1]==='ping'&&j&&j.cl)islChat(j.cl);if(m[1]==='life'&&j&&j.rk)islRank(j.rk)}catch(e){}}).catch(()=>{})}catch(e){}}).catch(()=>{})}catch(e){}return p}}
+function islMyNames(){const L=[];try{const p=LS.get('murim_pname','');if(p)L.push(p);if(S&&S.name)L.push(S.name)}catch(e){}return L.filter(x=>x&&x.length>=2)}
+function islChat(cl){const seen=LS.get('murim_clseen','');if(!seen){LS.set('murim_clseen',cl.i);return}if(cl.i===seen)return;ISL.chatN=(ISL.chatN||0)+1;if(ISL.chatLast===cl.i)return;ISL.chatLast=cl.i;
+ const me=islMyNames().some(n=>String(cl.x||'').includes(n));
+ if(me)island({big:1,pri:1,ic:'📣',h:'มีคนพูดถึงคุณในแชท',t:esc(cl.n||'ผู้เล่น')+': '+esc(String(cl.x).slice(0,70)),kind:'rainbow',btns:[{t:'💬 เปิดแชท',f:()=>islOpenChat()}],ms:6000});
+ islChipX('chat','💬',String(Math.min(9,ISL.chatN))+(ISL.chatN>9?'+':''),()=>islOpenChat())}
+function islOpenChat(){ISL.chatN=0;try{LS.set('murim_clseen',ISL.chatLast||LS.get('murim_clseen',''))}catch(e){}islChipOff('chat');openOnline('chat')}
+{const _ooM=openOnline;openOnline=function(tab){try{if((tab||'chat')==='chat'){ISL.chatN=0;if(ISL.chatLast)LS.set('murim_clseen',ISL.chatLast);islChipOff('chat')}}catch(e){}return _ooM.apply(this,arguments)}}
+{const _tgM=tagShow;tagShow=function(L){const r=_tgM.apply(this,arguments);try{if(islOn()){const b=$('tagBar');if(b)b.remove();const x=L[0]||{};island({big:1,pri:1,sticky:1,ic:'🔔',h:'ผู้ดูแลแท็กคุณในแชท'+(L.length>1?` (${L.length})`:''),t:esc(String(x.x||'').slice(0,90)),kind:'rainbow',btns:[{t:'💬 เปิดแชท',f:()=>openOnline('chat')},{t:'ปิด',f:()=>{}}],key:'tag'})}}catch(e){}return r}}
+function islRank(rk){const prev=LS.get('murim_lastrk',0);LS.set('murim_lastrk',rk);if(rk<=20)island({big:1,pri:rk<=3,ic:rk<=3?['','🥇','🥈','🥉'][rk]:'🏆',h:'ทำเนียบวันนี้',t:`ชีวิตนี้ติดอันดับ ${rk}`+(prev&&rk<prev?` · ขยับขึ้นจาก ${prev}`:''),kind:rk<=3?'rainbow':'gold',fx:rk<=3?'burst':'',btns:[{t:'🏆 ดูทำเนียบ',f:()=>openOnline('board')}],ms:5000})}
+// ---------- ตอบตัวเลือกจากเกาะ (ตอนย่อไว้) ----------
+setInterval(()=>{try{if(!islOn())return;const c=choice._cur;if(c&&choice._min&&!modalOpen){if(ISL.chFor===c)return;ISL.chFor=c;const O=c.opts.map((o,i)=>[o,i]).filter(([o])=>!o.skip).slice(0,2);
+  island({big:1,pri:1,sticky:1,ic:'📜',h:'มีเรื่องให้ตัดสินใจ',t:String(c.title).replace(/<[^>]+>/g,'').slice(0,60),kind:'gold',key:'ch',btns:[...O.map(([o,i])=>({t:String(o.t).replace(/<[^>]+>/g,'').slice(0,22),f:()=>{if(choice._cur===c)choiceRun(i)}})),{t:'เปิดดู',f:()=>{try{if(choice._cur===c)choiceShow()}catch(e){}}}]})}
+ else if(ISL.chFor&&(!c||!choice._min||c!==ISL.chFor)){ISL.chFor=null;if(ISL.cur&&ISL.cur.key==='ch')islNext(true);ISL.q=ISL.q.filter(x=>x.key!=='ch')}}catch(e){}},600);
+// ---------- เลือดต่ำ: ปุ่มกินยา + หัวใจเต้น ----------
+{const _isM=island;island=function(n){try{if(n&&n.ic==='❤️'&&typeof bagHas==='function'&&bagHas('hp'))n.btns=[{t:'💊 กินยาสมานแผล',f:()=>qmUse('hp')}]}catch(e){}return _isM.apply(this,arguments)}}
+setInterval(()=>{try{if(!islOn()||!S||!S.alive){islChipOff('hb');return}const r=S.hp/S.maxHp;if(r<.25)islChipX('hb','❤️','',()=>{if(typeof bagHas==='function'&&bagHas('hp'))qmUse('hp');else toast('❤️ ไม่มียาสมานแผล')});else if(r>=.4)islChipOff('hb')}catch(e){}},1000);
+// ---------- คอมโบดวงดี ----------
+ISL.yr={g:0,b:0};
+{const _lgM=log;log=function(t,c){const r=_lgM.apply(this,arguments);try{if(c==='good'||c==='epic'||c==='myth')ISL.yr.g++;else if(c==='bad')ISL.yr.b++}catch(e){}return r}}
+{const _pyM=passYear;passYear=function(){ISL.yr={g:0,b:0};const r=_pyM.apply(this,arguments);try{if(!S||!S.alive||!islOn())return r;S._cmb=S._cmb||0;const sc=ISL.yr.g-ISL.yr.b*1.5;
+  if(sc>0)S._cmb++;else if(sc<0){if(S._cmb>=3)island({ic:'💨',t:`คอมโบดวงดีดับลงที่ ×${S._cmb}`,kind:'grey',ms:1800});S._cmb=0}
+  if([3,5,8,12,20].includes(S._cmb))island({big:1,ic:'🔥',h:'ดวงขึ้นต่อเนื่อง',t:`คอมโบ ×${S._cmb} ปี`,kind:S._cmb>=8?'rainbow':'gold',ms:2600,key:'cmb'+S._cmb});
+  if(S._cmb>=3){const c=islChipX('cmb','🔥','×'+S._cmb);if(c)c.style.setProperty('--fl',Math.min(1,(S._cmb-2)/10))}else islChipOff('cmb');
+  // ใกล้ถึงเป้า: พลังถึง 90% ของขั้นถัดไป
+  const ri=realmIdx(),nx=REALMS[ri+1];if(nx&&nx.p&&total()>=nx.p*.9&&total()<nx.p&&S._near!==ri+1){S._near=ri+1;island({ic:'🎯',t:`อีกนิดเดียวจะถึง ${nx.n} (${Math.floor(total()/nx.p*100)}%)`,kind:'gold',ms:2600})}}catch(e){}return r}}
+// ---------- สรุปตอนกลับมา ----------
+{let snap=null;document.addEventListener('visibilitychange',()=>{try{if(document.hidden){if(S&&S.alive)snap={t:Date.now(),a:S.age,r:realmIdx(),m:S.money,ar:(S.arts||[]).length,k:(S.kids||0)}}else if(snap&&S&&S.alive&&islOn()){const d=snap;snap=null;if(Date.now()-d.t<60000)return;const L=[];if(S.age>d.a)L.push(`ผ่านไป ${S.age-d.a} ปี`);if(realmIdx()>d.r)L.push(`ทะลวง ${realmIdx()-d.r} ขั้น`);const ar=(S.arts||[]).length-d.ar;if(ar>0)L.push(`ได้วิชา ${ar}`);const km=(S.kids||0)-d.k;if(km>0)L.push(`ลูกเพิ่ม ${km}`);const dm=S.money-d.m;if(Math.abs(dm)>=1000)L.push(`เงิน ${dm>0?'+':''}${fmt(Math.round(dm))}`);
+  if(L.length)setTimeout(()=>island({big:1,ic:'🌅',h:'ระหว่างที่คุณไม่อยู่',t:L.slice(0,2).join(' · '),d:L.slice(2).join(' · '),kind:'gold',ms:5200}),400)}}catch(e){}})}
+// ---------- คนดูเราเล่น ----------
+setInterval(()=>{try{if(!islOn())return;const w=typeof watchN==='number'?watchN:0;if(w>0&&S&&S.alive){if(!ISL.wN)island({ic:'👁',t:`มีคนกำลังดูคุณเล่น ${w} คน`,kind:'info',ms:2200});islChipX('watch','👁',String(w))}else islChipOff('watch');ISL.wN=w}catch(e){}},3000);
+// ---------- กรอบของฉันเป็นขอบเกาะ · ฤดู · ตำแหน่ง · ขนาด ----------
+function islFrame(){try{if(!LS.get('murim_islfr',1))return null;const d=frGet();return d&&d.eq?frOf(d.eq):null}catch(e){return null}}
+function islDeco(){const e=islEl();const f=islFrame();e.classList.toggle('framed',!!f);if(f){e.style.setProperty('--f1',f.c1||'#ffd76a');e.style.setProperty('--f2',f.c2||f.c1||'#ffd76a');e.style.setProperty('--f3',f.c3||f.c2||'#ffd76a');e.classList.toggle('fspin',/spin|sparkle|orbit/.test(f.ty||''))}
+ let w=e.querySelector(':scope>.islWx');if(!w){w=document.createElement('div');w.className='islWx';e.appendChild(w)}let k='';try{if(S&&S.alive&&!islLite()){const x=wxNow();k=x==='snow'?'snow':x==='rain'?'rain':Math.floor(curMon()/3)===0?'petal':Math.floor(curMon()/3)===2?'leafy':''}}catch(x){}w.className='islWx '+k;
+ const pos=LS.get('murim_islpos','top');document.body.classList.toggle('islBottom',pos==='bottom');document.body.classList.toggle('islFloat',pos==='float');document.documentElement.style.setProperty('--islFs',LS.get('murim_islfs',1));islBubble()}
+{const _irM=islRender;islRender=function(){const r=_irM.apply(this,arguments);try{islDeco();islNotify(arguments[0])}catch(e){}return r}}
+// ---------- ลอย: จุดเกาะที่ลากไปวางได้ ----------
+function islBubble(){let b=document.getElementById('islBub');const on=document.body.classList.contains('islFloat')&&islOn();if(!on){if(b)b.remove();return}
+ if(!b){b=document.createElement('div');b.id='islBub';b.innerHTML='🏝️';document.body.appendChild(b);const p=LS.get('murim_islbub',{x:innerWidth-56,y:140});b.style.left=Math.min(innerWidth-44,p.x)+'px';b.style.top=Math.min(innerHeight-44,p.y)+'px';
+  let st=null;b.addEventListener('pointerdown',e=>{st={x:e.clientX,y:e.clientY,l:b.offsetLeft,t:b.offsetTop,m:0};try{b.setPointerCapture(e.pointerId)}catch(x){}});
+  b.addEventListener('pointermove',e=>{if(!st)return;const dx=e.clientX-st.x,dy=e.clientY-st.y;if(Math.hypot(dx,dy)>6)st.m=1;if(st.m){b.style.left=Math.max(4,Math.min(innerWidth-44,st.l+dx))+'px';b.style.top=Math.max(4,Math.min(innerHeight-44,st.t+dy))+'px'}});
+  b.addEventListener('pointerup',()=>{if(!st)return;const m=st.m;st=null;if(m){LS.set('murim_islbub',{x:b.offsetLeft,y:b.offsetTop});islDeco()}else islHistory()});b.style.touchAction='none'}
+ const e=islEl();e.style.setProperty('--bx',(b.offsetLeft+20)+'px');e.style.setProperty('--by',(b.offsetTop+44)+'px');b.classList.toggle('has',!!ISL.cur)}
+// ---------- แจ้งเตือนของเครื่อง (ตอนอยู่นอกแท็บ) ----------
+function islNotify(n){try{if(!n||n._nt||!document.hidden||!n.pri||!LS.get('murim_islos',0)||typeof Notification==='undefined'||Notification.permission!=='granted')return;n._nt=1;const t=String(n.t||'').replace(/<[^>]+>/g,''),h=String(n.h||'1 ใน นวนิยาย').replace(/<[^>]+>/g,'');const no=new Notification((n.ic?n.ic+' ':'')+h,{body:t,tag:n.key||'isl'});no.onclick=()=>{try{window.focus();no.close()}catch(e){}}}catch(e){}}
+// ---------- หน้าตั้งค่าเกาะ (ในหน้าดูย้อนหลัง) ----------
+{const _ihH=islHistory;islHistory=function(){_ihH.apply(this,arguments);try{const m=$('modal');const h=m.querySelector('h3');const pos=LS.get('murim_islpos','top'),fs=+LS.get('murim_islfs',1),fr=LS.get('murim_islfr',1),os=LS.get('murim_islos',0);
+  const seg=(k,v,L)=>`<span class="islSeg">${L.map(([x,t])=>`<b class="${v===x?'on':''}" onclick="LS.set('${k}',${JSON.stringify(x)});islDeco();islHistory()">${t}</b>`).join('')}</span>`;
+  h.insertAdjacentHTML('afterend',`<details class="islSet"><summary>⚙️ ตั้งค่าเกาะ</summary><div class="item"><b>📍 ตำแหน่ง</b> ${seg('murim_islpos',pos,[['top','บน'],['bottom','ล่าง'],['float','ลอย']])}</div><div class="item"><b>🔠 ขนาดตัวหนังสือ</b> ${seg('murim_islfs',fs,[[1,'ปกติ'],[1.15,'ใหญ่'],[1.3,'ใหญ่มาก']])}</div><div class="item"><b>🎨 หน้าตา</b> <button class="sysb" onclick="islThCycle();islHistory()">${ISL_TH.find(x=>x[0]===islTh())[2]} ›</button></div><div class="item"><b>🖼️ ใช้กรอบโปรไฟล์ที่ใส่อยู่เป็นขอบเกาะ</b> <button class="sysb" onclick="LS.set('murim_islfr',${fr?0:1});islDeco();islHistory()">${fr?'เปิด':'ปิด'}</button>${islFrame()?'':'<p class="tag2">ยังไม่ได้ใส่กรอบ — ใส่ได้ที่ 👤 โปรไฟล์</p>'}</div><div class="item"><b>📱 แจ้งเตือนของเครื่อง (ตอนปิดแท็บไว้)</b> <button class="sysb" onclick="islOsToggle()">${os&&typeof Notification!=='undefined'&&Notification.permission==='granted'?'เปิด':'ปิด'}</button><p class="tag2">เฉพาะเรื่องสำคัญ · ต้องเปิดเว็บค้างไว้ · iPhone ต้องเพิ่มเว็บไว้ที่หน้าจอโฮมก่อน</p></div></details>`)}catch(e){console.error(e)}}}
+function islOsToggle(){try{if(typeof Notification==='undefined'){toast('⚠️ เบราว์เซอร์นี้ไม่รองรับแจ้งเตือน');return}if(LS.get('murim_islos',0)&&Notification.permission==='granted'){LS.set('murim_islos',0);islHistory();return}
+ Notification.requestPermission().then(p=>{if(p==='granted'){LS.set('murim_islos',1);toast('📱 เปิดแจ้งเตือนของเครื่องแล้ว')}else toast('⚠️ ไม่ได้รับอนุญาตแจ้งเตือน');islHistory()})}catch(e){}}
+setTimeout(()=>{try{islDeco()}catch(e){}},800);setInterval(()=>{try{if(S&&S.alive)islDeco()}catch(e){}},15000);
+// ---------- สไตล์ ----------
+(()=>{const st=document.createElement('style');st.textContent=`
+#isl{font-size:calc(13px*var(--islFs,1))}#isl .islT{font-size:calc(14px*var(--islFs,1))}#isl .islSm .islT{font-size:calc(13px*var(--islFs,1))}#isl .islD{font-size:calc(11.5px*var(--islFs,1))}
+#isl .islBtns{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+#isl .islBtn{font-weight:700;font-size:calc(12px*var(--islFs,1));padding:5px 10px;border-radius:9px;background:color-mix(in srgb,var(--ik,#e8b54a) 22%,rgba(255,255,255,.06));border:1px solid color-mix(in srgb,var(--ik,#e8b54a) 60%,transparent);color:#fff3d0;cursor:pointer;transition:transform .15s,filter .15s}
+#isl .islBtn:active,#isl .islBtn.hit{transform:scale(.92);filter:brightness(1.4)}
+body.isl-scroll #isl .islBtn{border-radius:3px}
+#isl.framed{box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1.5px var(--f1),0 0 0 3px color-mix(in srgb,var(--f2) 60%,transparent),0 0 16px color-mix(in srgb,var(--f1) 45%,transparent)!important}
+#isl.framed.fspin{animation:islFr 3s linear infinite}
+@keyframes islFr{0%{box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1.5px var(--f1),0 0 0 3px color-mix(in srgb,var(--f2) 60%,transparent),0 0 16px color-mix(in srgb,var(--f1) 45%,transparent)}50%{box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1.5px var(--f3),0 0 0 3px color-mix(in srgb,var(--f1) 60%,transparent),0 0 22px color-mix(in srgb,var(--f3) 55%,transparent)}100%{box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1.5px var(--f1),0 0 0 3px color-mix(in srgb,var(--f2) 60%,transparent),0 0 16px color-mix(in srgb,var(--f1) 45%,transparent)}}
+#isl .islWx{position:absolute;inset:0;pointer-events:none;z-index:1;opacity:.55;border-radius:inherit}
+#isl .islWx.snow{background-image:radial-gradient(circle,#fff 1px,transparent 1.6px),radial-gradient(circle,#fff 0.8px,transparent 1.3px);background-size:22px 18px,31px 26px;animation:islSnow 6s linear infinite}
+@keyframes islSnow{to{background-position:6px 18px,-8px 26px}}
+#isl .islWx.rain{background-image:linear-gradient(105deg,transparent 46%,rgba(170,210,255,.55) 48%,transparent 50%);background-size:14px 16px;animation:islRain .7s linear infinite;opacity:.35}
+@keyframes islRain{to{background-position:-4px 16px}}
+#isl .islWx.petal{background-image:radial-gradient(ellipse 2px 1.4px,#ffb0cf 80%,transparent),radial-gradient(ellipse 1.6px 1.2px,#ffd0e2 80%,transparent);background-size:37px 30px,53px 41px;animation:islSnow 9s linear infinite;opacity:.7}
+#isl .islWx.leafy{background-image:radial-gradient(ellipse 2px 1.4px,#e8a040 80%,transparent);background-size:41px 33px;animation:islSnow 10s linear infinite;opacity:.6}
+body.islBottom #isl{top:auto;bottom:calc(env(safe-area-inset-bottom) + 118px)}body.islBottom #islDots{top:auto;bottom:calc(env(safe-area-inset-bottom) + 108px)}
+body.islFloat #isl{left:clamp(130px,var(--bx,50%),calc(100vw - 130px));top:var(--by,60px)}
+body.islFloat #isl:not(.on){opacity:0}
+#islBub{position:fixed;z-index:99989;width:40px;height:40px;border-radius:50%;background:#160e08;border:1.5px solid #e8b54a;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 4px 14px rgba(0,0,0,.5);cursor:grab;-webkit-user-select:none;user-select:none;transition:transform .2s cubic-bezier(.3,1.6,.5,1)}
+#islBub.has{animation:islBub 1s ease-in-out infinite}@keyframes islBub{50%{transform:scale(1.12);box-shadow:0 0 16px #e8b54a}}
+.islChip[data-k="cmb"]{border-color:#ff8a3a!important;box-shadow:0 0 calc(4px + 12px*var(--fl,0)) rgba(255,120,40,calc(.4 + .5*var(--fl,0)))}
+.islChip[data-k="cmb"] i{animation:islFlame .5s ease-in-out infinite alternate;display:inline-block;transform-origin:50% 90%}@keyframes islFlame{to{transform:scale(1.15,1.25) rotate(4deg)}}
+.islChip[data-k="hb"]{border-color:#e0503c!important}.islChip[data-k="hb"] i{animation:islHb 1s ease-in-out infinite;display:inline-block}
+@keyframes islHb{0%,40%,100%{transform:scale(1)}15%{transform:scale(1.35)}25%{transform:scale(.95)}32%{transform:scale(1.2)}}
+.islChip[data-k="chat"]{border-color:#7ab0ff!important}.islChip[data-k="chat"] em{background:#e0503c;color:#fff;border-radius:7px;padding:0 4px}
+.islSet{margin:4px 0 10px}.islSet summary{cursor:pointer;font-size:13px;opacity:.85;padding:4px 2px}.islSet .item{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:space-between}
+.islSeg{display:inline-flex;gap:2px;background:rgba(128,128,128,.15);border-radius:9px;padding:2px}.islSeg b{font-weight:600;font-size:12px;padding:4px 9px;border-radius:7px;cursor:pointer}.islSeg b.on{background:var(--pink);color:var(--onacc)}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
