@@ -20810,7 +20810,7 @@ function rotBuy(i){const s=S.sys,R0=rotGet(),it=ROT.find(z=>z.id===R0.L[i]);if(!
 // ของ % (ตั้งแต่ระดับกลาง)
 const PCT=[{id:'pp',n:'ยาเพิ่มพลังยุทธ์',d:'พลังยุทธ์ +2% (ทุกขั้นได้ไม่เกิน ~30% ก่อนเริ่มลดลง)',c:60,f(){S.power+=pctPow(.02)}},
  {id:'pq',n:'ยาขยายทะเลปราณ',d:'ลมปราณ +5%',c:60,f(){S.qi=+(S.qi*1.05+.5).toFixed(1)}},
- {id:'pl',n:'ยาต่ออายุขัย',d:'อายุขัย +3% (อย่างน้อย 5 ปี)',c:85,f(){S.lifespan+=Math.max(5,Math.round((S.lifespan||80)*.03))}}];
+ {id:'pl',n:'ยาต่ออายุขัย',d:'อายุขัย +3% (อย่างน้อย 5 ปี) · ไม่ถูกลดตามกฎยาซ้อน',c:85,f(){const L0=Math.max(80,lifeMax()||S.lifespan||80),g=Math.max(5,Math.round(L0*.03));if(mwOn&&mwOn()){S.mw.end+=g}else if(S.xt){S.glExtra=(S.glExtra||0)+g}else lsGive(g);log(`<span class="px">[ระบบ]</span> ⏳ อายุขัย +${fmt(g)} ปี (ตอนนี้ ${fmt(lifeMax())} ปี)`,'sys')}}];
 const pctC=id=>{const it=PCT.find(z=>z.id===id),n=((S.sys.pb||{})[id])|0;return sgPrice(Math.round(it.c*Math.pow(1.15,n)))};
 function pctBuy(id){const s=S.sys,it=PCT.find(z=>z.id===id),c=pctC(id);if(s.sp<c)return toast('SP ไม่พอ');s.sp-=c;s.pb=s.pb||{};s.pb[id]=(s.pb[id]|0)+1;it.f();sysLog(`ใช้ <b>${it.n}</b> · ครั้งถัดไปราคา ${pctC(id)} SP`,'');sfx('good');render();openSys()}
 // ของหายากชาติละครั้ง (ตั้งแต่ระดับสูง)
@@ -21135,6 +21135,48 @@ setInterval(()=>{try{document.body.classList.toggle('fxHi',typeof fxQ!=='undefin
 #modal.maSheet{animation:maDesk .34s cubic-bezier(.2,.9,.3,1) both!important}@keyframes maDesk{from{transform:translateY(26px) scale(.97);opacity:0}to{transform:none;opacity:1}}
 .maSheetOut{animation:maDeskOut .22s ease forwards!important}@keyframes maDeskOut{to{transform:translateY(18px) scale(.97);opacity:0}}
 #modal>.maGrab{display:none}}`;document.head.appendChild(st)})();
+
+
+// ===================== แก้ตามรายงานผู้เล่น (13 พ.ย. 21:40) =====================
+// 1) ตัวเลือกไม่ต้องรอข้อความพิมพ์จนจบนานเกินไป (เดิมรอ 3–8 วินาที ดูเหมือนค้าง) · ข้อความไม่ค้างซ่อน
+{const _mdP=modal;modal=function(html,k){const r=_mdP.apply(this,arguments);try{if(pendModal&&(k==='choice'||k==='duel')){clearTimeout(window._pmT);window._pmT=setTimeout(()=>{try{if(pendModal&&modalOpen)flushReveal()}catch(e){}},1100)}}catch(e){}return r}}
+setInterval(()=>{try{if(revealQ&&revealQ.length&&!revealT){const now=Date.now();if(!window._rvW)window._rvW=now;else if(now-window._rvW>1200){flushReveal();window._rvW=0}}else window._rvW=0}catch(e){}},400);
+document.addEventListener('click',e=>{try{if(pendModal&&e.target.closest&&e.target.closest('#feed,#game #goalBox'))flushReveal()}catch(x){}},true);
+// 2) เวลากระโดดหลายปีในปีเดียว (แดนเทพ/กัลป์): เส้นตายเควสนับตามรอบ ไม่ตามปีที่กระโดด
+{const _xfa=xFamAge;xFamAge=function(ex){try{if(ex>0&&S&&S.sys){const s=S.sys;if(s.bagQ&&s.bagQ.dl!=null)s.bagQ.dl+=ex;(s.quests||[]).forEach(q=>{if(q&&q.dl!=null)q.dl+=ex})}}catch(e){}return _xfa.apply(this,arguments)}}
+{const _xb=xBusy;xBusy=function(){let b=_xb.apply(this,arguments);try{if(S&&S.sys&&S.sys.bagQ)b++}catch(e){}return b}}
+// 3) ร้านระบบ: ซื้อถุงมิติขั้นถัดไปได้ (ข้ามเควส)
+const BAG_UP=[{n:'ถุงมิติ',c:450},{n:'แหวนมิติ',c:1100},{n:'โลกในแหวน',c:2400}];
+function bagUpBuy(){const s=S.sys;if(!S.bag)bagInit();const b=S.bag,t=b.sp||0,U=BAG_UP[t];if(!U)return toast('มีโลกในแหวนแล้ว');const c=sgPrice(U.c);if(s.sp<c)return toast('SP ไม่พอ');if((s.lv|0)<[6,16,28][t])return toast('ระบบต้องถึง Lv.'+[6,16,28][t]);s.sp-=c;b.sp=t+1;b.cap=9999;b.nm=U.n;s.bagQ=null;S.flags.spBag=1;
+ sysLog(`🎒 ได้รับ <b>${U.n}</b> จากร้านค้าระบบ — เก็บของได้ไม่จำกัด ไม่มีวันถูกขโมย${['',' · ชนะศัตรูได้ของเพิ่มเป็นสองเท่า',' · สมุนไพรและยางอกเงยในโลกในแหวนทุกปี'][t]||''}`,'myth');try{keyAdd('ได้รับ'+U.n+'จากร้านระบบ');cdxAdd('sysshop','bag'+t)}catch(e){}render();openSys()}
+{const _osB=openSys;openSys=function(){const r=_osB.apply(this,arguments);try{const s=S.sys,m=$('modal'),box=m.querySelector('.sysbox');if(!box||m.querySelector('.bagUpR'))return r;if(!S.bag)bagInit();const t=S.bag.sp||0,U=BAG_UP[t];
+ const h4=[...box.querySelectorAll('h4')].find(x=>x.textContent.trim()==='ร้านค้าระบบ');const nd=[6,16,28][t],lk=U&&(s.lv|0)<nd;const html=`<div class="sysq bagUpR" style="display:flex;justify-content:space-between;align-items:center;gap:6px"><div><b style="color:#ffd070">🎒 ${U?U.n:'โลกในแหวน'}</b><br><span style="opacity:.75">${U?(s.bagQ?'ข้ามเควสถุงมิติที่ทำอยู่ ได้ทันที':'ไม่ต้องทำเควส ได้ทันที · เก็บของไม่จำกัด'):'มีขั้นสูงสุดแล้ว'}</span></div>${U?`<button class="sysb" style="flex:0 0 auto" ${lk||s.sp<sgPrice(U.c)?'disabled':''} onclick="bagUpBuy()">${lk?'Lv.'+nd:sgPrice(U.c)+' SP'}</button>`:''}</div>`;
+ if(h4)h4.insertAdjacentHTML('beforebegin',`<h4>🎒 ถุงมิติ</h4>`+html);}catch(e){console.error(e)}return r}}
+// 4) เควสเจ้าสัว/ผู้นำตระกูล: ที่ดินตระกูลเต็มแล้วไม่ออกเควสขยายอีก · เควสที่ทำไม่ได้แล้วเปลี่ยนให้เอง
+const estMax=()=>5+(EST_SL[5]||14)*5;
+{const _qe=QOK.est;QOK.est=()=>(!_qe||_qe())&&estLvSum()<estMax()}
+{const _qm=QMK.est;QMK.est=function(){const r=_qm.apply(this,arguments);try{const left=estMax()-estLvSum(),E=S.est||{};r[1]=Math.max(1,Math.min(r[1],left));r[0]=(E.lv>=5?'ยกระดับสิ่งปลูกสร้างตระกูล ':'ขยายที่ดินหรือสิ่งปลูกสร้างตระกูล ')+r[1]+' ขั้น'}catch(e){}return r}}
+function sqFixImpossible(){try{const s=S&&S.sys;if(!s||!s.quests)return;s.quests.forEach((q,i)=>{if(!q||!QOK[q.k])return;let ok=true;try{ok=QOK[q.k]()}catch(e){}if(!ok){const keys=qKeys().filter(k=>k!==q.k);if(!keys.length)return;const old=q.n;s.quests[i]=mkQuest(ch(keys));sysLog(`🔄 เควส "${esc(old)}" ทำต่อไม่ได้แล้ว — ระบบเปลี่ยนเป็น <b>${s.quests[i].n}</b>`,'')}})}catch(e){}}
+{const _pyE=passYear;passYear=function(){const r=_pyE.apply(this,arguments);sqFixImpossible();return r}}
+{const _osE=openSys;openSys=function(){sqFixImpossible();return _osE.apply(this,arguments)}}
+// 5) ชื่อขั้นงานช่าง
+const CR_RN={alch:['นักปรุงยา','โอสถ'],forge:['ช่างตีเหล็ก','หลอมอาวุธ'],arr:['ผู้วางค่ายกล','ค่ายกล'],tal:['นักเขียนยันต์','ยันต์']};
+function crRank(k,lv){const N=CR_RN[k]||['ช่าง',''];lv=Math.max(1,lv|0);return lv<=5?N[0]+['ฝึกหัด','ขั้นต้น','ขั้นกลาง','ขั้นสูง','ชำนาญการ'][lv-1]:['ปรมาจารย์','ยอดปรมาจารย์','มหาปรมาจารย์','เทพ'][Math.min(3,lv-6)]+N[1]}
+{const _ocR=openCraft;openCraft=function(k){const r=_ocR.apply(this,arguments);try{const kk=k||(window._crK)||'alch',lv=S.cr&&S.cr.lv?S.cr.lv[kk]:1;const m=$('modal');const p=[...m.querySelectorAll('p.tag2,div.tag2')].find(x=>/ฝีมือขั้น/.test(x.textContent));if(p&&!p.querySelector('.crRk')){p.insertAdjacentHTML('afterbegin',`<span class="crRk" style="display:inline-block;margin:0 6px 4px 0;padding:1px 8px;border-radius:999px;background:color-mix(in srgb,var(--pink,#f0c860) 20%,transparent);font-weight:700;opacity:1">🏅 ${crRank(kk,lv)}</span>`)}}catch(e){}return r}}
+function crRkChk(){try{if(!S||!S.cr||!S.cr.lv)return;const o=S.cr._rk||(S.cr._rk={...S.cr.lv});Object.keys(CRK).forEach(k=>{const l=S.cr.lv[k]||1;if(o[k]==null)o[k]=l;if(l>o[k]){o[k]=l;log(`🏅 ฝีมือ${CRK[k].n}ขึ้นขั้น ${l} — ได้เป็น <b>${crRank(k,l)}</b>`,'epic')}})}catch(e){}}
+{const _crRR=crRun;crRun=function(){const r=_crRR.apply(this,arguments);crRkChk();return r}}
+{const _pyC=passYear;passYear=function(){const r=_pyC.apply(this,arguments);crRkChk();return r}}
+// 6) กล่องเปิด/ซ่อนชีวิตในทำเนียบ: ปุ่มอ่านง่ายขึ้น
+pvBtns=function(v,fn){return`<div class="pvSeg">${[1,0,2].map(k=>`<button class="${v===k?'on':''}" onclick="${fn}(${k})"><span>${PV_T[k][0]}</span><b>${PV_T[k][1]}</b></button>`).join('')}</div>`};
+(()=>{const st=document.createElement('style');st.textContent=`.pvSeg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.pvSeg button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:64px;padding:6px 4px;border:2px solid var(--line);border-radius:12px;background:transparent;color:var(--ink,inherit);font:inherit;cursor:pointer;transition:background .2s,border-color .2s,transform .12s}
+.pvSeg button span{font-size:22px;line-height:1}.pvSeg button b{font-size:12.5px;line-height:1.25;text-align:center}.pvSeg button:active{transform:scale(.96)}
+.pvSeg button.on{border-color:var(--pink,#f0c860);background:color-mix(in srgb,var(--pink,#f0c860) 22%,transparent);box-shadow:0 0 10px color-mix(in srgb,var(--pink,#f0c860) 35%,transparent)}`;document.head.appendChild(st)})();
+try{if($('lifePriv'))lifePrivBox()}catch(e){}
+
+function lsGive(g){const b=lifeMax();S.lifespan+=g;S._lsEx=(S._lsEx||0)+g;const got=lifeMax()-b;if(got<g)S.rvL=(S.rvL||0)+(g-Math.max(0,got))}
+// ยาอายุวัฒนะ (ร้านระบบเดิม): แดนเทพ/ยุคปัจจุบันใช้ได้จริง · ไม่ถูกลดตามกฎยาซ้อน
+{const _bsL=buySys;buySys=function(id){if(id!=='life'||!S||!S.sys)return _bsL.apply(this,arguments);const ls0=S.lifespan,L0=lifeMax(),sp0=S.sys.sp;const r=_bsL.apply(this,arguments);try{if(S.sys.sp<sp0){const add=S.lifespan-ls0;if(add>0){if(mwOn&&mwOn()){S.lifespan=ls0;S.mw.end+=add}else if(S.xt){S.lifespan=ls0;const g=Math.max(add,Math.round(L0*.02));S.glExtra=(S.glExtra||0)+g}else{S.lifespan=ls0;lsGive(add)}log(`<span class="px">[ระบบ]</span> ⏳ อายุขัยตอนนี้ ${fmt(lifeMax())} ปี`,'sys');try{render()}catch(e){}}}}catch(e){console.error(e)}return r}}
 
 </script>
 </body>
