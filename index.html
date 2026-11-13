@@ -19557,6 +19557,79 @@ function brdRestyle(){try{const m=$('modal');if(!m||m.dataset.k!=='online'||m.qu
  const seen={};for(const c of S.children){if(!c||!c.n)continue;if(seen[c.n]&&c.alive!==false&&nw.includes(c)){const g=c.g||'ชาย';for(let i=0;i<6&&seen[c.n];i++){try{const sur=surOf();c.n=(sur?sur+' ':'')+anyName(g).split(' ').slice(-1)[0]}catch(e){break}}}seen[c.n]=1}
  S._kSeen=S.kids||0;S._kLen=S.children.length;return r}catch(e){console.error(e);return _sfK.apply(this,arguments)}}}
 {const _rnK=render;render=function(){try{if(S&&S._kSeen==null){S._kSeen=S.kids||0;S._kLen=(S.children||[]).length}}catch(e){}return _rnK.apply(this,arguments)}}
+// ===================== 🌐 หน้าออนไลน์/ทำเนียบ — UI กระชับ =====================
+const ONL_NAV={chat:['💬','แชท'],live:['👁','ดูสด'],board:['🏆','ทำเนียบ'],arena:['🏟️','ลาน'],me:['⚙️','']};
+const ONL_PER={'รายวัน':'วัน','รายสัปดาห์':'สัปดาห์','รายเดือน':'เดือน','ตลอดกาล':'ตลอดกาล','สัปดาห์นี้':'สัปดาห์'};
+function onlReset(p){const n=Date.now(),t=new Date(n+7*3600e3);let e;
+ if(p==='d')e=Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate()+1);
+ else if(p==='w'){const wd=(t.getUTCDay()+6)%7;e=Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate()+7-wd)}
+ else if(p==='m')e=Date.UTC(t.getUTCFullYear(),t.getUTCMonth()+1,1);else return '';
+ const s=Math.max(0,(e-7*3600e3-n)/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);
+ return d?`${d} วัน ${h} ชม.`:h?`${h} ชม. ${m} น.`:`${m} น.`}
+function onlUI(){try{const m=$('modal');if(!m||m.dataset.k!=='online')return;
+ m.querySelectorAll('.onRst').forEach(x=>{const r=x.previousElementSibling;if(!r||r.style.display==='none')x.remove()});
+ // 1) แท็บหลัก → แถบนำทางแถวเดียว
+ let nav=m.querySelector(':scope>.tabs');if(nav&&nav.querySelectorAll('.tabb').length<4)nav=null;
+ if(nav&&!nav.classList.contains('onNav')){nav.classList.add('onNav');nav.querySelectorAll('.tabb').forEach(b=>{const oc=b.getAttribute('onclick')||'',k=/openLiveList/.test(oc)?'live':(oc.match(/openOnline\('(\w+)'\)/)||[])[1];const L=ONL_NAV[k];if(!L)return;b.innerHTML=`<i>${L[0]}</i>${L[1]?`<span>${L[1]}</span>`:''}`;if(k==='me'){b.classList.add('onMe');b.title='ชื่อที่แสดง'}})}
+ const rows=[...m.querySelectorAll('.tabs')].filter(r=>r!==nav&&r.style.display!=='none');
+ const isPer=r=>[...r.querySelectorAll('.tabb')].some(b=>/รายวัน|ตลอดกาล|สัปดาห์นี้/.test(b.textContent));
+ const isWorld=r=>[...r.querySelectorAll('.tabb')].some(b=>/ยุทธภพ/.test(b.textContent));
+ const world=rows.find(isWorld);
+ // 2) แถบเลือกทำเนียบ: เลื่อนแนวนอน วางไว้บนสุด
+ if(world&&!world.classList.contains('onStrip')&&!window._rgOpening){world.classList.add('onStrip');const per0=rows.find(r=>isPer(r)&&!r.closest('.rgbbox')&&r.compareDocumentPosition(world)&Node.DOCUMENT_POSITION_FOLLOWING);if(per0&&!window._rgOpening)per0.before(world);
+  const on=world.querySelector('.tabb.on');if(on)setTimeout(()=>{try{world.scrollLeft=Math.max(0,on.offsetLeft-world.clientWidth/2+on.offsetWidth/2)}catch(e){}},0)}
+ // 3) ช่วงเวลา → ปุ่มแบ่งช่อง + เวลารีเซ็ต
+ rows.filter(isPer).forEach(r=>{if(r.classList.contains('onSeg'))return;r.classList.add('onSeg');r.querySelectorAll('.tabb').forEach(b=>{const t=b.textContent.replace(/^[^฀-๿]+/,'').trim();if(ONL_PER[t])b.textContent=ONL_PER[t]});
+  const on=r.querySelector('.tabb.on');const oc=on?(on.getAttribute('onclick')||''):'';const p=(oc.match(/_bp='(\w)'/)||oc.match(/openRgBoard\('(\w+)'\)/)||[])[1];const tx=onlReset(p);
+  if(tx){const w=document.createElement('div');w.className='onRst';w.innerHTML=`⏳ สรุปอันดับใน <b>${tx}</b>`;r.after(w)}});
+ // 4) คำอธิบายยาว → พับเก็บ
+ [...m.querySelectorAll('p.tag2')].forEach(p=>{if(p.closest('.onInfo,.item,.chhead,.rgbr'))return;const t=p.textContent;if(!(/แยกตามโลก|ทำเนียบผู้ย้อนกาล —|คะแนนคิดจาก/.test(t)))return;const d=document.createElement('details');d.className='onInfo';d.innerHTML='<summary>ℹ️ กติกาและวิธีคิดคะแนน</summary>';p.replaceWith(d);d.appendChild(p)});
+ // 5) แผงรางวัล → แถวเดียว แตะเพื่อกาง
+ const rw=[...m.querySelectorAll('.brdrw,.chhead,.rgbbox>.item')].filter(x=>!x.closest('.onRw')&&/รางวัล|ผู้ท้าลิขิต/.test(x.textContent));
+ rw.forEach(x=>{let top='';try{const bp=(m.querySelector('.onSeg .tabb.on')||{}).textContent||'';const k=/สัปดาห์/.test(bp)?'w':/เดือน/.test(bp)?'m':'d';const ch=x.classList.contains('chhead');const amt=x.textContent.match(/☯️\s*([\d,]+)/);top=amt?amt[1]:(BD_KBP&&BD_KBP[k]?fmt(BD_KBP[k][1]):'')}catch(e){}
+  const chip=(x.querySelector('.rkchip')||{}).outerHTML||'';const d=document.createElement('details');d.className='onRw'+(x.classList.contains('chhead')?' onRwCh':'');
+  d.innerHTML=`<summary><span class="onRwL">🎁 <b>${x.classList.contains('chhead')?'ทำเนียบผู้ท้าลิขิต':'รางวัลอันดับ 1–3'}</b></span><span class="onRwC">${chip}</span><span class="onRwR">${top?`☯️ ${top}`:''}<i>▾</i></span></summary>`;x.replaceWith(d);d.appendChild(x)});
+ {const rws=m.querySelectorAll('details.onRw');const last=rws[rws.length-1];if(last)m.querySelectorAll('details.onInfo').forEach(d=>{if(d.compareDocumentPosition(last)&Node.DOCUMENT_POSITION_FOLLOWING)last.after(d)})}
+ // 6) อันดับ 4 ลงไป → แถวกระชับ
+ const list=[...m.querySelectorAll('.item.brd')];let i=0;list.forEach(el=>{let prev=false,p=el.previousElementSibling;while(p){if(p.tagName==='H4'){prev=/สามอันดับแรก/.test(p.textContent);break}p=p.previousElementSibling}if(prev||i++>=3){el.classList.add('onCompact');const pp=el.querySelector(':scope>p.tag2');if(pp&&!pp.dataset.cj){pp.dataset.cj=1;pp.querySelectorAll('br').forEach(b=>b.replaceWith(' · '))}}});
+ m.querySelectorAll('.rgbr').forEach((el,k)=>{if(k>=3)el.classList.add('onCompact')});
+}catch(e){console.error(e)}}
+// จำทำเนียบที่เปิดล่าสุด
+{const _ooU=openOnline;openOnline=async function(tab){
+ try{if((tab||'chat')==='board'&&!window._rgOpening&&!onlUI._rs){onlUI._rs=1;const v=LS.get('murim_lbrd',null),bp=LS.get('murim_lbrp',null);if(bp&&openOnline._bp==null)openOnline._bp=bp;if(v==='rg'&&typeof openRgBoard==='function')return openRgBoard();if(v!=null&&v!==''&&openOnline._bw==null&&!isNaN(+v))openOnline._bw=+v}}catch(e){}
+ const r=await _ooU.apply(this,arguments);
+ try{if((tab||'chat')==='board'&&!window._rgOpening){if(openOnline._bw!=null)LS.set('murim_lbrd',String(openOnline._bw));if(openOnline._bp)LS.set('murim_lbrp',openOnline._bp)}}catch(e){}
+ try{onlUI()}catch(e){}return r}}
+if(typeof openRgBoard==='function'){const _orU=openRgBoard;openRgBoard=async function(){window._rgOpening=1;onlUI._rs=1;let r;try{r=await _orU.apply(this,arguments)}finally{window._rgOpening=0}try{LS.set('murim_lbrd','rg')}catch(e){}try{onlUI()}catch(e){}return r}}
+// เผื่อส่วนอื่นวาดเพิ่มทีหลัง
+(()=>{let t=0;const mo=new MutationObserver(()=>{const m=$('modal');if(!m||m.dataset.k!=='online')return;cancelAnimationFrame(t);t=requestAnimationFrame(onlUI)});const go=()=>{const m=$('modal');if(m)mo.observe(m,{childList:true,subtree:true});else setTimeout(go,500)};go()})();
+(()=>{const st=document.createElement('style');st.textContent=`
+#modal .tabs.onNav{flex-wrap:nowrap;gap:4px;background:var(--w);border:2px solid var(--line);border-radius:14px;padding:4px;margin:8px 0 10px}
+#modal .onNav .tabb{flex:1 1 0;min-width:0;border:0;border-radius:10px;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:.78em;line-height:1.15;background:transparent}
+#modal .onNav .tabb i{font-style:normal;font-size:1.35em}#modal .onNav .tabb.onMe{flex:0 0 42px;justify-content:center}
+#modal .onNav .tabb.on{background:var(--pink);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+#modal .tabs.onStrip{flex-wrap:nowrap;overflow-x:auto;gap:6px;padding:2px 2px 6px;margin:4px -4px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+#modal .onStrip::-webkit-scrollbar{display:none}
+#modal .onStrip .tabb{flex:0 0 auto;border-radius:999px;padding:6px 12px;font-size:.84em;scroll-snap-align:center}
+#modal .tabs.onSeg{flex-wrap:nowrap;gap:3px;border:2px solid var(--line);border-radius:12px;padding:3px;margin:4px 0 2px;background:var(--w)}
+#modal .onSeg .tabb{flex:1 1 0;border:0;border-radius:9px;padding:6px 2px;font-size:.84em;background:transparent;text-align:center}
+#modal .onSeg .tabb.on{background:var(--pink);font-weight:700}
+#modal .onRst{font-size:.74em;opacity:.75;text-align:right;margin:2px 4px 8px}
+#modal details.onInfo{margin:2px 0 8px;font-size:.92em}#modal details.onInfo>summary{cursor:pointer;font-size:.8em;opacity:.75;list-style:none;padding:2px 4px}
+#modal details.onInfo>summary::-webkit-details-marker,#modal details.onRw>summary::-webkit-details-marker{display:none}
+#modal details.onInfo[open]>summary{opacity:1}
+#modal details.onRw{border:2px solid #ffc23a88;border-radius:12px;margin:4px 0 10px;background:linear-gradient(90deg,#ffc23a1f,transparent 70%);overflow:hidden}
+#modal details.onRwCh{border-color:#ff6a3a99;background:linear-gradient(90deg,#ff4a2a26,transparent 70%)}
+#modal details.onRw>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:8px 10px;font-size:.88em}
+#modal .onRwL{white-space:nowrap}#modal .onRwC{flex:1;min-width:0;overflow:hidden;display:flex}#modal .onRwC .rkchip{transform:scale(.85);transform-origin:left center;white-space:nowrap}
+#modal .onRwR{white-space:nowrap;font-weight:700;display:flex;gap:6px;align-items:center}#modal .onRwR i{font-style:normal;transition:transform .2s;opacity:.7}
+#modal details.onRw[open] .onRwR i{transform:rotate(180deg)}#modal details.onRw[open]>summary{border-bottom:1px dashed #ffc23a66}
+#modal details.onRw>.item,#modal details.onRw>.chhead{margin:0;border:0!important;border-radius:0}
+#modal .item.brd.onCompact{padding:7px 12px;margin-bottom:6px}#modal .item.brd.onCompact .rgbt{font-size:10.5px;opacity:.85;margin:0}
+#modal .item.brd.onCompact .h b{font-size:13.5px}#modal .item.brd.onCompact .px{font-size:13.5px}
+#modal .item.brd.onCompact>p.tag2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px;margin:1px 0 0}
+#modal .rgbr.onCompact{padding-top:6px;padding-bottom:6px;min-height:0}#modal .rgbr.onCompact .rgbt{font-size:10.5px}#modal .rgbr.onCompact .tag2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#modal .rgbr.onCompact .rgbm{min-width:0}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
