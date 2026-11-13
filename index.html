@@ -460,8 +460,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='17.5';
+const VERSION='17.6';
 const CHANGELOG=[
+ {v:'17.6',d:'13 พ.ย. 2026',l:['🌟 <b>ปรับชื่อขั้นพลังตามมังฮัวเซียนจีน</b> — โลกเทพเปลี่ยนชื่อเป็นลำดับเซียน: เซียนแท้ → เซียนทอง → เซียนหยกไท่อี่ → เซียนทองไท่อี่ → เซียนทองต้าหลัว → กึ่งปราชญ์ → ปราชญ์เต๋า → บรรพชนเต๋า (พลังและเงื่อนไขเหมือนเดิมทุกอย่าง แค่เปลี่ยนชื่อ)','☁️ <b>โลกเซียนครบ 10 ขั้น</b> — เพิ่ม ฝึกความว่าง และ รวมกาย ระหว่างแปรวิญญาณกับมหายาน ต้องฝ่าคอขวดกลางขั้นถึงจะได้ชื่อใหม่ · ฝึกปราณแบ่งเป็นชั้น 1–9','⭐ ขั้นย่อยใช้ชื่อแบบมังฮัว: ขั้นต้น → ขั้นกลาง → ขั้นปลาย → สมบูรณ์','✨ หลังขั้นสูงสุดแสดงเป็นดาว เช่น "บรรพชนเต๋า · ชั้นราชา ★2" ไม่สับสนกับชื่อขั้นอีก','🏹 จุดมุ่งหมายใหม่: ออกล่า — สู้ปีละ 3–6 ศึก ได้วัตถุดิบช่าง · เควสระบบเป้าแฟร์ขึ้น รางวัลตามความยาก สุ่มเควสใหม่ฟรีทุก 10 ปี','🔨 งานช่าง: หลอมอาวุธเข้าคลังชุด ค่าเป็น % ของพลัง · สูตรขั้น 6–9 · แยกชิ้นส่วน','💠 ระบบยกระดับความหายากได้ · ร้านแต้มมีชั้นสุ่ม ของเพิ่มแบบ % และของหายากชาติละครั้ง · การันตีกาชา 30 ครั้ง','💬 ตอบกลับแชทได้ทุกคน · 🗳️ โพลขึ้นบนเกาะพร้อมผลโหวต']},
  {v:'17.5',d:'13 พ.ย. 2026',l:['🏝️ <b>Dynamic Island</b> — แจ้งเตือนทุกอย่างรวมเป็นเกาะเดียวด้านบน ยืดหดตามเรื่อง · ปลดล็อก/ทะลวงขั้น/ประมูล/อัปเดต/เลือดต่ำ ขยายเป็นการ์ดมีปุ่มกด · เลือกหน้าตาได้ 4 แบบ (📜 ป้ายคัมภีร์ · 🟢 ป้ายหยก · 🌀 ลมปราณ · ⚫ ดำเรียบ) และใช้กรอบโปรไฟล์ที่ใส่อยู่เป็นขอบเกาะได้','👆 เล่นกับเกาะ: กดค้างเพื่อขยาย · ปัดซ้าย/ขวาดูเรื่องในคิว · ปัดแรงๆ โยนทิ้ง · ดึงลงดูแจ้งเตือนย้อนหลัง 20 อัน · แตะ 5 ครั้งมีของซ่อน · 🔕 เงียบ 10 นาที · ตั้งตำแหน่ง บน/ล่าง/ลอย และขนาดตัวหนังสือได้','📍 <b>ชิปข้างชื่อ</b> — 🤖 ออโต้ · ⏩ ข้ามเวลา · 🏛️ ประมูลเปิด · 💬 แชทใหม่ · 👁 คนดู · 🔥 คอมโบดวงดี · ❤️ หัวใจเต้นเมื่อเลือดต่ำ · แตะชิปเพื่อเปิด','📜 ตัวเลือกที่ย่อไว้ เลือกจากเกาะได้เลย · 🌅 สรุปสิ่งที่เกิดขึ้นตอนกลับมาเล่น · 🏆 บอกอันดับทำเนียบเมื่อจบชีวิต · เกาะเปลี่ยนตามฤดูและสภาพอากาศในเกม · แจ้งเตือนของเครื่องตอนปิดแท็บ (เปิดในตั้งค่าเกาะ)','🏛️ ประมูลทั่วยุทธภพ: เวลาต่อชิ้นนานขึ้นเป็น <b>25 วินาที</b> · แก้จังหวะเปลี่ยนชิ้นที่ค้างและกินเวลา · แสดงเวลาตรงกับที่เซิร์ฟเวอร์จะปิดจริง','🛠️ แก้หมวดเนื้อเรื่องในหน้าดูคนอื่นเล่นที่เด้งกลับหน้าภาพรวม และอื่นๆ']},
  {v:'17.4',d:'13 พ.ย. 2026',l:['⚡ <b>การ์ดทางลัด (กดค้าง)</b> — กดค้างปุ่มควบคุมในเกม (▶ 🎒 📋 🤖 ⏭ 📜 ☰ ความเร็ว และแถบปี) จะมีการ์ดเด้งขึ้นให้ลากนิ้วเลือกได้ทันที: เล่นต่อ 1/5 ปีแล้วหยุด · หยุดเองเมื่อมีเหตุการณ์สำคัญหรือเลือดต่ำ · ใช้ยาด่วน · ดูเควส · ตั้งค่าออโต้ · ข้าม 1/5/10 ปีหรือจนทะลวงขั้น · กรองบันทึก · หน้าที่เปิดบ่อย · เซฟ','🏠 หน้าแรก: กดค้าง <b>▶ เล่นต่อ</b> เลือกช่องเซฟ · กดค้าง <b>🎲 เกิดใหม่</b> เปลี่ยนโลก/ความเร็ว/โหมดแล้วเกิดได้ทันที มี 🔁 เกิดแบบเดิม และ 🎲 สุ่มทุกอย่าง · ลากข้ามระหว่างสองปุ่มได้','☰ <b>เมนูใหม่</b> — 🔍 ค้นหาเมนู · ⭐ เปิดบ่อยของคุณ · พับหมวดได้ · จุดแดงบอกของที่รออยู่ · กดค้างแล้วลากกรอบทองไปเปิดหน้าที่ต้องการ','🟨 <b>กรอบทองไหล</b> ทั่วทั้งเว็บ — ตัวเลือกเหตุการณ์ ท่าในการดวล หน้าเลือกทายาท/ตอนเกิด และกล่องตัวเลือกต่างๆ กดค้างแล้วลากเลือกได้ (ลากออกนอกแล้วปล่อย = ยกเลิก)','⏳ ชะตาตัดสินแทน: 3 วินาทีสุดท้ายมีกรอบบอกล่วงหน้าว่าชะตาจะเลือกข้อไหน · ✌️ ตั้งให้ตัวเลือกเสี่ยงตายต้องแตะ 2 ครั้งเพื่อยืนยันได้','🛠️ ปรับปรุงการกดค้างบนมือถือให้ลื่นและตรงขึ้น ทุกขนาดหน้าจอ และอื่นๆ · ชอบแบบเก่ากด ☰ → 🫧 แท็บ']},
  {v:'17.3',d:'13 พ.ย. 2026',l:['🫧 <b>แท็บแบบลื่น</b> — แตะแล้วกรอบไหลไป หรือกดที่กรอบแล้วลากเลือกตามนิ้วแบบ iPhone ใช้ได้ทุกหน้า รวมถึงตัวเลือกหน้าเกิดและแถบล่างหน้าแรก · แถบการฝึกในเกม: กดค้างแล้วลาก · ปุ่มความเร็ว: กดค้างเพื่อเลือก 1×–16× · ชอบแบบเก่ากด ☰ → 🫧 แท็บ เพื่อสลับ (แถบล่างแบบแคปซูลรวมอยู่ในปุ่มนี้แล้ว)','🏆 <b>หน้าทำเนียบใหม่</b> — ปุ่มเหลือแถวเดียว ปัดเลือกทำเนียบ · บอกเวลาที่เหลือก่อนสรุปอันดับ · รางวัลและกติกาพับเก็บได้ · อันดับ 4 ลงไปแสดงแบบกระชับ · จำทำเนียบที่เปิดล่าสุด','🔁 <b>ทำเนียบผู้ย้อนกาล</b> แยกต่างหาก มีรายวัน/สัปดาห์/เดือน/ตลอดกาล · อันดับ 1–3 ได้กรอบและฉายาเฉพาะ','🛠️ แก้บั๊ก: ทัณฑ์สวรรค์แดนเทพไม่ขึ้นแม้พลังถึง · ลูกที่เกิดใหม่ไปซ้ำกับลูกที่ล่วงลับ (หน้าครอบครัวบอกพ่อ/แม่ของลูกแต่ละคนแล้ว) และอื่นๆ']},
@@ -2788,7 +2789,7 @@ function ascendTick(){if(realmIdx()<7||S.flags.ascendNo>=2||S.age<20||Math.rando
 function ascendWave(n){const W=['อัสนีเก้าสาย','เพลิงสวรรค์เผาจิต','มารในใจครั้งสุดท้าย'];
  if(n>3&&!S.xian){S.flags.ascendNo=0;log('☁️ เมฆทัณฑ์แตกออก แสงทองสาดลงมาจากฟ้า ร่างของคุณลอยขึ้นสู่สวรรค์ท่ามกลางสายตาผู้คนนับหมื่น','myth',true);ascendToX();return}
  if(n>3&&S.xian&&!S.xt){S.flags.xImm=1;log('☁️ ทัณฑ์สวรรค์ครั้งสุดท้ายแห่งโลกเซียนสลายไป — เบื้องบนยังมีโลกที่สูงกว่า','myth',true);ascendGod();return}
- if(n>3){S.flags.ascended=1;S.flags.xImm=1;if(S.xt)S.flags.godMax=1;keyAdd('ฝ่าทัณฑ์สวรรค์ครั้งสุดท้าย บรรลุเป็นเซียนอมตะ');setScene('aura');log('☁️ ทัณฑ์สวรรค์ครั้งสุดท้ายสลายไป ประตูสู่ดินแดนเซียนแท้เปิดออก — คุณก้าวข้ามความตายไปตลอดกาล','myth',true);S.deathCause=S.xt?'บรรลุเทพสูงสุด ก้าวข้ามสามภพไปตลอดกาล':'บรรลุเป็นเซียนอมตะ ทะลวงสู่ดินแดนเซียนแท้';S.hp=0;return}
+ if(n>3){S.flags.ascended=1;S.flags.xImm=1;if(S.xt)S.flags.godMax=1;keyAdd('ฝ่าทัณฑ์สวรรค์ครั้งสุดท้าย บรรลุเป็นเซียนอมตะ');setScene('aura');log('☁️ ทัณฑ์สวรรค์ครั้งสุดท้ายสลายไป ประตูสู่ดินแดนเซียนแท้เปิดออก — คุณก้าวข้ามความตายไปตลอดกาล','myth',true);S.deathCause=S.xt?'บรรลุบรรพชนเต๋า ก้าวข้ามสามภพไปตลอดกาล':'บรรลุเป็นเซียนอมตะ ทะลวงสู่ดินแดนเซียนแท้';S.hp=0;return}
  const p=n===3?clamp(.5+S.karma/250,.25,.9):clamp(.55+(S.maxHp-300)/600+S.qi/800,.3,.92);
  if(Math.random()<p){log(`⚡ ระลอกที่ ${n}: ${W[n-1]} — ผ่าน!`,'epic');if(auto)ascendWave(n+1);else choice(`⚡ ทัณฑ์สวรรค์ระลอกที่ ${n+1}`,`ผ่าน${W[n-1]}มาได้ พลังชีวิตเหลือ ${Math.round(S.hp)}`,[{t:'ไปต่อ',f(){ascendWave(n+1)}}])}
  else{S.hp-=R(60,120);if(S.hp<=0)S.deathCause=`สลายไปในทัณฑ์สวรรค์ระลอกที่ ${n}`;else{S.flags.ascendNo=(S.flags.ascendNo||0)+1;log(`⚡ ${W[n-1]}ฟาดคุณร่วงลงจากฟ้า รอดมาได้อย่างปาฏิหาริย์`,'bad')}}}
@@ -3082,11 +3083,11 @@ function profTick(){if(!S.xian)return false;const p=S.prof;
  return false}
 const profFightM=()=>S.prof&&S.prof.t==='array'?1+S.prof.lv*.04:1;
 // ---- 11. หลายชั้นโลก ----
-const XGOD=['เทพฝึกหัด','เทพจริง','เทพสวรรค์','จ้าวเทพ','ราชาเทพ','จักรพรรดิเทพ','เทพบรรพกาล','เทพสูงสุด'];const XGP=[0,1000,3600,10000,28000,72000,168000,360000];
+const XGOD=['เซียนแท้','เซียนทอง','เซียนหยกไท่อี่','เซียนทองไท่อี่','เซียนทองต้าหลัว','กึ่งปราชญ์','ปราชญ์เต๋า','บรรพชนเต๋า'];const XGP=[0,1000,3600,10000,28000,72000,168000,360000];
 function setTier(t){S.xt=t;if(t>=1)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});}
 function ascendGod(){S.xt=1;setTier(1);S.faction=null;S.rank=0;S.merit=0;S.smaster=null;S.qi=Math.max(1,S.qi*.1);const rest=total()-S.power;S.power=Math.max(10,REALMS[1].p+80-rest);S.lifespan+=150;S.lastRealm=realmIdx();S.flags.ascendNo=0;
  if(S.spouse){log(`${S.spouse}ส่งคุณขึ้นสู่โลกเทพด้วยรอยยิ้ม — "ข้าจะตามไป"`);S.spouse=null}
- setScene('aura');log('🌟 <b>ทะลวงสู่โลกเทพ</b> — เซียนอมตะที่ไร้เทียมทานในโลกเซียน ที่นี่เป็นเพียงเทพฝึกหัด','myth',true);keyAdd('เหาะจากโลกเซียนสู่โลกเทพ');S.flags.toGod=1;render()}
+ setScene('aura');log('🌟 <b>ทะลวงสู่โลกเทพ</b> — เซียนอมตะที่ไร้เทียมทานในโลกเซียน ที่นี่เป็นเพียงเซียนแท้','myth',true);keyAdd('เหาะจากโลกเซียนสู่โลกเทพ');S.flags.toGod=1;render()}
 // ---- 13. สัตว์พันธสัญญาเติบโต ----
 const PET_LV=['ลูกอ่อน','วัยรุ่น','สัตว์อสูร','สัตว์ศักดิ์สิทธิ์','สัตว์เทพ'];
 const petM=()=>S.pet&&S.pet.spirit?1+(S.pet.lv||0)*.06:1;
@@ -6281,14 +6282,14 @@ try{Object.assign(I18N.d,{'ก่อนเกิดใหม่':'Before rebirth
 const RS_SUB=['ระดับต่ำ','ระดับกลาง','ระดับสูง','ใกล้เลื่อนขั้น','สมบูรณ์'],RS_PFX=['เทพ','ราชา','บรรพกาล','ราชัน','นิรันดร์'],RS_G=1.27,RS_MAX=44;
 function rsG(){try{return S&&S.xian&&!S.xt?1.15:RS_G}catch(e){return RS_G}}
 function rsPF(L){const pf=RS_PFX[Math.max(0,Math.min(RS_PFX.length-1,Math.floor(L/9)))]||'',n=REALMS[7].n||'';return n.startsWith(pf)?'มหา':pf}
-function rsPN(L){return rsPF(L)+REALMS[7].n}
+function rsPN(L){return REALMS[7].n+' · ชั้น'+(RS_PFX[Math.max(0,Math.min(RS_PFX.length-1,Math.floor(L/9)))]||'')}
 function postP(L){return REALMS[7].p*Math.pow(rsG(),L+1)}
 function postRaw(){const top=REALMS[7].p,p=total();if(p<postP(0))return -1;return Math.min(RS_MAX,Math.floor(Math.log(p/top)/Math.log(rsG()))-1)}
 function postLv(){if(!S||(S.beastMode&&!S.beastMode.human)||realmIdx()<7||S.pcap==null)return -1;return Math.min(postRaw(),S.pcap)}
 function realmSub(){if(!S)return 0;const ri=realmIdx(),p=total();let lo,hi,blocked;
  if(ri<7){blocked=rawRealm()>ri;lo=REALMS[ri].p;hi=REALMS[ri+1].p}else{const L=postLv();blocked=postRaw()>L&&L<RS_MAX;lo=L<0?REALMS[7].p:postP(L);hi=L>=RS_MAX?lo*rsG():postP(L+1)}
  if(blocked)return 4;const f=(p-lo)/Math.max(1,hi-lo);return f<.3?0:f<.6?1:f<.88?2:3}
-function realmLabel(){const ri=realmIdx(),L=postLv();const mx=L>=RS_MAX;return{base:L>=0?`${rsPN(L)} ขั้น ${L%9+1}`:REALMS[ri].n,sub:mx?'จุดสูงสุด':RS_SUB[realmSub()],si:mx?4:realmSub(),L,tier:L>=0?Math.floor(L/9):-1}}
+function realmLabel(){const ri=realmIdx(),L=postLv();const mx=L>=RS_MAX;return{base:L>=0?`${rsPN(L)} ★${L%9+1}`:REALMS[ri].n,sub:mx?'จุดสูงสุด':RS_SUB[realmSub()],si:mx?4:realmSub(),L,tier:L>=0?Math.floor(L/9):-1}}
 function realmNext(){const ri=realmIdx();if(ri<7)return REALMS[ri+1].p;const L=postLv();return L>=RS_MAX?null:postP(L+1)}
 function qiDev(tier){const m=(S.talent&&S.talent.m)||1,dv=Math.max(.03,Math.min(.45,(.12+(S.btFail||0)*.03-(S.int||0)/700-((S.happy||60)-50)/600-(m-1)*.05+((S.karma||0)<-100?.05:0))*(tier?1.5:1)));if(Math.random()>=dv)return;
  const r=Math.random();S.flags.qiDev=(S.flags.qiDev||0)+1;setScene('fight');
@@ -6300,8 +6301,8 @@ function postTick(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human)||realmIdx
  if(t%9!==0&&bagHas&&bagHas('brk')&&bagUse('brk')){S.pcap=t;S.btFail=0;postUp(t,'🎒 กลืนยาทะลวงขั้น ');return}
  const p=Math.max(.05,Math.min(.9,(tier?.3:.6)+(m-1)*.08+((S.int||0)-60)/600+((S.happy||60)-50)/500+Math.min(.1,(S.qi||0)/2000)-t/45*.15+(S.btFail||0)*.05+(S.sys?.05:0)));
  if(Math.random()<p){S.pcap=t;S.btFail=0;postUp(t,'');return}
- S.btFail=(S.btFail||0)+1;S.hp-=Math.round(S.maxHp*.1);const nm=`${rsPN(t)} ขั้น ${t%9+1}`;log(`💢 พยายามทะลวงสู่<b>${nm}</b> แต่ล้มเหลว <span class="tag2">(โอกาส ${Math.round(p*100)}%)</span>`,'bad');qiDev(tier)}
-function postUp(t,pre){const nm=`${rsPN(t)} ขั้น ${t%9+1}`;if(t%9===0){setScene('aura');log(`${pre}🌌 พลังทะลุขีดจำกัดของโลก — ก้าวสู่ชั้น <b>${rsPF(t)}</b> · ${nm} ฟ้าดินสั่นสะเทือน`,'myth',true)}else log(`${pre}⭐ ทะลวงสู่<b>${nm}</b>`,'epic')}
+ S.btFail=(S.btFail||0)+1;S.hp-=Math.round(S.maxHp*.1);const nm=`${rsPN(t)} ★${t%9+1}`;log(`💢 พยายามทะลวงสู่<b>${nm}</b> แต่ล้มเหลว <span class="tag2">(โอกาส ${Math.round(p*100)}%)</span>`,'bad');qiDev(tier)}
+function postUp(t,pre){const nm=`${rsPN(t)} ★${t%9+1}`;if(t%9===0){setScene('aura');log(`${pre}🌌 พลังทะลุขีดจำกัดของโลก — ก้าวสู่ชั้น <b>${rsPF(t)}</b> · ${nm} ฟ้าดินสั่นสะเทือน`,'myth',true)}else log(`${pre}⭐ ทะลวงสู่<b>${nm}</b>`,'epic')}
 {const _py13=passYear;passYear=function(){const r=_py13.apply(this,arguments);try{if(S&&S.alive&&!(S.beastMode&&!S.beastMode.human)){postTick();const si=realmSub(),k=realmIdx()*100+postLv();if(S.rsK===k&&si>(S.rsS||0)&&si<4)log(`🔹 ลมปราณมั่นคงขึ้น — ${realmLabel().base} <b>${RS_SUB[si]}</b>`,'');if(S.rsK!==k||si>(S.rsS||0)){S.rsK=k;S.rsS=si}}}catch(e){console.error(e)}return r}}
 function rsHTML(){const l=realmLabel();return`<b>${l.base}</b> <span class="rsub rs${l.si}">${l.sub}</span>`}
 {const _rd3=render;render=function(){const r=_rd3.apply(this,arguments);try{if(S&&!(S.beastMode&&!S.beastMode.human)&&$('gRealm')){const nx=realmNext();$('gRealm').innerHTML=`${S.xian?'☁':'⚔'} ${rsHTML()} · พลังรวม <span class="px">${fmt(total())}</span>${nx?` / ${fmt(Math.round(nx))}`:''}`;xFix(['gRealm'])}}catch(e){}return r}}
@@ -7142,7 +7143,7 @@ function tribStats(t,k){const T=tribT(k||'r',t),m=(S.talent&&S.talent.m)||1,n=v=
  const sc=parts.reduce((a,x)=>a+x[1],0)/parts.length;return{sc,parts}}
 function tribOdds(t,k){const T=tribT(k,t),st=tribStats(t,k),pr=(S.tribPrep||0)*.06+(S.tribPill||0),minor=k==='p'&&t%9!==0;return{st,ps:clamp(.14+.62*st.sc+pr+(S.btFail||0)*.03-T*.012+(minor?.08:0),.05,.92),pd:clamp((.64-.75*st.sc-pr*.4+T*.006)*(minor?.4:1),.02,.75)}}
 function tribGrade(sc){return sc<.3?['กาก','#d84a4a']:sc<.5?['พอใช้','#e8a23a']:sc<.7?['ดี','#5fb85f']:['ยอดเยี่ยม','#4aa3ff']}
-function tribName(k,t){return k==='r'?REALMS[t].n:`${rsPN(t)} ขั้น ${t%9+1}`}
+function tribName(k,t){return k==='r'?REALMS[t].n:`${rsPN(t)} ★${t%9+1}`}
 function godTrib(k,t){if(choice._cur||modalOpen)return;if(S.tribNext!=null&&S.age<S.tribNext)return;const nm=tribName(k,t),o=tribOdds(t,k),[gn,gc]=tribGrade(o.st.sc),risk=Math.round((1-o.ps)*o.pd*100);
  const bars=o.st.parts.map(([a,v])=>`${a} ${'▰'.repeat(Math.round(v*5))}${'▱'.repeat(5-Math.round(v*5))}`).join(' · ');
  const opts=[{t:'⚡ ฝ่าทัณฑ์สวรรค์ตอนนี้',s:`ผ่านราว ${Math.round(o.ps*100)}% · ถ้าพลาด ตายราว ${Math.round(o.pd*100)}% (รวมเสี่ยงตาย ~${risk}%)`,f(){tribGo(k,t)}}];
@@ -7619,7 +7620,7 @@ function qgNote(perf,skip){return skip?'':perf>=.9?' · ☯️ รวมปร�
    try{render();checkDeath()}catch(e){}});return}}}}catch(e){console.error(e)}return _bt.apply(this,arguments)}}
 // ขั้นย่อยหลังขั้นสูงสุด (ไม่ใช่โลกเทพ)
 {const _pt=postTick;postTick=function(){try{if(S&&S.alive&&!S.beastMode&&!S.xt&&realmIdx()>=7&&qgOk()&&!(bagHas('brk')&&((S.pcap==null?-1:S.pcap)+1)%9!==0)){if(S.pcap==null)S.pcap=-1;const raw=postRaw();if(raw>S.pcap){const t=S.pcap+1,tier=t%9===0,m=(S.talent&&S.talent.m)||1;
-  const p=Math.max(.05,Math.min(.9,(tier?.3:.6)+(m-1)*.08+((S.int||0)-60)/600+((S.happy||60)-50)/500+Math.min(.1,(S.qi||0)/2000)-t/45*.15+(S.btFail||0)*.05+(S.sys?.05:0))),nm=`${rsPN(t)} ขั้น ${t%9+1}`;
+  const p=Math.max(.05,Math.min(.9,(tier?.3:.6)+(m-1)*.08+((S.int||0)-60)/600+((S.happy||60)-50)/500+Math.min(.1,(S.qi||0)/2000)-t/45*.15+(S.btFail||0)*.05+(S.sys?.05:0))),nm=`${rsPN(t)} ★${t%9+1}`;
   qiGame({title:`ทะลวงสู่${nm}`,sub:tier?'ขีดจำกัดของโลกอยู่ตรงหน้า ปราณต้องรวมให้นิ่งกว่าทุกครั้ง':'รวมปราณให้เป็นหนึ่งเพื่อก้าวขึ้นอีกขั้น',p,diff:actDiff()*(1+t*.02)*(tier?1.15:1)},(ok,perf,pF,skip)=>{if(!S||!S.alive)return;
    if(ok){S.pcap=t;S.btFail=0;postUp(t,'');if(!skip&&perf>=.6)log(`☯️ รวมปราณได้ ${Math.round(perf*100)}%`,'')}
    else{S.btFail=(S.btFail||0)+1;S.hp-=Math.round(S.maxHp*.1);log(`💢 สายปราณแตกกระจาย ทะลวงสู่<b>${nm}</b>ไม่สำเร็จ${qgNote(perf,skip)} <span class="tag2">(โอกาส ${Math.round(pF*100)}%)</span>`,'bad');try{qiDev(tier)}catch(e){}}
@@ -11384,14 +11385,14 @@ const RLM_X=[
  ['🌌','มหายาน · ดึงดวงดาวลงมา','ร่างกายเชื่อมกับดวงดาว คุณฉีกมิติเดินทาง ดึงพลังดาราลงมาทับศัตรู ในคืนที่คุณโกรธ ดาวตกทั่วฟ้า','["ฉีกมิติเดินทางข้ามโลก","ดึงดาวตกลงมาเป็นอาวุธ","อายุขัยนับเป็นพันปี"]','ดวงดาวทุกดวง… คือกระบี่ของข้า','#c0a0ff','#1a1040','Mahayana — pulling down the stars.'],
  ['⚡','ข้ามทัณฑ์ · ท้าทายสวรรค์','ฟ้าไม่ยอมให้คุณเป็นเซียน สายฟ้าเก้าสีเก้าสิบเก้าสายฟาดลงมา — และคุณยืนรับมันด้วยรอยยิ้ม ประตูแห่งสวรรค์สั่นไหว','["ยืนรับทัณฑ์สายฟ้าเก้าสี","ร่างกายเกือบเป็นอมตะ","ประตูโลกเทพเปิดรอ"]','สวรรค์… ถ้าอยากหยุดข้า ก็ลงมาเองสิ','#ffffff','#5040a0','Tribulation Transcendence — defying heaven itself.']];
 const RLM_G=[
- ['✨','เทพฝึกหัด','ร่างกายถูกหลอมด้วยเปลวไฟเทพ ปราณกลายเป็นพลังเทพ แต่ในโลกเทพ… คุณยังเป็นเพียงผู้มาใหม่','["พลังเทพไหลแทนปราณ","ร่างไม่แก่ไม่โรย","มองเห็นเส้นด้ายแห่งโชคชะตา"]','จุดเริ่มต้นอีกครั้ง… ก็ดี','#f0e0a0','#806020','Novice God — reborn in divine fire.'],
- ['🔆','เทพแท้','แสงเทพเปล่งออกจากผิวกาย ทุกย่างก้าวทิ้งรอยดอกบัวทองบนพื้น สัตว์อสูรหมอบเมื่อคุณเดินผ่าน','["ก้าวเดินทิ้งรอยบัวทอง","แสงเทพขับไล่สิ่งชั่วร้าย","เข้าใจภาษาสรรพสัตว์"]','แสงนี้ไม่ใช่ของใคร… เป็นของข้า','#fff0a0','#a08020','True God — golden lotus blooms where you walk.'],
- ['☁️','เทพสวรรค์','ครองฟ้าหนึ่งชั้น สร้างวังเมฆของตนเอง สายฝนในโลกเบื้องล่างตกตามดำริ','["สร้างวังบนฟ้าได้ด้วยจิต","กำหนดฤดูกาลของแคว้น","ประทานพรให้มนุษย์"]','ชั้นฟ้านี้ ข้าเป็นผู้กำหนด','#a0e0ff','#2060a0','Heavenly God — ruler of a sky.'],
- ['👁️','จ้าวเทพ','ดวงตาเทพที่สามเปิดออก มองทะลุอดีตและอนาคตของสรรพสิ่ง เทพนับร้อยมาคุกเข่าเป็นบริวาร','["ดวงตาที่สามมองทะลุกาลเวลา","บัญชาเทพนับร้อย","อ่านกรรมของผู้อื่นได้"]','อนาคตของเจ้า… ข้าเห็นหมดแล้ว','#ffa0a0','#802040','God Lord — the third eye opens.'],
- ['👑','ราชาเทพ','หนึ่งโลกทั้งใบอยู่ในฝ่ามือ ดวงดาวโคจรตามจังหวะหัวใจ เมื่อคุณขมวดคิ้ว สุริยะยังหรี่แสง','["ถือโลกทั้งใบไว้ในฝ่ามือ","ดวงดาวโคจรตามหัวใจ","สร้างชีวิตจากธุลี"]','ดวงดาวทั้งหลาย… จงหมุนไปตามข้า','#ffd080','#904010','God King — a world in your palm.'],
- ['🌠','จักรพรรดิเทพ','ทางช้างเผือกคือเสื้อคลุม คุณจุดดาวดวงใหม่ด้วยปลายนิ้ว และดับมันด้วยลมหายใจ อาณาจักรเทพนับพันโค้งคำนับ','["จุดดาวดวงใหม่ด้วยปลายนิ้ว","ดับดวงอาทิตย์ด้วยลมหายใจ","ทางช้างเผือกคือเสื้อคลุม"]','ดาวดวงนั้นสว่างเกินไป… ดับเสีย','#d0a0ff','#301060','God Emperor — kindling and extinguishing stars.'],
- ['🗿','เทพบรรพกาล','อยู่มาก่อนที่จักรวาลนี้จะมีชื่อ คุณหยุดเวลาได้หนึ่งอึดใจ ย้อนแม่น้ำแห่งกาลเวลาได้หนึ่งก้าว','["หยุดกาลเวลาได้หนึ่งอึดใจ","ย้อนแม่น้ำกาลเวลา","จดจำจักรวาลก่อนหน้านี้"]','ก่อนที่ฟ้าจะมีชื่อ… ข้าอยู่ที่นี่แล้ว','#c0c0c0','#303040','Primordial God — before the universe had a name.'],
- ['♾️','เทพสูงสุด','เขียนกฎสวรรค์ได้ด้วยปลายพู่กัน คุณประกาศว่า "ที่นี่ห้ามตาย" — และความตายก็หลีกทาง ทุกสรรพสิ่งคือบทกวีที่คุณแต่ง','["เขียนกฎสวรรค์ใหม่ได้","สร้างและทำลายจักรวาล","ความตายต้องขออนุญาต"]','กฎสวรรค์ข้อใหม่… ข้าเป็นคนเขียน','#ffffff','#000000','Supreme God — writing the laws of heaven.']];
+ ['✨','เซียนแท้','ร่างกายถูกหลอมด้วยเปลวไฟเทพ ปราณกลายเป็นพลังเทพ แต่ในโลกเทพ… คุณยังเป็นเพียงผู้มาใหม่','["พลังเทพไหลแทนปราณ","ร่างไม่แก่ไม่โรย","มองเห็นเส้นด้ายแห่งโชคชะตา"]','จุดเริ่มต้นอีกครั้ง… ก็ดี','#f0e0a0','#806020','Novice God — reborn in divine fire.'],
+ ['🔆','เซียนทอง','แสงเทพเปล่งออกจากผิวกาย ทุกย่างก้าวทิ้งรอยดอกบัวทองบนพื้น สัตว์อสูรหมอบเมื่อคุณเดินผ่าน','["ก้าวเดินทิ้งรอยบัวทอง","แสงเทพขับไล่สิ่งชั่วร้าย","เข้าใจภาษาสรรพสัตว์"]','แสงนี้ไม่ใช่ของใคร… เป็นของข้า','#fff0a0','#a08020','True God — golden lotus blooms where you walk.'],
+ ['☁️','เซียนหยกไท่อี่','ครองฟ้าหนึ่งชั้น สร้างวังเมฆของตนเอง สายฝนในโลกเบื้องล่างตกตามดำริ','["สร้างวังบนฟ้าได้ด้วยจิต","กำหนดฤดูกาลของแคว้น","ประทานพรให้มนุษย์"]','ชั้นฟ้านี้ ข้าเป็นผู้กำหนด','#a0e0ff','#2060a0','Heavenly God — ruler of a sky.'],
+ ['👁️','เซียนทองไท่อี่','ดวงตาเทพที่สามเปิดออก มองทะลุอดีตและอนาคตของสรรพสิ่ง เทพนับร้อยมาคุกเข่าเป็นบริวาร','["ดวงตาที่สามมองทะลุกาลเวลา","บัญชาเทพนับร้อย","อ่านกรรมของผู้อื่นได้"]','อนาคตของเจ้า… ข้าเห็นหมดแล้ว','#ffa0a0','#802040','God Lord — the third eye opens.'],
+ ['👑','เซียนทองต้าหลัว','หนึ่งโลกทั้งใบอยู่ในฝ่ามือ ดวงดาวโคจรตามจังหวะหัวใจ เมื่อคุณขมวดคิ้ว สุริยะยังหรี่แสง','["ถือโลกทั้งใบไว้ในฝ่ามือ","ดวงดาวโคจรตามหัวใจ","สร้างชีวิตจากธุลี"]','ดวงดาวทั้งหลาย… จงหมุนไปตามข้า','#ffd080','#904010','God King — a world in your palm.'],
+ ['🌠','กึ่งปราชญ์','ทางช้างเผือกคือเสื้อคลุม คุณจุดดาวดวงใหม่ด้วยปลายนิ้ว และดับมันด้วยลมหายใจ อาณาจักรเทพนับพันโค้งคำนับ','["จุดดาวดวงใหม่ด้วยปลายนิ้ว","ดับดวงอาทิตย์ด้วยลมหายใจ","ทางช้างเผือกคือเสื้อคลุม"]','ดาวดวงนั้นสว่างเกินไป… ดับเสีย','#d0a0ff','#301060','God Emperor — kindling and extinguishing stars.'],
+ ['🗿','ปราชญ์เต๋า','อยู่มาก่อนที่จักรวาลนี้จะมีชื่อ คุณหยุดเวลาได้หนึ่งอึดใจ ย้อนแม่น้ำแห่งกาลเวลาได้หนึ่งก้าว','["หยุดกาลเวลาได้หนึ่งอึดใจ","ย้อนแม่น้ำกาลเวลา","จดจำจักรวาลก่อนหน้านี้"]','ก่อนที่ฟ้าจะมีชื่อ… ข้าอยู่ที่นี่แล้ว','#c0c0c0','#303040','Primordial God — before the universe had a name.'],
+ ['♾️','บรรพชนเต๋า','เขียนกฎสวรรค์ได้ด้วยปลายพู่กัน คุณประกาศว่า "ที่นี่ห้ามตาย" — และความตายก็หลีกทาง ทุกสรรพสิ่งคือบทกวีที่คุณแต่ง','["เขียนกฎสวรรค์ใหม่ได้","สร้างและทำลายจักรวาล","ความตายต้องขออนุญาต"]','กฎสวรรค์ข้อใหม่… ข้าเป็นคนเขียน','#ffffff','#000000','Supreme God — writing the laws of heaven.']];
 const RLM_P=[['🔱','ชั้นเทพ','ทะลุขีดจำกัดของโลกนี้ พลังเกินกว่าที่ฟ้าดินจะรองรับ ทุกครั้งที่ทะลวงขั้น แผ่นดินไหวทั่วทวีป','["ทะลุขีดจำกัดที่โลกกำหนด","แผ่นดินไหวทุกครั้งที่ทะลวงขั้น","ฟ้าดินเริ่มเกรงกลัว"]','ขีดจำกัด… มีไว้ให้ทำลาย','#ffd060','#904000','God Tier — beyond the world\'s limit.'],
  ['👑','ชั้นราชา','พลังกลายเป็นอาณาเขต รอบตัวคุณพันลี้คือ "โลกของข้า" ที่กฎทุกข้อเป็นไปตามใจ','["สร้างอาณาเขตพันลี้ที่กฎเป็นของคุณ","ศัตรูในอาณาเขตอ่อนแรง","เรียกวิญญาณบรรพชนมาช่วยรบ"]','ที่นี่… คืออาณาเขตของข้า','#ff9060','#802010','King Tier — a domain of your own law.'],
  ['🗿','ชั้นบรรพกาล','พลังย้อนไปถึงต้นกำเนิดของฟ้าดิน หมัดหนึ่งแยกทะเล ฝ่ามือหนึ่งปิดดวงอาทิตย์','["หมัดเดียวแยกทะเล","ฝ่ามือบดบังดวงอาทิตย์","สัมผัสต้นกำเนิดของเต๋า"]','ข้าคือเสียงสะท้อนจากวันที่ฟ้าแยกจากดิน','#c0a080','#403020','Primordial Tier — the origin of heaven and earth.'],
@@ -11521,7 +11522,7 @@ function toggleRlmPop(){LS.set('murim_rlmpop',rlmOn()?0:1);toast(rlmOn()?'🎬 �
 .rlmtag{background:linear-gradient(90deg,var(--ce),#222)!important;color:#fff!important;cursor:pointer;font-weight:700;box-shadow:0 0 8px var(--ce)}
 .rlmhint{font-size:.85em;opacity:.7}`;document.head.appendChild(st)})();
 // ---------- ความสำเร็จ + คู่มือ ----------
-{const L=[{id:'rl_el',n:'ธาตุตื่น',d:'ปลุกวิถีธาตุประจำตัว',r:1,c:()=>!!(S.rlm&&S.rlm.el)},{id:'rl_hw',n:'สามบุปผาบนศีรษะ',d:'ถึงฮวากยองในยุทธภพ',r:3,c:()=>!S.xian&&!S.beastMode&&realmIdx()>=5},{id:'rl_ns',n:'วิญญาณแยกร่าง',d:'ถึงก่อกำเนิดวิญญาณในโลกเซียน',r:3,c:()=>!!S.xian&&!S.xt&&realmIdx()>=4},{id:'rl_star',n:'ผู้ดึงดวงดาว',d:'ถึงมหายานในโลกเซียน',r:4,c:()=>!!S.xian&&!S.xt&&realmIdx()>=6},{id:'rl_emp',n:'ผู้จุดดวงดาว',d:'ถึงจักรพรรดิเทพ',r:5,c:()=>!!S.xt&&realmIdx()>=5},{id:'rl_law',n:'ผู้เขียนกฎสวรรค์',d:'ถึงเทพสูงสุด',r:6,c:()=>!!S.xt&&realmIdx()>=7}];ACH.push(['📜 ตำนานระดับพลัง',L]);ACH_ALL.push(...L)}
+{const L=[{id:'rl_el',n:'ธาตุตื่น',d:'ปลุกวิถีธาตุประจำตัว',r:1,c:()=>!!(S.rlm&&S.rlm.el)},{id:'rl_hw',n:'สามบุปผาบนศีรษะ',d:'ถึงฮวากยองในยุทธภพ',r:3,c:()=>!S.xian&&!S.beastMode&&realmIdx()>=5},{id:'rl_ns',n:'วิญญาณแยกร่าง',d:'ถึงก่อกำเนิดวิญญาณในโลกเซียน',r:3,c:()=>!!S.xian&&!S.xt&&realmIdx()>=4},{id:'rl_star',n:'ผู้ดึงดวงดาว',d:'ถึงมหายานในโลกเซียน',r:4,c:()=>!!S.xian&&!S.xt&&realmIdx()>=6},{id:'rl_emp',n:'ผู้จุดดวงดาว',d:'ถึงกึ่งปราชญ์',r:5,c:()=>!!S.xt&&realmIdx()>=5},{id:'rl_law',n:'ผู้เขียนกฎสวรรค์',d:'ถึงบรรพชนเต๋า',r:6,c:()=>!!S.xt&&realmIdx()>=7}];ACH.push(['📜 ตำนานระดับพลัง',L]);ACH_ALL.push(...L)}
 try{const _gc={s:'grow',t:'คัมภีร์ระดับพลังและวิถีธาตุ',te:'Realm codex & elemental path',ic:'📜',d:'ทุกขั้นมีพลังของมันเอง: ยุทธภพ (ขั้นสาม → แซงซากยอง เหนือความเป็นความตาย) · โลกเซียน (ฝึกปราณ → เหาะบนกระบี่ → แก่นทอง → วิญญาณแยกร่าง → สั่งฟ้าบัญชาฝน → ดึงดวงดาว → ท้าทายสวรรค์) · โลกเทพ (จุดดาว ดับดวงอาทิตย์ หยุดเวลา เขียนกฎสวรรค์) · เมื่อทะลวงขั้นจะมี<b>ฉากทะลวงขั้น</b>บอกพลังที่ตื่นขึ้น (ปิดได้) · ถึงขั้นหนึ่ง/แก่นทอง จะได้เลือก<b>วิถีธาตุ</b> 12 แบบ (เพลิง อัสนี น้ำแข็ง วายุ ปฐพี ดารา ราตรี สุริยะ ความว่างเปล่า โลหิต กระบี่ พฤกษา) ได้โบนัสทุกครั้งที่ทะลวงขั้น และได้<b>ฉายา</b>ที่เปลี่ยนไปตามระดับ · กดที่ชื่อระดับบนหน้าจอเพื่อเปิดคัมภีร์',de:'Every realm grants its own powers — from iron bones to commanding storms, pulling down stars and rewriting heaven\'s laws. Breakthroughs play a cinematic scene (toggleable). At First-Rate / Golden Core you awaken one of 12 elemental paths, gaining a bonus on every breakthrough and an evolving epithet. Tap your realm name to open the codex.'};const _gi=GD2.findIndex(x=>x.ic==='⭐'&&x.s==='grow');GD2.splice(_gi>=0?_gi+1:GD2.length,0,_gc);SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}catch(e){}
 
 
@@ -20903,6 +20904,25 @@ function sysReroll(i){const s=S.sys;if(!s||!s.quests[i])return;if(s.rrY!=null&&S
 (()=>{const st=document.createElement('style');st.textContent=`#chatBox .cm .cmh{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px}
 #chatBox .cm .cmh .rep{float:none!important;margin:0!important;order:10}#chatBox .cm .cmh .rep.cmtag,#chatBox .cm .cmh .rep.rpl{order:9;margin-left:auto!important}
 #chatBox .cm .cmh:not(:has(.cmtag)):not(:has(.rpl)) .rep{margin-left:auto!important}`;document.head.appendChild(st)})();
+
+
+// ===================== ขั้นพลังแบบมังฮัว: ขั้นย่อย · ฝึกปราณชั้น 1–9 · โลกเซียนครบ 10 ขั้น (แบ่งครึ่งขั้น 5 และ 6) =====================
+RS_SUB.splice(0,RS_SUB.length,'ขั้นต้น','ขั้นกลาง','ขั้นปลาย','สมบูรณ์','สมบูรณ์');
+const XSPL={5:['แปรวิญญาณ','ฝึกความว่าง'],6:['รวมกาย','มหายาน']};
+const xsOn=()=>S&&S.xian&&!S.xt&&!(S.beastMode&&!S.beastMode.human);
+function xFrac(ri){const lo=REALMS[ri].p,hi=REALMS[ri+1]?REALMS[ri+1].p:lo*2;return Math.max(0,Math.min(1,(total()-lo)/Math.max(1,hi-lo)))}
+const subOf=f=>f<.3?0:f<.6?1:f<.88?2:3;
+{const _rlX=realmLabel;realmLabel=function(){const r=_rlX.apply(this,arguments);try{if(xsOn()&&r.L<0){const ri=realmIdx();
+ if(ri===1){const f=xFrac(1),n=r.si===4?9:Math.max(1,Math.min(9,Math.floor(f*9)+1));r.sub=`ชั้น ${n}${r.si===4?' · สมบูรณ์':''}`}
+ else if(XSPL[ri]){const pass=!!(S.xsp&&S.xsp[ri]),f=xFrac(ri);r.base=XSPL[ri][pass?1:0];if(r.si!==4){const ff=pass?(f-.5)/.5:Math.min(1,f/.5);r.si=pass||f<.5?subOf(Math.max(0,ff)):3;r.sub=!pass&&f>=.5?'สมบูรณ์ · รอฝ่าคอขวด':RS_SUB[r.si]}}}}catch(e){}return r}}
+function xSplitTick(){try{if(!xsOn()||!S.alive)return;const ri=realmIdx();if(!XSPL[ri])return;S.xsp=S.xsp||{};if(S.xsp[ri])return;if(xFrac(ri)<.5)return;
+ const m=(S.talent&&S.talent.m)||1,p=Math.max(.15,Math.min(.85,.45+(m-1)*.1+(S.int||0)/1500+Math.min(.1,(S.qi||0)/3000)+(S.xspF||0)*.05)),nm=XSPL[ri][1];
+ if(Math.random()<p){S.xsp[ri]=1;S.xspF=0;const ls=ri===5?300:600;S.lifespan+=ls;try{setScene('aura')}catch(e){}log(`☁️ <b>ฝ่าคอขวดสู่${nm}</b> — ${ri===5?'วิญญาณหลอมเข้ากับความว่างเปล่า ร่างเลือนหายแล้วปรากฏได้ตามใจ':'ร่างและวิญญาณหลอมรวมเป็นหนึ่ง ทุกอณูของกายคือปราณ'} · อายุขัย +${ls} ปี`,'myth',true);keyAdd('ฝ่าคอขวดสู่'+nm);try{cdxAdd('realm','xs'+ri)}catch(e){}}
+ else{S.xspF=(S.xspF||0)+1;S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.12));log(`💢 พยายามฝ่าคอขวดสู่<b>${nm}</b> แต่ปราณแตกซ่าน <span class="tag2">(โอกาส ${Math.round(p*100)}% · ครั้งหน้าง่ายขึ้น)</span>`,'bad')}}catch(e){console.error(e)}}
+{const _pyX=passYear;passYear=function(){const r=_pyX.apply(this,arguments);try{xSplitTick()}catch(e){}return r}}
+{const _cxX=cxCats;cxCats=function(){const r=_cxX.apply(this,arguments);try{const c=r.find(x=>x&&x.cat==='realm'&&/โลกเซียน/.test(x.t||''));if(c&&!c.L.some(z=>z[0]==='xs5')){const i5=c.L.findIndex(z=>z[0]==='x5');if(i5>=0)c.L.splice(i5+1,0,['xs5','ฝึกความว่าง',1]);const i6=c.L.findIndex(z=>z[0]==='x6');if(i6>=0)c.L.splice(i6,0,['xs6','รวมกาย',1])}}catch(e){}return r}}
+// คัมภีร์ระดับพลัง: ชื่อโลกเซียน
+try{RLM_X[5][1]='แปรวิญญาณ → ฝึกความว่าง · สั่งฟ้าบัญชาฝน';RLM_X[6][1]='รวมกาย → มหายาน · ดึงดวงดาวลงมา'}catch(e){}
 
 </script>
 </body>
