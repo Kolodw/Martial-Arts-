@@ -21658,6 +21658,132 @@ window._hdq=[];
 setInterval(()=>{try{if(hellDue()||!window._hdq.length||choice._cur||modalOpen)return;const [t,a]=window._hdq.shift();choice.apply(t,a)}catch(e){}},900);
 
 {const _xsH=xStep;xStep=function(){const r=_xsH.apply(this,arguments);try{const h=typeof hellInfo==='function'?hellInfo():null;if(h&&h.lv<18&&h.next>S.age)return Math.max(1,Math.min(r,h.next-S.age))}catch(e){}return r}}
+
+// ===================== 🀄 วิถียุทธ์: ถอนหมั้น · บัญชีแค้น · ซ่อนพลัง · ตัวตนลับ · เปลวไฟสวรรค์ · ดวงวิญญาณอาวุธ · หลอมกาย · มารในใจ =====================
+const WX={};const wxOk=()=>!!(S&&S.alive&&!(S.beastMode&&!S.beastMode.human)&&!(typeof mwOn==='function'&&mwOn()));
+const wxFree=()=>wxOk()&&!choice._cur&&!modalOpen;
+const wxW=()=>S.xt?'g':S.xian?'x':'w';
+const wxGen=()=>S.gender==='หญิง'?'ชาย':'หญิง';
+const wxSur=()=>ch(['ซ่ง','หลิว','มู่','เยี่ยน','ไป๋','ฉิน','หลัว','ซู','หาน','เว่ย','ตงฟาง','ซือหม่า']);
+// ---------- 2) บัญชีแค้น ----------
+function grudges(){return S.grudge=S.grudge||[]}
+function grudgeAdd(n,why,pw,src){try{if(!wxOk()||!n)return;const L=grudges();const o=L.find(x=>x.n===n&&!x.done);if(o){o.why=why;o.pw=Math.max(o.pw,pw);return}if(L.filter(x=>!x.done).length>=12)return;
+ L.push({n:String(n).slice(0,30),why:String(why).slice(0,80),pw:Math.max(10,Math.round(pw)),y:S.age,src:src||'',done:0});log(`📕 จดชื่อ <b>${esc(n)}</b> ลงบัญชีแค้น — ${esc(why)}`,'')}catch(e){}}
+{const _fgW=fight;fight=function(name,ep){const sp=wsp();if(sp&&wxOk())ep=ep/(1+.035*sp.lv);if(S&&S.body&&S.body.lv)ep=ep/(1+.02*S.body.lv);const w=_fgW.call(this,name,ep);
+ try{if(!w&&wxOk()&&name&&!/สัตว์|อสูร|หมาป่า|เสือ|งู|หมี|อินทรี|แมงป่อง|ฝูง|มังกร|ผี|วิญญาณ|ภูต|มาร\b|ทัณฑ์|เงา|ผู้คุม|นรก|หุ่น/.test(name)&&Math.random()<.35)grudgeAdd(name,'เคยเอาชนะคุณจนต้องคลานกลับบ้าน',ep*1.1,'fight')}catch(e){}return w}}
+function grudgeTick(){const L=grudges();L.forEach(g=>{if(!g.done)g.pw=Math.round(g.pw*(1.02+Math.random()*.03))});
+ const live=L.filter(x=>!x.done);if(live.length&&Math.random()<.04&&wxFree()){const g=ch(live);const w=fight(g.n,g.pw);
+  if(w){g.done=1;S.fame+=Math.round(60+g.pw/Math.max(1,total())*80);log(`🗡️ <b>${esc(g.n)}</b> ตามมาถึงหน้าบ้านเพื่อปิดบัญชีเก่า — แต่คนที่ล้มลงคือเขา · ขีดฆ่าชื่อออกจากบัญชีแค้น`,'epic',true);keyAdd('ชำระแค้นกับ'+g.n)}
+  else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.35));log(`🩸 <b>${esc(g.n)}</b> บุกมาหาเรื่องถึงที่ และคุณยังสู้ไม่ได้ — แค้นนี้ยังไม่จบ`,'bad')}}}
+function grudgeGo(i){const g=grudges()[i];if(!g||g.done)return;if(choice._cur)return toast('ตัดสินใจเรื่องที่ค้างก่อน');closeM();
+ duel(g.n,g.pw,w=>{if(w){g.done=1;const f=Math.round(80+g.pw/Math.max(1,total())*120);S.fame+=f;joy(12);log(`⚔️ ชำระแค้นกับ <b>${esc(g.n)}</b> สำเร็จ — ${esc(g.why)} ... บัดนี้หมดหนี้กันแล้ว · ชื่อเสียง +${fmt(f)}`,'epic',true);keyAdd('ชำระแค้นกับ'+g.n);try{qqShow&&Math.random()<.5&&qqShow('kill')}catch(e){}}
+  else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));joy(-6);log(`💢 ไปทวงแค้น <b>${esc(g.n)}</b> แต่พ่ายกลับมา — เขายิ้มเยาะว่า "กลับไปฝึกอีกสิบปี"`,'bad')}render();checkDeath()})}
+// ---------- 1) ถอนหมั้น ----------
+function betroOffer(){if(S.flags.betro||S.age<15||S.age>19||S.spouse||!wxFree()||Math.random()>.1)return;S.flags.betro=1;const sur=wxSur(),nm=sur+' '+anyName(wxGen()).split(' ').pop(),fam='ตระกูล'+sur,elder='ผู้อาวุโส'+anyName('ชาย').split(' ').pop();
+ WX.b={nm,fam};
+ choice('📜 หนังสือหมั้นถูกโยนกลางโถง',`${elder}แห่ง<b>${fam}</b>เดินเข้าบ้านคุณพร้อมคนติดตามเต็มลาน ไม่นั่ง ไม่ดื่มชา — วางหนังสือหมั้นที่ปู่ของสองตระกูลเคยเซ็นไว้ลงบนโต๊ะ แล้วพูดเสียงดังพอให้เพื่อนบ้านได้ยิน<br><br>"<b>${esc(nm)}</b>เป็นอัจฉริยะของตระกูลเรา ส่วนคน<b>${esc(S.family.n)}</b>... ไม่คู่ควร วันนี้เรามาถอนหมั้น"<br><span class="tag2">${esc(nm)}ยืนอยู่ข้างหลัง ไม่สบตาคุณ</span>`,[
+  {t:'📅 "อีกสามปี ข้าจะไปหาเจ้าที่ประตูตระกูล"',s:'สาบานต่อหน้าทุกคน · ถ้าแข็งแกร่งพอตอนครบกำหนด จะได้พลิกกลับ',f(){const tr=Math.max(total()*2.6,(REALMS[Math.min(REALMS.length-1,realmIdx()+1)]||{p:total()*3}).p);S.vow={nm,fam,by:S.age+3,tp:Math.round(tr)};joy(-8);keyAdd(`ถูก${fam}ถอนหมั้น — สาบานนัดสามปี`);log(`📅 คุณฉีกหนังสือหมั้นด้วยมือตัวเอง "สามปีจากนี้ ข้าจะไปยืนที่ประตู${fam} แล้วค่อยดูว่าใครไม่คู่ควร" · ต้องมีพลังราว <b>${fmt(S.vow.tp)}</b> ภายในอายุ ${S.vow.by}`,'epic',true);grudgeAdd(nm,`ถอนหมั้นกลางโถงบ้าน — นัดกันไว้อีกสามปี`,S.vow.tp*.8,'betro')}},
+  {t:'🍵 รับไว้เงียบๆ',s:'ไม่มีเรื่อง · แต่คนในเมืองนินทาไปอีกนาน',f(){joy(-12);S.int+=4;S.fame=Math.max(0,S.fame-20);log(`🍵 คุณรินชาให้${elder}ทั้งที่มือสั่น แล้วคืนหนังสือหมั้นให้ไปโดยไม่พูดอะไร — คืนนั้นคุณนั่งอยู่ลานฝึกจนเช้า`,'bad')}},
+  {t:'🔥 "ถอนหมั้นหรือ — ข้าเป็นฝ่ายถอนเอง"',s:'ชิงฉีกก่อน · ได้หน้าคืนวันนี้ แต่ได้ศัตรูทั้งตระกูล',f(){S.fame+=40;joy(4);log(`🔥 คุณหยิบพู่กันเขียนทับหนังสือหมั้นว่า "<b>เลิก</b>" แล้วยื่นคืน "ฝากบอกคนของตระกูลด้วยว่า คน${esc(S.family.n)}เป็นฝ่ายไม่เอาเอง" · เสียงหัวเราะดังทั่วลาน`,'epic');grudgeAdd(elder+' แห่ง'+fam,'อับอายต่อหน้าคนทั้งเมืองเพราะคุณ',total()*1.6,'betro')}}])}
+function vowTick(){const v=S.vow;if(!v||v.done||S.age<v.by||!wxFree())return;v.done=1;const ok=total()>=v.tp;
+ if(!ok){S.fame=Math.max(0,Math.round(S.fame*.7));joy(-18);log(`🥀 ครบสามปีแล้ว คุณยังไม่แข็งแกร่งพอจะไปยืนที่ประตู${esc(v.fam)} — ข่าวลือว่า "คนที่ถูกถอนหมั้นไม่กล้าไป" แพร่ไปทั่ว`,'bad',true);return}
+ setScene('fight');choice(`⛩️ ประตู${v.fam} — ครบสามปี`,`คุณมาถึงตรงเวลาตามที่สาบาน ลานหน้าประตูมีคนมุงแน่น ทั้งคนที่มาดูคุณแพ้และคนที่มาดูคุณชนะ<br><b>${esc(v.nm)}</b>ก้าวออกมา สายตาไม่เหมือนสามปีก่อน`,[
+  {t:'⚔️ ประลองต่อหน้าทุกคน',s:'ตามสัญญา',f(){duel(v.nm,Math.round(total()*.78),w=>{if(w){S.fame+=Math.round(300+S.fame*.15);joy(25);keyAdd(`กลับไปชนะ${v.nm}ที่ประตู${v.fam}ตามนัดสามปี`);const g=grudges().find(x=>x.n===v.nm);if(g)g.done=1;
+     choice('🙇 หลังศึก',`${esc(v.nm)}คุกเข่าข้างหนึ่ง ลมหายใจหอบ ผู้อาวุโสของ${esc(v.fam)}ที่เคยโยนหนังสือหมั้นยืนหน้าซีดอยู่บนบันได`,[
+      {t:'🤝 ยื่นมือดึงขึ้น',s:'จบกันด้วยดี',f(){S.karma+=15;log(`🤝 "สามปีก่อนเจ้าไม่ได้เลือกเอง ข้ารู้" — คุณดึง${esc(v.nm)}ขึ้นยืน คนทั้งลานเงียบ แล้วเสียงปรบมือก็ดังขึ้นทีละคน`,'epic',true);if(!S.spouse&&Math.random()<.35){log(`💌 หลายเดือนต่อมา มีจดหมายจาก${esc(v.nm)}มาถึง — ลายมือเรียบร้อยกว่าที่คิด`,'')}}},
+      {t:'🗣️ หันไปมองผู้อาวุโส',s:'คืนสิ่งที่ได้รับมา',f(){S.fame+=120;S.karma-=5;log(`🗣️ คุณเงยหน้ามองบันได "คนไม่คู่ควรเมื่อสามปีก่อน วันนี้ขอลาไปก่อนนะขอรับ" — ผู้อาวุโสของ${esc(v.fam)}ไม่กล้าออกจากจวนไปหลายเดือน`,'epic',true)}}])}
+    else{S.fame=Math.max(0,Math.round(S.fame*.8));joy(-15);log(`💢 สามปีของคุณยังสั้นกว่าสามปีของ${esc(v.nm)} — คุณพ่ายกลางลาน แต่อย่างน้อยก็มาตามนัด`,'bad',true)}render();checkDeath()})}}])}
+// ---------- 3) ซ่อนพลัง ----------
+function hideOn(){return !!(S&&S.hidePw)}
+function hideTog(){S.hidePw=S.hidePw?0:1;toast(S.hidePw?'🫥 ซ่อนพลังแล้ว — คนอื่นจะเห็นคุณเป็นแค่คนธรรมดา':'💪 เลิกซ่อนพลัง');openWuxia()}
+const YM_N=['คุณชาย','คุณหนู','ศิษย์สายตรง','ทายาทเจ้าเมือง','บุตรผู้อาวุโส'];
+function hideTick(f0){if(!hideOn()||!wxOk())return;const d=S.fame-f0;if(d>0)S.fame=f0+Math.round(d*.6);
+ if(S.age<14||Math.random()>.09||!wxFree())return;const who=ch(YM_N)+anyName(ch(['ชาย','หญิง'])).split(' ').pop(),ep=Math.round(total()*(.55+Math.random()*.3));
+ const sc=ch([`<b>${who}</b>ปัดชามบะหมี่ของคุณตกพื้น "คนไร้ฝีมืออย่างเจ้า นั่งโต๊ะเดียวกับข้าไม่ได้"`,`<b>${who}</b>ขวางทางคุณกลางตลาด แล้วสั่งให้คุณคุกเข่าขอทาง คนรอบข้างหัวเราะ`,`<b>${who}</b>เหยียบเท้าคุณแล้วยิ้ม "ขอโทษ ไม่เห็น — คนไม่มีปราณ มองไม่ค่อยเห็นจริงๆ"`,`<b>${who}</b>แย่งสมุนไพรที่คุณเก็บมาทั้งวัน "ของดีแบบนี้ คนแบบเจ้าใช้ไม่เป็นหรอก"`]);
+ choice('🫥 ไม่มีใครรู้ว่าคุณเป็นใคร',sc+`<br><span class="tag2">${esc(who)}เห็นพลังคุณแค่ระดับคนธรรมดา</span>`,[
+  {t:'😶 ก้มหน้าเดินผ่านไป',s:'ยังซ่อนต่อ · ใจไม่สงบนิดหน่อย',f(){joy(-3);S.int+=1;log('😶 คุณก้มหน้าเดินจากไป มือที่กำแน่นค่อยๆ คลาย — ยังไม่ถึงเวลา')}},
+  {t:'⚡ ปล่อยปราณเพียงหนึ่งส่วน',s:'ตบหน้ากลางที่สาธารณะ · ชื่อเสียงพุ่ง',f(){const w=fight(who,ep);if(w){const g=Math.round(120+S.fame*.08);S.fame+=g;joy(8);log(ch([`⚡ แค่คุณเงยหน้า ลมปราณแผ่ออกเพียงเสี้ยว — ${esc(who)}ทรุดลงคุกเข่าต่อหน้าคนทั้งตลาดโดยที่คุณยังไม่ได้ขยับนิ้ว · ชื่อเสียง +${fmt(g)}`,`⚡ คุณใช้ตะเกียบคู่เดียวปัดกระบี่ของ${esc(who)}หลุดมือ ปักลงพื้นข้างเท้าเขาพอดี "บะหมี่ชามนั้น ราคาสามอีแปะ" · ชื่อเสียง +${fmt(g)}`,`⚡ ${esc(who)}พุ่งเข้ามาเต็มแรง แล้วกระเด็นออกไปไกลกว่าที่วิ่งเข้ามา — ร้านน้ำชาทั้งร้านเงียบกริบ · ชื่อเสียง +${fmt(g)}`]),'epic',true);if(Math.random()<.4)grudgeAdd(who.replace(/^(คุณชาย|คุณหนู)/,'')+' (และผู้อยู่เบื้องหลัง)','ถูกคุณทำให้อับอายกลางเมือง',total()*1.3,'hide')}
+   else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.25));joy(-8);log(`💢 ${esc(who)}แข็งแกร่งกว่าที่คิด — การเปิดเผยพลังครั้งแรกจบลงอย่างน่าอาย`,'bad')}}}])}
+// ---------- 4) ตัวตนลับ ----------
+const ALIAS_T={alch:{ic:'🎭',n:'ปรมาจารย์ปรุงยาสวมหน้ากาก',d:'ขายยาในตลาดใต้ดิน ได้เงินตามฝีมือปรุงยา · เสี่ยงถูกจับได้น้อย'},sw:{ic:'🗡️',n:'นักดาบไร้นาม',d:'รับงานปราบโจรและท้าประลอง ได้ชื่อเสียงลับและเงิน'},kill:{ic:'🌑',n:'มือสังหารเงา',d:'รับงานลอบสังหาร ได้เงินมาก แต่กรรมลด · ถ้าถูกเปิดโปงหนัก'}};
+function aliasMake(t){const nm=(($('alNm')||{}).value||'').replace(/[<>&"'`\\]/g,'').trim().slice(0,20);if(!nm)return toast('ตั้งฉายาก่อน');if(t==='alch'&&!(S.cr&&S.cr.lv&&S.cr.lv.alch>=3))return toast('ฝีมือปรุงยาต้องขั้น 3 ขึ้นไป');
+ S.alias={t,n:nm,f:0,y:S.age,risk:0};log(`${ALIAS_T[t].ic} ใต้หน้ากาก คุณคือ <b>${esc(nm)}</b> — ${ALIAS_T[t].n} ไม่มีใครรู้ว่าเป็นคนเดียวกับ${esc(S.name)}`,'epic');keyAdd('สร้างตัวตนลับ '+nm);openWuxia()}
+function aliasEnd(){if(!S.alias)return;log(`🎭 <b>${esc(S.alias.n)}</b> หายไปจากยุทธภพโดยไม่มีใครรู้ว่าไปไหน — หน้ากากถูกเผาทิ้งในเตา`,'');S.aliasOld=(S.aliasOld||[]).concat([S.alias.n]);S.alias=null;openWuxia()}
+function aliasTick(){const A=S.alias;if(!A||!wxOk())return;const W=S.xt?40:S.xian?6:1;
+ if(A.t==='alch'){const lv=(S.cr&&S.cr.lv&&S.cr.lv.alch)||1;S.money+=Math.round((120+lv*90)*W*(.7+Math.random()*.6));A.f+=lv*6;A.risk+=.004}
+ else if(A.t==='sw'){A.f+=Math.round(20+Math.random()*40);S.money+=Math.round(80*W*(.6+Math.random()));if(Math.random()<.25){const w=fight('โจรที่'+A.n+'ไปปราบ',total()*.7);if(w)A.f+=30}A.risk+=.007}
+ else{S.money+=Math.round(400*W*(.7+Math.random()*.8));S.karma-=2;A.f+=15;A.risk+=.012}
+ if(Math.random()<Math.min(.25,A.risk+A.f/40000)&&wxFree())aliasExposed()}
+function aliasExposed(){const A=S.alias;A.risk=0;const who=ch(['ศิษย์น้องคนหนึ่ง','เด็กขายถั่วหน้าตลาด','สายลับของสำนักคู่แข่ง','คู่ปรับเก่า','หมอยาประจำเมือง']);
+ choice('🎭 มีคนจำได้',`${who}เดินตามคุณกลับบ้านจากตลาดใต้ดิน และเห็นคุณถอดหน้ากาก<br>"<b>${esc(A.n)}</b>... ที่แท้คือท่าน?"`,[
+  {t:'🙂 "ท่านจำคนผิดแล้ว"',s:'ตีหน้าตาย · ใช้ปัญญา',f(){if(roll01(Math.min(.85,.3+S.int/800))){log(`🙂 คุณพูดเรื่องราคาข้าวสารต่อหน้าตาเฉย จน${who}เริ่มไม่แน่ใจในสายตาตัวเอง — ความลับยังอยู่`,'')}else{log(`😬 ${who}ไม่เชื่อ — ข่าวลือว่า${esc(S.name)}คือ${esc(A.n)}เริ่มแพร่`,'bad');A.risk+=.05}}},
+  {t:'🎭 ยอมรับต่อหน้าทุกคน',s:'ชื่อเสียงลับรวมเข้ากับตัวจริง · ปิดตัวตนนี้',f(){const g=Math.round(A.f*.6+50);S.fame+=g;if(A.t==='kill'){S.karma-=20;grudgeAdd('ญาติของเหยื่อ'+A.n,'รู้แล้วว่าใครคือมือสังหารเงา',total()*1.5,'alias')}log(`🎭 คุณถอดหน้ากากต่อหน้าทุกคน — <b>${esc(A.n)}</b>กับ${esc(S.name)}คือคนเดียวกัน · ชื่อเสียง +${fmt(g)}`,'epic',true);keyAdd('เปิดเผยว่าตนคือ '+A.n);S.aliasOld=(S.aliasOld||[]).concat([A.n]);S.alias=null}},
+  {t:'🤫 ขอให้เก็บเป็นความลับ',s:'เสียเงินปิดปาก · กรรมไม่ลด',f(){const c=Math.round(S.money*.15);S.money-=c;log(`🤫 ${who}รับถุงเงิน ${fmt(c)} แล้วสัญญาว่าจะลืมทุกอย่าง — ส่วนจะลืมจริงไหม ไม่มีใครรู้`,'');A.risk+=.02}}])}
+// ---------- 5) เปลวไฟสวรรค์ ----------
+const FLAME=[['ไฟหิ่งห้อยป่าลึก','#9fe870'],['ไฟเทียนวัดร้าง','#ffd27a'],['ไฟใต้บ่อน้ำแข็ง','#9fe0ff'],['ไฟธูปพันปี','#ffb070'],['ไฟเกล็ดมังกรเผือก','#f0f0ff'],['ไฟปากปล่องภูเขาเหล็ก','#ff7a3a'],['ไฟหมอกม่วงหุบมรณะ','#c07aff'],['ไฟน้ำตาหงส์แดง','#ff4a6a'],['ไฟเงาจันทร์ดับ','#8a9aff'],['ไฟรากต้นไม้โลก','#5ad08a'],['ไฟกระดูกจักรพรรดิ','#e8e0c0'],['ไฟอสนีบาตเก้าชั้น','#7ad0ff'],['ไฟทะเลทรายไร้เงา','#ffe070'],['ไฟใต้ทะเลลึก','#3a9aff'],['ไฟดอกบัวดำ','#40304a'],['ไฟทองคำเหลวสวรรค์','#ffc840'],['ไฟผลาญวิญญาณ','#a0ffe0'],['ไฟกาลเวลาแตกร้าว','#d0b0ff'],['ไฟรุ่งอรุณแรก','#ffa0c0'],['ไฟดาวตก','#ffffff'],['ไฟความว่างไร้สี','#cccccc'],['ไฟหัวใจเทพที่ดับ','#ff9050'],['ไฟเริ่มต้นจักรวาล','#ffe0ff'],['ไฟที่ไม่มีชื่อ','#000000']];
+function flames(){return S.flames=S.flames||[]}
+function flameTick(){if(!wxOk()||S.age<16||!wxFree())return;const pr=(S.focus==='adv'||S.focus==='hhunt'?.03:.008)*(S.xian?1.5:1);if(Math.random()>pr)return;
+ const base=S.xt?14:S.xian?7:0,r=Math.min(23,base+Math.floor(Math.pow(Math.random(),1.8)*10));if(flames().includes(r))return;const F=FLAME[r];const risk=Math.max(.05,Math.min(.75,.55+r*.035-(S.qi||0)/(400*(1+base))-(S.body&&S.body.lv||0)*.03));
+ const where=ch(['ก้นหุบเหวที่ไม่มีนกบินผ่าน','ใจกลางภูเขาไฟที่ดับมาพันปี','ใต้แท่นบูชาในวิหารร้าง','ในซากเตาหลอมของสำนักที่ล่มสลาย','ในอกของสัตว์อสูรที่ตายไปนานแล้ว']);
+ setScene('aura');choice(`🔥 เปลวไฟสวรรค์อันดับ ${24-r}`,`ที่${where} คุณเจอเปลวไฟดวงหนึ่งลอยนิ่งอยู่ <b style="color:${F[1]==='#000000'?'#ccc':F[1]}">${F[0]}</b> — อากาศรอบตัวมันบิดเบี้ยว หินใต้มันละลายเป็นแก้ว<br><span class="tag2">กลืนแล้วพลังและฝีมือปรุงยาจะพุ่ง · ถ้าร่างรับไม่ไหว ไฟจะเผาจากข้างใน (เสี่ยงราว ${Math.round(risk*100)}%)</span>`,[
+  {t:'🔥 กลืนเปลวไฟ',s:`เสี่ยง ~${Math.round(risk*100)}% · ลมปราณและหลอมกายช่วยได้`,f(){if(Math.random()>risk){flames().push(r);flames().sort((a,b)=>b-a);S.power+=pctPow(.02+r*.005);S.qi=+(S.qi+2+r*.6).toFixed(1);if(S.cr&&S.cr.xp)S.cr.xp.alch=(S.cr.xp.alch||0)+10+r*2;log(`🔥 เปลวไฟไหลลงคอเหมือนน้ำเหล็กหลอม สามวันสามคืนที่คุณนอนสั่นอยู่ในถ้ำ — แล้ว<b>${F[0]}</b>ก็สงบลงในตันเถียน · พลัง +${Math.round((2+r*.5)*10)/10}% · ลมปราณ +${2+Math.round(r*.6)}`,'myth',true);keyAdd('กลืน'+F[0]);try{cdxAdd('flame','f'+r)}catch(e){}}
+   else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.6));S.qi=Math.max(0,+(S.qi*.85).toFixed(1));log(`💥 ${F[0]}ดิ้นอยู่ในร่างแล้วพุ่งออกทางผิวหนัง ทิ้งรอยไหม้เป็นลายใบไม้ไว้ทั้งแขน — คุณรอดมาได้อย่างหวุดหวิด · ลมปราณ −15%`,'bad',true)}render();checkDeath()}},
+  {t:'🏺 ผนึกใส่ขวดหยกไว้ขาย',s:'ได้เงินก้อนใหญ่ · ไม่เสี่ยง',f(){const c=Math.round((2000+r*r*600)*(S.xt?40:S.xian?6:1));S.money+=c;log(`🏺 คุณผนึก${F[0]}ใส่ขวดหยกสามชั้น — หอประมูลให้ราคา ${fmt(c)}`,'epic')}},
+  {t:'🚶 ไม่แตะต้อง',s:'',skip:true,f(){log(`🚶 คุณถอยออกมาช้าๆ — บางอย่างในโลกนี้ ควรปล่อยไว้ที่เดิม`)}}])}
+{const _ccF=cxCats;cxCats=function(){const L=_ccF.apply(this,arguments);try{L.push({g:'other',ic:'🔥',t:'เปลวไฟสวรรค์',te:'Heavenly flames',cat:'flame',L:FLAME.map((f,i)=>['f'+i,`อันดับ ${24-i} · ${f[0]}`,i>=18])})}catch(e){}return L}}
+// ---------- 6) ดวงวิญญาณอาวุธ ----------
+const WSP_P=[['หยิ่ง','"ท่าเมื่อกี้ช้าไปครึ่งจังหวะ ข้าอายแทน"','"ศัตรูแค่นี้ ไม่ต้องปลุกข้าก็ได้"'],['ขี้บ่น','"ฝนตกอีกแล้ว สนิมจะขึ้นไหมเนี่ย"','"เช็ดข้าด้วยผ้าเนื้อดีหน่อยได้ไหม"'],['อ่อนโยน','"วันนี้ท่านดูเหนื่อย พักเถอะ ข้าเฝ้าให้"','"ข้าจำได้ทุกครั้งที่ท่านไม่ยอมฆ่าคนที่ยอมแพ้"'],['กระหายเลือด','"นานแล้วนะที่ข้าไม่ได้ลิ้มรส..."','"ปล่อยให้ข้านำบ้างสิ"'],['เงียบขรึม','"..."','"เจ้าโตขึ้นแล้ว"']];
+function wsp(){return S&&S.wsp&&S.wsp.on?S.wsp:null}
+function wspTick(){if(!wxOk())return;const w=gearOf('weapon');if(!w){return}S.wsp=S.wsp||{held:0};const sp=S.wsp;sp.held=(sp.wid===w.id?sp.held:0)+1;if(sp.wid!==w.id&&sp.on){wspMove(w);return}sp.wid=w.id;
+ if(!sp.on&&sp.held>=15&&Math.random()<.04&&wxFree()){const p=Math.floor(Math.random()*WSP_P.length);Object.assign(sp,{on:1,lv:1,p,n:ch(['เสี่ยวไป๋','อาเหม่ย','ฉางเฟิง','หนิงซวง','เฮยหลง','ชิงเหลียน','อิ๋งเยว่']),xp:0,wn:w.n});
+  log(`✨ คืนหนึ่ง${esc(w.n)}ส่งเสียงหึ่งในฝัก — มีเสียงหนึ่งพูดขึ้นในหัวคุณ "สิบห้าปีแล้วนะ ไม่คิดจะถามชื่อข้าบ้างหรือ" · ดวงวิญญาณอาวุธ <b>${sp.n}</b> (${WSP_P[p][0]}) ตื่นขึ้น`,'myth',true);keyAdd('ดวงวิญญาณอาวุธ '+sp.n+' ตื่นขึ้น');return}
+ if(sp.on){sp.xp++;if(sp.lv<9&&sp.xp>=8+sp.lv*6){sp.xp=0;sp.lv++;log(`✨ <b>${sp.n}</b>เติบโตขึ้น (ขั้น ${sp.lv}) — ใบดาบสั่นเป็นเสียงเพลงสั้นๆ ก่อนเงียบไป`,'epic')}if(Math.random()<.12)log(`🗡️ ${sp.n}: ${ch(WSP_P[sp.p].slice(1))}`,'')}}
+function wspMove(w){const sp=S.wsp;if(!wxFree()){sp.wid=w.id;return}choice('🗡️ อาวุธใหม่',`คุณได้<b>${esc(w.n)}</b>มา แต่${esc(sp.wn||'อาวุธเก่า')}ที่มี<b>${sp.n}</b>สิงอยู่ยังวางอยู่ข้างเตียง`,[
+  {t:'✨ ย้ายดวงวิญญาณเข้าอาวุธใหม่',s:'ขั้นลดลง 1',f(){sp.wid=w.id;sp.wn=w.n;sp.lv=Math.max(1,sp.lv-1);log(`✨ ${sp.n}ย้ายเข้า${esc(w.n)} "ตัวใหม่หนักกว่าเดิม แต่ก็พอทนได้"`,'epic')}},
+  {t:'🕯️ ปล่อยให้หลับไปกับอาวุธเก่า',s:'',f(){sp.on=0;sp.held=0;sp.wid=w.id;log(`🕯️ ${sp.n}พูดคำสุดท้ายเบาๆ "ใช้ตัวใหม่ให้ดีนะ" แล้วใบดาบเก่าก็เย็นลง`,'')}}])}
+// ---------- 7) หลอมกาย ----------
+const BODY_N=['กายหนังเหนียว','กายเอ็นเหล็ก','กายกระดูกหยก','กายทองแดงหล่อ','กายเหล็กกล้าพันชั้น','กายหยกขาวไม่แตก','กายทองคำอมตะ','กายเพชรวัชระ','กายดาวเหล็กกลางฟ้า','กายที่ฟ้าทำลายไม่ได้'];
+FOCUS.push(['body','🪨','หลอมกาย']);try{ALLF.push(['body','🪨','หลอมกาย'])}catch(e){}try{GH.body='+หลอมกาย · พลังชีวิต'}catch(e){}
+try{FDESC.body=()=>['ฝึกร่างกายแยกจากลมปราณ — ช้ากว่าแต่ทนทาน พลังชีวิตสูงสุดเพิ่ม เจ็บน้อยลงในการต่อสู้','ขึ้นขั้นกายทุกช่วง · ฝึกทั้งกายและปราณสูงพร้อมกันจะได้โบนัส · ช่วยตอนกลืนเปลวไฟสวรรค์']}catch(e){}
+{const _foB=focusOK;focusOK=function(k){if(k==='body'){if(!S||S.age<10)return false;if(S.beastMode&&!S.beastMode.human)return false;if(typeof mwOn==='function'&&mwOn())return false;return true}return _foB.apply(this,arguments)}}
+{const _dfB=doFocus;doFocus=function(){if(S&&S.focus==='body'&&focusOK('body')){const B=S.body=S.body||{lv:0,xp:0};const g=(1.4+Math.random()*1.2)*(S.talent?S.talent.m:1)*(S.faction?1.15:1)*(S.xt?4:S.xian?2:1);B.xp+=g;const pw=Math.round(R(4,9)*(1+Math.min(S.age,100)/60)*(S.talent?S.talent.m:1)*(S.xt?60:S.xian?8:1));S.power+=pw;S.maxHp+=R(1,3);
+  const need=8+B.lv*B.lv*3;let line=ch(['แบกหินขึ้นเขาจนไหล่ถลอกแล้วหายเป็นผิวใหม่','แช่ตัวในน้ำยาเดือดจนผิวแดงก่ำ','ให้ศิษย์น้องเอาไม้ตีทั้งตัวจนไม้หัก','ยืนรับน้ำตกเย็นเฉียบทั้งคืนโดยไม่ใช้ปราณ','วิ่งขึ้นบันไดพันขั้นพร้อมก้อนหินผูกขา']);
+  if(B.lv<BODY_N.length&&B.xp>=need){B.xp-=need;B.lv++;S.maxHp+=20+B.lv*10;S.hp=S.maxHp;log(`🪨 ${line} — กระดูกทั้งร่างลั่นเหมือนประทัด · ก้าวสู่ <b>${BODY_N[B.lv-1]}</b> (หลอมกายขั้น ${B.lv}) · พลังชีวิตสูงสุดเพิ่ม`,'epic',true);keyAdd('หลอมกายถึง'+BODY_N[B.lv-1]);
+   if(B.lv>=5&&(S.qi||0)>=200*B.lv&&!S.flags.bodyQi){S.flags.bodyQi=1;S.power+=pctPow(.05);log('☯️ กายกับปราณที่ฝึกมาคู่กันเริ่มหมุนเป็นวงเดียว — ร่างนี้ไม่เหมือนผู้ฝึกตนคนไหนที่คุณเคยเห็น · พลัง +5%','myth',true)}}
+  else routine('train',line,pw,'พลังยุทธ์');return}return _dfB.apply(this,arguments)}}
+// ---------- 8) มารในใจ ----------
+function demonPast(){const P=[];try{if((S.kills||0)>=30)P.push(['ศพที่เดินได้',`คนที่คุณเคยฆ่า ${fmt(S.kills)} คนยืนเรียงแถวอยู่ในหมอก ไม่มีใครพูด ทุกคนแค่มองคุณ`]);
+ const pd=(S.parents||[]).filter(p=>!p.alive);if(pd.length)P.push(['เสียงที่บ้าน',`${pd[0].role}ของคุณนั่งอยู่ที่โต๊ะกินข้าวเหมือนวันเก่า "ทำไมไม่กลับมาบ้านบ้าง ข้ารอทุกปี"`]);
+ const gr=grudges().filter(x=>!x.done);if(gr.length)P.push(['คนในบัญชีแค้น',`<b>${esc(gr[0].n)}</b>ยืนหัวเราะอยู่บนหลังคา "เจ้าไม่มีวันชนะข้าได้หรอก — ดูสิ มือเจ้ายังสั่นอยู่เลย"`]);
+ if((S.karma||0)<-40)P.push(['เหยื่อที่ไม่มีชื่อ','เด็กคนหนึ่งยื่นมือที่เปื้อนเลือดมาหาคุณ "ท่านจำข้าไม่ได้ใช่ไหม ข้าก็จำหน้าท่านไม่ได้เหมือนกัน"']);
+ if(S.vow&&S.vow.done&&S.vow.nm)P.push(['หนังสือหมั้น',`<b>${esc(S.vow.nm)}</b>ยื่นหนังสือหมั้นฉบับเดิมมาให้ "ถ้าวันนั้นท่านไม่ฉีก ชีวิตเราจะเป็นอย่างไรนะ"`]);
+ if((S.children||[]).some(c=>!c.alive))P.push(['เปลว่าง','เสียงเด็กร้องดังมาจากเปลที่ว่างเปล่า คุณรู้ว่าเป็นเสียงใคร']);}catch(e){}
+ if(!P.length)P.push(['ตัวเองอีกคน','คนที่หน้าเหมือนคุณทุกอย่างนั่งอยู่ตรงข้าม "เจ้าฝึกมาทั้งชีวิตเพื่ออะไร ตอบข้ามาสักคำ"']);return ch(P)}
+{const _qgD=qiGame;qiGame=function(o,cb){try{if(o&&/^ทะลวงสู่/.test(o.title||'')&&wxOk()&&!o._dm&&realmIdx()>=2&&S.age-(S._dmY==null?-99:S._dmY)>=12&&Math.random()<.4){S._dmY=S.age;const [t,txt]=demonPast(),args=arguments,self=this;
+  setScene('aura');choice(`👁️ มารในใจ — ${t}`,`ก่อนปราณจะรวมเป็นหนึ่ง โลกรอบตัวคุณหายไป<br>${txt}<br><span class="tag2">ผ่านมารในใจได้ การทะลวงครั้งนี้จะง่ายขึ้น · ถ้าพ่าย จะยากขึ้น</span>`,[
+   {t:'🙏 ยอมรับว่ามันคือส่วนหนึ่งของข้า',s:'กรรมดีช่วย',f(){const ok=Math.random()<Math.max(.15,Math.min(.9,.5+(S.karma||0)/400));o=Object.assign({},o,{_dm:1,p:Math.max(.03,Math.min(.97,o.p+(ok?.12:-.1)))});log(ok?`🙏 คุณไม่หนี ไม่ปฏิเสธ — ภาพลวงค่อยๆ จางเหมือนหมอกถูกแดด · จิตนิ่งขึ้น (โอกาสทะลวง +12%)`:`😣 คุณพยายามยอมรับ แต่เสียงนั้นยังดังอยู่ในหัว · จิตสั่นคลอน (โอกาสทะลวง −10%)`,ok?'epic':'bad');setTimeout(()=>_qgD.call(self,o,cb),500)}},
+   {t:'⚔️ ฟันภาพลวงให้ขาด',s:'ปัญญาช่วย',f(){const ok=Math.random()<Math.max(.15,Math.min(.9,.35+(S.int||0)/900));o=Object.assign({},o,{_dm:1,p:Math.max(.03,Math.min(.97,o.p+(ok?.15:-.15)))});if(!ok){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.15))}log(ok?`⚔️ คุณมองออกว่าทั้งหมดคือความกลัวของตัวเอง — ดาบเดียวผ่าภาพลวงขาดกลางอก (โอกาสทะลวง +15%)`:`💢 ดาบฟันผ่านภาพลวงไปเหมือนฟันน้ำ แล้วมันก็กลับมาครบเหมือนเดิม — ปราณย้อนบาดใน (โอกาสทะลวง −15%)`,ok?'epic':'bad');setTimeout(()=>_qgD.call(self,o,cb),500)}},
+   {t:'🚪 ลืมตาออกมาก่อน',s:'ไม่ทะลวงปีนี้',skip:true,f(){S.qgAt=S.age;log('🚪 คุณลืมตาขึ้นกลางดึก เหงื่อท่วมตัว — ยังไม่พร้อมจะเผชิญหน้ากับมัน');try{cb(false,.5,o.p,1)}catch(e){}}}]);return}}catch(e){console.error(e)}return _qgD.apply(this,arguments)}}
+// ---------- รายปี ----------
+{const _pyW=passYear;passYear=function(){const f0=S?S.fame:0;const r=_pyW.apply(this,arguments);try{if(S&&S.alive&&wxOk()){hideTick(f0);grudgeTick();aliasTick();wspTick();vowTick();betroOffer();flameTick()}}catch(e){console.error(e)}return r}}
+// ---------- หน้ารวม ----------
+function openWuxia(){if(!S)return;const L=grudges(),live=L.filter(x=>!x.done),done=L.filter(x=>x.done),A=S.alias,sp=wsp(),B=S.body||{lv:0,xp:0},F=flames();
+ const sec=(ic,t,b)=>`<div class="box" style="margin:8px 0;padding:10px"><b>${ic} ${t}</b><div style="margin-top:6px">${b}</div></div>`;
+ const gl=live.length?live.map(g=>{const i=L.indexOf(g),rt=g.pw/Math.max(1,total());return`<div class="item"><div class="h"><b>${esc(g.n)}</b><span><button class="sysb" onclick="grudgeGo(${i})">⚔️ ชำระแค้น</button></span></div><p>${esc(g.why)} · ตั้งแต่อายุ ${fmt(g.y)}<br><span style="color:${rt>1.15?'#ff7a6a':rt>.9?'#f0c860':'#5ad87a'}">ความแข็งแกร่ง ~${fmt(g.pw)} (${rt>1.15?'แกร่งกว่าคุณ':rt>.9?'สูสี':'ด้อยกว่าคุณ'})</span></p></div>`}).join(''):'<p class="tag2">ยังไม่มีชื่อในบัญชี — คนที่ทำร้ายคุณจะถูกจดไว้ที่นี่เอง</p>';
+ const al=A?`${ALIAS_T[A.t].ic} <b>${esc(A.n)}</b> — ${ALIAS_T[A.t].n}<br><span class="tag2">ชื่อเสียงลับ ${fmt(A.f)} · ใช้มาตั้งแต่อายุ ${fmt(A.y)} · ยิ่งดังยิ่งเสี่ยงถูกจำได้</span><br><button class="gbtn" style="margin-top:6px" onclick="aliasEnd()">🔥 เผาหน้ากากทิ้ง</button>`:
+  `<input id="alNm" maxlength="20" placeholder="ตั้งฉายาใต้หน้ากาก" style="width:100%;margin-bottom:6px"><div class="mgrid">${Object.entries(ALIAS_T).map(([k,v])=>`<button class="opt" onclick="aliasMake('${k}')">${v.ic} ${v.n}<small>${v.d}</small></button>`).join('')}</div>`;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🀄 วิถียุทธ์</h3>
+ ${S.vow&&!S.vow.done?sec('📅','นัดสามปี',`ต้องไปที่ประตู${esc(S.vow.fam)}ตอนอายุ <b>${S.vow.by}</b> (อีก ${S.vow.by-S.age} ปี)<br>ต้องมีพลังราว <b>${fmt(S.vow.tp)}</b> · ตอนนี้ ${fmt(total())} ${total()>=S.vow.tp?'✅':''}`):''}
+ ${sec('📕','บัญชีแค้น',gl+(done.length?`<p class="tag2">ชำระแล้ว: ${done.map(g=>'<s>'+esc(g.n)+'</s>').join(' · ')}</p>`:''))}
+ ${sec('🫥','ซ่อนพลัง',`<p class="tag2" style="margin:0 0 6px">คนทั่วไปจะเห็นคุณเป็นแค่คนธรรมดา · ชื่อเสียงทั่วไปขึ้นช้าลง 40% แต่จะมีคนหยิ่งมาหาเรื่อง — ตบกลับกลางเมืองได้ชื่อเสียงก้อนใหญ่</p><button class="${hideOn()?'pbtn':'gbtn'}" onclick="hideTog()">${hideOn()?'🫥 กำลังซ่อนพลัง — แตะเพื่อเลิก':'💪 ไม่ได้ซ่อน — แตะเพื่อซ่อน'}</button>`)}
+ ${sec('🎭','ตัวตนลับ',al+(S.aliasOld&&S.aliasOld.length?`<p class="tag2">หน้ากากที่เคยใช้: ${S.aliasOld.map(esc).join(' · ')}</p>`:''))}
+ ${sec('🔥',`เปลวไฟสวรรค์ (${F.length}/24)`,F.length?F.map(r=>`<span style="display:inline-block;margin:2px 6px 2px 0;padding:1px 8px;border-radius:9px;border:1px solid ${FLAME[r][1]==='#000000'?'#888':FLAME[r][1]}">อันดับ ${24-r} · ${FLAME[r][0]}</span>`).join(''):'<p class="tag2">ยังไม่มี — ออกท่องยุทธภพหรือออกล่าบ่อยๆ จะมีโอกาสเจอ</p>')}
+ ${sec('✨','ดวงวิญญาณอาวุธ',sp?`<b>${sp.n}</b> (${WSP_P[sp.p][0]}) ใน${esc(sp.wn||'อาวุธ')} · ขั้น ${sp.lv}/9<br><span class="tag2">ศัตรูอ่อนลง ${Math.round(sp.lv*3.5)}% · ${WSP_P[sp.p][1]}</span>`:`<p class="tag2">ใช้อาวุธชิ้นเดิมนานพอ (15 ปีขึ้นไป) อาวุธอาจตื่นขึ้นมีวิญญาณเป็นของตัวเอง${S.wsp&&S.wsp.held?` · ถืออาวุธนี้มา ${S.wsp.held} ปี`:''}</p>`)}
+ ${sec('🪨','หลอมกาย',B.lv?`<b>${BODY_N[B.lv-1]}</b> (ขั้น ${B.lv}/${BODY_N.length}) · ความคืบหน้า ${Math.floor(B.xp)}/${8+B.lv*B.lv*3}<br><span class="tag2">ศัตรูอ่อนลง ${B.lv*2}% · เลือกจุดมุ่งหมาย 🪨 หลอมกาย เพื่อฝึกต่อ</span>`:'<p class="tag2">เลือกจุดมุ่งหมาย 🪨 หลอมกาย (อายุ 10 ขึ้นไป) เพื่อเริ่มฝึกร่างกายแยกจากลมปราณ</p>')}
+ <p class="tag2">👁️ มารในใจจะมาเองตอนทะลวงขั้นใหญ่ — ภาพที่เห็นมาจากสิ่งที่คุณทำจริงในชีวิตนี้</p>`,'wuxia')}
+{const _omW=openMenu;openMenu=function(){const r=_omW.apply(this,arguments);try{const m=$('modal'),gr=m.querySelector('.mgrid');if(gr&&!gr.querySelector('[data-wx]')&&wxOk()){const n=grudges().filter(x=>!x.done).length;gr.insertAdjacentHTML('afterbegin',`<button class="opt" data-wx="1" onclick="openWuxia()">🀄 วิถียุทธ์<small>${n?'📕 แค้น '+n+' · ':''}${flames().length?'🔥 '+flames().length+' · ':''}${S.alias?'🎭 '+esc(S.alias.n):hideOn()?'🫥 ซ่อนพลัง':'แค้น · หน้ากาก · ไฟ · กาย'}</small></button>`)}}catch(e){}return r}}
+try{GD2.push({s:'base',ic:'🀄',t:'วิถียุทธ์',nw:1,d:'☰ → 🀄 วิถียุทธ์ · 📕 บัญชีแค้น (คนที่ทำร้ายคุณถูกจดเอง แข็งแกร่งขึ้นทุกปี ชำระได้) · 🫥 ซ่อนพลัง (มีคนหยิ่งมาหาเรื่อง ตบกลับได้ชื่อเสียงก้อนใหญ่) · 🎭 ตัวตนลับ · 🔥 เปลวไฟสวรรค์ 24 อันดับ · ✨ ดวงวิญญาณอาวุธ · 🪨 หลอมกาย · 👁️ มารในใจตอนทะลวงขั้นใหญ่ · 📜 บางชีวิตถูกถอนหมั้นตอนวัยรุ่น'})}catch(e){}
+
 </script>
 </body>
 </html>
