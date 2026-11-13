@@ -742,6 +742,16 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     const bdSettle = async () => { const yk = new Date(now + 7 * 3600e3 - 86400e3).toISOString().slice(0, 10);
       await bdSettle1('d', 'bdset:' + yk, 7); await bdSettle1('w', 'bdsetw:' + week(new Date(now - 7 * 86400e3)), 30); await bdSettle1('m', 'bdsetm:' + bdMon(now, 1), 90) };
     const bdWipe = async () => { try { if (!(await cmd('SET', 'bd3init', 1, 'NX'))) return; let cur = '0', n = 0; do { const r = await cmd('SCAN', cur, 'MATCH', 'bd2:*', 'COUNT', 500); cur = String(r[0]); if (r[1].length) await cmd('DEL', ...r[1]); n++ } while (cur !== '0' && n < 200); await cmd('DEL', 'bdhide') } catch {} };
+    if (a === 'rgboard') {
+      const per = String(b.p || qOf(req).p || 'all') === 'w' ? 'w' : 'all';
+      const key = per === 'w' ? 'rgb:w:' + week(new Date(now)) : 'rgb:all';
+      const raw = (await cmd('ZREVRANGE', key, 0, 49)) || [];
+      const hide = new Set(['f18abdmw8fuj8d', ...((await cmd('SMEMBERS', 'bdhide')) || [])]);
+      const L0 = raw.map(x => { try { return JSON.parse(x) } catch { return null } }).filter(j => j && !(j.lid && hide.has(j.lid)));
+      const pubs = L0.length ? await cmd('MGET', ...L0.map(x => 'lifep:' + (x.lid || 'x'))) : [];
+      const top = L0.slice(0, 30).map((x, i) => { const v = pubs[i]; const o = Object.assign({}, x, { pub: v === '1' ? 1 : 0 }); if (v === '2') { o.n = 'ผู้ไม่ประสงค์ออกนาม'; o.anon = 1 } return o });
+      return res.json({ ok: 1, top, p: per });
+    }
     if (a === 'board') {
       await bdWipe(); await bdSettle();
       const ar = await cmd('ZREVRANGE', 'arenaW:' + W, 0, 9, 'WITHSCORES');
@@ -1291,6 +1301,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (bad) { await pipe([['INCR', 'lives'], ['LPUSH', 'cheatlog', JSON.stringify({ id: id.slice(0, 10), fid: id, n: e.n, s: e.s, age: e.age, why: bad, t: now })], ['LTRIM', 'cheatlog', 0, 99]]); return res.json({ ok: 1, skip: 1, flag: 1 }) }
       if (lid.length >= 6 && det && det.length < 40000) { try { JSON.parse(det); L.push(['SET', 'lifed:' + lid, det, 'EX', 86400 * 40], ['SET', 'lifeo:' + lid, id, 'EX', 86400 * 40], ['SET', 'lifep:' + lid, +b.pub === 2 ? '2' : b.pub ? '1' : '0', 'EX', 86400 * 40]) } catch {} }
       if (lid.length >= 6 && await cmd('GET', 'lsent:' + lid)) return res.json({ ok: 1, dup: 1 });
+      if (e.ch === 'regress' && e.rf) { try { const G = (JSON.parse(det || '{}').rg) || {}, en = ['breaker', 'protector', 'lonely'].includes(G.end) ? G.end : 'lonely', vr = ['normal', 'r5', 'nomem', 'lim10'].includes(G.var) ? G.var : 'normal'; const rj = JSON.stringify({ n: e.n, lid: e.lid, rl: e.rl, end: en, var: vr, age: e.age, r: e.r, t: now, x: e.x, g: e.g }); const rs = ({ breaker: 3, protector: 2, lonely: 1 })[en] * 1e8 - Math.min(999, e.rl || 1) * 1e5 + ({ lim10: 3, nomem: 2, r5: 1, normal: 0 })[vr] * 1e4 - Math.min(9999, Math.floor((now % 1e9) / 1e5)); L.push(['ZADD', 'rgb:all', rs, rj], ['ZREMRANGEBYRANK', 'rgb:all', 0, -201], ['ZADD', 'rgb:w:' + week(new Date(now)), rs, rj], ['ZREMRANGEBYRANK', 'rgb:w:' + week(new Date(now)), 0, -101], ['EXPIRE', 'rgb:w:' + week(new Date(now)), 86400 * 21]) } catch {} }
       await pipe(L);
       if (lid.length >= 6) { try { await cmd('SET', 'lsent:' + lid, 1, 'EX', 86400 * 20) } catch {} }
       return res.json({ ok: 1 });
