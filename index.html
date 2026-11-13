@@ -7571,7 +7571,7 @@ duelAct=function(a){if(!DU)return;duClear();
 const QGM={};
 function qgOk(){return S&&S.alive&&!auto&&!(typeof xFast==='function'&&xFast())&&!choice._cur&&!modalOpen&&!document.hidden&&S.age-(S.qgAt==null?-99:S.qgAt)>=3}
 function qiGame(o,cb){S.qgAt=S.age;const d=o.diff||1,N=S.ch==='hell'?6:5,col=S.xt?['#c79bff','#ffffff','#7d4dff']:S.xian?['#ffe07a','#e9fbff','#56d6ff']:['#8fd3ff','#ffffff','#4a8cff'];
- Object.assign(QGM,{o,cb,d,N,i:0,res:[],ring:null,parts:[],done:false,t0:performance.now(),col,end:null,flash:0});
+ Object.assign(QGM,{o,cb,d,N,i:0,res:[],ring:null,parts:[],done:false,closed:0,perf:0,t0:performance.now(),col,end:null,flash:0});
  modal(`<h3>☯️ ${o.title}</h3><p class="tag2">${o.sub}</p>
  <div style="text-align:center"><canvas id="qgC" width="96" height="96" style="width:264px;height:264px;image-rendering:pixelated;border-radius:10px;background:#0d0a14;touch-action:manipulation;cursor:pointer"></canvas></div>
  <p id="qgTx" style="text-align:center;min-height:2.6em">แตะ/กด <b>Space</b> ตอนที่วงปราณหดมาทับวงทองพอดี · รวมให้ได้ ${N} สาย</p>
@@ -21512,6 +21512,11 @@ function paceBreak(){if(modalOpen||choice._cur)return;PACE.brkAt=PACE.play;const
 #ybar.pfast{background:linear-gradient(90deg,var(--pink,#e8b54a),#7ad0ff)!important}`;document.head.appendChild(st)})();
 setTimeout(()=>{try{if(!LS.get('murim_pacehint',0)&&S&&S.alive){LS.set('murim_pacehint',1);toast('⏩ ปีที่เงียบจะผ่านเร็วขึ้นเอง · เหตุการณ์เล็กระบบเลือกให้ได้ — ตั้งค่าได้ที่กดค้างปุ่มความเร็ว')}}catch(e){}},20000);
 
+
+// มินิเกมรวมปราณ: กันค้าง — จบแล้วแต่หน้าต่างไม่ปิดเกิน 4 วิ ให้ปิดเอง
+setInterval(()=>{try{const m=$('modal');if(!m||m.dataset.k!=='qigame'){QGM._stT=0;return}if(QGM.done){QGM._stT=QGM._stT||Date.now();if(Date.now()-QGM._stT>4000){const ok=QGM.end?QGM.end.ok:null,pf=QGM.perf||.5;QGM._stT=0;if(!QGM._cbDone){QGM.closed=0;qgClose(ok,pf,QGM.o?QGM.o.p:.5)}else closeM()}}else QGM._stT=0}catch(e){}},1000);
+{const _qgc=qgClose;qgClose=function(){if(QGM.closed)return;QGM._cbDone=1;return _qgc.apply(this,arguments)}}
+{const _qgg=qiGame;qiGame=function(){QGM._cbDone=0;QGM._stT=0;return _qgg.apply(this,arguments)}}
 </script>
 </body>
 </html>
