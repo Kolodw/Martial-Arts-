@@ -19274,6 +19274,11 @@ function openRegress(){if(!S||!S.rg)return;const G=S.rg,sv=G.comp.filter(c=>c.sa
 {const _ldR=lifeDetail;lifeDetail=function(){const o=_ldR.apply(this,arguments);try{if(o&&S&&S.rg)o.rg={loop:S.rg.loop,free:S.flags.rgFree?1:0,broken:S.flags.rgBroken?1:0}}catch(e){}return o}}
 try{SYS_GUIDE.push({s:'life',nw:1,ic:'🔁',t:'โหมดผู้ย้อนกาล',go:'openRegress',d:'เลือกที่หน้าเกิด → โหมดการเล่น → 🔁 ผู้ย้อนกาล · เกิดมาพรสวรรค์ต่ำสุด อายุ 15 ความทรงจำโลกเดิมตื่นขึ้น พร้อมเพื่อนร่วมชะตาอีก 6 คนที่มีพรสวรรค์ · <b>ตายเมื่อไหร่ย้อนกลับไปอายุ 15</b> (ฟื้นสภาพตอนนั้นทั้งหมด) · ติดตัวข้ามรอบ: วิชาที่ดีที่สุด 1–3 วิชา (ลดขั้น 1) ปัญญาบางส่วน พลังกายจำได้ 5% ของพลังสูงสุดที่เคยมี · <b>เหตุการณ์สายหลัก 7 เรื่องเกิดซ้ำทุกรอบที่อายุเดิม</b> เจอครั้งแรกเพื่อนมักตาย แต่จะจดลงสมุดความทรงจำ รอบต่อไปมีตัวเลือก 🔮 ใช้ความรู้ล่วงหน้า · ช่วยเพื่อนครบ 6 คนในรอบเดียวและถึงขั้น '+REALMS[5].n+' ก่อนอายุ 50 → ประตูนอกวงจร · จิตเหนื่อยล้า +6–11 ต่อรอบ ลดลงเมื่อมีความสุข ถึง 100 วงจรจบ'})}catch(e){}
 {const _pyQ=passYear;passYear=function(){try{if(!choice._cur&&choice._q&&choice._q.length){const q=choice._q.shift();if(q[3]===S&&S&&S.alive){choice(q[0],q[1],q[2]);return}}}catch(e){}return _pyQ.apply(this,arguments)}}
+// ---------- ผู้ย้อนกาล: เหตุการณ์ทั่วไปเกิดซ้ำทุกรอบ (ล็อกค่าสุ่มรายปีตามรอบ) · ป้ายทำเนียบ ----------
+try{CHB.regress=['🔁','ผู้ย้อนกาล','#8ad0ff']}catch(e){}
+function rgRng(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+{const _pyS=passYear;passYear=function(){if(!(S&&S.ch==='regress'&&S.rg&&!S.rg.free&&S.rg.awake))return _pyS.apply(this,arguments);const mr=Math.random;let h=2166136261;for(const q of String(S.rg.id)+':'+S.age)h=Math.imul(h^q.charCodeAt(0),16777619)>>>0;Math.random=rgRng(h);try{return _pyS.apply(this,arguments)}finally{Math.random=mr}}}
+try{SYS_GUIDE.push({s:'life',nw:1,ic:'🔁',t:'ผู้ย้อนกาล: โลกที่วนซ้ำ',d:'ในโหมดผู้ย้อนกาล ตั้งแต่อายุ 15 <b>เหตุการณ์ทั่วไปของแต่ละปีจะเกิดซ้ำเหมือนรอบก่อน</b> ถ้าคุณทำแบบเดิม — แต่ถ้าคุณเลือกต่างไป สถานะต่างไป โลกก็จะค่อยๆ แตกแขนงไปจากเดิม (ผลกระทบผีเสื้อ) · ทำเนียบออนไลน์มีอันดับโหมดผู้ย้อนกาลในหมวด 🎯 โหมดท้าทาย: คนที่หลุดพ้นวงจรได้ในจำนวนรอบน้อยที่สุดอยู่บนสุด'})}catch(e){}
 </script>
 </body>
 </html>
