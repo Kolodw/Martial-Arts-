@@ -19677,6 +19677,91 @@ body.tuOn #modal .tabs.tuStrip{flex-wrap:nowrap;overflow-x:auto;gap:6px;padding:
 body.tuOn #modal .tuStrip::-webkit-scrollbar{display:none}body.tuOn #modal .tuStrip>.tabb{flex:0 0 auto;border-radius:999px;padding:5px 12px}
 body.tuOn #modal .tuStrip>.tabb.on,body.tuOn #modal .onStrip>.tabb.on{border-color:transparent}
 body.tuOn #modal .tabb.tuAct{display:inline-block;margin:0 0 6px;border-radius:999px;padding:4px 12px;font-size:.8em;opacity:.85}`;document.head.appendChild(st)})();
+// ===================== แท็บแบบลื่น ภาค 2: แถบการฝึกในเกม · ความเร็วกดค้าง · ตัวเลือกหน้าแรก =====================
+function tuNear(T,x,y){let best=null,d=1e18;for(const b of T){const cx=b.offsetLeft+b.offsetWidth/2,cy=b.offsetTop+b.offsetHeight/2,dd=(cx-x)*(cx-x)+(cy-y)*(cy-y)*4;if(dd<d){d=dd;best=b}}return best}
+function tuBuzz(){try{navigator.vibrate&&navigator.vibrate(6)}catch(e){}}
+// ตัวลากทั่วไป: r=แถว, all()=ปุ่มที่เลือกได้, hold=ต้องกดค้างก่อนลาก (แถบที่ปัดเลื่อนได้)
+function tuDrag(r,all,hold){if(r._tuD)return;r._tuD=1;let st=null;
+ const pill=()=>r.querySelector(':scope>.tuPill');
+ const lift=()=>{st.drag=true;r.classList.add('tuDrag');tuBuzz();try{r.setPointerCapture(st.id)}catch(e){}};
+ r.addEventListener('pointerdown',e=>{if(!tuOn()||e.button>0)return;const T=all();const b=e.target.closest('button');if(!b||!T.includes(b))return;const on=T.find(x=>x.classList.contains('on'));if(!on)return;
+  st={id:e.pointerId,x0:e.clientX,y0:e.clientY,drag:false,cur:on,on,tm:0,lx:e.clientX,ly:e.clientY};
+  if(hold)st.tm=setTimeout(()=>{if(st&&!st.drag&&Math.hypot(st.lx-st.x0,st.ly-st.y0)<9)lift()},280)},{passive:true});
+ const mv=e=>{if(!st||e.pointerId!==st.id)return;st.lx=e.clientX;st.ly=e.clientY;
+  if(!st.drag){if(hold){if(Math.hypot(e.clientX-st.x0,e.clientY-st.y0)>9){clearTimeout(st.tm);st=null}return}if(Math.abs(e.clientX-st.x0)<7)return;const b0=document.elementFromPoint(st.x0,st.y0);if(!b0||!b0.closest('button')||!b0.closest('button').classList.contains('on')){st=null;return}lift()}
+  const rc=r.getBoundingClientRect(),x=e.clientX-rc.left+r.scrollLeft-r.clientLeft,y=e.clientY-rc.top+r.scrollTop-r.clientTop;const T=all();const n=tuNear(T,x,y);if(!n)return;
+  if(n!==st.cur){st.cur=n;tuBuzz();T.forEach(b=>b.classList.toggle('tuHot',b===n))}
+  const p=pill();if(p){const w=n.offsetWidth;p.style.width=w+'px';p.style.height=n.offsetHeight+'px';p.style.transform=`translate(${x-w/2}px,${n.offsetTop}px) scale(.94)`;r._dtf=[p.style.transform,p.style.width,p.style.height]}
+  // เลื่อนแถบเองเมื่อลากไปถึงขอบ
+  r._edge=e.clientX<rc.left+34?-1:e.clientX>rc.right-34?1:0;if(r._edge&&!r._edT){const loop=()=>{if(!r._edge||!st||!st.drag){r._edT=0;return}r.scrollLeft+=r._edge*7;r._edT=requestAnimationFrame(loop)};r._edT=requestAnimationFrame(loop)}};
+ const end=e=>{if(!st)return;const s=st;st=null;clearTimeout(s.tm);r._edge=0;if(!s.drag)return;r.classList.remove('tuDrag');all().forEach(b=>b.classList.remove('tuHot'));r._tuNo=1;setTimeout(()=>r._tuNo=0,80);
+  const live=b=>{if(!b)return null;if(b.isConnected)return b;const k=b.getAttribute('onclick')||b.textContent;return [...r.querySelectorAll(':scope>button')].find(x=>(x.getAttribute('onclick')||x.textContent)===k)||null};const n=live(s.cur&&!s.cur.disabled?s.cur:s.on)||live(s.on);const o=live(s.on);if(!n)return;tuPlace(r,n,true);if(n!==o&&!n.classList.contains('on'))setTimeout(()=>{r._tuNo=0;try{(live(n)||n).click()}catch(x){}},150)};
+ r.addEventListener('pointermove',mv);r.addEventListener('pointerup',end);r.addEventListener('pointercancel',end);
+ r.addEventListener('touchmove',e=>{if(st&&st.drag)e.preventDefault()},{passive:false});
+ r.addEventListener('contextmenu',e=>{if(st)e.preventDefault()});
+ r.addEventListener('click',e=>{if(r._tuNo){e.stopPropagation();e.preventDefault()}},true)}
+function tuPillIn(r,on,key){r._tuK=key;let p=r.querySelector(':scope>.tuPill');if(p&&r.classList.contains('tuDrag'))return;const fresh=!p;if(!p){p=document.createElement('span');p.className='tuPill';r.prepend(p)}
+ if(r.classList.contains('tuDrag')&&r._dtf){p.style.transition='none';[p.style.transform,p.style.width,p.style.height]=r._dtf;return}
+ const o=TU.pos[key];if(fresh&&o&&(o.x!==on.offsetLeft||o.y!==on.offsetTop)){p.style.transition='none';p.style.width=o.w+'px';p.style.height=o.h+'px';p.style.transform=`translate(${o.x}px,${o.y}px)`;void p.offsetWidth;p.style.transition='';requestAnimationFrame(()=>{const b=r.querySelector('.on.tuSel')||on;if(b.isConnected)tuPlace(r,b,true)})}else tuPlace(r,on,!fresh)}
+// ---- แถบการฝึกในเกม ----
+function fcPill(){const r=$('focus');if(!r)return;if(!tuOn()){r.classList.remove('tuRow','tuFc');const p=r.querySelector(':scope>.tuPill');if(p)p.remove();return}
+ const T=[...r.querySelectorAll(':scope>.fc:not(.fcx):not(.fctr)')];T.forEach(b=>b.classList.add('tuSel'));const on=T.find(b=>b.classList.contains('on'));
+ if(!on||T.length<2){const p=r.querySelector(':scope>.tuPill');if(p)p.remove();r.classList.remove('tuRow','tuFc');return}
+ r.classList.add('tuRow','tuFc');tuPillIn(r,on,'focus');tuDrag(r,()=>[...r.querySelectorAll(':scope>.fc.tuSel')].filter(b=>!b.disabled),true)}
+{const _rnF=render;render=function(){const x=_rnF.apply(this,arguments);try{fcPill()}catch(e){}return x}}
+// ---- ตัวเลือกหน้าแรก (ความเร็ว · โลก · โหมดท้าทาย) ----
+function segPills(){if(!tuOn())return;document.querySelectorAll('#title .seg').forEach(r=>{if(!r.offsetParent)return;const T=[...r.querySelectorAll(':scope>button:not(.mwseg)')];T.forEach(b=>b.classList.add('tuSel'));const on=T.find(b=>b.classList.contains('on'));if(!on)return;
+ r.classList.add('tuRow','tuTs');tuPillIn(r,on,'seg:'+(r.dataset.k||''));
+ if(!r._tuC){r._tuC=1;r.addEventListener('click',()=>requestAnimationFrame(()=>{const b=r.querySelector(':scope>button.on:not(.mwseg)');if(b)tuPlace(r,b,true)}))}
+ tuDrag(r,()=>[...r.querySelectorAll(':scope>button.tuSel')].filter(b=>!b.disabled),false)})}
+{const go=()=>{try{segPills()}catch(e){}};setTimeout(go,300);setTimeout(go,1500);document.addEventListener('visibilitychange',go);
+ if(typeof goTitle==='function'){const _gt=goTitle;goTitle=function(){const r=_gt.apply(this,arguments);setTimeout(go,60);return r}}
+ window.addEventListener('resize',()=>{setTimeout(()=>{go();const f=$('focus');const b=f&&f.querySelector('.fc.on.tuSel');if(b&&f.querySelector('.tuPill'))tuPlace(f,b,false)},50)});
+ const t=$('title');if(t){new MutationObserver(()=>requestAnimationFrame(go)).observe(t,{attributes:true,attributeFilter:['class','style']})}}
+// ---- ความเร็ว: แตะ = วนเหมือนเดิม · กดค้าง = เลือกจากแถบ ----
+const SPD_L=[[1,'1×'],[2,'2×'],[4,'4×'],[8,'8×'],[16,'16×'],[0,'⚡A']];
+function spdPopClose(){const p=document.getElementById('spdPop');if(p)p.remove();document.removeEventListener('pointerdown',spdOut,true)}
+function spdOut(e){if(!e.target.closest('#spdPop,#spdBtn'))spdPopClose()}
+function spdSet(v){speed=v;spdPopClose();try{render()}catch(e){}try{toast('ความเร็ว '+(v?v+'×':'⚡ อัตโนมัติ'))}catch(e){}}
+function spdPopOpen(){spdPopClose();const btn=$('spdBtn');if(!btn)return;const rc=btn.getBoundingClientRect();const d=document.createElement('div');d.id='spdPop';
+ d.innerHTML=`<div class="spdT">⏱️ ความเร็วเวลา</div><div class="tabs spdRow">${SPD_L.map(([v,t])=>`<button class="tabb ${speed===v?'on':''}" onclick="spdSet(${v})">${t}</button>`).join('')}</div>`;document.body.appendChild(d);
+ const w=Math.min(innerWidth-16,330);d.style.width=w+'px';d.style.left=Math.max(8,Math.min(innerWidth-w-8,rc.left+rc.width/2-w/2))+'px';d.style.bottom=(innerHeight-rc.top+10)+'px';
+ const r=d.querySelector('.spdRow');const on=r.querySelector('.on')||r.children[0];r.classList.add('tuRow','tuSeg');tuPillIn(r,on,'spd');document.addEventListener('pointerdown',spdOut,true);tuBuzz();return r}
+(()=>{let tm=0,lp=false,row=null,pid=null,cur=null;const b0=()=>$('spdBtn');
+ document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('#spdBtn');if(!b||!tuOn())return;lp=false;pid=e.pointerId;cur=null;clearTimeout(tm);tm=setTimeout(()=>{lp=true;row=spdPopOpen()},380)},true);
+ document.addEventListener('pointermove',e=>{if(!lp||!row||e.pointerId!==pid)return;const T=[...row.querySelectorAll('.tabb')];const rc=row.getBoundingClientRect();const n=tuNear(T,e.clientX-rc.left,T[0].offsetTop+5);if(n&&n!==cur){cur=n;tuBuzz();T.forEach(x=>{x.classList.toggle('tuHot',x===n);x.classList.toggle('on',x===n)});tuPlace(row,n,true)}},true);
+ const up=e=>{clearTimeout(tm);if(lp&&cur&&e.pointerId===pid){const v=SPD_L[[...row.querySelectorAll('.tabb')].indexOf(cur)];if(v)spdSet(v[0])}pid=null};
+ document.addEventListener('pointerup',up,true);document.addEventListener('pointercancel',()=>{clearTimeout(tm)},true);
+ document.addEventListener('touchmove',e=>{if(lp&&pid!=null&&row)e.preventDefault()},{passive:false,capture:true});
+ document.addEventListener('click',e=>{if(lp&&e.target.closest&&e.target.closest('#spdBtn')){e.stopPropagation();e.preventDefault();lp=false}},true);
+ document.addEventListener('contextmenu',e=>{if(e.target.closest&&e.target.closest('#spdBtn'))e.preventDefault()},true)})();
+// สลับแบบเดิม → ล้างของใหม่บนหน้าเกม/หน้าแรก
+{const _tt=window.tabUiToggle;window.tabUiToggle=function(){_tt.apply(this,arguments);try{fcPill();if(!tuOn())document.querySelectorAll('#title .seg .tuPill').forEach(p=>{p.parentElement.classList.remove('tuRow','tuTs');p.remove()});else segPills()}catch(e){}}}
+(()=>{const st=document.createElement('style');st.textContent=`
+body.tuOn #focus.tuFc{position:relative;isolation:isolate}
+body.tuOn #focus.tuFc>.fc{position:relative;z-index:1}
+body.tuOn #focus.tuFc>.fc.on{background:transparent!important;box-shadow:none!important;border-color:transparent!important}
+body.tuOn #focus.tuFc>.tuPill{border-radius:18px;background:linear-gradient(180deg,color-mix(in srgb,var(--pink) 60%,#fff),var(--pink));box-shadow:inset 0 -3px 0 var(--pinkd),0 0 10px color-mix(in srgb,var(--pink) 40%,transparent)}
+body.tuOn #focus.tuFc.tuDrag>.tuPill{box-shadow:inset 0 -3px 0 var(--pinkd),0 8px 18px rgba(0,0,0,.4),0 0 16px color-mix(in srgb,var(--pink) 60%,transparent)}
+body.tuOn #focus.tuFc>.fc.tuHot{color:var(--onacc)!important}body.tuOn #focus.tuFc.tuDrag>.fc.on:not(.tuHot){color:inherit!important}
+body.tuOn #focus.tuFc>.fcx,body.tuOn #focus.tuFc>.fctr{border-style:dashed}
+body.tuOn #focus.tuFc{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+body.tuOn #title .seg.tuTs{position:relative;isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}
+body.tuOn #title .seg.tuTs>button{position:relative;z-index:1}
+body.tuOn #title .seg.tuTs>button.on{background:transparent!important;border-color:transparent!important;box-shadow:none!important}
+body.tuOn #title .seg.tuTs>.tuPill{border-radius:10px;background:color-mix(in srgb,var(--pink) 20%,var(--card));border:2px solid var(--pink);box-shadow:0 0 12px color-mix(in srgb,var(--pink) 45%,transparent);box-sizing:border-box}
+body.tuOn #title .seg.tuTs>button.tuHot{color:var(--ink)}
+body.tuOn #title .seg.tuTs>.tuPill,body.tuOn #focus.tuFc>.tuPill{position:absolute;left:0;top:0;z-index:0;pointer-events:none;transition:transform .38s cubic-bezier(.3,1.35,.5,1),width .3s cubic-bezier(.3,1.2,.5,1),height .3s;will-change:transform}
+body.tuOn #focus.tuFc.tuDrag>.fc,body.tuOn #title .seg.tuTs.tuDrag>button{background:transparent!important;transition:background .15s}
+body.tuOn .tuDrag>.tuPill{transition:width .18s,transform .06s linear!important}
+#spdBtn{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#spdPop{position:fixed;z-index:9999;background:rgba(20,15,32,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid color-mix(in srgb,var(--pink) 55%,transparent);border-radius:16px;padding:8px;box-shadow:0 10px 28px rgba(0,0,0,.55);animation:spdIn .18s cubic-bezier(.3,1.4,.5,1);color:#f0e6d0}
+@keyframes spdIn{from{transform:translateY(8px) scale(.94);opacity:0}}
+#spdPop .spdT{font-size:11px;opacity:.75;margin:0 4px 5px}
+#spdPop .tabs.spdRow{position:relative;isolation:isolate;display:flex;flex-wrap:nowrap;gap:3px;margin:0;padding:3px;border-radius:12px;background:rgba(255,255,255,.06)}
+#spdPop .spdRow .tabb{flex:1 1 0;border:0;background:transparent;color:#f0e6d0;padding:8px 2px;font-size:13px;position:relative;z-index:1;border-radius:9px}
+#spdPop .spdRow .tabb.on{background:transparent!important;border-color:transparent!important;box-shadow:none!important;color:var(--onacc)!important}#spdPop .spdRow .tabb.tuHot{color:var(--onacc)!important}
+#spdPop .tuPill{position:absolute;left:0;top:0;z-index:0;border-radius:9px;background:var(--pink);pointer-events:none;transition:transform .3s cubic-bezier(.3,1.35,.5,1),width .25s}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
