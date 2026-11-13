@@ -19943,10 +19943,10 @@ function bxSetup(m){if(!tuOn())return;const k=m.dataset.k||'';bxGroups(m).forEac
  {let st=null,tm=0;const live=()=>[...c.children].filter(x=>x.tagName==='BUTTON'&&B.includes(x)&&!x.disabled);
   c.addEventListener('contextmenu',e=>{if(e.target.closest('button'))e.preventDefault()});
   c.addEventListener('pointerdown',e=>{if(!tuOn()||e.button>0)return;const b=e.target.closest('button');if(!b||b.parentElement!==c||!B.includes(b))return;st={id:e.pointerId,x0:e.clientX,y0:e.clientY,x:e.clientX,y:e.clientY,drag:false,cur:b};clearTimeout(tm);
-   tm=setTimeout(()=>{if(!st||Math.hypot(st.x-st.x0,st.y-st.y0)>9)return;st.drag=true;c.classList.add('bxDrag');try{c.setPointerCapture(st.id)}catch(x){}bxPut(p,bxRect(c,st.cur),false);st.cur.classList.add('tuHot');tuBuzz()},300)},{passive:true});
+   tm=setTimeout(()=>{if(!st||Math.hypot(st.x-st.x0,st.y-st.y0)>9)return;st.drag=true;c.classList.add('bxDrag');try{c.setPointerCapture(st.id)}catch(x){}bxPut(p,bxRect(c,st.cur),false);st.cur.classList.add('tuHot','bxSrc');tuBuzz()},300)},{passive:true});
   c.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;st.x=e.clientX;st.y=e.clientY;if(!st.drag){if(Math.hypot(st.x-st.x0,st.y-st.y0)>9){clearTimeout(tm);st=null}return}
    const t=document.elementFromPoint(e.clientX,e.clientY);const n=t&&t.closest&&t.closest('button');if(!n||n.parentElement!==c||!live().includes(n)||n===st.cur)return;st.cur.classList.remove('tuHot');st.cur=n;n.classList.add('tuHot');bxPut(p,bxRect(c,n),true);tuBuzz()});
-  const end=e=>{clearTimeout(tm);if(!st)return;const s=st;st=null;if(!s.drag)return;c.classList.remove('bxDrag');s.cur.classList.remove('tuHot');c._no=1;setTimeout(()=>c._no=0,90);c.classList.add('bxMove');setTimeout(()=>c.classList.remove('bxMove'),420);BXU.pos[key]=bxRect(c,s.cur);
+  const end=e=>{clearTimeout(tm);if(!st)return;const s=st;st=null;if(!s.drag)return;c.classList.remove('bxDrag');[...c.children].forEach(x=>x.classList&&x.classList.remove('tuHot','bxSrc'));c._no=1;setTimeout(()=>c._no=0,90);c.classList.add('bxMove');setTimeout(()=>c.classList.remove('bxMove'),420);BXU.pos[key]=bxRect(c,s.cur);
    if(!s.cur.classList.contains('bxOn'))setTimeout(()=>{c._no=0;s.cur.click()},160)};
   c.addEventListener('pointerup',end);c.addEventListener('pointercancel',end);
   c.addEventListener('touchmove',e=>{if(st&&st.drag)e.preventDefault()},{passive:false});
@@ -19983,10 +19983,10 @@ function mnDrag(m){let st=null,tm=0,raf=0;const pill=()=>m.querySelector('.mnPil
  const at=(x,y,strict)=>{const t=document.elementFromPoint(x,y);const b=t&&t.closest?t.closest('.mgrid>button,.tmgrid>button'):null;if(!b||!strict)return b;const r=b.getBoundingClientRect(),ix=r.width*.12,iy=r.height*.15;return(x>r.left+ix&&x<r.right-ix&&y>r.top+iy&&y<r.bottom-iy)?b:null};
  const hot=b=>{if(!b||b===st.cur)return;const first=!st.cur;st.cur=b;m.querySelectorAll('.mnHot').forEach(x=>x.classList.remove('mnHot'));b.classList.add('mnHot');const p=mnPillTo(m,b,!first);p.classList.add('show');tuBuzz()};
  m.addEventListener('pointerdown',e=>{if(!tuOn()||e.button>0)return;const b=at(e.clientX,e.clientY);if(!b)return;st={id:e.pointerId,x0:e.clientX,y0:e.clientY,x:e.clientX,y:e.clientY,drag:false,cur:null};clearTimeout(tm);
-  tm=setTimeout(()=>{if(!st||st.drag||Math.hypot(st.x-st.x0,st.y-st.y0)>9)return;st.drag=true;m.classList.add('mnDragging');try{m.setPointerCapture(st.id)}catch(x){}hot(b);const p=pill();if(p)p.classList.add('lift');
+  tm=setTimeout(()=>{if(!st||st.drag||Math.hypot(st.x-st.x0,st.y-st.y0)>9)return;st.drag=true;m.classList.add('mnDragging');try{m.setPointerCapture(st.id)}catch(x){}b.classList.add('mnSrc');hot(b);const p=pill();if(p)p.classList.add('lift');
    const loop=()=>{if(!st||!st.drag)return;const rm=m.getBoundingClientRect();const d=st.y<rm.top+60?-1:st.y>rm.bottom-60?1:0;if(d){m.scrollTop+=d*9;hot(at(st.x,st.y,true))}raf=requestAnimationFrame(loop)};raf=requestAnimationFrame(loop)},300)},{passive:true});
  m.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;st.x=e.clientX;st.y=e.clientY;if(!st.drag){if(Math.hypot(st.x-st.x0,st.y-st.y0)>9){clearTimeout(tm);st=null}return}hot(at(st.x,st.y,true))});
- const end=e=>{clearTimeout(tm);cancelAnimationFrame(raf);if(!st)return;const s=st;st=null;if(!s.drag)return;m.classList.remove('mnDragging');const p=pill();if(p)p.classList.remove('lift');m.querySelectorAll('.mnHot').forEach(x=>x.classList.remove('mnHot'));
+ const end=e=>{clearTimeout(tm);cancelAnimationFrame(raf);if(!st)return;const s=st;st=null;if(!s.drag)return;m.classList.remove('mnDragging');const p=pill();if(p)p.classList.remove('lift');m.querySelectorAll('.mnHot,.mnSrc').forEach(x=>x.classList.remove('mnHot','mnSrc'));
   m._mnNo=1;setTimeout(()=>m._mnNo=0,90);const b=s.cur;setTimeout(()=>{const q=pill();if(q)q.classList.remove('show')},380);if(!b)return;b.classList.add('mnFlash');setTimeout(()=>{m._mnNo=0;try{b.click()}catch(x){}},170)};
  m.addEventListener('pointerup',end);m.addEventListener('pointercancel',end);
  m.addEventListener('touchmove',e=>{if(st&&st.drag)e.preventDefault()},{passive:false});
@@ -20002,7 +20002,7 @@ body.tuOn .bxRow>.bxPill{position:absolute;left:0;top:0;z-index:3;pointer-events
 body.tuOn .bxRow.bxMove>.bxPill,body.tuOn .bxRow.bxDrag>.bxPill{opacity:1}
 body.tuOn .bxRow.bxDrag>.bxPill{box-shadow:0 8px 20px rgba(0,0,0,.4),0 0 18px color-mix(in srgb,var(--pink) 60%,transparent)}
 body.tuOn .bxRow>button{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
-body.tuOn .bxRow.bxDrag>button.tuHot{border-color:transparent!important;box-shadow:none!important;outline:none!important;transition:border-color .15s}
+body.tuOn .bxRow.bxDrag>button.tuHot,body.tuOn .bxRow.bxDrag>button.bxSrc,body.tuOn .bxRow.bxDrag>button.bxOn{border-color:transparent!important;box-shadow:none!important;outline:none!important;transition:border-color .15s}
 /* ---- เมนูแคปซูล ---- */
 body.tuOn #modal.mnTu .mgrid,body.tuOn #modal.mnTu .tmgrid{transition:max-height .3s ease,opacity .2s}
 body.tuOn #modal.mnTu .mgrid>button,body.tuOn #modal.mnTu .tmgrid>button{position:relative;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;transition:transform .2s cubic-bezier(.3,1.5,.5,1)}
@@ -20020,7 +20020,7 @@ body.tuOn #modal.mnTu .mnSearch input::-webkit-search-cancel-button{display:none
 body.tuOn #modal.mnTu .mnX{border:0;background:transparent;color:inherit;opacity:.5;font-size:13px;padding:2px 4px}
 body.tuOn #modal.mnTu .mnFav{margin-bottom:8px}body.tuOn #modal.mnTu .mnFavH{font-size:12px;font-weight:700;color:var(--pink);margin:0 2px 6px}
 body.tuOn #modal.mnTu .mnG{position:relative}
-body.tuOn #modal.mnTu.mnDragging .mnHot{border-color:transparent!important;box-shadow:none!important;outline:none!important}
+body.tuOn #modal.mnTu.mnDragging .mnHot,body.tuOn #modal.mnTu.mnDragging .mnSrc{border-color:transparent!important;box-shadow:none!important;outline:none!important}
 body.tuOn #modal.mnTu .mgrid>button,body.tuOn #modal.mnTu .tmgrid>button{transition:border-color .15s,box-shadow .15s}
 body.tuOn #modal.mnTu .mnPill{position:absolute;left:0;top:0;z-index:5;pointer-events:none;border:2px solid var(--pink);box-sizing:border-box;background:color-mix(in srgb,var(--pink) 14%,transparent);box-shadow:0 0 14px color-mix(in srgb,var(--pink) 50%,transparent),inset 0 0 10px color-mix(in srgb,var(--pink) 25%,transparent);opacity:0;transition:transform .38s cubic-bezier(.3,1.35,.5,1),width .3s,height .3s,opacity .25s;will-change:transform}
 body.tuOn #modal.mnTu .mnPill.show{opacity:1}
