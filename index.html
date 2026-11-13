@@ -19818,18 +19818,18 @@ function qmRun(row){const sp=QM.spec;if(!sp||!row)return;const r=sp.rows[+row.da
 function qmWire(){const c=QM.el;if(!c)return;c.querySelectorAll('.qmR[data-i]').forEach(r=>{r.onclick=e=>{e.stopPropagation();qmRun(r)}});
  c.querySelectorAll('[data-sg]').forEach(b=>{b.onclick=e=>{e.stopPropagation();const [i,j]=b.dataset.sg.split(':').map(Number);const r=QM.spec.rows[i];try{r.seg.f(j)}catch(x){}tuBuzz();setTimeout(qmRefresh,40)}})}
 // ---------- การกดค้าง ----------
-const QM_SEL='#pauseBtn,#bagBtn,#questBtn,#autoBtn,#skipBtn,#logBtn,#menuBtn,.crow .ybar';
-function qmSpecFor(el){if(el.matches('#pauseBtn'))return qmPlay;if(el.matches('#bagBtn'))return qmBag;if(el.matches('#questBtn'))return qmQuest;if(el.matches('#autoBtn'))return qmAuto;if(el.matches('#skipBtn'))return qmSkip;if(el.matches('#logBtn'))return qmLog;if(el.matches('#menuBtn'))return qmMenu;if(el.matches('.ybar'))return qmYear;return null}
+const QM_FREE='#tCont,#tGo';let QM_SEL='#pauseBtn,#bagBtn,#questBtn,#autoBtn,#skipBtn,#logBtn,#menuBtn,.crow .ybar,#spdBtn,#tCont,#tGo';
+function qmSpecFor(el){if(el.matches('#tCont'))return qmCont;if(el.matches('#tGo'))return qmBorn;if(el.matches('#spdBtn'))return qmSpeed;if(el.matches('#pauseBtn'))return qmPlay;if(el.matches('#bagBtn'))return qmBag;if(el.matches('#questBtn'))return qmQuest;if(el.matches('#autoBtn'))return qmAuto;if(el.matches('#skipBtn'))return qmSkip;if(el.matches('#logBtn'))return qmLog;if(el.matches('#menuBtn'))return qmMenu;if(el.matches('.ybar'))return qmYear;return null}
 (()=>{let tm=0,lp=false,x0=0,y0=0;
- document.addEventListener('pointerdown',e=>{if(!tuOn()||!S||!S.alive)return;const b=e.target.closest&&e.target.closest(QM_SEL);if(!b||e.button>0)return;lp=false;QM.pid=e.pointerId;x0=e.clientX;y0=e.clientY;b.classList.add('qmPress');clearTimeout(tm);
+ document.addEventListener('pointerdown',e=>{if(!tuOn())return;const b=e.target.closest&&e.target.closest(QM_SEL);if(!b||e.button>0)return;if(!b.matches(QM_FREE)&&(!S||!S.alive))return;lp=false;QM.pid=e.pointerId;x0=e.clientX;y0=e.clientY;b.classList.add('qmPress');clearTimeout(tm);
   tm=setTimeout(()=>{const mk=qmSpecFor(b);if(!mk)return;lp=true;QM.hold=true;b.classList.remove('qmPress');qmOpen(b,mk);if(!LS.get('murim_qmhint',0))LS.set('murim_qmhint',1)},380)},true);
  document.addEventListener('pointermove',e=>{if(e.pointerId!==QM.pid)return;if(!lp){if(Math.hypot(e.clientX-x0,e.clientY-y0)>10){clearTimeout(tm);document.querySelectorAll('.qmPress').forEach(x=>x.classList.remove('qmPress'))}return}
   if(!QM.el)return;const t=document.elementFromPoint(e.clientX,e.clientY);qmHot(t&&t.closest?t.closest('#qm .qmR'):null)},true);
  const up=e=>{clearTimeout(tm);document.querySelectorAll('.qmPress').forEach(x=>x.classList.remove('qmPress'));if(e.pointerId!==QM.pid)return;QM.pid=null;if(lp&&QM.el&&QM.hot){const r=QM.hot;qmRun(r)}QM.hold=false};
  document.addEventListener('pointerup',up,true);document.addEventListener('pointercancel',e=>{clearTimeout(tm);if(!lp)document.querySelectorAll('.qmPress').forEach(x=>x.classList.remove('qmPress'))},true);
  document.addEventListener('touchmove',e=>{if(lp&&QM.hold&&QM.el)e.preventDefault()},{passive:false,capture:true});
- document.addEventListener('click',e=>{if(lp&&e.target.closest&&e.target.closest(QM_SEL)){e.stopPropagation();e.preventDefault();lp=false}},true);
- document.addEventListener('contextmenu',e=>{const b=e.target.closest&&e.target.closest(QM_SEL);if(!b||!tuOn()||!S||!S.alive)return;e.preventDefault();const mk=qmSpecFor(b);if(mk&&!QM.el)qmOpen(b,mk)},true);
+ document.addEventListener('click',e=>{if(lp&&e.isTrusted&&e.target.closest&&e.target.closest(QM_SEL)){e.stopPropagation();e.preventDefault();lp=false}},true);
+ document.addEventListener('contextmenu',e=>{const b=e.target.closest&&e.target.closest(QM_SEL);if(!b||!tuOn()||(!b.matches(QM_FREE)&&(!S||!S.alive)))return;e.preventDefault();const mk=qmSpecFor(b);if(mk&&!QM.el)qmOpen(b,mk)},true);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&QM.el)qmClose()});
  window.addEventListener('resize',()=>qmClose(true));})();
 // ---------- ⏸/▶ เล่น ----------
@@ -20102,6 +20102,52 @@ body.tuOn .actRow>.actPill.lift{box-shadow:0 8px 22px rgba(0,0,0,.4),0 0 20px co
 body.tuOn .actRow.actDrag>.actHot,body.tuOn .actRow.actDrag>.actSrc{border-color:transparent!important;box-shadow:none!important;outline:none!important}
 body.tuOn .actRow .actHot small{opacity:1!important;color:var(--goldL,#ffd98a)}
 body.tuOn .actRow .actFlash{animation:actFl .2s ease}@keyframes actFl{50%{filter:brightness(1.6)}}`;document.head.appendChild(st)})();
+// ===================== การ์ดทางลัด: เล่นต่อ · เกิดใหม่ · ความเร็ว + สูตรแอนิเมชันเดียวทั้งเว็บ =====================
+// ---------- ▶ เล่นต่อ ----------
+function qmCont(){const L=[];let latest=null;SLOTS.forEach(n=>{const sv=readSave(n);if(sv&&sv.S){L.push([n,sv]);if(sv.S.alive!==false&&(!latest||(sv.t||0)>(latest[1].t||0)))latest=[n,sv]}});
+ const rows=L.map(([n,sv])=>{const s=sv.S,dead=s.alive===false;return{ic:dead?'🪦':s.beastMode&&!s.beastMode.human?'🐾':s.xt?'🌟':s.xian?'☁️':'🏯',t:`ช่อง ${n}: ${esc(s.name||'ไม่มีชื่อ')}`,s:`${fmt(s.age||0)} ปี${dead?' · จบชีวิตแล้ว':''}`,r:latest&&latest[0]===n?'ล่าสุด':'',f:()=>loadGame(n)}});
+ if(!rows.length)rows.push({info:'ยังไม่มีเซฟ'});
+ rows.push({sep:1});if(typeof openArchive==='function')rows.push({ic:'🗂️',t:'คลังสำรอง',r:'›',f:openArchive});if(typeof openCloudRestore==='function')rows.push({ic:'☁️',t:'กู้จากเซิร์ฟเวอร์',r:'›',f:openCloudRestore});
+ return{ic:'▶',t:'เล่นต่อ',sub:`${L.length} ช่องเซฟ`,rows}}
+// ---------- 🎲 เกิดใหม่ ----------
+function qmSetCfg(k,v){const b=document.querySelector(`#title .seg[data-k="${k}"] button[data-v="${v}"]`);if(b){if(!b.classList.contains('on'))b.click()}else CFG[k]=v}
+function qmGo(cfg){if(cfg)['len','xian','chm'].forEach(k=>{if(cfg[k]!=null)qmSetCfg(k,cfg[k])});setTimeout(()=>{const g=$('tGo');if(g)g.click()},cfg?160:0)}
+{const _gbL=goBirth;goBirth=function(){try{LS.set('murim_lastcfg',{len:CFG.len,xian:CFG.xian?1:0,chm:CFG.chm||0})}catch(e){}return _gbL.apply(this,arguments)}}
+const QM_CH=[['🙂','ปกติ'],['🔥','นรก'],['⏳','ชีวิตสั้น'],['🗑️','รากขยะ'],['🔁','ผู้ย้อนกาล']];
+function qmBorn(){const last=LS.get('murim_lastcfg',null),LEN=[2500,5000,9000],cm=CFG.chm||0;const segOK=k=>!!document.querySelector(`#title .seg[data-k="${k}"]`);
+ const rows=[];if(last)rows.push({ic:'🔁',t:'เกิดแบบเดิมอีกครั้ง',s:`${last.xian?'☁️ เซียน':'🏯 ยุทธภพ'} · ${(QM_CH[last.chm||0]||QM_CH[0]).join(' ')}`,f:()=>qmGo(last)});
+ rows.push({ic:'🌏',t:'โลก',seg:{o:['🏯 ยุทธภพ','☁️ เซียน'],cur:CFG.xian?1:0,f:j=>qmSetCfg('xian',j)}});
+ rows.push({ic:'⏱️',t:'ความเร็ว',seg:{o:['⚡','🍵','🐢'],cur:Math.max(0,LEN.indexOf(+CFG.len)),f:j=>qmSetCfg('len',LEN[j])}});
+ rows.push({sep:1});
+ QM_CH.forEach(([ic,n],i)=>{if(i===4&&!document.querySelector('#title .seg[data-k="chm"] button[data-v="4"]'))return;rows.push({ic,t:`เกิดใหม่ · ${n}`,r:cm===i?'เลือกอยู่':'',f:()=>qmGo({chm:i})})});
+ rows.push({sep:1},{ic:'🎲',t:'สุ่มทุกอย่าง',s:'โลก ความเร็ว และโหมด',f:()=>{const n=document.querySelectorAll('#title .seg[data-k="chm"] button').length||4;qmGo({xian:Math.random()<.5?0:1,len:LEN[Math.floor(Math.random()*3)],chm:Math.floor(Math.random()*n)})}});
+ return{ic:'🎲',t:'เกิดใหม่',sub:`${CFG.xian?'☁️ เซียน':'🏯 ยุทธภพ'} · ${QM_CH[cm][1]}`,rows}}
+// ---------- ⏱️ ความเร็ว (การ์ดแบบเดียวกัน) ----------
+function spdPopOpen(){return null}
+function qmSpeed(){const L=[[1,'1×','ช้าสุด อ่านได้ทุกบรรทัด'],[2,'2×',''],[4,'4×',''],[8,'8×',''],[16,'16×','เร็วมาก'],[0,'⚡ อัตโนมัติ','ข้ามไปเร็วที่สุดเท่าที่ทำได้']];
+ return{ic:'⏱️',t:'ความเร็วเวลา',sub:speed?speed+'×':'⚡A',rows:L.map(([v,t,s])=>({ic:speed===v?'✓':'',t,s,r:speed===v?'ตอนนี้':'',f:()=>{speed=v;try{render()}catch(e){}tuBuzz()}}))}}
+// ---------- ลากข้ามปุ่ม: การ์ดเปลี่ยนตามปุ่มที่นิ้วอยู่ ----------
+(()=>{document.addEventListener('pointermove',e=>{if(!QM.el||!QM.hold||e.pointerId!==QM.pid)return;const b=[...document.querySelectorAll(QM_SEL)].find(x=>{if(!x.offsetParent)return false;const r=x.getBoundingClientRect();return e.clientX>r.left+6&&e.clientX<r.right-6&&e.clientY>r.top+4&&e.clientY<r.bottom-4});if(!b||b===QM.btn||(b.matches(QM_FREE)!==QM.btn.matches(QM_FREE)))return;const mk=qmSpecFor(b);if(!mk)return;
+  QM.el.classList.add('swap');qmOpen(b,mk);if(QM.el)QM.el.classList.add('swapIn')},true)})();
+// ---------- สูตรแอนิเมชันเดียว (การ์ดทางลัดทุกใบ) ----------
+(()=>{const st=document.createElement('style');st.textContent=`
+#qm{animation:qmIn2 .34s cubic-bezier(.22,1.4,.4,1) both;will-change:transform,opacity,filter}
+@keyframes qmIn2{0%{transform:scale(.4) translateY(14px);opacity:0;filter:blur(6px)}55%{opacity:1;filter:blur(0)}75%{transform:scale(1.025) translateY(-1px)}100%{transform:none}}
+#qm.out{animation:qmOut2 .17s cubic-bezier(.5,0,.75,0) forwards}
+@keyframes qmOut2{to{transform:scale(.55) translateY(10px);opacity:0;filter:blur(4px)}}
+#qm.swapIn{animation:qmSwap .22s cubic-bezier(.3,1.3,.5,1) both}
+@keyframes qmSwap{from{transform:scale(.92);opacity:.2}}
+#qm .qmR,#qm .qmInfo{animation:qmRow2 .36s cubic-bezier(.25,1.3,.45,1) backwards;animation-delay:calc(var(--d)*24ms + 70ms)}
+@keyframes qmRow2{from{transform:translateY(10px) scale(.97);opacity:0}}
+#qm.still .qmR,#qm.still .qmInfo,#qm.swapIn .qmR,#qm.swapIn .qmInfo{animation:none}
+#qm .qmH{animation:qmRow2 .3s cubic-bezier(.25,1.3,.45,1) backwards;animation-delay:30ms}
+#qmMask{animation:qmF2 .26s ease-out both}@keyframes qmF2{from{opacity:0;-webkit-backdrop-filter:blur(0);backdrop-filter:blur(0)}}
+#qm .qmPill{transition:transform .3s cubic-bezier(.3,1.35,.5,1),height .22s,opacity .15s}
+.qmPress{transform:scale(.9)!important;filter:brightness(.92);transition:transform .38s cubic-bezier(.4,0,.6,1),filter .38s!important}
+.qmPop{animation:qmPop .42s cubic-bezier(.3,1.6,.5,1);transform:scale(1.07)!important;box-shadow:0 0 0 2px var(--pink),0 0 22px color-mix(in srgb,var(--pink) 65%,transparent)!important;transition:transform .3s cubic-bezier(.3,1.6,.5,1),box-shadow .25s!important;z-index:10001}
+@keyframes qmPop{0%{transform:scale(.9)}55%{transform:scale(1.12)}100%{transform:scale(1.07)}}
+#tCont,#tGo{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;position:relative}
+body.tuOn #tCont::after,body.tuOn #tGo::after{content:'';position:absolute;right:9px;top:8px;width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.35}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
