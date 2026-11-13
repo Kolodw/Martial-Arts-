@@ -21478,6 +21478,40 @@ const bTribTxt=()=>{const b=bTribP();if(!b)return'';const pc=Math.round(b.p*100)
 // บอกโอกาสใน log ตอนฝ่าทัณฑ์ชั้น / ทดสอบสวรรค์
 {const _bps=bpsTry;bpsTry=function(){const b=bTribP();const n0=S.beastMode?S.beastMode.pst:0,c0=S.beastMode?S.beastMode.pstCd:0;const r=_bps.apply(this,arguments);try{const m=S.beastMode;if(b&&b.k==='ps'&&m&&(m.pst!==n0||m.pstCd!==c0))log(`<span class="tag2">⚡ โอกาสผ่านครั้งนี้ ~${Math.round(b.p*100)}%</span>`,'')}catch(e){}return r}}
 
+
+// ===================== จังหวะเกม: ปีเงียบผ่านเร็ว · เหตุการณ์เล็กเลือกให้ · ช่วงยาวเร่งเอง · เตือนพัก =====================
+const PACE={imp:Date.now(),on:()=>LS.get('murim_pace',1)?1:0,am:()=>LS.get('murim_automin',1)?1:0,brk:()=>LS.get('murim_brk',1)?1:0,play:0,brkAt:0};
+{const _lgP=log;log=function(t,c){try{if(c&&/^(epic|myth|qq|love)$/.test(c))PACE.imp=Date.now()}catch(e){}return _lgP.apply(this,arguments)}}
+{const _chP=choice;choice=function(){PACE.imp=Date.now();return _chP.apply(this,arguments)}}
+function paceBoost(){if(!PACE.on()||!S||!S.alive)return 1;const sp=speed;if(sp===0||sp>=8)return 1;
+ let b=1;const quiet=Date.now()-PACE.imp>4500&&!(revealQ&&revealQ.length);if(quiet)b*=2.2;
+ try{if(S.xt||S.age>lifeMax()*.75)b*=1.4}catch(e){}return Math.min(3,b)}
+setInterval(()=>{try{if(!S||!S.alive||paused||modalOpen||choice._cur||document.hidden)return;PACE.play+=100;
+  const b=paceBoost();if(b>1){const eff=speed||1;acc+=100*eff*(b-1);const yb=$('ybar');if(yb)yb.classList.add('pfast')}else{const yb=$('ybar');if(yb)yb.classList.remove('pfast')}
+  if(PACE.brk()&&PACE.play-PACE.brkAt>=90*60e3)paceBreak()}catch(e){}},100);
+// เหตุการณ์เล็ก: ให้ระบบเลือกให้ (แตะหน้าต่างเพื่อเลือกเอง)
+const PACE_BIG=/ทัณฑ์|ทายาท|ระบบ|แต่ง|รัก|คู่|ลูก|บุตร|สำนัก|ศึก|ดวล|ชิง|ทางแยก|เส้นทาง|ประมูล|ตาย|สิ้นใจ|กัลป์|AI|แสนปี|บัลลังก์|ข้ามมิติ|แปลง|ปิดด่าน|โลก|มาร|ศิษย์|อาจารย์|สืบทอด|ล้างแค้น|แค้น|ทรยศ|จักรพรรดิ|ประมุข|ระลอก|บททดสอบ|ลานประลอง|ติ๊ง|สัตว์คู่ใจ|เทพ/;
+function paceMinor(c){try{const tx=String(c.title)+' '+String(c.text||'').slice(0,160);if(PACE_BIG.test(tx))return false;if(!c.opts||c.opts.length<2||c.opts.length>4)return false;if(c.opts.some(o=>/เดิมพัน|ทุกสิ่ง|ชีวิต/.test(String(o.t)+String(o.s||''))))return false;return true}catch(e){return false}}
+{const _csP=choiceShow;choiceShow=function(){const r=_csP.apply(this,arguments);try{const c=choice._cur;if(!c||auto||!PACE.am()||!paceMinor(c))return r;
+  const m=$('modal');if(!m||m.dataset.k!=='choice')return r;let left=3,stop=false;
+  m.insertAdjacentHTML('beforeend',`<div class="paceMin" id="paceMin">⚡ เหตุการณ์เล็ก — ระบบจะเลือกให้ใน <b>${left}</b> วิ · แตะเพื่อเลือกเอง</div>`);
+  const cancel=()=>{stop=true;const e=$('paceMin');if(e)e.remove();m.removeEventListener('pointerdown',cancel,true)};m.addEventListener('pointerdown',cancel,true);
+  const tk=()=>{if(stop||choice._cur!==c)return;if(pendModal||!modalOpen){setTimeout(tk,400);return}left--;const e=$('paceMin');if(e)e.querySelector('b').textContent=left;
+   if(left<=0){m.removeEventListener('pointerdown',cancel,true);const valid=c.opts.map((o,i)=>i).filter(i=>!c.opts[i].skip);const i=valid.length?ch(valid):0;addFeed('ev',`⚡ ระบบเลือกให้ — <b>${String(c.title).replace(/<[^>]+>/g,'')}</b>: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');choiceRun(i);return}setTimeout(tk,1000)};
+  setTimeout(tk,1000)}catch(e){console.error(e)}return r}}
+// เตือนพัก
+function paceBreak(){if(modalOpen||choice._cur)return;PACE.brkAt=PACE.play;const was=paused;paused=true;try{if(typeof saveGame==='function')saveGame()}catch(e){}
+ let ri='';try{ri=REALMS[realmIdx()].n}catch(e){}
+ modal(`<h3>☕ เล่นมาชั่วโมงครึ่งแล้ว</h3><p>${esc(S.name)} อายุ <b>${fmt(S.age)}</b> ปี · ${ri}<br>เกมบันทึกให้แล้ว พักสายตาสักหน่อยก็ได้ กลับมาเล่นต่อได้ทุกเมื่อ</p>
+ <div class="brow"><button class="pbtn" style="flex:1" onclick="closeM();paused=${was?'true':'false'};render()">▶ เล่นต่อ</button><button class="gbtn" style="flex:1" onclick="closeM();paused=true;render();toast('พักไว้แล้ว — กด ▶ เมื่อพร้อม')">⏸ พักก่อน</button></div>
+ <label class="tag2" style="display:block;margin-top:8px"><input type="checkbox" onchange="LS.set('murim_brk',this.checked?0:1)"> ไม่ต้องเตือนอีก</label>`,'pbrk')}
+// ตั้งค่า: กดค้างปุ่มความเร็ว
+{const _qsP=qmSpeed;qmSpeed=function(){const sp=_qsP.apply(this,arguments);try{const sw=(k,v)=>{LS.set(k,v);tuBuzz()};
+ sp.rows.push({sep:1},{ic:'⏩',t:'ปีเงียบผ่านเร็ว',seg:{o:['ปิด','เปิด'],cur:PACE.on(),f:j=>sw('murim_pace',j)}},{ic:'⚡',t:'ระบบเลือกเหตุการณ์เล็ก',seg:{o:['ปิด','เปิด'],cur:PACE.am(),f:j=>sw('murim_automin',j)}},{ic:'☕',t:'เตือนพักทุก 90 นาที',seg:{o:['ปิด','เปิด'],cur:PACE.brk(),f:j=>sw('murim_brk',j)}})}catch(e){}return sp}}
+(()=>{const st=document.createElement('style');st.textContent=`.paceMin{margin-top:8px;padding:7px 10px;border-radius:10px;text-align:center;font-size:12.5px;background:color-mix(in srgb,var(--pink,#e8b54a) 16%,transparent);border:1px dashed color-mix(in srgb,var(--pink,#e8b54a) 55%,transparent)}
+#ybar.pfast{background:linear-gradient(90deg,var(--pink,#e8b54a),#7ad0ff)!important}`;document.head.appendChild(st)})();
+setTimeout(()=>{try{if(!LS.get('murim_pacehint',0)&&S&&S.alive){LS.set('murim_pacehint',1);toast('⏩ ปีที่เงียบจะผ่านเร็วขึ้นเอง · เหตุการณ์เล็กระบบเลือกให้ได้ — ตั้งค่าได้ที่กดค้างปุ่มความเร็ว')}}catch(e){}},20000);
+
 </script>
 </body>
 </html>
