@@ -20961,6 +20961,11 @@ function admUnlockCodex(){let n=0;try{const C=cdx();(cxCats()||[]).forEach(c=>{i
  const p=b.closest('.adsec')&&b.closest('.adsec').querySelector('p.tag2');if(p&&!p.querySelector('.adCdx'))p.insertAdjacentHTML('beforeend',' · <span class="adCdx">📚 สารานุกรมทุกหมวด · 🐉 สมุดสัตว์ทุกตัว (เฉพาะเครื่องนี้ ไม่กระทบผู้เล่นคนอื่น)</span>');
  if(!m.querySelector('.adCdxB'))b.insertAdjacentHTML('afterend',`<button class="gbtn adCdxB" onclick="admBackup();const n=admUnlockCodex();toast('📚 ปลดสารานุกรม + สมุดสัตว์แล้ว '+n+' รายการ');openAdmTools()">📚 ปลดเฉพาะสารานุกรม + สมุดสัตว์</button>`)}}catch(e){console.error(e)}return r}}
 
+
+// ===================== โปรไฟล์: ปุ่มลบรูปโปรไฟล์ =====================
+function profDel(){const d=frGet();if(!d.av&&!d.snap)return toast('ยังไม่มีรูปโปรไฟล์');if(!confirm('ลบรูปโปรไฟล์? (คนอื่นจะเห็นเป็น 🙂 แทน)'))return;d.av='';d.snap='';d.avUp=0;d.avSt='';frSet(d);try{profPush()}catch(e){}toast('🗑️ ลบรูปโปรไฟล์แล้ว');openProfile()}
+{const _opD=openProfile;openProfile=function(){const r=_opD.apply(this,arguments);try{const d=frGet(),m=$('modal');if((d.av||d.snap)&&!m.querySelector('.pfDel')){const sec=[...m.querySelectorAll('.pfsec')].find(x=>/รูปโปรไฟล์/.test((x.querySelector('h4')||{}).textContent||''));if(sec){const h=sec.querySelector('button.pbtn')||sec.querySelector('h4');h.insertAdjacentHTML('afterend','<button class="gbtn pfDel" style="width:100%;margin:6px 0;color:#d84a4a;border-color:#d84a4a88" onclick="profDel()">🗑️ ลบรูปโปรไฟล์</button>')}}}catch(e){console.error(e)}return r}}
+
 </script>
 </body>
 </html>
