@@ -21074,7 +21074,7 @@ function maKind(k,M){if(MA_LOCK(k))return'sheet';if(MA_ALERT.test(k||''))return'
  const t=MA.tap;if(t&&!t.inM&&Date.now()-t.t<600&&t.y<innerHeight*.58)return'zoom';return'sheet'}
 function maStagger(M){let i=0;[...M.children].forEach(ch=>{if(ch.classList.contains('xbtn')||ch.classList.contains('maGrab')||ch.classList.contains('maGhost'))return;ch.style.setProperty('--i',Math.min(i++,14))})}
 function maGrab(M,k){if(M.querySelector(':scope>.maGrab'))return;M.insertAdjacentHTML('afterbegin',`<div class="maGrab${MA_LOCK(k)?' lock':''}"><i></i></div>`)}
-function maRun(M,cls){M.classList.remove('maSheet','maZoom','maAlert','maPush','maPop','maIn','maLite');void M.offsetWidth;cls.split(' ').forEach(c=>c&&M.classList.add(c));clearTimeout(M._maT);M._maT=setTimeout(()=>{M.classList.remove('maSheet','maZoom','maAlert','maPush','maPop','maIn','maLite');M.style.transformOrigin=''},700)}
+function maRun(M,cls){M.classList.remove('maSheet','maZoom','maAlert','maPush','maPop','maIn','maLite','maDone');void M.offsetWidth;cls.split(' ').forEach(c=>c&&M.classList.add(c));clearTimeout(M._maT);M._maT=setTimeout(()=>{M.classList.add('maDone');M.classList.remove('maSheet','maZoom','maAlert','maPush','maPop','maLite');M.style.transformOrigin=''},700)}
 {const _mdA=modal;modal=function(html,k){const M=$('modal'),on=maOn();let wasOpen=modalOpen&&$('mask').classList.contains('on'),prevK=M.dataset.k||'',sn=null;
  const cl=MA.closed;if(!wasOpen&&cl&&Date.now()-cl.t<120){wasOpen=true;prevK=cl.k;sn=cl.sn;try{cl.g&&cl.g.remove();cl.bd&&cl.bd.remove()}catch(e){}MA.closed=null}
  else if(wasOpen&&on&&(k||'')!==prevK)sn=maSnap();
@@ -21084,7 +21084,7 @@ function maRun(M,cls){M.classList.remove('maSheet','maZoom','maAlert','maPush','
   if(!wasOpen){MA.stack=[k];const kind=maKind(k,M);MA.mode=kind;if(kind!=='alert')maGrab(M,k);maStagger(M);
    if(kind==='zoom'){const rc=M.getBoundingClientRect(),t=MA.tap;M.style.transformOrigin=`${Math.round(t.x-rc.left)}px ${Math.round(t.y-rc.top)}px`}
    if(shown)maRun(M,'ma'+kind[0].toUpperCase()+kind.slice(1)+(kind==='alert'?'':' maIn'))}
-  else if(k===prevK){if(MA.mode!=='alert')maGrab(M,k)}
+  else if(k===prevK){M.classList.remove('maIn');if(MA.mode!=='alert')maGrab(M,k)}
   else{const st=MA.stack,pop=st.length>=2&&st[st.length-2]===k;if(pop)st.pop();else{st.push(k);if(st.length>8)st.shift()}
    if(MA.mode!=='alert'&&!MA_ALERT.test(k))maGrab(M,k);maStagger(M);maGhost(sn,pop?'maPopOut':'maPushOut',360,true);maRun(M,(pop?'maPop':'maPush')+' maIn')}}catch(e){console.error(e)}return r}}
 {const _cmA=closeM;closeM=function(){const M=$('modal'),on=maOn()===2,was=$('mask').classList.contains('on')&&modalOpen,k=M.dataset.k||'';const sn=on&&was?maSnap():null;const r=_cmA.apply(this,arguments);
@@ -21117,7 +21117,7 @@ body.tuOn.fxHi .mask.on{backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5
 #modal.maPush{animation:maPushIn .34s cubic-bezier(.2,.9,.3,1) both!important}@keyframes maPushIn{from{transform:translateX(40%);opacity:0}to{transform:none;opacity:1}}
 #modal.maPop{animation:maPopIn .34s cubic-bezier(.2,.9,.3,1) both!important}@keyframes maPopIn{from{transform:translateX(-30%);opacity:0}to{transform:none;opacity:1}}
 #modal.maLite{animation:maLite .2s ease both!important}@keyframes maLite{from{opacity:0}}
-.maGhost{z-index:0;box-sizing:border-box}.mask>#modal{z-index:1}
+#modal.maDone{animation:none!important}#modal.maDone.maIn>*{animation-play-state:running}.maGhost{z-index:0;box-sizing:border-box}.mask>#modal{z-index:1}
 .maPushOut{animation:maPushOut .34s cubic-bezier(.4,0,.6,1) forwards}@keyframes maPushOut{to{transform:translateX(-26%) scale(.96);opacity:0}}
 .maPopOut{animation:maPopOut .34s cubic-bezier(.4,0,.6,1) forwards}@keyframes maPopOut{to{transform:translateX(38%);opacity:0}}
 .maSheetOut{z-index:51;animation:maSheetOut .28s cubic-bezier(.4,0,.8,.6) forwards}@keyframes maSheetOut{to{transform:translateY(46vh);opacity:0}}
