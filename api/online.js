@@ -325,7 +325,7 @@ async function paTick(now) {
     const H = {}; if (Array.isArray(bh)) for (let i = 0; i < bh.length; i += 2) H[bh[i]] = bh[i + 1]; else Object.assign(H, bh || {});
     const V = {}; if (Array.isArray(vh)) for (let i = 0; i < vh.length; i += 2) V[vh[i]] = +vh[i + 1]; else for (const k in (vh || {})) V[k] = +vh[k];
     const L = cur.lots[cur.li], ops = [];
-    if (H.by) { L.sold = { g: +H.hi, n: H.bn }; const dk = 'pa:wd:' + PA_DAY(now) + ':' + H.by; ops.push(['INCR', dk], ['EXPIRE', dk, 172800], ['HINCRBY', 'pa:ws:' + cur.sid, H.by, 1], ['EXPIRE', 'pa:ws:' + cur.sid, 7200], ['LPUSH', 'pa:win:' + H.by, JSON.stringify({ sid: cur.sid, li: cur.li, r: L.r, k: L.k, g: +H.hi, t: now, u: cur.u ? 1 : 0 })], ['EXPIRE', 'pa:win:' + H.by, 86400]) } else L.sold = { g: 0 };
+    if (H.by) { L.sold = { g: +H.hi, n: H.bn }; const dk = 'pa:wd:' + PA_DAY(now) + ':' + H.by + ':' + (L.w || 'm'); ops.push(['INCR', dk], ['EXPIRE', dk, 172800], ['HINCRBY', 'pa:ws:' + cur.sid, H.by, 1], ['EXPIRE', 'pa:ws:' + cur.sid, 7200], ['LPUSH', 'pa:win:' + H.by, JSON.stringify({ sid: cur.sid, li: cur.li, r: L.r, k: L.k, g: +H.hi, t: now, u: cur.u ? 1 : 0 })], ['EXPIRE', 'pa:win:' + H.by, 86400]) } else L.sold = { g: 0 };
     const rest = cur.lots.map((x, i) => i).filter(i => !cur.lots[i].sold);
     if (!rest.length) { cur.phase = 'done'; const act = +(await cmd('ZCOUNT', 'online', now - 180e3, '+inf')) || 0; cur.next = now + Math.max(5, Math.min(10, act)) * 60e3 }
     else { rest.sort((x, y) => (V['l' + y] || 0) - (V['l' + x] || 0) || x - y); cur.li = rest[0]; const ls0 = now + PA_GRACE_MS; cur.ls = ls0; cur.nbEnd = ls0 + PA_NB_MS; ops.push(['SET', 'pa:end:' + cur.sid, ls0 + PA_LOT_MS, 'EX', 3600]); cur.end = ls0 + PA_LOT_MS }
@@ -1813,10 +1813,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (a === 'pabid') {
         if (String(b.sid) !== sid || +b.li !== cur.li || cur.phase !== 'open') return res.json({ ok: 0, err: 'lot' });
         if ((await cmd('SET', 'pabl:' + id, 1, 'NX', 'PX', 900)) !== 'OK') return res.status(429).json({ err: 'rate' });
-        const [wd, ws] = await pipe([['GET', 'pa:wd:' + PA_DAY(now) + ':' + id], ['HGET', 'pa:ws:' + sid, id]]);
+        const L = cur.lots[cur.li];
+        // โควต้ารายวันแยกตามโลกของชิ้นนั้น (ยุทธภพ / โลกเซียน / แดนเทพ โลกละ 3 ชิ้น) — เหาะขึ้นโลกใหม่แล้วยังซื้อของโลกใหม่ได้ · ปั๊มไม่ได้เพราะเพดานรวม 9
+        const [wd, ws] = await pipe([['GET', 'pa:wd:' + PA_DAY(now) + ':' + id + ':' + (L.w || 'm')], ['HGET', 'pa:ws:' + sid, id]]);
         if ((+wd || 0) >= 3) return res.json({ ok: 0, code: -2 });
         if ((+ws || 0) >= 2) return res.json({ ok: 0, code: -3 });
-        const g = Math.max(1, Math.min(1e13, Math.floor(+b.g || 0))), L = cur.lots[cur.li];
+        const g = Math.max(1, Math.min(1e13, Math.floor(+b.g || 0)));
         { const why = paElig(L, ['m', 'x', 'g'].includes(b.w) ? b.w : 'm', Math.max(0, Math.min(9, Math.floor(+b.ri || 0)))); if (why) return res.json({ ok: 0, code: -4, why }) }
         const r = await cmd('EVAL', PA_BID_LUA, 2, 'pa:b:' + sid + ':' + cur.li, 'pa:end:' + sid, g, id, clean(b.n, 20) || 'นิรนาม', now, L.g);
         return res.json({ ok: +r[0] === 1 ? 1 : 0, code: +r[0], hi: +r[1] });
