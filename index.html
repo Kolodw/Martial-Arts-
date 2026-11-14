@@ -24623,6 +24623,61 @@ function bowFx(){try{const o0=$('bwOv');if(o0)o0.remove()}catch(e){}const o=docu
 @keyframes bwScr{0%{transform:translateX(0);opacity:0}10%{opacity:1}50%{transform:translateX(-18px)}90%{opacity:.6}100%{transform:translateX(9px);opacity:0}}
 #bwOv .bwVig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.85) 100%)}
 @media (prefers-reduced-motion:reduce){#bwOv,#bwOv *{animation-duration:.01s!important;animation-iteration-count:1!important}}`;document.head.appendChild(st)})();
+
+// ===================== 🏃 ขารีบ (1 ใน 20,000) · ความสำเร็จ "ลุงเอ" · ฉากโทนม่วง-ชมพู-ส้ม =====================
+BODY_C.rush={n:'ขารีบ',ic:'🏃',d:'ขาก้าวไวเหมือนมีธุระด่วนตลอดเวลา เดินช้าไม่เป็น · ฝึกยุทธ์ ×1.03 · เสน่ห์ +5 · ได้ฉายา「ลุงเอ」',p:.00005,good:1};
+BODY_M.rush={power:1.03};
+{const _bsR=bodyStart;bodyStart=function(){const r=_bsR.apply(this,arguments);try{if(S&&bodyHas('rush')&&!S.flags.rushSt){S.flags.rushSt=1;S.cha=(S.cha||0)+5;
+ const go=(n)=>{if(!S||!bodyHas('rush')||S.flags.rushFx)return;if((choice._cur||modalOpen)&&n<120)return setTimeout(()=>go(n+1),700);S.flags.rushFx=1;rushFx()};setTimeout(()=>go(0),1500)}}catch(e){console.error(e)}return r}}
+{const L=[{id:'b_rush',n:'ลุงเอ',d:'เกิดมาพร้อมขารีบ (โอกาส 1 ใน 20,000)',r:5,c:()=>bodyHas('rush')}];const G=ACH.find(x=>x[0]==='🦵 ร่างกายในตำนาน');if(G)G[1].push(...L);else ACH.push(['🦵 ร่างกายในตำนาน',L]);ACH_ALL.push(...L)}
+const RUSH_PX=['......HHHHHHHH......','.....HHHHHHHHHH.....','.....SSSSSSSSSS.....','.....GGGGGGGGGG.....','.....GWEGSGWEGS.....','.....GGGGSGGGGS.....','.....SSSSNSSSSS.....','......SSMMMMSS......','.......SSSSSS.......','........SSSS........',
+ '....TTTTTTTTTTTT....','...TTTTTTTTTTTTTT...','..TTTTTTTTTTTTTTTT..','..STTTTWWWWWTTTTTS..','..STTTTTTTTTTTTTTS..','..S.TTTTTTTTTTTT.S..','..S.TTTTTTTTTTTT.S..','....KKKKKKKKKKKK....','....KKKKKKKKKKKK....','....KKKKK..KKKKK....'];
+function rushSvg(){const C={H:'#1a1020',S:'#f1c7a8',G:'#160c1c',W:'#ffffff',E:'#2a1530',N:'#d99a7a',M:'#5a1f2e',T:'#ff2d95',K:'#2b0f3a'};let h='';
+ for(let y=0;y<RUSH_PX.length;y++)for(let x=0;x<20;x++){const c=RUSH_PX[y][x];if(C[c])h+=`<rect x="${x}" y="${y}" width="1.02" height="1.02" fill="${C[c]}"/>`}
+ const leg=(x,cl)=>`<g class="${cl}"><rect x="${x}" y="20" width="2.4" height="7" fill="#f1c7a8"/><rect x="${x-1}" y="27" width="4" height="1.6" rx=".4" fill="#ffffff"/><rect x="${x-1}" y="28.3" width="4" height=".5" fill="#ff8a00"/></g>`;
+ return`<svg viewBox="-3 -2 26 33" shape-rendering="crispEdges" class="ruFig"><g class="ruWheel"><circle cx="10" cy="25" r="5.4" fill="none" stroke="rgba(255,255,255,.55)" stroke-width=".5" stroke-dasharray="2 1.4"/><circle cx="10" cy="25" r="3.6" fill="none" stroke="rgba(255,200,120,.45)" stroke-width=".4" stroke-dasharray="1 1.6"/></g>${leg(6.4,'ruL1')}${leg(11.2,'ruL2')}<g class="ruUp">${h}</g><g class="ruSweat"><path d="M18.5 3 q1 1.6 0 2.4 q-1-.8 0-2.4z" fill="#bfe8ff"/></g></svg>`}
+function rushFx(){try{const o0=$('ruOv');if(o0)o0.remove()}catch(e){}const o=document.createElement('div');o.id='ruOv';
+ const sp=Array.from({length:14},(_,i)=>`<i style="top:${6+i*6.6}%;animation-delay:${(-(i*0.37)%1.2).toFixed(2)}s;width:${18+((i*37)%30)}%"></i>`).join('');
+ const st=Array.from({length:16},(_,i)=>`<b style="left:${(i*61)%100}%;top:${(i*37+11)%100}%;animation-delay:${((i*0.29)%2.4).toFixed(2)}s"></b>`).join('');
+ o.innerHTML=`<div class="ruBg"></div><div class="ruRing"></div><div class="ruSpd">${sp}</div><div class="ruStar">${st}</div>
+ <div class="ruWrap"><div class="ruTop">✦ ความสำเร็จหายาก ✦<small>ขารีบ · โอกาสเกิด 1 ใน 20,000</small></div>
+ <div class="ruStage"><div class="ruDust"><span></span><span></span><span></span></div>${rushSvg()}</div>
+ <div class="ruName">ลุงเอ</div><div class="ruSub">ขารีบดั่งลมพายุ · ธุระด่วนทั้งชีวิต</div><div class="ruTap">แตะเพื่อไปต่อ</div></div>`;
+ o.onclick=()=>{o.classList.add('ruOut');setTimeout(()=>o.remove(),500)};document.body.appendChild(o);try{sfx('ach')}catch(e){}}
+(()=>{const st=document.createElement('style');st.textContent=`
+#ruOv{position:fixed;inset:0;z-index:100001;overflow:hidden;cursor:pointer;background:#1a0826;animation:ruIn .55s cubic-bezier(.2,.9,.3,1)}
+#ruOv.ruOut{animation:ruOutK .5s forwards}@keyframes ruIn{from{opacity:0;transform:scale(1.08)}}@keyframes ruOutK{to{opacity:0;transform:scale(.94) translateX(-30px)}}
+#ruOv .ruBg{position:absolute;inset:-20%;background:linear-gradient(135deg,#6a2cff 0%,#b51cf0 28%,#ff2d95 55%,#ff5a3c 78%,#ff9a00 100%);background-size:200% 200%;animation:ruGrad 6s ease-in-out infinite}
+@keyframes ruGrad{0%,100%{background-position:0% 30%}50%{background-position:100% 70%}}
+#ruOv .ruRing{position:absolute;left:50%;top:44%;width:min(88vw,380px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.28),rgba(255,255,255,.06) 60%,transparent 70%);box-shadow:0 0 0 2px rgba(255,255,255,.35),0 0 60px rgba(255,120,200,.55);animation:ruPulse 2.2s ease-in-out infinite}
+@keyframes ruPulse{50%{transform:translate(-50%,-50%) scale(1.04);box-shadow:0 0 0 3px rgba(255,255,255,.5),0 0 90px rgba(255,160,80,.7)}}
+#ruOv .ruSpd i{position:absolute;right:-40%;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75));animation:ruLine 1.2s linear infinite}
+@keyframes ruLine{from{transform:translateX(0)}to{transform:translateX(-260vw)}}
+#ruOv .ruStar b{position:absolute;width:6px;height:6px;background:#fff;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);opacity:0;animation:ruTw 2.4s ease-in-out infinite}
+@keyframes ruTw{0%,100%{opacity:0;transform:scale(.3) rotate(0)}50%{opacity:.9;transform:scale(1.4) rotate(90deg)}}
+#ruOv .ruWrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#fff;text-align:center}
+#ruOv .ruTop{font-weight:800;font-size:14px;letter-spacing:.12em;text-shadow:0 2px 10px rgba(80,0,60,.6);opacity:0;animation:ruUp .6s .2s forwards}
+#ruOv .ruTop small{display:block;font-weight:600;font-size:12px;letter-spacing:.06em;opacity:.9;margin-top:2px}
+@keyframes ruUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#ruOv .ruStage{position:relative;width:min(48vw,200px);aspect-ratio:26/33;animation:ruDash 1s .3s cubic-bezier(.2,1.2,.3,1) backwards}
+@keyframes ruDash{from{transform:translateX(120vw) skewX(-20deg)}70%{transform:translateX(-6%) skewX(8deg)}to{transform:none}}
+#ruOv .ruFig{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 6px 10px rgba(60,0,50,.45));animation:ruBob .26s ease-in-out infinite}
+@keyframes ruBob{50%{transform:translateY(-2.5%) rotate(-3deg)}}
+#ruOv .ruL1,#ruOv .ruL2{transform-box:view-box;animation:ruLeg .26s linear infinite}
+#ruOv .ruL1{transform-origin:7.6px 20px}#ruOv .ruL2{transform-origin:12.4px 20px;animation-delay:-.13s}
+@keyframes ruLeg{0%{transform:rotate(38deg)}50%{transform:rotate(-38deg)}100%{transform:rotate(38deg)}}
+#ruOv .ruWheel{transform-box:view-box;transform-origin:10px 25px;animation:ruSpin .35s linear infinite}@keyframes ruSpin{to{transform:rotate(-360deg)}}
+#ruOv .ruSweat{animation:ruSw .9s ease-in infinite}@keyframes ruSw{0%{opacity:0;transform:translate(0,0)}30%{opacity:1}100%{opacity:0;transform:translate(3px,4px)}}
+#ruOv .ruDust{position:absolute;left:8%;bottom:6%;width:40%;height:20%}
+#ruOv .ruDust span{position:absolute;bottom:0;left:0;width:18px;height:18px;border-radius:50%;background:rgba(255,235,220,.85);animation:ruPuff .5s ease-out infinite}
+#ruOv .ruDust span:nth-child(2){animation-delay:-.17s;width:12px;height:12px}#ruOv .ruDust span:nth-child(3){animation-delay:-.34s;width:9px;height:9px}
+@keyframes ruPuff{0%{opacity:.9;transform:translate(10px,0) scale(.5)}100%{opacity:0;transform:translate(-60px,-14px) scale(1.6)}}
+#ruOv .ruName{font-size:54px;font-weight:900;line-height:1.05;letter-spacing:.04em;background:linear-gradient(90deg,#fff 0%,#ffe0f0 30%,#fff3c4 60%,#fff 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 0 #8a1050) drop-shadow(0 0 18px rgba(255,255,255,.6));opacity:0;animation:ruPop .8s 1.1s cubic-bezier(.2,1.6,.4,1) forwards,ruShine 2.4s 2s linear infinite}
+@keyframes ruPop{from{opacity:0;transform:scale(.2) rotate(-12deg)}to{opacity:1;transform:none}}@keyframes ruShine{to{background-position:-200% 0}}
+#ruOv .ruSub{font-size:13px;font-weight:700;letter-spacing:.08em;opacity:0;animation:ruUp .6s 1.7s forwards;text-shadow:0 2px 8px rgba(80,0,60,.6)}
+#ruOv .ruTap{margin-top:10px;font-size:12px;opacity:0;padding:4px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.6);animation:ruUp .6s 2.6s forwards,ruBl 1.6s 3.2s infinite}
+@keyframes ruBl{50%{opacity:.45}}
+@media (prefers-reduced-motion:reduce){#ruOv,#ruOv *{animation-duration:.01s!important;animation-iteration-count:1!important}}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
