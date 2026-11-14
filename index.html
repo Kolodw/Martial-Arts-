@@ -14666,6 +14666,8 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
   if(wipe){const k=(performance.now()-wipe.t0)/750;if(k>=1)wipe=null;else{const x0=Math.round((k*1.6-.3)*W);cx.fillStyle='#f6f2ff';for(let y=0;y<H;y+=6){const r=10+Math.round(sr(y)*10);disc(cx,x0+Math.round(Math.sin(y*.2)*8),y,r,'#ffffff','#e6e0fa')}cx.globalAlpha=Math.max(0,.9-Math.abs(k-.5)*1.8);cx.fillStyle='#ffffff';cx.fillRect(0,0,W,H);cx.globalAlpha=1}}}
  function loop(now){requestAnimationFrame(loop);const iv=fxQ>=2?33:250;if(now-last<iv)return;last=now;try{draw(now)}catch(e){}}
  tbDraw=function(){};requestAnimationFrame(loop);
+ // iOS ล้างหน่วยความจำ canvas ตอนสลับแอป/ปิดหน้าไปนาน → ภาพเพี้ยน: กลับมาเมื่อไหร่ให้วาดฉากใหม่ทั้งหมด
+ {const rb=()=>{key='';last=0};addEventListener('pageshow',rb);addEventListener('focus',rb);document.addEventListener('visibilitychange',()=>{if(!document.hidden)rb()});try{cv&&cv.addEventListener('contextrestored',rb)}catch(e){}}
  addEventListener('deviceorientation',e=>{if(e.gamma==null)return;tilt=Math.max(-1,Math.min(1,e.gamma/30))},{passive:true});
  // ไม่เคยเล่น: เงาคนพเนจรสวมงอบ
  const _tr=window.tRedo;if(_tr){window.tRedo=function(){_tr.apply(this,arguments);try{const T=$('title');if(!T)return;let hc=$('tHero');if(!hc){const big=T.querySelector('.big');if(big){big.insertAdjacentHTML('beforebegin','<canvas id="tHero" width="112" height="124"></canvas><div id="tHeroCap"></div>');hc=$('tHero')}}
