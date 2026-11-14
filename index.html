@@ -14667,7 +14667,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
  function loop(now){requestAnimationFrame(loop);const iv=fxQ>=2?33:250;if(now-last<iv)return;last=now;try{draw(now)}catch(e){}}
  tbDraw=function(){};requestAnimationFrame(loop);
  // iOS ล้างหน่วยความจำ canvas ตอนสลับแอป/ปิดหน้าไปนาน → ภาพเพี้ยน: กลับมาเมื่อไหร่ให้วาดฉากใหม่ทั้งหมด
- {const rb=()=>{key='';last=0};addEventListener('pageshow',rb);addEventListener('focus',rb);document.addEventListener('visibilitychange',()=>{if(!document.hidden)rb()});try{cv&&cv.addEventListener('contextrestored',rb)}catch(e){}}
+ {let rbT=0;const rb=()=>{clearTimeout(rbT);rbT=setTimeout(()=>{try{if(cv){cv.remove();cv=null;cx=null}}catch(e){}key='';last=0;try{L={};parts=[]}catch(e){}try{window.tRedo&&window.tRedo()}catch(e){}try{draw(performance.now())}catch(e){}},60)};addEventListener('pageshow',rb);addEventListener('focus',rb);document.addEventListener('visibilitychange',()=>{if(!document.hidden)rb()});document.addEventListener('resume',rb);setInterval(()=>{try{if(cv&&cv.getContext('2d').isContextLost&&cv.getContext('2d').isContextLost())rb()}catch(e){}},2000)}
  addEventListener('deviceorientation',e=>{if(e.gamma==null)return;tilt=Math.max(-1,Math.min(1,e.gamma/30))},{passive:true});
  // ไม่เคยเล่น: เงาคนพเนจรสวมงอบ
  const _tr=window.tRedo;if(_tr){window.tRedo=function(){_tr.apply(this,arguments);try{const T=$('title');if(!T)return;let hc=$('tHero');if(!hc){const big=T.querySelector('.big');if(big){big.insertAdjacentHTML('beforebegin','<canvas id="tHero" width="112" height="124"></canvas><div id="tHeroCap"></div>');hc=$('tHero')}}
