@@ -24546,6 +24546,29 @@ setInterval(dvScan,700);
 #dvOv video{width:100%;max-height:72vh;object-fit:contain;border-radius:14px;border:2px solid #d4a94a;background:#000;box-shadow:0 0 24px rgba(212,169,74,.35)}
 #dvOv .dvDots{display:flex;gap:6px}#dvOv .dvDots i{width:9px;height:9px;border-radius:50%;background:#555;cursor:pointer}#dvOv .dvDots i.on{background:#e8c06a}
 #dvOv .dvX{padding:7px 22px;border-radius:999px;border:1px solid #d4a94a;background:#1c1830;color:#f3e2b5;font:inherit;font-weight:700}`;document.head.appendChild(st)})();
+
+// ===================== 🧘 ปิดด่าน ย้ายออกจากกระเป๋า → การ์ดกดค้าง ⏭ · เมนู "ตัวละครและการฝึก" =====================
+function secAvail(){return !!(S&&S.alive&&S.xian&&!(S.beastMode&&!S.beastMode.human)&&!S.mw)}
+function secRem(){return Math.floor(lifeMax()-S.age-1)}
+function secGo(n){if(!secAvail())return;if(choice._cur)return toast('มีเรื่องรอตัดสินใจอยู่ — เลือกก่อนแล้วค่อยปิดด่าน');try{if(modalOpen)closeM()}catch(e){}setTimeout(()=>{try{seclude(n)}catch(e){console.error(e)}},60)}
+function openSeclude(){if(!secAvail())return toast('ปิดด่านข้ามเวลาเปิดให้ใช้ในโลกเซียน');const rem=secRem(),O=secOpts();
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🧘 ปิดด่านข้ามเวลา</h3>
+ <p class="tag2">ข้ามเวลาหลายปีในครั้งเดียว ได้ลมปราณและพลังต่อเนื่อง แต่<b>พลาดทุกเหตุการณ์ข้างนอก</b> คนรอบตัวแก่และอาจจากไประหว่างนั้น · พลังจะไปติดคอขวดก่อนขั้นถัดไป ต้องออกมาทะลวงเอง</p>
+ <div class="item">⏳ อายุ ${fmt(S.age)} ปี · อายุขัยเหลือราว <b>${fmt(Math.max(0,rem))}</b> ปี</div>
+ <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">${O.map(n=>`<button class="pbtn" style="flex:1;min-width:90px;white-space:nowrap" ${rem>=n&&!choice._cur?'':'disabled'} onclick="secGo(${n})">${fmt(n)} ปี</button>`).join('')}</div>
+ ${choice._cur?'<p class="tag2" style="margin-top:8px">มีเรื่องรอตัดสินใจอยู่ — เลือกก่อนแล้วค่อยปิดด่าน</p>':''}
+ <p class="tag2" style="margin-top:10px">💡 ทางลัด: กดค้างปุ่ม ⏭ ด้านล่าง ก็ปิดด่านได้เหมือนกัน</p>`)}
+// 1) การ์ดกดค้าง ⏭
+{const _qsk=qmSkip;qmSkip=function(){const c=_qsk.apply(this,arguments);try{if(secAvail()&&c&&Array.isArray(c.rows)){const busy=!!(choice._cur||modalOpen),rem=secRem();
+ const add=[{sep:1},...secOpts().map(n=>({ic:'🧘',t:`ปิดด่าน ${fmt(n)} ปี`,s:rem>=n?'พลาดเหตุการณ์ข้างนอกทั้งหมด':'อายุขัยไม่พอ',dis:busy||rem<n,f:()=>secGo(n)})),{ic:'📖',t:'รายละเอียดปิดด่าน',r:'›',f:openSeclude}];
+ const i=c.rows.findIndex(r=>r&&r.info);if(i>=0)c.rows.splice(i,0,...add);else c.rows.push(...add)}}catch(e){console.error(e)}return c}}
+// 2) ปุ่มในเมนู หมวดตัวละครและการฝึก
+try{const c=MENU_CAT.find(x=>x[0]==='🧘 ตัวละครและการฝึก');if(c&&!c[1].includes('openSeclude'))c[1].unshift('openSeclude')}catch(e){}
+{const _omSc=openMenu;openMenu=function(){const r=_omSc.apply(this,arguments);try{if(secAvail()){const m=$('modal');if(m&&!m.querySelector('.secB')){
+ const hd=[...m.querySelectorAll('.mch15')].find(x=>/ตัวละครและการฝึก/.test(x.textContent||'')),nx=hd&&hd.nextElementSibling,g=(nx&&nx.classList.contains('mgrid')?nx:null)||m.querySelector('.mgrid');
+ if(g)g.insertAdjacentHTML('afterbegin',`<button class="opt secB" onclick="openSeclude()">🧘 ปิดด่าน<small>ข้ามเวลา · เหลือ ${fmt(Math.max(0,secRem()))} ปี</small></button>`)}}}catch(e){console.error(e)}return r}}
+// 3) กระเป๋า: เหลือแค่ป้ายบอกทาง
+{const _xpS=xPanel;xPanel=function(){let h=_xpS.apply(this,arguments);try{h=h.replace(/<div class="item"><b>🧘 ปิดด่านข้ามเวลา<\/b>[\s\S]*?<\/div><\/div>/,`<div class="item"><b>🧘 ปิดด่านย้ายไปแล้ว</b><br><span class="tag2">กดค้างปุ่ม ⏭ ด้านล่าง หรือเมนู → ตัวละครและการฝึก</span><div style="margin-top:6px"><button class="sysb" onclick="openSeclude()">🧘 เปิดหน้าปิดด่าน</button></div></div>`)}catch(e){}return h}}
 </script>
 </body>
 </html>
