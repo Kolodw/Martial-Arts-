@@ -460,8 +460,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='17.9.1';
+const VERSION='17.9.2';
 const CHANGELOG=[
+ {v:'17.9.2',d:'14 พ.ย. 2026',l:['🔒 <b>ป้ายบอกเงื่อนไขขึ้นโลกถัดไป</b> — ถึงขั้นข้ามทัณฑ์แล้วแต่ยังขึ้นโลกเซียน/โลกเทพไม่ได้ จะมีป้ายบนหน้าเล่นบอกว่าขาดอะไร (ชั้นเหนือขั้นสูงสุดถึง ★ เท่าไหร่ · เหลืออีกกี่ปี) แตะป้ายเพื่อดูเงื่อนไขเต็ม — ทัณฑ์สวรรค์จะไม่มาเองจนกว่าจะครบทุกข้อ']},
  {v:'17.9.1',d:'14 พ.ย. 2026',l:['💾 <b>แก้เซฟหายบน Safari / iPhone</b> — Safari จะลบข้อมูลเกมในเครื่องทิ้งถ้าไม่ได้เปิดเว็บนี้นานราว 7 วัน ตอนนี้เกมฝากตัวตนไว้กับเซิร์ฟเวอร์แล้ว เปิดเกมมาเจอเครื่องว่าง จะขึ้นหน้า ☁️ กู้เซฟให้เลือกกู้เอง ไม่ต้องใช้รหัส (ใช้ได้กับเซฟที่ขึ้นคลาวด์หลังอัปเดตนี้ · คลาวด์เซฟทุก 10 นาทีขณะเล่น)',
   '📦 <b>เซฟไม่เต็มง่ายขึ้น</b> — ภาพอัลบั้มบน Safari เล็กลง และสำเนาสำรองไม่เก็บภาพซ้ำ',
   '⚠️ <b>เตือนเมื่อเซฟไม่ลง</b> — ถ้าพื้นที่เก็บเต็ม จะมีแถบแดงค้างบนจอจนกว่าจะบันทึกได้ (เดิมเตือนครั้งเดียวแล้วหาย)',
@@ -23272,6 +23273,21 @@ function saveFailBar(on){let e=document.getElementById('saveFailBar');if(!on){if
  e.innerHTML='⚠️ <b>เกมยังไม่ได้บันทึก</b> — พื้นที่เก็บข้อมูลในเบราว์เซอร์เต็ม ลบช่องเซฟเก่า หรือย้ายเซฟไปเก็บที่ 🗂️ คลังสำรอง แล้วเกมจะบันทึกต่อเอง';document.body.appendChild(e)}
 {const _sgF=saveGame;saveGame=function(){const r=_sgF.apply(this,arguments);try{saveFailBar(!!saveGame._warn)}catch(e){}return r}}
 {const _ttF=toTitle;toTitle=function(){try{saveFailBar(false)}catch(e){}return _ttF.apply(this,arguments)}}
+
+// ============ v17.9.2 ป้ายบอกเงื่อนไข: ถึงขั้นสูงสุดแล้วแต่ยังขึ้นโลกถัดไปไม่ได้ ============
+// เดิมต้องเปิด ☰ เมนู → ⚡ ฝ่าทัณฑ์สวรรค์ ถึงจะรู้ว่าติดอะไร ผู้เล่นหลายคนเลยไม่รู้ว่าต้องเล่นต่อ → แสดงสรุปเงื่อนไขที่ยังขาดไว้บนหน้าเล่นเลย แตะดูรายละเอียดได้
+function ascHintUpd(){try{let b=$('ascHint');const row=document.querySelector('#game .onrow');
+ if(!b&&row){row.insertAdjacentHTML('beforebegin','<button id="ascHint" onclick="ascForce()" style="display:none"></button>');b=$('ascHint')}if(!b)return;
+ let show=false,t='';
+ if(S&&S.alive&&ascCan()&&!ascEligible()){const q=ascReq(),g=q.g||{};
+  if(g.ok===false||q.w>0){const need=S.xian?9:(((typeof MN_X!=='undefined'&&MN_X.p)||0)+1),parts=[];
+   if(g.pOK===false)parts.push('ชั้นเหนือขั้นสูงสุด ★'+(g.pl<0?0:(g.pl%9)+1)+'/'+need);
+   if(g.tOK===false)parts.push('อีก '+fmt(g.left||0)+' ปี');
+   if(q.w>0)parts.push('รออีก '+fmt(q.w)+' ปี');
+   if(parts.length){show=true;t='🔒 ขึ้น'+(S.xian?'โลกเทพ':'โลกเซียน')+'ยังไม่ได้ — '+parts.join(' · ')+'  (แตะดูเงื่อนไข)'}}}
+ b.style.display=show?'':'none';if(show&&b.textContent!==t)b.textContent=t}catch(e){}}
+setInterval(ascHintUpd,1500);{const _rdH=render;render=function(){const r=_rdH.apply(this,arguments);ascHintUpd();return r}}
+(function(){const st=document.createElement('style');st.textContent='#ascHint{display:block;width:100%;margin:0 0 5px;padding:4px 10px;border:1px dashed #b89cff;border-radius:12px;background:#3a2470;color:#fff;font:inherit;font-size:.8em;line-height:1.35;text-align:center;cursor:pointer}#ascHint:active{transform:translateY(1px)}';document.head.appendChild(st)})();
 </script>
 </body>
 </html>
