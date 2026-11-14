@@ -1759,10 +1759,10 @@ function checkDeath(){
  else if(S.age>=lifeMax())cause=S.ch==='short'&&S.age<=30&&lifeMax0()>30?'ชะตาสามสิบปีมาถึงที่สุด ลมหายใจสุดท้ายหลุดลอยไปตามคำสาป':'จากไปอย่างสงบด้วยวัยชรา'+(S.kids?' ท่ามกลางลูกหลาน':'');
  if(!cause)return false;
  try{if(ndSys(cause))return false}catch(e){console.error(e)}
- if(S.sys&&S.sys.revive>0&&!S.flags.ascended&&!(S.flags.eternal&&(S.flags.kEnd||/กัลป์|กาลเวลา|จักรวาล|สามภพ/.test(cause)))&&!(S.ch==='short'&&S.age>=30)){S.sys.revive--;S.hp=S.maxHp;S.deathCause=null;S.chronic=null;if(/วัยชรา/.test(cause)||S.age>=lifeMax()){S.lifespan+=12;S.rvL=(S.rvL||0)+12}S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) — ร่างกายฟื้นคืนสมบูรณ์`,'up');setScene('system');return false}
+ if(S.sys&&S.sys.revive>0&&!(S.flags.ascended&&(!S.flags.ascStay||S.flags.ascLeft))&&!(S.flags.eternal&&(S.flags.kEnd||/กัลป์|กาลเวลา|จักรวาล|สามภพ/.test(cause)))&&!(S.ch==='short'&&S.age>=30)){S.sys.revive--;S.hp=S.maxHp;S.deathCause=null;S.chronic=null;if(/วัยชรา/.test(cause)||S.age>=lifeMax()){S.lifespan+=12;S.rvL=(S.rvL||0)+12}S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) — ร่างกายฟื้นคืนสมบูรณ์`,'up');setScene('system');return false}
  try{if(typeof regTry==='function'&&regTry(cause))return false}catch(e){console.error(e)}
  flushReveal();S.alive=false;S.cause=cause;saveLegacy();clearSave();const _asc=!!S.flags.ascended;setScene(_asc?'aura':'death');setTimeout(()=>sfx(_asc?'good':'death'),300);log(`${_asc?'🌟':'🪦'} ${cause}`,_asc?'myth':'bad');
- const _dn=S;setTimeout(()=>{if(!S||S!==_dn)return;modal(`<h3>${S.flags.ascended?'🌟 ตำนานบรรลุ — '+esc(S.name):'ลาก่อน '+esc(S.name)}</h3><p>${cause} ในวัย ${S.age} ปี${S.flags.ascended?'<br><span class="tag2">ไม่ใช่ความตาย — คุณก้าวพ้นสามภพไปแล้ว ใบชุบจึงไม่ถูกใช้</span>':''}<br>อยากบอกอะไรกับคนคนนี้เป็นครั้งสุดท้าย?</p><input class="ta" id="byeIn" maxlength="80" placeholder="คำอำลาสุดท้าย"><button class="pbtn" style="width:100%" onclick="endGame()">อำลา</button>`,'bye')},900);
+ const _dn=S;setTimeout(()=>{if(!S||S!==_dn)return;modal(`<h3>${S.flags.ascended?'🌟 ตำนานบรรลุ — '+esc(S.name):'ลาก่อน '+esc(S.name)}</h3><p>${cause} ในวัย ${S.age} ปี${S.flags.ascended&&(!S.flags.ascStay||S.flags.ascLeft)?'<br><span class="tag2">ไม่ใช่ความตาย — คุณก้าวพ้นสามภพไปแล้ว ใบชุบจึงไม่ถูกใช้</span>':''}<br>อยากบอกอะไรกับคนคนนี้เป็นครั้งสุดท้าย?</p><input class="ta" id="byeIn" maxlength="80" placeholder="คำอำลาสุดท้าย"><button class="pbtn" style="width:100%" onclick="endGame()">อำลา</button>`,'bye')},900);
  return true;
 }
 const STAGES=[['👶 วัยเด็ก',0,12],['🧑 วัยหนุ่มสาว',13,30],['🧔 วัยกลางคน',31,60],['👴 วัยชรา',61,999]];
@@ -23917,9 +23917,9 @@ function amFail(a,why){a.ft=(a.ft||0)+1;log(`🔒 ${why} — 《${esc(a.n)}》�
 // ---- เลือกวิธีทะลวง ----
 function amAsk(i){const a=typeof i==='number'?S.arts[i]:i;if(!a||!a.stk)return;try{closeM()}catch(e){}const w=ECO_W(),t=amLv(a)+1,low=S.hp<S.maxHp*.2,jc=(AM_JADE[amLv(a)]||0)*JADE;
  const O=[];
- if(!amReqOK(a))O.push({t:'⏳ รอบำเพ็ญให้ถึงก่อน',skip:true,f(){}});
+ if(!amReqOK(a))O.push({_x:1,t:'⏳ รอบำเพ็ญให้ถึงก่อน',skip:true,f(){}});
  else{
-  O.push({t:'⚔️ ดวลกับปรมาจารย์สายเดียวกัน',s:'ชนะ = ทะลวงทันที · แพ้ = บาดเจ็บหนัก',f(){const ep=total()*(1.05+Math.random()*.3);duel(w==='g'?'เทพผู้ครองกฎสายเดียวกัน':w==='x'?'เซียนผู้บรรลุวิชาเดียวกัน':'ปรมาจารย์วิชาเดียวกัน',ep,win=>{if(win)amBreak(a,'ชนะการดวลกับปรมาจารย์');else{S.hp-=Math.round(S.maxHp*.15);amFail(a,'แพ้การดวล')}})}});
+  O.push({_x:1,t:'⚔️ ดวลกับปรมาจารย์สายเดียวกัน',s:'ชนะ = ทะลวงทันที · แพ้ = บาดเจ็บหนัก',f(){const ep=total()*(1.05+Math.random()*.3);duel(w==='g'?'เทพผู้ครองกฎสายเดียวกัน':w==='x'?'เซียนผู้บรรลุวิชาเดียวกัน':'ปรมาจารย์วิชาเดียวกัน',ep,win=>{if(win)amBreak(a,'ชนะการดวลกับปรมาจารย์');else{S.hp-=Math.round(S.maxHp*.15);amFail(a,'แพ้การดวล')}})}});
   if(!a.sec)O.push({t:'🧘 ปิดด่านเข้าฌาน',s:'3–8 ปี · สำเร็จ 75% · ระหว่างนั้นชื่อเสียงค่อยๆ จางหาย',f(){a.sec=S.age+R(3,8);log(`🧘 คุณปิดด่านเพื่อทะลวง《${esc(a.n)}》 — จะออกมาตอนอายุ ${fmt(a.sec)}`,'epic')}});
   O.push({t:low?'🩸 ใช้วินาทีเฉียดตายทะลวง':'🩸 สู้เฉียดตาย (ต้องเลือดต่ำกว่า 20%)',s:low?'สำเร็จ 60% · พลาดอาจตาย':`ตอนนี้เลือด ${Math.round(S.hp/S.maxHp*100)}%`,f(){if(!low){toast('เลือดยังไม่ต่ำพอ');return}if(Math.random()<.6)amBreak(a,'ในวินาทีระหว่างความเป็นกับความตาย');else{S.hp-=Math.round(S.maxHp*.2);amFail(a,'ปราณย้อนกลับในวินาทีเฉียดตาย');checkDeath()}}});
   if(w==='g'&&jc)O.push({t:`💎 หลอมด้วย${JADE_N} ${fmt(jc/JADE)} ก้อน`,s:'สำเร็จ 85% · พลาดเสียหยกครึ่งหนึ่ง',f(){if(S.money<jc){toast(JADE_N+'ไม่พอ');return}if(Math.random()<.85){S.money-=jc;amBreak(a,`หลอม${JADE_N}เข้ากับกฎ`)}else{S.money-=Math.round(jc/2);amFail(a,'หยกแตกกลางการหลอม')}}});
@@ -23963,7 +23963,7 @@ async function lawClaim(a){if(!a)return;const L=lawOf(a);a.law=L[0];S.flags.lawE
  const send=async beat=>{try{const j=await api('lawclaim',{law:L[0],n:pname(),art:String(a.n).slice(0,30),pw:Math.round(total()),beat:beat||0});if(j&&j.ok){S.flags.lawHold=L[0];log(`⚖️ ทั้งเซิร์ฟเวอร์รับรู้แล้ว — คุณคือ<b>ผู้ครอง${L[1]}</b>`,'myth',true);keyAdd(`ผู้ครอง${L[1]}แห่งแดนเทพ`);render()}else if(j&&j.err==='beat')log('⚖️ ระหว่างนั้นมีคนอื่นชิงกฎไปก่อนแล้ว','bad')}catch(e){}};
  if(!H||H.u===String(pid||'').slice(0,6))return send(0);
  const go=()=>{if(choice._cur||modalOpen)return setTimeout(go,800);choice(`${L[2]} ${L[1]}มีเจ้าของแล้ว`,`<b>${esc(H.n)}</b> จารึก${L[1]}ไว้ก่อนด้วย《${esc(H.art||'')}》 · พลังรวมตอนจารึก ${fmt(H.pw||0)}<br>กฎหนึ่งสายมีเจ้าของได้คนเดียว ถ้าอยากได้ต้องดวลแย่ง`,
-  [{t:'⚔️ ท้าดวลชิงกฎ',f(){duel(`ผู้ครอง${L[1]} ${H.n}`,Math.max(+H.pw||0,total()*.8),win=>{if(win)send(H.t);else{S.hp-=Math.round(S.maxHp*.2);log(`⚖️ ${esc(H.n)}ยังครอง${L[1]}ต่อไป`,'bad')}})}},{t:'🙏 ยอมรับ ไว้ครั้งหน้า',skip:true,f(){}}])};go()}
+  [{_x:1,t:'⚔️ ท้าดวลชิงกฎ',f(){duel(`ผู้ครอง${L[1]} ${H.n}`,Math.max(+H.pw||0,total()*.8),win=>{if(win)send(H.t);else{S.hp-=Math.round(S.maxHp*.2);log(`⚖️ ${esc(H.n)}ยังครอง${L[1]}ต่อไป`,'bad')}})}},{t:'🙏 ยอมรับ ไว้ครั้งหน้า',skip:true,f(){}}])};go()}
 async function openLaws(){let l={};try{const j=await api('laws');l=(j&&j.l)||{}}catch(e){}
  modal(`<button class="xbtn" onclick="openArts()">←</button><h3>⚖️ ผู้ครองกฎแห่งแดนเทพ</h3><p class="tag2">วิชาที่ถึงขั้น<b>จารึกกฎ</b>ในแดนเทพจะได้ครองกฎหนึ่งสาย · กฎหนึ่งสายมีเจ้าของได้คนเดียวทั้งเซิร์ฟ · คนอื่นต้องดวลแย่ง</p>`+
   LAWS.map(L=>{const h=l[L[0]];return`<div class="item"><div class="h"><b>${L[2]} ${L[1]}</b><span class="tag2">${h?'ครองโดย':'ยังว่าง'}</span></div><p>${h?`<b>${esc(h.n)}</b> · 《${esc(h.art||'')}》 · พลังรวม ${fmt(h.pw||0)} <span class="tag2">· ${new Date(h.t).toLocaleDateString('th-TH')}</span>`:'<span class="tag2">ใครถึงจารึกกฎสายนี้ก่อนได้ครอง</span>'}</p></div>`}).join(''))}
@@ -24156,6 +24156,41 @@ function sysQSweep(){try{const s=S&&S.sys;if(!s||!S.alive||S.age<6||!Array.isArr
 // 2) กล่องเป้าหมายกางค้าง: แตะนอกกล่องหรือรอ 8 วิ จะย่อเอง
 {let gT=0;const fold=()=>{const g=$('goalBox');if(g&&g.classList.contains('gmx'))g.classList.remove('gmx')};
  document.addEventListener('click',e=>{try{const g=$('goalBox');if(!g)return;if(e.target.closest&&e.target.closest('#goalBox')){clearTimeout(gT);gT=setTimeout(fold,8000)}else if(g.classList.contains('gmx'))fold()}catch(x){}},false)}
+
+// ===================== v17.11 🏯 บรรลุแล้ว แต่ยังไม่จากไป =====================
+// ผ่านทัณฑ์สุดท้ายแห่งโลกเทพแล้วเลือกได้: ก้าวข้ามสามภพเลย (จบเหมือนเดิม) หรืออยู่ต่อในฐานะผู้ก้าวพ้นสามภพ
+// อยู่ต่อ = ได้ตอนจบสูงสุดแล้ว (ความสำเร็จ · บันทึก · ป้าย) · ไม่ตายด้วยวัยชรา (เดินต่อถึงวัฏจักรกัลป์) · คะแนนทำเนียบล็อกไว้ ณ ตอนบรรลุ · กดก้าวข้ามได้ทุกเมื่อ
+{const _awS=ascendWave;ascendWave=function(n){if(n>3&&S&&S.xian&&S.xt&&!S.flags.ascStay){const self=this,args=arguments;
+  setTimeout(()=>{const go=()=>{if(choice._cur||modalOpen)return setTimeout(go,500);
+   choice('🌟 ทัณฑ์สุดท้ายสลายไปแล้ว',`ประตูสู่ดินแดนเซียนแท้เปิดอยู่ตรงหน้า — คุณก้าวพ้นความตายแล้ว ไม่ว่าจะเลือกทางไหน<br><span class="tag2">ทั้งสองทางนับเป็น <b>ตอนจบสูงสุด</b> (ความสำเร็จ · บันทึกชีวิต · ป้ายในทำเนียบ)</span>`,[
+    {_x:1,t:'🌌 ก้าวข้ามสามภพไปเลย',s:'ปิดตำนานชีวิตนี้ทันที (แบบเดิม)',noFate:1,f(){_awS.apply(self,args)}},
+    {t:'🏯 บรรลุแล้ว แต่ยังไม่จากไป',s:'เล่นต่อได้ ไม่ตายด้วยวัยชรา · กดก้าวข้ามได้ทุกเมื่อ',noFate:1,f(){ascStay()}}])};go()},50);return}
+ return _awS.apply(this,arguments)}}
+function ascStay(){S.flags.ascended=1;S.flags.xImm=1;S.flags.godMax=1;S.flags.ascStay=1;S.ascAt=S.age;
+ try{S.ascSc=lifeScore();S.ascDet=JSON.parse(JSON.stringify(lifeDetail(S.ascSc)))}catch(e){}
+ keyAdd('ฝ่าทัณฑ์สวรรค์ครั้งสุดท้าย — บรรลุแล้ว แต่เลือกยังไม่จากไป');setScene('aura');try{achCheck()}catch(e){}
+ log('🏯 คุณหันหลังให้ประตูดินแดนเซียนแท้ "ยังมีอีกหลายอย่างที่ข้าอยากเห็น" — ตั้งแต่วันนี้ ความชราแตะต้องคุณไม่ได้อีก','myth',true);
+ log('🧭 สิ่งที่รออยู่: ♾️ <b>วัฏจักรกัลป์</b> เมื่ออายุถึงล้านปี · ⚖️ ชิงผู้ครองกฎ 8 สาย · 🚪 ประตูกัลป์ · 👪 ดูแลลูกหลานในภพล่าง · 🌌 อยากจบเมื่อไหร่ กดป้ายบนหน้าเล่น','epic');render()}
+function ascLeave(){if(!S||!S.alive||!S.flags.ascStay)return;choice('🌌 ก้าวข้ามสามภพ','ปิดตำนานชีวิตนี้ แล้วเดินผ่านประตูดินแดนเซียนแท้ไป — กลับมาไม่ได้อีก',[
+ {_x:1,t:'🌌 ก้าวข้ามเลย',noFate:1,f(){S.flags.ascLeft=1;S.deathCause='บรรลุบรรพชนเต๋า ก้าวข้ามสามภพไปตลอดกาล';S.hp=0;checkDeath()}},{t:'ยังก่อน',skip:true,f(){}}])}
+// ไม่ตายด้วยวัยชรา: อายุขัยยืดถึงขอบกัลป์เสมอ (ระลอกสิ้นกัลป์ยังมาตามปกติ)
+{const _lmS=lifeMax;lifeMax=function(){const v=_lmS.apply(this,arguments);try{if(S&&S.flags&&S.flags.ascStay&&!S.flags.ascLeft)return Math.max(v,kcap()+1)}catch(e){}return v}}
+// คะแนนทำเนียบล็อก ณ ตอนบรรลุ (อยู่นานไม่ได้คะแนนเพิ่ม)
+{const _lsS=lifeScore;lifeScore=function(){const v=_lsS.apply(this,arguments);try{if(S&&S.flags&&S.flags.ascStay&&S.ascSc!=null)return Math.min(v,S.ascSc)}catch(e){}return v}}
+{const _ldS=lifeDetail;lifeDetail=function(){const d=_ldS.apply(this,arguments);try{if(S&&S.flags&&S.flags.ascStay&&S.ascDet&&d){const o=Object.assign({},S.ascDet,{n:d.n,cause:d.cause,age:d.age,s:Math.min(+d.s||0,S.ascSc||0),asc:1,stay:1});return o}}catch(e){}return d}}
+// ป้ายบนหน้าเล่น
+{const _rnS=render;render=function(){const r=_rnS.apply(this,arguments);try{let b=$('ascLeaveP');if(S&&S.alive&&S.flags&&S.flags.ascStay){if(!b){const row=document.querySelector('.onrow');if(row){row.insertAdjacentHTML('afterbegin','<button class="ascpill" id="ascLeaveP" onclick="ascLeave()" style="display:inline-flex">🌌 ก้าวข้ามสามภพ</button>');row.classList.add('hasasc')}}}else if(b)b.remove()}catch(e){}return r}}
+// 👪 ดูแลลูกหลานในภพล่าง
+const ANC_EV=[['ทายาทรุ่นที่ {g} ถูกสำนักมารปิดล้อม','เลือดของคุณกำลังจะสูญสิ้นในภพล่าง'],['เหลนของคุณติดอยู่ในทัณฑ์สวรรค์ที่รับไม่ไหว','สายฟ้าเส้นสุดท้ายกำลังจะฟาดลง'],['ตระกูลของคุณถูกใส่ร้ายต่อหน้าจักรพรรดิ','ทั้งตระกูลกำลังจะถูกประหาร'],['ทายาทของคุณหลงทางในแดนต้องห้าม','ไม่มีใครในภพล่างตามไปช่วยได้'],['บ้านเกิดของคุณถูกโรคระบาดกลืน','หมอทั้งแผ่นดินยอมแพ้แล้ว']];
+function ancTick(){if(!S||!S.alive||!S.flags||!S.flags.ascStay||choice._cur||modalOpen)return;if(S.ancY!=null&&S.age-S.ancY<5000)return;if(Math.random()>.08)return;S.ancY=S.age;
+ const E=ch(ANC_EV),g=(S.gen||1)+R(3,40);
+ choice('👪 เสียงเรียกจากภพล่าง',`${E[0].replace('{g}',g)} — ${E[1]}<br><span class="tag2">ผู้ก้าวพ้นสามภพยื่นมือลงไปได้ แต่ฟ้าไม่ชอบให้ใครข้ามเส้น</span>`,[
+  {_x:1,t:'✋ ยื่นมือลงไปช่วย',s:'ผู้คนศรัทธา · ลูกหลานจดจำ · ฟ้าไม่พอใจ (พลังชีวิต −30%)',f(){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));S.fame+=5000;S.karma+=20;const A=LS.get('murim_anc',{})||{};A.n=S.name;A.h=(A.h||0)+1;A.t=Date.now();LS.set('murim_anc',A);log(`✋ นิ้วเดียวของคุณผ่าเมฆลงไป — ภัยในภพล่างสลายไป ลูกหลานคุกเข่าคำนับฟ้าโดยไม่รู้ว่าคุณคือใคร`,'myth',true);keyAdd('ยื่นมือลงไปช่วยลูกหลานในภพล่าง')}},
+  {t:'🌫️ ปล่อยให้เขาโตเอง',s:'ไม่ข้ามเส้นฟ้า',f(){S.karma-=5;log('🌫️ คุณหลับตาลง — ถ้าเขารอด เขาจะแกร่งกว่าที่คุณช่วย','')}}])}
+{const _pyS=passYear;passYear=function(){const r=_pyS.apply(this,arguments);try{ancTick()}catch(e){console.error(e)}return r}}
+// ชีวิตถัดไป: ได้พรบรรพชนจากคนที่เคยยื่นมือลงมาช่วย
+{const _slS=startLife;startLife=function(){const r=_slS.apply(this,arguments);try{const A=LS.get('murim_anc',null);if(A&&A.h&&S&&!S.custom&&!(S.beastMode&&!S.beastMode.human)){LS.del('murim_anc');const k=Math.min(5,A.h);S.power+=60*k;S.int+=4*k;S.karma+=10*k;
+  log(`👪 ตอนคุณเกิด มีแสงทองส่องลงมาที่บ้านหลังเล็ก — <b>${esc(A.n)}</b> บรรพชนผู้ก้าวพ้นสามภพเคยยื่นมือลงมาช่วยสายเลือดนี้ ${k} ครั้ง · พลัง +${60*k} · ปัญญา +${4*k}`,'myth')}}catch(e){console.error(e)}return r}}
 </script>
 </body>
 </html>
