@@ -22056,6 +22056,46 @@ function ftByeOK(j){const x=ftList()[j];if(!x||!x.h)return;const c=Math.round(sx
 // ทายาทที่เคยถูกสอน: เก่งขึ้น
 {const _ihT=inherit;inherit=function(ci){const P=S,kid=ci!=null&&P&&P.children?P.children[ci]:null,trn=kid?kid.trn|0:0,edu=kid?kid.edu|0:0;const r=_ihT.apply(this,arguments);try{if(S!==P&&(trn||edu)){setTimeout(()=>{try{if(!S||!S.alive)return;let t=[];if(trn){const g=pctPow(Math.min(.25,.025*trn));S.power+=g;t.push(`พลังยุทธ์ +${fmt(g)}`)}if(edu){const v=Math.min(40,edu*4);S.int+=v;t.push(`ปัญญา +${v}`)}log(`💞 สิ่งที่${esc(P.name)}สอนไว้ตอนเด็กยังติดตัว — ${t.join(' · ')}`,'epic');render()}catch(e){}},700)}}catch(e){}return r}}
 
+
+// ===================== v17.8 ล็อกตัวเลือก · ℹ️ รายละเอียดตัวเลือก · กายาศักดิ์สิทธิ์ =====================
+// ---- 🔒 ล็อกตัวเลือก: เปิดแล้วเกมจะรอผู้เล่นเสมอ (ปิดชะตาตัดสินแทน + ระบบเลือกเหตุการณ์เล็ก) ----
+const chLock=()=>!!LS.get('murim_chlock',0);
+{const _fsL=fateSec;fateSec=function(){return chLock()?0:_fsL.apply(this,arguments)}}
+{const _amL=PACE.am;PACE.am=function(){return chLock()?0:_amL.apply(this,arguments)}}
+function chLockTog(){LS.set('murim_chlock',chLock()?0:1);toast(chLock()?'🔒 ล็อกตัวเลือกแล้ว — เกมจะรอให้คุณเลือกเองทุกครั้ง':'🔓 ปลดล็อก — ใช้การตั้งค่าชะตาตัดสินแทนตามเดิม');if(choice._cur&&$('modal').dataset.k==='choice')choiceShow()}
+// ---- ℹ️ รายละเอียดตัวเลือก ----
+const ciTx=h=>String(h||'').replace(/<[^>]+>/g,' ');
+function ciPowTxt(p){const me=Math.max(1,total()),r=p/me;return r>=1.6?'<span style="color:#ff6b6b">เหนือกว่าคุณมาก</span>':r>=1.15?'<span style="color:#ff9a6b">แข็งกว่าคุณ</span>':r>=.85?'สูสีกับคุณ':r>=.5?'<span style="color:#5fb85f">อ่อนกว่าคุณ</span>':'<span style="color:#5fb85f">อ่อนกว่าคุณมาก</span>'}
+function ciPeople(txt){const out=[],seen=new Set(),has=n=>n&&n.length>=2&&txt.includes(n)&&!seen.has(n)&&seen.add(n);
+ try{peers.forEach(p=>{if(!has(p.name))return;const ri=Math.max(0,Math.min(REALMS.length-1,p.ri|0));out.push(`<b>${esc(p.name)}</b> — คนที่เกิดวินาทีเดียวกับคุณ${p.rel?' · '+REL[p.rel]:''}<br><span class="tag2">${p.alive===false?'🪦 ล่วงลับ · ':''}อายุ ${p.age|0} · ขั้น ${REALMS[ri].n} (${ciPowTxt(p.power||0)})${p.fac?` · ${esc(p.fac.n)} (ฝ่าย${esc(p.fac.t)})`:' · ไม่สังกัดสำนัก'}${p.af!=null?` · ความสนิท ${Math.round(p.af)}`:''}${(p.notes||[]).length?'<br>ล่าสุด: '+p.notes.slice(-2).map(esc).join(' · '):''}</span>`)})}catch(e){}
+ try{(S.children||[]).forEach(c=>{if(!has(c.n))return;out.push(`<b>${esc(c.n)}</b> — ${c.g==='หญิง'?'ลูกสาว':'ลูกชาย'}ของคุณ<br><span class="tag2">อายุ ${c.age|0} · ${esc(c.tal&&c.tal.n||'')}${c.fac?' · '+esc(c.fac.n):''}${c.married||c.wed?' · แต่งงานแล้ว':' · ยังโสด'} · ความผูกพัน ${Math.round(c.rel==null?60:c.rel)}</span>`)})}catch(e){}
+ try{if(S.sp&&has(S.sp.n))out.push(`<b>${esc(S.sp.n)}</b> — ${S.sp.wed===false?'คนรัก':'คู่ชีวิต'}ของคุณ<br><span class="tag2">อายุ ${S.sp.age|0} · นิสัย${esc(S.sp.p||'')} · ความรัก ${Math.round(S.sp.aff||0)}</span>`);
+  (S.harem||[]).forEach(g=>{if(has(g.n))out.push(`<b>${esc(g.n)}</b> — คนในตำหนักใน<br><span class="tag2">อายุ ${g.age|0} · ความรัก ${Math.round(g.aff==null?65:g.aff)}</span>`)})}catch(e){}
+ try{peopleAll().forEach(x=>{if(!has(x.n))return;out.push(`<b>${esc(x.n)}</b> — ${esc(ciTx(x.role))}<br><span class="tag2">${x.alive?'':'🪦 ล่วงลับ · '}${x.age!=null?'อายุ '+x.age+' · ':''}${x.rel!=null?'ความสัมพันธ์ '+Math.round(x.rel):''}</span>`)})}catch(e){}
+ try{FACTIONS.forEach(f=>{if(!has(f.n))return;const me=S.faction&&S.faction.n===f.n;out.push(`<b>🏯 ${esc(f.n)}</b> — ฝ่าย${esc(f.t)}${me?' · สำนักของคุณ':''}<br><span class="tag2">${esc(f.d)}${!me&&S.faction&&S.faction.t!==f.t&&(f.t==='มาร'||S.faction.t==='มาร')?' · ⚠️ ต่างฝ่ายกับสำนักของคุณ':''}</span>`)})}catch(e){}
+ return out}
+function ciHtml(){const c=choice._cur;if(!c)return'';const txt=ciTx(c.title)+' '+ciTx(c.text)+' '+c.opts.map(o=>ciTx(o.t)+' '+ciTx(o.s)).join(' '),P=ciPeople(txt);
+ const O=c.opts.map(o=>{const k=statKey(o),risk=/ตาย|ชีวิต|เดิมพัน|ดวล|สู้|เสี่ยง|บาดเจ็บ/.test(ciTx(o.t)+ciTx(o.s));return`<li><b>${ciTx(o.t)}</b>${o.s?` — ${ciTx(o.s)}`:''}${k?' · ใช้ค่า '+statShow(k):''}${o.skip?' · <span style="color:#5fb85f">ปลอดภัย ไม่เสียอะไร</span>':risk?' · <span style="color:#ff9a6b">มีความเสี่ยง</span>':''}</li>`}).join('');
+ const hpP=Math.round(S.hp/Math.max(1,S.maxHp)*100);
+ return`<div class="chInfo item" style="margin:4px 0 8px;font-size:.92em">${P.length?`<b>👤 คนและสำนักที่เกี่ยวข้อง</b>${P.map(p=>`<div style="margin:4px 0">${p}</div>`).join('')}`:'<p class="tag2" style="margin:0 0 4px">ไม่มีคนที่คุณรู้จักในเรื่องนี้ — เป็นคนแปลกหน้าหรือเหตุการณ์ทั่วไป</p>'}
+ <b>🔀 ตัวเลือก</b><ul style="margin:4px 0 6px;padding-left:18px">${O}</ul>
+ <span class="tag2">สถานะคุณตอนนี้: พลังรวม ${fmt(Math.round(total()))} · พลังชีวิต ${hpP}%${hpP<40?' ⚠️':''} · เงิน ${fmt(Math.round(S.money))} · ชื่อเสียง ${fmt(Math.round(S.fame))} · กรรม ${Math.round(S.karma)}</span></div>`}
+function chInfoTog(){const m=$('modal');const e=m.querySelector('.chInfo');if(e){e.remove();choiceShow._ci=0;return}choiceShow._ci=1;const top=m.querySelector('.chtop');if(top)top.insertAdjacentHTML('afterend',ciHtml())}
+{const _csI=choiceShow;choiceShow=function(){const r=_csI.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='choice'||!choice._cur)return r;const top=m.querySelector('.chtop');
+  if(top&&!top.querySelector('.ciB')){const mb=top.querySelector('.minb');const h=`<span style="display:flex;gap:10px;align-items:center"><button class="minb ciB" onclick="chInfoTog()">ℹ️ รายละเอียด</button><button class="minb clB" onclick="chLockTog()">${chLock()?'🔒 ล็อกอยู่':'🔓 ล็อกตัวเลือก'}</button></span>`;if(mb){mb.insertAdjacentHTML('beforebegin',h)}else top.insertAdjacentHTML('beforeend',h)}
+  if(choiceShow._ci&&!m.querySelector('.chInfo')&&top)top.insertAdjacentHTML('afterend',ciHtml());
+  if(chLock()){const cd=$('chCd');if(cd)cd.textContent=''}}catch(e){console.error(e)}return r}}
+// ---- ✨ กายาศักดิ์สิทธิ์ ----
+TALENT.push({w:.3,id:'holy',n:'กายาศักดิ์สิทธิ์',d:'ร่างบริสุทธิ์โดยกำเนิด ไม่ป่วย ไม่ติดพิษ ฟื้นตัวเร็ว ยิ่งทำดียิ่งแกร่ง — แต่ถ้ากรรมติดลบร่างจะแปดเปื้อน และนิกายมารหมายจับตัวไปหลอมเป็นยา',m:1.9,karma:10});
+try{if(typeof CX2_BODY!=='undefined'&&!CX2_BODY.includes('holy'))CX2_BODY.push('holy')}catch(e){}
+{const _ttH=talTick;talTick=function(){const r=_ttH.apply(this,arguments);try{if(!S||!S.alive||(S.beastMode&&!S.beastMode.human)||tid()!=='holy')return r;const k=S.karma||0;
+ if(k>=0){S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.1));if(S.chronic){S.chronic=null;log('✨ กายาศักดิ์สิทธิ์ขับโรคเรื้อรังออกจากร่างจนหมด','good')}S.qi=+(S.qi+.12).toFixed(2);
+  if(k>=200&&!S.holyAura){S.holyAura=1;S.power+=pctPow(.06);log('✨ บุญบารมีสะสมจนกายาศักดิ์สิทธิ์ตื่นเต็มที่ — รัศมีสีทองห่อหุ้มร่าง พลังยุทธ์ +6%','myth',true);keyAdd('กายาศักดิ์สิทธิ์ตื่นเต็มที่')}}
+ else{const d=Math.round(S.maxHp*.05);S.hp-=d;if(!S.holyW||S.age-S.holyW>=5){S.holyW=S.age;log(`🩸 กรรมชั่วทำให้กายาศักดิ์สิทธิ์แปดเปื้อน — ร่างกายเจ็บปวดทุกปี (พลังชีวิต −${d}/ปี) · ทำความดีให้กรรมกลับมาเป็นบวก`,'bad')}
+  if(k<=-100&&!S.holyFall){S.holyFall=1;S.talent=Object.assign({},S.talent,{m:+(S.talent.m*.6).toFixed(2)});log('🩸 กรรมดำมืดจนกายาศักดิ์สิทธิ์แตกสลาย — พรสวรรค์ลดลงเหลือ 60%','bad',true)}}
+ if(S.age>=20&&S.age%15===5&&S.holyY!==S.age&&!choice._cur&&!modalOpen){S.holyY=S.age;const foe=S.xt?'เทพนอกรีตผู้หลอมร่างเทพ':S.xian?'ผู้อาวุโสนิกายโลหิต':'ทูตพรรคมารสวรรค์',ep=Math.round(total()*1.1*(.9+Math.random()*.2));
+  log(`🩸 ${foe}ได้กลิ่นกายาศักดิ์สิทธิ์ — มาเพื่อจับตัวคุณไปหลอมเป็นยาอายุวัฒนะ`,'myth');duel(foe,ep,w=>{if(w){S.fame+=40;S.karma+=10;log(`✨ ปราบ${foe}ได้ — ชื่อเสียง +40 · กรรมดี +10`,'epic')}else{S.hp-=Math.round(S.maxHp*.4);S.qi=+(S.qi*.9).toFixed(2);log(`🩸 ${foe}ดูดปราณบริสุทธิ์ไปส่วนหนึ่งก่อนคุณจะหนีรอด — พลังชีวิต −40% · ลมปราณ −10%`,'bad')}try{checkDeath()}catch(e){}render()})}}catch(e){console.error(e)}return r}}
+
 </script>
 </body>
 </html>
