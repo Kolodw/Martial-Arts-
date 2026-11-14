@@ -3084,7 +3084,7 @@ function daoTick(){if(!S.xian||S.age<16)return;const p=.03+(S.focus==='qi'?.04:0
 const CAVE_N=['ถ้ำหินธรรมดา','ถ้ำบ่มเพาะมีค่ายกลรวมปราณ','ถ้ำวิญญาณพร้อมสวนสมุนไพร','จวนถ้ำบนเส้นเลือดมังกร','ตำหนักเซียนลอยฟ้า'];
 const caveM=()=>S.cave?1+S.cave.lv*.08:1;
 function caveTick(){if(!S.xian)return false;const c=S.cave;
- if(!c){if(realmIdx()>=2&&S.age>=16&&Math.random()<.12){choice('🏔️ ถ้ำบ่มเพาะ','คุณพบถ้ำร้างบนหน้าผาที่ลมปราณหนาแน่นผิดปกติ จะยึดเป็นถ้ำบ่มเพาะส่วนตัวไหม?',[{t:'ยึดเป็นของตัวเอง',f(){S.cave={lv:0};log('🏔️ ได้ถ้ำบ่มเพาะส่วนตัวแล้ว — อัปเกรดได้ในหน้ากระเป๋า','epic');keyAdd('ได้ถ้ำบ่มเพาะส่วนตัว')}},{t:'ปล่อยไว้',skip:true,f(){}}]);return true}return false}
+ if(!c){if(realmIdx()>=2&&S.age>=16&&!(S.caveNo>S.age)&&Math.random()<.12){choice('🏔️ ถ้ำบ่มเพาะ','คุณพบถ้ำร้างบนหน้าผาที่ลมปราณหนาแน่นผิดปกติ จะยึดเป็นถ้ำบ่มเพาะส่วนตัวไหม?',[{t:'ยึดเป็นของตัวเอง',skip:true,f(){S.cave={lv:0};S.flags.caveGot=1;log('🏔️ ได้ถ้ำบ่มเพาะส่วนตัวแล้ว — อัปเกรดได้ในหน้ากระเป๋า','epic');keyAdd('ได้ถ้ำบ่มเพาะส่วนตัว')}},{t:'ปล่อยไว้',s:'จะไม่เจอถ้ำแบบนี้อีกราว 30 ปี',f(){S.caveNo=S.age+30}}]);return true}return false}
  S.qi+=.3*(c.lv+1);if(c.lv>=2&&Math.random()<.4)bagAdd('herb',1,1);
  if(auto&&c.lv<4&&S.money>=caveCost()*2)caveUp(true);return false}
 const caveCost=()=>Math.round(3000*Math.pow(2.5,S.cave.lv));
@@ -14726,7 +14726,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
   if(k==='clean'||k==='flip'){const x=h.cur.pop();if(x==='luck')S.traits=(S.traits||[]).filter(t=>t!=='unlucky');if(x==='weak')S.maxHp=Math.round(S.maxHp/.85);if(x==='dull')S.int=Math.round(S.int/.85);log(`🕊️ คำสาป ${CUR[x][0]} หลุดออกไป`,'good');if(k==='flip'){const g=pctPow(.12);S.power+=g;log(`☯️ คำสาปพลิกเป็นพร — พลังยุทธ์ +${fmt(g)}`,'myth')}}
   sfx('good');render();hellShop()};
  function gate(){const h=S.hell,L=h.lv,nm=HL_N[L],bs=HL_B[L],ep=Math.max(40+L*30,Math.max((h.bp||0)*(.68+L*.036),total()*(.52+L*.03))*(wm().b||1));h.bp=0;
-  log(`🔥 <b>ประตู${nm}</b> (ชั้นที่ ${L+1}/18) เปิดออกใต้เท้าคุณ — <b>${bs}</b> ก้าวขึ้นมาจากเปลวไฟ`,'myth',true);
+  log(`🔥 <b>ประตู${nm}</b> (ชั้นที่ ${L+1}/100) เปิดออกใต้เท้าคุณ — <b>${bs}</b> ก้าวขึ้นมาจากเปลวไฟ`,'myth',true);
   duel(bs+` (ชั้น ${L+1})`,ep,w=>{if(w){h.lv++;h.fail=0;const e=Math.round((1+Math.floor(h.lv/4))*(wm().e||1));h.ess+=e;S.fame+=100*h.lv;h.next=S.age+gap();S.flags.hellMax=Math.max(S.flags.hellMax||0,h.lv);
     log(`🔥 ผ่าน<b>${nm}</b>ได้! ลงลึกสู่นรกชั้นที่ ${h.lv} · แก่นนรก +${e} (มี ${h.ess}) · ประตูถัดไปอีก ${h.next-S.age} ปี`,'myth',true);keyAdd(`ผ่านนรกชั้นที่ ${h.lv} — ${nm}`);
     if(h.lv>=18){S.flags.hell18=1;log('👑 คุณล้ม<b>พญายม</b>ได้ — ทั้งยมโลกคุกเข่า คุณคือ<b>ราชันยมโลก</b>','myth',true);try{pxPlay({mode:'arrive',type:'forbid',w:['m','x','g'][rgW()],seed:18,fx:'ember',title:'👑 ราชันยมโลก',sub:esc(S.name),sub0:'— นรก 18 ชั้นสยบแทบเท้า —'})}catch(e){}}
@@ -20207,7 +20207,8 @@ function islHtml(n){const k=n.kind||'info';
  if(n.big)return`<div class="islBig k-${k}"><div class="islIc">${n.ic||'🔔'}</div><div class="islTx"><div class="islH">${n.h||''}</div><div class="islT">${n.t}</div>${n.st?`<div class="islSt">${n.st}</div>`:''}${n.d?`<div class="islD">${n.d}</div>`:''}${n.act?`<div class="islAct">${n.act.t}</div>`:''}</div></div>`;
  return`<div class="islSm k-${k}"><span class="islIc">${n.ic||''}</span><span class="islT">${n.t}</span>${n.n>1?`<b class="islN">×${n.n}</b>`:''}${n.live?'<i class="islDot"></i>':''}</div>`}
 function islRender(n,morph){const e=islEl(),c=e.querySelector('.islC');const ow=e.offsetWidth,oh=e.offsetHeight,was=e.classList.contains('on');
- const old=c.firstElementChild;if(old&&was&&!islLite()){old.classList.add('islOut');setTimeout(()=>{if(old.parentNode)old.remove()},180)}else c.innerHTML='';
+ // เคยเก็บแค่ลูกตัวแรกไว้จางหาย — ถ้ามีป้ายใหม่มาภายใน 0.18 วิ ป้ายก่อนหน้าค้างทับกันถาวร → เหลือแค่ตัวล่าสุดที่กำลังจาง ที่เหลือลบทันที
+ const olds=[...c.children];if(olds.length&&was&&!islLite()){const last=olds[olds.length-1];olds.forEach(o=>{if(o!==last||o.classList.contains('islOut'))o.remove()});if(last.parentNode){last.classList.add('islOut');setTimeout(()=>{if(last.parentNode)last.remove()},180)}}else c.innerHTML='';
  const w=document.createElement('div');w.className='islIn';w.innerHTML=islHtml(n);c.appendChild(w);
  e.className='on k-'+(n.kind||'info')+(n.big?' big':'')+(islLite()?' lite':'');
  // วัดขนาดใหม่ แล้วยืดจากขนาดเดิมแบบสปริง
@@ -21684,7 +21685,7 @@ setInterval(()=>{try{if(!S||!S.alive||paused&&!auto)return;const h=typeof hellIn
 const hellDue=()=>{try{const h=typeof hellInfo==='function'?hellInfo():null;return !!(h&&S&&S.alive&&h.lv<18&&S.age>=h.next)}catch(e){return false}};
 function hellOpen(){try{const h=hellInfo();if(!h||!hellDue())return false;if(choice._cur||modalOpen||document.querySelector('.kfx'))return false;if(h._gT&&Date.now()-h._gT<2500)return false;h._gT=Date.now();
  try{if(ISL.cur&&ISL.cur.key==='hellgate')islNext(true);ISL.q=ISL.q.filter(x=>x.key!=='hellgate')}catch(e){}gate();return true}catch(e){console.error(e);return false}}
-function hellWaitNote(){try{if(!islOn()||(ISL.cur&&ISL.cur.key==='hellgate')||ISL.q.some(x=>x.key==='hellgate'))return;const h=hellInfo();island({big:1,pri:1,sticky:1,key:'hellgate',ic:'🔥',h:'ประตูนรกกำลังเปิด',t:`ชั้นที่ ${h.lv+1}/18 — เวลาหยุดรอ`,d:'ตัดสินใจเรื่องที่ค้างให้เสร็จ แล้วประตูจะเปิดทันที',kind:'bad'})}catch(e){}}
+function hellWaitNote(){try{if(!islOn()||(ISL.cur&&ISL.cur.key==='hellgate')||ISL.q.some(x=>x.key==='hellgate'))return;const h=hellInfo();island({big:1,pri:1,sticky:1,key:'hellgate',ic:'🔥',h:'ประตูนรกกำลังเปิด',t:`ชั้นที่ ${h.lv+1}/100 — เวลาหยุดรอ`,d:'ตัดสินใจเรื่องที่ค้างให้เสร็จ แล้วประตูจะเปิดทันที',kind:'bad'})}catch(e){}}
 {const _pyH=passYear;passYear=function(){try{if(hellDue()){if(!hellOpen())hellWaitNote();return}}catch(e){}return _pyH.apply(this,arguments)}}
 setInterval(()=>{try{if(!hellDue())return;if(!hellOpen()&&(choice._cur||modalOpen))hellWaitNote()}catch(e){}},700);
 
@@ -23295,7 +23296,7 @@ setInterval(ascHintUpd,1500);{const _rdH=render;render=function(){const r=_rdH.a
 // ตอนนี้ถ้ำเช่าย้ายไป S.rcave แล้ว · เซฟเก่า: ย้ายถ้ำเช่าที่ค้างอยู่ใน S.cave ออก แล้วคืนถ้ำบ่มเพาะให้คนที่เคยได้ (เคยอัปจนสุด = คืนระดับสูงสุด)
 function caveFix(){try{if(!S||!S.alive||S._caveFix)return;S._caveFix=1;
  const c=S.cave;if(c&&c.u!=null){if(!S.rcave&&c.u>S.age&&c.w===ECO_W())S.rcave=c;S.cave=null}
- if(!S.cave&&S.xian){const had=(S.key||[]).some(k=>String(k).indexOf('ได้ถ้ำบ่มเพาะส่วนตัว')>=0);
+ if(!S.cave&&S.xian){const had=(S.flags&&S.flags.caveGot)||(S.key||[]).some(k=>String(k).indexOf('ได้ถ้ำบ่มเพาะส่วนตัว')>=0);
   if(had){S.cave={lv:S.flags&&S.flags.cave4?4:0};log(`🏔️ <b>ถ้ำบ่มเพาะของคุณกลับมาแล้ว</b>${S.cave.lv?' (ระดับสูงสุด)':''} — ขออภัย ก่อนหน้านี้ถ้ำหายเพราะบั๊ก`,'epic')}}}catch(e){}}
 {const _lgCF=loadGame;loadGame=function(){const r=_lgCF.apply(this,arguments);try{caveFix()}catch(e){}return r}}
 {const _pyCF=passYear;passYear=function(){try{caveFix()}catch(e){}return _pyCF.apply(this,arguments)}}
