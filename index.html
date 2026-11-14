@@ -24678,6 +24678,12 @@ function rushFx(){try{const o0=$('ruOv');if(o0)o0.remove()}catch(e){}const o=doc
 #ruOv .ruTap{margin-top:10px;font-size:12px;opacity:0;padding:4px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.6);animation:ruUp .6s 2.6s forwards,ruBl 1.6s 3.2s infinite}
 @keyframes ruBl{50%{opacity:.45}}
 @media (prefers-reduced-motion:reduce){#ruOv,#ruOv *{animation-duration:.01s!important;animation-iteration-count:1!important}}`;document.head.appendChild(st)})();
+
+// ===== แก้บั๊ก: ระบบในร่างสัตว์อสูร — ทางแยกวิวัฒนาการ (Lv.10/20) · กลไกประจำระบบ · เควสลับ ไม่เคยทำงาน เพราะผูกไว้กับ sysTick ของมนุษย์อย่างเดียว =====
+{const _bsT=bsysTick;bsysTick=function(){const r=_bsT.apply(this,arguments);try{const s=S&&S.alive&&S.sys;if(s&&bsB()&&S.age>=6){sysFix();
+ try{sxYear()}catch(e){console.error(e)}
+ for(const h of HIDQ){if(h.id==='poor'||h.id==='irony'||s.hid.includes(h.id))continue;let ok=false;try{ok=h.c()}catch(e){}if(!ok)continue;s.hid.push(h.id);sysReward(200,50,`🔓 ปลดล็อกเควสลับ: <b>${h.n}</b>`);break}
+ if(!choice._cur&&!modalOpen)sxBranch()}}catch(e){console.error(e)}return r}}
 </script>
 </body>
 </html>
