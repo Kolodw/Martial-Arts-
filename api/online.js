@@ -171,7 +171,9 @@ const qOf = r => r._q || (r._q = Object.fromEntries(new URL(r.url || '/', 'http:
 // ฉายาที่มีจริงในเกม (สร้างจากตัวเกม) → เซิร์ฟเวอร์รับเฉพาะชื่อในรายการ และกำหนดสีระดับเอง
 let TITLES = { t: {}, a: {} }; try { TITLES = require('./titles.json') } catch (e) {}
 const rkOk = (tt, h) => { try { const k = String(tt || ''), m = RKT_ALL.get(k); if (!m || !Array.isArray(h)) return null; for (let i = 0; i < h.length; i += 2) { const v = JSON.parse(h[i + 1] || 'null'); if (v && v.t === k && v.exp > Date.now()) return { tt: k, tr: RKT_TR[m.p] } } } catch (e) {} return null };
-const ttlOk = (tt) => { const k = String(tt || '').slice(0, 24); return k && Object.prototype.hasOwnProperty.call(TITLES.t, k) ? { tt: k, tr: Math.max(0, Math.min(6, +TITLES.t[k] || 0)) } : { tt: '', tr: 0 } };
+// ฉายาที่ไม่อยู่ในรายชื่อ (เช่น ฉายาที่สุ่มประกอบขึ้นตอนเล่น หรือของระบบใหม่) ยังแสดงได้ แต่สีกรอบสูงสุดแค่ระดับ 2 กันคนตั้งชื่อหรูปลอม
+const ttlOk = (tt, tr) => { const k0 = String(tt || '').slice(0, 40), k = k0.slice(0, 24); if (!k) return { tt: '', tr: 0 }; if (Object.prototype.hasOwnProperty.call(TITLES.t, k)) return { tt: k, tr: Math.max(0, Math.min(6, +TITLES.t[k] || 0)) };
+  const c = String(clean(k0, 40) || ''); if (!c || c !== k0 || !noAdm(c) || !/^[\u0E00-\u0E7Fa-zA-Z0-9 ·\-'"()]+$/.test(c)) return { tt: '', tr: 0 }; return { tt: c, tr: Math.max(0, Math.min(2, +tr || 0)) } };
 // รูปตัวละครที่เกมวาดเอง: PNG ขนาด 56×62 เท่านั้น
 const avSnapOk = (s) => { if (!/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(s) || s.length > 8000) return false; try { const B = Buffer.from(s.slice(22, 22 + 44), 'base64'); return B.readUInt32BE(16) === 56 && B.readUInt32BE(20) === 62 } catch { return false } };
 // ล็อกอิน Google: ตรวจ ID token กับ Google โดยตรง (ต้องตั้ง GOOGLE_CLIENT_ID)
@@ -1345,7 +1347,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const [mu, ok, chx, rkh] = await pipe([['GET', 'mute:' + id], ['SET', 'rl:' + id, 1, 'NX', 'PX', 1800], ['SISMEMBER', 'cheaters', id], ['HGETALL', 'rkttl:' + id]]);
       if (mu) return res.status(429).json({ err: 'muted' });
       if (!ok) return res.status(429).json({ err: 'rate' });
-      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), ...((b.tp || +chx) ? { tt: '', tr: 0 } : rkOk(b.tt, rkh) || (isAdmKey(b.key) && RKT_ALL.has(String(b.tt || '')) ? { tt: String(b.tt), tr: RKT_TR[RKT_ALL.get(String(b.tt)).p] || 7 } : null) || ttlOk(b.tt)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
+      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), ...((b.tp || +chx) ? { tt: '', tr: 0 } : rkOk(b.tt, rkh) || (isAdmKey(b.key) && RKT_ALL.has(String(b.tt || '')) ? { tt: String(b.tt), tr: RKT_TR[RKT_ALL.get(String(b.tt)).p] || 7 } : null) || ttlOk(b.tt, b.tr)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
       if (isA) m.ad = 1;
       if (/^ตำนานลานซีซั่น \d{1,4}$/.test(String(b.tt || '')) && !m.tt) { const wv0 = jp(await cmd('HGET', 'arwal', id)); if (isAdmKey(b.key) || (wv0 && wv0.own && (wv0.own.tt || []).includes(String(b.tt)))) { m.tt = String(b.tt); m.tr = 6 } }
       if (['นักล่าเงา', 'ผู้ไม่เคยถอย', 'ตำนานแห่งลาน', 'ราชันเงาอสูร', 'เทพสงครามแห่งลาน', 'ผู้ยืนหนึ่งเหนือพันศึก', 'จักรพรรดิแห่งเงา', 'ผู้ไต่ลานทองคำ', 'เพชรแห่งลานเงา', 'จ้าวลานประลอง', 'ปรมาจารย์ผู้ไร้เงา', 'ราชันหมื่นเงา', 'เทพยุทธ์แห่งยุค'].includes(m.tt) && !isAdmKey(b.key)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.tt || []).includes(m.tt)) { m.tt = ''; m.tr = 0 } }
@@ -1377,7 +1379,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     }
     if (a === 'life') {
       const lid = String(b.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
-      const e = { n: clean(b.n, 20) || 'นิรนาม', s: Math.max(0, Math.min(1e12, +b.s || 0)), age: +b.age || 0, r: clean(b.r, 30), f: clean(b.f, 30), c: clean(b.c, 60), x: b.x ? 1 : 0, g: b.g ? 1 : 0, ga: Math.max(0, Math.min(1e9, Math.round(+b.ga || 0))), ...(b.tp ? { tt: '', tr: 0 } : ttlOk(b.tt)), xa: Math.max(0, Math.min(1e9, Math.round(+b.xa || 0))), cu: b.cu ? 1 : 0, bm: b.bm ? 1 : 0, kl: Math.max(0, Math.min(9, Math.floor(+b.kl || 0))), t: now, lid };
+      const e = { n: clean(b.n, 20) || 'นิรนาม', s: Math.max(0, Math.min(1e12, +b.s || 0)), age: +b.age || 0, r: clean(b.r, 30), f: clean(b.f, 30), c: clean(b.c, 60), x: b.x ? 1 : 0, g: b.g ? 1 : 0, ga: Math.max(0, Math.min(1e9, Math.round(+b.ga || 0))), ...(b.tp ? { tt: '', tr: 0 } : ttlOk(b.tt, b.tr)), xa: Math.max(0, Math.min(1e9, Math.round(+b.xa || 0))), cu: b.cu ? 1 : 0, bm: b.bm ? 1 : 0, kl: Math.max(0, Math.min(9, Math.floor(+b.kl || 0))), t: now, lid };
       { const c0 = String(b.ch || ''); if (CH_OK.includes(c0) && !(c0 === 'short' && e.age > 31)) e.ch = c0 }
       if (b.one && okId(id) && await cmd('GET', 'onex:' + id)) e.one = 1;
       // 🔒 จำนวนกัลป์ต้องเข้ากับอายุ (กัลป์ที่ n เริ่มเมื่ออายุราว n ล้านปี)

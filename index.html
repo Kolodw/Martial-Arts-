@@ -461,8 +461,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='17.10.4';
+const VERSION='17.10.5';
 const CHANGELOG=[
+  {v:'17.10.5',d:'15 พ.ย. 2026',l:['🐛 เควสระบบที่ทำครบแล้วแต่ไม่ได้รางวัล/ค้าง — ตอนนี้ได้รางวัลทันทีในปีถัดไป หรือตอนเปิดหน้าเควส','🐛 สัญญาปีศาจในนรก: ทำสัญญาแล้วไม่ได้ AI/ระบบ — ตอนนี้ได้แน่นอน และปีศาจจะไม่เสนอสัญญาที่ให้ไม่ได้','🐛 ฉายาบางอันไม่แสดงในแชทและทำเนียบ — แสดงครบแล้ว','🐛 กล่อง 🎯 เป้าหมายกางค้าง — แตะที่อื่นหรือรอสักครู่จะย่อเอง']},
   {v:'17.10.4',d:'15 พ.ย. 2026',l:['⏳ <b>เอาระบบนับถอยหลังเลือกเหตุการณ์เล็กให้ออกแล้ว</b> — เกมจะรอให้คุณเลือกเองทุกครั้ง · ถ้าอยากให้เกมเลือกแทน ใช้ ⏳ ชะตาตัดสินแทน (กดค้าง 🤖) หรือโหมดอัตโนมัติ']},
   {v:'17.10.3',d:'15 พ.ย. 2026',l:['🏆 <b>หน้าสรุปชีวิตบอกแล้วว่าขึ้นทำเนียบไหม</b> — ขึ้นแล้วบอกอันดับวันนี้ · ไม่ขึ้นบอกเหตุผล (เช่น เวอร์ชันเก่า ชีวิตลิขิตเอง หรือตรวจพบการแก้ค่า)','🔒 <b>กันโกงฝั่งเซิร์ฟเวอร์</b> — ลานประลองโหมดเงาสู้แทนให้เซิร์ฟเวอร์ตัดสินผล · ทำเนียบกัลป์ตรวจอายุ · ผู้ครองกฎ/ประตูกัลป์ตรวจพลังจากการเล่นจริง']},
   {v:'17.10.2',d:'15 พ.ย. 2026',l:['🎮 <b>สอนปุ่มด้านล่าง</b> — บอกทีละปุ่มว่าแตะได้อะไร กดค้างได้อะไร (จุดเล็กๆ มุมปุ่ม = กดค้างได้) · ตั้งชะตาตัดสินแทน · ล็อกตัวเลือก ได้ในหน้าสุดท้ายทันที · ดูซ้ำได้ที่ ☰ เมนู หรือ 🎓 บทเรียน']},
@@ -8156,7 +8157,7 @@ function openShowPick(){const cur=showTtl(),A=ACH_ALL.filter(a=>achGot[a.id]).so
   <h4 style="margin:10px 0 6px">🏆 จากสมุดตำนาน (${A.length})</h4>${A.length?`<div class="shpick">${A.map(a=>btn(a.n,a.r,'a')).join('')}</div>`:'<p class="tag2">ยังไม่มี</p>'}
   <h4 style="margin:12px 0 6px">🏷️ ฉายาที่เคยถูกเรียกขาน (${T.length})</h4>${T.length?`<div class="shpick">${T.map(([t,r])=>btn(t,r,'t')).join('')}</div>`:'<p class="tag2">ยังไม่มี — ฉายาจะมาเมื่ออายุ 15 ปีขึ้นไปและเริ่มมีชื่อเสียง</p>'}
   <button class="gbtn" style="width:100%;margin-top:12px" onclick="openBook()">← กลับสมุดตำนาน</button>`,'showpick')}
-function setShowTtl(t,r,k){if(!t){LS.del('murim_show');toast('ไม่โชว์ฉายาแล้ว')}else{LS.set('murim_show',{t:String(t).slice(0,24),r:+r||0,k});toast('🎖️ โชว์ฉายา「'+t+'」แล้ว')}openShowPick()}
+function setShowTtl(t,r,k){if(!t){LS.del('murim_show');toast('ไม่โชว์ฉายาแล้ว')}else{LS.set('murim_show',{t:String(t).slice(0,40),r:+r||0,k});toast('🎖️ โชว์ฉายา「'+t+'」แล้ว')}openShowPick()}
 {const _ob=openBook;openBook=function(){const r=_ob.apply(this,arguments);try{const m=$('modal');if(m.dataset.k==='book'){const bx=m.querySelector('.box'),cur=showTtl();if(bx&&!m.querySelector('#shBox'))bx.insertAdjacentHTML('afterend',`<div class="box" id="shBox" style="padding:8px 10px;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">🎖️ ฉายาที่โชว์: ${cur?tchipH(cur.t,cur.r):'<span class="tag2">ยังไม่ได้เลือก</span>'}<button class="pbtn" style="margin-left:auto;padding:4px 12px" onclick="openShowPick()">เลือกฉายา</button></div>`)}
   if(Date.now()-ACHF_T>300000&&typeof onlineOK!=='undefined'&&onlineOK){ACHF_T=Date.now();api('achfirsts').then(j=>{if(j&&j.f){ACHF=j.f;if($('modal').dataset.k==='book'&&modalOpen)openBook()}}).catch(()=>{})}}catch(e){}return r}}
 // ---- ฉายาพิเศษที่ซ้ำบ่อย: ให้ฉายาจากสิ่งที่ทำในชีวิตนี้ขึ้นก่อน ----
@@ -14749,8 +14750,8 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
    else{h.fail=(h.fail||0)+1;S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.5));
     if(h.fail>=3){S.deathCause=`วิญญาณถูกขังไว้ใน${nm} (นรกชั้นที่ ${L+1}) ตลอดกาล`;S.hp=0;log(`⛓️ พ่ายที่ประตู${nm}เป็นครั้งที่ 3 — โซ่นรกลากวิญญาณคุณลงไป`,'bad',true);try{checkDeath()}catch(e){}}
     else{h.next=S.age+1;log(`🩸 พ่ายให้${bs} — ถอยกลับมาพร้อมบาดแผล · ประตูจะเปิดอีกครั้งปีหน้า (พลาดได้อีก ${3-h.fail} ครั้ง ไม่งั้นวิญญาณจะถูกขัง)`,'bad',true)}}render()})}
- function pact(){const h=S.hell,r=Math.random(),k=r<.34?'sys':r<.67?'pow':'life';h.pactY=S.age;
-  const O={sys:{t:S.sys?'🤖 สัญญาปัญญาประดิษฐ์':'🟦 สัญญาหน้าต่างระบบ',s:'แลกกับอายุขัยสูงสุด −30%',f(){h.lifeP-=.3;S.chSysOK=1;try{S.sys?aiGive():sysOffer()}catch(e){}log('📜 คุณประทับลายนิ้วมือด้วยเลือด — ปีศาจหัวเราะ "อายุของเจ้าเป็นของข้าแล้ว"','myth',true)}},
+ function pact(){const h=S.hell,r=Math.random(),sysOK=S.sys?!S.ai:!S.sysEver;let k=r<.34?'sys':r<.67?'pow':'life';if(k==='sys'&&!sysOK)k=r<.17?'pow':'life';h.pactY=S.age;
+  const O={sys:{t:S.sys?'🤖 สัญญาปัญญาประดิษฐ์':'🟦 สัญญาหน้าต่างระบบ',s:'แลกกับอายุขัยสูงสุด −30%',f(){h.lifeP-=.3;S.chSysOK=1;try{if(S.sys){aiGive();if(!S.ai){aiGive._b=1;try{aiGive('pact')}finally{aiGive._b=0}}}else{const T=pickW(SYS_TYPES).v,G=pickW(SYS_GRADE).v;bindSys(T,G)}}catch(e){console.error(e)}log('📜 คุณประทับลายนิ้วมือด้วยเลือด — ปีศาจหัวเราะ "อายุของเจ้าเป็นของข้าแล้ว"','myth',true)}},
    pow:{t:'⚔️ สัญญาพลังมาร',s:'พลังยุทธ์ +30% · แลกกับกรรม −60 และคำสาปค่าหัวจากนรก',f(){const g=pctPow(.3);S.power+=g;S.karma-=60;addCurse('hunt');log(`📜 พลังมารไหลทะลักเข้าร่าง — พลังยุทธ์ +${fmt(g)}`,'myth',true)}},
    life:{t:'🌿 สัญญาอายุยืน',s:'อายุขัยสูงสุด +50% · แลกกับคำสาปสุ่ม 1 ข้อ',f(){h.lifeB+=.5;const ks=Object.keys(CUR).filter(x=>ncur(x)<3);addCurse(ch(ks));log('📜 ปีศาจต่อเส้นชีวิตให้คุณ — แต่ทิ้งรอยไหม้ไว้บนวิญญาณ','myth',true)}}}[k];
   choice('😈 ปีศาจเสนอสัญญา',`เงาสีดำนั่งลงตรงข้ามคุณ "ในนรก ไม่มีอะไรได้มาฟรี… แต่ข้าใจดีพอจะ<b>ขาย</b>ให้"`,[Object.assign({noFate:1},O),{t:'ปฏิเสธ',s:'ไม่แลกอะไรกับปีศาจ',skip:true,f(){S.karma+=3;log('😈 ปีศาจยักไหล่แล้วสลายไปในควัน "แล้วเจ้าจะกลับมาหาข้าเอง"','')}}])}
@@ -24144,6 +24145,17 @@ function lifeSkipBox(r){try{const end=$('end');if(!end||!r||$('lifeSkip'))return
 PACE.am=()=>0;try{LS.set('murim_automin',0)}catch(e){}
 {const _qsN=qmSpeed;qmSpeed=function(){const sp=_qsN.apply(this,arguments);try{sp.rows=sp.rows.filter(r=>r.t!=='ระบบเลือกเหตุการณ์เล็ก')}catch(e){}return sp}}
 setInterval(()=>{try{const x=$('paceMin');if(x)x.remove()}catch(e){}},300);
+
+// ===================== v17.10.5 แก้บั๊กจากกระดาน =====================
+// 1) เควสระบบทำครบแล้วไม่ได้รางวัล: เดิมเช็คเฉพาะตอน sysTick ซึ่งบางปีโดนเหตุการณ์อื่นตัดก่อน → เช็คซ้ำทุกปีและตอนเปิดหน้าเควส
+function sysQSweep(){try{const s=S&&S.sys;if(!s||!S.alive||S.age<6||!Array.isArray(s.quests)||(S.beastMode&&!S.beastMode.human))return;const T=sysType();
+ for(const q of s.quests.slice()){if(!q||q.pz)continue;let p=0;try{p=qProg(q)}catch(e){continue}if(!(p>=q.g))continue;
+  s.quests.splice(s.quests.indexOf(q),1);s.done=(s.done||0)+1;s.sp=(s.sp||0)+(q.sp||0);if(T&&T.id==='gacha'&&Math.random()<.5)s.tk++;sysLog(`เควสสำเร็จ: <b>${q.n}</b> · +${q.rw} EXP · +${q.sp} SP`,'up');try{gainExp(q.rw)}catch(e){}}}catch(e){console.error(e)}}
+{const _pyQ=passYear;passYear=function(){const r=_pyQ.apply(this,arguments);sysQSweep();return r}}
+{const _oqQ=openQuests;openQuests=function(){sysQSweep();return _oqQ.apply(this,arguments)}}
+// 2) กล่องเป้าหมายกางค้าง: แตะนอกกล่องหรือรอ 8 วิ จะย่อเอง
+{let gT=0;const fold=()=>{const g=$('goalBox');if(g&&g.classList.contains('gmx'))g.classList.remove('gmx')};
+ document.addEventListener('click',e=>{try{const g=$('goalBox');if(!g)return;if(e.target.closest&&e.target.closest('#goalBox')){clearTimeout(gT);gT=setTimeout(fold,8000)}else if(g.classList.contains('gmx'))fold()}catch(x){}},false)}
 </script>
 </body>
 </html>
