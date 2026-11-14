@@ -442,7 +442,7 @@ details.item summary{cursor:pointer}
 const R=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const ch=a=>a[Math.floor(Math.random()*a.length)];
 const $=id=>document.getElementById(id);
-const fmt=n=>Math.round(n).toLocaleString('th-TH');
+const fmt=n=>{n=Math.round(+n||0);const a=Math.abs(n);if(a>=1e8){const U=[[1e12,'ล้านล้าน'],[1e11,'แสนล้าน'],[1e10,'หมื่นล้าน'],[1e9,'พันล้าน'],[1e8,'ร้อยล้าน']];for(const [v,u] of U)if(a>=v){const x=n/v;return(Math.abs(x)>=100?Math.round(x).toLocaleString('th-TH'):(+x.toFixed(1)).toLocaleString('th-TH'))+' '+u}}return n.toLocaleString('th-TH')};
 const fmtG=n=>n%1?n.toFixed(1):fmt(n);
 function pickW(arr){const t=arr.reduce((s,x)=>s+x.w,0);let r=Math.random()*t;for(const x of arr){if((r-=x.w)<=0)return{v:x,p:x.w/t}}const l=arr[arr.length-1];return{v:l,p:l.w/t}}
 const oddsTxt=p=>1/p<1.05?'ทั่วไป':'1 ใน '+fmt(1/p);
@@ -944,6 +944,7 @@ function beginLife(){
 function addItem(it){const x={...it};if(!x.passive)x.left=x.uses;S.items.push(x);if(x.id==='nano')lsAdd(20);if(x.id==='system')S.int+=10}
 const has=id=>S.items.some(i=>i.id===id&&(i.passive||i.left>0));
 const artBonus=()=>Math.round(S.arts.map(a=>a.b*artM(a)).sort((x,y)=>y-x).reduce((s,v,i)=>s+(i<5?v:v*.25),0)*(S.clan&&S.clan.b&&S.clan.b.art||1)*(tr('fastlearn')?1.15:1)*(tr('crippled')?.2:1));
+function pvT(){try{if(!S||!S.pv2||S.beastMode)return total();const tt=total();if(realmIdx()<7)return tt;return Math.min(tt,REALMS[7].p)}catch(e){return total()}}
 const total=()=>gv('weapon')+eqA('pow')+S.power+S.qi*12+artBonus()+(has('axe')?80:0)+(S.done.includes('powder')?150:0);
 const LIFE_B=[0,3,6,10,20,40,70,100];
 function lifeMax(){const v=lifeMax0();return S&&S.ch==='short'?Math.min(30,v):v}
@@ -1544,7 +1545,7 @@ const EVENTS=[
   {t:'ไกล่เกลี่ยให้สองฝ่ายคืนดี',s:'ใช้ปัญญาและเสน่ห์',f(){if(roll01((S.int+S.cha)/260)){S.merit+=60;S.fame+=15;log('คุณไกล่เกลี่ยสำเร็จ เจ้าสำนักชื่นชมว่าเป็นเสาหลักของสำนัก','epic')}else{S.merit=Math.max(0,S.merit-15);log('สองฝ่ายหาว่าคุณเป็นพวกอีกฝ่าย','bad')}}}])}},
  {w:1.5,once:1,c:s=>s.age>=35&&s.age<=55&&realmIdx()>=2&&realmIdx()<=5,f(){choice('🧱 คอขวดแห่งวิถียุทธ์',`ฝึกมาหลายปีแต่พลังหยุดนิ่ง ราวกับมีกำแพงขวางอยู่ตรงหน้า`,[
   {t:'ปลีกวิเวกเข้าถ้ำหนึ่งปี',s:'ลมปราณ +',f(){S.qi+=R(3,6);S.fame=Math.max(0,S.fame-5);log('ปิดด่านในถ้ำหนึ่งปีเต็ม ออกมาด้วยแววตาที่สงบนิ่งกว่าเดิม','epic')}},
-  {t:'ลองวิชาแหวกแนวที่คิดเอง',s:'อาจธาตุไฟแตก',f(){if(roll01(.5)){S.power+=total()*.12;const a=newArt(2);a.n=S.name.split(' ').pop()+ch(['กระบี่อิสระ','ฝ่ามือไร้รูป','ลมปราณย้อนกระแส']);S.arts.push(a);log(`คิดค้นวิชาของตัวเองได้สำเร็จ — ${artHtml(a)}`,'myth')}else if(tr('allarts')){S.power+=total()*.05;log('ยังคิดค้นไม่สำเร็จ แต่กายาหมื่นวิชาทำให้ลมปราณไม่ตีกลับ ได้ความเข้าใจเพิ่มขึ้นแทน','good')}else{S.hp-=35;S.lifespan-=2;log('ลมปราณตีกลับ ธาตุไฟเข้าแทรก อายุขัย −2 ปี','bad')}}},
+  {t:'ลองวิชาแหวกแนวที่คิดเอง',s:'อาจธาตุไฟแตก',f(){if(roll01(.5)){S.power+=pvT()*.12;const a=newArt(2);a.n=S.name.split(' ').pop()+ch(['กระบี่อิสระ','ฝ่ามือไร้รูป','ลมปราณย้อนกระแส']);S.arts.push(a);log(`คิดค้นวิชาของตัวเองได้สำเร็จ — ${artHtml(a)}`,'myth')}else if(tr('allarts')){S.power+=pvT()*.05;log('ยังคิดค้นไม่สำเร็จ แต่กายาหมื่นวิชาทำให้ลมปราณไม่ตีกลับ ได้ความเข้าใจเพิ่มขึ้นแทน','good')}else{S.hp-=35;S.lifespan-=2;log('ลมปราณตีกลับ ธาตุไฟเข้าแทรก อายุขัย −2 ปี','bad')}}},
   {t:'ยอมรับขีดจำกัด ใช้ชีวิตให้มีความสุข',s:'ความสุข +',f(){joy(15);S.karma+=2;log('คุณวางกระบี่ลง แล้วหันไปมองครอบครัวที่รออยู่','good')}}])}},
  {w:1.2,once:1,c:s=>s.age>=30&&(s.children||[]).some(c=>c.alive&&c.age>=5&&c.age<=20),f(){const c=ch(S.children.filter(c=>c.alive&&c.age>=5&&c.age<=20)),ep=110+S.age*12+realmIdx()*180;choice('😱 ลูกถูกจับเป็นตัวประกัน',`โจรเรียกค่าไถ่ <b>${c.n}</b> ${fmt(2000)} ตำลึง`,[
   {t:'บุกช่วยด้วยตัวเอง',s:'ต้องสู้',f(){if(fight('แก๊งเรียกค่าไถ่',ep)){S.fame+=20;joy(10);log(`บุกรังโจรช่วย${c.n}ออกมาได้ ลูกกอดคุณแน่นไม่ยอมปล่อย`,'epic')}else{S.money=Math.max(0,S.money-2000);S.hp-=20;log(`บุกไม่สำเร็จ ต้องจ่ายค่าไถ่ไปในที่สุด`,'bad')}}},
@@ -1629,7 +1630,7 @@ const EVENTS=[
   {t:'บุกเข้าไป',s:'ศึกกับเจ้าป้อม',f(){duel('เจ้าป้อมจันทร์เลือด',ep,w=>{if(w){const a=newArt(3);S.arts.push(a);S.fame+=40;log(`พิชิตป้อมจันทร์เลือด! ได้ ${artHtml(a)}`,'myth');keyAdd('พิชิตป้อมจันทร์เลือด')}else{S.hp-=45;log('ถูกเหวี่ยงออกมาจากป้อมก่อนมันจะหายไปตอนรุ่งสาง','bad')}})}},
   {t:'เฝ้าดูจากไกลๆ',f(){S.int+=3;log('คุณจดบันทึกทุกอย่างไว้ เผื่ออีกร้อยปีจะมีคนได้อ่าน')}}])}},
  {w:1.2,once:1,c:s=>s.age>=16,f(){choice('🗡️ กระบี่ผีสิง',`ในร้านของเก่า มีกระบี่ขึ้นสนิมเล่มหนึ่งสั่นเบาๆ ทุกครั้งที่คุณเดินผ่าน เจ้าของร้านขายให้ถูกมาก "มันฆ่าเจ้าของมาแล้วเจ็ดคน"`,[
-  {t:'ซื้อมา (100 ตำลึง)',s:'เสี่ยงถูกครอบงำ',f(){S.money-=100;if(roll01(.5+S.karma/250)){S.power+=total()*.12;log('วิญญาณในกระบี่ยอมรับคุณเป็นนาย "ในที่สุดก็เจอคนที่ใจแข็งพอ" — พลังยุทธ์เพิ่มขึ้นมาก','myth')}else{S.karma-=10;S.hp-=25;log('คืนนั้นคุณละเมอลุกขึ้นฟันทุกอย่างในห้อง ตื่นมาพบมือเปื้อนเลือดไก่ของเพื่อนบ้าน... จึงโยนกระบี่ทิ้งลงแม่น้ำ','bad')}}},
+  {t:'ซื้อมา (100 ตำลึง)',s:'เสี่ยงถูกครอบงำ',f(){S.money-=100;if(roll01(.5+S.karma/250)){S.power+=pvT()*.12;log('วิญญาณในกระบี่ยอมรับคุณเป็นนาย "ในที่สุดก็เจอคนที่ใจแข็งพอ" — พลังยุทธ์เพิ่มขึ้นมาก','myth')}else{S.karma-=10;S.hp-=25;log('คืนนั้นคุณละเมอลุกขึ้นฟันทุกอย่างในห้อง ตื่นมาพบมือเปื้อนเลือดไก่ของเพื่อนบ้าน... จึงโยนกระบี่ทิ้งลงแม่น้ำ','bad')}}},
   {t:'ไม่ซื้อ',f(){}}])}},
  // ======== v3.2: มินิเกม ========
  {w:1.5,cd:15,c:s=>s.age>=18,f(){const foe=ch(['คนเรือร่างยักษ์','จอมยุทธ์ขี้เมา','นักพรตที่ไม่เคยเมา']);drinkRound(1,foe)}},
@@ -2538,7 +2539,7 @@ function protClash(pp){const s=S.sys,p=s.prot;setScene('fight');
   {t:'⚔️ สู้!',s:'ตัวร้ายจะชนะบทได้หรือไม่',f(){duel(p.n,pp,w=>{
    if(w){s.humil++;s.hate=Math.max(0,s.hate-1);S.fame+=40;sysReward(250,40,`เอาชนะ${p.n}ต่อหน้าผู้คนนับร้อย! ออร่าตัวเอกของเขาสั่นคลอน`);
     if(!auto||Math.random()<.5)choice('😈 ชะตาของบุตรแห่งสวรรค์',`${p.n}คุกเข่าอยู่ตรงหน้า บาดเจ็บสาหัส`,[
-     {t:'🗡️ ปิดฉากเขาเสีย',s:'ตัวร้ายไม่ปล่อยให้ตัวเอกรอดไปฝึกต่อ',f(){p.alive=0;s.protKill=1;S.karma-=15;S.power+=total()*.15;sysReward(600,100,`💀 สังหาร<b>${p.n}</b> บุตรแห่งสวรรค์! ชะตาทั้งหมดของเขาไหลเข้าสู่ร่างคุณ`);setScene('fight');S.key.push(`${S.age} ปี — สังหารบุตรแห่งสวรรค์ ${p.n}`);S.flags.protKill=1}},
+     {t:'🗡️ ปิดฉากเขาเสีย',s:'ตัวร้ายไม่ปล่อยให้ตัวเอกรอดไปฝึกต่อ',f(){p.alive=0;s.protKill=1;S.karma-=15;S.power+=pvT()*.15;sysReward(600,100,`💀 สังหาร<b>${p.n}</b> บุตรแห่งสวรรค์! ชะตาทั้งหมดของเขาไหลเข้าสู่ร่างคุณ`);setScene('fight');S.key.push(`${S.age} ปี — สังหารบุตรแห่งสวรรค์ ${p.n}`);S.flags.protKill=1}},
      {t:'🚶 ปล่อยไป',s:'เขาจะกลับมาอีก...แข็งแกร่งกว่าเดิม',skip:true,f(){p.r+=.15;sysLog(`คุณปล่อย${p.n}ไป ระบบเตือน: "ตัวเอกที่รอดจากความตายมักกลับมาแข็งแกร่งกว่าเดิม"`)}}])}
    else{const dmg=R(35,70);S.hp-=dmg;p.r+=.05;
     if(s.hate>=4&&Math.random()<.35){S.hp=0;S.deathCause=`ถูกบุตรแห่งสวรรค์ ${p.n} สังหารตามชะตาตัวร้าย`;log(`${p.n}ปล่อยฝ่ามือสุดท้าย "ตัวร้ายอย่างเจ้า สมควรตาย!"`,'bad')}
@@ -2570,7 +2571,7 @@ function ringEvent(){const s=S.sys;
   if(!o.length)return false;o.push({t:'⏳ ไว้ทีหลัง',skip:true,f(){}});
   choice('💍 คืนร่างให้ผู้เฒ่า',`ผู้เฒ่า${s.elder}: "ข้าพบวิธีคืนร่างแล้ว ต้องใช้หยกวิญญาณ..."`,o);return true}
  return false}
-function ringBody(){const s=S.sys;s.ringBody=1;S.power+=total()*.1;sysReward(500,0,`💍 ผู้เฒ่า${s.elder}ได้ร่างคืน! เขากลายเป็นอาจารย์ที่ติดตามคุณตลอดชีวิต — ฝึกได้ผลมากขึ้น และช่วยในการต่อสู้`);S.flags.ringBody=1;S.key.push(`${S.age} ปี — ผู้เฒ่าในแหวนได้ร่างคืน`)}
+function ringBody(){const s=S.sys;s.ringBody=1;S.power+=pvT()*.1;sysReward(500,0,`💍 ผู้เฒ่า${s.elder}ได้ร่างคืน! เขากลายเป็นอาจารย์ที่ติดตามคุณตลอดชีวิต — ฝึกได้ผลมากขึ้น และช่วยในการต่อสู้`);S.flags.ringBody=1;S.key.push(`${S.age} ปี — ผู้เฒ่าในแหวนได้ร่างคืน`)}
 // ---- เควสเหตุการณ์ (ทันที) ----
 function eqRun(title,text,opts){setScene('system');choice(title,`<span class="px">[ระบบ]</span> ${text}`,opts);return true}
 function eqWin(exp,sp,t){sysReward(exp*(1+S.sys.lv*.08),sp,t)}
@@ -2692,9 +2693,9 @@ function mystTick(){
  return false}
 function mystWin(t){S.flags.mystWin=1;S.fame+=60;keyAdd(`ทวงคืนชาติกำเนิด — ${MYST[t].n}`);
  if(t==='lostheir'){S.money+=inc(20000);const a=newArt(3);a.n='วิชาประจำตระกูลที่สาบสูญ';S.arts.push(a);log(`ล้างแค้นให้ตระกูลสำเร็จ ได้ทรัพย์สมบัติที่ถูกซ่อนไว้และ ${artHtml(a)}`,'myth')}
- else if(t==='demonblood'){S.power+=total()*.25;S.karma-=10;log('สายเลือดมารตื่นขึ้นเต็มที่ พลังพุ่งทะยาน แต่ดวงตาของคุณจะแดงไปตลอดกาล','myth')}
+ else if(t==='demonblood'){S.power+=pvT()*.25;S.karma-=10;log('สายเลือดมารตื่นขึ้นเต็มที่ พลังพุ่งทะยาน แต่ดวงตาของคุณจะแดงไปตลอดกาล','myth')}
  else if(t==='swapped'){S.money+=inc(15000);S.fame+=40;log('จวนขุนนางรับคุณกลับคืน ได้ทรัพย์มรดกและบรรดาศักดิ์','myth')}
- else{S.qi+=20;S.power+=total()*.2;log('ผนึกแตกออก พลังที่ถูกซ่อนไว้ทั้งชีวิตไหลบ่าเข้าสู่ทุกเส้นลมปราณ ลมปราณ +20 ปี','myth');setScene('aura')}}
+ else{S.qi+=20;S.power+=pvT()*.2;log('ผนึกแตกออก พลังที่ถูกซ่อนไว้ทั้งชีวิตไหลบ่าเข้าสู่ทุกเส้นลมปราณ ลมปราณ +20 ปี','myth');setScene('aura')}}
 // ---- 2. มิติลับ ----
 function secretRealmTick(){if(S.age<16||S.age%10!==5||S.srY===S.age||Math.random()>.6)return false;S.srY=S.age;
  const nm=ch(['ซากวังเซียนโบราณ','สุสานจักรพรรดิมาร','สวนสมุนไพรพันปี','เมืองใต้ทะเลสาบ','หอคอยกลับหัว']);
@@ -2960,7 +2961,7 @@ const XEV=[
   {t:'หลอมเอง',s:'ใช้ปัญญา · เตาอาจระเบิด',f(){if(roll01(.35+S.int/300)){S.power+=REALMS[Math.min(7,realmIdx()+1)].p*.15;log('เปิดเตา กลิ่นหอมตลบทั้งหุบ — หลอมยาสำเร็จ พลังพุ่งขึ้นมาก','epic')}else{S.hp-=25;log('ตูม! เตาระเบิด คิ้วไหม้หมด','bad')}}},
   {t:'จ้างนักปรุงยาหลอมให้ (หินวิญญาณ = เงิน 3,000)',f(){if(S.money<3000){log('หินวิญญาณไม่พอ','bad');return}S.money-=3000;S.power+=REALMS[Math.min(7,realmIdx()+1)].p*.1;log('นักปรุงยาหลอมให้สำเร็จ','good')}}])}},
  {w:2,once:1,c:s=>s.xian&&s.age>=14,f(){const bt=ch(['พยัคฆ์ขาวลูกอ่อน','จิ้งจอกเพลิงน้อย','มังกรน้ำแรกเกิด','นกกระเรียนวิญญาณ']);choice('🐉 สัตว์วิญญาณ',`${bt}บาดเจ็บนอนอยู่ริมลำธาร มันจ้องคุณด้วยดวงตาใสแจ๋ว`,[
-  {t:'รักษาแล้วทำสัญญาพันธะ',s:'สัตว์พันธสัญญา',f(){S.pet={i:'🐉',n:bt,t:'สัตว์พันธสัญญา',age:S.age,spirit:1,lv:0};S.flags.xPet=1;S.power+=total()*.05;log(`ทำสัญญาพันธะกับ${bt} มันจะเติบโตไปพร้อมกับคุณ`,'myth');keyAdd(`ทำสัญญาพันธะกับ${bt}`)}},
+  {t:'รักษาแล้วทำสัญญาพันธะ',s:'สัตว์พันธสัญญา',f(){S.pet={i:'🐉',n:bt,t:'สัตว์พันธสัญญา',age:S.age,spirit:1,lv:0};S.flags.xPet=1;S.power+=pvT()*.05;log(`ทำสัญญาพันธะกับ${bt} มันจะเติบโตไปพร้อมกับคุณ`,'myth');keyAdd(`ทำสัญญาพันธะกับ${bt}`)}},
   {t:'เอาแก่นอสูรของมัน',s:'กรรม −−',f(){S.qi+=4;S.karma-=12;log('คุณได้แก่นอสูร... แต่แม่ของมันจะจำกลิ่นคุณได้','bad');plant('beastMom',{n:bt},4,10,.7)}},
   {t:'ปล่อยไป',f(){S.karma+=2}}])}},
  {w:2,cd:12,c:s=>s.xian&&!!s.faction&&s.age>=14,f(){const ep=total()*(.85+Math.random()*.35);choice('🏟️ การประลองชิงอันดับสำนัก',`${S.faction.n}จัดการประลองชิงอันดับศิษย์ ผู้ชนะได้เข้าแดนลับของสำนัก`,[
@@ -2971,12 +2972,12 @@ const XEV=[
   {t:'ขอส่วนแบ่ง',s:'กรรม −−−',f(){S.karma-=25;S.qi+=8;log('คุณได้ลมปราณจากวิญญาณที่ถูกหลอม... เสียงร้องไห้ยังดังในหูทุกคืน','bad')}},
   {t:'เลี่ยงไป',skip:true,f(){S.karma-=3}}])}},
  {w:1.5,cd:20,c:s=>s.xian&&realmIdx()>=3,f(){const fb=ch(['กระบี่บินสีคราม','กระดิ่งสะกดวิญญาณ','หม้อหลอมฟ้าดิน','พัดเพลิงหงส์']);choice('🗡️ อาวุธวิเศษเลือกนาย',`<b>${fb}</b> ลอยออกจากซากถ้ำโบราณ วนรอบตัวคุณสามรอบ`,[
-  {t:'หลอมรวมด้วยเลือด',s:'อาจถูกปฏิเสธ',f(){if(roll01(.55+S.talent.m*.05)){S.power+=total()*.15;S.gear=S.gear||{};S.gear.weapon='w4';log(`${fb}ยอมรับคุณเป็นนาย — อาวุธวิเศษคู่ชีวิต`,'myth');keyAdd(`ได้อาวุธวิเศษ${fb}`)}else{S.hp-=30;log(`${fb}สะบัดคุณกระเด็นแล้วบินหายไป`,'bad')}}},
+  {t:'หลอมรวมด้วยเลือด',s:'อาจถูกปฏิเสธ',f(){if(roll01(.55+S.talent.m*.05)){S.power+=pvT()*.15;S.gear=S.gear||{};S.gear.weapon='w4';log(`${fb}ยอมรับคุณเป็นนาย — อาวุธวิเศษคู่ชีวิต`,'myth');keyAdd(`ได้อาวุธวิเศษ${fb}`)}else{S.hp-=30;log(`${fb}สะบัดคุณกระเด็นแล้วบินหายไป`,'bad')}}},
   {t:'ไม่แตะ',f(){}}])}},
  {w:1.5,cd:12,c:s=>s.xian&&s.age>=20,f(){choice('☯️ จิตแห่งเต๋า',`ระหว่างปิดด่าน มีคำถามผุดขึ้นในใจ: "เจ้าฝึกตนไปเพื่ออะไร?"`,[
   {t:'เพื่อความเป็นอมตะ',f(){S.qi+=2;log('จิตแน่วแน่ ลมปราณไหลเร็วขึ้น')}},
   {t:'เพื่อปกป้องคนที่รัก',f(){S.karma+=4;joy(6);log('จิตอบอุ่น มารในใจทำอะไรคุณไม่ได้')}},
-  {t:'เพื่ออยู่เหนือทุกสรรพสิ่ง',f(){S.power+=total()*.05;S.karma-=3;log('จิตทะเยอทะยาน พลังเพิ่ม แต่เงามืดในใจก็เพิ่มตาม')}}])}},
+  {t:'เพื่ออยู่เหนือทุกสรรพสิ่ง',f(){S.power+=pvT()*.05;S.karma-=3;log('จิตทะเยอทะยาน พลังเพิ่ม แต่เงามืดในใจก็เพิ่มตาม')}}])}},
  {w:1.2,once:1,c:s=>s.xian&&s.age>=20,f(){const nm=anyName(oppG());choice('💞 คู่บ่มเพาะ',`<b>${nm}</b> ผู้ฝึกตนที่มีรากวิญญาณเข้ากันกับคุณอย่างน่าประหลาด เสนอให้เป็นคู่บ่มเพาะ`,[
   {t:'ตกลง',s:'ฝึกด้วยกัน',f(){if(!S.spouse)marry(nm,'ผูกจิตเป็นคู่บ่มเพาะกับ');S.qi+=5;log('ลมปราณหยินหยางของทั้งคู่ไหลเวียนเข้าหากัน ลมปราณ +5 ปี','epic')}},
   {t:'ปฏิเสธ',f(){}}])}},
@@ -3350,7 +3351,7 @@ function nemTick(){if(S.age<12)return false;const N=S.nem;
 function nemRes(w,fin){const N=S.nem;
  if(w){N.w++;N.r=Math.max(.6,N.r-.06);S.fame+=20+N.c*5;
   if(fin)choice(`😈 ${N.n}คุกเข่าลง`,'ศัตรูที่ตามรังควานคุณมาทั้งชีวิตบาดเจ็บสาหัสอยู่ตรงหน้า',[
-   {t:'🗡️ ปิดฉาก',s:'จบความแค้นตลอดกาล',f(){N.alive=0;S.kills++;S.karma-=5;S.power+=total()*.05;log(`💀 ${N.n} สิ้นใจ — ความแค้นทั้งชีวิตจบลงตรงนี้ คุณกลับรู้สึกว่างเปล่าอย่างประหลาด`,'myth');keyAdd(`ปิดฉากศัตรูคู่ชะตา ${N.n}`);S.flags.nemKill=1}},
+   {t:'🗡️ ปิดฉาก',s:'จบความแค้นตลอดกาล',f(){N.alive=0;S.kills++;S.karma-=5;S.power+=pvT()*.05;log(`💀 ${N.n} สิ้นใจ — ความแค้นทั้งชีวิตจบลงตรงนี้ คุณกลับรู้สึกว่างเปล่าอย่างประหลาด`,'myth');keyAdd(`ปิดฉากศัตรูคู่ชะตา ${N.n}`);S.flags.nemKill=1}},
    {t:'🕊️ ไว้ชีวิต',s:'กรรม +',f(){N.peace=1;S.karma+=10;log(`คุณยื่นมือให้${N.n}ลุกขึ้น เขาร้องไห้เหมือนเด็ก แล้วจากไปโดยไม่หันกลับมาอีก`,'myth');keyAdd(`ไว้ชีวิตศัตรูคู่ชะตา ${N.n}`);S.flags.nemSpare=1}}]);
   else log(`😈 ชนะ${N.n}อีกครั้ง — "${ch(['ครั้งหน้าข้าจะไม่แพ้!','จำไว้ เรื่องนี้ยังไม่จบ','เจ้าแค่โชคดี'])}"`,'epic')}
  else{N.l++;N.r+=.1;if(fin&&N.l>=4&&Math.random()<.3){S.hp=0;S.deathCause=`ถูกศัตรูคู่ชะตา ${N.n} สังหารในศึกตัดสิน`}else log(`😈 ${N.n}เหยียบคุณจมดิน "${ch(['อ่อนแอเหมือนเดิม','ข้ารอวันนี้มานาน','ไปฝึกมาใหม่เถอะ'])}"`,'bad')}}
@@ -5883,7 +5884,7 @@ function bossTick(){if(!S||!S.alive||S.beastMode||S.age<16||S.age>95||choice._cu
  S.bossN=(S.bossN||0)+1;S.bossY=S.age;setScene('fight');
  const die=how=>{if(!S.bossSurv&&Math.random()<.6){S.bossSurv=1;S.hp=1;S.power=Math.round(S.power*.9);joy(-15);log(`💀 ${B.n}ทิ้งคุณไว้ให้ตายกลางป่า… แต่คุณรอดมาได้อย่างปาฏิหาริย์ (พลังยุทธ์ −10%)`,'bad',true);return}S.deathCause=`ถูก${B.n}สังหาร${how}`;S.hp=0};
  const fled=()=>{S.hp=Math.max(1,Math.round(S.maxHp*.15));joy(-8);log(`🏃 หนีรอดจาก${B.n}มาได้อย่างหวุดหวิด ร่างกายบาดเจ็บสาหัส`,'bad',true)};
- const won=()=>{S.fame+=x?1500:1200;S.power+=Math.round(total()*.06);joy(15);S.karma+=x?0:5;S.flags.bossKill=1;let a=null;try{a=newArt(3);Array.prototype.push.call(S.arts,a)}catch(e){}
+ const won=()=>{S.fame+=x?1500:1200;S.power+=Math.round(pvT()*.06);joy(15);S.karma+=x?0:5;S.flags.bossKill=1;let a=null;try{a=newArt(3);Array.prototype.push.call(S.arts,a)}catch(e){}
   log(`👑 <b>ล้ม${B.n}ได้ในการดวลตัวต่อตัว!</b> ชื่อของคุณก้องไปทั่ว${x?'ทุกแดนเซียน':'ยุทธภพ'}${a?` — ได้ ${artHtml(a)}`:''}`,'myth',true)};
  choice(`☠️ เผชิญหน้า${B.n}`,`ระหว่างทาง ฟ้าพลันมืดมิด แรงกดดันมหาศาลตรึงร่างคุณไว้กับที่ — <b>${B.n}</b> ${B.d} ยืนขวางทางอยู่ตามลำพัง<br>"${x?'มดปลวกที่กล้าเหยียบแดนเดียวกับข้า':'ได้ยินชื่อเจ้ามานาน'}... มาดูกันว่าเจ้ามีดีแค่ไหน"<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของศัตรู</span>`,[
   {t:'⚔️ สู้ตัวต่อตัว',s:`โอกาสชนะราว ${pw}% · ถ้าแพ้ต้องหนีให้รอด ไม่งั้นตาย`,f(){duel(B.n,ep,w=>{if(w)won();else if(Math.random()<esc*.8)fled();else die('ในการดวลตัวต่อตัว')})}},
@@ -6299,8 +6300,8 @@ const RS_SUB=['ระดับต่ำ','ระดับกลาง','ระ�
 function rsG(){try{return S&&S.xian&&!S.xt?1.15:RS_G}catch(e){return RS_G}}
 function rsPF(L){const pf=RS_PFX[Math.max(0,Math.min(RS_PFX.length-1,Math.floor(L/9)))]||'',n=REALMS[7].n||'';return n.startsWith(pf)?'มหา':pf}
 function rsPN(L){return REALMS[7].n+' · ชั้น'+(RS_PFX[Math.max(0,Math.min(RS_PFX.length-1,Math.floor(L/9)))]||'')}
-function postP(L){return REALMS[7].p*Math.pow(rsG(),L+1)}
-function postRaw(){const top=REALMS[7].p,p=total();if(p<postP(0))return -1;return Math.min(RS_MAX,Math.floor(Math.log(p/top)/Math.log(rsG()))-1)}
+function postP(L){if(S&&S.pv2)return REALMS[7].p*(1+(rsG()-1)*(L+1));return REALMS[7].p*Math.pow(rsG(),L+1)}
+function postRaw(){const top=REALMS[7].p,p=total();if(p<postP(0))return -1;if(S&&S.pv2)return Math.min(RS_MAX,Math.floor((p/top-1)/(rsG()-1)+1e-9)-1);return Math.min(RS_MAX,Math.floor(Math.log(p/top)/Math.log(rsG()))-1)}
 function postLv(){if(!S||(S.beastMode&&!S.beastMode.human)||realmIdx()<7||S.pcap==null)return -1;return Math.min(postRaw(),S.pcap)}
 function realmSub(){if(!S)return 0;const ri=realmIdx(),p=total();let lo,hi,blocked;
  if(ri<7){blocked=rawRealm()>ri;lo=REALMS[ri].p;hi=REALMS[ri+1].p}else{const L=postLv();blocked=postRaw()>L&&L<RS_MAX;lo=L<0?REALMS[7].p:postP(L);hi=L>=RS_MAX?lo*rsG():postP(L+1)}
@@ -8008,7 +8009,7 @@ function ascSquash(why){if(!S)return;const rest=total()-S.power,cap=REALMS[2].p*
 // มรดกวิชาของลูก: ร่างเด็กรับพลังเต็มของวิชาบรรพบุรุษไม่ไหว
 {const _ih=inherit;inherit=function(){const r=_ih.apply(this,arguments);try{if(S&&S.arts){const cap=REALMS[2].p*.8,rest=total()-S.power,h=S.arts.find(a=>a&&a.heir);if(h&&rest>cap){const ab=artBonus(),f=Math.max(.02,Math.min(1,(ab-(rest-cap))/ab));if(f<1){h.b=Math.max(1,Math.round(h.b*f));log(`🧒 ร่างเด็กยังรับพลังเต็มของวิชามรดกไม่ไหว — พลังของวิชาจะถูกผนึกไว้บางส่วน`,'')}}}}catch(e){}return r}}
 // พลังรวมถาวร % : ต่อขั้น ได้เต็มรวมไม่เกิน 30% ส่วนเกินได้แค่ 20%
-function pctPow(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx();if(!S._pp||S._pp.k!==k)S._pp={k,a:0};const room=Math.max(0,.3-S._pp.a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,S._pp.a));S._pp.a+=v;return Math.round(total()*eff)}
+function pctPow(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx();if(!S._pp||S._pp.k!==k)S._pp={k,a:0};const room=Math.max(0,.3-S._pp.a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,S._pp.a));S._pp.a+=v;return Math.round(pvT()*eff)}
 
 // ---- v13.2b ยาทะลวงขั้น: ใช้เองแล้วต้องทะลวงจริง (ไม่เสียยาฟรี) · คอขวดใหญ่ขั้น 6–7 ได้โอกาส +15% · ทัณฑ์โลกเซียน +10% ----
 function brkInfo(){if(!S)return{k:'none'};if(S.xt)return{k:'god'};const i=realmIdx(),raw=rawRealm();
@@ -9570,7 +9571,7 @@ function bParYear(){const m=S&&S.beastMode;if(!(m&&!m.human&&m.par>0&&!m.parGone
  r_5:['ถึงขั้นฮวากยอง',()=>realmIdx()>=5&&nb()],
  r_7:['ถึงขั้นแซงซากยอง',()=>realmIdx()>=7&&nb()],
  v_asc:['เกิดในยุทธภพ เหาะขึ้นแดนเซียน แล้วฝ่าทัณฑ์สวรรค์จนเป็นเซียนอมตะในชาติเดียว',()=>!!S.flags.toXian&&!!S.flags.ascended],
- z_op:['พลังรวมเกิน 100,000,000,000 (100B)',()=>total()>=1e11]};
+ z_op:['พลังรวมเกิน 100,000,000,000 (100B) — หรือถึงชั้นสูงสุดของแดนเทพ',()=>total()>=1e11||(!!S.pv2&&!!S.xt&&postLv()>=RS_MAX)]};
  const AR={"w_bdivine":2,"d_100":4,"h_joy":4,"d_last":3,"b_genius":3,"b_heaven":4,"b_demon":5,"b_allarts":3,"b_ow":2,"t_dragon":4,"t_crip3":5,"b_hellworld":2,"d_infant":3,"d_accident":3,"d_180":5,"r_5":1,"r_7":3,"r_trash":4,"w_shadow":4,"w_shadowboss":5,"w_godtier":2,"w_qidev":3,"w_allfx":4,"w_eye":2,"f_d":1,"h_right":5,"h_lost":4,"c_head":4,"r_one":2,"e_surp":3,"f_peach":3,"w_champ":4,"a_master":1,"a_kill":3,"a_spare":3,"a_marry":4,"h_grand":3,"h_filial":4,"l_kids5":4,"l_rich":4,"l_gen3":3,"l_gen5":5,"g_goal":2,"p_ass":4,"w_bpath":1,"w_bprime":3,"s_lv10":3,"x_bag":3,"x_dao":5,"x_sec":5,"x_pet4":5,"x_core":1,"x_pet":3,"x_200":4,"v_mystp":2,"v_sr5":3,"v_reg":5,"v_dyn":3,"v_rlove":5,"v_leg":1,"s_q20":4,"s_gold":2,"s_main":2,"s_hid3":5,"s_tc5":3,"s_ur":3,"s_sage":5,"s_ring":3,"o_gun":3,"o_shop":4,"ow_phone":3,"ow_phone20":4,"ow_gunpeak":3,"o_rise":4,"ai_birth":3,"ai_copy":4,"ai_secret":4};
  ACH_ALL.forEach(a=>{const f=AF[a.id];if(f){a.d=f[0];a.c=f[1]}if(AR[a.id]!=null&&a.r>0&&a.r<6)a.r=AR[a.id]});
  // ฉายาพิเศษ (TTL_SP) ที่มีตัวเลข: ยากขึ้น 10 เท่า
@@ -10623,7 +10624,7 @@ const bsB=()=>!!(S&&S.beastMode&&!S.beastMode.human);
 const BMAIN=[[()=>`เปิดปัญญา (ถึงขั้น${BL_ST[2]})`,()=>bqSt()>=2],[()=>'ล่าเหยื่อและชนะศึกรวม 25 ครั้ง',()=>(S.bKill||0)>=25],[()=>`บำเพ็ญถึงขั้น${BL_ST[4]}`,()=>bqSt()>=4]];
 function bmainCheck(){const s=S.sys;s.bmain=s.bmain||0;if(s.bmain>=BMAIN.length)return;if(!BMAIN[s.bmain][1]())return;const i=s.bmain++;
  sysReward(250*(i+1),40*(i+1),`📜 เควสหลักสัตว์อสูรบทที่ ${i+1}/${BMAIN.length} สำเร็จ: <b>${BMAIN[i][0]()}</b>`);
- if(s.bmain>=BMAIN.length){S.power+=Math.round(total()*.2);S.lifespan+=30;S.flags.sysMain=1;sysLog(`🏆 จบเควสหลักฉบับสัตว์อสูร! พลังอสูร +20% · อายุขัย +30 ปี`,'myth');keyAdd('จบเควสหลักของระบบในร่างสัตว์')}
+ if(s.bmain>=BMAIN.length){S.power+=Math.round(pvT()*.2);S.lifespan+=30;S.flags.sysMain=1;sysLog(`🏆 จบเควสหลักฉบับสัตว์อสูร! พลังอสูร +20% · อายุขัย +30 ปี`,'myth');keyAdd('จบเควสหลักของระบบในร่างสัตว์')}
  else sysLog(`📜 เควสหลักบทต่อไป: <b>${BMAIN[s.bmain][0]()}</b>`)}
 function bsysOffer(){if(choice._cur||modalOpen)return false;const T=pickW(SYS_TYPES).v,G=pickW(SYS_GRADE).v;setScene('system');
  choice('🟦 ติ๊ง!',`<span class="px">[ระบบ]</span> เสียงประหลาดดังก้องในหัวของ${esc(S.name)}... <i>"ตรวจพบโฮสต์ที่ไม่ใช่มนุษย์ — กำลังปรับระบบให้เข้ากับร่างสัตว์..."</i><br>ชื่อระบบ: <b>${T.ic} ${T.n}</b> (ฉบับสัตว์อสูร)<br>ระดับระบบ: <b style="color:${G.c}">${G.n}</b><br>${T.d}<br><span class="tag2">เควสจะเป็นแบบสัตว์อสูร: ล่าเหยื่อ ดูดซับแสงจันทร์ บำเพ็ญขั้น หาคู่ ฯลฯ</span>`,[
@@ -12492,12 +12493,12 @@ function hibAbsorb(){const m=S.beastMode;if(!m||!m.core)return;closeM();const c=
   {t:'🌿 ค่อยๆ ย่อย',s:'ได้ 80% · ปลอดภัย',f(){S.power+=Math.round(c.p*.8);S.qi+=c.q*.8;m.core=null;log('💠 ค่อยๆ ย่อยแก่นอสูรจนกลืนเข้ากับร่าง','good');render()}}])}
 function hibWake(D,n){if(!S||!S.alive)return;if(choice._cur||modalOpen)return setTimeout(()=>hibWake(D,n),800);const m=S.beastMode,K=hibKind(),E=[];
  if(K.serp)E.push(['🐍 ลอกคราบ','คุณตื่นขึ้นพร้อมคราบเก่าที่หลุดลอกออกทั้งตัว เกล็ดใหม่แข็งและวาวกว่าเดิม',[{t:'กินคราบเก่าคืนพลัง',s:'+พลังชีวิตสูงสุด',f(){S.maxHp+=40;S.hp=S.maxHp;m.hibF=Object.assign(m.hibF||{},{spike:1});log('🐍 เกล็ดใหม่งอกเป็นหนามแหลม พลังชีวิตสูงสุด +40','epic')}},{t:'ทิ้งไว้เป็นของขลัง',s:'ชาวบ้านเจอแล้วบูชา · +ชื่อเสียง',f(){S.fame+=120;m.hibF=Object.assign(m.hibF||{},{tint:1});log('🐍 คราบงูยักษ์กลายเป็นของขลังของหมู่บ้าน ชื่อเสียง +120','good')}}]]);
- if(K.bug)E.push(['🦋 ออกจากดักแด้','ระหว่างหลับ ร่างกายห่อหุ้มเป็นดักแด้ — ตอนนี้มันกำลังแตกออก',[{t:'แหวกดักแด้ออกมา',s:'ร่างใหม่ · +พลัง',f(){S.power+=Math.round(total()*.08);m.hibF=Object.assign(m.hibF||{},{glow:1,tint:1});log('🦋 ร่างใหม่ส่องประกาย ปีกเรืองแสง พลังเพิ่มขึ้น','myth')}}]]);
- if(K.bear)E.push(['🐻 ตื่นจากจำศีลยาว','ร่างกายผอมลงแต่กล้ามเนื้อแน่นเปรี๊ยะ ความหิวลุกเป็นไฟ',[{t:'ออกล่าทันที',s:'+พลัง · +ฆ่า',f(){S.power+=Math.round(total()*.05);S.kills=(S.kills||0)+R(2,5);m.fat=(m.fat||0)+4;log('🐻 ล่าเหยื่อจนอิ่มหนำ ไขมันสะสม +4','good')}}]]);
+ if(K.bug)E.push(['🦋 ออกจากดักแด้','ระหว่างหลับ ร่างกายห่อหุ้มเป็นดักแด้ — ตอนนี้มันกำลังแตกออก',[{t:'แหวกดักแด้ออกมา',s:'ร่างใหม่ · +พลัง',f(){S.power+=Math.round(pvT()*.08);m.hibF=Object.assign(m.hibF||{},{glow:1,tint:1});log('🦋 ร่างใหม่ส่องประกาย ปีกเรืองแสง พลังเพิ่มขึ้น','myth')}}]]);
+ if(K.bear)E.push(['🐻 ตื่นจากจำศีลยาว','ร่างกายผอมลงแต่กล้ามเนื้อแน่นเปรี๊ยะ ความหิวลุกเป็นไฟ',[{t:'ออกล่าทันที',s:'+พลัง · +ฆ่า',f(){S.power+=Math.round(pvT()*.05);S.kills=(S.kills||0)+R(2,5);m.fat=(m.fat||0)+4;log('🐻 ล่าเหยื่อจนอิ่มหนำ ไขมันสะสม +4','good')}}]]);
  E.push(['💭 ฝันถึงบรรพบุรุษ','ในความฝันยาวนาน เงาของบรรพสัตว์ปรากฏตัวและจ้องมองคุณ',[{t:'ก้มหัวรับมรดก',s:'อาจปลุกสายเลือดโบราณ',f(){if(roll01(.45)){S.talent.m=+(Math.min(S.talent.m+.15,9)).toFixed(2);m.hibF=Object.assign(m.hibF||{},{eye3:1});log('🩸 สายเลือดโบราณตื่นขึ้น! พรสวรรค์เพิ่ม ดวงตาที่สามปรากฏบนหน้าผาก','myth');keyAdd('สายเลือดโบราณตื่นระหว่างจำศีล')}else{S.qi+=3;log('💭 เงาบรรพบุรุษจางหายไป ทิ้งไว้เพียงลมปราณอุ่นๆ (+3)','good')}}},{t:'ถามถึงอนาคต',s:'+ปัญญา',f(){S.int+=12;log('💭 บรรพบุรุษกระซิบถึงทางข้างหน้า ปัญญา +12','good')}}]]);
- E.push(['🏘️ หมู่บ้านข้างรัง','ตื่นมาพบว่ามนุษย์มาตั้งหมู่บ้านเล็กๆ ติดกับที่จำศีลของคุณ',[{t:'คุ้มครองพวกเขา',s:'+กรรม · +ผู้ศรัทธา',f(){S.karma+=12;if(m.shr)m.shr.f+=R(80,200);else S.fame+=80;log('🏘️ ชาวบ้านเรียกคุณว่าเทพผู้หลับใหลแห่งขุนเขา','good')}},{t:'ไล่ไปให้พ้น',s:'+พลัง · −กรรม',f(){S.karma-=10;S.power+=Math.round(total()*.03);log('🏘️ เสียงคำรามเพียงครั้งเดียว หมู่บ้านทั้งหมู่บ้านอพยพหนี','bad')}}]]);
+ E.push(['🏘️ หมู่บ้านข้างรัง','ตื่นมาพบว่ามนุษย์มาตั้งหมู่บ้านเล็กๆ ติดกับที่จำศีลของคุณ',[{t:'คุ้มครองพวกเขา',s:'+กรรม · +ผู้ศรัทธา',f(){S.karma+=12;if(m.shr)m.shr.f+=R(80,200);else S.fame+=80;log('🏘️ ชาวบ้านเรียกคุณว่าเทพผู้หลับใหลแห่งขุนเขา','good')}},{t:'ไล่ไปให้พ้น',s:'+พลัง · −กรรม',f(){S.karma-=10;S.power+=Math.round(pvT()*.03);log('🏘️ เสียงคำรามเพียงครั้งเดียว หมู่บ้านทั้งหมู่บ้านอพยพหนี','bad')}}]]);
  E.push(['🐣 ผู้อาศัยตัวน้อย','สัตว์ตัวเล็กตัวหนึ่งมาซุกนอนในขนของคุณตลอดหลายปี ตอนนี้มันไม่ยอมไปไหน',[{t:'รับเป็นบริวาร',s:'มีเพื่อนติดตาม · +ความสุข',f(){if(!S.pet)S.pet={i:ch(['🐿️','🐇','🦔','🐦']),n:'บริวารเฝ้ารัง'};joy(10);log('🐣 บริวารตัวน้อยติดตามคุณไปทุกที่','good')}},{t:'ไล่มันไป',s:'',f(){log('🐣 มันวิ่งหายเข้าพงหญ้าไป','')}}]]);
- if(D.id!=='cave'||Math.random()<.3)E.push(['⚔️ ผู้บุกรุกรัง',D.id==='lake'?'อสูรน้ำตัวหนึ่งยึดทะเลสาบไว้ระหว่างที่คุณหลับ':'กลุ่มนักล่ามนุษย์ตามกลิ่นมาจนพบรังของคุณ',[{t:'สู้ทันที',s:'ชนะ +พลัง +ชื่อเสียง',f(){blFight(D.id==='lake'?'อสูรน้ำผู้ยึดถิ่น':'กองนักล่าอสูร',.95,()=>{S.power+=Math.round(total()*.05);S.fame+=60},()=>{})}},{t:'หนีไปหาที่ใหม่',s:'ปลอดภัย',f(){joy(-4);log('🏃 คุณทิ้งรังเก่าไปหาที่ใหม่','')}}]]);
+ if(D.id!=='cave'||Math.random()<.3)E.push(['⚔️ ผู้บุกรุกรัง',D.id==='lake'?'อสูรน้ำตัวหนึ่งยึดทะเลสาบไว้ระหว่างที่คุณหลับ':'กลุ่มนักล่ามนุษย์ตามกลิ่นมาจนพบรังของคุณ',[{t:'สู้ทันที',s:'ชนะ +พลัง +ชื่อเสียง',f(){blFight(D.id==='lake'?'อสูรน้ำผู้ยึดถิ่น':'กองนักล่าอสูร',.95,()=>{S.power+=Math.round(pvT()*.05);S.fame+=60},()=>{})}},{t:'หนีไปหาที่ใหม่',s:'ปลอดภัย',f(){joy(-4);log('🏃 คุณทิ้งรังเก่าไปหาที่ใหม่','')}}]]);
  const ev=ch(E);choice(ev[0],ev[1],ev[2]);try{render()}catch(e){}}
 {const _bmH=blMe;blMe=function(){const o=_bmH.apply(this,arguments);try{const F=S.beastMode&&S.beastMode.hibF;if(F){if(F.spike)o.f.spike=true;if(F.glow)o.f.glow=true;if(F.eye3)o.f.eye3=true;if(F.tint&&o.col)o.col=shadeC(o.col,.18)}}catch(e){}return o}}
 {const _byH=beastYear;beastYear=function(){const r=_byH.apply(this,arguments);try{const m=S.beastMode;if(m&&!m.human){m.fat=Math.min(hibFatCap(),(m.fat==null?6:m.fat)+(S.focus==='hunt'?2:S.focus==='devour'?1.5:.5))}}catch(e){}return r}}
@@ -13984,7 +13985,7 @@ function chLuck(){if(!S)return;if(S.chSysOK==null){S.chSysOK=chH()?(Math.random(
   if(Math.random()<.4){const k=R(0,5),g=[()=>{const q=+(1+Math.random()*2).toFixed(1);S.qi=+(S.qi+q).toFixed(1);return`🌀 เวลาเหลือน้อย คุณนั่งสมาธิทั้งคืน — ลมปราณ +${q} ปี`},()=>{const p=pctPow(.03);S.power+=p;return`⚔️ ฝึกหนักเหมือนไม่มีพรุ่งนี้ — พลัง +${fmt(p)}`},()=>{const m=inc(R(80,300));S.money+=m;return`💰 รับงานด่วนได้ค่าจ้าง ${fmt(m)} ตำลึง`},()=>{S.int+=R(2,5);return'📖 อ่านคัมภีร์ข้ามคืน ปัญญาเพิ่มขึ้น'},()=>{joy(6);return'🌸 ใช้วันว่างอย่างคุ้มค่ากับคนที่รัก'},()=>{if(Math.random()<.35){const a=newArt(1);S.arts.push(a);return`📜 บังเอิญได้${artHtml(a)}จากนักเดินทาง`}S.fame+=5;return'🏮 ชื่อของคุณเริ่มมีคนพูดถึง'}][k];try{addFeed('ev',g(),'sum')}catch(e){}}
   if(S.age>=24&&!S.chBurn&&S.age<=lifeMax()-1&&Math.random()<.35){S.chBurn=1;const ep=total()*(1.6+Math.random()*.4);
    choice('🔥 เผาผลาญอายุ','เหลือเวลาอีกไม่กี่ปี… ยอดฝีมือที่แข็งแกร่งที่สุดในแคว้นมาขวางทาง — จะ<b>เผาอายุขัยที่เหลือทั้งหมด</b>แลกพลังระเบิดในศึกเดียวหรือไม่?',[
-    {t:'🔥 เผาผลาญ!',s:'พลังทวีคูณ · หลังศึกจะเหลือเวลาแค่ปีเดียว',f(){S.lifespan=Math.min(S.lifespan,S.age+1);S._lsEx=0;const bak=S.power;S.power+=total()*1.5;duel('ยอดฝีมืออันดับหนึ่งแห่งแคว้น',ep,w=>{S.power=bak+Math.round((S.power-bak)*.15);if(w){S.flags.chBurnW=1;S.fame+=Math.round(fameR(150));log('🔥 <b>ชีวิตที่สั้นที่สุดกลายเป็นตำนานที่ยาวที่สุด</b> — คุณเผาอายุทั้งชีวิตแลกชัยชนะครั้งนี้','myth',true);keyAdd('เผาผลาญอายุขัยแลกชัยชนะ')}else log('🌅 แม้จะเผาทั้งชีวิตก็ยังไม่พอ — แต่ไม่มีใครลืมศึกนี้','bad',true);render()})}},
+    {t:'🔥 เผาผลาญ!',s:'พลังทวีคูณ · หลังศึกจะเหลือเวลาแค่ปีเดียว',f(){S.lifespan=Math.min(S.lifespan,S.age+1);S._lsEx=0;const bak=S.power;S.power+=pvT()*1.5;duel('ยอดฝีมืออันดับหนึ่งแห่งแคว้น',ep,w=>{S.power=bak+Math.round((S.power-bak)*.15);if(w){S.flags.chBurnW=1;S.fame+=Math.round(fameR(150));log('🔥 <b>ชีวิตที่สั้นที่สุดกลายเป็นตำนานที่ยาวที่สุด</b> — คุณเผาอายุทั้งชีวิตแลกชัยชนะครั้งนี้','myth',true);keyAdd('เผาผลาญอายุขัยแลกชัยชนะ')}else log('🌅 แม้จะเผาทั้งชีวิตก็ยังไม่พอ — แต่ไม่มีใครลืมศึกนี้','bad',true);render()})}},
     {t:'🍃 ใช้เวลาที่เหลืออย่างสงบ',f(){joy(15)}}])}}
  // รากขยะ: โชคของขยะ · ความแค้น · ฝ่าขีดจำกัด
  if(chJ()){if(ri>ri0){const p=pctPow(.06);S.power+=p;S.flags.chJb=(S.flags.chJb||0)+1;log(`🗑️ <b>ฝ่าขีดจำกัดของรากขยะ!</b> คนที่บอกว่าคุณทำไม่ได้ต้องหุบปาก — พลัง +${fmt(p)}`,'epic',true)}
@@ -23054,6 +23055,21 @@ function lnkify(root){if(!root)return;const W=document.createTreeWalker(root,Nod
 (()=>{const st=document.createElement('style');st.textContent='a.admLnk{color:#4aa8ff;text-decoration:underline;word-break:break-all;font-weight:bold}a.admLnk::after{content:" ↗";font-size:.8em}';document.head.appendChild(st)})();
 {const _crL=chatRender;chatRender=function(){const r=_crL.apply(this,arguments);try{const box=$('chatBox');if(box){const rows=box.querySelectorAll('.cm'),L=chatMsgs||[];if(rows.length===L.length)L.forEach((m,i)=>{if(m&&!m._p&&(m.ad||m.k==='ann')){const x=rows[i].querySelector('.cmx');if(x)lnkify(x)}})}}catch(e){}return r}}
 {let q=0;const run=()=>{q=0;try{lnkify(document.getElementById('annBar'));const M=document.getElementById('modal');if(M&&/^ann(view|list)$/.test(M.dataset.k||''))lnkify(M)}catch(e){}};new MutationObserver(()=>{if(!q)q=requestAnimationFrame(run)}).observe(document.body,{childList:true,subtree:true})}
+
+// ===================== v17.9f พลังรวม: สูตรใหม่สำหรับชีวิตใหม่ (ไม่ทบต้น) · ดูที่มาของพลัง =====================
+{const _slP=startLife;startLife=function(){const r=_slP.apply(this,arguments);try{if(S&&S.age<=1)S.pv2=1}catch(e){}return r}}
+function openPowInfo(){if(!S)return;const tt=total(),ri=realmIdx(),nx=REALMS[ri+1],L=postLv(),sf=v=>Math.max(0,Math.round(v||0));
+ let wp=0,eq=0,ar=0;try{wp=gv('weapon')}catch(e){}try{eq=eqA('pow')}catch(e){}try{ar=artBonus()}catch(e){}
+ const parts=[['🧘 ฝึกฝน ทะลวงขั้น และเหตุการณ์',sf(S.power)],['🌀 ลมปราณ ('+fmt(S.qi||0)+' ปี × 12)',sf((S.qi||0)*12)],['📖 วิชา',sf(ar)],['🗡️ อาวุธ',sf(wp)],['🥋 ชุดสวมใส่',sf(eq)]];const sum=parts.reduce((a,x)=>a+x[1],0);if(tt-sum>1)parts.push(['✨ ของวิเศษอื่นๆ',sf(tt-sum)]);
+ let fm=1;try{fm=myPow()/Math.max(1,tt)}catch(e){}
+ const cur=ri>=7&&L>=0?postP(L):REALMS[ri].p,nxt=ri>=7?(L>=0&&L<RS_MAX?postP(L+1):null):(nx?nx.p:null),pc=nxt?Math.max(0,Math.min(100,(tt-cur)/(nxt-cur)*100)):100;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>⚔️ พลังรวม</h3>
+ <div class="item"><b style="font-size:1.15em">${esc(REALMS[ri].n)}${ri>=7&&L>=0?' · ชั้นที่ '+(L+1)+' เหนือขั้นสูงสุด':''}</b><div class="hpbar" style="height:8px;margin:6px 0"><i style="width:${pc}%;background:linear-gradient(90deg,#ffb83a,#ffe08a)"></i></div><p class="tag2" style="margin:0">${nxt?`อีก ${Math.round(100-pc)}% ถึงขั้นถัดไป`:'สุดขั้นของโลกนี้แล้ว'} · พลังรวม <b>${fmt(tt)}</b></p></div>
+ <h4 style="margin:10px 0 4px">พลังมาจากไหน</h4>${parts.map(([n,v])=>`<div style="margin:4px 0"><div style="display:flex;justify-content:space-between"><span>${n}</span><b>${fmt(v)}</b></div><div style="height:6px;background:rgba(0,0,0,.12);border-radius:4px;overflow:hidden"><i style="display:block;height:100%;width:${tt>0?Math.min(100,v/tt*100):0}%;background:#e0a030"></i></div></div>`).join('')}
+ ${fm>1.01?`<p class="tag2" style="margin-top:8px">⚔️ ตอนต่อสู้จริงแรงขึ้นอีก ×${fm.toFixed(2)} (อุปกรณ์ คู่หู สัตว์เลี้ยง อาชีพ)</p>`:''}
+ <p class="tag2" style="margin-top:8px">${S.pv2?'📐 ตัวละครนี้ใช้สูตรพลังแบบใหม่: เมื่อเกินขั้นสูงสุด รางวัลพลังคิดจากพลังของขั้นสูงสุด ไม่ทบต้นจากพลังทั้งหมด · ชั้นเหนือขั้นสูงสุดแต่ละชั้นเพิ่มเท่าๆ กัน — พลังจึงมาจากการเล่นจริง ไม่พองเอง':'📐 ตัวละครนี้เริ่มก่อนเปลี่ยนสูตร จึงยังใช้สูตรเดิม · ชีวิตใหม่จะใช้สูตรใหม่ที่ไม่ทบต้น'}</p>`,'powinfo')}
+{const _rnP=render;render=function(){const r=_rnP.apply(this,arguments);try{document.querySelectorAll('.dkb').forEach(b=>{if(b.dataset.pw)return;const l=b.querySelector('.dkb-l span');if(l&&/พลังรวม/.test(l.textContent)){b.dataset.pw=1;b.style.cursor='pointer';l.insertAdjacentHTML('beforeend',' <small style="opacity:.7">ⓘ</small>');b.addEventListener('click',ev=>{ev.stopPropagation();openPowInfo()})}})}catch(e){}return r}}
+try{SYS_GUIDE.push({s:'life',nw:1,ic:'⚔️',t:'พลังรวม',go:'openPowInfo',d:'แตะแถบ ⚔️ พลังรวม ด้านบนเพื่อดูว่าพลังมาจากไหน (ฝึกฝน ลมปราณ วิชา อาวุธ ชุด) และอีกกี่ % ถึงขั้นถัดไป · ตัวเลขใหญ่จะย่อเป็น ล้าน/พันล้าน/หมื่นล้าน · ชีวิตใหม่ใช้สูตรที่ไม่ทบต้น ชั้น ★ แต่ละชั้นเพิ่มเท่าๆ กัน'})}catch(e){}
 
 </script>
 </body>
