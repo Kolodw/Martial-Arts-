@@ -18727,7 +18727,7 @@ function openLove(){const v=loveOpt(),b=(k,ic,t,d)=>`<button class="opt" ${v===k
 // 4) ชื่ออาวุธคู่ชีวิตอ่านง่าย
 (()=>{const st=document.createElement('style');st.textContent='#modal .sysq b[style*="font-size:16px"]{color:#ffd76a!important;text-shadow:0 0 6px rgba(255,190,60,.55),0 1px 1px #000}#bwName{color:#fff;background:#1b1830;border:1px solid #6a5a9a}.cm.share .shb{display:inline-block;margin-top:4px;padding:2px 10px;border-radius:10px;border:1px solid #8a7ad0;background:#2a2148;color:#e0d8ff;font-size:12px;cursor:pointer}.cm.share.shc .shr,.cm.share.shc .rlv{display:none}.cm.share.shc .shh{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}';document.head.appendChild(st)})();
 // 5) ขีดจำกัดอายุมนุษย์ (ยุทธภพ) — ยาเพิ่มอายุดันเกินได้สูงสุด +20 ปี + แจ้งเตือนครั้งเดียว
-{const _lmH=lifeMax0;lifeMax0=function(){const v=_lmH.apply(this,arguments);try{if(S&&!S.xian&&!S.beastMode&&!(S.kalpa&&S.kalpa.n)){const ri=realmIdx(),tc=S.sys?(S.sys.tc||0):0,cap=(ri>=7?200:150)+tc*4+(S.rvL||0),raw=S.lifespan+LIFE_B[ri]+Math.min(15,S.qi*.1)+tc*3;if(raw>cap&&v>=cap-.01){if(!S._hCapN&&S.alive&&S.age>=cap-30){S._hCapN=1;setTimeout(()=>{try{log(`⚠️ ร่างมนุษย์มีขีดจำกัดอายุราว <b>${cap} ปี</b> — ไม่ว่าฝีมือสูงแค่ไหน ต้องข้ามสู่โลกเซียนจึงจะอยู่ได้นานกว่านี้ (ยาเพิ่มอายุดันเกินได้อีกไม่เกิน 20 ปี)`,'myth',true)}catch(e){}},0)}return Math.min(raw,cap+Math.min(20,S.lsI||0))}}}catch(e){}return v}}
+{const _lmH=lifeMax0;lifeMax0=function(){const v=_lmH.apply(this,arguments);try{if(S&&!S.xian&&!S.beastMode&&!(S.kalpa&&S.kalpa.n)){const ri=realmIdx(),tc=S.sys?(S.sys.tc||0):0,cap=(ri>=7?200:150)+tc*4+(S.rvL||0),raw=S.lifespan+LIFE_B[ri]+Math.min(15,S.qi*.1)+tc*3;if(raw>cap&&v>=cap-.01){if(!S._hCapN&&S.alive&&S.age>=cap-30){S._hCapN=1;setTimeout(()=>{try{log(`⚠️ ร่างมนุษย์มีขีดจำกัดอายุราว <b>${cap} ปี</b> — ไม่ว่าฝีมือสูงแค่ไหน ต้องข้ามสู่โลกเซียนจึงจะอยู่ได้นานกว่านี้ (อายุขัยจากยาและของวิเศษบวกเกินได้อีกสูงสุด 60 ปี และไม่หายเมื่อทะลวงขั้น)`,'myth',true)}catch(e){}},0)}const L=Math.max(0,S.lsI||0);return Math.max(cap+Math.min(20,L),Math.min(raw,Math.min(raw-L,cap)+Math.min(60,L)))}}}catch(e){}return v}}
 // 6) แชท: โชว์วิชาแสดงบรรทัดเดียว กด "เพิ่มเติม" เพื่อดูคำอธิบาย+ภาพเคลื่อนไหว
 const SH_OPEN=new Set();
 function shTog(i,btn){if(SH_OPEN.has(i))SH_OPEN.delete(i);else SH_OPEN.add(i);const row=btn.closest('.cm');if(row){row.classList.toggle('shc',!SH_OPEN.has(i));btn.textContent=SH_OPEN.has(i)?'ย่อ ▴':'เพิ่มเติม ▸'}}
@@ -22021,6 +22021,40 @@ PACE.am=()=>LS.get('murim_automin',0)?1:0;
   const cancel=()=>{stop=true;const x=$('paceMin');if(x)x.remove();m.removeEventListener('pointerdown',cancel,true)};m.addEventListener('pointerdown',cancel,true);
   const tk=()=>{if(stop||choice._cur!==c)return;if(pendModal||!modalOpen||document.hidden){setTimeout(tk,500);return}left--;const x=$('paceMin');if(x)x.querySelector('b').textContent=left;
    if(left<=0){m.removeEventListener('pointerdown',cancel,true);const v=c.opts.map((o,i)=>i).filter(i=>!c.opts[i].skip&&!c.opts[i].noFate);const i=v.length?ch(v):0;addFeed('ev',`⚡ ระบบเลือกให้ — <b>${String(c.title).replace(/<[^>]+>/g,'')}</b>: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');choiceRun(i);return}setTimeout(tk,1000)};setTimeout(tk,1000)}catch(e){console.error(e)}return r}}
+
+
+// ===================== v17.8 ใช้เวลากับครอบครัว: คู่ชีวิต · ตำหนักใน · ลูก =====================
+const ftMf=n=>S.xian?stoneTxt(n):fmt(n)+' ตำลึง';
+function ftInit(){if(!S.ft||S.ft.y!==S.age)S.ft={y:S.age,d:{}};return S.ft}
+function ftList(){const L=[];if(S.sp)L.push({k:'sp',o:S.sp,n:S.sp.n,role:S.sp.wed===false?'💕 คนรัก':'💍 คู่ชีวิต',age:S.sp.age,p:1,v:S.sp.aff||0});
+ (S.harem||[]).forEach(g=>L.push({k:'h:'+g.n,o:g,n:g.n,role:'🏯 ตำหนักใน'+(g.t?' · '+g.t:''),age:g.age,p:1,h:1,v:g.aff==null?65:g.aff}));
+ (S.children||[]).forEach(c=>{if(c&&c.alive!==false&&!c.gone)L.push({k:'c:'+c.n,o:c,n:c.n,role:(c.g==='หญิง'?'👧 ลูกสาว':'👦 ลูกชาย')+(c.adopt?' (บุญธรรม)':''),age:c.age|0,c:1,v:c.rel==null?60:c.rel})});return L}
+function ftAdd(x,d){if(x.p)x.o.aff=clamp((x.o.aff==null?65:x.o.aff)+d,0,100);else{x.o.rel=clamp((x.o.rel==null?60:x.o.rel)+d,0,100);if(x.o.adopt&&x.o.bond!=null)x.o.bond=clamp(x.o.bond+d,0,100)}}
+function ftActs(x){const a=x.age;if(x.p)return[['talk','💬 ใช้เวลาด้วยกัน'],['trip','🏞️ พาไปเที่ยว'],['gift','🎁 ของขวัญ']];
+ if(a<6)return[['play','🧸 เล่นด้วยกัน'],['gift','🎁 ของเล่น']];if(a<16)return[['edu','📚 สอนหนังสือ'],['trn','🥋 สอนวิชา'],['gift','🎁 ของขวัญ']];return[['talk','💬 คุยเรื่องอนาคต'],['trn','🥋 ฝึกยุทธ์ด้วยกัน'],['gift','🎁 ของขวัญ']]}
+function openFamTime(){if(!S)return;const F=ftInit(),L=ftList(),gc=Math.round(sxBiz()*.2),tc=Math.round(sxBiz()*.5);
+ modal(`<button class="xbtn" onclick="openFamily()">←</button><h3>💞 ใช้เวลากับครอบครัว</h3><p class="tag2">ใช้เวลากับแต่ละคนได้ปีละ 1 ครั้ง (ของขวัญให้ได้ตลอด · ${ftMf(gc)}) · ยิ่งสนิท ความสุขยิ่งเพิ่ม · ลูกที่คุณสอนจะเก่งขึ้นเมื่อได้สืบทอดเป็นทายาท</p>`+
+ (L.length?L.map((x,j)=>{const done=F.d[x.k],acts=ftActs(x);return`<div class="item"><div class="h"><b>${esc(x.n)}</b><span class="tag2">${x.age!=null?x.age+' ปี':''}</span></div><p class="tag2">${x.role}${x.c&&(x.o.trn||x.o.edu)?` · เรียนกับคุณ ${(x.o.trn|0)+(x.o.edu|0)} ครั้ง`:''}${done?' · ปีนี้ใช้เวลาด้วยกันแล้ว':''}</p>
+  <div class="hpbar" style="height:7px;margin:4px 0"><i style="width:${Math.max(0,x.v)}%;background:${x.p?'#ff8fb3':'#8fd0ff'}"></i></div><p class="tag2" style="margin:0 0 4px">${x.p?'ความรัก':'ความผูกพัน'} ${Math.round(x.v)}/100</p>
+  <div style="display:flex;gap:6px;flex-wrap:wrap">${acts.map(([k,n])=>`<button class="sysb" onclick="ftDo(${j},'${k}')" ${k!=='gift'&&done?'disabled style="opacity:.45"':''}>${n}${k==='trip'?' · '+ftMf(tc):''}</button>`).join('')}${x.h?`<button class="sysb" onclick="ftBye(${j})">🚪 ให้ออกจากตำหนัก</button>`:''}</div></div>`}).join(''):'<p class="tag2">ยังไม่มีคู่ชีวิต คนในตำหนักใน หรือลูก</p>'),'famtime')}
+function ftDo(j,k){const x=ftList()[j];if(!x)return;const F=ftInit(),W=x.p?(x.o.wed===false?'คนรัก':'คู่'):'ลูก';
+ if(k==='gift'){const c=Math.round(sxBiz()*.2);if(S.money<c)return toast('เงินไม่พอ ('+ftMf(c)+')');S.money-=c;const d=R(8,12);ftAdd(x,d);joy(2);log(`🎁 มอบ${x.c&&x.age<6?'ของเล่น':'ของขวัญ'}ให้<b>${esc(x.n)}</b> — ${x.p?'ความรัก':'ความผูกพัน'} +${d}`,'good')}
+ else{if(F.d[x.k])return toast('ปีนี้ใช้เวลากับคนนี้แล้ว');
+  if(k==='trip'){const c=Math.round(sxBiz()*.5);if(S.money<c)return toast('เงินไม่พอ ('+ftMf(c)+')');S.money-=c;F.d[x.k]=1;const d=R(7,11);ftAdd(x,d);joy(8);
+   log(`🏞️ ${ch(['พา','ชวน'])}<b>${esc(x.n)}</b>${ch(['ล่องเรือชมทะเลสาบ','ขึ้นเขาดูทะเลหมอกยามเช้า','เดินเที่ยวงานโคมไฟ','ไปแช่น้ำพุร้อนกลางหุบเขา','นั่งชมดอกท้อบานเต็มสวน'])} — ความรัก +${d} · ความสุข +8`,'good')}
+  else{F.d[x.k]=1;let d=R(4,8),t='';
+   if(k==='talk'&&x.p){joy(3);t=ch(['นั่งจิบชาคุยกันจนดึก','ทำอาหารด้วยกัน','เล่นหมากล้อมกันทั้งบ่าย','ช่วยกันดูแลสวนหลังบ้าน','เล่าความฝันให้กันฟัง'])}
+   else if(k==='play'){joy(5);d=R(5,9);t=ch(['เล่นซ่อนหาทั้งบ้าน','ขี่คอพาเดินรอบลานบ้าน','เล่านิทานจนหลับ','พับว่าวกระดาษด้วยกัน'])}
+   else if(k==='edu'){joy(2);x.o.edu=(x.o.edu|0)+1;t='สอนอ่านเขียนและเรื่องราวของโลก'}
+   else if(k==='trn'){joy(2);x.o.trn=(x.o.trn|0)+1;t=x.age<16?'สอนกระบวนท่าพื้นฐานกลางลานบ้าน':'ประมือกันจนเหงื่อโชก'}
+   else{joy(3);d=R(4,7);t=ch(['คุยเรื่องความฝันและเส้นทางชีวิต','ให้คำปรึกษาเรื่องสำนักที่อยากเข้า','ฟังเรื่องคนที่ลูกแอบชอบ','เล่าเรื่องสมัยหนุ่มสาวของคุณให้ฟัง'])}
+   ftAdd(x,d);log(`💞 ${t}กับ<b>${esc(x.n)}</b> — ${x.p?'ความรัก':'ความผูกพัน'} +${d}`,'good')}}
+ sfx('good');render();openFamTime()}
+function ftBye(j){const x=ftList()[j];if(!x||!x.h)return;modal(`<h3>🚪 ให้${esc(x.n)}ออกจากตำหนักใน?</h3><p>${esc(x.n)}จะจากไปพร้อมเงินติดตัว ${ftMf(Math.round(sxBiz()*.3))} · ความสุข −5</p><div class="brow"><button class="gbtn" onclick="openFamTime()">ยกเลิก</button><button class="pbtn" onclick="ftByeOK(${j})">ยืนยัน</button></div>`,'famtime')}
+function ftByeOK(j){const x=ftList()[j];if(!x||!x.h)return;const c=Math.round(sxBiz()*.3);S.money=Math.max(0,S.money-c);S.harem=S.harem.filter(g=>g!==x.o);if(!S.harem.length){S.harem=null}joy(-5);log(`🚪 <b>${esc(x.n)}</b>ออกจากตำหนักในไปพร้อมเงินติดตัว — ทั้งสองแยกทางกันอย่างสงบ`,'');render();openFamTime()}
+{const _ofT=openFamily;openFamily=function(){const r=_ofT.apply(this,arguments);try{const m=$('modal');if(m.dataset.k==='family'&&!(S.beastMode&&!S.beastMode.human)&&(S.sp||(S.harem&&S.harem.length)||(S.children||[]).some(c=>c&&c.alive!==false))){const h=m.querySelector('h3'),n=ftList().filter(x=>!ftInit().d[x.k]).length;if(h&&!m.querySelector('.ftB'))h.insertAdjacentHTML('afterend',`<button class="pbtn ftB" style="width:100%;margin:4px 0 8px" onclick="openFamTime()">💞 ใช้เวลากับครอบครัว${n?` <small>(ปีนี้ยังว่าง ${n} คน)</small>`:''}</button>`)}}catch(e){}return r}}
+// ทายาทที่เคยถูกสอน: เก่งขึ้น
+{const _ihT=inherit;inherit=function(ci){const P=S,kid=ci!=null&&P&&P.children?P.children[ci]:null,trn=kid?kid.trn|0:0,edu=kid?kid.edu|0:0;const r=_ihT.apply(this,arguments);try{if(S!==P&&(trn||edu)){setTimeout(()=>{try{if(!S||!S.alive)return;let t=[];if(trn){const g=pctPow(Math.min(.25,.025*trn));S.power+=g;t.push(`พลังยุทธ์ +${fmt(g)}`)}if(edu){const v=Math.min(40,edu*4);S.int+=v;t.push(`ปัญญา +${v}`)}log(`💞 สิ่งที่${esc(P.name)}สอนไว้ตอนเด็กยังติดตัว — ${t.join(' · ')}`,'epic');render()}catch(e){}},700)}}catch(e){}return r}}
 
 </script>
 </body>
