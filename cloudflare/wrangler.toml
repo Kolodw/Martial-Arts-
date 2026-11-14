@@ -1,6 +1,6 @@
 # 1 ใน นวนิยาย — ตั้งค่าสำหรับย้ายไป Cloudflare Workers (ยังไม่ได้ใช้ · เว็บจริงยังรันบน Vercel)
 # วิธีใช้ดูที่ cloudflare/README.md
-name = "1inanovel"
+name = "martial-arts"
 main = "worker.js"
 compatibility_date = "2025-09-01"
 compatibility_flags = ["nodejs_compat"]
