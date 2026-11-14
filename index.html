@@ -20010,7 +20010,7 @@ function mnUI(m){const k=m.dataset.k;const H=m.querySelector(':scope>h3');if(!(k
  if(top.length){const s=document.createElement('div');s.className='mnFav';s.innerHTML=`<div class="mnFavH">⭐ เปิดบ่อยของคุณ</div><div class="${G[0].className} mnFavG"></div>`;const g=s.querySelector('.mnFavG');top.forEach(b=>{const c=b.cloneNode(true);c.classList.add('mnFavB');g.appendChild(c)});anchor.after(s)}
  // หมวดพับได้
  const col=LS.get('murim_mncol',{})||{};m.querySelectorAll('.mch15,.tmh').forEach(h=>{const g=h.matches('.tmh')?h.parentElement.querySelector('.tmgrid'):h.nextElementSibling;if(!g||!g.matches('.mgrid,.tmgrid'))return;const id=k+'|'+h.textContent.trim();h.classList.add('mnH');h.insertAdjacentHTML('beforeend','<i class="mnChev">▾</i>');
-  const ap=()=>{const c=!!col[id];g.classList.toggle('mnCol',c);h.classList.toggle('mnColH',c)};ap();h.onclick=()=>{col[id]=!col[id];LS.set('murim_mncol',col);ap();tuBuzz();0}});
+  const ap=()=>{const c=!!col[id];g.classList.toggle('mnCol',c);h.classList.toggle('mnColH',c);h.dataset.hid=c?'ซ่อน '+g.children.length+' รายการ · แตะเพื่อแสดง':''};ap();h.onclick=()=>{col[id]=!col[id];LS.set('murim_mncol',col);ap();tuBuzz();0}});
  // จุดแดง
  allB().forEach(b=>{const s=(b.querySelector('small')||{}).textContent||'';if(/พร้อมลง|เหลือ [1-9]\d* ครั้ง|ใหม่!|รับได้/.test(s))b.classList.add('mnDot')});
  // ค้นหา
@@ -21978,9 +21978,9 @@ function ctPill(k){const C=ctInit(),o=CT_PL.find(x=>x[0]===k);if(!o)return;if(C.
  if(k==='qi'){const v=+(S.qi*.04+2).toFixed(1);S.qi=+(S.qi+v).toFixed(1);t=`ลมปราณ +${fmt(v)} ปี`}else if(k==='pw'){const g=pctPow(.04);S.power+=g;t=`พลังยุทธ์ +${fmt(g)}`}else{const v=Math.max(5,Math.round(S.maxHp*.05));S.maxHp+=v;S.hp=S.maxHp;t=`พลังชีวิตสูงสุด +${fmt(v)}`}
  log(`⚗️ กิน${o[1].slice(2)}จากหอโอสถ — ${t}`,'good');sfx('good');render();openTown('pill')}
 const CT_CV=[['🕳️ ถ้ำธรรมดา',2000,[.01,.5,.005]],['💎 ถ้ำสายแร่วิญญาณ',8000,[.02,1,.01]],['🐉 ถ้ำเส้นมังกร',30000,[.035,2,.018]]];
-function ctCave(i){if(S.cave&&S.cave.u>S.age)return toast('ยังมีสัญญาเช่าถ้ำอยู่');const c=Math.round(CT_CV[i][1]*W15());if(S.money<c)return toast('เงินไม่พอ');S.money-=c;S.cave={u:S.age+5,lv:i+1,w:ECO_W()};ctRepAdd(5);log(`🏔️ เช่า${CT_CV[i][0].slice(3)} 5 ปี — ฝึกในถ้ำทุกปีจะได้ลมปราณและพลังเพิ่ม`,'good');sfx('good');render();openTown('cave')}
-{const _pyC=passYear;passYear=function(){const a0=S?S.age:0;const r=_pyC.apply(this,arguments);try{const V=S&&S.cave;if(S&&S.alive&&V){if(V.w!==ECO_W()){S.cave=null}else{const st=Math.max(0,Math.min(S.age,V.u)-a0),[q,qa,pw]=CT_CV[V.lv-1][2];
- for(let i=0;i<Math.min(st,10);i++){S.qi=+(S.qi+S.qi*q+qa).toFixed(2);S.power+=pctPow(pw)}if(S.age>=V.u){S.cave=null;log('🏔️ หมดสัญญาเช่าถ้ำบำเพ็ญ — เช่าใหม่ได้ที่ย่านขุนนาง','')}}}}catch(e){console.error(e)}return r}}
+function ctCave(i){if(S.rcave&&S.rcave.u>S.age)return toast('ยังมีสัญญาเช่าถ้ำอยู่');const c=Math.round(CT_CV[i][1]*W15());if(S.money<c)return toast('เงินไม่พอ');S.money-=c;S.rcave={u:S.age+5,lv:i+1,w:ECO_W()};ctRepAdd(5);log(`🏔️ เช่า${CT_CV[i][0].slice(3)} 5 ปี — ฝึกในถ้ำทุกปีจะได้ลมปราณและพลังเพิ่ม`,'good');sfx('good');render();openTown('cave')}
+{const _pyC=passYear;passYear=function(){const a0=S?S.age:0;const r=_pyC.apply(this,arguments);try{const V=S&&S.rcave;if(S&&S.alive&&V){if(V.w!==ECO_W()){S.rcave=null}else{const st=Math.max(0,Math.min(S.age,V.u)-a0),[q,qa,pw]=CT_CV[V.lv-1][2];
+ for(let i=0;i<Math.min(st,10);i++){S.qi=+(S.qi+S.qi*q+qa).toFixed(2);S.power+=pctPow(pw)}if(S.age>=V.u){S.rcave=null;log('🏔️ หมดสัญญาเช่าถ้ำบำเพ็ญ — เช่าใหม่ได้ที่ย่านขุนนาง','')}}}}catch(e){console.error(e)}return r}}
 // ---- แดนเทพ: ตลาดดวงดาว · หอสมุดสวรรค์ · สภาเทพ ----
 const CT_FP=[0,0,0,40,90,200,450,1000];
 function ctStar(){const C=ctInit();if(C.star)return C.star;const rnd=srng(ctHash(C.k+'*star'+S.age)),P=ecoCat('g').filter(x=>x.r>=3&&x.r<=6&&x.c!=='b'),L=[];
@@ -22011,7 +22011,7 @@ function ctPage(p,B){const C=ctInit(),w=ECO_W(),W=W15(),grp=k=>B.filter(b=>b.c==
   `<h4 style="margin:10px 0 4px">🏚️ ร้านช่าง · ตำรับ · เครื่องมือ</h4><div class="mgrid">${grp('craft')}</div>`}
  if(p==='folk')return`<div class="mgrid">${grp('folk')}</div>`;
  if(p==='noble'){let x=grp('noble');if(w==='m')x+=ctBtn("openTown('esc')",'🛡️ สำนักคุ้มภัย',C.esc?'ปีนี้รับงานแล้ว':'รับงานคุ้มกันปีละครั้ง')+ctBtn("openTown('intel')",'🕵️ สายข่าว',`ซื้อข่าวปีละ 2 ครั้ง (เหลือ ${2-C.intel})`);
-  if(w==='x')x+=ctBtn("openTown('pill')",'⚗️ หอโอสถ','ยาบำรุงปีละครั้ง')+ctBtn("openTown('cave')",'🏔️ เช่าถ้ำบำเพ็ญ',S.cave&&S.cave.u>S.age?`${CT_CV[S.cave.lv-1][0]} เหลือ ${S.cave.u-S.age} ปี`:'ฝึกตนในถ้ำ 5 ปี');
+  if(w==='x')x+=ctBtn("openTown('pill')",'⚗️ หอโอสถ','ยาบำรุงปีละครั้ง')+ctBtn("openTown('cave')",'🏔️ เช่าถ้ำบำเพ็ญ',S.rcave&&S.rcave.u>S.age?`${CT_CV[S.rcave.lv-1][0]} เหลือ ${S.rcave.u-S.age} ปี`:'ฝึกตนในถ้ำ 5 ปี');
   if(w==='g')x+=ctBtn("openTown('lib')",'📚 หอสมุดสวรรค์',C.lib?'ปีนี้อ่านแล้ว':'อ่านตำรา คัดลอกคัมภีร์')+ctBtn("openTown('council')",'🏛️ สภาเทพ',GD_RK[gdInit().rk]);
   return`<div class="mgrid">${x}</div><h4 style="margin:10px 0 4px">🏙️ บริจาคสร้างเมือง <span class="tag2">ปีละ 3 ครั้ง (เหลือ ${3-C.don}) · ได้ชื่อเสียงในเมือง</span></h4><div class="mgrid">${CT_DON.map(([c,rp,n],i)=>{const v=Math.round(c*W);return`<button class="opt" onclick="ctDonate(${i})" ${ctDis(C.don<3&&S.money>=v)}>${n}<small>${fmt(v)} · ชื่อเสียง +${rp}</small></button>`}).join('')}</div>`}
  if(p==='bm'){if(!ctBMOpen())return ctSub('trade','🌑 ตลาดมืด',S.age<16?'<p>เด็กเข้าตลาดมืดไม่ได้ — รออายุ 16 ปี</p>':'<p>คนที่นี่ยังไม่ไว้ใจคุณ — สร้างชื่อเสียงในเมืองให้ถึง "คนคุ้นหน้า" (100) ก่อน</p>');const all=ecoCat(w);
@@ -22023,7 +22023,7 @@ function ctPage(p,B){const C=ctInit(),w=ECO_W(),W=W15(),grp=k=>B.filter(b=>b.c==
  if(p==='sectm')return ctSub('trade','🏪 ตลาดนิกาย',S.faction?`<p class="tag2">ผลงานนิกายของคุณ: <b>${fmt(S.merit||0)}</b> · แลกได้ปีละ 3 ครั้ง (เหลือ ${3-C.sm}) · ผลงานที่ใช้ไปไม่ทำให้ตำแหน่งลด แต่ต้องสะสมใหม่เพื่อสอบเลื่อนขั้น</p>`+CT_SM.map(([id,q,c],i)=>`<div class="item"><div class="h"><b>${id==='art'?'📕 คัมภีร์ยุทธ์ของนิกาย':BAGIT[id].ic+' '+BAGIT[id].n+' ×'+q}</b><button class="sysb" onclick="ctSM(${i})" ${ctDis(C.sm<3&&(S.merit||0)>=c)}>ผลงาน ${c}</button></div></div>`).join(''):'<p>ต้องสังกัดนิกายก่อนจึงจะเข้าตลาดนิกายได้</p>');
  if(p==='sky')return ctSub('trade','☁️ ตลาดลอยฟ้า','<p class="tag2">ของหายากจากแดนไกล ล็อตละครั้ง เปลี่ยนทุกปี</p>'+ctSky().map((l,i)=>`<div class="item" style="${l.done?'opacity:.5':''}"><div class="h"><b>${BAGIT[l.m].ic} ${BAGIT[l.m].n} ×${l.q}</b>${l.done?'<span class="tag2">ซื้อแล้ว</span>':`<button class="sysb" onclick="ctSkyBuy(${i})" ${ctDis(S.money>=l.p)}>${fmt(l.p)}</button>`}</div></div>`).join(''));
  if(p==='pill')return ctSub('noble','⚗️ หอโอสถ','<p class="tag2">ยาแต่ละชนิดซื้อได้ปีละครั้ง</p>'+CT_PL.map(([k,n,c,d])=>`<div class="item"><div class="h"><b>${n}</b><button class="sysb" onclick="ctPill('${k}')" ${ctDis(!C.pill[k]&&S.money>=c*W)}>${C.pill[k]?'ซื้อแล้ว':fmt(Math.round(c*W))}</button></div><p class="tag2">${d}</p></div>`).join(''));
- if(p==='cave'){const on=S.cave&&S.cave.u>S.age;return ctSub('noble','🏔️ เช่าถ้ำบำเพ็ญ',`<p class="tag2">${on?`กำลังเช่า ${CT_CV[S.cave.lv-1][0]} · เหลือ ${S.cave.u-S.age} ปี`:'สัญญา 5 ปี · ฝึกในถ้ำทุกปีได้ลมปราณและพลังยุทธ์เพิ่มเอง · ใช้ได้เฉพาะโลกเซียน'}</p>`+CT_CV.map(([n,c,[q,qa,pw]],i)=>`<div class="item"><div class="h"><b>${n}</b><button class="sysb" onclick="ctCave(${i})" ${ctDis(!on&&S.money>=c*W)}>${fmt(Math.round(c*W))}</button></div><p class="tag2">ต่อปี: ลมปราณ +${Math.round(q*100)}% +${qa} ปี · พลังยุทธ์ +${(pw*100).toFixed(1)}%</p></div>`).join(''))}
+ if(p==='cave'){const on=S.rcave&&S.rcave.u>S.age;return ctSub('noble','🏔️ เช่าถ้ำบำเพ็ญ',`<p class="tag2">${on?`กำลังเช่า ${CT_CV[S.rcave.lv-1][0]} · เหลือ ${S.rcave.u-S.age} ปี`:'สัญญา 5 ปี · ฝึกในถ้ำทุกปีได้ลมปราณและพลังยุทธ์เพิ่มเอง · ใช้ได้เฉพาะโลกเซียน'}</p>`+CT_CV.map(([n,c,[q,qa,pw]],i)=>`<div class="item"><div class="h"><b>${n}</b><button class="sysb" onclick="ctCave(${i})" ${ctDis(!on&&S.money>=c*W)}>${fmt(Math.round(c*W))}</button></div><p class="tag2">ต่อปี: ลมปราณ +${Math.round(q*100)}% +${qa} ปี · พลังยุทธ์ +${(pw*100).toFixed(1)}%</p></div>`).join(''))}
  if(p==='star'){const g=gdInit(),all=ecoCat('g');return ctSub('trade','✨ ตลาดดวงดาว',`<p class="tag2">พลังศรัทธาของคุณ: <b>${fmt(Math.floor(g.fp))}</b> · ของชิ้นละครั้ง เปลี่ยนทุกปี</p>`+ctStar().map((l,i)=>{const it=all.find(x=>x.id===l.id);return it?`<div class="item" style="${l.done?'opacity:.5':''}"><div class="h"><b>${esc(it.n)} ${rarTag(it.r)}</b>${l.done?'<span class="tag2">แลกแล้ว</span>':`<button class="sysb" onclick="ctStarBuy(${i})" ${ctDis(g.fp>=l.f)}>ศรัทธา ${fmt(l.f)}</button>`}</div><p class="tag2">${ecoDesc(it)}</p></div>`:''}).join(''))}
  if(p==='lib'){const cd=S.libC!=null&&S.age-S.libC<5;return ctSub('noble','📚 หอสมุดสวรรค์',`<div class="item"><div class="h"><b>📖 อ่านตำรา</b><button class="sysb" onclick="ctLib('read')" ${ctDis(!C.lib&&S.money>=3000*W)}>${C.lib?'อ่านแล้ว':fmt(3000*W)}</button></div><p class="tag2">ปีละครั้ง · ปัญญาเพิ่มตามขั้นพลัง · 25% ค้นพบคัมภีร์</p></div>
   <div class="item"><div class="h"><b>🖋️ คัดลอกคัมภีร์ต้องห้าม</b><button class="sysb" onclick="ctLib('copy')" ${ctDis(!cd&&S.money>=40000*W)}>${cd?'อีก '+(5-(S.age-S.libC))+' ปี':fmt(40000*W)}</button></div><p class="tag2">ทุก 5 ปี · ได้คัมภีร์แน่นอน + ปัญญา +3</p></div>`)}
@@ -23288,6 +23288,31 @@ function ascHintUpd(){try{let b=$('ascHint');const row=document.querySelector('#
  b.style.display=show?'':'none';if(show&&b.textContent!==t)b.textContent=t}catch(e){}}
 setInterval(ascHintUpd,1500);{const _rdH=render;render=function(){const r=_rdH.apply(this,arguments);ascHintUpd();return r}}
 (function(){const st=document.createElement('style');st.textContent='#ascHint{display:block;width:100%;margin:0 0 5px;padding:4px 10px;border:1px dashed #b89cff;border-radius:12px;background:#3a2470;color:#fff;font:inherit;font-size:.8em;line-height:1.35;text-align:center;cursor:pointer}#ascHint:active{transform:translateY(1px)}';document.head.appendChild(st)})();
+
+// ============ แก้บั๊กถ้ำบ่มเพาะหาย ============
+// ถ้ำเช่าในเมือง (v17.8) เคยใช้ตัวแปร S.cave ร่วมกับถ้ำบ่มเพาะส่วนตัว → ทุกปีโค้ดถ้ำเช่าเห็นว่า "ไม่ใช่ของโลกนี้" แล้วลบทิ้ง
+// ตอนนี้ถ้ำเช่าย้ายไป S.rcave แล้ว · เซฟเก่า: ย้ายถ้ำเช่าที่ค้างอยู่ใน S.cave ออก แล้วคืนถ้ำบ่มเพาะให้คนที่เคยได้ (เคยอัปจนสุด = คืนระดับสูงสุด)
+function caveFix(){try{if(!S||!S.alive||S._caveFix)return;S._caveFix=1;
+ const c=S.cave;if(c&&c.u!=null){if(!S.rcave&&c.u>S.age&&c.w===ECO_W())S.rcave=c;S.cave=null}
+ if(!S.cave&&S.xian){const had=(S.key||[]).some(k=>String(k).indexOf('ได้ถ้ำบ่มเพาะส่วนตัว')>=0);
+  if(had){S.cave={lv:S.flags&&S.flags.cave4?4:0};log(`🏔️ <b>ถ้ำบ่มเพาะของคุณกลับมาแล้ว</b>${S.cave.lv?' (ระดับสูงสุด)':''} — ขออภัย ก่อนหน้านี้ถ้ำหายเพราะบั๊ก`,'epic')}}}catch(e){}}
+{const _lgCF=loadGame;loadGame=function(){const r=_lgCF.apply(this,arguments);try{caveFix()}catch(e){}return r}}
+{const _pyCF=passYear;passYear=function(){try{caveFix()}catch(e){}return _pyCF.apply(this,arguments)}}
+
+// ============ เมนู ☰ หาของง่ายขึ้น ============
+// 1) ปุ่มที่ระบบใหม่ๆ เติมเข้ามาทีหลังเคยไปกองรวมในหมวด "⭐ ใช้บ่อย" (26 ปุ่ม) → จัดเข้าหมวดที่ถูกต้อง
+// 2) หมวดที่ถูกพับไว้ (แตะหัวข้อโดยไม่ตั้งใจตอนเลื่อนจอ แล้วจำค่าไว้ตลอด) ทำให้ปุ่มหายจนต้องพิมพ์ค้นหา → กางทุกหมวดให้ใหม่ 1 ครั้ง และหัวข้อที่พับอยู่บอกชัดว่าซ่อนกี่รายการ
+const MENU_MORE={'⭐ ใช้บ่อย':['ascForce','openCal'],
+ '🧘 ตัวละครและการฝึก':['openJob','openWuxia','openTalent','openRealm','openMoveBook','openInvest','glwSet','openTtlMine','openRoadmap','openAdvice'],
+ '👪 ครอบครัวและผู้คน':['openLove','openKeep'],
+ '📚 บันทึกและสะสม':['openArcBook','openLore','openMyCard','openGraves']};
+{const _omR=openMenu;openMenu=function(){const r=_omR.apply(this,arguments);try{const m=$('modal'),H=[...m.querySelectorAll('.mcat15>.mch15')];if(H.length<2)return r;
+ const grid={};H.forEach(h=>{const g=h.nextElementSibling;if(g&&g.classList.contains('mgrid'))grid[h.textContent.trim()]=g});
+ const first=grid[MENU_CAT[0][0]];if(!first)return r;const fnOf=b=>((b.getAttribute('onclick')||'').match(/^\s*([A-Za-z0-9_]+)\(/)||[])[1]||'';
+ const keep=new Set([...MENU_CAT[0][1],...MENU_MORE[MENU_CAT[0][0]]]);const home=f=>{for(const [cn,fs] of MENU_CAT.slice(1))if(fs.includes(f)&&grid[cn])return grid[cn];for(const cn in MENU_MORE)if(cn!==MENU_CAT[0][0]&&MENU_MORE[cn].includes(f)&&grid[cn])return grid[cn];return grid['🧘 ตัวละครและการฝึก']||null};
+ [...first.children].forEach(b=>{const f=fnOf(b);if(keep.has(f))return;const g=home(f);if(g&&g!==first)g.appendChild(b)})}catch(e){console.error(e)}return r}}
+try{if((LS.get('murim_mncolV',0)|0)<2){LS.del('murim_mncol');LS.set('murim_mncolV',2)}}catch(e){}
+(function(){const st=document.createElement('style');st.textContent='body.tuOn #modal.mnTu .mnColH::after{content:attr(data-hid);display:block;width:100%;font-size:11px;font-weight:normal;opacity:.75;color:#e8b830;margin-top:2px}body.tuOn #modal.mnTu .mnColH{flex-wrap:wrap}';document.head.appendChild(st)})();
 </script>
 </body>
 </html>
