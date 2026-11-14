@@ -23313,6 +23313,131 @@ const MENU_MORE={'⭐ ใช้บ่อย':['ascForce','openCal'],
  [...first.children].forEach(b=>{const f=fnOf(b);if(keep.has(f))return;const g=home(f);if(g&&g!==first)g.appendChild(b)})}catch(e){console.error(e)}return r}}
 try{if((LS.get('murim_mncolV',0)|0)<2){LS.del('murim_mncol');LS.set('murim_mncolV',2)}}catch(e){}
 (function(){const st=document.createElement('style');st.textContent='body.tuOn #modal.mnTu .mnColH::after{content:attr(data-hid);display:block;width:100%;font-size:11px;font-weight:normal;opacity:.75;color:#e8b830;margin-top:2px}body.tuOn #modal.mnTu .mnColH{flex-wrap:wrap}';document.head.appendChild(st)})();
+
+// ===================== v17.10 🧘 บำเพ็ญหยั่งรู้ฟ้า (เรียกระบบในโลกเซียน/โลกเทพ) · 📢 ผู้ข้ามมิติเรียกร้องหาระบบ =====================
+// สะสม "ญาณแห่งเต๋า" ทุกปีที่บำเพ็ญ (โฟกัสลมปราณเร็วขึ้น · โลกเทพเร็วขึ้น · เคยปฏิเสธระบบช้าลงครึ่งหนึ่ง) ครบ 100% แล้วลองหยั่งรู้ — สำเร็จได้ระบบ ไม่สำเร็จธาตุไฟเข้าแทรก
+// ผู้ข้ามมิติที่ยังไม่มีระบบ: มีเหตุการณ์ตะโกนเรียกระบบ (อ่านนิยายแนวนี้มาเยอะ) เพิ่ม "แรงศรัทธาต่อระบบ" ซึ่งเพิ่มโอกาสได้ระบบทั้งจากการตะโกนเองและการบำเพ็ญ
+function scOK(){return !!(S&&S.alive&&S.xian&&!S.sys&&!(S.beastMode&&!S.beastMode.human)&&S.age>=16&&!(S.sc&&S.sc.won))}
+function scOf(){if(!S.sc)S.sc={p:0,won:0,fail:0};return S.sc}
+function scRate(){return .25*(S.focus==='qi'?2.5:1)*(S.xt?1.6:1)*(S.sysRefused?.5:1)*(1+Math.min(.5,(S.chuuni||0)/100))}
+function scWin(){const c=scOf();return clamp(.5+(S.chuuni||0)/200+Math.min(.1,(S.int||0)/20000)-.08*c.fail,.25,.9)}
+function scTick(dy){if(!scOK())return;const c=scOf();if(c.p>=100)return;const y=Math.min(dy,400);c.p=Math.min(100,c.p+Math.min(8,y*scRate()));
+ if(Math.random()<Math.min(.3,.015*Math.min(dy,20))&&c.p>5){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.08));log('🧘 ระหว่างหยั่งรู้ฟ้า ลมปราณตีกลับเล็กน้อย — บาดเจ็บภายใน','bad')}
+ if(c.p>=100&&!c.told){c.told=1;log('🧘 <b>ญาณแห่งเต๋าเต็มเปี่ยม</b> — รู้สึกได้ว่ามี "บางสิ่ง" เฝ้ามองอยู่เหนือฟ้า · เปิด ☰ เมนู → 🧘 หยั่งรู้ฟ้า เพื่อลองเรียกมัน','myth',true)}}
+function openSysCult(){if(!S)return;if(S.sys)return toast('คุณมีระบบอยู่แล้ว');if(!S.xian)return toast('บำเพ็ญหยั่งรู้ฟ้าได้เฉพาะโลกเซียนและโลกเทพ');const c=scOf();
+ if(c.won)return toast('ชีวิตนี้หยั่งรู้ฟ้าสำเร็จไปแล้ว');const rd=c.p>=100,yrs=Math.ceil((100-c.p)/Math.max(.01,scRate()));
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🧘 บำเพ็ญหยั่งรู้ฟ้า</h3><p class="tag2">บำเพ็ญจนญาณแห่งเต๋าเต็ม แล้วลองสื่อถึง "สิ่งที่อยู่เหนือฟ้า" — หน้าต่างระบบอาจตอบรับ · สำเร็จได้ครั้งเดียวต่อชีวิต</p>
+ <div class="item"><b>ญาณแห่งเต๋า ${Math.floor(c.p)}%</b><div class="hpbar" style="margin:6px 0"><i style="width:${c.p}%;background:#8ad0ff"></i></div>
+ <p class="tag2">${rd?'พร้อมแล้ว':`อีกราว ${fmt(yrs)} ปี`} · ${S.focus==='qi'?'🌀 โฟกัสลมปราณอยู่ (เร็ว ×2.5)':'💡 ตั้งโฟกัสเป็น 🌀 ลมปราณ จะเร็วขึ้น ×2.5'}${S.xt?' · โลกเทพ ×1.6':''}${S.sysRefused?' · เคยปฏิเสธระบบ (ช้าลงครึ่งหนึ่ง)':''}${S.chuuni?` · 📢 แรงศรัทธาต่อระบบ ${S.chuuni}%`:''}</p></div>
+ ${rd?`<p>โอกาสสำเร็จ <b>~${Math.round(scWin()*100)}%</b> · ล้มเหลว = ธาตุไฟเข้าแทรก (พลังชีวิต −35% · อายุขัย −3%) แล้วญาณลดเหลือครึ่ง</p><button class="pbtn" style="width:100%" onclick="scTry()">🌌 สื่อถึงฟ้า</button>`:''}`,'scult')}
+function scTry(){const c=scOf();if(c.p<100||S.sys)return;if(choice._cur)return toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');closeM();
+ if(Math.random()<scWin()){c.won=1;c.p=0;S.sysEver=0;log('🌌 คุณส่งจิตทะลุเก้าชั้นฟ้า… แล้วบางสิ่งก็ <b>ตอบกลับ</b>','myth',true);keyAdd('หยั่งรู้ฟ้าจนระบบตอบรับ');setTimeout(()=>{try{sysOffer()}catch(e){console.error(e)}},400)}
+ else{c.fail++;c.p=50;S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.35));S.lifespan=Math.max(S.age+1,Math.round(S.lifespan*.97));log('🔥 <b>ธาตุไฟเข้าแทรก!</b> ฟ้าเงียบงัน มีแต่ลมปราณที่ตีกลับจนกระอักเลือด — ญาณแห่งเต๋าเหลือครึ่งหนึ่ง','bad',true)}
+ render()}
+// ---- 📢 ผู้ข้ามมิติเรียกร้องหาระบบ ----
+const CHU_FAIL=['ไม่มีอะไรเกิดขึ้น มีแต่นกกาบินหนี','เด็กข้างบ้านมองคุณแล้ววิ่งไปฟ้องแม่','ชาวบ้านกระซิบกันว่า "คนนี้โดนผีเข้า"','ลมพัดผ่านเงียบๆ… ระบบไม่ตอบ','คุณได้ยินเสียง "ติ๊ง!" — แต่เป็นเสียงกระดิ่งร้านน้ำชา','แมวตัวหนึ่งเดินมานั่งมอง เหมือนสงสารคุณ','อาจารย์เดินผ่านมาพอดี เงียบไปนานก่อนเดินจากไป'];
+const CHU_EV=[
+ ['📢 "สเตตัส! เปิด!"','คุณยืนกลางตลาด ยื่นมือออกไปข้างหน้า แล้วตะโกนคำที่ตัวเอกในนิยายทุกเรื่องพูด',[['🗣️ ตะโกนให้ดังกว่าเดิม',6,()=>{S.fame=Math.max(0,S.fame-5);joy(2)}],['🤫 ลองกระซิบเบาๆ แทน',3,()=>{}]]],
+ ['🌙 พิธีกรรมเที่ยงคืน','คุณจุดเทียนเป็นวงกลม นั่งตรงกลาง แล้วเรียก "ระบบ… ข้าพร้อมแล้ว…" ตามแบบที่อ่านมาจากนิยายเรื่องโปรด',[['🕯️ ทำพิธีจนรุ่งสาง',5,()=>{S.hp=Math.max(1,S.hp-5)}],['📜 จดชื่อระบบที่อยากได้ลงกระดาษแล้วเผา',4,()=>{S.int+=1}]]],
+ ['🪨 ลองตายเพื่อตื่นระบบ (แบบไม่ตายจริง)','นิยายบอกว่าระบบมักตื่นตอนตัวเอกใกล้ตาย คุณเลยยืนอยู่ริมหน้าผา… คิดหนัก',[['🧗 ปีนลงไปนั่งบนชะง่อนผาครึ่งวัน',7,()=>{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.1))}],['🙅 ไม่เอาดีกว่า ชีวิตจริงไม่มีบันทึกเกม',2,()=>{S.int+=2}]]],
+ ['📖 เทียบกับนิยายที่เคยอ่าน','"ตัวเอกเรื่องอื่นได้ระบบตั้งแต่บทที่ 1 ทำไมข้ายังไม่ได้!" คุณนั่งนับนิ้วว่าตอนนี้ชีวิตตัวเองอยู่ "บทที่เท่าไหร่" แล้ว',[['✍️ เขียนพล็อตชีวิตตัวเองใหม่ให้ "เข้าทาง" ระบบ',4,()=>{S.int+=2}],['😤 ประกาศกับฟ้าว่าไม่ต้องมีระบบก็ได้!',-2,()=>{S.karma+=2;joy(3)}]]],
+ ['🎤 ท่องท่าประจำตัว','คุณตั้งท่าเท่ๆ ที่ฝึกหน้ากระจกมาหลายปี แล้วประกาศชื่อตัวเองพร้อมฉายาที่คิดเอง',[['⚡ ตะโกนชื่อท่าไปด้วย',5,()=>{S.cha=(S.cha||0)+1;S.fame=Math.max(0,S.fame-3)}],['😳 ทำแค่ในห้องปิดประตู',3,()=>{}]]],
+ ['🔁 ทดลองทุกคำสั่ง','"Inventory!" "Skill tree!" "Quest log!" "Help!" "ระบบ ช่วยด้วย!" — คุณลองทุกคำที่นึกออกเป็นภาษาบ้านเกิด',[['📋 ทำเป็นตารางทดลองอย่างเป็นระบบ',5,()=>{S.int+=2}],['🎲 สุ่มพูดไปเรื่อยๆ',4,()=>{joy(2)}]]],
+];
+function chuOK(){return !!(S&&S.alive&&S.ow&&S.awake&&!S.sys&&!(S.beastMode&&!S.beastMode.human)&&S.age>=6&&(S.chuN||0)<12)}
+function chuTick(){if(!chuOK()||choice._cur||modalOpen)return;if(S.age-(S.chuY==null?-9:S.chuY)<3||Math.random()>.05)return;S.chuY=S.age;S.chuN=(S.chuN||0)+1;
+ const E=CHU_EV[(S.chuN-1)%CHU_EV.length];
+ choice(E[0],`${E[1]}<br><span class="tag2">📢 แรงศรัทธาต่อระบบ ${S.chuuni||0}% (ยิ่งสูงยิ่งมีโอกาสที่ระบบจะได้ยิน${S.xian?' · ช่วยการบำเพ็ญหยั่งรู้ฟ้าด้วย':''})</span>`,E[2].map(o=>({t:o[0],s:o[1]>0?`ศรัทธา +${o[1]}%`:`ศรัทธา ${o[1]}%`,f(){try{o[2]()}catch(e){}S.chuuni=clamp((S.chuuni||0)+o[1],0,45);
+  if(o[1]>0&&!S.sys&&Math.random()<(S.chuuni||0)/100){S.sysEver=0;log(`📢 ${E[0]} — …<b>ติ๊ง!</b> คราวนี้ไม่ใช่กระดิ่งร้านน้ำชา!`,'myth',true);keyAdd('ตะโกนเรียกระบบจนระบบได้ยิน');setTimeout(()=>{try{sysOffer()}catch(e){console.error(e)}},400)}
+  else log(`📢 ${E[0]} — ${ch(CHU_FAIL)} <span class="tag2">(แรงศรัทธาต่อระบบ ${S.chuuni}%)</span>`,'')}})))}
+
+// ===================== v17.10 🏯 กิจการสำนัก: คลังสำนัก · ขยายสำนัก · เรื่องราวเจ้าสำนัก · ผู้สืบทอด =====================
+// สมดุลเงิน: รายได้คลังคิดเป็นหน่วยเงินของแต่ละโลก (×1 / ×50 / ×4000) มีเพดานต่อปีและเพดานคลัง · ข้ามเวลายาวนับรายได้ไม่เกิน 50 ปี
+// ถอนเข้ากระเป๋าตัวเอง: ปีละครั้ง ไม่เกิน 15% ของคลัง และไม่เกิน 600×หน่วยเงินโลก · ทุกครั้งผู้อาวุโสไม่พอใจ (ถอนติดกันยิ่งไม่พอใจ) · ใช้สร้างอาคาร/ช่วยเหลือได้ไม่จำกัด
+const LB=[['lib','📚 หอคัมภีร์','มีโอกาสได้วิชาใหม่ทุกปี',3000],['pill','⚗️ หอโอสถ','ลมปราณเพิ่มทุกปี · ได้สมุนไพร',2500],['yard','🥋 ลานฝึก','พลังยุทธ์เพิ่มทุกปี',4000],['ward','🛡️ ค่ายกลพิทักษ์','กันขโมย · ได้เปรียบเมื่อมีคนบุก',3500],['hall','🏯 หอรับศิษย์','ศิษย์และรายได้เพิ่ม · คลังจุได้มากขึ้น',5000]];
+const LB_MAX=5,LW_PCT=.15,LW_CAP=600;
+function ldOK(){return !!(S&&S.alive&&!(S.beastMode&&!S.beastMode.human)&&((S.faction&&S.rank>=4)||(S.ownSect&&!S.faction)))}
+function ldName(){return S.faction&&S.rank>=4?S.faction.n:S.ownSect?S.ownSect.n:''}
+function ldOf(){const n=ldName();if(!S.lead||S.lead.n!==n){const nm=()=>ch(['หลิว','จาง','หวัง','เฉิน','หลี่','จ้าว','ซ่ง','หาน','ถัง','ฉิน'])+ch(['อวิ๋น','เฟิง','หมิง','เสวี่ย','ซิง','หลาน','อี้','เทียน','หยาง','เหยียน']);
+  S.lead={n,tr:Math.round(W15()*300),b:{lib:0,pill:0,yard:0,ward:0,hall:0},loy:70,wy:-99,ws:0,ly:S.age,evY:S.age,sen:[nm(),nm(),nm()],cand:[],heir:null};log(`🏯 รับมอบกิจการ<b>${esc(n)}</b> — คลังสำนัก ${fmt(S.lead.tr)} ตำลึง · ดูแลได้ที่ ☰ เมนู → 🏯 กิจการสำนัก`,'epic')}return S.lead}
+function ldDis(){if(S.ownSect&&!S.faction)return S.ownSect.dis|0;return S.faction&&S.faction.tier==='เล็ก'?60:240}
+function ldIncome(){const L=ldOf(),base=30+ldDis()*1.2,f=1+Math.min(1,(S.fame||0)/20000)*.5,h=1+.15*L.b.hall,l=L.loy<40?.7:1;return Math.round(Math.min(800,base*f*h*l)*W15())}
+function ldCap(){return Math.round(20000*(1+ldOf().b.hall)*W15())}
+function ldWMax(){const L=ldOf();return Math.max(0,Math.min(Math.floor(L.tr*LW_PCT),Math.round(LW_CAP*W15())))}
+function ldBCost(k){const b=LB.find(x=>x[0]===k);return Math.round(b[3]*Math.pow(2,ldOf().b[k])*W15())}
+function ldTick(dy){if(!ldOK())return;const L=ldOf(),yi=Math.min(dy,50),ye=Math.min(dy,10);
+ L.tr=Math.min(ldCap(),L.tr+ldIncome()*yi);L.loy=clamp(L.loy+(L.loy<70?1:L.loy>70?-.5:0)*ye,0,100);
+ if(L.b.yard)S.power+=pctPow(.0015*L.b.yard*ye);
+ if(L.b.pill){S.qi=+(S.qi+.1*L.b.pill*ye).toFixed(2);if(Math.random()<.08*L.b.pill)bagAdd('herb',1,1)}
+ if(L.b.lib&&Math.random()<Math.min(.5,.02*L.b.lib*ye)){const a=newArt(Math.min(3,L.b.lib-1));S.arts.push(a);log(`📚 หอคัมภีร์ของสำนักรวบรวมวิชาใหม่ได้ ${artHtml(a)}`,'epic')}
+ if(L.b.hall&&S.ownSect&&!S.faction)S.ownSect.dis+=Math.round(L.b.hall*ye*.5);
+ if(L.loy<25&&!L.coup&&!choice._cur&&!modalOpen){L.coup=1;return ldEv(0)}
+ if(!choice._cur&&!modalOpen&&S.age-L.evY>=4&&Math.random()<.08){L.evY=S.age;ldEv()}}
+function openSectBiz(){if(!ldOK())return toast('ต้องเป็นเจ้าสำนักหรือผู้ก่อตั้งสำนักก่อน');const L=ldOf(),wm=ldWMax(),can=L.wy!==S.age&&wm>0;
+ const lo=L.loy>=70?'😊 ภักดี':L.loy>=45?'😐 พอใช้':L.loy>=25?'😠 ไม่พอใจ':'🔥 คิดก่อกบฏ';
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏯 กิจการ${esc(L.n)}</h3>
+ <div class="item"><b>💰 คลังสำนัก ${fmt(L.tr)}</b> / ${fmt(ldCap())} ตำลึง<p class="tag2">รายได้ราวปีละ ${fmt(ldIncome())} · ศิษย์ ${fmt(ldDis())} คน · ความภักดีของผู้อาวุโสและศิษย์: ${lo} (${Math.round(L.loy)})</p>
+ <div class="brow"><button class="gbtn" onclick="ldDep()">📥 สมทบทุนจากเงินตัวเอง</button><button class="pbtn" onclick="ldWd()" ${can?'':'disabled style="opacity:.45"'}>📤 เบิกเข้ากระเป๋า ${can?fmt(wm):'(ปีนี้เบิกแล้ว)'}</button></div>
+ <p class="tag2">เบิกได้ปีละครั้ง ไม่เกิน 15% ของคลัง (สูงสุด ${fmt(Math.round(LW_CAP*W15()))}) · ทุกครั้งผู้อาวุโสไม่พอใจ ยิ่งเบิกติดกันยิ่งไม่พอใจ · ใช้เงินคลังสร้างอาคารได้ไม่จำกัด</p></div>
+ <h4>🏗️ ขยายสำนัก</h4>${LB.map(([k,n,d])=>{const lv=L.b[k],mx=lv>=LB_MAX,c=mx?0:ldBCost(k);return`<div class="item"><div class="h"><b>${n} ${'★'.repeat(lv)}${'☆'.repeat(LB_MAX-lv)}</b>${mx?'<span class="tag2">สูงสุดแล้ว</span>':`<button class="sysb" onclick="ldBuild('${k}')" ${L.tr>=c?'':'disabled style="opacity:.45"'}>สร้าง ${fmt(c)}</button>`}</div><p class="tag2">${d}</p></div>`}).join('')}
+ <h4>👑 ผู้สืบทอด</h4><p class="tag2">ตั้งทายาทไว้ ชีวิตหน้าเลือก "เล่นต่อเป็นศิษย์" แล้วรับสำนักต่อได้ (คลังครึ่งหนึ่ง · อาคารลดลง 1 ขั้น)</p>
+ <div class="mgrid">${[...new Set([S.flags.disciple,...L.cand,...L.sen].filter(Boolean))].map(n=>`<button class="opt" onclick="ldHeir('${esc(n).replace(/'/g,'')}')" ${L.heir===n?'style="background:var(--tb4)"':''}>${L.heir===n?'👑':'🧑‍🎓'} ${esc(n)}<small>${L.heir===n?'ทายาทที่ตั้งไว้':L.cand.includes(n)?'ศิษย์อัจฉริยะ':n===S.flags.disciple?'ศิษย์คนแรก':'ศิษย์อาวุโส'}</small></button>`).join('')}</div>`,'sectbiz')}
+function ldDep(){const L=ldOf(),room=ldCap()-L.tr;if(room<=0)return toast('คลังเต็มแล้ว');const v=Math.min(room,Math.floor(S.money*.5));if(v<=0)return toast('ไม่มีเงินพอจะสมทบ');S.money-=v;L.tr+=v;L.loy=clamp(L.loy+3,0,100);log(`📥 สมทบทุนเข้าคลัง${esc(L.n)} ${fmt(v)} ตำลึง (ครึ่งหนึ่งของเงินที่มี) — ศิษย์ต่างซาบซึ้ง`,'good');render();openSectBiz()}
+function ldWd(){const L=ldOf(),v=ldWMax();if(L.wy===S.age||v<=0)return;L.ws=L.wy===S.age-1?L.ws+1:0;L.wy=S.age;L.tr-=v;S.money+=v;const d=6+L.ws*6;L.loy=clamp(L.loy-d,0,100);
+ log(`📤 เบิกเงินคลังสำนัก ${fmt(v)} ตำลึงเข้ากระเป๋า — ผู้อาวุโสหลายคนหน้าบึ้ง (ความภักดี −${d})`,L.ws?'bad':'');render();openSectBiz()}
+function ldBuild(k){const L=ldOf();if(L.b[k]>=LB_MAX)return;const c=ldBCost(k);if(L.tr<c)return toast('เงินในคลังไม่พอ — สมทบทุนก่อนได้');L.tr-=c;L.b[k]++;L.loy=clamp(L.loy+4,0,100);const b=LB.find(x=>x[0]===k);
+ log(`🏗️ ${esc(L.n)}สร้าง<b>${b[1]}</b>ขั้น ${L.b[k]} สำเร็จ — ศิษย์ทั้งสำนักภาคภูมิใจ`,'epic');if(Object.values(L.b).every(v=>v>=LB_MAX)&&!S.flags.sectMax){S.flags.sectMax=1;keyAdd('ขยาย'+L.n+'จนยิ่งใหญ่ที่สุด')}render();openSectBiz()}
+function ldHeir(n){const L=ldOf();L.heir=n;S.flags.disciple=n;log(`👑 ประกาศแต่งตั้ง <b>${esc(n)}</b> เป็นผู้สืบทอด${esc(L.n)}`,'epic');openSectBiz()}
+// ---- เรื่องราวเจ้าสำนัก ----
+function ldEv(force){const L=ldOf(),W=W15(),pw=()=>clamp(.45+realmIdx()*.05+(L.b.ward*.04),.2,.92),wi=()=>clamp(.4+Math.min(.35,(S.int||0)/1500),.2,.85),T=n=>{L.tr=clamp(L.tr+n,0,ldCap())},Y=n=>{L.loy=clamp(L.loy+n,0,100)};
+ const E=[
+ ()=>{const e=ch(L.sen);choice('⚔️ ผู้อาวุโสชิงตำแหน่ง',`ผู้อาวุโส<b>${esc(e)}</b>รวบรวมคนที่ไม่พอใจ เรียกประชุมกลางลานแล้วประกาศว่าคุณ "ไม่คู่ควรกับตำแหน่ง"`,[
+  {t:'⚔️ ประลองต่อหน้าทุกคน',s:`~${Math.round(pw()*100)}%`,f(){if(Math.random()<pw()){Y(30);S.fame+=300;log(`⚔️ คุณสยบ${esc(e)}ในสามกระบวนท่า ทั้งลานเงียบกริบ — ไม่มีใครกล้าคัดค้านอีก`,'epic');L.coup=0}else{Y(10);T(-Math.round(L.tr*.3));S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));log(`⚔️ คุณพ่ายแพ้ ${esc(e)}พาพรรคพวกขนเงินคลังไปส่วนหนึ่งแล้วแยกตัวออกไป`,'bad');L.coup=0}}},
+  {t:'🍵 เจรจาแบ่งอำนาจ',s:'คลัง −20% · ความภักดีฟื้น',f(){T(-Math.round(L.tr*.2));Y(25);L.coup=0;log(`🍵 คุณยอมให้${esc(e)}คุมการคลังบางส่วน เรื่องสงบลงชั่วคราว`)}}])},
+ ()=>{const e=ch(L.sen);choice('📜 ศิษย์เอกทรยศ',`ศิษย์ใกล้ชิดของผู้อาวุโส${esc(e)}ขโมยคัมภีร์ลับของสำนักหนีลงเขาไปตอนกลางคืน`,[
+  {t:'🏃 ไล่ตามด้วยตัวเอง',s:`~${Math.round(pw()*100)}%`,f(){if(Math.random()<pw()){Y(8);S.fame+=150;log('🏃 คุณตามทันที่ด่านชายแดน ได้คัมภีร์คืนครบ','good')}else{Y(-8);log('🏃 คลาดกันแค่ก้าวเดียว คัมภีร์หลุดไปอยู่ในมือสำนักคู่แข่ง','bad')}}},
+  {t:'💰 ตั้งค่าหัว',s:`คลัง −${fmt(Math.round(800*W))}`,f(){if(L.tr<800*W){Y(-5);log('💰 คลังไม่พอจะตั้งค่าหัว ข่าวลือเรื่องความอ่อนแอแพร่ไป','bad');return}T(-800*W);Y(3);log('💰 นักล่าค่าหัวนำคัมภีร์กลับมาภายในสามเดือน','good')}},
+  {t:'🕊️ ปล่อยไป',s:'ใจกว้าง แต่คนในอาจมองว่าอ่อนแอ',f(){Y(-6);S.karma+=5;log('🕊️ "วิชาไม่ใช่สมบัติของใครคนเดียว" — บางคนชื่นชม บางคนส่ายหน้า')}}])},
+ ()=>{const rv=ch(['สำนักกระบี่เมฆา','พรรคเหล็กดำ','หอพิรุณ','สำนักหมัดภูผา','นิกายจันทร์ซ่อน']);choice('🏆 ประลองชิงอันดับ',`${rv}ส่งศิษย์เอกมาท้าประลองต่อหน้าแขกจากทั่วแผ่นดิน เดิมพันคือชื่อเสียงของทั้งสองสำนัก`,[
+  {t:'⚔️ รับคำท้า',s:`~${Math.round(pw()*100)}% · ชนะได้ชื่อเสียงและเงินสนับสนุน`,f(){if(Math.random()<pw()){S.fame+=500;T(Math.round(1500*W));Y(8);log(`🏆 ศิษย์ของคุณชนะ${rv}อย่างงดงาม ผู้อุปถัมภ์หลายรายส่งเงินมาสนับสนุน`,'epic')}else{S.fame=Math.max(0,S.fame-200);Y(-6);log(`🏆 แพ้${rv}อย่างฉิวเฉียด คนในสำนักเสียขวัญ`,'bad')}}},
+  {t:'🙅 ปฏิเสธ',s:'ชื่อเสียงลดเล็กน้อย',f(){S.fame=Math.max(0,S.fame-80);log(`🙅 คุณปฏิเสธคำท้าของ${rv} ข่าวว่า "ไม่กล้า" แพร่ไปทั่ว`)}}])},
+ ()=>{const nm=ch(['เสี่ยว','อา'])+ch(['หลิง','เฟย','อวี่','ฉี','ซาน','หลัน']);const c=Math.round(1200*W);choice('🌟 เด็กอัจฉริยะ',`ในงานเปิดรับศิษย์ มีเด็กชื่อ<b>${nm}</b>ที่รากกระดูกดีหาได้ยาก สำนักอื่นอีกสองแห่งก็กำลังยื่นข้อเสนอ`,[
+  {t:'🎁 ยื่นข้อเสนอสูงกว่า',s:`คลัง −${fmt(c)} · ได้ศิษย์อัจฉริยะ (เป็นผู้สืบทอดได้)`,f(){if(L.tr<c){log('🎁 คลังไม่พอ เด็กไปเข้าสำนักอื่น','bad');return}T(-c);L.cand=[...L.cand,nm].slice(-3);if(S.ownSect&&!S.faction)S.ownSect.dis++;Y(4);log(`🌟 <b>${nm}</b>คุกเข่าคำนับคุณเป็นอาจารย์ — ตั้งเป็นผู้สืบทอดได้ในหน้ากิจการสำนัก`,'epic')}},
+  {t:'🧘 ปล่อยให้เด็กเลือกเอง',s:`~${15+L.b.hall*10}% (หอรับศิษย์ช่วย)`,f(){if(Math.random()<.15+L.b.hall*.1){L.cand=[...L.cand,nm].slice(-3);log(`🧘 ${nm}เลือกสำนักของคุณเอง "เพราะท่านไม่ได้พยายามซื้อข้า"`,'epic')}else log(`🧘 ${nm}เลือกสำนักที่ใหญ่กว่า`)}}])},
+ ()=>{const loss=Math.round(L.tr*.15);if(L.b.ward>=2){log(`🛡️ มีขโมยลอบเข้าคลังสำนักตอนกลางคืน แต่ติดค่ายกลพิทักษ์จนสลบอยู่หน้าประตู`,'good');Y(2);return}choice('🕵️ คลังถูกขโมย',`เช้านี้พบว่าเงินในคลังหายไปราว ${fmt(loss)} ตำลึง ร่องรอยบอกว่าเป็นคนใน`,[
+  {t:'🔍 สืบหาตัวคนร้าย',s:`~${Math.round(wi()*100)}% · ปัญญาช่วย`,f(){if(Math.random()<wi()){Y(5);log('🔍 คุณจับได้ว่าเป็นคนดูแลบัญชี เงินคืนมาครบ','good')}else{T(-loss);Y(-4);log('🔍 สืบจนหมดปีก็ไม่พบ คนในสำนักเริ่มระแวงกันเอง','bad')}}},
+  {t:'🤐 ปล่อยผ่าน แล้วสร้างค่ายกลกันไว้',s:'เสียเงิน',f(){T(-loss);log('🤐 คุณไม่พูดถึงเรื่องนี้อีก แต่จดไว้ในใจ')}}])},
+ ()=>{const c=Math.round(600*W);choice('🤝 ประชุมพันธมิตร',`สำนักใหญ่หลายแห่งเชิญเจ้าสำนักทุกคนไปร่วมประชุม ต้องเตรียมของขวัญให้สมฐานะ`,[
+  {t:'🎁 ไปพร้อมของขวัญ',s:`คลัง −${fmt(c)} · ชื่อเสียง +`,f(){if(L.tr<c){S.fame=Math.max(0,S.fame-50);log('🎁 ของขวัญดูน้อยไปหน่อย เจ้าสำนักอื่นแอบหัวเราะ','bad');return}T(-c);S.fame+=250;Y(3);log('🤝 คุณได้นั่งโต๊ะเดียวกับเจ้าสำนักใหญ่ ชื่อของสำนักถูกพูดถึงไปอีกนาน','good')}},
+  {t:'🏠 ไม่ไป',s:'ไม่เสียอะไร',f(){log('🏠 คุณอยู่ดูแลสำนัก ปีนี้ผ่านไปเงียบๆ')}}])},
+ ()=>{const c=Math.round(Math.min(L.tr*.25,1500*W));choice('🌧️ ภัยพิบัติเชิงเขา',`น้ำป่าพัดหมู่บ้านใต้ภูเขาจนเสียหายหนัก ชาวบ้านที่เคยส่งลูกหลานมาเป็นศิษย์มาขอความช่วยเหลือ`,[
+  {t:'🍚 เปิดคลังช่วยเหลือ',s:`คลัง −${fmt(c)} · กรรมดี · ภักดี +`,f(){T(-c);S.karma+=15;S.fame+=120;Y(10);log('🍚 ศิษย์ทั้งสำนักลงไปช่วยสร้างบ้าน ชาวบ้านจารึกชื่อสำนักไว้ที่ศาลเจ้า','good')}},
+  {t:'🚪 ปิดประตูสำนัก',s:'กรรม −',f(){S.karma-=10;Y(-5);log('🚪 ศิษย์บางคนแอบลงไปช่วยเอง แล้วไม่กลับมาอีก','bad')}}])},
+ ()=>{choice('🔥 ศิษย์แตกเป็นสองฝ่าย',`ศิษย์สายกระบี่กับสายฝ่ามือทะเลาะกันเรื่องใครได้ใช้ลานฝึกก่อน จนลงไม้ลงมือ`,[
+  {t:'⚖️ ไกล่เกลี่ยด้วยตัวเอง',s:`~${Math.round(wi()*100)}%`,f(){if(Math.random()<wi()){Y(8);log('⚖️ คุณจัดตารางฝึกใหม่ ทั้งสองฝ่ายยอมรับ แถมเริ่มฝึกร่วมกัน','good')}else{Y(-6);log('⚖️ ทั้งสองฝ่ายต่างคิดว่าคุณลำเอียง','bad')}}},
+  {t:'🏗️ สร้างลานฝึกเพิ่ม',s:L.b.yard>=LB_MAX?'ลานฝึกเต็มแล้ว':'ใช้เงินคลังขยายลานฝึก 1 ขั้น',f(){if(L.b.yard<LB_MAX&&L.tr>=ldBCost('yard')){T(-ldBCost('yard'));L.b.yard++;Y(6);log('🏗️ ลานฝึกใหม่ใหญ่พอสำหรับทุกคน ปัญหาจบ','good')}else{Y(-3);log('🏗️ เงินไม่พอหรือไม่มีที่ให้ขยาย ต้องลงโทษทั้งสองฝ่ายแทน')}}}])},
+ ()=>{const g=Math.round(Math.min(2000*W,ldCap()-L.tr));choice('💼 พ่อค้าขอเป็นผู้อุปถัมภ์',`พ่อค้ารายใหญ่เสนอเงิน ${fmt(g)} ตำลึง แลกกับให้สำนักคุ้มกันกองคาราวานของเขา — ข่าวว่าเขาค้าของเถื่อนด้วย`,[
+  {t:'🤝 รับข้อเสนอ',s:'คลัง + · กรรม −',f(){T(g);S.karma-=12;Y(-2);log('🤝 เงินไหลเข้าคลัง แต่ศิษย์บางคนต้องไปคุ้มกันของที่ไม่ควรรู้ว่าคืออะไร')}},
+  {t:'🙅 ปฏิเสธ',s:'กรรม +',f(){S.karma+=6;Y(3);log('🙅 "สำนักนี้ไม่ใช่ทหารรับจ้าง" — ศิษย์รุ่นเยาว์จดคำนี้ไว้')}}])},
+ ()=>{const e=ch(L.sen);choice('🏔️ ศิษย์ขอลงเขา',`${esc(e)}มาขออนุญาตพาศิษย์รุ่นเยาว์ลงไปฝึกในยุทธภพสามปี`,[
+  {t:'✅ อนุญาต',s:'มีโอกาสกลับมาพร้อมของดี',f(){if(Math.random()<.6){T(Math.round(500*W));S.fame+=150;log(`🏔️ สามปีต่อมา${esc(e)}พาศิษย์กลับมาครบ พร้อมชื่อเสียงและของฝาก`,'good')}else{if(S.ownSect&&!S.faction)S.ownSect.dis=Math.max(1,S.ownSect.dis-2);Y(-4);log(`🏔️ มีศิษย์สองคนไม่ได้กลับมา`,'bad')}}},
+  {t:'🚫 ไม่อนุญาต',s:'ภักดีลดเล็กน้อย',f(){Y(-3);log('🚫 ศิษย์รุ่นเยาว์ผิดหวัง แต่ไม่มีใครกล้าเถียง')}}])}];
+ (force!=null?E[force]:ch(E))()}
+// ---- รับสำนักต่อเมื่อเล่นเป็นศิษย์ที่ตั้งเป็นผู้สืบทอด ----
+{const _paL=playAs;playAs=function(kind){const P=S,heir=kind==='disc'&&P&&P.lead&&P.lead.heir&&P.flags&&P.flags.disciple===P.lead.heir?P.lead:null,wasF=P&&P.faction&&P.rank>=4,os=P&&P.ownSect&&!P.faction?P.ownSect:null;
+ const r=_paL.apply(this,arguments);try{if(heir&&S&&S!==P){if(wasF){S.faction=P.faction;S.rank=4;S.merit=MERIT[4]||S.merit}else if(os){S.ownSect={n:os.n,dis:Math.round(os.dis*.8),lv:os.lv};S.path='founder'}
+  const b={};for(const k in heir.b)b[k]=Math.max(0,heir.b[k]-1);S.lead=Object.assign({},heir,{tr:Math.round(heir.tr*.5),b,loy:60,wy:-99,ws:0,ly:S.age,evY:S.age,heir:null,cand:[],coup:0});
+  log(`👑 คุณขึ้นรับตำแหน่งเจ้า<b>${esc(heir.n)}</b>ต่อจากอาจารย์ — คลังสำนัก ${fmt(S.lead.tr)} ตำลึง`,'myth',true);keyAdd('สืบทอดตำแหน่งเจ้า'+heir.n);render()}}catch(e){console.error(e)}return r}}
+// ---- ตัวนับปี (รองรับกาลเวลาที่ข้ามทีละหลายปีในโลกเซียน/เทพ) ----
+{const _py17=passYear;passYear=function(){const a0=S?S.age:0;const r=_py17.apply(this,arguments);try{if(S&&S.alive){const dy=Math.max(1,S.age-a0);scTick(dy);ldTick(dy);chuTick()}}catch(e){console.error(e)}return r}}
+// ---- ปุ่มในเมนู + หน้าสำนัก ----
+{const _omN=openMenu;openMenu=function(){const r=_omN.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g){
+ if(S&&S.xian&&!S.sys&&!(S.sc&&S.sc.won)){const p=Math.floor(scOf().p);g.insertAdjacentHTML('afterbegin',`<button class="opt" onclick="openSysCult()"${p>=100?' style="background:var(--tb4)"':''}>🧘 หยั่งรู้ฟ้า<small>${p>=100?'ญาณเต็มแล้ว — ลองเรียกระบบ':'ญาณแห่งเต๋า '+p+'%'}</small></button>`)}
+ if(ldOK()){const L=ldOf();g.insertAdjacentHTML('afterbegin',`<button class="opt" onclick="openSectBiz()">🏯 กิจการสำนัก<small>คลัง ${fmt(L.tr)} · ${L.loy>=45?'สงบ':'⚠️ ไม่พอใจ'}</small></button>`)}}}catch(e){}return r}}
+{const _ofN=openFaction;openFaction=function(){const r=_ofN.apply(this,arguments);try{if(ldOK()&&S.faction){const m=$('modal');m.insertAdjacentHTML('beforeend','<button class="opt" onclick="openSectBiz()" style="background:var(--tb4)">🏯 กิจการสำนัก<small>คลังสำนัก · ขยายสำนัก · ผู้สืบทอด</small></button>')}}catch(e){}return r}}
+try{MENU_MORE['⭐ ใช้บ่อย'].push('openSectBiz','openSysCult')}catch(e){}
+try{SYS_GUIDE.push({s:'world',nw:1,ic:'🧘',t:'หยั่งรู้ฟ้า — เรียกระบบในโลกเซียน/โลกเทพ',go:'openSysCult',d:'ยังไม่มีระบบ? บำเพ็ญจน <b>ญาณแห่งเต๋า</b> ครบ 100% (โฟกัสลมปราณเร็ว ×2.5 · โลกเทพ ×1.6 · เคยปฏิเสธระบบช้าลงครึ่งหนึ่ง) แล้วลองสื่อถึงฟ้า — สำเร็จได้ระบบ ล้มเหลวธาตุไฟเข้าแทรก · สำเร็จได้ครั้งเดียวต่อชีวิต · ผู้ข้ามมิติที่ชอบตะโกนเรียกระบบ ศรัทธายิ่งสูงยิ่งมีโอกาส',te:'Heavenly Insight',de:'Cultivate insight to 100% in the xian/god world, then attempt to summon a system once per life.'},
+ {s:'life',nw:1,ic:'🏯',t:'กิจการสำนัก (เจ้าสำนัก)',go:'openSectBiz',d:'เป็นเจ้าสำนักหรือผู้ก่อตั้งแล้วดูแลคลังสำนัก (รายได้ทุกปีตามศิษย์และชื่อเสียง) · สร้างอาคาร 5 แบบ แบบละ 5 ขั้น · เบิกเข้ากระเป๋าได้ปีละครั้ง ไม่เกิน 15% และผู้อาวุโสจะไม่พอใจ · มีเรื่องราวเฉพาะเจ้าสำนัก · ตั้งผู้สืบทอดแล้วเล่นต่อเป็นศิษย์เพื่อรับสำนักต่อ',te:'Sect affairs',de:'Treasury, buildings, leader events and a chosen successor.'})}catch(e){}
 </script>
 </body>
 </html>
