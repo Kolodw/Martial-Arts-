@@ -22770,7 +22770,7 @@ const CAL=[{ic:'👹',n:'มารสวรรค์บุกแดนใต้'
 let CAL_J=null;
 async function openCal(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>⚔️ ภัยประจำสัปดาห์</h3><div id="calBox" class="tag2">${onlineOK?'กำลังโหลด…':'ต้องออนไลน์ก่อน'}</div>`,'cal');if(!onlineOK)return;
  try{CAL_J=await api('cal',{})}catch(e){const el=$('calBox');if(el)el.textContent='โหลดไม่ได้';return}calRender()}
-function calRender(){const j=CAL_J,el=$('calBox');if(!j||!el)return;const E=CAL[j.i]||CAL[0],done=j.tot>=j.goal,d=Math.floor(j.end/86400e3),h=Math.floor(j.end%86400e3/3600e3);
+function calRender(){const j=CAL_J,el=$('calBox');if(!j||!el)return;const E=CAL[j.i]||CAL[0],done=j.tot>=j.goal,d=Math.floor((+j.end||0)/86400e3),h=Math.floor((+j.end||0)%86400e3/3600e3);
  const used=LS.get('murim_calu',{});const dk=new Date(Date.now()+7*3600e3).toISOString().slice(0,10),u=used.d===dk?used.n:0,left=Math.max(0,8-u);
  const btn=(k,ic,t,s)=>`<button class="opt" style="width:100%;text-align:left;margin:3px 0" ${left&&S&&S.alive?'':'disabled'} onclick="calDo('${k}')">${ic} ${t}${E.b===k?' <b style="color:#e0a030">×2 สัปดาห์นี้</b>':''}<small>${s}</small></button>`;
  el.className='';el.innerHTML=`<div class="item" style="border-left:5px solid #e04050"><b style="font-size:17px">${E.ic} ${E.n}</b><p class="tag2" style="margin:4px 0">${E.d}</p>${wpBar(j.tot,j.goal,done?'#5cb85c':'#e04050')}<p style="margin:2px 0"><b>${fmt(j.tot)}</b> / ${fmt(j.goal)} แต้ม ${done?'· ✅ <b>ผ่านแล้ว!</b>':''}<span class="tag2" style="float:right">เหลือ ${d} วัน ${h} ชม.</span></p></div>
@@ -22875,7 +22875,7 @@ function calScene(cv,i,p){if(!cv)return;const c=cv.getContext('2d');c.imageSmoot
 function calRumor(f,E){const A=E.a[f.k]||E.a.give;const tx=f.k==='fight'?(f.w?A[1]:A[2]):A[1];return`<p style="margin:3px 0"><b>${esc(f.n)}</b> ${esc(tx)} <span class="tag2">${ago(f.t)}</span></p>`}
 function calDots(n){return'<span style="letter-spacing:1px;color:#e0a030">'+'●'.repeat(n)+'</span>'}
 function calOut(){const j=CAL_J;if(!j||!j.prev||!j.prev.goal)return null;const ok=j.prev.tot>=j.prev.goal,E=CAL[j.prev.i]||CAL[0];const o={w:j.w,ok,i:j.prev.i};LS.set('murim_calout',o);return{ok,E}}
-function calRender(){const j=CAL_J,el=$('calBox');if(!j||!el)return;const E=CAL[j.i]||CAL[0],p=j.tot/Math.max(1,j.goal),done=p>=1,d=Math.floor(j.end/86400e3),h=Math.floor(j.end%86400e3/3600e3);
+function calRender(){const j=CAL_J,el=$('calBox');if(!j||!el)return;const E=CAL[j.i]||CAL[0],p=j.tot/Math.max(1,j.goal),done=p>=1,d=Math.floor((+j.end||0)/86400e3),h=Math.floor((+j.end||0)%86400e3/3600e3);
  const used=LS.get('murim_calu',{});const dk=new Date(Date.now()+7*3600e3).toISOString().slice(0,10),u=used.d===dk?used.n:0,left=Math.max(0,8-u);
  const stI=Math.min(3,Math.floor(p*4)),stage=p<.25?'ยังไม่มีใครหยุดภัยนี้ได้':E.st[Math.min(3,Math.floor(p*4)-1)];
  const M=LS.get('murim_calms',{});const got=M.w===j.w?M.g||[]:[];
