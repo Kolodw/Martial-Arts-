@@ -1838,7 +1838,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (!okId(id)) return res.json({ err: 'id' });
       if (!(await cmd('SET', 'gvrl:' + id, 1, 'NX', 'EX', 60))) return res.json({ ok: 0, rate: 1 });
       if (await cmd('SISMEMBER', 'cheaters', id)) return res.json({ ok: 1 });
-      const g = { i: 'g' + now.toString(36) + Math.random().toString(36).slice(2, 5), n: noAdm(clean(b.n, 20)) || 'นิรนาม', e: clean(b.e, 30), a: Math.max(0, Math.min(1e7, Math.floor(+b.a || 0))), r: clean(b.r, 30), c: clean(b.c, 80), y: clean(b.y, 80), w: ['m', 'x', 'g'].includes(b.w) ? b.w : 'm', ar: clean(b.ar, 30), ri: Math.max(0, Math.min(9, Math.floor(+b.ri || 0))), t: now };
+      const g = { i: 'g' + now.toString(36) + Math.random().toString(36).slice(2, 5), n: noAdm(clean(b.n, 20)) || 'นิรนาม', e: clean(b.e, 30), a: Math.max(0, Math.min(1e7, Math.floor(+b.a || 0))), r: clean(b.r, 30), c: clean(b.c, 80), y: clean(b.y, 80), w: ['m', 'x', 'g'].includes(b.w) ? b.w : 'm', ar: clean(b.ar, 30), ri: Math.max(0, Math.min(9, Math.floor(+b.ri || 0))), hl: Math.max(0, Math.min(100, Math.floor(+b.hl || 0))), t: now };
       await pipe([['LPUSH', 'graves', JSON.stringify(g)], ['LTRIM', 'graves', 0, 299]]);
       return res.json({ ok: 1, i: g.i });
     }
@@ -1857,6 +1857,22 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const ok = await cmd('SET', 'gp:' + id + ':' + gid, 1, 'NX', 'EX', 86400 * 7);
       const n = ok ? await cmd('HINCRBY', 'gvpr', gid, 1) : +(await cmd('HGET', 'gvpr', gid)) || 0;
       return res.json({ ok: ok ? 1 : 0, n });
+    }
+    if (a === 'hgraves') {
+      const [list, hidden] = await pipe([['LRANGE', 'graves', 0, 299], ['SMEMBERS', 'chat:hidden']]);
+      const hs = new Set(hidden || []), L = (list || []).map(jp).filter(x => x && !hs.has(x.i) && (x.hl || 0) >= 19);
+      const out = []; while (L.length && out.length < 12) out.push(L.splice(Math.floor(Math.random() * L.length), 1)[0]);
+      return res.json({ g: out.map(x => ({ n: x.n, y: x.y, ar: x.ar, hl: x.hl })) });
+    }
+    if (a === 'shrine') {
+      if (!okId(id)) return res.json({ err: 'id' });
+      const c = Math.max(0, Math.min(4, Math.floor(+b.c || 0))), k = String(b.k || '').replace(/[^a-zA-Z0-9_]/g, '').slice(0, 24);
+      if (!k) return res.json({ err: 'k' });
+      if (!(await cmd('SET', 'shrl:' + id, 1, 'NX', 'EX', 20))) return res.json({ err: 'rate' });
+      const key = 'shr:' + c, mine = JSON.stringify({ k, n: noAdm(clean(b.n, 20)) || 'นิรนาม', u: id, t: now });
+      let got = null; for (let tries = 0; tries < 3; tries++) { const v = jp(await cmd('RPOP', key)); if (!v) break; if (v.u === id) { await cmd('LPUSH', key, JSON.stringify(v)); continue } got = v; break }
+      await pipe([['LPUSH', key, mine], ['LTRIM', key, 0, 39]]);
+      return res.json(got ? { k: got.k, n: got.n } : { empty: 1 });
     }
     // ---- ภัยพิบัติประจำสัปดาห์: ผู้เล่นทุกคนช่วยกันสะสมแต้ม ----
     const CAL_N = 5, calIdx = w => { let h = 7; for (const c of String(w)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h % CAL_N };
