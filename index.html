@@ -24211,6 +24211,14 @@ setInterval(()=>{try{const ym=$('ymon');if(!ym||!S||!S.alive)return;const m=curM
 
 // รากขยะ: พรสวรรค์ต่ำสุดต้องโตช้ากว่าคนปกติจริง ไม่ใช่แค่ตอนเริ่ม (พลังที่ได้ในแต่ละปี ×0.82)
 {const _pyJ=passYear;passYear=function(){const j=S&&S.alive&&S.ch==='junk'&&!(S.beastMode&&!S.beastMode.human),p0=j?S.power:0;const r=_pyJ.apply(this,arguments);try{if(j&&S&&S.alive&&S.ch==='junk'){const d=S.power-p0;if(d>0)S.power=Math.round(p0+d*.82)}}catch(e){}return r}}
+
+// ===== แก้บั๊ก: ระบบในร่างสัตว์อสูร — หน้าเควสหลักโชว์เควสของมนุษย์ (เช็คอินครบ 10 ปี) แต่ตัวเช็คจริงใช้ BMAIN → ไม่มีวันสำเร็จ =====
+// ร่างสัตว์: แสดงและนับเควสหลักชุดสัตว์ (BMAIN) ทุกจุดที่อ่าน MAINQ · sync s.main = s.bmain
+// ระบบเช็คอินไม่ได้ออกล่า → บทที่ 2 เปลี่ยนเป็น "กลับมานอนรังเดิมครบ 30 ปี" แทนล่า 25 ครั้ง
+{const _t=BMAIN[1];BMAIN[1]=[()=>(S.sys&&S.sys.t==='checkin')?'กลับมานอนรังเดิมเช็คอินครบ 30 ปี':_t[0](),()=>(S.sys&&S.sys.t==='checkin')?(S.age-(S.sys.since||0)>=30||(S.bKill||0)>=25):_t[1]()]}
+{const _bl=()=>BMAIN.map(x=>[x[0](),x[1]]);
+ for(const k of Object.keys(MAINQ)){const o=MAINQ[k];Object.defineProperty(MAINQ,k,{configurable:true,enumerable:true,get(){try{if(bsB()&&S.sys){S.sys.main=S.sys.bmain|0;return _bl()}}catch(e){}return o},set(v){}})}}
+{const _bm=bmainCheck;bmainCheck=function(){const r=_bm.apply(this,arguments);try{if(S&&S.sys)S.sys.main=S.sys.bmain|0}catch(e){}return r}}
 </script>
 </body>
 </html>
