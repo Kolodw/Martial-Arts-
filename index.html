@@ -23460,6 +23460,48 @@ function jadeW(t){if(typeof t!=='string'||!gJ())return t;return t.replace(/ต�
    choice('💠 ศาลแลกเทวสภา',`คุณขนเงินจากโลกเซียนติดตัวมาด้วย${bk||iv?' (รวมเงินฝากและเงินลงทุนที่ถอนออกมา)':''} — ที่นี่ใช้ซื้ออะไรไม่ได้เลย<br>เจ้าหน้าที่เทวสภายอมรับแลกเป็น${JADE_N} แต่หักค่าธรรมเนียมเก้าในสิบ`,[
     {t:`💠 แลกเป็น${JADE_N}`,s:`ได้ ${fmtJ(q)} ${JADE_N} (10% ของมูลค่า)`,f(){S.money+=q;log(`💠 แลกเงินโลกเซียนได้ <b>${fmtJ(q)} ${JADE_N}</b> — เจ้าหน้าที่ยิ้มกว้างกว่าคุณ`,'good')}},
     {t:'🙏 ถวายให้ศาลเทพแดนล่าง',s:'ไม่ได้เงิน · กรรมดีและชื่อเสียง',f(){S.karma+=Math.min(60,10+Math.round(Math.log10(tot+1)*4));S.fame+=Math.min(3000,Math.round(Math.log10(tot+1)*120));log('🙏 คุณโปรยเงินจากโลกเซียนทั้งหมดลงไปยังศาลเจ้าในแดนล่าง ชาวบ้านเล่าขานว่ามีฝนสมบัติตกกลางลานวัด','epic')}}])};setTimeout(ask,600)}}catch(e){console.error(e)}return r}}
+
+// ===================== v17.10 📖 เน้นเนื้อเรื่อง · เลือกภาคเอง · โควต้าภาคต่อชีวิต =====================
+// murim_story: 0 = ปิด · 1 = ปกติ · 2 = เน้นเนื้อเรื่อง (ภาคเริ่มบ่อยขึ้น พักสั้นลง เพดานต่อชีวิตสูงขึ้น)
+function storyFocus(){return +LS.get('murim_story',1)===2}
+function saCap(){const x=!!(S&&S.xian);return storyFocus()?(x?12:5):(x?7:3)}
+function saStartArc(D,manual){const N={id:D.id,ch:0,at:S.age,v:{},nm:{},h:{}};D.init(N);S.sarc=N;log(`📖 <b>ภาคใหม่เริ่มต้น${manual?' (เลือกเอง)':''}: ${D.ic} ${D.n}</b>`,'myth',true);try{D.ch[0](N)}catch(e){console.error(e);S.sarc=null}}
+// เหตุผลที่ภาคนี้ยังเริ่มไม่ได้ (อ่านจากเงื่อนไขของภาค)
+let _saSrc=null;function saCSrc(D){try{if(!_saSrc){_saSrc={};const tx=[...document.scripts].map(x=>x.text||'').join('\n');const re=/\{id:'(\w+)',ic:'[^']*',n:'[^']*',c:(\(\)=>[^\n]*?),\s*(?:init|ch|end|hint|w)\b/g;let m;while((m=re.exec(tx)))if(!_saSrc[m[1]])_saSrc[m[1]]=m[2]}}catch(e){}return (_saSrc&&_saSrc[D.id])||String(D.c)}
+function saWhy(D){try{const src=saCSrc(D),r=[];
+ if(/saBeast\(\)/.test(src)&&!/!saBeast\(\)/.test(src))r.push('ต้องเกิดเป็นสัตว์');
+ if(/saG\(\)|S\.xt\b(?!\s*\))/.test(src)&&!/!S\.xt/.test(src))r.push('เฉพาะแดนเทพ');else if(/saX\(\)|S\.xian&&!S\.xt/.test(src))r.push('เฉพาะโลกเซียน');else if(/!S\.xian/.test(src))r.push('เฉพาะยุทธภพ');
+ const a1=src.match(/S\.age>=(\d+)/),a2=src.match(/S\.age<=(\d+)/);if(a1||a2)r.push(`อายุ ${a1?a1[1]:'0'}${a2?'–'+a2[1]:'+'} ปี`);
+ const pl=src.match(/saLast\('(\w+)'\)/);if(pl){const P=SA_ARCS.find(a=>a.id===pl[1]);r.push(`ต้องจบภาค「${P?P.n:pl[1]}」ก่อน (ชีวิตไหนก็ได้)`)}
+ if(/S\.spouse/.test(src))r.push('ต้องมีคู่ชีวิต');if(/children/.test(src))r.push('ต้องมีลูกอายุ 12 ปีขึ้นไป');if(/chOn\('hell'\)/.test(src))r.push('โหมดนรก');if(/S\.ch==='short'/.test(src))r.push('โหมดชีวิตสั้น');
+ const lg=src.match(/loreGot\(\)\)\.length>=(\d+)/);if(lg)r.push(`ค้นพบตำนานบรรพกาล ${lg[1]} ชิ้น`);const ri=src.match(/realmIdx\(\)>=(\d+)/);if(ri)r.push(`ระดับพลัง ${gRN(+ri[1])} ขึ้นไป`);
+ if(/saPeer\(\)/.test(src))r.push('ต้องมีคู่ปรับที่เกิดพร้อมกันยังมีชีวิต');if(/!S\.ownSect/.test(src))r.push('ยังไม่ได้ก่อตั้งสำนักเอง');if(/murim_legacy/.test(src))r.push('ต้องมีชีวิตก่อนหน้าที่จบไปแล้ว');
+ return r.length?r.join(' · '):'เงื่อนไขของภาคยังไม่ตรงในตอนนี้'}catch(e){return 'เงื่อนไขยังไม่ตรง'}}
+function saCanStart(D){if(!S||!S.alive)return'ต้องอยู่ในเกม';if(!storyOn())return'ปิดเนื้อเรื่องอยู่';if(!saOK())return'ตอนนี้เริ่มภาคไม่ได้';if(S.sarc)return'มีภาคที่กำลังดำเนินอยู่';
+ if((S.arcN||0)>=saCap())return`ชีวิตนี้เล่นครบ ${saCap()} ภาคแล้ว`;if((S.arcDone||[]).some(x=>x.id===D.id))return'ชีวิตนี้เล่นภาคนี้ไปแล้ว';if(S.age<14)return'อายุ 14 ปีขึ้นไป';
+ let ok=false;try{ok=!!D.c()}catch(e){}return ok?'':saWhy(D)}
+function saPickGo(id){const D=SA_ARCS.find(a=>a.id===id);if(!D)return;const w=saCanStart(D);if(w)return toast(w);if(choice._cur)return toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');closeM();saStartArc(D,1);render()}
+// ตัวเริ่มภาคใหม่: ใช้แทนของเดิม (โควต้าตามโหมด · ข้ามเวลายาวนับโอกาสตามปีที่ผ่านไป) — บทถัดๆ ไปของภาคที่ค้างอยู่ยังใช้ของเดิม
+{const _stF=saTick;saTick=function(){try{if(!S||S.sarc||!saOK())return _stF.apply(this,arguments);
+ if(S._saY===S.age||choice._cur||modalOpen)return;
+ const la=S._saLA==null?S.age-1:S._saLA;S._saY=S.age;const dy=Math.max(1,S.age-la);S._saLA=S.age;
+ if((S.arcN||0)>=saCap()||S.age<(S.arcCd||0)||S.age<14)return;
+ const f=storyFocus(),p=1-Math.pow(1-(f?.4:.12),Math.min(dy,f?10:5));if(Math.random()>p)return;
+ const B=LS.get('murim_arcbook',{})||{},done=(S.arcDone||[]).map(x=>x.id);const pool=SA_ARCS.filter(a=>{if(done.includes(a.id))return false;try{return a.c()}catch(e){return false}});if(!pool.length)return;
+ pool.sort((x,y)=>Object.keys(B[x.id]||{}).length-Object.keys(B[y.id]||{}).length+(Math.random()-.5)*2);saStartArc(pool[0])}catch(e){console.error(e)}}}
+// ปีที่มีเหตุการณ์ค้าง ภาคใหม่เคยถูกข้ามทั้งปี → ลองเริ่มอีกครั้งหลังผู้เล่นตัดสินใจเสร็จ
+{const _crF=choiceRun;choiceRun=function(){const r=_crF.apply(this,arguments);try{if(S&&S.alive&&!S.sarc&&storyOn())setTimeout(()=>{try{if(S&&S.alive&&!S.sarc&&!choice._cur&&!modalOpen)saTick()}catch(e){}},400)}catch(e){}return r}}
+{const _seF=saEnd;saEnd=function(){const r=_seF.apply(this,arguments);try{if(S&&storyFocus())S.arcCd=S.age+R(2,4)}catch(e){}return r}}
+function storySet(v){LS.set('murim_story',v);toast(v===2?'📖 เน้นเนื้อเรื่อง — ภาคใหม่มาบ่อยขึ้น':v?'📖 เปิดเนื้อเรื่องแล้ว':'🚫 ปิดเนื้อเรื่อง — เล่นแบบปกติ (ภาคที่ค้างอยู่จะหยุดไว้ก่อน)');openArcBook()}
+{const _obF=openArcBook;openArcBook=function(){const r=_obF.apply(this,arguments);try{const m=$('modal'),mode=+LS.get('murim_story',1),bar=m.querySelector('.stbar');
+ if(bar){const br=bar.querySelector('.brow');if(br)br.outerHTML=`<div class="brow"><button class="${mode===2?'pbtn':'gbtn'}" onclick="storySet(2)">📖 เน้นเนื้อเรื่อง</button><button class="${mode===1?'pbtn':'gbtn'}" onclick="storySet(1)">📖 ปกติ</button><button class="${mode===0?'pbtn':'gbtn'}" onclick="storySet(0)">🚫 ปิด</button></div>`;
+  const pp=bar.querySelector('p.tag2');if(pp)pp.innerHTML=(mode===2?'ภาคใหม่เริ่มบ่อยขึ้นมาก พักระหว่างภาคสั้นลง และเล่นได้มากภาคขึ้นต่อชีวิต — หน้าต่างเนื้อเรื่องจะเด้งบ่อย':mode===1?'ภาคเรื่องราวจะเกิดขึ้นเองเป็นระยะระหว่างชีวิต':'ปิดอยู่ — ไม่มีภาคเรื่องราวใหม่ ภาคที่ค้างจะหยุดไว้จนกว่าจะเปิด')+' · ตั้งครั้งเดียวใช้ทุกชีวิต'}
+ const d=m.querySelector(':scope>p.tag2');if(d)d.innerHTML=d.innerHTML.replace(/ชีวิตละไม่เกิน 3 ภาค/,`ชีวิตละไม่เกิน ${saCap()} ภาค${S&&S.xian?' ในโลกเซียน/แดนเทพ':''}`);
+ if(S&&S.alive){const n=S.arcN||0,c=saCap();(bar||m.querySelector('h3')).insertAdjacentHTML('afterend',`<div class="sysq">📚 ชีวิตนี้เล่นไปแล้ว <b>${n}/${c}</b> ภาค${n>=c?' — <b>ครบแล้ว</b> ชีวิตนี้จะไม่มีภาคใหม่'+(mode!==2?' (โหมดเน้นเนื้อเรื่องเล่นได้ถึง '+(S.xian?12:5)+' ภาค)':''):S.sarc?' · มีภาคค้างอยู่':S.age<(S.arcCd||0)?` · ภาคถัดไปเริ่มได้ราวอายุ ${S.arcCd}`:''}</div>`)}
+ const ds=[...m.querySelectorAll('details.item')];SA_ARCS.forEach(D=>{const el=ds.find(x=>{const b=x.querySelector('summary b');return b&&b.textContent.trim()===(D.ic+' '+D.n)});if(!el||!S||!S.alive)return;const w=saCanStart(D),sm=el.querySelector('summary');
+  if(!sm||sm.querySelector('.saRd'))return;const done=(S.arcDone||[]).some(x=>x.id===D.id);
+  if(w)sm.insertAdjacentHTML('beforeend',`<div class="tag2 saRd" style="opacity:.75;margin-top:2px">${done?'✅':'🔒'} ${esc(w)}</div>`);
+  else{sm.insertAdjacentHTML('beforeend',' <span class="tag2 saRd" style="color:#5fd47a">▶ เริ่มได้</span>');sm.insertAdjacentHTML('afterend',`<button class="sysb" style="width:100%;margin:4px 0" onclick="saPickGo('${D.id}')">▶ เริ่มภาคนี้</button>`)}})}catch(e){console.error(e)}return r}}
 </script>
 </body>
 </html>
