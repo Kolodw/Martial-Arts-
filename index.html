@@ -3499,7 +3499,7 @@ let actCache='',actM=-1;
 function sceneCap(t){const m=curMon(),key=m+'|'+S.focus+'|'+S.age;if(key!==actM){actM=key;actCache=actNow()}const se=SEASONS[Math.floor(m/3)];return`${LOC[t]||''} · ${se[1]} ${MON_N[m]} · กำลัง: ${actCache}`}
 const YS_K=[['power','พลังยุทธ์',1],['qi','ลมปราณ',.1],['int','ปัญญา',1],['cha','เสน่ห์',1],['fame','ชื่อเสียง',1],['karma','กรรม',1],['money','ตำลึง',1]];
 function yearSum(){if(!S)return;const y=S._ys;if(y&&y.a===S.age-1){const f=ALLF.find(x=>x[0]===y.f)||['','','ใช้ชีวิต'];const parts=[];
-  for(const [k,n,min] of YS_K){const d=(S[k]||0)-(y[k]||0);if(Math.abs(d)>=min)parts.push(`${n} ${d>0?'+':''}${k==='qi'?(+d.toFixed(1)):fmt(Math.round(d))}`)}
+  for(const [k,n,min] of YS_K){if(k==='money'&&typeof bsB==='function'&&bsB())continue;const d=(S[k]||0)-(y[k]||0);if(Math.abs(d)>=min)parts.push(k==='money'&&typeof curW==='function'?`${curW()} ${d>0?'+':'−'}${fmtM(Math.abs(Math.round(d)))}`:`${n} ${d>0?'+':''}${k==='qi'?(+d.toFixed(1)):fmt(Math.round(d))}`)}
   if(parts.length){ensureHeader();addFeed('ev',`📊 สรุปปี: ${f[1]} ${f[2]} 12 เดือน · ${parts.join(' · ')}`,'sum')}}}
 function yearSnap(){S._ys={a:S.age,f:S.focus};for(const [k] of YS_K)S._ys[k]=S[k]||0}
 let crForce=null;
@@ -24684,6 +24684,12 @@ function rushFx(){try{const o0=$('ruOv');if(o0)o0.remove()}catch(e){}const o=doc
  try{sxYear()}catch(e){console.error(e)}
  for(const h of HIDQ){if(h.id==='poor'||h.id==='irony'||s.hid.includes(h.id))continue;let ok=false;try{ok=h.c()}catch(e){}if(!ok)continue;s.hid.push(h.id);sysReward(200,50,`🔓 ปลดล็อกเควสลับ: <b>${h.n}</b>`);break}
  if(!choice._cur&&!modalOpen)sxBranch()}}catch(e){console.error(e)}return r}}
+
+// ===== แก้บั๊กสัตว์อสูร (ตรวจรอบใหญ่) =====
+// 1) สัตว์ป่าได้เงินตำลึงทุกปี (จากศึก/รายได้/ระบบเจ้าสัว) แล้วขึ้นในสรุปปี → สัตว์ที่ยังไม่แปลงกายไม่ถือเงิน
+{const _pyBM=passYear;passYear=function(){const b=bsB(),m0=b?(+S.money||0):0;const r=_pyBM.apply(this,arguments);try{if(b&&S&&bsB()&&S.money>m0)S.money=m0}catch(e){}return r}}
+// 2) เควส "บำเพ็ญสู่ขั้นถัดไป" ออกตอนขั้น 4 ขึ้นไป ซึ่งต้องรอทางแยกระดับแสนปี — ทำไม่ทันใน 25–40 ปี จึงล้มเหลวซ้ำทุกรอบ
+QOK.bq_st=()=>bqSt()<Math.min(4,BL_ST.length-1);
 </script>
 </body>
 </html>
