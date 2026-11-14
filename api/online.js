@@ -1860,15 +1860,15 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     }
     // ---- ภัยพิบัติประจำสัปดาห์: ผู้เล่นทุกคนช่วยกันสะสมแต้ม ----
     const CAL_N = 5, calIdx = w => { let h = 7; for (const c of String(w)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h % CAL_N };
-    const calGoal = async () => { let g = +(await cmd('GET', 'calg:' + W)) || 0; if (!g) { const pw = week(new Date(now - 7 * 86400e3)), pt = +(await cmd('GET', 'calt:' + pw)) || 0; g = Math.max(400, Math.min(30000, Math.round((pt || 500) * 0.9 / 50) * 50)); await cmd('SET', 'calg:' + W, g, 'NX', 'EX', 86400 * 30); g = +(await cmd('GET', 'calg:' + W)) || g } return g };
+    const calGoal = async () => { let g = +(await cmd('GET', 'calg2:' + W)) || 0; if (!g) { const pw = week(new Date(now - 7 * 86400e3)), pt = +(await cmd('GET', 'calt:' + pw)) || 0; g = Math.max(120, Math.min(30000, Math.round((pt ? pt * 0.9 : 150) / 10) * 10)); await cmd('SET', 'calg2:' + W, g, 'NX', 'EX', 86400 * 30); g = +(await cmd('GET', 'calg2:' + W)) || g } return g };
     if (a === 'cal') {
       const goal = await calGoal(), pw = week(new Date(now - 7 * 86400e3));
-      const [tot, top, mine, cl, ptot, pg, ptop] = await pipe([['GET', 'calt:' + W], ['ZREVRANGE', 'calz:' + W, 0, 9, 'WITHSCORES'], okId(id) ? ['ZSCORE', 'calz:' + W, id] : ['GET', 'x:none'], okId(id) ? ['SISMEMBER', 'calr:' + W, id] : ['GET', 'x:none'], ['GET', 'calt:' + pw], ['GET', 'calg:' + pw], ['ZREVRANGE', 'calz:' + pw, 0, 2, 'WITHSCORES']]);
+      const [tot, top, mine, cl, ptot, pg, ptop, pg2, fd] = await pipe([['GET', 'calt:' + W], ['ZREVRANGE', 'calz:' + W, 0, 9, 'WITHSCORES'], okId(id) ? ['ZSCORE', 'calz:' + W, id] : ['GET', 'x:none'], okId(id) ? ['SISMEMBER', 'calr:' + W, id] : ['GET', 'x:none'], ['GET', 'calt:' + pw], ['GET', 'calg:' + pw], ['ZREVRANGE', 'calz:' + pw, 0, 2, 'WITHSCORES'], ['GET', 'calg2:' + pw], ['LRANGE', 'calf:' + W, 0, 11]]);
       const ids = []; for (let k = 0; k < (top || []).length; k += 2) ids.push(top[k]); for (let k = 0; k < (ptop || []).length; k += 2) ids.push(ptop[k]);
       const nm = ids.length ? await cmd('HMGET', 'calnm', ...ids) : [];
       const mk = (l, o) => { const r = []; for (let k = 0; k < (l || []).length; k += 2) r.push({ n: (nm && nm[o + k / 2]) || 'นิรนาม', s: +l[k + 1], me: l[k] === id ? 1 : 0 }); return r };
       const tl = (top || []).length / 2;
-      return res.json({ w: W, i: calIdx(W), tot: +tot || 0, goal, top: mk(top, 0), mine: +mine || 0, cl: cl ? 1 : 0, end: Math.max(0, (() => { const d = new Date(now + 7 * 3600e3), dw = (d.getUTCDay() + 6) % 7; return (7 - dw) * 86400e3 - (d.getUTCHours() * 3600e3 + d.getUTCMinutes() * 60e3) })()), prev: { i: calIdx(pw), tot: +ptot || 0, goal: +pg || 0, top: mk(ptop, tl) } });
+      return res.json({ w: W, i: calIdx(W), tot: +tot || 0, goal, top: mk(top, 0), mine: +mine || 0, cl: cl ? 1 : 0, end: Math.max(0, (() => { const d = new Date(now + 7 * 3600e3), dw = (d.getUTCDay() + 6) % 7; return (7 - dw) * 86400e3 - (d.getUTCHours() * 3600e3 + d.getUTCMinutes() * 60e3) })()), prev: { i: calIdx(pw), tot: +ptot || 0, goal: +pg2 || +pg || 0, top: mk(ptop, tl) }, feed: (fd || []).map(jp).filter(Boolean) });
     }
     if (a === 'calp') {
       if (!okId(id)) return res.json({ err: 'id' });
@@ -1878,7 +1878,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (used > 8) return res.json({ err: 'cap', used });
       if (await cmd('SISMEMBER', 'cheaters', id)) return res.json({ ok: 1, used });
       const n = noAdm(clean(b.n, 20)) || 'นิรนาม';
-      const [tot] = await pipe([['INCRBY', 'calt:' + W, v], ['ZINCRBY', 'calz:' + W, v, id], ['HSET', 'calnm', id, n], ['EXPIRE', 'calt:' + W, 86400 * 30], ['EXPIRE', 'calz:' + W, 86400 * 30]]);
+      const fk = ['fight', 'give', 'qi'].includes(b.k) ? b.k : 'give', fe = JSON.stringify({ n, k: fk, w: b.wn ? 1 : 0, v, t: now });
+      const [tot] = await pipe([['INCRBY', 'calt:' + W, v], ['ZINCRBY', 'calz:' + W, v, id], ['HSET', 'calnm', id, n], ['EXPIRE', 'calt:' + W, 86400 * 30], ['EXPIRE', 'calz:' + W, 86400 * 30], ['LPUSH', 'calf:' + W, fe], ['LTRIM', 'calf:' + W, 0, 19], ['EXPIRE', 'calf:' + W, 86400 * 10]]);
       return res.json({ ok: 1, tot: +tot || 0, used, goal: await calGoal() });
     }
     if (a === 'calc') {

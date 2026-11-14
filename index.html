@@ -22802,6 +22802,82 @@ try{SYS_GUIDE.push({s:'life',nw:1,ic:'🗺️',t:'เส้นทางชีว
  {s:'life',nw:1,ic:'🪦',t:'สุสานจอมยุทธ์',go:'openGraves',d:'ป้ายหลุมศพและคำอำลาสุดท้ายของผู้เล่นจริง · ไหว้ได้ปีละ 3 ป้าย ได้กรรมดีและความสุข ป้ายของยอดฝีมืออาจให้แรงบันดาลใจ'},
  {s:'life',nw:1,ic:'🏛️',t:'ดูแลแคว้นเบื้องล่าง',go:'openHeaven',d:'ในโลกเทพ รับดูแลแคว้นหนึ่งในยุทธภพ · ประทานพร ลงทัณฑ์ ส่งนิมิต และตอบคำขอของผู้คน · ศรัทธากับความรุ่งเรืองเพิ่มผู้ศรัทธาในแดนเทพทุกปี ดูแลดี 10 ปีได้ผลงานเลื่อนตำแหน่งเทวสภา · ถ้าแคว้นล่มจะถูกปลด'})}catch(e){}
 
+
+// ===================== v17.9b ภัยประจำสัปดาห์ v2: ฉากคือแถบความคืบหน้า · คำในโลกเกม · หลักไมล์ · ผลสะท้อนสัปดาห์หน้า =====================
+[{cd:'มารจะตีเมืองแตกในอีก',a:{fight:['ขึ้นกำแพงต้านมาร','ฟันทหารมารร่วงจากกำแพงไปหลายตน','ถูกทหารมารฟันบาดเจ็บ แต่ยังยืนเฝ้าประตูเมือง'],give:['ส่งเสบียงให้ทหาร','ขนเสบียงขึ้นกำแพงทั้งคืน'],qi:['ซ่อมค่ายกลกันเมือง','อัดปราณซ่อมค่ายกลจนหน้าซีด']},st:['กำแพงชั้นนอกตั้งรับได้','รอยร้าวบนกำแพงถูกอุด','ทัพมารเริ่มถอยร่น','รอยแยกฟ้าถูกผนึก'],win:'ทัพมารแตกพ่าย การค้าชายแดนกลับมาคึกคัก',fail:'เมืองชายแดนแตก ผู้อพยพทะลักเข้าเมือง โจรชุกชุม'},
+ {cd:'ข้าวในยุ้งจะหมดในอีก',a:{fight:['ไล่ล่าโจรปล้นยุ้งฉาง','ไล่ฟันโจรปล้นยุ้งจนแตกกระเจิง','ถูกโจรรุมจนต้องถอย แต่ยึดเกวียนข้าวคืนมาได้หนึ่งคัน'],give:['แจกข้าวสาร','แจกข้าวสารหน้าวัดจนเกลี้ยงกระสอบ'],qi:['เรียกเมฆด้วยลมปราณ','นั่งสมาธิเรียกเมฆบนยอดเขาสามวันสามคืน']},st:['โรงทานเปิดได้ทุกหมู่บ้าน','บ่อน้ำเริ่มมีน้ำซึม','ฝนแรกตกลงมา','ทุ่งนากลับมาเขียว'],win:'ฝนตกต้องตามฤดู ข้าวถูกลงทั่วแผ่นดิน',fail:'ข้าวยากหมากแพง ชาวบ้านอดอยาก ราคาของขึ้น'},
+ {cd:'โรคจะลามทั้งเมืองในอีก',a:{fight:['ตามล่าหมอผีปล่อยพิษ','ตามล่าหมอผีจนเจอรังปล่อยพิษ','โดนพิษของหมอผีจนต้องพักฟื้น'],give:['ซื้อยาแจกชาวบ้าน','ขนยาสมุนไพรแจกตามตรอกซอย'],qi:['ขับพิษด้วยลมปราณ','ใช้ปราณขับพิษให้เด็กๆ ทีละคน']},st:['โรงหมอสนามตั้งขึ้นแล้ว','คนป่วยใหม่ลดลง','หมอกพิษเริ่มจาง','โคมทุกบ้านกลับมาสว่าง'],win:'โรคหายขาด ผู้คนแข็งแรงและมีความสุข',fail:'โรคลามต่อ ผู้คนป่วยออดแอด เมืองเงียบเหงา'},
+ {cd:'มังกรจะถึงหุบเขาในอีก',a:{fight:['บุกถ้ำมังกร','ฟันเกล็ดมังกรหลุดไปหลายแผ่น','ถูกเปลวไฟมังกรเผาจนผมไหม้'],give:['สร้างหน้าไม้ยักษ์','ออกเงินสร้างหน้าไม้ยักษ์บนหน้าผา'],qi:['ผนึกเกล็ดมังกรด้วยปราณ','วาดยันต์ผนึกบนเกล็ดมังกร']},st:['หมู่บ้านอพยพทัน','หน้าไม้ยักษ์ตั้งบนหน้าผา','มังกรเจ็บจนบินช้าลง','มังกรหลับใหลอีกพันปี'],win:'มังกรหลับลง เกล็ดที่หลุดกลายเป็นสมบัติของชาวบ้าน',fail:'หุบเขาถูกเผาราบ ผู้คนหวาดกลัว ค้าขายซบเซา'},
+ {cd:'น้ำจะถึงเมืองหลวงในอีก',a:{fight:['ปราบปีศาจน้ำวน','ดำลงไปฟันปีศาจน้ำวนจนน้ำนิ่ง','ถูกน้ำวนดูดจนเกือบจมแต่ว่ายรอดมาได้'],give:['ขนกระสอบทรายอุดเขื่อน','ขนกระสอบทรายอุดเขื่อนจนมือแตก'],qi:['ใช้ปราณกั้นน้ำ','ยืนกลางกระแสน้ำ ใช้ปราณผลักน้ำกลับ']},st:['หลังคาบ้านเริ่มโผล่พ้นน้ำ','ถนนสายหลักแห้งแล้ว','ชาวบ้านกลับเข้าบ้าน','เขื่อนใหม่สร้างเสร็จ'],win:'ดินหลังน้ำลดอุดม ข้าวงามทั่วลุ่มน้ำ',fail:'ไร่นาจมน้ำ ข้าวแพง ผู้คนไร้บ้าน'}].forEach((x,i)=>Object.assign(CAL[i],x));
+const CALM=[[.25,'joy'],[.5,'money'],[.75,'pow']];
+function calLerp(a,b,t){const h=s=>[1,3,5].map(k=>parseInt(s.slice(k,k+2),16));const A=h(a),B=h(b);return'rgb('+A.map((v,k)=>Math.round(v+(B[k]-v)*t)).join(',')+')'}
+function calDraw(c,i,p,tk){const W=160,H=80;p=Math.max(0,Math.min(1,p));const R0=(x,y,w,h,col)=>{c.fillStyle=col;c.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))};
+ const house=(x,gy,lit,col)=>{R0(x,gy-12,14,12,col||'#8a6a4a');c.fillStyle='#5a2a2a';c.beginPath();c.moveTo(x-2,gy-12);c.lineTo(x+7,gy-19);c.lineTo(x+16,gy-12);c.fill();R0(x+5,gy-6,4,6,'#3a2a1a');R0(x+10,gy-10,3,3,lit?'#ffd860':'#2a2030');if(lit){c.fillStyle='rgba(255,216,96,.25)';c.fillRect(x+7,gy-13,9,9)}};
+ if(i===4){R0(0,0,W,H,calLerp('#4a5260','#8fc4e8',p));if(p>.8){c.fillStyle='rgba(255,230,120,'+(p-.8)*4+')';c.beginPath();c.arc(135,14,7,0,7);c.fill()}
+  R0(0,62,W,18,'#5a7a3a');[8,30,52,78,100,124,144].forEach((x,k)=>house(x,62,p>.5&&k%2==0));
+  const wl=26+p*44;if(wl<80){const g=c.createLinearGradient(0,wl,0,80);g.addColorStop(0,'rgba(90,120,150,.92)');g.addColorStop(1,'rgba(50,70,100,.96)');c.fillStyle=g;c.fillRect(0,wl,W,80-wl);c.fillStyle='rgba(220,235,255,.6)';for(let x=0;x<W;x+=12){const o=Math.sin(tk/300+x)*2;c.fillRect((x+tk/40)%W,wl+1+o,6,1)}
+   R0((tk/25)%W,wl-1,5,2,'#6a4a2a')}}
+ else if(i===0){R0(0,0,W,H,calLerp('#5a1a1a','#7aa8d0',p));R0(0,64,W,16,'#4a4030');R0(0,22,40,42,'#7a7a80');for(let x=0;x<40;x+=8)R0(x,18,5,4,'#7a7a80');R0(14,44,10,20,'#3a2a20');
+  c.strokeStyle='#2a2a30';c.lineWidth=1;const cr=Math.round((1-p)*5);for(let k=0;k<cr;k++){c.beginPath();const x=6+k*7;c.moveTo(x,26);c.lineTo(x+3,34);c.lineTo(x,40);c.stroke()}
+  if(p<.98){c.fillStyle='rgba(120,0,40,'+(.5-p*.45)+')';c.fillRect(150,0,10,80)}
+  const n=Math.round((1-p)*14);for(let k=0;k<n;k++){const x=52+p*70+(k%7)*14+(k>6?6:0),y=56-(k>6?8:0)+Math.round(Math.sin(tk/200+k)*1);R0(x,y,5,8,'#a02030');R0(x,y-1,1,2,'#ffe0a0');R0(x+4,y-1,1,2,'#ffe0a0');R0(x+1,y+2,1,1,'#ffff60');R0(x+3,y+2,1,1,'#ffff60')}
+  R0(36,58+Math.sin(tk/250)*1,4,6,'#3060c0')}
+ else if(i===1){R0(0,0,W,H,calLerp('#e8c890','#9ac8e8',p));const sr=16-p*8;c.fillStyle=calLerp('#ff8020','#ffe080',p);c.beginPath();c.arc(130,16,sr,0,7);c.fill();
+  for(let k=0;k<Math.round(p*4);k++){const x=(20+k*35+tk/60)%180-20;R0(x,8+k%2*6,22,6,'rgba(250,250,255,.9)');R0(x+4,4+k%2*6,12,5,'rgba(250,250,255,.9)')}
+  if(p>.6)for(let k=0;k<20;k++)R0((k*13+tk/8)%W,(k*29+tk/3)%50+14,1,3,'rgba(120,160,220,.7)');
+  R0(0,44,W,36,calLerp('#a07a40','#5a9a3a',p));for(let r=0;r<4;r++)for(let x=4;x<W;x+=8){const hgt=Math.round(1+p*5);R0(x+r*2,50+r*8-hgt,2,hgt,calLerp('#7a5a30','#3a8a2a',p))}
+  if(p<.5){c.strokeStyle='rgba(90,60,30,.6)';for(let k=0;k<6;k++){c.beginPath();c.moveTo(10+k*25,56);c.lineTo(18+k*25,62);c.lineTo(14+k*25,70);c.stroke()}}}
+ else if(i===2){R0(0,0,W,H,'#1a1830');for(let k=0;k<18;k++)R0((k*37)%W,(k*17)%30,1,1,'rgba(255,255,255,.6)');c.fillStyle='#e8e0c0';c.beginPath();c.arc(20,14,6,0,7);c.fill();R0(0,64,W,16,'#2a2a3a');
+  const lit=Math.round(p*7);[6,28,50,72,94,116,138].forEach((x,k)=>house(x,64,k<lit,'#5a4a5a'));
+  const fa=(1-p)*.55;if(fa>.02){for(let k=0;k<5;k++){c.fillStyle='rgba(130,60,170,'+fa+')';const x=((k*50+tk/30)%220)-40;c.fillRect(x,46+k%3*5,60,8)}}}
+ else if(i===3){R0(0,0,W,H,calLerp('#4a2a2a','#8ab0d0',p));c.fillStyle=calLerp('#3a2a2a','#5a6a7a',p);c.beginPath();c.moveTo(0,80);c.lineTo(30,40);c.lineTo(55,62);c.lineTo(85,30);c.lineTo(120,64);c.lineTo(145,44);c.lineTo(160,58);c.lineTo(160,80);c.fill();
+  const sl=p>=1,col=sl?'#7a7a80':'#c03030';for(let k=0;k<16;k++){const x=40+k*5,y=24+Math.sin(k/2.2+(sl?0:tk/300))*6*(sl?.3:1);R0(x,y+(sl?20:0),6,5,col)}R0(118,(sl?44:22)+Math.sin(sl?0:tk/300)*2,8,7,col);R0(124,(sl?46:24),2,2,sl?'#555':'#ffe060');
+  if(!sl){const f=1-p;for(let k=0;k<Math.round(f*10);k++)R0(128+k*2+Math.random()*2,26+Math.random()*4-2,2,2,k%2?'#ffb020':'#ff5010')}
+  R0(30,4,100,4,'#2a1a1a');R0(31,5,98*(1-p),2,'#e03030');}
+}
+function calScene(cv,i,p){if(!cv)return;const c=cv.getContext('2d');c.imageSmoothingEnabled=false;let cur=0,t0=performance.now();const tgt=p;const loop=t=>{if(!cv.isConnected)return;cur+= (tgt-cur)*.06;calDraw(c,i,cur,t-t0);requestAnimationFrame(loop)};cur=Math.max(0,tgt-.12);requestAnimationFrame(loop)}
+function calRumor(f,E){const A=E.a[f.k]||E.a.give;const tx=f.k==='fight'?(f.w?A[1]:A[2]):A[1];return`<p style="margin:3px 0"><b>${esc(f.n)}</b> ${esc(tx)} <span class="tag2">${ago(f.t)}</span></p>`}
+function calDots(n){return'<span style="letter-spacing:1px;color:#e0a030">'+'●'.repeat(n)+'</span>'}
+function calOut(){const j=CAL_J;if(!j||!j.prev||!j.prev.goal)return null;const ok=j.prev.tot>=j.prev.goal,E=CAL[j.prev.i]||CAL[0];const o={w:j.w,ok,i:j.prev.i};LS.set('murim_calout',o);return{ok,E}}
+function calRender(){const j=CAL_J,el=$('calBox');if(!j||!el)return;const E=CAL[j.i]||CAL[0],p=j.tot/Math.max(1,j.goal),done=p>=1,d=Math.floor(j.end/86400e3),h=Math.floor(j.end%86400e3/3600e3);
+ const used=LS.get('murim_calu',{});const dk=new Date(Date.now()+7*3600e3).toISOString().slice(0,10),u=used.d===dk?used.n:0,left=Math.max(0,8-u);
+ const stI=Math.min(3,Math.floor(p*4)),stage=p<.25?'ยังไม่มีใครหยุดภัยนี้ได้':E.st[Math.min(3,Math.floor(p*4)-1)];
+ const M=LS.get('murim_calms',{});const got=M.w===j.w?M.g||[]:[];
+ const ms=[.25,.5,.75,1].map((m,k)=>{const on=p>=m;return`<div style="flex:1;text-align:center;opacity:${on?1:.45}"><div style="font-size:15px">${on?'✅':'⬜'}</div><div style="font-size:11px;line-height:1.2">${esc(E.st[k])}</div></div>`}).join('');
+ const canM=CALM.filter(([m],k)=>p>=m&&!got.includes(k)&&j.mine>=1).length;
+ const act=(k,ic,s,n)=>{const main=E.b===k;return`<button class="opt" style="width:100%;text-align:left;margin:3px 0;${main?'border-color:#e0a030':''}" ${left&&S&&S.alive?'':'disabled'} onclick="calDo('${k}')">${ic} ${esc(E.a[k][0])} ${calDots(n+(main?1:0))}${main?' <small style="display:inline;color:#e0a030">งานหลักของภัยนี้</small>':''}<small>${s}</small></button>`};
+ const out=calOut();
+ el.className='';el.innerHTML=`<div style="position:relative;border-radius:10px;overflow:hidden;border:3px solid #2a2030;margin-bottom:6px"><canvas id="calCv" width="160" height="80" style="width:100%;display:block;image-rendering:pixelated"></canvas>
+  <div style="position:absolute;left:8px;top:6px;color:#fff;text-shadow:0 1px 0 #000,0 0 4px #000;font-weight:bold;font-size:16px">${E.ic} ${E.n}</div>
+  <div style="position:absolute;left:8px;bottom:6px;right:8px;color:#fff;text-shadow:0 1px 0 #000,0 0 4px #000;font-size:13px">${done?'✅ ทุกคนช่วยกันผ่านพ้นแล้ว':`⏳ ${E.cd} <b>${d} วัน ${h} ชม.</b>`}</div></div>
+  <p style="margin:4px 0"><b>${esc(stage)}</b></p><div style="display:flex;gap:4px;margin:6px 0 8px">${ms}</div>
+  ${canM?`<button class="pbtn" style="width:100%;margin:2px 0 6px" onclick="calMs()">🎁 รับของจากหลักไมล์ (${canM})</button>`:''}
+  ${done&&!j.cl&&j.mine>=6?`<button class="pbtn" style="width:100%;margin:2px 0 6px" onclick="calClaim()">🎁 รับรางวัลช่วยแผ่นดิน</button>`:''}
+  <p class="tag2" style="margin:6px 0 2px">แรงของคุณวันนี้ ${'💪'.repeat(Math.min(left,8))}${left?'':' หมดแล้ว — พรุ่งนี้มาใหม่'} · ช่วยไปแล้ว ${calDots(Math.min(j.mine,12))}${j.mine>12?' +'+(j.mine-12):''}</p>
+  ${act('fight','⚔️',`ดวลกับ${E.boss} · แพ้ก็ยังช่วยได้นิดหน่อย`,2)}${act('give','💰',`ใช้ ${wpMf(Math.round(600*W15()))}`,1)}${act('qi','🧘','ใช้พลังชีวิตตัวเองส่วนหนึ่ง',1)}
+  <h4 style="margin:10px 0 4px">📜 ข่าวลือจากแนวหน้า</h4>${(j.feed||[]).slice(0,6).map(f=>calRumor(f,E)).join('')||'<p class="tag2">ยังไม่มีใครออกไปช่วย — ข่าวลือแรกอาจเป็นชื่อคุณ</p>'}
+  ${(j.top||[]).length?`<p class="tag2" style="margin:8px 0 0">แนวหน้าสัปดาห์นี้: ${(j.top||[]).slice(0,3).map((x,i)=>['🥇','🥈','🥉'][i]+' '+esc(x.n)).join(' · ')}</p>`:''}
+  ${out?`<div class="item" style="margin-top:8px;border-left:4px solid ${out.ok?'#5cb85c':'#e04050'}"><b>${out.ok?'🌤️':'🌧️'} ผลจากสัปดาห์ก่อน (${out.E.ic} ${out.E.n})</b><p class="tag2" style="margin:2px 0">${out.ok?out.E.win:out.E.fail} — มีผลกับชีวิตคุณทั้งสัปดาห์นี้</p></div>`:''}
+  <details style="margin-top:8px"><summary class="tag2">ⓘ กติกา</summary><p class="tag2">ผู้เล่นทุกคนช่วยกัน วันละ 8 แรง · ครบแต่ละหลักไมล์ ฉากจะเปลี่ยนและคนที่เคยช่วยรับของได้ · ครบเป้า คนที่ช่วยรวม 6 ●ขึ้นไปรับรางวัลใหญ่ · <b>ถ้าผ่าน</b>: ${E.win} · <b>ถ้าไม่ผ่าน</b>: ${E.fail} (มีผลทั้งสัปดาห์ถัดไป) · เริ่มภัยใหม่ทุกวันจันทร์</p></details>`;
+ calScene($('calCv'),j.i,p)}
+async function calSend(v,k,wn){const E=CAL[CAL_J.i]||CAL[0];try{const j=await api('calp',{v,n:S.name,k,wn:wn?1:0});if(j.err==='cap')return toast('แรงวันนี้หมดแล้ว');if(j.err)return toast('ส่งไม่ได้ ลองใหม่');
+ const dk=new Date(Date.now()+7*3600e3).toISOString().slice(0,10);LS.set('murim_calu',{d:dk,n:j.used||0});const g=j.goal||CAL_J.goal,p0=CAL_J.tot/g;CAL_J.tot=j.tot;CAL_J.mine+=v;CAL_J.feed=[{n:S.name,k,w:wn?1:0,v,t:Date.now()}].concat(CAL_J.feed||[]);
+ const A=E.a[k];log(`${E.ic} คุณ${k==='fight'?(wn?A[1]:A[2]):A[1]}`,'good');const p1=j.tot/g,cross=[.25,.5,.75,1].find(m=>p0<m&&p1>=m);
+ try{if(cross)island({big:1,pri:1,ic:cross>=1?'🎉':E.ic,h:'ภัยประจำสัปดาห์',t:cross>=1?'ทุกคนช่วยกันผ่านพ้นแล้ว!':E.st[Math.round(cross*4)-1],d:cross>=1?'รับรางวัลได้ในหน้าภัยประจำสัปดาห์':'ฉากเปลี่ยนแล้ว · รับของจากหลักไมล์ได้',kind:cross>=1?'rainbow':'gold',ms:5000});else island({ic:E.ic,t:esc(A[0])+' '+'●'.repeat(v),kind:'ok',ms:2400})}catch(e){}
+ if($('calBox'))calRender();else openCal()}catch(e){toast('ส่งไม่ได้')}}
+function calDo(k){if(!CAL_J||!S||!S.alive)return;const E=CAL[CAL_J.i]||CAL[0],bx=E.b===k?1:0;
+ if(k==='give'){const c=Math.round(600*W15());if(S.money<c)return toast('เงินไม่พอ');S.money-=c;S.karma+=1;render();return calSend(1+bx,'give')}
+ if(k==='qi'){if(S.hp<S.maxHp*.3)return toast('พลังชีวิตต่ำเกินไป');S.hp-=Math.round(S.maxHp*.15);S.karma+=1;render();return calSend(1+bx,'qi')}
+ if(k==='fight'){if(S.hp<S.maxHp*.3)return toast('พลังชีวิตต่ำเกินไป');closeM();setTimeout(()=>duel(E.boss,Math.round(total()*(E.ic==='🐉'?1.1:.95)),w=>{if(!w)S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.2));render();calSend((w?2:1)+bx,'fight',w)}),200)}}
+function calMs(){const j=CAL_J;if(!j||!S||!S.alive||j.mine<1)return;const p=j.tot/Math.max(1,j.goal),M=LS.get('murim_calms',{});if(M.w!==j.w){M.w=j.w;M.g=[]}const E=CAL[j.i]||CAL[0];const msg=[];
+ CALM.forEach(([m,t],k)=>{if(p<m||M.g.includes(k))return;M.g.push(k);if(t==='joy'){joy(6);S.karma+=2;msg.push('ความสุข กรรมดี')}if(t==='money'){const v=Math.round(400*W15());S.money+=v;msg.push(wpMf(v))}if(t==='pow'){try{pctPow(.006)}catch(e){}msg.push('พลังเพิ่มขึ้น')}});
+ LS.set('murim_calms',M);log(`${E.ic} ชาวบ้านนำของมาขอบคุณคนที่ช่วยรับมือ${E.n} — ได้ ${msg.join(' · ')}`,'epic');sfx('good');render();calRender()}
+// ---- ผลสะท้อนจากสัปดาห์ก่อน: มีผลกับชีวิตตลอดสัปดาห์นี้ ----
+{const _pyO=passYear;passYear=function(){const r=_pyO.apply(this,arguments);try{if(!S||!S.alive||S.mw)return r;const o=LS.get('murim_calout',null);if(!o||!CAL_J||o.w!==CAL_J.w)return r;const E=CAL[o.i]||CAL[0];
+ if(!S._calOutT){S._calOutT=1;log(`${o.ok?'🌤️':'🌧️'} ${o.ok?E.win:E.fail}`,o.ok?'good':'bad')}
+ if(o.ok&&Math.random()<.12){const v=Math.round(150*W15());S.money+=v;joy(2);log(`🌤️ ผลจากที่ทุกคนช่วยกันรับมือ${E.n} — ${ch(['การค้าคึกคัก ขายของได้ดีกว่าทุกปี','ชาวบ้านนำของมาฝากด้วยความขอบคุณ','ข้าวของราคาถูกลง เก็บเงินได้มากขึ้น'])} (+${wpMf(v)})`,'good')}
+ if(!o.ok&&Math.random()<.12){const b=R(0,2);if(b===0){const v=Math.round(S.money*.05);S.money-=v;log(`🌧️ ผลพวงจาก${E.n}ที่ไม่มีใครหยุดได้ — ข้าวยากหมากแพง เสียเงินไป ${wpMf(v)}`,'bad')}else if(b===1){joy(-4);log(`🌧️ ผู้อพยพจาก${E.n}เต็มเมือง ทุกคนดูหม่นหมอง`,'bad')}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.08));log(`🌧️ โจรชุกชุมหลัง${E.n} คุณถูกดักปล้นกลางทาง`,'bad')}}}catch(e){}return r}}
+
 </script>
 </body>
 </html>
