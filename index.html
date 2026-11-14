@@ -22850,8 +22850,7 @@ function calRender(){const j=CAL_J,el=$('calBox');if(!j||!el)return;const E=CAL[
  const act=(k,ic,s,n)=>{const main=E.b===k;return`<button class="opt" style="width:100%;text-align:left;margin:3px 0;${main?'border-color:#e0a030':''}" ${left&&S&&S.alive?'':'disabled'} onclick="calDo('${k}')">${ic} ${esc(E.a[k][0])} ${calDots(n+(main?1:0))}${main?' <small style="display:inline;color:#e0a030">งานหลักของภัยนี้</small>':''}<small>${s}</small></button>`};
  const out=calOut();
  el.className='';el.innerHTML=`<div style="position:relative;border-radius:10px;overflow:hidden;border:3px solid #2a2030;margin-bottom:6px"><canvas id="calCv" width="160" height="80" style="width:100%;display:block;image-rendering:pixelated"></canvas>
-  <div style="position:absolute;left:8px;top:6px;color:#fff;text-shadow:0 1px 0 #000,0 0 4px #000;font-weight:bold;font-size:16px">${E.ic} ${E.n}</div>
-  <div style="position:absolute;left:8px;bottom:6px;right:8px;color:#fff;text-shadow:0 1px 0 #000,0 0 4px #000;font-size:13px">${done?'✅ ทุกคนช่วยกันผ่านพ้นแล้ว':`⏳ ${E.cd} <b>${d} วัน ${h} ชม.</b>`}</div></div>
+  <div style="background:#2a2030;color:#fff;padding:6px 10px"><div style="font-weight:bold;font-size:16px">${E.ic} ${E.n}</div><div style="font-size:13px;opacity:.9">${done?'✅ ทุกคนช่วยกันผ่านพ้นแล้ว':`⏳ ${E.cd} <b style="color:#ffcf5a">${d} วัน ${h} ชม.</b>`}</div></div></div>
   <p style="margin:4px 0"><b>${esc(stage)}</b></p><div style="display:flex;gap:4px;margin:6px 0 8px">${ms}</div>
   ${canM?`<button class="pbtn" style="width:100%;margin:2px 0 6px" onclick="calMs()">🎁 รับของจากหลักไมล์ (${canM})</button>`:''}
   ${done&&!j.cl&&j.mine>=6?`<button class="pbtn" style="width:100%;margin:2px 0 6px" onclick="calClaim()">🎁 รับรางวัลช่วยแผ่นดิน</button>`:''}
@@ -22879,6 +22878,53 @@ function calMs(){const j=CAL_J;if(!j||!S||!S.alive||j.mine<1)return;const p=j.to
  if(!S._calOutT){S._calOutT=1;log(`${o.ok?'🌤️':'🌧️'} ${o.ok?E.win:E.fail}`,o.ok?'good':'bad')}
  if(o.ok&&Math.random()<.12){const v=Math.round(150*W15());S.money+=v;joy(2);log(`🌤️ ผลจากที่ทุกคนช่วยกันรับมือ${E.n} — ${ch(['การค้าคึกคัก ขายของได้ดีกว่าทุกปี','ชาวบ้านนำของมาฝากด้วยความขอบคุณ','ข้าวของราคาถูกลง เก็บเงินได้มากขึ้น'])} (+${wpMf(v)})`,'good')}
  if(!o.ok&&Math.random()<.12){const b=R(0,2);if(b===0){const v=Math.round(S.money*.05);S.money-=v;log(`🌧️ ผลพวงจาก${E.n}ที่ไม่มีใครหยุดได้ — ข้าวยากหมากแพง เสียเงินไป ${wpMf(v)}`,'bad')}else if(b===1){joy(-4);log(`🌧️ ผู้อพยพจาก${E.n}เต็มเมือง ทุกคนดูหม่นหมอง`,'bad')}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.08));log(`🌧️ โจรชุกชุมหลัง${E.n} คุณถูกดักปล้นกลางทาง`,'bad')}}}catch(e){}return r}}
+
+
+// ===================== v17.9c ฉากภัยประจำสัปดาห์ วาดด้วยเครื่องมือเดียวกับฉากในเกม (P/person/house/tree/mountains) =====================
+function calSky(a,b){for(let y=0;y<SH;y++){const t=Math.min(1,y/46);P(0,y,SW,1,t<.5?a:(t<.55&&y%2)?a:b)}}
+function calMix(a,b,t){return pxMix(a,b,Math.max(0,Math.min(1,t)))}
+function calDraw(ctx,i,p,f){const g0=g,ps0=PS,f0=frame;try{g=ctx;PS=ctx.canvas.width/SW;frame=f;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;p=Math.max(0,Math.min(1,p));const Y=47;
+ const folk=(x,y,k,robe,pose,o)=>{const c=avatarCols(700+k*37,k%2?'หญิง':'ชาย');person(x,y,Object.assign({age:20+(k*13)%40,g:k%2?'หญิง':'ชาย',skin:c.skin,hair:c.hair,robe:robe||c.robe},o||{}),pose||'stand')};
+ if(i===4){// 🌊 น้ำท่วม: ระดับน้ำลดลงตามความคืบหน้า
+  calSky(calMix('#5a6270','#8fcaff',p),calMix('#8a929c','#d8f0ff',p));mountains(calMix('#6a7280','#9ab0c8',p),40,10,1);ground(1);
+  house(10,Y,24);house(42,Y,20,'#3a5a6a');tree(70,Y,1);house(108,Y,24);house(138,Y,18,'#3a5a6a');
+  const wt=Math.round(30+p*19);if(p<.5){folk(16,Y-17,1,null,'sit');folk(114,Y-17,2,null,'sit');folk(120,Y-17,3,null,'sit')}
+  if(wt<SH){for(let y=wt;y<SH;y++)P(0,y,SW,1,calMix('#6a8aa8','#3a5a7a',(y-wt)/14));for(let x=0;x<SW;x+=10)if((x+frame*2)%20<10)P((x+frame)%SW,wt+((x/10)%2),5,1,'#d8ecff');P((frame*.7)%(SW+10)-10,wt-1,6,2,'#7a5a3a');P((frame*.4+80)%(SW+10)-10,wt,3,1,'#a87a4a')}
+  if(p>=.25){P(84,Y-4,8,4,'#c8a878');P(84,Y-4,8,1,'#a88858');folk(96,Y,4,'#8a6a4a','walk');P(92,Y-12,5,3,'#c8a878')}
+  if(p>=.5)townsfolk(Y+2,2);if(p>=1){P(0,Y-2,SW,2,'#8a8a96');P(0,Y-3,SW,1,'#aaaab6')}}
+ else if(i===0){// 👹 มารบุก: ทัพมารถอย กำแพงถูกซ่อม
+  calSky(calMix('#3a0a14','#8fcaff',p),calMix('#8a2a2a','#d8f0ff',p));if(p<1){g.globalAlpha=1-p;P(120,0,40,12,'#1a0208');for(let k=0;k<6;k++)P(118+k*7,8+(k%2)*3,3,6,'#8a1a2a');g.globalAlpha=1}
+  mountains(calMix('#4a2a2a','#9ab0c8',p),40,10,4);ground(2,46,calMix('#5a4a3a','#7cc46a',p));
+  P(0,24,46,23,'#8a8a96');for(let x=0;x<46;x+=6)P(x,21,4,3,'#8a8a96');P(0,24,46,1,'#aaaab6');P(16,35,12,12,'#4a3020');P(16,35,12,1,'#2a1a10');
+  const cr=Math.round((1-p)*5);for(let k=0;k<cr;k++){const x=4+k*8;P(x,26,1,3,'#3a3a44');P(x+1,29,1,3,'#3a3a44');P(x,32,1,2,'#3a3a44')}
+  const def=1+Math.round(p*3);for(let k=0;k<def;k++)folk(6+k*10,24,k,'#3a5aa8','stand',{hat:'band',bandC:'#c8283a'});
+  const n=Math.round((1-p)*6);for(let k=0;k<n;k++){const x=70+p*50+k*13+Math.sin(frame*.3+k)*1;person(x,Y+(k%2),{age:30,g:'ชาย',skin:'#c89090',hair:'#7a0f2a',robe:'#3a0a14',trim:'#a01020',belt:'#a01020',hat:'mask',maskC:'#1a1a1a'},'walk')}
+  if(p<1&&frame%6<3){P(50+p*40,Y-8,4,1,'#ffe08a');P(56+p*40,Y-10,3,1,'#ffe08a')}}
+ else if(i===1){// 🌵 ฟ้าแล้ง: ทุ่งเขียว ฝนตก
+  calSky(calMix('#e8a050','#8fcaff',p),calMix('#ffe2a0','#d8f0ff',p));const sr=Math.round(7-p*3);pxDiscP(130,10,sr,calMix('#ff9a3a','#fff3b0',p));
+  for(let k=0;k<Math.round(p*3);k++){const cx=((k*55+frame*.5)%(SW+40))-30;P(cx,5+k*4,22,4,'#ffffffdd');P(cx+4,3+k*4,12,2,'#ffffffdd')}
+  mountains(calMix('#b89a70','#9ab0c8',p),40,9,2);ground(0,46,calMix('#c8a060','#7cc46a',p));
+  for(let r=0;r<4;r++){P(0,48+r*2,SW,1,calMix('#a8804a','#5a9a3a',p));for(let x=(r%2)*4;x<SW;x+=8){const h=Math.round(p*3);if(h)P(x,48+r*2-h,1,h,calMix('#8a6a3a','#3f9a4a',p))}}
+  if(p<.5){P(30,46,1,1,'#7a5a3a');P(31,47,1,1,'#7a5a3a');P(60,47,2,1,'#7a5a3a');P(100,46,1,2,'#7a5a3a')}
+  tree(14,Y,p<.5?2:1);house(124,Y,22);P(64,Y-6,6,6,'#8a6a4a');P(64,Y-6,6,1,'#5a4a3a');folk(78,Y,1,'#8a7a5a',p<.5?'stand':'walk',{hat:'straw'});
+  if(p>=.6)for(let k=0;k<26;k++){const x=(k*37+frame*2)%SW,y=(k*23+frame*5)%46;P(x,y,1,2,'#8ab4e8')}}
+ else if(i===2){// 🦠 โรคระบาด: โคมแต่ละบ้านกลับมาสว่าง
+  calSky('#0a0a22','#2a2a52');for(let k=0;k<20;k++)if((k+frame)%9)P((k*37)%SW,(k*13)%30,1,1,'#ffffffaa');pxDiscP(22,9,4,'#f4ecd0');
+  mountains('#1a1a32',40,8,3);ground(3,46,'#3a3a4a');const lit=Math.round(p*5);
+  [6,36,66,96,126].forEach((x,k)=>{P(x,Y-12,24,12,'#5a4a5a');P(x-3,Y-17,30,5,'#2a1a2a');P(x+10,Y-8,5,8,'#2a1a1a');P(x+3,Y-9,4,3,k<lit?'#ffd870':'#1a1420');if(k<lit){g.globalAlpha=.25;P(x+1,Y-11,8,7,'#ffd870');g.globalAlpha=1;lantern(x+20,Y-16)}});
+  const fa=(1-p)*.55;if(fa>.03){g.globalAlpha=fa;for(let k=0;k<4;k++)P(((k*50+frame*.6)%(SW+60))-50,36+(k%3)*4,50,5,'#8a3aaa');g.globalAlpha=1}
+  folk(58,Y+2,1,'#7ab88a','walk',{basket:1});if(p>=.5)folk(88,Y+2,2,'#e8e0c0','stand')}
+ else if(i===3){// 🐉 มังกรคลั่ง: แถบพลังมังกรลดลงจนหลับ
+  calSky(calMix('#5a2a2a','#8fcaff',p),calMix('#e8804a','#d8f0ff',p));mountains(calMix('#4a3030','#8aa0bc',p),44,22,0);mountains(calMix('#3a2424','#6a80a0',p),48,12,2);ground(2,48,calMix('#4a3a2a','#7cc46a',p));
+  const sl=p>=1,col=sl?'#6a6a72':'#c03030',dk=sl?'#4a4a52':'#801818';for(let k=0;k<18;k++){const x=36+k*5,y=(sl?34:16)+Math.sin(k/2.4+(sl?0:frame*.25))*(sl?1:4);P(x,y,6,4,col);P(x,y+3,6,1,dk);if(k%3===0)P(x+2,y-1,2,1,'#ffd040')}
+  const hx=126,hy=(sl?33:13)+Math.sin(18/2.4+(sl?0:frame*.25))*(sl?1:4);P(hx,hy,9,6,col);P(hx+7,hy+3,4,2,col);P(hx+2,hy-2,1,2,'#e8d8a8');P(hx+5,hy-2,1,2,'#e8d8a8');P(hx+5,hy+1,1,1,sl?'#3a3a3a':'#ffe060');
+  if(!sl){const fl=Math.round((1-p)*9);for(let k=0;k<fl;k++)P(hx+11+k*2,hy+4+((k+frame)%3)-1,2,2,k%2?'#ffb020':'#ff5010')}
+  else if(frame%10<5){P(hx+10,hy-4,1,1,'#fff');P(hx+12,hy-7,2,1,'#fff')}
+  for(let k=0;k<1+Math.round(p*2);k++)folk(20+k*14,Y+3,k,'#5a6a8a','stand',{hat:'band',bandC:'#5a3a22'});
+  P(40,2,80,3,'#1a0a0a');P(41,3,Math.round(78*(1-p)),1,'#e03030')}
+ }catch(e){console.error(e)}finally{g=g0;PS=ps0;frame=f0;try{ctx.setTransform(1,0,0,1,0,0)}catch(e){}}}
+function pxDiscP(cx,cy,r,col){for(let y=-r;y<=r;y++){const w=Math.floor(Math.sqrt(r*r-y*y));P(cx-w,cy+y,w*2+1,1,col)}}
+function calScene(cv,i,p){if(!cv)return;cv.width=SW*6;cv.height=SH*6;const c=cv.getContext('2d');let cur=Math.max(0,p-.12),f=0,lt=0;const loop=t=>{if(!cv.isConnected)return;requestAnimationFrame(loop);if(t-lt<110)return;lt=t;f++;cur+=(p-cur)*.15;if(Math.abs(p-cur)<.01)cur=p;calDraw(c,i,cur,f)};requestAnimationFrame(loop)}
 
 </script>
 </body>
