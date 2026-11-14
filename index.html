@@ -23979,6 +23979,13 @@ async function openLaws(){let l={};try{const j=await api('laws');l=(j&&j.l)||{}}
  if(ECO_W()==='g')M.insertAdjacentHTML('beforeend',`<button class="gbtn" style="width:100%;margin-top:8px" onclick="openLaws()">⚖️ ผู้ครองกฎทั้ง 8 สายของเซิร์ฟ</button>`);
  M.insertAdjacentHTML('beforeend',`<p class="tag2" style="margin-top:8px">ระดับวิชา: ${AMN.slice(0,AM_TOP+1).join(' → ')}<br>4 ขั้นแรกเลื่อนเองตามเวลา · จากนั้นต้องทะลวงด่านติดขั้น</p>`)}catch(e){console.error(e)}return r}}
 
+
+// ===================== v17.12.1 🐛 ขึ้นโลกใหม่แล้วตายด้วยวัยชราทันที =====================
+// สาเหตุ: อายุขัยส่วนหนึ่งมาจากขั้นพลัง (LIFE_B) พอขึ้นโลกใหม่พลังถูกนับใหม่ อายุขัยสูงสุดเลยร่วงต่ำกว่าอายุปัจจุบัน (โหมดนรกยิ่งหนักเพราะไฟนรกหักอายุขัยเพิ่ม)
+// แก้: หลังขึ้นโลกเซียน/โลกเทพ รับประกันว่าเหลืออายุขัยอย่างน้อย 60 / 100 ปี
+function ascLifeGuard(buf){if(!S||!S.alive)return;let n=0;while(lifeMax()<S.age+buf&&n++<40){S.lifespan+=Math.ceil(S.age+buf-lifeMax())+5}}
+{const _axL=ascendToX;ascendToX=function(){const r=_axL.apply(this,arguments);try{ascLifeGuard(60)}catch(e){console.error(e)}return r}}
+{const _agL=ascendGod;ascendGod=function(){const r=_agL.apply(this,arguments);try{ascLifeGuard(100)}catch(e){console.error(e)}return r}}
 </script>
 </body>
 </html>
