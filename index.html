@@ -3255,7 +3255,7 @@ function yearExtras(){festTick();eqTick();v43Tick();miniTick();if(S.age>=2&&Math
 function vib(ms){try{if(LS.get('murim_vib',1)&&navigator.vibrate)navigator.vibrate(ms)}catch(e){}}
 // ---- 7. อัลบั้ม ----
 function albumSnap(cap){if(!S||!S.alive)return;const a=S.album=S.album||[];if(a.length&&a[a.length-1].a===S.age)return;
- setTimeout(()=>{try{const cv=$('scene');if(!cv||!S||!S.alive)return;const sm=document.createElement('canvas');sm.width=240;sm.height=84;const sx=sm.getContext('2d');let u;if(sx){sx.imageSmoothingEnabled=false;sx.drawImage(cv,0,0,240,84);u=sm.toDataURL('image/webp',.6);if(!u||u.indexOf('image/webp')<0)u=sm.toDataURL('image/png')}else u=cv.toDataURL('image/png');if(!u||u.length<200)return;a.push({a:S.age,c:cap.replace(/<[^>]+>/g,'').slice(0,60),u});if(a.length>20)a.splice(1,1)}catch(e){}},450)}
+ setTimeout(()=>{try{const cv=$('scene');if(!cv||!S||!S.alive)return;const sm=document.createElement('canvas');sm.width=240;sm.height=84;const sx=sm.getContext('2d');let u;if(sx){sx.imageSmoothingEnabled=false;sx.drawImage(cv,0,0,240,84);u=sm.toDataURL('image/webp',.6);if(!u||u.indexOf('image/webp')<0){const j=sm.toDataURL('image/jpeg',.72),p=sm.toDataURL('image/png');u=j&&j.indexOf('image/jpeg')>=0&&j.length<p.length?j:p}}else u=cv.toDataURL('image/png');if(!u||u.length<200)return;a.push({a:S.age,c:cap.replace(/<[^>]+>/g,'').slice(0,60),u});if(a.length>20)a.splice(1,1)}catch(e){}},450)}
 function albumHTML(L){L=L||(S&&S.album)||[];if(!L.length)return '<p class="tag2">ยังไม่มีภาพในอัลบั้ม — ภาพจะถูกเก็บเองตอนเกิดเหตุการณ์สำคัญ</p>';
  return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">${L.map(p=>`<div style="border:2px solid var(--line);border-radius:6px;overflow:hidden;background:var(--w)"><img src="${p.u}" style="width:100%;image-rendering:pixelated;display:block"><div class="tag2" style="padding:3px 5px;font-size:11px;line-height:1.3"><b>${p.a} ปี</b> · ${esc(p.c)}</div></div>`).join('')}</div>`}
 // ---- 2. บันทึกชีวิตกลางเกม ----
@@ -3880,6 +3880,7 @@ function openSaveCode(){const c=S?saveCode():'';modal(`<button class="xbtn" oncl
 // ---------- 13) ออนไลน์ ----------
 const ONL_HOST=h=>/vercel\.app$|(^|\.)1inanovel\.com$/.test(h);const API=ONL_HOST(location.hostname)||location.hostname==='localhost'?'/api/online':'https://www.1inanovel.com/api/online';
 let onlineOK=false,onlineN=0,onlineLives=0,chatT=null,chatLast=0,chatMsgs=[];
+const _freshDev=(()=>{try{return localStorage.getItem('murim_pid')==null&&localStorage.getItem('murim_ctok')==null}catch(e){return false}})();
 const pid=(()=>{let v=LS.get('murim_pid','');if(!v){v=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);LS.set('murim_pid',v)}return v})();
 const pname=()=>LS.get('murim_pname','')||(S?S.name:'จอมยุทธ์นิรนาม');
 let _quotaUntil=0;
@@ -5215,7 +5216,7 @@ function tickScene(){
 function toggleScene(){showScene=!showScene;LS.set('murim_scene',showScene);tickScene();openMenu()}
 
 // ============ SAVE / LOAD ============
-function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;const d={t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION};let ok=LS.set(slotKey(S.slot),d);if(!ok){d.feed='';ok=LS.set(slotKey(S.slot),d)}if(!ok){if(!saveGame._warn){saveGame._warn=1;toast('⚠️ พื้นที่เก็บเซฟในเครื่องเต็ม — เกมนี้ยังไม่ถูกบันทึก ลองลบช่องเซฟเก่าหรือภาพในอัลบั้ม');try{log('⚠️ บันทึกเกมไม่สำเร็จ: พื้นที่เก็บข้อมูลของเบราว์เซอร์เต็ม — ลบช่องเซฟเก่าหรือภาพในอัลบั้มที่หน้าแรก แล้วเกมจะบันทึกต่อเอง','bad')}catch(e){}}}else saveGame._warn=0;try{cloudAuto()}catch(e){}}
+function saveGame(){if(!S||!S.alive)return;if(!S.slot)S.slot=1;const d={t:Date.now(),S:{...S,faction:S.faction?S.faction.n:null},peers:peers.map(p=>({...p,fac:p.fac?p.fac.n:null})),cfg:CFG,feed:$('feed').innerHTML,headerAge,v:VERSION};let ok=LS.set(slotKey(S.slot),d);if(!ok){d.feed='';ok=LS.set(slotKey(S.slot),d)}if(!ok&&Array.isArray(d.S.album)&&d.S.album.length>6){d.S.album=d.S.album.slice(-6);ok=LS.set(slotKey(S.slot),d);if(ok)S.album=d.S.album}if(!ok){if(!saveGame._warn){saveGame._warn=1;toast('⚠️ พื้นที่เก็บเซฟในเครื่องเต็ม — เกมนี้ยังไม่ถูกบันทึก ลองลบช่องเซฟเก่าหรือภาพในอัลบั้ม');try{log('⚠️ บันทึกเกมไม่สำเร็จ: พื้นที่เก็บข้อมูลของเบราว์เซอร์เต็ม — ลบช่องเซฟเก่าหรือภาพในอัลบั้มที่หน้าแรก แล้วเกมจะบันทึกต่อเอง','bad')}catch(e){}}}else saveGame._warn=0;try{cloudAuto()}catch(e){}}
 function clearSave(){if(S&&S.slot)LS.del(slotKey(S.slot))}
 function readSave(n=1){const ok=d=>d&&typeof d==='object'&&d.S&&typeof d.S==='object'&&d.S.name!=null&&Array.isArray(d.peers);const d=LS.get(slotKey(n),null);if(ok(d))return d;const b=LS.get(bakKey(n),null);return ok(b)&&b.S.alive!==false?b:null}
 function loadGame(n=1){
@@ -5542,7 +5543,7 @@ function arcDel(id){LS.set('murim_arc',arcList().filter(x=>x.id!==id));LS.del('m
 function openArchive(){const L=arcList();modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🗂️ คลังสำรอง</h3><p class="tag2">ชีวิตที่ถูกย้ายออกจากช่องเซฟ (ช่องเต็ม หรือกดลบ) จะเก็บไว้ที่นี่ ${ARC_MAX} ชีวิตล่าสุด · กดกู้คืนเพื่อเล่นต่อ</p>`+
  (L.length?L.map(a=>`<div class="item"><div class="h"><b>${esc(a.n)}${a.x?' ☁️':''}</b><span class="tag2">อายุ ${a.age} ปี</span></div><p class="tag2">${new Date(a.t).toLocaleString('th-TH')} · ${esc(a.why)}</p><div class="brow"><button class="pbtn" onclick="arcRestore('${a.id}')">↩️ กู้คืน</button><button class="gbtn" onclick="arcDel('${a.id}')">ลบถาวร</button></div></div>`).join(''):'<p class="tag2">ยังไม่มีชีวิตในคลังสำรอง</p>'),'archive')}
 // สำเนาต่อช่อง: เก็บสำเนาล่าสุดที่โหลดได้ไว้อีกชุด (ไม่รวมบันทึกฟีด) ทุก 3 ปีในเกม
-function bakTick(d){try{if(!S||!S.slot)return;const c=Object.assign({},d,{feed:''});if(LS.set(bakKey(S.slot),c))S._bakAge=S.age}catch(e){}}
+function bakTick(d){try{if(!S||!S.slot)return;const c=Object.assign({},d,{feed:''});if(c.S&&c.S.album)c.S=Object.assign({},c.S,{album:[]});if(LS.set(bakKey(S.slot),c))S._bakAge=S.age}catch(e){}}
 {const _sg=saveGame;saveGame=function(){const r=_sg.apply(this,arguments);try{if(S&&S.alive&&!saveGame._warn&&(S._bakAge==null||S.age-S._bakAge>=3||S.age<S._bakAge)){const d=LS.get(slotKey(S.slot),null);if(d)bakTick(d)}}catch(e){}return r}}
 {const _cs=clearSave;clearSave=function(){try{if(S&&S.slot)LS.del(bakKey(S.slot))}catch(e){}return _cs.apply(this,arguments)}}
 // ลบเอง = ย้ายไปคลังสำรอง (กู้คืนได้)
@@ -23240,6 +23241,33 @@ try{[['🗺️ เส้นทางชีวิตและขั้นต่�
  ['🧵 ด้ายแดงข้ามชาติ','คู่รักเดียว (แต่งงาน ความรัก 85+ อยู่กินกัน 15 ปี ไม่เคยเลิกรา/มีคนอื่น) ผูกด้ายแดงได้ที่ ครอบครัว → 🧵 · ชาติหน้าจะเจอเขาที่เกิดใหม่แต่จำคุณไม่ได้ · ปลุกความทรงจำหรือปล่อยวางได้เสมอ'],
  ['♾️ วัฏจักรกัลป์','อายุครบล้านปีในโลกเทพ จักรวาลจะดับ · เลือกของขึ้นเรือข้ามกัลป์ได้ 3 อย่าง · กัลป์ใหม่มีผู้รอดจากกัลป์ก่อนและต้องชิงกฎแห่งกัลป์ · ตั้งแต่กัลป์ที่ 4 บรรพกาลเทพเริ่มตามล่า เก็บเศษกฎดั้งเดิมครบ 3 ชิ้นเพื่อเลือกตอนจบที่กัลป์ที่เก้า'],
  ['🏝️ Dynamic Island','แจ้งเตือนรวมเป็นเกาะเดียว · แตะ 🏝️ เพื่อดูย้อนหลังและ ⚙️ ตั้งค่า: ตำแหน่ง บน/ล่าง/ลอย ขนาดตัวหนังสือ หน้าตา กรอบ แจ้งเตือนของเครื่อง เสียง']].forEach(x=>GUIDE.push(x))}catch(e){}
+
+// ============ กันเซฟหายบน Safari ============
+// Safari ลบ localStorage ทิ้งเมื่อใช้ Safari ครบ 7 วันโดยไม่ได้เข้าเว็บนี้ · พื้นที่เก็บของ Safari ก็เล็กกว่าเบราว์เซอร์อื่น
+// (1) กู้อัตโนมัติ: เซิร์ฟเวอร์ฝาก cookie (HttpOnly) ไว้ตอนเซฟคลาวด์ → เครื่องว่างเปล่าเมื่อไหร่ ถาม ?a=cme แล้วคืนตัวตนเดิมให้ แล้วเปิดหน้ากู้เซฟ
+(function(){
+ const hasLocal=()=>{try{return SLOTS.some(n=>!!readSave(n))||arcList().length>0}catch(e){return true}};
+ const ask=()=>{try{if(!LS.get('murim_cmeAsk',0))return;LS.del('murim_cmeAsk');if(S||hasLocal())return;openCloudRestore();toast('☁️ พบเซฟเก่าของเครื่องนี้บนเซิร์ฟเวอร์ — เลือกชีวิตที่จะกู้คืนได้เลย')}catch(e){}};
+ const check=async()=>{try{if(!_freshDev)return;let j=null;try{const r=await fetch(API+'?a=cme',{cache:'no-store',credentials:'same-origin'});if(!r.ok)return;j=await r.json()}catch(e){return}
+  if(!j||!j.p||!j.tk||!Array.isArray(j.l)||!j.l.length)return;if(j.p===pid)return;if(S||hasLocal())return;
+  LS.set('murim_pid',j.p);LS.set('murim_ctok',j.tk);LS.set('murim_cmeAsk',1);location.reload()}catch(e){}};
+ const go=()=>{setTimeout(ask,1200);setTimeout(check,800)};
+ if(document.readyState==='complete')go();else window.addEventListener('load',go);
+})();
+// (2) ขอให้เบราว์เซอร์เก็บข้อมูลแบบถาวร (Safari 17+/Chrome ไม่มีหน้าต่างถาม · ข้าม Firefox เดสก์ท็อปที่จะเด้งถาม)
+(function(){if(!(navigator.storage&&navigator.storage.persist)||/Firefox\//.test(navigator.userAgent||''))return;
+ const once=()=>{removeEventListener('pointerdown',once,true);try{navigator.storage.persisted().then(p=>p||navigator.storage.persist()).catch(()=>{})}catch(e){}};
+ addEventListener('pointerdown',once,true)})();
+// (3) ย่อภาพอัลบั้ม PNG เก่าในเซฟ (จากรุ่นก่อนที่ Safari บันทึกเป็น PNG) → JPEG ถ้าเล็กกว่า
+function albumShrink(){try{const a=S&&S.album;if(!Array.isArray(a))return;a.forEach(it=>{if(!it||typeof it.u!=='string'||it.u.indexOf('data:image/png')!==0||it.u.length<6000)return;
+ const im=new Image();im.onload=()=>{try{const c=document.createElement('canvas');c.width=im.width;c.height=im.height;const x=c.getContext('2d');if(!x)return;x.fillStyle='#000';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0);const j=c.toDataURL('image/jpeg',.72);if(j&&j.indexOf('image/jpeg')>=0&&j.length<it.u.length*.8)it.u=j}catch(e){}};im.src=it.u})}catch(e){}}
+{const _lgA=loadGame;loadGame=function(){const r=_lgA.apply(this,arguments);try{setTimeout(albumShrink,500)}catch(e){}return r}}
+// (4) เซฟไม่สำเร็จ → แถบเตือนค้างไว้จนกว่าจะเซฟได้ (เดิมเตือนครั้งเดียว ผู้เล่นไม่รู้ว่าเกมไม่ได้บันทึก)
+function saveFailBar(on){let e=document.getElementById('saveFailBar');if(!on){if(e)e.remove();return}if(e)return;e=document.createElement('div');e.id='saveFailBar';
+ e.style.cssText='position:fixed;left:0;right:0;top:0;z-index:2147482000;background:#7a1f1f;color:#fff;font:14px/1.45 system-ui,sans-serif;padding:8px 12px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.5)';
+ e.innerHTML='⚠️ <b>เกมยังไม่ได้บันทึก</b> — พื้นที่เก็บข้อมูลในเบราว์เซอร์เต็ม ลบช่องเซฟเก่า หรือย้ายเซฟไปเก็บที่ 🗂️ คลังสำรอง แล้วเกมจะบันทึกต่อเอง';document.body.appendChild(e)}
+{const _sgF=saveGame;saveGame=function(){const r=_sgF.apply(this,arguments);try{saveFailBar(!!saveGame._warn)}catch(e){}return r}}
+{const _ttF=toTitle;toTitle=function(){try{saveFailBar(false)}catch(e){}return _ttF.apply(this,arguments)}}
 </script>
 </body>
 </html>

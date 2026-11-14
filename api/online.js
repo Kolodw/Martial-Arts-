@@ -467,6 +467,7 @@ module.exports = async (req, res) => {
   let b = req.body || {};
   if (typeof b === 'string') { try { b = JSON.parse(b) } catch { b = {} } }
   const id = req.method === 'GET' ? qOf(req).id : b.id;
+  const id0 = id;
   const now = Date.now(), W = week();
   // ฐานข้อมูลเต็มโควตา: ตอบทันทีโดยไม่ยิงซ้ำ (ยกเว้นหน้าผู้ดูแลที่ต้องเห็นสถานะ)
   if (QUOTA_AT && now - QUOTA_AT < 120e3 && a !== 'admin' && a !== 'kvdiag') return res.status(503).json({ err: 'quota' });
@@ -941,10 +942,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       try { const seen = new Set(h.map(x => x.i)); for (const v of ((await cmd('LRANGE', 'chat', 0, 199)) || [])) { const m = JSON.parse(v); if (m.k === 'ann' && !seen.has(m.i)) { seen.add(m.i); h.push({ i: m.i, t: m.t, x: String(m.x || '').replace(/^@everyone\s*/i, ''), poll: m.poll }) } } h.sort((p1, p2) => p2.t - p1.t) } catch {}
       return res.json({ l: h.map(x => ({ i: x.i, t: x.t, x: String(x.x || '').slice(0, 120), poll: Array.isArray(x.poll) ? x.poll.length : 0, cur: !!(cur && cur.i === x.i) })) });
     }
-    if (a === 'clist') {
-      // รายการเซฟบนคลาวด์ของเครื่องนี้ (ต้องมี token ของเครื่อง)
+    if (a === 'clist' || a === 'cme') {
+      // clist: รายการเซฟบนคลาวด์ของเครื่องนี้ (ต้องมี token ของเครื่อง)
+      // cme: เหมือน clist แต่อ่าน id/token จาก cookie ที่เซิร์ฟเวอร์ฝากไว้ตอน csave — ใช้กู้เซฟเมื่อ Safari ลบ localStorage ทิ้ง (กฎ 7 วันของ ITP ไม่ลบ cookie ที่ตั้งจากเซิร์ฟเวอร์)
+      let id = id0, tk = String(qOf(req).tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
+      if (a === 'cme') { const m = /(?:^|;\s*)mc=([a-z0-9]{6,24})\.([a-z0-9]{8,20})(?:;|$)/.exec(String(req.headers.cookie || '')); if (!m) return res.json({ l: [] }); id = m[1]; tk = m[2] }
       if (!okId(id)) return res.json({ l: [] });
-      const tk = String(qOf(req).tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
       const keys = ['cs2:' + id, ...[1, 2, 3, 4, 5].map(n => 'cs3:' + id + ':' + n)];
       const [tok, ...vals0] = await pipe([['GET', 'ctok:' + id], ...keys.map(k => ['GET', k])]);
       if (!tok || tok !== tk) return res.json({ l: [] });
@@ -953,6 +956,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const out = [], seen = new Set();
       vals.forEach((v, i) => { if (!v) return; const m = meta(v); if (!m) return; const sig = m.n + '|' + m.seed + '|' + m.age; if (seen.has(sig)) return; seen.add(sig); out.push({ k: i ? 's' + i : 'cs2', sl: i || 0, n: m.n, age: m.age, x: m.x, t: m.t }) });
       out.sort((a1, b1) => b1.t - a1.t);
+      if (a === 'cme') { res.setHeader('Cache-Control', 'no-store'); return res.json({ l: out, p: id, tk }) }
       return res.json({ l: out });
     }
     if (a === 'cload') {
@@ -1206,6 +1210,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const sl = Math.max(1, Math.min(5, parseInt(b.sl, 10) || 1));
       await pipe([['DEL', 'cs2:' + id], ['DEL', 'cs3:' + id + ':' + sl]]);
       await pipe([['SET', 'cs3:' + id + ':' + sl, zPack(saveTrim(d)), 'EX', 86400 * 90], ['SET', 'cs2:' + id, '@' + sl, 'EX', 86400 * 90], ['EXPIRE', 'ctok:' + id, 86400 * 90]]);
+      // ฝาก id/token ไว้ใน cookie ที่ตั้งจากเซิร์ฟเวอร์ (HttpOnly) — Safari ลบ localStorage ทิ้งหลังไม่ได้เข้าเว็บ 7 วัน แต่ cookie นี้อยู่ต่อ ใช้กู้เซฟผ่าน ?a=cme
+      if (okId(id)) res.setHeader('Set-Cookie', 'mc=' + id + '.' + tk + '; Path=/api; Max-Age=' + 86400 * 90 + '; HttpOnly; Secure; SameSite=Lax');
       return res.json({ ok: 1 });
     }
     if (a === 'profile') {
