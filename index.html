@@ -23158,6 +23158,17 @@ function openKalpa(){const K=kK();if(!K)return toast('ยังไม่ถึ�
 {const _omK=openMenu;openMenu=function(){const r=_omK.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g&&S&&S.kalpa&&!g.querySelector('.klB'))g.insertAdjacentHTML('afterbegin',`<button class="opt klB" onclick="openKalpa()">♾️ วัฏจักรกัลป์<small>${KAL_N[S.kalpa.n]}</small></button>`)}catch(e){}return r}}
 try{SYS_GUIDE.push({s:'world',nw:1,ic:'♾️',t:'วัฏจักรกัลป์',go:'openKalpa',d:'อยู่ในโลกเทพจนอายุครบล้านปี (อย่ากดก้าวข้ามสามภพ เพราะชีวิตจะจบ) · ก่อนข้ามกัลป์เลือกของขึ้นเรือได้ 3 อย่าง · กัลป์ใหม่มีผู้รอดจากกัลป์ก่อน 1–3 ตน และต้องชิงกฎแห่งกัลป์ 3 ข้อ · บทบาท พันธมิตรที่สาบาน และกฎ ช่วยตอนฝ่าภัย · ตั้งแต่กัลป์ที่ 4 บรรพกาลเทพเริ่มตามล่า เก็บเศษกฎดั้งเดิมครบ 3 ชิ้นเพื่อเลือกชะตาที่กัลป์ที่เก้า · ชื่อผู้เล่นที่มาถึงแต่ละกัลป์ถูกสลักบนกำแพงกาล'})}catch(e){}
 
+// ===================== v17.9h ปิดยุคปัจจุบันเด็ดขาด — เข้าได้เฉพาะแอดมินที่เซิร์ฟเวอร์ยืนยันรหัสแล้ว =====================
+MW_PUBLIC=false;let _admV=null;
+async function admVerify(){const k=admK();if(!k){_admV=0;return}try{const j=await api('admchk&key='+encodeURIComponent(k));_admV=j&&j.ok?1:0}catch(e){_admV=_admV===1?1:0}}
+mwAllowed=function(){return !!MW_PUBLIC||(!!admK()&&_admV===1)};
+['mwEnter','mwAsk','mwHeirGo','mwRandNative'].forEach(fn=>{try{const o=window[fn];if(typeof o!=='function')return;window[fn]=function(){if(!mwAllowed()){toast('ยุคปัจจุบันปิดอยู่');return}return o.apply(this,arguments)}}catch(e){}});
+function mwEject(){try{if(!S||!S.alive||!S.mw||mwAllowed())return;if(typeof mwBackOK==='function'&&mwBackOK()){mwBack();log('🌀 รอยแยกสู่ยุคปัจจุบันถูกปิด — คุณถูกส่งกลับโลกเดิมพร้อมทุกอย่างที่มีก่อนจากมา','myth',true);return}
+ S.mw=null;S.xian=false;S.xt=0;CFG.xian=0;CFG.mw=0;try{setWorld(false)}catch(e){}log('🌀 รอยแยกสู่ยุคปัจจุบันถูกปิด — แรงดูดของมิติพาคุณมาเกิดใหม่ในยุทธภพ','myth',true);try{render()}catch(e){}}catch(e){console.error(e)}}
+function mwLockTick(){try{if(mwAllowed())return;if(typeof CFG!=='undefined'&&CFG.mw){CFG.mw=0;try{titleMode()}catch(e){}}document.querySelectorAll('.mwopt,.mwseg [data-v="2"]').forEach(b=>b.remove());mwEject()}catch(e){}}
+admVerify().then(mwLockTick);setInterval(mwLockTick,1500);
+{const _slMW=startLife;startLife=function(){try{if(!mwAllowed()&&typeof CFG!=='undefined')CFG.mw=0}catch(e){}const r=_slMW.apply(this,arguments);setTimeout(mwLockTick,100);return r}}
+
 </script>
 </body>
 </html>
