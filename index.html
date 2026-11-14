@@ -23879,6 +23879,106 @@ function evFlush(){if(!S||!S.alive||choice._cur||modalOpen||!EVQ.length)return;c
   const L=bodyLk(S.body),cs=bodyCs(S.body),cu=(S.body.cured||[]).map(k=>bodyTab(S.body.bt)[k]).filter(Boolean);const bits=[L.ic+' '+L.n].concat(cs.map(c=>c.ic+' '+c.n));
   ul.insertAdjacentHTML('beforeend',`<li>🧬 ร่างกาย: ${bits.join(' · ')}${cu.length?` · รักษาหายแล้ว: ${cu.map(c=>c.n).join(', ')}`:''}${S.body.acq?` · บาดเจ็บถาวร ${S.body.acq} ครั้ง`:''}</li>`)}catch(e){console.error(e)}return r}}
 
+
+// ===================== v17.12 📖 ระดับวิชา 7 ขั้น · ด่านติดขั้น · ชื่อระดับตามโลก · กฎแห่งแดนเทพ · วิชาข้ามกัลป์ =====================
+// ขั้น 0–3 เลื่อนเองเหมือนเดิม · ขั้น 4–6 ต้องผ่าน "ด่านติดขั้น" (ดวลปรมาจารย์ / ปิดด่าน / สู้เฉียดตาย / รู้แจ้งจากธรรมชาติ / หลอมด้วยหยกในแดนเทพ)
+const AMN_W={m:['ระดับต่ำ','ระดับกลาง','ระดับสูง','ระดับสุดยอด','บรรลุแก่นแท้','ไร้กระบวนท่า','สร้างวิชาใหม่'],
+ x:['ขั้นเริ่มต้น','สำเร็จเล็ก','สำเร็จใหญ่','สมบูรณ์','เจตนาวิชา','อาณาเขต','หยั่งรู้เต๋า'],
+ g:['เสี้ยวกฎ','ครึ่งกฎ','กฎสมบูรณ์','ควบคุมกฎ','หลอมกฎ','ผสานกฎ','จารึกกฎ']};
+const AM_TOP=6,AM_XREQ=[0,0,0,0,3,5,7],AM_JADE=[0,0,0,3,8,20],KPN=['','ร่องรอยกัลป์','สืบกัลป์','ข้ามกัลป์','อมตะไม่ดับสูญ'];
+AMX.push(4.4,6,8.5);AMY.push(20,35,55);
+function amnSync(){try{const L=AMN_W[ECO_W()]||AMN_W.m;for(let i=0;i<=AM_TOP;i++)AMN[i]=L[i]}catch(e){}}
+amnSync();
+artM=function(a){const lv=Math.max(0,Math.min(AM_TOP,(a&&a.lv)||0));return AMX[lv]*(1+.5*((a&&a.kp)|0))};
+function amLv(a){return Math.max(0,Math.min(AM_TOP,(a&&a.lv)||0))}
+function amSince(a){return S.age-(a.ly!=null?a.ly:(a.la||0))}
+function amReqOK(a){const t=amLv(a)+1;if(ECO_W()!=='x')return true;return realmIdx()>=AM_XREQ[t]}
+function amReqTxt(a){const t=amLv(a)+1;return ECO_W()==='x'&&!amReqOK(a)?`ต้องบำเพ็ญถึง${REALMS[AM_XREQ[t]]?REALMS[AM_XREQ[t]].n:'ขั้นที่สูงกว่านี้'}ก่อน วิชาถึงจะก้าวข้ามระดับการบำเพ็ญไม่ได้`:''}
+function amStuckL(){return(S.arts||[]).filter(a=>a&&typeof a==='object'&&a.stk)}
+const AM_NAT=['สายน้ำตกกระทบหินมาพันปีจนหินเป็นแอ่ง','ใบไม้ใบสุดท้ายของฤดูร่วงลงโดยไม่มีลมพัด','หิมะแรกของปีตกลงบนปลายกระบี่แล้วไม่ละลาย','มดแถวหนึ่งเดินอ้อมก้อนหินอย่างไม่รีบร้อน','พระจันทร์ลอยอยู่ในบ่อน้ำ ทั้งที่ไม่มีใครวางไว้ตรงนั้น','เด็กเลี้ยงควายเป่าขลุ่ยเพลงเดิมซ้ำทั้งบ่าย'];
+// ---- ทะลวงสำเร็จ ----
+function amBreak(a,how){if(!a||!S)return;const w=ECO_W(),t=amLv(a)+1;a.stk=0;a.sec=0;a.ft=0;
+ if(w==='x'&&t===4){ // ทัณฑ์วิชา
+  if(Math.random()>.7+Math.min(.15,(S.qi||0)/4000)){a.lv=Math.max(0,amLv(a)-1);a.ly=S.age;S.hp-=Math.round(S.maxHp*.25);log(`⚡ ${how} — แต่ทัณฑ์วิชาฟาดลงมาที่《${esc(a.n)}》โดยตรง ความเข้าใจแตกกระจาย ร่วงลงเป็น<b>${AMN[a.lv]}</b>`,'bad',true);render();return}
+  log(`⚡ ทัณฑ์วิชาเก้าสายฟาดลงที่《${esc(a.n)}》 — รับไว้ได้ทุกสาย`,'epic')}
+ a.lv=t;a.ly=S.age;S.fame+=[0,0,0,0,40,120,400][t]*(w==='g'?5:w==='x'?2:1);
+ log(`🌟 ${how} — 《${esc(a.n)}》เลื่อนเป็น<b>${AMN[t]}</b> พลังวิชา ×${AMX[t]}`,'myth',true);try{keyAdd(`《${a.n}》ถึง${AMN[t]}`)}catch(e){}try{sfx('realm')}catch(e){}
+ if(t===AM_TOP){const later=fn=>{const go=()=>{if(!S||!S.alive)return;if(choice._cur||modalOpen||(typeof DU!=='undefined'&&DU))return setTimeout(go,800);fn()};setTimeout(go,500)};if(w==='m')later(()=>amCreate(a));else if(w==='g')later(()=>lawClaim(a));else{S.qi+=5;log(`☯️ คุณมองเห็นเต๋าที่อยู่เบื้องหลัง《${esc(a.n)}》 — ปราณในกายไหลตามฟ้าดิน`,'myth')}}
+ render()}
+function amFail(a,why){a.ft=(a.ft||0)+1;log(`🔒 ${why} — 《${esc(a.n)}》ยังติดอยู่ที่${AMN[amLv(a)]}`,'bad')}
+// ---- เลือกวิธีทะลวง ----
+function amAsk(i){const a=typeof i==='number'?S.arts[i]:i;if(!a||!a.stk)return;try{closeM()}catch(e){}const w=ECO_W(),t=amLv(a)+1,low=S.hp<S.maxHp*.2,jc=(AM_JADE[amLv(a)]||0)*JADE;
+ const O=[];
+ if(!amReqOK(a))O.push({t:'⏳ รอบำเพ็ญให้ถึงก่อน',skip:true,f(){}});
+ else{
+  O.push({t:'⚔️ ดวลกับปรมาจารย์สายเดียวกัน',s:'ชนะ = ทะลวงทันที · แพ้ = บาดเจ็บหนัก',f(){const ep=total()*(1.05+Math.random()*.3);duel(w==='g'?'เทพผู้ครองกฎสายเดียวกัน':w==='x'?'เซียนผู้บรรลุวิชาเดียวกัน':'ปรมาจารย์วิชาเดียวกัน',ep,win=>{if(win)amBreak(a,'ชนะการดวลกับปรมาจารย์');else{S.hp-=Math.round(S.maxHp*.15);amFail(a,'แพ้การดวล')}})}});
+  if(!a.sec)O.push({t:'🧘 ปิดด่านเข้าฌาน',s:'3–8 ปี · สำเร็จ 75% · ระหว่างนั้นชื่อเสียงค่อยๆ จางหาย',f(){a.sec=S.age+R(3,8);log(`🧘 คุณปิดด่านเพื่อทะลวง《${esc(a.n)}》 — จะออกมาตอนอายุ ${fmt(a.sec)}`,'epic')}});
+  O.push({t:low?'🩸 ใช้วินาทีเฉียดตายทะลวง':'🩸 สู้เฉียดตาย (ต้องเลือดต่ำกว่า 20%)',s:low?'สำเร็จ 60% · พลาดอาจตาย':`ตอนนี้เลือด ${Math.round(S.hp/S.maxHp*100)}%`,f(){if(!low){toast('เลือดยังไม่ต่ำพอ');return}if(Math.random()<.6)amBreak(a,'ในวินาทีระหว่างความเป็นกับความตาย');else{S.hp-=Math.round(S.maxHp*.2);amFail(a,'ปราณย้อนกลับในวินาทีเฉียดตาย');checkDeath()}}});
+  if(w==='g'&&jc)O.push({t:`💎 หลอมด้วย${JADE_N} ${fmt(jc/JADE)} ก้อน`,s:'สำเร็จ 85% · พลาดเสียหยกครึ่งหนึ่ง',f(){if(S.money<jc){toast(JADE_N+'ไม่พอ');return}if(Math.random()<.85){S.money-=jc;amBreak(a,`หลอม${JADE_N}เข้ากับกฎ`)}else{S.money-=Math.round(jc/2);amFail(a,'หยกแตกกลางการหลอม')}}});
+  O.push({t:'🍃 ยังไม่รีบ รอวันรู้แจ้ง',s:'ทุกปีมีโอกาสรู้แจ้งเองจากธรรมชาติ',skip:true,f(){}});}
+ choice(`🔒 《${esc(a.n)}》ติดขั้น`,`วิชาถึง<b>${AMN[amLv(a)]}</b>แล้ว แต่ก้าวต่อไปสู่<b>${AMN[t]}</b> (พลังวิชา ×${AMX[t]}) ฝึกซ้ำอย่างเดียวไม่พอ${w==='x'&&t===4?'<br>⚡ ขึ้นเจตนาวิชาต้องรับ<b>ทัณฑ์วิชา</b> ถ้าไม่ผ่าน วิชาร่วงลงหนึ่งขั้น':''}${amReqTxt(a)?'<br><span class="tag2">'+amReqTxt(a)+'</span>':''}`,O)}
+function amYear(){if(!S||!S.alive||(S.beastMode&&!S.beastMode.human)||!S.arts)return;amnSync();
+ S.arts.forEach(a=>{if(!a||typeof a!=='object')return;const lv=amLv(a);
+  if(lv>=3&&lv<AM_TOP&&!a.stk&&amSince(a)>=AMY[lv]){a.stk=1;log(`🔒 《${esc(a.n)}》ติดขั้น — ฝึกต่อเฉยๆ ไม่ขึ้นแล้ว ต้องหาทางทะลวง <span class="tag2">(เปิดหน้าวิชาเพื่อเลือกวิธี)</span>`,'epic');if(!S._amAsk||S.age-S._amAsk>10){S._amAsk=S.age;evDefer(()=>{if(a.stk)amAsk(a)})}}
+  if(a.sec){S.fame=Math.max(0,Math.round(S.fame*.99));if(S.age>=a.sec){a.sec=0;if(Math.random()<.75)amBreak(a,'ออกจากการปิดด่าน');else amFail(a,'ปิดด่านครบกำหนดแต่ยังมองไม่เห็นทาง')}}});
+ const L=amStuckL().filter(a=>!a.sec&&amReqOK(a));if(L.length&&ECO_W()!=='g'&&Math.random()<.025){const a=ch(L);log(`🍃 คุณเห็น${ch(AM_NAT)}`,'');amBreak(a,'รู้แจ้งจากธรรมชาติ')}}
+{const _pyA=passYear;passYear=function(){const r=_pyA.apply(this,arguments);try{amYear()}catch(e){console.error(e)}return r}}
+// แพ้จนเลือดเหลือน้อย = โอกาสทะลวง
+{const _fgA=fight;fight=function(){const w=_fgA.apply(this,arguments);try{if(S&&S.alive&&S.hp>0&&S.hp<S.maxHp*.2){const L=amStuckL().filter(amReqOK);if(L.length&&Math.random()<.2)amBreak(ch(L),'ในวินาทีระหว่างความเป็นกับความตาย')}}catch(e){console.error(e)}return w}}
+// ---- ยุทธภพขั้นสุดท้าย: ตั้งชื่อวิชาเอง ----
+function amCreate(a){if(!a||a.made)return;a.made=1;const sug=(a.n.replace(/^(วิชา|คัมภีร์)/,'').slice(0,6))+ch(['ไร้นาม','พิชิตฟ้า','สะท้านปฐพี','จันทร์คืนเพ็ญ','หนึ่งเดียว']);
+ modal(`<h3>✍️ สร้างวิชาใหม่</h3><p>《${esc(a.n)}》ที่คุณฝึกมาทั้งชีวิตไม่เหลือเค้าเดิมแล้ว — มันกลายเป็นวิชาของคุณเอง ตั้งชื่อให้มัน</p><input id="amNm" maxlength="24" value="${esc(sug)}" style="width:100%;font:inherit;font-size:16px;padding:8px;border-radius:8px;box-sizing:border-box"><p class="tag2">วิชานี้จะเป็นมรดกให้ลูกหลาน และถูกจารึกในบันทึกชีวิต</p><button class="pbtn" style="width:100%" onclick="amCreateGo()">✍️ จารึกชื่อวิชา</button>`);window._amA=a}
+function amCreateGo(){const a=window._amA;if(!a)return closeM();let n=String(($('amNm')||{}).value||'').replace(/[<>《》"]/g,'').trim().slice(0,24);if(n.length<2)n=a.n;const old=a.n;a.n=n;a.own=1;a.b=Math.round(a.b*1.3);a.tier='✍️ วิชาที่สร้างเอง';closeM();
+ log(`✍️ 《${esc(old)}》ถูกหลอมจนเป็นวิชาใหม่ — ยุทธภพเรียกมันว่า <b>《${esc(n)}》</b>`,'myth',true);try{keyAdd(`สร้างวิชา《${n}》ขึ้นมาเอง`)}catch(e){}S.flags.amMade=(S.flags.amMade||0)+1;render()}
+// ---- โลกเซียน/แดนเทพ: ขึ้นโลกใหม่ ความเข้าใจวิชาเริ่มนับใหม่ (ลด 2 ขั้น) ----
+function amDrop(w){(S.arts||[]).forEach(a=>{if(a&&typeof a==='object'&&!a.kp){const o=amLv(a);a.lv=Math.max(0,o-2);a.stk=0;a.sec=0;a.ly=S.age}})}
+{const _ax=ascendToX;ascendToX=function(){try{if(S&&!S.xian)amDrop('x')}catch(e){}const r=_ax.apply(this,arguments);amnSync();try{if((S.arts||[]).length)log('📖 วิชาจากโลกมนุษย์ถูกนับใหม่ตามมาตรฐานโลกเซียน — ระดับสุดยอดที่นี่เป็นเพียง<b>สำเร็จเล็ก</b>','')}catch(e){}return r}}
+{const _ag=ascendGod;ascendGod=function(){try{if(S&&!S.xt)amDrop('g')}catch(e){}const r=_ag.apply(this,arguments);amnSync();try{if((S.arts||[]).length)log('⚖️ ในแดนเทพ วิชาไม่ใช่ท่าอีกต่อไป แต่คือ<b>กฎ</b>ของฟ้าดิน — ทุกวิชาเริ่มจาก<b>เสี้ยวกฎ</b>','')}catch(e){}return r}}
+{const _rnA=render;render=function(){amnSync();return _rnA.apply(this,arguments)}}
+// ---- ปุ่มพิเศษตอนดวล (ใช้ได้ครั้งเดียวต่อการดวล) ----
+function amTopArt(min){return(S.arts||[]).filter(a=>a&&amLv(a)>=min).sort((x,y)=>y.b*artM(y)-x.b*artM(x))[0]}
+function amDuelSkill(){const w=ECO_W(),a=amTopArt(w==='g'?4:5);if(!a)return null;return w==='x'?['🌐','ขยายอาณาเขต','ทุกอย่างในรัศมีเป็นของคุณ',a]:w==='g'?['⚖️','บังคับกฎ','ฟ้าดินเชื่อฟังกฎของคุณ',a]:['🌀','ไร้กระบวนท่า','ศัตรูอ่านท่าไม่ออกเพราะไม่มีท่า',a]}
+{const _dxb=duelXBtns;duelXBtns=function(){let h=_dxb.apply(this,arguments);try{const k=amDuelSkill();if(k&&!DU.amU)h=`<div class="mgrid" style="margin-top:8px"><button class="opt" style="grid-column:1/-1;border-color:#ffc23a" onclick="duelAct('amtop')">${k[0]} ${k[1]}<small>《${esc(k[3].n.slice(0,14))}》 · ${k[2]} · ครั้งเดียว</small></button></div>`+h}catch(e){}return h}}
+{const _dx=duelX;duelX=function(a,e,md,ed){if(a==='amtop'){const k=amDuelSkill();if(!k||DU.amU)return false;DU.amU=1;const w=ECO_W();
+  if(w==='x'){DU.en-=md*2.4;DU.me=Math.min(100,DU.me+15);DU._t=`🌐 อาณาเขตของ《${k[3].n}》แผ่คลุมสนาม — ศัตรูขยับตัวช้าลงเหมือนจมอยู่ในน้ำ`}
+  else if(w==='g'){DU.en-=md*3;DU._t=`⚖️ คุณประกาศกฎของ《${k[3].n}》 — การโจมตีของศัตรูถูกฟ้าดินลบทิ้งกลางอากาศ`}
+  else{DU.en-=md*1.9;DU._t=`🌀 《${k[3].n}》ไร้กระบวนท่า — ศัตรูตั้งรับผิดทางทุกครั้ง`}
+  try{sfx('rare')}catch(x){}return true}return _dx.apply(this,arguments)}}
+// ---- แดนเทพ: ผู้ครองกฎ (หนึ่งกฎ หนึ่งคน ทั้งเซิร์ฟเวอร์) ----
+const LAWS=[['blade','กฎคมดาบ','🗡️',/กระบี่|ดาบ|คม|ใบมีด|ทวน|หอก/],['fist','กฎหมัดฝ่ามือ','👊',/ฝ่ามือ|หมัด|นิ้ว|กรงเล็บ|เท้า/],['fire','กฎเพลิง','🔥',/ไฟ|เพลิง|ตะวัน|อาทิตย์|สุริยะ|แผดเผา/],['frost','กฎเยือกแข็ง','❄️',/น้ำ|หิมะ|น้ำแข็ง|จันทร์|เหมันต์|ธารา/],
+ ['thunder','กฎอัสนี','⚡',/สายฟ้า|อัสนี|ฟ้าผ่า|เหลย/],['wind','กฎวายุ','🌪️',/ลม|วายุ|เมฆ|เมฆา|นภา/],['death','กฎมรณะ','☠️',/พิษ|มาร|โลหิต|เงา|มรณะ|วิญญาณ|นรก/],['origin','กฎปฐมภูมิ','🌌',/./]];
+function lawOf(a){const n=String(a&&(a.n0||a.n)||'');return LAWS.find(L=>L[3].test(n))||LAWS[7]}
+async function lawClaim(a){if(!a)return;const L=lawOf(a);a.law=L[0];S.flags.lawEng=1;
+ log(`${L[2]} 《${esc(a.n)}》ถูกจารึกเป็น<b>${L[1]}</b>ลงในฟ้าดิน`,'myth',true);
+ if(typeof onlineOK==='undefined'||!onlineOK){log('⚖️ (ออฟไลน์ — ยังชิงตำแหน่งผู้ครองกฎทั้งเซิร์ฟไม่ได้)','');return}
+ let H=null;try{const j=await api('laws');H=j&&j.l&&j.l[L[0]]}catch(e){}
+ const send=async beat=>{try{const j=await api('lawclaim',{law:L[0],n:pname(),art:String(a.n).slice(0,30),pw:Math.round(total()),beat:beat||0});if(j&&j.ok){S.flags.lawHold=L[0];log(`⚖️ ทั้งเซิร์ฟเวอร์รับรู้แล้ว — คุณคือ<b>ผู้ครอง${L[1]}</b>`,'myth',true);keyAdd(`ผู้ครอง${L[1]}แห่งแดนเทพ`);render()}else if(j&&j.err==='beat')log('⚖️ ระหว่างนั้นมีคนอื่นชิงกฎไปก่อนแล้ว','bad')}catch(e){}};
+ if(!H||H.u===String(pid||'').slice(0,6))return send(0);
+ const go=()=>{if(choice._cur||modalOpen)return setTimeout(go,800);choice(`${L[2]} ${L[1]}มีเจ้าของแล้ว`,`<b>${esc(H.n)}</b> จารึก${L[1]}ไว้ก่อนด้วย《${esc(H.art||'')}》 · พลังรวมตอนจารึก ${fmt(H.pw||0)}<br>กฎหนึ่งสายมีเจ้าของได้คนเดียว ถ้าอยากได้ต้องดวลแย่ง`,
+  [{t:'⚔️ ท้าดวลชิงกฎ',f(){duel(`ผู้ครอง${L[1]} ${H.n}`,Math.max(+H.pw||0,total()*.8),win=>{if(win)send(H.t);else{S.hp-=Math.round(S.maxHp*.2);log(`⚖️ ${esc(H.n)}ยังครอง${L[1]}ต่อไป`,'bad')}})}},{t:'🙏 ยอมรับ ไว้ครั้งหน้า',skip:true,f(){}}])};go()}
+async function openLaws(){let l={};try{const j=await api('laws');l=(j&&j.l)||{}}catch(e){}
+ modal(`<button class="xbtn" onclick="openArts()">←</button><h3>⚖️ ผู้ครองกฎแห่งแดนเทพ</h3><p class="tag2">วิชาที่ถึงขั้น<b>จารึกกฎ</b>ในแดนเทพจะได้ครองกฎหนึ่งสาย · กฎหนึ่งสายมีเจ้าของได้คนเดียวทั้งเซิร์ฟ · คนอื่นต้องดวลแย่ง</p>`+
+  LAWS.map(L=>{const h=l[L[0]];return`<div class="item"><div class="h"><b>${L[2]} ${L[1]}</b><span class="tag2">${h?'ครองโดย':'ยังว่าง'}</span></div><p>${h?`<b>${esc(h.n)}</b> · 《${esc(h.art||'')}》 · พลังรวม ${fmt(h.pw||0)} <span class="tag2">· ${new Date(h.t).toLocaleDateString('th-TH')}</span>`:'<span class="tag2">ใครถึงจารึกกฎสายนี้ก่อนได้ครอง</span>'}</p></div>`}).join(''))}
+// ---- วัฏจักรกัลป์: วิชาที่ไม่ดับไปพร้อมจักรวาล ----
+{const _kw=kalpaWin;kalpaWin=function(){const r=_kw.apply(this,arguments);try{const a=(S.arts||[]).filter(x=>x&&typeof x==='object').sort((x,y)=>((y.kp|0)-(x.kp|0))||(y.b*artM(y)-x.b*artM(x)))[0];if(a&&(a.kp|0)<4){a.kp=(a.kp|0)+1;
+  log(`♾️ 《${esc(a.n)}》ไม่ดับไปพร้อมจักรวาลเก่า — กลายเป็น<b>${KPN[a.kp]}</b> พลังวิชา ×${(1+.5*a.kp).toFixed(1)}`,'myth',true);
+  if(a.kp>=3){LS.set('murim_kart',{n:a.n,r:a.r||0,b:a.b,kp:a.kp,by:S.name,t:Date.now()});log(`♾️ <b>${KPN[a.kp]}</b> — 《${esc(a.n)}》จะตามวิญญาณคุณไปทุกชาติหลังจากนี้ (อ่อนลงเหลือ ${a.kp>=4?20:10}%)`,'myth',true);keyAdd(`《${a.n}》กลายเป็นวิชา${KPN[a.kp]}`)}}}catch(e){console.error(e)}return r}}
+{const _slA=startLife;startLife=function(){const r=_slA.apply(this,arguments);try{amnSync();const K=LS.get('murim_kart',null);if(K&&S&&!S.custom&&!S.daily&&!(S.beastMode&&!S.beastMode.human)&&!(S.arts||[]).some(a=>a&&a.kart)){
+  Array.prototype.push.call(S.arts,{n:K.n,tier:'♾️ วิชา'+KPN[K.kp],r:K.r,b:Math.max(5,Math.round(K.b*(K.kp>=4?.2:.1))),lv:0,kp:K.kp,kart:1,la:S.age,ly:S.age});
+  log(`♾️ ตั้งแต่ลืมตา คุณรู้สึกถึงความทรงจำของวิชาที่ไม่ใช่ของชาตินี้ — 《${esc(K.n)}》 <span class="tag2">(${KPN[K.kp]} จาก ${esc(K.by||'ชาติก่อน')})</span>`,'myth')}}catch(e){console.error(e)}return r}}
+// ---- หน้าวิชา: แถบความคืบหน้า · สถานะติดขั้น · กฎ · กัลป์ ----
+{const _oaA=openArts;openArts=function(){const r=_oaA.apply(this,arguments);try{amnSync();const M=$('modal');if(!M)return r;const items=[...M.querySelectorAll('.item')];
+ (S.arts||[]).forEach((a,i)=>{if(!a||typeof a!=='object')return;const it=items.find(x=>{const b=x.querySelector('b');return b&&b.textContent.includes('《'+a.n+'》')});if(!it||it.querySelector('.amp'))return;
+  const lv=amLv(a);let h='';
+  if(lv>=AM_TOP)h=`<span class="tag2">✨ ถึงขั้นสูงสุดของโลกนี้แล้ว${a.law?' · '+(LAWS.find(L=>L[0]===a.law)||[])[2]+' '+(LAWS.find(L=>L[0]===a.law)||[])[1]:''}</span>`;
+  else if(a.sec)h=`<span class="tag2">🧘 กำลังปิดด่าน · ออกตอนอายุ ${fmt(a.sec)}</span>`;
+  else if(a.stk)h=`<button class="sysb" style="margin-top:4px;border-color:#ffc23a;color:#ffd060" onclick="amAsk(${i})">🔒 ติดขั้น — เลือกวิธีทะลวงสู่${AMN[lv+1]}</button>${amReqTxt(a)?`<div class="tag2">${amReqTxt(a)}</div>`:''}`;
+  else{const need=AMY[lv],p=Math.min(1,amSince(a)/need);h=`<div class="hpbar" style="height:6px;margin-top:4px"><i style="width:${Math.round(p*100)}%;background:${p>=1?'#ffc23a':'#7a9aff'}"></i></div><span class="tag2">${p>=1?(lv<3?'พร้อมเลื่อนขั้น — ขึ้นได้ทุกปีตามโอกาส (ฝึกยุทธ์/ลมปราณช่วยให้ไวขึ้น)':'ใกล้ติดขั้นแล้ว'):`อีกราว ${fmt(Math.max(1,Math.ceil(need-amSince(a))))} ปีถึงจะ${lv<3?'เริ่มลุ้นเลื่อนเป็น':'ติดขั้นก่อนก้าวสู่'}${AMN[lv+1]}`}</span>`}
+  if(a.kp)h=`<span class="tag2" style="color:#c0a0ff">♾️ ${KPN[a.kp]}</span> `+h;
+  it.insertAdjacentHTML('beforeend',`<div class="amp">${h}</div>`)});
+ if(ECO_W()==='g')M.insertAdjacentHTML('beforeend',`<button class="gbtn" style="width:100%;margin-top:8px" onclick="openLaws()">⚖️ ผู้ครองกฎทั้ง 8 สายของเซิร์ฟ</button>`);
+ M.insertAdjacentHTML('beforeend',`<p class="tag2" style="margin-top:8px">ระดับวิชา: ${AMN.slice(0,AM_TOP+1).join(' → ')}<br>4 ขั้นแรกเลื่อนเองตามเวลา · จากนั้นต้องทะลวงด่านติดขั้น</p>`)}catch(e){console.error(e)}return r}}
+
 </script>
 </body>
 </html>

@@ -1097,6 +1097,26 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const [cnt] = await pipe([['INCR', 'onecnt'], ['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199], ['LPUSH', 'oneh', JSON.stringify({ n, it, w, t: now })], ['LTRIM', 'oneh', 0, 49], ['SET', 'onex:' + id, 1, 'EX', 86400 * 60]]);
       return res.json({ ok: 1, cnt: +cnt || 0 });
     }
+    if (a === 'laws') {
+      // ⚖️ ผู้ครองกฎแห่งแดนเทพ — กฎหนึ่งสาย เจ้าของได้คนเดียวทั้งเซิร์ฟ
+      const h = (await cmd('HGETALL', 'law')) || [], l = {};
+      for (let i = 0; i < h.length; i += 2) { const v = jp(h[i + 1]); if (v) l[h[i]] = v }
+      return res.json({ l });
+    }
+    if (a === 'lawclaim') {
+      const LK = ['blade', 'fist', 'fire', 'frost', 'thunder', 'wind', 'death', 'origin'], LN = { blade: 'กฎคมดาบ', fist: 'กฎหมัดฝ่ามือ', fire: 'กฎเพลิง', frost: 'กฎเยือกแข็ง', thunder: 'กฎอัสนี', wind: 'กฎวายุ', death: 'กฎมรณะ', origin: 'กฎปฐมภูมิ' };
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
+      const k = String(b.law || ''); if (!LK.includes(k)) return res.status(400).json({ err: 'law' });
+      if (b.tp || await isBanned() || await cmd('SISMEMBER', 'cheaters', id)) return res.json({ ok: 0 });
+      if ((await cmd('SET', 'lawcd:' + id, 1, 'NX', 'EX', 300)) !== 'OK') return res.json({ ok: 0, err: 'cd' });
+      const cur = jp(await cmd('HGET', 'law', k)), u = id.slice(0, 6);
+      if (cur && cur.u !== u && String(b.beat || '') !== String(cur.t)) return res.json({ ok: 0, err: 'beat', cur });
+      const n = noAdm(clean(b.n, 20)) || 'นิรนาม', art = clean(b.art, 30) || '', pw = Math.max(0, Math.min(1e300, +b.pw || 0));
+      const v = { n, art, pw, t: now, u };
+      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: 'ฟ้าลิขิต', k: 'one', x: '⚖️ ' + n + ' ' + (cur && cur.u !== u ? 'ชิง' + LN[k] + 'จาก ' + cur.n + ' สำเร็จ' : 'จารึก' + LN[k] + 'ลงในฟ้าดิน') + ' ด้วย《' + art + '》' };
+      await pipe([['HSET', 'law', k, JSON.stringify(v)], ['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199]]);
+      return res.json({ ok: 1 });
+    }
     if (a === 'achfirst') {
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
       const aid = String(b.a || '').replace(/[^a-z0-9_]/g, '').slice(0, 24), n = noAdm(clean(b.n, 20)) || 'นิรนาม';
