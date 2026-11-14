@@ -1063,7 +1063,7 @@ function render(){
 }
 function toggleDetail(){detailOpen=!detailOpen;render()}
 function setFocus(f){S.focus=f;render()}
-function cycleSpeed(){const L=[1,2,4,8,16,0];speed=L[(L.indexOf(speed)+1)%L.length];render()}
+function cycleSpeed(){const L=[.5,1,2,4,8,16,0];speed=L[(L.indexOf(speed)+1)%L.length];render()}
 function togglePause(){paused=!paused;render()}
 function toggleAuto(){auto=!auto;render();toast(auto?'โหมดอัตโนมัติ: ชีวิตจะดำเนินไปเอง':'ปิดโหมดอัตโนมัติ')}
 function show(id){document.querySelectorAll('.screen').forEach(e=>e.classList.remove('on'));$(id).classList.add('on');window.scrollTo(0,0)}
@@ -14020,11 +14020,11 @@ function chLuck(){if(!S)return;if(S.chSysOK==null){S.chSysOK=chH()?(Math.random(
     {t:'🔥 เผาผลาญ!',s:'พลังทวีคูณ · หลังศึกจะเหลือเวลาแค่ปีเดียว',f(){S.lifespan=Math.min(S.lifespan,S.age+1);S._lsEx=0;const bak=S.power;S.power+=pvT()*1.5;duel('ยอดฝีมืออันดับหนึ่งแห่งแคว้น',ep,w=>{S.power=bak+Math.round((S.power-bak)*.15);if(w){S.flags.chBurnW=1;S.fame+=Math.round(fameR(150));log('🔥 <b>ชีวิตที่สั้นที่สุดกลายเป็นตำนานที่ยาวที่สุด</b> — คุณเผาอายุทั้งชีวิตแลกชัยชนะครั้งนี้','myth',true);keyAdd('เผาผลาญอายุขัยแลกชัยชนะ')}else log('🌅 แม้จะเผาทั้งชีวิตก็ยังไม่พอ — แต่ไม่มีใครลืมศึกนี้','bad',true);render()})}},
     {t:'🍃 ใช้เวลาที่เหลืออย่างสงบ',f(){joy(15)}}])}}
  // รากขยะ: โชคของขยะ · ความแค้น · ฝ่าขีดจำกัด
- if(chJ()){if(ri>ri0){const p=pctPow(.06);S.power+=p;S.flags.chJb=(S.flags.chJb||0)+1;log(`🗑️ <b>ฝ่าขีดจำกัดของรากขยะ!</b> คนที่บอกว่าคุณทำไม่ได้ต้องหุบปาก — พลัง +${fmt(p)}`,'epic',true)}
-  if((S.grudge||0)>=5){S.grudge=0;const p=pctPow(.12);S.power+=p;S.qi=+(S.qi+2).toFixed(1);S.flags.chJg=(S.flags.chJg||0)+1;log(`😤 <b>แรงฮึดจากความแค้น!</b> ทุกคำดูถูกกลายเป็นเชื้อเพลิง — พลัง +${fmt(p)} · ลมปราณ +2 ปี`,'myth',true)}
-  if(S.age>=8&&Math.random()<.06){const k=R(0,3);if(k===0){const a=newArt(Math.random()<.3?3:2);S.arts.push(a);log(`🕳️ <b>โชคของขยะ</b> — ตกหน้าผาแต่ไม่ตาย กลับพบถ้ำของยอดฝีมือในอดีต ได้${artHtml(a)}`,'myth',true)}
+ if(chJ()){if(ri>ri0){const p=pctPow(.02);S.power+=p;S.flags.chJb=(S.flags.chJb||0)+1;log(`🗑️ <b>ฝ่าขีดจำกัดของรากขยะ!</b> คนที่บอกว่าคุณทำไม่ได้ต้องหุบปาก — พลัง +${fmt(p)}`,'epic',true)}
+  if((S.grudge||0)>=5){S.grudge=0;const p=pctPow(.05);S.power+=p;S.qi=+(S.qi+2).toFixed(1);S.flags.chJg=(S.flags.chJg||0)+1;log(`😤 <b>แรงฮึดจากความแค้น!</b> ทุกคำดูถูกกลายเป็นเชื้อเพลิง — พลัง +${fmt(p)} · ลมปราณ +2 ปี`,'myth',true)}
+  if(S.age>=8&&Math.random()<.035){const k=R(0,3);if(k===0){const a=newArt(Math.random()<.3?3:2);S.arts.push(a);log(`🕳️ <b>โชคของขยะ</b> — ตกหน้าผาแต่ไม่ตาย กลับพบถ้ำของยอดฝีมือในอดีต ได้${artHtml(a)}`,'myth',true)}
    else if(k===1){S.qi=+(S.qi+4).toFixed(1);S.int+=5;log('🧓 <b>โชคของขยะ</b> — ชายชราขี้เมาที่คุณเลี้ยงข้าวคือยอดฝีมือเร้นกาย สอนลมปราณให้คืนหนึ่ง (ลมปราณ +4 · ปัญญา +5)','myth',true)}
-   else if(k===2){S.talent=Object.assign({},S.talent,{m:+Math.min(2.5,(S.talent.m||.5)+.08).toFixed(2)});log(`💊 <b>โชคของขยะ</b> — กลืนผลไม้ประหลาดที่ไม่มีใครกล้ากิน รากของคุณดีขึ้นเล็กน้อย (พรสวรรค์ ×${S.talent.m})`,'myth',true)}
+   else if(k===2){S.chJm0=S.chJm0||(S.talent.m||.5);S.talent=Object.assign({},S.talent,{m:+Math.min(S.chJm0+.3,(S.talent.m||.5)+.06).toFixed(2)});log(`💊 <b>โชคของขยะ</b> — กลืนผลไม้ประหลาดที่ไม่มีใครกล้ากิน รากของคุณดีขึ้นเล็กน้อย (พรสวรรค์ ×${S.talent.m})`,'myth',true)}
    else{S.grudge=(S.grudge||0)+2;log('🗣️ ศิษย์สำนักใหญ่หัวเราะเยาะกลางตลาด "รากขยะอย่างเจ้าฝึกไปก็เท่านั้น" — ความแค้น +2','bad')}}}
 }catch(e){console.error(e)}return r}}
 {const _fgC=fight;fight=function(name,ep){const w=_fgC.apply(this,arguments);try{if(!w&&chJ())S.grudge=(S.grudge||0)+1}catch(e){}return w}}
@@ -19306,14 +19306,14 @@ function rgEscapeOffer(){choice('🌅 ประตูนอกวงจร',`เ
  {t:'🌅 ก้าวผ่าน หลุดพ้นวงจร',s:'จบโหมดย้อนกาล · ได้รางวัลใหญ่',f(){const G=S.rg;G.free=1;S.flags.rgFree=1;S.fame+=500;S.int+=40;const a=newArt(4);Array.prototype.push.call(S.arts,a);lsAdd(50);keyAdd(`หลุดพ้นวงจรย้อนกาลหลังผ่านไป ${G.loop} รอบ`);log(`🌅 <b>หลุดพ้นวงจรแล้ว!</b> ใช้ไป ${G.loop} รอบ · ได้ ${artHtml(a)} · อายุขัย +50 · เพื่อนทั้ง 6 คนจำคุณได้เป็นครั้งแรก`,'myth',true);try{const B=LS.get('murim_rgbest',0);if(!B||G.loop<B)LS.set('murim_rgbest',G.loop)}catch(e){}try{setScene('aura')}catch(e){}}},
  {t:'⏳ ยังไม่ไป',s:'ประตูจะเปิดอีกครั้งเมื่อพร้อม',skip:true,f(){S.rg.offer=0;log('คุณหันหลังให้ประตู รอยร้าวบนฟ้าค่อยๆ ปิดลง')}}])}
 // ---------- ตาย → ย้อนกาล ----------
-function rgRegress(cause){const G=S.rg,old=S,oldAge=S.age,oldPow=total(),mem=(S.arts||[]).filter(a=>a&&typeof a==='object').slice().sort((a,b)=>(b.b||0)-(a.b||0)).slice(0,Math.min(3,1+Math.floor(G.loop/3))).map(a=>Object.assign({},a,{lv:Math.max(0,(a.lv|0)-1)}));
+function rgRegress(cause){const G=S.rg,old=S,oldAge=S.age,oldPow=total(),mem=(S.arts||[]).filter(a=>a&&typeof a==='object').slice().sort((a,b)=>(b.b||0)-(a.b||0)).slice(0,Math.min(3,1+Math.floor(G.loop/3))).map(a=>Object.assign({},a,{lv:Math.min(2,Math.max(0,(a.lv|0)-1)),stk:0,sec:0}));
  const gInt=Math.max(0,(S.int||0)-(G.int0||S.int||0));G.loop++;G.fat=Math.min(100,G.fat+(/วัยชรา/.test(cause)?1:2.5));G.peak=Math.max(G.peak||0,oldPow);G.awake=0;G.offer=0;
  if(G.fat>=100){log('💔 จิตของคุณแตกสลายหลังตายมานับครั้งไม่ถ้วน — ครั้งนี้ไม่มีการย้อนกลับอีกแล้ว','bad',true);G.free=1;S.flags.rgBroken=1;return false}
  let d=null;try{d=G.snap?LS.get(rgSnapKey(),null):null}catch(e){}
  if(d&&d.S){const fac=n=>n?FACTIONS.find(f=>f.n===n)||null:null;const slot=S.slot,lid=S._lid;S=Object.assign(baseState({}),JSON.parse(JSON.stringify(d.S)));S.slot=slot;S.flags=S.flags||{};S.faction=fac(S.faction);peers=d.peers.map(p=>({...p,fac:fac(p.fac)}));S.rg=G;if(lid)S._lid=lid}
  else{S.age=15;S.power=Math.round(S.power*.3)+50;S.faction=null;S.rank=0;S.merit=0;S.spouse=null;S.sp=null;S.children=[];S.kids=0;S.hp=S.maxHp}
  S.alive=true;S.deathCause=null;S.chronic=null;S.ch='regress';rgStartLoop();
- const pb=Math.round(Math.min(G.peak*.05,total()*2));S.power+=pb;S.int+=Math.round(gInt*.25)+5;mem.forEach(a=>{if(!S.arts.some(x=>x&&x.n===a.n))Array.prototype.push.call(S.arts,a)});G.int0=S.int;
+ const pb=Math.round(Math.min(G.peak*.05/(1+.4*Math.max(0,G.loop-2)),total()*.6));S.power+=pb;S.int+=Math.round(gInt*.25)+5;mem.forEach(a=>{if(!S.arts.some(x=>x&&x.n===a.n))Array.prototype.push.call(S.arts,a)});G.int0=S.int;
  try{acPrev=null}catch(e){}try{choice._cur=null;choice._q=[]}catch(e){}
  log(`🔁 <b>${esc(cause)}</b>… ความมืดกลืนทุกอย่าง แล้วคุณก็สะดุ้งตื่นในวันที่อายุ 15 ปีอีกครั้ง — <b>รอบที่ ${G.loop}</b><br>ความทรงจำติดตัวมา: วิชา ${mem.map(a=>artHtml(a)).join(' ')||'—'} · ปัญญา + · พลังกายจำได้ +${fmt(pb)} · จิตเหนื่อยล้า ${G.fat}/100`,'myth',true);
  try{keyAdd(`ตายตอนอายุ ${oldAge} (${cause}) แล้วย้อนกลับสู่อายุ 15 — รอบที่ ${G.loop}`)}catch(e){}try{setScene('portal')}catch(e){}try{rgFx()}catch(e){}setTimeout(()=>{try{acPrev=null;render()}catch(e){}},50);return true}
@@ -20186,7 +20186,7 @@ function qmBorn(){const last=LS.get('murim_lastcfg',null),LEN=[2500,5000,9000],c
  return{ic:'🎲',t:'เกิดใหม่',sub:`${CFG.xian?'☁️ เซียน':'🏯 ยุทธภพ'} · ${QM_CH[cm][1]}`,rows}}
 // ---------- ⏱️ ความเร็ว (การ์ดแบบเดียวกัน) ----------
 function spdPopOpen(){return null}
-function qmSpeed(){const L=[[1,'1×','ช้าสุด อ่านได้ทุกบรรทัด'],[2,'2×',''],[4,'4×',''],[8,'8×',''],[16,'16×','เร็วมาก'],[0,'⚡ อัตโนมัติ','ข้ามไปเร็วที่สุดเท่าที่ทำได้']];
+function qmSpeed(){const L=[[.5,'0.5×','ช้าสุด ค่อยๆ อ่าน'],[1,'1×','อ่านได้ทุกบรรทัด'],[2,'2×',''],[4,'4×',''],[8,'8×',''],[16,'16×','เร็วมาก'],[0,'⚡ อัตโนมัติ','ข้ามไปเร็วที่สุดเท่าที่ทำได้']];
  return{ic:'⏱️',t:'ความเร็วเวลา',sub:speed?speed+'×':'⚡A',rows:L.map(([v,t,s])=>({ic:speed===v?'✓':'',t,s,r:speed===v?'ตอนนี้':'',f:()=>{speed=v;try{render()}catch(e){}tuBuzz()}}))}}
 // ---------- ลากข้ามปุ่ม: การ์ดเปลี่ยนตามปุ่มที่นิ้วอยู่ ----------
 (()=>{document.addEventListener('pointermove',e=>{if(!QM.el||!QM.hold||e.pointerId!==QM.pid)return;const b=[...document.querySelectorAll(QM_SEL)].find(x=>{if(!x.offsetParent)return false;const r=x.getBoundingClientRect();return e.clientX>r.left+6&&e.clientX<r.right-6&&e.clientY>r.top+4&&e.clientY<r.bottom-4});if(!b||b===QM.btn||(b.matches(QM_FREE)!==QM.btn.matches(QM_FREE)))return;const mk=qmSpecFor(b);if(!mk)return;
@@ -22550,7 +22550,7 @@ function hlDoors(h){const n=h.lv+1;if(h.doors&&h.doors.n===n)return h.doors.d;co
  if(n%10===0||n===100)d=[{k:'boss'}];else{const W=(h.frc>0)?[['fight',70],['elite',30]]:[['fight',45],['elite',15],['altar',12],['event',15],['well',13]],pick=()=>{let t=r()*100;for(const [k,w] of W){if((t-=w)<=0)return k}return'fight'};d=[];for(let i=0;i<20&&d.length<3;i++){const k=pick();if(!d.some(x=>x.k===k))d.push({k})}if(!d.some(x=>x.k==='fight'||x.k==='elite'))d[0]={k:'fight'}}
  d.forEach((x,i)=>{if(x.k==='fight'||x.k==='elite'||x.k==='boss'){const ci=Math.max(0,hlCirc(n)),M=HL2.mob[Math.min(3,ci)]||HL2.mob[0];x.nm=x.k==='boss'?HL2.boss[n]:M[Math.floor(r()*M.length)];x.ru=hlRules(h,n+i*0.01,x.k!=='fight')}});
  h.doors={n,d};return d}
-function hlF(n){return .85*Math.pow(1.012,n-19)}
+function hlF(n){return .85*Math.pow(1.016,n-19)}
 function hlEp(h,x,n){const base=n===100?total():Math.max(h.bp||0,total()*.8);let m=hlF(n)*(1+(h.heat||0)/150);if(x.k==='elite')m*=1.2;if(x.k==='boss')m*=1.15;if(x.ru.includes('curse'))m*=1+.04*(h.cur||[]).length;if(x.ru.includes('heat'))m*=1+(h.heat||0)/100;m*=(_HL.wm().b||1);return Math.max(50,Math.round(base*m))}
 function hlTacM(h,x,t){let m=1;if(x.ru[0]==='shadow'){const u=h.use,ks=Object.keys(u).sort((a,b)=>u[b]-u[a]);if(t===ks[0]&&u[ks[0]]>u[ks[2]])m*=1.4;if(t===ks[2])m*=.72;return m}x.ru.forEach(k=>{const R=HL2.R[k];if(R[2]===t)m*=.8;else if(R[3]===t)m*=1.2});return m}
 function hlRuleTxt(h,x){if(x.ru[0]==='shadow'){const u=h.use,ks=Object.keys(u).sort((a,b)=>u[b]-u[a]);return`🪞 <b>เงาจำท่าของคุณ</b> — ท่าที่คุณใช้บ่อยที่สุดในนรก (${HL2.T[ks[0]][0]} ${u[ks[0]]} ครั้ง) จะถูกอ่านทะลุ · ท่าที่คุณใช้น้อยที่สุด (${HL2.T[ks[2]][0]}) เงาไม่เคยเห็น`}return x.ru.map(k=>`<b>${HL2.R[k][0]}</b> — ${HL2.R[k][1]}`).join('<br>')}
@@ -22560,13 +22560,13 @@ function openHell2(){const h=hl2();if(!h)return;hl2Init(h);const n=h.lv+1,ci=hlC
  const D=hlDoors(h),me=Math.max(1,total());
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>${C[3]} ${C[2]} · ชั้น ${h.lv}/100</h3>
  <div class="item"><p class="tag2" style="margin:0">🔥 แก่นนรก <b>${h.ess}</b> · คำสาป ${(h.cur||[]).length} · วิญญาณสำรอง ${h.rev||0} · พ่ายได้อีก ${Math.max(0,2-(h.fail||0))} ครั้ง</p>
- <div class="hpbar" style="height:8px;margin:6px 0 2px"><i style="width:${Math.min(100,h.heat||0)}%;background:linear-gradient(90deg,#ffb040,#ff3a1a)"></i></div><p class="tag2" style="margin:0">🌡️ ไฟกรรม ${Math.round(h.heat||0)}/100 — ผู้คุมแรงขึ้น ${Math.round((h.heat||0)/1.5)}% · ลดลงเองปีละ 4 · พักฟื้น บ่อน้ำ หรือแท่นบูชาลดได้</p></div>
+ <div class="hpbar" style="height:8px;margin:6px 0 2px"><i style="width:${Math.min(100,h.heat||0)}%;background:linear-gradient(90deg,#ffb040,#ff3a1a)"></i></div><p class="tag2" style="margin:0">🌡️ ไฟกรรม ${Math.round(h.heat||0)}/100 — ผู้คุมแรงขึ้น ${Math.round((h.heat||0)/1.5)}% · ลดลงเองปีละ 2 · พักฟื้น บ่อน้ำ หรือแท่นบูชาลดได้</p></div>
  <h4 style="margin:10px 0 4px">${n%10===0?'👹 ประตูบอสวงนรก — หนีไม่ได้':'🚪 เลือกประตู 1 บาน'} ${wait?`<span class="tag2">(ลงได้อีกใน ${wait} ปี — ใช้เวลาฝึกก่อน)</span>`:''}</h4>
  ${D.map((x,i)=>{const T=x.k==='boss'?['👹','บอสวงนรก','ชนะแล้วได้แก่นนรกก้อนใหญ่ · ต้องรับคำสาป · ไฟกรรม +15']:HL2.D[x.k],ep=x.nm?hlEp(h,x,n):0;
   return`<div class="item" style="border-left:4px solid ${x.k==='boss'?'#ff3a1a':x.k==='elite'?'#b04ad8':x.k==='fight'?'#e8c86a':'#5fb85f'}"><div class="h"><b>${T[0]} ${T[1]}${x.nm?' · '+esc(x.nm):''}</b><button class="pbtn" style="padding:6px 14px" onclick="hlGo(${i})" ${wait?'disabled style="opacity:.45;padding:6px 14px"':''}>เข้า</button></div><p class="tag2" style="margin:2px 0">${T[2]}</p>${x.nm?`<p style="margin:4px 0;font-size:.92em">${hlRuleTxt(h,x)}</p><p class="tag2" style="margin:0">แรงราว ${Math.round(ep/me*100)}% ของคุณตอนนี้ (ก่อนเลือกท่าที)</p>`:''}</div>`}).join('')}
  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="gbtn" style="flex:1" onclick="hellShop()">🏮 แท่นบูชา</button><button class="gbtn" style="flex:1" onclick="hlFuseUI()">⚗️ หลอมคำสาป</button><button class="gbtn" style="flex:1 1 100%" onclick="hlRest()" ${(h.heat||0)>0?'':'disabled style="opacity:.45;flex:1 1 100%"'}>🧘 พักฟื้นวิญญาณ 2 ปี<small style="display:block">ไฟกรรม −20 · ลงนรกต่อได้หลังพัก</small></button></div>
  <p class="tag2" style="margin-top:6px">💡 อ่านกฎผู้คุมแล้วเลือกท่าทีที่แก้ทาง — ถูกทางผู้คุมอ่อนลงมาก ผิดทางแรงขึ้น · ทุก 10 ชั้นเจอบอส · ประตูและกฎเหมือนกันทุกคนตลอดสัปดาห์</p>`,'hell2')}
-function hlRest(){const h=hl2();if(!h||!(h.heat>0))return;h.heat=Math.max(0,h.heat-20);h.cd=Math.max(h.cd,S.age+2);log('🧘 คุณนั่งสมาธิกลางเปลวไฟ ปล่อยให้ไฟกรรมมอดลง — ไฟกรรม −20 · ลงต่อได้อีก 2 ปี','good');render();openHell2()}
+function hlRest(){const h=hl2();if(!h||!(h.heat>0))return;const blk=Math.floor((h.lv|0)/10);if(h.rsB!==blk){h.rsB=blk;h.rsN=0}if((h.rsN|0)>=2)return toast('พักฟื้นได้ 2 ครั้งต่อวงนรก (ทุก 10 ชั้น) — ใช้ครบแล้ว');h.rsN=(h.rsN|0)+1;h.heat=Math.max(0,h.heat-20);h.cd=Math.max(h.cd,S.age+2);log('🧘 คุณนั่งสมาธิกลางเปลวไฟ ปล่อยให้ไฟกรรมมอดลง — ไฟกรรม −20 · ลงต่อได้อีก 2 ปี','good');render();openHell2()}
 function hlGo(i){const h=hl2();if(!h)return;const n=h.lv+1,x=hlDoors(h)[i];if(!x)return;if(S.age<h.cd)return toast('ยังลงไม่ได้ — พักฟื้นก่อน');if(choice._cur)return toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');
  if(x.nm){closeM();return choice(`${x.k==='boss'?'👹':x.k==='elite'?'💀':'⚔️'} ${esc(x.nm)} · ชั้น ${n}`,`${hlRuleTxt(h,x)}<br><span class="tag2">เลือกท่าทีก่อนเข้าสู้ — แก้ทางถูก ผู้คุมอ่อนลง 20% ต่อกฎ · ผิดทางแรงขึ้น 20%</span>`,Object.keys(HL2.T).map(t=>({t:HL2.T[t][0],s:HL2.T[t][1]+` · ผู้คุมแรงราว ${Math.round(hlEp(h,x,n)*hlTacM(h,x,t)/Math.max(1,total())*100)}%`,noFate:1,f(){hlFight(h,x,n,t)}})))}
  hlAdv(h,n,x.k)}
@@ -22613,7 +22613,7 @@ try{FRAMES.push({id:'f_hell2',n:'กรอบประตูนรก',side:'h',
 {const _cdH=checkDeath;checkDeath=function(){const r=_cdH.apply(this,arguments);try{if(S&&S.flags&&(S.flags.hellMax||0)>=50){const d=frGet();if(!d.own.includes('f_hell2')){d.own.push('f_hell2');frSet(d);toast('🚪 ได้กรอบประตูนรก')}}}catch(e){}return r}}
 // ---------- รายปี: ไฟกรรมลด · แจ้งเมื่อลงได้ · ถามจุดเริ่ม (จารึกวิญญาณ) ----------
 {const _pyH=passYear;passYear=function(){const a0=S?S.age:0;const r=_pyH.apply(this,arguments);try{const h=hl2();if(!h||!S.alive)return r;const st=Math.max(0,S.age-a0);
- if(h.lv>=18&&h.lv<100){hl2Init(h);h.heat=Math.max(0,(h.heat||0)-4*st);if(S.age>=h.cd&&h.toldCd!==h.cd){h.toldCd=h.cd;addFeed('ev',`🔥 พร้อมลงนรกชั้นที่ ${h.lv+1} แล้ว — กดป้าย 🔥 บนหัวจอเพื่อเลือกประตู`,'sum')}}
+ if(h.lv>=18&&h.lv<100){hl2Init(h);h.heat=Math.max(0,(h.heat||0)-2*st);if(S.age>=h.cd&&h.toldCd!==h.cd){h.toldCd=h.cd;addFeed('ev',`🔥 พร้อมลงนรกชั้นที่ ${h.lv+1} แล้ว — กดป้าย 🔥 บนหัวจอเพื่อเลือกประตู`,'sum')}}
  if(h.lv===0&&!h.csAsk&&S.age>=13&&S.age<(h.next||16)&&hlBest()>=20){h.csAsk=1;const B=hlBest(),cps=[20,40,60,80].filter(c=>c<=B),me=S;let tries=0;
   const ask=()=>{if(S!==me||!S.alive||h.lv!==0)return;if((choice._cur||modalOpen)&&tries++<90)return setTimeout(ask,1000);choice('📜 จารึกวิญญาณ',`วิญญาณคุณจำได้ว่าเคยลงนรกลึกถึงชั้นที่ <b>${B}</b> — จะเริ่มที่ไหน?<br><span class="tag2">เริ่มลึกจะข้ามชั้นที่เคยผ่าน แต่ไม่ได้แก่นนรกและพรของชั้นเหล่านั้น</span>`,[{t:'🔥 เริ่มจากชั้นแรก',s:'ลงทีละชั้นตามปกติ',noFate:1,f(){}},...cps.map(c=>({t:`📜 เริ่มที่ชั้น ${c}`,s:'ได้ของติดตัว 1 อย่าง · ไฟกรรมเริ่มที่ 20',noFate:1,f(){hlStartAt(h,c)}}))])};setTimeout(ask,600)}}catch(e){console.error(e)}return r}}
 function hlStartAt(h,c){h.lv=c;h.cs=c;h.flv=1;h.fl=[];hl2Init(h);h.heat=20;h.cd=S.age+1;h.bp=total();h.next=1e9;S.flags.hellMax=Math.max(S.flags.hellMax||0,c);
@@ -24084,9 +24084,9 @@ const CT_STEPS=[
 const CT={i:0,was:null,L:null};
 function ctSteps(){return CT_STEPS.filter(x=>{const e=document.querySelector(x[0]);return e&&e.offsetParent})}
 function ctStart(){try{closeM()}catch(e){}if(!$('game')||!$('game').classList.contains('on')){toast('เริ่มหรือโหลดชีวิตก่อน แล้วค่อยเปิดบทนี้');return}
- CT.L=ctSteps();CT.i=0;CT.was=paused;paused=true;try{render()}catch(e){}LS.set('murim_ctour',1);ctDraw()}
+ CT.L=ctSteps();CT.i=-1;CT.was=paused;paused=true;try{render()}catch(e){}LS.set('murim_ctour',1);LS.set('murim_ctour2',1);ctDraw()}
 function ctEnd(){const o=$('ctOv');if(o)o.remove();window.removeEventListener('resize',ctDraw);if(CT.was===false){paused=false;try{render()}catch(e){}}CT.L=null}
-function ctNext(d){CT.i+=d;if(CT.i<0)CT.i=0;ctDraw()}
+function ctNext(d){CT.i+=d;if(CT.i<-1)CT.i=-1;ctDraw()}
 function ctSetHtml(){const am=LS.get('murim_automin',0)?1:0,lk=LS.get('murim_chlock',0)?1:0,pc=LS.get('murim_pace',1)?1:0,fs=LS.get('murim_fate',0)||0;
  const sw=(on,f,dis)=>`<button class="ctSw${on?' on':''}" ${dis?'disabled':''} onclick="${f}"><i></i></button>`;
  return`<h3 style="margin:0 0 4px">⚙️ ตั้งค่าที่คนหาไม่ค่อยเจอ</h3><p class="tag2" style="margin:0 0 8px">ปรับตรงนี้ได้เลย · ภายหลังเปลี่ยนได้ที่ <b>กดค้าง 1×</b> และ <b>กดค้าง 🤖</b></p>
@@ -24094,9 +24094,10 @@ function ctSetHtml(){const am=LS.get('murim_automin',0)?1:0,lk=LS.get('murim_chl
  <div class="ctRow"><div><b>🔒 ล็อกตัวเลือก</b><small>เกมรอให้คุณเลือกเองทุกครั้ง (ปิดชะตาตัดสินแทน) · มีปุ่มนี้ในทุกหน้าต่างตัวเลือกด้วย</small></div>${sw(lk,"LS.set('murim_chlock',"+(lk?0:1)+");ctDraw()")}</div>
  <div class="ctRow"><div><b>⏩ ปีเงียบผ่านเร็ว</b><small>ปีที่ไม่มีอะไรเกิดขึ้นจะเร่งให้เอง</small></div>${sw(pc,"LS.set('murim_pace',"+(pc?0:1)+");ctDraw()")}</div>
  ${typeof tuOn==='function'&&!tuOn()?'<p class="tag2" style="color:#ffb040">⚠️ ตอนนี้ใช้แท็บแบบเดิมอยู่ — กดค้างปุ่มจะยังไม่ทำงาน เปิด "แท็บแบบลื่น" ในเมนูก่อน</p>':''}
- <div class="ctNav"><button class="gbtn" onclick="ctNext(-1)">‹ ย้อน</button><button class="pbtn" onclick="ctEnd()">เข้าใจแล้ว ✓</button></div>`}
+ <div class="ctNav"><button class="gbtn" onclick="CT.i=-1;ctDraw()">🎬 คลิป</button><button class="gbtn" onclick="ctNext(-1)">‹ ย้อน</button><button class="pbtn" onclick="ctEnd()">เข้าใจแล้ว ✓</button></div>`}
 function ctDraw(){if(!CT.L)return;let o=$('ctOv');if(!o){o=document.createElement('div');o.id='ctOv';document.body.appendChild(o);window.addEventListener('resize',ctDraw)}
  const L=CT.L,n=L.length;
+ if(CT.i<0){o.innerHTML=`<div class="ctDim"></div><div class="ctCard ctSet ctVid"><h3 style="margin:0 0 4px">🎬 ปุ่มด้านล่าง กดค้างได้ทุกปุ่ม</h3><p class="tag2" style="margin:0 0 8px">ดูคลิป 25 วิ — กดค้างที่ปุ่มแล้วจะมีเมนูลัดเด้งขึ้นมา ลากนิ้วไปปุ่มข้างๆ ได้เลย</p><video src="ctrl-demo.mp4" poster="ctrl-demo.jpg" autoplay muted loop playsinline controls preload="metadata"></video><div class="ctNav"><button class="gbtn" onclick="ctEnd()">ข้าม</button><button class="pbtn" onclick="ctNext(1)">สอนทีละปุ่ม ›</button></div></div>`;return}
  if(CT.i>=n){o.innerHTML=`<div class="ctDim"></div><div class="ctCard ctSet">${ctSetHtml()}</div>`;return}
  const st=L[CT.i],el=document.querySelector(st[0]);if(!el){CT.L.splice(CT.i,1);return ctDraw()}const r=el.getBoundingClientRect(),pad=5;
  const ring=`left:${r.left-pad}px;top:${r.top-pad}px;width:${r.width+pad*2}px;height:${r.height+pad*2}px`;
@@ -24118,6 +24119,7 @@ function ctDraw(){if(!CT.L)return;let o=$('ctOv');if(!o){o=document.createElemen
 #ctOv .ctStep{font-size:.8em;opacity:.7}#ctOv .ctStep span{color:#f0c860}
 #ctOv .ctNav{display:flex;gap:6px;justify-content:flex-end;margin-top:10px}#ctOv .ctNav button{padding:7px 14px}
 #ctOv .ctSet{left:50%;top:50%;transform:translate(-50%,-50%);width:min(92vw,380px);max-height:86vh;overflow:auto;animation:none}
+#ctOv .ctVid video{display:block;width:100%;max-height:58vh;object-fit:contain;border-radius:12px;background:#000;border:2px solid rgba(240,200,96,.5)}
 #ctOv .ctRow{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:9px 0;border-top:1px solid rgba(255,255,255,.08)}
 #ctOv .ctRow small{display:block;opacity:.72;font-size:.82em;margin-top:2px;line-height:1.35}
 .ctSw{flex:none;width:46px;height:26px;border-radius:13px;border:none;background:#4a4658;position:relative;padding:0;cursor:pointer;transition:background .2s}
@@ -24128,7 +24130,7 @@ function ctDraw(){if(!CT.L)return;let o=$('ctOv');if(!o){o=document.createElemen
 // เข้าถึงได้จาก: หน้าบทเรียน · เมนู · และขึ้นเองครั้งเดียวสำหรับทุกคน
 {const _olC=openLessons;openLessons=function(){const r=_olC.apply(this,arguments);try{const m=$('modal'),h=m&&m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',`<button class="pbtn" style="width:100%;margin:6px 0" onclick="ctStart()">🎮 สอนปุ่มด้านล่าง · ตั้งค่าชะตาตัดสินแทน</button>`)}catch(e){}return r}}
 {const _omC=openMenu;openMenu=function(){const r=_omC.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g)g.insertAdjacentHTML('afterbegin',`<button class="opt" onclick="ctStart()">🎮 สอนปุ่มด้านล่าง<small>แตะ · กดค้าง · ตั้งค่าชะตาตัดสินแทน</small></button>`)}catch(e){}return r}}
-setInterval(()=>{try{if(LS.get('murim_ctour',0)||!S||!S.alive||(S.age|0)<1||choice._cur||modalOpen||(typeof CO!=='undefined'&&CO.id)||$('ctOv'))return;if(!$('game')||!$('game').classList.contains('on'))return;ctStart()}catch(e){}},4000);
+setInterval(()=>{try{if(LS.get('murim_ctour2',0)||!S||!S.alive||(S.age|0)<1||choice._cur||modalOpen||(typeof CO!=='undefined'&&CO.id)||$('ctOv'))return;if(!$('game')||!$('game').classList.contains('on'))return;ctStart()}catch(e){}},4000);
 
 // ===================== v17.10.3 บอกผู้เล่นว่าชีวิตนี้ขึ้นทำเนียบไหม และทำไม =====================
 function lifeRankNote(r){try{const b=$('lifePriv');if(b&&r&&r.rk&&!b.querySelector('.lrk'))b.insertAdjacentHTML('afterbegin',`<div class="lrk" style="font-size:1.05em;margin-bottom:4px">🏅 อันดับ <b>${r.rk}</b> ของหมวดนี้วันนี้</div>`)}catch(e){}}
@@ -24197,6 +24199,18 @@ function specWorld(s){if(!s)return'm';if(s.xt||s.g===1&&s.x||/แดนเทพ
 function specMoney(s,v){const w=specWorld(s);v=+v||0;return w==='g'?`${fmtJ(v)} <small>${JADE_N}</small>`:`${fmt(v)} <small>${w==='x'?'หินวิญญาณ':'ตำลึง'}</small>`}
 function specN(v){v=+v;if(!isFinite(v))return'0';return Math.abs(v)>=1e4?fmt(v):(Math.round(v*10)/10).toLocaleString('th-TH')}
 {const _ldW=lifeDetail;lifeDetail=function(){const d=_ldW.apply(this,arguments);try{if(d&&S){d.xt=S.xt?1:0}}catch(e){}return d}}
+
+// ===================== ความยากโหมดท้าทาย · เวลาช้าลง · ป้ายเดือน =====================
+// นรก: โหมดอัตโนมัติสู้ด้วยตัวคูณของ (อุปกรณ์ สหาย บัฟ สัตว์เลี้ยง ฯลฯ) แต่ผู้คุมคิดจากพลังรวมเปล่าๆ → ออโต้ง่ายกว่าสู้เองมาก
+// ให้ผู้คุมในนรกได้ตัวคูณเดียวกันตอนสู้แบบอัตโนมัติ
+function fpM(){let m=1;try{m*=eqM('fight')*compM()*bufM('fight')*beastM()*profFightM()*petM()*fb('fight')*cb('fight')*smb('fight')}catch(e){}return isFinite(m)&&m>0?Math.min(8,m):1}
+{const _duH=duel;duel=function(name,ep,cb){try{if(auto&&S&&S.ch==='hell'&&/ชั้น\s*\d+/.test(String(name)))ep=ep*fpM()}catch(e){}return _duH.call(this,name,ep,cb)}}
+// ป้ายเดือน: บอกเดือนและเหลืออีกกี่เดือนถึงปีใหม่ (มือถือเดิมซ่อนไว้ แถบบางจนอ่านไม่ออก)
+setInterval(()=>{try{const ym=$('ymon');if(!ym||!S||!S.alive)return;const m=curMon(),t=ym.textContent||'';if(t.indexOf('⏩')>=0)return;const w=MON_N[m]+(m<11?` · อีก ${11-m} เดือนขึ้นปีใหม่`:' · ปีใหม่ใกล้มาแล้ว');if(t!==w)ym.textContent=w}catch(e){}},250);
+(()=>{const st=document.createElement('style');st.textContent=`@media (max-width:700px){#game .crow .ybar{height:15px!important;border-width:2px!important;border-radius:5px!important;margin:2px 0!important}#game #ymon,#game:not(.noscn) #ymon{display:block!important;font-size:10.5px!important;line-height:11px!important;font-weight:700}}#ymon{font-weight:700}`;document.head.appendChild(st)})();
+
+// รากขยะ: พรสวรรค์ต่ำสุดต้องโตช้ากว่าคนปกติจริง ไม่ใช่แค่ตอนเริ่ม (พลังที่ได้ในแต่ละปี ×0.82)
+{const _pyJ=passYear;passYear=function(){const j=S&&S.alive&&S.ch==='junk'&&!(S.beastMode&&!S.beastMode.human),p0=j?S.power:0;const r=_pyJ.apply(this,arguments);try{if(j&&S&&S.alive&&S.ch==='junk'){const d=S.power-p0;if(d>0)S.power=Math.round(p0+d*.82)}}catch(e){}return r}}
 </script>
 </body>
 </html>
