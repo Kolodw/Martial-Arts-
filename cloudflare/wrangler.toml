@@ -12,6 +12,10 @@ binding = "ASSETS"
 html_handling = "drop-trailing-slash"
 not_found_handling = "none"
 
+# ให้ Cloudflare ย้ายตำแหน่งรัน Worker ไปใกล้ฐานข้อมูลเอง (ลดเวลาเปิดการเชื่อมต่อ TLS ไป Aiven)
+[placement]
+mode = "smart"
+
 [observability]
 enabled = true
 

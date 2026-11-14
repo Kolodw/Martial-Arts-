@@ -27,7 +27,12 @@ async function upPipe(list) {
 
 // ---------- Valkey/Redis (RESP2) แบบไม่ต้องลงแพ็กเกจเพิ่ม ----------
 const net = require('net'), tls = require('tls');
-const VK = { sock: null, ready: null, buf: Buffer.alloc(0), q: [], io: 0 };
+const VK0 = { sock: null, ready: null, buf: Buffer.alloc(0), q: [], io: 0 };
+// Cloudflare Workers: socket ใช้ข้ามคำขอไม่ได้ → ให้แต่ละคำขอมี VK ของตัวเอง (AsyncLocalStorage) ทำหลายคำขอพร้อมกันได้ · Vercel ไม่เรียก vkRun จึงใช้ VK0 ตัวเดียวเหมือนเดิม
+const { AsyncLocalStorage: _ALS } = require('node:async_hooks');
+const VKS = new _ALS();
+const vkCtx = () => VKS.getStore() || VK0;
+const vkNew = () => ({ sock: null, ready: null, buf: Buffer.alloc(0), q: [], io: 0 });
 class RErr { constructor(m) { this.message = m } }
 function vkParse(buf, i) {
   if (i >= buf.length) return null;
@@ -55,52 +60,53 @@ function vkEnc(args) {
   for (const a of args) { const v = a == null ? '' : typeof a === 'string' ? a : String(a); s += '$' + Buffer.byteLength(v) + '\r\n' + v + '\r\n' }
   return s;
 }
-function vkDrop(err) {
-  const q = VK.q; VK.q = []; VK.sock = null; VK.ready = null; VK.cur = null; VK.buf = Buffer.alloc(0);
+function vkDrop(err, V = vkCtx()) {
+  const q = V.q; V.q = []; V.sock = null; V.ready = null; V.cur = null; V.buf = Buffer.alloc(0);
   for (const w of q) w.rej(err || new Error('valkey closed'));
 }
 function vkConnect() {
-  if (VK.ready) return VK.ready;
-  VK.ready = new Promise((res, rej) => {
+  const V = vkCtx();
+  if (V.ready) return V.ready;
+  V.ready = new Promise((res, rej) => {
     let u; try { u = new URL(VK_URL) } catch { return rej(new Error('VALKEY_URL invalid')) }
     const port = +u.port || 6379, host = u.hostname, secure = u.protocol === 'rediss:';
     const opt = { host, port, servername: host };
     if (process.env.VALKEY_CA) opt.ca = process.env.VALKEY_CA;
     const s = secure ? tls.connect(opt) : net.connect(opt);
-    VK.cur = s; s.setNoDelay(true); s.setKeepAlive(true, 30000);
+    V.cur = s; s.setNoDelay(true); s.setKeepAlive(true, 30000);
     const to = setTimeout(() => { s.destroy(new Error('valkey connect timeout')) }, 8000);
     s.on('data', d => {
-      if (VK.cur !== s) return;
-      VK.io = Date.now();
-      VK.buf = VK.buf.length ? Buffer.concat([VK.buf, d]) : d;
+      if (V.cur !== s) return;
+      V.io = Date.now();
+      V.buf = V.buf.length ? Buffer.concat([V.buf, d]) : d;
       let p = 0;
-      for (;;) { const r = vkParse(VK.buf, p); if (!r) break; p = r[1]; const w = VK.q.shift(); if (w) { r[0] instanceof RErr ? w.rej(new Error(r[0].message)) : w.res(r[0]) } }
-      VK.buf = p >= VK.buf.length ? Buffer.alloc(0) : VK.buf.subarray(p);
+      for (;;) { const r = vkParse(V.buf, p); if (!r) break; p = r[1]; const w = V.q.shift(); if (w) { r[0] instanceof RErr ? w.rej(new Error(r[0].message)) : w.res(r[0]) } }
+      V.buf = p >= V.buf.length ? Buffer.alloc(0) : V.buf.subarray(p);
     });
-    s.on('error', e => { clearTimeout(to); if (VK.cur === s) vkDrop(e); rej(e) });
-    s.on('close', () => { clearTimeout(to); if (VK.cur === s) vkDrop() });
+    s.on('error', e => { clearTimeout(to); if (V.cur === s) vkDrop(e, V); rej(e) });
+    s.on('close', () => { clearTimeout(to); if (V.cur === s) vkDrop(undefined, V) });
     s.once(secure ? 'secureConnect' : 'connect', async () => {
-      clearTimeout(to); VK.sock = s; VK.io = Date.now();
+      clearTimeout(to); V.sock = s; V.io = Date.now();
       try {
         const user = decodeURIComponent(u.username || ''), pass = decodeURIComponent(u.password || '');
-        if (pass) await vkSend(user ? ['AUTH', user, pass] : ['AUTH', pass]);
+        if (pass) await vkSend(user ? ['AUTH', user, pass] : ['AUTH', pass], V);
         res(s);
       } catch (e) { s.destroy(); rej(e) }
     });
   });
-  return VK.ready;
+  return V.ready;
 }
-function vkSend(args) {
+function vkSend(args, V = vkCtx()) {
   return new Promise((res, rej) => {
-    if (!VK.sock) return rej(new Error('valkey not connected'));
+    if (!V.sock) return rej(new Error('valkey not connected'));
     // ไม่ตอบใน 5 วิ = socket ค้าง (เช่นฟังก์ชันถูกแช่แข็งแล้วปลุกขึ้นมา) → ทิ้ง socket ให้คำสั่งถัดไปต่อใหม่
-    const t = setTimeout(() => { rej(new Error('valkey timeout')); const sk = VK.sock; if (sk) { vkDrop(new Error('valkey timeout')); try { sk.destroy() } catch {} } }, 5000);
-    VK.q.push({ res: v => { clearTimeout(t); res(v) }, rej: e => { clearTimeout(t); rej(e) } });
-    VK.sock.write(vkEnc(args));
+    const t = setTimeout(() => { rej(new Error('valkey timeout')); const sk = V.sock; if (sk) { vkDrop(new Error('valkey timeout'), V); try { sk.destroy() } catch {} } }, 5000);
+    V.q.push({ res: v => { clearTimeout(t); res(v) }, rej: e => { clearTimeout(t); rej(e) } });
+    V.sock.write(vkEnc(args));
   });
 }
 // socket ที่เงียบนานเกิน 40 วิ มักถูกปิดฝั่งเซิร์ฟเวอร์ไปแล้วแบบไม่บอก — ต่อใหม่ก่อนส่ง
-function vkFresh() { if (VK.sock && Date.now() - VK.io > 40e3 && !VK.q.length) { const sk = VK.sock; vkDrop(); try { sk.destroy() } catch {} } }
+function vkFresh() { const V = vkCtx(); if (V.sock && Date.now() - V.io > 40e3 && !V.q.length) { const sk = V.sock; vkDrop(undefined, V); try { sk.destroy() } catch {} } }
 const vkConnErr = e => /not connected|closed|ECONNRESET|EPIPE|ETIMEDOUT|connect timeout|socket hang up|valkey timeout/i.test(String(e && e.message));
 async function vkTry(fn) { vkFresh(); try { await vkConnect(); return await fn() } catch (e) { if (!vkConnErr(e)) throw e; vkDrop(); await vkConnect(); return fn() } }
 async function vkCmd(...args) { return vkTry(() => vkSend(args)) }
@@ -110,7 +116,8 @@ async function vkPipe(list) {
 }
 
 // ใช้ตอนรันบน Cloudflare Workers: socket ใช้ข้ามคำขอไม่ได้ → ปิดทิ้งทุกครั้งที่เริ่ม/จบคำขอ (Vercel ไม่ได้เรียกใช้)
-const vkReset = () => { const s = VK.sock || VK.cur; vkDrop(); try { s && s.destroy() } catch {} };
+const vkReset = () => { const V = vkCtx(), s = V.sock || V.cur; vkDrop(undefined, V); try { s && s.destroy() } catch {} };
+const vkRun = fn => VKS.run(vkNew(), fn);
 const jp = x => { try { const v = JSON.parse(x); return v && typeof v === 'object' ? v : null } catch { return null } };
 const cmd = USE_VK ? vkCmd : upCmd;
 const pipe = USE_VK ? vkPipe : upPipe;
@@ -1846,3 +1853,4 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
   }
 };
 module.exports.vkReset = vkReset;
+module.exports.vkRun = vkRun;

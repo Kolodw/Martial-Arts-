@@ -19,13 +19,11 @@ async function handler() {
   return H;
 }
 
-// online.js ใช้การเชื่อมต่อฐานข้อมูลตัวเดียวร่วมกัน แต่ Workers ห้ามใช้ socket ข้ามคำขอ
-// → ให้คำขอ API ในแต่ละ isolate ทำทีละคำขอ (คำขอละ ~15ms · Cloudflare เปิดหลาย isolate ให้เองเมื่อคนเยอะ)
-let chain = Promise.resolve();
-function api(request, url) {
-  const run = chain.then(() => Promise.race([apiOne(request, url), new Promise(r => setTimeout(() => r(new Response('{"err":"timeout"}', { status: 504, headers: { 'content-type': 'application/json' } })), 25000))]));
-  chain = run.catch(() => {});
-  return run;
+// Workers ห้ามใช้ socket ข้ามคำขอ → แต่ละคำขอมีการเชื่อมต่อฐานข้อมูลของตัวเอง (vkRun ใช้ AsyncLocalStorage) ทำหลายคำขอพร้อมกันได้ ไม่ต้องเข้าคิว
+async function api(request, url) {
+  const h = await handler();
+  const run = h.vkRun ? h.vkRun(() => apiOne(request, url)) : apiOne(request, url);
+  return Promise.race([run, new Promise(r => setTimeout(() => r(new Response('{"err":"timeout"}', { status: 504, headers: { 'content-type': 'application/json' } })), 20000))]);
 }
 
 async function apiOne(request, url) {
