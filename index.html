@@ -22005,6 +22005,23 @@ function ctPage(p,B){const C=ctInit(),w=ECO_W(),W=W15(),grp=k=>B.filter(b=>b.c==
   modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏘️ ${esc(townName())}</h3><p class="tag2">💰 ${fmt(S.money)} ตำลึง</p>${ctHead()}${tabs}${ctPage(p,B)}${dist&&go?`<div class="mgrid" style="margin-top:10px">${go}</div>`:''}`,'town');openTown._p=p}
  catch(e){console.error(e);return _otV.call(this,'main')}}}
 
+
+// ===================== v17.8 ปิดยุคปัจจุบัน (ยังไม่เสถียร: เฉพาะแอดมิน) · ระบบไม่เลือกเหตุการณ์ให้เองอีก =====================
+MW_PUBLIC=false;
+// ไม่มีทางเข้า/ตัวอย่างยุคปัจจุบันสำหรับผู้เล่นทั่วไป (รอยแยก มิติปริศนา ปุ่มหน้าแรก กล่องในบันทึกอัปเดต ตอนจบ)
+{const _chNM=choice,nf=function(title,text,opts){try{if(!mwAllowed()&&/รอยแยกสู่อนาคต|มิติปริศนา/.test(String(title||''))&&!(S&&S.mw))return}catch(e){}return _chNM.apply(this,arguments)};for(const k in _chNM)nf[k]=_chNM[k];choice=nf}
+setInterval(()=>{try{if(mwAllowed())return;document.querySelectorAll('.mwseg,.mwupd,.mwend').forEach(e=>e.remove())}catch(e){}},700);
+{const _otNM=openMWTeaser;openMWTeaser=function(){if(!mwAllowed())return toast('ระบบนี้ปิดปรับปรุงชั่วคราว');return _otNM.apply(this,arguments)}}
+// ระบบเลือกเหตุการณ์เล็กให้: ปิดเป็นค่าเริ่มต้น (ปิดให้ทุกคนครั้งเดียว) · ถ้าเปิดเองจะรอ 10 วิ และไม่เลือกตัวเลือกที่พาไปโลกอื่น
+if(!LS.get('murim_amv2',0)){LS.set('murim_amv2',1);LS.set('murim_automin',0)}
+PACE.am=()=>LS.get('murim_automin',0)?1:0;
+{const _pmNM=paceMinor;paceMinor=function(c){if(!paceMinor._mine)return false;try{if(c&&c.opts&&c.opts.some(o=>o.noFate||/ข้าม|รอยแยก|มิติ|ยุค|โลก/.test(String(o.t)+String(o.s||''))))return false}catch(e){}return _pmNM.apply(this,arguments)}}
+{const _csNM=choiceShow;choiceShow=function(){const r=_csNM.apply(this,arguments);try{const c=choice._cur;paceMinor._mine=1;const mn=c&&!auto&&PACE.am()&&paceMinor(c);paceMinor._mine=0;if(!mn)return r;const m=$('modal');if(!m||m.dataset.k!=='choice')return r;
+  let left=10,stop=false;m.insertAdjacentHTML('beforeend',`<div class="paceMin" id="paceMin">⚡ เหตุการณ์เล็ก — ระบบจะเลือกให้ใน <b>${left}</b> วิ · แตะเพื่อเลือกเอง</div>`);
+  const cancel=()=>{stop=true;const x=$('paceMin');if(x)x.remove();m.removeEventListener('pointerdown',cancel,true)};m.addEventListener('pointerdown',cancel,true);
+  const tk=()=>{if(stop||choice._cur!==c)return;if(pendModal||!modalOpen||document.hidden){setTimeout(tk,500);return}left--;const x=$('paceMin');if(x)x.querySelector('b').textContent=left;
+   if(left<=0){m.removeEventListener('pointerdown',cancel,true);const v=c.opts.map((o,i)=>i).filter(i=>!c.opts[i].skip&&!c.opts[i].noFate);const i=v.length?ch(v):0;addFeed('ev',`⚡ ระบบเลือกให้ — <b>${String(c.title).replace(/<[^>]+>/g,'')}</b>: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');choiceRun(i);return}setTimeout(tk,1000)};setTimeout(tk,1000)}catch(e){console.error(e)}return r}}
+
 </script>
 </body>
 </html>
