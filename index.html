@@ -387,7 +387,7 @@ details.item summary{cursor:pointer}
       <div style="flex:1;min-width:0"><div class="tag2">ชื่อ</div><div id="nameOut" style="font-size:22px;line-height:1.2"></div><div class="tag2" id="soulOut"></div></div></div>
     <div id="traits" style="margin-top:8px"></div>
   </div>
-  <div class="box oddsbig" id="oddsBox" style="visibility:hidden"><div class="tag2">โอกาสที่จะเกิดมาเป็นคนนี้</div><div class="n px" id="oddsN"></div></div>
+  <div class="box oddsbig" id="oddsBox" style="visibility:hidden"><div class="tag2">ความหายากของชีวิตนี้</div><div class="n px" id="oddsN"></div></div>
   <div class="box" id="goalBox" style="padding:12px;margin-bottom:12px;visibility:hidden"><div class="tag2" style="margin-bottom:6px">🎯 เลือกปณิธานของชีวิตนี้ — ยิ่งยากยิ่งได้คะแนนมาก (×1.6 ถึง ×2.5) · ทำได้ 70% ขึ้นไปได้ ×1.1</div><div id="goalOpts"></div></div>
   <div class="brow"><button class="gbtn" id="rerollBtn" onclick="doRoll()">🔄 เกิดใหม่ (<span id="rr">3</span>)</button><button class="pbtn" id="startBtn" onclick="startLife()" disabled>ใช้ชีวิต ▶</button></div>
 </div>
@@ -889,10 +889,11 @@ function doRoll(first){
  {const L=roll.trs.list.map(trOf),tw=TRAITS.reduce((a,x)=>a+x.w,0);if(!L.length)T.push(['พรสวรรค์พิเศษ','ไม่มี','เกิดมาเป็นคนธรรมดา',.45]);else L.forEach(t=>T.push([t.bad?'⚠️ พรสวรรค์พิเศษ (ด้านร้าย)':'✨ พรสวรรค์พิเศษ',t.n,t.d,t.w/tw*.55]))}
  if(roll.w){T.push(['โลกเดิม',roll.w.v.n,`วิญญาณของ ${roll.soul.n} — ${roll.soul.d}`,roll.w.p]);T.push(['ของติดตัวจากโลกเดิม',roll.it.v.n,roll.it.v.d,roll.it.p])}
  if(roll.os){const ST=SYS_TYPES.find(x=>x.id===roll.os.t),SG=SYS_GRADE[roll.os.g];if(ST)T.push(['🟦 ระบบติดตัวข้ามมิติ',`${ST.ic} ${ST.n}${SG&&SG.m>1?' · '+SG.n:''}`,'ระบบตามวิญญาณข้ามมิติมาตั้งแต่เกิด — '+ST.d,roll.os.p])}
+ try{roll.body=bodyGen(false);if(roll.trs.list.includes('beauty')){roll.body.lk=4;roll.body.lkP=1}bodyRows(roll.body,T,false);roll.rare=rareCalc(T,'h'+(CFG.xian?1:0))}catch(e){console.error(e)}
  $('traits').innerHTML=T.map(c=>{const r=rarOf(c[3]);return`<div class="trait"><div><div class="k">${c[0]}</div><div class="v t${r}">${c[1]}</div>${c[2]?`<div class="d">${c[2]}</div>`:''}</div><span class="o t${r}">${oddsTxt(c[3])}</span></div>`}).join('');
  xFix(['traits','soulOut']);
  [...document.querySelectorAll('.trait')].forEach((e,i)=>setTimeout(()=>e.classList.add('show'),220*i+80));
- setTimeout(()=>{$('oddsN').textContent='1 ใน '+fmt(1/(roll.p*roll.era.p));$('oddsBox').style.visibility='visible';$('goalBox').style.visibility='visible';renderGoalPick();$('startBtn').disabled=false;$('rerollBtn').disabled=rerolls<=0},220*T.length+250);
+ setTimeout(()=>{oddsShowR(roll);$('oddsBox').style.visibility='visible';$('goalBox').style.visibility='visible';renderGoalPick();$('startBtn').disabled=false;$('rerollBtn').disabled=rerolls<=0},220*T.length+250);
 }
 
 // ============ PEERS ============
@@ -3545,7 +3546,7 @@ function crStart(){const left=CR_PTS-crSpent();if(left<0)return toast('แต้
   look:{hs:CR_HS[C.hs][1],hair:CR_HC[C.hc][1],skin:CR_SK[C.sk][1],robe:CR_RB[C.rb][1]}};
  roll.root=rootOf(tv);roll.name=C.name.trim()||genName(f.v,gv0.n);roll.soul=w?genSoul(w.v,gv0.n):null;roll.goals=[C.goal];roll.goal=C.goal;
  rerolls=0;startLife()}
-function oddsLine(){return S&&S.custom?'✍️ ชีวิตที่ลิขิตเอง':`โอกาสเกิด 1 ใน ${fmt(1/S.odds)}`}
+function oddsLine(){return S&&S.custom?'✍️ ชีวิตที่ลิขิตเอง':S&&S.rareN?(S.rareN>1.5?`ความหายาก 1 ใน ${fmt(Math.round(S.rareN))}`:'ชีวิตธรรมดา')+(S.rareFr?` (บนสุด ${rareFrTxt(S.rareFr)})`:''):`โอกาสเกิด 1 ใน ${fmt(1/S.odds)}`}
 
 // ---------- 3) ชุดสวมใส่ ----------
 const EQI={
@@ -8455,7 +8456,7 @@ function fateN(odds){return odds>0?1/odds:0}
 #birth .bstage.sg5{box-shadow:3px 3px 0 var(--line),0 0 12px #a86aff}#birth .bstage.sg6{box-shadow:3px 3px 0 var(--line),0 0 14px #ff8a2a}#birth .bstage.sg7{box-shadow:3px 3px 0 var(--line),0 0 16px #ffc030}#birth .bstage.sg8{box-shadow:3px 3px 0 var(--line),0 0 18px #ff3a5a}#birth .bstage.sg9{box-shadow:3px 3px 0 var(--line),0 0 20px #ff5ad8}
 #birth .bstage.sg10,#birth .bstage.sg11,#birth .bstage.sg12{border-color:transparent;background:linear-gradient(90deg,#ff4d4d,#ffd84d,#5dff7a,#4dd8ff,#b06bff,#ff4d4d) border-box;box-shadow:0 0 24px #b06bffaa}
 .fstar{position:absolute;width:3px;height:3px;background:#fff;border-radius:50%;animation:fsT 1.8s ease-in-out infinite;pointer-events:none}@keyframes fsT{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1.4)}}`;document.head.appendChild(st)})();
-function fateApply(){const r=roll;if(!r)return;const N=1/(r.p*(r.era?r.era.p:1)),f=fateOf(N),F=FATE[f];
+function fateApply(){const r=roll;if(!r)return;const N=1/(r.p*(r.era?r.era.p:1)),f=r.rare?r.rare.f:fateOf(N),F=FATE[f];
  const st=$('bStage');if(st)st.className='bstage sg'+f;
  const ob=$('oddsBox');if(ob){ob.className='box oddsbig fb'+f;ob.querySelectorAll('.fstar').forEach(e=>e.remove());const t=$('oddsT');if(t){t.className='ot';t.innerHTML=`${F[2]} <span class="fx${f}">ระดับชะตา: ${F[1]}</span>`}
   let d=$('oddsD');if(!d){ob.insertAdjacentHTML('beforeend','<div class="od" id="oddsD"></div><div class="fbar" id="oddsBar"></div>');d=$('oddsD')}d.textContent=F[3];const bar=$('oddsBar');if(bar){bar.className='fgrade fx'+f;bar.textContent=`⟪ ${FGRADE[f]} ⟫`}
@@ -8464,7 +8465,7 @@ function fateApply(){const r=roll;if(!r)return;const N=1/(r.p*(r.era?r.era.p:1))
  const dl=(document.querySelectorAll('#birth .trait').length*220)+400;
  if(f>=6)setTimeout(()=>{const b=$('oddsBox');if(!b||b.style.visibility==='hidden'||roll!==r)return;const C=f>=10?['#ff4d4d','#ffd84d','#5dff7a','#4dd8ff','#b06bff','#ffffff']:f>=8?['#ff3a5a','#ff5ad8','#ffd040','#ffffff']:['#ffc030','#ff8a2a','#fff0a0'];for(let i=0;i<Math.min(70,(f-4)*9);i++){const e=document.createElement('i');e.className='bconf';e.style.left=Math.random()*100+'%';e.style.background=C[i%C.length];e.style.animationDelay=(Math.random()*.6)+'s';b.appendChild(e);setTimeout(()=>e.remove(),2500)}try{if(f>=8)sfx('ach')}catch(e){}},dl)}
 {const _dr3=doRoll;doRoll=function(first){const r=_dr3.apply(this,arguments);try{document.querySelectorAll('#oddsBox .bconf').forEach(e=>e.remove());fateApply()}catch(e){console.error(e)}return r}}
-{const _ol=oddsLine;oddsLine=function(){const t=_ol.apply(this,arguments);try{if(S&&!S.custom&&S.odds){const F=FATE[fateOf(1/S.odds)];return t+` · ${F[2]} ชะตา${F[1].replace(/^ชะตา/,'')}`}}catch(e){}return t}}
+{const _ol=oddsLine;oddsLine=function(){const t=_ol.apply(this,arguments);try{if(S&&!S.custom&&S.odds){const F=FATE[S.rareF!=null?S.rareF:fateOf(1/S.odds)];return t+` · ${F[2]} ชะตา${F[1].replace(/^ชะตา/,'')}`}}catch(e){}return t}}
 
 // ============ v13.9 แจ้งเตือนเร็ว: ประมูล + ประกาศ ถึงทุกคนภายใน ~20 วิ (ไม่ต้องรอรอบ 45 วิ/2 นาที) ============
 async function fastTick(){if(document.hidden||fastTick._f)return;fastTick._f=1;try{const j=await api('tick');
@@ -9220,15 +9221,15 @@ function brDrawStage(){const cv=$('brCv');if(!cv||!brRoll){brAnim=0;return}const
  if($('modal').dataset.k==='broll')brAnim=requestAnimationFrame(brDrawStage);else brAnim=0}
 function brShow(anim){brCss();const r=brRoll,s=BL_SP[r.sp],e=BEL[r.el],b=BBLOOD[r.bl],T=TALENT[r.t],M=brMul(r),dr=s[0]==='มังกร',pa=BPAR[r.par|0],en=LANG==='en';
  const row=(k,v,d,p,c)=>{const q=rarOf(p);return`<div class="trait r${q}${anim?'':' show'}${d&&d.length>46?' wide':''}"><div><div class="k">${k}</div><div class="v t${q}"${c?` style="color:${c}"`:''}>${v}</div>${d?`<div class="d">${d}</div>`:''}</div><span class="o t${q}">${oddsTxt(p)}</span></div>`};
- const rows=[row('เผ่าพันธุ์',(dr?'🐉 ':'')+s[0],s[3]+` · อายุขัยราว ${(BSPX[s[0]]||[0,3])[1]} เท่าของมนุษย์`,r.spP,dr?'#ffd040':null),row('ธาตุ',e[0],'ธาตุประจำกาย',r.elP,e[1]),row('สายเลือด',b.n,b.d,r.blP),row('รากปราณ',BTAL_N[r.t]||T.n,BTAL_D[r.t]||'',r.tP),row('เพศ',r.g?'เพศเมีย':'เพศผู้','',r.gP),row('ครอบครัว',en?pa.e:pa.n,en?pa.de:pa.d,r.parP||1),row('ถิ่นกำเนิด',r.hab,'ที่ที่ลืมตาดูโลก',1),row('นิสัย',BTMP[r.tm][0],'',1)];
- const N=1/r.p,f=fateOf(N),F=FATE[f],tot=rarOf(r.p);
+ const rows=[row('เผ่าพันธุ์',(dr?'🐉 ':'')+s[0],s[3]+` · อายุขัยราว ${(BSPX[s[0]]||[0,3])[1]} เท่าของมนุษย์`,r.spP,dr?'#ffd040':null),row('ธาตุ',e[0],'ธาตุประจำกาย',r.elP,e[1]),row('สายเลือด',b.n,b.d,r.blP),row('รากปราณ',BTAL_N[r.t]||T.n,BTAL_D[r.t]||'',r.tP),row('เพศ',r.g?'เพศเมีย':'เพศผู้','',r.gP),row('ครอบครัว',en?pa.e:pa.n,en?pa.de:pa.d,r.parP||1),row('ถิ่นกำเนิด',r.hab,'ที่ที่ลืมตาดูโลก',1),row('นิสัย',BTMP[r.tm][0],'',1)].concat(bodyBRows(r,row));
+ const N=r.rare?r.rare.N:1/r.p,f=r.rare?r.rare.f:fateOf(N),F=FATE[f],tot=rarOf(r.p);
  const stars=f>=10?Array.from({length:(f-8)*6},()=>`<i class="fstar" style="left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*1.8}s"></i>`).join(''):'';
  const nm=dr?'ลูกมังกร':(BX[s[0]]&&BX[s[0]].kid)||('ลูก'+s[0]);
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div id="brB"><h3>🐾 ${en?'Beast birth':'กำเนิดสัตว์อสูร'}</h3><p class="tag2" style="margin-top:-4px">ฟ้าลิขิตว่าคุณจะเกิดเป็นอะไร — สุ่มใหม่ได้ ${brRR>50?'ไม่จำกัด':brRR+' ครั้ง'}</p>
  <div class="brst gl${tot}"><canvas id="brCv" width="480" height="186"></canvas><div class="bcap">${CFG.xian?'☁️':'⚔️'} ร่างเมื่อเติบโต · ${esc(r.hab)}</div></div>
  <div class="brhd"><div><div class="tag2">${en?'Born as':'เกิดเป็น'}</div><div class="brnm t${rarOf(r.spP)}"${dr?' style="color:#ffd040"':''}>${esc(nm)}</div></div><div class="btags"><span>${r.g?'♀':'♂'}</span><span class="t${rarOf(r.blP)}">${esc(b.n)}</span>${r.par?'':'<span>🍂 กำพร้า</span>'}</div></div>
  <div class="brtr">${rows.join('')}</div>
- <div class="box oddsbig fb${f}" id="brOdds" style="${anim?'visibility:hidden':''}"><div class="tag2">โอกาสเกิดแบบนี้</div><div class="n px fx${f}">1 ใน ${fmt(Math.round(N))}</div><div class="ot">${F[2]} <span class="fx${f}">ระดับชะตา: ${F[1]}</span></div><div class="od">${F[3]}</div><div class="fgrade fx${f}">⟪ ${FGRADE[f]} ⟫</div><div class="od">พลังโดยรวม ×${M.pow.toFixed(1)} · อายุขัย ×${M.life.toFixed(1)} ของมนุษย์</div>${stars}</div>
+ <div class="box oddsbig fb${f}" id="brOdds" style="${anim?'visibility:hidden':''}"><div class="tag2">ความหายากของชีวิตนี้</div><div class="n px fx${f}">${r.rare&&!r.rare.k?'ธรรมดา':'1 ใน '+fmt(Math.round(N))}</div>${r.rare?`<div class="od">${rareSub(r.rare)}</div>`:''}<div class="ot">${F[2]} <span class="fx${f}">ระดับชะตา: ${F[1]}</span></div><div class="od">${F[3]}</div><div class="fgrade fx${f}">⟪ ${FGRADE[f]} ⟫</div><div class="od">พลังโดยรวม ×${M.pow.toFixed(1)} · อายุขัย ×${M.life.toFixed(1)} ของมนุษย์</div>${stars}</div>
  <div style="display:flex;gap:8px;margin-top:10px"><button class="gbtn" style="flex:1" ${brRR<=0?'disabled':''} onclick="brReroll()">🎲 สุ่มใหม่ (${brRR>50?'∞':brRR})</button><button class="pbtn" style="flex:1.4" onclick="closeM();beastBirth2(brRoll)">🐣 เกิด</button></div></div>`);
  try{$('modal').dataset.k='broll'}catch(e){}
  if(!brAnim)brAnim=requestAnimationFrame(brDrawStage);
@@ -9865,10 +9866,10 @@ function paLTag(L){if(!L||!L.w)return'';return`<span class="paWt ${L.nb?'nb':''}
 // ===== v15.2 ดูคนอื่นเล่น: แท็บกำเนิด · ประวัติ · จัดหมวดใหม่ =====
 function realmTxt(){try{const B=S.beastMode;if(B&&!B.human){const L=B.sp==='มังกร'?BL_STD:BL_ST;return `${B.sp||'สัตว์อสูร'} · ${(L&&L[B.st])||('ขั้น '+((B.st|0)+1))}`}const L=realmLabel();return L.base+(L.sub?' · '+L.sub:'')}catch(e){return REALMS[realmIdx()].n}}
 function worldTxt(){return S.xt?'✨ แดนเทพ':S.xian?'☁️ โลกเซียน':'⚔️ ยุทธภพ'}
-function birthInfo(){const B=S.beastMode,o=S.odds>0?1/S.odds:0;let fi=0;try{fi=fateOf(o)}catch(e){}
+function birthInfo(){const B=S.beastMode,o=S.odds>0?1/S.odds:0;let fi=0;try{fi=S.rareF!=null?S.rareF:fateOf(o)}catch(e){}
  const g=S.goal&&typeof goalOf==='function'?goalOf(S.goal):null;
  return{fam:S.family?S.family.n:'',famD:String((S.family&&S.family.d)||'').replace(/<[^>]+>/g,'').slice(0,90),tal:S.talent?S.talent.n:'',talM:S.talent?+S.talent.m||0:0,g:S.gender||'',
-  odds:S.custom?'✍️ ลิขิตเอง':(o?'1 ใน '+fmt(Math.round(o)):''),oc:fi,cu:S.custom?1:0,
+  odds:S.custom?'✍️ ลิขิตเอง':S.rareN?(S.rareN>1.5?'1 ใน '+fmt(Math.round(S.rareN)):'ธรรมดา'):(o?'1 ใน '+fmt(Math.round(o)):''),oc:fi,cu:S.custom?1:0,
   traits:(S.traits||[]).map(trOf).filter(Boolean).map(t=>(t.bad?'⚠️ ':'')+t.n).slice(0,10),
   ow:S.ow&&S.world?('🌌 วิญญาณจาก'+S.world.n+(S.soul?' — '+S.soul.n:'')):'',
   mode:S.ch==='short'?'⏳ ชีวิตสั้น':B?'🐾 สัตว์อสูร':S.xt?'✨ แดนเทพ':S.xian?'☁️ โลกเซียน':'⚔️ ยุทธภพ',
@@ -23347,7 +23348,7 @@ const CHU_EV=[
  ['🔁 ทดลองทุกคำสั่ง','"Inventory!" "Skill tree!" "Quest log!" "Help!" "ระบบ ช่วยด้วย!" — คุณลองทุกคำที่นึกออกเป็นภาษาบ้านเกิด',[['📋 ทำเป็นตารางทดลองอย่างเป็นระบบ',5,()=>{S.int+=2}],['🎲 สุ่มพูดไปเรื่อยๆ',4,()=>{joy(2)}]]],
 ];
 function chuOK(){return !!(S&&S.alive&&S.ow&&S.awake&&!S.sys&&!(S.beastMode&&!S.beastMode.human)&&S.age>=6&&(S.chuN||0)<12)}
-function chuTick(){if(!chuOK()||choice._cur||modalOpen)return;if(S.age-(S.chuY==null?-9:S.chuY)<3||Math.random()>.05)return;S.chuY=S.age;S.chuN=(S.chuN||0)+1;
+function chuTick(){if(!chuOK())return;if(choice._cur||modalOpen){if(typeof evDefer==='function'&&!(S.chuQ===S.age)){S.chuQ=S.age;evDefer(chuTick)}return}if(S.age-(S.chuY==null?-9:S.chuY)<3||Math.random()>.05)return;S.chuY=S.age;S.chuN=(S.chuN||0)+1;
  const E=CHU_EV[(S.chuN-1)%CHU_EV.length];
  choice(E[0],`${E[1]}<br><span class="tag2">📢 แรงศรัทธาต่อระบบ ${S.chuuni||0}% (ยิ่งสูงยิ่งมีโอกาสที่ระบบจะได้ยิน${S.xian?' · ช่วยการบำเพ็ญหยั่งรู้ฟ้าด้วย':''})</span>`,E[2].map(o=>({t:o[0],s:o[1]>0?`ศรัทธา +${o[1]}%`:`ศรัทธา ${o[1]}%`,f(){try{o[2]()}catch(e){}S.chuuni=clamp((S.chuuni||0)+o[1],0,45);
   if(o[1]>0&&!S.sys&&Math.random()<(S.chuuni||0)/100){S.sysEver=0;log(`📢 ${E[0]} — …<b>ติ๊ง!</b> คราวนี้ไม่ใช่กระดิ่งร้านน้ำชา!`,'myth',true);keyAdd('ตะโกนเรียกระบบจนระบบได้ยิน');setTimeout(()=>{try{sysOffer()}catch(e){console.error(e)}},400)}
@@ -23637,6 +23638,247 @@ window.oneForce=k=>{if(S&&S.alive&&!S.flags.one)oneApply(k||1)};
 (function(){const st=document.createElement('style');st.textContent=`.cm.cmone .cmb{background:linear-gradient(120deg,#3a2808,#6a4a10 45%,#3a2808);color:#ffe8a8;border:2px solid #ffd060;box-shadow:0 0 16px #ffd06088;border-radius:14px;padding:8px 12px;width:100%}.cm.cmone .cmh b{color:#ffd060}.cm.cmone{justify-content:center}
 .klb.oneb{background:linear-gradient(90deg,#b8862a,#ffe08a,#b8862a);color:#3a2808;font-weight:bold}`;document.head.appendChild(st)})();
 try{SYS_GUIDE.push({s:'life',nw:1,ic:'🌟',t:'หนึ่งเดียวในนวนิยาย',d:'ทุกครั้งที่เกิดแบบสุ่ม มีโอกาส <b>1 ใน 10,000</b> (0.01%) ที่ฟ้าจะลิขิตให้คุณเป็น「หนึ่งเดียวในนวนิยาย」 — ได้พรสวรรค์สูงสุดและของเทพ 1 ชิ้น (กระบี่ลิขิตฟ้า · ลูกปัดอายุวัฒนะ · คัมภีร์ไร้นาม · ตราผู้ถูกเลือก) · ชื่อจะถูกประกาศในแชทโลก และมีป้าย 🌟 ในทำเนียบ · ชีวิตที่สร้างเอง ชะตาประจำวัน และสัตว์ไม่มีสิทธิ์',te:'One in the Novel',de:'0.01% chance per random birth: top talent and a god-tier item, announced to everyone.'})}catch(e){}
+
+// ===================== v17.11 🧬 ระบบร่างกาย + ความหายากแบบใหม่ (คนและสัตว์) =====================
+// ความหายาก: นับเฉพาะส่วนที่โอกาสต่ำกว่า 10% (เพศ/ยุค/ครอบครัวธรรมดาไม่ทำให้ตัวเลขพองอีกต่อไป)
+// ระดับชะตา: เทียบกับชีวิตจำลองนับพันครั้ง → "อยู่กลุ่มบนสุดกี่ %" แล้วจับคู่กับขั้นชะตาเดิม 13 ขั้น
+const BODY_LK=[
+ {n:'อัปลักษณ์',ic:'👺',d:'คนแปลกหน้ามักเบือนหน้าหนี · เสน่ห์ −20',cha:-20,p:.06},
+ {n:'หน้าตาค่อนไปทางขี้เหร่',ic:'😶',d:'ไม่มีใครจำหน้าได้ · เสน่ห์ −6',cha:-6,p:.2},
+ {n:'หน้าตาธรรมดา',ic:'🙂',d:'หน้าตาแบบที่เห็นได้ทั่วไป',cha:0,p:.48},
+ {n:'หน้าตาดี',ic:'😊',d:'คนมักเอ็นดู · เสน่ห์ +8',cha:8,p:.2},
+ {n:'งามเลิศ',ic:'🌸',d:'เดินผ่านตลาดแล้วคนหยุดมอง · เสน่ห์ +20',cha:20,p:.06}];
+const BODY_LKB=[
+ {n:'ขนหย็อมแหว่ง',ic:'🥀',d:'ดูขี้โรค ตัวอื่นในฝูงไม่ค่อยเข้าใกล้',cha:-10,p:.06},
+ {n:'ขนสีหม่น',ic:'🌫️',d:'กลมกลืนกับป่า ไม่มีใครสังเกต',cha:-3,p:.2},
+ {n:'ขนธรรมดา',ic:'🐾',d:'',cha:0,p:.48},
+ {n:'ขนเงางาม',ic:'✨',d:'สะดุดตา เป็นที่หมายปองของตัวอื่น',cha:5,p:.2},
+ {n:'ลวดลายหายาก',ic:'🌟',d:'ลายบนตัวไม่ซ้ำใครในป่า · พรานก็อยากได้',cha:10,p:.06}];
+// cure: ระดับความยากในการรักษา (0=รักษาไม่ได้/ไม่ต้องรักษา) · good: ข้อดี
+const BODY_C={
+ whole:{n:'กายาสมบูรณ์ 100%',ic:'💎',d:'ไม่มีจุดบกพร่องแม้แต่จุดเดียว · พลังชีวิต +30 · ฝึกยุทธ์ ×1.08',p:.025,good:1},
+ hetero:{n:'ดวงตาสองสี',ic:'👁️',d:'ตาสองข้างคนละสี · เสน่ห์ +10 · ชาวบ้านบางคนว่าเป็นลางร้าย',p:.005,good:1},
+ blind:{n:'ตาบอดแต่กำเนิด',ic:'🦯',d:'มองไม่เห็น · ปัญญาโตช้าลง แต่ลมปราณนิ่งกว่า · โตขึ้นอาจตื่น "เนตรทิพย์"',p:.006,cure:1},
+ deaf:{n:'หูหนวก',ic:'🧏',d:'ไม่ได้ยินเสียง · ลมปราณ ×1.1 เพราะไม่มีเสียงรบกวน · คุยกับคนลำบาก',p:.008,cure:1},
+ mute:{n:'เป็นใบ้',ic:'🤐',d:'พูดไม่ได้ · ตัวเลือกที่ต้องพูดจะหายไป · ความลับไม่มีวันหลุดจากปาก',p:.008,cure:1},
+ leg:{n:'ขาพิการ',ic:'🦽',d:'เดินลำบาก · วิ่งหนี/ไล่ตาม/ปีนไม่ได้ · ฝึกยุทธ์ ×0.88',p:.006,cure:1},
+ arm:{n:'แขนข้างเดียว',ic:'🫱',d:'เกิดมามีแขนข้างเดียว · ฝึกยุทธ์ ×0.85 · ถ้าได้วิชากระบี่มือเดียวจะกลับแรงกว่าเดิม',p:.004,cure:1},
+ // ได้มาระหว่างชีวิต (ไม่สุ่มตอนเกิด)
+ oneeye:{n:'ตาบอดข้างหนึ่ง',ic:'🏴‍☠️',d:'เสียตาไปข้างหนึ่งจากการต่อสู้ · ฝึกยุทธ์ ×0.95',p:0,cure:1,acq:1},
+ scar:{n:'แผลเป็นบนใบหน้า',ic:'⚔️',d:'แผลยาวพาดหน้า · เสน่ห์ −8 แต่คนเห็นก็รู้ว่าผ่านศึกมาไม่น้อย · ชื่อเสียง +',p:0,acq:1},
+ lostarm:{n:'แขนขาดหนึ่งข้าง',ic:'🩸',d:'เสียแขนในการต่อสู้ · ฝึกยุทธ์ ×0.85',p:0,cure:1,acq:1},
+ lostleg:{n:'ขาเจ็บถาวร',ic:'🩼',d:'กระดูกขาแตกจนเดินกะเผลก · ฝึกยุทธ์ ×0.9',p:0,cure:1,acq:1}};
+const BODY_CB={
+ whole:{n:'ร่างสมบูรณ์ไร้ตำหนิ',ic:'💎',d:'แข็งแรงเกินตัวอื่นในครอก · พลังชีวิต +30 · ล่าเก่งขึ้น ×1.08',p:.025,good:1},
+ albino:{n:'เผือกทั้งตัว',ic:'🤍',d:'ขาวโพลนทั้งตัว หายากมาก · ดูดแสงจันทร์ ×1.15 · แต่พรานหมายหัว',p:.004,good:1},
+ blind:{n:'ตาบอด',ic:'🦯',d:'ล่าด้วยกลิ่นและเสียง · ล่าได้น้อยลง ×0.8 · ดูดแสงจันทร์นิ่งขึ้น',p:.007,cure:1},
+ deaf:{n:'หูหนวก',ic:'🧏',d:'ไม่ได้ยินเสียงนักล่าที่ย่องมา · ดูดแสงจันทร์ ×1.1',p:.008,cure:1},
+ leg:{n:'ขาพิการ',ic:'🦴',d:'วิ่งไม่ทันเหยื่อ · ล่าได้น้อยลง ×0.8',p:.007,cure:1},
+ tail:{n:'หางด้วน',ic:'✂️',d:'ทรงตัวไม่ดี ตัวอื่นในฝูงดูแคลน · ล่า ×0.92',p:.01,cure:1,notFor:['fish','serp']},
+ wing:{n:'ปีกหัก',ic:'🪶',d:'บินไม่ได้ ต้องเดินหากินบนพื้นเหมือนสัตว์อื่น · ล่า ×0.85',p:.012,cure:1,only:'bird'},
+ oneeye:{n:'ตาบอดข้างหนึ่ง',ic:'🏴‍☠️',d:'เสียตาไปข้างหนึ่งจากการต่อสู้ · ล่า ×0.95',p:0,cure:1,acq:1},
+ scar:{n:'แผลเป็นทั่วตัว',ic:'⚔️',d:'ผ่านศึกมามาก สัตว์อื่นเห็นแล้วถอย',p:0,acq:1},
+ lostleg:{n:'ขาเจ็บถาวร',ic:'🩼',d:'กระดูกขาแตกจากการต่อสู้ · ล่า ×0.85',p:0,cure:1,acq:1}};
+// ตัวคูณการเติบโตของแต่ละสภาพ (ใช้กับค่าที่เพิ่มขึ้นในแต่ละปี)
+const BODY_M={whole:{power:1.08},hetero:{},blind:{int:.7,qi:1.12},deaf:{qi:1.1},mute:{cha:.7},leg:{power:.88},arm:{power:.85},oneeye:{power:.95},scar:{},lostarm:{power:.85},lostleg:{power:.9},
+ albino:{qi:1.15},tail:{power:.92},wing:{power:.85}};
+const BODY_MB={blind:{power:.8,qi:1.1},leg:{power:.8}};
+// คำในตัวเลือกที่ร่างกายแบบนี้ทำไม่ได้
+const BODY_RX={
+ mute:/(?<!ไม่)(ตะโกน|ร้องเพลง|ขับร้อง|กระซิบ|เจรจา|ต่อรอง|โน้มน้าว|พูด|กล่าว|ท่องบท|ท่องคาถา|ประกาศ|ตวาด|โต้เถียง|โต้วาที|ด่ากลับ|เล่านิทาน|สารภาพ|ร้องขอ)/,
+ blind:/(?<!ไม่)(อ่านหนังสือ|อ่านคัมภีร์|อ่านตำรา|อ่านจดหมาย|วาดภาพ|วาดรูป|ยิงธนู|เล็ง|ชมวิว|เพ่งมอง|แอบมอง|ส่องดู|ปักผ้า|เขียนพู่กัน)/,
+ deaf:/(?<!ไม่)(ฟังเพลง|ดีดพิณ|เป่าขลุ่ย|แอบฟัง|ดักฟัง|ฟังเสียง|ฟังเทศน์|ฟังธรรม|เงี่ยหู)/,
+ leg:/(?<!ไม่)(วิ่ง|กระโดด|ปีน|เตะ|ไล่ตาม|ไล่ล่า|เต้นรำ|วิชาตัวเบา)/,
+ lostleg:/(?<!ไม่)(วิ่ง|กระโดด|ปีน|ไล่ตาม|เต้นรำ|วิชาตัวเบา)/,
+ arm:/(?<!ไม่)(ปีน|ยิงธนู|ดีดพิณ|ตีเหล็ก|สองมือ|ปรบมือ|ทวนคู่|กระบี่คู่)/,
+ lostarm:/(?<!ไม่)(ปีน|ยิงธนู|ดีดพิณ|ตีเหล็ก|สองมือ|ปรบมือ|ทวนคู่|กระบี่คู่)/,
+ oneeye:/(?<!ไม่)(ยิงธนู|เล็ง)/,
+ wing:/(?<!ไม่)(บินหนี|โผบิน|บินขึ้น|ทะยานขึ้นฟ้า|บินไป)/};
+const BODY_RXB={blind:BODY_RX.blind,deaf:BODY_RX.deaf,leg:BODY_RX.lostleg,lostleg:BODY_RX.lostleg,wing:BODY_RX.wing};
+function bodyB(){return !!(S&&S.beastMode&&!S.beastMode.human)}
+function bodyTab(beast){return beast?BODY_CB:BODY_C}
+function bodyGen(beast,kind){
+ const LK=beast?BODY_LKB:BODY_LK,C=bodyTab(beast);let a=Math.random(),lk=2;for(let i=0;i<LK.length;i++){if(a<LK[i].p){lk=i;break}a-=LK[i].p}
+ const pool=Object.keys(C).filter(k=>{const c=C[k];return c.p>0&&(!c.only||c.only===kind)&&!(c.notFor&&c.notFor.includes(kind))});
+ const tot=pool.reduce((s,k)=>s+C[k].p,0);let b=Math.random(),cs=[],cp=1-tot;for(const k of pool){if(b<C[k].p){cs=[k];cp=C[k].p;break}b-=C[k].p}
+ return{lk,lkP:LK[lk].p,cs,cP:cp,bt:beast?1:0,cured:[],acq:0}}
+function bodyLk(b){return(b&&b.bt?BODY_LKB:BODY_LK)[b?b.lk:2]}
+function bodyCs(b){const C=bodyTab(b&&b.bt);return(b&&b.cs||[]).map(k=>Object.assign({id:k},C[k])).filter(c=>c.n)}
+function bodyHas(k){return !!(S&&S.body&&(S.body.cs||[]).includes(k))}
+function bodyRows(b,T,beast){const L=bodyLk(b),cs=bodyCs(b);
+ T.push([beast?'🐾 รูปลักษณ์':'🪞 รูปลักษณ์',L.ic+' '+L.n,L.d,b.lkP]);
+ if(cs.length)cs.forEach(c=>T.push([c.good?'💎 ร่างกาย':'🩹 ร่างกาย',c.ic+' '+c.n,c.d,b.cP]));
+ else T.push(['🩺 ร่างกาย','ครบสามสิบสองประการ','ร่างกายปกติ ไม่มีอะไรขาดไม่มีอะไรเกิน',b.cP])}
+// ---------- ความหายาก ----------
+const RARE_CUT=.1,RARE_TOP=[1,.7,.45,.25,.12,.05,.02,.007,.0025,.0008,.0002,.00005,.00001];
+const RARE_DIST={};
+function rareN(ps){let n=1;ps.forEach(p=>{if(p>0&&p<RARE_CUT)n/=p});return n}
+function rareHumanPs(){const era=pickW(ERAS),r=genRoll(Math.min(.6,era.v.ow*(CFG.xian?2.5:1))),tw=TRAITS.reduce((a,x)=>a+x.w,0),b=bodyGen(false);
+ const ps=[era.p,r.g.p,r.f.p,r.t.p,r.op,b.lkP,b.cP];const L=r.trs.list.map(trOf).filter(Boolean);if(!L.length)ps.push(.45);else L.forEach(t=>ps.push(t.w/tw*.55));
+ if(r.w){ps.push(r.w.p,r.it.p)}if(r.os)ps.push(r.os.p);return ps}
+function rareBeastPs(){const r=_brGenRaw(),k=(BL_SP[r.sp]||[])[1],b=bodyGen(true,k);return[r.spP,r.elP,r.blP,r.tP,r.gP,r.parP||1,b.lkP,b.cP]}
+function rareDist(key){if(RARE_DIST[key])return RARE_DIST[key];const A=[],beast=key[0]==='b';
+ for(let i=0;i<3000;i++){try{A.push(Math.log10(rareN(beast?rareBeastPs():rareHumanPs())))}catch(e){A.push(0)}}
+ A.sort((a,b)=>a-b);return RARE_DIST[key]=A}
+function rareFrac(N,key){const A=rareDist(key),x=Math.log10(N),n=A.length;
+ // สัดส่วนชีวิตที่หายาก "เท่ากับหรือมากกว่า" ชีวิตนี้
+ let lo=0,hi=n;while(lo<hi){const m=(lo+hi)>>1;if(A[m]<x-1e-9)lo=m+1;else hi=m}const ge=(n-lo)/n;
+ const q=A[Math.floor(n*.99)];if(ge<.01&&x>q)return Math.min(.01,.01*Math.pow(10,q-x));return Math.max(ge,1/n/4)}
+function rareTier(fr){let f=0;RARE_TOP.forEach((t,i)=>{if(fr<=t)f=i});return f}
+function rareCalc(T,key){const R0=T.filter(c=>c[3]>0&&c[3]<RARE_CUT),N=rareN(T.map(c=>c[3])),fr=rareFrac(N,key),f=rareTier(fr);
+ const top=R0.slice().sort((a,b)=>a[3]-b[3])[0];return{N,fr,f,k:R0.length,top:top?[String(top[0]).replace(/^[^\wก-๙]+\s*/,''),String(top[1]).replace(/<[^>]+>/g,''),1/top[3]]:null}}
+function rareFrTxt(fr){return fr>=.01?(fr*100).toFixed(fr>=.1?0:1)+'%':'1 ใน '+fmt(Math.round(1/fr))+' ชีวิต'}
+function rareSub(r){if(!r)return'';if(!r.k)return'ไม่มีอะไรหายากเลย — ชีวิตธรรมดาแบบคนส่วนใหญ่';
+ return`อยู่กลุ่มบนสุด <b>${rareFrTxt(r.fr)}</b> ของทุกชีวิต · นับเฉพาะ ${r.k} อย่างที่หายาก${r.top?`<br>ชิ้นที่หายากที่สุด: <b>${esc(r.top[1])}</b> (1 ใน ${fmt(Math.round(r.top[2]))})`:''}`}
+function oddsShowR(r){const n=$('oddsN');if(!n)return;const R0=r&&r.rare;
+ if(!R0){n.textContent='1 ใน '+fmt(1/(r.p*r.era.p));return}
+ n.textContent=R0.k?'1 ใน '+fmt(Math.round(R0.N)):'ธรรมดา';
+ let d=$('oddsR');if(!d){n.insertAdjacentHTML('afterend','<div class="od" id="oddsR" style="margin-top:2px"></div>');d=$('oddsR')}d.innerHTML=rareSub(R0)}
+// ---------- สัตว์: แนบร่างกาย+ความหายากตอนสุ่ม ----------
+const _brGenRaw=brGen;
+brGen=function(){const r=_brGenRaw.apply(this,arguments);try{const k=(BL_SP[r.sp]||[])[1];r.body=bodyGen(true,k);const T=[];
+ const s=BL_SP[r.sp],b=BBLOOD[r.bl];T.push(['เผ่าพันธุ์',s[0],'',r.spP],['ธาตุ',BEL[r.el][0],'',r.elP],['สายเลือด',b.n,'',r.blP],['รากปราณ',BTAL_N[r.t]||TALENT[r.t].n,'',r.tP],['เพศ','','',r.gP],['ครอบครัว','','',r.parP||1]);
+ bodyRows(r.body,T,true);r.rare=rareCalc(T,'b'+(CFG.xian?1:0))}catch(e){console.error(e)}return r};
+function bodyBRows(r,row){if(!r.body)return[];const T=[];bodyRows(r.body,T,true);return T.map(c=>row(c[0],c[1],c[2],c[3]))}
+{const _bb2=beastBirth2;beastBirth2=function(r){window._bbR=r;try{return _bb2.apply(this,arguments)}finally{window._bbR=null;try{if(S&&r&&r.body&&!S.body){S.body=JSON.parse(JSON.stringify(r.body));bodyStart();if(r.rare){S.rareN=r.rare.N;S.rareF=r.rare.f;S.rareFr=r.rare.fr}render()}}catch(e){console.error(e)}}}}
+// ---------- เริ่มชีวิต ----------
+function bodyStart(){const b=S.body;if(!b||b._st)return;b._st=1;const L=bodyLk(b);S.cha=Math.max(0,(S.cha||0)+L.cha);
+ if(bodyHas('hetero'))S.cha+=10;if(bodyHas('mute'))S.cha=Math.max(0,S.cha-10);if(bodyHas('whole')){S.hp+=30}
+ if(bodyHas('albino'))S.cha+=5}
+{const _slB=startLife;startLife=function(){const r0=roll;const out=_slB.apply(this,arguments);try{if(S&&!S.body&&!window._bbirth){
+  let b=r0&&r0.body;if(!b){b=r0&&(r0.custom||r0.daily)?{lk:tr('beauty')?4:2,lkP:1,cs:[],cP:1,bt:0,cured:[],acq:0}:bodyGen(false)}
+  S.body=JSON.parse(JSON.stringify(b));bodyStart();if(r0&&r0.rare){S.rareN=r0.rare.N;S.rareF=r0.rare.f;S.rareFr=r0.rare.fr}render()}}catch(e){console.error(e)}return out}}
+// ---------- ผลต่อการเติบโตรายปี ----------
+function bodyMul(k){if(!S||!S.body)return 1;let m=1;const B=bodyB();for(const c of S.body.cs||[]){const t=(B&&BODY_MB[c])||BODY_M[c];if(t&&t[k])m*=t[k]}
+ if(S.body.oneArm&&(bodyHas('arm')||bodyHas('lostarm'))&&k==='power')m*=1.35;if(S.body.aid&&(bodyHas('leg')||bodyHas('lostleg'))&&k==='power')m*=1.08;return m}
+{const _ye11=yearEnd;yearEnd=function(){const r=_ye11.apply(this,arguments);try{if(S&&S.body&&bodyHas('whole')){S.maxHp+=30;S.hp=Math.min(S.hp,S.maxHp)}}catch(e){}return r}}
+{const _py11=passYear;passYear=function(){if(!S||!S.alive||!S.body)return _py11.apply(this,arguments);
+ const a0=S.age,b0={power:S.power,int:S.int,qi:S.qi,cha:S.cha},hp0=S.hp;const r=_py11.apply(this,arguments);
+ try{if(S&&S.alive&&S.body){for(const k in b0){const m=bodyMul(k);if(m!==1&&typeof S[k]==='number'){const d=S[k]-b0[k];if(d>0)S[k]=k==='qi'?+(b0[k]+d*m).toFixed(2):Math.round(b0[k]+d*m)}}
+  const dy=Math.max(1,S.age-a0);bodyYear(dy,hp0)}}catch(e){console.error(e)}return r}}
+// ---------- เหตุการณ์เกี่ยวกับร่างกาย ----------
+function bodyCure(k,how){const b=S.body;b.cs=(b.cs||[]).filter(x=>x!==k);b.cured=(b.cured||[]).concat([k]);const c=bodyTab(b.bt)[k];
+ log(`🩺 ${how} — <b>${c?c.n:k}</b> หายเป็นปกติ`,'epic',true);try{keyAdd(`${how}: ${c?c.n:k} หายขาด`)}catch(e){}joy(15);render()}
+function bodyCurable(){return(S.body.cs||[]).filter(k=>{const c=bodyTab(S.body.bt)[k];return c&&c.cure})}
+function bodyGain(k,how){const b=S.body,C=bodyTab(b.bt);if(!C[k]||(b.cs||[]).includes(k))return false;b.cs=(b.cs||[]).concat([k]);b.acq=(b.acq||0)+1;
+ if(k==='scar'){S.cha=Math.max(0,S.cha-8);S.fame+=20}if(k==='oneeye'&&!tr('eye')&&Math.random()<.15){S.traits.push('eye');log('👁️ ตาข้างที่เหลือกลับมองเห็นท่าทีศัตรูชัดกว่าเดิม — <b>เนตรทิพย์</b>ตื่นขึ้น','myth',true)}
+ log(`🩸 ${how} — ร่างกายเปลี่ยนไปตลอดกาล: <b>${C[k].ic} ${C[k].n}</b>`,'bad',true);try{keyAdd(`${how} จนได้${C[k].n}`)}catch(e){}joy(-15);render();return true}
+const BODY_EV=[
+ // ---- คน ----
+ {c:'blind',t:'🦯 เสียงฝีเท้าในความมืด',x:'กลางดึก คุณได้ยินเสียงฝีเท้าย่องเข้ามาในบ้าน คนอื่นหลับกันหมด แต่สำหรับคุณ กลางวันกับกลางคืนก็มืดเท่ากัน',o:[
+  ['👂 ฟังทิศทางแล้วจู่โจมก่อน',()=>{if(Math.random()<.55+Math.min(.3,S.power/2000)){S.power+=R(10,25);S.fame+=8;log('🦯 โจรไม่คิดว่าคนตาบอดจะรู้ว่ามันยืนตรงไหน — ล้มลงตั้งแต่ฝ่ามือแรก','good')}else{S.hp-=R(15,30);S.money=Math.max(0,S.money-R(20,80)*W15());log('🦯 พลาดไปครึ่งก้าว โจรหนีไปพร้อมของในบ้าน','bad')}}],
+  ['🔔 เคาะภาชนะเรียกคนทั้งบ้าน',()=>{S.karma+=1;joy(2);log('🦯 ทั้งบ้านตื่น โจรหนีไปมือเปล่า','')}]]},
+ {c:'blind',t:'🧓 อาจารย์ตาบอดริมลำธาร',x:'ชายชราตาบอดเหมือนคุณนั่งฟังเสียงน้ำอยู่ทุกเช้า วันหนึ่งเขาพูดขึ้นมาว่า "ตาของเจ้าไม่ได้หายไปไหน มันแค่ย้ายไปอยู่ที่หูกับผิวหนังเท่านั้น"',o:[
+  ['🙇 ขอเป็นศิษย์',()=>{S.qi+=1.5;S.power+=R(15,30);if(!tr('eye')&&Math.random()<.35){S.traits.push('eye');log('👁️ วันหนึ่งคุณ "เห็น" ลมที่พัดผ่านดาบ — <b>เนตรทิพย์</b>ตื่นขึ้น','myth',true);keyAdd('คนตาบอดที่ตื่นเนตรทิพย์')}else log('🦯 คุณเรียนวิธีฟังเสียงลมจนรู้ว่าใครยืนอยู่ห่างกี่ก้าว','good')}],
+  ['🙏 ขอบคุณแล้วกลับบ้าน',()=>{S.int+=3}]]},
+ {c:'deaf',t:'🧏 โลกที่เงียบสนิท',x:'คุณนั่งสมาธิอยู่ในศาลาตามลำพัง ไม่รู้เลยว่าทั้งหมู่บ้านวิ่งหนีเพราะโจรภูเขาบุก จนเงาของใครคนหนึ่งพาดผ่านหน้า',o:[
+  ['⚔️ ลุกขึ้นสู้ทันที',()=>{if(fight('โจรภูเขา',Math.max(30,total()*.7)))log('🧏 คุณสู้โดยไม่ได้ยินเสียงขู่ใดๆ เลยไม่หวั่นไหวสักนิด','good');else log('🧏 คุณเสียท่าเพราะไม่ได้ยินพวกมันที่อ้อมมาข้างหลัง','bad')}],
+  ['🧘 นั่งนิ่งต่อไปให้มันคิดว่าเป็นรูปปั้น',()=>{if(Math.random()<.5){S.qi+=1;log('🧏 พวกโจรเดินผ่านไปจริงๆ — สมาธิคุณนิ่งจนตัวเองยังแปลกใจ','good')}else{S.hp-=R(10,25);log('🧏 มันเตะคุณล้มเพราะคิดว่าเป็นคนหยิ่ง','bad')}}]]},
+ {c:'deaf',t:'🤟 ภาษามือ',x:'คุณคิดท่ามือขึ้นมาเองเพื่อคุยกับแม่ เด็กๆ ในหมู่บ้านเห็นแล้วอยากเล่นด้วย',o:[
+  ['👐 สอนทุกคนที่อยากเรียน',()=>{S.karma+=5;S.cha+=4;joy(6);log('🤟 ไม่นานทั้งหมู่บ้านก็ใช้ท่ามือของคุณสื่อสารกันเวลาซุ่มล่าสัตว์','good')}],
+  ['🤫 ใช้แค่ในครอบครัว',()=>{joy(3)}]]},
+ {c:'mute',t:'🤐 ถูกใส่ร้ายโดยไม่มีปากจะแก้',x:'ของมีค่าของคหบดีหายไป ทุกคนชี้มาที่คุณ เพราะคิดว่าคนเป็นใบ้คงเถียงไม่ได้',o:[
+  ['✍️ เขียนลำดับเหตุการณ์ลงบนพื้นทราย',()=>{if(S.int>=30||Math.random()<.3){S.fame+=10;S.karma+=2;log('🤐 คุณเขียนเวลาและรอยเท้าทีละขั้น จนคนร้ายตัวจริงหน้าซีด','good')}else{S.money=Math.max(0,S.money-R(30,100)*W15());S.fame=Math.max(0,S.fame-5);log('🤐 ไม่มีใครอ่านออก… คุณถูกปรับเงิน','bad')}}],
+  ['😔 ยอมรับโทษเงียบๆ',()=>{S.karma+=4;S.money=Math.max(0,S.money-R(20,60)*W15());joy(-5)}]]},
+ {c:'mute',t:'🗝️ ผู้เก็บความลับ',x:'ผู้อาวุโสคนหนึ่งต้องการคนเฝ้าห้องเก็บคัมภีร์ "คนที่พูดไม่ได้ ข้าไว้ใจที่สุด"',o:[
+  ['🙇 รับหน้าที่',()=>{S.money+=R(60,140)*W15();S.int+=R(4,8);if(Math.random()<.3){S.power+=R(30,60);log('🗝️ ระหว่างเฝ้าห้อง คุณแอบอ่านคัมภีร์ไปทีละหน้า — ไม่มีใครรู้ เพราะคุณไม่มีวันเล่าให้ใครฟัง','epic')}else log('🗝️ งานเงียบ เงินดี และคุณได้อ่านหนังสือทุกวัน','good')}],
+  ['🙅 ปฏิเสธ',()=>{}]]},
+ {c:['leg','lostleg'],t:'🪵 ไม้เท้าของช่างไม้',x:'ช่างไม้ชราเห็นคุณเดินลำบาก เสนอทำไม้เท้าเหล็กไหลหุ้มไม้จันทน์ให้ "ใช้เป็นอาวุธก็ได้นะ"',o:[
+  ['💰 จ้างทำ',()=>{const c=Math.round(R(80,160)*W15());if(S.money>=c){S.money-=c;S.body.aid=1;log(`🪵 จ่ายไป ${fmtM(c)} — ไม้เท้าอันนี้ทำให้คุณยืนได้มั่นคงขึ้น และฟาดคนได้เจ็บกว่าเดิม`,'good')}else log('🪵 เงินไม่พอ ช่างไม้ส่ายหน้าแล้วกลับไป','')}],
+  ['🙏 ขอบคุณแต่ไม่เป็นไร',()=>{}]]},
+ {c:['leg','lostleg'],t:'🧘 ฝึกแต่ครึ่งบน',x:'คุณวิ่งไม่ได้ เตะไม่ได้ แต่ยังมีมือ มีลมหายใจ และมีเวลามากกว่าคนอื่น',o:[
+  ['✊ ฝึกฝ่ามือจนเลือดซิบ',()=>{S.power+=R(25,50);joy(-2)}],
+  ['🌬️ นั่งฝึกลมปราณแทน',()=>{S.qi+=1.5}]]},
+ {c:['arm','lostarm'],t:'🗡️ กระบี่มือเดียว',x:'จอมยุทธ์พเนจรแขนขาดข้างหนึ่งเหมือนคุณ แวะดื่มน้ำชาที่ร้านริมทาง เขามองแขนเสื้อที่ว่างเปล่าของคุณแล้วยิ้ม',o:[
+  ['🙇 ขอเรียนวิชา',()=>{if(S.body.oneArm){S.power+=R(20,40);return}S.body.oneArm=1;S.power+=R(40,80);log('🗡️ "กระบี่สองมือต้องแบ่งใจเป็นสอง กระบี่มือเดียวใจเป็นหนึ่ง" — คุณได้วิชา<b>กระบี่มือเดียว</b> การฝึกยุทธ์กลับแรงกว่าคนสองแขน','myth',true);keyAdd('เรียนกระบี่มือเดียวจากจอมยุทธ์แขนขาด')}],
+  ['🍵 แค่นั่งดื่มชาด้วยกัน',()=>{S.int+=2;joy(3)}]]},
+ {c:'ugly',t:'💔 แม่สื่อส่ายหน้า',x:'แม่สื่อเดินมาถึงหน้าบ้าน มองหน้าคุณครู่หนึ่ง แล้วหันหลังกลับโดยไม่พูดอะไร',o:[
+  ['👘 ซื้อชุดใหม่ แต่งตัวให้ดีขึ้น',()=>{const c=Math.round(R(30,70)*W15());S.money=Math.max(0,S.money-c);S.cha+=4;log('👘 ชุดดีช่วยได้นิดหน่อย อย่างน้อยครั้งหน้าแม่สื่อก็ยอมนั่งดื่มชา','')}],
+  ['⚔️ ช่างมัน ไปฝึกต่อ',()=>{S.power+=R(15,35);joy(-3);log('⚔️ คนหน้าตาไม่ดีไม่มีเวลาไปเสียใจ — ต้องเก่งจนไม่มีใครกล้ามองหน้า','')}]]},
+ {c:'ugly',t:'🎭 หน้ากากเหล็ก',x:'คุณเบื่อสายตาคนแปลกหน้า เลยตีหน้ากากเหล็กใส่ออกไปข้างนอก ไม่นานผู้คนก็เริ่มลือกันถึง "จอมยุทธ์หน้ากากเหล็ก"',o:[
+  ['🎭 ใส่ตลอดไป',()=>{S.fame+=25;S.cha+=6;S.body.mask=1;log('🎭 ไม่มีใครรู้ว่าใต้หน้ากากหน้าตาเป็นอย่างไร — ทุกคนเลยจินตนาการว่าต้องหล่อมาก','epic');keyAdd('จอมยุทธ์หน้ากากเหล็ก')}],
+  ['😌 ถอดออก ยอมรับตัวเอง',()=>{S.karma+=3;joy(8)}]]},
+ {c:'pretty',t:'🌸 ความงามนำภัย',x:'บุตรชายขุนนางท้องถิ่นเห็นคุณที่ตลาด ส่งคนมาเชิญไปงานเลี้ยงที่จวน พร้อมกล่องเครื่องประดับ',o:[
+  ['🙅 ปฏิเสธต่อหน้าคนส่งสาร',()=>{if(Math.random()<.5){if(fight('องครักษ์ของจวน',Math.max(40,total()*.8)))log('🌸 คนของจวนมาหาเรื่องถึงบ้าน แต่กลับไปพร้อมฟันหัก','good');else log('🌸 ถูกคนของจวนรุมทุบเพราะทำให้นายขายหน้า','bad')}else{S.karma+=3;log('🌸 บุตรขุนนางขายหน้าจนไม่กล้ามาอีก','')}}],
+  ['💎 รับกล่องไว้แล้วไปงานเลี้ยง',()=>{S.money+=R(80,200)*W15();S.karma-=4;S.fame+=5;log('💎 งานเลี้ยงหรูหรา คุณกลับมาพร้อมของขวัญและข่าวลือ','')}]]},
+ {c:'whole',t:'💎 กระดูกไร้ตำหนิ',x:'ปรมาจารย์ผู้หนึ่งบีบข้อมือคุณแล้วตาลุกวาว "ข้าดูกระดูกคนมาหกสิบปี เพิ่งเคยเจอร่างที่ไม่มีจุดบกพร่องเลยสักจุด"',o:[
+  ['🙇 ขอให้ท่านชี้แนะ',()=>{S.power+=R(40,90);S.qi+=1;log('💎 ร่างที่สมบูรณ์รับพลังได้ไม่มีรั่ว — สามเดือนกับปรมาจารย์เท่ากับสามปีของคนอื่น','epic')}],
+  ['🤨 ระวังตัวไว้ก่อน',()=>{S.int+=4;log('💎 ภายหลังคุณได้ยินว่าเขาตามหาร่างสมบูรณ์ไปทำ "เตาหลอมยา" — ดีแล้วที่ไม่ไป','')}]]},
+ {c:'hetero',t:'👁️ ลางร้ายหรือเครื่องหมายฟ้า',x:'หมอผีประจำหมู่บ้านชี้หน้าคุณ "ตาสองสีคือลางร้าย! ภัยแล้งปีนี้เป็นเพราะเด็กคนนี้!"',o:[
+  ['🔥 ยืนจ้องตาหมอผีนิ่งๆ',()=>{if(Math.random()<.5){S.fame+=12;log('👁️ หมอผีหลบสายตาก่อน ชาวบ้านเริ่มลือว่าตาคู่นี้มองทะลุคนโกหก','good')}else{S.fame=Math.max(0,S.fame-8);joy(-6);log('👁️ ชาวบ้านไม่กล้าคบหาครอบครัวคุณไปหลายปี','bad')}}],
+  ['🙈 ปิดตาข้างหนึ่งไว้ตลอด',()=>{S.cha=Math.max(0,S.cha-3);joy(-2)}]]},
+ {c:'scar',t:'⚔️ แผลที่เล่าเรื่องแทนปาก',x:'ในโรงเตี๊ยม นักเลงกลุ่มหนึ่งกำลังจะหาเรื่องคุณ แต่หัวหน้ามันมองแผลบนหน้าคุณแล้วชะงัก',o:[
+  ['😐 จ้องกลับเฉยๆ',()=>{S.fame+=10;log('⚔️ พวกมันวางเงินค่าเหล้าไว้แล้วเดินออกไปเงียบๆ','good')}],
+  ['🍶 เลี้ยงเหล้าแล้วเล่าที่มาของแผล',()=>{S.cha+=5;S.money=Math.max(0,S.money-R(5,15)*W15());joy(4)}]]},
+ // ---- สัตว์ ----
+ {b:1,c:'blind',t:'👃 ล่าด้วยจมูก',x:'คุณมองไม่เห็นเหยื่อ แต่กลิ่นกระต่ายป่าลอยมาตามลมชัดเจน',o:[
+  ['🐾 ย่องตามกลิ่น',()=>{if(Math.random()<.6){S.power+=R(10,20);log('👃 จมูกพาไปถึงโพรงกระต่ายพอดี — อิ่มไปสามวัน','good')}else{S.hp-=R(5,15);log('👃 กลิ่นพาไปเจอรังผึ้งแทน','bad')}}],
+  ['🌕 รอดูดแสงจันทร์ดีกว่า',()=>{S.qi+=.8}]]},
+ {b:1,c:'deaf',t:'🐍 นักล่าที่คุณไม่ได้ยิน',x:'งูเหลือมยักษ์เลื้อยมาข้างหลังโดยไม่มีเสียงอะไรถึงหูคุณเลย — แต่พื้นดินสั่นเบาๆ',o:[
+  ['🦶 อาศัยแรงสั่นของพื้น กระโจนหลบ',()=>{if(Math.random()<.55){S.power+=R(10,20);log('🐍 คุณหลบได้หวุดหวิด แล้วกัดสวนกลับ','good')}else{S.hp-=R(20,35);log('🐍 รัดจนกระดูกลั่นก่อนจะดิ้นหลุดมาได้','bad')}}],
+  ['😶 นิ่งไว้',()=>{if(Math.random()<.4)log('🐍 มันเลื้อยผ่านไป','');else{S.hp-=R(15,30);log('🐍 มันฉกเข้าที่ขาหลัง','bad')}}]]},
+ {b:1,c:['leg','lostleg','wing','tail'],t:'🐺 ฝูงทิ้งไว้ข้างหลัง',x:'ฝูงกำลังย้ายถิ่นหนีหิมะ แต่คุณตามไม่ทัน ตัวอื่นหันมามองครั้งเดียวแล้วเดินต่อ',o:[
+  ['🐾 กัดฟันตามไปให้ได้',()=>{S.hp-=R(10,25);S.power+=R(10,20);log('🐾 คุณมาถึงที่พักใหม่ช้ากว่าตัวอื่นสามวัน แต่มาถึง','')}],
+  ['🕳️ หาโพรงจำศีลเอง',()=>{S.qi+=1.2;joy(-4);log('🕳️ หน้าหนาวนี้คุณอยู่ลำพัง กับแสงจันทร์ที่ส่องเข้าปากโพรง','')}]]},
+ {b:1,c:'albino',t:'🏹 พรานหมายหัวสัตว์เผือก',x:'ข่าวลือเรื่องสัตว์เผือกทั้งตัวไปถึงเมือง พรานสามคนพร้อมกับดักเข้าป่ามา',o:[
+  ['🌿 ซ่อนตัวลึกในป่า',()=>{if(Math.random()<.65)log('🌿 พรานกลับไปมือเปล่า','good');else{S.hp-=R(20,40);log('🪤 ขาข้างหนึ่งติดกับดัก ดิ้นจนหลุดมาได้','bad');if(Math.random()<.25)bodyGain('lostleg','ติดกับดักพราน')}}],
+  ['⚔️ ซุ่มโจมตีพรานก่อน',()=>{if(Math.random()<.45+Math.min(.35,S.power/1500)){S.power+=R(20,40);S.fame+=10;log('🤍 พรานวิ่งหนีลงเขา เล่าลือกันว่าสัตว์เผือกตัวนั้นเป็นเทพป่า','epic')}else{S.hp-=R(25,45);log('🏹 ลูกธนูปักเข้าไหล่','bad')}}]]},
+ {b:1,c:'whole',t:'👑 จ่าฝูงหมายตา',x:'จ่าฝูงแก่สังเกตเห็นว่าคุณโตเร็วและแข็งแรงกว่าตัวอื่น วันหนึ่งมันเดินมาขวางทาง',o:[
+  ['🦷 ท้าประลอง',()=>{if(Math.random()<.5){S.power+=R(30,60);S.fame+=15;log('👑 จ่าฝูงยอมถอย ตัวอื่นเริ่มเดินตามคุณ','epic')}else{S.hp-=R(25,40);log('👑 แพ้ แต่จ่าฝูงไม่ฆ่า — มันรู้ว่าวันหนึ่งคุณจะกลับมา','bad')}}],
+  ['🙇 ก้มหัวรอเวลา',()=>{S.int+=2;S.qi+=.6}]]},
+ {b:1,c:'scar',t:'⚔️ รอยแผลทั่วตัว',x:'หมาป่าหนุ่มตัวหนึ่งจะแย่งเหยื่อของคุณ แต่มันหยุดเมื่อเห็นรอยแผลเต็มตัวคุณ',o:[
+  ['😤 แยกเขี้ยวขู่',()=>{S.fame+=5;log('⚔️ มันหางตกแล้วถอยไป','good')}],
+  ['🍖 แบ่งให้ครึ่งหนึ่ง',()=>{S.karma+=3;joy(3)}]]}];
+function bodyEvOK(e){const B=bodyB();if(!!e.b!==B)return false;const c=Array.isArray(e.c)?e.c:[e.c],lk=S.body.lk;
+ return c.some(k=>k==='ugly'?(lk<=0||(lk<=1&&Math.random()<.5))&&!S.body.mask:k==='pretty'?lk>=4||tr('beauty'):bodyHas(k))}
+function bodyEvRun(e){S.body.ev=(S.body.ev||[]).concat([e.t]);
+ choice(e.t,e.x+`<br><span class="tag2">🧬 เหตุการณ์ที่เกิดเพราะร่างกายของคุณ</span>`,e.o.map(o=>({t:o[0],bodyOK:1,f(){try{o[1]()}catch(er){console.error(er)}}})))}
+// ทางรักษา: หมอเทวดา · ระบบ · หลอมร่างใหม่ด้วยการบำเพ็ญ
+function bodyDoctor(){const L=bodyCurable();if(!L.length)return false;const k=ch(L),c=bodyTab(S.body.bt)[k],cost=Math.round((S.body.bt?120:R(400,900))*W15()),B=bodyB();
+ choice(B?'🌿 สมุนไพรหายากกลางหุบเขา':'🧙 หมอเทวดาพเนจร',B?`กลิ่นสมุนไพรประหลาดโชยมาจากหุบเขาลึก สัญชาตญาณบอกว่ามันอาจรักษา<b>${c.n}</b>ได้ แต่ทางไปผ่านถิ่นของอสูรตัวใหญ่`:`ข่าวลือว่ามีหมอพเนจรผู้รักษาคนตายให้ฟื้นได้ผ่านมาที่เมืองใกล้ๆ เขาดูอาการ<b>${c.n}</b>ของคุณแล้วบอกว่า "รักษาได้ แต่ไม่แน่นอน ค่ายา ${fmtM(cost)}"`,
+  B?[{t:'🐾 เสี่ยงเข้าไปกิน',bodyOK:1,f(){if(Math.random()<.45)bodyCure(k,'กินสมุนไพรกลางหุบเขา');else{S.hp-=R(20,40);log('🌿 อสูรเจ้าถิ่นไล่ขย้ำกลับออกมา','bad')}}},{t:'🙅 ไม่เสี่ยง',bodyOK:1,f(){}}]
+  :[{t:`💰 จ่าย ${fmtM(cost)} แล้วลองดู`,s:'สำเร็จราว 50%',bodyOK:1,f(){if(S.money<cost){log('🧙 เงินไม่พอ หมอเดินจากไปแล้ว','');return}S.money-=cost;if(Math.random()<.5)bodyCure(k,'หมอเทวดาพเนจรรักษา');else{joy(-6);log('🧙 เข็มเงินสิบเจ็ดเล่ม ยาสามหม้อ… ไม่ได้ผล หมอคืนเงินให้ครึ่งหนึ่ง','bad');S.money+=Math.round(cost/2)}}},{t:'🙏 ไม่เป็นไร อยู่แบบนี้ก็ได้',bodyOK:1,f(){S.karma+=1;joy(2)}}]);return true}
+function bodySysCure(){const L=bodyCurable();if(!L.length||!S.sys)return false;const k=ch(L),c=bodyTab(S.body.bt)[k];
+ choice('🟦 [ระบบ] ตรวจพบความบกพร่องของร่างกาย',`[ระบบ] โฮสต์มี <b>${c.n}</b> — ประสิทธิภาพของโฮสต์ต่ำกว่ามาตรฐาน<br>[ระบบ] เสนอ: ซ่อมแซมร่างกายทันที แลกกับพลังยุทธ์ 15%`,
+  [{t:'✅ ยอมรับ',bodyOK:1,f(){S.power=Math.round(S.power*.85);bodyCure(k,'[ระบบ] ซ่อมแซมร่างกาย')}},{t:'❌ ปฏิเสธ — นี่คือตัวข้า',bodyOK:1,f(){S.karma+=2;joy(4);log('🟦 [ระบบ] …รับทราบ (ระบบดูงงๆ)','')}}]);return true}
+function bodyYear(dy,hp0){const b=S.body;if(!b)return;const B=bodyB();
+ // ตาบอดแต่กำเนิด → อาจตื่นเนตรทิพย์
+ if(!B&&bodyHas('blind')&&S.age>=12&&!tr('eye')&&Math.random()<.03*dy){S.traits.push('eye');log('👁️ คุณไม่เคยเห็นแสง แต่วันนี้ "เห็น" ลมที่พัดผ่านใบไม้ทุกใบ — <b>เนตรทิพย์</b>ตื่นขึ้น','myth',true);try{keyAdd('ตาบอดแต่กำเนิดแล้วตื่นเนตรทิพย์')}catch(e){}}
+ // บำเพ็ญสูงพอ ร่างถูกหลอมใหม่
+ if(S.xian&&bodyCurable().length&&realmIdx()>=3&&Math.random()<.06*dy){bodyCure(ch(bodyCurable()),'ระหว่างทะลวงขั้น ลมปราณหลอมร่างกายใหม่');return}
+ // บาดเจ็บถาวรตอนเกือบตาย (สัตว์: หลังปีที่เลือดเหลือน้อย)
+ if(B&&S.hp<S.maxHp*.15&&hp0>S.hp&&(b.acq||0)<2&&Math.random()<.08){bodyGain(ch(['oneeye','scar','lostleg']),'บาดแผลสาหัสจากการต่อสู้ในป่า');return}
+ bodyEvTry()}
+function bodyEvTry(){if(!S||!S.alive||!S.body)return;const b=S.body,B=bodyB();if(S.age<(B?2:8))return;
+ if(S.age-(b.evY==null?-9:b.evY)<4)return;if(choice._cur||modalOpen){evDefer(bodyEvTry);return}
+ if(S.sys&&bodyCurable().length&&Math.random()<.08){b.evY=S.age;bodySysCure();return}
+ if(bodyCurable().length&&S.age>=16&&Math.random()<.08){b.evY=S.age;bodyDoctor();return}
+ if(Math.random()>.16)return;const L=BODY_EV.filter(e=>bodyEvOK(e)&&!(b.ev||[]).includes(e.t));if(!L.length)return;b.evY=S.age;bodyEvRun(ch(L))}
+// คิวเหตุการณ์: ถ้าตอนนั้นมีหน้าต่างค้างอยู่ จะรอขึ้นหลังผู้เล่นตัดสินใจเสร็จ (เดิมเหตุการณ์แบบนี้แทบไม่มีโอกาสขึ้น)
+const EVQ=[];function evDefer(fn){if(!EVQ.includes(fn))EVQ.push(fn)}
+function evFlush(){if(!S||!S.alive||choice._cur||modalOpen||!EVQ.length)return;const fn=EVQ.shift();try{fn()}catch(e){console.error(e)}}
+{const _crQ=choiceRun;const _crN=function(){const r=_crQ.apply(this,arguments);setTimeout(evFlush,450);return r};Object.keys(_crQ).forEach(k=>{_crN[k]=_crQ[k]});choiceRun=_crN}
+{const _clQ=closeM;const _clN=function(){const r=_clQ.apply(this,arguments);if(EVQ.length)setTimeout(evFlush,450);return r};Object.keys(_clQ).forEach(k=>{_clN[k]=_clQ[k]});closeM=_clN}
+{const _slQ=startLife;startLife=function(){EVQ.length=0;return _slQ.apply(this,arguments)}}
+// ---------- บาดเจ็บถาวรระหว่างชีวิต (คน) ----------
+{const _fg11=fight;fight=function(){const w=_fg11.apply(this,arguments);try{if(S&&S.body&&!w&&!bodyB()&&S.age>=12&&S.hp<S.maxHp*.15&&(S.body.acq||0)<2&&!tr('iron')&&Math.random()<.06){
+  const opts=['scar','oneeye','lostarm','lostleg'].filter(k=>!bodyHas(k)&&!(k==='lostarm'&&bodyHas('arm'))&&!(k==='lostleg'&&bodyHas('leg'))&&!(k==='oneeye'&&bodyHas('blind')));const P=[.45,.2,.15,.2];
+  if(opts.length){let k=opts[0];const ws=opts.map(o=>P[['scar','oneeye','lostarm','lostleg'].indexOf(o)]),t=ws.reduce((a,b)=>a+b,0);let x=Math.random()*t;for(let i=0;i<opts.length;i++){if(x<ws[i]){k=opts[i];break}x-=ws[i]}
+   bodyGain(k,`แพ้${arguments[0]?'ให้'+String(arguments[0]).replace(/<[^>]+>/g,''):''}อย่างหนัก`)}}}catch(e){console.error(e)}return w}}
+// ---------- กรองตัวเลือกที่ร่างกายทำไม่ได้ ----------
+{const _chB=choice;const _chN=function(title,text,opts){try{if(S&&S.body&&(S.body.cs||[]).length&&Array.isArray(opts)&&opts.length>1){const B=bodyB(),RX=B?BODY_RXB:BODY_RX,cs=S.body.cs.filter(k=>RX[k]);
+  if(cs.length){const plain=o=>String(o.t||'').replace(/<[^>]+>/g,'');const why=[];const keep=opts.filter(o=>{if(o.bodyOK)return true;const hit=cs.find(k=>RX[k].test(plain(o)));if(hit){why.push(hit);return false}return true});
+   if(keep.length&&keep.length<opts.length){const C=bodyTab(B),ns=[...new Set(why)].map(k=>C[k].ic+' '+C[k].n).join(' · ');opts=keep;text=String(text||'')+`<br><span class="tag2">🧬 ซ่อน ${why.length} ทางเลือกที่ร่างกายของคุณทำไม่ได้ (${ns})</span>`}}}}catch(e){console.error(e)}
+ return _chB.call(this,title,text,opts)};Object.keys(_chB).forEach(k=>{_chN[k]=_chB[k]});choice=_chN}
+// ---------- แสดงผล: แถบสถานะ · บันทึกชีวิต · ฉากจบ ----------
+{const _rnB=render;render=function(){const r=_rnB.apply(this,arguments);try{if(S&&S.body){const g=$('gTags');if(g&&!g.querySelector('.bodyTag')){const L=bodyLk(S.body),cs=bodyCs(S.body);
+  let h='';if(S.body.lk!==2)h+=`<span class="tag bodyTag" title="${esc(L.d)}">${L.ic} ${L.n}${S.body.mask?' (หน้ากาก)':''}</span>`;cs.forEach(c=>h+=`<span class="tag bodyTag" style="background:${c.good?'var(--epic)':'#6a5a7a'}" title="${esc(c.d)}">${c.ic} ${c.n}${(c.id==='arm'||c.id==='lostarm')&&S.body.oneArm?' · กระบี่มือเดียว':''}</span>`);
+  if(h)g.insertAdjacentHTML('beforeend',h)}}}catch(e){}return r}}
+{const _biB=birthInfo;birthInfo=function(){const o=_biB.apply(this,arguments);try{if(S&&S.body&&o){const L=bodyLk(S.body),cs=bodyCs(S.body);const add=[];if(S.body.lk!==2)add.push(L.ic+' '+L.n);cs.forEach(c=>add.push(c.ic+' '+c.n));o.traits=(o.traits||[]).concat(add).slice(0,12);o.body=add}}catch(e){}return o}}
+{const _egB=endGame;endGame=function(){const busy=endGame._busy;const r=_egB.apply(this,arguments);try{if(busy||!S||!S.body||S._bdE)return r;S._bdE=1;const ul=document.querySelector('#end ul');if(!ul)return r;
+  const L=bodyLk(S.body),cs=bodyCs(S.body),cu=(S.body.cured||[]).map(k=>bodyTab(S.body.bt)[k]).filter(Boolean);const bits=[L.ic+' '+L.n].concat(cs.map(c=>c.ic+' '+c.n));
+  ul.insertAdjacentHTML('beforeend',`<li>🧬 ร่างกาย: ${bits.join(' · ')}${cu.length?` · รักษาหายแล้ว: ${cu.map(c=>c.n).join(', ')}`:''}${S.body.acq?` · บาดเจ็บถาวร ${S.body.acq} ครั้ง`:''}</li>`)}catch(e){console.error(e)}return r}}
+
 </script>
 </body>
 </html>
