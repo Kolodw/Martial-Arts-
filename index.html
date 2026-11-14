@@ -22592,6 +22592,28 @@ try{const g=SYS_GUIDE.find(x=>/โหมดนรก/.test(x.t));if(g){g.t='โ�
 // ตัวเลือกในนรก 100 ชั้นไม่ต้องมีตัวเลือกเสริมสุ่ม (ทุ่มสุดตัว/แกล้งตาย)
 {const _chH2=choice,nf=function(title,text,opts){try{if(Array.isArray(opts)&&/จารึกวิญญาณ|ของติดตัวลงนรก|\(ชั้น \d+\)| · ชั้น \d+|บ่อน้ำลืมชาติ|ประตูนรกบานสุดท้าย|วิญญาณเด็กหลงทาง|หีบโซ่ตรวน|ผู้ท้าชิงคนก่อน|ตลาดวิญญาณ|กฎนรกชั้น/.test(String(title||'')))opts=opts.map(o=>Object.assign({},o,{_x:1}))}catch(e){}return _chH2.call(this,title,text,opts)};for(const k in _chH2)nf[k]=_chH2[k];choice=nf}
 
+
+// ===================== v17.9 ภารกิจเมือง: ต้องกดรับก่อน · ส่งงานอัตโนมัติ · ทิ้งงานได้ (เสียชื่อเสียง) =====================
+const tqAccd=q=>q.acc===1||!!(q.chain&&q.chain.step>1);
+{const _tqR=tqRefresh;tqRefresh=function(){if(!S)return;const st=(S.tq||[]).map(q=>{const a=tqAccd(q);if(!a&&q.dl){q._dl=q.dl;q.dl=0}return q});const r=_tqR.apply(this,arguments);try{(S.tq||[]).forEach(q=>{if(q._dl!=null){q.dl=q._dl;delete q._dl}if(q.acc==null&&!tqAccd(q))q.acc=0})}catch(e){}return r}}
+function tqAuto(){if(!S||!S.alive)return 0;let n=0;for(let i=(S.tq||[]).length-1;i>=0;i--){const q=S.tq[i];if(!q||!q.v2||!tqAccd(q)||q.kind==='fight')continue;try{const V=tqV(q);if(!V.ok)continue;if(q.kind==='item'&&!bagTake(q.m,q.need))continue;if(q.kind==='donate'){if(S.money<q.need)continue;S.money-=q.need}S.tq.splice(i,1);tqPay(q,1,`📋 ส่งงานอัตโนมัติ: <b>${esc(q.n)}</b>`);n++}catch(e){}}return n}
+function tqAcc(i){const q=S.tq[i];if(!q)return;q.acc=1;toast('📌 รับงานแล้ว — ทำครบระบบส่งให้เอง');sfx('click');const n=tqAuto();if(n)render();openTown('board')}
+function tqDrop(i){const q=S.tq[i];if(!q)return;const p=5+(q.g|0)*5;S.fame=Math.max(0,S.fame-p);S.tq.splice(i,1);log(`🗑️ คุณทิ้งภารกิจ「${esc(q.n)}」 — ชื่อเสียง −${p}`,'bad');render();openTown('board')}
+{const _tqD=tqDo;tqDo=function(i){const q=S.tq&&S.tq[i];if(q&&q.v2&&!tqAccd(q))q.acc=1;return _tqD.apply(this,arguments)}}
+{const _pyTQ=passYear;passYear=function(){const r=_pyTQ.apply(this,arguments);try{if(S&&S.alive&&(S.tq||[]).length)tqAuto()}catch(e){}return r}}
+{const _otTQ=openTown;openTown=function(p){const r=_otTQ.apply(this,arguments);try{if(p==='board'&&S&&$('modal').dataset.k==='town'){const m=$('modal'),n=tqAuto();if(n){render();return _otTQ.call(this,'board')}
+  const tg=m.querySelector('button.gbtn + p.tag2');if(tg)tg.innerHTML='📌 <b>เลือกรับเฉพาะงานที่อยากทำ</b> — ไม่รับก็ไม่เสียอะไร งานจะหมดอายุไปเอง · รับแล้วทำครบ <b>ระบบส่งงานให้อัตโนมัติ</b>ทุกปี (งานต่อสู้ต้องกดออกไปสู้เอง) · รับแล้วทิ้งหรือปล่อย ⏳ เลยกำหนด เสียชื่อเสียง · 🟢 ง่าย ×0.5 · 🟡 กลาง ×1 · 🔴 ยาก ×2 · 💀 อันตราย ×4';
+  m.querySelectorAll('button[onclick^="tqDo("]').forEach(b=>{const i=+(/tqDo\((\d+)\)/.exec(b.getAttribute('onclick'))||[])[1],q=S.tq[i];if(!q)return;const box=b.closest('.item');
+   if(!tqAccd(q)){b.outerHTML=`<button class="sysb" onclick="tqAcc(${i})">📌 รับงาน</button>`;if(box)box.style.opacity='.8'}
+   else if(box&&!box.querySelector('.tqDrop'))box.insertAdjacentHTML('beforeend',`<p class="tag2" style="margin:4px 0 0">✅ รับแล้ว${q.kind!=='fight'?' · ทำครบแล้วส่งให้เอง':''} · <a class="tqDrop" style="text-decoration:underline;cursor:pointer" onclick="tqDrop(${i})">ทิ้งงานนี้ (ชื่อเสียง −${5+(q.g|0)*5})</a></p>`)})}}catch(e){console.error(e)}return r}}
+// ===================== ครองโสดตลอดชีวิต: ตัวเลือกในเหตุการณ์รัก · ครองโสดแล้วไม่มีเหตุการณ์รักมากวน =====================
+const LOVE_RX=/^(💞|💍(?! งานแต่งของ)|💕|💋|🌸 (พบรัก|รักต่าง)|🌸 .*ขอเข้าตำหนักใน|🌙 คนรักเก่า|⚔️💞|📜 หนังสือหมั้น)/;
+{const _chLV=choice,nf=function(title,text,opts){try{const T=String(title||'').replace(/<[^>]+>/g,'').trim();if(S&&S.alive&&!S.beastMode&&!(typeof mwOn==='function'&&mwOn())&&Array.isArray(opts)&&LOVE_RX.test(T)&&!S.spouse){
+  if(loveOpt()==='off')return;
+  if(!opts.some(o=>o&&o._celib))opts=[...opts.map(o=>Object.assign({},o,{_x:1})),{_x:1,_celib:1,noFate:1,t:'🚫 ครองโสดตลอดชีวิต',s:'ชีวิตนี้จะไม่มีเรื่องรักเข้ามาอีก · ใจนิ่ง ฝึกเร็วขึ้น 5% · เปลี่ยนใจได้ที่ ☰ → 💞 ความรัก',f(){S.loveOpt='off';if(S.focus==='love')S.focus='train';log('🚫 คุณตัดสินใจครองโสดตลอดชีวิต — มุ่งหน้าบนวิถียุทธ์เพียงลำพัง ใจนิ่งดั่งผิวน้ำ','epic');try{keyAdd('ปณิธานครองโสดตลอดชีวิต')}catch(e){}}}]}}catch(e){}return _chLV.call(this,title,text,opts)};for(const k in _chLV)nf[k]=_chLV[k];choice=nf}
+// เมนูความรัก: แยก "ชีวิตนี้" กับ "ทุกชีวิต"
+{const _olV=openLove;openLove=function(){const r=_olV.apply(this,arguments);try{const m=$('modal');if(S&&S.loveOpt==='off'&&LS.get('murim_love','fate')!=='off'&&!m.querySelector('.lvThis'))m.querySelector('h3').insertAdjacentHTML('afterend','<p class="tag2 lvThis" style="color:#e8c86a">🚫 ชีวิตนี้คุณตั้งปณิธานครองโสดตลอดชีวิตไว้ — ชีวิตหน้าจะกลับไปใช้ค่าที่ตั้งไว้ด้านล่าง</p>')}catch(e){}return r}}
+
 </script>
 </body>
 </html>
