@@ -461,8 +461,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='17.10';
+const VERSION='17.10.1';
 const CHANGELOG=[
+  {v:'17.10.1',d:'15 พ.ย. 2026',l:['🔥 <b>ปรับโหมดนรก</b> — เดิมแทบทุกชั้นมีประตูที่ไม่ต้องสู้ (แท่นบูชา · บ่อน้ำ · เหตุการณ์) ทำให้ลงได้รวดเดียวโดยสู้แค่บอส · ตอนนี้ใช้ประตูไม่ต้องสู้แล้ว อีก 2 ชั้นถัดไปจะมีแต่ประตูต่อสู้','🔒 <b>กันโกงโหมดนรก</b> — เซิร์ฟเวอร์ตรวจลำดับชั้นที่ผ่านจริงก่อนขึ้นทำเนียบ · แก้ค่านรกผ่านคอนโซลจะติดธงและไม่ขึ้นทำเนียบ']},
   {v:'17.10',d:'14 พ.ย. 2026',l:['🧬 <b>ระบบร่างกาย</b> — ตอนเกิดจะสุ่มหน้าตาและร่างกายด้วย ตั้งแต่กายาสมบูรณ์ 100% ไปจนถึงตาบอด หูหนวก เป็นใบ้ ขาพิการ (สัตว์ก็มี: เผือก หางด้วน ปีกหัก) · ร่างกายมีผลกับการเติบโตและตัดตัวเลือกที่ทำไม่ได้ออก · มีเหตุการณ์เฉพาะ ทางรักษา และบาดเจ็บถาวรระหว่างชีวิต',
    '🎲 <b>ความหายากแบบใหม่</b> — นับเฉพาะส่วนที่หายากจริง ไม่เอาเพศหรือครอบครัวธรรมดามาคูณให้ตัวเลขพอง · บอกด้วยว่าชีวิตนี้อยู่กลุ่มบนสุดกี่ % และชิ้นไหนหายากที่สุด',
    '📖 <b>ระดับวิชา 7 ขั้น</b> — 4 ขั้นแรกเลื่อนเองตามเดิม แต่หลังจากนั้นวิชาจะ <b>ติดขั้น</b> ต้องหาทางทะลวงเอง: ดวลปรมาจารย์ · ปิดด่าน · สู้เฉียดตาย · รู้แจ้งจากธรรมชาติ · ขั้นสุดท้ายในยุทธภพได้ตั้งชื่อวิชาเอง',
@@ -22539,10 +22540,10 @@ const hl2=()=>window._HL&&_HL.H();
 const hlCirc=n=>HL2.circ.findIndex(c=>n>=c[0]&&n<=c[1]);
 const hlBest=()=>Math.max(+LS.get('murim_hlbest',0)||0,(S&&S.flags&&S.flags.hellMax)||0);
 function hlRng(h,k){return _HL.rngOf(_HL.hsh(h.wk+'|'+k+'|'+(h.cs|0)))}
-function hl2Init(h){if(h.h2)return h;h.h2=1;h.heat=h.heat||0;h.cd=h.cd||S.age;h.use=h.use||{fast:0,def:0,swap:0};h.doors=null;return h}
+function hl2Init(h){if(h.h2)return h;h.h2=1;if(h.flv==null){h.flv=h.lv<=18?1:0;h.fl=h.fl||[]}h.heat=h.heat||0;h.cd=h.cd||S.age;h.use=h.use||{fast:0,def:0,swap:0};h.doors=null;return h}
 function hlRules(h,n,elite){const r=hlRng(h,'r'+n),K=Object.keys(HL2.R),k=n===100?['shadow']:[K[Math.floor(r()*K.length)]];if(elite||n%10===0){let x;do{x=K[Math.floor(r()*K.length)]}while(x===k[0]);if(n!==100)k.push(x)}return k}
 function hlDoors(h){const n=h.lv+1;if(h.doors&&h.doors.n===n)return h.doors.d;const r=hlRng(h,'d'+n);let d;
- if(n%10===0||n===100)d=[{k:'boss'}];else{const W=[['fight',45],['elite',15],['altar',12],['event',15],['well',13]],pick=()=>{let t=r()*100;for(const [k,w] of W){if((t-=w)<=0)return k}return'fight'};d=[];for(let i=0;i<20&&d.length<3;i++){const k=pick();if(!d.some(x=>x.k===k))d.push({k})}if(!d.some(x=>x.k==='fight'||x.k==='elite'))d[0]={k:'fight'}}
+ if(n%10===0||n===100)d=[{k:'boss'}];else{const W=(h.frc>0)?[['fight',70],['elite',30]]:[['fight',45],['elite',15],['altar',12],['event',15],['well',13]],pick=()=>{let t=r()*100;for(const [k,w] of W){if((t-=w)<=0)return k}return'fight'};d=[];for(let i=0;i<20&&d.length<3;i++){const k=pick();if(!d.some(x=>x.k===k))d.push({k})}if(!d.some(x=>x.k==='fight'||x.k==='elite'))d[0]={k:'fight'}}
  d.forEach((x,i)=>{if(x.k==='fight'||x.k==='elite'||x.k==='boss'){const ci=Math.max(0,hlCirc(n)),M=HL2.mob[Math.min(3,ci)]||HL2.mob[0];x.nm=x.k==='boss'?HL2.boss[n]:M[Math.floor(r()*M.length)];x.ru=hlRules(h,n+i*0.01,x.k!=='fight')}});
  h.doors={n,d};return d}
 function hlF(n){return .85*Math.pow(1.012,n-19)}
@@ -22571,7 +22572,7 @@ function hlFight(h,x,n,t){h.use[t]=(h.use[t]||0)+1;const ep=Math.round(hlEp(h,x,
   else{h.fail=(h.fail||0)+1;S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.5));h.heat=Math.min(100,(h.heat||0)+10);h.cd=S.age+1;
    if(h.fail>=3){S.deathCause=`วิญญาณถูกขังไว้ใน${HL2.circ[Math.max(0,hlCirc(n))][2]} (นรกชั้นที่ ${n}) ตลอดกาล`;S.hp=0;log(`⛓️ พ่ายเป็นครั้งที่ 3 — โซ่นรกลากวิญญาณคุณลงไปในชั้นที่ ${n}`,'bad',true);try{checkDeath()}catch(e){}}
    else log(`🩸 พ่ายให้${esc(x.nm)} — ถอยกลับมา ไฟกรรม +10 · ลองใหม่ปีหน้า (พลาดได้อีก ${3-h.fail} ครั้ง)`,'bad',true)}render()})}
-function hlAdv(h,n,k,e){h.lv=n;h.fail=0;h.doors=null;h.bp=total();h.cd=S.age+(k==='boss'?3:k==='elite'?2:1);S.flags.hellMax=Math.max(S.flags.hellMax||0,n);try{LS.set('murim_hlbest',Math.max(+LS.get('murim_hlbest',0)||0,n))}catch(x){}
+function hlAdv(h,n,k,e){try{h.frc=['fight','elite','boss'].includes(k)?Math.max(0,(h.frc||0)-1):2;(h.fl=h.fl||[]).push([n,Math.round(S.age),{fight:1,elite:2,boss:3}[k]||0]);if(h.fl.length>120)h.fl.shift()}catch(x){}h.lv=n;h.fail=0;h.doors=null;h.bp=total();h.cd=S.age+(k==='boss'?3:k==='elite'?2:1);S.flags.hellMax=Math.max(S.flags.hellMax||0,n);try{LS.set('murim_hlbest',Math.max(+LS.get('murim_hlbest',0)||0,n))}catch(x){}
  try{keyAdd(`ผ่านนรกชั้นที่ ${n}`)}catch(x){}
  const msg={altar:'🏮 แท่นบูชาลับเรืองแสง — พรครั้งถัดไปถูกลง 1 แก่น',well:'🌊 ดื่มน้ำจากบ่อลืมชาติ — พลังชีวิตเต็ม ไฟกรรม −25'}[k];
  if(k==='altar'){h.disc=1;h.heat=Math.max(0,(h.heat||0)-5)}if(k==='well'){S.hp=S.maxHp;h.heat=Math.max(0,(h.heat||0)-25)}
@@ -22611,7 +22612,7 @@ try{FRAMES.push({id:'f_hell2',n:'กรอบประตูนรก',side:'h',
  if(h.lv>=18&&h.lv<100){hl2Init(h);h.heat=Math.max(0,(h.heat||0)-4*st);if(S.age>=h.cd&&h.toldCd!==h.cd){h.toldCd=h.cd;addFeed('ev',`🔥 พร้อมลงนรกชั้นที่ ${h.lv+1} แล้ว — กดป้าย 🔥 บนหัวจอเพื่อเลือกประตู`,'sum')}}
  if(h.lv===0&&!h.csAsk&&S.age>=13&&S.age<(h.next||16)&&hlBest()>=20){h.csAsk=1;const B=hlBest(),cps=[20,40,60,80].filter(c=>c<=B),me=S;let tries=0;
   const ask=()=>{if(S!==me||!S.alive||h.lv!==0)return;if((choice._cur||modalOpen)&&tries++<90)return setTimeout(ask,1000);choice('📜 จารึกวิญญาณ',`วิญญาณคุณจำได้ว่าเคยลงนรกลึกถึงชั้นที่ <b>${B}</b> — จะเริ่มที่ไหน?<br><span class="tag2">เริ่มลึกจะข้ามชั้นที่เคยผ่าน แต่ไม่ได้แก่นนรกและพรของชั้นเหล่านั้น</span>`,[{t:'🔥 เริ่มจากชั้นแรก',s:'ลงทีละชั้นตามปกติ',noFate:1,f(){}},...cps.map(c=>({t:`📜 เริ่มที่ชั้น ${c}`,s:'ได้ของติดตัว 1 อย่าง · ไฟกรรมเริ่มที่ 20',noFate:1,f(){hlStartAt(h,c)}}))])};setTimeout(ask,600)}}catch(e){console.error(e)}return r}}
-function hlStartAt(h,c){h.lv=c;h.cs=c;hl2Init(h);h.heat=20;h.cd=S.age+1;h.bp=total();h.next=1e9;S.flags.hellMax=Math.max(S.flags.hellMax||0,c);
+function hlStartAt(h,c){h.lv=c;h.cs=c;h.flv=1;h.fl=[];hl2Init(h);h.heat=20;h.cd=S.age+1;h.bp=total();h.next=1e9;S.flags.hellMax=Math.max(S.flags.hellMax||0,c);
  setTimeout(()=>choice('🎒 ของติดตัวลงนรก','เลือก 1 อย่างที่จะพกลงไปจากชาติก่อน',[{t:'🔥 แก่นนรก 6',noFate:1,f(){h.ess+=6}},{t:'🩸 วิญญาณสำรอง 1 ดวง',noFate:1,f(){h.rev=(h.rev||0)+1}},{t:'🧊 ไฟกรรมเริ่มที่ 0',noFate:1,f(){h.heat=0}},{t:'⚔️ พลังยุทธ์ +15%',noFate:1,f(){S.power+=pctPow(.15)}}].map(o=>Object.assign(o,{s:'ติดตัวตลอดการลงนรกชีวิตนี้'}))),400);log(`📜 จารึกวิญญาณพาคุณลงสู่นรกชั้นที่ ${c} โดยตรง`,'myth',true)}
 // ป้ายบนหัวจอ & แท่นบูชา: ชั้น 18+ เปิดหน้านรกใหม่
 {const _hs=window.hellShop;window.hellShop=function(){const h=hl2();const r=_hs.apply(this,arguments);try{if(h&&$('modal').dataset.k!=='hell2'){const m=$('modal');if(h.lv>=18&&!m.querySelector('.hl2B'))m.insertAdjacentHTML('beforeend',`<button class="pbtn hl2B" style="width:100%;margin-top:8px" onclick="openHell2()">🚪 ไปที่ประตูชั้นถัดไป (ชั้น ${Math.min(100,h.lv+1)})</button><button class="gbtn" style="width:100%;margin-top:6px" onclick="hlFuseUI()">⚗️ หลอมคำสาป</button>`);if(h.disc)m.insertAdjacentHTML('afterbegin','<p class="tag2" style="color:#5fb85f">🏮 แท่นบูชาลับ: พรครั้งถัดไปถูกลง 1 แก่น</p>')}}catch(e){}return r}}
@@ -24052,6 +24053,18 @@ function kGateWrite(done){const L=(S.arts||[]).filter(a=>a&&typeof a==='object')
 {const _ke=kalpaEnd;kalpaEnd=function(how){const args=arguments,self=this;if(how==='top'&&S&&!S.flags.kGateAsk){S.flags.kGateAsk=1;return kGateWrite(()=>_ke.apply(self,args))}return _ke.apply(this,arguments)}}
 {const _ka=klAncEnd;klAncEnd=function(){const args=arguments,self=this;if(S&&!S.flags.kGateAsk){S.flags.kGateAsk=1;return kGateWrite(()=>_ka.apply(self,args))}return _ka.apply(this,arguments)}}
 
+
+// ===================== v17.10.1 🔒 กันโกงโหมดนรก =====================
+// 1) บันทึกทุกชั้นที่ผ่านตั้งแต่ชั้น 19 (ชั้น · อายุ · ประเภทประตู) ส่งไปให้เซิร์ฟเวอร์ตรวจลำดับ
+{const _ldH=lifeDetail;lifeDetail=function(){const d=_ldH.apply(this,arguments);try{if(S&&S.ch==='hell'&&S.hell&&d){d.hlg=(S.hell.fl||[]).slice(-100);d.hlv=S.hell.flv?1:0;d.hcs=S.hell.cs|0}}catch(e){}return d}}
+// 2) เขียนค่านรกจากคอนโซล = ติดธง (ชั้น · แก่นนรก · วิญญาณสำรอง · จำนวนครั้งที่พลาด · ไฟกรรม)
+const AC_HK=['lv','ess','rev','fail','heat','cs','frc'],AC_HSYM=Symbol('h');
+function acTrapH(o){if(!o||typeof o!=='object'||o[AC_HSYM])return;try{Object.defineProperty(o,AC_HSYM,{value:1});
+ AC_HK.forEach(k=>{const d=Object.getOwnPropertyDescriptor(o,k);if(d&&(!('value' in d)||!d.configurable))return;let v=d?d.value:undefined;
+  Object.defineProperty(o,k,{enumerable:true,configurable:false,get(){return v},set:function __acS(n){try{if(n!==v&&!acCaller()){acFlag('console-hell-'+k);acSus('console-hell-'+k)}}catch(e){}v=n}})})}catch(e){}}
+setInterval(()=>{try{if(S&&S.alive&&!S.custom&&S.hell)acTrapH(S.hell)}catch(e){}},400);
+// 3) ชั้นนรกกระโดดเกินทีละชั้น (ยกเว้นจารึกวิญญาณตอนเริ่ม) = น่าสงสัย
+let AC_HL=null;setInterval(()=>{try{if(!S||!S.alive||S.custom||!S.hell)return;const lv=+S.hell.lv||0;if(AC_HL&&AC_HL.o===S){const d=lv-AC_HL.lv;if(d>1&&!(S.hell.cs&&lv===S.hell.cs&&AC_HL.lv===0)){acFlag('jump-hell');acSus('jump-hell')}}AC_HL={o:S,lv}}catch(e){}},500);
 </script>
 </body>
 </html>
