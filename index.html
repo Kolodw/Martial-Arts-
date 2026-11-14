@@ -461,8 +461,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='17.10.2';
+const VERSION='17.10.3';
 const CHANGELOG=[
+  {v:'17.10.3',d:'15 พ.ย. 2026',l:['🏆 <b>หน้าสรุปชีวิตบอกแล้วว่าขึ้นทำเนียบไหม</b> — ขึ้นแล้วบอกอันดับวันนี้ · ไม่ขึ้นบอกเหตุผล (เช่น เวอร์ชันเก่า ชีวิตลิขิตเอง หรือตรวจพบการแก้ค่า)','🔒 <b>กันโกงฝั่งเซิร์ฟเวอร์</b> — ลานประลองโหมดเงาสู้แทนให้เซิร์ฟเวอร์ตัดสินผล · ทำเนียบกัลป์ตรวจอายุ · ผู้ครองกฎ/ประตูกัลป์ตรวจพลังจากการเล่นจริง']},
   {v:'17.10.2',d:'15 พ.ย. 2026',l:['🎮 <b>สอนปุ่มด้านล่าง</b> — บอกทีละปุ่มว่าแตะได้อะไร กดค้างได้อะไร (จุดเล็กๆ มุมปุ่ม = กดค้างได้) · ปิด/เปิด <b>ระบบเลือกเหตุการณ์เล็ก</b> · ชะตาตัดสินแทน · ล็อกตัวเลือก ได้ในหน้าสุดท้ายทันที · ดูซ้ำได้ที่ ☰ เมนู หรือ 🎓 บทเรียน']},
   {v:'17.10.1',d:'15 พ.ย. 2026',l:['🔥 <b>ปรับโหมดนรก</b> — เดิมแทบทุกชั้นมีประตูที่ไม่ต้องสู้ (แท่นบูชา · บ่อน้ำ · เหตุการณ์) ทำให้ลงได้รวดเดียวโดยสู้แค่บอส · ตอนนี้ใช้ประตูไม่ต้องสู้แล้ว อีก 2 ชั้นถัดไปจะมีแต่ประตูต่อสู้','🔒 <b>กันโกงโหมดนรก</b> — เซิร์ฟเวอร์ตรวจลำดับชั้นที่ผ่านจริงก่อนขึ้นทำเนียบ · แก้ค่านรกผ่านคอนโซลจะติดธงและไม่ขึ้นทำเนียบ']},
   {v:'17.10',d:'14 พ.ย. 2026',l:['🧬 <b>ระบบร่างกาย</b> — ตอนเกิดจะสุ่มหน้าตาและร่างกายด้วย ตั้งแต่กายาสมบูรณ์ 100% ไปจนถึงตาบอด หูหนวก เป็นใบ้ ขาพิการ (สัตว์ก็มี: เผือก หางด้วน ปีกหัก) · ร่างกายมีผลกับการเติบโตและตัดตัวเลือกที่ทำไม่ได้ออก · มีเหตุการณ์เฉพาะ ทางรักษา และบาดเจ็บถาวรระหว่างชีวิต',
@@ -4188,7 +4189,7 @@ function lifeDetail(score){const ri=realmIdx(),lifeAch=(S.achLife||[]).map(id=>A
   look:{robe:o.robe,trim:o.trim,belt:o.belt,hat:o.hat,skin:o.skin,hair:o.hair,hs:o.hs,g:o.g,age:o.age,mood:'neutral',aura:o.aura,sword:o.sword,staff:o.staff,seed:o.seed}}}
 function lifePubDef(){return LS.get('murim_lifepub',1)}
 async function sendLife(score){if(S&&S.custom){customNote();return}if(!onlineOK||!S||S._sent)return;S._sent=1;S._lid=pid.slice(0,6)+Date.now().toString(36);
- const P0={n:pname(),s:score,age:S.age,r:(typeof realmLabel==='function'?realmLabel().base:REALMS[realmIdx()].n),f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,g:S.xt?1:0,ga:S.gAge||0,tt:(showTtl()||{}).t||'',tr:(showTtl()||{}).r||0,xa:S.xAsc||0,cu:S.custom?1:0,bm:S.beastMode?1:0,ver:VERSION,tp:acTp(),lid:S._lid,pub:lifePubDef(),ch:S.ch&&S.ch!=='normal'?S.ch:'',hl:S.ch==='hell'&&S.hell?S.hell.lv:0,hcs:S.ch==='hell'&&S.hell?(S.hell.cs|0):0,kl:S.kalpa?S.kalpa.n:0,one:S.flags&&S.flags.one?1:0,det:xT(JSON.stringify(lifeDetail(score)))};try{const r=await api('life',P0);if(!r||!r.ok)throw new Error('life');if(!r.skip)lifePrivBox()}catch(e){try{lifeQAdd(P0)}catch(e2){}}}
+ const P0={n:pname(),s:score,age:S.age,r:(typeof realmLabel==='function'?realmLabel().base:REALMS[realmIdx()].n),f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,g:S.xt?1:0,ga:S.gAge||0,tt:(showTtl()||{}).t||'',tr:(showTtl()||{}).r||0,xa:S.xAsc||0,cu:S.custom?1:0,bm:S.beastMode?1:0,ver:VERSION,tp:acTp(),lid:S._lid,pub:lifePubDef(),ch:S.ch&&S.ch!=='normal'?S.ch:'',hl:S.ch==='hell'&&S.hell?S.hell.lv:0,hcs:S.ch==='hell'&&S.hell?(S.hell.cs|0):0,kl:S.kalpa?S.kalpa.n:0,one:S.flags&&S.flags.one?1:0,det:xT(JSON.stringify(lifeDetail(score)))};try{const r=await api('life',P0);if(!r||!r.ok)throw new Error('life');if(!r.skip){lifePrivBox();lifeRankNote(r)}else lifeSkipBox(r)}catch(e){try{lifeQAdd(P0)}catch(e2){}}}
 function customNote(){const end=$('end');if(!end||$('lifePriv'))return;const b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b);b.innerHTML='<b>✍️ ชีวิตที่สร้างเอง — ไม่ติดอันดับทำเนียบ</b><p class="tag2">ชีวิตที่เลือกชาติกำเนิด กระดูก และพรสวรรค์เองจะไม่ถูกส่งขึ้นทำเนียบออนไลน์ เพื่อความยุติธรรมกับคนที่ให้ฟ้าลิขิต · เลือก 🎲 สุ่ม หรือ 🎨 ออกแบบหน้าตา เพื่อลุ้นขึ้นทำเนียบ</p>'}
 function lifePrivBox(){const end=$('end');if(!end||!S||!S._lid)return;let b=$('lifePriv');if(!b){b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b)}
  const pub=lifePubDef();b.innerHTML=`<b>🏆 ชีวิตนี้ขึ้นทำเนียบออนไลน์แล้ว</b><p class="tag2">${pub?'คนอื่นกดดูรายละเอียดชีวิตนี้ได้ (ไทม์ไลน์ ค่าพลัง ของ วิชา ครอบครัว)':'คนอื่นเห็นแค่ชื่อกับคะแนน กดดูรายละเอียดไม่ได้'}</p>
@@ -12591,9 +12592,9 @@ function arFight(o,au){if(!o)return;if(!arFight._d){arFight._d=1;setTimeout(()=>
  const sv={f:S.fame,h:S.hp,k:S.kills,j:S.happy};const fin=w=>{S.fame=sv.f;S.hp=Math.max(S.hp,sv.h*.9);S.kills=sv.k;S.happy=sv.j;arResult(o,au,w)};
  if(au){const my=myPow()*(1+.12*ad),sb=AR_SB[arSt()]===o.st?1:AR_SB[o.st]===arSt()?-1:0,allv=(o.st==='all'||arSt()==='all')?.12:0;let p=clamp(my/(my+o.p)+sb*.08*Math.min(1,2*Math.min(my,o.p)/Math.max(my,o.p))+(Math.random()-.5)*allv*2,.02,.98);const w=Math.random()<p;
   const A=AR_ST[arSt()],B=AR_ST[o.st]||AR_ST.atk,lines=[`${A[0]} เงาของคุณ${A[1]} — ${B[0]} เงาของ ${esc(o.n)}${B[1]}`,sb>0?'ท่าทีของคุณข่มอีกฝ่ายได้!':sb<0?'อีกฝ่ายอ่านทางเงาของคุณออก…':'ทั้งสองแลกหมัดกันอย่างดุเดือด',`《${esc((o.arts||[])[0]||'ท่าเงา')}》 ปะทะ 《${esc(((S.arts||[]).slice().sort((a,b)=>b.b-a.b)[0]||{}).n||'หมัดเปล่า')}》`];
-  modal(`<h3>🤖 เงาสู้แทน</h3><div class="arauto">${lines.map((l,i)=>`<p style="animation-delay:${i*.6}s">${l}</p>`).join('')}<p class="arres" style="animation-delay:2s">${w?'🏆 เงาของคุณชนะ!':'💀 เงาของคุณพ่ายแพ้'}</p></div>`,'arauto');setTimeout(()=>{if($('modal').dataset.k==='arauto')arResult(o,au,w)},3000);return}
+  modal(`<h3>🤖 เงาสู้แทน</h3><div class="arauto">${lines.map((l,i)=>`<p style="animation-delay:${i*.6}s">${l}</p>`).join('')}<p class="arres" style="animation-delay:2s">⏳ รอผลจากลาน…</p></div>`,'arauto');setTimeout(()=>{if($('modal').dataset.k==='arauto')arResult(o,au,w)},3000);return}
  duel(o.train?o.n:`เงาของ ${o.n}`,ep,fin);try{DU.ar=o;DU.tech=null;setScene('fight',o.look&&o.look.beast?{beast:o.look.beast}:{en:o.look||null});drawDuel()}catch(e){}}
-async function arResult(o,au,w){let r=null;if(!o.train){try{r=await api('ar2res',{w:w?1:0,au:au?1:0,ad:(AR.cur&&AR.cur.ad)||0,cb:window._arBestL|0});window._arRes=r;try{if(r&&r.wal)arWalApply(r.wal)}catch(e){}}catch(e){}}const c=o.train?0:(r&&r.ok&&r.g!=null)?r.g:0;
+async function arResult(o,au,w){let r=null;if(!o.train){try{r=await api('ar2res',{w:w?1:0,au:au?1:0,ad:(AR.cur&&AR.cur.ad)||0,cb:window._arBestL|0});window._arRes=r;if(r&&r.sw!=null){const w0=w;w=!!r.sw;if(!au&&w0&&!w)toast('⚠️ ลานไม่นับชัยชนะนี้ — อีกฝ่ายแรงกว่าเกินกว่าจะชนะได้จริง')}try{if(r&&r.wal)arWalApply(r.wal)}catch(e){}}catch(e){}}const c=o.train?0:(r&&r.ok&&r.g!=null)?r.g:0;
  try{if(w&&!o.train)S.flags.arW=(S.flags.arW||0)+1}catch(e){}
  log(`🏟️ ลานประลอง: ${w?'ชนะ':'แพ้'}เงาของ <b>${esc(o.n)}</b>${r&&r.ok?` · ${r.d>0?'+':''}${r.d} แต้ม (${fmt(r.rt)})`:''}${c?` · 🪙+${c}`:''}`,w?'good':'bad');
  const up=r&&r.ok&&AR.info&&r.lg>(AR.info.lg|0);
@@ -24062,7 +24063,7 @@ function kGateWrite(done){const L=(S.arts||[]).filter(a=>a&&typeof a==='object')
 const AC_HK=['lv','ess','rev','fail','heat','cs','frc'],AC_HSYM=Symbol('h');
 function acTrapH(o){if(!o||typeof o!=='object'||o[AC_HSYM])return;try{Object.defineProperty(o,AC_HSYM,{value:1});
  AC_HK.forEach(k=>{const d=Object.getOwnPropertyDescriptor(o,k);if(d&&(!('value' in d)||!d.configurable))return;let v=d?d.value:undefined;
-  Object.defineProperty(o,k,{enumerable:true,configurable:false,get(){return v},set:function __acS(n){try{if(n!==v&&!acCaller()){acFlag('console-hell-'+k);acSus('console-hell-'+k)}}catch(e){}v=n}})})}catch(e){}}
+  Object.defineProperty(o,k,{enumerable:true,configurable:false,get(){return v},set:function __acS(n){try{if(n!==v&&!acCaller()){acFlag('console-hell-'+k);acSus('hlc-'+k)}}catch(e){}v=n}})})}catch(e){}}
 setInterval(()=>{try{if(S&&S.alive&&!S.custom&&S.hell)acTrapH(S.hell)}catch(e){}},400);
 // 3) ชั้นนรกกระโดดเกินทีละชั้น (ยกเว้นจารึกวิญญาณตอนเริ่ม) = น่าสงสัย
 let AC_HL=null;setInterval(()=>{try{if(!S||!S.alive||S.custom||!S.hell)return;const lv=+S.hell.lv||0;if(AC_HL&&AC_HL.o===S){const d=lv-AC_HL.lv;if(d>1&&!(S.hell.cs&&lv===S.hell.cs&&AC_HL.lv===0)){acFlag('jump-hell');acSus('jump-hell')}}AC_HL={o:S,lv}}catch(e){}},500);
@@ -24127,6 +24128,17 @@ function ctDraw(){if(!CT.L)return;let o=$('ctOv');if(!o){o=document.createElemen
 {const _olC=openLessons;openLessons=function(){const r=_olC.apply(this,arguments);try{const m=$('modal'),h=m&&m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',`<button class="pbtn" style="width:100%;margin:6px 0" onclick="ctStart()">🎮 สอนปุ่มด้านล่าง · ตั้งค่าเลือกเหตุการณ์อัตโนมัติ</button>`)}catch(e){}return r}}
 {const _omC=openMenu;openMenu=function(){const r=_omC.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g)g.insertAdjacentHTML('afterbegin',`<button class="opt" onclick="ctStart()">🎮 สอนปุ่มด้านล่าง<small>แตะ · กดค้าง · ตั้งค่าเลือกอัตโนมัติ</small></button>`)}catch(e){}return r}}
 setInterval(()=>{try{if(LS.get('murim_ctour',0)||!S||!S.alive||(S.age|0)<1||choice._cur||modalOpen||(typeof CO!=='undefined'&&CO.id)||$('ctOv'))return;if(!$('game')||!$('game').classList.contains('on'))return;ctStart()}catch(e){}},4000);
+
+// ===================== v17.10.3 บอกผู้เล่นว่าชีวิตนี้ขึ้นทำเนียบไหม และทำไม =====================
+function lifeRankNote(r){try{const b=$('lifePriv');if(b&&r&&r.rk&&!b.querySelector('.lrk'))b.insertAdjacentHTML('afterbegin',`<div class="lrk" style="font-size:1.05em;margin-bottom:4px">🏅 อันดับ <b>${r.rk}</b> ของหมวดนี้วันนี้</div>`)}catch(e){}}
+const LIFE_WHY={edit:['⚠️ ตรวจพบการแก้ไขค่าระหว่างชีวิตนี้','ค่าบางอย่างถูกเปลี่ยนจากนอกเกม (เช่น คอนโซล หรือแก้ไฟล์เซฟ) ชีวิตนี้จึงไม่ขึ้นทำเนียบ'],
+ ban:['⛔ บัญชีนี้ถูกพักจากทำเนียบชั่วคราว','เคยตรวจพบการแก้ไขค่าในชีวิตก่อนหน้า · ถ้าคิดว่าผิดพลาด กดแจ้งบั๊กพร้อมรหัสด้านล่าง ผู้ดูแลตรวจและปลดได้'],
+ stat:['⚠️ ค่าสถานะเกินขีดจำกัดของเกม','ชีวิตนี้มีค่าที่สูงเกินกว่าที่เกมรองรับ จึงไม่ขึ้นทำเนียบ'],
+ old:['📦 เกมในเครื่องเป็นเวอร์ชันเก่า','ปิดแท็บแล้วเปิดเว็บใหม่ ชีวิตต่อไปจะขึ้นทำเนียบตามปกติ'],
+ parse:['⚠️ ส่งข้อมูลชีวิตไม่สมบูรณ์','ลองเล่นชีวิตใหม่ ถ้ายังเป็นอีกให้แจ้งบั๊ก'],
+ cu:['✍️ ชีวิตที่ลิขิตเองไม่ขึ้นทำเนียบ','ชีวิตที่สร้างเองเล่นได้ปกติ แต่ไม่นับคะแนนแข่งกับคนอื่น']};
+function lifeSkipBox(r){try{const end=$('end');if(!end||!r||$('lifeSkip'))return;const W=LIFE_WHY[r.why]||LIFE_WHY.parse;const d=document.createElement('div');d.id='lifeSkip';d.className='box';d.style.cssText='border-color:#d8a04a;padding:8px 10px;margin:8px 0';
+ d.innerHTML=`<b>${W[0]}</b><p class="tag2" style="margin:4px 0 0">${W[1]}</p>${r.why==='ban'||r.why==='edit'?`<p class="tag2" style="margin:4px 0 0">รหัสอ้างอิง: <b>${esc(String(pid||'').slice(0,8))}</b></p>`:''}`;const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(d,rec.nextSibling):end.insertBefore(d,end.firstChild)}catch(e){}}
 </script>
 </body>
 </html>

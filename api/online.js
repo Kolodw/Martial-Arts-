@@ -1109,9 +1109,10 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const k = String(b.law || ''); if (!LK.includes(k)) return res.status(400).json({ err: 'law' });
       if (b.tp || await isBanned() || await cmd('SISMEMBER', 'cheaters', id)) return res.json({ ok: 0 });
       if ((await cmd('SET', 'lawcd:' + id, 1, 'NX', 'EX', 300)) !== 'OK') return res.json({ ok: 0, err: 'cd' });
+      const lp = jp(await cmd('GET', 'acp:' + id)); if (!lp || !(+lp.p > 0)) return res.json({ ok: 0, err: 'live' });
       const cur = jp(await cmd('HGET', 'law', k)), u = id.slice(0, 6);
       if (cur && cur.u !== u && String(b.beat || '') !== String(cur.t)) return res.json({ ok: 0, err: 'beat', cur });
-      const n = noAdm(clean(b.n, 20)) || 'นิรนาม', art = clean(b.art, 30) || '', pw = Math.max(0, Math.min(1e300, +b.pw || 0));
+      const n = noAdm(clean(b.n, 20)) || 'นิรนาม', art = clean(b.art, 30) || '', pw = Math.max(0, Math.min(+lp.p * 1.1, +b.pw || 0));
       const v = { n, art, pw, t: now, u };
       const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: 'ฟ้าลิขิต', k: 'one', x: '⚖️ ' + n + ' ' + (cur && cur.u !== u ? 'ชิง' + LN[k] + 'จาก ' + cur.n + ' สำเร็จ' : 'จารึก' + LN[k] + 'ลงในฟ้าดิน') + ' ด้วย《' + art + '》' };
       await pipe([['HSET', 'law', k, JSON.stringify(v)], ['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199]]);
@@ -1125,6 +1126,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     if (a === 'kgate') {
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
       if (b.tp || await isBanned() || await cmd('SISMEMBER', 'cheaters', id)) return res.json({ ok: 0 });
+      { const lp = jp(await cmd('GET', 'acp:' + id)); if (!lp || (+lp.a || 0) < 8e6) return res.json({ ok: 0, err: 'live' }) }
       if ((await cmd('SET', 'kgcd:' + id, 1, 'NX', 'EX', 3600)) !== 'OK') return res.json({ ok: 0, err: 'cd' });
       const n = noAdm(clean(b.n, 20)) || 'นิรนาม', art = clean(b.art, 48) || 'วิชาไร้นาม', kp = Math.max(0, Math.min(9, +b.kp || 0)), sk = ['rewind', 'void', 'mem', 'fly', 'array', 'esc', 'time', 'decree'].includes(b.sk) ? b.sk : '';
       const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: 'ฟ้าลิขิต', k: 'one', x: '🚪 ' + n + ' ก้าวพ้นวัฏจักรกัลป์ทั้งเก้า และจารึก《' + art + '》ไว้บนประตูกัลป์' };
@@ -1378,6 +1380,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const e = { n: clean(b.n, 20) || 'นิรนาม', s: Math.max(0, Math.min(1e12, +b.s || 0)), age: +b.age || 0, r: clean(b.r, 30), f: clean(b.f, 30), c: clean(b.c, 60), x: b.x ? 1 : 0, g: b.g ? 1 : 0, ga: Math.max(0, Math.min(1e9, Math.round(+b.ga || 0))), ...(b.tp ? { tt: '', tr: 0 } : ttlOk(b.tt)), xa: Math.max(0, Math.min(1e9, Math.round(+b.xa || 0))), cu: b.cu ? 1 : 0, bm: b.bm ? 1 : 0, kl: Math.max(0, Math.min(9, Math.floor(+b.kl || 0))), t: now, lid };
       { const c0 = String(b.ch || ''); if (CH_OK.includes(c0) && !(c0 === 'short' && e.age > 31)) e.ch = c0 }
       if (b.one && okId(id) && await cmd('GET', 'onex:' + id)) e.one = 1;
+      // 🔒 จำนวนกัลป์ต้องเข้ากับอายุ (กัลป์ที่ n เริ่มเมื่ออายุราว n ล้านปี)
+      if (e.kl > 0 && e.kl > Math.floor((+e.age || 0) / 1e6)) { try { await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, n: e.n, age: e.age, why: 'srv-kl', kl: e.kl, t: now, info: 1 })], ['LTRIM', 'acsus', 0, 199]]) } catch {} e.kl = Math.floor((+e.age || 0) / 1e6) }
       try { const dk = 'lifeday:' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10); await pipe([['INCR', dk], ['EXPIRE', dk, 86400 * 90]]) } catch {}
       try { e.s = bdScore(JSON.parse(String(b.det || '{}')), e) } catch { e.s = 0 }
       if (e.ch === 'hell') { const hl = Math.max(0, Math.min(100, Math.floor(+b.hl || 0))), cs0 = [20, 40, 60, 80].includes(+b.hcs) ? +b.hcs : 0, hb = okId(id) ? +(await cmd('GET', 'hlb:' + id)) || 0 : 0, cs = cs0 && cs0 <= hb ? cs0 : 0, ag = +e.age || 0;
@@ -1397,7 +1401,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       let rjB = null; if (e.ch === 'regress' && e.rf) { try { const G0 = (JSON.parse(String(b.det || '{}')).rg) || {}, en0 = ['breaker', 'protector', 'lonely'].includes(G0.end) ? G0.end : 'lonely', vr0 = ['normal', 'r5', 'nomem', 'lim10'].includes(G0.var) ? G0.var : 'normal'; rjB = Object.assign({}, e, { end: en0, var: vr0, s: ({ breaker: 3, protector: 2, lonely: 1 })[en0] * 1e8 - Math.min(999, e.rl || 1) * 1e5 + ({ lim10: 3, nomem: 2, r5: 1, normal: 0 })[vr0] * 1e4 }) } catch {} }
       for (const cc of e.ch === 'regress' ? (rjB ? [cat, 'r'] : [cat]) : e.ch ? [cat, 'c'] : [cat]) { if (cc === 'r') { const jj = JSON.stringify(rjB); for (const [kk, ex] of [[bdKey('r', now), 4], [bdKeyW('r', now), 20], [bdKeyM('r', now), 70]]) L.push(['ZADD', kk, rjB.s, jj], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]); continue } const useC = cc === 'c' && ejC, sv = useC ? JSON.parse(ejC).s : e.s, jj = useC ? ejC : ej; for (const [kk, ex] of [[bdKey(cc, now), 4], [bdKeyW(cc, now), 20], [bdKeyM(cc, now), 70]]) L.push(['ZADD', kk, sv, jj], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]) }
       await bdSettle();
-      if (e.cu || !(parseFloat(b.ver) >= 6.3)) { await cmd('INCR', 'lives'); return res.json({ ok: 1, skip: 1 }) }
+      if (e.cu || !(parseFloat(b.ver) >= 6.3)) { await cmd('INCR', 'lives'); return res.json({ ok: 1, skip: 1, why: e.cu ? 'cu' : 'old' }) }
       const det = String(b.det || '');
       // ---- anti-cheat: ตรวจความสมเหตุสมผลของคะแนนและค่าสถานะ ----
       let bad = '';
@@ -1415,7 +1419,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (!bad && !det) bad = 'nodet';
         if (!bad && await isBanned()) bad = 'banned';
       } catch { bad = bad || 'parse' }
-      if (bad) { await pipe([['INCR', 'lives'], ['LPUSH', 'cheatlog', JSON.stringify({ id: id.slice(0, 10), fid: id, n: e.n, s: e.s, age: e.age, why: bad, t: now })], ['LTRIM', 'cheatlog', 0, 99]]); return res.json({ ok: 1, skip: 1, flag: 1 }) }
+      if (bad) { await pipe([['INCR', 'lives'], ['LPUSH', 'cheatlog', JSON.stringify({ id: id.slice(0, 10), fid: id, n: e.n, s: e.s, age: e.age, why: bad, t: now })], ['LTRIM', 'cheatlog', 0, 99]]); return res.json({ ok: 1, skip: 1, flag: 1, why: /^tamper/.test(bad) ? 'edit' : bad === 'banned' ? 'ban' : bad === 'stat' ? 'stat' : bad === 'nodet' ? 'old' : 'parse' }) }
       if (lid.length >= 6 && det && det.length < 40000) { try { JSON.parse(det); L.push(['SET', 'lifed:' + lid, det, 'EX', 86400 * 40], ['SET', 'lifeo:' + lid, id, 'EX', 86400 * 40], ['SET', 'lifep:' + lid, +b.pub === 2 ? '2' : b.pub ? '1' : '0', 'EX', 86400 * 40]) } catch {} }
       if (lid.length >= 6 && await cmd('GET', 'lsent:' + lid)) return res.json({ ok: 1, dup: 1 });
       if (e.ch === 'regress' && e.rf) { try { const G = (JSON.parse(det || '{}').rg) || {}, en = ['beyond', 'breaker', 'protector', 'lonely'].includes(G.end) ? G.end : 'lonely', vr = ['normal', 'r5', 'nomem', 'lim10'].includes(G.var) ? G.var : 'normal'; const rj = JSON.stringify({ n: e.n, lid: e.lid, rl: e.rl, end: en, var: vr, age: e.age, r: e.r, t: now, x: e.x, g: e.g }); const rs = ({ beyond: 4, breaker: 3, protector: 2, lonely: 1 })[en] * 1e8 - Math.min(999, e.rl || 1) * 1e5 + ({ lim10: 3, nomem: 2, r5: 1, normal: 0 })[vr] * 1e4 - Math.min(9999, Math.floor((now % 1e9) / 1e5)); L.push(['ZADD', 'rgb:all', rs, rj], ['ZREMRANGEBYRANK', 'rgb:all', 0, -201], ['ZADD', 'rgb:w:' + week(new Date(now)), rs, rj], ['ZREMRANGEBYRANK', 'rgb:w:' + week(new Date(now)), 0, -101], ['EXPIRE', 'rgb:w:' + week(new Date(now)), 86400 * 21]) } catch {} }
@@ -1500,7 +1504,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       }
       if (!o) return res.json({ o: null, tk: await arTk(0), rt: myR });
       const tk = await arTk(1); if (!tk.ok) return res.json({ o: null, notk: 1, tk, rt: myR });
-      await cmd('SET', 'arm:' + id, JSON.stringify({ o: oid, rv, t: now, bot, ch: ['hell', 'short', 'junk'].includes(b.ch) ? b.ch : '' }), 'EX', 900);
+      await cmd('SET', 'arm:' + id, JSON.stringify({ o: oid, rv, t: now, bot, ch: ['hell', 'short', 'junk'].includes(b.ch) ? b.ch : '', mp: me.p, op: +o.p || 0, ms: me.st, os: o.st || 'atk' }), 'EX', 900);
       const or = bot ? Math.max(900, myR - 30) : await arRt(oid); delete o.t; return res.json({ o: Object.assign(o, { rt: or, lg: arLg(or) }), rt: myR, tk });
     }
     // ---- ยุคปัจจุบัน: ฝังสมบัติ / จักรวาลซ้อน ----
@@ -1594,7 +1598,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     if (a === 'ar2res') {
       if (!okId(id)) return res.status(403).json({ err: 'id' });
       const pm = jp(await cmd('GETDEL', 'arm:' + id)); if (!pm || !pm.o) return res.json({ err: 'nomatch' });
-      const bot = !!pm.bot || pm.o === '~bot', w = b.w ? 1 : 0, au = b.au ? 1 : 0, ra = await arRt(id), rb = bot ? Math.max(900, ra - 30) : await arRt(pm.o), ea = 1 / (1 + Math.pow(10, (rb - ra) / 400)), K = 32 * (au ? .5 : 1) * (bot ? .7 : 1);
+      const AR_SB0 = { atk: 'trick', trick: 'def', def: 'atk' }; let w = b.w ? 1 : 0, sw = null; const au = b.au ? 1 : 0;
+      // 🔒 ผลการสู้: โหมดเงาสู้แทน เซิร์ฟเวอร์ทอยผลเอง · สู้เองแล้วชนะคนที่แรงกว่าเกิน 3.3 เท่า ไม่นับ
+      if (pm.mp > 0 && pm.op > 0) { const ad = Math.max(-1, Math.min(1, +b.ad || 0)), my = pm.mp * (1 + .12 * ad), sb = AR_SB0[pm.ms] === pm.os ? 1 : AR_SB0[pm.os] === pm.ms ? -1 : 0;
+        if (au) { const pr = Math.max(.02, Math.min(.98, my / (my + pm.op) + sb * .08 * Math.min(1, 2 * Math.min(my, pm.op) / Math.max(my, pm.op)))); w = Math.random() < pr ? 1 : 0; sw = w }
+        else if (w && my / pm.op < .3) { w = 0; sw = 0; try { await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, age: 0, why: 'srv-ar', st: { pow: Math.round(pm.mp), opp: Math.round(pm.op) }, t: now, info: 1 })], ['LTRIM', 'acsus', 0, 199]]) } catch {} } }
+      const bot = !!pm.bot || pm.o === '~bot', ra = await arRt(id), rb = bot ? Math.max(900, ra - 30) : await arRt(pm.o), ea = 1 / (1 + Math.pow(10, (rb - ra) / 400)), K = 32 * (au ? .5 : 1) * (bot ? .7 : 1);
       const da0 = Math.round(K * (w - ea)), da = bot && da0 > 0 ? Math.max(0, Math.min(da0, 1600 - ra)) : da0, db = -Math.round(da * .5), na = Math.max(0, ra + da), nb = Math.max(0, rb + db), nm = (await cmd('HGET', 'arn', id)) || 'นิรนาม';
       const L = bot ? [['HSET', 'arr:' + W, id, na], ['EXPIRE', 'arr:' + W, 86400 * 40], ['ZADD', 'ars:' + W, na, id], ['EXPIRE', 'ars:' + W, 86400 * 40]] : [['HSET', 'arr:' + W, id, na, pm.o, nb], ['EXPIRE', 'arr:' + W, 86400 * 40], ['ZADD', 'ars:' + W, na, id, nb, pm.o], ['EXPIRE', 'ars:' + W, 86400 * 40],
         ['LPUSH', 'ardef:' + pm.o, JSON.stringify({ n: nm, w: w ? 0 : 1, d: db, t: now, a: id })], ['LTRIM', 'ardef:' + pm.o, 0, 19], ['EXPIRE', 'ardef:' + pm.o, 86400 * 14], ['HINCRBY', 'ardefn', pm.o, 1]];
@@ -1607,7 +1616,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
           if (inc) { q.p = Math.min(need, q.p + inc); if (q.p >= need) { q.done = 1; qg += 8 } } });
         if (!v.q.all && v.q.q.every(q => q.done)) { v.q.all = 1; qg += 15 }
         v.c += g + bonus + qg; await arWalSet(v) } catch (e) {} finally { await arUnlock() }
-      return res.json({ ok: 1, rt: na, d: da, lg: arLg(na), ort: nb, g, bonus, qg, chm: pm.ch || '', wal: v ? arWalPub(v) : null });
+      return res.json({ ok: 1, rt: na, d: da, lg: arLg(na), ort: nb, g, bonus, qg, chm: pm.ch || '', wal: v ? arWalPub(v) : null, ...(sw != null ? { sw } : {}) });
     }
     if (a === 'arena') {
       const me = { n: clean(b.n, 20) || 'นิรนาม', p: Math.max(0, +b.p || 0), hp: +b.hp || 100, r: clean(b.r, 30), ri: Math.max(0, Math.min(12, +b.ri || 0)), x: b.x ? 1 : 0, t: now };
