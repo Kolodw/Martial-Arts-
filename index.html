@@ -23591,6 +23591,25 @@ setTimeout(mtBadge,1200);
 .seg button .mtNew{display:block;width:max-content;margin:3px auto 0}
 .mtSum{margin-left:6px;font-size:11px;color:#e8b830}
 @media (prefers-reduced-motion:reduce){.lc .lh i{animation:none}}`;document.head.appendChild(st)})();
+
+// ===================== v17.10 💾 เตือนก่อนช่องเซฟเต็ม =====================
+// ช่องเซฟมี 5 ช่อง · เต็มแล้วเริ่มชีวิตใหม่ เกมจะย้ายชีวิตที่เล่นล่าสุดนานที่สุดไปคลังสำรองเอง (คลังเก็บได้ ARC_MAX ชีวิต เกินแล้วอันเก่าสุดหายถาวร) — เดิมรู้ตัวอีกทีก็ย้ายไปแล้ว
+function slotsFull(){try{return SLOTS.every(n=>!!readSave(n))}catch(e){return false}}
+function slotOldest(){let best=null,bt=Infinity;for(const n of SLOTS){const d=readSave(n);if(d&&(d.t||0)<bt){bt=d.t||0;best=n}}return best}
+const slotAgo=t=>{if(!t)return'ไม่ทราบเวลา';const d=Math.floor((Date.now()-t)/864e5);return d<1?'วันนี้':d<2?'เมื่อวาน':d+' วันก่อน'};
+function slotGuard(go,what){if(!slotsFull()||window._slotPass)return go();window._slotGo=go;const old=slotOldest(),L=arcList(),af=L.length>=ARC_MAX,lost=af?L[L.length-1]:null;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>💾 ช่องเซฟเต็มแล้ว (${SLOTS.length}/${SLOTS.length})</h3>
+ <p>จะ${what}ได้ ต้องย้ายชีวิตหนึ่งออกจากช่องเซฟไปไว้ใน 🗂️ คลังสำรองก่อน — <b>ยังกู้กลับมาเล่นต่อได้</b></p>
+ ${af?`<div class="item" style="border-color:#d84a4a"><b style="color:#d84a4a">⚠️ คลังสำรองก็เต็มแล้ว (${L.length}/${ARC_MAX})</b><br><span class="tag2">ชีวิตเก่าสุดในคลัง <b>${esc(lost.n)}</b> (อายุ ${lost.age} ปี) จะถูก<b>ลบถาวร</b> กู้คืนไม่ได้</span></div>`:`<p class="tag2">คลังสำรองตอนนี้ ${L.length}/${ARC_MAX}</p>`}
+ ${SLOTS.map(n=>{const d=readSave(n),o=n===old;return`<div class="item"${o?' style="border-color:#e8b830"':''}><div class="h"><b>ช่อง ${n}: ${esc(d.S.name)}</b><button class="${o?'pbtn':'sysb'}" onclick="slotMove(${n})">${o?'▶ ย้ายช่องนี้':'ย้ายช่องนี้แทน'}</button></div><p class="tag2">อายุ ${d.S.age} ปี${d.S.xian?(d.S.xt?' · 🌟 แดนเทพ':' · ☁️ โลกเซียน'):''} · เล่นล่าสุด ${slotAgo(d.t)}${o?' · <b>เกมจะเลือกช่องนี้ถ้าไม่เลือกเอง</b>':''}</p></div>`}).join('')}
+ <div class="brow" style="margin-top:8px"><button class="gbtn" onclick="closeM();openArchive()">🗂️ ดูคลังสำรอง</button><button class="gbtn" onclick="closeM()">ยกเลิก</button></div>`,'slotfull')}
+function slotMove(n){const d=readSave(n);if(!d)return;if(!arcPut(d,'ช่องเซฟเต็ม'))return toast('⚠️ ย้ายไม่สำเร็จ — พื้นที่เก็บข้อมูลเต็ม ลบเซฟเก่าก่อน');LS.del(slotKey(n));LS.del(bakKey(n));closeM();toast(`🗂️ ย้าย ${d.S.name} ไปคลังสำรองแล้ว`);const g=window._slotGo;window._slotGo=null;try{renderLegends()}catch(e){}
+ if(g){window._slotPass=1;try{g()}finally{setTimeout(()=>{window._slotPass=0},50)}}}
+[['goBirthPick','เริ่มชีวิตใหม่'],['goDaily','เล่นชะตาประจำวัน'],['goBeastLife','เกิดเป็นสัตว์'],['arcRestore','กู้ชีวิตจากคลังสำรอง'],['cloudRestore','กู้เซฟจากเซิร์ฟเวอร์'],['loadCode','โหลดเซฟจากรหัส']].forEach(([fn,what])=>{try{const f=window[fn];if(typeof f!=='function')return;window[fn]=function(){const a=arguments,self=this;return slotGuard(()=>f.apply(self,a),what)}}catch(e){}});
+// หน้าแรก: บอกสถานะช่องเซฟ
+{const _rlS=renderLegends;renderLegends=function(){const r=_rlS.apply(this,arguments);try{const b=$('contBox');if(b&&slotsFull()&&!b.querySelector('.slotFullNote')){const L=arcList(),af=L.length>=ARC_MAX;b.insertAdjacentHTML('beforeend',`<div class="slotFullNote">💾 ช่องเซฟเต็ม ${SLOTS.length}/${SLOTS.length} — ชีวิตใหม่จะต้องย้ายชีวิตหนึ่งไปคลังสำรอง${af?` · <b>คลังสำรองก็เต็ม (${L.length}/${ARC_MAX}) อันเก่าสุดจะหายถาวร</b>`:''}</div>`)}}catch(e){}return r}}
+(function(){const st=document.createElement('style');st.textContent='.slotFullNote{margin:6px 2px 2px;padding:7px 10px;border-radius:10px;border:1.5px dashed #e8b830;background:rgba(232,184,48,.12);font-size:12.5px;line-height:1.45;text-align:center}';document.head.appendChild(st)})();
+setTimeout(()=>{try{renderLegends()}catch(e){}},900);
 </script>
 </body>
 </html>
