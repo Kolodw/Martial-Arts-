@@ -616,9 +616,9 @@ document.querySelectorAll('.seg').forEach(sg=>sg.querySelectorAll('button').forE
 
 const rnm=i=>CFG.xian?XREALM[i]:(W0&&W0.realm?W0.realm[i]:REALMS[i].n);
 const OPT_INFO={
- len:{2500:()=>['⚡','เร็ว','ปีหนึ่งผ่านไปราว 2.5 วินาที ชีวิตหนึ่งชาติจบในไม่กี่นาที เหมาะกับคนที่อยากเล่นหลายชีวิตติดกัน',[['1 ปี ≈ 2.5 วิ'],['ข้อความขึ้นถี่']]],
-  5000:()=>['🍵','ปกติ','ปีหนึ่งราว 5 วินาที มีเวลาอ่านทุกเหตุการณ์และลุ้นทีละบรรทัด',[['1 ปี ≈ 5 วิ'],['แนะนำ','g']]],
-  9000:()=>['🐢','ช้า','ปีหนึ่งราว 9 วินาที อ่านสบาย เหมาะกับคนที่อยากอินกับทุกเรื่องราว',[['1 ปี ≈ 9 วิ'],['อ่านละเอียด']]]},
+ len:{2500:()=>['⚡','เร็ว','ปีหนึ่งผ่านไปราว 2.5 วินาที ชีวิตหนึ่งชาติจบในไม่กี่นาที เหมาะกับคนที่อยากเล่นหลายชีวิตติดกัน · ปีที่ไม่มีอะไรเกิดขึ้นจะข้ามเร็วขึ้น (มีป้าย ⏩)',[['1 ปี ≈ 2.5 วิ'],['ข้อความขึ้นถี่']]],
+  5000:()=>['🍵','ปกติ','ปีหนึ่งราว 5 วินาที ข้อความขึ้นตามเดือนบนแถบเวลา อ่านทันทุกบรรทัด · ปีที่เงียบจะข้ามเร็วขึ้น (มีป้าย ⏩)',[['1 ปี ≈ 5 วิ'],['แนะนำ','g']]],
+  9000:()=>['🐢','ช้า','ปีหนึ่งราว 9 วินาที อ่านสบาย เหมาะกับคนที่อยากอินกับทุกเรื่องราว · ปีที่เงียบจะข้ามเร็วขึ้น (มีป้าย ⏩)',[['1 ปี ≈ 9 วิ'],['อ่านละเอียด']]]},
  xian:{0:()=>['🏯','ยุทธภพ','โลกจอมยุทธ์ สำนักฝ่ายธรรมะ อธรรม และมาร ฝึกวรยุทธ์จาก'+rnm(1)+'ถึง'+rnm(7)+' อายุราว 60–200 ปี',[['ชีวิตกระชับ เข้มข้น'],['ถึงขั้นสูงสุดแล้วเหาะขึ้นโลกเซียนได้','g']]],
   1:()=>['☁️','โลกเทพเซียน','โลกผู้ฝึกตน มีรากวิญญาณ กฎแห่งเต๋า ถ้ำบ่มเพาะ และหินวิญญาณ ฝึกจาก'+XREALM[1]+'ถึง'+XREALM[7]+' แล้วขึ้นสู่โลกเทพ อายุยืนหลายร้อยปี',[['ได้ระบบบ่อยขึ้น ×3','g'],['ผู้ข้ามมิติบ่อยขึ้น','g'],['ชีวิตยาว ใช้ปิดด่านช่วยได้']]]},
  chm:{0:()=>['🙂','ปกติ','เล่นตามปกติ สุ่มเกิดใหม่ได้ 3 ครั้งก่อนเริ่มชีวิต',[['สุ่มใหม่ได้ 3 ครั้ง','g']]],
@@ -23197,6 +23197,31 @@ function afPill(){try{let p=document.getElementById('afPill');const on=!!(auto&&
 // ตัวเลือกที่ค้างไว้เพราะเป็นเรื่องใหญ่ในโหมดอัตโนมัติ: เปิดให้เห็นทันที
 {const _csA=choiceShow;choiceShow=function(){const r=_csA.apply(this,arguments);try{const c=choice._cur;if(c&&auto&&afBig(c)){clearTimeout(choice._t);const e=$('chCd');if(e)e.textContent='✋ เรื่องสำคัญ — โหมดอัตโนมัติจะหยุดรอให้คุณเลือกเอง';try{$('modal').querySelectorAll('p,div,span,small').forEach(x=>{if(!x.children.length&&/กำลังตัดสินใจอัตโนมัติ/.test(x.textContent))x.textContent='✋ รอคุณเลือกเอง'})}catch(x){}if(!c._held2){c._held2=1;try{island({big:1,pri:1,ic:'✋',h:'รอคุณตัดสินใจ',t:String(c.title).replace(/<[^>]+>/g,'').slice(0,40),d:'โหมดอัตโนมัติหยุดรอ',kind:'gold',ms:4500})}catch(x){}}}}catch(e){}return r}}
 try{SYS_GUIDE.push({s:'life',nw:1,ic:'🎲',t:'ระบบเลือกแทน',go:'',d:'เหตุการณ์ที่มาซ้อนกันจะต่อคิว ไม่ถูกสุ่มตอบทิ้ง · ชะตาตัดสินแทน/โหมดอัตโนมัติ เลือกให้เฉพาะเรื่องเล็ก และเลือกข้อที่ปลอดภัยที่สุด · เรื่องสำคัญ (ทัณฑ์ ข้ามโลก สำนัก แต่งงาน ทายาท ฯลฯ) ระบบจะหยุดรอให้คุณเลือกเองเสมอ · ทุกครั้งที่เลือกแทนจะแจ้งที่เกาะด้านบน'})}catch(e){}
+
+// ===================== v17.9j นาฬิกาปีเดียว: แถบเวลาเดินตามจริง · ข้อความขึ้นตามเดือนบนแถบ · แถบเต็มค้างแป๊บ · ข้ามช่วงเงียบแบบเห็นชัด =====================
+const _pbC=paceBoost;paceBoost=function(){return 1}; // ตัวเร่งเก่าที่แอบเพิ่มเวลา: ย้ายมารวมในนาฬิกาหลัก
+let CK={hold:0,yN:0,yShown:0,fb:0};
+revealPush=function(e){if(!S||!S.alive||!e)return;e.style.display='none';revealQ.push(e)};
+function ckShow(){let e;while((e=revealQ.shift())&&!e.isConnected){}if(e){e.style.display='';e.classList.add('popin');const f=$('feed');if(f)f.scrollTop=f.scrollHeight;CK.yShown++}if(!revealQ.length&&pendModal){pendModal=false;if(modalOpen)$('mask').classList.add('on')}return !!e}
+function ckBar(p,instant){const b=$('ybar');if(!b)return;b.style.transition=instant?'none':'width .1s linear';b.style.width=Math.max(0,Math.min(100,p*100))+'%'}
+startTimer=function(){clearInterval(timer);timer=setInterval(()=>{try{
+ if(!S||!S.alive)return;
+ const blocked=paused||modalOpen||choice._cur||document.hidden;
+ // ถูกหยุด (มีหน้าต่าง/ตัวเลือก/พัก): ข้อความที่ค้างอยู่ทยอยขึ้นให้ครบ ไม่ต้องรอแถบ
+ if(blocked){if(revealQ.length&&++CK.fb>=2){CK.fb=0;ckShow()}return}
+ if(CK.hold){if(Date.now()<CK.hold)return;if(revealQ.length){ckShow();return}CK.hold=0;acc=0;ckBar(0,true);CK.yShown=0;CK.yN=0;passYear();CK.yN=revealQ.length;return}
+ const eff=speed||((Date.now()-lastNotable<1800)?1:8);let b=1;try{b=_pbC()}catch(e){}
+ const quietSkip=b>1&&!revealQ.length;acc+=100*eff*(quietSkip?b:1);
+ const p=Math.min(1,acc/CFG.len);ckBar(p);
+ {const ym=$('ymon');if(ym)ym.textContent=MON_N[curMon()]+(quietSkip?' ⏩ ข้ามช่วงเงียบ':'')}
+ {const yb=$('ybar');if(yb)yb.classList.toggle('pfast',quietSkip)}
+ // ข้อความของปีนี้ขึ้นตามเดือนบนแถบ (ครบภายใน 85% ของปี)
+ const tot=CK.yShown+revealQ.length;if(revealQ.length){const want=Math.ceil(Math.min(1,p/.85)*Math.max(1,tot));if(CK.yShown<want||p>=.85)ckShow();if(revealQ.length>12)ckShow()}
+ if(acc>=CFG.len){ckBar(1);CK.hold=Date.now()+(speed>=8||speed===0&&eff>=8?80:320)}
+}catch(e){console.error(e)}},100)};
+// เริ่มชีวิต/โหลดเกม: รีเซ็ตนาฬิกา
+{const _slC=startLife;startLife=function(){CK={hold:0,yN:0,yShown:0,fb:0};const r=_slC.apply(this,arguments);try{startTimer()}catch(e){}return r}}
+try{if(timer)startTimer()}catch(e){}
 
 </script>
 </body>
