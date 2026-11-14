@@ -22096,6 +22096,127 @@ try{if(typeof CX2_BODY!=='undefined'&&!CX2_BODY.includes('holy'))CX2_BODY.push('
  if(S.age>=20&&S.age%15===5&&S.holyY!==S.age&&!choice._cur&&!modalOpen){S.holyY=S.age;const foe=S.xt?'เทพนอกรีตผู้หลอมร่างเทพ':S.xian?'ผู้อาวุโสนิกายโลหิต':'ทูตพรรคมารสวรรค์',ep=Math.round(total()*1.1*(.9+Math.random()*.2));
   log(`🩸 ${foe}ได้กลิ่นกายาศักดิ์สิทธิ์ — มาเพื่อจับตัวคุณไปหลอมเป็นยาอายุวัฒนะ`,'myth');duel(foe,ep,w=>{if(w){S.fame+=40;S.karma+=10;log(`✨ ปราบ${foe}ได้ — ชื่อเสียง +40 · กรรมดี +10`,'epic')}else{S.hp-=Math.round(S.maxHp*.4);S.qi=+(S.qi*.9).toFixed(2);log(`🩸 ${foe}ดูดปราณบริสุทธิ์ไปส่วนหนึ่งก่อนคุณจะหนีรอด — พลังชีวิต −40% · ลมปราณ −10%`,'bad')}try{checkDeath()}catch(e){}render()})}}catch(e){console.error(e)}return r}}
 
+
+// ===================== v17.8 อาชีพ: หมอ · มือปราบ (ใช้ได้ทุกโลก) =====================
+const JOB={
+ doc:{ic:'🩺',n:{m:'หมอ',x:'หมอเซียน',g:'เทพโอสถ'},rk:{m:['หมอฝึกหัด','หมอประจำเมือง','หมอมีชื่อ','หมอเทวดา'],x:['หมอเซียนฝึกหัด','หมอเซียนประจำเมือง','หมอเซียนมีชื่อ','หมอเซียนพันปี'],g:['เทพโอสถฝึกหัด','เทพโอสถประจำนคร','เทพโอสถมีชื่อ','จ้าวแห่งโอสถสวรรค์']},
+  d:'คนไข้มาหาปีละ 1–2 คน ดูอาการแล้วเลือกวิธีรักษา รักษาถูกได้ค่ารักษาและจำโรคได้ ผิดคนไข้แย่ลงหรือเสียชีวิต',req:'อายุ 14+ · ปัญญา 30+',ok:()=>S.age>=14&&S.int>=30},
+ cop:{ic:'⚖️',n:{m:'มือปราบ',x:'ผู้คุมกฎ',g:'ผู้ตรวจการสวรรค์'},rk:{m:['มือปราบฝึกหัด','มือปราบประจำเมือง','หัวหน้ามือปราบ','ยอดมือปราบแห่งแผ่นดิน'],x:['ผู้คุมกฎฝึกหัด','ผู้คุมกฎประจำเมือง','หัวหน้าผู้คุมกฎ','ผู้คุมกฎแห่งโลกเซียน'],g:['ผู้ตรวจการฝึกหัด','ผู้ตรวจการประจำนคร','หัวหน้าผู้ตรวจการ','ผู้ตรวจการแห่งสวรรค์']},
+  d:'ทางการส่งคดีมาปีละ 1–2 คดี อ่านหลักฐานแล้วชี้ตัวคนร้ายจากผู้ต้องสงสัย 3 คน ได้เงินเดือนทุกปี + ค่าปิดคดี',req:'อายุ 16+ · พ้นขั้นไร้ระดับ',ok:()=>S.age>=16&&realmIdx()>=1}};
+const JOB_XP=[0,5,14,30];
+const jW=()=>ECO_W();
+const jRk=J=>JOB[J.t].rk[jW()][J.lv];
+function jInit(){const J=S.job;if(!J||!JOB[J.t])return null;J.q=J.q||[];J.kn=J.kn||{};J.st=J.st||{ok:0,bad:0,earn:0};return J}
+// ---------- ข้อมูลโรค ----------
+const JD_M={needle:['🪡','ฝังเข็ม'],tea:['🍵','ต้มยาสมุนไพร'],poison:['🧪','ถอนพิษ'],rest:['🛌','ให้พักฟื้นและปรับอาหาร']};
+const JD=[
+ {n:'ไข้ลมร้อน',s:['ตัวร้อนจัด','คอแห้ง','ปวดศีรษะ'],m:'tea'},{n:'ไข้หนาวสั่น',s:['หนาวสั่น','ตัวเย็น','เบื่ออาหาร'],m:'tea'},{n:'แผลติดเชื้อ',s:['แผลมีหนอง','ตัวร้อนจัด','บวมแดง'],m:'tea'},
+ {n:'พิษงูเขียว',s:['แผลบวมเขียว','ชาไปทั้งแขน','ใจสั่น'],m:'poison'},{n:'พิษเห็ดป่า',s:['อาเจียน','ตาพร่า','เหงื่อแตก'],m:'poison'},{n:'พิษเข็มดำ',s:['เล็บดำ','ชีพจรเต้นช้า','ตัวเย็น'],m:'poison'},
+ {n:'ลมปราณติดขัด',s:['ปวดจุกหน้าอก','ใช้วิชาไม่ได้','หายใจติดขัด'],m:'needle'},{n:'ธาตุไฟเข้าแทรก',s:['ตาแดงก่ำ','ชีพจรเต้นแรง','ฉุนเฉียวง่าย'],m:'needle'},{n:'จุดชีพจรถูกสกัด',s:['ขยับไม่ได้','ใช้วิชาไม่ได้','หน้าซีด'],m:'needle'},
+ {n:'กระดูกร้าว',s:['บวมช้ำ','ขยับไม่ได้','ปวดเมื่อลงน้ำหนัก'],m:'rest'},{n:'อ่อนเพลียเรื้อรัง',s:['ซูบผอม','นอนไม่หลับ','ใจสั่น'],m:'rest'},{n:'ตรอมใจ',s:['นอนไม่หลับ','เบื่ออาหาร','ร้องไห้บ่อย'],m:'rest'}];
+const JD_P=[{k:'vil',n:'ชาวบ้าน',ic:'🧑‍🌾',pay:80,die:.25,w:5},{k:'mer',n:'พ่อค้า',ic:'🧑‍💼',pay:300,die:.2,w:3},{k:'nob',n:'ขุนนาง',ic:'🎩',pay:1200,die:.15,w:1.5},{k:'sec',n:'ศิษย์สำนัก',ic:'🥋',pay:150,die:.2,w:2},{k:'mys',n:'ชายบาดเจ็บปริศนา',ic:'🩸',pay:0,die:.3,w:1}];
+// ---------- ข้อมูลคดี ----------
+const JC_CR=['ขโมยทองจากโรงรับจำนำ','ฆาตกรรมพ่อค้าผ้าไหม','วางยาในบ่อน้ำกลางเมือง','ลักพาตัวบุตรขุนนาง','เผาโกดังข้าวหลวง','ปล้นคาราวานเกลือ'];
+const JC_DIM=[ // [ลักษณะผู้ต้องสงสัย, หลักฐาน]
+ [['✋ ถนัดมือซ้าย','รอยมือซ้ายเปื้อนเลือดบนประตู'],['🤚 ถนัดมือขวา','รอยมือขวาเปื้อนเลือดบนประตู']],
+ [['🩹 มีรอยไหม้ที่มือ','เศษผ้าไหม้ติดอยู่ที่หน้าต่าง'],['👐 มือสะอาดไม่มีแผล','ไม่มีร่องรอยไฟเลยแม้แต่น้อย']],
+ [['🌙 อยู่ในเมืองคืนเกิดเหตุ','ยามเห็นเงาคนเดินในเมืองตอนดึก'],['🏞️ อยู่นอกเมืองคืนเกิดเหตุ','มีรอยเท้ามาจากนอกกำแพงเมือง']],
+ [['🪶 รู้วิชาตัวเบา','กระเบื้องหลังคาแตกเป็นทางยาว'],['🚶 ไม่รู้วิชาตัวเบา','รอยเท้าลึกบนพื้นดินโคลน']],
+ [['🎲 มีหนี้พนัน','เจ้ามือบ่อนเล่าว่ามีคนเอาทองมาใช้หนี้'],['💰 ฐานะร่ำรวย','ของที่หายไปไม่ใช่ของมีค่า — ทำเพราะแค้น']],
+ [['👡 ใส่รองเท้าฟาง','เศษฟางตกอยู่ในที่เกิดเหตุ'],['👞 ใส่รองเท้าหนัง','รอยรองเท้าหนังพื้นแข็ง']]];
+const JC_NM=['หลี่ซาน','จางเหลียง','หวังอู่','เฉินเสี่ยวเอ้อ','ซุนป๋อ','โจวเฟย','หลิวเหม่ย','อู๋เต้า','หม่าลิ่ว','เจิ้งฮวา','ถังจิ่ว','หูเหยียน'];
+// ---------- สร้างงาน ----------
+function jMkDoc(){const P=pickW(JD_P.map(p=>({v:p,w:p.w}))).v.v;if(P.k!=='mys'&&Math.random()<.08)return{k:'psn',y:S.age,p:'mer'};return{k:'doc',y:S.age,d:Math.floor(Math.random()*JD.length),p:P.k,show:2,ck:0,elim:[]}}
+function jMkCop(){const dims=[0,1,2,3,4,5].sort(()=>Math.random()-.5).slice(0,3),cul=dims.map(()=>R(0,1));
+ const A=cul.map((v,i)=>i<2?v:1-v);let B;do{B=dims.map(()=>R(0,1))}while(B.every((v,i)=>v===cul[i]));
+ const nm=[...JC_NM].sort(()=>Math.random()-.5).slice(0,3),sus=[{n:nm[0],a:cul,g:1},{n:nm[1],a:A},{n:nm[2],a:B}].sort(()=>Math.random()-.5);
+ return{k:'cop',y:S.age,cr:R(0,JC_CR.length-1),dims,cul,sus,show:2,elim:[]}}
+function jNewCase(){const J=jInit();if(!J)return;const c=J.t==='doc'?jMkDoc():jMkCop();J.q.push(c);return c}
+// ---------- รายปี ----------
+{const _pyJ=passYear;passYear=function(){const a0=S?S.age:0;const r=_pyJ.apply(this,arguments);try{const J=S&&S.alive&&!(S.beastMode&&!S.beastMode.human)?jInit():null;if(!J)return r;const st=Math.max(0,Math.min(S.age-a0,5));if(!st)return r;
+ const old=J.q.length;J.q=J.q.filter(c=>S.age-c.y<=2);if(J.q.length<old){J.rep=Math.max(0,(J.rep==null?50:J.rep)-3);log(`${JOB[J.t].ic} ${J.t==='doc'?'คนไข้รอไม่ไหว ไปหาหมอคนอื่นแล้ว':'คดีค้างนานเกินไป ทางการโอนให้คนอื่น'} (ความน่าเชื่อถือ −3)`,'bad')}
+ let n=0;for(let i=0;i<st;i++){const k=1+(J.lv>=2&&Math.random()<.5?1:0);for(let j=0;j<k&&J.q.length<3;j++){jNewCase();n++}}
+ if(J.t==='cop'){const s=Math.round([100,250,600,1500][J.lv]*W15()*st);S.money+=s;J.st.earn+=s}
+ if(n)log(`${JOB[J.t].ic} ${J.t==='doc'?`มีคนไข้มารอที่โรงหมอ ${n} คน`:`ทางการส่งคดีใหม่มา ${n} คดี`} — เปิด ☰ เมนู → 📜 อาชีพ`,'good');
+ if(J.lv>=3&&J.t==='doc'&&S.chronic){S.chronic=null;log('🩺 คุณรักษาโรคเรื้อรังของตัวเองจนหายขาด','good')}}catch(e){console.error(e)}return r}}
+// ---------- หน้าอาชีพ ----------
+function jBar(J){const nx=JOB_XP[J.lv+1];return nx?`<div class="hpbar" style="height:7px;margin:4px 0"><i style="width:${Math.min(100,(J.xp-JOB_XP[J.lv])/(nx-JOB_XP[J.lv])*100)}%;background:#e8c86a"></i></div><p class="tag2" style="margin:0">ผลงาน ${J.xp}/${nx} → เลื่อนเป็น ${JOB[J.t].rk[jW()][J.lv+1]}</p>`:'<p class="tag2">ขั้นสูงสุดแล้ว</p>'}
+function jPerks(J){const L=J.t==='doc'?['ค่ารักษาเพิ่ม 30% ทุกขั้น','ขั้น 3: จับชีพจรได้ 2 ครั้ง · บางปีคนไข้มา 2 คน','ขั้น 4: รักษาโรคเรื้อรังของตัวเองทุกปี · อายุขัย +5 ปี']:['เงินเดือนเพิ่มทุกขั้น','ขั้น 3: แฝงตัวตัดผู้บริสุทธิ์ได้ 1 คน · บางปีมีคดี 2 คดี','ขั้น 4: ชื่อเสียงจากการปิดคดี ×2'];return L.map((x,i)=>`<li style="${i===0||J.lv>=i+1?'':'opacity:.5'}">${x}${i&&J.lv>=i+1?' ✅':''}</li>`).join('')}
+function jCaseTitle(c){if(c.k==='doc'){const P=JD_P.find(p=>p.k===c.p);return`${P.ic} ${P.n}ป่วย`}if(c.k==='psn')return'🧑‍💼 ชายแปลกหน้ามาขอพบ';return`📂 ${JC_CR[c.cr]}`}
+function openJob(){if(!S)return;if(S.beastMode&&!S.beastMode.human)return toast('สัตว์อสูรทำงานในเมืองไม่ได้');const J=jInit();
+ if(!J){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📜 อาชีพ</h3><p class="tag2">อาชีพไว้ใช้ชีวิตนอกการต่อสู้ · ทุกปีมีงานเข้ามาให้คุณตัดสินใจเอง (ระบบไม่เลือกแทน งานรอได้ 2 ปี) · มี 4 ขั้น เลื่อนจากผลงาน</p>`+
+  Object.keys(JOB).map(k=>{const D=JOB[k],ok=D.ok();return`<div class="item"><div class="h"><b>${D.ic} ${D.n[jW()]}</b><button class="sysb" onclick="jTake('${k}')" ${ok?'':'disabled style="opacity:.45"'}>สมัคร</button></div><p>${D.d}</p><p class="tag2">ต้องการ: ${D.req} ${ok?'✅':'❌'}</p></div>`}).join(''),'job');return}
+ const D=JOB[J.t],rp=Math.round(J.rep==null?50:J.rep);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>${D.ic} ${jRk(J)}</h3>${jBar(J)}
+ <p class="tag2">สำเร็จ ${J.st.ok} · พลาด ${J.st.bad} · รายได้รวม ${ftMf(J.st.earn)} · ความน่าเชื่อถือ ${rp}/100 (ยิ่งสูงยิ่งได้เงินมาก)${J.t==='doc'?` · รู้จักโรค ${Object.keys(J.kn).length}/${JD.length}`:` · เงินเดือน ${ftMf(Math.round([100,250,600,1500][J.lv]*W15()))}/ปี`}</p>
+ <h4 style="margin:10px 0 4px">${J.t==='doc'?'🧑‍🤝‍🧑 คนไข้ที่รออยู่':'📂 คดีที่รออยู่'} (${J.q.length}/3)</h4>
+ ${J.q.length?J.q.map((c,i)=>`<div class="item"><div class="h"><b>${jCaseTitle(c)}</b><button class="pbtn" style="padding:6px 14px" onclick="jOpen(${i})">${c.k==='cop'?'สืบคดี':c.k==='psn'?'พบ':'รักษา'}</button></div><p class="tag2">มาเมื่อ${S.age-c.y?' '+(S.age-c.y)+' ปีก่อน':'ปีนี้'}${S.age-c.y>=2?' · ⚠️ ปีหน้าจะไปแล้ว':''}</p></div>`).join(''):`<p class="tag2">ยังไม่มีงาน — งานใหม่มาทุกปี</p>`}
+ ${J.t==='doc'?`<div class="item"><div class="h"><b>📖 ซื้อตำราแพทย์</b><button class="sysb" onclick="jBook()">${ftMf(Math.round(600*W15()))}</button></div><p class="tag2">รู้จักโรคใหม่ 3 โรค — เจออาการที่ตรงจะรู้วิธีรักษาทันที</p></div>`:''}
+ <h4 style="margin:10px 0 4px">⭐ ความสามารถตามขั้น</h4><ul style="margin:0;padding-left:18px" class="tag2">${jPerks(J)}</ul>
+ <button class="gbtn" style="width:100%;margin-top:10px" onclick="jQuit()">ลาออก</button>`,'job')}
+function jTake(k){if(!JOB[k].ok())return;S.job={t:k,lv:0,xp:0,rep:50,q:[],kn:{},st:{ok:0,bad:0,earn:0}};jNewCase();log(`${JOB[k].ic} เริ่มทำงานเป็น<b>${jRk(S.job)}</b> — งานแรกรออยู่แล้ว`,'epic');sfx('good');render();openJob()}
+function jQuit(){modal(`<h3>ลาออกจากอาชีพ?</h3><p>ขั้นและผลงานทั้งหมดจะหายไป ถ้ากลับมาต้องเริ่มขั้นแรกใหม่</p><div class="brow"><button class="gbtn" onclick="openJob()">ยกเลิก</button><button class="pbtn" onclick="S.job=null;log('📜 คุณลาออกจากงาน');render();openJob()">ลาออก</button></div>`,'job')}
+function jBook(){const J=jInit(),c=Math.round(600*W15());if(S.money<c)return toast('เงินไม่พอ');const un=JD.map((d,i)=>i).filter(i=>!J.kn[i]);if(!un.length)return toast('รู้จักโรคครบทุกโรคแล้ว');S.money-=c;const L=un.sort(()=>Math.random()-.5).slice(0,3);L.forEach(i=>J.kn[i]=1);log(`📖 อ่านตำราแพทย์ — รู้จัก ${L.map(i=>JD[i].n).join(', ')}`,'good');render();openJob()}
+function jXp(J,v){J.xp+=v;while(J.lv<3&&J.xp>=JOB_XP[J.lv+1]){J.lv++;S.fame+=20*J.lv;log(`${JOB[J.t].ic} ได้เลื่อนขั้นเป็น <b>${jRk(J)}</b>!`,'epic',J.lv>=3);try{keyAdd(`ได้เป็น${jRk(J)}`)}catch(e){}if(J.lv===3&&J.t==='doc'&&!J.ls){J.ls=1;if(S.xt)S.glExtra=(S.glExtra||0)+5;else lsAdd(5)}}}
+function jbPay(J,base){return Math.round(base*W15()*(1+J.lv*.3)*(.6+(J.rep==null?50:J.rep)/125))}
+function jOpen(i){const J=jInit(),c=J&&J.q[i];if(!c)return;if(c.k==='doc')return jDocUI(i);if(c.k==='psn')return jPsnUI(i);return jCopUI(i)}
+// ---------- หน้ารักษา ----------
+const jChecks=J=>J.lv>=2?2:1;
+function jDocUI(i){const J=jInit(),c=J.q[i],D=JD[c.d],P=JD_P.find(p=>p.k===c.p),show=S.int>=150?3:c.show,sy=D.s.slice(0,show);
+ const known=JD.map((d,k)=>[d,k]).filter(([d,k])=>J.kn[k]&&sy.every(s=>d.s.includes(s)));
+ const btn=m=>{const [ic,n]=JD_M[m],cost=m==='tea'?{herb:1}:m==='poison'?(bagN('cure')?{cure:1}:{herb:2}):null,ok=!cost||Object.keys(cost).every(k=>bagN(k)>=cost[k]),out=c.elim.includes(m);
+  return`<button class="opt" onclick="jTreat(${i},'${m}')" ${ok&&!out?'':'disabled style="opacity:.4"'}>${ic} ${n}<small>${out?'❌ ตรวจแล้วว่าไม่ใช่':cost?'ใช้ '+Object.keys(cost).map(k=>BAGIT[k].ic+BAGIT[k].n+' ×'+cost[k]).join(' ')+(ok?'':' — ไม่มี (ซื้อที่ย่านช่าง)'):'ไม่ต้องใช้ของ'}</small></button>`};
+ modal(`<button class="xbtn" onclick="openJob()">←</button><h3>${P.ic} ${P.n}ป่วย</h3><p class="tag2">${{vil:'จ่ายน้อยแต่ได้กรรมดี',mer:'จ่ายปานกลาง',nob:'จ่ายมาก — แต่ถ้ารักษาพลาดโดนปรับ',sec:'จ่ายน้อย แต่ได้ชื่อเสียง',mys:'ไม่มีเงินจ่าย ไม่รู้ว่าเป็นใคร — อาจตอบแทนหรือพาเรื่องมาหา'}[c.p]}${P.pay?' · ค่ารักษาราว '+ftMf(jbPay(J,P.pay)):''}</p>
+ <div class="item"><b>🔍 อาการ</b><ul style="margin:4px 0;padding-left:18px">${sy.map(s=>`<li>${s}</li>`).join('')}${show<3?'<li class="tag2">… ยังมีอาการที่ต้องตรวจละเอียด</li>':''}</ul>
+ ${known.length?`<p style="margin:4px 0;color:#5fb85f">📖 อาการเข้ากับโรคที่คุณรู้จัก: ${known.map(([d])=>`<b>${d.n}</b> → ${JD_M[d.m].join(' ')}`).join(' · ')}${known.length>1?' (เข้าได้หลายโรค ลองตรวจละเอียด)':''}</p>`:'<p class="tag2" style="margin:4px 0">💡 ยังไม่รู้จักโรคนี้ — ดูอาการแล้วเดา: ไข้/แผล → ต้มยา · พิษ → ถอนพิษ · ลมปราณ/ชีพจร → ฝังเข็ม · กระดูก/อ่อนแรง/ใจ → พักฟื้น · รักษาครั้งเดียวจะจำโรคได้</p>'}</div>
+ <button class="gbtn" style="width:100%;margin:4px 0;${c.ck<jChecks(J)?'':'opacity:.45'}" onclick="jCheck(${i})" ${c.ck<jChecks(J)?'':'disabled'}>🩺 จับชีพจรตรวจละเอียด (เหลือ ${jChecks(J)-c.ck} ครั้ง)<small style="display:block">เผยอาการที่ซ่อนอยู่ หรือตัดวิธีที่ผิดออก 1 วิธี</small></button>
+ <div class="mgrid">${Object.keys(JD_M).map(btn).join('')}</div>
+ <button class="opt" style="width:100%;margin-top:6px" onclick="jRefer(${i})">↪️ ส่งต่อให้หมอคนอื่น<small>ปลอดภัย ไม่ได้เงิน ไม่เสียอะไร</small></button>`,'job')}
+function jCheck(i){const J=jInit(),c=J.q[i];if(!c||c.ck>=jChecks(J))return;c.ck++;const D=JD[c.d];if(c.show<3&&S.int<150){c.show++;toast('พบอาการเพิ่ม')}else{const wr=Object.keys(JD_M).filter(m=>m!==D.m&&!c.elim.includes(m));if(wr.length){c.elim.push(ch(wr));toast('ตัดวิธีที่ไม่ใช่ออก 1 วิธี')}}sfx('click');jDocUI(i)}
+function jRefer(i){const J=jInit();J.q.splice(i,1);log('↪️ คุณส่งคนไข้ไปหาหมอที่เชี่ยวชาญกว่า');render();openJob()}
+function jTreat(i,m){const J=jInit(),c=J.q[i];if(!c)return;const D=JD[c.d],P=JD_P.find(p=>p.k===c.p);
+ if(m==='tea'&&!bagTake('herb',1))return toast('ไม่มีสมุนไพร');if(m==='poison'){if(bagN('cure'))bagTake('cure',1);else if(!bagTake('herb',2))return toast('ต้องมียาถอนพิษ หรือสมุนไพร 2 ต้น')}
+ J.q.splice(i,1);const ok=m===D.m;let t='',cls='good';J.kn[c.d]=1;
+ if(ok){J.st.ok++;J.rep=Math.min(100,(J.rep==null?50:J.rep)+4);jXp(J,c.p==='nob'?2:1);const g=P.pay?jbPay(J,P.pay):0;S.money+=g;J.st.earn+=g;try{ctRepAdd(6,'รักษาคนไข้')}catch(e){}
+  t=`${JD_M[m][1]}ได้ผล! ${P.n}หายจาก<b>${D.n}</b>${g?` — ค่ารักษา ${ftMf(g)}`:''}`;
+  if(c.p==='vil'){S.karma+=3;t+=' · กรรมดี +3'}if(c.p==='sec'){S.fame+=10;t+=' · สำนักของเขาติดหนี้บุญคุณ (ชื่อเสียง +10)'}
+  if(c.p==='mys'){if(Math.random()<.5){const v=jbPay(J,2500);S.money+=v;J.st.earn+=v;t+=` · หลายเดือนต่อมามีคนนำหีบเงิน ${ftMf(v)} มาส่ง "นายท่านไม่ลืมบุญคุณ"`;cls='epic'}else{t+=' · แต่คนที่ตามล่าเขาตามมาถึงโรงหมอ!';setTimeout(()=>{try{duel('มือสังหารที่ตามล่าคนไข้',Math.round(total()*.9),w=>{if(w){S.fame+=25;log('⚔️ คุณไล่มือสังหารออกไปได้ — ชื่อเสียง +25','epic')}else{S.hp-=Math.round(S.maxHp*.2);log('⚔️ มือสังหารทำร้ายคุณก่อนหนีไป — พลังชีวิต −20%','bad')}render()})}catch(e){}},600)}}}
+ else{J.st.bad++;J.rep=Math.max(0,(J.rep==null?50:J.rep)-6);const die=Math.random()<P.die;t=`${JD_M[m][1]}ไม่ได้ผล — ที่จริงเป็น<b>${D.n}</b> (ต้อง${JD_M[D.m][1]}) · คุณจำโรคนี้ไว้แล้ว`;cls='bad';
+  if(die){S.karma-=3;t+=` · ${P.n}เสียชีวิต กรรม −3`}else t+=' · ครอบครัวพาไปหาหมออื่นทัน';if(c.p==='nob'){const f=jbPay(J,600);S.money=Math.max(0,S.money-f);t+=` · ขุนนางสั่งปรับ ${ftMf(f)}`}}
+ log(`🩺 ${t}`,cls);jResult(t,ok)}
+function jPsnUI(i){const J=jInit(),g=jbPay(J,1500);modal(`<button class="xbtn" onclick="openJob()">←</button><h3>🧑‍💼 ชายแปลกหน้า</h3><p>ชายคนหนึ่งปิดหน้าครึ่งซีก วางถุงเงินหนักอึ้งบนโต๊ะ "ข้าต้องการยาที่ทำให้คนหลับแล้วไม่ตื่นอีก… ไม่มีใครรู้หรอก"</p>
+ <div class="mgrid"><button class="opt" onclick="jPsn(${i},1)">💰 รับงาน<small>ได้ ${ftMf(g)} · กรรม −15 · 30% ถูกสืบเจอ: ปรับและลดขั้น</small></button><button class="opt" onclick="jPsn(${i},0)">🙅 ปฏิเสธ<small>กรรมดี +3</small></button><button class="opt" onclick="jPsn(${i},2)">⚖️ จับส่งทางการ<small>ต้องสู้ · ชนะได้ชื่อเสียง</small></button></div>`,'job')}
+function jPsn(i,a){const J=jInit();J.q.splice(i,1);let t;
+ if(a===1){const g=jbPay(J,1500);S.money+=g;J.st.earn+=g;S.karma-=15;t=`คุณปรุงยาพิษให้เขา ได้ ${ftMf(g)} · กรรม −15`;if(Math.random()<.3){J.lv=Math.max(0,J.lv-1);J.xp=JOB_XP[J.lv];J.rep=Math.max(0,(J.rep==null?50:J.rep)-30);const f=Math.round(g*.6);S.money=Math.max(0,S.money-f);t+=` — แต่ทางการสืบมาถึงคุณ! โดนปรับ ${ftMf(f)} และลดขั้น`}log('🧪 '+t,'bad');return jResult(t,false)}
+ if(a===0){S.karma+=3;t='คุณผลักถุงเงินคืน "ข้าเป็นหมอ ไม่ใช่เพชฌฆาต" · กรรมดี +3';log('🩺 '+t,'good');return jResult(t,true)}
+ if(choice._cur){J.q.splice(i,0,{k:'psn',y:S.age,p:'mer'});return toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน')}
+ closeM();duel('ชายปิดหน้า',Math.round(total()*.8),w=>{if(w){S.fame+=20;S.karma+=5;J.rep=Math.min(100,(J.rep==null?50:J.rep)+8);log('⚖️ คุณจับชายปิดหน้าส่งทางการ — เขาคือมือสังหารที่ถูกตามล่ามานาน · ชื่อเสียง +20','epic')}else{S.hp-=Math.round(S.maxHp*.15);log('⚖️ ชายปิดหน้าหนีไปได้หลังทำร้ายคุณ','bad')}render()})}
+// ---------- หน้าสืบคดี ----------
+function jCopUI(i){const J=jInit(),c=J.q[i],ev=c.dims.slice(0,c.show).map((d,k)=>JC_DIM[d][c.cul[k]][1]);
+ modal(`<button class="xbtn" onclick="openJob()">←</button><h3>📂 ${JC_CR[c.cr]}</h3><p class="tag2">อ่านหลักฐาน แล้วหาคนที่ลักษณะตรงกับหลักฐาน<b>ทุกข้อ</b> · ชี้ผิดคนบริสุทธิ์จะติดคุกแทน</p>
+ <div class="item"><b>🧾 หลักฐาน</b><ol style="margin:4px 0;padding-left:20px">${ev.map(e=>`<li>${e}</li>`).join('')}${c.show<3?'<li class="tag2">??? ต้องสอบปากคำพยาน</li>':''}</ol></div>
+ <div style="display:flex;gap:6px;margin:4px 0"><button class="gbtn" style="flex:1;${c.show<3?'':'opacity:.45'}" onclick="jAsk(${i})" ${c.show<3?'':'disabled'}>🗣️ สอบปากคำพยาน<small style="display:block">เผยหลักฐานข้อ 3</small></button>${J.lv>=2?`<button class="gbtn" style="flex:1;${c.elim.length?'opacity:.45':''}" onclick="jSpy(${i})" ${c.elim.length?'disabled':''}>🕵️ แฝงตัวสืบ<small style="display:block">ตัดคนบริสุทธิ์ 1 คน</small></button>`:''}</div>
+ <b>👥 ผู้ต้องสงสัย</b>${c.sus.map((s,k)=>{const out=c.elim.includes(k);return`<div class="item" style="${out?'opacity:.45':''}"><div class="h"><b>${esc(s.n)}</b><button class="pbtn" style="padding:6px 14px" onclick="jAccuse(${i},${k})" ${out?'disabled':''}>ชี้ตัว</button></div><p class="tag2">${c.dims.map((d,j)=>JC_DIM[d][s.a[j]][0]).join(' · ')}${out?' · ✅ บริสุทธิ์':''}</p></div>`}).join('')}`,'job')}
+function jAsk(i){const c=jInit().q[i];if(!c||c.show>=3)return;c.show=3;sfx('click');jCopUI(i)}
+function jSpy(i){const c=jInit().q[i];if(!c||c.elim.length)return;c.elim.push(ch(c.sus.map((s,j)=>j).filter(j=>!c.sus[j].g)));sfx('click');jCopUI(i)}
+function jAccuse(i,k){const J=jInit(),c=J.q[i];if(!c)return;const s=c.sus[k],serious=c.cr>=1&&c.cr<=3,b=jbPay(J,serious?900:500);
+ modal(`<button class="xbtn" onclick="jCopUI(${i})">←</button><h3>⛓️ จับกุม ${esc(s.n)}?</h3><p>${esc(s.n)}ถูกคุมตัวมาที่ศาล ก่อนประกาศผล ญาติของเขาแอบยื่นถุงเงินให้คุณใต้โต๊ะ…</p>
+ <div class="mgrid"><button class="opt" onclick="jArrest(${i},${k},0)">⚖️ ตัดสินตามหลักฐาน<small>ถ้าถูกตัว: ค่าปิดคดี ${ftMf(b)}${serious?' · คดีใหญ่ คนร้ายอาจสู้':''}</small></button><button class="opt" onclick="jArrest(${i},${k},1)">💰 รับสินบนปล่อยตัว<small>ได้ ${ftMf(b*2)} · กรรม −8 · 25% เรื่องแดง ลดขั้น</small></button></div>`,'job')}
+function jArrest(i,k,bribe){const J=jInit(),c=J.q[i];if(!c)return;const s=c.sus[k],right=!!s.g,serious=c.cr>=1&&c.cr<=3,b=jbPay(J,serious?900:500),cul=c.sus.find(x=>x.g);let t;
+ if(!bribe&&right&&serious&&choice._cur)return toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');J.q.splice(i,1);
+ if(bribe){S.money+=b*2;J.st.earn+=b*2;S.karma-=8;t=`คุณรับเงิน ${ftMf(b*2)} แล้วปล่อย${esc(s.n)}ไป · กรรม −8`;if(Math.random()<.25){J.lv=Math.max(0,J.lv-1);J.xp=JOB_XP[J.lv];J.rep=Math.max(0,(J.rep==null?50:J.rep)-25);t+=' — เรื่องรั่วถึงเจ้าเมือง! ถูกลดขั้น';try{ctRepAdd(-40)}catch(e){}}log('💰 '+t,'bad');return jResult(t,false)}
+ const done=()=>{J.st.ok++;J.rep=Math.min(100,(J.rep==null?50:J.rep)+4);jXp(J,serious?2:1);S.money+=b;J.st.earn+=b;S.fame+=(serious?12:6)*(J.lv>=3?2:1);S.karma+=2;try{ctRepAdd(8,'ปิดคดี')}catch(e){}t=`ปิดคดีสำเร็จ — <b>${esc(s.n)}</b>คือคนร้ายจริง · ค่าปิดคดี ${ftMf(b)}`;log('⚖️ '+t,'epic');jResult(t,true)};
+ if(!right){J.st.bad++;J.rep=Math.max(0,(J.rep==null?50:J.rep)-8);S.karma-=5;t=`ชี้ผิดคน! ${esc(s.n)}บริสุทธิ์แต่ต้องติดคุก · คนร้ายตัวจริงคือ <b>${esc(cul.n)}</b> (${c.dims.map((d,j)=>JC_DIM[d][cul.a[j]][0]).join(' · ')}) ที่หนีไปแล้ว · กรรม −5`;log('⚖️ '+t,'bad');return jResult(t,false)}
+ if(serious&&Math.random()<.5){closeM();log(`⚖️ ${esc(s.n)}คือคนร้ายจริง — แต่เขาชักอาวุธขัดขืนการจับกุม!`,'');duel(s.n,Math.round(total()*(.75+J.lv*.12)*(.9+Math.random()*.2)),w=>{if(w)done();else{J.st.bad++;S.hp-=Math.round(S.maxHp*.2);log(`⚖️ ${esc(s.n)}หนีไปได้หลังทำร้ายคุณ`,'bad');render()}});return}
+ done()}
+function jResult(t,ok){render();modal(`<h3>${ok?'✅ สำเร็จ':'❌ ผิดพลาด'}</h3><p>${t}</p><button class="pbtn" style="width:100%" onclick="openJob()">กลับหน้าอาชีพ</button>`,'job')}
+// ---------- ทางเข้า: เมือง (ย่านชาวเมือง) + เมนู ----------
+{const _cpJ=ctPage;ctPage=function(p,B){const h=_cpJ.apply(this,arguments);try{if(p==='folk'&&S){const J=jInit();return h.replace('<div class="mgrid">',`<div class="mgrid">${ctBtn('openJob()','📜 อาชีพ',J?`${jRk(J)}${J.q.length?' · มีงานรอ '+J.q.length:''}`:'หมอ · มือปราบ — สมัครที่นี่',!!(J&&J.q.length))}`)}}catch(e){}return h}}
+{const _omJ=openMenu;openMenu=function(){const r=_omJ.apply(this,arguments);try{if(S&&S.alive&&!(S.beastMode&&!S.beastMode.human)&&!(typeof mwOn==='function'&&mwOn())){const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.jobB')){const J=jInit();g.insertAdjacentHTML('afterbegin',`<button class="opt jobB" onclick="openJob()"${J&&J.q.length?' style="background:var(--tb4)"':''}>📜 อาชีพ<small>${J?jRk(J)+(J.q.length?' · มีงานรอ '+J.q.length:''):'ยังไม่มีงาน'}</small></button>`)}}}catch(e){}return r}}
+// ทายาทสืบทอดอาชีพ (ลดขั้น 1 · ความรู้เรื่องโรคยังอยู่)
+{const _ihJ=inherit;inherit=function(ci){const P=S,j=P&&P.job&&JOB[P.job.t]?{t:P.job.t,lv:P.job.lv,kn:Object.assign({},P.job.kn||{})}:null;const r=_ihJ.apply(this,arguments);try{if(j&&S!==P&&!S.job){const lv=Math.max(0,j.lv-1);S.job={t:j.t,lv,xp:JOB_XP[lv],rep:50,q:[],kn:j.kn,st:{ok:0,bad:0,earn:0}};setTimeout(()=>{try{log(`${JOB[j.t].ic} สืบทอดอาชีพตระกูลเป็น<b>${jRk(S.job)}</b>`,'epic')}catch(e){}},800)}}catch(e){}return r}}
+try{SYS_GUIDE.push({s:'life',nw:1,ic:'📜',t:'อาชีพ',go:'openJob',d:'☰ เมนู → <b>📜 อาชีพ</b> หรือ เมือง → ย่านชาวเมือง · <b>🩺 หมอ</b>: ดูอาการแล้วเลือกวิธีรักษา จับชีพจรเพื่อเห็นอาการเพิ่ม รักษาครั้งเดียวจะจำโรคได้ · <b>⚖️ มือปราบ</b>: อ่านหลักฐานแล้วชี้ตัวคนที่ลักษณะตรงทุกข้อ ได้เงินเดือนทุกปี · 4 ขั้น เลื่อนจากผลงาน · ทายาทสืบทอดอาชีพได้'})}catch(e){}
+
 </script>
 </body>
 </html>
