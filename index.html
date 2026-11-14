@@ -461,10 +461,11 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='17.10.3';
+const VERSION='17.10.4';
 const CHANGELOG=[
+  {v:'17.10.4',d:'15 พ.ย. 2026',l:['⏳ <b>เอาระบบนับถอยหลังเลือกเหตุการณ์เล็กให้ออกแล้ว</b> — เกมจะรอให้คุณเลือกเองทุกครั้ง · ถ้าอยากให้เกมเลือกแทน ใช้ ⏳ ชะตาตัดสินแทน (กดค้าง 🤖) หรือโหมดอัตโนมัติ']},
   {v:'17.10.3',d:'15 พ.ย. 2026',l:['🏆 <b>หน้าสรุปชีวิตบอกแล้วว่าขึ้นทำเนียบไหม</b> — ขึ้นแล้วบอกอันดับวันนี้ · ไม่ขึ้นบอกเหตุผล (เช่น เวอร์ชันเก่า ชีวิตลิขิตเอง หรือตรวจพบการแก้ค่า)','🔒 <b>กันโกงฝั่งเซิร์ฟเวอร์</b> — ลานประลองโหมดเงาสู้แทนให้เซิร์ฟเวอร์ตัดสินผล · ทำเนียบกัลป์ตรวจอายุ · ผู้ครองกฎ/ประตูกัลป์ตรวจพลังจากการเล่นจริง']},
-  {v:'17.10.2',d:'15 พ.ย. 2026',l:['🎮 <b>สอนปุ่มด้านล่าง</b> — บอกทีละปุ่มว่าแตะได้อะไร กดค้างได้อะไร (จุดเล็กๆ มุมปุ่ม = กดค้างได้) · ปิด/เปิด <b>ระบบเลือกเหตุการณ์เล็ก</b> · ชะตาตัดสินแทน · ล็อกตัวเลือก ได้ในหน้าสุดท้ายทันที · ดูซ้ำได้ที่ ☰ เมนู หรือ 🎓 บทเรียน']},
+  {v:'17.10.2',d:'15 พ.ย. 2026',l:['🎮 <b>สอนปุ่มด้านล่าง</b> — บอกทีละปุ่มว่าแตะได้อะไร กดค้างได้อะไร (จุดเล็กๆ มุมปุ่ม = กดค้างได้) · ตั้งชะตาตัดสินแทน · ล็อกตัวเลือก ได้ในหน้าสุดท้ายทันที · ดูซ้ำได้ที่ ☰ เมนู หรือ 🎓 บทเรียน']},
   {v:'17.10.1',d:'15 พ.ย. 2026',l:['🔥 <b>ปรับโหมดนรก</b> — เดิมแทบทุกชั้นมีประตูที่ไม่ต้องสู้ (แท่นบูชา · บ่อน้ำ · เหตุการณ์) ทำให้ลงได้รวดเดียวโดยสู้แค่บอส · ตอนนี้ใช้ประตูไม่ต้องสู้แล้ว อีก 2 ชั้นถัดไปจะมีแต่ประตูต่อสู้','🔒 <b>กันโกงโหมดนรก</b> — เซิร์ฟเวอร์ตรวจลำดับชั้นที่ผ่านจริงก่อนขึ้นทำเนียบ · แก้ค่านรกผ่านคอนโซลจะติดธงและไม่ขึ้นทำเนียบ']},
   {v:'17.10',d:'14 พ.ย. 2026',l:['🧬 <b>ระบบร่างกาย</b> — ตอนเกิดจะสุ่มหน้าตาและร่างกายด้วย ตั้งแต่กายาสมบูรณ์ 100% ไปจนถึงตาบอด หูหนวก เป็นใบ้ ขาพิการ (สัตว์ก็มี: เผือก หางด้วน ปีกหัก) · ร่างกายมีผลกับการเติบโตและตัดตัวเลือกที่ทำไม่ได้ออก · มีเหตุการณ์เฉพาะ ทางรักษา และบาดเจ็บถาวรระหว่างชีวิต',
    '🎲 <b>ความหายากแบบใหม่</b> — นับเฉพาะส่วนที่หายากจริง ไม่เอาเพศหรือครอบครัวธรรมดามาคูณให้ตัวเลขพอง · บอกด้วยว่าชีวิตนี้อยู่กลุ่มบนสุดกี่ % และชิ้นไหนหายากที่สุด',
@@ -21560,7 +21561,7 @@ function paceBreak(){if(modalOpen||choice._cur)return;PACE.brkAt=PACE.play;const
  sp.rows.push({sep:1},{ic:'⏩',t:'ปีเงียบผ่านเร็ว',seg:{o:['ปิด','เปิด'],cur:PACE.on(),f:j=>sw('murim_pace',j)}},{ic:'⚡',t:'ระบบเลือกเหตุการณ์เล็ก',seg:{o:['ปิด','เปิด'],cur:PACE.am(),f:j=>sw('murim_automin',j)}},{ic:'☕',t:'เตือนพักทุก 90 นาที',seg:{o:['ปิด','เปิด'],cur:PACE.brk(),f:j=>sw('murim_brk',j)}})}catch(e){}return sp}}
 (()=>{const st=document.createElement('style');st.textContent=`.paceMin{margin-top:8px;padding:7px 10px;border-radius:10px;text-align:center;font-size:12.5px;background:color-mix(in srgb,var(--pink,#e8b54a) 16%,transparent);border:1px dashed color-mix(in srgb,var(--pink,#e8b54a) 55%,transparent)}
 #ybar.pfast{background:linear-gradient(90deg,var(--pink,#e8b54a),#7ad0ff)!important}`;document.head.appendChild(st)})();
-setTimeout(()=>{try{if(!LS.get('murim_pacehint',0)&&S&&S.alive){LS.set('murim_pacehint',1);toast('⏩ ปีที่เงียบจะผ่านเร็วขึ้นเอง · เหตุการณ์เล็กระบบเลือกให้ได้ — ตั้งค่าได้ที่กดค้างปุ่มความเร็ว')}}catch(e){}},20000);
+setTimeout(()=>{try{if(!LS.get('murim_pacehint',0)&&S&&S.alive){LS.set('murim_pacehint',1);toast('⏩ ปีที่เงียบจะผ่านเร็วขึ้นเอง — ตั้งค่าได้ที่กดค้างปุ่มความเร็ว')}}catch(e){}},20000);
 
 
 // มินิเกมรวมปราณ: กันค้าง — จบแล้วแต่หน้าต่างไม่ปิดเกิน 4 วิ ให้ปิดเอง
@@ -24071,7 +24072,7 @@ let AC_HL=null;setInterval(()=>{try{if(!S||!S.alive||S.custom||!S.hell)return;co
 // ===================== v17.10.2 🎮 สอนปุ่มควบคุมด้านล่าง (แตะ · กดค้าง · ตั้งค่าที่หาไม่เจอ) =====================
 const CT_STEPS=[
  ['#pauseBtn','▶ ⏸ เล่น / หยุด','<b>แตะ</b> หยุดหรือเล่นต่อ','<b>กดค้าง</b> เล่นต่อ 1 ปี · 5 ปี แล้วหยุดเอง · ตั้งให้หยุดเมื่อมีเหตุการณ์สำคัญ หรือเลือดต่ำ'],
- ['#spdBtn','1× ความเร็ว','<b>แตะ</b> เปลี่ยนความเร็ว 1× → 2× → 4× …','<b>กดค้าง</b> ⚙️ ตั้งค่าจังหวะเกม — <b>⚡ ระบบเลือกเหตุการณ์เล็ก</b> · ⏩ ปีเงียบผ่านเร็ว · ☕ เตือนพัก'],
+ ['#spdBtn','1× ความเร็ว','<b>แตะ</b> เปลี่ยนความเร็ว 1× → 2× → 4× …','<b>กดค้าง</b> ⚙️ ตั้งค่าจังหวะเกม — ⏩ ปีเงียบผ่านเร็ว · ☕ เตือนพัก'],
  ['.ybar','แถบปี','แถบเต็มเมื่อครบหนึ่งปี','<b>กดค้าง</b> ดูอายุขัยที่เหลือ และพลังห่างจากขั้นถัดไปกี่ %'],
  ['#bagBtn','🎒 กระเป๋า','<b>แตะ</b> เปิดกระเป๋า','<b>กดค้าง</b> กินยาด่วนได้เลย ไม่ต้องเปิดกระเป๋า'],
  ['#questBtn','📋 เควส','<b>แตะ</b> เปิดบันทึกเควส','<b>กดค้าง</b> ปักหมุดเควสที่อยากให้ขึ้นบนจอ'],
@@ -24088,9 +24089,8 @@ function ctNext(d){CT.i+=d;if(CT.i<0)CT.i=0;ctDraw()}
 function ctSetHtml(){const am=LS.get('murim_automin',0)?1:0,lk=LS.get('murim_chlock',0)?1:0,pc=LS.get('murim_pace',1)?1:0,fs=LS.get('murim_fate',0)||0;
  const sw=(on,f,dis)=>`<button class="ctSw${on?' on':''}" ${dis?'disabled':''} onclick="${f}"><i></i></button>`;
  return`<h3 style="margin:0 0 4px">⚙️ ตั้งค่าที่คนหาไม่ค่อยเจอ</h3><p class="tag2" style="margin:0 0 8px">ปรับตรงนี้ได้เลย · ภายหลังเปลี่ยนได้ที่ <b>กดค้าง 1×</b> และ <b>กดค้าง 🤖</b></p>
- <div class="ctRow"><div><b>⚡ ระบบเลือกเหตุการณ์เล็ก</b><small>เหตุการณ์เล็กๆ เกมรอ 10 วิแล้วเลือกให้ · แตะหน้าต่างเมื่อไหร่ก็เลือกเองได้${lk?' · <b style="color:#ffb040">ตอนนี้ล็อกตัวเลือกอยู่ ระบบจะไม่เลือกให้</b>':''}</small></div>${sw(am,"LS.set('murim_automin',"+(am?0:1)+");ctDraw()",lk)}</div>
  <div class="ctRow"><div><b>⏳ ชะตาตัดสินแทน</b><small>ไม่เลือกภายในเวลาที่ตั้ง เกมเลือกให้ทุกเหตุการณ์</small></div><div class="ctSeg">${FATE_L.map(v=>`<button class="${v===fs?'on':''}" ${lk?'disabled':''} onclick="LS.set('murim_fate',${v});ctDraw()">${v?v+'วิ':'ปิด'}</button>`).join('')}</div></div>
- <div class="ctRow"><div><b>🔒 ล็อกตัวเลือก</b><small>เกมรอให้คุณเลือกเองทุกครั้ง (ปิดสองข้อบน) · มีปุ่มนี้ในทุกหน้าต่างตัวเลือกด้วย</small></div>${sw(lk,"LS.set('murim_chlock',"+(lk?0:1)+");ctDraw()")}</div>
+ <div class="ctRow"><div><b>🔒 ล็อกตัวเลือก</b><small>เกมรอให้คุณเลือกเองทุกครั้ง (ปิดชะตาตัดสินแทน) · มีปุ่มนี้ในทุกหน้าต่างตัวเลือกด้วย</small></div>${sw(lk,"LS.set('murim_chlock',"+(lk?0:1)+");ctDraw()")}</div>
  <div class="ctRow"><div><b>⏩ ปีเงียบผ่านเร็ว</b><small>ปีที่ไม่มีอะไรเกิดขึ้นจะเร่งให้เอง</small></div>${sw(pc,"LS.set('murim_pace',"+(pc?0:1)+");ctDraw()")}</div>
  ${typeof tuOn==='function'&&!tuOn()?'<p class="tag2" style="color:#ffb040">⚠️ ตอนนี้ใช้แท็บแบบเดิมอยู่ — กดค้างปุ่มจะยังไม่ทำงาน เปิด "แท็บแบบลื่น" ในเมนูก่อน</p>':''}
  <div class="ctNav"><button class="gbtn" onclick="ctNext(-1)">‹ ย้อน</button><button class="pbtn" onclick="ctEnd()">เข้าใจแล้ว ✓</button></div>`}
@@ -24125,8 +24125,8 @@ function ctDraw(){if(!CT.L)return;let o=$('ctOv');if(!o){o=document.createElemen
 .ctSeg{display:flex;flex:none;border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,.15)}
 .ctSeg button{border:none;background:transparent;color:inherit;padding:5px 7px;font:inherit;font-size:.85em}.ctSeg button.on{background:#f0c860;color:#222}.ctSeg button:disabled{opacity:.4}`;document.head.appendChild(st)})();
 // เข้าถึงได้จาก: หน้าบทเรียน · เมนู · และขึ้นเองครั้งเดียวสำหรับทุกคน
-{const _olC=openLessons;openLessons=function(){const r=_olC.apply(this,arguments);try{const m=$('modal'),h=m&&m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',`<button class="pbtn" style="width:100%;margin:6px 0" onclick="ctStart()">🎮 สอนปุ่มด้านล่าง · ตั้งค่าเลือกเหตุการณ์อัตโนมัติ</button>`)}catch(e){}return r}}
-{const _omC=openMenu;openMenu=function(){const r=_omC.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g)g.insertAdjacentHTML('afterbegin',`<button class="opt" onclick="ctStart()">🎮 สอนปุ่มด้านล่าง<small>แตะ · กดค้าง · ตั้งค่าเลือกอัตโนมัติ</small></button>`)}catch(e){}return r}}
+{const _olC=openLessons;openLessons=function(){const r=_olC.apply(this,arguments);try{const m=$('modal'),h=m&&m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',`<button class="pbtn" style="width:100%;margin:6px 0" onclick="ctStart()">🎮 สอนปุ่มด้านล่าง · ตั้งค่าชะตาตัดสินแทน</button>`)}catch(e){}return r}}
+{const _omC=openMenu;openMenu=function(){const r=_omC.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g)g.insertAdjacentHTML('afterbegin',`<button class="opt" onclick="ctStart()">🎮 สอนปุ่มด้านล่าง<small>แตะ · กดค้าง · ตั้งค่าชะตาตัดสินแทน</small></button>`)}catch(e){}return r}}
 setInterval(()=>{try{if(LS.get('murim_ctour',0)||!S||!S.alive||(S.age|0)<1||choice._cur||modalOpen||(typeof CO!=='undefined'&&CO.id)||$('ctOv'))return;if(!$('game')||!$('game').classList.contains('on'))return;ctStart()}catch(e){}},4000);
 
 // ===================== v17.10.3 บอกผู้เล่นว่าชีวิตนี้ขึ้นทำเนียบไหม และทำไม =====================
@@ -24139,6 +24139,11 @@ const LIFE_WHY={edit:['⚠️ ตรวจพบการแก้ไขค่�
  cu:['✍️ ชีวิตที่ลิขิตเองไม่ขึ้นทำเนียบ','ชีวิตที่สร้างเองเล่นได้ปกติ แต่ไม่นับคะแนนแข่งกับคนอื่น']};
 function lifeSkipBox(r){try{const end=$('end');if(!end||!r||$('lifeSkip'))return;const W=LIFE_WHY[r.why]||LIFE_WHY.parse;const d=document.createElement('div');d.id='lifeSkip';d.className='box';d.style.cssText='border-color:#d8a04a;padding:8px 10px;margin:8px 0';
  d.innerHTML=`<b>${W[0]}</b><p class="tag2" style="margin:4px 0 0">${W[1]}</p>${r.why==='ban'||r.why==='edit'?`<p class="tag2" style="margin:4px 0 0">รหัสอ้างอิง: <b>${esc(String(pid||'').slice(0,8))}</b></p>`:''}`;const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(d,rec.nextSibling):end.insertBefore(d,end.firstChild)}catch(e){}}
+
+// ===================== v17.10.4 เอาระบบนับถอยหลังเลือกเหตุการณ์เล็กให้ออก — เกมรอผู้เล่นเลือกเองเสมอ (ยกเว้นตั้งชะตาตัดสินแทน/โหมดอัตโนมัติ) =====================
+PACE.am=()=>0;try{LS.set('murim_automin',0)}catch(e){}
+{const _qsN=qmSpeed;qmSpeed=function(){const sp=_qsN.apply(this,arguments);try{sp.rows=sp.rows.filter(r=>r.t!=='ระบบเลือกเหตุการณ์เล็ก')}catch(e){}return sp}}
+setInterval(()=>{try{const x=$('paceMin');if(x)x.remove()}catch(e){}},300);
 </script>
 </body>
 </html>
