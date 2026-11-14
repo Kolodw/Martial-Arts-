@@ -461,8 +461,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='17.10.1';
+const VERSION='17.10.2';
 const CHANGELOG=[
+  {v:'17.10.2',d:'15 พ.ย. 2026',l:['🎮 <b>สอนปุ่มด้านล่าง</b> — บอกทีละปุ่มว่าแตะได้อะไร กดค้างได้อะไร (จุดเล็กๆ มุมปุ่ม = กดค้างได้) · ปิด/เปิด <b>ระบบเลือกเหตุการณ์เล็ก</b> · ชะตาตัดสินแทน · ล็อกตัวเลือก ได้ในหน้าสุดท้ายทันที · ดูซ้ำได้ที่ ☰ เมนู หรือ 🎓 บทเรียน']},
   {v:'17.10.1',d:'15 พ.ย. 2026',l:['🔥 <b>ปรับโหมดนรก</b> — เดิมแทบทุกชั้นมีประตูที่ไม่ต้องสู้ (แท่นบูชา · บ่อน้ำ · เหตุการณ์) ทำให้ลงได้รวดเดียวโดยสู้แค่บอส · ตอนนี้ใช้ประตูไม่ต้องสู้แล้ว อีก 2 ชั้นถัดไปจะมีแต่ประตูต่อสู้','🔒 <b>กันโกงโหมดนรก</b> — เซิร์ฟเวอร์ตรวจลำดับชั้นที่ผ่านจริงก่อนขึ้นทำเนียบ · แก้ค่านรกผ่านคอนโซลจะติดธงและไม่ขึ้นทำเนียบ']},
   {v:'17.10',d:'14 พ.ย. 2026',l:['🧬 <b>ระบบร่างกาย</b> — ตอนเกิดจะสุ่มหน้าตาและร่างกายด้วย ตั้งแต่กายาสมบูรณ์ 100% ไปจนถึงตาบอด หูหนวก เป็นใบ้ ขาพิการ (สัตว์ก็มี: เผือก หางด้วน ปีกหัก) · ร่างกายมีผลกับการเติบโตและตัดตัวเลือกที่ทำไม่ได้ออก · มีเหตุการณ์เฉพาะ ทางรักษา และบาดเจ็บถาวรระหว่างชีวิต',
    '🎲 <b>ความหายากแบบใหม่</b> — นับเฉพาะส่วนที่หายากจริง ไม่เอาเพศหรือครอบครัวธรรมดามาคูณให้ตัวเลขพอง · บอกด้วยว่าชีวิตนี้อยู่กลุ่มบนสุดกี่ % และชิ้นไหนหายากที่สุด',
@@ -24065,6 +24066,67 @@ function acTrapH(o){if(!o||typeof o!=='object'||o[AC_HSYM])return;try{Object.def
 setInterval(()=>{try{if(S&&S.alive&&!S.custom&&S.hell)acTrapH(S.hell)}catch(e){}},400);
 // 3) ชั้นนรกกระโดดเกินทีละชั้น (ยกเว้นจารึกวิญญาณตอนเริ่ม) = น่าสงสัย
 let AC_HL=null;setInterval(()=>{try{if(!S||!S.alive||S.custom||!S.hell)return;const lv=+S.hell.lv||0;if(AC_HL&&AC_HL.o===S){const d=lv-AC_HL.lv;if(d>1&&!(S.hell.cs&&lv===S.hell.cs&&AC_HL.lv===0)){acFlag('jump-hell');acSus('jump-hell')}}AC_HL={o:S,lv}}catch(e){}},500);
+
+// ===================== v17.10.2 🎮 สอนปุ่มควบคุมด้านล่าง (แตะ · กดค้าง · ตั้งค่าที่หาไม่เจอ) =====================
+const CT_STEPS=[
+ ['#pauseBtn','▶ ⏸ เล่น / หยุด','<b>แตะ</b> หยุดหรือเล่นต่อ','<b>กดค้าง</b> เล่นต่อ 1 ปี · 5 ปี แล้วหยุดเอง · ตั้งให้หยุดเมื่อมีเหตุการณ์สำคัญ หรือเลือดต่ำ'],
+ ['#spdBtn','1× ความเร็ว','<b>แตะ</b> เปลี่ยนความเร็ว 1× → 2× → 4× …','<b>กดค้าง</b> ⚙️ ตั้งค่าจังหวะเกม — <b>⚡ ระบบเลือกเหตุการณ์เล็ก</b> · ⏩ ปีเงียบผ่านเร็ว · ☕ เตือนพัก'],
+ ['.ybar','แถบปี','แถบเต็มเมื่อครบหนึ่งปี','<b>กดค้าง</b> ดูอายุขัยที่เหลือ และพลังห่างจากขั้นถัดไปกี่ %'],
+ ['#bagBtn','🎒 กระเป๋า','<b>แตะ</b> เปิดกระเป๋า','<b>กดค้าง</b> กินยาด่วนได้เลย ไม่ต้องเปิดกระเป๋า'],
+ ['#questBtn','📋 เควส','<b>แตะ</b> เปิดบันทึกเควส','<b>กดค้าง</b> ปักหมุดเควสที่อยากให้ขึ้นบนจอ'],
+ ['#autoBtn','🤖 อัตโนมัติ','<b>แตะ</b> เปิด/ปิดโหมดอัตโนมัติ — ชีวิตเดินเองและเลือกทุกอย่างให้','<b>กดค้าง</b> <b>⏳ ชะตาตัดสินแทน</b> (ไม่เลือกภายในกี่วิ เกมเลือกให้) · ซื้อยาเอง · ขายของเกินเอง'],
+ ['#skipBtn','⏭ ข้าม','<b>แตะ</b> แสดงข้อความที่ค้างทั้งหมดทันที','<b>กดค้าง</b> ข้าม 1 · 5 · 10 ปี หรือข้ามจนทะลวงขั้น — หยุดเองเมื่อมีเรื่องให้เลือก'],
+ ['#logBtn','📜 บันทึกชีวิต','<b>แตะ</b> ดูเหตุการณ์สำคัญทั้งชีวิต','<b>กดค้าง</b> กรองตามหมวด · เลื่อนไปบนสุด/ล่าสุด'],
+ ['#menuBtn','☰ เมนู','<b>แตะ</b> เปิดเมนูทั้งหมด','<b>กดค้าง</b> ทางลัดหน้าที่ใช้บ่อย · 💾 เซฟทันที']];
+const CT={i:0,was:null,L:null};
+function ctSteps(){return CT_STEPS.filter(x=>{const e=document.querySelector(x[0]);return e&&e.offsetParent})}
+function ctStart(){try{closeM()}catch(e){}if(!$('game')||!$('game').classList.contains('on')){toast('เริ่มหรือโหลดชีวิตก่อน แล้วค่อยเปิดบทนี้');return}
+ CT.L=ctSteps();CT.i=0;CT.was=paused;paused=true;try{render()}catch(e){}LS.set('murim_ctour',1);ctDraw()}
+function ctEnd(){const o=$('ctOv');if(o)o.remove();window.removeEventListener('resize',ctDraw);if(CT.was===false){paused=false;try{render()}catch(e){}}CT.L=null}
+function ctNext(d){CT.i+=d;if(CT.i<0)CT.i=0;ctDraw()}
+function ctSetHtml(){const am=LS.get('murim_automin',0)?1:0,lk=LS.get('murim_chlock',0)?1:0,pc=LS.get('murim_pace',1)?1:0,fs=LS.get('murim_fate',0)||0;
+ const sw=(on,f,dis)=>`<button class="ctSw${on?' on':''}" ${dis?'disabled':''} onclick="${f}"><i></i></button>`;
+ return`<h3 style="margin:0 0 4px">⚙️ ตั้งค่าที่คนหาไม่ค่อยเจอ</h3><p class="tag2" style="margin:0 0 8px">ปรับตรงนี้ได้เลย · ภายหลังเปลี่ยนได้ที่ <b>กดค้าง 1×</b> และ <b>กดค้าง 🤖</b></p>
+ <div class="ctRow"><div><b>⚡ ระบบเลือกเหตุการณ์เล็ก</b><small>เหตุการณ์เล็กๆ เกมรอ 10 วิแล้วเลือกให้ · แตะหน้าต่างเมื่อไหร่ก็เลือกเองได้${lk?' · <b style="color:#ffb040">ตอนนี้ล็อกตัวเลือกอยู่ ระบบจะไม่เลือกให้</b>':''}</small></div>${sw(am,"LS.set('murim_automin',"+(am?0:1)+");ctDraw()",lk)}</div>
+ <div class="ctRow"><div><b>⏳ ชะตาตัดสินแทน</b><small>ไม่เลือกภายในเวลาที่ตั้ง เกมเลือกให้ทุกเหตุการณ์</small></div><div class="ctSeg">${FATE_L.map(v=>`<button class="${v===fs?'on':''}" ${lk?'disabled':''} onclick="LS.set('murim_fate',${v});ctDraw()">${v?v+'วิ':'ปิด'}</button>`).join('')}</div></div>
+ <div class="ctRow"><div><b>🔒 ล็อกตัวเลือก</b><small>เกมรอให้คุณเลือกเองทุกครั้ง (ปิดสองข้อบน) · มีปุ่มนี้ในทุกหน้าต่างตัวเลือกด้วย</small></div>${sw(lk,"LS.set('murim_chlock',"+(lk?0:1)+");ctDraw()")}</div>
+ <div class="ctRow"><div><b>⏩ ปีเงียบผ่านเร็ว</b><small>ปีที่ไม่มีอะไรเกิดขึ้นจะเร่งให้เอง</small></div>${sw(pc,"LS.set('murim_pace',"+(pc?0:1)+");ctDraw()")}</div>
+ ${typeof tuOn==='function'&&!tuOn()?'<p class="tag2" style="color:#ffb040">⚠️ ตอนนี้ใช้แท็บแบบเดิมอยู่ — กดค้างปุ่มจะยังไม่ทำงาน เปิด "แท็บแบบลื่น" ในเมนูก่อน</p>':''}
+ <div class="ctNav"><button class="gbtn" onclick="ctNext(-1)">‹ ย้อน</button><button class="pbtn" onclick="ctEnd()">เข้าใจแล้ว ✓</button></div>`}
+function ctDraw(){if(!CT.L)return;let o=$('ctOv');if(!o){o=document.createElement('div');o.id='ctOv';document.body.appendChild(o);window.addEventListener('resize',ctDraw)}
+ const L=CT.L,n=L.length;
+ if(CT.i>=n){o.innerHTML=`<div class="ctDim"></div><div class="ctCard ctSet">${ctSetHtml()}</div>`;return}
+ const st=L[CT.i],el=document.querySelector(st[0]);if(!el){CT.L.splice(CT.i,1);return ctDraw()}const r=el.getBoundingClientRect(),pad=5;
+ const ring=`left:${r.left-pad}px;top:${r.top-pad}px;width:${r.width+pad*2}px;height:${r.height+pad*2}px`;
+ const w=Math.min(innerWidth-20,330),cx=Math.max(10,Math.min(innerWidth-w-10,r.left+r.width/2-w/2)),ax=Math.max(18,Math.min(w-18,r.left+r.width/2-cx));
+ o.innerHTML=`<div class="ctRing" style="${ring}"></div><div class="ctCard" style="left:${cx}px;width:${w}px;bottom:${innerHeight-r.top+16}px"><i class="ctArr" style="left:${ax}px"></i>
+  <div class="ctStep">${CT.i+1}/${n+1}${CT.i===0?' · <span>จุดเล็กๆ มุมปุ่ม = ปุ่มนั้นกดค้างได้</span>':''}</div><h3>${st[1]}</h3><p>👆 ${st[2]}</p><p class="ctHold">✋ ${st[3]}</p>
+  <div class="ctNav"><button class="gbtn" onclick="ctEnd()">ข้าม</button>${CT.i?'<button class="gbtn" onclick="ctNext(-1)">‹</button>':''}<button class="pbtn" onclick="ctNext(1)">ถัดไป ›</button></div></div>`}
+(()=>{const st=document.createElement('style');st.textContent=`
+#ctOv{position:fixed;inset:0;z-index:9990}
+#ctOv .ctDim{position:absolute;inset:0;background:rgba(0,0,0,.72)}
+#ctOv .ctRing{position:absolute;border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.72),0 0 0 3px #f0c860,0 0 18px 4px rgba(240,200,96,.55);transition:all .28s cubic-bezier(.3,1.3,.5,1);pointer-events:none;animation:ctPulse 1.6s ease-in-out infinite}
+@keyframes ctPulse{50%{box-shadow:0 0 0 9999px rgba(0,0,0,.72),0 0 0 3px #f0c860,0 0 28px 8px rgba(240,200,96,.35)}}
+#ctOv .ctCard{position:absolute;background:var(--card,#1d1b26);border:2px solid #f0c860;border-radius:16px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:ctIn .3s cubic-bezier(.22,1.3,.4,1)}
+@keyframes ctIn{from{transform:translateY(10px) scale(.96);opacity:0}}
+#ctOv .ctCard h3{margin:2px 0 6px;font-size:1.08em}
+#ctOv .ctCard p{margin:4px 0;line-height:1.45}
+#ctOv .ctHold{background:rgba(240,200,96,.1);border-radius:10px;padding:6px 8px}
+#ctOv .ctArr{position:absolute;bottom:-9px;width:16px;height:16px;margin-left:-8px;background:var(--card,#1d1b26);border-right:2px solid #f0c860;border-bottom:2px solid #f0c860;transform:rotate(45deg)}
+#ctOv .ctStep{font-size:.8em;opacity:.7}#ctOv .ctStep span{color:#f0c860}
+#ctOv .ctNav{display:flex;gap:6px;justify-content:flex-end;margin-top:10px}#ctOv .ctNav button{padding:7px 14px}
+#ctOv .ctSet{left:50%;top:50%;transform:translate(-50%,-50%);width:min(92vw,380px);max-height:86vh;overflow:auto;animation:none}
+#ctOv .ctRow{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:9px 0;border-top:1px solid rgba(255,255,255,.08)}
+#ctOv .ctRow small{display:block;opacity:.72;font-size:.82em;margin-top:2px;line-height:1.35}
+.ctSw{flex:none;width:46px;height:26px;border-radius:13px;border:none;background:#4a4658;position:relative;padding:0;cursor:pointer;transition:background .2s}
+.ctSw i{position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s}
+.ctSw.on{background:#5fbf6f}.ctSw.on i{left:23px}.ctSw:disabled{opacity:.4}
+.ctSeg{display:flex;flex:none;border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,.15)}
+.ctSeg button{border:none;background:transparent;color:inherit;padding:5px 7px;font:inherit;font-size:.85em}.ctSeg button.on{background:#f0c860;color:#222}.ctSeg button:disabled{opacity:.4}`;document.head.appendChild(st)})();
+// เข้าถึงได้จาก: หน้าบทเรียน · เมนู · และขึ้นเองครั้งเดียวสำหรับทุกคน
+{const _olC=openLessons;openLessons=function(){const r=_olC.apply(this,arguments);try{const m=$('modal'),h=m&&m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',`<button class="pbtn" style="width:100%;margin:6px 0" onclick="ctStart()">🎮 สอนปุ่มด้านล่าง · ตั้งค่าเลือกเหตุการณ์อัตโนมัติ</button>`)}catch(e){}return r}}
+{const _omC=openMenu;openMenu=function(){const r=_omC.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g)g.insertAdjacentHTML('afterbegin',`<button class="opt" onclick="ctStart()">🎮 สอนปุ่มด้านล่าง<small>แตะ · กดค้าง · ตั้งค่าเลือกอัตโนมัติ</small></button>`)}catch(e){}return r}}
+setInterval(()=>{try{if(LS.get('murim_ctour',0)||!S||!S.alive||(S.age|0)<1||choice._cur||modalOpen||(typeof CO!=='undefined'&&CO.id)||$('ctOv'))return;if(!$('game')||!$('game').classList.contains('on'))return;ctStart()}catch(e){}},4000);
 </script>
 </body>
 </html>
