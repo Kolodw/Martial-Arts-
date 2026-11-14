@@ -161,7 +161,7 @@ function week(d = new Date()) {
 const BAD = ['ควย', 'เหี้ย', 'สัส', 'เย็ด', 'แตด', 'fuck', 'shit', 'bitch', 'nigg', 'เงี่ยน', 'กะหรี่'];
 function clean(s, n) {
   s = String(s || '').replace(/[\u0000-\u001f<>]/g, '').slice(0, n);
-  s = s.replace(/(https?:\/\/|www\.)\S+/gi, '[ลิงก์]').replace(/\b\S+\.(com|net|org|io|gg|me|xyz|th|co)\b\S*/gi, '[ลิงก์]');
+  s = s.replace(/(https?:\/\/|www\.|[a-z][a-z0-9+.-]*:\/\/)\S+/gi, '[ลิงก์]').replace(/\b[a-z0-9][a-z0-9-]*([.。．][a-z0-9-]+)*[.。．][a-z]{2,24}\b(\/\S*)?/gi, '[ลิงก์]').replace(/\b[a-z0-9][a-z0-9-]*\s*[.。．]\s*(com|net|org|io|gg|me|xyz|th|co|ly|to|cc|link|site|shop|app|dev|info|biz|tv|ru|cn|in\.th|co\.th)\b(\/\S*)?/gi, '[ลิงก์]').replace(/\b[a-z0-9-]+\s*(\(|\[)?\s*dot\s*(\)|\])?\s*(com|net|org|io|gg|me|xyz|th|co|ly|to|cc|link)\b/gi, '[ลิงก์]');
   for (const w of BAD) s = s.split(w).join('*'.repeat([...w].length));
   s = s.replace(/หี(?![บดม])/g, '**');
   return s.trim();
@@ -1282,17 +1282,19 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (Array.isArray(b.poll) && b.poll.length && poll.length < 2) return res.status(400).json({ err: 'poll' });
         const ann = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, x: body, n: clean(b.n, 20) || 'ผู้ดูแล' };
         if (poll.length >= 2) ann.poll = poll;
-        const m = { i: ann.i, t: now, n: ann.n, ti: 'ผู้ดูแล', x: '@everyone ' + body, k: 'ann', poll: ann.poll, u: String(id || '').slice(0, 4), pu: String(id || '').slice(0, 12) };
+        const m = { i: ann.i, t: now, n: ann.n, ti: 'ผู้ดูแล', x: '@everyone ' + body, k: 'ann', ad: 1, poll: ann.poll, u: String(id || '').slice(0, 4), pu: String(id || '').slice(0, 12) };
         await pipe([['SET', 'ann', JSON.stringify(ann), 'EX', 86400 * 3], ['LPUSH', 'annh', JSON.stringify(ann)], ['LTRIM', 'annh', 0, 29], ['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199]]);
         let pr = null; if (b.push !== 0) { try { pr = await withCap(pushHashes(await cmd('HKEYS', 'push'), { t: '📢 ประกาศจากผู้ดูแล', b: body.slice(0, 160), u: '/?go=chat', g: 'ann-' + ann.i }), 20000) } catch (e) {} }
         return res.json({ ok: 1, ann: await annPoll(ann, id), push: pr });
       }
-      const x = clean(b.x, 200);
+      const isA = isAdmKey(b.key);
+      const x = isA ? String(b.x || '').replace(/[\u0000-\u001f<>]/g, '').slice(0, 400).trim() : clean(b.x, 200);
       if (!x) return res.status(400).json({ err: 'empty' });
       const [mu, ok, chx, rkh] = await pipe([['GET', 'mute:' + id], ['SET', 'rl:' + id, 1, 'NX', 'PX', 1800], ['SISMEMBER', 'cheaters', id], ['HGETALL', 'rkttl:' + id]]);
       if (mu) return res.status(429).json({ err: 'muted' });
       if (!ok) return res.status(429).json({ err: 'rate' });
       const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), ...((b.tp || +chx) ? { tt: '', tr: 0 } : rkOk(b.tt, rkh) || (isAdmKey(b.key) && RKT_ALL.has(String(b.tt || '')) ? { tt: String(b.tt), tr: RKT_TR[RKT_ALL.get(String(b.tt)).p] || 7 } : null) || ttlOk(b.tt)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
+      if (isA) m.ad = 1;
       if (/^ตำนานลานซีซั่น \d{1,4}$/.test(String(b.tt || '')) && !m.tt) { const wv0 = jp(await cmd('HGET', 'arwal', id)); if (isAdmKey(b.key) || (wv0 && wv0.own && (wv0.own.tt || []).includes(String(b.tt)))) { m.tt = String(b.tt); m.tr = 6 } }
       if (['นักล่าเงา', 'ผู้ไม่เคยถอย', 'ตำนานแห่งลาน', 'ราชันเงาอสูร', 'เทพสงครามแห่งลาน', 'ผู้ยืนหนึ่งเหนือพันศึก', 'จักรพรรดิแห่งเงา', 'ผู้ไต่ลานทองคำ', 'เพชรแห่งลานเงา', 'จ้าวลานประลอง', 'ปรมาจารย์ผู้ไร้เงา', 'ราชันหมื่นเงา', 'เทพยุทธ์แห่งยุค'].includes(m.tt) && !isAdmKey(b.key)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.tt || []).includes(m.tt)) { m.tt = ''; m.tr = 0 } }
       // แชร์การปลดปล่อยพลัง: แนบข้อมูลฉาก pixel (ตัวเลข/สี/คำสั้นๆ เท่านั้น) ให้คนอื่นเล่นซ้ำในแชทได้
