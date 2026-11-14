@@ -23502,6 +23502,94 @@ function storySet(v){LS.set('murim_story',v);toast(v===2?'📖 เน้นเ�
   if(!sm||sm.querySelector('.saRd'))return;const done=(S.arcDone||[]).some(x=>x.id===D.id);
   if(w)sm.insertAdjacentHTML('beforeend',`<div class="tag2 saRd" style="opacity:.75;margin-top:2px">${done?'✅':'🔒'} ${esc(w)}</div>`);
   else{sm.insertAdjacentHTML('beforeend',' <span class="tag2 saRd" style="color:#5fd47a">▶ เริ่มได้</span>');sm.insertAdjacentHTML('afterend',`<button class="sysb" style="width:100%;margin:4px 0" onclick="saPickGo('${D.id}')">▶ เริ่มภาคนี้</button>`)}})}catch(e){console.error(e)}return r}}
+
+// ===================== v17.10 🎓 บทเรียนโหมดท้าทายและระบบใหญ่ · แนะนำโหมดที่ยังไม่เคยลอง · หน้าบทเรียนแบบแบ่งหมวด =====================
+function lcard(c,ic,t,sub,rows,key){return`<div class="lc" style="--c:${c}"><div class="lh"><i>${ic}</i><div><b>${t}</b><small>${sub}</small></div></div><ul>${rows.map(r=>`<li><span>${r[0]}</span><span>${r[1]}</span></li>`).join('')}</ul>${key?`<div class="lk">${key}</div>`:''}</div>`}
+Object.assign(LESSON,{
+ m_hell:{t:'โหมดนรก',s:[
+  {t:'ยินดีต้อนรับสู่นรก 100 ชั้น',d:'',card:lcard('#c8323a','🔥','โหมดนรก','ยากที่สุด · ทำเนียบแยก',[['🚪','อายุ 16 ประตูนรกเปิด แล้วลึกลงเป็นช่วงๆ จนถึง<b>ชั้น 100</b> · เตือนก่อนเสมอ'],['👹','ผู้คุมแข็งแรงตามพลังคุณ<b>ตอนที่ถูกเตือน</b> — ฝึกให้เกินกว่านั้นจะได้เปรียบ'],['💀','แพ้ได้ 2 ครั้ง ครั้งที่ 3 วิญญาณถูกขังตลอดกาล'],['🩸','ผ่านชั้นต้องเลือกรับคำสาป 1 ใน 3'],['📜','ปีศาจจะมาเสนอสัญญา แลกระบบ พลัง หรืออายุ']],'🔥 แก่นนรกจากผู้คุม เอาไปแลกพรที่แท่นบูชา — กดป้าย <b>🔥 ชั้น</b> บนหัวจอ')},
+  {t:'หลังชั้น 18: เลือกทางเอง',d:'',card:lcard('#8a2a5a','🕳️','นรกชั้นลึก','ชั้น 19–100',[['🚪','กดป้าย 🔥 แล้ว<b>เลือกประตู</b>: ผู้คุม · ผู้คุมชั้นยอด · แท่นบูชา · วิญญาณหลงทาง · บ่อน้ำลืมชาติ'],['🎯','ผู้คุมมีกฎ เลือกท่าทีให้แก้ทาง (⚡ บุกเร็ว · 🛡️ ตั้งรับ · 🔀 สลับวิชา) — ถูกทางผู้คุมอ่อนลง ผิดทางแรงขึ้น'],['🌡️','<b>ไฟกรรม</b>ยิ่งสูง ผู้คุมยิ่งแรง — บ่อน้ำและแท่นบูชาช่วยลด'],['⚗️','<b>หลอมคำสาป</b> 2 เป็น 1 แลกพรด้านมืด'],['📜','ชาติหน้า<b>จารึกวิญญาณ</b>พาลงไปเริ่มที่ชั้นลึกได้เลย']],'🪞 ชั้น 100 มีบางอย่างที่หน้าเหมือนคุณรออยู่')}]},
+ m_short:{t:'โหมดชีวิตสั้น',s:[
+  {t:'ชีวิตนี้สั้นนัก',d:'',card:lcard('#d88a20','⏳','โหมดชีวิตสั้น','ทุกปีมีค่า',[['🎯','<b>สิ่งที่ต้องทำก่อนตาย</b> 5 ข้อ — วันเดียวกันทุกคนได้ชุดเดียวกัน แข่งกันได้'],['📜','<b>พินัยกรรม</b> ส่งวิชาหรือของ 1 อย่างให้ชีวิตถัดไป ต่อเป็นสายเลือดสั้น'],['🌸','<b>บานครั้งสุดท้าย</b> — ปีเดียวแกร่ง 6 เท่า แล้วจากไป'],['⏸️','หยุดเวลาได้แค่ <b>3 ครั้ง</b>ต่อชีวิต']],'📍 ทุกอย่างอยู่ที่ ☰ เมนู → ⏳ ชีวิตสั้น')}]},
+ m_junk:{t:'โหมดรากขยะ',s:[
+  {t:'เกิดมาเป็นขยะ',d:'',card:lcard('#7a8a5a','🗑️','โหมดรากขยะ','พรสวรรค์ต่ำสุด · ผงาดให้ได้',[['📒','<b>บัญชีแค้น</b> — คนที่ดูถูกคุณถูกจดชื่อไว้ แกร่งกว่าเมื่อไหร่จะได้เจอกันอีก: ตบหน้า ทำให้สำนึก หรือให้อภัย'],['🧩','<b>ของที่คนทิ้ง</b> — เก็บของพังให้ครบชุด 3 ชิ้น หลอมเป็นของในตำนาน'],['☠️','อายุ 12 เลือก<b>ทางนอกรีต</b> (หลอมกาย · กินพิษ · กินอสูร) ร่างเปลี่ยนจริง'],['⚔️','ชนะคนที่แกร่งกว่าคุณ 20% ขึ้นไป นับเป็น<b>ชนะข้ามขั้น</b>']],'📍 ดูบัญชีแค้นและของที่เก็บได้ที่ ☰ เมนู → 🗑️ รากขยะ')}]},
+ m_regress:{t:'โหมดผู้ย้อนกาล',s:[
+  {t:'ตายเมื่อไหร่ ก็เริ่มใหม่ที่อายุ 15',d:'',card:lcard('#5a7ae0','🔁','โหมดผู้ย้อนกาล','วนซ้ำจนกว่าจะหลุดพ้น',[['⏪','ตายแล้ว<b>ย้อนกลับไปอายุ 15</b> — ติดตัวไปได้: วิชาที่ดีที่สุด ปัญญาบางส่วน และพลังที่จำได้เล็กน้อย'],['👥','มี<b>เพื่อนร่วมชะตา</b>ซ่อนอยู่ 3–7 คน สังเกตคนที่ทำตัวแบบคนโลกเดิมแล้วทักเอง'],['📓','เหตุการณ์สายหลักเกิดซ้ำทุกรอบ — รอบหน้ามีตัวเลือก <b>🔮 ใช้ความรู้ล่วงหน้า</b>'],['⏩','รอบ 2 ขึ้นไป กด <b>⏩ ตามความทรงจำ</b> เพื่อข้ามปีที่เคยผ่านเร็วๆ'],['🧠','ตายบ่อยจะ<b>จิตล้า</b> ความจำเริ่มผิดเพี้ยน — ทำสมาธิหรือพักเพื่อลด']],'🏁 ตอนจบต้องมีทั้งจำนวนรอบและความเข้าใจวงจร · ดูทั้งหมดที่ ☰ → 🔁 ผู้ย้อนกาล')}]},
+ m_beast:{t:'เกิดเป็นสัตว์',s:[
+  {t:'ลืมตาดูโลกในป่าลึก',d:'',card:lcard('#3a9a5a','🐾','เกิดเป็นสัตว์','จากลูกสัตว์ สู่ราชาอสูร',[['🌱','เริ่มเป็นลูกสัตว์ บำเพ็ญจน<b>เปิดปัญญา</b> แล้วกลายเป็นอสูร'],['🧬','ฟ้าสุ่มเผ่าพันธุ์ ธาตุ และสายเลือด (สามัญ → อสูรโบราณ → เทพอสูร → ปฐมกาล)'],['🔀','โตแล้วเลือก <b>แปลงกายเป็นคน</b> หรือ <b>ครองป่าเป็นราชาอสูร</b>'],['⏳','อายุยืนกว่ามนุษย์หลายเท่า · มีปณิธานของสัตว์กว่า 100 เป้า']],'🏆 ชีวิตสัตว์อสูรขึ้นทำเนียบแยกของตัวเอง')}]},
+ sys:{t:'หน้าต่างระบบ',s:[
+  {t:'ติ๊ง! คุณได้ระบบแล้ว',d:'',card:lcard('#2a6ad8','🟦','หน้าต่างระบบ','ตัวช่วยที่จะพาคุณไปให้สุด',[['📋','<b>เควส</b>จากระบบ ทำสำเร็จได้ EXP และ SP'],['⬆️','ขึ้นเลเวลได้<b>แต้มสถานะ 5</b> กดเพิ่มยุทธ์ ลมปราณ ปัญญา เสน่ห์ ร่างกายเอง'],['🛒','<b>SP</b> ใช้ซื้อของในร้านระบบ'],['🌿','Lv.10 และ Lv.20 ระบบวิวัฒนาการ ให้เลือกเส้นทาง'],['🏅','เลื่อนอันดับ F → EX ด้วยบททดสอบ · EX เปิดบทสุดท้ายและส่งต่อทายาทได้'],['🤖','เจ้าระบบมีนิสัย ยิ่งสนิทรางวัลเควสยิ่งสูง']])},
+  {sel:'#sysBtn',t:'ปุ่มระบบอยู่ตรงนี้',d:'แตะ 🟦 เพื่อดูเควส แต้ม ร้านค้า และตัวเลขทั้งหมดของระบบ'}]},
+ arc:{t:'ภาคเรื่องราว',s:[
+  {t:'เรื่องราวของคุณเริ่มแล้ว',d:'',card:lcard('#a05ad8','📖','ภาคเรื่องราว','นิยายที่คุณเป็นตัวเอก',[['📚','ภาคหนึ่งมีหลายบท แต่ละบทห่างกันไม่กี่ปี'],['🌙','ก่อนบทใหม่ 1 ปี จะมี<b>ลางบอกเหตุ</b>ในบันทึก'],['🔀','ตัวเลือกบทแรกๆ ส่งผลถึง<b>ตอนจบ</b> แต่ละภาคมี 3–8 ตอนจบ'],['⚔️','จุดพีคเป็นการดวลจริง'],['👶','ตายกลางภาค เล่นต่อเป็นลูกแล้วลูกจะสานต่อ']],'📍 ☰ → 📖 สมุดนิยาย: ตั้ง <b>📖 เน้นเนื้อเรื่อง</b> ให้ภาคมาบ่อยขึ้น · กด <b>▶ เริ่มภาคนี้</b> เพื่อเลือกภาคเอง')}]},
+ pauc:{t:'ห้องประมูลผู้เล่น',s:[
+  {t:'ประมูลกับผู้เล่นจริง',d:'',card:lcard('#c89a2a','🏛️','ห้องประมูลผู้เล่น','ของดีที่สุด แย่งกับคนจริง',[['⏱️','เปิดทีละชิ้น ชิ้นละราว 25 วินาที · ไม่มีใครเสนอ ข้ามไปชิ้นถัดไป'],['🌏','ของแต่ละชิ้นเป็นของโลกเดียว ประมูลได้เฉพาะคนในโลกนั้น'],['🎯','ชนะได้รอบละ 2 ชิ้น · วันละ 3 ชิ้นต่อโลก'],['🐣','ทุกรอบมีของสำหรับมือใหม่ 1 ชิ้น'],['⭐','โหวตเลือกชิ้นที่อยากให้เปิดต่อได้']],'🗝️ ของที่ชนะเข้า ☰ → 🗝️ คลังสมบัติ กดใช้เมื่อพร้อม')}]},
+ sect:{t:'กิจการสำนัก',s:[
+  {t:'ตอนนี้คุณคือเจ้าสำนัก',d:'',card:lcard('#b8742a','🏯','กิจการสำนัก','คลัง · อาคาร · ผู้สืบทอด',[['💰','<b>คลังสำนัก</b>มีรายได้ทุกปีตามจำนวนศิษย์และชื่อเสียง'],['🏗️','สร้างอาคาร 5 แบบ แบบละ 5 ขั้น ด้วยเงินคลัง'],['📤','เบิกเข้ากระเป๋าได้ปีละครั้ง ไม่เกิน 15% — <b>ผู้อาวุโสจะไม่พอใจ</b>'],['🔥','ความภักดีต่ำมากจะเกิดการชิงตำแหน่ง'],['👑','ตั้งผู้สืบทอด แล้วชีวิตหน้าเล่นเป็นศิษย์เพื่อรับสำนักต่อ']])}]},
+ scult:{t:'หยั่งรู้ฟ้า',s:[
+  {t:'เรียกระบบด้วยการบำเพ็ญ',d:'',card:lcard('#4aa0c8','🧘','หยั่งรู้ฟ้า','สำหรับคนที่ยังไม่มีระบบ',[['🌀','บำเพ็ญให้ <b>ญาณแห่งเต๋า</b> ถึง 100% — ตั้งโฟกัสลมปราณเร็วขึ้น 2.5 เท่า'],['🌌','ครบแล้วลองสื่อถึงฟ้า โอกาสราวครึ่งหนึ่ง'],['🔥','ไม่สำเร็จ = ธาตุไฟเข้าแทรก ญาณลดเหลือครึ่ง'],['☝️','สำเร็จได้ครั้งเดียวต่อชีวิต'],['📢','ผู้ข้ามมิติที่ชอบตะโกนเรียกระบบ ยิ่งศรัทธายิ่งมีโอกาส']])}]},
+ god:{t:'แดนเทพ',s:[
+  {t:'ยินดีต้อนรับสู่แดนเทพ',d:'',card:lcard('#d8a830','🌟','แดนเทพ','สูงกว่าเก้าชั้นฟ้า',[['💠','เงินของที่นี่คือ <b>หยกดาราเทพ</b> — เงินโลกเซียนแลกได้แค่ 10% ที่ศาลแลกเทวสภา'],['🙏','<b>พลังศรัทธา</b>จากผู้คนในแดนล่าง ใช้แลกของที่ตลาดดวงดาว'],['🏛️','สร้าง<b>ผลงานในสภาเทพ</b>เพื่อเลื่อนตำแหน่ง'],['⏳','กาลเวลาที่นี่ไหลไม่คงที่ บางทีผ่านไปเป็นหมื่นปีในพริบตา'],['⚡','ทะลวงขั้นต้องฝ่าทัณฑ์ — ปุ่ม ⚡ ทะลวงสู่… จะขึ้นเมื่อพลังถึง']],'🏘️ ในเมืองมีตลาดดวงดาว หอสมุดสวรรค์ และสภาเทพ')}]}});
+// ---- การ์ดในฟองคำพูด: แสดงทันที ไม่พิมพ์ทีละตัว ----
+{const _ctL=coType;coType=function(el,html){const L=LESSON[CO.id],s=L&&L.s[CO.i];if(s&&s.card){clearInterval(CO.tw);el.innerHTML=s.card+(html?`<div style="margin-top:6px">${html}</div>`:'');const b=el.closest('.cbub'),bx=el.closest('.cbox');if(b)b.classList.add('cbCard');if(bx&&!s.sel){bx.style.bottom='';bx.style.top=Math.max(8,Math.round(innerHeight*.06))+'px'}return}const b=el.closest&&el.closest('.cbub');if(b)b.classList.remove('cbCard');return _ctL.apply(this,arguments)}}
+// ---- ตัวกระตุ้น ----
+const MODE_K=()=>!S?null:S.beastMode&&!S.beastMode.human?'beast':S.rg?'regress':(S.ch&&S.ch!=='normal'?S.ch:'normal');
+function mtGet(){return LS.get('murim_mtried',{})||{}}
+function lsnTry(id,delay){if(coSeen(id)||!coCan()||modalOpen||choice._cur||CO.id)return false;setTimeout(()=>{if(!coSeen(id)&&coCan()&&!modalOpen&&!choice._cur&&!CO.id)coStart(id)},delay||300);return true}
+{const _pyL=passYear;passYear=function(){const r=_pyL.apply(this,arguments);try{if(S&&S.alive){const k=MODE_K(),T=mtGet();if(k&&!T[k]){T[k]=1;LS.set('murim_mtried',T)}
+ if(k&&k!=='normal'&&lsnTry('m_'+k,500))return r;if(S.sys&&lsnTry('sys',600))return r;if(S.sarc&&lsnTry('arc',700))return r}}catch(e){}return r}}
+{const _crL=choiceRun;choiceRun=function(){const r=_crL.apply(this,arguments);try{if(S&&S.alive&&S.sarc&&!coSeen('arc'))setTimeout(()=>lsnTry('arc',0),900)}catch(e){}return r}}
+{const _opL=openPAuc;openPAuc=function(){const r=_opL.apply(this,arguments);try{if(!coSeen('pauc'))setTimeout(()=>{if(!CO.id)coStart('pauc')},700)}catch(e){}return r}}
+{const _osL=openSectBiz;openSectBiz=function(){const r=_osL.apply(this,arguments);try{if(!coSeen('sect'))setTimeout(()=>{if(!CO.id)coStart('sect')},500)}catch(e){}return r}}
+{const _oscL=openSysCult;openSysCult=function(){const r=_oscL.apply(this,arguments);try{if(!coSeen('scult'))setTimeout(()=>{if(!CO.id)coStart('scult')},500)}catch(e){}return r}}
+// ---- หน้าบทเรียนแบบแบ่งหมวด + อ่านได้ทันที ----
+const LSN_G=[['🌱','พื้นฐาน',[['start','🧭','หน้าจอและปุ่มหลัก'],['choice','🔀','ตัวเลือก ℹ️ ข้อมูล · 🔒 ล็อก · ▾ ย่อ'],['town','🏘️','4 ย่าน · ชื่อเสียงในเมือง'],['job0','💼','อาชีพ ทำทีละ 1 อย่าง'],['job1','📨','งานของอาชีพ'],['family','👪','ใช้เวลากับคู่และลูก'],['bag','🎒','ยา วัตถุดิบ การขาย'],['cloud','🔐','เชื่อม Google กันเซฟหาย']]],
+ ['🌏','โลก',[['xian','☁️','หินวิญญาณ · อาคารใหม่ในเมือง'],['god','🌟','หยกดาราเทพ · ศรัทธา · สภาเทพ']]],
+ ['🎯','โหมดท้าทาย',[['m_hell','🔥','นรก 100 ชั้น · ผู้คุม · คำสาป · ประตู'],['m_short','⏳','สิ่งที่ต้องทำก่อนตาย · พินัยกรรม'],['m_junk','🗑️','บัญชีแค้น · ของที่คนทิ้ง'],['m_regress','🔁','ตายแล้วย้อนไปอายุ 15'],['m_beast','🐾','ลูกสัตว์ → อสูร → ราชา']]],
+ ['⚙️','ระบบ',[['sys','🟦','เควส · แต้ม · อันดับ F→EX'],['arc','📖','ภาคเรื่องราวและตอนจบ'],['pauc','🏛️','ประมูลกับผู้เล่นจริง'],['sect','🏯','คลัง · อาคาร · ผู้สืบทอด'],['scult','🧘','บำเพ็ญเพื่อเรียกระบบ']]]];
+function openLessons(){const T=mtGet(),seen=LSN_G.reduce((a,g)=>a+g[2].filter(x=>coSeen(x[0])).length,0),tot=LSN_G.reduce((a,g)=>a+g[2].length,0);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎓 บทเรียน</h3><div class="lsnTop"><b>${seen}/${tot}</b> บท<div class="hpbar"><i style="width:${Math.round(seen/tot*100)}%;background:#e8b830"></i></div></div><p class="tag2">ครูผู้เฒ่าจะมาสอนเองเมื่อเจอครั้งแรก · บทที่ยังไม่เจอ กด <b>อ่าน</b> ได้เลย</p>
+ ${LSN_G.map(([gi,gn,L])=>`<h4 class="lsnH">${gi} ${gn}</h4><div class="lsnG">${L.filter(x=>LESSON[x[0]]).map(([id,ic,sub])=>{const sn=coSeen(id),md=id.startsWith('m_')?id.slice(2):null;return`<div class="lsnI${sn?' ok':''}"><div class="li1">${ic}</div><div class="li2"><b>${sn?'✅ ':''}${LESSON[id].t}</b>${!sn?' <span class="lsnNew">ใหม่</span>':''}${md&&!T[md]?' <span class="lsnNew" style="background:#7a5ad8">ยังไม่เคยเล่น</span>':''}<small>${sub}</small></div><button class="sysb" onclick="openLessonRead('${id}')">อ่าน</button></div>`}).join('')}</div>`).join('')}
+ <button class="gbtn" style="width:100%;margin-top:10px" onclick="closeM();coFull()">🧭 ทัวร์ปุ่มทั้งหมด (ฉบับเต็ม)</button>`,'lessons')}
+function openLessonRead(id){const L=LESSON[id];if(!L)return;const md=id.startsWith('m_')?id.slice(2):null;
+ modal(`<button class="xbtn" onclick="openLessons()">←</button><h3>🎓 ${L.t}</h3>${L.s.map(s=>`${s.card||`<div class="item"><b>${s.t}</b></div>`}${s.d?`<div class="tag2" style="margin:2px 2px 10px">${s.d}</div>`:''}`).join('')}
+ <div class="brow">${md&&MODE_I[md]?`<button class="pbtn" onclick="mtGo('${md}')">▶ ลองโหมดนี้ชีวิตหน้า</button>`:''}<button class="gbtn" onclick="coReplay('${id}')">👴 ให้ครูสอน</button></div>`,'lessonread');try{coMark(id)}catch(e){}}
+// ---- แนะนำโหมดที่ยังไม่เคยลอง ----
+const MODE_I={hell:{ic:'🔥',n:'นรก',c:'#c8323a',chm:1,p:'ลงนรก 100 ชั้น สู้ผู้คุม รับคำสาป เลือกประตูเอง และขึ้นทำเนียบนรก'},short:{ic:'⏳',n:'ชีวิตสั้น',c:'#d88a20',chm:2,p:'ชีวิตสั้นนิดเดียว ทำ 5 อย่างก่อนตาย แล้วส่งพินัยกรรมให้ตัวถัดไป'},junk:{ic:'🗑️',n:'รากขยะ',c:'#7a8a5a',chm:3,p:'เกิดมาพรสวรรค์ต่ำสุด จดชื่อคนที่ดูถูก แล้วกลับไปตบหน้าเขา'},regress:{ic:'🔁',n:'ผู้ย้อนกาล',c:'#5a7ae0',chm:4,p:'ตายแล้วย้อนไปอายุ 15 ใช้ความรู้จากรอบก่อนช่วยเพื่อนร่วมชะตา'},beast:{ic:'🐾',n:'เกิดเป็นสัตว์',c:'#3a9a5a',beast:1,p:'เกิดเป็นลูกสัตว์ในป่า บำเพ็ญจนเป็นอสูร แล้วเลือกแปลงกายหรือครองป่า'}};
+function mtPick(){const T=mtGet(),no=LS.get('murim_mtno',{})||{},ok=k=>!T[k]&&!no[k];const pref=[];try{const old=/แก่|อายุขัย/.test(S.cause||'')||S.age>=(lifeMax()-2);if(realmIdx()>=6||S.xian)pref.push('hell');if(old)pref.push('short');if((S.talent&&S.talent.m<1)||(S.kills||0)<5)pref.push('junk');if((S.arcDone||[]).length)pref.push('regress');if(S.beast)pref.push('beast')}catch(e){}
+ const k=pref.find(ok)||Object.keys(MODE_I).find(ok);if(!k)return null;const why={hell:'คุณแกร่งเกินกว่ายุทธภพจะท้าทายได้แล้ว',short:'ชีวิตนี้ยาวจนแก่ตาย — ลองดูว่าถ้าเหลือเวลาน้อยนิดจะทำอะไร',junk:'อยากรู้ไหมว่าถ้าเริ่มจากศูนย์จริงๆ จะไปได้ไกลแค่ไหน',regress:'ชอบเนื้อเรื่อง? โหมดนี้มีเรื่องราวที่วนซ้ำให้ไขปริศนา',beast:'คุณเลี้ยงสัตว์คู่ใจมาแล้ว ลองเป็นฝ่ายสัตว์ดูบ้าง'}[k]||'';return{k,why}}
+function mtGo(k){const M=MODE_I[k];if(!M)return;closeM();if(S&&S.alive){if(M.beast)return toast('🐾 ชีวิตหน้าเลือก "เกิดเป็นสัตว์" ตอนกดเกิดได้เลย');CFG.chm=M.chm;document.querySelectorAll('.seg[data-k="chm"] button').forEach(b=>b.classList.toggle('on',+b.dataset.v===M.chm));return toast(`${M.ic} ตั้งโหมด${M.n}ไว้แล้ว — จะใช้ตอนเริ่มชีวิตใหม่`)}try{toTitle()}catch(e){}
+ if(M.beast)return setTimeout(()=>{try{goBeastLife()}catch(e){}},300);CFG.chm=M.chm;document.querySelectorAll('.seg[data-k="chm"] button').forEach(b=>b.classList.toggle('on',+b.dataset.v===M.chm));try{updateHints()}catch(e){}toast(`${M.ic} ตั้งโหมด${M.n}แล้ว — เปลี่ยนกลับได้ที่ตัวเลือกการเกิด`);setTimeout(()=>{try{goBirth()}catch(e){}},300)}
+function mtNo(k,all){if(all)LS.set('murim_mtoff',1);else{const n=LS.get('murim_mtno',{})||{};n[k]=1;LS.set('murim_mtno',n)}const c=document.getElementById('mtCard');if(c)c.remove()}
+{const _egL=endGame;endGame=function(){const busy=endGame._busy;const r=_egL.apply(this,arguments);try{if(busy||!S||S._mtC)return r;S._mtC=1;const n=(+LS.get('murim_lifeN',0)||0)+1;LS.set('murim_lifeN',n);if(n<3||LS.get('murim_mtoff',0)||S.custom)return r;
+ const p=mtPick();if(!p)return r;const M=MODE_I[p.k],end=$('end'),brs=end.querySelectorAll(':scope>.brow'),anchor=brs[brs.length-1];
+ const h=`<div id="mtCard" class="lc" style="--c:${M.c};margin-top:14px"><div class="lh"><i>${M.ic}</i><div><b>ชีวิตหน้า ลองโหมด${M.n}ไหม?</b><small>${p.why}</small></div></div><ul><li><span>✨</span><span>${M.p}</span></li></ul><div class="brow" style="padding:0 10px 10px"><button class="pbtn" onclick="mtGo('${p.k}')">▶ ลองชีวิตหน้า</button><button class="gbtn" onclick="openLessonRead('m_${p.k}')">📖 อ่านก่อน</button></div><div style="text-align:center;padding:0 0 8px;font-size:11px"><a href="#" onclick="mtNo('${p.k}');return false" style="color:inherit;opacity:.6">ไม่สนใจโหมดนี้</a> · <a href="#" onclick="mtNo('',1);return false" style="color:inherit;opacity:.6">ไม่ต้องแนะนำอีก</a></div></div>`;
+ if(anchor)anchor.insertAdjacentHTML('beforebegin',h);else end.insertAdjacentHTML('beforeend',h)}catch(e){console.error(e)}return r}}
+// ---- ป้าย "ยังไม่เคยเล่น" ที่หน้าเกิด ----
+function mtBadge(){try{const T=mtGet(),k=['normal','hell','short','junk','regress'];let n=0;document.querySelectorAll('.seg[data-k="chm"] button').forEach(b=>{const m=k[+b.dataset.v];let t=b.querySelector('.mtNew');const need=m&&m!=='normal'&&!T[m];if(need)n++;if(need&&!t)b.insertAdjacentHTML('beforeend','<span class="mtNew">ใหม่</span>');if(!need&&t)t.remove()});
+ const sm=document.querySelector('details.tadv>summary');if(sm){let t=sm.querySelector('.mtSum');if(n&&!t)sm.insertAdjacentHTML('beforeend',`<span class="mtSum">🆕 ยังไม่เคยลอง ${n} โหมด</span>`);else if(t){if(n)t.textContent=`🆕 ยังไม่เคยลอง ${n} โหมด`;else t.remove()}}}catch(e){}}
+{const _ttM=toTitle;toTitle=function(){const r=_ttM.apply(this,arguments);setTimeout(mtBadge,200);return r}}
+{const _gbM=goBirthPick;goBirthPick=function(){const r=_gbM.apply(this,arguments);try{if(!mtGet().beast){const b=document.querySelector('#modal .opt[onclick*="goBeastLife"]');if(b&&!b.querySelector('.mtNew'))b.insertAdjacentHTML('afterbegin','<span class="mtNew" style="float:right">ยังไม่เคยเล่น</span>')}}catch(e){}return r}}
+setTimeout(mtBadge,1200);
+(function(){const st=document.createElement('style');st.textContent=`
+.lc{border-radius:14px;overflow:hidden;margin:2px 0 8px;border:1.5px solid var(--c);background:linear-gradient(160deg,color-mix(in srgb,var(--c) 22%,var(--card)) 0%,var(--card) 60%);box-shadow:0 4px 14px color-mix(in srgb,var(--c) 30%,transparent);color:var(--ink);text-align:left}
+.lc .lh{display:flex;gap:10px;align-items:center;padding:9px 12px;background:linear-gradient(100deg,var(--c),color-mix(in srgb,var(--c) 72%,#1a1020));color:#fff;text-shadow:0 1px 2px #0007}
+.lc .lh i{font-style:normal;font-size:30px;line-height:1;filter:drop-shadow(0 2px 3px #0008);animation:lcBob 2.6s ease-in-out infinite}
+.lc .lh b{display:block;font-size:15px;letter-spacing:.2px}.lc .lh small{display:block;font-size:11.5px;opacity:.95}
+.lc ul{list-style:none;margin:0;padding:8px 12px 6px;display:grid;gap:6px}
+.lc li{display:flex;gap:8px;font-size:12.6px;line-height:1.45}.lc li>span:first-child{flex:0 0 20px;text-align:center;font-size:14px}
+.lc .lk{margin:2px 10px 10px;padding:6px 9px;border-radius:9px;background:color-mix(in srgb,var(--c) 16%,transparent);border:1px dashed color-mix(in srgb,var(--c) 60%,transparent);font-size:12px}
+@keyframes lcBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+#coach .cbub.cbCard{max-height:76vh;overflow:auto}
+.lsnTop{display:flex;align-items:center;gap:10px;margin:2px 0 4px}.lsnTop .hpbar{flex:1;margin:0}
+.lsnH{margin:14px 2px 6px;font-size:14px;border-bottom:1px dashed rgba(128,128,128,.35);padding-bottom:3px}
+.lsnG{display:grid;gap:6px}
+.lsnI{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;border:1.5px solid var(--line);background:var(--w)}
+.lsnI.ok{opacity:.78}.lsnI .li1{font-size:24px;flex:0 0 30px;text-align:center}.lsnI .li2{flex:1;min-width:0}.lsnI .li2 small{display:block;font-size:11.5px;opacity:.75}
+.lsnNew,.mtNew{display:inline-block;font-size:10px;font-weight:bold;line-height:1;padding:3px 6px;border-radius:8px;background:#e05a3a;color:#fff;vertical-align:middle;margin-left:4px}
+.seg button .mtNew{display:block;width:max-content;margin:3px auto 0}
+.mtSum{margin-left:6px;font-size:11px;color:#e8b830}
+@media (prefers-reduced-motion:reduce){.lc .lh i{animation:none}}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
