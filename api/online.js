@@ -1117,6 +1117,20 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       await pipe([['HSET', 'law', k, JSON.stringify(v)], ['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199]]);
       return res.json({ ok: 1 });
     }
+    if (a === 'kgates') {
+      // 🚪 ประตูกัลป์ — วิชาที่ผู้ก้าวพ้นวัฏจักรกัลป์ทิ้งไว้
+      const L = ((await cmd('LRANGE', 'kgate', 0, 19)) || []).map(jp).filter(Boolean);
+      return res.json({ l: L });
+    }
+    if (a === 'kgate') {
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
+      if (b.tp || await isBanned() || await cmd('SISMEMBER', 'cheaters', id)) return res.json({ ok: 0 });
+      if ((await cmd('SET', 'kgcd:' + id, 1, 'NX', 'EX', 3600)) !== 'OK') return res.json({ ok: 0, err: 'cd' });
+      const n = noAdm(clean(b.n, 20)) || 'นิรนาม', art = clean(b.art, 48) || 'วิชาไร้นาม', kp = Math.max(0, Math.min(9, +b.kp || 0)), sk = ['rewind', 'void', 'mem', 'fly', 'array', 'esc', 'time', 'decree'].includes(b.sk) ? b.sk : '';
+      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: 'ฟ้าลิขิต', k: 'one', x: '🚪 ' + n + ' ก้าวพ้นวัฏจักรกัลป์ทั้งเก้า และจารึก《' + art + '》ไว้บนประตูกัลป์' };
+      await pipe([['LPUSH', 'kgate', JSON.stringify({ n, art, kp, sk, t: now })], ['LTRIM', 'kgate', 0, 29], ['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199]]);
+      return res.json({ ok: 1 });
+    }
     if (a === 'achfirst') {
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
       const aid = String(b.a || '').replace(/[^a-z0-9_]/g, '').slice(0, 24), n = noAdm(clean(b.n, 20)) || 'นิรนาม';

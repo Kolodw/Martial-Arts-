@@ -461,8 +461,17 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='17.9.2';
+const VERSION='17.10';
 const CHANGELOG=[
+  {v:'17.10',d:'14 พ.ย. 2026',l:['🧬 <b>ระบบร่างกาย</b> — ตอนเกิดจะสุ่มหน้าตาและร่างกายด้วย ตั้งแต่กายาสมบูรณ์ 100% ไปจนถึงตาบอด หูหนวก เป็นใบ้ ขาพิการ (สัตว์ก็มี: เผือก หางด้วน ปีกหัก) · ร่างกายมีผลกับการเติบโตและตัดตัวเลือกที่ทำไม่ได้ออก · มีเหตุการณ์เฉพาะ ทางรักษา และบาดเจ็บถาวรระหว่างชีวิต',
+   '🎲 <b>ความหายากแบบใหม่</b> — นับเฉพาะส่วนที่หายากจริง ไม่เอาเพศหรือครอบครัวธรรมดามาคูณให้ตัวเลขพอง · บอกด้วยว่าชีวิตนี้อยู่กลุ่มบนสุดกี่ % และชิ้นไหนหายากที่สุด',
+   '📖 <b>ระดับวิชา 7 ขั้น</b> — 4 ขั้นแรกเลื่อนเองตามเดิม แต่หลังจากนั้นวิชาจะ <b>ติดขั้น</b> ต้องหาทางทะลวงเอง: ดวลปรมาจารย์ · ปิดด่าน · สู้เฉียดตาย · รู้แจ้งจากธรรมชาติ · ขั้นสุดท้ายในยุทธภพได้ตั้งชื่อวิชาเอง',
+   '☁️✨ <b>แต่ละโลกมีวิชาของตัวเอง</b> — ชื่อระดับ ชื่อวิชา และเกรดวิชาแยกตามโลก (ขั้นเหลือง→ขั้นเซียน · เทวะสามัญ→ขั้นปฐมกาล) · วิชาบางสายมีความสามารถตอนดวล เช่น กระบี่บิน ค่ายกล หนีภัย บัญญัติกาล ประกาศิต',
+   '⚖️ <b>ผู้ครองกฎแห่งแดนเทพ</b> — วิชาถึงขั้นจารึกกฎจะได้ครองกฎหนึ่งในแปดสาย สายละคนเดียวทั้งเซิร์ฟ ใครอยากได้ต้องดวลแย่ง',
+   '♾️ <b>วิชาแห่งกัลป์</b> — ผ่านสิ้นกัลป์แต่ละครั้งได้วิชาที่ตั้งชื่อตามภัยที่รอดมา (ย้อนกาล · ความว่างเปล่า · ความทรงจำแห่งจักรวาล) · วิชาที่ผ่านครบ 3 กัลป์จะติดตามวิญญาณไปทุกชาติ · คนที่ก้าวพ้นกัลป์ทั้งเก้าจารึกวิชาไว้ที่ <b>ประตูกัลป์</b> ให้คนรุ่นหลังเลือกเรียน',
+   '💎 <b>หยกดาราเทพ</b> — แดนเทพมีสกุลเงินของตัวเอง · 🏯 กิจการสำนัก · 📢 เหตุการณ์ผู้ข้ามมิติเรียกหาระบบ · 🌟 หนึ่งเดียวในนวนิยาย',
+   '🧭 ปุ่มเนื้อเรื่องหลักเลือกเรื่องที่สนใจได้ · 📚 สอนเล่นทุกโหมด · ⚠️ เตือนก่อนเซฟเกิน 5 ช่อง',
+   '🛠️ แก้บั๊ก: ขึ้นโลกเซียน/โลกเทพแล้วตายด้วยวัยชราทันที · dynamic island ซ้อนกัน · ถ้ำฝึกตนหาย และอื่นๆ']},
  {v:'17.9.2',d:'14 พ.ย. 2026',l:['🔒 <b>ป้ายบอกเงื่อนไขขึ้นโลกถัดไป</b> — ถึงขั้นข้ามทัณฑ์แล้วแต่ยังขึ้นโลกเซียน/โลกเทพไม่ได้ จะมีป้ายบนหน้าเล่นบอกว่าขาดอะไร (ชั้นเหนือขั้นสูงสุดถึง ★ เท่าไหร่ · เหลืออีกกี่ปี) แตะป้ายเพื่อดูเงื่อนไขเต็ม — ทัณฑ์สวรรค์จะไม่มาเองจนกว่าจะครบทุกข้อ']},
  {v:'17.9.1',d:'14 พ.ย. 2026',l:['💾 <b>แก้เซฟหายบน Safari / iPhone</b> — Safari จะลบข้อมูลเกมในเครื่องทิ้งถ้าไม่ได้เปิดเว็บนี้นานราว 7 วัน ตอนนี้เกมฝากตัวตนไว้กับเซิร์ฟเวอร์แล้ว เปิดเกมมาเจอเครื่องว่าง จะขึ้นหน้า ☁️ กู้เซฟให้เลือกกู้เอง ไม่ต้องใช้รหัส (ใช้ได้กับเซฟที่ขึ้นคลาวด์หลังอัปเดตนี้ · คลาวด์เซฟทุก 10 นาทีขณะเล่น)',
   '📦 <b>เซฟไม่เต็มง่ายขึ้น</b> — ภาพอัลบั้มบน Safari เล็กลง และสำเนาสำรองไม่เก็บภาพซ้ำ',
@@ -23101,13 +23110,7 @@ function klPeers(){const K=kK();K.peers=K.peers||[];return K.peers}
 function klMkPeer(){const g=Math.random()<.5?'ชาย':'หญิง',P=ch(KL_PERS);let nm;try{nm=xianName(g).replace(' ','')}catch(e){nm=anyName(g)}return{n:nm,ti:ch(KL_TTL),pe:P[0],rel:P[1],r:+(0.85+Math.random()*.35).toFixed(2),alive:1,k0:kK().n}}
 function klEp(p){return Math.round(total()*p.r*(1+.03*(kK().n|0)))}
 // ---------- เข้าสู่กัลป์ใหม่ ----------
-{const _kw=kalpaWin;kalpaWin=function(){const r=_kw.apply(this,arguments);try{const K=kK();
- const old=klPeers().filter(p=>p.alive&&p.carry);K.peers=old.map(p=>Object.assign(p,{carry:0}));const add=Math.min(3,1+Math.floor(K.n/3))-K.peers.length;for(let i=0;i<add;i++)K.peers.push(klMkPeer());
- K.laws={};K.lawAsk=0;K.anc=K.anc||{aw:0,pc:0};
- klBoatApply();
- mdWait(()=>klMeet());
- if(onlineOK)api('kwall',{k:K.n,n:S.name}).then(j=>{if(!j||!j.l)return;K.wall=j.l;if(j.first){S.fame+=20000;S.flags['kfirst'+K.n]=1;log(`🗿 <b>กำแพงกาลสลักชื่อคุณเป็นคนแรกของ${KAL_N[K.n]}</b> — ไม่เคยมีผู้เล่นคนไหนมาถึงที่นี่มาก่อน`,'myth',true);try{island({big:1,pri:1,ic:'🗿',h:'กำแพงกาล',t:`คนแรกที่ไปถึง${KAL_N[K.n]}`,kind:'rainbow',ms:5000})}catch(e){}}
-  else log(`🗿 บนกำแพงกาลของ${KAL_N[K.n]} มีชื่อผู้มาถึงก่อนคุณสลักไว้: ${j.l.slice(0,5).map(x=>'<b>'+esc(x.n)+'</b>').join(' · ')} — ชื่อคุณเป็นคนที่ ${j.rank}`,'epic')}).catch(()=>{})}catch(e){console.error(e)}return r}}
+{const _kw=kalpaWin;kalpaWin=function(){const r=_kw.apply(this,arguments);try{kalAge();kalArtNew();if(kOf().n===1)kGateRead()}catch(e){console.error(e)}return r}}
 function klMeet(){const K=kK(),P=klPeers();if(!P.length)return klLawStart();const p=P.find(x=>!x.met)||P[0];P.forEach(x=>x.met=1);
  choice(`♾️ ผู้รอดจากกัลป์ก่อน`,`ในจักรวาลที่เพิ่งถือกำเนิด คุณไม่ได้อยู่คนเดียว — ${P.map(x=>`<b>${esc(x.n)}</b> 「${x.ti}」 (${x.pe})${x.k0<K.n?' ที่ฝ่าข้ามมาด้วยกันจากกัลป์ก่อน':''}`).join(', ')}<br><br><i>${esc(KL_PERS.find(z=>z[0]===p.pe)[2])}</i><br><span class="tag2">ทั้งจักรวาลมีแค่พวกคุณที่อยู่ระดับนี้ · จักรวาลยังไม่มีกฎ — ผู้ที่แกร่งที่สุดจะเป็นผู้จารึกมัน</span>`,[{t:'🌌 ไปจารึกกฎแห่งกัลป์',_x:1,noFate:1,f(){setTimeout(klLawStart,400)}}])}
 // ---------- ชิงกฎแห่งกัลป์ (3 ข้อ) ----------
@@ -23964,7 +23967,7 @@ async function openLaws(){let l={};try{const j=await api('laws');l=(j&&j.l)||{}}
   log(`♾️ 《${esc(a.n)}》ไม่ดับไปพร้อมจักรวาลเก่า — กลายเป็น<b>${KPN[a.kp]}</b> พลังวิชา ×${(1+.5*a.kp).toFixed(1)}`,'myth',true);
   if(a.kp>=3){LS.set('murim_kart',{n:a.n,r:a.r||0,b:a.b,kp:a.kp,by:S.name,t:Date.now()});log(`♾️ <b>${KPN[a.kp]}</b> — 《${esc(a.n)}》จะตามวิญญาณคุณไปทุกชาติหลังจากนี้ (อ่อนลงเหลือ ${a.kp>=4?20:10}%)`,'myth',true);keyAdd(`《${a.n}》กลายเป็นวิชา${KPN[a.kp]}`)}}}catch(e){console.error(e)}return r}}
 {const _slA=startLife;startLife=function(){const r=_slA.apply(this,arguments);try{amnSync();const K=LS.get('murim_kart',null);if(K&&S&&!S.custom&&!S.daily&&!(S.beastMode&&!S.beastMode.human)&&!(S.arts||[]).some(a=>a&&a.kart)){
-  Array.prototype.push.call(S.arts,{n:K.n,tier:'♾️ วิชา'+KPN[K.kp],r:K.r,b:Math.max(5,Math.round(K.b*(K.kp>=4?.2:.1))),lv:0,kp:K.kp,kart:1,la:S.age,ly:S.age});
+  Array.prototype.push.call(S.arts,{n:K.n,tier:'♾️ วิชา'+KPN[K.kp],r:K.r,b:Math.max(5,Math.round(K.b*(K.kp>=4?.2:.1))),lv:0,kp:K.kp,kart:1,sk:K.sk||'',la:S.age,ly:S.age});
   log(`♾️ ตั้งแต่ลืมตา คุณรู้สึกถึงความทรงจำของวิชาที่ไม่ใช่ของชาตินี้ — 《${esc(K.n)}》 <span class="tag2">(${KPN[K.kp]} จาก ${esc(K.by||'ชาติก่อน')})</span>`,'myth')}}catch(e){console.error(e)}return r}}
 // ---- หน้าวิชา: แถบความคืบหน้า · สถานะติดขั้น · กฎ · กัลป์ ----
 {const _oaA=openArts;openArts=function(){const r=_oaA.apply(this,arguments);try{amnSync();const M=$('modal');if(!M)return r;const items=[...M.querySelectorAll('.item')];
@@ -23986,6 +23989,69 @@ async function openLaws(){let l={};try{const j=await api('laws');l=(j&&j.l)||{}}
 function ascLifeGuard(buf){if(!S||!S.alive)return;let n=0;while(lifeMax()<S.age+buf&&n++<40){S.lifespan+=Math.ceil(S.age+buf-lifeMax())+5}}
 {const _axL=ascendToX;ascendToX=function(){const r=_axL.apply(this,arguments);try{ascLifeGuard(60)}catch(e){console.error(e)}return r}}
 {const _agL=ascendGod;ascendGod=function(){const r=_agL.apply(this,arguments);try{ascLifeGuard(100)}catch(e){console.error(e)}return r}}
+
+// ===================== v17.10 🌏 ชื่อวิชาตามโลก · เกรดตามโลก · วิชาความสามารถพิเศษ · วิชาแห่งกัลป์ · ประตูกัลป์ =====================
+const ART_SW={
+ x:[['เคล็ดกระบี่บิน','fly'],['คัมภีร์บ่มเพาะ'],['เคล็ดยันต์'],['ค่ายกล','array'],['เคล็ดกายา'],['ศาสตร์เนตร'],['เคล็ดหลอมเตา'],['วิชาหนีภัย','esc']],
+ g:[['หัตถ์เทวะ'],['บัญญัติกาล','time'],['ร่างเทวะ'],['ดวงตาเทพ'],['หอกดารา'],['เสียงประกาศิต','decree']]};
+const ART_PW={
+ x:{'ธรรมะ':['ดาวเหนือ','บัวหยก','เมฆาเก้าชั้น','หมื่นกระบี่คืนสู่หนึ่ง','ห้าธาตุหมุนเวียน','จันทร์หยก'],'อธรรม':['ไอพิษเก้าหุบ','เงาจันทร์ดับ','ใยแมงมุมฟ้า','หมอกพันลี้','ตะขาบทอง'],
+  'มาร':['กลืนสวรรค์','เลือดอสูรพันปี','หมื่นวิญญาณ','ศพไม่เน่า','ดูดปราณ'],'none':['สายฟ้าเก้าสวรรค์','ลมเมฆา','ภูผาหมื่นจั้ง','ธาราบรรพกาล','เพลิงสุริยะแท้']},
+ g:{'all':['ดาราดับ','ทะเลดาว','กาลเวลาหยุดนิ่ง','ทลายภพ','ปฐมจักรวาล','สิบทิศ','เทวสภา','ดวงอาทิตย์ร้อยดวง']}};
+const TIER_W={m:['สามัญ','ยอดยุทธ์','ล้ำเลิศ','ตำนาน','เทพ'],x:['ขั้นเหลือง','ขั้นลึกล้ำ','ขั้นปฐพี','ขั้นสวรรค์','ขั้นเซียน'],g:['เทวะสามัญ','เทวะชั้นสูง','ขั้นดารา','ขั้นจักรวาล','ขั้นปฐมกาล']};
+const ASK={fly:['🗡️','กระบี่บิน','พุ่งออกไปก่อนการดวลเริ่ม',1],array:['🔯','วางค่ายกล','ศัตรูตีเบาลง 3 ยก'],esc:['💨','วิชาหนีภัย','ออกจากการดวลโดยไม่บาดเจ็บ'],time:['⏳','บัญญัติกาล','ได้ตีเพิ่มหนึ่งยก'],decree:['📜','ประกาศิต','ยกเลิกท่ารวมพลังของศัตรู'],
+ rewind:['♾️','ย้อนกาล','ล้มลงเมื่อไหร่ ย้อนกลับไปยกก่อนหน้าได้หนึ่งครั้ง',1],void:['🌑','ความว่างเปล่า','ลบท่ารวมพลังและท่าหนักของศัตรูจนจบการดวล'],mem:['🌌','ความทรงจำแห่งจักรวาล','เรียกท่าจากวิชาชาติก่อน']};
+{const _na=newArt;newArt=function(){const a=_na.apply(this,arguments);try{const w=ECO_W();a.tier=(TIER_W[w]||TIER_W.m)[Math.max(0,Math.min(4,a.r|0))];
+ if(w==='x'||w==='g'){const P=ch(ART_SW[w]),key=S&&S.faction?S.faction.t:'none',L=w==='g'?ART_PW.g.all:(ART_PW.x[key]||ART_PW.x.none);a.n=P[0]+ch(L);a.ow=w;if(P[1])a.sk=P[1]}}catch(e){}return a}}
+// วิชาที่ติดมาจากโลกก่อน
+function amOrigin(w){(S.arts||[]).forEach(a=>{if(a&&typeof a==='object'&&!a.ow&&!a.kal)a.ow=w})}
+{const _axN=ascendToX;ascendToX=function(){try{if(S&&!S.xian)amOrigin('m')}catch(e){}return _axN.apply(this,arguments)}}
+{const _agN=ascendGod;ascendGod=function(){try{if(S&&!S.xt)amOrigin(S.xian?'x':'m')}catch(e){}return _agN.apply(this,arguments)}}
+const OW_TAG={m:'🏮 วิชาจากโลกมนุษย์',x:'☁️ วิชาจากโลกเซียน',g:'✨ วิชาแห่งแดนเทพ'};
+{const _oaN=openArts;openArts=function(){const r=_oaN.apply(this,arguments);try{const M=$('modal'),items=[...M.querySelectorAll('.item')],w=ECO_W();
+ (S.arts||[]).forEach(a=>{if(!a||typeof a!=='object')return;const it=items.find(x=>{const b=x.querySelector('b');return b&&b.textContent.includes('《'+a.n+'》')});if(!it||it.querySelector('.amo'))return;const t=[];
+  if(a.ow&&a.ow!==w)t.push(OW_TAG[a.ow]);if(a.sk&&ASK[a.sk])t.push(`${ASK[a.sk][0]} ${ASK[a.sk][1]}: ${ASK[a.sk][2]}`);if(a.kal)t.push('♾️ ผ่าน '+(a.kp|0)+' กัลป์');
+  if(t.length)it.insertAdjacentHTML('beforeend',`<div class="amo tag2" style="margin-top:3px">${t.join(' · ')}</div>`)})}catch(e){}return r}}
+// ---------- วิชาความสามารถพิเศษตอนดวล ----------
+function askArts(){return(S.arts||[]).filter(a=>a&&a.sk&&ASK[a.sk])}
+function askHas(k){return askArts().find(a=>a.sk===k)}
+{const _du=duel;duel=function(name,ep,cb){const r=_du.apply(this,arguments);try{if(typeof DU!=='undefined'&&DU&&!DU._ask){DU._ask=1;DU.skU={};const f=askHas('fly');if(f){DU.skU.fly=1;DU.en-=R(10,18);DU.txt=`🗡️ 《${esc(f.n)}》กระบี่บินพุ่งออกไปก่อนที่${esc(DU.name)}จะทันตั้งท่า`;drawDuel()}}}catch(e){console.error(e)}return r}}
+{const _dxbN=duelXBtns;duelXBtns=function(){let h=_dxbN.apply(this,arguments);try{if(!DU||!DU.skU)return h;const B=[];const seen={};
+ askArts().forEach(a=>{const k=a.sk,K=ASK[k];if(K[3]||DU.skU[k]||seen[k])return;seen[k]=1;B.push(`<button class="opt" style="border-color:#8a6aff" onclick="${k==='esc'?'askEsc()':`duelAct('ask_${k}')`}">${K[0]} ${K[1]}<small>《${esc(a.n.slice(0,12))}》 · ${K[2]}</small></button>`)});
+ if(B.length)h+=`<div class="tag2" style="margin-top:8px">วิชาความสามารถพิเศษ · ครั้งเดียวต่อการดวล</div><div class="mgrid">${B.join('')}</div>`}catch(e){}return h}}
+function askEsc(){if(!DU)return;DU.skU.esc=1;DU.me=100;DU.txt='💨 คุณใช้วิชาหนีภัย ร่างสลายเป็นสายลม — ออกจากการดวลโดยไม่มีรอยขีดข่วน';duelEnd(false,true)}
+{const _dxN=duelX;duelX=function(a,e,md,ed){if(typeof a==='string'&&a.startsWith('ask_')){const k=a.slice(4),A=askHas(k);if(!A||DU.skU[k])return false;DU.skU[k]=1;
+  if(k==='array'){DU.arr=3;DU._t=`🔯 ค่ายกลของ《${A.n}》กางออกรอบตัว — การโจมตีของศัตรูเบาลง`}
+  else if(k==='time'){DU.en-=md*1.3;DU.r--;DU._t=`⏳ 《${A.n}》หยุดกาลเวลาไว้ชั่วครู่ — คุณได้ตีเพิ่มหนึ่งยก`}
+  else if(k==='decree'){DU.charge=false;DU._dec=1;DU.en-=md*.6;DU._t=`📜 ประกาศิตของ《${A.n}》 — ปราณที่ศัตรูรวบรวมไว้สลายไปกลางอากาศ`}
+  else if(k==='void'){DU.void=1;DU.en-=md*.6;DU._t=`🌑 《${A.n}》ลบท่าไม้ตายของศัตรูออกจากโลกนี้`}
+  else if(k==='mem'){const K=LS.get('murim_kart',null),src=K&&K.n?K.n:(S.arts.filter(x=>x!==A).sort((x,y)=>y.b-x.b)[0]||A).n;DU.en-=md*2.2;DU._t=`🌌 คุณนึกถึง《${esc(src)}》จากชาติก่อน — ท่านั้นออกมาจากมือเองโดยไม่ต้องนึก`}
+  try{sfx('rare')}catch(x){}return true}return _dxN.apply(this,arguments)}}
+{const _daN=duelAct;duelAct=function(a){if(!DU)return;const me0=DU.me;DU._snap=DU._snap||null;if(!DU.skU||!DU.skU.rewind)DU._snap={me:DU.me,en:DU.en,r:DU.r,charge:DU.charge,poison:DU.poison};
+ const r=_daN.apply(this,arguments);try{if(DU&&!DU._end){if(DU.arr>0&&DU.me<me0){DU.me+=Math.round((me0-DU.me)*.45);DU.arr--;drawDuel()}if(a==='ask_decree'){DU.charge=false}}}catch(e){}return r}}
+{const _deN=duelEnd;duelEnd=function(win,fled){try{if(!win&&!fled&&DU&&DU.me<=0&&DU.skU&&!DU.skU.rewind&&DU._snap&&askHas('rewind')){const A=askHas('rewind');DU.skU.rewind=1;Object.assign(DU,DU._snap);DU.txt=`♾️ 《${esc(A.n)}》ย้อนกาลกลับไปหนึ่งยก — คุณยืนอยู่ตรงเดิมก่อนที่ดาบนั้นจะมาถึง`;DU.intent=duelIntent();drawDuel();return}}catch(e){console.error(e)}
+ if(DU)DU._end=1;return _deN.apply(this,arguments)}}
+{const _diN=duelIntent;duelIntent=function(){const r=_diN.apply(this,arguments);try{if(DU&&(DU.void||DU._dec)&&(r==='chg'||r==='heavy')){if(DU._dec)DU._dec=0;return 'atk'}}catch(e){}return r}}
+// ---------- วิชาแห่งกัลป์: ชื่อมาจากระลอกภัยที่รอดมาได้ ----------
+const KW_P=[['ผู้ยืนหลังดาวดับ','void'],['ผู้ฝ่าเพลิงสิ้นกัลป์','mem'],['ผู้เห็นกาลม้วนกลับ','rewind']];
+{const _kwv=kalpaWave;kalpaWave=function(w,ok){try{const K=kOf();if(w===1){K.wp=[];K.wok=0}else if(ok>(K.wok||0))(K.wp=K.wp||[]).push(w-2);K.wok=ok;K.wl=w}catch(e){}return _kwv.apply(this,arguments)}}
+function kalArtNew(){const K=kOf(),wp=(K.wp||[]).slice();if(wp.length<2)wp.push(Math.max(0,(K.wl||3)-1));const P=KW_P[wp[wp.length-1]]||KW_P[0];
+ const a={n:ch(['หัตถ์','กระบี่','ลมหายใจ','ดวงตา','ก้าวย่าง','เสียงหัวใจ'])+P[0]+'แห่ง'+KAL_N[Math.max(0,K.n-1)],tier:'♾️ วิชาแห่งกัลป์',r:4,b:Math.round(1600*3*Math.max(1,K.n)),lv:3,kp:1,kal:1,sk:P[1],la:S.age,ly:S.age};
+ Array.prototype.push.call(S.arts,a);log(`♾️ สิ่งที่คุณเห็นตอนจักรวาลดับกลายเป็นวิชา — <b>《${esc(a.n)}》</b> · ${ASK[a.sk][0]} ${ASK[a.sk][1]}: ${ASK[a.sk][2]}`,'myth',true);try{keyAdd(`ได้วิชา《${a.n}》ตอนผ่าน${KAL_N[K.n-1]}`)}catch(e){}return a}
+function kalAge(){(S.arts||[]).forEach(a=>{if(a&&a.kp>0&&a.kp<4){a.kp++;if(a.kal)a.tier='♾️ วิชาแห่งกัลป์'}});const top=(S.arts||[]).filter(a=>a&&(a.kp|0)>=3).sort((x,y)=>(y.kp-x.kp)||(y.b-x.b))[0];
+ if(top){const old=LS.get('murim_kart',null);if(!old||old.n!==top.n||old.kp!==top.kp){LS.set('murim_kart',{n:top.n,r:top.r||0,b:top.b,kp:top.kp,sk:top.sk||'',by:S.name,t:Date.now()});log(`♾️ 《${esc(top.n)}》ผ่านมาแล้ว ${top.kp} กัลป์ (<b>${KPN[top.kp]}</b>) — จะตามวิญญาณคุณไปทุกชาติหลังจากนี้`,'myth',true)}}}
+// ---------- ประตูกัลป์ (เซิร์ฟเวอร์): คนที่ไปถึงจุดสูงสุดจารึกวิชาไว้ ให้คนรุ่นหลังเลือกเรียน ----------
+async function kGateRead(){if(typeof onlineOK==='undefined'||!onlineOK||S.flags.kGateR)return;S.flags.kGateR=1;let L=[];try{const j=await api('kgates');L=(j&&j.l)||[]}catch(e){}if(!L.length)return;
+ const pick=L.slice(0,3);const go=()=>{if(!S||!S.alive)return;if(choice._cur||modalOpen)return setTimeout(go,900);
+  choice('🚪 ประตูกัลป์',`ที่ขอบจักรวาลมีประตูหินที่ไม่ผุพังไปกับกาลเวลา บนนั้นมีชื่อวิชาจารึกไว้ — ทิ้งไว้โดยคนที่เคยก้าวพ้นวัฏจักรกัลป์ทั้งเก้า<br><span class="tag2">เลือกเรียนได้หนึ่งวิชา</span>`,
+   pick.map(g=>({t:`📜 《${esc(g.art)}》`,s:`จารึกโดย ${esc(g.n)} · ผ่าน ${g.kp|0} กัลป์${g.sk&&ASK[g.sk]?' · '+ASK[g.sk][0]+' '+ASK[g.sk][1]:''}`,f(){const a={n:String(g.art).slice(0,48),tier:'🚪 จารึกประตูกัลป์ · '+String(g.n).slice(0,20),r:4,b:Math.round(1600*4),lv:3,kp:1,kal:1,sk:ASK[g.sk]?g.sk:'mem',la:S.age,ly:S.age};Array.prototype.push.call(S.arts,a);log(`🚪 คุณวางมือบนรอยจารึก — 《${esc(a.n)}》ไหลเข้ามาในความทรงจำ`,'myth',true);keyAdd(`เรียน《${a.n}》จากประตูกัลป์ ที่${g.n}จารึกไว้`)}})).concat([{t:'🚶 เดินผ่านไป สร้างทางของตัวเอง',skip:true,f(){S.karma+=5}}]))};setTimeout(go,1200)}
+function kGateWrite(done){const L=(S.arts||[]).filter(a=>a&&typeof a==='object').sort((x,y)=>((y.kp|0)-(x.kp|0))||(y.b*artM(y)-x.b*artM(x))).slice(0,3);if(!L.length)return done();
+ choice('🚪 จารึกวิชาไว้ที่ประตูกัลป์',`ก่อนก้าวพ้นกาลเวลา คุณทิ้งร่องรอยไว้ได้หนึ่งอย่าง — วิชาที่จารึกจะอยู่บนประตูกัลป์ให้คนที่มาถึงทีหลังเลือกเรียน`,
+  L.map(a=>({t:`📜 《${esc(a.n)}》`,s:(a.kp?'ผ่าน '+a.kp+' กัลป์ · ':'')+AMN[amLv(a)],f(){S.flags.kGateW=a.n;log(`🚪 คุณจารึก《${esc(a.n)}》ไว้บนประตูกัลป์`,'myth',true);keyAdd(`จารึก《${a.n}》ไว้บนประตูกัลป์`);
+   try{if(typeof onlineOK!=='undefined'&&onlineOK)api('kgate',{n:pname(),art:String(a.n).slice(0,48),kp:a.kp|0,sk:a.sk||''}).catch(()=>{})}catch(e){}setTimeout(done,300)}})).concat([{t:'🌫️ ไม่ทิ้งอะไรไว้',skip:true,f(){setTimeout(done,300)}}]))}
+{const _ke=kalpaEnd;kalpaEnd=function(how){const args=arguments,self=this;if(how==='top'&&S&&!S.flags.kGateAsk){S.flags.kGateAsk=1;return kGateWrite(()=>_ke.apply(self,args))}return _ke.apply(this,arguments)}}
+{const _ka=klAncEnd;klAncEnd=function(){const args=arguments,self=this;if(S&&!S.flags.kGateAsk){S.flags.kGateAsk=1;return kGateWrite(()=>_ka.apply(self,args))}return _ka.apply(this,arguments)}}
+
 </script>
 </body>
 </html>
