@@ -22696,6 +22696,108 @@ function rdBind(){const e=rdElig();if(!e.ok||!S.sp)return;S.rd={bind:1,n:S.sp.n}
 {const _ofR=openFamily;openFamily=function(){const r=_ofR.apply(this,arguments);try{if(S&&!S.beastMode&&(S.sp||S.rd2||rdLS())){const m=$('modal'),h=m.querySelector('.ftB')||m.querySelector('h3');if(h&&!m.querySelector('.rdB'))h.insertAdjacentHTML('afterend',`<button class="gbtn rdB" style="width:100%;margin:0 0 8px" onclick="openRedThread()">🧵 ด้ายแดงข้ามชาติ${S.rd2&&S.rd2.met&&!S.rd2.done?` <small>(${esc(S.rd2.n2)} · ${Math.round(S.rd2.mem)}/100)</small>`:S.rd&&S.rd.bind?' <small>(ผูกไว้แล้ว)</small>':''}</button>`)}}catch(e){}return r}}
 try{SYS_GUIDE.push({s:'life',nw:1,ic:'🧵',t:'ด้ายแดงข้ามชาติ',go:'openRedThread',d:'คู่ชีวิตที่รักเดียวจริง (แต่งงาน · ความรัก 85+ · อยู่กินกัน 15 ปี · ไม่เคยเลิกราหรือมีคนอื่น) ผูกด้ายแดงได้ที่ ครอบครัว → 🧵 · ชาติหน้าจะได้พบเขาที่เกิดใหม่ — เราจำเขาได้แต่เขาจำเราไม่ได้ อาจเป็นคนคุ้นเคย ศัตรู คนที่มีคู่แล้ว หรือคนป่วย · ปลุกความทรงจำด้วยสถานที่เดิม ของแทนใจ บอกความจริง หรือปกป้องเขา · ปล่อยวางได้เสมอ · คู่กันครบ 3 ชาติได้ฉายาด้ายแดงสามชาติ'})}catch(e){}
 
+
+// ===================== v17.9 แผนที่เส้นทางชีวิต · สุสานผู้เล่น · ภัยประจำสัปดาห์ · ตำแหน่งสวรรค์ · โหวตไอเดีย =====================
+const wpW=()=>S&&S.xt?'g':S&&S.xian?'x':'m';
+const wpMf=n=>S&&S.xian?stoneTxt(n):fmt(n)+' ตำลึง';
+function wpBar(v,max,col){const p=Math.max(0,Math.min(100,v/Math.max(1,max)*100));return`<div style="height:10px;background:rgba(0,0,0,.12);border-radius:6px;overflow:hidden;margin:4px 0"><div style="width:${p}%;height:100%;background:${col||'var(--tb4,#e0a030)'}"></div></div>`}
+// ---------- 1. แผนที่เส้นทางชีวิต ----------
+function openRoadmap(){if(!S)return;const W=wpW(),ri=realmIdx();let q=null;try{q=ascReq()}catch(e){}
+ const st=[{k:'m',ic:'🏯',n:'ยุทธภพ (โลกมนุษย์)',d:'ฝึกจากไร้ระดับจนถึงขั้นสูงสุดของโลกมนุษย์ แล้วฝึก "ชั้นเหนือขั้นสูงสุด" ต่อจนฟ้าเปิดทาง'},
+  {k:'x',ic:'☁️',n:'โลกเซียน',d:'ฝ่าทัณฑ์ 3 ระลอกจากยุทธภพ ขึ้นมาเริ่มใหม่ที่ขั้นต้นของเซียน · ฝึกจนถึงขั้นสูงสุด แล้วเกินขีดจำกัดให้ถึง ★9 + อยู่นานพอ'},
+  {k:'g',ic:'🌟',n:'โลกเทพ',d:'ฝ่าทัณฑ์จากโลกเซียน · สร้างแดนเทพ สะสมผู้ศรัทธา ดูแลแคว้นในยุทธภพ · ฝึกทุกชั้นแห่งโลกเทพจนสุด'},
+  {k:'e',ic:'🌌',n:'ก้าวข้ามสามภพ (ตอนจบสูงสุด)',d:'ฝ่าทัณฑ์ครั้งสุดท้ายในโลกเทพ ปิดตำนานชีวิตนี้ — ชีวิตจบทันที ใบชุบไม่มีผล'}];
+ const cur=W==='g'?2:W==='x'?1:0;
+ const rows=st.map((s,i)=>{const done=i<cur,now=i===cur,nx=i===cur+1;
+  let det='';if(now){det=`<p class="tag2" style="margin:4px 0">ตอนนี้: <b>${esc(REALMS[ri].n)}</b> (ขั้นที่ ${ri+1}/${REALMS.length})${ri>=7?` · ชั้นเหนือขั้นสูงสุด ${postLv()<0?'ยังไม่เริ่ม':'★'+(postLv()%9+1)}`:''}</p>${wpBar(ri,REALMS.length-1)}`;
+   if(ri<7)det+=`<p class="tag2">👉 ขั้นต่อไป: <b>${esc(REALMS[ri+1].n)}</b> — ฝึกปราณ เก็บวิชา ลุยดันเจี้ยน หรือหาสำนักดีๆ</p>`;
+   else if(q)det+=`<div class="item" style="margin:4px 0">${q.txt.map(t=>`<p style="margin:2px 0">${t}</p>`).join('')}</div><p class="tag2">ครบแล้วทัณฑ์สวรรค์จะมาเอง หรือกด ⚡ ในเมนู</p>`;
+   if(W==='g')det+=`<p class="tag2">${S.hv?'🏛️ '+esc(hvRank().n):'🏛️ ยังไม่ได้ดูแลแคว้นใด — เมนู → ดูแลแคว้นเบื้องล่าง'}</p>`}
+  return`<div class="item" style="border-left:5px solid ${done?'#5cb85c':now?'#e0a030':'#999'};${!done&&!now?'opacity:.6':''}"><b>${done?'✅':now?'👉':'🔒'} ${s.ic} ${s.n}</b><p class="tag2" style="margin:3px 0">${s.d}</p>${det}${nx&&!now?'<p class="tag2">⬆️ เป้าหมายถัดไปของคุณ</p>':''}</div>`}).join('<div style="text-align:center;opacity:.5">▼</div>');
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🗺️ เส้นทางชีวิต</h3><p class="tag2">ทั้งเกมมี 4 ช่วง ไปทีละขั้นตามลำดับ (ยุคปัจจุบันเป็นเส้นทางแยก ไม่นับรวม)</p>${rows}`,'roadmap')}
+// ---------- 2. สุสานผู้เล่นจริง ----------
+let GV_C=null,GV_T=0;
+async function gvLoad(force){if(!onlineOK)return null;if(GV_C&&!force&&Date.now()-GV_T<300000)return GV_C;try{const j=await api('graves',{});GV_C=j.g||[];GV_T=Date.now();return GV_C}catch(e){return GV_C}}
+function gvCard(g,k){const wn={m:'ยุทธภพ',x:'โลกเซียน',g:'โลกเทพ'}[g.w]||'';return`<div class="item" style="background:linear-gradient(#5a5560,#3d3a44);color:#eee;border-radius:10px 10px 4px 4px"><div style="display:flex;justify-content:space-between"><b>🪦 ${esc(g.n)}</b><span style="opacity:.7;font-size:12px">${ago(g.t)}</span></div><p style="margin:3px 0;font-size:13px;opacity:.85">${g.e?'「'+esc(g.e)+'」 · ':''}${esc(g.r)} · ${wn} · อายุ ${fmt(g.a)} ปี</p><p style="margin:3px 0;font-size:13px;opacity:.8">${esc(g.c)}</p>${g.y?`<p style="margin:6px 0;font-style:italic">“${esc(g.y)}”</p>`:''}<div class="brow2"><button class="sysb" onclick="gvPray(${k},this)">🙏 ไหว้ ${g.p||''}</button><button class="rep" onclick="chatRep('${esc(g.i)}');this.disabled=true" title="รายงาน">⚑</button></div></div>`}
+async function openGraves(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🪦 สุสานจอมยุทธ์</h3><p class="tag2">ป้ายหลุมศพของผู้เล่นจริงที่จบชีวิตไปแล้ว พร้อมคำอำลาสุดท้าย · ไหว้ได้ปีละ 3 ป้าย จะได้กรรมดี ความสุข และบางครั้งได้แรงบันดาลใจจากยอดฝีมือ</p><div id="gvList" class="tag2">${onlineOK?'กำลังโหลด…':'ต้องออนไลน์ก่อน'}</div><button class="gbtn" style="width:100%;margin-top:6px" onclick="gvLoad(1).then(openGraves)">🔄 ดูป้ายอื่น</button>`,'graves');
+ const L=await gvLoad();const el=$('gvList');if(!el)return;el.className='';el.innerHTML=(L&&L.length)?L.map(gvCard).join(''):'<p class="tag2">ยังไม่มีป้ายหลุมศพ</p>'}
+async function gvPray(k,btn){const g=GV_C&&GV_C[k];if(!g||!S||!S.alive)return;if(S.gpY!==S.age){S.gpY=S.age;S.gpN=0}if(S.gpN>=3)return toast('ปีนี้ไหว้ครบแล้ว');S.gpN++;if(btn)btn.disabled=true;
+ S.karma+=1;joy(2);let ex='';if((g.ri||0)>=6&&Math.random()<.35){const v=pctPow(.01);ex=` · ได้แรงบันดาลใจจากยอดฝีมือ พลัง +${fmt(v||0)}`}
+ log(`🙏 คุณจุดธูปหน้าป้ายของ <b>${esc(g.n)}</b>${g.y?` — “${esc(g.y)}”`:''}${ex}`,'good');try{const j=await api('gpray',{g:g.i});g.p=j.n;if(btn)btn.textContent='🙏 ไหว้แล้ว '+(j.n||'')}catch(e){}render()}
+{const _egG=endGame;endGame=function(){try{const by=(($('byeIn')||{}).value||'').trim();if(onlineOK&&S&&!S.mw&&!S.cu&&S.age>=10&&!endGame._busy){const best=(S.arts||[]).slice().sort((a,b)=>b.b-a.b)[0];api('grave',{n:S.name,e:(typeof epithet==='function'?epithet():''),a:S.age,r:REALMS[realmIdx()].n,c:S.cause||S.deathCause||'',y:by,w:wpW(),ar:best?best.n:'',ri:realmIdx()}).catch(()=>{})}}catch(e){}return _egG.apply(this,arguments)}}
+// ---------- 3. ภัยพิบัติประจำสัปดาห์ ----------
+const CAL=[{ic:'👹',n:'มารสวรรค์บุกแดนใต้',d:'กองทัพมารทะลักออกจากรอยแยกฟ้า เมืองชายแดนกำลังจะแตก',b:'fight',boss:'แม่ทัพมารเขี้ยวเหล็ก'},
+ {ic:'🌵',n:'ฟ้าแล้งทั่วแผ่นดิน',d:'ฝนไม่ตกมาสามฤดู ผู้คนอดอยาก ต้องการเสบียงและเงินทอง',b:'give',boss:'โจรปล้นยุ้งฉาง'},
+ {ic:'🦠',n:'โรคระบาดกลางเมืองหลวง',d:'ไข้ดำแพร่ไปทั่ว หมอไม่พอ ต้องใช้ลมปราณช่วยขับพิษ',b:'qi',boss:'หมอผีปล่อยพิษ'},
+ {ic:'🐉',n:'มังกรคลั่งตื่นจากหลับพันปี',d:'มังกรเฒ่าอาละวาดทำลายหุบเขา ต้องรวมยอดฝีมือสยบมัน',b:'fight',boss:'มังกรคลั่งเกล็ดเพลิง'},
+ {ic:'🌊',n:'น้ำท่วมลุ่มแม่น้ำใหญ่',d:'เขื่อนแตก หมู่บ้านนับร้อยจมน้ำ ต้องการแรงคนและเงินสร้างใหม่',b:'give',boss:'ปีศาจน้ำวน'}];
+let CAL_J=null;
+async function openCal(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>⚔️ ภัยประจำสัปดาห์</h3><div id="calBox" class="tag2">${onlineOK?'กำลังโหลด…':'ต้องออนไลน์ก่อน'}</div>`,'cal');if(!onlineOK)return;
+ try{CAL_J=await api('cal',{})}catch(e){const el=$('calBox');if(el)el.textContent='โหลดไม่ได้';return}calRender()}
+function calRender(){const j=CAL_J,el=$('calBox');if(!j||!el)return;const E=CAL[j.i]||CAL[0],done=j.tot>=j.goal,d=Math.floor(j.end/86400e3),h=Math.floor(j.end%86400e3/3600e3);
+ const used=LS.get('murim_calu',{});const dk=new Date(Date.now()+7*3600e3).toISOString().slice(0,10),u=used.d===dk?used.n:0,left=Math.max(0,8-u);
+ const btn=(k,ic,t,s)=>`<button class="opt" style="width:100%;text-align:left;margin:3px 0" ${left&&S&&S.alive?'':'disabled'} onclick="calDo('${k}')">${ic} ${t}${E.b===k?' <b style="color:#e0a030">×2 สัปดาห์นี้</b>':''}<small>${s}</small></button>`;
+ el.className='';el.innerHTML=`<div class="item" style="border-left:5px solid #e04050"><b style="font-size:17px">${E.ic} ${E.n}</b><p class="tag2" style="margin:4px 0">${E.d}</p>${wpBar(j.tot,j.goal,done?'#5cb85c':'#e04050')}<p style="margin:2px 0"><b>${fmt(j.tot)}</b> / ${fmt(j.goal)} แต้ม ${done?'· ✅ <b>ผ่านแล้ว!</b>':''}<span class="tag2" style="float:right">เหลือ ${d} วัน ${h} ชม.</span></p></div>
+ <p class="tag2">ผู้เล่นทุกคนช่วยกันสะสมแต้ม · ครบเป้าแล้วใครช่วยไว้ตั้งแต่ 6 แต้มขึ้นไปรับรางวัลได้ · รีเซ็ตทุกวันจันทร์</p>
+ <p style="margin:6px 0">ส่วนของคุณ: <b>${fmt(j.mine)}</b> แต้ม · แรงวันนี้เหลือ <b>${left}</b>/8</p>
+ ${btn('fight','⚔️','ออกรบ',`ดวลกับ${E.boss} · ชนะ +3 · แพ้ +1 และบาดเจ็บ`)}${btn('give','💰','บริจาคเสบียง',`จ่าย ${wpMf(Math.round(600*W15()))} · +2`)}${btn('qi','🧘','ส่งลมปราณช่วยผู้คน',`พลังชีวิต −15% · +2`)}
+ ${done&&!j.cl&&j.mine>=6?`<button class="pbtn" style="width:100%;margin:6px 0" onclick="calClaim()">🎁 รับรางวัลช่วยแผ่นดิน</button>`:j.cl?'<p class="tag2">🎁 รับรางวัลสัปดาห์นี้แล้ว</p>':''}
+ <h4 style="margin:10px 0 4px">🏅 ผู้ช่วยแผ่นดินสัปดาห์นี้</h4>${(j.top||[]).map((x,i)=>`<p style="margin:2px 0;${x.me?'font-weight:bold':''}">${['🥇','🥈','🥉'][i]||(i+1)+'.'} ${esc(x.n)} <span class="tag2">${fmt(x.s)} แต้ม</span></p>`).join('')||'<p class="tag2">ยังไม่มีใครช่วย — เป็นคนแรกสิ</p>'}
+ ${j.prev&&j.prev.goal?`<p class="tag2" style="margin-top:8px">สัปดาห์ก่อน: ${(CAL[j.prev.i]||CAL[0]).ic} ${(CAL[j.prev.i]||CAL[0]).n} — ${j.prev.tot>=j.prev.goal?'✅ ทุกคนช่วยกันผ่าน':'❌ ไม่ผ่าน'} (${fmt(j.prev.tot)}/${fmt(j.prev.goal)})${j.prev.top&&j.prev.top[0]?' · ผู้ช่วยอันดับ 1: '+esc(j.prev.top[0].n):''}</p>`:''}`}
+async function calSend(v,msg){const E=CAL[CAL_J.i]||CAL[0];try{const j=await api('calp',{v,n:S.name});if(j.err==='cap')return toast('แรงวันนี้หมดแล้ว');if(j.err)return toast('ส่งไม่ได้ ลองใหม่');
+ const dk=new Date(Date.now()+7*3600e3).toISOString().slice(0,10);LS.set('murim_calu',{d:dk,n:j.used||0});CAL_J.tot=j.tot;CAL_J.mine+=v;log(`${E.ic} ${msg} — ช่วยแผ่นดิน +${v} แต้ม`,'good');openCal()}catch(e){toast('ส่งไม่ได้')}}
+function calDo(k){if(!CAL_J||!S||!S.alive)return;const E=CAL[CAL_J.i]||CAL[0],bx=E.b===k?1:0;
+ if(k==='give'){const c=Math.round(600*W15());if(S.money<c)return toast('เงินไม่พอ');S.money-=c;S.karma+=1;return calSend(2+bx,`คุณบริจาค ${wpMf(c)} ช่วยรับมือ${E.n}`)}
+ if(k==='qi'){if(S.hp<S.maxHp*.3)return toast('พลังชีวิตต่ำเกินไป');S.hp-=Math.round(S.maxHp*.15);S.karma+=1;render();return calSend(2+bx,`คุณถ่ายลมปราณช่วยผู้คนจาก${E.n}`)}
+ if(k==='fight'){if(S.hp<S.maxHp*.3)return toast('พลังชีวิตต่ำเกินไป');closeM();setTimeout(()=>duel(E.boss,Math.round(total()*(E.ic==='🐉'?1.1:.95)),w=>{if(!w)S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.2));render();calSend((w?3:1)+bx,w?`คุณสยบ${E.boss}ได้`:`คุณพ่ายให้${E.boss} แต่ถ่วงเวลาให้ผู้คนหนีทัน`)}),200)}}
+async function calClaim(){if(!S||!S.alive)return toast('ต้องมีชีวิตอยู่ถึงจะรับได้');try{const j=await api('calc',{});if(j.err==='mine')return toast('ต้องช่วยอย่างน้อย 6 แต้ม');if(j.err)return toast('ยังรับไม่ได้');if(!j.ok)return toast('รับไปแล้ว');
+ const m=Math.round(3000*W15());S.money+=m;S.fame+=150;S.karma+=5;joy(10);try{pctPow(.02)}catch(e){}log(`🎁 แผ่นดินรอดพ้นภัยเพราะทุกคนช่วยกัน — ได้รับ ${wpMf(m)} · ชื่อเสียง +150 · กรรมดี +5 · พลังเพิ่มขึ้น`,'myth',true);sfx('good');CAL_J.cl=1;calRender();render()}catch(e){toast('รับไม่ได้')}}
+{const _slC=startLife;startLife=function(){const r=_slC.apply(this,arguments);try{if(onlineOK&&S&&!S.mw)setTimeout(async()=>{try{const j=await api('cal',{});CAL_J=j;const E=CAL[j.i];if(E&&S)addFeed?addFeed('ev',`📯 ข่าวจากทั่วแผ่นดิน: <b>${E.ic} ${E.n}</b> — ผู้คนทุกโลกกำลังช่วยกัน (${fmt(j.tot)}/${fmt(j.goal)}) · เมนู → ⚔️ ภัยประจำสัปดาห์`):0}catch(e){}},6000)}catch(e){}return r}}
+// ---------- 4. ตำแหน่งสวรรค์ (โลกเทพ) ----------
+const HV_REG=['แคว้นทุ่งหญ้าลมหนาว','แคว้นลุ่มน้ำหยก','แคว้นหุบเขาเมฆ','แคว้นทะเลใต้','แคว้นที่ราบตะวันออก'];
+function hvRank(){return{n:S&&S.hv?'เทพผู้ดูแล'+HV_REG[S.hv.reg]:'ยังไม่ได้ดูแลแคว้นใด'}}
+function hvOk(){return !!(S&&S.alive&&S.xt&&!S.beastMode)}
+function openHeaven(){if(!hvOk())return toast('ต้องอยู่ในโลกเทพก่อน');const H=S.hv;
+ if(!H)return modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏛️ ดูแลแคว้นเบื้องล่าง</h3><p>เทวสภาสวรรค์มอบหมายให้คุณเลือกแคว้นหนึ่งในยุทธภพเบื้องล่างไปดูแล — ผู้คนที่ศรัทธาจะกลายเป็น<b>ผู้ศรัทธาในแดนเทพ</b>ของคุณ ดูแลดีได้ผลงานเลื่อนตำแหน่งในเทวสภา แต่ถ้าแคว้นล่มสลาย คุณจะถูกปลด</p>${HV_REG.map((n,i)=>`<button class="opt" style="width:100%;margin:3px 0" onclick="hvPick(${i})">🗺️ ${n}</button>`).join('')}`,'heaven');
+ const R=hvRank(),G=gdInit(),a=H.ay===S.age?H.ac||{}:{};const b=(k,ic,t,s)=>`<button class="opt" style="width:100%;text-align:left;margin:3px 0" ${a[k]?'disabled':''} onclick="hvAct('${k}')">${ic} ${t}<small>${a[k]?'ทำไปแล้วปีนี้':s}</small></button>`;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏛️ ${esc(R.n)}</h3><p class="tag2">ตำแหน่งในเทวสภา: <b>${GD_RK[G.rk]}</b> · ผู้ศรัทธาในแดนเทพ ${fmt(G.bel)} · ดูแลมาแล้ว ${H.yr||0} ปี</p>
+ <p style="margin:6px 0 0">🌾 ความรุ่งเรือง ${Math.round(H.pr)}</p>${wpBar(H.pr,100,'#5cb85c')}<p style="margin:6px 0 0">🙏 ความศรัทธา ${Math.round(H.fa)}</p>${wpBar(H.fa,100,'#e0a030')}<p style="margin:6px 0 0">🔥 ความวุ่นวาย ${Math.round(H.un)}</p>${wpBar(H.un,100,'#e04050')}
+ <p class="tag2">ศรัทธา×รุ่งเรืองสูง = ได้ผู้ศรัทธาเข้าแดนเทพทุกปี · ดูแลดีครบทุก 10 ปีได้ผลงานเทวสภา · รุ่งเรืองต่ำทำให้วุ่นวายขึ้น · วุ่นวายถึง 80 จะเกิดกบฏ · ศรัทธาต่ำกว่า 10 นาน 3 ปี จะถูกปลด</p>
+ ${b('bless','🌧️','ประทานพร',`ส่งฝนและความอุดมสมบูรณ์ · พลังชีวิต −10% · รุ่งเรือง +10 ศรัทธา +3`)}${b('smite','⚡','ลงทัณฑ์ผู้ก่อการร้าย',`วุ่นวาย −18 · ศรัทธา +4 (กลัว) · รุ่งเรือง −3 · กรรม −2`)}${b('dream','👁️','ส่งนิมิตถึงนักพรต',`ศรัทธา +7`)}
+ <button class="gbtn" style="width:100%;margin-top:8px" onclick="if(confirm('วางมือจากแคว้นนี้? ค่าต่างๆ ของแคว้นจะหายหมด'))hvQuit()">วางมือจากแคว้นนี้</button>`,'heaven')}
+function hvPick(i){if(!hvOk())return;S.hv={reg:i,pr:50,fa:30,un:25,yr:0,good:0,low:0,ay:-1,ac:{}};log(`🏛️ เทวสภามอบหมายให้คุณดูแล<b>${HV_REG[i]}</b> — ผู้คนเบื้องล่างเริ่มตั้งศาลบูชา`,'myth',true);openHeaven()}
+function hvQuit(){S.hv=null;log('🏛️ คุณวางตำแหน่งสวรรค์ลง กลับไปบำเพ็ญเพียรเงียบๆ','epic');closeM()}
+function hvAct(k){const H=S.hv;if(!H||!hvOk())return;if(H.ay!==S.age){H.ay=S.age;H.ac={}}if(H.ac[k])return;H.ac[k]=1;const cl=v=>clamp(v,0,100);
+ if(k==='bless'){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.1));H.pr=cl(H.pr+10);H.fa=cl(H.fa+3);log(`🌧️ ฝนทิพย์โปรยลงทั่ว${HV_REG[H.reg]} ข้าวออกรวงเต็มทุ่ง`,'good')}
+ if(k==='smite'){H.un=cl(H.un-18);H.fa=cl(H.fa+4);H.pr=cl(H.pr-3);S.karma-=2;log(`⚡ สายฟ้าฟาดลงกลางรังโจรใน${HV_REG[H.reg]} — ผู้คนกราบกรานด้วยความหวาดกลัว`,'epic')}
+ if(k==='dream'){H.fa=cl(H.fa+7);log(`👁️ นักพรตใน${HV_REG[H.reg]}ฝันเห็นคุณ แล้วป่าวประกาศไปทั่ว`,'good')}
+ render();openHeaven()}
+function hvTick(){const H=S.hv;if(!H||!hvOk())return;const cl=v=>clamp(v,0,100);H.yr=(H.yr||0)+1;
+ H.pr=cl(H.pr+(H.fa-50)/25+R(-3,3)-(H.un>60?3:0));H.un=cl(H.un+(50-H.pr)/18+R(-2,3));H.fa=cl(H.fa-1-H.un/60+(H.pr>70?1:0));
+ try{gdBel(Math.round(H.fa*H.pr*25));if(H.fa>=40)pctPow(.002*H.fa/50);H.good=H.fa>=50&&H.pr>=50?(H.good||0)+1:0;if(H.good>=10){H.good=0;gdMerit(4,`${HV_REG[H.reg]}รุ่งเรืองสงบสุขมาสิบปี`)}}catch(e){}
+ if(H.un>=80){H.pr=cl(H.pr-15);H.fa=cl(H.fa-10);H.un=cl(H.un-25);log(`🔥 กบฏลุกฮือทั่ว${HV_REG[H.reg]} ศาลบูชาถูกเผา`,'bad',true)}
+ H.low=H.fa<10?(H.low||0)+1:0;if(H.low>=3){S.fame=Math.max(0,S.fame-150);try{gdMerit(-8)}catch(e){};log(`🏛️ เทวสภาสวรรค์ปลดคุณจากตำแหน่ง — ไม่มีใครใน${HV_REG[H.reg]}บูชาคุณอีกแล้ว`,'bad',true);S.hv=null;return}
+ if(Math.random()<.3&&!choice._cur&&!modalOpen)hvPetition()}
+function hvPetition(){const H=S.hv,cl=v=>clamp(v,0,100),N=HV_REG[H.reg];const P=[
+ ['🙏 คำอธิษฐานของแม่ม่าย',`หญิงม่ายใน${N}จุดธูปขอให้ลูกชายที่ป่วยหนักหาย`,[{t:'รักษาให้',s:'ศรัทธา +5 · กรรมดี +2',f(){H.fa=cl(H.fa+5);S.karma+=2;log('🙏 เด็กชายลุกขึ้นได้ในเช้าวันรุ่ง ข่าวลือเรื่องเทพผู้เมตตาแพร่ไปทั่ว','good')}},{t:'ปล่อยตามชะตา',s:'ไม่มีผล',f(){}}]],
+ ['👑 ฮ่องเต้ขอพร',`ฮ่องเต้แห่ง${N}ทำพิธีใหญ่ ขอให้ชนะศึกกับแคว้นข้างเคียง`,[{t:'ประทานชัยชนะ',s:'รุ่งเรือง +8 · วุ่นวาย +8 · กรรม −3',f(){H.pr=cl(H.pr+8);H.un=cl(H.un+8);S.karma-=3;log('👑 กองทัพชนะศึก แต่ศพเกลื่อนชายแดน','epic')}},{t:'ส่งนิมิตให้สงบศึก',s:'วุ่นวาย −10 · ศรัทธา −3',f(){H.un=cl(H.un-10);H.fa=cl(H.fa-3);log('🕊️ ฮ่องเต้ฝันร้ายจนยอมสงบศึก','good')}}]],
+ ['🐍 ลัทธิมารผุดขึ้น',`ลัทธิบูชางูเก้าหัวใน${N}กำลังดึงผู้ศรัทธาไปจากคุณ`,[{t:'ทำลายลัทธิ',s:'ดวล · ชนะ ศรัทธา +10',f(){setTimeout(()=>duel('เจ้าลัทธิงูเก้าหัว',Math.round(total()*.9),w=>{if(w){H.fa=cl(H.fa+10);H.un=cl(H.un-8);log('🐍 ลัทธิมารแตกพ่าย ผู้คนกลับมาบูชาคุณ','good')}else{H.fa=cl(H.fa-8);log('🐍 ลัทธิมารแข็งแกร่งกว่าที่คิด ศรัทธาของคุณลดลง','bad')}render()}),300)}},{t:'ปล่อยไว้',s:'ศรัทธา −6',f(){H.fa=cl(H.fa-6)}}]],
+ ['🌋 ภูเขาไฟจะระเบิด',`ภูเขาไฟกลาง${N}ส่งควันดำ อีกไม่นานจะระเบิด`,[{t:'กดภูเขาไฟไว้ด้วยตัวเอง',s:'พลังชีวิต −30% · รุ่งเรือง +5 ศรัทธา +8',f(){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.3));H.pr=cl(H.pr+5);H.fa=cl(H.fa+8);log('🌋 คุณกดลาวาไว้ใต้พื้นพิภพ ผู้คนเห็นแสงทองบนยอดเขา','myth')}},{t:'ส่งนิมิตให้อพยพ',s:'รุ่งเรือง −12 · ศรัทธา +3',f(){H.pr=cl(H.pr-12);H.fa=cl(H.fa+3);log('🌋 ผู้คนอพยพทัน แต่บ้านเรือนจมใต้เถ้าถ่าน','epic')}}]],
+ ['🏯 สำนักขอคัมภีร์',`สำนักใหญ่ใน${N}ขอให้คุณประทานวิชาลงมา`,[{t:'ประทานวิชา',s:'ศรัทธา +6 · วุ่นวาย +4 (สำนักอื่นอิจฉา)',f(){H.fa=cl(H.fa+6);H.un=cl(H.un+4);log('📜 สำนักนั้นผงาดขึ้นเป็นที่หนึ่งของแคว้น','good')}},{t:'ปฏิเสธ',s:'ไม่มีผล',f(){}}]]];
+ const [t,x,o]=ch(P);choice(t,`${x}<br><span class="tag2">🏛️ ${esc(hvRank().n)} · ศรัทธา ${Math.round(H.fa)} · รุ่งเรือง ${Math.round(H.pr)} · วุ่นวาย ${Math.round(H.un)}</span>`,o.map(z=>Object.assign({_x:1},z)))}
+{const _pyH=passYear;passYear=function(){const r=_pyH.apply(this,arguments);try{if(S&&S.hv&&hvOk())hvTick()}catch(e){console.error(e)}return r}}
+// ---------- 5. บอร์ดโหวตไอเดีย ----------
+async function openIdeas(){modal(`<button class="xbtn" onclick="openReport()">←</button><h3>📊 ไอเดียยอดนิยม</h3><p class="tag2">ไอเดียจากผู้เล่น เรียงตามคะแนนโหวต — กด 👍 ให้อันที่อยากได้ ผู้พัฒนาจะหยิบอันที่คะแนนสูงไปทำก่อน · เสนอไอเดียใหม่ได้ที่แท็บ 💡 อยากให้เพิ่ม</p><div id="idList" class="tag2">${onlineOK?'กำลังโหลด…':'ต้องออนไลน์ก่อน'}</div>`,'ideas');if(!onlineOK)return;
+ try{const j=await api('ideas',{}),el=$('idList');if(!el)return;el.className='';el.innerHTML=(j.m||[]).map((m,i)=>`<div class="item fbi ${m.d?'fixed':''}" style="display:flex;gap:10px;align-items:flex-start"><div style="min-width:44px;text-align:center"><div style="font-size:20px;font-weight:bold">${m.c}</div><div class="tag2">โหวต</div></div><div style="flex:1"><p style="margin:0">${!m.d&&i<3?['🥇','🥈','🥉'][i]+' ':''}${esc(m.x)}</p><p class="tag2" style="margin:2px 0">${esc(m.n)} · ${ago(m.t)}${m.d?' · <span class="fixtag">✅ ทำแล้ว</span>':''}</p>${m.d?'':`<button class="sysb" ${m.mv?'disabled':''} onclick="bugVote('${m.i}',this)">👍 ${m.mv?'โหวตแล้ว':'อยากได้'}</button>`}</div></div>`).join('')||'<p class="tag2">ยังไม่มีไอเดีย</p>'}catch(e){const el=$('idList');if(el)el.textContent='โหลดไม่ได้'}}
+{const _orI=openReport;openReport=async function(){const r=_orI.apply(this,arguments);try{const m=$('modal'),tb=m&&m.querySelector('.fbform .tabs');if(tb&&!tb.querySelector('.idB'))tb.insertAdjacentHTML('beforeend','<button class="tabb idB" onclick="openIdeas()">📊 ไอเดียยอดนิยม</button>')}catch(e){}return r}}
+// ---------- ปุ่มในเมนู ----------
+{const _omW=openMenu;openMenu=function(){const r=_omW.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.wpB')&&S){let h=`<button class="opt wpB" onclick="openRoadmap()">🗺️ เส้นทางชีวิต<small>ตอนนี้อยู่ตรงไหน ต้องทำอะไรต่อ</small></button><button class="opt" onclick="openCal()">⚔️ ภัยประจำสัปดาห์<small>ทุกคนช่วยกัน · มีรางวัล</small></button><button class="opt" onclick="openGraves()">🪦 สุสานจอมยุทธ์<small>คำอำลาของผู้เล่นจริง</small></button>`;
+ if(S.xt)h+=`<button class="opt" onclick="openHeaven()">🏛️ ดูแลแคว้นเบื้องล่าง<small>${S.hv?esc(HV_REG[S.hv.reg]):'รับดูแลแคว้นในยุทธภพ'}</small></button>`;g.insertAdjacentHTML('afterbegin',h)}}catch(e){}return r}}
+try{SYS_GUIDE.push({s:'life',nw:1,ic:'🗺️',t:'เส้นทางชีวิต',go:'openRoadmap',d:'เมนู → 🗺️ ดูว่าตอนนี้อยู่ช่วงไหนของเกม (ยุทธภพ → โลกเซียน → โลกเทพ → ก้าวข้ามสามภพ) และขั้นต่อไปต้องมีอะไรบ้าง'},
+ {s:'life',nw:1,ic:'⚔️',t:'ภัยประจำสัปดาห์',go:'openCal',d:'ทุกสัปดาห์จะมีภัยพิบัติ 1 อย่างที่ผู้เล่นทุกคนช่วยกันสะสมแต้ม (ออกรบ บริจาค ส่งลมปราณ · วันละ 8 ครั้ง) · ครบเป้าแล้วคนที่ช่วยตั้งแต่ 6 แต้มรับรางวัลได้ · มีทำเนียบผู้ช่วยแผ่นดิน'},
+ {s:'life',nw:1,ic:'🪦',t:'สุสานจอมยุทธ์',go:'openGraves',d:'ป้ายหลุมศพและคำอำลาสุดท้ายของผู้เล่นจริง · ไหว้ได้ปีละ 3 ป้าย ได้กรรมดีและความสุข ป้ายของยอดฝีมืออาจให้แรงบันดาลใจ'},
+ {s:'life',nw:1,ic:'🏛️',t:'ดูแลแคว้นเบื้องล่าง',go:'openHeaven',d:'ในโลกเทพ รับดูแลแคว้นหนึ่งในยุทธภพ · ประทานพร ลงทัณฑ์ ส่งนิมิต และตอบคำขอของผู้คน · ศรัทธากับความรุ่งเรืองเพิ่มผู้ศรัทธาในแดนเทพทุกปี ดูแลดี 10 ปีได้ผลงานเลื่อนตำแหน่งเทวสภา · ถ้าแคว้นล่มจะถูกปลด'})}catch(e){}
+
 </script>
 </body>
 </html>
