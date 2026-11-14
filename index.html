@@ -24517,6 +24517,35 @@ function hqLists(){const L=[];if(S&&S.sys&&Array.isArray(S.sys.quests))L.push(..
 {const _mkT=mkQuest;mkQuest=function(k){const q=_mkT.apply(this,arguments);try{if(q&&hiOut()&&HQN[k]&&!bsB())q.n=HQN[k]().replace('{g}',fmt(+q.g));if(q&&xFast())q.hiT=Math.max(2,q.dl-S.age)}catch(e){}return q}}
 {const _pqT=pushQuest;pushQuest=function(q){if(!(S&&xFast()))return _pqT.apply(this,arguments);const o=sysLog;sysLog=function(t){return o.call(this,String(t).replace(/ภายใน (\d+) ปี/,'ภายใน $1 รอบเวลา'))};try{return _pqT.apply(this,arguments)}finally{sysLog=o}}}
 {const _qlT=questList;questList=function(){const L=_qlT.apply(this,arguments);try{if(S&&xFast())L.forEach(x=>{if(x&&/^(sq|nq)\d/.test(x.k)&&typeof x.p==='string')x.p=x.p.replace(/เหลือ (\d+) ปี/,'เหลือ $1 รอบเวลา')})}catch(e){}return L}}
+
+// ===================== 🎬 คลิปสาธิตการใช้หน้าต่างๆ (เล่นเอง วนต่อเนื่อง ไม่ต้องกดเล่น) =====================
+const DV={speed:['demo/speed.mp4','เลือกความเร็วของชีวิต และโลกที่จะไปเกิด'],mode:['demo/mode.mp4','เลือกโหมดการเล่น (ปกติ · นรก · ชีวิตสั้น · รากขยะ · ผู้ย้อนกาล)'],
+ slot:['demo/slot.mp4','ปุ่ม ⋯ ของช่องเซฟ: เล่นต่อ ตั้งป้าย ย้ายเข้าคลังสำรอง ลบ'],birth:['demo/birth.mp4','กดปุ่ม เล่นต่อ / เกิดใหม่ — เลือกช่อง หรือเกิดแบบเร็วด้วยโหมดต่างๆ'],
+ nav:['demo/nav.mp4','แถบปุ่มด้านล่างหน้าแรก: ชะตาวันนี้ · สมุดตำนาน · ลาน · ออนไลน์ · เมนู'],home:['demo/home.mp4','จากหน้าแรกเปิดเมนู'],
+ menuh:['demo/menuh.mp4','เมนูหน้าแรก: แตะหมวดเพื่อพับ/กาง ค้นหาเมนูได้'],menug:['demo/menug.mp4','เมนูในเกม: ทุกอย่างอยู่ในหมวด เลื่อนหาหรือค้นหา']};
+function dvShow(keys){keys=[].concat(keys).filter(k=>DV[k]);if(!keys.length)return;dvClose();let i=0;
+ const o=document.createElement('div');o.id='dvOv';o.innerHTML=`<div class="dvBox"><div class="dvCap"></div><video autoplay muted playsinline preload="auto" ${keys.length>1?'':'loop'}></video><div class="dvDots">${keys.length>1?keys.map((_,j)=>`<i data-j="${j}"></i>`).join(''):''}</div><button class="dvX" onclick="dvClose()">ปิด ✕</button></div>`;
+ document.body.appendChild(o);const v=o.querySelector('video'),cap=o.querySelector('.dvCap');
+ const go=j=>{i=(j+keys.length)%keys.length;const d=DV[keys[i]];v.src=d[0];v.poster=d[0].replace('.mp4','.jpg');cap.textContent='🎬 '+d[1];o.querySelectorAll('.dvDots i').forEach((x,k)=>x.classList.toggle('on',k===i));const p=v.play();if(p&&p.catch)p.catch(()=>{})};
+ v.addEventListener('ended',()=>go(i+1));o.querySelectorAll('.dvDots i').forEach(x=>x.onclick=e=>{e.stopPropagation();go(+x.dataset.j)});
+ o.addEventListener('click',e=>{if(e.target===o)dvClose()});go(0)}
+function dvClose(){const o=$('dvOv');if(o){const v=o.querySelector('video');try{v.pause();v.removeAttribute('src');v.load()}catch(e){}o.remove()}}
+const dvChip=(k,t)=>`<button type="button" class="dvChip" data-dv="${k}" onclick="event.stopPropagation();event.preventDefault();dvShow('${k}'.split(','))">🎬 ${t||'ดูวิธีใช้'}</button>`;
+function dvScan(){try{const T=$('title');if(T&&T.classList.contains('on')){
+  T.querySelectorAll('.lb').forEach(l=>{if(l.querySelector('.dvChip'))return;const s=l.textContent;if(/ความเร็วของชีวิต/.test(s))l.insertAdjacentHTML('beforeend',dvChip('speed'));else if(/โหมดการเล่น/.test(s))l.insertAdjacentHTML('beforeend',dvChip('mode'))});
+  if(!T.querySelector('[data-dv="slot"]')){const h=[...T.querySelectorAll('*')].find(e=>e.children.length<=3&&/^\s*💾?\s*ช่องเซฟ\s*\d/.test(e.textContent||'')&&(e.textContent||'').length<40);if(h)h.insertAdjacentHTML('beforeend',dvChip('slot'))}
+  const bx=T.querySelector('.box.opts');if(bx&&!T.querySelector('.dvRow'))bx.insertAdjacentHTML('afterend',`<div class="dvRow">${dvChip('nav,home','ปุ่มด้านล่าง')}${dvChip('birth','เล่นต่อ / เกิดใหม่')}${dvChip('menuh','เมนูหน้าแรก')}</div>`)}
+ const m=$('modal');if(m&&modalOpen){const h=m.querySelector('h3');if(h&&/^☰\s*เมนู/.test(h.textContent||'')&&!h.querySelector('.dvChip')){const land=T&&T.classList.contains('on');h.insertAdjacentHTML('beforeend',dvChip(land?'menuh':'menug','ดูวิธีใช้เมนู'))}}}catch(e){}}
+setInterval(dvScan,700);
+(()=>{const st=document.createElement('style');st.textContent=`.dvChip{display:inline-flex;align-items:center;gap:3px;margin-left:6px;padding:2px 9px;border-radius:999px;border:1px solid var(--gold,#d4a94a);background:rgba(212,169,74,.12);color:var(--gold,#e8c06a);font:inherit;font-size:11px;font-weight:700;line-height:18px;cursor:pointer;vertical-align:middle}
+.dvChip:active{transform:scale(.96)}h3 .dvChip{font-size:11px}
+.dvRow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0 2px}.dvRow .dvChip{margin:0}
+#dvOv{position:fixed;inset:0;z-index:100000;background:rgba(5,4,12,.82);display:flex;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(3px)}
+#dvOv .dvBox{width:min(360px,94vw);display:flex;flex-direction:column;align-items:center;gap:8px}
+#dvOv .dvCap{color:#f3e2b5;font-size:13px;font-weight:700;text-align:center;line-height:1.35}
+#dvOv video{width:100%;max-height:72vh;object-fit:contain;border-radius:14px;border:2px solid #d4a94a;background:#000;box-shadow:0 0 24px rgba(212,169,74,.35)}
+#dvOv .dvDots{display:flex;gap:6px}#dvOv .dvDots i{width:9px;height:9px;border-radius:50%;background:#555;cursor:pointer}#dvOv .dvDots i.on{background:#e8c06a}
+#dvOv .dvX{padding:7px 22px;border-radius:999px;border:1px solid #d4a94a;background:#1c1830;color:#f3e2b5;font:inherit;font-weight:700}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>
