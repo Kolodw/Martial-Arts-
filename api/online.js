@@ -1876,6 +1876,16 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       await pipe([['LPUSH', key, mine], ['LTRIM', key, 0, 39]]);
       return res.json(got ? { k: got.k, n: got.n } : { empty: 1 });
     }
+    if (a === 'kwall') {
+      if (!okId(id)) return res.json({ err: 'id' });
+      const k = Math.max(1, Math.min(8, Math.floor(+b.k || 0))), key = 'kw:' + k;
+      if (await cmd('SISMEMBER', 'cheaters', id)) return res.json({ l: [] });
+      let first = 0;
+      if (await cmd('HSETNX', 'kwid:' + k, id, now)) { const n = noAdm(clean(b.n, 20)) || 'นิรนาม'; await cmd('ZADD', key, now, JSON.stringify({ n, u: id.slice(0, 6), t: now })); if ((+(await cmd('ZCARD', key)) || 0) === 1) first = 1 }
+      const L = ((await cmd('ZRANGE', key, 0, 19)) || []).map(jp).filter(Boolean), mt = +(await cmd('HGET', 'kwid:' + k, id)) || now;
+      const rank = (+(await cmd('ZCOUNT', key, '-inf', mt)) || L.length);
+      return res.json({ l: L.map(x => ({ n: x.n, t: x.t })), first, rank });
+    }
     // ---- ภัยพิบัติประจำสัปดาห์: ผู้เล่นทุกคนช่วยกันสะสมแต้ม ----
     const CAL_N = 5, calIdx = w => { let h = 7; for (const c of String(w)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h % CAL_N };
     const calGoal = async () => { let g = +(await cmd('GET', 'calg2:' + W)) || 0; if (!g) { const pw = week(new Date(now - 7 * 86400e3)), pt = +(await cmd('GET', 'calt:' + pw)) || 0; g = Math.max(120, Math.min(30000, Math.round((pt ? pt * 0.9 : 150) / 10) * 10)); await cmd('SET', 'calg2:' + W, g, 'NX', 'EX', 86400 * 30); g = +(await cmd('GET', 'calg2:' + W)) || g } return g };
