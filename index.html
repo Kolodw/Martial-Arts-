@@ -22355,6 +22355,129 @@ try{const _bt={mer:'วางแผน',dja:'พบ',dje:'จัดการ',dj
 {const _cpJ2=ctPage;ctPage=function(p,B){return String(_cpJ2.apply(this,arguments)).replace('หมอ · มือปราบ — สมัครที่นี่','หมอ · มือปราบ · พ่อค้า · โรงฝึก · บัณฑิต')}}
 try{const g=SYS_GUIDE.find(x=>x.t==='อาชีพ');if(g)g.d+=' · <b>🐫 พ่อค้า</b>: ปีละเที่ยว เลือกสินค้า ปลายทาง ขนาดกอง และการคุ้มกัน · <b>🥋 เจ้าโรงฝึก</b>: รับศิษย์ ตั้งวิธีสอน รักษาความสุขศิษย์ ศิษย์จบได้ชื่อเสียง · <b>📜 บัณฑิต</b>: อ่านหนังสือสะสมแต้ม สอบทุก 3 ปี ตอบคำถามบ้านเมือง 3 ข้อ'}catch(e){}
 
+
+// ===================== v17.9 ระบบสอนใหม่: ครูผู้เฒ่า · สอนตอนเจอครั้งแรก · ให้ลองกดจริง · บทเรียนย้อนดูได้ =====================
+(()=>{const st=document.createElement('style');st.textContent=`
+#coach{position:fixed;inset:0;z-index:1001;pointer-events:none}
+#coach .cblk{position:fixed;background:transparent;pointer-events:auto}
+#coach .chole{position:fixed;border-radius:12px;border:2px solid #ffd040;box-shadow:0 0 0 9999px rgba(10,8,20,.72),0 0 18px #ffd040aa;transition:left .35s ease,top .35s ease,width .35s ease,height .35s ease,opacity .25s;pointer-events:none}
+#coach .chole.pulse{animation:chpulse 1.4s ease-in-out infinite}
+@keyframes chpulse{0%,100%{box-shadow:0 0 0 9999px rgba(10,8,20,.72),0 0 10px #ffd04088}50%{box-shadow:0 0 0 9999px rgba(10,8,20,.72),0 0 26px #ffd040}}
+#coach .chand{position:fixed;font-size:34px;pointer-events:none;animation:chtap 1s ease-in-out infinite;filter:drop-shadow(0 2px 3px #000a);transition:left .35s,top .35s}
+@keyframes chtap{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+#coach .cbox{position:fixed;left:10px;right:10px;max-width:440px;margin:0 auto;display:flex;gap:10px;align-items:flex-end;pointer-events:auto;animation:popin .3s;transition:top .35s,bottom .35s}
+#coach .cgd{flex:0 0 64px;height:64px;image-rendering:pixelated;filter:drop-shadow(0 3px 4px #0009);animation:chbob 2.4s ease-in-out infinite}
+@keyframes chbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+#coach .cbub{flex:1;position:relative;background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:14px;padding:10px 12px;box-shadow:0 6px 24px #0008;font-size:14px;line-height:1.5}
+#coach .cbub:before{content:'';position:absolute;left:-9px;bottom:16px;border:8px solid transparent;border-right-color:var(--line);border-left:0}
+#coach .cbub b.ct{display:block;font-size:15px;margin-bottom:2px}
+#coach .cnav{display:flex;gap:8px;margin-top:8px;align-items:center}
+#coach .cdots{flex:1;font-size:11px;opacity:.6;letter-spacing:2px}
+#coach .ctry{color:#e8a020;font-weight:bold;font-size:13px}
+@media (prefers-reduced-motion:reduce){#coach .chand,#coach .cgd,#coach .chole.pulse{animation:none}}`;document.head.appendChild(st)})();
+// ---- ครูผู้เฒ่า (ภาพพิกเซลวาดเอง) ----
+const CG_PX=['....KKKKKKKK....','...KHHHHHHHHK...','..KHHHHHHHHHHK..','.KKKKKKKKKKKKKK.','...KWWSSSSWWK...','...KWSESSESWK...','...KWSSSSSSWK...','...KWWSNNSWWK...','...KWWWWWWWWK...','..KRWWWWWWWWRK..','.KRRRWWWWWWRRRK.','.KRRRRWWWWRRRRK.','.KRRRRRBBRRRRRK.','.KSRRRRRRRRRRSK.','..KRRRRRRRRRRK..','..KKKKK..KKKKK..'];
+function cgDraw(cv){try{const w=typeof ECO_W==='function'&&S?ECO_W():'m',robe={m:'#7a5a3a',x:'#6a9ac8',g:'#d8a830'}[w],hat={m:'#2a2a3a',x:'#3a4a6a',g:'#8a3a2a'}[w],C={K:'#1a1420',H:hat,W:'#f2f2f2',S:'#f0c8a0',E:'#1a1420',N:'#d89a7a',R:robe,B:'#e8c86a'};
+ const g2=cv.getContext('2d');g2.clearRect(0,0,16,16);CG_PX.forEach((row,y)=>[...row].forEach((ch,x)=>{if(C[ch]){g2.fillStyle=C[ch];g2.fillRect(x,y,1,1)}}))}catch(e){}}
+// ---- บทเรียน ----
+const W15s=()=>{try{return W15()}catch(e){return 1}};
+const LESSON={
+ start:{t:'เริ่มต้นชีวิต',s:[
+  {sel:'.box.top',t:'นี่คือตัวคุณ',d:'อายุ ขั้นพลัง และพลังชีวิตอยู่ตรงนี้ · แตะแถบนี้เมื่อไหร่ก็ได้เพื่อดูรายละเอียดทั้งหมด'},
+  {sel:'#feed',t:'เรื่องราวชีวิต',d:'ทุกปีจะมีเหตุการณ์ขึ้นที่นี่ บางเรื่องให้คุณ<b>เลือกทางเอง</b> — เกมจะหยุดรอเสมอ ไม่เลือกแทน'},
+  {sel:'#focus',t:'ปีนี้จะทำอะไร',d:'เลือกว่าแต่ละปีจะเน้นฝึกยุทธ์ ฝึกลมปราณ หรือเรื่องอื่น · โตขึ้นจะมีปุ่มพิเศษเพิ่มที่แถบนี้'},
+  {sel:'#spdBtn',t:'เร่งเวลา',d:'กดเพื่อเปลี่ยนความเร็ว · ปุ่ม ⏸ ข้างๆ หยุดเวลาได้ทุกเมื่อ'},
+  {sel:'#menuBtn',t:'ลองกดเมนู',d:'สำนัก ตลาด เมือง ครอบครัว อาชีพ — ทุกอย่างอยู่ในเมนู',act:1},
+  {sel:'#modal .mgrid',t:'ทุกอย่างอยู่ที่นี่',d:'ไม่ต้องจำทั้งหมดตอนนี้ — <b>เจอระบบไหนครั้งแรก ข้าจะมาสอนตอนนั้นเอง</b> · อยากทบทวน กด ❓ วิธีเล่น ในเมนู',end:()=>{try{closeM()}catch(e){}}}]},
+ choice:{t:'การเลือกทางชีวิต',s:[
+  {sel:'#modal .opt',t:'เลือกทางชีวิต',d:'แต่ละปุ่มคือทางเลือก ตัวเล็กใต้ปุ่มบอกผลคร่าวๆ · เกมหยุดรอจนคุณกดเลือกเอง'},
+  {sel:'#modal .ciB',t:'ℹ️ ไม่แน่ใจ? ดูรายละเอียด',d:'บอกว่าคนในเรื่องเป็นใคร เก่งกว่าคุณไหม อยู่สำนักไหน และตัวเลือกไหนเสี่ยง'},
+  {sel:'#modal .clB',t:'🔒 ล็อกตัวเลือก',d:'เปิดไว้แล้วจะไม่มีการสุ่มเลือกแทนเลย แม้จะตั้ง "ชะตาตัดสินแทน" ไว้'},
+  {sel:'#modal .chtop > button.minb',t:'▾ ย่อไว้ก่อน',d:'อยากไปดูกระเป๋าหรือเมนูก่อนตัดสินใจ ก็ย่อเก็บไว้ได้ — กลับมาเลือกทีหลัง'}]},
+ town:{t:'เมือง',rw:100,s:[
+  {sel:'#modal .item',t:'แต่ละเมืองไม่เหมือนกัน',d:'บรรทัดแรกคือ<b>นิสัยเมือง</b> (เช่น เมืองหมอยา สมุนไพรถูก) · ทำภารกิจหรือบริจาคให้เมืองจะได้<b>ชื่อเสียงในเมือง</b> แล้วร้านจะลดราคาให้'},
+  {sel:'#modal .tabs',t:'เมืองแบ่งเป็น 4 ย่าน',d:'แตะย่านไหนก็ได้เพื่อดูสถานที่ในย่านนั้น',act:1},
+  {sel:'#modal .mgrid',t:'สถานที่ในย่าน',d:'การค้า = ร้านและประมูล · ช่าง = ซื้อขายวัตถุดิบ · ชาวเมือง = โรงเตี๊ยม ภารกิจ อาชีพ · ขุนนาง = ธนาคาร บริจาค อาคารพิเศษของแต่ละโลก'}]},
+ job0:{t:'อาชีพ',s:[{sel:'#modal .item',t:'เลือกอาชีพ',d:'ทำได้ทีละ 1 อาชีพ · ทุกปีจะมีงานเข้ามาและแจ้งในเรื่องราว · งานรอได้ 2 ปี และ<b>ระบบไม่เลือกแทนคุณ</b> · ปุ่มเทาคือยังไม่ผ่านเงื่อนไข'}]},
+ job1:{t:'งานแรกของอาชีพ',rw:150,s:[{sel:'#modal button.pbtn[onclick^="jOpen("]',t:'งานแรกมาแล้ว',d:'แตะเพื่อเปิดงาน',act:1},{sel:'#modal h3',t:'อ่านแล้วตัดสินใจ',d:'ทุกปุ่มมีตัวเล็กบอกผลหรือสิ่งที่ต้องใช้ · ถ้าไม่แน่ใจ มักมีปุ่มที่ปลอดภัย (ส่งต่อ / ปฏิเสธ / ข้าม)'}]},
+ family:{t:'ครอบครัว',s:[{sel:'#modal .ftB',t:'💞 ใช้เวลากับครอบครัว',d:'คุยกับคู่ชีวิต คนในตำหนักใน และลูกได้ปีละครั้งต่อคน · แตะดูสิ',act:1},{sel:'#modal .item',t:'ปุ่มเปลี่ยนตามวัย',d:'ลูกเล็กเล่นด้วย · ลูกโตสอนหนังสือ/สอนวิชา — <b>ลูกที่คุณสอนจะเก่งขึ้นตอนได้เป็นทายาท</b>'}]},
+ bag:{t:'กระเป๋า',s:[{sel:'#modal',t:'กระเป๋า',d:'ยาบางอย่างใช้เองอัตโนมัติตอนจำเป็น (เช่น ยาสมานแผลตอนบาดเจ็บ) · วัตถุดิบเอาไปคราฟ หรือขายที่เมือง → ย่านช่าง'}]},
+ xian:{t:'โลกเซียน',s:[{t:'ยินดีต้อนรับสู่โลกเซียน',d:'เงินเปลี่ยนเป็น<b>หินวิญญาณ</b> ทุกอย่างแพงขึ้นแต่ได้มากขึ้น · ในเมืองมีอาคารใหม่: ตลาดลอยฟ้า หอโอสถ เช่าถ้ำบำเพ็ญ ตลาดนิกาย · อาชีพยังอยู่ แต่เปลี่ยนชื่อตามโลก'}]},
+ god:{t:'แดนเทพ',s:[{t:'ยินดีต้อนรับสู่แดนเทพ',d:'สิ่งสำคัญคือ<b>พลังศรัทธา</b>และ<b>ผลงานในสภาเทพ</b> · ในเมืองมีตลาดดวงดาว (ใช้ศรัทธาแลกของ) หอสมุดสวรรค์ และสภาเทพ'}]},
+ cloud:{t:'เซฟคลาวด์',s:[{t:'อย่าให้เซฟหาย',d:'เชื่อมบัญชี Google ไว้ เปลี่ยนเครื่องหรือล้างเบราว์เซอร์ก็ดึงความคืบหน้ากลับมาได้ (เกมไม่เห็นรหัสผ่าน)',btn:['🔐 เปิดหน้าโปรไฟล์','openProfile()']}]}};
+// ---- เครื่องยนต์ ----
+const CO={id:null,i:0,was:false,clk:null,tw:null};
+const coSeen=id=>!!(LS.get('murim_coach',{})||{})[id];
+function coMark(id){const d=LS.get('murim_coach',{})||{};d[id]=1;LS.set('murim_coach',d)}
+function coVis(el){if(!el)return false;const r=el.getBoundingClientRect();return r.width>0&&r.height>0&&getComputedStyle(el).visibility!=='hidden'}
+function coCan(){return S&&S.alive&&!CO.id&&!(typeof tutI!=='undefined'&&tutI>=0)&&!auto&&!document.getElementById('awayBar')}
+function coStart(id,force){const L=LESSON[id];if(!L)return;if(!force&&(coSeen(id)||!coCan()))return;if(CO.id)coEnd(true);CO.id=id;CO.i=0;CO.was=paused;paused=true;coMark(id);
+ let o=document.getElementById('coach');if(!o){o=document.createElement('div');o.id='coach';document.body.appendChild(o)}
+ o.innerHTML='<div class="cblk"></div><div class="cblk"></div><div class="cblk"></div><div class="cblk"></div><div class="chole" style="left:50%;top:50%;width:0;height:0"></div><div class="chand" style="display:none">👆</div><div class="cbox"><canvas class="cgd" width="16" height="16"></canvas><div class="cbub"></div></div>';cgDraw(o.querySelector('.cgd'));coStep(0)}
+function coWait(sel,cb,n){const el=sel?[...document.querySelectorAll(sel)].find(coVis):null;if(!sel||el)return cb(el);if((n||0)>12)return cb(null);setTimeout(()=>coWait(sel,cb,(n||0)+1),200)}
+function coType(el,html){clearInterval(CO.tw);if(matchMedia('(prefers-reduced-motion: reduce)').matches){el.innerHTML=html;return}let i=0;const step=()=>{if(i>=html.length){clearInterval(CO.tw);el.innerHTML=html;return}if(html[i]==='<'){const j=html.indexOf('>',i);i=j<0?html.length:j+1}else i+=2;el.innerHTML=html.slice(0,i)};CO.tw=setInterval(step,16);el.parentNode.onclick=e=>{if(e.target.tagName!=='BUTTON'){clearInterval(CO.tw);el.innerHTML=html}}}
+function coStep(i){const L=LESSON[CO.id];if(!L)return;if(i>=L.s.length)return coEnd();CO.i=i;const s=L.s[i];
+ coWait(s.sel,el=>{if(!CO.id||CO.i!==i)return;if(s.sel&&!el){if(s.act)return coEnd();return coStep(i+1)}
+  const o=document.getElementById('coach');if(!o)return;const hole=o.querySelector('.chole'),hand=o.querySelector('.chand'),box=o.querySelector('.cbox'),bub=o.querySelector('.cbub'),B=[...o.querySelectorAll('.cblk')],vw=innerWidth,vh=innerHeight;
+  let r;if(el){try{el.scrollIntoView({block:'nearest'})}catch(e){}r=el.getBoundingClientRect();const p=6;r={l:Math.max(2,r.left-p),t:Math.max(2,r.top-p),w:Math.min(vw-4,r.width+p*2),h:Math.min(vh-4,r.height+p*2)}}else r={l:vw/2,t:vh/2,w:0,h:0};
+  Object.assign(hole.style,{left:r.l+'px',top:r.t+'px',width:r.w+'px',height:r.h+'px',opacity:el?1:0});hole.classList.toggle('pulse',!!s.act);
+  // บังทุกที่ ยกเว้นช่องที่ให้กดจริง
+  const R=s.act?[[0,0,vw,r.t],[0,r.t+r.h,vw,vh-r.t-r.h],[0,r.t,r.l,r.h],[r.l+r.w,r.t,vw-r.l-r.w,r.h]]:[[0,0,vw,vh],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+  B.forEach((b,k)=>Object.assign(b.style,{left:R[k][0]+'px',top:R[k][1]+'px',width:Math.max(0,R[k][2])+'px',height:Math.max(0,R[k][3])+'px'}));
+  hand.style.display=s.act&&el?'':'none';if(s.act&&el){hand.style.left=(r.l+r.w/2-14)+'px';hand.style.top=Math.min(vh-50,r.t+r.h-6)+'px'}
+  const below=!el||r.t+r.h/2<vh/2;box.style.top=box.style.bottom='';if(!el){box.style.top=Math.round(vh*.32)+'px'}else if(below)box.style.top=Math.min(vh-190,r.t+r.h+(s.act?44:12))+'px';else box.style.bottom=Math.min(vh-190,vh-r.t+12)+'px';
+  const last=i===L.s.length-1,dots=L.s.map((x,k)=>k===i?'●':'○').join('');
+  bub.innerHTML=`<b class="ct">${s.t}</b><div class="ctx"></div><div class="cnav"><span class="cdots">${dots}</span><button class="gbtn" onclick="coEnd()">ข้าม</button>${s.btn?`<button class="pbtn" onclick="coEnd();${s.btn[1]}">${s.btn[0]}</button>`:''}${s.act?'<span class="ctry">👆 แตะที่ไฟส่อง</span>':`<button class="pbtn" onclick="coNext()">${last?'เข้าใจแล้ว!':'ถัดไป ▶'}</button>`}</div>`;
+  coType(bub.querySelector('.ctx'),s.d);
+  document.removeEventListener('click',CO.clk,true);if(s.act&&el){CO.clk=e=>{if(el.contains(e.target)){document.removeEventListener('click',CO.clk,true);setTimeout(()=>coNext(),450)}};document.addEventListener('click',CO.clk,true)}})}
+function coNext(){const L=LESSON[CO.id];if(!L)return;const s=L.s[CO.i];if(s&&s.end)try{s.end()}catch(e){}coStep(CO.i+1)}
+function coEnd(silent){const id=CO.id,L=LESSON[id];document.removeEventListener('click',CO.clk,true);clearInterval(CO.tw);const o=document.getElementById('coach');if(o)o.remove();CO.id=null;if(typeof paused!=='undefined')paused=CO.was;
+ if(!silent&&L&&L.rw&&S&&S.alive){const d=LS.get('murim_coachrw',{})||{};if(!d[id]){d[id]=1;LS.set('murim_coachrw',d);const g=Math.round(L.rw*W15s());S.money+=g;log(`🎓 เรียนจบบท「${L.t}」 — ครูผู้เฒ่าให้ค่าขนม ${typeof ftMf==='function'?ftMf(g):fmt(g)}`,'good')}}try{render()}catch(e){}}
+// ---- หน้าบทเรียน (แทน "วิธีเล่น") ----
+function openLessons(){const L=Object.entries(LESSON);modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎓 บทเรียน</h3><p class="tag2">ครูผู้เฒ่าจะมาสอนเองเมื่อคุณเจอระบบนั้นครั้งแรก · บทที่เรียนแล้วกดดูซ้ำได้ (บทที่ต้องเปิดหน้านั้นอยู่ ให้เปิดหน้านั้นก่อน)</p>
+ ${L.map(([id,x])=>`<div class="item"><div class="h"><b>${coSeen(id)?'✅':'⬜'} ${x.t}</b><button class="sysb" onclick="coReplay('${id}')">ดู</button></div></div>`).join('')}
+ <button class="gbtn" style="width:100%;margin-top:8px" onclick="closeM();coFull()">🧭 ทัวร์ปุ่มทั้งหมด (ฉบับเต็ม)</button>`,'lessons')}
+function coReplay(id){closeM();const need={choice:'choice',town:'town',job0:'job',job1:'job',family:'family',bag:null}[id];
+ if(id==='town'){openTown();return setTimeout(()=>coStart('town',1),350)}if(id==='family'){openFamily();return setTimeout(()=>coStart('family',1),350)}if(id==='job0'||id==='job1'){openJob();return setTimeout(()=>coStart(id,1),350)}if(id==='bag'){openBag();return setTimeout(()=>coStart('bag',1),350)}
+ if(id==='choice')return toast('บทนี้จะขึ้นตอนมีตัวเลือก — กด ℹ️ ในกล่องตัวเลือกได้เลย');setTimeout(()=>coStart(id,1),200)}
+const _coFullTut=startTut;function coFull(){_coFullTut()}
+startTut=function(){if(!LS.get('murim_tut',0)){LS.set('murim_tut',1);let n=0;const w=()=>{if((modalOpen||choice._cur||document.querySelector('.kfx'))&&n++<30)return setTimeout(w,600);coStart('start')};return setTimeout(w,400)}openLessons()};
+// ---- ตัวกระตุ้น: สอนตอนเจอครั้งแรก ----
+{const _csC=choiceShow;choiceShow=function(){const r=_csC.apply(this,arguments);try{if(!coSeen('choice')&&S&&S.age>=3&&$('modal').dataset.k==='choice'&&coCan())setTimeout(()=>{if($('modal').dataset.k==='choice'&&choice._cur)coStart('choice')},500)}catch(e){}return r}}
+{const _otC=openTown;openTown=function(){const r=_otC.apply(this,arguments);try{if(!coSeen('town')&&$('modal').dataset.k==='town'&&$('modal').querySelector('.tabs'))setTimeout(()=>coStart('town'),400)}catch(e){}return r}}
+{const _ojC=openJob;openJob=function(){const r=_ojC.apply(this,arguments);try{const J=typeof jInit==='function'&&S?jInit():null;if(!J&&!coSeen('job0'))setTimeout(()=>coStart('job0'),400);else if(J&&J.q.length&&!coSeen('job1'))setTimeout(()=>coStart('job1'),400)}catch(e){}return r}}
+{const _ofC=openFamily;openFamily=function(){const r=_ofC.apply(this,arguments);try{if(!coSeen('family')&&$('modal').querySelector('.ftB'))setTimeout(()=>coStart('family'),400)}catch(e){}return r}}
+{const _obC=openBag;openBag=function(){const r=_obC.apply(this,arguments);try{if(!coSeen('bag'))setTimeout(()=>coStart('bag'),400)}catch(e){}return r}}
+{const _pyC=passYear;passYear=function(){const r=_pyC.apply(this,arguments);try{if(S&&S.alive&&!modalOpen&&!choice._cur&&coCan()){if(S.xt&&!coSeen('god'))setTimeout(()=>coStart('god'),300);else if(S.xian&&!S.xt&&!coSeen('xian'))setTimeout(()=>coStart('xian'),300);
+ else if(S.age>=25&&!coSeen('cloud')&&typeof onlineOK!=='undefined'&&onlineOK&&!(typeof PFST!=='undefined'&&PFST&&PFST.g)&&Math.random()<.2)setTimeout(()=>coStart('cloud'),300)}}catch(e){}return r}}
+// ผู้เล่นเก่า: ไม่ต้องดูบทเริ่มต้นซ้ำ
+try{if(LS.get('murim_tut',0)&&!coSeen('start'))coMark('start')}catch(e){}
+
+
+// ===================== v17.9 กลับจากยุคปัจจุบันสู่โลกเดิม (ยุทธภพ / โลกเซียน / แดนเทพ) =====================
+function mwBackOK(){const M=S&&S.mw;return !!(M&&S.alive&&!M.native&&(M.old||M.past))}
+function mwBackInfo(){const M=S.mw,O=M.old||{},P=M.past||{},xian=P.xian!=null?!!P.xian:O.world&&O.world!=='ยุทธภพ',xt=P.xt!=null?!!P.xt:O.world==='แดนเทพ';
+ return{M,O,P,xian,xt,world:xt?'แดนเทพ':xian?'โลกเซียน':'ยุทธภพ',age:M.real0||O.age||P.age||S.age,pow:P.pow0||O.pow||0,money:M.mon0!=null?M.mon0:O.money,sect:O.sect||''}}
+function openMwBack(){if(!mwBackOK())return toast('ไม่มีโลกเดิมให้กลับ — ชีวิตนี้เกิดในยุคปัจจุบัน');const I=mwBackInfo();
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌀 กลับสู่${I.world}</h3><p>รอยแยกเปิดขึ้นอีกครั้ง — ผ่านมันไป คุณจะกลับไปยืนอยู่ที่${I.world} ณ วันที่คุณจากมา</p>
+ <div class="item"><b>สิ่งที่ได้คืน</b><ul style="margin:4px 0;padding-left:18px" class="tag2"><li>โลก: <b>${I.world}</b>${I.O.realm?' · ขั้น '+esc(I.O.realm):''}</li><li>อายุกลับเป็น ${fmt(I.age)} ปี (เวลาในยุคปัจจุบันไม่นับ)</li><li>พลังรวมกลับเป็นราว ${fmt(I.pow)}${I.O.qi!=null?' · ลมปราณ '+fmt(I.O.qi):''}</li><li>เงิน ${I.money!=null?fmt(I.money):'เดิม'}</li><li>วิชา ครอบครัว ลูก กระเป๋า ความสำเร็จ อยู่ครบ</li>${I.sect?`<li>สำนัก: ${esc(I.sect)}${FACTIONS.some(f=>f.n0===I.sect||f.n===I.sect||XN[f.n0]===I.sect)?' — กลับเข้าสำนักเดิม':' — ⚠️ สำนักที่ตั้งเองต้องสร้างใหม่ (ชื่อเสียงยังอยู่)'}</li>`:''}</ul></div>
+ <p class="tag2">ความทรงจำในยุคปัจจุบันยังอยู่ในบันทึกชีวิต · กลับแล้วจะเข้ายุคปัจจุบันอีกไม่ได้จนกว่าระบบจะเปิดอีกครั้ง</p>
+ <div class="brow"><button class="gbtn" onclick="closeM()">อยู่ต่อ</button><button class="pbtn" onclick="mwBack()">🌀 กลับเลย</button></div>`,'mwback')}
+function mwBack(){if(!mwBackOK())return;const I=mwBackInfo(),M=I.M,yrs=M.y|0;
+ try{if(choice._cur){choice._cur=null;choice._min=false;try{pendBar()}catch(e){}}choice._q=[]}catch(e){}
+ S.mw=null;S.xian=I.xian;S.xt=I.xt?1:0;CFG.xian=I.xian?1:0;try{setWorld(!!I.xian)}catch(e){}
+ S.age=Math.max(1,Math.round(I.age));if(I.money!=null)S.money=Math.max(0,Math.round(I.money));if(I.O.qi!=null)S.qi=Math.max(S.qi||0,I.O.qi);
+ try{if(I.pow){const d=I.pow-total();if(d>0)S.power=Math.max(5,Math.round(S.power+d))}}catch(e){}
+ if(I.sect){const f=FACTIONS.find(f=>f.n===I.sect||f.n0===I.sect||XN[f.n0]===I.sect);if(f)S.faction=f}
+ S.focus='train';S.mwTest=0;S.wev2=null;S.wPend=null;S.flags=S.flags||{};S.flags.mwBack=1;S.mwBackN=(S.mwBackN||0)+1;
+ try{if(S.rcap!=null)S.rcap=Math.max(S.rcap,realmIdx())}catch(e){}
+ try{keyAdd(`กลับจากยุคปัจจุบันสู่${I.world}หลังใช้ชีวิตที่นั่น ${yrs} ปี`)}catch(e){}
+ closeM();log(`🌀 <b>รอยแยกเปิดอีกครั้ง</b> — คุณก้าวกลับสู่${I.world} ลมบนยอดเขายังพัดเหมือนวันที่จากไป ราวกับเวลาที่นี่ไม่เคยเดิน${yrs?` (คุณใช้ชีวิตในยุคปัจจุบันมา ${yrs} ปี)`:''}`,'myth',true);
+ try{render()}catch(e){}try{saveGame()}catch(e){}}
+{const _omB=openMenu;openMenu=function(){const r=_omB.apply(this,arguments);try{if(mwBackOK()){const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.mwBackB')){const I=mwBackInfo();g.insertAdjacentHTML('afterbegin',`<button class="opt mwBackB" onclick="openMwBack()" style="background:var(--tb4)">🌀 กลับสู่${I.world}<small>กลับโลกเดิม ข้อมูลอยู่ครบ</small></button>`)}}}catch(e){console.error(e)}return r}}
+// แจ้งครั้งเดียวสำหรับคนที่ติดอยู่ในยุคปัจจุบัน
+setTimeout(function mwBackNote(){try{if(mwBackOK()&&!S.mwBackTold){S.mwBackTold=1;log(`🌀 ยุคปัจจุบันปิดปรับปรุงชั่วคราว — ถ้าไม่ได้ตั้งใจมา กลับสู่${mwBackInfo().world}ได้ที่ ☰ เมนู → 🌀 กลับสู่${mwBackInfo().world}`,'epic')}}catch(e){}setTimeout(mwBackNote,15000)},4000);
+
 </script>
 </body>
 </html>
