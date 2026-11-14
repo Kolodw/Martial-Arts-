@@ -1727,7 +1727,7 @@ function checkDeath(){
  else if(S.age>=lifeMax())cause=S.ch==='short'&&S.age<=30&&lifeMax0()>30?'ชะตาสามสิบปีมาถึงที่สุด ลมหายใจสุดท้ายหลุดลอยไปตามคำสาป':'จากไปอย่างสงบด้วยวัยชรา'+(S.kids?' ท่ามกลางลูกหลาน':'');
  if(!cause)return false;
  try{if(ndSys(cause))return false}catch(e){console.error(e)}
- if(S.sys&&S.sys.revive>0&&!S.flags.ascended&&!S.flags.eternal&&!(S.ch==='short'&&S.age>=30)){S.sys.revive--;S.hp=S.maxHp;S.deathCause=null;S.chronic=null;if(/วัยชรา/.test(cause)||S.age>=lifeMax()){S.lifespan+=12;S.rvL=(S.rvL||0)+12}S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) — ร่างกายฟื้นคืนสมบูรณ์`,'up');setScene('system');return false}
+ if(S.sys&&S.sys.revive>0&&!S.flags.ascended&&!(S.flags.eternal&&(S.flags.kEnd||/กัลป์|กาลเวลา|จักรวาล|สามภพ/.test(cause)))&&!(S.ch==='short'&&S.age>=30)){S.sys.revive--;S.hp=S.maxHp;S.deathCause=null;S.chronic=null;if(/วัยชรา/.test(cause)||S.age>=lifeMax()){S.lifespan+=12;S.rvL=(S.rvL||0)+12}S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) — ร่างกายฟื้นคืนสมบูรณ์`,'up');setScene('system');return false}
  try{if(typeof regTry==='function'&&regTry(cause))return false}catch(e){console.error(e)}
  flushReveal();S.alive=false;S.cause=cause;saveLegacy();clearSave();setScene('death');setTimeout(()=>sfx('death'),300);log(`🪦 ${cause}`,'bad');
  const _dn=S;setTimeout(()=>{if(!S||S!==_dn)return;modal(`<h3>ลาก่อน ${esc(S.name)}</h3><p>${cause} ในวัย ${S.age} ปี<br>อยากบอกอะไรกับคนคนนี้เป็นครั้งสุดท้าย?</p><input class="ta" id="byeIn" maxlength="80" placeholder="คำอำลาสุดท้าย"><button class="pbtn" style="width:100%" onclick="endGame()">อำลา</button>`,'bye')},900);
@@ -22613,6 +22613,19 @@ const LOVE_RX=/^(💞|💍(?! งานแต่งของ)|💕|💋|🌸 (�
   if(!opts.some(o=>o&&o._celib))opts=[...opts.map(o=>Object.assign({},o,{_x:1})),{_x:1,_celib:1,noFate:1,t:'🚫 ครองโสดตลอดชีวิต',s:'ชีวิตนี้จะไม่มีเรื่องรักเข้ามาอีก · ใจนิ่ง ฝึกเร็วขึ้น 5% · เปลี่ยนใจได้ที่ ☰ → 💞 ความรัก',f(){S.loveOpt='off';if(S.focus==='love')S.focus='train';log('🚫 คุณตัดสินใจครองโสดตลอดชีวิต — มุ่งหน้าบนวิถียุทธ์เพียงลำพัง ใจนิ่งดั่งผิวน้ำ','epic');try{keyAdd('ปณิธานครองโสดตลอดชีวิต')}catch(e){}}}]}}catch(e){}return _chLV.call(this,title,text,opts)};for(const k in _chLV)nf[k]=_chLV[k];choice=nf}
 // เมนูความรัก: แยก "ชีวิตนี้" กับ "ทุกชีวิต"
 {const _olV=openLove;openLove=function(){const r=_olV.apply(this,arguments);try{const m=$('modal');if(S&&S.loveOpt==='off'&&LS.get('murim_love','fate')!=='off'&&!m.querySelector('.lvThis'))m.querySelector('h3').insertAdjacentHTML('afterend','<p class="tag2 lvThis" style="color:#e8c86a">🚫 ชีวิตนี้คุณตั้งปณิธานครองโสดตลอดชีวิตไว้ — ชีวิตหน้าจะกลับไปใช้ค่าที่ตั้งไว้ด้านล่าง</p>')}catch(e){}return r}}
+
+
+// ===================== v17.9 โลกเซียน: ชั้นเหนือข้ามทัณฑ์ไม่ใช้คำว่า "เทพ" · ฝ่าทัณฑ์ขึ้นโลกเทพได้เองทุกเมื่อ =====================
+const RS_PFX_X=['กึ่งเซียน','เซียนดิน','เซียนฟ้า','เซียนทอง','เซียนบรรพกาล'];
+const rsXI=L=>Math.max(0,Math.min(RS_PFX_X.length-1,Math.floor(L/9)));
+{const _pn=rsPN;rsPN=function(L){try{if(S&&S.xian&&!S.xt)return REALMS[7].n+' · ชั้น'+RS_PFX_X[rsXI(L)]}catch(e){}return _pn.apply(this,arguments)}}
+{const _pf=rsPF;rsPF=function(L){try{if(S&&S.xian&&!S.xt)return RS_PFX_X[rsXI(L)]}catch(e){}return _pf.apply(this,arguments)}}
+function ascCan(){return !!(S&&S.alive&&!S.beastMode&&!S.xt&&realmIdx()>=7&&S.age>=20&&!(typeof mwOn==='function'&&mwOn()))}
+function ascReq(){try{const g=S.xian?godReady():xianReady(),w=ascWait(),need=S.xian?9:((typeof MN_X!=='undefined'&&MN_X.p)||0)+1;return{g,w,txt:[g.pOK?'✅ ผ่านชั้นเหนือขั้นสูงสุดครบแล้ว':`⬜ ผ่านชั้นเหนือขั้นสูงสุดให้ถึง ★${S.xian?9:3} (ตอนนี้ ${g.pl<0?'ยังไม่เริ่ม':'★'+(g.pl%9+1)})`,g.tOK?'✅ รากฐานหยั่งลึกพอแล้ว':`⬜ ${S.xian?`อยู่ในโลกเซียนครบ ${g.n?g.n.y:800} ปี หรืออายุ ${fmt(g.n?g.n.a:1000)} ปี`:'อายุถึงเกณฑ์'} (เหลืออีก ${fmt(g.left||0)} ปี)`,w>0?`⬜ รออีก ${w} ปี`:''].filter(Boolean)}}catch(e){return{g:{ok:true},w:0,txt:[]}}}
+function ascForce(){if(!ascCan())return toast('ยังไม่ถึงขั้นสูงสุดของโลกนี้');{const q=ascReq();if(!q.g.ok||q.w>0)return modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>⚡ ทัณฑ์สวรรค์ยังไม่มา</h3><p>ร่างกายแตะขีดสุดของ${S.xian?'โลกเซียน':'โลกมนุษย์'}แล้ว แต่ฟ้ายังไม่เปิดทางขึ้น${S.xian?'โลกเทพ':'โลกเซียน'} — ระหว่างนี้พลังยังโตต่อใน "ชั้นเหนือขั้นสูงสุด" ได้ตามปกติ</p><div class="item">${q.txt.map(t=>`<p style="margin:3px 0">${t}</p>`).join('')}</div><p class="tag2">ครบเงื่อนไขเมื่อไหร่ ทัณฑ์สวรรค์จะมาเอง หรือกดปุ่มนี้ในเมนูได้ทันที</p>`,'asc')}if(choice._cur)return toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');
+ closeM();ascAsk()}
+{const _omA=openMenu;openMenu=function(){const r=_omA.apply(this,arguments);try{if(ascCan()){const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.ascB')){const cd=S.ascCd&&S.age<S.ascCd?S.ascCd-S.age:0;const q=ascReq(),rd=q.g.ok&&q.w<=0&&!cd;g.insertAdjacentHTML('afterbegin',`<button class="opt ascB" onclick="ascForce()"${rd?' style="background:var(--tb4)"':''}>⚡ ฝ่าทัณฑ์สวรรค์<small>${cd?'พร้อมอีกใน '+cd+' ปี':rd?(S.xian?'พร้อมแล้ว — เหาะขึ้นสู่โลกเทพ':'พร้อมแล้ว — เหาะขึ้นสู่โลกเซียน'):'ดูเงื่อนไขขึ้น'+(S.xian?'โลกเทพ':'โลกเซียน')}</small></button>`)}}}catch(e){}return r}}
+{const _pyA=passYear;passYear=function(){const r=_pyA.apply(this,arguments);try{if(ascCan()&&!S.ascTold){S.ascTold=1;log(`⚡ คุณถึงขั้นสูงสุดของ${S.xian?'โลกเซียน':'โลกมนุษย์'}แล้ว — ต่อจากนี้พลังจะโตใน<b>ชั้นเหนือขั้นสูงสุด</b> (${S.xian?'กึ่งเซียน ★1–9':'ชั้นเทพ ★1–9'}) · ดูเงื่อนไขการขึ้น${S.xian?'โลกเทพ':'โลกเซียน'}ได้ที่ ☰ เมนู → ⚡ ฝ่าทัณฑ์สวรรค์`,'epic')}}catch(e){}return r}}
 
 </script>
 </body>
