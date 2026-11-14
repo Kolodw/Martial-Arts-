@@ -1087,6 +1087,16 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (v.length >= 6) { const d = thDay(now); await pipe([['PFADD', 'hv:' + d + ':' + w, v], ['EXPIRE', 'hv:' + d + ':' + w, 86400 * 40], ['PFADD', 'hv:all:' + w, v]]) }
       return res.json({ ok: 1 });
     }
+    if (a === 'oneborn') {
+      // 🌟 หนึ่งเดียวในนวนิยาย (โอกาส 0.01% ตอนเกิด) — ประกาศในแชทโลก · เก็บสถิติ · เปิดสิทธิ์ป้ายในทำเนียบ
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
+      if (b.tp || await isBanned() || await cmd('SISMEMBER', 'cheaters', id)) return res.json({ ok: 0 });
+      if ((await cmd('SET', 'onecd:' + id, 1, 'NX', 'EX', 3600)) !== 'OK') return res.json({ ok: 0, err: 'cd' });
+      const n = noAdm(clean(b.n, 20)) || 'นิรนาม', it = clean(b.it, 40) || 'ของเทพ', w = ['m', 'x', 'g'].includes(b.w) ? b.w : 'm';
+      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: 'ฟ้าลิขิต', k: 'one', x: '🌟 ' + n + ' ถือกำเนิดเป็น「หนึ่งเดียวในนวนิยาย」 พร้อม ' + it, on: n, oi: it, ow: w };
+      const [cnt] = await pipe([['INCR', 'onecnt'], ['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199], ['LPUSH', 'oneh', JSON.stringify({ n, it, w, t: now })], ['LTRIM', 'oneh', 0, 49], ['SET', 'onex:' + id, 1, 'EX', 86400 * 60]]);
+      return res.json({ ok: 1, cnt: +cnt || 0 });
+    }
     if (a === 'achfirst') {
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
       const aid = String(b.a || '').replace(/[^a-z0-9_]/g, '').slice(0, 24), n = noAdm(clean(b.n, 20)) || 'นิรนาม';
@@ -1333,6 +1343,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const lid = String(b.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
       const e = { n: clean(b.n, 20) || 'นิรนาม', s: Math.max(0, Math.min(1e12, +b.s || 0)), age: +b.age || 0, r: clean(b.r, 30), f: clean(b.f, 30), c: clean(b.c, 60), x: b.x ? 1 : 0, g: b.g ? 1 : 0, ga: Math.max(0, Math.min(1e9, Math.round(+b.ga || 0))), ...(b.tp ? { tt: '', tr: 0 } : ttlOk(b.tt)), xa: Math.max(0, Math.min(1e9, Math.round(+b.xa || 0))), cu: b.cu ? 1 : 0, bm: b.bm ? 1 : 0, kl: Math.max(0, Math.min(9, Math.floor(+b.kl || 0))), t: now, lid };
       { const c0 = String(b.ch || ''); if (CH_OK.includes(c0) && !(c0 === 'short' && e.age > 31)) e.ch = c0 }
+      if (b.one && okId(id) && await cmd('GET', 'onex:' + id)) e.one = 1;
+      try { const dk = 'lifeday:' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10); await pipe([['INCR', dk], ['EXPIRE', dk, 86400 * 90]]) } catch {}
       try { e.s = bdScore(JSON.parse(String(b.det || '{}')), e) } catch { e.s = 0 }
       if (e.ch === 'hell') { const hl = Math.max(0, Math.min(100, Math.floor(+b.hl || 0))), cs0 = [20, 40, 60, 80].includes(+b.hcs) ? +b.hcs : 0, hb = okId(id) ? +(await cmd('GET', 'hlb:' + id)) || 0 : 0, cs = cs0 && cs0 <= hb ? cs0 : 0, ag = +e.age || 0;
         const minAge = cs ? 16 + Math.max(0, hl - cs - 1) : hl <= 18 ? 16 + 6 * Math.max(0, hl - 1) : 16 + 6 * 17 + (hl - 19); e.hl = hl === 0 || (ag >= minAge && (!cs0 || cs)) ? hl : 0; if (cs) e.hcs = cs; if (okId(id) && e.hl > hb) await cmd('SET', 'hlb:' + id, e.hl, 'EX', 86400 * 400) }
