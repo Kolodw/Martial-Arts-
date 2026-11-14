@@ -23169,6 +23169,35 @@ function mwLockTick(){try{if(mwAllowed())return;if(typeof CFG!=='undefined'&&CFG
 admVerify().then(mwLockTick);setInterval(mwLockTick,1500);
 {const _slMW=startLife;startLife=function(){try{if(!mwAllowed()&&typeof CFG!=='undefined')CFG.mw=0}catch(e){}const r=_slMW.apply(this,arguments);setTimeout(mwLockTick,100);return r}}
 
+// ===================== v17.9i ระบบเลือกแทนแบบใหม่: ไม่สุ่มทับ · เรื่องใหญ่ต้องเลือกเอง · เลือกแทนแบบปลอดภัย · บอกทุกครั้ง =====================
+const AF_BIG=/ทัณฑ์|ข้ามโลก|ข้ามมิติ|รอยแยก|สามภพ|กัลป์|โลกเซียน|โลกเทพ|แดนเทพ|เหาะ|สำนัก|เจ้าสำนัก|แต่ง|หย่า|คู่ชีวิต|ทายาท|สืบทอด|บัลลังก์|ระบบ|ย้อนกาล|ด้ายแดง|พันธสัญญา|นรก|ผนึก|บรรพกาล|ละสังขาร|ทางแยก|เส้นทาง|ปณิธาน|เปลี่ยนร่าง|แปลงกาย|กลืน|ทรยศ|ล้างแค้น/;
+const AF_RISK=/ตาย|เสี่ยง|ดวล|สู้|ทุ่มสุดตัว|แกล้งตาย|ฝ่า|บุก|ท้า|ขโมย|ปล้น|ลอบ|ฆ่า|ทรยศ|พนัน|เดิมพัน|ระเบิด|ลองดู|ทุ่ม|เผา|สละ|เสียสละ/;
+const afTxt=o=>String((o&&o.t)||'')+' '+String((o&&o.s)||'');
+function afBig(c){try{if(!c)return false;if(c.opts&&c.opts.some(o=>o&&o.noFate))return true;return AF_BIG.test(String(c.title||'').replace(/<[^>]+>/g,''))}catch(e){return false}}
+function afSafe(c){const O=c.opts||[];const sk=O.findIndex(o=>o&&o.skip);if(sk>=0)return sk;let best=0,bs=1e9;O.forEach((o,i)=>{if(!o||o.noFate)return;const t=afTxt(o);let r=0;if(AF_RISK.test(t))r+=3;const m=t.match(/(\d{1,3})\s*%/);if(m&&+m[1]<60)r+=2;if(/[−-]\s*\d|เสีย|ลดลง|หัก/.test(o.s||''))r+=1;if(r<bs){bs=r;best=i}});return best}
+// 1) ตัวเลือกใหม่ต่อคิวเสมอ (รวมโหมดอัตโนมัติ) — ไม่สุ่มตอบอันเก่าทิ้ง
+{const _chA=choice;const nc=function(title,text,opts){try{if(choice._cur&&S&&S.alive){if(choice._cur.title===title)return;if(!choice._q)choice._q=[];if(choice._q.length>=12)choice._q.splice(choice._q.findIndex(q=>!afBig({title:q[0],opts:q[2]}))>>>0,1);choice._q.push([title,text,opts,S]);return}}catch(e){}return _chA.apply(this,arguments)};for(const k in _chA)nc[k]=_chA[k];choice=nc}
+// 2) ชะตาตัดสินแทน: เรื่องใหญ่ไม่เลือกให้ · เรื่องเล็กเลือกข้อที่ปลอดภัยที่สุด · บอกทุกครั้ง
+{const _fcA=fateChoice;fateChoice=function(silent){const c=choice._cur;if(!c)return;try{
+ if(typeof aiOn==='function'&&aiOn()&&S.ai&&S.ai.on&&!afBig(c))return _fcA.apply(this,arguments);
+ if(afBig(c)&&!fateChoice._force){c._held=1;try{if(choice._min){choice._min=false;pendBar();choiceShow()}}catch(e){}const e=$('chCd');if(e)e.textContent='✋ เรื่องสำคัญ — ระบบจะไม่เลือกแทน รอคุณตัดสินใจ';
+  if(!c._held2){c._held2=1;try{island({big:1,pri:1,ic:'✋',h:'รอคุณตัดสินใจ',t:String(c.title).replace(/<[^>]+>/g,'').slice(0,40),d:'เรื่องสำคัญ ระบบจะไม่เลือกแทนคุณ',kind:'gold',ms:4500})}catch(x){}}return}
+ const i=afSafe(c),o=c.opts[i];if(!o)return _fcA.apply(this,arguments);
+ const tl=String(c.title).replace(/<[^>]+>/g,''),ot=String(o.t).replace(/<[^>]+>/g,'');
+ if(!silent||!auto){addFeed('ev',`🎲 ระบบเลือกแทน (ข้อที่ปลอดภัยที่สุด) — <b>${tl}</b>: ${ot}`,'sum');if(!auto)try{island({ic:'🎲',t:`เลือกแทน: ${esc(ot).slice(0,40)}`,kind:'grey',ms:2600})}catch(x){}}
+ return choiceRun(i)}catch(e){console.error(e)}return _fcA.apply(this,arguments)}}
+// กรอบบอกล่วงหน้าให้ตรงกับข้อที่ระบบจะเลือกจริง
+try{chuPredict=function(c){if(!c||afBig(c))return null;try{if(typeof aiOn==='function'&&aiOn()&&S.ai&&S.ai.on&&typeof aiPick==='function')return{i:aiPick(c),force:false}}catch(e){}return{i:afSafe(c),force:false}}}catch(e){}
+// กลับหน้าแรกระหว่างมีเรื่องค้าง: เลือกข้อปลอดภัยให้ (กันเกมค้าง)
+{const _ttA=toTitle;toTitle=function(){fateChoice._force=1;try{return _ttA.apply(this,arguments)}finally{fateChoice._force=0}}}
+// 3) ป้ายบอกว่าโหมดอัตโนมัติเปิดอยู่ + คำอธิบายตอนเปิด
+{const _taA=toggleAuto;toggleAuto=function(){const r=_taA.apply(this,arguments);try{if(auto)toast('🤖 อัตโนมัติ: เรื่องเล็กระบบเลือกข้อปลอดภัยให้ · เรื่องสำคัญจะหยุดรอให้คุณเลือกเอง')}catch(e){}afPill();return r}}
+function afPill(){try{let p=document.getElementById('afPill');const on=!!(auto&&S&&S.alive&&document.getElementById('game')&&document.getElementById('game').classList.contains('on'));if(!on){if(p)p.remove();return}if(!p){p=document.createElement('button');p.id='afPill';p.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 118px);z-index:60;padding:5px 14px;border-radius:20px;border:2px solid #e8c86a;background:rgba(20,14,30,.85);color:#ffe9a0;font:inherit;font-weight:bold;font-size:13px';p.onclick=()=>{toggleAuto()};document.body.appendChild(p)}p.textContent='🤖 อัตโนมัติเปิดอยู่ · แตะเพื่อปิด'}catch(e){}}
+{const _rnA=render;render=function(){const r=_rnA.apply(this,arguments);afPill();return r}}
+// ตัวเลือกที่ค้างไว้เพราะเป็นเรื่องใหญ่ในโหมดอัตโนมัติ: เปิดให้เห็นทันที
+{const _csA=choiceShow;choiceShow=function(){const r=_csA.apply(this,arguments);try{const c=choice._cur;if(c&&auto&&afBig(c)){clearTimeout(choice._t);const e=$('chCd');if(e)e.textContent='✋ เรื่องสำคัญ — โหมดอัตโนมัติจะหยุดรอให้คุณเลือกเอง';try{$('modal').querySelectorAll('p,div,span,small').forEach(x=>{if(!x.children.length&&/กำลังตัดสินใจอัตโนมัติ/.test(x.textContent))x.textContent='✋ รอคุณเลือกเอง'})}catch(x){}if(!c._held2){c._held2=1;try{island({big:1,pri:1,ic:'✋',h:'รอคุณตัดสินใจ',t:String(c.title).replace(/<[^>]+>/g,'').slice(0,40),d:'โหมดอัตโนมัติหยุดรอ',kind:'gold',ms:4500})}catch(x){}}}}catch(e){}return r}}
+try{SYS_GUIDE.push({s:'life',nw:1,ic:'🎲',t:'ระบบเลือกแทน',go:'',d:'เหตุการณ์ที่มาซ้อนกันจะต่อคิว ไม่ถูกสุ่มตอบทิ้ง · ชะตาตัดสินแทน/โหมดอัตโนมัติ เลือกให้เฉพาะเรื่องเล็ก และเลือกข้อที่ปลอดภัยที่สุด · เรื่องสำคัญ (ทัณฑ์ ข้ามโลก สำนัก แต่งงาน ทายาท ฯลฯ) ระบบจะหยุดรอให้คุณเลือกเองเสมอ · ทุกครั้งที่เลือกแทนจะแจ้งที่เกาะด้านบน'})}catch(e){}
+
 </script>
 </body>
 </html>
