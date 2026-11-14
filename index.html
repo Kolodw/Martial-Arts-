@@ -21829,6 +21829,182 @@ function rgBeyond(){const G=S.rg;G.free=1;G.end='beyond';S.flags.rgFree=1;S.flag
 {const _mdB=modal;modal=function(html){const r=_mdB.apply(this,arguments);try{if(typeof html==='string'&&html.indexOf('🔓 ปลดล็อก (เฉพาะเครื่องนี้)')>=0&&!document.querySelector('#modal .rgBornSec')){const sec=document.querySelector('#modal .islTestSec')||[...document.querySelectorAll('#modal .adsec')].pop();const on=LS.get('murim_forceBorn',0);
   const h=`<div class="adsec rgBornSec"><h4>🌌 ผู้ย้อนกาล (เฉพาะเครื่องนี้)</h4><div class="adg"><button class="${on?'pbtn':'sysb'}" onclick="LS.set('murim_forceBorn',LS.get('murim_forceBorn',0)?0:1);toast(LS.get('murim_forceBorn',0)?'🌌 ชีวิตย้อนกาลถัดไปจะเป็นผู้ตื่นรู้แต่กำเนิด':'ยกเลิกแล้ว');this.className=LS.get('murim_forceBorn',0)?'pbtn':'sysb'">🌌 ชีวิตย้อนกาลถัดไป = ผู้ตื่นรู้แต่กำเนิด</button></div><p class="tag2" style="margin:4px 0 0">ใช้ทดสอบตอนจบลับ · ใช้ได้ครั้งเดียวแล้วรีเซ็ตเอง</p></div>`;if(sec)sec.insertAdjacentHTML('afterend',h)}}catch(e){}return r}}
 try{SYS_GUIDE.push({s:'life',nw:1,ic:'🌌',t:'ผู้ย้อนกาล: ???',go:'openRegress',d:'มีเรื่องเล่าว่าผู้ย้อนกาลบางคนตื่นขึ้นมาพร้อมความทรงจำของรอบที่ยังไม่เกิด — ราว 1 ใน 500 ชีวิต · ถ้าไม่ตายเลยแม้แต่ครั้งเดียว ช่วยทุกคนรอด และเก็บปริศนาครบ อาจได้พบประตูที่ไม่มีใครเคยเห็น'})}catch(e){}
+
+// ===================== เมือง v2: 4 ย่าน · นิสัยเมือง · ราคาผันผวน · ชื่อเสียงเมือง · ตลาดมืด · เหตุการณ์ · อาคารประจำโลก =====================
+const CT_TR={
+ trade:{m:'⛵ เมืองท่าการค้า',x:'⛵ เมืองท่าวิญญาณ',g:'⛵ นครท่าดารา',d:'ร้านสมบัติถูกลง 8% · โรงประมูลมีของเพิ่ม 1 ชิ้น'},
+ herb:{m:'🌿 เมืองหมอยา',x:'🌿 เมืองสวนโอสถ',g:'🌿 นครพฤกษาทิพย์',d:'สมุนไพรถูกลง 20% · ร้านมีสมุนไพรเพิ่ม 4'},
+ smith:{m:'⚒️ เมืองช่างเหล็ก',x:'⚒️ เมืองเตาหลอมวิญญาณ',g:'⚒️ นครเตาเทพ',d:'แร่ถูกลง 20% · ร้านมีแร่เพิ่ม 4'},
+ sage:{m:'📜 เมืองบัณฑิต',x:'📜 เมืองคัมภีร์',g:'📜 นครปัญญา',d:'หมึกและไหมถูกลง 20% · หยกถูกลง 10%'},
+ martial:{m:'🥋 เมืองยุทธ์',x:'🥋 เมืองกระบี่',g:'🥋 นครนักรบ',d:'งานคุ้มกัน ปราบโจร และศึกประจำเมืองได้เงินเพิ่ม 25%'},
+ shady:{m:'🌑 เมืองใต้ดิน',x:'🌑 เมืองเงา',g:'🌑 นครสนธยา',d:'ตลาดมืดเปิดให้ทุกคน มีของเพิ่ม 1 ชิ้น เสี่ยงน้อยลง · แต่ร้านทั่วไปแพงขึ้น 5%'}};
+const CT_K=Object.keys(CT_TR);
+const CT_RT=[[0,'คนแปลกหน้า',0],[100,'คนคุ้นหน้า',.02],[300,'ผู้มีหน้ามีตา',.04],[600,'วีรชนประจำเมือง',.07],[1000,'ตำนานแห่งเมือง',.1]];
+const CT_EV={
+ fair:{n:'🎏 ตลาดนัดใหญ่',d:'พ่อค้าจากทั่วแดนมารวมตัว ร้านสมบัติลด 10% ทั้งปี'},
+ plague:{n:'🤒 โรคระบาด',d:'สมุนไพรแพงขึ้น 50% · ร้านรับซื้อสมุนไพรแพง · บริจาคสมุนไพร 3 ต้นช่วยชาวเมืองได้',an:'🌿 บริจาคสมุนไพร ×3'},
+ bandit:{n:'🏴 โจรปิดเส้นทาง',d:'วัตถุดิบทุกอย่างแพงขึ้น 20% · ออกไปปราบให้เส้นทางเปิดได้',an:'⚔️ ออกปราบ'},
+ caravan:{n:'🐫 คาราวานต่างแดน',d:'หยกและแก่นอสูรมีขายเพิ่มอย่างละ 2 · ตลาดมืดมีของเพิ่ม 1 ชิ้น'},
+ flood:{n:'🌊 ภัยพิบัติถล่มเมือง',d:'ชาวเมืองเดือดร้อน · บริจาคเงินช่วยได้ ได้กรรมดีและชื่อเสียงในเมือง',an:'💰 บริจาคช่วยเหลือ'},
+ duel:{n:'🏆 ศึกชิงเจ้ายุทธ์ประจำเมือง',d:'ยอดฝีมือมารวมตัว ลงแข่งชิงรางวัลก้อนโตได้ครั้งเดียว',an:'🥋 ลงแข่ง'}};
+const CT_EK=Object.keys(CT_EV);
+const CT_MATS=['herb','ore','ink','silk','core','jade'];
+function ctHash(s){let h=2166136261;for(const c of String(s))h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0}
+function ctTN(){return String(townName()).replace(/^(หมู่บ้าน|เมือง)(?!เซียน)/,'')}
+function ctTrait(){return CT_K[ctHash(ctTN()+'|'+ECO_W())%CT_K.length]}
+function ctTrN(k){k=k||ctTrait();return CT_TR[k][ECO_W()]}
+function ctBanditN(){const w=ECO_W();return w==='g'?'กองทัพอสูรนอกรีต':w==='x'?'กลุ่มผู้ฝึกตนสายมาร':'โจรภูเขาดำ'}
+function ctEvN(k){const e=CT_EV[k];if(!e)return'';const w=ECO_W();if(k==='bandit')return w==='g'?'🏴 อสูรปิดเส้นทางดารา':w==='x'?'🏴 มารปิดเส้นทาง':e.n;if(k==='duel')return w==='g'?'🏆 ศึกชิงเทพยุทธ์ประจำนคร':w==='x'?'🏆 ศึกชิงเซียนกระบี่ประจำเมือง':e.n;return e.n}
+// ---- สถานะเมืองรายปี ----
+function ctInit(){const tn=ctTN(),w=ECO_W(),k=w+':'+tn;let C=S.city;if(C&&C.y===S.age&&C.k===k)return C;
+ const rnd=srng(ctHash(k+'#'+S.age)),mi={};CT_MATS.forEach(m=>mi[m]=+(.85+rnd()*.37).toFixed(2));const si=+(.95+rnd()*.13).toFixed(2);
+ let ev=null;if(S.age>=14&&rnd()<.38)ev=CT_EK[Math.floor(rnd()*CT_EK.length)];
+ C=S.city={y:S.age,k,tr:ctTrait(),si,mi,ev,evDone:0,rot:null,fb:{},bm:null,esc:0,intel:0,ins:{},don:0,sm:0,sky:null,pill:{},lib:0,cn:{},star:null,sold:{}};return C}
+// ---- ชื่อเสียงในเมือง ----
+function ctRepK(){return ECO_W()+':'+ctTN()}
+function ctRep(){return((S.crep||{})[ctRepK()])|0}
+function ctRepT(v){v=v==null?ctRep():v;let t=CT_RT[0];for(const x of CT_RT)if(v>=x[0])t=x;return t}
+function ctRepAdd(v,why){S.crep=S.crep||{};const k=ctRepK(),a=ctRep(),t0=ctRepT(a),b=Math.max(-200,Math.min(1500,a+Math.round(v)));S.crep[k]=b;const t1=ctRepT(b);
+ if(t1[0]>t0[0])log(`🏙️ ${why?why+' — ':''}ชาวเมือง${esc(townName())}ยกย่องคุณเป็น <b>${t1[1]}</b> (ร้านในเมืองลดราคา ${Math.round(t1[2]*100)}%)`,'epic')}
+// ---- ตัวคูณราคา (ส่วนลดรวมทุกอย่างไม่เกิน 25%) ----
+function ctShopMul(it){const C=ctInit();let d=0,up=0;if(C.tr==='trade')d+=.08;if(C.tr==='shady')up+=.05;d+=ctRepT()[2];if(C.ev==='fair')d+=.1;if(C.intelD)d+=.05;
+ if(it&&C.rot&&C.rot.includes(it.id)&&!C.fb[it.id])d+=.15;return(C.si+up)*(1-d)}
+function ctMatMul(m){const C=ctInit(),tr=C.tr;let x=C.mi[m]||1,d=ctRepT()[2];
+ if(tr==='herb'&&m==='herb')d+=.2;if(tr==='smith'&&m==='ore')d+=.2;if(tr==='sage'&&(m==='ink'||m==='silk'))d+=.2;if(tr==='sage'&&m==='jade')d+=.1;if(tr==='shady')x+=.05;
+ if(C.ev==='plague'&&m==='herb')x*=1.5;if(C.ev==='bandit')x*=1.2;return x*(1-d)}
+function ctPct(x){x=Math.max(.75,x);const v=Math.round((x-1)*100);return v<0?`<span style="color:#5fb85f">ถูกลง ${-v}%</span>`:v>0?`<span style="color:#ff8a6b">แพงขึ้น ${v}%</span>`:'ราคาปกติ'}
+{const _epC=ecoPrice;ecoPrice=function(it){const p=_epC.apply(this,arguments);try{if(!S||!it)return p;const raw=Math.round(it.price*Math.pow(1.6,((S.shopN||{})[it.id]||0)));return Math.max(Math.round(raw*.75),Math.round(p*ctShopMul(it)))}catch(e){return p}}}
+{const _mpC=matPrice;matPrice=function(m,k){const p=_mpC.apply(this,arguments);try{return Math.max(Math.round(p*.75),Math.round(p*ctMatMul(m)))}catch(e){return p}}}
+{const _mlC=matLeft;matLeft=function(m){let b=0;try{const C=ctInit();if(C.tr==='herb'&&m==='herb')b+=4;if(C.tr==='smith'&&m==='ore')b+=4;if(C.ev==='caravan'&&(m==='jade'||m==='core'))b+=2}catch(e){}return Math.max(0,_mlC.apply(this,arguments)+b)}}
+{const _arC=aucRef;aucRef=function(){const had=S.auc&&S.auc.y===S.age&&S.auc.w===ECO_W();const r=_arC.apply(this,arguments);try{if(!had&&S.auc&&ctInit().tr==='trade'){const P=ecoCat(ECO_W()).filter(x=>x.r>=2&&x.r<=5),it=ch(P);if(it&&!S.auc.lots.some(l=>l.id===it.id))S.auc.lots.push({id:it.id,start:Math.round(it.price*.6),done:0})}}catch(e){}return r}}
+// ชื่อเสียงเมืองจากภารกิจ/เทศกาล
+{const _tpC=tqPay;tqPay=function(q,mult){const r=_tpC.apply(this,arguments);try{if(mult>=1)ctRepAdd(8+6*((q&&q.g)|0),'ทำภารกิจเมือง')}catch(e){}return r}}
+{const _tfC=twFest;twFest=function(k){const f0=S.tw&&S.tw.festY;const r=_tfC.apply(this,arguments);try{if(S.tw&&S.tw.festY===S.age&&f0!==S.age)ctRepAdd(k==='don'?40:15,'ร่วมเทศกาล')}catch(e){}return r}}
+// ---- ร้านสมบัติ: ของเด่นหมุนเวียน + ค้นหา ----
+function ctRot(){const C=ctInit();if(C.rot)return C.rot;const all=ecoCat(ECO_W()),rnd=srng(ctHash(C.k+'@rot'+S.age)),ri=Math.max(0,realmIdx()),mx=Math.min(7,2+Math.floor(ri/1.5)),P=all.filter(x=>x.r<=mx),out=[];
+ for(let i=0;i<60&&out.length<6&&P.length;i++){const it=P[Math.floor(rnd()*P.length)];if(it&&!out.includes(it.id))out.push(it.id)}C.rot=out;return out}
+function ctShopRow(it,soldOut){const p=ecoPrice(it),n=(S.shopN||{})[it.id]||0;return`<div class="item"><div class="h"><b>${esc(it.n)} ${rarTag(it.r)}</b><button class="sysb" onclick="ecoBuy('${it.id}')" ${S.money>=p?'':'disabled style="opacity:.45"'}>${fmt(p)}</button></div><p class="tag2">${ecoDesc(it)}${n?` · ซื้อแล้ว ${n} ครั้ง`:''}${soldOut?' · ส่วนลดของเด่นใช้ไปแล้ว':''}</p></div>`}
+function ctSearch(q){ctSearch._q=q=String(q||'');const el=$('ctqr');if(!el)return;const s=q.trim().toLowerCase();if(!s){el.innerHTML='';return}
+ const L=ecoCat(ECO_W()).filter(x=>String(x.n).toLowerCase().includes(s)).sort((a,b)=>a.r-b.r||a.price-b.price);
+ el.innerHTML=L.length?`<p class="tag2">พบ ${L.length} อย่าง${L.length>30?' (แสดง 30 อย่างแรก)':''}</p>`+L.slice(0,30).map(it=>ctShopRow(it)).join(''):'<p class="tag2">ไม่พบของชื่อนี้ในโลกนี้</p>'}
+{const _osC=openShop2;openShop2=function(c){const r=_osC.apply(this,arguments);try{const m=$('modal');if(!S||m.dataset.k!=='shop2')return r;const tabs=m.querySelector('.tabs');if(!tabs)return r;
+ const C=ctInit(),all=ecoCat(ECO_W()),feat=ctRot().map(id=>all.find(x=>x.id===id)).filter(Boolean),mul=ctShopMul();
+ tabs.insertAdjacentHTML('beforebegin',`<p class="tag2">ราคาที่${esc(townName())}ปีนี้: ${ctPct(mul)} (ดัชนีตลาด · นิสัยเมือง · ชื่อเสียง · เหตุการณ์ — ส่วนลดรวมไม่เกิน 25%)</p>
+ <div class="item" style="border-left:4px solid #e8c86a"><b>⭐ ของเด่นปีนี้</b> <span class="tag2">ลดเพิ่ม 15% ชิ้นละครั้ง · เปลี่ยนทุกปีและต่างกันทุกเมือง</span>${feat.map(it=>ctShopRow(it,C.fb[it.id])).join('')}</div>
+ <input id="ctq" placeholder="🔍 ค้นหาของทุกหมวด…" oninput="ctSearch(this.value)" style="width:100%;box-sizing:border-box;padding:9px 10px;margin:6px 0;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.25);color:inherit;font-size:15px"><div id="ctqr"></div>`);
+ if(ctSearch._q){const i=$('ctq');if(i){i.value=ctSearch._q;ctSearch(ctSearch._q)}}}catch(e){console.error(e)}return r}}
+{const _ebC=ecoBuy;ecoBuy=function(id){const m0=S.money;const r=_ebC.apply(this,arguments);try{const C=ctInit();if(S.money<m0&&C.rot&&C.rot.includes(id)&&!C.fb[id]){C.fb[id]=1;if($('modal').dataset.k==='shop2')openShop2(openShop2._c)}}catch(e){}return r}}
+// ---- ตลาดมืด ----
+function ctBMOpen(){return S.age>=16&&(ctInit().tr==='shady'||ctRep()>=100)}
+function ctBM(){const C=ctInit();if(C.bm)return C.bm;const all=ecoCat(ECO_W()),rnd=srng(ctHash(C.k+'$bm'+S.age)),ri=Math.max(0,realmIdx()),lo=Math.min(5,2+Math.floor(ri/3)),P=all.filter(x=>x.r>=lo&&x.r<=Math.min(7,lo+2)&&x.c!=='b'),n=3+(C.tr==='shady'?1:0)+(C.ev==='caravan'?1:0),L=[];
+ for(let i=0;i<60&&L.length<n&&P.length;i++){const it=P[Math.floor(rnd()*P.length)];if(it&&!L.some(l=>l.id===it.id))L.push({id:it.id,p:Math.round(it.price*(1.25+rnd()*.25)),done:0})}C.bm=L;return L}
+function ctBMBuy(i){const C=ctInit(),l=ctBM()[i];if(!l||l.done||!ctBMOpen())return;const it=ecoCat(ECO_W()).find(x=>x.id===l.id);if(!it)return;if(S.money<l.p)return toast('เงินไม่พอ');S.money-=l.p;l.done=1;
+ if(Math.random()<(C.tr==='shady'?.07:.15)){const f=Math.round(l.p*.25);S.money=Math.max(0,S.money-f);S.karma-=5;ctRepAdd(-50);log(`🚨 ทางการบุกตลาดมืด! คุณหนีออกมาพร้อม<b>${esc(it.n)}</b>ได้ แต่โดนปรับ ${fmt(f)} ตำลึง · กรรม −5 · ชื่อเสียงในเมืองลดลง`,'bad')}
+ ecoApply(it,'🌑');sfx('good');render();openTown('bm')}
+function ctBMSell(i){if(!ctBMOpen())return;const v=(S.vault||[])[i];if(!v)return;const p=Math.round((v.paid||0)*.6);S.vault.splice(i,1);S.money+=p;S.karma-=1;toast(`ขายผ่านตลาดมืดได้ ${fmt(p)}`);sfx('click');render();openTown('bm')}
+// ---- ขายวัตถุดิบให้เมือง ----
+function ctShort(m){const C=ctInit();return(C.mi[m]||1)*(C.ev==='plague'&&m==='herb'?1.5:C.ev==='bandit'?1.2:1)>=1.15}
+function ctSellP(m){const C=ctInit(),f=ctShort(m)?.85:Math.min(.6,.5*(C.mi[m]||1));return Math.max(1,Math.round(BAGIT[m].v*CRW()*f))}
+function ctSell(m,n){const C=ctInit();const left=10-(C.sold[m]||0);n=Math.min(n,left,bagN(m));if(n<=0)return toast(left<=0?'ร้านรับซื้อของชนิดนี้ครบ 10 ชิ้นแล้วปีนี้':'ไม่มีของให้ขาย');const p=ctSellP(m);if(!bagTake(m,n))return;S.money+=p*n;C.sold[m]=(C.sold[m]||0)+n;toast(`ขาย${BAGIT[m].n} ×${n} ได้ ${fmt(p*n)}`);sfx('click');render();openTown('craft')}
+// ---- เหตุการณ์เมือง ----
+function ctEvAct(){const C=ctInit(),e=C.ev;if(!e||C.evDone||!CT_EV[e].an)return;const W=W15(),ri=Math.max(0,realmIdx());
+ if(e==='plague'){if(!bagTake('herb',3))return toast('ต้องมีสมุนไพรวิญญาณ 3 ต้น');C.evDone=1;S.karma+=8;ctRepAdd(60,'ช่วยรักษาโรคระบาด');log('🤒 คุณมอบสมุนไพรให้หมอเมืองต้มยาแจกชาวบ้าน — กรรมดี +8','good')}
+ else if(e==='flood'){const c=Math.round(2000*W);if(S.money<c)return toast(`ต้องใช้ ${fmt(c)} ตำลึง`);S.money-=c;C.evDone=1;S.karma+=6;S.fame+=10;ctRepAdd(70,'ช่วยเหลือผู้ประสบภัย');log(`🌊 บริจาค ${fmt(c)} ตำลึงช่วยชาวเมือง — กรรมดี +6`,'good')}
+ else{if(choice._cur)return toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');C.evDone=1;const b=e==='bandit',k=b?.95:1.25,foe=b?ctBanditN():ch(S.xt?['เทพนักรบผู้ไร้พ่าย','ราชันสังเวียนดารา']:S.xian?['เซียนกระบี่ผมขาว','ทายาทนิกายใหญ่']:['จอมดาบไร้เงา','ประมุขพรรคหมัดเหล็ก','หญิงสาวชุดขาวถือกระบี่']);closeM();
+  duel(foe,Math.round(total()*k*(.9+Math.random()*.2)),w=>{if(w){const g=Math.round((b?1500:6000)*W*(1+ri*.6)*(C.tr==='martial'?1.25:1));S.money+=g;S.fame+=b?15:40;ctRepAdd(b?60:40,b?'ปราบโจรสำเร็จ':'ชนะศึกประจำเมือง');if(b)C.ev=null;
+   log(b?`⚔️ ปราบ${foe}สำเร็จ เส้นทางเปิดแล้ว ราคาวัตถุดิบกลับมาปกติ — รางวัล ${fmt(g)} ตำลึง`:`🏆 คุณชนะ${foe}ในศึกประจำเมือง — รางวัล ${fmt(g)} ตำลึง`,'epic')}
+   else{const d=Math.round(S.maxHp*(b?.15:.25));S.hp-=d;log(`💢 พ่ายให้${foe} — พลังชีวิต −${d}`,'bad')}render()});return}
+ sfx('good');render();openTown('folk')}
+// ---- บริจาคสร้างเมือง ----
+const CT_DON=[[500,10,'🧱 ซ่อมถนน'],[3000,40,'🏫 สร้างสำนักศึกษา'],[15000,120,'🌉 สร้างสะพานใหญ่']];
+function ctDonate(i){const C=ctInit();if(C.don>=3)return toast('ปีนี้บริจาคครบ 3 ครั้งแล้ว');const [c0,rp,n]=CT_DON[i],c=Math.round(c0*W15());if(S.money<c)return toast('เงินไม่พอ');S.money-=c;C.don++;S.karma+=1+i;ctRepAdd(rp,'บริจาคสร้างเมือง');log(`🏙️ ${n}ให้${esc(townName())} — ${fmt(c)} ตำลึง`,'good');sfx('good');render();openTown('noble')}
+// ---- ยุทธภพ: สำนักคุ้มภัย · สายข่าว ----
+const CT_ESC=[['🟢 คาราวานผ้าไหม',.8,1,10],['🟡 ขบวนส่งเงินหลวง',1.05,3,20],['🔴 ขบวนสมบัติตระกูลใหญ่',1.35,9,35]];
+function ctEscPrize(i){return Math.round(400*CT_ESC[i][2]*W15()*(1+Math.max(0,realmIdx())*.6)*(ctInit().tr==='martial'?1.25:1))}
+function ctEsc(i){const C=ctInit();if(C.esc)return toast('ปีนี้รับงานคุ้มกันแล้ว');if(choice._cur)return toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');C.esc=1;const [n,k,,rp]=CT_ESC[i],foe=ch(['โจรภูเขาดำ','กลุ่มโจรม้าเร็ว','มือสังหารรับจ้าง','โจรสลัดแม่น้ำ']);closeM();log(`🛡️ รับงาน${n.slice(2)} — ออกเดินทาง…`);
+ duel(foe,Math.round(total()*k*(.9+Math.random()*.2)),w=>{if(w){const g=ctEscPrize(i);S.money+=g;S.fame+=5+i*8;ctRepAdd(rp,'คุ้มกันสำเร็จ');log(`🛡️ ปกป้อง${n.slice(2)}จาก${foe}สำเร็จ — ค่าจ้าง ${fmt(g)} ตำลึง`,i>=2?'epic':'good')}else{const d=Math.round(S.maxHp*[.08,.15,.25][i]);S.hp-=d;ctRepAdd(-5);log(`🛡️ ${foe}ปล้น${n.slice(2)}ไปได้ — พลังชีวิต −${d}`,'bad')}render()})}
+const CT_IN=[['dg','🏰 ข่าวดันเจี้ยน',150,'ดันเจี้ยนพักฟื้นเร็วขึ้น 1 ปี'],['mk','💹 ข่าววงในตลาด',250,'ร้านสมบัติลดเพิ่ม 5% ทั้งปี'],['hn','🗡️ ข่าวมือสังหาร',300,'ถ้ามีคนตามล่า จะรู้ตัวก่อนและตัดตอนได้ 1 ราย'],['tr','🗺️ แผนที่สมบัติ',500,'ลุ้นได้ของจากร้านสมบัติฟรี (~40%)']];
+function ctIntel(k){const C=ctInit(),o=CT_IN.find(x=>x[0]===k);if(!o)return;if(C.intel>=2)return toast('สายข่าวรับงานคุณได้ปีละ 2 ครั้ง');if(C.ins[k])return toast('ปีนี้ซื้อข่าวนี้แล้ว');const c=Math.round(o[2]*W15());if(S.money<c)return toast('เงินไม่พอ');S.money-=c;C.intel++;C.ins[k]=1;let t;
+ if(k==='dg'){if(S.dgY!=null)S.dgY-=1;S.dgHint=1;t='รู้ทางลัดเข้าดันเจี้ยน — พักฟื้นเร็วขึ้น 1 ปี'}
+ else if(k==='mk'){C.intelD=1;t='รู้ว่าร้านไหนต่อราคาได้ — ร้านสมบัติลดเพิ่ม 5% ทั้งปี'}
+ else if(k==='hn'){const H=S.hunts||[];if(H.length){const h=H.shift();t=`สืบรู้ว่า${esc(h.who)}จ้างมือสังหารไว้ — แจ้งทางการตัดตอนได้ทัน`}else t='ไม่มีใครเคลื่อนไหวตามล่าคุณอยู่ตอนนี้ สบายใจได้'}
+ else{const ri=Math.max(0,realmIdx()),P=ecoCat(ECO_W()).filter(x=>x.r<=Math.min(5,1+Math.floor(ri/2))&&x.c!=='b'&&x.c!=='x');if(P.length&&Math.random()<.4){const it=ch(P);ecoApply(it,'🗺️');t=`ตามแผนที่ไปเจอ<b>${esc(it.n)}</b>`}else{const g=Math.round(c*.4);S.money+=g;t=`เจอแค่หีบเก่ามีเงินติดก้นอยู่ ${fmt(g)} ตำลึง`}}
+ log(`🕵️ สายข่าว: ${t}`,'good');sfx('good');render();openTown('intel')}
+// ---- โลกเซียน: ตลาดนิกาย · ตลาดลอยฟ้า · หอโอสถ · เช่าถ้ำ ----
+const CT_SM=[['lpill',1,80],['core',2,40],['jade',1,50],['brk',1,60],['art',0,150]];
+function ctSM(i){const C=ctInit(),[id,q,c]=CT_SM[i];if(!S.faction)return toast('ต้องสังกัดนิกายก่อน');if(C.sm>=3)return toast('ปีนี้แลกครบ 3 ครั้งแล้ว');if((S.merit||0)<c)return toast('ผลงานนิกายไม่พอ');
+ if(id!=='art'&&bagCount()+q>S.bag.cap&&!S.bag.sp)return toast('กระเป๋าเต็ม');S.merit-=c;C.sm++;let t;if(id==='art'){const a=newArt(3);S.arts.push(a);t=artHtml(a)}else{bagAdd(id,q,true);t=`${BAGIT[id].ic} ${BAGIT[id].n} ×${q}`}
+ log(`🏪 ใช้ผลงานนิกาย ${c} แลก ${t}`,'good');sfx('good');render();openTown('sectm')}
+function ctSky(){const C=ctInit();if(C.sky)return C.sky;const rnd=srng(ctHash(C.k+'^sky'+S.age)),P=['core','jade','lpill','brk','qi','core','jade'],L=[];
+ for(let i=0;i<20&&L.length<4;i++){const m=P[Math.floor(rnd()*P.length)];if(!BAGIT[m]||L.some(l=>l.m===m))continue;const q=m==='lpill'||m==='brk'?1:1+Math.floor(rnd()*3);L.push({m,q,p:Math.round(BAGIT[m].v*CRW()*q*(1.6+rnd()*.6)*Math.max(.8,C.si)),done:0})}C.sky=L;return L}
+function ctSkyBuy(i){const l=ctSky()[i];if(!l||l.done)return;if(S.money<l.p)return toast('เงินไม่พอ');const got=bagAdd(l.m,l.q,true)||0;if(!got)return toast('กระเป๋าเต็ม');const p=Math.round(l.p*got/l.q);S.money-=p;l.done=1;log(`☁️ ซื้อ${BAGIT[l.m].n} ×${got} จากตลาดลอยฟ้า — ${fmt(p)} ตำลึง`,'good');sfx('good');render();openTown('sky')}
+const CT_PL=[['qi','🔵 ยาบำรุงปราณ',1500,'ลมปราณเพิ่ม 4% +2 ปี'],['pw','🔴 ยาเสริมรากฐาน',3000,'พลังยุทธ์เพิ่มขึ้น'],['hp','💊 ยาชำระกาย',1000,'พลังชีวิตสูงสุด +5% และฟื้นเต็ม']];
+function ctPill(k){const C=ctInit(),o=CT_PL.find(x=>x[0]===k);if(!o)return;if(C.pill[k])return toast('ปีนี้ซื้อยานี้แล้ว');const c=Math.round(o[2]*W15());if(S.money<c)return toast('เงินไม่พอ');S.money-=c;C.pill[k]=1;let t;
+ if(k==='qi'){const v=+(S.qi*.04+2).toFixed(1);S.qi=+(S.qi+v).toFixed(1);t=`ลมปราณ +${fmt(v)} ปี`}else if(k==='pw'){const g=pctPow(.04);S.power+=g;t=`พลังยุทธ์ +${fmt(g)}`}else{const v=Math.max(5,Math.round(S.maxHp*.05));S.maxHp+=v;S.hp=S.maxHp;t=`พลังชีวิตสูงสุด +${fmt(v)}`}
+ log(`⚗️ กิน${o[1].slice(2)}จากหอโอสถ — ${t}`,'good');sfx('good');render();openTown('pill')}
+const CT_CV=[['🕳️ ถ้ำธรรมดา',2000,[.01,.5,.005]],['💎 ถ้ำสายแร่วิญญาณ',8000,[.02,1,.01]],['🐉 ถ้ำเส้นมังกร',30000,[.035,2,.018]]];
+function ctCave(i){if(S.cave&&S.cave.u>S.age)return toast('ยังมีสัญญาเช่าถ้ำอยู่');const c=Math.round(CT_CV[i][1]*W15());if(S.money<c)return toast('เงินไม่พอ');S.money-=c;S.cave={u:S.age+5,lv:i+1,w:ECO_W()};ctRepAdd(5);log(`🏔️ เช่า${CT_CV[i][0].slice(3)} 5 ปี — ฝึกในถ้ำทุกปีจะได้ลมปราณและพลังเพิ่ม`,'good');sfx('good');render();openTown('cave')}
+{const _pyC=passYear;passYear=function(){const a0=S?S.age:0;const r=_pyC.apply(this,arguments);try{const V=S&&S.cave;if(S&&S.alive&&V){if(V.w!==ECO_W()){S.cave=null}else{const st=Math.max(0,Math.min(S.age,V.u)-a0),[q,qa,pw]=CT_CV[V.lv-1][2];
+ for(let i=0;i<Math.min(st,10);i++){S.qi=+(S.qi+S.qi*q+qa).toFixed(2);S.power+=pctPow(pw)}if(S.age>=V.u){S.cave=null;log('🏔️ หมดสัญญาเช่าถ้ำบำเพ็ญ — เช่าใหม่ได้ที่ย่านขุนนาง','')}}}}catch(e){console.error(e)}return r}}
+// ---- แดนเทพ: ตลาดดวงดาว · หอสมุดสวรรค์ · สภาเทพ ----
+const CT_FP=[0,0,0,40,90,200,450,1000];
+function ctStar(){const C=ctInit();if(C.star)return C.star;const rnd=srng(ctHash(C.k+'*star'+S.age)),P=ecoCat('g').filter(x=>x.r>=3&&x.r<=6&&x.c!=='b'),L=[];
+ for(let i=0;i<40&&L.length<3&&P.length;i++){const it=P[Math.floor(rnd()*P.length)];if(it&&!L.some(l=>l.id===it.id))L.push({id:it.id,f:CT_FP[it.r],done:0})}C.star=L;return L}
+function ctStarBuy(i){const l=ctStar()[i];if(!l||l.done)return;const g=gdInit();if(g.fp<l.f)return toast('พลังศรัทธาไม่พอ');const it=ecoCat('g').find(x=>x.id===l.id);if(!it)return;g.fp=+(g.fp-l.f).toFixed(1);l.done=1;ecoApply(it,'✨');sfx('good');render();openTown('star')}
+function ctLib(k){const C=ctInit(),ri=Math.max(0,realmIdx());if(k==='read'){if(C.lib)return toast('ปีนี้อ่านแล้ว');const c=Math.round(3000*W15());if(S.money<c)return toast('เงินไม่พอ');S.money-=c;C.lib=1;const v=5+Math.min(20,ri);S.int+=v;let t=`ปัญญา +${v}`;if(Math.random()<.25){const a=newArt(3);S.arts.push(a);t+=` · ค้นพบ ${artHtml(a)}`}log(`📚 อ่านตำราที่หอสมุดสวรรค์ — ${t}`,'good')}
+ else{if(S.libC!=null&&S.age-S.libC<5)return toast(`คัดลอกได้อีกครั้งในอีก ${5-(S.age-S.libC)} ปี`);const c=Math.round(40000*W15());if(S.money<c)return toast('เงินไม่พอ');S.money-=c;S.libC=S.age;const a=newArt(3);S.arts.push(a);S.int+=3;log(`📚 ได้รับอนุญาตคัดลอกคัมภีร์ต้องห้าม — ${artHtml(a)} · ปัญญา +3`,'epic')}
+ sfx('good');render();openTown('lib')}
+function ctCouncil(k){const C=ctInit(),g=gdInit();if(C.cn[k])return toast('ปีนี้ถวายแบบนี้แล้ว');if(k==='fp'){if(g.fp<150)return toast('พลังศรัทธาไม่พอ (150)');g.fp=+(g.fp-150).toFixed(1);C.cn[k]=1;gdMerit(4,'ถวายพลังศรัทธาต่อสภาเทพ');log('🏛️ ถวายพลังศรัทธา 150 — ผลงานในสภาเทพ +4','good')}
+ else{const c=Math.round(20000*W15());if(S.money<c)return toast('เงินไม่พอ');S.money-=c;C.cn[k]=1;gdMerit(2,'ถวายบรรณาการต่อสภาเทพ');ctRepAdd(20);log(`🏛️ ถวายบรรณาการ ${fmt(c)} — ผลงานในสภาเทพ +2`,'good')}
+ sfx('good');render();openTown('council')}
+// ---- หน้าเมือง: 4 ย่าน ----
+const CT_D=[['trade','🏪 ย่านการค้า'],['craft','🔨 ย่านช่าง'],['folk','🏮 ย่านชาวเมือง'],['noble','🏛️ ย่านขุนนาง']];
+const CT_PG=['trade','craft','folk','noble','bm','esc','intel','sectm','sky','pill','cave','star','lib','council'];
+function ctCls(oc){return/openShop2|openAuction|openVault|openMarket/.test(oc)?'trade':/openTown\('(apo|smith|brush|jade)'\)|openCraft/.test(oc)?'craft':/openTown\('(bk|gov|ar)'\)/.test(oc)?'noble':/openDungeons|openMap/.test(oc)?'go':'folk'}
+function ctBtn(oc,n,s,hl){return`<button class="opt" onclick="${oc}"${hl?' style="background:var(--tb4)"':''}>${n}<small>${s}</small></button>`}
+const ctDis=b=>b?'':'disabled style="opacity:.45"';
+function ctHead(){const C=ctInit(),rp=ctRep(),t=ctRepT(rp),nx=CT_RT.find(x=>x[0]>rp),e=C.ev;
+ return`<div class="item" style="margin-top:6px"><b>${ctTrN(C.tr)}</b><p class="tag2">${CT_TR[C.tr].d}<br>🏙️ ชื่อเสียงในเมือง: <b>${t[1]}</b> (${fmt(rp)}${nx?'/'+nx[0]:''})${t[2]?' · ลดราคา '+Math.round(t[2]*100)+'%':''} · ร้านสมบัติปีนี้ ${ctPct(ctShopMul())}</p></div>`+
+ (e?`<div class="item" style="border-left:4px solid #e8c86a"><div class="h"><b>${ctEvN(e)}</b>${CT_EV[e].an?`<button class="sysb" onclick="ctEvAct()" ${ctDis(!C.evDone)}>${C.evDone?'ทำแล้ว':CT_EV[e].an}</button>`:''}</div><p class="tag2">${CT_EV[e].d}${e==='flood'?` (${fmt(Math.round(2000*W15()))} ตำลึง)`:''}</p></div>`:'')}
+function ctSub(back,title,body){return`<button class="gbtn" onclick="openTown('${back}')">← ${CT_D.find(x=>x[0]===back)[1]}</button><h4 style="margin:10px 0 4px">${title}</h4>${body}`}
+function ctPage(p,B){const C=ctInit(),w=ECO_W(),W=W15(),grp=k=>B.filter(b=>b.c===k).map(b=>b.h).join('');
+ if(p==='trade'){const bm=ctBMOpen();let x=grp('trade')+ctBtn("openTown('bm')",w==='g'?'🌑 ตลาดใต้ดวงดาว':w==='x'?'🌑 ตลาดเงา':'🌑 ตลาดมืด',bm?`ของหายาก ${ctBM().filter(l=>!l.done).length} ชิ้น · เสี่ยงโดนจับ`:S.age<16?'🔒 อายุ 16 ขึ้นไป':'🔒 ต้องเป็น "คนคุ้นหน้า" ของเมือง',bm);
+  if(w==='x')x+=ctBtn("openTown('sectm')",'🏪 ตลาดนิกาย',S.faction?`ใช้ผลงานนิกายแลกของ · มี ${fmt(S.merit||0)}`:'ต้องสังกัดนิกาย')+ctBtn("openTown('sky')",'☁️ ตลาดลอยฟ้า','วัตถุดิบหายาก หมุนเวียนทุกปี');
+  if(w==='g')x+=ctBtn("openTown('star')",'✨ ตลาดดวงดาว',`ใช้พลังศรัทธาแลกของวิเศษ · มี ${fmt(Math.floor(gdInit().fp))}`);return`<div class="mgrid">${x}</div>`}
+ if(p==='craft'){return`<p class="tag2" style="margin-top:6px">ซื้อวัตถุดิบ (ร้านเติมของทุกปี) · ขายคืนได้ไม่เกิน 60% ของราคากลาง เว้นแต่ช่วงขาดแคลน · รับซื้อชนิดละ 10 ชิ้นต่อปี</p>`+CT_MATS.filter(m=>BAGIT[m]).map(m=>{const left=matLeft(m),p1=matPrice(m),sp=ctSellP(m),has=bagN(m),sl=10-(C.sold[m]||0);
+  return`<div class="item"><b>${BAGIT[m].ic} ${BAGIT[m].n}</b> <span class="tag2">มี ${has} · ร้านเหลือ ${left} · ${ctPct(ctMatMul(m))}${ctShort(m)?' · 🔥 ขาดแคลน รับซื้อแพง':''}</span><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><button class="sysb" onclick="matBuy('${m}',1)" ${ctDis(left&&S.money>=p1)}>ซื้อ ${fmt(p1)}</button><button class="sysb" onclick="matBuy('${m}',5)" ${ctDis(left)}>ซื้อ ×5</button><button class="sysb" onclick="ctSell('${m}',1)" ${ctDis(has&&sl>0)}>ขาย ${fmt(sp)}</button></div></div>`}).join('')+
+  `<h4 style="margin:10px 0 4px">🏚️ ร้านช่าง · ตำรับ · เครื่องมือ</h4><div class="mgrid">${grp('craft')}</div>`}
+ if(p==='folk')return`<div class="mgrid">${grp('folk')}</div>`;
+ if(p==='noble'){let x=grp('noble');if(w==='m')x+=ctBtn("openTown('esc')",'🛡️ สำนักคุ้มภัย',C.esc?'ปีนี้รับงานแล้ว':'รับงานคุ้มกันปีละครั้ง')+ctBtn("openTown('intel')",'🕵️ สายข่าว',`ซื้อข่าวปีละ 2 ครั้ง (เหลือ ${2-C.intel})`);
+  if(w==='x')x+=ctBtn("openTown('pill')",'⚗️ หอโอสถ','ยาบำรุงปีละครั้ง')+ctBtn("openTown('cave')",'🏔️ เช่าถ้ำบำเพ็ญ',S.cave&&S.cave.u>S.age?`${CT_CV[S.cave.lv-1][0]} เหลือ ${S.cave.u-S.age} ปี`:'ฝึกตนในถ้ำ 5 ปี');
+  if(w==='g')x+=ctBtn("openTown('lib')",'📚 หอสมุดสวรรค์',C.lib?'ปีนี้อ่านแล้ว':'อ่านตำรา คัดลอกคัมภีร์')+ctBtn("openTown('council')",'🏛️ สภาเทพ',GD_RK[gdInit().rk]);
+  return`<div class="mgrid">${x}</div><h4 style="margin:10px 0 4px">🏙️ บริจาคสร้างเมือง <span class="tag2">ปีละ 3 ครั้ง (เหลือ ${3-C.don}) · ได้ชื่อเสียงในเมือง</span></h4><div class="mgrid">${CT_DON.map(([c,rp,n],i)=>{const v=Math.round(c*W);return`<button class="opt" onclick="ctDonate(${i})" ${ctDis(C.don<3&&S.money>=v)}>${n}<small>${fmt(v)} · ชื่อเสียง +${rp}</small></button>`}).join('')}</div>`}
+ if(p==='bm'){if(!ctBMOpen())return ctSub('trade','🌑 ตลาดมืด',S.age<16?'<p>เด็กเข้าตลาดมืดไม่ได้ — รออายุ 16 ปี</p>':'<p>คนที่นี่ยังไม่ไว้ใจคุณ — สร้างชื่อเสียงในเมืองให้ถึง "คนคุ้นหน้า" (100) ก่อน</p>');const all=ecoCat(w);
+  return ctSub('trade',w==='g'?'🌑 ตลาดใต้ดวงดาว':w==='x'?'🌑 ตลาดเงา':'🌑 ตลาดมืด',`<p class="tag2">ของหายากกว่าร้านปกติ ราคาตายตัว ไม่ลดราคา · ซื้อได้ชิ้นละครั้ง · เสี่ยงโดนทางการบุก ${C.tr==='shady'?'7':'15'}% · เปลี่ยนของทุกปี</p>`+
+  ctBM().map((l,i)=>{const it=all.find(x=>x.id===l.id);return it?`<div class="item" style="${l.done?'opacity:.5':''}"><div class="h"><b>${esc(it.n)} ${rarTag(it.r)}</b>${l.done?'<span class="tag2">ขายแล้ว</span>':`<button class="sysb" onclick="ctBMBuy(${i})" ${ctDis(S.money>=l.p)}>${fmt(l.p)}</button>`}</div><p class="tag2">${ecoDesc(it)}</p></div>`:''}).join('')+
+  `<h4 style="margin:10px 0 4px">💰 ปล่อยของในคลังสมบัติ <span class="tag2">ได้ 60% ของราคาที่จ่าย (คลังปกติ 50%) · กรรม −1</span></h4>`+((S.vault||[]).map((v,i)=>{const it=ecoCat(v.w).find(x=>x.id===v.id);return it?`<div class="item"><div class="h"><b>${esc(it.n)} ${rarTag(it.r)}</b><button class="sysb" onclick="ctBMSell(${i})">ขาย ${fmt(Math.round((v.paid||0)*.6))}</button></div></div>`:''}).join('')||'<p class="tag2">คลังว่างเปล่า</p>'))}
+ if(p==='esc')return ctSub('noble','🛡️ สำนักคุ้มภัย',`<p class="tag2">ปีละ 1 งาน · ชนะได้ค่าจ้าง ชื่อเสียง และชื่อเสียงในเมือง · แพ้เสียพลังชีวิต${C.tr==='martial'?' · 🥋 เมืองยุทธ์ ค่าจ้าง +25%':''}</p>`+CT_ESC.map(([n,k,,rp],i)=>`<div class="item"><div class="h"><b>${n}</b><button class="sysb" onclick="ctEsc(${i})" ${ctDis(!C.esc)}>รับงาน</button></div><p class="tag2">ศัตรูแข็งแรงราว ${Math.round(k*100)}% ของคุณ · ค่าจ้าง ${fmt(ctEscPrize(i))} · ชื่อเสียงในเมือง +${rp}</p></div>`).join(''));
+ if(p==='intel')return ctSub('noble','🕵️ สายข่าว',`<p class="tag2">ซื้อข่าวได้ปีละ 2 ครั้ง (เหลือ ${2-C.intel}) · แต่ละข่าวซื้อได้ปีละครั้ง</p>`+CT_IN.map(([k,n,c,d])=>`<div class="item"><div class="h"><b>${n}</b><button class="sysb" onclick="ctIntel('${k}')" ${ctDis(!C.ins[k]&&C.intel<2&&S.money>=c*W)}>${C.ins[k]?'ซื้อแล้ว':fmt(Math.round(c*W))}</button></div><p class="tag2">${d}</p></div>`).join(''));
+ if(p==='sectm')return ctSub('trade','🏪 ตลาดนิกาย',S.faction?`<p class="tag2">ผลงานนิกายของคุณ: <b>${fmt(S.merit||0)}</b> · แลกได้ปีละ 3 ครั้ง (เหลือ ${3-C.sm}) · ผลงานที่ใช้ไปไม่ทำให้ตำแหน่งลด แต่ต้องสะสมใหม่เพื่อสอบเลื่อนขั้น</p>`+CT_SM.map(([id,q,c],i)=>`<div class="item"><div class="h"><b>${id==='art'?'📕 คัมภีร์ยุทธ์ของนิกาย':BAGIT[id].ic+' '+BAGIT[id].n+' ×'+q}</b><button class="sysb" onclick="ctSM(${i})" ${ctDis(C.sm<3&&(S.merit||0)>=c)}>ผลงาน ${c}</button></div></div>`).join(''):'<p>ต้องสังกัดนิกายก่อนจึงจะเข้าตลาดนิกายได้</p>');
+ if(p==='sky')return ctSub('trade','☁️ ตลาดลอยฟ้า','<p class="tag2">ของหายากจากแดนไกล ล็อตละครั้ง เปลี่ยนทุกปี</p>'+ctSky().map((l,i)=>`<div class="item" style="${l.done?'opacity:.5':''}"><div class="h"><b>${BAGIT[l.m].ic} ${BAGIT[l.m].n} ×${l.q}</b>${l.done?'<span class="tag2">ซื้อแล้ว</span>':`<button class="sysb" onclick="ctSkyBuy(${i})" ${ctDis(S.money>=l.p)}>${fmt(l.p)}</button>`}</div></div>`).join(''));
+ if(p==='pill')return ctSub('noble','⚗️ หอโอสถ','<p class="tag2">ยาแต่ละชนิดซื้อได้ปีละครั้ง</p>'+CT_PL.map(([k,n,c,d])=>`<div class="item"><div class="h"><b>${n}</b><button class="sysb" onclick="ctPill('${k}')" ${ctDis(!C.pill[k]&&S.money>=c*W)}>${C.pill[k]?'ซื้อแล้ว':fmt(Math.round(c*W))}</button></div><p class="tag2">${d}</p></div>`).join(''));
+ if(p==='cave'){const on=S.cave&&S.cave.u>S.age;return ctSub('noble','🏔️ เช่าถ้ำบำเพ็ญ',`<p class="tag2">${on?`กำลังเช่า ${CT_CV[S.cave.lv-1][0]} · เหลือ ${S.cave.u-S.age} ปี`:'สัญญา 5 ปี · ฝึกในถ้ำทุกปีได้ลมปราณและพลังยุทธ์เพิ่มเอง · ใช้ได้เฉพาะโลกเซียน'}</p>`+CT_CV.map(([n,c,[q,qa,pw]],i)=>`<div class="item"><div class="h"><b>${n}</b><button class="sysb" onclick="ctCave(${i})" ${ctDis(!on&&S.money>=c*W)}>${fmt(Math.round(c*W))}</button></div><p class="tag2">ต่อปี: ลมปราณ +${Math.round(q*100)}% +${qa} ปี · พลังยุทธ์ +${(pw*100).toFixed(1)}%</p></div>`).join(''))}
+ if(p==='star'){const g=gdInit(),all=ecoCat('g');return ctSub('trade','✨ ตลาดดวงดาว',`<p class="tag2">พลังศรัทธาของคุณ: <b>${fmt(Math.floor(g.fp))}</b> · ของชิ้นละครั้ง เปลี่ยนทุกปี</p>`+ctStar().map((l,i)=>{const it=all.find(x=>x.id===l.id);return it?`<div class="item" style="${l.done?'opacity:.5':''}"><div class="h"><b>${esc(it.n)} ${rarTag(it.r)}</b>${l.done?'<span class="tag2">แลกแล้ว</span>':`<button class="sysb" onclick="ctStarBuy(${i})" ${ctDis(g.fp>=l.f)}>ศรัทธา ${fmt(l.f)}</button>`}</div><p class="tag2">${ecoDesc(it)}</p></div>`:''}).join(''))}
+ if(p==='lib'){const cd=S.libC!=null&&S.age-S.libC<5;return ctSub('noble','📚 หอสมุดสวรรค์',`<div class="item"><div class="h"><b>📖 อ่านตำรา</b><button class="sysb" onclick="ctLib('read')" ${ctDis(!C.lib&&S.money>=3000*W)}>${C.lib?'อ่านแล้ว':fmt(3000*W)}</button></div><p class="tag2">ปีละครั้ง · ปัญญาเพิ่มตามขั้นพลัง · 25% ค้นพบคัมภีร์</p></div>
+  <div class="item"><div class="h"><b>🖋️ คัดลอกคัมภีร์ต้องห้าม</b><button class="sysb" onclick="ctLib('copy')" ${ctDis(!cd&&S.money>=40000*W)}>${cd?'อีก '+(5-(S.age-S.libC))+' ปี':fmt(40000*W)}</button></div><p class="tag2">ทุก 5 ปี · ได้คัมภีร์แน่นอน + ปัญญา +3</p></div>`)}
+ if(p==='council'){const g=gdInit();return ctSub('noble','🏛️ สภาเทพ',`<p class="tag2">ตำแหน่ง: <b>${GD_RK[g.rk]}</b> · ผลงาน ${fmt(g.mer)}${g.rk<7?' / '+GD_MER[g.rk+1]:''} · ศรัทธา ${fmt(Math.floor(g.fp))}</p>
+  <div class="item"><div class="h"><b>✨ ถวายพลังศรัทธา</b><button class="sysb" onclick="ctCouncil('fp')" ${ctDis(!C.cn.fp&&g.fp>=150)}>${C.cn.fp?'ถวายแล้ว':'ศรัทธา 150'}</button></div><p class="tag2">ปีละครั้ง · ผลงานสภาเทพ +4</p></div>
+  <div class="item"><div class="h"><b>💰 ถวายบรรณาการ</b><button class="sysb" onclick="ctCouncil('gold')" ${ctDis(!C.cn.gold&&S.money>=20000*W)}>${C.cn.gold?'ถวายแล้ว':fmt(20000*W)}</button></div><p class="tag2">ปีละครั้ง · ผลงานสภาเทพ +2 · ชื่อเสียงในเมือง +20</p></div>`)}
+ return''}
+{const _otV=openTown;openTown=function(p){p=p||'main';if(!S||bsB())return _otV.apply(this,arguments);if(p==='main')p=S.cityD||'trade';if(!CT_PG.includes(p))return _otV.apply(this,arguments);
+ try{ctInit();_otV.call(this,'main');const m=$('modal');if(m.dataset.k!=='town')return;
+  const B=[...m.querySelectorAll('.mgrid button.opt')].map(b=>({c:ctCls(b.getAttribute('onclick')||''),h:b.outerHTML}));
+  const dist=CT_D.some(x=>x[0]===p);if(dist)S.cityD=p;const cur=dist?p:S.cityD||'trade';
+  const tabs=`<div class="tabs" style="flex-wrap:wrap">${CT_D.map(([k,n])=>`<button class="tabb ${k===cur?'on':''}" onclick="openTown('${k}')">${n}</button>`).join('')}</div>`;
+  const go=B.filter(b=>b.c==='go').map(b=>b.h).join('');
+  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏘️ ${esc(townName())}</h3><p class="tag2">💰 ${fmt(S.money)} ตำลึง</p>${ctHead()}${tabs}${ctPage(p,B)}${dist&&go?`<div class="mgrid" style="margin-top:10px">${go}</div>`:''}`,'town');openTown._p=p}
+ catch(e){console.error(e);return _otV.call(this,'main')}}}
+
 </script>
 </body>
 </html>
