@@ -25590,6 +25590,69 @@ async function saveRlCfg(reset){
  try{const set={};['chatcd','lawgap','lawdig'].forEach(k=>{const e=$('rc_'+k);if(e)set[k]=+e.value});const n=$('rc_lawnews');if(n)set.lawnews=n.checked?1:0;
   const j=await api('cfg&key='+encodeURIComponent(admK()),reset?{reset:1}:{set});
   toast(reset?'↩️ คืนค่าเริ่มต้นแล้ว':'✅ บันทึกแล้ว');openRlCfg()}catch(e){toast('บันทึกไม่สำเร็จ: '+(e.message||e))}}
+
+// ===== ทรงกรอบ (shape overlay): ลายประดับนอกกรอบต่อกรอบ ใช้สีจากกรอบเดิม (--c1/--c2/--c3/--pc) =====
+(function(){
+const st=document.createElement('style');st.textContent=`
+.frw>.frsh{position:absolute;inset:-33.333%;width:166.667%;height:166.667%;pointer-events:none;z-index:4;overflow:visible;display:block}
+.frw.rnd{border-radius:36%!important}.frw.soft{border-radius:22%!important}
+.frw.rnd>:not(i):not(svg),.frw.soft>:not(i):not(svg){border-radius:inherit;overflow:hidden}
+.frsh *{vector-effect:none}
+#chatBox .cm:has(.frsh){content-visibility:visible!important;contain:none!important}
+#chatBox .cav:has(.frsh){contain:layout!important;position:relative;z-index:1}`;document.head.appendChild(st);
+const C1='fill:var(--c1)',C2='fill:var(--c2)',C3='fill:var(--c3)',PC='fill:var(--pc)',S1='stroke:var(--c1)',S2='stroke:var(--c2)';
+const mir=d=>d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g,(m,x,y)=>(100-x)+' '+y);
+const star=(x,y,r)=>`<path style="${PC}" d="M${x} ${y-r}L${x+r*.28} ${y-r*.28}L${x+r} ${y}L${x+r*.28} ${y+r*.28}L${x} ${y+r}L${x-r*.28} ${y+r*.28}L${x-r} ${y}L${x-r*.28} ${y-r*.28}Z"/>`;
+const flake=(x,y,r)=>[0,60,120].map(a=>{const t=a*Math.PI/180,dx=Math.cos(t)*r,dy=Math.sin(t)*r;return`<line x1="${x-dx}" y1="${y-dy}" x2="${x+dx}" y2="${y+dy}" style="${S2};stroke-width:2.2"/>`}).join('');
+const M={
+bam:()=>[[12,12],[74,12],[12,82],[74,82]].map(p=>`<rect x="${p[0]}" y="${p[1]}" width="14" height="6" style="${C1}"/>`).join(''),
+gem:()=>[[20,20],[80,20],[20,80],[80,80]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="5.5" style="${C1};${S2};stroke-width:1.6"/>`).join(''),
+star4:()=>star(15,15,10)+star(85,15,10)+star(15,85,10)+star(85,85,10),
+dbl:()=>`<rect x="11" y="11" width="78" height="78" style="fill:none;${S1};stroke-width:1.6"/>`,
+fade:()=>`<rect x="9" y="9" width="82" height="82" style="fill:none;${S1};stroke-width:1.3;stroke-dasharray:3 5;opacity:.6"/>`,
+crown:()=>`<path style="${C1};${S2};stroke-width:1.6" d="M28 22L25 5L38 13L50 1L62 13L75 5L72 22Z"/><circle cx="50" cy="3" r="2.6" style="${PC}"/><circle cx="25" cy="6" r="2.2" style="${PC}"/><circle cx="75" cy="6" r="2.2" style="${PC}"/>`,
+horn:()=>`<path style="${C3};${S1};stroke-width:1.6" d="M30 22L20 1L44 16Z"/><path style="${C3};${S1};stroke-width:1.6" d="M70 22L80 1L56 16Z"/>`,
+wing:()=>{const a='M20 40L3 20L7 46L0 62L20 60Z',b='M20 46L10 33L12 49L20 52Z';return`<path style="${C1}" d="${a}"/><path style="${C2}" d="${b}"/><path style="${C1}" d="${mir(a)}"/><path style="${C2}" d="${mir(b)}"/>`},
+ray:()=>[0,45,90,135,180,225,270,315].map(a=>{const t=a*Math.PI/180,c=Math.cos(t),s=Math.sin(t);return`<line x1="${50+c*45}" y1="${50+s*45}" x2="${50+c*53}" y2="${50+s*53}" style="${S2};stroke-width:3;stroke-linecap:round"/>`}).join(''),
+ringh:()=>`<circle cx="50" cy="50" r="47" style="fill:none;${S2};stroke-width:1.5;stroke-dasharray:3 4"/>`,
+cloud:()=>[[34,14,7],[46,10,8],[58,14,7],[34,86,6],[46,90,7],[58,86,6]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="${p[2]}" style="${C2}"/>`).join(''),
+flame:()=>`<path style="${C1}" d="M18 86L13 66L22 73L20 56L29 71L31 88Z"/><path style="${C1}" d="M82 86L87 66L78 73L80 56L71 71L69 88Z"/><path style="${C2}" d="M36 90L41 76L46 84L50 70L54 84L59 76L64 90Z"/>`,
+drip:()=>[[24,80,12],[46,80,7],[68,80,15]].map(p=>`<rect x="${p[0]}" y="${p[1]}" width="4" height="${p[2]}" style="${C1}"/><circle cx="${p[0]+2}" cy="${p[1]+p[2]+1}" r="3.2" style="${C1}"/>`).join(''),
+thorn:()=>[0,1,2,3,4].map(i=>{const x=26+i*10;return`<path style="${C1}" d="M${x} 20L${x+4} 8L${x+8} 20Z"/><path style="${C1}" d="M${x} 80L${x+4} 92L${x+8} 80Z"/>`}).join(''),
+petal:()=>[[12,22,-30],[88,15,25],[90,84,40],[10,80,-12]].map(p=>`<ellipse cx="${p[0]}" cy="${p[1]}" rx="6" ry="3.4" transform="rotate(${p[2]} ${p[0]} ${p[1]})" style="${PC}"/>`).join(''),
+snow:()=>flake(12,14,8)+flake(88,14,8)+flake(12,86,8)+flake(88,86,8),
+chain:()=>[28,42,56,70].map(y=>`<ellipse cx="9" cy="${y}" rx="4" ry="6.5" style="fill:none;${S1};stroke-width:2.6"/><ellipse cx="91" cy="${y}" rx="4" ry="6.5" style="fill:none;${S1};stroke-width:2.6"/>`).join(''),
+skull:()=>`<circle cx="50" cy="10" r="8.5" style="${C1}"/><rect x="45" y="15" width="10" height="7" style="${C1}"/><circle cx="46" cy="10" r="2.2" style="fill:#1c1a28"/><circle cx="54" cy="10" r="2.2" style="fill:#1c1a28"/>`,
+sword:()=>`<line x1="3" y1="3" x2="23" y2="23" style="${S2};stroke-width:3.4;stroke-linecap:round"/><line x1="97" y1="3" x2="77" y2="23" style="${S2};stroke-width:3.4;stroke-linecap:round"/><line x1="3" y1="97" x2="23" y2="77" style="${S1};stroke-width:3;stroke-linecap:round"/><line x1="97" y1="97" x2="77" y2="77" style="${S1};stroke-width:3;stroke-linecap:round"/>`,
+laurel:()=>{const L=y=>`<ellipse cx="${y[0]}" cy="${y[1]}" rx="5" ry="2.6" transform="rotate(${y[2]} ${y[0]} ${y[1]})" style="${C1}"/>`;const ls=[[10,28,-50],[7,42,-20],[7,56,20],[10,70,50]];return`<path style="fill:none;${S1};stroke-width:2.4" d="M16 84Q2 50 16 18"/><path style="fill:none;${S1};stroke-width:2.4" d="M84 84Q98 50 84 18"/>`+ls.map(L).join('')+ls.map(y=>L([100-y[0],y[1],-y[2]])).join('')},
+lotus:()=>`<ellipse cx="50" cy="89" rx="5" ry="9" style="${PC};${S1};stroke-width:1.2"/><ellipse cx="38" cy="88" rx="5" ry="8" transform="rotate(-35 38 88)" style="${PC};${S1};stroke-width:1.2"/><ellipse cx="62" cy="88" rx="5" ry="8" transform="rotate(35 62 88)" style="${PC};${S1};stroke-width:1.2"/>`,
+knob:()=>[[14,22],[22,14],[78,14],[86,22],[14,78],[22,86],[78,86],[86,78]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4.6" style="${C1}"/>`).join(''),
+clock:()=>[...Array(12).keys()].map(i=>{const t=i*30*Math.PI/180,c=Math.cos(t),s=Math.sin(t),r1=i%3?46:44;return`<line x1="${50+c*r1}" y1="${50+s*r1}" x2="${50+c*52}" y2="${50+s*52}" style="${S2};stroke-width:${i%3?1.8:3}"/>`}).join(''),
+moon:()=>`<path style="${C2}" d="M44 3A9 9 0 1 0 57 14A7.4 7.4 0 1 1 44 3Z"/>`,
+scale:()=>`<path style="fill:none;${S1};stroke-width:2.6" d="M20 86q5 8 10 0q5 8 10 0q5 8 10 0q5 8 10 0q5 8 10 0q5 8 10 0"/>`,
+eye:()=>`<ellipse cx="50" cy="9" rx="10" ry="5.5" style="fill:none;${S2};stroke-width:2"/><circle cx="50" cy="9" r="2.8" style="${C1}"/>`,
+lightning:()=>`<path style="fill:none;${S2};stroke-width:3;stroke-linejoin:round" d="M12 22L20 40L12 42L21 64"/><path style="fill:none;${S2};stroke-width:3;stroke-linejoin:round" d="M88 22L80 40L88 42L79 64"/>`,
+leaf:()=>[[12,16,-40],[88,16,40],[12,84,40],[88,84,-40]].map(p=>`<ellipse cx="${p[0]}" cy="${p[1]}" rx="9" ry="3.6" transform="rotate(${p[2]} ${p[0]} ${p[1]})" style="${C1}"/>`).join(''),
+butterfly:()=>`<ellipse cx="80" cy="12" rx="8" ry="5" transform="rotate(-25 80 12)" style="${C2}"/><ellipse cx="90" cy="19" rx="6" ry="4" transform="rotate(30 90 19)" style="${C1}"/><ellipse cx="14" cy="86" rx="8" ry="5" transform="rotate(-25 14 86)" style="${C2}"/><ellipse cx="22" cy="93" rx="6" ry="4" transform="rotate(30 22 93)" style="${C1}"/>`,
+pearl:()=>[28,39,50,61,72].map(x=>`<circle cx="${x}" cy="91" r="3.4" style="${PC}"/>`).join(''),
+gate:()=>`<path style="fill:none;${S1};stroke-width:3.2" d="M24 22L24 12Q50 -6 76 12L76 22"/>`
+};
+const R='rnd',SO='soft';
+const T={
+f_wood:'bam',f_jade:SO+'|gem',f_gold:'dbl|gem',f_star:'star4',f_cloud:SO+'|cloud',f_phoenix:'wing',f_celestial:R+'|ray|ringh',
+f_bone:'knob',f_blood:'drip',f_shadow:'fade',f_demon:'horn',
+f_lotus:'lotus|petal',f_bamboo2:'leaf',f_moon:R+'|moon',f_sun:R+'|ray',f_crane:'wing',f_sakura:'petal',f_jade2:'dbl|gem',f_aurora:'fade|star4',f_goldd:'scale|horn',f_spring:'petal|leaf',f_thunderg:'lightning',f_sage:R+'|ringh',f_pearl:R+'|pearl',f_phoenix2:'wing|flame',f_qilin:'horn|scale',f_heaven9:'ringh|star4',f_buddha:R+'|ray|lotus',f_galaxy:R+'|clock|star4',f_rainbow:R+'|ringh|cloud',f_emperor:'crown|dbl',f_dao:R+'|clock',f_primal:R+'|ray|star4',f_supreme:'crown|wing|ringh',
+f_rust:'chain',f_poison:'drip',f_ghost:'butterfly',f_skull:'skull',f_bloodmoon:R+'|moon|drip',f_abyss:R+'|eye',f_ghostfire:'flame',f_venom:'scale|thorn',f_crow:'wing',f_chain:'chain|knob',f_hellfire:'flame|horn',f_bloodlotus:'lotus|drip',f_eclipse:R+'|ray|moon',f_shadow2:'fade|eye',f_ice:'snow|thorn',f_curse:'thorn|eye',f_demonk:'horn|thorn',f_void:R+'|eye|ringh',f_reaper:'skull|chain',f_blooddragon:'scale|horn|drip',f_heavendemon:'horn|wing',f_nightmare:'eye|star4|fade',f_asura:'horn|thorn',f_doom:'flame|clock',f_chaos:R+'|ringh|eye',f_endless:'horn|wing|flame',
+f_rk1:'ray|gem',f_rk2:'star4',f_rk3:'dbl',f_wk1:'crown|gem',f_wk2:'snow',f_wk3:'flame',f_mo1:R+'|ringh|star4',f_mo2:'moon|snow',f_mo3:'ray',f_ch1:'flame|thorn',f_ch2:'chain',f_ch3:'fade',
+f_ar1:'sword|gem',f_ar2:'sword',f_ar3:'fade',f_arc1:'fade',f_arc2:'knob|fade',f_arc3:'lightning|snow',f_arc4:R+'|moon|star4',f_arc5:'crown|sword',
+f_lg1:'laurel',f_lg2:'laurel',f_lg3:'laurel|gem',f_lg4:'crown|laurel',f_lg5:'scale|horn|ringh',f_lg6:'sword|crown',f_lg7:R+'|clock|star4',f_lg8:'crown|ringh|laurel',
+f_box1:'leaf|gem',f_box2:'gem|flame',f_box3:'gem|thorn|ringh',f_hell:'flame|horn',f_hell2:'gate|flame',
+f_rgd1:R+'|clock',f_rgd2:'moon',f_rgd3:'clock',f_rgw1:R+'|clock|star4',f_rgw2:'skull',f_rgw3:'scale',f_rgm1:R+'|clock|ringh',f_rgm2:'crown',f_rgm3:'dbl|clock'};
+window.FRSH_T=T;window.FRSH_M=M;
+{const _fwS=frWrap;frWrap=function(inner,id){const h=_fwS.apply(this,arguments),sp=T[id];if(!sp||typeof h!=='string'||!/<\/span>$/.test(h))return h;
+ const p=sp.split('|'),cls=p.filter(k=>k===R||k===SO).join(' '),ms=p.filter(k=>M[k]).map(k=>M[k]()).join('');
+ return h.replace(/class="frw /,`class="frw ${cls} `).replace(/<\/span>$/,`<svg class="frsh" viewBox="0 0 100 100" aria-hidden="true">${ms}</svg></span>`)}}
+})();
 </script>
 </body>
 </html>
