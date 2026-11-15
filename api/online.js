@@ -369,7 +369,7 @@ async function paTick(now) {
 }
 const PA_DAY = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10);
 const paSum = c => c ? { sid: c.sid, phase: c.phase, t0: c.t0, ls: c.ls || 0, li: c.li, n: c.lots.length, left: c.lots.filter(x => !x.sold).length } : null;
-let QUOTA_AT = 0;
+let QUOTA_AT = 0, OOM_AT = 0;
 
 // ---------- 🔔 Web Push (VAPID + aes128gcm เขียนเองไม่ใช้ไลบรารี) + กล่องแจ้งเตือนในเกม ----------
 const crypto = require('crypto');
@@ -628,8 +628,10 @@ module.exports = async (req, res) => {
         const meta = { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(qOf(req).v || '').slice(0, 8), c: String(req.headers['cf-ipcountry'] || req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
         let act = null;
         try { const r = JSON.parse(String(qOf(req).st || '').slice(0, 600) || 'null'); if (r && typeof r === 'object') { const S0 = v => String(v == null ? '' : v).replace(/[<>]/g, '').slice(0, 40), N0 = v => Math.max(-1, Math.min(1e7, Math.round(+v || 0))); act = { w: ['m', 'x', 'g'].includes(r.w) ? r.w : '', sc: S0(r.sc), md: S0(r.md), ch: r.ch ? 1 : 0, hd: r.hd ? 1 : 0, ia: N0(r.ia), er: N0(r.er), em: String(r.em || '').replace(/[<>]/g, '').slice(0, 120), nm: S0(r.nm), ag: N0(r.ag), al: r.al ? 1 : 0, au: r.au ? 1 : 0, pa: r.pa ? 1 : 0, sp: N0(r.sp), w: S0(r.w).slice(0, 1), yr: N0(r.yr), ri: S0(r.ri), v: S0(qOf(req).v).slice(0, 8), t: now } } } catch {}
+        try {
         const hk = 'ipid:' + ip + ':' + Math.floor(now / 3600e3), [, nid] = await pipe([['SADD', hk, id], ['SCARD', hk], ['EXPIRE', hk, 4000]]);
         if (meta.b !== 'บอท' && +nid <= 600) await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)], ...(act ? [['HSET', 'oa', id, JSON.stringify(act)]] : [])]);
+        } catch (e) { if (/OOM/i.test(String(e && e.message))) { OOM_AT = Date.now() } else throw e }
       }
       const [, n, lives, annV, cl0] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 600e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann'], ['LINDEX', 'chat', 0]]);
       let cl = null; try { const m = jp(cl0); if (m && m.i) cl = { i: m.i, t: m.t, n: String(m.n || '').slice(0, 20), x: String(m.x || '').slice(0, 90) } } catch {}
@@ -1034,6 +1036,25 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const want = ['lives', 'chat', 'bugs2', 'reviews', 'online', 'om', 'oa', 'ann', 'annh', 'trklog', 'jserr', 'bugdone'];
       try { const r = await pipe([...want.map(k => ['TYPE', k]), ...want.map(k => ['TTL', k])]); out.keys = want.map((k, i) => [k, r[i], r[i + want.length]]) } catch (x) { out.keysErr = String(x && x.message || x) }
       try { const smp = big.filter((_, i) => i % Math.max(1, Math.floor(big.length / 300)) === 0).slice(0, 300); const mu = await pipe(smp.map(k => ['MEMORY', 'USAGE', k])); const by = {}; smp.forEach((k, i) => { const pf = String(k).split(':')[0]; by[pf] = (by[pf] || 0) + (+mu[i] || 0) }); out.sampleBytesByPrefix = Object.entries(by).sort((x, y) => y[1] - x[1]).slice(0, 20); out.sampled = smp.length } catch (x) { out.memErr = String(x && x.message || x) }
+      return res.json(out);
+    }
+    if (a === 'csprune') {
+      // ผู้ดูแลเท่านั้น: ดู/ลบเซฟคลาวด์ของคนที่หายไปนาน (อายุดูจาก TTL ที่เหลือ: เซฟใหม่ = 90 วัน) · ค่าเริ่มต้นเป็นแค่ "ดู" ต้องใส่ go=1 ถึงจะลบ
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
+      const days = Math.max(7, Math.min(89, parseInt(qOf(req).days, 10) || 30)), go = String(qOf(req).go || '') === '1', lim = (90 - days) * 86400;
+      const out = { days, go, oomAt: OOM_AT || 0, total: 0, bytes: 0, old: 0, oldBytes: 0, deleted: 0 }; let cur = '0', n = 0;
+      try {
+        do {
+          const r = await cmd('SCAN', cur, 'MATCH', 'cs3:*', 'COUNT', 300); cur = String(r[0]); const ks = r[1] || []; n += ks.length;
+          if (ks.length) {
+            const rr = await pipe([...ks.map(k => ['TTL', k]), ...ks.map(k => ['STRLEN', k])]);
+            const del = [];
+            ks.forEach((k, i) => { const ttl = +rr[i], len = +rr[i + ks.length] || 0; out.total++; out.bytes += len; if (ttl >= 0 && ttl < lim) { out.old++; out.oldBytes += len; del.push(k) } });
+            if (go && del.length) { await pipe(del.map(k => ['DEL', k])); out.deleted += del.length }
+          }
+        } while (cur !== '0' && n < 30000);
+      } catch (x) { out.err = String(x && x.message || x) }
+      out.mb = +(out.bytes / 1048576).toFixed(1); out.oldMb = +(out.oldBytes / 1048576).toFixed(1);
       return res.json(out);
     }
     if (a === 'annget') {
