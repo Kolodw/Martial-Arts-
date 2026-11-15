@@ -26598,6 +26598,161 @@ function past(){const L=(S.mem||[]).filter(m=>S.age-m.a>=5&&m.v!==0);if(!L.lengt
 function fresh(L,p){S.evcd=S.evcd||{};const ok=L.map((f,i)=>i).filter(i=>S.age-(S.evcd[p+i]??-99)>=15);if(!ok.length)return false;const i=ch(ok);S.evcd[p+i]=S.age;L[i]();return true}
 window._nl2={MSE,HE,SEED,goalPick,expel,past,ending,rp,mem,seed};
 }catch(e){console.error(e)}})();
+
+// ===================== v17.19 เข้มข้น: วิกฤตนับถอยหลัง · ศึกเลือกท่า · ยุคสมัย · สหายมีนิสัย · คดีปริศนา · ชีวิตสองหน้า · พลิกชะตา =====================
+(function(){try{
+const WD=()=>window._nlWD?_nlWD():(S.xt?'g':S.xian?'x':'w');
+const mortal=()=>{const w=WD();return w==='w'||w==='x'};
+const pw=v=>Math.max(1,Math.round(pctPow(v)));
+const ep=m=>Math.round(total()*m*(.92+Math.random()*.16));
+const lose=m=>{S.money=Math.max(0,Math.floor(S.money*(1-m)))};
+const Ev=(t,d,o)=>choice(t,d,o);
+const N2=()=>window._nl2||{};
+const rp=o=>{try{return N2().rp(o)}catch(e){return''}};
+const mem=(n,v,w)=>{try{N2().mem(n,v,w)}catch(e){}};
+const inj=s=>{try{window.injure&&window.injure(s)}catch(e){}};
+const qFull=()=>(choice._q||[]).length>=5||(S.kalpa&&S.kalpa.pend)||S.beastMode||S.ch==='hell';
+// ---------- 2) ศึกเลือกท่า 3 เทิร์น ----------
+const ST={atk:['⚔️ บุก','ยกอาวุธสูง ก้าวเท้าเข้าหาคุณ'],def:['🛡️ ตั้งรับ','ย่อตัวต่ำ ตั้งการ์ดแน่นหนา'],fnt:['🌀 ล่อหลอก','ยิ้มมุมปาก ไหล่ขยับผิดจังหวะ']};
+const BEAT={atk:'fnt',def:'atk',fnt:'def'};
+function tfight(name,e,cb,title){const T={r:0,sc:0,last:null,card:1,log:[]};name=String(name);
+ const fin=(w)=>{if(w){S.kills=(S.kills||0)+1;S.fame+=15}else{S.hp-=Math.round(S.maxHp*.12);if(Math.random()<.35)inj(name)}try{cb&&cb(w)}catch(x){console.error(x)}try{render()}catch(x){}};
+ const round=()=>{if(T.r>=3){const r=total()/Math.max(1,e),v=T.sc+(r-1)*2.5+(Math.random()-.5);const w=v>0;log(`⚔️ ศึกกับ${name}: ${T.log.join(' ')} → <b>${w?'ชนะ':'แพ้'}</b>`,w?'epic':'bad');return fin(w)}
+  const s=ch(Object.keys(ST)),acc=.7+Math.min(.2,(S.int||0)/500),shown=Math.random()<acc?s:ch(Object.keys(ST).filter(k=>k!==s));
+  const go=p=>()=>{T.r++;let res;if(p==='card'){T.card=0;S.hp-=Math.round(S.maxHp*.1);res=Math.random()<.75?1.5:-1;T.log.push(res>0?'💥':'💢')}
+   else if(p===T.last){res=-1;T.log.push('👁️');log(`👁️ ${name}อ่านทาง — คุณใช้${ST[p][0]}ซ้ำ`,'bad')}
+   else{res=BEAT[p]===s?1:BEAT[s]===p?-1:0;T.log.push(res>0?'✅':res<0?'❌':'➖')}
+   T.sc+=res;if(p!=='card')T.last=p;round()};
+  const O=Object.keys(ST).map(k=>({t:ST[k][0],s:k===T.last?'⚠️ ใช้ซ้ำจะถูกอ่านทาง':({atk:'ชนะล่อหลอก',def:'ชนะการบุก',fnt:'ชนะการตั้งรับ'})[k],noFate:1,f:go(k)}));
+  if(T.card)O.push({t:'💥 ไพ่ตาย',s:'ใช้ได้ครั้งเดียว · เสียพลังชีวิต 10% · 75% ได้เปรียบมาก',noFate:1,f:go('card')});
+  if(T.r===0)O.push({t:'⏩ ให้ชะตาตัดสิน',s:'ทอยครั้งเดียวแบบเดิม',noFate:1,f(){fin(fight(name,e))}});
+  Ev(`${title||'⚔️ ศึกสำคัญ'} · เทิร์น ${T.r+1}/3`,`<b>${name}</b> ${ST[shown][1]}<br><span class="tag2">คะแนน ${T.sc>0?'+':''}${T.sc} · พลังคุณ/ศัตรู ${(total()/Math.max(1,e)).toFixed(2)} · บุกชนะหลอก · รับชนะบุก · หลอกชนะรับ${T.r?'':' · ท่าทีศัตรูอาจหลอกตา (ปัญญาสูงอ่านแม่นขึ้น)'}</span>`,O)};
+ round()}
+window.tfight=tfight;
+// ---------- 3) ยุคสมัย ----------
+const ERA={war:['⚔️ ยุคสงคราม','ศึกบ่อย ศัตรูแรงขึ้น 10% · ทหารรับจ้างรวย'],famine:['🌾 ยุคอดอยาก','เงินหายาก โจรชุม · คนช่วยชาวบ้านได้ใจมาก'],gold:['📜 ยุคทองยุทธภพ','คัมภีร์หาง่าย · คู่แข่งเก่งขึ้น 10%'],fall:['👑 ราชวงศ์ล่ม','ราชสำนักแตก — ใครเคยใกล้ชิดกลายเป็นเป้า'],peace:['🌸 ยุคสงบ','ชีวิตเรียบง่าย ค้าขายรุ่ง · ความสุขง่ายขึ้น']};
+function eraNew(first){const ks=Object.keys(ERA).filter(k=>!S.epo||k!==S.epo.k);const k=ch(ks);S.epo={k,until:S.age+R(20,30)};
+ if(k==='fall'){try{const R0=N2().rp&&(S.rep=S.rep||{pp:0,sect:0,court:0,dem:0});if(R0){R0.court=-Math.round(R0.court*.8)}}catch(e){}}
+ if(!first)log(`🌀 <b>${ERA[k][0]}</b> เริ่มต้น — ${ERA[k][1]} (ราว ${S.epo.until-S.age} ปี)`,'myth',true)}
+{const _f=fight;fight=function(n,e){try{if(S&&S.epo&&mortal()&&!S.beastMode&&S.ch!=='hell'&&(S.epo.k==='war'||S.epo.k==='gold'))e*=1.1;if(S&&S._cmp)e*=.85}catch(x){}return _f.call(this,n,e)}}
+const EREV={
+ war:()=>Ev('⚔️ ทัพรับจ้าง','แม่ทัพเสนอค่าจ้างสูงให้คุณนำหน่วยกล้าตาย',[{t:'⚔️ รับงาน',s:'ศึกเลือกท่า · ชนะได้เงินก้อนใหญ่',f(){tfight('แม่ทัพฝ่ายตรงข้าม',ep(1.15),w=>{if(w){S.money+=Math.round(S.money*.35)+600;rp({court:10})}},'⚔️ สมรภูมิ')}},{t:'🏠 พาครอบครัวหลบภัย',s:'เงิน -15%',skip:1,f(){lose(.15)}}]),
+ famine:()=>Ev('🌾 ฝูงชนหิวโหยหน้าประตู','ชาวบ้านหลายร้อยคนมาออกันหน้าบ้านคุณ',[{t:'🍚 เปิดยุ้งฉาง',s:'เงิน -25% · '+'ชาวบ้าน +20',f(){lose(.25);rp({pp:20});S.karma+=10}},{t:'💰 ขายข้าวราคาแพง',s:'เงิน +40% · ชาวบ้าน -25',f(){S.money+=Math.round(S.money*.4)+200;rp({pp:-25});S.karma-=10}},{t:'🚪 ปิดประตูเงียบ',skip:1,s:'ชาวบ้าน -10',f(){rp({pp:-10})}}]),
+ gold:()=>Ev('📜 คัมภีร์ลับโผล่กลางตลาด','ยุคทองทำให้คัมภีร์หายากหลุดออกมาบ่อย แต่คนแย่งก็มาก',[{t:'⚔️ แย่งชิง',s:'ศึกเลือกท่า · ชนะได้วิชา',f(){tfight('ยอดฝีมือคู่แย่ง',ep(1.1),w=>{if(w)try{S.arts.push(newArt(2))}catch(e){}},'📜 ชิงคัมภีร์')}},{t:'💰 ประมูลซื้อ',s:'เงิน -30% · ได้วิชา',f(){lose(.3);try{S.arts.push(newArt(1))}catch(e){}}},{t:'🚶 ปล่อยไป',skip:1,f(){}}]),
+ fall:()=>Ev('👑 กบฏบุกเมืองหลวง','องค์ชายหนีมาขอที่ซ่อน ทหารกบฏตามมาติดๆ',[{t:'🛡️ ซ่อนองค์ชาย',s:'ศึกเลือกท่ากับแม่ทัพกบฏ · ถ้าราชวงศ์ฟื้นจะได้ใหญ่',f(){tfight('แม่ทัพกบฏ',ep(1.2),w=>{if(w){mem('องค์ชายที่หนีภัย',3,'ซ่อนเขาจากกบฏ');rp({court:30})}},'👑 คืนกบฏ')}},{t:'⛓️ ส่งตัวให้กบฏ',s:'เงิน + · กรรมชั่ว',f(){S.money+=Math.round(S.money*.3)+400;S.karma-=20;mem('องค์ชายที่หนีภัย',-3,'ขายเขาให้กบฏ')}}]),
+ peace:()=>Ev('🌸 เทศกาลโคมไฟ','ทั้งเมืองออกมาเที่ยวงาน ไม่มีใครพกอาวุธ',[{t:'🏮 เปิดร้านในงาน',s:'เงิน +20%',f(){S.money+=Math.round(S.money*.2)+100}},{t:'💞 เดินเที่ยวกับคนสำคัญ',s:'ความสุข +15',f(){joy(15)}},{t:'🧘 ใช้ความสงบฝึกวิชา',s:'พลัง +2%',f(){S.power+=pw(.02)}}])};
+// ---------- 1) วิกฤตนับถอยหลัง ----------
+const CRI={poison:['🧊 พิษเย็นในเส้นลมปราณ','หาสมุนไพร 3 ชนิดให้ครบ',3,5],kidnap:['👶 ลูกถูกลักพาตัว','ตามเบาะแส 3 ชิ้นแล้วบุกช่วย',3,3],doom:['🏯 สำนักจะถูกล้าง','เตรียมพร้อม 4 ด้านก่อนศัตรูบุก',4,4]};
+function criStart(){const opts=['poison','doom'];if((S.children||[]).length)opts.push('kidnap');const k=ch(opts),C=CRI[k];S.cri={k,left:C[3],got:0,need:C[2]};
+ const intro={poison:'ระหว่างสู้ คุณโดนเข็มพิษเย็นของสำนักทมิฬ หมอบอกว่า "อยู่ได้อีกห้าปี ถ้าหาสมุนไพรสามชนิดไม่ครบ ร่างจะแข็งเป็นน้ำแข็ง"',kidnap:`จดหมายเปื้อนเลือดถูกปักไว้หน้าประตู "อยากเห็น${(ch(S.children)||{}).n||'ลูก'}อีก ก็ตามมาให้ทันภายในสามปี"`,doom:'สายลับรายงานว่าพันธมิตรมารกำลังรวมทัพ อีกสี่ปีจะบุกล้างสำนักของคุณจนสิ้นซาก'}[k];
+ log(`⏳ <b>${C[0]}</b> — ${intro}`,'myth',true)}
+function criYear(){const c=S.cri,C=CRI[c.k];
+ if(c.left<=0||c.got>=c.need)return criEnd();
+ const t=`${C[0]} · เหลือ ${c.left} ปี · ${c.got}/${c.need}`;
+ if(c.k==='poison'){const herb=['บัวหิมะพันปี','เห็ดหลินจือเลือด','ดอกไม้ไฟใต้ภูเขาไฟ','รากโสมมังกร'][c.got]||'สมุนไพร';
+  Ev(t,`ข่าวลือว่า<b>${herb}</b>อยู่ในถ้ำที่สัตว์อสูรเฝ้า — ร่างคุณเริ่มเย็นเฉียบตอนกลางคืน`,[
+   {t:'⚔️ บุกถ้ำ',s:'ศึกเลือกท่า · ชนะได้สมุนไพร',f(){tfight('สัตว์อสูรเฝ้าสมุนไพร',ep(1.1),w=>{if(w){c.got++;log(`🌿 ได้${herb}แล้ว (${c.got}/${c.need})`,'good')}},'🌿 '+herb)}},
+   {t:'💰 จ้างนักล่าสมุนไพร',s:'เงิน -30% · สำเร็จ 60%',f(){lose(.3);if(Math.random()<.6){c.got++;log(`🌿 นักล่ากลับมาพร้อม${herb} (${c.got}/${c.need})`,'good')}else log('💰 นักล่าหายไปพร้อมเงิน','bad')}},
+   {t:'🧘 ปิดด่านกดพิษ',s:'ซื้อเวลา +1 ปี · พลัง -3%',f(){c.left++;S.power=Math.max(1,S.power-pw(.03));log('🧘 คุณใช้ลมปราณกดพิษไว้ได้อีกปี','')}}])}
+ else if(c.k==='kidnap')Ev(t,c.got<2?'คุณได้ร่องรอยของพวกลักพาตัว — แต่ตามไปทางไหนดี':'เบาะแสครบพอ คุณรู้แล้วว่าลูกถูกขังที่ไหน',c.got<2?[
+   {t:'🕵️ สืบจากคนในตลาดมืด',s:'ปัญญาช่วย',f(){if(Math.random()<.45+(S.int||0)/300){c.got++;log(`🕵️ ได้เบาะแส (${c.got}/3)`,'good')}else log('🕵️ เบาะแสปลอม เสียเวลาไปทั้งปี','bad')}},
+   {t:'🩸 จับลูกน้องมาบังคับ',s:'ศึกเลือกท่า · กรรม -',f(){S.karma-=5;tfight('ลูกน้องโจร',ep(.95),w=>{if(w){c.got++;log(`🩸 มันคายความจริงออกมา (${c.got}/3)`,'')}},'🩸 เค้นความจริง')}},
+   {t:'💰 ประกาศค่าหัว',s:'เงิน -25% · ได้เบาะแสแน่นอน',f(){lose(.25);c.got++;log(`💰 มีคนนำข่าวมาแลกเงิน (${c.got}/3)`,'')}}]:[
+   {t:'⚔️ บุกช่วยทันที',s:'ศึกเลือกท่า',f(){tfight('หัวหน้าผู้ลักพาตัว',ep(1.2),w=>{c.got=3;c.won=w;criEnd()},'👶 บุกช่วยลูก')}},
+   {t:'💰 จ่ายค่าไถ่',s:'เงิน -50% · ได้ลูกคืนแน่นอน',f(){lose(.5);c.got=3;c.won=1;criEnd()}}]);
+ else{const done=c.d=c.d||{};const L=[['train','🏋️ ฝึกศิษย์','พลัง +2%'],['wall','🧱 สร้างค่ายกล','เงิน -20%'],['ally','🤝 หาพันธมิตร','ต้องเสน่ห์'],['spy','🕵️ ส่งสายลับ','ต้องปัญญา']].filter(x=>!done[x[0]]);
+  Ev(t,`ทัพมารใกล้เข้ามาทุกวัน — ปีนี้ทำได้เพียงอย่างเดียว`,L.map(x=>({t:x[1],s:x[2],f(){if(x[0]==='wall')lose(.2);if(x[0]==='train')S.power+=pw(.02);const ok=x[0]==='ally'?Math.random()<.4+(S.cha||0)/150:x[0]==='spy'?Math.random()<.4+(S.int||0)/250:true;if(ok){done[x[0]]=1;c.got++;log(`✅ ${x[1]}สำเร็จ (${c.got}/4)`,'good')}else log(`❌ ${x[1]}ไม่สำเร็จ`,'bad')}})))}}
+function criEnd(){const c=S.cri;if(!c)return;S.cri=null;const C=CRI[c.k];
+ if(c.k==='poison'){if(c.got>=c.need){S.power+=pw(.05);S.lifespan+=5;keyAdd('รอดจากพิษเย็นด้วยสมุนไพรสามชนิด');log('🌿 ยาถอนพิษสำเร็จ — ร่างอุ่นขึ้น และแข็งแกร่งกว่าเดิม','myth')}
+  else{S.power=Math.max(1,S.power-pw(.2));S.maxHp=Math.round(S.maxHp*.75);S.lifespan=Math.min(S.lifespan,S.age+R(5,15));keyAdd('พิษเย็นแทรกถึงกระดูก');log('🧊 หาสมุนไพรไม่ครบ — พิษเย็นแทรกถึงกระดูก อายุขัยสั้นลงมาก','bad')}}
+ else if(c.k==='kidnap'){if(c.won){joy(25);S.fame+=80;keyAdd('บุกช่วยลูกจากผู้ลักพาตัว');log('👶 คุณกอดลูกไว้แน่น — ไม่มีใครกล้าแตะครอบครัวคุณอีก','myth')}else{joy(-40);mem('ผู้ลักพาตัวลูก',-3,'ทำให้เขาเสียลูกน้อง');keyAdd('ช่วยลูกไม่ทัน');log('💔 คุณไปไม่ทัน… ลูกถูกพาข้ามชายแดนไป ไม่มีใครรู้ชะตา','bad')}}
+ else{const p=c.got;Ev('🏯 ทัพมารมาถึงแล้ว',`คุณเตรียมไว้ ${p}/4 ด้าน — ทุกด้านที่เตรียมไว้ทำให้ศัตรูอ่อนลง`,[{t:'⚔️ ออกรบ',s:'ศึกเลือกท่า',noFate:1,f(){tfight('จอมมารผู้นำทัพ',ep(1.45-p*.12),w=>{if(w){rp({sect:40});S.fame+=200;keyAdd('ปกป้องสำนักจากทัพมาร');log('🏯 ทัพมารแตกพ่าย สำนักของคุณกลายเป็นตำนาน','myth')}else{S.faction=null;rp({sect:-30});inj('ทัพมาร');log('🔥 สำนักถูกเผาราบ คุณรอดมาได้คนเดียว','bad')}},'🏯 ศึกป้องกันสำนัก')}}])}}
+// ---------- 4) สหายมีนิสัย ----------
+const TR={greedy:'💰 โลภ',hot:'🔥 ใจร้อน',loyal:'🛡️ ซื่อสัตย์',amb:'🐍 ทะเยอทะยาน',kind:'🌸 ใจดี'};
+const AL=()=>(S.allies||[]).filter(a=>a&&a.n&&!a.tr);
+function alInit(){(S.allies||[]).forEach(a=>{if(a&&a.n&&!a.per){a.per=ch(Object.keys(TR));a.loy=a.per==='loyal'?75:55}})}
+const CE=[
+ ()=>{const L=AL();if(L.length<2)return false;const[a,b]=[...L].sort(()=>Math.random()-.5);Ev(`💢 ${a.n} กับ ${b.n} ทะเลาะกัน`,`${a.n} (${TR[a.per]}) กล่าวหาว่า ${b.n} (${TR[b.per]}) ขโมยส่วนแบ่ง — ทั้งคู่หันมาให้คุณตัดสิน`,[
+  {t:`☝️ เข้าข้าง ${a.n}`,s:`${a.n} ภักดี+ · ${b.n} ภักดี-`,f(){a.loy+=15;b.loy-=25;log(`☝️ ${b.n}กัดฟันเดินออกไป`,'')}},
+  {t:`☝️ เข้าข้าง ${b.n}`,s:`${b.n} ภักดี+ · ${a.n} ภักดี-`,f(){b.loy+=15;a.loy-=25;log(`☝️ ${a.n}ไม่พูดกับคุณไปหลายวัน`,'')}},
+  {t:'⚖️ แบ่งของให้เท่ากันจากกระเป๋าตัวเอง',s:'เงิน -10% · ทั้งคู่ภักดี+',f(){lose(.1);a.loy+=8;b.loy+=8;log('⚖️ ทั้งสองยอมจับมือกัน','good')}}]);return true},
+ ()=>{const L=AL();if(!L.length)return false;Ev('🗺️ ภารกิจอันตราย','ต้องพาคนไปด้วยหนึ่งคน — คนที่ไปช่วยให้ศึกง่ายขึ้น คนที่ไม่ได้ไปจะน้อยใจ',L.slice(0,4).map(a=>({t:`👤 ${a.n}`,s:`${TR[a.per]} · ภักดี ${Math.round(a.loy)}`,f(){S._cmp=1;tfight('หัวหน้าค่ายโจรภูเขา',ep(1.15),w=>{S._cmp=0;a.loy+=10;L.filter(x=>x!==a).forEach(x=>x.loy-=5);if(w){S.money+=Math.round(S.money*.2)+300;if(a.per==='greedy'&&Math.random()<.4){const g=Math.round(S.money*.1);S.money-=g;a.loy-=5;log(`💰 ${a.n}แอบเก็บส่วนแบ่งไป ${fmtM(g)}`,'bad')}}},'🗺️ ภารกิจกับ'+a.n)}})).concat([{t:'🚶 ไปคนเดียว',skip:1,s:'ไม่มีใครช่วย',f(){tfight('หัวหน้าค่ายโจรภูเขา',ep(1.15),w=>{if(w)S.money+=Math.round(S.money*.2)+300},'🗺️ ภารกิจเดี่ยว')}}]));return true},
+ ()=>{const a=AL().find(x=>x.loy<25&&(x.per==='greedy'||x.per==='amb'||x.per==='hot'));if(!a)return false;Ev(`🗡️ ${a.n} หักหลัง`,`${a.n} (${TR[a.per]}) ที่ไม่พอใจคุณมานาน พาศัตรูมาล้อมบ้านกลางดึก`,[
+  {t:'⚔️ สู้กับคนทรยศ',s:'ศึกเลือกท่า',noFate:1,f(){tfight(a.n,ep(1.1),w=>{S.allies=S.allies.filter(x=>x!==a);mem(a.n,-3,'ถูกขับไล่หลังทรยศ');log(w?`🗡️ ${a.n}หนีไปพร้อมบาดแผล`:`🗡️ ${a.n}ขนทรัพย์สินคุณไปครึ่งหนึ่ง`,w?'':'bad');if(!w)lose(.5)},'🗡️ คืนแห่งการทรยศ')}},
+  {t:'🗣️ เกลี้ยกล่อม',s:'เสน่ห์ช่วย',noFate:1,f(){if(Math.random()<.3+(S.cha||0)/200){a.loy=60;log(`🗣️ ${a.n}ทิ้งดาบลงแล้วร้องไห้`,'good')}else{S.allies=S.allies.filter(x=>x!==a);lose(.3);log(`🗣️ ${a.n}ไม่ฟัง — หนีไปพร้อมเงิน`,'bad')}}}]);return true}];
+{const _f=fight;fight=function(n,e){const w=_f.apply(this,arguments);try{if(!w&&S&&S.alive&&mortal()){const a=AL().find(x=>x.loy>=85);if(a&&Math.random()<.1){S.allies=S.allies.filter(x=>x!==a);keyAdd(`${a.n}ตายแทนในศึกกับ${String(n).replace(/<[^>]+>/g,'')}`);log(`🕯️ <b>${a.n}</b>กระโดดรับดาบแทนคุณ — "ตามท่านมาทั้งชีวิต… คุ้มแล้ว"`,'myth');return true}}}catch(x){}return w}}
+// ---------- 5) คดีปริศนา ----------
+const SUSP=[['ศิษย์พี่ใหญ่','อยากได้ตำแหน่งเจ้าสำนัก'],['ภรรยาน้อย','ถูกทำร้ายมาหลายปี'],['หมอประจำสำนัก','เป็นคนเตรียมยาให้ทุกวัน'],['แขกจากสำนักคู่แข่ง','มาพักคืนเกิดเหตุพอดี'],['พ่อบ้านเฒ่า','ถือกุญแจทุกห้อง']];
+function mysStart(){const sus=[...SUSP].sort(()=>Math.random()-.5).slice(0,4).map(x=>({r:x[0],why:x[1],n:anyName(x[0]==='ภรรยาน้อย'?'หญิง':'ชาย'),out:0}));S.mys={sus,cul:R(0,3),left:10,cl:0,v:anyName('ชาย')};
+ log(`🔍 <b>คดีห้องปิดตาย</b> — เจ้าสำนัก${S.mys.v}ถูกพบเป็นศพในห้องที่ล็อกจากข้างใน ผู้ต้องสงสัย 4 คน เบาะแสจะโผล่ทีละชิ้น (มีเวลา 10 ปีก่อนคนร้ายหนี)`,'myth',true)}
+function mysSusTxt(){return S.mys.sus.map((x,i)=>`${x.out?'<s>':''}${i+1}. ${x.n} (${x.r}) — ${x.why}${x.out?'</s> ✓ พ้นข้อสงสัย':''}`).join('<br>')}
+function mysYear(){const M=S.mys;M.left--;if(M.left<=0){const c=M.sus[M.cul];mem(c.n,-3,'เกือบเปิดโปงคดีฆาตกรรมของเขา');log(`🔍 คดีหมดเวลา — ${c.n} (${c.r}) หนีไปได้ คุณเพิ่งรู้ทีหลังว่าเขาคือคนร้าย`,'bad');S.mys=null;return}
+ const opts=[{t:'🕵️ สืบต่อ',s:'ปัญญาช่วย · อาจตัดผู้ต้องสงสัยได้ 1 คน',f(){if(Math.random()<.45+(S.int||0)/250){const inn=M.sus.map((x,i)=>i).filter(i=>i!==M.cul&&!M.sus[i].out);if(inn.length){const i=ch(inn);M.sus[i].out=1;M.cl++;log(`🔍 เบาะแส: ${M.sus[i].n} มีพยานยืนยันว่าอยู่ที่อื่นคืนนั้น`,'good')}}else log('🔍 ปีนี้ไม่ได้อะไรเพิ่ม','')}},
+  {t:'💰 จ้างนักสืบ',s:'เงิน -15% · ตัดได้ 1 คนแน่นอน',f(){lose(.15);const inn=M.sus.map((x,i)=>i).filter(i=>i!==M.cul&&!M.sus[i].out);if(inn.length){const i=ch(inn);M.sus[i].out=1;M.cl++;log(`🔍 นักสืบพบว่า ${M.sus[i].n} บริสุทธิ์`,'good')}}}];
+ M.sus.forEach((x,i)=>{if(!x.out)opts.push({t:`☝️ ชี้ตัว: ${x.n}`,s:x.r,noFate:1,f(){mysAccuse(i)}})});
+ Ev(`🔍 คดีห้องปิดตาย · เหลือ ${M.left} ปี`,mysSusTxt(),opts)}
+function mysAccuse(i){const M=S.mys,x=M.sus[i];S.mys=null;
+ if(i===M.cul)tfight(x.n,ep(1.1),w=>{S.fame+=150;rp({sect:20,pp:10});keyAdd(`ไขคดีห้องปิดตาย — คนร้ายคือ${x.n}`);log(`🔍 ถูกต้อง! ${x.n} (${x.r})${w?' ถูกจับได้':' หนีไปได้แต่ทุกคนรู้ความจริงแล้ว'}`,'myth')},'🔍 คนร้ายจนตรอก');
+ else{const c=M.sus[M.cul];S.karma-=20;S.fame=Math.max(0,S.fame-60);rp({sect:-20});mem(c.n,-2,'เกือบจับได้แต่ชี้ผิดคน');keyAdd(`ชี้ผิดตัวในคดีห้องปิดตาย — ${x.n}ถูกประหารทั้งที่บริสุทธิ์`);log(`💀 ${x.n}ถูกประหาร… สามเดือนต่อมา ${c.n} (${c.r}) หัวเราะอยู่ในที่ปลอดภัย`,'bad')}}
+// ---------- 6) ชีวิตสองหน้า ----------
+function maskOffer(){Ev('🎭 หน้ากากจอมโจร','ชายที่ใกล้ตายยื่นหน้ากากเงินให้ "ปล้นคนรวยแจกคนจน… คืนนี้เป็นตาเจ้า"',[{t:'🎭 รับหน้ากาก',s:'กลางคืนเป็นจอมโจร · ถ้าถูกจับได้ ชื่อเสียงพังทุกกลุ่ม',f(){S.mask={sus:0,n:0};log('🎭 ตั้งแต่คืนนี้ คุณมีชีวิตสองหน้า','myth')}},{t:'🙅 ไม่รับ',skip:1,f(){}}])}
+function maskYear(){const M=S.mask;Ev(`🎭 คืนของจอมโจร · ความสงสัย ${Math.round(M.sus)}/100`,'ทางการเริ่มสืบหาตัวจอมโจรหน้ากากเงิน',[
+ {t:'💰 ปล้นคฤหาสน์ขุนนาง',s:'เงินก้อนใหญ่ · สงสัย +18',f(){M.n++;M.sus+=18;S.money+=Math.round(S.money*.3)+500;rp({court:-5});log('🎭 คฤหาสน์ทั้งหลังตื่นมาพบหีบเงินว่างเปล่า','')}},
+ {t:'📜 ขโมยคัมภีร์ในหอสมบัติ',s:'ได้วิชา · สงสัย +22',f(){M.n++;M.sus+=22;try{S.arts.push(newArt(2))}catch(e){}}},
+ {t:'🍚 แจกเงินคนจน',s:'ชาวบ้าน +12 · สงสัย +8',f(){M.n++;M.sus+=8;lose(.08);rp({pp:12});S.karma+=6}},
+ {t:'🌙 เก็บตัวเงียบ',s:'สงสัย -12',f(){M.sus=Math.max(0,M.sus-12)}},
+ ...(M.sus<40&&M.n>=3?[{t:'🕊️ แขวนหน้ากากถาวร',s:'จบชีวิตสองหน้าอย่างตำนาน',f(){S.mask=null;keyAdd('จอมโจรหน้ากากเงินที่ไม่มีใครรู้ตัวจริง');S.fame+=60;log('🕊️ หน้ากากเงินหายไปจากยุทธภพ — กลายเป็นนิทานที่เด็กๆ เล่ากัน','myth')}}]:[])])}
+function maskExpose(){const M=S.mask;S.mask=null;Ev('💥 หน้ากากถูกกระชาก','กลางงานเลี้ยงใหญ่ หัวหน้ามือปราบกระชากหน้ากากของคุณต่อหน้าแขกทั้งงาน',[
+ {t:'⚔️ สู้ฝ่าวงล้อม',s:'ศึกเลือกท่า',noFate:1,f(){tfight('หัวหน้ามือปราบ',ep(1.2),w=>{rp({court:-40,sect:-20});S.fame=Math.round(S.fame*.5);if(!w)S.jail={left:R(4,8),tr:0};log(w?'💥 คุณฝ่าออกไปได้ — แต่กลายเป็นนักโทษหนีคดีทั้งแผ่นดิน':'⛓️ คุณถูกจับเข้าคุก','bad')},'💥 งานเลี้ยงนองเลือด')}},
+ {t:'🙇 ยอมมอบตัว',s:'ติดคุก · ชาวบ้านอาจช่วย',noFate:1,f(){S.jail={left:R(3,6),tr:0};rp({court:-25,pp:(M.n>3?15:0)});log('⛓️ คุณยื่นมือให้ใส่ตรวน','bad')}}])}
+// ---------- 7) พลิกชะตา ----------
+function jailYear(){const J=S.jail;J.left--;if(J.left<=0){S.jail=null;log('🚪 ประตูคุกเปิด — คุณได้อิสระอีกครั้ง','good');return}
+ const O=[{t:'⛏️ แหกคุก',s:'ศึกเลือกท่า · ชนะเป็นอิสระ · ราชสำนัก -20',f(){tfight('ผู้คุมใหญ่',ep(1.05),w=>{if(w){S.jail=null;rp({court:-20});log('⛏️ คุณหายไปในคืนเดือนมืด','epic')}else{J.left+=2;inj('ผู้คุม')}},'⛏️ แหกคุก')}},
+  {t:'💰 ติดสินบนผู้คุม',s:'เงิน -40% · ออกทันที',f(){lose(.4);S.jail=null;log('💰 ผู้คุมลืมล็อกประตูคืนนั้น','')}},
+  {t:'🔍 สืบว่าใครใส่ร้าย',s:'ปัญญาช่วย · สำเร็จ 2 ครั้งพ้นผิด',f(){if(Math.random()<.4+(S.int||0)/250){J.tr++;log(`🔍 ได้หลักฐาน (${J.tr}/2)`,'good');if(J.tr>=2){S.jail=null;rp({court:20});const n=anyName('ชาย');mem(n,-3,'ถูกเปิดโปงว่าใส่ร้ายคุณ');log(`⚖️ ศาลพลิกคดี — ${n}คือคนใส่ร้าย คุณพ้นผิดพร้อมเกียรติ`,'myth')}}else log('🔍 ไม่มีใครยอมพูด','')}},
+  {t:'🧱 อยู่อย่างสงบ',s:'เวลาผ่านไป',skip:1,f(){}}];
+ if(!J.mt)O.push({t:'👴 ผูกมิตรกับชายชราห้องข้างๆ',s:'ว่ากันว่าเคยเป็นยอดฝีมือ',f(){J.mt=1;try{S.arts.push(newArt(3))}catch(e){}mem('ชายชราในคุก',2,'ดูแลเขาในคุก');log('👴 ชายชราถ่ายทอดวิชาที่ไม่เคยสอนใคร "ข้าเหลือเวลาไม่มาก ใช้มันให้ดี"','myth')}});
+ Ev(`⛓️ ในคุก · เหลือ ${J.left} ปี`,'ห้องขังชื้นแฉะ ผู้คุมรับสินบน นักโทษข้างๆ บางคนไม่ธรรมดา',O)}
+const TW={
+ jail(){S.jail={left:R(3,8),tr:0};log('⛓️ <b>พลิกชะตา: ถูกใส่ร้าย</b> — ทหารบุกค้นบ้านพบของกลางที่คุณไม่เคยเห็น คุณถูกจับเข้าคุก','myth',true)},
+ amnesia(){const L=S.arts||[];const k=Math.floor(L.length/2);S.lostArts=L.splice(0,k);const a=anyName('หญิง'),b=anyName('ชาย'),truth=Math.random()<.5;log(`🌫️ <b>พลิกชะตา: ความจำเสื่อม</b> — คุณตื่นมาจำอะไรไม่ได้ วิชาหายไป ${k} วิชา`,'myth',true);
+  Ev('🌫️ ใครพูดความจริง',`${a}บอกว่าคุณเป็นจอมยุทธ์ผู้ทรงธรรมที่ถูกลอบทำร้าย<br>${b}บอกว่าคุณคือหัวหน้ามือสังหาร และเขาเป็นมือขวาของคุณ<br><span class="tag2">มีคนหนึ่งโกหก</span>`,[
+   {t:`🙏 เชื่อ${a}`,s:'เธอพาไปหาคนที่รู้จักคุณ',noFate:1,f(){if(truth){S.arts.push(...S.lostArts);S.lostArts=null;mem(a,3,'อยู่ข้างคุณตอนความจำเสื่อม');log(`🌫️ ${a}พูดความจริง — ความจำและวิชากลับมาครบ`,'myth')}else{S.karma-=15;lose(.3);mem(a,-2,'หลอกใช้ตอนความจำเสื่อม');log(`🌫️ ${a}หลอกคุณ — กว่าจะรู้ตัวเธอก็ขนเงินหนีไปแล้ว`,'bad')}}},
+   {t:`🗡️ เชื่อ${b}`,s:'เขาพาไปหาพรรคพวก',noFate:1,f(){if(!truth){S.arts.push(...S.lostArts);S.lostArts=null;rp({dem:20});log(`🗡️ ${b}พูดจริง — คุณคือหัวหน้ามือสังหาร และพรรคพวกยังรออยู่`,'myth')}else{S.karma-=20;rp({dem:15,pp:-15});mem(b,-2,'หลอกให้ทำงานสกปรก');log(`🗡️ ${b}หลอกให้คุณฆ่าคนแทนเขาหลายปี`,'bad')}}},
+   {t:'🧭 ไม่เชื่อใคร เริ่มใหม่',s:'ปัญญา + · วิชาที่หายจะไม่กลับมา',noFate:1,f(){S.int+=40;S.lostArts=null;log('🧭 คุณเลือกเป็นคนใหม่ทั้งหมด','')}}])},
+ swap(){S.power=Math.max(1,S.power-pw(.3));S.swapA=S.age;log('🔄 <b>พลิกชะตา: สลับร่าง</b> — คุณตื่นมาในร่างคนแปลกหน้า พลังเดิมเหลือไม่ถึงครึ่ง ครอบครัวไล่คุณออกจากบ้านเพราะคิดว่าเป็นคนบ้า','myth',true)}};
+function swapProve(){S.swapA=0;Ev('🔄 พิสูจน์ตัวตน','คุณกลับไปหน้าบ้านอีกครั้ง — ต้องทำให้คนในครอบครัวเชื่อ',[
+ {t:'🗝️ เล่าความลับที่รู้กันแค่ในบ้าน',s:'ปัญญาช่วย',noFate:1,f(){if(Math.random()<.4+(S.int||0)/250){S.power+=pw(.35);joy(20);log('🔄 แม่ร้องไห้กอดคุณ — วิญญาณค่อยๆ เข้ากับร่างใหม่ พลังกลับมาและแรงกว่าเดิม','myth')}else{joy(-15);log('🔄 ไม่มีใครเชื่อ — พวกเขาแจ้งทางการ','bad')}}},
+ {t:'⚔️ ใช้วิชาประจำตระกูลให้ดู',s:'ศึกเลือกท่ากับพี่ชาย',noFate:1,f(){tfight('พี่ชายในร่างเดิม',ep(1),w=>{if(w){S.power+=pw(.3);log('🔄 ท่าที่มีแค่คุณใช้เป็น ทำให้ทุกคนเงียบกริบ','epic')}},'🔄 พิสูจน์ด้วยวิชา')}},
+ {t:'🚶 เริ่มชีวิตใหม่ในร่างนี้',s:'เสน่ห์ +30 · ปัญญา +30',noFate:1,f(){S.cha=(S.cha||0)+30;S.int+=30;log('🚶 คุณเดินจากบ้านเดิมไป — ชีวิตใหม่ในใบหน้าใหม่','')}}])}
+// ---------- ป้าย ----------
+{const _r=render;render=function(){const r=_r.apply(this,arguments);try{const t=$('gTags');if(t&&S){t.querySelectorAll('.nl3').forEach(x=>x.remove());const B=[];
+ if(S.epo&&mortal())B.push(`${ERA[S.epo.k][0]} ${Math.max(0,S.epo.until-S.age)}ปี`);if(S.cri)B.push(`⏳ ${CRI[S.cri.k][0].split(' ').slice(1).join(' ')} ${S.cri.left}ปี ${S.cri.got}/${S.cri.need}`);if(S.mys)B.push(`🔍 คดี ${S.mys.left}ปี`);if(S.mask)B.push(`🎭 สงสัย ${Math.round(S.mask.sus)}`);if(S.jail)B.push(`⛓️ คุก ${S.jail.left}ปี`);
+ t.insertAdjacentHTML('beforeend',B.map(x=>`<span class="tag nl3"${/⏳|⛓️/.test(x)?' style="border-color:#ff5a5a;color:#ffb0b0"':''}>${x}</span>`).join(''))}}catch(e){}return r}}
+// ---------- รายปี ----------
+{const _py=passYear;passYear=function(){const a0=S?S.age:0;const r=_py.apply(this,arguments);try{if(!S||!S.alive||S.age===a0||!mortal())return r;const st=Math.min(5,S.age-a0);
+ if(!S.epo)eraNew(true);else if(S.age>=S.epo.until)eraNew(false);
+ alInit();
+ if(S.epo.k==='famine')S.money=Math.max(0,Math.floor(S.money*(1-.02*st)));if(S.epo.k==='peace')joy(1);
+ if(S.mask)S.mask.sus=Math.max(0,S.mask.sus-3*st);
+ if(S.cri)S.cri.left-=st;
+ if(qFull())return r;
+ if(S.jail){jailYear();return r}
+ if(S.mask&&S.mask.sus>=100){maskExpose();return r}
+ if(S.cri){criYear();return r}
+ if(S.swapA&&S.age-S.swapA>=3){swapProve();return r}
+ if(S.mys&&Math.random()<.5){mysYear();return r}
+ if(S.mask&&Math.random()<.3){maskYear();return r}
+ if(S.age>=16&&Math.random()<.06){const L=CE.slice().sort(()=>Math.random()-.5);for(const f of L)if(f())return r}
+ if(S.age>=14&&S.age-(S._erA||0)>=5&&Math.random()<.15){S._erA=S.age;EREV[S.epo.k]();return r}
+ const TWo=S._twd=S._twd||{};
+ if(S.age>=20&&Math.random()<.012){const k=ch(Object.keys(TW).filter(k=>!TWo[k]));if(k){TWo[k]=1;TW[k]();return r}}
+ if(S.age>=15&&S.age-(S._criE||0)>=15&&Math.random()<.04){S._criE=S.age;criStart();return r}
+ if(S.age>=20&&!S._mysD&&Math.random()<.025){S._mysD=1;mysStart();return r}
+ if(S.age>=18&&S.age<=50&&!S._mskD&&(S.algn==='good'||S.algn==='free'||!S.algn)&&Math.random()<.02){S._mskD=1;maskOffer();return r}
+ }catch(e){console.error(e)}return r}}
+window._nl3={tfight,criStart,criYear,mysStart,mysYear,maskOffer,maskYear,maskExpose,jailYear,TW,swapProve,CE,EREV,eraNew,alInit};
+}catch(e){console.error(e)}})();
 </script>
 </body>
 </html>
