@@ -168,7 +168,10 @@ const RKG = (() => {
     return { id, n: 'กรอบ「' + title(p, c, k, r) + '」', side: 'r', c: 0, ty: TY[r], c1: pal[0], c2: pal[1], c3: pal[2], pc: pal[1], bd: BD[p][r], d: 'อันดับ ' + r + ' ทำเนียบ' + PN[p] + ' รุ่น ' + dl + ' — มีรอบเดียว ไม่กลับมาอีก', gen: 1, sh: sh.join('|') };
   }
   const fid = (p, c, k, r) => 'f_g' + p + c + k + '_' + r;
-  return { title, frame, fid, RE, H };
+  // อันดับจากคำแก่น (คำแรกของฉายา) · หมวดจากคำประจำหมวด — ใช้ทำป้ายฉายาให้ถูกอันดับ
+  const rank = t => { t = String(t || ''); for (let r = 1; r <= 3; r++) if (CORE[r].some(c => t.startsWith(c))) return r; return 0 };
+  const cat = t => { t = String(t || ''); for (const k of ['h', 's', 'j', 'r', 'b', 'x', 'g', 'c']) if (TH[k].some(w => t.includes(w))) return k; return 'm' };
+  return { title, frame, fid, RE, H, rank, cat };
 })();
 const RKG_C = { m: 'm', x: 'x', g: 'g', b: 'b', r: 'r', c: 'c', ch: 'h', cs: 's', cj: 'j' };
 const rkKey = (lab, salt) => String(lab || '').replace(/[^0-9]/g, '') + (salt ? 's' + salt : '');
@@ -947,7 +950,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const pm = {}; all.forEach((x, i) => { pm[x.lid] = pubs[i] === '1' ? 1 : pubs[i] === '2' ? 2 : 0; if (+kns[i] > 0) x.kn = +kns[i] });
       const admB = !!ADM_KEY && String(qOf(req).key || '') === ADM_KEY;
       const fix = l => l.map(x => { const v = x.lid ? pm[x.lid] || 0 : 0; const o = Object.assign(x, { pub: v === 1 || (admB && x.lid) ? 1 : 0 }); if (v === 2 && !admB) { o.n = 'ผู้ไม่ประสงค์ออกนาม'; o.f = ''; o.anon = 1 } return o });
-      return res.json({ top: fix(T), prev: fix(Pv), ctop: fix(CT), cprev: fix(CP), cm: CHF[cmK], arena, daily: 1, p: per });
+      return res.json({ top: fix(T), prev: fix(Pv), ctop: fix(CT), cprev: fix(CP), cm: CHF[cmK], arena, daily: 1, p: per, rks: await (async () => { try { const L = { d: new Date(now + 7 * 3600e3).toISOString().slice(0, 10), w: week(new Date(now)), m: bdMon(now) }, v = await pipe(['d', 'w', 'm'].map(p0 => ['GET', 'rksalt:' + p0 + ':' + rkKey(L[p0])])); return { d: v[0] || '', w: v[1] || '', m: v[2] || '' } } catch { return {} } })() });
     }
     if (a === 'bdrw') {
       if (!okId(id)) return res.json({ l: [] });

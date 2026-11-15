@@ -3948,7 +3948,7 @@ async function openOnline(tab){tab=tab||'chat';clearInterval(chatT);const tabs=[
  if(tab==='chat'){modal(head+`<div id="chatBox" class="chatbox"><div class="tag2">กำลังโหลด…</div></div><div class="chatin"><input id="chatIn" maxlength="200" placeholder="พิมพ์ข้อความ… (ลิงก์และคำหยาบถูกปิด)" onkeydown="if(event.key==='Enter')chatSend()"><button class="pbtn" onclick="chatSend()">ส่ง</button></div>${S?'<button class="gbtn" style="width:100%;margin-top:6px" onclick="shareLife()">📤 แชร์ชีวิตตอนนี้เข้าแชท</button>':''}<p class="tag2">⚑ รายงานข้อความที่ผิดกฎ · รายงานครบ 5 คนข้อความจะถูกซ่อน</p>`,'online');chatPoll();chatT=setInterval(()=>{if($('modal').dataset.k!=='online'||!$('chatBox'))return clearInterval(chatT);if(!document.hidden)chatPoll()},10000)}
  else if(tab==='board'){modal(head+'<div class="tag2">กำลังโหลด…</div>','online');try{const bp=openOnline._bp||'d',BPN={d:['วันนี้','เมื่อวาน','วัน'],w:['สัปดาห์นี้','สัปดาห์ก่อน','สัปดาห์'],m:['เดือนนี้','เดือนก่อน','เดือน']}[bp];const j=await api('board',{p:bp,cm:(typeof chmSel==='function'?chmSel():'h')});const row=(e,i)=>`<div class="item brd ${e.lid?'click':''}" ${e.lid?`onclick="openLifeView('${e.lid}')"`:''}><div class="h"><b>${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${esc(e.n)}${e.kn?`<span class="lvKc">🙏${fmt(e.kn)}</span>`:''}${e.tt?tchipH(e.tt,e.tr):''}${e.ch&&typeof chBadge==='function'?chBadge(e.ch):''}${e.sp?'<span class="chbg" style="--c:#ff9a30" title="คะแนนโหมดชีวิตสั้นคิดจากความเร็ว">⚡ ความเร็ว</span>':''}${e.al?`<span class="chbg" style="--c:#7a3aff" title="โหมดอเวจี 1000 ชั้น">🕳️ อเวจี ชั้น ${e.al}</span>`:''}${e.hd&&!e.al?`<span class="chbg" style="--c:#ff4a2a" title="ทำเนียบนรกเรียงตามชั้นที่ลงได้ลึกสุดก่อน ชั้นเท่ากันค่อยเทียบคะแนน">🔥 ชั้น ${e.hl||0}</span>`:''}${e.kl?`<span class="klb">♾️ กัลป์ ${e.kl+1}</span>`:''}${e.one?'<span class="klb oneb">🌟 หนึ่งเดียว</span>':''}</b><span class="px">${e.jk?`⛰️ ถึงตอนอายุ ${(1e6-(e.s%1e6))%1e6}`:e.hd===2?fmt(e.hs!=null?e.hs:e.s%1e6):fmt(e.s)}</span></div><p class="tag2">${esc(e.r)} · ${esc(e.f)} · อายุ ${e.age}${e.x?' · ☁️ เซียน':''}${e.ga?` · ขึ้นโลกเทพตอนอายุ ${e.ga}`:e.x&&e.xa?` · เหาะสู่โลกเซียนตอนอายุ ${e.xa}`:''}${e.cu?' · ✍️':''}<br>${esc(e.c||'')}${e.lid?`<br>${e.pub?'👁 แตะเพื่อดูชีวิตนี้':'🔒 ส่วนตัว'}`:''}</p>${e.lid&&admK()?`<button class="sysb" style="margin-top:6px;border-color:#c55;color:#ff9b9b" onclick="event.stopPropagation();bdDelAsk('${e.lid}',this)" data-n="${esc(e.n)}" data-s="${e.s}">🗑 ลบออกจากทำเนียบ (แอดมิน)</button>`:''}</div>`;
    const bw=openOnline._bw!=null?openOnline._bw:(S?(S.ch&&S.ch!=='normal'?4:S.beastMode?2:S.xt?3:S.xian?1:0):(CFG.xian?1:0));const wf=e=>bw===2?!!e.bm:bw===3?(!e.bm&&!!e.g):(!e.bm&&!e.g&&(e.x?1:0)===bw);const T=bw===4?(j.ctop||[]).slice(0,20):(j.top||[]).filter(wf).slice(0,20),Pv=bw===4?(j.cprev||[]).slice(0,3):(j.prev||[]).filter(wf).slice(0,3);
-   modal(head+`<div class="tabs">${[['d','📅 รายวัน'],['w','🗓️ รายสัปดาห์'],['m','🌙 รายเดือน']].map(([k,t])=>`<button class="tabb ${bp===k?'on':''}" onclick="openOnline._bp='${k}';openOnline('board')">${t}</button>`).join('')}</div><div class="tabs"><button class="tabb ${bw===0?'on':''}" onclick="openOnline._bw=0;openOnline('board')">⚔️ ยุทธภพ</button><button class="tabb ${bw===1?'on':''}" onclick="openOnline._bw=1;openOnline('board')">☁️ โลกเทพเซียน</button><button class="tabb ${bw===3?'on':''}" onclick="openOnline._bw=3;openOnline('board')">🌟 โลกเทพ</button><button class="tabb ${bw===2?'on':''}" onclick="openOnline._bw=2;openOnline('board')">🐾 สัตว์อสูร</button><button class="tabb chtab ${bw===4?'on':''}" onclick="openOnline._bw=4;openOnline('board')">🔥 ท้าทาย</button></div>${bw===4?chBoardHead(bp):''}<p class="tag2"${bw===4?' style="display:none"':''}>🏆 <b>ทำเนียบ${BPN[2]}นี้</b> แยกตามโลก — ${bp==='d'?'รีเซ็ตทุกเที่ยงคืน':bp==='w'?'รีเซ็ตทุกวันจันทร์':'รีเซ็ตทุกวันที่ 1'} · คะแนนคิดจาก<b>ค่าเฉลี่ยทุกด้าน</b> (พลัง ชื่อเสียง เงิน ปัญญา เสน่ห์ ลูกหลาน อายุ การต่อสู้ ความสำเร็จ กรรม ความสุข) · อันดับ 1–3 ของแต่ละโลกได้${bp==='d'?' 🥇🥈🥉 กรอบรางวัล':bp==='w'?' 👑💎🔶 กรอบรางวัลรายสัปดาห์':' 🌟🌙☀️ กรอบรางวัลรายเดือน (สวยที่สุด)'} + คลังกรรม ${fmt([0,30000,120000,400000][bp==='d'?1:bp==='w'?2:3])} (อันดับ 1)</p>${T.map(row).join('')||(bw===4?'<p class="tag2">ยังไม่มีใครรอดจากโหมดท้าทาย${BPN[0]} — เป็นคนแรกสิ 🔥</p>':'<p class="tag2">ยังไม่มีใครขึ้นทำเนียบ${BPN[0]}</p>')}${Pv.length?`<h4 style="margin:10px 0 4px">👑 สามอันดับแรก${BPN[1]}</h4>`+Pv.map(row).join(''):''}`,'online')}catch(e){modal(head+'<p class="tag2">โหลดไม่ได้</p>','online')}}
+   modal(head+`<div class="tabs">${[['d','📅 รายวัน'],['w','🗓️ รายสัปดาห์'],['m','🌙 รายเดือน']].map(([k,t])=>`<button class="tabb ${bp===k?'on':''}" onclick="openOnline._bp='${k}';openOnline('board')">${t}</button>`).join('')}</div><div class="tabs"><button class="tabb ${bw===0?'on':''}" onclick="openOnline._bw=0;openOnline('board')">⚔️ ยุทธภพ</button><button class="tabb ${bw===1?'on':''}" onclick="openOnline._bw=1;openOnline('board')">☁️ โลกเทพเซียน</button><button class="tabb ${bw===3?'on':''}" onclick="openOnline._bw=3;openOnline('board')">🌟 โลกเทพ</button><button class="tabb ${bw===2?'on':''}" onclick="openOnline._bw=2;openOnline('board')">🐾 สัตว์อสูร</button><button class="tabb chtab ${bw===4?'on':''}" onclick="openOnline._bw=4;openOnline('board')">🔥 ท้าทาย</button></div>${bw===4?chBoardHead(bp):''}<p class="tag2"${bw===4?' style="display:none"':''}>🏆 <b>ทำเนียบ${BPN[2]}นี้</b> แยกตามโลก — ${bp==='d'?'รีเซ็ตทุกเที่ยงคืน':bp==='w'?'รีเซ็ตทุกวันจันทร์':'รีเซ็ตทุกวันที่ 1'} · คะแนนคิดจาก<b>ค่าเฉลี่ยทุกด้าน</b> (พลัง ชื่อเสียง เงิน ปัญญา เสน่ห์ ลูกหลาน อายุ การต่อสู้ ความสำเร็จ กรรม ความสุข) · อันดับ 1–3 ของแต่ละโลกได้${bp==='d'?' 🥇🥈🥉 กรอบรางวัล':bp==='w'?' 👑💎🔶 กรอบรางวัลรายสัปดาห์':' 🌟🌙☀️ กรอบรางวัลรายเดือน (สวยที่สุด)'} + คลังกรรม ${fmt([0,30000,120000,400000][bp==='d'?1:bp==='w'?2:3])} (อันดับ 1)</p>${T.map(row).join('')||(bw===4?'<p class="tag2">ยังไม่มีใครรอดจากโหมดท้าทาย'+BPN[bp][0]+' — เป็นคนแรกสิ 🔥</p>':'<p class="tag2">ยังไม่มีใครขึ้นทำเนียบ${BPN[0]}</p>')}${Pv.length?`<h4 style="margin:10px 0 4px">👑 สามอันดับแรก${BPN[1]}</h4>`+Pv.map(row).join(''):''}`,'online')}catch(e){modal(head+'<p class="tag2">โหลดไม่ได้</p>','online')}}
  else if(tab==='arena')modal(head+`<p>ส่งเงาของตัวละครไปประลองกับเงาของผู้เล่นคนอื่นในขั้นพลังใกล้เคียงกัน · ชนะได้ชื่อเสียง +10 · ปีละ 3 ครั้ง</p>${S?`<p class="tag2">พลังของคุณ ${fmt(Math.round(myPow()))} · ${REALMS[realmIdx()].n} · ปีนี้ประลองแล้ว ${S.arY===S.age?S.arN||0:0}/3</p><button class="pbtn" style="width:100%" onclick="arenaGo()">⚔️ หาคู่ประลอง</button>`:'<p class="tag2">ต้องอยู่ระหว่างเล่นชีวิตหนึ่งก่อน</p>'}`,'online');
  else modal(head+`<p class="tag2">ชื่อที่แสดงในแชทและทำเนียบ (เว้นว่าง = ใช้ชื่อตัวละคร)</p><input class="crin" maxlength="20" value="${esc(LS.get('murim_pname',''))}" onchange="LS.set('murim_pname',this.value.trim());toast('บันทึกแล้ว')"><p class="tag2" style="margin-top:8px">💾 ย้ายเซฟข้ามเครื่อง ย้ายไปอยู่ในหน้า <a href="#" onclick="openProfile();return false">👤 โปรไฟล์</a> แล้ว</p>`,'online')}
 
@@ -27095,7 +27095,10 @@ const RKG = (() => {
     return { id, n: 'กรอบ「' + title(p, c, k, r) + '」', side: 'r', c: 0, ty: TY[r], c1: pal[0], c2: pal[1], c3: pal[2], pc: pal[1], bd: BD[p][r], d: 'อันดับ ' + r + ' ทำเนียบ' + PN[p] + ' รุ่น ' + dl + ' — มีรอบเดียว ไม่กลับมาอีก', gen: 1, sh: sh.join('|') };
   }
   const fid = (p, c, k, r) => 'f_g' + p + c + k + '_' + r;
-  return { title, frame, fid, RE, H };
+  // อันดับจากคำแก่น (คำแรกของฉายา) · หมวดจากคำประจำหมวด — ใช้ทำป้ายฉายาให้ถูกอันดับ
+  const rank = t => { t = String(t || ''); for (let r = 1; r <= 3; r++) if (CORE[r].some(c => t.startsWith(c))) return r; return 0 };
+  const cat = t => { t = String(t || ''); for (const k of ['h', 's', 'j', 'r', 'b', 'x', 'g', 'c']) if (TH[k].some(w => t.includes(w))) return k; return 'm' };
+  return { title, frame, fid, RE, H, rank, cat };
 })();
 
 const reg=id=>{try{if(!id||typeof id!=='string'||!RKG.RE.test(id))return null;let f=FRAMES.find(x=>x.id===id);if(f)return f;f=RKG.frame(id);if(!f)return null;FRAMES.push(f);try{if(window.FRSH_T)window.FRSH_T[id]=f.sh}catch(e){}return f}catch(e){return null}};
@@ -27105,6 +27108,81 @@ const _fw=frWrap;frWrap=function(inner,id){try{reg(id)}catch(e){}return _fw.appl
 try{(frGet().own||[]).forEach(reg)}catch(e){}
 // รับรางวัล: ใส่กรอบรุ่นนี้เข้ากระเป๋าก่อนหน้าต่างรางวัลอ่านข้อมูล
 const _api=api;api=async function(a){const j=await _api.apply(this,arguments);try{if(a==='bdrw'&&j&&Array.isArray(j.l)){const d=frGet();j.l.forEach(x=>{if(x&&x.gf&&reg(x.gf)){if(!d.own.includes(x.gf))d.own.push(x.gf);x.d=String(x.d||'')+' · กรอบรุ่น '+frOf(x.gf).n}});frSet(d)}}catch(e){}return j};
+})()}catch(e){console.error(e)}
+
+// ===================== v17.25 💬 แชทโฉมใหม่: รวมข้อความต่อเนื่อง · ตัวคั่นวัน · ปักประกาศ · ป้ายข้อความใหม่ · การ์ดผู้เล่น =====================
+try{(()=>{
+try{const st=document.createElement('style');st.textContent=`
+#chatBox.chatbox{height:min(56vh,460px);padding:8px 8px 4px;background:linear-gradient(180deg,var(--w),var(--bg));scroll-behavior:auto;position:relative}
+#chatBox .cm{border-bottom:none;padding:2px 0}
+#chatBox .cm.cmp .cmb{border-radius:4px 14px 14px 14px;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+#chatBox .cm.cmp.me .cmb{border-radius:14px 4px 14px 14px}
+#chatBox .cm.cmG{margin-top:-1px}#chatBox .cm.cmG .cav{visibility:hidden;height:1px}
+#chatBox .cm.cmG .cmh b,#chatBox .cm.cmG .cmh .rkchip,#chatBox .cm.cmG .cmh .tchip{display:none}
+#chatBox .cm.cmG .cmb{border-top-left-radius:14px}#chatBox .cm.cmG:not(.cmOpen) .cmh>*:not(.ct){display:none}#chatBox .cm.cmG:not(.cmOpen) .cmh{float:right;margin:2px 0 0 8px;font-size:0}#chatBox .cm.cmG:not(.cmOpen) .cmh .ct{font-size:11px}#chatBox .cm.cmp.me.cmG:not(.cmOpen) .cmh{float:left;margin:2px 8px 0 0}#chatBox .cm.cmp.me.cmG .cmb{border-top-right-radius:14px}
+#chatBox .cm .cmh .rep{opacity:0;max-width:0;padding:0;margin:0;border:none;overflow:hidden;transition:opacity .15s}
+#chatBox .cm.cmOpen .cmh .rep{opacity:1;max-width:80px;padding:1px 7px;margin-left:4px;border:1.5px solid var(--grid)}
+#chatBox .cm .cmh .ct{font-size:.72em}
+#chatBox .cav{cursor:pointer}
+.cmDay{text-align:center;margin:10px 0 6px;font-size:.75em;color:var(--mut)}.cmDay span{background:var(--grid);border-radius:10px;padding:2px 10px}
+.cmNew{position:sticky;bottom:4px;margin:0 auto;display:block;width:max-content;border:none;border-radius:14px;background:var(--ink);color:var(--bg);font:inherit;font-size:.8em;padding:4px 12px;box-shadow:0 2px 8px #0006;cursor:pointer;z-index:2}
+.cmPin{display:flex;gap:8px;align-items:center;border:2px solid #e8b84a;background:#fff3d0;color:#4a3410;border-radius:10px;padding:6px 10px;margin:0 0 6px;font-size:.85em;cursor:pointer}
+.cmPin b{flex:0 0 auto}.cmPin span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cmPin i{font-style:normal;opacity:.6}
+.chatin input{border-radius:20px;padding:9px 14px}.chatin .chSendI{border-radius:50%;width:42px;height:42px;padding:0;font-size:1.1em;flex:0 0 auto}
+.cmCard{text-align:center}.cmCard .frw{transform:scale(1.6);margin:22px auto 26px;display:inline-block}`;document.head.appendChild(st)}catch(e){}
+const dayLab=t=>{const d=new Date(t),n=new Date(),y=new Date(Date.now()-864e5),k=x=>x.toDateString();return k(d)===k(n)?'วันนี้':k(d)===k(y)?'เมื่อวาน':d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})};
+const idOf=el=>{const b=el.querySelector('[onclick*="chatRep(\'"],[onclick*="chTag(\'"],[onclick*="annOpen(\'"]');const m=b&&/\('([^']+)'\)/.exec(b.getAttribute('onclick'));return m?m[1]:null};
+let lastN=0,lastTop=null;
+const _cr=chatRender;chatRender=function(){const box=$('chatBox'),near=box?box.scrollHeight-box.scrollTop-box.clientHeight<80:true;const r=_cr.apply(this,arguments);
+ try{const b=$('chatBox');if(!b)return r;const L=chatMsgs||[],byId={};L.forEach(m=>{if(m&&m.i)byId[m.i]=m});
+  b.querySelectorAll('.cmDay,.cmNew').forEach(x=>x.remove());
+  const els=[...b.querySelectorAll(':scope > .cm')];let prev=null,pd='';
+  els.forEach((el,i)=>{const m=byId[idOf(el)]||(els.length===L.length?L[i]:null);el.classList.remove('cmG');if(!m)return;el._m=m;
+   const dl=dayLab(m.t);if(dl!==pd){el.insertAdjacentHTML('beforebegin',`<div class="cmDay"><span>${dl}</span></div>`);pd=dl;prev=null}
+   if(prev&&prev.pu&&prev.pu===m.pu&&m.k!=='ann'&&prev.k!=='ann'&&m.k!=='share'&&prev.k!=='share'&&m.t-prev.t<300e3&&el.classList.contains('cmp'))el.classList.add('cmG');
+   prev=m;
+   if(!el.dataset.cu){el.dataset.cu=1;const bb=el.querySelector('.cmb');if(bb&&!bb.getAttribute('onclick'))bb.addEventListener('click',ev=>{if(ev.target.closest('button,a'))return;el.classList.toggle('cmOpen')});const av=el.querySelector('.cav');if(av)av.addEventListener('click',()=>cmCard(el._m))}});
+  // ป้ายข้อความใหม่เมื่อกำลังอ่านย้อนหลัง
+  const top=L.length?L[L.length-1].i:null;
+  if(!near&&lastTop&&top!==lastTop){const k=Math.max(1,L.length-L.findIndex(m=>m.i===lastTop)-1);b.insertAdjacentHTML('beforeend',`<button class="cmNew" onclick="(function(){const b=document.getElementById('chatBox');b.scrollTop=b.scrollHeight;this.remove()}).call(this)">↓ ข้อความใหม่ ${k}</button>`)}
+  else if(near||!lastTop)lastTop=top;
+  if(near)b.scrollTop=b.scrollHeight;
+  b.onscroll=()=>{if(b.scrollHeight-b.scrollTop-b.clientHeight<40){lastTop=L.length?L[L.length-1].i:null;const p=b.querySelector('.cmNew');if(p)p.remove()}};
+  // ปักประกาศล่าสุด (24 ชม.) ไว้เหนือแชท
+  const an=L.slice().reverse().find(m=>m.k==='ann'&&Date.now()-m.t<864e5);let pin=$('cmPin');
+  if(an){if(!pin){b.insertAdjacentHTML('beforebegin','<div id="cmPin" class="cmPin"></div>');pin=$('cmPin')}pin.innerHTML=`<b>📌 ประกาศ</b><span>${esc(String(an.x||'').replace(/^@everyone\s*/i,''))}</span><i>›</i>`;pin.onclick=()=>{try{annOpen(an.i)}catch(e){}}}else if(pin)pin.remove();
+  // ช่องพิมพ์: ปุ่มส่งเป็นไอคอน
+  const sb=document.querySelector('.chatin > button.pbtn');if(sb&&!sb.classList.contains('chSendI')){sb.classList.add('chSendI');sb.textContent='➤';sb.title='ส่ง'}
+ }catch(e){console.error(e)}return r};
+// การ์ดผู้เล่นเมื่อแตะรูป
+window.cmCard=function(m){if(!m)return;const pf=m.pu&&chatProf&&chatProf[m.pu],av=pf&&pf.av?`<img src="${pf.av}" alt="">`:'🙂',mine=m.pu&&typeof myPu==='function'&&m.pu===myPu();
+ const n=L=>(chatMsgs||[]).filter(x=>x.pu===m.pu).length;const fr=pf&&pf.fr&&frOf(pf.fr);
+ const box=$('chatBox'),st=box?box.scrollTop:0;
+ const back=`<div class="brow"><button class="pbtn" onclick="openOnline('chat')">← กลับแชท</button>${!mine&&typeof chTag==='function'&&m.i?`<button class="gbtn" onclick="openOnline('chat');setTimeout(()=>{try{chTag('${esc(m.i)}')}catch(e){}},600)">↩︎ ตอบเขา</button>`:''}</div>`;
+ modal(`<button class="xbtn" onclick="openOnline('chat')">✕</button><div class="cmCard">${frWrap(`<span class="frph">${av}</span>`,pf&&pf.fr)}<h3 style="margin:4px 0">${esc(m.ti?'['+m.ti+'] ':'')}${esc(mine?'คุณ':m.n)}</h3>${m.tt&&typeof tchipH==='function'?tchipH(m.tt,m.tr):''}
+ <p class="tag2">${fr?'สวมกรอบ <b>'+esc(fr.n)+'</b>'+(fr.d?'<br>'+esc(fr.d):''):'ยังไม่สวมกรอบ'}</p><p class="tag2">ข้อความในแชทตอนนี้ ${n()} ข้อความ · ล่าสุด ${new Date(m.t).toTimeString().slice(0,5)}</p></div>${back}`,'chcard')};
+})()}catch(e){console.error(e)}
+
+// ---- v17.24b ป้ายฉายาถูกอันดับ + หน้าทำเนียบโชว์ฉายาที่จะแจกจริงของรอบนี้ ----
+try{(()=>{
+const G=window.RKG;if(!G)return;let SALT={};const GEN=new Map();
+const lab=p=>{const t=new Date(Date.now()+7*3600e3);if(p==='d')return t.toISOString().slice(0,10);if(p==='m')return t.toISOString().slice(0,7);const dd=(t.getUTCDay()+6)%7;return new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate()-dd)).toISOString().slice(0,10)};
+const key=p=>lab(p).replace(/[^0-9]/g,'')+(SALT[p]?'s'+SALT[p]:'');
+const gt=(p,c,r)=>{const t=G.title(p,c,key(p),r);GEN.set(t,{p,r,c});return t};
+window.rkgNow=gt;
+const _api2=api;api=async function(a){const j=await _api2.apply(this,arguments);try{if(String(a).startsWith('board')&&j&&j.rks)SALT=j.rks}catch(e){}return j};
+// ป้ายฉายา: ฉายาสุ่มใหม่ → อันดับจากคำแก่น (เดิมตกไปเป็นอันดับ 1 เสมอ หรือชนชื่อเก่าจนได้อันดับผิด)
+const IC={h:['☄️','🔥','💀'],s:['☄️','🔥','💀'],j:['☄️','🔥','💀'],c:['☄️','🔥','💀'],r:['⏳','🌀','♾️']},PI={d:0,w:1,m:2};
+const _rc=rkChip;rkChip=function(t,tr){try{const s=String(t||'');let o=GEN.get(s);if(!o&&!RKC_OF(s)){const r=G.rank(s);if(r)o={r,c:G.cat(s),p:+tr===9?'m':+tr===8?'w':'d'}}
+ if(o){const{p,r,c}=o,cls=IC[c]?(c==='r'?`rkr rkr${p}`:`rkc rkc${p}`):`rk${p}`,ic=IC[c]?IC[c][PI[p]]:(p==='m'?'👑':p==='w'?'💠':'✦');return`<span class="rkchip ${cls} rr${r}"><i>${ic}${['','①','②','③'][r]}</i>${esc(s.slice(0,40))}</span>`}}catch(e){}return _rc.apply(this,arguments)};
+const _chh=chBoardHead;chBoardHead=function(bp){const m=chmSel(),k=bp||'d',old=CHM_T[m][k];try{CHM_T[m][k]=['',1,2,3].map((r,i)=>i?gt(k,m,r):'')}catch(e){}try{return _chh.apply(this,arguments)}finally{CHM_T[m][k]=old}};
+const _orb2=openRgBoard;openRgBoard=async function(){const keep={};try{for(const p of ['d','w','m']){keep[p]=RKC[p+'r'];RKC[p+'r']=['',1,2,3].map((r,i)=>i?gt(p,'r',r):'')}}catch(e){}try{return await _orb2.apply(this,arguments)}finally{for(const p in keep)RKC[p+'r']=keep[p]}};
+// หน้าทำเนียบ: สลับรายชื่อฉายาเก่าเป็นชุดที่จะแจกจริงรอบนี้ ระหว่างวาดหน้า
+const WC=['m','x','g','b'];
+const _br=brdRestyle;brdRestyle=function(){const keep={},kc={};try{for(const p of ['d','w','m']){keep[p]=RKC[p];RKC[p]=['',1,2,3].map((r,i)=>i?gt(p,WC[openOnline._bw]||'m',r):'');keep[p+'c']=RKC[p+'c'];keep[p+'r']=RKC[p+'r'];RKC[p+'r']=['',1,2,3].map((r,i)=>i?gt(p,'r',r):'');
+  for(const m of ['h','s','j']){kc[m+p]=CHM_T[m][p];CHM_T[m][p]=['',1,2,3].map((r,i)=>i?gt(p,m,r):'')}}}catch(e){}
+ try{return _br.apply(this,arguments)}finally{for(const k in keep)if(keep[k])RKC[k]=keep[k];for(const k in kc)CHM_T[k[0]][k.slice(1)]=kc[k];
+  try{const m=$('modal'),b=m&&m.querySelector('.brdrw');if(b&&!b.querySelector('.rkgNote'))b.insertAdjacentHTML('beforeend','<div class="tag2 rkgNote">🆕 ฉายาสุ่มใหม่ทุกรอบ · อันดับ 1–3 ได้<b>กรอบรุ่นพิเศษ</b>ที่ตั้งชื่อตามฉายาเพิ่มด้วย (มีรอบเดียว)'+(openOnline._bw===4?'':' · แต่ละโลกได้ฉายาต่างกัน')+'</div>')}catch(e){}}};
 })()}catch(e){console.error(e)}
 </script>
 </body>
