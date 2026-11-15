@@ -1221,7 +1221,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const day = new Date(now + 7 * 3600e3).toISOString().slice(0, 10), ipk = String(cip(req) || 'x').slice(0, 45);
       const [a1, a2, dn] = await pipe([['SET', 'onerl:' + id, 1, 'NX', 'PX', 15000], ['SET', 'onerip:' + ipk, 1, 'NX', 'PX', 4000], ['INCR', 'oned:' + id + ':' + day], ['EXPIRE', 'oned:' + id + ':' + day, 172800]]);
       if (a1 !== 'OK' || a2 !== 'OK' || +dn > 300) return res.json({ win: 0 });
-      if (Math.random() < 1e-7) { await cmd('SET', 'onetk:' + id, 1, 'EX', 900); return res.json({ win: 1 }) }
+      if (Math.random() < 1e-6) { await cmd('SET', 'onetk:' + id, 1, 'EX', 900); return res.json({ win: 1 }) }
       return res.json({ win: 0 });
     }
     if (a === 'oneborn') {
