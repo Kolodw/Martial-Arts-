@@ -14730,7 +14730,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
  const free=()=>S&&S.alive&&!choice._cur&&!modalOpen;
  const ncur=k=>(S.hell.cur||[]).filter(x=>x===k).length;
  window.hellInfo=()=>H()?S.hell:null;
- window._HL={CUR,BOON,WM,HL_N,HL_B,addCurse:k=>addCurse(k),offerCurse:f=>offerCurse(f),ncur,wm,H,free,rngOf,hsh};
+ window._HL={CUR,BOON,WM,HL_N,HL_B,pact:()=>pact(),addCurse:k=>addCurse(k),offerCurse:f=>offerCurse(f),ncur,wm,H,free,rngOf,hsh};
  function hInit(){if(!S||S.ch!=='hell'||S.hell)return;const wk=wkKey(),sd=hsh('hell'+wk);S.hell={lv:0,next:16,cur:[],ess:0,boon:{},fail:0,wk,sd,wm:sd%WM.length,burnF:0,lifeB:0,lifeP:0,rev:0,pactY:-99};}
  const gap=()=>Math.max(8,Math.round(Math.min(2000,(typeof lifeMax0==='function'?lifeMax0():S.lifespan)||80)*.07*(wm().gap||1)));
  // ---- อายุขัย: ไฟนรก + พร/สัญญา ----
@@ -14761,7 +14761,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
     if(h.fail>=3){S.deathCause=`วิญญาณถูกขังไว้ใน${nm} (นรกชั้นที่ ${L+1}) ตลอดกาล`;S.hp=0;log(`⛓️ พ่ายที่ประตู${nm}เป็นครั้งที่ 3 — โซ่นรกลากวิญญาณคุณลงไป`,'bad',true);try{checkDeath()}catch(e){}}
     else{h.next=S.age+1;log(`🩸 พ่ายให้${bs} — ถอยกลับมาพร้อมบาดแผล · ประตูจะเปิดอีกครั้งปีหน้า (พลาดได้อีก ${3-h.fail} ครั้ง ไม่งั้นวิญญาณจะถูกขัง)`,'bad',true)}}render()})}
  function pact(){const h=S.hell,r=Math.random(),sysOK=S.sys?!S.ai:!S.sysEver;let k=r<.34?'sys':r<.67?'pow':'life';if(k==='sys'&&!sysOK)k=r<.17?'pow':'life';h.pactY=S.age;
-  const O={sys:{t:S.sys?'🤖 สัญญาปัญญาประดิษฐ์':'🟦 สัญญาหน้าต่างระบบ',s:'แลกกับอายุขัยสูงสุด −30%',f(){h.lifeP-=.3;S.chSysOK=1;try{if(S.sys){aiGive();if(!S.ai){aiGive._b=1;try{aiGive('pact')}finally{aiGive._b=0}}}else{const T=pickW(SYS_TYPES).v,G=pickW(SYS_GRADE).v;bindSys(T,G)}}catch(e){console.error(e)}log('📜 คุณประทับลายนิ้วมือด้วยเลือด — ปีศาจหัวเราะ "อายุของเจ้าเป็นของข้าแล้ว"','myth',true)}},
+  const O={sys:{t:S.sys?'🤖 สัญญาปัญญาประดิษฐ์':'🟦 สัญญาหน้าต่างระบบ',s:'แลกกับอายุขัยสูงสุด −30%',f(){h.lifeP-=.3;S.chSysOK=1;const hadSys=!!S.sys;try{if(S.sys){aiGive();if(!S.ai){aiGive._b=1;try{aiGive('pact')}finally{aiGive._b=0}}}else{const T=pickW(SYS_TYPES).v,G=pickW(SYS_GRADE).v;bindSys(T,G)}}catch(e){console.error(e)}if(hadSys?!S.ai:!S.sys){h.lifeP+=.3;const g=pctPow(.1);S.power+=g;log(`📜 ปีศาจผิดสัญญา — ${hadSys?'AI':'หน้าต่างระบบ'}ไม่ยอมมาหาคุณ! อายุขัยที่ขายไปถูก<b>คืนให้ครบ</b> และปีศาจชดเชยพลังยุทธ์ +${fmt(g)}`,'myth',true);return}log('📜 คุณประทับลายนิ้วมือด้วยเลือด — ปีศาจหัวเราะ "อายุของเจ้าเป็นของข้าแล้ว"','myth',true)}},
    pow:{t:'⚔️ สัญญาพลังมาร',s:'พลังยุทธ์ +30% · แลกกับกรรม −60 และคำสาปค่าหัวจากนรก',f(){const g=pctPow(.3);S.power+=g;S.karma-=60;addCurse('hunt');log(`📜 พลังมารไหลทะลักเข้าร่าง — พลังยุทธ์ +${fmt(g)}`,'myth',true)}},
    life:{t:'🌿 สัญญาอายุยืน',s:'อายุขัยสูงสุด +50% · แลกกับคำสาปสุ่ม 1 ข้อ',f(){h.lifeB+=.5;const ks=Object.keys(CUR).filter(x=>ncur(x)<3);addCurse(ch(ks));log('📜 ปีศาจต่อเส้นชีวิตให้คุณ — แต่ทิ้งรอยไหม้ไว้บนวิญญาณ','myth',true)}}}[k];
   choice('😈 ปีศาจเสนอสัญญา',`เงาสีดำนั่งลงตรงข้ามคุณ "ในนรก ไม่มีอะไรได้มาฟรี… แต่ข้าใจดีพอจะ<b>ขาย</b>ให้"`,[Object.assign({noFate:1},O),{t:'ปฏิเสธ',s:'ไม่แลกอะไรกับปีศาจ',skip:true,f(){S.karma+=3;log('😈 ปีศาจยักไหล่แล้วสลายไปในควัน "แล้วเจ้าจะกลับมาหาข้าเอง"','')}}])}
@@ -26085,6 +26085,18 @@ const gb=document.getElementById('goalBox');if(gb){const mo=new MutationObserver
 {const _bs=brShow;brShow=function(anim){const r=_bs.apply(this,arguments);try{const B=document.querySelector('#brB');if(B){const a=B.lastElementChild;if(a)a.classList.add('brAct');gt(document.getElementById('brGoal'));const m=$('modal');if(m&&anim)m.scrollTop=0}}catch(e){console.error(e)}return r}}
 {const _dr=doRoll;doRoll=function(first){const r=_dr.apply(this,arguments);try{if(!first)window.scrollTo({top:0,behavior:'smooth'});const g=document.getElementById('goalBox');if(g){g.classList.remove('gall')}document.querySelectorAll('#oddsBox').forEach(x=>x.classList.remove('open'))}catch(e){}return r}}
 }catch(e){console.error(e)}})();
+
+// ===== v17.13 กันเวลาค้างตอนประตูนรกถึงเวลา: ถ้าค้างเกิน 12 วิ ล้างตัวล็อกที่ไม่มีหน้าจอจริง =====
+(function(){let t0=0;setInterval(()=>{try{
+ if(typeof hellDue!=='function'||!hellDue()){t0=0;return}
+ const now=Date.now();if(!t0){t0=now;return}if(now-t0<12000)return;
+ const m=document.getElementById('mask'),shown=m&&m.classList.contains('on');
+ try{if(typeof flushReveal==='function'&&(typeof pendModal!=='undefined'&&pendModal||(typeof revealQ!=='undefined'&&revealQ.length)))flushReveal()}catch(e){}
+ if(typeof modalOpen!=='undefined'&&modalOpen&&!shown&&!(typeof pendModal!=='undefined'&&pendModal)){try{closeM()}catch(e){modalOpen=false}}
+ if(choice._cur&&!shown&&!(typeof pendModal!=='undefined'&&pendModal)){choice._cur=null}
+ document.querySelectorAll('.kfx').forEach(x=>{if(!x.dataset.t)x.dataset.t=now;else if(now-(+x.dataset.t)>15000)x.remove()});
+ t0=now-8000;
+}catch(e){}},1500)})();
 </script>
 </body>
 </html>
