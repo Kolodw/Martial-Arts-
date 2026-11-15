@@ -907,7 +907,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const cnt = all.length ? await pipe(all.map(x => ['ZCOUNT', 'watch:' + x[0], now - 25e3, '+inf'])) : [];
         const lms = all.length ? await cmd('HMGET', 'lm', ...all.map(x => x[0])) : [];
         const l = [];
-        all.forEach(([x, , pv], i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, w: cnt[i] || 0, pv, m: (() => { try { return JSON.parse(lms[i]) } catch { return null } })() }) } catch {} });
+        all.forEach(([x, , pv], i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null, w: cnt[i] || 0, pv, m: (() => { try { return JSON.parse(lms[i]) } catch { return null } })() }) } catch {} });
         await pipe([['ZREMRANGEBYSCORE', 'livezp', 0, now - 180e3]]);
         const onIds = await cmd('ZRANGEBYSCORE', 'online', now - 600e3, '+inf');
         const liveSet = new Set(all.map(x => x[0]));
@@ -921,9 +921,24 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const vals = await cmd('MGET', ...ids.map(x => 'live:' + x));
       const cnt = await pipe(ids.map(x => ['ZCOUNT', 'watch:' + x, now - 25e3, '+inf']));
       const l = [];
-      ids.forEach((x, i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, w: cnt[i] || 0 }) } catch {} });
+      ids.forEach((x, i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null, w: cnt[i] || 0 }) } catch {} });
       await cmd('ZREMRANGEBYSCORE', 'livez', 0, now - 120e3);
       return res.json({ l: l.sort((p, q) => q.w - p.w || q.age - p.age).slice(0, 40) });
+    }
+    if (a === 'lreact' || a === 'lvote' || a === 'lbet') {
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
+      const k2 = String(b.t || '').toLowerCase().replace(/[^a-z0-9]/g, ''); const ids = await cmd('ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'); const full = (ids || []).find(x => x.slice(0, 6) + x.slice(-4) === k2); if (!full || full === id) return res.json({ ok: 0 });
+      if (a === 'lreact') { if ((await cmd('SET', 'lrrl:' + id, 1, 'NX', 'PX', 1200)) !== 'OK') return res.json({ ok: 0, err: 'rate' }); const e = Math.max(0, Math.min(3, Math.floor(+b.e || 0))); await pipe([['HINCRBY', 'lrx:' + full, String(e), 1], ['EXPIRE', 'lrx:' + full, 120], ['LPUSH', 'lrxl:' + full, JSON.stringify({ e, t: now, i: Math.random().toString(36).slice(2, 7) })], ['LTRIM', 'lrxl:' + full, 0, 19], ['EXPIRE', 'lrxl:' + full, 60]]); return res.json({ ok: 1 }) }
+      const ck = String(b.c || '').replace(/[^a-z0-9]/g, '').slice(0, 12); if (!ck) return res.json({ ok: 0 });
+      if (a === 'lvote') { const o = Math.max(0, Math.min(9, Math.floor(+b.o || 0))); if ((await cmd('SET', 'lvd:' + full + ':' + ck + ':' + id, o, 'NX', 'EX', 900)) !== 'OK') return res.json({ ok: 0, err: 'done' }); await pipe([['HINCRBY', 'lvote:' + full + ':' + ck, String(o), 1], ['EXPIRE', 'lvote:' + full + ':' + ck, 900]]); return res.json({ ok: 1 }) }
+      const p = +b.p ? 1 : 0; if ((await cmd('SET', 'lbd:' + full + ':' + ck + ':' + id, p, 'NX', 'EX', 3600)) !== 'OK') return res.json({ ok: 0, err: 'done' }); await pipe([['HINCRBY', 'lbet:' + full + ':' + ck, String(p), 1], ['EXPIRE', 'lbet:' + full + ':' + ck, 3600], ['SADD', 'lbs:' + full + ':' + ck, id + '|' + p], ['EXPIRE', 'lbs:' + full + ':' + ck, 3600]]); return res.json({ ok: 1 });
+    }
+    if (a === 'lbclaim') { if (!okId(id)) return res.json({ l: [] }); const [l] = await pipe([['LRANGE', 'lbw:' + id, 0, 19], ['DEL', 'lbw:' + id]]); return res.json({ l: (l || []).map(jp).filter(Boolean) }) }
+    if (a === 'liveend') {
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
+      const z = jp(String(b.s || '')); if (!z) return res.json({ ok: 0 });
+      const e = { n: clean(z.n, 20), age: Math.max(0, Math.floor(+z.age || 0)), r: clean(z.r, 40), cause: clean(z.cause, 120), hl: (Array.isArray(z.hl) ? z.hl : []).slice(0, 6).map(x => clean(x, 140)), look: z.look && JSON.stringify(z.look).length < 1600 ? z.look : null, lid: String(z.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16), t: now };
+      await pipe([['SET', 'liveend:' + id, JSON.stringify(e), 'EX', 900], ['ZADD', 'liveendz', now, id], ['ZREMRANGEBYSCORE', 'liveendz', 0, now - 900e3]]); return res.json({ ok: 1 });
     }
     if (a === 'liveget') {
       const k2 = String(qOf(req).t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -937,12 +952,16 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       }
       const ids = await cmd('ZRANGEBYSCORE', 'livez', now - 60e3, '+inf');
       const full = (ids || []).find(x => x.slice(0, 6) + x.slice(-4) === k2);
-      if (!full) return res.status(404).json({ err: 'off' });
+      const lvEnd = async () => { const e2 = (await cmd('ZRANGEBYSCORE', 'liveendz', now - 900e3, '+inf')) || []; const f = e2.find(x => x.slice(0, 6) + x.slice(-4) === k2); if (!f) return null; return jp(await cmd('GET', 'liveend:' + f)) };
+      if (!full) { const e = await lvEnd(); if (e) return res.json({ end: e }); return res.status(404).json({ err: 'off' }) }
       const v = await cmd('GET', 'live:' + full);
-      if (!v) return res.status(404).json({ err: 'off' });
+      if (!v) { const e = await lvEnd(); if (e) return res.json({ end: e }); return res.status(404).json({ err: 'off' }) }
       const viewer = okId(id) ? id : 'anon' + (req.headers['x-forwarded-for'] || '').slice(0, 15);
       const [, , w] = await pipe([['ZADD', 'watch:' + full, now, viewer], ['ZREMRANGEBYSCORE', 'watch:' + full, 0, now - 25e3], ['ZCARD', 'watch:' + full], ['EXPIRE', 'watch:' + full, 120]]);
-      return res.json({ s: JSON.parse(v), w: w || 0 });
+      const S0 = JSON.parse(v), ck = S0.ch && String(S0.ch.k || '').replace(/[^a-z0-9]/g, '').slice(0, 12), hk = S0.hot && String(S0.hot.k || '').replace(/[^a-z0-9]/g, '').slice(0, 12);
+      const [rxl, vt, bt, myv, myb] = await pipe([['LRANGE', 'lrxl:' + full, 0, 19], ['HGETALL', 'lvote:' + full + ':' + (ck || '-')], ['HGETALL', 'lbet:' + full + ':' + (hk || '-')], ['GET', 'lvd:' + full + ':' + (ck || '-') + ':' + viewer], ['GET', 'lbd:' + full + ':' + (hk || '-') + ':' + viewer]]);
+      const hm = h => { const o = {}; if (Array.isArray(h)) for (let i = 0; i < h.length; i += 2) o[h[i]] = +h[i + 1]; else for (const k in (h || {})) o[k] = +h[k]; return o };
+      return res.json({ s: S0, w: w || 0, rx: (rxl || []).map(jp).filter(x => x && now - x.t < 15e3), vt: hm(vt), bt: hm(bt), myv: myv == null ? null : +myv, myb: myb == null ? null : +myb });
     }
     if (a === 'migstat') {
       if (!USE_VK) return res.json({ vk: 0 });
@@ -1358,7 +1377,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       try { JSON.parse(snap) } catch { return res.status(400).json({ err: 'json' }) }
       const [, , , , w] = await pipe([['SET', 'live:' + id, snap, 'EX', 70], ['ZADD', 'livez', now, id], ['DEL', 'livep:' + id], ['ZREM', 'livezp', id], ['ZCOUNT', 'watch:' + id, now - 25e3, '+inf']]);
       const [lr, fa] = await pipe([['GET', 'logreq:' + id], ['ZCOUNT', 'watcha:' + id, now - 25e3, '+inf']]);
-      return res.json({ w: w || 0, f: (+w > 0 || +fa > 0) ? 1 : 0, lr: lr ? 1 : 0 });
+      let ex = {}; try { const z = JSON.parse(snap), ck = z.ch && String(z.ch.k || '').replace(/[^a-z0-9]/g, '').slice(0, 12);
+        const [rx, , vt] = await pipe([['HGETALL', 'lrx:' + id], ['DEL', 'lrx:' + id], ['HGETALL', 'lvote:' + id + ':' + (ck || '-')]]);
+        const hm = h => { const o = {}; if (Array.isArray(h)) for (let i = 0; i < h.length; i += 2) o[h[i]] = +h[i + 1]; else for (const k in (h || {})) o[k] = +h[k]; return o };
+        ex = { rx: hm(rx), vt: hm(vt), vk: ck || '' };
+        const R = z.res; if (R && R.k) { const rk = String(R.k).replace(/[^a-z0-9]/g, '').slice(0, 12); if ((await cmd('SET', 'lbr:' + id + ':' + rk, 1, 'NX', 'EX', 7200)) === 'OK') { const mem = (await cmd('SMEMBERS', 'lbs:' + id + ':' + rk)) || []; const nm = clean(z.n, 20), ops = []; mem.forEach(m => { const [vw, p] = String(m).split('|'); if (okId(vw)) ops.push(['LPUSH', 'lbw:' + vw, JSON.stringify({ n: nm, ok: (+p === 1) === !!R.w ? 1 : 0, ev: clean(R.ev, 30), t: now })], ['LTRIM', 'lbw:' + vw, 0, 19], ['EXPIRE', 'lbw:' + vw, 86400]) }); if (ops.length) await pipe(ops) } } } catch {}
+      return res.json(Object.assign({ w: w || 0, f: (+w > 0 || +fa > 0) ? 1 : 0, lr: lr ? 1 : 0 }, ex));
     }
     if (a === 'csave') {
       const tk = String(b.tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20), d = String(b.d || '');
