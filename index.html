@@ -3917,7 +3917,7 @@ async function api(a,body){if(Date.now()<_quotaUntil)throw new Error('quota');co
  const run=async()=>{for(let t=0;;t++){const ctl=typeof AbortController!=='undefined'?new AbortController():null,tm=setTimeout(()=>{try{if(ctl){const er=new Error('timeout');er.name='AbortError';er._quiet=1;ctl.abort(er)}}catch(e){}},body?15000:10000);
   try{const o=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({id:pid},body))}:{};if(ctl)o.signal=ctl.signal;
    const r=await fetch(API+'?a='+a+(body?'':'&id='+pid),o);const j=await r.json().catch(()=>({}));
-   if(!r.ok){if(j.err==='quota'){_quotaUntil=Date.now()+600000;try{quotaNote()}catch(e){}}const e=new Error(j.err||r.status);e.http=r.status;e.q=j.err==='quota';throw e}return j}
+   if(!r.ok){if(j.err==='quota'){_quotaUntil=Date.now()+120000;try{quotaNote()}catch(e){}}const e=new Error(j.err||r.status);e.http=r.status;e.q=j.err==='quota';throw e}return j}
   catch(e){const net=e.name==='AbortError'||!e.http||e.http>=500;if(body||t>=1||e.q||!net)throw e.name==='AbortError'?new Error('timeout'):e;await new Promise(r=>setTimeout(r,700))}finally{clearTimeout(tm)}}};
  let p;if(key&&_apiFly[key])p=_apiFly[key];else{p=run();if(key){_apiFly[key]=p;p.then(()=>{delete _apiFly[key]},()=>{delete _apiFly[key]})}}
  const j=await p;_apiS0=s0;setTimeout(()=>{if(_apiS0===s0)_apiS0=null},0);return j}
@@ -26752,6 +26752,18 @@ function swapProve(){S.swapA=0;Ev('🔄 พิสูจน์ตัวตน','�
  if(S.age>=18&&S.age<=50&&!S._mskD&&(S.algn==='good'||S.algn==='free'||!S.algn)&&Math.random()<.02){S._mskD=1;maskOffer();return r}
  }catch(e){console.error(e)}return r}}
 window._nl3={tfight,criStart,criYear,mysStart,mysYear,maskOffer,maskYear,maskExpose,jailYear,TW,swapProve,CE,EREV,eraNew,alInit};
+}catch(e){console.error(e)}})();
+
+// ---- v17.20 ออนไลน์ไม่หลุดง่าย: ping พลาดครั้งสองครั้งไม่ตัดออฟไลน์ · ลองใหม่ถี่ขึ้นเอง · คนไม่ได้แตะหน้าจอไม่หลุดจากรายชื่อ ----
+(function(){try{
+let fails=0,lastOK=Date.now(),rt=0;
+const _op=onlinePing;onlinePing=async function(){const was=onlineOK;await _op.apply(this,arguments);
+ try{if(onlineOK){fails=0;lastOK=Date.now()}else{fails++;
+  if(was&&fails<3&&Date.now()-lastOK<240000){onlineOK=true;try{const t=$('tOnN');if(t)t.parentNode.classList.add('on');const el=$('onlineBadge');if(el)el.style.display=''}catch(e){}}
+  clearTimeout(rt);rt=setTimeout(()=>{try{if(!document.hidden)onlinePing()}catch(e){}},Math.min(60000,10000*Math.pow(2,Math.min(fails,3)-1)))}}catch(e){}};
+setInterval(()=>{try{if(document.hidden)return;const age=Date.now()-(window._lastPing||0),lim=idleMs()>300000?330000:200000;if(age>=lim||(!onlineOK&&age>=20000))onlinePing()}catch(e){}},20000);
+const _oo=window.openOnline;if(typeof _oo==='function'){window.openOnline=openOnline=function(){try{if(!onlineOK&&Date.now()-(window._lastPing||0)>5000)onlinePing()}catch(e){}return _oo.apply(this,arguments)}}
+window.addEventListener('online',()=>{try{fails=0;onlinePing()}catch(e){}});
 }catch(e){console.error(e)}})();
 </script>
 </body>
