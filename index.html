@@ -10479,16 +10479,16 @@ function bhShow(st,soft){BH.st=st;BH.off=st.now-Date.now();const isB=st.role==='
  const btn=(c,t,s,kind)=>`<button class="opt" ${((kind==='j'?st.myj:st.my)===c)?'style="background:var(--tb4)"':''} ${(kind==='j'?st.myj:st.my)?'disabled':''} onclick="bhPick('${kind==='j'?'':c}','${kind==='j'?c:''}')">${t}<small>${s}</small></button>`;
  const hs=st.H.map((h,i)=>`<div>🏹 <b>${esc(h.n)}</b> <span class="tag2">พลัง ${fmt(h.p)}${!isB&&st.role==='h'+i?' (คุณ)':''}</span></div>`).join('');
  let body='';
- if(isB)body=`<p>นักล่า${nh>1?' <b>2 คน</b>':''}ตามกลิ่นคุณมาแล้ว! ถ้าแพ้ <b>แก่นอสูรของคุณจะถูกล้วงไป</b> (พลังและลมปราณลดลงมาก)</p><div class="mgrid">${btn('fight','⚔️ สู้กลับ','ชนะได้พลังและชื่อเสียง')}${btn('flee','🏃 หนีเข้าป่าลึก','กับดักทำให้หนียาก')}${btn('hide','🌿 ซ่อนตัว','กับดักจะหาเจอ')}</div>`;
- else body=`<p>คุณกำลังล่า <b>${esc(B.n)}</b> (${esc(B.sp||'สัตว์อสูร')}) — มันเป็นผู้เล่นจริงและกำลังตัดสินใจเหมือนกัน</p><div class="mgrid">${btn('hunt','🏹 ไล่ล่าตรงๆ','เข้าปะทะ')}${btn('trap','🪤 วางกับดัก','ดักทางหนีและที่ซ่อน แต่ถ้ามันสู้จะเสียเปรียบ')}</div>`+
+ if(isB)body=`<p>นักล่า${nh>1?' <b>2 คน</b>':''}ตามกลิ่นคุณมาแล้ว! ถ้าแพ้ <b>แก่นอสูรของคุณจะถูกล้วงไป</b> (พลังและลมปราณลดลงมาก)</p><div class="mgrid">${btn('fight','⚔️ สู้กลับ','ชนะได้พลังและชื่อเสียง')}${btn('flee','🏃 หนีเข้าป่าลึก','กับดักทำให้หนียาก')}${btn('hide','🌿 ซ่อนตัว','กับดักจะหาเจอ')}${btn('yield','🎁 สละเกล็ดแลกชีวิต','ไม่เสียแก่น · เสียพลังเล็กน้อย')}${btn('accept','🤝 ยอมทำสัญญา','ถ้านักล่าเลือกปราบเป็นสหาย → เป็นสหายกัน ไม่งั้นแค่สละเกล็ด')}</div>`;
+ else body=`<p>คุณกำลังล่า <b>${esc(B.n)}</b> (${esc(B.sp||'สัตว์อสูร')}) — มันเป็นผู้เล่นจริงและกำลังตัดสินใจเหมือนกัน</p><div class="mgrid">${btn('hunt','🏹 ไล่ล่าตรงๆ','เข้าปะทะ')}${btn('trap','🪤 วางกับดัก','ดักทางหนีและที่ซ่อน แต่ถ้ามันสู้จะเสียเปรียบ')}${btn('tame','🤝 ปราบเป็นสหาย','ถ้ามันยอมทำสัญญา ได้สหายสัตว์ · ไม่ได้แก่น · ถ้ามันสู้ จะเสียเปรียบเล็กน้อย')}</div>`+
   (nh>1?`<h4 style="margin:8px 0 4px">🤝 มีนักล่าอีกคน!</h4><div class="mgrid">${btn('coop','🤝 ร่วมมือ','รวมพลังกัน · คนที่ได้แก่นคือคนแกร่งกว่า อีกคนได้เนื้อ','j')}${btn('steal','🗡️ แย่งชิง','ลอบโจมตีอีกคนก่อน ชนะได้ล่าคนเดียว','j')}</div>`:`<p class="tag2">⏳ นักล่าคนอื่นอาจเข้ามาร่วมได้อีก ${jl} วิ</p>`);
- modal(`<h3>🐾 ศึกล่าสัตว์อสูร (ผู้เล่นจริง)</h3><div class="item"><b>🐉 ${esc(B.n)}</b> <span class="tag2">${esc(B.sp||'')} · พลัง ${fmt(B.p)}${isB?' (คุณ)':''}</span>${hs}</div>
+ modal(`<h3>🐾 ศึกล่าสัตว์อสูร (ผู้เล่นจริง)</h3><p class="tag2">${bhScene()}</p><div class="item"><b>🐉 ${esc(B.n)}</b> <span class="tag2">${esc(B.sp||'')} · พลัง ${fmt(B.p)}${isB?' (คุณ)':''}</span>${hs}</div>
  <div class="paTm"><i style="width:${Math.max(0,Math.min(100,left/30*100))}%"></i></div><p class="tag2" style="text-align:center">⏳ เหลือ ${left} วิ · ไม่เลือก = สุ่มให้</p>${body}`,'bh');
  if(!soft)try{sfx('click')}catch(e){}}
 async function bhPick(c,jv){const st=BH.st;if(!st)return;try{const j=await api('bhpick',{rid:st.rid,c,j:jv});if(j&&j.ok){if(j.st.res){bhApply(j.st);return}bhShow(j.st,1)}}catch(e){toast('ส่งไม่สำเร็จ')}}
 setInterval(()=>{if(BH.st&&$('modal').dataset.k==='bh'&&modalOpen)bhShow(BH.st,1)},1000);
 function bhApply(st){const R=st.res;if(!R||BH.done[st.rid])return;BH.done[st.rid]=1;clearInterval(BH.poll);BH.st=null;if($('modal').dataset.k==='bh')closeM();if(!S||!S.alive)return;
- const B=st.B,hn=st.H.map(h=>h.n),C={fight:'⚔️ สู้',flee:'🏃 หนี',hide:'🌿 ซ่อน',hunt:'🏹 ไล่ล่า',trap:'🪤 กับดัก',coop:'🤝 ร่วมมือ',steal:'🗡️ แย่งชิง'};
+ const B=st.B,hn=st.H.map(h=>h.n),C={fight:'⚔️ สู้',flee:'🏃 หนี',hide:'🌿 ซ่อน',yield:'🎁 สละเกล็ด',accept:'🤝 ยอมสัญญา',tame:'🤝 ปราบสหาย',hunt:'🏹 ไล่ล่า',trap:'🪤 กับดัก',coop:'🤝 ร่วมมือ',steal:'🗡️ แย่งชิง'};
  const sum=`สรุป: ${esc(B.n)} เลือก ${C[R.cb]} · ${hn.map((n,i)=>esc(n)+' '+C[R.hc[i]]+(hn.length>1?' '+C[R.hj[i]]:'')).join(' · ')}`;
  if(st.role==='b'){
   if(R.k==='h'){const tk=hn[R.taker]||'นักล่า',dp=Math.round(S.power*.15),dq=+(S.qi*.15).toFixed(1);S.power=Math.max(1,S.power-dp);S.qi=Math.max(0,+(S.qi-dq).toFixed(1));S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.4));S.bhFoe=tk;S.bhLost=(S.bhLost||0)+1;
@@ -25907,6 +25907,46 @@ function ghInbox(m){if(!S||!S.alive||!m)return;const M=MW[m.w||0],n=esc(m.n);let
  else if(m.r==='betr'){allyAdd(m.n,'ผู้เล่นจริง (ผ่านเงา)');const a=(S.allies||[]).find(x=>x.n===m.n);if(a)a.tr=1;t='เขาแสร้งผูกมิตรกับเงาของคุณ… แต่ลางสังหรณ์บอกว่า <b>มีบางอย่างไม่ชอบมาพากล</b>'}
  else if(m.r==='flee')t='ทั้งสองเผชิญหน้ากันครู่หนึ่ง ก่อนแยกจากกัน';else t='เขาคารวะเงาของคุณแล้วจากไป';
  log(`👤 ระหว่างที่คุณไม่อยู่ ผู้เล่น <b>${n}</b> พบเงาของคุณใน${M.n} — ${t}`,'epic',true)}
+
+// ===================== สัตว์อสูรผู้เล่นจริง v2: ฉากตามโลก · ทำสัญญาแทนการฆ่า · สละเกล็ดแลกชีวิต · เงาสัตว์ · เจ้าป่า =====================
+const bhP=x=>Math.max(1,pctPow(x));
+function bhScene(){const x=(typeof mwW==='function'?mwW():0)>=1;const P=x?['หุบเขาวิญญาณ','ถ้ำสมบัติเซียน','ขอบเขตทัณฑ์ฟ้า','ป่าวิญญาณใต้ทะเลเมฆ']:['ป่าลึกหลังหมู่บ้าน','เชิงเขาร้าง','หุบเขาหมอกหนา','ชายป่าริมแม่น้ำ'];
+ const t=x?['ปราณสัตว์วิญญาณปั่นป่วนในอากาศ','รอยเล็บบนศิลาหยกยังสด','สมบัติฟ้าดินส่องแสงอยู่ลึกเข้าไป']:['ชาวบ้านแถบนี้เล่าว่ามีเสียงคำรามทุกคืน','รอยเท้าใหญ่กดลึกลงในดินโคลน','ฝูงนกแตกฮือขึ้นจากยอดไม้'];return`📍 ${ch(P)} — ${ch(t)}`}
+function bhGive(w){return w>=2?JADE*R(1,3):w===1?R(1500,6000):R(150,700)}
+{const _ba=bhApply;bhApply=function(st){const R0=st.res;if(!R0||BH.done[st.rid]||(R0.k!=='y'&&R0.k!=='pact'))return _ba.apply(this,arguments);
+ BH.done[st.rid]=1;clearInterval(BH.poll);BH.st=null;if($('modal').dataset.k==='bh')closeM();if(!S||!S.alive)return;
+ const B=st.B,hn=st.H.map(h=>h.n),w=mwW(),tk=hn[R0.taker]||'นักล่า';
+ if(st.role==='b'){
+  if(R0.k==='pact'){S.bhMaster={n:tk,w,a:S.age};S.power+=bhP(.02);S.fame+=15;S.karma+=3;joy(5);keyAdd(`ทำสัญญากับนักล่าผู้เล่นจริง ${tk}`);log(`🤝 <b>${esc(tk)}</b> ไม่ล้วงแก่นคุณ แต่ยื่นสัญญา${w>=1?'วิญญาณ':'ใจ'}ให้ — คุณยอมรับ จากนี้ทั้งคู่เป็นสหายกัน · พลังยุทธ์ +${fmt(bhP(.02))}`,'epic',true)}
+  else{const d=Math.round(S.power*.02);S.power=Math.max(1,S.power-d);S.karma+=2;log(`🎁 คุณสละ${w>=1?'เกล็ดวิญญาณ':'เกล็ดและเขี้ยว'}ให้ <b>${esc(tk)}</b> แลกกับชีวิต — แก่นอสูรยังอยู่ครบ (พลังยุทธ์ −${fmt(d)})`,'good',true)}}
+ else{const me=+st.role.slice(1);
+  if(R0.taker===me){
+   if(R0.k==='pact'){S.bhPet={n:B.n,sp:B.sp||'สัตว์อสูร',w,a:S.age};allyAdd(B.n,'สหายสัตว์อสูร');S.power+=bhP(.02);S.fame+=25;joy(10);keyAdd(`ปราบ${B.sp||'สัตว์อสูร'}ของผู้เล่นจริงเป็นสหาย ${B.n}`);log(`🤝 ${w>=1?'คุณทำสัญญาวิญญาณกับ':'คุณผูกใจ'} <b>${esc(B.n)}</b> (${esc(B.sp||'สัตว์อสูร')} · ผู้เล่นจริง) ได้เป็น<b>สหายสัตว์อสูร</b> — พลังยุทธ์ +${fmt(bhP(.02))} · ชื่อเสียง +25`,'epic',true)}
+   else{const g=bhGive(w);S.money+=inc(g);S.fame+=10;bagAdd('food',2,true);log(`🎁 <b>${esc(B.n)}</b> สละ${w>=1?'เกล็ดวิญญาณ':'เกล็ดและเขี้ยว'}แลกชีวิต — คุณได้ ${fmtM(inc(g))} กับเสบียง 2 · (ไว้ชีวิตมันไป)`,'good',true)}}
+  else{bagAdd('food',1,true);log(`🐾 ${esc(tk)}จัดการกับ ${esc(B.n)} ได้ก่อน — คุณได้เสบียงเล็กน้อย`,'')}}
+ try{render()}catch(e){}}}
+// สหายสัตว์/นายนักล่า ส่งผลทุกปี · เจ้าป่า
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(!S||!S.alive)return r;
+ const w=mwW();if(S.bhPet&&Math.random()<.2){if(w>=1){S.qi=+(S.qi+.5).toFixed(1);log(`🐾 ${esc(S.bhPet.n)} สหายสัตว์วิญญาณแบ่งปราณให้ — ปราณ +0.5 ปี`,'good')}else{const g=bhGive(0);S.money+=inc(g);log(`🐾 ${esc(S.bhPet.n)} สหายสัตว์อสูรคาบของป่ามาให้ — +${fmtM(inc(g))}`,'good')}}
+ if(S.bhMaster&&Math.random()<.15){const g=bhP(.003);S.power+=g;log(`🤝 สหายนักล่า <b>${esc(S.bhMaster.n)}</b> ส่งสมุนไพรมาให้ — พลังยุทธ์ +${fmt(g)}`,'good')}
+ if((S.bhWin||0)>=3&&!S.flags.bhLord){S.flags.bhLord=1;S.fame+=60;log('🐉 นักล่าลือกันว่า <b>"เจ้าป่า"</b> ตนนี้ไม่ควรแตะ — คุณชนะนักล่าติดกันสามครั้ง ชื่อเสียง +60','myth',true);keyAdd('ได้ฉายา เจ้าป่า จากการชนะนักล่า 3 ครั้ง')}
+ }catch(e){console.error(e)}return r}}
+// เงาสัตว์: เจอเงาของสัตว์อสูรที่ผู้เล่นเพิ่งเล่น
+{const _gs=ghShow;ghShow=function(g){if(!g||!g.bm)return _gs.apply(this,arguments);const w=mwW(),ep=Math.max(50,g.p||100);setScene('portal');
+ const r=total()/ep,v=r>1.5?'🟢 คุณเหนือกว่ามาก':r>1.1?'🟢 คุณเหนือกว่า':r>.9?'🟡 สูสี':r>.6?'🟠 มันแกร่งกว่า':'🔴 มันแกร่งกว่ามาก';
+ choice('🐾 รอยเท้าเงาของสัตว์อสูร',`${bhScene()}<br>ร่างโปร่งแสงของ<b>${esc(g.sp||'สัตว์อสูร')}</b> ชื่อ <b>${esc(g.n)}</b> ปรากฏขึ้น · ${v}<br><span class="tag2">เงานี้ทิ้งไว้ ${ghAgo(g.ago||0)} · เจ้าของจะรู้ผลเมื่อกลับมาเล่น</span>`,
+  [{t:'🏹 ออกล่า',s:'เงาจะสู้ หนี หรือยอมตามนิสัย',f(){bhGhRes(g,'hunt',w,ep)}},{t:'🤝 ยื่นสัญญาปราบเป็นสหาย',s:'ถ้ามันยอมรับ ได้สหายสัตว์ ไม่ได้ของจากการล่า',f(){bhGhRes(g,'tame',w,ep)}},{t:'🙏 ปล่อยมันไป',s:'กรรมดี +2',skip:true,f(){S.karma+=2;log(`🐾 คุณปล่อยเงาของ ${esc(g.n)} ไป`)}}])}}
+function bhGhRes(g,k,w,ep){const n=esc(g.n),P=(x,y)=>Math.pow(Math.max(1,x),1.3)/(Math.pow(Math.max(1,x),1.3)+Math.pow(Math.max(1,y),1.3)),q=P(total(),ep);
+ const bc=ch(['fight','fight','fight','flee','flee','hide','hide','yield','accept']);let kind='none';
+ if(bc==='fight'){if(Math.random()<Math.max(.05,Math.min(.95,q-(k==='tame'?.05:0)))){const gg=bhP(.015);S.power+=gg;S.fame+=fameR(25);bagAdd('food',2,true);log(`🏹 คุณเอาชนะเงาของ <b>${n}</b> (${esc(g.sp||'สัตว์อสูร')}) — พลังยุทธ์ +${fmt(gg)} · ชื่อเสียง +${fameR(25)} · เสบียง 2 (เงาไม่มีแก่นให้ล้วง)`,'good',true);kind='duel'}
+  else{const d=Math.round(S.maxHp*.15);S.hp=Math.max(1,S.hp-d);log(`🐉 เงาของ <b>${n}</b> สู้กลับจนคุณพ่ายแพ้ — พลังชีวิต −${d}`,'bad',true);kind='duelw'}}
+ else if(bc==='flee'||bc==='hide'){log(`🐾 เงาของ <b>${n}</b> ${bc==='flee'?'หนีเข้าป่าลึกไปได้':'ซ่อนตัวจนหาไม่เจอ'} — คว้าน้ำเหลว`,'');kind='flee'}
+ else if(bc==='accept'&&k==='tame'){S.bhPet={n:g.n,sp:g.sp||'สัตว์อสูร',w,a:S.age};allyAdd(g.n,'สหายสัตว์อสูร');S.power+=bhP(.015);S.fame+=fameR(15);log(`🤝 เงาของ <b>${n}</b> ยอมรับสัญญา — ได้เป็นสหายสัตว์อสูร พลังยุทธ์ +${fmt(bhP(.015))}`,'epic',true);kind='tame'}
+ else{const gv=bhGive(w);S.money+=inc(gv);log(`🎁 เงาของ <b>${n}</b> สละของแลกชีวิต — +${fmtM(inc(gv))}`,'good',true);kind='yield'}
+ try{api('ghact',{to:g.k,x:S.xian?1:0,kind:kind==='duelw'?'duel':kind,win:kind==='duelw'?1:0,n:pname(),w}).catch(()=>{})}catch(e){}try{render()}catch(e){}}
+{const _gi=ghInbox;ghInbox=function(m){if(m&&(m.r==='tame'||m.r==='yield')&&S&&S.alive){const M=MW[m.w||0];if(m.r==='tame'){S.bhMaster={n:m.n,w:m.w||0,a:S.age};S.fame+=10;log(`👤 ระหว่างที่คุณไม่อยู่ นักล่า <b>${esc(m.n)}</b> พบเงาของคุณใน${M.n} — ยื่นสัญญาให้ และเงาของคุณยอมรับ ได้เป็นสหายกัน`,'epic',true)}
+  else{S.fame+=5;log(`👤 ระหว่างที่คุณไม่อยู่ นักล่า <b>${esc(m.n)}</b> พบเงาของคุณใน${M.n} — เงาสละเกล็ดแลกชีวิต แก่นของคุณปลอดภัย`,'good',true)}return}
+ return _gi.apply(this,arguments)}}
 </script>
 </body>
 </html>
