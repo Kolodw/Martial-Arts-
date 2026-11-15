@@ -248,7 +248,7 @@ const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
 function uaMeta(req, now) {
   const ua = String(req.headers['user-agent'] || '');
   const org = String(req.headers['origin'] || req.headers['referer'] || '').replace(/^https?:\/\//, '').split('/')[0].slice(0, 60);
-  return { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(qOf(req).v || '').slice(0, 8), c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
+  return { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(qOf(req).v || '').slice(0, 8), c: String(req.headers['cf-ipcountry'] || req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
 }
 // ย้ายข้อมูลเก่าจาก Upstash -> Valkey ทีละชุด (ไม่ทับของใหม่ ทำซ้ำได้)
 async function migStep(cur) {
@@ -625,7 +625,7 @@ module.exports = async (req, res) => {
       if (okId(id)) {
         const ua = String(req.headers['user-agent'] || '');
         const org = String(req.headers['origin'] || req.headers['referer'] || '').replace(/^https?:\/\//, '').split('/')[0].slice(0, 60);
-        const meta = { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(qOf(req).v || '').slice(0, 8), c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
+        const meta = { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(qOf(req).v || '').slice(0, 8), c: String(req.headers['cf-ipcountry'] || req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
         let act = null;
         try { const r = JSON.parse(String(qOf(req).st || '').slice(0, 600) || 'null'); if (r && typeof r === 'object') { const S0 = v => String(v == null ? '' : v).replace(/[<>]/g, '').slice(0, 40), N0 = v => Math.max(-1, Math.min(1e7, Math.round(+v || 0))); act = { w: ['m', 'x', 'g'].includes(r.w) ? r.w : '', sc: S0(r.sc), md: S0(r.md), ch: r.ch ? 1 : 0, hd: r.hd ? 1 : 0, ia: N0(r.ia), er: N0(r.er), em: String(r.em || '').replace(/[<>]/g, '').slice(0, 120), nm: S0(r.nm), ag: N0(r.ag), al: r.al ? 1 : 0, au: r.au ? 1 : 0, pa: r.pa ? 1 : 0, sp: N0(r.sp), w: S0(r.w).slice(0, 1), yr: N0(r.yr), ri: S0(r.ri), v: S0(qOf(req).v).slice(0, 8), t: now } } } catch {}
         const hk = 'ipid:' + ip + ':' + Math.floor(now / 3600e3), [, nid] = await pipe([['SADD', hk, id], ['SCARD', hk], ['EXPIRE', hk, 4000]]);
@@ -697,6 +697,13 @@ module.exports = async (req, res) => {
       const hvHtml = `<h2>🌐 เว็บใหม่ vs เว็บเก่า <small style="font-weight:normal;color:#aaa">· นับเครื่องที่เปิดเว็บ (ไม่นับซ้ำในวันเดียวกัน)</small></h2><div><span class="c"><b>${hvOn.new}</b>ออนไลน์ตอนนี้ที่ 1inanovel.com</span><span class="c"><b>${hvOn.old}</b>ออนไลน์ตอนนี้ที่ลิงก์เก่า</span>${hvOn.other ? `<span class="c"><b>${hvOn.other}</b>ไม่ระบุเว็บ</span>` : ''}</div>
 <table style="border-collapse:collapse;margin:8px 0;font-size:14px;width:100%;max-width:520px"><tr style="color:#aaa"><td style="padding:4px 6px"></td><td style="padding:4px 6px">วันนี้</td><td style="padding:4px 6px">เมื่อวาน</td><td style="padding:4px 6px">7 วัน</td><td style="padding:4px 6px">ทั้งหมด</td></tr><tr><td style="padding:4px 6px">🆕 1inanovel.com</td><td style="padding:4px 6px"><b>${hvN(0)}</b></td><td style="padding:4px 6px">${hvN(2)}</td><td style="padding:4px 6px">${hvN(4)}</td><td style="padding:4px 6px">${hvN(6)}</td></tr><tr><td style="padding:4px 6px">🕰️ ลิงก์เก่า (.vercel.app)</td><td style="padding:4px 6px"><b>${hvN(1)}</b></td><td style="padding:4px 6px">${hvN(3)}</td><td style="padding:4px 6px">${hvN(5)}</td><td style="padding:4px 6px">${hvN(7)}</td></tr></table>
 <p>📦 ย้ายเซฟ: วันนี้ส่งออกจากเว็บเก่า <b>${hvN(8)}</b> · รับเข้าเว็บใหม่สำเร็จ <b>${hvN(9)}</b> · รวมทั้งหมด ส่งออก ${hvN(10)} / รับสำเร็จ ${hvN(11)}<br><small>คนเปิดลิงก์เก่าจะถูกพาไปเว็บใหม่อัตโนมัติ · ตัวเลข "ลิงก์เก่า" ที่ลดลงเรื่อยๆ แปลว่าคนเปลี่ยนมาใช้ลิงก์ใหม่แล้ว · เริ่มนับตั้งแต่ 9 พ.ย. 2569 ค่ำ</small></p>`;
+      let srcHtml = '';
+      try {
+        const sd = [0, 1, 2, 3, 4, 5, 6].map(k => thDay(now, k)), sr = await pipe(sd.map(d => ['HGETALL', 'src:' + d])), agg = { c: {}, r: {}, t: {} }, tod = { c: {}, r: {}, t: {} }; let n7 = 0, n1 = 0;
+        sr.forEach((arr, di) => { arr = arr || []; for (let i = 0; i < arr.length; i += 2) { const k = String(arr[i]), val = +arr[i + 1] || 0, ty = k[0]; if (k === 'n:all') { n7 += val; if (!di) n1 += val; continue } if (agg[ty]) { agg[ty][k.slice(2)] = (agg[ty][k.slice(2)] || 0) + val; if (!di) tod[ty][k.slice(2)] = val } } });
+        const top = (o, t) => Object.entries(o).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([k, v]) => `${e(k)} <b>${v}</b>${t && t[k] ? ` <small style="color:#aaa">(วันนี้ ${t[k]})</small>` : ''}`).join(' · ') || '-';
+        srcHtml = `<h2>🧭 คนเข้ามาจากไหน <small style="font-weight:normal;color:#aaa">· ผู้เล่นใหม่ที่ 1inanovel.com นับเครื่องละ 1 ครั้งต่อวัน · เริ่มเก็บตั้งแต่อัปเดตนี้</small></h2><p>👥 วันนี้ <b>${n1}</b> · 7 วัน <b>${n7}</b></p><p>🌏 ประเทศ: ${top(agg.c, tod.c)}</p><p>🔗 เว็บต้นทาง: ${top(agg.r, tod.r)}</p><p>🏷️ ลิงก์ติดแท็ก (?ref=): ${top(agg.t, tod.t)}</p><p><small style="color:#aaa">"ตรง" = พิมพ์ลิงก์/บุ๊กมาร์ก/แอปไม่ส่งต้นทาง (LINE, Messenger มักแสดงเป็นตรง) · แปะลิงก์แบบ https://www.1inanovel.com/?ref=tiktok เพื่อแยกช่องทาง</small></p>`
+      } catch { }
       const tDay = new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
       const tIps = (await cmd('ZREVRANGE', 'trap:ips', 0, 39)) || [], tInf = tIps.length ? await cmd('HMGET', 'trap:info', ...tIps) : [], tTtl = tIps.length ? await pipe(tIps.map(x => ['TTL', 'ban:' + x])) : [], tWl = tIps.length ? await pipe(tIps.map(x => ['EXISTS', 'banx:' + x])) : [];
       const [tN1, tN7] = await pipe([['GET', 'trap:n:' + tDay], ['GET', 'trap:n:' + new Date(now + 7 * 3600e3 - 86400e3).toISOString().slice(0, 10)]]);
@@ -733,6 +740,7 @@ async function spM(i,v,b){if(v==='del'&&!confirm('ลบรายการนี
 ${avHtml}
 ${supHtml}
 ${hvHtml}
+${srcHtml}
 ${secHtml}
 ${acHtml}
 ${afHtml}
@@ -1243,7 +1251,10 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     }
     if (a === 'hit') {
       const w = ['old', 'new'].includes(qOf(req).w) ? qOf(req).w : 'other', v = String(qOf(req).vid || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 24);
-      if (v.length >= 6) { const d = thDay(now); await pipe([['PFADD', 'hv:' + d + ':' + w, v], ['EXPIRE', 'hv:' + d + ':' + w, 86400 * 40], ['PFADD', 'hv:all:' + w, v]]) }
+      if (v.length >= 6) { const d = thDay(now); const hr = await pipe([['PFADD', 'hv:' + d + ':' + w, v], ['EXPIRE', 'hv:' + d + ':' + w, 86400 * 40], ['PFADD', 'hv:all:' + w, v]]);
+        try { if (w === 'new' && +(hr && hr[0]) === 1) { const q = qOf(req), bad = /[^a-zA-Z0-9._-]/g, ct = String(req.headers['cf-ipcountry'] || req.headers['x-vercel-ip-country'] || '?').replace(bad, '').slice(0, 3) || '?', rf = String(q.r || '').replace(bad, '').slice(0, 40) || 'ตรง', tg = String(q.t || '').replace(bad, '').slice(0, 24), ua = String(req.headers['user-agent'] || ''), bt = /bot|crawl|spider|headless|preview/i.test(ua);
+          if (!bt) await pipe([['HINCRBY', 'src:' + d, 'c:' + ct, 1], ['HINCRBY', 'src:' + d, 'r:' + rf, 1], ...(tg ? [['HINCRBY', 'src:' + d, 't:' + tg, 1]] : []), ['HINCRBY', 'src:' + d, 'n:all', 1], ['EXPIRE', 'src:' + d, 86400 * 40]]) } } catch { }
+      }
       return res.json({ ok: 1 });
     }
     if (a === 'oneroll') {
