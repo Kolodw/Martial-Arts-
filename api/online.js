@@ -907,7 +907,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const cnt = all.length ? await pipe(all.map(x => ['ZCOUNT', 'watch:' + x[0], now - 25e3, '+inf'])) : [];
         const lms = all.length ? await cmd('HMGET', 'lm', ...all.map(x => x[0])) : [];
         const l = [];
-        all.forEach(([x, , pv], i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null, w: cnt[i] || 0, pv, m: (() => { try { return JSON.parse(lms[i]) } catch { return null } })() }) } catch {} });
+        all.forEach(([x, , pv], i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: +s0.p || (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null, w: cnt[i] || 0, pv, m: (() => { try { return JSON.parse(lms[i]) } catch { return null } })() }) } catch {} });
         await pipe([['ZREMRANGEBYSCORE', 'livezp', 0, now - 180e3]]);
         const onIds = await cmd('ZRANGEBYSCORE', 'online', now - 600e3, '+inf');
         const liveSet = new Set(all.map(x => x[0]));
@@ -918,11 +918,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       }
       const ids = await cmd('ZRANGEBYSCORE', 'livez', now - 60e3, '+inf');
       if (!ids || !ids.length) return res.json({ l: [] });
-      const vals = await cmd('MGET', ...ids.map(x => 'live:' + x));
-      const cnt = await pipe(ids.map(x => ['ZCOUNT', 'watch:' + x, now - 25e3, '+inf']));
+      const r1 = await pipe([['HMGET', 'livem', ...ids], ...ids.map(x => ['ZCOUNT', 'watch:' + x, now - 25e3, '+inf'])]);
+      let vals = r1[0] || [];const cnt = r1.slice(1);
+      const miss = ids.filter((x, i) => !vals[i]); if (miss.length) { const mv = await cmd('MGET', ...miss.map(x => 'live:' + x)); vals = vals.slice(); let j = 0; ids.forEach((x, i) => { if (!vals[i]) vals[i] = mv[j++] }) }
       const l = [];
-      ids.forEach((x, i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null, w: cnt[i] || 0 }) } catch {} });
-      await cmd('ZREMRANGEBYSCORE', 'livez', 0, now - 120e3);
+      ids.forEach((x, i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: +s0.p || (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null, w: cnt[i] || 0 }) } catch {} });
+      const gone = await cmd('ZRANGEBYSCORE', 'livez', 0, now - 120e3); await pipe([['ZREMRANGEBYSCORE', 'livez', 0, now - 120e3], ...((gone || []).length ? [['HDEL', 'livem', ...gone]] : [])]);
       return res.json({ l: l.sort((p, q) => q.w - p.w || q.age - p.age).slice(0, 40) });
     }
     if (a === 'lreact' || a === 'lvote' || a === 'lbet') {
@@ -957,9 +958,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const v = await cmd('GET', 'live:' + full);
       if (!v) { const e = await lvEnd(); if (e) return res.json({ end: e }); return res.status(404).json({ err: 'off' }) }
       const viewer = okId(id) ? id : 'anon' + (req.headers['x-forwarded-for'] || '').slice(0, 15);
-      const [, , w] = await pipe([['ZADD', 'watch:' + full, now, viewer], ['ZREMRANGEBYSCORE', 'watch:' + full, 0, now - 25e3], ['ZCARD', 'watch:' + full], ['EXPIRE', 'watch:' + full, 120]]);
       const S0 = JSON.parse(v), ck = S0.ch && String(S0.ch.k || '').replace(/[^a-z0-9]/g, '').slice(0, 12), hk = S0.hot && String(S0.hot.k || '').replace(/[^a-z0-9]/g, '').slice(0, 12);
-      const [rxl, vt, bt, myv, myb] = await pipe([['LRANGE', 'lrxl:' + full, 0, 19], ['HGETALL', 'lvote:' + full + ':' + (ck || '-')], ['HGETALL', 'lbet:' + full + ':' + (hk || '-')], ['GET', 'lvd:' + full + ':' + (ck || '-') + ':' + viewer], ['GET', 'lbd:' + full + ':' + (hk || '-') + ':' + viewer]]);
+      const [, , w, , rxl, vt, bt, myv, myb] = await pipe([['ZADD', 'watch:' + full, now, viewer], ['ZREMRANGEBYSCORE', 'watch:' + full, 0, now - 25e3], ['ZCARD', 'watch:' + full], ['EXPIRE', 'watch:' + full, 120], ['LRANGE', 'lrxl:' + full, 0, 19], ['HGETALL', 'lvote:' + full + ':' + (ck || '-')], ['HGETALL', 'lbet:' + full + ':' + (hk || '-')], ['GET', 'lvd:' + full + ':' + (ck || '-') + ':' + viewer], ['GET', 'lbd:' + full + ':' + (hk || '-') + ':' + viewer]]);
       const hm = h => { const o = {}; if (Array.isArray(h)) for (let i = 0; i < h.length; i += 2) o[h[i]] = +h[i + 1]; else for (const k in (h || {})) o[k] = +h[k]; return o };
       return res.json({ s: S0, w: w || 0, rx: (rxl || []).map(jp).filter(x => x && now - x.t < 15e3), vt: hm(vt), bt: hm(bt), myv: myv == null ? null : +myv, myb: myb == null ? null : +myb });
     }
@@ -1369,13 +1369,14 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (okId(id)) { try { const lm = uaMeta(req, now); lm.u = String(req.headers['user-agent'] || '').slice(0, 160); await cmd('HSET', 'lm', id, JSON.stringify(lm)) } catch {} }
       if (!b.spec) {
         const ps = String(b.s || '');
-        if (ps && ps.length <= 60000) { try { JSON.parse(ps); const r0 = await pipe([['DEL', 'live:' + id], ['ZREM', 'livez', id], ['SET', 'livep:' + id, ps, 'EX', 100], ['ZADD', 'livezp', now, id], ['GET', 'logreq:' + id], ['ZCOUNT', 'watcha:' + id, now - 25e3, '+inf']]); return res.json({ w: 0, f: +r0[5] > 0 ? 1 : 0, lr: r0[4] ? 1 : 0 }) } catch {} }
-        await pipe([['DEL', 'live:' + id], ['ZREM', 'livez', id], ['DEL', 'livep:' + id], ['ZREM', 'livezp', id]]); return res.json({ w: 0 })
+        if (ps && ps.length <= 60000) { try { JSON.parse(ps); const r0 = (await pipe([['HDEL', 'livem', id], ['DEL', 'live:' + id], ['ZREM', 'livez', id], ['SET', 'livep:' + id, ps, 'EX', 100], ['ZADD', 'livezp', now, id], ['GET', 'logreq:' + id], ['ZCOUNT', 'watcha:' + id, now - 25e3, '+inf']])).slice(1); return res.json({ w: 0, f: +r0[5] > 0 ? 1 : 0, lr: r0[4] ? 1 : 0 }) } catch {} }
+        await pipe([['HDEL', 'livem', id], ['DEL', 'live:' + id], ['ZREM', 'livez', id], ['DEL', 'livep:' + id], ['ZREM', 'livezp', id]]); return res.json({ w: 0 })
       }
       const snap = String(b.s || '');
       if (snap.length > 60000) return res.status(400).json({ err: 'size' });
       try { JSON.parse(snap) } catch { return res.status(400).json({ err: 'json' }) }
-      const [, , , , w] = await pipe([['SET', 'live:' + id, snap, 'EX', 70], ['ZADD', 'livez', now, id], ['DEL', 'livep:' + id], ['ZREM', 'livezp', id], ['ZCOUNT', 'watch:' + id, now - 25e3, '+inf']]);
+      let meta = ''; try { const s0 = JSON.parse(snap); meta = JSON.stringify({ n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: +s0.p || (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null }) } catch {}
+      const [, , , , w] = await pipe([['SET', 'live:' + id, snap, 'EX', 70], ['ZADD', 'livez', now, id], ['DEL', 'livep:' + id], ['ZREM', 'livezp', id], ['ZCOUNT', 'watch:' + id, now - 25e3, '+inf'], ['HSET', 'livem', id, meta]]);
       const [lr, fa] = await pipe([['GET', 'logreq:' + id], ['ZCOUNT', 'watcha:' + id, now - 25e3, '+inf']]);
       let ex = {}; try { const z = JSON.parse(snap), ck = z.ch && String(z.ch.k || '').replace(/[^a-z0-9]/g, '').slice(0, 12);
         const [rx, , vt] = await pipe([['HGETALL', 'lrx:' + id], ['DEL', 'lrx:' + id], ['HGETALL', 'lvote:' + id + ':' + (ck || '-')]]);
