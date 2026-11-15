@@ -26255,6 +26255,21 @@ setInterval(()=>{try{const r=rdy();document.querySelectorAll('.hlb').forEach(b=>
  if(!r)return;const h=hl2();if(h.autoCd===h.cd)return;if(choice._cur||modalOpen||document.querySelector('.ov.show,#birth:not(.hide)'))return;
  if(!S.age||S.age<16)return;h.autoCd=h.cd;(h.ab?openAbyss:openHell2)()}catch(e){}},1500);
 }catch(e){console.error(e)}})();
+
+// ---- v17.16 เควส: บอกสถานะ/ที่ส่งให้ชัด · ปุ่มไปกระดานเมือง · ส่งทันทีที่ครบ ----
+(function(){try{
+const st=document.createElement('style');st.textContent='.qitem.qrdy{border-left:4px solid #5fd05f!important;background:rgba(80,200,80,.08)}.qgo{margin-top:6px}';document.head.appendChild(st);
+const _ql=questList;questList=function(){const L=_ql.apply(this,arguments);try{
+ (S.tq||[]).forEach(q=>{if(!q||!q.v2)return;const x=L.find(y=>y.k==='tq'+q.id);if(!x)return;const T=tqV(q);x.go='board';
+  const base=String(T.pr||'').replace(/ · ✅.*$/,''),left=' · เหลือ '+q.left+' ปี';
+  if(q.kind==='fight')x.p='⚔️ ต้องไปสู้ที่กระดานเมือง'+left;
+  else if(T.ok){x.ready=1;x.p=base+(tqAccd(q)?' · ✅ ครบแล้ว — ส่งให้เองทันที':' · ✅ ครบแล้ว — กดรับที่กระดานเมืองเพื่อส่ง')+left}
+  else x.p=base+(tqAccd(q)?'':' · ยังไม่ได้กดรับ (กดรับที่กระดานเมือง)')+left});
+ L.forEach(x=>{if(x.q&&/^nq/.test(x.k)&&!x.q.pz&&QV[x.q.k]&&QV[x.q.k]()-x.q.b>=x.q.g){x.ready=1;x.p=x.p+' · ✅ ครบแล้ว — ส่งให้เองทันที'}})}catch(e){console.error(e)}return L};
+const _oq=openQuests;openQuests=function(){const r=_oq.apply(this,arguments);try{const L=questList(),m=$('modal');if(m){const its=m.querySelectorAll('.qitem');L.forEach((x,i)=>{const el=its[i];if(!el)return;if(x.ready)el.classList.add('qrdy');if(x.go&&!el.querySelector('.qgo'))el.insertAdjacentHTML('beforeend','<button class="sysb qgo" onclick="closeM();openTown(\'board\')">🏛️ ไปกระดานเมือง</button>')})}}catch(e){console.error(e)}return r};
+const nqNow=()=>{let n=0;for(const q of (S.nq||[]).slice()){if(q.pz)continue;if(QV[q.k]()-q.b<q.g)continue;const p=q.gp&&(S.parents||[]).find(x=>x.n===q.gp&&x.alive);S.nq.splice(S.nq.indexOf(q),1);S.money+=q.mny;S.fame+=q.fm;joy(4);if(p)p.rel=Math.min(100,(p.rel||0)+8);log(`📜✅ ทำเควสของ<b>${q.gv}</b>สำเร็จ: ${q.n} — ได้ ${nqRwTxt(q)}`,'epic');n++}return n};
+setInterval(()=>{try{if(!S||!S.alive||typeof tqAuto!=='function')return;let n=0;if((S.tq||[]).length)n+=tqAuto();if((S.nq||[]).length)n+=nqNow();if(n){render();const m=$('modal');if(m&&m.dataset.k==='town')openTown('board')}}catch(e){}},2000);
+}catch(e){console.error(e)}})();
 </script>
 </body>
 </html>
