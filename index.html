@@ -24724,6 +24724,20 @@ function chmReward(x,d,kb){const r=Math.max(1,Math.min(3,+x.r||3)),pp=['d','w','
 // คู่มือ
 try{const g=GD2.find(x=>x.t==='ทำเนียบโหมดท้าทาย');if(g){g.d='เล่นโหมด <b>🔥 นรก · ⏳ ชีวิตสั้น · 🗑️ รากขยะ</b> แล้วจบชีวิต จะขึ้น<b>ทำเนียบของโหมดนั้น</b>เท่านั้น (ไม่ปนทำเนียบโลก) · นรกวัดชั้นที่ลงได้ลึกสุด · ชีวิตสั้นวัดความเร็ว · รากขยะวัดขั้นสูงสุดที่ไปถึง · อันดับ 1–3 ได้ฉายาของโหมด และรายเดือนได้กรอบพิเศษ · ผู้ย้อนกาลอยู่แท็บ 🔁 ของตัวเอง';SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}}catch(e){}
 (()=>{const st=document.createElement('style');st.textContent='.chmTabs{margin-top:6px}.chmTabs .tabb{flex:1}';document.head.appendChild(st)})();
+
+// ===== สัตว์อสูรขั้นอสูรพันปี: ถ้าพลาดทางแยก (แปลงกาย/ครองป่า) จะติดขั้นตลอดไป — ขั้นย่อยวนเพราะผูกกับระดับพลังมนุษย์ =====
+function blGateLock(){const m=S&&S.beastMode;return !!(m&&!m.human&&(m.st|0)===4&&!m.king&&!m.pdone)}
+function blGateAsk(){const m=S.beastMode;if(!blGateLock()||choice._cur||modalOpen)return;m.xAsk=S.age;
+ choice('🌙 ทางแยกของอสูรพันปี',`${esc(S.name)}ฝึกจนถึงขีดของอสูรพันปีแล้ว แต่ยังไม่ได้เลือกทาง — ขั้นจะไม่ขยับจนกว่าจะเลือก`,[
+  {t:'👑 ครองป่าเป็นราชาอสูร',s:'อยู่ในร่างสัตว์ต่อ เลื่อนขั้นต่อได้ · แปลงกายทีหลังได้ที่ ☰',_x:1,f(){m.king=1;S.fame+=200;log(`👑 ${S.name} ประกาศตนเป็นราชาอสูร สัตว์ทั้งป่าก้มหัวให้`,'myth',true);try{render()}catch(e){}}},
+  {t:'🧑 จะแปลงกายเป็นมนุษย์ (เลือกที่ ☰)',s:'ปิดหน้านี้ไว้ก่อน · จะถามอีกใน 5 ปี',_x:1,noFate:1,f(){toast('แปลงกายได้ที่เมนู ☰')}}])}
+{const _byG=beastYear;beastYear=function(){const r=_byG.apply(this,arguments);try{const m=S&&S.beastMode;if(blGateLock()&&S.age-(m.xAsk||-99)>=5&&!window._blGP){let n=0;window._blGP=setInterval(()=>{n++;try{if(!S||!blGateLock()||n>200){clearInterval(window._blGP);window._blGP=0;return}if(!choice._cur&&!modalOpen){clearInterval(window._blGP);window._blGP=0;blGateAsk()}}catch(e){}},700)}}catch(e){}return r}}
+{const _rdG=render;render=function(){const r=_rdG.apply(this,arguments);try{if(S&&blGateLock()){const g=$('gRealm');if(g&&!g.querySelector('.blLock')){const sb=g.querySelector('.rsub');if(sb)sb.remove();g.insertAdjacentHTML('beforeend',' <span class="blLock" onclick="event.stopPropagation();blGateAsk()">🔒 เลือกทางก่อนเลื่อนขั้น</span>')}}}catch(e){}return r}}
+// ===== สมุดตำนาน: แถว "ได้ล่าสุด" — ของที่ปลดล็อกแล้วหาเจอง่าย ไม่หายไปกับป้าย "ใหม่" =====
+{const _obL=openBook;openBook=function(){const r=_obL.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='book'||(typeof BKT!=='undefined'&&BKT==='ttl')||m.querySelector('.bkRecent'))return r;
+ const L=Object.entries(achGot).filter(([id,g])=>g&&g.t).sort((a,b)=>b[1].t-a[1].t).slice(0,6).map(([id,g])=>[ACH_ALL.find(a=>a.id===id),g]).filter(x=>x[0]);if(!L.length)return r;
+ const h=m.querySelector('h4');if(h)h.insertAdjacentHTML('beforebegin',`<div class="bkRecent"><b>🕘 ได้ล่าสุด</b>${L.map(([a,g])=>`<span class="t${a.r}" title="${esc(a.d)}">${esc(a.n)}<small>${new Date(g.t).toLocaleDateString('th-TH',{day:'numeric',month:'short'})}</small></span>`).join('')}</div>`)}catch(e){console.error(e)}return r}}
+(()=>{const st=document.createElement('style');st.textContent='.blLock{display:inline-block;margin-left:4px;padding:0 8px;border-radius:999px;background:#5a2a10;color:#ffd9a0;border:1px solid #ff9a40;font-size:11px;font-weight:700;cursor:pointer;animation:blLk 1.6s ease-in-out infinite}@keyframes blLk{50%{box-shadow:0 0 8px #ff9a40}}.bkRecent{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0;padding:8px;border-radius:10px;background:rgba(255,215,106,.08);border:1px dashed rgba(255,215,106,.4)}.bkRecent>b{width:100%;font-size:13px}.bkRecent span{font-size:12px;font-weight:700;padding:2px 8px;border-radius:8px;background:rgba(0,0,0,.25)}.bkRecent small{margin-left:4px;opacity:.6;font-weight:400}';document.head.appendChild(st)})();
 </script>
 </body>
 </html>
