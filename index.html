@@ -25653,6 +25653,51 @@ window.FRSH_T=T;window.FRSH_M=M;
  const p=sp.split('|'),cls=p.filter(k=>k===R||k===SO).join(' '),ms=p.filter(k=>M[k]).map(k=>M[k]()).join('');
  return h.replace(/class="frw /,`class="frw ${cls} `).replace(/<\/span>$/,`<svg class="frsh" viewBox="0 0 100 100" aria-hidden="true">${ms}</svg></span>`)}}
 })();
+
+// ===================== ฉายา: พับตามระดับ · โหลดทีละชุด · ค้นหาข้ามหมวด · ลดเอฟเฟกต์ในรายการ =====================
+(function(){const st=document.createElement('style');st.textContent=`
+.ttlist .tb,.ttres .tb{animation:none!important;box-shadow:none!important}
+.ttlist .tb::before,.ttlist .tb::after,.ttres .tb::before,.ttres .tb::after{display:none!important}
+.ttlist .tb .n,.ttres .tb .n{animation:none!important}
+.ttah{cursor:pointer;user-select:none;padding:4px 2px}.ttah .ar{transition:transform .2s;opacity:.7;font-size:12px}.ttah.open .ar{transform:rotate(90deg)}
+.ttmore{display:block;margin:4px 0 8px;width:100%;border:1.5px dashed var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:7px;font:inherit;font-size:13px;cursor:pointer}
+.ttjs{display:flex;gap:5px;overflow-x:auto;margin-top:6px;scrollbar-width:none}.ttjs::-webkit-scrollbar{display:none}
+.ttjs button{flex:0 0 auto;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:3px 10px;font:inherit;font-size:12px;cursor:pointer;white-space:nowrap}`;document.head.appendChild(st)})();
+const TT_N=60;
+window._tt=null;
+function ttChunk(i){const T=window._tt;if(!T)return;const L=T.by[i],box=$('tt_'+i);if(!box)return;const s=T.sh[i]||0,e=Math.min(L.length,s+TT_N);
+ box.insertAdjacentHTML('beforeend',L.slice(s,e).map(([t,v])=>tbChip(t,v)).join(''));T.sh[i]=e;
+ let b=box.nextElementSibling;const rest=L.length-e;
+ if(rest>0){if(!b||!b.classList.contains('ttmore')){box.insertAdjacentHTML('afterend',`<button class="ttmore" onclick="ttChunk(${i})"></button>`);b=box.nextElementSibling}b.textContent=`แสดงอีก ${Math.min(TT_N,rest)} (เหลือ ${rest})`}
+ else if(b&&b.classList.contains('ttmore'))b.remove()}
+function ttTog(i,force){const T=window._tt;if(!T)return;const h=$('tth_'+i),box=$('tt_'+i);if(!h||!box)return;const op=force==null?!h.classList.contains('open'):!!force;
+ h.classList.toggle('open',op);box.style.display=op?'':'none';const b=box.nextElementSibling;if(b&&b.classList.contains('ttmore'))b.style.display=op?'':'none';
+ if(op&&!(T.sh[i]>0))ttChunk(i)}
+function ttJump(i){ttTog(i,true);const h=$('tth_'+i);if(h)h.scrollIntoView({behavior:'smooth',block:'start'})}
+function ttAll(){(window._tt?[6,5,4,3,2,1,0]:[]).forEach(i=>{if($('tth_'+i))ttTog(i,false)})}
+function ttSearch(){const T=window._tt;if(!T)return;const q=String(window._bkQ||'').trim().toLowerCase(),res=$('ttRes'),main=$('ttMain'),c=$('bkCnt');if(!res||!main)return;
+ if(!q){res.style.display='none';res.innerHTML='';main.style.display='';if(c)c.textContent='';return}
+ const hit=T.flat.filter(([t])=>t.toLowerCase().includes(q));T.q={hit,sh:0};main.style.display='none';res.style.display='';res.innerHTML=`<div class="tbg ttres" id="ttRL"></div>`;
+ if(c)c.textContent=`เจอ ${hit.length} จาก ${T.flat.length} ฉายา`;ttQMore()}
+function ttQMore(){const T=window._tt;if(!T||!T.q)return;const{hit}=T.q,L=$('ttRL'),res=$('ttRes');if(!L)return;const s=T.q.sh,e=Math.min(hit.length,s+TT_N+20);
+ L.insertAdjacentHTML('beforeend',hit.slice(s,e).map(([t,v])=>tbChip(t,v)).join(''));T.q.sh=e;const o=res.querySelector('.ttmore');if(o)o.remove();
+ const rest=hit.length-e;if(rest>0)res.insertAdjacentHTML('beforeend',`<button class="ttmore" onclick="ttQMore()">แสดงอีก ${Math.min(TT_N+20,rest)} (เหลือ ${rest})</button>`);
+ else if(!hit.length)res.innerHTML='<p class="tag2">ไม่พบฉายาที่ค้นหา</p>'}
+{const _obT=openBook;openBook=function(){const r=_obT.apply(this,arguments);try{const m=$('modal');if(BKT!=='ttl'||m.dataset.k!=='book')return r;
+ const heads=[...m.querySelectorAll('.tbh')];if(!heads.length)return r;const TL=LS.get('murim_ttl',{});
+ const by=[[],[],[],[],[],[],[]];Object.entries(TL).forEach(([t,v])=>by[ttlRar(t)].push([t,v]));by.forEach(a=>a.sort((x,y)=>y[1].t-x[1].t));
+ const tot=[0,0,0,0,0,0,0];TTL_VALID.forEach(t=>tot[ttlRar(t)]++);const flat=[].concat(...by.slice().reverse());
+ window._tt={by,sh:{},flat,q:null};
+ const recent=Object.entries(TL).sort((a,b)=>b[1].t-a[1].t).slice(0,8),cur=S&&S.ttl&&TL[S.ttl]?[S.ttl,TL[S.ttl]]:null;
+ const top=(cur?`<div class="tbh"><b>🏷️ ฉายาตอนนี้</b></div><div class="tbg">${tbChip(cur[0],cur[1])}</div>`:'')+(recent.length?`<div class="tbh"><b>🕒 ได้ล่าสุด</b></div><div class="tbg">${recent.map(([t,v])=>tbChip(t,v)).join('')}</div>`:'');
+ const acc=[6,5,4,3,2,1,0].filter(i=>by[i].length).map(i=>`<div class="tbh ttah" id="tth_${i}" onclick="ttTog(${i})"><span class="tb tb${i}" style="padding:2px 9px;font-size:12px">${TB_IC[i]?`<i>${TB_IC[i]}</i>`:''}<span class="n">${TB_N[i]}</span></span><span class="c">${by[i].length}/${tot[i]}</span><span class="ar">▸</span></div><div class="tbg ttlist" id="tt_${i}" style="display:none"></div>`).join('');
+ const host=document.createElement('div');host.innerHTML=`<div id="ttMain">${top}${acc}</div><div id="ttRes" style="display:none"></div>`;
+ heads[0].before(host);heads.forEach(h=>{let n=h.nextElementSibling;h.remove();if(n&&n.classList.contains('tbg'))n.remove()});
+ const q=$('bkQ');if(q){q.placeholder='🔍 ค้นหาฉายา…';q.oninput=function(){window._bkQ=this.value;clearTimeout(window._ttT);window._ttT=setTimeout(ttSearch,160)};if(window._bkQ)ttSearch()}
+ const fl=m.querySelector('.bkfl');if(fl)fl.innerHTML=`<button onclick="ttAll()">⊖ พับทั้งหมด</button>`;
+ const js=m.querySelector('.bkjs');const jh=[6,5,4,3,2,1,0].filter(i=>by[i].length).map(i=>`<button onclick="ttJump(${i})">${TB_IC[i]||''} ${TB_N[i]} ${by[i].length}</button>`).join('');
+ if(js)js.innerHTML=jh;else if(fl)fl.insertAdjacentHTML('afterend',`<div class="ttjs">${jh}</div>`)
+}catch(e){console.error(e)}return r}}
 </script>
 </body>
 </html>
