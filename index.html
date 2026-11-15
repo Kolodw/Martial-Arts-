@@ -24825,6 +24825,18 @@ async function admPaStat(){try{const j=await api('pastat',{key:admK()});const L=
  modal(`<button class="xbtn" onclick="openAdmTools()">←</button><h3>📊 สถิติงานประมูล</h3><p class="tag2">${L.length} รอบล่าสุด · เฉลี่ยคนเข้าดู ${L.length?(L.reduce((a,x)=>a+x.vw,0)/L.length).toFixed(1):0} · คนเสนอราคา ${L.length?(L.reduce((a,x)=>a+x.bd,0)/L.length).toFixed(1):0} · ขายได้ ${L.length?Math.round(L.reduce((a,x)=>a+x.sold,0)/Math.max(1,L.reduce((a,x)=>a+x.n,0))*100):0}%</p>
  ${L.map(x=>`<div class="item"><b>${new Date(x.t).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</b> · ออนไลน์ ${x.act} · เข้าดูสูงสุด ${x.vw} · เสนอราคา ${x.bd} คน · ขายได้ ${x.sold}/${x.n}<br><span class="tag2">${String(x.w||'').split(',').map(t=>(WN[t[0]]||'')+'ระดับ'+t.slice(1)).join(' · ')}</span></div>`).join('')||'<p class="tag2">ยังไม่มีข้อมูล — เก็บตั้งแต่อัปเดตนี้</p>'}`,'admtool2')}catch(e){toast('โหลดไม่ได้')}}
 {const _oatP=openAdmTools;openAdmTools=function(){const r=_oatP.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='admtool'&&!m.querySelector('.paStB')){const b=[...m.querySelectorAll('button')].find(x=>/ประมูล/.test(x.textContent));const h=`<button class="gbtn paStB" style="width:100%;margin-top:6px" onclick="admPaStat()">📊 สถิติงานประมูล</button>`;if(b)b.insertAdjacentHTML('afterend',h);else m.insertAdjacentHTML('beforeend',h)}}catch(e){}return r}}
+
+// ===== แก้: โหมดนรกตั้งแต่ชั้น 19 หาทางลงชั้นถัดไปไม่เจอ (มีแค่ป้าย 🔥 เล็กๆ บนหัวจอ) =====
+// 1) ถึงเวลาลงได้ → เด้งถามเองครั้งเดียวต่อชั้น · 2) ป้ายบนหัวจอกะพริบเมื่อพร้อม · 3) ปุ่ม "🔥 ประตูนรก" ในเมนู
+function hlReady(){const h=S&&S.ch==='hell'&&hl2();return !!(h&&h.h2&&h.lv>=18&&h.lv<100&&S.alive&&S.age>=h.cd)}
+function hlAsk(){const h=hl2();if(!hlReady()||h.askLv===h.lv)return;if(choice._cur||modalOpen)return setTimeout(hlAsk,900);h.askLv=h.lv;const n=h.lv+1;
+ choice(`🔥 ประตูนรกชั้นที่ ${n} เปิดแล้ว`,`ผู้คุมไล่ล่าอยู่ห่าง ${h.wd==null?6:h.wd} ก้าว — ${n%10===0?'ข้างหน้าคือ<b>บอสวงนรก</b>':'เลือกได้ 1 บานจากหลายประตู'}<br><span class="tag2">กดป้าย 🔥 บนหัวจอ หรือเมนู ☰ → 🔥 ประตูนรก ได้ทุกเมื่อ</span>`,[
+  {t:'🚪 ไปเลือกประตู',_x:1,noFate:1,f(){setTimeout(openHell2,200)}},
+  {t:'🗡️ ฝึกต่อก่อน',s:'ทุกปีที่ไม่ลง ผู้คุมใกล้เข้ามา 1 ก้าว',_x:1,noFate:1,skip:true,f(){}}])}
+{const _pyHR=passYear;passYear=function(){const r=_pyHR.apply(this,arguments);try{if(hlReady()){const h=hl2();if(h.askLv!==h.lv)setTimeout(hlAsk,600)}}catch(e){}return r}}
+{const _rdHR=render;render=function(){const r=_rdHR.apply(this,arguments);try{const b=document.querySelector('.hlb');if(b){const on=hlReady();b.classList.toggle('hlbReady',on);if(on&&!/ลงได้/.test(b.textContent))b.insertAdjacentHTML('beforeend',' · 🚪 ลงได้')}}catch(e){}return r}}
+{const _omHR=openMenu;openMenu=function(){const r=_omHR.apply(this,arguments);try{const h=S&&S.ch==='hell'&&hl2();if(h&&h.lv>=18&&h.lv<100){const m=$('modal'),g=m&&m.querySelector('.mgrid');if(g&&!m.querySelector('.hlMB'))g.insertAdjacentHTML('afterbegin',`<button class="opt hlMB" onclick="openHell2()">🔥 ประตูนรก<small>ชั้น ${h.lv+1}${hlReady()?' · ลงได้แล้ว':' · อีก '+Math.max(0,h.cd-S.age)+' ปี'}</small></button>`)}}catch(e){}return r}}
+(()=>{const st=document.createElement('style');st.textContent='.hlb.hlbReady{animation:hlbP 1.2s ease-in-out infinite;font-weight:800}@keyframes hlbP{50%{box-shadow:0 0 10px #ff6a20;background:#6a1a0a}}';document.head.appendChild(st)})();
 </script>
 </body>
 </html>
