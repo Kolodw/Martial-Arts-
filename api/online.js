@@ -370,6 +370,8 @@ async function paTick(now) {
 const PA_DAY = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10);
 const paSum = c => c ? { sid: c.sid, phase: c.phase, t0: c.t0, ls: c.ls || 0, li: c.li, n: c.lots.length, left: c.lots.filter(x => !x.sold).length } : null;
 let QUOTA_AT = 0, OOM_AT = 0;
+// ฐานข้อมูลเต็ม (OOM): ตัวนับกันสแปมเขียนไม่ได้ → ข้ามการจำกัดไปก่อน ไม่ให้ทุกคำขอล้มทั้งหมด (แชท/โหลดข้อมูลยังใช้ได้)
+const pipeSoft = async l => { try { return await pipe(l) } catch (e) { if (/OOM/i.test(String(e && e.message))) { OOM_AT = Date.now(); return null } throw e } };
 
 // ---------- 🔔 Web Push (VAPID + aes128gcm เขียนเองไม่ใช้ไลบรารี) + กล่องแจ้งเตือนในเกม ----------
 const crypto = require('crypto');
@@ -586,13 +588,13 @@ module.exports = async (req, res) => {
     if (a === 'admreg') return res.status(403).json({ err: 'admin' });
     if (!admReq && ip !== 'x') {
       const mk = Math.floor(now / 60000), WR = IP_WRITE.has(a);
-      const [bn, rc, wc] = await pipe([['GET', 'ban:' + ip], ['INCR', 'ipr:' + ip + ':' + mk], WR ? ['INCR', 'ipw:' + ip + ':' + mk] : ['GET', 'ipw:' + ip + ':' + mk], ['EXPIRE', 'ipr:' + ip + ':' + mk, 90], ...(WR ? [['EXPIRE', 'ipw:' + ip + ':' + mk, 90]] : [])]);
+      const [bn, rc, wc] = (await pipeSoft([['GET', 'ban:' + ip], ['INCR', 'ipr:' + ip + ':' + mk], WR ? ['INCR', 'ipw:' + ip + ':' + mk] : ['GET', 'ipw:' + ip + ':' + mk], ['EXPIRE', 'ipr:' + ip + ':' + mk, 90], ...(WR ? [['EXPIRE', 'ipw:' + ip + ':' + mk, 90]] : [])])) || [0, 0, 0];
       if (bn) return res.status(403).json({ err: 'banned' });
       if (+rc > IP_HARD) { await pipe([['SET', 'ban:' + ip, 'flood', 'EX', 1800], ['ZADD', 'trap:ips', now, ip], ['HSET', 'trap:info', ip, JSON.stringify({ n: +rc, p: ['(ยิง API ถี่เกิน ' + rc + ' ครั้ง/นาที)'], f: now, l: now, ua: String(req.headers['user-agent'] || '').slice(0, 140), fl: 1 })]]); return res.status(429).json({ err: 'rate' }) }
       if (+rc > IP_SOFT) return res.status(429).json({ err: 'rate' });
       if (WR && +wc > IP_WMAX) return res.status(429).json({ err: 'rate' });
       // จำกัดต่อผู้เล่น (ไอดี) — คนดีที่ใช้ IP เดียวกันไม่โดนลูกหลง
-      const uk = okId(id) ? 'idr:' + id : 'ipn:' + ip, [uc, uw] = await pipe([['INCR', uk + ':' + mk], WR ? ['INCR', uk + ':w:' + mk] : ['GET', uk + ':w:' + mk], ['EXPIRE', uk + ':' + mk, 90], ...(WR ? [['EXPIRE', uk + ':w:' + mk, 90]] : [])]);
+      const uk = okId(id) ? 'idr:' + id : 'ipn:' + ip, [uc, uw] = (await pipeSoft([['INCR', uk + ':' + mk], WR ? ['INCR', uk + ':w:' + mk] : ['GET', uk + ':w:' + mk], ['EXPIRE', uk + ':' + mk, 90], ...(WR ? [['EXPIRE', uk + ':w:' + mk, 90]] : [])])) || [0, 0];
       if (+uc > (okId(id) ? ID_SOFT : NOID_SOFT)) return res.status(429).json({ err: 'rate' });
       if (WR && +uw > ID_WMAX) return res.status(429).json({ err: 'rate' });
     }
@@ -1498,12 +1500,14 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     if (a === 'csave') {
       const tk = String(b.tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20), d = String(b.d || '');
       if (tk.length < 8 || !d || d.length > 900000) return res.status(400).json({ err: 'bad' });
-      await cmd('SET', 'ctok:' + id, tk, 'NX');
-      const tok = await cmd('GET', 'ctok:' + id);
-      if (tok !== tk) return res.status(403).json({ err: 'token' });
       const sl = Math.max(1, Math.min(5, parseInt(b.sl, 10) || 1));
-      await pipe([['DEL', 'cs2:' + id], ['DEL', 'cs3:' + id + ':' + sl]]);
-      await pipe([['SET', 'cs3:' + id + ':' + sl, zPack(saveTrim(d)), 'EX', 86400 * 90], ['SET', 'cs2:' + id, '@' + sl, 'EX', 86400 * 90], ['EXPIRE', 'ctok:' + id, 86400 * 90]]);
+      try {
+        await cmd('SET', 'ctok:' + id, tk, 'NX');
+        const tok = await cmd('GET', 'ctok:' + id);
+        if (tok !== tk) return res.status(403).json({ err: 'token' });
+        // เขียนทับเลย ไม่ลบของเก่าก่อน — ถ้าฐานข้อมูลเต็ม เซฟเก่าบนคลาวด์ต้องไม่หาย
+        await pipe([['SET', 'cs3:' + id + ':' + sl, zPack(saveTrim(d)), 'EX', 86400 * 90], ['SET', 'cs2:' + id, '@' + sl, 'EX', 86400 * 90], ['EXPIRE', 'ctok:' + id, 86400 * 90]]);
+      } catch (e) { if (/OOM/i.test(String(e && e.message))) { OOM_AT = Date.now(); return res.status(503).json({ err: 'full' }) } throw e }
       // ฝาก id/token ไว้ใน cookie ที่ตั้งจากเซิร์ฟเวอร์ (HttpOnly) — Safari ลบ localStorage ทิ้งหลังไม่ได้เข้าเว็บ 7 วัน แต่ cookie นี้อยู่ต่อ ใช้กู้เซฟผ่าน ?a=cme
       if (okId(id)) res.setHeader('Set-Cookie', 'mc=' + id + '.' + tk + '; Path=/api; Max-Age=' + 86400 * 90 + '; HttpOnly; Secure; SameSite=Lax');
       return res.json({ ok: 1 });
