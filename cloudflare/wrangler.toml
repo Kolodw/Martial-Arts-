@@ -12,6 +12,11 @@ binding = "ASSETS"
 html_handling = "drop-trailing-slash"
 not_found_handling = "none"
 
+# ที่เก็บเซฟคลาวด์ (R2 bucket "1inanovel" · ไม่เปิดสาธารณะ) — ถ้าไม่มี binding นี้ เกมจะใช้ Valkey เหมือนเดิม
+[[r2_buckets]]
+binding = "SAVES"
+bucket_name = "1inanovel"
+
 # ให้ Cloudflare ย้ายตำแหน่งรัน Worker ไปใกล้ฐานข้อมูลเอง (ลดเวลาเปิดการเชื่อมต่อ TLS ไป Aiven)
 [placement]
 mode = "smart"
