@@ -23624,9 +23624,9 @@ function slotMove(n){const d=readSave(n);if(!d)return;if(!arcPut(d,'ช่อง
 setTimeout(()=>{try{renderLegends()}catch(e){}},900);
 
 // ===================== v17.10 🌟 หนึ่งเดียวในนวนิยาย =====================
-// สุ่มตอนเริ่มชีวิตแบบสุ่ม (ไม่ใช่สร้างเอง · ชะตาประจำวัน · สัตว์) โอกาส 0.01% = 1 ใน 10,000 ชีวิต · สุ่มตอนกดเริ่ม จึงกดสุ่มใหม่เพื่อตามหาไม่ได้
+// สุ่มตอนเริ่มชีวิตแบบสุ่ม (ไม่ใช่สร้างเอง · ชะตาประจำวัน · สัตว์) โอกาส 0.00001% = 1 ใน 10,000,000 ชีวิต · สุ่มตอนกดเริ่ม จึงกดสุ่มใหม่เพื่อตามหาไม่ได้
 // ได้: พรสวรรค์สูงสุด + ของเทพ 1 ชิ้นจาก 4 แบบ · พลังเสริมเยอะตอนต้น แล้วลดลงตามขั้น (กันพังทำเนียบ) · ประกาศแชทโลก · ป้าย 🌟 ในทำเนียบ
-const ONE_P=1e-4;
+const ONE_P=1e-7;
 const ONE_SET=[
  {id:'sword',ic:'🗡️',n:'กระบี่ลิขิตฟ้า',d:'พลังยุทธ์เติบโตเพิ่มทุกปี — แรงมากตอนเริ่ม แล้วค่อยๆ ลดลงเมื่อขั้นสูงขึ้น'},
  {id:'pearl',ic:'📿',n:'ลูกปัดอายุวัฒนะ',d:'อายุขัย +30% ทันที · ลมปราณเพิ่มทุกปี'},
@@ -23637,8 +23637,8 @@ function oneApply(force){const it=force?ONE_SET.find(x=>x.id===force)||ONE_SET[0
  const best=TALENT.slice().sort((a,b)=>b.m-a.m)[0];S.talent=Object.assign({},best);try{if(S.xian)S.root=rootOf(S.talent)}catch(e){}
  if(it.id==='pearl')lsAdd(Math.round(lifeMax()*.3));if(it.id==='book'){try{S.arts.push(newArt(3))}catch(e){}}if(it.id==='seal'){S.talent.m=+(S.talent.m*1.1).toFixed(2);S.fame+=300;S.cha=(S.cha||0)+20;S.karma+=10}
  S.items.push({id:'one_'+it.id,n:it.n,d:it.d,passive:1,one:1});keyAdd(`ถือกำเนิดเป็นหนึ่งเดียวในนวนิยาย พร้อม${it.n}`);
- log(`🌟 <b>ฟ้าดินสั่นสะเทือน — คุณคือ「หนึ่งเดียวในนวนิยาย」</b> โอกาส 1 ใน 10,000 ชีวิต · เกิดมาพร้อม <b>${it.ic} ${it.n}</b> — ${it.d}`,'myth',true);
- try{pxPlay({mode:'arrive',type:'peak',w:S.xt?'g':S.xian?'x':'m',seed:77,fx:'ember',title:'🌟 หนึ่งเดียวในนวนิยาย',sub:`${esc(S.name)} · ${it.ic} ${it.n}`,sub0:'— โอกาส 1 ใน 10,000 ชีวิต —'})}catch(e){}
+ log(`🌟 <b>ฟ้าดินสั่นสะเทือน — คุณคือ「หนึ่งเดียวในนวนิยาย」</b> โอกาส 1 ใน 10,000,000 ชีวิต · เกิดมาพร้อม <b>${it.ic} ${it.n}</b> — ${it.d}`,'myth',true);
+ try{pxPlay({mode:'arrive',type:'peak',w:S.xt?'g':S.xian?'x':'m',seed:77,fx:'ember',title:'🌟 หนึ่งเดียวในนวนิยาย',sub:`${esc(S.name)} · ${it.ic} ${it.n}`,sub0:'— โอกาส 1 ใน 10,000,000 ชีวิต —'})}catch(e){}
  try{if(!force&&typeof onlineOK!=='undefined'&&onlineOK)api('oneborn',{n:pname(),it:it.n,w:S.xt?'g':S.xian?'x':'m'}).then(j=>{if(j&&j.ok&&j.cnt)log(`📢 ฟ้าประกาศชื่อคุณไปทั่วแผ่นดิน — คุณคือคนที่ <b>${fmt(j.cnt)}</b> ของเซิร์ฟเวอร์`,'epic')}).catch(()=>{})}catch(e){}}
 window.oneForce=k=>{if(typeof ADM!=='undefined'&&ADM.ok&&S&&S.alive&&!S.flags.one)oneApply(k||1)};
 {const _slO=startLife;startLife=function(){const r0=roll;const out=_slO.apply(this,arguments);try{if(S&&r0&&!r0.custom&&!r0.daily&&!(r0.f&&r0.f.v&&r0.f.v.beast)&&!S.mw)oneRoll()}catch(e){}return out}}
@@ -23649,7 +23649,7 @@ async function oneRoll(){try{if(typeof onlineOK==='undefined'||!onlineOK)return;
 {const _crO=chatRender;chatRender=function(){const r=_crO.apply(this,arguments);try{const box=$('chatBox'),L=chatMsgs||[];if(!box)return r;const rows=box.querySelectorAll('.cm');if(rows.length!==L.length)return r;L.forEach((m,i)=>{if(m.k!=='one'||rows[i].classList.contains('cmone'))return;rows[i].className='cm cmone';rows[i].innerHTML=`<div class="cmb"><div class="cmh"><b>🌟 ประกาศจากสวรรค์</b> <span class="ct">${new Date(m.t).toTimeString().slice(0,5)}</span></div><div class="cmx">${esc(m.x||'')}</div></div>`})}catch(e){}return r}}
 (function(){const st=document.createElement('style');st.textContent=`.cm.cmone .cmb{background:linear-gradient(120deg,#3a2808,#6a4a10 45%,#3a2808);color:#ffe8a8;border:2px solid #ffd060;box-shadow:0 0 16px #ffd06088;border-radius:14px;padding:8px 12px;width:100%}.cm.cmone .cmh b{color:#ffd060}.cm.cmone{justify-content:center}
 .klb.oneb{background:linear-gradient(90deg,#b8862a,#ffe08a,#b8862a);color:#3a2808;font-weight:bold}`;document.head.appendChild(st)})();
-try{SYS_GUIDE.push({s:'life',nw:1,ic:'🌟',t:'หนึ่งเดียวในนวนิยาย',d:'ทุกครั้งที่เกิดแบบสุ่ม มีโอกาส <b>1 ใน 10,000</b> (0.01%) ที่ฟ้าจะลิขิตให้คุณเป็น「หนึ่งเดียวในนวนิยาย」 — ได้พรสวรรค์สูงสุดและของเทพ 1 ชิ้น (กระบี่ลิขิตฟ้า · ลูกปัดอายุวัฒนะ · คัมภีร์ไร้นาม · ตราผู้ถูกเลือก) · ชื่อจะถูกประกาศในแชทโลก และมีป้าย 🌟 ในทำเนียบ · ชีวิตที่สร้างเอง ชะตาประจำวัน และสัตว์ไม่มีสิทธิ์',te:'One in the Novel',de:'0.01% chance per random birth: top talent and a god-tier item, announced to everyone.'})}catch(e){}
+try{SYS_GUIDE.push({s:'life',nw:1,ic:'🌟',t:'หนึ่งเดียวในนวนิยาย',d:'ทุกครั้งที่เกิดแบบสุ่ม มีโอกาส <b>1 ใน 10,000,000</b> (0.00001%) ที่ฟ้าจะลิขิตให้คุณเป็น「หนึ่งเดียวในนวนิยาย」 — ได้พรสวรรค์สูงสุดและของเทพ 1 ชิ้น (กระบี่ลิขิตฟ้า · ลูกปัดอายุวัฒนะ · คัมภีร์ไร้นาม · ตราผู้ถูกเลือก) · ชื่อจะถูกประกาศในแชทโลก และมีป้าย 🌟 ในทำเนียบ · ชีวิตที่สร้างเอง ชะตาประจำวัน และสัตว์ไม่มีสิทธิ์',te:'One in the Novel',de:'0.01% chance per random birth: top talent and a god-tier item, announced to everyone.'})}catch(e){}
 
 // ===================== v17.11 🧬 ระบบร่างกาย + ความหายากแบบใหม่ (คนและสัตว์) =====================
 // ความหายาก: นับเฉพาะส่วนที่โอกาสต่ำกว่า 10% (เพศ/ยุค/ครอบครัวธรรมดาไม่ทำให้ตัวเลขพองอีกต่อไป)
