@@ -20235,7 +20235,7 @@ function islRender(n,morph){const e=islEl(),c=e.querySelector('.islC');const ow=
 function island(n){if(!n||!n.t)return;n.ms=n.ms||(n.big?3800:2000);const key=n.key||(n.ic||'')+n.t;
  if(ISL.cur&&!ISL.cur.live&&(ISL.cur.key===key)){ISL.cur.n=(ISL.cur.n||1)+1;islRender(ISL.cur,true);clearTimeout(ISL.t);ISL.t=setTimeout(()=>islNext(),ISL.cur.ms);return}
  const q=ISL.q.find(x=>x.key===key);if(q){q.n=(q.n||1)+1;return}n.key=key;n.n=1;
- if(n.pri)ISL.q.unshift(n);else ISL.q.push(n);while(ISL.q.length>6){const i=ISL.q.findIndex(x=>!x.pri);ISL.q.splice(i>=0?i:0,1)}
+ if(n.pri)ISL.q.unshift(n);else ISL.q.push(n);while(ISL.q.length>9){const i=ISL.q.findIndex(x=>!x.pri&&(x.kind||'info')!=='bad');ISL.q.splice(i>=0?i:0,1)}
  if(!ISL.cur||ISL.cur.live||(n.pri&&!ISL.cur.pri))islNext()}
 function islNext(user){clearTimeout(ISL.t);const n=ISL.q.shift();if(!n){ISL.cur=null;if(ISL.live){ISL.cur=ISL.live;islRender(ISL.live,true);return}islHide();return}
  if(user&&ISL.cur&&ISL.cur.live){ISL.live=null}ISL.cur=n;islRender(n,true);try{if(n.big&&n.kind!=='info')tuBuzz()}catch(e){}if(!n.sticky)ISL.t=setTimeout(()=>islNext(),n.ms)}
@@ -24845,6 +24845,25 @@ function hlAsk(){const h=hl2();if(!hlReady()||h.askLv===h.lv)return;if(choice._c
 #lifePriv .pvSeg button{flex:1;flex-direction:row!important;gap:4px!important;min-height:0!important;height:32px;padding:0 6px!important;border:0!important;border-radius:999px!important;font-size:12px!important;box-shadow:none!important;white-space:nowrap}
 #lifePriv .pvSeg button span{font-size:14px!important}#lifePriv .pvSeg button b{font-size:12px!important}
 #lifePriv .pvSeg button.on{background:color-mix(in srgb,var(--pink,#f0c860) 30%,transparent)!important}`;document.head.appendChild(st)})();
+
+// ===================== 🏝️ Dynamic Island: เสถียรขึ้น =====================
+// 1) ป้ายที่ถูกรวม/อัปเดตซ้ำ ต่อเวลาได้ไม่เกิน 4 วิ นับจากที่ขึ้นครั้งแรก (เดิมรวมกันไม่หยุด → ค้างจอและแจ้งเตือนอื่นในคิวไม่ได้ขึ้น)
+// 2) แจ้งเตือนสำคัญแทรก → ป้ายที่ถูกแทรกกลับเข้าคิวต่อ ไม่หายไปเฉยๆ
+// 3) ตัวเฝ้า: ป้ายค้างนานเกิน · มีคิวแต่ไม่มีอะไรขึ้น · เกาะโชว์ค้างทั้งที่ไม่มีอะไร · กลับมาจากแท็บอื่น → จัดการให้
+{const _irS=islRender;islRender=function(n,m){try{if(n&&!n._at)n._at=Date.now()}catch(e){}return _irS.apply(this,arguments)}}
+{const _ntS=islNext;islNext=function(user){try{const c=ISL.cur,q0=ISL.q[0];if(!user&&c&&!c.live&&!c.sticky&&q0&&q0.pri&&!c.pri&&c._at&&Date.now()-c._at<(c.ms||2000)*.6&&!c._rq){c._rq=1;c._at=0;ISL.q.splice(1,0,c)}}catch(e){}return _ntS.apply(this,arguments)}}
+{const _isS=island;island=function(n){try{const c=ISL.cur;if(n&&c&&c._at&&!c.live&&!c.sticky&&Date.now()-c._at>4000&&(n.upd&&c.key===n.key||(n.key||(n.ic||'')+n.t)===c.key||(!n.big&&!n.pri&&n.ic&&n.ic===c.ic&&(n.kind||'info')===(c.kind||'info')))){
+   // หมดโควต้าต่อเวลา → ต่อคิวเป็นป้ายใหม่แทน
+   if(n.upd)return;const q=ISL.q.find(x=>!x.big&&x.ic===n.ic&&(x.kind||'info')===(n.kind||'info'));if(q){q.t=n.t;q.n=(q.n||1)+1;return}ISL.q.push(Object.assign({},n,{key:(n.key||(n.ic||'')+n.t)+'~'+Date.now(),n:1,ms:n.ms||(n.big?3800:2000)}));return}}catch(e){}return _isS.apply(this,arguments)}}
+// 4) ของที่รอคิวไอคอนเดียวกัน → รวมเป็นป้ายเดียว (×N) · คิวเต็ม → ทิ้งป้ายซ้ำ/ทั่วไปก่อน เก็บคำเตือนไว้
+{const _isQ=island;island=function(n){try{if(n&&n.t&&!n.big&&!n.pri&&!n.sticky&&!n.upd&&n.ic){const q=ISL.q.find(x=>!x.big&&!x.sticky&&x.ic===n.ic&&(x.kind||'info')===(n.kind||'info'));if(q){q.t=n.t;q.n=(q.n||1)+1;return}}}catch(e){}
+ const r=_isQ.apply(this,arguments);try{while(ISL.q.length>6){let i=ISL.q.findIndex((x,j)=>!x.pri&&ISL.q.some((y,k)=>k>j&&y.ic===x.ic));if(i<0)i=ISL.q.findIndex(x=>!x.pri&&(x.kind||'info')!=='bad');if(i<0)i=0;ISL.q.splice(i,1)}}catch(e){}return r}}
+setInterval(()=>{try{if(!islOn())return;const el=document.getElementById('isl'),c=ISL.cur,on=el&&el.classList.contains('on'),now=Date.now();
+ if(c&&!c.live&&!c.sticky&&c._at&&now-c._at>(c.ms||2000)+6000){islNext();return}
+ if(!c&&ISL.q.length){islNext();return}
+ if(c&&!c.docked&&!on&&!document.body.classList.contains('islFloat')){islRender(c,false);return}
+ if(!c&&!ISL.q.length&&on&&!el.classList.contains('bye')){if(!ISL._hw)ISL._hw=now;else if(now-ISL._hw>1500){ISL._hw=0;islHide()}}else ISL._hw=0}catch(e){}},700);
+document.addEventListener('visibilitychange',()=>{try{if(document.hidden)return;const c=ISL.cur;if(c&&!c.live&&!c.sticky&&c._at&&Date.now()-c._at>(c.ms||2000)){clearTimeout(ISL.t);ISL.t=setTimeout(()=>islNext(),300)}}catch(e){}});
 </script>
 </body>
 </html>
