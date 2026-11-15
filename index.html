@@ -25557,6 +25557,20 @@ async function supMine(){if(typeof onlineOK==='undefined'||!onlineOK)return;let 
 // ป้าย 💛 ในแชท
 {const _crSp=chatRender;chatRender=function(){const r=_crSp.apply(this,arguments);try{const box=$('chatBox'),L=chatMsgs||[];if(!box)return r;const rows=box.querySelectorAll('.cm');if(rows.length!==L.length)return r;L.forEach((m,i)=>{if(!m.sp)return;const b=rows[i].querySelector('.cmb b');if(b&&!b.querySelector('.cmSp'))b.insertAdjacentHTML('beforeend','<span class="cmSp" title="ผู้สนับสนุนเกม">💛</span>')})}catch(e){}return r}}
 
+// ===================== v17.17b 🥚 ไข่สัตว์วิญญาณ: มีสัตว์วิญญาณอยู่แล้วก็ใช้ได้ (ฟักเข้าทีมคู่หู / ป้อนตัวเดิม / ขาย) · ไม่ทับสัตว์เลี้ยงธรรมดาเงียบๆ =====================
+function eggTeam(){if(!(typeof bSlotFree==='function')||bSlotFree()<=0)return toast('ทีมคู่หูเต็มแล้ว');const w=S.xian?1:0,L=beasts().filter(b=>b.w===w&&b.t>=2&&b.t<=Math.min(6,3+realmIdx()/2));const B=ch(L.length?L:beasts().filter(b=>b.w===w));if(!B||!bagUse('egg'))return;
+ bTeam().push({i:B.i,lv:1,xp:0,st:0,bond:70,nick:ch(['เสี่ยว','อา','ต้า'])+ch(['ไป๋','เฮย','หง','จิน','หลาน','ฮวา']),hum:0,ln:{f:0,g:0,l:0,s:0}});closeM();log(`🥚 ไข่แตกออก — <b>${esc(B.n)}</b> (${BTIER[w][B.t]} · ธาตุ${B.el}) เข้าร่วมทีมคู่หูของคุณ`,'epic');sfx('good');render()}
+function eggFeed(){const p=S.pet;if(!p||!p.spirit)return;if((p.lv|0)>=PET_LV.length-1)return toast(p.n+' ถึงขั้นสูงสุดแล้ว');if(!bagUse('egg'))return;closeM();if(Math.random()<.6){p.lv=(p.lv|0)+1;log(`🥚 ${esc(p.n)}กลืนพลังวิญญาณในไข่ — เติบโตเป็น<b>${PET_LV[p.lv]}</b>`,'epic')}else{S.karma=(S.karma||0);log(`🥚 ${esc(p.n)}กินไข่จนอิ่มแปล้ แต่ยังไม่เลื่อนขั้น — ครั้งหน้าอาจได้`,'')}render()}
+function eggSell(){if(!bagUse('egg'))return;const g=Math.round(BAGIT.egg.v*(typeof W15==='function'?W15():1)*.8);S.money+=g;closeM();log(`🥚 ขายไข่สัตว์วิญญาณให้พ่อค้า ได้ ${typeof ftMf==='function'?ftMf(g):fmt(g)}`,'');render()}
+function eggHatch(){const p=S.pet;closeM();const r=BAGX.egg.use.call(BAGX.egg);if(r==null)return;bagUse('egg');log(`🎒 ${r}`,'epic');render()}
+{const _bumE=bagUseManual;bagUseManual=function(id){try{if(id==='egg'&&S&&S.alive&&S.bag&&S.bag.it.egg&&!(S.beastMode&&!S.beastMode.human)){const p=S.pet,free=typeof bSlotFree==='function'?bSlotFree():0;
+  if(p&&(p.spirit||!p.spirit)){const opts=[];
+   if(!p.spirit)opts.push(`<button class="opt" onclick="eggHatch()">🐣 ฟักเป็นสัตว์วิญญาณคู่กาย<small>${esc(p.n)}ตัวเดิมจะกลับไปใช้ชีวิตในป่า</small></button>`);
+   opts.push(`<button class="opt" onclick="eggTeam()" ${free>0?'':'disabled style="opacity:.45"'}>🐾 ฟักเข้าทีมคู่หู<small>${free>0?'ได้สัตว์อสูรตัวใหม่เข้าทีม (ว่าง '+free+' ช่อง)':'ทีมคู่หูเต็ม'}</small></button>`);
+   if(p.spirit)opts.push(`<button class="opt" onclick="eggFeed()" ${(p.lv|0)>=PET_LV.length-1?'disabled style="opacity:.45"':''}>🔮 ป้อนให้${esc(p.n)}<small>60% เลื่อนเป็น${PET_LV[Math.min(PET_LV.length-1,(p.lv|0)+1)]} · ตอนนี้${PET_LV[p.lv|0]}</small></button>`);
+   opts.push(`<button class="opt" onclick="eggSell()">💰 ขายให้พ่อค้า<small>ได้เงินราว ${typeof ftMf==='function'?ftMf(Math.round(BAGIT.egg.v*(typeof W15==='function'?W15():1)*.8)):''}</small></button>`);
+   modal(`<button class="xbtn" onclick="openBag()">←</button><h3>🥚 ไข่สัตว์วิญญาณ</h3><p class="tag2">${p.spirit?`คุณมี${esc(p.n)}เป็นสัตว์วิญญาณคู่กายอยู่แล้ว — จะทำอะไรกับไข่ฟองนี้?`:`ตอนนี้มี${esc(p.n)}เป็นสัตว์เลี้ยง — ถ้าฟักเป็นสัตว์วิญญาณคู่กาย ${esc(p.n)}จะจากไป`}</p><div class="mgrid">${opts.join('')}</div>`,'bag');return}}}catch(e){console.error(e)}return _bumE.apply(this,arguments)}}
+
 </script>
 </body>
 </html>
