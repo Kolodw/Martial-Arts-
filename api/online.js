@@ -1238,7 +1238,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     if (a === 'laws') {
       // ⚖️ ผู้ครองกฎแห่งแดนเทพ — กฎหนึ่งสาย เจ้าของได้คนเดียวทั้งเซิร์ฟ
       const h = (await cmd('HGETALL', 'law')) || [], l = {};
-      for (let i = 0; i < h.length; i += 2) { const v = jp(h[i + 1]); if (v) l[h[i]] = v }
+      if (Array.isArray(h)) { for (let i = 0; i < h.length; i += 2) { const v = jp(h[i + 1]); if (v) l[h[i]] = v } } else for (const k in (h || {})) { const v = jp(h[k]); if (v) l[k] = v }
+      const ks = Object.keys(l), LN2 = { blade: 'กฎคมดาบ', fist: 'กฎหมัดฝ่ามือ', fire: 'กฎเพลิง', frost: 'กฎเยือกแข็ง', thunder: 'กฎอัสนี', wind: 'กฎวายุ', death: 'กฎมรณะ', origin: 'กฎปฐมภูมิ' };
+      if (ks.length) { const ids = await cmd('HMGET', 'lawid', ...ks); const ps = ids.some(Boolean) ? await cmd('MGET', ...ids.map(x => 'acp:' + (x || '-'))) : []; const ops = [];
+        ks.forEach((k, i) => { const v = l[k], ap = jp(ps[i]); if (ap && +ap.p > 0) v.pn = Math.round(+ap.p); v.sh = v.pt && v.pt > now ? v.pt : 0;
+          if (now - (v.t || now) >= 7 * 86400e3 && !v.a7) { v.a7 = 1; const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: 'ฟ้าลิขิต', k: 'one', x: '⚖️ ' + v.n + ' ครอง' + (LN2[k] || 'กฎ') + 'ต่อเนื่องครบ 7 วัน — ฟ้าดินยอมรับเป็นเจ้าแห่งกฎสายนี้' }; const v2 = Object.assign({}, v); delete v2.pn; delete v2.sh; ops.push(['HSET', 'law', k, JSON.stringify(v2)], ['LPUSH', 'chat', JSON.stringify(m)]) } });
+        if (ops.length) await pipe([...ops, ['LTRIM', 'chat', 0, 199]]) }
       return res.json({ l });
     }
     if (a === 'lawclaim') {
@@ -1246,15 +1251,35 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
       const k = String(b.law || ''); if (!LK.includes(k)) return res.status(400).json({ err: 'law' });
       if (b.tp || await isBanned() || await cmd('SISMEMBER', 'cheaters', id)) return res.json({ ok: 0 });
-      if ((await cmd('SET', 'lawcd:' + id, 1, 'NX', 'EX', 300)) !== 'OK') return res.json({ ok: 0, err: 'cd' });
       const lp = jp(await cmd('GET', 'acp:' + id)); if (!lp || !(+lp.p > 0)) return res.json({ ok: 0, err: 'live' });
-      const cur = jp(await cmd('HGET', 'law', k)), u = id.slice(0, 6);
+      const cur = jp(await cmd('HGET', 'law', k)), u = id.slice(0, 6), day = new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
+      if (cur && cur.u !== u) {
+        if (cur.pt && now < cur.pt) return res.json({ ok: 0, err: 'shield', until: cur.pt, cur });
+        const rv = await cmd('GET', 'lawrv:' + k + ':' + u); if (rv && rv === cur.u) return res.json({ ok: 0, err: 'revenge', cur, until: +(await cmd('PTTL', 'lawrv:' + k + ':' + u)) + now });
+        if (+(await cmd('GET', 'lawd:' + id + ':' + day)) >= 3) return res.json({ ok: 0, err: 'day' });
+      }
+      if ((await cmd('SET', 'lawcd:' + id, 1, 'NX', 'EX', 300)) !== 'OK') return res.json({ ok: 0, err: 'cd' });
       if (cur && cur.u !== u && String(b.beat || '') !== String(cur.t)) return res.json({ ok: 0, err: 'beat', cur });
       const n = noAdm(clean(b.n, 20)) || 'นิรนาม', art = clean(b.art, 30) || '', pw = Math.max(0, Math.min(+lp.p * 1.1, +b.pw || 0));
-      const v = { n, art, pw, t: now, u };
-      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: 'ฟ้าลิขิต', k: 'one', x: '⚖️ ' + n + ' ' + (cur && cur.u !== u ? 'ชิง' + LN[k] + 'จาก ' + cur.n + ' สำเร็จ' : 'จารึก' + LN[k] + 'ลงในฟ้าดิน') + ' ด้วย《' + art + '》' };
-      await pipe([['HSET', 'law', k, JSON.stringify(v)], ['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199]]);
-      return res.json({ ok: 1 });
+      const seize = cur && cur.u !== u, same = cur && cur.u === u;
+      const v = { n, art, pw, t: same ? cur.t : now, u, pt: seize ? now + 3 * 3600e3 : (same ? cur.pt || 0 : 0), a7: same ? cur.a7 || 0 : 0 };
+      const ops = [['HSET', 'law', k, JSON.stringify(v)], ['HSET', 'lawid', k, id]];
+      if (seize) { const oid = await cmd('HGET', 'lawid', k); ops.push(['INCR', 'lawd:' + id + ':' + day], ['EXPIRE', 'lawd:' + id + ':' + day, 172800]); if (oid) ops.push(['SET', 'lawrv:' + k + ':' + cur.u, u, 'EX', 12 * 3600], ['LPUSH', 'lawlost:' + oid, JSON.stringify({ k, by: n, art, t: now })], ['LTRIM', 'lawlost:' + oid, 0, 9], ['EXPIRE', 'lawlost:' + oid, 86400 * 3]) }
+      if (!same) {
+        const first = !cur && (await cmd('HSETNX', 'lawfirst', k, now)) === 1;
+        if (first || !cur) { const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: 'ฟ้าลิขิต', k: first ? 'one' : 'law', x: '⚖️ ' + n + ' จารึก' + LN[k] + 'ลงในฟ้าดิน' + (first ? 'เป็นคนแรกของโลก' : '') + ' ด้วย《' + art + '》' }; ops.push(['LPUSH', 'chat', JSON.stringify(m)]) }
+        else {
+          const lm = jp(await cmd('GET', 'lawmsg:' + k)), recent = lm && now - lm.t0 < 3600e3; const c = recent ? (lm.c || 1) + 1 : 1;
+          const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: 'ฟ้าลิขิต', k: 'law', x: '⚖️ ' + (c > 1 ? LN[k] + 'เปลี่ยนมือ ' + c + ' ครั้งในชั่วโมงนี้ · ล่าสุด ' : '') + n + ' ชิง' + (c > 1 ? '' : LN[k]) + 'จาก ' + cur.n + ' ด้วย《' + art + '》' };
+          if (recent && lm.j) ops.push(['LREM', 'chat', 1, lm.j]); const mj = JSON.stringify(m); ops.push(['LPUSH', 'chat', mj], ['SET', 'lawmsg:' + k, JSON.stringify({ j: mj, t0: recent ? lm.t0 : now, c }), 'EX', 7200]);
+        }
+        ops.push(['LTRIM', 'chat', 0, 199]);
+      }
+      await pipe(ops);
+      return res.json({ ok: 1, pt: v.pt });
+    }
+    if (a === 'lawinbox') {
+      if (!okId(id)) return res.json({ l: [] }); const [l] = await pipe([['LRANGE', 'lawlost:' + id, 0, 9], ['DEL', 'lawlost:' + id]]); return res.json({ l: (l || []).map(jp).filter(Boolean) });
     }
     if (a === 'kgates') {
       // 🚪 ประตูกัลป์ — วิชาที่ผู้ก้าวพ้นวัฏจักรกัลป์ทิ้งไว้
