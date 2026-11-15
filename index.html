@@ -24915,6 +24915,12 @@ function openWP(){const P=S&&S.wp,W=WPW();if(!P)return;const v=Math.round(P.v);m
 {const _rdWP=render;render=function(){const r=_rdWP.apply(this,arguments);try{const P=S&&S.wp,g=$('gRealm');if(g&&P&&P.v>0&&wpOn()&&!g.querySelector('.wpb')){const v=Math.round(P.v);g.insertAdjacentHTML('beforeend',` <span class="wpb ${v>=75?'wpHot':''}" onclick="event.stopPropagation();openWP()">🌍 ${v}%</span>`)}}catch(e){}return r}}
 try{const L=[{id:'wp_defy',n:'ผู้ท้าฟ้า',d:'ชนะผู้บังคับใช้กฎที่ลงมาไล่คุณออกจากโลก',r:4,c:()=>!!(S.flags&&S.flags.wpDefy)},{id:'wp_hero',n:'ผู้ค้ำฟ้า',d:'ใช้ร่างตัวเองอุดรอยแยกของโลกที่กำลังแตก',r:5,c:()=>!!(S.flags&&S.flags.wpHero)},{id:'wp_guard',n:'เทพผู้พิทักษ์ยุทธภพ',d:'ผนึกพลังตัวเองเพื่ออยู่ปกป้องโลกด้วยกรรมดี',r:4,c:()=>!!(S.flags&&S.flags.wpGuard)},{id:'wp_eat',n:'ผู้กลืนโลก',d:'กลืนโลกทั้งใบที่รับพลังของคุณไม่ไหว',r:5,c:()=>!!(S.flags&&S.flags.wpDemon)}];ACH.push(['🌍 แรงกดดันของโลก',L]);ACH_ALL.push(...L)}catch(e){}
 (()=>{const st=document.createElement('style');st.textContent='.wpb{cursor:pointer;background:#2a2410;color:#ffd76a;border:1px solid #c8a23a;border-radius:8px;padding:0 6px;font-size:.85em;font-weight:700}.wpb.wpHot{background:#3a0c0c;color:#ff9a7a;border-color:#ff5a3a;animation:hlbP 1.2s ease-in-out infinite}';document.head.appendChild(st)})();
+// ---- อาชีพ: ผูกปุ่มกับ "เรื่อง" จริง ไม่ใช่ลำดับในคิว (กันกดแล้วไปโดนเรื่องอื่น/แต้มเพี้ยน) + งานแบบปีละเรื่องไม่ซ้อน ----
+{const _jo=jOpen;jOpen=function(i){const J=jInit();jOpen._c=J&&J.q[i]||null;return _jo.apply(this,arguments)};
+ const G=n=>{const f=window[n];if(typeof f!=='function')return;window[n]=function(i,...a){const J=jInit();if(!J)return;const c=jOpen._c;if(c){const j=J.q.indexOf(c);if(j<0){toast('เรื่องนี้จัดการไปแล้ว');try{openJob()}catch(e){}return}i=j}else if(!J.q[i]){try{openJob()}catch(e){}return}return f.call(this,i,...a)}};
+ ['jAccuse','jArrest','jAsk','jCheck','jCopUI','jDja','jDje','jDjr','jMerGo','jMerIntel','jMerSet','jPsn','jRefer','jSceA','jSceCheat','jScs','jSkip','jSpy','jTreat','jDjeUI','jSceUI','jScsUI','jMerUI','jDjaUI','jDjrUI'].forEach(G);
+ const _nc=jNewCase;jNewCase=function(){const J=jInit();if(J&&JOB[J.t]&&JOB[J.t].one&&J.q.some(x=>x&&x.y===S.age&&(x.k==='scs'||x.k==='sce'||x.k==='mer')))return null;const c=_nc.apply(this,arguments);if(c&&J&&(c.k==='scs'||c.k==='mer'||c.k==='sce'))J.q=J.q.filter(x=>x===c||!(x.k==='scs'||x.k==='mer'||(c.k==='sce'&&x.k==='sce')));return c}}
+
 </script>
 </body>
 </html>
