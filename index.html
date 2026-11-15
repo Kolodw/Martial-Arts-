@@ -26111,6 +26111,10 @@ const gb=document.getElementById('goalBox');if(gb){const mo=new MutationObserver
 #modal .spCard .spOpt.me span::before{content:'✔ ';color:var(--pinkd)}
 #modal .spCard .gbtn,#modal .spCard .pbtn{font-size:14px!important;font-weight:700}
 `;document.head.appendChild(st)}catch(e){}})();
+
+// ===== v17.13 แชทออนไลน์: วาดใหม่แล้วไม่เด้งขึ้นบน · ส่งข้อความแล้วเลื่อนลงล่างสุด =====
+{const _crS=chatRender;chatRender=function(){const b=$('chatBox'),had=b&&b.dataset.ok,st=b?b.scrollTop:0,near=b?(b.scrollHeight-b.scrollTop-b.clientHeight<120):true;const r=_crS.apply(this,arguments);try{const b2=$('chatBox');if(b2&&had){if(near||(window._chStick&&Date.now()<window._chStick))b2.scrollTop=b2.scrollHeight;else b2.scrollTop=st}}catch(e){}return r}}
+{const _csS=chatSend;chatSend=async function(){window._chStick=Date.now()+5000;return _csS.apply(this,arguments)}}
 </script>
 </body>
 </html>
