@@ -23640,8 +23640,9 @@ function oneApply(force){const it=force?ONE_SET.find(x=>x.id===force)||ONE_SET[0
  log(`🌟 <b>ฟ้าดินสั่นสะเทือน — คุณคือ「หนึ่งเดียวในนวนิยาย」</b> โอกาส 1 ใน 10,000 ชีวิต · เกิดมาพร้อม <b>${it.ic} ${it.n}</b> — ${it.d}`,'myth',true);
  try{pxPlay({mode:'arrive',type:'peak',w:S.xt?'g':S.xian?'x':'m',seed:77,fx:'ember',title:'🌟 หนึ่งเดียวในนวนิยาย',sub:`${esc(S.name)} · ${it.ic} ${it.n}`,sub0:'— โอกาส 1 ใน 10,000 ชีวิต —'})}catch(e){}
  try{if(!force&&typeof onlineOK!=='undefined'&&onlineOK)api('oneborn',{n:pname(),it:it.n,w:S.xt?'g':S.xian?'x':'m'}).then(j=>{if(j&&j.ok&&j.cnt)log(`📢 ฟ้าประกาศชื่อคุณไปทั่วแผ่นดิน — คุณคือคนที่ <b>${fmt(j.cnt)}</b> ของเซิร์ฟเวอร์`,'epic')}).catch(()=>{})}catch(e){}}
-window.oneForce=k=>{if(S&&S.alive&&!S.flags.one)oneApply(k||1)};
-{const _slO=startLife;startLife=function(){const r0=roll;const out=_slO.apply(this,arguments);try{if(S&&r0&&!r0.custom&&!r0.daily&&!(r0.f&&r0.f.v&&r0.f.v.beast)&&!S.mw&&Math.random()<ONE_P)setTimeout(()=>{try{if(S&&S.alive&&!S.flags.one)oneApply()}catch(e){console.error(e)}},1200)}catch(e){}return out}}
+window.oneForce=k=>{if(typeof ADM!=='undefined'&&ADM.ok&&S&&S.alive&&!S.flags.one)oneApply(k||1)};
+{const _slO=startLife;startLife=function(){const r0=roll;const out=_slO.apply(this,arguments);try{if(S&&r0&&!r0.custom&&!r0.daily&&!(r0.f&&r0.f.v&&r0.f.v.beast)&&!S.mw)oneRoll()}catch(e){}return out}}
+async function oneRoll(){try{if(typeof onlineOK==='undefined'||!onlineOK)return;const L=S;const j=await api('oneroll',{});if(j&&j.win)setTimeout(()=>{try{if(S===L&&S&&S.alive&&!S.flags.one)oneApply()}catch(e){console.error(e)}},1200)}catch(e){}}
 {const _pyO=passYear;passYear=function(){const a0=S?S.age:0;const r=_pyO.apply(this,arguments);try{if(S&&S.alive&&S.one){const dy=Math.min(10,Math.max(1,S.age-a0)),d=oneDecay(),k=S.one.id;
  if(k==='sword')S.power+=pctPow(.012*d*dy);if(k==='pearl')S.qi=+(S.qi+.4*d*dy).toFixed(2);if(k==='book'&&S.age-(S.one.ly||S.one.y)>=12){S.one.ly=S.age;try{const a=newArt(2);S.arts.push(a);log(`📕 คัมภีร์ไร้นามเปิดหน้าใหม่ด้วยตัวเอง — ${artHtml(a)}`,'epic')}catch(e){}}if(k==='seal'&&Math.random()<.1*dy)S.fame+=Math.round(40*d*dy)}}catch(e){}return r}}
 // แชทโลก: ข้อความประกาศสวรรค์

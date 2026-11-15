@@ -1183,10 +1183,20 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (v.length >= 6) { const d = thDay(now); await pipe([['PFADD', 'hv:' + d + ':' + w, v], ['EXPIRE', 'hv:' + d + ':' + w, 86400 * 40], ['PFADD', 'hv:all:' + w, v]]) }
       return res.json({ ok: 1 });
     }
+    if (a === 'oneroll') {
+      // ทอยลูกเต๋า「หนึ่งเดียวในนวนิยาย」ที่เซิร์ฟเวอร์ (กันแก้โค้ดฝั่งเครื่อง) · จำกัดความถี่ต่อไอดีและต่อ IP
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
+      const day = new Date(now + 7 * 3600e3).toISOString().slice(0, 10), ipk = String(cip(req) || 'x').slice(0, 45);
+      const [a1, a2, dn] = await pipe([['SET', 'onerl:' + id, 1, 'NX', 'PX', 15000], ['SET', 'onerip:' + ipk, 1, 'NX', 'PX', 4000], ['INCR', 'oned:' + id + ':' + day], ['EXPIRE', 'oned:' + id + ':' + day, 172800]]);
+      if (a1 !== 'OK' || a2 !== 'OK' || +dn > 300) return res.json({ win: 0 });
+      if (Math.random() < 1e-4) { await cmd('SET', 'onetk:' + id, 1, 'EX', 900); return res.json({ win: 1 }) }
+      return res.json({ win: 0 });
+    }
     if (a === 'oneborn') {
       // 🌟 หนึ่งเดียวในนวนิยาย (โอกาส 0.01% ตอนเกิด) — ประกาศในแชทโลก · เก็บสถิติ · เปิดสิทธิ์ป้ายในทำเนียบ
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
       if (b.tp || await isBanned() || await cmd('SISMEMBER', 'cheaters', id)) return res.json({ ok: 0 });
+      const [tk] = await pipe([['GET', 'onetk:' + id], ['DEL', 'onetk:' + id]]); if (!tk) return res.json({ ok: 0, err: 'roll' });
       if ((await cmd('SET', 'onecd:' + id, 1, 'NX', 'EX', 3600)) !== 'OK') return res.json({ ok: 0, err: 'cd' });
       const n = noAdm(clean(b.n, 20)) || 'นิรนาม', it = clean(b.it, 40) || 'ของเทพ', w = ['m', 'x', 'g'].includes(b.w) ? b.w : 'm';
       const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: 'ฟ้าลิขิต', k: 'one', x: '🌟 ' + n + ' ถือกำเนิดเป็น「หนึ่งเดียวในนวนิยาย」 พร้อม ' + it, on: n, oi: it, ow: w };
