@@ -138,43 +138,84 @@ const RKT_J = { d: ['', 'ผู้ท้าลิขิต', 'ขยะผู้
 const RKT_M = { ch: RKT_H, cs: RKT_S, cj: RKT_J };
 const RKT_ALL = new Map(); [RKT, RKT_C, RKT_A, RKT_R, RKT_H, RKT_S, RKT_J].forEach(TT => Object.entries(TT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) })));
 // ===== ฉายา/กรอบทำเนียบแบบสุ่มจากคลังคำ (ไม่ใช้ AI) · ผลเหมือนกันทุกเครื่องจากรหัสรอบ =====
+// รหัสรอบที่มี "v" = ชุดที่ 2 (คลังคำใหญ่ + กรอบประกอบชิ้นส่วน) · ไม่มี "v" = ชุดแรก (คงไว้ให้ของที่แจกไปแล้วหน้าตาไม่เปลี่ยน)
 const RKG = (() => {
   const H = s => { let h = 2166136261; for (const c of String(s)) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619) } return h >>> 0 };
   const RNG = seed => { let q = seed >>> 0 || 1; return () => { q = (q + 0x6D2B79F5) >>> 0; let t = q; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296 } };
-  const PRE = ['อัสนี', 'หิมะ', 'โลหิต', 'จันทรา', 'เพลิงนิล', 'วายุ', 'ธาราฟ้า', 'หยกขาว', 'ทองคำ', 'เงามืด', 'อรุณ', 'สนธยา', 'ดารา', 'เมฆา', 'ศิลา', 'อำพัน', 'มรกต', 'หงส์ไฟ', 'พยัคฆ์', 'กิเลน', 'มังกรฟ้า', 'พันกระบี่', 'หมื่นลี้', 'เก้าสวรรค์', 'สามภพ', 'ไร้เงา', 'ไร้นาม', 'สายฟ้า', 'ราตรี', 'ทะเลเมฆ'];
-  const TH = { m: ['กระบี่', 'ยุทธภพ', 'ดาบเหล็ก', 'หมัดเหล็ก'], x: ['เซียน', 'เมฆหยก', 'ปราณฟ้า', 'โอสถทิพย์'], g: ['เทพ', 'สวรรค์', 'แสงทิพย์', 'บัลลังก์ฟ้า'], b: ['อสูร', 'เขี้ยวเหล็ก', 'พงไพร', 'กรงเล็บ'], r: ['กาลเวลา', 'วงจร', 'เข็มกาล', 'ทรายย้อน'], c: ['อเวจี', 'เพลิงกัลป์', 'ลิขิตแตก'], h: ['อเวจี', 'เพลิงกัลป์', 'ขุมนรก', 'ไฟบาป'], s: ['ชั่วพริบตา', 'ดาวตก', 'เทียนสองปลาย', 'สามสิบฤดู'], j: ['ธุลี', 'กระดูกขยะ', 'ไร้ราก', 'ฝุ่นทราย'] };
-  const CORE = [null, ['จักรพรรดิ', 'ราชัน', 'อธิราช', 'มหาเทพ', 'จ้าว', 'ปฐมกษัตริย์'], ['ขุนศึก', 'ยอดยุทธ์', 'อัครเซียน', 'แม่ทัพ', 'ผู้พิชิต', 'จอมดาบ'], ['ดาวรุ่ง', 'ยอดฝีมือ', 'ผู้กล้า', 'นักดาบ', 'ผู้ท้าทาย', 'ศิษย์เอก']];
-  const SUF = ['แห่งวสันต์', 'เหนือเมฆา', 'ไร้พ่าย', 'แห่งบูรพา', 'แห่งทะเลเหนือ', 'ใต้แสงจันทร์', 'ผู้ทลายฟ้า', 'ผู้ฝ่าพายุ', 'แห่งยุคใหม่', 'ผู้ลิขิตตำนาน', 'แห่งหมื่นศึก', 'ผู้ไม่หลับใหล'];
   const pk = (r, a) => a[Math.floor(r() * a.length)];
-  // p = d/w/m · c = หมวด (m x g b r c h s j) · k = รหัสรอบ (ตัวเลข+ตัวสุ่มใหม่) · r = อันดับ 1–3
-  function title(p, c, k, r) {
-    const R = RNG(H('t|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE[r] || CORE[3]), pre = R() < .55 ? pk(R, TH[c] || TH.m) : pk(R, PRE);
-    // ไทยเอาคำนามขึ้นก่อน: ราชัน+อัสนี · บางครั้งใส่ "แห่ง" · รายเดือนมีวลีท้ายให้ยิ่งใหญ่
-    const of = R() < .35 && !/^(ผู้|แห่ง|ไร้)/.test(pre) ? 'แห่ง' : '', suf = pk(R, SUF);
+  // ---------- ชุดแรก (v1) ----------
+  const PRE1 = ['อัสนี', 'หิมะ', 'โลหิต', 'จันทรา', 'เพลิงนิล', 'วายุ', 'ธาราฟ้า', 'หยกขาว', 'ทองคำ', 'เงามืด', 'อรุณ', 'สนธยา', 'ดารา', 'เมฆา', 'ศิลา', 'อำพัน', 'มรกต', 'หงส์ไฟ', 'พยัคฆ์', 'กิเลน', 'มังกรฟ้า', 'พันกระบี่', 'หมื่นลี้', 'เก้าสวรรค์', 'สามภพ', 'ไร้เงา', 'ไร้นาม', 'สายฟ้า', 'ราตรี', 'ทะเลเมฆ'];
+  const TH1 = { m: ['กระบี่', 'ยุทธภพ', 'ดาบเหล็ก', 'หมัดเหล็ก'], x: ['เซียน', 'เมฆหยก', 'ปราณฟ้า', 'โอสถทิพย์'], g: ['เทพ', 'สวรรค์', 'แสงทิพย์', 'บัลลังก์ฟ้า'], b: ['อสูร', 'เขี้ยวเหล็ก', 'พงไพร', 'กรงเล็บ'], r: ['กาลเวลา', 'วงจร', 'เข็มกาล', 'ทรายย้อน'], c: ['อเวจี', 'เพลิงกัลป์', 'ลิขิตแตก'], h: ['อเวจี', 'เพลิงกัลป์', 'ขุมนรก', 'ไฟบาป'], s: ['ชั่วพริบตา', 'ดาวตก', 'เทียนสองปลาย', 'สามสิบฤดู'], j: ['ธุลี', 'กระดูกขยะ', 'ไร้ราก', 'ฝุ่นทราย'] };
+  const CORE1 = [null, ['จักรพรรดิ', 'ราชัน', 'อธิราช', 'มหาเทพ', 'จ้าว', 'ปฐมกษัตริย์'], ['ขุนศึก', 'ยอดยุทธ์', 'อัครเซียน', 'แม่ทัพ', 'ผู้พิชิต', 'จอมดาบ'], ['ดาวรุ่ง', 'ยอดฝีมือ', 'ผู้กล้า', 'นักดาบ', 'ผู้ท้าทาย', 'ศิษย์เอก']];
+  const SUF1 = ['แห่งวสันต์', 'เหนือเมฆา', 'ไร้พ่าย', 'แห่งบูรพา', 'แห่งทะเลเหนือ', 'ใต้แสงจันทร์', 'ผู้ทลายฟ้า', 'ผู้ฝ่าพายุ', 'แห่งยุคใหม่', 'ผู้ลิขิตตำนาน', 'แห่งหมื่นศึก', 'ผู้ไม่หลับใหล'];
+  function title1(p, c, k, r) {
+    const R = RNG(H('t|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE1[r] || CORE1[3]), pre = R() < .55 ? pk(R, TH1[c] || TH1.m) : pk(R, PRE1);
+    const of = R() < .35 && !/^(ผู้|แห่ง|ไร้)/.test(pre) ? 'แห่ง' : '', suf = pk(R, SUF1);
     let t = p === 'm' ? core + (/^แห่ง/.test(suf) ? '' : of) + pre + suf : core + of + pre;
     if ([...t].length > 28) t = core + of + pre;
     return t;
   }
+  // ---------- ชุดที่ 2: คลังคำใหญ่ขึ้น 2–3 เท่า + คำเฉพาะหมวด ----------
+  const PRE = PRE1.concat(['สุริยัน', 'หิมพานต์', 'บูรพา', 'ประจิม', 'ทักษิณ', 'อุดร', 'พายุทราย', 'คลื่นคลั่ง', 'เพลิงฟ้า', 'น้ำค้างแข็ง', 'เมฆดำ', 'ดาวเหนือ', 'รุ้งเจ็ดสี', 'ใบไผ่', 'บัวหิมะ', 'ดอกท้อ', 'ศิลาดำ', 'เหล็กกล้า', 'หยกเลือด', 'หมอกม่วง', 'ทองแดง', 'เงินยวง', 'ไข่มุก', 'ปีกหงส์', 'เกล็ดมังกร', 'เขี้ยวพยัคฆ์', 'พันเมฆ', 'หมื่นดาว', 'ร้อยศึก', 'เจ็ดดารา', 'แปดทิศ', 'สามพันโลก', 'ลมหนาว', 'สนธยาแดง', 'จันทร์เสี้ยว', 'ราตรีกาล']);
+  const TH = {
+    m: TH1.m.concat(['หอกทวน', 'ทวนเหล็ก', 'เกราะทอง', 'ป้อมปราการ', 'สำนักใหญ่', 'ม้าศึก', 'ลานประลอง', 'กระบี่คู่', 'กำปั้นมังกร', 'ทางยุทธ์']),
+    x: TH1.x.concat(['ถ้ำเซียน', 'ยาเม็ดทอง', 'เตาหลอม', 'ภูเขาเซียน', 'กระบี่เหาะ', 'ลมปราณม่วง', 'ทะเลเมฆหยก', 'ค่ายกล', 'ผลท้อสวรรค์', 'ฟ้าเก้าชั้น']),
+    g: TH1.g.concat(['วิมานทอง', 'ประตูสวรรค์', 'ราชรถเทพ', 'แสงศักดิ์สิทธิ์', 'บัวสวรรค์', 'กฎฟ้า', 'ดาราเทพ', 'สังข์ทิพย์', 'ทวยเทพ', 'ราชันสวรรค์']),
+    b: TH1.b.concat(['ป่าลึก', 'ขนเพลิง', 'เกล็ดหยก', 'หางเก้าแฉก', 'จ่าฝูง', 'เสียงคำราม', 'ถ้ำอสูร', 'สายเลือดดุร้าย', 'คมเขี้ยว', 'ดวงตาอำพัน']),
+    r: TH1.r.concat(['นาฬิกาทราย', 'อดีตกาล', 'ชาติที่ร้อย', 'ความทรงจำ', 'รุ่งสางซ้ำ', 'วันวาน', 'เข็มทวน', 'รอยแยกกาล', 'ฤดูที่วนกลับ', 'กาลไร้สิ้นสุด']),
+    c: TH1.c.concat(['ลิขิตฟ้า', 'โซ่ตรวน', 'ทวนชะตา', 'บาปกรรม', 'เปลวทมิฬ']),
+    h: TH1.h.concat(['ขุมที่สิบแปด', 'สะพานไร้กลับ', 'เพลิงทมิฬ', 'โซ่ตรวน', 'ยมโลก', 'ทะเลเลือด', 'ปีศาจไฟ', 'เถ้าถ่าน', 'ประตูผี', 'ลาวาดำ']),
+    s: TH1.s.concat(['ดอกไม้ไฟ', 'เทียนไข', 'รุ้งชั่วคราว', 'ดาวหาง', 'น้ำค้างเช้า', 'ใบไม้ร่วง', 'ฤดูเดียว', 'เปลวเทียน', 'พลุสวรรค์', 'ชั่วลมหายใจ']),
+    j: TH1.j.concat(['เศษหิน', 'ใบหญ้า', 'ดินโคลน', 'กิ่งหัก', 'หญ้าป่า', 'เศษเหล็ก', 'ผู้ถูกทิ้ง', 'ขอทาน', 'ตรอกมืด', 'รากหญ้า'])
+  };
+  const CORE = [null,
+    CORE1[1].concat(['ราชันย์', 'จักรพรรดินี', 'เทพจักรพรรดิ', 'เจ้าโลก', 'ตำนาน', 'มหาราชัน', 'เทพเจ้า', 'อธิปไตย']),
+    CORE1[2].concat(['เจ้าสำนัก', 'ผู้พิทักษ์', 'ยอดขุนพล', 'ราชครู', 'จอมยุทธ์', 'นายพล', 'มหาเซียน', 'ผู้คุมกฎ']),
+    CORE1[3].concat(['ดาวดวงใหม่', 'อัจฉริยะ', 'ผู้ตื่นรู้', 'ศิษย์รัก', 'ผู้แสวงหา', 'ผู้มาใหม่', 'จอมยุทธ์น้อย', 'ผู้ไต่ฟ้า'])];
+  const SUF = SUF1.concat(['ผู้ยืนบนยอดเขา', 'ผู้ไร้ผู้ต่อกร', 'แห่งแปดทิศ', 'ผู้ข้ามทะเลดาว', 'ผู้เดียวในใต้หล้า', 'ใต้ฟ้าเดียวกัน', 'ผู้ไม่หันหลัง', 'แห่งพันปี', 'ผู้ปลุกตำนาน', 'แห่งรุ่งอรุณ', 'ผู้กลืนดวงดาว', 'แห่งสายลม', 'ผู้ตัดสายฟ้า', 'ผู้ยิ้มรับลิขิต']);
+  function title(p, c, k, r) {
+    if (!/v/.test(String(k))) return title1(p, c, k, r);
+    const R = RNG(H('t2|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE[r] || CORE[3]), pre = R() < .6 ? pk(R, TH[c] || TH.m) : pk(R, PRE);
+    const of = R() < .35 && !/^(ผู้|แห่ง|ไร้)/.test(pre) ? 'แห่ง' : '', suf = pk(R, SUF);
+    let t = p === 'm' ? core + (/^แห่ง/.test(suf) ? '' : of) + pre + suf : p === 'w' && R() < .3 ? core + pre + suf : core + of + pre;
+    if ([...t].length > 28) t = core + of + pre;
+    return t;
+  }
+  // ---------- กรอบ ----------
   const PALS = [['#ffd040', '#fff4b0', '#ff9a20'], ['#ff70e0', '#ffffff', '#ffd040'], ['#6ad0ff', '#e8f8ff', '#3a6ad8'], ['#ff5d73', '#ffd0d8', '#8a1a2a'], ['#7ae07a', '#e8ffe0', '#2a8a4a'], ['#b070ff', '#f0e0ff', '#5a2aa8'], ['#ffb050', '#fff0d0', '#c85a1a'], ['#d8e0f0', '#ffffff', '#7a8aa8'], ['#40e0d0', '#e0fffa', '#1a7a8a'], ['#ff8a40', '#ffe0a0', '#a02a1a'], ['#e0c080', '#fff8e0', '#8a6a2a'], ['#ff4ab0', '#ffe0f0', '#6a1a5a']];
-  const SH = { m: ['sword', 'laurel', 'crown', 'dbl'], x: ['cloud', 'ringh', 'leaf', 'pearl'], g: ['ray', 'ringh', 'star4', 'lotus'], b: ['horn', 'scale', 'thorn', 'wing'], r: ['clock', 'moon', 'star4'], c: ['flame', 'thorn', 'chain'], h: ['flame', 'horn', 'drip', 'gate'], s: ['flame', 'star4', 'butterfly'], j: ['knob', 'chain', 'fade', 'leaf'] };
-  const TY = [null, 'spin halo orbit ring2 aura2 sparkle star ember corner badge rk1', 'spin orbit ring2 snow corner badge rk2', 'corner badge rk3'];
+  const SH1 = { m: ['sword', 'laurel', 'crown', 'dbl'], x: ['cloud', 'ringh', 'leaf', 'pearl'], g: ['ray', 'ringh', 'star4', 'lotus'], b: ['horn', 'scale', 'thorn', 'wing'], r: ['clock', 'moon', 'star4'], c: ['flame', 'thorn', 'chain'], h: ['flame', 'horn', 'drip', 'gate'], s: ['flame', 'star4', 'butterfly'], j: ['knob', 'chain', 'fade', 'leaf'] };
+  const TY1 = [null, 'spin halo orbit ring2 aura2 sparkle star ember corner badge rk1', 'spin orbit ring2 snow corner badge rk2', 'corner badge rk3'];
   const PN = { d: 'ประจำวัน', w: 'ประจำสัปดาห์', m: 'ประจำเดือน' }, BD = { d: ['', '🌅', '🥈', '🥉'], w: ['', '⚔️', '🥈', '🥉'], m: ['', '🌟', '🥈', '🥉'] };
   const RE = /^f_g([dwm])([mxgbrchsj])([0-9a-z]+)_([123])$/;
+  // ชุดที่ 2: สีจากวงล้อสี (โทนคู่ตรงข้าม/ข้างเคียง) · ลายประดับตามหมวด + ลายสุ่ม · แสงสุ่มชุดใหม่ทุกรอบ · ตราตามหมวด
+  const hsl = (h, s, l) => { h = ((h % 360) + 360) % 360; s /= 100; l /= 100; const a = s * Math.min(l, 1 - l), f = n => { const k = (n + h / 30) % 12, c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); return Math.round(255 * c).toString(16).padStart(2, '0') }; return '#' + f(0) + f(8) + f(4) };
+  const SH = { m: ['sword', 'laurel', 'crown', 'dbl', 'gem'], x: ['cloud', 'ringh', 'leaf', 'pearl', 'gate'], g: ['ray', 'ringh', 'star4', 'lotus', 'crown'], b: ['horn', 'scale', 'thorn', 'wing', 'eye'], r: ['clock', 'moon', 'star4', 'ringh'], c: ['flame', 'thorn', 'chain', 'eye'], h: ['flame', 'horn', 'drip', 'gate', 'skull'], s: ['flame', 'star4', 'butterfly', 'petal'], j: ['knob', 'chain', 'fade', 'leaf'] };
+  const ANY = ['star4', 'gem', 'petal', 'snow', 'moon', 'ray', 'lightning', 'pearl', 'leaf', 'cloud', 'wing'];
+  const FX = { 1: ['halo', 'orbit', 'ring2', 'aura2', 'sparkle', 'star', 'ember', 'snow', 'petal', 'rainbow', 'flow', 'glow'], 2: ['orbit', 'ring2', 'sparkle', 'snow', 'ember', 'petal', 'shift', 'glow', 'star'], 3: ['snow', 'ember', 'star', 'glow'] };
+  const MARK = { m: ['⚔️', '🗡️', '🏯'], x: ['☁️', '🌀', '🍑'], g: ['✨', '🌞', '🪷'], b: ['🐾', '🐉', '🐯'], r: ['⏳', '🕰️', '🌀'], c: ['🔥', '⛓️', '☄️'], h: ['💀', '🔥', '👹'], s: ['☄️', '🕯️', '🎆'], j: ['🦴', '🍂', '🪨'] };
   function frame(id) {
-    const m = RE.exec(id); if (!m) return null; const [, p, c, k, rs] = m, r = +rs, R = RNG(H('f|' + id)), pal = pk(R, PALS);
-    const sh = (SH[c] || SH.m).slice().sort(() => R() - .5).slice(0, r === 1 ? 3 : r === 2 ? 2 : 1);
-    if (r === 1) sh.unshift('rnd'); if (r === 1 && !sh.includes('crown') && R() < .5) sh.push('gem');
-    const dt = String(k).replace(/s.*/, ''), dl = dt.length >= 8 ? dt.slice(6, 8) + '/' + dt.slice(4, 6) + '/' + dt.slice(0, 4) : dt.slice(4, 6) + '/' + dt.slice(0, 4);
-    return { id, n: 'กรอบ「' + title(p, c, k, r) + '」', side: 'r', c: 0, ty: TY[r], c1: pal[0], c2: pal[1], c3: pal[2], pc: pal[1], bd: BD[p][r], d: 'อันดับ ' + r + ' ทำเนียบ' + PN[p] + ' รุ่น ' + dl + ' — มีรอบเดียว ไม่กลับมาอีก', gen: 1, sh: sh.join('|') };
+    const m = RE.exec(id); if (!m) return null; const [, p, c, k, rs] = m, r = +rs;
+    const dt = String(k).replace(/[sv].*/, ''), dl = dt.length >= 8 ? dt.slice(6, 8) + '/' + dt.slice(4, 6) + '/' + dt.slice(0, 4) : dt.slice(4, 6) + '/' + dt.slice(0, 4);
+    const base = { id, n: 'กรอบ「' + title(p, c, k, r) + '」', side: 'r', c: 0, d: 'อันดับ ' + r + ' ทำเนียบ' + PN[p] + ' รุ่น ' + dl + ' — มีรอบเดียว ไม่กลับมาอีก', gen: 1 };
+    if (!/v/.test(k)) { const R = RNG(H('f|' + id)), pal = pk(R, PALS), sh = (SH1[c] || SH1.m).slice().sort(() => R() - .5).slice(0, r === 1 ? 3 : r === 2 ? 2 : 1); if (r === 1) sh.unshift('rnd'); if (r === 1 && !sh.includes('crown') && R() < .5) sh.push('gem'); return Object.assign(base, { ty: TY1[r], c1: pal[0], c2: pal[1], c3: pal[2], pc: pal[1], bd: BD[p][r], sh: sh.join('|') }) }
+    const R = RNG(H('f2|' + id)), h0 = Math.floor(R() * 360), sat = r === 1 ? 88 : r === 2 ? 70 : 42, mode = pk(R, [150, 180, 30, -40, 120]);
+    const c1 = hsl(h0, sat, r === 3 ? 52 : 60), c2 = hsl(h0 + 10, 95, 90), c3 = hsl(h0 + mode, sat, r === 3 ? 30 : 42);
+    const own = (SH[c] || SH.m).slice().sort(() => R() - .5), extra = ANY.slice().sort(() => R() - .5);
+    const sh = r === 1 ? [own[0], own[1], extra[0]] : r === 2 ? [own[0], extra[0]] : [own[0]];
+    const outline = r === 1 ? pk(R, ['rnd', 'rnd', 'soft', '']) : r === 2 ? pk(R, ['soft', '', 'rnd']) : pk(R, ['', 'soft']); if (outline) sh.unshift(outline);
+    const fx = FX[r].slice().sort(() => R() - .5).slice(0, r === 1 ? 4 + Math.floor(R() * 2) : r === 2 ? 2 + Math.floor(R() * 2) : Math.floor(R() * 2));
+    const ty = (r === 1 ? 'spin ' : r === 2 ? pk(R, ['spin ', 'pulse ', '']) : '') + fx.join(' ') + ' corner badge rk' + r;
+    const bd = r === 1 ? pk(R, MARK[c] || MARK.m) : ['', '', '🥈', '🥉'][r];
+    return Object.assign(base, { ty, c1, c2, c3, pc: c2, bd, sh: [...new Set(sh)].join('|') });
   }
   const fid = (p, c, k, r) => 'f_g' + p + c + k + '_' + r;
-  // อันดับจากคำแก่น (คำแรกของฉายา) · หมวดจากคำประจำหมวด — ใช้ทำป้ายฉายาให้ถูกอันดับ
-  const rank = t => { t = String(t || ''); for (let r = 1; r <= 3; r++) if (CORE[r].some(c => t.startsWith(c))) return r; return 0 };
+  const ALLC = [null, ...[1, 2, 3].map(r => CORE[r])];
+  const rank = t => { t = String(t || ''); let best = 0, bl = 0; for (let r = 1; r <= 3; r++) for (const w of ALLC[r]) if (t.startsWith(w) && w.length > bl) { bl = w.length; best = r } return best };
   const cat = t => { t = String(t || ''); for (const k of ['h', 's', 'j', 'r', 'b', 'x', 'g', 'c']) if (TH[k].some(w => t.includes(w))) return k; return 'm' };
   return { title, frame, fid, RE, H, rank, cat };
 })();
 const RKG_C = { m: 'm', x: 'x', g: 'g', b: 'b', r: 'r', c: 'c', ch: 'h', cs: 's', cj: 'j' };
-const rkKey = (lab, salt) => String(lab || '').replace(/[^0-9]/g, '') + (salt ? 's' + salt : '');
+const rkKey = (lab, salt) => String(lab || '').replace(/[^0-9]/g, '') + 'v' + (salt || ''); // v = ชุดที่ 2
 const bdCat = e => e.bm ? 'b' : e.g ? 'g' : e.x ? 'x' : 'm';
 const bdKey = (c, ms, back = 0) => 'bd3:' + c + ':' + new Date(ms + 7 * 3600e3 - back * 86400e3).toISOString().slice(0, 10);
 const bdKeyW = (c, ms, back = 0) => 'bdw:' + c + ':' + week(new Date(ms - back * 7 * 86400e3));
@@ -1086,8 +1127,9 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       // ผู้ดูแล: ดูฉายา/กรอบของรอบหน้าล่วงหน้า · &roll=d|w|m สุ่มชุดของรอบนั้นใหม่
       const q = qOf(req); if (!isAdmKey(q.key)) return res.status(403).json({ err: 'admin' });
       const nx = { d: new Date(now + 7 * 3600e3).toISOString().slice(0, 10), w: week(new Date(now)), m: bdMon(now) }; // รอบที่กำลังแข่งอยู่ = ชุดที่จะแจกตอนจบรอบ
-      if (/^[dwm]$/.test(q.roll || '')) await cmd('SET', 'rksalt:' + q.roll + ':' + rkKey(nx[q.roll]), String(Math.floor(Math.random() * 9) + 1), 'EX', 86400 * 40);
+      if (/^[dwm]$/.test(q.roll || '')) { const sk = 'rksalt:' + q.roll + ':' + rkKey(nx[q.roll]), old = await cmd('GET', sk); let v; do { v = Math.random().toString(36).slice(2, 5).replace(/[^a-z0-9]/g, '') } while (!v || v === old); await cmd('SET', sk, v, 'EX', 86400 * 40) }
       const CN = { m: '⚔️ ยุทธภพ', x: '☁️ เซียน', g: '🌟 เทพ', b: '🐾 อสูร', r: '🔁 ย้อนกาล', h: '🔥 นรก', s: '⏳ ชีวิตสั้น', j: '🦴 รากขยะ' };
+      if (q.fmt === 'json') { const keys = {}; for (const p of ['d', 'w', 'm']) keys[p] = rkKey(nx[p], await cmd('GET', 'rksalt:' + p + ':' + rkKey(nx[p]))); return res.json({ nx, keys }) }
       let html = '<meta name="viewport" content="width=device-width"><style>body{font-family:sans-serif;background:#1a1420;color:#eee;padding:10px}td{padding:3px 6px;border-bottom:1px solid #333}a{color:#ffd040}</style><h3>🏆 ฉายาที่จะแจกรอบนี้</h3>';
       for (const p of ['d', 'w', 'm']) { const k = rkKey(nx[p], await cmd('GET', 'rksalt:' + p + ':' + rkKey(nx[p])));
         html += `<h4>${{ d: 'รายวัน', w: 'รายสัปดาห์', m: 'รายเดือน' }[p]} (รอบ ${nx[p]}) <a href="?a=rkprev&key=${encodeURIComponent(q.key)}&roll=${p}">🎲 สุ่มใหม่</a></h4><table>`;
