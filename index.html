@@ -25778,6 +25778,16 @@ function frgSearch(){const q=String(window._frg.q||'').trim().toLowerCase(),res=
  if(r===4){a='<i class="wg"></i>';b='<i class="wg r"></i>'}
  if(r===5||r===6)i=h.replace(/<\/span>$/,'<u class="a">'+(r===6?'✧':'✦')+'</u><u class="b">'+(r===6?'✧':'✦')+'</u></span>');
  return`<span class="tbw tbw${r}">${a}${i}${b}</span>`}}
+
+// ===================== ปุ่มกลุ่มเฟสบุ๊ก (ใต้ปุ่มสนับสนุนเกม หน้าแรก) =====================
+const FB_URL='https://www.facebook.com/groups/2160641727993657/';
+function openFbGroup(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👥 กลุ่มเฟสบุ๊กของเกม</h3>
+ <div class="box" style="padding:12px;margin-bottom:10px"><p style="margin:0 0 8px">เจอบั๊ก มีไอเดีย หาเพื่อนเล่น หรือหาเกมไม่เจอ — เข้ามาคุยกันในกลุ่มได้เลย</p><p class="tag2" style="margin:0">แชร์ให้เพื่อนที่ยังหาเกมนี้ไม่เจอได้ด้วย</p></div>
+ <a class="pbtn" href="${FB_URL}" target="_blank" rel="noopener noreferrer" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box">เปิดกลุ่มเฟสบุ๊ก ↗</a>
+ <button class="gbtn" style="width:100%;margin-top:8px" onclick="fbCopy()">📋 คัดลอกลิงก์กลุ่ม</button>`,'fb')}
+function fbCopy(){try{navigator.clipboard.writeText(FB_URL).then(()=>toast('คัดลอกลิงก์แล้ว'),()=>toast(FB_URL))}catch(e){toast(FB_URL)}}
+(function(){const st=document.createElement('style');st.textContent='#tFb{position:absolute;right:10px;top:58px;z-index:6;font:inherit;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(180deg,#4a7bff,#2a55d0);border:2px solid #17348a;border-radius:12px;padding:6px 11px;box-shadow:0 3px 0 #17348a;cursor:pointer}#tFb:active{transform:translateY(2px);box-shadow:0 1px 0 #17348a}';document.head.appendChild(st);
+ setInterval(()=>{try{const T=$('title');if(T&&$('tSup')&&!$('tFb'))$('tSup').insertAdjacentHTML('afterend','<button id="tFb" onclick="openFbGroup()">👥 กลุ่มเฟส</button>')}catch(e){}},1200)})();
 </script>
 </body>
 </html>
