@@ -65,8 +65,22 @@ async function apiOne(request, url) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
+    // แชทโลก: แคชที่ขอบ Cloudflare 3 วินาที (ทุกคนได้คำตอบเดียวกัน ไม่ต้องวิ่งไป Valkey ทุกครั้ง) · ไม่แคชถ้าประกาศมีโพลซึ่งแยกตามผู้เล่น
+    if (request.method === 'GET' && url.pathname === '/api/online' && url.searchParams.get('a') === 'chat') {
+      try {
+        const ck = new Request(url.origin + '/__edge/chat'), c = caches.default, hit = await c.match(ck);
+        if (hit) { const r = new Response(hit.body, hit); r.headers.set('x-edge', 'HIT'); return r }
+        const r = await api(request, url);
+        if (r.status === 200) {
+          const t = await r.clone().text();
+          let ok = false; try { const j = JSON.parse(t); ok = !(j && j.ann && Array.isArray(j.ann.poll) && j.ann.poll.length) } catch (e) {}
+          if (ok) ctx.waitUntil(c.put(ck, new Response(t, { status: 200, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'public, max-age=3' } })));
+        }
+        return r;
+      } catch (e) { console.error('API_ERR edgecache', String(e && e.message || e)) }
+    }
     if (TRAP.some(r => r.test(url.pathname))) { url.search = '?a=trap&p=' + encodeURIComponent(url.pathname.slice(1)); url.pathname = '/api/online' }
     if (url.pathname === '/api/online' || url.pathname === '/api/online/') return api(request, url);
     // โดเมนเดิม (www) → ใช้ไฟล์หน้าเว็บ
