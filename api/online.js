@@ -852,8 +852,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       let T = [], Pv = [], CT = [], CP = []; BD_CATS.forEach((c, k) => { const a1 = pj(R0[k * 2]).slice(0, 20), a2 = pj(R0[k * 2 + 1]).slice(0, 3); if (c === cmK) { CT = a1; CP = a2 } else if (c === 'r' || c === 'c' || CHF[c]) { } else { T = T.concat(a1.filter(x => !x.ch)); Pv = Pv.concat(a2.filter(x => !x.ch)) } });
       const arena = []; for (let i = 0; i < (ar || []).length; i += 2) arena.push({ n: ar[i], w: +ar[i + 1] });
       const all = T.concat(Pv, CT, CP).filter(x => x.lid);
-      const pubs = all.length ? await cmd('MGET', ...all.map(x => 'lifep:' + x.lid)) : [];
-      const pm = {}; all.forEach((x, i) => pm[x.lid] = pubs[i] === '1' ? 1 : pubs[i] === '2' ? 2 : 0);
+      const [pubs, kns] = all.length ? await pipe([['MGET', ...all.map(x => 'lifep:' + x.lid)], ['MGET', ...all.map(x => 'lvkn:' + x.lid)]]) : [[], []];
+      const pm = {}; all.forEach((x, i) => { pm[x.lid] = pubs[i] === '1' ? 1 : pubs[i] === '2' ? 2 : 0; if (+kns[i] > 0) x.kn = +kns[i] });
       const admB = !!ADM_KEY && String(qOf(req).key || '') === ADM_KEY;
       const fix = l => l.map(x => { const v = x.lid ? pm[x.lid] || 0 : 0; const o = Object.assign(x, { pub: v === 1 || (admB && x.lid) ? 1 : 0 }); if (v === 2 && !admB) { o.n = 'ผู้ไม่ประสงค์ออกนาม'; o.f = ''; o.anon = 1 } return o });
       return res.json({ top: fix(T), prev: fix(Pv), ctop: fix(CT), cprev: fix(CP), cm: CHF[cmK], arena, daily: 1, p: per });
@@ -1065,7 +1065,33 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (!d) return res.status(404).json({ err: 'notfound' });
       const admV = !!ADM_KEY && String(qOf(req).key || '') === ADM_KEY;
       if (pub !== '1' && own !== id && !admV) return res.status(403).json({ err: 'private' });
-      return res.json({ d: JSON.parse(d), pub: pub === '1' ? 1 : 0, mine: own === id ? 1 : 0 });
+      const [kn, eu, kd, em] = await pipe([['GET', 'lvkn:' + lid], ['LRANGE', 'lveu:' + lid, 0, 19], ['EXISTS', 'lvkd:' + lid + ':' + id + ':' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10)], ['EXISTS', 'lvem:' + lid + ':' + id]]);
+      const hs0 = new Set((await cmd('SMEMBERS', 'chat:hidden')) || []);
+      const eul = (eu || []).map(jp).filter(x => x && !hs0.has(x.i)).map(x => ({ i: x.i, n: x.n, t: x.t, x: x.x, me: x.u === String(id).slice(0, 12) ? 1 : 0 }));
+      return res.json({ d: JSON.parse(d), pub: pub === '1' ? 1 : 0, mine: own === id ? 1 : 0, kn: +kn || 0, kd: +kd ? 1 : 0, eu: eul, em: +em ? 1 : 0 });
+    }
+    if (a === 'lvkneel' || a === 'lveu') {
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
+      const lid = String(b.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
+      const [pub, own] = await pipe([['GET', 'lifep:' + lid], ['GET', 'lifeo:' + lid]]);
+      if (!own) return res.status(404).json({ err: 'notfound' });
+      if (pub !== '1') return res.status(403).json({ err: 'private' });
+      if (own === id) return res.status(400).json({ err: 'self' });
+      if (a === 'lvkneel') {
+        const day = new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
+        const ok = await cmd('SET', 'lvkd:' + lid + ':' + id + ':' + day, 1, 'NX', 'EX', 86400 * 2);
+        if (ok !== 'OK') return res.json({ ok: 0, err: 'done', kn: +(await cmd('GET', 'lvkn:' + lid)) || 0 });
+        const [kn] = await pipe([['INCR', 'lvkn:' + lid], ['EXPIRE', 'lvkn:' + lid, 86400 * 40]]);
+        return res.json({ ok: 1, kn: +kn || 0 });
+      }
+      const [mu, bn] = await pipe([['EXISTS', 'mute:' + id], ['SISMEMBER', 'cheaters', id]]);
+      if (+mu || +bn) return res.status(403).json({ err: 'muted' });
+      const x = clean(b.x, 60); if (!x) return res.status(400).json({ err: 'empty' });
+      const ok = await cmd('SET', 'lvem:' + lid + ':' + id, 1, 'NX', 'EX', 86400 * 40);
+      if (ok !== 'OK') return res.json({ ok: 0, err: 'done' });
+      const m = { i: 'e' + now.toString(36) + Math.random().toString(36).slice(2, 5), n: clean(b.n, 20) || 'ผู้ผ่านทาง', t: now, x, u: String(id).slice(0, 12) };
+      await pipe([['LPUSH', 'lveu:' + lid, JSON.stringify(m)], ['LTRIM', 'lveu:' + lid, 0, 19], ['EXPIRE', 'lveu:' + lid, 86400 * 40]]);
+      return res.json({ ok: 1, e: { i: m.i, n: m.n, t: m.t, x: m.x, me: 1 } });
     }
 
     const findLive = async (k2, adm) => { const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 90e3, '+inf']]); const f1 = (pub || []).find(x => x.slice(0, 6) + x.slice(-4) === k2); if (f1) return f1; if (adm) return (prv || []).find(x => x.slice(0, 6) + x.slice(-4) === k2) || null; return null };
