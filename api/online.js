@@ -288,12 +288,16 @@ async function autoMig() {
 }
 
 // ---- ประมูลทั่วยุทธภพ (ผู้เล่นจริง): รอบละ 6 ชิ้น ชิ้นละ 60 วิ · มีคนเสนอราคาแล้วนับถอยหลังใหม่ 20 วิทุกครั้ง · สมบัติระดับเทพ (k>=9e8) โอกาส 22% ต่อชิ้นระดับ 4+ สูงสุด 1 ชิ้นต่อรอบ ราคาเริ่ม ×2.5 · พักรอบละ 10–15 นาที ----
-const PA_RW = [0, 4, 10, 18, 24, 22, 14, 0], PA_G0 = [10, 300, 5000, 80000, 1000000, 8000000, 30000000, 100000000], PA_LOT_MS = 60e3, PA_NB_MS = 25e3, PA_GRACE_MS = 1500;
+const PA_RW = [0, 4, 10, 18, 24, 22, 14, 0], PA_G0 = [10, 300, 5000, 80000, 1000000, 8000000, 30000000, 100000000], PA_LOT_MS = 30e3, PA_NB_MS = 30e3, PA_GRACE_MS = 1500, PA_LEAD_MS = 60e3;
+// v17.12: ราคาเริ่มตามเงินที่ผู้เล่นมีจริง (เดิม ×1 → ระดับสูงลดมาก) · ไม่มีคนเสนอ ราคาลดทุก 5 วิ ครั้งละ 15% จนเหลือ 40%
+const PA_GF = [1, .5, .3, .15, .075, .05, .03, .02];
+const paPrice = (cur, L, now) => { const st = cur.ls || cur.t0 || now, n = Math.max(0, Math.floor((now - st) / 5000)); return Math.max(Math.ceil(L.g * .4), Math.round(L.g * Math.pow(.85, n))) };
 const PA_GW = { m: [10, 100, 1000, 10000, 80000, 400000, 2000000, 10000000], x: [500, 5000, 50000, 400000, 3000000, 15000000, 50000000, 100000000], g: [20000, 200000, 2000000, 8000000, 25000000, 50000000, 80000000, 100000000] }, PA_NB = [10, 30, 100, 300];
+for (const w in PA_GW) PA_GW[w] = PA_GW[w].map((v, i) => Math.max(10, Math.round(v * PA_GF[i] / 10) * 10));
 const PA_WN = { m: 'ยุทธภพ', x: 'โลกเซียน', g: 'แดนเทพ' };
 // ใครประมูลชิ้นนี้ได้: ต้องอยู่โลกเดียวกัน · ชิ้นมือใหม่ = ขั้นไม่เกิน 2 · ของระดับต่ำ (ธรรมดา/หายาก) คนขั้น 5 ขึ้นไปห้ามแย่ง
 function paElig(L, w, ri) { if (!L.w) return ''; if (L.w !== w) return 'ชิ้นนี้สำหรับคนใน' + PA_WN[L.w]; if (L.nb && ri > 2) return 'ชิ้นมือใหม่ — สำหรับคนที่ยังอยู่ขั้นต้น'; if (!L.nb && L.r <= 1 && ri >= 5) return 'ของระดับต่ำ เก็บไว้ให้มือใหม่'; return '' }
-const PA_BID_LUA = "local hi=tonumber(redis.call('HGET',KEYS[1],'hi') or '0') local en=tonumber(redis.call('GET',KEYS[2]) or '0') local now=tonumber(ARGV[4]) if now>en then return {-1,hi} end local g=tonumber(ARGV[1]) local mn=tonumber(ARGV[5]) if hi>0 then mn=math.ceil(hi*1.05) end if g<mn then return {0,hi} end redis.call('HSET',KEYS[1],'hi',g,'by',ARGV[2],'bn',ARGV[3],'t',now) redis.call('SET',KEYS[2],now+25000,'EX',3600) redis.call('EXPIRE',KEYS[1],3600) return {1,g}";
+const PA_BID_LUA = "local hi=tonumber(redis.call('HGET',KEYS[1],'hi') or '0') local en=tonumber(redis.call('GET',KEYS[2]) or '0') local now=tonumber(ARGV[4]) if now>en then return {-1,hi} end local g=tonumber(ARGV[1]) local mn=tonumber(ARGV[5]) if hi>0 then mn=math.ceil(hi*1.05) end if g<mn then return {0,hi} end redis.call('HSET',KEYS[1],'hi',g,'by',ARGV[2],'bn',ARGV[3],'t',now) redis.call('SET',KEYS[2],now+15000,'EX',3600) redis.call('EXPIRE',KEYS[1],3600) return {1,g}";
 function paPick() { const t = PA_RW.reduce((a, b) => a + b, 0); let x = Math.random() * t; for (let i = 0; i < PA_RW.length; i++) { if ((x -= PA_RW[i]) < 0) return i } return 4 }
 async function paTick(now) {
   let cur = null; try { const v = await cmd('GET', 'pa:cur'); cur = v ? JSON.parse(v) : null } catch {}
@@ -306,17 +310,20 @@ async function paTick(now) {
     if ((act < 2 || nDay >= 120) && !force) return cur;
     if ((await cmd('SET', 'pa:lk', '1', 'NX', 'PX', 4000)) !== 'OK') return cur;
     try {
-      const sid = (now.toString(36) + Math.random().toString(36).slice(2, 5)).slice(-9), lots = [], nL = act <= 3 ? 3 : act <= 8 ? 4 : act <= 15 ? 5 : 6;
+      const sid = (now.toString(36) + Math.random().toString(36).slice(2, 5)).slice(-9), lots = [], nL = act <= 3 ? 3 : 4;
+      // โลกของแต่ละชิ้น ตามสัดส่วนคนที่ออนไลน์อยู่จริงในแต่ละโลก (ไม่รู้ = แบบเดิม 50/30/20)
+      let WW = { m: .5, x: .3, g: .2 }; try { const ids = (await cmd('ZRANGEBYSCORE', 'online', now - 180e3, '+inf', 'LIMIT', 0, 200)) || []; if (ids.length) { const A = (await cmd('HMGET', 'oa', ...ids)) || [], C = { m: 0, x: 0, g: 0 }; let n0 = 0; A.forEach(v => { const o = jp(v); if (o && C[o.w] != null) { C[o.w]++; n0++ } }); if (n0) WW = { m: C.m / n0, x: C.x / n0, g: C.g / n0 } } } catch {}
+      const pickW = () => { const x = Math.random(); return x < WW.m ? 'm' : x < WW.m + WW.x ? 'x' : 'g' };
       let hi6 = 0, hi7 = 0, opN = 0;
       // ของแต่ละชิ้นมีโลกของมัน (ประมูลได้เฉพาะคนในโลกนั้น) + ชิ้นมือใหม่ 1 ชิ้นต่อรอบ
       const rg = r => Math.max(10, Math.round(r * (.8 + Math.random() * .4) / 10) * 10);
-      lots.push({ r: Math.random() < .5 ? 2 : 3, k: Math.floor(Math.random() * 1e6), w: 'm', nb: 1 }); lots[0].g = rg(PA_NB[lots[0].r]);
-      for (let i = 1; i < nL; i++) { let r = Math.min(6, paPick()); if (r >= 6 && hi6 >= 2) r = 5; if (r === 7) hi7++; if (r >= 6) hi6++; const x = Math.random(), w = x < .5 ? 'm' : x < .8 ? 'x' : 'g'; const op = r >= 4 && !opN && Math.random() < .22; if (op) opN = 1; lots.push({ r, k: op ? 9e8 + Math.floor(Math.random() * 1e6) : Math.floor(Math.random() * 1e6), w, g: rg(PA_GW[w][r] * (op ? 2.5 : 1)) }) }
+      lots.push({ r: Math.random() < .5 ? 2 : 3, k: Math.floor(Math.random() * 1e6), w: WW.m > 0 || !(WW.x + WW.g) ? 'm' : pickW(), nb: 1 }); lots[0].g = rg(PA_NB[lots[0].r]);
+      for (let i = 1; i < nL; i++) { let r = Math.min(6, paPick()); if (r >= 6 && hi6 >= 2) r = 5; if (r === 7) hi7++; if (r >= 6) hi6++; const w = pickW(); const op = r >= 4 && !opN && Math.random() < .22; if (op) opN = 1; lots.push({ r, k: op ? 9e8 + Math.floor(Math.random() * 1e6) : Math.floor(Math.random() * 1e6), w, g: rg(PA_GW[w][r] * (op ? 2.5 : 1)) }) }
       for (let i = lots.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [lots[i], lots[j]] = [lots[j], lots[i]] }
-      cur = { sid, t0: now, lots, li: 0, phase: 'open', act, u: 2, ls: now + 10e3 };
+      cur = { sid, t0: now, lots, li: 0, phase: 'open', act, u: 2, ls: now + PA_LEAD_MS };
       if (force) await cmd('DEL', 'pa:force');
       await pipe([['INCR', 'pa:day:' + day], ['EXPIRE', 'pa:day:' + day, 172800]]);
-      await pipe([['SET', 'pa:cur', JSON.stringify(cur), 'EX', 7200], ['SET', 'pa:end:' + sid, now + 80e3, 'EX', 3600]]);
+      await pipe([['SET', 'pa:cur', JSON.stringify(cur), 'EX', 7200], ['SET', 'pa:end:' + sid, now + PA_LEAD_MS + PA_LOT_MS, 'EX', 3600]]);
     } finally { await cmd('DEL', 'pa:lk').catch(() => {}) }
     return cur;
   }
@@ -337,7 +344,10 @@ async function paTick(now) {
     const L = cur.lots[cur.li], ops = [];
     if (H.by) { L.sold = { g: +H.hi, n: H.bn }; const dk = 'pa:wd:' + PA_DAY(now) + ':' + H.by + ':' + (L.w || 'm'); ops.push(['INCR', dk], ['EXPIRE', dk, 172800], ['HINCRBY', 'pa:ws:' + cur.sid, H.by, 1], ['EXPIRE', 'pa:ws:' + cur.sid, 7200], ['LPUSH', 'pa:win:' + H.by, JSON.stringify({ sid: cur.sid, li: cur.li, r: L.r, k: L.k, g: +H.hi, t: now, u: cur.u ? 1 : 0 })], ['EXPIRE', 'pa:win:' + H.by, 86400]) } else L.sold = { g: 0 };
     const rest = cur.lots.map((x, i) => i).filter(i => !cur.lots[i].sold);
-    if (!rest.length) { cur.phase = 'done'; const act = +(await cmd('ZCOUNT', 'online', now - 180e3, '+inf')) || 0; cur.next = now + Math.max(5, Math.min(10, act)) * 60e3 }
+    if (!rest.length) { cur.phase = 'done'; const act = +(await cmd('ZCOUNT', 'online', now - 180e3, '+inf')) || 0; cur.next = now + Math.max(5, Math.min(10, act)) * 60e3;
+      try { const [bd, vmax, wsH] = await pipe([['SMEMBERS', 'pa:bd:' + cur.sid], ['GET', 'pa:vmax:' + cur.sid], ['HKEYS', 'pa:ws:' + cur.sid]]); const winners = new Set(wsH || []); if (H.by) winners.add(H.by); const B = bd || [];
+        ops.push(['LPUSH', 'pa:stat', JSON.stringify({ sid: cur.sid, t: now, act: cur.act || 0, vw: +vmax || 0, bd: B.length, n: cur.lots.length, sold: cur.lots.filter(x => x.sold && x.sold.g).length, w: cur.lots.map(x => x.w + x.r).join(',') })], ['LTRIM', 'pa:stat', 0, 199]);
+        for (const u of B) if (!winners.has(u)) ops.push(['SET', 'pa:cons:' + u, cur.sid, 'EX', 86400]) } catch {} }
     else { rest.sort((x, y) => (V['l' + y] || 0) - (V['l' + x] || 0) || x - y); cur.li = rest[0]; const ls0 = now + PA_GRACE_MS; cur.ls = ls0; cur.nbEnd = ls0 + PA_NB_MS; ops.push(['SET', 'pa:end:' + cur.sid, ls0 + PA_LOT_MS, 'EX', 3600]); cur.end = ls0 + PA_LOT_MS }
     ops.push(['SET', 'pa:cur', JSON.stringify(cur), 'EX', 7200]);
     await pipe(ops);
@@ -345,7 +355,7 @@ async function paTick(now) {
   return cur;
 }
 const PA_DAY = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10);
-const paSum = c => c ? { sid: c.sid, phase: c.phase, t0: c.t0, li: c.li, n: c.lots.length, left: c.lots.filter(x => !x.sold).length } : null;
+const paSum = c => c ? { sid: c.sid, phase: c.phase, t0: c.t0, ls: c.ls || 0, li: c.li, n: c.lots.length, left: c.lots.filter(x => !x.sold).length } : null;
 let QUOTA_AT = 0;
 
 // ---------- 🔔 Web Push (VAPID + aes128gcm เขียนเองไม่ใช้ไลบรารี) + กล่องแจ้งเตือนในเกม ----------
@@ -586,7 +596,7 @@ module.exports = async (req, res) => {
         const org = String(req.headers['origin'] || req.headers['referer'] || '').replace(/^https?:\/\//, '').split('/')[0].slice(0, 60);
         const meta = { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(qOf(req).v || '').slice(0, 8), c: String(req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
         let act = null;
-        try { const r = JSON.parse(String(qOf(req).st || '').slice(0, 600) || 'null'); if (r && typeof r === 'object') { const S0 = v => String(v == null ? '' : v).replace(/[<>]/g, '').slice(0, 40), N0 = v => Math.max(-1, Math.min(1e7, Math.round(+v || 0))); act = { sc: S0(r.sc), md: S0(r.md), ch: r.ch ? 1 : 0, hd: r.hd ? 1 : 0, ia: N0(r.ia), er: N0(r.er), em: String(r.em || '').replace(/[<>]/g, '').slice(0, 120), nm: S0(r.nm), ag: N0(r.ag), al: r.al ? 1 : 0, au: r.au ? 1 : 0, pa: r.pa ? 1 : 0, sp: N0(r.sp), w: S0(r.w).slice(0, 1), yr: N0(r.yr), ri: S0(r.ri), v: S0(qOf(req).v).slice(0, 8), t: now } } } catch {}
+        try { const r = JSON.parse(String(qOf(req).st || '').slice(0, 600) || 'null'); if (r && typeof r === 'object') { const S0 = v => String(v == null ? '' : v).replace(/[<>]/g, '').slice(0, 40), N0 = v => Math.max(-1, Math.min(1e7, Math.round(+v || 0))); act = { w: ['m', 'x', 'g'].includes(r.w) ? r.w : '', sc: S0(r.sc), md: S0(r.md), ch: r.ch ? 1 : 0, hd: r.hd ? 1 : 0, ia: N0(r.ia), er: N0(r.er), em: String(r.em || '').replace(/[<>]/g, '').slice(0, 120), nm: S0(r.nm), ag: N0(r.ag), al: r.al ? 1 : 0, au: r.au ? 1 : 0, pa: r.pa ? 1 : 0, sp: N0(r.sp), w: S0(r.w).slice(0, 1), yr: N0(r.yr), ri: S0(r.ri), v: S0(qOf(req).v).slice(0, 8), t: now } } } catch {}
         const hk = 'ipid:' + ip + ':' + Math.floor(now / 3600e3), [, nid] = await pipe([['SADD', hk, id], ['SCARD', hk], ['EXPIRE', hk, 4000]]);
         if (meta.b !== 'บอท' && +nid <= 600) await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)], ...(act ? [['HSET', 'oa', id, JSON.stringify(act)]] : [])]);
       }
@@ -1899,6 +1909,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const ids = [r.b, ...r.H.map(h => h.id)].filter(x0 => x0 !== id), L = []; ids.forEach(t => L.push(['LPUSH', 'mbox:' + t, JSON.stringify({ kind: 'bhres', rid, t: now })], ['LTRIM', 'mbox:' + t, 0, 9], ['EXPIRE', 'mbox:' + t, 3600])); L.push(['DEL', 'bhc:' + r.b]); await pipe(L) } } }
       return res.json({ ok: 1, st: view(r, H, role) });
     }
+    if (a === 'pastat') { if (!isAdmKey(b.key || qOf(req).key)) return res.status(403).json({ err: 'admin' }); const L = ((await cmd('LRANGE', 'pa:stat', 0, 59)) || []).map(jp).filter(Boolean); return res.json({ ok: 1, l: L }) }
     if (a === 'pa' || a === 'pabid' || a === 'pachat' || a === 'pavote' || a === 'paclaim') {
       if (!okId(id)) return res.json({ ok: 0 });
       if (a !== 'pa' && a !== 'paclaim' && (b.tp || await isBanned())) return res.json({ ok: 0, err: 'ban' });
@@ -1906,6 +1917,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const sid = cur.sid;
       if (a === 'pabid') {
         if (String(b.sid) !== sid || +b.li !== cur.li || cur.phase !== 'open') return res.json({ ok: 0, err: 'lot' });
+        if (cur.ls && now < cur.ls) return res.json({ ok: 0, code: -5 });
         if ((await cmd('SET', 'pabl:' + id, 1, 'NX', 'PX', 900)) !== 'OK') return res.status(429).json({ err: 'rate' });
         const L = cur.lots[cur.li];
         // โควต้ารายวันแยกตามโลกของชิ้นนั้น (ยุทธภพ / โลกเซียน / แดนเทพ โลกละ 3 ชิ้น) — เหาะขึ้นโลกใหม่แล้วยังซื้อของโลกใหม่ได้ · ปั๊มไม่ได้เพราะเพดานรวม 9
@@ -1914,7 +1926,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if ((+ws || 0) >= 2) return res.json({ ok: 0, code: -3 });
         const g = Math.max(1, Math.min(1e13, Math.floor(+b.g || 0)));
         { const why = paElig(L, ['m', 'x', 'g'].includes(b.w) ? b.w : 'm', Math.max(0, Math.min(9, Math.floor(+b.ri || 0)))); if (why) return res.json({ ok: 0, code: -4, why }) }
-        const r = await cmd('EVAL', PA_BID_LUA, 2, 'pa:b:' + sid + ':' + cur.li, 'pa:end:' + sid, g, id, clean(b.n, 20) || 'นิรนาม', now, L.g);
+        const r = await cmd('EVAL', PA_BID_LUA, 2, 'pa:b:' + sid + ':' + cur.li, 'pa:end:' + sid, g, id, clean(b.n, 20) || 'นิรนาม', now, paPrice(cur, L, now));
+        if (+r[0] === 1) { try { await pipe([['SADD', 'pa:bd:' + sid, id], ['EXPIRE', 'pa:bd:' + sid, 7200]]) } catch {} }
         return res.json({ ok: +r[0] === 1 ? 1 : 0, code: +r[0], hi: +r[1] });
       }
       if (a === 'pachat') {
@@ -1932,10 +1945,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       }
       if (a === 'paclaim') { const w = String(b.w || ''); if (w) await cmd('LREM', 'pa:win:' + id, 1, w); return res.json({ ok: 1 }) }
       const join = !!(b.join || qOf(req).join);
-      const [, , vw, bh, ch0, vh, myv, wins, endV] = await pipe([join ? ['ZADD', 'pa:vw:' + sid, now, id] : ['PING'], ['ZREMRANGEBYSCORE', 'pa:vw:' + sid, 0, now - 15e3], ['ZCARD', 'pa:vw:' + sid], ['HGETALL', 'pa:b:' + sid + ':' + cur.li], ['LRANGE', 'pa:c:' + sid, 0, 24], ['HGETALL', 'pa:v:' + sid], ['HGET', 'pa:vu:' + sid, id], ['LRANGE', 'pa:win:' + id, 0, 9], ['GET', 'pa:end:' + sid]]);
+      const [, , vw, bh, ch0, vh, myv, wins, endV, cons] = await pipe([join ? ['ZADD', 'pa:vw:' + sid, now, id] : ['PING'], ['ZREMRANGEBYSCORE', 'pa:vw:' + sid, 0, now - 15e3], ['ZCARD', 'pa:vw:' + sid], ['HGETALL', 'pa:b:' + sid + ':' + cur.li], ['LRANGE', 'pa:c:' + sid, 0, 24], ['HGETALL', 'pa:v:' + sid], ['HGET', 'pa:vu:' + sid, id], ['LRANGE', 'pa:win:' + id, 0, 9], ['GET', 'pa:end:' + sid], ['GET', 'pa:cons:' + id]]);
+      try { const vk = 'pa:vmax:' + sid; if ((+vw || 0) > (+(await cmd('GET', vk)) || 0)) await cmd('SET', vk, +vw || 0, 'EX', 7200) } catch {}
+      let consOk = 0; if (cons && (b.cons || qOf(req).cons)) { const dk = 'pa:consd:' + PA_DAY(now) + ':' + id, [c1] = await pipe([['INCR', dk], ['EXPIRE', dk, 172800], ['DEL', 'pa:cons:' + id]]); consOk = +c1 <= 5 ? 1 : 0 }
       const H = {}; if (Array.isArray(bh)) for (let i = 0; i < bh.length; i += 2) H[bh[i]] = bh[i + 1]; else Object.assign(H, bh || {});
       const V = {}; if (Array.isArray(vh)) for (let i = 0; i < vh.length; i += 2) V[vh[i]] = +vh[i + 1]; else for (const k in (vh || {})) V[k] = +vh[k];
-      return res.json({ ok: 1, now, cur: { sid, phase: cur.phase, next: cur.next || 0, li: cur.li, end: +endV || cur.end || 0, nb: cur.nbEnd || 0, lots: cur.lots, votes: V }, bid: { hi: +H.hi || 0, bn: H.bn || '', me: H.by === id ? 1 : 0, ext: +H.ext || 0 }, vw: +vw || 0, chat: (ch0 || []).map(jp).filter(Boolean).reverse(), myv: myv == null ? -1 : +myv, wins: (wins || []) });
+      return res.json({ ok: 1, now, cur: { sid, phase: cur.phase, next: cur.next || 0, li: cur.li, ls: cur.ls || 0, end: +endV || cur.end || 0, nb: cur.nbEnd || 0, lots: cur.lots, votes: V }, bid: { hi: +H.hi || 0, bn: H.bn || '', me: H.by === id ? 1 : 0, ext: +H.ext || 0, pn: cur.phase === 'open' && !(+H.hi) ? paPrice(cur, cur.lots[cur.li], now) : 0 }, cons: cons ? 1 : 0, consOk, vw: +vw || 0, chat: (ch0 || []).map(jp).filter(Boolean).reverse(), myv: myv == null ? -1 : +myv, wins: (wins || []) });
     }
     // ---- สุสานผู้เล่นจริง: ป้ายหลุมศพ + คำอำลาของผู้เล่นคนอื่น ----
     if (a === 'grave') {
