@@ -123,7 +123,8 @@ const cmd = USE_VK ? vkCmd : upCmd;
 const pipe = USE_VK ? vkPipe : upPipe;
 
 // ===== ทำเนียบรายวัน (v15.3): แยก 4 หมวด · คะแนนจากค่าเฉลี่ยทุกด้าน · รางวัลอันดับ 1–3 =====
-const BD_CATS = ['m', 'x', 'g', 'b', 'c', 'r']; // c = ทำเนียบโหมดท้าทาย (นรก/ชีวิตสั้น/รากขยะ)
+const BD_CATS = ['m', 'x', 'g', 'b', 'c', 'r', 'ch', 'cs', 'cj']; // c = ทำเนียบท้าทายรวม (เลิกใช้แล้ว) · ch นรก · cs ชีวิตสั้น · cj รากขยะ · r ผู้ย้อนกาล
+const CHC = { hell: 'ch', short: 'cs', junk: 'cj' }, CHM = { h: 'ch', s: 'cs', j: 'cj' }, CHF = { ch: 'h', cs: 's', cj: 'j' };
 const CH_OK = ['hell', 'short', 'junk', 'regress'];
 // ฉายาทำเนียบ (ชั่วคราว): รายวัน/สัปดาห์/เดือน · อันดับ 1–3
 const RKT = { d: ['', 'ตะวันเจิดจ้า', 'จันทร์เหนือเมฆ', 'ดาวประกาย'], w: ['', 'จ้าวยุทธภพ', 'ขุนศึกไร้พ่าย', 'ยอดฝีมือผงาด'], m: ['', 'จักรพรรดิเหนือฟ้า', 'มหาเทพบัญชาสวรรค์', 'ตำนานผู้ถูกจารึก'] };
@@ -131,7 +132,11 @@ const RKT_C = { d: ['', 'ผู้ฝ่าขุมนรก', 'วิญญา
 const RKT_A = { w: ['', 'จ้าวลานหมื่นเงา', 'ราชันย์เงาพิฆาต', 'ดาบเงาไร้เทียมทาน'] };
 const RKT_R = { d: ['', 'ผู้หมุนเข็มกาล', 'เงาที่ไม่ยอมดับ', 'ผู้ตื่นซ้ำแล้วซ้ำเล่า'], w: ['', 'ผู้ฉีกวงจรแห่งกาล', 'ผู้กลืนกินความตาย', 'ผู้ทวนกระแสกาล'], m: ['', 'ผู้อยู่เหนือกาลเวลา', 'จักรพรรดิแห่งวันวาน', 'ผู้จดจำร้อยชาติ'] };
 const RKT_EXP = { d: 86400e3 * 1.1, w: 86400e3 * 7.2, m: 86400e3 * 31 }, RKT_TR = { d: 7, w: 8, m: 9 };
-const RKT_ALL = new Map(); [RKT, RKT_C, RKT_A, RKT_R].forEach(TT => Object.entries(TT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) })));
+const RKT_H = { d: ['', 'ผู้ฝ่าขุมนรก', 'ผู้ลุยเพลิงอเวจี', 'วิญญาณไม่ดับ'], w: ['', 'จ้าวแห่งเปลวนรก', 'อสูรเพลิงกัลป์', 'ผู้เหยียบขุมไฟ'], m: ['', 'จักรพรรดิแห่งขุมนรก', 'มารฟ้าทลายกรรม', 'ผู้กลับจากอเวจี'] };
+const RKT_S = { d: ['', 'ดาวตกสามสิบปี', 'ผู้เผาเทียนสองปลาย', 'ชีวิตเดียวพันตำนาน'], w: ['', 'จ้าวแห่งเวลาอันสั้น', 'ตำนานชั่วพริบตา', 'ผู้ใช้สามสิบปีให้คุ้ม'], m: ['', 'จักรพรรดิแห่งพริบตา', 'ดาวหางผ่าฟ้า', 'ผู้ชนะเวลา'] };
+const RKT_J = { d: ['', 'ผู้ท้าลิขิต', 'ขยะผู้ไม่ยอมแพ้', 'ธุลีที่ลุกขึ้น'], w: ['', 'ราชันย์ไร้พรสวรรค์', 'ผู้ทวนชะตา', 'กระดูกขยะทะลวงฟ้า'], m: ['', 'จักรพรรดิผู้ลบลิขิต', 'ตำนานจากธุลี', 'ผู้ทำลายคำพยากรณ์'] };
+const RKT_M = { ch: RKT_H, cs: RKT_S, cj: RKT_J };
+const RKT_ALL = new Map(); [RKT, RKT_C, RKT_A, RKT_R, RKT_H, RKT_S, RKT_J].forEach(TT => Object.entries(TT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) })));
 const bdCat = e => e.bm ? 'b' : e.g ? 'g' : e.x ? 'x' : 'm';
 const bdKey = (c, ms, back = 0) => 'bd3:' + c + ':' + new Date(ms + 7 * 3600e3 - back * 86400e3).toISOString().slice(0, 10);
 const bdKeyW = (c, ms, back = 0) => 'bdw:' + c + ':' + week(new Date(ms - back * 7 * 86400e3));
@@ -151,6 +156,9 @@ function bdScoreShort(D, e) { // ชีวิตสั้น: คิดจาก
   const D2 = Object.assign({}, D, { st: Object.assign({}, st, { pow: sc(st.pow), fame: sc(st.fame), money: sc(st.money), int: sc(st.int), kills: sc(st.kills) }) });
   return bdScore(D2, Object.assign({}, e, { age: Math.min(10000, sc(st.pow) / 500) }));
 }
+// จุดสูงสุดที่ไปถึง (ส่งมาใน det.pk = [โลก, ขั้น, อายุตอนถึง]) → คะแนนรากขยะ / ผู้ย้อนกาลที่ยังไม่หลุดพ้น · โลกใช้ค่าของเซิร์ฟเวอร์
+function bdPeak(D, e) { const pk = Array.isArray(D && D.pk) ? D.pk : [], tier = e.g ? 2 : e.x ? 1 : 0, ri = Math.max(0, Math.min(7, Math.floor(+pk[1] || 0))), ag = Math.max(0, Math.min(+e.age || 0, Math.floor(+pk[2] || 0)));
+  return (tier * 8 + ri + 1) * 1e6 - Math.min(999999, ag) }
 function week(d = new Date()) {
   // สัปดาห์เริ่มวันจันทร์ 00:00 เวลาไทย
   const t = new Date(d.getTime() + 7 * 3600e3);
@@ -784,15 +792,23 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     // แจกรางวัลอันดับ 1–3 ของเมื่อวาน (ครั้งเดียวต่อวัน) · ล้างทำเนียบรุ่นเก่าครั้งเดียว
     const bdSettle1 = async (p, flag, ex) => { try { if (!(await cmd('SET', flag, 1, 'NX', 'EX', 86400 * ex))) return;
       const R1 = await pipe(BD_CATS.map(c => ['ZREVRANGE', bdKeyP(p, c, now, 1), 0, 9])), lab = flag.split(':').slice(1).join(':');
-      for (let k = 0; k < BD_CATS.length; k++) { const L1 = (R1[k] || []).map(jp).filter(x => x && x.lid && !x.cu); const seen = new Set(); let r = 0;
+      const N1 = await pipe(BD_CATS.map(c => ['ZCARD', bdKeyP(p, c, now, 1)]));
+      for (let k = 0; k < BD_CATS.length; k++) { if (p === 'd' && CHF[BD_CATS[k]] && (+N1[k] || 0) < 5) continue; const L1 = (R1[k] || []).map(jp).filter(x => x && x.lid && !x.cu && !x.nf && !(+x.s < 0)); const seen = new Set(); let r = 0;
         for (const x of L1) { if (r >= 3) break; const own = await cmd('GET', 'lifeo:' + x.lid); if (!own || seen.has(own) || await cmd('SISMEMBER', 'cheaters', own)) continue; seen.add(own); r++;
-          const isC = BD_CATS[k] === 'c', isR = BD_CATS[k] === 'r', TT = isC ? RKT_C : isR ? RKT_R : RKT, hf = isC ? p + 'c' : isR ? p + 'r' : p, cur = jp(await cmd('HGET', 'rkttl:' + own, hf)), nt = { t: TT[p][r], r, c: BD_CATS[k], exp: now + RKT_EXP[p], at: now };
+          const isC = BD_CATS[k] === 'c', isR = BD_CATS[k] === 'r', isM = !!CHF[BD_CATS[k]], TT = isM ? RKT_M[BD_CATS[k]] : isC ? RKT_C : isR ? RKT_R : RKT, hf = isM ? p + CHF[BD_CATS[k]] : isC ? p + 'c' : isR ? p + 'r' : p, cur = jp(await cmd('HGET', 'rkttl:' + own, hf)), nt = { t: TT[p][r], r, c: BD_CATS[k], exp: now + RKT_EXP[p], at: now };
           const L2 = [['LPUSH', 'bdrw:' + own, JSON.stringify({ p, c: BD_CATS[k], r, d: lab, n: x.n, s: x.s, tt: TT[p][r], exp: nt.exp, ...(x.ch ? { ch: x.ch } : {}) })], ['EXPIRE', 'bdrw:' + own, 86400 * 60], ['HINCRBY', 'bdwins', own, 1]];
           if (!cur || cur.exp < now || r <= cur.r) L2.push(['HSET', 'rkttl:' + own, hf, JSON.stringify(nt)], ['EXPIRE', 'rkttl:' + own, 86400 * 40]);
           await pipe(L2) } } } catch {} };
     const bdSettle = async () => { const yk = new Date(now + 7 * 3600e3 - 86400e3).toISOString().slice(0, 10);
       await bdSettle1('d', 'bdset:' + yk, 7); await bdSettle1('w', 'bdsetw:' + week(new Date(now - 7 * 86400e3)), 30); await bdSettle1('m', 'bdsetm:' + bdMon(now, 1), 90) };
-    const bdWipe = async () => { try { if (!(await cmd('SET', 'bd3init', 1, 'NX'))) return; let cur = '0', n = 0; do { const r = await cmd('SCAN', cur, 'MATCH', 'bd2:*', 'COUNT', 500); cur = String(r[0]); if (r[1].length) await cmd('DEL', ...r[1]); n++ } while (cur !== '0' && n < 200); await cmd('DEL', 'bdhide') } catch {} };
+    // v17.12: ย้ายชีวิตโหมดท้าทายของรอบปัจจุบัน ออกจากทำเนียบรวม/ทำเนียบโลก ไปทำเนียบของโหมดตัวเอง (ครั้งเดียว)
+    const bdSplit = async () => { try { if (!(await cmd('SET', 'bdsplit1', 1, 'NX'))) return;
+      for (const p of ['d', 'w', 'm']) { for (let back = 0; back <= 1; back++) {
+        const ck = bdKeyP(p, 'c', now, back), raw = (await cmd('ZRANGE', ck, 0, -1, 'WITHSCORES')) || [], L = [];
+        for (let i = 0; i < raw.length; i += 2) { const x = jp(raw[i]); const c2 = x && CHC[x.ch]; if (!c2) continue; const kk = bdKeyP(p, c2, now, back); L.push(['ZADD', kk, +raw[i + 1] || 0, raw[i]], ['EXPIRE', kk, 86400 * (p === 'd' ? 4 : p === 'w' ? 20 : 70)]) }
+        for (const wc of ['m', 'x', 'g', 'b']) { const wk = bdKeyP(p, wc, now, back), wr = (await cmd('ZRANGE', wk, 0, -1)) || []; const rm = wr.filter(v => { const x = jp(v); return x && x.ch }); if (rm.length) L.push(['ZREM', wk, ...rm]) }
+        if (L.length) await pipe(L) } } } catch {} };
+    const bdWipe = async () => { await bdSplit(); try { if (!(await cmd('SET', 'bd3init', 1, 'NX'))) return; let cur = '0', n = 0; do { const r = await cmd('SCAN', cur, 'MATCH', 'bd2:*', 'COUNT', 500); cur = String(r[0]); if (r[1].length) await cmd('DEL', ...r[1]); n++ } while (cur !== '0' && n < 200); await cmd('DEL', 'bdhide') } catch {} };
     if (a === 'rgboard') {
       await bdSettle();
       const p0 = String(b.p || qOf(req).p || 'd'), per = ['d', 'w', 'm', 'all'].includes(p0) ? p0 : 'd';
@@ -814,14 +830,15 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const R0 = await pipe(Q);
       const hide = new Set(['f18abdmw8fuj8d', ...((await cmd('SMEMBERS', 'bdhide')) || [])]);
       const pj = l => (l || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(j => j && !j.cu && !(j.lid && hide.has(j.lid)));
-      let T = [], Pv = [], CT = [], CP = []; BD_CATS.forEach((c, k) => { const a1 = pj(R0[k * 2]).slice(0, 20), a2 = pj(R0[k * 2 + 1]).slice(0, 3); if (c === 'c') { CT = a1; CP = a2 } else if (c === 'r') { } else { T = T.concat(a1); Pv = Pv.concat(a2) } });
+      const cmK = CHM[String(b.cm || qOf(req).cm || 'h')] || 'ch';
+      let T = [], Pv = [], CT = [], CP = []; BD_CATS.forEach((c, k) => { const a1 = pj(R0[k * 2]).slice(0, 20), a2 = pj(R0[k * 2 + 1]).slice(0, 3); if (c === cmK) { CT = a1; CP = a2 } else if (c === 'r' || c === 'c' || CHF[c]) { } else { T = T.concat(a1.filter(x => !x.ch)); Pv = Pv.concat(a2.filter(x => !x.ch)) } });
       const arena = []; for (let i = 0; i < (ar || []).length; i += 2) arena.push({ n: ar[i], w: +ar[i + 1] });
       const all = T.concat(Pv, CT, CP).filter(x => x.lid);
       const pubs = all.length ? await cmd('MGET', ...all.map(x => 'lifep:' + x.lid)) : [];
       const pm = {}; all.forEach((x, i) => pm[x.lid] = pubs[i] === '1' ? 1 : pubs[i] === '2' ? 2 : 0);
       const admB = !!ADM_KEY && String(qOf(req).key || '') === ADM_KEY;
       const fix = l => l.map(x => { const v = x.lid ? pm[x.lid] || 0 : 0; const o = Object.assign(x, { pub: v === 1 || (admB && x.lid) ? 1 : 0 }); if (v === 2 && !admB) { o.n = 'ผู้ไม่ประสงค์ออกนาม'; o.f = ''; o.anon = 1 } return o });
-      return res.json({ top: fix(T), prev: fix(Pv), ctop: fix(CT), cprev: fix(CP), arena, daily: 1, p: per });
+      return res.json({ top: fix(T), prev: fix(Pv), ctop: fix(CT), cprev: fix(CP), cm: CHF[cmK], arena, daily: 1, p: per });
     }
     if (a === 'bdrw') {
       if (!okId(id)) return res.json({ l: [] });
@@ -1401,7 +1418,11 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (e.ch === 'regress') { try { const D0 = JSON.parse(String(b.det || '{}')), G = D0.rg || {}, rl = Math.max(1, Math.min(999, Math.floor(+G.loop || 1))), rf = G.free && (+e.age || 0) >= 15 ? 1 : 0; e.rl = rl; e.rf = rf; const vn = { r5: ' ⏪', nomem: ' 🧠', lim10: ' 🔟' }[String(G.var || '')] || ''; e.c = (rf ? '🔁 หลุดพ้นวงจรใน ' + rl + ' รอบ' : '🔁 ย้อนกาล ' + rl + ' รอบ') + vn + (e.c ? ' · ' + e.c : ''); e.c = e.c.slice(0, 80); ejC = JSON.stringify(Object.assign({}, e, { s: (rf ? 5e8 - rl * 1e6 : 0) + Math.min(4e8, bdScore(D0, e)), rg: 1 })) } catch {} }
       const cat = bdCat(e), ej = JSON.stringify(e), L = [['INCR', 'lives']];
       let rjB = null; if (e.ch === 'regress' && e.rf) { try { const G0 = (JSON.parse(String(b.det || '{}')).rg) || {}, en0 = ['breaker', 'protector', 'lonely'].includes(G0.end) ? G0.end : 'lonely', vr0 = ['normal', 'r5', 'nomem', 'lim10'].includes(G0.var) ? G0.var : 'normal'; rjB = Object.assign({}, e, { end: en0, var: vr0, s: ({ breaker: 3, protector: 2, lonely: 1 })[en0] * 1e8 - Math.min(999, e.rl || 1) * 1e5 + ({ lim10: 3, nomem: 2, r5: 1, normal: 0 })[vr0] * 1e4 }) } catch {} }
-      for (const cc of e.ch === 'regress' ? (rjB ? [cat, 'r'] : [cat]) : e.ch ? [cat, 'c'] : [cat]) { if (cc === 'r') { const jj = JSON.stringify(rjB); for (const [kk, ex] of [[bdKey('r', now), 4], [bdKeyW('r', now), 20], [bdKeyM('r', now), 70]]) L.push(['ZADD', kk, rjB.s, jj], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]); continue } const useC = cc === 'c' && ejC, sv = useC ? JSON.parse(ejC).s : e.s, jj = useC ? ejC : ej; for (const [kk, ex] of [[bdKey(cc, now), 4], [bdKeyW(cc, now), 20], [bdKeyM(cc, now), 70]]) L.push(['ZADD', kk, sv, jj], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]) }
+      if (e.ch === 'junk') { try { ejC = JSON.stringify(Object.assign({}, e, { s: bdPeak(JSON.parse(String(b.det || '{}')), e), jk: 1 })) } catch {} }
+      if (e.ch === 'regress' && !rjB) { try { rjB = Object.assign({}, e, { nf: 1, s: bdPeak(JSON.parse(String(b.det || '{}')), e) - 1e9 }) } catch {} }
+      // v17.12: โหมดท้าทายขึ้นเฉพาะทำเนียบของโหมดตัวเอง (ไม่ปนทำเนียบโลก)
+      const mainC = e.ch === 'regress' ? 'r' : e.ch && CHC[e.ch] ? CHC[e.ch] : cat; let mainJ = ej;
+      for (const cc of [mainC]) { if (cc === 'r') { if (!rjB) continue; const jj = JSON.stringify(rjB); mainJ = jj; for (const [kk, ex] of [[bdKey('r', now), 4], [bdKeyW('r', now), 20], [bdKeyM('r', now), 70]]) L.push(['ZADD', kk, rjB.s, jj], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]); continue } const useC = CHF[cc] && ejC, sv = useC ? JSON.parse(ejC).s : e.s, jj = useC ? ejC : ej; mainJ = jj; for (const [kk, ex] of [[bdKey(cc, now), 4], [bdKeyW(cc, now), 20], [bdKeyM(cc, now), 70]]) L.push(['ZADD', kk, sv, jj], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]) }
       await bdSettle();
       if (e.cu || !(parseFloat(b.ver) >= 6.3)) { await cmd('INCR', 'lives'); return res.json({ ok: 1, skip: 1, why: e.cu ? 'cu' : 'old' }) }
       const det = String(b.det || '');
@@ -1427,7 +1448,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (e.ch === 'regress' && e.rf) { try { const G = (JSON.parse(det || '{}').rg) || {}, en = ['beyond', 'breaker', 'protector', 'lonely'].includes(G.end) ? G.end : 'lonely', vr = ['normal', 'r5', 'nomem', 'lim10'].includes(G.var) ? G.var : 'normal'; const rj = JSON.stringify({ n: e.n, lid: e.lid, rl: e.rl, end: en, var: vr, age: e.age, r: e.r, t: now, x: e.x, g: e.g }); const rs = ({ beyond: 4, breaker: 3, protector: 2, lonely: 1 })[en] * 1e8 - Math.min(999, e.rl || 1) * 1e5 + ({ lim10: 3, nomem: 2, r5: 1, normal: 0 })[vr] * 1e4 - Math.min(9999, Math.floor((now % 1e9) / 1e5)); L.push(['ZADD', 'rgb:all', rs, rj], ['ZREMRANGEBYRANK', 'rgb:all', 0, -201], ['ZADD', 'rgb:w:' + week(new Date(now)), rs, rj], ['ZREMRANGEBYRANK', 'rgb:w:' + week(new Date(now)), 0, -101], ['EXPIRE', 'rgb:w:' + week(new Date(now)), 86400 * 21]) } catch {} }
       await pipe(L);
       if (lid.length >= 6) { try { await cmd('SET', 'lsent:' + lid, 1, 'EX', 86400 * 20) } catch {} }
-      let rk = null; try { const r0 = await cmd('ZREVRANK', bdKey(cat, now), ej); if (r0 != null) rk = +r0 + 1 } catch {}
+      let rk = null; try { const r0 = await cmd('ZREVRANK', bdKey(mainC, now), mainJ); if (r0 != null) rk = +r0 + 1 } catch {}
       return res.json({ ok: 1, ...(rk ? { rk } : {}) });
     }
     if (a === 'lifepub') {
