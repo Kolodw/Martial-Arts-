@@ -26802,6 +26802,19 @@ const _or=openRegress;openRegress=function(){const r=_or.apply(this,arguments);t
  const hd=m.querySelector('h3');if(hd)hd.insertAdjacentHTML('afterend',h);else m.insertAdjacentHTML('afterbegin',h)}catch(e){console.error(e)}return r};
 window._rg21={left};
 })()}catch(e){console.error(e)}
+
+// ===================== v17.22 📜 แนะนำอาชีพ: ป้ายเตือนครั้งเดียว → หน้าอาชีพ → ครูผู้เฒ่าสอน (job0) =====================
+try{(()=>{
+const can=()=>{try{return S&&S.alive&&!S.job&&!S.beastMode&&!(typeof mwOn==='function'&&mwOn())&&typeof openJob==='function'&&typeof JOB!=='undefined'}catch(e){return false}};
+const seen=()=>{try{return!!(LS.get('murim_coach',{})||{}).jobnudge}catch(e){return true}},mark=()=>{try{const d=LS.get('murim_coach',{})||{};d.jobnudge=1;LS.set('murim_coach',d)}catch(e){}};
+const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{
+ if(S&&S.age>=15&&S.age<=40&&can()&&!seen()&&!(typeof coSeen==='function'&&coSeen('job0'))&&!window._jnW){window._jnW=1;let n=0;const w=()=>{try{if(!can()||seen()||n++>40){window._jnW=0;return}if(choice._cur||modalOpen||(choice._q&&choice._q.length)||(typeof CO!=='undefined'&&CO.id))return setTimeout(w,1500);window._jnW=0;go()}catch(e){window._jnW=0}};setTimeout(w,1200)}
+}catch(e){console.error(e)}return r};
+function go(){try{
+  const ok=Object.keys(JOB).filter(k=>{try{return JOB[k].ok()}catch(e){return false}}).length;
+  mark();
+  island({ic:'📜',h:'เลือกอาชีพได้แล้ว',t:ok?`มีอาชีพให้สมัคร ${ok} สาย — ทุกปีจะมีงานเข้ามาให้ตัดสินใจเอง`:'อาชีพไว้ใช้ชีวิตนอกการต่อสู้ — ดูเงื่อนไขได้ที่หน้าอาชีพ',kind:'good',big:1,ms:9000,btns:[{t:'📜 ดูอาชีพ',f:()=>{try{openJob()}catch(e){}}}]})}catch(e){console.error(e)}}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
