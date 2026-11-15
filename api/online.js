@@ -1946,6 +1946,50 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       return res.json({ pa, pw, o, gh, n: cand.length, inbox: inbox0.concat((box || []).map(s0 => { try { return JSON.parse(s0) } catch { return null } }).filter(Boolean)) });
     }
     // ผลการเจอ "เงา" → แจ้งเจ้าของเงาเมื่อเขากลับมาเล่น (เก็บ 3 วัน)
+    if (a === 'bsh') {
+      if (b.tp || await isBanned()) return res.json({ o: null, notes: [] });
+      const ok = await cmd('SET', 'bshl:' + id, 1, 'NX', 'EX', 20);
+      if (!ok) return res.status(429).json({ err: 'rate' });
+      const x = b.x ? 1 : 0, key = 'bsh:' + x;
+      const me = { n: clean(b.n, 20) || 'นิรนาม', sp: clean(b.sp, 16), st: Math.max(0, Math.min(12, +b.st || 0)), p: Math.max(0, Math.min(1e15, +b.p || 0)), k: id.slice(0, 6) + id.slice(-4), t: now };
+      const [, , nl] = await pipe([['HSET', key, id, JSON.stringify(me)], ['EXPIRE', key, 86400 * 3], ['LRANGE', 'bsn:' + id, 0, 9], ['DEL', 'bsn:' + id]]);
+      let o = null;
+      for (let k = 0; k < 4 && !o; k++) {
+        const f = await cmd('HRANDFIELD', key, 1);
+        const fid = Array.isArray(f) ? f[0] : f;
+        if (fid && fid !== id) { try { const v = JSON.parse(await cmd('HGET', key, fid)); if (v && now - v.t < 3 * 864e5) o = v } catch {} }
+      }
+      const notes = (nl || []).map(s0 => { try { return JSON.parse(s0) } catch { return null } }).filter(Boolean);
+      return res.json({ o, notes });
+    }
+    if (a === 'bshres') {
+      if (b.tp || await isBanned()) return res.json({ ok: 0 });
+      const ok = await cmd('SET', 'bshr:' + id, 1, 'NX', 'EX', 10);
+      if (!ok) return res.status(429).json({ err: 'rate' });
+      const to = String(b.to || '').replace(/[^a-z0-9]/g, '').slice(0, 12), x = b.x ? 1 : 0;
+      const ks = await cmd('HKEYS', 'bsh:' + x);
+      const tid = (ks || []).find(k0 => k0.slice(0, 6) + k0.slice(-4) === to);
+      if (!tid || tid === id) return res.json({ ok: 0 });
+      const m = { n: clean(b.n, 20) || 'นิรนาม', win: b.win ? 1 : 0, t: now };
+      await pipe([['LPUSH', 'bsn:' + tid, JSON.stringify(m)], ['LTRIM', 'bsn:' + tid, 0, 9], ['EXPIRE', 'bsn:' + tid, 259200]]);
+      return res.json({ ok: 1 });
+    }
+    if (a === 'wboss') {
+      const K = 'wb:' + W, KN = 'wbn:' + W, KT = 'wbt:' + W;
+      if (b.d != null) {
+        const ok = await cmd('SET', 'wbl:' + id, 1, 'NX', 'EX', 45);
+        if (!ok) return res.status(429).json({ err: 'rate' });
+        if (!b.tp && !(await isBanned())) {
+          const d = Math.max(0, Math.min(2000, Math.round(+b.d || 0)));
+          await pipe([['ZINCRBY', K, d, id], ['HSET', KN, id, clean(b.n, 20) || 'นิรนาม'], ['INCRBY', KT, d], ['EXPIRE', K, 86400 * 14], ['EXPIRE', KN, 86400 * 14], ['EXPIRE', KT, 86400 * 14]]);
+        }
+      }
+      const [top, tot, mine, rk] = await pipe([['ZREVRANGE', K, 0, 9, 'WITHSCORES'], ['GET', KT], ['ZSCORE', K, id], ['ZREVRANK', K, id]]);
+      const ids = [], sc = [];
+      for (let i = 0; i < (top || []).length; i += 2) { ids.push(top[i]); sc.push(+top[i + 1] || 0) }
+      const nms = ids.length ? (await cmd('HMGET', KN, ...ids)) || [] : [];
+      return res.json({ top: ids.map((_, i) => [nms[i] || 'นิรนาม', sc[i]]), tot: +tot || 0, mine: +mine || 0, rk: rk == null ? null : +rk });
+    }
     if (a === 'ghact') {
       if (b.tp || await isBanned()) return res.json({ ok: 0 });
       const ok = await cmd('SET', 'mtl:' + id, 1, 'NX', 'EX', 15);

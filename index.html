@@ -26115,6 +26115,137 @@ const gb=document.getElementById('goalBox');if(gb){const mo=new MutationObserver
 // ===== v17.13 แชทออนไลน์: วาดใหม่แล้วไม่เด้งขึ้นบน · ส่งข้อความแล้วเลื่อนลงล่างสุด =====
 {const _crS=chatRender;chatRender=function(){const b=$('chatBox'),had=b&&b.dataset.ok,st=b?b.scrollTop:0,near=b?(b.scrollHeight-b.scrollTop-b.clientHeight<120):true;const r=_crS.apply(this,arguments);try{const b2=$('chatBox');if(b2&&had){if(near||(window._chStick&&Date.now()<window._chStick))b2.scrollTop=b2.scrollHeight;else b2.scrollTop=st}}catch(e){}return r}}
 {const _csS=chatSend;chatSend=async function(){window._chStick=Date.now()+5000;return _csS.apply(this,arguments)}}
+
+// ===================== v17.14 สัตว์อสูร 2.0: ล่าอ่านท่า · เจ้าป่า · อาณาเขต/ฤดูกาล · วิวัฒนาการ · ฝูง · เงาผู้เล่น · อสูรร้ายประจำสัปดาห์ =====================
+const b2On=()=>!!(S&&S.alive&&S.beastMode&&!S.beastMode.human);
+function b2(){const m=S.beastMode;m.x2=m.x2||{tr:[],evn:m.st||0,food:0,ter:null,pk:null,big:0,hs:0};return m.x2}
+function b2Q(fn,n){n=n||0;if(!b2On())return;if((choice._cur||modalOpen||document.querySelector('.kfx'))&&n<60)return setTimeout(()=>b2Q(fn,n+1),700);if(n>=60)return;try{fn()}catch(e){console.error(e)}}
+const b2Has=k=>b2On()&&b2().tr.includes(k);
+const b2G=v=>Math.max(1,Math.round(pctPow(v)||0));
+// ---------- ฤดูกาล ----------
+const B2SEA=[['🌸','ฤดูผสมพันธุ์','คู่แข่งดุ ถูกท้าชิงถิ่นบ่อยขึ้น · หาคู่ง่าย'],['☀️','ปีแล้ง','เหยื่อน้อยลง · แหล่งน้ำมีค่าขึ้นเท่าตัว'],['🍂','ปีอุดม','ล่าได้ผล +40% · เก็บเสบียงได้มาก'],['❄️','หนาวยาว','ล่าได้ผล −40% · ไม่มีเสบียงจะหิวจนเจ็บ']];
+function b2Sea(){const x=b2();if(x.sY!==S.age){x.sY=S.age;const r=Math.random();x.sea=r<.25?0:r<.45?1:r<.75?2:3}return x.sea}
+// ---------- 3) วิวัฒนาการ ----------
+const B2TR={fang:['🦷','เขี้ยวพิษ','ล่าได้ผล +20% · เจ้าป่าอ่อนลง 10%','ล่าแต่ละปีกรรม −1'],wing:['🪽','ปีก','ย้ายถิ่นไม่ต้องรอ · ถิ่นที่ถูกแย่งหนีรอดไม่เจ็บ','พลังชีวิตสูงสุด −10%'],
+ camo:['🍃','พรางกาย','ซุ่มพลาดยังได้ครึ่ง · ถูกท้าชิงถิ่นน้อยลง','ล่าได้ผล −5%'],spine:['🦔','ผิวหนาม','ป้องกันถิ่นแกร่งขึ้น 25% · ล่าพลาดเจ็บน้อยลงครึ่ง','ไล่ต้อนได้ผลน้อยลง'],
+ horn:['🦬','เขาเหล็ก','ล่อเข้ากับดักได้ผลเพิ่ม · ยึดถิ่นง่ายขึ้น 15%','ปัญญาเพิ่มช้าลง 20%'],eye:['👁️','ตาวิญญาณ','มองเหยื่อออก (บอกใบ้ท่าที่ถูก) · ลมปราณ +10%','พลังชีวิตสูงสุด −10%'],
+ blood:['🩸','เลือดร้อน','ล่าได้ผล +15%','อายุขัย −8%'],moon:['🌕','ขนจันทรา','ดูดแสงจันทร์ได้ลมปราณ +30%','ล่าได้ผล −10%'],hide:['🛡️','หนังหนา','พลังชีวิตสูงสุด +30%','ลมปราณ −10%']};
+function b2TrGive(k,why){const x=b2();if(x.tr.includes(k))return;x.tr.push(k);const T=B2TR[k];
+ if(k==='wing'||k==='eye'){S.maxHp=Math.max(30,Math.round(S.maxHp*.9));S.hp=Math.min(S.hp,S.maxHp)}if(k==='hide'){S.maxHp=Math.round(S.maxHp*1.3)}if(k==='blood')S.lifespan=Math.max(10,Math.round(S.lifespan*.92));
+ log(`🧬 ${why||'ร่างกายวิวัฒน์'} — ได้ <b>${T[0]} ${T[1]}</b> (${T[2]} · แลกกับ ${T[3]})`,'myth',true);try{keyAdd('วิวัฒน์'+T[1])}catch(e){}}
+function b2Evo(){const x=b2(),m=S.beastMode;if(x.evn>=m.st)return;x.evn++;const pool=Object.keys(B2TR).filter(k=>!x.tr.includes(k)).sort(()=>Math.random()-.5).slice(0,3);if(!pool.length)return;
+ b2Q(()=>choice(`🧬 วิวัฒนาการ — ขั้น ${BL_ST[Math.min(m.st,BL_ST.length-1)]||m.st}`,`ร่างของ${esc(S.name)}กำลังเปลี่ยน เลือก 1 ลักษณะที่จะติดตัวไปตลอดชีวิต (และอาจตกทอดถึงลูก)<br><span class="tag2">ทุกอย่างได้อย่างเสียอย่าง</span>`,pool.map(k=>({t:B2TR[k][0]+' '+B2TR[k][1],s:B2TR[k][2]+' · ⚠️ '+B2TR[k][3],f(){b2TrGive(k)}}))))}
+// ---------- 1) ล่าแบบอ่านท่า ----------
+const B2TAC={amb:['🌿 ซุ่มรอ','นิ่งจนกว่าเหยื่อจะเข้ามาใกล้'],chase:['💨 ไล่ต้อน','ต้อนเข้าซอกจนหมดทางหนี'],lure:['🪤 ล่อเข้ากับดัก','ล่อเข้าโคลน หน้าผา หรือรังผึ้ง']};
+const B2PT=[['หูไว ระแวงทุกเสียง','ซุ่มนานแค่ไหนก็รู้ตัว','chase'],['วิ่งเร็วกว่าลม','ไล่ไม่มีวันทัน แต่ต้องลงมากินน้ำทุกเช้า','amb'],['ตัวใหญ่ดุร้าย','สู้ตรงๆ เจ็บหนัก แต่หัวร้อนพุ่งใส่อะไรก็ได้','lure'],['อยู่เป็นฝูง','ซุ่มไปก็แตกฮือ — ต้องต้อนตัวที่อ่อนแอที่สุดให้หลุดฝูง','chase'],['เจ้าเล่ห์ระวังกับดัก','ไม่เคยเหยียบกับดัก แต่ประมาทตอนเดินหาอาหารคนเดียว','amb'],['ตะกละ ไม่เลือกกิน','เห็นซากเหยื่อเมื่อไหร่ลืมระวังตัว','lure']];
+const B2PN=[['กวางเขาเงิน','หมูป่าเขี้ยวเหล็ก','กระต่ายหิมะ','งูหลามลายทอง','ควายป่าเขาหิน','ไก่ฟ้าหางยาว','แพะภูเขา'],['กวางวิญญาณ','กระเรียนหยก','หมูป่าเพลิง','งูเกล็ดมรกต','ควายสายฟ้า','จิ้งจอกเมฆ','เต่าศิลาพันปี']];
+function b2Hunt(){const x=b2(),P=B2PT[R(0,B2PT.length-1)],nm=ch(B2PN[S.xian?1:0]),ok=P[2],eye=b2Has('eye'),sea=b2Sea();
+ const hint=(x.pk&&x.pk.mem.some(z=>z.role==='scout'))||eye;
+ choice(`🍖 ล่า${nm}`,`${B2SEA[sea][0]} ${B2SEA[sea][1]} · เหยื่อตัวนี้<b>${P[0]}</b> — ${P[1]}${hint?`<br><span class="tag2">${eye?'👁️ ตาวิญญาณ':'🐺 ลูกฝูงที่สอดแนม'}กระซิบ: น่าจะต้อง <b>${B2TAC[ok][0]}</b></span>`:''}`,Object.keys(B2TAC).map(t=>({t:B2TAC[t][0],s:B2TAC[t][1],f(){b2HuntRes(nm,t===ok,t,sea)}})))}
+function b2HuntMul(t,sea){let m=1;if(b2Has('fang'))m*=1.2;if(b2Has('blood'))m*=1.15;if(b2Has('camo'))m*=.95;if(b2Has('moon'))m*=.9;if(t==='chase'&&b2Has('spine'))m*=.75;if(t==='lure'&&b2Has('horn'))m*=1.25;
+ if(sea===2)m*=1.4;if(sea===1)m*=.85;if(sea===3)m*=.6;return m}
+function b2HuntRes(nm,good,t,sea){const x=b2();let m=b2HuntMul(t,sea);if(!good&&t==='amb'&&b2Has('camo')){good=.5}
+ if(good){const g=b2G(.012*m*(good===.5?.5:1)*(1+Math.min(5,x.hs)*.1));S.power+=g;x.hs=good===1?(x.hs||0)+1:0;const fd=sea===2?2:1;x.food=Math.min(9,(x.food||0)+fd);joy(3);
+  log(`🍖 ${B2TAC[t][0]} — ล้ม<b>${nm}</b>ได้${good===.5?' (พรางกายช่วยไว้ครึ่งหนึ่ง)':''} · พลังยุทธ์ +${fmt(g)} · เสบียง +${fd}${x.hs>=3?` · 🔥 ล่าติด ${x.hs} ครั้ง`:''}`,'good')}
+ else{x.hs=0;const d=Math.round(S.maxHp*(b2Has('spine')?.07:.14));S.hp=Math.max(1,S.hp-d);log(`🩸 ${B2TAC[t][0]} ผิดจังหวะ — ${nm}หนีไปได้และฝากแผลไว้ · พลังชีวิต −${d}`,'bad')}render()}
+// ---------- เจ้าป่าถิ่นอื่น (ศึกอ่านท่า 3 ยก) ----------
+const B2MV=[['ย่อตัวต่ำ กล้ามเนื้อขาเกร็ง','pounce'],['ก้มหัว ตะกุยดินสองครั้ง','charge'],['เดินวนรอบ ตาไม่ละจากคอคุณ','circle']];
+const B2CT={pounce:['↔️ กระโดดหลบข้าง',"dodge"],charge:['🪨 ตั้งหลักรับแรงปะทะ',"brace"],circle:['⚡ ชิงกัดก่อน',"strike"]};
+const B2BN=['พยัคฆ์ตาเดียวแห่งหุบเขา','หมีดำกรงเล็บเหล็ก','ราชาหมาป่าหิมะ','อินทรีปีกพายุ','งูยักษ์เจ็ดเศียร','กระทิงเขาทองแดง'];
+function b2Read(title,intro,rounds,done){let sc=0,i=0;const go=()=>{if(i>=rounds)return done(sc);const mv=B2MV[R(0,2)];i++;
+ choice(`${title} · ยกที่ ${i}/${rounds}`,`${i===1?intro+'<br>':''}มัน<b>${mv[0]}</b>${i>1?`<br><span class="tag2">อ่านถูกแล้ว ${sc}/${i-1}</span>`:''}`,Object.keys(B2CT).map(k=>({t:B2CT[k][0],noFate:1,f(){if(k===mv[1])sc++;setTimeout(go,250)}})))};go()}
+function b2Big(){const x=b2(),nm=ch(B2BN);x.big=S.age;b2Read(`👑 เจ้าป่า: ${nm}`,`<b>${nm}</b> เจ้าถิ่นป่าข้างเคียงบุกเข้ามา — อ่านท่ามันให้ออก<br><span class="tag2">ย่อตัว→หลบข้าง · ตะกุยดิน→ตั้งหลัก · เดินวน→ชิงกัดก่อน</span>`,3,sc=>{
+ const ep=total()*(1.35-sc*.25)*(b2Has('fang')?.9:1),w=fight(nm,ep);
+ if(w){const g=b2G(.05+sc*.01);S.power+=g;S.fame+=60+sc*20;x.bigW=(x.bigW||0)+1;log(`👑 อ่านท่าถูก ${sc}/3 — ล้ม<b>${nm}</b>ได้! ป่านั้นเป็นของคุณ · พลังยุทธ์ +${fmt(g)} · ชื่อเสียง +${60+sc*20}`,'myth',true);try{keyAdd('ล้มเจ้าป่า '+nm)}catch(e){}b2TerAdd(`ถ้ำของ${nm}`,'cave',true)}
+ else{const d=Math.round(S.maxHp*(.35-sc*.07));S.hp=Math.max(1,S.hp-d);log(`🩸 อ่านถูก ${sc}/3 — แต่${nm}แข็งเกินไป คุณถอยหนีพร้อมแผลลึก · พลังชีวิต −${d}`,'bad',true)}render()})}
+// ---------- 2) อาณาเขต ----------
+const B2SPOT={water:['💧','แหล่งน้ำ','ฟื้นพลังชีวิต · ปีแล้งมีค่าเป็นสองเท่า'],herd:['🦌','ทุ่งฝูงเหยื่อ','พลังยุทธ์ทุกปี · เสบียง'],cave:['🕳️','ถ้ำปลอดภัย','เจ็บน้อยลง · ป้องกันถิ่นอื่นง่ายขึ้น'],spring:['✨','ตาน้ำวิญญาณ','ลมปราณทุกปี'],herb:['🌿','ดงสมุนไพร','อายุขัยเพิ่มช้าๆ · ฟื้นแผล'],cliff:['🦅','หน้าผาสูง','ปัญญา · เห็นภัยก่อน']};
+const B2RV=['หมาป่าแก่หูขาด','หมีควาย','เสือดาวลายเมฆ','ฝูงไฮยีนา','งูเหลือมยักษ์','นกแร้งดำ','กระทิงตาบอด','ลิงยักษ์หน้าแดง'];
+function b2Ter(){const x=b2();if(!x.ter){const K=Object.keys(B2SPOT),sp=[];for(let i=0;i<7;i++){const k=i<K.length?K[i]:ch(K);sp.push({k,n:B2SPOT[k][1],o:i===0?'me':ch(B2RV),r:+(0.55+Math.random()*.7).toFixed(2)})}x.ter={sp,mv:-99}}return x.ter}
+function b2TerAdd(n,k,mine){const T=b2Ter();T.sp.push({k,n,o:mine?'me':ch(B2RV),r:1});if(T.sp.length>9)T.sp.splice(T.sp.findIndex(z=>z.o!=='me'),1)}
+const b2Cap=()=>1+(S.beastMode.st||0)+(b2().pk?Math.floor(b2().pk.mem.length/3):0);
+const b2Mine=()=>b2Ter().sp.filter(z=>z.o==='me');
+function openTerr(){if(!b2On())return;const T=b2Ter(),x=b2(),sea=b2Sea(),used=x.ta===S.age,cap=b2Cap(),mine=b2Mine().length;
+ const row=(z,i)=>{const P=B2SPOT[z.k],me=z.o==='me';return`<div class="item" style="${me?'border-color:var(--pink)':''}"><div class="h"><b>${P[0]} ${esc(z.n)}</b><span class="tag2">${me?'🐾 ของคุณ':z.sh?'👤 เงาผู้เล่น':''}</span></div><p class="tag2" style="margin:2px 0">${P[2]}${me?'':` · ครองโดย <b>${esc(z.o)}</b> (แรงราว ${Math.round(z.r*100)}% ของคุณ)`}</p>${!me?`<button class="sysb" ${used||mine>=cap?'disabled style="opacity:.45"':''} onclick="b2Claim(${i})">⚔️ ยึด</button>`:''}</div>`};
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🗺️ อาณาเขต</h3><p class="tag2">${B2SEA[sea][0]} <b>${B2SEA[sea][1]}</b> — ${B2SEA[sea][2]}<br>ครอง ${mine}/${cap} ถิ่น · เสบียง 🍖 ${x.food||0}/9 · ทำได้ปีละ 1 อย่าง${used?' (ปีนี้ทำแล้ว)':''}</p>
+ <div class="brow" style="margin:6px 0"><button class="gbtn" ${used?'disabled':''} onclick="b2Patrol()">🛡️ ตรวจตรา${x.pat===S.age?' ✔':''}</button><button class="gbtn" ${used||(!b2Has('wing')&&S.age-T.mv<5)?'disabled':''} onclick="b2Move()">🧳 ย้ายถิ่น</button></div>
+ ${T.sp.map(row).join('')}<p class="tag2">ถิ่นที่ครองให้ผลทุกปี แต่อาจถูกท้าชิง · ตรวจตราปีนี้ = ป้องกันแกร่งขึ้น 40% · ย้ายถิ่น = ทิ้งทุกถิ่น ไปเจอแผนที่ใหม่ (ทุก 5 ปี) · ถิ่นของผู้เล่นจริงจะมีป้าย 👤</p>`,'b2ter')}
+function b2Claim(i){const T=b2Ter(),z=T.sp[i],x=b2();if(!z||z.o==='me'||x.ta===S.age||b2Mine().length>=b2Cap())return;x.ta=S.age;closeM();
+ const w=fight(z.o,total()*z.r*(b2Has('horn')?.85:1));if(w){const o=z.o,sh=z.sh;z.o='me';delete z.sh;S.fame+=15;log(`🗺️ ไล่<b>${esc(o)}</b>ออกจาก${esc(z.n)}ได้ — ถิ่นนี้เป็นของคุณแล้ว`,'epic');if(sh)b2ShRes(sh,1)}
+ else{const d=Math.round(S.maxHp*.2);S.hp=Math.max(1,S.hp-d);z.r=+(z.r*1.05).toFixed(2);log(`🩸 ${esc(z.o)}ป้องกัน${esc(z.n)}ไว้ได้ — คุณถอยกลับมา · พลังชีวิต −${d}`,'bad');if(z.sh)b2ShRes(z.sh,0)}render()}
+function b2Patrol(){const x=b2();if(x.ta===S.age)return;x.ta=S.age;x.pat=S.age;log('🛡️ คุณเดินตรวจรอบถิ่น ทิ้งกลิ่นไว้ทุกต้นไม้ — ปีนี้ใครจะมาแย่งต้องคิดหนัก','good');openTerr()}
+function b2Move(){const x=b2(),T=b2Ter();if(x.ta===S.age)return;x.ta=S.age;const K=Object.keys(B2SPOT);T.sp=Array.from({length:7},()=>{const k=ch(K);return{k,n:B2SPOT[k][1],o:ch(B2RV),r:+(0.45+Math.random()*.6).toFixed(2)}});T.mv=S.age;log('🧳 คุณทิ้งถิ่นเก่า มุ่งหน้าสู่ป่าที่ไม่มีใครรู้จัก — เริ่มใหม่ทั้งหมด','epic');b2ShFetch();openTerr()}
+function b2TerYear(){const x=b2(),T=b2Ter(),sea=b2Sea(),mine=b2Mine();
+ mine.forEach(z=>{if(z.k==='water'){S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*(sea===1?.12:.06)))}if(z.k==='herd'){S.power+=b2G(.004);if(Math.random()<.5)x.food=Math.min(9,(x.food||0)+1)}if(z.k==='spring')S.qi=+(S.qi+(S.xian?2:.8)).toFixed(1);if(z.k==='herb'){if(Math.random()<.25)S.lifespan+=1;S.hp=Math.min(S.maxHp,S.hp+8)}if(z.k==='cliff')S.int+=1});
+ if(sea===3){if((x.food||0)>0){x.food--;}else{const d=Math.round(S.maxHp*.12);S.hp=Math.max(1,S.hp-d);addFeed('ev',`❄️ หนาวยาวและไม่มีเสบียง — หิวจนตัวสั่น · พลังชีวิต −${d}`,'sum')}}
+ if(!mine.length)return;const chP=(sea===0?.32:.16)*(b2Has('camo')?.6:1);if(Math.random()>chP)return;
+ const z=ch(mine),foe=Math.random()<.4&&x.pk&&x.pk.riv?x.pk.riv:ch(B2RV),def=(x.pat===S.age?1.4:1)*(b2Has('spine')?1.25:1)*(mine.some(q=>q.k==='cave')?1.1:1)*(x.pk?1+x.pk.mem.filter(q=>q.role==='guard').length*.08:1);
+ const w=fight(foe,total()*(0.6+Math.random()*.6)/def);if(w){S.fame+=8;addFeed('ev',`🛡️ <b>${esc(foe)}</b>มาท้าชิง${esc(z.n)} — ถูกไล่กลับไป`,'sum')}else{z.o=foe;z.r=+(0.8+Math.random()*.4).toFixed(2);if(!b2Has('wing'))S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.1));log(`💢 <b>${esc(foe)}</b>แย่ง${esc(z.n)}ไปได้ — ยึดคืนได้ที่ ☰ → 🗺️ อาณาเขต`,'bad')}}
+// ---------- 4) ฝูง ----------
+const B2PER={fierce:['ดุดัน','hunt'],wary:['ระวังภัย','guard'],gentle:['อ่อนโยน','teach'],curious:['ช่างสงสัย','scout'],ambit:['ทะเยอทะยาน','']};
+const B2ROLE={hunt:['🍖 ล่า','พลังยุทธ์และเสบียงของฝูง'],guard:['🛡️ เฝ้าถิ่น','ป้องกันถิ่น +8% ต่อตัว'],teach:['🍼 สอนลูก','ความสุข ลูกหลาน ปัญญา'],scout:['🔭 สอดแนม','บอกใบ้ท่าล่า · เตือนเจ้าป่า']};
+const B2MN=['เขี้ยวดำ','หูขาด','หางไฟ','ตาเดียว','ขนเงิน','เท้าเร็ว','จมูกไว','หมอกเช้า','ใบไม้','ก้อนหิน','ฟ้าร้อง','จันทร์เสี้ยว','น้ำค้าง','กรงเล็บ'];
+function b2Pk(){const x=b2();if(!x.pk)x.pk={mem:[],riv:null};return x.pk}
+function b2PkOn(){return b2On()&&S.beastMode.path==='pack'}
+function b2Recruit(){const P=b2Pk(),cap=3+(S.beastMode.st||0)*2;if(P.mem.length>=cap)return;const per=ch(Object.keys(B2PER)),n=ch(B2MN.filter(q=>!P.mem.some(z=>z.n===q)))||('ลูกฝูง'+R(1,99));
+ P.mem.push({n,per,loy:55+R(0,20),pw:+(0.3+Math.random()*.5).toFixed(2),role:B2PER[per][1]||'hunt'});addFeed('ev',`🐺 <b>${esc(n)}</b> (${B2PER[per][0]}) ขอเข้าร่วมฝูง`,'sum')}
+function openPack(){if(!b2On())return;const P=b2Pk(),cap=3+(S.beastMode.st||0)*2;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🐺 ฝูงของคุณ</h3><p class="tag2">สมาชิก ${P.mem.length}/${cap} · ให้งานตรงนิสัย ความภักดีจะขึ้น ผิดนิสัยจะลด · ภักดีต่ำอาจท้าชิงจ่าฝูงหรือแยกไปตั้งฝูงคู่แข่ง${P.riv?`<br>⚠️ ฝูงคู่แข่ง: <b>${esc(P.riv)}</b>`:''}</p>
+ ${P.mem.length?P.mem.map((z,i)=>`<div class="item"><div class="h"><b>🐺 ${esc(z.n)}</b><span class="tag2">${B2PER[z.per][0]} · แรง ${Math.round(z.pw*100)}%</span></div><div style="height:6px;border-radius:4px;background:var(--grid);margin:4px 0"><i style="display:block;height:100%;width:${z.loy}%;border-radius:4px;background:${z.loy<30?'#e05a5a':z.loy<60?'#e8a23a':'#4ac27a'}"></i></div><div class="tag2">ภักดี ${Math.round(z.loy)}</div><div class="mgrid" style="grid-template-columns:repeat(4,1fr);gap:4px;margin-top:4px">${Object.keys(B2ROLE).map(r=>`<button class="opt" style="padding:4px;font-size:11px;${z.role===r?'background:var(--pink)!important;color:#fff!important;font-weight:700':'background:var(--w)!important;color:var(--ink)!important;opacity:.75'}" onclick="b2Role(${i},'${r}')">${B2ROLE[r][0]}</button>`).join('')}</div></div>`).join(''):'<p class="tag2">ยังไม่มีลูกฝูง — เลือกจุดมุ่งหมาย 🐾 นำฝูง เพื่อรวบรวมสัตว์</p>'}
+ <p class="tag2">${Object.values(B2ROLE).map(r=>r[0]+' '+r[1]).join(' · ')}</p>`,'b2pack')}
+function b2Role(i,r){const z=b2Pk().mem[i];if(!z)return;z.role=r;openPack()}
+function b2PkYear(){const P=b2Pk();if(S.focus==='pack'&&Math.random()<.45)b2Recruit();if(!P.mem.length)return;const x=b2();let hp=0;
+ P.mem.forEach(z=>{const fit=B2PER[z.per][1];z.loy=clamp(z.loy+(fit===z.role?2:fit?-2:-1)+(S.happy>60?1:0)-(z.per==='ambit'?2:0),0,100);if(z.role==='hunt'){hp+=z.pw;if(Math.random()<.3)x.food=Math.min(9,(x.food||0)+1)}if(z.role==='teach'){joy(1);if(Math.random()<.15)S.int+=1}z.pw=+Math.min(1.3,z.pw+.01).toFixed(2)});
+ if(hp)S.power+=b2G(.002*hp);
+ const bad=P.mem.filter(z=>z.loy<25).sort((a,b)=>b.pw-a.pw)[0];if(!bad||Math.random()>.35)return;
+ if(bad.pw>.8||bad.per==='ambit')b2Q(()=>choice(`🐺 ${esc(bad.n)} ท้าชิงจ่าฝูง`,`<b>${esc(bad.n)}</b>ขู่คำรามต่อหน้าทั้งฝูง — มันต้องการตำแหน่งของคุณ`,[
+  {t:'⚔️ สั่งสอนต่อหน้าฝูง',s:'ชนะ ทั้งฝูงภักดีขึ้น · แพ้ มันพาลูกฝูงบางส่วนแยกไป',f(){const w=fight(bad.n,total()*bad.pw*1.1);if(w){P.mem.forEach(z=>z.loy=Math.min(100,z.loy+10));bad.loy=60;log(`🐺 คุณกดคอ${esc(bad.n)}ลงกับพื้น — ทั้งฝูงก้มหัว`,'epic')}else b2Split(bad)}},
+  {t:'🍖 แบ่งเหยื่อให้ ซื้อใจ',s:'เสบียง −2 · ภักดีมัน +30',f(){x.food=Math.max(0,(x.food||0)-2);bad.loy+=30;log(`🍖 คุณยกส่วนดีที่สุดของเหยื่อให้${esc(bad.n)} มันหยุดคำราม`,'')}},
+  {t:'🚪 ไล่ออกจากฝูง',s:'มันจะไปตั้งฝูงคู่แข่ง',f(){b2Split(bad,true)}}]));
+ else{P.mem.splice(P.mem.indexOf(bad),1);addFeed('ev',`🍂 <b>${esc(bad.n)}</b> หายไปจากฝูงกลางดึก ไม่มีใครเห็นมันอีก`,'sum')}}
+function b2Split(z,kick){const P=b2Pk();const tk=P.mem.filter(q=>q!==z&&q.loy<50).slice(0,2);P.mem=P.mem.filter(q=>q!==z&&!tk.includes(q));P.riv=`ฝูงของ${z.n}`;log(`💢 ${esc(z.n)}${kick?'ถูกไล่ออก':'ชนะ แต่ไม่ฆ่าคุณ'} — พาลูกฝูง ${tk.length} ตัวแยกไปตั้ง <b>${esc(P.riv)}</b> พวกมันจะกลับมาแย่งถิ่น`,'bad',true)}
+// ---------- 5) เงาสัตว์ของผู้เล่นจริงในอาณาเขต ----------
+function b2ShFetch(){try{if(!onlineOK||!b2On())return;const x=b2();if(x.shT&&Date.now()-x.shT<60000)return;x.shT=Date.now();
+ api('bsh',{n:S.name,sp:String(S.beastMode.sp||''),st:S.beastMode.st||0,p:Math.round(total()),x:S.xian?1:0,tp:typeof acTp==='function'?acTp():0}).then(j=>{if(!j||!b2On())return;
+  (j.notes||[]).forEach(q=>log(q.win?`👤 ผู้เล่น <b>${esc(q.n)}</b> บุกถิ่นเงาของคุณ — ไล่ยึดไปได้ระหว่างที่คุณไม่อยู่`:`👤 ผู้เล่น <b>${esc(q.n)}</b> บุกถิ่นเงาของคุณ — แต่เงาของคุณป้องกันไว้ได้ · ชื่อเสียง +10`,q.win?'bad':'epic'));(j.notes||[]).forEach(q=>{if(!q.win)S.fame+=10});
+  const o=j.o;if(!o)return;const T=b2Ter();T.sp.forEach(z=>{if(z.sh&&z.o!=='me'){z.o=ch(B2RV);delete z.sh}});const z=T.sp.find(q=>q.o!=='me');if(!z)return;
+  z.o=`เงาของ ${o.n}${o.sp?' ('+o.sp+')':''}`;z.sh=o.k;z.r=+Math.max(.5,Math.min(1.6,(o.p||1)/Math.max(1,total()))).toFixed(2)}).catch(()=>{})}catch(e){}}
+function b2ShRes(k,win){try{api('bshres',{to:k,win:win?1:0,n:S.name,x:S.xian?1:0}).catch(()=>{})}catch(e){}}
+// ---------- 5) อสูรร้ายประจำสัปดาห์ ----------
+const B2WB=['ราชาอสูรเก้าหาง','มังกรดำกลืนจันทร์','พญาวานรหินผา','อินทรีเพลิงพันปี','ราชันหมาป่าเงา','เต่าดำแบกภูเขา','วาฬฟ้าพายุ'];
+function b2WbName(){const w=Math.floor((Date.now()+7*3600e3-4*864e5)/(7*864e5));return B2WB[w%B2WB.length]}
+async function openWBoss(){if(!b2On())return;const x=b2();let j=null;try{j=await api('wboss',{})}catch(e){}
+ const cd=x.wbY!=null&&S.age-x.wbY<5,HP=50000,dealt=j?Math.min(HP,+j.tot||0):0;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👹 อสูรร้ายประจำสัปดาห์</h3><p><b>${b2WbName()}</b> ออกอาละวาดทุกป่า — สัตว์อสูรของผู้เล่นทุกคนช่วยกันล้ม</p>
+ <div style="height:12px;border:2px solid var(--line);border-radius:6px;overflow:hidden;margin:6px 0"><i style="display:block;height:100%;width:${Math.max(0,100-dealt/HP*100)}%;background:#d84a4a"></i></div><p class="tag2">พลังชีวิตที่เหลือ ${fmt(Math.max(0,HP-dealt))}/${fmt(HP)}${dealt>=HP?' · 💀 ล้มแล้วสัปดาห์นี้! ยังตีเก็บแต้มได้':''} · รีเซ็ตทุกวันจันทร์ ${typeof arResetTxt==='function'?'('+arResetTxt()+')':''}</p>
+ ${j?`<p class="tag2">ดาเมจของคุณสัปดาห์นี้: <b>${fmt(+j.mine||0)}</b>${j.rk!=null?` · อันดับ ${j.rk+1}`:''}</p>${(j.top||[]).map((r,i)=>`<div class="tag2">${i+1}. ${esc(r[0])} — ${fmt(+r[1])}</div>`).join('')}`:'<p class="tag2">เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ — ลองใหม่ภายหลัง</p>'}
+ <button class="pbtn" style="width:100%;margin-top:8px" ${cd||!j?'disabled':''} onclick="b2WbGo()">⚔️ เข้าโจมตี${cd?` (อีก ${5-(S.age-x.wbY)} ปี)`:''}</button><p class="tag2">โจมตีได้ทุก 5 ปีในเกม · อ่านท่า 3 ยก ยิ่งอ่านถูกยิ่งแรง · ได้พลังและชื่อเสียงตามดาเมจ</p>`,'b2wb')}
+function b2WbGo(){const x=b2();if(x.wbY!=null&&S.age-x.wbY<5)return;x.wbY=S.age;closeM();const nm=b2WbName();
+ b2Read(`👹 ${nm}`,`ผู้เล่นหลายสิบตัวรุมอยู่รอบร่างยักษ์ — หาจังหวะของคุณ<br><span class="tag2">ย่อตัว→หลบข้าง · ตะกุยดิน→ตั้งหลัก · เดินวน→ชิงกัดก่อน</span>`,3,sc=>{
+  const d=Math.round(Math.min(2000,(20+18*Math.log10(Math.max(10,total())))*(1+(S.beastMode.st||0)*.25)*(.5+sc*.5)*(.85+Math.random()*.3)));
+  const g=b2G(.01+sc*.008);S.power+=g;S.fame+=Math.round(d/10);log(`👹 อ่านถูก ${sc}/3 — ฝากแผลไว้บน<b>${nm}</b> ${fmt(d)} ดาเมจ · พลังยุทธ์ +${fmt(g)} · ชื่อเสียง +${Math.round(d/10)}`,'epic',true);
+  api('wboss',{d,n:S.name,tp:typeof acTp==='function'?acTp():0}).then(()=>{}).catch(()=>{});render()})}
+// ---------- ผูกเข้ากับปีของสัตว์ ----------
+{const _byX=beastYear;beastYear=function(){if(!b2On())return _byX.apply(this,arguments);const x=b2(),f=S.focus,p0=S.power,q0=S.qi,i0=S.int;b2Sea();const r=_byX.apply(this,arguments);
+ try{if(!b2On())return r;const dp=S.power-p0,dq=S.qi-q0,di=S.int-i0;
+  if(f==='hunt'&&dp>0)S.power=p0+Math.round(dp*b2HuntMul('',x.sea));
+  let qm=1;if(f==='moon'&&b2Has('moon'))qm*=1.3;if(b2Has('eye'))qm*=1.1;if(b2Has('hide'))qm*=.9;if(dq>0&&qm!==1)S.qi=+(q0+dq*qm).toFixed(1);
+  if(di>0&&b2Has('horn'))S.int=i0+Math.round(di*.8);if(f==='hunt'&&b2Has('fang'))S.karma=(S.karma||0)-1;
+  b2TerYear();if(b2PkOn()||x.pk&&x.pk.mem.length)b2PkYear();if(S.age%3===0)b2ShFetch();
+  if(x.evn<S.beastMode.st)b2Evo();
+  if(!auto&&S.age>=3){if(f==='hunt'&&Math.random()<.45)b2Q(b2Hunt);else if((S.beastMode.st||0)>=2&&S.age-(x.big||0)>=8&&Math.random()<.18){if(x.pk&&x.pk.mem.some(z=>z.role==='scout'))addFeed('ev','🔭 ลูกฝูงที่สอดแนมกลับมารายงาน — เจ้าป่าถิ่นข้างเคียงกำลังมา!','sum');b2Q(b2Big)}}
+ }catch(e){console.error(e)}return r}}
+// ---------- สืบทอดถึงลูก ----------
+{const _bhX=bHeir;bHeir=function(){const x0=b2On()&&S.beastMode.x2?JSON.parse(JSON.stringify(S.beastMode.x2)):null;const r=_bhX.apply(this,arguments);
+ try{if(x0&&b2On()){const x=b2();x.ter=x0.ter;if(x0.pk){x.pk=x0.pk;x.pk.mem.forEach(z=>z.loy=Math.round(z.loy*.7))}x.food=x0.food||0;x.evn=S.beastMode.st||0;
+  if(x0.tr&&x0.tr.length&&Math.random()<.7){const k=ch(x0.tr);setTimeout(()=>{try{b2TrGive(k,'สายเลือดพ่อแม่ตื่นขึ้น')}catch(e){}},900)}
+  if(x.ter)setTimeout(()=>{try{log('🗺️ คุณสืบทอดอาณาเขตของพ่อแม่ — แต่สัตว์ถิ่นอื่นรู้ว่าเจ้าของใหม่ยังเด็ก','epic')}catch(e){}},1200)}}catch(e){console.error(e)}return r}}
+// ---------- เมนู · ป้ายหัวจอ ----------
+{const _omX=openMenu;openMenu=function(){const r=_omX.apply(this,arguments);try{if(b2On()){const g=$('modal').querySelector('.mcat15 .mgrid')||$('modal').querySelector('.mgrid');if(g&&!g.querySelector('[data-b2]')){const x=b2();
+ g.insertAdjacentHTML('afterbegin',`<button class="opt" data-b2="1" onclick="openTerr()">🗺️ อาณาเขต<small>${B2SEA[b2Sea()][0]} ${B2SEA[b2Sea()][1]} · ครอง ${b2Mine().length} ถิ่น</small></button><button class="opt" data-b2="1" onclick="openB2Evo()">🧬 วิวัฒนาการ<small>${x.tr.length?x.tr.map(k=>B2TR[k][0]).join(' '):'ยังไม่มี'}</small></button>${b2PkOn()||(x.pk&&x.pk.mem.length)?`<button class="opt" data-b2="1" onclick="openPack()">🐺 ฝูง<small>${b2Pk().mem.length} ตัว</small></button>`:''}<button class="opt" data-b2="1" onclick="openWBoss()">👹 อสูรร้ายประจำสัปดาห์<small>${b2WbName()}</small></button>`)}}}catch(e){console.error(e)}return r}}
+function openB2Evo(){if(!b2On())return;const x=b2();modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🧬 วิวัฒนาการ</h3><p class="tag2">ทุกครั้งที่ขึ้นขั้น เลือก 1 ลักษณะจาก 3 · ลูกมีโอกาส 70% ได้ลักษณะหนึ่งของพ่อแม่</p>${x.tr.length?x.tr.map(k=>`<div class="item"><b>${B2TR[k][0]} ${B2TR[k][1]}</b><p class="tag2">${B2TR[k][2]} · ⚠️ ${B2TR[k][3]}</p></div>`).join(''):'<p class="tag2">ยังไม่มี — ขึ้นขั้นถัดไปจะได้เลือก</p>'}`,'b2evo')}
+{const _rdX=render;render=function(){const r=_rdX.apply(this,arguments);try{if(b2On()){const el=$('gRealm');if(el&&!el.querySelector('.b2b')){const x=b2();el.insertAdjacentHTML('beforeend',` <span class="b2b" onclick="event.stopPropagation();openTerr()" style="cursor:pointer;border:1px solid currentColor;border-radius:8px;padding:0 6px;font-size:11px;white-space:nowrap">${B2SEA[b2Sea()][0]} ${B2SEA[b2Sea()][1]} · 🗺️${b2Mine().length} · 🍖${x.food||0}</span>`)}}}catch(e){}return r}}
+try{GD2.push({s:'beast',ic:'🗺️',t:'สัตว์อสูร 2.0',nw:1,d:'<b>🍖 ล่าแบบอ่านท่า</b> เหยื่อมีนิสัย เลือกซุ่ม/ไล่ต้อน/ล่อเข้ากับดักให้ถูก · <b>👑 เจ้าป่า</b> บุกมาทุกช่วง อ่านท่า 3 ยก · <b>🗺️ อาณาเขต</b> ยึด/ตรวจตรา/ย้ายถิ่น แต่ละถิ่นให้ผลต่างกัน ถูกท้าชิงได้ · <b>ฤดูกาล</b> ผสมพันธุ์ แล้ง อุดม หนาวยาว (ต้องมีเสบียง) · <b>🧬 วิวัฒนาการ</b> ขึ้นขั้นเลือกลักษณะ 1 ใน 3 ได้อย่างเสียอย่าง ตกทอดถึงลูก · <b>🐺 ฝูง</b> (สายจ่าฝูง) มอบหมายงาน ความภักดี ท้าชิงจ่าฝูง ฝูงคู่แข่ง · <b>👤 เงาผู้เล่นจริง</b> ครองถิ่นในแผนที่ · <b>👹 อสูรร้ายประจำสัปดาห์</b> ทุกคนช่วยกันตี มีอันดับ'})}catch(e){}
 </script>
 </body>
 </html>
