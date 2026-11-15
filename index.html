@@ -26847,6 +26847,14 @@ const PX={
  crack:['...s....','..sSs...','..sks...','..skkS..','...sks..','..sSks..','.sSks...','..sss...'],
  lair:['........','.kkkkkk.','kkrkkrkk','kkkkkkkk','.kwkkwk.','..kkkk..','........','........'],
  ice:['....U...','...UwU..','..UwUwU.','.UwUUUwU','..UwUwU.','...UwU..','....U...','........'],
+ ghost:['..kkkk..','.kdkkdk.','kkrkkrkk','.kkkkkk.','..kbbk..','.k.bb.k.','...bb...','..bbbb..'],
+ pit:['........','........','bBBBBBBb','bkkkkkkb','bkwkkwkb','bkkkkkkb','.bkkkkb.','........'],
+ mud:['........','..o.....','.bBoBb..','bBBBBBBb','BbobBBoB','.bBBBBb.','........','........'],
+ camp:['...r....','...rr...','...k....','..oBo...','.oBBBo..','oBkkkBo.','oBkkkBo.','yy.yy.yy'],
+ fruit:['..GgG...','.GgGgG..','GgrGgrG.','.GgGrGg.','..GgG...','...b....','...b....','..bbb...'],
+ hive:['...b....','..yYy...','.yYkYy..','.YyYyY..','.yYkYy..','..yYy...','...y....','........'],
+ mush:['........','..rrrr..','.rwrrwr.','rrrrrrrr','...ww...','...ww...','..wwww..','........'],
+ bamb:['.G..G.G.','.g..g.g.','.gG.g.g.','.g..gGg.','.g..g.g.','.gG.g.g.','.g..g.g.','.g..g.g.'],
  exit:['........','..gggg..','.g....g.','.g.yy.g.','.g.yy.g.','.g....g.','.gggggg.','........']};
 const hx=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)],sh=(h,f)=>{const c=hx(h).map(v=>Math.max(0,Math.min(255,Math.round(f>1?v+(255-v)*(f-1):v*f))));return`rgb(${c})`};
 // สไปรต์: ขยาย 2 เท่า + เส้นขอบดำ + ไฮไลต์ขอบบน/เงาขอบล่าง + เงาพื้น (สไตล์เดียวกับตัวละครในเกม)
@@ -26858,13 +26866,16 @@ const cvs={};function icon(t){if(cvs[t])return cvs[t];const P=PX[t]||PX.herb,W=2
   if(!on(x,y+1)){g.fillStyle=sh(b,.62);g.fillRect(X0,Y0+1,2,1)}else if(!on(x+1,y)){g.fillStyle=sh(b,.8);g.fillRect(X0+1,Y0,1,2)}}
  return cvs[t]=c.toDataURL()}
 // ฉากหลังพิกเซล: สุ่มใหม่ทุกทริป (ป่า = หญ้า ต้นไม้ ทางเดิน · ถ้ำ = หิน หินย้อย แอ่งน้ำ)
-function scene(area,seed){let q=seed>>>0||1;const r=()=>{q=(q+0x6D2B79F5)>>>0;let t=q;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296};const W=96,H=64,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d'),p=(x,y,col)=>{g.fillStyle=col;g.fillRect(x|0,y|0,1,1)};
- if(area!=='cave'){g.fillStyle='#2c5a2e';g.fillRect(0,0,W,H);for(let i=0;i<700;i++)p(r()*W,r()*H,pk2(r,['#346a35','#285028','#3d7a3a','#244a26']));
+function scene(area,seed,kind){let q=seed>>>0||1;const r=()=>{q=(q+0x6D2B79F5)>>>0;let t=q;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296};const W=96,H=64,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d'),p=(x,y,col)=>{g.fillStyle=col;g.fillRect(x|0,y|0,1,1)};
+ if(area!=='cave'){const K={forest:['#2c5a2e',['#346a35','#285028','#3d7a3a','#244a26']],bamboo:['#4a7a3a',['#5a8a44','#426e34','#68984c','#3c6430']],swamp:['#2e3e26',['#3a4a2a','#26341e','#444a2a','#30402a']],peak:['#4a5a44',['#5a6650','#3e4a3a','#6a7060','#52604a']]}[kind]||[];g.fillStyle=K[0]||'#2c5a2e';g.fillRect(0,0,W,H);for(let i=0;i<700;i++)p(r()*W,r()*H,pk2(r,K[1]||['#346a35']));
+  if(kind==='swamp')for(let i=0;i<7;i++){const a=r()*W,b=r()*H,w=6+r()*10;for(let j=0;j<w;j++)for(let k=0;k<3;k++)p(a+j,b+k,k?'#1e2a1a':'#3a4a3a')}
+  if(kind==='peak')for(let i=0;i<9;i++){const a=r()*W,b=r()*H;for(let j=0;j<5;j++)for(let k=0;k<3;k++)if(j+k<6)p(a+j,b+k,k?'#6a6a70':'#9a9aa0')}
   let x=r()*W,y=0;for(let i=0;i<H*2;i++){y+=.5;x+=(r()-.5)*1.4;for(let k=-1;k<=1;k++)p(x+k,y,i%5?'#7a6440':'#8a7450')}
   for(let i=0;i<40;i++){const a=r()*W,b=r()*H;p(a,b,'#7fd06a');p(a+1,b-1,'#6fc25a')}
   for(let i=0;i<6;i++){const a=r()*W,b=r()*H;p(a,b,pk2(r,['#f2c94c','#e88aa8','#ffffff']))}
   const tree=(tx,ty,s)=>{for(let k=0;k<s;k++)for(let j=-k;j<=k;j++)p(tx+j,ty+k,j<0?'#1f4a24':j===-k||j===k?'#163a1a':'#2f6a32');for(let k=0;k<s;k++)for(let j=-k+1;j<=k-1;j++)if((j+k)%3===0)p(tx+j,ty+k+s-2,'#3f8a3a');p(tx,ty+s*2-2,'#5a3a20');p(tx,ty+s*2-1,'#5a3a20')};
-  for(let i=0;i<11;i++){const ex=r()<.5;tree(ex?(r()<.5?r()*14:W-r()*14):r()*W,ex?r()*H-6:(r()<.5?-4+r()*6:H-14),4+(r()*3|0))}}
+  if(kind==='bamboo'){for(let i=0;i<22;i++){const a=r()<.5?r()*16:W-r()*16,h=12+r()*20;for(let k=0;k<h;k++)p(a,H-k,k%6?'#7ab84a':'#4a7a2a');p(a+1,H-h+2,'#9ad06a')}}
+  else for(let i=0;i<11;i++){const ex=r()<.5;tree(ex?(r()<.5?r()*14:W-r()*14):r()*W,ex?r()*H-6:(r()<.5?-4+r()*6:H-14),4+(r()*3|0))}}
  else{g.fillStyle='#1c1820';g.fillRect(0,0,W,H);for(let i=0;i<900;i++)p(r()*W,r()*H,pk2(r,['#241f2a','#2c2632','#18141c','#332c3a']));
   for(let i=0;i<14;i++){const a=r()*W,l=3+r()*7;for(let k=0;k<l;k++)for(let j=0;j<Math.max(1,(l-k)/2.5);j++)p(a+j,k,k>l-2?'#5a5262':'#3e3646')}
   for(let i=0;i<10;i++){const a=r()*W,b=H-r()*5;for(let k=0;k<3+r()*4;k++)p(a,b-k,'#3e3646')}
@@ -26910,8 +26921,37 @@ const FN={
   {t:'เก็บเร็วๆ',s:'ได้แน่',f(){take(loot(0));return'เก็บใส่ย่ามได้กำใหญ่'}},
   {t:'เลือกต้นที่ดีที่สุด',s:`เสียเวลา 1 · ${S.job&&S.job.t==='doc'?'หมอดูออก (ดีขึ้น)':'ลุ้นของหายาก'}`,f(){X.time++;const p=S.job&&S.job.t==='doc'?.75:.4;if(Math.random()<p){take(loot(1));if(!F().del&&Math.random()<.4){F().del={until:S.age+2,n:anyName(Math.random()<.5?'ชาย':'หญิง')};return`ได้ของหายาก และรู้ว่า <b>${E(F().del.n)}</b> ในเมืองกำลังป่วยหนัก ต้องใช้ต้นนี้ภายใน 2 ปี (ส่งยาได้ที่หน้าป่าและถ้ำ)`}return'ได้ต้นที่ดีที่สุดในดง'}take(loot(0));return'แยกไม่ออก ได้ของธรรมดา'}}]}),
  cliff:n=>({h:'🪨 หน้าผา',d:'กลางหน้าผามีดอกไม้สีม่วงขึ้นอยู่ดอกเดียว',o:[
-  {t:'ปีนลงไปเก็บ',s:'เสี่ยงตก',f(){if(Math.random()<Math.min(.8,.45+(S.agi||S.int||0)/600)){take(loot(1+(Math.random()<.3?1:0)));return'คุณเก็บดอกไม้มาได้ หัวใจยังเต้นแรง'}hurt(.3);return'หินที่เหยียบหลุด คุณร่วงลงไปกระแทก'}},
+  {t:'ปีนลงไปเก็บ',s:X&&X.rope?'มีเชือกไผ่ (ปลอดภัยขึ้น)':'เสี่ยงตก',f(){if(Math.random()<Math.min(.92,.45+(X.rope?.3:0)+(S.agi||S.int||0)/600)){take(loot(1+(Math.random()<.3?1:0)));return'คุณเก็บดอกไม้มาได้ หัวใจยังเต้นแรง'}hurt(.3);return'หินที่เหยียบหลุด คุณร่วงลงไปกระแทก'}},
   {t:'ไม่เสี่ยง',s:'',f(){return'คุณมองดอกไม้นั้นแล้วเดินจากไป'}}]}),
+ ghost:n=>({h:'🌳 ต้นไม้ผีสิง',d:'ต้นไม้แก่บิดเบี้ยว ลำต้นมีรอยคล้ายใบหน้า ได้ยินเสียงกระซิบเรียกชื่อคุณ',o:[
+  {t:'นั่งฟังเสียงกระซิบ',s:'เสียเวลา 1 · ลุ้นปัญญา',f(){X.time++;if(Math.random()<.55){S.int=(S.int||0)+rn(2,5);return'เสียงนั้นเล่าเรื่องคนที่ตายในป่านี้ คุณเข้าใจบางอย่างมากขึ้น (ปัญญา +)'}joy(-8);return'เสียงนั้นพูดถึงความกลัวที่ลึกที่สุดของคุณ'}},
+  {t:'ตัดกิ่งเอาไปทำยา',s:'ของดี · กรรม −',f(){S.karma-=4;take(loot(1));if(Math.random()<.35){hurt(.15);return'ได้กิ่งมา แต่รากไม้กระชากขาคุณจนล้ม'}return'กิ่งไม้มียางสีดำ กลิ่นแรงแต่เป็นยาดี'}},
+  {t:'ผูกผ้าแดงแล้วไป',s:'กรรม +',f(){S.karma+=3;if(Math.random()<.25){addNode('shrine',2);return'ลมพัดผ้าแดงชี้ไปทางหนึ่ง — <b>ศาลลับปรากฏ</b>'}return'เสียงกระซิบเงียบลง'}}]}),
+ pit:n=>({h:'🕳️ หลุมพราน',d:'หลุมพรางที่พรานขุดไว้ ข้างล่างมีลูกสัตว์วิญญาณติดอยู่ ร้องเรียกแม่',o:[
+  {t:'ช่วยมันขึ้นมา',s:'กรรม + · ลุ้นของ',f(){S.karma+=5;if(Math.random()<.3){take(loot(2));return'แม่ของมันวางของบางอย่างไว้ที่ปากหลุมก่อนพาลูกจากไป'}return'ลูกสัตว์วิ่งกลับเข้าป่า'}},
+  {t:'เอาของในหลุมพราน',s:'ได้ของ · พรานอาจกลับมา',f(){take(loot(1));if(Math.random()<.4)return fightIn('พรานป่า',.8,()=>{take(loot(0));return'พรานพ่ายแพ้ ทิ้งย่ามไว้'},'พรานไล่คุณออกไป');return'คุณหยิบเหยื่อล่อและกับดักมาขาย'}},
+  {t:'ระวังหลุมอื่นที่ซ่อน',s:'เสียเวลา 1 · คืนนี้ปลอดภัยขึ้น',f(){X.time++;X.hide=1;return'คุณจำตำแหน่งหลุมทั้งหมดไว้ ถ้าค้างคืนจะปลอดภัยกว่า'}}]}),
+ mud:n=>({h:'🟤 บ่อโคลน',d:'โคลนสีดำมีฟองผุดเป็นระยะ ตำราว่าใต้บ่อแบบนี้มีของจมอยู่',o:[
+  {t:'งมหา',s:'ลุ้นของพิเศษ / ถูกดูด',f(){if(Math.random()<.35){take(loot(2));return'มือคุณเจอกล่องไม้หุ้มโคลน ข้างในยังแห้ง'}hurt(.22);X.time++;return'โคลนดูดคุณลงจนต้องดิ้นขึ้นมา — <b>เสียเวลา 1</b>'}},
+  {t:'ตักโคลนยา',s:'ได้แน่',f(){take(loot(0));return'โคลนนี้ใช้พอกแผลได้ดี'}}]}),
+ camp:n=>({h:'⛺ ค่ายโจร',d:'กองไฟยังไม่ดับ โจรสามคนหลับอยู่ ข้างเต็นท์มีหีบที่ปล้นมา',o:[
+  {t:'ย่องขโมยหีบ',s:`ไหวพริบ ${S.int||0}`,f(){if(Math.random()<.4+(S.int||0)/700){take(loot(1));take(loot(1));return'คุณยกหีบออกมาได้ทั้งใบ'}return fightIn('หัวหน้าโจร',.95,()=>{take(loot(1));return'โจรตื่นแต่สู้คุณไม่ได้'},'โจรรุมคุณจนต้องหนี')}},
+  {t:'บุกค่าย',s:'ดวล · กรรม + · ของดี',f(){return fightIn('หัวหน้าโจร',1.1,()=>{S.karma+=6;S.fame=(S.fame||0)+15;take(loot(2));take(loot(1));return'ค่ายโจรแตก ชาวบ้านจะได้ยินเรื่องนี้'},'โจรมากเกินไป คุณถอยหนี')}},
+  {t:'เลี่ยงไป',s:'',f(){return'คุณอ้อมค่ายไปเงียบๆ'}}]}),
+ fruit:n=>({h:'🍎 ต้นผลไม้หายาก',d:'ผลสีแดงส่องแสง มีฝูงลิงขาวนั่งเฝ้าอยู่บนกิ่ง',o:[
+  {t:'ปีนเก็บเลย',s:'ลิงอาจขว้างหิน',f(){if(Math.random()<.45)hurt(.15);take(loot(Math.random()<.3?2:1));return'คุณได้ผลไม้มา ลิงส่งเสียงด่าตามหลัง'}},
+  {t:'นั่งรอจนลิงไว้ใจ',s:'เสียเวลา 2 · ได้แน่',f(){X.time+=2;take(loot(1));if(Math.random()<.4){take(loot(2));return'ลิงจ่าฝูงหย่อนผลที่ดีที่สุดให้คุณเอง'}return'ลิงยอมให้คุณเก็บผลที่ร่วงอยู่'}}]}),
+ hive:n=>({h:'🐝 รังผึ้งป่า',d:'รังผึ้งขนาดเท่าตุ่มน้ำ น้ำผึ้งไหลเยิ้มลงตามกิ่ง',o:[
+  {t:'รมควันก่อนเก็บ',s:'เสียเวลา 1 · ปลอดภัย',f(){X.time++;S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.15));take(loot(1));return'ผึ้งมึนควัน คุณได้รวงผึ้งและกินน้ำผึ้งจนสดชื่น'}},
+  {t:'ตีรังเลย',s:'โดนต่อย',f(){hurt(.18);take(loot(1));return'ได้รวงผึ้งมาพร้อมตัวที่บวมไปครึ่งซีก'}}]}),
+ mush:n=>({h:'🍄 วงเห็ด',d:'เห็ดสีแดงขึ้นเป็นวงกลมสมบูรณ์ ตรงกลางวงหญ้าไม่ขึ้นเลย',o:[
+  {t:'ชิมดู',s:'ลุ้น',f(){const r=Math.random();if(r<.35){S.qi=+((S.qi||0)+.4).toFixed(1);return'ลมปราณพลุ่งพล่าน (ลมปราณ +)'}if(r<.6){addNode('moon',2);return'ภาพตรงหน้าบิดเบี้ยว คุณเห็นแสงจันทร์ส่องดอกไม้ที่ยังไม่บาน — <b>รู้ตำแหน่งดอกจันทร์ราตรี</b>'}hurt(.2);return'พิษเห็ดทำให้คุณอาเจียนจนหมดแรง'}},
+  {t:'เก็บไปขาย',s:'ได้เงิน',f(){const g=money(.4);take({t:0,x:`💰 ${mtxt(g)}`,f(){S.money+=g}});return'พ่อค้ายาในเมืองรับซื้อเห็ดแบบนี้'}},
+  {t:'ก้าวเข้ากลางวง',s:'ลุ้นมิติแปลก',f(){if(Math.random()<.3){take(loot(2));return'ชั่วพริบตาคุณอยู่ในทุ่งที่ไม่มีอยู่จริง แล้วกลับมาพร้อมของในมือ'}X.time+=2;return'คุณหลงอยู่ในวงนั้นนานกว่าที่คิด — <b>เสียเวลา 2</b>'}}]}),
+ bamb:n=>({h:'🎋 ดงไผ่',d:'ไผ่สูงเสียดฟ้า ลมพัดเสียดกันเป็นเสียงขลุ่ย',o:[
+  {t:'ตัดไผ่ทำเชือกและไม้ค้ำ',s:'ปีนหน้าผาปลอดภัยขึ้น',f(){X.rope=1;return'คุณได้เชือกไผ่ ถ้าเจอหน้าผาจะปีนง่ายขึ้นมาก'}},
+  {t:'ฟังเสียงลม',s:'เสียเวลา 1 · ลุ้นทางลับ',f(){X.time++;if(Math.random()<.5){addNode(pk(['shrine','herb','fruit']),2);return'เสียงลมเปลี่ยนโทนตรงจุดหนึ่ง มีทางลับซ่อนอยู่ — <b>จุดใหม่ปรากฏ</b>'}return'แค่เสียงลม'}},
+  {t:'ขุดหน่อไผ่วิญญาณ',s:'ได้ของ',f(){take(loot(Math.random()<.25?1:0));return'หน่อไผ่อ่อนมีปราณเจือจาง'}}]}),
  moon:n=>({h:'🌙 ดอกจันทร์ราตรี',d:'ดอกไม้ที่บานเฉพาะใต้แสงจันทร์ ว่ากันว่าเป็นยาอายุวัฒนะ',o:[
   {t:'เก็บ',s:'ของพิเศษ',f(){take(loot(2));return'คุณเก็บดอกไม้ที่ส่องแสงนั้นใส่กล่องหยก'}}]}),
  lair:n=>({h:'🐺 รังอสูร',d:'กลิ่นสาบรุนแรง กระดูกกองอยู่หน้าปากโพรง และมีบางอย่างส่องประกายอยู่ข้างใน',o:[
@@ -26920,6 +26960,10 @@ const FN={
   {t:'ถอย',s:'',f(){return'คุณไม่อยากตายวันนี้'}}]}),
  rival:n=>rivalEv()};
 // ---------- ถ้ำ 4 แบบ ----------
+const FORESTS={forest:{n:'🌲 ป่าลึก',set:['stream','carcass','nest','tracks','mist','herb','cliff','shrine','ghost','pit','hive','mush','fruit','camp']},
+ bamboo:{n:'🎋 ป่าไผ่',set:['bamb','bamb','stream','herb','mist','shrine','camp','pit','mush','tracks','hive']},
+ swamp:{n:'🐸 ป่าพรุ',set:['mud','mud','mist','herb','carcass','ghost','mush','pit','stream','nest']},
+ peak:{n:'⛰️ ป่าบนเขา',set:['cliff','cliff','nest','shrine','fruit','tracks','herb','camp','hive','stream','ghost']}};
 const CAVES={dark:{n:'🕳️ ถ้ำมืด',set:['chest','trap','bones','crack','pool','lair']},ice:{n:'🧊 ถ้ำน้ำแข็ง',set:['ice','chest','crack','pool','bones'],cold:1},sink:{n:'⬇️ ถ้ำหลุมยุบ',set:['crack','trap','chest','bones','pool'],fall:1},temple:{n:'🏛️ ศาสนสถานร้างใต้ดิน',set:['idol','trap','chest','bones','idol'],holy:1}};
 const CN={
  chest:n=>({h:'🧰 หีบเก่า',d:'หีบไม้ขึ้นราวางอยู่ในซอก ฝามีกลไกบางอย่าง',o:[
@@ -26954,30 +26998,35 @@ function rivalEv(){const f=F();if(!f.riv)f.riv={n:anyName(Math.random()<.6?'ช�
 // ---------- สถานะทริป ----------
 let X=null;
 function take(l){if(l)X.loot.push(l)}
-function addNode(t,lv){const used=X.nodes.map(n=>[n.x,n.y]);let x,y,k=0;do{x=rn(12,88);y=rn(14,82);k++}while(k<30&&used.some(([a,b])=>Math.abs(a-x)<17&&Math.abs(b-y)<17));X.nodes.push({t,x,y,lv:lv||1,done:0,nw:1})}
+// วางจุดบนตาราง 5×3 ช่อง (ขยับสุ่มเล็กน้อย) → ชื่อไม่ทับกัน · ช่องเต็มแล้วค่อยหาที่ว่างที่ไกลจากจุดอื่นมากที่สุด
+const GX=[11,30,50,70,89],GY=[17,48,79];
+function addNode(t,lv){X.cells=X.cells||{};const free=[];GX.forEach((gx,i)=>GY.forEach((gy,j)=>{if(!X.cells[i+'_'+j])free.push([i,j])}));let x,y;
+ if(free.length){const[i,j]=free[Math.floor(Math.random()*free.length)];X.cells[i+'_'+j]=1;x=GX[i]+rn(-4,4);y=GY[j]+rn(-5,5)}
+ else{let best=null,bd=-1;for(let k=0;k<40;k++){const a=rn(10,90),b=rn(14,84),d=Math.min(...X.nodes.map(n=>Math.hypot((n.x-a)*1.4,n.y-b)));if(d>bd){bd=d;best=[a,b]}}[x,y]=best}
+ X.nodes.push({t,x,y,lv:lv||1,done:0,nw:1})}
 function bumpAll(t,d){X.nodes.forEach(n=>{if(n.t===t)n.lv+=d})}
 function fightIn(nm,mult,win,lose,onLose){X.busy=1;const ep=Math.round(pow()*mult*(X.curse&&X.night?1.25:1));
  duel(nm,ep,w=>{X.busy=0;let msg;if(w)msg=win();else{hurt(.25);if(onLose)onLose();msg=lose}setTimeout(()=>draw(msg),300)});return null}
 function start(area,kind){const f=F();f.n++;f.trips++;
- const cave=area==='cave';kind=cave?kind:'forest';X={area,kind,time:0,max:8,night:0,loot:[],nodes:[],was:paused,camp:0,bg:scene(area,(Math.random()*4e9)|0)};paused=true;
- const set=cave?CAVES[kind].set:['stream','carcass','nest','tracks','mist','herb','cliff','shrine'];
- const n=cave?6:rn(6,7);const pool=set.slice().sort(()=>Math.random()-.5);for(let i=0;i<n;i++)addNode(pool[i%pool.length],1);X.nodes.forEach(m=>m.nw=0);
+ const cave=area==='cave';kind=cave?kind:(FORESTS[kind]?kind:'forest');X={area,kind,time:0,max:8,night:0,loot:[],nodes:[],was:paused,camp:0,bg:scene(area,(Math.random()*4e9)|0,kind)};paused=true;
+ const set=cave?CAVES[kind].set:FORESTS[kind].set;
+ const n=cave?6:rn(6,7);const pool=[...new Set(set)].sort(()=>Math.random()-.5);for(let i=0;i<n;i++)addNode(pool[i%pool.length],1);X.nodes.forEach(m=>m.nw=0);
  if(Math.random()<.35||(f.riv&&f.riv.att&&Math.random()<.7))addNode('rival',1);
  if(cave&&f.mark===kind){addNode('chest',2);X.nodes[X.nodes.length-1].sp=1;f.mark=null;log('🗺️ รอยสลักที่ลอกมานำคุณไปถึงห้องลับ','epic')}
  if(cave&&f.map>=2&&kind==='temple'){addNode('idol',2);X.nodes[X.nodes.length-1].sp=1;f.map=0;log('🗺️ แผนที่ครึ่งฉีกทั้งสองชิ้นต่อกันได้พอดี','epic')}
- draw(cave?`คุณจุดคบเพลิงแล้วก้าวเข้าสู่ ${CAVES[kind].n}`:'แสงเช้าลอดผ่านยอดไม้ คุณกระชับย่ามแล้วเดินเข้าป่า')}
+ draw(cave?`คุณจุดคบเพลิงแล้วก้าวเข้าสู่ ${CAVES[kind].n}`:`แสงเช้าลอดผ่านยอดไม้ คุณกระชับย่ามแล้วเดินเข้าสู่ ${FORESTS[kind].n}`)}
 function tod(){return X.time<3?'🌅 เช้า':X.time<6?'☀️ บ่าย':X.time<8?'🌇 พลบค่ำ':'🌑 กลางคืน'}
 function draw(msg){if(!X)return;
  if(X.time>=8&&!X.night){X.night=1;if(!X.camp){return endTrip('dark')}if(X.area==='forest')addNode('moon',2);msg=(msg?msg+'<br>':'')+'🌑 <b>ค่ำแล้ว</b> สิ่งที่ออกหากินกลางคืนเริ่มขยับ'}
  if(X.time>=11)return endTrip('dawn');
  const fog=Math.min(.55,X.time*.06),tc=X.loot.reduce((a,l)=>a+l.t,0);
  const nodes=X.nodes.map((n,i)=>`<button class="fxn${n.done?' dn':''}${n.lv>1&&!n.done?' dg':''}${n.sp||(!n.done&&(n.t==='moon'))?' sp':''}" style="left:${n.x}%;top:${n.y}%" onclick="_wlGo(${i})"><img src="${icon(n.t)}" alt="">${n.done?'✓':(n.nw?'🆕 ':'')+((X.area==='cave'?CN:FN)[n.t]?nm(n.t):'?')}</button>`).join('');
- modal(`<h3>${X.area==='cave'?CAVES[X.kind].n:'🌲 ป่าลึก'}</h3><div class="fxbar"><span>${tod()} ${X.time}/${X.camp?11:8}</span><span>❤️ ${Math.round(S.hp)}/${Math.round(S.maxHp)}</span><span>🎒 ${X.loot.length} ชิ้น${tc?` · ✨${tc}`:''}</span>${X.curse?'<span>👁️ ถ้ำโกรธ</span>':''}</div>
+ modal(`<h3>${X.area==='cave'?CAVES[X.kind].n:FORESTS[X.kind].n}</h3><div class="fxbar"><span>${tod()} ${X.time}/${X.camp?11:8}</span><span>❤️ ${Math.round(S.hp)}/${Math.round(S.maxHp)}</span><span>🎒 ${X.loot.length} ชิ้น${tc?` · ✨${tc}`:''}</span>${X.curse?'<span>👁️ ถ้ำโกรธ</span>':''}</div>
  <div class="fxmap${X.area==='cave'?' cave':''}" style="background-image:url(${X.bg})">${nodes}<div class="fxfog" style="opacity:${fog};background:${X.night?'radial-gradient(circle at 50% 50%,transparent 20%,#05051a 75%)':'#0a0a18'}"></div></div>
  ${msg?`<p>${msg}</p>`:'<p class="tag2">แตะจุดบนแผนที่เพื่อไปสำรวจ · ทุกจุดใช้เวลา 1 · ค่ำแล้วต้องกลับ หรือค้างคืนเสี่ยงต่อ</p>'}
  ${S.hp<S.maxHp*.25?'<p class="tag2" style="color:#ff5d73">⚠️ บาดเจ็บหนัก — ควรกลับ</p>':''}
  <div class="brow"><button class="pbtn" onclick="_wlEnd()">🏠 กลับพร้อมของ (${X.loot.length})</button>${X.time>=6&&!X.camp?`<button class="gbtn" onclick="_wlCamp()">🔥 ค้างคืน</button>`:''}</div>`,'fx')}
-function nm(t){return{stream:'ลำธาร',carcass:'ซากสัตว์',nest:'รังนก',tracks:'รอยเท้า',mist:'หมอก',shrine:'ศาลเก่า',herb:'สมุนไพร',cliff:'หน้าผา',moon:'ดอกจันทร์',lair:'รังอสูร',rival:'คนในป่า',chest:'หีบ',trap:'ทางแคบ',pool:'สระ',bones:'กระดูก',crack:'รอยแยก',ice:'ผลึก',idol:'รูปเคารพ'}[t]||t}
+function nm(t){return{ghost:'ต้นไม้ผี',pit:'หลุมพราน',mud:'บ่อโคลน',camp:'ค่ายโจร',fruit:'ผลไม้หายาก',hive:'รังผึ้ง',mush:'วงเห็ด',bamb:'ดงไผ่',stream:'ลำธาร',carcass:'ซากสัตว์',nest:'รังนก',tracks:'รอยเท้า',mist:'หมอก',shrine:'ศาลเก่า',herb:'สมุนไพร',cliff:'หน้าผา',moon:'ดอกจันทร์',lair:'รังอสูร',rival:'คนในป่า',chest:'หีบ',trap:'ทางแคบ',pool:'สระ',bones:'กระดูก',crack:'รอยแยก',ice:'ผลึก',idol:'รูปเคารพ'}[t]||t}
 window._wlGo=function(i){if(!X||X.busy)return;const n=X.nodes[i];if(!n||n.done)return;X.time++;n.nw=0;
  if(X.night&&Math.random()<(X.hide?.12:.25)+(X.curse?.15:0)){n.done=0;return fightIn(X.area==='cave'?'สิ่งที่คืบคลานในความมืด':'อสูรราตรี',1+(X.curse?.2:0),()=>{take(loot(1));return'คุณจัดการสิ่งที่ซุ่มอยู่ได้'},'มันคาบของในย่ามไปบางส่วน',()=>{X.loot.splice(0,Math.ceil(X.loot.length/3))})}
  const ev=(X.area==='cave'?CN:FN)[n.t](n);X.cur={i,ev};
@@ -26995,7 +27044,7 @@ function endTrip(why){if(!X)return;const T=X;X=null;let lost=0;
 function quick(area,kind,guide){const f=F();f.n++;f.trips++;const cost=guide?money(.5):0;if(guide){if(S.money<cost)return toast('เงินไม่พอจ้างผู้นำทาง');S.money-=cost}
  const L=[];const add=t=>L.push(loot(t));X={night:0,loot:L};
  if(guide){add(0);add(Math.random()<.5?1:0);if(Math.random()<.1)add(2)}else{add(0);if(Math.random()<.25)add(1);if(Math.random()<.2)hurt(.15)}
- X=null;L.forEach(l=>{try{l.f()}catch(e){}});closeM();log(`${guide?'🧭 ผู้นำทางพาคุณ':'🎲 คุณเดิน'}${area==='cave'?'สำรวจ'+CAVES[kind].n:'เข้าป่า'} · ได้ ${L.map(l=>l.x).join(' · ')}`,'good');try{render()}catch(e){}}
+ X=null;L.forEach(l=>{try{l.f()}catch(e){}});closeM();log(`${guide?'🧭 ผู้นำทางพาคุณ':'🎲 คุณเดิน'}${area==='cave'?'สำรวจ'+CAVES[kind].n:'เข้า'+(FORESTS[kind]||FORESTS.forest).n} · ได้ ${L.map(l=>l.x).join(' · ')}`,'good');try{render()}catch(e){}}
 window._wlIn=function(area,kind,mode){if(!ok())return;if(left()<=0)return toast('ปีนี้เข้าป่าครบ 2 ครั้งแล้ว');if(mode==='x')start(area,kind);else quick(area,kind,mode==='g')};
 window._wlDel=function(){const f=F(),d=f.del;if(!d)return;if(!(S.bag&&S.bag.it&&false)){}f.del=null;S.karma+=10;S.fame+=40;const g=money(2);S.money+=g;log(`🩺 คุณส่งสมุนไพรให้ <b>${E(d.n)}</b> ทันเวลา เขาหายป่วย · ได้ ${mtxt(g)} · ชื่อเสียงและกรรม +`,'epic',true);openWild()};
 window.openWild=function(){if(!ok())return toast('ตอนนี้เข้าป่าไม่ได้');const f=F(),l=left();
@@ -27004,7 +27053,7 @@ window.openWild=function(){if(!ok())return toast('ตอนนี้เข้า
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌲 ป่าและถ้ำ</h3><p class="tag2">ปีนี้เข้าได้อีก <b>${l}/2</b> ครั้ง · 🗺️ สำรวจเอง = ได้ของดีที่สุดแต่เสี่ยง · 🧭 ผู้นำทาง = ปลอดภัย ของปานกลาง · 🎲 สุ่ม = เร็ว ของธรรมดา</p>
  ${f.del?`<div class="item" style="border-left:4px solid #5fbf6f"><b>🩺 ${E(f.del.n)} รอสมุนไพรอยู่</b> <span class="tag2">ส่งภายในอายุ ${f.del.until}</span><div class="brow"><button class="pbtn" onclick="_wlDel()">ส่งยา</button></div></div>`:''}
  ${f.riv?`<p class="tag2">🧑‍🌾 ${E(f.riv.n)}: ${f.riv.att>0?'มิตร':f.riv.att<0?'ศัตรู':'คนแปลกหน้า'} · 🗺️ แผนที่ครึ่งฉีก ${f.map}/2${f.mark?` · รอยสลักชี้ไป ${CAVES[f.mark].n}`:''} · ของพิเศษที่เคยได้ ${f.sp}</p>`:''}
- ${b('forest','forest','🌲 ป่าลึก — สมุนไพร ซากสัตว์ ศาลเก่า')}${kinds.map(k=>b('cave',k,CAVES[k].n)).join('')}`,'fxhub')};
+ ${b('forest','forest','🌲 ป่าลึก — ครบทุกอย่าง')}${b('forest','bamboo','🎋 ป่าไผ่ — ค่ายโจร ทางลับในดงไผ่')}${b('forest','swamp','🐸 ป่าพรุ — บ่อโคลน ต้นไม้ผีสิง')}${b('forest','peak','⛰️ ป่าบนเขา — หน้าผา ผลไม้หายาก')}${kinds.map(k=>b('cave',k,CAVES[k].n)).join('')}`,'fxhub')};
 // ปมสมุนไพรส่งคนไข้หมดเวลา
 {const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{const f=S&&S.fx;if(f&&f.del&&S.age>f.del.until){log(`🕯️ ${E(f.del.n)} ไม่ได้รับสมุนไพรทันเวลา และจากไปแล้ว`,'bad');f.del=null;S.karma-=3}}catch(e){}return r}}
 // ปุ่มในเมนู
