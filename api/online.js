@@ -320,7 +320,9 @@ async function paTick(now) {
       lots.push({ r: Math.random() < .5 ? 2 : 3, k: Math.floor(Math.random() * 1e6), w: WW.m > 0 || !(WW.x + WW.g) ? 'm' : pickW(), nb: 1 }); lots[0].g = rg(PA_NB[lots[0].r]);
       for (let i = 1; i < nL; i++) { let r = Math.min(6, paPick()); if (r >= 6 && hi6 >= 2) r = 5; if (r === 7) hi7++; if (r >= 6) hi6++; const w = pickW(); const op = r >= 4 && !opN && Math.random() < .22; if (op) opN = 1; lots.push({ r, k: op ? 9e8 + Math.floor(Math.random() * 1e6) : Math.floor(Math.random() * 1e6), w, g: rg(PA_GW[w][r] * (op ? 2.5 : 1)) }) }
       for (let i = lots.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [lots[i], lots[j]] = [lots[j], lots[i]] }
+      let csOp = null; try { const cq = jp(await cmd('RPOP', 'pa:cq')); if (cq && cq.u) { const li = lots.findIndex(x => !x.nb); if (li >= 0) { const w = ['m', 'x', 'g'].includes(cq.w) ? cq.w : 'm', r = Math.max(2, Math.min(5, +cq.r || 3)); lots[li] = { r, k: Math.floor(Math.random() * 1e6), w, g: rg(PA_GW[w][r]), cn: String(cq.n || '').slice(0, 20) }; csOp = ['HSET', 'pa:cs:' + sid, String(li), cq.u] } } } catch {}
       cur = { sid, t0: now, lots, li: 0, phase: 'open', act, u: 2, ls: now + PA_LEAD_MS };
+      if (csOp) await pipe([csOp, ['EXPIRE', 'pa:cs:' + sid, 7200]]);
       if (force) await cmd('DEL', 'pa:force');
       await pipe([['INCR', 'pa:day:' + day], ['EXPIRE', 'pa:day:' + day, 172800]]);
       await pipe([['SET', 'pa:cur', JSON.stringify(cur), 'EX', 7200], ['SET', 'pa:end:' + sid, now + PA_LEAD_MS + PA_LOT_MS, 'EX', 3600]]);
@@ -342,6 +344,7 @@ async function paTick(now) {
     const H = {}; if (Array.isArray(bh)) for (let i = 0; i < bh.length; i += 2) H[bh[i]] = bh[i + 1]; else Object.assign(H, bh || {});
     const V = {}; if (Array.isArray(vh)) for (let i = 0; i < vh.length; i += 2) V[vh[i]] = +vh[i + 1]; else for (const k in (vh || {})) V[k] = +vh[k];
     const L = cur.lots[cur.li], ops = [];
+    if (L.cn) { try { const su = await cmd('HGET', 'pa:cs:' + cur.sid, String(cur.li)); if (su) ops.push(['LPUSH', 'pacs:' + su, JSON.stringify({ g: H.by ? +H.hi : 0, r: L.r, w: L.w, t: now })], ['LTRIM', 'pacs:' + su, 0, 19], ['EXPIRE', 'pacs:' + su, 86400 * 30]) } catch {} }
     if (H.by) { L.sold = { g: +H.hi, n: H.bn }; const dk = 'pa:wd:' + PA_DAY(now) + ':' + H.by + ':' + (L.w || 'm'); ops.push(['INCR', dk], ['EXPIRE', dk, 172800], ['HINCRBY', 'pa:ws:' + cur.sid, H.by, 1], ['EXPIRE', 'pa:ws:' + cur.sid, 7200], ['LPUSH', 'pa:win:' + H.by, JSON.stringify({ sid: cur.sid, li: cur.li, r: L.r, k: L.k, g: +H.hi, t: now, u: cur.u ? 1 : 0 })], ['EXPIRE', 'pa:win:' + H.by, 86400]) } else L.sold = { g: 0 };
     const rest = cur.lots.map((x, i) => i).filter(i => !cur.lots[i].sold);
     if (!rest.length) { cur.phase = 'done'; const act = +(await cmd('ZCOUNT', 'online', now - 180e3, '+inf')) || 0; cur.next = now + Math.max(5, Math.min(10, act)) * 60e3;
@@ -1058,6 +1061,36 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       for (const k0 of BD_CATS.flatMap(c => ['d', 'w', 'm'].flatMap(p0 => [bdKeyP(p0, c, now), bdKeyP(p0, c, now, 1)]))) { const all = await cmd('ZRANGE', k0, 0, -1); for (const m of (all || [])) { try { if (JSON.parse(m).lid === lid) { await cmd('ZREM', k0, m); removed++ } } catch {} } }
       let banned = 0; if (ban) { const own = await cmd('GET', 'lifeo:' + lid); if (own) { await cmd('SADD', 'cheaters', own); banned = 1 } }
       return res.json({ ok: 1, removed, banned });
+    }
+    if (a === 'pacons') {
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
+      if (+(await cmd('SISMEMBER', 'cheaters', id))) return res.status(403).json({ err: 'ban' });
+      const day = new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
+      if ((await cmd('SET', 'pacd:' + id + ':' + day, 1, 'NX', 'EX', 86400 * 2)) !== 'OK') return res.json({ ok: 0, err: 'day' });
+      const qn = +(await cmd('LLEN', 'pa:cq')) || 0; if (qn >= 30) return res.json({ ok: 0, err: 'full' });
+      await cmd('LPUSH', 'pa:cq', JSON.stringify({ u: id, n: clean(b.n, 20) || 'พ่อค้านิรนาม', w: ['m', 'x', 'g'].includes(b.w) ? b.w : 'm', r: Math.max(2, Math.min(5, +b.r || 3)) }));
+      return res.json({ ok: 1, q: qn + 1 });
+    }
+    if (a === 'paconst') {
+      if (!okId(id)) return res.json({ l: [] });
+      const [l] = await pipe([['LRANGE', 'pacs:' + id, 0, 19], ['DEL', 'pacs:' + id]]);
+      return res.json({ l: (l || []).map(jp).filter(Boolean) });
+    }
+    if (a === 'djreg' || a === 'djfind' || a === 'djres' || a === 'djinfo') {
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
+      if (a === 'djreg') { const e = { n: clean(b.n, 20) || 'อาจารย์นิรนาม', s: clean(b.s, 20) || 'ศิษย์', p: Math.max(1, Math.min(1e7, Math.round(+b.p || 1))), tal: Math.max(1, Math.min(5, +b.tal || 1)), w: ['m', 'x', 'g'].includes(b.w) ? b.w : 'm', t: now }; await pipe([['HSET', 'dj:e', id, JSON.stringify(e)], ['ZADD', 'djz', e.p, id]]); return res.json({ ok: 1 }) }
+      if (a === 'djinfo') { const [h] = await pipe([['HGETALL', 'djw:' + id], ['DEL', 'djw:' + id]]); const o = {}; if (Array.isArray(h)) for (let i = 0; i < h.length; i += 2) o[h[i]] = +h[i + 1]; else for (const k in (h || {})) o[k] = +h[k]; return res.json(o) }
+      if (a === 'djfind') { const p = Math.max(1, +b.p || 1); let ids = (await cmd('ZRANGEBYSCORE', 'djz', Math.floor(p * .5), Math.ceil(p * 2), 'LIMIT', 0, 60)) || []; ids = ids.filter(x => x !== id); if (!ids.length) { ids = ((await cmd('ZRANGE', 'djz', 0, 80)) || []).filter(x => x !== id) } if (!ids.length) return res.json({ e: null }); const oid = ids[Math.floor(Math.random() * ids.length)]; const e = jp(await cmd('HGET', 'dj:e', oid)); if (!e || now - (e.t || 0) > 86400e3 * 30) return res.json({ e: null }); const tok = Math.random().toString(36).slice(2, 12); await cmd('SET', 'djt:' + tok, oid + '|' + id, 'EX', 3600); return res.json({ e: { n: e.n, s: e.s, p: e.p, tal: e.tal, w: e.w }, tok }) }
+      const tk = String(b.tok || '').replace(/[^a-z0-9]/g, '').slice(0, 12); const v = await cmd('GET', 'djt:' + tk); if (!v) return res.json({ ok: 0 }); const [oid, me] = String(v).split('|'); if (me !== id) return res.json({ ok: 0 }); await cmd('DEL', 'djt:' + tk);
+      await pipe([['HINCRBY', 'djw:' + oid, 'c', 1], ['HINCRBY', 'djw:' + oid, b.win ? 'l' : 'w', 1], ['EXPIRE', 'djw:' + oid, 86400 * 30]]); return res.json({ ok: 1 });
+    }
+    if (a === 'yvote') {
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
+      const lid = String(b.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16), v = Math.max(0, Math.min(3, Math.floor(+b.v || 0)));
+      const [pub, own] = await pipe([['GET', 'lifep:' + lid], ['GET', 'lifeo:' + lid]]); if (pub !== '1' || !own) return res.json({ ok: 0, err: 'private' });
+      const h = await cmd('HGETALL', 'yv:' + lid); const o = [0, 0, 0, 0]; if (Array.isArray(h)) for (let i = 0; i < h.length; i += 2) o[+h[i]] = +h[i + 1]; else for (const k in (h || {})) o[+k] = +h[k];
+      if ((await cmd('SET', 'yvd:' + lid + ':' + id, 1, 'NX', 'EX', 86400 * 40)) === 'OK') await pipe([['HINCRBY', 'yv:' + lid, String(v), 1], ['EXPIRE', 'yv:' + lid, 86400 * 40]]);
+      return res.json({ ok: 1, prev: o });
     }
     if (a === 'lifeview') {
       const lid = String(qOf(req).l || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
