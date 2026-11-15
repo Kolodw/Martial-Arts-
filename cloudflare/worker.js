@@ -82,7 +82,12 @@ export default {
       } catch (e) { console.error('API_ERR edgecache', String(e && e.message || e)) }
     }
     if (TRAP.some(r => r.test(url.pathname))) { url.search = '?a=trap&p=' + encodeURIComponent(url.pathname.slice(1)); url.pathname = '/api/online' }
-    if (url.pathname === '/api/online' || url.pathname === '/api/online/') return api(request, url);
+    if (url.pathname === '/api/online' || url.pathname === '/api/online/') {
+      const r = await api(request, url);
+      // มีคนส่งข้อความ/ประกาศ → ล้างแคชแชทที่ขอบทันที ข้อความใหม่จะขึ้นในการดึงรอบถัดไป
+      try { if (request.method === 'POST' && /^(say|annrm|annvote|chathide|chatdel)$/.test(url.searchParams.get('a') || '') && r.status === 200) ctx.waitUntil(caches.default.delete(new Request(url.origin + '/__edge/chat'))) } catch (e) {}
+      return r;
+    }
     // โดเมนเดิม (www) → ใช้ไฟล์หน้าเว็บ
     return env.ASSETS.fetch(request);
   },

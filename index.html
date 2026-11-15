@@ -27285,6 +27285,28 @@ function check(){try{if(!S||!S.alive)return;const id=(S.seed|0)+'|'+(S.name||'')
 const _py=passYear;passYear=function(){check();const r=_py.apply(this,arguments);check();return r};
 setInterval(check,1500);window._rwFix=check;
 })()}catch(e){console.error(e)}
+
+// ===================== v17.28 🟦 ระบบ: ใส่แต้มสถานะทีละหลายแต้ม (+1 / +10 / +100 / ทั้งหมด / พิมพ์เอง) =====================
+try{(()=>{
+const N=()=>{const v=LS.get('murim_apn',1);return v==='all'?'all':Math.max(1,Math.min(1e6,parseInt(v,10)||1))};
+const _ap=allocPt;allocPt=function(k,silent){if(silent)return _ap.apply(this,arguments);const s=S&&S.sys;if(!s||s.pts<=0)return;const n0=N(),n=n0==='all'?s.pts:Math.min(n0,s.pts);
+ for(let i=0;i<n;i++)_ap.call(this,k,true);try{toast(`ใส่ ${fmt(n)} แต้ม`)}catch(e){}render();openSys()};
+window._apSet=v=>{LS.set('murim_apn',v);openSys()};
+const _os=openSys;openSys=function(){const r=_os.apply(this,arguments);try{const m=$('modal'),g=m&&m.querySelector('.sysg'),s=S.sys;if(g&&s&&!m.querySelector('.apRow')){const n=N(),b=(v,t)=>`<button class="apB${n===v?' on':''}" onclick="_apSet(${typeof v==='string'?`'${v}'`:v})">${t}</button>`;
+ if(!document.getElementById('apSt')){const st=document.createElement('style');st.id='apSt';st.textContent='.apB{flex:1;padding:7px 2px;border:2px solid currentColor;border-radius:10px;background:transparent;color:inherit;font:inherit;font-weight:bold;cursor:pointer;opacity:.75}.apB.on{background:#ffd040;color:#2a1a00;border-color:#ffd040;opacity:1}.apIn{width:64px!important;padding:6px!important;border:2px solid currentColor!important;border-radius:10px!important;font:inherit;background:transparent!important;color:inherit!important}.apIn::placeholder{color:inherit;opacity:.6}';document.head.appendChild(st)}
+ g.insertAdjacentHTML('beforebegin',`<div class="apRow" style="display:flex;gap:4px;align-items:center;margin:4px 0 6px"><span class="tag2" style="flex:0 0 auto">กดทีละ</span>${b(1,'+1')}${b(10,'+10')}${b(100,'+100')}${b('all','ทั้งหมด')}<input class="apIn" type="number" min="1" inputmode="numeric" placeholder="พิมพ์" value="${[1,10,100,'all'].includes(n)?'':n}" onchange="_apSet(this.value)"></div>`);
+ const k=n==='all'?s.pts:Math.min(n,s.pts);if(k>1)g.querySelectorAll('button small').forEach(x=>{x.textContent=x.textContent+' ×'+fmt(k)})}}catch(e){console.error(e)}return r};
+})()}catch(e){console.error(e)}
+
+// ===================== v17.29 แก้: แอดมินพิมพ์แชท/ประกาศแล้วไม่ขึ้น =====================
+// chatSend ถูกเขียนทับทั้งตัว (v?) ทำให้ทางของแอดมิน (@everyone · ตอบกลับพร้อมแจ้งเตือน) หายไป → ส่งไปโดยไม่มีรหัสแอดมิน → เซิร์ฟเวอร์ปฏิเสธ (403)
+try{(()=>{
+const _apiA=api;api=async function(a,body){try{if(a==='say'&&body&&typeof body==='object'&&typeof admK==='function'&&admK()){if(!body.key)body.key=admK();
+  const x=String(body.x||'');if(typeof chatRto!=='undefined'&&chatRto&&x.startsWith('@'+chatRto.n)&&!body.rto){body.rto=chatRto.pu;chatRto=null}
+  if(/^\s*@everyone\b/i.test(x)){body.ti='ผู้ดูแล';body.k='msg'}}}catch(e){}
+ const j=await _apiA.apply(this,arguments);
+ try{if(a==='say'&&j&&j.ann){LS.del('murim_annX');annShow(j.ann);toast('📢 ส่งประกาศถึงทุกคนแล้ว'+(j.push&&j.push.sent?` · แจ้งเตือนเด้ง ${j.push.sent} เครื่อง`:''))}else if(a==='say'&&j&&j.push&&body&&body.rto){toast(j.push.sent?`📨 แจ้งเตือนเด้งที่ ${j.push.sent} เครื่อง`:'ส่งแล้ว — เขายังไม่เปิดแจ้งเตือน')}}catch(e){}return j};
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
