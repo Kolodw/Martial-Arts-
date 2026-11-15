@@ -137,6 +137,41 @@ const RKT_S = { d: ['', 'ดาวตกสามสิบปี', 'ผู้เ
 const RKT_J = { d: ['', 'ผู้ท้าลิขิต', 'ขยะผู้ไม่ยอมแพ้', 'ธุลีที่ลุกขึ้น'], w: ['', 'ราชันย์ไร้พรสวรรค์', 'ผู้ทวนชะตา', 'กระดูกขยะทะลวงฟ้า'], m: ['', 'จักรพรรดิผู้ลบลิขิต', 'ตำนานจากธุลี', 'ผู้ทำลายคำพยากรณ์'] };
 const RKT_M = { ch: RKT_H, cs: RKT_S, cj: RKT_J };
 const RKT_ALL = new Map(); [RKT, RKT_C, RKT_A, RKT_R, RKT_H, RKT_S, RKT_J].forEach(TT => Object.entries(TT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) })));
+// ===== ฉายา/กรอบทำเนียบแบบสุ่มจากคลังคำ (ไม่ใช้ AI) · ผลเหมือนกันทุกเครื่องจากรหัสรอบ =====
+const RKG = (() => {
+  const H = s => { let h = 2166136261; for (const c of String(s)) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619) } return h >>> 0 };
+  const RNG = seed => { let q = seed >>> 0 || 1; return () => { q = (q + 0x6D2B79F5) >>> 0; let t = q; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296 } };
+  const PRE = ['อัสนี', 'หิมะ', 'โลหิต', 'จันทรา', 'เพลิงนิล', 'วายุ', 'ธาราฟ้า', 'หยกขาว', 'ทองคำ', 'เงามืด', 'อรุณ', 'สนธยา', 'ดารา', 'เมฆา', 'ศิลา', 'อำพัน', 'มรกต', 'หงส์ไฟ', 'พยัคฆ์', 'กิเลน', 'มังกรฟ้า', 'พันกระบี่', 'หมื่นลี้', 'เก้าสวรรค์', 'สามภพ', 'ไร้เงา', 'ไร้นาม', 'สายฟ้า', 'ราตรี', 'ทะเลเมฆ'];
+  const TH = { m: ['กระบี่', 'ยุทธภพ', 'ดาบเหล็ก', 'หมัดเหล็ก'], x: ['เซียน', 'เมฆหยก', 'ปราณฟ้า', 'โอสถทิพย์'], g: ['เทพ', 'สวรรค์', 'แสงทิพย์', 'บัลลังก์ฟ้า'], b: ['อสูร', 'เขี้ยวเหล็ก', 'พงไพร', 'กรงเล็บ'], r: ['กาลเวลา', 'วงจร', 'เข็มกาล', 'ทรายย้อน'], c: ['อเวจี', 'เพลิงกัลป์', 'ลิขิตแตก'], h: ['อเวจี', 'เพลิงกัลป์', 'ขุมนรก', 'ไฟบาป'], s: ['ชั่วพริบตา', 'ดาวตก', 'เทียนสองปลาย', 'สามสิบฤดู'], j: ['ธุลี', 'กระดูกขยะ', 'ไร้ราก', 'ฝุ่นทราย'] };
+  const CORE = [null, ['จักรพรรดิ', 'ราชัน', 'อธิราช', 'มหาเทพ', 'จ้าว', 'ปฐมกษัตริย์'], ['ขุนศึก', 'ยอดยุทธ์', 'อัครเซียน', 'แม่ทัพ', 'ผู้พิชิต', 'จอมดาบ'], ['ดาวรุ่ง', 'ยอดฝีมือ', 'ผู้กล้า', 'นักดาบ', 'ผู้ท้าทาย', 'ศิษย์เอก']];
+  const SUF = ['แห่งวสันต์', 'เหนือเมฆา', 'ไร้พ่าย', 'แห่งบูรพา', 'แห่งทะเลเหนือ', 'ใต้แสงจันทร์', 'ผู้ทลายฟ้า', 'ผู้ฝ่าพายุ', 'แห่งยุคใหม่', 'ผู้ลิขิตตำนาน', 'แห่งหมื่นศึก', 'ผู้ไม่หลับใหล'];
+  const pk = (r, a) => a[Math.floor(r() * a.length)];
+  // p = d/w/m · c = หมวด (m x g b r c h s j) · k = รหัสรอบ (ตัวเลข+ตัวสุ่มใหม่) · r = อันดับ 1–3
+  function title(p, c, k, r) {
+    const R = RNG(H('t|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE[r] || CORE[3]), pre = R() < .55 ? pk(R, TH[c] || TH.m) : pk(R, PRE);
+    // ไทยเอาคำนามขึ้นก่อน: ราชัน+อัสนี · บางครั้งใส่ "แห่ง" · รายเดือนมีวลีท้ายให้ยิ่งใหญ่
+    const of = R() < .35 && !/^(ผู้|แห่ง|ไร้)/.test(pre) ? 'แห่ง' : '', suf = pk(R, SUF);
+    let t = p === 'm' ? core + (/^แห่ง/.test(suf) ? '' : of) + pre + suf : core + of + pre;
+    if ([...t].length > 28) t = core + of + pre;
+    return t;
+  }
+  const PALS = [['#ffd040', '#fff4b0', '#ff9a20'], ['#ff70e0', '#ffffff', '#ffd040'], ['#6ad0ff', '#e8f8ff', '#3a6ad8'], ['#ff5d73', '#ffd0d8', '#8a1a2a'], ['#7ae07a', '#e8ffe0', '#2a8a4a'], ['#b070ff', '#f0e0ff', '#5a2aa8'], ['#ffb050', '#fff0d0', '#c85a1a'], ['#d8e0f0', '#ffffff', '#7a8aa8'], ['#40e0d0', '#e0fffa', '#1a7a8a'], ['#ff8a40', '#ffe0a0', '#a02a1a'], ['#e0c080', '#fff8e0', '#8a6a2a'], ['#ff4ab0', '#ffe0f0', '#6a1a5a']];
+  const SH = { m: ['sword', 'laurel', 'crown', 'dbl'], x: ['cloud', 'ringh', 'leaf', 'pearl'], g: ['ray', 'ringh', 'star4', 'lotus'], b: ['horn', 'scale', 'thorn', 'wing'], r: ['clock', 'moon', 'star4'], c: ['flame', 'thorn', 'chain'], h: ['flame', 'horn', 'drip', 'gate'], s: ['flame', 'star4', 'butterfly'], j: ['knob', 'chain', 'fade', 'leaf'] };
+  const TY = [null, 'spin halo orbit ring2 aura2 sparkle star ember corner badge rk1', 'spin orbit ring2 snow corner badge rk2', 'corner badge rk3'];
+  const PN = { d: 'ประจำวัน', w: 'ประจำสัปดาห์', m: 'ประจำเดือน' }, BD = { d: ['', '🌅', '🥈', '🥉'], w: ['', '⚔️', '🥈', '🥉'], m: ['', '🌟', '🥈', '🥉'] };
+  const RE = /^f_g([dwm])([mxgbrchsj])([0-9a-z]+)_([123])$/;
+  function frame(id) {
+    const m = RE.exec(id); if (!m) return null; const [, p, c, k, rs] = m, r = +rs, R = RNG(H('f|' + id)), pal = pk(R, PALS);
+    const sh = (SH[c] || SH.m).slice().sort(() => R() - .5).slice(0, r === 1 ? 3 : r === 2 ? 2 : 1);
+    if (r === 1) sh.unshift('rnd'); if (r === 1 && !sh.includes('crown') && R() < .5) sh.push('gem');
+    const dt = String(k).replace(/s.*/, ''), dl = dt.length >= 8 ? dt.slice(6, 8) + '/' + dt.slice(4, 6) + '/' + dt.slice(0, 4) : dt.slice(4, 6) + '/' + dt.slice(0, 4);
+    return { id, n: 'กรอบ「' + title(p, c, k, r) + '」', side: 'r', c: 0, ty: TY[r], c1: pal[0], c2: pal[1], c3: pal[2], pc: pal[1], bd: BD[p][r], d: 'อันดับ ' + r + ' ทำเนียบ' + PN[p] + ' รุ่น ' + dl + ' — มีรอบเดียว ไม่กลับมาอีก', gen: 1, sh: sh.join('|') };
+  }
+  const fid = (p, c, k, r) => 'f_g' + p + c + k + '_' + r;
+  return { title, frame, fid, RE, H };
+})();
+const RKG_C = { m: 'm', x: 'x', g: 'g', b: 'b', r: 'r', c: 'c', ch: 'h', cs: 's', cj: 'j' };
+const rkKey = (lab, salt) => String(lab || '').replace(/[^0-9]/g, '') + (salt ? 's' + salt : '');
 const bdCat = e => e.bm ? 'b' : e.g ? 'g' : e.x ? 'x' : 'm';
 const bdKey = (c, ms, back = 0) => 'bd3:' + c + ':' + new Date(ms + 7 * 3600e3 - back * 86400e3).toISOString().slice(0, 10);
 const bdKeyW = (c, ms, back = 0) => 'bdw:' + c + ':' + week(new Date(ms - back * 7 * 86400e3));
@@ -179,7 +214,7 @@ function clean(s, n) {
 const qOf = r => r._q || (r._q = Object.fromEntries(new URL(r.url || '/', 'http://localhost').searchParams));
 // ฉายาที่มีจริงในเกม (สร้างจากตัวเกม) → เซิร์ฟเวอร์รับเฉพาะชื่อในรายการ และกำหนดสีระดับเอง
 let TITLES = { t: {}, a: {} }; try { TITLES = require('./titles.json') } catch (e) {}
-const rkOk = (tt, h) => { try { const k = String(tt || ''), m = RKT_ALL.get(k); if (!m || !Array.isArray(h)) return null; for (let i = 0; i < h.length; i += 2) { const v = JSON.parse(h[i + 1] || 'null'); if (v && v.t === k && v.exp > Date.now()) return { tt: k, tr: RKT_TR[m.p] } } } catch (e) {} return null };
+const rkOk = (tt, h) => { try { const k = String(tt || ''), m = RKT_ALL.get(k); if (!k || !Array.isArray(h)) return null; for (let i = 0; i < h.length; i += 2) { const v = JSON.parse(h[i + 1] || 'null'); if (v && v.t === k && v.exp > Date.now()) return { tt: k, tr: RKT_TR[m ? m.p : String(h[i])[0]] || 7 } } } catch (e) {} return null }; // ฉายาสุ่มใหม่ไม่อยู่ในตาราง → ยืนยันจากที่บันทึกไว้ตอนแจกแทน
 // ฉายาที่ไม่อยู่ในรายชื่อ (เช่น ฉายาที่สุ่มประกอบขึ้นตอนเล่น หรือของระบบใหม่) ยังแสดงได้ แต่สีกรอบสูงสุดแค่ระดับ 2 กันคนตั้งชื่อหรูปลอม
 const ttlOk = (tt, tr) => { const k0 = String(tt || '').slice(0, 40), k = k0.slice(0, 24); if (!k) return { tt: '', tr: 0 }; const has = x => Object.prototype.hasOwnProperty.call(TITLES.t, x); if (has(k0)) return { tt: k0, tr: Math.max(0, Math.min(6, +TITLES.t[k0] || 0)) }; if (has(k)) { const c0 = String(clean(k0, 40) || ''); return { tt: c0 === k0 && /^[\u0E00-\u0E7Fa-zA-Z0-9 ·\-'"()]+$/.test(c0) ? k0 : k, tr: Math.max(0, Math.min(6, +TITLES.t[k] || 0)) } }
   const c = String(clean(k0, 40) || ''); if (!c || c !== k0 || !noAdm(c) || !/^[\u0E00-\u0E7Fa-zA-Z0-9 ·\-'"()]+$/.test(c)) return { tt: '', tr: 0 }; return { tt: c, tr: Math.max(0, Math.min(2, +tr || 0)) } };
@@ -852,12 +887,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     }
     // แจกรางวัลอันดับ 1–3 ของเมื่อวาน (ครั้งเดียวต่อวัน) · ล้างทำเนียบรุ่นเก่าครั้งเดียว
     const bdSettle1 = async (p, flag, ex) => { try { if (!(await cmd('SET', flag, 1, 'NX', 'EX', 86400 * ex))) return;
-      const R1 = await pipe(BD_CATS.map(c => ['ZREVRANGE', bdKeyP(p, c, now, 1), 0, 9])), lab = flag.split(':').slice(1).join(':');
+      const R1 = await pipe(BD_CATS.map(c => ['ZREVRANGE', bdKeyP(p, c, now, 1), 0, 9])), lab = flag.split(':').slice(1).join(':'), rkk = rkKey(lab, await cmd('GET', 'rksalt:' + p + ':' + rkKey(lab)));
       const N1 = await pipe(BD_CATS.map(c => ['ZCARD', bdKeyP(p, c, now, 1)]));
       for (let k = 0; k < BD_CATS.length; k++) { if (p === 'd' && CHF[BD_CATS[k]] && (+N1[k] || 0) < 5) continue; const L1 = (R1[k] || []).map(jp).filter(x => x && x.lid && !x.cu && !x.nf && !(+x.s < 0)); const seen = new Set(); let r = 0;
         for (const x of L1) { if (r >= 3) break; const own = await cmd('GET', 'lifeo:' + x.lid); if (!own || seen.has(own) || await cmd('SISMEMBER', 'cheaters', own)) continue; seen.add(own); r++;
-          const isC = BD_CATS[k] === 'c', isR = BD_CATS[k] === 'r', isM = !!CHF[BD_CATS[k]], TT = isM ? RKT_M[BD_CATS[k]] : isC ? RKT_C : isR ? RKT_R : RKT, hf = isM ? p + CHF[BD_CATS[k]] : isC ? p + 'c' : isR ? p + 'r' : p, cur = jp(await cmd('HGET', 'rkttl:' + own, hf)), nt = { t: TT[p][r], r, c: BD_CATS[k], exp: now + RKT_EXP[p], at: now };
-          const L2 = [['LPUSH', 'bdrw:' + own, JSON.stringify({ p, c: BD_CATS[k], r, d: lab, n: x.n, s: x.s, tt: TT[p][r], exp: nt.exp, ...(x.ch ? { ch: x.ch } : {}) })], ['EXPIRE', 'bdrw:' + own, 86400 * 60], ['HINCRBY', 'bdwins', own, 1]];
+          const isC = BD_CATS[k] === 'c', isR = BD_CATS[k] === 'r', isM = !!CHF[BD_CATS[k]], TT = isM ? RKT_M[BD_CATS[k]] : isC ? RKT_C : isR ? RKT_R : RKT, hf = isM ? p + CHF[BD_CATS[k]] : isC ? p + 'c' : isR ? p + 'r' : p, cur = jp(await cmd('HGET', 'rkttl:' + own, hf)), gc = RKG_C[BD_CATS[k]] || 'm', gt = RKG.title(p, gc, rkk, r), gf = RKG.fid(p, gc, rkk, r), nt = { t: gt, r, c: BD_CATS[k], exp: now + RKT_EXP[p], at: now };
+          const L2 = [['LPUSH', 'bdrw:' + own, JSON.stringify({ p, c: BD_CATS[k], r, d: lab, n: x.n, s: x.s, tt: gt, gf, exp: nt.exp, ...(x.ch ? { ch: x.ch } : {}) })], ['EXPIRE', 'bdrw:' + own, 86400 * 60], ['HINCRBY', 'bdwins', own, 1]];
           if (!cur || cur.exp < now || r <= cur.r) L2.push(['HSET', 'rkttl:' + own, hf, JSON.stringify(nt)], ['EXPIRE', 'rkttl:' + own, 86400 * 40]);
           await pipe(L2) } } } catch {} };
     const bdSettle = async () => { const yk = new Date(now + 7 * 3600e3 - 86400e3).toISOString().slice(0, 10);
@@ -1043,6 +1078,19 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       try { const r = await pipe([...want.map(k => ['TYPE', k]), ...want.map(k => ['TTL', k])]); out.keys = want.map((k, i) => [k, r[i], r[i + want.length]]) } catch (x) { out.keysErr = String(x && x.message || x) }
       try { const smp = big.filter((_, i) => i % Math.max(1, Math.floor(big.length / 300)) === 0).slice(0, 300); const mu = await pipe(smp.map(k => ['MEMORY', 'USAGE', k])); const by = {}; smp.forEach((k, i) => { const pf = String(k).split(':')[0]; by[pf] = (by[pf] || 0) + (+mu[i] || 0) }); out.sampleBytesByPrefix = Object.entries(by).sort((x, y) => y[1] - x[1]).slice(0, 20); out.sampled = smp.length } catch (x) { out.memErr = String(x && x.message || x) }
       return res.json(out);
+    }
+    if (a === 'rkprev') {
+      // ผู้ดูแล: ดูฉายา/กรอบของรอบหน้าล่วงหน้า · &roll=d|w|m สุ่มชุดของรอบนั้นใหม่
+      const q = qOf(req); if (!isAdmKey(q.key)) return res.status(403).json({ err: 'admin' });
+      const nx = { d: new Date(now + 7 * 3600e3).toISOString().slice(0, 10), w: week(new Date(now)), m: bdMon(now) }; // รอบที่กำลังแข่งอยู่ = ชุดที่จะแจกตอนจบรอบ
+      if (/^[dwm]$/.test(q.roll || '')) await cmd('SET', 'rksalt:' + q.roll + ':' + rkKey(nx[q.roll]), String(Math.floor(Math.random() * 9) + 1), 'EX', 86400 * 40);
+      const CN = { m: '⚔️ ยุทธภพ', x: '☁️ เซียน', g: '🌟 เทพ', b: '🐾 อสูร', r: '🔁 ย้อนกาล', h: '🔥 นรก', s: '⏳ ชีวิตสั้น', j: '🦴 รากขยะ' };
+      let html = '<meta name="viewport" content="width=device-width"><style>body{font-family:sans-serif;background:#1a1420;color:#eee;padding:10px}td{padding:3px 6px;border-bottom:1px solid #333}a{color:#ffd040}</style><h3>🏆 ฉายาที่จะแจกรอบนี้</h3>';
+      for (const p of ['d', 'w', 'm']) { const k = rkKey(nx[p], await cmd('GET', 'rksalt:' + p + ':' + rkKey(nx[p])));
+        html += `<h4>${{ d: 'รายวัน', w: 'รายสัปดาห์', m: 'รายเดือน' }[p]} (รอบ ${nx[p]}) <a href="?a=rkprev&key=${encodeURIComponent(q.key)}&roll=${p}">🎲 สุ่มใหม่</a></h4><table>`;
+        for (const c of Object.keys(CN)) html += `<tr><td>${CN[c]}</td>${[1, 2, 3].map(r => `<td>${['', '🥇', '🥈', '🥉'][r]} ${RKG.title(p, c, k, r)}</td>`).join('')}</tr>`;
+        html += '</table>' }
+      res.setHeader('content-type', 'text/html; charset=utf-8'); return res.send(html + '<p>กรอบสร้างจากฉายาชุดเดียวกัน (สีและลายสุ่มตามรอบ) · กดสุ่มใหม่ได้จนกว่าจะถึงเวลาแจก</p>');
     }
     if (a === 'csprune') {
       // ผู้ดูแลเท่านั้น: ดู/ลบเซฟคลาวด์ของคนที่หายไปนาน (อายุดูจาก TTL ที่เหลือ: เซฟใหม่ = 90 วัน) · ค่าเริ่มต้นเป็นแค่ "ดู" ต้องใส่ go=1 ถึงจะลบ

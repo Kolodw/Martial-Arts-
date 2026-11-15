@@ -27061,6 +27061,51 @@ window.openWild=function(){if(!ok())return toast('ตอนนี้เข้า
 try{SYS_GUIDE.push({s:'life',nw:1,ic:'🌲',t:'ป่าและถ้ำ',go:'openWild',d:'☰ เมนู → <b>🌲 ป่าและถ้ำ</b> ปีละ 2 ครั้ง · <b>🗺️ สำรวจเอง</b>: แผนที่สุ่มทุกครั้ง เลือกไปจุดไหนก่อนก็ได้ สิ่งที่ทำที่จุดหนึ่งเปลี่ยนจุดอื่น · เวลาเดินทุกครั้งที่ไป ค่ำแล้วต้องกลับ ไม่งั้นหลงทางเสียของครึ่งหนึ่ง หรือ<b>ค้างคืน</b>เพื่อของกลางคืนที่ดีกว่าแต่ถูกซุ่มได้ · เจอ<b>นักล่าสมุนไพร</b>ที่จำสิ่งที่คุณทำ · ปมต่อ: แผนที่ครึ่งฉีก รอยสลักนำทางไปห้องลับ สมุนไพรต้องส่งคนไข้ภายใน 2 ปี · ถ้ำ 4 แบบ · หมอเลือกสมุนไพรได้แม่นกว่า'})}catch(e){}
 window._wl={start,draw,endTrip,get X(){return X},loot,FN,CN,CAVES};
 })()}catch(e){console.error(e)}
+
+// ===================== v17.24 🏆 ฉายา/กรอบทำเนียบสุ่มใหม่ทุกรอบ (วัน/สัปดาห์/เดือน · ทุกหมวด) =====================
+try{(()=>{
+// ===== ฉายา/กรอบทำเนียบแบบสุ่มจากคลังคำ (ไม่ใช้ AI) · ผลเหมือนกันทุกเครื่องจากรหัสรอบ =====
+const RKG = (() => {
+  const H = s => { let h = 2166136261; for (const c of String(s)) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619) } return h >>> 0 };
+  const RNG = seed => { let q = seed >>> 0 || 1; return () => { q = (q + 0x6D2B79F5) >>> 0; let t = q; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296 } };
+  const PRE = ['อัสนี', 'หิมะ', 'โลหิต', 'จันทรา', 'เพลิงนิล', 'วายุ', 'ธาราฟ้า', 'หยกขาว', 'ทองคำ', 'เงามืด', 'อรุณ', 'สนธยา', 'ดารา', 'เมฆา', 'ศิลา', 'อำพัน', 'มรกต', 'หงส์ไฟ', 'พยัคฆ์', 'กิเลน', 'มังกรฟ้า', 'พันกระบี่', 'หมื่นลี้', 'เก้าสวรรค์', 'สามภพ', 'ไร้เงา', 'ไร้นาม', 'สายฟ้า', 'ราตรี', 'ทะเลเมฆ'];
+  const TH = { m: ['กระบี่', 'ยุทธภพ', 'ดาบเหล็ก', 'หมัดเหล็ก'], x: ['เซียน', 'เมฆหยก', 'ปราณฟ้า', 'โอสถทิพย์'], g: ['เทพ', 'สวรรค์', 'แสงทิพย์', 'บัลลังก์ฟ้า'], b: ['อสูร', 'เขี้ยวเหล็ก', 'พงไพร', 'กรงเล็บ'], r: ['กาลเวลา', 'วงจร', 'เข็มกาล', 'ทรายย้อน'], c: ['อเวจี', 'เพลิงกัลป์', 'ลิขิตแตก'], h: ['อเวจี', 'เพลิงกัลป์', 'ขุมนรก', 'ไฟบาป'], s: ['ชั่วพริบตา', 'ดาวตก', 'เทียนสองปลาย', 'สามสิบฤดู'], j: ['ธุลี', 'กระดูกขยะ', 'ไร้ราก', 'ฝุ่นทราย'] };
+  const CORE = [null, ['จักรพรรดิ', 'ราชัน', 'อธิราช', 'มหาเทพ', 'จ้าว', 'ปฐมกษัตริย์'], ['ขุนศึก', 'ยอดยุทธ์', 'อัครเซียน', 'แม่ทัพ', 'ผู้พิชิต', 'จอมดาบ'], ['ดาวรุ่ง', 'ยอดฝีมือ', 'ผู้กล้า', 'นักดาบ', 'ผู้ท้าทาย', 'ศิษย์เอก']];
+  const SUF = ['แห่งวสันต์', 'เหนือเมฆา', 'ไร้พ่าย', 'แห่งบูรพา', 'แห่งทะเลเหนือ', 'ใต้แสงจันทร์', 'ผู้ทลายฟ้า', 'ผู้ฝ่าพายุ', 'แห่งยุคใหม่', 'ผู้ลิขิตตำนาน', 'แห่งหมื่นศึก', 'ผู้ไม่หลับใหล'];
+  const pk = (r, a) => a[Math.floor(r() * a.length)];
+  // p = d/w/m · c = หมวด (m x g b r c h s j) · k = รหัสรอบ (ตัวเลข+ตัวสุ่มใหม่) · r = อันดับ 1–3
+  function title(p, c, k, r) {
+    const R = RNG(H('t|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE[r] || CORE[3]), pre = R() < .55 ? pk(R, TH[c] || TH.m) : pk(R, PRE);
+    // ไทยเอาคำนามขึ้นก่อน: ราชัน+อัสนี · บางครั้งใส่ "แห่ง" · รายเดือนมีวลีท้ายให้ยิ่งใหญ่
+    const of = R() < .35 && !/^(ผู้|แห่ง|ไร้)/.test(pre) ? 'แห่ง' : '', suf = pk(R, SUF);
+    let t = p === 'm' ? core + (/^แห่ง/.test(suf) ? '' : of) + pre + suf : core + of + pre;
+    if ([...t].length > 28) t = core + of + pre;
+    return t;
+  }
+  const PALS = [['#ffd040', '#fff4b0', '#ff9a20'], ['#ff70e0', '#ffffff', '#ffd040'], ['#6ad0ff', '#e8f8ff', '#3a6ad8'], ['#ff5d73', '#ffd0d8', '#8a1a2a'], ['#7ae07a', '#e8ffe0', '#2a8a4a'], ['#b070ff', '#f0e0ff', '#5a2aa8'], ['#ffb050', '#fff0d0', '#c85a1a'], ['#d8e0f0', '#ffffff', '#7a8aa8'], ['#40e0d0', '#e0fffa', '#1a7a8a'], ['#ff8a40', '#ffe0a0', '#a02a1a'], ['#e0c080', '#fff8e0', '#8a6a2a'], ['#ff4ab0', '#ffe0f0', '#6a1a5a']];
+  const SH = { m: ['sword', 'laurel', 'crown', 'dbl'], x: ['cloud', 'ringh', 'leaf', 'pearl'], g: ['ray', 'ringh', 'star4', 'lotus'], b: ['horn', 'scale', 'thorn', 'wing'], r: ['clock', 'moon', 'star4'], c: ['flame', 'thorn', 'chain'], h: ['flame', 'horn', 'drip', 'gate'], s: ['flame', 'star4', 'butterfly'], j: ['knob', 'chain', 'fade', 'leaf'] };
+  const TY = [null, 'spin halo orbit ring2 aura2 sparkle star ember corner badge rk1', 'spin orbit ring2 snow corner badge rk2', 'corner badge rk3'];
+  const PN = { d: 'ประจำวัน', w: 'ประจำสัปดาห์', m: 'ประจำเดือน' }, BD = { d: ['', '🌅', '🥈', '🥉'], w: ['', '⚔️', '🥈', '🥉'], m: ['', '🌟', '🥈', '🥉'] };
+  const RE = /^f_g([dwm])([mxgbrchsj])([0-9a-z]+)_([123])$/;
+  function frame(id) {
+    const m = RE.exec(id); if (!m) return null; const [, p, c, k, rs] = m, r = +rs, R = RNG(H('f|' + id)), pal = pk(R, PALS);
+    const sh = (SH[c] || SH.m).slice().sort(() => R() - .5).slice(0, r === 1 ? 3 : r === 2 ? 2 : 1);
+    if (r === 1) sh.unshift('rnd'); if (r === 1 && !sh.includes('crown') && R() < .5) sh.push('gem');
+    const dt = String(k).replace(/s.*/, ''), dl = dt.length >= 8 ? dt.slice(6, 8) + '/' + dt.slice(4, 6) + '/' + dt.slice(0, 4) : dt.slice(4, 6) + '/' + dt.slice(0, 4);
+    return { id, n: 'กรอบ「' + title(p, c, k, r) + '」', side: 'r', c: 0, ty: TY[r], c1: pal[0], c2: pal[1], c3: pal[2], pc: pal[1], bd: BD[p][r], d: 'อันดับ ' + r + ' ทำเนียบ' + PN[p] + ' รุ่น ' + dl + ' — มีรอบเดียว ไม่กลับมาอีก', gen: 1, sh: sh.join('|') };
+  }
+  const fid = (p, c, k, r) => 'f_g' + p + c + k + '_' + r;
+  return { title, frame, fid, RE, H };
+})();
+
+const reg=id=>{try{if(!id||typeof id!=='string'||!RKG.RE.test(id))return null;let f=FRAMES.find(x=>x.id===id);if(f)return f;f=RKG.frame(id);if(!f)return null;FRAMES.push(f);try{if(window.FRSH_T)window.FRSH_T[id]=f.sh}catch(e){}return f}catch(e){return null}};
+window.rkgReg=reg;window.RKG=RKG;
+const _fo=frOf;frOf=function(id){return _fo(id)||reg(id)};
+const _fw=frWrap;frWrap=function(inner,id){try{reg(id)}catch(e){}return _fw.apply(this,arguments)};
+try{(frGet().own||[]).forEach(reg)}catch(e){}
+// รับรางวัล: ใส่กรอบรุ่นนี้เข้ากระเป๋าก่อนหน้าต่างรางวัลอ่านข้อมูล
+const _api=api;api=async function(a){const j=await _api.apply(this,arguments);try{if(a==='bdrw'&&j&&Array.isArray(j.l)){const d=frGet();j.l.forEach(x=>{if(x&&x.gf&&reg(x.gf)){if(!d.own.includes(x.gf))d.own.push(x.gf);x.d=String(x.d||'')+' · กรอบรุ่น '+frOf(x.gf).n}});frSet(d)}}catch(e){}return j};
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
