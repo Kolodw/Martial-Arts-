@@ -26270,6 +26270,18 @@ const _oq=openQuests;openQuests=function(){const r=_oq.apply(this,arguments);try
 const nqNow=()=>{let n=0;for(const q of (S.nq||[]).slice()){if(q.pz)continue;if(QV[q.k]()-q.b<q.g)continue;const p=q.gp&&(S.parents||[]).find(x=>x.n===q.gp&&x.alive);S.nq.splice(S.nq.indexOf(q),1);S.money+=q.mny;S.fame+=q.fm;joy(4);if(p)p.rel=Math.min(100,(p.rel||0)+8);log(`📜✅ ทำเควสของ<b>${q.gv}</b>สำเร็จ: ${q.n} — ได้ ${nqRwTxt(q)}`,'epic');n++}return n};
 setInterval(()=>{try{if(!S||!S.alive||typeof tqAuto!=='function')return;let n=0;if((S.tq||[]).length)n+=tqAuto();if((S.nq||[]).length)n+=nqNow();if(n){render();const m=$('modal');if(m&&m.dataset.k==='town')openTown('board')}}catch(e){}},2000);
 }catch(e){console.error(e)}})();
+
+// ---- v17.16 เซฟเต็ม: ล้างพื้นที่ให้เองเป็นขั้น (บันทึกชีวิตยาว → สำรองช่องปัจจุบัน → บันทึกชีวิตช่องอื่น) แล้วลองเซฟใหม่ ----
+function storeUse(){const r=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);r.push([k,(localStorage.getItem(k)||'').length+k.length])}}catch(e){}r.sort((a,b)=>b[1]-a[1]);return r}
+function storeRescue(lv){let freed=0;try{
+ const trim=(k,n)=>{try{const v=localStorage.getItem(k);if(!v)return;const a=JSON.parse(v);if(Array.isArray(a)&&a.length>n){const t=JSON.stringify(a.slice(-n));freed+=v.length-t.length;localStorage.setItem(k,t)}}catch(e){}};
+ const fk=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/^murim_flog_/.test(k))fk.push(k)}
+ fk.forEach(k=>trim(k,400));if(S&&Array.isArray(S.flog)&&S.flog.length>400)S.flog.splice(0,S.flog.length-400);
+ if(lv>=2&&S&&S.slot){const k=bakKey(S.slot),v=localStorage.getItem(k);if(v){freed+=v.length;localStorage.removeItem(k)}}
+ if(lv>=3){const me='murim_flog_'+(S&&S.slot||1);fk.forEach(k=>{if(k!==me){const v=localStorage.getItem(k);if(v){freed+=v.length;localStorage.removeItem(k)}}})}
+}catch(e){}return freed}
+{const _sgR=saveGame;saveGame=function(){let r=_sgR.apply(this,arguments);try{for(let lv=1;lv<=3&&saveGame._warn;lv++){saveGame._warn=0;storeRescue(lv);_sgR.apply(this,arguments)}if(!saveGame._warn)saveFailBar(false)}catch(e){}return r}}
+{const _sfb=saveFailBar;saveFailBar=function(on){_sfb(on);try{const e=document.getElementById('saveFailBar');if(on&&e&&!e.querySelector('.sfC')){const u=storeUse().slice(0,3).map(x=>x[0].replace(/^murim_/,'')+' '+Math.round(x[1]/1024)+'KB').join(' · ');e.insertAdjacentHTML('beforeend','<div style="font-size:12px;opacity:.85;margin-top:2px">ที่กินที่มากสุด: '+u+'</div><button class="sfC" style="margin-top:4px;padding:4px 12px;border-radius:8px;border:0;background:#fff;color:#7a1f1f;font-weight:700" onclick="storeRescue(3);saveGame();toast(\'🧹 ล้างพื้นที่แล้ว\')">🧹 ล้างพื้นที่ให้ (ลบบันทึกเหตุการณ์เก่า)</button>')}}catch(x){}}}
 </script>
 </body>
 </html>
