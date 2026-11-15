@@ -829,7 +829,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
           if (sc == null) { if (x.hd) sc = Math.max(0, (+x.s || 0) - (+x.hl || 0) * 200000); else if (!x.sp && !x.jk) sc = +x.s || 0; else continue }
           const y = Object.assign({}, x, { s: sc }); delete y.sp; delete y.jk; L.push(['ZREM', k, v], ['ZADD', k, sc, JSON.stringify(y)]) }
         if (L.length) await pipe(L) } } catch {} };
-    const bdWipe = async () => { await bdSplit(); await bdRescore(); try { if (!(await cmd('SET', 'bd3init', 1, 'NX'))) return; let cur = '0', n = 0; do { const r = await cmd('SCAN', cur, 'MATCH', 'bd2:*', 'COUNT', 500); cur = String(r[0]); if (r[1].length) await cmd('DEL', ...r[1]); n++ } while (cur !== '0' && n < 200); await cmd('DEL', 'bdhide') } catch {} };
+    // v17.15b: ทำเนียบนรกเรียงตามชั้นก่อน (ชั้น×1,000,000 + คะแนนเฉลี่ย) → คิดใหม่ให้รายการเดิม (ครั้งเดียว)
+    const bdHellFloor = async () => { try { if (!(await cmd('SET', 'bdhellfl1', 1, 'NX'))) return;
+      for (const p of ['d', 'w', 'm']) for (let back = 0; back <= 1; back++) { const k = bdKeyP(p, 'ch', now, back), raw = (await cmd('ZRANGE', k, 0, -1)) || [], L = [];
+        for (const v of raw) { const x = jp(v); if (!x || x.hd === 2) continue; const hs = Math.max(0, Math.min(999999, Math.round(+x.s || 0))), sc = (+x.hl || 0) * 1e6 + hs; const y = Object.assign({}, x, { s: sc, hs, hd: 2 }); L.push(['ZREM', k, v], ['ZADD', k, sc, JSON.stringify(y)]) }
+        if (L.length) await pipe(L) } } catch {} };
+    const bdWipe = async () => { await bdSplit(); await bdRescore(); await bdHellFloor(); try { if (!(await cmd('SET', 'bd3init', 1, 'NX'))) return; let cur = '0', n = 0; do { const r = await cmd('SCAN', cur, 'MATCH', 'bd2:*', 'COUNT', 500); cur = String(r[0]); if (r[1].length) await cmd('DEL', ...r[1]); n++ } while (cur !== '0' && n < 200); await cmd('DEL', 'bdhide') } catch {} };
     if (a === 'rgboard') {
       await bdSettle();
       const p0 = String(b.p || qOf(req).p || 'd'), per = ['d', 'w', 'm', 'all'].includes(p0) ? p0 : 'd';
@@ -1532,7 +1537,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
               if (ok && L0.length && L0[L0.length - 1][1] > ag + 1) { ok = false; why = 'hlog-age2' } okL = ok } }
           catch {}
           if (!okL) { try { await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(e.n || ''), 24), age: ag, why, hl: e.hl, t: now, info: 1 })], ['LTRIM', 'acsus', 0, 199]]) } catch {} e.hl = Math.min(e.hl, Math.max(18, cs || 0)) } } if (cs) e.hcs = cs; if (okId(id) && e.hl > hb) await cmd('SET', 'hlb:' + id, e.hl, 'EX', 86400 * 400) }
-      let ejC = null; if (e.ch === 'hell') { try { ejC = JSON.stringify(Object.assign({}, e, { s: e.s, hd: 1 })) } catch {} }
+      let ejC = null; if (e.ch === 'hell') { try { const hs = Math.max(0, Math.min(999999, Math.round(+e.s || 0))); ejC = JSON.stringify(Object.assign({}, e, { s: (+e.hl || 0) * 1e6 + hs, hs, hd: 2 })) } catch {} }
       if (e.ch === 'short') { try { ejC = JSON.stringify(Object.assign({}, e, { s: e.s })) } catch {} }
       if (e.ch === 'regress') { try { const D0 = JSON.parse(String(b.det || '{}')), G = D0.rg || {}, rl = Math.max(1, Math.min(999, Math.floor(+G.loop || 1))), rf = G.free && (+e.age || 0) >= 15 ? 1 : 0; e.rl = rl; e.rf = rf; const vn = { r5: ' ⏪', nomem: ' 🧠', lim10: ' 🔟' }[String(G.var || '')] || ''; e.c = (rf ? '🔁 หลุดพ้นวงจรใน ' + rl + ' รอบ' : '🔁 ย้อนกาล ' + rl + ' รอบ') + vn + (e.c ? ' · ' + e.c : ''); e.c = e.c.slice(0, 80); ejC = JSON.stringify(Object.assign({}, e, { s: (rf ? 5e8 - rl * 1e6 : 0) + Math.min(4e8, bdScore(D0, e)), rg: 1 })) } catch {} }
       const cat = bdCat(e), ej = JSON.stringify(e), L = [['INCR', 'lives']];
