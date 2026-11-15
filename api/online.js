@@ -143,6 +143,7 @@ const bdKeyW = (c, ms, back = 0) => 'bdw:' + c + ':' + week(new Date(ms - back *
 const bdMon = (ms, back = 0) => { const t = new Date(ms + 7 * 3600e3); const d = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth() - back, 1)); return d.toISOString().slice(0, 7) };
 const bdKeyM = (c, ms, back = 0) => 'bdm:' + c + ':' + bdMon(ms, back);
 const bdKeyP = (p, c, ms, back = 0) => p === 'w' ? bdKeyW(c, ms, back) : p === 'm' ? bdKeyM(c, ms, back) : bdKey(c, ms, back);
+function liveMeta(snap) { try { const s0 = typeof snap === 'string' ? JSON.parse(snap) : snap; return JSON.stringify({ n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null }) } catch { return '' } }
 function bdScore(D, e) {
   const st = (D && D.st) || {}, bm = !!e.bm, L = (v, r) => Math.min(1.5, Math.log10(1 + Math.max(0, +v || 0)) / Math.log10(1 + r));
   const kids = +D.kc >= 0 && D.kc != null ? +D.kc : (D.kids || []).length, ach = D.an != null ? +D.an : (D.ach || []).length;
@@ -908,9 +909,9 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 90e3, '+inf']]);
         const all = [...(pub || []).map(x => [x, 'live:', 0]), ...(prv || []).filter(x => !(pub || []).includes(x)).map(x => [x, 'livep:', 1])];
 
-        const vals = all.length ? await cmd('MGET', ...all.map(x => x[1] + x[0])) : [];
-        const cnt = all.length ? await pipe(all.map(x => ['ZCOUNT', 'watch:' + x[0], now - 25e3, '+inf'])) : [];
-        const lms = all.length ? await cmd('HMGET', 'lm', ...all.map(x => x[0])) : [];
+        const rA = all.length ? await pipe([['HMGET', 'livem', ...all.map(x => x[0])], ['HMGET', 'lm', ...all.map(x => x[0])], ...all.map(x => ['ZCOUNT', 'watch:' + x[0], now - 25e3, '+inf'])]) : [[], []];
+        let vals = rA[0] || []; const lms = rA[1] || [], cnt = rA.slice(2);
+        const missA = all.filter((x, i) => !vals[i]); if (missA.length) { const mv = await cmd('MGET', ...missA.map(x => x[1] + x[0])); vals = vals.slice(); let j = 0; all.forEach((x, i) => { if (!vals[i]) vals[i] = mv[j++] }) }
         const l = [];
         all.forEach(([x, , pv], i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: +s0.p || (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null, w: cnt[i] || 0, pv, m: (() => { try { return JSON.parse(lms[i]) } catch { return null } })() }) } catch {} });
         await pipe([['ZREMRANGEBYSCORE', 'livezp', 0, now - 180e3]]);
@@ -1374,13 +1375,13 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (okId(id)) { try { const lm = uaMeta(req, now); lm.u = String(req.headers['user-agent'] || '').slice(0, 160); await cmd('HSET', 'lm', id, JSON.stringify(lm)) } catch {} }
       if (!b.spec) {
         const ps = String(b.s || '');
-        if (ps && ps.length <= 60000) { try { JSON.parse(ps); const r0 = (await pipe([['HDEL', 'livem', id], ['DEL', 'live:' + id], ['ZREM', 'livez', id], ['SET', 'livep:' + id, ps, 'EX', 100], ['ZADD', 'livezp', now, id], ['GET', 'logreq:' + id], ['ZCOUNT', 'watcha:' + id, now - 25e3, '+inf']])).slice(1); return res.json({ w: 0, f: +r0[5] > 0 ? 1 : 0, lr: r0[4] ? 1 : 0 }) } catch {} }
+        if (ps && ps.length <= 60000) { try { JSON.parse(ps); const r0 = (await pipe([['HSET', 'livem', id, liveMeta(ps)], ['DEL', 'live:' + id], ['ZREM', 'livez', id], ['SET', 'livep:' + id, ps, 'EX', 100], ['ZADD', 'livezp', now, id], ['GET', 'logreq:' + id], ['ZCOUNT', 'watcha:' + id, now - 25e3, '+inf']])).slice(1); return res.json({ w: 0, f: +r0[5] > 0 ? 1 : 0, lr: r0[4] ? 1 : 0 }) } catch {} }
         await pipe([['HDEL', 'livem', id], ['DEL', 'live:' + id], ['ZREM', 'livez', id], ['DEL', 'livep:' + id], ['ZREM', 'livezp', id]]); return res.json({ w: 0 })
       }
       const snap = String(b.s || '');
       if (snap.length > 60000) return res.status(400).json({ err: 'size' });
       try { JSON.parse(snap) } catch { return res.status(400).json({ err: 'json' }) }
-      let meta = ''; try { const s0 = JSON.parse(snap); meta = JSON.stringify({ n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: +s0.p || (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null }) } catch {}
+      const meta = liveMeta(snap);
       const [, , , , w] = await pipe([['SET', 'live:' + id, snap, 'EX', 70], ['ZADD', 'livez', now, id], ['DEL', 'livep:' + id], ['ZREM', 'livezp', id], ['ZCOUNT', 'watch:' + id, now - 25e3, '+inf'], ['HSET', 'livem', id, meta]]);
       const [lr, fa] = await pipe([['GET', 'logreq:' + id], ['ZCOUNT', 'watcha:' + id, now - 25e3, '+inf']]);
       let ex = {}; try { const z = JSON.parse(snap), ck = z.ch && String(z.ch.k || '').replace(/[^a-z0-9]/g, '').slice(0, 12);
