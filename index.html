@@ -24864,6 +24864,57 @@ setInterval(()=>{try{if(!islOn())return;const el=document.getElementById('isl'),
  if(c&&!c.docked&&!on&&!document.body.classList.contains('islFloat')){islRender(c,false);return}
  if(!c&&!ISL.q.length&&on&&!el.classList.contains('bye')){if(!ISL._hw)ISL._hw=now;else if(now-ISL._hw>1500){ISL._hw=0;islHide()}}else ISL._hw=0}catch(e){}},700);
 document.addEventListener('visibilitychange',()=>{try{if(document.hidden)return;const c=ISL.cur;if(c&&!c.live&&!c.sticky&&c._at&&Date.now()-c._at>(c.ms||2000)){clearTimeout(ISL.t);ISL.t=setTimeout(()=>islNext(),300)}}catch(e){}});
+
+// ===================== 🌍 แรงกดดันของโลก — อยู่ยุทธภพ/โลกเซียนนานเกินไป โลกรับพลังไม่ไหว =====================
+// ยุทธภพ: เริ่มเมื่ออายุ 1,000 ปี หรืออยู่ขั้นสูงสุดเกิน 300 ปี · เต็มราว 3,000 ปี
+// โลกเซียน: เริ่มเมื่ออายุ 50,000 ปี หรืออยู่ขั้นสูงสุดเกิน 15,000 ปี · เต็มราว 30,000 ปี
+// 25% ลางบอกเหตุ · 50% ทูตจากเบื้องบน · 75% ผู้บังคับใช้กฎ (ทุก 200 / 2,000 ปี) · 100% โลกเริ่มแตก
+const WPW=()=>S.xian?{st:50000,pk:15000,full:30000,hold:10000,enf:2000,up:'แดนเทพ',me:'โลกเซียน',from:'ผู้คุมกฎจากแดนเทพ'}:{st:1000,pk:300,full:3000,hold:100,enf:200,up:'โลกเซียน',me:'ยุทธภพ',from:'ผู้คุมกฎจากโลกเซียน'};
+function wpOn(){return !!(S&&S.alive&&!S.xt&&!(S.beastMode&&!S.beastMode.human)&&S.ch!=='short'&&!S.mw&&!(S.wp&&S.wp.seal))}
+function wpGet(){const w=S.xian?'x':'m';if(!S.wp||S.wp.w!==w)S.wp={w,v:0,s25:0,env:0,hold:0,enf:0,fail:0,pk:null,seal:0};return S.wp}
+function wpTick(st){if(!wpOn())return;const W=WPW(),P=wpGet();if(realmIdx()>=7){if(P.pk==null)P.pk=S.age}else P.pk=null;
+ const over=S.age>=W.st||(P.pk!=null&&S.age-P.pk>=W.pk);if(!over)return;
+ if(!P.init){P.init=1;if(S.age>=W.st*3)P.v=Math.max(P.v,50)}
+ if(P.hold&&S.age<P.hold)return;P.v=Math.min(100,P.v+100/W.full*Math.max(1,st)*(realmIdx()>=7?1.2:1));wpAsk()}
+function wpWait(fn){let n=0;const go=()=>{if(!S||!S.alive){if(S&&S.wp)S.wp.busy=0;return}if((choice._cur||modalOpen)&&n++<150)return setTimeout(go,900);fn()};setTimeout(go,500)}
+function wpAsk(){const P=S.wp,W=WPW();if(!P)return;if(P.busy&&Date.now()-P.busy<180000)return;P.busy=0;
+ if(P.v>=100&&!P.end){P.busy=Date.now();return wpWait(()=>{P.busy=0;wpCollapse()})}
+ if(P.v>=75&&S.age>=(P.enf||0)){P.busy=Date.now();return wpWait(()=>{P.busy=0;wpEnforcer()})}
+ if(P.v>=50&&!P.env){P.busy=Date.now();return wpWait(()=>{P.busy=0;wpEnvoy()})}
+ if(P.v>=25&&!P.s25){P.s25=1;joy(-8);S.fame+=fameR?fameR(30):30;log(`🌍 <b>${W.me}เริ่มรับพลังของคุณไม่ไหว</b> — ท้องฟ้าร้าวเป็นเส้นบางๆ สัตว์ในป่าเงียบกริบ แผ่นดินสั่นทุกครั้งที่คุณฝึก คนรอบตัวเริ่มมองคุณด้วยความกลัว`,'myth',true);try{const k=(S.children||[]).find(c=>c&&c.alive!==false);if(k)log(`🌍 ${esc(k.n||'ลูกของคุณ')}บาดเจ็บจากแผ่นดินไหวที่เกิดใกล้ตัวคุณ`,'bad')}catch(e){}}}
+function wpUp(gift){const W=WPW();S.flags.ascendNo=0;S.wp=null;log(`☁️ ${W.from}เปิดทางให้ — ร่างของคุณลอยขึ้นสู่${W.up}โดยไม่ต้องฝ่าทัณฑ์`,'myth',true);if(S.xian)ascendGod();else ascendToX();if(gift){try{const a=newArt(4);S.arts.push(a);log(`🎁 ของขวัญจากผู้เชิญ: ${artHtml(a)}`,'epic')}catch(e){}}try{render()}catch(e){}}
+function wpEnvoy(){const P=S.wp,W=WPW();if(!P||P.env)return;P.env=1;
+ choice(`🌩️ ${W.from}ลงมาพบ`,`ชายในชุดขาวยืนอยู่กลางอากาศ "${esc(S.name)} — ${W.me}นี้เล็กเกินไปสำหรับเจ้าแล้ว ทุกปีที่เจ้าอยู่ ฟ้าดินที่นี่ร้าวลึกขึ้น ไปเสีย ก่อนที่จะมีคนตายเพราะเจ้า"<br><span class="tag2">🌍 แรงกดดันของโลก ${Math.round(P.v)}%</span>`,[
+  {t:`☁️ ไปเลย`,s:`ขึ้น${W.up}ทันทีโดยไม่ต้องฝ่าทัณฑ์ + วิชาระดับ 4 เป็นของขวัญ`,_x:1,noFate:1,f(){wpUp(1)}},
+  ...(P.held?[]:[{t:`⏳ ขอเวลา ${fmt(W.hold)} ปี`,s:'แรงกดดันหยุดขึ้นชั่วคราว (ขอได้ครั้งเดียว)',_x:1,noFate:1,f(){P.held=1;P.hold=S.age+W.hold;log(`⏳ ทูตพยักหน้า "${fmt(W.hold)} ปี ไม่มากกว่านั้น"`,'epic')}}]),
+  {t:'🔒 ผนึกพลังตัวเอง',s:'พลังยุทธ์ −40% แต่โลกไม่กดดันอีก · ได้คืนบางส่วนเมื่อขึ้นโลกถัดไป',_x:1,noFate:1,f(){wpSeal()}},
+  {t:'✋ ปฏิเสธ',s:'แรงกดดันขึ้นต่อ · ถึง 75% จะมีคนมาบังคับ',_x:1,noFate:1,f(){S.karma-=5;log('✋ "ที่นี่คือบ้านของข้า" — ทูตหายไปพร้อมคำเตือนครั้งสุดท้าย','bad',true)}}])}
+function wpSeal(){const P=S.wp,W=WPW();const cut=Math.round(S.power*.4);S.power-=cut;P.seal=1;S.flags.wpSealUp=1;
+ const g=(S.karma||0)>=200;log(`🔒 คุณผนึกพลังส่วนหนึ่งไว้ในกระดูกของตัวเอง — ${W.me}กลับมาสงบ${g?' · ผู้คนเรียกคุณว่า<b>เทพผู้พิทักษ์'+W.me+'</b>':''}`,'myth',true);if(g)S.flags.wpGuard=1;try{render()}catch(e){}}
+function wpEnforcer(){const P=S.wp,W=WPW();if(!P)return;P.enf=S.age+W.enf;P.ec=(P.ec||0)+1;const ep=Math.round(total()*(1.15+.1*Math.min(5,P.ec-1)));
+ choice(`⚖️ ผู้บังคับใช้กฎลงมา (ครั้งที่ ${P.ec})`,`"เจ้าได้รับคำเตือนแล้ว" — ผู้บังคับใช้กฎจาก${W.up}ชักกระบี่แสงออกมา ฟ้าทั้งผืนเงียบลง<br><span class="tag2">แรงราว ${Math.round(ep/Math.max(1,total())*100)}% ของคุณ · แพ้ครบ 3 ครั้งจะถูกลบออกจากโลก (แพ้แล้ว ${P.fail||0})</span>`,[
+  {t:'⚔️ สู้',s:'ชนะ = แรงกดดัน −30% และฉายา「ผู้ท้าฟ้า」',_x:1,noFate:1,f(){setTimeout(()=>duel('ผู้บังคับใช้กฎแห่ง'+W.up,ep,w=>{if(w){P.v=Math.max(50,P.v-30);S.flags.wpDefy=(S.flags.wpDefy||0)+1;S.fame+=fameR?fameR(200):200;log(`⚔️ คุณหักกระบี่แสงของผู้บังคับใช้กฎ — มันถอยกลับขึ้นฟ้า แต่จะมีคนที่แข็งกว่ามาอีก`,'myth',true)}
+   else{P.fail=(P.fail||0)+1;S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.6));if(P.fail>=3){S.deathCause=`ถูกผู้บังคับใช้กฎแห่ง${W.up}ลบออกจาก${W.me}`;S.hp=0;try{checkDeath()}catch(e){}}else log(`⚖️ คุณแพ้ — ผู้บังคับใช้กฎทิ้งรอยแผลไว้กลางอก "ครั้งหน้าข้าไม่ไว้ชีวิต" (แพ้ได้อีก ${3-P.fail} ครั้ง)`,'bad',true)}try{render()}catch(e){}}),300)}},
+  {t:`☁️ ยอมขึ้น${W.up}`,s:'ไปโดยไม่ต้องฝ่าทัณฑ์ (ไม่มีของขวัญ)',_x:1,noFate:1,f(){wpUp(0)}}])}
+function wpCollapse(){const P=S.wp,W=WPW();if(!P||P.end)return;P.end=1;const sp=S.spouse&&S.spouse.n;
+ choice(`💥 ${W.me}กำลังแตกสลาย`,`ฟ้าแยกออกเป็นสองฝั่ง ทะเลไหลขึ้นสู่รอยแยก — ${W.me}รับพลังของคุณไม่ไหวอีกแล้ว ต้องเลือกเดี๋ยวนี้`,[
+  {t:'🕊️ เหาะหนีพร้อมคนที่รัก',s:`ขึ้น${W.up}${sp?' พา '+esc(sp)+' ไปด้วย':''}`,_x:1,noFate:1,f(){log(`🕊️ คุณ${sp?'จับมือ '+esc(sp)+' แล้ว':''}ทะยานผ่านรอยแยกขึ้นไป ข้างล่าง${W.me}ค่อยๆ ประสานกลับ`,'myth',true);wpUp(0)}},
+  {t:'🛡️ ใช้ร่างอุดรอยแยก',s:'จบชีวิตเป็นวีรบุรุษ · ฉายา「ผู้ค้ำฟ้า」 · ทายาทได้มรดกใหญ่',_x:1,noFate:1,f(){S.flags.wpHero=1;LS.set('murim_wpleg',{n:S.name,t:Date.now()});S.deathCause=`ใช้ร่างตัวเองอุดรอยแยกของ${W.me} — ฟ้าดินยังอยู่เพราะเขา`;S.hp=0;try{checkDeath()}catch(e){}}},
+  {t:'😈 กลืนโลกทั้งใบ',s:'พลังมหาศาล · กรรมดิ่ง · ไปโลกถัดไปในฐานะมารที่ถูกตามล่า',_x:1,noFate:1,f(){S.karma-=500;S.flags.wpDemon=1;log(`😈 คุณสูด${W.me}ทั้งใบเข้าไปในร่าง — ไม่มีอะไรเหลือ นอกจากคุณ`,'myth',true);wpUp(0);try{S.power+=pctPow(.8)}catch(e){}}}])}
+// ขึ้นโลกใหม่ → รีเซ็ต · เคยผนึกไว้ ได้คืนบางส่วน
+{const _ax=ascendToX;ascendToX=function(){const r=_ax.apply(this,arguments);try{S.wp=null;if(S.flags.wpSealUp){S.flags.wpSealUp=0;S.power+=pctPow(.2);log('🔓 ผนึกในกระดูกคลายออก — พลังที่เก็บไว้ไหลกลับมาส่วนหนึ่ง','epic')}}catch(e){}return r}}
+{const _ag=ascendGod;ascendGod=function(){const r=_ag.apply(this,arguments);try{S.wp=null;if(S.flags.wpSealUp){S.flags.wpSealUp=0;S.power+=pctPow(.2);log('🔓 ผนึกในกระดูกคลายออก — พลังที่เก็บไว้ไหลกลับมาส่วนหนึ่ง','epic')}}catch(e){}return r}}
+// มรดกผู้ค้ำฟ้า → ชีวิตถัดไป
+{const _slW=startLife;startLife=function(){const r=_slW.apply(this,arguments);try{const L=LS.get('murim_wpleg',null);if(L&&S){LS.del('murim_wpleg');S.money+=Math.round(5000*(typeof W15==='function'?1:1));S.power+=pctPow(.15);S.karma+=50;setTimeout(()=>log(`🛡️ คุณเกิดใต้ฟ้าที่ <b>${esc(L.n)}</b> ผู้ค้ำฟ้าใช้ชีวิตแลกไว้ — ตระกูลได้รับมรดกและพรของเขา`,'myth',true),900)}}catch(e){}return r}}
+{const _pyWP=passYear;passYear=function(){const a0=S?S.age:0;const r=_pyWP.apply(this,arguments);try{if(S&&S.alive)wpTick(Math.max(1,S.age-a0))}catch(e){console.error(e)}return r}}
+// ป้ายบนหัวจอ + หน้าอธิบาย
+function openWP(){const P=S&&S.wp,W=WPW();if(!P)return;const v=Math.round(P.v);modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌍 แรงกดดันของ${W.me} ${v}%</h3><div class="hpbar" style="height:10px"><i style="width:${v}%;background:linear-gradient(90deg,#ffd76a,#ff7a2a,#ff2a2a)"></i></div>
+ <p>${W.me}ถูกสร้างมาให้รับพลังได้แค่ระดับหนึ่ง ยิ่งคุณอยู่นาน ยิ่งแรงกดดันสะสม</p><ul class="speclist"><li>${P.v>=25?'✅':'▫️'} 25% — ลางบอกเหตุ</li><li>${P.env?'✅':'▫️'} 50% — ทูตจากเบื้องบนมาเตือน</li><li>${P.v>=75?'⚠️':'▫️'} 75% — ผู้บังคับใช้กฎลงมาทุก ${fmt(W.enf)} ปี (แพ้ครบ 3 ครั้ง = ตาย · แพ้แล้ว ${P.fail||0})</li><li>${P.v>=100?'💥':'▫️'} 100% — โลกเริ่มแตก ต้องเลือกทางจบ</li></ul>
+ ${P.hold&&S.age<P.hold?`<p class="tag2">⏳ ทูตให้เวลาถึงอายุ ${fmt(P.hold)} ปี</p>`:''}<p class="tag2">ทางออก: ขึ้น${W.up} · หรือผนึกพลังตัวเอง (พลัง −40% แต่โลกไม่กดดันอีก)</p>
+ <button class="gbtn" style="width:100%" onclick="closeM();wpSeal()">🔒 ผนึกพลังตัวเองเดี๋ยวนี้</button>`,'wp')}
+{const _rdWP=render;render=function(){const r=_rdWP.apply(this,arguments);try{const P=S&&S.wp,g=$('gRealm');if(g&&P&&P.v>0&&wpOn()&&!g.querySelector('.wpb')){const v=Math.round(P.v);g.insertAdjacentHTML('beforeend',` <span class="wpb ${v>=75?'wpHot':''}" onclick="event.stopPropagation();openWP()">🌍 ${v}%</span>`)}}catch(e){}return r}}
+try{const L=[{id:'wp_defy',n:'ผู้ท้าฟ้า',d:'ชนะผู้บังคับใช้กฎที่ลงมาไล่คุณออกจากโลก',r:4,c:()=>!!(S.flags&&S.flags.wpDefy)},{id:'wp_hero',n:'ผู้ค้ำฟ้า',d:'ใช้ร่างตัวเองอุดรอยแยกของโลกที่กำลังแตก',r:5,c:()=>!!(S.flags&&S.flags.wpHero)},{id:'wp_guard',n:'เทพผู้พิทักษ์ยุทธภพ',d:'ผนึกพลังตัวเองเพื่ออยู่ปกป้องโลกด้วยกรรมดี',r:4,c:()=>!!(S.flags&&S.flags.wpGuard)},{id:'wp_eat',n:'ผู้กลืนโลก',d:'กลืนโลกทั้งใบที่รับพลังของคุณไม่ไหว',r:5,c:()=>!!(S.flags&&S.flags.wpDemon)}];ACH.push(['🌍 แรงกดดันของโลก',L]);ACH_ALL.push(...L)}catch(e){}
+(()=>{const st=document.createElement('style');st.textContent='.wpb{cursor:pointer;background:#2a2410;color:#ffd76a;border:1px solid #c8a23a;border-radius:8px;padding:0 6px;font-size:.85em;font-weight:700}.wpb.wpHot{background:#3a0c0c;color:#ff9a7a;border-color:#ff5a3a;animation:hlbP 1.2s ease-in-out infinite}';document.head.appendChild(st)})();
 </script>
 </body>
 </html>
