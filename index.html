@@ -8111,7 +8111,7 @@ setInterval(()=>{try{if($('modal').dataset.k==='spec')specStamp._r()}catch(e){}}
 .shpick button.fr6{border-color:transparent;background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(90deg,#ff4d4d,#ffd84d,#5dff7a,#4dd8ff,#b06bff,#ff4d4d) border-box}`;document.head.appendChild(st)})();
 const ACH_W=[1,1,2,3,4,6,8];
 const starH=n=>'★'.repeat(n)+'☆'.repeat(Math.max(0,3-n));
-function tchipH(t,r){r=Math.max(0,Math.min(6,+r||0));return`<span class="tchip fr${r}">${esc(String(t).slice(0,24))}</span>`}
+function tchipH(t,r){r=Math.max(0,Math.min(6,+r||0));return`<span class="tchip fr${r}">${esc(String(t).slice(0,40))}</span>`}
 // ---- ป๊อปอัปกรอบสี (คิวทีละอัน) ----
 const APQ=[];let apBusy=0;
 function achPopShow(h){APQ.push(h);if(APQ.length>4)APQ.splice(0,APQ.length-4);if(!apBusy)apNext()}
@@ -8827,7 +8827,7 @@ function ttlInfo(t){t=String(t||'');if(!t)return null;if(typeof ACH_ALL!=='undef
 function ttlCls(t){const i=ttlInfo(t);if(!i||!i.hard)return'';return' tt tt-'+({g:'good',e:'evil',n:'neu'})[i.al]}
 {const _tc2=tchipH;tchipH=function(t,r){if(String(t)===GOD_T)return _tc2.apply(this,arguments);r=Math.max(0,Math.min(6,+r||0));const tc=ttlCls(t);
  const ic=tc.includes('evil')?'<i class="tti">☠</i>':tc.includes('good')?'<i class="tti">✧</i>':tc.includes('neu')?'<i class="tti">◇</i>':'';
- return`<span class="tchip fr${r}${tc}" style="--ph:${aPh(3000)};--ph2:${aPh(4200,700)}">${ic}<span class="tcx">${esc(String(t).slice(0,24))}</span></span>`}}
+ return`<span class="tchip fr${r}${tc}" style="--ph:${aPh(3000)};--ph2:${aPh(4200,700)}">${ic}<span class="tcx">${esc(String(t).slice(0,40))}</span></span>`}}
 // หน้าเลือกฉายา: ปุ่มใช้หน้าตาเดียวกับป้ายจริง + คำอธิบายสี
 {const _osp=openShowPick;openShowPick=function(){const r=_osp.apply(this,arguments);try{const m=$('modal');m.querySelectorAll('.shpick button').forEach(b=>{const sp=b.querySelector('span');if(!sp)return;const t=sp.textContent,rr=(b.className.match(/fr(\d)/)||[])[1]||0;b.classList.add('shx');b.innerHTML=tchipH(t,rr)});
  const h=[...m.querySelectorAll('h4')].find(x=>/ฉายาที่เคยถูกเรียกขาน/.test(x.textContent));if(h&&!m.querySelector('#ttLegend'))h.insertAdjacentHTML('afterend',`<p id="ttLegend" class="tag2" style="margin:-2px 0 8px">ฉายาที่ได้ยาก (ระดับเทพขึ้นไป และฉายาพิเศษ) สีตามบทบาท: ${tchipH('จักรพรรดิกระบี่ทรงธรรม',4)} ฝ่ายธรรมะ · ${tchipH('จักรพรรดิมารโลหิต',4)} ฝ่ายมาร · ${tchipH('จักรพรรดิหมัดสายลม',4)} สายกลาง</p>`)}catch(e){}return r}}
@@ -8883,7 +8883,7 @@ const ACH_THI={cyber:'⟁',sys:'▣',demon:'☠',holy:'✧',gold:'✦',beast:'�
 const ACH_BYN={};try{ACH_ALL.forEach(a=>{ACH_BYN[a.n]=a})}catch(e){}
 function achThemeOf(name){const a=ACH_BYN[String(name||'').trim()];if(!a||a.r>=6||String(name)===GOD_T)return null;const t=ACH_TH[a.id];return t?{t,a}:null}
 {const _tc3=tchipH;tchipH=function(t,r){const th=achThemeOf(t);if(!th)return _tc3.apply(this,arguments);r=Math.max(0,Math.min(6,+r||0));
- return`<span class="tchip fr${r} th th-${th.t}" style="--ph:${aPh(3000)};--ph2:${aPh(4800,900)}"><i class="tti">${ACH_THI[th.t]}</i><span class="tcx">${esc(String(t).slice(0,24))}</span></span>`}}
+ return`<span class="tchip fr${r} th th-${th.t}" style="--ph:${aPh(3000)};--ph2:${aPh(4800,900)}"><i class="tti">${ACH_THI[th.t]}</i><span class="tcx">${esc(String(t).slice(0,40))}</span></span>`}}
 // ติดธีมให้การ์ดในสมุด ข้อความในบันทึก และป๊อปอัปตอนปลดล็อก
 function achThemeMark(){try{
  document.querySelectorAll('#modal .item:not([data-th])').forEach(e=>{e.dataset.th='-';const b=e.querySelector('.h b');if(!b)return;const n=(b.textContent||'').replace(/^[^฀-๿A-Za-z0-9]+/,'').trim();const th=achThemeOf(n);if(th){e.dataset.th=th.t;e.classList.add('th','th-'+th.t)}});
@@ -12171,7 +12171,7 @@ function rkSync(rk){if(!Array.isArray(rk))return;const had=new Set(rkList().map(
  const cur=showTtl();if(nw.length&&(!cur||(cur.r<7)||(RKC_TR[nw[0].p]>=cur.r))){const b=nw[0];LS.set('murim_show',{t:b.t,r:RKC_TR[b.p],k:'rk'});toast('🏆 สวมฉายาทำเนียบ「'+b.t+'」ให้แล้ว (ชั่วคราว)')}
  nw.forEach(x=>{try{achPopShow({r:6,h:'🏆 ฉายาทำเนียบ'+RKC_PN[x.p],n:'「'+x.t+'」',d:'โชว์ในแชทและตอนคนอื่นดูคุณเล่น · หมดอายุ '+rkLeft(x)})}catch(e){}})}
 function rkLeft(x){const ms=x.exp-Date.now();if(ms<=0)return'หมดแล้ว';const d=Math.floor(ms/86400e3),h=Math.floor(ms%86400e3/3600e3);return d?`อีก ${d} วัน ${h} ชม.`:`อีก ${h} ชม. ${Math.floor(ms%3600e3/60e3)} นาที`}
-function rkChip(t,tr){const o=RKC_OF(t),p=o?o.p:tr===9?'m':tr===8?'w':'d',r=o?o.r:1;return`<span class="rkchip rk${p} rr${r}"><i>${p==='m'?'👑':p==='w'?'💠':'✦'}${['','①','②','③'][r]}</i>${esc(String(t).slice(0,24))}</span>`}
+function rkChip(t,tr){const o=RKC_OF(t),p=o?o.p:tr===9?'m':tr===8?'w':'d',r=o?o.r:1;return`<span class="rkchip rk${p} rr${r}"><i>${p==='m'?'👑':p==='w'?'💠':'✦'}${['','①','②','③'][r]}</i>${esc(String(t).slice(0,40))}</span>`}
 {const _tcR=tchipH;tchipH=function(t,r){if(+r>=7||RKC_OF(String(t||'')))return rkChip(t,+r);return _tcR.apply(this,arguments)}}
 {const _stR=showTtl;showTtl=function(){const v=_stR.apply(this,arguments);try{if(v&&(v.r>=7||v.k==='rk')){const ok=rkList().some(x=>x.t===v.t);if(!ok){LS.del('murim_show');return null}}}catch(e){}return v}}
 {const _spR=openShowPick;openShowPick=function(){const r=_spR.apply(this,arguments);try{const m=$('modal'),L=rkList(),cur=showTtl();const h4=[...m.querySelectorAll('h4')][0];
@@ -12416,7 +12416,7 @@ const CHB={hell:['🔥','นรก','#ff4a2a'],short:['⏳','ชีวิตส�
 function chBadge(c){const b=CHB[c];return b?`<span class="chbg" style="--c:${b[2]}">${b[0]} ${b[1]}</span>`:''}
 Object.assign(RKC,{dc:['','ผู้ฝ่าขุมนรก','วิญญาณไม่ดับ','ผู้ท้าลิขิต'],wc:['','ราชันย์ไร้พรสวรรค์','จ้าวแห่งเปลวนรก','ผู้ทวนชะตา'],mc:['','จักรพรรดิผู้ลบลิขิต','มารฟ้าทลายกรรม','ตำนานจากธุลี']});
 Object.assign(RKC_TR,{dc:7,wc:8,mc:9});Object.assign(RKC_PN,{dc:'ท้าทายรายวัน',wc:'ท้าทายรายสัปดาห์',mc:'ท้าทายรายเดือน'});
-{const _rkc=rkChip;rkChip=function(t,tr){const o=RKC_OF(String(t||''));if(o&&o.p==='wa'){const r=o.r;return`<span class="rkchip rka rr${r}"><i>⚔️${['','①','②','③'][r]}</i>${esc(String(t).slice(0,24))}</span>`}if(o&&o.p.length===2){const r=o.r,p=o.p[0];return`<span class="rkchip rkc rkc${p} rr${r}"><i>${p==='m'?'💀':p==='w'?'🔥':'☄️'}${['','①','②','③'][r]}</i>${esc(String(t).slice(0,24))}</span>`}return _rkc.apply(this,arguments)}}
+{const _rkc=rkChip;rkChip=function(t,tr){const o=RKC_OF(String(t||''));if(o&&o.p==='wa'){const r=o.r;return`<span class="rkchip rka rr${r}"><i>⚔️${['','①','②','③'][r]}</i>${esc(String(t).slice(0,40))}</span>`}if(o&&o.p.length===2){const r=o.r,p=o.p[0];return`<span class="rkchip rkc rkc${p} rr${r}"><i>${p==='m'?'💀':p==='w'?'🔥':'☄️'}${['','①','②','③'][r]}</i>${esc(String(t).slice(0,40))}</span>`}return _rkc.apply(this,arguments)}}
 FRAMES.push({id:'f_ch1',n:'กรอบเพลิงนรกันต์',side:'r',c:0,ty:'spin halo orbit sparkle star corner badge',c1:'#ff3a1a',c2:'#ffb040',c3:'#5a0a10',pc:'#ffd080',bd:'🔥',d:'อันดับ 1 ทำเนียบโหมดท้าทาย'},
  {id:'f_ch2',n:'กรอบโซ่ทวนลิขิต',side:'r',c:0,ty:'spin orbit star corner badge',c1:'#a040ff',c2:'#ff70c0',c3:'#2a0a40',pc:'#ffb0f0',bd:'⛓️',d:'อันดับ 2 ทำเนียบโหมดท้าทาย'},
  {id:'f_ch3',n:'กรอบเถ้าธุลีพลิกฟ้า',side:'r',c:0,ty:'spin corner badge',c1:'#8a7a5a',c2:'#ffe0a0',c3:'#3a2a1a',pc:'#ffe8b0',bd:'🗑️',d:'อันดับ 3 ทำเนียบโหมดท้าทาย'});
@@ -19584,7 +19584,7 @@ try{FRAMES.push(
  {id:'f_rgm1',n:'กรอบเหนือกาลเวลา',side:'r',c:0,ty:'spin halo orbit sparkle star corner badge',c1:'#ffd76a',c2:'#8affd0',c3:'#1a1030',pc:'#ffffff',bd:'♾️',d:'อันดับ 1 ทำเนียบผู้ย้อนกาลรายเดือน (สวยที่สุด)'},
  {id:'f_rgm2',n:'กรอบจักรพรรดิแห่งวันวาน',side:'r',c:0,ty:'spin halo orbit sparkle corner badge',c1:'#e0c070',c2:'#ff8ab0',c3:'#2a1418',pc:'#fff0d0',bd:'👑',d:'อันดับ 2 ทำเนียบผู้ย้อนกาลรายเดือน'},
  {id:'f_rgm3',n:'กรอบร้อยชาติ',side:'r',c:0,ty:'spin halo orbit corner badge',c1:'#70c0a0',c2:'#e0ffb0',c3:'#0a2018',pc:'#f0fff0',bd:'📜',d:'อันดับ 3 ทำเนียบผู้ย้อนกาลรายเดือน'})}catch(e){}
-{const _rkcR=rkChip;rkChip=function(t,tr){const o=RKC_OF(String(t||''));if(o&&o.p.length===2&&o.p[1]==='r'){const r=o.r,p=o.p[0];return`<span class="rkchip rkr rkr${p} rr${r}"><i>${p==='m'?'♾️':p==='w'?'🌀':'⏳'}${['','①','②','③'][r]}</i>${esc(String(t).slice(0,24))}</span>`}return _rkcR.apply(this,arguments)}}
+{const _rkcR=rkChip;rkChip=function(t,tr){const o=RKC_OF(String(t||''));if(o&&o.p.length===2&&o.p[1]==='r'){const r=o.r,p=o.p[0];return`<span class="rkchip rkr rkr${p} rr${r}"><i>${p==='m'?'♾️':p==='w'?'🌀':'⏳'}${['','①','②','③'][r]}</i>${esc(String(t).slice(0,40))}</span>`}return _rkcR.apply(this,arguments)}}
 {const _bdcO2=BD_FRP;bdClaim=async function(){try{if(!onlineOK)return;const j=await api('bdrw');try{rkSync(j&&j.rk)}catch(e){}const L=(j&&j.l)||[];if(!L.length)return;const d=frGet(),kb=kbGet();let w=LS.get('murim_bdw',0)||0;const lines=[];
  for(const x of L){if(x.c==='al'){try{lines.push(arLgReward(x,d))}catch(e){}continue}if(/^c[hsj]$/.test(x.c)&&typeof chmReward==='function'){try{lines.push(chmReward(x,d,kb));w++}catch(e){}continue}const r=Math.max(1,Math.min(3,+x.r||3)),pp=_bdcO2[x.p]?x.p:'d',isC=x.c==='c',isA=x.c==='a',isR=x.c==='r',fid=isR?'f_rg'+pp+r:isA?'f_ar'+r:isC?'f_ch'+r:_bdcO2[pp]+r,kv=BD_KBP[pp][r];if(!d.own.includes(fid))d.own.push(fid);kb.g+=kv;w++;if(r===1)LS.set('murim_bd1',(LS.get('murim_bd1',0)||0)+1);if(isC)LS.set('murim_bdC',(LS.get('murim_bdC',0)||0)+1);else if(isR)LS.set('murim_bdR',(LS.get('murim_bdR',0)||0)+1);else if(pp!=='d'){const kk=pp==='w'?'murim_bdW':'murim_bdM';LS.set(kk,(LS.get(kk,0)||0)+1)}
   lines.push(`${['','🥇','🥈','🥉'][r]} อันดับ ${r} ${isR?'🔁 ทำเนียบผู้ย้อนกาล'+BD_PN[pp]:isA?'🏟️ ลานประลองหมื่นเงา ซีซั่น':isC?'🔥 ทำเนียบท้าทาย'+RKC_PN[pp]:'ทำเนียบ'+BD_PN[pp]+' '+(BD_CN[x.c]||'')} (${esc(x.d)}) — ${esc(x.n)}${x.ch&&!isR?' '+chBadge(x.ch):''}${isR&&x.rl?` (${x.rl} รอบ)`:` (${fmt(x.s)} คะแนน)`} · ได้ <b>${frOf(fid).n}</b>${x.tt?' + ฉายา「'+esc(x.tt)+'」':''} + ☯️ ${fmt(kv)}`)}
@@ -23190,7 +23190,7 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'♾️',t:'วัฏจักรกัล
 
 // ===================== v17.9h ปิดยุคปัจจุบันเด็ดขาด — เข้าได้เฉพาะแอดมินที่เซิร์ฟเวอร์ยืนยันรหัสแล้ว =====================
 MW_PUBLIC=false;let _admV=null;
-async function admVerify(){const k=admK();if(!k){_admV=0;return}try{const j=await api('admchk&key='+encodeURIComponent(k));_admV=j&&j.ok?1:0}catch(e){_admV=_admV===1?1:0}}
+async function admVerify(){const k=admK();if(!k){_admV=0;try{ADM.ok=false}catch(e){}return false}try{const j=await api('admchk&key='+encodeURIComponent(k));_admV=j&&j.ok?1:0}catch(e){_admV=_admV===1?1:0}try{ADM.ok=_admV===1;admBtnUpd()}catch(e){}return _admV===1}
 mwAllowed=function(){return !!MW_PUBLIC||(!!admK()&&_admV===1)};
 ['mwEnter','mwAsk','mwHeirGo','mwRandNative'].forEach(fn=>{try{const o=window[fn];if(typeof o!=='function')return;window[fn]=function(){if(!mwAllowed()){toast('ยุคปัจจุบันปิดอยู่');return}return o.apply(this,arguments)}}catch(e){}});
 function mwEject(){try{if(!S||!S.alive||!S.mw||mwAllowed())return;if(typeof mwBackOK==='function'&&mwBackOK()){mwBack();log('🌀 รอยแยกสู่ยุคปัจจุบันถูกปิด — คุณถูกส่งกลับโลกเดิมพร้อมทุกอย่างที่มีก่อนจากมา','myth',true);return}
