@@ -913,8 +913,8 @@ function doRoll(first){
  try{roll.body=bodyGen(false);if(roll.trs.list.includes('beauty')){roll.body.lk=4;roll.body.lkP=1}bodyRows(roll.body,T,false);roll.rare=rareCalc(T,'h'+(CFG.xian?1:0))}catch(e){console.error(e)}
  $('traits').innerHTML=T.map(c=>{const r=rarOf(c[3]);return`<div class="trait"><div><div class="k">${c[0]}</div><div class="v t${r}">${c[1]}</div>${c[2]?`<div class="d">${c[2]}</div>`:''}</div><span class="o t${r}">${oddsTxt(c[3])}</span></div>`}).join('');
  xFix(['traits','soulOut']);
- [...document.querySelectorAll('.trait')].forEach((e,i)=>setTimeout(()=>e.classList.add('show'),220*i+80));
- setTimeout(()=>{oddsShowR(roll);$('oddsBox').style.visibility='visible';$('goalBox').style.visibility='visible';renderGoalPick();$('startBtn').disabled=false;$('rerollBtn').disabled=rerolls<=0},220*T.length+250);
+ [...document.querySelectorAll('.trait')].forEach((e,i)=>setTimeout(()=>e.classList.add('show'),110*i+60));
+ setTimeout(()=>{oddsShowR(roll);$('oddsBox').style.visibility='visible';$('goalBox').style.visibility='visible';renderGoalPick();$('startBtn').disabled=false;$('rerollBtn').disabled=rerolls<=0},110*T.length+200);
 }
 
 // ============ PEERS ============
@@ -9257,8 +9257,8 @@ function brShow(anim){brCss();const r=brRoll,s=BL_SP[r.sp],e=BEL[r.el],b=BBLOOD[
  <div style="display:flex;gap:8px;margin-top:10px"><button class="gbtn" style="flex:1" ${brRR<=0?'disabled':''} onclick="brReroll()">🎲 สุ่มใหม่ (${brRR>50?'∞':brRR})</button><button class="pbtn" style="flex:1.4" onclick="closeM();beastBirth2(brRoll)">🐣 เกิด</button></div></div>`);
  try{$('modal').dataset.k='broll'}catch(e){}
  if(!brAnim)brAnim=requestAnimationFrame(brDrawStage);
- const L=[...document.querySelectorAll('#brB .trait')];if(anim){L.forEach((x,i)=>setTimeout(()=>x.classList.add('show'),130*i+60));setTimeout(()=>{const o=$('brOdds');if(!o||brRoll!==r)return;o.style.visibility='visible';
-  if(f>=6){const C=f>=10?['#ff4d4d','#ffd84d','#5dff7a','#4dd8ff','#b06bff','#ffffff']:f>=8?['#ff3a5a','#ff5ad8','#ffd040','#ffffff']:['#ffc030','#ff8a2a','#fff0a0'];for(let i=0;i<Math.min(70,(f-4)*9);i++){const e=document.createElement('i');e.className='bconf';e.style.left=Math.random()*100+'%';e.style.background=C[i%C.length];e.style.animationDelay=(Math.random()*.6)+'s';o.appendChild(e);setTimeout(()=>e.remove(),2500)}try{if(f>=8)sfx('ach')}catch(e){}}},130*L.length+200)}}
+ const L=[...document.querySelectorAll('#brB .trait')];if(anim){L.forEach((x,i)=>setTimeout(()=>x.classList.add('show'),70*i+50));setTimeout(()=>{const o=$('brOdds');if(!o||brRoll!==r)return;o.style.visibility='visible';
+  if(f>=6){const C=f>=10?['#ff4d4d','#ffd84d','#5dff7a','#4dd8ff','#b06bff','#ffffff']:f>=8?['#ff3a5a','#ff5ad8','#ffd040','#ffffff']:['#ffc030','#ff8a2a','#fff0a0'];for(let i=0;i<Math.min(70,(f-4)*9);i++){const e=document.createElement('i');e.className='bconf';e.style.left=Math.random()*100+'%';e.style.background=C[i%C.length];e.style.animationDelay=(Math.random()*.6)+'s';o.appendChild(e);setTimeout(()=>e.remove(),2500)}try{if(f>=8)sfx('ach')}catch(e){}}},70*L.length+160)}}
 try{Object.assign(I18N.d,{'กำเนิดสัตว์อสูร':'Beast birth','ครอบครัว':'Family','กำพร้า':'Orphan','แม่เลี้ยงดู':'Raised by mother','พ่อแม่อยู่ครบ':'Both parents','ร่างเมื่อเติบโต':'Grown form','เกิดเป็น':'Born as','รังกำเนิด':'Birth nest','ถิ่นอาศัย':'Habitat','โอกาสเกิดแบบนี้':'Odds of this birth','ระดับชะตา':'Fate tier'});Object.assign(I18N.d,BHK_EN)}catch(e){}
 
 // สัตว์ป่า: ไม่ใช้เหตุการณ์ชีวิตมนุษย์ (เทศกาล/ทารกในบ้าน/ชีวิตประจำวัน) — ใช้เหตุการณ์ธรรมชาติแทน
@@ -26050,6 +26050,41 @@ try{TTL_SP.unshift(['ab1000',()=>!!(S.flags&&S.flags.ab1000),'ราชันอ
 try{FRAMES.push({id:'f_abyss',n:'กรอบปากอเวจี',side:'h',c:0,ty:'spin halo orbit sparkle star corner badge',c1:'#7a3aff',c2:'#0a0014',c3:'#ff3a8a',pc:'#e0c8ff',bd:'🕳️',d:'ผ่านอเวจีวงแรก (ชั้น 100)'});if(window.FRSH_T)FRSH_T.f_abyss='rnd|ringh,eye,chain'}catch(e){}
 {const _cd=checkDeath;checkDeath=function(){const r=_cd.apply(this,arguments);try{if(S&&S.flags&&(S.flags.abMax||0)>=100){const d=frGet();if(!d.own.includes('f_abyss')){d.own.push('f_abyss');frSet(d);toast('🕳️ ได้กรอบปากอเวจี')}}}catch(e){}return r}}
 try{SYS_GUIDE.push({s:'world',nw:1,ic:'🕳️',t:'โหมดอเวจี 1000 ชั้น',d:'ปลดล็อกเมื่อผ่านนรกครบ 100 ชั้น · <b>กดค้างปุ่ม 🔥 นรก</b> ในแถบเลือกโหมดเพื่อเปลี่ยนเป็น 🕳️ อเวจี · 10 วง วงละ 100 ชั้น แต่ละวงเพิ่มกฎ (ซ่อนกฎ · ไม่มีวิญญาณสำรอง · ไฟกรรมไม่ดับ · ประตูไร้ป้าย · ตกลึก · เงาอ่านใจ · ไร้ที่พัก · ทางลวง · มีแต่ผู้คุม) · ผู้คุมแรง<b>คงที่ตามชั้น</b> · แพ้ตก 3 ชั้น · แพ้บอสทุก 10 ชั้นตกกลับด่านบอสก่อนหน้า · แพ้บอสวงใหญ่ทุก 100 ชั้น <b>วิญญาณแตก</b> · ชาติถัดไปเริ่มที่ต้นวงที่เคยถึงได้',te:'Abyss (1000 floors)',de:'Unlocks after clearing Hell floor 100. Long-press the 🔥 Hell button to switch to 🕳️ Abyss.'})}catch(e){}
+
+// ===== v17.13 หน้ากำเนิดกะทัดรัด: ปุ่มเกิดติดล่าง · การ์ดความหายากย่อ · ปณิธานพับ · คำอธิบายย่อ =====
+(function(){try{
+const st=document.createElement('style');st.textContent=`
+#birth>.brow,#create>.brow{position:sticky;bottom:0;z-index:25;margin:10px -6px 0;padding:10px 6px calc(10px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,var(--bg) 78%,transparent);backdrop-filter:blur(2px)}
+#birth>.brow .pbtn,#create>.brow .pbtn{box-shadow:0 4px 0 var(--line),0 8px 18px #0003}
+#modal .brAct{position:sticky;bottom:-16px;z-index:8;margin:12px -16px -16px!important;padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:2px solid var(--line);box-shadow:0 -10px 16px -10px #0004}
+#birth .oddsbig,#brB .oddsbig{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:10px;row-gap:1px;text-align:left;padding:8px 12px!important;margin:8px 0!important;cursor:pointer}
+#birth .oddsbig>.tag2,#brB .oddsbig>.tag2{grid-column:1/-1;font-size:10px}
+#birth .oddsbig .n,#brB .oddsbig .n{grid-column:1/-1;font-size:26px!important;line-height:1.15;white-space:nowrap}
+#birth .oddsbig .ot,#brB .oddsbig .ot{grid-column:1;margin:0!important;text-align:left;font-size:12px}
+#birth .oddsbig .fgrade,#brB .oddsbig .fgrade{grid-column:2;grid-row:3;font-size:12px;margin:0;text-align:right}
+#birth .oddsbig .od,#brB .oddsbig .od{display:none;grid-column:1/-1;font-size:11px;margin-top:3px}
+#birth .oddsbig.open .od,#brB .oddsbig.open .od{display:block}
+#birth .oddsbig::after,#brB .oddsbig::after{content:'▾ ดูรายละเอียด';grid-column:1/-1;font-size:10px;color:var(--mut);text-align:right;margin-top:2px}
+#birth .oddsbig.open::after,#brB .oddsbig.open::after{content:'▴ ย่อ'}
+#birth #traits .trait,#brB .trait{padding:6px 9px}
+#birth #traits .trait .d,#brB .trait .d{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:11px;line-height:1.35}
+#birth #traits .trait.ex .d,#brB .trait.ex .d{-webkit-line-clamp:unset}
+#birth #goalBox:not(.gall) #goalOpts .opt:not(.sel),#brGoal:not(.gall) .opt:not(.sel){display:none}
+.gtog{display:block;width:100%;margin-top:6px;padding:7px;border:2px dashed var(--line);border-radius:8px;background:none;color:var(--ink);font-family:inherit;font-size:12px;cursor:pointer}
+body:not(.desk) #create .crhead canvas{width:112px!important;height:124px!important}
+body:not(.desk) #create .crhead{padding:8px 10px}
+`;document.head.appendChild(st);
+const gt=(box)=>{if(!box)return;let b=box.querySelector(':scope>.gtog');if(!b){b=document.createElement('button');b.type='button';b.className='gtog';b.onclick=e=>{e.stopPropagation();box.classList.toggle('gall');gu(box)};box.appendChild(b)}gu(box)};
+const gu=(box)=>{const b=box.querySelector(':scope>.gtog');if(!b)return;const n=box.querySelectorAll('.opt').length;const d=n>1?'':'none',t=box.classList.contains('gall')?'▴ ย่อรายการ':`▾ เปลี่ยนปณิธาน (${n})`;if(b.style.display!==d)b.style.display=d;if(b.textContent!==t)b.textContent=t};
+document.addEventListener('click',e=>{try{
+ const o=e.target.closest&&e.target.closest('.oddsbig');if(o&&(o.closest('#birth')||o.closest('#brB'))){o.classList.toggle('open');return}
+ const t=e.target.closest&&e.target.closest('#birth #traits .trait,#brB .trait');if(t){t.classList.toggle('ex');return}
+ const g=e.target.closest&&e.target.closest('#birth #goalBox .opt,#brGoal .opt');if(g){const bx=g.closest('#goalBox,#brGoal');setTimeout(()=>{bx.classList.remove('gall');gu(bx)},180)}
+}catch(x){}});
+const gb=document.getElementById('goalBox');if(gb){const mo=new MutationObserver(()=>{if(!gb.closest('#birth'))return;gt(gb)});mo.observe(gb,{childList:true,subtree:true});gt(gb)}
+{const _bs=brShow;brShow=function(anim){const r=_bs.apply(this,arguments);try{const B=document.querySelector('#brB');if(B){const a=B.lastElementChild;if(a)a.classList.add('brAct');gt(document.getElementById('brGoal'));const m=$('modal');if(m&&anim)m.scrollTop=0}}catch(e){console.error(e)}return r}}
+{const _dr=doRoll;doRoll=function(first){const r=_dr.apply(this,arguments);try{if(!first)window.scrollTo({top:0,behavior:'smooth'});const g=document.getElementById('goalBox');if(g){g.classList.remove('gall')}document.querySelectorAll('#oddsBox').forEach(x=>x.classList.remove('open'))}catch(e){}return r}}
+}catch(e){console.error(e)}})();
 </script>
 </body>
 </html>
