@@ -26246,6 +26246,15 @@ function b2WbGo(){const x=b2();if(x.wbY!=null&&S.age-x.wbY<5)return;x.wbY=S.age;
 function openB2Evo(){if(!b2On())return;const x=b2();modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🧬 วิวัฒนาการ</h3><p class="tag2">ทุกครั้งที่ขึ้นขั้น เลือก 1 ลักษณะจาก 3 · ลูกมีโอกาส 70% ได้ลักษณะหนึ่งของพ่อแม่</p>${x.tr.length?x.tr.map(k=>`<div class="item"><b>${B2TR[k][0]} ${B2TR[k][1]}</b><p class="tag2">${B2TR[k][2]} · ⚠️ ${B2TR[k][3]}</p></div>`).join(''):'<p class="tag2">ยังไม่มี — ขึ้นขั้นถัดไปจะได้เลือก</p>'}`,'b2evo')}
 {const _rdX=render;render=function(){const r=_rdX.apply(this,arguments);try{if(b2On()){const el=$('gRealm');if(el&&!el.querySelector('.b2b')){const x=b2();el.insertAdjacentHTML('beforeend',` <span class="b2b" onclick="event.stopPropagation();openTerr()" style="cursor:pointer;border:1px solid currentColor;border-radius:8px;padding:0 6px;font-size:11px;white-space:nowrap">${B2SEA[b2Sea()][0]} ${B2SEA[b2Sea()][1]} · 🗺️${b2Mine().length} · 🍖${x.food||0}</span>`)}}}catch(e){}return r}}
 try{GD2.push({s:'beast',ic:'🗺️',t:'สัตว์อสูร 2.0',nw:1,d:'<b>🍖 ล่าแบบอ่านท่า</b> เหยื่อมีนิสัย เลือกซุ่ม/ไล่ต้อน/ล่อเข้ากับดักให้ถูก · <b>👑 เจ้าป่า</b> บุกมาทุกช่วง อ่านท่า 3 ยก · <b>🗺️ อาณาเขต</b> ยึด/ตรวจตรา/ย้ายถิ่น แต่ละถิ่นให้ผลต่างกัน ถูกท้าชิงได้ · <b>ฤดูกาล</b> ผสมพันธุ์ แล้ง อุดม หนาวยาว (ต้องมีเสบียง) · <b>🧬 วิวัฒนาการ</b> ขึ้นขั้นเลือกลักษณะ 1 ใน 3 ได้อย่างเสียอย่าง ตกทอดถึงลูก · <b>🐺 ฝูง</b> (สายจ่าฝูง) มอบหมายงาน ความภักดี ท้าชิงจ่าฝูง ฝูงคู่แข่ง · <b>👤 เงาผู้เล่นจริง</b> ครองถิ่นในแผนที่ · <b>👹 อสูรร้ายประจำสัปดาห์</b> ทุกคนช่วยกันตี มีอันดับ'})}catch(e){}
+
+// ---- v17.15 อเวจี/นรก: ถึงเวลาลงชั้น → เปิดประตูให้เอง + ป้ายกะพริบ ----
+(function(){try{
+const st=document.createElement('style');st.textContent='.hlb.rdy{animation:hlRdy 1.1s ease-in-out infinite}@keyframes hlRdy{0%,100%{box-shadow:0 0 0 0 rgba(255,80,40,.0)}50%{box-shadow:0 0 10px 3px rgba(255,90,40,.9)}}';document.head.appendChild(st);
+const rdy=()=>{try{const h=typeof hl2==='function'?hl2():null;return !!(h&&S&&S.alive&&S.ch==='hell'&&h.lv<(h.ab?1000:100)&&(h.ab||h.lv>=18)&&S.age>=h.cd)}catch(e){return false}};
+setInterval(()=>{try{const r=rdy();document.querySelectorAll('.hlb').forEach(b=>b.classList.toggle('rdy',r));
+ if(!r)return;const h=hl2();if(h.autoCd===h.cd)return;if(choice._cur||modalOpen||document.querySelector('.ov.show,#birth:not(.hide)'))return;
+ if(!S.age||S.age<16)return;h.autoCd=h.cd;(h.ab?openAbyss:openHell2)()}catch(e){}},1500);
+}catch(e){console.error(e)}})();
 </script>
 </body>
 </html>
