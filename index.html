@@ -26876,8 +26876,12 @@ function scene(area,seed,kind){let q=seed>>>0||1;const r=()=>{q=(q+0x6D2B79F5)>>
   const tree=(tx,ty,s)=>{for(let k=0;k<s;k++)for(let j=-k;j<=k;j++)p(tx+j,ty+k,j<0?'#1f4a24':j===-k||j===k?'#163a1a':'#2f6a32');for(let k=0;k<s;k++)for(let j=-k+1;j<=k-1;j++)if((j+k)%3===0)p(tx+j,ty+k+s-2,'#3f8a3a');p(tx,ty+s*2-2,'#5a3a20');p(tx,ty+s*2-1,'#5a3a20')};
   if(kind==='bamboo'){for(let i=0;i<22;i++){const a=r()<.5?r()*16:W-r()*16,h=12+r()*20;for(let k=0;k<h;k++)p(a,H-k,k%6?'#7ab84a':'#4a7a2a');p(a+1,H-h+2,'#9ad06a')}}
   else for(let i=0;i<11;i++){const ex=r()<.5;tree(ex?(r()<.5?r()*14:W-r()*14):r()*W,ex?r()*H-6:(r()<.5?-4+r()*6:H-14),4+(r()*3|0))}}
- else{g.fillStyle='#1c1820';g.fillRect(0,0,W,H);for(let i=0;i<900;i++)p(r()*W,r()*H,pk2(r,['#241f2a','#2c2632','#18141c','#332c3a']));
-  for(let i=0;i<14;i++){const a=r()*W,l=3+r()*7;for(let k=0;k<l;k++)for(let j=0;j<Math.max(1,(l-k)/2.5);j++)p(a+j,k,k>l-2?'#5a5262':'#3e3646')}
+ else{const C={dark:['#1c1820',['#241f2a','#2c2632','#18141c','#332c3a'],'#3e3646','#5a5262'],ice:['#16283a',['#1e3448','#20405a','#142434','#2a4a66'],'#6a9ac8','#c8ecff'],sink:['#241a12',['#2e2218','#3a2a1c','#1c140e','#44321f'],'#5a4430','#8a6a48'],temple:['#221c14',['#2c2418','#362c1c','#1a140e','#40341f'],'#6a5a3a','#c8a050']}[kind]||null;const K=C||['#1c1820',['#241f2a','#2c2632','#18141c','#332c3a'],'#3e3646','#5a5262'];
+  g.fillStyle=K[0];g.fillRect(0,0,W,H);for(let i=0;i<900;i++)p(r()*W,r()*H,pk2(r,K[1]));
+  if(kind==='ice')for(let i=0;i<9;i++){const a=r()*W,b=r()*H;for(let k=0;k<4;k++){p(a,b-k,'#c8ecff');p(a-1,b-k+1,'#8ad0ff');p(a+1,b-k+1,'#8ad0ff')}}
+  if(kind==='sink')for(let i=0;i<4;i++){const a=8+r()*80,b=10+r()*44,w=7+r()*8;for(let j=-w;j<=w;j++)for(let k=-3;k<=3;k++)if(j*j/(w*w)+k*k/9<1)p(a+j,b+k,j*j/(w*w)+k*k/9<.55?'#0a0604':'#3a2a1c')}
+  if(kind==='temple'){for(let i=0;i<5;i++){const a=8+i*20;for(let k=6;k<H-6;k++){p(a,k,'#6a5a3a');p(a+1,k,'#8a7a50');p(a+2,k,'#4a3e28')}for(let j=-2;j<=4;j++){p(a+j,6,'#c8a050');p(a+j,H-7,'#c8a050')}}}
+  for(let i=0;i<14;i++){const a=r()*W,l=3+r()*7;for(let k=0;k<l;k++)for(let j=0;j<Math.max(1,(l-k)/2.5);j++)p(a+j,k,k>l-2?K[3]:K[2])}
   for(let i=0;i<10;i++){const a=r()*W,b=H-r()*5;for(let k=0;k<3+r()*4;k++)p(a,b-k,'#3e3646')}
   for(let i=0;i<3;i++){const a=r()*W,b=20+r()*36,w=5+r()*6;for(let j=0;j<w;j++)for(let k=0;k<3;k++)p(a+j,b+k,k?'#22405a':'#3a6a8a')}
   for(let i=0;i<18;i++)p(r()*W,r()*H,pk2(r,['#8ad0ff','#c0a0ff']))}
@@ -27041,19 +27045,43 @@ function endTrip(why){if(!X)return;const T=X;X=null;let lost=0;
  const head={home:'🏠 กลับถึงบ้าน',dark:'🌑 ฟ้ามืดก่อนออกจากป่า — หลงทางทั้งคืน',dawn:'🌅 รุ่งเช้า คุณออกจากป่าอย่างอ่อนล้า'}[why];
  log(`${head} · ได้ ${T.loot.length?T.loot.map(l=>l.x).join(' · '):'มือเปล่า'}${lost?` · ทำของหล่นหาย ${lost} ชิ้น`:''}`,sp?'myth':'good',!!sp);try{render()}catch(e){}}
 // ---------- 3 วิธีเข้า ----------
-function quick(area,kind,guide){const f=F();f.n++;f.trips++;const cost=guide?money(.5):0;if(guide){if(S.money<cost)return toast('เงินไม่พอจ้างผู้นำทาง');S.money-=cost}
+function quick(area,kind,guide){const f=F();const cost=guide?money(.5):0;if(guide){if(S.money<cost)return toast('เงินไม่พอจ้างผู้นำทาง');S.money-=cost}f.n++;f.trips++;
  const L=[];const add=t=>L.push(loot(t));X={night:0,loot:L};
  if(guide){add(0);add(Math.random()<.5?1:0);if(Math.random()<.1)add(2)}else{add(0);if(Math.random()<.25)add(1);if(Math.random()<.2)hurt(.15)}
  X=null;L.forEach(l=>{try{l.f()}catch(e){}});closeM();log(`${guide?'🧭 ผู้นำทางพาคุณ':'🎲 คุณเดิน'}${area==='cave'?'สำรวจ'+CAVES[kind].n:'เข้า'+(FORESTS[kind]||FORESTS.forest).n} · ได้ ${L.map(l=>l.x).join(' · ')}`,'good');try{render()}catch(e){}}
 window._wlIn=function(area,kind,mode){if(!ok())return;if(left()<=0)return toast('ปีนี้เข้าป่าครบ 2 ครั้งแล้ว');if(mode==='x')start(area,kind);else quick(area,kind,mode==='g')};
 window._wlDel=function(){const f=F(),d=f.del;if(!d)return;if(!(S.bag&&S.bag.it&&false)){}f.del=null;S.karma+=10;S.fame+=40;const g=money(2);S.money+=g;log(`🩺 คุณส่งสมุนไพรให้ <b>${E(d.n)}</b> ทันเวลา เขาหายป่วย · ได้ ${mtxt(g)} · ชื่อเสียงและกรรม +`,'epic',true);openWild()};
-window.openWild=function(){if(!ok())return toast('ตอนนี้เข้าป่าไม่ได้');const f=F(),l=left();
- const kinds=['dark','ice','sink'].concat(f.map>=2||f.mark==='temple'?['temple']:[]);
- const b=(area,kind,lab)=>`<div class="item"><div class="h"><b>${lab}</b></div><div class="brow"><button class="pbtn" onclick="_wlIn('${area}','${kind}','x')" ${l?'':'disabled'}>🗺️ สำรวจเอง</button><button class="gbtn" onclick="_wlIn('${area}','${kind}','g')" ${l?'':'disabled'}>🧭 จ้างผู้นำทาง (${mtxt(money(.5))})</button><button class="gbtn" onclick="_wlIn('${area}','${kind}','a')" ${l?'':'disabled'}>🎲 เดินสุ่ม</button></div></div>`;
- modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌲 ป่าและถ้ำ</h3><p class="tag2">ปีนี้เข้าได้อีก <b>${l}/2</b> ครั้ง · 🗺️ สำรวจเอง = ได้ของดีที่สุดแต่เสี่ยง · 🧭 ผู้นำทาง = ปลอดภัย ของปานกลาง · 🎲 สุ่ม = เร็ว ของธรรมดา</p>
- ${f.del?`<div class="item" style="border-left:4px solid #5fbf6f"><b>🩺 ${E(f.del.n)} รอสมุนไพรอยู่</b> <span class="tag2">ส่งภายในอายุ ${f.del.until}</span><div class="brow"><button class="pbtn" onclick="_wlDel()">ส่งยา</button></div></div>`:''}
- ${f.riv?`<p class="tag2">🧑‍🌾 ${E(f.riv.n)}: ${f.riv.att>0?'มิตร':f.riv.att<0?'ศัตรู':'คนแปลกหน้า'} · 🗺️ แผนที่ครึ่งฉีก ${f.map}/2${f.mark?` · รอยสลักชี้ไป ${CAVES[f.mark].n}`:''} · ของพิเศษที่เคยได้ ${f.sp}</p>`:''}
- ${b('forest','forest','🌲 ป่าลึก — ครบทุกอย่าง')}${b('forest','bamboo','🎋 ป่าไผ่ — ค่ายโจร ทางลับในดงไผ่')}${b('forest','swamp','🐸 ป่าพรุ — บ่อโคลน ต้นไม้ผีสิง')}${b('forest','peak','⛰️ ป่าบนเขา — หน้าผา ผลไม้หายาก')}${kinds.map(k=>b('cave',k,CAVES[k].n)).join('')}`,'fxhub')};
+// ---------- หน้าเลือกที่: การ์ดภาพพิกเซล 2 คอลัมน์ → แตะแล้วเปิดรายละเอียด + เลือกวิธีเข้า ----------
+const PLACES=[
+ {a:'forest',k:'forest',ic:'herb',n:'🌲 ป่าลึก',tag:'ครบทุกอย่าง',dg:1,d:'ป่าดิบผืนใหญ่ เจอได้ทุกแบบ ตั้งแต่ลำธาร ศาลเก่า จนถึงค่ายโจร'},
+ {a:'forest',k:'bamboo',ic:'bamb',n:'🎋 ป่าไผ่',tag:'⛺ ค่ายโจร · 🎋 ทางลับ',dg:2,d:'ดงไผ่เสียงลมหวีดหวิว ทางลับซ่อนอยู่หลังเสียงลม ไผ่ทำเชือกช่วยปีนผาได้'},
+ {a:'forest',k:'swamp',ic:'mud',n:'🐸 ป่าพรุ',tag:'🟤 บ่อโคลน · 🌳 ต้นไม้ผี',dg:2,d:'ป่าน้ำขังกลิ่นอับ ของจมอยู่ใต้โคลน และมีต้นไม้ที่กระซิบได้'},
+ {a:'forest',k:'peak',ic:'cliff',n:'⛰️ ป่าบนเขา',tag:'🪨 หน้าผา · 🍎 ผลไม้หายาก',dg:3,d:'ป่าสนบนสันเขา ของดีอยู่บนหน้าผาสูง ลมแรงและทางชัน'},
+ {a:'cave',k:'dark',ic:'chest',n:'🕳️ ถ้ำมืด',tag:'🧰 หีบเก่า · 🐺 รังอสูร',dg:2,d:'ถ้ำธรรมดาที่ไม่ธรรมดา หีบของนักสำรวจรุ่นก่อนยังรอคนเปิด'},
+ {a:'cave',k:'ice',ic:'ice',n:'🧊 ถ้ำน้ำแข็ง',tag:'❄️ ผลึกโบราณ',dg:3,d:'ความเย็นกัดกร่อนเลือดเนื้อ แต่ในผลึกมีของที่ถูกแช่ไว้นับพันปี'},
+ {a:'cave',k:'sink',ic:'crack',n:'⬇️ ถ้ำหลุมยุบ',tag:'🕳️ ห้องลับใต้ดิน',dg:3,d:'พื้นถ้ำยุบเป็นชั้นๆ โรยตัวลงไปเจอห้องที่ไม่มีใครเคยเข้า ถ้าเชือกไม่ขาดก่อน'},
+ {a:'cave',k:'temple',ic:'idol',n:'🏛️ ศาสนสถานร้าง',tag:'🗿 รูปเคารพ · ของถวาย',dg:4,d:'วัดใต้ดินที่ถูกลืม รูปเคารพฝังอัญมณี — แต่ถ้ำจำได้ว่าใครลบหลู่',lock:1}];
+const thumb={};const TB=pl=>thumb[pl.k]||(thumb[pl.k]=scene(pl.a,H5(pl.k),pl.k));const H5=s=>{let h=7;for(const c of s)h=h*31+c.charCodeAt(0)>>>0;return h};
+try{const st=document.createElement('style');st.textContent=`.wlS{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 10px}.wlS span{background:var(--grid);border-radius:14px;padding:3px 10px;font-size:.82em}.wlS .hot{background:#5fbf6f;color:#fff;animation:fxp 1.2s infinite}
+.wlG{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wlT{position:relative;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card);cursor:pointer;text-align:left;padding:0;font:inherit;color:inherit}
+.wlT img{display:block;width:100%;height:78px;object-fit:cover;image-rendering:pixelated}.wlT .b{padding:6px 8px 8px}.wlT b{display:block;font-size:.95em}.wlT small{display:block;font-size:.72em;opacity:.75;line-height:1.3;margin-top:2px}
+.wlT .wlI{position:absolute;left:50%;top:39px;width:46px;height:46px;transform:translate(-50%,-50%);image-rendering:pixelated}.wlT .dg{position:absolute;top:5px;right:6px;font-size:.7em;background:#000a;color:#fff;border-radius:10px;padding:1px 6px}.wlT .bd{position:absolute;top:5px;left:6px;font-size:.7em;background:#ffd040;color:#3a2a00;border-radius:10px;padding:1px 6px;font-weight:bold}
+.wlT.lk img{filter:grayscale(1) brightness(.45)}.wlT.lk b{opacity:.6}.wlT:active{transform:translateY(2px)}
+.wlBig{width:100%;height:150px;object-fit:cover;image-rendering:pixelated;border-radius:10px;border:2px solid var(--line)}
+.wlM{display:flex;border:2px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0}.wlM button{flex:1;border:none;background:none;font:inherit;padding:8px 2px;cursor:pointer;color:inherit;line-height:1.25}.wlM button small{display:block;font-size:.7em;opacity:.7}.wlM button.on{background:var(--ink);color:var(--bg)}`;document.head.appendChild(st)}catch(e){}
+const unlocked=pl=>{const f=F();return!pl.lock||f.map>=2||f.mark===pl.k};
+const MODES=[['x','🗺️ สำรวจเอง','ของดีสุด · เสี่ยง'],['g','🧭 ผู้นำทาง','ปลอดภัย · ปานกลาง'],['a','🎲 สุ่ม','เร็ว · ธรรมดา']];
+function status(){const f=F(),l=left();return`<div class="wlS"><span>${'🎒'.repeat(l)}${'<i style="opacity:.3;font-style:normal">🎒</i>'.repeat(2-l)} ปีนี้อีก ${l}/2</span>${f.map?`<span>🗺️ แผนที่ครึ่งฉีก ${f.map}/2</span>`:''}${f.riv?`<span>🧑‍🌾 ${E(f.riv.n)} ${f.riv.att>0?'😊 มิตร':f.riv.att<0?'😠 ศัตรู':'😐'}</span>`:''}${f.sp?`<span>✨ ของพิเศษ ${f.sp}</span>`:''}${f.del?`<span class="hot" onclick="_wlDel()">🩺 ${E(f.del.n)} รอยา · แตะเพื่อส่ง</span>`:''}</div>`}
+window.openWild=function(){if(!ok())return toast('ตอนนี้เข้าป่าไม่ได้');const f=F();
+ const tiles=PLACES.map((pl,i)=>{const lk=!unlocked(pl);return`<button class="wlT${lk?' lk':''}" onclick="${lk?`toast('🔒 ต่อแผนที่ครึ่งฉีกให้ครบ 2 ชิ้น (หาได้ในถ้ำและศาลเก่า)')`:`_wlPlace(${i})`}"><img src="${TB(pl)}" alt="">${lk?'':`<img class="wlI" src="${icon(pl.ic)}" alt="">`}<span class="dg">${'⚠️'.repeat(pl.dg)}</span>${f.mark===pl.k?'<span class="bd">🧭 รอยสลักชี้มา</span>':''}<div class="b"><b>${lk?'🔒 ???':pl.n}</b><small>${lk?'ต่อแผนที่ครึ่งฉีกให้ครบ':pl.tag}</small></div></button>`}).join('');
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌲 ป่าและถ้ำ</h3>${status()}<div class="wlG">${tiles}</div>`,'fxhub')};
+window._wlPlace=function(i){const pl=PLACES[i];if(!pl)return;const l=left();let md=LS.get('murim_wlmode','x');if(!MODES.some(m=>m[0]===md))md='x';
+ const cost=mtxt(money(.5));
+ modal(`<button class="xbtn" onclick="openWild()">✕</button><h3>${pl.n}</h3><div style="position:relative"><img class="wlBig" src="${TB(pl)}" alt=""><img src="${icon(pl.ic)}" alt="" style="position:absolute;left:50%;top:50%;width:84px;height:84px;transform:translate(-50%,-50%);image-rendering:pixelated"></div><p style="margin:8px 0 2px">${pl.d}</p><p class="tag2">อันตราย ${'⚠️'.repeat(pl.dg)} · ${pl.tag}</p>
+ <div class="wlM">${MODES.map(([k,t,d])=>`<button class="${k===md?'on':''}" onclick="LS.set('murim_wlmode','${k}');_wlPlace(${i})">${t}<small>${k==='g'?cost:d}</small></button>`).join('')}</div>
+ <button class="pbtn" style="width:100%;font-size:1.1em;padding:12px" ${l?'':'disabled'} onclick="_wlIn('${pl.a}','${pl.k}','${md}')">${l?'เข้าไป →':'ปีนี้เข้าครบ 2 ครั้งแล้ว'}</button>
+ <button class="gbtn" style="width:100%;margin-top:6px" onclick="openWild()">← เลือกที่อื่น</button>`,'fxhub')};
+window._wlDel=function(){const f=F(),d=f.del;if(!d)return;f.del=null;S.karma+=10;S.fame+=40;const g=money(2);S.money+=g;log(`🩺 คุณส่งสมุนไพรให้ <b>${E(d.n)}</b> ทันเวลา เขาหายป่วย · ได้ ${mtxt(g)} · ชื่อเสียงและกรรม +`,'epic',true);openWild()};
 // ปมสมุนไพรส่งคนไข้หมดเวลา
 {const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{const f=S&&S.fx;if(f&&f.del&&S.age>f.del.until){log(`🕯️ ${E(f.del.n)} ไม่ได้รับสมุนไพรทันเวลา และจากไปแล้ว`,'bad');f.del=null;S.karma-=3}}catch(e){}return r}}
 // ปุ่มในเมนู
@@ -27239,6 +27267,23 @@ window.openRkAdmin=async function(p,roll){p=p||openRkAdmin._p||'d';openRkAdmin._
  <p class="tag2">ชุดที่จะแจกตอนจบรอบ ${esc(j.nx[p])} · ไม่ชอบกดสุ่มใหม่ได้จนกว่าจะถึงเวลาแจก (ผู้เล่นเห็นในหน้าทำเนียบทันที)</p>
  <button class="pbtn" style="width:100%" onclick="openRkAdmin('${p}','${p}')">🎲 สุ่มชุด${PN[p]}ใหม่</button>${rows}`,'rkadm')};
 const _oat=openAdmTools;openAdmTools=function(){const r=_oat.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='admtool'&&!m.querySelector('.rkAdmB')){const h='<button class="pbtn rkAdmB" style="width:100%;margin-top:6px" onclick="openRkAdmin()">🎲 ฉายาและกรอบทำเนียบรอบนี้</button>';const t=m.querySelector('h3');if(t)t.insertAdjacentHTML('afterend',h);else m.insertAdjacentHTML('beforeend',h)}}catch(e){}return r};
+})()}catch(e){console.error(e)}
+
+// ===================== v17.27 ⏪ ย้อนเวลาแล้วคูลดาวน์ไม่ติดอนาคต =====================
+// ระบบหลายอย่างจำ "อายุตอนทำล่าสุด" (รวมวิชา ดันเจี้ยน ฯลฯ) แล้วเช็ก S.age - อายุนั้น · พอย้อนเวลา ค่าเหล่านี้อยู่ในอนาคต → ติดล็อกจนอายุกลับไปถึง
+// แก้แบบรวม: เมื่ออายุถอยหลังในชีวิตเดียวกัน เลื่อนเลขอายุที่อยู่ "ในอนาคต" ถอยตามไปเท่ากัน (ยังเว้นระยะเท่าเดิมเทียบกับตอนก่อนย้อน)
+try{(()=>{
+const KEY=/(Y|y|At|at|Age|A|a|Last|last|since|met|from|Ago|rot|cubs|libC|ppv|dpc|upkN|holyW|mwXt0|_amAsk|_mar0|wy|crY|evY|trY|pactY|lzAt|rivalLast)$/;
+const SKIP=new Set(['age','lifespan','lsI','hp','maxHp','power','money','fame','karma','int','qi','happy','grief','seed','slot','fat','loop','peak']);
+let last=null;
+function shift(o,lo,hi,d,dep,seen){if(!o||typeof o!=='object'||dep>4||seen.has(o))return 0;seen.add(o);let n=0;
+ if(Array.isArray(o)){if(o.length>300)return 0;for(const v of o)n+=shift(v,lo,hi,d,dep+1,seen);return n}
+ for(const k of Object.keys(o)){const v=o[k];if(typeof v==='number'){if(dep===0&&SKIP.has(k))continue;if(KEY.test(k)&&v>lo&&v<=hi&&isFinite(v)){o[k]=/(since|met|from)$/.test(k)?v-d:lo-50;n++}}else if(v&&typeof v==='object'&&k!=='arts'&&k!=='log'&&k!=='feed')n+=shift(v,lo,hi,d,dep+1,seen)}return n}
+function check(){try{if(!S||!S.alive)return;const id=(S.seed|0)+'|'+(S.name||'')+'|'+(S.gen||0);
+ if(last&&last.id===id&&S.age<last.age-0.5){const d=last.age-S.age,n=shift(S,S.age,last.age+1,d,0,new WeakSet());if(n)console.log('rewind fix',n,'stamps -'+d)}
+ last={id,age:S.age}}catch(e){}}
+const _py=passYear;passYear=function(){check();const r=_py.apply(this,arguments);check();return r};
+setInterval(check,1500);window._rwFix=check;
 })()}catch(e){console.error(e)}
 </script>
 </body>
