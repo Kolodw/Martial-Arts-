@@ -4291,12 +4291,12 @@ Object.assign(RCP,{f7:{k:'forge',n:'เกราะเกล็ดอสูร',
 function beastPick(near){const ri=realmIdx(),w=S.xian?1:0,L=beasts().filter(b=>b.w===w&&b.t<=Math.min(9,ri+(near?1:3)));const wt=L.map(b=>({w:1/(1+Math.abs(b.t-(ri+1))*1.5),b}));return pickW(wt).v.b}
 function beastLoot(b){const got=[];const add=(k,n)=>{bagAdd(k,n,true);got.push(BAGIT[k].ic+BAGIT[k].n+'×'+n)};
  add('hide',R(1,2+Math.floor(b.t/3)));if(b.t>=3)add('core',R(1,1+Math.floor(b.t/3)));if(b.t>=6&&Math.random()<.5)add('jade',R(1,2));if(b.t>=7&&Math.random()<.35)add('bcore',1);return got.join(' · ')}
-function tameOdds(b){const r=myPow()/(b.ep*1.2);return Math.max(.03,Math.min(.85,(.15+r*.35)*b.tmm*(1+S.cha/600)*(S.beast?.5:1)*(b.t>realmIdx()+2?.3:1)))}
+function tameOdds(b){const r=myPow()/(b.ep*1.2);return Math.max(.03,Math.min(.85,(.15+r*.35)*b.tmm*(1+S.cha/600)*(S.beast?(typeof bSlotFree==='function'&&bSlotFree()>0?.8:.5):1)*(b.t>realmIdx()+2?.3:1)))}
 function beastFight(b){const my=myPow()*(.75+Math.random()*.5),en=b.ep*(.75+Math.random()*.5);const win=my>=en;const dmg=Math.round((win?R(4,14):R(18,40))*(1-gv('armor','red')-eqA('red')-bufA('red')));S.hp-=Math.max(1,dmg);return{win,dmg}}
 function beastEncounter(b,where){b=b||beastPick();const img=bImgTag(b,120);const isNew=!bdexGet()[b.i];setScene('fight',{beast:b});if(sceneEvt)sceneEvt.t=Date.now()+20000;
  choice(`${isNew?'✨ ':''}🐾 พบ${btierN(b)}`,`${img?`<div style="text-align:center">${img}</div>`:''}<b>${b.n}</b> (${b.sp} ธาตุ${b.el} · นิสัย${b.tm})<br>${where||'โผล่ออกมาจาก'+b.hab+' ขวางทางคุณไว้'}<br><span class="tag2">พลังประมาณ ${fmt(b.ep)} · พลังของคุณ ${fmt(Math.round(myPow()))}</span>`,[
   {t:'⚔️ ต่อสู้',s:`ชนะได้ของจากสัตว์ · โอกาส ~${Math.round(Math.min(.95,myPow()/(myPow()+b.ep))*100)}%`,f(){const r=beastFight(b);if(r.win){S.kills++;S.fame+=3+b.t*4;bdexAdd(b,'kill');log(`⚔️ ปราบ<b>${b.n}</b>ได้! (−${r.dmg} พลังชีวิต) ได้ ${beastLoot(b)}`,b.t>=6?'epic':'good',b.t>=6)}else{bdexAdd(b,'see');log(`🩸 ${b.n}แข็งแกร่งเกินคาด คุณบาดเจ็บหนักต้องถอยหนี (−${r.dmg} พลังชีวิต)`,'bad')}}},
-  {t:'🪢 พยายามสยบมาเป็นสัตว์คู่ใจ',s:S.beast?`มีสัตว์คู่ใจอยู่แล้ว (${S.beast.nick}) — ถ้าสำเร็จจะปล่อยตัวเก่า · ~${Math.round(tameOdds(b)*100)}%`:`โอกาส ~${Math.round(tameOdds(b)*100)}%`,f(){if(Math.random()<tameOdds(b)){bdexAdd(b,'tame');if(S.beast)log(`ปล่อย${S.beast.nick}คืนสู่ป่า`);S.beast={i:b.i,lv:1,xp:0,st:0,bond:40+R(0,20),nick:ch(['เสี่ยว','อา','ต้า'])+ch(['ไป๋','เฮย','หง','จิน','หลาน','ฮวา','เล่ย','อวิ๋น']),hum:0};
+  {t:'🪢 พยายามสยบมาเป็นสัตว์คู่ใจ',s:S.beast?`มีสัตว์คู่ใจอยู่แล้ว (${S.beast.nick}) — ${typeof bTameNote==='function'?bTameNote():'ถ้าสำเร็จจะปล่อยตัวเก่า'} · ~${Math.round(tameOdds(b)*100)}%`:`โอกาส ~${Math.round(tameOdds(b)*100)}%`,f(){if(Math.random()<tameOdds(b)){bdexAdd(b,'tame');if(S.beast){if(typeof bTeamKeep==='function'&&bTeamKeep(S.beast))log(`🏡 ${S.beast.nick} กลับไปอยู่บ้าน — ตัวใหม่ติดตัวแทน`);else log(`ปล่อย${S.beast.nick}คืนสู่ป่า`)}S.beast={i:b.i,lv:1,xp:0,st:0,bond:40+R(0,20),nick:ch(['เสี่ยว','อา','ต้า'])+ch(['ไป๋','เฮย','หง','จิน','หลาน','ฮวา','เล่ย','อวิ๋น']),hum:0};
      log(`🪢 สยบ<b>${b.n}</b>สำเร็จ! ตั้งชื่อให้ว่า "${S.beast.nick}" — กลายเป็นสัตว์คู่ใจ`,'epic',true);sfx('rare')}else{const r=beastFight(b);bdexAdd(b,'see');log(`${b.n}ไม่ยอมสยบ หันมาจู่โจม (−${r.dmg} พลังชีวิต)`,'bad')}}},
   {t:'👀 แอบสังเกตแล้วจดบันทึก',s:'ปัญญา + · บันทึกลงสมุดสัตว์',f(){bdexAdd(b,'see');S.int+=2+Math.floor(b.t/2);log(`👀 แอบสังเกต${b.n}อยู่นาน จดลักษณะนิสัยและจุดอ่อนลงสมุด`)}},
   {t:'🏃 หนี',f(){if(Math.random()<.8){log('ถอยหนีมาได้อย่างปลอดภัย')}else{const d=R(5,15);S.hp-=d;log(`หนีไม่ทัน โดนกรงเล็บข่วนเป็นแผล (−${d})`,'bad')}}}])}
@@ -4304,7 +4304,7 @@ function beastTick(){if(S.age<8||(S.beastMode&&!S.beastMode.human))return false;
 // ---- 2) สัตว์คู่ใจ เติบโต วิวัฒนาการ แปลงกาย ----
 const bOf=()=>S&&S.beast?beasts()[S.beast.i]:null;
 function beastStageN(){const b=bOf(),st=S.beast.st;return st===0?b.n:st===1?b.n+'ตื่นรู้':(['เทพ','ราชา','จักรพรรดิ'][b.t%3])+b.sp+'สวรรค์'}
-const beastM=()=>{if(!S||!S.beast)return 1;const b=bOf();return 1+.04+.03*S.beast.st+Math.min(.12,S.beast.lv*.004)+b.t*.006}
+let beastM=()=>{if(!S||!S.beast)return 1;const b=bOf();return 1+.04+.03*S.beast.st+Math.min(.12,S.beast.lv*.004)+b.t*.006}
 function beastCompTick(){if(!S.beast)return;const B=S.beast,b=bOf();B.xp+=1+(S.focus==='adv'?2:0)+(S.xian?1:0);while(B.xp>=B.lv*2&&B.lv<60){B.xp-=B.lv*2;B.lv++}
  if(B.st===0&&B.lv>=10){B.st=1;log(`🐾 ${B.nick} วิวัฒนาการเป็น <b>${beastStageN()}</b>! ร่างกายใหญ่ขึ้น ดวงตาเปล่งแสง`,'epic',true)}
  else if(B.st===1&&B.lv>=25&&b.t>=3){B.st=2;log(`🌟 ${B.nick} ผ่านทัณฑ์ฟ้าวิวัฒนาการสูงสุดเป็น <b>${beastStageN()}</b>!`,'myth',true)}
@@ -24701,7 +24701,7 @@ function pkKey(){return((S.xt?2:S.xian?1:0)*8)+Math.max(0,realmIdx())}
 const CHM_T={h:{d:['','ผู้ฝ่าขุมนรก','ผู้ลุยเพลิงอเวจี','วิญญาณไม่ดับ'],w:['','จ้าวแห่งเปลวนรก','อสูรเพลิงกัลป์','ผู้เหยียบขุมไฟ'],m:['','จักรพรรดิแห่งขุมนรก','มารฟ้าทลายกรรม','ผู้กลับจากอเวจี']},
  s:{d:['','ดาวตกสามสิบปี','ผู้เผาเทียนสองปลาย','ชีวิตเดียวพันตำนาน'],w:['','จ้าวแห่งเวลาอันสั้น','ตำนานชั่วพริบตา','ผู้ใช้สามสิบปีให้คุ้ม'],m:['','จักรพรรดิแห่งพริบตา','ดาวหางผ่าฟ้า','ผู้ชนะเวลา']},
  j:{d:['','ผู้ท้าลิขิต','ขยะผู้ไม่ยอมแพ้','ธุลีที่ลุกขึ้น'],w:['','ราชันย์ไร้พรสวรรค์','ผู้ทวนชะตา','กระดูกขยะทะลวงฟ้า'],m:['','จักรพรรดิผู้ลบลิขิต','ตำนานจากธุลี','ผู้ทำลายคำพยากรณ์']}};
-const CHM_N={h:['🔥','นรก','#ff4a2a','ชั้นนรกที่ลงได้ลึกที่สุด · เท่ากันดูว่าใช้ปีน้อยกว่า'],s:['⏳','ชีวิตสั้น','#3ab0ff','ทำได้มากแค่ไหนใน 30 ปี (คะแนนความเร็ว)'],j:['🗑️','รากขยะ','#9a7a4a','ขั้นสูงสุดที่ไปถึง · เท่ากันดูว่าถึงตอนอายุน้อยกว่า']};
+const CHM_N={h:['🔥','นรก','#ff4a2a','คะแนนเฉลี่ยทุกด้าน แบบเดียวกับโหมดปกติ'],s:['⏳','ชีวิตสั้น','#3ab0ff','คะแนนเฉลี่ยทุกด้าน แบบเดียวกับโหมดปกติ'],j:['🗑️','รากขยะ','#9a7a4a','คะแนนเฉลี่ยทุกด้าน แบบเดียวกับโหมดปกติ']};
 try{for(const m of ['h','s','j'])for(const p of ['d','w','m']){RKC[p+m]=CHM_T[m][p];RKC_TR[p+m]=RKC_TR[p+'c']||RKC_TR[p];RKC_PN[p+m]=CHM_N[m][1]+(p==='d'?'รายวัน':p==='w'?'รายสัปดาห์':'รายเดือน')}}catch(e){}
 try{Object.assign(BD_CN,{ch:'🔥 ทำเนียบนรก',cs:'⏳ ทำเนียบชีวิตสั้น',cj:'🗑️ ทำเนียบรากขยะ'})}catch(e){}
 function chmSel(){const v=openOnline._cm;if(v&&CHM_N[v])return v;const c=S&&S.ch;return c==='short'?'s':c==='junk'?'j':'h'}
@@ -24722,7 +24722,7 @@ function chmReward(x,d,kb){const r=Math.max(1,Math.min(3,+x.r||3)),pp=['d','w','
   box.querySelectorAll('.rgbr').forEach((el,i)=>{const e=L[i];if(!e||!e.nf)return;const t=el.querySelector('.rgbt');if(t)t.textContent='「ยังวนอยู่ในวงจร」';el.className='rgbr rgf7'+(el.classList.contains('click')?' click':'');
    const tg=el.querySelector('.rgbm .tag2');if(tg)tg.textContent=`⏳ ยังไม่หลุดพ้น · ${e.g?'🌟 แดนเทพ':e.x?'☁️ เซียน':'⚔️ ยุทธภพ'} · ${e.r||''} · อายุ ${e.age}`})}catch(e){console.error(e)}return r}}
 // คู่มือ
-try{const g=GD2.find(x=>x.t==='ทำเนียบโหมดท้าทาย');if(g){g.d='เล่นโหมด <b>🔥 นรก · ⏳ ชีวิตสั้น · 🗑️ รากขยะ</b> แล้วจบชีวิต จะขึ้น<b>ทำเนียบของโหมดนั้น</b>เท่านั้น (ไม่ปนทำเนียบโลก) · นรกวัดชั้นที่ลงได้ลึกสุด · ชีวิตสั้นวัดความเร็ว · รากขยะวัดขั้นสูงสุดที่ไปถึง · อันดับ 1–3 ได้ฉายาของโหมด และรายเดือนได้กรอบพิเศษ · ผู้ย้อนกาลอยู่แท็บ 🔁 ของตัวเอง';SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}}catch(e){}
+try{const g=GD2.find(x=>x.t==='ทำเนียบโหมดท้าทาย');if(g){g.d='เล่นโหมด <b>🔥 นรก · ⏳ ชีวิตสั้น · 🗑️ รากขยะ</b> แล้วจบชีวิต จะขึ้น<b>ทำเนียบของโหมดนั้น</b>เท่านั้น (ไม่ปนทำเนียบโลก) · ทุกโหมดใช้คะแนนเฉลี่ยทุกด้านแบบโหมดปกติ · อันดับ 1–3 ได้ฉายาของโหมด และรายเดือนได้กรอบพิเศษ · ผู้ย้อนกาลอยู่แท็บ 🔁 ของตัวเอง';SYS_GUIDE.length=0;GD2.forEach(x=>SYS_GUIDE.push(x))}}catch(e){}
 (()=>{const st=document.createElement('style');st.textContent='.chmTabs{margin-top:6px}.chmTabs .tabb{flex:1}';document.head.appendChild(st)})();
 
 // ===== สัตว์อสูรขั้นอสูรพันปี: ถ้าพลาดทางแยก (แปลงกาย/ครองป่า) จะติดขั้นตลอดไป — ขั้นย่อยวนเพราะผูกกับระดับพลังมนุษย์ =====
@@ -24738,6 +24738,85 @@ function blGateAsk(){const m=S.beastMode;if(!blGateLock()||choice._cur||modalOpe
  const L=Object.entries(achGot).filter(([id,g])=>g&&g.t).sort((a,b)=>b[1].t-a[1].t).slice(0,6).map(([id,g])=>[ACH_ALL.find(a=>a.id===id),g]).filter(x=>x[0]);if(!L.length)return r;
  const h=m.querySelector('h4');if(h)h.insertAdjacentHTML('beforebegin',`<div class="bkRecent"><b>🕘 ได้ล่าสุด</b>${L.map(([a,g])=>`<span class="t${a.r}" title="${esc(a.d)}">${esc(a.n)}<small>${new Date(g.t).toLocaleDateString('th-TH',{day:'numeric',month:'short'})}</small></span>`).join('')}</div>`)}catch(e){console.error(e)}return r}}
 (()=>{const st=document.createElement('style');st.textContent='.blLock{display:inline-block;margin-left:4px;padding:0 8px;border-radius:999px;background:#5a2a10;color:#ffd9a0;border:1px solid #ff9a40;font-size:11px;font-weight:700;cursor:pointer;animation:blLk 1.6s ease-in-out infinite}@keyframes blLk{50%{box-shadow:0 0 8px #ff9a40}}.bkRecent{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0;padding:8px;border-radius:10px;background:rgba(255,215,106,.08);border:1px dashed rgba(255,215,106,.4)}.bkRecent>b{width:100%;font-size:13px}.bkRecent span{font-size:12px;font-weight:700;padding:2px 8px;border-radius:8px;background:rgba(0,0,0,.25)}.bkRecent small{margin-left:4px;opacity:.6;font-weight:400}';document.head.appendChild(st)})();
+
+// ===================== 🐾 สัตว์คู่ใจ 2.0 — แตกสายวิวัฒนาการ · เลี้ยงได้ 3 ตัว · ความผูกพัน · ส่งต่อทายาท =====================
+// S.beast = ตัวที่ติดตัว (ผลเต็ม) · S.bTeam = ตัวที่อยู่บ้าน (ผล 1/3)
+const BP={f:['⚔️','ดุร้าย','#ff5a3a','ช่วยตีในศึกแรงขึ้น','สังหารพันศึก'],g:['🛡️','พิทักษ์','#4aa0ff','รับการโจมตีถึงตายแทน 1 ครั้งต่อ 10 ปี','พิทักษ์ประตูสวรรค์'],l:['🍀','โชคลาภ','#3fbf6a','คาบของหายากกลับมาให้','นำโชคพันลี้'],s:['🌀','วิญญาณ','#b07aff','ลมปราณเพิ่มทุกปี','กลืนแสงจันทรา']};
+const BP_FOC={train:'f',mission:'f',adv:'l',work:'l',rest:'g',love:'g',qi:'s',study:'s',tech:'s',hunt:'f',hide:'g',roam:'l',moon:'s',human:'g'};
+const BSET=[['f','g','🛡️⚔️ โล่หน้าดาบหลัง','พลังในศึก +3%'],['l','s','🍀🌀 ฟ้าประทานพร','ของหายากและลมปราณจากสัตว์คู่ใจ ×1.5'],['f','s','⚔️🌀 ดาบวิญญาณ','พลังในศึก +2% · ลมปราณจากสัตว์คู่ใจ ×1.3'],['g','l','🛡️🍀 บ้านอบอุ่น','ความสุข +2 และพลังชีวิตฟื้นเพิ่มทุกปี'],['f','l','⚔️🍀 นักล่าโชคดี','ชนะศึกแล้วมีโอกาสได้ของ'],['g','s','🛡️🌀 ผู้เฝ้าสมาธิ','ทะลวงขั้นปลอดภัยขึ้น · ลมปราณ ×1.2']];
+function bTeam(){if(!S)return[];if(!Array.isArray(S.bTeam))S.bTeam=[];return S.bTeam}
+function bSlots(){if(!S)return 1;return 1+((realmIdx()>=3||S.xian)?1:0)+((realmIdx()>=5||S.xt||(S.flags&&S.flags.bPact))?1:0)}
+function bAll(){return(S&&S.beast?[S.beast]:[]).concat(bTeam())}
+function bSlotFree(){return bSlots()-bAll().length}
+function bTeamKeep(B){if(!B||bSlotFree()<=0)return false;bTeam().push(B);return true}
+function bPaths(){const s=new Set();bAll().forEach(B=>{if(B.path)s.add(B.path)});return s}
+function bSets(){const P=bPaths();return BSET.filter(x=>P.has(x[0])&&P.has(x[1]))}
+function bHas(set){return bSets().some(x=>x[2]===set)}
+function bBaseM(B){try{const b=beasts()[B.i];return .04+.03*B.st+Math.min(.12,B.lv*.004)+b.t*.006}catch(e){return 0}}
+function bStageName(B){const b=beasts()[B.i];if(!b)return'?';if(B.st===0)return b.n;if(B.st===1)return b.n+'ตื่นรู้';return B.path?(['เทพ','ราชา','จักรพรรดิ'][b.t%3])+b.sp+BP[B.path][4]:(['เทพ','ราชา','จักรพรรดิ'][b.t%3])+b.sp+'สวรรค์'}
+{const _bsn=beastStageN;beastStageN=function(){try{if(S&&S.beast&&S.beast.path)return bStageName(S.beast)}catch(e){}return _bsn.apply(this,arguments)}}
+// พลังในศึก: ตัวติดตัวเต็ม + สาย ⚔️ · ตัวที่อยู่บ้าน 1/3 · โบนัสชุด
+{const _bmM=beastM;beastM=function(){let m=_bmM.apply(this,arguments);try{if(!S)return m;const A=S.beast;if(A&&A.path==='f')m+=.02*(A.st+1);
+ for(const B of bTeam()){m+=bBaseM(B)/3;if(B.path==='f')m+=.02*(B.st+1)/3}if(bHas(BSET[0][2]))m+=.03;if(bHas(BSET[2][2]))m+=.02}catch(e){}return m}}
+function bPathPick(B,why){const L=B.ln||{f:0,g:0,l:0,s:0};let best=null,v=-1;for(const k of ['f','g','l','s']){const x=(L[k]||0)+Math.random()*.5;if(x>v){v=x;best=k}}B.path=best;const P=BP[best];
+ log(`${P[0]} ${esc(B.nick)} ตื่นรู้เป็น<b>สาย${P[1]}</b>${why?' — '+why:''} · ${P[3]}`,'epic',true)}
+function bGrow(B,home){const b=beasts()[B.i];if(!b)return;B.xp+=home?1:0;while(B.xp>=B.lv*2&&B.lv<60){B.xp-=B.lv*2;B.lv++}
+ if(home){if(B.st===0&&B.lv>=10){B.st=1;if(!B.path)bPathPick(B,'ระหว่างอยู่บ้าน')}else if(B.st===1&&B.lv>=25&&b.t>=3){B.st=2;log(`🌟 ${esc(B.nick)} (อยู่บ้าน) วิวัฒนาการสูงสุดเป็น <b>${bStageName(B)}</b>`,'myth')}B.bond=Math.min(100,(B.bond||0)+.5)}}
+{const _bct=beastCompTick;beastCompTick=function(){const A=S&&S.beast,st0=A?A.st:0;try{if(A&&A.st===0){A.ln=A.ln||{f:0,g:0,l:0,s:0};const k=BP_FOC[S.focus];if(k)A.ln[k]+=2}}catch(e){}
+ const r=_bct.apply(this,arguments);try{if(A&&S.beast===A&&A.st>=1&&!A.path&&st0===0)bPathPick(A,'ตามวิธีที่คุณเลี้ยงมา');
+  for(const B of bTeam())bGrow(B,1);
+  // ผลประจำปีตามสาย
+  const k=x=>x===S.beast?1:1/3,luckM=bHas(BSET[1][2])?1.5:1,qiM=bHas(BSET[1][2])?1.5:bHas(BSET[2][2])?1.3:bHas(BSET[5][2])?1.2:1;
+  for(const B of bAll()){if(B.path==='l'&&Math.random()<.3*k(B)*luckM)bagGive(2,Math.min(6,3+B.st),`🍀 ${B.nick}คาบของกลับมา`);if(B.path==='s'){const g=+(Math.max(.5,(S.qi||0)*.004*(B.st+1))*k(B)*qiM).toFixed(1);S.qi=+((S.qi||0)+g).toFixed(1)}}
+  if(bHas(BSET[3][2])){joy(2);S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.05))}
+  bBondEv()}catch(e){console.error(e)}return r}}
+// สาย 🛡️ (ตัวติดตัว) รับการโจมตีถึงตายแทน · ความผูกพันสูงสุดช่วยได้ 1 ครั้งต่อตัว
+{const _cdB=checkDeath;checkDeath=function(){try{if(S&&S.alive&&!S.deathCause&&S.hp<=0&&S.beast){const A=S.beast;let why='';
+  if(A.path==='g'&&A.st>=1&&S.age-(A.gAt==null?-99:A.gAt)>=10){A.gAt=S.age;why='พุ่งเข้ารับการโจมตีถึงตายแทนคุณ'}else if((A.bond||0)>=95&&!A.saved){A.saved=1;why='ไม่ยอมทิ้งคุณ ลากร่างคุณออกจากความตาย'}
+  if(why){S.hp=Math.max(1,Math.round(S.maxHp*.3));A.bond=Math.min(100,(A.bond||0)+5);log(`${A.path==='g'?'🛡️':'💗'} <b>${esc(A.nick)}</b>${why}!`,'myth',true)}}}catch(e){}return _cdB.apply(this,arguments)}}
+// ความผูกพันสูง: หายไปแล้วกลับมาพร้อมลูก
+function bBondEv(){const A=S.beast;if(!A||(A.bond||0)<90||A.lv<15||A.kid||choice._cur||modalOpen||Math.random()>.08)return;A.kid=1;const b=beasts()[A.i];
+ choice(`🐾 ${A.nick} หายไปสามปี`,`${esc(A.nick)}หายไปจากบ้านสามปีเต็ม คุณตามหาจนเกือบถอดใจ — แล้ววันหนึ่งมันก็เดินกลับมา ข้างหลังมี<b>ลูก${b.sp}ตัวเล็ก</b>เดินตามมาต้อยๆ`,[
+  {t:'🏡 รับลูกมาเลี้ยงด้วย',s:bSlotFree()>0?'ได้สัตว์คู่ใจตัวใหม่ (ไปอยู่บ้าน)':'ช่องเต็ม — ฝากลูกไว้กับฝูงของมัน',_x:1,f(){if(bSlotFree()>0){const nk=ch(['เสี่ยว','อา','ต้า'])+ch(['ไป๋','เฮย','หง','จิน','หลาน','ฮวา','เล่ย','อวิ๋น','ซิง','เหมย']);bTeam().push({i:A.i,lv:1,xp:0,st:0,bond:70,nick:nk,hum:0,ln:{f:0,g:0,l:0,s:0}});log(`🐣 ลูกของ${esc(A.nick)}ชื่อ <b>${nk}</b> เข้ามาอยู่ในบ้าน`,'epic',true)}else{A.bond=100;log(`🐾 ลูกของ${esc(A.nick)}กลับไปอยู่กับฝูง แต่จะแวะมาหาทุกฤดูใบไม้ผลิ`,'good')}joy(10)}},
+  {t:'🤗 กอดทั้งสองตัว',s:'ความสุข +',_x:1,f(){joy(15);A.bond=100;log(`🐾 ${esc(A.nick)}ซุกหน้าลงที่ตักคุณเหมือนวันแรก`,'good')}}])}
+// สยบตัวใหม่: ช่องว่าง → ตัวเก่าไปอยู่บ้าน (ไม่ปล่อยทิ้ง)
+function bTameNote(){return bSlotFree()>0?'ตัวเดิมจะไปอยู่บ้าน':'ช่องเต็ม — ถ้าสำเร็จจะปล่อยตัวเก่า'}
+// ฝึกด้วยกัน (ปีละครั้ง) — ดันสายตอนยังไม่ตื่นรู้
+function bTrain(k){const A=S.beast;if(!A)return;if(S.bTrY===S.age)return toast('ปีนี้ฝึกด้วยกันแล้ว');S.bTrY=S.age;A.ln=A.ln||{f:0,g:0,l:0,s:0};A.ln[k]+=4;A.xp+=2;A.bond=Math.min(100,(A.bond||0)+2);
+ const T={f:'พาออกล่าในป่าลึก',g:'นอนเฝ้าบ้านด้วยกันทั้งคืน',l:'พาเดินทางไปเมืองข้างเคียง',s:'นั่งสมาธิใต้แสงจันทร์ด้วยกัน'};log(`${BP[k][0]} ${T[k]}กับ${esc(A.nick)} — เอียงไปทางสาย${BP[k][1]}`);try{render()}catch(e){}openBeastComp()}
+function bChoosePath(k){const A=S.beast;if(!A||A.path||A.st<1)return;A.path=k;log(`${BP[k][0]} ${esc(A.nick)} เลือกเดิน<b>สาย${BP[k][1]}</b> · ${BP[k][3]}`,'epic');openBeastComp()}
+function bSwap(i){const T=bTeam(),B=T[i];if(!B)return;if(S.bSwY===S.age)return toast('สลับตัวติดตัวได้ปีละครั้ง');S.bSwY=S.age;T.splice(i,1);if(S.beast)T.push(S.beast);S.beast=B;log(`🔄 ${esc(B.nick)} ออกมาติดตัวแทน`);try{render()}catch(e){}openBeastComp()}
+function bRelease(i){const T=bTeam(),B=T[i];if(!B)return;modal(`<h3>ปล่อย ${esc(B.nick)} คืนป่า?</h3><p>ปล่อยแล้วเรียกกลับไม่ได้</p><div class="brow"><button class="gbtn" onclick="openBeastComp()">ไม่ปล่อย</button><button class="pbtn" onclick="bRelease2(${i})">ปล่อย</button></div>`,'bcomp')}
+function bRelease2(i){const T=bTeam(),B=T[i];if(!B)return;T.splice(i,1);joy(-5);log(`🌿 ปล่อย ${esc(B.nick)} คืนสู่ป่า`);openBeastComp()}
+function bHeirMark(i){bAll().forEach(B=>delete B.hr);const B=i<0?S.beast:bTeam()[i];if(B)B.hr=1;openBeastComp()}
+function bCard(B,i,act){const b=beasts()[B.i],P=B.path&&BP[B.path];const ln=B.ln||{};const tot=Math.max(1,(ln.f||0)+(ln.g||0)+(ln.l||0)+(ln.s||0));
+ return`<div class="bcc ${act?'bccA':''}" style="--c:${P?P[2]:'#777'}"><div class="bccH"><span class="bccI">${bImgTag(b,56)||'🐾'}</span><div><b>${esc(B.nick)}</b> ${act?'<span class="bccT">ติดตัว</span>':'<span class="bccT bccHm">อยู่บ้าน · ผล 1/3</span>'}${B.hr?' <span class="bccT" style="background:#7a5a10">🎗️ ส่งต่อทายาท</span>':''}<br><span class="tag2">${bStageName(B)} · Lv.${B.lv} · ผูกพัน ${Math.round(B.bond||0)}</span></div></div>
+ ${P?`<div class="bccP">${P[0]} สาย${P[1]} — ${P[3]}</div>`:B.st>=1?`<div class="bccP">ยังไม่มีสาย ${act?'— เลือกได้เลย':''}</div>${act?`<div class="brow">${Object.keys(BP).map(k=>`<button class="gbtn" onclick="bChoosePath('${k}')">${BP[k][0]} ${BP[k][1]}</button>`).join('')}</div>`:''}`:
+  `<div class="bccL">${Object.keys(BP).map(k=>`<div><span>${BP[k][0]}</span><i style="width:${Math.round((ln[k]||0)/tot*100)}%;background:${BP[k][2]}"></i></div>`).join('')}<small>ตื่นรู้ที่ Lv.10 — สายเอียงตามวิธีที่เลี้ยง</small></div>`}
+ <div class="brow">${act?'':`<button class="gbtn" onclick="bSwap(${i})">🔄 ให้ติดตัว</button><button class="gbtn" onclick="bRelease(${i})">🌿 ปล่อย</button>`}<button class="gbtn" onclick="bHeirMark(${act?-1:i})">🎗️ ส่งต่อทายาท</button></div></div>`}
+{const _obT=openBeastComp;openBeastComp=function(){const r=_obT.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='bcomp'||!S)return r;const A=S.beast,T=bTeam();
+ if(S.beastMode&&!S.beastMode.human){const h=m.querySelector('h3');if(h)h.innerHTML=h.innerHTML.replace('🐾','🐺 ลูกน้องในฝูง ·')}
+ let html='';
+ if(A&&A.st===0){const done=S.bTrY===S.age;html+=`<div class="sysq bccTr"><b>🤝 ฝึกด้วยกัน</b> <span class="tag2">(ปีละครั้ง · ดันสายที่จะตื่นรู้)</span><div class="brow">${Object.keys(BP).map(k=>`<button class="gbtn" ${done?'disabled':''} onclick="bTrain('${k}')">${BP[k][0]} ${BP[k][1]}</button>`).join('')}</div></div>`}
+ html+=`<h4 style="margin:10px 0 4px">🏡 ทีมสัตว์คู่ใจ ${bAll().length}/${bSlots()}</h4>${A?bCard(A,-1,1):''}${T.map((B,i)=>bCard(B,i,0)).join('')}
+ ${bSlots()<3?`<p class="tag2">🔒 ช่องถัดไปเปิดเมื่อ${bSlots()<2?'ถึงขั้นหนึ่ง หรือขึ้นโลกเซียน':'ถึงฮวากยอง ขึ้นแดนเทพ หรือได้สัญญาวิญญาณ'}</p>`:''}
+ <div class="sysq" style="background:none;border:1px solid var(--line)"><b>✨ โบนัสชุด</b> <span class="tag2">(มีสัตว์ 2 สายพร้อมกันในทีม)</span><br>${BSET.map(x=>{const on=bHas(x[2]);return`<span class="tag2" style="${on?'color:#ffd76a;font-weight:700':''}">${on?'✅':'▫️'} ${x[2]} — ${x[3]}</span>`}).join('<br>')}</div>`;
+ const anchor=m.querySelector('.bcFeed')||m.querySelector('.brow');if(anchor)anchor.insertAdjacentHTML('beforebegin',html);else m.insertAdjacentHTML('beforeend',html)}catch(e){console.error(e)}return r}}
+// ไม่มีตัวติดตัวแต่มีตัวที่บ้าน → หน้าพื้นฐานบอกว่า "ยังไม่มี" ให้โชว์ทีมด้วย (กรณีปล่อยตัวติดตัวไป)
+{const _cf2=confirm2;confirm2=function(){const r=_cf2.apply(this,arguments);try{const b=[...document.querySelectorAll('#modal .pbtn')].pop();if(b){const oc=b.getAttribute('onclick')||'';b.setAttribute('onclick',oc.replace('S.beast=null;','S.beast=(S.bTeam&&S.bTeam.length)?S.bTeam.shift():null;'))}}catch(e){}return r}}
+// ส่งต่อทายาท: ตัวที่ติดป้าย (ถ้าไม่มีใช้ตัวติดตัว) — ลดลง 1 ร่าง สายคงเดิม
+{const _inhB=inherit;inherit=function(){const P=S;let keep=null;try{keep=bAll().find(B=>B.hr)||(P&&P.beast)||null;if(keep)keep=JSON.parse(JSON.stringify(keep))}catch(e){}
+ const r=_inhB.apply(this,arguments);try{if(keep&&S&&S!==P&&!S.beast){keep.st=Math.max(0,(keep.st||0)-1);keep.lv=Math.max(1,keep.st>=1?10:Math.round(keep.lv*.5));keep.xp=0;keep.bond=Math.max(50,Math.round((keep.bond||50)*.7));delete keep.hr;delete keep.gAt;delete keep.saved;delete keep.kid;S.beast=keep;
+  setTimeout(()=>{try{log(`🎗️ <b>${esc(keep.nick)}</b> สัตว์คู่ใจของรุ่นก่อน มานอนเฝ้าเปลของคุณตั้งแต่วันแรก`,'epic',true)}catch(e){}},800)}}catch(e){console.error(e)}return r}}
+// ร่างสัตว์อสูร: ลูกน้องในฝูง
+{const _byC=beastYear;beastYear=function(){const r=_byC.apply(this,arguments);try{const m=S&&S.beastMode;if(m&&!m.human&&S.alive&&(m.st|0)>=1&&bSlotFree()>0&&!choice._cur&&!modalOpen&&Math.random()<.05){const b=beastPick(false);if(b){
+  choice('🐺 มีสัตว์ขอเข้าฝูง',`${bImgTag(b,90)?`<div style="text-align:center">${bImgTag(b,90)}</div>`:''}<b>${b.n}</b> (${b.sp}) เดินตามคุณมาหลายวัน ก้มหัวขอเข้าฝูง`,[
+   {t:'🐾 รับเข้าฝูง',s:'ได้ลูกน้อง — ช่วยต่อสู้ และแตกสายได้เหมือนสัตว์คู่ใจ',_x:1,f(){bdexAdd(b,'tame');const B={i:b.i,lv:1,xp:0,st:0,bond:50,nick:ch(['เสี่ยว','อา','ต้า'])+ch(['ไป๋','เฮย','หง','จิน','หลาน','ฮวา','เล่ย','อวิ๋น']),hum:0,ln:{f:0,g:0,l:0,s:0}};if(!S.beast)S.beast=B;else bTeam().push(B);log(`🐺 <b>${B.nick}</b> (${b.n}) เข้าฝูงของคุณ`,'epic',true)}},
+   {t:'🌲 ไล่ไป',_x:1,f(){log('คุณคำรามไล่ มันวิ่งหายเข้าป่า')}}])}}}catch(e){console.error(e)}return r}}
+{const _omB=openMenu;openMenu=function(){const r=_omB.apply(this,arguments);try{const m=S&&S.beastMode;if(m&&!m.human&&bAll().length){const md=$('modal'),g=md&&md.querySelector('.mgrid');if(g&&!md.querySelector('.bPackB'))g.insertAdjacentHTML('afterbegin',`<button class="opt bPackB" onclick="openBeastComp()">🐺 ลูกน้องในฝูง<small>${bAll().length} ตัว</small></button>`)}}catch(e){}return r}}
+(()=>{const st=document.createElement('style');st.textContent=`.bcc{margin:6px 0;padding:8px 10px;border-radius:12px;border:2px solid var(--c);background:color-mix(in srgb,var(--c) 10%,transparent)}.bccA{box-shadow:0 0 10px color-mix(in srgb,var(--c) 50%,transparent)}
+.bccH{display:flex;gap:8px;align-items:center}.bccI img,.bccI canvas{width:48px;height:48px;image-rendering:pixelated}.bccT{font-size:10px;padding:1px 6px;border-radius:6px;background:var(--c);color:#fff;font-weight:700}.bccHm{background:#555}
+.bccP{margin:6px 0 2px;font-size:12.5px;font-weight:700;color:var(--c)}.bccL{margin:6px 0}.bccL div{display:flex;align-items:center;gap:6px;height:12px;margin:2px 0}.bccL span{width:18px;font-size:11px}.bccL i{display:block;height:7px;border-radius:4px;min-width:2px}.bccL small{font-size:11px;opacity:.7}.bcc .brow{margin-top:6px}.bcc .gbtn{font-size:12px;padding:4px 8px}`;document.head.appendChild(st)})();
 </script>
 </body>
 </html>

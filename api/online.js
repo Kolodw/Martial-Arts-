@@ -808,7 +808,15 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         for (let i = 0; i < raw.length; i += 2) { const x = jp(raw[i]); const c2 = x && CHC[x.ch]; if (!c2) continue; const kk = bdKeyP(p, c2, now, back); L.push(['ZADD', kk, +raw[i + 1] || 0, raw[i]], ['EXPIRE', kk, 86400 * (p === 'd' ? 4 : p === 'w' ? 20 : 70)]) }
         for (const wc of ['m', 'x', 'g', 'b']) { const wk = bdKeyP(p, wc, now, back), wr = (await cmd('ZRANGE', wk, 0, -1)) || []; const rm = wr.filter(v => { const x = jp(v); return x && x.ch }); if (rm.length) L.push(['ZREM', wk, ...rm]) }
         if (L.length) await pipe(L) } } } catch {} };
-    const bdWipe = async () => { await bdSplit(); try { if (!(await cmd('SET', 'bd3init', 1, 'NX'))) return; let cur = '0', n = 0; do { const r = await cmd('SCAN', cur, 'MATCH', 'bd2:*', 'COUNT', 500); cur = String(r[0]); if (r[1].length) await cmd('DEL', ...r[1]); n++ } while (cur !== '0' && n < 200); await cmd('DEL', 'bdhide') } catch {} };
+    // v17.12b: ทุกโหมดใช้คะแนนเฉลี่ยแบบโหมดปกติ → คิดคะแนนใหม่จากรายละเอียดชีวิตที่เก็บไว้ (ครั้งเดียว)
+    const bdRescore = async () => { try { if (!(await cmd('SET', 'bdrescore1', 1, 'NX'))) return;
+      for (const p of ['d', 'w', 'm']) for (let back = 0; back <= 1; back++) for (const c of ['ch', 'cs', 'cj']) {
+        const k = bdKeyP(p, c, now, back), raw = (await cmd('ZRANGE', k, 0, -1)) || [], L = [];
+        for (const v of raw) { const x = jp(v); if (!x) continue; let sc = null; try { const det = x.lid ? await cmd('GET', 'lifed:' + x.lid) : null; if (det) sc = bdScore(JSON.parse(det), x) } catch {}
+          if (sc == null) { if (x.hd) sc = Math.max(0, (+x.s || 0) - (+x.hl || 0) * 200000); else if (!x.sp && !x.jk) sc = +x.s || 0; else continue }
+          const y = Object.assign({}, x, { s: sc }); delete y.sp; delete y.jk; L.push(['ZREM', k, v], ['ZADD', k, sc, JSON.stringify(y)]) }
+        if (L.length) await pipe(L) } } catch {} };
+    const bdWipe = async () => { await bdSplit(); await bdRescore(); try { if (!(await cmd('SET', 'bd3init', 1, 'NX'))) return; let cur = '0', n = 0; do { const r = await cmd('SCAN', cur, 'MATCH', 'bd2:*', 'COUNT', 500); cur = String(r[0]); if (r[1].length) await cmd('DEL', ...r[1]); n++ } while (cur !== '0' && n < 200); await cmd('DEL', 'bdhide') } catch {} };
     if (a === 'rgboard') {
       await bdSettle();
       const p0 = String(b.p || qOf(req).p || 'd'), per = ['d', 'w', 'm', 'all'].includes(p0) ? p0 : 'd';
@@ -1413,14 +1421,14 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
               if (ok && L0.length && L0[L0.length - 1][1] > ag + 1) { ok = false; why = 'hlog-age2' } okL = ok } }
           catch {}
           if (!okL) { try { await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(e.n || ''), 24), age: ag, why, hl: e.hl, t: now, info: 1 })], ['LTRIM', 'acsus', 0, 199]]) } catch {} e.hl = Math.min(e.hl, Math.max(18, cs || 0)) } } if (cs) e.hcs = cs; if (okId(id) && e.hl > hb) await cmd('SET', 'hlb:' + id, e.hl, 'EX', 86400 * 400) }
-      let ejC = null; if (e.ch === 'hell') { try { ejC = JSON.stringify(Object.assign({}, e, { s: (e.hl || 0) * 200000 + bdScore(JSON.parse(String(b.det || '{}')), e), hd: 1 })) } catch {} }
-      if (e.ch === 'short') { try { ejC = JSON.stringify(Object.assign({}, e, { s: bdScoreShort(JSON.parse(String(b.det || '{}')), e), sp: 1 })) } catch {} }
+      let ejC = null; if (e.ch === 'hell') { try { ejC = JSON.stringify(Object.assign({}, e, { s: e.s, hd: 1 })) } catch {} }
+      if (e.ch === 'short') { try { ejC = JSON.stringify(Object.assign({}, e, { s: e.s })) } catch {} }
       if (e.ch === 'regress') { try { const D0 = JSON.parse(String(b.det || '{}')), G = D0.rg || {}, rl = Math.max(1, Math.min(999, Math.floor(+G.loop || 1))), rf = G.free && (+e.age || 0) >= 15 ? 1 : 0; e.rl = rl; e.rf = rf; const vn = { r5: ' ⏪', nomem: ' 🧠', lim10: ' 🔟' }[String(G.var || '')] || ''; e.c = (rf ? '🔁 หลุดพ้นวงจรใน ' + rl + ' รอบ' : '🔁 ย้อนกาล ' + rl + ' รอบ') + vn + (e.c ? ' · ' + e.c : ''); e.c = e.c.slice(0, 80); ejC = JSON.stringify(Object.assign({}, e, { s: (rf ? 5e8 - rl * 1e6 : 0) + Math.min(4e8, bdScore(D0, e)), rg: 1 })) } catch {} }
       const cat = bdCat(e), ej = JSON.stringify(e), L = [['INCR', 'lives']];
       let rjB = null; if (e.ch === 'regress' && e.rf) { try { const G0 = (JSON.parse(String(b.det || '{}')).rg) || {}, en0 = ['breaker', 'protector', 'lonely'].includes(G0.end) ? G0.end : 'lonely', vr0 = ['normal', 'r5', 'nomem', 'lim10'].includes(G0.var) ? G0.var : 'normal'; rjB = Object.assign({}, e, { end: en0, var: vr0, s: ({ breaker: 3, protector: 2, lonely: 1 })[en0] * 1e8 - Math.min(999, e.rl || 1) * 1e5 + ({ lim10: 3, nomem: 2, r5: 1, normal: 0 })[vr0] * 1e4 }) } catch {} }
-      if (e.ch === 'junk') { try { ejC = JSON.stringify(Object.assign({}, e, { s: bdPeak(JSON.parse(String(b.det || '{}')), e), jk: 1 })) } catch {} }
-      if (e.ch === 'regress' && !rjB) { try { rjB = Object.assign({}, e, { nf: 1, s: bdPeak(JSON.parse(String(b.det || '{}')), e) - 1e9 }) } catch {} }
-      // v17.12: โหมดท้าทายขึ้นเฉพาะทำเนียบของโหมดตัวเอง (ไม่ปนทำเนียบโลก)
+      if (e.ch === 'junk') { try { ejC = JSON.stringify(Object.assign({}, e, { s: e.s })) } catch {} }
+      if (e.ch === 'regress' && !rjB) { try { rjB = Object.assign({}, e, { nf: 1, s: Math.min(9e8, +e.s || 0) - 1e9 }) } catch {} }
+      // v17.12: โหมดท้าทายขึ้นเฉพาะทำเนียบของโหมดตัวเอง (ไม่ปนทำเนียบโลก) · ทุกโหมดใช้คะแนนเฉลี่ยทุกด้านแบบโหมดปกติ
       const mainC = e.ch === 'regress' ? 'r' : e.ch && CHC[e.ch] ? CHC[e.ch] : cat; let mainJ = ej;
       for (const cc of [mainC]) { if (cc === 'r') { if (!rjB) continue; const jj = JSON.stringify(rjB); mainJ = jj; for (const [kk, ex] of [[bdKey('r', now), 4], [bdKeyW('r', now), 20], [bdKeyM('r', now), 70]]) L.push(['ZADD', kk, rjB.s, jj], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]); continue } const useC = CHF[cc] && ejC, sv = useC ? JSON.parse(ejC).s : e.s, jj = useC ? ejC : ej; mainJ = jj; for (const [kk, ex] of [[bdKey(cc, now), 4], [bdKeyW(cc, now), 20], [bdKeyM(cc, now), 70]]) L.push(['ZADD', kk, sv, jj], ['ZREMRANGEBYRANK', kk, 0, -101], ['EXPIRE', kk, 86400 * ex]) }
       await bdSettle();
