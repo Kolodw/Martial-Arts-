@@ -8295,6 +8295,7 @@ function openAdmTools(){if(!ADM.ok){admVerify().then(ok=>{if(ok)openAdmTools();e
   <button class="gbtn" onclick="admPaForce(this)">🔨 เปิดประมูลผู้เล่นทันที</button>
   <button class="gbtn" onclick="openOnline('chat');setTimeout(()=>{const i=$('chatIn');if(i){i.value='@everyone ';i.focus()}},400)">📢 ประกาศถึงทุกคน</button>
   <button class="gbtn" onclick="admPush()">🔔 ส่งแจ้งเตือนถึงทุกคน</button>
+  <button class="gbtn" onclick="openRlCfg()">⏱️ ตั้งค่าดีเลย์แชต/ข่าว</button>
  </div><p class="tag2" style="margin:4px 0 0">ประมูลเปิดทันที ผู้เล่นทุกคนที่อยู่ในชีวิตจะเห็นป้ายภายใน ~20 วิ · ประกาศ @everyone ก็ถึงทุกคนภายใน ~20 วิ</p></div>`,'admtool')}
 async function admPaForce(b){b.disabled=true;try{const j=await api('paforce&key='+encodeURIComponent(admK()));const p=j&&j.pa;
  if(j&&j.st==='open'){toast('🔨 เปิดประมูลแล้ว! ทุกคนจะเห็นประกาศภายใน ~20 วิ');try{PA.sum=p;if(p&&!PA.seen[p.sid]){PA.seen[p.sid]=1;if(paCanSee())paBanner(p);else toast('ℹ️ เข้าไปอยู่ในชีวิตก่อน ถึงจะเห็นป้ายประมูลเอง')}}catch(e){}}
@@ -25571,6 +25572,24 @@ function eggHatch(){const p=S.pet;closeM();const r=BAGX.egg.use.call(BAGX.egg);i
    opts.push(`<button class="opt" onclick="eggSell()">💰 ขายให้พ่อค้า<small>ได้เงินราว ${typeof ftMf==='function'?ftMf(Math.round(BAGIT.egg.v*(typeof W15==='function'?W15():1)*.8)):''}</small></button>`);
    modal(`<button class="xbtn" onclick="openBag()">←</button><h3>🥚 ไข่สัตว์วิญญาณ</h3><p class="tag2">${p.spirit?`คุณมี${esc(p.n)}เป็นสัตว์วิญญาณคู่กายอยู่แล้ว — จะทำอะไรกับไข่ฟองนี้?`:`ตอนนี้มี${esc(p.n)}เป็นสัตว์เลี้ยง — ถ้าฟักเป็นสัตว์วิญญาณคู่กาย ${esc(p.n)}จะจากไป`}</p><div class="mgrid">${opts.join('')}</div>`,'bag');return}}}catch(e){console.error(e)}return _bumE.apply(this,arguments)}}
 
+
+// ===== แอดมิน: ตั้งค่าดีเลย์แชต + ข่าวชิงกฎ (ปรับสด เก็บใน Redis) =====
+async function openRlCfg(){
+ let j;try{j=await api('cfg&key='+encodeURIComponent(admK()))}catch(e){toast('โหลดไม่สำเร็จ: '+(e.message||e));return}
+ const c=j.cfg||{},d=j.def||{};
+ const row=(k,ic,t,u,desc,step)=>`<div class="adsec" style="margin:8px 0"><h4>${ic} ${t}</h4><div style="display:flex;gap:6px;align-items:center"><input id="rc_${k}" type="number" inputmode="numeric" step="${step||1}" value="${c[k]}" class="crin" style="flex:1;min-width:0"><span class="tag2">${u}</span></div><p class="tag2" style="margin:4px 0 0">${desc} · ค่าเริ่มต้น ${d[k]}</p></div>`;
+ modal(`<h2>⏱️ ตั้งค่าดีเลย์</h2><p class="tag2">มีผลกับทุกคนภายใน ~10 วิ · แอดมินไม่โดนดีเลย์แชต</p>
+ ${row('chatcd','💬','ดีเลย์ส่งแชตผู้เล่น','มิลลิวินาที (1000 = 1 วิ)','ห่างระหว่างข้อความของคนเดียวกัน',500)}
+ ${row('lawgap','⚖️','ช่องว่างข่าวต่อกฎ','วินาที','กฎเดียวกันห้ามขึ้นข่าวถี่กว่านี้ (การชิงยังสำเร็จ แค่ไม่ประกาศ) · 0 = ไม่จำกัด',60)}
+ ${row('lawdig','🗞️','รวมข่าวชิงกฎเป็นบรรทัดเดียว','วินาที','ข่าวที่เกิดในช่วงนี้ถูกรวมเป็น "N กฎเปลี่ยนมือ" · 0 = ไม่รวม',60)}
+ <div class="adsec" style="margin:8px 0"><h4>📣 ข่าวชิงกฎ</h4><label style="display:flex;gap:8px;align-items:center"><input id="rc_lawnews" type="checkbox" ${c.lawnews?'checked':''}> เปิดประกาศข่าวชิงกฎในแชต</label></div>
+ <button class="pbtn" style="width:100%" onclick="saveRlCfg()">💾 บันทึก</button>
+ <button class="gbtn" style="width:100%;margin-top:6px" onclick="saveRlCfg(1)">↩️ คืนค่าเริ่มต้น</button>
+ <button class="gbtn" style="width:100%;margin-top:6px" onclick="openAdmTools()">ปิด</button>`,'rlcfg')}
+async function saveRlCfg(reset){
+ try{const set={};['chatcd','lawgap','lawdig'].forEach(k=>{const e=$('rc_'+k);if(e)set[k]=+e.value});const n=$('rc_lawnews');if(n)set.lawnews=n.checked?1:0;
+  const j=await api('cfg&key='+encodeURIComponent(admK()),reset?{reset:1}:{set});
+  toast(reset?'↩️ คืนค่าเริ่มต้นแล้ว':'✅ บันทึกแล้ว');openRlCfg()}catch(e){toast('บันทึกไม่สำเร็จ: '+(e.message||e))}}
 </script>
 </body>
 </html>

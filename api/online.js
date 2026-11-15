@@ -217,6 +217,15 @@ const saveTrim = d => { try { d = String(d || ''); if (!/^[A-Za-z0-9+/]+=*$/.tes
   const al = j.S.album; if (Array.isArray(al) && al.length > 3) al.forEach((p, i) => { if (p && p.u && i > 0 && i < al.length - 2) { p.u = ''; ch = 1 } }); // อัลบั้ม: เก็บภาพแรก + 2 ภาพล่าสุด · คำบรรยายครบ
   return ch ? Buffer.from(JSON.stringify(j), 'utf8').toString('base64') : d } catch { return d } };
 const isAdmKey = k => !!ADM_KEY && String(k || '') === ADM_KEY;
+// ===== ตั้งค่าดีเลย์ที่แอดมินปรับสดได้ (Redis hash "cfg") =====
+const CFG_DEF = { chatcd: 3000, lawgap: 600, lawdig: 600, lawnews: 1 }, CFG_LIM = { chatcd: [500, 60000], lawgap: [0, 86400], lawdig: [0, 3600], lawnews: [0, 1] };
+let CFG_C = null, CFG_AT = 0;
+async function getCfg(force) {
+  if (!force && CFG_C && Date.now() - CFG_AT < 10000) return CFG_C;
+  const o = { ...CFG_DEF };
+  try { const h = (await cmd('HGETALL', 'cfg')) || []; for (let i = 0; i + 1 < h.length; i += 2) { const k = h[i]; if (k in CFG_DEF) { const v = +h[i + 1]; if (isFinite(v)) o[k] = Math.max(CFG_LIM[k][0], Math.min(CFG_LIM[k][1], Math.round(v))) } } } catch (e) {}
+  CFG_C = o; CFG_AT = Date.now(); return o;
+}
 const annGet = async () => { try { const v = await cmd('GET', 'ann'); return v ? JSON.parse(v) : null } catch { return null } };
 const ANN_VOTE_DAYS = 7;
 const annHist = async () => { try { return ((await cmd('LRANGE', 'annh', 0, 29)) || []).map(v => { try { return JSON.parse(v) } catch { return null } }).filter(Boolean) } catch { return [] } };
@@ -1268,6 +1277,16 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (ops.length) await pipe([...ops, ['LTRIM', 'chat', 0, 199]]) }
       return res.json({ l });
     }
+    if (a === 'cfg') {
+      if (!isAdmKey(qOf(req).key) && !isAdmKey(b.key)) return res.status(403).json({ err: 'admin' });
+      if (req.method === 'POST' && b.set && typeof b.set === 'object') {
+        const ops = [];
+        for (const k of Object.keys(CFG_DEF)) if (k in b.set) { const v = Math.round(+b.set[k]); if (!isFinite(v)) continue; ops.push(['HSET', 'cfg', k, Math.max(CFG_LIM[k][0], Math.min(CFG_LIM[k][1], v))]) }
+        if (b.reset) ops.push(['DEL', 'cfg']);
+        if (ops.length) await pipe(ops);
+      } else if (b.reset) await cmd('DEL', 'cfg');
+      return res.json({ ok: 1, cfg: await getCfg(true), def: CFG_DEF, lim: CFG_LIM });
+    }
     if (a === 'lawclaim') {
       const LK = ['blade', 'fist', 'fire', 'frost', 'thunder', 'wind', 'death', 'origin'], LN = { blade: 'กฎคมดาบ', fist: 'กฎหมัดฝ่ามือ', fire: 'กฎเพลิง', frost: 'กฎเยือกแข็ง', thunder: 'กฎอัสนี', wind: 'กฎวายุ', death: 'กฎมรณะ', origin: 'กฎปฐมภูมิ' };
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
@@ -1291,9 +1310,15 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const first = !cur && (await cmd('HSETNX', 'lawfirst', k, now)) === 1;
         if (first || !cur) { const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: 'ฟ้าลิขิต', k: first ? 'one' : 'law', x: '⚖️ ' + n + ' จารึก' + LN[k] + 'ลงในฟ้าดิน' + (first ? 'เป็นคนแรกของโลก' : '') + ' ด้วย《' + art + '》' }; ops.push(['LPUSH', 'chat', JSON.stringify(m)]) }
         else {
-          const lm = jp(await cmd('GET', 'lawmsg:' + k)), recent = lm && now - lm.t0 < 3600e3; const c = recent ? (lm.c || 1) + 1 : 1;
-          const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: 'ฟ้าลิขิต', k: 'law', x: '⚖️ ' + (c > 1 ? LN[k] + 'เปลี่ยนมือ ' + c + ' ครั้งในชั่วโมงนี้ · ล่าสุด ' : '') + n + ' ชิง' + (c > 1 ? '' : LN[k]) + 'จาก ' + cur.n + ' ด้วย《' + art + '》' };
-          if (recent && lm.j) ops.push(['LREM', 'chat', 1, lm.j]); const mj = JSON.stringify(m); ops.push(['LPUSH', 'chat', mj], ['SET', 'lawmsg:' + k, JSON.stringify({ j: mj, t0: recent ? lm.t0 : now, c }), 'EX', 7200]);
+          const cf = await getCfg();
+          const gapOk = cf.lawnews && (cf.lawgap <= 0 || (await cmd('SET', 'lawng:' + k, 1, 'NX', 'EX', cf.lawgap)) === 'OK');
+          if (gapOk) {
+            const lm = cf.lawdig > 0 ? jp(await cmd('GET', 'lawdig')) : null, recent = lm && now - lm.t0 < cf.lawdig * 1000; const c = recent ? (lm.c || 1) + 1 : 1;
+            const mins = Math.max(1, Math.round(cf.lawdig / 60));
+            const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: 'ฟ้าลิขิต', k: 'law', x: '⚖️ ' + (c > 1 ? c + ' กฎเปลี่ยนมือในรอบ ' + mins + ' นาที · ล่าสุด ' + n + ' ชิง' + LN[k] : n + ' ชิง' + LN[k]) + 'จาก ' + cur.n + ' ด้วย《' + art + '》' };
+            if (recent && lm.j) ops.push(['LREM', 'chat', 1, lm.j]); const mj = JSON.stringify(m); ops.push(['LPUSH', 'chat', mj]);
+            if (cf.lawdig > 0) ops.push(['SET', 'lawdig', JSON.stringify({ j: mj, t0: recent ? lm.t0 : now, c }), 'EX', cf.lawdig + 60]);
+          }
         }
         ops.push(['LTRIM', 'chat', 0, 199]);
       }
@@ -1533,9 +1558,10 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const isA = isAdmKey(b.key);
       const x = isA ? String(b.x || '').replace(/[\u0000-\u001f<>]/g, '').slice(0, 400).trim() : clean(b.x, 200);
       if (!x) return res.status(400).json({ err: 'empty' });
-      const [mu, ok, chx, rkh] = await pipe([['GET', 'mute:' + id], ['SET', 'rl:' + id, 1, 'NX', 'PX', 1800], ['SISMEMBER', 'cheaters', id], ['HGETALL', 'rkttl:' + id]]);
+      const cfg0 = await getCfg();
+      const [mu, ok, chx, rkh] = await pipe([['GET', 'mute:' + id], isA ? ['SET', 'rl:' + id, 1, 'NX', 'PX', 800] : ['SET', 'rl:' + id, 1, 'NX', 'PX', cfg0.chatcd], ['SISMEMBER', 'cheaters', id], ['HGETALL', 'rkttl:' + id]]);
       if (mu) return res.status(429).json({ err: 'muted' });
-      if (!ok) return res.status(429).json({ err: 'rate' });
+      if (!ok) return res.status(429).json({ err: 'rate', cd: isA ? 800 : cfg0.chatcd });
       const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), ...((b.tp || +chx) ? { tt: '', tr: 0 } : rkOk(b.tt, rkh) || (isAdmKey(b.key) && RKT_ALL.has(String(b.tt || '')) ? { tt: String(b.tt), tr: RKT_TR[RKT_ALL.get(String(b.tt)).p] || 7 } : null) || ttlOk(b.tt, b.tr)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
       if (isA) m.ad = 1;
       if (!b.nsp) { try { if (+(await cmd('SISMEMBER', 'supok', id))) m.sp = 1 } catch {} }
