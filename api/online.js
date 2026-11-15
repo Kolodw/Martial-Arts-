@@ -1914,19 +1914,46 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     }
     if (a === 'meet') {
       const x = b.x ? 1 : 0, key = 'mp:' + x;
-      const me = { n: clean(b.n, 20) || 'นิรนาม', ri: Math.max(0, Math.min(12, +b.ri || 0)), p: Math.max(0, Math.min(1e13, +b.p || 0)), f: clean(b.f, 30), age: Math.max(0, +b.age || 0), c: Math.max(0, Math.min(999, Math.round(+b.cha || 0))), t: now };
+      const me = { n: clean(b.n, 20) || 'นิรนาม', ri: Math.max(0, Math.min(12, +b.ri || 0)), p: Math.max(0, Math.min(1e13, +b.p || 0)), f: clean(b.f, 30), age: Math.max(0, +b.age || 0), c: Math.max(0, Math.min(999, Math.round(+b.cha || 0))), t: now, g: b.g === 'f' ? 'f' : 'm', ms: b.ms ? 1 : 0, w: Math.max(0, Math.min(3, +b.w || 0)), td: ['fight', 'ally', 'betray', 'leave', 'bond'].includes(b.td) ? b.td : 'ally' };
       if (b.bm) { me.bm = 1; me.sp = clean(b.sp, 20); me.st = Math.max(0, Math.min(9, +b.st || 0)); me.p = Math.min(me.p, 1e12) }
       const okMe = !b.tp && (me.bm ? me.p <= 1e12 : powOk(me.p, me.ri, x, me.age)) && !(await isBanned());
-      const [, all, box] = await pipe([okMe ? ['HSET', key, id, JSON.stringify(me)] : ['HDEL', key, id], ['HGETALL', key], ['LRANGE', 'mbox:' + id, 0, 9]]);
+      const [, all, box, gbox] = await pipe([okMe ? ['HSET', key, id, JSON.stringify(me)] : ['HDEL', key, id], ['HGETALL', key], ['LRANGE', 'mbox:' + id, 0, 9], ['LRANGE', 'gbox:' + id, 0, 9]]);
+      // เงาผู้เล่น: เก็บร่องรอยคนที่เพิ่งเล่นไว้ 2 วัน ให้คนที่มาทีหลังเจอ "เงา" ได้แม้ไม่มีใครออนไลน์
+      if (okMe && !me.bm && me.age >= 14) { try { await pipe([['HSET', 'mpold:' + x, id, JSON.stringify(me)], ['EXPIRE', 'mpold:' + x, 172800]]) } catch {} }
       const cand = [], stale = [];
       for (let i = 0; i < (all || []).length; i += 2) { const k0 = all[i]; let v = null; try { v = JSON.parse(all[i + 1]) } catch {} if (!v || now - v.t > 120e3) { stale.push(k0); continue } if (k0 !== id) cand.push(Object.assign(v, { k: k0.slice(0, 6) + k0.slice(-4) })) }
-      const L2 = [['EXPIRE', key, 3600]]; if (stale.length) L2.push(['HDEL', key, ...stale.slice(0, 50)]); if (box && box.length) L2.push(['DEL', 'mbox:' + id]);
+      const L2 = [['EXPIRE', key, 3600]]; if (stale.length) L2.push(['HDEL', key, ...stale.slice(0, 50)]); if (box && box.length) L2.push(['DEL', 'mbox:' + id]); if (gbox && gbox.length) L2.push(['DEL', 'gbox:' + id]);
       await pipe(L2);
       // สัตว์อสูรไม่เป็นฝ่ายเริ่ม · มนุษย์มีโอกาสเจอสัตว์อสูร (ผู้เล่นจริง) มากขึ้นเมื่อมีในเซิร์ฟเวอร์
       let o = null;
       if (!me.bm && cand.length) { const bc = cand.filter(c => c.bm), hc = cand.filter(c => !c.bm); const pool = bc.length && (!hc.length || Math.random() < .45) ? bc : hc.length ? hc : bc; o = pool[Math.floor(Math.random() * pool.length)] }
       let pa = null, pw = 0; try { pa = paSum(await paTick(now)); pw = +(await cmd('LLEN', 'pa:win:' + id)) || 0 } catch {}
-      return res.json({ pa, pw, o, n: cand.length, inbox: (box || []).map(s0 => { try { return JSON.parse(s0) } catch { return null } }).filter(Boolean) });
+      let gh = null;
+      if (!o && !me.bm && me.age >= 14 && Math.random() < .5) {
+        try {
+          const rf = await cmd('HRANDFIELD', 'mpold:' + x, 8, 'WITHVALUES'), live = new Set(); for (let i = 0; i < (all || []).length; i += 2) live.add(all[i]);
+          const gs = [], old = [];
+          for (let i = 0; i < (rf || []).length; i += 2) { const k0 = rf[i]; let v = null; try { v = JSON.parse(rf[i + 1]) } catch {} if (!v || now - v.t > 172800e3) { old.push(k0); continue } if (k0 === id || live.has(k0) || now - v.t < 120e3) continue; gs.push(Object.assign(v, { k: k0.slice(0, 6) + k0.slice(-4), ago: now - v.t })) }
+          if (old.length) await cmd('HDEL', 'mpold:' + x, ...old);
+          if (gs.length) { const near = gs.filter(v => Math.abs((v.ri || 0) - me.ri) <= 2); const pool = near.length ? near : gs; gh = pool[Math.floor(Math.random() * pool.length)] }
+        } catch {}
+      }
+      const inbox0 = (gbox || []).map(s0 => { try { return JSON.parse(s0) } catch { return null } }).filter(Boolean);
+      return res.json({ pa, pw, o, gh, n: cand.length, inbox: inbox0.concat((box || []).map(s0 => { try { return JSON.parse(s0) } catch { return null } }).filter(Boolean)) });
+    }
+    // ผลการเจอ "เงา" → แจ้งเจ้าของเงาเมื่อเขากลับมาเล่น (เก็บ 3 วัน)
+    if (a === 'ghact') {
+      if (b.tp || await isBanned()) return res.json({ ok: 0 });
+      const ok = await cmd('SET', 'mtl:' + id, 1, 'NX', 'EX', 15);
+      if (!ok) return res.status(429).json({ err: 'rate' });
+      const to = String(b.to || '').replace(/[^a-z0-9]/g, '').slice(0, 12), x = b.x ? 1 : 0;
+      const ks = await cmd('HKEYS', 'mpold:' + x);
+      const tid = (ks || []).find(k0 => k0.slice(0, 6) + k0.slice(-4) === to);
+      if (!tid || tid === id) return res.json({ ok: 0 });
+      const kind = ['duel', 'flee', 'pact', 'sworn', 'none', 'betr'].includes(b.kind) ? b.kind : 'none';
+      const m = { kind: 'gh', r: kind, n: clean(b.n, 20) || 'นิรนาม', win: b.win ? 1 : 0, w: Math.max(0, Math.min(3, +b.w || 0)), k: id.slice(0, 6) + id.slice(-4), t: now };
+      await pipe([['LPUSH', 'gbox:' + tid, JSON.stringify(m)], ['LTRIM', 'gbox:' + tid, 0, 9], ['EXPIRE', 'gbox:' + tid, 259200]]);
+      return res.json({ ok: 1 });
     }
     if (a === 'meetact') {
       if (b.tp || await isBanned()) return res.json({ ok: 0 });
@@ -1945,8 +1972,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     if (a === 'mtopen' || a === 'mtpick' || a === 'mtmsg' || a === 'mtst') {
       if (!okId(id)) return res.json({ ok: 0 });
       if (b.tp || await isBanned()) return res.json({ ok: 0 });
-      const CH = ['fight', 'ally', 'betray', 'leave'];
-      const rnd = () => CH[Math.floor(Math.random() * CH.length)];
+      const CH = ['fight', 'ally', 'betray', 'leave', 'bond'], CHR = ['fight', 'ally', 'betray', 'leave'];
+      const rnd = () => CHR[Math.floor(Math.random() * CHR.length)];
       const camp = c => c === 'fight' ? 'h' : c === 'leave' ? 'p' : 'f';   // ศัตรู / ถอย / เป็นมิตร (แสร้งสาบานก็ดูเป็นมิตร)
       const resolve = r => {
         if (r.res) return r;
@@ -1974,6 +2001,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         else if (CA === 'p' || CB === 'p') { const fr = CA === 'f' ? 'a' : 'b'; o = persuade(fr) ? { k: 'pact', ba: ca === 'betray' ? 1 : 0, bb: cb === 'betray' ? 1 : 0, per: fr } : { k: 'none', tried: fr } }
         else o = { k: 'pact', ba: ca === 'betray' ? 1 : 0, bb: cb === 'betray' ? 1 : 0 };
         if (o.k === 'pact' && !o.ba && !o.bb && !o.per) o.bonus = 1;   // ไว้ใจกันจริงทั้งคู่
+        // ผูกสัมพันธ์: ทั้งคู่เลือก "ผูกสัมพันธ์" → คู่รัก (เพศตรงข้าม ยังไม่มีคู่ทั้งคู่) หรือพี่น้องร่วมสาบาน
+        if (o.k === 'pact' && ca === 'bond' && cb === 'bond') { o.k = 'bond'; o.love = (r.A.g && r.B.g && r.A.g !== r.B.g && !r.A.ms && !r.B.ms) ? 1 : 0 }   // ไว้ใจกันจริงทั้งคู่
         o.fa = ca; o.fb = cb; r.res = o; r.rt = now; return r;
       };
       const load = async rid => { const v = await cmd('GET', 'mr:' + rid); try { return v ? JSON.parse(v) : null } catch { return null } };
@@ -1987,8 +2016,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const all = await cmd('HGETALL', 'mp:' + x); let tid = null, B = null;
         for (let i = 0; i < (all || []).length; i += 2) if (all[i].slice(0, 6) + all[i].slice(-4) === to) { tid = all[i]; try { B = JSON.parse(all[i + 1]) } catch {} }
         if (!tid || tid === id || !B || now - B.t > 150e3 || B.bm) return res.json({ ok: 0 });
-        const A = { n: clean(b.n, 20) || 'นิรนาม', ri: Math.max(0, Math.min(12, +b.ri || 0)), p: Math.max(0, Math.min(1e13, +b.p || 0)), f: clean(b.f, 30), age: Math.max(0, +b.age || 0), c: Math.max(0, Math.min(999, Math.round(+b.cha || 0))), k: id.slice(0, 6) + id.slice(-4) };
-        B = { n: B.n, ri: B.ri, p: B.p, f: B.f, age: B.age, c: B.c || 0, k: to };
+        const A = { n: clean(b.n, 20) || 'นิรนาม', ri: Math.max(0, Math.min(12, +b.ri || 0)), p: Math.max(0, Math.min(1e13, +b.p || 0)), f: clean(b.f, 30), age: Math.max(0, +b.age || 0), c: Math.max(0, Math.min(999, Math.round(+b.cha || 0))), k: id.slice(0, 6) + id.slice(-4), g: b.g === 'f' ? 'f' : 'm', ms: b.ms ? 1 : 0, w: Math.max(0, Math.min(3, +b.w || 0)) };
+        B = { n: B.n, ri: B.ri, p: B.p, f: B.f, age: B.age, c: B.c || 0, k: to, g: B.g || '', ms: B.ms ? 1 : 0, w: B.w || 0 };
         const rid = (now.toString(36) + Math.random().toString(36).slice(2, 6)).slice(-10);
         const r = { rid, a: id, b: tid, A, B, t0: now, c: {}, m: {}, x };
         await pipe([save(rid, r), ['LPUSH', 'mbox:' + tid, JSON.stringify({ kind: 'room', rid, n: A.n, t: now })], ['LTRIM', 'mbox:' + tid, 0, 9], ['EXPIRE', 'mbox:' + tid, 3600]]);

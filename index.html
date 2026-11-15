@@ -6226,9 +6226,9 @@ function allyAdd(n,src){S.allies=S.allies||[];if(S.allies.some(a=>a.n===n))retur
 // ---- พบผู้เล่นจริงแบบเรียลไทม์ ----
 let meetC=null,meetT=0;
 async function meetPoll(){try{if(!onlineOK||!S||!S.alive||S.beastMode||paused||document.hidden)return;if(Date.now()-meetT<(idleMs()>300000?300000:90000))return;meetT=Date.now();
- const j=await api('meet',{n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0});try{if(typeof paNote==='function')paNote(j)}catch(e){};meetC=j.o?Object.assign(j.o,{at:Date.now()}):null;
+ const j=await api('meet',Object.assign({n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0},typeof mwMe==='function'?mwMe():{}));try{if(typeof paNote==='function')paNote(j)}catch(e){};meetC=j.o?Object.assign(j.o,{at:Date.now()}):null;try{if(!j.o&&j.gh&&typeof ghSet==='function')ghSet(j.gh)}catch(e){}
  (j.inbox||[]).forEach(m=>{if(!S||!S.alive)return;if(m.kind==='ally'){if(m.ok){allyAdd(m.n,'ผู้เล่นจริง');log(`🤝 ผู้เล่น <b>${esc(m.n)}</b> สาบานเป็นพันธมิตรกับคุณข้ามจักรวาล — เขาจะมาช่วยตอนจวนตัว`,'epic',true)}}
-  else if(m.kind==='mmsg'||m.kind==='room'||m.kind==='mres'||/^bh/.test(m.kind||'')){try{mtInbox(m)}catch(e){}}else{if(m.win){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.08));S.fame=Math.max(0,S.fame-5);log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — คุณพ่ายแพ้ บาดเจ็บเล็กน้อย`,'bad',true)}else{S.fame+=20;log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — แต่คุณเป็นฝ่ายชนะ! ชื่อเสียง +20`,'epic',true)}}});try{render()}catch(e){}}catch(e){}}
+  else if(m.kind==='gh'){try{ghInbox(m)}catch(e){}}else if(m.kind==='mmsg'||m.kind==='room'||m.kind==='mres'||/^bh/.test(m.kind||'')){try{mtInbox(m)}catch(e){}}else{if(m.win){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.08));S.fame=Math.max(0,S.fame-5);log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — คุณพ่ายแพ้ บาดเจ็บเล็กน้อย`,'bad',true)}else{S.fame+=20;log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — แต่คุณเป็นฝ่ายชนะ! ชื่อเสียง +20`,'epic',true)}}});try{render()}catch(e){}}catch(e){}}
 setInterval(meetPoll,5000);
 function meetTick(){if(!meetC||Date.now()-meetC.at>90000||S.age<14||choice._cur||modalOpen||S.beastMode||Math.random()>.06)return;const o=meetC;meetC=null;const RN=S.xian?XREALM:REALMS.map(r=>r.n),ep=Math.max(50,o.p||100),r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100)));
  choice(`🌐 พบผู้เล่นจริง!`,`รอยแยกมิติเปิดออกชั่วครู่ — <b>${esc(o.n)}</b> ผู้เล่นที่กำลังจำลองชีวิตอยู่ตอนนี้ ก้าวข้ามมาสู่จักรวาลของคุณ<br>${esc(RN[o.ri]||'')} · ${esc(o.f||'')} · อายุ ${fmt(o.age||0)} ปี<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของเขา · สิ่งที่คุณเลือกจะส่งผลถึงเขาด้วย</span>`,[
@@ -7572,7 +7572,7 @@ function mtInbox(m){if(!S||!S.alive||!m)return;if(m.kind==='room'){if(!mtDone(m.
 setInterval(async()=>{try{if(!S||!S.alive||!MT.inv.length||choice._cur||S.beastMode)return;if(modalOpen&&['choice','duel','specfull'].includes($('modal').dataset.k))return;const m=MT.inv.shift();if(Date.now()-(m.t||0)>58000)return;
  const j=await api('mtst',{rid:m.rid});if(!j||!j.ok||!j.st||j.st.res)return j&&j.st&&mtApply(j.st);if(modalOpen)closeM();mtShow(j.st);mtWatch(m.rid)}catch(e){}},1000);
 meetTick=function(){if(!meetC||Date.now()-meetC.at>90000||S.age<14||choice._cur||modalOpen||S.beastMode||MT.busy||Math.random()>.06)return;const o=meetC;meetC=null;MT.busy=1;
- api('mtopen',{to:o.k,n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0}).then(j=>{if(j&&j.ok&&j.st&&S&&S.alive&&!choice._cur){mtShow(j.st);mtWatch(j.st.rid)}}).catch(()=>{}).finally(()=>{MT.busy=0})};
+ api('mtopen',Object.assign({to:o.k,n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0},typeof mwMe==='function'?mwMe():{})).then(j=>{if(j&&j.ok&&j.st&&S&&S.alive&&!choice._cur){mtShow(j.st);mtWatch(j.st.rid)}}).catch(()=>{}).finally(()=>{MT.busy=0})};
 
 // ---- เล่นเองมากขึ้น: ดวลแบบจับเวลา (หลบ/สวนกลับ/อ่านท่า) + มินิเกมรวมปราณตอนเลื่อนขั้น ----
 function actDiff(){const m={hell:1.45,short:1.15,junk:1.1}[S&&S.ch]||1;return m*(S&&S.xt?1.2:S&&S.xian?1.1:1)}
@@ -25795,6 +25795,118 @@ function openFbGroup(){modal(`<button class="xbtn" onclick="closeM()">✕</butto
 function fbCopy(){try{navigator.clipboard.writeText(FB_URL).then(()=>toast('คัดลอกลิงก์แล้ว'),()=>toast(FB_URL))}catch(e){toast(FB_URL)}}
 (function(){const st=document.createElement('style');st.textContent='#tFb{position:absolute;right:10px;top:58px;z-index:6;font:inherit;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(180deg,#4a7bff,#2a55d0);border:2px solid #17348a;border-radius:12px;padding:6px 11px;box-shadow:0 3px 0 #17348a;cursor:pointer}#tFb:active{transform:translateY(2px);box-shadow:0 1px 0 #17348a}';document.head.appendChild(st);
  setInterval(()=>{try{const T=$('title');if(T&&$('tSup')&&!$('tFb'))$('tSup').insertAdjacentHTML('afterend','<button id="tFb" onclick="openFbGroup()">👥 กลุ่มเฟส</button>')}catch(e){}},1200)})();
+
+// ===================== พบผู้เล่นจริง v3: แต่ละโลกเจอกันต่างกัน · ผูกรัก (เพศตรงข้าม) / พี่น้องร่วมสาบาน (ทุกเพศ) · เงาผู้เล่นที่ออฟไลน์ =====================
+function mwW(){if(!S)return 0;if((S.kalpa&&(S.kalpa.n>0||S.kalpa.pend))||S.age>=1e6)return 3;if(S.xt)return 2;if(S.xian)return 1;return 0}
+const MW=[
+ {n:'ยุทธภพ',ic:'🏮',pair:'คู่ยุทธ์ภพ',sw:'พี่น้องร่วมยุทธภพ',
+  pl:['โรงเตี๊ยมริมทาง','ศาลเจ้าร้างกลางป่าไผ่','เรือข้ามฟากยามหมอกลง','ลานประลองกลางเมือง','ด่านตรวจชายแดน','งานเทศกาลโคมไฟ'],
+  ar:'แสงตะเกียงวูบไหว ผู้คนรอบข้างเงียบกริบ ทุกสายตาจับจ้องมาที่คุณสองคน',
+  o:{fight:['⚔️ ประลองยุทธ์ต่อหน้าผู้ชม','ชนะแล้วชื่อดังทั่วยุทธภพ'],ally:['🤝 สาบานเป็นพันธมิตรยุทธภพ','ถ้าอีกฝ่ายยอมด้วย ทั้งคู่ได้พันธมิตร'],betray:['🗡️ แสร้งผูกมิตร แล้วลอบแทงข้างหลัง','ได้เปรียบ แต่ข่าวอาจรั่วจนถูกตราหน้า'],leave:['🍵 คารวะสุราหนึ่งจอก แล้วแยกทาง','ถ้าอีกฝ่ายท้าดวล หนีได้ราวครึ่งหนึ่ง']}},
+ {n:'โลกเซียน',ic:'☁️',pair:'คู่บำเพ็ญ',sw:'ศิษย์พี่ศิษย์น้องร่วมสาบาน',
+  pl:['ตลาดเซียนใต้ทะเลเมฆ','ลานสำนักลอยฟ้า','ถ้ำวิญญาณหลังม่านน้ำตก','ทะเลสาบหยกกลางหุบเขา','แดนลับที่เพิ่งเปิดออก'],
+  ar:'ปราณฟ้าดินรอบตัวปั่นป่วน คุณรับรู้ได้ถึงระดับพลังของอีกฝ่ายทันที',
+  o:{fight:['⚔️ ประลองปราณ','ชนะแล้วซึมซับปราณจากการปะทะ'],ally:['☯️ ร่วมสาบานต่อเต๋า','ถ้าอีกฝ่ายยอมด้วย ทั้งคู่ได้พันธมิตร'],betray:['🗡️ แสร้งสาบาน แต่แอบดูดปราณ','ได้พลัง แต่ผิดสาบานต่อเต๋า'],leave:['🙏 คารวะแล้วเหาะจากไป','ถ้าอีกฝ่ายท้าดวล หนีได้ราวครึ่งหนึ่ง']}},
+ {n:'แดนเทพ',ic:'🌟',pair:'คู่เทพ',sw:'พี่น้องร่วมสวรรค์',
+  pl:['สวรรค์ชั้นที่ #','ระเบียงดาราเหนือทางช้างเผือก','ทะเลเมฆนิรันดร์','ประตูสวรรค์ทิศใต้','วังร้างของเทพโบราณ'],
+  ar:'กฎของฟ้าดินสั่นสะเทือนเมื่อสองเทพเผชิญหน้า ดวงดาวรอบตัวหยุดหมุน',
+  o:{fight:['⚔️ ดวลกฎสวรรค์','ชนะได้'+JADE_N],ally:['🌟 ร่วมพันธสัญญาสวรรค์','ถ้าอีกฝ่ายยอมด้วย ทั้งคู่ได้พันธมิตร'],betray:['🗡️ แสร้งร่วมพันธสัญญา แล้วฉกชิงพลังกฎ','ได้พลัง แต่ฟ้าลิขิตจดจำ'],leave:['☁️ ทรงเมฆจากไปอย่างสง่างาม','ถ้าอีกฝ่ายท้าดวล หนีได้ราวครึ่งหนึ่ง']}},
+ {n:'สิ้นกัลป์',ic:'♾️',pair:'คู่ข้ามกาล',sw:'พี่น้องข้ามกาล',
+  pl:['รอยแยกเวลากลางภัยสิ้นกัลป์','ซากดาวที่กำลังดับ','สะพานแห่งกาลที่พังทลาย','ทะเลเถ้าธุลีของจักรวาลเก่า'],
+  ar:'จักรวาลรอบตัวกำลังพังทลาย เหลือทางรอดอยู่ไม่กี่ทาง — และเขาก็เห็นทางเดียวกับคุณ',
+  o:{fight:['⚔️ แย่งเส้นทางรอดเพียงหนึ่งเดียว','ผู้ชนะดูดซับพลังจากซากกัลป์'],ally:['🛡️ ร่วมมือฝ่าภัยสิ้นกัลป์','ไว้ใจกันจริงทั้งคู่ → ได้วิชาร่วมรอด'],betray:['🗡️ แสร้งร่วมมือ แล้วผลักเขาเข้าหาภัย','ได้พลัง แต่กรรมติดตัวข้ามกัลป์'],leave:['🌀 กระโดดเข้ารอยแยกของตัวเอง','ถ้าอีกฝ่ายท้าดวล หนีได้ราวครึ่งหนึ่ง']}}];
+function mwPl(w){return ch(MW[w].pl).replace('#',R(1,33))}
+function myG(){return S&&S.gender==='หญิง'?'f':'m'}
+function mwLove(o){return !!(o&&o.g&&o.g!==myG()&&!o.ms&&!S.spouse&&S.age>=16)}
+function mwTd(){let c={};try{c=JSON.parse(localStorage.getItem('murim_mtd')||'{}')||{}}catch(e){}let b='ally',m=0;for(const k in c)if(c[k]>m){m=c[k];b=k}return b}
+function mwMe(){return{g:myG(),ms:S&&S.spouse?1:0,w:mwW(),td:mwTd()}}
+function mwOpts(w,o){const M=MW[w];['fight','ally','betray','leave'].forEach(k=>{const e=MT_OPT.find(x=>x[0]===k);if(e){e[1]=M.o[k][0];e[2]=M.o[k][1]}});
+ let b=MT_OPT.find(x=>x[0]==='bond');if(!b){b=['bond','',''];MT_OPT.push(b)}
+ if(mwLove(o)){b[1]='💞 ผูกรักเป็น'+M.pair;b[2]='ต้องเลือกตรงกันทั้งคู่ · ถ้าอีกฝ่ายเลือกสาบาน จะเป็นพันธมิตรแทน'}
+ else{b[1]='🫂 สาบานเป็น'+M.sw;b[2]='ต้องเลือกตรงกันทั้งคู่ · ช่วยเหลือกันตลอดชีวิต ไม่จำกัดเพศ'}}
+function mwRecog(o){let t='';if(S.plover&&S.plover.k===o.k)t=`<br><b style="color:#ff8fc8">💞 ${esc(o.n)} คือ${MW[S.plover.w||0].pair}ของคุณ!</b>`;
+ else if(S.plm&&S.plm.k===o.k)t=`<br><b style="color:#ff8fc8">🧵 ใบหน้านี้… คุณเคยเห็นในฝันทุกคืน — ${esc(S.plm.n)} ${MW[3].pair}จากกัลป์ก่อน</b>`;
+ else if((S.sworn||[]).some(x=>x.k===o.k))t=`<br><b style="color:#9fd8ff">🫂 ${esc(o.n)} คือพี่น้องร่วมสาบานของคุณ</b>`;
+ else if((S.allies||[]).some(x=>x.n===o.n&&!x.tr))t=`<br><span class="tag2">🤝 เคยสาบานเป็นพันธมิตรกันมาก่อน</span>`;return t}
+mtShow=function(st){const o=st.o||{},rid=st.rid,w=mwW(),M=MW[w],RN=S.xian?(typeof XREALM!=='undefined'?XREALM:[]):REALMS.map(r=>r.n),ep=Math.max(50,o.p||100),r=total()/ep;
+ const pw=Math.round(Math.max(3,Math.min(97,Math.pow(total(),1.3)/(Math.pow(total(),1.3)+Math.pow(ep,1.3))*100)));mwOpts(w,o);
+ MT.room={rid,o,ep,side:st.side,w};setScene('portal');let rv='';const tr=(S.allies||[]).find(x=>x.n===o.n&&x.tr);if(tr){S.allies=S.allies.filter(x=>x!==tr);S.flags.betrayed=1;rv=`<br><b style="color:#ff6b6b">🗡️ คุณจำใบหน้านี้ได้ — ${esc(o.n)} คือคนที่แอบหักหลังคุณตอนสาบานครั้งก่อน!</b>`;log(`🗡️ เจอกันอีกครั้ง… คุณรู้แล้วว่า <b>${esc(o.n)}</b> หักหลังคุณมาตลอด`,'bad',true);keyAdd(`รู้ว่าผู้เล่น ${o.n} หักหลัง`)}
+ const gx=o.g?(o.g==='f'?' · หญิง':' · ชาย'):'';
+ choice(`${M.ic} พบผู้เล่นจริงใน${M.n}!`,`📍 <b>${esc(mwPl(w))}</b> — ${M.ar}<br><b>${esc(o.n)}</b> ผู้เล่นที่กำลังจำลองชีวิตอยู่ตอนนี้ ยืนอยู่ตรงหน้าคุณ<br>${esc(RN[o.ri]||'')}${o.f?' · '+esc(o.f):''}${gx} · อายุ ${fmt(o.age||0)} ปี<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของเขา · เขากำลังเลือกอยู่เหมือนกัน และไม่รู้ว่าคุณเลือกอะไร</span>${rv}${mwRecog(o)}`,
+  MT_OPT.map(([k,t,s])=>({t,s:k==='fight'?`โอกาสชนะราว ${pw}% · ${s}`:s,skip:k==='leave',f(){mtPick(rid,k)}})));
+ if(choice._cur){choice._cur.mt=rid;if(choice._min&&!auto){choice._min=false;choiceShow()}}mtCountdown(rid,Math.max(Date.now()+3000,Math.min(st.dl||0,Date.now()+10500)))};
+{const _mp=mtPick;mtPick=function(rid,k,r2){try{if(!r2){let c={};try{c=JSON.parse(localStorage.getItem('murim_mtd')||'{}')||{}}catch(e){}c[k]=(c[k]||0)+1;localStorage.setItem('murim_mtd',JSON.stringify(c))}}catch(e){}return _mp.apply(this,arguments)}}
+// ---- ผลพิเศษตามโลก + ผูกสัมพันธ์ ----
+function mwGift(w){const b=[R(200,900),R(2000,9000),JADE*R(1,3),JADE*R(2,6)][w]||300;return inc(b)}
+function mwBond(o,love,w,via){const M=MW[w];
+ if(love){marry(o.n,`💞 ผูกรักเป็น<b>${M.pair}</b>กับผู้เล่นจริง`);S.plover={n:o.n,k:o.k,w,a:S.age};joy(20);keyAdd(`ผูกรักเป็น${M.pair}กับผู้เล่นจริง ${o.n}`);
+  log(`💞 คุณกับ <b>${esc(o.n)}</b> เลือกกันและกัน — ${[`จากนี้ไปท่องยุทธภพด้วยกัน เปิดโรงเตี๊ยมเล็กๆ ไว้เป็นที่พักใจ`,`จากนี้ไปบำเพ็ญคู่กัน ปราณของทั้งสองจะหนุนกันทุกปี`,`ฟ้าลิขิตประกาศไปทั่วแดนเทพ: สองเทพร่วมครองดินแดน`,`ด้ายแดงผูกข้ามกาล — แม้จักรวาลนี้ดับ ชาติหน้าก็จะจำกันได้`][w]}`,'epic',true);
+  if(w===3)try{localStorage.setItem('murim_plover',JSON.stringify({n:o.n,k:o.k}))}catch(e){}
+  if(w===2)try{if(typeof fateNews==='function')fateNews(`💞 ${pname()} กับ ${o.n} ร่วมเป็นคู่เทพ`)}catch(e){}}
+ else{S.sworn=S.sworn||[];S.sworn=S.sworn.filter(x=>x.k!==o.k);S.sworn.push({n:o.n,k:o.k,w,a:S.age});if(S.sworn.length>3)S.sworn.shift();allyAdd(o.n,M.sw);S.fame+=fameR(15);joy(8);
+  log(`🫂 ${via?'เงาของเขาตอบรับ — ':''}คุณกับ <b>${esc(o.n)}</b> คุกเข่าสาบานเป็น<b>${M.sw}</b> "ไม่ได้เกิดวันเดียวกัน แต่ขอตายวันเดียวกัน" — ชื่อเสียง +${fameR(15)}`,'epic',true);keyAdd(`สาบานเป็นพี่น้องกับผู้เล่น ${o.n}`)}}
+{const _ma=mtApply;mtApply=function(st){if(!st||!S||!S.alive)return _ma.apply(this,arguments);const rid=st.rid,was=mtDone(rid),R0=st.res,o=st.o||{},w=(MT.room&&MT.room.rid===rid&&MT.room.w!=null)?MT.room.w:mwW();
+ let bond=null;if(R0&&!was&&R0.k==='bond'){bond={love:R0.love};R0.k='pact';R0.ba=0;R0.bb=0;R0.bonus=1}
+ if(R0&&R0.my==='bond')R0.my='ally';if(R0&&R0.their==='bond')R0.their='ally';
+ const pw0=S.power,r=_ma.apply(this,arguments);
+ try{if(!R0||was||!mtDone(rid))return r;const me=st.side,M=MW[w],ep=Math.max(50,o.p||100);
+  if(bond){mwBond(o,bond.love,w);return r}
+  if(R0.k==='duel'){const win=R0.w===me;
+   if(win){if(w===0){const f=fameR(15);S.fame+=f;log(`🏮 ผู้ชมรอบ${ch(['ลาน','โรงเตี๊ยม','ท่าเรือ'])}โห่ร้อง เรื่องนี้ถูกเล่าขานไปทั่วยุทธภพ — ชื่อเสียง +${f}`,'good')}
+    else if(w===1){const q=R(3,9);S.qi+=q;log(`☁️ คุณซึมซับปราณที่แตกกระจายจากการปะทะ — ปราณ +${q}`,'good')}
+    else if(w===2){const g=mwGift(2);S.money+=g;log(`🌟 กฎของคุณข่มกฎของเขาได้ ฟ้าลิขิตมอบรางวัล — +${fmtM(g)}`,'good')}
+    else{const g=Math.max(30,Math.round(total()*.02));S.power+=g;log(`♾️ คุณยึดเส้นทางรอดไว้ได้ และดูดซับพลังจากซากกัลป์ — พลังยุทธ์ +${fmt(g)}`,'good')}}
+   else if(w===1){const q=Math.min(S.qi||0,R(1,4));S.qi-=q;if(q)log(`☁️ ปราณปั่นป่วนหลังพ่ายแพ้ — ปราณ −${q}`,'bad')}}
+  else if(R0.k==='pact'){const iB=me==='a'?R0.ba:R0.bb,theyB=me==='a'?R0.bb:R0.ba;
+   if(iB){if(w===0&&Math.random()<.5){S.fame=Math.max(0,S.fame-15);log('📰 ข่าวการลอบแทงรั่วออกไป คุณถูกตราหน้าว่า "คนสองหน้า" — ชื่อเสียง −15','bad')}
+    else if(w===1){S.karma-=5;S.flags.daoOath=1;log('⚡ คุณผิดสาบานต่อเต๋า — ทัณฑ์สวรรค์จดจำเรื่องนี้ไว้ (กรรม −5)','bad')}
+    else if(w===2){S.karma-=5;log('📜 ฟ้าลิขิตจารึกการหักหลังนี้ไว้ในบันทึกสวรรค์ (กรรม −5)','bad')}
+    else{S.karma-=8;log('♾️ กรรมจากการผลักเขาเข้าหาภัย จะติดตัวคุณข้ามกัลป์ (กรรม −8)','bad')}}
+   if(theyB&&S.plover&&S.plover.k===o.k&&w===1){joy(-25);S.power=Math.round(S.power*.95);S.flags.hdemon=1;log(`👹 <b>มารในใจ</b> — คนที่คุณบำเพ็ญคู่ด้วยกลับหักหลัง จิตใจคุณสั่นคลอน พลังยุทธ์ −5%`,'bad',true)}
+   if(R0.bonus&&!iB&&!theyB){if(w===3){const a=newArt(2);a.n='วิชาร่วมรอด·'+o.n;S.arts.push(a);S.hp=S.maxHp;log(`🛡️ คุณกับ ${esc(o.n)} หลังชนหลังฝ่าภัยสิ้นกัลป์จนรอดทั้งคู่ — ได้ ${artHtml(a)} · ฟื้นพลังชีวิตเต็ม`,'epic')}
+    else if(w===2){const g=mwGift(2);S.money+=g;log(`🌟 พันธสัญญาสวรรค์ศักดิ์สิทธิ์ — ทั้งคู่ได้ ${fmtM(g)}`,'good')}
+    else if(w===1){const q=R(2,6);S.qi+=q;log(`☯️ สาบานต่อเต๋าสำเร็จ ปราณของทั้งสองสอดประสาน — ปราณ +${q}`,'good')}}}
+ }catch(e){console.error(e)}return r}}
+// ---- ทุกปี: คู่รัก/พี่น้องส่งข่าวถึงกัน ----
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(!S||!S.alive)return r;const w=mwW();
+ if(S.age<=3&&!S.plmC){S.plmC=1;try{const p=JSON.parse(localStorage.getItem('murim_plover')||'null');if(p&&p.k){S.plm=p;setTimeout(()=>{if(S&&S.alive)log(`🧵 ด้ายแดงข้ามกาล — ทุกคืนคุณฝันเห็นใบหน้าของ <b>${esc(p.n)}</b> ราวกับเคยรักกันมาก่อนกัลป์นี้`,'epic')},800)}}catch(e){}}
+ const L=S.plover;if(L&&S.spouse===L.n){joy(2);
+  if(w===1)S.qi+=1;
+  if(Math.random()<.1){const g=mwGift(w);S.money+=g;log(`💌 จดหมายจาก${MW[w].pair} <b>${esc(L.n)}</b>: ${ch([['"คิดถึงนะ โรงเตี๊ยมของเรามีคนแวะมาไม่ขาด"','"ข้าส่งของฝากจากเมืองหลวงมาให้"'],['"ปราณของข้าทะลวงขั้นได้เพราะเจ้า"','"ข้าเก็บสมุนไพรนี้ไว้ให้เจ้า"'],['"ดินแดนของเราสงบสุขดี"','"ข้าเก็บหยกจากสวรรค์ชั้นบนมาฝาก"'],['"ไม่ว่ากัลป์ไหน ข้าจะตามหาเจ้า"','"ข้ายังจำเจ้าได้"']][w])} — +${fmtM(g)}`,'good')}}
+ if((S.sworn||[]).length&&Math.random()<.06){const x=ch(S.sworn),g=mwGift(w);S.money+=g;log(`🫂 ${MW[x.w||0].sw} <b>${esc(x.n)}</b> ส่ง${ch(['ของขวัญ','เสบียง','ยาบำรุง','ข่าวลับ'])}มาให้ — +${fmtM(g)}`,'good')}}catch(e){console.error(e)}return r}}
+// ---- เงาผู้เล่น (คนที่เล่นไปแล้วใน 2 วัน) — เจอได้แม้ไม่มีใครออนไลน์ ----
+MT.gh=null;
+function ghSet(g){if(!g||!g.k)return;MT.gh=Object.assign(g,{at:Date.now()})}
+function ghAgo(ms){const h=Math.round(ms/36e5);return h<1?'เมื่อครู่':h<24?h+' ชั่วโมงก่อน':Math.round(h/24)+' วันก่อน'}
+{const _mt=meetTick;meetTick=function(){const r=_mt.apply(this,arguments);try{const g=MT.gh;if(!meetC&&g&&S&&S.alive&&S.age>=14&&!choice._cur&&!modalOpen&&!S.beastMode&&!MT.busy&&Date.now()-g.at<600000&&Math.random()<.05){MT.gh=null;ghShow(g)}}catch(e){console.error(e)}return r}}
+function ghShow(g){const w=mwW(),M=MW[w],ep=Math.max(50,g.p||100),RN=S.xian?(typeof XREALM!=='undefined'?XREALM:[]):REALMS.map(r=>r.n);mwOpts(w,{});
+ const pw=Math.round(Math.max(3,Math.min(97,Math.pow(total(),1.3)/(Math.pow(total(),1.3)+Math.pow(ep,1.3))*100)));setScene('portal');
+ const sw=MT_OPT.find(x=>x[0]==='bond');
+ choice(`👤 พบเงาของผู้เล่นใน${M.n}`,`📍 <b>${esc(mwPl(w))}</b> — ร่างโปร่งแสงของ <b>${esc(g.n)}</b> ปรากฏขึ้น<br>${esc(RN[g.ri]||'')}${g.f?' · '+esc(g.f):''} · เงานี้ทิ้งไว้ ${ghAgo(g.ago||0)}<br><span class="tag2">เงาจะตอบสนองตามนิสัยที่เจ้าของเคยเลือก · เจ้าของจะรู้ผลเมื่อกลับมาเล่น</span>${mwRecog(g)}`,
+  MT_OPT.map(([k,t,s])=>({t:k==='bond'?'🫂 สาบานเป็น'+M.sw:t,s:k==='fight'?`โอกาสชนะราว ${pw}%`:k==='bond'?'ผูกรักได้เฉพาะตอนเจอตัวจริง':s,skip:k==='leave',f(){ghRes(g,k,w,ep)}})))}
+function ghRes(g,k,w,ep){const M=MW[w],n=esc(g.n),td=g.td==='bond'?'ally':g.td||'ally',gc=Math.random()<.6?td:ch(['fight','ally','betray','leave']);
+ const camp=c=>c==='fight'?'h':c==='leave'?'p':'f',A=camp(k),B=camp(gc),P=(x,y)=>Math.pow(x,1.3)/(Math.pow(x,1.3)+Math.pow(y,1.3)),pw=P(Math.max(1,total()),ep);
+ let res='none',win=0;const duel=b=>{win=Math.random()<Math.max(.05,Math.min(.95,pw+b))?1:0;res='duel'};
+ if(A==='h'&&B==='h')duel(0);else if(A==='h'&&B==='p'){if(Math.random()<.5)res='flee';else duel(0)}else if(A==='p'&&B==='h'){if(Math.random()<.5)res='flee';else duel(0)}
+ else if(A==='h')duel(.15);else if(B==='h')duel(-.15);else if(A==='p'||B==='p')res='none';
+ else{res=k==='betray'?'betr':gc==='betray'?'gbet':k==='bond'&&td==='ally'&&Math.random()<.6?'sworn':'pact'}
+ const L={fight:'⚔️ สู้',ally:'🤝 ผูกมิตร',betray:'🗡️ หักหลัง',leave:'🙇 ถอย'};
+ if(res==='duel'){if(win){const f=Math.round(fameR(20)+Math.sqrt(ep)/3);S.fame+=f;log(`👤 คุณเอาชนะเงาของ <b>${n}</b> ใน${M.n} — ชื่อเสียง +${f}`,'good',true)}else{const d=Math.round(S.maxHp*.1);S.hp=Math.max(1,S.hp-d);log(`👤 เงาของ <b>${n}</b> แข็งแกร่งกว่าที่คิด คุณพ่ายแพ้ — พลังชีวิต −${d}`,'bad',true)}}
+ else if(res==='flee')log(`👤 ${A==='p'?'คุณถอยกลับเข้ารอยแยกได้ทัน':'เงาของ'+n+'สลายหายไปก่อนจะได้สู้'}`,'');
+ else if(res==='none')log(`👤 คุณกับเงาของ <b>${n}</b> ต่างคารวะแล้วแยกทาง`,'');
+ else if(res==='sworn')mwBond(g,0,w,1);
+ else if(res==='betr'){const gg=Math.max(20,Math.round(total()*.02));S.power+=gg;S.karma-=10;log(`🗡️ คุณแสร้งผูกมิตรกับเงาของ <b>${n}</b> แล้วขโมยเคล็ดวิชา — พลังยุทธ์ +${fmt(gg)} กรรม −10 · เจ้าของจะรู้เมื่อกลับมา`,'bad',true)}
+ else if(res==='gbet'){allyAdd(g.n,'เงาผู้เล่น');const a=(S.allies||[]).find(x=>x.n===g.n);if(a)a.tr=1;log(`🤝 คุณสาบานเป็นพันธมิตรกับเงาของ <b>${n}</b>`,'good',true);setTimeout(()=>{if(S&&S.alive)log('🕵️ คืนนั้นคุณรู้สึกแปลกๆ… <b>เงานั้นอาจไม่จริงใจ</b>','bad',true)},1500)}
+ else{allyAdd(g.n,'เงาผู้เล่น');S.fame+=fameR(8);log(`🤝 คุณสาบานเป็นพันธมิตรกับเงาของ <b>${n}</b> — เขาจะรู้เรื่องนี้เมื่อกลับมาเล่น`,'good',true)}
+ log(`📜 สรุป: คุณเลือก <b>${L[k]||'🫂 สาบานเป็นพี่น้อง'}</b> · เงาของ${n}เลือก <b>${L[gc]}</b>`,'');
+ const kind=res==='gbet'?'pact':res;try{api('ghact',{to:g.k,x:S.xian?1:0,kind,win:res==='duel'?(win?0:1):0,n:pname(),w}).catch(()=>{})}catch(e){}try{render()}catch(e){}}
+function ghInbox(m){if(!S||!S.alive||!m)return;const M=MW[m.w||0],n=esc(m.n);let t='';
+ if(m.r==='duel'){if(m.win){S.fame+=10;t=`ถูกท้าดวล — <b>เงาของคุณชนะ!</b> ชื่อเสียง +10`}else{S.fame=Math.max(0,S.fame-3);t='ถูกท้าดวล — เงาของคุณพ่ายแพ้ ชื่อเสียง −3'}}
+ else if(m.r==='pact'){allyAdd(m.n,'ผู้เล่นจริง (ผ่านเงา)');t='เขาสาบานเป็นพันธมิตรกับเงาของคุณ — เขาจะมาช่วยตอนจวนตัว'}
+ else if(m.r==='sworn'){S.sworn=S.sworn||[];if(!S.sworn.some(x=>x.k===m.k)){S.sworn.push({n:m.n,k:m.k,w:m.w||0,a:S.age});if(S.sworn.length>3)S.sworn.shift()}allyAdd(m.n,M.sw);t=`เขาคุกเข่าสาบานเป็น<b>${M.sw}</b>กับเงาของคุณ`}
+ else if(m.r==='betr'){allyAdd(m.n,'ผู้เล่นจริง (ผ่านเงา)');const a=(S.allies||[]).find(x=>x.n===m.n);if(a)a.tr=1;t='เขาแสร้งผูกมิตรกับเงาของคุณ… แต่ลางสังหรณ์บอกว่า <b>มีบางอย่างไม่ชอบมาพากล</b>'}
+ else if(m.r==='flee')t='ทั้งสองเผชิญหน้ากันครู่หนึ่ง ก่อนแยกจากกัน';else t='เขาคารวะเงาของคุณแล้วจากไป';
+ log(`👤 ระหว่างที่คุณไม่อยู่ ผู้เล่น <b>${n}</b> พบเงาของคุณใน${M.n} — ${t}`,'epic',true)}
 </script>
 </body>
 </html>
