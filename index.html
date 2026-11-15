@@ -25737,6 +25737,47 @@ function frgSearch(){const q=String(window._frg.q||'').trim().toLowerCase(),res=
  fl.replaceWith(host);const qi=$('frQ');qi.oninput=function(){window._frg.q=this.value;clearTimeout(window._frT);window._frT=setTimeout(frgSearch,160)};
  Object.keys(window._frg.open).forEach(k=>{if(window._frg.open[k]){window._frg.sh[k]=0;frgTog(k,true)}});if(window._frg.q)frgSearch()
 }catch(e){console.error(e)}return r}}
+
+// ===================== ทรงป้ายฉายา: ทุกระดับรูปทรงต่างกัน (สีเดิมทั้งหมด) =====================
+(function(){const st=document.createElement('style');st.textContent=`
+@keyframes tbBo5{to{background-position:-300% 0}}@keyframes tbBo6{to{background-position:-400% 0}}
+.tbw{position:relative;display:inline-flex;align-items:center}
+.tbw3{filter:drop-shadow(0 0 4px rgba(168,106,255,.6))}.tbw4{filter:drop-shadow(0 0 5px rgba(240,192,64,.65));margin:0 12px}
+.tbw5{filter:drop-shadow(0 0 5px rgba(255,79,216,.55))}.tbw6{filter:drop-shadow(0 0 5px rgba(176,107,255,.6))}
+.tbw .wg{position:absolute;top:50%;margin-top:-15px;width:24px;height:30px;left:-17px;background:url("__WING__") no-repeat center/contain;pointer-events:none}
+.tbw .wg.r{left:auto;right:-17px;transform:scaleX(-1)}
+.tb{overflow:visible!important;border-color:transparent!important;border-radius:0!important;box-shadow:none!important;padding:6px 15px}
+.tb{clip-path:var(--sp)}
+.tb.tb4{animation:none!important}.tb.tb5,.tb.tb6{animation:none!important}
+.tb.tb5{background:linear-gradient(135deg,#3a0830,#1a0428)!important;padding:6px 20px}
+.tb.tb6{background:linear-gradient(135deg,#050505,#111 60%,#050505)!important;padding:6px 18px}
+.tb.tb3,.tb.tb1{padding:6px 17px}.tb.tb4{padding:6px 18px}
+.tb::before,.tb.tb5::before,.tb.tb6::before{content:''!important;position:absolute;inset:0;font-size:0;z-index:1;pointer-events:none;background:var(--bd);background-size:var(--bds,auto);clip-path:var(--ring);animation:var(--bda,none);color:transparent;right:0;top:0}
+.tb.tb0{--bd:rgba(156,138,102,.55)}.tb.tb1{--bd:rgba(47,174,76,.8)}.tb.tb2{--bd:#4aa3ff}.tb.tb3{--bd:#a86aff}.tb.tb4{--bd:#f0c040}
+.tb.tb5{--bd:linear-gradient(90deg,#ff4fd8,#ffb04f,#ff4fd8,#9b4fff,#ff4fd8);--bds:300% 100%;--bda:tbBo5 3s linear infinite}
+.tb.tb6{--bd:linear-gradient(90deg,#ff4d4d,#ffd84d,#5dff7a,#4dd8ff,#b06bff,#ff4d4d);--bds:400% 100%;--bda:tbBo6 2.4s linear infinite}
+.tb u{position:absolute;top:2px;font-size:9px;text-decoration:none;color:#fff;z-index:3;animation:tbSp 1.8s ease-in-out infinite}.tb u.a{left:7px}.tb u.b{right:7px;animation-delay:-.9s}
+.ttlist .tbw,.ttres .tbw{filter:none!important}.ttlist .tb::before,.ttres .tb::before{display:block!important;animation:none!important}.ttlist .tb u,.ttres .tb u{display:none}
+.tb.tb0{--sp:polygon(0px 0px, calc(100% - 9px) 0px, calc(100% - 0px) 50%, calc(100% - 9px) calc(100% - 0px), 0px calc(100% - 0px));--ring:polygon(evenodd,0px 0px, calc(100% - 9px) 0px, calc(100% - 0px) 50%, calc(100% - 9px) calc(100% - 0px), 0px calc(100% - 0px), 0px 0px, 1.5px 1.5px, 1.5px calc(100% - 1.5px), calc(100% - 10.5px) calc(100% - 1.5px), calc(100% - 3.45px) 50%, calc(100% - 10.5px) 1.5px, 1.5px 1.5px)}
+.tb.tb1{--sp:polygon(0px 0px, calc(100% - 0px) 0px, calc(100% - 10px) 50%, calc(100% - 0px) calc(100% - 0px), 0px calc(100% - 0px), 10px 50%);--ring:polygon(evenodd,0px 0px, calc(100% - 0px) 0px, calc(100% - 10px) 50%, calc(100% - 0px) calc(100% - 0px), 0px calc(100% - 0px), 10px 50%, 0px 0px, 1.5px 1.5px, 13.45px 50%, 1.5px calc(100% - 1.5px), calc(100% - 1.5px) calc(100% - 1.5px), calc(100% - 13.45px) 50%, calc(100% - 1.5px) 1.5px, 1.5px 1.5px)}
+.tb.tb2{--sp:polygon(9px 0px, calc(100% - 9px) 0px, calc(100% - 0px) 9px, calc(100% - 0px) calc(100% - 9px), calc(100% - 9px) calc(100% - 0px), 9px calc(100% - 0px), 0px calc(100% - 9px), 0px 9px);--ring:polygon(evenodd,9px 0px, calc(100% - 9px) 0px, calc(100% - 0px) 9px, calc(100% - 0px) calc(100% - 9px), calc(100% - 9px) calc(100% - 0px), 9px calc(100% - 0px), 0px calc(100% - 9px), 0px 9px, 9px 0px, 10.5px 1.5px, 1.5px 10.5px, 1.5px calc(100% - 10.5px), 10.5px calc(100% - 1.5px), calc(100% - 10.5px) calc(100% - 1.5px), calc(100% - 1.5px) calc(100% - 10.5px), calc(100% - 1.5px) 10.5px, calc(100% - 10.5px) 1.5px, 10.5px 1.5px)}
+.tb.tb3{--sp:polygon(0px 0px, calc(100% - 0px) 0px, calc(100% - 0px) 28%, calc(100% - 9px) 50%, calc(100% - 0px) 72%, calc(100% - 0px) calc(100% - 0px), 0px calc(100% - 0px), 0px 72%, 9px 50%, 0px 28%);--ring:polygon(evenodd,0px 0px, calc(100% - 0px) 0px, calc(100% - 0px) 28%, calc(100% - 9px) 50%, calc(100% - 0px) 72%, calc(100% - 0px) calc(100% - 0px), 0px calc(100% - 0px), 0px 72%, 9px 50%, 0px 28%, 0px 0px, 1.5px 1.5px, 1.5px 28%, 12.45px 50%, 1.5px 72%, 1.5px calc(100% - 1.5px), calc(100% - 1.5px) calc(100% - 1.5px), calc(100% - 1.5px) 72%, calc(100% - 12.45px) 50%, calc(100% - 1.5px) 28%, calc(100% - 1.5px) 1.5px, 1.5px 1.5px)}
+.tb.tb4{--sp:polygon(12px 0px, calc(100% - 12px) 0px, calc(100% - 0px) 50%, calc(100% - 12px) calc(100% - 0px), 12px calc(100% - 0px), 0px 50%);--ring:polygon(evenodd,12px 0px, calc(100% - 12px) 0px, calc(100% - 0px) 50%, calc(100% - 12px) calc(100% - 0px), 12px calc(100% - 0px), 0px 50%, 12px 0px, 13.5px 1.5px, 3.45px 50%, 13.5px calc(100% - 1.5px), calc(100% - 13.5px) calc(100% - 1.5px), calc(100% - 3.45px) 50%, calc(100% - 13.5px) 1.5px, 13.5px 1.5px)}
+.tb.tb5{--sp:polygon(0px 50%, 16px 0px, calc(100% - 16px) 0px, calc(100% - 0px) 50%, calc(100% - 16px) calc(100% - 0px), 16px calc(100% - 0px));--ring:polygon(evenodd,0px 50%, 16px 0px, calc(100% - 16px) 0px, calc(100% - 0px) 50%, calc(100% - 16px) calc(100% - 0px), 16px calc(100% - 0px), 0px 50%, 3.45px 50%, 17.5px calc(100% - 1.5px), calc(100% - 17.5px) calc(100% - 1.5px), calc(100% - 3.45px) 50%, calc(100% - 17.5px) 1.5px, 17.5px 1.5px, 3.45px 50%)}
+.tb.tb6{--sp:polygon(0px 0px, calc(100% - 15px) 0px, calc(100% - 0px) 15px, calc(100% - 0px) calc(100% - 0px), 15px calc(100% - 0px), 0px calc(100% - 15px));--ring:polygon(evenodd,0px 0px, calc(100% - 15px) 0px, calc(100% - 0px) 15px, calc(100% - 0px) calc(100% - 0px), 15px calc(100% - 0px), 0px calc(100% - 15px), 0px 0px, 2px 2px, 2px calc(100% - 17px), 17px calc(100% - 2px), calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) 17px, calc(100% - 17px) 2px, 2px 2px)}
+/* ป้ายเล็ก (แชต/ทำเนียบ/log): ทรงใบมีดด้วย border-radius — ใช้ได้ทุกเบราว์เซอร์ และ Chrome ได้ corner-shape เพิ่ม */
+.tchip.fr0{border-radius:3px}.tchip.fr1{border-radius:9px 2px 9px 2px}.tchip.fr2{border-radius:2px 9px 2px 9px}
+.tchip.fr3{border-radius:3px 12px 3px 12px}.tchip.fr4{border-radius:12px 3px 12px 3px}.tchip.fr5{border-radius:14px 2px 14px 2px}.tchip.fr6{border-radius:2px 14px 2px 14px}
+.rkchip.rr1{border-radius:12px 3px 12px 3px}.rkchip.rr2{border-radius:3px 10px 3px 10px}.rkchip.rr3{border-radius:3px}
+@supports (corner-shape:bevel){
+.tchip.fr1{corner-shape:scoop bevel scoop bevel}.tchip.fr2{corner-shape:bevel}.tchip.fr3{corner-shape:scoop}.tchip.fr4{corner-shape:bevel}.tchip.fr5{corner-shape:bevel}.tchip.fr6{corner-shape:notch bevel notch bevel}
+.rkchip.rr1{corner-shape:bevel}.rkchip.rr2{corner-shape:bevel scoop bevel scoop}.rkchip.rr3{corner-shape:notch}
+.tchip.fr2{border-radius:5px}.tchip.fr3{border-radius:6px;padding:0 8px}.tchip.fr4{border-radius:7px}.tchip.fr5{border-radius:8px;padding:0 8px}.tchip.fr6{border-radius:6px;padding:0 9px}.tchip.fr1{padding:0 8px}.rkchip.rr1{border-radius:7px}.rkchip.rr2{border-radius:5px;padding:0 9px}.rkchip.rr3{border-radius:4px;padding:0 8px}}`
+.replace('__WING__',"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 36'%3E%3Cpath d='M30 18L8 4L12 16L2 20L12 22L8 32Z' fill='%23f0c040'/%3E%3Cpath d='M30 18L14 11L16 18L14 25Z' fill='%23fff3b0'/%3E%3C/svg%3E");document.head.appendChild(st)})();
+{const _tbc=tbChip;tbChip=function(t,v){const h=_tbc.apply(this,arguments),r=ttlRar(t);let a='',b='',i=h;
+ if(r===4){a='<i class="wg"></i>';b='<i class="wg r"></i>'}
+ if(r===5||r===6)i=h.replace(/<\/span>$/,'<u class="a">'+(r===6?'✧':'✦')+'</u><u class="b">'+(r===6?'✧':'✦')+'</u></span>');
+ return`<span class="tbw tbw${r}">${a}${i}${b}</span>`}}
 </script>
 </body>
 </html>
