@@ -26097,6 +26097,20 @@ const gb=document.getElementById('goalBox');if(gb){const mo=new MutationObserver
  document.querySelectorAll('.kfx').forEach(x=>{if(!x.dataset.t)x.dataset.t=now;else if(now-(+x.dataset.t)>15000)x.remove()});
  t0=now-8000;
 }catch(e){}},1500)})();
+
+// ===== v17.13 การ์ดโหวต/ทายผลตอนดูผู้เล่นอื่น: ใช้สีตามธีม + ตัวอักษรชัดขึ้น =====
+(function(){try{const st=document.createElement('style');st.textContent=`
+#modal .spCard{background:var(--card)!important;border:2px solid var(--pink)!important;color:var(--ink)!important;padding:10px 12px!important;border-radius:12px!important;box-shadow:3px 3px 0 var(--line)}
+#modal .spCard h4{color:var(--ink)!important;font-size:15px!important;font-weight:800;line-height:1.35;margin:0 0 6px!important}
+#modal .spCard .tag2{color:var(--ink)!important;opacity:.78;font-size:12.5px!important;line-height:1.45}
+#modal .spCard .spOpt{background:var(--w)!important;color:var(--ink)!important;border:2px solid var(--line)!important;font-size:14px!important;font-weight:600;line-height:1.4;padding:9px 11px!important;margin:6px 0!important;opacity:1!important;box-shadow:2px 2px 0 var(--line)}
+#modal .spCard .spOpt:disabled{opacity:1!important;cursor:default}
+#modal .spCard .spOpt span,#modal .spCard .spOpt b{color:var(--ink)!important;text-shadow:none!important}
+#modal .spCard .spOpt i{background:color-mix(in srgb,var(--pink) 38%,transparent)!important}
+#modal .spCard .spOpt.me{border-color:var(--pink)!important;box-shadow:0 0 0 2px var(--pink),2px 2px 0 var(--line)}
+#modal .spCard .spOpt.me span::before{content:'✔ ';color:var(--pinkd)}
+#modal .spCard .gbtn,#modal .spCard .pbtn{font-size:14px!important;font-weight:700}
+`;document.head.appendChild(st)}catch(e){}})();
 </script>
 </body>
 </html>
