@@ -371,6 +371,10 @@ const PA_DAY = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10);
 const paSum = c => c ? { sid: c.sid, phase: c.phase, t0: c.t0, ls: c.ls || 0, li: c.li, n: c.lots.length, left: c.lots.filter(x => !x.sold).length } : null;
 let QUOTA_AT = 0, OOM_AT = 0;
 // ฐานข้อมูลเต็ม (OOM): ตัวนับกันสแปมเขียนไม่ได้ → ข้ามการจำกัดไปก่อน ไม่ให้ทุกคำขอล้มทั้งหมด (แชท/โหลดข้อมูลยังใช้ได้)
+// เซฟคลาวด์ก้อนใหญ่: ถ้า Worker ผูก R2 (SAVES_R2) ไว้ → เก็บใน R2 แทน RAM ของ Valkey · ไม่ผูก = ใช้ Valkey เหมือนเดิม
+const r2Bkt = () => globalThis.SAVES_R2 || null, r2Key = (id, n) => 'cs3/' + id + '/' + n;
+const r2Get = async (id, n) => { const b = r2Bkt(); if (!b) return null; try { const o = await b.get(r2Key(id, n)); return o ? await o.text() : null } catch { return null } };
+const cs3Fill = async (id, vals) => r2Bkt() ? Promise.all(vals.map(async (v, i) => v != null ? v : await r2Get(id, i + 1))) : vals;
 const pipeSoft = async l => { try { return await pipe(l) } catch (e) { if (/OOM/i.test(String(e && e.message))) { OOM_AT = Date.now(); return null } throw e } };
 
 // ---------- 🔔 Web Push (VAPID + aes128gcm เขียนเองไม่ใช้ไลบรารี) + กล่องแจ้งเตือนในเกม ----------
@@ -1078,6 +1082,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const keys = ['cs2:' + id, ...[1, 2, 3, 4, 5].map(n => 'cs3:' + id + ':' + n)];
       const [tok, ...vals0] = await pipe([['GET', 'ctok:' + id], ...keys.map(k => ['GET', k])]);
       if (!tok || tok !== tk) return res.json({ l: [] });
+      const sl0 = await cs3Fill(id, vals0.slice(1)); vals0.splice(1, 5, ...sl0);
       const vals = vals0.map(v => /^@[1-5]$/.test(String(v || '')) ? null : zUnpack(v));
       const meta = v => { try { const d = JSON.parse(Buffer.from(v, 'base64').toString('utf8')); const S = d && d.S; if (!S) return null; return { n: String(S.name || '').slice(0, 40), age: +S.age || 0, x: S.xian ? 1 : 0, t: +d.t || 0, seed: S.seed || 0 } } catch { return null } };
       const out = [], seen = new Set();
@@ -1091,8 +1096,9 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const kq = String(qOf(req).k || 'cs2'), dk = /^s[1-5]$/.test(kq) ? 'cs3:' + p0 + ':' + kq.slice(1) : 'cs2:' + p0;
       let [tok, d] = await pipe([['GET', 'ctok:' + p0], ['GET', dk]]);
       if (!tok || tok !== tk) return res.status(404).json({ err: 'notfound' });
-      if (/^@[1-5]$/.test(String(d || ''))) d = await cmd('GET', 'cs3:' + p0 + ':' + String(d).slice(1));
-      if (!d && dk.startsWith('cs2:')) { const all = await pipe([1, 2, 3, 4, 5].map(n => ['GET', 'cs3:' + p0 + ':' + n])); let best = null, bt = -1; all.forEach(v => { const u = zUnpack(v); if (!u) return; let t = 0; try { t = +JSON.parse(Buffer.from(u, 'base64').toString('utf8')).t || 0 } catch {} if (t > bt) { bt = t; best = u } }); d = best }
+      if (d == null && dk.startsWith('cs3:')) d = await r2Get(p0, +dk.slice(-1));
+      if (/^@[1-5]$/.test(String(d || ''))) { const n0 = +String(d).slice(1); d = await cmd('GET', 'cs3:' + p0 + ':' + n0); if (d == null) d = await r2Get(p0, n0) }
+      if (!d && dk.startsWith('cs2:')) { const all = await cs3Fill(p0, await pipe([1, 2, 3, 4, 5].map(n => ['GET', 'cs3:' + p0 + ':' + n]))); let best = null, bt = -1; all.forEach(v => { const u = zUnpack(v); if (!u) return; let t = 0; try { t = +JSON.parse(Buffer.from(u, 'base64').toString('utf8')).t || 0 } catch {} if (t > bt) { bt = t; best = u } }); d = best }
       d = zUnpack(d);
       if (!d) return res.status(404).json({ err: 'notfound' });
       return res.json({ d });
@@ -1126,7 +1132,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const out = [];
       for (const fid of [...found].slice(0, 6)) {
         const [lm, om, lv, lp, cs, ch, ctk] = await pipe([['HGET', 'lm', fid], ['HGET', 'om', fid], ['GET', 'live:' + fid], ['GET', 'livep:' + fid], ['GET', 'cs2:' + fid], ['SISMEMBER', 'cheaters', fid], ['GET', 'ctok:' + fid]]);
-        const sl = await pipe([1, 2, 3, 4, 5].map(i => ['GET', 'cs3:' + fid + ':' + i]));
+        const sl = await cs3Fill(fid, await pipe([1, 2, 3, 4, 5].map(i => ['GET', 'cs3:' + fid + ':' + i])));
         const cs0 = /^@[1-5]$/.test(String(cs || '')) ? sl[+String(cs).slice(1) - 1] : cs;
         const cl = ((await cmd('LRANGE', 'cheatlog', 0, 99)) || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(x => x && fid.startsWith(x.id));
         let live = null; try { const z = JSON.parse(lv || lp || 'null'); if (z) live = { n: z.n, age: z.age, r: z.r, x: z.x, st: z.st, sys: z.sys, feed: z.feed, t: z.t } } catch {}
@@ -1506,7 +1512,10 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const tok = await cmd('GET', 'ctok:' + id);
         if (tok !== tk) return res.status(403).json({ err: 'token' });
         // เขียนทับเลย ไม่ลบของเก่าก่อน — ถ้าฐานข้อมูลเต็ม เซฟเก่าบนคลาวด์ต้องไม่หาย
-        await pipe([['SET', 'cs3:' + id + ':' + sl, zPack(saveTrim(d)), 'EX', 86400 * 90], ['SET', 'cs2:' + id, '@' + sl, 'EX', 86400 * 90], ['EXPIRE', 'ctok:' + id, 86400 * 90]]);
+        const packed = zPack(saveTrim(d)); let inR2 = false;
+        if (r2Bkt()) { try { await r2Bkt().put(r2Key(id, sl), packed, { customMetadata: { t: String(now) } }); inR2 = true } catch (e) { console.error('API_ERR csave r2', String(e && e.message || e)) } }
+        if (inR2) await pipe([['DEL', 'cs3:' + id + ':' + sl], ['SET', 'cs2:' + id, '@' + sl, 'EX', 86400 * 90], ['EXPIRE', 'ctok:' + id, 86400 * 90]]); // เซฟอยู่ใน R2 แล้ว → ปล่อย RAM ของก้อนเก่าใน Valkey
+        else await pipe([['SET', 'cs3:' + id + ':' + sl, packed, 'EX', 86400 * 90], ['SET', 'cs2:' + id, '@' + sl, 'EX', 86400 * 90], ['EXPIRE', 'ctok:' + id, 86400 * 90]]);
       } catch (e) { if (/OOM/i.test(String(e && e.message))) { OOM_AT = Date.now(); return res.status(503).json({ err: 'full' }) } throw e }
       // ฝาก id/token ไว้ใน cookie ที่ตั้งจากเซิร์ฟเวอร์ (HttpOnly) — Safari ลบ localStorage ทิ้งหลังไม่ได้เข้าเว็บ 7 วัน แต่ cookie นี้อยู่ต่อ ใช้กู้เซฟผ่าน ?a=cme
       if (okId(id)) res.setHeader('Set-Cookie', 'mc=' + id + '.' + tk + '; Path=/api; Max-Age=' + 86400 * 90 + '; HttpOnly; Secure; SameSite=Lax');
