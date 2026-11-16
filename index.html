@@ -20413,9 +20413,9 @@ function islFx(n){if(!n.fx||islLite())return;const e=$('isl');const r=e.getBound
 // ---------- ท่าทางบนเกาะ: บีบ · ปัด · โยน · ดึงลง · แตะรัว ----------
 (()=>{const e=islEl();let st=null,taps=[];
  const setv=(gx,gy,gr,gs,tr)=>{e.style.transition=tr||'';e.style.setProperty('--gx',gx+'px');e.style.setProperty('--gy',gy+'px');e.style.setProperty('--gr',gr+'deg');e.style.setProperty('--gs',gs)};
- e.addEventListener('pointerdown',ev=>{if(!ISL.cur)return;st={x0:ev.clientX,y0:ev.clientY,t0:performance.now(),dx:0,dy:0,g:0,hold:0};e.classList.add('sq');
+ e.addEventListener('pointerdown',ev=>{if(!ISL.cur)return;try{e.setPointerCapture(ev.pointerId)}catch(x){}st={pid:ev.pointerId,x0:ev.clientX,y0:ev.clientY,t0:performance.now(),dx:0,dy:0,g:0,hold:0};e.classList.add('sq');
   st.tm=setTimeout(()=>{if(!st||st.g)return;st.hold=1;st.g=1;e.classList.remove('sq');const c=ISL.cur;if(c&&!c.big){c.big=1;if(!c.h)c.h='รายละเอียด';islRender(c,true)}clearTimeout(ISL.t);ISL.t=setTimeout(()=>islNext(),5000);tuBuzz()},600)});
- e.addEventListener('pointermove',ev=>{if(!st)return;st.dx=ev.clientX-st.x0;st.dy=ev.clientY-st.y0;if(Math.hypot(st.dx,st.dy)>10){clearTimeout(st.tm);e.classList.remove('sq')}
+ e.addEventListener('pointermove',ev=>{if(!st)return;if(ev.pointerType==='mouse'&&!(ev.buttons&1)){end(ev);return}st.dx=ev.clientX-st.x0;st.dy=ev.clientY-st.y0;if(Math.hypot(st.dx,st.dy)>10){clearTimeout(st.tm);e.classList.remove('sq')}
   if(Math.abs(st.dx)>Math.abs(st.dy)&&Math.abs(st.dx)>8){st.g=1;setv(st.dx*.6,0,st.dx*.04,1,'none')}else if(st.dy>8){st.g=1;setv(0,Math.min(40,st.dy*.5),0,1+Math.min(.06,st.dy/900),'none')}});
  const end=ev=>{if(!st)return;const s=st;st=null;clearTimeout(s.tm);e.classList.remove('sq');const dt=Math.max(1,performance.now()-s.t0),vx=s.dx/dt;
   if(!s.g){e.classList.remove('bnc');void e.offsetWidth;e.classList.add('bnc');return}
@@ -20423,7 +20423,7 @@ function islFx(n){if(!n.fx||islLite())return;const e=$('isl');const r=e.getBound
   if(Math.abs(s.dx)>Math.abs(s.dy)&&(Math.abs(vx)>.9||Math.abs(s.dx)>90)){const dir=Math.sign(s.dx);setv(dir*innerWidth*.8,-10,dir*28,.9,'transform .26s cubic-bezier(.4,0,1,1),opacity .26s');e.style.opacity='0';setTimeout(()=>{setv(0,0,0,1,'none');e.style.opacity='';islNext(true)},270);return}
   if(Math.abs(s.dx)>Math.abs(s.dy)&&Math.abs(s.dx)>40){setv(0,0,0,1);if(s.dx<0)islNext(true);else{const h=ISL.hist.slice(0,-1).reverse().find(x=>x.t!==(ISL.cur&&ISL.cur.t));if(h)island({ic:h.ic,h:h.h,t:h.t,d:h.d,kind:h.kind,act:h.act,big:!!h.h,pri:1,key:'h'+h.at})}return}
   setv(0,0,0,1);if(s.dy>34)islHistory()};
- e.addEventListener('pointerup',end);e.addEventListener('pointercancel',end);
+ e.addEventListener('pointerup',end);e.addEventListener('pointercancel',end);window.addEventListener('pointerup',end);window.addEventListener('blur',()=>{if(st)end({})});e.addEventListener('lostpointercapture',()=>{if(st)end({})});
  e.addEventListener('click',ev=>{if(e._g){ev.stopImmediatePropagation();ev.preventDefault();return}const t=Date.now();taps=taps.filter(x=>t-x<1500);taps.push(t);if(taps.length>=5){taps=[];ev.stopImmediatePropagation();e.classList.remove('shake');void e.offsetWidth;e.classList.add('shake');setTimeout(()=>island({big:1,pri:1,ic:'🍃',h:'ปรัชญายุทธภพ',t:ISL_Q[Math.floor(Math.random()*ISL_Q.length)],kind:'gold',ms:4200,key:'q'+t}),380)}},true)})();
 // ---------- ประวัติแจ้งเตือน + โหมดเงียบ ----------
 function islHistory(){const L=ISL.hist.slice().reverse(),now=Date.now(),ago=t=>{const s=Math.round((now-t)/1000);return s<60?s+' วิ':s<3600?Math.round(s/60)+' นาที':Math.round(s/3600)+' ชม.'};const sil=Date.now()<ISL.silent;
@@ -21605,7 +21605,7 @@ function islPush(){try{const e=document.getElementById('isl'),g=$('game');if(!g)
  const h=ok?Math.max(0,Math.min(110,(parseFloat(e.style.height)||e.offsetHeight)-26)):0;g.style.setProperty('--islPush',h+'px');g.classList.toggle('islPushOn',h>0)}catch(e){}}
 // 4) ตำแหน่งบนคอม: แจ้งเตือนสั้นอยู่หัวคอลัมน์กลาง · เรื่องยาวเป็นการ์ดมุมขวาล่าง
 function islDeskPos(){try{const e=document.getElementById('isl');if(!e)return;if(!deskOn||document.body.classList.contains('islBottom')||document.body.classList.contains('islFloat')){e.style.removeProperty('--islX');e.style.removeProperty('--islTop');return}
- const C=$('deskC');if(!C)return;const r=C.getBoundingClientRect();e.style.setProperty('--islX',(r.left+r.width/2)+'px');e.style.setProperty('--islTop',Math.max(8,r.top+8)+'px')}catch(e){}}
+ const C=$('deskC'),r=C&&C.getBoundingClientRect();if(!r||r.width<200||r.height<100||r.right<0||r.left>innerWidth){e.style.removeProperty('--islX');e.style.removeProperty('--islTop');return}const x=Math.min(innerWidth-140,Math.max(140,r.left+r.width/2));e.style.setProperty('--islX',x+'px');e.style.setProperty('--islTop',Math.min(innerHeight-60,Math.max(8,r.top+8))+'px')}catch(e){}}
 const islLongD=n=>!!(n&&n.big&&!n.live&&!(n.btns&&n.btns.length)&&(n.sticky||n.act||(n.d&&String(n.d).replace(/<[^>]+>/g,'').length>30)));
 function islCard(n){let w=document.getElementById('islCards');if(!w){w=document.createElement('div');w.id='islCards';document.body.appendChild(w)}
  const old=w.querySelector('.islCard:not(.out)');if(old){old.classList.add('out');setTimeout(()=>old.remove(),260)}
