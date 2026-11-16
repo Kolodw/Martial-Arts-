@@ -85,7 +85,7 @@ export default {
     if (url.pathname === '/api/online' || url.pathname === '/api/online/') {
       const r = await api(request, url);
       // มีคนส่งข้อความ/ประกาศ → ล้างแคชแชทที่ขอบทันที ข้อความใหม่จะขึ้นในการดึงรอบถัดไป
-      try { if (request.method === 'POST' && /^(say|annrm|annvote|chathide|chatdel)$/.test(url.searchParams.get('a') || '') && r.status === 200) ctx.waitUntil(caches.default.delete(new Request(url.origin + '/__edge/chat'))) } catch (e) {}
+      try { if (request.method === 'POST' && /^(say|annrm|annvote|chathide|chatdel)$/.test(url.searchParams.get('a') || '') && r.status === 200) await caches.default.delete(new Request(url.origin + '/__edge/chat')) } catch (e) {}
       return r;
     }
     // โดเมนเดิม (www) → ใช้ไฟล์หน้าเว็บ
