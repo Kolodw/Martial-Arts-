@@ -28138,6 +28138,37 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'🌌',t:'ก้าวข้ามสา�
   d.innerHTML='<b>⚡ ก้าวข้ามสามภพ พร้อมแล้ว</b><br>• <b>แตะ</b> ปุ่มนี้ = เริ่มฝ่าทัณฑ์ 3 ระลอก (มีให้ยืนยันก่อน)<br>• <b>กดค้าง</b> = ดูว่าได้อะไร เสี่ยงอะไร<br>• ผ่านแล้วเลือกได้: 🌌 จากไป หรือ 🏯 อยู่ต่อ <span style="float:right;opacity:.7">แตะเพื่อปิด</span>';
   d.onclick=()=>d.remove();document.body.appendChild(d);setTimeout(()=>{try{d.remove()}catch(e){}},14000)}catch(e){}};
  setInterval(tip,2000)}
+
+// ============ v18.7 · กัลป์: เศษความทรงจำ → หอบรรพกาล → ประตูนวนิยาย ============
+{const KM=[
+ {id:'page',t:'📖 ตัวอักษรลอยกลางอากาศ',x:'ระหว่างที่คุณเดินผ่านทุ่งร้าง ตัวอักษรเรืองแสงลอยขึ้นเหนือพื้นดิน เป็นประโยคที่ยังเขียนไม่จบ: "<i>…และเขาก้าวไปข้างหน้าอีกหนึ่งก้าว</i>" คุณขยับเท้า — ตัวอักษรต่อประโยคตามทันที',o:[['📖 อ่านต่อ','ได้เศษความทรงจำ +1 · ปัญญา+',()=>{S.int+=25;return 1}],['🙈 เดินผ่านไป','สงบใจ',()=>{joy(6);return 0}]],r:'คุณรู้สึกว่ามีใครกำลังอ่านเรื่องของคุณอยู่'},
+ {id:'self',t:'🪞 ตัวเองจากกัลป์ก่อน',x:'ในกระจกน้ำ คุณเห็นเงาของชายหนุ่มที่ยังไม่เคยฆ่าใคร ยังไม่เคยเสียใคร — หน้าตาเหมือนคุณเมื่อหลายล้านปีก่อน เขาเงยหน้ามองกลับมา',o:[['🤝 พยักหน้าให้เขา','ได้เศษความทรงจำ +1 · ความสุข+',()=>{joy(12);return 1}],['🌫️ ปัดผิวน้ำให้เลือน','ไม่ได้อะไร',()=>0]],r:'เงานั้นยิ้มก่อนจะจางไป'},
+ {id:'forg',t:'🧓 ผู้รอดที่ลืมชื่อตัวเอง',x:'ผู้รอดจากกัลป์ก่อนนั่งอยู่ริมทาง เขาจำได้ว่าเคยเป็นเทพ แต่จำไม่ได้ว่าชื่ออะไร "ท่านรู้จักข้าไหม" เขาถาม',o:[['🗣️ บอกชื่อที่ท่านรู้จัก','ได้เศษความทรงจำ +1 · กรรมดี+',()=>{S.karma+=30;return 1}],['🤐 บอกว่าไม่รู้จัก','ไม่ได้อะไร',()=>0]],r:'เขาจดชื่อนั้นลงบนฝ่ามือ แล้วยิ้มอย่างโล่งใจ'},
+ {id:'lost',t:'🌑 โลกที่ถูกลืม',x:'คุณเจอผืนดินแห่งหนึ่งที่ไม่ปรากฏในพงศาวดารใดเลย ไม่มีชื่อ ไม่มีผู้คน มีแต่ป้ายหินว่างเปล่า',o:[['✍️ จารึกชื่อลงไป','ได้เศษความทรงจำ +1 · ชื่อเสียง+',()=>{S.fame+=3000;return 1}],['🚶 ปล่อยไว้อย่างนั้น','ไม่ได้อะไร',()=>0]],r:'ผืนดินนั้นเริ่มมีชื่อ และเริ่มมีลม'},
+ {id:'letter',t:'✉️ จดหมายที่ไม่มีผู้เขียน',x:'จดหมายฉบับหนึ่งหล่นลงบนมือคุณ ลายมือเป็นของคุณเอง แต่คุณจำไม่ได้ว่าเคยเขียน: "<i>ถ้าอ่านอยู่ แปลว่าเรื่องยังไม่จบ</i>"',o:[['💌 เก็บไว้กับตัว','ได้เศษความทรงจำ +1',()=>1],['🔥 เผาทิ้ง','ใจเบาขึ้น',()=>{joy(8);return 0}]],r:'ตัวหนังสือบนกระดาษที่ไหม้ ยังเรืองแสงอยู่ครู่หนึ่ง'},
+ {id:'mem',t:'🕯️ เมื่อคนที่จำคุณได้จากไป',x:'คนสุดท้ายที่จำเรื่องราวของคุณในกัลป์ก่อนได้กำลังจะสิ้นอายุ เขากุมมือคุณและพูดว่า "ท่านจะจำทุกอย่างไว้ หรือปล่อยให้มันจางไปกับข้า"',o:[['🕯️ จำไว้ทั้งหมด','ได้เศษความทรงจำ +2 · ความสุข−',()=>{joy(-10);return 2}],['🍃 ปล่อยให้จางไป','ความสุข+',()=>{joy(15);return 0}]],r:'เขาจากไปอย่างสงบ'}];
+ window._kmN=KM.length;
+ const _ke=kalpaEvent;kalpaEvent=function(){const K=kOf();K.mm=K.mm||{};const L=KM.filter(e=>!K.mm[e.id]);
+  if(L.length&&Math.random()<.4){const e=ch(L);K.mm[e.id]=1;return choice(e.t,e.x,e.o.map(o=>({t:o[0],s:o[1],noFate:1,f(){const g=o[2]();if(g){K.sh=(K.sh||0)+g;log(`🔮 <b>เศษความทรงจำ +${g}</b> (รวม ${K.sh}) — ${e.r}`,'myth')}else log(`${e.r}`,'')}})))}
+  return _ke.apply(this,arguments)}
+ const HI=[['🌱','ปฐมกัลป์','พรสวรรค์ +4%',()=>{S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.04).toFixed(2)})}],
+  ['⏳','กัลป์ที่สอง','อายุขัย +200 ปี',()=>{S.lifespan+=200}],['💰','กัลป์ที่สาม','เงินตั้งต้น +20% (อย่างน้อย 5,000)',()=>{S.money+=Math.max(5000,Math.round(S.money*.2))}],
+  ['🏮','กัลป์ที่สี่','ชื่อเสียง +500',()=>{S.fame+=500}],['🌀','กัลป์ที่ห้า','ปราณ +5',()=>{S.qi+=5}],['📚','กัลป์ที่หก','ปัญญา +20',()=>{S.int+=20}],
+  ['⚔️','กัลป์ที่เจ็ด','พลังเริ่มต้น +3%',()=>{S.power+=Math.max(1,Math.round(pctPow(.03)))}],['☯️','กัลป์ที่แปด','กรรมดี +50',()=>{S.karma+=50}],['👑','กัลป์ที่เก้า','พลังชีวิตสูงสุด +100',()=>{S.maxHp+=100;S.hp=S.maxHp}]];
+ let pick=[];
+ function hallOpen(){const K=kOf(),sh=K.sh||0,max=Math.min(HI.length,3+Math.min(6,sh));pick=[];
+  const draw=()=>{const m=$('modal');m.innerHTML=xT(`<h3>🏛️ หอบรรพกาล</h3><p class="tag2">ตัวตนของทุกกัลป์ที่คุณผ่านมายืนเรียงอยู่ในหอ เลือกของไปเป็นของฝากให้ชีวิตหน้า <b>ได้ ${max} อย่าง</b> (เศษความทรงจำ ${sh} ชิ้น: ยิ่งมี ยิ่งเลือกได้มาก สูงสุด 9)</p><div class="mgrid">${HI.map((h,i)=>`<button class="opt ${pick.includes(i)?'on':''}" style="${pick.includes(i)?'outline:3px solid var(--pink)':''}" onclick="_kHallTog(${i})">${h[0]} ${h[1]}<small>${h[2]}</small></button>`).join('')}</div><button class="pbtn" style="margin-top:10px" onclick="_kHallOk()">ยืนยัน (${pick.length}/${max})</button>`)};
+  window._kHallTog=i=>{const k=pick.indexOf(i);if(k>=0)pick.splice(k,1);else if(pick.length<max)pick.push(i);else toast(`เลือกได้ ${max} อย่าง`);draw()};
+  window._kHallOk=()=>{if(!pick.length)return toast('เลือกอย่างน้อย 1 อย่าง');LS.set('murim_khall',pick.slice());S.flags.kHallDone=1;S.flags.kHall=pick.length;closeM();setTimeout(doorOpen,300)};
+  modal('','khall');draw()}
+ function doorOpen(){choice('📖 ประตูนวนิยาย','หลังหอบรรพกาล มีประตูบานหนึ่งปรากฏขึ้น บนบานเขียนว่า <b>"หน้าสุดท้ายของเรื่องนี้"</b> — คุณมองเห็นแล้วว่าตัวเองอยู่ในหนังสือเล่มหนึ่งมาตลอด ของฝากที่เลือกไว้จะตามคุณไปเกิดในชีวิตหน้า',[
+   {t:'🌌 ก้าวข้ามสามภพ',s:'ปิดตำนานชีวิตนี้ · ของฝากไปกับชีวิตหน้า',noFate:1,_x:1,f(){kalpaEnd('top')}},
+   {t:'📖 เปิดหน้าใหม่ (เร็วๆ นี้)',s:'ไปเกิดในโลกอื่น — ยังไม่เปิด รอยุคใหม่ ตอนนี้กดแล้วจะกลับมาเลือกใหม่',noFate:1,skip:1,f(){toast('ยังไม่เปิด — รอยุคใหม่');setTimeout(doorOpen,400)}}])}
+ const _ke2=kalpaEnd;kalpaEnd=function(how){if(how==='top'&&!S.flags.kHallDone){return hallOpen()}return _ke2.apply(this,arguments)}
+ const apply=()=>{try{const L=LS.get('murim_khall',null);if(!L||!S||!L.length)return;LS.del('murim_khall');L.forEach(i=>{try{HI[i][3]()}catch(e){}});log(`🏛️ <b>ของฝากจากหอบรรพกาล</b> — ${L.map(i=>HI[i][1]).join(' · ')} ตามคุณมาเกิดใหม่`,'myth',true)}catch(e){}};
+ {const _s=startLife;startLife=function(){const r=_s.apply(this,arguments);setTimeout(apply,80);return r}}
+ {const _i=inherit;inherit=function(){const r=_i.apply(this,arguments);setTimeout(apply,80);return r}}
+ window._kHall={open:hallOpen,door:doorOpen}}
 </script>
 </body>
 </html>
