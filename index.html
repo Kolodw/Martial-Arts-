@@ -6588,7 +6588,7 @@ function fuseCore(n){let s=String(n||'').replace(/^วิชายุทธ์�
 function fuseGo(){const idx=FU_SEL.slice().sort((a,b)=>b-a),L=idx.map(i=>S.arts[i]).filter(Boolean);if(L.length<2||(S.fuseY!=null&&S.age-S.fuseY<3))return;const p=fuseP(L);S.fuseY=S.age;FU_SEL=[];closeM();
  if(Math.random()<p){const tot=L.reduce((s,a)=>s+a.b*artM(a),0),mr=Math.max(...L.map(a=>a.r||0)),r=Math.min(4,mr+(Math.random()<.3?1:0)),fx=[...new Set(L.flatMap(a=>a.fx?(Array.isArray(a.fx)?a.fx:[a.fx]):[]))];
   const given=(S.name||'').split(' ').pop(),typ=(ART_S.find(t=>String(L[0].n).startsWith(t))||ch(ART_S));const cu=String(window.FU_NAME||'').replace(/[<>&"'`\\]/g,'').replace(/[《》\[\]]/g,'').replace(/\s+/g,' ').trim().slice(0,24);window.FU_NAME='';const nm=cu||`วิถี${given}: ${typ}${fuseCore(L[0].n)}ผสาน${fuseCore(L[1].n)}${L[2]?'·'+fuseCore(L[2].n):''}`;
-  const a={n:nm,tier:ART_TIER[r].n+' · วิชาของตัวเอง',cn:cu?1:0,b:Math.round(tot*1.05+ART_TIER[r].b*.2),r,p:.0001,lv:0,own:1};try{a.src=L.flatMap(x=>x.src&&x.src.length?x.src:[String(x.n)]).slice(0,4)}catch(e){}if(fx.length)a.fx=fx.length===1?fx[0]:fx;
+  const kp0=Math.max(0,...L.map(x=>x.kp|0)),a={n:nm,tier:ART_TIER[r].n+' · วิชาของตัวเอง',cn:cu?1:0,b:Math.round(tot*1.05/(1+.5*kp0)+ART_TIER[r].b*.2),r,p:.0001,lv:0,own:1};try{if(kp0>0)a.kp=kp0;if(L.some(x=>x.kal))a.kal=1;const sk=L.find(x=>x.sk&&typeof ASK!=='undefined'&&ASK[x.sk]);if(sk)a.sk=sk.sk;if(a.kal&&kp0>=3)a.tier='♾️ วิชาแห่งกัลป์ · วิชาของตัวเอง'}catch(e){}try{a.src=L.flatMap(x=>x.src&&x.src.length?x.src:[String(x.n)]).slice(0,4)}catch(e){}if(fx.length)a.fx=fx.length===1?fx[0]:fx;
   idx.forEach(i=>S.arts.splice(i,1));Array.prototype.push.call(S.arts,a);S.flags.fused=(S.flags.fused||0)+1;setScene('aura');
   log(`🔮 หลอมรวม ${L.map(x=>'《'+x.n+'》').join(' + ')} สำเร็จ! ถือกำเนิดเป็นวิชาใหม่ที่มีเพียงคุณคนเดียวในใต้หล้า — ${artHtml(a)}${r>mr?' ระดับสูงขึ้น!':''}`,'myth',true)}
  else{log(`💢 พยายามหลอมรวม ${L.map(x=>'《'+x.n+'》').join(' + ')} แต่ลมปราณของวิชาต่างสายปะทะกัน — ล้มเหลว <span class="tag2">(โอกาส ${Math.round(p*100)}%)</span>`,'bad');if(Math.random()<.45)qiDev(false)}
@@ -27719,6 +27719,13 @@ function addBtn(){const B=$('birth');if(!B||B.querySelector('#bBack'))return;B.i
 addBtn();{const _gb2=goBirth;goBirth=function(){const r=_gb2.apply(this,arguments);addBtn();return r}}
 try{const st=document.createElement('style');st.textContent='#bBack{display:inline-block;margin:calc(env(safe-area-inset-top) + 6px) 0 2px 4px;font-size:12px;padding:3px 10px}';document.head.appendChild(st)}catch(e){}
 })()}catch(e){console.error(e)}
+
+// ===================== v17.40 🔮 รวมวิชา: บอกชัดว่าอะไรติดมา อะไรหาย =====================
+try{(()=>{const _of=openFuse;openFuse=function(){const r=_of.apply(this,arguments);try{const M=$('modal'),sel=(FU_SEL||[]).map(i=>S.arts[i]).filter(Boolean);if(!M||!sel.length)return r;
+ const kp=Math.max(0,...sel.map(x=>x.kp|0)),sk=sel.find(x=>x.sk&&typeof ASK!=='undefined'&&ASK[x.sk]),law=sel.find(x=>x.law),hi=Math.max(...sel.map(x=>x.lv|0));
+ const ok=[],bad=[];ok.push('พลังรวมไม่ลด (+5%)');if(sel.some(x=>x.fx))ok.push('ผลพิเศษของวิชา');if(kp)ok.push(`♾️ ระดับกัลป์《${KPN[kp]}》และการโตข้ามกัลป์`);if(sk)ok.push(`ความสามารถ ${ASK[sk.sk][0]} ${ASK[sk.sk][1]}`);
+ if(hi>0)bad.push(`ขั้นวิชาเริ่มใหม่ที่ขั้น 1 (ตัวคูณขั้นเดิมถูกรวมเข้าพลังแล้ว แต่ต้องไต่ขั้นใหม่)`);if(law)bad.push('⚖️ บัลลังก์กฎที่วิชานี้ครองอยู่จะหลุด');if(sel.filter(x=>x.sk).length>1)bad.push('ความสามารถแห่งกัลป์ติดมาได้แค่อย่างเดียว');
+ const b=M.querySelector('.pbtn');if(b)b.insertAdjacentHTML('beforebegin',`<div class="item" style="margin-top:6px"><p class="tag2">✅ ติดไปกับวิชาใหม่: ${ok.join(' · ')}</p>${bad.length?`<p class="tag2" style="color:#e07a5a">⚠️ ${bad.join(' · ')}</p>`:''}</div>`)}catch(e){console.error(e)}return r}})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
