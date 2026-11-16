@@ -455,6 +455,28 @@ let QUOTA_AT = 0, OOM_AT = 0;
 const r2Bkt = () => globalThis.SAVES_R2 || null, r2Key = (id, n) => 'cs3/' + id + '/' + n;
 const r2Get = async (id, n) => { const b = r2Bkt(); if (!b) return null; try { const o = await b.get(r2Key(id, n)); return o ? await o.text() : null } catch { return null } };
 const cs3Fill = async (id, vals) => r2Bkt() ? Promise.all(vals.map(async (v, i) => v != null ? v : await r2Get(id, i + 1))) : vals;
+// ย้ายเซฟคลาวด์ 1 ก้อนจาก Valkey → R2: เขียนเฉพาะเมื่อ R2 ยังไม่มีไฟล์นั้น (ไม่ทับของใหม่ที่ผู้เล่นเพิ่งฝาก) → เช็คขนาด → ค่อยลบจาก Valkey · คืน 1=ย้าย/ลบแล้ว 0=ข้าม -1=พลาด
+async function csMove(k, bk, go = true) {
+  try {
+    const [, id, sl] = k.split(':'), [v, ttl] = await pipe([['GET', k], ['TTL', k]]);
+    if (v == null || /^@[1-5]$/.test(String(v))) return 0;
+    if (!go) return 1;
+    const by = Buffer.byteLength(String(v)), nw = Date.now(), t = +ttl > 0 ? nw - Math.max(0, 90 * 86400 - +ttl) * 1000 : nw;
+    const put = await bk.put(r2Key(id, sl), String(v), { customMetadata: { t: String(t), mig: '1' }, onlyIf: { etagDoesNotMatch: '*' } });
+    if (put) { const hd = await bk.head(r2Key(id, sl)); if (!hd || hd.size !== by) return -1 }
+    await cmd('DEL', k); return 1;
+  } catch (e) { return -1 }
+}
+// ย้ายเองเบื้องหลังตอนมีคน ping (ทีละไม่กี่ก้อน) → ฐานข้อมูลเต็มก็ค่อยๆ ว่างเอง ไม่ต้องรอผู้ดูแลกด
+let CSM_CUR = '0', CSM_T = 0;
+async function autoCs(max = 4) {
+  const bk = r2Bkt(); if (!bk || Date.now() - CSM_T < 10e3) return; CSM_T = Date.now();
+  try {
+    const r = await cmd('SCAN', CSM_CUR, 'MATCH', 'cs3:*', 'COUNT', 300); CSM_CUR = String(r[0]);
+    const ks = (r[1] || []).filter(k => /^cs3:[a-z0-9]{6,24}:[1-5]$/.test(k)).slice(0, max);
+    await Promise.all(ks.map(k => csMove(k, bk)));
+  } catch (e) {}
+}
 const pipeSoft = async l => { try { return await pipe(l) } catch (e) { if (/OOM/i.test(String(e && e.message))) { OOM_AT = Date.now(); return null } throw e } };
 
 // ---------- 🔔 Web Push (VAPID + aes128gcm เขียนเองไม่ใช้ไลบรารี) + กล่องแจ้งเตือนในเกม ----------
@@ -724,7 +746,7 @@ module.exports = async (req, res) => {
       let tg = null; if (okId(id)) { try { const tq = await cmd('LRANGE', 'tagq:' + id, 0, 9); if (tq && tq.length) { await cmd('DEL', 'tagq:' + id); tg = tq.map(jp).filter(Boolean) } } catch (e) {} }
       let ann = null; try { ann = annV ? JSON.parse(annV) : null } catch {}
       ann = await annPoll(ann, id);
-      await Promise.race([autoMig(), new Promise(r => setTimeout(r, 1200))]);
+      await Promise.race([Promise.all([autoMig(), autoCs()]), new Promise(r => setTimeout(r, 1500))]);
       return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7), ann, ...(tg ? { tg } : {}), ...(cl ? { cl } : {}) });
     }
     if (a === 'who' || a === 'admin' || a === 'bugfix') {
@@ -1171,17 +1193,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         } while (cur !== '0' && out.scanned < 60000 && (todo.length < lim || out.left < 1));
         for (let i = 0; i < todo.length; i += 8) {
           await Promise.all(todo.slice(i, i + 8).map(async k => {
-            try {
-              const [, id, sl] = k.split(':'), [v, ttl] = await pipe([['GET', k], ['TTL', k]]);
-              if (v == null || /^@[1-5]$/.test(String(v))) { out.skipped++; return }
-              const bytes = Buffer.byteLength(String(v)); out.bytes += bytes;
-              if (!go) { out.moved++; return }
-              const t = +ttl > 0 ? now - Math.max(0, 90 * 86400 - +ttl) * 1000 : now;
-              await bk.put(r2Key(id, sl), String(v), { customMetadata: { t: String(t), mig: '1' } });
-              const hd = await bk.head(r2Key(id, sl));
-              if (!hd || hd.size !== bytes) { out.failed++; return }
-              await cmd('DEL', k); out.moved++;
-            } catch (e) { out.failed++ }
+            const r = await csMove(k, bk, go);
+            if (r === 1) out.moved++; else if (r === -1) out.failed++; else out.skipped++;
           }));
         }
       } catch (x) { out.err = String(x && x.message || x).slice(0, 120) }
