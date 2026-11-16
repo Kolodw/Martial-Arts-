@@ -1716,7 +1716,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       let tagTo = null;
       const admTo = isAdmKey(b.key);
       if (b.to) { const pu0 = String(b.to).replace(/[^a-z0-9]/g, '').slice(0, 12); if (pu0.length === 12 && pu0 !== m.pu) { m.to = pu0; m.ton = noAdm(clean(b.ton, 20)) || ''; m.re = String(b.re || '').replace(/[^a-z0-9]/g, '').slice(0, 20); const rx = clean(b.rx, 60); if (rx) m.rx = rx; tagTo = await cmd('HGET', 'pupid', pu0) } }
-      await pipe([['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199], ['HSET', 'pupid', id.slice(0, 12), id]]);
+      { const wr = await pipe([['LPUSH', 'chat', JSON.stringify(m)], ['LTRIM', 'chat', 0, 199], ['HSET', 'pupid', id.slice(0, 12), id]]); if (!wr || typeof wr[0] !== 'number') return res.status(503).json({ err: 'full' }) }
       if (tagTo && okId(tagTo)) { try { const ev = JSON.stringify({ i: m.i, n: m.n, x: m.x.slice(0, 160), t: now, ...(admTo ? { a: 1 } : {}) }); await pipe([['LPUSH', 'tagq:' + tagTo, ev], ['LTRIM', 'tagq:' + tagTo, 0, 9], ['EXPIRE', 'tagq:' + tagTo, 86400 * 14]]); const pOk = admTo || await cmd('SET', 'trp:' + id.slice(0, 12) + ':' + tagTo.slice(0, 12), 1, 'NX', 'PX', 120000); const hs = pOk ? await cmd('SMEMBERS', 'push:id:' + tagTo) : null; if (hs && hs.length) await withCap(pushHashes(hs, { t: admTo ? '💬 ผู้ดูแลตอบคุณในแชท' : '💬 ' + m.n + ' ตอบกลับคุณในแชท', b: m.x.slice(0, 160), u: '/?go=chat', g: 'tag-' + m.i }), 8000) } catch (e) {} }
       if (b.rto && isAdmKey(b.key)) {
         let pr = null;
