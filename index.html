@@ -1765,7 +1765,7 @@ function checkDeath(){
  if(!S.deathCause&&S.hp<=0&&S.age-(S.nearY==null?-99:S.nearY)>=(S.age<8?4:8)&&Math.random()<(S.age<8?.75:.5)){S.nearY=S.age;S.hp=15;log(ch(['หมดสติไปสามวันสามคืน ตื่นขึ้นมาอีกครั้งอย่างปาฏิหาริย์','ชาวบ้านใจดีพบคุณนอนจมกองเลือด แล้วแบกกลับไปรักษา','ลมหายใจเกือบขาด แต่ใจที่ยังไม่อยากตายดึงคุณกลับมา'])+' — รอดตายอย่างหวุดหวิด','bad',true);return false}
  if(S.deathCause)cause=S.deathCause;
  else if(S.hp<=0&&S.beastMode&&!S.beastMode.human)cause=ch(['บาดแผลจากการต่อสู้ในป่าลึกพรากลมหายใจสุดท้าย','สิ้นใจอย่างเงียบๆ ในโพรงหลังบาดเจ็บสาหัส','ล้มลงกลางป่าและไม่ได้ลุกขึ้นมาอีก']);
- else if(S.hp<=0)cause=S.age<3?'จากไปตั้งแต่ยังเป็นทารก':S.age<20?'จากไปตั้งแต่ยังเยาว์':S.chronic?`ทรุดหนักด้วย${S.chronic.n}จนสิ้นใจ`:'สิ้นใจจากบาดแผลในยุทธภพ';
+ else if(S.hp<=0)cause=S.age<3?'จากไปตั้งแต่ยังเป็นทารก':S.age<20?'จากไปตั้งแต่ยังเยาว์':S.chronic?`ทรุดหนักด้วย${S.chronic.n}จนสิ้นใจ`:(S.mw&&S.mw.native?'สิ้นใจจากบาดแผลสาหัส':'สิ้นใจจากบาดแผลในยุทธภพ');
  else if(S.age>=lifeMax()&&S.beastMode&&!S.beastMode.human)cause=ch(['หลับไปตลอดกาลในโพรงที่คุ้นเคย','จากไปอย่างสงบใต้แสงจันทร์ที่บำเพ็ญมาทั้งชีวิต','ร่างที่ชราภาพคืนสู่ผืนป่า'])+(S.kids?' ท่ามกลางลูกหลาน':'');
  else if(S.age>=lifeMax())cause=S.ch==='short'&&S.age<=30&&lifeMax0()>30?'ชะตาสามสิบปีมาถึงที่สุด ลมหายใจสุดท้ายหลุดลอยไปตามคำสาป':'จากไปอย่างสงบด้วยวัยชรา'+(S.kids?' ท่ามกลางลูกหลาน':'');
  if(!cause)return false;
@@ -26296,7 +26296,7 @@ function storeRescue(lv){let freed=0;try{
 
 // ===================== v17.17 ไม่เส้นตรง · ยากขึ้น (ยุทธภพ · โลกเซียน · แดนเทพ · กัลป์) =====================
 (function(){try{
-window._nlWD=()=>WD();const WD=()=>!S?'':S.flags&&S.flags.eternal?'k':S.xt?'g':S.xian?'x':'w';
+window._nlWD=()=>WD();const WD=()=>!S?'':S.mw&&S.mw.native?'m':S.flags&&S.flags.eternal?'k':S.xt?'g':S.xian?'x':'w';
 const busy=()=>!!(((choice._q||[]).length>=5)||(S.kalpa&&S.kalpa.pend)||S.beastMode||S.ch==='hell');
 const pw=v=>Math.max(1,Math.round(pctPow(v)));
 const ep=m=>Math.round(total()*m*(.92+Math.random()*.16));
@@ -26595,7 +26595,7 @@ function past(){const L=(S.mem||[]).filter(m=>S.age-m.a>=5&&m.v!==0);if(!L.lengt
  if(qFull())return r;
  const sd=(S.dseed||[]).findIndex(x=>S.age>=x.at);if(sd>=0){const x=S.dseed.splice(sd,1)[0];try{SEED[x.k]&&SEED[x.k](Object.assign({a:S.age-10},x.d))}catch(e){console.error(e)}return r}
  if(!mortal())return r;
- if(!S.lg&&!S._lgA&&S.age>=(S.xian?60:35)){S._lgA=1;goalPick();return r}
+ if(!(S.mw&&S.mw.native)&&!S.lg&&!S._lgA&&S.age>=(S.xian?60:35)){S._lgA=1;goalPick();return r}
  if(S.faction&&R0.sect<=-50&&!S._exp){S._exp=1;expel();return r}
  for(const k of ['pp','sect','court','dem']){if(Math.abs(R0[k])>=55&&S.age-(S['_rg'+k]||0)>=12&&Math.random()<.15){S['_rg'+k]=S.age;
   if(R0[k]>0)Ev(`${RG[k]} ตอบแทน`,`${RG[k].split(' ')[1]}ทั่วแผ่นดินรู้ว่าคุณอยู่ข้างพวกเขา`,[{t:'🎁 รับ',s:'เงิน + · พลังชีวิตเต็ม',f(){S.money+=Math.round(S.money*.15)+400;S.hp=S.maxHp;log(`🎁 ${RG[k]}ส่งของขวัญมาเต็มเกวียน`,'good')}}]);
@@ -26743,6 +26743,7 @@ function swapProve(){S.swapA=0;Ev('🔄 พิสูจน์ตัวตน','�
 // ---------- รายปี ----------
 {const _py=passYear;passYear=function(){const a0=S?S.age:0;const r=_py.apply(this,arguments);try{if(!S||!S.alive||S.age===a0||!mortal())return r;const st=Math.min(5,S.age-a0);
  if(!S.epo)eraNew(true);else if(S.age>=S.epo.until)eraNew(false);
+ if(S.mw&&S.mw.native)return r;
  alInit();
  if(S.epo.k==='famine')S.money=Math.max(0,Math.floor(S.money*(1-.02*st)));if(S.epo.k==='peace')joy(1);
  if(S.mask)S.mask.sus=Math.max(0,S.mask.sus-3*st);
@@ -28097,6 +28098,17 @@ MW_PUBLIC=true;mwAllowed=function(){return true};
  const _py=passYear;passYear=function(){fixB();return _py.apply(this,arguments)};
  const _bt=bTransform;bTransform=function(){fixB();return _bt.apply(this,arguments)};
  const _br=bRevert;bRevert=function(){fixB();return _br.apply(this,arguments)}}
+
+// ============ v18.5 · ยุคปัจจุบัน: ตัดเหตุการณ์/ระบบจากยุทธภพออกจากชีวิตคนยุคนี้ ============
+{const nat=()=>{try{return !!(S&&S.mw&&S.mw.native)}catch(e){return false}};window.mwNat=nat;
+ {const _mrn=mwRandNative;mwRandNative=function(){const r=_mrn.apply(this,arguments);setTimeout(()=>{try{if(!nat())return;S.goal=null;S.lg='none';const f=$('feed');if(f)[...f.children].forEach(e=>{if(/ยุทธภพ|ปณิธานของชีวิตนี้/.test(e.textContent))e.remove()})}catch(e){}},1200);return r}}
+ {const _ws=wsGet;wsGet=function(){if(nat())return{n:'ยุคปัจจุบัน',d:'',m:1};return _ws.apply(this,arguments)}}
+ {const OLD=/ยุทธภพ|กระบี่|ปราณ|วิชา|สำนัก|ยอดฝีมือ|ศิษย์|จอมยุทธ|ท่ารำ|เซียน|อสูร|ลมปราณ|พลังยุทธ|ผู้ฝึก|ชาติที่แล้ว|โลกเดิม|หลงยุค|ซ่อนพลัง|เคนโด้|ซามูไร|ปรมาจารย์|ตำรา|นักพรต|ดูดวง|หมอดู|ซินแส/;
+  let n0=0,n1=0;MW_R.forEach(e=>{try{const src=String(e.go)+String(e.c);e._old=OLD.test(src)||['love3','us3','jp2','tw1','cb3','cb5','cb6','wt1','wt7','wt8','wt9','gd2','gd4','hg2','flood','lotto'].includes(e.id);n0++;if(e._old)n1++;const c0=e.c;e.c=function(M,p){if(M&&M.native&&e._old)return false;return c0.apply(this,arguments)}}catch(x){}});window._mwOldN=[n1,n0]}
+ {const OLDQ=/ยุทธภพ|กระบี่|ปราณ|วิชา|สำนัก|ยอดฝีมือ|ศิษย์|จอมยุทธ|ฟันมังกร|เซียน|ลมปราณ|ตัวเบา|ผู้ฝึก/;const _qp=qqPick;qqPick=function(){let q=_qp.apply(this,arguments);if(nat()){for(let i=0;i<8&&q&&OLDQ.test(q.t);i++)q=_qp.apply(this,arguments);if(q&&OLDQ.test(q.t))return null}return q}}
+ setInterval(()=>{try{const sg=document.querySelector('#title .seg[data-k="chm"]');if(!sg)return;const on=!!CFG.mw,lb=sg.previousElementSibling,hint=$('hint-chm'),det=document.querySelector('#title details.tadv');if(on&&CFG.chm){CFG.chm=0;sg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v==='0'));try{updateHints()}catch(e){}}[sg,lb,hint,det].forEach(e=>{if(e)e.style.display=on?'none':''})}catch(e){}},300);
+ const _wd=window._nlWD;if(_wd)window._nlWD=function(){return nat()?'m':_wd.apply(this,arguments)};
+ const _re=randomEvent;randomEvent=function(){if(nat())return;return _re.apply(this,arguments)}}
 </script>
 </body>
 </html>
