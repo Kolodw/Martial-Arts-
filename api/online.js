@@ -469,10 +469,10 @@ async function csMove(k, bk, go = true) {
 }
 // ย้ายเองเบื้องหลังตอนมีคน ping (ทีละไม่กี่ก้อน) → ฐานข้อมูลเต็มก็ค่อยๆ ว่างเอง ไม่ต้องรอผู้ดูแลกด
 let CSM_CUR = '0', CSM_T = 0;
-async function autoCs(max = 4) {
-  const bk = r2Bkt(); if (!bk || Date.now() - CSM_T < 10e3) return; CSM_T = Date.now();
+async function autoCs(max = 15) {
+  const bk = r2Bkt(); if (!bk || Date.now() - CSM_T < 3e3) return; CSM_T = Date.now();
   try {
-    const r = await cmd('SCAN', CSM_CUR, 'MATCH', 'cs3:*', 'COUNT', 300); CSM_CUR = String(r[0]);
+    const r = await cmd('SCAN', CSM_CUR, 'MATCH', 'cs3:*', 'COUNT', 1000); CSM_CUR = String(r[0]);
     const ks = (r[1] || []).filter(k => /^cs3:[a-z0-9]{6,24}:[1-5]$/.test(k)).slice(0, max);
     await Promise.all(ks.map(k => csMove(k, bk)));
   } catch (e) {}
@@ -746,7 +746,7 @@ module.exports = async (req, res) => {
       let tg = null; if (okId(id)) { try { const tq = await cmd('LRANGE', 'tagq:' + id, 0, 9); if (tq && tq.length) { await cmd('DEL', 'tagq:' + id); tg = tq.map(jp).filter(Boolean) } } catch (e) {} }
       let ann = null; try { ann = annV ? JSON.parse(annV) : null } catch {}
       ann = await annPoll(ann, id);
-      await Promise.race([Promise.all([autoMig(), autoCs()]), new Promise(r => setTimeout(r, 1500))]);
+      await Promise.race([Promise.all([autoMig(), autoCs()]), new Promise(r => setTimeout(r, 2500))]);
       return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7), ann, ...(tg ? { tg } : {}), ...(cl ? { cl } : {}) });
     }
     if (a === 'who' || a === 'admin' || a === 'bugfix') {
@@ -1184,7 +1184,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       // ปลอดภัย: เขียน R2 → เช็คขนาดตรงกัน → ค่อยลบจาก Valkey · ทำทีละ lim ก้อน (เรียกซ้ำจนกว่า left=0) · ไม่แตะกุญแจ cs2 (ตัวชี้) ซึ่งเกมอ่านต่อจาก R2 เองได้
       if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
       const bk = r2Bkt(); if (!bk) return res.status(400).json({ err: 'no-r2' });
-      const go = String(qOf(req).go || '') === '1', lim = Math.max(1, Math.min(400, parseInt(qOf(req).lim, 10) || 100));
+      const go = String(qOf(req).go || '') === '1', lim = Math.max(1, Math.min(24, parseInt(qOf(req).lim, 10) || 20)); // Workers แพ็กฟรีจำกัดการเรียกต่อคำขอ → ทีละไม่เกิน 24 ก้อน
       const out = { go, lim, scanned: 0, moved: 0, skipped: 0, failed: 0, bytes: 0, left: 0 }; let cur = '0', todo = [];
       try {
         do {
