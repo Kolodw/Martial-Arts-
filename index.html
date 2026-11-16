@@ -27675,6 +27675,26 @@ const _oa=openArts;openArts=function(){const r=_oa.apply(this,arguments);try{if(
  }catch(e){console.error(e)}return r};
 try{const st=document.createElement('style');st.textContent='.agL{display:inline-block;font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:8px;background:rgba(122,154,255,.18);color:#9ab4ff}.agC{display:inline-block;font-size:11px;padding:1px 7px;border-radius:8px;background:rgba(160,160,160,.18);opacity:.85}.agC.on{background:rgba(95,208,138,.2);color:#6fd08a;opacity:1}.agBtn{font-size:12px;margin-left:6px;vertical-align:middle}.agT{border-collapse:collapse;width:100%;font-size:12px;margin-top:6px}.agT th,.agT td{border:1px solid var(--line);padding:3px 5px;text-align:center;white-space:nowrap}';document.head.appendChild(st)}catch(e){}
 })()}catch(e){console.error(e)}
+
+// ===================== v17.38 🎲 สุ่มต่อ: ปุ่มเกิดใหม่กลายเป็น "สุ่มต่อ" เมื่อฟรีหมด · บอกราคา · หน้าสรุปชีวิต · หน้าสนับสนุน =====================
+try{(()=>{
+const off=()=>!!(CFG.daily||CFG.chm==1);
+function rrFix(){try{const b=$('rerollBtn');if(!b||off())return;const row=b.parentNode;let hint=$('rrHint');
+ if(rerolls<=0){if(!b.dataset.rr){b.dataset.rr=1;b.innerHTML='🎲 สุ่มต่อ<span id="rr" style="display:none">0</span>'}b.disabled=false;b.classList.add('rrNext');
+  if(!hint&&row){row.insertAdjacentHTML('beforebegin','<p id="rrHint" class="tag2" style="text-align:center;margin:4px 0">สุ่มฟรีหมดแล้ว · ใช้กรรม 50 สุ่มต่อได้ หรือเริ่มที่ <b>10 บาท / 12 ครั้ง</b></p>')}}
+ else{if(b.dataset.rr){delete b.dataset.rr;b.innerHTML=`🔄 เกิดใหม่ (<span id="rr">${rerolls}</span>)`}b.classList.remove('rrNext');if(hint)hint.remove()}
+ // ได้ของหายากแต่ยังอยากได้ดีกว่า → ปุ่มสุ่มเพิ่มกะพริบเบาๆ
+ const m=$('rrMore');if(m&&roll){const rare=(roll.t&&roll.t.p>0&&roll.t.p<1/50)||(roll.f&&roll.f.p>0&&roll.f.p<1/30);m.classList.toggle('hi',rerolls<=0||!!rare)}if(m){const pr=m.querySelector('.rrPr');if(rerolls<=0&&!pr)m.insertAdjacentHTML('beforeend','<small class="rrPr">กรรม 50 · หรือ 10฿/12 ครั้ง</small>');else if(rerolls>0&&pr)pr.remove()}}catch(e){}}
+{const _dr=doRoll;doRoll=function(first){if(!first&&rerolls<=0&&!off()&&!(typeof ADM!=='undefined'&&ADM.ok&&ADM.rr)){try{rrMenu()}catch(e){}return}const r=_dr.apply(this,arguments);[60,2600,4200].forEach(d=>setTimeout(rrFix,d));return r}}
+{const _gb=goBirth;goBirth=function(){const r=_gb.apply(this,arguments);setTimeout(rrFix,80);return r}}
+// ปุ่ม "สุ่มต่อ" เปิดหน้าเลือกเสมอเมื่อฟรีหมด แม้ปุ่มเดิมยังถูกตั้ง disabled
+new MutationObserver(()=>{const b=$('rerollBtn');if(b&&b.disabled&&rerolls<=0&&!off()&&$('startBtn')&&!$('startBtn').disabled)b.disabled=false}).observe(document.body,{subtree:true,attributes:true,attributeFilter:['disabled']});
+// หน้าสรุปชีวิต
+{const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);const add=()=>{try{const E=$('end');if(E&&E.innerHTML.trim()&&!E.querySelector('.rrEnd')&&!(S&&S.beastMode)){const host=E.querySelector('.box')||E;host.insertAdjacentHTML('beforeend','<p class="tag2 rrEnd" style="text-align:center;margin-top:10px">ชีวิตหน้าอยากเกิดดีกว่านี้? <button class="sysb" onclick="rrMenu()">🎲 สิทธิ์สุ่มเกิด</button><br><small>สิทธิ์ที่ซื้อเก็บไว้ใช้ได้ทุกชีวิต · ใช้กรรมแลกได้ด้วย</small></p>')}}catch(e){}};[50,600,1800].forEach(d=>setTimeout(add,d));return r}}
+// หน้าสนับสนุนผู้พัฒนา
+{const _os=openSupport;openSupport=function(){const r=_os.apply(this,arguments);try{const M=$('modal');if(M&&!M.querySelector('.rrSup')){const P=(window.RR_PKS||{s:[10,12],m:[29,40],l:[59,100]});const h=M.querySelector('h3');(h||M).insertAdjacentHTML(h?'afterend':'beforeend',`<div class="item rrSup"><b>🎲 สนับสนุนแล้วได้สิทธิ์สุ่มเกิดด้วย</b><p class="tag2">เลือกแพ็กแล้วโอนตามยอด สิทธิ์จะเข้าบัญชีหลังผู้พัฒนาตรวจสลิป</p><div class="rrpk">${Object.entries(P).map(([k,v])=>`<button class="opt" onclick="rrBuy('${k}')"><b>${v[1]} ครั้ง</b><small>${v[0]} บาท</small></button>`).join('')}</div></div>`)}}catch(e){}return r}}
+try{const st=document.createElement('style');st.textContent='#rerollBtn.rrNext{border-color:#e0a020;color:#c07a00;font-weight:800;animation:rrP 1.6s ease-in-out infinite}#rrMore small.rrPr{display:block;font-size:11px;opacity:.75;font-weight:400}';document.head.appendChild(st)}catch(e){}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
