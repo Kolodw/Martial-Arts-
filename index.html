@@ -27322,6 +27322,25 @@ jQuit=function(){const two=S.job2&&JOB[S.job2.t];modal(`<h3>ลาออกจ�
 
 // ---- v17.31 ประกาศแอดมินต้องขึ้นเกาะเสมอ: ไม่ถูกป้ายค้างอื่น (เช่น แจ้งอัปเดต/ตอบแชท) ดักไว้ในคิว ----
 {const _isl=island;island=function(n){try{if(n&&n.key==='ann'&&ISL.cur&&ISL.cur.key!=='ann'&&ISL.cur.sticky&&!ISL.cur.live){const c=ISL.cur;clearTimeout(ISL.t);ISL.q.unshift(c);ISL.cur=null}}catch(e){}return _isl.apply(this,arguments)}}
+
+// ---- v17.31 กระเป๋า: ใช้ของทีละหลายชิ้น (×1 / ×10 / ×100 / ทั้งหมด / พิมพ์เอง) ----
+(function(){try{
+window._bq=+LS.get('murim_bagq',1)||1;
+const _one=bagUseManual;
+bagUseManual=function(id,q){q=q==null?window._bq:q;if(!S||!S.alive||!S.bag||!S.bag.it[id])return;const x=BAGX[id];if(!x||!x.use)return;const have=S.bag.it[id];const want=q<=0?have:Math.min(q,have);
+ if(want<=1)return _one(id);
+ let n=0,last=null,first=true;for(let i=0;i<want&&S.bag&&S.bag.it[id]&&S.alive;i++){const r=x.use();if(r==null){if(first){toast('ใช้ไม่ได้ตอนนี้ — '+(id==='hp'?'พลังชีวิตเต็มอยู่แล้ว':id==='cure'?'ไม่ได้ป่วย':'เงื่อนไขยังไม่ครบ'));return}break}first=false;bagUse(id);n++;last=r}
+ if(n){log(`🎒 ใช้ ${rarName(id)} ×${n} — ${last}${n>1?' (รวมทุกชิ้น)':''}`,bRar(id)>=4?'myth':bRar(id)>=2?'epic':'good');sfx('good');if(n<want)toast('ใช้ได้ '+n+' ชิ้น แล้วหยุด (เงื่อนไขเต็ม/ครบแล้ว)')}
+ render();openBag()};
+window.bagQSet=function(q){window._bq=q;LS.set('murim_bagq',q);openBag()};
+window.bagQAsk=function(){const v=prompt('ใช้ทีละกี่ชิ้น? (ตัวเลข)',String(window._bq>0?window._bq:10));if(v==null)return;const n=Math.floor(+String(v).replace(/[^0-9]/g,''));if(n>=1)bagQSet(n)};
+const _ob=openBag;openBag=function(){const r=_ob.apply(this,arguments);try{const m=$('modal');if(!m)return r;const q=window._bq,pre=[1,10,100,0];const first=m.querySelector('.bagit');
+ const bar=document.createElement('div');bar.className='bagQ';bar.innerHTML='<span class="tag2" style="margin:0">ใช้ทีละ</span>'+pre.map(v=>`<button class="${q===v?'on':''}" onclick="bagQSet(${v})">${v===0?'ทั้งหมด':'×'+v}</button>`).join('')+`<button class="${pre.includes(q)?'':'on'}" onclick="bagQAsk()">${pre.includes(q)?'พิมพ์เอง':'×'+q}</button>`;
+ if(first)first.parentNode.insertBefore(bar,first);
+ m.querySelectorAll('.bagit').forEach(row=>{const b=row.querySelector('button[onclick^="bagUseManual"]');if(!b)return;const id=(b.getAttribute('onclick').match(/'([^']+)'/)||[])[1];const have=S.bag.it[id]||0;const w=q<=0?have:Math.min(q,have);if(w>1)b.textContent='ใช้ ×'+w});
+}catch(e){console.error(e)}return r};
+const st=document.createElement('style');st.textContent='.bagQ{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin:4px 0 8px;position:sticky;top:0;z-index:3;background:var(--bg,#fff);padding:4px 0}.bagQ button{padding:5px 11px;border-radius:9px;border:2px solid #8a6d3b;background:#fff7e0;color:#4a3410;font:inherit;font-size:13px;font-weight:700}.bagQ button.on{background:#e9a824;color:#2a1c00}';document.head.appendChild(st);
+}catch(e){console.error(e)}})();
 </script>
 </body>
 </html>
