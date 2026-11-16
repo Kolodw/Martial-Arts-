@@ -7778,7 +7778,7 @@ tqDo=function(i){const q=S.tq[i];if(!q||!q.v2)return;const V=tqV(q);
 
 // ==== เศรษฐกิจ v2: ร้านสมบัติร้อยกว่าอย่างต่อโลก · โรงประมูล (โดนหมั่นไส้/ตามล่าได้) · คลังสมบัติ · ลดเงินเฟ้อ ====
 function srng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-const ECO_W=()=>S&&S.xt?'g':S&&S.xian?'x':'m';
+const ECO_W=()=>S&&(S.xt||(S.xian&&S.beastMode&&S.beastMode.human&&(S.beastMode.st|0)>=4))?'g':S&&S.xian?'x':'m';
 const ECO_P0={m:800,x:40000,g:3000000},ECO_RM=[1,3,9,25,70,200,600,2000];
 const ECO_RICH={m:1e6,x:5e7,g:5e9},ECO_INV={m:5e4,x:2e6,g:1e8};
 const ECO_CT=[['w','⚔️ อาวุธ',24],['a','🛡️ เกราะ',20],['p','💊 โอสถ',30],['k','📕 คัมภีร์',16],['c','🧿 เครื่องราง',20],['t','📜 ยันต์ศึก',16],['b','🏯 สิ่งก่อสร้าง',12],['x','❔ ของลึกลับ',12]];
@@ -28091,6 +28091,12 @@ MW_PUBLIC=true;mwAllowed=function(){return true};
  {const _ch=choice;choice=function(title,text,opts){if(/รอยแยกสู่อนาคต/.test(String(title||'')))title=String(title).replace('รอยแยก','รอยแยก\u200b');return _ch.call(this,title,text,opts)};Object.keys(_ch).forEach(k=>{try{choice[k]=_ch[k]}catch(e){}})}
  const clean=()=>{try{const m=$('modal');if(!m)return;m.querySelectorAll('.mwadmB,.tbB,.mwHeirB').forEach(b=>{if(!/mwInfo/.test(b.getAttribute('onclick')||''))b.remove()});m.querySelectorAll('.mgrid .opt').forEach(b=>{if(/mwNewLost|mwPickPast|mwAsk|mwHeirGo|mwNewAncient|openBury/.test(b.getAttribute('onclick')||''))b.remove()});m.querySelectorAll('p.tag2').forEach(p=>{if(/หรือระหว่างเล่น|หลงยุค/.test(p.textContent)&&!p.closest('.mgrid'))p.remove()});const e=$('end');if(e)e.querySelectorAll('.mwHeirB').forEach(b=>b.remove())}catch(e){}};
  setInterval(clean,400)}
+
+// ============ v18.4.1 · แก้ตัวนับปีค้าง (ทัณฑ์ฟ้า/แปลงกาย) ตอนสืบทอด — ค่าเก็บเป็นอายุสัมบูรณ์ ชาติใหม่อายุเริ่มใหม่เลยค้างหลายปี ============
+{const fixB=()=>{try{const m=S&&S.beastMode;if(!m)return;if(m.pstCd!=null&&m.pstCd>S.age+15)m.pstCd=S.age+R(0,8);if(m.trY!=null&&m.trY>S.age)m.trY=Math.min(m.trY,S.age-10);if(S.est&&S.est.trY!=null&&S.est.trY>S.age)S.est.trY=-99}catch(e){}};
+ const _py=passYear;passYear=function(){fixB();return _py.apply(this,arguments)};
+ const _bt=bTransform;bTransform=function(){fixB();return _bt.apply(this,arguments)};
+ const _br=bRevert;bRevert=function(){fixB();return _br.apply(this,arguments)}}
 </script>
 </body>
 </html>
