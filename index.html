@@ -19638,7 +19638,7 @@ function brdRestyle(){try{const m=$('modal');if(!m||m.dataset.k!=='online'||m.qu
  S._kSeen=S.kids||0;S._kLen=S.children.length;return r}catch(e){console.error(e);return _sfK.apply(this,arguments)}}}
 {const _rnK=render;render=function(){try{if(S&&S._kSeen==null){S._kSeen=S.kids||0;S._kLen=(S.children||[]).length}}catch(e){}return _rnK.apply(this,arguments)}}
 // ===================== 🌐 หน้าออนไลน์/ทำเนียบ — UI กระชับ =====================
-const ONL_NAV={chat:['💬','แชท'],live:['👁','ดูสด'],board:['🏆','ทำเนียบ'],arena:['🏟️','ลาน'],me:['⚙️','']};
+const ONL_NAV={chat:['💬','แชท'],live:['👁','ดูสด'],board:['🏆','ทำเนียบ'],arena:['🏟️','ลาน'],rp:['🎭','เล่นบท'],me:['⚙️','']};
 const ONL_PER={'รายวัน':'วัน','รายสัปดาห์':'สัปดาห์','รายเดือน':'เดือน','ตลอดกาล':'ตลอดกาล','สัปดาห์นี้':'สัปดาห์'};
 function onlReset(p){const n=Date.now(),t=new Date(n+7*3600e3);let e;
  if(p==='d')e=Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate()+1);
@@ -28071,9 +28071,9 @@ async function rpPoll(){if(!$('rpBox')){clearInterval(chatT);return}try{const j=
 window.rpScene=k=>{rpSc=k;LS.set('murim_rpsc',k);openOnline('rp')};
 window.rpSend=async k=>{const i=$('rpIn');if(!i||rpBusy)return;const x=i.value.trim();if(!x)return;rpBusy=1;try{const j=await api('rpsay',{sc:rpSc,n:pname(),ti:myTitle(),x,k});i.value='';rpM.unshift(j.m);rpDraw();const b=$('rpBox');if(b)b.scrollTop=b.scrollHeight}catch(e){toast({rate:'ช้าหน่อย — รอสักครู่',dup:'ข้อความซ้ำ',muted:'คุณถูกปิดปากอยู่',login:'ต้องล็อกอิน Google ก่อน',off:'ห้องนี้ปิดชั่วคราว',empty:'พิมพ์ข้อความก่อน'}[e.message]||'ส่งไม่ได้')}rpBusy=0};
 const _oo=openOnline;openOnline=async function(tab){
- if(tab!=='rp'){const r=await _oo.apply(this,arguments);try{const t=$('modal').querySelector('.tabs');if(t&&!t.querySelector('.rpt')){const b=document.createElement('button');b.className='tabb rpt';b.textContent='🎭 เล่นบท';b.onclick=()=>openOnline('rp');t.insertBefore(b,t.children[1]||null)}}catch(e){}return r}
+ if(tab!=='rp'){const r=await _oo.apply(this,arguments);try{const t=$('modal').querySelector('.tabs');if(t&&!t.querySelector('.rpt')){const b=document.createElement('button');b.className='tabb rpt';b.setAttribute('onclick',"openOnline('rp')");b.innerHTML=t.classList.contains('onNav')?'<i>🎭</i><span>เล่นบท</span>':'🎭 เล่นบท';t.insertBefore(b,t.children[1]||null)}}catch(e){}return r}
  await _oo('me');if(!onlineOK)return;const m=$('modal'),t=m.querySelector('.tabs');if(!t)return;
- if(!t.querySelector('.rpt')){const b=document.createElement('button');b.className='tabb rpt';b.textContent='🎭 เล่นบท';t.insertBefore(b,t.children[1]||null)}
+ if(!t.querySelector('.rpt')){const b=document.createElement('button');b.className='tabb rpt';b.setAttribute('onclick',"openOnline('rp')");b.innerHTML=t.classList.contains('onNav')?'<i>🎭</i><span>เล่นบท</span>':'🎭 เล่นบท';t.insertBefore(b,t.children[1]||null)}
  [...t.children].forEach(b=>b.classList.toggle('on',b.classList.contains('rpt')));
  while(t.nextSibling)t.nextSibling.remove();
  const w=document.createElement('div');w.innerHTML='<div class="tag2">กำลังโหลด…</div>';t.after(w);
