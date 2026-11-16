@@ -28109,6 +28109,27 @@ MW_PUBLIC=true;mwAllowed=function(){return true};
  setInterval(()=>{try{const sg=document.querySelector('#title .seg[data-k="chm"]');if(!sg)return;const on=!!CFG.mw,lb=sg.previousElementSibling,hint=$('hint-chm'),det=document.querySelector('#title details.tadv');if(on&&CFG.chm){CFG.chm=0;sg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v==='0'));try{updateHints()}catch(e){}}[sg,lb,hint,det].forEach(e=>{if(e)e.style.display=on?'none':''})}catch(e){}},300);
  const _wd=window._nlWD;if(_wd)window._nlWD=function(){return nat()?'m':_wd.apply(this,arguments)};
  const _re=randomEvent;randomEvent=function(){if(nat())return;return _re.apply(this,arguments)}}
+
+// ============ v18.6 · กดค้างปุ่มก้าวข้าม/ขึ้นโลกใหม่ — อธิบายว่ากดแล้วได้อะไร ============
+{QM_SEL+=',#ascPill,#ascLeaveP';
+ const spec=btn=>()=>{if(!S)return null;
+  if(btn.id==='ascLeaveP')return{ic:'🌌',t:'ก้าวข้ามสามภพ',sub:'อยู่ต่อแล้ว · กดจบเมื่อไหร่ก็ได้',rows:[
+   {info:'<b>ได้อะไร:</b> ปิดตำนานชีวิตนี้อย่างสมบูรณ์ ตอนจบสูงสุดและป้ายถูกบันทึกไว้แล้วตั้งแต่ตอนบรรลุ'},
+   {info:'<b>เสียอะไร:</b> ชีวิตนี้จบทันที กลับมาเล่นต่อไม่ได้ · คะแนนทำเนียบล็อกไว้ตามตอนบรรลุ ไม่เพิ่มอีก'},
+   {sep:1},{ic:'🌌',t:'ก้าวข้ามเลย',s:'จะมีให้ยืนยันอีกครั้ง',f:()=>ascLeave()},
+   {info:'ยังไม่อยากจบ? ปล่อยไว้ได้เลย เดินต่อถึงวัฏจักรกัลป์ ชิงกฎ และดูแลลูกหลาน'}]};
+  const xt=!!S.xt,xi=!!S.xian;
+  if(xt)return{ic:'⚡',t:'ก้าวข้ามสามภพ',sub:'ฝ่าทัณฑ์สุดท้ายของโลกเทพ',rows:[
+   {info:'<b>ได้อะไร:</b> ฝ่าทัณฑ์ 3 ระลอก ถ้าผ่านจะได้ตอนจบสูงสุด (ความสำเร็จ บันทึก ป้าย) แล้วเลือกได้ว่าจะ <b>จากไป</b> หรือ <b>อยู่ต่อ</b> ไม่ตายด้วยวัยชรา'},
+   {info:'<b>เสี่ยงอะไร:</b> ถ้าไม่ผ่านระลอกใดระลอกหนึ่ง อาจตายทันที'},
+   {sep:1},{ic:'⚡',t:'ฝ่าทัณฑ์สวรรค์',s:'จะมีให้ยืนยันอีกครั้ง',f:()=>ascAsk()},
+   {info:'ปุ่มไม่หายไป ยังไม่พร้อมกดทีหลังได้'}]};
+  return{ic:'⚡',t:xi?'ขึ้นสู่โลกเทพ':'เหาะสู่โลกเซียน',sub:'ฝ่าทัณฑ์สวรรค์ 3 ระลอก',rows:[
+   {info:xi?'<b>ได้อะไร:</b> ไปเล่นต่อในโลกเทพ ชีวิตยืนยาวกว่าเดิมมาก ศัตรูและกฎของโลกจะเปลี่ยนไป':'<b>ได้อะไร:</b> ไปเล่นต่อในโลกเซียน อายุขัยยาวขึ้น มีเส้นทางใหม่ให้ฝึก'},
+   {info:'<b>เสียอะไร:</b> พลังบางส่วนลดลงตอนข้ามโลก · ถ้าฝ่าทัณฑ์พลาด'+(xi?'เสียพลังบางส่วน':'อาจตาย')},
+   {sep:1},{ic:'⚡',t:'ฝ่าทัณฑ์สวรรค์',s:'จะมีให้ยืนยันอีกครั้ง',f:()=>ascAsk()},
+   {info:'ปุ่มไม่หายไป ยังไม่พร้อมกดทีหลังได้'}]}};
+ const _sf=qmSpecFor;qmSpecFor=function(el){if(el&&el.matches&&el.matches('#ascPill,#ascLeaveP'))return spec(el);return _sf.apply(this,arguments)}}
 </script>
 </body>
 </html>
