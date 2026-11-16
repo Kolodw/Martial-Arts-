@@ -1700,6 +1700,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const [mu, ok, chx, rkh] = await pipe([['GET', 'mute:' + id], isA ? ['SET', 'rl:' + id, 1, 'NX', 'PX', 800] : ['SET', 'rl:' + id, 1, 'NX', 'PX', cfg0.chatcd], ['SISMEMBER', 'cheaters', id], ['HGETALL', 'rkttl:' + id]]);
       if (mu) return res.status(429).json({ err: 'muted' });
       if (!ok) return res.status(429).json({ err: 'rate', cd: isA ? 800 : cfg0.chatcd });
+      if (!isA && b.k !== 'share') { let hh = 0; for (let q = 0; q < x.length; q++) hh = (hh * 31 + x.charCodeAt(q)) | 0; const dk = await cmd('SET', 'dup:' + id + ':' + (hh >>> 0).toString(36), 1, 'NX', 'PX', 45000); if (!dk) return res.status(429).json({ err: 'dup' }) }
       const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), ...((b.tp || +chx) ? { tt: '', tr: 0 } : rkOk(b.tt, rkh) || (isAdmKey(b.key) && RKT_ALL.has(String(b.tt || '')) ? { tt: String(b.tt), tr: RKT_TR[RKT_ALL.get(String(b.tt)).p] || 7 } : null) || ttlOk(b.tt, b.tr)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
       if (isA) m.ad = 1;
       if (!b.nsp) { try { if (+(await cmd('SISMEMBER', 'supok', id))) m.sp = 1 } catch {} }
