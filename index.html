@@ -5611,7 +5611,7 @@ async function specFull(k){specTarget=null;clearTimeout(specT);const back=`<butt
 {const _os2=openSpectate;openSpectate=async function(k,tab){const r=await _os2.apply(this,arguments);try{if((tab||openSpectate._tab)==='feed'&&$('modal').dataset.k==='spec'&&!$('modal').querySelector('.sfbtn')){const tb=[...$('modal').querySelectorAll('.tabs')].pop();const h=`<button class="pbtn sfbtn" style="width:100%;margin:6px 0" onclick="specFull('${k}')">📜 โหลดบันทึกทั้งหมดตั้งแต่เกิด</button>`;if(tb)tb.insertAdjacentHTML('afterend',h);else $('modal').insertAdjacentHTML('beforeend',h)}}catch(e){}return r}}
 (function(){const st=document.createElement('style');st.textContent='.sfbox{max-height:60vh;overflow-y:auto;border:2px solid var(--line,#333);border-radius:8px;padding:8px;font-size:13px;line-height:1.5}.sfbox .yr{margin:8px 0 4px;text-align:center;opacity:.8}.sfbox .sfl{padding:3px 0;border-bottom:1px dashed rgba(128,128,128,.25)}';document.head.appendChild(st)})();
 
-{const _sg=saveGame;saveGame=function(){if(!S)return _sg.apply(this,arguments);const f=S.flog;delete S.flog;try{return _sg.apply(this,arguments)}finally{S.flog=f;try{if(f&&S.slot)localStorage.setItem('murim_flog_'+S.slot,JSON.stringify(f))}catch(e){}}}}
+{const _sg=saveGame;saveGame=function(){if(!S)return _sg.apply(this,arguments);const f=S.flog;delete S.flog;try{return _sg.apply(this,arguments)}finally{S.flog=f;try{if(f&&S.slot)localStorage.setItem('murim_flog_'+S.slot,JSON.stringify(f.length>800?f.slice(-800):f))}catch(e){}}}}
 {const _lg=loadGame;loadGame=function(n){const r=_lg.apply(this,arguments);try{if(S){const f=LS.get('murim_flog_'+(n||1),null);if(f&&!S.flog)S.flog=f}}catch(e){}return r}}
 {const _ds=delSlot;delSlot=function(n){try{localStorage.removeItem('murim_flog_'+n)}catch(e){}return _ds.apply(this,arguments)}}
 
@@ -27308,6 +27308,13 @@ const _apiA=api;api=async function(a,body){try{if(a==='say'&&body&&typeof body==
  const j=await _apiA.apply(this,arguments);
  try{if(a==='say'&&j&&j.ann){LS.del('murim_annX');annShow(j.ann);toast('📢 ส่งประกาศถึงทุกคนแล้ว'+(j.push&&j.push.sent?` · แจ้งเตือนเด้ง ${j.push.sent} เครื่อง`:''))}else if(a==='say'&&j&&j.push&&body&&body.rto){toast(j.push.sent?`📨 แจ้งเตือนเด้งที่ ${j.push.sent} เครื่อง`:'ส่งแล้ว — เขายังไม่เปิดแจ้งเตือน')}}catch(e){}return j};
 })()}catch(e){console.error(e)}
+
+// ---- v17.31 แถบ "เกมยังไม่ได้บันทึก": เล็กลง อยู่ล่างจอ ไม่บังหน้าต่าง ปิดได้ ----
+(function(){try{
+const st=document.createElement('style');st.textContent='#saveFailBar{top:auto!important;bottom:0!important;z-index:800!important;font-size:12px!important;line-height:1.35!important;padding:5px 34px 5px 10px!important;text-align:left!important;max-height:38vh;overflow:auto;pointer-events:auto}#saveFailBar .sfX{position:absolute;right:4px;top:3px;width:28px;height:28px;border:0;border-radius:8px;background:rgba(255,255,255,.2);color:#fff;font-size:16px;font-weight:700}#saveFailBar .sfC{padding:3px 10px!important}';document.head.appendChild(st);
+window._sfHide=0;
+const _sfb2=saveFailBar;saveFailBar=function(on){if(on&&Date.now()<window._sfHide)return;_sfb2(on);try{const e=document.getElementById('saveFailBar');if(on&&e&&!e.querySelector('.sfX')){const b=document.createElement('button');b.className='sfX';b.textContent='✕';b.onclick=()=>{window._sfHide=Date.now()+600000;e.remove()};e.appendChild(b)}}catch(x){}};
+}catch(e){console.error(e)}})();
 </script>
 </body>
 </html>
