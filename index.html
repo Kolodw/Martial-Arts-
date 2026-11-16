@@ -28061,6 +28061,27 @@ try{(()=>{const _of=openFuse;openFuse=function(){const r=_of.apply(this,argument
  const all=(S.arts||[]).filter(Boolean),ok=all.filter(a=>fuseCan(a)).length;
  m.querySelectorAll('.fuit[disabled] .h').forEach(h=>{if(!h.querySelector('.fuLk'))h.insertAdjacentHTML('beforeend','<span class="tag2 fuLk">🔒 ยังไม่ถึงระดับกลาง</span>')});
  const p=m.querySelector('p.tag2');if(p)p.insertAdjacentHTML('afterend',`<div class="item fuHint" style="border-left:4px solid ${ok>=2?'#3f8f5a':'#e0503c'}">${ok>=2?`🔮 รวมได้ตอนนี้ <b>${ok}</b> วิชา — แตะเลือก 2–3 วิชา`:`🔒 ยังรวมไม่ได้ — ต้องมีวิชาที่ฝึกถึง<b>ระดับกลาง</b>ขึ้นไปอย่างน้อย 2 วิชา (ตอนนี้มี ${ok}/${all.length}) · ไปฝึกวิชาที่มีให้ได้ระดับก่อน แล้วกลับมารวม`}</div>`)}catch(e){console.error(e)}return r}})()}catch(e){console.error(e)}
+
+// ============ v18.3 · ห้องเล่นบท (เฉพาะคนล็อกอิน Google) ============
+{const SC=[['inn','🏮','โรงเตี๊ยม'],['mkt','🛒','ตลาด'],['gate','⛩️','หน้าสำนัก'],['sky','⛰️','ยอดเขา']];let rpSc=LS.get('murim_rpsc','inn'),rpM=[],rpOk=0,rpOff=0,rpLast=0,rpBusy=0;
+const st=document.createElement('style');st.textContent='.rpsc{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.rpsc button{border:2px solid var(--line);background:var(--card);color:var(--ink);padding:5px 9px;font:inherit;font-size:13px;box-shadow:2px 2px 0 var(--line);cursor:pointer}.rpsc button.on{background:var(--pink);color:#fff}.rpbox{height:34vh;min-height:180px;overflow:auto;border:2px solid var(--line);background:var(--card);padding:8px}.rpm{margin:0 0 9px;line-height:1.5;font-size:14px;word-break:break-word}.rpm .rn{font-weight:700}.rpm .rt{color:var(--mut);font-size:12px}.rpm .ra{font-style:italic;color:var(--mut)}.rpm.act{padding-left:10px;border-left:3px solid var(--pink)}.rpm .rep{opacity:.5;border:0;background:none;cursor:pointer}.rpin{display:flex;gap:6px;margin-top:8px}.rpin input{flex:1;min-width:0}.rplk{padding:18px 10px;text-align:center;border:2px dashed var(--line);margin-top:10px}';document.head.appendChild(st);
+const fx=t=>esc(t).replace(/\*([^*\n]{1,80})\*/g,'<span class="ra">*$1*</span>');
+function rpDraw(){const b=$('rpBox');if(!b)return;const near=b.scrollHeight-b.scrollTop-b.clientHeight<60;b.innerHTML=[...rpM].reverse().map(m=>`<div class="rpm ${m.a?'act':''}"><span class="rt">${new Date(m.t).toTimeString().slice(0,5)}</span> <span class="rn">${esc(m.n)}</span>${m.ti?` <span class="rt">· ${esc(m.ti)}</span>`:''}${m.vq?` <span class="rt">「${esc(m.vq)}」</span>`:''} ${m.a?`<span class="ra">*${esc(m.x)}*</span>`:'— '+fx(m.x)} <button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div>`).join('')||'<div class="tag2">ยังไม่มีใครในฉากนี้ · เริ่มบทแรกเลย</div>';if(near)b.scrollTop=b.scrollHeight}
+async function rpPoll(){if(!$('rpBox')){clearInterval(chatT);return}try{const j=await api('rpget&sc='+rpSc);if(rpSc!==j.sc)return;rpM=j.m||[];rpOk=j.ok;rpOff=j.off;rpDraw()}catch(e){}}
+window.rpScene=k=>{rpSc=k;LS.set('murim_rpsc',k);openOnline('rp')};
+window.rpSend=async k=>{const i=$('rpIn');if(!i||rpBusy)return;const x=i.value.trim();if(!x)return;rpBusy=1;try{const j=await api('rpsay',{sc:rpSc,n:pname(),ti:myTitle(),x,k});i.value='';rpM.unshift(j.m);rpDraw();const b=$('rpBox');if(b)b.scrollTop=b.scrollHeight}catch(e){toast({rate:'ช้าหน่อย — รอสักครู่',dup:'ข้อความซ้ำ',muted:'คุณถูกปิดปากอยู่',login:'ต้องล็อกอิน Google ก่อน',off:'ห้องนี้ปิดชั่วคราว',empty:'พิมพ์ข้อความก่อน'}[e.message]||'ส่งไม่ได้')}rpBusy=0};
+const _oo=openOnline;openOnline=async function(tab){
+ if(tab!=='rp'){const r=await _oo.apply(this,arguments);try{const t=$('modal').querySelector('.tabs');if(t&&!t.querySelector('.rpt')){const b=document.createElement('button');b.className='tabb rpt';b.textContent='🎭 เล่นบท';b.onclick=()=>openOnline('rp');t.insertBefore(b,t.children[1]||null)}}catch(e){}return r}
+ await _oo('me');if(!onlineOK)return;const m=$('modal'),t=m.querySelector('.tabs');if(!t)return;
+ if(!t.querySelector('.rpt')){const b=document.createElement('button');b.className='tabb rpt';b.textContent='🎭 เล่นบท';t.insertBefore(b,t.children[1]||null)}
+ [...t.children].forEach(b=>b.classList.toggle('on',b.classList.contains('rpt')));
+ while(t.nextSibling)t.nextSibling.remove();
+ const w=document.createElement('div');w.innerHTML='<div class="tag2">กำลังโหลด…</div>';t.after(w);
+ let g=null;try{const p=await profStat();g=p&&p.g}catch(e){}
+ const sc=`<div class="rpsc">${SC.map(c=>`<button class="${c[0]===rpSc?'on':''}" onclick="rpScene('${c[0]}')">${c[1]} ${c[2]}</button>`).join('')}</div>`;
+ const rules='<p class="tag2">สวมบทตัวละครของคุณ · พูดปกติ หรือใส่ *ดอกจัน* เพื่อบรรยายท่าทาง เช่น *ชักกระบี่* · ห้ามพูดเรื่องนอกเกม/หยาบคาย · ข้อความอยู่ 3 วัน</p>';
+ w.innerHTML=`<p class="tag2" style="margin:8px 0 0">ใช้ชื่อ <b>${esc(pname())}</b>${S?' · '+esc(myTitle()):''}</p>${sc}<div id="rpBox" class="rpbox"><div class="tag2">กำลังโหลด…</div></div>`+(g?`<div class="rpin"><input id="rpIn" maxlength="160" placeholder="พูดในบทบาท…" onkeydown="if(event.key==='Enter')rpSend('say')"><button class="pbtn" onclick="rpSend('say')">💬</button><button class="pbtn" onclick="rpSend('act')" title="บรรยายท่าทาง">🎬</button></div>`:`<div class="rplk">🔒 ห้องเล่นบทสำหรับผู้ที่ล็อกอิน Google เท่านั้น<br><button class="pbtn" style="margin-top:8px" onclick="openProfile()">ล็อกอินที่หน้าโปรไฟล์</button></div>`)+rules;
+ await rpPoll();clearInterval(chatT);chatT=setInterval(rpPoll,5000);if(rpOff&&$('rpBox'))$('rpBox').insertAdjacentHTML('afterbegin','<div class="tag2">🚧 ห้องเล่นบทปิดชั่วคราว</div>')}}
 </script>
 </body>
 </html>
