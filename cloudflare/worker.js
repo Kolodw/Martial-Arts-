@@ -14,6 +14,7 @@ async function handler() {
   if (H) return H;
   // ค่าลับจาก Cloudflare → process.env ก่อนโหลด online.js (online.js อ่านค่าตอนโหลด)
   for (const [k, v] of Object.entries(ENV)) if (typeof v === 'string') process.env[k] = v;
+  process.env.LOW_CPU = process.env.LOW_CPU || '1'; // ลด CPU ตอนบีบอัดเซฟ (Workers แพ็กฟรีจำกัด 10ms/คำขอ)
   try { if (ENV.SAVES && typeof ENV.SAVES.put === 'function') globalThis.SAVES_R2 = ENV.SAVES } catch (e) {} // ที่เก็บเซฟคลาวด์ R2 (ถ้าผูกไว้ใน wrangler.toml)
   const m = await import('../api/online.js');
   H = m.default || m;
