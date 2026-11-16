@@ -27341,6 +27341,16 @@ const _ob=openBag;openBag=function(){const r=_ob.apply(this,arguments);try{const
 }catch(e){console.error(e)}return r};
 const st=document.createElement('style');st.textContent='.bagQ{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin:4px 0 8px;position:sticky;top:0;z-index:3;background:var(--bg,#fff);padding:4px 0}.bagQ button{padding:5px 11px;border-radius:9px;border:2px solid #8a6d3b;background:#fff7e0;color:#4a3410;font:inherit;font-size:13px;font-weight:700}.bagQ button.on{background:#e9a824;color:#2a1c00}';document.head.appendChild(st);
 }catch(e){console.error(e)}})();
+
+// ===================== v17.31 ปุ่มเริ่มเล่นชัดเจน: คนเล่นใหม่หาปุ่มเริ่มไม่เจอ =====================
+{const css=document.createElement('style');css.textContent='#tStartIn{display:none;width:100%;margin:14px 0 6px;padding:16px 10px;font:inherit;font-size:22px;font-weight:800;color:#1d1405;background:linear-gradient(180deg,#ffe29a,#e8b54a 55%,#c98d22);border:3px solid #7a5410;border-radius:18px;box-shadow:0 4px 0 #7a5410,0 8px 18px rgba(0,0,0,.35);animation:tsPulse 1.6s ease-in-out infinite}#tStartIn small{display:block;font-size:12px;font-weight:600;opacity:.75;margin-top:2px}#tStartIn:active{transform:translateY(3px);box-shadow:0 1px 0 #7a5410}@keyframes tsPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}#title.redo #tStartIn{display:block}@media (prefers-reduced-motion:reduce){#tStartIn{animation:none}}';document.head.appendChild(css);
+ const fix=()=>{try{const T=document.getElementById('title');if(!T||!T.classList.contains('on'))return;const box=T.querySelector('.box.opts');if(!box)return;
+  const has=(typeof lastSave==='function')&&lastSave();let b=document.getElementById('tStartIn');
+  if(!b){b=document.createElement('button');b.id='tStartIn';b.onclick=function(){goBirthPick()};box.insertAdjacentElement('afterend',b)}
+  b.innerHTML=has?'🎲 เกิดใหม่<small>เริ่มชีวิตใหม่ตามตัวเลือกด้านบน</small>':'▶ เริ่มเล่น<small>กดตรงนี้เพื่อเกิดเป็นจอมยุทธ์</small>';
+  const g=document.getElementById('tGo');if(g&&!has)g.innerHTML='<i>▶</i> เริ่มเล่น'}catch(e){}};
+ const _s=show;show=function(id){const r=_s.apply(this,arguments);if(id==='title'){setTimeout(fix,80);setTimeout(fix,600)}return r};
+ setTimeout(fix,300);setTimeout(fix,1500)}
 </script>
 </body>
 </html>
