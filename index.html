@@ -28017,6 +28017,39 @@ try{const st=document.createElement('style');st.textContent=`
 .vx-conf{position:absolute;inset:0;pointer-events:none}.vx-conf i{position:absolute;top:-10px;left:var(--x);width:7px;height:12px;background:var(--c);transform:rotate(var(--r));animation:vxFall 2.4s var(--d) 1 both ease-in;opacity:0}@keyframes vxFall{0%{opacity:1;transform:translateY(0) rotate(var(--r))}100%{opacity:0;transform:translateY(340px) rotate(calc(var(--r) + 300deg))}}
 @media (prefers-reduced-motion:reduce){.vx-stamp,.vx-rays,.vx-conf i,.vx-tl li.now i,.vtab.mine::before,.vx-card.vk3 .vseal.vs3{animation:none!important}.vx-conf{display:none}}`;document.head.appendChild(st)}catch(e){}
 })()}catch(e){console.error(e)}
+
+// ===================== v18.2 📜 คัมภีร์ระดับพลัง: ชั้นเหนือขีดจำกัดแตกเป็น 9 ดาว · แท็บวัฏจักรกัลป์ · ทางของสัตว์อสูรหลังปฐมสัตว์เทพ · ป้ายขั้นถัดไป =====================
+try{(()=>{
+const _or=openRealm;
+const card=(ic,nm,sub,d,ab,q,c1,c2,st)=>`<div class="rlmc ${st==='cur'?'cur':''} ${st==='lk'?'lk':''}" style="--c1:${c1};--c2:${c2}"><div class="rlmch"><span class="rlmci">${st==='lk'?'🔒':ic}</span><div><b>${st==='lk'?'???':esc(nm)}</b>${st==='cur'?' <span class="rlmnow">ตอนนี้</span>':st==='done'?' ✅':''}<div class="tag2">${st==='lk'?'ยังไม่มีใครเล่าให้ฟัง…':sub}</div></div></div>${st==='lk'?'':`<div class="rlmcd">${d}</div>${ab&&ab.length?`<div class="rlmca">${ab.map(a=>`<span>✦ ${a}</span>`).join('')}</div>`:''}${q?`<div class="rlmcq">“${q}”</div>`:''}`}</div>`;
+// ----- วัฏจักรกัลป์ -----
+const KD=['ปฐมกัลป์ — จักรวาลแรกที่คุณเกิดมาในนั้น','กัลป์ที่สอง — โลกที่ถูกสร้างใหม่จากเถ้าของกัลป์ก่อน','กัลป์ที่สาม — ดวงดาวเก่าเหลือแต่ตำนาน','กัลป์ที่สี่ — มีแต่ไม่กี่ผู้ที่จำจักรวาลก่อนได้','กัลป์ที่ห้า — กาลเวลาเริ่มฟังคำสั่งของคุณ','กัลป์ที่หก — กงล้อกาลหมุนตามมือคุณ','กัลป์ที่เจ็ด — นิรันดร์ไม่ใช่คำเปรียบเทียบอีกต่อไป','กัลป์ที่แปด — ขอบสุดท้ายก่อนเหนือกาลเวลา','กัลป์ที่เก้า — กัลป์สุดท้ายที่ใครเคยไปถึง'];
+function kalBody(){const n=(S&&S.kalpa&&S.kalpa.n)|0,on=!!(S&&(S.kalpa||S.xt));
+ const head=`<div class="rlmel"><b>♾️ วัฏจักรกัลป์</b><br><span class="tag2">อยู่ในโลกเทพจนอายุครบล้านปี จักรวาลจะดับ — เลือก 🌌 ก้าวข้ามกัลป์ (ฝ่าภัยสิ้นกัลป์ 3 ระลอก ผ่าน 2 ใน 3) หรือ 🌅 ละสังขาร (ลูกหลานได้มรดก) · มีได้สูงสุด 9 กัลป์ · ชีวิตของคุณตอนนี้: <b>${on?KAL_N[Math.min(8,n)]:'ยังไม่ถึง'}</b></span></div>`;
+ return head+KAL_N.map((nm,i)=>{const st=i<n?'done':i===n&&on?'cur':i>Math.max(n,on?n:0)+1?'lk':'';
+  const cap=1e6*(i+1),last=i>=8;
+  return card('♾️',nm+(i?` · ${KAL_T[i]}`:''),`อายุถึง ${fmt(cap)} ปี`,KD[i],[last?'👁️ ก้าวขึ้นเหนือกาลเวลา — ฉากจบสูงสุด':`ผ่านภัยสิ้นกัลป์ 3 ระลอก (ผ่าน 2 ใน 3) → ${KAL_N[i+1]}`,i>=1?'เลือกบทบาทของกัลป์: ผู้สร้างโลกใหม่ · ผู้พิทักษ์ · มารสิ้นกัลป์':'ไม่ผ่าน = สลายไปพร้อมจักรวาล',i>=1?'เหตุการณ์กัลป์: ลูกหลานกลับชาติ รักเก่า ศาลเจ้าของคุณ ผู้ท้าชิง':'ยังไม่มีเหตุการณ์กัลป์ในปฐมกัลป์'],i?KAL_T[i]:'ข้ายังไม่เคยเห็นจักรวาลดับ',KAL_C[i],KAL_C[Math.min(8,i+1)],st)}).join('')}
+// ----- สัตว์อสูร: ทางหลังปฐมสัตว์เทพ -----
+function beastExtra(){const m=S&&S.beastMode,cx=(m&&m.capX)|0,top=m&&(m.st|0)>=4;
+ const rows=[['⚡','ทัณฑ์แสนปี','ขอบอายุขัยของสัตว์ทุก 100,000 ปี','ถึงขีดอายุขัย (แสนปี) แล้วฝ่าทัณฑ์เพื่อขยายอายุขัยทีละ 100,000 ปี ได้สูงสุด 9 ครั้ง จนถึง 1,000,000 ปี · ผ่านแล้วพลังและพลังชีวิตเพิ่ม',['ผ่านทัณฑ์ → อายุขัยขยาย +100,000 ปี','พลาด → เสียหายหนัก แต่ลองใหม่ได้','ขยายแล้ว '+cx+'/9 ครั้ง'],'ฟ้าดินกำหนดไว้เท่านี้ — ข้าจะฉีกมัน','#ffd45a','#ff7a3a',cx>=9?'done':cx>0||(m&&S.age>=9e4)?'cur':'lk'],
+ ['👑','ราชาอสูร','ครองป่าทั้งผืน','เมื่อถึงอสูรพันปี เลือกครองป่าเป็นราชาอสูรเพื่อเดินต่อในร่างสัตว์ เลื่อนขั้นต่อได้ แปลงกายทีหลังได้ที่ ☰',['สัตว์ทั้งป่าก้มหัวให้','ชื่อเสียง +200','แปลงกายทีหลังได้'],'ป่านี้… เป็นของข้า','#d8a830','#7a3a10',m&&m.king?'cur':top?'':'lk'],
+ ['🧑','แปลงกายเป็นมนุษย์','ทิ้งร่างสัตว์ ใช้ชีวิตในโลกมนุษย์','ที่อสูรพันปีขึ้นไปแปลงกายได้ พลังเดิมติดตัว ลูกที่เกิดหลังจากนี้เป็นคน (สืบทอดยังเลือกให้เกิดในร่างสัตว์ได้) คืนร่างได้หลังผ่านไป 10 ปี',['พลังและอายุขัยของสัตว์ติดตัวไปด้วย','ใช้ระบบมนุษย์ได้: สำนัก ตลาด เมือง ดันเจี้ยน','ที่ ☰ เมนู → แปลงกาย'],'ข้าจะลองเดินบนสองขาดูสักครั้ง','#8fd0ff','#3a6a9a',m&&m.human?'cur':top?'':'lk']];
+ return rows.map(r=>card(...r)).join('')}
+// ----- ขั้นถัดไป -----
+function nextBar(tab,c){try{if(tab==='p'||tab==='k')return'';const L=rlmList(tab),i=(tab===c.w)?(c.L<0?c.i:-1):-1;if(i<0||i+1>=L.length)return'';const nx=L[i+1],N=rlmNames(tab),nm=N[i+1]||nx[1];
+  let pw='';if(tab==='m'&&REALMS[i+1]&&typeof total==='function'){const need=REALMS[i+1].p,have=Math.round(total());pw=`<br><span class="tag2">พลังที่ต้องมีถึง ${fmt(need)} · ตอนนี้ ${fmt(have)}${have>=need?' ✅ ทะลวงได้แล้ว':''}</span>`}
+  const ab=rlmJ(nx[3]);return`<div class="rlmel rlmnext"><b>🎯 ขั้นถัดไป: ${esc(nm)}</b>${pw}<br><span class="tag2">${nx[2]}${ab[0]?' · ปลดล็อก: '+ab[0]:''}</span></div>`}catch(e){return''}}
+window.openRealm=openRealm=function(tab){if(!S)return;const c=rlmCur();tab=tab||openRealm._t||c.w;
+ const isK=tab==='k';const r=_or.call(this,isK?(c.w==='b'?'m':c.w):tab);openRealm._t=tab;
+ try{const m=$('modal'),tb=m&&m.querySelector('.cxtabs'),body=m&&m.querySelector('.cxbody');if(!tb||!body)return r;
+  if(!tb.querySelector('[data-k]')){tb.insertAdjacentHTML('beforeend',`<button class="cxtab ${isK?'on':''}" data-k="1" onclick="openRealm('k')">♾️ วัฏจักรกัลป์</button>`)}
+  if(isK){tb.querySelectorAll('.cxtab').forEach(b=>{if(!b.dataset.k)b.classList.remove('on')});body.innerHTML=kalBody();return r}
+  if(tab==='p'){const cl=c.L;[...body.querySelectorAll('.rlmc')].forEach((el,i)=>{if(el.classList.contains('lk'))return;const layer=i,stars=Array.from({length:9},(_,k)=>{const L=layer*9+k,st=cl>=0&&(L<cl||(L===cl&&false))?'d':cl>=0&&L===cl?'c':(passedAll(c)?'d':'');return`<i class="rlmst ${st}" title="★${k+1}">★${k+1}</i>`}).join('');el.insertAdjacentHTML('beforeend',`<div class="rlm9">${stars}</div>`)})}
+  if(tab==='b'){body.insertAdjacentHTML('beforeend','<div class="rlmel" style="margin-top:10px"><b>🌌 หลังปฐมสัตว์เทพ</b><br><span class="tag2">ทางที่สัตว์อสูรเลือกเดินต่อเมื่อถึงขีดอายุขัยและพลัง</span></div>'+beastExtra())}
+  const nb=nextBar(tab,c);if(nb){const first=body.querySelector('.rlmc');if(first)body.insertAdjacentHTML('afterbegin',nb)}}catch(e){console.error(e)}return r};
+function passedAll(c){return false}
+try{const st=document.createElement('style');st.textContent=`.rlm9{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.rlmst{font-style:normal;font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;border:1.5px solid var(--line);opacity:.55}.rlmst.d{background:var(--c1);color:#111;border-color:var(--c1);opacity:1}.rlmst.c{border-color:var(--c1);box-shadow:0 0 0 2px var(--c1);opacity:1}.rlmnext{border-left:4px solid #c9a24a}.cxtabs{flex-wrap:wrap;gap:6px}`;document.head.appendChild(st)}catch(e){}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
