@@ -27605,7 +27605,7 @@ window.HD={hd0,hd1,hd2,hd3,hd4,hd5,hdHunt};
 
 // ===================== v17.35 🎲 สุ่มเกิดเพิ่ม: ฟรี 3 ครั้งเหมือนเดิม · ใช้กรรมแลก · ซื้อเป็นแพ็ก (สิทธิ์เก็บที่เซิร์ฟเวอร์) =====================
 try{(()=>{
-const RR={c:null,used:0,cap:10,kc:1000,kday:5,pk:{s:[10,12],m:[29,40],l:[59,100]}};
+const RR={c:null,used:0,cap:10,kc:1000,kday:5,pk:{s:[10,12],m:[29,40],l:[59,100]}};window._RR=RR;
 const rrKD=()=>{const t=new Date(Date.now()+7*3600e3).toISOString().slice(0,10);let d=null;try{d=LS.get('murim_rrk',null)}catch(e){}if(!d||d.d!==t)d={d:t,n:0};return d};
 const rrKC=()=>RR.kc*Math.pow(2,rrKD().n);window.rrKC=rrKC;
 const rrOff=()=>!!(CFG.daily||CFG.chm==1);
@@ -27696,6 +27696,26 @@ new MutationObserver(()=>{const b=$('rerollBtn');if(b&&b.disabled&&rerolls<=0&&!
 // หน้าสนับสนุนผู้พัฒนา
 {const _os=openSupport;openSupport=function(){const r=_os.apply(this,arguments);try{const M=$('modal');if(M&&!M.querySelector('.rrSup')){const P=(window.RR_PKS||{s:[10,12],m:[29,40],l:[59,100]});const h=M.querySelector('h3');(h||M).insertAdjacentHTML(h?'afterend':'beforeend',`<div class="item rrSup"><b>🎲 สนับสนุนแล้วได้สิทธิ์สุ่มเกิดด้วย</b><p class="tag2">เลือกแพ็กแล้วโอนตามยอด สิทธิ์จะเข้าบัญชีหลังผู้พัฒนาตรวจสลิป</p><div class="rrpk">${Object.entries(P).map(([k,v])=>`<button class="opt" onclick="rrBuy('${k}')"><b>${v[1]} ครั้ง</b><small>${v[0]} บาท</small></button>`).join('')}</div></div>`)}}catch(e){}return r}}
 try{const st=document.createElement('style');st.textContent='#rerollBtn.rrNext{border-color:#e0a020;color:#c07a00;font-weight:800;animation:rrP 1.6s ease-in-out infinite}#rrMore small.rrPr{display:block;font-size:11px;opacity:.75;font-weight:400}';document.head.appendChild(st)}catch(e){}
+})()}catch(e){console.error(e)}
+
+// ===================== v17.39 ⬅️ ปุ่มย้อนกลับในหน้ากำเนิด — กลับหน้าแรกได้ แต่จำนวนสุ่มที่เหลือและผลสุ่มเดิมยังอยู่ =====================
+try{(()=>{
+const HK='murim_bhold';
+const hGet=()=>{try{const h=LS.get(HK,null);return h&&Date.now()-(h.t||0)<6*3600e3?h:null}catch(e){return null}};
+const hSet=h=>{try{if(h)LS.set(HK,h);else LS.del(HK)}catch(e){}};
+window.birthBack=function(){try{if(!$('birth')||!$('birth').classList.contains('on'))return;const R=window._RR||{};hSet({t:Date.now(),rr:rerolls,used:R.used|0,x:CFG.xian?1:0,d:CFG.daily||'',c:CFG.chm|0});window._bMem=roll?{roll,x:CFG.xian?1:0,d:CFG.daily||''}:null;closeM&&closeM();try{renderLegends()}catch(e){}show('title')}catch(e){console.error(e)}};
+// ข้ามการสุ่มใหม่ครั้งแรกถ้ากลับมาหน้ากำเนิดเดิม (ผลสุ่มเดิมยังแสดงอยู่)
+{const _dr=doRoll;doRoll=function(first){if(first&&window._bSkip){window._bSkip=0;try{$('startBtn').disabled=false;$('oddsBox').style.visibility='visible';$('goalBox').style.visibility='visible';$('rerollBtn').disabled=rerolls<=0}catch(e){}return}return _dr.apply(this,arguments)}}
+{const _gb=goBirth;goBirth=function(){const h=hGet(),M=window._bMem,same=h&&h.x===(CFG.xian?1:0)&&h.d===(CFG.daily||'')&&h.c===(CFG.chm|0);
+ if(same&&M&&M.roll&&M.x===h.x&&M.d===h.d)window._bSkip=1;
+ const r=_gb.apply(this,arguments);
+ if(same){rerolls=Math.max(0,h.rr|0);try{$('rr').textContent=rerolls}catch(e){}if(window._RR)window._RR.used=h.used|0;try{$('rerollBtn').disabled=rerolls<=0&&!!$('rerollBtn').dataset.rr===false}catch(e){}}
+ hSet(null);window._bMem=null;return r}}
+{const _sl=startLife;startLife=function(){hSet(null);window._bMem=null;return _sl.apply(this,arguments)}}
+// ปุ่มบนหน้ากำเนิด
+function addBtn(){const B=$('birth');if(!B||B.querySelector('#bBack'))return;B.insertAdjacentHTML('afterbegin','<button id="bBack" class="sysb" onclick="birthBack()" title="กลับหน้าแรก (จำนวนสุ่มที่เหลือยังอยู่)">⬅️ หน้าแรก</button>')}
+addBtn();{const _gb2=goBirth;goBirth=function(){const r=_gb2.apply(this,arguments);addBtn();return r}}
+try{const st=document.createElement('style');st.textContent='#bBack{display:inline-block;margin:calc(env(safe-area-inset-top) + 6px) 0 2px 4px;font-size:12px;padding:3px 10px}';document.head.appendChild(st)}catch(e){}
 })()}catch(e){console.error(e)}
 </script>
 </body>
