@@ -28082,6 +28082,15 @@ const _oo=openOnline;openOnline=async function(tab){
  const rules='<p class="tag2">สวมบทตัวละครของคุณ · พูดปกติ หรือใส่ *ดอกจัน* เพื่อบรรยายท่าทาง เช่น *ชักกระบี่* · ห้ามพูดเรื่องนอกเกม/หยาบคาย · ข้อความอยู่ 3 วัน</p>';
  w.innerHTML=`<p class="tag2" style="margin:8px 0 0">ใช้ชื่อ <b>${esc(pname())}</b>${S?' · '+esc(myTitle()):''}</p>${sc}<div id="rpBox" class="rpbox"><div class="tag2">กำลังโหลด…</div></div>`+(g?`<div class="rpin"><input id="rpIn" maxlength="160" placeholder="พูดในบทบาท…" onkeydown="if(event.key==='Enter')rpSend('say')"><button class="pbtn" onclick="rpSend('say')">💬</button><button class="pbtn" onclick="rpSend('act')" title="บรรยายท่าทาง">🎬</button></div>`:`<div class="rplk">🔒 ห้องเล่นบทสำหรับผู้ที่ล็อกอิน Google เท่านั้น<br><button class="pbtn" style="margin-top:8px" onclick="openProfile()">ล็อกอินที่หน้าโปรไฟล์</button></div>`)+rules;
  await rpPoll();clearInterval(chatT);chatT=setInterval(rpPoll,5000);if(rpOff&&$('rpBox'))$('rpBox').insertAdjacentHTML('afterbegin','<div class="tag2">🚧 ห้องเล่นบทปิดชั่วคราว</div>')}}
+
+// ============ v18.4 · เปิดยุคปัจจุบันอีกครั้ง — เข้าได้ทางเดียว: เกิดใหม่เป็นคนธรรมดา (ปิดทางข้ามยุคทุกแบบ) ============
+MW_PUBLIC=true;mwAllowed=function(){return true};
+{const shut=()=>{try{log('🌀 รอยแยกสั่นไหวแล้วผลักคุณกลับมาเบาๆ — <b>"ยังไม่ถึงเวลา"</b>','myth',true)}catch(e){}};
+ mwEnter=function(){shut()};mwAsk=function(){toast('ยุคปัจจุบันเกิดใหม่ได้อย่างเดียว')};mwHeirGo=function(){toast('ยังไม่เปิดส่วนนี้')};mwNewLost=function(){toast('ยังไม่เปิดส่วนนี้')};mwPickPast=function(){toast('ยังไม่เปิดส่วนนี้')};mwNewAncient=function(){toast('ยังไม่เปิดส่วนนี้')};
+ tbCan=function(){return false};
+ {const _ch=choice;choice=function(title,text,opts){if(/รอยแยกสู่อนาคต/.test(String(title||'')))title=String(title).replace('รอยแยก','รอยแยก\u200b');return _ch.call(this,title,text,opts)};Object.keys(_ch).forEach(k=>{try{choice[k]=_ch[k]}catch(e){}})}
+ const clean=()=>{try{const m=$('modal');if(!m)return;m.querySelectorAll('.mwadmB,.tbB,.mwHeirB').forEach(b=>{if(!/mwInfo/.test(b.getAttribute('onclick')||''))b.remove()});m.querySelectorAll('.mgrid .opt').forEach(b=>{if(/mwNewLost|mwPickPast|mwAsk|mwHeirGo|mwNewAncient|openBury/.test(b.getAttribute('onclick')||''))b.remove()});m.querySelectorAll('p.tag2').forEach(p=>{if(/หรือระหว่างเล่น|หลงยุค/.test(p.textContent)&&!p.closest('.mgrid'))p.remove()});const e=$('end');if(e)e.querySelectorAll('.mwHeirB').forEach(b=>b.remove())}catch(e){}};
+ setInterval(clean,400)}
 </script>
 </body>
 </html>
