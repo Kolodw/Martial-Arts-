@@ -718,7 +718,7 @@ module.exports = async (req, res) => {
         if (meta.b !== 'บอท' && +nid <= 600) await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)], ...(act ? [['HSET', 'oa', id, JSON.stringify(act)]] : [])]);
         } catch (e) { if (/OOM/i.test(String(e && e.message))) { OOM_AT = Date.now() } else throw e }
       }
-      const [, n, lives, annV, cl0] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 600e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann'], ['LINDEX', 'chat', 0]]);
+      const [, n, lives, annV, cl0] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 1500e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann'], ['LINDEX', 'chat', 0]]);
       let cl = null; try { const m = jp(cl0); if (m && m.i) cl = { i: m.i, t: m.t, n: String(m.n || '').slice(0, 20), x: String(m.x || '').slice(0, 90) } } catch {}
       let tg = null; if (okId(id)) { try { const tq = await cmd('LRANGE', 'tagq:' + id, 0, 9); if (tq && tq.length) { await cmd('DEL', 'tagq:' + id); tg = tq.map(jp).filter(Boolean) } } catch (e) {} }
       let ann = null; try { ann = annV ? JSON.parse(annV) : null } catch {}
