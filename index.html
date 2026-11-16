@@ -27601,6 +27601,46 @@ function hdHunt(){const H=hdF();H.hu=S.age;const m=.8+.1*(H.ch|0);
 try{TTL_SP.unshift(['hdhost',()=>!!(S.flags&&S.flags.hd_host),'ร่างทรงมารบรรพกาล'],['hdmask',()=>!!(S.flags&&S.flags.hd_mask),'เทพจอมปลอม'],['hdduo',()=>!!(S.flags&&S.flags.hd_duo),'คู่ครองแห่งบัลลังก์มาร'],['hdseal',()=>!!(S.flags&&S.flags.hd_seal),'ผู้ฉีกสัญญา'],['hdemp',()=>!!(S.flags&&S.flags.hd_emp),'จักรพรรดิมารสวรรค์'],['hdburn',()=>!!(S.flags&&S.flags.hd_burn),'ผู้เผาสวรรค์'],['hdred',()=>!!(S.flags&&S.flags.hd_redeem),'มารผู้กลับใจ'],['hd4',()=>!!(S.hd&&S.hd.ch>=4),'มารสวรรค์ผู้ล่าเทพ'],['hd3',()=>!!(S.hd&&S.hd.ch>=3),'เจ้าวังมารสวรรค์'],['hd1',()=>!!(S.hd&&S.hd.ch>=1),'ผู้ทรยศสวรรค์'])}catch(e){}
 window.HD={hd0,hd1,hd2,hd3,hd4,hd5,hdHunt};
 })()}catch(e){console.error(e)}
+
+// ===================== v17.35 🎲 สุ่มเกิดเพิ่ม: ฟรี 3 ครั้งเหมือนเดิม · ใช้กรรมแลก · ซื้อเป็นแพ็ก (สิทธิ์เก็บที่เซิร์ฟเวอร์) =====================
+try{(()=>{
+const RR={c:null,used:0,cap:10,kc:50,pk:{s:[10,12],m:[29,40],l:[59,100]}};
+const rrOff=()=>!!(CFG.daily||CFG.chm==1);
+async function rrLoad(){try{const j=await api('rrget');RR.c=Math.max(0,+j.c||0);if(j.pk)RR.pk=j.pk}catch(e){}rrBtn()}
+function rrBtn(){try{const row=$('rerollBtn')&&$('rerollBtn').parentNode;if(!row)return;let b=$('rrMore');if(rrOff()){if(b)b.remove();return}
+ if(!b){row.insertAdjacentHTML('beforeend','<button class="gbtn" id="rrMore" onclick="rrMenu()">🎲 สุ่มเพิ่ม</button>');b=$('rrMore')}
+ b.innerHTML=`🎲 สุ่มเพิ่ม${RR.c?` <small>(${fmt(RR.c)})</small>`:''}`;b.classList.toggle('hi',rerolls<=0)}catch(e){}}
+function rrGo(){rerolls++;$('rr').textContent=rerolls;RR.used++;closeM();setTimeout(()=>{doRoll();rrBtn()},150)}
+window.rrMenu=function(){const kb=kbGet(),kk=Math.max(kb.g,kb.e),cap=RR.used>=RR.cap;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎲 สุ่มเกิดเพิ่ม</h3>
+ <p class="tag2">สุ่มฟรีเหลือ ${rerolls} ครั้ง · ชีวิตนี้ใช้สุ่มเพิ่มไปแล้ว ${RR.used}/${RR.cap} ครั้ง</p>
+ ${cap?`<p class="tag2" style="color:#e0503c">ชีวิตนี้ใช้ครบ ${RR.cap} ครั้งแล้ว — สิทธิ์ที่ซื้อยังเก็บไว้ใช้ชีวิตหน้าได้</p>`:''}
+ <div class="item"><b>🎟️ ใช้สิทธิ์ที่ซื้อไว้</b> <span class="tag2">เหลือ ${RR.c==null?'…':fmt(RR.c)} ครั้ง</span><button class="gbtn" style="float:right" ${cap||!RR.c?'disabled':''} onclick="rrUsePaid(this)">ใช้ 1 ครั้ง</button></div>
+ <div class="item"><b>☯️ ใช้กรรมแลก</b> <span class="tag2">${RR.kc} กรรม/ครั้ง · มี ${fmt(kk)}</span><button class="gbtn" style="float:right" ${cap||kk<RR.kc?'disabled':''} onclick="rrUseKarma()">แลก 1 ครั้ง</button><p class="tag2">ใช้กรรมดีหรือกรรมชั่วฝั่งที่มีมากกว่า (กรรมเดียวกับร้านแลกกรอบ)</p></div>
+ <h4 style="margin:12px 0 4px">💳 ซื้อสิทธิ์สุ่มเกิด</h4>
+ <div class="rrpk">${Object.entries(RR.pk).map(([k,v])=>`<button class="opt" onclick="rrBuy('${k}')"><b>${v[1]} ครั้ง</b><small>${v[0]} บาท · ~${(v[0]/v[1]).toFixed(2)} บาท/ครั้ง</small></button>`).join('')}</div>
+ <p class="tag2">สิทธิ์ผูกกับบัญชีของคุณ (ล็อกอิน Google ไว้จะไม่หายเวลาเปลี่ยนเครื่อง) · ได้สิทธิ์หลังผู้พัฒนาตรวจสลิปแล้ว ปกติไม่เกิน 1 วัน · ถ้าเกิน 48 ชม. ยังไม่ได้ แจ้งบั๊กเพื่อขอคืนเงินได้</p>`);
+ if(RR.c==null&&!RR.ld){RR.ld=1;rrLoad().then(()=>{RR.ld=0;if(RR.c!=null&&$('modal').querySelector('.rrpk'))rrMenu()})}}
+window.rrUsePaid=async function(btn){if(RR.used>=RR.cap)return toast('ชีวิตนี้ใช้ครบแล้ว');btn.disabled=true;try{const j=await api('rruse',{});RR.c=+j.c||0;toast(`🎟️ ใช้สิทธิ์แล้ว เหลือ ${RR.c} ครั้ง`);rrGo()}catch(e){btn.disabled=false;if(e.message==='none'){RR.c=0;toast('ไม่มีสิทธิ์เหลือแล้ว')}else toast('ใช้สิทธิ์ไม่สำเร็จ ลองใหม่อีกครั้ง')}}
+window.rrUseKarma=function(){if(RR.used>=RR.cap)return toast('ชีวิตนี้ใช้ครบแล้ว');const kb=kbGet(),sd=kb.g>=kb.e?'g':'e';if(kb[sd]<RR.kc)return toast('กรรมไม่พอ');kb[sd]-=RR.kc;kbSet(kb);toast(`☯️ ใช้กรรม${sd==='g'?'ดี':'ชั่ว'} ${RR.kc}`);rrGo()}
+window.rrBuy=function(k){const v=RR.pk[k];if(!v)return;
+ modal(`<button class="xbtn" onclick="rrMenu()">✕</button><h3>💳 ซื้อสุ่มเกิด ${v[1]} ครั้ง · ${v[0]} บาท</h3>
+ <div style="text-align:center"><img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:46vh;border-radius:10px;background:#fff" draggable="false">
+ <p style="margin:8px 0 2px">1) สแกนโอน <b>${v[0]} บาท</b> ด้วยแอปธนาคาร</p><p class="tag2">2) แนบสลิปแล้วกดส่งด้านล่าง · ผู้พัฒนาตรวจแล้วสิทธิ์จะเข้าเอง</p>
+ <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
+ <label class="supl">👤 ชื่อบัญชีที่โอน<input id="supPn" maxlength="40" placeholder="ช่วยให้ตรวจเร็วขึ้น"></label>
+ <label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>
+ <button class="pbtn" style="width:100%;margin-top:8px" onclick="rrPaid(this,'${k}')">📨 ส่งสลิป</button>
+ <p class="tag2">โอนผิดยอดหรือไม่แนบสลิป อาจตรวจไม่ได้ · ไม่มีการตัดเงินอัตโนมัติ</p>`);try{supEv('view')}catch(e){}}
+window.rrPaid=async function(btn,k){const v=RR.pk[k],pn=(($('supPn')||{}).value||'').trim(),f=$('supImg')&&$('supImg').files&&$('supImg').files[0];
+ if(!f&&!pn)return toast('แนบสลิป หรือใส่ชื่อบัญชีอย่างน้อยหนึ่งอย่างนะ');btn.disabled=true;btn.textContent='⏳ กำลังส่ง…';
+ try{const img=await supShrink(f);const d=new Date();await api('sup',{e:'paid',pk:k,n:pname(),src:'reroll',amt:v[0],pn,tm:String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'),msg:'',img});
+  btn.textContent='✅ ส่งแล้ว — รอตรวจสลิป';toast('🙏 ส่งแล้ว ผู้พัฒนาตรวจแล้วสิทธิ์จะเข้าเอง');try{sfx('good')}catch(e){}}
+ catch(e){btn.disabled=false;btn.textContent='📨 ส่งสลิป';toast(e.message==='rate'?'เพิ่งส่งไป รอสักครู่แล้วลองใหม่':'ส่งไม่สำเร็จ ลองใหม่อีกครั้ง')}}
+{const _gb=goBirth;goBirth=function(){const r=_gb.apply(this,arguments);RR.used=0;try{rrBtn();rrLoad()}catch(e){}return r}}
+{const _dr=doRoll;doRoll=function(){const r=_dr.apply(this,arguments);setTimeout(rrBtn,50);return r}}
+try{const st=document.createElement('style');st.textContent='#rrMore.hi{animation:rrP 1.6s ease-in-out infinite}@keyframes rrP{0%,100%{box-shadow:0 0 0 #ffd76a00}50%{box-shadow:0 0 12px #ffd76aaa}}.rrpk{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.rrpk .opt{display:flex;flex-direction:column;align-items:center;padding:10px 4px}.rrpk small{font-size:11px;opacity:.8}';document.head.appendChild(st)}catch(e){}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
