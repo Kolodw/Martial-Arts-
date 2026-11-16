@@ -648,7 +648,9 @@ module.exports = async (req, res) => {
         v = await vipAdd(id, 1, 30, 1);
         try { await withCap(noteTo(id, { t: '🏮 ขอบคุณที่สนับสนุนเกม', b: 'ได้รับ ผู้อุปถัมภ์สำนัก ฟรี 30 วัน — สุ่มเกิดได้ 30 ครั้งต่อชีวิต', u: '/' }), 3000) } catch (e) {}
       }
-      return res.json({ c: Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0), pk: RR_PK, vp: VIP_PK, vip: vipOut(v) });
+      const vo = vipOut(v);
+      if (vo.u) { const ul = jp(await cmd('HGET', 'vipu', id)); if (ul) vo.ul = { o: ul.o | 0, t: +ul.t || 0, w: ul.w || '' } }
+      return res.json({ c: Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0), pk: RR_PK, vp: VIP_PK, vip: vo });
     }
     if (a === 'vipset') {
       const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
@@ -657,8 +659,23 @@ module.exports = async (req, res) => {
       const v = await vipAdd(tid, tr, Math.abs(dy), dy < 0 ? -1 : 1); return res.json({ ok: 1, vip: vipOut(v) });
     }
     if (a === 'vipwall') {
-      const h = (await cmd('HVALS', 'vipu')) || []; res.setHeader('Cache-Control', 'public, max-age=60');
-      return res.json({ n: h.filter(Boolean).slice(0, 300) });
+      const raw = (await cmd('HGETALL', 'vipu')) || [], rows = [];
+      for (let i = 0; i + 1 < raw.length; i += 2) { const o = jp(raw[i + 1]); if (o) rows.push({ id: raw[i], n: String(o.n || ''), o: o.o | 0, t: +o.t || 0, w: String(o.w || '') }) }
+      rows.sort((x, y) => x.o - y.o); const top = rows.slice(0, 300);
+      const rs = top.length ? await pipe(top.flatMap(r => [['SCARD', 'vinc:' + r.id], ['SISMEMBER', 'vinc:' + r.id, okId(id) ? id : '-']])) : [];
+      return res.json({ n: top.map((r, i) => ({ n: r.n, o: r.o, t: r.t, w: r.w, c: +rs[i * 2] || 0, m: +rs[i * 2 + 1] ? 1 : 0, k: r.id === id ? 1 : 0 })) });
+    }
+    if (a === 'vipsay') {
+      if (!okId(id)) return res.json({ err: 'id' });
+      const ul = jp(await cmd('HGET', 'vipu', id)); if (!ul) return res.status(403).json({ err: 'none' });
+      ul.w = clean(String(b.w || ''), 40); await cmd('HSET', 'vipu', id, JSON.stringify(ul)); return res.json({ ok: 1, w: ul.w });
+    }
+    if (a === 'vipinc') {
+      const o = b.o | 0; if (!okId(id) || o < 1) return res.json({ err: 'id' });
+      const raw = (await cmd('HGETALL', 'vipu')) || []; let to = '';
+      for (let i = 0; i + 1 < raw.length; i += 2) { const x = jp(raw[i + 1]); if (x && (x.o | 0) === o) { to = raw[i]; break } }
+      if (!to) return res.json({ err: 'none' });
+      await cmd('SADD', 'vinc:' + to, id); return res.json({ ok: 1, c: +(await cmd('SCARD', 'vinc:' + to)) || 0 });
     }
     if (a === 'rruse') {
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'id' });
@@ -674,7 +691,7 @@ module.exports = async (req, res) => {
       else { const cur = jp(await cmd('HGET', 'suppay', sid)); if (cur) { const was = cur.st; cur.st = v === 'ok' ? 'ok' : v === 'no' ? 'no' : ''; cur.mt = now;
         let pr = null; if (cur.st === 'ok' && was !== 'ok' && okId(cur.fid)) { await cmd('SADD', 'supok', cur.fid); if (String(qOf(req).ty || '1') === '1' && !cur.rp) { const x = '🙏 ได้รับแล้ว ขอบคุณมากครับ! เงินสนับสนุนจะเอาไปพัฒนาเกมต่อ 💛'; cur.rp = { x, t: now, auto: 1 }; pr = await withCap(noteTo(cur.fid, { t: '💬 ผู้พัฒนาตอบคุณ', b: x, u: '/?go=support' }), 4000) } }
         try { if (cur.pk && RR_PK[cur.pk] && okId(cur.fid)) { if (cur.st === 'ok' && !cur.rg) { cur.rg = RR_PK[cur.pk][1]; await cmd('INCRBY', 'rrc:' + cur.fid, cur.rg) } else if (cur.st !== 'ok' && cur.rg) { const left = +(await cmd('DECRBY', 'rrc:' + cur.fid, cur.rg)) || 0; if (left < 0) await cmd('SET', 'rrc:' + cur.fid, 0); cur.rg = 0 } } } catch (e) {}
-        try { if (cur.vp && VIP_PK[cur.vp] && okId(cur.fid)) { const vx = VIP_PK[cur.vp]; if (cur.st === 'ok' && !cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], 1); cur.vg = 1; if (vx[1] === 3) await cmd('HSET', 'vipu', cur.fid, clean(String(cur.n || ''), 24)) } else if (cur.st !== 'ok' && cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], -1); cur.vg = 0; if (vx[1] === 3) await cmd('HDEL', 'vipu', cur.fid) } } } catch (e) {}
+        try { if (cur.vp && VIP_PK[cur.vp] && okId(cur.fid)) { const vx = VIP_PK[cur.vp]; if (cur.st === 'ok' && !cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], 1); cur.vg = 1; if (vx[1] === 3 && !(await cmd('HEXISTS', 'vipu', cur.fid))) { const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', cur.fid, JSON.stringify({ n: clean(String(cur.n || ''), 24), o, t: Date.now() })) } } else if (cur.st !== 'ok' && cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], -1); cur.vg = 0; if (vx[1] === 3) await cmd('HDEL', 'vipu', cur.fid) } } } catch (e) {}
         if (cur.st !== 'ok' && was === 'ok' && okId(cur.fid)) { const others = ((await cmd('HVALS', 'suppay')) || []).map(jp).filter(z => z && z.fid === cur.fid && z.i !== cur.i && z.st === 'ok'); if (!others.length) await cmd('SREM', 'supok', cur.fid) }
         await cmd('HSET', 'suppay', sid, JSON.stringify(cur)); return res.json({ ok: 1, push: pr }) } }
       return res.json({ ok: 1 });
