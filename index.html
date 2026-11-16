@@ -27605,25 +27605,27 @@ window.HD={hd0,hd1,hd2,hd3,hd4,hd5,hdHunt};
 
 // ===================== v17.35 🎲 สุ่มเกิดเพิ่ม: ฟรี 3 ครั้งเหมือนเดิม · ใช้กรรมแลก · ซื้อเป็นแพ็ก (สิทธิ์เก็บที่เซิร์ฟเวอร์) =====================
 try{(()=>{
-const RR={c:null,used:0,cap:10,kc:50,pk:{s:[10,12],m:[29,40],l:[59,100]}};
+const RR={c:null,used:0,cap:10,kc:1000,kday:5,pk:{s:[10,12],m:[29,40],l:[59,100]}};
+const rrKD=()=>{const t=new Date(Date.now()+7*3600e3).toISOString().slice(0,10);let d=null;try{d=LS.get('murim_rrk',null)}catch(e){}if(!d||d.d!==t)d={d:t,n:0};return d};
+const rrKC=()=>RR.kc*Math.pow(2,rrKD().n);window.rrKC=rrKC;
 const rrOff=()=>!!(CFG.daily||CFG.chm==1);
 async function rrLoad(){try{const j=await api('rrget');RR.c=Math.max(0,+j.c||0);if(j.pk)RR.pk=j.pk}catch(e){}rrBtn()}
 function rrBtn(){try{const row=$('rerollBtn')&&$('rerollBtn').parentNode;if(!row)return;let b=$('rrMore');if(rrOff()){if(b)b.remove();return}
  if(!b){row.insertAdjacentHTML('beforeend','<button class="gbtn" id="rrMore" onclick="rrMenu()">🎲 สุ่มเพิ่ม</button>');b=$('rrMore')}
  b.innerHTML=`🎲 สุ่มเพิ่ม${RR.c?` <small>(${fmt(RR.c)})</small>`:''}`;b.classList.toggle('hi',rerolls<=0)}catch(e){}}
 function rrGo(){rerolls++;$('rr').textContent=rerolls;RR.used++;closeM();setTimeout(()=>{doRoll();rrBtn()},150)}
-window.rrMenu=function(){const kb=kbGet(),kk=Math.max(kb.g,kb.e),cap=RR.used>=RR.cap;
+window.rrMenu=function(){const kb=kbGet(),kk=Math.max(kb.g,kb.e),cap=RR.used>=RR.cap,kd=rrKD(),kc=rrKC(),kOut=kd.n>=RR.kday;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎲 สุ่มเกิดเพิ่ม</h3>
  <p class="tag2">สุ่มฟรีเหลือ ${rerolls} ครั้ง · ชีวิตนี้ใช้สุ่มเพิ่มไปแล้ว ${RR.used}/${RR.cap} ครั้ง</p>
  ${cap?`<p class="tag2" style="color:#e0503c">ชีวิตนี้ใช้ครบ ${RR.cap} ครั้งแล้ว — สิทธิ์ที่ซื้อยังเก็บไว้ใช้ชีวิตหน้าได้</p>`:''}
  <div class="item"><b>🎟️ ใช้สิทธิ์ที่ซื้อไว้</b> <span class="tag2">เหลือ ${RR.c==null?'…':fmt(RR.c)} ครั้ง</span><button class="gbtn" style="float:right" ${cap||!RR.c?'disabled':''} onclick="rrUsePaid(this)">ใช้ 1 ครั้ง</button></div>
- <div class="item"><b>☯️ ใช้กรรมแลก</b> <span class="tag2">${RR.kc} กรรม/ครั้ง · มี ${fmt(kk)}</span><button class="gbtn" style="float:right" ${cap||kk<RR.kc?'disabled':''} onclick="rrUseKarma()">แลก 1 ครั้ง</button><p class="tag2">ใช้กรรมดีหรือกรรมชั่วฝั่งที่มีมากกว่า (กรรมเดียวกับร้านแลกกรอบ)</p></div>
+ <div class="item"><b>☯️ ใช้กรรมแลก</b> <span class="tag2">${kOut?'วันนี้แลกครบแล้ว':`ครั้งนี้ ${fmt(kc)} กรรม`} · มี ${fmt(kk)}</span><button class="gbtn" style="float:right" ${cap||kOut||kk<kc?'disabled':''} onclick="rrUseKarma()">แลก 1 ครั้ง</button><p class="tag2">วันนี้แลกไปแล้ว ${kd.n}/${RR.kday} ครั้ง · ราคาเพิ่มเท่าตัวทุกครั้ง (${fmt(RR.kc)} → ${fmt(RR.kc*2)} → ${fmt(RR.kc*4)} …) รีเซ็ตเที่ยงคืน · ใช้กรรมฝั่งที่มีมากกว่า (กรรมเดียวกับร้านแลกกรอบ)</p></div>
  <h4 style="margin:12px 0 4px">💳 ซื้อสิทธิ์สุ่มเกิด</h4>
  <div class="rrpk">${Object.entries(RR.pk).map(([k,v])=>`<button class="opt" onclick="rrBuy('${k}')"><b>${v[1]} ครั้ง</b><small>${v[0]} บาท · ~${(v[0]/v[1]).toFixed(2)} บาท/ครั้ง</small></button>`).join('')}</div>
  <p class="tag2">สิทธิ์ผูกกับบัญชีของคุณ (ล็อกอิน Google ไว้จะไม่หายเวลาเปลี่ยนเครื่อง) · ได้สิทธิ์หลังผู้พัฒนาตรวจสลิปแล้ว ปกติไม่เกิน 1 วัน · ถ้าเกิน 48 ชม. ยังไม่ได้ แจ้งบั๊กเพื่อขอคืนเงินได้</p>`);
  if(RR.c==null&&!RR.ld){RR.ld=1;rrLoad().then(()=>{RR.ld=0;if(RR.c!=null&&$('modal').querySelector('.rrpk'))rrMenu()})}}
 window.rrUsePaid=async function(btn){if(RR.used>=RR.cap)return toast('ชีวิตนี้ใช้ครบแล้ว');btn.disabled=true;try{const j=await api('rruse',{});RR.c=+j.c||0;toast(`🎟️ ใช้สิทธิ์แล้ว เหลือ ${RR.c} ครั้ง`);rrGo()}catch(e){btn.disabled=false;if(e.message==='none'){RR.c=0;toast('ไม่มีสิทธิ์เหลือแล้ว')}else toast('ใช้สิทธิ์ไม่สำเร็จ ลองใหม่อีกครั้ง')}}
-window.rrUseKarma=function(){if(RR.used>=RR.cap)return toast('ชีวิตนี้ใช้ครบแล้ว');const kb=kbGet(),sd=kb.g>=kb.e?'g':'e';if(kb[sd]<RR.kc)return toast('กรรมไม่พอ');kb[sd]-=RR.kc;kbSet(kb);toast(`☯️ ใช้กรรม${sd==='g'?'ดี':'ชั่ว'} ${RR.kc}`);rrGo()}
+window.rrUseKarma=function(){if(RR.used>=RR.cap)return toast('ชีวิตนี้ใช้ครบแล้ว');const kd=rrKD();if(kd.n>=RR.kday)return toast('วันนี้แลกด้วยกรรมครบแล้ว');const kc=rrKC(),kb=kbGet(),sd=kb.g>=kb.e?'g':'e';if(kb[sd]<kc)return toast('กรรมไม่พอ');kb[sd]-=kc;kbSet(kb);kd.n++;try{LS.set('murim_rrk',kd)}catch(e){}toast(`☯️ ใช้กรรม${sd==='g'?'ดี':'ชั่ว'} ${fmt(kc)}`);rrGo()}
 window.rrBuy=function(k){const v=RR.pk[k];if(!v)return;
  modal(`<button class="xbtn" onclick="rrMenu()">✕</button><h3>💳 ซื้อสุ่มเกิด ${v[1]} ครั้ง · ${v[0]} บาท</h3>
  <div style="text-align:center"><img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:46vh;border-radius:10px;background:#fff" draggable="false">
@@ -27681,16 +27683,16 @@ try{(()=>{
 const off=()=>!!(CFG.daily||CFG.chm==1);
 function rrFix(){try{const b=$('rerollBtn');if(!b||off())return;const row=b.parentNode;let hint=$('rrHint');
  if(rerolls<=0){if(!b.dataset.rr){b.dataset.rr=1;b.innerHTML='🎲 สุ่มต่อ<span id="rr" style="display:none">0</span>'}b.disabled=false;b.classList.add('rrNext');
-  if(!hint&&row){row.insertAdjacentHTML('beforebegin','<p id="rrHint" class="tag2" style="text-align:center;margin:4px 0">สุ่มฟรีหมดแล้ว · ใช้กรรม 50 สุ่มต่อได้ หรือเริ่มที่ <b>10 บาท / 12 ครั้ง</b></p>')}}
+  if(!hint&&row){row.insertAdjacentHTML('beforebegin','<p id="rrHint" class="tag2" style="text-align:center;margin:4px 0">สุ่มฟรีหมดแล้ว · ใช้กรรมแลกได้วันละ 5 ครั้ง หรือเริ่มที่ <b>10 บาท / 12 ครั้ง</b></p>')}}
  else{if(b.dataset.rr){delete b.dataset.rr;b.innerHTML=`🔄 เกิดใหม่ (<span id="rr">${rerolls}</span>)`}b.classList.remove('rrNext');if(hint)hint.remove()}
  // ได้ของหายากแต่ยังอยากได้ดีกว่า → ปุ่มสุ่มเพิ่มกะพริบเบาๆ
- const m=$('rrMore');if(m&&roll){const rare=(roll.t&&roll.t.p>0&&roll.t.p<1/50)||(roll.f&&roll.f.p>0&&roll.f.p<1/30);m.classList.toggle('hi',rerolls<=0||!!rare)}if(m){const pr=m.querySelector('.rrPr');if(rerolls<=0&&!pr)m.insertAdjacentHTML('beforeend','<small class="rrPr">กรรม 50 · หรือ 10฿/12 ครั้ง</small>');else if(rerolls>0&&pr)pr.remove()}}catch(e){}}
+ const m=$('rrMore');if(m&&roll){const rare=(roll.t&&roll.t.p>0&&roll.t.p<1/50)||(roll.f&&roll.f.p>0&&roll.f.p<1/30);m.classList.toggle('hi',rerolls<=0||!!rare)}if(m){const pr=m.querySelector('.rrPr');if(rerolls<=0&&!pr)m.insertAdjacentHTML('beforeend','<small class="rrPr">ใช้กรรม · หรือ 10฿/12 ครั้ง</small>');else if(rerolls>0&&pr)pr.remove()}}catch(e){}}
 {const _dr=doRoll;doRoll=function(first){if(!first&&rerolls<=0&&!off()&&!(typeof ADM!=='undefined'&&ADM.ok&&ADM.rr)){try{rrMenu()}catch(e){}return}const r=_dr.apply(this,arguments);[60,2600,4200].forEach(d=>setTimeout(rrFix,d));return r}}
 {const _gb=goBirth;goBirth=function(){const r=_gb.apply(this,arguments);setTimeout(rrFix,80);return r}}
 // ปุ่ม "สุ่มต่อ" เปิดหน้าเลือกเสมอเมื่อฟรีหมด แม้ปุ่มเดิมยังถูกตั้ง disabled
 new MutationObserver(()=>{const b=$('rerollBtn');if(b&&b.disabled&&rerolls<=0&&!off()&&$('startBtn')&&!$('startBtn').disabled)b.disabled=false}).observe(document.body,{subtree:true,attributes:true,attributeFilter:['disabled']});
 // หน้าสรุปชีวิต
-{const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);const add=()=>{try{const E=$('end');if(E&&E.innerHTML.trim()&&!E.querySelector('.rrEnd')&&!(S&&S.beastMode)){const host=E.querySelector('.box')||E;host.insertAdjacentHTML('beforeend','<p class="tag2 rrEnd" style="text-align:center;margin-top:10px">ชีวิตหน้าอยากเกิดดีกว่านี้? <button class="sysb" onclick="rrMenu()">🎲 สิทธิ์สุ่มเกิด</button><br><small>สิทธิ์ที่ซื้อเก็บไว้ใช้ได้ทุกชีวิต · ใช้กรรมแลกได้ด้วย</small></p>')}}catch(e){}};[50,600,1800].forEach(d=>setTimeout(add,d));return r}}
+{const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);const add=()=>{try{const E=$('end');if(E&&E.innerHTML.trim()&&!E.querySelector('.rrEnd')&&!(S&&S.beastMode)){const host=E.querySelector('.box')||E;host.insertAdjacentHTML('beforeend','<p class="tag2 rrEnd" style="text-align:center;margin-top:10px">ชีวิตหน้าอยากเกิดดีกว่านี้? <button class="sysb" onclick="rrMenu()">🎲 สิทธิ์สุ่มเกิด</button><br><small>สิทธิ์ที่ซื้อเก็บไว้ใช้ได้ทุกชีวิต · ใช้กรรมแลกได้วันละ 5 ครั้ง</small></p>')}}catch(e){}};[50,600,1800].forEach(d=>setTimeout(add,d));return r}}
 // หน้าสนับสนุนผู้พัฒนา
 {const _os=openSupport;openSupport=function(){const r=_os.apply(this,arguments);try{const M=$('modal');if(M&&!M.querySelector('.rrSup')){const P=(window.RR_PKS||{s:[10,12],m:[29,40],l:[59,100]});const h=M.querySelector('h3');(h||M).insertAdjacentHTML(h?'afterend':'beforeend',`<div class="item rrSup"><b>🎲 สนับสนุนแล้วได้สิทธิ์สุ่มเกิดด้วย</b><p class="tag2">เลือกแพ็กแล้วโอนตามยอด สิทธิ์จะเข้าบัญชีหลังผู้พัฒนาตรวจสลิป</p><div class="rrpk">${Object.entries(P).map(([k,v])=>`<button class="opt" onclick="rrBuy('${k}')"><b>${v[1]} ครั้ง</b><small>${v[0]} บาท</small></button>`).join('')}</div></div>`)}}catch(e){}return r}}
 try{const st=document.createElement('style');st.textContent='#rerollBtn.rrNext{border-color:#e0a020;color:#c07a00;font-weight:800;animation:rrP 1.6s ease-in-out infinite}#rrMore small.rrPr{display:block;font-size:11px;opacity:.75;font-weight:400}';document.head.appendChild(st)}catch(e){}
