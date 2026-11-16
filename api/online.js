@@ -656,7 +656,24 @@ module.exports = async (req, res) => {
       const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
       const tid = String(q.id || b.id || ''), tr = Math.max(1, Math.min(3, +(q.t || b.t) || 1)), dy = Math.round(+(q.d || b.d) || 0);
       if (!okId(tid)) return res.json({ err: 'id' });
-      const v = await vipAdd(tid, tr, Math.abs(dy), dy < 0 ? -1 : 1); return res.json({ ok: 1, vip: vipOut(v) });
+      const v = await vipAdd(tid, tr, Math.abs(dy), dy < 0 ? -1 : 1);
+      if (tr === 3 && dy >= 0 && !(await cmd('HEXISTS', 'vipu', tid))) { const o = Math.max(0, Math.floor(+(q.o || b.o) || 0)) || (+(await cmd('INCR', 'vipuN')) || 1); await cmd('HSET', 'vipu', tid, JSON.stringify({ n: clean(String(q.n || b.n || ''), 24), o, t: Date.now() })) }
+      return res.json({ ok: 1, vip: vipOut(v) });
+    }
+    // ซ่อมหอบรรพชน: คนที่จ่ายแพ็กถาวรและอนุมัติแล้ว แต่ไม่ขึ้นในหอ (เช่น อนุมัติก่อนระบบหอเสร็จ) — ใส่ย้อนหลังตามลำดับเวลาที่จ่าย ไม่ลบอะไร
+    if (a === 'vipfix') {
+      const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
+      const ids = (await cmd('ZRANGE', 'suppayz', 0, -1)) || [], vals = ids.length ? ((await cmd('HMGET', 'suppay', ...ids)) || []).map(jp) : [], fixed = [], maybe = [];
+      for (const r of vals) {
+        if (!r || r.st !== 'ok' || !okId(r.fid)) continue;
+        if (r.vp === 'v3') {
+          const had = await cmd('HEXISTS', 'vipu', r.fid), v0 = jp(await cmd('GET', 'vip:' + r.fid)) || {};
+          if (!v0.u) await vipAdd(r.fid, 3, 0, 1);
+          if (!had) { const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', r.fid, JSON.stringify({ n: clean(String(r.n || ''), 24), o, t: +r.tm0 || Date.now() })); fixed.push({ i: r.i, n: r.n, o }) }
+          if (!r.vg) { r.vg = 1; await cmd('HSET', 'suppay', r.i, JSON.stringify(r)) }
+        } else if (!r.vp && (+r.amt || 0) >= 599) maybe.push({ i: r.i, n: r.n, amt: r.amt, fid: String(r.fid).slice(0, 6) })
+      }
+      return res.json({ ok: 1, fixed, maybe });
     }
     if (a === 'vipwall') {
       const raw = (await cmd('HGETALL', 'vipu')) || [], rows = [];
@@ -895,7 +912,7 @@ module.exports = async (req, res) => {
 <div><span class="c"><b>${spT.view || 0}</b>เปิดดู QR วันนี้ (${+spR[7] || 0} คน)</span><span class="c"><b>${spT.stay || 0}</b>เปิดค้าง (น่าจะสแกน) วันนี้</span><span class="c"><b>${spT.save || 0}</b>บันทึก QR วันนี้</span><span class="c"><b>${spT.paid || 0}</b>แจ้งโอนวันนี้</span><span class="c"><b>${sp7.view}</b>เปิดดู 7 วัน (${+spR[8] || 0} คน)</span><span class="c"><b>${sp7.paid}</b>แจ้งโอน 7 วัน</span><span class="c"><b>${spSum.toLocaleString('th-TH')}</b>บาทที่ยืนยันแล้ว</span><span class="c"><b>${+spR[11] || 0}</b>คนกดรอโลกปัจจุบัน 🏙️</span></div>
 <h3>📨 แจ้งว่าโอนแล้ว (${spPay.length})</h3>${spPay.length ? spPay.map(spRow).join('') : '<p><small>ยังไม่มีคนแจ้ง</small></p>'}
 <details><summary>👀 คนที่เปิดดู/บันทึก QR ล่าสุด (${spEv.length})</summary>${spEv.map(x => `<div class="pl"><div class="plh"><b>${e(x.n)}</b><small>${tAgo(x.t)} ที่แล้ว</small></div>${EVN[x.e] || e(x.e)} · <small>${e(String(x.fid || '').slice(0, 10))} · ${e(x.dev || '')}${x.src ? ' · เปิดจาก' + e(x.src) : ''}</small></div>`).join('') || '<p><small>ยังไม่มี</small></p>'}</details>
-<label style="display:block;margin:6px 0"><input type="checkbox" id="spTy" checked onchange="localStorage.setItem('spTy',this.checked?1:0)"> กด ✅ ยืนยันว่าได้รับ แล้วส่งคำขอบคุณอัตโนมัติ</label><script>try{if(localStorage.getItem('spTy')==='0')document.getElementById('spTy').checked=false}catch(x){}const SPQ=['🙏 ได้รับแล้ว ขอบคุณมากครับ! เงินสนับสนุนจะเอาไปพัฒนาเกมต่อ 💛','❓ ยังไม่พบยอดโอนครับ รบกวนเช็กชื่อบัญชีและเวลาโอนอีกครั้งนะครับ','📸 รบกวนส่งสลิปอีกครั้งผ่านปุ่มแจ้งโอนในเกมนะครับ รูปเดิมไม่ชัด'];function spQ(i,k){const t=document.getElementById('spx_'+i);if(t)t.value=SPQ[k]}
+<label style="display:block;margin:6px 0"><input type="checkbox" id="spTy" checked onchange="localStorage.setItem('spTy',this.checked?1:0)"> กด ✅ ยืนยันว่าได้รับ แล้วส่งคำขอบคุณอัตโนมัติ</label><button onclick="vFix(this)" style="margin:4px 0">🏮 ซ่อมหอบรรพชน (ใส่ย้อนหลังคนที่จ่ายถาวรแล้วไม่ขึ้น)</button><script>async function vFix(b){b.disabled=true;try{const r=await fetch('?a=vipfix&key=${K}');const j=await r.json();b.textContent=j.ok?'✓ ใส่เพิ่ม '+j.fixed.length+' คน'+(j.maybe&&j.maybe.length?' · พบจ่าย ≥599 ที่ไม่ได้เลือกแพ็ก '+j.maybe.length+' รายการ (ดูในรายการจ่าย)':''):'ไม่สำเร็จ'}catch(e){b.textContent='ไม่สำเร็จ';b.disabled=false}}</script><script>try{if(localStorage.getItem('spTy')==='0')document.getElementById('spTy').checked=false}catch(x){}const SPQ=['🙏 ได้รับแล้ว ขอบคุณมากครับ! เงินสนับสนุนจะเอาไปพัฒนาเกมต่อ 💛','❓ ยังไม่พบยอดโอนครับ รบกวนเช็กชื่อบัญชีและเวลาโอนอีกครั้งนะครับ','📸 รบกวนส่งสลิปอีกครั้งผ่านปุ่มแจ้งโอนในเกมนะครับ รูปเดิมไม่ชัด'];function spQ(i,k){const t=document.getElementById('spx_'+i);if(t)t.value=SPQ[k]}
 async function spR(i,b){const t=document.getElementById('spx_'+i);b.disabled=true;try{const r=await fetch('?a=supreply&key=${K}&i='+i,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({x:t?t.value:''})});const j=await r.json();b.textContent=j.ok?(j.del?'✓ ลบคำตอบแล้ว':'✓ ส่งแล้ว'+(j.push&&j.push.sent?' · เด้งถึงมือถือ '+j.push.sent+' เครื่อง':' · เก็บไว้ในกล่องข้อความในเกม')):'ไม่สำเร็จ';if(j.ok)setTimeout(()=>location.reload(),1200)}catch(x){b.textContent='ไม่สำเร็จ';b.disabled=false}}
 async function spM(i,v,b){if(v==='del'&&!confirm('ลบรายการนี้?'))return;b.disabled=true;try{const ty=document.getElementById('spTy');const r=await fetch('?a=supmark&key=${K}&i='+i+'&v='+v+'&ty='+(ty&&ty.checked?1:0));const j=await r.json();b.textContent=j.ok?'✓ บันทึกแล้ว'+(j.push?(j.push.sent?' · ส่งคำขอบคุณถึงมือถือแล้ว':' · ส่งคำขอบคุณในเกมแล้ว'):''):'ไม่สำเร็จ';if(j.ok)setTimeout(()=>location.reload(),900)}catch(x){b.textContent='ไม่สำเร็จ'}}</script>`;
       const acHtml = `<h2>🕵️ ผู้ต้องสงสัยโกง <small style="font-weight:normal;color:#aaa">· 🔴 = จับได้ชัด (แก้ค่าผ่านคอนโซล/แก้เซฟ) ถูกตัดจากระบบออนไลน์อัตโนมัติ · 🟡🟠 = สัญญาณให้ตรวจเอง</small></h2>${acL.length ? acL.slice(0, 40).map(x => acRow(x, 'ระบบจับ')).join('') : '<p><small>ยังไม่มี</small></p>'}<details><summary>📋 ถูกตัดจากทำเนียบล่าสุด (${clL.length})</summary>${clL.map(x => acRow(x, 'ทำเนียบ')).join('')}</details>
