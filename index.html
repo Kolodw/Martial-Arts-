@@ -27319,6 +27319,9 @@ const _sfb2=saveFailBar;saveFailBar=function(on){if(on&&Date.now()<window._sfHid
 // ---- v17.31 ลาออกจากอาชีพหนึ่งแล้วอีกอาชีพต้องไม่หาย: เลื่อนอาชีพที่เหลือขึ้นมาเป็นอาชีพหลักเลย ----
 function jQuitGo(){if(S.job2&&JOB[S.job2.t]){const old=S.job;S.job=S.job2;S.job2=null;log('📜 คุณลาออกจากงาน'+(old&&JOB[old.t]?' '+JOB[old.t].ic:'')+' — กลับมาทำ '+JOB[S.job.t].ic+' อาชีพเดิมต่อ')}else{S.job=null;S.job2=null;log('📜 คุณลาออกจากงาน')}render();openJob()}
 jQuit=function(){const two=S.job2&&JOB[S.job2.t];modal(`<h3>ลาออกจากอาชีพ?</h3><p>${two?'ขั้นและผลงานของอาชีพนี้จะหายไป — อีกอาชีพที่ทำอยู่จะยังอยู่ครบและกลับมาเป็นอาชีพหลักทันที':'ขั้นและผลงานทั้งหมดจะหายไป ถ้ากลับมาต้องเริ่มขั้นแรกใหม่'}</p><div class="brow"><button class="gbtn" onclick="openJob()">ยกเลิก</button><button class="pbtn" onclick="jQuitGo()">ลาออก</button></div>`,'job')};
+
+// ---- v17.31 ประกาศแอดมินต้องขึ้นเกาะเสมอ: ไม่ถูกป้ายค้างอื่น (เช่น แจ้งอัปเดต/ตอบแชท) ดักไว้ในคิว ----
+{const _isl=island;island=function(n){try{if(n&&n.key==='ann'&&ISL.cur&&ISL.cur.key!=='ann'&&ISL.cur.sticky&&!ISL.cur.live){const c=ISL.cur;clearTimeout(ISL.t);ISL.q.unshift(c);ISL.cur=null}}catch(e){}return _isl.apply(this,arguments)}}
 </script>
 </body>
 </html>
