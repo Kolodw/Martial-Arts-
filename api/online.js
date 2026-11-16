@@ -1156,6 +1156,37 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       out.mb = +(out.bytes / 1048576).toFixed(1); out.oldMb = +(out.oldBytes / 1048576).toFixed(1);
       return res.json(out);
     }
+    if (a === 'csmig') {
+      // ผู้ดูแลเท่านั้น: ย้ายเซฟคลาวด์เก่าจาก Valkey (RAM) ไป R2 · ค่าเริ่มต้น = ดูเฉยๆ (dry-run) · go=1 ถึงจะย้ายจริง
+      // ปลอดภัย: เขียน R2 → เช็คขนาดตรงกัน → ค่อยลบจาก Valkey · ทำทีละ lim ก้อน (เรียกซ้ำจนกว่า left=0) · ไม่แตะกุญแจ cs2 (ตัวชี้) ซึ่งเกมอ่านต่อจาก R2 เองได้
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
+      const bk = r2Bkt(); if (!bk) return res.status(400).json({ err: 'no-r2' });
+      const go = String(qOf(req).go || '') === '1', lim = Math.max(1, Math.min(400, parseInt(qOf(req).lim, 10) || 100));
+      const out = { go, lim, scanned: 0, moved: 0, skipped: 0, failed: 0, bytes: 0, left: 0 }; let cur = '0', todo = [];
+      try {
+        do {
+          const r = await cmd('SCAN', cur, 'MATCH', 'cs3:*', 'COUNT', 500); cur = String(r[0]); const ks = r[1] || []; out.scanned += ks.length;
+          for (const k of ks) { if (/^cs3:[a-z0-9]{6,24}:[1-5]$/.test(k)) { if (todo.length < lim) todo.push(k); else out.left++ } else out.skipped++ }
+        } while (cur !== '0' && out.scanned < 60000 && (todo.length < lim || out.left < 1));
+        for (let i = 0; i < todo.length; i += 8) {
+          await Promise.all(todo.slice(i, i + 8).map(async k => {
+            try {
+              const [, id, sl] = k.split(':'), [v, ttl] = await pipe([['GET', k], ['TTL', k]]);
+              if (v == null || /^@[1-5]$/.test(String(v))) { out.skipped++; return }
+              const bytes = Buffer.byteLength(String(v)); out.bytes += bytes;
+              if (!go) { out.moved++; return }
+              const t = +ttl > 0 ? now - Math.max(0, 90 * 86400 - +ttl) * 1000 : now;
+              await bk.put(r2Key(id, sl), String(v), { customMetadata: { t: String(t), mig: '1' } });
+              const hd = await bk.head(r2Key(id, sl));
+              if (!hd || hd.size !== bytes) { out.failed++; return }
+              await cmd('DEL', k); out.moved++;
+            } catch (e) { out.failed++ }
+          }));
+        }
+      } catch (x) { out.err = String(x && x.message || x).slice(0, 120) }
+      out.mb = +(out.bytes / 1048576).toFixed(2);
+      return res.json(out);
+    }
     if (a === 'annget') {
       const ai = String(qOf(req).ai || '').replace(/[^a-z0-9]/g, '').slice(0, 20), f = await annFind(ai);
       if (!f) return res.status(404).json({ err: 'gone' });
