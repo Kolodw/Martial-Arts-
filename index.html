@@ -27379,6 +27379,117 @@ const st=document.createElement('style');st.textContent='.bagQ{display:flex;gap:
  const _cpW=chatPoll;chatPoll=function(){if(live&&Date.now()-lastSync<60000)return Promise.resolve();lastSync=Date.now();return _cpW.apply(this,arguments)};
  window._chWS=()=>({live,open:!!ws});
 }catch(e){console.error(e)}})();
+
+// ===================== v17.33 🔀 เหนือกัลป์ที่เก้า: ทางแยก 3 สาย · กัลป์ที่ 10–11 · แดนนอกกาล · มหากัลป์ =====================
+try{(()=>{
+const KP={
+ mem:{n:'สายทรงจำ',ic:'💞',c:['#ff9ad0','#ffc0e8'],k:['กัลป์แห่งความทรงจำ','กัลป์แห่งการลืม'],t:['ผู้จดจำข้ามกัลป์','ผู้ถือความทรงจำของจักรวาล'],
+  req:'มีคู่ครอง หรือลูกหลาน/ศิษย์ 3 คนขึ้นไป',ok:()=>!!S.spouse||kpKids()>=3,hint:'ความรัก ลูกหลาน และปัญญาช่วยให้ผ่าน',
+  w:[['🌫️ หมอกลืมชื่อ','หมอกสีเงินพัดผ่าน ชื่อของคนที่คุณรักเริ่มเลือนหายจากปาก'],['🪞 เงาของวันวาน','ภาพชีวิตเก่าทุกชาติไหลย้อนเข้ามาพร้อมกัน จนแยกไม่ออกว่าคุณคือใคร'],['🕳️ ความว่างที่ไม่มีใครจำ','จักรวาลทั้งใบกำลังลืมว่าเคยมีคุณอยู่']]},
+ law:{n:'สายกฎ',ic:'📜',c:['#7ad0ff','#b0f0ff'],k:['กัลป์แห่งกฎที่แตกสลาย','กัลป์แห่งกฎใหม่'],t:['ผู้อ่านกฎที่แตกร้าว','ผู้จารึกกฎแห่งจักรวาล'],
+  req:'มีวิชา 8 วิชาขึ้นไป หรือปัญญา 3,000 ขึ้นไป',ok:()=>(S.arts||[]).length>=8||(S.int||0)>=3000,hint:'วิชาและปัญญาช่วยให้ผ่าน',
+  w:[['⚖️ กฎแรงโน้มถ่วงกลับหัว','ดวงดาวร่วงขึ้นฟ้า ลมปราณไหลย้อนทาง วิชาที่ฝึกมาใช้การไม่ได้ครึ่งหนึ่ง'],['🔢 ตัวเลขแห่งชะตาแตกร้าว','ความน่าจะเป็นพังทลาย ทุกการกระทำให้ผลตรงข้าม'],['📜 กฎข้อสุดท้ายถูกลบ','เส้นแบ่งระหว่างมีกับไม่มีกำลังหายไป']]},
+ shd:{n:'สายเงา',ic:'🌑',c:['#a080ff','#ff6a8a'],k:['กัลป์แห่งเงา','กัลป์แห่งผู้สร้าง'],t:['ผู้เดินร่วมกับเงา','ผู้สร้างจากความมืด'],
+  req:'กรรม (ดีหรือชั่ว) 500 ขึ้นไป หรือเคยกลืนกัลป์',ok:()=>Math.abs(S.karma||0)>=500||!!(S.flags&&S.flags.kDevour),hint:'พลังและกรรมที่หนักแน่นช่วยให้ผ่าน',
+  w:[['🌑 เงากลืนแสง','เงาของคุณลุกขึ้นยืนเอง แล้วเดินเข้าหาคุณ'],['👥 เงาจากทุกกัลป์','เงานับร้อยจากทุกกัลป์ที่ผ่านมา ล้อมคุณไว้ แต่ละเงาคือตัวคุณในอีกทางเลือกหนึ่ง'],['🖤 ผู้สร้างคนแรก','เงาที่ใหญ่ที่สุดเผยหน้า — มันคือคนแรกที่ก้าวข้ามกัลป์ที่เก้า และไม่เคยกลับมา']]}};
+const KPK=['mem','law','shd'];
+const KW_DEF=KW.map(x=>x.slice()),KN_DEF=KAL_N.slice(),KT_DEF=KAL_T.slice(),KC_DEF=KAL_C.slice();
+function kpKids(){try{return Math.max((S.children||[]).length+(S.lineage||[]).length,Math.min(50,S.kids|0))}catch(e){return 0}}
+const later=(f,ms)=>{clearTimeout(later.t);later.t=setTimeout(f,ms)};
+function kpApply(K){if(!K)return;const P=K.path&&KP[K.path];
+ if(P){KAL_N[9]=P.k[0];KAL_N[10]=P.k[1];KAL_T[9]=P.t[0];KAL_T[10]=P.t[1];KAL_C[9]=P.c[0];KAL_C[10]=P.c[1]}
+ else{KAL_N[9]='กัลป์ที่สิบ';KAL_N[10]='กัลป์ที่สิบเอ็ด';KAL_T[9]='ผู้ก้าวพ้นกัลป์ที่เก้า';KAL_T[10]='ผู้ยืนนอกวงจร';KAL_C[9]='#ffd7ff';KAL_C[10]='#ffffff'}
+ const pw=P&&(K.n>=8);for(let i=0;i<3;i++){const s=pw?P.w[i]:KW_DEF[i];KW[i][0]=s[0];KW[i][1]=s[1]}}
+window.KP=KP;window.kpApply=kpApply;
+// ปีสิ้นกัลป์นับต่อจากมหากัลป์ก่อน (อายุเดินหน้าเสมอ)
+{const _kc=kcap;kcap=function(){const K=S&&S.kalpa;return 1e6*(1+((K&&K.n)|0)+((K&&K.ofs)|0))}}
+{const _ko=kOf;kOf=function(){const K=_ko.apply(this,arguments);try{kpApply(K)}catch(e){}return K}}
+// ความยาก: กัลป์ 9 ขึ้นไปไม่ต่ำกว่า ~30% · มหากัลป์ยากขึ้นรอบละ 5% (ไม่ต่ำกว่า 18%) · สายที่ถนัด + เศษกัลป์ช่วย
+{const _kd=kDiff;kDiff=function(){let d=_kd.apply(this,arguments);try{const K=kK();if(!K)return d;const mk=K.mk|0;
+ if(K.n>=8)d=Math.max(d,.30-.05*mk);d-=.05*mk;
+ if(K.path&&K.n>=8){const b=K.path==='mem'?kpKids()/40+(S.spouse?.03:0)+(S.int||0)/80000:K.path==='law'?(S.arts||[]).length*.006+(S.int||0)/60000:Math.abs(S.karma||0)/3000+(S.flags&&S.flags.kDevour?.03:0);d+=Math.min(.08,b)+Math.min(3,K.sh|0)*.04}
+ d=Math.max(.18,d)}catch(e){}return d}}
+{const _kv=kalpaWave;kalpaWave=function(){try{kpApply(kOf())}catch(e){}return _kv.apply(this,arguments)}}
+// ---------- ประตู ----------
+function kpPick(){const K=kOf();if(!S||!S.alive||K.path)return;if(choice._cur)return later(kpPick,500);const any=KPK.some(k=>KP[k].ok());
+ const O=KPK.map(k=>{const P=KP[k],ok=!any||P.ok();return{t:`${P.ic} ${P.n} → ${P.k[0]}`,s:ok?P.hint:`🔒 ต้อง${P.req}`,skip:!ok,_x:1,noFate:1,f(){if(!ok){toast('🔒 ยังไม่ผ่านเงื่อนไขของ'+P.n);setTimeout(kpPick,300);return}
+  K.path=k;K.ancDone=1;K.sh=K.sh|0;kpApply(K);keyAdd(`เลือก${P.n} — เดินออกนอกวงจรกัลป์`);log(`🔀 คุณหันหลังให้บรรพกาลเทพ แล้วเดินไปทาง <b>${P.n}</b> — ข้างหน้าคือ<b>${P.k[0]}</b> ที่ไม่มีใครเคยเห็น`,'myth',true);setTimeout(()=>kalpaWave(1,0),300)}}});
+ O.push({t:'↩️ กลับไปที่ใจกลางวงจร',s:'ตัดสินบรรพกาลเทพแทน',skip:true,_x:1,f(){setTimeout(kalpaGate,300)}});
+ choice('🔀 ทางแยกนอกวงจรกัลป์',`เหนือกัลป์ที่เก้า วงจรแตกออกเป็นสามสาย แต่ละสายพาไปสู่จักรวาลที่ต่างกัน — และ<b>แดนนอกกาล</b>ที่ปลายทาง<br><span class="tag2">เลือกได้สายเดียว · สายที่ถนัดผ่านภัยง่ายขึ้น${(K.mk|0)?` · มหากัลป์ที่ ${(K.mk|0)+1}`:''}</span>`,O)}
+function kpGate(){const K=kOf();if(!S||!S.alive)return;if(choice._cur)return later(kpGate,700);
+ if(K.by>0)return kpBeyond();
+ if(K.n>=10){choice(`🌫️ ขอบของ${KAL_N[K.n]}`,`<div class="kgate" style="--c:${KAL_C[K.n]}"><b>${fmt(S.age)} ปี</b> · ${KAL_T[K.n]}<br>เหนือจากนี้ไม่มีจักรวาล ไม่มีปี ไม่มีกัลป์ — มีเพียง<b>แดนนอกกาล</b> ที่ไม่มีใครกลับออกมาเล่าได้</div>`,[
+  {t:'🌫️ ก้าวสู่แดนนอกกาล',s:'3 ด่านสุดท้าย · ไม่มีการนับปีอีกต่อไป',_x:1,noFate:1,f(){K.by=1;setTimeout(kpBeyond,300)}},
+  {t:'🌅 ละสังขารอย่างสมบูรณ์',s:'จบอย่างสงบ · ลูกหลานได้มรดกแห่งกัลป์',skip:true,_x:1,f(){kalpaEnd('rest')}}]);return}
+ const nx=KAL_N[K.n+1];choice(`♾️ ขอบของ${KAL_N[K.n]}`,`<div class="kgate" style="--c:${KAL_C[K.n]}"><b>${fmt(S.age)} ปี</b> · ${KAL_T[K.n]||''}<br>${KP[K.path].ic} ${KP[K.path].n} ยังทอดยาวต่อไป — ข้างหน้าคือ<b>${nx}</b></div>`,[
+  {t:'🌌 ก้าวข้ามกัลป์',s:`เผชิญภัย 3 ระลอก (ผ่าน 2 ใน 3) · โอกาสราว ${Math.round(kDiff()*100)}% · รอด → <b>${nx}</b>`,_x:1,noFate:1,f(){setTimeout(()=>kalpaWave(1,0),300)}},
+  {t:'🌅 ละสังขารอย่างสมบูรณ์',s:'จบอย่างสงบ · ลูกหลานได้มรดกแห่งกัลป์',skip:true,_x:1,f(){kalpaEnd('rest')}}])}
+{const _kg=kalpaGate;kalpaGate=function(){const K=kK();if(!S||!S.alive||!K)return _kg.apply(this,arguments);
+ if(K.n>=9||(K.n===8&&K.path))return kpGate();
+ const r=_kg.apply(this,arguments);
+ try{if(K.n===8&&!K.path&&choice._cur&&/วงจรกัลป์/.test(choice._cur.title)&&!choice._cur.opts.some(o=>o._kp)){choice._cur.opts.splice(Math.max(0,choice._cur.opts.length-1),0,{_kp:1,_x:1,noFate:1,t:'🔀 เดินออกนอกวงจร',s:'ไม่ตัดสินบรรพกาลเทพ — เลือก 1 ใน 3 สายสู่กัลป์ที่สิบ แล้วไปให้ถึงแดนนอกกาล',f(){setTimeout(kpPick,300)}});choiceShow()}}catch(e){console.error(e)}
+ return r}}
+// ---------- เหตุการณ์ระหว่างกัลป์ 10–11: ทางลัด · เศษกัลป์ · สลับสาย · เหตุการณ์ตามสาย ----------
+function kpEv(){const K=kOf(),P=KP[K.path],E=[];
+ if(K.n===9&&!K.scT)E.push(()=>{const p=clamp(kDiff()-.08,.12,.8);choice('⚡ รอยแยกทางลัด',`รอยแยกในจักรวาลเปิดตรงไปยัง<b>${KAL_N[10]}</b> — ข้ามได้ทันทีโดยไม่ต้องรอสิ้นกัลป์ แต่รอยแยกไม่มั่นคง`,[
+  {t:'⚡ พุ่งผ่านรอยแยก',s:`~${Math.round(p*100)}% · สำเร็จ = ข้ามไป${KAL_N[10]}ทันที (รางวัลน้อยกว่าปกติ) · พลาด = พลังชีวิต −35%`,f(){K.scT=1;if(Math.random()<p){const st=S.age;kalpaWin();S.fame=Math.max(0,S.fame-2500);S.age=Math.max(st,kcap()-1e6);K.st=S.age;log('⚡ คุณทะลุรอยแยกออกมาอีกฝั่ง — ข้ามไปทั้งกัลป์ในพริบตา','myth',true)}else{S.hp-=Math.round(S.maxHp*.35);log('⚡ รอยแยกปิดใส่ร่างคุณครึ่งหนึ่ง — กระเด็นกลับมาที่เดิม','bad',true);checkDeath()}render()}},
+  {t:'🚶 เดินทางตามปกติ',s:'ปลอดภัยกว่า',skip:true,f(){K.scT=1;log('🚶 คุณปล่อยรอยแยกให้ปิดไปเอง')}}])});
+ if((K.sh|0)<3)E.push(()=>choice('🧩 เศษกัลป์',`เศษของจักรวาลที่ดับไปลอยอยู่ในห้วงอวกาศ — ใน${P.n} มันช่วยให้ผ่านภัยท้ายได้ง่ายขึ้น (มีอยู่ ${K.sh|0}/3)`,[
+  {t:'🧩 อ้อมไปเก็บ',s:'~60% · สำเร็จ = เศษกัลป์ +1 (ภัยง่ายขึ้น 4%) · พลาด = พลังชีวิต −20%',f(){if(Math.random()<.6){K.sh=Math.min(3,(K.sh|0)+1);log(`🧩 ได้เศษกัลป์ (${K.sh}/3) — มันสั่นไหวตามชีพจรของคุณ`,'epic')}else{S.hp-=Math.round(S.maxHp*.2);log('🧩 เศษกัลป์ระเบิดใส่มือ','bad');checkDeath()}render()}},
+  {t:'➡️ ไม่ต้องอ้อม',s:'ไปต่อ',skip:true,f(){}}]));
+ if(K.n===9&&!K.swT)E.push(()=>{const O=KPK.filter(k=>k!==K.path).map(k=>({t:`${KP[k].ic} เปลี่ยนไป${KP[k].n}`,s:`พลังชีวิตเหลือ 60% · เสียเศษกัลป์ทั้งหมด · กัลป์ถัดไปเป็น${KP[k].k[1]}`,f(){K.swT=1;K.path=k;K.sh=0;S.hp=Math.min(S.hp,Math.round(S.maxHp*.6));kpApply(K);keyAdd(`สลับไป${KP[k].n}กลางทาง`);log(`🔀 คุณตัดตัวเองออกจาก${P.n} แล้วกระโดดข้ามไปยัง<b>${KP[k].n}</b>`,'myth',true);render()}}));
+  O.push({t:`${P.ic} อยู่${P.n}ต่อ`,s:'ไม่เปลี่ยน',skip:true,f(){K.swT=1}});choice('🔀 จุดตัดของสาย',`ตรงนี้สามสายเฉียดเข้าหากัน — คุณมองเห็นอีกสองสายอยู่ใกล้แค่เอื้อม`,O)});
+ if(K.path==='mem'){
+  E.push(()=>{const nm=S.spouse||((S.children||[]).concat(S.lineage||[]).map(c=>c&&c.n).filter(Boolean)[0])||'คนที่คุณเคยช่วยไว้';choice('💞 คนที่ยังจำได้',`ในจักรวาลที่ทุกคนลืม มีเพียง <b>${esc(nm)}</b> ที่ยังจำชื่อคุณได้ — แม้จะจำได้แค่ครึ่งเดียว`,[
+   {t:'🤲 เล่าเรื่องให้ฟังจนจำได้ครบ',s:'ความสุข + · ปัญญา +',f(){joy(25);S.int+=80;log(`🤲 คุณนั่งเล่าเรื่องของพวกคุณให้ ${esc(nm)} ฟังทั้งคืน จนเขาจำได้ครบ`,'epic')}},
+   {t:'🍃 ปล่อยให้เขาจำแบบนั้น',s:'กรรม + · เศษกัลป์ (ถ้ายังไม่ครบ)',f(){S.karma+=30;if((K.sh|0)<3)K.sh=(K.sh|0)+1;log('🍃 ความทรงจำครึ่งเดียวก็งดงามพอแล้ว','good')}}])});
+  E.push(()=>choice('📖 หอสมุดที่ถูกลืม','หอสมุดลอยกลางความว่าง เก็บความทรงจำของทุกคนที่จักรวาลลืมไปแล้ว',[{t:'📖 อ่าน',s:'ปัญญา ++',f(){S.int+=150;log('📖 คุณอ่านชีวิตของคนนับล้านที่ไม่มีใครจำ','epic')}},{t:'🔥 เผาทิ้ง',s:'พลัง + · กรรม −',f(){const g=pctPow(.03);S.power+=g;S.karma-=40;log(`🔥 ความทรงจำนับล้านกลายเป็นเชื้อเพลิง — พลังยุทธ์ +${fmt(g)}`,'bad')}}]))}
+ if(K.path==='law'){
+  E.push(()=>choice('⚖️ กฎที่ขาดหาย','กฎข้อหนึ่งของจักรวาลหายไป — ไฟไม่ร้อน น้ำไม่ไหล ผู้คนตื่นตระหนก',[{t:'📜 เขียนกฎใหม่แทน',s:'ปัญญา + · ชื่อเสียง +',f(){S.int+=100;S.fame+=3000;log('📜 คุณจารึกกฎข้อใหม่ลงในความว่าง โลกกลับมาหมุนได้อีกครั้ง','epic')}},{t:'🌀 ปล่อยให้โลกปรับตัวเอง',s:'เศษกัลป์ (ถ้ายังไม่ครบ)',f(){if((K.sh|0)<3)K.sh=(K.sh|0)+1;log('🌀 โลกค่อยๆ หากฎของตัวเองเจอ และทิ้งเศษกฎเก่าไว้ให้คุณ','good')}}]));
+  E.push(()=>{const a=(S.arts||[]).filter(x=>x&&typeof x==='object')[0];choice('🔢 วิชาที่กฎไม่รองรับ',a?`กฎใหม่ของจักรวาลทำให้《${esc(a.n)}》ใช้การไม่ได้`:'กฎใหม่ทำให้ลมปราณไหลผิดทาง',[{t:'🛠️ ดัดแปลงวิชาให้เข้ากับกฎ',s:'ปัญญาช่วย',f(){if(Math.random()<.45+(S.int||0)/20000){if(a)a.b=Math.round(a.b*1.15);log('🛠️ วิชาที่ดัดแปลงแล้วแข็งแกร่งกว่าเดิม','epic')}else{S.hp-=Math.round(S.maxHp*.15);log('🛠️ ลมปราณย้อนกลับ','bad');checkDeath()}render()}},{t:'🧘 รอให้กฎเสถียร',s:'ปลอดภัย',skip:true,f(){joy(5)}}])})}
+ if(K.path==='shd'){
+  E.push(()=>choice('🌑 เงาที่ขอเข้าร่วม','เงาของคุณจากกัลป์ก่อนตนหนึ่งคุกเข่า ขอกลับเข้ามาเป็นส่วนหนึ่งของคุณ',[{t:'🖤 รับเข้ามา',s:'พลัง + · กรรมเอียงไปทางเดิม',f(){const g=pctPow(.04);S.power+=g;S.karma+=S.karma>=0?40:-40;log(`🖤 เงากลืนเข้าไปในตัวคุณ — พลังยุทธ์ +${fmt(g)}`,'epic')}},{t:'⚔️ ทำลายทิ้ง',s:'ดวล · ชนะได้เศษกัลป์',f(){setTimeout(()=>duel('เงาจากกัลป์ก่อน',Math.round(total()*.9),w=>{if(w&&(K.sh|0)<3)K.sh=(K.sh|0)+1;log(w?'⚔️ เงาแตกเป็นเศษกัลป์':'⚔️ เงาหนีกลับเข้าความมืด',w?'epic':'bad')}),200)}}]));
+  E.push(()=>choice('👁️ ผู้สร้างคนแรกมองมา','ในความมืดมีดวงตาคู่หนึ่งเฝ้ามองคุณมาตลอดทาง',[{t:'👁️ มองกลับ',s:'ปัญญา + · พลังชีวิต −',f(){S.int+=90;S.hp-=Math.round(S.maxHp*.1);log('👁️ คุณเห็นอดีตของมัน — มันก็เคยเป็นคนแบบคุณ','epic');checkDeath();render()}},{t:'🚶 เดินต่อโดยไม่หันไป',s:'ความสุข +',skip:true,f(){joy(8)}}]))}
+ ch(E)()}
+{const _ke=kalpaEvent;kalpaEvent=function(){try{const K=kK();if(K&&K.n>=9&&K.path&&KP[K.path]&&Math.random()<.55)return kpEv()}catch(e){console.error(e)}return _ke.apply(this,arguments)}}
+// ---------- แดนนอกกาล: 3 ด่าน ----------
+function kpMems(){const L=[];try{if(S.spouse)L.push(['💞',S.spouse,'คนรัก']);(S.children||[]).concat(S.lineage||[]).filter(c=>c&&c.n).slice(0,2).forEach(c=>L.push(['👶',c.n,'ลูกหลาน']));if(S.faction&&S.faction.n)L.push(['🏯',S.faction.n,'สำนักที่เคยอยู่']);if(S.name)L.push(['🪞',S.name,'ชื่อของคุณเอง'])}catch(e){}return L.slice(0,4)}
+function kpBeyond(){const K=kOf();if(!S||!S.alive||!(K.by>0)||S.flags.kEnd)return;if(choice._cur)return later(kpBeyond,600);K.pend=1;const P=KP[K.path]||KP.mem;
+ if(K.by===1){const M=kpMems();
+  choice('🪞 ด่าน 1/3 · ห้องกระจกแห่งวัฏจักร',`กระจกนับไม่ถ้วนสะท้อนชีวิตทุกชาติของคุณ${M.length?`<br>${M.map(m=>`${m[0]} <b>${esc(m[1])}</b> <span class="tag2">${m[2]}</span>`).join('<br>')}`:''}<br><span class="tag2">กระจกจะให้คุณเอาความทรงจำออกไปได้ไม่เท่ากัน</span>`,[
+   {_x:1,noFate:1,t:'💠 เก็บทุกความทรงจำ',s:'ด่านสุดท้ายเปิดฉากจบสายทรงจำง่ายขึ้น · ความสุข +',f(){K.bm='all';joy(20);log('💠 คุณกอดความทรงจำทุกชาติไว้ — หนักอึ้ง แต่ไม่อยากวางลง','myth');K.by=2;setTimeout(kpBeyond,400)}},
+   {_x:1,noFate:1,t:'🍃 ทิ้งทุกอย่างไว้ที่นี่',s:'ตัวเบา · ด่านที่ 2 ง่ายขึ้น 10%',f(){K.bm='none';log('🍃 คุณวางทุกชาติลงทีละชาติ จนเหลือแค่ตัวคุณตอนนี้','myth');K.by=2;setTimeout(kpBeyond,400)}},
+   ...(M.length?[{_x:1,noFate:1,t:`🔆 เก็บไว้แค่ ${esc(M[0][1])}`,s:'สมดุล',f(){K.bm='one';K.bmN=String(M[0][1]).slice(0,30);log(`🔆 ในบรรดาทุกอย่าง คุณเลือกเก็บ <b>${esc(M[0][1])}</b> ไว้เพียงอย่างเดียว`,'myth');K.by=2;setTimeout(kpBeyond,400)}}]:[])]);return}
+ if(K.by===2){const nb=K.bm==='none'?.1:0,sh=Math.min(3,K.sh|0)*.05;
+  const done=w=>{if(w){log(`✨ ผ่านด่านที่ 2 ของ${P.n}`,'myth',true);K.by=3;setTimeout(kpBeyond,600)}else{S.hp-=Math.round(S.maxHp*.35);if(S.hp<=0){S.deathCause=`สลายไปในแดนนอกกาล ระหว่างทาง${P.n}`;K.pend=0;render();checkDeath();return}log('💢 คุณถูกผลักกลับไปที่ปากทาง — ยังลองใหม่ได้ (พลังชีวิตลดลง)','bad',true);render();setTimeout(kpBeyond,900)}};
+  if(K.path==='shd'){const m=Math.max(.6,1.15-sh-nb);choice('🌑 ด่าน 2/3 · เงาของตัวคุณจากทุกกัลป์',`เงาทุกตนรวมร่างเป็นหนึ่ง — มันรู้ทุกท่าที่คุณเคยใช้<br><span class="tag2">ดวลกับตัวเอง (แรงราว ${Math.round(m*100)}% ของคุณ)</span>`,[{t:'⚔️ ดวล',_x:1,noFate:1,f(){setTimeout(()=>duel('เงาของตัวคุณจากทุกกัลป์',Math.round(total()*m),done),300)}}]);return}
+  const p=K.path==='mem'?clamp(.35+kpKids()/60+(S.spouse?.1:0)+(K.bm==='all'?.1:0)+nb+sh,.2,.9):clamp(.35+(S.arts||[]).length*.01+(S.int||0)/40000+nb+sh,.2,.9);
+  const T=K.path==='mem'?['💞 ด่าน 2/3 · เงาของคนที่คุณรัก','เงาของคนที่คุณรักที่สุดยืนขวางทาง — "ถ้าเดินต่อ เธอจะลืมฉัน"']:['📜 ด่าน 2/3 · ผู้เฝ้าประตู','ผู้เฝ้าประตูถามคำถามเดียว — "กฎข้อแรกของจักรวาลคืออะไร"'];
+  choice(T[0],`${T[1]}<br><span class="tag2">โอกาสผ่าน ~${Math.round(p*100)}%</span>`,[
+   {t:K.path==='mem'?'🤲 จับมือเงาแล้วพาไปด้วย':'📜 ตอบด้วยสิ่งที่เรียนรู้มาทั้งชีวิต',_x:1,noFate:1,f(){done(Math.random()<p)}},
+   {t:K.path==='mem'?'🗡️ ฝืนเดินผ่าน':'⚔️ ไม่ตอบ แต่ฝ่าเข้าไป',s:'ดวลแทน (แรงราว 110%)',_x:1,noFate:1,f(){setTimeout(()=>duel(K.path==='mem'?'เงาของคนที่รัก':'ผู้เฝ้าประตู',Math.round(total()*1.1),done),300)}}]);return}
+ // ด่าน 3: วัฏจักรที่ถูกลืม → ฉากจบ
+ const pd=(K.pd||[]).slice(),secret=KPK.every(k=>k===K.path||pd.includes(k));
+ const E0={mem:[['all','ผู้จดจำทุกสิ่ง','คุณกลายเป็นความทรงจำของจักรวาลทั้งปวง ไม่มีใครถูกลืมอีกต่อไป','#ff9ad0'],['forget','ผู้ลืมเพื่อเริ่มใหม่','คุณปล่อยทุกอย่าง แล้วเกิดใหม่เป็นเด็กธรรมดาในจักรวาลที่ไม่มีใครรู้จัก','#ffc0e8']],
+  law:[['write','ผู้เขียนกฎใหม่','คุณจารึกกฎข้อแรกของจักรวาลใหม่ด้วยมือตัวเอง','#7ad0ff'],['keep','ผู้พิทักษ์กฎเดิม','คุณซ่อมกฎเก่าทุกข้อ แล้วนั่งเฝ้ามันไปชั่วนิรันดร์','#b0f0ff']],
+  shd:[['create','ผู้สร้างจักรวาลใหม่','จากความมืดทั้งหมด คุณจุดแสงดวงแรกของจักรวาลใหม่','#ffd700'],['void','ผู้ดับสูญสมบูรณ์','คุณเลือกให้ทุกสิ่งจบลงอย่างแท้จริง — รวมถึงตัวคุณ','#a080ff']]}[K.path]||[];
+ const O=E0.map(e=>({t:`${P.ic} ${e[1]}`,s:'ฉากจบ',_x:1,noFate:1,f(){kpEnd(e)}}));
+ if(K.path==='mem'&&K.bm==='none')O.shift();
+ O.push({t:'🔄 วนกลับสู่มหากัลป์',s:`เริ่มปฐมกัลป์ใหม่ในชีวิตเดิม · ยากขึ้น 5% · ไม่จบชีวิต${secret?'':' · ผ่านครบทุกสายเพื่อปลดฉากจบลับ'}`,_x:1,noFate:1,f(){kpLoop()}});
+ if(secret)O.unshift({t:'👁️‍🗨️ ผู้เห็นทุกจักรวาล',s:'ฉากจบลับ — ผ่านครบทั้งสามสาย',_x:1,noFate:1,f(){kpEnd(['all3','ผู้เห็นทุกจักรวาล','คุณเดินครบทุกสายของวัฏจักร จนเห็นว่าทุกจักรวาลคือจักรวาลเดียวกัน','#ffffff'])}});
+ choice('🌀 ด่าน 3/3 · วัฏจักรที่ถูกลืม',`ที่ปลายสุดของ${P.n} คุณพบจักรวาลแรกสุด — จักรวาลที่ถูกลบทิ้งก่อนปฐมกัลป์จะเกิด<br>${K.bmN?`<span class="tag2">🔆 ${esc(K.bmN)} อยู่กับคุณจนถึงตรงนี้</span><br>`:''}ตอนนี้คุณตัดสินได้ว่าวัฏจักรจะเป็นอย่างไรต่อ`,O)}
+function kpEnd(e){const K=kOf();K.pend=0;K.by=0;S.flags.kEnd=1;S.flags.kTop=1;S.flags['kOut_'+e[0]]=1;S.flags.kOut=e[1];
+ S.deathCause=`${e[1]} — ${e[2]}`;try{kfx('win',e[1],e[2],e[3],5200)}catch(x){}LS.set('murim_kleg',{k:Math.min(12,K.n+1+(K.mk|0)),t:Date.now()});keyAdd(S.deathCause);log(`🌫️ <b>${e[1]}</b> — ${e[2]}`,'myth',true);S.hp=0;setTimeout(()=>{render();checkDeath()},400)}
+function kpLoop(){const K=kOf();K.pd=[...new Set((K.pd||[]).concat([K.path]))];K.ofs=(K.ofs|0)+K.n+1;K.mk=(K.mk|0)+1;
+ Object.assign(K,{n:0,path:null,pend:0,by:0,sh:0,st:S.age,role:null,ev:0,ancDone:0,scT:0,swT:0,bm:null,bmN:null,boatN:null});kpApply(K);
+ S.hp=S.maxHp;S.lifespan=Math.max(S.lifespan||0,kcap()+100);S.flags['kMk'+(K.mk+1)]=1;const g=pctPow(.05);S.power+=g;S.fame+=8000;
+ keyAdd(`วนกลับสู่มหากัลป์ที่ ${K.mk+1}`);log(`🔄 <b>มหากัลป์ที่ ${K.mk+1}</b> — วัฏจักรทั้งหมดเริ่มใหม่จากจุดเดียว คุณยืนอยู่ในปฐมกัลป์อีกครั้ง พร้อมความทรงจำของทุกกัลป์ที่ผ่านมา · พลังยุทธ์ +${fmt(g)}<br><span class="tag2">ภัยสิ้นกัลป์ยากขึ้น · ผ่านสายแล้ว: ${K.pd.map(k=>KP[k].n).join(', ')}</span>`,'myth',true);
+ try{kfx('win',`มหากัลป์ที่ ${K.mk+1}`,'ทุกสิ่งเริ่มต้นใหม่ — แต่คุณจำได้ทุกอย่าง','#ffd7ff',4200)}catch(x){}render()}
+window.kpPick=kpPick;window.kpGate=kpGate;window.kpBeyond=kpBeyond;
+// ป้ายบนแถบสถานะ: มหากัลป์ / สาย
+{const _rP=render;render=function(){try{if(S&&S.kalpa)kpApply(S.kalpa)}catch(e){}const r=_rP.apply(this,arguments);try{const K=S&&S.kalpa;if(K&&((K.mk|0)>0||K.path)){const t=$('gTags');if(t&&!t.querySelector('.kpb'))t.insertAdjacentHTML('afterbegin',`<span class="tag kpb" style="--c:${K.path?KP[K.path].c[0]:'#ffd7ff'}">${(K.mk|0)>0?`🔄 มหากัลป์ ${(K.mk|0)+1}`:''}${(K.mk|0)>0&&K.path?' · ':''}${K.path?KP[K.path].ic+' '+KP[K.path].n+((K.sh|0)?` 🧩${K.sh}`:''):''}</span>`)}}catch(e){}return r}}
+try{TTL_SP.unshift(['kseen',()=>!!(S.flags&&S.flags.kOut_all3),'ผู้เห็นทุกจักรวาล'],['kmemall',()=>!!(S.flags&&S.flags.kOut_all),'ผู้จดจำทุกสิ่ง'],['kforget',()=>!!(S.flags&&S.flags.kOut_forget),'ผู้ลืมเพื่อเริ่มใหม่'],['kwrite',()=>!!(S.flags&&S.flags.kOut_write),'ผู้เขียนกฎใหม่'],['kkeep',()=>!!(S.flags&&S.flags.kOut_keep),'ผู้พิทักษ์กฎเดิม'],['kcreate',()=>!!(S.flags&&S.flags.kOut_create),'ผู้สร้างจักรวาลใหม่'],['kvoid',()=>!!(S.flags&&S.flags.kOut_void),'ผู้ดับสูญสมบูรณ์'],['kmk',()=>!!(S.kalpa&&(S.kalpa.mk|0)>0),'ผู้ผ่านมหากัลป์'])}catch(e){}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
