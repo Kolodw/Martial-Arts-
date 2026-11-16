@@ -461,8 +461,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='17.35';
+const VERSION='18.0';
 const CHANGELOG=[
+  {v:'18.0',d:'16 พ.ย. 2026',l:['🎉 <b>อัปเดตใหญ่ 18.0</b> — รวบรวมของใหม่ทั้งหมดตั้งแต่เวอร์ชันก่อน ขอบคุณทุกคนที่เล่นและส่งความเห็นมาตลอด ทั้งสายฟรีและสายอุปถัมภ์ 💛','🎲 <b>สุ่มเกิดฟรีเพิ่มจาก 3 เป็น 5 ครั้งต่อชีวิต</b> · ใช้กรรมแลกสุ่มเพิ่มได้วันละ 5 ครั้ง (ราคากรรมเพิ่มเท่าตัวทุกครั้ง) · ซื้อเป็นแพ็กสุ่มเกิดได้ที่ปุ่ม 🎲 สุ่มเพิ่ม','🏮 <b>ผู้อุปถัมภ์สำนัก</b> — ผู้อุปถัมภ์สุ่มเกิดได้ 30 / 60 / 100 ครั้งต่อชีวิต มีป้ายหน้าชื่อในแชท ระดับ 🏯 ขึ้นไปมีปุ่ม ⚡ สุ่มรัว ระดับ 👑 ถาวรมีชื่อในหอบรรพชน · ไม่มีพลังหรือเงินในเกมให้ ผู้เล่นฟรีเล่นแข่งทำเนียบได้เหมือนกันทุกอย่าง','◀️ หน้ากำเนิดมีปุ่มย้อนกลับไปหน้าแรก จำนวนสุ่มและผลสุ่มเดิมยังอยู่','📖 หน้าวิชาอ่านง่ายขึ้น: เลขขั้น x/7 · ป้ายนับเต็ม/25% · มีคู่มือกฎวิชา','🧬 รวมวิชา: ระดับกัลป์และความสามารถแห่งกัลป์ติดไปกับวิชาใหม่ · หน้ารวมวิชาบอกว่าอะไรติดมา อะไรหาย','📢 ประกาศผู้ดูแลแต่ละคนเห็น 5 นาทีนับจากตอนที่เห็นครั้งแรก แล้วปิดเอง (กดเปิดดูซ้ำได้)','💬 แชทอัปเดตเรียลไทม์ขึ้น ข้อความใหม่เด้งทันที · แก้ Dynamic Island บนคอม','🛒 ร้านค้ากดซื้อทีละ ×10 ×100 สูงสุด หรือใส่จำนวนเองได้','⚖️ ปรับการเพิ่มพลังจากเหตุการณ์ต่างๆ ให้ไม่พุ่งเกินจริงในรอบหลังๆ']},
   {v:'17.35',d:'16 พ.ย. 2026',l:['🔀 <b>เหนือกัลป์ที่เก้า</b> — ที่ใจกลางวงจรกัลป์เลือก "เดินออกนอกวงจร" ได้แล้ว แยกเป็น 3 สาย 💞 ทรงจำ · 📜 กฎ · 🌑 เงา แต่ละสายมีกัลป์ที่ 10–11 และภัยของตัวเอง','⚡ ระหว่างทางมีทางลัดข้ามกัลป์ · 🧩 เศษกัลป์ช่วยให้ผ่านภัยง่ายขึ้น · 🔀 เปลี่ยนสายกลางทางได้','🌫️ <b>แดนนอกกาล</b> 3 ด่าน — ห้องกระจกแห่งวัฏจักร · ด่านตามสาย · วัฏจักรที่ถูกลืม · ฉากจบใหม่ 6 แบบ + ฉากจบลับเมื่อผ่านครบ 3 สาย','🔄 <b>มหากัลป์</b> — วนกลับปฐมกัลป์ในชีวิตเดิม ภัยยากขึ้นทุกรอบ','😈 <b>เนื้อเรื่องเสริมมารสวรรค์ 5 บท</b> — ในโลกเซียน/แดนเทพ เมื่อบารมีมารถึงขั้นจอมมาร เลือกทรยศได้ 3 ทาง ⚔️ ประกาศสงคราม · 🎭 แฝงตัวในสวรรค์ · 📜 ทำสัญญากับมารบรรพกาล เรื่องแยกตามสิ่งที่เลือก ฉากจบ 7 แบบ พร้อมฉายา','🎲 <b>สุ่มเกิดเพิ่ม</b> — ฟรี 3 ครั้งเหมือนเดิม และสุ่มเพิ่มได้ด้วยกรรม 50 ต่อครั้ง หรือซื้อแพ็ก 12 ครั้ง 10 บาท · 40 ครั้ง 29 บาท · 100 ครั้ง 59 บาท (สิทธิ์ผูกกับบัญชี)','🛍️ ร้านค้าข้ามมิติซื้อของหลายชิ้นได้ — ×10 · ×100 · สูงสุดเท่าที่เงินพอ · ใส่จำนวนเอง','💬 แชทออนไลน์ส่งแล้วขึ้นทันที คนอื่นเห็นข้อความใหม่แทบในพริบตา ไม่ต้องรอรีเฟรช','🏆 ทำเนียบแสดงคนละ 1 ชีวิต (ชีวิตที่ดีที่สุด) — ถ้ามีหลายชีวิตจะขึ้นป้าย "+N ชีวิต" ท็อป 10 คือ 10 คนจริง','🛠️ แก้บั๊ก: Dynamic Island บนคอมหลุดไปติดขอบจอ · ลากด้วยเมาส์แล้วเกาะค้าง']},
   {v:'17.30',d:'16 พ.ย. 2026',l:['🌲 <b>ป่าและถ้ำ มินิเกมใหม่</b> — ออกหาสมุนไพร แร่ โอสถ ในป่า 4 แห่งกับถ้ำ 4 แห่ง แผนที่พิกเซลสุ่มทุกครั้ง มีกลางวัน-กลางคืน คู่แข่ง และเรื่องราวระหว่างทาง เลือกเข้าได้ 3 แบบ','🏅 <b>ฉายาและกรอบทำเนียบสุ่มใหม่ทุกรอบ</b> — ทำเนียบรายวัน สัปดาห์ และเดือน ได้ฉายากับกรอบหน้าตาใหม่ทุกรอบ อันดับ 1 2 3 ดูต่างกันชัดเจน','💬 <b>แชทออนไลน์ปรับหน้าตาใหม่</b> อ่านง่ายขึ้นและโหลดไวขึ้น','🧭 <b>แนะนำอาชีพ</b> — เกมแนะนำงานที่เหมาะกับคุณตอนเริ่มหาอาชีพ','🔢 <b>ใส่แต้มสถานะทีละเยอะๆ</b> ในหน้าระบบ เลือก +10 / +100 / +1000 หรือพิมพ์จำนวนเอง','🛍️ <b>ร้านโลกเดิม:</b> กระจกเงาใสเข้ากระเป๋าและขายให้ขุนนางได้จริง · โลกที่มี "ระบบ" สุ่มได้ของหลากหลายขึ้น','🤖 <b>ลูมิน่า (นาโนแมชชีน)</b> ซิงก์เพิ่มเร็วขึ้น ความลับปลดง่ายขึ้นและไม่ลดลงเมื่อใช้ซิงก์ ปรับพันธุกรรมใช้ซิงก์ 200','🔧 <b>แก้บั๊ก:</b> ย้อนเวลาแล้วรวมวิชา/ลงดันเจี้ยนไม่ได้ · แอดมินพิมพ์แชทไม่ขึ้น · เงินมากจนหน้าจอยืดยาว · ข้อความเซฟบางครั้งหาย']},
   {v:'17.21',d:'15 พ.ย. 2026',l:['🌿 <b>เนื้อเรื่องไม่เป็นเส้นตรงแล้ว</b> — ยุทธภพ โลกเซียน แดนเทพ และกัลป์ มีทางแยกที่เลือกแล้วส่งผลจริง บางเรื่องเกิดผลหลายปีให้หลัง · ชื่อเสียงแยกตามกลุ่ม · เป้าหมายชีวิตที่นำไปสู่ตอนจบเฉพาะตัว · แพ้แล้วมีทางใหม่ให้ไปต่อ · NPC จำสิ่งที่คุณทำได้','⚔️ <b>เกมยากขึ้นและเข้มข้นขึ้น</b> — ศึกต้องอ่านท่าทางคู่ต่อสู้ ไม่ใช่ชนะอัตโนมัติ · วิกฤตแข่งกับเวลา · ยุคสมัยเปลี่ยนโลก · สหายมีนิสัยของตัวเอง · ปริศนาให้สืบหาตัวการ · ชีวิตสองหน้า · หักมุมกลางเรื่อง','🔁 <b>โหมดผู้ย้อนกาล</b> — มีการ์ด "เส้นทางสู่ตอนจบ" บอกเงื่อนไขทุกทางจบพร้อมความคืบหน้า · เพิ่มตอนจบที่ 4 <b>🍃 ผู้ปล่อยวาง</b> (เปิดที่รอบ 10) · ตั้งแต่รอบ 8 มีตัวช่วย (เพื่อนขาดได้ 1 คน · คำใบ้เศษปริศนา · ผู้ทำลายวงจรเกิดแน่นอนเมื่อครบเงื่อนไข) · หมุดอายุ 30 และเดินตามความทรงจำเริ่มรอบ 3 · ปกติจบใน 6–12 รอบ','🧭 <b>ภารกิจส่งง่ายขึ้น</b> — บอกชัดว่าต้องไปส่งที่ไหน มีปุ่มไปกระดานภารกิจ ภารกิจที่ครบแล้วเด่นขึ้นและส่งให้อัตโนมัติ','🕳️ <b>แก้บั๊กอายุ 30 ชั้นอเวจี/นรกไม่ขึ้นมา</b> — เมื่อถึงเวลาจะเปิดหน้าเลือกประตูให้เอง พร้อมป้ายกะพริบ','💾 <b>พื้นที่เก็บเกมเต็มแล้วไม่เซฟหายเงียบๆ</b> — เกมช่วยล้างข้อมูลเก่าให้เองเป็นขั้นๆ ถ้ายังไม่พอจะบอกว่าอะไรกินที่และมีปุ่มล้างให้','📶 <b>โดนตัดออฟไลน์บ่อย</b> — ปรับให้ทนสัญญาณสะดุดและต่อกลับเอง ไม่หลุดออนไลน์ง่ายๆ']},
@@ -27610,7 +27611,7 @@ const RR={c:null,used:0,cap:10,kc:1000,kday:5,pk:{s:[10,12],m:[29,40],l:[59,100]
 const rrKD=()=>{const t=new Date(Date.now()+7*3600e3).toISOString().slice(0,10);let d=null;try{d=LS.get('murim_rrk',null)}catch(e){}if(!d||d.d!==t)d={d:t,n:0};return d};
 const rrKC=()=>RR.kc*Math.pow(2,rrKD().n);window.rrKC=rrKC;
 const rrOff=()=>!!(CFG.daily||CFG.chm==1);
-async function rrLoad(){try{const j=await api('rrget');RR.c=Math.max(0,+j.c||0);if(j.pk)RR.pk=j.pk}catch(e){}rrBtn()}
+async function rrLoad(){try{const j=await api('rrget');RR.c=Math.max(0,+j.c||0);if(j.pk)RR.pk=j.pk;try{window.vipSet&&window.vipSet(j.vip)}catch(e){}}catch(e){}rrBtn()}
 function rrBtn(){try{const row=$('rerollBtn')&&$('rerollBtn').parentNode;if(!row)return;let b=$('rrMore');if(rrOff()){if(b)b.remove();return}
  if(!b){row.insertAdjacentHTML('beforeend','<button class="gbtn" id="rrMore" onclick="rrMenu()">🎲 สุ่มเพิ่ม</button>');b=$('rrMore')}
  b.innerHTML=`🎲 สุ่มเพิ่ม${RR.c?` <small>(${fmt(RR.c)})</small>`:''}`;b.classList.toggle('hi',rerolls<=0)}catch(e){}}
@@ -27726,6 +27727,72 @@ try{(()=>{const _of=openFuse;openFuse=function(){const r=_of.apply(this,argument
  const ok=[],bad=[];ok.push('พลังรวมไม่ลด (+5%)');if(sel.some(x=>x.fx))ok.push('ผลพิเศษของวิชา');if(kp)ok.push(`♾️ ระดับกัลป์《${KPN[kp]}》และการโตข้ามกัลป์`);if(sk)ok.push(`ความสามารถ ${ASK[sk.sk][0]} ${ASK[sk.sk][1]}`);
  if(hi>0)bad.push(`ขั้นวิชาเริ่มใหม่ที่ขั้น 1 (ตัวคูณขั้นเดิมถูกรวมเข้าพลังแล้ว แต่ต้องไต่ขั้นใหม่)`);if(law)bad.push('⚖️ บัลลังก์กฎที่วิชานี้ครองอยู่จะหลุด');if(sel.filter(x=>x.sk).length>1)bad.push('ความสามารถแห่งกัลป์ติดมาได้แค่อย่างเดียว');
  const b=M.querySelector('.pbtn');if(b)b.insertAdjacentHTML('beforebegin',`<div class="item" style="margin-top:6px"><p class="tag2">✅ ติดไปกับวิชาใหม่: ${ok.join(' · ')}</p>${bad.length?`<p class="tag2" style="color:#e07a5a">⚠️ ${bad.join(' · ')}</p>`:''}</div>`)}catch(e){console.error(e)}return r}})()}catch(e){console.error(e)}
+
+// ===================== v17.41 🏮 ผู้อุปถัมภ์สำนัก: สุ่มเกิดต่อชีวิต 30/60/100 · ป้ายในแชท · สุ่มรัว · หอบรรพชน (ไม่มีพลัง/เงินในเกม) =====================
+try{(()=>{
+const TOT=[5,30,60,100],NM=['','ผู้อุปถัมภ์สำนัก','ผู้อาวุโสอุปถัมภ์','บรรพชนผู้อุปถัมภ์'],IC=['','🏮','🏯','👑'];
+const PK={v1:[39,1,'30 วัน'],v2:[99,2,'30 วัน'],v3:[599,3,'ถาวร']};
+let V=null;try{V=LS.get('murim_vip',null)}catch(e){}
+const tierOf=v=>!v?0:v.u?3:(v.e2||0)>Date.now()?2:(v.e1||0)>Date.now()?1:0;
+window.vipT=()=>tierOf(V);window.vipTot=()=>TOT[tierOf(V)];
+const R=()=>window._RR||{};
+try{Object.defineProperty(R(),'kday',{get(){return tierOf(V)>=2?8:5},set(){},configurable:true})}catch(e){}
+const dTxt=ms=>new Date(ms).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});
+function vipLeft(){const t=tierOf(V);if(!t)return'';if(t===3)return'ถาวร';const e=t===2?V.e2:V.e1;return`ถึง ${dTxt(e)} (อีก ${Math.max(1,Math.ceil((e-Date.now())/864e5))} วัน)`}
+window.vipSet=function(v){try{if(!v)return;const old=tierOf(V);V={e1:+v.e1||0,e2:+v.e2||0,u:v.u?1:0};LS.set('murim_vip',V);const t=tierOf(V),tot=TOT[t],rr=R();
+  if(rr.tot!=null&&tot>rr.tot&&!(typeof ADM!=='undefined'&&ADM.ok&&ADM.rr)&&CFG.chm!=1&&!CFG.daily&&$('birth')&&$('birth').classList.contains('on')){rerolls+=tot-rr.tot;$('rr').textContent=rerolls}
+  rr.tot=tot;
+  const ymd=new Date().toISOString().slice(0,10);
+  if(t&&t<3){const e=t===2?V.e2:V.e1,dl=(e-Date.now())/864e5;if(dl<=3&&LS.get('murim_vipw','')!==ymd){LS.set('murim_vipw',ymd);toast(`${IC[t]} ${NM[t]} เหลืออีก ${Math.max(1,Math.ceil(dl))} วัน — ซื้อต่อได้ที่ปุ่ม 🎲 สุ่มเพิ่ม`)}}
+  const lastEx=Math.max(V.e1,V.e2);if(!t&&lastEx&&LS.get('murim_vipx',0)!==lastEx){LS.set('murim_vipx',lastEx);toast('🏮 สิทธิ์ผู้อุปถัมภ์หมดอายุแล้ว — สุ่มฟรี 5 ครั้งเหมือนเดิม · สิทธิ์สุ่มที่ซื้อเป็นแพ็กยังอยู่')}
+ }catch(e){console.error(e)}};
+// เริ่มชีวิตใหม่: จำนวนสุ่มฟรีตามระดับ (สายฟรี 5)
+{const _gb=goBirth;goBirth=function(){const r=_gb.apply(this,arguments);try{if(CFG.chm!=1&&!(typeof ADM!=='undefined'&&ADM.ok&&ADM.rr)){rerolls=TOT[tierOf(V)];$('rr').textContent=rerolls}R().tot=TOT[tierOf(V)];try{const b=$('rerollBtn');if(b&&rerolls>0)b.disabled=false}catch(e){}}catch(e){}return r}}
+// ป้ายหน้าชื่อในแชท
+{const _cr=chatRender;chatRender=function(){const r=_cr.apply(this,arguments);try{const box=$('chatBox');if(!box)return r;const ks=[...box.children].filter(e=>e.classList&&e.classList.contains('cm')),ms=chatMsgs||[];if(ks.length!==ms.length)return r;
+  ks.forEach((e,i)=>{const t=+ms[i].vp||0;if(t&&!e.querySelector('.vpb')){const b=e.querySelector('.cmh b');if(b)b.insertAdjacentHTML('beforebegin',`<span class="vpb" title="${NM[t]}">${IC[t]}</span>`)}})}catch(e){}return r}}
+// เมนูสุ่มเพิ่ม: แทรกทางเข้า VIP
+{const _rm=rrMenu;window.rrMenu=rrMenu=function(){const r=_rm.apply(this,arguments);try{const m=$('modal'),h=m&&m.querySelector('h3');if(h&&!m.querySelector('#vipEnt')){const t=tierOf(V);
+  h.insertAdjacentHTML('afterend',`<div id="vipEnt" class="vipent"><button class="gbtn" onclick="vipMenu()">${t?IC[t]+' '+NM[t]:'🏮 ผู้อุปถัมภ์สำนัก'}${t?` <small>${vipLeft()}</small>`:' <small>สุ่มเกิด 30–100 ครั้ง</small>'}</button>${t>=2?'<button class="gbtn" onclick="vipAutoMenu()">⚡ สุ่มรัว</button>':''}</div><p class="tag2" style="margin:-2px 0 6px">ไม่ซื้อก็เล่นได้เหมือนกัน — สุ่มฟรี 5 ครั้ง และแลกกรรมเพิ่มได้ทุกวัน</p>`)}}catch(e){}return r}}
+window.vipMenu=function(){const t=tierOf(V),card=(k,ic,nm,price,per,ls)=>`<div class="vipc ${t>=PK[k][1]?'on':''}"><div class="vh"><b>${ic} ${nm}</b><span>${price} บาท <small>${per}</small></span></div><ul>${ls.map(x=>`<li>${x}</li>`).join('')}</ul><button class="pbtn" style="width:100%" onclick="vipBuy('${k}')">${t&&PK[k][1]<=t&&PK[k][1]===t?'ต่ออายุ / ซื้อเพิ่ม':'เลือกแบบนี้'}</button></div>`;
+ modal(`<button class="xbtn" onclick="rrMenu()">✕</button><h3>🏮 ผู้อุปถัมภ์สำนัก</h3>
+ <div class="vipfree"><b>💚 เล่นฟรีก็เล่นได้เหมือนกัน ไม่ต้องน้อยใจนะ</b><br>ผู้อุปถัมภ์ไม่ได้พลัง เงิน หรือโบนัสในเกมเลยสักอย่าง ได้แค่สุ่มเกิดได้เยอะขึ้นกับป้ายชื่อ ส่วนชีวิตทุกคนต้องเล่นเองทั้งชีวิตเหมือนกัน และแข่งทำเนียบด้วยกติกาเดียวกัน<br>สายฟรีสุ่มเกิดได้ <b>5 ครั้งต่อชีวิต</b> และแลกกรรมเพิ่มได้ทุกวัน</div>
+ ${t?`<p class="tag2" style="margin:8px 0">ตอนนี้: <b>${IC[t]} ${NM[t]}</b> · ${vipLeft()} · สุ่มเกิดได้ ${TOT[t]} ครั้งต่อชีวิต</p>`:''}
+ ${card('v1','🏮','ผู้อุปถัมภ์สำนัก',39,'/ 30 วัน',['สุ่มเกิดได้ <b>30 ครั้ง</b>ต่อชีวิต','ป้าย 🏮 หน้าชื่อในแชท'])}
+ ${card('v2','🏯','ผู้อาวุโสอุปถัมภ์',99,'/ 30 วัน',['สุ่มเกิดได้ <b>60 ครั้ง</b>ต่อชีวิต','ป้าย 🏯 หน้าชื่อในแชท','แลกกรรมสุ่มได้วันละ 8 ครั้ง (ปกติ 5)','ปุ่ม ⚡ สุ่มรัว — ตั้งเงื่อนไขแล้วระบบสุ่มให้เอง'])}
+ ${card('v3','👑','บรรพชนผู้อุปถัมภ์',599,'ครั้งเดียว ถาวร',['สุ่มเกิดได้ <b>100 ครั้ง</b>ต่อชีวิต ตลอดไป','ทุกอย่างของผู้อาวุโสอุปถัมภ์ ตลอดไป','ป้าย 👑 และชื่อขึ้นใน <a href="#" onclick="vipWall();return false">หอบรรพชน</a>'])}
+ <p class="tag2">ไม่ต่ออายุเอง ไม่มีการตัดเงินอัตโนมัติ · ซื้อซ้ำก่อนหมดอายุจะต่อวันให้ · สิทธิ์ผูกกับบัญชี (ล็อกอิน Google ไว้จะไม่หายเวลาเปลี่ยนเครื่อง) · ได้สิทธิ์หลังผู้พัฒนาตรวจสลิปแล้ว ปกติไม่เกิน 1 วัน · ถ้าเกิน 48 ชม. ยังไม่ได้ แจ้งบั๊กเพื่อขอคืนเงินได้ · สิทธิ์สุ่มที่ซื้อเป็นแพ็กไม่หายเมื่อ VIP หมดอายุ</p>
+ <button class="gbtn" style="width:100%" onclick="vipWall()">👑 ดูหอบรรพชน</button>`);
+ try{if(window._RR&&_RR.c==null)api('rrget').then(j=>{if(j&&j.vip)vipSet(j.vip)}).catch(()=>{})}catch(e){}};
+window.vipWall=async function(){modal(`<button class="xbtn" onclick="vipMenu()">✕</button><h3>👑 หอบรรพชน</h3><p class="tag2">ผู้ที่อุปถัมภ์สำนักแบบถาวร ขอบคุณที่อยู่เคียงข้างเกมนี้ 🙏</p><div id="vipWallL" class="tag2">กำลังโหลด…</div>`);
+ try{const j=await api('vipwall'),n=(j&&j.n)||[];const el=$('vipWallL');if(el)el.innerHTML=n.length?n.map(x=>`<div class="item">👑 ${esc(x)}</div>`).join(''):'ยังไม่มีรายชื่อ'}catch(e){const el=$('vipWallL');if(el)el.textContent='โหลดไม่สำเร็จ'}};
+window.vipBuy=function(k){const v=PK[k];if(!v)return;
+ modal(`<button class="xbtn" onclick="vipMenu()">✕</button><h3>${IC[v[1]]} ${NM[v[1]]} · ${v[0]} บาท (${v[2]})</h3>
+ <div style="text-align:center"><img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:46vh;border-radius:10px;background:#fff" draggable="false">
+ <p style="margin:8px 0 2px">1) สแกนโอน <b>${v[0]} บาท</b> ด้วยแอปธนาคาร</p><p class="tag2">2) แนบสลิปแล้วกดส่งด้านล่าง · ผู้พัฒนาตรวจแล้วสิทธิ์จะเข้าเอง</p>
+ <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
+ <label class="supl">👤 ชื่อบัญชีที่โอน<input id="supPn" maxlength="40" placeholder="ช่วยให้ตรวจเร็วขึ้น"></label>
+ <label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>
+ <button class="pbtn" style="width:100%;margin-top:8px" onclick="vipPaid(this,'${k}')">📨 ส่งสลิป</button>
+ <p class="tag2">โอนผิดยอดหรือไม่แนบสลิป อาจตรวจไม่ได้ · ไม่มีการตัดเงินอัตโนมัติ</p>`);try{supEv('view')}catch(e){}};
+window.vipPaid=async function(btn,k){const v=PK[k],pn=(($('supPn')||{}).value||'').trim(),f=$('supImg')&&$('supImg').files&&$('supImg').files[0];
+ if(!f&&!pn)return toast('แนบสลิป หรือใส่ชื่อบัญชีอย่างน้อยหนึ่งอย่างนะ');btn.disabled=true;btn.textContent='⏳ กำลังส่ง…';
+ try{const img=await supShrink(f);const d=new Date();await api('sup',{e:'paid',vp:k,n:pname(),src:'vip',amt:v[0],pn,tm:String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'),msg:'',img});
+  btn.textContent='✅ ส่งแล้ว — รอตรวจสลิป';toast('🙏 ส่งแล้ว ผู้พัฒนาตรวจแล้วสิทธิ์จะเข้าเอง');try{sfx('good')}catch(e){}}
+ catch(e){btn.disabled=false;btn.textContent='📨 ส่งสลิป';toast(e.message==='rate'?'เพิ่งส่งไป รอสักครู่แล้วลองใหม่':'ส่งไม่สำเร็จ ลองใหม่อีกครั้ง')}};
+// ⚡ สุ่มรัว (ผู้อาวุโสขึ้นไป): ใช้โควตาสุ่มฟรีของชีวิตนี้ หยุดเมื่อได้ตามเงื่อนไข
+const AUTO=[[.1,'ติด 10% บนสุด','เฉลี่ยราว 10 ครั้ง'],[.03,'ติด 3% บนสุด','เฉลี่ยราว 30 ครั้ง'],[.01,'ติด 1% บนสุด','เฉลี่ยราว 100 ครั้ง'],[.001,'ติด 0.1% บนสุด','ยากมาก มักไม่พอ']];
+window.vipAutoMenu=function(){if(tierOf(V)<2)return toast('สุ่มรัวสำหรับผู้อาวุโสอุปถัมภ์ขึ้นไป');
+ modal(`<button class="xbtn" onclick="rrMenu()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tag2">ระบบสุ่มให้เองจนกว่าจะได้ชีวิตที่หายากตามที่เลือก (ใช้โควตาสุ่มฟรีของชีวิตนี้ เหลือ ${rerolls} ครั้ง) · ถ้าสุ่มหมดก่อนเจอ จะอยู่ที่ผลสุดท้าย</p>
+ <div class="rrpk" style="grid-template-columns:1fr 1fr">${AUTO.map((a,i)=>`<button class="opt" onclick="vipAutoGo(${i})"><b>${a[1]}</b><small>${a[2]}</small></button>`).join('')}</div>
+ <label class="supl" style="display:flex;gap:6px;align-items:center;margin-top:8px"><input type="checkbox" id="vaNb" checked> ไม่เอาพรสวรรค์ร้าย / ร่างกายบกพร่อง</label>`)};
+window.vipAutoGo=function(i){const fr=AUTO[i][0],nb=!$('vaNb')||$('vaNb').checked;closeM();
+ const good=()=>{try{const r=roll&&roll.rare;if(!r||!r.k||r.fr>fr)return false;if(nb){if(roll.trs.list.map(trOf).some(t=>t&&t.bad))return false;if(roll.body&&bodyCs(roll.body).some(c=>!c.good))return false}return true}catch(e){return false}};
+ let n=0,hit=false;for(;;){if(good()){hit=true;break}if(rerolls<=0||n>=200)break;doRoll();n++}
+ toast(hit?(n?`⚡ สุ่ม ${n} ครั้ง — ได้แล้ว! เหลือสุ่ม ${rerolls} ครั้ง`:'⚡ ชีวิตนี้ตรงเงื่อนไขอยู่แล้ว'):`⚡ สุ่ม ${n} ครั้งแล้วยังไม่ถึงเกณฑ์ — โควตาหมด อยู่ที่ผลสุดท้าย`);try{sfx(hit?'good':'bad')}catch(e){}};
+try{const st=document.createElement('style');st.textContent='.vipent{display:flex;gap:6px;margin:6px 0}.vipent .gbtn{flex:1;text-align:left}.vipent small{opacity:.75;display:block;font-size:11px}.vipfree{background:rgba(80,200,120,.12);border:1px solid rgba(80,200,120,.45);border-radius:10px;padding:10px;font-size:13px;line-height:1.55}.vipc{border:1px solid rgba(255,215,106,.4);border-radius:10px;padding:10px;margin:8px 0}.vipc.on{border-color:#ffd76a;box-shadow:0 0 10px #ffd76a55}.vipc .vh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}.vipc ul{margin:4px 0 8px;padding-left:18px;font-size:13px;line-height:1.55}.vpb{margin-right:3px}';document.head.appendChild(st)}catch(e){}
+try{setTimeout(()=>{const rr=R();rr.tot=TOT[tierOf(V)]},0)}catch(e){}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>

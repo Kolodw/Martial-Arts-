@@ -278,6 +278,18 @@ const noAdm = x => /ผู้ดูแล|แอดมิน|admin|ทีมง�
 const thDay = (ms, back = 0) => new Date(ms + 7 * 3600e3 - back * 86400e3).toISOString().slice(0, 10);
 // IP ของผู้ใช้จริง (Vercel ใส่ x-forwarded-for / x-real-ip ให้)
 const RR_PK = { s: [10, 12], m: [29, 40], l: [59, 100] }; // แพ็กสุ่มเกิด: [ราคา บาท, จำนวนครั้ง]
+// 🏮 ผู้อุปถัมภ์: [ราคา บาท, ระดับ, จำนวนวัน (0 = ถาวร)] — ไม่มีพลัง/เงินในเกม ได้แค่สุ่มเกิดเพิ่ม ป้าย และสิทธิ์สะดวก
+const VIP_PK = { v1: [39, 1, 30], v2: [99, 2, 30], v3: [599, 3, 0] };
+const VIP_NM = { 1: 'ผู้อุปถัมภ์สำนัก', 2: 'ผู้อาวุโสอุปถัมภ์', 3: 'บรรพชนผู้อุปถัมภ์' };
+const VIP_GIFT_UNTIL = Date.parse('2026-12-01T00:00:00+07:00'); // ผู้สนับสนุนเดิมที่เข้าเกมก่อนวันนี้ รับ VIP ฟรี 1 เดือน
+const vipTier = (v, t = Date.now()) => !v ? 0 : v.u ? 3 : (+v.e2 || 0) > t ? 2 : (+v.e1 || 0) > t ? 1 : 0;
+const vipOut = v => ({ t: vipTier(v), e1: +(v && v.e1) || 0, e2: +(v && v.e2) || 0, u: v && v.u ? 1 : 0 });
+async function vipAdd(id, tier, days, sign) {
+  const v = jp(await cmd('GET', 'vip:' + id)) || {}, t = Date.now();
+  if (tier === 3) { if (sign > 0) v.u = 1; else delete v.u }
+  else { const k = tier === 2 ? 'e2' : 'e1'; v[k] = sign > 0 ? Math.max(+v[k] || 0, t) + days * 86400e3 : Math.max(0, (+v[k] || 0) - days * 86400e3) }
+  await cmd('SET', 'vip:' + id, JSON.stringify(v)); return v;
+}
 const cip = req => (String(req.headers['x-real-ip'] || '') || String(req.headers['x-forwarded-for'] || '').split(',')[0]).trim().replace(/[^0-9a-fA-F:.]/g, '').slice(0, 45) || 'x';
 // ต่อ IP ต่อนาที: เกิน SOFT ตอบ 429 · เกิน HARD แบน 30 นาที · คำสั่งที่เขียนข้อความให้คนอื่นเห็นจำกัดแยก
 // เน็ตมือถือไทยใช้ IP ร่วมกัน (CGNAT) → จำกัดหลักต่อ 'ไอดีผู้เล่น' ส่วนต่อ IP เผื่อไว้สูงมาก (กันแค่ยิงถล่มจริง)
@@ -629,7 +641,25 @@ module.exports = async (req, res) => {
       res.statusCode = 404; return res.end('The page could not be found\n\nNOT_FOUND\n');
     }
     // 🎲 สิทธิ์สุ่มเกิดที่ซื้อ (เก็บที่เซิร์ฟเวอร์ ผูกกับรหัสผู้เล่น/บัญชี Google)
-    if (a === 'rrget') { if (!okId(id)) return res.json({ c: 0 }); return res.json({ c: Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0), pk: RR_PK }) }
+    if (a === 'rrget') {
+      if (!okId(id)) return res.json({ c: 0 });
+      let v = jp(await cmd('GET', 'vip:' + id));
+      if (Date.now() < VIP_GIFT_UNTIL && !v && +(await cmd('SISMEMBER', 'supok', id)) && await cmd('SET', 'vipg:' + id, 1, 'NX')) {
+        v = await vipAdd(id, 1, 30, 1);
+        try { await withCap(noteTo(id, { t: '🏮 ขอบคุณที่สนับสนุนเกม', b: 'ได้รับ ผู้อุปถัมภ์สำนัก ฟรี 30 วัน — สุ่มเกิดได้ 30 ครั้งต่อชีวิต', u: '/' }), 3000) } catch (e) {}
+      }
+      return res.json({ c: Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0), pk: RR_PK, vp: VIP_PK, vip: vipOut(v) });
+    }
+    if (a === 'vipset') {
+      const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
+      const tid = String(q.id || b.id || ''), tr = Math.max(1, Math.min(3, +(q.t || b.t) || 1)), dy = Math.round(+(q.d || b.d) || 0);
+      if (!okId(tid)) return res.json({ err: 'id' });
+      const v = await vipAdd(tid, tr, Math.abs(dy), dy < 0 ? -1 : 1); return res.json({ ok: 1, vip: vipOut(v) });
+    }
+    if (a === 'vipwall') {
+      const h = (await cmd('HVALS', 'vipu')) || []; res.setHeader('Cache-Control', 'public, max-age=60');
+      return res.json({ n: h.filter(Boolean).slice(0, 300) });
+    }
     if (a === 'rruse') {
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'id' });
       const left = +(await cmd('DECR', 'rrc:' + id));
@@ -644,6 +674,7 @@ module.exports = async (req, res) => {
       else { const cur = jp(await cmd('HGET', 'suppay', sid)); if (cur) { const was = cur.st; cur.st = v === 'ok' ? 'ok' : v === 'no' ? 'no' : ''; cur.mt = now;
         let pr = null; if (cur.st === 'ok' && was !== 'ok' && okId(cur.fid)) { await cmd('SADD', 'supok', cur.fid); if (String(qOf(req).ty || '1') === '1' && !cur.rp) { const x = '🙏 ได้รับแล้ว ขอบคุณมากครับ! เงินสนับสนุนจะเอาไปพัฒนาเกมต่อ 💛'; cur.rp = { x, t: now, auto: 1 }; pr = await withCap(noteTo(cur.fid, { t: '💬 ผู้พัฒนาตอบคุณ', b: x, u: '/?go=support' }), 4000) } }
         try { if (cur.pk && RR_PK[cur.pk] && okId(cur.fid)) { if (cur.st === 'ok' && !cur.rg) { cur.rg = RR_PK[cur.pk][1]; await cmd('INCRBY', 'rrc:' + cur.fid, cur.rg) } else if (cur.st !== 'ok' && cur.rg) { const left = +(await cmd('DECRBY', 'rrc:' + cur.fid, cur.rg)) || 0; if (left < 0) await cmd('SET', 'rrc:' + cur.fid, 0); cur.rg = 0 } } } catch (e) {}
+        try { if (cur.vp && VIP_PK[cur.vp] && okId(cur.fid)) { const vx = VIP_PK[cur.vp]; if (cur.st === 'ok' && !cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], 1); cur.vg = 1; if (vx[1] === 3) await cmd('HSET', 'vipu', cur.fid, clean(String(cur.n || ''), 24)) } else if (cur.st !== 'ok' && cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], -1); cur.vg = 0; if (vx[1] === 3) await cmd('HDEL', 'vipu', cur.fid) } } } catch (e) {}
         if (cur.st !== 'ok' && was === 'ok' && okId(cur.fid)) { const others = ((await cmd('HVALS', 'suppay')) || []).map(jp).filter(z => z && z.fid === cur.fid && z.i !== cur.i && z.st === 'ok'); if (!others.length) await cmd('SREM', 'supok', cur.fid) }
         await cmd('HSET', 'suppay', sid, JSON.stringify(cur)); return res.json({ ok: 1, push: pr }) } }
       return res.json({ ok: 1 });
@@ -1612,6 +1643,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const hasImg = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(img) && img.length < 400000;
       const rec = { ...base, i: sid, amt: Math.max(0, Math.min(1e7, Math.round((+b.amt || 0) * 100) / 100)), pn: clean(String(b.pn || ''), 40), tm: clean(String(b.tm || ''), 20), msg: clean(String(b.msg || ''), 200), img: hasImg ? 1 : 0, st: '' };
       if (RR_PK[String(b.pk || '')]) { rec.pk = String(b.pk); rec.msg = ('[🎲 ซื้อสุ่มเกิด ' + RR_PK[rec.pk][1] + ' ครั้ง · ' + RR_PK[rec.pk][0] + ' บาท] ' + rec.msg).slice(0, 240) }
+      if (VIP_PK[String(b.vp || '')]) { rec.vp = String(b.vp); const vx = VIP_PK[rec.vp]; rec.msg = ('[🏮 ' + VIP_NM[vx[1]] + ' · ' + vx[0] + ' บาท' + (vx[2] ? ' · ' + vx[2] + ' วัน' : ' · ถาวร') + '] ' + rec.msg).slice(0, 240) }
       const L = [['HSET', 'suppay', sid, JSON.stringify(rec)], ['ZADD', 'suppayz', now, sid], ['HINCRBY', 'supd:' + d0, 'paid', 1], ['EXPIRE', 'supd:' + d0, 86400 * 120]];
       if (hasImg) L.push(['SET', 'supimg:' + sid, img, 'EX', 86400 * 120]);
       await pipe(L); await supNote('💰 มีคนแจ้งว่าสนับสนุนแล้ว!', `${base.n} แจ้งโอน ${rec.amt ? rec.amt.toLocaleString('th-TH') + ' บาท' : '(ไม่ระบุยอด)'}${rec.pn ? ' · ชื่อบัญชี ' + rec.pn : ''}${rec.tm ? ' · เวลา ' + rec.tm : ''}${rec.img ? ' · มีสลิป' : ''}`); return res.json({ ok: 1, i: sid });
@@ -1769,6 +1801,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), ...((b.tp || +chx) ? { tt: '', tr: 0 } : rkOk(b.tt, rkh) || (isAdmKey(b.key) && RKT_ALL.has(String(b.tt || '')) ? { tt: String(b.tt), tr: RKT_TR[RKT_ALL.get(String(b.tt)).p] || 7 } : null) || ttlOk(b.tt, b.tr)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
       if (isA) m.ad = 1;
       if (!b.nsp) { try { if (+(await cmd('SISMEMBER', 'supok', id))) m.sp = 1 } catch {} }
+      try { const vt = vipTier(jp(await cmd('GET', 'vip:' + id))); if (vt) m.vp = vt } catch {}
       if (/^ตำนานลานซีซั่น \d{1,4}$/.test(String(b.tt || '')) && !m.tt) { const wv0 = jp(await cmd('HGET', 'arwal', id)); if (isAdmKey(b.key) || (wv0 && wv0.own && (wv0.own.tt || []).includes(String(b.tt)))) { m.tt = String(b.tt); m.tr = 6 } }
       if (['นักล่าเงา', 'ผู้ไม่เคยถอย', 'ตำนานแห่งลาน', 'ราชันเงาอสูร', 'เทพสงครามแห่งลาน', 'ผู้ยืนหนึ่งเหนือพันศึก', 'จักรพรรดิแห่งเงา', 'ผู้ไต่ลานทองคำ', 'เพชรแห่งลานเงา', 'จ้าวลานประลอง', 'ปรมาจารย์ผู้ไร้เงา', 'ราชันหมื่นเงา', 'เทพยุทธ์แห่งยุค'].includes(m.tt) && !isAdmKey(b.key)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.tt || []).includes(m.tt)) { m.tt = ''; m.tr = 0 } }
       // แชร์การปลดปล่อยพลัง: แนบข้อมูลฉาก pixel (ตัวเลข/สี/คำสั้นๆ เท่านั้น) ให้คนอื่นเล่นซ้ำในแชทได้
