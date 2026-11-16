@@ -28130,6 +28130,14 @@ MW_PUBLIC=true;mwAllowed=function(){return true};
    {sep:1},{ic:'⚡',t:'ฝ่าทัณฑ์สวรรค์',s:'จะมีให้ยืนยันอีกครั้ง',f:()=>ascAsk()},
    {info:'ปุ่มไม่หายไป ยังไม่พร้อมกดทีหลังได้'}]}};
  const _sf=qmSpecFor;qmSpecFor=function(el){if(el&&el.matches&&el.matches('#ascPill,#ascLeaveP'))return spec(el);return _sf.apply(this,arguments)}}
+
+// ============ v18.6.1 · สอนก้าวข้ามสามภพ: ป้ายชี้ปุ่มครั้งแรก + ลงคู่มือระบบ ============
+try{SYS_GUIDE.push({s:'world',nw:1,ic:'🌌',t:'ก้าวข้ามสามภพ',d:'ทำยังไง: เล่นจนถึงขั้นสูงสุดของโลกเทพ แล้วปุ่ม ⚡ ก้าวข้ามสามภพ จะโผล่เหนือแถบเวลา · แตะ = เริ่มฝ่าทัณฑ์ 3 ระลอก (มีให้ยืนยันก่อน) · กดค้าง = อ่านว่าได้อะไร เสี่ยงอะไร · ผ่านแล้วเลือกได้ 2 ทาง: 🌌 จากไป (ปิดตำนานทันที) หรือ 🏯 อยู่ต่อ (ไม่ตายด้วยวัยชรา เดินต่อถึงวัฏจักรกัลป์) · ถ้ายังไม่พร้อม ปุ่มไม่หาย กดทีหลังได้'})}catch(e){}
+{const tip=()=>{try{if(!S||!S.alive||!S.xt||LS.get('murim_ascTip',0))return;const b=$('ascPill');if(!b||b.style.display==='none'||!b.offsetParent)return;if(choice._cur||modalOpen)return;LS.set('murim_ascTip',1);
+  const r=b.getBoundingClientRect(),d=document.createElement('div');d.id='ascTip';d.style.cssText=`position:fixed;z-index:9999;left:12px;right:12px;top:${Math.max(8,r.top-92)}px;background:#1a0f38;color:#fff;border:2px solid #b89cff;border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.5;box-shadow:3px 3px 0 #000`;
+  d.innerHTML='<b>⚡ ก้าวข้ามสามภพ พร้อมแล้ว</b><br>• <b>แตะ</b> ปุ่มนี้ = เริ่มฝ่าทัณฑ์ 3 ระลอก (มีให้ยืนยันก่อน)<br>• <b>กดค้าง</b> = ดูว่าได้อะไร เสี่ยงอะไร<br>• ผ่านแล้วเลือกได้: 🌌 จากไป หรือ 🏯 อยู่ต่อ <span style="float:right;opacity:.7">แตะเพื่อปิด</span>';
+  d.onclick=()=>d.remove();document.body.appendChild(d);setTimeout(()=>{try{d.remove()}catch(e){}},14000)}catch(e){}};
+ setInterval(tip,2000)}
 </script>
 </body>
 </html>
