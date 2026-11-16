@@ -1824,6 +1824,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
           const BIG = v => !isFinite(v) || v > 1e30; if (BIG(+st.int || 0) || BIG(+st.cha || 0) || BIG(fm) || BIG(mn) || kids > 1e7 || BIG(dis) || BIG(pw)) bad = 'stat';
           const powCap = ((e.x ? 60000 : 25000) * (1 + ag / 8) + 300000) * (e.bm ? 12 : 1) * (D.sys ? 3 : 1) * (D.ai ? 3 : 1);
           if (!bad && pw > powCap && ag < 1000) { try { await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(e.n || ''), 24), age: ag, why: 'pow-age', st: { pow: pw, fame: fm, money: mn }, t: now, info: 1 })], ['LTRIM', 'acsus', 0, 199]]) } catch {} }
+          if (!bad && ag >= 1000 && pw > powCap * 50) { try { if (await cmd('SET', 'acold:' + id, 1, 'NX', 'EX', 86400)) await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(e.n || ''), 24), age: ag, why: 'pow-old', st: { pow: pw, fame: fm, money: mn }, t: now, info: 1 })], ['LTRIM', 'acsus', 0, 199]]) } catch {} }
           const upper = (pw + fm * 3 + 20 * Math.sqrt(Math.max(0, mn)) + 2500 + kids * 100 + dis * 20 + 4000) * 2.5 * 1.05 + 1000;
         }
         if (!bad && !det) bad = 'nodet';
