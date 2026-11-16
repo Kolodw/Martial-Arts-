@@ -290,6 +290,12 @@ async function vipAdd(id, tier, days, sign) {
   else { const k = tier === 2 ? 'e2' : 'e1'; v[k] = sign > 0 ? Math.max(+v[k] || 0, t) + days * 86400e3 : Math.max(0, (+v[k] || 0) - days * 86400e3) }
   await cmd('SET', 'vip:' + id, JSON.stringify(v)); return v;
 }
+// ผู้ถือบรรพชน (u) ที่ไม่มีชื่อในหอ (เช่น อนุมัติก่อนระบบหอเสร็จ) → ใส่ให้เองตามลำดับเวลาที่จ่าย ชื่อจากรายการจ่ายล่าสุด
+async function vipHeal(id) {
+  if (await cmd('HEXISTS', 'vipu', id)) return;
+  let nm = '', t0 = 0; try { const ids = (await cmd('ZRANGE', 'suppayz', 0, -1)) || [], vals = ids.length ? ((await cmd('HMGET', 'suppay', ...ids)) || []).map(jp) : []; for (const r of vals) if (r && r.fid === id && r.vp === 'v3' && r.st === 'ok') { nm = String(r.n || ''); t0 = +r.mt || 0 } } catch (e) {}
+  const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', id, JSON.stringify({ n: clean(nm, 24), o, t: t0 || Date.now() }));
+}
 const cip = req => (String(req.headers['x-real-ip'] || '') || String(req.headers['x-forwarded-for'] || '').split(',')[0]).trim().replace(/[^0-9a-fA-F:.]/g, '').slice(0, 45) || 'x';
 // ต่อ IP ต่อนาที: เกิน SOFT ตอบ 429 · เกิน HARD แบน 30 นาที · คำสั่งที่เขียนข้อความให้คนอื่นเห็นจำกัดแยก
 // เน็ตมือถือไทยใช้ IP ร่วมกัน (CGNAT) → จำกัดหลักต่อ 'ไอดีผู้เล่น' ส่วนต่อ IP เผื่อไว้สูงมาก (กันแค่ยิงถล่มจริง)
@@ -649,6 +655,7 @@ module.exports = async (req, res) => {
         try { await withCap(noteTo(id, { t: '🏮 ขอบคุณที่สนับสนุนเกม', b: 'ได้รับ ผู้อุปถัมภ์สำนัก ฟรี 30 วัน — สุ่มเกิดได้ 30 ครั้งต่อชีวิต', u: '/' }), 3000) } catch (e) {}
       }
       const vo = vipOut(v);
+      if (vo.u) { try { await vipHeal(id) } catch (e) {} }
       if (vo.u) { const ul = jp(await cmd('HGET', 'vipu', id)); if (ul) vo.ul = { o: ul.o | 0, t: +ul.t || 0, w: ul.w || '' } }
       return res.json({ c: Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0), pk: RR_PK, vp: VIP_PK, vip: vo });
     }
@@ -708,7 +715,7 @@ module.exports = async (req, res) => {
       else { const cur = jp(await cmd('HGET', 'suppay', sid)); if (cur) { const was = cur.st; cur.st = v === 'ok' ? 'ok' : v === 'no' ? 'no' : ''; cur.mt = now;
         let pr = null; if (cur.st === 'ok' && was !== 'ok' && okId(cur.fid)) { await cmd('SADD', 'supok', cur.fid); if (String(qOf(req).ty || '1') === '1' && !cur.rp) { const x = '🙏 ได้รับแล้ว ขอบคุณมากครับ! เงินสนับสนุนจะเอาไปพัฒนาเกมต่อ 💛'; cur.rp = { x, t: now, auto: 1 }; pr = await withCap(noteTo(cur.fid, { t: '💬 ผู้พัฒนาตอบคุณ', b: x, u: '/?go=support' }), 4000) } }
         try { if (cur.pk && RR_PK[cur.pk] && okId(cur.fid)) { if (cur.st === 'ok' && !cur.rg) { cur.rg = RR_PK[cur.pk][1]; await cmd('INCRBY', 'rrc:' + cur.fid, cur.rg) } else if (cur.st !== 'ok' && cur.rg) { const left = +(await cmd('DECRBY', 'rrc:' + cur.fid, cur.rg)) || 0; if (left < 0) await cmd('SET', 'rrc:' + cur.fid, 0); cur.rg = 0 } } } catch (e) {}
-        try { if (cur.vp && VIP_PK[cur.vp] && okId(cur.fid)) { const vx = VIP_PK[cur.vp]; if (cur.st === 'ok' && !cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], 1); cur.vg = 1; if (vx[1] === 3 && !(await cmd('HEXISTS', 'vipu', cur.fid))) { const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', cur.fid, JSON.stringify({ n: clean(String(cur.n || ''), 24), o, t: Date.now() })) } } else if (cur.st !== 'ok' && cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], -1); cur.vg = 0; if (vx[1] === 3) await cmd('HDEL', 'vipu', cur.fid) } } } catch (e) {}
+        try { if (cur.vp && VIP_PK[cur.vp] && okId(cur.fid)) { const vx = VIP_PK[cur.vp]; if (cur.st === 'ok' && !cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], 1); cur.vg = 1; if (vx[1] === 3 && !(await cmd('HEXISTS', 'vipu', cur.fid))) { const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', cur.fid, JSON.stringify({ n: clean(String(cur.n || ''), 24), o, t: Date.now() })) } } else if (cur.st === 'ok' && cur.vg && vx[1] === 3) { await vipHeal(cur.fid) } else if (cur.st !== 'ok' && cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], -1); cur.vg = 0; if (vx[1] === 3) await cmd('HDEL', 'vipu', cur.fid) } } } catch (e) {}
         if (cur.st !== 'ok' && was === 'ok' && okId(cur.fid)) { const others = ((await cmd('HVALS', 'suppay')) || []).map(jp).filter(z => z && z.fid === cur.fid && z.i !== cur.i && z.st === 'ok'); if (!others.length) await cmd('SREM', 'supok', cur.fid) }
         await cmd('HSET', 'suppay', sid, JSON.stringify(cur)); return res.json({ ok: 1, push: pr }) } }
       return res.json({ ok: 1 });
