@@ -65,9 +65,30 @@ async function apiOne(request, url) {
   return r;
 }
 
+// 💬 แชทเรียลไทม์: ห้องเดียวทั้งโลก (Durable Object แบบ SQLite ใช้ได้ในแพ็กฟรี) — แค่กระจายข้อความ ไม่เก็บข้อมูล
+// ผู้เล่นต่อ WebSocket แบบจำศีล (ไม่มีข้อความ = ไม่เสียโควต้า) · ข้อความจริงยังบันทึกใน Valkey ผ่าน api/online.js เหมือนเดิม
+export class ChatHub {
+  constructor(ctx, env) { this.ctx = ctx; try { ctx.setWebSocketAutoResponse(new WebSocketRequestResponsePair('ping', 'pong')) } catch (e) {} }
+  async fetch(req) {
+    const u = new URL(req.url);
+    if (u.pathname === '/b' && req.method === 'POST') { const t = await req.text(); let n = 0; for (const ws of this.ctx.getWebSockets()) { try { ws.send(t); n++ } catch (e) {} } return new Response(String(n)) }
+    if (u.pathname === '/n') return new Response(String(this.ctx.getWebSockets().length));
+    if ((req.headers.get('Upgrade') || '').toLowerCase() !== 'websocket') return new Response('ws only', { status: 426 });
+    if (this.ctx.getWebSockets().length >= 3000) return new Response('full', { status: 503 });
+    const pair = new WebSocketPair(), c = pair[0], s = pair[1];
+    this.ctx.acceptWebSocket(s);
+    return new Response(null, { status: 101, webSocket: c });
+  }
+  webSocketMessage(ws, msg) {}
+  webSocketClose(ws, code) { try { ws.close(code === 1005 || code === 1006 ? 1000 : code, 'bye') } catch (e) {} }
+  webSocketError(ws) { try { ws.close(1011, 'err') } catch (e) {} }
+}
+const hub = env => env && env.CHAT ? env.CHAT.get(env.CHAT.idFromName('world')) : null;
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+    if (url.pathname === '/ws/chat') { const h = hub(env); return h ? h.fetch(request) : new Response('no hub', { status: 404 }) }
     // แชทโลก: แคชที่ขอบ Cloudflare 3 วินาที (ทุกคนได้คำตอบเดียวกัน ไม่ต้องวิ่งไป Valkey ทุกครั้ง) · ไม่แคชถ้าประกาศมีโพลซึ่งแยกตามผู้เล่น
     if (request.method === 'GET' && url.pathname === '/api/online' && url.searchParams.get('a') === 'chat' && !url.searchParams.get('fresh')) {
       try {
@@ -87,6 +108,8 @@ export default {
       const r = await api(request, url);
       // มีคนส่งข้อความ/ประกาศ → ล้างแคชแชทที่ขอบทันที ข้อความใหม่จะขึ้นในการดึงรอบถัดไป
       try { if (request.method === 'POST' && /^(say|annrm|annvote|chathide|chatdel)$/.test(url.searchParams.get('a') || '') && r.status === 200) await caches.default.delete(new Request(url.origin + '/__edge/chat')) } catch (e) {}
+      // กระจายข้อความใหม่ถึงทุกคนที่เปิดแชทอยู่ทันที (ไม่ต้องรอรอบดึง)
+      try { const a0 = url.searchParams.get('a') || ''; if (request.method === 'POST' && r.status === 200 && /^(say|annrm|annvote|chathide|chatdel)$/.test(a0)) { const h = hub(env); if (h) { let msg = '{"t":"r"}'; if (a0 === 'say') { try { const j = await r.clone().json(); if (j && j.m && !j.ann) msg = JSON.stringify({ t: 'm', m: j.m }) } catch (e) {} } ctx.waitUntil(h.fetch('https://hub/b', { method: 'POST', body: msg }).catch(() => {})) } } } catch (e) {}
       return r;
     }
     // โดเมนเดิม (www) → ใช้ไฟล์หน้าเว็บ

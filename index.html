@@ -27357,6 +27357,28 @@ const st=document.createElement('style');st.textContent='.bagQ{display:flex;gap:
   const g=document.getElementById('tGo');if(g&&!has)g.innerHTML='<i>▶</i> เริ่มเล่น'}catch(e){}};
  const _s=show;show=function(id){const r=_s.apply(this,arguments);if(id==='title'){setTimeout(fix,80);setTimeout(fix,600)}return r};
  setTimeout(fix,300);setTimeout(fix,1500)}
+
+// ===================== v17.32 💬 แชทเรียลไทม์ (WebSocket) — ข้อความขึ้นทันที · ถ้าต่อไม่ได้ใช้การดึงทุก 10 วิเหมือนเดิม =====================
+(function(){try{
+ let ws=null,live=0,bo=1500,lastSync=0,pfT=null,pingT=null;
+ const want=()=>!document.hidden&&$('modal')&&$('modal').dataset.k==='online'&&!!$('chatBox');
+ const wsUrl=()=>{try{const u=new URL(API,location.href);if(!/\/api\/online/.test(u.pathname))return null;return (u.protocol==='https:'?'wss:':'ws:')+'//'+u.host+'/ws/chat'}catch(e){return null}};
+ const syncSoon=d=>{clearTimeout(pfT);pfT=setTimeout(()=>{try{lastSync=Date.now();chatPollF()}catch(e){}},d||1200)};
+ function onMsg(ev){let d;try{d=JSON.parse(ev.data)}catch(e){return}if(!d)return;
+  if(d.t==='m'&&d.m&&d.m.i){const m=d.m,L=chatMsgs||[];if(L.some(x=>x&&x.i===m.i))return;chatMsgs=L.concat([m]).sort((x,y)=>(x.t||0)-(y.t||0));if(chatMsgs.length>160)chatMsgs=chatMsgs.slice(-160);try{chatRender()}catch(e){}try{if(m.pu&&!(chatProf||{})[m.pu])syncSoon(1500)}catch(e){}}
+  else if(d.t==='r')syncSoon(300)}
+ function open(){if(ws||!want()||typeof WebSocket==='undefined')return;const u=wsUrl();if(!u)return;let s;try{s=new WebSocket(u)}catch(e){return}ws=s;
+  s.onopen=()=>{live=1;bo=1500;syncSoon(200);clearInterval(pingT);pingT=setInterval(()=>{try{if(s.readyState===1)s.send('ping')}catch(e){}},25000)};
+  s.onmessage=onMsg;
+  s.onclose=()=>{if(ws===s){ws=null;live=0;clearInterval(pingT);if(want())setTimeout(open,bo);bo=Math.min(bo*2,30000)}};
+  s.onerror=()=>{try{s.close()}catch(e){}}}
+ function shut(){const s=ws;ws=null;live=0;clearInterval(pingT);try{if(s)s.close(1000)}catch(e){}}
+ setInterval(()=>{try{if(want()){if(!ws)open()}else if(ws)shut()}catch(e){}},2500);
+ document.addEventListener('visibilitychange',()=>{try{if(document.hidden)shut();else if(want())open()}catch(e){}});
+ // ต่อ WebSocket ได้แล้ว → ไม่ต้องดึงทุก 10 วิ (ดึงเต็มทุก 60 วิพอ ให้ข้อความที่ถูกซ่อน/โปรไฟล์ตรงกัน)
+ const _cpW=chatPoll;chatPoll=function(){if(live&&Date.now()-lastSync<60000)return Promise.resolve();lastSync=Date.now();return _cpW.apply(this,arguments)};
+ window._chWS=()=>({live,open:!!ws});
+}catch(e){console.error(e)}})();
 </script>
 </body>
 </html>

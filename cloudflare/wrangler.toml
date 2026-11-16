@@ -21,6 +21,15 @@ bucket_name = "1inanovel"
 [placement]
 mode = "smart"
 
+# 💬 ห้องแชทเรียลไทม์ (Durable Object แบบ SQLite = ใช้ได้ในแพ็กฟรี)
+[[durable_objects.bindings]]
+name = "CHAT"
+class_name = "ChatHub"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ChatHub"]
+
 [observability]
 enabled = true
 
