@@ -23986,7 +23986,7 @@ async function lawClaim(a){if(!a)return;const L=lawOf(a);a.law=L[0];S.flags.lawE
  const go=()=>{if(choice._cur||modalOpen)return setTimeout(go,800);choice(`${L[2]} ${L[1]}มีเจ้าของแล้ว`,`<b>${esc(H.n)}</b> จารึก${L[1]}ไว้ก่อนด้วย《${esc(H.art||'')}》 · พลังรวมตอนจารึก ${fmt(H.pw||0)}<br>กฎหนึ่งสายมีเจ้าของได้คนเดียว ถ้าอยากได้ต้องดวลแย่ง`,
   [{_x:1,t:'⚔️ ท้าดวลชิงกฎ',s:`ผู้ครองกฎได้เปรียบ +20% · แรงล่าสุดราว ${fmt(Math.round((+H.pn||+H.pw||0)*1.2))}`,f(){duel(`ผู้ครอง${L[1]} ${H.n}`,Math.max((+H.pn||+H.pw||0)*1.2,total()*.8),win=>{if(win)send(H.t);else{S.hp-=Math.round(S.maxHp*.2);log(`⚖️ ${esc(H.n)}ยังครอง${L[1]}ต่อไป`,'bad')}})}},{t:'🙏 ยอมรับ ไว้ครั้งหน้า',skip:true,f(){}}])};go()}
 async function openLaws(){let l={};try{const j=await api('laws');l=(j&&j.l)||{}}catch(e){}
- modal(`<button class="xbtn" onclick="openArts()">←</button><h3>⚖️ ผู้ครองกฎแห่งแดนเทพ</h3><p class="tag2">วิชาที่ถึงขั้น<b>จารึกกฎ</b>ในแดนเทพจะได้ครองกฎหนึ่งสาย · กฎหนึ่งสายมีเจ้าของได้คนเดียวทั้งเซิร์ฟ · คนอื่นต้องดวลแย่ง</p>`+
+ modal(`<button class="xbtn" onclick="openArts()">←</button><h3>⚖️ บัลลังก์กฎ 8 สายแห่งแดนเทพ</h3><p class="tag2">ไม่ใช่ระดับวิชา — เป็นตำแหน่งที่มีได้สายละคนเดียวทั้งเซิร์ฟ สำหรับวิชาที่ถึงขั้น 7 (จารึกกฎ)</p><p class="tag2">วิชาที่ถึงขั้น<b>จารึกกฎ</b>ในแดนเทพจะได้ครองกฎหนึ่งสาย · กฎหนึ่งสายมีเจ้าของได้คนเดียวทั้งเซิร์ฟ · คนอื่นต้องดวลแย่ง</p>`+
   LAWS.map(L=>{const h=l[L[0]];return`<div class="item"><div class="h"><b>${L[2]} ${L[1]}</b><span class="tag2">${h?'ครองโดย':'ยังว่าง'}</span></div><p>${h?`<b>${esc(h.n)}</b> · 《${esc(h.art||'')}》 · พลังรวม ${fmt(h.pw||0)} <span class="tag2">· ${new Date(h.t).toLocaleDateString('th-TH')}</span>`:'<span class="tag2">ใครถึงจารึกกฎสายนี้ก่อนได้ครอง</span>'}</p></div>`}).join(''))}
 // ---- วัฏจักรกัลป์: วิชาที่ไม่ดับไปพร้อมจักรวาล ----
 {const _kw=kalpaWin;kalpaWin=function(){const r=_kw.apply(this,arguments);try{const a=(S.arts||[]).filter(x=>x&&typeof x==='object').sort((x,y)=>((y.kp|0)-(x.kp|0))||(y.b*artM(y)-x.b*artM(x)))[0];if(a&&(a.kp|0)<4){a.kp=(a.kp|0)+1;
@@ -24005,7 +24005,7 @@ async function openLaws(){let l={};try{const j=await api('laws');l=(j&&j.l)||{}}
   else{const need=AMY[lv],p=Math.min(1,amSince(a)/need);h=`<div class="hpbar" style="height:6px;margin-top:4px"><i style="width:${Math.round(p*100)}%;background:${p>=1?'#ffc23a':'#7a9aff'}"></i></div><span class="tag2">${p>=1?(lv<3?'พร้อมเลื่อนขั้น — ขึ้นได้ทุกปีตามโอกาส (ฝึกยุทธ์/ลมปราณช่วยให้ไวขึ้น)':'ใกล้ติดขั้นแล้ว'):`อีกราว ${fmt(Math.max(1,Math.ceil(need-amSince(a))))} ปีถึงจะ${lv<3?'เริ่มลุ้นเลื่อนเป็น':'ติดขั้นก่อนก้าวสู่'}${AMN[lv+1]}`}</span>`}
   if(a.kp)h=`<span class="tag2" style="color:#c0a0ff">♾️ ${KPN[a.kp]}</span> `+h;
   it.insertAdjacentHTML('beforeend',`<div class="amp">${h}</div>`)});
- if(ECO_W()==='g')M.insertAdjacentHTML('beforeend',`<button class="gbtn" style="width:100%;margin-top:8px" onclick="openLaws()">⚖️ ผู้ครองกฎทั้ง 8 สายของเซิร์ฟ</button>`);
+ if(ECO_W()==='g')M.insertAdjacentHTML('beforeend',`<button class="gbtn" style="width:100%;margin-top:8px" onclick="openLaws()">⚖️ บัลลังก์กฎ 8 สาย — ใครครองอยู่ทั้งเซิร์ฟ</button>`);
  M.insertAdjacentHTML('beforeend',`<p class="tag2" style="margin-top:8px">ระดับวิชา: ${AMN.slice(0,AM_TOP+1).join(' → ')}<br>4 ขั้นแรกเลื่อนเองตามเวลา · จากนั้นต้องทะลวงด่านติดขั้น</p>`)}catch(e){console.error(e)}return r}}
 
 
@@ -27652,6 +27652,28 @@ function annHide(i){try{const el=document.getElementById('annBar');if(el&&(!i||e
 const _as=annShow;annShow=function(a){try{if(a&&a.i&&!window._annForce){const t0=annSeen(a.i),left=t0+ANN_MS-Date.now();if(left<=0){annCur=a;annHide(a.i);return}
   clearTimeout(annT);annT=setTimeout(()=>{if(!window._annForce)annHide(a.i)},left+50)}}catch(e){}return _as.apply(this,arguments)};
 const _ar=annReopen;annReopen=function(){try{if(annCur&&annCur.i){const d=seenGet();d[annCur.i]=Date.now();LS.set('murim_annSeen',d)}}catch(e){}return _ar.apply(this,arguments)};
+})()}catch(e){console.error(e)}
+
+// ===================== v17.37 📖 หน้าวิชาอ่านง่ายขึ้น: เลขขั้น x/7 · ป้ายนับเต็ม/25% · คู่มือกฎวิชา =====================
+try{(()=>{
+const W3=[['m','⚔️ ยุทธภพ'],['x','☁️ โลกเซียน'],['g','🌟 แดนเทพ']];
+window.openArtGuide=function(){const rows=[0,1,2,3,4,5,6].map(i=>`<tr><td><b>${i+1}</b></td>${W3.map(w=>`<td>${AMN_W[w[0]][i]}</td>`).join('')}<td>×${AMX[i]}</td></tr>`).join('');
+ modal(`<button class="xbtn" onclick="openArts()">←</button><h3>❓ กฎวิชา</h3>
+ <div class="item"><b>1. วิชามี 7 ขั้น</b><p class="tag2">ชื่อขั้นเปลี่ยนตามโลก แต่เป็นขั้นเดียวกัน — ข้ามโลกแล้ววิชาไม่ได้ถูกรีเซ็ต</p>
+ <div style="overflow-x:auto"><table class="agT"><tr><th>ขั้น</th>${W3.map(w=>`<th>${w[1]}</th>`).join('')}<th>พลัง</th></tr>${rows}</table></div></div>
+ <div class="item"><b>2. ขั้น 1–4 ขึ้นเอง · ขั้น 5–7 ต้องทะลวง</b><p class="tag2">ฝึกไปเรื่อยๆ ขั้นจะขึ้นเองตามเวลา (ฝึกยุทธ์/ลมปราณช่วยให้ไวขึ้น) พอถึงขั้น 4 แล้วจะ <b>🔒 ติดขั้น</b> ต้องกดปุ่มในหน้าวิชาเพื่อเลือกวิธีทะลวง: ดวลปรมาจารย์ · ปิดด่าน 3–8 ปี · สู้เฉียดตาย · รู้แจ้ง · (แดนเทพ) หลอมด้วยหยก</p></div>
+ <div class="item"><b>3. โลกเซียน: วิชาขึ้นเกินการบำเพ็ญไม่ได้</b><p class="tag2">ขั้น 5–7 ต้องบำเพ็ญถึงระดับที่กำหนดก่อน และขึ้นขั้น 5 (เจตนาวิชา) ต้องรับทัณฑ์วิชา ถ้าไม่ผ่าน วิชาร่วงหนึ่งขั้น</p></div>
+ <div class="item"><b>4. พลังรวมนับเต็มแค่ 5 วิชาที่แรงสุด</b><p class="tag2">วิชาที่ 6 เป็นต้นไปนับแค่ 25% — ในหน้าวิชามีป้าย <span class="agC on">นับเต็ม</span> / <span class="agC">นับ 25%</span> บอกไว้ ฝึกวิชาหลักให้สูงคุ้มกว่าเก็บวิชาเยอะๆ</p></div>
+ <div class="item"><b>⚖️ บัลลังก์กฎ 8 สาย (แดนเทพ)</b><p class="tag2">ไม่ใช่ระดับวิชา — ชื่อขั้นในแดนเทพมีคำว่า "กฎ" เพราะวิชาที่นั่นคือการเข้าใจกฎของสวรรค์ ส่วน <b>บัลลังก์กฎ</b> คือตำแหน่งผู้ครองกฎหนึ่งในแปดสาย มีได้สายละคนเดียวทั้งเซิร์ฟ วิชาต้องถึงขั้น 7 (จารึกกฎ) ถึงจะชิงได้ และคนอื่นมาดวลแย่งได้</p></div>`)};
+const _oa=openArts;openArts=function(){const r=_oa.apply(this,arguments);try{if(!S||!S.arts)return r;const M=$('modal');if(!M)return r;
+ const h=M.querySelector('h3');if(h&&!M.querySelector('.agBtn'))h.insertAdjacentHTML('beforeend',' <button class="sysb agBtn" onclick="openArtGuide()">❓ กฎวิชา</button>');
+ const L=(S.arts||[]).filter(a=>a&&typeof a==='object'),rk=L.slice().sort((x,y)=>y.b*artM(y)-x.b*artM(x)),items=[...M.querySelectorAll('.item')];
+ L.forEach(a=>{const it=items.find(x=>{const b=x.querySelector('b');return b&&b.textContent.includes('《'+a.n+'》')});if(!it||it.querySelector('.agL'))return;
+  const lv=amLv(a),full=rk.indexOf(a)<5,p=it.querySelector('p');
+  const tag=`<span class="agL">ขั้น ${lv+1}/${AM_TOP+1}${lv<AM_TOP?` · ถัดไป ×${AMX[lv+1]}`:' · สูงสุด'}</span> <span class="agC${full?' on':''}" title="${full?'หนึ่งใน 5 วิชาที่แรงสุด นับเต็มค่า':'วิชาที่ 6 เป็นต้นไปนับแค่ 25% ของพลัง'}">${full?'นับเต็ม':'นับ 25%'}</span>`;
+  if(p)p.insertAdjacentHTML('afterbegin',tag+'<br>');try{const sp=p&&p.querySelector('.tag2');if(sp&&/ระดับถัดไป/.test(sp.textContent))sp.remove()}catch(e){}});
+ }catch(e){console.error(e)}return r};
+try{const st=document.createElement('style');st.textContent='.agL{display:inline-block;font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:8px;background:rgba(122,154,255,.18);color:#9ab4ff}.agC{display:inline-block;font-size:11px;padding:1px 7px;border-radius:8px;background:rgba(160,160,160,.18);opacity:.85}.agC.on{background:rgba(95,208,138,.2);color:#6fd08a;opacity:1}.agBtn{font-size:12px;margin-left:6px;vertical-align:middle}.agT{border-collapse:collapse;width:100%;font-size:12px;margin-top:6px}.agT th,.agT td{border:1px solid var(--line);padding:3px 5px;text-align:center;white-space:nowrap}';document.head.appendChild(st)}catch(e){}
 })()}catch(e){console.error(e)}
 </script>
 </body>
