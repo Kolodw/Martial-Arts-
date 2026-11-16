@@ -12764,7 +12764,7 @@ const KROLE={make:'🌱 ผู้สร้าง',guard:'🛡️ ผู้พิ
   const K=S.kalpa;if(K&&K.n>=1&&!K.pend&&!choice._cur&&!modalOpen&&Math.random()<.25)kalpaEvent();
   const m=S.beastMode;if(m&&!m.human)bCross()}catch(e){console.error(e)}return r}}
 function bCap(){const m=S.beastMode;return m.heaven||(S.kalpa&&S.kalpa.n>=1)?kcap():Math.min(kcap(),1e5*(1+(m.capX||0)))}
-{const _lmK=lifeMax0;lifeMax0=function(){const r=_lmK.apply(this,arguments);try{if(S&&S.kalpa&&S.kalpa.n>=1&&!(S.beastMode&&!S.beastMode.human))return Math.max(r,kcap());const m=S&&S.beastMode;if(m&&!m.human&&S.lifespan+40>1e5)return Math.min(bCap(),S.lifespan+40+(m.lsB||0))}catch(e){}return r}}
+{const _lmK=lifeMax0;lifeMax0=function(){const r=_lmK.apply(this,arguments);try{const mH=S&&S.beastMode;if(mH&&mH.human&&S.lifespan+40>1e3&&!(S.kalpa&&S.kalpa.n>=1))return Math.max(r,Math.min(kcap(),S.lifespan+40+(mH.lsB||0)));if(S&&S.kalpa&&S.kalpa.n>=1&&!(S.beastMode&&!S.beastMode.human))return Math.max(r,kcap());const m=S&&S.beastMode;if(m&&!m.human&&S.lifespan+40>1e5)return Math.min(bCap(),S.lifespan+40+(m.lsB||0))}catch(e){}return r}}
 function bCross(){const m=S.beastMode;if(m.heaven||choice._cur||modalOpen)return;const cap=bCap();if(S.lifespan+40<cap||S.age<cap-Math.max(60,cap*.01)||m.xrAt===cap||(m.xrCd&&S.age<m.xrCd)||(m.capX||0)>=9)return;
  const p=clamp(.5+.03*(m.st|0)-.03*(m.capX||0)+Math.min(.1,S.qi/20000),.2,.85),nx=cap+1e5;
  choice('🌌 ทางแยกอสูรแสนปี',`ร่างของ${esc(S.name)}มีอายุถึง <b>${fmt(cap)} ปี</b> — ขีดจำกัดที่ฟ้าดินกำหนดให้สัตว์อสูร วิญญาณสัตว์ทั้งหลายรอคุณอยู่ที่ปลายทาง`,[
