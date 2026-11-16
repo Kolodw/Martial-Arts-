@@ -27642,6 +27642,17 @@ window.rrPaid=async function(btn,k){const v=RR.pk[k],pn=(($('supPn')||{}).value|
 {const _dr=doRoll;doRoll=function(){const r=_dr.apply(this,arguments);setTimeout(rrBtn,50);return r}}
 try{const st=document.createElement('style');st.textContent='#rrMore.hi{animation:rrP 1.6s ease-in-out infinite}@keyframes rrP{0%,100%{box-shadow:0 0 0 #ffd76a00}50%{box-shadow:0 0 12px #ffd76aaa}}.rrpk{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.rrpk .opt{display:flex;flex-direction:column;align-items:center;padding:10px 4px}.rrpk small{font-size:11px;opacity:.8}';document.head.appendChild(st)}catch(e){}
 })()}catch(e){console.error(e)}
+
+// ===================== v17.36 📢 ประกาศผู้ดูแล: แต่ละคนเห็น 5 นาทีนับจากตอนที่เห็นครั้งแรก แล้วปิดเอง (กดเปิดดูซ้ำได้) =====================
+try{(()=>{
+const ANN_MS=5*60e3;let annT=null;
+const seenGet=()=>{try{return LS.get('murim_annSeen',null)||{}}catch(e){return {}}};
+function annSeen(i){const d=seenGet();if(!d[i]){d[i]=Date.now();const ks=Object.keys(d).sort((x,y)=>d[y]-d[x]);ks.slice(20).forEach(x=>delete d[x]);try{LS.set('murim_annSeen',d)}catch(e){}}return d[i]}
+function annHide(i){try{const el=document.getElementById('annBar');if(el&&(!i||el.dataset.i===i||!el.dataset.i))el.remove()}catch(e){}}
+const _as=annShow;annShow=function(a){try{if(a&&a.i&&!window._annForce){const t0=annSeen(a.i),left=t0+ANN_MS-Date.now();if(left<=0){annCur=a;annHide(a.i);return}
+  clearTimeout(annT);annT=setTimeout(()=>{if(!window._annForce)annHide(a.i)},left+50)}}catch(e){}return _as.apply(this,arguments)};
+const _ar=annReopen;annReopen=function(){try{if(annCur&&annCur.i){const d=seenGet();d[annCur.i]=Date.now();LS.set('murim_annSeen',d)}}catch(e){}return _ar.apply(this,arguments)};
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
