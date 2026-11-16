@@ -283,12 +283,13 @@ const VIP_PK = { v1: [39, 1, 30], v2: [99, 2, 30], v3: [599, 3, 0] };
 const VIP_NM = { 1: 'ผู้อุปถัมภ์สำนัก', 2: 'ผู้อาวุโสอุปถัมภ์', 3: 'บรรพชนผู้อุปถัมภ์' };
 const VIP_GIFT_UNTIL = Date.parse('2026-12-01T00:00:00+07:00'); // ผู้สนับสนุนเดิมที่เข้าเกมก่อนวันนี้ รับ VIP ฟรี 1 เดือน
 const vipTier = (v, t = Date.now()) => !v ? 0 : v.u ? 3 : (+v.e2 || 0) > t ? 2 : (+v.e1 || 0) > t ? 1 : 0;
-const vipOut = v => ({ t: vipTier(v), e1: +(v && v.e1) || 0, e2: +(v && v.e2) || 0, u: v && v.u ? 1 : 0 });
+const VIP_TT = ['ผู้สนับสนุนสำนัก', 'ศิษย์ใต้โคมแดง', 'ผู้ถือตราชาด', 'ผู้เฝ้าหอโคม', 'สหายแห่งยุทธภพ', 'ผู้ค้ำจุนสำนัก'];
+const vipOut = v => ({ t: vipTier(v), e1: +(v && v.e1) || 0, e2: +(v && v.e2) || 0, u: v && v.u ? 1 : 0, tt: String((v && v.tt) || ''), ttl: VIP_TT });
 async function vipAdd(id, tier, days, sign) {
   const v = jp(await cmd('GET', 'vip:' + id)) || {}, t = Date.now();
   if (tier === 3) { if (sign > 0) v.u = 1; else delete v.u }
   else { const k = tier === 2 ? 'e2' : 'e1'; v[k] = sign > 0 ? Math.max(+v[k] || 0, t) + days * 86400e3 : Math.max(0, (+v[k] || 0) - days * 86400e3) }
-  await cmd('SET', 'vip:' + id, JSON.stringify(v)); return v;
+  await cmd('SET', 'vip:' + id, JSON.stringify(v)); try { await cmd('SADD', 'vipall', id) } catch {} return v;
 }
 // ผู้ถือบรรพชน (u) ที่ไม่มีชื่อในหอ (เช่น อนุมัติก่อนระบบหอเสร็จ) → ใส่ให้เองตามลำดับเวลาที่จ่าย ชื่อจากรายการจ่ายล่าสุด
 async function vipHeal(id) {
@@ -656,6 +657,7 @@ module.exports = async (req, res) => {
       }
       const vo = vipOut(v);
       if (vo.u) { try { await vipHeal(id) } catch (e) {} }
+      if (vo.t) { try { await cmd('SADD', 'vipall', id) } catch (e) {} }
       if (vo.u) { const ul = jp(await cmd('HGET', 'vipu', id)); if (ul) vo.ul = { o: ul.o | 0, t: +ul.t || 0, w: ul.w || '' } }
       return res.json({ c: Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0), pk: RR_PK, vp: VIP_PK, vip: vo });
     }
@@ -688,6 +690,21 @@ module.exports = async (req, res) => {
       rows.sort((x, y) => x.o - y.o); const top = rows.slice(0, 300);
       const rs = top.length ? await pipe(top.flatMap(r => [['SCARD', 'vinc:' + r.id], ['SISMEMBER', 'vinc:' + r.id, okId(id) ? id : '-']])) : [];
       return res.json({ n: top.map((r, i) => ({ n: r.n, o: r.o, t: r.t, w: r.w, c: +rs[i * 2] || 0, m: +rs[i * 2 + 1] ? 1 : 0, k: r.id === id ? 1 : 0 })) });
+    }
+    if (a === 'vipttl') {
+      if (!okId(id)) return res.json({ err: 'id' });
+      const v = jp(await cmd('GET', 'vip:' + id)) || {}, t = vipTier(v); if (!t) return res.status(403).json({ err: 'none' });
+      const w = String(b.w || '').trim();
+      if (t < 3 && w && !VIP_TT.includes(w)) return res.status(403).json({ err: 'preset' });
+      v.tt = w ? (t === 3 ? clean(w, 20) : w) : ''; await cmd('SET', 'vip:' + id, JSON.stringify(v)); return res.json({ ok: 1, tt: v.tt });
+    }
+    if (a === 'vipstat') {
+      const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
+      const ids = (await cmd('SMEMBERS', 'vipall')) || [], vs = ids.length ? ((await cmd('MGET', ...ids.map(x => 'vip:' + x))) || []).map(jp) : [], now2 = Date.now(), cnt = [0, 0, 0, 0], soon = [], pay = ((await cmd('HVALS', 'suppay')) || []).map(jp).filter(z => z && z.st === 'ok'), nmOf = {};
+      for (const z of pay) if (z.fid) nmOf[z.fid] = z.n || '';
+      ids.forEach((x, i) => { const v = vs[i], t = vipTier(v, now2); cnt[t]++; if (t && t < 3) { const e = t === 2 ? +v.e2 : +v.e1, left = (e - now2) / 864e5; if (left <= 5) soon.push({ n: nmOf[x] || x.slice(0, 4), t, d: Math.max(0, Math.ceil(left)) }) } });
+      let inc = 0, tot = 0; for (const z of pay) if (z.vp && VIP_PK[z.vp]) inc += VIP_PK[z.vp][0]; for (const z of pay) tot += +z.amt || 0;
+      soon.sort((x, y) => x.d - y.d); return res.json({ ok: 1, cnt, soon: soon.slice(0, 30), inc, tot, wall: +(await cmd('HLEN', 'vipu')) || 0 });
     }
     if (a === 'vipsay') {
       if (!okId(id)) return res.json({ err: 'id' });
@@ -919,7 +936,7 @@ module.exports = async (req, res) => {
 <div><span class="c"><b>${spT.view || 0}</b>เปิดดู QR วันนี้ (${+spR[7] || 0} คน)</span><span class="c"><b>${spT.stay || 0}</b>เปิดค้าง (น่าจะสแกน) วันนี้</span><span class="c"><b>${spT.save || 0}</b>บันทึก QR วันนี้</span><span class="c"><b>${spT.paid || 0}</b>แจ้งโอนวันนี้</span><span class="c"><b>${sp7.view}</b>เปิดดู 7 วัน (${+spR[8] || 0} คน)</span><span class="c"><b>${sp7.paid}</b>แจ้งโอน 7 วัน</span><span class="c"><b>${spSum.toLocaleString('th-TH')}</b>บาทที่ยืนยันแล้ว</span><span class="c"><b>${+spR[11] || 0}</b>คนกดรอโลกปัจจุบัน 🏙️</span></div>
 <h3>📨 แจ้งว่าโอนแล้ว (${spPay.length})</h3>${spPay.length ? spPay.map(spRow).join('') : '<p><small>ยังไม่มีคนแจ้ง</small></p>'}
 <details><summary>👀 คนที่เปิดดู/บันทึก QR ล่าสุด (${spEv.length})</summary>${spEv.map(x => `<div class="pl"><div class="plh"><b>${e(x.n)}</b><small>${tAgo(x.t)} ที่แล้ว</small></div>${EVN[x.e] || e(x.e)} · <small>${e(String(x.fid || '').slice(0, 10))} · ${e(x.dev || '')}${x.src ? ' · เปิดจาก' + e(x.src) : ''}</small></div>`).join('') || '<p><small>ยังไม่มี</small></p>'}</details>
-<label style="display:block;margin:6px 0"><input type="checkbox" id="spTy" checked onchange="localStorage.setItem('spTy',this.checked?1:0)"> กด ✅ ยืนยันว่าได้รับ แล้วส่งคำขอบคุณอัตโนมัติ</label><button onclick="vFix(this)" style="margin:4px 0">🏮 ซ่อมหอบรรพชน (ใส่ย้อนหลังคนที่จ่ายถาวรแล้วไม่ขึ้น)</button><script>async function vFix(b){b.disabled=true;try{const r=await fetch('?a=vipfix&key=${K}');const j=await r.json();b.textContent=j.ok?'✓ ใส่เพิ่ม '+j.fixed.length+' คน'+(j.maybe&&j.maybe.length?' · พบจ่าย ≥599 ที่ไม่ได้เลือกแพ็ก '+j.maybe.length+' รายการ (ดูในรายการจ่าย)':''):'ไม่สำเร็จ'}catch(e){b.textContent='ไม่สำเร็จ';b.disabled=false}}</script><script>try{if(localStorage.getItem('spTy')==='0')document.getElementById('spTy').checked=false}catch(x){}const SPQ=['🙏 ได้รับแล้ว ขอบคุณมากครับ! เงินสนับสนุนจะเอาไปพัฒนาเกมต่อ 💛','❓ ยังไม่พบยอดโอนครับ รบกวนเช็กชื่อบัญชีและเวลาโอนอีกครั้งนะครับ','📸 รบกวนส่งสลิปอีกครั้งผ่านปุ่มแจ้งโอนในเกมนะครับ รูปเดิมไม่ชัด'];function spQ(i,k){const t=document.getElementById('spx_'+i);if(t)t.value=SPQ[k]}
+<label style="display:block;margin:6px 0"><input type="checkbox" id="spTy" checked onchange="localStorage.setItem('spTy',this.checked?1:0)"> กด ✅ ยืนยันว่าได้รับ แล้วส่งคำขอบคุณอัตโนมัติ</label><button onclick="vStat(this)" style="margin:4px 6px 4px 0">📊 สรุป VIP</button><div id="vStatBox" style="font-size:13px;line-height:1.7"></div><button onclick="vFix(this)" style="margin:4px 0">🏮 ซ่อมหอบรรพชน (ใส่ย้อนหลังคนที่จ่ายถาวรแล้วไม่ขึ้น)</button><script>async function vStat(b){b.disabled=true;try{const r=await fetch('?a=vipstat&key=${K}');const j=await r.json();const nm=['หมดอายุ','สำนัก','อาวุโส','บรรพชน'];document.getElementById('vStatBox').innerHTML=j.ok?'ผู้ถือตอนนี้: สำนัก <b>'+j.cnt[1]+'</b> · อาวุโส <b>'+j.cnt[2]+'</b> · บรรพชน <b>'+j.cnt[3]+'</b> · หมดอายุแล้ว '+j.cnt[0]+' · ในหอ '+j.wall+' ป้าย<br>ยอดแพ็ก VIP ที่อนุมัติ <b>'+j.inc.toLocaleString()+'</b> บาท · ยอดสนับสนุนที่อนุมัติทั้งหมด <b>'+j.tot.toLocaleString()+'</b> บาท'+(j.soon.length?'<br>ใกล้หมดอายุ (≤5 วัน): '+j.soon.map(function(x){return x.n+' ('+nm[x.t]+' อีก '+x.d+' วัน)'}).join(' · '):'<br>ยังไม่มีใครใกล้หมดอายุ'):'ไม่สำเร็จ'}catch(e){document.getElementById('vStatBox').textContent='ไม่สำเร็จ'}b.disabled=false}</script><script>async function vFix(b){b.disabled=true;try{const r=await fetch('?a=vipfix&key=${K}');const j=await r.json();b.textContent=j.ok?'✓ ใส่เพิ่ม '+j.fixed.length+' คน'+(j.maybe&&j.maybe.length?' · พบจ่าย ≥599 ที่ไม่ได้เลือกแพ็ก '+j.maybe.length+' รายการ (ดูในรายการจ่าย)':''):'ไม่สำเร็จ'}catch(e){b.textContent='ไม่สำเร็จ';b.disabled=false}}</script><script>try{if(localStorage.getItem('spTy')==='0')document.getElementById('spTy').checked=false}catch(x){}const SPQ=['🙏 ได้รับแล้ว ขอบคุณมากครับ! เงินสนับสนุนจะเอาไปพัฒนาเกมต่อ 💛','❓ ยังไม่พบยอดโอนครับ รบกวนเช็กชื่อบัญชีและเวลาโอนอีกครั้งนะครับ','📸 รบกวนส่งสลิปอีกครั้งผ่านปุ่มแจ้งโอนในเกมนะครับ รูปเดิมไม่ชัด'];function spQ(i,k){const t=document.getElementById('spx_'+i);if(t)t.value=SPQ[k]}
 async function spR(i,b){const t=document.getElementById('spx_'+i);b.disabled=true;try{const r=await fetch('?a=supreply&key=${K}&i='+i,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({x:t?t.value:''})});const j=await r.json();b.textContent=j.ok?(j.del?'✓ ลบคำตอบแล้ว':'✓ ส่งแล้ว'+(j.push&&j.push.sent?' · เด้งถึงมือถือ '+j.push.sent+' เครื่อง':' · เก็บไว้ในกล่องข้อความในเกม')):'ไม่สำเร็จ';if(j.ok)setTimeout(()=>location.reload(),1200)}catch(x){b.textContent='ไม่สำเร็จ';b.disabled=false}}
 async function spM(i,v,b){if(v==='del'&&!confirm('ลบรายการนี้?'))return;b.disabled=true;try{const ty=document.getElementById('spTy');const r=await fetch('?a=supmark&key=${K}&i='+i+'&v='+v+'&ty='+(ty&&ty.checked?1:0));const j=await r.json();b.textContent=j.ok?'✓ บันทึกแล้ว'+(j.push?(j.push.sent?' · ส่งคำขอบคุณถึงมือถือแล้ว':' · ส่งคำขอบคุณในเกมแล้ว'):''):'ไม่สำเร็จ';if(j.ok)setTimeout(()=>location.reload(),900)}catch(x){b.textContent='ไม่สำเร็จ'}}</script>`;
       const acHtml = `<h2>🕵️ ผู้ต้องสงสัยโกง <small style="font-weight:normal;color:#aaa">· 🔴 = จับได้ชัด (แก้ค่าผ่านคอนโซล/แก้เซฟ) ถูกตัดจากระบบออนไลน์อัตโนมัติ · 🟡🟠 = สัญญาณให้ตรวจเอง</small></h2>${acL.length ? acL.slice(0, 40).map(x => acRow(x, 'ระบบจับ')).join('') : '<p><small>ยังไม่มี</small></p>'}<details><summary>📋 ถูกตัดจากทำเนียบล่าสุด (${clL.length})</summary>${clL.map(x => acRow(x, 'ทำเนียบ')).join('')}</details>
@@ -1842,7 +1859,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), ...((b.tp || +chx) ? { tt: '', tr: 0 } : rkOk(b.tt, rkh) || (isAdmKey(b.key) && RKT_ALL.has(String(b.tt || '')) ? { tt: String(b.tt), tr: RKT_TR[RKT_ALL.get(String(b.tt)).p] || 7 } : null) || ttlOk(b.tt, b.tr)), x, k: b.k === 'share' ? 'share' : 'msg', u: id.slice(0, 4), pu: id.slice(0, 12) };
       if (isA) m.ad = 1;
       if (!b.nsp) { try { if (+(await cmd('SISMEMBER', 'supok', id))) m.sp = 1 } catch {} }
-      try { const vt = vipTier(jp(await cmd('GET', 'vip:' + id))); if (vt) m.vp = vt } catch {}
+      try { const vj = jp(await cmd('GET', 'vip:' + id)), vt = vipTier(vj); if (vt) { m.vp = vt; if (vj.tt && (vt === 3 || VIP_TT.includes(vj.tt))) m.vq = String(vj.tt).slice(0, 20) } } catch {}
       if (/^ตำนานลานซีซั่น \d{1,4}$/.test(String(b.tt || '')) && !m.tt) { const wv0 = jp(await cmd('HGET', 'arwal', id)); if (isAdmKey(b.key) || (wv0 && wv0.own && (wv0.own.tt || []).includes(String(b.tt)))) { m.tt = String(b.tt); m.tr = 6 } }
       if (['นักล่าเงา', 'ผู้ไม่เคยถอย', 'ตำนานแห่งลาน', 'ราชันเงาอสูร', 'เทพสงครามแห่งลาน', 'ผู้ยืนหนึ่งเหนือพันศึก', 'จักรพรรดิแห่งเงา', 'ผู้ไต่ลานทองคำ', 'เพชรแห่งลานเงา', 'จ้าวลานประลอง', 'ปรมาจารย์ผู้ไร้เงา', 'ราชันหมื่นเงา', 'เทพยุทธ์แห่งยุค'].includes(m.tt) && !isAdmKey(b.key)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.tt || []).includes(m.tt)) { m.tt = ''; m.tr = 0 } }
       // แชร์การปลดปล่อยพลัง: แนบข้อมูลฉาก pixel (ตัวเลข/สี/คำสั้นๆ เท่านั้น) ให้คนอื่นเล่นซ้ำในแชทได้

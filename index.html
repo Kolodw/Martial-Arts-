@@ -27848,6 +27848,175 @@ function own(){const t=Date.now();if(t-ownT<3000)return;ownT=t;try{add(LS.get('m
  L.forEach((n,i)=>{t=t.split(n).join('\uE000'+i+'\uE001')});t=_x(t);L.forEach((n,i)=>{t=t.split('\uE000'+i+'\uE001').join(n)});return t}}
 {const _j=Response.prototype.json;Response.prototype.json=function(){return _j.apply(this,arguments).then(j=>{try{walk(j,0)}catch(e){}return j})}}
 })()}catch(e){console.error(e)}
+
+// ===================== v18.1 🏮 หน้า VIP/สุ่มเกิดใหม่: การ์ดต่างวัสดุ · แพ็กคุ้มสุด · สถานะการจ่าย · หน้าจอ "ได้รับแล้ว" · ฉายา · หอบรรพชนเข้ม =====================
+try{(()=>{
+const NM=['','ผู้อุปถัมภ์สำนัก','ผู้อาวุโสอุปถัมภ์','บรรพชนผู้อุปถัมภ์'],SLb=['','สำนัก','อาวุโส','บรรพชน'];
+const PK={v1:[39,1,30],v2:[99,2,30],v3:[599,3,0]};
+const vget=()=>{try{return LS.get('murim_vip',null)}catch(e){return null}};
+const tierOf=v=>!v?0:v.u?3:(v.e2||0)>Date.now()?2:(v.e1||0)>Date.now()?1:0;
+const T=()=>tierOf(vget());
+const dTxt=ms=>new Date(ms).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});
+const endOf=(v,t)=>t===2?v.e2:v.e1,daysLeft=(v,t)=>Math.max(1,Math.ceil((endOf(v,t)-Date.now())/864e5));
+const IC={dice:'<rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="9" r="1" fill="currentColor"/><circle cx="9" cy="15" r="1" fill="currentColor"/><circle cx="15" cy="15" r="1" fill="currentColor"/>',
+ stamp:'<circle cx="12" cy="12" r="8.5"/><path d="M8.5 12h7M12 8.5v7"/>',frame:'<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/>',
+ lantern:'<path d="M9 4h6M8 7h8a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2zM10 17v3M14 17v3M12 7v10"/>',tag:'<path d="M4 5h9l7 7-8 8-8-8z"/><circle cx="8.5" cy="9.5" r="1" fill="currentColor"/>',
+ bolt:'<path d="M13 3 5 13h6l-1 8 8-10h-6z"/>',yin:'<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a4.25 4.25 0 0 1 0 8.5 4.25 4.25 0 0 0 0 8.5"/>',inf:'<path d="M12 12c-2-3-3.5-4-5.2-4a4 4 0 0 0 0 8c1.7 0 3.200-1 5.200-4zm0 0c2 3 3.500 4 5.200 4a4 4 0 0 0 0-8c-1.700 0-3.200 1-5.200 4z"/>',
+ plaque:'<path d="M7 20V9a5 5 0 0 1 10 0v11zM9.500 12h5M9.500 15h5"/>',ticket:'<path d="M4 8a2 2 0 0 0 0 4v0a2 2 0 0 1 0 4v1h16v-1a2 2 0 0 1 0-4v0a2 2 0 0 0 0-4V7H4zM10 7v10"/>',chev:'<path d="m9 6 6 6-6 6"/>',check:'<path d="m5 12 4.500 4.500L19 7"/>'};
+const ico=n=>`<svg class="vxi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[n]||''}</svg>`;
+const seal=(t,x)=>{const v=vget();return`<span class="vseal vs${t}${x||''}"><b>${t===3&&v&&v.ul?'№'+v.ul.o:SLb[t]}</b></span>`};
+let TT={tt:'',ttl:[]};try{const o=LS.get('murim_vipt',null);if(o)TT=o}catch(e){}
+const pend=()=>{let P=null;try{P=LS.get('murim_vipP',null)}catch(e){}if(P&&Date.now()-P.t>7*864e5){try{LS.set('murim_vipP',null)}catch(e){}P=null}return P};
+const setPend=P=>{try{LS.set('murim_vipP',P)}catch(e){}};
+const kdGet=()=>{const t=new Date(Date.now()+7*3600e3).toISOString().slice(0,10);let d=null;try{d=LS.get('murim_rrk',null)}catch(e){}if(!d||d.d!==t)d={d:t,n:0};return d};
+const inRR=()=>{const m=$('modal');return m&&m.querySelector('.vx-rr')};
+const inVip=()=>{const m=$('modal');return m&&m.querySelector('.vx-vip')};
+
+// ---------- สถานะการจ่าย (ไทม์ไลน์ 3 ขั้น) ----------
+function tlHtml(P){if(!P)return'';const h=(Date.now()-P.t)/36e5,ago=h<1?'เมื่อสักครู่':h<24?`${Math.floor(h)} ชม.ที่แล้ว`:`${Math.floor(h/24)} วันที่แล้ว`;
+ const what=P.k?NM[PK[P.k][1]]+(P.k==='v3'?'':' · 30 วัน'):`แพ็กสุ่มเกิด ${P.n||''} ครั้ง`;
+ return`<div class="vx-tl"><div class="vx-tlh"><b>รายการที่รอตรวจ</b><small>${what}</small></div>
+ <ol><li class="done"><i>${ico('check')}</i><div><b>ส่งสลิปแล้ว</b><small>${ago}</small></div></li>
+ <li class="now"><i></i><div><b>ผู้พัฒนากำลังตรวจสลิป</b><small>ปกติไม่เกิน 1 วัน${h>48?' · <span style="color:#e0503c">เกิน 48 ชม.แล้ว — แจ้งบั๊กเพื่อขอคืนเงินได้</span>':''}</small></div></li>
+ <li><i></i><div><b>ได้รับสิทธิ์</b><small>สิทธิ์เข้าเองและมีแจ้งเตือน ไม่ต้องทำอะไรเพิ่ม</small></div></li></ol>
+ <button class="gbtn" onclick="vxCheck(this)">เช็กสถานะตอนนี้</button></div>`}
+window.vxCheck=async function(b){if(b)b.disabled=true;try{await vxFetch(true)}catch(e){toast('เช็กไม่สำเร็จ ลองใหม่อีกครั้ง')}if(b)b.disabled=false;const P=pend();if(P&&b)toast('ยังไม่ได้รับการอนุมัติ — รอผู้พัฒนาตรวจสลิปนะ')};
+async function vxFetch(re){const RR=window._RR||{};const j=await api('rrget');if(!j)return;RR.c=Math.max(0,+j.c||0);if(j.pk)RR.pk=j.pk;
+ if(j.vip){TT={tt:j.vip.tt||'',ttl:j.vip.ttl||TT.ttl||[]};try{LS.set('murim_vipt',TT)}catch(e){}}
+ try{window.vipSet&&window.vipSet(j.vip)}catch(e){}
+ if(re){if(inRR())rrMenu();else if(inVip())vipMenu()}}
+
+// ---------- หน้า 🎲 สุ่มเกิดเพิ่ม ----------
+window.rrMenu=function(){const RR=window._RR||{pk:{},used:0,cap:10,kday:5,kc:1000},kb=kbGet(),kk=Math.max(kb.g,kb.e),cap=RR.used>=RR.cap,kd=kdGet(),kc=window.rrKC?window.rrKC():1000,kOut=kd.n>=RR.kday,t=T(),v=vget(),P=pend();
+ const pk=Object.entries(RR.pk||{}),u0=pk.length?pk[0][1][0]/pk[0][1][1]:1;
+ const ent=t?`<button class="vx-ent" onclick="vipMenu()">${seal(t,' mini')}<span><b>${NM[t]}</b><small>${t===3?(v.ul?'ลำดับที่ '+v.ul.o:'ถาวร'):'อีก '+daysLeft(v,t)+' วัน'} · สุ่มเกิด ${[0,30,60,100][t]} ครั้งต่อชีวิต</small></span><span class="go">${ico('chev')}</span></button>`
+  :`<button class="vx-ent" onclick="vipMenu()"><span class="vx-ei">${ico('lantern')}</span><span><b>ผู้อุปถัมภ์สำนัก</b><small>สุ่มเกิด 30–100 ครั้งต่อชีวิต · ตราประทับ · กรอบ · ฉายา</small></span><span class="go">${ico('chev')}</span></button>`;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3 class="vx-rr">สุ่มเกิดเพิ่ม</h3>
+ ${ent}${t>=2?'<button class="vx-auto" onclick="vipAutoMenu()">'+ico('bolt')+'<span>สุ่มรัว <small>ตั้งเงื่อนไขแล้วระบบสุ่มให้เอง</small></span></button>':''}
+ <div class="vx-chips"><div><b>${rerolls}</b><span>ฟรี</span></div><div><b>${RR.c==null?'…':fmt(RR.c)}</b><span>ซื้อไว้</span></div><div><b>${RR.used||0}/${RR.cap||10}</b><span>ใช้เพิ่มชีวิตนี้</span></div></div>
+ ${cap?`<p class="tag2" style="color:#e0503c;margin:0 0 8px">ชีวิตนี้ใช้ครบ ${RR.cap} ครั้งแล้ว — สิทธิ์ที่ซื้อเก็บไว้ใช้ชีวิตหน้าได้</p>`:''}
+ <div class="vx-act">${ico('ticket')}<div class="tx"><b>ใช้สิทธิ์ที่ซื้อไว้</b><small>เหลือ ${RR.c==null?'…':fmt(RR.c)} ครั้ง</small></div><button class="gbtn" ${cap||!RR.c?'disabled':''} onclick="rrUsePaid(this)">ใช้ 1 ครั้ง</button></div>
+ <div class="vx-act">${ico('yin')}<div class="tx"><b>ใช้กรรมแลก</b><small>${kOut?'วันนี้แลกครบแล้ว':`ครั้งนี้ ${fmt(kc)} กรรม`} · มี ${fmt(kk)}<br>แลกแล้ว ${kd.n}/${RR.kday} ครั้งวันนี้ · ราคาเท่าตัวทุกครั้ง รีเซ็ตเที่ยงคืน</small></div><button class="gbtn" ${cap||kOut||kk<kc?'disabled':''} onclick="rrUseKarma()">แลก 1 ครั้ง</button></div>
+ ${P?tlHtml(P):''}
+ <h4 class="vx-h4">ซื้อสิทธิ์สุ่มเกิด</h4>
+ <div class="vx-packs">${pk.map(([k,x],i)=>{const per=x[0]/x[1],sv=Math.round((1-per/u0)*100),best=i===pk.length-1&&pk.length>1;return`<button class="vx-pk${best?' best':''}" onclick="rrBuy('${k}')">${best?'<span class="vx-rib">คุ้มสุด</span>':''}<span class="n">${x[1]}</span><span class="u">ครั้ง</span><span class="s">${sv>0?'ถูกกว่า '+sv+'%':'&nbsp;'}</span><span class="p">${x[0]} บาท</span><span class="u">${per.toFixed(2)} บ./ครั้ง</span></button>`}).join('')}</div>
+ <p class="vx-note">ไม่ซื้อก็เล่นได้เหมือนกัน — สุ่มฟรี 5 ครั้ง และแลกกรรมเพิ่มได้ทุกวัน · สิทธิ์ที่ซื้อไม่มีวันหมดอายุ</p>
+ <details class="vfp"><summary>เงื่อนไขการซื้อ</summary><p class="tag2">สิทธิ์ผูกกับบัญชีของคุณ (ล็อกอิน Google ไว้จะไม่หายเวลาเปลี่ยนเครื่อง) · ได้สิทธิ์หลังผู้พัฒนาตรวจสลิปแล้ว ปกติไม่เกิน 1 วัน · ถ้าเกิน 48 ชม. ยังไม่ได้ แจ้งบั๊กเพื่อขอคืนเงินได้ · ไม่มีการตัดเงินอัตโนมัติ</p></details>`);
+ if(RR.c==null&&!RR.ld){RR.ld=1;vxFetch(false).catch(()=>{}).then(()=>{RR.ld=0;if(inRR())rrMenu()})}}
+
+// ---------- หน้า VIP ----------
+const F=(ic,x)=>`<li>${ico(ic)}<span>${x}</span></li>`;
+function card(k){const n=PK[k][1],t=T(),v=vget(),have=t===n,low=t===3&&n<3;
+ const L={1:[F('dice','สุ่มเกิดได้ <b>30 ครั้ง</b>ต่อชีวิต'),F('stamp','ตราประทับชาด <b>เส้นเดี่ยว</b>'),F('frame','กรอบอวตารเส้นเดี่ยวสีชาด'),F('lantern','ป้ายโคมหน้าชื่อในแชท'),F('tag','ฉายา เลือกจากชุดสำเร็จรูป 6 ชื่อ')],
+  2:[F('dice','สุ่มเกิดได้ <b>60 ครั้ง</b>ต่อชีวิต'),F('stamp','ตราประทับชาด <b>เส้นคู่</b>'),F('frame','กรอบอวตารเส้นคู่'),F('yin','แลกกรรมสุ่มได้วันละ <b>8 ครั้ง</b> (ปกติ 5)'),F('bolt','ปุ่ม <b>สุ่มรัว</b> ตั้งเงื่อนไขแล้วระบบสุ่มให้เอง'),F('tag','ฉายาเลือกจากชุดสำเร็จรูป')],
+  3:[F('dice','สุ่มเกิดได้ <b>100 ครั้ง</b>ต่อชีวิต ตลอดไป'),F('stamp','ตราทองแกะลาย พร้อม <b>เลขลำดับ</b> ซื้อซ้ำไม่ได้'),F('frame','กรอบขอบทองเส้นคู่ ประดับมุม'),F('plaque','ป้ายชื่อในหอบรรพชน · คำจารึก · จุดธูป'),F('tag','ฉายา <b>ตั้งเองได้</b> (20 ตัวอักษร)'),F('bolt','ทุกอย่างของผู้อาวุโส ตลอดไป')]}[n];
+ const price=n===3?'ครั้งเดียว ถาวร':'/ 30 วัน',lbl=have&&n<3?`ต่ออายุ ${PK[k][0]} บาท · 30 วัน`:n===3?`ซื้อถาวร ${PK[k][0]} บาท`:`สมัคร ${PK[k][0]} บาท · 30 วัน`;
+ const cmp=n===3?`<div class="vx-cmp"><div><span>รายเดือน 99 × 6</span><i style="width:99%"></i><b>594</b></div><div><span>ถาวร</span><i style="width:100%" class="g"></i><b>599</b></div><p>จ่ายครั้งเดียว คุ้มตั้งแต่เดือนที่ 7 · ไม่ต้องต่ออายุอีก</p></div>`:'';
+ const dis=(n===3&&t===3)||low;
+ return`<div class="vx-card vk${n}${have?' on':''}${low?' dim':''}">${n===3?'<span class="vx-rib g">คุ้มสุด · ถาวร</span>':''}${have?'<span class="vx-rib o">ใช้อยู่</span>':''}
+ <div class="vx-hd">${seal(n,'')}<div><div class="vx-nm">${NM[n]}</div><div class="vx-pr">${PK[k][0]} <small>บาท ${price}</small></div></div></div>
+ <ul>${L.join('')}</ul>${cmp}<button class="vx-buy vk${n}" ${dis?'disabled':''} onclick="vipBuy('${k}')">${n===3&&t===3?'เป็นบรรพชนแล้ว':low?'มีสิทธิ์ถาวรอยู่แล้ว':lbl}</button></div>`}
+function ttHtml(){const t=T();if(!t)return'';const cur=TT.tt||'';
+ const body=t===3?`<div class="vx-ttin"><input id="vipT" maxlength="20" placeholder="ตั้งฉายาของคุณ (ไม่เกิน 20 ตัวอักษร)" value="${esc(cur)}"><button class="gbtn" onclick="vipTtl(document.getElementById('vipT').value)">บันทึก</button></div>`
+  :`<div class="vx-tt">${(TT.ttl||[]).map(n=>`<button class="${n===cur?'on':''}" data-w="${esc(n)}" onclick="vipTtl(this.dataset.w)">${esc(n)}</button>`).join('')||'<small class="tag2">กำลังโหลด…</small>'}</div>`;
+ return`<div class="vx-sec"><h4 class="vx-h4">ฉายาของคุณ</h4><p class="tag2" style="margin:0 0 6px">${cur?'ตอนนี้: <b>'+esc(cur)+'</b> · ':''}แสดงข้างชื่อในแชท${t<3?' · กดซ้ำที่ชื่อเดิมเพื่อถอด':''}</p>${body}</div>`}
+window.vipTtl=async function(w){w=String(w||'').trim();if(w&&w===TT.tt&&T()<3)w='';try{const j=await api('vipttl',{w});TT.tt=j.tt||'';try{LS.set('murim_vipt',TT)}catch(e){}toast(TT.tt?'ตั้งฉายาแล้ว':'ถอดฉายาแล้ว');if(inVip())vipMenu()}catch(e){toast(e.message==='preset'?'เลือกจากชุดที่มีให้':'บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง')}};
+window.vipMenu=function(){const t=T(),v=vget(),near=t&&t<3&&(endOf(v,t)-Date.now())<3*864e5,P=pend();
+ const stat=t?`<div class="vx-stat">${seal(t,near?' fade':'')}<div><b>${NM[t]}</b><small>${t===3?(v.ul?`ลำดับที่ ${v.ul.o} · เข้าร่วม ${dTxt(v.ul.t)}`:'ถาวร'):`ถึง ${dTxt(endOf(v,t))} · อีก ${daysLeft(v,t)} วัน${near?' · ใกล้หมดอายุ':''}`}</small></div></div>`:'';
+ const ins=t===3&&v.ul?`<div class="vx-sec"><h4 class="vx-h4">คำจารึกบนป้าย</h4><div class="vx-ttin"><input id="vipW" maxlength="40" placeholder="ข้อความสั้นๆ (ไม่เกิน 40 ตัวอักษร)" value="${esc(v.ul.w||'')}"><button class="gbtn" onclick="vipSay(this)">จารึก</button></div></div>`:'';
+ modal(`<button class="xbtn" onclick="rrMenu()">✕</button><h3 class="vx-vip">ผู้อุปถัมภ์สำนัก</h3>
+ <div class="vx-free"><b>เล่นฟรีก็เล่นได้เหมือนกัน ไม่ต้องน้อยใจ</b><details><summary>อ่านรายละเอียด</summary><p>ผู้อุปถัมภ์ไม่ได้พลัง เงิน หรือโบนัสในเกม ได้แค่สุ่มเกิดมากขึ้น กับตราประทับ กรอบ และฉายา ชีวิตทุกคนต้องเล่นเองทั้งชีวิตและแข่งทำเนียบด้วยกติกาเดียวกัน · สายฟรีสุ่มเกิดได้ 5 ครั้งต่อชีวิต และแลกกรรมเพิ่มได้ทุกวัน</p></details></div>
+ ${stat}${P?tlHtml(P):''}${ins}${ttHtml()}
+ ${card('v1')}${card('v2')}${card('v3')}
+ <button class="vx-wallb" onclick="vipWall()">${ico('plaque')}<span>เข้าหอบรรพชน<small>ป้ายของผู้อุปถัมภ์ถาวร เรียงตามวันที่เข้าร่วม</small></span><span class="go">${ico('chev')}</span></button>
+ <details class="vfp"><summary>เงื่อนไขการซื้อ</summary><p class="tag2">ไม่ต่ออายุเอง ไม่มีการตัดเงินอัตโนมัติ · ซื้อซ้ำก่อนหมดอายุจะต่อวันให้ · สิทธิ์ผูกกับบัญชี (ล็อกอิน Google ไว้จะไม่หายเวลาเปลี่ยนเครื่อง) · ได้สิทธิ์หลังผู้พัฒนาตรวจสลิปแล้ว ปกติไม่เกิน 1 วัน · ถ้าเกิน 48 ชม. ยังไม่ได้ แจ้งบั๊กเพื่อขอคืนเงินได้ · สิทธิ์สุ่มที่ซื้อเป็นแพ็กไม่หายเมื่อ VIP หมดอายุ</p></details>`);
+ if(!vipMenu._ld){vipMenu._ld=1;const a=JSON.stringify([vget(),TT]);vxFetch(false).catch(()=>{}).then(()=>{vipMenu._ld=0;if(inVip()&&a!==JSON.stringify([vget(),TT]))vipMenu()})}};
+
+// ---------- หน้าชำระเงิน: ขั้นตอน 3 ข้อ + จำสถานะ ----------
+const steps=()=>`<ol class="vx-st"><li><i>1</i>สแกนโอน</li><li><i>2</i>แนบสลิป</li><li><i>3</i>รอตรวจ</li></ol>`;
+for(const f of ['vipBuy','rrBuy']){const o=window[f];if(typeof o!=='function')continue;window[f]=function(){const r=o.apply(this,arguments);try{const h=$('modal').querySelector('h3');if(h&&!$('modal').querySelector('.vx-st'))h.insertAdjacentHTML('afterend',steps())}catch(e){}return r}}
+{const o=window.vipPaid;if(typeof o==='function')window.vipPaid=async function(btn,k){const r=await o.apply(this,arguments);try{if(/ส่งแล้ว/.test(btn.textContent))setPend({t:Date.now(),k})}catch(e){}return r}}
+{const o=window.rrPaid;if(typeof o==='function')window.rrPaid=async function(btn,k){const r=await o.apply(this,arguments);try{if(/ส่งแล้ว/.test(btn.textContent)){const RR=window._RR||{};setPend({t:Date.now(),k:'',pk:k,n:(RR.pk&&RR.pk[k]&&RR.pk[k][1])||0,c0:RR.c||0})}}catch(e){}return r}}
+
+// ---------- หน้าจอ "ได้รับแล้ว" ----------
+window.vipCele=function(kind,n){const t=kind==='rr'?0:kind,v=vget();
+ const conf=Array.from({length:22},(_,i)=>`<i style="--x:${Math.round(Math.random()*100)}%;--d:${(Math.random()*.8).toFixed(2)}s;--r:${Math.round(Math.random()*360)}deg;--c:${['#c9a24a','#f0dc9a','#b8372a','#fff'][i%4]}"></i>`).join('');
+ const head=kind==='rr'?`สิทธิ์สุ่มเข้าแล้ว <b>+${n}</b> ครั้ง`:`ยินดีต้อนรับ <b>${NM[t]}</b>`;
+ const det=kind==='rr'?'<li>สิทธิ์ไม่มีวันหมดอายุ เก็บไว้ใช้ได้ทุกชีวิต</li><li>ไปที่ 🎲 สุ่มเกิดเพิ่ม แล้วกด "ใช้ 1 ครั้ง"</li>'
+  :t===3?`<li>เลขลำดับของคุณ <b>${v&&v.ul?'№ '+v.ul.o:'ในหอบรรพชน'}</b> — ซื้อซ้ำไม่ได้</li><li>สุ่มเกิด 100 ครั้งต่อชีวิต ตลอดไป</li><li>กรอบบรรพชนอยู่ในโปรไฟล์ · ตั้งฉายาและคำจารึกได้แล้ว</li>`
+  :`<li>สุ่มเกิด ${t===2?60:30} ครั้งต่อชีวิต${v&&endOf(v,t)?' · ถึง '+dTxt(endOf(v,t)):''}</li><li>ตราประทับและกรอบ${t===2?'เส้นคู่':'เส้นเดี่ยว'}อยู่ในโปรไฟล์</li><li>เลือกฉายาได้ที่หน้านี้</li>`;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="vx-cele cc${t}"><div class="vx-conf">${conf}</div><div class="vx-rays"></div>
+ <div class="vx-stamp">${kind==='rr'?`<span class="vx-dice">${ico('dice')}</span>`:seal(t,' big')}</div><p class="vx-th">ได้รับแล้ว — ขอบคุณมากครับ</p><h3>${head}</h3><ul>${det}</ul>
+ <button class="pbtn" style="width:100%" onclick="${kind==='rr'?'rrMenu()':'vipMenu()'}">${kind==='rr'?'ไปสุ่มเกิด':'ดูสิทธิ์ของฉัน'}</button></div>`);try{sfx('realm')}catch(e){}};
+{const o=window.vipSet;if(typeof o==='function')window.vipSet=function(v){const old=T(),P=pend();const r=o.apply(this,arguments);try{if(P){const RR=window._RR||{},nw=T();
+  if(P.k&&nw>=PK[P.k][1]&&old<PK[P.k][1]){setPend(null);setTimeout(()=>{if(!choice._cur)vipCele(PK[P.k][1])},400)}
+  else if(!P.k&&RR.c!=null&&RR.c>(P.c0||0)){const n=RR.c-(P.c0||0);setPend(null);setTimeout(()=>{if(!choice._cur)vipCele('rr',n)},400)}}}catch(e){console.error(e)}return r}}
+setTimeout(()=>{try{if(pend())vxFetch(false).catch(()=>{})}catch(e){}},4500);
+
+// ---------- แชท: ฉายา ----------
+{const _cr=chatRender;chatRender=function(){const r=_cr.apply(this,arguments);try{const box=$('chatBox');if(!box)return r;const ks=[...box.children].filter(e=>e.classList&&e.classList.contains('cm')),ms=chatMsgs||[];if(ks.length!==ms.length)return r;
+  ks.forEach((e,i)=>{const q=ms[i]&&ms[i].vq;if(q&&!e.querySelector('.vtt')){const b=e.querySelector('.cmh b');if(b)b.insertAdjacentHTML('afterend',`<span class="vtt">${esc(String(q).slice(0,20))}</span>`)}})}catch(e){}return r}}
+
+// ---------- หอบรรพชน: หัวหอ ----------
+{const o=window.vipWall;if(typeof o==='function')window.vipWall=async function(){const r=await o.apply(this,arguments);try{const m=$('modal'),n=m.querySelectorAll('.vtab').length;if(m.querySelector('.vx-wallhd'))return r;const h=m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',`<div class="vx-wallhd"><b>${n} ท่าน</b><span>เรียงตามวันที่เข้าร่วม ไม่ใช่ตามเงิน — ทุกคนจ่ายเท่ากัน</span></div>`);const mine=m.querySelector('.vtab.mine');if(mine)mine.scrollIntoView({block:'nearest'})}catch(e){}return r}}
+
+try{const st=document.createElement('style');st.textContent=`
+.vx-ent,.vx-auto,.vx-wallb{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:2px solid var(--line);border-radius:10px;background:var(--w);color:inherit;font:inherit;cursor:pointer;box-shadow:0 4px 0 var(--line);padding:10px 12px;margin:6px 0 12px}
+.vx-ent:active,.vx-auto:active,.vx-wallb:active,.vx-pk:active{transform:translateY(2px);box-shadow:0 2px 0 var(--line)}
+.vx-ent b,.vx-wallb b{display:block;font-size:15px}.vx-ent small,.vx-auto small,.vx-wallb small{display:block;color:var(--mut);font-size:12px;line-height:1.4;margin-top:1px}.vx-ent .go,.vx-wallb .go{margin-left:auto;opacity:.55;display:flex}.vx-ent .go .vxi,.vx-wallb .go .vxi{width:20px;height:20px}
+.vx-ei{display:flex;width:34px;height:34px;align-items:center;justify-content:center;border:2px solid #b8372a;color:#b8372a;border-radius:50%;flex:none}
+.vx-auto{margin-top:-4px;font-weight:700}.vx-auto small{display:inline;font-weight:400;margin-left:4px}
+.vx-chips{display:flex;gap:8px;margin:0 0 12px}.vx-chips>div{flex:1;text-align:center;border:2px solid var(--line);border-radius:10px;background:var(--w);padding:7px 4px}.vx-chips b{display:block;font-size:20px;line-height:1.2}.vx-chips span{font-size:11px;color:var(--mut)}
+.vx-act{display:flex;align-items:center;gap:12px;border:2px solid var(--line);border-radius:10px;background:var(--w);padding:12px 14px;margin:0 0 12px;box-shadow:0 3px 0 var(--line)}.vx-act>.vxi{width:26px;height:26px;opacity:.8}
+.vx-act .gbtn,.vx-ttin .gbtn,.vx-tl .gbtn{background:#e8b84a;color:#2a1f08;border:2px solid #7a5a14;box-shadow:0 3px 0 #7a5a14;font-weight:800;border-radius:8px}.vx-act .gbtn:disabled,.vx-ttin .gbtn:disabled{opacity:.45}
+.vx-act .tx{flex:1;min-width:0}.vx-act b{font-size:15px}.vx-act small{display:block;color:var(--mut);font-size:12px;margin-top:3px;line-height:1.5}.vx-act .gbtn{flex:none;min-width:96px;padding:10px 14px;margin:0}
+.vx-h4{margin:14px 0 8px;font-size:15px}.vx-sec{margin:0 0 12px}
+.vx-packs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding-top:6px}
+.vx-pk{position:relative;border:2px solid var(--line);border-radius:10px;background:var(--w);box-shadow:0 4px 0 var(--line);padding:14px 4px 10px;text-align:center;color:inherit;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px}
+.vx-pk .n{font-size:28px;font-weight:800;line-height:1.1}.vx-pk .u{font-size:11.5px;color:var(--mut)}.vx-pk .s{font-size:11.5px;color:#3f8f5a;font-weight:700;min-height:15px;margin-top:2px}
+.vx-pk .p{margin:6px 0 3px;width:calc(100% - 12px);border-radius:6px;background:#c9a24a;color:#2a1f08;font-weight:800;font-size:14px;padding:6px 0;border:2px solid #7a5a14;box-shadow:0 2px 0 #7a5a14}
+.vx-pk.best{border-color:#c9a24a;box-shadow:0 4px 0 #7a5a14}
+.vx-rib{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#b8372a;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:999px;white-space:nowrap;box-shadow:0 2px 0 #5a1a12;z-index:1}
+.vx-card .vx-rib{top:-1px;right:12px;left:auto;transform:none;border-radius:0 0 8px 8px;padding:3px 10px 4px}.vx-rib.g{background:linear-gradient(#e6c86e,#b08a2a);color:#2a1f08;box-shadow:0 2px 0 #5a420c}.vx-rib.o{background:#3f8f5a;box-shadow:0 2px 0 #1f4a2e;right:auto;left:12px}
+.vx-note{font-size:12px;color:var(--mut);margin:10px 0 4px;line-height:1.55}
+.vx-free{border:2px solid #3f8f5a;border-radius:10px;background:var(--w);box-shadow:0 3px 0 #3f8f5a;padding:9px 12px;margin:6px 0 12px;font-size:13px}.vx-free summary{cursor:pointer;color:var(--mut);font-size:12px;margin-top:3px}.vx-free p{margin:6px 0 0;line-height:1.6;font-size:12.5px}
+.vx-stat{display:flex;gap:12px;align-items:center;border:2px solid var(--line);border-radius:10px;background:var(--w);box-shadow:0 3px 0 var(--line);padding:10px 12px;margin:0 0 12px}.vx-stat b{display:block;font-size:15px}.vx-stat small{color:var(--mut);font-size:12px}
+.vx-ttin{display:flex;gap:6px}.vx-ttin input{flex:1;min-width:0;padding:9px;border:2px solid var(--line);border-radius:8px;background:var(--w);color:inherit;font:inherit}.vx-ttin .gbtn{flex:none;margin:0;padding:9px 14px}
+.vx-tt{display:flex;flex-wrap:wrap;gap:7px}.vx-tt button{border:2px solid var(--line);border-radius:999px;background:var(--w);color:inherit;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer}.vx-tt button.on{background:#c9a24a;color:#2a1f08;border-color:#7a5a14;font-weight:700}
+.vx-card{position:relative;border:2px solid var(--line);border-radius:12px;padding:16px 14px 14px;margin:0 0 16px;box-shadow:0 4px 0 var(--line);background:var(--w)}
+.vx-card.vk1{background:repeating-linear-gradient(0deg,rgba(184,55,42,.07) 0 1px,transparent 1px 6px),var(--w);border-color:#b8372a;box-shadow:0 4px 0 #b8372a}
+.vx-card.vk2{background:linear-gradient(115deg,rgba(143,42,34,.16),transparent 42%,rgba(216,201,160,.12) 62%,transparent),var(--w);border-color:#a02d24;box-shadow:0 4px 0 #8f2a22,inset 0 0 0 3px var(--w),inset 0 0 0 4.5px rgba(160,45,36,.55)}
+.vx-card.vk3{background:radial-gradient(120% 90% at 100% 0,rgba(240,220,154,.24),transparent 60%),linear-gradient(160deg,rgba(201,162,74,.18),transparent 55%),var(--w);border-color:#c9a24a;box-shadow:0 4px 0 #7a5a14,inset 0 0 0 3px var(--w),inset 0 0 0 4.5px rgba(201,162,74,.8)}
+.vx-card.vk3::before,.vx-card.vk3::after{content:"";position:absolute;width:16px;height:16px;border:2px solid #c9a24a;pointer-events:none}.vx-card.vk3::before{left:8px;top:8px;border-right:0;border-bottom:0}.vx-card.vk3::after{right:8px;bottom:8px;border-left:0;border-top:0}
+.vx-card.on{outline:3px solid #3f8f5a;outline-offset:2px}.vx-card.dim{opacity:.6}
+.vx-hd{display:flex;gap:12px;align-items:center;margin-bottom:10px}.vx-nm{font-size:17px;font-weight:800}.vx-pr{font-size:24px;font-weight:800;line-height:1.2}.vx-pr small{font-size:12px;font-weight:400;color:var(--mut)}
+.vx-card ul{list-style:none;margin:4px 0 12px;padding:0;display:grid;gap:8px}.vx-card li{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;line-height:1.45}.vxi{flex:none;width:18px;height:18px;margin-top:1px;opacity:.8}.vx-card.vk1 .vxi{color:#b8372a}.vx-card.vk2 .vxi{color:#a02d24}.vx-card.vk3 .vxi{color:#b08a2a}
+.vx-cmp{margin:0 0 12px;font-size:12px}.vx-cmp>div{display:grid;grid-template-columns:86px 1fr 34px;gap:8px;align-items:center;margin:4px 0}.vx-cmp i{display:block;height:9px;border-radius:5px;background:#b8372a;opacity:.7}.vx-cmp i.g{background:linear-gradient(90deg,#b08a2a,#f0dc9a);opacity:1}.vx-cmp b{text-align:right}.vx-cmp p{margin:6px 0 0;color:var(--mut);font-size:12px}
+.vx-buy{width:100%;padding:13px 12px;font:inherit;font-size:16px;font-weight:800;border-radius:9px;cursor:pointer;border:2px solid;box-shadow:0 4px 0;color:#fff}.vx-buy:active{transform:translateY(2px);box-shadow:0 2px 0}.vx-buy:disabled{opacity:.55;cursor:default;transform:none}
+.vx-buy.vk1{background:#b8372a;border-color:#6e1d14;box-shadow:0 4px 0 #6e1d14}.vx-buy.vk2{background:#8f2a22;border-color:#4e140f;box-shadow:0 4px 0 #4e140f;background-image:linear-gradient(90deg,transparent,rgba(216,201,160,.18),transparent)}
+.vx-buy.vk3{background:linear-gradient(180deg,#e6c86e,#c9a24a);color:#2a1f08;border-color:#7a5a14;box-shadow:0 4px 0 #7a5a14}
+.vx-card.vk3 .vseal.vs3{animation:vxSheen 1.8s .3s 1 both}@keyframes vxSheen{0%{filter:brightness(1)}40%{filter:brightness(1.45) saturate(1.3)}100%{filter:brightness(1)}}
+.vx-tl{border:2px solid #c9a24a;border-radius:10px;background:var(--w);box-shadow:0 3px 0 #7a5a14;padding:11px 12px;margin:0 0 12px}.vx-tlh{display:flex;justify-content:space-between;gap:8px;align-items:baseline;margin-bottom:8px}.vx-tlh small{color:var(--mut);font-size:12px}
+.vx-tl ol{list-style:none;margin:0 0 8px;padding:0;position:relative}.vx-tl ol::before{content:"";position:absolute;left:11px;top:12px;bottom:12px;width:2px;background:var(--line);opacity:.5}
+.vx-tl li{display:flex;gap:11px;align-items:flex-start;padding:5px 0;position:relative}.vx-tl li i{flex:none;width:24px;height:24px;border-radius:50%;border:2px solid var(--line);background:var(--w);display:flex;align-items:center;justify-content:center;z-index:1}.vx-tl li i .vxi{width:14px;height:14px;margin:0}
+.vx-tl li.done i{background:#3f8f5a;border-color:#3f8f5a;color:#fff}.vx-tl li.now i{border-color:#c9a24a;background:#c9a24a;box-shadow:0 0 0 4px rgba(201,162,74,.3);animation:vxPulse 1.6s infinite}.vx-tl li b{font-size:13.5px}.vx-tl li small{display:block;color:var(--mut);font-size:12px;line-height:1.4}.vx-tl .gbtn{width:100%;margin:0}
+@keyframes vxPulse{50%{box-shadow:0 0 0 7px rgba(201,162,74,.08)}}
+.vx-st{display:flex;gap:6px;list-style:none;margin:6px 0 12px;padding:0}.vx-st li{flex:1;display:flex;gap:6px;align-items:center;justify-content:center;border:2px solid var(--line);border-radius:999px;background:var(--w);padding:5px 4px;font-size:12px}.vx-st i{font-style:normal;width:18px;height:18px;border-radius:50%;background:#c9a24a;color:#2a1f08;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center}
+.vx-wallb{margin:0 0 12px;background:linear-gradient(#2d2217,#1d1610);color:#f1e3c2;border-color:#c9a24a;box-shadow:0 4px 0 #000}.vx-wallb small{color:#c9b98f}.vx-wallb .vxi{color:#c9a24a;width:26px;height:26px;opacity:1}
+.vx-wallhd{display:flex;gap:10px;align-items:baseline;margin:2px 0 10px;padding:8px 12px;border-left:4px solid #c9a24a;background:rgba(201,162,74,.12);border-radius:4px}.vx-wallhd b{font-size:18px;color:#c9a24a;white-space:nowrap}.vx-wallhd span{font-size:12px;color:var(--mut)}
+.vtab{position:relative;background:repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0 2px,transparent 2px 7px),linear-gradient(#34281b,#1a130d)!important;overflow:hidden}
+.vtab::after{content:"";position:absolute;inset:5px;border:1px solid rgba(201,162,74,.38);border-radius:42px 42px 3px 3px;pointer-events:none}
+.vtab.mine::before{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,236,170,.45),transparent);transform:skewX(-18deg);animation:vxSweep 1.6s .5s 1 both;pointer-events:none}@keyframes vxSweep{to{left:130%}}
+.vtab .vto{letter-spacing:1px;font-weight:700}
+.vtt{font-size:10.5px;border:1px solid #c9a24a;color:#b08a2a;border-radius:4px;padding:0 4px;margin-left:4px;vertical-align:middle;white-space:nowrap}
+.vx-cele{position:relative;text-align:center;overflow:hidden;padding:8px 4px 4px}.vx-cele h3{margin:6px 0 10px;font-size:20px}.vx-cele h3 b{color:#b08a2a}.vx-cele ul{list-style:none;margin:0 0 14px;padding:0;font-size:13.5px;line-height:1.7;text-align:left;display:inline-block}.vx-th{font-size:12px;letter-spacing:.08em;color:var(--mut);margin:12px 0 0}
+.vx-stamp{display:inline-block;margin-top:6px;animation:vxStamp .7s .15s cubic-bezier(.2,1.4,.4,1) both}.vseal.big{width:104px;height:104px;font-size:20px;border-width:4px}.vseal.vs3.big{font-size:22px}
+.vx-dice{display:inline-flex;width:92px;height:92px;align-items:center;justify-content:center;border:4px solid #c9a24a;border-radius:20px;color:#b08a2a}.vx-dice .vxi{width:56px;height:56px;margin:0}
+@keyframes vxStamp{0%{transform:scale(2.6) rotate(-24deg);opacity:0}60%{transform:scale(.92) rotate(-6deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+.vx-rays{position:absolute;left:50%;top:76px;width:300px;height:300px;margin:-150px 0 0 -150px;background:repeating-conic-gradient(rgba(201,162,74,.2) 0 8deg,transparent 8deg 20deg);border-radius:50%;-webkit-mask:radial-gradient(circle,#000 20%,transparent 68%);mask:radial-gradient(circle,#000 20%,transparent 68%);animation:vxSpin 14s linear infinite;pointer-events:none}@keyframes vxSpin{to{transform:rotate(360deg)}}
+.vx-conf{position:absolute;inset:0;pointer-events:none}.vx-conf i{position:absolute;top:-10px;left:var(--x);width:7px;height:12px;background:var(--c);transform:rotate(var(--r));animation:vxFall 2.4s var(--d) 1 both ease-in;opacity:0}@keyframes vxFall{0%{opacity:1;transform:translateY(0) rotate(var(--r))}100%{opacity:0;transform:translateY(340px) rotate(calc(var(--r) + 300deg))}}
+@media (prefers-reduced-motion:reduce){.vx-stamp,.vx-rays,.vx-conf i,.vx-tl li.now i,.vtab.mine::before,.vx-card.vk3 .vseal.vs3{animation:none!important}.vx-conf{display:none}}`;document.head.appendChild(st)}catch(e){}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
