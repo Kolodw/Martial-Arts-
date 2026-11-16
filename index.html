@@ -169,9 +169,9 @@ body.fs-l .bub,body.fs-l .quiet{font-size:16.5px}body.fs-l #modal p,body.fs-l .o
 .chev{font-size:16px;color:var(--mut);align-self:flex-start}
 .tag{display:inline-block;font-size:11px;padding:0 7px;border-radius:10px;border:1.5px solid var(--line);margin:2px 3px 0 0;background:var(--w)}
 .tag.ธรรมะ{background:var(--tb1)}.tag.อธรรม{background:var(--tb2)}.tag.มาร{background:var(--tb3)}.tag.ow{background:var(--tb4)}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:7px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:7px}
 .st{background:var(--card);border:2px solid var(--line);border-radius:5px;padding:3px 4px;font-size:11px;text-align:center}
-.st b{display:block;font-size:13px}
+.st{min-width:0;overflow:hidden}.st b{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hpbar{height:6px;border:1.5px solid var(--line);border-radius:3px;margin-top:2px;background:var(--w);overflow:hidden}
 .hpbar i{display:block;height:100%;background:#ff5d73}
 body.mono .hpbar i{background:#000}
@@ -443,7 +443,7 @@ const JADE=4000,JADE_N='หยกดาราเทพ',JADE_X=.1;
 const R=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const ch=a=>a[Math.floor(Math.random()*a.length)];
 const $=id=>document.getElementById(id);
-const fmt=n=>{n=Math.round(+n||0);const a=Math.abs(n);if(a>=1e8){const U=[[1e12,'ล้านล้าน'],[1e11,'แสนล้าน'],[1e10,'หมื่นล้าน'],[1e9,'พันล้าน'],[1e8,'ร้อยล้าน']];for(const [v,u] of U)if(a>=v){const x=n/v;return(Math.abs(x)>=100?Math.round(x).toLocaleString('th-TH'):(+x.toFixed(1)).toLocaleString('th-TH'))+' '+u}}return n.toLocaleString('th-TH')};
+const fmt=n=>{n=Math.round(+n||0);const a=Math.abs(n);if(!isFinite(n))return n<0?'-∞':'∞';if(a>=1e15){const e=Math.floor(Math.log10(a)),m=+(n/Math.pow(10,e)).toFixed(1),SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';return m+'×10'+String(e).replace(/\d/g,d=>SUP[d])}if(a>=1e8){const U=[[1e12,'ล้านล้าน'],[1e11,'แสนล้าน'],[1e10,'หมื่นล้าน'],[1e9,'พันล้าน'],[1e8,'ร้อยล้าน']];for(const [v,u] of U)if(a>=v){const x=n/v;return(Math.abs(x)>=100?Math.round(x).toLocaleString('th-TH'):(+x.toFixed(1)).toLocaleString('th-TH'))+' '+u}}return n.toLocaleString('th-TH')};
 const fmtG=n=>n%1?n.toFixed(1):fmt(n);
 function pickW(arr){const t=arr.reduce((s,x)=>s+x.w,0);let r=Math.random()*t;for(const x of arr){if((r-=x.w)<=0)return{v:x,p:x.w/t}}const l=arr[arr.length-1];return{v:l,p:l.w/t}}
 const oddsTxt=p=>1/p<1.05?'ทั่วไป':'1 ใน '+fmt(1/p);
@@ -7422,9 +7422,9 @@ function aiGive(src){if(S.ai||(S.beastMode&&!aiGive._b))return;const nano=Math.r
  S.ai={lv:0,sync:0,heat:0,on:1,src,nm:ch(AI_NM)+'-'+R(100,999),ori:nano?-1:R(0,AI_ORI.length-1),nano:nano?1:0,clue:0,cp:0,sim:0,hot:0,lost:[],yc:-1,cy:0};
  aiLog(src==='birth'?'ระบบชีวภาพเชื่อมต่อสำเร็จ… สวัสดี โฮสต์ ฉันอยู่ในตัวคุณมาตั้งแต่ก่อนคุณลืมตา':'การฝังตัวเสร็จสมบูรณ์ — ซิงก์กับระบบประสาทของโฮสต์ 3%… ยินดีที่ได้รู้จัก','myth');
  log('💡 <b>AI ฝังตัว</b> — คัดลอกวิชาจากการต่อสู้ ฟื้นฟูร่างกาย จำลองการต่อสู้ในห้วงลึก และเลือกทางแทนคุณได้ · ใช้มากจะร้อน ถ้าร้อนเกินขีดอาจตาย · เปิดที่ ☰ เมนู → 🤖 AI','sys');keyAdd(src==='birth'?'เกิดมาพร้อม AI ฝังตัวจากโลกอนาคต':'ได้รับ AI ฝังตัวจากคนจากอนาคต')}
-function aiSync(v){const a=S.ai;a.sync+=v;while(a.lv<2&&a.sync>=AI_NX[a.lv]){a.lv++;S.int+=10*a.lv;aiLog(`อัปเกรดสำเร็จ — ระดับ <b>${AI_LV[a.lv]}</b> · ประมวลผลเร็วขึ้น ฉลาดขึ้น คัดลอกวิชาได้ดีขึ้น และระบายความร้อนได้ดีขึ้น`,'myth');keyAdd(`AI ขึ้นระดับ${AI_LV[a.lv]}`);
+function aiSync(v){const a=S.ai;a.syncT=(a.syncT==null?a.sync:a.syncT)+v;a.sync+=v;while(a.lv<2&&a.sync>=AI_NX[a.lv]){a.lv++;S.int+=10*a.lv;aiLog(`อัปเกรดสำเร็จ — ระดับ <b>${AI_LV[a.lv]}</b> · ประมวลผลเร็วขึ้น ฉลาดขึ้น คัดลอกวิชาได้ดีขึ้น และระบายความร้อนได้ดีขึ้น`,'myth');keyAdd(`AI ขึ้นระดับ${AI_LV[a.lv]}`);
   if(a.lv===2){S.maxHp+=40;S.hp=S.maxHp;if(a.nano&&!a.nanoRev){a.nanoRev=1;a.ori=-1;aiLog('…นาโนแมชชีนขึ้นรูปเป็นร่างโฮโลแกรมเป็นครั้งแรก มันมองหน้าคุณนาน ก่อนพูดว่า <b>"เจ้าของคนก่อนของข้าชื่อ ชอน ชอ ยุน"</b>','myth')}}}
- const need=[40,130,280,500,800];while(a.clue<5&&a.sync>=need[a.clue])aiClue()}
+ const need=[40,110,200,320,480];while(a.clue<5&&(a.syncT==null?a.sync:a.syncT)>=need[a.clue])aiClue()}
 function aiClue(){const a=S.ai;a.clue++;if(a.clue<5){aiLog(`🔍 ถอดรหัสความลับได้ ${a.clue}/5 — ${a.clue===4&&a.nano?'สัญญาณจาง ๆ ของวิชามารโบราณในหน่วยความจำ':AI_CLUE[a.clue-1]}`,'epic');return}
  const o=a.ori<0?AI_NANO:AI_ORI[a.ori];a.rev=1;aiLog(`🔓 <b>ความลับของ AI ถูกเปิดเผย</b> — ผู้ที่ส่งมันมาคือ <b>${o.n}</b> ${o.d}`,'myth');keyAdd('ไขความลับต้นกำเนิดของ AI')}
 function aiHeat(v){const a=S.ai;a.heat=Math.max(0,a.heat+v);if(a.heat<=100){if(a.heat>=85)aiLog(`⚠️ อุณหภูมิแกนประมวลผล ${Math.round(a.heat)}% — ใกล้ถึงขีดอันตราย`,'bad');return false}
@@ -7432,7 +7432,7 @@ function aiHeat(v){const a=S.ai;a.heat=Math.max(0,a.heat+v);if(a.heat<=100){if(a
  if(Math.random()<p){S.hp=0;S.deathCause='สมองถูกเผาไหม้จากความร้อนเกินขีดของชิป AI ที่ฝังในร่าง';log('🔥 แกนประมวลผลร้อนเกินขีด — ระบบประสาทของคุณถูกเผาไหม้จากภายใน','bad',true);return true}
  a.hot=(a.hot||0)+1;a.heat=60;a.off=S.age+R(1,3);S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.35));aiLog('🔥 ร้อนเกินขีด! ตัดการทำงานฉุกเฉินเพื่อรักษาชีวิตโฮสต์ — AI จะออฟไลน์ไปสักพัก','bad');return false}
 function aiTick(st){const a=S.ai;if(!a)return;const y=Math.max(1,st||1);a.heat=Math.max(0,a.heat-(12+a.lv*5)*Math.min(y,10));if(a.off&&S.age>=a.off){a.off=0;aiLog('รีบูตเสร็จสิ้น ระบบกลับมาออนไลน์','good')}
- if(!aiOn())return;aiSync(Math.round((R(1,3)+Math.min(2,Math.floor((S.int||0)/300)))*(S.xian?.45:1)));
+ if(!aiOn())return;aiSync(Math.round((R(2,5)+Math.min(3,Math.floor((S.int||0)/300)))*(S.xian?.7:1)));
  const g=aiPowV([.15,.3,.5][a.lv]);S.power+=g;
  if(Math.random()<[.02,.04,.07][a.lv]){const r=Math.random();if(S.chronic&&r<.4){const n=S.chronic.n;S.chronic=null;aiLog(`ซ่อมแซมเซลล์ที่เสียหาย — หายจาก${n}`,'good')}else if(r<.85){const h=[5,10,20][a.lv];S.maxHp+=h;aiLog(`ปรับโครงสร้างกล้ามเนื้อและกระดูกระหว่างคุณหลับ — พลังชีวิตสูงสุด +${h}`,'good')}else if(a.lv===2){S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.02).toFixed(2)});aiLog('ปรับแต่งเส้นลมปราณให้เหมาะสมที่สุด — ความเร็วฝึก ×1.02 ถาวร','myth')}}}
 {const _fg=fight;fight=function(name,ep){const w=_fg.apply(this,arguments);try{if(aiOn()&&S.alive){const a=S.ai;if(!w){a.lost.unshift(String(name).replace(/<[^>]+>/g,'').slice(0,30));a.lost=a.lost.slice(0,5)}
@@ -10160,7 +10160,7 @@ function ai2Act(k,x){const a=ai2Fix(),F=aiFused();let died=false;
  else if(k==='oc'){if(!aiHasBr('war'))return;const v=+(1.5).toFixed(2);S.buf=(S.buf||[]).filter(b=>b.k!=='fight'||b.u<=S.age||b.v<v);S.buf.push({k:'fight',v,u:S.age+1,n:'AI Overclock'});aiLog('⚡ Overclock! เร่งระบบประสาทเกินขีด — ต่อสู้ ×1.5 ตลอดปีนี้','myth');died=aiHeat(35)}
  else if(k==='weak'){if(!aiHasBr('sage'))return;const v=1.25;S.buf=(S.buf||[]).filter(b=>b.k!=='fight'||b.u<=S.age||b.v<v);S.buf.push({k:'fight',v,u:S.age+3,n:'AI วิเคราะห์จุดอ่อน'});S.int+=3;aiLog('🔍 วิเคราะห์จุดอ่อนของศัตรูในฐานข้อมูลทั้งหมด — ต่อสู้ ×1.25 นาน 3 ปี · ปัญญา +3','epic');died=aiHeat(25)}
  else if(k==='mkt'){if(!aiHasBr('trade'))return;if(a.mktY===S.age)return toast('ปีนี้เก็งกำไรไปแล้ว');a.mktY=S.age;const c=Math.round(S.money*.3);if(c<50)return toast('เงินทุนน้อยเกินไป');const ok=Math.random()<(.7+a.lv*.08);S.money+=ok?Math.round(c*(.15+Math.random()*.35)):-Math.round(c*.25);aiLog(ok?'💹 ทำนายราคาตลาดถูกต้อง — เก็งกำไรได้กำไร':'💹 ตลาดผันผวนเกินคาด ขาดทุนไปบางส่วน',ok?'good':'bad');died=aiHeat(20)}
- else if(k==='gene'){if(a.lv<2)return;if(a.geneY!=null&&S.age-a.geneY<10)return toast(`ปรับพันธุกรรมได้อีกใน ${10-(S.age-a.geneY)} ปี`);if((a.sync||0)<300)return toast('ซิงก์ไม่พอ (ต้องมี 300)');a.geneY=S.age;a.sync-=300;
+ else if(k==='gene'){if(a.lv<2)return;if(a.geneY!=null&&S.age-a.geneY<10)return toast(`ปรับพันธุกรรมได้อีกใน ${10-(S.age-a.geneY)} ปี`);if((a.sync||0)<200)return toast('ซิงก์ไม่พอ (ต้องมี 200)');a.geneY=S.age;a.sync-=200;
   const ok=Math.random()<.4+(a.bond>=80?.1:0)+(F?.1:0);if(ok){const id=ch(['dao','myriad','undying']),T=TALENT.find(t=>t.id===id),m=Math.max(S.talent.m,T.m)*1.05;S.talent=Object.assign({},T,{m:+m.toFixed(2)});a.gene=(a.gene||0)+1;aiLog(`🧬 ปรับพันธุกรรมสำเร็จ! ร่างกายกลายเป็น <b>${T.n}</b> (พรสวรรค์ ×${S.talent.m})`,'myth');keyAdd('AI ปรับพันธุกรรมเป็น'+T.n)}
   else{S.unst=S.age+5;aiLog('🧬 ปรับพันธุกรรมล้มเหลว — ร่างกายไม่เสถียร จะเจ็บป่วยไปอีก 5 ปี','bad')}died=aiHeat(50)}
  else if(k==='cmd'){if(!F)return;if(a.cmdY===S.age&&(a.cmdN||0)>=2)return toast('ปีนี้สั่งงานครบ 2 ครั้งแล้ว');if(a.cmdY!==S.age){a.cmdY=S.age;a.cmdN=0}a.cmdN++;const ri=Math.max(0,realmIdx());
@@ -10183,7 +10183,7 @@ function ai2Tick(){const a=ai2Fix();if(!a||!S.alive)return;const F=aiFused();
  // เลือกสายวิวัฒนาการ
  if((a.br||[]).length<a.lv){if(auto){a.brW=(a.brW||0)+1;if(a.brW>=3){a.brW=0;aiPickBr0(ch(Object.keys(AI_BR)))}return}ai2Branch();return}
  // เรื่องยาว
- if(!a.end&&!F){if(a.arc===0&&a.lv>=1&&a.bond>=35&&Math.random()<.25){ai2Arc1();return}if(a.arc===1&&a.lv>=2&&Math.random()<.25){ai2Arc2();return}if(a.arc===2&&a.lv>=2&&(a.sync||0)>=600&&(a.clue||0)>=3&&Math.random()<.3){ai2Arc3();return}}}
+ if(!a.end&&!F){if(a.arc===0&&a.lv>=1&&a.bond>=35&&Math.random()<.25){ai2Arc1();return}if(a.arc===1&&a.lv>=2&&Math.random()<.25){ai2Arc2();return}if(a.arc===2&&a.lv>=2&&(a.syncT==null?(a.sync||0):a.syncT)>=400&&(a.clue||0)>=3&&Math.random()<.3){ai2Arc3();return}}}
 function aiPickBr0(k){const a=S.ai;a.br.push(k);aiLog(`🌳 วิวัฒนาการไปทาง <b>${AI_BR[k][0]}</b>`,'myth')}
 function aiPickBr(k){const a=ai2Fix();if(!a||(a.br||[]).length>=a.lv)return;a.br.push(k);aiLog(`🌳 วิวัฒนาการไปทาง <b>${AI_BR[k][0]}</b>`,'myth');render();openAI()}
 function ai2Branch(){const a=S.ai;const opts=Object.keys(AI_BR).map(k=>({t:AI_BR[k][0]+(a.br.includes(k)?' (ยกระดับ)':''),s:AI_BR[k][1],f(){a.br.push(k);aiLog(`🌳 วิวัฒนาการไปทาง <b>${AI_BR[k][0]}</b>`,'myth');if(a.br.filter(x=>x===k).length>=2)aiLog('สายเดียวกัน 2 ครั้ง — ความสามารถของสายนี้แรงขึ้นเป็นพิเศษ','epic')}}));
@@ -10221,7 +10221,7 @@ function ai2End(k){const a=S.ai;a.end=k;if(k==='fuse'){a.bondOld=a.bond;a.bond=0
  if(aiHasBr('war'))h+=B('oc','⚡ Overclock','ต่อสู้ ×1.5 ทั้งปีนี้',35);
  if(aiHasBr('sage'))h+=B('weak','🔍 วิเคราะห์จุดอ่อนศัตรู','ต่อสู้ ×1.25 นาน 3 ปี',25);
  if(aiHasBr('trade'))h+=B('mkt','💹 เก็งกำไรตลาด',a.mktY===S.age?'ปีนี้ทำแล้ว':'ลงทุน 30% ของเงิน',20,a.mktY===S.age);
- if(a.lv>=2)h+=B('gene','🧬 ปรับพันธุกรรม',a.geneY!=null&&S.age-a.geneY<10?`อีก ${10-(S.age-a.geneY)} ปี`:`ใช้ซิงก์ 300 (มี ${fmt(a.sync||0)}) · สำเร็จ ~${Math.round((.4+(a.bond>=80?.1:0)+(F?.1:0))*100)}%`,50,(a.geneY!=null&&S.age-a.geneY<10)||(a.sync||0)<300);
+ if(a.lv>=2)h+=B('gene','🧬 ปรับพันธุกรรม',a.geneY!=null&&S.age-a.geneY<10?`อีก ${10-(S.age-a.geneY)} ปี`:`ใช้ซิงก์ 200 (มี ${fmt(a.sync||0)}) · สำเร็จ ~${Math.round((.4+(a.bond>=80?.1:0)+(F?.1:0))*100)}%`,50,(a.geneY!=null&&S.age-a.geneY<10)||(a.sync||0)<200);
  h+=`<button class="opt" onclick="S.ai.prd=S.ai.prd?0:1;openAI()">${a.prd?'✅':'⬜'} 🎯 ทำนายผลบนตัวเลือก<small>ขึ้นคำทำนายใต้ทุกตัวเลือก · ร้อน +2 ต่อเหตุการณ์</small></button>`;
  grid.insertAdjacentHTML('afterbegin',h);
  if(F){const n=a.cmdY===S.age?a.cmdN||0:0;grid.insertAdjacentHTML('afterend',`<h4 style="margin:10px 0 4px">🔗 สั่งงาน AI <span class="tag2">ปีนี้เหลือ ${2-n}/2 ครั้ง</span></h4><div class="mgrid">${[['work','💰 ทำงานหาเงิน','เงินตามขั้น'],['train','💪 ฝึกร่างกายแทน','พลังยุทธ์'],['study','📚 อ่านคัมภีร์','ปัญญา'],['copy','📜 ถอดวิชาจากความจำ','ได้วิชา 1'],['heal','💠 ซ่อมร่างกาย','เต็ม + หายโรค']].map(([x,t,s])=>B('cmd',t,s,0,n>=2,x)).join('')}</div>`)}}catch(e){console.error(e)}}}
