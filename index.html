@@ -26263,7 +26263,7 @@ try{GD2.push({s:'beast',ic:'🗺️',t:'สัตว์อสูร 2.0',nw:1,d:
 const st=document.createElement('style');st.textContent='.hlb.rdy{animation:hlRdy 1.1s ease-in-out infinite}@keyframes hlRdy{0%,100%{box-shadow:0 0 0 0 rgba(255,80,40,.0)}50%{box-shadow:0 0 10px 3px rgba(255,90,40,.9)}}';document.head.appendChild(st);
 const rdy=()=>{try{const h=typeof hl2==='function'?hl2():null;return !!(h&&S&&S.alive&&S.ch==='hell'&&h.lv<(h.ab?1000:100)&&(h.ab||h.lv>=18)&&S.age>=h.cd)}catch(e){return false}};
 setInterval(()=>{try{const r=rdy();document.querySelectorAll('.hlb').forEach(b=>b.classList.toggle('rdy',r));
- if(!r)return;const h=hl2();if(h.autoCd===h.cd)return;if(choice._cur||modalOpen||document.querySelector('.ov.show,#birth:not(.hide)'))return;
+ if(!r)return;const h=hl2();if(h.autoCd===h.cd)return;if(choice._cur||modalOpen||(document.querySelector('.ov.show')||($('birth')&&$('birth').classList.contains('on'))))return;
  if(!S.age||S.age<16)return;h.autoCd=h.cd;(h.ab?openAbyss:openHell2)()}catch(e){}},1500);
 }catch(e){console.error(e)}})();
 
@@ -27792,6 +27792,20 @@ window.vipAutoGo=function(i){const fr=AUTO[i][0],nb=!$('vaNb')||$('vaNb').checke
  toast(hit?(n?`⚡ สุ่ม ${n} ครั้ง — ได้แล้ว! เหลือสุ่ม ${rerolls} ครั้ง`:'⚡ ชีวิตนี้ตรงเงื่อนไขอยู่แล้ว'):`⚡ สุ่ม ${n} ครั้งแล้วยังไม่ถึงเกณฑ์ — โควตาหมด อยู่ที่ผลสุดท้าย`);try{sfx(hit?'good':'bad')}catch(e){}};
 try{const st=document.createElement('style');st.textContent='.vipent{display:flex;gap:6px;margin:6px 0}.vipent .gbtn{flex:1;text-align:left}.vipent small{opacity:.75;display:block;font-size:11px}.vipfree{background:rgba(80,200,120,.12);border:1px solid rgba(80,200,120,.45);border-radius:10px;padding:10px;font-size:13px;line-height:1.55}.vipc{border:1px solid rgba(255,215,106,.4);border-radius:10px;padding:10px;margin:8px 0}.vipc.on{border-color:#ffd76a;box-shadow:0 0 10px #ffd76a55}.vipc .vh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}.vipc ul{margin:4px 0 8px;padding-left:18px;font-size:13px;line-height:1.55}.vpb{margin-right:3px}';document.head.appendChild(st)}catch(e){}
 try{setTimeout(()=>{const rr=R();rr.tot=TOT[tierOf(V)]},0)}catch(e){}
+})()}catch(e){console.error(e)}
+
+// ===================== v18.0.1 🛡️ ชื่อผู้เล่นไม่ถูกแปลงเป็นศัพท์โลกเซียน (เช่น "มารสวรรค์" → "ราชันมาร") =====================
+try{(()=>{
+const NMS=new Set();let ownT=0;
+const hit=s=>{for(const d of XDICT)if(s.includes(d[0]))return true;return false};
+function add(s){if(typeof s!=='string'||s.length<2||s.length>40||NMS.has(s))return;if(hit(s)){if(NMS.size>300)NMS.clear();NMS.add(s)}}
+function walk(o,d){if(!o||d>5)return;if(Array.isArray(o)){for(let i=0;i<o.length&&i<400;i++)walk(o[i],d+1);return}
+ if(typeof o==='object')for(const k in o){const v=o[k];if(typeof v==='string'){if(k==='n'||k==='name'||k==='pn')add(v)}else if(v&&typeof v==='object')walk(v,d+1)}}
+function own(){const t=Date.now();if(t-ownT<3000)return;ownT=t;try{add(LS.get('murim_pname',''));if(S&&S.name)add(S.name)}catch(e){}}
+{const _x=xT;xT=function(t){if(typeof t!=='string')return _x(t);own();if(!NMS.size)return _x(t);
+ const L=[...NMS].filter(n=>t.includes(n)).sort((a,b)=>b.length-a.length);if(!L.length)return _x(t);
+ L.forEach((n,i)=>{t=t.split(n).join('\uE000'+i+'\uE001')});t=_x(t);L.forEach((n,i)=>{t=t.split('\uE000'+i+'\uE001').join(n)});return t}}
+{const _j=Response.prototype.json;Response.prototype.json=function(){return _j.apply(this,arguments).then(j=>{try{walk(j,0)}catch(e){}return j})}}
 })()}catch(e){console.error(e)}
 </script>
 </body>
