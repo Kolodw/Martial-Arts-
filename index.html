@@ -6830,7 +6830,8 @@ annVote=async function(i,ai){ai=ai||(annCur&&annCur.i);const tgt=[annCur,annView
  const paint=()=>{if(annCur&&annCur.i===ai)annShow(annCur);annViewRender()};
  try{tgt.forEach(bump);paint();const j=await api('annvote',{ai,o:i});if(j&&j.ann){const n=j.ann;tgt.forEach(x=>{x.c=n.c;x.my=n.my});paint()}toast('โหวตแล้ว ✅')}
  catch(e){tgt.forEach((x,k)=>Object.assign(x,snap[k]));paint();toast(e.message==='gone'?'ประกาศนี้ถูกลบแล้ว':e.message==='closed'?'โพลนี้ปิดโหวตแล้ว':e.message==='rate'?'กดเร็วเกินไป':'โหวตไม่สำเร็จ')}finally{annVote._busy=0}};
-annClear=async function(ai,fromView){if(!admK())return;ai=ai||(annCur&&annCur.i);if(!ai)return;try{await api('annclear',{key:admK(),ai});if(annCur&&annCur.i===ai)annShow(null);toast('ลบประกาศแล้ว');if(fromView)annList()}catch(e){toast(e.message==='admin'?'รหัสแอดมินไม่ถูกต้อง':'ลบไม่สำเร็จ')}};
+annClear=async function(ai,fromView){if(!admK())return;ai=ai||(annCur&&annCur.i);if(!ai)return;if(annClear._b)return;annClear._b=1;let ok=0;for(let k=0;k<3&&!ok;k++){try{await api('annclear',{key:admK(),ai});ok=1}catch(e){if(e.message==='admin'){annClear._b=0;return toast('รหัสแอดมินไม่ถูกต้อง')}await new Promise(r=>setTimeout(r,700*(k+1)))}}annClear._b=0;if(!ok)return toast('ลบไม่สำเร็จ ลองใหม่อีกครั้ง');
+ try{LS.set('murim_annX',ai)}catch(e){}if(annCur&&annCur.i===ai)annShow(null);try{const el=document.getElementById('annBar');if(el&&el.dataset.i===ai)el.remove();annIslOff(ai);if(typeof chatPollF==='function')setTimeout(chatPollF,400)}catch(e){}toast('ลบประกาศแล้ว');if(fromView)annList()};
 // ทุกประกาศในแชทกดเปิดอ่าน/โหวตได้ + ปุ่มประกาศย้อนหลัง
 chatRender=function(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60,me=myPu();
  box.innerHTML=chatMsgs.map(m=>{const mine=!!m.pu&&m.pu===me,pf=m.pu&&chatProf[m.pu],av=pf&&pf.av?`<img src="${pf.av}" alt="">`:'🙂',tm=new Date(m.t).toTimeString().slice(0,5);
@@ -27650,8 +27651,9 @@ try{(()=>{
 const ANN_MS=5*60e3;let annT=null;
 const seenGet=()=>{try{return LS.get('murim_annSeen',null)||{}}catch(e){return {}}};
 function annSeen(i){const d=seenGet();if(!d[i]){d[i]=Date.now();const ks=Object.keys(d).sort((x,y)=>d[y]-d[x]);ks.slice(20).forEach(x=>delete d[x]);try{LS.set('murim_annSeen',d)}catch(e){}}return d[i]}
-function annHide(i){try{const el=document.getElementById('annBar');if(el&&(!i||el.dataset.i===i||!el.dataset.i))el.remove()}catch(e){}}
-const _as=annShow;annShow=function(a){try{if(a&&a.i&&!window._annForce){const t0=annSeen(a.i),left=t0+ANN_MS-Date.now();if(left<=0){annCur=a;annHide(a.i);return}
+function annHide(i){try{const el=document.getElementById('annBar');if(el&&(!i||el.dataset.i===i||!el.dataset.i))el.remove()}catch(e){}annIslOff(i)}
+function annIslOff(i){try{if(typeof ISL==='undefined')return;ISL.q=ISL.q.filter(x=>!(x&&x.key==='ann'&&(!i||x.aid===i)));if(ISL.cur&&ISL.cur.key==='ann'&&(!i||ISL.cur.aid===i)){window._annIsl=null;islNext(true)}}catch(e){}}window.annIslOff=annIslOff;
+const _as=annShow;annShow=function(a){try{if(!a||!a.i){clearTimeout(annT);annIslOff(null)}else if(annCur&&annCur.i&&annCur.i!==a.i)annIslOff(annCur.i)}catch(e){}try{if(a&&a.i&&!window._annForce){const t0=annSeen(a.i),left=t0+ANN_MS-Date.now();if(left<=0){annCur=a;annHide(a.i);return}
   clearTimeout(annT);annT=setTimeout(()=>{if(!window._annForce)annHide(a.i)},left+50)}}catch(e){}return _as.apply(this,arguments)};
 const _ar=annReopen;annReopen=function(){try{if(annCur&&annCur.i){const d=seenGet();d[annCur.i]=Date.now();LS.set('murim_annSeen',d)}}catch(e){}return _ar.apply(this,arguments)};
 })()}catch(e){console.error(e)}
