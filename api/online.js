@@ -961,7 +961,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
           const isC = BD_CATS[k] === 'c', isR = BD_CATS[k] === 'r', isM = !!CHF[BD_CATS[k]], TT = isM ? RKT_M[BD_CATS[k]] : isC ? RKT_C : isR ? RKT_R : RKT, hf = isM ? p + CHF[BD_CATS[k]] : isC ? p + 'c' : isR ? p + 'r' : p, cur = jp(await cmd('HGET', 'rkttl:' + own, hf)), gc = RKG_C[BD_CATS[k]] || 'm', gt = RKG.title(p, gc, rkk, r), gf = RKG.fid(p, gc, rkk, r), nt = { t: gt, r, c: BD_CATS[k], exp: now + RKT_EXP[p], at: now };
           const L2 = [['LPUSH', 'bdrw:' + own, JSON.stringify({ p, c: BD_CATS[k], r, d: lab, n: x.n, s: x.s, tt: gt, gf, exp: nt.exp, ...(x.ch ? { ch: x.ch } : {}) })], ['EXPIRE', 'bdrw:' + own, 86400 * 60], ['HINCRBY', 'bdwins', own, 1]];
           if (!cur || cur.exp < now || r <= cur.r) L2.push(['HSET', 'rkttl:' + own, hf, JSON.stringify(nt)], ['EXPIRE', 'rkttl:' + own, 86400 * 40]);
-          await pipe(L2) } } } catch {} };
+          await pipe(L2) }
+        // v17.33 หลายบัญชี: คนละรหัสผู้เล่นแต่ IP เดียวกันติดท็อป 10 พร้อมกัน → แจ้งแอดมินเท่านั้น (ไม่แบน · คนในบ้าน/ร้านเน็ตใช้ IP ร่วมได้)
+        try { const ow = (await pipe(L1.slice(0, 10).map(x => ['GET', 'lifeo:' + x.lid]))) || [], uo = [...new Set(ow.filter(Boolean))];
+          if (uo.length > 1) { const ips = await cmd('MGET', ...uo.map(u => 'idip:' + u)), g = {}; uo.forEach((u, i) => { if (ips[i]) (g[ips[i]] = g[ips[i]] || []).push(u) });
+            for (const [ip1, us] of Object.entries(g)) { if (us.length < 2) continue; const nm = []; for (const u of us) { const x = L1[ow.indexOf(u)]; nm.push(clean(String((x && x.n) || ''), 20)) }
+              await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: us[0], ids: us, n: nm.join(' / '), age: 0, why: 'multi-acc ' + p + BD_CATS[k], info: 1, t: now })], ['LTRIM', 'acsus', 0, 199]]) } } } catch {} } } catch {} };
     const bdSettle = async () => { const yk = new Date(now + 7 * 3600e3 - 86400e3).toISOString().slice(0, 10);
       await bdSettle1('d', 'bdset:' + yk, 7); await bdSettle1('w', 'bdsetw:' + week(new Date(now - 7 * 86400e3)), 30); await bdSettle1('m', 'bdsetm:' + bdMon(now, 1), 90) };
     // v17.12: ย้ายชีวิตโหมดท้าทายของรอบปัจจุบัน ออกจากทำเนียบรวม/ทำเนียบโลก ไปทำเนียบของโหมดตัวเอง (ครั้งเดียว)
@@ -1006,8 +1011,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const R0 = await pipe(Q);
       const hide = new Set(['f18abdmw8fuj8d', ...((await cmd('SMEMBERS', 'bdhide')) || [])]);
       const pj = l => (l || []).map(x => { try { return JSON.parse(x) } catch { return null } }).filter(j => j && !j.cu && !(j.lid && hide.has(j.lid)));
+      // v17.33 กระดานแสดงคนละ 1 ชีวิต (ชีวิตที่ดีที่สุดของแต่ละคน) · ชีวิตอื่นของคนเดียวกันนับเป็น more
+      const PJ = R0.map(pj), lidAll = [...new Set(PJ.flat().map(x => x.lid).filter(Boolean))];
+      const ownM = {}; if (lidAll.length) { try { const ov = await cmd('MGET', ...lidAll.map(l => 'lifeo:' + l)); lidAll.forEach((l, i) => { if (ov[i]) ownM[l] = ov[i] }) } catch {} }
+      const dd = l => { const seen = new Map(), out = []; for (const x of l) { const o0 = x.lid && ownM[x.lid]; if (o0) { const k0 = seen.get(o0); if (k0) { k0.more = (k0.more || 0) + 1; continue } seen.set(o0, x) } out.push(x) } return out };
       const cmK = CHM[String(b.cm || qOf(req).cm || 'h')] || 'ch';
-      let T = [], Pv = [], CT = [], CP = []; BD_CATS.forEach((c, k) => { const a1 = pj(R0[k * 2]).slice(0, 20), a2 = pj(R0[k * 2 + 1]).slice(0, 3); if (c === cmK) { CT = a1; CP = a2 } else if (c === 'r' || c === 'c' || CHF[c]) { } else { T = T.concat(a1.filter(x => !x.ch)); Pv = Pv.concat(a2.filter(x => !x.ch)) } });
+      let T = [], Pv = [], CT = [], CP = []; BD_CATS.forEach((c, k) => { const a1 = dd(PJ[k * 2]).slice(0, 20), a2 = dd(PJ[k * 2 + 1]).slice(0, 3); if (c === cmK) { CT = a1; CP = a2 } else if (c === 'r' || c === 'c' || CHF[c]) { } else { T = T.concat(a1.filter(x => !x.ch)); Pv = Pv.concat(a2.filter(x => !x.ch)) } });
       const arena = []; for (let i = 0; i < (ar || []).length; i += 2) arena.push({ n: ar[i], w: +ar[i + 1] });
       const all = T.concat(Pv, CT, CP).filter(x => x.lid);
       const [pubs, kns] = all.length ? await pipe([['MGET', ...all.map(x => 'lifep:' + x.lid)], ['MGET', ...all.map(x => 'lvkn:' + x.lid)]]) : [[], []];
@@ -1831,6 +1840,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (!bad && await isBanned()) bad = 'banned';
       } catch { bad = bad || 'parse' }
       if (bad) { await pipe([['INCR', 'lives'], ['LPUSH', 'cheatlog', JSON.stringify({ id: id.slice(0, 10), fid: id, n: e.n, s: e.s, age: e.age, why: bad, t: now })], ['LTRIM', 'cheatlog', 0, 99]]); return res.json({ ok: 1, skip: 1, flag: 1, why: /^tamper/.test(bad) ? 'edit' : bad === 'banned' ? 'ban' : bad === 'stat' ? 'stat' : bad === 'nodet' ? 'old' : 'parse' }) }
+      try { const ip0 = cip(req); if (ip0 && okId(id)) L.push(['SET', 'idip:' + id, String(ip0).slice(0, 45), 'EX', 86400 * 40]) } catch {}
       if (lid.length >= 6 && det && det.length < 40000) { try { JSON.parse(det); L.push(['SET', 'lifed:' + lid, det, 'EX', 86400 * 40], ['SET', 'lifeo:' + lid, id, 'EX', 86400 * 40], ['SET', 'lifep:' + lid, +b.pub === 2 ? '2' : b.pub ? '1' : '0', 'EX', 86400 * 40]) } catch {} }
       if (lid.length >= 6 && await cmd('GET', 'lsent:' + lid)) return res.json({ ok: 1, dup: 1 });
       if (e.ch === 'regress' && e.rf) { try { const G = (JSON.parse(det || '{}').rg) || {}, en = ['beyond', 'breaker', 'protector', 'lonely'].includes(G.end) ? G.end : 'lonely', vr = ['normal', 'r5', 'nomem', 'lim10'].includes(G.var) ? G.var : 'normal'; const rj = JSON.stringify({ n: e.n, lid: e.lid, rl: e.rl, end: en, var: vr, age: e.age, r: e.r, t: now, x: e.x, g: e.g }); const rs = ({ beyond: 4, breaker: 3, protector: 2, lonely: 1 })[en] * 1e8 - Math.min(999, e.rl || 1) * 1e5 + ({ lim10: 3, nomem: 2, r5: 1, normal: 0 })[vr] * 1e4 - Math.min(9999, Math.floor((now % 1e9) / 1e5)); L.push(['ZADD', 'rgb:all', rs, rj], ['ZREMRANGEBYRANK', 'rgb:all', 0, -201], ['ZADD', 'rgb:w:' + week(new Date(now)), rs, rj], ['ZREMRANGEBYRANK', 'rgb:w:' + week(new Date(now)), 0, -101], ['EXPIRE', 'rgb:w:' + week(new Date(now)), 86400 * 21]) } catch {} }
