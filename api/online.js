@@ -297,7 +297,7 @@ const saveTrim = d => { try { d = String(d || ''); if (!/^[A-Za-z0-9+/]+=*$/.tes
   return ch ? Buffer.from(JSON.stringify(j), 'utf8').toString('base64') : d } catch { return d } };
 const isAdmKey = k => !!ADM_KEY && String(k || '') === ADM_KEY;
 // ===== ตั้งค่าดีเลย์ที่แอดมินปรับสดได้ (Redis hash "cfg") =====
-const CFG_DEF = { chatcd: 3000, lawgap: 600, lawdig: 600, lawnews: 1 }, CFG_LIM = { chatcd: [500, 60000], lawgap: [0, 86400], lawdig: [0, 3600], lawnews: [0, 1] };
+const CFG_DEF = { chatcd: 0, lawgap: 600, lawdig: 600, lawnews: 1 }, CFG_LIM = { chatcd: [0, 60000], lawgap: [0, 86400], lawdig: [0, 3600], lawnews: [0, 1] };
 let CFG_C = null, CFG_AT = 0;
 async function getCfg(force) {
   if (!force && CFG_C && Date.now() - CFG_AT < 10000) return CFG_C;
@@ -1697,7 +1697,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const x = isA ? String(b.x || '').replace(/[\u0000-\u001f<>]/g, '').slice(0, 400).trim() : clean(b.x, 200);
       if (!x) return res.status(400).json({ err: 'empty' });
       const cfg0 = await getCfg();
-      const [mu, ok, chx, rkh] = await pipe([['GET', 'mute:' + id], isA ? ['SET', 'rl:' + id, 1, 'NX', 'PX', 800] : ['SET', 'rl:' + id, 1, 'NX', 'PX', cfg0.chatcd], ['SISMEMBER', 'cheaters', id], ['HGETALL', 'rkttl:' + id]]);
+      const [mu, ok, chx, rkh] = await pipe([['GET', 'mute:' + id], isA ? ['SET', 'rl:' + id, 1, 'NX', 'PX', 800] : (cfg0.chatcd > 0 ? ['SET', 'rl:' + id, 1, 'NX', 'PX', cfg0.chatcd] : ['SET', 'rl:' + id, 1, 'PX', 1]), ['SISMEMBER', 'cheaters', id], ['HGETALL', 'rkttl:' + id]]);
       if (mu) return res.status(429).json({ err: 'muted' });
       if (!ok) return res.status(429).json({ err: 'rate', cd: isA ? 800 : cfg0.chatcd });
       if (!isA && b.k !== 'share') { let hh = 0; for (let q = 0; q < x.length; q++) hh = (hh * 31 + x.charCodeAt(q)) | 0; const dk = await cmd('SET', 'dup:' + id + ':' + (hh >>> 0).toString(36), 1, 'NX', 'PX', 45000); if (!dk) return res.status(429).json({ err: 'dup' }) }
