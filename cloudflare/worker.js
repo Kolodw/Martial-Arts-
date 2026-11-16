@@ -69,7 +69,7 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     // แชทโลก: แคชที่ขอบ Cloudflare 3 วินาที (ทุกคนได้คำตอบเดียวกัน ไม่ต้องวิ่งไป Valkey ทุกครั้ง) · ไม่แคชถ้าประกาศมีโพลซึ่งแยกตามผู้เล่น
-    if (request.method === 'GET' && url.pathname === '/api/online' && url.searchParams.get('a') === 'chat') {
+    if (request.method === 'GET' && url.pathname === '/api/online' && url.searchParams.get('a') === 'chat' && !url.searchParams.get('fresh')) {
       try {
         const ck = new Request(url.origin + '/__edge/chat'), c = caches.default, hit = await c.match(ck);
         if (hit) { const r = new Response(hit.body, hit); r.headers.set('x-edge', 'HIT'); return r }
