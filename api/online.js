@@ -2466,7 +2466,9 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       return res.status(503).json({ err: 'quota' });
     }
     console.error('API_ERR', a, String(e && e.message || e).slice(0, 200), process.env.DEBUG_API ? (e && e.stack) : '');
-    return res.status(500).json({ err: 'server' });
+    // บอกแค่ "ประเภท" ของปัญหา (ไม่เปิดข้อความจริง) เพื่อให้ผู้ดูแลเห็นสาเหตุจากหน้าเว็บ/โทรศัพท์ได้
+    const em = String(e && e.message || e), why = /NOAUTH|WRONGPASS|AUTH/i.test(em) ? 'auth' : /OOM|maxmemory/i.test(em) ? 'oom' : /timeout/i.test(em) ? 'timeout' : /closed|not connected|ECONN|ENOTFOUND|EAI_AGAIN|socket|TLS|certificate|CERT|reset/i.test(em) ? 'conn' : /max (daily )?requests?|quota/i.test(em) ? 'quota' : /JSON|undefined|null|Cannot read/i.test(em) ? 'code' : 'other';
+    return res.status(500).json({ err: 'server', why });
   }
 };
 module.exports.vkReset = vkReset;
