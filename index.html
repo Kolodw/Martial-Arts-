@@ -27490,6 +27490,117 @@ window.kpPick=kpPick;window.kpGate=kpGate;window.kpBeyond=kpBeyond;
 {const _rP=render;render=function(){try{if(S&&S.kalpa)kpApply(S.kalpa)}catch(e){}const r=_rP.apply(this,arguments);try{const K=S&&S.kalpa;if(K&&((K.mk|0)>0||K.path)){const t=$('gTags');if(t&&!t.querySelector('.kpb'))t.insertAdjacentHTML('afterbegin',`<span class="tag kpb" style="--c:${K.path?KP[K.path].c[0]:'#ffd7ff'}">${(K.mk|0)>0?`🔄 มหากัลป์ ${(K.mk|0)+1}`:''}${(K.mk|0)>0&&K.path?' · ':''}${K.path?KP[K.path].ic+' '+KP[K.path].n+((K.sh|0)?` 🧩${K.sh}`:''):''}</span>`)}}catch(e){}return r}}
 try{TTL_SP.unshift(['kseen',()=>!!(S.flags&&S.flags.kOut_all3),'ผู้เห็นทุกจักรวาล'],['kmemall',()=>!!(S.flags&&S.flags.kOut_all),'ผู้จดจำทุกสิ่ง'],['kforget',()=>!!(S.flags&&S.flags.kOut_forget),'ผู้ลืมเพื่อเริ่มใหม่'],['kwrite',()=>!!(S.flags&&S.flags.kOut_write),'ผู้เขียนกฎใหม่'],['kkeep',()=>!!(S.flags&&S.flags.kOut_keep),'ผู้พิทักษ์กฎเดิม'],['kcreate',()=>!!(S.flags&&S.flags.kOut_create),'ผู้สร้างจักรวาลใหม่'],['kvoid',()=>!!(S.flags&&S.flags.kOut_void),'ผู้ดับสูญสมบูรณ์'],['kmk',()=>!!(S.kalpa&&(S.kalpa.mk|0)>0),'ผู้ผ่านมหากัลป์'])}catch(e){}
 })()}catch(e){console.error(e)}
+
+// ===================== v17.34 😈 เนื้อเรื่องเสริม: มารสวรรค์ (5 บท) — โลกเซียน/แดนเทพ · บารมีมาร 800+ =====================
+try{(()=>{
+const HD_GAP=[0,25,40,40,30];
+const hdOn=()=>!!(S&&S.alive&&(S.xian||S.xt)&&!(S.beastMode&&!S.beastMode.human));
+const hdF=()=>S.hd||(S.hd={});
+const hdNames=()=>{const L=[];try{if(S.hd&&S.hd.lv==='with'&&S.spouse)L.push(S.spouse);(S.children||[]).concat(S.lineage||[]).forEach(c=>{if(c&&c.n&&c.alive!==false)L.push(c.n)});if(S.nemesis&&S.nemesis.n)L.push(S.nemesis.n)}catch(e){}
+ ['เยว่หลานผู้ไร้หัวใจ','ราชันกระดูกดำ','นางพญาเงาจันทร์','เสวียนหมิงผู้ต้องสาป','ปีศาจพันหน้า','เทพตกสวรรค์ไร้นาม'].forEach(n=>L.push(n));return [...new Set(L.map(x=>String(x).slice(0,20)))]};
+const later=(f,ms)=>{clearTimeout(later.t);later.t=setTimeout(f,ms)};
+function hdNext(){const H=hdF();H.t=S.age}
+// ---------- บทนำ: เสียงจากใต้บัลลังก์สวรรค์ (เลือกทางทรยศ 3 แบบ) ----------
+const HWAY={war:'⚔️ ประกาศสงคราม',spy:'🎭 แฝงตัวในสวรรค์',pact:'📜 ทำสัญญากับมารบรรพกาล'};
+function hd0(){const H=hdF();const go=(w,txt,mp)=>()=>{H.ch=1;H.way=w;hdNext();mpAdd(mp,'ทรยศสวรรค์');S.karma-=w==='spy'?40:100;keyAdd(`ทรยศสวรรค์ (${HWAY[w]}) — เริ่มเส้นทางมารสวรรค์`);log(txt,'myth',true);later(hd1,900)};
+ choice('😈 เสียงจากใต้บัลลังก์สวรรค์',`คืนหนึ่งเสียงกระซิบดังขึ้นจากใต้บัลลังก์ของสวรรค์ — "สวรรค์กลัวเจ้า เพราะเจ้าแข็งแกร่งเกินกว่าที่กฎของมันจะคุมได้ จะก้มหัวต่อไป หรือจะขึ้นไปนั่งแทน?"<br><span class="tag2">บารมีมาร ${fmt(mpOf())} · ทางที่เลือกเปลี่ยนเนื้อเรื่องทั้งหมด · ผู้พิทักษ์สวรรค์จะตามล่า</span>`,[
+ {t:HWAY.war,s:'ทรยศอย่างเปิดเผย · ตั้งวังมาร รวมขุนพล ทำสงคราม',_x:1,noFate:1,f:go('war','😈 คุณหัวเราะใส่ฟ้า แล้วตอบเสียงนั้นว่า <b>"ข้าจะขึ้นไปนั่งแทน"</b> — ดวงดาวทั้งฟ้ากะพริบพร้อมกันราวกับตกใจ',300)},
+ {t:HWAY.spy,s:'ยังเป็นเทพต่อหน้า แต่เป็นมารลับหลัง · เก็บความลับ ยึดอำนาจจากข้างใน · ถูกจับได้ = กลายเป็นสงคราม',_x:1,noFate:1,f:go('spy','🎭 คุณยิ้มรับคำสรรเสริญของเหล่าเทพในวันรุ่งขึ้น — ไม่มีใครรู้ว่าคืนก่อนคุณตอบเสียงนั้นไปแล้ว',150)},
+ {t:HWAY.pact,s:'ได้พลังมารบรรพกาลทันที · แต่มันจะมาทวงค่าตอบแทน',_x:1,noFate:1,f:go('pact','📜 คุณกรีดเลือดลงบนสัญญาที่ลอยออกมาจากความมืด — เสียงหัวเราะเก่าแก่ดังก้องอยู่ในกระดูกของคุณ',500)},
+ {t:'☯️ ปฏิเสธ',s:'กรรม + · (ถ้าบารมีมารถึง 2,000 เสียงนี้จะกลับมาอีกครั้ง)',skip:true,f(){H.no=1;S.karma+=60;log('☯️ คุณปิดหูต่อเสียงกระซิบ — มันเงียบไปพร้อมเสียงหัวเราะแผ่วเบา','good')}}])}
+// ---------- บทที่ 1: ตกสวรรค์ ----------
+function hd1(){const H=hdF();if(choice._cur)return later(hd1,700);const sp=S.spouse;if((H.ch|0)!==1)return;H.ch=2;hdNext();
+ if(H.way==='spy'){H.lv=sp?'hide':'none';H.sec=0;H.risk=0;hdNext();log('🎭 <b>บทที่ 1 · หน้ากากเทพ</b> — คุณยังนั่งในสภาเทพเหมือนเดิม แต่ทุกคืนมีเงาของคุณเดินลงไปใต้บัลลังก์','myth',true);if(sp)log(`🤫 ${esc(sp)} ยังไม่รู้ความจริง — ความลับนี้จะทำร้ายหรือปกป้องเขา ขึ้นกับว่าคุณจะเล่าเมื่อไร`,'');return}
+ if(H.way==='pact'){H.debt=1;const g=pctPow(.08);S.power+=g;log(`📜 <b>บทที่ 1 · พลังที่ยืมมา</b> — พลังของมารบรรพกาลไหลเข้าเส้นลมปราณ · พลังยุทธ์ +${fmt(g)} · แต่ทุกครั้งที่หลับตา คุณได้ยินมันนับหนี้`,'myth',true)}
+ log('⚡ <b>บทที่ 1 · ตกสวรรค์</b> — ชื่อของคุณถูกลบจากทำเนียบเทพ สายฟ้าสวรรค์ฟาดลงกลางสำนักที่คุณเคยอยู่ ทุกคนหันหลังให้','myth',true);S.fame=Math.max(0,S.fame-Math.round(S.fame*.05));
+ if(!sp){H.lv='none';hdNext();return}
+ choice('💔 บทที่ 1 · คนรักต้องเลือกข้าง',`<b>${esc(sp)}</b> ยืนอยู่ตรงกลางระหว่างคุณกับสวรรค์ — "ถ้าข้าไปกับท่าน ข้าก็จะถูกลบชื่อเหมือนกัน"`,[
+  {t:'🤝 ขอให้มาด้วยกัน',s:`เสน่ห์ช่วย · ~${Math.round(clamp(.4+(S.cha||0)/400,.4,.9)*100)}%`,_x:1,noFate:1,f(){if(Math.random()<clamp(.4+(S.cha||0)/400,.4,.9)){H.lv='with';joy(20);log(`💞 ${esc(sp)} จับมือคุณ — "ถ้าสวรรค์ไม่ต้องการท่าน ข้าก็ไม่ต้องการสวรรค์"`,'epic',true)}else{H.lv='gone';S.spouse=null;joy(-30);log(`💔 ${esc(sp)} ร้องไห้แล้วเดินขึ้นไปทางสวรรค์ — ไม่หันกลับมาอีก`,'bad',true)}hdNext();render()}},
+  {t:'🍂 ปล่อยให้ไป',s:'ไม่ลากเขามาด้วย · กรรม +',f(){H.lv='gone';S.karma+=40;S.spouse=null;joy(-20);log(`🍂 คุณปล่อยมือ ${esc(sp)} — ทางของมารต้องเดินคนเดียว`,'bad',true);hdNext();render()}}])}
+// ---------- บทที่ 2: แยกตามทาง ----------
+function hd2(){const H=hdF();if(H.way==='spy')return hd2s();if(H.way==='pact')return hd2p();return hd2w()}
+function hd2w(){const H=hdF();const P=hdNames().slice(0,8);H.gp=[];
+ const pickOne=()=>{if(choice._cur)return later(pickOne,600);const left=P.filter(n=>!H.gp.includes(n));if(H.gp.length>=3||!left.length){H.gen=H.gp.slice();H.gp=null;H.ch=3;hdNext();mpAdd(200,'ตั้งวังมารสวรรค์');keyAdd('ตั้งวังมารสวรรค์ · ขุนพล: '+H.gen.join(', '));log(`🏯 <b>วังมารสวรรค์</b>ลอยขึ้นเหนือทะเลเมฆ — ขุนพลมารของคุณคือ <b>${H.gen.map(esc).join(' · ')}</b>`,'myth',true);render();return}
+  choice(`🏯 บทที่ 2 · วังมารสวรรค์ (ขุนพล ${H.gp.length+1}/3)`,`มารนับหมื่นที่สวรรค์เคยขับไล่มาคุกเข่าหน้าประตู — เลือกขุนพลที่จะยืนข้างคุณ`,left.slice(0,4).map(n=>({t:`🩸 ${esc(n)}`,_x:1,noFate:1,f(){H.gp.push(n);later(pickOne,400)}})).concat([{t:'🧍 ไม่ต้องมีขุนพลเพิ่ม',s:'มารที่ไว้ใจได้มีแค่ตัวเอง · ศึกหนักขึ้น แต่ไม่มีใครทรยศ',skip:true,f(){H.solo=1;H.gp.length=3;later(pickOne,300)}}]))};
+ log('🏯 <b>บทที่ 2 · วังมารสวรรค์</b>','myth',true);pickOne()}
+function hd2s(){const H=hdF();const r=clamp(.25+(H.risk|0)*.12,.25,.75);
+ choice(`🎭 บทที่ 2 · ความลับใต้บัลลังก์ (${H.sec|0}/3)`,`คุณมีโอกาสล้วงความลับของสวรรค์ — ยิ่งเสี่ยงยิ่งได้มาก แต่ถ้าถูกจับได้ หน้ากากจะหลุดทันที<br><span class="tag2">ความเสี่ยงถูกจับได้ ~${Math.round(r*100)}%</span>`,[
+  {t:'📜 ขโมยบันทึกกฎสวรรค์',s:'ความลับ +1 · เสี่ยงปานกลาง',_x:1,noFate:1,f(){if(Math.random()<r)return hdExpose();H.sec=(H.sec|0)+1;H.risk=(H.risk|0)+1;S.int+=60;log('📜 คุณคัดลอกกฎสวรรค์มาทั้งเล่มในคืนเดียว','epic');hdSpyNext()}},
+  {t:'👂 ซื้อใจเทพชั้นผู้น้อย',s:'ความลับ +1 · ได้พวกในสวรรค์ (ใช้ในบทที่ 3)',_x:1,noFate:1,f(){if(Math.random()<r*.8)return hdExpose();H.sec=(H.sec|0)+1;H.ally=(H.ally|0)+1;S.money=Math.max(0,S.money-Math.round(S.money*.05));log('👂 เทพผู้น้อยคนหนึ่งเริ่มรายงานทุกอย่างให้คุณ','epic');hdSpyNext()}},
+  {t:'🕯️ รอจังหวะ',s:'ปลอดภัย · ความเสี่ยงลดลง',skip:true,f(){H.risk=Math.max(0,(H.risk|0)-1);hdNext();log('🕯️ คุณทำตัวเป็นเทพที่ดีไปอีกพักใหญ่')}},
+  ...(H.lv==='hide'&&S.spouse?[{t:`💬 บอกความจริงกับ ${esc(S.spouse)}`,s:'เขาอาจช่วย หรืออาจจากไป',f(){if(Math.random()<clamp(.45+(S.cha||0)/500,.45,.9)){H.lv='with';H.sec=(H.sec|0)+1;log(`💞 ${esc(S.spouse)} เงียบไปนาน แล้วยื่นกุญแจห้องเก็บบันทึกสวรรค์ให้คุณ`,'epic',true)}else{H.lv='gone';log(`💔 ${esc(S.spouse)} รับไม่ได้ และจากไปเงียบๆ`,'bad',true);S.spouse=null}hdSpyNext()}}]:[])])}
+function hdSpyNext(){const H=hdF();hdNext();if((H.sec|0)>=3){H.ch=3;mpAdd(200,'กุมความลับของสวรรค์');keyAdd('กุมความลับสามประการของสวรรค์');log('🎭 คุณกุมความลับพอจะสั่นคลอนบัลลังก์ได้แล้ว','myth',true)}render()}
+function hdExpose(){const H=hdF();H.way='war';H.exp=1;H.ch=2;hdNext();S.fame=Math.max(0,S.fame-Math.round(S.fame*.1));mpAdd(200,'หน้ากากหลุด');keyAdd('หน้ากากเทพหลุด — ถูกขับจากสวรรค์');log('🎭💥 <b>หน้ากากหลุด!</b> — เหล่าเทพเห็นมารในตัวคุณต่อหน้าสภา คุณต้องหนีลงจากสวรรค์ และเปลี่ยนไปทาง <b>ประกาศสงคราม</b>','bad',true);if(H.lv==='hide'){H.lv='gone';S.spouse=null}render()}
+function hd2p(){const H=hdF();const nm=hdNames(),gen=nm[0];
+ choice('📜 บทที่ 2 · มารบรรพกาลมาทวง',`เสียงเก่าแก่กระซิบในกระดูก — "ถึงเวลาจ่ายหนี้ ข้าต้องการบางอย่างที่เจ้ารัก"`,[
+  ...(S.spouse?[{t:`💔 มอบ ${esc(S.spouse)}`,s:'หนี้หมด · พลังเพิ่ม · กรรมชั่วหนัก',_x:1,noFate:1,f(){const n=S.spouse;S.spouse=null;H.lv='gone';H.debt=0;S.karma-=300;const g=pctPow(.06);S.power+=g;log(`🖤 ${esc(n)} หายไปในความมืด — พลังยุทธ์ +${fmt(g)}`,'bad',true);hdPactNext('paid')}}]:[]),
+  {t:'⏳ มอบอายุขัยของตัวเอง',s:'อายุขัย −30% · หนี้หมด',_x:1,noFate:1,f(){S.lifespan=Math.max(S.age+50,Math.round(S.lifespan-(S.lifespan-S.age)*.3));H.debt=0;log('⏳ มารบรรพกาลดูดอายุขัยของคุณไปหนึ่งส่วน','bad',true);hdPactNext('paid')}},
+  {t:'🗡️ ฉีกสัญญา',s:'สู้กับเงาของมารบรรพกาล (แรงราว 120%) · ชนะ = เป็นอิสระ ได้พลังที่ยืมมาฟรี',_x:1,noFate:1,f(){later(()=>duel('เงาของมารบรรพกาล',Math.round(total()*1.2),w=>{if(w){H.debt=0;H.torn=1;mpAdd(300,'ฉีกสัญญามารบรรพกาล');log('🗡️ สัญญาขาดเป็นสองท่อน — มารบรรพกาลกรีดร้องแล้วเงียบไป','myth',true);hdPactNext('torn')}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.35));hdNext();log('🗡️ เงาของมารบรรพกาลหัวเราะ — "หนี้ยังอยู่"','bad',true);render()}}),300)}},
+  {t:'🤝 ขอเป็นร่างทรงแทนการจ่าย',s:'ยอมให้มันอยู่ในตัว · บารมีมาร +++ · ปลดฉากจบลับ',f(){H.debt=0;H.host=1;mpAdd(800,'เป็นร่างทรงมารบรรพกาล');S.karma-=200;log('🤝 ดวงตาของคุณเปลี่ยนเป็นสีดำสนิท — มีสองเสียงพูดพร้อมกันทุกครั้งที่คุณเปิดปาก','myth',true);hdPactNext('host')}}])}
+function hdPactNext(k){const H=hdF();H.pk=k;H.ch=3;hdNext();keyAdd('จ่ายหนี้มารบรรพกาล: '+k);render()}
+// ---------- บทที่ 3: สงครามสวรรค์ (3 ระลอก ผ่าน 2) ----------
+const HW=[['⚔️ ทัพเทพสวรรค์ชั้นนอก','ทหารเทพนับแสนเรียงแถวเต็มท้องฟ้า'],['🌩️ เทพสายฟ้าทั้งเก้า','เทพสายฟ้าเก้าองค์ล้อมวังมารไว้ทุกทิศ'],['🛡️ ผู้พิทักษ์บัลลังก์','ผู้พิทักษ์ที่ไม่เคยแพ้ใครมาหมื่นปีเดินออกมาเอง']];
+function hd3(w,ok){const H=hdF();if(w==null||w===1&&!ok){if(H.way==='spy')return hd3s();}w=w||1;ok=ok|0;if(choice._cur)return later(()=>hd3(w,ok),700);const g=(H.gen||[]).length,base=clamp(.42+g*.05+Math.min(.12,mpOf()/40000)+(H.lv==='with'?.04:0)+(H.solo?-.04:0)+(H.way==='pact'?(H.host?.12:H.torn?.08:.05):0),.25,.85);
+ if(w===1)log('🔥 <b>บทที่ 3 · สงครามสวรรค์</b> — สวรรค์ส่งทัพลงมาบดขยี้วังมาร','myth',true);
+ const W=HW[w-1],res=(p,how,lose)=>()=>{const win=Math.random()<p;let lost='';if(!win){S.hp-=Math.round(S.maxHp*.22);if(lose&&H.gen&&H.gen.length){lost=H.gen.splice(Math.floor(Math.random()*H.gen.length),1)[0]}}
+  log(`${W[0]} — ${how}: ${win?'<b>ชนะ!</b>':'ถอยร่น'}${lost?` · ขุนพล <b>${esc(lost)}</b> ล้มลงในสนามรบ`:''}`,win?'myth':'bad');if(S.hp<=0){S.deathCause='ล้มลงในสงครามสวรรค์ หน้าประตูวังมารของตัวเอง';render();checkDeath();return}
+  const ok2=ok+(win?1:0);if(w<3&&ok2<2&&(w-ok2)<2)return later(()=>hd3(w+1,ok2),500);
+  if(ok2>=2){H.ch=4;hdNext();mpAdd(400,'ชนะสงครามสวรรค์');S.fame+=6000;const gp=pctPow(.05);S.power+=gp;keyAdd('ชนะสงครามสวรรค์');log(`🔥 ทัพสวรรค์แตกพ่าย — คุณกลายเป็น <b>มารสวรรค์ผู้ล่าเทพ</b> · พลังยุทธ์ +${fmt(gp)}`,'myth',true)}
+  else{hdNext();log('🌫️ วังมารถูกตีถอยกลับไปซ่อนหลังทะเลเมฆ — ต้องรวบรวมกำลังใหม่ แล้วค่อยบุกอีกครั้ง','bad',true)}render()};
+ choice(`${W[0]} · ระลอก ${w}/3`,`${W[1]}<br><span class="tag2">ชนะแล้ว ${ok}/${w-1} · ต้องชนะ 2 ใน 3 · ขุนพล ${g} คน · พลังชีวิต ${Math.max(0,Math.round(S.hp/Math.max(1,S.maxHp)*100))}%</span>`,[
+  {t:'⚔️ นำทัพบุกเอง',s:`~${Math.round(base*100)}% · แพ้ = เจ็บหนัก`,_x:1,noFate:1,f:res(base,'นำทัพบุกเอง',0)},
+  {t:'🩸 ส่งขุนพลมารออกรบ',s:`~${Math.round(clamp(base+.1,.3,.9)*100)}% · แพ้ = อาจเสียขุนพล`,_x:1,noFate:1,f:res(clamp(base+.1,.3,.9),'ส่งขุนพลมารออกรบ',1)},
+  {t:'🌑 ใช้แผนลวง',s:`~${Math.round(clamp(base-.05+Math.min(.15,(S.int||0)/20000),.25,.9)*100)}% · ปัญญาช่วย`,_x:1,noFate:1,f:res(clamp(base-.05+Math.min(.15,(S.int||0)/20000),.25,.9),'ใช้แผนลวง',0)}])}
+function hd3s(){const H=hdF();const p=clamp(.4+(H.sec|0)*.08+(H.ally|0)*.08+Math.min(.12,(S.int||0)/25000),.3,.9);
+ choice('🎭 บทที่ 3 · รัฐประหารในสวรรค์',`ความลับ ${H.sec|0} ข้อ · พวกในสวรรค์ ${H.ally|0} คน — ถึงเวลาลงมือ`,[
+  {t:'📢 เปิดโปงความลับกลางสภาเทพ',s:`~${Math.round(p*100)}% · สำเร็จ = เหล่าเทพแตกเป็นสองฝ่าย`,_x:1,noFate:1,f(){if(Math.random()<p){H.ch=4;H.coup=1;hdNext();mpAdd(400,'รัฐประหารสวรรค์');S.fame+=6000;log('📢 ความลับของจักรพรรดิสวรรค์ถูกอ่านกลางสภา — ครึ่งหนึ่งของเหล่าเทพหันมาอยู่ข้างคุณ','myth',true);render()}else hdExpose()}},
+  {t:'🗡️ ลอบสังหารเสนาบดีสวรรค์ก่อน',s:'ดวล (แรงราว 95%) · ชนะ = บทที่ 4 ง่ายขึ้น',_x:1,noFate:1,f(){later(()=>duel('เสนาบดีสวรรค์',Math.round(total()*.95),w=>{if(w){H.ch=4;H.coup=1;H.kill=1;hdNext();mpAdd(300,'สังหารเสนาบดีสวรรค์');log('🗡️ เสนาบดีสวรรค์ล้มลงโดยไม่มีใครเห็น — บัลลังก์ไร้คนเฝ้าข้างกาย','myth',true)}else hdExpose();render()}),300)}},
+  {t:'🕯️ รอให้พร้อมกว่านี้',s:'ไปเก็บความลับเพิ่ม',skip:true,f(){H.ch=2;hdNext()}}])}
+// ---------- บทที่ 4: บัลลังก์ว่าง ----------
+function hd4(){const H=hdF();const g=(H.gen||[]).length;
+ const ok=()=>{H.ch=5;hdNext();log('👑 จักรพรรดิสวรรค์ก้าวลงจากบัลลังก์ — บัลลังก์ว่างอยู่ตรงหน้าคุณ','myth',true);later(hd5,900)};
+ const no=t=>{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.3));hdNext();log(t+' — ต้องกลับไปรอจังหวะใหม่','bad',true);render()};
+ const pt=clamp(.35+Math.min(.25,(S.cha||0)/1200)+(H.lv==='with'?.05:0),.25,.8),pi=clamp(.3+Math.min(.3,(S.int||0)/12000)+g*.03,.25,.85),m=Math.max(.9,1.4-g*.08);
+ choice('👑 บทที่ 4 · บัลลังก์ว่าง',`คุณยืนอยู่หน้า<b>จักรพรรดิสวรรค์</b> ผู้ปกครองสวรรค์มาตั้งแต่ก่อนมีกาลเวลา — "เจ้ามาไกลกว่ามารทุกตนที่เคยมา จะเอาอะไรจากข้า?"`,[
+  {t:'⚔️ โค่นจักรพรรดิสวรรค์',s:`ดวล (แรงราว ${Math.round(m*100)}% · ขุนพลยิ่งเยอะยิ่งเบา)`,_x:1,noFate:1,f(){later(()=>duel('จักรพรรดิสวรรค์',Math.round(total()*m),w=>{if(w){H.how='slay';ok()}else no('⚡ จักรพรรดิสวรรค์ปัดคุณตกลงจากบันไดสวรรค์')}),300)}},
+  {t:'🗣️ เจรจาให้สละบัลลังก์',s:`~${Math.round(pt*100)}% · เสน่ห์ช่วย`,_x:1,noFate:1,f(){if(Math.random()<pt){H.how='talk';log('🗣️ จักรพรรดิสวรรค์ฟังคุณจนจบ แล้วหัวเราะอย่างเหนื่อยล้า — "ข้าก็เบื่อมานานแล้ว"','epic',true);ok()}else no('🗣️ จักรพรรดิสวรรค์ไม่ฟัง')}},
+  ...(H.coup?[{t:'🎭 ให้เหล่าเทพฝ่ายคุณถอดถอน',s:`~${Math.round(clamp(pi+.15,.4,.92)*100)}% · ใช้เสียงในสภา`,_x:1,noFate:1,f(){if(Math.random()<clamp(pi+.15,.4,.92)){H.how='vote';log('🎭 สภาเทพลงมติถอดถอนจักรพรรดิสวรรค์ — ครั้งแรกในประวัติศาสตร์สวรรค์','epic',true);ok()}else no('🎭 เสียงในสภาไม่พอ')}}]:[]),
+  ...(H.host?[{t:'🖤 ปล่อยให้มารบรรพกาลออกมา',s:'ชนะแน่นอน · แต่ฉากจบจะเหลือทางเดียว',_x:1,noFate:1,f(){H.how='host';H.lock=1;log('🖤 มารบรรพกาลพุ่งออกจากร่างคุณ แล้วกลืนจักรพรรดิสวรรค์ทั้งตัว','myth',true);ok()}}]:[]),
+  ...(H.lv==='with'&&S.spouse?[{t:`💞 ให้ ${esc(S.spouse)} พูดแทน`,s:`~${Math.round(clamp(pt+.12,.35,.9)*100)}% · คนรักเคยเป็นคนของสวรรค์`,_x:1,noFate:1,f(){if(Math.random()<clamp(pt+.12,.35,.9)){H.how='love';log(`💞 จักรพรรดิสวรรค์มองคุณกับ ${esc(S.spouse)} อยู่นาน — "ข้าไม่เคยมีใครยืนข้างแบบนี้"`,'epic',true);ok()}else no('💞 จักรพรรดิสวรรค์ไม่ฟัง')}}]:[]),
+  {t:'🌑 หลอกล่อให้ลงจากบัลลังก์',s:`~${Math.round(pi*100)}% · ปัญญาและขุนพลช่วย`,_x:1,noFate:1,f(){if(Math.random()<pi){H.how='trick';log('🌑 กับดักที่ขุนพลมารวางไว้ทำงานพอดี — จักรพรรดิสวรรค์ก้าวลงมาเอง','epic',true);ok()}else no('🌑 แผนถูกจับได้')}}])}
+// ---------- บทที่ 5: ฉากจบ ----------
+function hd5(){const H=hdF();if(choice._cur)return later(hd5,700);
+ const end=(k,ti,tx,col,fx)=>()=>{H.ch=6;H.end=k;S.flags['hd_'+k]=1;fx();keyAdd(`${ti} — ${tx}`);log(`😈 <b>${ti}</b> — ${tx}`,'myth',true);try{kfx('win',ti,tx,col,4800)}catch(e){}render()};
+ if(H.lock)return choice('🖤 บทที่ 5 · ร่างของใคร?','มารบรรพกาลกลืนจักรพรรดิสวรรค์แล้ว — และมันไม่ยอมกลับเข้าไปอยู่ในร่างคุณเฉยๆ อีกต่อไป',[
+  {t:'🖤 ยอมเป็นร่างทรงตลอดกาล',s:'ฉากจบ: ร่างทรงมารบรรพกาล',_x:1,noFate:1,f:end('host','ร่างทรงมารบรรพกาล','สวรรค์มีผู้ปกครองใหม่ — สองดวงวิญญาณในร่างเดียว','#c02aff',()=>{mpAdd(3000,'ร่างทรงมารบรรพกาล');S.karma-=500})},
+  {t:'🗡️ ฉีกมันออกจากตัว',s:`ดวล (แรงราว 140%) · ชนะ = ครองสวรรค์คนเดียว · แพ้ = ร่างทรงตลอดกาล`,_x:1,noFate:1,f(){later(()=>duel('มารบรรพกาลในร่างคุณ',Math.round(total()*1.4),w=>{(w?end('emp','จักรพรรดิมารสวรรค์','ฉีกมารบรรพกาลออกจากร่าง แล้วนั่งลงบนบัลลังก์คนเดียว','#ff2a6a',()=>{mpAdd(2500,'ขึ้นครองสวรรค์');S.fame+=25000}):end('host','ร่างทรงมารบรรพกาล','สวรรค์มีผู้ปกครองใหม่ — สองดวงวิญญาณในร่างเดียว','#c02aff',()=>{mpAdd(3000,'ร่างทรงมารบรรพกาล')}))()}),300)}}]);
+ choice('😈 บทที่ 5 · สวรรค์หลังสงคราม',`บัลลังก์สวรรค์ว่างอยู่ตรงหน้า${(H.gen||[]).length?` ขุนพล ${H.gen.map(esc).join(' · ')} รอคำสั่ง`:''}${H.lv==='with'&&S.spouse?` · ${esc(S.spouse)} ยืนอยู่ข้างคุณ`:''}`,[
+  {t:'👑 ขึ้นครองเป็นจักรพรรดิมารสวรรค์',s:'บารมีมาร +++ · กฎของสวรรค์กลายเป็นกฎของมาร',_x:1,noFate:1,f:end('emp','จักรพรรดิมารสวรรค์','นั่งลงบนบัลลังก์สวรรค์ แล้วเขียนกฎใหม่ด้วยเลือด','#ff2a6a',()=>{mpAdd(2000,'ขึ้นครองสวรรค์');S.fame+=20000;S.karma-=300})},
+  {t:'🔥 เผาสวรรค์ทิ้ง',s:'ไม่มีใครปกครองใครอีก · ชื่อเสียง ++',_x:1,noFate:1,f:end('burn','ผู้เผาสวรรค์','เผาบัลลังก์ทิ้ง ไม่ให้ใครได้ปกครองใครอีกต่อไป','#ff7a3a',()=>{mpAdd(1000,'เผาสวรรค์');S.fame+=30000;S.karma+=100})},
+  ...(H.way==='spy'||H.coup?[{t:'🎭 นั่งบัลลังก์ในหน้ากากเทพ',s:'ไม่มีใครรู้ว่าจักรพรรดิองค์ใหม่คือมาร · ชื่อเสียง +++',_x:1,noFate:1,f:end('mask','เทพจอมปลอม','สวมหน้ากากเทพขึ้นครองสวรรค์ — ทั้งสามภพกราบไหว้มารโดยไม่รู้ตัว','#e0c0ff',()=>{mpAdd(1500,'ครองสวรรค์ในหน้ากาก');S.fame+=40000})}]:[]),
+  ...(H.lv==='with'&&S.spouse?[{t:`💞 ครองสวรรค์คู่กับ ${esc(S.spouse)}`,s:'บัลลังก์สองที่นั่ง · ความสุข +++',_x:1,noFate:1,f:end('duo','คู่ครองแห่งบัลลังก์มาร',`ขึ้นครองสวรรค์คู่กับ ${String(S.spouse).slice(0,20)} — บัลลังก์แรกที่มีสองที่นั่ง`,'#ff9ad0',()=>{mpAdd(1500,'ครองสวรรค์คู่กัน');joy(50);S.fame+=20000})}]:[]),
+  ...(H.torn?[{t:'🔗 ใช้พลังที่ฉีกจากสัญญาผนึกสวรรค์กับมารแยกจากกัน',s:'ไม่มีฝ่ายไหนรุกรานกันได้อีก',_x:1,noFate:1,f:end('seal','ผู้ฉีกสัญญา','ใช้เศษสัญญามารบรรพกาลผนึกเส้นแบ่งสวรรค์กับมารไว้ตลอดกาล','#7ad0ff',()=>{mpAdd(800,'ผนึกสวรรค์-มาร');S.karma+=200})}]:[]),
+  {t:'🕊️ หยุดก่อนก้าวสุดท้าย',s:'กรรม +++ · บารมีมารลดครึ่ง · ได้เป็นผู้พิทักษ์ระหว่างสวรรค์กับมาร',_x:1,noFate:1,f:end('redeem','มารผู้กลับใจ','หันหลังให้บัลลังก์ แล้วยืนเฝ้าเส้นแบ่งระหว่างสวรรค์กับมาร','#9ad0ff',()=>{S.mp=Math.round((S.mp||0)/2);S.karma+=500;joy(30)})}])}
+// ---------- ผู้พิทักษ์สวรรค์ตามล่า (ระหว่างบทที่ 1–4) ----------
+function hdHunt(){const H=hdF();H.hu=S.age;const m=.8+.1*(H.ch|0);
+ choice('🛡️ ผู้พิทักษ์สวรรค์ตามล่า',`ผู้พิทักษ์สวรรค์ตามกลิ่นบารมีมารของคุณมาถึง — "ผู้ทรยศต้องถูกลงทัณฑ์"`,[
+  {t:'⚔️ สู้',s:`ดวล (แรงราว ${Math.round(m*100)}%) · ชนะ = บารมีมาร +`,f(){later(()=>duel('ผู้พิทักษ์สวรรค์',Math.round(total()*m),w=>{if(w)mpAdd(120,'สังหารผู้พิทักษ์สวรรค์');else S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.25))}),300)}},
+  {t:'🌫️ หลบซ่อน',s:'ปลอดภัย · ความสุข −',skip:true,f(){joy(-6);log('🌫️ คุณซ่อนตัวในทะเลเมฆจนผู้พิทักษ์ผ่านไป')}}])}
+// ---------- จังหวะเหตุการณ์ ----------
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(!hdOn()||choice._cur||modalOpen)return r;const H=hdF();if(H.no||(H.ch|0)>=6)return r;
+ if(!H.ch){if(dmIs(800)&&!H.ask&&Math.random()<.04){H.ask=1;hd0()}return r}
+ const gap=HD_GAP[H.ch]||30,due=S.age-(H.t|0)>=gap;
+ if(due&&Math.random()<.25){if(H.ch===1)return hd1(),r;if(H.ch===2)return hd2(),r;if(H.ch===3)return hd3(1,0),r;if(H.ch===4)return hd4(),r;if(H.ch===5)return hd5(),r}
+ if(H.ch<=4&&!(H.way==='spy'&&!H.exp)&&S.age-(H.hu|0)>=35&&Math.random()<.04)hdHunt()}catch(e){console.error(e)}return r}}
+// ถ้าปฏิเสธไปแล้วแต่บารมีมารขึ้นอีกมาก (2000+) เสียงนั้นกลับมาอีกครั้ง
+{const _py2=passYear;passYear=function(){const r=_py2.apply(this,arguments);try{const H=S&&S.hd;if(H&&H.no&&!H.ask2&&hdOn()&&dmIs(2000)&&!choice._cur&&!modalOpen&&Math.random()<.03){H.ask2=1;H.no=0;hd0()}}catch(e){}return r}}
+// กัลป์: จักรพรรดิมารสวรรค์ผ่านภัยในสายเงาง่ายขึ้นเล็กน้อย
+{const _kd=kDiff;kDiff=function(){let d=_kd.apply(this,arguments);try{if(S&&S.flags&&S.flags.hd_emp&&S.kalpa&&S.kalpa.path==='shd')d+=.03}catch(e){}return d}}
+// ป้ายสถานะ
+{const _r=render;render=function(){const r=_r.apply(this,arguments);try{const H=S&&S.hd;if(H&&H.ch&&S.alive){const t=$('gTags');if(t&&!t.querySelector('.hdb')){const lb=H.ch>=6?{emp:'👑 จักรพรรดิมารสวรรค์',burn:'🔥 ผู้เผาสวรรค์',redeem:'🕊️ มารผู้กลับใจ',host:'🖤 ร่างทรงมารบรรพกาล',mask:'🎭 เทพจอมปลอม',duo:'💞 คู่ครองแห่งบัลลังก์มาร',seal:'🔗 ผู้ฉีกสัญญา'}[H.end]:`😈 มารสวรรค์ ${H.way?HWAY[H.way].split(' ')[0]+' ':''}บทที่ ${H.ch}/5`;t.insertAdjacentHTML('afterbegin',`<span class="tag hdb" style="--c:#ff2a6a">${lb||''}</span>`)}}}catch(e){}return r}}
+try{TTL_SP.unshift(['hdhost',()=>!!(S.flags&&S.flags.hd_host),'ร่างทรงมารบรรพกาล'],['hdmask',()=>!!(S.flags&&S.flags.hd_mask),'เทพจอมปลอม'],['hdduo',()=>!!(S.flags&&S.flags.hd_duo),'คู่ครองแห่งบัลลังก์มาร'],['hdseal',()=>!!(S.flags&&S.flags.hd_seal),'ผู้ฉีกสัญญา'],['hdemp',()=>!!(S.flags&&S.flags.hd_emp),'จักรพรรดิมารสวรรค์'],['hdburn',()=>!!(S.flags&&S.flags.hd_burn),'ผู้เผาสวรรค์'],['hdred',()=>!!(S.flags&&S.flags.hd_redeem),'มารผู้กลับใจ'],['hd4',()=>!!(S.hd&&S.hd.ch>=4),'มารสวรรค์ผู้ล่าเทพ'],['hd3',()=>!!(S.hd&&S.hd.ch>=3),'เจ้าวังมารสวรรค์'],['hd1',()=>!!(S.hd&&S.hd.ch>=1),'ผู้ทรยศสวรรค์'])}catch(e){}
+window.HD={hd0,hd1,hd2,hd3,hd4,hd5,hdHunt};
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
