@@ -28055,6 +28055,12 @@ try{const st=document.createElement('style');st.textContent=`.rlm9{display:flex;
 try{(()=>{
 {const _dk=dkLeft;dkLeft=function(){let h=_dk.apply(this,arguments);try{const n=String(S&&S.age||0).length;if(n>=6)h=h.replace('<div class="dk-age px">',`<div class="dk-age px ${n>=9?'dkA3':n>=7?'dkA2':'dkA1'}">`)}catch(e){}return h}}
 const st=document.createElement('style');st.textContent=`body.desk .dk-hero{align-items:flex-start}body.desk .dk-hero .frw{align-self:flex-start;flex:0 0 auto}body.desk .dk-age{white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}body.desk .dk-age.dkA1{font-size:26px}body.desk .dk-age.dkA2{font-size:21px}body.desk .dk-age.dkA3{font-size:16px}`;document.head.appendChild(st)})()}catch(e){console.error(e)}
+
+// ===================== v18.2.2 🔮 รวมวิชา: บอกเหตุผลว่าทำไมเลือกวิชาไม่ได้ (เดิมปุ่มเทาเฉยๆ ผู้เล่นงงว่ารวมไม่ได้) =====================
+try{(()=>{const _of=openFuse;openFuse=function(){const r=_of.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='fuse'||m.querySelector('.fuHint'))return r;
+ const all=(S.arts||[]).filter(Boolean),ok=all.filter(a=>fuseCan(a)).length;
+ m.querySelectorAll('.fuit[disabled] .h').forEach(h=>{if(!h.querySelector('.fuLk'))h.insertAdjacentHTML('beforeend','<span class="tag2 fuLk">🔒 ยังไม่ถึงระดับกลาง</span>')});
+ const p=m.querySelector('p.tag2');if(p)p.insertAdjacentHTML('afterend',`<div class="item fuHint" style="border-left:4px solid ${ok>=2?'#3f8f5a':'#e0503c'}">${ok>=2?`🔮 รวมได้ตอนนี้ <b>${ok}</b> วิชา — แตะเลือก 2–3 วิชา`:`🔒 ยังรวมไม่ได้ — ต้องมีวิชาที่ฝึกถึง<b>ระดับกลาง</b>ขึ้นไปอย่างน้อย 2 วิชา (ตอนนี้มี ${ok}/${all.length}) · ไปฝึกวิชาที่มีให้ได้ระดับก่อน แล้วกลับมารวม`}</div>`)}catch(e){console.error(e)}return r}})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
