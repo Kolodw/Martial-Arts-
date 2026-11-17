@@ -26665,7 +26665,7 @@ const EREV={
 // ---------- 1) วิกฤตนับถอยหลัง ----------
 const CRI={poison:['🧊 พิษเย็นในเส้นลมปราณ','หาสมุนไพร 3 ชนิดให้ครบ',3,5],kidnap:['👶 ลูกถูกลักพาตัว','ตามเบาะแส 3 ชิ้นแล้วบุกช่วย',3,3],doom:['🏯 สำนักจะถูกล้าง','เตรียมพร้อม 4 ด้านก่อนศัตรูบุก',4,4]};
 function criStart(){const opts=['poison','doom'];if((S.children||[]).length)opts.push('kidnap');const k=ch(opts),C=CRI[k];S.cri={k,left:C[3],got:0,need:C[2]};
- const intro={poison:'ระหว่างสู้ คุณโดนเข็มพิษเย็นของสำนักทมิฬ หมอบอกว่า "อยู่ได้อีกห้าปี ถ้าหาสมุนไพรสามชนิดไม่ครบ ร่างจะแข็งเป็นน้ำแข็ง"',kidnap:`จดหมายเปื้อนเลือดถูกปักไว้หน้าประตู "อยากเห็น${(ch(S.children)||{}).n||'ลูก'}อีก ก็ตามมาให้ทันภายในสามปี"`,doom:'สายลับรายงานว่าพันธมิตรมารกำลังรวมทัพ อีกสี่ปีจะบุกล้างสำนักของคุณจนสิ้นซาก'}[k];
+ const intro={poison:'ระหว่างสู้ คุณโดนเข็มพิษเย็นของสำนักทมิฬ หมอบอกว่า "อยู่ได้อีกห้าปี ถ้าหาสมุนไพรสามชนิดไม่ครบ ร่างจะแข็งเป็นน้ำแข็ง"',kidnap:`จดหมายเปื้อนเลือดถูกปักไว้หน้าประตู "อยากเห็น${(ch((S.children||[]).filter(c=>c&&c.alive!==false&&!c.gone))||{}).n||'ลูก'}อีก ก็ตามมาให้ทันภายในสามปี"`,doom:'สายลับรายงานว่าพันธมิตรมารกำลังรวมทัพ อีกสี่ปีจะบุกล้างสำนักของคุณจนสิ้นซาก'}[k];
  log(`⏳ <b>${C[0]}</b> — ${intro}`,'myth',true)}
 function criYear(){const c=S.cri,C=CRI[c.k];
  if(c.left<=0||c.got>=c.need)return criEnd();
@@ -28882,6 +28882,47 @@ try{document.head.insertAdjacentHTML('beforeend',`<style>
 @keyframes pxShine{0%{transform:translateX(-60%)}60%,100%{transform:translateX(60%)}}@keyframes pxHue{to{filter:hue-rotate(360deg)}}
 </style>`)}catch(e){}
 
+})()}catch(e){console.error(e)}
+
+// ===================== v18.13 ซื้อเหมาร้านสมบัติ · ซื้อหุ้นทีละหลายส่วน · ใช้เวลากับครอบครัวทีเดียวทุกคน =====================
+try{(()=>{
+const Mf=n=>S&&S.xian?stoneTxt(n):fmtM(n)+' ตำลึง';
+const twice=(btn,f)=>{if(btn&&!btn.dataset.ok){btn.dataset.ok=1;const t=btn.innerHTML;btn.innerHTML='⚠️ แตะอีกครั้งเพื่อยืนยัน';setTimeout(()=>{try{if(btn.isConnected){btn.innerHTML=t;delete btn.dataset.ok}}catch(e){}},3500);return}f()};
+const quiet=(f)=>{const lg=log,sf=sfx,rd=render;const got=[];log=(t,c,k)=>{got.push([t,c,k])};sfx=()=>{};render=()=>{};try{f()}finally{log=lg;sfx=sf;render=rd}return got};
+// ---- 1) ร้านสมบัติ: ซื้อทั้งหมดในหมวด / ทุกหมวด ----
+const shopList=(scope)=>{const w=ECO_W(),c=openShop2._c||'w';return ecoCat(w).filter(x=>scope==='all'?x.c!=='x':x.c===c).slice().sort((a,b)=>ecoPrice(a)-ecoPrice(b))};
+const shopSum=L=>{let t=0,n=0,m=S.money;for(const it of L){const p=ecoPrice(it);t+=p;if(m>=p){m-=p;n++}}return{t,n}};
+window.ecoBuyAll=function(scope,btn){if(!S)return;const L=shopList(scope);if(!L.length)return toast('ไม่มีของในหมวดนี้');const pv=shopSum(L);if(!pv.n)return toast('เงินไม่พอซื้อสักชิ้น');
+ twice(btn,()=>{let n=0,sp=0;const C=(typeof ctInit==='function')?ctInit():null;const best=[];
+  const got=quiet(()=>{for(const it of L){const p=ecoPrice(it);if(S.money<p)continue;S.money-=p;sp+=p;S.shopN=S.shopN||{};S.shopN[it.id]=(S.shopN[it.id]||0)+1;try{if(C&&C.rot&&C.rot.includes(it.id))C.fb[it.id]=1}catch(e){}try{ecoApply(it,'🏬')}catch(e){}n++;if(it.r>=5)best.push(it)}});
+  const by=[0,0,0,0,0,0,0,0];L.slice(0,0);got.length;
+  log(`🛒 <b>ซื้อเหมา${scope==='all'?'ทุกหมวด':'ทั้งหมวด'} ${n} ชิ้น</b> — จ่าย ${Mf(sp)}${best.length?` · ของหายาก: ${best.slice(0,6).map(x=>esc(x.n)+' '+rarTag(x.r)).join(' · ')}${best.length>6?` และอีก ${best.length-6} ชิ้น`:''}`:''}`,best.length?'myth':'epic',best.length>0);
+  try{const curse=got.filter(g=>/คำสาป/.test(g[0])).length;if(curse)log(`❔ มีของลึกลับ ${curse} ชิ้นเป็นคำสาป`,'bad')}catch(e){}
+  sfx('good');render();openShop2(openShop2._c)})};
+{const _o=openShop2;openShop2=function(c){const r=_o.apply(this,arguments);try{const m=$('modal');if(!S||!m||m.dataset.k!=='shop2')return r;const tabs=m.querySelector('.tabs');if(!tabs||m.querySelector('.ecoAll'))return r;
+  const a=shopSum(shopList('tab')),b=shopSum(shopList('all'));
+  (m.querySelector('h3+p.tag2')||tabs).insertAdjacentHTML('afterend',`<div class="ecoAll" style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0">
+   <button class="sysb" style="flex:1 1 150px" onclick="ecoBuyAll('tab',this)">🛒 ซื้อทั้งหมวดนี้<br><small>ซื้อได้ ${a.n} ชิ้น · ครบทุกชิ้น ${Mf(a.t)}</small></button>
+   <button class="sysb" style="flex:1 1 150px" onclick="ecoBuyAll('all',this)">🛒 ซื้อทุกหมวด<br><small>ไม่รวมของลึกลับ · ซื้อได้ ${b.n} ชิ้น</small></button></div>
+   <p class="tag2" style="margin:0 0 6px">ซื้อเหมา = ซื้อทุกชิ้นชิ้นละ 1 ครั้ง เริ่มจากถูกสุด จนเงินหมด</p>`)}catch(e){console.error(e)}return r}}
+// ---- 1b) หุ้นหัวเมือง: ซื้อ ×10 / สุดกำลัง ----
+window.ivBuyN=function(n,btn){if(!S)return;const go=()=>{let k=0,sp=0;const v=ivOf();quiet(()=>{while(k<n&&k<5000){const c=ivCost('sh');if(S.money<c)break;S.money-=c;sp+=c;v.sh++;v.paid=(v.paid||0)+c;k++}});
+  if(!k)return toast('เงินไม่พอ');log(`🏙️ ซื้อหุ้นหัวเมือง ${k} ส่วน — จ่าย ${Mf(sp)} (รวมถือ ${v.sh} ส่วน)`,'good');sfx('good');render();openInvest()};if(n>10)twice(btn,go);else go()};
+{const _o=openInvest;openInvest=function(){const r=_o.apply(this,arguments);try{const m=$('modal');const b=m&&[...m.querySelectorAll('button')].find(x=>/ivBuy\('sh'\)/.test(x.getAttribute('onclick')||''));if(b&&!m.querySelector('.ivN')){
+  let c=0,k=0,mm=S.money;while(k<5000){const v=ivOf(),cc=Math.round(ivCost('sh')*Math.pow(1.35,k));if(mm<cc)break;mm-=cc;k++}
+  b.insertAdjacentHTML('afterend',` <button class="sysb ivN" onclick="ivBuyN(10)">×10</button> <button class="sysb ivN" onclick="ivBuyN(99999,this)">💰 สุดกำลัง (~${k} ส่วน)</button>`)}}catch(e){}return r}}
+// ---- 2) ใช้เวลากับครอบครัว: ทีเดียวทุกคน ----
+const ftPick=x=>{if(x.p)return'talk';if(x.age<6)return'play';if(x.age<16)return(x.o.edu|0)<=(x.o.trn|0)?'edu':'trn';return'talk'};
+function ftBatch(kind,btn){const L=ftList(),F=ftInit();const todo=L.map((x,j)=>[x,j]).filter(([x])=>kind==='gift'||!F.d[x.k]);if(!todo.length)return toast('ปีนี้ใช้เวลากับทุกคนครบแล้ว');
+ const run=()=>{const of=openFamTime;let n=0;openFamTime=()=>{};const m0=S.money;try{quiet(()=>{todo.forEach(([x,j])=>{const k=kind==='gift'?'gift':ftPick(x);if(kind==='gift'&&S.money<Math.round(sxBiz()*.2))return;const b=ftInit().d[x.k];ftDo(j,k);if(kind==='gift'||(!b&&ftInit().d[x.k]))n++})})}finally{openFamTime=of}
+  log(kind==='gift'?`🎁 มอบของขวัญให้ครอบครัว ${n} คน — จ่าย ${Mf(m0-S.money)} · ทุกคนสนิทขึ้น`:`💞 ใช้เวลากับครอบครัวครบ ${n} คน — คุยกับคู่ เล่นกับลูกเล็ก สอนหนังสือและวิชาให้ลูก · ทุกคนสนิทขึ้น`,'good');sfx('good');render();openFamTime()};
+ if(kind==='gift'&&todo.length>3)twice(btn,run);else run()}
+window.ftBatch=ftBatch;
+{const _o=openFamTime;openFamTime=function(){const r=_o.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='famtime'||m.querySelector('.ftAll'))return r;const L=ftList(),F=ftInit(),left=L.filter(x=>!F.d[x.k]).length;if(!L.length)return r;const gc=Math.round(sxBiz()*.2);
+  const p=m.querySelector('p.tag2');(p||m.querySelector('h3')).insertAdjacentHTML('afterend',`<div class="ftAll" style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 8px">
+   <button class="pbtn" style="flex:1 1 160px" onclick="ftBatch('time',this)" ${left?'':'disabled style="flex:1 1 160px;opacity:.45"'}>✨ ใช้เวลากับทุกคน<br><small>${left?`เหลือ ${left} คนในปีนี้ · ฟรี`:'ปีนี้ครบทุกคนแล้ว'}</small></button>
+   <button class="sysb" style="flex:1 1 140px" onclick="ftBatch('gift',this)">🎁 ของขวัญทุกคน<br><small>${L.length} คน · ${Mf(gc*L.length)}</small></button></div>`)}catch(e){console.error(e)}return r}}
+try{SYS_GUIDE.push({s:'life',nw:1,ic:'🛒',t:'ซื้อเหมาและกดทีเดียวจบ',go:'',d:'ร้านสมบัติมีปุ่ม <b>🛒 ซื้อทั้งหมวด</b> และ <b>ซื้อทุกหมวด</b> (ซื้อทุกชิ้นชิ้นละครั้ง เริ่มจากถูกสุดจนเงินหมด) · หุ้นหัวเมืองซื้อ ×10 หรือสุดกำลังได้ · หน้าใช้เวลากับครอบครัวมี <b>✨ ใช้เวลากับทุกคน</b> และ <b>🎁 ของขวัญทุกคน</b>'})}catch(e){}
 })()}catch(e){console.error(e)}
 </script>
 </body>
