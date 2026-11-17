@@ -461,8 +461,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='18.14';
+const VERSION='18.15';
 const CHANGELOG=[
+  {v:'18.15',d:'18 พ.ย. 2026',l:['👤 <b>หน้าโปรไฟล์ดีไซน์ใหม่</b> — การ์ดหัวโปรไฟล์ + ปุ่มลัด (หอผู้ก่อตั้ง/ร้านตกแต่ง/อีเวนต์) + แท็บ ข้อมูล/กรอบ/ฉายา/บัญชี · แก้บั๊กหน้าโปรไฟล์บีบแคบและปุ่มผู้ก่อตั้งซ้ำ']},
   {v:'18.14',d:'18 พ.ย. 2026',l:['🕳️ <b>อเวจี</b> — ลงอัตโนมัติ/ลงรวดผ่านชั้นลึกที่ประตูซ่อนได้ · เพิ่มป้ายผู้คุมพิเศษ 🟢/🟡/🔴 พร้อมรางวัล · แก้ปณิธานสัตว์อสูรเปลี่ยนไม่ได้ · แก้ป้ายด่านนรกหาย','🔁 <b>ผู้ย้อนกาล</b> — เควสช่วยเพื่อนร่วมชะตาไม่ถูกข้ามแล้ว (ออโต้หยุดรอ ดวลจริง ไม่ซ้อนทับ)','💛 <b>หอผู้สนับสนุน</b> — อันดับผู้สนับสนุนเกม เดือนนี้/ตลอดกาล ขึ้นชื่อแบบยินยอม','👁 ตัวละครยุคปัจจุบันในหน้าดูคนอื่นเล่นแสดงอาชีพ/สุขภาพแทนขั้นพลัง']},
   {v:'18.13',d:'17 พ.ย. 2026',l:['🏮 <b>งานลอยกระทง 2026</b> — กรอบ ฉายา ธีมแชทชุดลอยกระทง ขยับทั้งกรอบ (กระทงลอย ดาวไหว ควันธูป กลีบดอกไม้) พร้อมเพลง Night of the Lotus เป็นเพลงเริ่มต้นถึง 17 ธ.ค.','🎨 <b>ร้านตกแต่งเปิดเร็วขึ้น</b> — การ์ดที่ยังไม่เห็นหยุดขยับก่อนจนกว่าจะเลื่อนถึง เอฟเฟกต์กรอบ/ฉายา/ธีมครบเหมือนเดิม · แถบแท็บไม่ทับเนื้อหาแล้ว','🕳️ <b>อเวจีลงอัตโนมัติ</b> — เปิดปุ่ม 🤖 ที่หน้าอเวจี ระบบสู้ให้ปีละ 1 ชั้น · เพิ่มปุ่ม ⏩ <b>ลงรวด 10 / 50 / 100 ชั้น</b> สู้ต่อเนื่องในทีเดียว (ผลสู้เท่าเดิม ไม่ข้ามด่าน) แล้วรอ ~1 ปีต่อ 10 ชั้น · หยุดเองเมื่อเลือดต่ำ ผู้คุมแรงเกิน บอสวงใหญ่ หรือพ่ายแพ้','🔴 <b>ผู้คุมพิเศษอเวจี</b> — ประตูมีป้ายความแรง 🟢/🟡/🔴 · ชนะ 🟡 แก่นนรก ×1.5 · ชนะ 🔴 (แรงเกิน 105%) แก่นนรก ×2 + โอกาสได้วิชาอเวจี (สูงสุด 5 ชิ้น/ชาติ) · ปุ่ม ⚠️ ยอมเสี่ยง ให้ลงอัตโนมัติ/ลงรวดท้าผู้คุมได้ถึง 130% (แพ้เสียเท่าเดิม)','🏯 <b>แก้สำนักที่ตั้งจากระบบเจ้าสำนักอัปเลเวลไม่ได้</b> — ตอนนี้ศิษย์เพิ่มและสำนักเลื่อนระดับรายปี (20/60/150/400 คน)','⚖️ <b>ปุ่มท้าดวลชิงบัลลังก์กฎ 8 สาย</b> ในหน้ากฎ บอกเงื่อนไขและเวลารอชัดเจน','👁 <b>ดูคนอื่นเล่น</b> — ตัวเลขคนดูแม่นขึ้น · ยุคปัจจุบันไม่หายจากรายชื่อเมื่อคนเยอะ · ตัวละครยุคปัจจุบันแสดงอาชีพ/สุขภาพ/ทักษะแทนขั้นพลังยุทธภพ','💛 <b>หอผู้สนับสนุน</b> — อันดับผู้สนับสนุนเกมเรียงตามยอดที่ยืนยันแล้ว (เดือนนี้ / ตลอดกาล) ผู้เล่นเลือกเองว่าจะขึ้นชื่อหรือโชว์ยอดไหม ค่าเริ่มต้นเป็นนิรนาม · เข้าจากหน้า VIP','🔁 <b>แก้โหมดผู้ย้อนกาล</b> — เควสช่วยเพื่อนร่วมชะตาไม่ถูกข้ามแล้ว: ออโต้หยุดรอให้เลือกเอง ดวลจริงไม่ถูกตัดสินอัตโนมัติ และถ้ามีเหตุการณ์อื่นเด้งซ้อนจะต่อคิวรอ','🧬 หน้าตัวละครของฉันย้ายไปอยู่ในเมนู · เมนูในเกมเพิ่มสารานุกรม · จอคอมใช้พื้นที่กว้างขึ้นทั้งเว็บ']},
   {v:'18.12',d:'17 พ.ย. 2026',l:['🏙️ <b>ยุคปัจจุบัน: ชีวิตคนไทยเต็มรูปแบบ</b> — เล่นในไทยครบ 77 จังหวัด ทุกจังหวัดมีค่าครองชีพ ค่าแรง อาชีพ ภัยธรรมชาติ และเทศกาลของตัวเอง ย้ายถิ่นได้ แต่ต้องหางานและคนรู้จักใหม่','🧬 <b>พื้นเพครอบครัว 8 แบบ + นิสัยประจำตัว 9 แบบ</b> — ลูกชาวไร่ ลูกพ่อค้า ครอบครัวข้าราชการ แม่เลี้ยงเดี่ยว ลูกแรงงานย้ายถิ่น ชนชั้นกลาง ครอบครัวมีฐานะ โตกับญาติ แต่ละแบบเริ่มชีวิตต่างกัน และนิสัยอย่างขยัน ประหยัด โชคดี ใจร้อน ฯลฯ ส่งผลตลอดชีวิต','🏠 ราคาบ้านขึ้นลงตามจังหวัดและยุคเศรษฐกิจ · 🌾 อาชีพเกษตรกรผูกกับราคาผลผลิตรายปี · 🔑 ปล่อยเช่าห้องว่าง · 🎸 งานอดิเรกที่ให้ความสุขระยะยาว','🎭 <b>เหตุการณ์ใหม่เกือบ 50 เรื่อง ทางเลือกหลายทาง ไม่มีทางถูกทางเดียว</b> — สวัสดิการและประกันสังคม หนี้นอกระบบ แชร์ กองทุนหมู่บ้าน ธุรกิจร้านอาหาร ธุระที่อำเภอ เลือกตั้งท้องถิ่น (ผู้สมัครสมมติ) ศาสนาและความเชื่อ ตลาดชายแดน ประมง ชีวิตบนดอย ของดีประจำถิ่น','📖 <b>เรื่องราวยาวหลายตอน</b> — ที่ดินพ่อแม่ ลูกวัยรุ่น ฝันนักดนตรี ขยายร้าน ผลลัพธ์ขึ้นกับสิ่งที่คุณเลือกก่อนหน้า · เรื่องที่เคยช่วยคนอื่นอาจย้อนกลับมาหาคุณ','🏆 <b>ความสำเร็จ 16 อย่าง</b> และหน้าสรุปชีวิตที่เล่าเรื่องราวของคุณ · ปรับสมดุลเงินให้เล่นได้หลายสไตล์ ไม่มีทางรวยลัดหรือจนไม่มีทางออก','🎲 <b>หน้า "ผลการเกิด" ของยุคปัจจุบัน</b> — กดเกิดแล้วเห็นการ์ดตัวละคร: ชื่อ หน้าตา อายุ จังหวัด พื้นเพครอบครัว ฐานะเริ่มต้น และนิสัยประจำตัว · สุ่มใหม่ได้ 3 ครั้ง (ล็อก 🔒 ส่วนที่ชอบไว้ได้) · แต่งตัวด้วยชุดสมัยใหม่/ตั้งชื่อเอง · เลือกจังหวัดจาก 77 จังหวัดแบบค้นหาได้ · เลือกพื้นเพเอง แล้วกด เริ่มชีวิต','🕯️ <b>บัญชีแค้นสำหรับคนตัวเล็ก</b> — ดวลศัตรูที่แรงกว่ามากๆ ยากขึ้นตามความห่างจริง (ไม่มีดวงช่วยแล้ว) · ถ้าศัตรูแกร่งกว่า 4 เท่าขึ้นไป จะมีเมนู วางแผนล้างแค้น: วางยา · วางกับดัก · ขอพันธมิตร · ใช้ปืน/อาวุธต่างโลก · หรือรอให้เขาแก่ลง (ศัตรูที่จดไว้นาน 25 ปีพลังจะเสื่อม)','🌌 ร้านผู้ข้ามมิติ: <b>ขายของหลายชิ้นพร้อมกันได้แล้ว</b> — ×10 · ขายทั้งหมด · ใส่จำนวนเอง (ตามคำขอของ ชงชา)','🔮 <b>โปรดติดตาม</b> — ยุคปัจจุบันจะมีโหมดอื่นตามมา เช่น 🏹 โลกฮันเตอร์ · 🧟 ซอมบี้ · ⚡ ยุคปลุกพลัง และอื่นๆ · 🐉 โหมดแฟนตาซี <b>Coming Soon</b>']},
@@ -30414,7 +30415,7 @@ window.hallOpen=async function(from){window._hallFrom=from||'shop';return window
 const ow=window.vipWall;window.vipWall=async function(){const r=await ow.apply(this,arguments);try{const b=$('modal').querySelector('.xbtn');if(b){b.setAttribute('onclick',window._hallFrom==='online'?"openOnline('chat')":window._hallFrom==='profile'?"openProfile()":"vipMenu()")}}catch(e){}return r};
 // โปรไฟล์: ผู้ก่อตั้งเห็นลำดับของตัวเอง
 const vg=()=>{try{return LS.get('murim_vip',null)}catch(e){return null}};
-for(const f of ['openProfile']){const o=window[f];if(typeof o!=='function')continue;window[f]=function(){const r=o.apply(this,arguments);try{const v=vg(),m=$('modal');if(v&&v.u&&m&&!m.querySelector('.hallme')){const d=document.createElement('button');d.className='gbtn hallme';d.style.cssText='width:100%;margin:8px 0';d.textContent='🏛 ผู้ก่อตั้ง'+(v.ul?' ลำดับที่ '+v.ul.o:'')+' · ดูป้ายของฉัน ›';d.setAttribute('onclick',"hallOpen('profile')");const h=m.querySelector('.frbig');const box=h&&h.parentElement&&h.parentElement.parentElement;(box||m).insertAdjacentElement(box?'afterend':'beforeend',d)}}catch(e){}return r}}
+for(const f of ['openProfile']){const o=window[f];if(typeof o!=='function')continue;window[f]=function(){const r=o.apply(this,arguments);try{const v=vg(),m=$('modal');if(false){const d=document.createElement('button');d.className='gbtn hallme';d.style.cssText='width:100%;margin:8px 0';d.textContent='🏛 ผู้ก่อตั้ง'+(v.ul?' ลำดับที่ '+v.ul.o:'')+' · ดูป้ายของฉัน ›';d.setAttribute('onclick',"hallOpen('profile')");const h=m.querySelector('.frbig');const box=h&&h.parentElement&&h.parentElement.parentElement;(box||m).insertAdjacentElement(box?'afterend':'beforeend',d)}}catch(e){}return r}}
 })()}catch(e){console.error(e)}
 
 
@@ -35337,6 +35338,64 @@ window._wx13={NW,mx(M){const w=wOf(M);
  return null}};
 window._wld13={ids:['wi_tower','t_b25','t_b50','t_b75','t_top','t_hurt','t_party','t_loot','t_fam','wi_game','g_pk','g_bug','g_guild','g_hid','g_free','g_final','wi_gatewon','r_m25','r_m50','r_m75','r_top','r_fall','r_food','r_beast','wi_doom','d_lot','d_riot','d_msn','d_end'],tI,qI,rI,dI};
 })()}catch(e){console.error('block13',e)}
+
+/* ===== v18.15 โปรไฟล์ดีไซน์ใหม่ ===== */
+{
+const st=document.createElement('style');st.textContent=`
+.pfhero{display:flex!important;flex-direction:column;align-items:center!important;gap:8px!important;text-align:center;margin:8px 0 10px!important;padding:16px 12px 12px;border-radius:18px;border:2px solid #7a5512;background:radial-gradient(circle at 50% 0%,#fff6dc,#ffe6ae 70%,#f3cd80);color:#2a1a04;box-shadow:0 3px 0 #7a5512}
+.pfhero .tag2{color:#5a4118}.pfhero>div{min-width:0;max-width:100%}
+.pfchips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px}
+.pfchip{font-size:12px;font-weight:700;border:1.5px solid #7a5512;border-radius:999px;padding:2px 10px;background:#fffaf0;color:#5a3a08}
+.pfq{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin:0 0 10px}
+.pfq button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 6px;border-radius:14px;border:2px solid #7a5512;background:linear-gradient(135deg,#ffe29a,#e8b54a 55%,#c98d22);color:#2a1a04;font:inherit;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 3px 0 #7a5512}
+.pfq button b{font-size:22px;line-height:1}.pfq button.ev{background:linear-gradient(135deg,#ffd58a,#f0a93f 55%,#d9852a)}.pfq button.hl{background:linear-gradient(135deg,#2b2140,#4a3470);color:#ffe9a8;border-color:#1a1230;box-shadow:0 3px 0 #1a1230}
+.pftabs{display:flex;gap:6px;margin:0 0 4px;position:sticky;top:0;z-index:3;background:#fffdf8;padding:4px 0}
+.pftabs button{flex:1;padding:8px 4px;border-radius:12px;border:2px solid #cdbb94;background:#fff8e8;font:inherit;font-weight:800;font-size:13px;color:#6a5328;cursor:pointer}
+.pftabs button.on{border-color:#7a5512;background:#ffd980;color:#2a1a04;box-shadow:0 2px 0 #7a5512}
+.pfpane{display:none}.pfpane.on{display:block}.pfpane>.pfsec:first-child{border-top:0;margin-top:6px}
+`;document.head.appendChild(st);
+window.pfTabGo=function(t){window._pfTab=t;const m=$('modal');if(!m)return;m.querySelectorAll('.pftabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));m.querySelectorAll('.pfpane').forEach(p=>p.classList.toggle('on',p.dataset.t===t))};
+const o=window.openProfile;
+window.openProfile=function(){
+ const r=o.apply(this,arguments);
+ try{
+  document.querySelectorAll('.hallme').forEach(e=>{if(!e.closest('#modal'))e.remove()});
+  const m=$('modal');if(!m||m.dataset.k!=='profile'||m.querySelector('.pfhero'))return r;
+  const hasEv=!!m.querySelector('.cosent.ev');
+  m.querySelectorAll('.cosent,.hallme').forEach(e=>e.remove());
+  const row=m.querySelector('.frbig')&&m.querySelector('.frbig').parentElement;
+  if(!row)return r;
+  row.removeAttribute('style');row.classList.add('pfhero');
+  let v=null;try{v=vg()}catch(e){}
+  const d=(typeof frGet==='function')?frGet():{own:[]};
+  const chips=[];
+  if(v&&v.u)chips.push('🏛 ผู้ก่อตั้ง'+(v.ul?' #'+v.ul.o:''));
+  chips.push('🖼️ กรอบ '+((d.own||[]).length)+' อัน');
+  const inf=row.querySelector('.frbig').nextElementSibling;
+  if(inf)inf.insertAdjacentHTML('beforeend','<div class="pfchips">'+chips.map(c=>'<span class="pfchip">'+c+'</span>').join('')+'</div>');
+  const q=document.createElement('div');q.className='pfq';
+  let qh='';
+  if(typeof hallOpen==='function')qh+=`<button class="hl" onclick="hallOpen('profile')"><b>🏛</b>หอผู้ก่อตั้ง</button>`;
+  if(typeof cosMenu==='function')qh+=`<button onclick="cosMenu()"><b>🎨</b>ร้านตกแต่ง</button>`;
+  if(hasEv&&typeof evMenu==='function')qh+=`<button class="ev" onclick="evMenu()"><b>🏮</b>อีเวนต์</button>`;
+  q.innerHTML=qh;row.insertAdjacentElement('afterend',q);
+  const secs=[...m.querySelectorAll(':scope > .pfsec, :scope > #pfPush')];
+  const tabs={info:[],fr:[],ttl:[],acc:[]};
+  secs.forEach(e=>{const h=((e.querySelector('h4,b')||{}).textContent||'');
+   if(/ชื่อที่แสดง|รูปโปรไฟล์/.test(h))tabs.info.push(e);
+   else if(/กรอบของฉัน/.test(h))tabs.fr.push(e);
+   else if(/ฉายา/.test(h))tabs.ttl.push(e);
+   else tabs.acc.push(e)});
+  const names={info:'📝 ข้อมูล',fr:'🖼️ กรอบ',ttl:'🎖️ ฉายา',acc:'🔐 บัญชี'};
+  const tb=document.createElement('div');tb.className='pftabs';
+  tb.innerHTML=Object.keys(names).map(k=>`<button data-t="${k}" onclick="pfTabGo('${k}')">${names[k]}</button>`).join('');
+  q.insertAdjacentElement('afterend',tb);
+  let last=tb;
+  for(const k of Object.keys(names)){const p=document.createElement('div');p.className='pfpane';p.dataset.t=k;last.insertAdjacentElement('afterend',p);last=p;tabs[k].forEach(e=>p.appendChild(e))}
+  pfTabGo(window._pfTab&&tabs[window._pfTab]?window._pfTab:'info');
+ }catch(e){console.error(e)}
+ return r};
+}
 </script>
 </body>
 </html>
