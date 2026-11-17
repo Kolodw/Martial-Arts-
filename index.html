@@ -31996,6 +31996,24 @@ window.chatPollF=function(){if(fly)return fly;lp=Date.now();
   if(box&&(chatMsgs||[]).length){chatRender();box.dataset.ok=1;box.scrollTop=box.scrollHeight}
   try{window._chWSOpen&&window._chWSOpen()}catch(e){}window.chatPollF()}}catch(e){}return r}}
 })()}catch(e){console.error(e)}
+
+// 🎒 แจ้งใน Dynamic Island ว่าของที่ได้/ซื้อไปเก็บไว้ตรงไหน (ผู้เล่นหาของไม่เจอ)
+try{(()=>{
+const on=()=>{try{return typeof islOn==='function'&&islOn()}catch(e){return false}};
+const isl=o=>{try{if(on())island(o);else toast((o.ic||'')+' '+String(o.t).replace(/<[^>]+>/g,''))}catch(e){}};
+let ini=0;const aC=()=>[(S.arts||[]).length,(S.learnQ||[]).length,(S.learnSlow||[]).length];
+const aMsg=(n0,key,nm,ic)=>{const n=aC();if(n[1]>n0[1])isl({ic:'📕',h:'ซื้อสำเร็จ',t:`<b>${esc(nm)}</b> → ได้คัมภีร์ (ยังใช้ไม่ได้)`,d:'อยู่ในหน้า 📖 วิชา ช่อง "คัมภีร์ที่รอฝึก" — ระบบจะลองฝึกให้ปีละครั้ง ไม่เข้ากระเป๋า',kind:'gold',key,ms:5200,btns:[{t:'📖 ดูวิชา',f:()=>openArts()}]});else if(n[0]>n0[0]||n[2]>n0[2])isl({ic:'📖',h:'ซื้อสำเร็จ',t:`<b>${esc(nm)}</b> → ได้วิชาใหม่`,d:'วิชาอยู่ที่ เมนู ☰ → 📖 วิชา (ไม่เข้ากระเป๋า)',kind:'gold',key,ms:4200,btns:[{t:'📖 ดูวิชา',f:()=>openArts()}]});else return false;return true};
+{const _bi=bagInit;bagInit=function(){ini++;try{return _bi.apply(this,arguments)}finally{ini--}}}
+{const _ba=bagAdd;bagAdd=function(id,q,quiet){const r=_ba.apply(this,arguments);try{if(r&&!ini&&S&&S.alive){const I=BAGIT[id]||{};isl({ic:'🎒',h:'เก็บเข้ากระเป๋าแล้ว',t:`<b>${esc((I.ic||'')+' '+(I.n||id))}</b>${r>1?' ×'+r:''} อยู่ใน${esc((S.bag&&S.bag.nm)||'กระเป๋า')}`,d:'กดปุ่ม 🎒 ที่แถบด้านบนเพื่อดู/ใช้ของ',kind:'ok',key:'bag'+id,ms:2800,btns:[{t:'🎒 เปิดกระเป๋า',f:()=>openBag()}]})}}catch(e){}return r}}
+{const _bs=buySys;buySys=function(id){const s=S&&S.sys,sp0=s?s.sp:0,n0=aC();const r=_bs.apply(this,arguments);try{if(s&&s.sp<sp0){const it=SHOP.find(x=>x.id===id)||{n:id};
+  if(id==='ticket')isl({ic:'🎟️',h:'ซื้อสำเร็จ',t:`<b>ตั๋วสุ่มกาชา</b> เหลือ ${s.tk} ใบ`,d:'เก็บไว้ในหน้าต่างระบบ 🟦 — เลื่อนลงหา "ตั๋วกาชา" แล้วกดสุ่ม',kind:'gold',key:'shp'+id,ms:4200,btns:[{t:'🟦 เปิดระบบ',f:()=>openSys()}]});
+  else if(aMsg(n0,'shp'+id,it.n)){}
+  else if(it.once)isl({ic:'🟦',h:'ซื้อสำเร็จ',t:`<b>${esc(it.n)}</b> ติดตั้งถาวรแล้ว`,d:'ดูได้ที่หน้าต่างระบบ 🟦',kind:'gold',key:'shp'+id,ms:3800,btns:[{t:'🟦 เปิดระบบ',f:()=>openSys()}]});
+  else isl({ic:'✨',h:'ซื้อสำเร็จ',t:`<b>${esc(it.n)}</b> ใช้ทันที`,d:'ผลเข้าสถานะเลย ไม่เก็บในกระเป๋า · ดูที่หน้าสถานะ/บันทึกชีวิต',kind:'gold',key:'shp'+id,ms:3600})}}catch(e){}return r}}
+{const _eb=ecoBuy;ecoBuy=function(id){const m0=S.money,n0=aC(),it=ecoCat(ECO_W()).find(x=>x.id===id);const r=_eb.apply(this,arguments);try{if(it&&S.money<m0){
+  if(aMsg(n0,'eco'+id,it.n)){}
+  else isl({ic:'✨',h:'ซื้อสำเร็จ',t:`<b>${esc(it.n)}</b> ใช้ทันที`,d:'ผลเข้าสถานะเลย ไม่เก็บในกระเป๋า · ดูที่หน้าสถานะ/บันทึกชีวิต',kind:'gold',key:'eco'+id,ms:3600})}}catch(e){}return r}}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
