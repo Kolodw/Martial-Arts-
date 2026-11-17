@@ -6531,9 +6531,11 @@ let acPrev=null;
 function acSnap(){return{int:+S.int||0,cha:+S.cha||0,fame:+S.fame||0,money:+S.money||0,qi:+S.qi||0,pow:(()=>{try{return +total()||0}catch(e){return +S.power||0}})(),dis:S.ownSect?+S.ownSect.dis||0:0,kids:+S.kids||0,har:(S.harem||[]).length,age:+S.age||0}}
 function acFlag(why){if(!S||S._tp)return;S._tp=why;try{console.warn('integrity')}catch(e){}}
 let acObj=null;
-function acCheck(){try{if(!S||!S.alive||S.custom)return;if(S._tp&&/^(cap-|save-jump)/.test(String(S._tp)))delete S._tp;if(S!==acObj){const kp=acPrev&&acObj&&acObj.name===S.name&&Math.abs((+S.age||0)-acPrev.age)<=2;acObj=S;if(!kp)acPrev=null}const c=acSnap();
- for(const k in AC_CAP)if(c[k]>AC_CAP[k]||!isFinite(c[k]))return acFlag('cap-'+k);
- if(c.dis>1e30||c.kids>1e9||c.pow>1e30||!isFinite(c.pow))return acFlag('cap-x');
+function acCheck(){try{if(!S||!S.alive||S.custom)return;if(S._tp&&/^(cap-|save-jump)/.test(String(S._tp)))delete S._tp;if(S!==acObj){const kp=acPrev&&acObj&&acObj.name===S.name&&Math.abs((+S.age||0)-acPrev.age)<=2;acObj=S;if(!kp)acPrev=null}
+ for(const k of ['int','cha','fame','money','qi','power','karma']){const v=S[k];if(typeof v==='number'){if(v!==v)S[k]=0;else if(v>1e30)S[k]=1e30;else if(v<-1e30)S[k]=-1e30}}
+ try{if(S.ownSect&&+S.ownSect.dis>1e30)S.ownSect.dis=1e30}catch(e){}
+ const c=acSnap();if(!isFinite(c.pow)||c.pow>1e30)c.pow=1e30;
+ if(c.kids>1e9)return acFlag('cap-x');
  if(acPrev&&c.age-acPrev.age<=1){const d=(k)=>c[k]-acPrev[k];
   if(d('int')>800||d('cha')>800)return acSus('jump-stat');
   if(d('fame')>Math.max(30000,acPrev.fame*4,c.pow/5))return acSus('jump-fame');

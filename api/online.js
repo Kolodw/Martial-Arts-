@@ -1776,8 +1776,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     }
     if (a === 'live') {
       if (b.spec && (b.tp || await isBanned())) b.spec = 0;
-      try { const z = JSON.parse(String(b.s || 'null')); if (z && z.st && okId(id)) { const p = +z.st.pow || 0, fm = +z.st.fame || 0, mn = +z.st.money || 0, ag = +z.age || 0; let why = '';
-        if (!isFinite(p) || !isFinite(fm) || !isFinite(mn) || p > 1e30 || fm > 1e30 || mn > 1e30) why = 'srv-cap';
+      try { const z = JSON.parse(String(b.s || 'null')); if (z && z.st && okId(id)) { const CAP = v => { v = +v || 0; return isFinite(v) ? Math.max(-1e30, Math.min(1e30, v)) : 0 }, p = CAP(z.st.pow), fm = CAP(z.st.fame), mn = CAP(z.st.money), ag = +z.age || 0; let why = '';
         const pv = jp(await cmd('GET', 'acp:' + id));
         const L = [['SET', 'acp:' + id, JSON.stringify({ n: z.n, a: ag, p }), 'EX', 86400 * 7]];
         if (why && !(await cmd('GET', 'acf:' + id))) { if (why === 'srv-cap') L.push(['SET', 'acf:' + id, why, 'EX', 86400 * 60]); L.push(['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(z.n || ''), 24), age: ag, why, st: { pow: p, fame: fm, money: mn }, prev: pv, t: now })], ['LTRIM', 'acsus', 0, 199]); if (why === 'srv-cap') b.spec = 0 }
@@ -1939,6 +1938,9 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       return res.json({ ok: 1 });
     }
     if (a === 'life') {
+      // ค่าที่โตเกินเพดาน (พลัง/เงิน ฯลฯ ทบกันหลายกัลป์) → ปรับลงเป็นเพดานแล้วรับคะแนนตามปกติ ไม่ตัดทิ้ง
+      try { const D0 = JSON.parse(String(b.det || 'null')); if (D0 && typeof D0 === 'object') { let ch = 0; const fx = (o, k) => { const v = o[k]; if (typeof v === 'number' && Math.abs(v) > 1e30) { o[k] = v > 0 ? 1e30 : -1e30; ch = 1 } };
+        if (D0.st && typeof D0.st === 'object') for (const k of Object.keys(D0.st)) fx(D0.st, k); fx(D0, 'kc'); fx(D0, 'an'); if (ch) b.det = JSON.stringify(D0) } } catch {}
       const lid = String(b.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16);
       const e = { n: clean(b.n, 20) || 'นิรนาม', s: Math.max(0, Math.min(1e12, +b.s || 0)), age: +b.age || 0, r: clean(b.r, 30), f: clean(b.f, 30), c: clean(b.c, 60), x: b.x ? 1 : 0, g: b.g ? 1 : 0, ga: Math.max(0, Math.min(1e9, Math.round(+b.ga || 0))), ...(b.tp ? { tt: '', tr: 0 } : ttlOk(b.tt, b.tr)), xa: Math.max(0, Math.min(1e9, Math.round(+b.xa || 0))), cu: b.cu ? 1 : 0, bm: b.bm ? 1 : 0, kl: Math.max(0, Math.min(9, Math.floor(+b.kl || 0))), t: now, lid };
       { const c0 = String(b.ch || ''); if (CH_OK.includes(c0) && !(c0 === 'short' && e.age > 31)) e.ch = c0 }
