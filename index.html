@@ -31314,16 +31314,17 @@ window.mwBWld=function(k){if(!MB)return;MB.wld=k;mbDraw(false)};
 const WP=[['normal',.40],['hunter',.12],['under',.12],['ghost',.12],['loop',.08],['dragon',.08],['zombie',.08]];
 const WI={normal:['🏙️','โลกปกติ','ชีวิตคนยุคปัจจุบันทั่วไป ทำงาน ใช้ชีวิต ไม่มีอะไรเหนือธรรมชาติ (ยังมีโอกาสเปลี่ยนโลกกลางชีวิตได้ ~1%/ปี)'],hunter:['🌀','โลกฮันเตอร์','ประตูมิติเปิดขึ้นทั่วโลก นักล่าฮันเตอร์ระดับ E–S ปลุกพลังเพื่อสู้กับสัตว์ประหลาด'],under:['🌃','โลกใต้ดิน','โลกของก๊ก นักเลง และผู้มีอิทธิพล ไต่จากเด็กในซอยสู่เจ้าพ่อ ระวังความร้อนจากตำรวจ'],ghost:['👻','โลกผีไทย','ผี หมอผี พระเครื่อง และศาลตายายเป็นเรื่องจริง ปราบผีและสะสมบารมี'],loop:['🔁','โลกวนลูป','วันเวลาเริ่มวนซ้ำ จดความทรงจำและตามหาต้นตอของวงจรเวลา'],dragon:['🐲','โลกมังกรหลับ','มังกรหลับใต้ภูเขากำลังจะตื่น สร้างความผูกพันและกล่อมให้มันหลับ'],zombie:['🧟','โลกซอมบี้','โรคระบาดซอมบี้ ออกหาเสบียง สร้างที่พัก และเอาตัวรอดในโลกใหม่']};
 const wRollK=()=>{let r=Math.random();for(const w of WP){r-=w[1];if(r<=0)return w[0]}return'normal'};
-window.mwBRand=function(){mwBornPage(true);if(!MB)return;MB.rnd=1;MB.rr=999;MB.wld=wRollK();mbDraw(false)};
-{const _rr=window.mwBReroll;window.mwBReroll=function(){_rr.apply(this,arguments);if(MB&&MB.rnd){MB.rr=999;MB.wld=wRollK();mbDraw(false)}}}
+window.mwBRand=function(){mwBornPage(true);if(!MB)return;MB.rnd=1;MB.rr=3;MB.wld=wRollK();mbDraw(false)};
+const admRR=()=>{try{return typeof ADM!=='undefined'&&ADM.ok&&ADM.rr}catch(e){return false}};
+{const _rr=window.mwBReroll;window.mwBReroll=function(){const n=MB&&MB.rr,adm=admRR();if(MB&&MB.rnd&&adm)MB.rr=Math.max(MB.rr,1);_rr.apply(this,arguments);if(MB&&MB.rnd&&MB.rr<n||(MB&&MB.rnd&&adm)){if(adm)MB.rr=Math.max(MB.rr,1);MB.wld=wRollK();mbDraw(false)}}}
 {const _d2=mbDraw;mbDraw=function(anim){_d2.apply(this,arguments);try{const o=$('mwB');if(!o||!MB||!MB.rnd)return;o.classList.add('mbRnd');
  const w=WI[MB.wld]||WI.normal,pc=Math.round((WP.find(x=>x[0]===MB.wld)||[0,.4])[1]*100);
  const wd=o.querySelector('.mbWd');if(wd)wd.outerHTML=`<div class="mbT mbWide mbWr"><div class="mbTh"><span>🌐 โลกที่เกิด</span><span style="font-size:11px;opacity:.7">โอกาส ~${pc}%</span></div><div class="mbTv">${w[0]} ${w[1]}</div><div class="mbTs">${w[2]}</div></div>`;
  const g=o.querySelector('.mbGrid'),wr=o.querySelector('.mbWr');if(g&&wr)g.insertBefore(wr,g.firstChild);
  const st=o.querySelector('.mbSt');if(st)st.remove();
  const ti=o.querySelector('.mbTi');if(ti)ti.innerHTML=ti.innerHTML.replace('ผลการเกิด','คุณได้ถือกำเนิดขึ้นแล้ว');
- const rb=o.querySelector('.mbRr');if(rb)rb.innerHTML='🎲 <b>∞</b>';
- const ro=o.querySelector('.mbRoll');if(ro){ro.innerHTML='🔄 เกิดใหม่ (∞)<small>สุ่มทุกอย่างใหม่ได้ไม่จำกัด</small>';ro.disabled=false}
+ const adm=admRR(),rb=o.querySelector('.mbRr');if(rb)rb.innerHTML=adm?'🎲 <b>∞</b>':`🎲 <b>${MB.rr}</b>/3`;
+ const ro=o.querySelector('.mbRoll');if(ro){ro.innerHTML=`🔄 เกิดใหม่ (${adm?'∞':MB.rr})<small>สุ่มทุกอย่างใหม่ รวมทั้งโลก</small>`;ro.disabled=!adm&&MB.rr<=0}
  const go=o.querySelector('.mbGo');if(go)go.innerHTML='ใช้ชีวิต<span>▶</span>'}catch(e){console.error(e)}}}
 try{document.head.insertAdjacentHTML('beforeend','<style>#mwB.mbRnd .mbLk,#mwB.mbRnd .mbCh,#mwB.mbRnd .mbBtns{display:none!important}#mwB .mbWr .mbTv{font-size:20px}</style>')}catch(e){}
 
@@ -32356,7 +32357,7 @@ window._wld2={LR,DR,ZR,lYear,dYear,zYear};
 try{(()=>{
 const WL=[['rand','🎲','สุ่ม'],['normal','🏙️','ปกติ'],['hunter','🌀','ฮันเตอร์'],['under','🌃','ใต้ดิน'],['ghost','👻','ผีไทย'],['loop','🔁','วนลูป'],['dragon','🐲','มังกรหลับ'],['zombie','🧟','ซอมบี้']];
 window.mwBornMenu=function(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🐣 เริ่มชีวิตใหม่ <span class="tag2">ยุคปัจจุบัน</span></h3>
- <button class="opt" onclick="closeM();mwBQuick()">🎲 สุ่ม — ให้ฟ้าลิขิต<small>สุ่มจังหวัด พื้นเพ นิสัย หน้าตา และโลก · ดูผลการเกิดแล้วกดเกิดใหม่ได้ไม่จำกัด</small></button>
+ <button class="opt" onclick="closeM();mwBQuick()">🎲 สุ่ม — ให้ฟ้าลิขิต<small>สุ่มจังหวัด พื้นเพ นิสัย หน้าตา และโลก · ดูผลการเกิดแล้วกดเกิดใหม่ได้ 3 ครั้ง</small></button>
  <button class="opt" onclick="closeM();mwBorn(true)">🎨 ออกแบบหน้าตา — ที่เหลือให้ฟ้าลิขิต<small>เลือกเพศ ทรงผม สีผม สีผิว และสีชุดเอง แล้วสุ่มจังหวัด พื้นเพ และโลกตามปกติ</small></button>
  <button class="opt" onclick="closeM();mwBornPage(true)">✍️ สร้างเอง<small>เลือกจังหวัด พื้นเพครอบครัว นิสัย ช่วงเริ่มชีวิต และ<b>โลก</b>ของชีวิตนี้เอง · สุ่มใหม่ได้ 3 ครั้ง<br><span style="color:#ff8a7a">⚠️ ชีวิตที่สร้างเองจะไม่ติดอันดับทำเนียบ</span></small></button>`,'mwbm')};
 window.mwBQuick=function(){try{mwBRand()}catch(e){console.error(e);try{mwRandNative()}catch(x){}}};
