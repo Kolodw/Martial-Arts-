@@ -9875,7 +9875,7 @@ function twTick(){if(!S||!S.alive||!S.tw)return;const T=S.tw;if(T.w&&T.w!==ECO_W
 const MENU_CAT=[
  ['⭐ ใช้บ่อย',['paJoin','openAI','openGodRealm','openTown','openShop2','openMarket','openArts','openEquip','openBag','openQuests','openDungeons','openSys','gachaArt']],
  ['🧘 ตัวละครและการฝึก',['openFaction','openCraft','openBeastComp','openItems','openPortal','openMap','relMenu','nemInfo']],
- ['👪 ครอบครัวและผู้คน',['openHouse','openFamily','openPeople','openPeers','openRanking']],
+ ['👪 ครอบครัวและผู้คน',['openHouse','openFamily','openPeople','openPeers','openRanking','openPeopleMW','openAssets']],
  ['📚 บันทึกและสะสม',['openBook','openBestiary','openCodex','openCosmetic','openFrameShop','openProfile']],
  ['⚙️ ตั้งค่าและช่วยเหลือ',['openAuto','openGuide','startTut','openUpdate','openSound','cycleTheme','cycleFs','toggleScene','openPush','openSaveCode','openReport','openFeedback']]];
 {const _om15=openMenu;openMenu=function(){const r=_om15.apply(this,arguments);try{const m=$('modal'),gr=m.querySelector('.mgrid');if(!gr)return r;const all=[...m.querySelectorAll('button.opt')].filter(b=>b.closest('.mgrid'));const fnOf=b=>((b.getAttribute('onclick')||'').match(/^\s*([A-Za-z0-9_]+)\(/)||[])[1]||'';
@@ -32404,6 +32404,9 @@ window.mwBornMenu=function(){modal(`<button class="xbtn" onclick="closeM()">✕<
  <button class="opt" onclick="closeM();mwBornPage(true)">✍️ สร้างเอง<small>เลือกจังหวัด พื้นเพครอบครัว นิสัย ช่วงเริ่มชีวิต และ<b>โลก</b>ของชีวิตนี้เอง · สุ่มใหม่ได้ 3 ครั้ง<br><span style="color:#ff8a7a">⚠️ ชีวิตที่สร้างเองจะไม่ติดอันดับทำเนียบ</span></small></button>`,'mwbm')};
 window.mwBQuick=function(){try{mwBRand()}catch(e){console.error(e);try{mwRandNative()}catch(x){}}};
 })()}catch(e){console.error(e)}
+
+// ===== เมนู: ซ่อนหัวข้อหมวดที่ไม่มีปุ่มให้เห็น (เช่น ยุคปัจจุบัน) =====
+{const _omE=openMenu;openMenu=function(){const r=_omE.apply(this,arguments);const fix=()=>{try{const m=$('modal');if(!m||m.dataset.k!=='menu')return;m.querySelectorAll('.mch15').forEach(h=>{const g=h.nextElementSibling;if(!g||!g.matches('.mgrid'))return;const any=[...g.children].some(b=>b.style.display!=='none'&&!b.classList.contains('mnHide'));if(!g.children.length||![...g.children].some(b=>b.style.display!=='none')){h.style.display='none';g.style.display='none'}})}catch(e){}};fix();setTimeout(fix,80);setTimeout(fix,350);return r}}
 </script>
 </body>
 </html>
