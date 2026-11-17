@@ -1080,7 +1080,7 @@ function render(){
 }
 function toggleDetail(){detailOpen=!detailOpen;render()}
 function setFocus(f){S.focus=f;render()}
-function cycleSpeed(){const L=[.5,1,2,4,8,16,0];speed=L[(L.indexOf(speed)+1)%L.length];render()}
+function cycleSpeed(){const L=[.5,1,2,4,8,16,32,64,0];speed=L[(L.indexOf(speed)+1)%L.length];render()}
 function togglePause(){paused=!paused;render()}
 function toggleAuto(){auto=!auto;render();toast(auto?'โหมดอัตโนมัติ: ชีวิตจะดำเนินไปเอง':'ปิดโหมดอัตโนมัติ')}
 function show(id){document.querySelectorAll('.screen').forEach(e=>e.classList.remove('on'));$(id).classList.add('on');window.scrollTo(0,0)}
@@ -19812,7 +19812,7 @@ function segPills(){if(!tuOn())return;document.querySelectorAll('#title .seg').f
  window.addEventListener('resize',()=>{setTimeout(()=>{go();const f=$('focus');const b=f&&f.querySelector('.fc.on.tuSel');if(b&&f.querySelector('.tuPill'))tuPlace(f,b,false)},50)});
  const t=$('title');if(t){new MutationObserver(()=>requestAnimationFrame(go)).observe(t,{attributes:true,attributeFilter:['class','style']})}}
 // ---- ความเร็ว: แตะ = วนเหมือนเดิม · กดค้าง = เลือกจากแถบ ----
-const SPD_L=[[1,'1×'],[2,'2×'],[4,'4×'],[8,'8×'],[16,'16×'],[0,'⚡A']];
+const SPD_L=[[1,'1×'],[2,'2×'],[4,'4×'],[8,'8×'],[16,'16×'],[32,'32×'],[64,'64×'],[0,'⚡A']];
 function spdPopClose(){const p=document.getElementById('spdPop');if(p)p.remove();document.removeEventListener('pointerdown',spdOut,true)}
 function spdOut(e){if(!e.target.closest('#spdPop,#spdBtn'))spdPopClose()}
 function spdSet(v){speed=v;spdPopClose();try{render()}catch(e){}try{toast('ความเร็ว '+(v?v+'×':'⚡ อัตโนมัติ'))}catch(e){}}
@@ -20216,8 +20216,8 @@ function qmBorn(){const last=LS.get('murim_lastcfg',null),LEN=[2500,5000,9000],c
  return{ic:'🎲',t:'เกิดใหม่',sub:`${CFG.xian?'☁️ เซียน':'🏯 ยุทธภพ'} · ${QM_CH[cm][1]}`,rows}}
 // ---------- ⏱️ ความเร็ว (การ์ดแบบเดียวกัน) ----------
 function spdPopOpen(){return null}
-function qmSpeed(){const L=[[.5,'0.5×','ช้าสุด ค่อยๆ อ่าน'],[1,'1×','อ่านได้ทุกบรรทัด'],[2,'2×',''],[4,'4×',''],[8,'8×',''],[16,'16×','เร็วมาก'],[0,'⚡ อัตโนมัติ','ข้ามไปเร็วที่สุดเท่าที่ทำได้']];
- return{ic:'⏱️',t:'ความเร็วเวลา',sub:speed?speed+'×':'⚡A',rows:L.map(([v,t,s])=>({ic:speed===v?'✓':'',t,s,r:speed===v?'ตอนนี้':'',f:()=>{speed=v;try{render()}catch(e){}tuBuzz()}}))}}
+function qmSpeed(){const L=[[.5,'0.5×','ช้าสุด ค่อยๆ อ่าน'],[1,'1×','อ่านได้ทุกบรรทัด'],[2,'2×',''],[4,'4×',''],[8,'8×',''],[16,'16×','เร็วมาก'],[32,'32× เทอร์โบ','ปีเงียบรวมเป็นบรรทัดสรุป · หยุดเองเมื่อมีตัวเลือก/เลือดต่ำ'],[64,'64× เทอร์โบ','เร็วสุด · หยุดเองเมื่อมีตัวเลือก/เลือดต่ำ'],[0,'⚡ อัตโนมัติ','ข้ามไปเร็วที่สุดเท่าที่ทำได้']];
+ return{ic:'⏱️',t:'ความเร็วเวลา',sub:speed?speed+'×':'⚡A',rows:L.map(([v,t,s])=>({ic:speed===v?'✓':'',t,s,r:speed===v?'ตอนนี้':'',f:()=>{speed=v;try{render()}catch(e){}tuBuzz()}})).concat([{sep:1},{ic:'⏭️',t:'ข้ามไปเหตุการณ์สำคัญถัดไป',s:'เร่งเต็มที่จนเจอเหตุการณ์ใหญ่/ตัวเลือก/การต่อสู้ แล้วหยุดเอง',f:()=>{try{window.turboSkip()}catch(e){}tuBuzz()}}])}}
 // ---------- ลากข้ามปุ่ม: การ์ดเปลี่ยนตามปุ่มที่นิ้วอยู่ ----------
 (()=>{document.addEventListener('pointermove',e=>{if(!QM.el||!QM.hold||e.pointerId!==QM.pid)return;const b=[...document.querySelectorAll(QM_SEL)].find(x=>{if(!x.offsetParent)return false;const r=x.getBoundingClientRect();return e.clientX>r.left+6&&e.clientX<r.right-6&&e.clientY>r.top+4&&e.clientY<r.bottom-4});if(!b||b===QM.btn||(b.matches(QM_FREE)!==QM.btn.matches(QM_FREE)))return;const mk=qmSpecFor(b);if(!mk)return;
   QM.el.classList.add('swap');qmOpen(b,mk);if(QM.el)QM.el.classList.add('swapIn')},true)})();
@@ -23263,7 +23263,7 @@ function ckShow(){let e;while((e=revealQ.shift())&&!e.isConnected){}if(e){e.styl
 function ckBar(p,instant){const b=$('ybar');if(!b)return;b.style.transition=instant?'none':'width .1s linear';b.style.width=Math.max(0,Math.min(100,p*100))+'%'}
 startTimer=function(){clearInterval(timer);timer=setInterval(()=>{try{
  if(!S||!S.alive)return;
- const blocked=paused||modalOpen||choice._cur||document.hidden;
+ const blocked=paused||modalOpen||choice._cur||document.hidden||speed>=32;
  // ถูกหยุด (มีหน้าต่าง/ตัวเลือก/พัก): ข้อความที่ค้างอยู่ทยอยขึ้นให้ครบ ไม่ต้องรอแถบ
  if(blocked){if(revealQ.length&&++CK.fb>=2){CK.fb=0;if(auto||speed>=4)flushReveal();else ckShow()}return}
  if(CK.hold){if(Date.now()<CK.hold)return;if(revealQ.length){if(auto||speed>=4||speed===0)flushReveal();else{ckShow();return}}CK.hold=0;acc=0;ckBar(0,true);CK.yShown=0;CK.yN=0;passYear();CK.yN=revealQ.length;return}
@@ -30227,6 +30227,26 @@ window.addEventListener('shop:paid',()=>{try{if(gs()!=='seal')return;const b=doc
 // ตั้งค่า → หน้าร้าน
 const og=window.openGfx;if(typeof og==='function')window.openGfx=function(){const r=og.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.shset')){const d=document.createElement('div');d.className='shset';const cur=gs();d.innerHTML=`<h4 style="margin:14px 0 6px">🛒 หน้าร้านสนับสนุน</h4><div style="display:flex;gap:6px">${[['clean','เรียบสะอาด'],['seal','ตราพิกเซล'],['classic','แบบเดิม']].map(([k,n])=>`<button class="gbtn${cur===k?' on':''}" style="flex:1" onclick="shopStyle('${k}')">${cur===k?'✅ ':''}${n}</button>`).join('')}</div>`;m.appendChild(d)}}catch(e){}return r};
 window.shopStyle=k=>{ss(k);try{toast('เปลี่ยนหน้าร้านแล้ว');window.openGfx()}catch(e){}};
+})()}catch(e){console.error(e)}
+
+
+// ⏩ v18.23 เทอร์โบ 32×/64× + ข้ามไปเหตุการณ์สำคัญ · ปีเงียบถูกรวมเป็นบรรทัดสรุปอยู่แล้ว (routine) · หยุดเองเมื่อมีตัวเลือก/หน้าต่าง/ตาย/เลือดต่ำ
+try{(()=>{
+let T=0,last=0,sk=null,lastSave=0;
+const stopSkip=why=>{if(!sk)return;const p=sk.prev;sk=null;speed=p>=32||!p?1:p;try{render()}catch(e){}if(why)try{toast('⏭️ '+why)}catch(e){}};
+window.turboSkip=()=>{if(!S||!S.alive)return;sk={prev:speed>=32||!speed?1:speed};speed=64;try{render()}catch(e){}try{toast('⏭️ กำลังข้ามไปเหตุการณ์สำคัญ…')}catch(e){}};
+const _log=log;log=function(t,c,key){const r=_log.apply(this,arguments);try{if(sk&&(c==='epic'||c==='myth'||c==='bad'||key))stopSkip('เจอเหตุการณ์สำคัญ — หยุดแล้ว')}catch(e){}return r};
+setInterval(()=>{try{
+ if(speed<32){T=0;last=0;if(sk&&speed<32)sk=null;return}
+ const now=performance.now();if(!last){last=now;return}let dt=Math.min(250,now-last);last=now;
+ if(!S||!S.alive||paused||modalOpen||choice._cur||document.hidden)return;
+ T+=dt*speed;let n=0;const sg=saveGame;saveGame=function(){};
+ try{while(T>=CFG.len&&n<8){T-=CFG.len;n++;acc=0;passYear();
+   if(!S||!S.alive||modalOpen||choice._cur)break;
+   if(S.maxHp&&S.hp<S.maxHp*.3){speed=8;T=0;try{render();toast('⚠️ เลือดเหลือน้อย — ลดเหลือ 8× ให้แล้ว')}catch(e){}stopSkip();break}}}
+ finally{saveGame=sg}
+ if(n){try{flushReveal()}catch(e){}acc=0;try{ckBar(0,true)}catch(e){}CK.hold=0;if(now-lastSave>1500){lastSave=now;try{saveGame()}catch(e){}}}
+}catch(e){console.error(e)}},50);
 })()}catch(e){console.error(e)}
 </script>
 </body>
