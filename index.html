@@ -33025,6 +33025,7 @@ const cxIO=typeof IntersectionObserver==='function'?new IntersectionObserver(es=
   const c=/^c_p/.test(cc||'')?tid(cc):0,t=/^t_p/.test(ct||'')?tid(ct):0;
   if(c>=1&&c<=8)e.classList.add('cxr'+c);  if(c>=1&&c<=8){const bd=e.querySelector('.cmb');if(bd&&!/ccxT/.test(bd.className)){bd.classList.add('ccx','ccxT'+c);const h=bd.querySelector('.cmh');if(h)h.insertAdjacentHTML('beforeend','<span class="cosk" data-cs="c'+c+'" title="ดูธีมนี้ในร้าน">🎨</span>')}}
   if(t>=1&&t<=11&&!e.querySelector('.ptt')){const b=e.querySelector('.cmh b');if(b)b.insertAdjacentHTML('afterend',' '+cosTitleHtml(ct))}
+  if(t>=1&&t<=11&&e.querySelector('.ptt'))e.querySelectorAll('.cmh .rkchip,.cmh .tchip,.cmh .ttl').forEach(x=>x.remove());
   if(c||t>=1&&t<=8)cxWatch(e)})}catch(e){}return r}}
 document.addEventListener('click',ev=>{try{const el=ev.target.closest&&ev.target.closest('#chatBox [data-cs]');if(!el)return;const k=el.dataset.cs;if(!k)return;ev.stopPropagation();cosMenu(k[0]==='c'?'c':'t','c'===k[0]?k:k)}catch(e){}},true);
 // ทางเข้า: แบนเนอร์ด้านบนของโปรไฟล์/ร้านแลกกรอบ/ผู้สนับสนุน + ปุ่มหน้าแรก
