@@ -91,7 +91,7 @@ async function payAdmin(request, env, url) {
   return jr({ err: 'a' }, 400);
 }
 async function pay(request, env) {
-  if (request.method !== 'POST') return jr({ err: 'method' }, 405);
+  if (request.method !== 'POST') { try { if (new URL(request.url).searchParams.get('diag') === '1') return jr({ db: !!env.PAY_DB, key: !!env.EASYSLIP_KEY }) } catch (e) {} return jr({ err: 'method' }, 405) }
   if (!env.PAY_DB || !env.EASYSLIP_KEY) return jr({ ok: 0, st: 'unavailable' });
   let b; try { b = await request.json() } catch (e) { return jr({ ok: 0, st: 'bad' }, 400) }
   const uid = String(b.id || ''), pk = String(b.pk || ''), name = String(b.n || '').slice(0, 24);
