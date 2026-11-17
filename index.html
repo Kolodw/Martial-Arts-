@@ -20062,7 +20062,7 @@ function mnUI(m){const k=m.dataset.k;const H=m.querySelector(':scope>h3');if(!(k
  if(top.length){const s=document.createElement('div');s.className='mnFav';s.innerHTML=`<div class="mnFavH">⭐ เปิดบ่อยของคุณ</div><div class="${G[0].className} mnFavG"></div>`;const g=s.querySelector('.mnFavG');top.forEach(b=>{const c=b.cloneNode(true);c.classList.add('mnFavB');g.appendChild(c)});anchor.after(s)}
  // หมวดพับได้
  const col=LS.get('murim_mncol',{})||{};m.querySelectorAll('.mch15,.tmh').forEach(h=>{const g=h.matches('.tmh')?h.parentElement.querySelector('.tmgrid'):h.nextElementSibling;if(!g||!g.matches('.mgrid,.tmgrid'))return;const id=k+'|'+h.textContent.trim();h.classList.add('mnH');h.insertAdjacentHTML('beforeend','<i class="mnChev">▾</i>');
-  const ap=()=>{const c=!!col[id];g.classList.toggle('mnCol',c);h.classList.toggle('mnColH',c);h.dataset.hid=c?'ซ่อน '+g.children.length+' รายการ · แตะเพื่อแสดง':''};ap();h.onclick=()=>{col[id]=!col[id];LS.set('murim_mncol',col);ap();tuBuzz();0}});
+  const ap=()=>{const c=!!col[id]&&!g.querySelector('[data-b2]');g.classList.toggle('mnCol',c);h.classList.toggle('mnColH',c);h.dataset.hid=c?'ซ่อน '+g.children.length+' รายการ · แตะเพื่อแสดง':''};ap();h.onclick=()=>{col[id]=!col[id];LS.set('murim_mncol',col);ap();tuBuzz();0}});
  // จุดแดง
  allB().forEach(b=>{const s=(b.querySelector('small')||{}).textContent||'';if(/พร้อมลง|เหลือ [1-9]\d* ครั้ง|ใหม่!|รับได้/.test(s))b.classList.add('mnDot')});
  // ค้นหา
@@ -23361,7 +23361,7 @@ function caveFix(){try{if(!S||!S.alive||S._caveFix)return;S._caveFix=1;
 // ============ เมนู ☰ หาของง่ายขึ้น ============
 // 1) ปุ่มที่ระบบใหม่ๆ เติมเข้ามาทีหลังเคยไปกองรวมในหมวด "⭐ ใช้บ่อย" (26 ปุ่ม) → จัดเข้าหมวดที่ถูกต้อง
 // 2) หมวดที่ถูกพับไว้ (แตะหัวข้อโดยไม่ตั้งใจตอนเลื่อนจอ แล้วจำค่าไว้ตลอด) ทำให้ปุ่มหายจนต้องพิมพ์ค้นหา → กางทุกหมวดให้ใหม่ 1 ครั้ง และหัวข้อที่พับอยู่บอกชัดว่าซ่อนกี่รายการ
-const MENU_MORE={'⭐ ใช้บ่อย':['ascForce','openCal'],
+const MENU_MORE={'⭐ ใช้บ่อย':['ascForce','openCal','openTerr','openB2Evo','openPack','openWBoss','openHib','openNest'],
  '🧘 ตัวละครและการฝึก':['openJob','openWuxia','openTalent','openRealm','openMoveBook','openInvest','glwSet','openTtlMine','openRoadmap','openAdvice'],
  '👪 ครอบครัวและผู้คน':['openLove','openKeep'],
  '📚 บันทึกและสะสม':['openArcBook','openLore','openMyCard','openGraves']};
@@ -23370,7 +23370,7 @@ const MENU_MORE={'⭐ ใช้บ่อย':['ascForce','openCal'],
  const first=grid[MENU_CAT[0][0]];if(!first)return r;const fnOf=b=>((b.getAttribute('onclick')||'').match(/^\s*([A-Za-z0-9_]+)\(/)||[])[1]||'';
  const keep=new Set([...MENU_CAT[0][1],...MENU_MORE[MENU_CAT[0][0]]]);const home=f=>{for(const [cn,fs] of MENU_CAT.slice(1))if(fs.includes(f)&&grid[cn])return grid[cn];for(const cn in MENU_MORE)if(cn!==MENU_CAT[0][0]&&MENU_MORE[cn].includes(f)&&grid[cn])return grid[cn];return grid['🧘 ตัวละครและการฝึก']||null};
  [...first.children].forEach(b=>{const f=fnOf(b);if(keep.has(f))return;const g=home(f);if(g&&g!==first)g.appendChild(b)})}catch(e){console.error(e)}return r}}
-try{if((LS.get('murim_mncolV',0)|0)<2){LS.del('murim_mncol');LS.set('murim_mncolV',2)}}catch(e){}
+try{if((LS.get('murim_mncolV',0)|0)<3){LS.del('murim_mncol');LS.set('murim_mncolV',3)}}catch(e){}
 (function(){const st=document.createElement('style');st.textContent='body.tuOn #modal.mnTu .mnColH::after{content:attr(data-hid);display:block;width:100%;font-size:11px;font-weight:normal;opacity:.75;color:#e8b830;margin-top:2px}body.tuOn #modal.mnTu .mnColH{flex-wrap:wrap}';document.head.appendChild(st)})();
 
 // ===================== v17.10 🧘 บำเพ็ญหยั่งรู้ฟ้า (เรียกระบบในโลกเซียน/โลกเทพ) · 📢 ผู้ข้ามมิติเรียกร้องหาระบบ =====================
