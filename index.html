@@ -35079,7 +35079,7 @@ window._wld11={DR,DRM,nI,nbAdd,chance,ids:[].concat(DR.reduce((a,D)=>a.concat(D.
 .shl .mine .row{display:flex;gap:6px;margin-top:8px}.shl .empty{text-align:center;opacity:.7;padding:18px 0;font-size:13px}
 `;document.head.appendChild(st)})();
 window.supHall=async function(sc){sc=sc==='m'?'m':'a';supHall._s=sc;
- modal(`<button class="xbtn" onclick="vipMenu()">✕</button><div class="shl"><div class="hd"><h3>💛 หอผู้สนับสนุน</h3><p>ขอบคุณทุกคนที่ช่วยให้เกมนี้เดินต่อได้ · เรียงตามยอดที่ยืนยันแล้ว</p></div><div class="empty">กำลังโหลด…</div></div>`,'vipw');
+ modal(`<button class="xbtn" onclick="vipMenu()">✕</button><h3>หอผู้ก่อตั้ง</h3>${hlTabsH('s')}<div class="shl"><div class="hd"><h3>💛 หอผู้สนับสนุน</h3><p>ขอบคุณทุกคนที่ช่วยให้เกมนี้เดินต่อได้ · เรียงตามยอดที่ยืนยันแล้ว</p></div><div class="empty">กำลังโหลด…</div></div>`,'vipw');
  let j=null;try{const r=await fetch('/api/pay?a=supboard&s='+sc+'&uid='+encodeURIComponent(pid));j=await r.json()}catch(e){}
  const m=$('modal');if(!m||m.dataset.k!=='vipw')return;
  if(!j){m.querySelector('.shl').innerHTML+='<p class="tag2">โหลดไม่สำเร็จ</p>';return}
@@ -35531,6 +35531,15 @@ window.pbnTest=function(a,n){Q.push({t:Date.now(),n:n||'ทดสอบ',a,k:'co
 
 /* ยุคปัจจุบัน: พ่อแม่เสียชีวิตตามอายุ — หลังจากนั้นไม่ขึ้นอีเวนต์ที่พ่อแม่ยังอยู่ (แม่โทรมา ส่งเงินกลับบ้าน ทะเลาะที่ดินพ่อแม่) */
 window.mwParOK=function(){try{if(!S)return true;const M=S.mw||null;if(M&&M.native)return false;S.flags=S.flags||{};if(!S.flags.mPd)S.flags.mPd=R(52,78);return S.age<S.flags.mPd}catch(e){return true}};
+
+/* หอผู้สนับสนุน: ใช้กรอบเดียวกับหอผู้ก่อตั้ง (ไม่มีกรอบซ้อน) · หัวเรื่อง+แท็บอยู่ที่เดิม · ขนาดหน้าต่างไม่กระโดดตอนโหลด */
+{const st=document.createElement('style');st.textContent=`
+#modal[data-k=vipw]{min-height:min(78vh,640px)}
+#modal .shl{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;color:inherit}
+#modal .shl .hd{padding:0 0 4px;text-align:left}#modal .shl .hd h3{font-size:16px;color:#c98d22;text-shadow:none}#modal .shl .hd p{opacity:.8}
+#modal .shl .tb{justify-content:flex-start;padding:0;margin:8px 0 12px;width:auto;position:static;left:auto}
+#modal .shl .pc,#modal .shl .rw{color:#f1e3c2}
+#modal .shl .empty{color:inherit}`;document.head.appendChild(st)}
 </script>
 </body>
 </html>
