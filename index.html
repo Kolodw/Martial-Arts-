@@ -28179,7 +28179,7 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'🌌',t:'ก้าวข้ามสา�
  function doorOpen(){const K=kOf(),rem=K.rem||0,fg=K.fg||0,opts=[{t:'🌌 ก้าวข้ามสามภพ',s:'จบตำนานตามเดิม · ของฝากจากหอไปกับชีวิตหน้า',noFate:1,_x:1,f(){kalpaEnd('top')}}];
   const add=(k,why)=>{const v=EXV[k];opts.push({t:`${v[0]} ${v[1]}`,s:`${v[3]} · ปรากฏเพราะ ${why}`,noFate:1,_x:1,f(){LS.set('murim_khallx',k);S.flags.kEndV=k;kalpaEnd('top');S.deathCause=`${v[1]} — ${v[2]}`;try{keyAdd(S.deathCause)}catch(e){}}})};
   if(S.karma>=100||K.role==='guard')add('guard',S.karma>=100?'กรรมดีสูง':'เคยเป็นผู้พิทักษ์');
-  if(S.karma<=-100||K.role==='demon')add('mara',S.karma<=-100?'กรรมชั่วหนัก':'เคยเป็นมารสิ้นกัลป์');
+  if(S.karma<=-100||K.role==='demon'||(typeof mpOf==='function'&&mpOf()>=800&&S.karma<0))add('mara',S.karma<=-100?'กรรมชั่วหนัก':K.role==='demon'?'เคยเป็นมารสิ้นกัลป์':'บารมีมารสูงและกรรมติดลบ');
   if(fg>=3)add('letgo','ปล่อยความทรงจำไปแล้ว '+fg+' ครั้ง');
   if(rem>=3)add('keep','จดจำไว้แล้ว '+rem+' ครั้ง');
   opts.push({t:'📖 เปิดหน้าใหม่ (เร็วๆ นี้)',s:'ไปเกิดในโลกอื่น — ยังไม่เปิด รอยุคใหม่',noFate:1,skip:1,f(){toast('ยังไม่เปิด — รอยุคใหม่');setTimeout(doorOpen,400)}});
@@ -28232,9 +28232,9 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'🏛️',t:'หอบรรพกาล�
  const _w=window.vipWall;window.vipWall=async function(){const r=await _w.apply(this,arguments);deco();return r}}
 
 // ============ v18.9 · ออโต้เลือกตามสไตล์/ฝั่ง · เด็กเล็กรอดโรคง่ายขึ้น · กันดวงซวยตายเด็กซ้ำ ============
-{const AF_STY={safe:'🛡️ ปลอดภัย',bal:'⚖️ สมดุล',bold:'🔥 กล้าได้กล้าเสีย'},AF_SIDE={auto:'☯️ ตามกรรม',good:'😇 ธรรมะ',mid:'⚖️ กลาง',evil:'😈 มาร'};
+{const AF_STY={safe:'🛡️ ปลอดภัย',bal:'⚖️ สมดุล',bold:'🔥 กล้าได้กล้าเสีย'},AF_SIDE={auto:'☯️ ตามกรรม',good:'😇 ธรรมะ',mid:'⚖️ กลาง',anti:'🌗 มารใจดี',evil:'😈 มาร'};
  const auF=()=>{try{auInit();if(!S.au.sty)S.au.sty='bal';if(!S.au.side)S.au.side='auto';return S.au}catch(e){return{sty:'bal',side:'auto'}}};
- const sideNow=a=>a.side!=='auto'?a.side:(S.karma||0)<-20?'evil':(S.karma||0)>20?'good':'mid';
+ const sideNow=a=>a.side!=='auto'?a.side:(typeof q4==='function'&&q4()==='anti')?'anti':(S.karma||0)<-20?'evil':(S.karma||0)>20?'good':'mid';
  window.afLbl=()=>{const a=auF();return a.sty==='safe'?'ข้อที่ปลอดภัยที่สุด':AF_STY[a.sty].slice(3)+' · '+AF_SIDE[a.side].slice(3)};
  const EVL=/กรรมชั่ว|อธรรม|สายมาร|ฆ่า|ปล้น|ขโมย|ทรยศ|ลอบ|กลืน|สังหาร|รีดไถ|ข่มขู่/,GD=/กรรมดี|ช่วย|ธรรมะ|เมตตา|ปล่อยตัว|ให้อภัย|บริจาค|คุ้มครอง|รักษาให้/;
  const _afOld=afSafe;
@@ -28247,7 +28247,7 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'🏛️',t:'หอบรรพกาล�
    if(AF_RISK.test(t))sc+=bold?.3:-.6;if(o.skip)sc-=bold?2.5:1.5;
    const m=t.match(/([\d,]+)\s*(?:ตำลึง|หินวิญญาณ)/);if(m&&/ใช้|จ่าย|ซื้อ|ประมูล|−/.test(t)&&S.money<+m[1].replace(/,/g,''))sc-=6;
    if(low&&/รักษา|พัก|ฟื้น|ถอย|ปลอดภัย/.test(t))sc+=2;
-   if(sd==='good'){if(GD.test(t))sc+=1.5;if(EVL.test(t))sc-=1.5}else if(sd==='evil'){if(EVL.test(t))sc+=1.5;if(GD.test(t))sc-=1}
+   if(sd==='good'){if(GD.test(t))sc+=1.5;if(EVL.test(t))sc-=1.5}else if(sd==='evil'){if(EVL.test(t))sc+=1.5;if(GD.test(t))sc-=1}else if(sd==='anti'){if(GD.test(t))sc+=1;if(/บารมีมาร|วิธีมาร|กวาดล้าง|ล้มคน|ปิดบัญชี|คนชั่ว/.test(t))sc+=1;if(/ผู้บริสุทธิ์|คนแปลกหน้า|ปล้น|ขโมย|รีดไถ|ทรยศ|ยอมตาม|กรรมชั่ว|กรรมดิ่ง/.test(t))sc-=2.5}
    if(sc>bs){bs=sc;best=i}});
   return best>=0?best:_afOld(c)};
  window.afSet=(k,v)=>{const a=auF();a[k]=v;openAuto()};
@@ -28923,6 +28923,175 @@ window.ftBatch=ftBatch;
    <button class="pbtn" style="flex:1 1 160px" onclick="ftBatch('time',this)" ${left?'':'disabled style="flex:1 1 160px;opacity:.45"'}>✨ ใช้เวลากับทุกคน<br><small>${left?`เหลือ ${left} คนในปีนี้ · ฟรี`:'ปีนี้ครบทุกคนแล้ว'}</small></button>
    <button class="sysb" style="flex:1 1 140px" onclick="ftBatch('gift',this)">🎁 ของขวัญทุกคน<br><small>${L.length} คน · ${Mf(gc*L.length)}</small></button></div>`)}catch(e){console.error(e)}return r}}
 try{SYS_GUIDE.push({s:'life',nw:1,ic:'🛒',t:'ซื้อเหมาและกดทีเดียวจบ',go:'',d:'ร้านสมบัติมีปุ่ม <b>🛒 ซื้อทั้งหมวด</b> และ <b>ซื้อทุกหมวด</b> (ซื้อทุกชิ้นชิ้นละครั้ง เริ่มจากถูกสุดจนเงินหมด) · หุ้นหัวเมืองซื้อ ×10 หรือสุดกำลังได้ · หน้าใช้เวลากับครอบครัวมี <b>✨ ใช้เวลากับทุกคน</b> และ <b>🎁 ของขวัญทุกคน</b>'})}catch(e){}
+})()}catch(e){console.error(e)}
+
+// ===================== v18.14 สายกับใจ: มารผู้ถือสัจจะ (anti-hero) · ผู้สวมหน้ากากธรรม · เสียงมารกระซิบ =====================
+try{(()=>{
+const Mf=n=>S&&S.xian?stoneTxt(n):fmtM(n)+' ตำลึง';
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const nm=()=>anyName(Math.random()<.5?'ชาย':'หญิง');
+const RP=o=>{try{return rp(o)}catch(e){return''}};
+const pw=v=>{const g=pctPow(v);S.power+=g;return g};
+const K=(d)=>{S.karma=(S.karma||0)+d};
+// ---- แกนสาย × ใจ ----
+const isDem=()=>mpOf()>=150||!!(S.faction&&S.faction.t==='มาร')||!!S.dsect;
+const isOrtho=()=>!!(S.faction&&S.faction.t==='ธรรมะ')||((S.fame||0)>=1500&&!isDem());
+function q4(){if(!S)return'mid';const k=S.karma||0;if(isDem())return k>=20?'anti':k<=-20?'demon':'mid';if(k<=-40&&isOrtho())return'mask';return k>=20?'hero':'mid'}
+window.q4=q4;
+const Q4={anti:['🌗','มารผู้ถือสัจจะ','#c8a0ff'],mask:['🎭','ผู้สวมหน้ากากธรรม','#e0b050'],hero:['🛡️','วีรบุรุษ','#7ac0ff'],demon:['😈','จอมมาร','#ff5a6a'],mid:['⚖️','ผู้เดินทางกลาง','#b0b0b0']};
+function AH(){if(!S.ah)S.ah={pt:0,wh:0,yd:0,rs:0,sec:0,mk:0,my:0,ay:0,q:[],last:-99,done:{},dis:null,ally:null};return S.ah}
+const AT=[[0,'มารพเนจร'],[30,'มารผู้คุ้มครอง'],[80,'มารผู้ถือสัจจะ'],[160,'ราชามารผู้ถือสัจจะ'],[300,'ตำนานมารผู้ไม่เคยแตะผู้บริสุทธิ์']];
+const atI=p=>{let i=0;AT.forEach((t,j)=>{if(p>=t[0])i=j});return i};
+function ahPt(v,why){const A=AH(),a=atI(A.pt);A.pt=Math.max(0,A.pt+v);const b=atI(A.pt);if(b>a){const g=pw(.04*b);log(`🌗 <b>ชาวบ้านเริ่มเรียกคุณว่า「${AT[b][1]}」</b>${why?' — '+why:''} · พลังยุทธ์ +${fmt(g)}`,'myth',true);try{keyAdd('ได้ฉายา '+AT[b][1])}catch(e){}}}
+function whAdd(v){const A=AH();A.wh=clamp(A.wh+v,0,100)}
+function later(y,id,d){AH().q.push({at:S.age+y,id,d:d||{}})}
+const resist=()=>clamp(.45+(S.karma||0)/500+(S.int||0)/30000-AH().wh/160,.08,.92);
+const ep=(m)=>Math.round(total()*m);
+const fightThen=(who,m,cb)=>setTimeout(()=>duel(who,ep(m),cb),300);
+const sect=()=>pick(['สำนักกระบี่ฟ้าใส','นิกายเมฆขาว','สำนักวิหารทอง','สำนักเต๋าภูผา','สำนักพิทักษ์ธรรมทิศเหนือ']);
+const vill=()=>pick(['หมู่บ้านริมธาร','ตำบลต้นหลิว','หมู่บ้านเชิงเขาหมอก','ชุมชนท่าเรือเก่า','หมู่บ้านทุ่งข้าวทอง']);
+const loved=()=>{if(S.sp&&S.spouse)return{n:S.sp.n,k:'sp'};const c=(S.children||[]).filter(c=>c&&c.alive!==false&&!c.gone);if(c.length){const x=pick(c);return{n:x.n,k:'c',o:x}}const p=(typeof peers!=='undefined'?peers:[]).filter(p=>p.alive&&p.rel==='friend');if(p.length){const x=pick(p);return{n:x.name,k:'p',o:x}}return null};
+const lose=(L)=>{try{if(L.k==='sp'){S.sp.life=Math.min(S.sp.life||999,(S.sp.age|0)+1);log(`💔 อาการของ<b>${esc(L.n)}</b>ทรุดลงจนหมอส่ายหน้า`,'bad',true)}else if(L.k==='c'){L.o.alive=false;joy(-40);log(`🕯️ <b>${esc(L.n)}</b> ลูกของคุณ สิ้นใจในอ้อมแขน`,'bad',true)}else if(L.k==='p'){L.o.alive=false;joy(-25);log(`🕯️ <b>${esc(L.n)}</b> สหายที่เกิดพร้อมคุณ จากไปแล้ว`,'bad',true)}}catch(e){}};
+// ---- เหตุการณ์ ----
+const EV={};
+// A1 ชาวบ้านขอความช่วยเหลือ
+EV.a1=()=>{const v=vill(),s=sect(),o=nm();choice('🏚️ คนที่สำนักธรรมะไม่ช่วย',`ผู้เฒ่าจาก${v}คุกเข่าต่อหน้าคุณ "ศิษย์${s}นาม <b>${esc(o)}</b> เก็บส่วยจนลูกหลานข้าอดตาย ใครๆ ก็บอกว่าท่านเป็นมาร… แต่มารไม่เคยเก็บส่วยพวกข้า"`,[
+ {t:'⚔️ บุกกวาดล้างด่านส่วยทั้งด่าน',s:'วิธีมาร · บารมีมาร+ กรรมไม่ลด · สำนักแค้น',f(){fightThen(`${o} และศิษย์${s}`,1,w=>{if(w){mpAdd(70,'กวาดล้างด่านส่วย');K(10);ahPt(18,'กวาดล้างด่านส่วยที่'+v);log(`🌗 ด่านส่วยของ${s}ถูกล้างเป็นทะเลเลือด — ${v}ได้ข้าวคืนทั้งหมด · ${RP({pp:12,sect:-10})}`,'epic');later(R(3,6),'a1r',{v,s})}else{S.hp=Math.max(1,Math.round(S.hp*.5));log(`🩸 ศิษย์${s}มากกว่าที่คิด คุณถอยกลับมาพร้อมแผลเต็มตัว`,'bad')}})}},
+ {t:'🩸 ลอบสังหารเฉพาะหัวหน้า ทิ้งรอยมารไว้ข่มขวัญ',s:'ไม่มีศึกใหญ่ · ตำนานแพร่',f(){mpAdd(45,'ทิ้งรอยมารไว้บนศพผู้กดขี่');ahPt(10,'');log(`🌑 รุ่งเช้า ${esc(o)} ถูกพบนั่งตายบนเก้าอี้เก็บส่วย หน้าผากมีรอยฝ่ามือมาร ไม่มีใครกล้ามาเก็บส่วยที่${v}อีก · ${RP({pp:8,sect:-5})}`,'epic');later(R(5,9),'a1s',{v})}},
+ {t:'💰 จ่ายส่วยแทนชาวบ้านทั้งหมู่บ้าน',s:`${Mf(Math.round(sxBiz()*.6))} · ไม่ต้องเปื้อนเลือด`,f(){const c=Math.round(sxBiz()*.6);if(S.money<c){toast('เงินไม่พอ');return EV.a1()}S.money-=c;K(15);ahPt(6,'');log(`💰 คุณจ่ายส่วยแทน${v}ทั้งปี ชาวบ้านจุดธูปให้ — แต่${esc(o)}ยิ้มกว้างกว่าเดิม · ${RP({pp:6})}`,'good');later(R(2,4),'a1m',{v,o,s,c})}},
+ {t:'🚶 ไม่ใช่เรื่องของข้า',s:'ไม่มีอะไรเกิดขึ้น… ตอนนี้',f(){log(`🚶 คุณเดินจากไป เสียงร้องไห้ของ${v}ค่อยๆ เบาลงข้างหลัง`);later(R(6,10),'a1c',{v,s})}}])};
+EV.a1r=d=>{const n=R(3,6);choice(`🔥 ${d.s}ล้างแค้น`,`ศิษย์${d.s} ${n} สิบคนบุกเผา${d.v} ประกาศว่า "หมู่บ้านที่เลี้ยงมาร ต้องถูกชำระ"`,[
+ {t:'⚔️ รีบไปขวางไว้',s:'ศึกหนัก',f(){fightThen(`ทัพศิษย์${d.s}`,1.15,w=>{if(w){mpAdd(90,'ปกป้องหมู่บ้านจากสำนักธรรมะ');K(20);ahPt(25,'ยืนขวางไฟที่'+d.v);log(`🌗 คุณยืนอยู่หน้าประตู${d.v}จนรุ่งสาง ไม่มีบ้านไหนถูกเผาอีก · ${RP({pp:15,sect:-15})}`,'myth',true)}else{K(-5);joy(-20);log(`🔥 คุณมาไม่ทัน… ${d.v}เหลือแต่เถ้า`,'bad',true)}})}},
+ {t:'🏃 พาชาวบ้านหนีไปซ่อนในหุบเขา',s:'ไม่มีใครตาย แต่บ้านหายหมด',f(){K(10);ahPt(8,'');log(`🏃 ${d.v}ย้ายไปอยู่ในหุบเขาที่คุณซ่อนไว้ — ตั้งชื่อหมู่บ้านใหม่ตามฉายาของคุณ`,'good')}},
+ {t:'🩸 ไม่ไปช่วย แต่บุกสำนักของมันแทนตอนที่ว่าง',s:'แก้แค้นแบบมาร',f(){mpAdd(120,'บุกสำนักที่ว่างเปล่า');K(-10);whAdd(10);joy(-10);log(`🩸 คุณเผาหอคัมภีร์ของ${d.s}จนวอด ขณะที่${d.v}ก็วอดเช่นกัน… ไฟสองกองนี้ไม่มีใครชนะ · ${RP({sect:-20,dem:8})}`,'epic')}}])};
+EV.a1s=d=>{const A=AH();choice('🕯️ ศาลเจ้าที่ไม่มีชื่อ',`ชาวบ้าน${d.v}สร้างศาลเล็กๆ บูชา "ฝ่ามือมารผู้คุ้มครอง" เด็กหนุ่มคนหนึ่งเฝ้าศาลทุกคืน รอวันที่จะได้เจอคุณ`,[
+ {t:'🧒 รับเขาเป็นศิษย์',s:'มีศิษย์ติดตาม (จะมีเรื่องตามมา)',f(){A.dis={n:nm(),y:S.age,src:'shrine'};log(`🧒 <b>${esc(A.dis.n)}</b> คุกเข่ากราบคุณเป็นอาจารย์ — แววตาของเขาเชื่อในตัวคุณมากกว่าที่คุณเชื่อตัวเอง`,'good');later(R(4,7),'a3',{})}},
+ {t:'🌫️ บอกให้ลืมคุณเสีย',s:'กรรมดี+',f(){K(8);ahPt(5,'');log('🌫️ "อย่าบูชามาร แม้มารที่ช่วยเจ้า" คุณพูดแล้วหายไปในหมอก')}}])};
+EV.a1m=d=>{choice('💰 ส่วยที่ไม่มีวันจบ',`<b>${esc(d.o)}</b> กลับมาที่${d.v}อีก คราวนี้ขอเป็นสองเท่า "ในเมื่อมีคนจ่ายให้ ทำไมจะไม่ขอเพิ่ม"`,[
+ {t:'⚔️ พอกันที',s:'ศึก',f(){fightThen(d.o,.9,w=>{if(w){mpAdd(50,'');K(8);ahPt(12,'ล้มคนเก็บส่วยที่'+d.v);log(`🌗 คุณจ่ายส่วยครั้งสุดท้ายด้วยฝ่ามือ · ${RP({pp:8,sect:-6})}`,'epic')}else log('🩸 คุณพลาดท่า ต้องถอยออกมา','bad')})}},
+ {t:'💰 จ่ายต่อ',s:`${Mf(d.c*2)}`,f(){if(S.money<d.c*2){K(-3);log(`💸 คุณไม่มีเงินพอ ${d.v}ถูกยึดนา`,'bad');return}S.money-=d.c*2;K(5);log('💸 คุณจ่ายอีกครั้ง… และรู้ดีว่าปีหน้ามันจะมาอีก')}}])};
+EV.a1c=d=>{const c=nm();choice('🧒 เด็กที่รอดจากกองไฟ',`${d.v}ที่คุณเคยเดินผ่านถูก${d.s}เผาจนหมด เหลือเด็กคนเดียวชื่อ <b>${esc(c)}</b> เขาจำหน้าคุณได้ "ท่านคือคนที่เดินจากไปวันนั้น"`,[
+ {t:'🤲 รับเลี้ยงและสอนวิชา',s:'มีศิษย์ (อาจไปทางไหนก็ได้)',f(){AH().dis={n:c,y:S.age,src:'orphan',grudge:1};K(12);log(`🤲 คุณรับ<b>${esc(c)}</b>ไว้ — เขาไม่เคยยิ้มให้คุณเลยสักครั้ง`,'good');later(R(4,7),'a3',{})}},
+ {t:'💰 ทิ้งเงินไว้ให้แล้วไป',s:'',f(){S.money=Math.max(0,S.money-Math.round(sxBiz()*.2));log('💰 คุณวางถุงเงินไว้แล้วหันหลัง เด็กไม่หยิบมันเลย');later(R(10,15),'a1v',{c,s:d.s})}}])};
+EV.a1v=d=>{choice('🗡️ เด็กคนนั้นโตแล้ว',`<b>${esc(d.c)}</b> กลับมาในฐานะศิษย์เอก${d.s} "ข้าเกลียด${d.s}ที่เผาบ้านข้า แต่ข้าเกลียดคนที่เดินผ่านไปมากกว่า"`,[
+ {t:'⚔️ รับคำท้า',s:'ดวล',f(){fightThen(d.c,1.05,w=>{if(w){log(`⚔️ คุณชนะ แต่ไม่ได้รู้สึกเหมือนชนะ`);choice('⚔️ เขาล้มอยู่ตรงหน้า','',[{t:'🩸 จบชีวิตเขา',s:'กรรมชั่ว',f(){K(-25);whAdd(10);mpAdd(40,'');log(`🩸 คุณปิดตาให้${esc(d.c)} ด้วยมือเดียวกับที่ไม่เคยยื่นให้เขา`,'bad')}},{t:'🤲 ขอโทษเขา',s:'',f(){K(20);ahPt(15,'ขอโทษเด็กที่เคยทอดทิ้ง');AH().ally={n:d.c,y:S.age};log(`🤲 ${esc(d.c)}ร้องไห้เป็นครั้งแรกในรอบสิบปี — วันหนึ่งเขาจะกลับมาช่วยคุณ`,'myth',true)}}])}else{S.hp=Math.max(1,Math.round(S.hp*.3));log(`🩸 ${esc(d.c)}ไว้ชีวิตคุณ "อยู่ให้ทรมานแบบที่ข้าเคย"`,'bad')}})}},
+ {t:'🙇 ก้มหัวรับผิด',s:'พลังชีวิต −50% · อาจได้ใจเขา',f(){S.hp=Math.max(1,Math.round(S.hp*.5));K(15);if(Math.random()<.5+(S.cha||0)/400){AH().ally={n:d.c,y:S.age};ahPt(12,'');log(`🙇 ${esc(d.c)}ฟันลงมา… แล้วหยุดห่างคอคุณหนึ่งนิ้ว — "ข้าจะจำว่าท่านไม่หนี"`,'myth',true)}else log(`🩸 เขาฟันจริง แล้วเดินจากไปโดยไม่หันกลับ`,'bad')}}])};
+// A2 ถูกใส่ร้าย
+EV.a2=()=>{const s=sect(),el=nm(),A=AH();choice('📜 คดีที่คุณไม่ได้ทำ',`${s}ประกาศทั่วยุทธภพว่าคุณสังหารคาราวานพ่อค้าสามสิบชีวิต — แต่คุณรู้ว่าผู้อาวุโส <b>${esc(el)}</b> ของ${s}เป็นคนทำเอง`,[
+ {t:'🔍 สืบหาหลักฐาน',s:A.ally?`${esc(A.ally.n)}จะช่วยคุณ`:'ขึ้นกับปัญญา',f(){const ok=A.ally||Math.random()<clamp(.3+(S.int||0)/600,.3,.85);if(ok){K(15);ahPt(20,'เปิดโปงผู้อาวุโสจอมปลอม');S.fame+=200;log(`🔍 ${A.ally?esc(A.ally.n)+'นำพยานมาให้ ':''}หลักฐานถูกวางกลางที่ประชุมยุทธภพ ${esc(el)}หน้าซีดเผือด · ${RP({pp:10,sect:-5,court:8})}`,'myth',true);later(R(8,14),'a2x',{el,s})}else{S.fame=Math.round(S.fame*.8);RP({sect:-12,pp:-5});log('🔍 พยานทุกคนหายตัวไปก่อนคุณจะถึง… ชื่อเสียงของคุณดิ่งลง','bad');later(R(2,4),'hunt',{s})}}},
+ {t:'⚔️ บุกกลางพิธีแล้วฉีกหน้ากากด้วยกำลัง',s:'วิธีมาร · ดวลผู้อาวุโส',f(){fightThen(`ผู้อาวุโส${el}`,1.2,w=>{if(w){mpAdd(130,'ทุบผู้อาวุโสกลางพิธี');K(5);ahPt(15,'');log(`⚔️ ${esc(el)}คุกเข่าสารภาพต่อหน้าทุกคน เพราะกลัวคุณ ไม่ใช่เพราะสำนึก · ${RP({pp:8,sect:-20,dem:5})}`,'epic');later(R(3,5),'hunt',{s})}else{S.hp=Math.max(1,Math.round(S.hp*.4));S.fame=Math.round(S.fame*.7);log('🩸 คุณแพ้ในพิธี ข้อกล่าวหาจึงยิ่งดูจริง','bad')}})}},
+ {t:'🌫️ ยอมให้ชื่อเสีย แล้วหายตัวไป',s:'ชื่อเสียง −40% · ความจริงอาจกลับมาเอง',f(){S.fame=Math.round(S.fame*.6);K(10);joy(-12);log('🌫️ คุณปล่อยให้ทั้งยุทธภพสาปแช่ง แล้วหายไปในขุนเขา','bad');later(R(6,12),'a2t',{el,s})}}])};
+EV.a2t=d=>{S.fame+=400;K(20);ahPt(25,'ความจริงเปิดเผยเอง');log(`📜 ศิษย์ของ${esc(d.el)}ทนความผิดไม่ไหว สารภาพกลางเมืองว่าอาจารย์ของตนคือฆาตกรคาราวาน — ผู้คนตามหาคุณเพื่อขอโทษ · ${RP({pp:15,sect:-10})}`,'myth',true)};
+EV.a2x=d=>{choice('🎭 คนเดิมในหน้ากากใหม่',`หลังถูกขับจาก${d.s} <b>${esc(d.el)}</b> ฝึกวิชามารจนกลายเป็นปีศาจ และประกาศว่า "ข้ากลายเป็นสิ่งที่พวกเจ้ากล่าวหาเขา — ทีนี้มาดูว่าใครคือมารตัวจริง"`,[
+ {t:'⚔️ ปิดบัญชี',s:'ศึกหนัก',f(){fightThen(`มาร${d.el}`,1.3,w=>{if(w){mpAdd(150,'สังหารมารที่เคยใส่ร้ายคุณ');K(15);ahPt(20,'');log('⚔️ มารปลอมตายด้วยมือมารจริง — คนทั้งยุทธภพเห็นความต่าง','myth',true)}else{S.hp=Math.max(1,Math.round(S.hp*.3));log('🩸 คุณรอดมาได้หวุดหวิด','bad')}})}},
+ {t:'🤝 ชวนเขาร่วมมือล้าง'+d.s,s:'กรรมชั่ว · บารมีมารมหาศาล',f(){mpAdd(250,'ร่วมมือมารล้างสำนัก');K(-60);whAdd(20);log(`🩸 คุณกับ${esc(d.el)}เดินเข้า${d.s}ด้วยกัน ไม่มีใครเดินออกมา · ${RP({sect:-40,dem:20,pp:-10})}`,'epic',true)}}])};
+EV.hunt=d=>{if(typeof dmHunt==='function')dmHunt(`นักล่ามารจาก${d.s||sect()}`)};
+// A3 ศิษย์ถามทาง
+EV.a3=()=>{const A=AH(),D=A.dis;if(!D)return false;choice('🩸 ศิษย์ถามคำถามเดียว',`<b>${esc(D.n)}</b> ${D.grudge?'มองคุณด้วยแววตาเย็นชา':'ถาม'} "อาจารย์มีพลังมารเหนือคนทั้งแคว้น ทำไมเราต้องอดมื้อกินมื้อ ทำไมไม่ปล้นเหมือนนิกายอื่น"`,[
+ {t:'📜 "เพราะเราไม่ใช่พวกมัน"',s:'ขึ้นกับเสน่ห์และกรรม',f(){const p=clamp(.35+(S.cha||0)/300+(S.karma||0)/600-(D.grudge?.15:0),.15,.9);if(Math.random()<p){D.ok=1;ahPt(15,'สอนศิษย์ด้วยหลักของตน');log(`📜 ${esc(D.n)}เงียบไปนาน แล้วพยักหน้า — คืนนั้นเขาแบ่งข้าวให้ขอทานหน้าถ้ำ`,'good');later(R(6,10),'a3g',{})}else{log(`📜 ${esc(D.n)}ฟังแล้วไม่พูดอะไร… สามวันต่อมาเขาหายไปพร้อมคัมภีร์ของคุณ`,'bad');later(R(5,9),'a3x',{n:D.n});A.dis=null}}},
+ {t:'🗡️ "อยากปล้นก็ไปเถิด แต่อย่ากลับมา"',s:'ปล่อยเขาไป',f(){log(`🗡️ ${esc(D.n)}กราบลาแล้วเดินลงเขา`);later(R(5,9),'a3x',{n:D.n,free:1});A.dis=null}},
+ {t:'🩸 ลงโทษจนไม่กล้าถามอีก',s:'บารมีมาร+ · เสียงมารดังขึ้น',f(){mpAdd(40,'');whAdd(12);D.fear=1;log(`🩸 ${esc(D.n)}ไม่เคยถามอีกเลย และไม่เคยมองตาคุณอีกเลย`,'bad');later(R(8,12),'a3f',{})}}])};
+EV.a3g=()=>{const D=AH().dis;if(!D)return false;ahPt(20,'ศิษย์เดินตามทาง');S.fame+=250;log(`🌗 <b>${esc(D.n)}</b> ศิษย์ของคุณตั้ง "สำนักมารไร้นาม" ที่รับแต่คนที่สำนักธรรมะทอดทิ้ง ทั้งยุทธภพเริ่มเรียกพวกเขาว่าสายมารผู้ถือสัจจะ · ${RP({pp:10,dem:-5})}`,'myth',true);AH().ally=AH().ally||{n:D.n,y:S.age}};
+EV.a3f=()=>{const D=AH().dis;if(!D)return false;choice('🗡️ มีดในความมืด',`คืนหนึ่ง <b>${esc(D.n)}</b> ยืนอยู่ข้างเตียงคุณพร้อมมีด "ท่านสอนข้าว่าคนแข็งแกร่งทำอะไรก็ได้"`,[
+ {t:'⚔️ สู้',s:'ดวลศิษย์',f(){fightThen(D.n,.85,w=>{AH().dis=null;if(w){K(-5);mpAdd(30,'');log(`🩸 ศิษย์ที่คุณสร้างมา ตายด้วยบทเรียนที่คุณสอน`,'bad')}else{S.hp=1;log(`🩸 ${esc(D.n)}แทงคุณแล้วหนีไป คุณรอดเพราะโชคช่วย`,'bad')}})}},
+ {t:'🙇 "ข้าสอนเจ้าผิดไป"',s:'เสี่ยง',f(){if(Math.random()<.45+(S.karma||0)/500){AH().dis.ok=1;AH().dis.fear=0;K(15);whAdd(-15);ahPt(15,'');log(`🙇 มีดในมือ${esc(D.n)}ร่วงลงพื้น`,'myth',true)}else{S.hp=Math.max(1,Math.round(S.hp*.2));AH().dis=null;log(`🩸 คำขอโทษมาช้าไปหนึ่งปี`,'bad')}}}])};
+EV.a3x=d=>{choice('👹 ศิษย์ที่จากไปกลายเป็นจอมมาร',`<b>${esc(d.n)}</b> ${d.free?'ที่คุณปล่อยไป':'ที่ขโมยคัมภีร์ของคุณ'} ตั้งนิกายปล้นสะดมเจ็ดเมือง ชาวบ้านเรียกเขาว่า "ศิษย์ของมารผู้ถือสัจจะ" — ชื่อของคุณเปื้อนเลือดที่คุณไม่ได้หลั่ง`,[
+ {t:'⚔️ ไปปิดทางเอง',s:'ดวล',f(){fightThen(`จอมมาร${d.n}`,1.15,w=>{if(w){choice('⚔️ ศิษย์เก่าล้มลงแล้ว','',[{t:'🩸 ฆ่า',s:'ล้างมลทิน',f(){mpAdd(80,'');ahPt(15,'ล้างมลทินด้วยมือตัวเอง');log(`🩸 คุณลบความผิดพลาดของตัวเองทิ้ง ด้วยราคาที่แพงที่สุด`,'epic')}},{t:'🤲 พากลับมา',s:'เสี่ยงอีกครั้ง',f(){AH().dis={n:d.n,y:S.age,ok:Math.random()<.55?1:0};K(10);log(`🤲 คุณแบก${esc(d.n)}กลับถ้ำ — ครั้งนี้คุณจะสอนให้ถูก`,'good');later(R(5,8),AH().dis.ok?'a3g':'a3f',{})}}])}else{S.hp=Math.max(1,Math.round(S.hp*.3));S.fame=Math.round(S.fame*.8);log('🩸 ศิษย์เก่าเหนือกว่าคุณไปแล้ว','bad')}})}},
+ {t:'🩸 เข้าร่วมกับเขา',s:'กลายเป็นจอมมาร · กรรมดิ่ง',f(){mpAdd(300,'ร่วมนิกายศิษย์เก่า');K(-90);whAdd(25);log(`🩸 อาจารย์กับศิษย์ปล้นเมืองที่แปดด้วยกัน — คุณไม่ใช่มารผู้ถือสัจจะอีกต่อไป · ${RP({pp:-25,dem:20})}`,'bad',true);try{keyAdd('ทิ้งสัจจะ ร่วมปล้นกับศิษย์เก่า')}catch(e){}}},
+ {t:'🚶 ปล่อยให้คนอื่นจัดการ',s:'ชื่อเสียง −',f(){S.fame=Math.round(S.fame*.75);ahPt(-20,'');log('🚶 ฉายาของคุณเปื้อนไปตลอดกาล','bad')}}])};
+// A4 วีรบุรุษท้าดวล
+EV.a4=()=>{const h=nm(),s=sect(),A=AH();choice('⚖️ วีรบุรุษคนสุดท้ายที่ยังเชื่อในธรรมะ',`<b>${esc(h)}</b> วีรบุรุษหนุ่มแห่ง${s} ยืนขวางทาง "ข้าไม่สนว่าเจ้าช่วยใคร มารก็คือมาร"`,[
+ {t:'⚔️ สู้',s:'ดวล · ชนะแล้วเลือกต่อ',f(){fightThen(h,1.05,w=>{if(!w){S.hp=Math.max(1,Math.round(S.hp*.35));if(Math.random()<.5){log(`🩸 ${esc(h)}ชนะ แต่ไม่ฟันซ้ำ "ทำไมเจ้าไม่ใช้วิชามารเต็มกำลัง"`,'bad');later(R(3,6),'a4b',{h,s,spared:1})}else log(`🩸 ${esc(h)}ทิ้งคุณไว้ให้ตายข้างทาง คุณคลานกลับมาได้`,'bad');return}
+   choice(`⚖️ ${h}ล้มอยู่ตรงหน้า`,'"ฆ่าข้าสิ ให้ทุกคนรู้ว่ามารเป็นอย่างไร"',[
+    {t:'🩸 ฆ่า',s:'เขาไม่ใช่คนชั่ว · กรรมชั่ว',f(){K(-35);whAdd(15);mpAdd(100,'สังหารวีรบุรุษ');log(`🩸 วีรบุรุษตายในวันที่เขาคิดถูกเรื่องคุณ · ${RP({sect:-15,pp:-5,dem:10})}`,'bad',true)}},
+    {t:'🕊️ ไว้ชีวิต ไม่พูดอะไร',s:'',f(){K(10);log(`🕊️ คุณเดินผ่าน${esc(h)}ไปเฉยๆ`);later(R(4,8),'a4b',{h,s,spared:1})}},
+    {t:'📜 บอกความจริงทั้งหมดของ'+s,s:'ขึ้นกับปัญญา',f(){if(Math.random()<clamp(.35+(S.int||0)/500,.35,.85)){K(15);ahPt(20,'ทำให้วีรบุรุษเห็นความจริง');A.ally={n:h,y:S.age};log(`📜 ${esc(h)}ฟังจนจบ แล้วหักป้ายศิษย์${s}ทิ้งต่อหน้าคุณ — คุณได้พันธมิตรที่ไม่มีใครคาดคิด · ${RP({sect:-8,pp:5})}`,'myth',true)}else{log(`📜 "โกหก!" ${esc(h)}ไม่เชื่อสักคำ`);later(R(4,8),'a4b',{h,s})}}}])})}},
+ {t:'🌫️ ไม่สู้ ถอยไป',s:'ชื่อเสียงลด',f(){S.fame=Math.round(S.fame*.9);log(`🌫️ คุณหันหลังให้${esc(h)} — เขาตะโกนตามหลังว่า "มารขี้ขลาด!"`);later(R(4,8),'a4b',{h,s})}}])};
+EV.a4b=d=>{if(d.spared&&Math.random()<.55){AH().ally=AH().ally||{n:d.h,y:S.age};K(10);ahPt(12,'');log(`⚖️ ${esc(d.h)}ที่คุณเคยไว้ชีวิต ยืนขวางนักล่ามารของ${d.s}ไว้ให้คุณ "มารตนนี้ ข้าขอรับผิดชอบเอง"`,'myth',true)}else{log(`⚖️ ${esc(d.h)}กลับมาพร้อมนักล่ามารของ${d.s}`,'bad');EV.hunt(d)}};
+// A5 คืนที่เสียงมารดังที่สุด
+EV.a5=()=>{const L=loved();if(!L)return false;const A=AH();choice('🌑 คืนที่เสียงมารดังที่สุด',`<b>${esc(L.n)}</b> ป่วยหนักด้วยพิษเย็นที่ไม่มียาแก้ หมอบอกว่าเหลือไม่เกินเจ็ดวัน<br>เสียงในหัวกระซิบ: <i>"คัมภีร์มารหน้าสุดท้าย… ชีวิตแลกชีวิต คนแปลกหน้าคนไหนก็ได้"</i>`,[
+ {t:'🩸 สังเวยคนแปลกหน้า',s:`${esc(L.n)}รอดแน่ · กรรมดิ่งหนัก`,f(){K(-70);whAdd(30);mpAdd(80,'');joy(10);log(`🩸 คนเร่ร่อนคนหนึ่งหายไปจากสะพานหน้าเมือง ${esc(L.n)}ลืมตาตอนรุ่งสาง — และคุณรู้ว่าตัวเองจะไม่มีวันลืมคืนนั้น`,'bad',true);try{keyAdd('สังเวยคนแปลกหน้าเพื่อ'+L.n)}catch(e){}later(R(8,12),'a5r',{n:L.n})}},
+ {t:'🔥 สังเวยพลังของตัวเองแทน',s:'พลังยุทธ์ −15% · อายุขัย −',f(){S.power=Math.round(S.power*.85);try{if(!S.xt)S.lifespan=Math.max(S.age+5,S.lifespan-Math.round((S.lifespan-S.age)*.15))}catch(e){}K(25);whAdd(-25);ahPt(25,'สังเวยพลังตัวเองแทนชีวิตคนอื่น');joy(5);log(`🔥 คุณถ่ายพลังมารเข้าร่าง${esc(L.n)}จนตัวเองกระอักเลือด — พิษเย็นละลายไป`,'myth',true)}},
+ {t:'🙏 ออกตามหายาแบบทางธรรม',s:'ขึ้นกับปัญญาและเงิน',f(){const p=clamp(.25+(S.int||0)/800+Math.min(.25,S.money/(sxBiz()*20)),.15,.75);if(Math.random()<p){K(10);ahPt(10,'');log(`🙏 เจ็ดวันเจ็ดคืน คุณได้ดอกบัวหิมะมาทันเวลา ${esc(L.n)}รอด`,'good')}else lose(L)}},
+ {t:'🌫️ ทำใจ',s:'',f(){lose(L);whAdd(5)}}])};
+EV.a5r=d=>{const c=nm();choice('🕯️ ลูกของคนเร่ร่อน',`ชายหนุ่มชื่อ <b>${esc(c)}</b> ตามรอยมาสิบปี "พ่อข้าหายไปจากสะพานคืนนั้น ศพเขามีรอยวิชามารของท่าน"`,[
+ {t:'🙇 ยอมรับ ให้เขาตัดสิน',s:'พลังชีวิต −60% · กรรมดี+',f(){S.hp=Math.max(1,Math.round(S.hp*.4));K(40);whAdd(-20);log(`🙇 เขาแทงคุณหนึ่งแผล แล้วทิ้งมีดไว้ "เท่านี้ก็พอ ข้าไม่อยากเป็นแบบท่าน"`,'myth',true)}},
+ {t:'⚔️ สู้',s:'ถ้าฆ่า กรรมชั่วซ้ำ',f(){fightThen(c,.95,w=>{if(w){K(-30);whAdd(10);log(`🩸 คุณฆ่าพ่อแล้วฆ่าลูก — เสียงมารหัวเราะเบาๆ`,'bad',true)}else{S.hp=1;log(`🩸 ${esc(c)}ชนะ แต่ไม่ฆ่า "ท่านยังต้องอยู่ชดใช้"`,'bad')}})}},
+ {t:'🤲 รับเขาเป็นศิษย์ ชดใช้ด้วยชีวิตที่เหลือ',s:'',f(){AH().dis={n:c,y:S.age,grudge:1};K(20);log(`🤲 ${esc(c)}รับคำ แต่บอกว่า "วันที่ข้าชนะท่านได้ ข้าจะเลือกใหม่"`,'good');later(R(4,7),'a3',{})}}])};
+// W เสียงมารกระซิบ
+const LURE=[['เด็กอัจฉริยะในหมู่บ้านข้างล่าง มีรากปราณบริสุทธิ์ กลืนเขาแล้วทะลวงขั้นได้ทันที',.18],['พยานคนสุดท้ายของคดีเก่า ถ้าเขาตาย ไม่มีใครรู้อีกว่าเจ้าเคยทำอะไร',.1],['เลือดชาวบ้านสามร้อยคนเปิดค่ายกลโลหิตได้ เจ้าจะไร้เทียมทานไปสิบปี',.25],['ภรรยาของศัตรูกำลังตั้งครรภ์ ฆ่าทั้งสองแล้วสายเลือดมันจะสิ้น',.12]];
+EV.w=()=>{const A=AH(),[t,g]=pick(LURE),p=resist();choice('🌑 เสียงมารกระซิบ',`<i>"${t}"</i><br><span class="tag2">เสียงมาร ${Math.round(A.wh)}/100 · โอกาสต้านไหว ~${Math.round(p*100)}%</span>`,[
+ {t:'🩸 ยอมตามเสียงนั้น',s:`พลังยุทธ์พุ่ง · กรรมดิ่ง`,f(){const gg=pw(g);K(-60);whAdd(18);A.yd++;mpAdd(120,'ยอมตามเสียงมาร');log(`🩸 คุณทำตามเสียงนั้น — พลังยุทธ์ +${fmt(gg)} · เสียงในหัวดังขึ้นอีก`,'bad',true);if(A.yd>=3&&!A.done.wf)later(1,'wf',{})}},
+ {t:'🧘 ข่มใจต้านไว้',s:`~${Math.round(p*100)}%`,f(){if(Math.random()<p){whAdd(-12);A.rs++;K(8);ahPt(8,'ต้านเสียงมาร');log('🧘 คุณนั่งสมาธิจนรุ่งเช้า เสียงนั้นเงียบไป — ครั้งนี้','good');if(A.rs>=4&&!A.done.wr){A.done.wr=1;const gg=pw(.12);log(`🌗 <b>จิตเหนือมาร</b> — ต้านเสียงมารมาสี่ครั้ง วิชามารไม่อาจครอบงำคุณได้อีก · พลังยุทธ์ +${fmt(gg)}`,'myth',true);whAdd(-30)}}else{S.hp=Math.max(1,Math.round(S.hp*.7));whAdd(6);log('🌑 คุณต้านได้แต่ร่างกายแลกด้วยเลือด — เสียงมารยังไม่ยอมเงียบ','bad')}}},
+ {t:'✂️ ตัดพลังมารทิ้งส่วนหนึ่ง',s:'บารมีมาร −25% · เสียงเงียบลงมาก',f(){S.mp=Math.round(mpOf()*.75);whAdd(-35);K(5);log('✂️ คุณสลายพลังมารหนึ่งในสี่ทิ้ง เสียงในหัวเหลือแค่กระซิบไกลๆ','good')}}])};
+EV.wf=()=>{const A=AH();A.done.wf=1;choice('👁️ มารในใจตื่นขึ้น',`เสียงที่เคยกระซิบ ตอนนี้พูดด้วยเสียงของคุณเอง <i>"เจ้ายอมข้ามาสามครั้งแล้ว เลิกแกล้งทำเป็นคนดีเสียที"</i>`,[
+ {t:'😈 ยอมรับว่าข้าคือมาร',s:'กลายเป็นจอมมารเต็มตัว',f(){mpAdd(400,'ยอมรับมารในใจ');K(-80);const gg=pw(.3);log(`😈 คุณหัวเราะพร้อมกับเสียงนั้น — พลังยุทธ์ +${fmt(gg)} · มารผู้ถือสัจจะตายไปแล้ว`,'myth',true);try{keyAdd('ยอมรับมารในใจ')}catch(e){}}},
+ {t:'🔥 สลายพลังมารทิ้งครึ่งหนึ่ง',s:'เจ็บหนัก · เริ่มใหม่',f(){S.mp=Math.round(mpOf()*.5);S.power=Math.round(S.power*.8);A.wh=0;A.yd=0;K(30);log('🔥 คุณเผาพลังมารครึ่งหนึ่งทิ้งด้วยไฟในใจ ร่างพังแต่เสียงนั้นเงียบสนิท','myth',true)}},
+ {t:'🗡️ ดวลกับมารในใจ',s:'ดวลกับตัวเอง',f(){fightThen('มารในใจของคุณ',1.1,w=>{if(w){A.wh=0;A.yd=0;K(20);ahPt(30,'ชนะมารในใจ');const gg=pw(.15);log(`🗡️ คุณชนะตัวเอง — พลังมารยังอยู่ แต่ตอนนี้มันเป็นของคุณ · พลังยุทธ์ +${fmt(gg)}`,'myth',true)}else{mpAdd(200,'');K(-50);whAdd(30);log('🩸 คุณแพ้ตัวเอง เสียงนั้นยึดครองร่างอยู่ครู่หนึ่ง… และมีคนตายระหว่างนั้น','bad',true)}})}}])};
+// M หน้ากากธรรม
+EV.m1=()=>{const w=nm(),A=AH();choice('🎭 พยานที่เห็นมากเกินไป',`คนรับใช้ชื่อ <b>${esc(w)}</b> เห็นคุณขนของต้องห้ามออกจากหอคัมภีร์ตอนดึก<br><span class="tag2">ความลับเสี่ยงรั่ว ${Math.round(A.sec)}/100</span>`,[
+ {t:'🩸 ปิดปากถาวร',s:'กรรมชั่ว · ความลับปลอดภัย',f(){K(-30);A.sec=Math.max(0,A.sec-25);log(`🩸 ${esc(w)}พลัดตกบ่อน้ำ ทุกคนเสียใจ — คุณเป็นคนกล่าวไว้อาลัยเอง`,'bad');later(R(5,9),'m1g',{w})}},
+ {t:'💰 ติดสินบนให้เงียบ',s:`${Mf(Math.round(sxBiz()*.4))}`,f(){S.money=Math.max(0,S.money-Math.round(sxBiz()*.4));A.sec=Math.max(0,A.sec-10);log(`💰 ${esc(w)}รับเงินแล้วยิ้ม — รอยยิ้มแบบคนที่รู้ว่าจะได้อีก`);later(R(2,4),'m1b',{w})}},
+ {t:'🙏 สารภาพกับเขา และเลิกทำ',s:'กรรมดี+ · ทางกลับตัว',f(){K(40);A.sec=Math.max(0,A.sec-40);log(`🙏 คุณเผาของต้องห้ามต่อหน้า${esc(w)} "ช่วยข้าเป็นคนอย่างที่คนอื่นคิดว่าข้าเป็น"`,'myth',true)}}])};
+EV.m1g=d=>{AH().sec+=20;log(`👻 ลูกสาวของ${esc(d.w)}เข้าสำนักมาเป็นศิษย์ เธอถามทุกคนว่าคืนนั้นพ่อของเธอไปทำอะไรที่หอคัมภีร์`,'bad')};
+EV.m1b=d=>{const A=AH();choice('💰 คนที่รู้ความลับกลับมา',`<b>${esc(d.w)}</b> ขอเป็นห้าเท่า "หรือจะให้ข้าเล่าเรื่องสนุกให้เจ้าสำนักฟัง"`,[
+ {t:'💰 จ่าย',s:`${Mf(Math.round(sxBiz()*2))}`,f(){const c=Math.round(sxBiz()*2);if(S.money<c){A.sec+=35;log('💸 คุณจ่ายไม่ไหว… เขาเริ่มพูด','bad');return}S.money-=c;later(R(3,5),'m1b',d)}},
+ {t:'🩸 จัดการเสีย',s:'กรรมชั่ว',f(){K(-30);A.sec+=8;log(`🩸 ${esc(d.w)}หายไปเฉยๆ แต่เขาบอกเมียไว้ก่อนแล้ว`,'bad')}}])};
+EV.m2=()=>{const s=nm(),A=AH();choice('🎭 ศิษย์ที่เริ่มสงสัย',`ศิษย์เอก <b>${esc(s)}</b> เจอบัญชีลับของคุณ "อาจารย์… เงินบริจาคช่วยน้ำท่วมไปอยู่ที่ไหน"`,[
+ {t:'😊 อธิบายให้เชื่อ',s:'ขึ้นกับเสน่ห์',f(){if(Math.random()<clamp(.3+(S.cha||0)/250,.3,.85)){log(`😊 ${esc(s)}ก้มหัวขอโทษที่สงสัยอาจารย์`);A.sec=Math.max(0,A.sec-5)}else{A.sec+=25;log(`😶 ${esc(s)}พยักหน้า แต่คุณเห็นว่าเขาไม่เชื่อ`,'bad')}}},
+ {t:'📜 ใส่ร้ายให้เขาถูกขับจากสำนัก',s:'กรรมชั่ว · เขาจะกลับมา',f(){K(-25);A.sec=Math.max(0,A.sec-10);log(`📜 ${esc(s)}ถูกประจานว่าขโมยเงินบริจาค ถูกขับลงเขากลางฝน`,'bad');later(R(6,10),'m2x',{s})}},
+ {t:'🤝 ชวนเขามาร่วมกิน',s:'ได้พวก หรือโดนแฉ',f(){if(Math.random()<.5){S.money+=Math.round(sxBiz()*.5);K(-10);log(`🤝 ${esc(s)}ยิ้ม "ข้านึกว่าอาจารย์จะไม่ชวนเสียแล้ว"`)}else{A.sec+=45;log(`🙅 ${esc(s)}ถอยหลังสองก้าว แล้ววิ่งไปหาเจ้าสำนัก`,'bad')}}}])};
+EV.m2x=d=>{choice('👹 ศิษย์ที่ถูกขับกลับมา',`<b>${esc(d.s)}</b> ที่คุณใส่ร้าย กลับมาพร้อมวิชามาร "ท่านทำให้ข้ากลายเป็นสิ่งที่ท่านเป็นอยู่ข้างใน"`,[
+ {t:'⚔️ สู้',s:'ดวล',f(){fightThen(`มาร${d.s}`,1.1,w=>{if(w){S.fame+=150;log(`⚔️ "ข้าปราบมารร้ายได้แล้ว" คุณประกาศ — ทุกคนปรบมือ`,'epic');AH().sec+=10}else{AH().sec+=40;S.hp=Math.max(1,Math.round(S.hp*.3));log('🩸 เขาตะโกนความจริงทั้งหมดกลางตลาดก่อนจากไป','bad')}})}},
+ {t:'🙇 สารภาพต่อหน้าเขา',s:'',f(){K(30);AH().sec+=30;log(`🙇 ${esc(d.s)}ไม่ฆ่าคุณ "ข้าจะปล่อยให้ทุกคนตัดสินท่านเอง"`,'myth')}}])};
+EV.m3=()=>{const A=AH();A.done.m3=S.age;choice('🎭 หน้ากากแตก',`ความลับทั้งหมดถูกอ่านกลางที่ประชุมยุทธภพ — บัญชีลับ ของต้องห้าม พยานที่หายไป ทุกสายตาหันมาที่คุณ`,[
+ {t:'🙇 สารภาพทั้งหมด และชดใช้',s:'ชื่อเสียงหาย · กรรมดี+ · เริ่มใหม่',f(){S.fame=Math.round(S.fame*.4);K(60);A.sec=0;A.mk++;if(S.faction){S.rank=0}joy(-20);log('🙇 คุณคุกเข่าต่อหน้าทุกคน ยอมสละตำแหน่งทั้งหมด — บางคนถุยน้ำลาย บางคนเริ่มเคารพ','myth',true);try{keyAdd('สารภาพความผิดทั้งหมดต่อหน้ายุทธภพ')}catch(e){}}},
+ {t:'🩸 ฉีกหน้ากากทิ้ง กลายเป็นมาร',s:'ออกจากสำนัก · บารมีมาร+',f(){S.faction=null;S.rank=0;mpAdd(220,'หน้ากากธรรมแตก');K(-40);A.sec=0;A.mk++;log('🩸 คุณหัวเราะกลางที่ประชุม "ใช่ ข้านี่แหละ" แล้วฝ่าวงล้อมออกไป','myth',true)}},
+ {t:'⚔️ ฆ่าคนที่เปิดโปงกลางที่ประชุม',s:'ศึกหนักมาก',f(){fightThen('ยอดฝีมือทั้งที่ประชุม',1.4,w=>{if(w){A.sec=30;A.mk++;K(-50);S.fame+=300;log('⚔️ ไม่มีใครกล้าพูดคำว่า "ความลับ" อีก — แต่ทุกคนรู้','epic',true)}else{S.hp=1;S.fame=Math.round(S.fame*.3);S.faction=null;log('🩸 คุณหนีออกมาได้แบบไม่เหลืออะไร','bad',true)}})}}])};
+window._ahEV=EV;
+// ---- ลูปรายปี ----
+let pend=0;const fire=(id,d)=>{if(pend)return;pend=1;wpWait(()=>{pend=0;try{if(!S||!S.alive||choice._cur)return;const f=EV[id];if(f&&f(d)!==false)AH().last=S.age}catch(e){console.error(e)}})};
+{const _py=passYear;passYear=function(){const a0=S?S.age:0,k0=S?S.karma||0:0;const r=_py.apply(this,arguments);try{if(!S||!S.alive||S.beastMode||S.age<16)return r;const A=AH(),dy=Math.max(1,Math.min(10,S.age-a0)),q=q4();
+  if(q==='anti')A.ay+=dy;if(q==='mask'){A.my+=dy;const dk=(S.karma||0)-k0;if(dk<0)A.sec=clamp(A.sec+Math.min(15,-dk/6),0,100);A.sec=clamp(A.sec+.5*dy,0,100)}
+  if(q==='anti'&&Math.random()<.5)RP({sect:-1,pp:1});
+  if(mpOf()>=150&&A.wh<60)whAdd(Math.min(3,.5+.4*dmTi())*dy);
+  if(pend)return r;const due=A.q.findIndex(x=>x.at<=S.age);if(due>=0){const x=A.q.splice(due,1)[0];fire(x.id,x.d);return r}
+  if(S.age-A.last<3)return r;
+  if(mpOf()>=300&&(S.karma||0)>-150&&A.wh>=10&&Math.random()<.05*dy*(1+A.wh/60))return fire('w'),r;
+  if(q==='mask'){if(A.sec>=70&&(!A.done.m3||S.age-A.done.m3>30)&&Math.random()<A.sec/350*dy)return fire('m3'),r;if(Math.random()<.07*dy)return fire(pick(['m1','m2'])),r}
+  if(q==='anti'&&Math.random()<.08*dy){const L=['a1','a2','a4','a5'].filter(k=>!(A.done[k]&&S.age-A.done[k]<25));if(A.dis&&!A.done.a3)L.push('a3');if(!L.length)return r;const k=pick(L);A.done[k]=S.age;return fire(k),r}
+  if(q==='anti'&&Math.random()<.025*dy)return fire('hunt',{}),r;}catch(e){console.error(e)}return r}}
+// ---- กฎกรรม: ฆ่าคนชั่วด้วยวิธีมาร กรรมไม่ลด ----
+const VIL=/โจร|ขุนนาง|ทรราช|ฆาตกร|ผู้กดขี่|คนชั่ว|อันธพาล|มารร้าย|นักฆ่า|ค้ามนุษย์|โจรสลัด|เจ้าพ่อ|สังหารหมู่|รีดไถ|เก็บส่วย/,INN=/ชาวบ้าน(?!.*(?:ช่วย|ปกป้อง))|เด็ก|ผู้บริสุทธิ์|คนแก่|สตรีมีครรภ์|ขอทาน|พ่อค้า(?!ทาส)/;
+{const _cr=choiceRun;choiceRun=function(i){let c=null,k0=0,m0=0;try{c=choice._cur;k0=S?S.karma||0:0;m0=mpOf()}catch(e){}const r=_cr.apply(this,arguments);
+ try{if(!S||!c||q4()==='demon'||!isDem())return r;const o=c.opts&&c.opts[i];if(!o)return r;const t=String(c.title)+' '+String(c.text||'')+' '+String(o.t)+' '+String(o.s||''),dk=(S.karma||0)-k0;
+  if(dk<0&&VIL.test(t)&&!INN.test(String(o.t)+' '+String(o.s||''))&&!/(ผู้บริสุทธิ์|คนแปลกหน้า|วีรบุรุษ)/.test(t)){const back=Math.round(-dk*.8);S.karma+=back;ahPt(3,'');log(`🌗 คนที่ตายเป็นคนชั่วจริง — วิถีของคุณโหด แต่ใจไม่เปื้อน (กรรมคืน +${back})`,'')}}catch(e){}return r}}
+// ---- ออโต้: ฝั่งมารใจดี ----
+// ---- ป้ายสถานะ ----
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{if(!S||S.age<14)return r;const t=$('gTags');if(!t)return r;const q=q4(),old=t.querySelector('.q4b');if(q==='mid'||q==='hero'||q==='demon'){if(old)old.remove();return r}
+  const A=AH(),lab=q==='anti'?AT[atI(A.pt)][1]:Q4[q][1],h=`<span class="tag q4b" style="--c:${Q4[q][2]};border-color:${Q4[q][2]};color:${Q4[q][2]}" onclick="event.stopPropagation();openQ4()">${Q4[q][0]} ${lab}</span>`;
+  if(old){if(old.outerHTML!==h)old.outerHTML=h}else t.insertAdjacentHTML('afterbegin',h)}catch(e){}return r}}
+window.openQ4=function(){if(!S)return;const A=AH(),q=q4(),mp=mpOf(),k=S.karma||0;const cell=(id,a,b)=>`<div class="q4c ${q===id?'on':''}" style="--c:${Q4[id][2]}"><b>${Q4[id][0]} ${Q4[id][1]}</b><small>${a}<br>${b}</small></div>`;
+ let R0='';try{const R=rep();R0=Object.keys(RG).map(x=>`${RG[x]} ${R[x]|0}`).join(' · ')}catch(e){}
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌗 สายกับใจ</h3><p class="tag2"><b>สาย</b> = ฝึกอะไร อยู่ฝั่งไหน (บารมีมาร ${fmt(mp)}${S.faction?' · '+esc(S.faction.n):''}) · <b>ใจ</b> = ทำกับใคร (กรรม ${k>0?'+':''}${Math.round(k)})</p>
+ <div class="q4g">${cell('hero','สายธรรมะ','ใจดี')}${cell('mask','สายธรรมะ','ใจชั่ว')}${cell('anti','สายมาร','ใจดี')}${cell('demon','สายมาร','ใจชั่ว')}</div>
+ ${q==='anti'?`<div class="item"><b>🌗 ${AT[atI(A.pt)][1]}</b> <span class="tag2">${Math.round(A.pt)}${AT[atI(A.pt)+1]?' / '+AT[atI(A.pt)+1][0]+' → '+AT[atI(A.pt)+1][1]:''}</span><p class="tag2">ฆ่าคนชั่วด้วยวิธีมาร กรรมไม่ลด · ทำร้ายผู้บริสุทธิ์ กรรมดิ่งเหมือนเดิม · สำนักธรรมะยังตามล่า ฝ่ายมารไม่ไว้ใจ · ทุกปีชาวบ้านรักคุณขึ้น สำนักเกลียดคุณขึ้น</p></div>`:''}
+ ${q==='mask'?`<div class="item"><b>🎭 ความลับเสี่ยงรั่ว ${Math.round(A.sec)}/100</b><div class="hpbar" style="height:7px;margin:4px 0"><i style="width:${A.sec}%;background:#e0b050"></i></div><p class="tag2">ทุกครั้งที่ทำชั่ว ความลับยิ่งเสี่ยงรั่ว · ถึง 70 อาจถูกเปิดโปงกลางยุทธภพ</p></div>`:''}
+ ${mp>=150?`<div class="item"><b>🌑 เสียงมาร ${Math.round(A.wh)}/100</b><div class="hpbar" style="height:7px;margin:4px 0"><i style="width:${A.wh}%;background:#a03050"></i></div><p class="tag2">ยิ่งดังยิ่งต้านยาก · กรรมดีและปัญญาช่วยต้าน · ยอมแพ้ 3 ครั้ง มารในใจจะตื่น · ต้านได้ 4 ครั้ง จิตเหนือมาร</p></div>`:''}
+ ${A.dis?`<p class="tag2">🧒 ศิษย์: <b>${esc(A.dis.n)}</b>${A.dis.ok?' · เดินตามทางของคุณ':A.dis.fear?' · กลัวคุณ':''}</p>`:''}${A.ally?`<p class="tag2">🤝 พันธมิตรที่ไม่คาดคิด: <b>${esc(A.ally.n)}</b></p>`:''}
+ ${R0?`<p class="tag2">ชื่อเสียงแต่ละกลุ่ม: ${R0}</p>`:''}<p class="tag2">ตอนจบพิเศษที่ 📖 ประตูนวนิยาย: 🌗 มารผู้ถือสัจจะ · 🎭 ผู้สวมหน้ากากธรรม</p>`,'q4')};
+// ---- ประตูนวนิยาย: 2 วิถีใหม่ ----
+const EX2={anti:['🌗','มารผู้ถือสัจจะ','คุณเดินผ่านประตูด้วยมือที่เปื้อนเลือดคนชั่วเท่านั้น','ชีวิตหน้าเกิดมาพร้อมบารมีมาร 150 กรรมดี +30 และปัญญา +20',()=>{S.mp=(S.mp||0)+150;S.karma=(S.karma||0)+30;S.int+=20}],
+ mask:['🎭','ผู้สวมหน้ากากธรรม','คุณถอดหน้ากากวางไว้หน้าประตู มันยิ้มให้คุณ','ชีวิตหน้าได้ ชื่อเสียง +300 เสน่ห์ +25 แต่กรรม −30',()=>{S.fame+=300;S.cha+=25;S.karma=(S.karma||0)-30}]};
+{const _ch=choice;choice=function(title,text,opts){try{if(title==='📖 ประตูนวนิยาย'&&Array.isArray(opts)&&S){const A=AH(),add=[];
+  if((A.pt>=80||A.ay>=60)&&(S.karma||0)>=50)add.push(['anti',`เดินสายมารด้วยใจดี (${AT[atI(A.pt)][1]})`]);if(A.my>=30||A.mk>=1)add.push(['mask',A.mk?'หน้ากากเคยแตกมาแล้ว':'สวมหน้ากากธรรมมานาน '+A.my+' ปี']);
+  const at=Math.max(1,opts.length-1);add.forEach(([k,why])=>{const v=EX2[k];opts.splice(at,0,{t:`${v[0]} ${v[1]}`,s:`${v[3]} · ปรากฏเพราะ ${why}`,noFate:1,_x:1,f(){LS.set('murim_khallx2',k);S.flags.kEndV=k;kalpaEnd('top');S.deathCause=`${v[1]} — ${v[2]}`;try{keyAdd(S.deathCause)}catch(e){}}})})}}catch(e){}return _ch.apply(this,arguments)}}
+const ap2=()=>{try{const X=LS.get('murim_khallx2',null);if(X&&EX2[X]&&S){LS.del('murim_khallx2');EX2[X][4]();log(`${EX2[X][0]} <b>${EX2[X][1]}</b> — ${EX2[X][3]}`,'myth',true)}}catch(e){}};
+{const _s=startLife;startLife=function(){const r=_s.apply(this,arguments);setTimeout(ap2,120);return r}}{const _i=inherit;inherit=function(){const r=_i.apply(this,arguments);setTimeout(ap2,120);return r}}
+// ---- บารมีมาร: ช่องอธิบาย ----
+{const _od=openDm;openDm=async function(){const r=await _od.apply(this,arguments);try{const m=$('modal');const b=m&&m.querySelector('.dmbox');if(b&&!m.querySelector('.q4link')){const q=q4();b.insertAdjacentHTML('afterend',`<button class="gbtn q4link" style="width:100%;margin:0 0 6px" onclick="openQ4()">${Q4[q][0]} สายกับใจ: ${Q4[q][1]} — แตะดู</button>`)}}catch(e){}return r}}
+try{document.head.insertAdjacentHTML('beforeend',`<style>.q4b{cursor:pointer}.q4g{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}.q4c{border:1px solid #5a5070;border-radius:10px;padding:8px;opacity:.55;background:#1a1626;color:#e8e0f0}.q4c small{display:block;font-size:11px;opacity:.8;margin-top:2px}.q4c.on{opacity:1;border-color:var(--c);box-shadow:0 0 10px color-mix(in srgb,var(--c) 50%,transparent)}.q4c b{color:var(--c)}</style>`)}catch(e){}
+try{SYS_GUIDE.push({s:'life',nw:1,ic:'🌗',t:'สายกับใจ (มารใจดี · หน้ากากธรรม)',go:'openQ4',d:'สาย (บารมีมาร/สำนัก) กับใจ (กรรม) แยกกันแล้ว — <b>🌗 มารผู้ถือสัจจะ</b>: ฝึกมารแต่ไม่แตะผู้บริสุทธิ์ ฆ่าคนชั่วด้วยวิธีมารกรรมไม่ลด มีเรื่องราวเฉพาะที่แตกแขนงตามที่เลือกและย้อนกลับมาหลายปีให้หลัง · <b>🎭 ผู้สวมหน้ากากธรรม</b>: อยู่สำนักธรรมะแต่ทำชั่ว ความลับสะสมจนถูกเปิดโปง · <b>🌑 เสียงมารกระซิบ</b>: บารมีมารสูงจะมีทางลัดชั่วๆ มาล่อ ยอม 3 ครั้งมารในใจตื่น ต้าน 4 ครั้งจิตเหนือมาร · ตอนจบใหม่ 2 วิถีที่ 📖 ประตูนวนิยาย'})}catch(e){}
 })()}catch(e){console.error(e)}
 </script>
 </body>
