@@ -283,10 +283,16 @@ const RP_SC = ['inn', 'mkt', 'gate', 'sky'];
 const VIP_PK = { v1: [39, 1, 30], v2: [99, 2, 30], v3: [599, 3, 0] };
 // 🎨 ร้านตกแต่ง (กรอบ/ฉายา/ธีมแชท) — ซื้อครั้งเดียวถาวร ไม่มีผลต่อพลังหรือการแข่งขัน
 const COS_FP = [39, 49, 39, 49, 49, 39, 39, 49], COS_SET = [79, 69, 59, 69, 69, 59, 59, 69];
-const COS_P = {}; // pk -> [ราคา, [ไอเทม]]
-for (let i = 1; i <= 8; i++) { COS_P['cf' + i] = [COS_FP[i - 1], ['f_p' + i]]; COS_P['ct' + i] = [i === 1 ? 29 : 19, ['t_p' + i]]; COS_P['cc' + i] = [i === 1 ? 29 : 19, ['c_p' + i]]; COS_P['cs' + i] = [COS_SET[i - 1], ['f_p' + i, 't_p' + i, 'c_p' + i]] }
-COS_P.call = [399, [...Array(8).keys()].flatMap(i => ['f_p' + (i + 1), 't_p' + (i + 1), 'c_p' + (i + 1)])];
-const COS_ALL = new Set(COS_P.call[1]);
+const COS_BASE = Object.create(null); // pk -> [ราคาเต็ม, [ไอเทม]]
+for (let i = 1; i <= 8; i++) { COS_BASE['cf' + i] = [COS_FP[i - 1], ['f_p' + i]]; COS_BASE['ct' + i] = [i === 1 ? 29 : 19, ['t_p' + i]]; COS_BASE['cc' + i] = [i === 1 ? 29 : 19, ['c_p' + i]]; COS_BASE['cs' + i] = [COS_SET[i - 1], ['f_p' + i, 't_p' + i, 'c_p' + i]] }
+for (let i = 9; i <= 11; i++) COS_BASE['ct' + i] = [9, ['t_p' + i]]; // ฉายาเริ่มต้น 9 บาท
+COS_BASE.call = [399, [...Array(8).keys()].flatMap(i => ['f_p' + (i + 1), 't_p' + (i + 1), 'c_p' + (i + 1)])];
+const COS_ALL = new Set([...COS_BASE.call[1], 't_p9', 't_p10', 't_p11']);
+// ของแนะนำประจำวัน (เวลาไทย): ลด 20% ทั้งวัน — กรอบเดี่ยวหรือเซ็ต
+const COS_FEAT = [...Array(8).keys()].flatMap(i => ['cf' + (i + 1), 'cs' + (i + 1)]);
+const cosFeat = () => { const th = Date.now() + 7 * 3600e3, day = Math.floor(th / 864e5), pk = COS_FEAT[day % COS_FEAT.length]; return { pk, exp: (day + 1) * 864e5 - 7 * 3600e3 } };
+const cosPrice = pk => { const b = COS_BASE[pk]; if (!b) return 0; return cosFeat().pk === pk ? Math.round(b[0] * 0.8) : b[0] };
+const COS_P = new Proxy({}, { get: (_, pk) => COS_BASE[pk] ? [cosPrice(pk), COS_BASE[pk][1]] : undefined, has: (_, pk) => !!COS_BASE[pk] });
 const cosOwn = async id => { try { return (await cmd('SMEMBERS', 'cos:' + id)) || [] } catch { return [] } };
 
 const VIP_NM = { 1: 'ผู้อุปถัมภ์สำนัก', 2: 'ผู้อาวุโสอุปถัมภ์', 3: 'บรรพชนผู้อุปถัมภ์' };
@@ -673,9 +679,9 @@ module.exports = async (req, res) => {
     }
     // 🎲 สิทธิ์สุ่มเกิดที่ซื้อ (เก็บที่เซิร์ฟเวอร์ ผูกกับรหัสผู้เล่น/บัญชี Google)
     if (a === 'cosget') {
-      if (!okId(id)) return res.json({ own: [], eq: {} });
+      if (!okId(id)) { const ft0 = cosFeat(); return res.json({ own: [], eq: {}, feat: { pk: ft0.pk, p: cosPrice(ft0.pk), full: COS_BASE[ft0.pk][0], exp: ft0.exp } }) }
       const [own, q] = await pipe([['SMEMBERS', 'cos:' + id], ['GET', 'cosq:' + id]]);
-      return res.json({ own: own || [], eq: jp(q) || {} });
+      const ft = cosFeat(); return res.json({ own: own || [], eq: jp(q) || {}, feat: { pk: ft.pk, p: cosPrice(ft.pk), full: COS_BASE[ft.pk][0], exp: ft.exp } });
     }
     if (a === 'cosset') {
       if (!okId(id)) return res.status(400).json({ err: 'id' });
