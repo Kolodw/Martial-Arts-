@@ -28433,6 +28433,167 @@ const _p1=person0;person0=function(x,y,o,pose){const r=_p1.apply(this,arguments)
 try{Object.assign(I18N.d,{'ชุดสำเร็จรูป':'Ready outfits','แบบตา':'Eye shape','ปาก':'Mouth','ชุดสมัยใหม่ (ทับแบบชุด)':'Modern outfit','😈 ชุดสายมาร':'😈 Demonic sets','⚔️ ชุดยุทธภพ · เซียน':'⚔️ Martial · Immortal sets','— เลือกชุด —':'— pick —'})}catch(e){}
 try{SYS_GUIDE.push({s:'start',nw:1,ic:'🎽',t:'แต่งตัวละครแบบใหม่',go:'',d:'หน้าออกแบบรูปลักษณ์มีแท็บ <b>🎽 ชุดสำเร็จรูป</b> (ชุดสายมาร 35 · ยุทธภพ/เซียน 20 กดทีเดียวใส่ครบทั้งชุด) · ในแท็บ 👘 ชุด มี <b>ชุดสมัยใหม่</b> 45 ชุด และแบบชุดสายมาร 7 แบบ · ในแท็บ 👁️ ใบหน้า มี <b>แบบตา</b> 8 แบบ <b>ปาก</b> 6 แบบ และร่องรอยใหม่ 7 แบบ'})}catch(e){}
 })()}catch(e){console.error(e)}
+
+// ===================== v18.11 ชุดระดับกัลป์: ปลดล็อกตามกัลป์ที่ไปถึง และวิถีที่เลือกที่ประตูนวนิยาย =====================
+try{(()=>{
+// [ชื่อ, ไอคอน, เงื่อนไข(ข้อความ), สีชุด, สีขลิบ, สีกางเกง, สีเข็มขัด, แบบชุดฐาน]
+const KX=[null,
+ ['ชุดผู้ข้ามกาล','⏳','ไปถึงกัลป์ที่สอง','#7a8098','#d8e4ff','#4a5068','#c8d4ff',1],
+ ['ชุดผู้เฝ้าจักรวาลดับ','🌑','ไปถึงกัลป์ที่สาม','#2e2a30','#ff8a40','#1e1a20','#5a3a2a',4],
+ ['ชุดนาวากาลเวลา','⛵','ไปถึงกัลป์ที่ห้า','#1a3460','#e8c040','#14243e','#e8c040',7],
+ ['ชุดผู้รอดทุกกัลป์','✨','ไปถึงกัลป์ที่เจ็ด','#141a3c','#b0c8ff','#0e1230','#b0c8ff',1],
+ ['ชุดบรรพกาล','☀️','ไปถึงกัลป์ที่เก้า','#f6f2e8','#ffd040','#e8e0cc','#ffd040',2],
+ ['ชุดผู้อยู่นอกกาล','🌌','ผ่านครบทั้งเก้ากัลป์','#dff0ff','#70e0ff','#b8d8f0','#70e0ff',1],
+ ['ชุดผู้พิทักษ์','🛡️','เลือก 🛡️ ผู้พิทักษ์ ที่ประตูนวนิยาย','#e8eef8','#5b8def','#c8d4e8','#5b8def',3],
+ ['ชุดผู้ลบหน้ากระดาษ','😈','เลือก 😈 ผู้ลบหน้ากระดาษ ที่ประตูนวนิยาย','#0e0a12','#c8183a','#0a080e','#c8183a',1],
+ ['ชุดผู้ปล่อยวาง','🍃','เลือก 🍃 ผู้ปล่อยวาง ที่ประตูนวนิยาย','#dceedd','#7ac898','#b8d8c0','#7ac898',2],
+ ['ชุดผู้จดจำ','📖','เลือก 📖 ผู้จดจำ ที่ประตูนวนิยาย','#2a2456','#f0d080','#1c1840','#f0d080',2],
+ ['ชุดก้าวข้ามสามภพ','🔱','เลือก 🌌 ก้าวข้ามสามภพ ที่ประตูนวนิยาย','#241640','#ffd7ff','#180e2c','#ffd7ff',7]];
+const KPAL=[null,
+ ['โลหิต','#5a0e18','#ff4a5a','#2a0a10','#ff4a5a','#ff4a5a','#8a1020','#ffc0c8'],['มรกต','#0e4a34','#5af0a8','#0a2a20','#5af0a8','#5af0a8','#1a8a5a','#d0fff0'],
+ ['ราตรี','#0e1030','#8a9aff','#080a20','#8a9aff','#8a9aff','#3a3a9a','#e0e4ff'],['อัคคี','#6a1e08','#ffa030','#3a1006','#ffa030','#ffa030','#e8402a','#fff0a0'],
+ ['หิมะ','#eef4fa','#8ac8ff','#c8d8e8','#8ac8ff','#bfe4ff','#6aa8e0','#ffffff'],['ทองคำ','#8a6a1a','#ffe060','#4a380a','#ffe060','#ffe060','#c8a040','#fff8c8'],
+ ['อเมทิสต์','#3a1a5a','#d08aff','#200e34','#d08aff','#d08aff','#7a3ab0','#f4e0ff'],['ไพลิน','#0e2a6a','#4ab0ff','#081a40','#4ab0ff','#4ab0ff','#2a5ad0','#d8f0ff'],
+ ['สุริยัน','#e89a2a','#fff0a0','#8a4a10','#fff0a0','#fff0a0','#ff8a20','#ffffff'],['จันทรา','#c8ccd8','#f4f4ff','#6a6e80','#f4f4ff','#f4f4ff','#a0a8c8','#ffffff'],
+ ['มรณะ','#1a1a1e','#9aff9a','#0e0e10','#4a4a50','#9aff9a','#3a6a3a','#e0ffe0'],['บุปผา','#e87aa8','#fff0f6','#8a3a5a','#fff0f6','#ffb0d0','#d84a8a','#ffffff'],
+ ['อสนี','#1e2a4a','#fff060','#10182a','#fff060','#fff060','#8ab0ff','#ffffff'],['พิษ','#2a3a10','#c0ff40','#18200a','#c0ff40','#c0ff40','#6a9a1a','#f0ffc0'],
+ ['หยก','#4a8a6a','#e0fff0','#2a4a3a','#e0fff0','#a0f0c8','#5ac08a','#ffffff'],['อำพัน','#7a4a1a','#ffc060','#3a240a','#ffc060','#ffc060','#c87a2a','#fff0d0'],
+ ['ทับทิม','#8a0e3a','#ff8ac0','#4a0820','#ff8ac0','#ff5a9a','#c8185a','#ffe0f0'],['เมฆา','#a8c0e0','#ffffff','#6a80a0','#ffffff','#ffffff','#c8d8f0','#ffffff'],
+ ['เงาดำ','#0a0a0e','#6a6a7a','#050508','#6a6a7a','#9a9aaa','#3a3a4a','#ffffff'],['รุ้ง','#2a2040','#ff9ad0','#18142a','#8ad8ff','#ff9ad0','#8ad8ff','#ffe08a']];
+// สีแสงตั้งต้นของแต่ละชุด [a,b,c]
+const KDEF=[null,['#e0e8ff','#a8b8e8','#ffffff'],['#ff8a40','#ff6a20','#ffc040'],['#e8c040','#8a6a20','#fff0a0'],['#ffe08a','#8ad8ff','#ff9ad0'],['#ffd040','#c8a040','#fff4c0'],['#70e0ff','#e0b0ff','#ffffff'],
+ ['#cfe0ff','#a8c4ff','#ffffff'],['#e8dcc0','#8a1020','#3a0a14'],['#cfeedd','#7ac898','#d0f0a0'],['#d8ccb0','#f0d080','#fff0b0'],['#6ad08a','#7ad0ff','#ffd040']];
+const PATH_I={guard:7,mara:8,letgo:9,keep:10,top:11};
+const KN=[0,1,2,4,6,8]; // กัลป์ที่ต้องถึง (K.n) ของชุด 1–5
+// ---- การปลดล็อก (เก็บเป็นของบัญชี: คีย์ murim_ ย้ายไปกับโปรไฟล์) ----
+const U=()=>{const u=LS.get('murim_kxu',null)||{};u.k=u.k|0;u.p=u.p||{};return u};
+function kxOk(i){if(!i)return true;const u=U();if(i<=6)return u.k>=i;return !!u.p[Object.keys(PATH_I).find(k=>PATH_I[k]===i)]}
+window.kxOk=kxOk;
+function kxGive(list){const u=U(),got=[];list.forEach(i=>{if(kxOk(i))return;if(i<=6){if(i>u.k){for(let j=u.k+1;j<=i;j++)got.push(j);u.k=i}}else{const k=Object.keys(PATH_I).find(x=>PATH_I[x]===i);u.p[k]=1;got.push(i)}});
+ if(!got.length)return;LS.set('murim_kxu',u);
+ try{got.forEach(i=>{const x=KX[i];log(`🌌 <b>ปลดล็อกชุดระดับกัลป์: ${x[1]} ${x[0]}</b> — ใส่ได้ทุกชีวิต <button class="sysb" style="margin-left:4px" onclick="kxOpen()">👘 ใส่ชุด</button>`,'myth',true)});toast(`🌌 ปลดล็อก ${KX[got[got.length-1]][0]}`)}catch(e){}}
+// ย้อนหลัง: ใครเคยได้ความสำเร็จเรื่องกัลป์แล้วได้ชุดเลย
+try{const a=typeof achGot!=='undefined'?achGot:{};const L=[];if(a.kal2)L.push(1);if(a.kal5)L.push(3);if(a.kal9)L.push(6,11);if(L.length){const u=U();let ch=0;L.forEach(i=>{if(i<=6&&i>u.k){u.k=i;ch=1}else if(i===11&&!u.p.top){u.p.top=1;ch=1}});if(ch)LS.set('murim_kxu',u)}}catch(e){}
+function kxScan(){try{if(!S||!S.kalpa)return;const K=S.kalpa,n=K.n|0;if(kxScan._n===n+':'+(K.mk|0)+':'+(S.flags&&S.flags.kTop?1:0))return;kxScan._n=n+':'+(K.mk|0)+':'+(S.flags&&S.flags.kTop?1:0);
+ let t=0;for(let i=1;i<=5;i++)if(n>=KN[i])t=i;if(n>=9||(K.mk|0)>0||(S.flags&&S.flags.kTop))t=6;if(t)kxGive([t])}catch(e){}}
+{const _r=render;render=function(){const r=_r.apply(this,arguments);kxScan();return r}}
+{const _kw=kalpaWin;kalpaWin=function(){const r=_kw.apply(this,arguments);kxScan._n='';kxScan();return r}}
+{const _ke=kalpaEnd;kalpaEnd=function(how){const v=S&&S.flags&&S.flags.kEndV,h=S&&S.flags&&S.flags.kHallDone;const r=_ke.apply(this,arguments);
+ try{if(how==='top'&&h){const L=[6];L.push(PATH_I[v]||11);kxGive(L)}}catch(e){}return r}}
+// ---- หน้าออกแบบ ----
+const LK_KX=[['ไม่ใส่']].concat(KX.slice(1).map((x,i)=>[(kxOk(i+1)?'':'🔒 ')+x[0]]));
+const relbl=()=>KX.forEach((x,i)=>{if(i)LK_KX[i][0]=(kxOk(i)?'':'🔒 ')+x[0]});
+const KVF=['kv','🎨 สีของชุดกัลป์ (20 สี)','body',()=>LK_KV],LK_KV=[['สีดั้งเดิม']].concat(KPAL.slice(1).map(p=>['สี'+p[0]]));
+LK_F.set.unshift(['kx','🌌 ชุดระดับกัลป์','body',()=>{relbl();return LK_KX}]);
+const _li=lkInit;lkInit=function(){_li.apply(this,arguments);if(C.kx==null)C.kx=0;if(C.kv==null)C.kv=0};
+const _lf=lkFromC;lkFromC=function(){const L=_lf.apply(this,arguments);if(C.kx>0&&kxOk(C.kx)){L.kx=C.kx;L.kv=C.kv|0}return L};
+const _ls=lkSet;lkSet=function(k,i){if(k==='kx'){if(i>0&&!kxOk(i)){sfx('click');return toast('🔒 ปลดล็อกเมื่อ'+KX[i][2])}C.kx=i;if(!i)C.kv=0;sfx('click');crDraw();return}
+ if(k==='kv'){C.kv=i;sfx('click');crDraw();return}
+ if(['sty','rb','tr','bt','pt','mof','set_d','set_c'].includes(k))C.kx=0;return _ls.apply(this,arguments)};
+const _lr=lkRand;lkRand=function(){C.kx=0;C.kv=0;return _lr.apply(this,arguments)};
+const _lz=lkReset;lkReset=function(){C.kx=0;C.kv=0;return _lz.apply(this,arguments)};
+const _lb=lkBody;lkBody=function(){try{const j=LK_F.set.indexOf(KVF);if(C.kx>0&&j<0)LK_F.set.splice(1,0,KVF);else if(!(C.kx>0)&&j>=0)LK_F.set.splice(j,1)}catch(e){}let h=_lb.apply(this,arguments);try{if(C.tab==='set'){const u=U();const row=(i)=>`<span class="kxu ${kxOk(i)?'on':''}">${kxOk(i)?'✅':'🔒'} ${KX[i][1]} ${KX[i][0].replace('ชุด','')}<small>${KX[i][2]}</small></span>`;
+  const box=`<details class="kxbox"><summary><b>🌌 ชุดระดับกัลป์ · ปลดล็อกแล้ว ${[1,2,3,4,5,6,7,8,9,10,11].filter(kxOk).length}/11</b> <small>แตะดูวิธีปลดล็อก</small></summary><p class="tag2">ชุดมีแสงขยับ ใส่ได้ทุกชีวิต · ระหว่างเล่นเปลี่ยนได้ที่ 👘 ในบันทึกตอนปลดล็อก หรือในคู่มือระบบ</p><div class="kxg">${[1,2,3,4,5,6,7,8,9,10,11].map(row).join('')}</div></details>`;
+  h=h.replace('<div class="lkf">',box+'<div class="lkf">')}}catch(e){}return h};
+// ---- ใส่ชุดเข้าตัวละคร ----
+const _la=lookApply;lookApply=function(o,L,age,gd,fac){const kx=L&&L.kx|0;if(!kx||!KX[kx]||!o||o.beast)return _la.apply(this,arguments);
+ const kv=L.kv|0,P=kv&&KPAL[kv]?KPAL[kv]:null,x0=KX[kx],x=P?[x0[0],x0[1],x0[2],P[1],P[2],P[3],P[4],x0[7]]:x0,L2=Object.assign({},L,{mof:0,sty:x[7]});const r=_la.call(this,o,L2,age,gd,fac);try{if(r&&age>=12){r.robe=x[3];r.trim=x[4];r.pant=x[5];r.belt=x[6];['coat','coatL','skirt','sash','patch','stripe','emblem'].forEach(p=>delete r[p]);if(r.hat==='hood'&&r.ck&&!r.ck.hw2)r.hat=null;
+  if(r.g==='หญิง'||gd==='หญิง')r.skirt=x[3];const k=r.ck||(r.ck={});k.kx=kx;k.kv=kv;k.mof=0;k.sty=x[7]}}catch(e){}return r};
+// ---- วาด ----
+const A=(a,f)=>{const s=g.globalAlpha;g.globalAlpha=Math.max(0,Math.min(1,s*a));try{f()}finally{g.globalAlpha=s}};
+const glow=(x,y,rx,ry,c,a)=>{[1,.66,.36].forEach(f=>A(a/3,()=>{const RX=rx*f,RY=Math.max(1,Math.round(ry*f));for(let yy=-RY;yy<=RY;yy++){const w=Math.round(RX*Math.sqrt(Math.max(0,1-(yy/RY)*(yy/RY))));if(w>0)Q(x-w,y+yy,w*2,1,c)}}))};
+const star=(x,y,c)=>{Q(x-1,y,3,1,c);Q(x,y-1,1,3,c);Q(x,y,1,1,'#ffffff')};
+function geo(x,y,o,pose){const sit=pose==='sit',walk=pose==='walk',X=Math.round(x*3),Y=Math.round(y*3),T=frame*.15,sd=(o.seed||((o.robe||'').length*7+(o.hair||'').length))%10;
+ const H=48,hw=12,hh=12,tw=16,th=18,bob=walk?(Math.abs(Math.sin(T*3.2))>.7?-1:0):Math.round(Math.sin(T*1.6+sd)*.6);
+ const top=Y-H+(sit?9:0)+(o.old?2:0)+bob,cx=X+12,hx=cx-6,ty=top+hh+1,ly=ty+th,bY=ty+9,bot=sit?ly:Y-2;
+ return{sit,walk,X,Y,T,sd,top,cx,hx,hw,tw,th,ty,ly,bY,bot,fl:Math.round(Math.sin(T*3+sd))}}
+// วงโคจร: ของที่อยู่ด้านหลัง (b=1) วาดก่อนตัว ด้านหน้า (b=0) วาดหลังตัว
+function orbit(G,n,rx,ry,cy,sp,b,f){for(let i=0;i<n;i++){const a=G.T*sp+i*Math.PI*2/n+G.sd,s=Math.sin(a);if((s<0)!==!!b)continue;f(G.cx+Math.round(Math.cos(a)*rx),cy+Math.round(s*ry),i,a)}}
+function motes(G,n,c,spread,rise,sp,sz){for(let i=0;i<n;i++){const p=((G.T*sp+i*.618+G.sd*.13)%1+1)%1;const px=G.cx+Math.round(Math.sin(i*2.39+G.sd)*spread+Math.sin(G.T*1.5+i)*1.5),py=G.Y-4-Math.round(p*rise);A(1-p,()=>Q(px,py,sz||1,sz||1,typeof c==='function'?c(i):c))}}
+function back(G,o,k,pa,pb,pc){const {cx,T,ty,Y,top,bot,tw,sd}=G;
+ if(k===1){glow(cx,ty+6,13,24,pa,.3+.1*Math.sin(T*2));motes(G,9,pa,11,44,.18);for(let i=0;i<8;i++){const p=((T*.22+i*.125)%1),s=i%2?1:-1,px=cx+s*(10+(i%3)),py=top+Math.round(p*46);A(Math.sin(p*Math.PI),()=>Q(px,py,1,1,i%3?pb:pc))}}
+ else if(k===2){const cc=shd(o.robe||'#2e2a30',-.45),w=tw+6,l=cx-Math.floor(w/2);for(let i=0;i<w;i++){const rag=((i*7+3)%5)+Math.round((Math.sin(T*2.4+i*.7)*.5+.5)*2),len=bot-ty-rag;Q(l+i+(i>w-4?G.fl:0),ty,1,Math.max(3,len),i%4===0?shd(cc,.15):cc)}
+  A(.55,()=>{for(let i=0;i<w;i+=3)Q(l+i,bot-8-((i*5)%4),1,2,pb)})}
+ else if(k===3){const cy=ty+5,R=15,ang=T*.6;A(.85,()=>{for(let t=0;t<64;t++){const a=t/64*Math.PI*2;Q(cx+Math.round(Math.cos(a)*R),cy+Math.round(Math.sin(a)*R),1,1,t%2?pa:pb)}
+   for(let h=0;h<12;h++){const a=h/12*Math.PI*2;Q(cx+Math.round(Math.cos(a)*(R-2)),cy+Math.round(Math.sin(a)*(R-2)),1,1,h%3?pa:pc)}
+   for(let s=2;s<R-2;s++)Q(cx+Math.round(Math.cos(ang)*s),cy+Math.round(Math.sin(ang)*s),1,1,pc);for(let s=2;s<R-6;s++)Q(cx+Math.round(Math.cos(ang/12)*s),cy+Math.round(Math.sin(ang/12)*s),1,1,pa)});
+  A(.25+.15*Math.sin(T*2),()=>{for(let t=0;t<48;t++){const a=t/48*Math.PI*2;Q(cx+Math.round(Math.cos(a)*(R+2)),cy+Math.round(Math.sin(a)*(R+2)),1,1,pc)}})}
+ else if(k===4){orbit(G,3,16,4,ty+8,1.1,1,(x,y,i)=>A(.8,()=>star(x,y,[pa,pb,pc][i])));A(.4,()=>{for(let i=0;i<12;i++){const p=(i*37+sd*11)%40;Q(cx-20+p,top-2+((i*13)%46),1,1,((T*2+i)%3)<1?'#ffffff':pb)}})}
+ else if(k===5){const hy=top+5,pu=.18+.1*Math.sin(T*2);A(pu,()=>{for(let r=0;r<12;r++){const a=r/12*Math.PI*2+T*.15,L=r%2?22:30;for(let s=8;s<L;s+=1)Q(cx+Math.round(Math.cos(a)*s),hy+Math.round(Math.sin(a)*s),1,1,pc)}});
+  glow(cx,hy,13,13,pc,.55);glow(cx,ty+8,14,22,pa,.25)}
+ else if(k===6){glow(cx,ty+6,13,24,pa,.3+.15*Math.sin(T*1.3));A(.4+.15*Math.sin(T*1.7),()=>{for(let t=0;t<40;t++){const a=t/40*Math.PI*2+T*.4;Q(cx+Math.round(Math.cos(a)*14),Y-3+Math.round(Math.sin(a)*3),2,1,t%3?pa:pb)}})}
+ else if(k===7){const fp=Math.round(Math.sin(T*2.2)*1.5);[-1,1].forEach(s=>{for(let r=0;r<5;r++){const len=12-r*2,yy=ty-2+r*3-fp*(r<2?1:0);for(let j=0;j<len;j++){const px=s<0?cx-7-j:cx+7+j;Q(px,yy-Math.round(j*.35),1,2,j>len-3?pc:r%2?pb:pa)}}
+   glow(s<0?cx-13:cx+13,ty+1,9,7,pa,.4)})}
+ else if(k===8){for(let i=0;i<5;i++){const p=((T*.12+i*.2+sd*.05)%1),px=cx+Math.round(Math.sin(i*2.1+T*.8)*14),py=G.Y-6-Math.round(p*46),v=Math.floor(T*2+i)%2;A(1-p*.8,()=>{Q(px,py,v?3:2,v?2:3,pa);Q(px,py,1,1,pb);Q(px+(v?2:1),py+(v?1:2),1,1,pc)})}}
+ else if(k===9){const ry=ty+2;for(let i=0;i<34;i++){const px=cx+6+i,py=ry+Math.round(Math.sin(T*2.6-i*.35)*2.5+i*.25);A(1-i/40,()=>Q(px,py,1,2,i%5?pa:'#ffffff'))}
+  for(let i=0;i<30;i++){const px=cx-7-i,py=ry+3+Math.round(Math.sin(T*2.6-i*.35+1)*2+i*.3);A(.8-i/40,()=>Q(px,py,1,1,pa))}}
+ else if(k===10){orbit(G,3,15,4,ty+5,.7,1,(x,y)=>{Q(x-1,y-2,4,5,pa);Q(x,y-1,2,1,shd(pa,-.4));Q(x,y+1,2,1,shd(pa,-.4))});glow(cx,ty+6,13,24,pb,.25+.1*Math.sin(T*2))}
+ else if(k===11){const C3=[pa,pb,pc];A(.55,()=>{for(let t=0;t<48;t++){const a=t/48*Math.PI*2+T*.5;Q(cx+Math.round(Math.cos(a)*15),Y-3+Math.round(Math.sin(a)*3),2,1,C3[Math.floor(t/16)])}});
+  orbit(G,3,17,5,ty+6,.9,1,(x,y,i,a)=>{for(let t=1;t<5;t++){A(.5-t*.1,()=>Q(G.cx+Math.round(Math.cos(a-t*.15)*17),ty+6+Math.round(Math.sin(a-t*.15)*5),1,1,C3[i]))}Q(x-1,y-1,3,3,C3[i]);Q(x,y,1,1,'#fff')})}}
+function front(G,o,k,pa,pb,pc){const {cx,T,ty,Y,top,bot,tw,ly,bY,sd}=G,tc=o.trim||'#fff',pu=.55+.45*Math.sin(T*3+sd),L8=cx-Math.floor(tw/2);
+ if(k===1){A(pu,()=>{Q(L8-1,bot-1,tw+2,1,pa);Q(L8,bot-2,tw,1,pb)});
+  const cy=ty+6,rc=shd(o.robe||'#7a8098',-.3);Q(cx-2,cy-2,5,5,rc);Q(cx-2,cy-2,5,1,tc);Q(cx-2,cy+2,5,1,tc);Q(cx-2,cy-2,1,5,tc);Q(cx+2,cy-2,1,5,tc);
+  const h=Math.floor(T*.8)%8,D=[[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1]][h];Q(cx,cy,1,1,pc);Q(cx+D[0],cy+D[1],1,1,pc)}
+ else if(k===2){A(pu,()=>{[[L8+3,ty+4],[L8+4,ty+5],[L8+3,ty+6],[L8+4,ty+7],[cx+3,ty+8],[cx+4,ty+9],[cx+3,ty+10],[cx+5,ty+11],[cx-2,ly-3],[cx-1,ly-2]].forEach(([a,b])=>Q(a,b,1,1,pa))});
+  motes(G,8,i=>i%3?pb:pc,10,40,.3)}
+ else if(k===3){for(let t=0;t<13;t++)Q(cx-6+t,ty+1+t,2,1,t%4===0?pc:pa);const cy=ty+6;Q(cx-2,cy-2,5,5,pa);Q(cx-1,cy-1,3,3,o.robe||'#1a3460');const a=T*1.5;Q(cx+Math.round(Math.cos(a)),cy+Math.round(Math.sin(a)),1,1,'#ff5a5a');Q(cx,cy,1,1,'#fff');
+  Q(L8-1,bY,tw+2,2,pa)}
+ else if(k===4){const P=[[-5,3],[3,5],[-2,8],[5,10],[-6,12],[1,14],[-3,16],[4,17],[0,4],[-1,12]];P.forEach(([a,b],i)=>{if(ty+b>bot)return;const tw2=Math.sin(T*2.5+i*1.7);Q(cx+a,ty+b,1,1,tw2>.6?'#ffffff':tw2>-.2?tc:shd(tc,-.5))});
+  orbit(G,3,16,4,ty+8,1.1,0,(x,y,i)=>star(x,y,[pa,pb,pc][i]))}
+ else if(k===5){const hy=top-3+Math.round(Math.sin(T*1.8)),hw=8;for(let t=0;t<32;t++){const a=t/32*Math.PI*2;Q(cx+Math.round(Math.cos(a)*hw),hy+Math.round(Math.sin(a)*2),1,1,Math.sin(a)<0?pb:pa)}A(pu,()=>{Q(cx-2,hy-3,5,1,pc)});
+  [L8-4,cx+Math.floor(tw/2)-1].forEach(px=>{Q(px,ty-1,5,3,pa);Q(px+1,ty-1,3,1,pc);Q(px,ty+2,5,1,pb)});Q(cx-1,ty+5,3,3,pa);Q(cx,ty+4,1,5,pa);Q(cx-2,ty+6,5,1,pa);Q(cx,ty+6,1,1,'#fff');
+  A(pu,()=>Q(L8,bot-1,tw,1,pa))}
+ else if(k===6){const gl=(Math.floor(T*3)%7)===0;if(gl){const r=ty+((Math.floor(T*13))%14);A(.7,()=>{Q(L8-3,r,tw+6,1,pa);Q(L8-1,r+2,tw+2,1,pb)})}
+  for(let i=0;i<14;i++){const p=((T*.25+i*.0714)%1),a=i*.449+sd,d=6+p*16,px=cx+Math.round(Math.cos(a)*d),py=ty+7+Math.round(Math.sin(a)*d*.9);A(1-p,()=>{Q(px,py,2,1,i%2?pa:pc);Q(px+(i%2?0:1),py+1,1,1,pb)})}
+  A(pu*.6,()=>Q(cx-1,ty+5,2,2,pc))}
+ else if(k===7){Q(cx-2,ty+4,5,6,tc);Q(cx-2,ty+4,5,1,shd(tc,.3));Q(cx-1,ty+9,3,1,tc);Q(cx,ty+10,1,1,tc);Q(cx,ty+5,1,4,'#fff');Q(cx-1,ty+6,3,1,'#fff');A(pu,()=>Q(cx-3,ty+3,7,1,pa))}
+ else if(k===8){for(let t=0;t<9;t++){Q(cx-4+t,ty+3+t,1,1,tc);Q(cx+4-t,ty+3+t,1,1,pb)}
+  for(let i=0;i<tw;i+=3){const ph=((T*.5+i*.37)%1),len=1+Math.round(ph*4);Q(L8+i,bot-1,1,len,o.robe||'#0e0a12');if(ph>.7)A(1-ph,()=>Q(L8+i,bot+len+Math.round((ph-.7)*12),1,1,pc))}
+  A(pu,()=>{Q(L8,bot-2,tw,1,tc)})}
+ else if(k===9){for(let i=0;i<6;i++){const p=((T*.09+i/6+sd*.03)%1),px=cx-24+Math.round(p*48),py=top+6+i*6+Math.round(Math.sin(T*2+i*1.3)*3),c=[pb,pa,shd(pb,-.2),pc][i%4];A(Math.sin(p*Math.PI),()=>{Q(px,py,2,1,c);Q(px+((Math.floor(T*3+i)%2)?1:0),py+1,1,1,shd(c,-.25))})}
+  Q(L8,ty+1,tw,1,shd(pa,.4));A(.7,()=>Q(L8+1,ty+2,tw-2,2,shd(pa,.25)))}
+ else if(k===10){for(let r=0;r<5;r++){const yy=ty+3+((r*3+Math.floor(T*1.2))%15);if(yy>bot-1)continue;A(.6+.4*Math.sin(T*2+r),()=>{for(let i=0;i<tw-4;i+=2)if(((i*7+r*3)%5)>1)Q(L8+2+i,yy,1,1,pb)})}
+  orbit(G,3,15,4,ty+5,.7,0,(x,y)=>{Q(x-1,y-2,4,5,shd(pa,.5));Q(x,y-1,2,1,shd(pa,-.4));Q(x,y+1,2,1,shd(pa,-.4));glow(x,y,3,3,pc,.5)})}
+ else if(k===11){const C3=[pa,pb,pc];Q(cx,ty+4,1,1,C3[2]);Q(cx-2,ty+7,1,1,C3[0]);Q(cx+2,ty+7,1,1,C3[1]);A(pu,()=>{Q(cx-1,ty+5,3,2,tc)});
+  orbit(G,3,17,5,ty+6,.9,0,(x,y,i,a)=>{for(let t=1;t<5;t++){A(.5-t*.1,()=>Q(G.cx+Math.round(Math.cos(a-t*.15)*17),ty+6+Math.round(Math.sin(a-t*.15)*5),1,1,C3[i]))}Q(x-1,y-1,3,3,C3[i]);Q(x,y,1,1,'#fff')})}}
+const _p0=person0;person0=function(x,y,o,pose){const k=o&&o.ck&&o.ck.kx|0;if(!k||pose==='lie'||o.beast||o.age<12||(o.float&&pose!=='sit'&&pose!=='walk'))return _p0.apply(this,arguments);
+ const v=o.ck.kv|0,Pp=v&&KPAL[v]?KPAL[v].slice(5):KDEF[k];let G=null;try{G=geo(x,y,o,pose);back(G,o,k,Pp[0],Pp[1],Pp[2])}catch(e){}
+ const sa=g.globalAlpha;if(k===6)g.globalAlpha=sa*(.72+.18*Math.sin(frame*.15*1.3));let r;try{r=_p0.apply(this,arguments)}finally{g.globalAlpha=sa}
+ try{if(G)front(G,o,k,Pp[0],Pp[1],Pp[2])}catch(e){}return r};
+// ---- ใส่ระหว่างเล่น ----
+window.kxOpen=function(){if(!S){toast('เลือกได้ในหน้าออกแบบตัวละคร');return}const cur=S.look&&S.look.kx|0;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌌 ชุดระดับกัลป์</h3><p class="tag2">ปลดล็อกแล้ว ${[1,2,3,4,5,6,7,8,9,10,11].filter(kxOk).length}/11 · ใส่ได้ทุกชีวิต</p>${cur?`<div class="kxpal"><b>🎨 สีของ${KX[cur][0]}</b><div>${KPAL.map((p,i)=>`<button class="kxp ${(S.look.kv|0)===i?'on':''}" style="--a:${p?p[1]:KX[cur][3]};--b:${p?p[5]:KDEF[cur][0]}" title="${p?'สี'+p[0]:'สีดั้งเดิม'}" onclick="kxTone(${i})"></button>`).join('')}</div></div>`:''}<div class="kxw">${KX.map((x,i)=>{const ok=kxOk(i);return`<button class="kxc ${i===cur?'on':''} ${ok?'':'lk'}" onclick="kxWear(${i})"><canvas data-kx="${i}" width="68" height="104"></canvas><b>${i?(ok?'':'🔒 ')+x[0]:'ไม่ใส่'}</b>${i&&!ok?`<small>${x[2]}</small>`:''}</button>`}).join('')}</div>`,'kxw');kxAnim()};
+window.kxTone=function(i){if(!S||!S.look||!S.look.kx)return;S.look.kv=i;toast(i?'สี'+KPAL[i][0]:'สีดั้งเดิม');try{render();saveGame()}catch(e){}kxOpen()};
+window.kxWear=function(i){if(i&&!kxOk(i))return toast('🔒 ปลดล็อกเมื่อ'+KX[i][2]);if(!S.look)S.look={};if(S.look.kx!==i)S.look.kv=0;S.look.kx=i;closeM();toast(i?'สวม '+KX[i][0]:'ถอดชุดกัลป์');try{render();saveGame()}catch(e){}};
+function kxAnim(){const cs=[...document.querySelectorAll('#modal canvas[data-kx]')];if(!cs.length)return;const base=(typeof meLook==='function'&&S)?meLook():null;
+ cs.forEach(cv=>{const i=+cv.dataset.kx,ctx=cv.getContext('2d'),sg=g,sp=PS;try{g=ctx;const VW=17,ox=7.5,oy=2.6;PS=cv.width/VW;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);ctx.setTransform(PS,0,0,PS,-ox*PS,-oy*PS);ctx.imageSmoothingEnabled=false;
+  P(ox,oy,VW,40,'#1c1830');P(ox,26,VW,10,'#2a2440');let o=base?Object.assign({},base):{robe:'#8a6a4a',skin:'#f1c27d',hair:'#2a2020',age:20,g:S.gender||'ชาย',mood:'happy',seed:7};o.age=Math.max(20,o.age|0);o.float=0;o.mood='happy';
+  const L=Object.assign({},S.look||{},{kx:i});o=lookApply(o,L,o.age,S.gender,false);if(!kxOk(i)&&i){ctx.globalAlpha=.55}person(10,30,o,'stand');ctx.globalAlpha=1}catch(e){}finally{g=sg;PS=sp}});
+ requestAnimationFrame(()=>setTimeout(kxAnim,60))}
+// หน้าออกแบบ: ภาพตัวอย่างชุดกัลป์ขยับได้
+{let busy=0;const loop=()=>{const cs=document.querySelectorAll('#crBody canvas[data-lk^="kx:"]');if(!cs.length){busy=0;return}
+ cs.forEach(cv=>{const i=+cv.dataset.lk.split(':')[1];if(!i)return;const sv=C.kx;C.kx=i;let o;try{o=crLook();if(o.ck)o.ck.kx=i;else return}finally{C.kx=sv}
+  if(!o.ck.kx){const x=KX[i];o.robe=x[3];o.trim=x[4];o.pant=x[5];o.belt=x[6];o.ck.kx=i}
+  const ctx=cv.getContext('2d'),sg=g,sp=PS;try{g=ctx;const VW=17,ox=7.5,oy=2.6;PS=cv.width/VW;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);ctx.setTransform(PS,0,0,PS,-ox*PS,-oy*PS);ctx.imageSmoothingEnabled=false;P(ox,oy,VW,40,'#1c1830');P(ox,26,VW,10,'#2a2440');if(!kxOk(i))ctx.globalAlpha=.6;person(10,30,o,'stand');ctx.globalAlpha=1}catch(e){}finally{g=sg;PS=sp}});
+ setTimeout(loop,70)};
+ const _lt=lkThumbs;lkThumbs=function(){const r=_lt.apply(this,arguments);if(!busy){busy=1;setTimeout(loop,70)}return r}}
+// lkFromC ไม่ใส่ kx ที่ยังล็อก → ภาพตัวอย่างของชุดที่ล็อกต้องบังคับใส่เอง (ทำใน loop ด้านบน)
+try{document.head.insertAdjacentHTML('beforeend',`<style>
+.kxbox{margin:6px 0 10px;padding:10px;border-radius:12px;border:1px solid #6a5aa0;background:linear-gradient(135deg,rgba(40,30,80,.75),rgba(20,30,60,.75));position:relative;overflow:hidden}
+.kxbox:before{content:'';position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent,rgba(160,140,255,.18),transparent 30%);animation:kxSpin 8s linear infinite;pointer-events:none}
+.kxbox>*{position:relative}.kxbox summary{cursor:pointer;list-style:none}.kxbox summary small{color:#b8b0d8;font-size:11px}.kxbox b{color:#e8dcff}
+.kxg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px;margin-top:6px}
+.kxu{font-size:12px;padding:4px 6px;border-radius:8px;background:rgba(0,0,0,.25);color:#9a94b0;display:flex;flex-direction:column}
+.kxu.on{color:#fff;background:rgba(120,100,220,.3);box-shadow:inset 0 0 0 1px #a890ff}.kxu small{font-size:10px;opacity:.75}
+.kxw{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px;max-height:62vh;overflow:auto}
+.kxc{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border-radius:10px;border:1px solid #4a4070;background:#15122a;color:#e8e0ff;font-size:11px}
+.kxpal{margin:6px 0 8px;font-size:12px}.kxpal>div{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}.kxp{width:26px;height:26px;border-radius:50%;border:2px solid #4a4070;background:linear-gradient(135deg,var(--a) 50%,var(--b) 50%)}.kxp.on{border-color:#fff;box-shadow:0 0 8px var(--b)}
+.kxc canvas{width:68px;height:104px;image-rendering:pixelated}.kxc.on{border-color:#ffd040;box-shadow:0 0 12px rgba(255,208,64,.45)}.kxc.lk{opacity:.8}.kxc small{font-size:9px;opacity:.7}
+@keyframes kxSpin{to{transform:rotate(360deg)}}
+</style>`)}catch(e){}
+try{Object.assign(I18N.d,{'🌌 ชุดระดับกัลป์':'🌌 Kalpa outfits','ไม่ใส่':'None','🎨 สีของชุดกัลป์ (20 สี)':'🎨 Kalpa outfit tone (20)','สีดั้งเดิม':'Original'})}catch(e){}
+try{SYS_GUIDE.push({s:'world',nw:1,ic:'🌌',t:'ชุดระดับกัลป์',go:'kxOpen',d:'ชุดพิเศษ 11 ชุด แต่ละชุดมี 20 สีแปร (สีชุดและสีแสงเปลี่ยนตาม) มีแสงขยับ ได้จากการเล่นจริงเท่านั้น: ถึงกัลป์ที่ 2 · 3 · 5 · 7 · 9 · ผ่านครบเก้ากัลป์ และอีก 5 ชุดตามวิถีที่เลือกที่ 📖 ประตูนวนิยาย (ผู้พิทักษ์ · ผู้ลบหน้ากระดาษ · ผู้ปล่อยวาง · ผู้จดจำ · ก้าวข้ามสามภพ) · ปลดล็อกแล้วใส่ได้ทุกชีวิต เลือกในหน้าออกแบบ (แท็บ 🎽) หรือกดปุ่มนี้ระหว่างเล่น'})}catch(e){}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
