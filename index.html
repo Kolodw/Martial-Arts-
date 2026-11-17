@@ -34605,6 +34605,21 @@ const fcHTML=M=>{const F=fc(M);return`<div class="item"><b>🏛️ ฝ่าย�
 try{END.hunter.push(['hDoom','C','ผู้เปิดประตูหายนะ'],['hCultBust','S','ทลายลัทธิจากข้างใน'],['hMask','A','ตำนานใต้หน้ากาก'],['hUnmask','A','ถอดหน้ากากต่อหน้าโลก'],['hVig','B','ศาลเตี้ยของประชาชน'],['hMirSave','S','ดึงกระจกเงากลับมา'],['hMirW','A','ชนะคู่ปรับกระจกเงา'],['hOrg','C','เจ้าแห่งเครือข่ายเงา'],['hFall','C','ตกต่ำจนสุดทาง'])}catch(e){}
 window._wld10={GR,GG,VG,FE,fc,alHTML};
 })()}catch(e){console.error(e)}
+
+// 🤖 อเวจี: ลงอัตโนมัติ — ไม่ต้องกดทุกปี (1 ชั้น/ปีตามกติกาเดิม ไม่ข้ามด่าน ไม่ลดความยาก)
+window.abAutoToggle=function(){const h=abH();if(!h)return;S.flags.abAuto=S.flags.abAuto?0:1;toast(S.flags.abAuto?'🤖 เปิดลงอัตโนมัติ — สู้ให้ปีละชั้น หยุดเองเมื่อเสี่ยง':'ปิดลงอัตโนมัติแล้ว');openAbyss()};
+function abAutoStop(m){S.flags.abAuto=0;log('🤖 <b>หยุดลงอัตโนมัติ</b> — '+m,'myth',true)}
+function abAutoStep(){try{const h=abH();if(!h||!S||!S.alive||!S.flags.abAuto)return;if(choice._cur||modalOpen||paused)return;if(S.age<h.cd)return;const n=h.lv+1;if(n>1000)return abAutoStop('ถึงชั้นสุดท้ายแล้ว');
+ if(S.hp<S.maxHp*.55)return abAutoStop('เลือดต่ำกว่า 55% — พักก่อนค่อยลงต่อ');
+ if(abK(n)===100)return abAutoStop(`ถึงบอสวงใหญ่ชั้น ${n} (แพ้ = ตาย) — ให้คุณตัดสินใจเอง`);
+ const D=hlDoors(h);let best=null;
+ D.forEach((x,i)=>{if(!x.nm||x.hid||x.trap)return;let bt=null,bm=1e18;Object.keys(HL2.T).forEach(t=>{const m=hlEp(h,x,n)*hlTacM(h,x,t);if(m<bm){bm=m;bt=t}});const r=bm/Math.max(1,total());if(!best||r<best.r)best={i,x,t:bt,r}});
+ if(!best){const i=D.findIndex(x=>!x.nm&&!x.trap&&!x.hid);if(i>=0){hlGo(i);return}return abAutoStop('ข้างหน้าไม่มีประตูที่ปลอดภัย')}
+ if(best.r>1.05)return abAutoStop(`ผู้คุมชั้น ${n} แรงราว ${Math.round(best.r*100)}% ของคุณ — เสี่ยงเกินไป`);
+ const a0=auto;auto=true;try{abFight(h,best.x,n,best.t)}finally{auto=a0}
+ if(S.alive&&h.lv<n)abAutoStop(`พ่ายที่ชั้น ${n}`)}catch(e){}}
+{const _py2=passYear;passYear=function(){const r=_py2.apply(this,arguments);try{if(S&&S.flags&&S.flags.abAuto)setTimeout(abAutoStep,60)}catch(e){}return r}}
+{const _oa=openAbyss;openAbyss=function(){const r=_oa.apply(this,arguments);try{const h=abH(),m=$('modal');if(h&&m&&h.lv<1000&&!m.querySelector('.abAu'))m.insertAdjacentHTML('beforeend',`<button class="pbtn abAu" style="width:100%;margin-top:8px;${S.flags.abAuto?'background:#2a7a3a':''}" onclick="abAutoToggle()">🤖 ลงอัตโนมัติ: ${S.flags.abAuto?'เปิดอยู่ (กดปิด)':'ปิด (กดเปิด)'}</button><p class="tag2" style="margin:4px 0 0">สู้ให้ปีละ 1 ชั้นตามกติกาเดิม เลือกประตู/ท่าทีที่ปลอดภัยสุด หยุดเองเมื่อเลือดต่ำ ผู้คุมแรงเกินไป บอสวงใหญ่ หรือพ่ายแพ้</p>`)}catch(e){}return r}}
 </script>
 </body>
 </html>
