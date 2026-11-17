@@ -101,6 +101,7 @@ async function pay(request, env) {
   let P = null, worldId = null;
   try { const r = await env.PAY_DB.prepare("SELECT kind,scope,world_id,tier,days,n,price_baht FROM products WHERE sku=? AND active=1").bind(pk).first(); if (r) { P = { kind: r.kind, amt: r.price_baht, tier: r.tier, days: r.days || 0, n: r.n }; worldId = r.scope === 'world' ? r.world_id : null } } catch (e) {}
   if (!P) P = h.payPack && h.payPack(pk);
+  const DON = pk === 'donate'; if (DON) P = { kind: 'donate', amt: 0, tier: 0, days: 0, n: 0 }; // โหมดสนับสนุน: ตรวจว่าสลิปจริง/ไม่ซ้ำ/เข้าบัญชีเรา แต่ไม่ให้สิทธิ์ใดๆ
   if (!P || !/^[a-z0-9]{6,24}$/.test(uid)) return jr({ ok: 0, st: 'bad' }, 400);
   const img = String(b.img || ''); if (!/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(img) || img.length > 5.2e6) return jr({ ok: 0, st: 'img' }, 400);
   const db = env.PAY_DB, now = Date.now();
@@ -117,7 +118,7 @@ async function pay(request, env) {
     try {
       const bin = Uint8Array.from(atob(img.split(',')[1]), c => c.charCodeAt(0)), fd = new FormData();
       fd.append('files', new Blob([bin], { type: (img.match(/^data:([^;]+)/) || [])[1] || 'image/jpeg' }), 'slip.jpg');
-      fd.append('amount', String(P.amt)); fd.append('log', 'true');
+      if (!DON) fd.append('amount', String(P.amt)); fd.append('log', 'true');
       const r = await fetch('https://api.slipok.com/api/line/apikey/' + encodeURIComponent(env.SLIPOK_BRANCH), { method: 'POST', headers: { 'x-authorization': env.SLIPOK_KEY }, body: fd });
       hs = r.status; j = await r.json().catch(() => null);
     } catch (e) { return fail('unavailable', 'fetch') }
@@ -159,11 +160,12 @@ async function pay(request, env) {
     sender = String(((raw.sender || {}).account || {}).name && raw.sender.account.name.th || '').slice(0, 60); receiver = String(((raw.receiver || {}).account || {}).name && raw.receiver.account.name.th || '').slice(0, 60);
   }
   if (!ref) return fail('noslip', 'noref');
-  if (amt !== P.amt * 100) return fail('amount', 'slip=' + amt);
+  if (!DON && amt !== P.amt * 100) return fail('amount', 'slip=' + amt);
   if (!sd || sd < now - 3 * 3600e3 || sd > now + 600e3) return fail('old', 'date=' + (raw.date || raw.transDate || ''));
   // จองสลิปนี้ (คีย์หลักซ้ำ = เคยใช้แล้ว)
   try { await db.prepare("INSERT INTO slips(channel,trans_ref,order_id,amount_satang,sender_name,receiver_name,slip_date,verified_at) VALUES(?,?,?,?,?,?,?,?)").bind('promptpay', ref, oid, amt, sender, receiver, String(raw.date || raw.transDate || ''), now).run() }
   catch (e) { return fail('dup', 'slip-used') }
+  if (DON) { await db.prepare("UPDATE orders SET status='donation',paid_at=?,trans_ref=?,amount_satang=?,note=? WHERE id=?").bind(now, ref, amt, 'สนับสนุน ' + sender, oid).run(); return jr({ ok: 1, order: oid, don: 1, amt: amt / 100, ref }) }
   await db.prepare("UPDATE orders SET status='paid',paid_at=?,trans_ref=? WHERE id=?").bind(now, ref, oid).run();
   try {
     const run = h.vkRun ? h.vkRun(() => h.payGrant(uid, P, name)) : h.payGrant(uid, P, name); await run;

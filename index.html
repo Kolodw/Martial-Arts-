@@ -30174,6 +30174,13 @@ const wrap=(name,mkPk)=>{const o=window[name];if(typeof o!=='function')return;
   if(j&&MSG[j.st]){btn.disabled=false;btn.textContent='📨 ส่งสลิป';toast(MSG[j.st]);return}
   btn.disabled=false;return o.apply(this,arguments)}};
 wrap('vipPaid',k=>k);wrap('rrPaid',k=>'r'+k);
+// 💛 ฟอร์มสนับสนุน (จำนวนเงินกรอกเอง): ถ้าแนบสลิป ให้ SlipOK ตรวจก่อน (จริง/ไม่ซ้ำ/เข้าบัญชีเรา) แล้วติดป้าย ✅ ในข้อความที่ส่งผู้พัฒนา · ไม่มีสิทธิ์ใดๆ
+{const o=window.supPaid||(typeof supPaid==='function'?supPaid:null);if(o){const nw=async function(btn){const f=$('supImg')&&$('supImg').files&&$('supImg').files[0];if(!f)return o.apply(this,arguments);
+ btn.disabled=true;btn.textContent='⏳ กำลังตรวจสลิป…';let j=null;
+ try{const img=await bigShrink(f);if(!img)throw 0;const r=await fetch('/api/pay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:pid,pk:'donate',n:pname(),img})});j=await r.json().catch(()=>null)}catch(e){j=null}
+ if(j&&j.ok){const m=$('supMsg');if(m)m.value=('✅ SlipOK ตรวจแล้ว '+(j.amt||0)+' บาท ref '+(j.ref||'')+' '+(m.value||'')).slice(0,200);const a=$('supAmt');if(a&&!+a.value&&j.amt)a.value=j.amt;btn.disabled=false;return o.apply(this,arguments)}
+ if(j&&(j.st==='dup'||j.st==='acct'||j.st==='noslip'||j.st==='old')){btn.disabled=false;btn.textContent='📨 แจ้งว่าสนับสนุนแล้ว';toast(MSG[j.st]||'ตรวจสลิปไม่ผ่าน');return}
+ btn.disabled=false;return o.apply(this,arguments)};window.supPaid=nw;try{supPaid=nw}catch(e){}}}
 const t=document.querySelectorAll('.tag2');
 })()}catch(e){console.error(e)}
 
