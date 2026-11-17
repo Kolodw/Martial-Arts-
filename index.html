@@ -32026,6 +32026,18 @@ const clean=()=>{try{if(!(typeof mwOn==='function'&&mwOn()))return;const m=docum
  m.querySelectorAll('small,.sub').forEach(x=>{if(/ครอบครัว เพื่อน ศิษย์/.test(x.textContent))x.textContent=x.textContent.replace('ครอบครัว เพื่อน ศิษย์','ครอบครัว เพื่อน')})}catch(e){}};
 {const _o=openMenu;openMenu=function(){const r=_o.apply(this,arguments);clean();setTimeout(clean,60);setTimeout(clean,300);return r}}
 })()}catch(e){console.error(e)}
+
+// 📖 วิชาซ้ำค้างกินช่องลบไม่ได้: วิชาชื่อเดียวกันที่หลุดเข้ามาซ้ำ (เช่นจากวิญญาณ มรดก หรือสุ่มซ้อน) รวมเหลือเล่มเดียว เล่มที่เหลือเป็นเล่มที่ระดับสูงสุด ส่วนที่ซ้ำสลายเป็นพลังยุทธ์เหมือนกฎวิชาซ้ำปกติ
+try{(()=>{
+window.artDedup=function(){try{if(!S||!Array.isArray(S.arts))return 0;const by={};let n=0,g=0;const keep=[];
+ for(const a of S.arts){if(!a){continue}if(!a.n){keep.push(a);continue}const c=by[a.n];if(!c){by[a.n]=a;keep.push(a);continue}
+  const better=(x,y)=>((x.lv||0)-(y.lv||0))||((x.b||0)-(y.b||0));let win=c,lose=a;if(better(a,c)>0){win=a;lose=c;keep[keep.indexOf(c)]=a;by[a.n]=a}
+  if(lose.heir)win.heir=win.heir||lose.heir;g+=Math.round((lose.b||10)/4);n++}
+ if(!n)return 0;const arr=S.arts;arr.length=0;Array.prototype.push.apply(arr,keep);S.power+=g;
+ try{log(`📖 พบวิชาซ้ำ ${n} เล่ม — รวมเหลือเล่มเดียว ส่วนที่ซ้ำสลายเป็นพลังยุทธ์ +${g}`,'good')}catch(e){}try{render()}catch(e){}return n}catch(e){console.error(e);return 0}};
+{const _o=openArts;openArts=function(){try{artDedup()}catch(e){}return _o.apply(this,arguments)}}
+{const _p=passYear;passYear=function(){try{artDedup()}catch(e){}return _p.apply(this,arguments)}}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
