@@ -298,6 +298,21 @@ async function vipHeal(id) {
   let nm = '', t0 = 0; try { const ids = (await cmd('ZRANGE', 'suppayz', 0, -1)) || [], vals = ids.length ? ((await cmd('HMGET', 'suppay', ...ids)) || []).map(jp) : []; for (const r of vals) if (r && r.fid === id && r.vp === 'v3' && r.st === 'ok') { nm = String(r.n || ''); t0 = +r.mt || 0 } } catch (e) {}
   const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', id, JSON.stringify({ n: clean(nm, 24), o, t: t0 || Date.now() }));
 }
+async function vipFixAll() {
+  const ids = (await cmd('ZRANGE', 'suppayz', 0, -1)) || [], vals = ids.length ? ((await cmd('HMGET', 'suppay', ...ids)) || []).map(jp) : [], fixed = [], maybe = [];
+  for (const r of vals) {
+    if (!r || r.st !== 'ok' || !okId(r.fid)) continue;
+    if (!r.vp && (+r.amt || 0) >= 599) { r.vp = 'v3'; await cmd('HSET', 'suppay', r.i, JSON.stringify(r)) } // แพ็กรีโรลแพงสุด 59 บาท — ยอดตั้งแต่ 599 มีแพ็กเดียวคือบรรพชน
+    if (r.vp === 'v3') {
+      const cur = jp(await cmd('HGET', 'vipu', r.fid)), v0 = jp(await cmd('GET', 'vip:' + r.fid)) || {};
+      if (!v0.u) await vipAdd(r.fid, 3, 0, 1);
+      if (!cur) { const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', r.fid, JSON.stringify({ n: clean(String(r.n || ''), 24), o, t: +r.tm0 || Date.now() })); fixed.push({ i: r.i, n: r.n, o }) }
+      else if (!cur.n && r.n) { cur.n = clean(String(r.n), 24); await cmd('HSET', 'vipu', r.fid, JSON.stringify(cur)); fixed.push({ i: r.i, n: r.n, o: cur.o, name: 1 }) }
+      if (!r.vg) { r.vg = 1; await cmd('HSET', 'suppay', r.i, JSON.stringify(r)) }
+    } else if (!r.vp && (+r.amt || 0) >= 599) maybe.push({ i: r.i, n: r.n, amt: r.amt, fid: String(r.fid).slice(0, 6) })
+  }
+  return { fixed, maybe };
+}
 const cip = req => (String(req.headers['x-real-ip'] || '') || String(req.headers['x-forwarded-for'] || '').split(',')[0]).trim().replace(/[^0-9a-fA-F:.]/g, '').slice(0, 45) || 'x';
 // ต่อ IP ต่อนาที: เกิน SOFT ตอบ 429 · เกิน HARD แบน 30 นาที · คำสั่งที่เขียนข้อความให้คนอื่นเห็นจำกัดแยก
 // เน็ตมือถือไทยใช้ IP ร่วมกัน (CGNAT) → จำกัดหลักต่อ 'ไอดีผู้เล่น' ส่วนต่อ IP เผื่อไว้สูงมาก (กันแค่ยิงถล่มจริง)
@@ -673,19 +688,10 @@ module.exports = async (req, res) => {
     // ซ่อมหอบรรพชน: คนที่จ่ายแพ็กถาวรและอนุมัติแล้ว แต่ไม่ขึ้นในหอ (เช่น อนุมัติก่อนระบบหอเสร็จ) — ใส่ย้อนหลังตามลำดับเวลาที่จ่าย ไม่ลบอะไร
     if (a === 'vipfix') {
       const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
-      const ids = (await cmd('ZRANGE', 'suppayz', 0, -1)) || [], vals = ids.length ? ((await cmd('HMGET', 'suppay', ...ids)) || []).map(jp) : [], fixed = [], maybe = [];
-      for (const r of vals) {
-        if (!r || r.st !== 'ok' || !okId(r.fid)) continue;
-        if (r.vp === 'v3') {
-          const had = await cmd('HEXISTS', 'vipu', r.fid), v0 = jp(await cmd('GET', 'vip:' + r.fid)) || {};
-          if (!v0.u) await vipAdd(r.fid, 3, 0, 1);
-          if (!had) { const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', r.fid, JSON.stringify({ n: clean(String(r.n || ''), 24), o, t: +r.tm0 || Date.now() })); fixed.push({ i: r.i, n: r.n, o }) }
-          if (!r.vg) { r.vg = 1; await cmd('HSET', 'suppay', r.i, JSON.stringify(r)) }
-        } else if (!r.vp && (+r.amt || 0) >= 599) maybe.push({ i: r.i, n: r.n, amt: r.amt, fid: String(r.fid).slice(0, 6) })
-      }
-      return res.json({ ok: 1, fixed, maybe });
+      return res.json(Object.assign({ ok: 1 }, await vipFixAll()));
     }
     if (a === 'vipwall') {
+      try { if (await cmd('SET', 'vipfix:lock', 1, 'NX', 'PX', 300000)) await vipFixAll() } catch (e) {}
       const raw = (await cmd('HGETALL', 'vipu')) || [], rows = [];
       for (let i = 0; i + 1 < raw.length; i += 2) { const o = jp(raw[i + 1]); if (o) rows.push({ id: raw[i], n: String(o.n || ''), o: o.o | 0, t: +o.t || 0, w: String(o.w || '') }) }
       rows.sort((x, y) => x.o - y.o); const top = rows.slice(0, 300);
