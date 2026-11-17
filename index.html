@@ -24018,8 +24018,8 @@ function amDuelSkill(){const w=ECO_W(),a=amTopArt(w==='g'?4:5);if(!a)return null
 const LAWS=[['blade','กฎคมดาบ','🗡️',/กระบี่|ดาบ|คม|ใบมีด|ทวน|หอก/],['fist','กฎหมัดฝ่ามือ','👊',/ฝ่ามือ|หมัด|นิ้ว|กรงเล็บ|เท้า/],['fire','กฎเพลิง','🔥',/ไฟ|เพลิง|ตะวัน|อาทิตย์|สุริยะ|แผดเผา/],['frost','กฎเยือกแข็ง','❄️',/น้ำ|หิมะ|น้ำแข็ง|จันทร์|เหมันต์|ธารา/],
  ['thunder','กฎอัสนี','⚡',/สายฟ้า|อัสนี|ฟ้าผ่า|เหลย/],['wind','กฎวายุ','🌪️',/ลม|วายุ|เมฆ|เมฆา|นภา/],['death','กฎมรณะ','☠️',/พิษ|มาร|โลหิต|เงา|มรณะ|วิญญาณ|นรก/],['origin','กฎปฐมภูมิ','🌌',/./]];
 function lawOf(a){const n=String(a&&(a.n0||a.n)||'');return LAWS.find(L=>L[3].test(n))||LAWS[7]}
-async function lawClaim(a){if(!a)return;const L=lawOf(a);a.law=L[0];S.flags.lawEng=1;
- log(`${L[2]} 《${esc(a.n)}》ถูกจารึกเป็น<b>${L[1]}</b>ลงในฟ้าดิน`,'myth',true);
+async function lawClaim(a,quiet){if(!a)return;const L=lawOf(a);a.law=L[0];S.flags.lawEng=1;
+ if(!quiet)log(`${L[2]} 《${esc(a.n)}》ถูกจารึกเป็น<b>${L[1]}</b>ลงในฟ้าดิน`,'myth',true);
  if(typeof onlineOK==='undefined'||!onlineOK){log('⚖️ (ออฟไลน์ — ยังชิงตำแหน่งผู้ครองกฎทั้งเซิร์ฟไม่ได้)','');return}
  let H=null;try{const j=await api('laws');H=j&&j.l&&j.l[L[0]]}catch(e){}
  const send=async beat=>{try{const j=await api('lawclaim',{law:L[0],n:pname(),art:String(a.n).slice(0,30),pw:Math.round(total()),beat:beat||0});if(j&&j.ok){S.flags.lawHold=L[0];log(`⚖️ ทั้งเซิร์ฟเวอร์รับรู้แล้ว — คุณคือ<b>ผู้ครอง${L[1]}</b>`,'myth',true);keyAdd(`ผู้ครอง${L[1]}แห่งแดนเทพ`);render()}else if(j&&j.err==='beat')log('⚖️ ระหว่างนั้นมีคนอื่นชิงกฎไปก่อนแล้ว','bad');else if(j&&j.err)lawErr(j,L)}catch(e){}};
@@ -34267,6 +34267,13 @@ body.desk .scene{max-height:54vh}body.desk .scene canvas{max-height:52vh}
 }`;document.head.appendChild(st)}
 }catch(e){console.error('ev',e)}})();
 {const _rRt=render;render=function(){const r=_rRt.apply(this,arguments);try{if(S&&S.xian){const t=$('gTags');if(t){t.querySelectorAll('.rootTag').forEach(x=>x.remove());const rt=S.root||rootOf(S.talent);if(rt)t.insertAdjacentHTML('afterbegin',`<span class="tag rootTag">🌱 ${rt}</span>`)}}}catch(e){}return r}}
+// ⚖️ ปุ่มท้าดวลชิงกฎในหน้าบัลลังก์กฎ (เดิมดวลได้เฉพาะตอนวิชาถึงขั้นจารึกกฎ)
+{const _olc=openLaws;openLaws=async function(){await _olc.apply(this,arguments);try{const m=$('modal');if(!m||!S||!S.alive||typeof amLv!=='function')return;const arts=(S.arts||[]).filter(a=>a&&typeof a==='object'&&amLv(a)>=AM_TOP);let l={};try{const j=await api('laws');l=(j&&j.l)||{}}catch(e){}
+ const now=Date.now(),me=String(pid||'').slice(0,6);
+ m.querySelectorAll('.item').forEach((it,i)=>{const L=LAWS[i];if(!L||it.querySelector('.lawCh'))return;const h=l[L[0]],a=arts.find(x=>(x.law||lawOf(x)[0])===L[0]);if(!a||(h&&h.u===me))return;
+  const sh=h&&h.sh&&h.sh>now;it.insertAdjacentHTML('beforeend',`<button class="gbtn lawCh" ${sh?'disabled':''} style="margin-top:6px;width:100%${sh?';opacity:.55':''}" data-i="${S.arts.indexOf(a)}">${sh?'🛡️ ฟ้าคุ้มครองอีก '+lawLeft(h.sh):h?'⚔️ ท้าดวลชิงกฎ':'✋ จารึกครองกฎนี้'} · 《${esc(a.n)}》</button>`)});
+ m.querySelectorAll('.lawCh').forEach(b=>b.onclick=()=>{const a=S.arts[+b.dataset.i];if(!a)return;closeM();lawClaim(a,1)});
+ if(!arts.length&&!m.querySelector('.lawHint'))m.insertAdjacentHTML('beforeend','<p class="tag2 lawHint" style="margin-top:8px">💡 ถ้ามีวิชาถึงขั้นจารึกกฎ (ขั้น 7) จะมีปุ่มท้าดวลชิงกฎในหน้านี้ — ท้าได้ตอนกฎนั้นไม่อยู่ใต้ฟ้าคุ้มครอง</p>')}catch(e){}}}
 
 
 
