@@ -67,6 +67,26 @@ async function apiOne(request, url) {
 
 // 💳 ตรวจสลิปพร้อมเพย์อัตโนมัติ (EasySlip v2 + D1 "PAY_DB") — ต้องมีค่าลับ EASYSLIP_KEY และ binding PAY_DB ไม่มี = ตอบ unavailable แล้วหน้าเว็บจะใช้ระบบส่งสลิปให้ผู้พัฒนาตรวจเหมือนเดิม
 const jr = (o, st = 200) => new Response(JSON.stringify(o), { status: st, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
+async function payAdmin(request, env, url) {
+  const h = await handler(), a = url.searchParams.get('a');
+  if (!h.isAdm || !h.isAdm(url.searchParams.get('key'))) return jr({ err: 'admin' }, 403);
+  if (!env.PAY_DB) return jr({ ok: 0 });
+  const db = env.PAY_DB;
+  if (a === 'list') {
+    const rs = await db.prepare("SELECT o.id,o.uid,o.pack,o.amount_satang,o.status,o.created_at,o.trans_ref,o.note,s.sender_name FROM orders o LEFT JOIN slips s ON s.order_id=o.id ORDER BY o.created_at DESC LIMIT 60").all();
+    const t = await db.prepare("SELECT COUNT(*) n, COALESCE(SUM(amount_satang),0) s FROM orders WHERE status='done' AND created_at>?").bind(Date.now() - ((Date.now() + 7 * 3600e3) % 86400e3)).first();
+    return jr({ rows: rs.results || [], today: { n: t ? t.n : 0, baht: t ? t.s / 100 : 0 } });
+  }
+  if (a === 'regrant' && request.method === 'POST') {
+    const id = String(url.searchParams.get('o') || '').replace(/[^a-z0-9]/g, '');
+    const o = await db.prepare("SELECT uid,pack,status FROM orders WHERE id=?").bind(id).first();
+    if (!o || o.status !== 'paid_nogrant') return jr({ ok: 0, err: 'state' });
+    try { const run = h.vkRun ? h.vkRun(() => h.payGrant(o.uid, o.pack, '')) : h.payGrant(o.uid, o.pack, ''); await run } catch (e) { return jr({ ok: 0, err: String(e && e.message || e).slice(0, 80) }) }
+    await db.prepare("UPDATE orders SET status='done',note='regrant' WHERE id=?").bind(id).run();
+    return jr({ ok: 1 });
+  }
+  return jr({ err: 'a' }, 400);
+}
 async function pay(request, env) {
   if (request.method !== 'POST') return jr({ err: 'method' }, 405);
   if (!env.PAY_DB || !env.EASYSLIP_KEY) return jr({ ok: 0, st: 'unavailable' });
@@ -146,7 +166,7 @@ export default {
         return r;
       } catch (e) { console.error('API_ERR edgecache', String(e && e.message || e)) }
     }
-    if (url.pathname === '/api/pay') return pay(request, env);
+    if (url.pathname === '/api/pay') return url.searchParams.get('a') ? payAdmin(request, env, url) : pay(request, env);
     if (TRAP.some(r => r.test(url.pathname))) { url.search = '?a=trap&p=' + encodeURIComponent(url.pathname.slice(1)); url.pathname = '/api/online' }
     if (url.pathname === '/api/online' || url.pathname === '/api/online/') {
       const r = await api(request, url);
