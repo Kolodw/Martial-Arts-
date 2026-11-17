@@ -17276,7 +17276,7 @@ MW_PUBLIC=true;
 MW_R.forEach(e=>{if(/^hr\d/.test(e.id)){const c0=e.c;e.c=M=>!M.rnd&&c0(M)}});
 {const _otS=openMWTeaser;openMWTeaser=function(src){if(!mwAllowed()||src==='rift'||src==='end')return _otS.apply(this,arguments);const L=LS.get('murim_legacy',[])||[];
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏙️ ยุคปัจจุบัน <span class="tag2">${mwTag()}</span></h3><p>ใช้ชีวิตในโลกปัจจุบัน — ระบบนี้ยังเป็นเบต้า เจอบั๊กแจ้งได้ที่ ☰ → 🐞 แจ้งบั๊ก</p>
- <div class="mgrid"><button class="opt" onclick="mwBornMenu()">🎲 เกิดเป็นคนยุคปัจจุบัน<small>สุ่มเกิด · เลือกจังหวัด · ออกแบบหน้าตาและแต่งตัวเอง</small></button>
+ <div class="mgrid"><button class="opt" onclick="mwBornMenu()">🎲 เกิดเป็นคนยุคปัจจุบัน<small>สุ่มทั้งหมด · ออกแบบหน้าตา · หรือสร้างเองทั้งชีวิต (จังหวัด พื้นเพ โลก)</small></button>
  <button class="opt" onclick="window._mwLI=0;mwNewLost()">🌀 ยอดฝีมือหลงยุค<small>${L[0]?`ใช้ชีวิตล่าสุด: ${esc(L[0].n)} (${L[0].a} ปี)`:'สร้างยอดฝีมือขึ้นมาใหม่'}</small></button>
  <button class="opt" onclick="mwPickPast()">📜 เลือกชีวิตจากชาติที่แล้ว<small>${L.length?`มี ${L.length} ชาติให้เลือก`:'ยังไม่มีชีวิตที่จบไป'}</small></button></div>
  <p class="tag2">หรือระหว่างเล่น: ☰ เมนู → 🌀 หลงยุคสู่ปี ${MW_Y0} เพื่อพาตัวละครที่เล่นอยู่ข้ามยุค</p>`,'mwadm')}}
@@ -31296,6 +31296,14 @@ const ST={birth:['🍼 ตั้งแต่เกิด','เล่นวัย
  try{const o=$('mwB');if(!o||!MB)return;const g=o.querySelector('.mbGrid');if(!g||g.querySelector('.mbSt'))return;const cur=MB.start||'adult';
   g.insertAdjacentHTML('afterbegin',`<div class="mbT mbWide mbSt"><div class="mbTh"><span>🕰️ เริ่มชีวิตตอนไหน</span></div><div class="mbStB">${Object.keys(ST).map(x=>`<button class="${x===cur?'on':''}" onclick="mwBStartAt('${x}')">${ST[x][0]}</button>`).join('')}</div><div class="mbTs">${ST[cur][1]}</div></div>`)}catch(e){console.error(e)}}}
 window.mwBStartAt=function(k){if(!MB||!ST[k])return;MB.start=k;mbDraw(false)};
+const WL=[['rand','🎲','สุ่ม'],['normal','🏙️','ปกติ'],['hunter','🌀','ฮันเตอร์'],['under','🌃','ใต้ดิน'],['ghost','👻','ผีไทย'],['loop','🔁','วนลูป'],['dragon','🐲','มังกรหลับ'],['zombie','🧟','ซอมบี้']];
+window.mwBWld=function(k){if(!MB)return;MB.wld=k;mbDraw(false)};
+{const _d=mbDraw;mbDraw=function(anim){_d.apply(this,arguments);try{const o=$('mwB');if(!o||!MB)return;const g=o.querySelector('.mbGrid');if(!g||g.querySelector('.mbWd'))return;const cur=MB.wld||'rand';
+ const nm={rand:'สุ่มตามดวง (ปกติ 40% · โลกพิเศษ 60%)',normal:'โลกธรรมดา ชีวิตคนทั่วไป (ยังมีโอกาสเปลี่ยนโลกกลางชีวิตได้ ~1%/ปี)',hunter:'ประตูมิติ นักล่าฮันเตอร์ ระดับ E–S',under:'โลกนักเลง ก๊ก อิทธิพลและความร้อน',ghost:'โลกผีไทย หมอผี พระเครื่อง ศาลตายาย',loop:'วันซ้ำวนไม่รู้จบ ต้องหาต้นตอ',dragon:'มังกรหลับใต้ภูเขาที่ใกล้ตื่น',zombie:'โรคระบาดซอมบี้ เอาตัวรอดและสร้างที่พัก'};
+ const html=`<div class="mbT mbWide mbWd mbSt"><div class="mbTh"><span>🌐 โลกของชีวิตนี้</span></div><div class="mbStB" style="flex-wrap:wrap">${WL.map(w=>`<button class="${w[0]===cur?'on':''}" style="flex:1 1 30%" onclick="mwBWld('${w[0]}')">${w[1]} ${w[2]}</button>`).join('')}</div><div class="mbTs">${nm[cur]}${cur==='rand'||cur==='normal'?'':' · โลกพิเศษบางโลกจะเริ่มทำงานตอนอายุ 18'}</div></div>`;
+ const t=g.querySelector('.mbSt');if(t)t.insertAdjacentHTML('afterend',html);else g.insertAdjacentHTML('afterbegin',html)}catch(e){console.error(e)}}}
+{const _s=window.mwBStart;window.mwBStart=function(){window._wForce=(MB&&MB.wld&&MB.wld!=='rand')?MB.wld:null;return _s.apply(this,arguments)}}
+
 {const _s=window.mwBStart;window.mwBStart=function(){const k=MB&&MB.start;if(MB&&k&&k!=='adult')MB.age=ST[k][2];window._mwKid=k&&k!=='adult'?k:null;return _s.apply(this,arguments)}}
 })()}catch(e){console.error(e)}
 try{document.head.insertAdjacentHTML('beforeend',`<style>
@@ -32055,7 +32063,8 @@ const CREWS=['ก๊กมังกรดำ','แก๊งเสือเหน
 const isl=o=>{try{if(typeof islOn==='function'&&islOn())island(o)}catch(e){}};
 // ---------- สุ่มโลกตอนเกิด / เปลี่ยนโลกกลางชีวิต ----------
 function wInit(M,id){if(id==='under')M.U=M.U||{inf:0,heat:5,rk:0,crew:null,rec:0};if(id==='ghost')M.G=M.G||{ward:0,bad:0,rk:0,amu:0};if(id==='loop')M.L=M.L||{mem:0,tir:5,rk:0};if(id==='dragon')M.D=M.D||{bond:0,wake:10,rk:0};if(id==='zombie')M.Z=M.Z||{surv:0,inf:5,rk:0}}
-function wRoll(M,skip){if(!M||M.wroll)return;M.wroll=1;M.wsp=SH_LO+Math.random()*(SH_HI-SH_LO);if(skip||M.hw>0||M.wx)return;
+function wRoll(M,skip){if(!M||M.wroll)return;M.wroll=1;M.wsp=SH_LO+Math.random()*(SH_HI-SH_LO);const fw=window._wForce;if(fw&&!(M.hw>0)){window._wForce=null;M.fl=M.fl||{};if(fw==='hunter')hwInit(M,true);else if(fw==='normal')M.hw=0;else{M.wx={id:fw,on:0,born:1};M.hw=M.hw||0}return}
+if(skip||M.hw>0||M.wx)return;
  const r=Math.random();M.fl=M.fl||{};
  const T=[['under',P_U],['ghost',P_G],['loop',P_L],['dragon',P_D],['zombie',P_Z]];let a=P_H,f=0;
  if(r<P_H){hwInit(M,true)}else{for(const t of T){a+=t[1];if(r<a){M.wx={id:t[0],on:0,born:1};M.hw=M.hw||0;f=1;break}}if(!f&&M.hw==null)M.hw=0}}
@@ -32092,7 +32101,7 @@ function wYear(M,foc){if(M.wroll==null)wRoll(M,!(M.native&&M.y<=1));
   if(L.length){let t=L.reduce((a,e)=>a+e.w,0),r=Math.random()*t,pick=L[0];for(const e of L){r-=e.w;if(r<=0){pick=e;break}}M.wcd[pick.id]=M.y;wFire(pick.id)}}}
 {const _y=mwYear;mwYear=function(){const foc=S&&S.focus;const r=_y.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(M&&!M.kid)wYear(M,foc)}catch(e){console.error(e)}return r}}
 // โลกที่สุ่มได้ตอนเกิด (ชีวิตแบบเกิดในยุคปัจจุบัน)
-{const _r=mwRandNative;mwRandNative=function(){const r=_r.apply(this,arguments);setTimeout(()=>{try{const M=S&&S.mw;if(M&&M.native&&!M.wroll&&!window._wHeir){wRoll(M);render();saveGame()}}catch(e){console.error(e)}},500);return r}}
+{const _r=mwRandNative;mwRandNative=function(){const r=_r.apply(this,arguments);let n=0;const t=setInterval(()=>{try{n++;const M=S&&S.mw;if(M&&M.native){clearInterval(t);if(!M.wroll&&!window._wHeir){wRoll(M);render();saveGame()}}else if(n>20)clearInterval(t)}catch(e){clearInterval(t);console.error(e)}},400);return r}}
 // ข้ามยุคจากยุทธภพ: โลกปกติ 40% มีโลกใต้ดิน/ผีไทยแทรก
 {const _e=mwEnter;mwEnter=function(){const had=S&&S.mw;const r=_e.apply(this,arguments);try{const M=S&&S.mw;if(M&&!had&&!M.wroll){M.wroll=1;M.wsp=SH_LO+Math.random()*(SH_HI-SH_LO);if(M.hw===0&&!M.gateY){const x=Math.random();if(x<.2){M.wx={id:'under',on:1,since:0};wInit(M,'under');wFire('wi_under')}else if(x<.4){M.wx={id:'ghost',on:1,since:0};wInit(M,'ghost');wFire('wi_ghost')}}}}catch(e){console.error(e)}return r}}
 // ทายาทรับโลกจากพ่อแม่
@@ -32318,6 +32327,16 @@ MW_R.push(
 );
 MW_FORCE.push([0,'wl_boss'],[0,'wl_end'],[0,'wd_child'],[0,'wd_end'],[0,'wz_bite'],[0,'wz_radio'],[0,'wz_end']);
 window._wld2={LR,DR,ZR,lYear,dYear,zYear};
+})()}catch(e){console.error(e)}
+
+// ===================== เมนูเริ่มชีวิตใหม่ของยุคปัจจุบัน (แยกตัวเลือกเหมือนยุคเก่า) =====================
+try{(()=>{
+const WL=[['rand','🎲','สุ่ม'],['normal','🏙️','ปกติ'],['hunter','🌀','ฮันเตอร์'],['under','🌃','ใต้ดิน'],['ghost','👻','ผีไทย'],['loop','🔁','วนลูป'],['dragon','🐲','มังกรหลับ'],['zombie','🧟','ซอมบี้']];
+window.mwBornMenu=function(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🐣 เริ่มชีวิตใหม่ <span class="tag2">ยุคปัจจุบัน</span></h3>
+ <button class="opt" onclick="closeM();mwBQuick()">🎲 สุ่ม — ให้ฟ้าลิขิต<small>จังหวัด พื้นเพ นิสัย หน้าตา และโลกสุ่มทั้งหมด · เริ่มเล่นทันที</small></button>
+ <button class="opt" onclick="closeM();mwBorn(true)">🎨 ออกแบบหน้าตา — ที่เหลือให้ฟ้าลิขิต<small>เลือกเพศ ทรงผม สีผม สีผิว และสีชุดเอง แล้วสุ่มจังหวัด พื้นเพ และโลกตามปกติ</small></button>
+ <button class="opt" onclick="closeM();mwBornPage(true)">✍️ สร้างเอง<small>เลือกจังหวัด พื้นเพครอบครัว นิสัย ช่วงเริ่มชีวิต และ<b>โลก</b>ของชีวิตนี้เอง · สุ่มใหม่ได้ 3 ครั้ง<br><span style="color:#ff8a7a">⚠️ ชีวิตที่สร้างเองจะไม่ติดอันดับทำเนียบ</span></small></button>`,'mwbm')};
+window.mwBQuick=function(){try{mwBornPage(true);mwBStart()}catch(e){console.error(e);try{mwRandNative()}catch(x){}}};
 })()}catch(e){console.error(e)}
 </script>
 </body>
