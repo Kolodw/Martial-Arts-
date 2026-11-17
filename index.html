@@ -3885,7 +3885,7 @@ function ambUpdate(){if(!ambOn||!S||!$('game').classList.contains('on')||documen
  AMB.water.gain.setTargetAtTime(loc==='waterfall'?.2:S.region==='sea'?.12:0,t,.8);
  if(!inside&&wx!=='rain'){if(se===0&&Math.random()<.35)ambChirp('bird');if(se===1&&Math.random()<.3)ambChirp('bug');if(se===2&&Math.random()<.12)ambChirp('bird')}}
 setInterval(()=>{try{ambUpdate()}catch(e){}},1000);
-function setVol(k,v){VOL[k]=+v;LS.set('murim_v'+k,+v);if(k==='b'&&BGM.out&&BGM.on)BGM.out.gain.value=VOL.b*.55;if(k==='b'&&MIST)MIST.volume=Math.min(1,VOL.b*.8);if(k==='a'&&AMB)AMB.master.gain.value=VOL.a*.9}
+function setVol(k,v){VOL[k]=+v;LS.set('murim_v'+k,+v);if(k==='b'&&BGM.out&&BGM.on)BGM.out.gain.value=VOL.b*.55;if(k==='b'&&MIST)MIST.volume=Math.min(1,VOL.b*.8);if(k==='b'&&typeof LOTUS!=='undefined'&&LOTUS)LOTUS.volume=Math.min(1,VOL.b*.8);if(k==='a'&&AMB)AMB.master.gain.value=VOL.a*.9}
 function openSound(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🔊 เสียง</h3>
  <div class="item auto"><input type="checkbox" ${bgmOn?'checked':''} onchange="toggleBgm();openSound()"><span><b>🎵 เพลง</b><input type="range" min="0" max="1" step=".05" value="${VOL.b}" oninput="setVol('b',this.value)"><span class="tabs" style="margin:6px 0 0"><button class="tabb ${bgmTrack()==='gen'?'on':''}" onclick="event.preventDefault();setTrack('gen')">🎐 เพลงบรรเลงในเกม</button><button class="tabb ${bgmTrack()==='mists'?'on':''}" onclick="event.preventDefault();setTrack('mists')">🏞️ mists</button></span></span></div>
  <div class="item auto"><input type="checkbox" ${sfxOn?'checked':''} onchange="toggleSfx();openSound()"><span><b>🔔 เสียงประกอบ</b><input type="range" min="0" max="1" step=".05" value="${VOL.s}" oninput="setVol('s',this.value)"></span></div>
@@ -4100,10 +4100,13 @@ function bgmBar(t0){const beat=60/70,a=ac(),bar=BGM.bar,ci=bar%8,C=CHORDS[ci];
  else zheng(G_PENTA[C[4]+2]||G_PENTA[12],t0+beat*3,.06,2);
  BGM.bar++;return beat*4}
 function bgmSched(){const a=ac();if(!a||!BGM.on)return;bgmNodes();while(BGM.next<a.currentTime+1.2){if(BGM.next<a.currentTime)BGM.next=a.currentTime+.08;BGM.next+=bgmBar(BGM.next)}}
-const bgmTrack=()=>LS.get('murim_track','gen');let MIST=null;
+// 🪷 เพลง Night of the Lotus เป็นเพลงหลักช่วงอีเวนต์ลอยกระทง (17 พ.ย. – 17 ธ.ค. 2026 23:59) · ใครเลือกเพลงอื่นเองหลังเริ่มอีเวนต์ จะได้เพลงที่เลือก · หมดอีเวนต์กลับเพลงเดิมเอง
+const LOTUS_T0=Date.UTC(2026,10,17,14,40),LOTUS_T1=Date.UTC(2026,11,17,16,59,59),LOTUS_ON=()=>{const n=Date.now();return n>=LOTUS_T0&&n<LOTUS_T1};
+const bgmTrack=()=>{const t=LS.get('murim_track','gen'),pk=+LS.get('murim_trkpick',0)||0;return LOTUS_ON()&&(t==='lotus'||pk<LOTUS_T0)?'lotus':t==='lotus'?'gen':t};let MIST=null,LOTUS=null;
+function lotusEl(){if(!LOTUS){LOTUS=new Audio('lotus.mp3');LOTUS.loop=true;LOTUS.preload='auto'}return LOTUS}
 function mistEl(){if(!MIST){MIST=new Audio('mists.mp3');MIST.loop=true;MIST.preload='auto'}return MIST}
-function startBgm(){if(!bgmOn)return;if(bgmTrack()==='mists'){const a=mistEl();a.volume=Math.min(1,VOL.b*.8);a.play().catch(()=>{});return}if(BGM.on||!ac())return;BGM.on=true;bgmNodes();BGM.next=ac().currentTime+.15;BGM.bar=0;BGM.out.gain.cancelScheduledValues(ac().currentTime);BGM.out.gain.setTargetAtTime(VOL.b*.55,ac().currentTime,.5);BGM.tid=setInterval(bgmSched,250);bgmSched()}
-function stopBgm(){if(MIST)MIST.pause();BGM.on=false;clearInterval(BGM.tid);if(BGM.out&&AC)BGM.out.gain.setTargetAtTime(0,AC.currentTime,.3)}
+function startBgm(){if(!bgmOn)return;if(bgmTrack()==='lotus'){const a=lotusEl();a.volume=Math.min(1,VOL.b*.8);a.play().catch(()=>{});return}if(bgmTrack()==='mists'){const a=mistEl();a.volume=Math.min(1,VOL.b*.8);a.play().catch(()=>{});return}if(BGM.on||!ac())return;BGM.on=true;bgmNodes();BGM.next=ac().currentTime+.15;BGM.bar=0;BGM.out.gain.cancelScheduledValues(ac().currentTime);BGM.out.gain.setTargetAtTime(VOL.b*.55,ac().currentTime,.5);BGM.tid=setInterval(bgmSched,250);bgmSched()}
+function stopBgm(){if(MIST)MIST.pause();if(LOTUS)LOTUS.pause();BGM.on=false;clearInterval(BGM.tid);if(BGM.out&&AC)BGM.out.gain.setTargetAtTime(0,AC.currentTime,.3)}
 
 // ---------- v4.5 กระดานแจ้งบั๊ก & ความคิดเห็นผู้เล่น ----------
 let RV={r:0},BUGK='bug';
@@ -4566,7 +4569,7 @@ function v50Tick(){famInit();beastCompTick();if(sagaTick())return true;if(famTic
 ALLF.push(...BFOCUS);
 Object.assign(ACT,{hunt:['ไล่ล่าเหยื่อ','ซุ่มรอเหยื่อ','กินเนื้อสด'],moon:['ดูดซับแสงจันทร์','นั่งนิ่งใต้จันทร์'],roam:['ท่องป่า','สำรวจถิ่นใหม่','ดมกลิ่นตามรอย'],hide:['ขดตัวในโพรง','เลียแผล','นอนพัก'],human:['แอบดูหมู่บ้าน','ย่องเข้าใกล้ชายป่า']});
 
-function setTrack(t){LS.set('murim_track',t);stopBgm();if(!bgmOn){bgmOn=true;LS.set('murim_bgm',true)}setTimeout(startBgm,80);openSound();toast(t==='mists'?'🏞️ เปลี่ยนเป็นเพลง mists':'🎐 เปลี่ยนเป็นเพลงบรรเลงในเกม')}
+function setTrack(t){LS.set('murim_track',t);LS.set('murim_trkpick',Date.now());stopBgm();if(!bgmOn){bgmOn=true;LS.set('murim_bgm',true)}setTimeout(startBgm,80);openSound();toast(t==='lotus'?'🪷 เปลี่ยนเป็นเพลง Night of the Lotus':t==='mists'?'🏞️ เปลี่ยนเป็นเพลง mists':'🎐 เปลี่ยนเป็นเพลงบรรเลงในเกม')}
 // ============ SOUND (8-bit) ============
 let AC=null,sfxOn=LS.get('murim_sfx',true),bgmOn=LS.get('murim_bgm',true),bgmT=null,sfxLast={};
 function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){return null}}if(AC.state==='suspended')AC.resume().catch(()=>{});return AC}
@@ -5856,7 +5859,7 @@ function openFrameShop(){const d=frGet(),k=S?Math.round(S.karma):null,kb=kbGet()
 function frBuy(id){const f=frOf(id),d=frGet(),kb=kbGet();if(!f||d.own.includes(id))return;if(kb[f.side]<f.c){toast('กรรมไม่พอ');return}
  kb[f.side]-=f.c;kbSet(kb);d.own.push(id);d.eq=id;frSet(d);try{if(S&&S.alive)log(`🖼️ แลก<b>${f.n}</b>ด้วยคลัง${f.side==='g'?'กรรมดี':'กรรมชั่ว'} ${fmt(f.c)}`,'epic')}catch(e){}toast('ได้ '+f.n);profPush();try{render()}catch(e){}openFrameShop()}
 function frEquip(id){const d=frGet();d.eq=id;frSet(d);profPush();try{render()}catch(e){}if($('modal').dataset.k==='frames')openFrameShop();else if($('modal').dataset.k==='profile')openProfile()}
-async function profPush(){if(!onlineOK)return;const d=frGet();try{await api('profile',Object.assign({av:d.av||'',fr:d.eq||''},/^f_(adm|p\d)/.test(d.eq||'')&&admK()?{key:admK()}:{}))}catch(e){}}
+async function profPush(){if(!onlineOK)return;const d=frGet();try{await api('profile',Object.assign({av:d.av||'',fr:d.eq||''},/^f_(adm|p\d|e\d)/.test(d.eq||'')&&admK()?{key:admK()}:{}))}catch(e){}}
 function openProfile(){const d=frGet();const own=FRAMES.filter(f=>d.own.includes(f.id));
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👤 โปรไฟล์</h3><div style="display:flex;gap:14px;align-items:center;margin:8px 0 12px"><div class="frbig">${frWrap(`<span class="frph big">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,d.eq)}</div><div><div style="font-size:18px"><b>${esc(pname())}</b></div><div class="tag2">${d.eq?'กรอบ: '+frOf(d.eq).n:'ยังไม่มีกรอบ'}</div><div class="tag2">รูปนี้จะขึ้นข้างชื่อในแชทโลก</div></div></div>
   ${S?`<button class="pbtn" style="width:100%" onclick="profSnap()">📸 ใช้ตัวละครตอนนี้ (${esc(S.name)}) เป็นรูปโปรไฟล์</button>`:'<p class="tag2">เริ่มชีวิตก่อน แล้วกลับมากดใช้ตัวละครเป็นรูปโปรไฟล์ได้</p>'}
@@ -21127,7 +21130,7 @@ function sndAmbT(){ambOn=!ambOn;LS.set('murim_amb',ambOn);try{if(!ambOn&&AMB&&AM
 openSound=function(){const tr=bgmTrack(),wx={clear:'☀️ แจ่มใส',rain:'🌧️ ฝนตก',wind:'🍃 ลมแรง',snow:'❄️ หิมะตก'}[wxNow()]||'';
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🔊 เสียง</h3>
  <div class="sndC"><div class="sndH"><span class="sndI">🎵</span><div><b>เพลง</b><small>${bgmOn?'กำลังเล่น':'ปิดอยู่'}</small></div>${sndSw(bgmOn,'toggleBgm();openSound()')}</div>${sndRow('b',VOL.b,bgmOn)}
-  <div class="sndTr"><button class="${tr==='gen'?'on':''}" onclick="setTrack('gen')"><span>🎐</span><b>เพลงบรรเลงในเกม</b><small>เปลี่ยนทำนองตามฉากและโลก</small></button><button class="${tr==='mists'?'on':''}" onclick="setTrack('mists')"><span>🏞️</span><b>Mists</b><small>เพลงบรรเลงเงียบสงบ เล่นวนต่อเนื่อง</small></button></div></div>
+  <div class="sndTr">${LOTUS_ON()?`<button class="${tr==='lotus'?'on':''}" onclick="setTrack('lotus')"><span>🪷</span><b>Night of the Lotus</b><small>เพลงอีเวนต์ลอยกระทง ถึง 17 ธ.ค.</small></button>`:''}<button class="${tr==='gen'?'on':''}" onclick="setTrack('gen')"><span>🎐</span><b>เพลงบรรเลงในเกม</b><small>เปลี่ยนทำนองตามฉากและโลก</small></button><button class="${tr==='mists'?'on':''}" onclick="setTrack('mists')"><span>🏞️</span><b>Mists</b><small>เพลงบรรเลงเงียบสงบ เล่นวนต่อเนื่อง</small></button></div></div>
  <div class="sndC"><div class="sndH"><span class="sndI">🔔</span><div><b>เสียงประกอบ</b><small>กดปุ่ม ทะลวงขั้น ต่อสู้ แจ้งเตือน</small></div>${sndSw(sfxOn,'toggleSfx();openSound()')}</div>${sndRow('s',VOL.s,sfxOn)}<button class="sndTest" ${sfxOn?'':'disabled'} onclick="try{sfx('good')}catch(e){}">▶ ลองฟัง</button></div>
  <div class="sndC"><div class="sndH"><span class="sndI">🌧️</span><div><b>เสียงบรรยากาศ</b><small>ฝน ลม น้ำตก นกร้อง แมลง ตามฉาก ฤดู และอากาศ</small></div>${sndSw(ambOn,'sndAmbT()')}</div>${sndRow('a',VOL.a,ambOn)}<div class="sndWx">อากาศตอนนี้ <b>${wx}</b></div></div>`,'sound')};
 (()=>{const st=document.createElement('style');st.textContent=`
@@ -33914,6 +33917,258 @@ setInterval(()=>{try{if(!nat()||!calm()){quiet=0;return}const M=S.mw,m=$('modal'
  if(want('mw_world'))return coStart('mw_world');
  const w=wNow();if(WL[w]&&want('mw_w_'+w))return coStart('mw_w_'+w)}catch(e){}},1600);
 })()}catch(e){console.error(e)}
+// 🏮 อีเวนต์ลอยกระทง 2026 — กรอบ 5 · ฉายา 5 · ธีมแชท 5 · ซื้อด้วยเงิน (ฉบับเลขลำดับ) หรือแลกด้วยกรรมดี/กรรมชั่ว · ขายถึง 17 ธ.ค. 23:59
+(function(){try{
+const M=window.FRSH_M,T=window.FRSH_T;if(!M||!T||typeof FRAMES==='undefined'||typeof frWrap!=='function')return;
+const END=Date.UTC(2026,11,17,16,59,59);
+const at=o=>{let s='';for(const k in o)s+=` ${k}="${o[k]}"`;return s};
+const X=(t,o,c)=>c==null?`<${t}${at(o)}/>`:`<${t}${at(o)}>${c}</${t}>`;
+const C=130,pt=(r,a)=>[C+r*Math.sin(a),C-r*Math.cos(a)],n1=v=>(+v).toFixed(1);
+const ST=a=>a.map(([o,c,p])=>X('stop',{offset:o,'stop-color':c,'stop-opacity':p==null?1:p})).join('');
+const LG=(id,a,b,c,d,st)=>X('linearGradient',{id,x1:a,y1:b,x2:c,y2:d},ST(st));
+const RG=(id,st,cx,cy,r)=>X('radialGradient',{id,cx:cx==null?.5:cx,cy:cy==null?.5:cy,r:r==null?.5:r},ST(st));
+const ann=(r1,r2,fill)=>X('path',{d:`M${C-r2} ${C}a${r2} ${r2} 0 1 0 ${2*r2} 0a${r2} ${r2} 0 1 0 ${-2*r2} 0ZM${C-r1} ${C}a${r1} ${r1} 0 1 1 ${2*r1} 0a${r1} ${r1} 0 1 1 ${-2*r1} 0Z`,'fill-rule':'evenodd',fill});
+const A=(cls,dl,inner)=>X('g',{class:cls,style:`animation-delay:${dl}s`},inner);
+const IMG=(defs,body)=>X('image',{href:'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 260"><defs>${defs}</defs>${body}</svg>`),x:0,y:0,width:260,height:260});
+const W=inner=>`<g transform="translate(20 20) scale(.6)"><g transform="translate(50 50) scale(.8667) translate(-130 -130)">${inner}</g></g>`;
+const memo=f=>{let v;return()=>v==null?(v=f()):v};const SI={};const SW=img=>`<g transform="translate(20 20) scale(.6)"><g transform="translate(50 50) scale(.8667) translate(-130 -130)">${img}</g></g>`;
+// ---------- ชิ้นส่วนวาด ----------
+const leaf=(r0,r1,w,a,fill,stroke,rib)=>{const y0=C-r0,y1=C-r1,L=r1-r0;return X('g',{transform:`rotate(${n1(a*180/Math.PI)} ${C} ${C})`},
+ X('path',{d:`M${C} ${y0}C${C-w} ${y0-L*.25} ${C-w*.8} ${y1+10} ${C} ${y1}C${C+w*.8} ${y1+10} ${C+w} ${y0-L*.25} ${C} ${y0}Z`,fill,stroke,'stroke-width':.8})
+ +X('path',{d:`M${C} ${y0-3}L${C} ${y1+5}`,stroke:rib,'stroke-width':.8,opacity:.7})
+ +[-1,1].map(s=>X('path',{d:`M${C} ${y0-8}Q${C+s*w*.55} ${(y0+y1)/2} ${C+s*w*.1} ${y1+9}`,stroke:rib,'stroke-width':.5,fill:'none',opacity:.45})).join(''))};
+const mari=(n,rad,c1,c2,cc,off)=>{let o='';for(let i=0;i<n;i++){const a=i*2*Math.PI/n+(off||.13),p=pt(rad,a);let q='';for(let k=0;k<9;k++)q+=X('ellipse',{cx:0,cy:-4.2,rx:2.2,ry:4.4,fill:k%2?c1:c2,stroke:'#0004','stroke-width':.3,transform:`rotate(${k*40})`});o+=X('g',{transform:`translate(${n1(p[0])} ${n1(p[1])}) rotate(${i*30})`},q+X('circle',{r:2,fill:cc}))}return o};
+const orchids=(r,angs)=>angs.map((a,i)=>{const p=pt(r,a);let q='';for(let k=0;k<5;k++)q+=X('path',{d:'M0 0C-4-5-3-11 0-12C3-11 4-5 0 0Z',fill:i%2?'#ffd6e6':'#f4b6d2',stroke:'#c5679a','stroke-width':.4,transform:`rotate(${k*72})`});return X('g',{transform:`translate(${n1(p[0])} ${n1(p[1])}) rotate(${n1(a*180/Math.PI)})`},q+X('circle',{r:1.7,fill:'#ffe27a'}))}).join('');
+const candle=(wax,tip)=>X('rect',{x:C-5,y:50,width:10,height:15,rx:2,fill:wax,stroke:'#0003','stroke-width':.5})+X('path',{d:`M${C} 50v-3`,stroke:'#2a1a0a','stroke-width':1.2});
+const incense=col=>[-1,1].map(s=>X('path',{d:`M${C+s*13} 70L${C+s*29} 41`,stroke:col,'stroke-width':2.2,'stroke-linecap':'round'})).join('');
+const flame=(cy,s)=>A('fx-flame',0,X('path',{d:`M${C} ${cy-12*s}C${C+6*s} ${cy-4*s} ${C+5*s} ${cy+3*s} ${C} ${cy+5*s}C${C-5*s} ${cy+3*s} ${C-6*s} ${cy-4*s} ${C} ${cy-12*s}Z`,fill:'url(#evFl)'}))+A('fx-flame',-.5,X('path',{d:`M${C} ${cy-4*s}C${C+2.5*s} ${cy} ${C+2*s} ${cy+3*s} ${C} ${cy+4*s}C${C-2*s} ${cy+3*s} ${C-2.5*s} ${cy} ${C} ${cy-4*s}Z`,fill:'#fffbe8',opacity:.9}));
+const halo=id=>A('fx-pulse',0,X('circle',{cx:C,cy:C,r:95,fill:`url(#${id})`}));
+const rip=col=>[0,-1.6,-3.2].map(d=>A('fx-evrip',d,X('ellipse',{cx:C,cy:212,rx:90,ry:12,fill:'none',stroke:col,'stroke-width':1.2}))).join('');
+const sweep=(r,col)=>X('circle',{cx:C,cy:C,r,fill:'none',stroke:col,'stroke-width':3,'stroke-linecap':'round',class:'fx-evsw',transform:`rotate(-90 ${C} ${C})`});
+const parts=(list,cls,fill,r)=>list.map((p,i)=>A(cls,-i*.7,X('circle',{cx:p[0],cy:p[1],r:r||1.7,fill}))).join('');
+// ---------- 1 กระทงใบตอง ----------
+const live1=memo(()=>{const d=LG('l1',0,0,1,1,[[0,'#9dc15a'],[.55,'#5f8a34'],[1,'#355a1f']])+LG('l2',0,1,1,0,[[0,'#c9df86'],[1,'#7aa13e']]);let b=ann(50,79,'#243a14');
+ for(let i=0;i<16;i++)b+=leaf(54,96,17,i*Math.PI/8,'url(#l1)','#1f3a10','#cfe59a');for(let i=0;i<16;i++)b+=leaf(52,84,13,(i+.5)*Math.PI/8,'url(#l2)','#4a6e24','#eaf7bd');
+ for(let i=0;i<16;i++){const p=pt(77,(i+.5)*Math.PI/8);b+=X('circle',{cx:n1(p[0]),cy:n1(p[1]),r:1.4,fill:'#e8ecd0'})}
+ b+=mari(12,60,'#ffb02a','#ff9412','#b8470b')+orchids(70,[-.62,.95,2.3,3.95])+X('circle',{cx:C,cy:C,r:57.7,fill:'none',stroke:'#e9b44c','stroke-width':1.6})+incense('#7a4a22')+candle('#f6ead0');
+ return W(halo('evH1')+rip('#9fd3e2')+(SI[1]=IMG(d,b),'')+flame(44,1)+A('fx-pulse',0,X('circle',{cx:C,cy:44,r:15,fill:'url(#evH0)'}))+sweep(57.7,'#fff3c4')+parts([[C-29,41],[C+29,41]],'fx-twk','#ff5a1f',1.8)+parts([[C-20,38],[C+22,34]],'fx-rise','#cfd6e0',2.4))});
+// ---------- 2 โคมลอยขึ้นฟ้า ----------
+const live2=memo(()=>{const body='M84 53C52 72 52 106 52 130C52 162 66 190 92 203L168 203C194 190 208 162 208 130C208 106 208 72 176 53Z',hole='M74 130a56 56 0 1 0 112 0a56 56 0 1 0 -112 0Z';
+ const d=RG('lp',[[0,'#fff3bf'],[.55,'#ffc460'],[1,'#d9701e']],.5,.55,.62)+X('clipPath',{id:'lbc'},X('path',{d:body+hole,'clip-rule':'evenodd'}));
+ let rb='';for(let t=-1;t<=1.01;t+=.25){const xt=C+t*46,xm=C+t*78,xb=C+t*38;rb+=X('path',{d:`M${n1(xt)} 53C${n1(xm)} 80 ${n1(xm)} 176 ${n1(xb)} 203`,fill:'none',stroke:'#8a3a10','stroke-width':Math.abs(t*2%1)>.1?.5:.9,opacity:.5})}
+ let b=X('path',{d:body+hole,'fill-rule':'evenodd',fill:'url(#lp)',stroke:'#8a3a10','stroke-width':1.4})+X('g',{'clip-path':'url(#lbc)'},rb)
+  +X('rect',{x:78,y:46,width:104,height:8,rx:3,fill:'#6a2a0e'})+X('rect',{x:84,y:203,width:92,height:8,rx:3,fill:'#6a2a0e'})+X('path',{d:`M${C} 46V37`,stroke:'#6a2a0e','stroke-width':2})+X('circle',{cx:C,cy:36.5,r:2.2,fill:'none',stroke:'#6a2a0e','stroke-width':1.6})
+  +X('circle',{cx:C,cy:C,r:56,fill:'none',stroke:'#8a3a10','stroke-width':2.6})+X('circle',{cx:C,cy:C,r:54,fill:'none',stroke:'#ffe9a8','stroke-width':.8,opacity:.6})
+  +[0,1,2,3].map(i=>X('path',{d:`M${C-9+i*6} 211l-1.5 13`,stroke:'#d9701e','stroke-width':1.6,'stroke-linecap':'round'})).join('');
+ const fl=A('fx-flame',0,X('path',{d:`M${C} 187C${C+8} 194 ${C+7} 202 ${C} 204C${C-7} 202 ${C-8} 194 ${C} 187Z`,fill:'url(#evFl)'}));
+ return W(halo('evH2')+(SI[2]=IMG(d,b),'')+fl+parts([[44,150],[216,140],[40,100],[222,112],[46,176]],'fx-rise','#ffd27a',1.8))});
+// ---------- 3 บัวบานกลางสายน้ำ ----------
+const live3=memo(()=>{const d=LG('g1',0,1,0,0,[[0,'#f6a5c4'],[1,'#fff5f9']])+LG('g2',0,1,0,0,[[0,'#ee7fa8'],[1,'#ffdbe8']])+LG('g3',0,1,0,0,[[0,'#e2588f'],[1,'#ffc0d6']])+RG('lf',[[0,'#6fb872'],[1,'#2f7a4c']]);
+ const pad=x=>X('ellipse',{cx:x,cy:200,rx:30,ry:16,fill:'url(#lf)',stroke:'#1f5a38','stroke-width':1})+[0,1,2,3,4,5,6,7].map(k=>{const a=k*Math.PI/4;return X('path',{d:`M${x} 200L${n1(x+Math.cos(a)*28)} ${n1(200+Math.sin(a)*15)}`,stroke:'#cfe9c0','stroke-width':.6,opacity:.5})}).join('');
+ const ring=(n,R,w,off,f)=>{let o='';for(let i=0;i<n;i++){const L=R-52;o+=X('g',{transform:`rotate(${n1(off+i*360/n)} ${C} ${C})`},X('path',{d:`M${C} ${C-52}C${C-w} ${C-52-L*.35} ${C-w*.75} ${C-52-L*.85} ${C} ${C-R}C${C+w*.75} ${C-52-L*.85} ${C+w} ${C-52-L*.35} ${C} ${C-52}Z`,fill:f,stroke:'#c9588a','stroke-width':.7})+X('path',{d:`M${C} ${C-56}L${C} ${C-R+8}`,stroke:'#fff','stroke-width':.7,opacity:.6}))}return o};
+ let b=pad(64)+pad(196)+ring(12,96,21,0,'url(#g1)')+ring(10,84,22,18,'url(#g2)')+ring(8,72,23,0,'url(#g3)');
+ for(let i=0;i<26;i++){const a=i*2*Math.PI/26,p=pt(55,a),q=pt(61,a);b+=X('path',{d:`M${n1(p[0])} ${n1(p[1])}L${n1(q[0])} ${n1(q[1])}`,stroke:'#f2c038','stroke-width':2.2,'stroke-linecap':'round'})+X('circle',{cx:n1(q[0]),cy:n1(q[1]),r:1.7,fill:'#ffe27a'})}
+ b+=X('circle',{cx:C,cy:C,r:57.7,fill:'none',stroke:'#e9b44c','stroke-width':1.4});
+ return W(halo('evH3')+rip('#cfeee6')+(SI[3]=IMG(d,b),'')+sweep(57.7,'#ffffff')+parts([[96,70],[176,78],[150,198],[84,184]],'fx-twk','#ffffff',1.9))});
+// ---------- 4 พญานาคเฝ้าท่า ----------
+const live4=memo(()=>{const d=LG('rg',0,0,1,1,[[0,'#0f6b6b'],[1,'#14a89c']])+RG('sg',[[0,'#7fe6d8'],[1,'#0a5a5a']],.4,.35,.8)+LG('hg',0,0,1,1,[[0,'#0f6b6b'],[1,'#14a89c']]);
+ let b=X('circle',{cx:C,cy:C,r:74,fill:'none',stroke:'#052a2c','stroke-width':30})+X('circle',{cx:C,cy:C,r:74,fill:'none',stroke:'url(#rg)','stroke-width':27});
+ [[63,34,0],[74,36,.5],[85,38,0]].forEach(r=>{for(let i=0;i<r[1];i++){const p=pt(r[0],(i+r[2])*2*Math.PI/r[1]);b+=X('circle',{cx:n1(p[0]),cy:n1(p[1]),r:5.4,fill:'url(#sg)',stroke:'#e9c35a','stroke-width':.8,opacity:.95})}});
+ for(let i=0;i<24;i++){const a=i*2*Math.PI/24,q=pt(95,a),p1=pt(88,a+.07),p2=pt(88,a-.07);b+=X('path',{d:`M${n1(p1[0])} ${n1(p1[1])}L${n1(q[0])} ${n1(q[1])}L${n1(p2[0])} ${n1(p2[1])}Z`,fill:'#e9c35a'})}
+ b+=X('circle',{cx:C,cy:C,r:57.7,fill:'none',stroke:'#e9c35a','stroke-width':1.5})+X('circle',{cx:C,cy:C,r:54.5,fill:'none',stroke:'#e9c35a','stroke-width':1,'stroke-dasharray':'1 4',opacity:.8});
+ let h='';[[-14,-18],[-4,-22],[6,-20]].forEach(q=>{h+=X('path',{d:`M${q[0]} ${q[1]+8}C${q[0]-8} ${q[1]-6} ${q[0]+2} ${q[1]-10} ${q[0]-2} ${q[1]-20}C${q[0]+8} ${q[1]-12} ${q[0]+14} ${q[1]-8} ${q[0]+6} ${q[1]+8}Z`,fill:'#e9c35a',stroke:'#8a5a10','stroke-width':.6})});
+ h+=X('path',{d:'M-12-10C-34-12-44-8-58-18C-46-6-38 0-14 4Z',fill:'#e9c35a'})+X('path',{d:'M-30 8C-32-10-16-22 2-22C14-22 24-16 32-8L46-4C50-3 50 2 46 4L32 8C26 12 20 16 12 18C-2 22-24 20-30 8Z',fill:'url(#hg)',stroke:'#e9c35a','stroke-width':1.4})+X('path',{d:'M12 18C24 22 36 20 44 11L32 8Z',fill:'#0a5a5a',stroke:'#e9c35a','stroke-width':1})+X('circle',{cx:7,cy:-7,r:3,fill:'#fff4a8'})+X('circle',{cx:40,cy:-1,r:1.3,fill:'#052a2c'});
+ b+=X('g',{transform:'translate(146 68) scale(.66)'},h);
+ const lv=X('g',{transform:'translate(146 68) scale(.66)'},A('fx-pulse',0,X('circle',{cx:7,cy:-7,r:7,fill:'#ffd84a',opacity:.45}))+X('g',{transform:'translate(46 2)'},A('fx-sway',0,X('path',{d:'M0 0C14 4 22 14 18 30',fill:'none',stroke:'#e9c35a','stroke-width':1.8,'stroke-linecap':'round'})))+A('fx-pulse',-.6,X('circle',{cx:66,cy:-8,r:13,fill:'#3fe0c8',opacity:.3}))+X('circle',{cx:66,cy:-8,r:7,fill:'url(#evPe)'}));
+ return W(halo('evH4')+rip('#7fe0d4')+(SI[4]=IMG(d,b),'')+lv+sweep(57.7,'#9ffff0')+parts([[170,56],[196,70],[184,48]],'fx-rise','#9ffff0',1.5))});
+// ---------- 5 กระทงเถ้าถ่าน ----------
+const live5=memo(()=>{const d=LG('a1',0,0,1,1,[[0,'#4a3a30'],[.6,'#241a15'],[1,'#0d0908']])+LG('a2',0,1,1,0,[[0,'#5a4a3e'],[1,'#2a1f19']]);let b=ann(50,79,'#0b0807');
+ for(let i=0;i<16;i++)b+=leaf(54,96,17,i*Math.PI/8,'url(#a1)','#ff6a1a','#ff9a3a');for(let i=0;i<16;i++)b+=leaf(52,84,13,(i+.5)*Math.PI/8,'url(#a2)','#c4501a','#e8a070');
+ b+=mari(12,60,'#8a8078','#6a625a','#ff6a1a')+X('circle',{cx:C,cy:C,r:57.7,fill:'none',stroke:'#8a8078','stroke-width':1.6})+incense('#3a2a20')+candle('#6a5a4c');
+ const em=[];for(let i=0;i<14;i++){const p=pt(92,i*2*Math.PI/14+.1);em.push([n1(p[0]),n1(p[1])])}
+ return W(halo('evH5')+rip('#a89888')+(SI[5]=IMG(d,b),'')+flame(44,.8)+parts(em,'fx-twk','#ff8a2a',2.2)+parts([[C-29,41],[C+29,41]],'fx-twk','#ff5a1f',1.8)+parts([[96,50],[130,40],[164,50],[110,36],[150,36]],'fx-rise','#9a8a7a',2.2)+parts([[104,44],[140,38]],'fx-rise','#ff8a2a',1.6))});
+// ---------- ลงทะเบียนกรอบ ----------
+const mk=(id,n,c1,c2,c3,pc,bd,sh)=>{const f={id,n,side:'h',c:0,ty:'static',c1,c2,c3,pc,bd,d:''};const i=FRAMES.findIndex(x=>x.id===id);if(i>=0)FRAMES[i]=f;else FRAMES.push(f);T[id]=sh};
+M.pev1=live1;M.pev2=live2;M.pev3=live3;M.pev4=live4;M.pev5=live5;
+mk('f_e1','กรอบกระทงใบตอง','#7aa13e','#ffb02a','#243a14','#fff3c4','🪷','pev1');
+mk('f_e2','กรอบโคมลอยขึ้นฟ้า','#ffc460','#fff3bf','#6a2a0e','#ffffff','🏮','pev2');
+mk('f_e3','กรอบบัวบานกลางสายน้ำ','#f08ab4','#ffe3ee','#7a1a4a','#ffffff','🪷','pev3');
+mk('f_e4','กรอบพญานาคเฝ้าท่า','#14a89c','#e9c35a','#052a2c','#9ffff0','🐉','pev4');
+mk('f_e5','กรอบกระทงเถ้าถ่าน','#ff6a1a','#8a8078','#0b0807','#ffd9bd','🔥','pev5');
+{const _w=frWrap;frWrap=function(inner,id){let h=_w.apply(this,arguments);try{if(typeof h==='string'&&/^f_e[1-5]$/.test(id)){const n=+id.slice(-1);h=h.replace(/class="frw /,`class="frw fsh fev${n} `).replace(/style="/,'style="--clip:circle(50% at 50% 50%);').replace('<svg class="frsh"',`<svg class="frsh evst evst${n}" viewBox="0 0 100 100" aria-hidden="true">${SW(SI[n]||'')}</svg><svg class="frsh"`)}}catch(e){}return h}}
+// gradient ของชั้นที่ขยับ (ใช้ร่วมทั้งหน้า)
+document.body.insertAdjacentHTML('beforeend',`<svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true"><defs>${RG('evFl',[[0,'#fff6c8'],[.45,'#ffc24a'],[1,'#ff6a10']],.5,.7,.6)}${RG('evH0',[[0,'#ffb54a',.5],[1,'#ff8a2a',0]])}${RG('evPe',[[0,'#fff'],[.5,'#9ffff0'],[1,'#12b8a8']],.4,.35,.7)}`+[['evH1','#ffb54a'],['evH2','#ffb040'],['evH3','#ff9ec2'],['evH4','#3fe0c8'],['evH5','#ff6a1a']].map(x=>RG(x[0],[[0,x[1],0],[.58,x[1],0],[.74,x[1],.4],[1,x[1],0]])).join('')+'</defs></svg>');
+// ---------- CSS ----------
+const css=document.createElement('style');css.textContent=`
+.frsh.evst3{animation:evBr 4.4s ease-in-out infinite;will-change:transform}
+.frw.fsh.fev2{animation:evBobU 4.6s ease-in-out infinite!important;will-change:transform}
+.fx-evrip{animation:evRip 4.8s ease-out infinite}
+.frsh circle.fx-evsw{stroke-dasharray:46 318;animation:evSw 9s linear infinite}
+@keyframes evBob{0%,100%{transform:translateY(0) rotate(-.5deg)}50%{transform:translateY(2.5px) rotate(.5deg)}}
+@keyframes evBobU{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-5px) rotate(1deg)}}
+@keyframes evBr{0%,100%{transform:scale(1)}50%{transform:scale(1.028)}}
+@keyframes evRip{0%{transform:scale(.55);opacity:0}15%{opacity:.55}100%{transform:scale(1.2);opacity:0}}
+@keyframes evSw{0%,70%{stroke-dashoffset:364;opacity:0}72%{opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+@keyframes evUp{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-22px);opacity:0}}
+@keyframes evShim{to{transform:translateX(520%)}}
+@keyframes evGl{0%,100%{opacity:.7}50%{opacity:1}}
+.evt{display:inline-flex;align-items:center;gap:7px;position:relative;padding:2px 12px;font-size:.82em;font-weight:800;white-space:nowrap;line-height:1.5;vertical-align:middle;cursor:pointer;overflow:hidden}
+.evt small{font-size:.72em;font-weight:500;padding-left:7px;border-left:1px solid;opacity:.85;font-variant-numeric:tabular-nums}
+.evt::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,#fff6,transparent);animation:evShim 5s linear infinite;pointer-events:none}
+.evt1{background:linear-gradient(180deg,#5a2c12,#3a1a0a);border:1px solid #b6772f;color:#ffe3a6;text-shadow:0 0 6px #ff9a2e,0 0 12px #ff7a10aa;clip-path:polygon(0 0,100% 0,calc(100% - 6px) 50%,100% 100%,0 100%,6px 50%)}.evt1 small{color:#d9a867}.evt1>span{animation:evGl 3s ease-in-out infinite}
+.evt2{border-radius:99px;color:#14223a;background:linear-gradient(180deg,#eef2f9,#a9b8cf);box-shadow:0 0 10px #b7cdf055,inset 0 0 0 1px #fff8;padding-left:28px}
+.evt2::before{content:"";position:absolute;left:6px;top:50%;width:15px;height:15px;margin-top:-7.5px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#c9d4e6 60%,#93a6c4);box-shadow:inset -3px -2px 0 #7f93b3}
+.evt3{color:#4a1030;background:linear-gradient(180deg,#ffe3ee,#f08ab4);clip-path:polygon(0 50%,8px 0,calc(100% - 8px) 0,100% 50%,calc(100% - 8px) 100%,8px 100%);padding:2px 18px;box-shadow:inset 0 -3px 0 #d9608f55}
+.evt4{color:#f6dc8a;background:radial-gradient(circle at 50% 120%,#0f7f7855 0 5px,transparent 6px) 0 0/12px 9px,linear-gradient(180deg,#0b2d30,#06191c);border:1px solid #d9b04a;box-shadow:inset 0 0 0 2px #06191c,inset 0 0 0 3px #d9b04a66;border-radius:3px}.evt4 small{color:#d9b04a}
+.evt5{color:#ffb27a;background:linear-gradient(180deg,#241a15,#120d0b);border-bottom:2px solid #ff6a1a;text-shadow:0 0 7px #ff6a1a;clip-path:polygon(0 0,12% 6%,26% 0,41% 7%,58% 0,74% 6%,100% 0,100% 100%,0 100%);box-shadow:0 6px 12px -4px #ff6a1a88}.evt5>span{animation:evGl 2.4s ease-in-out infinite}
+/* ธีมแชท (ใช้ชุดโครง ccxT เดิม: 9–13) */
+.evs .cmb[class*=ccxT]{border-width:2px;border-style:solid;position:relative;overflow:visible;border-radius:6px 16px 16px 16px;padding:8px 12px;font-size:14px;line-height:1.5}
+.evs .cmb[class*=ccxT]::before,.evs .cmb[class*=ccxT]::after{position:absolute;pointer-events:none;line-height:1}
+#chatBox .cm.cmp .cmb.ccxT9,.evs .cmb.ccxT9{background:linear-gradient(160deg,#112440,#0b1a30);border-color:#3f6aa0;color:#e6efff}
+#chatBox .cmb.ccxT9 .zqc>.zql,.evs .cmb.ccxT9 .zqc>.zql{width:300%;left:-100%;top:0;height:100%;background:linear-gradient(110deg,transparent 44%,#bfe3ff44 50%,transparent 56%);animation:lxSweep 4.6s linear infinite}
+#chatBox .cmb.ccxT9>.zqg,.evs .cmb.ccxT9>.zqg{box-shadow:0 0 16px #5fa8e055;animation:lxPulse 2.6s ease-in-out infinite alternate}
+#chatBox .cm.cmp .cmb.ccxT9::after,.evs .cmb.ccxT9::after{content:'';right:9px;bottom:-4px;width:7px;height:7px;border-radius:50%;background:#ffc45a;box-shadow:0 0 8px 3px #ff9a2e99;animation:pTw 1.8s infinite}
+#chatBox .cmb.ccxT9 .cmh b,.evs .cmb.ccxT9 .cmh b{color:#ffd58a}
+#chatBox .cm.cmp .cmb.ccxT10,.evs .cmb.ccxT10{background:linear-gradient(160deg,#2a2060,#52305e);border-color:#8a74e0;color:#f4ecff}
+#chatBox .cmb.ccxT10 .zqc>.zql,.evs .cmb.ccxT10 .zqc>.zql{width:300%;left:-100%;top:0;height:100%;background:linear-gradient(110deg,transparent 44%,#ffd48a55 50%,transparent 56%);animation:lxSweep 4s linear infinite}
+#chatBox .cmb.ccxT10>.zqg,.evs .cmb.ccxT10>.zqg{box-shadow:0 0 18px #ffb04a66;animation:lxPulse 2.2s ease-in-out infinite alternate}
+#chatBox .cm.cmp .cmb.ccxT10::before,.evs .cmb.ccxT10::before{content:'';left:12px;bottom:0;width:6px;height:8px;border-radius:2px 2px 3px 3px;background:#ffc060;box-shadow:0 0 8px 3px #ff9a3a88;animation:evUp 4s ease-out infinite}
+#chatBox .cm.cmp .cmb.ccxT10::after,.evs .cmb.ccxT10::after{content:'';right:18px;bottom:0;width:5px;height:7px;border-radius:2px 2px 3px 3px;background:#ffd080;box-shadow:0 0 7px 3px #ff9a3a77;animation:evUp 5.5s ease-out infinite -2s}
+#chatBox .cmb.ccxT10 .cmh b,.evs .cmb.ccxT10 .cmh b{color:#ffd9a0}
+#chatBox .cm.cmp .cmb.ccxT11,.evs .cmb.ccxT11{background:linear-gradient(160deg,#fff4f8,#e4f6ef);border-color:#f0a0c0;color:#3a2a34}
+#chatBox .cmb.ccxT11 .zqc>.zql,.evs .cmb.ccxT11 .zqc>.zql{width:300%;left:-100%;top:0;height:100%;background:linear-gradient(110deg,transparent 44%,#ffffffaa 50%,transparent 56%);animation:lxSweep 5s linear infinite}
+#chatBox .cmb.ccxT11>.zqg,.evs .cmb.ccxT11>.zqg{box-shadow:0 0 14px #ff9ec288;animation:lxPulse 3s ease-in-out infinite alternate}
+#chatBox .cm.cmp .cmb.ccxT11::after,.evs .cmb.ccxT11::after{content:'';right:-5px;top:-7px;width:12px;height:16px;border-radius:50% 50% 50% 0;background:linear-gradient(#ffb6d0,#f06a9a);transform:rotate(35deg);animation:pTw 3s infinite}
+#chatBox .cmb.ccxT11 .cmh b,.evs .cmb.ccxT11 .cmh b{color:#c04a7a}
+#chatBox .cm.cmp .cmb.ccxT12,.evs .cmb.ccxT12{background:#07282c;border-color:#d9b04a;color:#e2f4ee;outline:1px solid #d9b04a55;outline-offset:2px}
+#chatBox .cmb.ccxT12 .zqc>.zql,.evs .cmb.ccxT12 .zqc>.zql{width:300%;left:-100%;top:0;height:100%;background:linear-gradient(110deg,transparent 44%,#e9c35a55 50%,transparent 56%);animation:lxSweep 3.6s linear infinite}
+#chatBox .cmb.ccxT12>.zqg,.evs .cmb.ccxT12>.zqg{box-shadow:0 0 16px #14a89c77;animation:lxPulse 2.4s ease-in-out infinite alternate}
+#chatBox .cm.cmp .cmb.ccxT12::before,.evs .cmb.ccxT12::before{content:'';left:2px;right:2px;bottom:2px;height:9px;background:radial-gradient(circle at 50% 100%,transparent 0 3px,#e9c35a44 4px 5px,transparent 6px) 0 0/10px 8px;opacity:.8}
+#chatBox .cmb.ccxT12 .cmh b,.evs .cmb.ccxT12 .cmh b{color:#f6dc8a}
+#chatBox .cm.cmp .cmb.ccxT13,.evs .cmb.ccxT13{background:#1c1512;border-color:#ff7a28aa;color:#ffd9bd;box-shadow:inset 0 -3px 0 #ff6a1a}
+#chatBox .cmb.ccxT13>.zqg,.evs .cmb.ccxT13>.zqg{box-shadow:0 0 14px #ff6a1a55;animation:lxPulse 1.8s ease-in-out infinite alternate}
+#chatBox .cm.cmp .cmb.ccxT13::before,.evs .cmb.ccxT13::before{content:'';left:16px;bottom:0;width:3px;height:3px;border-radius:50%;background:#ff8a2a;box-shadow:0 0 6px 2px #ff6a1a;animation:evUp 3s ease-out infinite}
+#chatBox .cm.cmp .cmb.ccxT13::after,.evs .cmb.ccxT13::after{content:'';right:22px;bottom:0;width:3px;height:3px;border-radius:50%;background:#ffa24a;box-shadow:0 0 6px 2px #ff6a1a;animation:evUp 4s ease-out infinite -1.4s}
+#chatBox .cmb.ccxT13 .cmh b,.evs .cmb.ccxT13 .cmh b{color:#ffb27a}
+/* หน้าร้านอีเวนต์ */
+.evs{color:#f2ead6;background:#0b1222;border-radius:16px;padding:8px;margin:-2px}.evs .hero{position:relative;overflow:hidden;border-radius:16px;padding:14px;margin:36px 0 10px;background:radial-gradient(140px 70px at 85% 10%,#ffb04a55,transparent),linear-gradient(135deg,#13203a,#2a1a3c);border:1px solid #3a4a72}
+.evs .hero h4{font-size:19px;color:#ffd58a;margin:0 0 2px}.evs .hero p{margin:0;font-size:12px;opacity:.8}
+.evs .kb{display:flex;gap:8px;margin-top:10px}.evs .kb div{flex:1;border-radius:12px;padding:8px 10px;font-size:12px;border:1px solid}
+.evs .kb b{display:block;font-size:18px;font-variant-numeric:tabular-nums}.evs .kg{background:#0c2412;border-color:#2f6a3a;color:#bfe9b8}.evs .ke{background:#2a0f0b;border-color:#7a2f22;color:#ffb0a0}
+.evs .tabs{display:flex;gap:6px;margin:8px 0}.evs .tabs button{flex:1;font:inherit;font-weight:800;font-size:13px;padding:8px 4px;border-radius:10px;border:1.5px solid #3a4a72;background:#0d1626;color:#aab4c6;cursor:pointer}.evs .tabs button.on{background:linear-gradient(180deg,#ffe29a,#e8b54a);color:#2a1a04;border-color:#7a5512}
+.evs .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.evs .card{border-radius:16px;padding:10px 8px 10px;text-align:center;border:1px solid #1f2b44;background:radial-gradient(120% 90% at 50% 0,#14223a,#0a1220 72%);display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.evs .card.w{grid-column:1/-1}.evs .nm{font-weight:800;font-size:13.5px}.evs .ds{font-size:11px;opacity:.7;line-height:1.4}
+.evs .pv{min-height:96px;display:flex;align-items:center;justify-content:center;width:100%}.evs .pv .frprev{padding:20px 0 14px}
+.evs .frph{display:flex;width:54px;height:60px;align-items:center;justify-content:center;font-size:28px;background:#2a3550;overflow:hidden}.evs .frph img{width:100%;height:100%;object-fit:cover}
+.evs .tg{display:inline-block;font-size:11px;padding:2px 9px;border-radius:99px;border:1px solid}.evs .tm{color:#ffcf7a;border-color:#7a5a22;background:#2a1f0a}.evs .tk{color:#bfe9b8;border-color:#2f6a3a;background:#0c2412}.evs .te{color:#ffb0a0;border-color:#7a2f22;background:#2a0f0b}
+.evs .bar{width:80%;height:5px;border-radius:3px;background:#1a2438;overflow:hidden}.evs .bar i{display:block;height:100%;background:linear-gradient(90deg,#e9b44c,#ff8a2a)}
+.evs .acts{width:100%;display:flex;gap:6px;justify-content:center;flex-wrap:wrap}.evs .acts button{flex:1 1 80px;font:inherit;font-size:12.5px;font-weight:800;border-radius:10px;padding:7px 6px;cursor:pointer;border:2px solid #7a5512;color:#2a1a04;background:linear-gradient(180deg,#ffe29a,#e8b54a 60%,#c98d22);box-shadow:0 2px 0 #7a5512}
+.evs .acts button.g{background:#1a2438;color:#cfd8e8;border-color:#3a4a72;box-shadow:none}.evs .acts button.k{background:linear-gradient(180deg,#b9f0b0,#5fbf6a);border-color:#2f6a3a;box-shadow:0 2px 0 #2f6a3a}.evs .acts button.e{background:linear-gradient(180deg,#ffb4a0,#d9604a);border-color:#7a2f22;box-shadow:0 2px 0 #7a2f22}.evs .acts button:disabled{opacity:.45;cursor:default}
+#tEv{position:absolute;right:10px;top:132px;z-index:6;font:inherit;font-size:12px;font-weight:800;color:#2a1304;background:linear-gradient(180deg,#ffd58a,#f0a93f);border:2px solid #7a4a10;border-radius:12px;padding:6px 11px;box-shadow:0 3px 0 #7a4a10,0 0 14px #ffb04a99;cursor:pointer}
+.cosent.ev{border-color:#7a4a10;background:linear-gradient(135deg,#ffd58a,#f0a93f 55%,#d9852a)}
+@media(prefers-reduced-motion:reduce){.evt::after,.evt>span{animation:none}}
+`;document.head.appendChild(css);
+// ---------- ข้อมูลสินค้า ----------
+const OVL='<i class="zqc"><i class="zql"></i><i class="zqm"></i></i><i class="zqg"></i>';
+const IT=[
+ ['f',1,'evf1','กระทงใบตอง','ใบตองพับจีบสองชั้น ดอกดาวเรืองกับกล้วยไม้ เทียนไหว คลื่นน้ำใต้กรอบ',{p:49,cap:300}],
+ ['f',2,'evf2','โคมลอยขึ้นฟ้า','กระดาษสาส่องแสงจากไส้ใน ลอยขึ้นลง ประกายไฟลอยเหนือโคม',{k:25000,s:'g'}],
+ ['f',3,'evf3','บัวบานกลางสายน้ำ','กลีบสามชั้นหายใจช้าๆ เกสรทอง หยดน้ำวิบ',{k:15000,s:'g'}],
+ ['f',4,'evf4','พญานาคเฝ้าท่า','เกล็ดสามแถว ลูกแก้วเรือง หนวดไหว',{p:69,cap:100}],
+ ['f',5,'evf5','กระทงเถ้าถ่าน','ใบตองไหม้ ขอบถ่านแดงวูบ ขี้เถ้าลอยขึ้น',{k:25000,s:'e'}],
+ ['t',1,'evt1','ผู้ปล่อยโคม','ตัวอักษรเรืองเหมือนไฟส่องผ่านกระดาษสา',{p:29,cap:300}],
+ ['t',2,'evt2','ใต้เงาจันทร์เพ็ญ','ป้ายเงินพระจันทร์ แสงวิ่งผ่าน',{k:8000,s:'g'}],
+ ['t',3,'evt3','บัวบานกลางสายน้ำ','ป้ายกลีบบัวสีชมพู',{k:8000,s:'g'}],
+ ['t',4,'evt4','นาคาเฝ้าท่า','ป้ายเกล็ดนาค ขอบทอง',{p:39,cap:100}],
+ ['t',5,'evt5','ลอยทุกข์ลงน้ำ','ป้ายกระดาษไหม้ ขอบถ่านแดง',{k:8000,s:'e'}],
+ ['c',1,'evc1','ริมน้ำคืนเพ็ญ','น้ำนิ่ง ตะเกียงเล็กวูบที่มุมกรอบ',{p:29,cap:300}],
+ ['c',2,'evc2','ฟ้าโคมลอย','โคมเล็กลอยขึ้นในกรอบข้อความ',{k:10000,s:'g'}],
+ ['c',3,'evc3','สระบัวยามเช้า','กรอบสีอ่อน กลีบบัวที่มุม',{k:10000,s:'g'}],
+ ['c',4,'evc4','ท่าน้ำนาคา','ขอบทอง แถบเกล็ดนาคด้านล่าง',{p:39,cap:100}],
+ ['c',5,'evc5','เถ้าถ่านปลายธูป','ขอบถ่านเรือง ประกายไฟลอยขึ้น',{k:10000,s:'e'}]];
+const ID=r=>({f:'f_e',t:'t_e',c:'c_e'}[r[0]]+r[1]);
+const CAP={t_e1:300,t_e4:100};
+const EV={own:[],eq:{},ev:null};
+const isA=()=>{try{return !!(typeof admK==='function'&&admK())}catch(e){return false}};
+const has=id=>isA()||EV.own.includes(id);
+const f=n=>Number(n||0).toLocaleString('th-TH');
+const pad3=n=>String(n).padStart(3,'0');
+const evChip=(id,sn)=>{if(!/^t_e[1-5]$/.test(id||''))return'';const n=+id.slice(-1),nm=IT.find(r=>r[0]==='t'&&r[1]===n)[3];return`<span class="evt evt${n}" data-cs="e"><span>${nm}</span>${sn&&CAP[id]?`<small>№ ${pad3(sn)}/${CAP[id]}</small>`:''}</span>`};
+{const _t=window.cosTitleHtml;if(typeof _t==='function')window.cosTitleHtml=function(t){return /^t_e[1-5]$/.test(t||'')?evChip(t):_t.apply(this,arguments)}}
+// ---------- ซิงก์ ----------
+async function evSync(){try{const j=await api('cosget');if(!j)return;EV.own=Array.isArray(j.own)?j.own:[];EV.eq=j.eq||{};EV.ev=j.ev||null;
+ try{const d=frGet();let ch=0;EV.own.forEach(x=>{if(/^f_e[1-5]$/.test(x)&&!d.own.includes(x)){d.own.push(x);ch=1}});if(ch)frSet(d)}catch(e){}}catch(e){}}
+window.evSync=evSync;
+// ฝากกรรมตอนจบชีวิตขึ้นเซิร์ฟเวอร์ (หลังนำเข้าคลังเดิมแล้วเท่านั้น กันนับซ้ำ)
+try{if(typeof kbDeposit==='function'){const _kd=kbDeposit;kbDeposit=function(){let k=0;try{if(S&&!S._kbDone)k=Math.max(-3000,Math.min(3000,Math.round(S.karma||0)))}catch(e){}const r=_kd.apply(this,arguments);try{if(k&&EV.ev&&EV.ev.kb&&EV.ev.kb.imp)api('kbdep',{k}).then(()=>evSync()).catch(()=>{})}catch(e){}return r}}}catch(e){}
+// ---------- แชท ----------
+const evIO=typeof IntersectionObserver==='function'?new IntersectionObserver(es=>es.forEach(x=>x.target.classList.toggle('cxoff',!x.isIntersecting)),{rootMargin:'40px'}):null;
+{const _cr=chatRender;chatRender=function(){const r=_cr.apply(this,arguments);try{const box=$('chatBox');if(!box)return r;const ks=[...box.children].filter(e=>e.classList&&e.classList.contains('cm')),ms=chatMsgs||[];if(ks.length!==ms.length)return r;
+ ks.forEach((e,i)=>{const m=ms[i];let hit=0;
+  if(/^c_e[1-5]$/.test(m.cc||'')){const n=+m.cc.slice(-1),bd=e.querySelector('.cmb');if(bd&&!/ccxT/.test(bd.className)){bd.classList.add('ccx','ccxT'+(8+n));if(!bd.querySelector(':scope>.zqc'))bd.insertAdjacentHTML('afterbegin',OVL)}hit=1}
+  if(/^t_e[1-5]$/.test(m.ct||'')){if(!e.querySelector('.evt')){const b=e.querySelector('.cmh b');if(b)b.insertAdjacentHTML('afterend',' '+evChip(m.ct,m.cn))}e.querySelectorAll('.cmh .rkchip,.cmh .tchip,.cmh .ttl').forEach(x=>x.remove());hit=1}
+  if(hit&&evIO&&!e._evw){e._evw=1;evIO.observe(e)}})}catch(e){}return r}}
+document.addEventListener('click',ev=>{try{const el=ev.target.closest&&ev.target.closest('#chatBox .evt[data-cs]');if(!el)return;ev.stopPropagation();evMenu()}catch(e){}},true);
+// ---------- หน้าร้าน ----------
+const bigShrink=f=>new Promise(res=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);let q=.88,d=cv.toDataURL('image/jpeg',q);while(d.length>2.8e6&&q>.4){q-=.1;d=cv.toDataURL('image/jpeg',q)}res(d)};im.onerror=()=>res('');im.src=fr.result};fr.onerror=()=>res('');fr.readAsDataURL(f)});
+const MSG={noslip:'อ่านสลิปไม่ได้ ลองแคปให้เห็นทั้งใบ (ต้องเห็น QR) แล้วลองใหม่',dup:'สลิปนี้เคยถูกใช้แล้ว',acct:'สลิปนี้ไม่ได้โอนเข้าบัญชีของเกม',amount:'ยอดในสลิปไม่ตรงกับราคาที่เลือก',old:'สลิปเก่าเกินไป (รับเฉพาะที่โอนภายใน 3 ชั่วโมง)',pending:'ธนาคารยังอัปเดตสลิปไม่เสร็จ รอ 2-3 นาทีแล้วกดส่งใหม่',rate:'ลองบ่อยเกินไป รอสักครู่',img:'ไฟล์รูปไม่ถูกต้อง',bad:'อีเวนต์นี้ปิดขายแล้ว'};
+const av=()=>{const d=frGet();return d.av?`<img src="${d.av}">`:'🙂'};
+const left=pk=>EV.ev&&EV.ev.left&&EV.ev.left[pk]!=null?EV.ev.left[pk]:null;
+const tl=()=>{const ms=Math.max(0,END-Date.now()),d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5);return ms<=0?'ปิดขายแล้ว':`เหลือ ${d} วัน ${h} ชม.`};
+const card=r=>{const id=ID(r),o=has(id),x=r[5],sn=EV.ev&&EV.ev.sn&&EV.ev.sn[id],kb=EV.ev&&EV.ev.kb||{g:0,e:0},open=Date.now()<END;
+ let pv='',cur=false;
+ if(r[0]==='f'){pv=`<div class="frprev">${frWrap(`<span class="frph">${av()}</span>`,id)}</div>`;try{cur=frGet().eq===id}catch(e){}}
+ if(r[0]==='t'){pv=evChip(id,sn||(CAP[id]?Math.min(47,CAP[id]):0));cur=EV.eq.t===id}
+ if(r[0]==='c'){pv=`<div class="cmb ccxT${8+r[1]}">${OVL}<div class="cmh"><b>${esc(pname())}</b></div>ข้อความตัวอย่าง</div>`;cur=EV.eq.c===id}
+ const tag=x.p?`<span class="tg tm">🪙 ${x.p}฿ · ฉบับเลข ${x.cap} ชิ้น</span>`:`<span class="tg ${x.s==='g'?'tk':'te'}">${x.s==='g'?'☯️':'☠️'} ${f(x.k)} ${x.s==='g'?'กรรมดี':'กรรมชั่ว'}</span>`;
+ const lf=x.p?left(r[2]):null,bar=x.p&&lf!=null?`<div class="bar"><i style="width:${Math.round(lf/x.cap*100)}%"></i></div><div class="ds">เหลือ ${lf}/${x.cap}</div>`:'';
+ let act='';
+ if(o)act=`<div class="ds" style="color:#bfe9b8">✅ มีแล้ว${sn&&CAP[id]?` · № ${pad3(sn)}/${CAP[id]}`:sn?` · № ${pad3(sn)}`:''}</div><div class="acts">${cur?`<button class="g" onclick="evEq('${r[0]}','')">ถอด</button>`:`<button onclick="evEq('${r[0]}','${id}')">ใช้งาน</button>`}</div>`;
+ else if(!open)act='<div class="ds">ปิดขายแล้ว</div>';
+ else if(x.p)act=lf===0?'<div class="ds" style="color:#ffb0a0">หมดแล้ว</div>':`<div class="acts"><button onclick="evBuy('${r[2]}')">🪙 ซื้อ ${x.p}฿</button></div>`;
+ else{const have=x.s==='g'?kb.g:kb.e,ok=have>=x.k;act=`<div class="acts"><button class="${x.s==='g'?'k':'e'}" ${ok?'':'disabled'} onclick="evClaim(this,'${r[2]}')">${ok?'แลกด้วยกรรม':'กรรมไม่พอ · ขาดอีก '+f(x.k-have)}</button></div>`}
+ return`<div class="card${r[0]==='c'?' w':''}"><div class="pv">${pv}</div><div class="nm">${r[3]}</div><div class="ds">${r[4]}</div>${tag}${bar}${act}</div>`};
+window.evMenu=async function(tab){tab=window._evTab=tab||window._evTab||'f';
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="evs"><div class="hero"><h4>🏮 อีเวนต์ลอยกระทง 2026</h4><p>กำลังโหลด…</p></div></div>`,'evshop');
+ await evSync();
+ try{if(EV.ev&&EV.ev.kb&&!EV.ev.kb.imp&&typeof kbGet==='function'){const k=kbGet();await api('kbimp',{g:k.g,e:k.e});await evSync()}}catch(e){}
+ if(!EV.ev){modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="evs"><div class="hero"><h4>🏮 อีเวนต์ลอยกระทง 2026</h4><p>เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่อีกครั้งในอีกสักครู่</p></div></div>`,'evshop');return}
+ const kb=EV.ev.kb||{g:0,e:0},tabs=[['f','🖼️ กรอบ'],['t','🏷️ ฉายา'],['c','💬 ธีมแชท']];
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="evs"><div class="hero"><h4>🏮 อีเวนต์ลอยกระทง 2026</h4><p>ขายถึง 17 ธ.ค. 23:59 · ${tl()} · ซื้อแล้วถาวร</p>
+ <div class="kb"><div class="kg">คลังกรรมดี<b>☯️ ${f(kb.g)}</b></div><div class="ke">คลังกรรมชั่ว<b>☠️ ${f(kb.e)}</b></div></div>
+ <p style="margin-top:8px;font-size:11px">🪙 ซื้อด้วยเงิน = ฉบับเลขลำดับ จำกัดจำนวน · ☯️/☠️ แลกด้วยกรรมที่สะสมจากการจบชีวิต (หักจากคลังที่เซิร์ฟเวอร์)</p></div>
+ <div class="tabs">${tabs.map(t=>`<button class="${tab===t[0]?'on':''}" onclick="evMenu('${t[0]}')">${t[1]}</button>`).join('')}</div>
+ <div class="grid">${IT.filter(r=>r[0]===tab).map(card).join('')}</div>
+ <p class="tag2" style="margin-top:10px">ของแต่งล้วน ไม่มีผลต่อพลังหรืออันดับ · ผูกกับบัญชี · ถ้าตรวจสลิปอัตโนมัติไม่ได้ แจ้งบั๊กพร้อมสลิป</p></div>`,'evshop')};
+window.evEq=async function(kind,id){if(kind==='f'){try{frEquip(id||null)}catch(e){}setTimeout(()=>evMenu(),60);return}
+ const o=window.cosMenu;window.cosMenu=()=>{};try{if(typeof window.cosEq==='function')await window.cosEq(kind,id)}catch(e){}window.cosMenu=o;evMenu()};
+window.evClaim=async function(btn,pk){if(!btn._arm){btn._arm=1;const t=btn.textContent;btn.textContent='กดอีกครั้งเพื่อยืนยัน';setTimeout(()=>{btn._arm=0;if(btn.isConnected)btn.textContent=t},4000);return}
+ btn.disabled=true;btn.textContent='⏳ กำลังแลก…';let j=null;try{j=await api('cosclaim',{pk})}catch(e){j=null}
+ if(j&&j.ok){try{const r=IT.find(x=>x[2]===pk),k=kbGet();k[r[5].s]=Math.max(0,(k[r[5].s]||0)-r[5].k);kbSet(k)}catch(e){}toast('✅ แลกสำเร็จ!');try{sfx('good')}catch(e){}try{window.cosSync&&cosSync()}catch(e){}evMenu();return}
+ toast(j&&j.err==='karma'?'กรรมไม่พอ':j&&j.err==='closed'?'อีเวนต์ปิดแล้ว':'แลกไม่สำเร็จ ลองใหม่');evMenu()};
+window.evBuy=function(pk){const r=IT.find(x=>x[2]===pk);if(!r)return;const p=r[5].p,lf=left(pk);
+ modal(`<button class="xbtn" onclick="evMenu()">✕</button><h3>🏮 ${r[3]}</h3>
+ <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#c98d22">${p} บาท</div><div class="tag2">ฉบับจำกัด เหลือ ${lf==null?'?':lf}/${r[5].cap} ชิ้น · ได้เลขลำดับตามลำดับที่ชำระสำเร็จ</div>
+ <img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">
+ <p style="margin:8px 0 2px">1) สแกนโอน <b>${p} บาท</b> ตรงยอดเป๊ะ</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจอัตโนมัติ ของเข้าทันที</p>
+ <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
+ <label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>
+ <button class="pbtn" style="width:100%;margin-top:8px" onclick="evPaid(this,'${pk}')">📨 ส่งสลิป</button>
+ <p class="tag2">ซื้อครั้งเดียวถาวร ผูกกับบัญชี · ของแต่งล้วน ไม่มีผลต่อพลังหรืออันดับ</p>`,'evbuy')};
+window.evPaid=async function(btn,pk){const fl=$('supImg')&&$('supImg').files&&$('supImg').files[0];if(!fl)return toast('แนบสลิปก่อนนะ');
+ btn.disabled=true;btn.textContent='⏳ กำลังตรวจสลิป…';let j=null;
+ try{const img=await bigShrink(fl);if(!img)throw 0;const r=await fetch('/api/pay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:pid,pk,n:pname(),img})});j=await r.json().catch(()=>null)}catch(e){j=null}
+ if(j&&j.ok){await evSync();try{window.cosSync&&cosSync()}catch(e){}btn.textContent='✅ ตรวจผ่านแล้ว ของเข้าแล้ว!';toast('✅ ได้ของแล้ว ขอบคุณที่สนับสนุนครับ 💛');try{sfx('good')}catch(e){}setTimeout(()=>evMenu(),1200);return}
+ btn.disabled=false;btn.textContent='📨 ส่งสลิป';toast(j&&j.st==='amount'&&j.need?'ยอดในสลิปไม่ตรง ต้องโอน '+j.need+' บาทพอดี (ไม่ขาดไม่เกิน) แล้วส่งสลิปใบใหม่':j&&j.st==='grant'?'ชำระแล้วแต่ของหมด/มีปัญหา แจ้งผู้พัฒนาพร้อมสลิปนะ':j&&MSG[j.st]?MSG[j.st]:'ตรวจสลิปไม่สำเร็จ ลองใหม่อีกครั้ง หรือแจ้งผู้พัฒนาพร้อมสลิป')};
+// ---------- ทางเข้า ----------
+const banner=()=>`<button class="cosent ev" onclick="evMenu()"><span class="ic">🏮</span><span>อีเวนต์ลอยกระทง — ถึง 17 ธ.ค.<small>กรอบนาค โคมลอย บัว · ซื้อด้วยเงิน หรือแลกด้วยกรรมดี/กรรมชั่ว</small></span></button>`;
+['openProfile','openFrameShop','vipMenu'].forEach(n=>{let o;try{o=eval(n)}catch(e){}if(typeof o!=='function')return;const w=function(){const r=o.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.cosent.ev')&&!/^(cos|ev)/.test(m.dataset.k||'')&&Date.now()<END){const h=m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',banner())}}catch(e){}return r};window[n]=w;try{eval(n+'=w')}catch(e){}});
+setInterval(()=>{try{const Tt=$('title');if(Tt&&$('tSup')&&!$('tEv')&&Date.now()<END)Tt.insertAdjacentHTML('afterbegin','<button id="tEv" onclick="evMenu()">🏮 อีเวนต์ลอยกระทง</button>')}catch(e){}},1200);
+setTimeout(evSync,3200);setInterval(evSync,300000);window.addEventListener('shop:paid',evSync);
+try{if((navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=2){document.documentElement.classList.add('evlite');const st=document.createElement('style');st.textContent='.evlite #chatBox .frsh .fx-evrip,.evlite #chatBox .frsh .fx-rise,.evlite #chatBox .frsh .fx-twk{display:none}.evlite #chatBox .frsh .fx-pulse{animation:none}';document.head.appendChild(st)}}catch(e){}
+}catch(e){console.error('ev',e)}})();
+
 </script>
 </body>
 </html>
