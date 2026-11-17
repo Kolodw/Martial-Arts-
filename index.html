@@ -21076,7 +21076,7 @@ function svInfo(d){const S0=d.S||{},ri=Math.max(0,Math.min(7,S0.lastRealm|0));le
  if(S0.mw){w='🏙️ ยุคปัจจุบัน';wc='mw';rl=(S0.mw.imm?'⏳ ผู้อยู่ยง':S0.mw.native?'คนยุคปัจจุบัน':'ยอดฝีมือหลงยุค')}
  else if(S0.beastMode&&!S0.beastMode.human){w='🐾 สัตว์อสูร';wc='bst';rl=S0.beastMode.sp||'สัตว์อสูร'}
  else if(S0.xt){w='🌟 โลกเทพ';wc='g';rl=XGOD[ri]}else if(S0.xian){w='☁️ โลกเซียน';wc='x';rl=XREALM[ri]}else{w='🏯 ยุทธภพ';wc='m';rl=SV_W[ri]}
- const ch=S0.ch&&S0.ch!=='normal'?(CH_N[S0.ch]||(S0.ch==='regress'?'🔁 ผู้ย้อนกาล':'')):'';return{w,wc,rl,ch}}
+ const ch=S0.ch&&S0.ch!=='normal'?(S0.ch==='hell'&&S0.flags&&S0.flags.abyss?'🕳️ อเวจี':CH_N[S0.ch]||(S0.ch==='regress'?'🔁 ผู้ย้อนกาล':'')):'';return{w,wc,rl,ch}}
 const svLbl=()=>LS.get('murim_slotlbl',{})||{};
 function svDraw(cv,look){try{const c=cv.getContext('2d'),sg=g,sp=PS;try{g=c;PS=cv.width/28;c.setTransform(PS,0,0,PS,0,0);c.imageSmoothingEnabled=false;c.clearRect(0,0,28,31);person(9,29,look||{robe:'#3a3448',trim:'#5a5068',skin:'#c8a88a',hair:'#1a1424',age:25,g:'ชาย',seed:3,mood:'neutral'},'stand')}finally{g=sg;PS=sp}}catch(e){}}
 function svMenu(n){const d=readSave(n);if(!d)return null;const I=svInfo(d),L=svLbl();return{ic:'💾',t:`ช่อง ${n}: ${d.S.name}`,sub:`${I.w} · ${d.S.age} ปี`,rows:[
@@ -26077,7 +26077,7 @@ function openAbyss(){const h=abH();if(!h)return;hl2Init(h);const n=h.lv+1,R0=abR
  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="gbtn" style="flex:1" onclick="hellShop()">🏮 แท่นบูชา</button><button class="gbtn" style="flex:1" onclick="hlFuseUI()">⚗️ หลอมคำสาป</button><button class="gbtn" style="flex:1 1 100%" onclick="hlRest()" ${(h.heat||0)>0&&R0<7?'':'disabled style="opacity:.45;flex:1 1 100%"'}>🧘 พักฟื้น (1 ครั้ง/10 ชั้น)</button></div>
  <p class="tag2" style="margin-top:6px">💡 ผู้คุมแรงคงที่ตามชั้น — ต้องฝึกให้ทันจริง · ท่าทีถูก −35% ผิด +35% · ประตูและกฎเหมือนกันทุกคนตลอดสัปดาห์</p>`,'hell2')}
 // ---- ป้ายบนหัวจอ & แท่นบูชา ----
-{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const h=abH(),b=document.querySelector('#gRealm .hlb');if(h&&b){b.textContent=`🕳️ อเวจี ${h.lv}/1000 · ${h.ess}`;b.style.background='#1a0a2a';b.style.borderColor='#9a6aff';b.style.color='#d8c0ff'}}catch(e){}return r}}
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const h=abH(),el=$('gRealm');let b=document.querySelector('#gRealm .hlb');if(h&&el&&!b){el.insertAdjacentHTML('beforeend',' <span class="hlb" style="cursor:pointer;border:1px solid;border-radius:8px;padding:0 6px;font-size:11px;white-space:nowrap"></span>');b=el.querySelector('.hlb')}if(h&&b){b.textContent=`🕳️ อเวจี ${h.lv}/1000 · ${h.ess}`;b.style.background='#1a0a2a';b.style.borderColor='#9a6aff';b.style.color='#d8c0ff'}}catch(e){}return r}}
 document.addEventListener('click',e=>{try{const b=e.target.closest&&e.target.closest('.hlb');if(b&&abH()){e.stopImmediatePropagation();e.preventDefault();openAbyss()}}catch(x){}},true);
 {const _hs=window.hellShop;window.hellShop=function(){const r=_hs.apply(this,arguments);try{const h=abH(),m=$('modal');if(h&&m){m.querySelectorAll('.hl2B').forEach(x=>x.remove());if(!m.querySelector('.abB'))m.insertAdjacentHTML('beforeend',`<button class="pbtn abB" style="width:100%;margin-top:8px" onclick="openAbyss()">🕳️ ไปที่ประตูอเวจี (ชั้น ${Math.min(1000,h.lv+1)})</button>`);m.innerHTML=m.innerHTML.replace(/ชั้นปัจจุบัน <b>(\d+)\/100<\/b>/,'ชั้นอเวจี <b>$1/1000</b>')}}catch(e){}return r}}
 // ---- รายปี ----
