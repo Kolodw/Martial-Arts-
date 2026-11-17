@@ -27418,6 +27418,7 @@ const st=document.createElement('style');st.textContent='.bagQ{display:flex;gap:
  // ต่อ WebSocket ได้แล้ว → ไม่ต้องดึงทุก 10 วิ (ดึงเต็มทุก 60 วิพอ ให้ข้อความที่ถูกซ่อน/โปรไฟล์ตรงกัน)
  const _cpW=chatPoll;chatPoll=function(){if(live&&Date.now()-lastSync<60000)return Promise.resolve();lastSync=Date.now();return _cpW.apply(this,arguments)};
  window._chWS=()=>({live,open:!!ws});
+ window._chWSOpen=()=>{try{if(want()&&!ws)open()}catch(e){}};
 }catch(e){console.error(e)}})();
 
 // ===================== v17.33 🔀 เหนือกัลป์ที่เก้า: ทางแยก 3 สาย · กัลป์ที่ 10–11 · แดนนอกกาล · มหากัลป์ =====================
@@ -31973,6 +31974,27 @@ try{const st=document.createElement('style');st.textContent=`#mwB .mbSt .mbStB{d
 // เหตุการณ์ตามลักษณะร่างกายแบบยุทธภพ (แม่สื่อ/หน้ากากเหล็ก ฯลฯ) ไม่ควรขึ้นในยุคปัจจุบัน
 {const _bt=bodyEvTry;bodyEvTry=function(){if(S&&S.mw)return;return _bt.apply(this,arguments)}}
 window._kids={KE,kfx,kRun,kDo,kYear,kGrad,KFOC,kidOf};
+})()}catch(e){console.error(e)}
+
+// 💬 แชทออนไลน์: เปิดจอแชทแล้วต้องรอโหลด + ข้อความเด้งย้อนกลับ
+// เดิม: เปิดทุกครั้งโชว์ "กำลังโหลด…" จนกว่าเซิร์ฟเวอร์จะตอบ · ดึงแชทสองทาง (แบบแคชเก่ากับแบบสด) แล้วตัวที่ตอบทีหลังทับกัน ข้อความใหม่เลยหายแล้วค่อยกลับมา · WebSocket รอรอบเช็ก 2.5 วิก่อนต่อ
+// ตอนนี้: เปิดมาโชว์ข้อความเดิมทันที (เก็บแคชในเครื่องไว้ด้วย) · ดึงสดทางเดียว ครั้งเดียวต่อรอบ · ผสานกับข้อความที่ WebSocket ส่งมาก่อน ไม่ให้ของเก่าทับของใหม่ · ต่อ WebSocket ทันทีที่เปิด
+try{(()=>{
+let fly=null,lp=0;
+try{const c=LS.get('murim_chc',null);if(Array.isArray(c)&&c.length&&!(chatMsgs||[]).length)chatMsgs=c}catch(e){}
+const save=()=>{try{LS.set('murim_chc',(chatMsgs||[]).filter(m=>m&&!m._p).slice(-40))}catch(e){}};
+window.chatPollF=function(){if(fly)return fly;lp=Date.now();
+ fly=(async()=>{try{const r=await fetch(API+'?a=chat&id='+pid+'&fresh='+Date.now());if(!r.ok)return;const j=await r.json();if(!j||!Array.isArray(j.m))return;
+  const srv=j.m.slice(),ids=new Set(srv.map(m=>m.i)),mx=srv.reduce((a,m)=>Math.max(a,m.t||0),0);
+  // ข้อความที่ส่งมาทาง WebSocket แล้วแต่รายการจากเซิร์ฟเวอร์ยังไม่ทัน (ใหม่กว่าทุกข้อความในรายการ) ต้องไม่หาย
+  const keep=(chatMsgs||[]).filter(m=>m&&!m._p&&m.i&&!ids.has(m.i)&&(m.t||0)>mx);
+  chatMsgs=srv.concat(keep).sort((x,y)=>(x.t||0)-(y.t||0));
+  try{chatProf=j.p||chatProf}catch(e){}try{if('ann' in j)annShow(j.ann)}catch(e){}
+  chatRender();save()}catch(e){}finally{fly=null}})();return fly};
+{const _cp=chatPoll;chatPoll=function(){const w=window._chWS&&window._chWS();if(w&&w.live&&Date.now()-lp<60000)return Promise.resolve();return window.chatPollF()}}
+{const _o=openOnline;openOnline=function(tab){const r=_o.apply(this,arguments);try{if((tab||'chat')==='chat'){const box=$('chatBox');
+  if(box&&(chatMsgs||[]).length){chatRender();box.dataset.ok=1;box.scrollTop=box.scrollHeight}
+  try{window._chWSOpen&&window._chWSOpen()}catch(e){}window.chatPollF()}}catch(e){}return r}}
 })()}catch(e){console.error(e)}
 </script>
 </body>
