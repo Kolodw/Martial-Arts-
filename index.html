@@ -28595,6 +28595,294 @@ try{document.head.insertAdjacentHTML('beforeend',`<style>
 try{Object.assign(I18N.d,{'🌌 ชุดระดับกัลป์':'🌌 Kalpa outfits','ไม่ใส่':'None','🎨 สีของชุดกัลป์ (20 สี)':'🎨 Kalpa outfit tone (20)','สีดั้งเดิม':'Original'})}catch(e){}
 try{SYS_GUIDE.push({s:'world',nw:1,ic:'🌌',t:'ชุดระดับกัลป์',go:'kxOpen',d:'ชุดพิเศษ 11 ชุด แต่ละชุดมี 20 สีแปร (สีชุดและสีแสงเปลี่ยนตาม) มีแสงขยับ ได้จากการเล่นจริงเท่านั้น: ถึงกัลป์ที่ 2 · 3 · 5 · 7 · 9 · ผ่านครบเก้ากัลป์ และอีก 5 ชุดตามวิถีที่เลือกที่ 📖 ประตูนวนิยาย (ผู้พิทักษ์ · ผู้ลบหน้ากระดาษ · ผู้ปล่อยวาง · ผู้จดจำ · ก้าวข้ามสามภพ) · ปลดล็อกแล้วใส่ได้ทุกชีวิต เลือกในหน้าออกแบบ (แท็บ 🎽) หรือกดปุ่มนี้ระหว่างเล่น'})}catch(e){}
 })()}catch(e){console.error(e)}
+
+// ===================== v18.12 ไอคอนพิกเซลของไอเทม (วาดด้วยโค้ด · สีตามความหายาก) =====================
+try{(()=>{
+// 14x14 sprites. letters: m l d = ramp(material by rarity) · g G gold · w white · h H wood · r R red · n N green · b B blue · p P purple
+// s S steel · o O orange · y yellow · c C cyan · t T paper · e E pink · a A accent(per item) · x X dark gray · . empty. Outline is added automatically.
+const ART={
+sword:[
+'......lm......','.....llmd.....','.....llmd.....','.....llmd.....','.....llmd.....','.....llmd.....','.....lmdd.....','.....lmdd.....',
+'..ggggaagggg..','..GGGGGGGGGG..','......hH......','......hH......','.....gggg.....','.....GGGG.....'],
+saber:[
+'.........lm...','........llmd..','.......llmd...','.......lmd....','......llmd....','......lmd.....','.....llmd.....','.....lmd......',
+'...gggagg.....','...GGGGGG.....','.....hH.......','.....hH.......','....gggg......','....GGGG......'],
+spear:[
+'......lm......','.....llmd.....','.....llmd.....','......md......','.....rrrr.....','.....RrrR.....','......hH......','......hH......',
+'......hH......','......hH......','......hH......','......hH......','.....gggg.....','.....GGGG.....'],
+hammer:[
+'..............','..llllllllll..','..lmmmmmmmmd..','..lmmmmmmmmd..','..dddddddddd..','......hH......','......hH......','......hH......',
+'......hH......','......hH......','......hH......','......hH......','.....gggg.....','.....GGGG.....'],
+axe:[
+'..............','...llll.hH....','..lllmmmhH....','.llmmmmmhH....','.lmmmmmdhH....','.lmmmmddhH....','..ddddd.hH....','........hH....',
+'........hH....','........hH....','........hH....','........hH....','.......gggg...','.......GGGG...'],
+bow:[
+'.....hh.......','....hH.s......','...hH...s.....','..hH....s.....','..hH.....s....','..hH.....s....','..hH.....s....','..hH.....s....',
+'..hH.....s....','..hH.....s....','...hH...s.....','....hH.s......','.....hh.......','..............'],
+fan:[
+'..............','.....rrrr.....','...rrwwwwrr...','..rwwlwwlwwr..','.rwlwwlwwlwwr.','.rwwlwwwwlwwr.','.rwwwlwwlwwwr.','..rrwwlllwwrr.',
+'...rrrrrrrrr..','.......hH.....','.......hH.....','.......gg.....','..............','..............'],
+flute:[
+'..............','..........lm..','.........lmd..','........lmd...','.......lmd....','......lmd.....','.....lmd......','....lmd.......',
+'...lmd........','..lmd.........','.rlm..........','.rr...........','..............','..............'],
+whip:[
+'..............','....hhhh......','...hH..hH.....','..hH....hH....','..hH....hH....','...hH...hH....','....hH..hH....','.....hH.hH....',
+'......hHhH....','......hhH.....','.....hhH......','....ggg.......','....GGG.......','..............'],
+claw:[
+'..............','..m.m.m.......','..lmlmlm......','.llmllmlm.....','.llmmlmmlm....','..lmmmmmmd....','...dmmmmdd....','....ddddd.....',
+'.....hH.......','.....hH.......','.....hH.......','....gggg......','....GGGG......','..............'],
+dagger:[
+'..............','.......lm.....','......llmd....','......llmd....','......lmdd....','.....llmd.....','....gaggg.....','...gGGGgg.....',
+'...hH.........','..hH..........','.hH...........','gg............','..............','..............'],
+bell:[
+'......gg......','......gg......','.....gGGg.....','....lllllm....','...llmmmmmd...','...lmmmmmmd...','...lmmmmmmd...','..llmmmmmmdd..',
+'..lmmmmmmmmd..','..dddddddddd..','.....gaag.....','......gg......','..............','..............'],
+seal:[
+'..............','.....gggg.....','....gaaaag....','....gaggag....','....GGGGGG....','..mmmmmmmmmm..','..lmmmmmmmmd..','..lmmmmmmmmd..',
+'..lmmaaaammd..','..lmmaggammd..','..lmmaaaammd..','..dddddddddd..','..............','..............'],
+lute:[
+'.hH...........','.hH...........','..hH..........','...hH.........','....hHrrr.....','.....rRmmmr...','....rmmmmmmr..','...rmmlmmmdr..',
+'...rmmmmmmdr..','....rmmmmdr...','.....rmmdr....','......rrr.....','..............','..............'],
+flag:[
+'..hH..........','..hHrrrrrrr...','..hHrwwwwwrr..','..hHrwaawwrr..','..hHrwwwwwr...','..hHrrrrrr....','..hH..........','..hH..........',
+'..hH..........','..hH..........','..hH..........','..hH..........','.gggg.........','.GGGG.........'],
+chest:[
+'..............','..............','...mmmmmmmm...','..mllllllmmd..','..mlmmmmmmdd..','..ddddddddd...','..mmmmaammmd..','..lmmmaaammd..',
+'..lmmmmmmmmd..','..lmmmmmmmmd..','..lmmmmmmmmd..','..dddddddddd..','..............','..............'],
+helm:[
+'..............','.....llll.....','...lllmmmmd...','..llmmmmmmmd..','..lmmmmmmmmd..','..lmmmmmmmmd..','..lmmwwwwmmd..','..lmwXXXXwmd..',
+'..lmwXXXXwmd..','..lmm....mmd..','..ddd....ddd..','..............','..............','..............'],
+chestplate:[
+'..............','..mm......mm..','.mllm....mllm.','.mllmmmmmmllm.','.mllmmmmmmllm.','..mlmmaammdm..','..mlmmaammdm..','...lmmmmmmd...',
+'...lmmmmmmd...','...lmmmmmmd...','...ddmmmmdd...','....dddddd....','..............','..............'],
+robe:[
+'.....rrrr.....','....rwwwwr....','...rwwrrwwr...','..rwlwrrwlwr..','..rwlwwwwlwr..','.rrwlwwwwlwrr.','.rwwlwwwwlwwr.','.rwwlwaawlwwr.',
+'.rwwlwwwwlwwr.','.rwwlwwwwlwwr.','.rwwlwwwwlwwr.','.rrrrrrrrrrrr.','..............','..............'],
+boots:[
+'..............','..............','...hh.....hh..','...hH.....hH..','...hH.....hH..','...hH.....hH..','..hhH....hhH..','.hhhhH..hhhhH.',
+'.HHHHHH.HHHHHH','..............','..............','..............','..............','..............'],
+bracer:[
+'..............','..............','..mmmmmmmmmm..','.lmmmmmmmmmd..','.lmmaaaammmd..','.lmmaggammmd..','.lmmaaaammmd..','.lmmmmmmmmmd..',
+'..dddddddddd..','..............','..............','..............','..............','..............'],
+shield:[
+'..............','..mmmmmmmmmm..','.mllmmmmmmmmd.','.mlmmmaammmmd.','.mlmmaggammmd.','.mlmmmaammmmd.','.mlmmmmmmmmmd.','..mlmmmmmmmd..',
+'...mlmmmmmd...','....mlmmmd....','.....mmmd.....','......dd......','..............','..............'],
+turtle:[
+'..............','....nnnnnn....','..nnnNnnNnnn..','.nnNnnnnnnNnn.','.nNnnNnnNnnNn.','.nnnnnNNnnnnn.','.nNnnNnnNnnNn.','..nnNnnnnNnn..',
+'...nnnnnnnn...','..ss......ss..','.sSs......sSs.','..............','..............','..............'],
+pill:[
+'..............','..............','....llllll....','...lwmmmmmd...','..lwmmmmmmmd..','..lmmmmmmmmd..','..lmmmmmmmmd..','..lmmmmmmmmd..',
+'..lmmmmmmmdd..','...dmmmmmdd...','....dddddd....','..............','..............','..............'],
+bottle:[
+'..............','.....hhhh.....','.....HHHH.....','.....wwww.....','....wwwwww....','...wwaaaaww...','..wwaaaaaaww..','..wwaaaaaaww..',
+'..wwaaaaaaww..','..wwaaaaaaww..','...wwaaaaww...','....wwwwww....','..............','..............'],
+vial:[
+'..............','......hh......','......hh......','.....wwww.....','......ww......','.....wwww.....','....waaaaw....','....waaaaw....',
+'....waaaaw....','....waaaaw....','.....wwww.....','..............','..............','..............'],
+drop:[
+'..............','......ll......','.....lmm......','.....lmmd.....','....lmmmd.....','...lmmmmmd....','..lwmmmmmmd...','..lwmmmmmmd...',
+'..lmmmmmmmd...','...lmmmmmd....','....dddddd....','..............','..............','..............'],
+peach:[
+'.......nn.....','......nNn.....','.....hnn......','....eeeeeee...','..eewweeeeee..','.eeweeeeeeEe..','.eweeeeeeeEe..','.eeeeeeeeeEE..',
+'.eeeeeeeeEEE..','..eeeeeeEEE...','...EeeeeEE....','....EEEEE.....','..............','..............'],
+jug:[
+'..............','.....hhhh.....','.....HHHH.....','....tttttt....','...ttttttTt...','..ttaaaaattT..','..ttaaaaaatT..','..ttaaaaaatT..',
+'..ttaaaaaatT..','..tttaaaattT..','...tttttTTT...','....TTTTTT....','..............','..............'],
+herb:[
+'..............','.....n..n.....','....nNn.nn....','...nnNnnNn....','..nnnNnnNnn...','..nNnnnnnNn...','...nnn.nnn....','....nN.Nn.....',
+'.....nNn......','......hh......','......hH......','.....hhHH.....','..............','..............'],
+book:[
+'..............','.hhhhhhhhhh...','.hRRRRRRRRh...','.hRggggggRh...','.hRgaaaagRh...','.hRgaggagRh...','.hRgaaaagRh...','.hRggggggRh...',
+'.hRRRRRRRRh...','.hhhhhhhhhh...','.tttttttttt...','..............','..............','..............'],
+tome:[
+'..............','..mmmmmmmmmm..','..mllllllllm..','..mlmmmmmmdm..','..mlmgggmmdm..','..mlmgaagmdm..','..mlmgggmmdm..','..mlmmmmmmdm..',
+'..mddddddddm..','..tttttttttt..','..TTTTTTTTTT..','..............','..............','..............'],
+scroll:[
+'..............','.hh........hh.','.hHttttttttHh.','..hTtttttttT..','..hTttrrrrtT..','..hTtrRRrtT...','..hTttrrrrtT..','..hTtttttttT..',
+'.hHttttttttHh.','.hh........hh.','..............','..............','..............','..............'],
+tablet:[
+'..............','....mmmmmm....','...mllllllm...','..mllmmmmmmd..','..mlmmaammmd..','..mlmmaammmd..','..mlmmmmmmmd..','..mlmmaammmd..',
+'..mlmmmmmmmd..','..mddddddddd..','..............','..............','..............','..............'],
+ring:[
+'..............','..............','.....aaaa.....','.....aAAa.....','....gggggg....','...gG....Gg...','..gG......Gg..','..gG......Gg..',
+'..gG......Gg..','...gG....Gg...','....GGGGGG....','..............','..............','..............'],
+pendant:[
+'..............','..gg......gg..','...gG....gG...','....gG..gG....','.....gGGg.....','.....gmmg.....','....gmllmg....','...gmllmmdg...',
+'...gmlmmmdg...','...gmmmmmdg...','....gmmmdg....','.....gGGg.....','..............','..............'],
+beads:[
+'..............','....mmmmm.....','..mmm....mmm..','.mm........mm.','.ml........md.','.ml........md.','.mm........md.','..mm......mm..',
+'...mmm..mmm...','.....mgGm.....','......hH......','......hH......','..............','..............'],
+pin:[
+'..............','.....ee.......','....eaae......','....eaae......','.....ee.......','.....gg.......','......gg......','.......gg.....',
+'........gg....','.........gg...','..........gG..','...........GG.','..............','..............'],
+pouch:[
+'..............','.....rrrr.....','....rRrrRr....','.....gggg.....','....mmmmmm....','...mlmmmmmd...','..mlmmaammmd..','..mlmmaammmd..',
+'..mlmmmmmmmd..','..mlmmmmmmmd..','...mddddddd...','....dddddd....','..............','..............'],
+mirror:[
+'..............','....gggggg....','...gllllllg...','..gllwwwwllg..','..glwwwwwwlg..','..glwwwwwwlg..','..glwwwwwwdg..','..gdlwwwwddg..',
+'...gddddddg...','....gGGGGg....','.....hHhH.....','......hH......','......hH......','..............'],
+orb:[
+'..............','....lllll.....','...lwwmmmd....','..lwwmmmmmd...','..lwmmmmmmd...','..lmmmmmmmd...','..lmmmmmmdd...','...mmmmmddd...',
+'....ddddd.....','...gggggg.....','..gGGGGGGg....','..............','..............','..............'],
+core:[
+'..............','......ll......','.....lwmd.....','....lwmmmd....','...lwmmmmmd...','..lwmmmmmmmd..','..lmmmmmmmmd..','...dmmmmmmd...',
+'....dmmmmd....','.....dmmd.....','......dd......','..............','..............','..............'],
+gem:[
+'..............','..............','...llllllll...','..lwwlwwlwwd..','.lwlmlmmlmlmd.','..lmlmmmmlmd..','...lmmmmmmd...','....lmmmmd....',
+'.....lmmd.....','......md......','..............','..............','..............','..............'],
+feather:[
+'..............','..........lm..','.........llmd.','........llmmd.','.......llmmd..','......llmmd...','.....llmmd....','....llmmd.....',
+'...llmd.......','..llm.........','.lhH..........','hH............','..............','..............'],
+star:[
+'.......l......','.......l......','......lml.....','.llllllmmllll.','..lmmmmmmmmd..','...lmmmmmmd...','....lmmmmd....','...lmmdmmmd...',
+'...lmd..lmd...','..lmd....lmd..','..ld......ld..','..............','..............','..............'],
+mask:[
+'..............','...wwwwwwww...','..wwwwwwwwww..','..wwXXwwXXww..','..wwXXwwXXww..','..wwwwwwwwww..','..wwwwrrwwww..','...wwwrrwww...',
+'....wwwwww....','.....wwww.....','..............','..............','..............','..............'],
+talisman:[
+'..............','...yyyyyyyy...','...yRRRRRRy...','...yRrrrrRy...','...yRrRRrRy...','...yRrrrrRy...','...yRRrrRRy...','...yRrRRrRy...',
+'...yRrrrrRy...','...yRRRRRRy...','...yyyyyyyy...','..............','..............','..............'],
+pagoda:[
+'.......gg.....','......gGGg....','.....rrrrrr...','...rrrrrrrrrr.','....rRRRRRRr..','.....wwwwww...','....rrrrrrrr..','..rrrrrrrrrrrr','...rRRRRRRRRr.','....wwwwwwww..','....wXXwwXXw..','..hhhhhhhhhhhh','..............','..............'],
+egg:[
+'..............','......ll......','.....lwmd.....','....lwmmmd....','....lwmmmd....','...lwmmmmmd...','...lmmmmmmd...','...lmmmmmmd...',
+'...lmmmmmmd...','....lmmmmd....','.....dddd.....','..............','..............','..............'],
+rock:[
+'..............','..............','.....lllll....','...lllmmmmd...','..lllmmmmmmd..','.lllmmmmmmmdd.','.llmmmmmmmmdd.','.lmmmmmmmmddd.',
+'.dddddddddddd.','..............','..............','..............','..............','..............'],
+ore:[
+'..............','......wl......','...lll.mmd....','..llmmmmmmd...','.lwmmmmaammd..','.lmmmmmaamdd..','.lmmmmmmmmdd..','..dmmmmmmddd..',
+'...dddddddd...','..............','..............','..............','..............','..............'],
+void:[
+'..............','..pp......pp..','.pP.pppppp.Pp.','..pPPPPPPPp...','.p.PXXXXXXP.p.','...PXllllXP...','.p.PXlwwlXP.p.','...PXllllXP...',
+'.p.PXXXXXXP.p.','..pPPPPPPPp...','.pP.pppppp.Pp.','..pp......pp..','..............','..............'],
+map:[
+'..............','.tttttttttttt.','.tTttttTttttt.','.tTrrttTtbbtt.','.ttrRttTtbbtt.','.tttttTtttttt.','.ttnnTttttrrt.','.ttnnTtttrRtt.',
+'.tttttTttttrt.','.tttttTtttttt.','.tttttttttttt.','..............','..............','..............'],
+food:[
+'..............','..............','.....wwww.....','....wwwwww....','...wwwwwwww...','..wwwwwwwwww..','..wwwwXXwwww..','..wwwwXXwwww..',
+'..wwwwXXwwww..','...SSSSSSSS...','..............','..............','..............','..............'],
+silk:[
+'..............','...gggggggg...','...rrrrrrrr...','..rRrRrRrRrr..','..rrrrrrrrrr..','..rRrRrRrRrr..','..rrrrrrrrrr..','..rRrRrRrRrr..',
+'...rrrrrrrr...','...gggggggg...','..............','..............','..............','..............'],
+ink:[
+'..............','.....hhhh.....','.....HHHH.....','....XXXXXX....','...XxxxxxxX...','..XxxrrrrxxX..','..XxxrrrrxxX..','..XxxrrrrxxX..',
+'..XxxxxxxxxX..','...XXXXXXXX...','..............','..............','..............','..............'],
+hide:[
+'..............','..tt......tt..','.tTttttttttTt.','.tTtTttttTtTt.','..ttttTTttttt.','.tTtttttttTtt.','..ttTtttTttt..','..tttttttttt..',
+'...tTttttTt...','....tttttt....','..............','..............','..............','..............'],
+ticket:[
+'..............','..............','.gggggggggggg.','.gyyyyyyyyyyg.','.gyyaaaaaayyg.','gyyyaggggaayyg','gyyyaggggaayyg','.gyyaaaaaayyg.',
+'.gyyyyyyyyyyg.','.gggggggggggg.','..............','..............','..............','..............'],
+furnace:[
+'..............','....gggggg....','..hhhhhhhhhh..','..mmmmmmmmmm..','.mllmmmmmmmdm.','.mlmmmmmmmmdm.','.mlmmrrrrmmdm.','.mlmmrooormdm.',
+'.mlmmmrrrmmdm.','.mddddddddddm.','..mm......mm..','..dd......dd..','..............','..............'],
+horse:[
+'..........hh..','.........hhhH.','........hhXhH.','.......hhhhhH.','......HhhhH...','.HhhhhhhhhH...','HhhhhhhhhhH...','hhhhhhhhhhH...',
+'.hhhhhhhhhH...','.hH.hH..hH.hH.','.hH.hH..hH.hH.','.XX.XX..XX.XX.','..............','..............'],
+house:[
+'..............','.......rr.....','......rrrr....','.....rrrrrr...','....rrRRRRrr..','...rrrrrrrrrr.','..rRRRRRRRRRRr','...tttttttttt.','...tttwwtbbtt.',
+'...tttwwtbbtt.','...tttttttttt.','...hhhhhhhhhh.','..............','..............'],
+hourglass:[
+'..............','..gggggggggg..','..GGGGGGGGGG..','...wwwwwwww...','....wyyyyw....','.....wyyw.....','......ww......','.....wyyw.....','....wyyyyw....',
+'...wwyyyyww...','..GGGGGGGGGG..','..gggggggggg..','..............','..............'],
+cauldron:[
+'..............','..............','.gg........gg.','.gGgggggggGgg.','..mmmmmmmmmm..','.mllmmmmmmmdm.','.mlmmmmmmmmdm.','.mlmmmmmmmmdm.',
+'.mlmmmmmmmmdm.','..mddddddddm..','...ss....ss...','..............','..............','..............'],
+yinyang:[
+'..............','....wwwwww....','..wwwwwwwxxx..','.wwwwXwwwxxxx.','.wwwwwwwxxxxx.','.wwwXXwwxxxxx.','.wwwwwwwxxwxx.','.wwwwwxxxxwxx.',
+'.wwwwxxxxxxxx.','..wwwxxxxxxx..','...xxxxxxxx...','..............','..............','..............'],
+redline:[
+'..............','..rr..........','.rRRr.........','.rRRr....rr...','..rr....rRRr..','...rr...rRRr..','....rr...rr...','.....rrrrr....',
+'......rr......','.....rr.rr....','....rr...rr...','...rR.....Rr..','..............','..............'],
+card:[
+'..............','...gggggggg...','...gwwwwwwg...','...gwaaaawg...','...gwaggawg...','...gwaggawg...','...gwaaaawg...','...gwwwwwwg...',
+'...gggggggg...','..............','..............','..............','..............','..............'],
+sign:[
+'..............','..gggggggggg..','..gRRRRRRRRg..','..gRwwwwwwRg..','..gRwrrrrwRg..','..gRwwwwwwRg..','..gRRRRRRRRg..','..gggggggggg..',
+'.......hH.....','.......hH.....','.......hH.....','.......hH.....','..............','..............'],
+lure:[
+'..............','...hhh........','..h...h.......','..h...h.......','...hhh........','.....gg.......','....ggggg.....','...gooooog....','..gooooooog...',
+'..gooyyyoog...','...goooog.....','....gggg......','..............','..............'],
+donkey:[
+'.........h.h..','.........hhh..','........hhXhH.','.......hhhhhH.','......HhhhH...','.HhhhhhhhhH...','HhhhhhhhhhH...','hhhhhhhhhhH...',
+'.hhhhhhhhhH...','.hH.hH..hH.hH.','.hH.hH..hH.hH.','.XX.XX..XX.XX.','..............','..............'],
+box:[
+'..............','..............','..hhhhhhhhhh..','.hhHHhhhhHHhh.','.hHhhhhhhhhHh.','.hHhhhaahhhHh.','.hHhhhaahhhHh.','.hHhhhhhhhhHh.','.hHHHHHHHHHHh.',
+'..hhhhhhhhhh..','..............','..............','..............','..............']
+};
+
+const RAMP=[['#8d9098','#d0d4dc','#585c66'],['#3aa845','#86e894','#1e6a2a'],['#2f86e0','#8ac8ff','#1a4a9a'],['#9b4ff0','#d6a8ff','#5a2a9a'],['#e88a10','#ffcc66','#a04a08'],['#e8337f','#ff98c8','#9a1a50'],['#13b3a5','#78f4e4','#0a6a64'],['#c86bff','#ffe4ff','#6a2ab0']];
+const TINT={red:['#e0404a','#ff9aa4','#8a1824'],blue:['#3a8ae8','#9accff','#1a3a8a'],purple:['#9a50e0','#d8a8ff','#4a2280'],pink:['#ff7aa8','#ffc8dc','#b83a6a'],white:['#ece8de','#ffffff','#b0a898'],
+ brown:['#9a6438','#cc9a64','#5a3418'],gold:['#e8b830','#fff0a0','#9a7010'],green:['#3ab85a','#90f0a0','#1a6a30'],orange:['#f08a30','#ffc890','#a04a10'],cyan:['#30c8d8','#a0f4ff','#107a8a'],
+ steel:['#9aa0ac','#e0e4ec','#5a5e6a'],jade:['#4ab88a','#a8f0d0','#1e6a4a'],black:['#3a3644','#6a6478','#18161e']};
+const FIX={g:'#f0c850',G:'#a07a20',w:'#ffffff',h:'#9a6438',H:'#5e3a20',r:'#d83a3c',R:'#8a1c24',n:'#4ab85a',N:'#226a34',b:'#4a8ae8',B:'#24408a',p:'#a05ae0',P:'#5a2a8a',
+ s:'#c8ccd8',S:'#7a8094',o:'#f08a30',O:'#a8501a',y:'#ffe060',c:'#5ad8e8',C:'#1a8a9a',t:'#eadcae',T:'#b09860',e:'#ff9ac0',E:'#c8507a',x:'#3a3a46',X:'#20202a'};
+const ACC=[['#ff4a5a','#9a1424'],['#5ab0ff','#1a4a9a'],['#5ae07a','#1a7a34'],['#c080ff','#5a2a9a'],['#5ae8e0','#1a8a88'],['#ffd84a','#a07a10']];
+const hsh=s=>{s=String(s||'');let h=7;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h};
+const CACHE={};
+function pxiURL(kind,r,tint,seed){r=Math.max(0,Math.min(7,r|0));const ai=hsh(seed)%6,key=kind+'|'+r+'|'+(tint||'')+'|'+(tint?0:ai);if(CACHE[key])return CACHE[key];
+ const A=ART[kind]||ART.box,cv=document.createElement('canvas');cv.width=cv.height=16;const ctx=cv.getContext('2d');const ramp=tint&&TINT[tint]?TINT[tint]:RAMP[r];
+ const pal=Object.assign({},FIX,{m:ramp[0],l:ramp[1],d:ramp[2],a:tint&&TINT[tint]?ramp[0]:ACC[ai][0],A:tint&&TINT[tint]?ramp[2]:ACC[ai][1]});
+ const grid=[];for(let y=0;y<16;y++){grid.push(new Array(16).fill(null))}
+ A.forEach((row,y)=>{for(let x=0;x<14;x++){const ch=row[x];if(ch&&ch!=='.'&&pal[ch])grid[y+1][x+1]=pal[ch]}});
+ const out='#1a1420';for(let y=0;y<16;y++)for(let x=0;x<16;x++){if(grid[y][x])continue;const n=[[0,1],[1,0],[0,-1],[-1,0]].some(([dx,dy])=>{const v=(grid[y+dy]||[])[x+dx];return v&&v!==out});if(n)grid[y][x]=out}
+ for(let y=0;y<16;y++)for(let x=0;x<16;x++)if(grid[y][x]){ctx.fillStyle=grid[y][x];ctx.fillRect(x,y,1,1)}
+ if(r>=4){ctx.fillStyle='#ffffff';ctx.fillRect(13,1,1,1);ctx.fillStyle='rgba(255,255,255,.6)';ctx.fillRect(12,1,1,1);ctx.fillRect(14,1,1,1);ctx.fillRect(13,0,1,1);ctx.fillRect(13,2,1,1)}
+ return CACHE[key]=cv.toDataURL()}
+window.pxi=function(kind,r,tint,seed,big){return`<span class="pxf r${r|0}${big?' big':''}"><img src="${pxiURL(kind,r,tint,seed)}" alt=""></span>`};
+// ---- จับคู่ของ → รูป ----
+const EMK={'🪞':['mirror'],'💊':['pill','red'],'🧪':['vial','green'],'🔵':['pill','blue'],'🔴':['pill','red'],'📜':['talisman'],'🔶':['core','orange'],'🌿':['herb'],'🍙':['food'],'💎':['gem','cyan'],
+ '🗺️':['map'],'🥚':['egg','white'],'🍑':['peach'],'🪨':['ore','steel'],'🧵':['silk'],'🖋️':['ink'],'💠':['gem','jade'],'🦴':['hide'],'🔮':['orb','purple'],'👛':['pouch','pink'],'🍶':['jug','pink'],
+ '💧':['drop','cyan'],'🟣':['pill','purple'],'📕':['book'],'🪶':['feather','red'],'🌠':['star','gold'],'🧿':['seal','blue'],'🕳️':['void'],'💮':['pill','pink'],'🟤':['pill','brown'],
+ '💍':['ring'],'🪮':['pin'],'📿':['beads','brown'],'🟢':['pendant','jade'],'🐯':['ring'],'⚡':['bracer','gold'],'👝':['pouch','purple'],'🔱':['spear','gold'],'🐉':['ring'],'🐢':['turtle'],'🔔':['bell','gold'],
+ '👘':['robe'],'🥷':['robe'],'👑':['robe'],'🦎':['chestplate','green'],'🗡️':['sword'],'⚔️':['saber'],'🛡️':['shield'],'🍵':['jug','green'],'💼':['box'],'🙏':['beads','brown']};
+const KW=[['กระบี่','sword'],['ดาบ','saber'],['ทวน','spear'],['หอก','spear'],['ง้าว','spear'],['พัด','fan'],['ขลุ่ย','flute'],['กรงเล็บ','claw'],['ตะขอ','claw'],['แส้','whip'],['โซ่','whip'],['ธนู','bow'],
+ ['ขวาน','axe'],['กระบอง','hammer'],['ค้อน','hammer'],['มีด','dagger'],['กริช','dagger'],['ลูกดอก','dagger'],['กระดิ่ง','bell'],['ระฆัง','bell'],['ธง','flag'],['พิณ','lute'],['ตรา','seal'],
+ ['หมวก','helm'],['มงกุฎ','helm'],['รองเท้า','boots'],['สนับแขน','bracer'],['ปลอกแขน','bracer'],['ผ้าคลุม','robe'],['ชุดเต๋า','robe'],['อาภรณ์','robe'],['ม่าน','robe'],['เกราะ','chestplate'],['ชุด','robe'],
+ ['สุรา','jug'],['เหล้า','jug'],['น้ำชา','jug'],['น้ำค้าง','drop'],['หยด','drop'],['น้ำ','bottle'],['ผลท้อ','peach'],['ผล','peach'],['ท้อ','peach'],['ผงยา','pouch'],['ยาต้ม','jug'],['แก่นดาว','star'],['ยา','pill'],['โอสถ','pill'],
+ ['คัมภีร์','book'],['ตำรา','tome'],['บันทึก','tome'],['ม้วน','scroll'],['ศิลา','tablet'],['จารึก','tablet'],['ค่ายกล','tablet'],['ยันต์','talisman'],
+ ['ถุงหอม','pouch'],['ถุง','pouch'],['จี้','pendant'],['ลูกประคำ','beads'],['ปิ่น','pin'],['แหวน','ring'],['กำไล','ring'],['หยก','pendant'],['ลูกแก้ว','orb'],['กระจก','mirror'],['เครื่องราง','pendant'],['ดวงดาว','star'],['ดาว','star'],
+ ['หีบ','chest'],['กล่อง','box'],['ไข่','egg'],['กระดูก','hide'],['เมล็ด','herb'],['สมุนไพร','herb'],['แร่','ore'],['ไหม','silk'],['หมึก','ink'],['หนัง','hide'],['แก่น','core'],['สร้าง','pagoda'],['สะพาน','pagoda'],['ขุดคลอง','map']];
+const byKw=(n,d)=>{for(const [k,v] of KW)if(n.includes(k))return v;return d};
+const CATD={w:'sword',a:'chestplate',p:'pill',k:'book',c:'pendant',t:'talisman',b:'pagoda',x:'box',f:'food',g:'box',e:'house',m:'ore',s:'horse'};
+const FXT={qi:'blue',life:'pink',int:'purple',hp:'red',hpheal:'red',cha:'pink',karma:'gold',fame:'orange'};
+const MATK={herb:'herb',ore:'ore',jade:'gem',ink:'ink',silk:'silk',core:'core',hide:'hide'};
+function ecoIcon(it){let k;if(it.c==='m'&&MATK[it.mat])k=MATK[it.mat];else if(it.c==='b')k='pagoda';else if(it.c==='s')k=byKw(it.n,'horse');else if(it.c==='e')k='house';else k=byKw(it.n,CATD[it.c]||'box');
+ if(it.c==='x')k=byKw(it.n,'box');if(it.c==='f'&&!['jug','bottle','drop','peach'].includes(k))k='food';if(it.c==='s'&&!['horse','donkey'].includes(k))k='horse';
+ const tint=(it.c==='p'&&FXT[it.fx])?FXT[it.fx]:null;return[k,it.r|0,tint,it.n]}
+const SHI={pill:['pill','orange'],heal:['vial','green'],qi:['pill','blue'],art:['chest'],life:['peach'],break:['pill','red'],revive:['card'],ticket:['ticket'],furnace:['cauldron'],body:['bottle','orange'],mask:['mask'],soulp:['pill','purple'],
+ perfume:['vial','pink'],redline:['redline'],yinyang:['yinyang'],recruit:['sign'],deed:['scroll'],hammer:['hammer'],lure:['lure'],sand:['hourglass']};
+let NM=null,NMw='';
+function nameMap(){const w=typeof ECO_W==='function'&&S?ECO_W():'m';if(NM&&NMw===w)return NM;NMw=w;const M={};
+ try{(ecoCat(w)||[]).forEach(it=>{M[it.n]=ecoIcon(it)})}catch(e){}
+ try{Object.entries(BAGIT).forEach(([k,v])=>{const e=EMK[v.ic]||['box'];M[v.n]=[e[0],typeof bRar==='function'?bRar(k):1,e[1]||null,k]})}catch(e){}
+ try{Object.entries(EQI).forEach(([k,v])=>{const e=EMK[v.ic]||[byKw(v.n,'ring')];let kk=e[0],tn=e[1]||null;if(v.s==='fit'){kk='robe'}if(v.s==='fw')kk=byKw(v.n,'sword');M[v.n]=[kk,Math.max(0,Math.min(7,(v.t|0)||(v.s==='fw'?2:1))),tn,k]})}catch(e){}
+ try{Object.entries(GEAR).forEach(([slot,L])=>L.forEach((it,i)=>{const r=[0,1,2,4][i]|0;const kk=slot==='weapon'?byKw(it.n,'sword'):slot==='armor'?'chestplate':slot==='mount'?(it.n.startsWith('ลา')?'donkey':'horse'):'house';M[it.n]=[kk,r,slot==='armor'?['brown','gold','white'][i]:null,it.id]}))}catch(e){}
+ try{SHOP.forEach(it=>{const e=SHI[it.id]||[byKw(it.n,'box')];M[it.n]=[e[0],it.c<30?1:it.c<60?2:it.c<100?3:4,e[1]||null,it.id]})}catch(e){}
+ NM=M;NM._k=Object.keys(M).filter(k=>k.length>=3).sort((a,b)=>b.length-a.length);return NM}
+const EMRE=new RegExp('^\\s*('+Object.keys(EMK).map(e=>e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')\\uFE0F?\\s*');
+function deco(root){if(!root)return;const M=nameMap();const els=[];root.querySelectorAll('.item .h').forEach(h=>{const x=h.querySelector('b');if(x)els.push(x)});root.querySelectorAll('.sysq b, .eqs > b').forEach(x=>els.push(x));els.forEach(el=>{if(el.dataset.px||el.querySelector('.pxf'))return;el.dataset.px=1;const t=el.textContent.trim();if(!t||t.startsWith('—'))return;
+  let hit=null;for(const k of M._k){if(t.includes(k)){hit=M[k];break}}
+  const em=t.match(EMRE);if(!hit&&em&&EMK[em[1]]){const e=EMK[em[1]];hit=[e[0],1,e[1]||null,t]}if(!hit){const rt=el.querySelector('.rtag')||(el.parentNode&&el.parentNode.querySelector('.rtag'));const mm=rt&&String(rt.className).match(/rar(\d)/);if(mm){const k=byKw(t,null);if(k)hit=[k,+mm[1],null,t]}}if(!hit)return;
+  const ic=pxi(hit[0],hit[1],hit[2],hit[3]);const ps=el.previousSibling;if(ps&&ps.nodeType===3&&EMRE.test(ps.textContent.trim()+' ')){ps.textContent=ps.textContent.replace(EMRE,'');el.insertAdjacentHTML('beforebegin',ic)}else{const h=el.innerHTML,m2=h.match(EMRE);el.innerHTML=m2?ic+h.slice(m2[0].length):ic+h;el.classList.add('pxrow')}})}
+window.pxDeco=deco;
+const PXT=/🎒|🗝️|🏬|🛒|ชุดสวมใส่|ร้าน|คลัง|ตลาด|ระบบ|ประมูล|มรดก/;let pxQ=0;const pxRun=()=>{pxQ=0;try{const m=$('modal');const h3=m&&m.querySelector('h3');if(h3&&PXT.test(h3.textContent))deco(m)}catch(e){}};
+try{const m=$('modal');if(m)new MutationObserver(()=>{if(!pxQ){pxQ=1;requestAnimationFrame(pxRun)}}).observe(m,{childList:true,subtree:true})}catch(e){}
+const _md=modal;modal=function(){const r=_md.apply(this,arguments);pxRun();return r};
+try{document.head.insertAdjacentHTML('beforeend',`<style>
+.pxf{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:0 0 34px;border-radius:8px;margin-right:7px;vertical-align:middle;position:relative;overflow:hidden;
+ background:radial-gradient(circle at 50% 45%,color-mix(in srgb,var(--rc) 38%,#2a2440) 0%,#181424 75%);border:1.5px solid var(--rc);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.pxf img{width:32px;height:32px;image-rendering:pixelated;image-rendering:crisp-edges;position:relative;z-index:1}
+.pxf.big{width:52px;height:52px;flex-basis:52px}.pxf.big img{width:48px;height:48px}
+.pxf.r0{--rc:#8d8d8d}.pxf.r1{--rc:#3aa845}.pxf.r2{--rc:#2f86e0}.pxf.r3{--rc:#9b4ff0;box-shadow:0 0 6px rgba(155,79,240,.55)}.pxf.r4{--rc:#e88a10;box-shadow:0 0 8px rgba(232,138,16,.6)}
+.pxf.r5{--rc:#e8337f;box-shadow:0 0 9px rgba(232,51,127,.65)}.pxf.r6{--rc:#13b3a5;box-shadow:0 0 10px rgba(19,179,165,.7)}.pxf.r7{--rc:#c86bff;box-shadow:0 0 12px rgba(200,107,255,.8);animation:pxHue 4s linear infinite}
+.pxf.r4:after,.pxf.r5:after,.pxf.r6:after,.pxf.r7:after{content:'';position:absolute;inset:-50%;background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.45) 50%,transparent 58%);animation:pxShine 2.6s ease-in-out infinite;z-index:2;pointer-events:none}
+.pxrow{display:inline-flex;align-items:center;flex-wrap:wrap}
+@keyframes pxShine{0%{transform:translateX(-60%)}60%,100%{transform:translateX(60%)}}@keyframes pxHue{to{filter:hue-rotate(360deg)}}
+</style>`)}catch(e){}
+
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
