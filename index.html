@@ -35471,7 +35471,7 @@ window.evBuy=async function(pk){
  <label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>
  <button class="pbtn" style="width:100%;margin-top:8px" onclick="evPaid(this,'${pk}')">📨 ส่งสลิป</button>
  <p class="tag2">ซื้อครั้งเดียวถาวร ผูกกับบัญชี · ของแต่งล้วน ไม่มีผลต่อพลังหรืออันดับ</p>`,'evbuy')};
-setInterval(()=>{try{const t=$('tEv');if(t&&Date.now()<END){const d=Math.ceil((END-Date.now())/864e5);t.textContent='🏮 ลอยกระทง · เหลือ '+d+' วัน'}}catch(e){}},5000);
+setInterval(()=>{try{const t=$('tEv');if(t&&Date.now()<END){const d=Math.ceil((END-Date.now())/864e5);{const sp=t.querySelector('span');if(sp)sp.textContent='อีก '+d+' วัน';else t.textContent='🏮 ลอยกระทง · เหลือ '+d+' วัน'}}}catch(e){}},5000);
 }
 
 /* ===== แบนเนอร์ประกาศการซื้อ (เงินจริง) ในแชทออนไลน์ · ยิ่งแพงยิ่งหรู ===== */
@@ -35540,6 +35540,26 @@ window.mwParOK=function(){try{if(!S)return true;const M=S.mw||null;if(M&&M.nativ
 #modal .shl .tb{justify-content:flex-start;padding:0;margin:8px 0 12px;width:auto;position:static;left:auto}
 #modal .shl .pc,#modal .shl .rw{color:#f1e3c2}
 #modal .shl .empty{color:inherit}`;document.head.appendChild(st)}
+
+/* ===== ปรับปุ่มหน้าแรก: แถบปุ่มขวาบนแบบกะทัดรัด · ปุ่มหลัก/รอง · ตัวเลือกที่เลือกชัดขึ้น ===== */
+{
+const st=document.createElement('style');st.textContent=`
+@media (max-width:999px){
+#title #tSup,#title #tFb,#title #tCos,#title #tEv{position:absolute!important;right:10px!important;left:auto!important;width:54px!important;height:50px!important;padding:0!important;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:1px;border-radius:15px!important;font-size:10.5px!important;line-height:1.1;font-weight:800;text-align:center;box-sizing:border-box}
+#title #tSup{top:10px!important}#title #tFb{top:64px!important}#title #tCos{top:118px!important}#title #tEv{top:172px!important}
+#title .tbi{font-size:19px;line-height:1;font-style:normal}
+#title #tSup{background:linear-gradient(180deg,#ffe29a,#e8b54a 55%,#c98d22)!important;color:#2a1a04!important;border:2px solid #7a5512!important;box-shadow:0 3px 0 #7a5512,0 0 14px #e8b54a88!important}
+#title #tFb,#title #tCos,#title #tEv{background:rgba(22,17,40,.78)!important;color:#ffe9a8!important;border:2px solid #c9a24a!important;box-shadow:0 3px 0 #000!important;backdrop-filter:none}
+#title #tEv::after{content:"";position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:#ff4a3a;box-shadow:0 0 0 2px #1a1230}
+}
+body.tuOn #title .seg.tuTs > button.on,#title .box.opts .seg button.on,#title .seg button.on{background:linear-gradient(180deg,#ffe29a,#e8b54a)!important;color:#2a1a04!important;-webkit-text-fill-color:#2a1a04!important;border-color:#7a5512!important;font-weight:800;box-shadow:0 3px 0 #7a5512!important;opacity:1!important}
+#title .seg button.on::before{content:"✓ ";font-weight:900}
+#title [onclick="goDaily()"]{font-size:15px!important;font-weight:800}#title #dailyInfo{font-size:13px!important}
+#title::after{content:"";display:block;height:120px;flex:none}
+`;document.head.appendChild(st);
+const M={tSup:['🙏','สนับสนุน'],tFb:['👥','เฟส'],tCos:['🎨','ตกแต่ง'],tEv:['🏮','ลอยกระทง']};
+setInterval(()=>{try{for(const k in M){const e=$(k);if(e&&!e.querySelector('.tbi')){e.title=e.textContent.trim();e.innerHTML=`<i class="tbi">${M[k][0]}</i><span>${M[k][1]}</span>`}}}catch(e){}},900);
+}
 </script>
 </body>
 </html>
