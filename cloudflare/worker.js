@@ -101,16 +101,18 @@ function mpBody(parts) {
   let n = 0; for (const o of out) n += o.length; const buf = new Uint8Array(n); let k = 0; for (const o of out) { buf.set(o, k); k += o.length }
   return { body: buf, type: 'multipart/form-data; boundary=' + bd };
 }
+// รหัสสาขา SlipOK: รับได้ทั้งตัวเลขล้วน หรือลิงก์เต็ม (https://api.slipok.com/api/line/apikey/12345) → ตัดเอาส่วนท้าย
+const branchId = env => String(env.SLIPOK_BRANCH || '').trim().replace(/\/+$/, '').split('/').pop();
 async function slipokCall(env, bin, mt, amount, withLog) {
   const parts = [{ name: 'files', filename: 'slip.' + (/png/.test(mt) ? 'png' : 'jpg'), type: mt, value: bin }];
   if (withLog) parts.push({ name: 'log', value: 'true' });
   if (amount != null) parts.push({ name: 'amount', value: String(amount) });
   const m = mpBody(parts);
-  const r = await fetch('https://api.slipok.com/api/line/apikey/' + encodeURIComponent(String(env.SLIPOK_BRANCH).trim()), { method: 'POST', headers: { 'x-authorization': String(env.SLIPOK_KEY).trim(), 'Content-Type': m.type }, body: m.body });
+  const r = await fetch('https://api.slipok.com/api/line/apikey/' + encodeURIComponent(branchId(env)), { method: 'POST', headers: { 'x-authorization': String(env.SLIPOK_KEY).trim(), 'Content-Type': m.type }, body: m.body });
   return { hs: r.status, j: await r.json().catch(() => null) };
 }
 async function pay(request, env) {
-  if (request.method !== 'POST') { try { if (new URL(request.url).searchParams.get('diag') === 'slip') { const png = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='), c => c.charCodeAt(0)); const o = { key: !!env.SLIPOK_KEY, branch: !!env.SLIPOK_BRANCH, keyLen: String(env.SLIPOK_KEY || '').length, branchLen: String(env.SLIPOK_BRANCH || '').length }; try { const a = await slipokCall(env, png, 'image/png', null, false); o.test = { hs: a.hs, code: a.j && a.j.code, msg: a.j && String(a.j.message || '').slice(0, 80) } } catch (e) { o.test = { err: String(e && e.message || e).slice(0, 80) } } return jr(o) } if (new URL(request.url).searchParams.get('diag') === '1') return jr({ db: !!env.PAY_DB, slipok: !!(env.SLIPOK_KEY && env.SLIPOK_BRANCH), easyslip: !!env.EASYSLIP_KEY, name_check: !!env.PAY_NAME }) } catch (e) {} return jr({ err: 'method' }, 405) }
+  if (request.method !== 'POST') { try { if (new URL(request.url).searchParams.get('diag') === 'slip') { const png = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='), c => c.charCodeAt(0)); const o = { key: !!env.SLIPOK_KEY, branch: !!env.SLIPOK_BRANCH, keyLen: String(env.SLIPOK_KEY || '').length, branchLen: String(env.SLIPOK_BRANCH || '').length, branchUsed: branchId(env).length, branchWasUrl: /\//.test(String(env.SLIPOK_BRANCH || '')) }; try { const a = await slipokCall(env, png, 'image/png', null, false); o.test = { hs: a.hs, code: a.j && a.j.code, msg: a.j && String(a.j.message || '').slice(0, 80) } } catch (e) { o.test = { err: String(e && e.message || e).slice(0, 80) } } return jr(o) } if (new URL(request.url).searchParams.get('diag') === '1') return jr({ db: !!env.PAY_DB, slipok: !!(env.SLIPOK_KEY && env.SLIPOK_BRANCH), easyslip: !!env.EASYSLIP_KEY, name_check: !!env.PAY_NAME }) } catch (e) {} return jr({ err: 'method' }, 405) }
   const useOK = !!(env.SLIPOK_KEY && env.SLIPOK_BRANCH);
   if (!env.PAY_DB || !(useOK || env.EASYSLIP_KEY)) return jr({ ok: 0, st: 'unavailable' });
   let b; try { b = await request.json() } catch (e) { return jr({ ok: 0, st: 'bad' }, 400) }
