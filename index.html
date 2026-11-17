@@ -3386,6 +3386,7 @@ function titleExtras(){const b=document.getElementById('dailyInfo');if(!b)return
 // ---- 2. ศัตรูคู่แค้นตลอดชีวิต ----
 const NEM_T=['ศัตรูวัยเยาว์','คู่แค้น','ศัตรูคู่ชะตา','มารร้ายแห่งยุค'];
 function nemTick(){if(S.age<12)return false;const N=S.nem;
+ if(N&&N.alive&&!N.peace&&(choice._cur||modalOpen||S.hp<S.maxHp*.6))return false;
  if(!N){if(Math.random()>.06)return false;const nm=anyName(ch(['ชาย','หญิง']));S.nem={n:nm,r:.9,w:0,l:0,c:0,last:S.age,alive:1,why:ch(['คนที่คุณเผลอทำให้อับอายต่อหน้าคนทั้งเมือง','ลูกของคนที่ครอบครัวคุณเคยทำร้าย','คนที่อิจฉาพรสวรรค์ของคุณตั้งแต่แรกเห็น','ศิษย์สำนักคู่อริที่ถูกคุณแย่งตำแหน่ง'])};
   log(`😈 <b>${nm}</b> — ${S.nem.why} สาบานว่าจะเอาชนะคุณให้ได้สักวัน`,'epic',true);return false}
  if(!N.alive||N.peace||S.age-N.last<N.gap)return false;
@@ -3393,8 +3394,8 @@ function nemTick(){if(S.age<12)return false;const N=S.nem;
  const line=fin?`หลังปะทะกันมาทั้งชีวิต ${N.n}ยืนรออยู่บนยอดเขาที่ทั้งคู่เคยสู้กันครั้งแรก "วันนี้ต้องจบ"`:ch([`${N.n}ปรากฏตัวกลางตลาด "ข้าฝึกมาทั้งปีเพื่อวันนี้"`,`${N.n}ส่งจดหมายท้าดวลมาพร้อมกริชปักบนประตู`,`${N.n}ดักรอคุณกลางทางกลับบ้าน`,`${N.n}ทำร้ายศิษย์น้องของคุณเพื่อยั่วให้ออกมา`]);
  choice(`😈 ${N.n} — ${tl}`,`${line}<br><span class="tag2">ปะทะครั้งที่ ${N.c} · ชนะ ${N.w} · แพ้ ${N.l} · พลังเขา ≈ ${fmt(ep)}</span>`,[
   {t:'⚔️ สู้',s:fin?'ศึกตัดสิน':'',f(){duel(N.n,ep,w=>nemRes(w,fin))}},
-  {t:'🗣️ เจรจาให้เลิกแค้น',s:'ใช้เสน่ห์และปัญญา',f(){if(roll01((S.cha+S.int)/(300+N.c*40))){N.peace=1;S.karma+=6;joy(6);log(`🤝 ${N.n}วางอาวุธลง "บางทีข้าอาจเกลียดเจ้าผิดคนมาตลอด" — ความแค้นจบลงด้วยจอกสุรา`,'myth');keyAdd(`คืนดีกับศัตรูคู่แค้น ${N.n}`);S.flags.nemPeace=1}else{N.r+=.05;log(`${N.n}หัวเราะเยาะคำพูดของคุณแล้วจากไป`,'bad')}}},
-  {t:'🏃 หลบหน้า',skip:true,f(){N.r+=.08;S.fame=Math.max(0,S.fame-10);if(Math.random()<.5){S.money=Math.floor(S.money*.85);joy(-6);log(`${N.n}ระบายแค้นใส่บ้านคุณแทน ข้าวของเสียหายไปมาก`,'bad')}else log(`คุณหลบหน้า${N.n} — ชาวบ้านเริ่มนินทาว่าคุณขลาด`,'bad')}}]);
+  {t:'🗣️ เจรจาให้เลิกแค้น',s:'ใช้เสน่ห์และปัญญา',f(){if(roll01((S.cha+S.int)/(300+N.c*40))){N.peace=1;S.karma+=6;joy(6);log(`🤝 ${N.n}วางอาวุธลง "บางทีข้าอาจเกลียดเจ้าผิดคนมาตลอด" — ความแค้นจบลงด้วยจอกสุรา`,'myth');keyAdd(`คืนดีกับศัตรูคู่แค้น ${N.n}`);S.flags.nemPeace=1}else{N.r=Math.min(1.15,N.r+.05);log(`${N.n}หัวเราะเยาะคำพูดของคุณแล้วจากไป`,'bad')}}},
+  {t:'🏃 หลบหน้า',skip:true,f(){N.r=Math.min(1.15,N.r+.08);S.fame=Math.max(0,S.fame-10);if(Math.random()<.5){S.money=Math.floor(S.money*.85);joy(-6);log(`${N.n}ระบายแค้นใส่บ้านคุณแทน ข้าวของเสียหายไปมาก`,'bad')}else log(`คุณหลบหน้า${N.n} — ชาวบ้านเริ่มนินทาว่าคุณขลาด`,'bad')}}]);
  return true}
 function nemRes(w,fin){const N=S.nem;
  if(w){N.w++;N.r=Math.max(.6,N.r-.06);S.fame+=20+N.c*5;
@@ -5507,7 +5508,7 @@ function artLearned(a,how){_nPush.call(S.arts,a);if(Math.random()<.1){a.b=Math.r
 function artPush(...items){if(!S||window._artRaw||!S.alive||(S.beastMode&&!S.beastMode.human)||S.age<1)return _nPush.apply(this,items);
  for(const a of items){if(!a)continue;if(!a.n){_nPush.call(this,a);continue}
   if(this.some(x=>x.n===a.n)){const g=Math.round((a.b||10)/4);S.power+=g;queueMicrotask(()=>{try{log(`📖 《${a.n}》 ซ้ำกับวิชาที่มีอยู่แล้ว — นำมาทบทวนจนชำนาญขึ้น พลัง +${g}`)}catch(e){}});continue}
-  if(!window._artForce&&this.length&&(Math.random()<.4||this.length>=artCap())){artMaster(this,a);continue}
+  if(!window._artForce&&this.length&&(a.r||0)<2&&(Math.random()<.4||this.length>=artCap())){artMaster(this,a);continue}
   if((a.r||0)>=2){(S.learnQ=S.learnQ||[]).push(a);queueMicrotask(()=>{try{log(`📕 ได้คัมภีร์${artHtml(a)}มา — คัมภีร์ระดับนี้ต้องฝึกให้สำเร็จก่อนจึงจะใช้ได้`)}catch(e){}});continue}
   const p=learnP(a);if(Math.random()<p){_nPush.call(this,a);if(Math.random()<.08){a.b=Math.round(a.b*1.25);queueMicrotask(()=>{try{log(`✨ เข้าใจ《${a.n}》ได้ในพริบตา — พลังวิชา +25%`,'good')}catch(e){}})}}
   else{S.qi+=.3;queueMicrotask(()=>{try{log(`📖 ฝึก《${a.n}》แต่จับแก่นไม่ได้ — ยังใช้ไม่ได้ (โอกาส ${Math.round(p*100)}% · ขึ้นกับพรสวรรค์และปัญญา)`,'bad')}catch(e){}})}}
@@ -6289,7 +6290,7 @@ try{Object.assign(I18N.d,{'ตรวจพบภัยเงา':'Hidden threat 
 // ---------- v8.9 ผู้หวนคืน: ย้อนเวลา / สิงร่าง + ล้างแค้น ----------
 const REG_BETRAY=['ศิษย์พี่ที่คุณไว้ใจที่สุด','สหายร่วมสาบานที่แอบอิจฉา','อาจารย์ที่ต้องการชิงคัมภีร์ของคุณ','คู่ชีวิตที่ถูกศัตรูซื้อตัว','ผู้อาวุโสในสำนักที่กลัวคุณจะแซงหน้า','พ่อค้าที่คุณช่วยไว้แต่หักหลัง'];
 function regKiller(cause){const m=/ถูก(.+?)สังหาร/.exec(cause||'');if(m&&!/ลอบสังหารโดยไม่ทันรู้ตัว/.test(cause))return m[1];if(/ไม่ทันรู้ตัว/.test(cause||'')){const k=(S.key||[]).map(x=>/ผู้ลงมือคือ (.+?) \(/.exec(x)).filter(Boolean).pop();if(k)return k[1]}return null}
-function regTry(cause){if(!S||S.beastMode||(S.regN||0)>=1||S.revenge||/บรรลุ|อมตะ|ทะลวงสู่|ก้าวข้าม|หลุดพ้น/.test(cause||''))return false;S.regN=(S.regN||0)+1;if(Math.random()>=.25)return false;
+function regTry(cause){if(!S||S.beastMode||(S.regN||0)>=1||S.revenge||/บรรลุ|อมตะ|ทะลวงสู่|ก้าวข้าม|หลุดพ้น|กัลป์|กาลเวลา|จักรวาล/.test(cause||''))return false;S.regN=(S.regN||0)+1;if(Math.random()>=.25)return false;
  const killer=regKiller(cause),betray=!killer&&!/วัยชรา|ทารก/.test(cause)&&Math.random()<.5,target=killer||(betray?ch(REG_BETRAY):null),oldAge=S.age,oldPow=total(),poss=Math.random()<.5;
  S.deathCause=null;S.chronic=null;S.shadow=null;S.flags.regress=1;S.flags.regBack=1;
  if(poss){S.flags.possess=1;const pe=peers.filter(p=>p.alive&&p.age>=12);const P=pe.length&&Math.random()<.6?ch(pe):null;const g=P?P.g:S.gender,nm=P?P.name:anyName(g),na=P?Math.max(14,P.age):R(15,30);if(P){P.alive=false;P.killed=false}
@@ -8234,7 +8235,7 @@ async function gBoxFill(){const box=$('gBox');if(!box)return;if(typeof onlineOK=
 async function gGot(resp){try{const j=await api('glogin',{cred:resp.credential,tk:ctok});if(!j||!j.ok)throw 0;
   if(j.linked){toast('✅ เชื่อมบัญชี Google แล้ว');await profStat();openProfile();return}
   if(j.other){modal(`<h3>🔐 บัญชีนี้มีข้อมูลเกมอยู่แล้ว</h3><p>บัญชี <b>${esc(j.e)}</b> เคยเชื่อมกับข้อมูลเกมจากอีกเครื่อง</p><p class="tag2">สลับไปใช้ชุดนั้น = เครื่องนี้จะใช้ชื่อออนไลน์และเซฟคลาวด์ของบัญชีนี้ แล้วเปิดหน้ากู้เซฟให้เลือก · เซฟที่อยู่ในเครื่องนี้ยังอยู่ครบ ไม่ถูกลบ</p><div class="brow"><button class="gbtn" onclick="openProfile()">ยกเลิก</button><button class="pbtn" onclick='gSwitch(${JSON.stringify(j.other).replace(/'/g,"&#39;")})'>สลับไปใช้บัญชีนี้</button></div>`,'gsw')}}
- catch(e){toast('ล็อกอินไม่สำเร็จ ลองใหม่อีกครั้ง')}}
+ catch(e){toast('ล็อกอินไม่สำเร็จ ลองใหม่อีกครั้ง'+(e&&e.message?' ('+String(e.message).slice(0,40)+')':''))}}
 function gSwitch(o){try{if(S&&S.alive)saveGame()}catch(e){}if(!o||!o.id)return;LS.set('murim_pid',o.id);if(o.tk)LS.set('murim_ctok',o.tk);LS.set('murim_gpull',1);location.reload()}
 async function gUnlink(){if(!confirm('ยกเลิกการเชื่อมบัญชี Google?'))return;try{await api('gunlink',{});toast('ยกเลิกแล้ว')}catch(e){toast('ไม่สำเร็จ')}await profStat();openProfile()}
 // หลังสลับบัญชี: เปิดหน้ากู้เซฟคลาวด์ให้ · ถ้ารูปไม่ผ่านการตรวจ: เตือนและให้เปลี่ยนรูป
@@ -14755,7 +14756,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
  // ---- ศัตรูได้พรนรก ----
  {const _f=fight;fight=function(n,ep){const h=H();if(h){const k=ncur('foe');if(k)ep*=Math.pow(1.08,k)}return _f.call(this,n,ep)}}
  // ---- วิญญาณสำรอง ----
- {const _rt=regTry;regTry=function(cause){try{const h=H();if(h&&h.rev>0&&S&&!/วัยชรา/.test(cause||'')){h.rev--;S.hp=S.maxHp;S.deathCause=null;log(`🩸 วิญญาณสำรองจากนรกแตกสลายแทนคุณ — ฟื้นคืนชีพ (${esc(cause||'')}) · เหลือ ${h.rev} ดวง`,'myth',true);return true}}catch(e){}return _rt.apply(this,arguments)}}
+ {const _rt=regTry;regTry=function(cause){try{const h=H();if(h&&h.rev>0&&S&&!/วัยชรา|กัลป์|กาลเวลา|จักรวาล/.test(cause||'')&&!(S.flags&&S.flags.kEnd)){h.rev--;S.hp=S.maxHp;S.deathCause=null;log(`🩸 วิญญาณสำรองจากนรกแตกสลายแทนคุณ — ฟื้นคืนชีพ (${esc(cause||'')}) · เหลือ ${h.rev} ดวง`,'myth',true);return true}}catch(e){}return _rt.apply(this,arguments)}}
  function addCurse(k){const h=S.hell;h.cur.push(k);const C=CUR[k];if(k==='weak'){S.maxHp=Math.max(30,Math.round(S.maxHp*.85));S.hp=Math.min(S.hp,S.maxHp)}if(k==='dull')S.int=Math.round(S.int*.85);if(k==='love'&&S.sp)S.sp.aff=Math.max(0,(S.sp.aff||60)-30);if(k==='luck'&&!(S.traits||[]).includes('unlucky')&&!(S.traits||[]).includes('lucky'))S.traits=[...(S.traits||[]),'unlucky'];log(`☠️ รับคำสาปนรก <b>${C[0]}</b> — ${C[1]}`,'bad',true)}
  function offerCurse(after){const h=S.hell,r=rngOf(h.sd+h.lv*977),ks=Object.keys(CUR).filter(k=>ncur(k)<3);for(let i=ks.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[ks[i],ks[j]]=[ks[j],ks[i]]}const o=ks.slice(0,3);
   choice(`☠️ กฎนรกชั้นที่ ${h.lv}`,`ผ่านประตูมาได้ — แต่นรกไม่ปล่อยใครออกไปมือเปล่า<br>เลือกคำสาปที่<b>ร้ายน้อยที่สุด</b> 1 ข้อ (ติดตัวถาวร)`,o.map(k=>({t:CUR[k][0],s:CUR[k][1]+(ncur(k)?` · ซ้อนครั้งที่ ${ncur(k)+1}`:''),noFate:1,f(){addCurse(k);setTimeout(after,350)}})))}
@@ -15731,7 +15732,7 @@ function mwPast(){const P={n:S.name,age:S.age,ri:realmIdx(),realm:'',xian:!!S.xi
  else if(S._mwFac){P.sect=S._mwFac;P.sectUp=true}
  const sp=String(S.name||'').split(' ');P.sur=sp.length>1?sp[0]:null;
  const mom=(S.parents||[]).find(p=>p.role==='แม่');P.mom=mom?mom.n:null;
- const kid=(S.children||S.kids||[]).find(k=>k&&(k.g==='หญิง'))||(S.children||S.kids||[])[0];P.kid=kid&&kid.n?kid.n:null;P.kidG=kid&&kid.g||null;
+ const kl=(S.children||S.kids||[]).filter(k=>k&&k.alive!==false),kid=kl.find(k=>k.g==='หญิง')||kl[0];P.kid=kid&&kid.n?kid.n:null;P.kidG=kid&&kid.g||null;
  const rv=(typeof peers!=='undefined'?peers:[]).find(p=>p.rel==='rival');P.foe=S.revenge&&S.revenge.n?S.revenge.n:rv?rv.name:null;
  P.fam=S.family&&S.family.n||'';
  try{P.keys=(S.key||[]).slice(-6).map(mwTxt).filter(x=>x.length>6).slice(-3)}catch(e){P.keys=[]}
@@ -24280,7 +24281,7 @@ const HX={
 const heJ=(...a)=>a.filter(Boolean).join(' · ');
 const Pr=p=>Math.random()<p;
 const heFt=(nm,m)=>fight(nm,total()*m);
-const heKids=()=>{const L=((S&&S.children)||[]).concat((S&&S.lineage)||[]).map(c=>c&&(c.n||c.name)).filter(Boolean);return L.length?L.slice(0,8):['ลูกหลานคนโตของคุณ','หลานสาวที่ชอบปีนต้นไม้','เหลนที่คุณเคยอุ้มแค่ครั้งเดียว']};
+const heKids=()=>{const L=((S&&S.children)||[]).filter(c=>c&&c.alive!==false).map(c=>c&&(c.n||c.name)).filter(Boolean);return L.length?L.slice(0,8):['ลูกหลานคนโตของคุณ','หลานสาวที่ชอบปีนต้นไม้','เหลนที่คุณเคยอุ้มแค่ครั้งเดียว']};
 const heLaw=()=>(typeof LAWS!=='undefined'?LAWS.map(L=>L[1]):['กฎแห่งเวลา','กฎแห่งไฟ']);
 // ---- คลังคำ ----
 const HP={
@@ -27427,6 +27428,7 @@ function kpPick(){const K=kOf();if(!S||!S.alive||K.path)return;if(choice._cur)re
  O.push({t:'↩️ กลับไปที่ใจกลางวงจร',s:'ตัดสินบรรพกาลเทพแทน',skip:true,_x:1,f(){setTimeout(kalpaGate,300)}});
  choice('🔀 ทางแยกนอกวงจรกัลป์',`เหนือกัลป์ที่เก้า วงจรแตกออกเป็นสามสาย แต่ละสายพาไปสู่จักรวาลที่ต่างกัน — และ<b>แดนนอกกาล</b>ที่ปลายทาง<br><span class="tag2">เลือกได้สายเดียว · สายที่ถนัดผ่านภัยง่ายขึ้น${(K.mk|0)?` · มหากัลป์ที่ ${(K.mk|0)+1}`:''}</span>`,O)}
 function kpGate(){const K=kOf();if(!S||!S.alive)return;if(choice._cur)return later(kpGate,700);
+ if(!K.path&&!K.by&&K.n>=9)return kpPick();
  if(K.by>0)return kpBeyond();
  if(K.n>=10){choice(`🌫️ ขอบของ${KAL_N[K.n]}`,`<div class="kgate" style="--c:${KAL_C[K.n]}"><b>${fmt(S.age)} ปี</b> · ${KAL_T[K.n]}<br>เหนือจากนี้ไม่มีจักรวาล ไม่มีปี ไม่มีกัลป์ — มีเพียง<b>แดนนอกกาล</b> ที่ไม่มีใครกลับออกมาเล่าได้</div>`,[
   {t:'🌫️ ก้าวสู่แดนนอกกาล',s:'3 ด่านสุดท้าย · ไม่มีการนับปีอีกต่อไป',_x:1,noFate:1,f(){K.by=1;setTimeout(kpBeyond,300)}},
