@@ -34622,6 +34622,9 @@ function abAutoStep(){try{const h=abH();if(!h||!S||!S.alive||!S.flags.abAuto)ret
  if(S.alive&&h.lv<n)abAutoStop(`พ่ายที่ชั้น ${n}`)}catch(e){}}
 {const _py2=passYear;passYear=function(){const r=_py2.apply(this,arguments);try{if(S&&S.flags&&S.flags.abAuto)setTimeout(abAutoStep,60)}catch(e){}return r}}
 {const _oa=openAbyss;openAbyss=function(){const r=_oa.apply(this,arguments);try{const h=abH(),m=$('modal');if(h&&m&&h.lv<1000&&!m.querySelector('.abAu'))m.insertAdjacentHTML('beforeend',`<button class="pbtn abAu" style="width:100%;margin-top:8px;${S.flags.abAuto?'background:#2a7a3a':''}" onclick="abAutoToggle()">🤖 ลงอัตโนมัติ: ${S.flags.abAuto?'เปิดอยู่ (กดปิด)':'ปิด (กดเปิด)'}</button><p class="tag2" style="margin:4px 0 0">สู้ให้ปีละ 1 ชั้นตามกติกาเดิม เลือกประตู/ท่าทีที่ปลอดภัยสุด หยุดเองเมื่อเลือดต่ำ ผู้คุมแรงเกินไป บอสวงใหญ่ หรือพ่ายแพ้</p>`)}catch(e){}return r}}
+
+// 🔥 ป้ายด่านนรก/อเวจีหาย: โหมดยุคปัจจุบัน/วัยเด็กเขียนทับแถบขั้นพลัง ทำให้ป้ายหลุด — วาดคืนเป็นด่านสุดท้ายของทุกการเรนเดอร์
+{const _rdB=render;render=function(){const r=_rdB.apply(this,arguments);try{const el=document.getElementById('gRealm');if(el&&S&&S.alive&&typeof hellInfo==='function'&&!el.querySelector('.hlb')){const h=hellInfo();if(h){const ab=!!h.ab;el.insertAdjacentHTML('beforeend',` <span class="hlb" style="cursor:pointer;background:${ab?'#1a0a2a':'#3a0c0c'};color:${ab?'#d8c0ff':'#ffb070'};border:1px solid ${ab?'#9a6aff':'#ff5a3a'};border-radius:8px;padding:0 6px;font-size:11px;white-space:nowrap">${ab?`🕳️ อเวจี ${h.lv}/1000`:`🔥 ชั้น ${h.lv}/100`} · ${h.ess|0}</span>`);const b=el.querySelector('.hlb');b.onclick=ev=>{ev.stopPropagation();try{ab&&typeof openAbyss==='function'?openAbyss():(h.lv>=18&&typeof openHell2==='function'?openHell2():hellShop())}catch(e){}}}}}catch(e){}return r}}
 </script>
 </body>
 </html>
