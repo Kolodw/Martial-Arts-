@@ -2045,7 +2045,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     const AR_TKM = 5, AR_TKR = 1200e3, arBr = b0 => (b0.bm ? 'b' : b0.x ? 'x' : 'm') + ':' + Math.max(0, Math.min(12, +b0.ri || 0)) + ((+b0.ri || 0) >= 7 && +b0.pl >= 0 ? ':t' + Math.min(4, Math.floor(+b0.pl / 9)) : '');
     const arTk = async (use) => { const v = jp(await cmd('HGET', 'artk', id)) || { n: AR_TKM, t: now }; const add = Math.floor((now - v.t) / AR_TKR); if (add > 0) { v.n = Math.max(v.n, Math.min(AR_TKM, v.n + add)); v.t = v.n >= AR_TKM ? now : v.t + add * AR_TKR } if (v.n >= AR_TKM) v.t = now;
       if (use) { if (v.n <= 0) return { ok: 0, n: 0, nx: AR_TKR - (now - v.t) }; if (v.n >= AR_TKM) v.t = now; v.n -= use } if (use || add > 0) await cmd('HSET', 'artk', id, JSON.stringify(v)); return { ok: 1, n: v.n, nx: v.n >= AR_TKM ? 0 : AR_TKR - (now - v.t) } };
-    const arRt = async (who) => { const v = await cmd('HGET', 'arr:' + W, who); if (v != null && v !== '') return +v || 0; return 1000 }; // รีเซ็ตทุกสัปดาห์: ทุกคนเริ่ม 1000 ใหม่
+    const arRt = async (who) => { const v = await cmd('HGET', 'arr:' + W, who); if (v != null && v !== '') return +v || 0; const pv = await cmd('HGET', 'arr:' + week(new Date(now - 7 * 86400e3)), who); return pv != null && pv !== '' ? Math.round(1000 + ((+pv || 1000) - 1000) / 2) : 1000 }; // เริ่มสัปดาห์ใหม่: ดึงแต้มเก่ากลับเข้าหา 1000 ครึ่งทาง (ไม่รีเซ็ตหมด) // รีเซ็ตทุกสัปดาห์: ทุกคนเริ่ม 1000 ใหม่
     const arSettle = async () => { try { const pw = week(new Date(now - 7 * 86400e3)); if (!(await cmd('SET', 'arset:' + pw, 1, 'NX', 'EX', 86400 * 30))) return; const top = await cmd('ZREVRANGE', 'ars:' + pw, 0, 2, 'WITHSCORES'); for (let i = 0; i < (top || []).length; i += 2) { const own = top[i], r = i / 2 + 1, sc = +top[i + 1]; if (await cmd('SISMEMBER', 'cheaters', own)) continue; const nm = (await cmd('HGET', 'arn', own)) || 'นิรนาม', exp = now + RKT_EXP.w;
       await pipe([['LPUSH', 'bdrw:' + own, JSON.stringify({ p: 'w', c: 'a', r, d: pw, n: nm, s: sc, tt: RKT_A.w[r], exp })], ['EXPIRE', 'bdrw:' + own, 86400 * 60], ['HSET', 'rkttl:' + own, 'wa', JSON.stringify({ t: RKT_A.w[r], r, c: 'a', exp, at: now })], ['EXPIRE', 'rkttl:' + own, 86400 * 40]]) }
       // รางวัลจบซีซั่นตามลีก (ทุกคนที่ลงแข่ง)
@@ -2071,13 +2071,13 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     const arUnlock = () => cmd('DEL', 'arwl:' + id);
     if (a === 'ar2') {
       if (!okId(id)) return res.json({ err: 'id' }); await arSettle();
-      const [tk, rt, top, dl, dn, wt] = await Promise.all([arTk(0), arRt(id), cmd('ZREVRANGE', 'ars:' + W, 0, 9, 'WITHSCORES'), cmd('LRANGE', 'ardef:' + id, 0, 19), cmd('HGET', 'ardefn', id), cmd('ZREVRANGE', 'arwin:' + W, 0, 9, 'WITHSCORES')]);
+      const [tk, rt, top, dl, dn, wt, pk0] = await Promise.all([arTk(0), arRt(id), cmd('ZREVRANGE', 'ars:' + W, 0, 9, 'WITHSCORES'), cmd('LRANGE', 'ardef:' + id, 0, 19), cmd('HGET', 'ardefn', id), cmd('ZREVRANGE', 'arwin:' + W, 0, 9, 'WITHSCORES'), cmd('HGET', 'arpk', id)]);
       const ids = []; for (let i = 0; i < (top || []).length; i += 2) ids.push(top[i]); const nms = ids.length ? await cmd('HMGET', 'arn', ...ids) : [];
       const T = ids.map((x, i) => ({ n: nms[i] || 'นิรนาม', r: +top[i * 2 + 1], me: x === id ? 1 : 0, lg: arLg(+top[i * 2 + 1]) }));
       const wids = []; for (let i = 0; i < (wt || []).length; i += 2) wids.push(wt[i]); const wn = wids.length ? await cmd('HMGET', 'arn', ...wids) : []; const WT = wids.map((x, i) => ({ n: wn[i] || 'นิรนาม', w: +wt[i * 2 + 1], me: x === id ? 1 : 0 }));
       const D = (dl || []).map(jp).filter(Boolean).map((e, i) => ({ i, n: e.n, w: e.w, d: e.d, t: e.t, rv: e.rv ? 1 : 0 }));
       if (+dn) await cmd('HDEL', 'ardefn', id);
-      return res.json({ tk, rt, lg: arLg(rt), top: T, wins: WT, def: D, nw: +dn || 0, wk: W });
+      return res.json({ tk, rt, lg: arLg(rt), pk: Math.max(+pk0 || 0, arLg(rt)), top: T, wins: WT, def: D, nw: +dn || 0, wk: W });
     }
     if (a === 'ar2snap') { // อัปเดตพลังเงาระหว่างเล่น (เฉพาะคนที่มีเงาอยู่แล้ว)
       if (!okId(id)) return res.status(403).json({ err: 'id' });
@@ -2213,14 +2213,16 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         ['LPUSH', 'ardef:' + pm.o, JSON.stringify({ n: nm, w: w ? 0 : 1, d: db, t: now, a: id })], ['LTRIM', 'ardef:' + pm.o, 0, 19], ['EXPIRE', 'ardef:' + pm.o, 86400 * 14], ['HINCRBY', 'ardefn', pm.o, 1]];
       if (w) L.push(['ZINCRBY', 'arenaW:' + W, 1, nm], ['EXPIRE', 'arenaW:' + W, 86400 * 40], ['ZINCRBY', 'arwin:' + W, 1, id], ['EXPIRE', 'arwin:' + W, 86400 * 40]);
       await pipe(L);
-      let g = 0, bonus = 0, qg = 0, v = null; try { for (let t = 0; t < 4 && !(await arLock()); t++) await new Promise(r0 => setTimeout(r0, 300)); v = await arWal(); g = au ? (w ? 1 : 0) : (w ? 3 : 1); const chM = { hell: 1.5, junk: 1.5, short: 1.3 }[pm.ch] || 1; if (g && chM > 1) g = Math.max(g + 1, Math.round(g * chM));
+      let pkNew = 0; try { const pk0 = +(await cmd('HGET', 'arpk', id)) || 0, lgN = arLg(na); if (lgN > pk0) { await cmd('HSET', 'arpk', id, lgN); pkNew = pk0 > 0 ? lgN : 0 } } catch {}
+      let g = 0, bonus = 0, qg = 0, fw = 0, v = null; try { for (let t = 0; t < 4 && !(await arLock()); t++) await new Promise(r0 => setTimeout(r0, 300)); v = await arWal(); g = au ? (w ? 1 : 0) : (w ? 3 : 1); const chM = { hell: 1.5, junk: 1.5, short: 1.3 }[pm.ch] || 1; if (g && chM > 1) g = Math.max(g + 1, Math.round(g * chM));
         if (w) { v.stk = (v.stk | 0) + 1; if (v.stk >= 3) bonus = Math.min(5, v.stk - 2) } else v.stk = 0;
+        if (w && !au && !pm.bot && v.fw !== thDay(now)) { v.fw = thDay(now); fw = 5 } else if (w && v.fw !== thDay(now)) { v.fw = thDay(now); fw = 3 } // ชนะครั้งแรกของวัน: โบนัสเหรียญ
         const ev = { w, au, ad: +b.ad > 0, rv: !!pm.rv, best: Math.max(0, Math.min(99, +b.cb || 0)) };
         v.q.q.forEach(q => { if (q.done) return; const need = AR_QN[q.id] || 1; let inc = 0; if (q.id === 'w3' && ev.w) inc = 1; if (q.id === 'man2' && !ev.au) inc = 1; if (q.id === 'adv' && ev.w && ev.ad) inc = 1; if (q.id === 'rv' && ev.w && ev.rv) inc = 1; if (q.id === 'cb3' && ev.best >= 3 && !ev.au) inc = 1; if (q.id === 'any5') inc = 1;
           if (inc) { q.p = Math.min(need, q.p + inc); if (q.p >= need) { q.done = 1; qg += 8 } } });
         if (!v.q.all && v.q.q.every(q => q.done)) { v.q.all = 1; qg += 15 }
-        v.c += g + bonus + qg; await arWalSet(v) } catch (e) {} finally { await arUnlock() }
-      return res.json({ ok: 1, rt: na, d: da, lg: arLg(na), ort: nb, g, bonus, qg, chm: pm.ch || '', wal: v ? arWalPub(v) : null, ...(sw != null ? { sw } : {}) });
+        v.c += g + bonus + qg + fw; await arWalSet(v) } catch (e) {} finally { await arUnlock() }
+      return res.json({ ok: 1, rt: na, d: da, lg: arLg(na), ort: nb, g, bonus, qg, fw, pkNew, chm: pm.ch || '', wal: v ? arWalPub(v) : null, ...(sw != null ? { sw } : {}) });
     }
     if (a === 'arena') {
       const me = { n: clean(b.n, 20) || 'นิรนาม', p: Math.max(0, +b.p || 0), hp: +b.hp || 100, r: clean(b.r, 30), ri: Math.max(0, Math.min(12, +b.ri || 0)), x: b.x ? 1 : 0, t: now };

@@ -31618,6 +31618,30 @@ addEventListener('pagehide',()=>{try{if(dirty()&&Date.now()-PS.last>20000){PS.la
 // หลังรวมข้อมูลแล้วรีโหลด: แจ้งผล
 setTimeout(()=>{try{const n=sessionStorage.getItem('pf_note');if(n){sessionStorage.removeItem('pf_note');toast(`☁️ ซิงค์ข้อมูลจากบัญชีแล้ว (${n} รายการ)`)}}catch(e){}},2500);
 })()}catch(e){console.error(e)}
+
+// ===================== ลานประลองหมื่นเงา: ดึงคนเข้า (แจ้งเมื่อตั๋วเต็ม/แนะนำครั้งแรก) · โบนัสชนะครั้งแรกของวัน · ป้ายลีกสูงสุดที่เคยถึง =====================
+try{(()=>{
+const TKM=5,TKR=1200e3,rec=()=>LS.get('murim_arlast',null);
+const est=()=>{const r=rec();if(!r)return null;return Math.max(0,Math.min(TKM,(r.n|0)+Math.floor((Date.now()-(r.t||0))/TKR)))};
+const save=n=>LS.set('murim_arlast',{n:Math.max(0,Math.min(TKM,n)),t:Date.now()});
+const inGame=()=>{try{return S&&S.alive&&S.ch!=='short'&&!(S.beastMode&&!S.beastMode.human)&&$('game').classList.contains('on')}catch(e){return false}};
+const need=()=>{const r=rec();return !r?'new':est()>=TKM?'full':''};
+window._arNeed=need;
+// ตั๋วในเครื่อง = ค่าประมาณจากครั้งล่าสุดที่เห็นจริง (เซิร์ฟเวอร์เป็นตัวตัดสิน)
+{const _ap=arPage;arPage=async function(){const r=await _ap.apply(this,arguments);try{const j=AR.info;if(j&&j.tk)save(j.tk.n|0);
+  const box=$('arBox');if(box&&j&&(j.pk|0)>=1&&!box.querySelector('.arpk')){const me=box.querySelector('.arme');if(me)me.insertAdjacentHTML('afterend',`<div class="arpk" style="margin:4px 0 2px;font-size:12px;opacity:.85">🏅 ลีกสูงสุดที่เคยถึง ${arLgH(Math.min(7,j.pk|0))}</div>`)}}catch(e){console.error(e)}return r}}
+{const _ar=arResult;arResult=async function(o){const r=await _ar.apply(this,arguments);try{if(!o||!o.train){const n=est();save(n==null?TKM-1:n-1)}
+  const x=window._arRes;if(x&&!(o&&o.train)){const m=$('modal');if(m&&m.dataset.k==='arres'){const bt=m.querySelector('.pbtn');let h='';
+   if(x.fw)h+=`<p class="arstk big" style="background:linear-gradient(90deg,#2a9d6a,#e8c24a)">🌅 ชนะครั้งแรกของวัน · โบนัส 🪙+${x.fw}</p>`;
+   if(x.pkNew)h+=`<p class="arstk big" style="background:linear-gradient(90deg,#7a4cff,#ff60c0)">🏅 ลีกสูงสุดใหม่ของคุณ!</p>`;
+   if(bt&&h)bt.insertAdjacentHTML('beforebegin',h)}}}catch(e){console.error(e)}return r}}
+// ทางเข้า: จุดแดงที่ปุ่มเมนู + ปุ่มลานบนสุดในเมนู + ป้ายแจ้งวันละครั้ง
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{if(inGame()&&need()==='full')$('menuBtn').classList.add('dot')}catch(e){}return r}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const nd=need();if(S&&S.ch!=='short'&&nd){const gr=$('modal').querySelector('.mgrid');if(gr&&!gr.querySelector('[data-arn]')){const b=document.createElement('button');b.className='opt';b.dataset.arn='1';b.style.cssText='background:linear-gradient(160deg,#2a1a40,#150d24);color:#e8d8ff;border-color:#a080ff';b.setAttribute('onclick',"openOnline('arena')");
+  b.innerHTML=nd==='full'?'🏟️ ลานประลองหมื่นเงา<small style="color:#c8b0ff">🎫 ตั๋วเต็มแล้ว ลงสนามเลย</small>':'🏟️ ลานประลองหมื่นเงา<small style="color:#c8b0ff">ส่งเงาไปสู้ ชนะได้เหรียญแลกหีบและกรอบ</small>';gr.insertBefore(b,gr.firstChild)}}}catch(e){console.error(e)}return r}}
+setInterval(()=>{try{if(!inGame()||modalOpen||choice._cur||document.hidden)return;const nd=need();if(!nd)return;const k=dayKey();if(LS.get('murim_arnd','')===k)return;if(S.age<12)return;LS.set('murim_arnd',k);
+ island(nd==='full'?{ic:'🎫',t:'<b>ตั๋วลานเต็มแล้ว</b> — ☰ เมนู › 🏟️ ลานประลอง ลงสนามได้เลย',ms:6000,kind:'info'}:{ic:'🏟️',t:'<b>ลานประลองหมื่นเงา</b> — ส่งเงาไปสู้กับผู้เล่นอื่น ชนะได้เหรียญ · ☰ เมนูแรกสุด',ms:7000,kind:'info'})}catch(e){}},45000);
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
