@@ -67,6 +67,9 @@ async function apiOne(request, url) {
 
 // 💳 ตรวจสลิปพร้อมเพย์อัตโนมัติ (EasySlip v2 + D1 "PAY_DB") — ต้องมีค่าลับ EASYSLIP_KEY และ binding PAY_DB ไม่มี = ตอบ unavailable แล้วหน้าเว็บจะใช้ระบบส่งสลิปให้ผู้พัฒนาตรวจเหมือนเดิม
 const jr = (o, st = 200) => new Response(JSON.stringify(o), { status: st, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
+async function payProducts(env) {
+  try { const r = await env.PAY_DB.prepare("SELECT sku,kind,scope,world_id,tier,days,n,price_baht FROM products WHERE active=1 ORDER BY sort").all(); return jr({ items: r.results || [] }) } catch (e) { return jr({ items: [] }) }
+}
 async function payAdmin(request, env, url) {
   const h = await handler(), a = url.searchParams.get('a');
   if (!h.isAdm || !h.isAdm(url.searchParams.get('key'))) return jr({ err: 'admin' }, 403);
@@ -79,9 +82,9 @@ async function payAdmin(request, env, url) {
   }
   if (a === 'regrant' && request.method === 'POST') {
     const id = String(url.searchParams.get('o') || '').replace(/[^a-z0-9]/g, '');
-    const o = await db.prepare("SELECT uid,pack,status FROM orders WHERE id=?").bind(id).first();
+    const o = await db.prepare("SELECT uid,pack,status FROM orders WHERE id=?").bind(id).first(); let PR = null; try { const r = o && await db.prepare("SELECT kind,tier,days,n,price_baht FROM products WHERE sku=?").bind(o.pack).first(); if (r) PR = { kind: r.kind, amt: r.price_baht, tier: r.tier, days: r.days || 0, n: r.n } } catch (e) {}
     if (!o || o.status !== 'paid_nogrant') return jr({ ok: 0, err: 'state' });
-    try { const run = h.vkRun ? h.vkRun(() => h.payGrant(o.uid, o.pack, '')) : h.payGrant(o.uid, o.pack, ''); await run } catch (e) { return jr({ ok: 0, err: String(e && e.message || e).slice(0, 80) }) }
+    try { const run = h.vkRun ? h.vkRun(() => h.payGrant(o.uid, PR || o.pack, '')) : h.payGrant(o.uid, PR || o.pack, ''); await run } catch (e) { return jr({ ok: 0, err: String(e && e.message || e).slice(0, 80) }) }
     await db.prepare("UPDATE orders SET status='done',note='regrant' WHERE id=?").bind(id).run();
     return jr({ ok: 1 });
   }
@@ -92,7 +95,11 @@ async function pay(request, env) {
   if (!env.PAY_DB || !env.EASYSLIP_KEY) return jr({ ok: 0, st: 'unavailable' });
   let b; try { b = await request.json() } catch (e) { return jr({ ok: 0, st: 'bad' }, 400) }
   const uid = String(b.id || ''), pk = String(b.pk || ''), name = String(b.n || '').slice(0, 24);
-  const h = await handler(), P = h.payPack && h.payPack(pk);
+  const h = await handler();
+  // สินค้า: อ่านจากตาราง products ใน D1 (เพิ่ม/แก้ราคา/เพิ่มโลกได้โดยไม่แก้โค้ด) · ถ้าไม่มีแถวนั้นใช้ค่าตั้งต้นในโค้ดเดิม
+  let P = null, worldId = null;
+  try { const r = await env.PAY_DB.prepare("SELECT kind,scope,world_id,tier,days,n,price_baht FROM products WHERE sku=? AND active=1").bind(pk).first(); if (r) { P = { kind: r.kind, amt: r.price_baht, tier: r.tier, days: r.days || 0, n: r.n }; worldId = r.scope === 'world' ? r.world_id : null } } catch (e) {}
+  if (!P) P = h.payPack && h.payPack(pk);
   if (!P || !/^[a-z0-9]{6,24}$/.test(uid)) return jr({ ok: 0, st: 'bad' }, 400);
   const img = String(b.img || ''); if (!/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(img) || img.length > 5.2e6) return jr({ ok: 0, st: 'img' }, 400);
   const db = env.PAY_DB, now = Date.now();
@@ -120,10 +127,10 @@ async function pay(request, env) {
   catch (e) { return fail('dup', 'slip-used') }
   await db.prepare("UPDATE orders SET status='paid',paid_at=?,trans_ref=? WHERE id=?").bind(now, ref, oid).run();
   try {
-    const run = h.vkRun ? h.vkRun(() => h.payGrant(uid, pk, name)) : h.payGrant(uid, pk, name); await run;
+    const run = h.vkRun ? h.vkRun(() => h.payGrant(uid, P, name)) : h.payGrant(uid, P, name); await run;
     try { h.vkReset && h.vkReset() } catch (e) {}
   } catch (e) { console.error('PAY_GRANT', String(e && e.message || e)); await db.prepare("UPDATE orders SET status='paid_nogrant',note=? WHERE id=?").bind(String(e && e.message || e).slice(0, 150), oid).run().catch(() => {}); return jr({ ok: 0, st: 'grant', order: oid }) }
-  try { await db.prepare("INSERT INTO entitlements(uid,kind,starts_at,ends_at,order_id,source,created_at) VALUES(?,?,?,?,?,?,?)").bind(uid, P.kind === 'vip' ? 'vip' + P.tier : 'rr' + P.n, now, P.days ? now + P.days * 86400e3 : null, oid, 'order', now).run() } catch (e) {}
+  try { await db.prepare("INSERT INTO entitlements(uid,kind,starts_at,ends_at,order_id,source,created_at,world_id) VALUES(?,?,?,?,?,?,?,?)").bind(uid, P.kind === 'vip' ? 'vip' + P.tier : 'rr' + P.n, now, P.days ? now + P.days * 86400e3 : null, oid, 'order', now, worldId).run() } catch (e) {}
   await db.prepare("UPDATE orders SET status='done' WHERE id=?").bind(oid).run().catch(() => {});
   return jr({ ok: 1, order: oid });
 }
@@ -166,7 +173,7 @@ export default {
         return r;
       } catch (e) { console.error('API_ERR edgecache', String(e && e.message || e)) }
     }
-    if (url.pathname === '/api/pay') return url.searchParams.get('a') ? payAdmin(request, env, url) : pay(request, env);
+    if (url.pathname === '/api/pay') return url.searchParams.get('a') === 'products' ? payProducts(env) : url.searchParams.get('a') ? payAdmin(request, env, url) : pay(request, env);
     if (TRAP.some(r => r.test(url.pathname))) { url.search = '?a=trap&p=' + encodeURIComponent(url.pathname.slice(1)); url.pathname = '/api/online' }
     if (url.pathname === '/api/online' || url.pathname === '/api/online/') {
       const r = await api(request, url);

@@ -30109,6 +30109,15 @@ const heal=()=>{try{
 }catch(e){}};
 const _cr=chatRender;chatRender=function(){const r=_cr.apply(this,arguments);setTimeout(heal,300);return r};
 })()}catch(e){console.error(e)}
+
+// 🏷️ v18.19 ชื่อสินค้ากลางๆ + สกินชื่อต่อโลก (ตอนนี้มีโลกเดียว = ชื่อยุทธภพเดิมทุกอย่าง) · โลกใหม่แค่เพิ่มสกินในตารางนี้ แล้วตั้ง window.WORLD_ID ก่อนเปิดร้าน
+try{(()=>{
+window.SHOP_SKIN={
+ wuxia:{tiers:{1:'ผู้อุปถัมภ์สำนัก',2:'ผู้อาวุโสอุปถัมภ์',3:'บรรพชนผู้อุปถัมภ์'},rr:'สุ่มเกิด'},
+ _:{tiers:{1:'ผู้สนับสนุน',2:'ผู้สนับสนุนอาวุโส',3:'ผู้ก่อตั้ง'},rr:'โควตาเกิดใหม่'}};
+window.shopSkin=function(w){return window.SHOP_SKIN[w||window.WORLD_ID||'wuxia']||window.SHOP_SKIN._};
+try{const sk=shopSkin();if(typeof NM==='object'&&NM)Object.keys(sk.tiers).forEach(k=>{if(k in NM)NM[k]=sk.tiers[k]})}catch(e){}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
