@@ -32407,6 +32407,25 @@ window.mwBQuick=function(){try{mwBRand()}catch(e){console.error(e);try{mwRandNat
 
 // ===== เมนู: ซ่อนหัวข้อหมวดที่ไม่มีปุ่มให้เห็น (เช่น ยุคปัจจุบัน) =====
 {const _omE=openMenu;openMenu=function(){const r=_omE.apply(this,arguments);const fix=()=>{try{const m=$('modal');if(!m||m.dataset.k!=='menu')return;m.querySelectorAll('.mch15').forEach(h=>{const g=h.nextElementSibling;if(!g||!g.matches('.mgrid'))return;const any=[...g.children].some(b=>b.style.display!=='none'&&!b.classList.contains('mnHide'));if(!g.children.length||![...g.children].some(b=>b.style.display!=='none')){h.style.display='none';g.style.display='none'}})}catch(e){}};fix();setTimeout(fix,80);setTimeout(fix,350);return r}}
+
+// ===== 🎲 แอดมิน: สุ่มกรอบ+ฉายาอเวจี (อยู่ในหมวด 🎲 ของเครื่องมือแอดมิน) · สุ่มไม่ซ้ำอันเดิม · เปิดโหมดรายสัปดาห์ให้สุ่มใหม่เองทุกสัปดาห์ =====
+try{(()=>{
+const AB_P=[['f_ab100','ผู้ข้ามปากอเวจี'],['f_ab300','วิญญาณไร้ที่พึ่ง'],['f_ab500','ผู้ร่วงไม่สิ้นสุด'],['f_ab800','ผู้ไม่เคยพัก'],['f_ab1000','ราชันอเวจี']];
+const wkId=()=>Math.floor((Date.now()+7*3600e3-4*86400e3)/604800e3);
+const st=()=>{const o=LS.get('murim_adm_abr',null)||{};return{on:!!o.on,wk:o.wk|0,last:o.last||'',fr:o.fr||'',tt:o.tt||''}};
+const save=o=>LS.set('murim_adm_abr',o);
+function admAbRoll(auto){if(!(typeof admK==='function'&&admK()))return;const o=st(),pool=AB_P.filter(p=>p[0]!==o.last),pick=pool[Math.floor(Math.random()*pool.length)];if(!pick)return;
+ try{const d=frGet();AB_P.forEach(p=>{if(!d.own.includes(p[0]))d.own.push(p[0])});frSet(d)}catch(e){}
+ // ฉายาสุ่มจากคลังอเวจี (ไม่ซ้ำอันเดิม) — ไม่จำเป็นต้องคู่กับกรอบ
+ const tp=AB_P.filter(p=>p[1]!==o.tt&&p[0]!==pick[0]),tt=(tp[Math.floor(Math.random()*tp.length)]||pick)[1];
+ save({on:o.on,wk:wkId(),last:pick[0],fr:pick[0],tt});frEquip(pick[0]);try{if(S&&S.alive)S.title=tt}catch(e){}
+ const f=frOf(pick[0]);toast((auto?'🎲 สัปดาห์ใหม่ — ':'🎲 ')+'สุ่มได้ '+(f?f.n:pick[0])+' · ฉายา '+tt)}
+window.admAbRoll=admAbRoll;window.admAbWeekly=v=>{const o=st();o.on=!!v;if(v)o.wk=wkId();save(o);toast(v?'🎲 เปิดสุ่มรายสัปดาห์':'ปิดสุ่มรายสัปดาห์')};
+const tick=()=>{try{if(typeof admK!=='function'||!admK())return;const o=st();if(o.on&&o.wk!==wkId())admAbRoll(1)}catch(e){}};
+setInterval(tick,60000);setTimeout(tick,4000);
+{const _oa=openAdmTools;openAdmTools=function(){const r=_oa.apply(this,arguments);try{const m=$('modal'),h=[...m.querySelectorAll('.adsec>h4')].find(x=>/หน้าเกิด/.test(x.textContent));if(h&&!m.querySelector('.admAbR')){const o=st(),f=o.fr&&frOf(o.fr);
+ h.parentElement.insertAdjacentHTML('afterend',`<div class="adsec admAbR"><h4>🎲 สุ่มกรอบ/ฉายาอเวจี</h4><p class="tag2" style="margin:0 0 6px">สุ่มกรอบอเวจี 1 ใน 5 กับฉายาอเวจี ไม่ซ้ำอันเดิม · ${o.fr?'ตอนนี้: <b>'+esc(f?f.n:o.fr)+'</b> · ฉายา <b>'+esc(o.tt)+'</b>':'ยังไม่เคยสุ่ม'}</p><div class="adg"><button class="pbtn" onclick="admAbRoll();openAdmTools()">🎲 สุ่มตอนนี้</button></div><label style="display:flex;gap:8px;align-items:center;margin-top:6px"><input type="checkbox" ${o.on?'checked':''} onchange="admAbWeekly(this.checked)"> 🗓️ สุ่มใหม่เองทุกสัปดาห์ (ไม่ซ้ำสัปดาห์ก่อน)</label></div>`)}}catch(e){console.error(e)}return r}}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
