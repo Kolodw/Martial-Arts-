@@ -4207,7 +4207,7 @@ async function openSpectate(k,tab){specTarget=k;clearTimeout(specT);tab=tab||ope
  let body='';if(tab==='sum')body=`<div class="specgrid"><div>⚔️ พลังรวม <b>${fmt(st.pow)}</b></div><div>🌀 ลมปราณ <b>${specN(st.qi)}</b></div><div>📖 ปัญญา <b>${specN(st.int)}</b></div><div>🌸 เสน่ห์ <b>${specN(st.cha)}</b></div><div>💰 เงิน <b>${specMoney(s,st.money)}</b></div><div>⭐ ชื่อเสียง <b>${fmt(st.fame)}</b> <small class="tag2">${(typeof fameTier==='function'?fameTier(+st.fame||0):[0,'','']).slice(1).join(' ')}</small></div><div>☯️ กรรม <b>${specN(st.karma)}</b></div><div>😊 ความสุข <b>${st.joy}</b></div></div><p class="tag2">${esc(s.fam)} · ${esc(s.tal)}${s.sys?' · 🟦 '+esc(s.sys):''}</p><h4 style="margin:6px 0 2px">สวมใส่</h4>${list(s.eq,'ไม่มี')}`;
  else if(tab==='feed')body='<div class="specfeed">'+(s.feed||[]).map(x=>x[0]==='§'?`<div class="sfh">${esc(x.slice(1))}</div>`:`<div>${esc(x)}</div>`).join('')+'</div>';
  else if(tab==='bag')body=list(s.bag,'กระเป๋าว่าง');else if(tab==='arts')body=list(s.arts,'ยังไม่มีวิชา');else if(tab==='q')body=list(s.q,'ไม่มีเควส');else body=list(s.ppl,'ไม่มี');
- modal(`<button class="xbtn" onclick="specClose()">✕</button><div class="spechead"><canvas id="specCv" width="140" height="154"></canvas><div><h3 style="margin:0">${esc(s.n)}${s.tt?tchipH(s.tt,s.tr):''}</h3><div class="tag2">${s.wk==='c'?'🏙️ ยุคปัจจุบัน':s.x?'☁️ โลกเทพเซียน':'⚔️ ยุทธภพ'} · อายุ ${s.age} ปี · ${esc(s.r)}</div><div class="tag2">${esc(s.f)}</div><div class="tag2">📍 ${esc(s.cap||'')}</div>
+ modal(`<button class="xbtn" onclick="specClose()">✕</button><div class="spechead"><canvas id="specCv" width="140" height="154"></canvas><div><h3 style="margin:0">${esc(s.n)}${s.tt?tchipH(s.tt,s.tr):''}</h3><div class="tag2">${s.wk==='c'?(s.mx?s.mx.ic+' '+s.mx.wn:'🏙️ ยุคปัจจุบัน'):s.x?'☁️ โลกเทพเซียน':'⚔️ ยุทธภพ'} · อายุ ${s.age} ปี · ${esc(s.r)}</div><div class="tag2">${esc(s.f)}</div><div class="tag2">📍 ${esc(s.cap||'')}</div>
   <div class="hpbar" style="margin:4px 0"><i style="width:${Math.max(0,st.hp/st.mhp*100)}%"></i></div><div class="tag2">${s.wk==='c'?'💚 สุขภาพ':'❤️'} ${st.hp}/${st.mhp} · 👁 ${j.w} คนกำลังดู</div></div></div>
   <div class="tabs">${T.map(t=>`<button class="tabb ${t[0]===tab?'on':''}" onclick="openSpectate('${k}','${t[0]}')">${t[1]}</button>`).join('')}</div>${body}
   <p class="tag2" style="text-align:center;margin-top:8px">🔴 ดูสด · ดูได้อย่างเดียว · <span id="specAge"></span></p><p id="specWarn" class="tag2" style="text-align:center;color:#e0a030;display:none"></p><button class="gbtn" style="width:100%" onclick="openLiveList()">← รายชื่อผู้เล่น</button>`,'spec');
@@ -9976,9 +9976,11 @@ openSpectate=async function(k,tab){specTarget=k;clearTimeout(specT);tab=tab||ope
  if(specTarget!==k)return;if(!j||!j.s||!j.s.st){if(k==='@me'){toast('เปิดการ์ดไม่สำเร็จ');return}if(specSoft(k,'off'))return;off();return}
  const sig=JSON.stringify(j.s)+'|'+j.w+'|'+tab;specOK(k);if(openSpectate._sig===sig&&$('modal').dataset.k==='spec'&&modalOpen){specStamp(j.s);specT=setTimeout(()=>{if($('modal').dataset.k==='spec'&&modalOpen&&specTarget===k)openSpectate(k)},5000);return}
  openSpectate._sig=sig;const _keep=openSpectate._at===k+'|'+tab,_msc=$('modal').scrollTop,_ofd=document.querySelector('.specfeed'),_fdb=_ofd?_ofd.scrollHeight-_ofd.scrollTop-_ofd.clientHeight<40:true,_fdt=_ofd?_ofd.scrollTop:0;openSpectate._at=k+'|'+tab;
- const s=j.s,st=s.st;const T=[['sum','📊 ภาพรวม'],['birth','🎲 กำเนิด'],['hist','📜 ประวัติ'],['feed','📰 สด'],['items','🎒 ของ'],['arts',j.s.wk==='c'?'📖 ทักษะ':'📖 วิชา'],['q',j.s.wk==='c'?'📋 เป้าหมาย':'📋 เควส'],['ppl','👪 ผู้คน']];
+ const s=j.s,st=s.st;const T=s.wk==='c'?[['sum','📊 ภาพรวม'],['mx',(s.mx?s.mx.ic:'🌍')+' '+(s.mx?s.mx.t:'โลก')],['hist','📜 ประวัติ'],['feed','📰 สด'],['items','🎒 ของ'],['arts','📖 ทักษะ'],['q','📋 เป้าหมาย'],['ppl','👪 ผู้คน']]:[['sum','📊 ภาพรวม'],['birth','🎲 กำเนิด'],['hist','📜 ประวัติ'],['feed','📰 สด'],['items','🎒 ของ'],['arts','📖 วิชา'],['q','📋 เควส'],['ppl','👪 ผู้คน']];
  const list=(a,emp)=>a&&a.length?'<ul class="speclist">'+a.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':`<p class="tag2">${emp}</p>`;let body='';
- if(tab==='sum'&&s.wk==='c')body=`<div class="specgrid"><div>📖 ปัญญา <b>${specN(st.int)}</b></div><div>🌸 เสน่ห์ <b>${specN(st.cha)}</b></div><div>💰 เงิน <b>${specMoney(s,st.money)}</b></div><div>⭐ ชื่อเสียง <b>${fmt(st.fame)}</b></div><div>😊 ความสุข <b>${st.joy}</b></div></div><p class="tag2">${esc(s.f||'')}${s.fam?' · '+esc(s.fam):''}</p>`;
+ if(tab==='sum'&&s.wk==='c'&&s.mx)body=mxGrid(s,st)+`<p class="tag2">${esc(s.f||'')}</p>`;
+ else if(tab==='mx')body=mxBody(s);
+ else if(tab==='sum'&&s.wk==='c')body=`<div class="specgrid"><div>📖 ปัญญา <b>${specN(st.int)}</b></div><div>🌸 เสน่ห์ <b>${specN(st.cha)}</b></div><div>💰 เงิน <b>${specMoney(s,st.money)}</b></div><div>⭐ ชื่อเสียง <b>${fmt(st.fame)}</b></div><div>😊 ความสุข <b>${st.joy}</b></div></div><p class="tag2">${esc(s.f||'')}${s.fam?' · '+esc(s.fam):''}</p>`;
  else if(tab==='sum')body=`<div class="specgrid"><div>⚔️ พลังรวม <b>${fmt(st.pow)}</b></div><div>🌀 ลมปราณ <b>${specN(st.qi)}</b></div><div>📖 ปัญญา <b>${specN(st.int)}</b></div><div>🌸 เสน่ห์ <b>${specN(st.cha)}</b></div><div>💰 เงิน <b>${specMoney(s,st.money)}</b></div><div>⭐ ชื่อเสียง <b>${fmt(st.fame)}</b> <small class="tag2">${(typeof fameTier==='function'?fameTier(+st.fame||0):[0,'','']).slice(1).join(' ')}</small></div><div>☯️ กรรม <b>${specN(st.karma)}</b></div><div>😊 ความสุข <b>${st.joy}</b></div></div>`+(s.org?list(s.org,''):`<p class="tag2">${esc(s.f||'')}${s.sys?' · 🟦 '+esc(s.sys):''}</p>`)+(s.birth&&s.birth.goal?`<p class="tag2">🎯 ปณิธาน: ${esc(s.birth.goal.n)} ${s.birth.goal.done?'✅':'· '+esc(s.birth.goal.p||'')}</p>`:'');
  else if(tab==='birth')body=birthHtml(s.birth);
  else if(tab==='hist')body=histHtml(s.hist);
@@ -9987,7 +9989,7 @@ openSpectate=async function(k,tab){specTarget=k;clearTimeout(specT);tab=tab||ope
  else if(tab==='arts')body=list(s.arts,'ยังไม่มีวิชา');
  else if(tab==='q')body=list(s.q2||s.q,'ไม่มีเควสที่กำลังทำ');
  else body=(s.rel?'<h4 style="margin:4px 0">💞 ความสัมพันธ์</h4>'+list(s.rel,'ยังไม่มี'):'')+'<h4 style="margin:8px 0 4px">👥 คนรอบตัว</h4>'+list(s.ppl,'ไม่มี');
- modal(`<button class="xbtn" onclick="specClose()">✕</button><div class="spechead"><canvas id="specCv" width="140" height="154"></canvas><div><h3 style="margin:0">${esc(s.n)}${s.tt?tchipH(s.tt,s.tr):''}</h3><div class="tag2">${esc(s.wk==='c'?'🏙️ ยุคปัจจุบัน':s.wd||(s.x?'☁️ โลกเทพเซียน':'⚔️ ยุทธภพ'))} · อายุ ${s.age} ปี · ${esc(s.rl||s.r)}</div><div class="tag2">${esc(s.f)}</div><div class="tag2">📍 ${esc(s.cap||'')}${s.fo&&!/กำลัง/.test(s.cap||'')?' · กำลัง'+esc(s.fo):''}</div>
+ modal(`<button class="xbtn" onclick="specClose()">✕</button><div class="spechead"><canvas id="specCv" width="140" height="154"></canvas><div><h3 style="margin:0">${esc(s.n)}${s.tt?tchipH(s.tt,s.tr):''}</h3><div class="tag2">${esc(s.wk==='c'?(s.mx?s.mx.ic+' '+s.mx.wn:'🏙️ ยุคปัจจุบัน'):s.wd||(s.x?'☁️ โลกเทพเซียน':'⚔️ ยุทธภพ'))} · อายุ ${s.age} ปี · ${esc(s.rl||s.r)}</div><div class="tag2">${esc(s.f)}</div><div class="tag2">📍 ${esc(s.cap||'')}${s.fo&&!/กำลัง/.test(s.cap||'')?' · กำลัง'+esc(s.fo):''}</div>
   <div class="hpbar" style="margin:4px 0"><i style="width:${Math.max(0,st.hp/st.mhp*100)}%"></i></div><div class="tag2">${s.wk==='c'?'💚 สุขภาพ':'❤️'} ${st.hp}/${st.mhp} · 👁 ${j.w} คนกำลังดู</div></div></div>
   <div class="tabs" style="flex-wrap:wrap">${T.map(t=>`<button class="tabb ${t[0]===tab?'on':''}" onclick="openSpectate('${k}','${t[0]}')">${t[1]}</button>`).join('')}</div>${body}
   <p class="tag2" style="text-align:center;margin-top:8px">🔴 ดูสด · ดูได้อย่างเดียว · <span id="specAge"></span></p><p id="specWarn" class="tag2" style="text-align:center;color:#e0a030;display:none"></p><button class="gbtn" style="width:100%" onclick="openLiveList()">← รายชื่อผู้เล่น</button>`,'spec');
@@ -24261,7 +24263,7 @@ function ancTick(){if(!S||!S.alive||!S.flags||!S.flags.ascStay||choice._cur||mod
 
 // ===================== หน้าดูคนอื่น: เงินตามสกุลของโลกนั้น · ตัวเลขอ่านง่าย =====================
 function specWorld(s){if(!s)return'm';if(s.xt||s.g===1&&s.x||/แดนเทพ/.test(String(s.wd||s.cap||'')))return'g';return s.x?'x':'m'}
-function specMoney(s,v){const w=specWorld(s);v=+v||0;return w==='g'?`${fmtJ(v)} <small>${JADE_N}</small>`:`${fmt(v)} <small>${w==='x'?'หินวิญญาณ':'ตำลึง'}</small>`}
+function specMoney(s,v){const w=specWorld(s);v=+v||0;if(s&&s.wk==='c')return `${fmt(v)} <small>บาท</small>`;return w==='g'?`${fmtJ(v)} <small>${JADE_N}</small>`:`${fmt(v)} <small>${w==='x'?'หินวิญญาณ':'ตำลึง'}</small>`}
 function specN(v){v=+v;if(!isFinite(v))return'0';return Math.abs(v)>=1e4?fmt(v):(Math.round(v*10)/10).toLocaleString('th-TH')}
 {const _ldW=lifeDetail;lifeDetail=function(){const d=_ldW.apply(this,arguments);try{if(d&&S){d.xt=S.xt?1:0}}catch(e){}return d}}
 
@@ -25536,11 +25538,12 @@ async function spvPatch(k){let j;try{j=await api('liveget&t='+encodeURIComponent
  clearTimeout(specT);let hot0=false;try{spvApply(k,j);hot0=!!(j.s.ch||j.s.hot)}catch(e){console.error('spv',e)}specT=setTimeout(()=>{if($('modal').dataset.k==='spec'&&modalOpen&&specTarget===k)openSpectate(k)},hot0?2000:4000);if(Date.now()-(spvPatch._cl||0)>30000){spvPatch._cl=Date.now();spClaim()}}
 function spvApply(k,j){const s=j.s,P=SPV.prev,m=$('modal'),st=s.st;try{_specS=s}catch(e){}
  // หัว
- const hd=m.querySelector('.spechead');if(hd){const tg=hd.querySelectorAll('.tag2');if(tg[0])tg[0].textContent=`${s.wk==='c'?'🏙️ ยุคปัจจุบัน':s.x?'☁️ โลกเทพเซียน':'⚔️ ยุทธภพ'} · อายุ ${s.age} ปี · ${s.r}`;if(tg[1])tg[1].textContent=s.f||'';if(tg[2])tg[2].textContent='📍 '+(s.cap||'');const hb=hd.querySelector('.hpbar i');if(hb)hb.style.width=Math.max(0,st.hp/st.mhp*100)+'%';const last=tg[tg.length-1];if(last&&/คนกำลังดู/.test(last.textContent))last.textContent=`${s.wk==='c'?'💚 สุขภาพ':'❤️'} ${st.hp}/${st.mhp} · 👁 ${j.w} คนกำลังดู`}
+ const hd=m.querySelector('.spechead');if(hd){const tg=hd.querySelectorAll('.tag2');if(tg[0])tg[0].textContent=`${s.wk==='c'?(s.mx?s.mx.ic+' '+s.mx.wn:'🏙️ ยุคปัจจุบัน'):s.x?'☁️ โลกเทพเซียน':'⚔️ ยุทธภพ'} · อายุ ${s.age} ปี · ${s.r}`;if(tg[1])tg[1].textContent=s.f||'';if(tg[2])tg[2].textContent='📍 '+(s.cap||'');const hb=hd.querySelector('.hpbar i');if(hb)hb.style.width=Math.max(0,st.hp/st.mhp*100)+'%';const last=tg[tg.length-1];if(last&&/คนกำลังดู/.test(last.textContent))last.textContent=`${s.wk==='c'?'💚 สุขภาพ':'❤️'} ${st.hp}/${st.mhp} · 👁 ${j.w} คนกำลังดู`}
  try{specStamp(s)}catch(e){}
  // เนื้อหาแท็บ
  const tab=openSpectate._tab||'sum';
- if(tab==='sum'){const gr=m.querySelector('.specgrid');if(gr&&P){const ks=['pow','qi','int','cha','money','fame','karma','joy'];[...gr.children].forEach((d,i)=>{const k2=ks[i];if(!k2||P.st[k2]==null||st[k2]==null||+P.st[k2]===+st[k2])return;const b=d.querySelector('b');if(b){b.textContent=k2==='pow'||k2==='fame'?fmt(st[k2]):k2==='money'?(typeof specMoney==='function'?String(specMoney(s,st[k2])).replace(/<[^>]+>/g,''):fmt(st[k2])):specN(st[k2])}d.classList.remove('spUp','spDn');void d.offsetWidth;d.classList.add(+st[k2]>+P.st[k2]?'spUp':'spDn')})}}
+ if(tab==='sum'&&s.wk==='c'&&s.mx){const gr=m.querySelector('.mxg');if(gr&&P)mxPatch(gr,s,P)}
+ else if(tab==='sum'){const gr=m.querySelector('.specgrid');if(gr&&P){const ks=['pow','qi','int','cha','money','fame','karma','joy'];[...gr.children].forEach((d,i)=>{const k2=ks[i];if(!k2||P.st[k2]==null||st[k2]==null||+P.st[k2]===+st[k2])return;const b=d.querySelector('b');if(b){b.textContent=k2==='pow'||k2==='fame'?fmt(st[k2]):k2==='money'?(typeof specMoney==='function'?String(specMoney(s,st[k2])).replace(/<[^>]+>/g,''):fmt(st[k2])):specN(st[k2])}d.classList.remove('spUp','spDn');void d.offsetWidth;d.classList.add(+st[k2]>+P.st[k2]?'spUp':'spDn')})}}
  if(tab==='feed'){const fd=m.querySelector('.specfeed');if(fd){const have=[...fd.children].map(x=>x.textContent);const F=(s.feed||[]).map(x=>x[0]==='§'?{h:1,t:x.slice(1)}:{t:x});let start=0;const lastHave=have[have.length-1];if(lastHave){const ix=F.map(f=>f.t).lastIndexOf(lastHave);start=ix>=0?ix+1:0;if(ix<0)fd.innerHTML=''}F.slice(start).forEach(f=>{const d=document.createElement('div');if(f.h)d.className='sfh';d.textContent=f.t;d.style.animation='spUp 1.2s';fd.appendChild(d)});while(fd.children.length>60)fd.firstChild.remove();if(SPV.pin)fd.scrollTop=fd.scrollHeight}}
  // ช่วงเวลาใหญ่
  if(P){if(P.r!==s.r)spFlash(`⚡ ${esc(s.n)} ทะลวงสู่ ${esc(s.r)}`,'#ffd060');else if(st.hp<P.st.hp-P.st.mhp*.3)spFlash(`💥 ${esc(s.n)} บาดเจ็บสาหัส`,'#ff3a3a');else if(s.hot&&(!P.hot||P.hot.k!==s.hot.k))spFlash(`⚔️ ${esc(s.hot.ev||'เหตุการณ์ใหญ่')}`,'#ff8a2a');else if(s.ch&&spHotRe.test(s.ch.t)&&(!P.ch||P.ch.k!==s.ch.k))spFlash(`🌩️ ${esc(s.ch.t)}`,'#b07aff')
@@ -25580,12 +25583,12 @@ async function spList(){const adm=!!(typeof admK==='function'&&admK());const hea
  if(!spList._l||Date.now()-(spList._t||0)>4000){const go=api('livelist').then(j=>{spList._l=(j.l||[]).filter(x=>x.id!==pid.slice(0,6));spList._idle=j.idle||null;spList._tot=j.tot||null;spList._bad=adm&&!j.adm;spList._t=Date.now();return 1}).catch(()=>0);
   if(!fresh){if(!(await go)){modal(head+'<p class="tag2">โหลดไม่สำเร็จ</p><button class="gbtn" style="width:100%" onclick="spList._t=0;openLiveList()">🔄 ลองใหม่</button>','online');return}}
   else go.then(ok=>{if(ok&&$('modal').dataset.k==='online'&&$('modal').querySelector('.spList'))spList()})}
- const so=spList._s||'w',wf=spList._w||'',F=spFolL().map(x=>x.k),kOf=x=>x.wk||(x.x?'x':'m'),isC=x=>kOf(x)==='c',eraF=spList._e||'';const nC=spList._tot?spList._tot.c:spList._l.filter(isC).length,nO=spList._tot?spList._tot.o:spList._l.length-spList._l.filter(isC).length;let L=spList._l.slice();if(eraF==='c')L=L.filter(isC);else{if(eraF==='o')L=L.filter(x=>!isC(x));if(wf)L=L.filter(x=>kOf(x)===wf)}
+ const so=spList._s||'w',wf=spList._w||'',F=spFolL().map(x=>x.k),kOf=x=>x.wk||(x.x?'x':'m'),isC=x=>kOf(x)==='c',eraF=spList._e||'';const nC=spList._tot?spList._tot.c:spList._l.filter(isC).length,nO=spList._tot?spList._tot.o:spList._l.length-spList._l.filter(isC).length;let L=spList._l.slice();if(eraF==='c'){L=L.filter(isC);if(spList._mw)L=L.filter(x=>x.wi===spList._mw)}else{if(eraF==='o')L=L.filter(x=>!isC(x));if(wf)L=L.filter(x=>kOf(x)===wf)}
  L.sort((a,b)=>(F.includes(b.k)-F.includes(a.k))||((b.hot|0)-(a.hot|0))||(so==='p'?(b.p||0)-(a.p||0):so==='a'?(b.age||0)-(a.age||0):(b.w||0)-(a.w||0)||(b.age||0)-(a.age||0)));
  if(!eraF)L=L.filter(x=>!isC(x)).concat(L.filter(isC));
  const eraBar=`<div class="spE">${[['','ทั้งหมด',nO+nC],['o','🏯 ยุคเก่า',nO],['c','🏙️ ยุคปัจจุบัน',nC]].map(([k,l,n])=>`<button class="${eraF===k?'on':''}" onclick="spList._e='${k}';spList()">${l}<small>${n}</small></button>`).join('')}</div>`;
- modal(head+eraBar+`<div class="spF">${[['w','👁 คนดู'],['p','⚔️ พลัง'],['a','⏳ อายุ']].map(([k,l])=>`<button class="${so===k?'on':''}" onclick="spList._s='${k}';spList()">${l}</button>`).join('')}<span style="flex:1"></span>${eraF==='c'?'':[['','ทุกโลก'],['m','⚔️'],['x','☁️'],['g','🌟']].map(([k,l])=>`<button class="${wf===k?'on':''}" onclick="spList._w='${k}';spList()">${l}</button>`).join('')}</div>
- <div class="spList">${L.length?L.map((x,i)=>`${!eraF&&nC&&nO&&(i===0||isC(x)!==isC(L[i-1]))?`<div class="spH">${isC(x)?'🏙️ ยุคปัจจุบัน':'🏯 ยุคเก่า'} <small>${isC(x)?nC:nO}</small></div>`:''}<div class="spLc ${x.hot?'hot':''} ${isC(x)?'cur':''}" onclick="openSpectate('${x.k}')"><canvas width="140" height="154" data-i="${i}"></canvas><div class="i"><b>${x.pv?'🔒 ':''}${esc(x.n)}</b>${x.hot?'<span class="spHot">🔥 กำลังมีเรื่อง</span>':''}<br><span class="tag2">${{m:'⚔️',x:'☁️',g:'🌟',c:'🏙️'}[kOf(x)]||'⚔️'} ${esc(x.r||'')} · อายุ ${fmt(x.age||0)}${x.p&&!isC(x)?' · พลัง '+fmt(x.p):''}${x.ago>=25?' · 🕒 '+(x.ago>=90?Math.round(x.ago/60)+' นาที':x.ago+' วิ')+'ที่แล้ว':''}</span><br><span class="tag2">${esc(x.f||'')}${x.fo?' · กำลัง'+esc(x.fo):''}${x.pv?' · 🔒 ปิดการให้ดู':''}</span>${adm&&x.m?`<br><span class="tag2" style="font-size:10.5px;opacity:.75">🛰️ ${esc(x.m.d||'')} · ${esc(x.m.b||'')} · ${esc(x.m.o||'')}${x.m.c?' · '+esc(x.m.c):''}${x.m.v?' · v'+esc(x.m.v):''}</span>`:''}</div><div style="text-align:center"><button class="spStar" onclick="event.stopPropagation();spFollow('${x.k}',this)">${F.includes(x.k)?'⭐':'☆'}</button><div class="tag2">👁 ${x.w|0}</div></div></div>`).join(''):'<p class="tag2">ตอนนี้ยังไม่มีใครเปิดให้ดู'+(eraF==='c'?'ในยุคปัจจุบัน':wf?'ในโลกนี้':'')+'</p>'}</div>
+ modal(head+eraBar+`<div class="spF">${[['w','👁 คนดู'],['p','⚔️ พลัง'],['a','⏳ อายุ']].map(([k,l])=>`<button class="${so===k?'on':''}" onclick="spList._s='${k}';spList()">${l}</button>`).join('')}<span style="flex:1"></span>${eraF==='c'?[['','ทุกโลก'],['normal','🏙️'],['hunter','🌀'],['under','🌃'],['ghost','👻'],['loop','🔁'],['dragon','🐲'],['zombie','🧟']].map(([k,l])=>`<button class="${(spList._mw||'')===k?'on':''}" onclick="spList._mw='${k}';spList()">${l}</button>`).join(''):[['','ทุกโลก'],['m','⚔️'],['x','☁️'],['g','🌟']].map(([k,l])=>`<button class="${wf===k?'on':''}" onclick="spList._w='${k}';spList()">${l}</button>`).join('')}</div>
+ <div class="spList">${L.length?L.map((x,i)=>`${!eraF&&nC&&nO&&(i===0||isC(x)!==isC(L[i-1]))?`<div class="spH">${isC(x)?'🏙️ ยุคปัจจุบัน':'🏯 ยุคเก่า'} <small>${isC(x)?nC:nO}</small></div>`:''}<div class="spLc ${x.hot?'hot':''} ${isC(x)?'cur':''}" onclick="openSpectate('${x.k}')"><canvas width="140" height="154" data-i="${i}"></canvas><div class="i"><b>${x.pv?'🔒 ':''}${esc(x.n)}</b>${x.hot?'<span class="spHot">🔥 กำลังมีเรื่อง</span>':''}<br><span class="tag2">${isC(x)&&x.wi?({normal:'🏙️',hunter:'🌀',under:'🌃',ghost:'👻',loop:'🔁',dragon:'🐲',zombie:'🧟'}[x.wi]||'🏙️'):({m:'⚔️',x:'☁️',g:'🌟',c:'🏙️'}[kOf(x)]||'⚔️')} ${esc(isC(x)&&x.wr?x.wr:(x.r||''))} · อายุ ${fmt(x.age||0)}${x.p&&!isC(x)?' · พลัง '+fmt(x.p):''}${x.ago>=25?' · 🕒 '+(x.ago>=90?Math.round(x.ago/60)+' นาที':x.ago+' วิ')+'ที่แล้ว':''}</span><br><span class="tag2">${esc(x.f||'')}${x.fo?' · กำลัง'+esc(x.fo):''}${x.pv?' · 🔒 ปิดการให้ดู':''}</span>${adm&&x.m?`<br><span class="tag2" style="font-size:10.5px;opacity:.75">🛰️ ${esc(x.m.d||'')} · ${esc(x.m.b||'')} · ${esc(x.m.o||'')}${x.m.c?' · '+esc(x.m.c):''}${x.m.v?' · v'+esc(x.m.v):''}</span>`:''}</div><div style="text-align:center"><button class="spStar" onclick="event.stopPropagation();spFollow('${x.k}',this)">${F.includes(x.k)?'⭐':'☆'}</button><div class="tag2">👁 ${x.w|0}</div></div></div>`).join(''):'<p class="tag2">ตอนนี้ยังไม่มีใครเปิดให้ดู'+(eraF==='c'?'ในยุคปัจจุบัน':wf?'ในโลกนี้':'')+'</p>'}</div>
  <button class="gbtn" style="width:100%;margin-top:8px" onclick="spList._t=0;spList._l=null;spList()">🔄 รีเฟรช</button>${adm&&spList._idle&&spList._idle.length?`<details style="margin-top:8px"><summary class="tag2">💤 ออนไลน์แต่ไม่ได้ส่งภาพสด ${spList._idle.length} คน</summary><div class="tag2" style="font-size:11px;max-height:180px;overflow:auto">${spList._idle.map(x=>`<div>#${esc(x.id)} · ${esc(x.d||'')} ${esc(x.b||'')} · ${x.ago}s${x.v?' · v'+esc(x.v):''}</div>`).join('')}</div></details>`:''}${spList._bad?'<p class="tag2" style="color:#d84a4a">⚠️ รหัสแอดมินไม่ถูกต้อง — แสดงเฉพาะคนที่เปิดให้ดู</p>':''}${adm?`<button class="pbtn" style="width:100%;margin-top:6px" onclick="LS.set('murim_admk','');toast('ออกจากโหมดแอดมินแล้ว');openLiveList()">🛡️ ออกจากโหมดแอดมินในเครื่องนี้</button>`:''}<button class="gbtn" style="width:100%;margin-top:4px" onclick="openOnline('chat')">← ออนไลน์</button>`,'online');
  $('modal').querySelectorAll('.spLc canvas').forEach(c=>{const x=L[+c.dataset.i];spAva(c,x&&x.look)});spLiveTag();if(Date.now()-(spvPatch._cl||0)>30000){spvPatch._cl=Date.now();spClaim()}}
 {openLiveList=function(){return spList()}}
@@ -31375,7 +31378,7 @@ window.mwBWld=function(k){if(!MB)return;MB.wld=k;mbDraw(false)};
 const WP=[['normal',.40],['hunter',.07],['hunterhi',.05],['under',.12],['ghost',.12],['loop',.08],['dragon',.08],['zombie',.08]];
 const WI={hunterhi:['⚡','โลกฮันเตอร์พลังสูง','พลังเฟ้อจนแรงก์ SSS เปรียบเหมือนนิวเคลียร์เดินได้ เกต F–SSS ฮันเตอร์เป็นทั้งคนดังและอาวุธของรัฐ'],normal:['🏙️','โลกปกติ','ชีวิตคนยุคปัจจุบันทั่วไป ทำงาน ใช้ชีวิต ไม่มีอะไรเหนือธรรมชาติ (ยังมีโอกาสเปลี่ยนโลกกลางชีวิตได้ ~1%/ปี)'],hunter:['🌀','โลกฮันเตอร์','ประตูมิติเปิดขึ้นทั่วโลก นักล่าฮันเตอร์ระดับ E–S ปลุกพลังเพื่อสู้กับสัตว์ประหลาด'],under:['🌃','โลกใต้ดิน','โลกของก๊ก นักเลง และผู้มีอิทธิพล ไต่จากเด็กในซอยสู่เจ้าพ่อ ระวังความร้อนจากตำรวจ'],ghost:['👻','โลกผีไทย','ผี หมอผี พระเครื่อง และศาลตายายเป็นเรื่องจริง ปราบผีและสะสมบารมี'],loop:['🔁','โลกวนลูป','วันเวลาเริ่มวนซ้ำ จดความทรงจำและตามหาต้นตอของวงจรเวลา'],dragon:['🐲','โลกมังกรหลับ','มังกรหลับใต้ภูเขากำลังจะตื่น สร้างความผูกพันและกล่อมให้มันหลับ'],zombie:['🧟','โลกซอมบี้','โรคระบาดซอมบี้ ออกหาเสบียง สร้างที่พัก และเอาตัวรอดในโลกใหม่']};
 const wRollK=()=>{let r=Math.random();for(const w of WP){r-=w[1];if(r<=0)return w[0]}return'normal'};
-window.mwBRand=function(){mwBornPage(true);if(!MB)return;MB.rnd=1;MB.rr=3;MB.wld=wRollK();mbDraw(false)};
+window.mwBRand=function(){mwBornPage(true);if(!MB)return;MB.rnd=1;MB.rr=3;MB.start='birth';MB.wld=wRollK();mbDraw(false)};
 const admRR=()=>{try{return typeof ADM!=='undefined'&&ADM.ok&&ADM.rr}catch(e){return false}};
 {const _rr=window.mwBReroll;window.mwBReroll=function(){const n=MB&&MB.rr,adm=admRR();if(MB&&MB.rnd&&adm)MB.rr=Math.max(MB.rr,1);_rr.apply(this,arguments);if(MB&&MB.rnd&&MB.rr<n||(MB&&MB.rnd&&adm)){if(adm)MB.rr=Math.max(MB.rr,1);MB.wld=wRollK();mbDraw(false)}}}
 {const _d2=mbDraw;mbDraw=function(anim){_d2.apply(this,arguments);try{const o=$('mwB');if(!o||!MB||!MB.rnd)return;o.classList.add('mbRnd');
@@ -34629,6 +34632,101 @@ window.abBatch=function(N){const h=abH();if(!h||!S.alive)return;try{closeM()}cat
 
 // 🔥 ป้ายด่านนรก/อเวจีหาย: โหมดยุคปัจจุบัน/วัยเด็กเขียนทับแถบขั้นพลัง ทำให้ป้ายหลุด — วาดคืนเป็นด่านสุดท้ายของทุกการเรนเดอร์
 {const _rdB=render;render=function(){const r=_rdB.apply(this,arguments);try{const el=document.getElementById('gRealm');if(el&&S&&S.alive&&typeof hellInfo==='function'&&!el.querySelector('.hlb')){const h=hellInfo();if(h){const ab=!!h.ab;el.insertAdjacentHTML('beforeend',` <span class="hlb" style="cursor:pointer;background:${ab?'#1a0a2a':'#3a0c0c'};color:${ab?'#d8c0ff':'#ffb070'};border:1px solid ${ab?'#9a6aff':'#ff5a3a'};border-radius:8px;padding:0 6px;font-size:11px;white-space:nowrap">${ab?`🕳️ อเวจี ${h.lv}/1000`:`🔥 ชั้น ${h.lv}/100`} · ${h.ess|0}</span>`);const b=el.querySelector('.hlb');b.onclick=ev=>{ev.stopPropagation();try{ab&&typeof openAbyss==='function'?openAbyss():(h.lv>=18&&typeof openHell2==='function'?openHell2():hellShop())}catch(e){}}}}}catch(e){}return r}}
+// ============================================================
+// หน้าดูคนอื่นเล่น: ยุคปัจจุบันแยกตามประเภทโลก
+// ============================================================
+try{(()=>{
+const W=window._wld,W2=window._wld2,W4=window._wld4,W7=window._wld7,AL=window._al;
+if(!(W&&W2&&W4&&W7&&AL))return;
+const WN={normal:['🏙️','โลกปกติ'],hunter:['🌀','โลกฮันเตอร์'],under:['🌃','โลกใต้ดิน'],ghost:['👻','โลกผีไทย'],loop:['🔁','โลกวนลูป'],dragon:['🐲','โลกมังกรหลับ'],zombie:['🧟','โลกซอมบี้']};
+const TN={normal:'ชีวิต',hunter:'ฮันเตอร์',under:'ใต้ดิน',ghost:'ผีไทย',loop:'วนลูป',dragon:'มังกร',zombie:'ซอมบี้'};
+const SKm={under:['U','inf','heat'],ghost:['G','ward','bad'],loop:['LP','mem','tir'],dragon:['D','bond','wake'],zombie:['Z','surv','inf']};
+const RT={under:W.UR,ghost:W.GR,loop:W2.LR,dragon:W2.DR,zombie:W2.ZR};
+const HRN=['E','D','C','B','A','S'];
+const n0=v=>Math.round(+v||0),tx=v=>String(v==null?'':v).replace(/<[^>]+>/g,'').slice(0,40);
+const tier=(T,v)=>{let n=T[0][1];T.forEach(t=>{if(v>=t[0])n=t[1]});return n};
+const FCN={assoc:['🏛️','สมาคมฮันเตอร์'],state:['🪖','รัฐและทหาร'],guild:['🏢','กิลด์ใหญ่'],under:['🌃','โลกใต้ดิน'],cult:['🌀','ลัทธิบูชาเกต'],people:['👥','ประชาชน']};
+const ROLEN={doc:'🩺 หมอ',eng:'🔧 ช่าง',sol:'🪖 อดีตทหาร',far:'🌾 ชาวนา',kid:'🧒 เด็ก',tea:'📚 ครู'};
+const DSTN=['หลับลึก','ลืมตาครึ่งหนึ่ง','ตื่นได้บางคืน','ตื่นเต็มตัว'];
+// สร้างข้อมูลย่อของโลกสำหรับส่งให้คนดู (เล็ก ไม่มีความลับที่เจ้าตัวยังซ่อน)
+function mxOf(M){
+ const w=W.wOf(M)||'normal',o={i:w,ic:WN[w][0],wn:WN[w][1],t:TN[w]};
+ const H=M.H,hi=M.hv==='high'||M.hw===2;
+ let g=[],l=[],r='',secret=0;
+ if(M.kid){o.r='วัยเด็ก';o.g=[];o.l=['🧒 ยังเป็นเด็ก — โลกของเขายังไม่เปิดเผย'];}
+ else if(w==='hunter'&&H){
+  const rk=hi?(H.rx!=null?window._wld7.RX[H.rx]:'—'):(H.r>=0?HRN[H.r]:'—');
+  const cls=window._wld7.CL&&window._wld7.CL[H.cls];
+  r=rk==='—'?'ฮันเตอร์ (ยังไม่จัดแรงก์)'+(hi?' ✦':''):'ฮันเตอร์ '+rk+(hi?' ✦':'');
+  let pw=0;try{pw=typeof hStr==='function'?hStr(M):window._wld7.pow(M)}catch(e){}
+  g=[['⚔️','พลังฮันเตอร์',n0(pw||H.pw)],['💎','หินมานา',n0(H.ms)],['🩸','บาดแผลใจ',n0(H.trm)+'/100'],['👥','ปาร์ตี้',(H.pt||[]).length+' คน']];
+  l.push(`${hi?'✦ สายพลังสูง (F–SSS)':'สายฮันเตอร์ทั่วไป (E–S)'} · แรงก์ ${rk}`);
+  if(cls)l.push(`${cls.ic} คลาส ${cls.n}`);else l.push('🎓 ยังไม่เลือกคลาส');
+  l.push('📖 สกิลที่ปลดแล้ว '+Object.keys(H.sk||{}).length+' อย่าง');
+  if(H.gd2)l.push(({big:'🏢 สังกัดกิลด์ใหญ่ '+tx(H.gdn),indie:'🤝 กิลด์เล็ก/อิสระ',own:'🏰 ตั้งกิลด์เอง',ask:'🪧 ยังไม่เลือกกิลด์'})[H.gd2]||'');
+  if(H.aw)l.push(({sys:'🟦 ได้รับระบบ',aw:'✨ ตื่นรู้พลังเอง',none:'🧱 ยังไม่ตื่นพลัง'})[H.aw]||'');
+  (H.pt||[]).slice(0,5).forEach(c=>l.push('🧑‍🤝‍🧑 '+tx(c.n)));
+  if(H.vil)l.push('⚠️ เคยมีเรื่องคนร้ายในเกต');
+  if(H.mk||H.mi||(H.cu&&H.cu.in))secret=1;
+ }
+ else if(RT[w]&&SKm[w]){
+  const k=SKm[w],S0=M[k[0]]||{},v1=S0[k[1]]||0,v2=S0[k[2]]||0;
+  r=tier(RT[w],v1);
+  if(w==='under'){const U=S0,own=(U.soi||[]).filter(s=>s.o===1).length;
+   g=[['🗺️','ย่านที่คุม',own+'/'+(U.soi||[]).length],['👥','ลูกน้อง',(U.lt||[]).length+' คน'],['🔥','ความร้อน',n0(v2)+'/100'],['🏴','อิทธิพล',n0(v1)]];
+   (U.soi||[]).forEach(s=>l.push((s.o===1?'🟢 ':s.o===2?'🔴 ':'⚪ ')+tx(s.n)));
+   (U.lt||[]).slice(0,6).forEach(x=>l.push('🤝 ลูกน้อง '+tx(x.n)+(x.bro?' (พี่น้องสาบาน)':'')));
+   if(U.rv&&U.rv.n)l.push('⚔️ คู่แข่งย่าน '+tx(U.rv.n));if(U.jail)l.push('🔒 ติดคุกอีก '+U.jail+' ปี');}
+  else if(w==='ghost'){const G=S0;
+   g=[['📋','คดีที่ปิดแล้ว',G.cs|0],['🛡️','บารมี',n0(v1)],['👁️','ผีตามหลอน',n0(v2)+'/100'],['📿','สาย',G.mor?(G.dk?'สายมืด':'สายขาว'):'ยังไม่มีครู']];
+   l.push('📋 เคสที่ปิดแล้ว '+(G.cs|0)+' เคส');if(G.mor)l.push('📿 ศิษย์ของครู'+tx(G.mor));else l.push('🙏 ยังไม่มีครู');
+   if((G.tb||[]).length)l.push('📜 ข้อห้ามที่รู้แล้ว '+(G.tbk||[]).length+'/'+(G.tb||[]).length);}
+  else if(w==='loop'){const L=S0;
+   g=[['🧩','เบาะแส',(L.clue|0)+'/5'],['🧠','ความทรงจำ',n0(v1)],['⌛','ความล้าเวลา',n0(v2)+'/100'],['⏪','ย้อนไปแล้ว',(L.rw|0)+' ครั้ง']];
+   l.push('🧩 เก็บเบาะแสได้ '+(L.clue|0)+' จาก 5 ชิ้น (เนื้อหายังเป็นความลับ)');if(L.my)l.push('🧍 คนสำคัญในลูป: '+tx(L.my));l.push('⏪ ย้อนเวลาไปแล้ว '+(L.rw|0)+' ครั้ง');secret=1;}
+  else if(w==='dragon'){const D=S0;
+   g=[['🐲','มังกร',D.dg?tx(D.dg.n):'ยังไม่ตั้งชื่อ'],['💤','ระยะ',D.dg?DSTN[D.dg.stg]||'—':'—'],['🤝','ความผูกพัน',n0(v1)],['🌫️','ความลับรั่ว',n0(D.exp)+'/100']];
+   if(D.dg){l.push('🐲 '+tx(D.dg.n)+' — '+(DSTN[D.dg.stg]||''));l.push('😶 อารมณ์ '+n0(D.dg.mood))}else l.push('🥚 ยังไม่ได้พบมังกร');l.push('🌫️ ความลับรั่ว '+n0(D.exp)+'/100');}
+  else if(w==='zombie'){const Z=S0,zd=W4.zDef?W4.zDef(M,Z):0;
+   g=[['🏘️','คนในที่พัก',(Z.com||[]).length+' คน'],['🥫','เสบียง',n0(Z.sup)],['🛡️','ป้องกัน',n0(zd)],['☣️','เสี่ยงติดเชื้อ',n0(v2)+'/100']];
+   (Z.com||[]).slice(0,8).forEach(c=>l.push((ROLEN[c.r]||'🧑')+' '+tx(c.n)));if(!(Z.com||[]).length)l.push('🧍 อยู่คนเดียว');l.push('🥫 เสบียงเหลือ '+n0(Z.sup));}
+ }
+ else{r='';g=[];l.push('🏙️ ใช้ชีวิตในโลกปกติ — ยังไม่มีเรื่องเหนือธรรมชาติ');}
+ o.r=r||'';o.g=g;o.l=l.filter(Boolean).slice(0,16);
+ // ตัวตน
+ try{const A=AL.ali(M),ar=AL.AR[AL.arch(M)];o.k=n0(A.k);o.lw=n0(A.l);o.ar=secret&&H&&H.mk?['🎭','ปกปิดตัวตน']:[ar[0],ar[1]];}catch(e){}
+ if(M.fc){o.fc=Object.keys(FCN).map(k=>[FCN[k][0],FCN[k][1],n0(M.fc[k])])}
+ if(secret)o.sc=1;
+ // กำเนิด
+ const b=[];try{if(typeof PV!=='undefined'&&PV[M.pv])b.push('📍 ภูมิลำเนา '+tx(PV[M.pv].n||PV[M.pv][0]));}catch(e){}
+ b.push(M.native?'🍼 เกิดและโตในยุคปัจจุบัน':'🌌 คนหลงยุคจากอดีต');
+ if(M.wx&&M.wx.shift&&w!=='normal')b.push('🔀 โลกของเขาเปลี่ยนไปกลางชีวิต');
+ if(M.hw>0&&!M.wx)b.push('🌀 โลกฮันเตอร์ตั้งแต่เกิด');
+ o.b=b;
+ return o}
+window._mxOf=mxOf;
+{const _l=liveSnap;liveSnap=function(){const r=_l.apply(this,arguments);try{const M=S&&S.mw;if(r&&M){const mx=mxOf(M);r.mx=mx;if(mx.r)r.rl=mx.r;}}catch(e){console.error('mx',e)}return r}}
+// ---------- แสดงผลฝั่งคนดู ----------
+const E=s=>typeof esc==='function'?esc(String(s==null?'':s)):String(s==null?'':s);
+const cellK=(k,ic,lb,v)=>`<div data-k="${k}">${ic} ${lb} <b>${v}</b></div>`;
+window.mxGrid=function(s,st){const mx=s.mx||{};let h=cellK('int','📖','ปัญญา',specN(st.int))+cellK('cha','🌸','เสน่ห์',specN(st.cha))+cellK('money','💰','เงิน',specMoney(s,st.money))+cellK('fame','⭐','ชื่อเสียง',fmt(st.fame))+cellK('joy','😊','ความสุข',st.joy);
+ (mx.g||[]).forEach((c,i)=>{h+=cellK('g'+i,c[0],E(c[1]),E(c[2]))});
+ if(mx.ar)h+=cellK('ar',mx.ar[0],'ตัวตน',E(mx.ar[1]));
+ return `<div class="specgrid mxg">${h}</div>`};
+window.mxPatch=function(gr,s,P){const st=s.st,mx=s.mx||{},pm=(P&&P.mx)||{};const set=(k,v,pv)=>{const d=gr.querySelector(`[data-k="${k}"]`);if(!d)return;const b=d.querySelector('b');if(!b)return;const was=b.innerHTML;if(was===v)return;b.innerHTML=v;if(pv==null)return;d.classList.remove('spUp','spDn');void d.offsetWidth;d.classList.add('spUp')};
+ const ps=P&&P.st||{};set('int',specN(st.int),ps.int);set('cha',specN(st.cha),ps.cha);set('money',specMoney(s,st.money),ps.money);set('fame',fmt(st.fame),ps.fame);set('joy',String(st.joy),ps.joy);
+ (mx.g||[]).forEach((c,i)=>set('g'+i,E(c[2]),(pm.g||[])[i]));if(mx.ar)set('ar',E(mx.ar[1]),(pm.ar||[])[1])};
+const bar=(v,lo,hi,c)=>{const p=Math.max(0,Math.min(100,(v-lo)/(hi-lo)*100));return `<div style="height:6px;border-radius:9px;background:#8883;overflow:hidden"><div style="width:${p}%;height:100%;background:${c}"></div></div>`};
+window.mxBody=function(s){const mx=s.mx;if(!mx)return '<p class="tag2">ผู้เล่นคนนี้ใช้เวอร์ชันเก่า ยังไม่มีข้อมูลโลก</p>';let h=`<div class="item"><b>${mx.ic} ${E(mx.wn)}</b>${mx.r?` · ${E(mx.r)}`:''}</div>`;
+ if(mx.b&&mx.b.length)h+=`<h4 style="margin:8px 0 2px">🎲 กำเนิด</h4><ul class="speclist">${mx.b.map(x=>`<li>${E(x)}</li>`).join('')}</ul>`;
+ if(mx.l&&mx.l.length)h+=`<h4 style="margin:8px 0 2px">${mx.ic} ${E(mx.t)}</h4><ul class="speclist">${mx.l.map(x=>`<li>${E(x)}</li>`).join('')}</ul>`;
+ if(mx.ar){h+=`<h4 style="margin:8px 0 2px">⚖️ ตัวตน — ${mx.ar[0]} ${E(mx.ar[1])}</h4>`;if(mx.k!=null&&mx.ar[1]!=='ปกปิดตัวตน')h+=`<div class="tag2">ใจ ${mx.k>0?'+':''}${mx.k} (ชั่ว ↔ ดี)</div>${bar(mx.k,-100,100,'#f5a623')}<div class="tag2" style="margin-top:3px">วิธี ${mx.lw>0?'+':''}${mx.lw} (นอกกฎ ↔ ตามกฎ)</div>${bar(mx.lw,-100,100,'#4aa3ff')}`}
+ if(mx.fc)h+=`<h4 style="margin:8px 0 2px">🏛️ ความสัมพันธ์กับฝ่ายต่างๆ</h4>`+mx.fc.map(f=>`<div style="margin:3px 0"><span class="tag2">${f[0]} ${E(f[1])} <b>${f[2]>0?'+':''}${f[2]}</b></span>${bar(f[2],-100,100,f[2]>=30?'#46a758':f[2]<=-30?'#e5484d':'#999')}</div>`).join('');
+ if(mx.sc)h+=`<p class="tag2" style="margin-top:8px">🎭 มีความลับบางอย่างที่เจ้าตัวยังซ่อนอยู่ — เฉลยเมื่อถึงเวลา</p>`;
+ return h};
+})()}catch(e){console.error('block11',e)}
+// หน้าดูชีวิตในทำเนียบ: ชีวิตยุคปัจจุบันบอกโลก อันดับ และตัวตนสุดท้าย
+try{{const _ld=lifeDetail;lifeDetail=function(){const d=_ld.apply(this,arguments);try{const M=S&&S.mw;if(d&&M&&window._mxOf){const mx=window._mxOf(M);d.wk='c';d.ow=`${mx.ic} ${mx.wn}${mx.r?' · '+mx.r:''}${mx.ar?' · ตัวตนสุดท้าย '+mx.ar[0]+' '+mx.ar[1]:''}`;if(mx.r)d.r=mx.r;if(!d.f||/จอมยุทธ์|พเนจร/.test(d.f))d.f='🏙️ ยุคปัจจุบัน'}}catch(e){}return d}}}catch(e){console.error('block11b',e)}
 </script>
 </body>
 </html>
