@@ -35565,7 +35565,7 @@ setInterval(()=>{try{for(const k in M){const e=$(k);if(e&&!e.querySelector('.tbi
    และการดวลก็ถูกคำนวณทันทีเมื่อเปิดโหมดอัตโนมัติ → ผู้เล่นเห็นว่า "ตัดข้าม" */
 {
 const _afB=afBig;
-afBig=function(c){try{const t=String(c&&c.title||'').replace(/<[^>]+>/g,'');if(/^🌌|^🔓 ใจกลางวงจร|เฝ้ากาล/.test(t))return true}catch(e){}return _afB.apply(this,arguments)};
+afBig=function(c){try{const t=String(c&&c.title||'').replace(/<[^>]+>/g,'');if(/^🌌|^🔓 ใจกลางวงจร|เฝ้ากาล/.test(t))return true;if(c&&Array.isArray(c.opts)&&c.opts.some(o=>o&&typeof o.f==='function'&&/\b(duel|fight)\(/.test(o.f.toString())))return true}catch(e){}return _afB.apply(this,arguments)};
 const _duBoss=duel;
 duel=function(name){try{if(auto&&/เฝ้ากาล/.test(String(name))){auto=false;try{toast('⚔️ ด่านผู้เฝ้ากาลต้องสู้เอง — ปิดโหมดอัตโนมัติให้แล้ว')}catch(e){}}}catch(e){}return _duBoss.apply(this,arguments)};
 }
