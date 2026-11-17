@@ -1307,7 +1307,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const rest = (onIds || []).filter(x => !liveSet.has(x));
         const metas = rest.length ? await cmd('HMGET', 'om', ...rest) : [];
         const idle = rest.map((x, i) => { let m = {}; try { m = JSON.parse(metas[i] || '{}') } catch {} return { id: x.slice(0, 4), d: m.d, b: m.b, v: m.v || '', ago: Math.round((now - (m.t || now)) / 1000) } }).filter(x => x.b !== 'บอท');
-        const tot = { o: l.filter(q => q.wk !== 'c').length, c: l.filter(q => q.wk === 'c').length }; return res.json({ l: l.sort((p, q) => q.age - p.age).slice(0, 80), adm: 1, idle, tot, now });
+        const tot = { o: l.filter(q => q.wk !== 'c').length, c: l.filter(q => q.wk === 'c').length }; const capEra = (arr, N, cmp) => { const c = arr.filter(q => q.wk === 'c').sort(cmp).slice(0, Math.ceil(N / 2)), o = arr.filter(q => q.wk !== 'c').sort(cmp).slice(0, N - c.length); return o.concat(c).sort(cmp) }; return res.json({ l: capEra(l, 80, (p, q) => q.age - p.age), adm: 1, idle, tot, now });
       }
       const idsR = await cmd('ZRANGEBYSCORE', 'livez', now - 60e3, '+inf', 'WITHSCORES'); const sc = {}, ids = []; for (let i = 0; i + 1 < (idsR || []).length; i += 2) { if (idsR[i] === id) continue; ids.push(idsR[i]); sc[idsR[i]] = +idsR[i + 1] }
       if (!ids.length) return res.json({ l: [], tot: { o: 0, c: 0 }, now });
@@ -1317,7 +1317,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const l = [];
       ids.forEach((x, i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), ago: Math.max(0, Math.round((now - (sc[x] || now)) / 1000)), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: +s0.p || (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g', 'c'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null, w: cnt[i] || 0 }) } catch {} });
       const gone = await cmd('ZRANGEBYSCORE', 'livez', 0, now - 120e3); await pipe([['ZREMRANGEBYSCORE', 'livez', 0, now - 120e3], ...((gone || []).length ? [['HDEL', 'livem', ...gone]] : [])]);
-      const tot = { o: l.filter(q => q.wk !== 'c').length, c: l.filter(q => q.wk === 'c').length }; return res.json({ l: l.sort((p, q) => q.w - p.w || q.age - p.age).slice(0, 40), tot, now });
+      const tot = { o: l.filter(q => q.wk !== 'c').length, c: l.filter(q => q.wk === 'c').length }; const capEra = (arr, N, cmp) => { const c = arr.filter(q => q.wk === 'c').sort(cmp).slice(0, Math.ceil(N / 2)), o = arr.filter(q => q.wk !== 'c').sort(cmp).slice(0, N - c.length); return o.concat(c).sort(cmp) }; return res.json({ l: capEra(l, 40, (p, q) => q.w - p.w || q.age - p.age), tot, now });
     }
     if (a === 'lreact' || a === 'lvote' || a === 'lbet') {
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
