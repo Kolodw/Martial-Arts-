@@ -690,6 +690,19 @@ module.exports = async (req, res) => {
       const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
       return res.json(Object.assign({ ok: 1 }, await vipFixAll()));
     }
+    // แอดมิน: ย้ายป้ายหนึ่งขึ้นเป็นลำดับที่ 1 (ใส่ n=ชื่อ หรือ id=รหัส) คนอื่นเลื่อนลงทีละ 1 — ถ้าชื่อซ้ำหลายป้ายจะไม่ทำ ให้ส่งรายการกลับมาเลือก
+    if (a === 'vipfirst') {
+      const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
+      const nm = String(q.n || b.n || '').trim(), tid = String(q.id || b.id || '');
+      const raw = (await cmd('HGETALL', 'vipu')) || [], rows = [];
+      for (let i = 0; i + 1 < raw.length; i += 2) { const o = jp(raw[i + 1]); if (o) rows.push({ id: raw[i], o }) }
+      const hit = rows.filter(r => tid ? r.id === tid : (nm && String(r.o.n || '') === nm));
+      if (hit.length !== 1) return res.json({ ok: 0, found: hit.length, all: rows.sort((x, y) => x.o.o - y.o.o).map(r => ({ id: r.id, n: r.o.n, o: r.o.o })) });
+      const t = hit[0], old = t.o.o | 0; const cmds = [];
+      for (const r of rows) { if (r === t) continue; if ((r.o.o | 0) < old) { r.o.o = (r.o.o | 0) + 1; cmds.push(['HSET', 'vipu', r.id, JSON.stringify(r.o)]) } }
+      t.o.o = 1; cmds.push(['HSET', 'vipu', t.id, JSON.stringify(t.o)]); await pipe(cmds);
+      return res.json({ ok: 1, id: t.id, n: t.o.n, from: old });
+    }
     if (a === 'vipwall') {
       try { if (await cmd('SET', 'vipfix:lock', 1, 'NX', 'PX', 300000)) await vipFixAll() } catch (e) {}
       const raw = (await cmd('HGETALL', 'vipu')) || [], rows = [];
