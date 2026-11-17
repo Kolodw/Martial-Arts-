@@ -26096,8 +26096,50 @@ function abPaint(){const b=abBtn();if(!b)return;const on=abOn();{const t=on?'�
   <p class="tag2" style="margin:0">🕳️ 1000 ชั้น 10 วง · ผู้คุมแรงคงที่ตามชั้น · แพ้ตกชั้น · แพ้บอสวงใหญ่ (ทุก 100 ชั้น) วิญญาณแตก · ข้ามชาติได้ด้วยจารึกวิญญาณ</p></div><button class="pbtn" style="width:100%;margin-top:10px" onclick="closeM();try{const d=document.querySelector('details.tadv');if(d)d.open=true}catch(e){}setTimeout(()=>{const b=abBtn();if(b){b.scrollIntoView({block:'center'});b.animate([{transform:'scale(1)'},{transform:'scale(1.15)'},{transform:'scale(1)'}],{duration:500,iterations:3})}},200)">เข้าใจแล้ว — ชี้ให้ดูปุ่ม</button>`,'abtut')}catch(e){}},1500)})();
 // ---- ฉายา · กรอบ · คู่มือ ----
 try{TTL_SP.unshift(['ab1000',()=>!!(S.flags&&S.flags.ab1000),'ราชันอเวจี'],['ab500',()=>(S.flags&&S.flags.abMax||0)>=500,'ผู้ร่วงไม่สิ้นสุด'],['ab100',()=>(S.flags&&S.flags.abMax||0)>=100,'ผู้ข้ามปากอเวจี'])}catch(e){}
-try{FRAMES.push({id:'f_abyss',n:'กรอบปากอเวจี',side:'h',c:0,ty:'spin halo orbit sparkle star corner badge',c1:'#7a3aff',c2:'#0a0014',c3:'#ff3a8a',pc:'#e0c8ff',bd:'🕳️',d:'ผ่านอเวจีวงแรก (ชั้น 100)'});if(window.FRSH_T)FRSH_T.f_abyss='rnd|ringh,eye,chain'}catch(e){}
-{const _cd=checkDeath;checkDeath=function(){const r=_cd.apply(this,arguments);try{if(S&&S.flags&&(S.flags.abMax||0)>=100){const d=frGet();if(!d.own.includes('f_abyss')){d.own.push('f_abyss');frSet(d);toast('🕳️ ได้กรอบปากอเวจี')}}}catch(e){}return r}}
+(function(){
+const M=window.FRSH_M,T=window.FRSH_T;if(!M||!T)return;
+const C1='fill:var(--c1)',C2='fill:var(--c2)',C3='fill:var(--c3)',PC='fill:var(--pc)',S1='stroke:var(--c1)',S2='stroke:var(--c2)',SP='stroke:var(--pc)';
+const mir=d=>d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g,(m,x,y)=>(100-x)+' '+y);
+// 🕳️ ปากอเวจี — ปากอสูรมีเขี้ยวบน-ล่าง
+M.abmaw=()=>{let o=`<path style="fill:none;${S1};stroke-width:2.4" d="M2 -3Q50 -16 98 -3"/><path style="fill:none;${S1};stroke-width:2.4" d="M2 103Q50 116 98 103"/>`;
+ for(let i=0;i<7;i++){const x=8+i*14,h=i%2?9:13;o+=`<path style="${C2}" d="M${x-5} -5L${x} ${-5+h}L${x+5} -5Z"/><path style="${C2}" d="M${x-5} 105L${x} ${105-h}L${x+5} 105Z"/>`}
+ o+=`<circle cx="-4" cy="50" r="4" style="${PC}"/><circle cx="104" cy="50" r="4" style="${PC}"/>`;return o};
+// ⛓️ โซ่เถ้าวิญญาณ — โซ่หนักรั้งสองข้าง ห่วงตรวนมุม ถ่านไฟร่วง
+M.abchain=()=>{let o='';for(let i=0;i<6;i++){const y=6+i*15;o+=`<ellipse cx="-6" cy="${y}" rx="${i%2?3.2:5}" ry="${i%2?6.5:4}" style="fill:none;${S1};stroke-width:3"/><ellipse cx="106" cy="${y}" rx="${i%2?3.2:5}" ry="${i%2?6.5:4}" style="fill:none;${S1};stroke-width:3"/>`}
+ [[2,2],[98,2],[2,98],[98,98]].forEach(p=>o+=`<rect x="${p[0]-8}" y="${p[1]-5}" width="16" height="10" rx="4" style="${C3};${S1};stroke-width:2.4"/><circle cx="${p[0]}" cy="${p[1]}" r="2.2" style="${C2}"/>`);
+ [[14,112],[40,118],[66,114],[88,120],[28,126],[78,128]].forEach((p,i)=>o+=`<circle cx="${p[0]}" cy="${p[1]}" r="${i%2?1.8:2.6}" style="${C2}" opacity="${.9-i*.1}"/>`);return o};
+// 🚪 ประตูไร้ป้าย — ซุ้มประตูหินปิดตา มีดวงตาเฝ้าหน้าประตู
+M.abgate=()=>`<path style="fill:none;${S1};stroke-width:4" d="M-8 100L-8 12Q50 -44 108 12L108 100"/><path style="fill:none;${S2};stroke-width:1.6" d="M-3 100L-3 14Q50 -34 103 14L103 100"/>
+ <rect x="-12" y="96" width="124" height="7" rx="2" style="${C3};${S1};stroke-width:2"/><rect x="-16" y="102" width="132" height="6" rx="2" style="${C3};${S2};stroke-width:1.4"/>
+ <path style="${C3};${S2};stroke-width:2" d="M30 -9L50 -26L70 -9L50 -3Z"/><ellipse cx="50" cy="-13" rx="11" ry="5.2" style="fill:none;${S2};stroke-width:2"/><circle cx="50" cy="-13" r="3.4" style="${C1}"/><circle cx="50" cy="-13" r="1.3" style="${C2}"/>
+ <path style="fill:none;${S2};stroke-width:1.4;stroke-dasharray:2 3" d="M-8 50L-3 50M108 50L103 50"/>`;
+// 🩸 เงาไร้ที่พัก — เสี้ยนหนามเงาพุ่งรอบทิศ รอยกรงเล็บขีดมุม
+M.abspike=()=>{let o='';const sp=(x,y,a,l,w)=>{const t=a*Math.PI/180,c=Math.cos(t),s=Math.sin(t),px=-s,py=c;return`<path style="${C1};${S2};stroke-width:1.1" d="M${x+px*w} ${y+py*w}L${x+c*l} ${y+s*l}L${x-px*w} ${y-py*w}Z"/>`};
+ [[0,0,-135,30,5.5],[100,0,-45,30,5.5],[0,100,135,30,5.5],[100,100,45,30,5.5]].forEach(p=>o+=sp(...p));
+ [[25,0,-90,15,3.4],[50,0,-90,22,4.2],[75,0,-90,15,3.4],[25,100,90,15,3.4],[50,100,90,22,4.2],[75,100,90,15,3.4],[0,28,180,15,3.4],[0,50,180,22,4.2],[0,72,180,15,3.4],[100,28,0,15,3.4],[100,50,0,22,4.2],[100,72,0,15,3.4]].forEach(p=>o+=sp(...p));
+ o+=`<path style="fill:none;${S2};stroke-width:2;stroke-linecap:round" d="M9 36L19 12M14 40L25 14M19 44L31 16"/><path style="fill:none;${S2};stroke-width:2;stroke-linecap:round" d="M91 64L81 88M86 60L75 86M81 56L69 84"/>`;return o};
+// 👑 ราชันอเวจี — มงกุฎใหญ่ ปีกทองซ้อนชั้น รัศมีสองวง
+M.abking=()=>{const w1='M-2 44L-26 20L-20 46L-34 60L-14 62L-26 76L0 66Z',w2='M-2 50L-16 36L-12 52L-22 60L-6 60Z',w3='M-4 56L-10 48L-8 58Z';
+ return`<path style="${C1};${S2};stroke-width:1.2" d="${w1}"/><path style="${C2}" d="${w2}"/><path style="${C1};${S2};stroke-width:1.2" d="${mir(w1)}"/><path style="${C2}" d="${mir(w2)}"/>
+ <circle cx="50" cy="50" r="62" style="fill:none;${S2};stroke-width:1.2;stroke-dasharray:1 5;stroke-linecap:round"/><circle cx="50" cy="50" r="56" style="fill:none;${S1};stroke-width:1.6;opacity:.7"/>
+ <path style="${C1};${S2};stroke-width:2" d="M20 6L15 -26L32 -12L50 -34L68 -12L85 -26L80 6Z"/><rect x="20" y="2" width="60" height="7" rx="2" style="${C2};${S1};stroke-width:1.4"/>
+ <circle cx="50" cy="-30" r="3.6" style="${PC}"/><circle cx="15" cy="-24" r="3" style="${PC}"/><circle cx="85" cy="-24" r="3" style="${PC}"/><circle cx="50" cy="5.5" r="2.4" style="${C3}"/>`};
+for(const k of ['abmaw','abchain','abgate','abspike','abking']){const f=M[k];M[k]=()=>`<g transform="translate(20 20) scale(.6)">${f()}</g>`}
+const mk=(id,n,c1,c2,c3,pc,bd,ty,sh,d)=>{try{const f={id,n,side:'h',c:0,ty,c1,c2,c3,pc,bd,d};const i=FRAMES.findIndex(x=>x.id===id);if(i>=0)FRAMES[i]=f;else FRAMES.push(f);T[id]=sh}catch(e){}};
+mk('f_ab100','กรอบปากอเวจี','#6a2aff','#f4eaff','#0a0014','#c8a0ff','🕳️','spin halo orbit sparkle corner badge','rnd|abmaw','ผ่านอเวจีวงแรก (ชั้น 100)');
+mk('f_ab300','กรอบโซ่เถ้าวิญญาณ','#9aa4b4','#ff8a2a','#22242c','#ffd09a','⛓️','orbit sparkle corner badge','abchain','ผ่านอเวจีวงที่ 3 (ชั้น 300)');
+mk('f_ab500','กรอบประตูไร้ป้าย','#8a4aff','#e8d4ff','#160830','#c8a0ff','🚪','halo orbit star corner badge','abgate|star4','ผ่านอเวจีครึ่งทาง (ชั้น 500)');
+mk('f_ab800','กรอบเงาไร้ที่พัก','#e0182e','#ffd6da','#14000a','#ff8a98','🩸','spin halo sparkle corner badge','abspike','ผ่านอเวจีวงที่ 8 (ชั้น 800)');
+mk('f_ab1000','กรอบราชันอเวจี','#ffc830','#fff3b0','#1a0a2a','#ffffff','👑','spin halo orbit aura2 sparkle star corner badge','abking','ราชันอเวจี — ลงถึงชั้น 1000');
+})();
+
+try{const AB_FR=[[100,'f_ab100'],[300,'f_ab300'],[500,'f_ab500'],[800,'f_ab800'],[1000,'f_ab1000']];
+ const abGrant=(all)=>{try{const d=frGet();let n=[];for(const [lv,id] of AB_FR){if((all||(S&&S.flags&&((S.flags.abMax||0)>=lv||(lv===1000&&S.flags.ab1000))))&&!d.own.includes(id)){d.own.push(id);n.push(id)}}if(n.length){frSet(d);if(!all)n.forEach(id=>{const f=frOf(id);toast('🕳️ ได้'+(f?f.n:'กรอบอเวจี'))})}}catch(e){}};
+ {const _cd2=checkDeath;checkDeath=function(){const r=_cd2.apply(this,arguments);abGrant(0);return r}}
+ // แอดมิน: ได้กรอบอเวจีครบทุกชุดไว้ใส่/ทดสอบ
+ for(const fn of ['openFrameShop','openProfile']){const o=window[fn];if(typeof o==='function')window[fn]=function(){try{if(typeof admK==='function'&&admK())abGrant(1)}catch(e){}return o.apply(this,arguments)}}
+ TTL_SP.unshift(['ab800',()=>(S.flags&&S.flags.abMax||0)>=800,'ผู้ไม่เคยพัก'],['ab300',()=>(S.flags&&S.flags.abMax||0)>=300,'วิญญาณไร้ที่พึ่ง'])}catch(e){console.error(e)}
+
 try{SYS_GUIDE.push({s:'world',nw:1,ic:'🕳️',t:'โหมดอเวจี 1000 ชั้น',d:'ปลดล็อกเมื่อผ่านนรกครบ 100 ชั้น · <b>กดค้างปุ่ม 🔥 นรก</b> ในแถบเลือกโหมดเพื่อเปลี่ยนเป็น 🕳️ อเวจี · 10 วง วงละ 100 ชั้น แต่ละวงเพิ่มกฎ (ซ่อนกฎ · ไม่มีวิญญาณสำรอง · ไฟกรรมไม่ดับ · ประตูไร้ป้าย · ตกลึก · เงาอ่านใจ · ไร้ที่พัก · ทางลวง · มีแต่ผู้คุม) · ผู้คุมแรง<b>คงที่ตามชั้น</b> · แพ้ตก 3 ชั้น · แพ้บอสทุก 10 ชั้นตกกลับด่านบอสก่อนหน้า · แพ้บอสวงใหญ่ทุก 100 ชั้น <b>วิญญาณแตก</b> · ชาติถัดไปเริ่มที่ต้นวงที่เคยถึงได้',te:'Abyss (1000 floors)',de:'Unlocks after clearing Hell floor 100. Long-press the 🔥 Hell button to switch to 🕳️ Abyss.'})}catch(e){}
 
 // ===== v17.13 หน้ากำเนิดกะทัดรัด: ปุ่มเกิดติดล่าง · การ์ดความหายากย่อ · ปณิธานพับ · คำอธิบายย่อ =====
