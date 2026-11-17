@@ -28188,6 +28188,43 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'🌌',t:'ก้าวข้ามสา�
 // ============ v18.7.1 · คู่มือ/คัมภีร์: หอบรรพกาลและประตูนวนิยาย ============
 function kalTailHtml(){return '<div class="rlmel" style="margin-top:8px"><b>🏛️ ปลายทางของกัลป์ที่เก้า</b><br><span class="tag2">ระหว่างกัลป์มี 🔮 เหตุการณ์เศษความทรงจำ (เลือก "จำ" ได้เศษ · เลือก "ปล่อย" ไม่ได้เศษ) · ก้าวขึ้นเหนือกาลเวลาแล้วเข้า <b>หอบรรพกาล</b> เลือกของฝากจากแต่ละกัลป์ไปชีวิตหน้า (3 อย่าง + เศษความทรงจำ สูงสุด 9) · แล้วถึง <b>📖 ประตูนวนิยาย</b> ที่เปิดบานตามวิถี: 🛡️ ผู้พิทักษ์ (กรรมดี +100 หรือเคยเป็นผู้พิทักษ์) · 😈 ผู้ลบหน้ากระดาษ (กรรมชั่ว −100 หรือเคยเป็นมาร) · 🍃 ผู้ปล่อยวาง (ปล่อยความทรงจำ 3 ครั้ง) · 📖 ผู้จดจำ (จำ 3 ครั้ง) · 🌌 ก้าวข้ามสามภพ (ได้เสมอ)</span></div>'}
 try{SYS_GUIDE.push({s:'world',nw:1,ic:'🏛️',t:'หอบรรพกาลและประตูนวนิยาย',go:'openKalpa',d:'ปลายทางของกัลป์ที่เก้า: ระหว่างกัลป์เจอ 🔮 เหตุการณ์เศษความทรงจำ (จำ = ได้เศษ · ปล่อย = ไม่ได้เศษ แต่นับเป็นวิถีผู้ปล่อยวาง) · ก้าวขึ้นเหนือกาลเวลาแล้วเข้า 🏛️ หอบรรพกาล เลือกของฝากให้ชีวิตหน้าได้ 3 อย่าง + 1 ต่อเศษความทรงจำ (สูงสุด 9) · จากนั้นเลือกประตูตามวิถีที่เดินมา ประตูที่ได้ให้โบนัสชีวิตหน้าต่างกัน · 📖 เปิดหน้าใหม่ (ไปเกิดโลกอื่น) ยังไม่เปิด'})}catch(e){}
+
+// ============ v18.8 · หอบรรพชน: เลขลำดับใหญ่ + ป้ายผู้ก่อตั้ง 1-3 + อนิเมชันเข้า ============
+{const st=document.createElement('style');st.textContent=`
+.vtab{--i:0;animation:vxRise .55s calc(var(--i)*70ms) cubic-bezier(.2,.9,.3,1) both}
+@keyframes vxRise{from{opacity:0;transform:translateY(22px) scale(.96)}to{opacity:1;transform:none}}
+.vtab .vto{font-size:10.5px;letter-spacing:.14em;opacity:.8}
+.vrk{font-family:Georgia,'Times New Roman',serif;font-size:34px;line-height:1.05;font-weight:800;margin:2px 0 4px;background:linear-gradient(#f3e0a2,#b98c2c 60%,#7c5a14);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 0 transparent;filter:drop-shadow(0 1px 0 rgba(0,0,0,.6))}
+.vtab.vtb .vrk{font-size:28px}
+.vtabs{align-items:start}.vpod{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 4px;align-items:stretch}
+.vpod .vtab.r1{grid-column:1/3;padding-top:22px;min-height:190px;border-width:3px;border-color:#f0cd6a;background:repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 2px,transparent 2px 7px),radial-gradient(120% 90% at 50% 0,#5a431c,#241a0c 70%)!important;box-shadow:0 5px 0 #000,0 0 22px rgba(240,205,106,.28)}
+.vpod .vtab.r1 .vrk{font-size:56px;background:linear-gradient(#fff2b8,#e8c25a 45%,#9a6f17);-webkit-background-clip:text;background-clip:text}
+.vpod .vtab.r1 .vtn{font-size:19px}
+.vpod .vtab.r2{border-color:#cdd3db;box-shadow:0 5px 0 #000,0 0 14px rgba(205,211,219,.2)}
+.vpod .vtab.r2 .vrk{background:linear-gradient(#fff,#cdd3db 50%,#7f8793);-webkit-background-clip:text;background-clip:text;font-size:44px}
+.vpod .vtab.r2::after{border-color:rgba(205,211,219,.4)}
+.vpod .vtab.r3{border-color:#c98a52;box-shadow:0 5px 0 #000,0 0 14px rgba(201,138,82,.25)}
+.vpod .vtab.r3 .vrk{background:linear-gradient(#ffd9b0,#c98a52 50%,#7a4a22);-webkit-background-clip:text;background-clip:text;font-size:44px}
+.vpod .vtab.r3::after{border-color:rgba(201,138,82,.4)}
+.vfd{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:.12em;white-space:nowrap;padding:1px 8px;border-radius:9px;border:1px solid currentColor;background:rgba(0,0,0,.35)}
+.r1 .vfd{color:#f0cd6a}.r2 .vfd{color:#cdd3db}.r3 .vfd{color:#c98a52}
+.vpod .vtab.r2 .vto,.vpod .vtab.r3 .vto{margin-top:12px}.vpod .vtab.r1 .vto{margin-top:8px}
+.vpod .vtab.r1::before,.vpod .vtab.r2::before{content:"";position:absolute;top:0;bottom:0;left:-60%;width:36%;background:linear-gradient(100deg,transparent,rgba(255,240,180,.38),transparent);transform:skewX(-18deg);animation:vxShine 7s 1.2s infinite;pointer-events:none;z-index:1}
+.vpod .vtab.r2::before{background:linear-gradient(100deg,transparent,rgba(235,240,255,.28),transparent);animation-delay:3s;animation-duration:9s}
+@keyframes vxShine{0%{left:-60%}22%,100%{left:140%}}
+.vpod .vtab.r3{animation:vxRise .55s calc(var(--i)*70ms) cubic-bezier(.2,.9,.3,1) both,vxGlow 4s 1s ease-in-out infinite}
+@keyframes vxGlow{50%{box-shadow:0 5px 0 #000,0 0 22px rgba(201,138,82,.45)}}
+.vtab.mine{animation:vxRise .55s calc(var(--i)*70ms) cubic-bezier(.2,.9,.3,1) both,vxMine 1.4s .9s 2 ease-in-out}
+@keyframes vxMine{50%{box-shadow:0 4px 0 #000,0 0 0 5px #e8c25a99,0 0 24px #e8c25a66}}
+.vpod .stk.lit,.vtab.mine .stk.lit{position:relative}
+.vpod .stk.lit::before,.vtab.mine .stk.lit::before{content:"";position:absolute;left:50%;bottom:100%;width:5px;height:12px;margin-left:-2px;border-radius:50%;background:rgba(255,255,255,.35);filter:blur(2.5px);animation:vxSmoke 3.2s infinite ease-out}
+@keyframes vxSmoke{0%{opacity:0;transform:translate(0,0) scale(.6)}25%{opacity:.7}100%{opacity:0;transform:translate(6px,-22px) scale(1.6)}}
+@media (prefers-reduced-motion:reduce){.vtab,.vpod .vtab::before,.vpod .stk.lit::before,.vtab.mine .stk.lit::before{animation:none!important}}
+`;document.head.appendChild(st);
+ const deco=()=>{try{const m=$('modal'),box=m&&m.querySelector('.vtabs');if(!box||box.dataset.dec)return;box.dataset.dec=1;const tabs=[...box.querySelectorAll('.vtab')];
+  tabs.forEach((t,i)=>{const o=+t.dataset.o,vto=t.querySelector('.vto');t.style.setProperty('--i',Math.min(i,14));if(vto){vto.textContent='ลำดับที่';vto.insertAdjacentHTML('afterend',`<div class="vrk">${o}</div>`)}if(i<3){t.classList.add('r'+(i+1));t.insertAdjacentHTML('afterbegin','<span class="vfd">ผู้ก่อตั้งหอ</span>')}else t.classList.add('vtb')});
+  if(tabs.length){const pod=document.createElement('div');pod.className='vpod';tabs.slice(0,3).forEach(t=>pod.appendChild(t));box.prepend(pod)}}catch(e){}};
+ const _w=window.vipWall;window.vipWall=async function(){const r=await _w.apply(this,arguments);deco();return r}}
 </script>
 </body>
 </html>
