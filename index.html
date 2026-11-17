@@ -19938,7 +19938,8 @@ function qmPlay(){return{ic:paused?'▶':'⏸',t:paused?'หยุดอยู�
  {ic:'🎂',t:'เล่นถึงอายุ '+(Math.floor(S.age/10)*10+10),s:'หยุดเมื่อถึงวัยถัดไป',f:()=>qmPlayFor(Math.floor(S.age/10)*10+10-S.age)},
  {sep:1},
  {ic:'⭐',t:'หยุดเมื่อมีเหตุการณ์สำคัญ',tog:qmApz(),keep:1,f:()=>{LS.set('murim_apz',qmApz()?0:1)}},
- {ic:'❤️',t:'หยุดเมื่อพลังชีวิตต่ำ',s:'ต่ำกว่า 25%',tog:LS.get('murim_apzhp',0),keep:1,f:()=>{LS.set('murim_apzhp',LS.get('murim_apzhp',0)?0:1)}}]}}
+ {ic:'❤️',t:'หยุดเมื่อพลังชีวิตต่ำ',s:'ต่ำกว่า 25%',tog:LS.get('murim_apzhp',0),keep:1,f:()=>{LS.set('murim_apzhp',LS.get('murim_apzhp',0)?0:1)}},
+ {ic:'🐢',t:'แดนเทพ: เวลาไหลทีละปี',s:'ปิดการข้ามเวลาหลายร้อย–หมื่นปี',tog:LS.get('murim_xone',0),keep:1,f:()=>{LS.set('murim_xone',LS.get('murim_xone',0)?0:1)}}]}}
 // ---------- 🎒 กระเป๋า ----------
 const QM_USE={hp:{ok:()=>S.hp<S.maxHp,go:()=>{S.hp=Math.min(S.maxHp,S.hp+80);log('🎒 💊 กินยาสมานแผล พลังชีวิต +80','good')},why:'เลือดเต็มอยู่'},
  cure:{ok:()=>!!S.chronic,go:()=>{log(`🎒 🧪 ใช้ยาถอนพิษ — หายจาก${S.chronic.n}`,'good');S.chronic=null},why:'ไม่ได้ป่วย'},
@@ -31109,6 +31110,10 @@ window._lifeTbl={PV,LE,LS,LW,LJ,LEDU,Ls,lOn,lRunE,lifeYear};
   try{log(`🔁 <b>เกิดใหม่ด้วยดวงเดิม</b> — ชีวิตก่อนหน้าจบตั้งแต่ ${age} ขวบ (${cause}) จึงได้เกิดใหม่ฟรีด้วยดวงเดิม (ครั้งเดียวต่อดวง)`,'myth',true)}catch(e){}
   return true}}catch(e){console.error(e)}return _cdRB.apply(this,arguments)}}
 
+
+// แดนเทพ: ปุ่ม ×1 ต้องไม่ข้ามเวลาจนตายแบบไม่ตั้งตัว — (1) ตั้งค่า "เวลาไหลทีละปี" ได้ในเมนูด่วน (2) ก้าวไม่เกินหนึ่งในสามของอายุขัยที่เหลือ จะได้มีเวลาเตรียมตัว
+{const _xsG=xStep;xStep=function(){const sealed=!!(S&&S.xseal>0);const v=_xsG.apply(this,arguments);try{if(S&&!sealed){if(LS.get('murim_xone',0))return 1;
+ const left=Math.round((typeof lifeMax==='function'?lifeMax():S.lifespan||0)-S.age);if(left>0&&v>3){const m=Math.max(1,Math.floor(left/3));if(v>m)return m}}}catch(e){}return v}}
 </script>
 </body>
 </html>
