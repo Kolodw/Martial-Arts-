@@ -31445,6 +31445,74 @@ function dot(){try{const b=$('bagBtn');if(b)b.classList.toggle('vltDot',!!(S&&S.
 setInterval(()=>{try{if(!S||!S.alive){cur=null;return}if(cur&&!(modalOpen&&$('modal').dataset.k==='pawin'))cur=null;show();dot()}catch(e){}},1500);
 {const _obW=openBag;openBag=function(){const r=_obW.apply(this,arguments);try{const b=document.querySelector('#modal [data-vlt]'),n=pending().length;if(b&&n){b.innerHTML=`🗝️ คลังสมบัติ (${(S.vault||[]).length} ชิ้น) · <span style="color:#ffd23f">✨ มีของประมูลรอใช้ ${n}</span>`}}catch(e){}return r}}
 })()}catch(e){console.error(e)}
+
+// ===================== ซิงค์ข้อมูลผู้เล่นทั้งบัญชีข้ามเครื่อง (เฉพาะบัญชีที่เชื่อม Google) =====================
+// เก็บทุกคีย์ murim_* ที่เป็นความคืบหน้า (สมุดตำนาน ความสำเร็จ ตำนานสายเลือด กรอบ ฉายา ค่าสถิติ ฯลฯ) เป็นก้อนเดียวบนเซิร์ฟเวอร์ · เซฟชีวิตทั้ง 5 ช่องอัปผ่าน csave
+// รวมข้อมูลแบบไม่ทับกัน: มีฝั่งเดียว→เอามา · ลิสต์→รวม · ตัวเลข→เอาค่าสูงสุด · จริง/เท็จ→OR · ออบเจ็กต์→รวมทีละคีย์ · ค่าตั้งค่าเครื่อง/ตัวตน/ของใช้ครั้งเดียว ไม่ซิงค์
+try{(()=>{
+const EXC=/^murim_(pid|ctok|vid|admk|adm_\w*|admtab|gpull|cmeAsk|prebak|mig\w*|push\w*|resume|cloudT|lastLook|lastcfg|seen|annX|annSeen|drafts|lifeq|bagq|forceBorn|kidpity|abtilt|will|flog_\d+|arc|arc_\w+|bak_\d+|save|save_\d+|rgsnap_\w+|mnlast_\w+|mnc|mncol|mncolV|lbrd|lbrp|vip\w*|supd|spec|slotlbl|ui9|lastrk|lastsys|pst|psh|theme|lang|fs|uiz|gfx|vfx|glow|v[a-z]?|sfx|vib|scene|scn|dock|tabui|isl\w*|bgm|track|amb|gmin|pace|automin|brk|apn|apz|apzhp|story|chsum|rlmpop|hidelaw|nothink|chlock|chmin|ch2|fate|love|wlmode|mtoff|lifepub|nsp|mwhmin|mwwait|pv_noask)$/;
+const PS={linked:null,busy:false,last:0,retry:0,lh:'',need:0,warned:0,sh:LS.get('murim_psh',{})||{}};
+PS.last=+LS.get('murim_pst',0)||0;
+const hash=s=>{let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return h+':'+s.length};
+const b64=u=>{let s='';for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(s)};
+const unb64=t=>Uint8Array.from(atob(t),c=>c.charCodeAt(0));
+async function gz(str){if(typeof CompressionStream==='undefined')return{d:str,z:0};const r=await new Response(new Blob([str]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer();return{d:b64(new Uint8Array(r)),z:1}}
+async function ungz(d,z){if(!z)return d;return await new Response(new Blob([unb64(d)]).stream().pipeThrough(new DecompressionStream('gzip'))).text()}
+function local(){const k={};try{for(let i=0;i<localStorage.length;i++){const n=localStorage.key(i);if(!n||n.indexOf('murim_')!==0||EXC.test(n))continue;const v=localStorage.getItem(n);if(v!=null&&v.length<1500000)k[n]=v}}catch(e){}return sorted(k)}
+function sorted(o){const r={};Object.keys(o).sort().forEach(k=>r[k]=o[k]);return r}
+const isO=x=>x&&typeof x==='object'&&!Array.isArray(x);
+function mv(a,b){if(a==null)return b;if(b==null)return a;
+ if(Array.isArray(a)&&Array.isArray(b)){const seen=new Set(a.map(x=>JSON.stringify(x))),out=a.slice();for(const x of b){const j=JSON.stringify(x);if(!seen.has(j)){seen.add(j);out.push(x)}}return out.length>3000?out.slice(0,3000):out}
+ if(isO(a)&&isO(b)){const o={};for(const k of Object.keys(a))o[k]=k in b?mv(a[k],b[k]):a[k];for(const k of Object.keys(b))if(!(k in a))o[k]=b[k];return o}
+ if(typeof a==='number'&&typeof b==='number')return Math.max(a,b);
+ if(typeof a==='boolean'&&typeof b==='boolean')return a||b;
+ if(typeof a==='string'&&!a)return b;
+ return a}
+function mergeB(loc,rem){const out={};for(const k of new Set(Object.keys(loc).concat(Object.keys(rem||{})))){if(EXC.test(k))continue;const a=loc[k],b=rem&&rem[k];
+  if(b==null||typeof b!=='string'){out[k]=a;continue}if(a==null){out[k]=b;continue}if(a===b){out[k]=a;continue}
+  try{out[k]=JSON.stringify(mv(JSON.parse(a),JSON.parse(b)))}catch(e){out[k]=a}}return sorted(out)}
+function safeNow(){try{const t=$('title');return !!(t&&t.classList.contains('on'))&&(!modalOpen||$('modal').dataset.k==='update')}catch(e){return false}}
+function fit(k){let s=JSON.stringify({v:1,k});if(s.length<=4000000)return k;const ks=Object.keys(k).sort((x,y)=>k[y].length-k[x].length);const o=Object.assign({},k);for(const n of ks){delete o[n];if(JSON.stringify({v:1,k:o}).length<=4000000)break}return o}
+async function slots(){for(const n of [1,2,3,4,5]){const key=n>1?'murim_save_'+n:'murim_save';let raw=null;try{raw=localStorage.getItem(key)}catch(e){}if(!raw||raw.length<50)continue;const h=hash(raw);if(PS.sh[n]===h)continue;let d;try{d=btoa(unescape(encodeURIComponent(raw)))}catch(e){continue}if(d.length>880000)continue;
+  try{await api('csave',{tk:ctok,d,sl:n});PS.sh[n]=h;LS.set('murim_psh',PS.sh)}catch(e){if(e&&(e.q||e.http===403||e.http===503))return}}}
+async function sync(force){
+ if(PS.busy||typeof onlineOK==='undefined'||!onlineOK)return false;
+ if(!force){if(typeof PFST==='undefined'||PFST===null||!PFST.g)return false;if(Date.now()<PS.retry||Date.now()-PS.last<90000)return false}
+ PS.busy=true;
+ try{
+  const loc=local();let j;
+  try{j=await api('psget',{tk:ctok})}catch(e){const m=String(e&&e.message);if(m==='nolink'||m==='token'){PS.linked=false;PS.retry=Date.now()+3600e3}return false}
+  PS.linked=true;let rawR='',rem=null;
+  if(j&&j.d){try{rawR=await ungz(j.d,j.z);const o=JSON.parse(rawR);rem=o&&o.k?o.k:null}catch(e){rem=null;rawR=''}}
+  const merged=fit(rem?mergeB(loc,rem):loc),str=JSON.stringify({v:1,k:merged});
+  const chg=Object.keys(merged).filter(k=>loc[k]!==merged[k]);
+  if(!rem||str!==rawR){const z=await gz(str);await api('psput',{tk:ctok,d:z.d,z:z.z,n:Object.keys(merged).length})}
+  if(chg.length){if(safeNow()){chg.forEach(k=>{try{localStorage.setItem(k,merged[k])}catch(e){}});PS.need=0;
+    try{sessionStorage.setItem('pf_note',String(chg.length))}catch(e){}
+    const last=+sessionStorage.getItem('pf_rl')||0;if(Date.now()-last>60000){try{sessionStorage.setItem('pf_rl',String(Date.now()))}catch(e){}location.reload();return true}}
+   else{PS.need=1;if(!PS.warned){PS.warned=1;try{toast('☁️ พบข้อมูลบัญชีจากเครื่องอื่น — จะรวมให้ตอนกลับหน้าแรก')}catch(e){}}}}
+  PS.lh=hash(JSON.stringify({v:1,k:local()}));
+  PS.last=Date.now();LS.set('murim_pst',PS.last);
+  try{await slots()}catch(e){}
+  return true
+ }catch(e){return false}finally{PS.busy=false}}
+const dirty=()=>{try{return hash(JSON.stringify({v:1,k:local()}))!==PS.lh}catch(e){return false}};
+window.psNow=async()=>{try{toast('☁️ กำลังซิงค์ข้อมูล…')}catch(e){}PS.retry=0;const ok=await sync(true);try{toast(ok||PS.linked?'☁️ ซิงค์ข้อมูลบัญชีเรียบร้อย':'ซิงค์ไม่สำเร็จ ลองใหม่อีกครั้ง')}catch(e){}try{if(typeof gBoxFill==='function')gBoxFill()}catch(e){}};
+window._ps=PS;
+// ตัวจับเวลา: เช็กทุก 30 วิ — ถ้ามีข้อมูลเปลี่ยนและเกิน 90 วิ → ซิงค์ · ครบ 10 นาที → ดึงของใหม่จากเครื่องอื่น · ถ้ามีของรอรวมและกลับหน้าแรกแล้ว → รวมทันที
+setInterval(()=>{try{if(document.hidden)return;if(PS.need&&safeNow()&&!PS.busy){sync(true);return}
+ if(Date.now()-PS.last>600000||dirty())sync(false)}catch(e){}},30000);
+setTimeout(()=>sync(false),6000);setTimeout(()=>sync(false),20000);
+document.addEventListener('visibilitychange',()=>{try{if(document.hidden){if(dirty()&&Date.now()-PS.last>20000){PS.last=0;sync(false)}}else if(Date.now()-PS.last>120000){PS.last=0;sync(false)}}catch(e){}});
+addEventListener('pagehide',()=>{try{if(dirty()&&Date.now()-PS.last>20000){PS.last=0;sync(false)}}catch(e){}});
+// เพิ่งเชื่อม Google สำเร็จ → ซิงค์ทันที
+{const _gg=gGot;gGot=async function(){const r=await _gg.apply(this,arguments);setTimeout(()=>{PS.retry=0;PS.last=0;sync(true)},1800);return r}}
+// หน้าโปรไฟล์ → กล่อง Google: แสดงสถานะซิงค์ + ปุ่มซิงค์ตอนนี้
+{const _gb=gBoxFill;gBoxFill=async function(){const r=await _gb.apply(this,arguments);try{const bx=$('gBox');if(bx&&PFST&&PFST.g&&!bx.querySelector('.psRow')){const t=PS.last?new Date(PS.last).toLocaleString('th-TH',{hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}):'ยังไม่เคย';
+  bx.insertAdjacentHTML('afterbegin',`<div class="psRow" style="margin:0 0 8px;padding:8px 10px;border-radius:10px;background:rgba(120,160,255,.12);font-size:13px;line-height:1.5">☁️ <b>ซิงค์ข้อมูลผู้เล่นข้ามเครื่อง</b><br><span class="tag2">ความสำเร็จ สมุดตำนาน ตำนานสายเลือด กรอบ ฉายา สถิติ และเซฟชีวิตทั้ง 5 ช่อง ตามบัญชีนี้ไปทุกเครื่อง · ซิงค์ล่าสุด ${t}</span><button class="gbtn" style="width:100%;margin-top:6px" onclick="psNow()">🔄 ซิงค์ตอนนี้</button></div>`)}}catch(e){}return r}}
+// หลังรวมข้อมูลแล้วรีโหลด: แจ้งผล
+setTimeout(()=>{try{const n=sessionStorage.getItem('pf_note');if(n){sessionStorage.removeItem('pf_note');toast(`☁️ ซิงค์ข้อมูลจากบัญชีแล้ว (${n} รายการ)`)}}catch(e){}},2500);
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>

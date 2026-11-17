@@ -317,7 +317,7 @@ const cip = req => (String(req.headers['x-real-ip'] || '') || String(req.headers
 // ต่อ IP ต่อนาที: เกิน SOFT ตอบ 429 · เกิน HARD แบน 30 นาที · คำสั่งที่เขียนข้อความให้คนอื่นเห็นจำกัดแยก
 // เน็ตมือถือไทยใช้ IP ร่วมกัน (CGNAT) → จำกัดหลักต่อ 'ไอดีผู้เล่น' ส่วนต่อ IP เผื่อไว้สูงมาก (กันแค่ยิงถล่มจริง)
 const IP_SOFT = 8000, IP_HARD = 25000, IP_WMAX = 2000, ID_SOFT = 240, ID_WMAX = 30, NOID_SOFT = 900;
-const IP_WRITE = new Set(['say', 'bug', 'bugedit', 'mtmsg', 'pachat', 'life', 'profile', 'idea', 'fb', 'mtopen', 'meet', 'migput', 'csave', 'save', 'achfirst', 'glogin', 'gunlink', 'profack', 'pushsub']);
+const IP_WRITE = new Set(['say', 'bug', 'bugedit', 'mtmsg', 'pachat', 'life', 'profile', 'idea', 'fb', 'mtopen', 'meet', 'migput', 'csave', 'save', 'achfirst', 'glogin', 'gunlink', 'profack', 'pushsub', 'psput']);
 // รหัสแอดมิน: ใช้ ADMIN_KEY2 ถ้ามี (รหัสเก่า ADMIN_KEY ใช้ไม่ได้อีก)
 const ADM_KEY = process.env.ADMIN_KEY2 || process.env.ADMIN_KEY || '';
 const zlib = require('zlib');
@@ -1820,6 +1820,30 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       // ฝาก id/token ไว้ใน cookie ที่ตั้งจากเซิร์ฟเวอร์ (HttpOnly) — Safari ลบ localStorage ทิ้งหลังไม่ได้เข้าเว็บ 7 วัน แต่ cookie นี้อยู่ต่อ ใช้กู้เซฟผ่าน ?a=cme
       if (okId(id)) res.setHeader('Set-Cookie', 'mc=' + id + '.' + tk + '; Path=/api; Max-Age=' + 86400 * 90 + '; HttpOnly; Secure; SameSite=Lax');
       return res.json({ ok: 1 });
+    }
+    // ซิงค์ข้อมูลผู้เล่นทั้งก้อนข้ามเครื่อง (เฉพาะบัญชีที่เชื่อม Google แล้ว) — เก็บ 1 ก้อนต่อบัญชี · ต้องมี token เซฟคลาวด์ตรงกัน
+    if (a === 'psput' || a === 'psget') {
+      const tk = String(b.tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
+      if (tk.length < 8) return res.status(400).json({ err: 'bad' });
+      const [tok, gk] = await pipe([['GET', 'ctok:' + id], ['GET', 'gof:' + id]]);
+      if (!tok || tok !== tk) return res.status(403).json({ err: 'token' });
+      let linked = false; if (gk) { const cur = jp(await cmd('GET', gk)); linked = !!(cur && cur.id === id) }
+      if (!linked) return res.status(403).json({ err: 'nolink' });
+      if (a === 'psget') {
+        let v = r2Bkt() ? await r2Get(id, 'pf') : null; if (v == null) v = await cmd('GET', 'pf:' + id);
+        if (v == null) return res.json({ none: 1 });
+        const o = jp(zUnpack(v)); if (!o || !o.d) return res.json({ none: 1 });
+        return res.json({ ok: 1, d: o.d, z: o.z ? 1 : 0, t: o.t || 0, n: o.n || 0 });
+      }
+      const d = String(b.d || '');
+      if (!d || d.length > 4200000) return res.status(400).json({ err: 'big' });
+      if (!(await cmd('SET', 'pfth:' + id, 1, 'NX', 'EX', 6))) return res.status(429).json({ err: 'rate' });
+      const packed = zPack(JSON.stringify({ d, z: b.z ? 1 : 0, n: Math.min(9999, +b.n || 0), t: now })); let inR2 = false;
+      try {
+        if (r2Bkt()) { try { await r2Bkt().put(r2Key(id, 'pf'), packed, { customMetadata: { t: String(now) } }); inR2 = true } catch (e) { console.error('API_ERR psput r2', String(e && e.message || e)) } }
+        if (inR2) await cmd('DEL', 'pf:' + id); else await cmd('SET', 'pf:' + id, packed, 'EX', 86400 * 365);
+      } catch (e) { if (/OOM/i.test(String(e && e.message))) { OOM_AT = Date.now(); return res.status(503).json({ err: 'full' }) } throw e }
+      return res.json({ ok: 1, t: now });
     }
     if (a === 'profile') {
       // รูปตัวละครจากเกม (PNG 56×62) ขึ้นได้ทันที · รูปที่อัปโหลดเอง (JPEG/WebP) ต้องรอแอดมินตรวจก่อนคนอื่นจะเห็น
