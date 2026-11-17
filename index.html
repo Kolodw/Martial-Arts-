@@ -28261,6 +28261,178 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'🏛️',t:'หอบรรพกาล�
  const was=S&&S.alive,ag=S&&S.age;const r=_cdK.apply(this,arguments);try{if(was&&S&&!S.alive&&ag<6&&!S.custom)LS.set('murim_kidpity',1)}catch(e){}return r}}
 {const _slP=startLife;startLife=function(){const r=_slP.apply(this,arguments);try{if(S&&LS.get('murim_kidpity',0)){LS.del('murim_kidpity');S.flags.kidShield=1}}catch(e){}return r}}
 {const _ihP=inherit;inherit=function(){const r=_ihP.apply(this,arguments);try{if(S&&LS.get('murim_kidpity',0)){LS.del('murim_kidpity');S.flags.kidShield=1}}catch(e){}return r}}
+
+// ===================== v18.10 แต่งตัวละคร: หน้าตาใหม่ · ชุดสายมาร · ชุดสมัยใหม่ · ชุดสำเร็จรูป =====================
+try{(()=>{
+// ---- ตัวเลือกใหม่ ----
+const LK_ES=[['ปกติ'],['ตาโตประกาย'],['ตาเรียวคม'],['ตายิ้มโค้ง'],['ตาง่วงงุน'],['ตาดุตวัด'],['ตามารเรียวแดง'],['ตาเย็นชา']];
+const LK_MO=[['ปกติ'],['ยิ้มมุมปาก'],['เขี้ยวมาร'],['ลิปแดง'],['ปากม่วงมาร'],['ยิ้มกว้าง']];
+LK_MARK.push(['ตาที่สามกลางหน้าผาก'],['รอยร้าวมารบนแก้ม'],['อายไลเนอร์แดง'],['รอยสักน้ำตา'],['แผลเป็นกากบาท'],['พลาสเตอร์ปิดแผล'],['แก้มแดงเรื่อ']);
+const ST0=LK_STY.length; // 11
+LK_STY.push(['เกราะมารหนามไหล่'],['เสื้อคลุมมารคอตั้ง'],['ชุดลายเพลิงนรก'],['ชุดโซ่ตรวน'],['เกราะกระดูก'],['ชุดนักบวชอักขระมาร'],['ชุดจักรพรรดิมาร']);
+CR_RB.push(['ดำนิล','#16121c'],['แดงโลหิต','#8a1020'],['ม่วงมาร','#2a1438'],['ขาวกระดูก','#f0ece4'],['ทองหม่น','#a8883a'],['เขียวพิษ','#1e3a24'],['น้ำเงินราตรี','#141a30']);
+LK_TRIM.push(['เขียวพิษ','#5ad08a'],['ม่วงเรือง','#b05aff'],['แดงเพลิง','#e8402a']);
+// ชุดสมัยใหม่: ใช้ชุดของยุคปัจจุบันทั้งหมด + เพิ่มอีก 15 ชุด
+const MWX=MW_OUTFITS.concat([
+ {n:'สูทขาวงานเลี้ยง',g:'m',robe:'#1e1e24',trim:'#1e1e24',coat:'#f0f0f4',coatL:'#ffffff',pant:'#f0f0f4',belt:'#f0f0f4'},
+ {n:'ฮู้ดดี้ดำ กางเกงวอร์ม',g:'m',robe:'#22222a',hat:'hood',hoodC:'#1a1a22',pant:'#3a3a44',belt:'#22222a'},
+ {n:'เสื้อบอมเบอร์เขียวขี้ม้า',g:'m',robe:'#e8e4dc',coat:'#4a5a3a',coatL:'#6a7a5a',pant:'#2a2a34',belt:'#2a2a34'},
+ {n:'เสื้อกล้ามขาว ยีนส์',g:'m',robe:'#f4f4f4',pant:'#4a6a9a',belt:'#4a6a9a'},
+ {n:'เสื้อลายพราง',g:'m',robe:'#5a6a3a',patch:1,pant:'#4a5a3a',belt:'#2a2a1a'},
+ {n:'เสื้อยืดดำสกรีนลาย',g:'m',robe:'#1e1e24',emblem:'#e8c040',pant:'#3a4a6a',belt:'#1e1e24'},
+ {n:'ชุดช่างยีนส์',g:'m',robe:'#4a6a9a',pant:'#4a6a9a',belt:'#6a4a2a',patch:1},
+ {n:'เสื้อนักบอลแดง',g:'m',robe:'#c8283a',stripe:1,emblem:'#ffffff',pant:'#f4f4f4',belt:'#c8283a'},
+ {n:'สเวตเตอร์ครีม สแล็ค',g:'m',robe:'#e8dcc0',pant:'#3a3a44',belt:'#3a3a44'},
+ {n:'โค้ทดำยาว',g:'m',robe:'#3a3a44',coat:'#141418',coatL:'#2a2a30',pant:'#1a1a20',belt:'#1a1a20'},
+ {n:'เดรสม่วงราตรี',g:'f',robe:'#4a1a6a',skirt:'#4a1a6a',sash:'#c8a040',belt:'#3a1050'},
+ {n:'ชุดเมด',g:'f',robe:'#1e1e24',skirt:'#1e1e24',trim:'#f4f4f4',sash:'#f4f4f4',belt:'#f4f4f4'},
+ {n:'ฮู้ดขาว กระโปรงพลีทดำ',g:'f',robe:'#f4f4f4',hat:'hood',hoodC:'#e8e8e8',skirt:'#1e1e24',belt:'#1e1e24'},
+ {n:'แจ็กเก็ตยีนส์ เดรสขาว',g:'f',robe:'#fafafa',coat:'#4a6a9a',coatL:'#6a8aba',skirt:'#fafafa',belt:'#fafafa'},
+ {n:'ชุดกีฬาหญิงสีฟ้า',g:'f',robe:'#4a9ad8',pant:'#1e2a4a',stripe:1,belt:'#4a9ad8',noSkirt:1}]);
+const LK_MOF=[['ไม่ใส่ (ชุดตามแบบชุด)']].concat(MWX.map(o=>[o.n]));
+// ชุดสำเร็จรูป: [ชื่อ, แบบชุด, สีชุด, สีขลิบ, สีกางเกง, ของสวมศีรษะ, เครื่องประดับ, แบบตา, ปาก, ร่องรอย]
+const S_=ST0;
+const SET_D=[
+ ['จอมมารโลหิต',S_,'#16121c','#c8183a','#1e1a24','horn',0,6,2,7],
+ ['ทูตเพลิงนรก',S_+2,'#2a1010','#e8402a','#1e1a24',null,0,5,1,10],
+ ['นักโทษแห่งอเวจี',S_+3,'#4a4a54','#8a8a96','#2a2a30',null,0,7,0,11],
+ ['ราชันกระดูก',S_+4,'#1e1a24','#e8e0d0','#16121c','x:gcrown',0,6,2,0],
+ ['นักบวชอักขระมาร',S_+5,'#2a1438','#c8183a','#16121c','hood',7,7,4,12],
+ ['จักรพรรดิมารนิรันดร์',S_+6,'#16121c','#c8a040','#16121c','horn',1,6,1,10],
+ ['เงามารไร้นาม',S_+1,'#141a30','#b05aff','#16121c','veil',0,7,0,0],
+ ['ปีศาจจิ้งจอกเก้าหาง',S_+1,'#f0ece4','#c8183a','#2a2030','x:fox',2,2,3,12],
+ ['มารกลืนวิญญาณ',S_+5,'#1e3a24','#5ad08a','#16121c',null,0,6,2,7],
+ ['ขุนพลมารเกราะดำ',S_,'#2a2a34','#c8a040','#1e1a24','band',0,5,0,14],
+ ['ธิดามารบุปผาโลหิต',S_+2,'#8a1020','#ff8ab0','#2a1018','flower',2,1,3,4],
+ ['นักฆ่าเงาราตรี',5,'#16121c','#b05aff','#16121c','x:fox',0,2,0,8],
+ ['มารผู้ถูกจองจำ',S_+3,'#2a1438','#c8ccd6','#16121c',null,0,7,2,11],
+ ['เจ้าแห่งสุสาน',S_+4,'#2a2a34','#e8e0d0','#1e1a24','hood',7,6,0,15],
+ ['ราชินีมารม่วง',S_+6,'#2a1438','#b05aff','#2a1438','x:circlet',2,5,4,12],
+ ['มารเพลิงผลาญฟ้า',S_+2,'#16121c','#e8402a','#16121c','horn',0,6,2,10],
+ ['สาวกเงาโลหิต',S_+1,'#8a1020','#16121c','#16121c','hood',0,7,3,7],
+ ['ปีศาจหน้ากากเหล็ก',S_,'#4a4a54','#c8183a','#2a2a30',null,0,6,2,14],
+ ['ผู้คุมนรกชั้นเก้า',S_+3,'#16121c','#e8402a','#1e1a24','band',0,5,0,10],
+ ['มารพิษพันปี',S_+5,'#1e3a24','#5ad08a','#1e3a24','veil',0,6,4,11],
+ ['บุตรแห่งมารสวรรค์',S_+6,'#8a1020','#c8a040','#16121c','x:gcrown',1,5,1,7],
+ ['จอมมารขาวผ่อง',S_+1,'#f0ece4','#16121c','#f0ece4','horn',0,7,2,10],
+ ['หญิงงามเลือดเย็น',S_+1,'#16121c','#c8183a','#16121c','x:pin',2,7,3,5],
+ ['ทหารผีไร้วิญญาณ',S_+4,'#4a4a54','#8a8a96','#2a2a30','bamboo',0,4,0,14],
+ ['ปราชญ์มารคัมภีร์ต้องห้าม',S_+5,'#141a30','#b05aff','#141a30','taoist',8,7,1,12],
+ ['ราชามังกรมาร',S_,'#8a1020','#c8a040','#16121c','horn',1,5,2,10],
+ ['เทพธิดาตกสวรรค์',S_+6,'#f0ece4','#16121c','#2a1438','x:circlet',2,1,4,13],
+ ['มารสุราเมามาย',S_+2,'#5a1020','#e8402a','#2a1018',null,4,4,1,16],
+ ['เพชฌฆาตโซ่เหล็ก',S_+3,'#16121c','#8a8a96','#16121c','mask',0,6,0,14],
+ ['มารบำเพ็ญในถ้ำ',S_+5,'#2a2a34','#c8183a','#1e1a24',null,7,4,0,7],
+ ['องครักษ์มารทองคำ',S_+6,'#a8883a','#16121c','#1e1a24','band',0,5,0,0],
+ ['มารสาวพิษผีเสื้อ',S_+2,'#2a1438','#5ad08a','#2a1438','flower',2,1,3,12],
+ ['ผู้กลืนดาว',S_+4,'#141a30','#5ad08a','#141a30',null,0,6,2,10],
+ ['เงาแห่งการทรยศ',S_+1,'#2a2a34','#c8183a','#16121c','hood',0,5,1,11],
+ ['มารผู้กลับใจ',S_+3,'#f0ece4','#c8a040','#4a4a54',null,7,3,1,13]];
+const SET_C=[
+ ['กระบี่พเนจร',4,'#5a4a3a','#c8a040','#3a3348','straw',4,2,1,0],
+ ['บัณฑิตหยกขาว',2,'#f0ece4','#6ad0a0','#d8d4cc','x:pin',5,1,1,0],
+ ['นักพรตเมฆา',1,'#a8d0f0','#f4f0e6','#d8d4cc','taoist',8,4,0,3],
+ ['ขุนพลพิทักษ์แคว้น',3,'#2a3a6a','#c8a040','#2a3050','band',0,5,0,1],
+ ['ภิกษุผู้ตื่นรู้',6,'#e0802a','#c8283a','#4a3426',null,7,4,1,3],
+ ['องค์ชายรัชทายาท',7,'#c8a040','#c8283a','#1e1a24','x:gcrown',1,2,1,0],
+ ['นางรำบุปผาจันทร์',8,'#ff8ab0','#f4f0e6','#d8d4cc','flower',2,1,3,4],
+ ['พรานแห่งขุนเขา',9,'#7a5032','#e8e4dc','#4a3426',null,4,5,0,6],
+ ['ทหารชายแดน',10,'#4a8a4a','#6a4a2a','#4a3426','bamboo',0,2,0,1],
+ ['เซียนกระบี่หิมะ',1,'#f0ece4','#5b8def','#f0ece4','x:circlet',0,7,0,0],
+ ['หมอเทวดา',2,'#6fbf73','#f4f0e6','#d8d4cc','x:pin',1,3,1,0],
+ ['นักดนตรีขลุ่ยหยก',0,'#a8d0f0','#4aa86a','#d8d4cc','x:ribbon',6,4,1,5],
+ ['จอมโจรใจธรรม',5,'#2a2a34','#c8283a','#1e1a24','band',4,5,1,1],
+ ['นักพรตเต๋าสายฟ้า',1,'#2a3a6a','#e8c040','#2a3050','taoist',7,2,0,3],
+ ['ธิดาเจ้าสำนัก',8,'#d84a7a','#c8a040','#f4f0e6','x:circlet',2,1,3,4],
+ ['ผู้เฒ่าเฝ้าหอคัมภีร์',2,'#7a7a86','#f4f0e6','#4a4a54',null,8,4,0,0],
+ ['เซียนสุราพเนจร',4,'#7a5032','#c8a040','#4a3426','straw',4,3,5,16],
+ ['เจ้าแห่งพยัคฆ์',9,'#c8643a','#16121c','#4a3426',null,0,5,2,1],
+ ['ศิษย์สำนักกระบี่',0,'#f4f0e6','#5b8def','#2a3050','band',0,2,1,0],
+ ['จักรพรรดิแห่งยุทธภพ',7,'#c8283a','#c8a040','#1e1a24','x:gcrown',1,5,1,0]];
+const ph=[['— เลือกชุด —']];
+const LK_SD=ph.concat(SET_D.map(x=>[x[0]])),LK_SC=ph.concat(SET_C.map(x=>[x[0]]));
+// ---- ฟิลด์ในหน้าออกแบบ ----
+LK_F.face.push(['es','แบบตา','head',()=>LK_ES],['mo','ปาก','head',()=>LK_MO]);
+LK_F.wear.splice(1,0,['mof','ชุดสมัยใหม่ (ทับแบบชุด)','body',()=>LK_MOF]);
+LK_F.set=[['set_d','😈 ชุดสายมาร','body',()=>LK_SD],['set_c','⚔️ ชุดยุทธภพ · เซียน','body',()=>LK_SC]];
+LK_TABS.splice(3,0,['set','🎽','ชุดสำเร็จรูป']);
+const NK=['es','mo','mof','set_d','set_c'];
+const _li=lkInit;lkInit=function(){_li.apply(this,arguments);NK.forEach(k=>{if(C[k]==null)C[k]=0})};
+const _lf=lkFromC;lkFromC=function(){const L=_lf.apply(this,arguments);L.es=C.es|0;L.mo=C.mo|0;L.mof=C.mof|0;return L};
+const _la=lookApply;lookApply=function(o,L,age,gd,fac){const r=_la.apply(this,arguments);try{if(r&&L&&!r.beast&&age>=12){const k=r.ck||(r.ck={});k.es=L.es|0;k.mo=L.mo|0;
+  if((L.sty|0)>=ST0&&!r.sash)r.sash=r.trim||'#c8183a';const m=L.mof|0;if(m>0&&MWX[m-1]){Object.assign(r,mwOF(MWX[m-1]));k.sty=0;k.mof=m;if(MWX[m-1].hat==='hood')k.hw2=null}}}catch(e){}return r};
+const cIdx=(A,hex,nm)=>{if(!hex)return 0;let i=A.findIndex(v=>v[1]===hex);if(i<0){A.push([nm||hex,hex]);i=A.length-1}return i};
+const hwIdx=v=>{if(!v)return 0;const i=LK_HW.findIndex(x=>x[1]===v);return i<0?0:i};
+function setApply(p){C.sty=p[1];C.rb=cIdx(CR_RB,p[2]);C.tr=cIdx(LK_TRIM,p[3]);C.pt=cIdx(LK_PANT,p[4]);C.hw=hwIdx(p[5]);C.acc=p[6]|0;C.es=p[7]|0;C.mo=p[8]|0;C.mark=p[9]|0;C.mof=0}
+const _ls=lkSet;lkSet=function(k,i){if(k==='set_d'||k==='set_c'){const L=k==='set_d'?SET_D:SET_C;C.set_d=0;C.set_c=0;C[k]=i;if(i>0&&L[i-1])setApply(L[i-1]);sfx('click');crDraw();return}
+ if(k!=='g'){C.set_d=0;C.set_c=0}if(k==='sty'&&i>0)C.mof=0;return _ls.apply(this,arguments)};
+const _lr=lkRand;lkRand=function(){_lr.apply(this,arguments);try{C.es=Math.random()<.5?0:R(1,LK_ES.length-1);C.mo=Math.random()<.6?0:R(1,LK_MO.length-1);C.mof=0;C.set_d=0;C.set_c=0;crDraw()}catch(e){}};
+const _lz=lkReset;lkReset=function(){NK.forEach(k=>C[k]=0);return _lz.apply(this,arguments)};
+// ภาพตัวอย่างของชุดสำเร็จรูป: ใส่ชุดนั้นจริงแล้ววาด
+const _lt=lkThumbs;lkThumbs=function(){_lt.apply(this,arguments);try{document.querySelectorAll('#crBody canvas[data-lk^="set_"]').forEach(cv=>{const [k,i]=cv.dataset.lk.split(':');const L=k==='set_d'?SET_D:SET_C,p=L[+i-1];
+  const keep={};['sty','rb','tr','pt','hw','acc','es','mo','mark','mof'].forEach(x=>keep[x]=C[x]);let o;try{if(p)setApply(p);o=crLook()}finally{Object.assign(C,keep)}
+  const ctx=cv.getContext('2d'),sg=g,sp=PS,sf=frame;try{frame=0;g=ctx;const VW=17,ox=7.5,oy=2.6;PS=cv.width/VW;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);
+   ctx.setTransform(PS,0,0,PS,-ox*PS,-oy*PS);ctx.imageSmoothingEnabled=false;P(ox,oy,VW,40,k==='set_d'?'#2a1a2a':'#34304a');P(ox,26,VW,10,k==='set_d'?'#3a2238':'#484262');if(p)person(10,30,o,'stand')}catch(e){}finally{g=sg;PS=sp;frame=sf}})}catch(e){}};
+// ---- วาดชั้นหน้า: ตา · ปาก · ร่องรอยใหม่ · ชุดสายมาร ----
+const _p1=person0;person0=function(x,y,o,pose){const r=_p1.apply(this,arguments);
+ try{if(!o||pose==='lie'||o.beast||o.age<12||(o.float&&pose!=='sit'&&pose!=='walk'))return r;const k=o.ck||{};const es=k.es|0,mo=k.mo|0,mk=k.mark|0,sty=k.sty|0;if(!es&&!mo&&mk<10&&sty<ST0)return r;
+  const child=false,sit=pose==='sit',walk=pose==='walk';const X=Math.round(x*3),Y=Math.round(y*3),T=frame*.15,sd=(o.seed||((o.robe||'').length*7+(o.hair||'').length))%10;
+  const H=48,hw=12,hh=12,tw=16,th=18;const bob=walk?(Math.abs(Math.sin(T*3.2))>.7?-1:0):Math.round(Math.sin(T*1.6+sd)*.6);
+  const top=Y-H+(sit?9:0)+(o.old?2:0)+bob,cx=X+12,hx=cx-Math.floor(hw/2),ty=top+hh+1,ly=ty+th,bY=ty+9,ey=top+Math.floor(hh*.5),eL=hx+2,eR=hx+hw-4,my=ey+4,mx=cx-1;
+  const stn=(pose==='stand'&&!sit)?o.stance:null,as=walk?Math.round(Math.sin(T*8)*2):Math.round(Math.sin(T*1.6+sd)*.5),aL=12,aw=o.coat?5:4,lxA=cx-Math.floor(tw/2)-3-(aw-4),rxA=cx+Math.floor(tw/2)-1,defArm=!stn&&!sit&&!walk;
+  const robe=o.robe||'#888',skin=o.skin||'#f1c27d',tc=o.trim||'#c8183a',fl=Math.round(Math.sin(T*3+sd)*1),face=o.hat!=='mask',fem=o.g==='หญิง';
+  const eg=o.eyeG&&typeof eyeGlowOn==='function'&&eyeGlowOn(o);
+  // ตา
+  if(es&&face&&!eg){const ec='#2a2030',ex=o.eye||null,bl=((T*1.3+sd)%4)<.24;Q(eL-1,ey-1,4,3,skin);Q(eR-1,ey-1,4,3,skin);
+   const both=f=>{f(eL,1);f(eR,-1)};
+   if(bl&&es!==3)both(e0=>Q(e0-1,ey+1,4,1,ec));
+   else if(es===1)both((e0,s)=>{Q(e0-1,ey-1,3,3,ec);Q(e0-1,ey-1,1,1,'#fff');Q(e0+1,ey+1,1,1,'#fff');if(ex)Q(e0,ey,1,1,ex)});
+   else if(es===2)both((e0,s)=>{Q(e0-1,ey,4,1,ec);Q(e0+(s>0?0:1),ey+1,2,1,ex||ec);Q(s>0?e0+2:e0-1,ey-1,1,1,ec)});
+   else if(es===3)both(e0=>{Q(e0-1,ey+1,1,1,ec);Q(e0,ey,2,1,ec);Q(e0+2,ey+1,1,1,ec)});
+   else if(es===4)both(e0=>{Q(e0-1,ey,4,1,shd(skin,-.3));Q(e0,ey+1,2,1,ex||ec)});
+   else if(es===5)both((e0,s)=>{Q(e0,ey,2,2,ex||ec);Q(e0,ey,1,1,'#fff');Q(s>0?e0-1:e0+2,ey-1,1,1,ec);Q(s>0?e0+2:e0-1,ey+1,1,1,ec)});
+   else if(es===6)both(e0=>{Q(e0-1,ey,4,2,ex||'#c8183a');Q(e0,ey-1,1,3,'#1a0a10');Q(e0+2,ey,1,1,'#ff8a9a')});
+   else if(es===7)both(e0=>{Q(e0-1,ey,4,1,shd(skin,-.35));Q(e0,ey+1,2,1,ex||ec);Q(e0+1,ey+1,1,1,shd(ex||ec,.4))});
+   if(fem&&!bl&&es!==3&&es!==4){Q(eL-2,ey-1,1,1,ec);Q(eR+2,ey-1,1,1,ec)}}
+  // ปาก
+  const md=o.mood||'neutral';
+  if(mo&&face&&md!=='hurt'&&md!=='sad'){if(!(k.fh|0))Q(mx-2,my,6,2,skin);
+   if(mo===1){Q(mx,my,2,1,'#8a4a4a');Q(mx+2,my-1,1,1,'#8a4a4a')}
+   else if(mo===2){Q(mx-1,my,4,1,'#5a2a2a');Q(mx-1,my+1,1,1,'#fff');Q(mx+2,my+1,1,1,'#fff')}
+   else if(mo===3){Q(mx-1,my,4,1,'#d0203a');Q(mx,my+1,2,1,'#a01828')}
+   else if(mo===4){Q(mx-1,my,4,1,'#5a2a6a');Q(mx,my+1,2,1,'#3a1a4a')}
+   else if(mo===5){Q(mx-2,my,6,1,'#8a3a3a');Q(mx-1,my+1,4,1,'#8a3a3a');Q(mx-1,my,4,1,'#fff')}}
+  // ร่องรอยใหม่
+  if(mk>=10&&face){
+   if(mk===10){Q(cx-1,top+2,2,3,'#c8183a');Q(cx-1,top+3,2,1,'#ffd040')}
+   else if(mk===11){const c='#5a1a6a';Q(eL-1,ey+2,1,1,c);Q(eL,ey+3,1,2,c);Q(eL-1,ey+5,1,1,c);Q(eL+1,ey+5,1,1,c)}
+   else if(mk===12){Q(eL-2,ey-1,2,1,'#c8183a');Q(eR+2,ey-1,2,1,'#c8183a')}
+   else if(mk===13){Q(eR+1,ey+3,1,1,'#2a3a8a');Q(eR+1,ey+4,1,1,'#4a6ad0')}
+   else if(mk===14){const c='#b8605a';Q(eR,ey+2,1,1,c);Q(eR+2,ey+2,1,1,c);Q(eR+1,ey+3,1,1,c);Q(eR,ey+4,1,1,c);Q(eR+2,ey+4,1,1,c)}
+   else if(mk===15){Q(eR-1,ey+3,4,2,'#f0d8b0');Q(eR,ey+3,2,2,'#e0c090')}
+   else if(mk===16){g.globalAlpha=.4;Q(eL-1,ey+2,3,2,'#ff6a7a');Q(eR,ey+2,3,2,'#ff6a7a');g.globalAlpha=1}}
+  // ชุดสายมาร
+  const s=sty-ST0;if(s>=0){const dk='#1e1620',hl=shd(tc,.35),pulse=.6+.4*Math.sin(T*3+sd);
+   if(s===0){[cx-Math.floor(tw/2)-5,cx+Math.floor(tw/2)-2].forEach((px,i)=>{Q(px,ty-1,7,4,dk);Q(px,ty-1,7,1,'#3a2a3a');Q(px+1,ty-3,1,2,dk);Q(px+3,ty-4,1,3,dk);Q(px+5,ty-3,1,2,dk);Q(px+3,ty+1,1,1,tc)});
+    Q(cx-4,ty+3,8,5,'#2a2030');Q(cx-4,ty+3,8,1,'#3a2a3a');g.globalAlpha=pulse;Q(cx-1,ty+4,2,2,tc);g.globalAlpha=1;Q(cx-Math.floor(tw/2)-1,bY-1,tw+2,2,dk);Q(cx-1,bY-1,2,2,tc)}
+   else if(s===1){const cc=shd(robe,-.55),cl=tc;Q(hx-3,ty-6,3,7,cc);Q(hx+hw,ty-6,3,7,cc);Q(hx-1,ty-5,1,6,cl);Q(hx+hw,ty-5,1,6,cl);
+    const bot=sit?ly:Y-3;for(let yy=ty;yy<bot;yy++){const kk=(yy-ty)/Math.max(1,bot-ty),wv=yy>bot-6?fl:0;Q(cx-Math.floor(tw/2)-3+wv,yy,3,1,cc);Q(cx+Math.floor(tw/2)+wv,yy,3,1,cc);if(yy%3===0){Q(cx-Math.floor(tw/2)-1+wv,yy,1,1,cl);Q(cx+Math.floor(tw/2)+wv,yy,1,1,cl)}}
+    for(let i=0;i<3;i++){Q(cx-Math.floor(tw/2)-3+i+fl,bot+(i%2),1,2,cc);Q(cx+Math.floor(tw/2)+i+fl,bot+((i+1)%2),1,2,cc)}}
+   else if(s===2){const fy=sit?ly:ly+2;for(let i=0;i<tw+2;i+=2){const h=3+Math.round((Math.sin(T*4+i*.9)*.5+.5)*4);Q(cx-Math.floor(tw/2)-1+i,fy-h,2,h,'#e8402a');Q(cx-Math.floor(tw/2)-1+i,fy-Math.max(1,h-3),1,Math.max(1,h-3),'#ffb030')}
+    if(defArm){[[lxA,ty+as+aL-2],[rxA,ty-as+aL-2]].forEach(([ax,ay])=>{Q(ax,ay,aw,2,'#e8402a');Q(ax+1,ay-1,1,1,'#ffb030')})}Q(cx-2,ty+4,4,3,'#2a1010');Q(cx-1,ty+5,2,1,'#ffb030')}
+   else if(s===3){for(let t=0;t<14;t++)Q(cx-7+t,ty+1+t,1,1,t%2?'#8a8a96':'#c8ccd6');for(let t=0;t<9;t++)Q(cx+6-t,ty+2+t,1,1,t%2?'#6a6a76':'#a8acb6');
+    if(defArm){Q(lxA,ty+as+aL-3,aw,2,'#5a5a66');Q(rxA,ty-as+aL-3,aw,2,'#5a5a66');for(let j=0;j<4;j++){Q(lxA+1,ty+as+aL-1+j,1,1,j%2?'#8a8a96':'#c8ccd6');Q(rxA+2,ty-as+aL-1+j,1,1,j%2?'#8a8a96':'#c8ccd6')}}}
+   else if(s===4){const bn='#e8e0d0',bs='#b8b0a0';Q(cx-1,ty+2,2,th-6,bs);for(let r0=0;r0<4;r0++){Q(cx-6,ty+3+r0*3,5,1,bn);Q(cx+1,ty+3+r0*3,5,1,bn);Q(cx-6,ty+4+r0*3,1,1,bs);Q(cx+5,ty+4+r0*3,1,1,bs)}
+    [cx-Math.floor(tw/2)-3,cx+Math.floor(tw/2)-2].forEach(px=>{Q(px,ty-1,5,3,bn);Q(px+1,ty-1,3,1,'#fff8e8');Q(px+2,ty+2,1,1,bs)});Q(cx-2,bY,4,3,'#f0e8d8');Q(cx-1,bY+1,1,1,'#1a1a1a');Q(cx+1,bY+1,1,1,'#1a1a1a')}
+   else if(s===5){Q(cx-2,ty+2,4,th-3,shd(robe,-.45));g.globalAlpha=pulse;for(let i=0;i<4;i++){Q(cx-1,ty+3+i*4,2,1,tc);Q(cx-1+(i%2?1:-1),ty+4+i*4,1,1,hl)}for(let i=0;i<tw;i+=4)Q(cx-Math.floor(tw/2)+i,ly-2,2,1,tc);g.globalAlpha=1}
+   else if(s===6){const gd='#c8a040',gD='#8a6a20';Q(cx-Math.floor(tw/2)-4,ty-1,tw+8,3,gd);Q(cx-Math.floor(tw/2)-4,ty+2,tw+8,1,gD);Q(cx-Math.floor(tw/2)-5,ty,1,3,gD);Q(cx+Math.floor(tw/2)+4,ty,1,3,gD);
+    Q(cx-1,ty,2,2,'#e0283a');Q(cx-1,ty,1,1,'#ff8a9a');for(let t=0;t<12;t++)Q(cx-5+t,ty+3+t,2,1,t%4===0?shd(tc,-.2):tc);Q(cx-Math.floor(tw/2)-1,bY,tw+2,2,gd);Q(cx-2,bY,4,2,'#e0283a');
+    Q(cx-Math.floor(tw/2)-3+fl,ty+3,1,7,gd);Q(cx+Math.floor(tw/2)+2+fl,ty+3,1,7,gd)}}
+ }catch(e){}return r};
+// ---- คำแปล ----
+try{Object.assign(I18N.d,{'ชุดสำเร็จรูป':'Ready outfits','แบบตา':'Eye shape','ปาก':'Mouth','ชุดสมัยใหม่ (ทับแบบชุด)':'Modern outfit','😈 ชุดสายมาร':'😈 Demonic sets','⚔️ ชุดยุทธภพ · เซียน':'⚔️ Martial · Immortal sets','— เลือกชุด —':'— pick —'})}catch(e){}
+try{SYS_GUIDE.push({s:'start',nw:1,ic:'🎽',t:'แต่งตัวละครแบบใหม่',go:'',d:'หน้าออกแบบรูปลักษณ์มีแท็บ <b>🎽 ชุดสำเร็จรูป</b> (ชุดสายมาร 35 · ยุทธภพ/เซียน 20 กดทีเดียวใส่ครบทั้งชุด) · ในแท็บ 👘 ชุด มี <b>ชุดสมัยใหม่</b> 45 ชุด และแบบชุดสายมาร 7 แบบ · ในแท็บ 👁️ ใบหน้า มี <b>แบบตา</b> 8 แบบ <b>ปาก</b> 6 แบบ และร่องรอยใหม่ 7 แบบ'})}catch(e){}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
