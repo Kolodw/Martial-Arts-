@@ -30084,7 +30084,7 @@ const wrap=(name,mkPk)=>{const o=window[name];if(typeof o!=='function')return;
  window[name]=async function(btn,k){const f=$('supImg')&&$('supImg').files&&$('supImg').files[0];if(!f)return o.apply(this,arguments);
   btn.disabled=true;btn.textContent='⏳ กำลังตรวจสลิป…';let j=null;
   try{const img=await bigShrink(f);if(!img)throw 0;const r=await fetch('/api/pay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:pid,pk:mkPk(k),n:pname(),img})});j=await r.json().catch(()=>null)}catch(e){j=null}
-  if(j&&j.ok){btn.textContent='✅ ตรวจผ่านแล้ว สิทธิ์เข้าแล้ว!';toast('✅ ตรวจสลิปผ่าน สิทธิ์เข้าแล้ว ขอบคุณที่สนับสนุนครับ 💛');try{sfx('good')}catch(e){}
+  if(j&&j.ok){btn.textContent='✅ ตรวจผ่านแล้ว สิทธิ์เข้าแล้ว!';toast('✅ ตรวจสลิปผ่าน สิทธิ์เข้าแล้ว ขอบคุณที่สนับสนุนครับ 💛');try{window.dispatchEvent(new Event('shop:paid'))}catch(e){}try{sfx('good')}catch(e){}
    try{const g=await api('rrget');if(window._RR){window._RR.c=Math.max(0,+g.c||0)}window.vipSet&&window.vipSet(g.vip);window.rrBtn&&window.rrBtn()}catch(e){}return}
   if(j&&MSG[j.st]){btn.disabled=false;btn.textContent='📨 ส่งสลิป';toast(MSG[j.st]);return}
   btn.disabled=false;return o.apply(this,arguments)}};
@@ -30113,8 +30113,8 @@ const _cr=chatRender;chatRender=function(){const r=_cr.apply(this,arguments);set
 // 🏷️ v18.19 ชื่อสินค้ากลางๆ + สกินชื่อต่อโลก (ตอนนี้มีโลกเดียว = ชื่อยุทธภพเดิมทุกอย่าง) · โลกใหม่แค่เพิ่มสกินในตารางนี้ แล้วตั้ง window.WORLD_ID ก่อนเปิดร้าน
 try{(()=>{
 window.SHOP_SKIN={
- wuxia:{tiers:{1:'ผู้อุปถัมภ์สำนัก',2:'ผู้อาวุโสอุปถัมภ์',3:'บรรพชนผู้อุปถัมภ์'},rr:'สุ่มเกิด'},
- _:{tiers:{1:'ผู้สนับสนุน',2:'ผู้สนับสนุนอาวุโส',3:'ผู้ก่อตั้ง'},rr:'โควตาเกิดใหม่'}};
+ wuxia:{accent:'#c9553f',tiers:{1:'ผู้อุปถัมภ์สำนัก',2:'ผู้อาวุโสอุปถัมภ์',3:'บรรพชนผู้อุปถัมภ์'},rr:'สุ่มเกิด'},
+ _:{accent:'#4f8cff',tiers:{1:'ผู้สนับสนุน',2:'ผู้สนับสนุนอาวุโส',3:'ผู้ก่อตั้ง'},rr:'โควตาเกิดใหม่'}};
 window.shopSkin=function(w){return window.SHOP_SKIN[w||window.WORLD_ID||'wuxia']||window.SHOP_SKIN._};
 try{const sk=shopSkin();if(typeof NM==='object'&&NM)Object.keys(sk.tiers).forEach(k=>{if(k in NM)NM[k]=sk.tiers[k]})}catch(e){}
 })()}catch(e){console.error(e)}
@@ -30139,6 +30139,94 @@ profPush=async function(){if(!onlineOK)return;let d=frGet();
   if(j&&j.img===0&&!d.avUp){const q=await shrink(d.snap||d.av||'');if(q){d=frGet();d.snap=q;d.av=q;frSet(d);j=await api('profile',body(q,q))}}
   if(j&&j.st){d=frGet();d.avSt=j.st;frSet(d)}}
  catch(e){if(e&&e.message==='noup'){const d2=frGet();d2.av=d2.snap||'';d2.avUp=0;d2.avSt='';frSet(d2);return}if(e&&e.message==='avban'){toast('ถูกระงับการอัปโหลดรูปชั่วคราว');const d2=frGet();d2.av=d2.snap||'';d2.avUp=0;frSet(d2)}}};
+})()}catch(e){console.error(e)}
+
+// 🛒 v18.22 ร้านสนับสนุนหน้าตาใหม่ 2 แบบ + แบบเดิม — เลือกได้ที่ ตั้งค่า (🎨 คุณภาพภาพ) → "หน้าร้าน" · เก็บใน LS 'murim_shop' = clean | seal | classic
+try{(()=>{
+const KEY='murim_shop',gs=()=>{try{const v=LS.get(KEY,null);return v==='seal'||v==='classic'?v:'clean'}catch(e){return'clean'}},ss=v=>{try{LS.set(KEY,v)}catch(e){}};
+const oldVip=window.vipMenu,oldRr=window.rrMenu;
+const TIER=[null,
+ {k:'v1',n:'ผู้สนับสนุน',p:39,per:'30 วัน',chips:['สุ่ม 30 ครั้ง/ชีวิต','ตราประทับเส้นเดี่ยว','กรอบสนับสนุน','ป้ายหน้าชื่อในแชท','ฉายา 6 ชื่อ']},
+ {k:'v2',n:'ผู้สนับสนุนพิเศษ',p:99,per:'30 วัน',chips:['สุ่ม 60 ครั้ง/ชีวิต','ตราประทับเส้นคู่','กรอบพิเศษ','แลกกรรมวันละ 8','ปุ่มสุ่มรัว','ฉายา']},
+ {k:'v3',n:'ผู้ก่อตั้ง',p:599,per:'ตลอดไป',chips:['สุ่ม 100 ครั้ง/ชีวิต','ตราทองมีเลขลำดับ','กรอบขอบทอง','ป้ายในหอผู้ก่อตั้ง + คำจารึก','ฉายาตั้งเอง','ทุกอย่างของระดับพิเศษ']}];
+const ROWS=[['สุ่มชีวิตใหม่ต่อชีวิต',30,60,100],['ตราประทับ','เดี่ยว','คู่','ทอง'],['กรอบอวตาร','✓','✓','✓'],['แลกกรรมต่อวัน',5,8,8],['สุ่มรัว','–','✓','✓'],['ฉายา','เลือก','เลือก','ตั้งเอง'],['ป้ายหอผู้ก่อตั้ง','–','–','✓']];
+const vget=()=>{try{return LS.get('murim_vip',null)}catch(e){return null}};
+const tierNow=()=>{const v=vget();return !v?0:v.u?3:(v.e2||0)>Date.now()?2:(v.e1||0)>Date.now()?1:0};
+const endOf=(v,t)=>t===2?v.e2:v.e1,left=(v,t)=>Math.max(0,Math.ceil((endOf(v,t)-Date.now())/864e5));
+const inShop=()=>{const m=$('modal');return !!(m&&m.querySelector('.sh2'))};
+// ตราพิกเซล (แบบ seal): วาดด้วยสี่เหลี่ยมเล็ก 12×12 ขยาย
+const EMB={1:['..444444....','.4333333 4..','.43322334...'],};
+const emb=(n,sz)=>{const c=document.createElement('canvas');c.width=c.height=12;const x=c.getContext('2d');const px=(a,col)=>{x.fillStyle=col;a.forEach(([i,j,w,h])=>x.fillRect(i,j,w||1,h||1))};
+ if(n===1){px([[3,1,6,1],[2,2,8,5],[3,7,6,1],[4,8,4,1],[5,9,2,1]],'#8a3a2c');px([[3,2,6,4],[4,6,4,1],[5,7,2,1]],'#d9604a');px([[5,3,2,2]],'#ffd9c8')}
+ if(n===2){px([[3,1,6,1],[2,2,8,7],[3,9,6,1]],'#7a7f8a');px([[3,2,6,7],[4,1,4,1],[4,9,4,1]],'#c9ced8');px([[4,3,4,5]],'#eef1f6');px([[5,4,2,3]],'#8a93a6')}
+ if(n===3){px([[1,4,2,5],[9,4,2,5],[3,3,6,6],[5,2,2,1]],'#9a7420');px([[1,3,2,1],[9,3,2,1],[5,1,2,1],[2,4,1,4],[3,4,6,5]],'#f1c94a');px([[5,3,2,1],[4,5,4,1]],'#fff3b0');px([[3,9,6,1]],'#9a7420')}
+ c.style.cssText=`width:${sz}px;height:${sz}px;image-rendering:pixelated`;return c};
+const embHtml=(n,sz)=>{try{return `<img class="sh2-em" width="${sz}" height="${sz}" src="${emb(n,sz).toDataURL()}" style="image-rendering:pixelated">`}catch(e){return''}};
+const css=()=>{if($('sh2css'))return;const st=document.createElement('style');st.id='sh2css';st.textContent=`
+.sh2{--a:#c9553f;--l:color-mix(in srgb,currentColor 20%,transparent);--t2:color-mix(in srgb,currentColor 62%,transparent);--b1:color-mix(in srgb,currentColor 6%,transparent);--b2:color-mix(in srgb,currentColor 12%,transparent);font-size:14px}
+.sh2 .sh2-top{display:flex;gap:6px;margin:6px 0 10px;background:var(--b1);border-radius:12px;padding:4px}
+.sh2 .sh2-top button{flex:1;border:0;background:none;color:inherit;padding:9px 6px;border-radius:9px;font:inherit;font-weight:600;opacity:.7}
+.sh2 .sh2-top button.on{background:var(--a);color:#fff;opacity:1}
+.sh2 .sh2-st{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:var(--b1);margin-bottom:10px}
+.sh2 .sh2-st b{display:block}.sh2 small{color:var(--t2)}
+.sh2 .sh2-row{display:block;width:100%;text-align:left;color:inherit;font:inherit;border:1px solid var(--l);background:var(--b1);border-radius:14px;padding:12px;margin:0 0 8px;transition:.15s}
+.sh2 .sh2-row.on{border-color:var(--a);background:var(--b2);box-shadow:0 0 0 1px var(--a) inset}
+.sh2 .sh2-row .hd{display:flex;align-items:center;gap:10px}.sh2 .sh2-row .nm{flex:1;font-weight:700}.sh2 .sh2-row .pr{font-size:20px;font-weight:800}.sh2 .sh2-row .pr small{font-size:11px;font-weight:400}
+.sh2 .dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--t2)}.sh2 .on .dot{border-color:var(--a);background:var(--a)}
+.sh2 .chips{display:none;flex-wrap:wrap;gap:6px;margin-top:10px}.sh2 .on .chips{display:flex}
+.sh2 .chips span{font-size:12px;padding:4px 9px;border-radius:99px;background:var(--b2)}
+.sh2 .best{font-size:10px;background:var(--a);color:#fff;border-radius:99px;padding:2px 7px;margin-left:6px;vertical-align:middle}
+.sh2 table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;table-layout:fixed}.sh2 td:first-child,.sh2 th:first-child{width:34%}.sh2 td,.sh2 th{padding:6px 4px;border-bottom:1px solid var(--l);text-align:center}.sh2 td:first-child{text-align:left;color:var(--t2)}.sh2 th{font-weight:600;font-size:11px}
+.sh2 .sh2-buy{position:sticky;bottom:-1px;margin-top:10px;padding:10px 0 4px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.sh2 .sh2-buy button{width:100%;border:0;border-radius:14px;padding:14px;font:inherit;font-weight:800;font-size:16px;color:#fff;background:var(--a)}
+.sh2 .sh2-buy button:disabled{opacity:.45}
+.sh2 .sh2-sum{display:flex;gap:8px;margin-bottom:10px}.sh2 .sh2-sum div{flex:1;text-align:center;padding:8px 4px;border-radius:12px;background:var(--b1)}.sh2 .sh2-sum b{display:block;font-size:20px}
+.sh2 .pk{display:flex;gap:8px;margin:8px 0}.sh2 .pk button{flex:1;position:relative;border:1px solid var(--l);background:var(--b1);color:inherit;border-radius:14px;padding:12px 4px;font:inherit}
+.sh2 .pk button.best1{border-color:var(--a);box-shadow:0 0 0 1px var(--a) inset}.sh2 .pk b{display:block;font-size:24px}.sh2 .pk .p{display:block;margin-top:6px;font-weight:800;color:var(--a);filter:brightness(1.25)}
+.sh2 .pk .rb{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:10px;background:var(--a);color:#fff;border-radius:99px;padding:1px 8px;white-space:nowrap}
+.sh2 .act{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--l);border-radius:12px;margin:8px 0}.sh2 .act div{flex:1}.sh2 .act button{border:0;border-radius:10px;padding:9px 12px;background:var(--b2);color:inherit;font:inherit;font-weight:600}.sh2 .act button:disabled{opacity:.4}
+.sh2 .lnk{display:block;width:100%;margin:8px 0 0;padding:10px;border-radius:12px;border:1px dashed var(--l);background:none;color:var(--t2);font:inherit}
+.sh2 .note{font-size:12px;color:var(--t2);margin:10px 0 0;line-height:1.5}
+.sh2-em{vertical-align:middle}
+.sh2-burst{position:fixed;inset:0;z-index:99999;pointer-events:none;overflow:hidden}.sh2-burst i{position:absolute;width:8px;height:8px;background:var(--c);animation:sh2b 1.4s ease-out forwards}
+@keyframes sh2b{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--x),var(--y)) scale(.4);opacity:0}}`;document.head.appendChild(st)};
+let sel=2,tab='m';
+const accent=()=>{try{return (shopSkin().accent)||'#c9553f'}catch(e){return'#c9553f'}};
+const RRs=()=>window._RR||{pk:{s:[10,12],m:[29,40],l:[59,100]},c:null,used:0,cap:10,kday:5};
+const render=()=>{css();const m=gs(),t=tierNow(),v=vget(),R=RRs(),sealMode=m==='seal';
+ const em=(n,sz)=>sealMode?embHtml(n,sz):'<span class="dot"></span>';
+ const top=`<div class="sh2-top"><button class="${tab==='m'?'on':''}" onclick="shopTab('m')">สิทธิ์สมาชิก</button><button class="${tab==='r'?'on':''}" onclick="shopTab('r')">สุ่มชีวิตใหม่</button></div>`;
+ let body='';
+ if(tab==='m'){
+  const st=t?`<div class="sh2-st">${sealMode?embHtml(t,36):''}<div><b>${TIER[t].n}</b><small>${t===3?(v.ul?'ลำดับที่ '+v.ul.o:'ตลอดไป'):'อีก '+left(v,t)+' วัน'}</small></div></div>`:'';
+  const rows=[1,2,3].map(n=>{const T=TIER[n];return`<button class="sh2-row${sel===n?' on':''}" onclick="shopSel(${n})"><div class="hd">${sealMode?embHtml(n,34):'<span class="dot"></span>'}<span class="nm">${T.n}${n===3?'<span class="best">คุ้มสุด</span>':''}</span><span class="pr">${T.p}<small> บาท / ${T.per}</small></span></div><div class="chips">${T.chips.map(c=>`<span>${c}</span>`).join('')}</div></button>`}).join('');
+  const tb=`<table><tr><th></th><th>${TIER[1].n.replace('ผู้','')}</th><th>พิเศษ</th><th>ก่อตั้ง</th></tr>${ROWS.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</table>`;
+  const T=TIER[sel],dis=(sel===3&&t===3)||(t===3&&sel<3),lbl=sel===3&&t===3?'เป็นผู้ก่อตั้งแล้ว':t===3?'มีสิทธิ์ตลอดไปอยู่แล้ว':t===sel&&sel<3?`ต่ออายุ ${T.p} บาท · ${T.per}`:sel===3?`ซื้อ ${T.p} บาท · ตลอดไป`:`สมัคร ${T.p} บาท · ${T.per}`;
+  body=`${st}${rows}${tb}<div class="sh2-buy"><button ${dis?'disabled':''} onclick="vipBuy('${T.k}')">${lbl}</button></div>
+   ${t?'<button class="lnk" onclick="shopClassic()">ฉายา · คำจารึก · หอผู้ก่อตั้ง</button>':''}
+   <p class="note">เล่นฟรีได้เหมือนกัน — ผู้สนับสนุนไม่ได้พลังหรือเงินในเกม ได้แค่ความสะดวกกับของตกแต่ง · แนบสลิปแล้วระบบตรวจอัตโนมัติ สิทธิ์เข้าทันที · ไม่ต่ออายุเอง ไม่ตัดเงินอัตโนมัติ</p>`;
+ }else{
+  const pk=Object.entries(R.pk||{}),u0=pk.length?pk[0][1][0]/pk[0][1][1]:1,cap=R.used>=R.cap;
+  body=`<div class="sh2-sum"><div><b>${typeof rerolls==='number'?rerolls:0}</b><small>ฟรี</small></div><div><b>${R.c==null?'…':fmt(R.c)}</b><small>ซื้อไว้</small></div><div><b>${R.used||0}/${R.cap||10}</b><small>ใช้เพิ่มชีวิตนี้</small></div></div>
+  <div class="pk">${pk.map(([k,x],i)=>{const per=x[0]/x[1],best=i===pk.length-1&&pk.length>1;return`<button class="${best?'best1':''}" onclick="rrBuy('${k}')">${best?'<span class="rb">คุ้มสุด</span>':''}<b>${x[1]}</b><small>ครั้ง</small><span class="p">${x[0]} บาท</span><small>${per.toFixed(2)} บ./ครั้ง${per<u0?' · ถูกลง '+Math.round((1-per/u0)*100)+'%':''}</small></button>`}).join('')}</div>
+  <div class="act"><div><b>ใช้สิทธิ์ที่ซื้อไว้</b><br><small>เหลือ ${R.c==null?'…':fmt(R.c)} ครั้ง${cap?' · ชีวิตนี้ใช้ครบแล้ว':''}</small></div><button ${cap||!R.c?'disabled':''} onclick="rrUsePaid(this)">ใช้ 1 ครั้ง</button></div>
+  <div class="act"><div><b>แลกด้วยกรรม</b><br><small>ครั้งนี้ ${fmt((window.rrKC&&window.rrKC())||1000)} กรรม · ราคาเท่าตัวทุกครั้ง รีเซ็ตเที่ยงคืน</small></div><button ${cap?'disabled':''} onclick="rrUseKarma()">แลก 1 ครั้ง</button></div>
+  ${t>=2?'<button class="lnk" onclick="vipAutoMenu()">⚡ สุ่มรัว — ตั้งเงื่อนไขแล้วระบบสุ่มให้เอง</button>':''}
+  <p class="note">ไม่ซื้อก็เล่นได้เหมือนกัน — สุ่มฟรี 5 ครั้ง และแลกกรรมเพิ่มได้ทุกวัน · สิทธิ์ที่ซื้อไม่มีวันหมดอายุ · แนบสลิปแล้วเข้าทันที</p>`;
+ }
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>ร้านสนับสนุน</h3><div class="sh2" style="--a:${accent()}">${top}${body}</div>`);
+};
+window.shopTab=t=>{tab=t;render();if(t==='r'&&RRs().c==null)ld()};
+window.shopSel=n=>{sel=n;render()};
+window.shopClassic=()=>{try{oldVip()}catch(e){}};
+const ld=async()=>{try{const j=await api('rrget');const R=window._RR;if(R){R.c=Math.max(0,+j.c||0);if(j.pk)R.pk=j.pk}window.vipSet&&window.vipSet(j.vip);if(inShop())render()}catch(e){}};
+const open=t=>{if(gs()==='classic')return t==='m'?oldVip():oldRr();tab=t;sel=tierNow()||2;render();ld()};
+window.vipMenu=function(){open('m')};window.rrMenu=function(){open('r')};
+// ฉลองตอนซื้อสำเร็จ (แบบ seal มีประกายพิกเซล)
+window.addEventListener('shop:paid',()=>{try{if(gs()!=='seal')return;const b=document.createElement('div');b.className='sh2-burst';const C=['#f1c94a','#d9604a','#fff3b0','#c9ced8'];for(let i=0;i<46;i++){const e=document.createElement('i');const a=Math.random()*6.28,d=80+Math.random()*180;e.style.cssText=`left:50%;top:45%;--c:${C[i%4]};--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d-60}px;animation-delay:${Math.random()*.2}s`;b.appendChild(e)}document.body.appendChild(b);setTimeout(()=>b.remove(),1800)}catch(e){}});
+// ตั้งค่า → หน้าร้าน
+const og=window.openGfx;if(typeof og==='function')window.openGfx=function(){const r=og.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.shset')){const d=document.createElement('div');d.className='shset';const cur=gs();d.innerHTML=`<h4 style="margin:14px 0 6px">🛒 หน้าร้านสนับสนุน</h4><div style="display:flex;gap:6px">${[['clean','เรียบสะอาด'],['seal','ตราพิกเซล'],['classic','แบบเดิม']].map(([k,n])=>`<button class="gbtn${cur===k?' on':''}" style="flex:1" onclick="shopStyle('${k}')">${cur===k?'✅ ':''}${n}</button>`).join('')}</div>`;m.appendChild(d)}}catch(e){}return r};
+window.shopStyle=k=>{ss(k);try{toast('เปลี่ยนหน้าร้านแล้ว');window.openGfx()}catch(e){}};
 })()}catch(e){console.error(e)}
 </script>
 </body>
