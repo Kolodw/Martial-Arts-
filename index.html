@@ -33959,13 +33959,16 @@ const flame=(cy,s)=>A('fx-flame',0,X('path',{d:`M${C} ${cy-12*s}C${C+6*s} ${cy-4
 const halo=id=>A('fx-pulse',0,X('circle',{cx:C,cy:C,r:95,fill:`url(#${id})`}));
 const rip=col=>[0,-1.6,-3.2].map(d=>A('fx-evrip',d,X('ellipse',{cx:C,cy:212,rx:90,ry:12,fill:'none',stroke:col,'stroke-width':1.2}))).join('');
 const sweep=(r,col)=>X('circle',{cx:C,cy:C,r,fill:'none',stroke:col,'stroke-width':3,'stroke-linecap':'round',class:'fx-evsw',transform:`rotate(-90 ${C} ${C})`});
+const pet=(list,fill)=>list.map((p,i)=>A('fx-evdrift',-i*1.5,X('ellipse',{cx:p[0],cy:p[1],rx:3.2,ry:1.8,fill}))).join('');
+const smk=(cx,cy,col)=>[0,1,2].map(i=>A('fx-evsmk',-i*1.05,X('circle',{cx:cx+(i-1)*2,cy,r:3,fill:col,opacity:.6}))).join('');
+const ringPts=(r,n,off)=>{const o=[];for(let i=0;i<n;i++){const q=pt(r,i*2*Math.PI/n+(off||0));o.push([n1(q[0]),n1(q[1])])}return o};
 const parts=(list,cls,fill,r)=>list.map((p,i)=>A(cls,-i*.7,X('circle',{cx:p[0],cy:p[1],r:r||1.7,fill}))).join('');
 // ---------- 1 กระทงใบตอง ----------
 const live1=memo(()=>{const d=LG('l1',0,0,1,1,[[0,'#9dc15a'],[.55,'#5f8a34'],[1,'#355a1f']])+LG('l2',0,1,1,0,[[0,'#c9df86'],[1,'#7aa13e']]);const LY=[];let b=ann(50,79,'#243a14');LY.push(b);b='';
- for(let i=0;i<16;i++)b+=leaf(54,96,17,i*Math.PI/8,'url(#l1)','#1f3a10','#cfe59a');LY.push(b);b='';for(let i=0;i<16;i++)b+=leaf(52,84,13,(i+.5)*Math.PI/8,'url(#l2)','#4a6e24','#eaf7bd');
- for(let i=0;i<16;i++){const p=pt(77,(i+.5)*Math.PI/8);b+=X('circle',{cx:n1(p[0]),cy:n1(p[1]),r:1.4,fill:'#e8ecd0'})}
- LY.push(b);b='';b+=mari(12,60,'#ffb02a','#ff9412','#b8470b')+orchids(70,[-.62,.95,2.3,3.95])+X('circle',{cx:C,cy:C,r:57.7,fill:'none',stroke:'#e9b44c','stroke-width':1.6})+incense('#7a4a22')+candle('#f6ead0');
- return W(halo('evH1')+rip('#9fd3e2')+(SI[1]=LY.concat([b]).map(x=>IMG(d,x)),'')+flame(44,1)+A('fx-pulse',0,X('circle',{cx:C,cy:44,r:15,fill:'url(#evH0)'}))+sweep(57.7,'#fff3c4')+parts([[C-29,41],[C+29,41]],'fx-twk','#ff5a1f',1.8)+parts([[C-20,38],[C+22,34]],'fx-rise','#cfd6e0',2.4))});
+ for(let k=0;k<2;k++){b='';for(let i=k;i<16;i+=2)b+=leaf(54,96,17,i*Math.PI/8,'url(#l1)','#1f3a10','#cfe59a');LY.push(b)}
+ for(let k=0;k<2;k++){b='';for(let i=k;i<16;i+=2){const p=pt(77,(i+.5)*Math.PI/8);b+=leaf(52,84,13,(i+.5)*Math.PI/8,'url(#l2)','#4a6e24','#eaf7bd')+X('circle',{cx:n1(p[0]),cy:n1(p[1]),r:1.4,fill:'#e8ecd0'})}LY.push(b)}
+ b='';b+=mari(12,60,'#ffb02a','#ff9412','#b8470b')+orchids(70,[-.62,.95,2.3,3.95])+X('circle',{cx:C,cy:C,r:57.7,fill:'none',stroke:'#e9b44c','stroke-width':1.6})+incense('#7a4a22')+candle('#f6ead0');
+ return W(halo('evH1')+rip('#9fd3e2')+(SI[1]=LY.concat([b]).map(x=>IMG(d,x)),'')+flame(44,1)+A('fx-pulse',0,X('circle',{cx:C,cy:44,r:15,fill:'url(#evH0)'}))+sweep(57.7,'#fff3c4')+parts([[C-29,41],[C+29,41]],'fx-twk','#ff5a1f',1.8)+parts([[C-20,38],[C+22,34]],'fx-rise','#cfd6e0',2.4)+smk(C,34,'#e6e9f0')+pet([[96,214],[164,210],[130,218]],'#ffb02a'))});
 // ---------- 2 โคมลอยขึ้นฟ้า ----------
 const live2=memo(()=>{const body='M84 53C52 72 52 106 52 130C52 162 66 190 92 203L168 203C194 190 208 162 208 130C208 106 208 72 176 53Z',hole='M74 130a56 56 0 1 0 112 0a56 56 0 1 0 -112 0Z';
  const d=RG('lp',[[0,'#fff3bf'],[.55,'#ffc460'],[1,'#d9701e']],.5,.55,.62)+X('clipPath',{id:'lbc'},X('path',{d:body+hole,'clip-rule':'evenodd'}));
@@ -33975,32 +33978,33 @@ const live2=memo(()=>{const body='M84 53C52 72 52 106 52 130C52 162 66 190 92 20
   +X('circle',{cx:C,cy:C,r:56,fill:'none',stroke:'#8a3a10','stroke-width':2.6})+X('circle',{cx:C,cy:C,r:54,fill:'none',stroke:'#ffe9a8','stroke-width':.8,opacity:.6})
   +[0,1,2,3].map(i=>X('path',{d:`M${C-9+i*6} 211l-1.5 13`,stroke:'#d9701e','stroke-width':1.6,'stroke-linecap':'round'})).join('');
  const fl=A('fx-flame',0,X('path',{d:`M${C} 187C${C+8} 194 ${C+7} 202 ${C} 204C${C-7} 202 ${C-8} 194 ${C} 187Z`,fill:'url(#evFl)'}));
- return W(halo('evH2')+(SI[2]=IMG(d,b),'')+fl+parts([[44,150],[216,140],[40,100],[222,112],[46,176]],'fx-rise','#ffd27a',1.8))});
+ return W(halo('evH2')+(SI[2]=IMG(d,b),'')+fl+parts([[44,150],[216,140],[40,100],[222,112],[46,176]],'fx-rise','#ffd27a',1.8)+[[52,214,0],[206,212,-2.4],[70,220,-4.6],[188,222,-1.2]].map(([x,y,d])=>A('fx-evmini',d,X('rect',{x:x-5,y:y-6,width:10,height:12,rx:3,fill:'#ffc460',stroke:'#8a3a10','stroke-width':.8})+X('circle',{cx:x,cy:y+2,r:2,fill:'#fff3bf'}))).join(''))});
 // ---------- 3 บัวบานกลางสายน้ำ ----------
 const live3=memo(()=>{const d=LG('g1',0,1,0,0,[[0,'#f6a5c4'],[1,'#fff5f9']])+LG('g2',0,1,0,0,[[0,'#ee7fa8'],[1,'#ffdbe8']])+LG('g3',0,1,0,0,[[0,'#e2588f'],[1,'#ffc0d6']])+RG('lf',[[0,'#6fb872'],[1,'#2f7a4c']]);
  const pad=x=>X('ellipse',{cx:x,cy:200,rx:30,ry:16,fill:'url(#lf)',stroke:'#1f5a38','stroke-width':1})+[0,1,2,3,4,5,6,7].map(k=>{const a=k*Math.PI/4;return X('path',{d:`M${x} 200L${n1(x+Math.cos(a)*28)} ${n1(200+Math.sin(a)*15)}`,stroke:'#cfe9c0','stroke-width':.6,opacity:.5})}).join('');
- const ring=(n,R,w,off,f)=>{let o='';for(let i=0;i<n;i++){const L=R-52;o+=X('g',{transform:`rotate(${n1(off+i*360/n)} ${C} ${C})`},X('path',{d:`M${C} ${C-52}C${C-w} ${C-52-L*.35} ${C-w*.75} ${C-52-L*.85} ${C} ${C-R}C${C+w*.75} ${C-52-L*.85} ${C+w} ${C-52-L*.35} ${C} ${C-52}Z`,fill:f,stroke:'#c9588a','stroke-width':.7})+X('path',{d:`M${C} ${C-56}L${C} ${C-R+8}`,stroke:'#fff','stroke-width':.7,opacity:.6}))}return o};
- const LY=[];let b=pad(64)+pad(196);LY.push(b);b=ring(12,96,21,0,'url(#g1)');LY.push(b);b=ring(10,84,22,18,'url(#g2)');LY.push(b);b=ring(8,72,23,0,'url(#g3)');
+ const ring=(n,R,w,off,f,par)=>{let o='';for(let i=par||0;i<n;i+=par==null?1:2){const L=R-52;o+=X('g',{transform:`rotate(${n1(off+i*360/n)} ${C} ${C})`},X('path',{d:`M${C} ${C-52}C${C-w} ${C-52-L*.35} ${C-w*.75} ${C-52-L*.85} ${C} ${C-R}C${C+w*.75} ${C-52-L*.85} ${C+w} ${C-52-L*.35} ${C} ${C-52}Z`,fill:f,stroke:'#c9588a','stroke-width':.7})+X('path',{d:`M${C} ${C-56}L${C} ${C-R+8}`,stroke:'#fff','stroke-width':.7,opacity:.6}))}return o};
+ const LY=[];let b=pad(64)+pad(196);LY.push(b);LY.push(ring(12,96,21,0,'url(#g1)',0));LY.push(ring(12,96,21,0,'url(#g1)',1));LY.push(ring(10,84,22,18,'url(#g2)',0));LY.push(ring(10,84,22,18,'url(#g2)',1));b=ring(8,72,23,0,'url(#g3)');
  for(let i=0;i<26;i++){const a=i*2*Math.PI/26,p=pt(55,a),q=pt(61,a);b+=X('path',{d:`M${n1(p[0])} ${n1(p[1])}L${n1(q[0])} ${n1(q[1])}`,stroke:'#f2c038','stroke-width':2.2,'stroke-linecap':'round'})+X('circle',{cx:n1(q[0]),cy:n1(q[1]),r:1.7,fill:'#ffe27a'})}
  b+=X('circle',{cx:C,cy:C,r:57.7,fill:'none',stroke:'#e9b44c','stroke-width':1.4});
- return W(halo('evH3')+rip('#cfeee6')+(SI[3]=LY.concat([b]).map(x=>IMG(d,x)),'')+sweep(57.7,'#ffffff')+parts([[96,70],[176,78],[150,198],[84,184]],'fx-twk','#ffffff',1.9))});
+ return W(halo('evH3')+rip('#cfeee6')+(SI[3]=LY.concat([b]).map(x=>IMG(d,x)),'')+sweep(57.7,'#ffffff')+parts([[96,70],[176,78],[150,198],[84,184]],'fx-twk','#ffffff',1.9)+parts(ringPts(64,10,.15),'fx-evup2','#ffe27a',1.5)+pet([[60,206],[200,204]],'#ffc0d6'))});
 // ---------- 4 พญานาคเฝ้าท่า ----------
 const live4=memo(()=>{const d=LG('rg',0,0,1,1,[[0,'#0f6b6b'],[1,'#14a89c']])+RG('sg',[[0,'#7fe6d8'],[1,'#0a5a5a']],.4,.35,.8)+LG('hg',0,0,1,1,[[0,'#0f6b6b'],[1,'#14a89c']]);
  const LY=[];let b=X('circle',{cx:C,cy:C,r:74,fill:'none',stroke:'#052a2c','stroke-width':30})+X('circle',{cx:C,cy:C,r:74,fill:'none',stroke:'url(#rg)','stroke-width':27});LY.push(b);b='';
- [[63,34,0],[74,36,.5],[85,38,0]].forEach(r=>{for(let i=0;i<r[1];i++){const p=pt(r[0],(i+r[2])*2*Math.PI/r[1]);b+=X('circle',{cx:n1(p[0]),cy:n1(p[1]),r:5.4,fill:'url(#sg)',stroke:'#e9c35a','stroke-width':.8,opacity:.95})}});
- LY.push(b);b='';for(let i=0;i<24;i++){const a=i*2*Math.PI/24,q=pt(95,a),p1=pt(88,a+.07),p2=pt(88,a-.07);b+=X('path',{d:`M${n1(p1[0])} ${n1(p1[1])}L${n1(q[0])} ${n1(q[1])}L${n1(p2[0])} ${n1(p2[1])}Z`,fill:'#e9c35a'})}
+ [[63,34,0],[74,36,.5],[85,38,0]].forEach(r=>{for(let i=0;i<r[1];i++){const p=pt(r[0],(i+r[2])*2*Math.PI/r[1]);b+=X('circle',{cx:n1(p[0]),cy:n1(p[1]),r:5.4,fill:'url(#sg)',stroke:'#e9c35a','stroke-width':.8,opacity:.95})}LY.push(b);b=''});
+ for(let i=0;i<24;i++){const a=i*2*Math.PI/24,q=pt(95,a),p1=pt(88,a+.07),p2=pt(88,a-.07);b+=X('path',{d:`M${n1(p1[0])} ${n1(p1[1])}L${n1(q[0])} ${n1(q[1])}L${n1(p2[0])} ${n1(p2[1])}Z`,fill:'#e9c35a'})}
  b+=X('circle',{cx:C,cy:C,r:57.7,fill:'none',stroke:'#e9c35a','stroke-width':1.5})+X('circle',{cx:C,cy:C,r:54.5,fill:'none',stroke:'#e9c35a','stroke-width':1,'stroke-dasharray':'1 4',opacity:.8});
  let h='';[[-14,-18],[-4,-22],[6,-20]].forEach(q=>{h+=X('path',{d:`M${q[0]} ${q[1]+8}C${q[0]-8} ${q[1]-6} ${q[0]+2} ${q[1]-10} ${q[0]-2} ${q[1]-20}C${q[0]+8} ${q[1]-12} ${q[0]+14} ${q[1]-8} ${q[0]+6} ${q[1]+8}Z`,fill:'#e9c35a',stroke:'#8a5a10','stroke-width':.6})});
  h+=X('path',{d:'M-12-10C-34-12-44-8-58-18C-46-6-38 0-14 4Z',fill:'#e9c35a'})+X('path',{d:'M-30 8C-32-10-16-22 2-22C14-22 24-16 32-8L46-4C50-3 50 2 46 4L32 8C26 12 20 16 12 18C-2 22-24 20-30 8Z',fill:'url(#hg)',stroke:'#e9c35a','stroke-width':1.4})+X('path',{d:'M12 18C24 22 36 20 44 11L32 8Z',fill:'#0a5a5a',stroke:'#e9c35a','stroke-width':1})+X('circle',{cx:7,cy:-7,r:3,fill:'#fff4a8'})+X('circle',{cx:40,cy:-1,r:1.3,fill:'#052a2c'});
  b+=X('g',{transform:'translate(146 68) scale(.66)'},h);
  const lv=X('g',{transform:'translate(146 68) scale(.66)'},A('fx-pulse',0,X('circle',{cx:7,cy:-7,r:7,fill:'#ffd84a',opacity:.45}))+X('g',{transform:'translate(46 2)'},A('fx-sway',0,X('path',{d:'M0 0C14 4 22 14 18 30',fill:'none',stroke:'#e9c35a','stroke-width':1.8,'stroke-linecap':'round'})))+A('fx-pulse',-.6,X('circle',{cx:66,cy:-8,r:13,fill:'#3fe0c8',opacity:.3}))+X('circle',{cx:66,cy:-8,r:7,fill:'url(#evPe)'}));
- return W(halo('evH4')+rip('#7fe0d4')+(SI[4]=LY.concat([b]).map(x=>IMG(d,x)),'')+lv+sweep(57.7,'#9ffff0')+parts([[170,56],[196,70],[184,48]],'fx-rise','#9ffff0',1.5))});
+ return W(halo('evH4')+rip('#7fe0d4')+(SI[4]=LY.concat([b]).map(x=>IMG(d,x)),'')+lv+sweep(57.7,'#9ffff0')+parts([[170,56],[196,70],[184,48]],'fx-rise','#9ffff0',1.5)+parts(ringPts(74,12,.1),'fx-twk','#fff6c0',1.9)+parts(ringPts(90,8,.3),'fx-evup2','#9ffff0',1.3))});
 // ---------- 5 กระทงเถ้าถ่าน ----------
 const live5=memo(()=>{const d=LG('a1',0,0,1,1,[[0,'#4a3a30'],[.6,'#241a15'],[1,'#0d0908']])+LG('a2',0,1,1,0,[[0,'#5a4a3e'],[1,'#2a1f19']]);const LY=[];let b=ann(50,79,'#0b0807');LY.push(b);b='';
- for(let i=0;i<16;i++)b+=leaf(54,96,17,i*Math.PI/8,'url(#a1)','#ff6a1a','#ff9a3a');LY.push(b);b='';for(let i=0;i<16;i++)b+=leaf(52,84,13,(i+.5)*Math.PI/8,'url(#a2)','#c4501a','#e8a070');
- LY.push(b);b='';b+=mari(12,60,'#8a8078','#6a625a','#ff6a1a')+X('circle',{cx:C,cy:C,r:57.7,fill:'none',stroke:'#8a8078','stroke-width':1.6})+incense('#3a2a20')+candle('#6a5a4c');
+ for(let k=0;k<2;k++){b='';for(let i=k;i<16;i+=2)b+=leaf(54,96,17,i*Math.PI/8,'url(#a1)','#ff6a1a','#ff9a3a');LY.push(b)}
+ for(let k=0;k<2;k++){b='';for(let i=k;i<16;i+=2)b+=leaf(52,84,13,(i+.5)*Math.PI/8,'url(#a2)','#c4501a','#e8a070');LY.push(b)}
+ b='';b+=mari(12,60,'#8a8078','#6a625a','#ff6a1a')+X('circle',{cx:C,cy:C,r:57.7,fill:'none',stroke:'#8a8078','stroke-width':1.6})+incense('#3a2a20')+candle('#6a5a4c');
  const em=[];for(let i=0;i<14;i++){const p=pt(92,i*2*Math.PI/14+.1);em.push([n1(p[0]),n1(p[1])])}
- return W(halo('evH5')+rip('#a89888')+(SI[5]=LY.concat([b]).map(x=>IMG(d,x)),'')+flame(44,.8)+parts(em,'fx-twk','#ff8a2a',2.2)+parts([[C-29,41],[C+29,41]],'fx-twk','#ff5a1f',1.8)+parts([[96,50],[130,40],[164,50],[110,36],[150,36]],'fx-rise','#9a8a7a',2.2)+parts([[104,44],[140,38]],'fx-rise','#ff8a2a',1.6))});
+ return W(halo('evH5')+rip('#a89888')+(SI[5]=LY.concat([b]).map(x=>IMG(d,x)),'')+flame(44,.8)+parts(em,'fx-twk','#ff8a2a',2.2)+parts([[C-29,41],[C+29,41]],'fx-twk','#ff5a1f',1.8)+parts([[96,50],[130,40],[164,50],[110,36],[150,36]],'fx-rise','#9a8a7a',2.2)+parts([[104,44],[140,38]],'fx-rise','#ff8a2a',1.6)+smk(C,34,'#7a6a5e')+pet([[100,214],[160,212]],'#3a2a20'))});
 // ---------- ลงทะเบียนกรอบ ----------
 const mk=(id,n,c1,c2,c3,pc,bd,sh)=>{const f={id,n,side:'h',c:0,ty:'static',c1,c2,c3,pc,bd,d:''};const i=FRAMES.findIndex(x=>x.id===id);if(i>=0)FRAMES[i]=f;else FRAMES.push(f);T[id]=sh};
 M.pev1=live1;M.pev2=live2;M.pev3=live3;M.pev4=live4;M.pev5=live5;
@@ -34015,14 +34019,36 @@ document.body.insertAdjacentHTML('beforeend',`<svg width="0" height="0" style="p
 // ---------- CSS ----------
 const css=document.createElement('style');css.textContent=`
 .frsh.evst{will-change:transform}
-.evst1.evl1,.evst5.evl1{animation:evSwA 5.4s ease-in-out infinite}
-.evst1.evl2,.evst5.evl2{animation:evSwB 4.6s ease-in-out infinite}
-.evst1.evl3,.evst5.evl3{animation:evBr 3.8s ease-in-out infinite}
-.evst3.evl0{animation:evBob 4.2s ease-in-out infinite}
-.evst3.evl1{animation:evSwA 6.2s ease-in-out infinite}
-.evst3.evl2{animation:evSwB 5.2s ease-in-out infinite}
-.evst3.evl3{animation:evBr 4.4s ease-in-out infinite}
-.evst4.evl1{animation:evSwA 7s ease-in-out infinite}
+.evst1.evl1,.evst5.evl1{animation:evLfA 3.2s ease-in-out infinite}
+.evst1.evl2,.evst5.evl2{animation:evLfB 2.9s ease-in-out -.7s infinite}
+.evst1.evl3,.evst5.evl3{animation:evLfB 3.4s ease-in-out -1.3s infinite}
+.evst1.evl4,.evst5.evl4{animation:evLfA 2.7s ease-in-out -.4s infinite}
+.evst1.evl5,.evst5.evl5{animation:evBr2 3.2s ease-in-out infinite}
+.evst3.evl0{animation:evBob2 3.6s ease-in-out infinite}
+.evst3.evl1{animation:evPtA 4s ease-in-out infinite}
+.evst3.evl2{animation:evPtB 4s ease-in-out -2s infinite}
+.evst3.evl3{animation:evPtB 3.4s ease-in-out -.5s infinite}
+.evst3.evl4{animation:evPtA 3.4s ease-in-out -2.2s infinite}
+.evst3.evl5{animation:evBr2 3s ease-in-out infinite}
+.evst4.evl1{animation:evNgA 3.6s ease-in-out infinite}
+.evst4.evl2{animation:evNgB 3.6s ease-in-out -.6s infinite}
+.evst4.evl3{animation:evNgA 3.6s ease-in-out -1.2s infinite}
+@keyframes evLfA{0%,100%{transform:rotate(-5deg) scale(1)}50%{transform:rotate(5deg) scale(1.02)}}
+@keyframes evLfB{0%,100%{transform:rotate(4.5deg) scale(1.015)}50%{transform:rotate(-4.5deg) scale(.995)}}
+@keyframes evBr2{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+@keyframes evBob2{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(2.5%) rotate(1.5deg)}}
+@keyframes evPtA{0%,100%{transform:rotate(-4deg) scale(.97)}50%{transform:rotate(4deg) scale(1.045)}}
+@keyframes evPtB{0%,100%{transform:rotate(4deg) scale(1.04)}50%{transform:rotate(-4deg) scale(.97)}}
+@keyframes evNgA{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes evNgB{0%,100%{transform:rotate(3deg)}50%{transform:rotate(-3deg)}}
+.frsh g.fx-evsmk{animation:evSmk 3.2s ease-out infinite}
+.frsh g.fx-evdrift{animation:evDrift 6s ease-in-out infinite}
+.frsh g.fx-evup2{animation:evUp2 3.6s ease-out infinite}
+.frsh g.fx-evmini{animation:evMini 7s ease-in infinite}
+@keyframes evSmk{0%{transform:translate(0,0) scale(.6);opacity:0}25%{opacity:.75}100%{transform:translate(5px,-26px) scale(1.9);opacity:0}}
+@keyframes evDrift{0%{transform:translate(-14px,0) rotate(-20deg);opacity:0}20%,80%{opacity:1}100%{transform:translate(14px,3px) rotate(25deg);opacity:0}}
+@keyframes evUp2{0%{transform:translate(0,0);opacity:0}20%{opacity:1}100%{transform:translate(0,-30px);opacity:0}}
+@keyframes evMini{0%{transform:translate(0,0) scale(.7);opacity:0}15%{opacity:1}85%{opacity:.9}100%{transform:translate(-6px,-140px) scale(1);opacity:0}}
 .evlite .frsh.evst{will-change:auto}
 @keyframes evSwA{0%,100%{transform:rotate(-1.8deg) scale(1)}50%{transform:rotate(1.8deg) scale(1.012)}}
 @keyframes evSwB{0%,100%{transform:rotate(1.6deg) scale(1.01)}50%{transform:rotate(-1.6deg) scale(1)}}
@@ -34032,11 +34058,11 @@ const css=document.createElement('style');css.textContent=`
 @keyframes evScl{to{background-position:12px 0,0 0}}
 @keyframes evGold{0%,100%{border-color:#d9b04a}50%{border-color:#fff0a8}}
 @keyframes evEmb{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-16px);opacity:0}}
-.frw.fsh.fev2{animation:evBobU 4.6s ease-in-out infinite!important;will-change:transform}
+.frw.fsh.fev2{animation:evBobU 3.6s ease-in-out infinite!important;will-change:transform}
 .fx-evrip{animation:evRip 4.8s ease-out infinite}
 .frsh circle.fx-evsw{stroke-dasharray:46 318;animation:evSw 9s linear infinite}
 @keyframes evBob{0%,100%{transform:translateY(0) rotate(-.5deg)}50%{transform:translateY(2.5px) rotate(.5deg)}}
-@keyframes evBobU{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-5px) rotate(1deg)}}
+@keyframes evBobU{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7px) rotate(3deg)}}
 @keyframes evBr{0%,100%{transform:scale(1)}50%{transform:scale(1.028)}}
 @keyframes evRip{0%{transform:scale(.55);opacity:0}15%{opacity:.55}100%{transform:scale(1.2);opacity:0}}
 @keyframes evSw{0%,70%{stroke-dashoffset:364;opacity:0}72%{opacity:1}100%{stroke-dashoffset:0;opacity:0}}
@@ -34202,7 +34228,7 @@ const banner=()=>`<button class="cosent ev" onclick="evMenu()"><span class="ic">
 ['openProfile','openFrameShop','vipMenu'].forEach(n=>{let o;try{o=eval(n)}catch(e){}if(typeof o!=='function')return;const w=function(){const r=o.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.cosent.ev')&&!/^(cos|ev)/.test(m.dataset.k||'')&&Date.now()<END){const h=m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',banner())}}catch(e){}return r};window[n]=w;try{eval(n+'=w')}catch(e){}});
 setInterval(()=>{try{const Tt=$('title');if(Tt&&$('tSup')&&!$('tEv')&&Date.now()<END)Tt.insertAdjacentHTML('afterbegin','<button id="tEv" onclick="evMenu()">🏮 อีเวนต์ลอยกระทง</button>')}catch(e){}},1200);
 setTimeout(evSync,3200);setInterval(evSync,300000);window.addEventListener('shop:paid',evSync);
-try{if((navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=2){document.documentElement.classList.add('evlite');const st=document.createElement('style');st.textContent='.evlite #chatBox .frsh .fx-evrip,.evlite #chatBox .frsh .fx-rise,.evlite #chatBox .frsh .fx-twk{display:none}.evlite #chatBox .frsh .fx-pulse{animation:none}';document.head.appendChild(st)}}catch(e){}
+try{if((navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=2){document.documentElement.classList.add('evlite');const st=document.createElement('style');st.textContent='.evlite #chatBox .frsh .fx-evsmk,.evlite #chatBox .frsh .fx-evdrift,.evlite #chatBox .frsh .fx-evup2,.evlite #chatBox .frsh .fx-evmini,.evlite #chatBox .frsh .fx-evrip,.evlite #chatBox .frsh .fx-rise,.evlite #chatBox .frsh .fx-twk{display:none}.evlite #chatBox .frsh .fx-pulse{animation:none}';document.head.appendChild(st)}}catch(e){}
 
 // 🖥️ ปรับหน้าคอม (จอกว้าง ≥1000px และมีเมาส์): จัดปุ่มลอยให้เป็นระเบียบ, ซ่อนปุ่มเริ่มเล่นซ้ำ, hover/โฟกัส/สกรอลบาร์
 {const st=document.createElement('style');st.textContent=`@media (min-width:1000px) and (hover:hover){
