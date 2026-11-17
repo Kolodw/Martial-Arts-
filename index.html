@@ -31114,6 +31114,48 @@ window._lifeTbl={PV,LE,LS,LW,LJ,LEDU,Ls,lOn,lRunE,lifeYear};
 // แดนเทพ: ปุ่ม ×1 ต้องไม่ข้ามเวลาจนตายแบบไม่ตั้งตัว — (1) ตั้งค่า "เวลาไหลทีละปี" ได้ในเมนูด่วน (2) ก้าวไม่เกินหนึ่งในสามของอายุขัยที่เหลือ จะได้มีเวลาเตรียมตัว
 {const _xsG=xStep;xStep=function(){const sealed=!!(S&&S.xseal>0);const v=_xsG.apply(this,arguments);try{if(S&&!sealed){if(LS.get('murim_xone',0))return 1;
  const left=Math.round((typeof lifeMax==='function'?lifeMax():S.lifespan||0)-S.age);if(left>0&&v>3){const m=Math.max(1,Math.floor(left/3));if(v>m)return m}}}catch(e){}return v}}
+
+// ===================== ชนะประมูลทั่วยุทธภพ: หน้าต่างแจ้งผล + ใช้เลย/เก็บไว้ · จุดแดงที่ปุ่มกระเป๋าเมื่อมีของรอใช้ =====================
+try{(()=>{
+const st=document.createElement('style');st.textContent=`
+.pawC{position:relative;text-align:center;color:#f6ead0;padding:20px 14px 16px;border-radius:16px;background:radial-gradient(120% 90% at 50% 0%,var(--pwg,#6b4a14) 0%,#2a1d0c 52%,#171008 100%);border:2px solid var(--pwc,#f0c860);box-shadow:0 0 0 1px #000,0 10px 34px rgba(0,0,0,.55),inset 0 0 40px rgba(240,200,96,.08);overflow:hidden}
+.pawC:before{content:"";position:absolute;inset:6px;border:1px solid rgba(240,200,96,.28);border-radius:11px;pointer-events:none}
+.pawC .pwK{font-size:12px;letter-spacing:.18em;color:var(--pwc,#f0c860);opacity:.9}
+.pawC .pwH{font-size:22px;font-weight:800;margin:4px 0 12px;color:#fff3cf;text-shadow:0 2px 10px rgba(240,200,96,.45)}
+.pawC .pwI{display:inline-block;font-size:40px;line-height:1;width:76px;height:76px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;border-radius:50%;background:rgba(0,0,0,.35);border:2px solid var(--pwc,#f0c860);box-shadow:0 0 22px var(--pwc,#f0c860);animation:pawG 2.2s ease-in-out infinite}
+.pawC .pwN{font-size:18px;font-weight:800;margin:2px 0 6px}
+.pawC .pwE{margin:10px auto 4px;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,.32);font-size:14px;line-height:1.5;color:#ffe9b0}
+.pawC .pwP{font-size:12px;opacity:.7;margin-bottom:12px}
+.pawC .pwB{display:flex;gap:8px}.pawC .pwB button{flex:1;padding:11px 6px;border-radius:11px;font:inherit;font-weight:800;cursor:pointer;border:2px solid var(--pwc,#f0c860)}
+.pawC .pwB .y{background:linear-gradient(180deg,#ffe29a,#e8b54a 55%,#c98d22);color:#2a1a00;box-shadow:0 3px 0 #7a5410}.pawC .pwB .y:active{transform:translateY(2px);box-shadow:0 1px 0 #7a5410}
+.pawC .pwB .n{background:transparent;color:var(--pwc,#f0c860)}
+.pawC .pwT{font-size:11px;opacity:.6;margin-top:9px}
+@keyframes pawG{50%{box-shadow:0 0 34px var(--pwc,#f0c860)}}
+@media (prefers-reduced-motion:reduce){.pawC .pwI{animation:none}}
+#bagBtn{position:relative}#bagBtn.vltDot:after{content:"";position:absolute;top:3px;right:3px;width:10px;height:10px;border-radius:50%;background:#ff4d4d;border:2px solid #fff;box-shadow:0 0 8px #ff4d4d;animation:pawP 1.4s ease-in-out infinite}
+@keyframes pawP{50%{transform:scale(1.3)}}`;document.head.appendChild(st);
+const GL={pow:'💪',hp:'❤️',qi:'🌀',life:'⏳',int:'🧠',cha:'🌸',art:'📜',fight:'⚔️',tal:'✨',brk:'⚡',myst:'🎁',fame:'🏅',karma:'☯️',money:'💰',duo:'🌟'};
+const Q=[];let cur=null;
+const clean=t=>String(t||'').replace(/ <i[\s\S]*$/,'');
+const esc2=x=>String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function pending(){return (S&&S.vault||[]).filter(v=>v&&v.pa)}
+function show(){if(cur||!Q.length||!S||!S.alive)return;if(modalOpen||choice._cur||paused&&false)return;
+ const w=Q[0],i=(S.vault||[]).findIndex(v=>v.uid===w.uid);if(i<0){Q.shift();return show()}
+ Q.shift();cur=w;const v=S.vault[i],it=paItem(v.r,v.k);let d='';try{d=clean(paEff(it).d)}catch(e){}
+ let rc={c:'#f0c860'};try{rc=rarC(it.r)||rc}catch(e){}const col=rc.c&&/^#/.test(rc.c)?rc.c:'#f0c860';
+ modal(`<div class="pawC" style="--pwc:${col};--pwg:${col}55"><div class="pwK">ประมูลทั่ว${S.xt?'เก้าชั้นฟ้า':S.xian?'โลกเซียน':'ยุทธภพ'}</div><div class="pwH">🔨 ปึก! คุณชนะการประมูล</div>
+  <div class="pwI">${GL[it.fx]||'🏺'}</div><div class="pwN">${esc2(it.n)}</div><div>${rarTag(it.r)}</div>
+  ${d?`<div class="pwE">${d}</div>`:''}<div class="pwP">จ่ายไป ${paGold(v.paid||0)}</div>
+  <div class="pwB"><button class="y" onclick="pawUse('${v.uid}')">✨ ใช้เลย</button><button class="n" onclick="pawKeep()">🗝️ เก็บไว้ในคลัง</button></div>
+  <div class="pwT">ยังไม่ใช้ก็ได้ — ของอยู่ในคลังสมบัติ (🎒 กระเป๋า) กดใช้ทีหลังเมื่อพร้อม</div></div>`,'pawin');
+ try{sfx('good')}catch(e){}}
+window.pawKeep=()=>{cur=null;closeM();dot();setTimeout(show,600)};
+window.pawUse=uid=>{cur=null;const i=(S.vault||[]).findIndex(v=>v.uid===uid);closeM();if(i>=0)vaultUse(i);try{closeM()}catch(e){}dot();setTimeout(show,600)};
+function dot(){try{const b=$('bagBtn');if(b)b.classList.toggle('vltDot',!!(S&&S.alive&&pending().length))}catch(e){}}
+{const _pw=paWins;paWins=function(L){const before=new Set((S&&S.vault||[]).map(v=>v.uid));const r=_pw.apply(this,arguments);try{(S&&S.vault||[]).forEach(v=>{if(v&&v.pa&&!before.has(v.uid))Q.push({uid:v.uid})});setTimeout(show,300)}catch(e){console.error(e)}return r}}
+setInterval(()=>{try{if(!S||!S.alive){cur=null;return}if(cur&&!(modalOpen&&$('modal').dataset.k==='pawin'))cur=null;show();dot()}catch(e){}},1500);
+{const _obW=openBag;openBag=function(){const r=_obW.apply(this,arguments);try{const b=document.querySelector('#modal [data-vlt]'),n=pending().length;if(b&&n){b.innerHTML=`🗝️ คลังสมบัติ (${(S.vault||[]).length} ชิ้น) · <span style="color:#ffd23f">✨ มีของประมูลรอใช้ ${n}</span>`}}catch(e){}return r}}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
