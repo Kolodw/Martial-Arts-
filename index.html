@@ -32905,6 +32905,9 @@ const st2=document.createElement('style');st2.textContent=`
 .cmb[class*=ccxT]>:not(.zqc):not(.zqg){position:relative;z-index:1}
 .cxs .cmb[class*=ccxT]::before,.cxs .cmb[class*=ccxT]::after,#chatBox .cmb[class*=ccxT]::before,#chatBox .cmb[class*=ccxT]::after{position:absolute;pointer-events:none;line-height:1}
 .cxoff,.cxoff *,.cxoff *::before,.cxoff *::after{animation-play-state:paused!important}
+/* ร้านตกแต่ง: ลดแล็คตอนเปิด — ไม่แตะเอฟเฟค */
+.cxs .card{content-visibility:auto;contain-intrinsic-size:auto 190px}
+.cxs .card.wide{contain-intrinsic-size:auto 120px}
 #chatBox .cm.cmp .cmb.ccxT1,.cxs .cmb.ccxT1{background:linear-gradient(135deg,#3a2a0a,#241a06);border-color:#e8b830;color:#fff3d0;outline:1px solid #e8b83066;outline-offset:2px}
 #chatBox .cmb.ccxT1 .zqc>.zql,.cxs .cmb.ccxT1 .zqc>.zql{width:300%;left:-100%;top:0;height:100%;background:linear-gradient(110deg,transparent 42%,#ffe9a077 50%,transparent 58%);animation:lxSweep 3.2s linear infinite}
 #chatBox .cmb.ccxT1>.zqg,.cxs .cmb.ccxT1>.zqg{box-shadow:0 0 22px #e8b830aa;animation:lxPulse 2s ease-in-out infinite alternate}
@@ -33053,7 +33056,7 @@ window.cosMenu=function(tab,focus){tab=window._cosTab=tab||window._cosTab||'set'
  if(tab==='c'){b='<div class="grid">'+[1,2,3,4,5,6,7,8].map(cardC).join('')+'</div>'}
  const hero=`<div class="hero"><span class="own">สะสมแล้ว ${owned()}/24</span><i class="sp" style="left:12%;top:20%"></i><i class="sp" style="left:60%;top:70%;animation-delay:-1s"></i><i class="sp" style="left:88%;top:40%;animation-delay:-.5s"></i><h4>🎨 ร้านตกแต่ง</h4><p>กรอบรูปทรงพิเศษที่ขยับได้ · ฉายาเรืองแสง · ธีมแชท<br>ของแต่งล้วนๆ ซื้อครั้งเดียวถาวร ไม่มีผลต่อพลังหรืออันดับ</p></div>`;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="cxs">${hero}<div class="tabs">${tabs.map(t=>`<button class="${tab===t[0]?'on':''}" onclick="cosMenu('${t[0]}')">${t[1]}</button>`).join('')}</div>${fh}${b}<p class="tag2" style="margin-top:10px">เล่นฟรีก็ได้กรอบและฉายาจากในเกมเหมือนเดิม · ผูกกับบัญชี ไม่หายเวลาเปลี่ยนเครื่อง</p></div>`,'cosshop');
- try{document.querySelectorAll('.cxs .card,.cxs .feat').forEach(cxWatch)}catch(e){}
+ try{document.querySelectorAll('.cxs .card,.cxs .feat').forEach((e,i)=>{if(i>1)e.classList.add('cxoff');cxWatch(e)})}catch(e){}
  if(focus){const el=document.getElementById('cs-'+focus);if(el){el.scrollIntoView({block:'center'});el.classList.add('hl')}}};
 // ลองใส่
 let TRY=null;
