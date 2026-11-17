@@ -35569,6 +35569,19 @@ afBig=function(c){try{const t=String(c&&c.title||'').replace(/<[^>]+>/g,'');if(/
 const _duBoss=duel;
 duel=function(name){try{if(auto&&/เฝ้ากาล/.test(String(name))){auto=false;try{toast('⚔️ ด่านผู้เฝ้ากาลต้องสู้เอง — ปิดโหมดอัตโนมัติให้แล้ว')}catch(e){}}}catch(e){}return _duBoss.apply(this,arguments)};
 }
+
+/* ===== ร้านตกแต่ง: แถบแท็บไม่โดนปุ่มลอยทับ · แท็บเข้าธีม · หยุดแอนิเมชันตอนเลื่อน (ลดแล็ก) ===== */
+{
+const st=document.createElement('style');st.textContent=`
+.cxs .tabs{background:rgba(18,13,34,.94)!important;border-radius:14px;padding:6px 6px 8px!important;margin-right:0!important;top:0!important}
+.cxs .tabs button{background:#1d1830!important;color:#f4ecd8!important;border-color:#4b4268!important}
+.cxs .tabs button.on{background:linear-gradient(180deg,#ffe29a,#e8b54a)!important;color:#2a1a04!important;border-color:#7a5512!important}
+#mFloat.shopf{top:auto!important;bottom:92px!important}
+#modal.scrl .cxs *{animation-play-state:paused!important}
+`;document.head.appendChild(st);
+let sT=0;document.addEventListener('scroll',e=>{const m=document.getElementById('modal');if(!m||m.dataset.k!=='cosshop')return;if(!m.contains(e.target)&&e.target!==m)return;m.classList.add('scrl');clearTimeout(sT);sT=setTimeout(()=>m.classList.remove('scrl'),180)},true);
+setInterval(()=>{try{const m=document.getElementById('modal'),f=document.getElementById('mFloat');if(f)f.classList.toggle('shopf',!!(m&&m.dataset.k==='cosshop'))}catch(e){}},500);
+}
 </script>
 </body>
 </html>
