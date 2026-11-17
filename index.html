@@ -35398,6 +35398,21 @@ window.openProfile=function(){
 
 /* v18.15 เอฟเฟกต์ประกายบังตัวอักษรในบับเบิลแชท: ย้ายเลเยอร์ไว้หลังข้อความ */
 {const st=document.createElement('style');st.textContent=`.cmb[class*=ccxT]{isolation:isolate}.cmb[class*=ccxT]>.zqc,.cmb[class*=ccxT]>.zqg{z-index:-1}`;document.head.appendChild(st)}
+
+/* ===== ลดแล็กแชทออนไลน์: เก็บเอฟเฟกต์ครบ แต่หยุดแอนิเมชันที่นอกจอ ===== */
+{
+const st=document.createElement('style');st.textContent='html.pgHide *{animation-play-state:paused!important}#chatBox.scrl *{animation-play-state:paused!important}';
+let _sT=0;document.addEventListener('scroll',e=>{const b=e.target;if(!b||b.id!=='chatBox')return;b.classList.add('scrl');clearTimeout(_sT);_sT=setTimeout(()=>b.classList.remove('scrl'),180)},true);document.head.appendChild(st);
+document.addEventListener('visibilitychange',()=>document.documentElement.classList.toggle('pgHide',document.hidden));
+const io=typeof IntersectionObserver==='function'?new IntersectionObserver(es=>es.forEach(x=>x.target.classList.toggle('cxoff',!x.isIntersecting)),{rootMargin:'60px'}):null;
+const o=window.chatRender;
+window.chatRender=function(){
+ try{if(Array.isArray(chatMsgs)&&chatMsgs.length>80)chatMsgs=chatMsgs.slice(-80)}catch(e){}
+ const r=o.apply(this,arguments);
+ try{const box=$('chatBox');if(box&&io){const rows=box.querySelectorAll('.cm'),n=rows.length;rows.forEach((e,i)=>{if(e._cw)return;e._cw=1;if(i<n-12)e.classList.add('cxoff');io.observe(e)})}}catch(e){}
+ return r};
+try{chatRender=window.chatRender}catch(e){}
+}
 </script>
 </body>
 </html>
