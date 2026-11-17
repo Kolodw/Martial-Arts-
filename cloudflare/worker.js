@@ -90,8 +90,27 @@ async function payAdmin(request, env, url) {
   }
   return jr({ err: 'a' }, 400);
 }
+// สร้าง multipart เอง (ไม่พึ่ง FormData ของ runtime) เพื่อให้ SlipOK เห็นช่อง files แน่นอน (SlipOK 1000 = ไม่พบ data/files/url)
+function mpBody(parts) {
+  const bd = '----slip' + Math.random().toString(36).slice(2) + Date.now().toString(36), enc = new TextEncoder(), out = [];
+  for (const p of parts) {
+    out.push(enc.encode('--' + bd + '\r\nContent-Disposition: form-data; name="' + p.name + '"' + (p.filename ? '; filename="' + p.filename + '"' : '') + '\r\n' + (p.type ? 'Content-Type: ' + p.type + '\r\n' : '') + '\r\n'));
+    out.push(typeof p.value === 'string' ? enc.encode(p.value) : p.value); out.push(enc.encode('\r\n'));
+  }
+  out.push(enc.encode('--' + bd + '--\r\n'));
+  let n = 0; for (const o of out) n += o.length; const buf = new Uint8Array(n); let k = 0; for (const o of out) { buf.set(o, k); k += o.length }
+  return { body: buf, type: 'multipart/form-data; boundary=' + bd };
+}
+async function slipokCall(env, bin, mt, amount, withLog) {
+  const parts = [{ name: 'files', filename: 'slip.' + (/png/.test(mt) ? 'png' : 'jpg'), type: mt, value: bin }];
+  if (withLog) parts.push({ name: 'log', value: 'true' });
+  if (amount != null) parts.push({ name: 'amount', value: String(amount) });
+  const m = mpBody(parts);
+  const r = await fetch('https://api.slipok.com/api/line/apikey/' + encodeURIComponent(String(env.SLIPOK_BRANCH).trim()), { method: 'POST', headers: { 'x-authorization': String(env.SLIPOK_KEY).trim(), 'Content-Type': m.type }, body: m.body });
+  return { hs: r.status, j: await r.json().catch(() => null) };
+}
 async function pay(request, env) {
-  if (request.method !== 'POST') { try { if (new URL(request.url).searchParams.get('diag') === '1') return jr({ db: !!env.PAY_DB, slipok: !!(env.SLIPOK_KEY && env.SLIPOK_BRANCH), easyslip: !!env.EASYSLIP_KEY, name_check: !!env.PAY_NAME }) } catch (e) {} return jr({ err: 'method' }, 405) }
+  if (request.method !== 'POST') { try { if (new URL(request.url).searchParams.get('diag') === 'slip') { const png = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='), c => c.charCodeAt(0)); const o = { key: !!env.SLIPOK_KEY, branch: !!env.SLIPOK_BRANCH, keyLen: String(env.SLIPOK_KEY || '').length, branchLen: String(env.SLIPOK_BRANCH || '').length }; try { const a = await slipokCall(env, png, 'image/png', null, false); o.test = { hs: a.hs, code: a.j && a.j.code, msg: a.j && String(a.j.message || '').slice(0, 80) } } catch (e) { o.test = { err: String(e && e.message || e).slice(0, 80) } } return jr(o) } if (new URL(request.url).searchParams.get('diag') === '1') return jr({ db: !!env.PAY_DB, slipok: !!(env.SLIPOK_KEY && env.SLIPOK_BRANCH), easyslip: !!env.EASYSLIP_KEY, name_check: !!env.PAY_NAME }) } catch (e) {} return jr({ err: 'method' }, 405) }
   const useOK = !!(env.SLIPOK_KEY && env.SLIPOK_BRANCH);
   if (!env.PAY_DB || !(useOK || env.EASYSLIP_KEY)) return jr({ ok: 0, st: 'unavailable' });
   let b; try { b = await request.json() } catch (e) { return jr({ ok: 0, st: 'bad' }, 400) }
@@ -117,11 +136,8 @@ async function pay(request, env) {
     let j, hs = 0;
     let sz = 0, mt = '';
     const callOK = async extras => {
-      const bin = Uint8Array.from(atob(img.split(',')[1]), c => c.charCodeAt(0)), fd = new FormData(); sz = bin.length; mt = (img.match(/^data:([^;]+)/) || [])[1] || 'image/jpeg';
-      fd.append('files', new Blob([bin], { type: mt }), 'slip.' + (/png/.test(mt) ? 'png' : 'jpg'));
-      if (extras) { if (!DON) fd.append('amount', String(P.amt)); fd.append('log', 'true') }
-      const r = await fetch('https://api.slipok.com/api/line/apikey/' + encodeURIComponent(String(env.SLIPOK_BRANCH).trim()), { method: 'POST', headers: { 'x-authorization': String(env.SLIPOK_KEY).trim() }, body: fd });
-      hs = r.status; return await r.json().catch(() => null);
+      const bin = Uint8Array.from(atob(img.split(',')[1]), c => c.charCodeAt(0)); sz = bin.length; mt = (img.match(/^data:([^;]+)/) || [])[1] || 'image/jpeg';
+      const rr = await slipokCall(env, bin, mt, extras && !DON ? P.amt : null, !!extras); hs = rr.hs; return rr.j;
     };
     try {
       j = await callOK(true);
