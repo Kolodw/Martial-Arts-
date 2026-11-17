@@ -1345,8 +1345,9 @@ function healthTick(){
  if(S.age<=6){const r=(S.family.inf||.05)*.25*(INF_DECAY[S.age-1]||0)*(S.talent.m>=3?.5:1);
   if(Math.random()<r){S.deathCause=ch(['ไข้สูงตั้งแต่ยังเป็นทารก','ร่างกายอ่อนแอมาตั้งแต่แรกเกิด','ป่วยหนักในฤดูหนาวที่หนาวจัด','โรคท้องร่วงในวัยทารก']);return}}
  const ac=(S.age<6?.008:S.age>60?.01:.005)*(realmIdx()>=4?.3:1)*(tr('lucky')?.5:1)*(tr('unlucky')?2:1);
- if(Math.random()<ac){const a=S.age<12?ch(['พลัดตกน้ำในฤดูน้ำหลาก','ตกต้นไม้','ถูกงูเห่ากัด','ถูกสุนัขบ้ากัด','บ้านไฟไหม้ตอนกลางคืน']):ch(['พลัดตกน้ำในฤดูน้ำหลาก','ตกจากหลังม้า','ถูกงูเห่ากัด','หิมะถล่มขณะเดินทาง','ฟ้าผ่าลงข้างตัว','บ้านไฟไหม้ตอนกลางคืน']);const dmg=Math.round(R(40,95)*(1-gv('armor','red')-eqA('red')-bufA('red'))*(tr('iron')?.8:1));S.hp-=dmg;
-  log(`⚠️ อุบัติเหตุ! ${a} (พลังชีวิต −${dmg})`,'bad',true);if(S.hp<=0)S.deathCause=`เสียชีวิตจากอุบัติเหตุ — ${a}`}
+ if(Math.random()<ac){const a=S.age<12?ch(['พลัดตกน้ำในฤดูน้ำหลาก','ตกต้นไม้','ถูกงูเห่ากัด','ถูกสุนัขบ้ากัด','บ้านไฟไหม้ตอนกลางคืน']):ch(['พลัดตกน้ำในฤดูน้ำหลาก','ตกจากหลังม้า','ถูกงูเห่ากัด','หิมะถล่มขณะเดินทาง','ฟ้าผ่าลงข้างตัว','บ้านไฟไหม้ตอนกลางคืน']);const dmg=Math.round(R(40,95)*(1-gv('armor','red')-eqA('red')-bufA('red'))*(tr('iron')?.8:1)),hp0=S.hp;S.hp-=dmg;
+  log(`⚠️ อุบัติเหตุ! ${a} (พลังชีวิต −${dmg})`,'bad',true);
+  if(S.hp<=0){if(S.age<8&&S.age-(S.nearY==null?-99:S.nearY)>=4&&Math.random()<.75){S.nearY=S.age;S.hp=15;log('🌿 ชาวบ้านพาไปหาหมอยาทัน หายใจรวยรินแต่รอดมาได้อย่างหวุดหวิด','good',true)}else S.deathCause=`เสียชีวิตจากอุบัติเหตุ — ${a} (พลังชีวิตเหลือ ${Math.max(0,Math.round(hp0))} แต่โดน −${dmg})`}}
 }
 const BODY_RES=[1,.85,.7,.5,.3,.15,.05,0],BODY_LET=[1,.8,.6,.45,.3,.15,.05,0];
 const qiRes=()=>Math.max(.5,1-S.qi*.008);
@@ -30786,6 +30787,15 @@ window.lifeAct=function(k,a,b){const M=S&&S.mw;if(!M)return;const l=Ls(M),cash=S
 {const _r=render;render=function(){const r=_r.apply(this,arguments);try{if(mwOn()&&lOn(S.mw)){const j=document.querySelector('#mwHud .mwJob .mwAstB');if(j&&!j.parentNode.querySelector('.mwLifeB'))j.insertAdjacentHTML('afterend',` <button class="gbtn mwJobB mwAstB mwLifeB" onclick="openLife()">🧭 ชีวิต</button>`)}}catch(e){}return r}}
 window._lifeTbl={LE,LS,LW,LJ,LEDU,Ls,lOn,lRunE,lifeYear};
 })();
+
+// เกิดใหม่ด้วยดวงเดิม: ตายก่อน 6 ขวบ → เกิดใหม่ด้วยดวงเดิมฟรี 1 ครั้งต่อดวง (ไม่เสียสิทธิ์สุ่ม ไม่นับเป็นชีวิตที่จบ)
+{const _slRB=startLife;startLife=function(){const r=_slRB.apply(this,arguments);try{window._rbRoll=roll}catch(e){}return r}}
+{const _cdRB=checkDeath;checkDeath=function(){try{const R0=window._rbRoll;
+ if(S&&S.alive&&S.deathCause&&S.age<=5&&R0&&!R0._rb&&R0.seed===S.seed&&!(S.gen>1)&&!(S.ch&&S.ch!=='normal')&&!S.beastMode&&!S.mw&&!S.custom&&!CFG.daily&&!(S.flags&&S.flags.kidShield)&&!(S.sys&&S.sys.revive>0)){
+  R0._rb=1;const cause=S.deathCause,age=S.age;roll=R0;startLife();
+  try{S.flags.kidShield=1}catch(e){}
+  try{log(`🔁 <b>เกิดใหม่ด้วยดวงเดิม</b> — ชีวิตก่อนหน้าจบตั้งแต่ ${age} ขวบ (${cause}) จึงได้เกิดใหม่ฟรีด้วยดวงเดิม (ครั้งเดียวต่อดวง)`,'myth',true)}catch(e){}
+  return true}}catch(e){console.error(e)}return _cdRB.apply(this,arguments)}}
 
 </script>
 </body>
