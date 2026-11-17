@@ -1089,6 +1089,7 @@ function gachaCost(){return Math.round(150*Math.pow(1.35,S.gachaN||0)/10)*10}
 function openMenu(){
  const ok=(S.gachaY||0)<3,th=THEMES.find(x=>x[0]===theme);
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☰ เมนู</h3><div class="mgrid">
+  <button class="opt" onclick="openMe()" style="grid-column:1/-1">🧬 ตัวละครของฉัน<small>${S.xian?'ราก · กฎเต๋า · ถ้ำ · อาชีพ':'พรสวรรค์ · พลัง · ชุดสวมใส่'}</small></button>
   <button class="opt" onclick="openArts()">📖 วิชา<small>${S.arts.length} วิชา</small></button>
   <button class="opt" onclick="gachaArt()" ${ok?'':'disabled style="opacity:.5"'}>🎴 สุ่มคัมภีร์<small>${ok?fmtM(gachaCost())+' ตำลึง · เหลือ '+(3-(S.gachaY||0))+' ครั้งปีนี้':'ปีนี้สุ่มครบแล้ว'}</small></button>
   <button class="opt" onclick="openFaction()">🏯 สำนัก<small>${S.faction?S.faction.n:'ยังไม่มีสังกัด'}</small></button>
@@ -3626,6 +3627,13 @@ function eqSaveTry(){if(!S.eq||!S.eq.trs||S.eqSv<=0)return false;const it=EQI[S.
 function eqSell(id){if(!S.eqInv[id])return;const p=Math.round(EQI[id].v*.4);S.eqInv[id]--;if(!S.eqInv[id])delete S.eqInv[id];S.money+=p;sfx('click');toast(`ขายได้ ${fmtM(p)}`);openEquip()}
 function eqBuy(id){const it=EQI[id];if(S.money<it.v)return toast('เงินไม่พอ');S.money-=it.v;sfx('good');eqGet(id,'ซื้อจากร้าน');render();openMarket()}
 function eqShopSec(){const L=Object.keys(EQI).filter(k=>EQI[k].t<=3);return`<h4 style="margin:10px 0 6px">💍 ร้านเครื่องประดับและชุด <span class="tag2">สวมได้ที่เมนู ⚔️ ชุดสวมใส่</span></h4>`+L.map(k=>{const it=EQI[k];return`<div class="item"><div class="h"><b>${it.ic} ${it.n}</b><button onclick="eqBuy('${k}')" ${S.money>=it.v?'':'disabled style="opacity:.4"'}>${fmtM(it.v)}</button></div><p>${EQS[it.s==='acc'?'acc1':it.s].replace(' 1','')} · ${it.d}</p></div>`}).join('')}
+function openMe(){if(!S)return;let rn='';try{rn=REALMS[realmIdx()].n}catch(e){}
+ const tal=S.talent?(S.xian?(S.root||rootOf(S.talent)):S.talent.n):'';
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🧬 ${esc(S.name||'ตัวละครของฉัน')}</h3>
+ <div class="item"><b>อายุ ${S.age} ปี${rn?' · '+rn:''}</b><br><span class="tag2">${S.xian?'โลกเซียน':'ยุทธภพ'}${S.talent?' · '+(S.xian?'':'พรสวรรค์ ')+tal+(S.talent.m?' · ความเร็วฝึก ×'+S.talent.m:''):''}</span></div>
+ <button class="gbtn" style="width:100%;margin-bottom:6px" onclick="openEquip()">⚔️ ชุดสวมใส่ (${eqOn().length} ชิ้น)</button>
+ <button class="gbtn" style="width:100%;margin-bottom:6px" onclick="openBag()">🎒 กระเป๋า</button>
+ ${S.xian?xPanel():''}`,'me')}
 function openEquip(){eqInit();const o=meLook();
  const gsl=k=>{const g0=gearOf(k);return`<div class="eqs"><div class="k">${SLOT_N[k]}</div><b>${g0?g0.n:'— ว่าง —'}</b><small>${g0?(k==='weapon'?'พลังรวม +'+g0.v:k==='armor'?'พลังชีวิต +'+g0.v+' · เจ็บน้อยลง '+g0.red*100+'%':k==='mount'?'เดินทางดีขึ้น':'ความสุข +'+g0.v):'ซื้อได้ที่ตลาด'}</small></div>`};
  const esl=k=>{const id=S.eq[k],it=id&&EQI[id];return`<div class="eqs ${it?'on':''}"><div class="k">${EQS[k]}</div><b>${it?it.ic+' '+it.n:'— ว่าง —'}</b><small>${it?it.d+(k==='trs'&&it.e.save?` · เหลือ ${S.eqSv} ครั้ง`:''):'ยังไม่ได้สวม'}</small>${it?`<button class="sysb" onclick="eqPut('${k}',null);openEquip()">ถอด</button>`:''}</div>`};
@@ -5698,7 +5706,7 @@ function hmLeave(why){if(S.harem&&S.harem.length)log(`🌸 คนในตำห
 
 // ============ v7.3: เลย์เอาต์สำหรับหน้าจอคอม + คีย์ลัด ============
 const DESK_W=1100;let deskOn=false;
-const DESK_MENU=[['📖','วิชา','openArts'],['🎒','กระเป๋า','openBag'],['🗡️','ชุดสวมใส่','openEquip'],['📋','เควส','openQuests'],['🏘️','หมู่บ้าน','openTown'],['🔨','งานช่าง','openCraft'],['👥','ผู้คน','openPeople'],['👪','ครอบครัว','openFamily'],['🏯','สำนัก','openFaction'],['🏡','ตระกูล','openHouse'],['🏰','ดันเจี้ยน','openDungeons'],['🐾','สัตว์คู่ใจ','openBeastComp'],['🗺️','แผนที่','openMap'],['📜','บันทึกชีวิต','openLifeLog'],['🏆','ทำเนียบสำนัก','openRanking'],['⚙️','อัตโนมัติ','openAuto'],['🔊','เสียง','openSound']];
+const DESK_MENU=[['🧬','ตัวละคร','openMe'],['📖','วิชา','openArts'],['🎒','กระเป๋า','openBag'],['🗡️','ชุดสวมใส่','openEquip'],['📋','เควส','openQuests'],['🏘️','หมู่บ้าน','openTown'],['🔨','งานช่าง','openCraft'],['👥','ผู้คน','openPeople'],['👪','ครอบครัว','openFamily'],['🏯','สำนัก','openFaction'],['🏡','ตระกูล','openHouse'],['🏰','ดันเจี้ยน','openDungeons'],['🐾','สัตว์คู่ใจ','openBeastComp'],['🗺️','แผนที่','openMap'],['📜','บันทึกชีวิต','openLifeLog'],['🏆','ทำเนียบสำนัก','openRanking'],['⚙️','อัตโนมัติ','openAuto'],['🔊','เสียง','openSound']];
 function deskBuild(){const g=$('game');if(!g||$('deskL'))return;const L=document.createElement('div'),C=document.createElement('div'),Rr=document.createElement('div');L.id='deskL';C.id='deskC';Rr.id='deskR';
  const top=g.querySelector('.top');[top,$('detail')].forEach(e=>e&&L.appendChild(e));[$('qTrack'),$('sceneBox'),$('feed'),$('pendBar'),g.querySelector('.ctrl')].forEach(e=>e&&C.appendChild(e));
  Rr.innerHTML=`<div class="box dpanel"><h4>☰ เมนู</h4><div class="dmenu">${DESK_MENU.map(m=>`<button class="dmb" data-f="${m[2]}" onclick="try{${m[2]}()}catch(e){}"><span>${m[0]}</span>${m[1]}</button>`).join('')}</div><button class="gbtn" style="width:100%;margin-top:6px" onclick="openMenu()">☰ เมนูทั้งหมด</button></div>
@@ -5753,7 +5761,7 @@ deskApply();
 
 // ============ v7.4: หน้าคอมแบบใหม่ — ซ้ายสถานะตัวละคร ขวาฟังก์ชัน ============
 const DK_GROUPS=[
- ['⚔️ ฝึกฝน',[['📖','วิชา','openArts',()=>`${(S.arts||[]).length} วิชา`],['🗡️','ชุดสวมใส่','openEquip',()=>`${eqOn().length} ชิ้น`],['🔨','งานช่าง','openCraft',()=>'หลอมยา · ตีอาวุธ'],['🏰','ดันเจี้ยน','openDungeons',()=>'ล่าของ']]],
+ ['⚔️ ฝึกฝน',[['🧬','ตัวละครของฉัน','openMe',()=>S.xian?'ราก · เต๋า · ถ้ำ':'พรสวรรค์ · พลัง'],['📖','วิชา','openArts',()=>`${(S.arts||[]).length} วิชา`],['🗡️','ชุดสวมใส่','openEquip',()=>`${eqOn().length} ชิ้น`],['🔨','งานช่าง','openCraft',()=>'หลอมยา · ตีอาวุธ'],['🏰','ดันเจี้ยน','openDungeons',()=>'ล่าของ']]],
  ['🎒 ทรัพย์สิน',[['🎒','กระเป๋า','openBag',()=>`${fmtM(S.money)} ${S.xian?'หินวิญญาณ':'ตำลึง'}`],['🏘️','หมู่บ้าน','openTown',()=>'ร้านค้า · ภารกิจ'],['🛒','ตลาด','openMarket',()=>'ซื้อขาย'],['🏡','ตระกูล','openHouse',()=>'ครัวเรือน']]],
  ['👥 ผู้คน',[['👪','ครอบครัว','openFamily',()=>`ความสุข ${Math.round(S.happy)}`],['👥','ผู้คน','openPeople',()=>'คู่หู · มิตร · ศัตรู'],['🏯','สำนัก','openFaction',()=>S.faction?S.faction.n:'ยังไม่มีสังกัด'],['🐾','สัตว์คู่ใจ','openBeastComp',()=>S.beast?S.beast.n||'มีแล้ว':'ยังไม่มี']]],
  ['🗺️ โลก',[['🗺️','แผนที่','openMap',()=>S.xian?'โลกเซียน':'ยุทธภพ'],['📜','บันทึกชีวิต','openLifeLog',()=>'ย้อนดู'],['🏆','ทำเนียบ','openRanking',()=>'สำนักใหญ่']]],
@@ -7169,7 +7177,7 @@ openBag=function(){if(!S.bag)bagInit();const b=S.bag,ks=Object.keys(b.it).sort((
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎒 ${b.nm}</h3><button class="gbtn" style="width:100%;margin-bottom:6px" onclick="openEquip()">⚔️ ชุดสวมใส่ (${eqOn().length} ชิ้น)</button><p class="tag2">${b.sp?bagCount()+' ชิ้น · ∞ ไม่จำกัด':bagCount()+'/'+b.cap+' ช่อง'}${b.sp?' · ✨ พื้นที่มิติ ไม่มีวันถูกขโมย':' · กระเป๋าธรรมดา อาจถูกปล้นได้'}</p>
  ${ks.length?ks.map(row).join(''):'<p class="tag2">ยังไม่มีของ</p>'}
  <details style="margin-top:8px"><summary class="tag2">ระดับความหายาก</summary><p class="tag2">${RAR.map((R0,i)=>rarTag(i)).join(' ')}<br>ยิ่งหายากยิ่งมีผลแรงและขายได้แพง · ของหายากได้จากมิติลับ ศึกใหญ่ ภารกิจ และซากศัตรู</p></details>
- ${S.xian?xPanel():''}`)};
+ ${S.xian?'<button class="gbtn" style="width:100%;margin-top:8px" onclick="openMe()">🧬 ดูตัวละครของฉัน (ราก · เต๋า · ถ้ำ)</button>':''}`)};
 
 // ---- 4. เหตุการณ์ใหญ่ (เลือกได้ว่าจะไป ไม่ไป หรือไปจัดการเอง) ----
 function bigFight(name,mult){return fight(name,Math.max(50,total()*mult))}
@@ -34189,6 +34197,21 @@ const banner=()=>`<button class="cosent ev" onclick="evMenu()"><span class="ic">
 setInterval(()=>{try{const Tt=$('title');if(Tt&&$('tSup')&&!$('tEv')&&Date.now()<END)Tt.insertAdjacentHTML('afterbegin','<button id="tEv" onclick="evMenu()">🏮 อีเวนต์ลอยกระทง</button>')}catch(e){}},1200);
 setTimeout(evSync,3200);setInterval(evSync,300000);window.addEventListener('shop:paid',evSync);
 try{if((navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=2){document.documentElement.classList.add('evlite');const st=document.createElement('style');st.textContent='.evlite #chatBox .frsh .fx-evrip,.evlite #chatBox .frsh .fx-rise,.evlite #chatBox .frsh .fx-twk{display:none}.evlite #chatBox .frsh .fx-pulse{animation:none}';document.head.appendChild(st)}}catch(e){}
+
+// 🖥️ ปรับหน้าคอม (จอกว้าง ≥1000px และมีเมาส์): จัดปุ่มลอยให้เป็นระเบียบ, ซ่อนปุ่มเริ่มเล่นซ้ำ, hover/โฟกัส/สกรอลบาร์
+{const st=document.createElement('style');st.textContent=`@media (min-width:1000px) and (hover:hover){
+#title.redo #tStartIn{display:none!important}
+#title #tSup,#title #tFb,#title #tCos,#title #tEv{position:fixed!important;right:28px!important;width:190px;box-sizing:border-box;display:flex;align-items:center;justify-content:flex-start;gap:7px;height:38px;padding:0 14px!important;text-align:left;transition:transform .15s,filter .15s}
+#title #tSup{top:16px!important}#title #tFb{top:62px!important}#title #tCos{top:108px!important}#title #tEv{top:154px!important}
+#title #tSup:hover,#title #tFb:hover,#title #tCos:hover,#title #tEv:hover{transform:translateX(-4px);filter:brightness(1.08)}
+#tDock .row{max-width:640px;margin-left:auto;margin-right:auto}
+.opt,.gbtn,.pbtn,.tabb,.cb{transition:transform .12s,filter .12s,box-shadow .12s}
+.opt:hover,.gbtn:hover,.tabb:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.opt:active,.gbtn:active,.tabb:active{transform:translateY(0)}
+button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:2px solid #e9b44c;outline-offset:2px}
+*{scrollbar-width:thin;scrollbar-color:#b98a3a66 transparent}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#b98a3a66;border-radius:8px;border:2px solid transparent;background-clip:padding-box}::-webkit-scrollbar-thumb:hover{background:#b98a3a;background-clip:padding-box;border:2px solid transparent}
+}`;document.head.appendChild(st)}
 }catch(e){console.error('ev',e)}})();
 {const _rRt=render;render=function(){const r=_rRt.apply(this,arguments);try{if(S&&S.xian){const t=$('gTags');if(t){t.querySelectorAll('.rootTag').forEach(x=>x.remove());const rt=S.root||rootOf(S.talent);if(rt)t.insertAdjacentHTML('afterbegin',`<span class="tag rootTag">🌱 ${rt}</span>`)}}}catch(e){}return r}}
 
