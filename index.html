@@ -3952,7 +3952,7 @@ async function arenaGo(){if(arenaBusy||!S)return;if(S.arY===S.age&&(S.arN||0)>=3
   if(S.arY!==S.age){S.arY=S.age;S.arN=0}S.arN++;const o=j.o;let a=me.p*(.8+Math.random()*.4),b=o.p*(.8+Math.random()*.4);const win=a>=b;
   if(win){S.fame+=10;joy(3)}else S.hp-=R(5,15);api('arenaRes',{w:win?1:0,n:pname(),on:o.n}).catch(()=>{});
   log(`⚔️ ประลองเงา: ${win?'ชนะ':'แพ้'} <b>${esc(o.n)}</b> (${esc(o.r)} · พลัง ${fmt(o.p)})${win?' · ชื่อเสียง +10':''}`,win?'good':'bad');render();openOnline('arena')}catch(e){toast('เชื่อมต่อไม่ได้')}finally{arenaBusy=false}}
-async function openOnline(tab){tab=tab||'chat';clearInterval(chatT);const tabs=[['chat','💬 แชทโลก'],['live','👁 ดูคนอื่นเล่น'],['board','🏆 ทำเนียบ'],['arena','⚔️ ประลองเงา'],['me','⚙️ ชื่อ']].map(t=>`<button class="tabb ${t[0]===tab?'on':''}" onclick="${t[0]==='live'?'openLiveList()':`openOnline('${t[0]}')`}">${t[1]}</button>`).join('');
+async function openOnline(tab){tab=tab||'chat';clearInterval(chatT);const tabs=[['chat','💬 แชทโลก'],['live','👁 ดูคนอื่นเล่น'],['board','🏆 ทำเนียบ'],['arena','⚔️ ประลองเงา'],['hall','🏛 หอผู้ก่อตั้ง'],['me','⚙️ ชื่อ']].map(t=>`<button class="tabb ${t[0]===tab?'on':''}" onclick="${t[0]==='live'?'openLiveList()':t[0]==='hall'?'hallOpen(\'online\')':`openOnline('${t[0]}')`}">${t[1]}</button>`).join('');
  const head=`<button class="xbtn" onclick="clearInterval(chatT);closeM()">✕</button><h3>🌐 ออนไลน์</h3><p class="tag2">${onlineOK?`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิต`:Date.now()<_quotaUntil?'🛠️ ระบบออนไลน์ปิดชั่วคราว':'🔴 ยังเชื่อมต่อเซิร์ฟเวอร์ไม่ได้'}${ONL_HOST(location.hostname)?'':' · ระบบออนไลน์ใช้ได้บนเว็บ 1inanovel.com'}</p><div class="tabs">${tabs}</div>`;
  if(!onlineOK){modal(head+`<p class="tag2">${Date.now()<_quotaUntil?'แชทโลก ทำเนียบ และดูคนอื่นเล่น ปิดชั่วคราว ข้อมูลทั้งหมดยังอยู่ครบ จะกลับมาเร็วๆ นี้ — ระหว่างนี้เล่นเกมได้ตามปกติ เซฟในเครื่องปลอดภัย':'ระบบออนไลน์ต้องเปิดฐานข้อมูลก่อน หรือเครือข่ายตอนนี้ใช้ไม่ได้'}</p><button class="gbtn" style="width:100%" onclick="onlinePing().then(()=>openOnline('${tab}'))">ลองใหม่</button>`,'online');return}
  if(tab==='chat'){modal(head+`<div id="chatBox" class="chatbox"><div class="tag2">กำลังโหลด…</div></div><div class="chatin"><input id="chatIn" maxlength="200" placeholder="พิมพ์ข้อความ… (ลิงก์และคำหยาบถูกปิด)" onkeydown="if(event.key==='Enter')chatSend()"><button class="pbtn" onclick="chatSend()">ส่ง</button></div>${S?'<button class="gbtn" style="width:100%;margin-top:6px" onclick="shareLife()">📤 แชร์ชีวิตตอนนี้เข้าแชท</button>':''}<p class="tag2">⚑ รายงานข้อความที่ผิดกฎ · รายงานครบ 5 คนข้อความจะถูกซ่อน</p>`,'online');chatPoll();chatT=setInterval(()=>{if($('modal').dataset.k!=='online'||!$('chatBox'))return clearInterval(chatT);if(!document.hidden)chatPoll()},10000)}
@@ -30203,7 +30203,7 @@ const render=()=>{css();const m=gs(),t=tierNow(),v=vget(),R=RRs(),sealMode=m==='
   const tb=`<table><tr><th></th><th>${TIER[1].n.replace('ผู้','')}</th><th>พิเศษ</th><th>ก่อตั้ง</th></tr>${ROWS.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</table>`;
   const T=TIER[sel],dis=(sel===3&&t===3)||(t===3&&sel<3),lbl=sel===3&&t===3?'เป็นผู้ก่อตั้งแล้ว':t===3?'มีสิทธิ์ตลอดไปอยู่แล้ว':t===sel&&sel<3?`ต่ออายุ ${T.p} บาท · ${T.per}`:sel===3?`ซื้อ ${T.p} บาท · ตลอดไป`:`สมัคร ${T.p} บาท · ${T.per}`;
   body=`${st}${rows}${tb}<div class="sh2-buy"><button ${dis?'disabled':''} onclick="vipBuy('${T.k}')">${lbl}</button></div>
-   ${t?'<button class="lnk" onclick="shopClassic()">ฉายา · คำจารึก · หอผู้ก่อตั้ง</button>':''}
+   <button class="lnk" onclick="hallOpen('shop')">🏛 ดูหอผู้ก่อตั้ง ›</button>${t?'<button class="lnk" onclick="shopClassic()">ฉายา · คำจารึก</button>':''}
    <p class="note">เล่นฟรีได้เหมือนกัน — ผู้สนับสนุนไม่ได้พลังหรือเงินในเกม ได้แค่ความสะดวกกับของตกแต่ง · แนบสลิปแล้วระบบตรวจอัตโนมัติ สิทธิ์เข้าทันที · ไม่ต่ออายุเอง ไม่ตัดเงินอัตโนมัติ</p>`;
  }else{
   const pk=Object.entries(R.pk||{}),u0=pk.length?pk[0][1][0]/pk[0][1][1]:1,cap=R.used>=R.cap;
@@ -30247,6 +30247,17 @@ setInterval(()=>{try{
  finally{saveGame=sg}
  if(n){try{flushReveal()}catch(e){}acc=0;try{ckBar(0,true)}catch(e){}CK.hold=0;if(now-lastSave>1500){lastSave=now;try{saveGame()}catch(e){}}}
 }catch(e){console.error(e)}},50);
+})()}catch(e){console.error(e)}
+
+
+// 🏛 v18.24 หอผู้ก่อตั้ง: ย้ายมาเป็นแท็บในเมนู "ออนไลน์" (ทุกคนเข้าดูได้) · ในร้านเหลือทางลัดเล็ก · ผู้ก่อตั้งเห็นลำดับของตัวเองในโปรไฟล์
+try{(()=>{
+window._hallFrom='shop';
+window.hallOpen=async function(from){window._hallFrom=from||'shop';return window.vipWall()};
+const ow=window.vipWall;window.vipWall=async function(){const r=await ow.apply(this,arguments);try{const b=$('modal').querySelector('.xbtn');if(b){b.setAttribute('onclick',window._hallFrom==='online'?"openOnline('chat')":window._hallFrom==='profile'?"openProfile()":"vipMenu()")}}catch(e){}return r};
+// โปรไฟล์: ผู้ก่อตั้งเห็นลำดับของตัวเอง
+const vg=()=>{try{return LS.get('murim_vip',null)}catch(e){return null}};
+for(const f of ['openProfile']){const o=window[f];if(typeof o!=='function')continue;window[f]=function(){const r=o.apply(this,arguments);try{const v=vg(),m=$('modal');if(v&&v.u&&m&&!m.querySelector('.hallme')){const d=document.createElement('button');d.className='gbtn hallme';d.style.cssText='width:100%;margin:8px 0';d.textContent='🏛 ผู้ก่อตั้ง'+(v.ul?' ลำดับที่ '+v.ul.o:'')+' · ดูป้ายของฉัน ›';d.setAttribute('onclick',"hallOpen('profile')");const h=m.querySelector('.frbig');const box=h&&h.parentElement&&h.parentElement.parentElement;(box||m).insertAdjacentElement(box?'afterend':'beforeend',d)}}catch(e){}return r}}
 })()}catch(e){console.error(e)}
 </script>
 </body>
