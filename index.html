@@ -32016,6 +32016,16 @@ const aMsg=(n0,key,nm,ic)=>{const n=aC();if(n[1]>n0[1])isl({ic:'📕',h:'ซื�
   if(aMsg(n0,'eco'+id,it.n)){}
   else isl({ic:'✨',h:'ซื้อสำเร็จ',t:`<b>${esc(it.n)}</b> ใช้ทันที`,d:'ผลเข้าสถานะเลย ไม่เก็บในกระเป๋า · ดูที่หน้าสถานะ/บันทึกชีวิต',kind:'gold',key:'eco'+id,ms:3600})}}catch(e){}return r}}
 })()}catch(e){console.error(e)}
+
+// 🏙️ ยุคปัจจุบัน: ซ่อนเมนูของยุคยุทธภพที่ไม่เกี่ยวกับชีวิตตอนนี้ (ซ่อนเฉยๆ ไม่ลบข้อมูล · กลับมาเองถ้าออกจากยุคนี้)
+try{(()=>{
+const NOPE=/เส้นทางชีวิต|ภัยประจำสัปดาห์|ลานประลองหมื่นเงา|คัมภีร์ท่า|สมุดตำนาน|สุสานจอมยุทธ์/,POW=/ปราณ|ซ่อนพลัง/;
+const clean=()=>{try{if(!(typeof mwOn==='function'&&mwOn()))return;const m=document.getElementById('modal');if(!m)return;const hasQi=(S.qi||0)>0;
+ m.querySelectorAll('button,.opt').forEach(b=>{if(b.closest&&b.closest('.xbtn'))return;const t=(b.innerText||'').replace(/\s+/g,' ').trim();if(!t||t==='✕')return;
+  if(NOPE.test(t)||(!hasQi&&POW.test(t)&&/^(🌀|🕶️)/.test(t)))b.style.display='none'});
+ m.querySelectorAll('small,.sub').forEach(x=>{if(/ครอบครัว เพื่อน ศิษย์/.test(x.textContent))x.textContent=x.textContent.replace('ครอบครัว เพื่อน ศิษย์','ครอบครัว เพื่อน')})}catch(e){}};
+{const _o=openMenu;openMenu=function(){const r=_o.apply(this,arguments);clean();setTimeout(clean,60);setTimeout(clean,300);return r}}
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
