@@ -25588,7 +25588,7 @@ async function spList(){const adm=!!(typeof admK==='function'&&admK());const hea
  L.sort((a,b)=>(F.includes(b.k)-F.includes(a.k))||((b.hot|0)-(a.hot|0))||(so==='p'?(b.p||0)-(a.p||0):so==='a'?(b.age||0)-(a.age||0):(b.w||0)-(a.w||0)||(b.age||0)-(a.age||0)));
  if(!eraF)L=L.filter(x=>!isC(x)).concat(L.filter(isC));
  const eraBar=`<div class="spE">${[['','ทั้งหมด',nO+nC],['o','🏯 ยุคเก่า',nO],['c','🏙️ ยุคปัจจุบัน',nC]].map(([k,l,n])=>`<button class="${eraF===k?'on':''}" onclick="spList._e='${k}';spList()">${l}<small>${n}</small></button>`).join('')}</div>`;
- modal(head+eraBar+`<div class="spF">${[['w','👁 คนดู'],['p','⚔️ พลัง'],['a','⏳ อายุ']].map(([k,l])=>`<button class="${so===k?'on':''}" onclick="spList._s='${k}';spList()">${l}</button>`).join('')}<span style="flex:1"></span>${eraF==='c'?[['','ทุกโลก'],['normal','🏙️'],['hunter','🌀'],['under','🌃'],['ghost','👻'],['loop','🔁'],['dragon','🐲'],['zombie','🧟']].map(([k,l])=>`<button class="${(spList._mw||'')===k?'on':''}" onclick="spList._mw='${k}';spList()">${l}</button>`).join(''):[['','ทุกโลก'],['m','⚔️'],['x','☁️'],['g','🌟']].map(([k,l])=>`<button class="${wf===k?'on':''}" onclick="spList._w='${k}';spList()">${l}</button>`).join('')}</div>
+ modal(head+eraBar+`<div class="spF">${[['w','👁 คนดู'],['p','⚔️ พลัง'],['a','⏳ อายุ']].map(([k,l])=>`<button class="${so===k?'on':''}" onclick="spList._s='${k}';spList()">${l}</button>`).join('')}<span style="flex:1"></span>${eraF==='c'?[['','ทุกโลก'],['normal','🏙️'],['hunter','🌀'],['under','🌃'],['ghost','👻'],['loop','🔁'],['dragon','🐲'],['zombie','🧟'],['tower','🏰'],['game','🎮'],['gatewon','💀'],['doom','☄️']].map(([k,l])=>`<button class="${(spList._mw||'')===k?'on':''}" onclick="spList._mw='${k}';spList()">${l}</button>`).join(''):[['','ทุกโลก'],['m','⚔️'],['x','☁️'],['g','🌟']].map(([k,l])=>`<button class="${wf===k?'on':''}" onclick="spList._w='${k}';spList()">${l}</button>`).join('')}</div>
  <div class="spList">${L.length?L.map((x,i)=>`${!eraF&&nC&&nO&&(i===0||isC(x)!==isC(L[i-1]))?`<div class="spH">${isC(x)?'🏙️ ยุคปัจจุบัน':'🏯 ยุคเก่า'} <small>${isC(x)?nC:nO}</small></div>`:''}<div class="spLc ${x.hot?'hot':''} ${isC(x)?'cur':''}" onclick="openSpectate('${x.k}')"><canvas width="140" height="154" data-i="${i}"></canvas><div class="i"><b>${x.pv?'🔒 ':''}${esc(x.n)}</b>${x.hot?'<span class="spHot">🔥 กำลังมีเรื่อง</span>':''}<br><span class="tag2">${isC(x)&&x.wi?({normal:'🏙️',hunter:'🌀',under:'🌃',ghost:'👻',loop:'🔁',dragon:'🐲',zombie:'🧟'}[x.wi]||'🏙️'):({m:'⚔️',x:'☁️',g:'🌟',c:'🏙️'}[kOf(x)]||'⚔️')} ${esc(isC(x)&&x.wr?x.wr:(x.r||''))} · อายุ ${fmt(x.age||0)}${x.p&&!isC(x)?' · พลัง '+fmt(x.p):''}${x.ago>=25?' · 🕒 '+(x.ago>=90?Math.round(x.ago/60)+' นาที':x.ago+' วิ')+'ที่แล้ว':''}</span><br><span class="tag2">${esc(x.f||'')}${x.fo?' · กำลัง'+esc(x.fo):''}${x.pv?' · 🔒 ปิดการให้ดู':''}</span>${adm&&x.m?`<br><span class="tag2" style="font-size:10.5px;opacity:.75">🛰️ ${esc(x.m.d||'')} · ${esc(x.m.b||'')} · ${esc(x.m.o||'')}${x.m.c?' · '+esc(x.m.c):''}${x.m.v?' · v'+esc(x.m.v):''}</span>`:''}</div><div style="text-align:center"><button class="spStar" onclick="event.stopPropagation();spFollow('${x.k}',this)">${F.includes(x.k)?'⭐':'☆'}</button><div class="tag2">👁 ${x.w|0}</div></div></div>`).join(''):'<p class="tag2">ตอนนี้ยังไม่มีใครเปิดให้ดู'+(eraF==='c'?'ในยุคปัจจุบัน':wf?'ในโลกนี้':'')+'</p>'}</div>
  <button class="gbtn" style="width:100%;margin-top:8px" onclick="spList._t=0;spList._l=null;spList()">🔄 รีเฟรช</button>${adm&&spList._idle&&spList._idle.length?`<details style="margin-top:8px"><summary class="tag2">💤 ออนไลน์แต่ไม่ได้ส่งภาพสด ${spList._idle.length} คน</summary><div class="tag2" style="font-size:11px;max-height:180px;overflow:auto">${spList._idle.map(x=>`<div>#${esc(x.id)} · ${esc(x.d||'')} ${esc(x.b||'')} · ${x.ago}s${x.v?' · v'+esc(x.v):''}</div>`).join('')}</div></details>`:''}${spList._bad?'<p class="tag2" style="color:#d84a4a">⚠️ รหัสแอดมินไม่ถูกต้อง — แสดงเฉพาะคนที่เปิดให้ดู</p>':''}${adm?`<button class="pbtn" style="width:100%;margin-top:6px" onclick="LS.set('murim_admk','');toast('ออกจากโหมดแอดมินแล้ว');openLiveList()">🛡️ ออกจากโหมดแอดมินในเครื่องนี้</button>`:''}<button class="gbtn" style="width:100%;margin-top:4px" onclick="openOnline('chat')">← ออนไลน์</button>`,'online');
  $('modal').querySelectorAll('.spLc canvas').forEach(c=>{const x=L[+c.dataset.i];spAva(c,x&&x.look)});spLiveTag();if(Date.now()-(spvPatch._cl||0)>30000){spvPatch._cl=Date.now();spClaim()}}
@@ -31368,16 +31368,16 @@ const ST={birth:['🍼 ตั้งแต่เกิด','เล่นวัย
  try{const o=$('mwB');if(!o||!MB)return;const g=o.querySelector('.mbGrid');if(!g||g.querySelector('.mbSt'))return;const cur=MB.start||'adult';
   g.insertAdjacentHTML('afterbegin',`<div class="mbT mbWide mbSt"><div class="mbTh"><span>🕰️ เริ่มชีวิตตอนไหน</span></div><div class="mbStB">${Object.keys(ST).map(x=>`<button class="${x===cur?'on':''}" onclick="mwBStartAt('${x}')">${ST[x][0]}</button>`).join('')}</div><div class="mbTs">${ST[cur][1]}</div></div>`)}catch(e){console.error(e)}}}
 window.mwBStartAt=function(k){if(!MB||!ST[k])return;MB.start=k;mbDraw(false)};
-const WL=[['rand','🎲','สุ่ม'],['normal','🏙️','ปกติ'],['hunter','🌀','ฮันเตอร์'],['hunterhi','⚡','ฮันเตอร์ F–SSS'],['under','🌃','ใต้ดิน'],['ghost','👻','ผีไทย'],['loop','🔁','วนลูป'],['dragon','🐲','มังกรหลับ'],['zombie','🧟','ซอมบี้']];
+const WL=[['rand','🎲','สุ่ม'],['normal','🏙️','ปกติ'],['hunter','🌀','ฮันเตอร์'],['hunterhi','⚡','ฮันเตอร์ F–SSS'],['under','🌃','ใต้ดิน'],['ghost','👻','ผีไทย'],['loop','🔁','วนลูป'],['dragon','🐲','มังกรหลับ'],['zombie','🧟','ซอมบี้'],['tower','🏰','หอคอย'],['game','🎮','ระบบเกม'],['gatewon','💀','เกตชนะ'],['doom','☄️','วันสิ้นโลก']];
 window.mwBWld=function(k){if(!MB)return;MB.wld=k;mbDraw(false)};
 {const _d=mbDraw;mbDraw=function(anim){_d.apply(this,arguments);try{const o=$('mwB');if(!o||!MB)return;const g=o.querySelector('.mbGrid');if(!g||g.querySelector('.mbWd'))return;const cur=MB.wld||'rand';
- const nm={rand:'สุ่มตามดวง (ปกติ 40% · โลกพิเศษ 60%)',normal:'โลกธรรมดา ชีวิตคนทั่วไป (ยังมีโอกาสเปลี่ยนโลกกลางชีวิตได้ ~1%/ปี)',hunter:'ประตูมิติ นักล่าฮันเตอร์ ระดับ E–S',hunterhi:'โลกพลังเฟ้อ แรงก์ F ถึง SSS · เกตแตกทีเมืองหาย ฮันเตอร์คืออาวุธของรัฐ',under:'โลกนักเลง ก๊ก อิทธิพลและความร้อน',ghost:'โลกผีไทย หมอผี พระเครื่อง ศาลตายาย',loop:'วันซ้ำวนไม่รู้จบ ต้องหาต้นตอ',dragon:'มังกรหลับใต้ภูเขาที่ใกล้ตื่น',zombie:'โรคระบาดซอมบี้ เอาตัวรอดและสร้างที่พัก'};
+ const nm={rand:'สุ่มตามดวง (ปกติ 36% · โลกพิเศษ 64%)',normal:'โลกธรรมดา ชีวิตคนทั่วไป (ยังมีโอกาสเปลี่ยนโลกกลางชีวิตได้ ~1%/ปี)',hunter:'ประตูมิติ นักล่าฮันเตอร์ ระดับ E–S',hunterhi:'โลกพลังเฟ้อ แรงก์ F ถึง SSS · เกตแตกทีเมืองหาย ฮันเตอร์คืออาวุธของรัฐ',under:'โลกนักเลง ก๊ก อิทธิพลและความร้อน',ghost:'โลกผีไทย หมอผี พระเครื่อง ศาลตายาย',loop:'วันซ้ำวนไม่รู้จบ ต้องหาต้นตอ',dragon:'มังกรหลับใต้ภูเขาที่ใกล้ตื่น',zombie:'โรคระบาดซอมบี้ เอาตัวรอดและสร้างที่พัก',tower:'หอคอย 100 ชั้นกลางเมือง ถึงยอดได้พรหนึ่งข้อ',game:'ทุกคนมีหน้าต่างสถานะ เลเวล คลาส บอสโลก',gatewon:'มนุษย์แพ้สงครามเกต เหลือแค่เมืองกำแพง',doom:'อุกกาบาตจะชนโลกในอีก 12 ปี'};
  const html=`<div class="mbT mbWide mbWd mbSt"><div class="mbTh"><span>🌐 โลกของชีวิตนี้</span></div><div class="mbStB" style="flex-wrap:wrap">${WL.map(w=>`<button class="${w[0]===cur?'on':''}" style="flex:1 1 30%" onclick="mwBWld('${w[0]}')">${w[1]} ${w[2]}</button>`).join('')}</div><div class="mbTs">${nm[cur]}${cur==='rand'||cur==='normal'?'':' · โลกพิเศษบางโลกจะเริ่มทำงานตอนอายุ 18'}</div></div>`;
  const t=g.querySelector('.mbSt');if(t)t.insertAdjacentHTML('afterend',html);else g.insertAdjacentHTML('afterbegin',html)}catch(e){console.error(e)}}}
 {const _s=window.mwBStart;window.mwBStart=function(){window._wForce=(MB&&MB.wld&&MB.wld!=='rand')?MB.wld:null;return _s.apply(this,arguments)}}
 // ---- โหมดสุ่ม: หน้า "คุณได้ถือกำเนิดขึ้นแล้ว" ของยุคปัจจุบัน (เกิดใหม่ไม่จำกัด · แสดงโลกที่สุ่มได้) ----
-const WP=[['normal',.40],['hunter',.07],['hunterhi',.05],['under',.12],['ghost',.12],['loop',.08],['dragon',.08],['zombie',.08]];
-const WI={hunterhi:['⚡','โลกฮันเตอร์พลังสูง','พลังเฟ้อจนแรงก์ SSS เปรียบเหมือนนิวเคลียร์เดินได้ เกต F–SSS ฮันเตอร์เป็นทั้งคนดังและอาวุธของรัฐ'],normal:['🏙️','โลกปกติ','ชีวิตคนยุคปัจจุบันทั่วไป ทำงาน ใช้ชีวิต ไม่มีอะไรเหนือธรรมชาติ (ยังมีโอกาสเปลี่ยนโลกกลางชีวิตได้ ~1%/ปี)'],hunter:['🌀','โลกฮันเตอร์','ประตูมิติเปิดขึ้นทั่วโลก นักล่าฮันเตอร์ระดับ E–S ปลุกพลังเพื่อสู้กับสัตว์ประหลาด'],under:['🌃','โลกใต้ดิน','โลกของก๊ก นักเลง และผู้มีอิทธิพล ไต่จากเด็กในซอยสู่เจ้าพ่อ ระวังความร้อนจากตำรวจ'],ghost:['👻','โลกผีไทย','ผี หมอผี พระเครื่อง และศาลตายายเป็นเรื่องจริง ปราบผีและสะสมบารมี'],loop:['🔁','โลกวนลูป','วันเวลาเริ่มวนซ้ำ จดความทรงจำและตามหาต้นตอของวงจรเวลา'],dragon:['🐲','โลกมังกรหลับ','มังกรหลับใต้ภูเขากำลังจะตื่น สร้างความผูกพันและกล่อมให้มันหลับ'],zombie:['🧟','โลกซอมบี้','โรคระบาดซอมบี้ ออกหาเสบียง สร้างที่พัก และเอาตัวรอดในโลกใหม่']};
+const WP=[['normal',.36],['hunter',.06],['hunterhi',.04],['under',.10],['ghost',.10],['loop',.06],['dragon',.06],['zombie',.06],['tower',.04],['game',.04],['gatewon',.04],['doom',.04]];
+const WI={hunterhi:['⚡','โลกฮันเตอร์พลังสูง','พลังเฟ้อจนแรงก์ SSS เปรียบเหมือนนิวเคลียร์เดินได้ เกต F–SSS ฮันเตอร์เป็นทั้งคนดังและอาวุธของรัฐ'],normal:['🏙️','โลกปกติ','ชีวิตคนยุคปัจจุบันทั่วไป ทำงาน ใช้ชีวิต ไม่มีอะไรเหนือธรรมชาติ (ยังมีโอกาสเปลี่ยนโลกกลางชีวิตได้ ~1%/ปี)'],hunter:['🌀','โลกฮันเตอร์','ประตูมิติเปิดขึ้นทั่วโลก นักล่าฮันเตอร์ระดับ E–S ปลุกพลังเพื่อสู้กับสัตว์ประหลาด'],under:['🌃','โลกใต้ดิน','โลกของก๊ก นักเลง และผู้มีอิทธิพล ไต่จากเด็กในซอยสู่เจ้าพ่อ ระวังความร้อนจากตำรวจ'],ghost:['👻','โลกผีไทย','ผี หมอผี พระเครื่อง และศาลตายายเป็นเรื่องจริง ปราบผีและสะสมบารมี'],loop:['🔁','โลกวนลูป','วันเวลาเริ่มวนซ้ำ จดความทรงจำและตามหาต้นตอของวงจรเวลา'],dragon:['🐲','โลกมังกรหลับ','มังกรหลับใต้ภูเขากำลังจะตื่น สร้างความผูกพันและกล่อมให้มันหลับ'],zombie:['🧟','โลกซอมบี้','โรคระบาดซอมบี้ ออกหาเสบียง สร้างที่พัก และเอาตัวรอดในโลกใหม่'],tower:['🏰','โลกหอคอย','หอคอยสีขาว 100 ชั้นโผล่กลางเมือง ปีนผ่านบอสทุก 25 ชั้น ถึงยอดได้พรหนึ่งข้อ'],game:['🎮','โลกระบบเกม','อายุ 18 ทุกคนได้หน้าต่างสถานะ เลือกคลาส เก็บเลเวล แล้วล้มบอสโลกเพื่อปิดเกม'],gatewon:['💀','โลกที่เกตชนะ','มนุษย์แพ้สงครามเกต รักษากำแพงเมืองและออกไปยึดโลกคืนจนถึงเกตแม่'],doom:['☄️','โลกวันสิ้นโลก','อุกกาบาตจะชนโลกในอีก 12 ปี เตรียมหลุมหลบภัยหรือใช้เวลาที่เหลือกับคนที่รัก']};
 const wRollK=()=>{let r=Math.random();for(const w of WP){r-=w[1];if(r<=0)return w[0]}return'normal'};
 window.mwBRand=function(){mwBornPage(true);if(!MB)return;MB.rnd=1;MB.rr=3;MB.start='birth';MB.wld=wRollK();mbDraw(false)};
 const admRR=()=>{try{return typeof ADM!=='undefined'&&ADM.ok&&ADM.rr}catch(e){return false}};
@@ -32140,8 +32140,8 @@ window.artDedup=function(){try{if(!S||!Array.isArray(S.arts))return 0;const by={
 // สุ่มโลกตอนเกิด (ฮันเตอร์/ใต้ดิน/ผีไทย อย่างละ 15% ที่เหลือโลกปกติ) · โลกปกติมีโอกาสเปลี่ยนโลกกลางชีวิต ~0.9–1.0% ต่อปี (อายุ 18+)
 // โลกฮันเตอร์ใช้ระบบเดิม (M.hw/M.H) · โลกใต้ดิน = M.wx{id:'under'} + M.U · โลกผีไทย = M.wx{id:'ghost'} + M.G
 try{(()=>{
-const P_H=.12,P_U=.12,P_G=.12,P_L=.08,P_D=.08,P_Z=.08,SH_LO=.009,SH_HI=.010;
-const WN={under:['🌃','โลกใต้ดิน'],ghost:['👻','โลกผีไทย'],hunter:['🌀','โลกฮันเตอร์'],loop:['🔁','โลกวนลูป'],dragon:['🐲','โลกมังกรหลับ'],zombie:['🧟','โลกซอมบี้']};
+const P_H=.10,P_U=.10,P_G=.10,P_L=.06,P_D=.06,P_Z=.06,P_N=.04,SH_LO=.009,SH_HI=.010;
+const WN={under:['🌃','โลกใต้ดิน'],ghost:['👻','โลกผีไทย'],hunter:['🌀','โลกฮันเตอร์'],loop:['🔁','โลกวนลูป'],dragon:['🐲','โลกมังกรหลับ'],zombie:['🧟','โลกซอมบี้'],tower:['🏰','โลกหอคอย'],game:['🎮','โลกระบบเกม'],gatewon:['💀','โลกที่เกตชนะ'],doom:['☄️','โลกวันสิ้นโลก']};
 const PF={under:'wu_',ghost:'wg_',loop:'wl_',dragon:'wd_',zombie:'wz_'};
 const wOf=M=>!M?'normal':M.hw>0?'hunter':(M.wx&&M.wx.on?M.wx.id:'normal');
 const mn=M=>MW_MIN[M.cc||'th']||MW_MIN.th, money=(M,k)=>mwToB(mn(M)*k,M);
@@ -32155,12 +32155,12 @@ function wInit(M,id){if(id==='under')M.U=M.U||{inf:0,heat:5,rk:0,crew:null,rec:0
 function wRoll(M,skip){if(!M||M.wroll)return;M.wroll=1;M.wsp=SH_LO+Math.random()*(SH_HI-SH_LO);const fw=window._wForce;if(fw&&!(M.hw>0)){window._wForce=null;M.fl=M.fl||{};if(fw==='hunter'||fw==='hunterhi'){hwInit(M,true);M.hv=fw==='hunterhi'?'high':'norm'}else if(fw==='normal')M.hw=0;else{M.wx={id:fw,on:0,born:1};M.hw=M.hw||0}return}
 if(skip||M.hw>0||M.wx)return;
  const r=Math.random();M.fl=M.fl||{};
- const T=[['under',P_U],['ghost',P_G],['loop',P_L],['dragon',P_D],['zombie',P_Z]];let a=P_H,f=0;
+ const T=[['under',P_U],['ghost',P_G],['loop',P_L],['dragon',P_D],['zombie',P_Z],['tower',P_N],['game',P_N],['gatewon',P_N],['doom',P_N]];let a=P_H,f=0;
  if(r<P_H){hwInit(M,true)}else{for(const t of T){a+=t[1];if(r<a){M.wx={id:t[0],on:0,born:1};M.hw=M.hw||0;f=1;break}}if(!f&&M.hw==null)M.hw=0}}
 function wFire(id){const e=MW_R.find(x=>x.id===id);if(!e)return;const me=S;const go=()=>{if(S!==me||!S||!S.alive||!S.mw)return;if(choice._cur||(modalOpen&&/choice/.test(($('modal')||{dataset:{}}).dataset.k||'')))return setTimeout(go,700);try{setScene('mw')}catch(x){}try{e.go(S.mw,S.mw.past)}catch(x){console.error(x)}};setTimeout(go,900)}
 function wOn(M,id,shift){M.wx={id,on:1,since:M.y,shift:shift?1:0};wInit(M,id);wFoc();wFire('wi_'+id);
- isl({big:1,pri:1,ic:WN[id][0],h:'โลกเปลี่ยนไป',t:({under:'อิทธิพลมืดเริ่มคุมเมือง',ghost:'ผีไทยเริ่มมีตัวตนให้เห็น',loop:'วันเวลาเริ่มวนซ้ำ',dragon:'บางสิ่งในถ้ำเริ่มตื่น',zombie:'โรคระบาดเริ่มลามทั้งเมือง'})[id],kind:'gold'})}
-const WF={loop:[['wxl','🔁','จดบันทึกวันซ้ำ'],['wxr','🌅','ใช้วันนี้ให้เต็มที่']],dragon:[['wxd','🐲','ดูแลสิ่งในถ้ำ'],['wxe','🌙','ขับกล่อมให้หลับ']],zombie:[['wxz','🧟','ออกหาเสบียง'],['wxb','🏠','เสริมที่พัก']],under:[['wxu','🥊','งานใต้ดิน'],['wxs','🤝','ซื้อใจผู้ใหญ่']],ghost:[['wxg','👻','รับงานปราบผี'],['wxh','🙏','ทำบุญผูกบารมี']]};
+ isl({big:1,pri:1,ic:WN[id][0],h:'โลกเปลี่ยนไป',t:({under:'อิทธิพลมืดเริ่มคุมเมือง',ghost:'ผีไทยเริ่มมีตัวตนให้เห็น',loop:'วันเวลาเริ่มวนซ้ำ',dragon:'บางสิ่งในถ้ำเริ่มตื่น',zombie:'โรคระบาดเริ่มลามทั้งเมือง',tower:'หอคอยสีขาวโผล่กลางเมือง',game:'หน้าต่างสถานะปรากฏต่อหน้า',gatewon:'เกตแตกพร้อมกันทั่วโลก',doom:'อุกกาบาตกำลังมุ่งหน้ามา'})[id],kind:'gold'})}
+const WF={loop:[['wxl','🔁','จดบันทึกวันซ้ำ'],['wxr','🌅','ใช้วันนี้ให้เต็มที่']],dragon:[['wxd','🐲','ดูแลสิ่งในถ้ำ'],['wxe','🌙','ขับกล่อมให้หลับ']],zombie:[['wxz','🧟','ออกหาเสบียง'],['wxb','🏠','เสริมที่พัก']],under:[['wxu','🥊','งานใต้ดิน'],['wxs','🤝','ซื้อใจผู้ใหญ่']],ghost:[['wxg','👻','รับงานปราบผี'],['wxh','🙏','ทำบุญผูกบารมี']],tower:[['wxt','🧗','ปีนหอคอย'],['wxtr','🩹','พักฟื้นและเตรียมตัว']],game:[['wxq','⚔️','ล่าเควส'],['wxqp','💼','ใช้สกิลหาเงิน']],gatewon:[['wxw','🗡️','ออกนอกกำแพง'],['wxwv','🧱','เฝ้ากำแพง']],doom:[['wxda','🏗️','เตรียมหลุมหลบภัย'],['wxdb','🌅','อยู่กับคนที่รัก']]};
 function wFoc(){try{for(let i=MW_FOC.length-1;i>=0;i--)if(/^wx/.test(MW_FOC[i][0]))MW_FOC.splice(i,1);const M=S&&S.mw;if(!M||M.kid)return;(WF[wOf(M)]||[]).forEach(f=>MW_FOC.push(f));if(S.focus&&/^wx/.test(S.focus)&&!MW_FOC.some(f=>f[0]===S.focus))S.focus='mwjob'}catch(e){}}
 // ---------- กลไกรายปี ----------
 function uYear(M,foc){const U=M.U;if(!U)return;U.heat=Math.max(0,U.heat-3);const r0=U.rk;
@@ -32183,7 +32183,7 @@ function gYear(M,foc){const G=M.G;if(!G)return;G.bad=Math.max(0,G.bad-2);const r
  G.rk=rkOf(GR,G.ward);if(G.rk>r0){log(`📿 <b>ชาวบ้านเรียกคุณว่า "${GR[G.rk][1]}"</b> — คนมีตาเริ่มรู้จักชื่อคุณ`,'epic',true);keyAdd('ได้ชื่อว่า'+GR[G.rk][1])}}
 function wYear(M,foc){if(M.wroll==null)wRoll(M,!(M.native&&M.y<=1));
  if(M.wx&&!M.wx.on&&S.age>=18){M.wx.on=1;M.wx.since=M.y;wInit(M,M.wx.id);wFoc();wFire('wi_'+M.wx.id)}
- if(wOf(M)==='normal'&&!M.wx&&!M.wshift&&S.age>=18&&M.y>=1&&Math.random()<(M.wsp||.0095)){M.wshift=1;const k=ch(['hunter','under','ghost','loop','dragon','zombie']);
+ if(wOf(M)==='normal'&&!M.wx&&!M.wshift&&S.age>=18&&M.y>=1&&Math.random()<(M.wsp||.0095)){M.wshift=1;const k=ch(['hunter','under','ghost','loop','dragon','zombie','tower','game','gatewon','doom']);
   if(k==='hunter'){M.hw=M.hw||0;M.gateY=M.y}else wOn(M,k,1)}
  const w=wOf(M);if(w==='under')uYear(M,foc);else if(w==='ghost')gYear(M,foc);wFoc();
  if(PF[w]&&S.alive&&Math.random()<.4){M.wcd=M.wcd||{};const pre=PF[w];const L=MW_R.filter(e=>e.id.indexOf(pre)===0&&e.w>0&&e.w<90&&e.cd>0&&!(M.y-(M.wcd[e.id]||-99)<e.cd)&&(()=>{try{return e.c(M)}catch(x){return false}})());
@@ -32420,7 +32420,7 @@ window._wld2={LR,DR,ZR,lYear,dYear,zYear};
 
 // ===================== เมนูเริ่มชีวิตใหม่ของยุคปัจจุบัน (แยกตัวเลือกเหมือนยุคเก่า) =====================
 try{(()=>{
-const WL=[['rand','🎲','สุ่ม'],['normal','🏙️','ปกติ'],['hunter','🌀','ฮันเตอร์'],['hunterhi','⚡','ฮันเตอร์ F–SSS'],['under','🌃','ใต้ดิน'],['ghost','👻','ผีไทย'],['loop','🔁','วนลูป'],['dragon','🐲','มังกรหลับ'],['zombie','🧟','ซอมบี้']];
+const WL=[['rand','🎲','สุ่ม'],['normal','🏙️','ปกติ'],['hunter','🌀','ฮันเตอร์'],['hunterhi','⚡','ฮันเตอร์ F–SSS'],['under','🌃','ใต้ดิน'],['ghost','👻','ผีไทย'],['loop','🔁','วนลูป'],['dragon','🐲','มังกรหลับ'],['zombie','🧟','ซอมบี้'],['tower','🏰','หอคอย'],['game','🎮','ระบบเกม'],['gatewon','💀','เกตชนะ'],['doom','☄️','วันสิ้นโลก']];
 window.mwBornMenu=function(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🐣 เริ่มชีวิตใหม่ <span class="tag2">ยุคปัจจุบัน</span></h3>
  <button class="opt" onclick="closeM();mwBQuick()">🎲 สุ่ม — ให้ฟ้าลิขิต<small>สุ่มจังหวัด พื้นเพ นิสัย หน้าตา และโลก · ดูผลการเกิดแล้วกดเกิดใหม่ได้ 3 ครั้ง</small></button>
  <button class="opt" onclick="closeM();mwBorn(true)">🎨 ออกแบบหน้าตา — ที่เหลือให้ฟ้าลิขิต<small>เลือกเพศ ทรงผม สีผม สีผิว และสีชุดเอง แล้วสุ่มจังหวัด พื้นเพ และโลกตามปกติ</small></button>
@@ -32467,7 +32467,7 @@ const HP=p=>{const d=Math.round(S.maxHp*p/100);S.hp=Math.max(1,S.hp-d);return d}
 const heal=p=>{const d=Math.round(S.maxHp*p/100);S.hp=Math.min(S.maxHp,S.hp+d);return d};
 const SK={under:['U','inf','heat','อิทธิพล','ความร้อน'],ghost:['G','ward','bad','บารมี','ผีตามหลอน'],loop:['LP','mem','tir','ความทรงจำ','ความล้า'],dragon:['D','bond','wake','ความผูกพัน','การตื่น'],zombie:['Z','surv','inf','ทักษะรอด','เสี่ยงติดเชื้อ']};
 const RK={under:W.UR,ghost:W.GR,loop:W2.LR,dragon:W2.DR,zombie:W2.ZR};
-const WN={normal:['🏙️','โลกปกติ'],hunter:['🌀','โลกฮันเตอร์'],under:['🌃','โลกใต้ดิน'],ghost:['👻','โลกผีไทย'],loop:['🔁','โลกวนลูป'],dragon:['🐲','โลกมังกรหลับ'],zombie:['🧟','โลกซอมบี้']};
+const WN={normal:['🏙️','โลกปกติ'],hunter:['🌀','โลกฮันเตอร์'],under:['🌃','โลกใต้ดิน'],ghost:['👻','โลกผีไทย'],loop:['🔁','โลกวนลูป'],dragon:['🐲','โลกมังกรหลับ'],zombie:['🧟','โลกซอมบี้'],tower:['🏰','โลกหอคอย'],game:['🎮','โลกระบบเกม'],gatewon:['💀','โลกที่เกตชนะ'],doom:['☄️','โลกวันสิ้นโลก']};
 // โลกของชีวิตนี้ (รวมช่วงที่ยังไม่เปิดใช้ เช่น วัยเด็ก)
 const wBase=M=>!M?'normal':M.hw>0?'hunter':M.wx?M.wx.id:'normal';
 const st=(M,w)=>{const k=SK[w];return k&&M[k[0]]};
@@ -33125,7 +33125,7 @@ const won=M=>!M.kid&&S.alive;
 // ============================================================
 const ZBLK=/^(car\d+|fin(2|3|4|7|8|10|11)|sc\d|d\d|r(6|7|8|9|11)|x(2|3|4|8|9|13|15|18|19|23)|pv_(t1|t2|f1|f2|u1|c1|mig|big|otop|border|fest)|prop\d|wf\d|db(2|3|4)|sh\d|bu\d|po\d|edu\d|h(4|8|11)|ksch|kuni|sl_band\d?|sl_shop\w*)$/;
 const zOn=M=>M&&!M.kid&&wOf(M)==='zombie'&&M.Z;
-const spOn=M=>M&&!M.kid&&['under','ghost','loop','dragon','zombie','hunter'].includes(wOf(M));
+const spOn=M=>M&&!M.kid&&['under','ghost','loop','dragon','zombie','hunter','tower','game','gatewon','doom'].includes(wOf(M));
 try{const LE=window._lifeTbl&&window._lifeTbl.LE;if(LE)LE.forEach(e=>{const c0=e.c,w0=e.w;
  e.c=function(M,l){if(zOn(M)&&ZBLK.test(e.id))return false;return c0?c0.apply(this,arguments):true};
  e.w=function(M,l){const b=typeof w0==='function'?w0.apply(this,arguments):w0;return spOn(M)?b*.55:b}})}catch(e){console.error(e)}
@@ -33485,7 +33485,7 @@ const tierOf=(M,w)=>{const L=END[w]||[];const got=L.filter(e=>M.fl&&M.fl[e[0]]);
 {const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);try{const M=S&&S.mw,E=$('end'),box=E&&E.querySelector('.wSum');if(M&&box&&!box.querySelector('.wTier')){const w=wOf(M)!=='normal'?wOf(M):(M.hw>0?'hunter':M.wx?M.wx.id:'normal');const L=END[w];if(!L)return r;
  const col=LS.get('murim_wcol',{})||{};col[w]=col[w]||{};const got=L.filter(e=>M.fl&&M.fl[e[0]]),nw=got.filter(e=>!col[w][e[0]]);got.forEach(e=>col[w][e[0]]=1);LS.set('murim_wcol',col);
  const t=tierOf(M,w);box.insertAdjacentHTML('beforeend',`<div class="wTier" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center">${t?`<span style="font-weight:900;padding:2px 10px;border-radius:99px;background:${TIERC[t]};color:#111">ระดับ ${t}</span>`:'<span class="tag2">ยังไม่ถึงฉากจบของโลกนี้</span>'}${got.map(e=>`<span class="tag2" style="padding:2px 8px;border-radius:99px;border:1px solid ${TIERC[e[1]]}">${e[1]} · ${e[2]}${nw.includes(e)?' 🆕':''}</span>`).join('')}<span class="tag2">📖 ทำเนียบโลก ${Object.keys(col[w]).length}/${L.length}</span></div>`)}}catch(e){console.error(e)}return r}}
-const WNM={hunter:['🌀','โลกฮันเตอร์'],under:['🌃','โลกใต้ดิน'],ghost:['👻','โลกผีไทย'],loop:['🔁','โลกวนลูป'],dragon:['🐲','โลกมังกรหลับ'],zombie:['🧟','โลกซอมบี้']};
+const WNM={hunter:['🌀','โลกฮันเตอร์'],under:['🌃','โลกใต้ดิน'],ghost:['👻','โลกผีไทย'],loop:['🔁','โลกวนลูป'],dragon:['🐲','โลกมังกรหลับ'],zombie:['🧟','โลกซอมบี้'],tower:['🏰','โลกหอคอย'],game:['🎮','โลกระบบเกม'],gatewon:['💀','โลกที่เกตชนะ'],doom:['☄️','โลกวันสิ้นโลก']};
 window.wCodex=function(){const col=LS.get('murim_wcol',{})||{};let tot=0,got=0;const html=Object.keys(END).map(w=>{const L=END[w],c=col[w]||{};tot+=L.length;const g=L.filter(e=>c[e[0]]).length;got+=g;return`<div class="item"><b>${WNM[w][0]} ${WNM[w][1]}</b> <span class="tag2">${g}/${L.length}</span><div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px">${L.map(e=>c[e[0]]?`<span class="tag2" style="padding:2px 8px;border-radius:99px;border:1px solid ${TIERC[e[1]]}">${e[1]} · ${e[2]}</span>`:`<span class="tag2" style="padding:2px 8px;border-radius:99px;border:1px dashed #8886;opacity:.6">${e[1]} · ???</span>`).join('')}</div></div>`}).join('');
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📖 ทำเนียบโลก <span class="tag2">${got}/${tot}</span></h3><p class="tag2">ฉากจบที่เคยไปถึงในแต่ละโลกของยุคปัจจุบัน · S ยากที่สุด · ปลดล็อกถาวรข้ามทุกชีวิต</p>${html}`,'wcodex')};
 
@@ -33539,8 +33539,8 @@ const add=(M,w,a,b)=>{const o=st(M,w);if(!o)return;const k=SK[w];o[k[1]]=Math.ma
 const O=(t,f,s)=>mwC(t,f,s?{s}:undefined);
 const say=(t,c,fx)=>mwSay(t,c||'',fx);
 const TH=['','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-const WA={under:['🥊','งานใต้ดิน','wxu'],ghost:['👻','รับงานปราบผี','wxg'],loop:['🔁','ตามรอยวันซ้ำ','wxl'],dragon:['🐲','ดูแลถ้ำ','wxd'],zombie:['🧟','ออกหาเสบียง','wxz'],hunter:['🌀','ล่าเกต','mwgate']};
-const WB={under:['🤝','ซื้อใจผู้ใหญ่','wxs'],ghost:['🙏','ทำบุญผูกบารมี','wxh'],loop:['🌅','ใช้วันให้เต็ม','wxr'],dragon:['🌙','ขับกล่อม','wxe'],zombie:['🏠','เสริมที่พัก','wxb'],hunter:['🛋️','พักฟื้นใจ','mwlow']};
+const WA={under:['🥊','งานใต้ดิน','wxu'],ghost:['👻','รับงานปราบผี','wxg'],loop:['🔁','ตามรอยวันซ้ำ','wxl'],dragon:['🐲','ดูแลถ้ำ','wxd'],zombie:['🧟','ออกหาเสบียง','wxz'],hunter:['🌀','ล่าเกต','mwgate'],tower:['🧗','ปีนหอคอย','wxt'],game:['⚔️','ล่าเควส','wxq'],gatewon:['🗡️','ออกนอกกำแพง','wxw'],doom:['🏗️','เตรียมหลุมหลบภัย','wxda']};
+const WB={under:['🤝','ซื้อใจผู้ใหญ่','wxs'],ghost:['🙏','ทำบุญผูกบารมี','wxh'],loop:['🌅','ใช้วันให้เต็ม','wxr'],dragon:['🌙','ขับกล่อม','wxe'],zombie:['🏠','เสริมที่พัก','wxb'],hunter:['🛋️','พักฟื้นใจ','mwlow'],tower:['🩹','พักฟื้น','wxtr'],game:['💼','ใช้สกิลหาเงิน','wxqp'],gatewon:['🧱','เฝ้ากำแพง','wxwv'],doom:['🌅','อยู่กับคนที่รัก','wxdb']};
 const BASE=[['work','💼','ทำงาน','mwjob'],['net','📱','งานเสริม/คอนเทนต์','mwnet'],['learn','📚','เรียนรู้','mwlearn'],['fam','👪','ครอบครัว/คนรอบตัว','mwlow'],['rest','🌿','พักผ่อน','mwlow']];
 const cats=M=>{const w=wOf(M),L=BASE.slice();if(WA[w]&&(w!=='hunter'||(M.H&&M.H.r>=0&&!M.H.no)))L.splice(1,0,['wa',WA[w][0],WA[w][1],WA[w][2]],['wb',WB[w][0],WB[w][1],WB[w][2]]);return L};
 const def=M=>{const w=wOf(M),L=cats(M),a={};L.forEach(c=>a[c[0]]=0);if(a.wa!=null){a.work=5;a.wa=4;a.wb=1;a.rest=1;a.fam=1}else{a.work=7;a.learn=2;a.fam=2;a.rest=1}return a};
@@ -34643,8 +34643,8 @@ window.abBatch=function(N){const h=abH();if(!h||!S.alive)return;try{closeM()}cat
 try{(()=>{
 const W=window._wld,W2=window._wld2,W4=window._wld4,W7=window._wld7,AL=window._al;
 if(!(W&&W2&&W4&&W7&&AL))return;
-const WN={normal:['🏙️','โลกปกติ'],hunter:['🌀','โลกฮันเตอร์'],under:['🌃','โลกใต้ดิน'],ghost:['👻','โลกผีไทย'],loop:['🔁','โลกวนลูป'],dragon:['🐲','โลกมังกรหลับ'],zombie:['🧟','โลกซอมบี้']};
-const TN={normal:'ชีวิต',hunter:'ฮันเตอร์',under:'ใต้ดิน',ghost:'ผีไทย',loop:'วนลูป',dragon:'มังกร',zombie:'ซอมบี้'};
+const WN={normal:['🏙️','โลกปกติ'],hunter:['🌀','โลกฮันเตอร์'],under:['🌃','โลกใต้ดิน'],ghost:['👻','โลกผีไทย'],loop:['🔁','โลกวนลูป'],dragon:['🐲','โลกมังกรหลับ'],zombie:['🧟','โลกซอมบี้'],tower:['🏰','โลกหอคอย'],game:['🎮','โลกระบบเกม'],gatewon:['💀','โลกที่เกตชนะ'],doom:['☄️','โลกวันสิ้นโลก']};
+const TN={normal:'ชีวิต',hunter:'ฮันเตอร์',under:'ใต้ดิน',ghost:'ผีไทย',loop:'วนลูป',dragon:'มังกร',zombie:'ซอมบี้',tower:'หอคอย',game:'ระบบเกม',gatewon:'เกตชนะ',doom:'วันสิ้นโลก'};
 const SKm={under:['U','inf','heat'],ghost:['G','ward','bad'],loop:['LP','mem','tir'],dragon:['D','bond','wake'],zombie:['Z','surv','inf']};
 const RT={under:W.UR,ghost:W.GR,loop:W2.LR,dragon:W2.DR,zombie:W2.ZR};
 const HRN=['E','D','C','B','A','S'];
@@ -34696,6 +34696,7 @@ function mxOf(M){
    g=[['🏘️','คนในที่พัก',(Z.com||[]).length+' คน'],['🥫','เสบียง',n0(Z.sup)],['🛡️','ป้องกัน',n0(zd)],['☣️','เสี่ยงติดเชื้อ',n0(v2)+'/100']];
    (Z.com||[]).slice(0,8).forEach(c=>l.push((ROLEN[c.r]||'🧑')+' '+tx(c.n)));if(!(Z.com||[]).length)l.push('🧍 อยู่คนเดียว');l.push('🥫 เสบียงเหลือ '+n0(Z.sup));}
  }
+ else if(window._wx13&&window._wx13.NW[w]){const x=window._wx13.mx(M)||{};r=x.r||'';g=x.g||[];l=x.l||[];}
  else{r='';g=[];l.push('🏙️ ใช้ชีวิตในโลกปกติ — ยังไม่มีเรื่องเหนือธรรมชาติ');}
  o.r=r||'';o.g=g;o.l=l.filter(Boolean).slice(0,16);
  // ตัวตน
@@ -35042,7 +35043,7 @@ function nPanel(M){const N=nI(M),d=N.dr,D=d&&DRM[d.id],a=AR[arch(M)];
 // ---------- ทำเนียบ / ฉากจบ ----------
 END.normal=[['ndTwo','S','ทำฝันสำเร็จสองฝันในชีวิตเดียว'],['ndBig','S','ชนะในเกมที่เสี่ยงที่สุด']].concat(DR.map(D=>['nd_'+D.id,'A',D.ed]),[['ndBend','B','ยอมปรับฝันแต่ไม่ทิ้งมัน'],['ndPass','B','ส่งต่อฝันให้คนรุ่นหลัง'],['ndHelp','B','มีคนในซอยที่ยอมช่วยคุณ'],['ndBurn','C','หมดแรงจนต้องล้มตัวพัก'],['ndNone','C','ใช้ชีวิตไปวันๆ ไม่เคยมีฝัน']]);
 {const _e=endGame;endGame=function(){try{const M=S&&S.mw;if(M&&wOf(M)==='normal'&&!M.kid){const N=nI(M);if(nbOk(M)>=3)M.fl.ndHelp=1;if(!N.ever&&!N.dn.length&&S.age>=45)M.fl.ndNone=1}}catch(e){}return _e.apply(this,arguments)}}
-const WNM={normal:['🏙️','โลกปกติ'],hunter:['🌀','โลกฮันเตอร์'],under:['🌃','โลกใต้ดิน'],ghost:['👻','โลกผีไทย'],loop:['🔁','โลกวนลูป'],dragon:['🐲','โลกมังกรหลับ'],zombie:['🧟','โลกซอมบี้']};
+const WNM={normal:['🏙️','โลกปกติ'],hunter:['🌀','โลกฮันเตอร์'],under:['🌃','โลกใต้ดิน'],ghost:['👻','โลกผีไทย'],loop:['🔁','โลกวนลูป'],dragon:['🐲','โลกมังกรหลับ'],zombie:['🧟','โลกซอมบี้'],tower:['🏰','โลกหอคอย'],game:['🎮','โลกระบบเกม'],gatewon:['💀','โลกที่เกตชนะ'],doom:['☄️','โลกวันสิ้นโลก']};
 const TIERC={S:'#f5c542',A:'#c07cff',B:'#5bb4ff',C:'#9aa0a6'};
 window.wCodex=function(){const col=LS.get('murim_wcol',{})||{};let tot=0,got=0;const html=Object.keys(END).filter(w=>WNM[w]).map(w=>{const L=END[w],c=col[w]||{};tot+=L.length;const g=L.filter(e=>c[e[0]]).length;got+=g;return`<div class="item"><b>${WNM[w][0]} ${WNM[w][1]}</b> <span class="tag2">${g}/${L.length}</span><div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px">${L.map(e=>c[e[0]]?`<span class="tag2" style="padding:2px 8px;border-radius:99px;border:1px solid ${TIERC[e[1]]}">${e[1]} · ${e[2]}</span>`:`<span class="tag2" style="padding:2px 8px;border-radius:99px;border:1px dashed #8886;opacity:.6">${e[1]} · ???</span>`).join('')}</div></div>`}).join('');
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📖 ทำเนียบโลก <span class="tag2">${got}/${tot}</span></h3><p class="tag2">ฉากจบที่เคยไปถึงในแต่ละโลกของยุคปัจจุบัน · S ยากที่สุด · ปลดล็อกถาวรข้ามทุกชีวิต</p>${html}`,'wcodex')};
@@ -35108,6 +35109,234 @@ window.supJoin=async function(off){const n=($('shlN')||{}).value||'',sa=($('shlS
 const hlTabsH=w=>`<div class="hlTabs"><button class="${w==='f'?'on':''}" onclick="vipWall()">🏯 หอผู้ก่อตั้ง</button><button class="${w==='s'?'on':''}" onclick="supHall()">💛 หอผู้สนับสนุน</button></div>`;
 {const _vw=window.vipWall;window.vipWall=async function(){const r=_vw.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k!=='vipw2'){const h=m.querySelector('h3');if(h&&!m.querySelector('.hlTabs'))h.insertAdjacentHTML('afterend',hlTabsH('f'))}}catch(e){}return r}}
 {const _sh=window.supHall;window.supHall=async function(sc){const p=_sh.apply(this,arguments);try{const m=$('modal');if(m){const hd=m.querySelector('.shl .hd');if(hd&&!m.querySelector('.hlTabs'))hd.insertAdjacentHTML('beforebegin',hlTabsH('s'))}}catch(e){}const r=await p;try{const m=$('modal');const hd=m&&m.querySelector('.shl .hd');if(hd&&!m.querySelector('.hlTabs'))hd.insertAdjacentHTML('beforebegin',hlTabsH('s'))}catch(e){}return r}}
+// ============================================================
+// 🏰 หอคอย · 🎮 ระบบเกม · 💀 โลกที่เกตชนะ · ☄️ วันสิ้นโลก — แบบเรียบง่าย เล่นจบได้
+// ============================================================
+try{(()=>{
+const W=window._wld,W4=window._wld4;if(!W||!W4)return;
+const wOf=W.wOf,fire=W.wFire,CAND=W4.CAND,END=W4.END;
+const mn=M=>MW_MIN[M.cc||'th']||MW_MIN.th,money=(M,k)=>mwToB(mn(M)*k,M);
+const HP=p=>{const d=Math.round(S.maxHp*p/100);S.hp=Math.max(1,S.hp-d);return d};
+const heal=p=>{const d=Math.round(S.maxHp*p/100);S.hp=Math.min(S.maxHp,S.hp+d);return d};
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const O=(t,f,s)=>mwC(t,f,s?{s}:undefined);
+const say=(t,c,fx)=>mwSay(t,c||'',fx);
+const EV=(id,go)=>MW_R.push({id,w:0,cd:0,c:()=>false,go});
+const die=(c,t)=>{S.deathCause=ch(c);log(t,'bad',true);setTimeout(()=>{try{checkDeath()}catch(e){}},300)};
+const feed=t=>addFeed('ev',t,'sum');
+const rk=(T,v)=>{let r=T[0][1];T.forEach(t=>{if(v>=t[0])r=t[1]});return r};
+const bar=(v,c)=>`<div style="height:6px;border-radius:9px;background:#8883;overflow:hidden"><div style="width:${cl(v,0,100)}%;height:100%;background:${c}"></div></div>`;
+const pct=p=>` <span class="tag2">(โอกาส ~${Math.round(p*100)}%)</span>`;
+const NW={tower:['🏰','โลกหอคอย'],game:['🎮','โลกระบบเกม'],gatewon:['💀','โลกที่เกตชนะ'],doom:['☄️','โลกวันสิ้นโลก']};
+const on=(M,w)=>M&&!M.kid&&S.alive&&wOf(M)===w;
+
+// ==================== 🏰 โลกหอคอย ====================
+const TR=[[0,'คนธรรมดา'],[1,'นักปีนมือใหม่'],[25,'นักปีนชั้นกลาง'],[50,'นักปีนแนวหน้า'],[75,'ผู้พิชิตชั้นสูง'],[100,'ผู้ไปถึงยอด']];
+const tI=M=>{const T=M.TW=M.TW||{};if(T.fl==null){T.fl=0;T.hu=0;T.gear=0;T.ms={};T.fin=0}return T};
+const tCap=T=>[25,50,75].find(b=>!T.ms[b]&&T.fl<b+1)||100;
+function tYear(M,foc){const T=tI(M);
+ if(foc==='wxt'&&!T.fin){const cap=tCap(T),g=R(2,5)+T.gear,b=T.fl;T.fl=Math.min(cap,T.fl+g);const h=Math.max(3,R(8,14)-T.gear*2);T.hu=cl(T.hu+h,0,100);const d=HP(R(3,8));
+  feed(`🧗 ปีนหอคอยทั้งปี · ชั้น ${b} → <b>${T.fl}</b>${T.fl>=cap&&cap<100&&!T.ms[cap]?` · <b>ประตูชั้น ${cap} ปิดอยู่ มีบางอย่างเฝ้า</b>`:''} · บาดเจ็บสะสม +${h} · พลังชีวิต −${d}`);
+  mwFx({mon:money(M,.4+T.fl/35)});
+  if(T.hu>=90&&Math.random()<.12){M.fl.tfall=1;die(['ตกจากบันไดวนระหว่างชั้นของหอคอย','ถูกกับดักในชั้นที่ยังไม่มีใครสำรวจ','ร่างกายที่บาดเจ็บสะสมทนไม่ไหวกลางทางขึ้นหอคอย'],'🏰 หอคอยไม่เคยให้อภัยคนที่ฝืนเกินตัว')}}
+ else if(foc==='wxtr'){const h=R(15,22);T.hu=Math.max(0,T.hu-h);heal(10);let s='';if(T.gear<3&&Math.random()<.55){const c=money(M,1.2+T.gear);if(S.money>=c){S.money-=c;T.gear++;s=` · ซื้ออุปกรณ์ปีนชุดใหม่ (ระดับ ${T.gear}/3)`}}feed(`🩹 พักฟื้นและเตรียมตัวทั้งปี · บาดเจ็บสะสม −${h}${s}`)}
+ else T.hu=Math.max(0,T.hu-6)}
+const BOSS={25:['🗿 ผู้เฝ้าชั้น 25','ห้องโถงหินกว้างเท่าสนามฟุตบอล รูปปั้นหินสูงสามเมตรลืมตาขึ้นทันทีที่คุณเหยียบเข้ามา บนผนังมีชื่อคนสลักไว้ร้อยกว่าชื่อ — ชื่อของคนที่ผ่านไม่ได้'],
+ 50:['🕸️ ราชินีใยเงิน ชั้น 50','ทั้งชั้นเป็นป่ามืดที่ห้อยด้วยใยสีเงิน เสียงกระซิบเรียกชื่อคุณด้วยเสียงแม่ คนที่มาด้วยกันเริ่มเดินออกนอกเส้นทางทีละคน'],
+ 75:['🔥 อัศวินไร้หน้า ชั้น 75','ชายในชุดเกราะไร้หน้ายืนรอที่ปลายสะพานไฟ ข้างเท้าเขามีป้ายชื่อทีมที่หายไปเมื่อปีที่แล้ว เขาไม่โจมตี แค่ยกดาบชี้มาที่คุณ']};
+function tBoss(M,b){const T=tI(M),B=BOSS[b],p1=cl(.35+T.gear*.1+(T.fl>=b?.05:0)-T.hu/250,.12,.8),p2=cl(p1+.2,.2,.9);
+ choice(B[0],B[1]+`<br><span class="tag2">บาดเจ็บสะสม ${T.hu}/100 · อุปกรณ์ระดับ ${T.gear}/3</span>`,[
+  O('บุกตรง ไม่ถอย',()=>{if(Math.random()<p1){T.ms[b]=1;T.fl=b+1;if(b===50)M.fl.t50=1;say(`⚔️ <b>ผ่านชั้น ${b}!</b> ประตูเปิดออกพร้อมแสงสีทอง ข่าวของคุณขึ้นหน้าหนึ่งทุกสำนัก`,'epic',{fame:2500*b/25,mon:money(M,b/10)})}else{T.hu=cl(T.hu+25,0,100);say(`🩸 คุณถูกเหวี่ยงกระแทกผนัง ทีมลากคุณออกมาทันก่อนประตูปิด · พลังชีวิต −${HP(20)}`,'bad');if(b===75&&T.hu>=85&&Math.random()<.3){M.fl.tfall=1;die(['สิ้นใจที่สะพานไฟชั้น 75 ของหอคอย'],'🔥 ชื่อของคุณถูกสลักลงบนผนังหิน')}}},'เสี่ยง'+pct(p1)),
+  O('อ่านแพทเทิร์นก่อน แล้วค่อยลงมือ',()=>{if(Math.random()<p2){T.ms[b]=1;T.fl=b+1;if(b===50)M.fl.t50=1;T.hu=cl(T.hu+10,0,100);say(`🧠 สามวันที่คุณแอบดูการเคลื่อนไหวของมันได้ผล — <b>ผ่านชั้น ${b}</b>`,'good',{fame:1500*b/25,mon:money(M,b/14)})}else{T.hu=cl(T.hu+12,0,100);say('🕳️ แพทเทิร์นเปลี่ยนกลางทาง คุณต้องถอยลงมาตั้งหลักใหม่','bad')}},'ช้าแต่ชัวร์กว่า'+pct(p2)),
+  O('ถอยลงไปฝึกก่อน',()=>{T.hu=Math.max(0,T.hu-8);say('🧭 คุณจดทุกอย่างที่เห็นแล้วเดินลงมา ประตูยังรออยู่ที่เดิม','')},'ไม่เสียอะไร')])}
+[25,50,75].forEach(b=>EV('t_b'+b,M=>tBoss(M,b)));
+EV('wi_tower',M=>{const T=tI(M);choice('🏰 หอคอยกลางเมือง','สิบปีก่อน หอคอยสีขาวสูงทะลุเมฆโผล่ขึ้นกลางสวนลุมฯ ในคืนเดียว ใครขึ้นถึงชั้นที่ 100 จะได้พรหนึ่งข้อ — มีป้ายเขียนไว้ที่ประตูเป็นทุกภาษาในโลก วันนี้คุณอายุครบที่จะลงทะเบียนเป็นนักปีน',[
+ O('ลงทะเบียนทันที',()=>{T.fl=1;say('🎫 บัตรนักปีนสีเทาอยู่ในมือ ชั้นแรกเงียบกว่าที่คิด','good',{joy:4})},'เริ่มปีน'),
+ O('ซื้ออุปกรณ์ดีๆ ก่อน',()=>{const c=money(M,1);if(S.money>=c){S.money-=c;T.gear=1;say('🧰 เชือก ถุงมือ และหมวกกันน็อกรุ่นที่ทีมอาชีพใช้','good')}else say('💸 เงินไม่พอ คุณได้แค่ถุงมือมือสองมาคู่เดียว','')},'อุปกรณ์ +1'),
+ O('ยังไม่ปีน ใช้ชีวิตไปก่อน',()=>say('🏙️ หอคอยยังตั้งอยู่ตรงนั้น — และจะรอคุณไปอีกนาน',''),'ปีนทีหลังได้')])});
+EV('t_top',M=>{const T=tI(M);choice('✨ ชั้นที่ 100','ไม่มีสัตว์ประหลาด ไม่มีกับดัก มีแค่ห้องสีขาวกับเก้าอี้ตัวเดียว เสียงที่ไม่ใช่ทั้งชายและหญิงถามว่า ‘ต้องการอะไร’',[
+ O('ขอให้หอคอยหายไป และทุกคนที่ติดอยู่ได้กลับบ้าน',()=>{T.fin=1;M.fl.tw_all=1;say('🌅 หอคอยสลายเป็นฝุ่นแสงตอนรุ่งเช้า คนที่หายไปหลายร้อยคนยืนงงอยู่กลางสวนลุมฯ — รวมทั้งเพื่อนที่คุณคิดว่าตายไปแล้ว','myth',{fame:30000,joy:15})},'เพื่อทุกคน'),
+ O('ขอคนที่รักที่เสียไปกลับมา',()=>{T.fin=1;M.fl.tw_back=1;say('🕯️ เสียงเคาะประตูบ้านตอนเย็น คนที่คุณไปส่งที่วัดเมื่อหลายปีก่อนยืนยิ้มอยู่หน้าบ้าน — ไม่มีใครอธิบายได้ และคุณก็ไม่ถาม','myth',{fame:12000,joy:20})},'เพื่อคนที่รัก'),
+ O('ขอให้ตัวเองไม่ต้องลำบากอีกเลย',()=>{T.fin=1;M.fl.tw_self=1;heal(100);say('💎 บัญชีธนาคารมีเลขศูนย์เพิ่มจนนับไม่ทัน ร่างกายกลับมาแข็งแรงเหมือนอายุยี่สิบ — หอคอยยังตั้งอยู่ และคนอื่นยังปีนต่อไป','epic',{mon:money(M,200),fame:15000,joy:8})},'เพื่อตัวเอง')])});
+EV('t_hurt',M=>{const T=tI(M);T.hw=1;choice('🦴 ร่างกายส่งสัญญาณ','หมอกระดูกดูฟิล์มเอกซเรย์นานผิดปกติ ‘ถ้าปีนต่อแบบนี้อีกปี ผมไม่รับประกันว่าคุณจะเดินได้’',[
+ O('วางเชือก เลิกปีน',()=>{T.fin=1;M.fl.tquit=1;T.hu=Math.max(0,T.hu-40);say(`🏡 คุณแขวนเชือกไว้ที่ผนังบ้าน ชั้น ${T.fl} คือที่สุดของคุณ และมันก็มากพอแล้ว`,'',{joy:6})},'จบเส้นทางนักปีน'),
+ O('พักยาวหนึ่งปีเต็ม',()=>{T.hu=Math.max(0,T.hu-30);heal(25);say('🛌 ปีหนึ่งของกายภาพบำบัดและความอดทน','good',{mon:-money(M,1)})},'บาดเจ็บ −30'),
+ O('ฝืนต่อ ยอดอยู่ใกล้แล้ว',()=>{T.hu=cl(T.hu+5,0,100);say('😤 คุณพันเข่าแน่นขึ้นอีกรอบแล้วเดินกลับไปที่ประตูหอคอย','bad')},'เสี่ยงตายมากขึ้น')])});
+EV('t_party',M=>{const T=tI(M);T.ms.pt=1;choice('🤝 ทีมที่ขาดคนหนึ่ง','ทีมนักปีนสามคนเสียสมาชิกไปที่ชั้นล่าง หัวหน้าทีมยื่นมือมา ‘เราต้องการคนที่ไม่หนีตอนสถานการณ์แย่’',[
+ O('เข้าร่วมทีม',()=>{T.gear=Math.min(3,T.gear+1);say('🧗 การปีนกับทีมทำให้ทุกชั้นง่ายขึ้น (อุปกรณ์ +1)','good',{joy:4})},'ปีนง่ายขึ้น'),
+ O('ขอปีนเดี่ยวต่อ',()=>say('🧍 คุณชอบรู้ว่าทุกความผิดพลาดเป็นของตัวเอง',''),'ไม่เปลี่ยน')])});
+EV('t_loot',M=>{const T=tI(M);choice('📦 กล่องในห้องลับ','หลังกำแพงที่พังในชั้นที่คุณเพิ่งผ่าน มีกล่องเหล็กเก่าสลักอักษรที่ไม่มีใครอ่านออก บริษัทวิจัยยินดีจ่ายแพงมากสำหรับของจากหอคอย',[
+ O('ขายให้บริษัทวิจัย',()=>say('💰 ราคาที่ได้มากกว่าเงินเดือนทั้งปี','good',{mon:money(M,3+T.fl/15)}),'ได้เงิน'),
+ O('เปิดดูเอง',()=>{if(Math.random()<.6){T.gear=Math.min(3,T.gear+1);say('🪢 เชือกที่ไม่มีวันขาด — อุปกรณ์ +1','good')}else{T.hu=cl(T.hu+15,0,100);say(`💨 ควันสีม่วงพุ่งใส่หน้า คุณไอไปหนึ่งสัปดาห์ · พลังชีวิต −${HP(10)}`,'bad')}},'ลุ้น')])});
+EV('t_fam',M=>{const T=tI(M);choice('📞 สายจากที่บ้าน','แม่โทรมาตอนดึก เสียงสั่น ‘ข่าวบอกว่ามีทีมหายไปอีกแล้ว แม่ไม่อยากเปิดทีวีแล้วเห็นชื่อลูก’',[
+ O('สัญญาว่าจะระวังที่สุด',()=>{T.hu=Math.max(0,T.hu-5);say('🤙 คุณโทรหาแม่ทุกครั้งก่อนเข้าหอคอยนับจากคืนนั้น','',{joy:3})},'ใจสบาย'),
+ O('เลิกปีนเพื่อแม่',()=>{T.fin=1;M.fl.tquit=1;say(`🏡 คุณหยุดที่ชั้น ${T.fl} แม่ร้องไห้ทั้งที่ยิ้ม`,'good',{joy:8})},'จบเส้นทางนักปีน')])});
+CAND.tower=(M,foc,out)=>{if(!on(M,'tower'))return;const T=tI(M);if(T.fin)return;const cap=tCap(T),r=Math.random;
+ if(cap<100&&T.fl>=cap)out.push({id:'t_b'+cap,p:4});
+ if(T.fl>=100)out.push({id:'t_top',p:6});
+ if(T.hu<50)T.hw=0;if(T.hu>=75&&!T.hw)out.push({id:'t_hurt',p:4.5});
+ if(!T.ms.pt&&T.fl>=3&&r()<.15)out.push({id:'t_party',p:2});
+ if(T.fl>=5&&r()<.12)out.push({id:'t_loot',p:1.8});
+ if(T.fl>=10&&r()<.07)out.push({id:'t_fam',p:1.6})};
+
+// ==================== 🎮 โลกระบบเกม ====================
+const GRK=[[1,'ผู้เล่นมือใหม่'],[10,'ผู้เล่นทั่วไป'],[25,'ผู้เล่นระดับกลาง'],[40,'ท็อปเซิร์ฟเวอร์'],[60,'ผู้ท้าชิงบอสโลก'],[99,'ผู้เล่นอันดับหนึ่ง']];
+const GCL={war:['⚔️','นักรบ','เลเวลขึ้นเร็วกว่า'],mage:['🔮','นักเวท','ชนะบอสง่ายกว่า'],craft:['🔨','ช่างคราฟต์','หาเงินจากสกิลได้มาก'],rogue:['🗡️','โจร','รอดจาก PK ง่าย']};
+const qI=M=>{const G=M.GM=M.GM||{};if(G.lv==null){G.lv=1;G.cls=null;G.gd=0;G.fin=0;G.ms={};G.fy=-9}return G};
+function qYear(M,foc){const G=qI(M);if(G.free)return;
+ if(foc==='wxq'){const cap=G.fin?99:60,u=R(2,4)+(G.cls==='war'?1:0),b=G.lv;G.lv=Math.min(cap,G.lv+u);const d=HP(R(2,6));feed(`⚔️ ล่ามอนสเตอร์ทำเควสทั้งปี · เลเวล ${b} → <b>${G.lv}</b>${G.lv>=60&&!G.fin?' · <b>เลเวลตัน — บอสโลกรออยู่</b>':''} · พลังชีวิต −${d}`);mwFx({mon:money(M,.2+G.lv/60)});
+  if(G.lv>=99&&!M.fl.gm_99){M.fl.gm_99=1;log('🏆 <b>เลเวล 99</b> — หน้าต่างสถานะเปลี่ยนเป็นสีทอง','epic',true)}}
+ else if(foc==='wxqp'){const m=money(M,(.6+G.lv/25)*(G.cls==='craft'?1.7:1));mwFx({mon:m});feed(`💼 ใช้สกิลจากระบบหาเงินทั้งปี (เลเวล ${G.lv})`)}}
+EV('wi_game',M=>{const G=qI(M);choice('🎮 หน้าต่างสีฟ้า','เช้าวันเกิดอายุสิบแปด มีหน้าต่างโปร่งแสงลอยอยู่หน้าตา ‘ยินดีต้อนรับ ผู้เล่น’ ทุกคนบนโลกได้รับมันตอนอายุเท่านี้ ประเทศทั้งประเทศหมุนรอบเลเวลมาสิบปีแล้ว ระบบให้เลือกคลาสได้ครั้งเดียว',
+ Object.keys(GCL).map(k=>O(`${GCL[k][0]} ${GCL[k][1]}`,()=>{G.cls=k;say(`✨ <b>คลาส ${GCL[k][1]}</b> ถูกบันทึกลงในหน้าต่างสถานะของคุณตลอดไป`,'good',{joy:4})},GCL[k][2])))});
+EV('g_pk',M=>{const G=qI(M),p=G.cls==='rogue'?.8:.5;choice('🩸 ผู้เล่นสาย PK','ในดันเจี้ยนชั้นล่าง กลุ่มผู้เล่นสามคนดักทางออก ‘ของทั้งหมดในกระเป๋า หรือเลเวลของแกจะลดลงสิบ’',[
+ O('สู้',()=>{if(Math.random()<p){G.lv=Math.min(G.fin?99:60,G.lv+2);say('⚔️ คุณเหลือคนสุดท้ายที่ยืนอยู่ — ระบบมอบค่าประสบการณ์โบนัส','good',{fame:800})}else{G.lv=Math.max(1,G.lv-5);say(`💀 เลเวลลดลง 5 · พลังชีวิต −${HP(15)}`,'bad')}},'ลุ้น'+pct(p)),
+ O('ยอมให้ของไป',()=>say('🎒 กระเป๋าว่างเปล่า แต่คุณยังเดินออกมาได้','bad',{mon:-money(M,1)}),'เสียเงิน'),
+ O('แจ้งกิลด์ตำรวจระบบ',()=>{M.fl.ghon=1;say('🚨 อีกสองวันพวกนั้นถูกจับ ชื่อคุณอยู่ในรายงานในฐานะพยาน','good')},'ช้าแต่ปลอดภัย')])});
+EV('g_bug',M=>{const G=qI(M);G.ms.bug=1;choice('🐞 บั๊กของระบบ','คุณพบว่าถ้ากดใช้สกิลพร้อมกันสองอันในจังหวะเดียว ไอเทมจะเพิ่มเป็นสองชิ้น ไม่มีใครรู้เรื่องนี้นอกจากคุณ',[
+ O('ใช้มันเงียบๆ',()=>{if(Math.random()<.55){say('💎 กระเป๋าคุณเต็มไปด้วยไอเทมหายาก','good',{mon:money(M,8)})}else{M.fl.gm_bug=1;G.lv=Math.max(1,G.lv-20);say('⛔ <b>ระบบแจ้งเตือน: บัญชีถูกลงโทษ</b> เลเวลลด 20 และชื่อคุณขึ้นบอร์ดประกาศทั้งประเทศ','bad',{joy:-8})}},'รวยหรือโดนแบน'),
+ O('รายงานบั๊ก',()=>{M.fl.ghon=1;say('📨 หน้าต่างแจ้งเตือนสีทอง: ‘ขอบคุณที่ช่วยรักษาความเป็นธรรม’ — ระบบจำคุณได้แล้ว','good',{fame:500})},'ระบบจำคุณได้')])});
+EV('g_guild',M=>{const G=qI(M);G.ms.gd=1;choice('🏯 คำเชิญจากกิลด์','กิลด์อันดับสามของประเทศส่งคำเชิญมาในหน้าต่างระบบ พร้อมเงินเดือนและตารางลงดันเจี้ยนทุกสัปดาห์',[
+ O('เข้ากิลด์',()=>{G.gd=1;say('🛡️ คุณได้เพื่อนร่วมทีมที่ไว้ใจได้ และโอกาสล้มบอสโลกในวันหนึ่ง','good',{mon:money(M,1)})},'บอสโลกง่ายขึ้น'),
+ O('ตั้งกิลด์ของตัวเอง',()=>{const c=money(M,3);if(S.money>=c){S.money-=c;G.gd=2;M.fl.gm_guild=1;say('🏰 ป้ายชื่อกิลด์ที่คุณตั้งเองขึ้นกระดานจัดอันดับในวันแรก','epic',{fame:2000})}else say('💸 ค่าจดทะเบียนกิลด์แพงเกินกว่าที่มีตอนนี้','bad')},'ต้องใช้เงิน'),
+ O('อยู่เดี่ยว',()=>say('🧍 คุณชอบความเงียบในดันเจี้ยนมากกว่า',''),'ไม่เปลี่ยน')])});
+EV('g_hid',M=>{const G=qI(M);choice('❓ เควสลับ','คุณยายขายส้มตำปากซอยมีเครื่องหมายเควสสีม่วงลอยเหนือหัว ไม่มีใครเห็นนอกจากคุณ ‘ช่วยยายหาแมวหน่อยได้ไหมลูก’',[
+ O('ช่วยหาแมว',()=>{G.lv=Math.min(G.fin?99:60,G.lv+R(3,6));say('🐈 แมวอยู่บนหลังคาวัด — รางวัลเควสลับคือเลเวลที่ขึ้นทีเดียวหลายขั้น','good',{joy:5})},'เลเวลขึ้น'),
+ O('ไม่มีเวลา',()=>say('⌛ เครื่องหมายสีม่วงหายไปในวันถัดมา',''),'ข้าม')])});
+EV('g_free',M=>{const G=qI(M);G.ms.free=1;choice('🔓 ทางออกจากระบบ','ชายแก่ไร้หน้าต่างสถานะ — คนเดียวที่คุณเคยเจอ — บอกว่ามีวิธีถอดระบบออกจากตัว แต่ทุกอย่างที่ได้จากมันจะหายไป',[
+ O('ถอดระบบออก',()=>{G.free=1;M.fl.gm_free=1;say('🌿 หน้าต่างสีฟ้าดับลงครั้งสุดท้าย โลกเงียบขึ้น และคุณได้ยินเสียงนกเป็นครั้งแรกในรอบหลายปี','epic',{joy:12})},'จบเส้นทางระบบ'),
+ O('ยังไม่พร้อม',()=>say('🎮 คุณยังอยากรู้ว่าเลเวลสุดท้ายหน้าตาเป็นยังไง',''),'เล่นต่อ')])});
+EV('g_final',M=>{const G=qI(M);G.fy=M.y;const pg=cl((G.gd?.55:.3)+(G.cls==='mage'?.12:0),.2,.8),ps=cl(.22+(G.cls==='mage'?.12:0),.1,.5);
+ choice('👹 บอสโลก','ประกาศจากระบบดังในหัวทุกคนพร้อมกัน: ‘บอสโลกปรากฏที่เขาใหญ่ ผู้ที่ล้มมันได้จะปิดเกมนี้ตลอดไป’ ผู้เล่นเลเวลหกสิบทั้งประเทศมีไม่ถึงร้อยคน และคุณคือหนึ่งในนั้น',[
+  O(G.gd?'นำกิลด์บุกพร้อมกัน':'รวมทีมผู้เล่นแปลกหน้า',()=>{if(Math.random()<pg){G.fin=1;M.fl.gm_clear=1;say('🌄 บอสโลกล้มลงพร้อมเสียงแตกของท้องฟ้า หน้าต่างสถานะของทุกคนบนโลกขึ้นข้อความเดียวกัน: <b>‘ขอบคุณที่เล่น’</b> แล้วหายไป','myth',{fame:30000,joy:15})}else{say(`🩸 ทีมแตก ถอยกลับไปตั้งหลัก · พลังชีวิต −${HP(25)}`,'bad')}},'ลุ้น'+pct(pg)),
+  O('ลุยเดี่ยว',()=>{if(Math.random()<ps){G.fin=1;M.fl.gm_clear=1;say('⚔️ คนทั้งประเทศดูไลฟ์ตอนคุณยืนอยู่คนเดียวบนซากบอสโลก — <b>เกมจบแล้ว</b>','myth',{fame:45000,joy:15})}else{say(`💀 เกือบไม่รอด · พลังชีวิต −${HP(40)}`,'bad');if(Math.random()<.2)die(['ล้มลงต่อหน้าบอสโลกที่เขาใหญ่'],'👹 ระบบประกาศชื่อคุณในรายชื่อผู้เสียชีวิต')}},'เสี่ยงตาย'+pct(ps)),
+  O('ขอคุยกับผู้ดูแลระบบ',()=>{if(M.fl.ghon){G.fin=1;M.fl.gm_admin=1;say('🛠️ หน้าต่างสีทองเปิดขึ้น: ‘ผู้เล่นที่ซื่อตรงที่สุด — คุณต้องการรับสิทธิ์ผู้ดูแลแทนเราไหม’ — คุณกดตกลง และโลกก็เปลี่ยนตามที่คุณเขียน','myth',{fame:20000,joy:10})}else say('🔇 ไม่มีอะไรตอบกลับ ระบบไม่รู้จักคุณมากพอ','')},M.fl.ghon?'ระบบจำความซื่อตรงของคุณได้':'ต้องเคยทำดีกับระบบมาก่อน')])});
+CAND.game=(M,foc,out)=>{if(!on(M,'game'))return;const G=qI(M),r=Math.random;if(G.free)return;
+ if(!G.cls)out.push({id:'wi_game',p:5});
+ if(G.lv>=60&&!G.fin&&M.y-G.fy>=2)out.push({id:'g_final',p:5});
+ if(r()<.1)out.push({id:'g_pk',p:1.8});
+ if(!G.ms.bug&&G.lv>=8&&r()<.08)out.push({id:'g_bug',p:2});
+ if(!G.ms.gd&&G.lv>=15&&r()<.12)out.push({id:'g_guild',p:2});
+ if(r()<.09)out.push({id:'g_hid',p:1.5});
+ if(!G.ms.free&&G.lv>=30&&r()<.05)out.push({id:'g_free',p:1.7})};
+
+// ==================== 💀 โลกที่เกตชนะ ====================
+const RRK=[[0,'ชาวเมืองกำแพง'],[10,'หน่วยลาดตระเวน'],[30,'นักรบนอกกำแพง'],[55,'ผู้นำการยึดคืน'],[80,'ความหวังของมนุษย์'],[100,'ผู้ปิดเกตแม่']];
+const rI=M=>{const R0=M.GW=M.GW||{};if(R0.wall==null){R0.wall=60;R0.res=0;R0.ms={};R0.fin=0;R0.fall=0}return R0};
+const rCap=X=>[25,50,75].find(b=>!X.ms[b]&&X.res<b+1)||100;
+function rYear(M,foc){const X=rI(M);const dw=R(4,8);X.wall=cl(X.wall-dw,0,100);
+ if(foc==='wxw'&&!X.fin){const cap=rCap(X),b=X.res;X.res=Math.min(cap,X.res+R(3,7));const d=HP(R(4,10));feed(`🗡️ ออกปฏิบัติการนอกกำแพงทั้งปี · ดินแดนยึดคืน ${b}% → <b>${X.res}%</b>${X.res>=cap&&cap<100&&!X.ms[cap]?' · <b>มีเป้าหมายใหญ่รออยู่ข้างหน้า</b>':''} · พลังชีวิต −${d}`);
+  if(Math.random()<.025){M.fl.rw_fall=1;die(['ถูกฝูงมอนสเตอร์ล้อมนอกกำแพง','ไม่ได้กลับจากการลาดตระเวนนอกกำแพง'],'💀 วิทยุของหน่วยคุณเงียบไปตอนพลบค่ำ')}}
+ else if(foc==='wxwv'){const u=R(9,15);X.wall=cl(X.wall+u,0,100);feed(`🧱 ซ่อมกำแพงและเฝ้ายามทั้งปี · ความมั่นคงของเมือง +${u}`)}
+ feed(`💀 มอนสเตอร์กดดันกำแพงทั้งปี · ความมั่นคง −${dw} → <b>${X.wall}</b>/100`)}
+const MS={25:['🚉 สถานีรถไฟร้าง','สถานีกลางที่เคยพาคนออกจากเมืองตอนเกตแตก ตอนนี้เป็นรังของมอนสเตอร์ขนาดใหญ่ ถ้ายึดได้ เมืองจะมีเส้นทางส่งเสบียงไปทางเหนือ'],
+ 50:['🏙️ เมืองข้างเคียง','วิทยุจับสัญญาณจากคนที่ยังรอดในเมืองถัดไปได้ พวกเขาติดอยู่ในห้างร้างมาสามปี ระหว่างทางคือทุ่งของหมาป่าสามหัว'],
+ 75:['🌀 แกนของเกต','หน่วยสำรวจพบว่าเกตทั้งหมดเชื่อมกับ ‘เกตแม่’ ที่ใจกลางทวีป ทางไปต้องผ่านป้อมของแม่ทัพมอนสเตอร์ ที่ไม่เคยมีมนุษย์คนไหนกลับมา']};
+function rMs(M,b){const X=rI(M),B=MS[b],p1=cl(.4+X.wall/250-b/400,.15,.75),p2=cl(p1+.18,.25,.9);
+ choice(B[0],B[1],[
+  O('บุกเต็มกำลัง',()=>{if(Math.random()<p1){X.ms[b]=1;X.res=b+1;X.wall=cl(X.wall+10,0,100);say(`🚩 <b>ยึดคืนสำเร็จ!</b> ธงของเมืองกำแพงขึ้นเสาเป็นครั้งแรกในรอบยี่สิบปี`,'epic',{fame:2500*b/25})}else{X.wall=cl(X.wall-8,0,100);say(`🩸 หน่วยเสียคนไปครึ่งหนึ่ง คุณต้องถอยกลับ · พลังชีวิต −${HP(20)}`,'bad')}},'เสี่ยง'+pct(p1)),
+  O('วางแผนยาว ส่งหน่วยเล็กเจาะ',()=>{if(Math.random()<p2){X.ms[b]=1;X.res=b+1;say('🗺️ แผนที่คุณวาดเองบนโต๊ะครัวได้ผลทุกขั้นตอน — <b>ยึดคืนสำเร็จ</b>','good',{fame:1500*b/25})}else{say('🕳️ หน่วยเล็กถูกจับได้กลางทาง ต้องรอโอกาสหน้า','bad')}},'ปลอดภัยกว่า'+pct(p2)),
+  O('ยังไม่ใช่ตอนนี้',()=>say('🧭 คุณเก็บแผนไว้ในลิ้นชัก เมืองต้องการคุณบนกำแพงก่อน',''),'รอ')])}
+[25,50,75].forEach(b=>EV('r_m'+b,M=>rMs(M,b)));
+EV('wi_gatewon',M=>{rI(M);choice('💀 เมืองหลังกำแพง','ยี่สิบปีก่อน เกตนับหมื่นแตกพร้อมกันทั่วโลก มนุษย์แพ้สงคราม ที่เหลืออยู่คือเมืองกำแพงไม่กี่แห่ง คุณโตมากับเสียงหอนนอกกำแพงทุกคืน วันนี้อายุครบที่ต้องเลือกหน้าที่',[
+ O('สมัครหน่วยลาดตระเวน',()=>say('🗡️ ดาบสั้นกับวิทยุหนึ่งเครื่อง — โลกนอกกำแพงกว้างกว่าที่คิด','good',{joy:3}),'ออกไปยึดโลกคืน'),
+ O('อยู่หน่วยซ่อมกำแพง',()=>{rI(M).wall+=8;say('🧱 มือคุณหยาบขึ้นทุกวัน แต่เด็กๆ ในเมืองหลับสบาย','good')},'ปกป้องเมือง')])});
+EV('r_top',M=>{const X=rI(M);choice('🌀 เกตแม่','ประตูมิติสูงเท่าตึกห้าสิบชั้นหมุนวนอยู่กลางทะเลทรายที่เคยเป็นเมืองหลวง ข้างหน้ามันคือร่างสูงในเสื้อคลุมดำ — ‘เจ้าเกต’ ที่พูดภาษาคนได้ ‘เราไม่ได้ต้องการโลกของพวกเจ้า เราแค่ไม่มีที่ไป’',[
+ O('ทำลายเกตแม่',()=>{const p=.55;if(Math.random()<p){X.fin=1;M.fl.rw_close=1;say('🌅 เกตแม่ยุบตัวเป็นจุดแสงเล็กๆ แล้วหายไป มอนสเตอร์ทั่วโลกล้มลงพร้อมกัน — <b>มนุษย์ได้โลกคืน</b>','myth',{fame:40000,joy:15})}else{say(`💥 แรงระเบิดเหวี่ยงคุณกระเด็น · พลังชีวิต −${HP(35)}`,'bad');if(Math.random()<.25){M.fl.rw_fall=1;die(['สิ้นใจหน้าเกตแม่'],'🌀 ชื่อคุณถูกสลักบนกำแพงเมืองเป็นชื่อแรก')}}},'ลุ้น ~55%'),
+ O('เจรจาสงบศึก แบ่งโลกกันอยู่',()=>{X.fin=1;M.fl.rw_pact=1;X.wall=100;say('🤝 สัญญาถูกเขียนด้วยเลือดของทั้งสองฝ่าย มอนสเตอร์ถอยกลับไปอยู่ครึ่งทวีปที่ไม่มีคน เด็กๆ ในเมืองได้วิ่งเล่นนอกกำแพงเป็นครั้งแรก','epic',{fame:20000,joy:10})},'สันติ แต่ไม่ใช่ชัยชนะ'),
+ O('ถอยกลับไปตั้งหลัก',()=>say('🧭 เกตแม่ยังหมุนอยู่ และจะรอคุณ',''),'รอ')])});
+EV('r_fall',M=>{const X=rI(M);X.fall=1;choice('🔥 กำแพงแตก','เสียงไซเรนดังตอนตีสาม กำแพงฝั่งตะวันออกพังเป็นทางกว้างยี่สิบเมตร ฝูงมอนสเตอร์ไหลเข้ามาเหมือนน้ำป่า',[
+ O('พาคนหนีออกทางใต้',()=>{M.fl.rw_save=1;X.wall=40;say('🚶 คุณนำคนสามร้อยคนเดินเท้าสิบวันไปถึงเมืองกำแพงอีกแห่ง — บ้านใหม่ ไม่ใช่บ้านเดิม แต่ทุกคนยังหายใจ','epic',{fame:6000,joy:-4})},'ช่วยคน'),
+ O('อยู่สู้ตรงช่องที่พัง',()=>{if(Math.random()<.5){M.fl.rw_fall=1;die(['ยืนสู้ตรงกำแพงที่พังจนลมหายใจสุดท้าย'],'🧱 ช่องที่คุณยืนเฝ้าเป็นช่องสุดท้ายที่มอนสเตอร์ผ่านไม่ได้')}else{X.wall=30;say(`🔥 รุ่งเช้า ช่องโหว่ถูกอุดด้วยรถบัสสามคัน คุณยังยืนอยู่ · พลังชีวิต −${HP(35)}`,'epic',{fame:9000})}},'เสี่ยงตาย 50%')])});
+EV('r_food',M=>{const X=rI(M);choice('🍚 เสบียงไม่พอ','ฤดูนี้ข้าวในแปลงในกำแพงเสียไปครึ่ง สภาเมืองเสนอลดอาหารคนแก่เพื่อเก็บไว้ให้ทหาร',[
+ O('ค้าน แบ่งเท่ากันทุกคน',()=>{X.wall=cl(X.wall-3,0,100);say('⚖️ ทุกคนผอมลง แต่ไม่มีใครถูกทิ้ง','good',{joy:3})},'ยุติธรรม'),
+ O('เห็นด้วย ทหารต้องแข็งแรง',()=>{X.wall=cl(X.wall+6,0,100);say('🪖 กำแพงแข็งแรงขึ้น แต่คุณหลีกเลี่ยงการเดินผ่านบ้านพักคนชรา','',{joy:-4})},'กำแพง +6')])});
+EV('r_beast',M=>{const X=rI(M);choice('🐺 ฝูงบุกกลางคืน','ฝูงหมาป่าสามหัวร้อยกว่าตัวปีนเนินขึ้นมาที่กำแพงฝั่งเหนือ ไฟสปอตไลต์ดับไปสองดวง',[
+ O('ขึ้นไปยืนแนวหน้า',()=>{if(Math.random()<.6){X.wall=cl(X.wall+5,0,100);say('🔦 คุณยิงจนลำกล้องร้อนแดง ฝูงถอยตอนรุ่งเช้า','good',{fame:1200})}else{X.wall=cl(X.wall-10,0,100);say(`🩸 เขี้ยวเฉี่ยวแขนคุณ · พลังชีวิต −${HP(18)}`,'bad')}},'ลุ้น'),
+ O('ซ่อมไฟส่องสว่างให้ทัน',()=>{X.wall=cl(X.wall+2,0,100);say('💡 ไฟติดกลับมาก่อนฝูงถึงยอดกำแพงสามนาที','')},'ปลอดภัย')])});
+CAND.gatewon=(M,foc,out)=>{if(!on(M,'gatewon'))return;const X=rI(M),r=Math.random;
+ if(X.wall<=0&&!X.fin)out.push({id:'r_fall',p:7});
+ if(X.fin)return;const cap=rCap(X);
+ if(cap<100&&X.res>=cap)out.push({id:'r_m'+cap,p:4});
+ if(X.res>=100)out.push({id:'r_top',p:6});
+ if(r()<.1)out.push({id:'r_food',p:1.6});
+ if(r()<.12)out.push({id:'r_beast',p:1.9})};
+
+// ==================== ☄️ วันสิ้นโลก ====================
+const dI=M=>{const D=M.DM=M.DM||{};if(D.left==null){D.left=12;D.prep=0;D.bond=0;D.ms={};D.fin=0;D.bunk=0;D.msn=0}return D};
+function dYear(M,foc){const D=dI(M);if(D.fin)return;D.left=Math.max(0,D.left-1);
+ if(foc==='wxda'){const g=R(6,11),c=money(M,.6);S.money=Math.max(0,S.money-c);D.prep=cl(D.prep+g,0,100);feed(`🏗️ ทั้งปีเตรียมหลุมหลบภัย ตุนอาหาร น้ำ ยา · การเตรียมตัว +${g} → <b>${D.prep}</b>/100`)}
+ else if(foc==='wxdb'){const g=R(6,11);D.bond=cl(D.bond+g,0,100);joy(4);feed(`🌅 ทั้งปีใช้เวลากับคนที่รัก ทำสิ่งที่เคยผัดไว้ · คนที่อยู่ข้างกัน +${g} → <b>${D.bond}</b>/100`)}
+ feed(`☄️ <b>อีก ${D.left} ปี</b> อุกกาบาต ‘อรุณ’ จะชนโลก`)}
+EV('wi_doom',M=>{const D=dI(M);choice('☄️ ประกาศจากนาซ่า','ทุกช่องทีวีตัดเข้าแถลงการณ์พร้อมกัน — อุกกาบาตกว้างสิบสองกิโลเมตรชื่อ ‘อรุณ’ จะชนโลกในอีก <b>สิบสองปี</b> ไม่มีที่ไหนปลอดภัยทั้งหมด นักวิทยาศาสตร์บอกว่าคนที่อยู่ใต้ดินลึกพอ อาจรอด',[
+ O('เริ่มเตรียมตัวทันที',()=>{D.prep+=8;say('🛒 คุณซื้อน้ำดื่มสองร้อยลิตรในวันที่ร้านยังไม่มีใครแย่ง','good',{mon:-money(M,.5)})},'การเตรียมตัว +8'),
+ O('โทรหาคนที่ไม่ได้คุยมานาน',()=>{D.bond+=8;say('📞 ปลายสายเงียบไปนาน แล้วพูดว่า ‘ดีใจที่โทรมานะ’','good',{joy:5})},'คนที่อยู่ข้างกัน +8'),
+ O('ไม่เชื่อ ใช้ชีวิตตามปกติ',()=>say('📺 คุณปิดทีวี — สิบสองปีนานพอจะคิดเรื่องนี้ทีหลัง',''),'ไม่เปลี่ยน')])});
+EV('d_lot',M=>{const D=dI(M);D.ms.lot=1;choice('🎟️ สลากบังเกอร์รัฐ','รัฐเปิดให้ประชาชนลงชื่อจับสลากเข้าบังเกอร์ใต้ภูเขา ที่นั่งมีหนึ่งในห้าสิบ ผลออกกลางปีหน้า',[
+ O('ลงชื่อ',()=>{if(Math.random()<.2){D.bunk=1;say('🎉 <b>ชื่อคุณอยู่ในรายชื่อ</b> — บัตรสีเขียวพร้อมรหัสประตูบังเกอร์มาถึงทางไปรษณีย์','epic',{joy:12})}else say('📄 ชื่อคุณไม่อยู่ในรายชื่อ — เหมือนอีกสี่สิบเก้าคนจากห้าสิบ','',{joy:-3})},'โอกาส 20%'),
+ O('ซื้อที่นั่งในตลาดมืด',()=>{const c=money(M,25);if(S.money>=c){S.money-=c;if(Math.random()<.6){D.bunk=1;say('🤫 บัตรเขียวที่ซื้อมาผ่านการตรวจ — คุณไม่ถามว่าที่นั่งนี้เคยเป็นของใคร','',{joy:-2})}else say('💸 บัตรปลอม เงินหายไปพร้อมเบอร์โทรที่ติดต่อไม่ได้อีกเลย','bad',{joy:-8})}else say('💸 ราคาแพงกว่าทุกอย่างที่คุณมี','bad')},'แพงมาก · อาจโดนโกง')])});
+EV('d_riot',M=>{const D=dI(M);choice('🔥 เมืองที่ไม่มีอนาคต','ห้างใกล้บ้านถูกปล้นกลางวันแสกๆ ตำรวจไม่มาแล้ว คนที่ไม่เชื่อว่าจะมีพรุ่งนี้ก็ไม่สนใจกฎของวันนี้',[
+ O('ปกป้องของที่ตุนไว้',()=>{if(Math.random()<.65)say('🔒 คุณเฝ้าประตูทั้งคืนกับไม้เบสบอล ไม่มีใครกล้าเข้ามา','good');else{D.prep=Math.max(0,D.prep-15);say(`🩸 พวกมันได้ของไปครึ่งหนึ่ง · พลังชีวิต −${HP(15)}`,'bad')}},'ลุ้น'),
+ O('แบ่งอาหารให้เพื่อนบ้าน',()=>{D.prep=Math.max(0,D.prep-6);D.bond=cl(D.bond+10,0,100);say('🍚 เพื่อนบ้านสามบ้านเริ่มผลัดกันเฝ้ายามกับคุณ','good',{joy:4})},'เพื่อนบ้าน +10')])});
+EV('d_msn',M=>{const D=dI(M);D.ms.msn=1;choice('🚀 ภารกิจเบี่ยงอุกกาบาต','องค์การอวกาศนานาชาติเปิดรับอาสาสมัครฝึกเป็นลูกเรือยานที่จะไปติดเครื่องยนต์บนอุกกาบาต คุณสมบัติที่ต้องการคือร่างกายแข็งแรงและไม่มีใครรอให้กลับบ้าน',[
+ O('สมัคร',()=>{if(Math.random()<.4+((S.int||0)>40?.15:0)){D.msn=1;say('🧑‍🚀 <b>คุณผ่านการคัดเลือก</b> ชื่อคุณอยู่ในลูกเรือสิบสองคนของยาน ‘รุ่งเช้า’','myth',{fame:15000})}else say('📋 คุณตกรอบสุดท้าย — ที่นั่งไปเป็นของอดีตนักบินขับไล่','',{joy:-3})},'ถ้าผ่าน จะได้ลุ้นช่วยโลก'),
+ O('ไม่สมัคร',()=>say('🏠 คุณเลือกอยู่บนพื้นดินกับคนที่รัก',''),'อยู่บนโลก')])});
+EV('d_end',M=>{const D=dI(M);D.fin=1;
+ if(D.msn&&!D.ms.fly){D.ms.fly=1;if(Math.random()<.5){M.fl.dm_save=1;say('🚀 ยาน ‘รุ่งเช้า’ จุดเครื่องบนผิวอุกกาบาตตามเวลาเป๊ะ ‘อรุณ’ เฉียดโลกไปสามแสนกิโลเมตร คนทั้งโลกออกมายืนดูมันผ่านไปบนฟ้า — <b>คุณกลับบ้านเป็นวีรบุรุษ</b>','myth',{fame:60000,joy:20});return}
+  say('🚀 เครื่องยนต์ติดไม่ครบ ยานถอยกลับโลกได้ทันก่อนการชน — คุณมองมันผ่านหน้าต่างยาน','bad')}
+ const safe=D.bunk||D.prep>=70;
+ choice('☄️ วันสุดท้าย','ฟ้าสีส้มตั้งแต่ตีห้า มีแสงดวงที่สองขึ้นทางตะวันออก ใหญ่ขึ้นทุกนาที ทุกเสียงในเมืองเงียบหมด',[
+  O('ลงหลุมหลบภัย',()=>{if(safe){M.fl.dm_live=1;if(D.prep>=70&&D.bond>=50)M.fl.dm_ark=1;say(`🕳️ ประตูเหล็กปิดลง พื้นสั่นติดต่อกันสามวัน เมื่อคุณขึ้นมาเห็นฟ้าอีกครั้ง โลกเป็นสีเทา — แต่คุณยังหายใจ${M.fl.dm_ark?' และคนที่คุณพาลงไปด้วยก็เช่นกัน':''}`,'epic',{joy:-5})}else{M.fl.dm_lost=1;die(['หลุมหลบภัยที่เตรียมไม่พอในวันสิ้นโลก'],'☄️ หลุมที่ขุดไว้ตื้นเกินไป')}},safe?'รอดแน่นอน':'เตรียมไม่พอ อาจไม่รอด'),
+  O('อยู่กับคนที่รักจนวินาทีสุดท้าย',()=>{if(D.bond>=40){M.fl.dm_love=1;die(['จากไปพร้อมคนที่รักในวันที่อุกกาบาตชนโลก'],'🌅 มือที่จับกันแน่นจนแสงสุดท้ายมาถึง')}else{M.fl.dm_lost=1;die(['จากไปคนเดียวในวันสิ้นโลก'],'📱 คุณกดโทรหาคนที่จำได้ทุกเบอร์ แต่สายไม่ว่างสักเบอร์')}},D.bond>=40?'จากไปอย่างสงบ':'คุณอาจอยู่คนเดียว'),
+  O('ขึ้นไปดูบนดาดฟ้า',()=>{if(Math.random()<.15){M.fl.dm_live=1;say('🌪️ คลื่นกระแทกเหวี่ยงคุณตกลงไปในสระน้ำของตึก — คุณรอดแบบที่ไม่มีใครอธิบายได้','epic')}else{M.fl[D.bond>=40?'dm_love':'dm_lost']=1;die(['มองอุกกาบาตจากดาดฟ้าจนวินาทีสุดท้าย'],'☄️ มันสวยกว่าที่คุณคิด')}},'ดูวันจบของโลกด้วยตา')])});
+CAND.doom=(M,foc,out)=>{if(!on(M,'doom'))return;const D=dI(M),r=Math.random;if(D.fin)return;
+ if(D.left<=0)out.push({id:'d_end',p:9});
+ if(!D.ms.lot&&D.left<=10&&r()<.3)out.push({id:'d_lot',p:2.5});
+ if(!D.ms.msn&&D.left<=8&&D.left>=3&&r()<.3)out.push({id:'d_msn',p:2.6});
+ if(D.left<=7&&r()<.14)out.push({id:'d_riot',p:2})};
+
+// ==================== รายปี / โฟกัส ====================
+{const _y=mwYear;mwYear=function(){const foc=S&&S.focus;const r=_y.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(M&&!M.kid){const w=wOf(M);
+ if(w==='tower')tYear(M,foc);else if(w==='game')qYear(M,foc);else if(w==='gatewon')rYear(M,foc);else if(w==='doom')dYear(M,foc)}}catch(e){console.error(e)}return r}}
+
+// ==================== แถบสถานะ / แผงโลก ====================
+function line(M){const w=wOf(M);
+ if(w==='tower'){const T=tI(M);return`🏰 <b>โลกหอคอย</b> · ${rk(TR,T.fl)} · ชั้น <b>${T.fl}</b>/100 · บาดเจ็บ <b>${T.hu}</b>`}
+ if(w==='game'){const G=qI(M);return`🎮 <b>โลกระบบเกม</b> · ${G.free?'ถอดระบบแล้ว':rk(GRK,G.lv)} · เลเวล <b>${G.lv}</b>${G.cls?' · '+GCL[G.cls][0]+' '+GCL[G.cls][1]:''}`}
+ if(w==='gatewon'){const X=rI(M);return`💀 <b>โลกที่เกตชนะ</b> · ${rk(RRK,X.res)} · ยึดคืน <b>${X.res}%</b> · กำแพง <b>${X.wall}</b>`}
+ if(w==='doom'){const D=dI(M);return`☄️ <b>วันสิ้นโลก</b> · ${D.fin?'หลังวันสิ้นโลก':'เหลืออีก <b>'+D.left+'</b> ปี'} · เตรียมตัว <b>${D.prep}</b> · คนข้างกาย <b>${D.bond}</b>`}
+ return''}
+{const _r=render;render=function(){const r=_r.apply(this,arguments);try{const M=S&&S.mw;if(M&&!M.kid&&NW[wOf(M)]){const h=$('mwHud');if(h&&!h.querySelector('.mwWX'))h.insertAdjacentHTML('afterbegin',`<div class="mwJob mwWX" style="border:none;margin:0 0 6px;padding:0;cursor:pointer">${line(M)}</div>`)}}catch(e){}return r}}
+function panel(M){const w=wOf(M);let b='';
+ if(w==='tower'){const T=tI(M),cap=tCap(T);b=`<div class="item">ชั้นที่ไปถึง <b>${T.fl}</b>/100${bar(T.fl,'#f5c542')}<span class="tag2">${T.fin?(M.fl.tquit?'วางเชือกแล้ว':'พิชิตหอคอยแล้ว'):cap<100?`ด่านถัดไป: ผู้เฝ้าชั้น ${cap}`:'ยอดหอคอยอยู่ข้างหน้า'}</span></div>
+ <div class="item">บาดเจ็บสะสม <b>${T.hu}</b>/100${bar(T.hu,T.hu>=75?'#e5484d':'#f5a623')}<span class="tag2">ถึง 90 อาจตายกลางหอคอย · พักฟื้นเพื่อลด</span></div>
+ <div class="item">อุปกรณ์ระดับ <b>${T.gear}</b>/3 <span class="tag2">ปีนได้ชั้นละมากขึ้น บาดเจ็บน้อยลง</span><br>ด่านบอส: ${[25,50,75].map(x=>(T.ms[x]?'✅':'⬜')+' '+x).join(' · ')}</div>`}
+ if(w==='game'){const G=qI(M);b=`<div class="item">เลเวล <b>${G.lv}</b>/99${bar(G.lv/99*100,'#5bb4ff')}<span class="tag2">${G.free?'ถอดระบบออกแล้ว':G.fin?'ปิดเกมแล้ว — เลเวลไปต่อได้ถึง 99':G.lv>=60?'เลเวลตันที่ 60 — ต้องล้มบอสโลก':'ถึง 60 จะเปิดศึกบอสโลก'}</span></div>
+ <div class="item">${G.cls?`คลาส <b>${GCL[G.cls][0]} ${GCL[G.cls][1]}</b> <span class="tag2">${GCL[G.cls][2]}</span>`:'ยังไม่เลือกคลาส'}<br>กิลด์: <b>${G.gd===2?'กิลด์ของตัวเอง':G.gd?'สมาชิกกิลด์':'ไม่มี'}</b>${M.fl.ghon?'<br><span class="tag2">🛠️ ระบบจดจำความซื่อตรงของคุณ</span>':''}</div>`}
+ if(w==='gatewon'){const X=rI(M),cap=rCap(X);b=`<div class="item">ดินแดนที่ยึดคืน <b>${X.res}%</b>${bar(X.res,'#46a758')}<span class="tag2">${X.fin?'สงครามจบแล้ว':cap<100?`เป้าหมายถัดไปที่ ${cap}%: ${MS[cap][0]}`:'เกตแม่อยู่ข้างหน้า'}</span></div>
+ <div class="item">ความมั่นคงของกำแพง <b>${X.wall}</b>/100${bar(X.wall,X.wall<=25?'#e5484d':'#5bb4ff')}<span class="tag2">ลดเองทุกปี · ถึง 0 เมืองแตก · เฝ้ากำแพงเพื่อเพิ่ม</span></div>`}
+ if(w==='doom'){const D=dI(M);b=`<div class="item">${D.fin?'<b>วันสิ้นโลกผ่านไปแล้ว</b>':`เวลาที่เหลือ <b>${D.left}</b> ปี${bar(D.left/12*100,'#e5484d')}`}</div>
+ <div class="item">การเตรียมตัว <b>${D.prep}</b>/100${bar(D.prep,'#f5a623')}<span class="tag2">ถึง 70 หลุมหลบภัยจะพอให้รอด</span></div>
+ <div class="item">คนที่อยู่ข้างกัน <b>${D.bond}</b>/100${bar(D.bond,'#c07cff')}<span class="tag2">ถึง 40 จะไม่ต้องอยู่คนเดียวในวันสุดท้าย</span>${D.bunk?'<br>🎟️ มีบัตรบังเกอร์รัฐ':''}${D.msn?'<br>🧑‍🚀 ลูกเรือยาน ‘รุ่งเช้า’':''}</div>`}
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>${NW[w][0]} ${NW[w][1]}</h3>${b}<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px"><button class="gbtn" onclick="wCodex()">📖 ทำเนียบโลก</button></div>`,'wpanel')}
+{const _p=window.wPanel;window.wPanel=function(){const M=S&&S.mw;if(M&&!M.kid&&NW[wOf(M)])return panel(M);return _p.apply(this,arguments)}}
+
+// ==================== ฉากจบ ====================
+END.tower=[['tw_all','S','ถึงยอด ขอพรให้ทุกคน'],['tw_back','A','ถึงยอด ขอคนที่รักคืนมา'],['tw_self','A','ถึงยอด ขอพรให้ตัวเอง'],['t50','B','พิชิตชั้น 50'],['tquit','B','วางเชือกกลับมาใช้ชีวิต'],['tfall','C','ตายในหอคอย']];
+END.game=[['gm_clear','S','ล้มบอสโลกและปิดเกม'],['gm_admin','S','ได้สิทธิ์ผู้ดูแลระบบ'],['gm_99','A','เลเวล 99'],['gm_free','A','ถอดระบบออกจากตัว'],['gm_guild','B','ตั้งกิลด์ของตัวเอง'],['gm_bug','C','ถูกลงโทษเพราะใช้บั๊ก']];
+END.gatewon=[['rw_close','S','ปิดเกตแม่ คืนโลกให้มนุษย์'],['rw_pact','A','สงบศึกกับเจ้าเกต'],['rw_city','A','เมืองไม่เคยแตกตลอดชีวิต'],['rw_save','B','พาคนหนีจากเมืองที่แตก'],['rw_fall','C','ตายนอกกำแพง']];
+END.doom=[['dm_save','S','เบี่ยงอุกกาบาตสำเร็จ'],['dm_ark','A','พาคนที่รักรอดไปด้วยกัน'],['dm_live','A','รอดหลังวันสิ้นโลก'],['dm_love','B','อยู่กับคนที่รักจนวินาทีสุดท้าย'],['dm_lost','C','จากไปคนเดียวในวันสิ้นโลก']];
+{const _e=endGame;endGame=function(){try{const M=S&&S.mw;if(M&&!M.kid&&wOf(M)==='gatewon'){const X=rI(M);if(!X.fall&&S.age>=45)M.fl.rw_city=1}}catch(e){}return _e.apply(this,arguments)}}
+
+// ==================== สำหรับคนดู ====================
+window._wx13={NW,mx(M){const w=wOf(M);
+ if(w==='tower'){const T=tI(M);return{r:rk(TR,T.fl),g:[['🏰','ชั้น',T.fl+'/100'],['🦴','บาดเจ็บ',T.hu+'/100'],['🧰','อุปกรณ์',T.gear+'/3'],['🗿','บอสที่ผ่าน',[25,50,75].filter(x=>T.ms[x]).length+'/3']],l:[T.fin?'🏁 เส้นทางนักปีนจบแล้ว':'🧗 ยังปีนอยู่']}}
+ if(w==='game'){const G=qI(M);return{r:G.free?'ถอดระบบแล้ว':rk(GRK,G.lv),g:[['⭐','เลเวล',G.lv],['🎓','คลาส',G.cls?GCL[G.cls][1]:'—'],['🏯','กิลด์',G.gd===2?'ของตัวเอง':G.gd?'สมาชิก':'ไม่มี'],['👹','บอสโลก',G.fin?'ล้มแล้ว':'ยัง']],l:[]}}
+ if(w==='gatewon'){const X=rI(M);return{r:rk(RRK,X.res),g:[['🚩','ยึดคืน',X.res+'%'],['🧱','กำแพง',X.wall+'/100'],['🏁','เป้าหมาย',[25,50,75].filter(x=>X.ms[x]).length+'/3'],['🌀','เกตแม่',X.fin?'จบแล้ว':'ยังอยู่']],l:[X.fall?'🔥 เคยเห็นเมืองแตก':'🏙️ เมืองยังยืนอยู่']}}
+ if(w==='doom'){const D=dI(M);return{r:D.fin?'ผู้รอดหลังวันสิ้นโลก':'อีก '+D.left+' ปีถึงวันสิ้นโลก',g:[['☄️','เหลือ',D.fin?'ผ่านแล้ว':D.left+' ปี'],['🏗️','เตรียมตัว',D.prep+'/100'],['💞','คนข้างกาย',D.bond+'/100'],['🎟️','บังเกอร์',D.bunk?'มี':'ไม่มี']],l:[]}}
+ return null}};
+window._wld13={ids:['wi_tower','t_b25','t_b50','t_b75','t_top','t_hurt','t_party','t_loot','t_fam','wi_game','g_pk','g_bug','g_guild','g_hid','g_free','g_final','wi_gatewon','r_m25','r_m50','r_m75','r_top','r_fall','r_food','r_beast','wi_doom','d_lot','d_riot','d_msn','d_end'],tI,qI,rI,dI};
+})()}catch(e){console.error('block13',e)}
 </script>
 </body>
 </html>
