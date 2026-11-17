@@ -23241,14 +23241,14 @@ function afSafe(c){const O=c.opts||[];const sk=O.findIndex(o=>o&&o.skip);if(sk>=
   if(!c._held2){c._held2=1;try{island({big:1,pri:1,ic:'✋',h:'รอคุณตัดสินใจ',t:String(c.title).replace(/<[^>]+>/g,'').slice(0,40),d:'เรื่องสำคัญ ระบบจะไม่เลือกแทนคุณ',kind:'gold',ms:4500})}catch(x){}}return}
  const i=afSafe(c),o=c.opts[i];if(!o)return _fcA.apply(this,arguments);
  const tl=String(c.title).replace(/<[^>]+>/g,''),ot=String(o.t).replace(/<[^>]+>/g,'');
- if(!silent||!auto){addFeed('ev',`🎲 ระบบเลือกแทน (ข้อที่ปลอดภัยที่สุด) — <b>${tl}</b>: ${ot}`,'sum');if(!auto)try{island({ic:'🎲',t:`เลือกแทน: ${esc(ot).slice(0,40)}`,kind:'grey',ms:2600})}catch(x){}}
+ if(!silent||!auto){addFeed('ev',`🎲 ระบบเลือกแทน (${typeof afLbl==='function'?afLbl():'ข้อที่ปลอดภัยที่สุด'}) — <b>${tl}</b>: ${ot}`,'sum');if(!auto)try{island({ic:'🎲',t:`เลือกแทน: ${esc(ot).slice(0,40)}`,kind:'grey',ms:2600})}catch(x){}}
  return choiceRun(i)}catch(e){console.error(e)}return _fcA.apply(this,arguments)}}
 // กรอบบอกล่วงหน้าให้ตรงกับข้อที่ระบบจะเลือกจริง
 try{chuPredict=function(c){if(!c||afBig(c))return null;try{if(typeof aiOn==='function'&&aiOn()&&S.ai&&S.ai.on&&typeof aiPick==='function')return{i:aiPick(c),force:false}}catch(e){}return{i:afSafe(c),force:false}}}catch(e){}
 // กลับหน้าแรกระหว่างมีเรื่องค้าง: เลือกข้อปลอดภัยให้ (กันเกมค้าง)
 {const _ttA=toTitle;toTitle=function(){fateChoice._force=1;try{return _ttA.apply(this,arguments)}finally{fateChoice._force=0}}}
 // 3) ป้ายบอกว่าโหมดอัตโนมัติเปิดอยู่ + คำอธิบายตอนเปิด
-{const _taA=toggleAuto;toggleAuto=function(){const r=_taA.apply(this,arguments);try{if(auto)toast('🤖 อัตโนมัติ: เรื่องเล็กระบบเลือกข้อปลอดภัยให้ · เรื่องสำคัญจะหยุดรอให้คุณเลือกเอง')}catch(e){}afPill();return r}}
+{const _taA=toggleAuto;toggleAuto=function(){const r=_taA.apply(this,arguments);try{if(auto)toast(`🤖 อัตโนมัติ: เรื่องเล็กระบบเลือกให้แบบ${typeof afLbl==='function'?afLbl():'ปลอดภัย'} (ตั้งใน ☰ → ⚙️ อัตโนมัติ) · เรื่องสำคัญจะหยุดรอให้คุณเลือกเอง`)}catch(e){}afPill();return r}}
 function afPill(){try{let p=document.getElementById('afPill');const on=!!(auto&&S&&S.alive&&document.getElementById('game')&&document.getElementById('game').classList.contains('on'));if(!on){if(p)p.remove();return}if(!p){p=document.createElement('button');p.id='afPill';p.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 118px);z-index:60;padding:5px 14px;border-radius:20px;border:2px solid #e8c86a;background:rgba(20,14,30,.85);color:#ffe9a0;font:inherit;font-weight:bold;font-size:13px';p.onclick=()=>{toggleAuto()};document.body.appendChild(p)}p.textContent='🤖 อัตโนมัติเปิดอยู่ · แตะเพื่อปิด'}catch(e){}}
 {const _rnA=render;render=function(){const r=_rnA.apply(this,arguments);afPill();return r}}
 // ตัวเลือกที่ค้างไว้เพราะเป็นเรื่องใหญ่ในโหมดอัตโนมัติ: เปิดให้เห็นทันที
@@ -28229,6 +28229,38 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'🏛️',t:'หอบรรพกาล�
   tabs.forEach((t,i)=>{const o=+t.dataset.o,vto=t.querySelector('.vto');t.style.setProperty('--i',Math.min(i,14));if(vto){vto.textContent='ลำดับที่';vto.insertAdjacentHTML('afterend',`<div class="vrk">${o}</div>`)}if(i<3){t.classList.add('r'+(i+1));t.insertAdjacentHTML('afterbegin','<span class="vfd">ผู้ก่อตั้งหอ</span>')}else t.classList.add('vtb')});
   if(tabs.length){const pod=document.createElement('div');pod.className='vpod';tabs.slice(0,3).forEach(t=>pod.appendChild(t));box.prepend(pod)}}catch(e){}};
  const _w=window.vipWall;window.vipWall=async function(){const r=await _w.apply(this,arguments);deco();return r}}
+
+// ============ v18.9 · ออโต้เลือกตามสไตล์/ฝั่ง · เด็กเล็กรอดโรคง่ายขึ้น · กันดวงซวยตายเด็กซ้ำ ============
+{const AF_STY={safe:'🛡️ ปลอดภัย',bal:'⚖️ สมดุล',bold:'🔥 กล้าได้กล้าเสีย'},AF_SIDE={auto:'☯️ ตามกรรม',good:'😇 ธรรมะ',mid:'⚖️ กลาง',evil:'😈 มาร'};
+ const auF=()=>{try{auInit();if(!S.au.sty)S.au.sty='bal';if(!S.au.side)S.au.side='auto';return S.au}catch(e){return{sty:'bal',side:'auto'}}};
+ const sideNow=a=>a.side!=='auto'?a.side:(S.karma||0)<-20?'evil':(S.karma||0)>20?'good':'mid';
+ window.afLbl=()=>{const a=auF();return a.sty==='safe'?'ข้อที่ปลอดภัยที่สุด':AF_STY[a.sty].slice(3)+' · '+AF_SIDE[a.side].slice(3)};
+ const EVL=/กรรมชั่ว|อธรรม|สายมาร|ฆ่า|ปล้น|ขโมย|ทรยศ|ลอบ|กลืน|สังหาร|รีดไถ|ข่มขู่/,GD=/กรรมดี|ช่วย|ธรรมะ|เมตตา|ปล่อยตัว|ให้อภัย|บริจาค|คุ้มครอง|รักษาให้/;
+ const _afOld=afSafe;
+ afSafe=function(c){const a=auF();if(a.sty==='safe')return _afOld(c);const O=c.opts||[],bold=a.sty==='bold',sd=sideNow(a),low=S.hp<S.maxHp*.4;let best=-1,bs=-1e9;
+  O.forEach((o,i)=>{if(!o||o.noFate||typeof o.f!=='function')return;const t=afTxt(o);let sc=Math.random()*.3;
+   sc+=(t.match(/\+/g)||[]).length*1-(t.match(/[−]/g)||[]).length*.8;
+   const ps=t.match(/ผ่าน(?:ราว)?\s*~?(\d+)%/),pd=t.match(/ตาย(?:ราว)?\s*~?(\d+)%/),pg=t.match(/~\s*(\d+)%/);
+   if(ps)sc+=+ps[1]/20;else if(pg&&!pd)sc+=(+pg[1]-50)/25;if(pd)sc-=+pd[1]/(bold?12:6)*(low?2:1);
+   if(/อาจตาย|เสี่ยงตาย|แพ้อาจตาย|ไม่รอดคือ/.test(t))sc-=(bold?1.2:3)*(low?2:1);
+   if(AF_RISK.test(t))sc+=bold?.3:-.6;if(o.skip)sc-=bold?2.5:1.5;
+   const m=t.match(/([\d,]+)\s*(?:ตำลึง|หินวิญญาณ)/);if(m&&/ใช้|จ่าย|ซื้อ|ประมูล|−/.test(t)&&S.money<+m[1].replace(/,/g,''))sc-=6;
+   if(low&&/รักษา|พัก|ฟื้น|ถอย|ปลอดภัย/.test(t))sc+=2;
+   if(sd==='good'){if(GD.test(t))sc+=1.5;if(EVL.test(t))sc-=1.5}else if(sd==='evil'){if(EVL.test(t))sc+=1.5;if(GD.test(t))sc-=1}
+   if(sc>bs){bs=sc;best=i}});
+  return best>=0?best:_afOld(c)};
+ window.afSet=(k,v)=>{const a=auF();a[k]=v;openAuto()};
+ const _oa=openAuto;openAuto=function(){const r=_oa.apply(this,arguments);try{const a=auF(),m=$('modal'),p=m&&m.querySelector('p.tag2');if(p&&!m.querySelector('.afSty')){const row=(k,M)=>`<div class="chips">${Object.entries(M).map(([v,n])=>`<button class="tabb ${a[k]===v?'on':''}" onclick="afSet('${k}','${v}')">${n}</button>`).join('')}</div>`;
+   p.insertAdjacentHTML('afterend',`<div class="item afSty"><b>🤖 เรื่องเล็กให้ระบบเลือกแบบ</b><p class="tag2">ใช้ทั้งโหมด 🤖 และ ⏳ ชะตาตัดสินแทน · เรื่องสำคัญยังรอให้คุณเลือกเองเสมอ</p>${row('sty',AF_STY)}<p class="tag2" style="margin:8px 0 2px">ฝั่งที่เอนไป</p>${row('side',AF_SIDE)}<p class="tag2">${a.sty==='safe'?'ปลอดภัย: เลี่ยงความเสี่ยงทุกทาง ถ้ามีข้อปฏิเสธจะเลือกข้อนั้น — เติบโตช้า':a.sty==='bal'?'สมดุล: เลือกข้อที่ได้ของมากสุด เลี่ยงข้อที่บอกว่าเสี่ยงตายสูง':'กล้าได้กล้าเสีย: ยอมเสี่ยงเพื่อรางวัลใหญ่ ยังหลบข้อที่บอกว่าเสี่ยงตายสูง'}${a.side==='auto'?' · ตามกรรม: กรรมติดลบเอนทางมาร กรรมบวกเอนทางธรรม':''}</p></div>`)}}catch(e){}return r};
+ try{const g=SYS_GUIDE.find(x=>x.t==='ระบบเลือกแทน');if(g)g.d=g.d.replace('และเลือกข้อที่ปลอดภัยที่สุด','ตามสไตล์ที่ตั้งใน ⚙️ อัตโนมัติ (🛡️ ปลอดภัย · ⚖️ สมดุล · 🔥 กล้าได้กล้าเสีย) และฝั่งที่เอน (ตามกรรม · ธรรมะ · กลาง · มาร)')}catch(e){}}
+// เด็กต่ำกว่า 6 ขวบ: โรคร้ายรุนแรงน้อยลงครึ่งหนึ่ง เสี่ยงตายต่อครั้งไม่เกิน 25% · บ้านไม่มีเงินจ้างหมอ มีหมอหมู่บ้านช่วย
+{const _ar=acuteRisk;acuteRisk=function(d,doc){let r=_ar.apply(this,arguments);try{if(S&&S.age<10&&!doc)r*=.6;if(S&&S.age<6)r=Math.min(.25,r*.5)}catch(e){}return r}}
+{const _ac=acute;acute=function(d){try{if(S&&S.age<10&&S.money<200+S.age*15&&!S._vHeal){S._vHeal=1;queueMicrotask(()=>{try{log('🌿 หมอสมุนไพรประจำหมู่บ้านแวะมาดูอาการให้โดยไม่คิดเงิน','');}catch(e){}})}}catch(e){}return _ac.apply(this,arguments)}}
+// ชาติก่อนตายก่อน 6 ขวบ → ชาตินี้รอดความตายในวัยเด็กได้ 1 ครั้ง
+{const _cdK=checkDeath;checkDeath=function(){try{if(S&&S.alive&&S.age<6&&S.flags&&S.flags.kidShield&&(S.deathCause||S.hp<=0)){S.flags.kidShield=0;S.deathCause=null;S.chronic=null;S.hp=Math.max(1,Math.round(S.maxHp*.5));log('🕯️ ลมหายใจกำลังจะดับ — แต่แสงอุ่นๆ จากบรรพบุรุษที่จากไปก่อนวัยห่อร่างคุณไว้ คุณรอดมาได้อย่างปาฏิหาริย์','myth',true);return false}}catch(e){}
+ const was=S&&S.alive,ag=S&&S.age;const r=_cdK.apply(this,arguments);try{if(was&&S&&!S.alive&&ag<6&&!S.custom)LS.set('murim_kidpity',1)}catch(e){}return r}}
+{const _slP=startLife;startLife=function(){const r=_slP.apply(this,arguments);try{if(S&&LS.get('murim_kidpity',0)){LS.del('murim_kidpity');S.flags.kidShield=1}}catch(e){}return r}}
+{const _ihP=inherit;inherit=function(){const r=_ihP.apply(this,arguments);try{if(S&&LS.get('murim_kidpity',0)){LS.del('murim_kidpity');S.flags.kidShield=1}}catch(e){}return r}}
 </script>
 </body>
 </html>
