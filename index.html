@@ -13852,8 +13852,7 @@ function rlvFrame(st,now){const cv=st.cv,c=cv.getContext('2d'),o=st.o,z=3,col=st
  for(let i=st.P.length-1;i>=0;i--){const p=st.P[i];p.x+=p.vx;p.y+=p.vy;p.vy+=p.s>1?-.004:.02;p.l--;if(p.l<=0||p.y>PXH+4){st.P.splice(i,1);continue}c.globalAlpha=Math.min(1,p.l/p.l0*1.5);c.fillStyle=p.c;c.fillRect(Math.round(p.x),Math.round(p.y),p.s,p.s)}c.globalAlpha=1;
  try{pxVig(c,cv.width,cv.height)}catch(e){}
  if(k>=3.7+SPC){const G=REL_GR[sc],a=Math.min(1,(k-3.7-SPC)/.3);c.setTransform(1,0,0,1,0,0);c.globalAlpha=a;c.textAlign='right';c.textBaseline='top';c.lineJoin='round';
-  c.font='bold 60px monospace';c.lineWidth=9;c.strokeStyle='#000000';c.strokeText(G[0],cv.width-12,8);c.fillStyle=G[2];c.fillText(G[0],cv.width-12,8);
-  c.font='bold 22px sans-serif';c.lineWidth=6;c.strokeText(G[1],cv.width-12,74);c.fillStyle='#ffffff';c.fillText(G[1],cv.width-12,74);c.globalAlpha=1;c.textAlign='left'}
+  c.textAlign='left';try{rlvTxt(c,G[0],cv.width-12,8,60,G[2]);rlvTxt(c,G[1],cv.width-12,74,22,'#ffffff')}catch(e){}c.globalAlpha=1}
  cv.style.transform=(shx||shy)?`translate(${shx*1.5}px,${shy*1.5}px)`:''}
 function rlvLoop(now){let box=$('chatBox');if(box&&box.offsetParent===null)box=null;let any=0;
  if(box&&box.isConnected&&now-RLV.last>=40){RLV.last=now;const br=box.getBoundingClientRect();
@@ -19647,7 +19646,7 @@ function brdRestyle(){try{const m=$('modal');if(!m||m.dataset.k!=='online'||m.qu
  S._kSeen=S.kids||0;S._kLen=S.children.length;return r}catch(e){console.error(e);return _sfK.apply(this,arguments)}}}
 {const _rnK=render;render=function(){try{if(S&&S._kSeen==null){S._kSeen=S.kids||0;S._kLen=(S.children||[]).length}}catch(e){}return _rnK.apply(this,arguments)}}
 // ===================== 🌐 หน้าออนไลน์/ทำเนียบ — UI กระชับ =====================
-const ONL_NAV={chat:['💬','แชท'],live:['👁','ดูสด'],board:['🏆','ทำเนียบ'],arena:['🏟️','ลาน'],rp:['🎭','เล่นบท'],me:['⚙️','']};
+const ONL_NAV={chat:['💬','แชท'],live:['👁','ดูสด'],board:['🏆','ทำเนียบ'],arena:['🏟️','ลาน'],rp:['🎭','เล่นบท'],hall:['🏛️','ผู้ก่อตั้ง'],me:['⚙️','']};
 const ONL_PER={'รายวัน':'วัน','รายสัปดาห์':'สัปดาห์','รายเดือน':'เดือน','ตลอดกาล':'ตลอดกาล','สัปดาห์นี้':'สัปดาห์'};
 function onlReset(p){const n=Date.now(),t=new Date(n+7*3600e3);let e;
  if(p==='d')e=Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate()+1);
@@ -19659,7 +19658,7 @@ function onlUI(){try{const m=$('modal');if(!m||m.dataset.k!=='online')return;
  m.querySelectorAll('.onRst').forEach(x=>{const r=x.previousElementSibling;if(!r||r.style.display==='none')x.remove()});
  // 1) แท็บหลัก → แถบนำทางแถวเดียว
  let nav=m.querySelector(':scope>.tabs');if(nav&&nav.querySelectorAll('.tabb').length<4)nav=null;
- if(nav&&!nav.classList.contains('onNav')){nav.classList.add('onNav');nav.querySelectorAll('.tabb').forEach(b=>{const oc=b.getAttribute('onclick')||'',k=/openLiveList/.test(oc)?'live':(oc.match(/openOnline\('(\w+)'\)/)||[])[1];const L=ONL_NAV[k];if(!L)return;b.innerHTML=`<i>${L[0]}</i>${L[1]?`<span>${L[1]}</span>`:''}`;if(k==='me'){b.classList.add('onMe');b.title='ชื่อที่แสดง'}})}
+ if(nav&&!nav.classList.contains('onNav')){nav.classList.add('onNav');nav.querySelectorAll('.tabb').forEach(b=>{const oc=b.getAttribute('onclick')||'',k=/openLiveList/.test(oc)?'live':/hallOpen/.test(oc)?'hall':(oc.match(/openOnline\('(\w+)'\)/)||[])[1];let L=ONL_NAV[k];if(!L){const mm=(b.textContent||'').trim().match(/^(\S+)\s+(\S+)/);if(!mm)return;L=[mm[1],mm[2]]}b.innerHTML=`<i>${L[0]}</i>${L[1]?`<span>${L[1]}</span>`:''}`;if(k==='me'){b.classList.add('onMe');b.title='ชื่อที่แสดง'}})}
  const rows=[...m.querySelectorAll('.tabs')].filter(r=>r!==nav&&r.style.display!=='none');
  const isPer=r=>[...r.querySelectorAll('.tabb')].some(b=>/รายวัน|ตลอดกาล|สัปดาห์นี้/.test(b.textContent));
  const isWorld=r=>[...r.querySelectorAll('.tabb')].some(b=>/ยุทธภพ/.test(b.textContent));
@@ -30072,6 +30071,61 @@ function realmPct(){try{const ri=realmIdx(),p=total();let lo,hi;if(ri<7){lo=REAL
  const b=(v,t,s)=>`<button class="opt ${VQ===v?'on':''}" onclick="setVfx(${v});openGfx()">${t} ${VQ===v?'✅':''}<small>${s}</small></button>`;
  const sc=[1,2,3,4,5].map(i=>`<button class="gbtn" style="margin:3px" ${i<=k?'':'disabled'} onclick="closeM();dsPlay(${i})">${i<=k?'▶️':'🔒'} ${{1:'ผ่าศิลา',2:'ผ่าภูผา',3:'ผ่าเมือง',4:'ผ่าทวีป',5:'ดับดารา'}[i]}</button>`).join('');
  m.insertAdjacentHTML('beforeend',`<h3 style="margin-top:14px">⚔️ เอฟเฟกต์ท่าวิชา</h3><p class="tag2">ท่าเปลี่ยนตามสายวิชา (8 สาย) และขั้นพลัง · หลังชนะศึกใหญ่จะมีฉากทำลายล้างตามขั้น</p>${b(2,'✨ เต็ม','ท่าทางตัวละคร วงเวท รอยฉีกมิติ ฉากบิด จอแตก')}${b(1,'🔋 ประหยัด','ท่าทางและเอฟเฟกต์หลัก ตัดของหนักออก')}${b(0,'⛔ ปิด','ฉากต่อสู้แบบเดิม ไม่มีฉากทำลายล้าง')}<p class="tag2" style="margin-top:8px">ดูฉากพลังที่ขั้นของคุณปลดแล้ว:</p><div>${sc}</div>`)}catch(e){}return r}}
+// 🔊 v18.25 เสียงพลังเบียวๆ: ท่าวิชาทั้ง 9 สาย (ดังขึ้นตามระดับ) · ทะลวงขั้น · ฉากทำลายล้าง 5 ระดับ (ชาร์จ → ปล่อย → ระเบิด → แผ่นดินสะเทือน) — สังเคราะห์สดด้วย WebAudio ไม่ต้องโหลดไฟล์
+const SND=(()=>{
+ const ok=()=>{try{return (typeof sfxOn==='undefined'||sfxOn)&&!!ac()}catch(e){return false}};
+ const V=v=>v*((typeof VOL!=='undefined'&&VOL&&VOL.s!=null)?VOL.s:1);
+ const nz=(d,v,ty,f0,f1,q,w,att)=>{const a=ac();if(!a)return;v=V(v);if(v<.0003)return;const t=a.currentTime+(w||0),n=Math.max(1,a.sampleRate*d|0),b=a.createBuffer(1,n,a.sampleRate),c=b.getChannelData(0);for(let i=0;i<n;i++)c[i]=Math.random()*2-1;
+  const s=a.createBufferSource();s.buffer=b;const f=a.createBiquadFilter();f.type=ty||'lowpass';f.frequency.setValueAtTime(f0,t);if(f1)f.frequency.exponentialRampToValueAtTime(f1,t+d);f.Q.value=q||1;
+  const g=a.createGain();att=Math.min(att||.012,d*.8);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+att);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(f);f.connect(g);g.connect(a.destination);s.start(t);s.stop(t+d+.05)};
+ const tn=(f,d,ty,v,w,sl,att)=>{const a=ac();if(!a)return;v=V(v);if(v<.0003)return;const t=a.currentTime+(w||0),o=a.createOscillator(),g=a.createGain();o.type=ty||'sine';o.frequency.setValueAtTime(f,t);if(sl)o.frequency.exponentialRampToValueAtTime(sl,t+d);
+  att=Math.min(att||.008,d*.8);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+att);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.05)};
+ // ชิ้นส่วนเสียง
+ const swish=(v,w,hi)=>{nz(.22,.13*v,'bandpass',hi?2600:1400,hi?7000:4200,1.4,w,.05);tn(hi?1900:1100,.14,'triangle',.02*v,w,hi?700:420)};
+ const boom=(v,w,len)=>{len=len||.8;tn(78,len,'sine',.16*v,w,30,.006);tn(52,len*1.2,'sine',.12*v,w,24,.01);nz(len,.14*v,'lowpass',900,70,.7,w,.006);nz(.09,.12*v,'highpass',900,0,.7,w)};
+ const rumble=(d,v,w)=>{nz(d,.1*v,'lowpass',180,50,1,w,Math.min(.5,d*.3));tn(41,d,'sine',.06*v,w,33,Math.min(.4,d*.3))};
+ const charge=(d,v,w)=>{nz(d,.08*v,'bandpass',180,2600,2.2,w,d*.9);tn(70,d,'sawtooth',.025*v,w,260,d*.9);tn(140,d,'triangle',.02*v,w,520,d*.9)};
+ const zap=(v,w)=>{for(let i=0;i<5;i++)nz(.04+Math.random()*.04,.12*v,'highpass',1800+Math.random()*2000,0,.8,(w||0)+i*.045+Math.random()*.02)};
+ const shimmer=(v,w,n)=>{const P=[1047,1319,1568,2093,2637,3136];for(let i=0;i<(n||6);i++)tn(P[i%6],.5,'sine',.03*v,(w||0)+i*.06)};
+ const gong=(v,w)=>{tn(196,2.2,'sine',.09*v,w,0,.004);tn(196*2.76,1.4,'sine',.035*v,w,0,.004);tn(196*5.4,.9,'sine',.018*v,w,0,.004);tn(98,1.8,'sine',.05*v,w)};
+ // ท่าวิชาตามสาย · T = 1..4 (ยิ่งขั้นสูงยิ่งดังและยาว)
+ const ART={
+  sword:(v,T)=>{swish(v,0,1);if(T>=2)swish(v*.8,.12,1);if(T>=3){tn(2400,.7,'sine',.025*v,.18);tn(3600,.5,'sine',.012*v,.18)}if(T>=4)boom(v*.6,.22,.6)},
+  fist:(v,T)=>{nz(.16,.1*v,'bandpass',500,180,1,0,.05);boom(v*.8,.12,.4+.1*T);if(T>=3)nz(.3,.07*v,'highpass',1200,4000,.7,.14)},
+  palm:(v,T)=>{nz(.55,.08*v,'bandpass',260,900,.9,0,.3);tn(150,.6,'sine',.07*v,.2,80);if(T>=3)boom(v*.6,.45,.7)},
+  fire:(v,T)=>{nz(.9+.2*T,.11*v,'bandpass',350,1700,.6,0,.3);for(let i=0;i<4+T*3;i++)nz(.025,.08*v,'highpass',3000,0,.6,.1+Math.random()*.8);if(T>=3)boom(v*.6,.6,.7)},
+  ice:(v,T)=>{[2093,2637,3136,4186].slice(0,2+T).forEach((f,i)=>tn(f,.45,'sine',.04*v,i*.07));nz(.2,.08*v,'highpass',5000,9000,.7,.3);if(T>=3)nz(.5,.07*v,'highpass',3000,800,.6,.35)},
+  thunder:(v,T)=>{zap(v,0);if(T>=2)zap(v*.8,.25);boom(v*(.6+.12*T),.3,.6+.15*T)},
+  wind:(v,T)=>{nz(.8,.09*v,'bandpass',450,2000,2.2,0,.35);nz(.7,.07*v,'bandpass',1800,400,2.2,.45,.2);if(T>=3)nz(1,.06*v,'bandpass',300,3000,3,.2,.5)},
+  demon:(v,T)=>{tn(62,1,'sawtooth',.05*v,0,46,.1);tn(65.5,1,'sawtooth',.04*v,0,48,.1);nz(.9,.05*v,'bandpass',900,300,6,0,.3);tn(311,.7,'sawtooth',.018*v,.25,290);if(T>=3)boom(v*.7,.5,.9)},
+  buddha:(v,T)=>{gong(v,0);if(T>=2)tn(220,1.2,'sine',.03*v,.1);if(T>=3){tn(330,1.2,'sine',.025*v,.1);gong(v*.7,.6)}}};
+ const art=(st,T)=>{if(!ok())return;const f=ART[st]||ART.palm;T=Math.max(1,Math.min(4,T|0));try{f(.75+.15*T,T)}catch(e){}};
+ // ทะลวงขั้น: ชาร์จขึ้น → ฟ้าแตก → ระฆังแก้ว
+ const brk=(T,dur)=>{if(!ok())return;T=Math.max(1,Math.min(4,T|0));const v=.8+.15*T,c=Math.max(.6,Math.min(1.6,(dur||1500)/1000*.55));charge(c,v,0);[392,523,659,784,1047,1319].forEach((f,i)=>tn(f,.25,'triangle',.03*v,c*.4+i*.07));boom(v,c,.7+.2*T);shimmer(v,c+.1,4+T);if(T>=3)zap(v*.7,c+.05)};
+ // ฉากทำลายล้าง: [เวลา(วินาที), ชนิด, ค่า] ตามจังหวะในฉากจริง
+ const DSQ={1:[[.2,'charge',2.1],[2.45,'swish'],[2.88,'boom',.9],[2.95,'rumble',1.6]],
+  2:[[.2,'charge',2.4],[2.7,'swish'],[2.85,'swish'],[4.4,'boom',1.1],[4.5,'rumble',2.6]],
+  3:[[.2,'charge',2.4],[2.75,'beam',3.4],[6.45,'boom',1.6],[6.5,'zap'],[6.6,'rumble',5],[9,'boom',.8]],
+  4:[[.3,'rumble',3],[.4,'charge',3.1],[3.7,'flash'],[4,'beam',4.1],[8.3,'boom',2],[8.35,'zap'],[8.5,'rumble',7]],
+  5:[[.3,'hum',3.3],[3.7,'flash'],[4,'charge',4.1],[8.3,'nova'],[8.6,'rumble',5],[9.2,'shimmer']]};
+ let Q=[];const clr=()=>{Q.forEach(clearTimeout);Q=[]};
+ const ds=k=>{clr();if(!ok())return;const v=1+.08*k;(DSQ[k]||[]).forEach(([t,ty,x])=>Q.push(setTimeout(()=>{try{if(!ok())return;
+  if(ty==='charge')charge(x,v,0);else if(ty==='swish')swish(v,0,1);else if(ty==='boom')boom(v*(x||1),0,.8*(x||1));else if(ty==='rumble')rumble(x,v,0);else if(ty==='zap')zap(v,0);
+  else if(ty==='beam'){nz(x,.09*v,'bandpass',300,2400,1.5,0,.25);tn(110,x,'sawtooth',.03*v,0,330,.2);tn(220,x,'triangle',.025*v,0,660,.2)}
+  else if(ty==='flash'){nz(.5,.12*v,'highpass',600,8000,.7,0,.01);tn(1568,.4,'sine',.04*v);tn(2093,.5,'sine',.03*v,.05)}
+  else if(ty==='hum'){tn(55,x,'sine',.06*v,0,58,1);tn(82.4,x,'sine',.04*v,0,85,1);tn(110,x,'triangle',.02*v,0,116,1.2)}
+  else if(ty==='nova'){boom(v*1.6,0,2.4);nz(2.5,.12*v,'highpass',200,9000,.6,0,.02);tn(30,3,'sine',.12*v,0,20,.01)}
+  else if(ty==='shimmer')shimmer(v,0,8)}catch(e){}},t*1000)))};
+ return {art,brk,ds,clr,nz,tn,boom,swish,zap,charge};
+})();
+window._snd=SND;
+// ต่อเข้ากับเอฟเฟกต์
+{const _dp=dsPlay;dsPlay=function(k){const had=!!DSX;const r=_dp.apply(this,arguments);try{if(!had&&DSX)SND.ds(k)}catch(e){}return r};window.dsPlay=dsPlay}
+{const _de=dsEnd;dsEnd=function(){try{SND.clr()}catch(e){}return _de.apply(this,arguments)}}
+{const _sc=setScene;setScene=function(){const b=VX;const r=_sc.apply(this,arguments);try{if(VX&&VX!==b){if(VX.type==='aura')SND.brk(VX.T,VX.dur);else SND.art(VX.st,VX.T)}}catch(e){}return r}}
+// คลิปปล่อยพลังในแชท: แตะที่ภาพแล้วมีเสียง (เล่นเองอัตโนมัติจะหนวกหู)
+document.addEventListener('click',e=>{try{const el=e.target.closest&&e.target.closest('.rlv');if(!el)return;const t=(el.closest('.cm')&&el.closest('.cm').textContent)||'';const st=/ดาบ|กระบี่/.test(t)?'sword':/หมัด/.test(t)?'fist':/เพลิง|ไฟ/.test(t)?'fire':/น้ำแข็ง|หิมะ/.test(t)?'ice':/อสนี|สายฟ้า|ฟ้าผ่า/.test(t)?'thunder':/ลม|พายุ/.test(t)?'wind':/มาร|โลหิต/.test(t)?'demon':/พุทธ|ธรรม/.test(t)?'buddha':'palm';const T=/EX|SSS|SS\b/.test(t)?4:/\bS\b|\bA\b/.test(t)?3:2;SND.art(st,T);setTimeout(()=>{try{SND.boom(.9,0,.8)}catch(x){}},900)}catch(x){}},true);
+
 window._vxTest={VFX,vxStyle,vxTier,dsTier,pConv,pIdx,get VX(){return VX}};
 
 })();
@@ -30259,6 +30313,20 @@ const ow=window.vipWall;window.vipWall=async function(){const r=await ow.apply(t
 const vg=()=>{try{return LS.get('murim_vip',null)}catch(e){return null}};
 for(const f of ['openProfile']){const o=window[f];if(typeof o!=='function')continue;window[f]=function(){const r=o.apply(this,arguments);try{const v=vg(),m=$('modal');if(v&&v.u&&m&&!m.querySelector('.hallme')){const d=document.createElement('button');d.className='gbtn hallme';d.style.cssText='width:100%;margin:8px 0';d.textContent='🏛 ผู้ก่อตั้ง'+(v.ul?' ลำดับที่ '+v.ul.o:'')+' · ดูป้ายของฉัน ›';d.setAttribute('onclick',"hallOpen('profile')");const h=m.querySelector('.frbig');const box=h&&h.parentElement&&h.parentElement.parentElement;(box||m).insertAdjacentElement(box?'afterend':'beforeend',d)}}catch(e){}return r}}
 })()}catch(e){console.error(e)}
+
+
+// 🔤 v18.25 ตัวอักษรในคลิปแชร์เป็นพิกเซล (เหมือนในเกม) แทนฟอนต์ขอบเรียบ · วาดครั้งเดียวแล้วจำไว้
+const RLVT={};
+function rlvTxt(c,t,xr,y,size,col){t=String(t||'');if(!t)return;const key=t+'|'+size+'|'+col;let o=RLVT[key];
+ if(!o){const s=size>=40?3:2,fs=Math.max(9,Math.round(size/s)),m=document.createElement('canvas'),x=m.getContext('2d'),F='bold '+fs+'px Loma,"Noto Sans Thai",monospace,sans-serif';x.font=F;
+  const w=Math.ceil(x.measureText(t).width)+4,h=Math.ceil(fs*1.5)+4;m.width=w;m.height=h;x.font=F;x.textBaseline='top';x.fillStyle='#fff';x.fillText(t,2,1);
+  const d=x.getImageData(0,0,w,h).data,on=(i,j)=>i>=0&&j>=0&&i<w&&j<h&&d[(j*w+i)*4+3]>110;
+  o=document.createElement('canvas');o.width=(w+2)*s;o.height=(h+2)*s;const q=o.getContext('2d');
+  q.fillStyle='#000';for(let j=0;j<h;j++)for(let i=0;i<w;i++)if(on(i,j))q.fillRect(i*s,j*s,s*3,s*3);
+  q.fillStyle=col;for(let j=0;j<h;j++)for(let i=0;i<w;i++)if(on(i,j))q.fillRect((i+1)*s,(j+1)*s,s,s);
+  q.fillStyle='rgba(255,255,255,.35)';for(let j=0;j<h;j++)for(let i=0;i<w;i++)if(on(i,j)&&!on(i,j-1))q.fillRect((i+1)*s,(j+1)*s,s,1);
+  RLVT[key]=o}
+ const sm=c.imageSmoothingEnabled;c.imageSmoothingEnabled=false;c.drawImage(o,Math.round(xr-o.width+3),Math.round(y-(size>=40?0:6)));c.imageSmoothingEnabled=sm}
 </script>
 </body>
 </html>
