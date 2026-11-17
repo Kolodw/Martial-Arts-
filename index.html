@@ -32426,6 +32426,15 @@ setInterval(tick,60000);setTimeout(tick,4000);
 {const _oa=openAdmTools;openAdmTools=function(){const r=_oa.apply(this,arguments);try{const m=$('modal'),h=[...m.querySelectorAll('.adsec>h4')].find(x=>/หน้าเกิด/.test(x.textContent));if(h&&!m.querySelector('.admAbR')){const o=st(),f=o.fr&&frOf(o.fr);
  h.parentElement.insertAdjacentHTML('afterend',`<div class="adsec admAbR"><h4>🎲 สุ่มกรอบ/ฉายาอเวจี</h4><p class="tag2" style="margin:0 0 6px">สุ่มกรอบอเวจี 1 ใน 5 กับฉายาอเวจี ไม่ซ้ำอันเดิม · ${o.fr?'ตอนนี้: <b>'+esc(f?f.n:o.fr)+'</b> · ฉายา <b>'+esc(o.tt)+'</b>':'ยังไม่เคยสุ่ม'}</p><div class="adg"><button class="pbtn" onclick="admAbRoll();openAdmTools()">🎲 สุ่มตอนนี้</button></div><label style="display:flex;gap:8px;align-items:center;margin-top:6px"><input type="checkbox" ${o.on?'checked':''} onchange="admAbWeekly(this.checked)"> 🗓️ สุ่มใหม่เองทุกสัปดาห์ (ไม่ซ้ำสัปดาห์ก่อน)</label></div>`)}}catch(e){console.error(e)}return r}}
 })()}catch(e){console.error(e)}
+
+// ===== 🎲 หน้า "ฉายาและกรอบรอบนี้" (แอดมิน): เพิ่มหมวด 🕳️ อเวจี — โชว์กรอบ+ฉายาอเวจีของจริง + ปุ่มสุ่ม/สุ่มรายสัปดาห์ =====
+try{(()=>{const AB_P=[['f_ab100','ผู้ข้ามปากอเวจี','ชั้น 100'],['f_ab300','วิญญาณไร้ที่พึ่ง','ชั้น 300'],['f_ab500','ผู้ร่วงไม่สิ้นสุด','ชั้น 500'],['f_ab800','ผู้ไม่เคยพัก','ชั้น 800'],['f_ab1000','ราชันอเวจี','ชั้น 1000']];
+const blk=()=>{const o=LS.get('murim_adm_abr',null)||{},f=o.fr&&frOf(o.fr);
+ return`<div class="item admAbP"><b>🕳️ อเวจี</b><p class="tag2" style="margin:2px 0 6px">กรอบ+ฉายาตามชั้น (ถาวร แยกจากอันดับ) · แอดมินสุ่มสวมได้ ไม่ซ้ำอันเดิม · ${o.fr?'ตอนนี้ <b>'+esc(f?f.n:o.fr)+'</b> · ฉายา <b>'+esc(o.tt||'')+'</b>':'ยังไม่เคยสุ่ม'}</p>
+ <div class="adg"><button class="pbtn" onclick="admAbRoll();openRkAdmin()">🎲 สุ่มกรอบ/ฉายาอเวจี</button></div>
+ <label style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" ${o.on?'checked':''} onchange="admAbWeekly(this.checked)"> 🗓️ สุ่มใหม่เองทุกสัปดาห์ (ไม่ซ้ำสัปดาห์ก่อน)</label>
+ ${AB_P.map(p=>`<div style="display:flex;align-items:center;gap:14px;margin-top:10px"><div style="flex:0 0 64px;text-align:center">${frWrap('<span class="frph sm">🙂</span>',p[0])}</div><div style="min-width:0;flex:1"><b>${esc(p[1])}</b><div class="tag2" style="margin-top:3px">${esc((frOf(p[0])||{}).n||'')} · ${p[2]}</div></div></div>`).join('')}</div>`};
+const _oR=window.openRkAdmin;if(typeof _oR==='function')window.openRkAdmin=async function(){const r=await _oR.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='rkadm'&&!m.querySelector('.admAbP')){const b=[...m.querySelectorAll('button.pbtn')].find(x=>/สุ่มชุด/.test(x.textContent));if(b)b.insertAdjacentHTML('afterend',blk())}}catch(e){console.error(e)}return r}})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
