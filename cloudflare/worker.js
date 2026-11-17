@@ -83,9 +83,10 @@ async function payAdmin(request, env, url) {
   if (a === 'regrant' && request.method === 'POST') {
     const id = String(url.searchParams.get('o') || '').replace(/[^a-z0-9]/g, '');
     const o = await db.prepare("SELECT uid,pack,status FROM orders WHERE id=?").bind(id).first(); let PR = null; try { const r = o && await db.prepare("SELECT kind,tier,days,n,price_baht FROM products WHERE sku=?").bind(o.pack).first(); if (r) PR = { kind: r.kind, amt: r.price_baht, tier: r.tier, days: r.days || 0, n: r.n } } catch (e) {}
-    if (!o || o.status !== 'paid_nogrant') return jr({ ok: 0, err: 'state' });
+    const manual = url.searchParams.get('m') === '1';
+    if (!o || !(o.status === 'paid_nogrant' || (manual && ['amount', 'unavailable', 'noslip', 'pending', 'old', 'acct', 'dup'].includes(o.status)))) return jr({ ok: 0, err: 'state' });
     try { const run = h.vkRun ? h.vkRun(() => h.payGrant(o.uid, PR || o.pack, '')) : h.payGrant(o.uid, PR || o.pack, ''); await run } catch (e) { return jr({ ok: 0, err: String(e && e.message || e).slice(0, 80) }) }
-    await db.prepare("UPDATE orders SET status='done',note='regrant' WHERE id=?").bind(id).run();
+    await db.prepare("UPDATE orders SET status='done',note=? WHERE id=?").bind(manual ? 'manual-approve(' + o.status + ')' : 'regrant', id).run();
     return jr({ ok: 1 });
   }
   return jr({ err: 'a' }, 400);
@@ -130,7 +131,7 @@ async function pay(request, env) {
   try { const c = await db.prepare("SELECT COUNT(*) n FROM orders WHERE uid=? AND created_at>?").bind(uid, now - 600e3).first(); if (c && c.n >= 6) return jr({ ok: 0, st: 'rate' }, 429) } catch (e) {}
   const oid = 'o' + now.toString(36) + Math.random().toString(36).slice(2, 8);
   await db.prepare("INSERT INTO orders(id,uid,pack,amount_satang,channel,status,created_at,expires_at) VALUES(?,?,?,?,?,?,?,?)").bind(oid, uid, pk, P.amt * 100, 'promptpay', 'pending', now, now + 3600e3).run();
-  const fail = async (st, note, code = 200) => { try { await db.prepare("UPDATE orders SET status=?,note=? WHERE id=?").bind(st, String(note || '').slice(0, 200), oid).run() } catch (e) {} return jr({ ok: 0, st, note }, code) };
+  const fail = async (st, note, code = 200) => { try { await db.prepare("UPDATE orders SET status=?,note=? WHERE id=?").bind(st, String(note || '').slice(0, 200), oid).run() } catch (e) {} return jr({ ok: 0, st, note, need: P.amt }, code) };
   // ผลตรวจที่ทุกผู้ให้บริการแปลงมาเป็นรูปเดียวกัน: ref, amt(สตางค์), sd(เวลาโอน ms), sender, receiver
   let ref = '', amt = 0, sd = 0, sender = '', receiver = '', raw = {};
   if (useOK) {
