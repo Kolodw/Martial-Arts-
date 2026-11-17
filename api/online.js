@@ -293,6 +293,7 @@ const COS_ALL = new Set([...COS_BASE.call[1], 't_p9', 't_p10', 't_p11']);
 const EV_END = Date.UTC(2026, 11, 17, 16, 59, 59);
 const EVM = { evf1: [49, 'f_e1', 300], evf4: [69, 'f_e4', 100], evt1: [29, 't_e1', 300], evt4: [39, 't_e4', 100], evc1: [29, 'c_e1', 300], evc4: [39, 'c_e4', 100] };
 const EVK = { evf2: ['f_e2', 25000, 'g'], evf3: ['f_e3', 15000, 'g'], evf5: ['f_e5', 25000, 'e'], evt2: ['t_e2', 8000, 'g'], evt3: ['t_e3', 8000, 'g'], evt5: ['t_e5', 8000, 'e'], evc2: ['c_e2', 10000, 'g'], evc3: ['c_e3', 10000, 'g'], evc5: ['c_e5', 10000, 'e'] };
+const EVB = { evb1: [79, ['evf1', 'evt1', 'evc1']], evb2: [109, ['evf4', 'evt4', 'evc4']] }; // ชุดรวม (ถูกกว่าซื้อแยก ~25%)
 const EV_MI = Object.values(EVM).map(x => x[1]);
 [...EV_MI, ...Object.values(EVK).map(x => x[0])].forEach(x => COS_ALL.add(x));
 const evOpen = () => Date.now() < EV_END;
@@ -689,9 +690,9 @@ module.exports = async (req, res) => {
     // 🎲 สิทธิ์สุ่มเกิดที่ซื้อ (เก็บที่เซิร์ฟเวอร์ ผูกกับรหัสผู้เล่น/บัญชี Google)
     if (a === 'cosget') {
       if (!okId(id)) { const ft0 = cosFeat(); return res.json({ own: [], eq: {}, feat: { pk: ft0.pk, p: cosPrice(ft0.pk), full: COS_BASE[ft0.pk][0], exp: ft0.exp } }) }
-      const [own, q, ...evr] = await pipe([['SMEMBERS', 'cos:' + id], ['GET', 'cosq:' + id], ...Object.keys(EVM).map(k => ['GET', 'evn:' + k]), ['HMGET', 'evs:' + id, ...EV_MI], ['HGETALL', 'kb:' + id]]);
+      const [own, q, ...evr] = await pipe([['SMEMBERS', 'cos:' + id], ['GET', 'cosq:' + id], ...Object.keys(EVM).map(k => ['GET', 'evn:' + k]), ['HMGET', 'evs:' + id, ...EV_MI], ['HGETALL', 'kb:' + id], ['SISMEMBER', 'supok', id]]);
       const ft = cosFeat(), EK = Object.keys(EVM), sn = evr[EK.length] || [], kbr = evr[EK.length + 1], kbo = {}; if (Array.isArray(kbr)) for (let i = 0; i + 1 < kbr.length; i += 2) kbo[kbr[i]] = kbr[i + 1]; else if (kbr && typeof kbr === 'object') Object.assign(kbo, kbr);
-      const ev = { end: EV_END, left: {}, sn: {}, kb: { g: +kbo.g || 0, e: +kbo.e || 0, imp: kbo.imp ? 1 : 0 } }; EK.forEach((k, i) => { ev.left[k] = Math.max(0, EVM[k][2] - (+evr[i] || 0)) }); EV_MI.forEach((x, i) => { if (sn[i]) ev.sn[x] = +sn[i] });
+      const ev = { end: EV_END, sup: +evr[EK.length + 2] ? 1 : 0, left: {}, sn: {}, kb: { g: +kbo.g || 0, e: +kbo.e || 0, imp: kbo.imp ? 1 : 0 } }; EK.forEach((k, i) => { ev.left[k] = Math.max(0, EVM[k][2] - (+evr[i] || 0)) }); EV_MI.forEach((x, i) => { if (sn[i]) ev.sn[x] = +sn[i] });
       return res.json({ own: own || [], eq: jp(q) || {}, ev, feat: { pk: ft.pk, p: cosPrice(ft.pk), full: COS_BASE[ft.pk][0], exp: ft.exp } });
     }
     if (a === 'cosset') {
@@ -2800,9 +2801,10 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
 module.exports.vkReset = vkReset;
 module.exports.vkRun = vkRun;
 // 💳 ให้สิทธิ์หลังตรวจสลิปอัตโนมัติสำเร็จ (เรียกจาก cloudflare/worker.js /api/pay) — pack: v1|v2|v3 = VIP, rs|rm|rl = ซื้อสุ่มเกิด
-module.exports.payPack = pk => { pk = String(pk || ''); if (EVM[pk]) return evOpen() ? { kind: 'cos', amt: EVM[pk][0], tier: 0, days: 0, n: 0, items: [EVM[pk][1]], key: pk, ev: 1, cap: EVM[pk][2] } : null; if (COS_P[pk]) return { kind: 'cos', amt: COS_P[pk][0], tier: 0, days: 0, n: 0, items: COS_P[pk][1], key: pk }; if (VIP_PK[pk]) return { kind: 'vip', amt: VIP_PK[pk][0], tier: VIP_PK[pk][1], days: VIP_PK[pk][2] }; const r = pk[0] === 'r' && RR_PK[pk.slice(1)]; return r ? { kind: 'rr', amt: r[0], n: r[1] } : null };
+module.exports.payPack = pk => { pk = String(pk || ''); if (EVB[pk]) return evOpen() ? { kind: 'cos', amt: EVB[pk][0], tier: 0, days: 0, n: 0, items: EVB[pk][1].map(k => EVM[k][1]), key: pk, ev: 1, bun: EVB[pk][1] } : null; if (EVM[pk]) return evOpen() ? { kind: 'cos', amt: EVM[pk][0], tier: 0, days: 0, n: 0, items: [EVM[pk][1]], key: pk, ev: 1, cap: EVM[pk][2] } : null; if (COS_P[pk]) return { kind: 'cos', amt: COS_P[pk][0], tier: 0, days: 0, n: 0, items: COS_P[pk][1], key: pk }; if (VIP_PK[pk]) return { kind: 'vip', amt: VIP_PK[pk][0], tier: VIP_PK[pk][1], days: VIP_PK[pk][2] }; const r = pk[0] === 'r' && RR_PK[pk.slice(1)]; return r ? { kind: 'rr', amt: r[0], n: r[1] } : null };
 module.exports.payGrant = async (uid, pk, name) => {
   const P = pk && typeof pk === 'object' ? pk : module.exports.payPack(pk);
+  if (P && P.bun && okId(uid)) { const own = new Set((await cmd('SMEMBERS', 'cos:' + uid)) || []), todo = P.bun.filter(k => !own.has(EVM[k][1])); for (const k of todo) { if ((+(await cmd('GET', 'evn:' + k)) || 0) >= EVM[k][2]) throw new Error('soldout') } const got = []; for (const k of todo) { const sn = +(await cmd('INCR', 'evn:' + k)); if (sn > EVM[k][2]) { await cmd('DECR', 'evn:' + k); continue } await cmd('HSET', 'evs:' + uid, EVM[k][1], sn); await cmd('LPUSH', 'evlog', JSON.stringify({ t: Date.now(), u: uid, k, i: EVM[k][1], m: 'pay', n: sn })); got.push(EVM[k][1]) } await cmd('LTRIM', 'evlog', 0, 299); if (!got.length) throw new Error('already'); await cmd('SADD', 'cos:' + uid, ...got); await cmd('SADD', 'supok', uid); return P }
   if (P && P.kind === 'cos' && okId(uid)) { const it = (P.items || []).filter(x => COS_ALL.has(x)); if (!it.length) throw new Error('bad pack/id'); if (P.ev && !(+(await cmd('SISMEMBER', 'cos:' + uid, it[0])))) { const sn = +(await cmd('INCR', 'evn:' + P.key)); if (sn > P.cap) { await cmd('DECR', 'evn:' + P.key); throw new Error('soldout') } await cmd('HSET', 'evs:' + uid, it[0], sn); await cmd('LPUSH', 'evlog', JSON.stringify({ t: Date.now(), u: uid, k: P.key, i: it[0], m: 'pay', n: sn })); await cmd('LTRIM', 'evlog', 0, 299) } await cmd('SADD', 'cos:' + uid, ...it); await cmd('SADD', 'supok', uid); return P }
   if (!P || !okId(uid) || !(P.kind === 'rr' ? P.n > 0 : P.tier >= 1 && P.tier <= 3)) throw new Error('bad pack/id');
   if (P.kind === 'rr') { await cmd('INCRBY', 'rrc:' + uid, P.n); await cmd('SADD', 'supok', uid); return P }

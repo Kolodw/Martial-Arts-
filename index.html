@@ -35431,6 +35431,47 @@ try{chatRender=window.chatRender}catch(e){}
 
 /* แท่นบูชา: วงอเวจีที่ 3+ (ชั้น 201+) ซื้อวิญญาณสำรองไม่ได้ — บอกชัดเจนและกดไม่ได้ ไม่เสียแก่นเปล่า */
 {const o=window.hellShop;if(typeof o==='function')window.hellShop=function(){const r=o.apply(this,arguments);try{const h=abH();if(h&&abR(h.lv+1)>=2){const b=document.querySelector('#modal [onclick="hellBuy(\'rev\')"]');if(b){b.disabled=true;b.style.opacity='.45';const sm=b.querySelector('small');if(sm)sm.innerHTML='🚫 ซื้อไม่ได้ในวงที่ 3 ขึ้นไป (ชั้น 201+) — กฎ "ไร้วิญญาณสำรอง" ของอเวจี'}}}catch(e){}return r};try{hellShop=window.hellShop}catch(e){}}
+
+/* ===== อีเวนต์ลอยกระทง: ชุดรวม + ส่วนลดผู้สนับสนุน 20% + นับถอยหลังบนปุ่ม ===== */
+{
+const END=Date.UTC(2026,11,17,16,59,59);
+const BUN={evb1:{n:'ชุดผู้ปล่อยโคม',d:'กระทงใบตอง + ฉายาผู้ปล่อยโคม + ธีมริมน้ำคืนเพ็ญ',p:79,full:107,ks:['evf1','evt1','evc1'],ids:['f_e1','t_e1','c_e1'],ic:'🪔'},
+ evb2:{n:'ชุดพญานาค',d:'พญานาคเฝ้าท่า + ฉายานาคาเฝ้าท่า + ธีมท่าน้ำนาคา',p:109,full:147,ks:['evf4','evt4','evc4'],ids:['f_e4','t_e4','c_e4'],ic:'🐉'}};
+const disc=p=>Math.ceil(p*.8);
+let INF=null,INFt=0;
+async function info(force){if(!force&&INF&&Date.now()-INFt<30000)return INF;try{const j=await api('cosget');if(j&&j.ev){INF=j;INFt=Date.now()}}catch(e){}return INF}
+const st=document.createElement('style');st.textContent=`.evbn{margin:8px 0;padding:11px 12px;border-radius:14px;border:2px solid #7a4a10;background:linear-gradient(135deg,#2b1a3a,#5a2c6a 55%,#8a4a2a);color:#ffe9a8;box-shadow:0 3px 0 #3a1a08;display:flex;gap:10px;align-items:center}
+.evbn .ic{font-size:30px}.evbn b{display:block;font-size:15px}.evbn small{display:block;opacity:.85;font-size:11.5px}.evbn s{opacity:.6}
+.evbn button{margin-left:auto;padding:8px 12px;border-radius:12px;border:2px solid #7a5512;background:linear-gradient(135deg,#ffe29a,#e8b54a);color:#2a1a04;font:inherit;font-weight:800;cursor:pointer;white-space:nowrap}
+.evsup{display:inline-block;margin-top:4px;font-size:11.5px;font-weight:800;border-radius:999px;padding:1px 9px;background:#3a9a4a33;color:#2f8a3e;border:1px solid #3a9a4a}`;document.head.appendChild(st);
+const om=window.evMenu;
+window.evMenu=async function(){
+ const r=await om.apply(this,arguments);
+ try{const m=$('modal');if(!m||m.dataset.k!=='evshop'||m.querySelector('.evbn'))return r;
+  const j=await info();if(!j||!j.ev||!m.isConnected||m.dataset.k!=='evshop'||m.querySelector('.evbn'))return r;
+  const own=j.own||[],L=j.ev.left||{},sup=!!j.ev.sup,hero=m.querySelector('.hero');if(!hero)return r;
+  let h='';
+  for(const k of Object.keys(BUN)){const b=BUN[k];if(b.ids.some(x=>own.includes(x)))continue;if(b.ks.some(x=>L[x]!=null&&L[x]<=0))continue;
+   const pr=sup?disc(b.p):b.p;
+   h+=`<div class="evbn"><span class="ic">${b.ic}</span><span><b>🎁 ${b.n}</b><small>${b.d}</small><small>ซื้อแยก <s>${b.full}฿</s> → เหมาชุด <b style="display:inline">${pr}฿</b>${sup?' (รวมส่วนลดผู้สนับสนุน)':''} · ประหยัด ${b.full-pr}฿</small></span><button onclick="evBuy('${k}')">ซื้อชุด</button></div>`}
+  if(sup)h+='<div class="evsup">💛 ผู้สนับสนุนลด 20% ทุกชิ้นในอีเวนต์</div>';
+  if(h)hero.insertAdjacentHTML('afterend',h)}catch(e){}
+ return r};
+const ob=window.evBuy;
+window.evBuy=async function(pk){
+ const b=BUN[pk];
+ if(!b){const r=ob.apply(this,arguments);try{const j=await info();if(j&&j.ev&&j.ev.sup){const m=$('modal');if(m&&m.dataset.k==='evbuy'){const bs=[...m.querySelectorAll('b,div')].filter(e=>/^\d+ บาท$/.test(e.textContent.trim())&&!e.children.length);const p0=bs[0]&&parseInt(bs[0].textContent);if(p0){const np=disc(p0);m.innerHTML=m.innerHTML.split(p0+' บาท').join(np+' บาท <small style="font-size:12px;color:#2f8a3e">(ลด 20% ผู้สนับสนุน)</small>')}}}}catch(e){}return r}
+ const j=await info(true),sup=!!(j&&j.ev&&j.ev.sup),p=sup?disc(b.p):b.p;
+ modal(`<button class="xbtn" onclick="evMenu()">✕</button><h3>${b.ic} ${b.n}</h3>
+ <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#c98d22">${p} บาท</div><div class="tag2">${b.d}<br>ซื้อแยก ${sup?disc(b.full):b.full} บาท · เหมาชุดประหยัดกว่า · ได้เลขลำดับของแต่ละชิ้น</div>
+ <img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">
+ <p style="margin:8px 0 2px">1) สแกนโอน <b>${p} บาท</b> ตรงยอดเป๊ะ</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจอัตโนมัติ ของเข้าทันที</p>
+ <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
+ <label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>
+ <button class="pbtn" style="width:100%;margin-top:8px" onclick="evPaid(this,'${pk}')">📨 ส่งสลิป</button>
+ <p class="tag2">ซื้อครั้งเดียวถาวร ผูกกับบัญชี · ของแต่งล้วน ไม่มีผลต่อพลังหรืออันดับ</p>`,'evbuy')};
+setInterval(()=>{try{const t=$('tEv');if(t&&Date.now()<END){const d=Math.ceil((END-Date.now())/864e5);t.textContent='🏮 ลอยกระทง · เหลือ '+d+' วัน'}}catch(e){}},5000);
+}
 </script>
 </body>
 </html>
