@@ -19481,7 +19481,7 @@ function rgFFstop(why){const G=S.rg;if(!G||!G.ff)return;G.ff=0;try{speed=G.ffSp|
 function rgFFgo(){if(!rgFFok())return toast('ใช้ได้ตั้งแต่รอบที่ 2 หลังความทรงจำตื่น');const G=S.rg;if(G.ff)return rgFFstop('หยุดเดินตามความทรงจำ');G.ff=1;G.ffSp=speed;G.ffY=0;try{speed=16;paused=false}catch(e){}toast('⏩ เดินตามความทรงจำ — เลือกเหมือนรอบก่อน หยุดเองเมื่อเจอสิ่งใหม่');rgFFbtn()}
 function rgFFbtn(){try{let b=$('rgFFp');const a=$('brkPill')||$('ascPill');if(!b&&a){a.insertAdjacentHTML('afterend','<button id="rgFFp" class="ascpill" style="display:none;margin-right:6px;border-color:#8ad0ff;background:linear-gradient(180deg,#183a5a,#0a1a2a)" onclick="rgFFgo()">⏩ ตามความทรงจำ</button>');b=$('rgFFp')}if(!b)return;const on=rgFFok();b.style.display=on?'':'none';if(on){const t=S.rg.ff?'⏸ หยุดเดินตามความทรงจำ':'⏩ ตามความทรงจำ';if(b.textContent!==t)b.textContent=t}}catch(e){}}
 setInterval(rgFFbtn,1500);
-{const _chFF=choice;const nf=function(title,text,opts){const r=_chFF.apply(this,arguments);try{const G=S&&S.rg;if(G&&G.ff&&choice._cur&&choice._cur.title===title){const k=S.age+'|'+rgKey(title),imp=/^(🔁|👀|😈|🌅|👑|🔓|💀|🗣️|💰)/.test(rgKey(title));if(!imp&&G.prev&&G.prev[k]!=null&&opts[G.prev[k]]){const idx=G.prev[k],cur=choice._cur;setTimeout(()=>{if(choice._cur===cur&&S.rg&&S.rg.ff)choiceRun(idx)},120)}else rgFFstop(imp?'เหตุการณ์สำคัญ — ตัดสินใจเอง':'พบสิ่งที่ไม่เคยเจอ — หยุดเดินตามความทรงจำ')}}catch(e){}return r};for(const k in _chFF)nf[k]=_chFF[k];choice=nf}
+{const _chFF=choice;const nf=function(title,text,opts){const r=_chFF.apply(this,arguments);try{const G=S&&S.rg;if(G&&G.ff&&choice._cur&&choice._cur.title===title){const k=S.age+'|'+rgKey(title),imp=/^(🔁|👀|😈|🌅|👑|🔓|🌌|💀|🗣️|💰)/.test(rgKey(title));if(!imp&&G.prev&&G.prev[k]!=null&&opts[G.prev[k]]){const idx=G.prev[k],cur=choice._cur;setTimeout(()=>{if(choice._cur===cur&&S.rg&&S.rg.ff)choiceRun(idx)},120)}else rgFFstop(imp?'เหตุการณ์สำคัญ — ตัดสินใจเอง':'พบสิ่งที่ไม่เคยเจอ — หยุดเดินตามความทรงจำ')}}catch(e){}return r};for(const k in _chFF)nf[k]=_chFF[k];choice=nf}
 {const _duFF=duel;duel=function(){try{if(S&&S.rg&&S.rg.ff)rgFFstop('การต่อสู้ — ควบคุมเอง')}catch(e){}return _duFF.apply(this,arguments)}}
 {const _pyFF=passYear;passYear=function(){const r=_pyFF.apply(this,arguments);try{const G=S&&S.rg;if(G&&G.ff){G.ffY=(G.ffY||0)+1;if(G.ffY%5===0){G.fat=Math.min(100,(G.fat||0)+1)}const nd=(G.deaths||[]).find(d=>d.age===S.age+1);if(nd)rgFFstop(`ปีหน้าคือปีที่คุณเคยตาย (${nd.cause})`);if(!G.prev||!Object.keys(G.prev).some(k=>+k.split('|')[0]>S.age))rgFFstop('สุดทางของความทรงจำรอบก่อนแล้ว')}}catch(e){}return r}}
 // ---------- 2) 💀 บันทึกความตาย ----------
@@ -35558,6 +35558,16 @@ body.tuOn #title .seg.tuTs > button.on,#title .box.opts .seg button.on,#title .s
 `;document.head.appendChild(st);
 const M={tSup:['🙏','สนับสนุน'],tFb:['👥','เฟส'],tCos:['🎨','ตกแต่ง'],tEv:['🏮','ลอยกระทง']};
 setInterval(()=>{try{for(const k in M){const e=$(k);if(e&&!e.querySelector('.tbi')){e.title=e.textContent.trim();e.innerHTML=`<i class="tbi">${M[k][0]}</i><span>${M[k][1]}</span>`}}}catch(e){}},900);
+}
+
+/* ===== ผู้เฝ้ากาล (ด่านวงจรย้อนกาล): ห้ามตัดสินแทน/ห้ามข้ามการต่อสู้ =====
+   สาเหตุเดิม: หัวข้อ 🌌 / 🔓 ไม่อยู่ในรายการ "เรื่องใหญ่" จึงให้โหมดอัตโนมัติเลือกข้อ "ยังไม่พร้อม" (skip) ให้เอง
+   และการดวลก็ถูกคำนวณทันทีเมื่อเปิดโหมดอัตโนมัติ → ผู้เล่นเห็นว่า "ตัดข้าม" */
+{
+const _afB=afBig;
+afBig=function(c){try{const t=String(c&&c.title||'').replace(/<[^>]+>/g,'');if(/^🌌|^🔓 ใจกลางวงจร|เฝ้ากาล/.test(t))return true}catch(e){}return _afB.apply(this,arguments)};
+const _duBoss=duel;
+duel=function(name){try{if(auto&&/เฝ้ากาล/.test(String(name))){auto=false;try{toast('⚔️ ด่านผู้เฝ้ากาลต้องสู้เอง — ปิดโหมดอัตโนมัติให้แล้ว')}catch(e){}}}catch(e){}return _duBoss.apply(this,arguments)};
 }
 </script>
 </body>
