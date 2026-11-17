@@ -30703,7 +30703,7 @@ function lWorld(M,l){const y=MW_Y0+M.y,w=LW[y];if(!w)return;l.hist.push(y);
  if(w.flood&&mwAst(M).h>0&&Math.random()<.6){const c=Math.round((mwAst(M).h===2?65000:18000)*l.cpi);lfx(M,l,{mon:-c});addFeed('ev',`🌊 น้ำท่วมเข้าบ้านคุณ ค่าซ่อมและของเสียหาย ${fmt(c)} บาท`,'sum')}
  l.cpi*=1+w.inf;l.wy=w}
 function lInvest(M,l){const w=l.wy;if(!w)return;const t=l.inv.f+l.inv.s+l.inv.c;if(t<=0)return;
- const nf=Math.round(l.inv.f*(1+w.f)),ns=Math.round(l.inv.s*(1+w.s)),nc=Math.round(l.inv.c*(1+w.c)),n=nf+ns+nc,d=n-t;l.inv.f=nf;l.inv.s=ns;l.inv.c=nc;
+ const big=t>3e6?.96:1,nf=Math.round(l.inv.f*(1+w.f-.012)*big),ns=Math.round(l.inv.s*(1+w.s-.006)*big),nc=Math.round(l.inv.c*(1+w.c)*big),n=nf+ns+nc,d=n-t;l.inv.f=nf;l.inv.s=ns;l.inv.c=nc;
  addFeed('ev',`📈 พอร์ตลงทุนปีนี้ ${d>=0?'+':''}${fmt(d)} บาท (${(d/t*100).toFixed(1)}%) → รวม ${fmt(n)} บาท <span class="tag2">(กองทุน ${(w.f*100).toFixed(0)}% · หุ้น ${(w.s*100).toFixed(0)}% · คริปโต ${(w.c*100).toFixed(0)}%)</span>`,'sum')}
 function lDebt(M,l){if(l.debt>0){const i=Math.round(l.debt*.16);l.debt+=i;const yc=mwToB(mwYearCost(M).yr,M),av=(S.money||0)-yc*.25;if(av>0){const p=Math.min(l.debt,Math.round(av));S.money-=p;l.debt-=p}
   addFeed('ev',`💳 หนี้บัตร/สินเชื่อ ดอกปีนี้ ${fmt(i)} บาท · คงเหลือ ${fmt(l.debt)} บาท`,'sum');if(l.debt>l.inc*.6)l.st=cl(l.st+4,0,100)}
