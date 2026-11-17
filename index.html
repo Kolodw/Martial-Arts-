@@ -30091,6 +30091,24 @@ const wrap=(name,mkPk)=>{const o=window[name];if(typeof o!=='function')return;
 wrap('vipPaid',k=>k);wrap('rrPaid',k=>'r'+k);
 const t=document.querySelectorAll('.tag2');
 })()}catch(e){console.error(e)}
+
+// 🖼️ v18.18 กรอบ/รูปโปรไฟล์ไม่ขึ้นในแชท: เดิมส่งโปรไฟล์ขึ้นเซิร์ฟเวอร์เฉพาะตอนกดใส่กรอบ/ตั้งรูป ถ้าส่งพลาดครั้งเดียว (ออฟไลน์ ย้ายเครื่อง รับกรอบจาก VIP/รางวัล) คนอื่นจะไม่เห็นกรอบตลอด · ตอนนี้แชทตรวจเองว่าโปรไฟล์ของเราบนเซิร์ฟเวอร์ตรงกับในเครื่องไหม ไม่ตรงก็ส่งซ้ำให้เอง
+try{(()=>{
+let last=0,busy=0;
+const heal=()=>{try{
+ if(busy||Date.now()-last<45000||!onlineOK||typeof myPu!=='function')return;
+ const me=myPu(),d=frGet(),eq=d.eq||'',pf=(chatProf&&chatProf[me])||null;
+ if(!(chatMsgs||[]).some(m=>m&&m.pu===me&&!m._p))return; // เช็กเมื่อมีข้อความของเราในแชทเท่านั้น
+ if(eq&&!frOf(eq))return;
+ if(/^f_adm/.test(eq)&&!(typeof admK==='function'&&admK()))return;
+ const frBad=(pf?(pf.fr||''):'')!==eq;
+ const avBad=!d.avUp&&!!d.av&&(!pf||!pf.av);
+ if(!frBad&&!avBad)return;
+ last=Date.now();busy=1;
+ Promise.resolve(profPush()).then(()=>{try{typeof chatPoll==='function'&&chatPoll()}catch(e){}}).catch(()=>{}).then(()=>{busy=0})
+}catch(e){}};
+const _cr=chatRender;chatRender=function(){const r=_cr.apply(this,arguments);setTimeout(heal,300);return r};
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
