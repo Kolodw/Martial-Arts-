@@ -29093,6 +29093,240 @@ const ap2=()=>{try{const X=LS.get('murim_khallx2',null);if(X&&EX2[X]&&S){LS.del(
 try{document.head.insertAdjacentHTML('beforeend',`<style>.q4b{cursor:pointer}.q4g{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}.q4c{border:1px solid #5a5070;border-radius:10px;padding:8px;opacity:.55;background:#1a1626;color:#e8e0f0}.q4c small{display:block;font-size:11px;opacity:.8;margin-top:2px}.q4c.on{opacity:1;border-color:var(--c);box-shadow:0 0 10px color-mix(in srgb,var(--c) 50%,transparent)}.q4c b{color:var(--c)}</style>`)}catch(e){}
 try{SYS_GUIDE.push({s:'life',nw:1,ic:'🌗',t:'สายกับใจ (มารใจดี · หน้ากากธรรม)',go:'openQ4',d:'สาย (บารมีมาร/สำนัก) กับใจ (กรรม) แยกกันแล้ว — <b>🌗 มารผู้ถือสัจจะ</b>: ฝึกมารแต่ไม่แตะผู้บริสุทธิ์ ฆ่าคนชั่วด้วยวิธีมารกรรมไม่ลด มีเรื่องราวเฉพาะที่แตกแขนงตามที่เลือกและย้อนกลับมาหลายปีให้หลัง · <b>🎭 ผู้สวมหน้ากากธรรม</b>: อยู่สำนักธรรมะแต่ทำชั่ว ความลับสะสมจนถูกเปิดโปง · <b>🌑 เสียงมารกระซิบ</b>: บารมีมารสูงจะมีทางลัดชั่วๆ มาล่อ ยอม 3 ครั้งมารในใจตื่น ต้าน 4 ครั้งจิตเหนือมาร · ตอนจบใหม่ 2 วิถีที่ 📖 ประตูนวนิยาย'})}catch(e){}
 })()}catch(e){console.error(e)}
+
+// ===================== v18.15 แดนอสูร (9 แคว้น · 4 ประตู · 3 ฝ่าย) + แดนต้องห้าม (คุก 7 ห้อง) =====================
+try{(()=>{
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const pw=v=>{const g=pctPow(v);S.power+=g;return g};
+const K=d=>{S.karma=(S.karma||0)+d};
+const ep=m=>Math.round(total()*m);
+const fightThen=(who,m,cb)=>setTimeout(()=>duel(who,ep(m),cb),300);
+const later=(y,id,d)=>{AB().q.push({at:S.age+y,id,d:d||{}})};
+const bar=(v,c)=>`<div class="dzbar"><i style="width:${clamp(v,0,100)}%;background:${c}"></i></div>`;
+const fbar=(v,c)=>`<div class="dzfb"><i style="left:${v<0?50+v/2:50}%;width:${Math.abs(v)/2}%;background:${c}"></i></div>`;
+const KN1=['เซวี่ย','หลัว','ม่อ','ซือ','หยาง','กู่','เฉวียน','ยวี่','ซา'],KN2=['ซาง','เหยียน','เฉิน','ลี่','หลิง','อู','จ้าน','ฉือ','เจี๋ย'];
+const LAND=[['🩸','หนองเลือด','ราชันโลหิต'],['🦴','ป่ากระดูก','ราชันกระดูก'],['🔥','ทะเลเพลิงดำ','ราชันเพลิงดำ'],['🍖','นครกินคน','ราชันกินคน'],['👑','บัลลังก์กลาง','จักรพรรดิอสูร'],
+ ['🕷️','ถ้ำแม่พันธุ์','มารดาแห่งรัง'],['⚖️','ตลาดวิญญาณ','นายตลาดวิญญาณ'],['🪦','สุสานเทพตก','ราชันเทพตก'],['🎭','หุบเงาสวมรอย','ราชันไร้หน้า']];
+const SLV=[0,1,0,1,0,0,1,1,0];
+const GATE={exile:['⚖️','ถูกเนรเทศ','นักโทษตราประทับ — ทุกฝ่ายรู้ว่าคุณเคยเป็นเทพ'],walk:['🌗','เดินลงมาเอง','อิสระ แต่อสูรได้กลิ่นคนดีจากตัวคุณ'],drag:['🩸','ถูกลากลงมา','ร่างครึ่งอสูร สติไม่มั่นคงตั้งแต่วันแรก'],rift:['🕳️','ตกรอยแยก','ไม่มีใครรู้ว่าคุณคือใคร — รวมทั้งตัวคุณเองในบางคืน']};
+function AB(){return S.ab}
+window.dzOn=()=>!!(S&&S.ab&&S.ab.on);
+function dzEnter(g){const kn=()=>pick(KN1)+pick(KN2);
+ S.ab={on:1,gate:g,y0:S.age,sat:g==='drag'?35:g==='walk'?80:60,hun:20,fx:{king:g==='drag'?15:g==='exile'?-15:-5,slave:g==='walk'?10:0,spy:g==='exile'?5:0},seals:0,arm:g==='drag'?40:10,q:[],last:S.age,done:{},ay:-1,fy:-1,kills:0,spyOk:null,spyBetray:0,coal:0,end:null,
+  L:LAND.map((x,i)=>({i,ic:x[0],n:x[1],k:{t:x[2],n:kn(),m:i===4?2.1:+(0.8+Math.random()*.7+(i===7?.2:0)).toFixed(2),alive:1,mood:0,sp:0,vas:0},own:0,slv:SLV[i],love:0}))};
+ S.flags.heretic=1;if(S.faction&&g!=='rift'){S.faction=null;S.rank=0}
+ const G=GATE[g];log(`🕳️ <b>แดนอสูร — ${G[0]} ${G[1]}</b> · ${G[2]}<br><span class="tag2">กฎข้อเดียวของที่นี่: กินหรือถูกกิน · ดูแผนที่ได้ที่ป้าย 👹 แดนอสูร</span>`,'myth',true);try{keyAdd('ลงสู่แดนอสูร ('+G[1]+')')}catch(e){}
+ render();setTimeout(()=>{if(!choice._cur)openDz()},700)}
+window.dzEnter=dzEnter;
+const owned=()=>AB().L.filter(l=>l.own).length;
+const satAdd=v=>{AB().sat=clamp(AB().sat+v,0,100)};const fx=(o)=>{const F=AB().fx;for(const k in o)F[k]=clamp(F[k]+o[k],-100,100)};
+const seal=(why)=>{const A=AB();if(A.seals>=3)return;A.seals++;log(`🧩 ได้เศษผนึกแดนต้องห้าม (${A.seals}/3)${why?' — '+why:''}`,'epic',A.seals>=3)};
+const rumor=(i,kind)=>{const others=AB().L.filter(l=>!l.own&&l.k.alive&&l.i!==i);if(others.length)later(R(2,4),'rum',{i:pick(others).i,kind,from:i})};
+// ---- แผนที่ ----
+window.openDz=function(){if(!dzOn())return;const A=AB(),G=GATE[A.gate],yr=S.age-A.y0,fr=A.fr&&A.fr.on;
+ if(fr)return openFz();
+ const cell=l=>`<button class="dzc ${l.own?'own':''} ${l.k.alive?'':'dead'}" onclick="dzLand(${l.i})"><span class="ic">${l.ic}</span><b>${l.n}</b><small>${l.own?'👑 ของคุณ'+(l.love?' · ทาสรักคุณ':''):l.k.alive?`${l.k.t} ${l.k.n}${l.k.vas?' · คุณเป็นขุนพล':''}${l.k.sp?' · ไว้ชีวิตไว้':''}`:'ว่าง — ไร้เจ้าของ'}</small>${l.slv&&!l.own?'<i>⛓️</i>':''}</button>`;
+ const ex=dzExits();
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="dzhd"><h3>👹 แดนอสูร</h3><p>${G[0]} ${G[1]} · อยู่มา ${yr} ปี · ครองแล้ว ${owned()}/9 แคว้น · ทัพ ${fmt(A.arm)}</p>
+  <div class="dzst"><span>🧠 สติ ${Math.round(A.sat)}</span>${bar(A.sat,'#7ac0ff')}<span>🩸 ความหิว ${Math.round(A.hun)}</span>${bar(A.hun,'#ff4a5a')}</div>
+  <div class="dzst"><span>👑 ราชันอสูร</span>${fbar(A.fx.king,'#ff7a40')}<span>⛓️ ทาสและผู้ลี้ภัย</span>${fbar(A.fx.slave,'#7ae0a0')}<span>☁️ สายลับแดนเทพ</span>${fbar(A.fx.spy,'#c0d8ff')}</div>
+  <p class="tag2">🧩 เศษผนึกแดนต้องห้าม ${A.seals}/3 · ลงมือได้ปีละ 1 แคว้น${A.ay===S.age?' (ปีนี้ลงมือแล้ว)':''}</p></div>
+ <div class="dzmap">${A.L.map(cell).join('')}</div>
+ <div class="dzact"><button class="pbtn" onclick="dzFeed()" ${A.fy===S.age?'disabled style="opacity:.45"':''}>🩸 กลืนแก่นอสูร<br><small>ความหิว −45 · สติ −6 · พลัง+</small></button>
+ <button class="gbtn" onclick="dzExitMenu()">🚪 ทางออก (${ex.filter(x=>x.ok).length}/${ex.length})</button>${A.seals>=3?'<button class="pbtn" style="background:linear-gradient(#3a0a4a,#1a0420);color:#e8c0ff" onclick="dzDeep()">🌑 เดินลึกลงไปแดนต้องห้าม</button>':''}</div>
+ <p class="tag2">แตะแคว้นเพื่อเลือกวิธี: ⚔️ ดวลยึด · 🤝 สวามิภักดิ์ · 🐍 ยุให้รบกัน · ⛓️ ปลดปล่อยทาส (ต้องใจดี) — ราชันจำทุกสิ่งที่คุณทำ</p>`,'abyss')};
+window.dzFeed=function(){const A=AB();if(A.fy===S.age)return;A.fy=S.age;A.hun=Math.max(0,A.hun-45);satAdd(S.karma>=20?-4:-7);const g=pw(.05);log(`🩸 คุณกลืนแก่นอสูรที่ยังอุ่นอยู่ — พลังยุทธ์ +${fmt(g)} · เสียงในหัวดังขึ้นนิดหนึ่ง`,'epic');render();openDz()};
+window.dzLand=function(i){const A=AB(),l=A.L[i];if(!l)return;if(l.own){toast(`${l.n} เป็นของคุณแล้ว`);return}
+ if(A.ay===S.age)return toast('ปีนี้ลงมือไปแล้ว รอปีหน้า');if(i===4&&owned()<5)return toast('ต้องครองอย่างน้อย 5 แคว้นก่อนจะท้าบัลลังก์กลาง');
+ if(!l.k.alive){closeM();A.ay=S.age;l.own=1;fx({king:-3});log(`🏴 คุณปักธงบน${l.n}ที่ไร้เจ้าของ`,'good');if(Math.random()<.35)seal('ใต้บัลลังก์ร้างของ'+l.n);render();return}
+ closeM();const k=l.k,others=A.L.filter(x=>!x.own&&x.k.alive&&x.i!==i&&x.i!==4),anti=(S.karma||0)>=20;
+ const o=[{t:'⚔️ ดวลยึด',s:`ดวล${k.t} (แรง ×${k.m}) · ได้แคว้นไว แต่ลูกน้องจะแค้น`,f(){A.ay=S.age;fightThen(`${k.t} ${k.n}`,k.m,w=>dzDuelEnd(l,w))}}];
+ if(!k.vas)o.push({t:'🤝 สวามิภักดิ์เป็นขุนพล',s:'ได้ทัพ · ต้องทำงานสกปรกให้ · วันหนึ่งแทงข้างหลังได้',f(){A.ay=S.age;k.vas=1;k.mood+=20;A.arm+=Math.round(30*k.m);fx({king:12});satAdd(-3);log(`🤝 คุณคุกเข่าต่อหน้า${k.t} ${k.n} — ได้ทัพอสูร ${Math.round(30*k.m)} ตน`,'epic');later(R(2,4),'order',{i})}});
+ else o.push({t:'🗡️ แทงข้างหลังนาย',s:`ดวลแบบได้เปรียบ (แรง ×${(k.m*.7).toFixed(2)}) · ราชันอื่นจะไม่ไว้ใจ`,f(){A.ay=S.age;fightThen(`${k.t} ${k.n} (ถูกลอบแทง)`,k.m*.7,w=>{if(w){k.alive=0;l.own=1;A.kills++;A.arm+=Math.round(20*k.m);fx({king:-25});satAdd(-4);log(`🗡️ ${k.t} ${k.n}ตายด้วยมีดของขุนพลที่ไว้ใจที่สุด — ${l.n}เป็นของคุณ`,'myth',true);if(Math.random()<.4)seal('ในห้องนอนของ'+k.n)}else{k.vas=0;k.mood=-80;S.hp=Math.max(1,Math.round(S.hp*.4));log(`🩸 แผนแตก ${k.n}รู้ตัว คุณหนีออกมาพร้อมแผลฉกรรจ์`,'bad');later(R(1,3),'kwar',{i})}})}});
+ if(others.length)o.push({t:'🐍 ยุให้รบกับแคว้นอื่น',s:`ใช้ปัญญา ~${Math.round(clamp(.3+(S.int||0)/1200,.3,.8)*100)}% · ได้สองแคว้นแบบบอบช้ำ`,f(){A.ay=S.age;const j=pick(others);const ok=Math.random()<clamp(.3+(S.int||0)/1200,.3,.8);if(ok){[l,j].forEach(x=>{x.k.alive=0;x.own=1});A.kills+=2;S.hp=Math.max(1,Math.round(S.hp*.7));fx({king:-15});satAdd(-2);log(`🐍 ${k.t}กับ${j.k.t}ฆ่ากันเองจนเหลือแต่ซาก คุณเดินเข้าไปเก็บทั้ง${l.n}และ${j.n}`,'myth',true);rumor(i,'scheme');if(Math.random()<.5)seal('ในซากศึกสองราชัน')}else{log(`🐍 ${k.n}กับ${j.k.n}จับได้ว่าใครยุ — สองราชันจับมือกันล่าคุณ`,'bad');fightThen(`${k.n}และ${j.k.n}`,(k.m+j.k.m)*.75,w=>{if(w){l.own=1;k.alive=0;A.kills++;log(`⚔️ คุณฝ่าสองราชันมาได้ ยึด${l.n}ไว้`,'epic')}else{S.hp=1;A.arm=Math.round(A.arm*.5);log('🩸 ทัพคุณแตกกระเจิง','bad')}})}}});
+ if(l.slv&&anti)o.push({t:'⛓️ ปลดปล่อยทาสแล้วก่อกบฏ',s:`~${Math.round(clamp(.4+A.fx.slave/200,.2,.85)*100)}% · แคว้นที่รักคุณ แต่ทุกแคว้นที่ใช้ทาสจะรวมหัว`,f(){A.ay=S.age;if(Math.random()<clamp(.4+A.fx.slave/200,.2,.85)){k.alive=0;l.own=1;l.love=1;A.kills++;A.arm+=60;fx({slave:25,king:-20});A.coal++;K(25);satAdd(6);try{ahPtX(15)}catch(e){}log(`⛓️ โซ่หลายหมื่นเส้นขาดในคืนเดียว ทาสแห่ง${l.n}ยก${k.t}ขึ้นตะแลงแกงด้วยมือตัวเอง — แล้วคุกเข่าให้คุณ`,'myth',true);later(R(3,5),'coal',{});rumor(i,'free')}else{fx({slave:-10});joy(-20);K(-5);log(`⛓️ การกบฏล้มเหลว ${k.t}สังหารทาสทั้งแคว้นต่อหน้าคุณ`,'bad',true)}}});
+ o.push({t:'↩️ ยังก่อน',s:'',skip:1,f(){openDz()}});
+ choice(`${l.ic} ${l.n}`,`${k.t} <b>${esc(k.n)}</b> · แรง ×${k.m}${k.mood>0?' · ชอบคุณ':k.mood<0?' · แค้นคุณ':''}${l.slv?' · ⛓️ ใช้ทาส':''}`,o)};
+function dzDuelEnd(l,w){const A=AB(),k=l.k;if(!w){S.hp=Math.max(1,Math.round(S.hp*.35));A.arm=Math.round(A.arm*.8);k.mood-=20;log(`🩸 ${k.t} ${k.n}เหยียบคุณจมดิน "กลับมาใหม่เมื่อเจ้าหิวกว่านี้"`,'bad');return}
+ choice(`⚔️ ${k.t}ล้มลงแล้ว`,`${esc(k.n)}คุกเข่าบนพื้นเลือดของตัวเอง`,[
+  {t:'🩸 กลืนแก่นของเขา',s:'พลังพุ่ง · ความหิวหาย · สติ −',f(){k.alive=0;l.own=1;A.kills++;A.hun=0;const g=pw(.08);satAdd(-8);fx({king:-8});log(`🩸 คุณกลืน${k.t}ทั้งแก่น — พลังยุทธ์ +${fmt(g)} · ${l.n}เป็นของคุณ`,'myth',true);later(R(3,6),'men',{i:l.i,n:k.n});rumor(l.i,'kill');if(Math.random()<.35)seal('ในแก่นของ'+k.n);if(i4(l))dzThrone()}},
+  {t:'⚔️ ตัดหัวเฉยๆ',s:'',f(){k.alive=0;l.own=1;A.kills++;fx({king:-5});log(`⚔️ หัวของ${k.t}ถูกเสียบไว้หน้าประตู${l.n}`,'epic');later(R(3,6),'men',{i:l.i,n:k.n});rumor(l.i,'kill');if(Math.random()<.35)seal('ใต้บัลลังก์'+l.n);if(i4(l))dzThrone()}},
+  {t:'🕊️ ไว้ชีวิต ให้เป็นเมืองขึ้น',s:'ได้แคว้น · เขาจะจำ (ดีหรือร้ายก็ได้)',f(){l.own=1;k.sp=1;k.mood+=30;satAdd(5);K(5);fx({king:5});log(`🕊️ คุณปล่อย${k.n}ไว้ — เขามองคุณเหมือนมองสิ่งที่ไม่เข้าใจ`,'good');later(R(4,8),'spared',{i:l.i});if(i4(l))dzThrone()}}])}
+const i4=l=>l.i===4;
+function dzThrone(){const A=AB();A.throne=1;S.flags.abKing=1;const g=pw(.2);log(`👑 <b>คุณนั่งลงบนบัลลังก์กลางของแดนอสูร</b> — ราชันทุกแคว้นที่เหลือส่งบรรณาการมาภายในเจ็ดวัน · พลังยุทธ์ +${fmt(g)}`,'myth',true);try{keyAdd('จักรพรรดิแดนอสูร')}catch(e){}
+ if(!S.asr)S.asr={army:Math.round(A.arm*3+mpOf()/10),lands:0,y:-1};else S.asr.army+=Math.round(A.arm*3);log('☁️ ทัพอสูรทั้งแดนรอคำสั่ง — ยกทัพขึ้นสวรรค์ได้ที่หน้าบารมีมาร','epic')}
+// ---- ทางออก ----
+function dzExits(){const A=AB();return[
+ {k:'throne',ic:'👑',n:'นั่งบัลลังก์กลาง',d:'ครองแดนอสูร แล้วยกทัพขึ้นสวรรค์',ok:!!A.throne,need:'ยึดบัลลังก์กลาง (ต้องมี 5 แคว้นก่อน)'},
+ {k:'heaven',ic:'☁️',n:'ล้างบาปกลับแดนเทพ',d:'ต้องทรยศใครสักฝ่ายในแดนอสูร',ok:A.fx.spy>=60&&A.spyOk===1,need:'รับงานสายลับแดนเทพ และสายลับไว้ใจ 60+'},
+ {k:'refuge',ic:'⛓️',n:'พาผู้ลี้ภัยกลับยุทธภพ',d:'เปิดประตูให้คนนับหมื่น แต่คุณต้องอยู่เฝ้าประตูตลอดไป (จบชีวิตนี้)',ok:A.fx.slave>=60&&(S.karma||0)>=0,need:'ทาสและผู้ลี้ภัยไว้ใจ 60+ และกรรมไม่ติดลบ'},
+ {k:'deep',ic:'🌑',n:'เดินลึกลงไปแดนต้องห้าม',d:'ไม่สนบัลลังก์ — ลงไปหาสิ่งที่ถูกขังไว้ก่อนจักรวาล',ok:A.seals>=3,need:'เศษผนึก 3 ชิ้น (ได้จากแคว้นที่ยึด)'},
+ {k:'sink',ic:'🩸',n:'จมหายเป็นอสูรไร้ชื่อ',d:'ทางที่ไม่มีใครเลือกเอง — เกิดเมื่อสติหมด',ok:false,need:'เกิดเองเมื่อสติเหลือ 0'}]}
+window.dzExitMenu=function(){const L=dzExits();closeM();choice('🚪 ทางออกจากแดนอสูร','ไม่มีทางไหนถูกที่สุด — แต่ละทางพรากบางอย่างไปเสมอ',L.filter(x=>x.k!=='sink').map(x=>({t:`${x.ic} ${x.n}${x.ok?'':' 🔒'}`,s:x.ok?x.d:'ต้อง: '+x.need,f(){if(!x.ok){toast('🔒 '+x.need);return setTimeout(openDz,300)}dzExit(x.k)}})).concat([{t:'↩️ กลับแผนที่',s:'',skip:1,f(){openDz()}}]))};
+function dzExit(k){const A=AB();
+ if(k==='throne'){log('👑 คุณคือจักรพรรดิแดนอสูรแล้ว — ใช้ทัพที่หน้าบารมีมาร (🩸) เพื่อบุกสวรรค์ หรือเดินลึกลงไปแดนต้องห้ามต่อ','epic');return openDm&&openDm()}
+ if(k==='deep')return dzDeep();
+ if(k==='heaven'){choice('☁️ ราคาของการล้างบาป','สายลับแดนเทพยื่นเงื่อนไข: "เอาหัวมาแลกตราประทับคืน"',[
+  {t:'👑 ทรยศราชันอสูร: ส่งแผนทัพทั้งหมดให้สวรรค์',s:'ราชันทุกตนจะล่าคุณจนถึงประตู',f(){fightThen('ราชันอสูรที่รู้ความจริง',1.3,w=>{if(w)dzLeaveUp('ทรยศราชันอสูร');else{S.hp=1;fx({king:-60});log('🩸 คุณไปไม่ถึงประตู ราชันลากคุณกลับลงมา','bad')}})}},
+  {t:'⛓️ ทรยศผู้ลี้ภัย: ชี้ที่ซ่อนให้ทัพสวรรค์กวาดล้าง',s:'กรรมดิ่งหนัก',f(){K(-80);fx({slave:-80});satAdd(-15);dzLeaveUp('ทรยศผู้ลี้ภัยหลายพันชีวิต')}},
+  {t:'↩️ ไม่ยอม',s:'',skip:1,f(){openDz()}}]);return}
+ if(k==='refuge'){choice('⛓️ ประตูกลับบ้าน','ผู้ลี้ภัยหลายหมื่นยืนรอหน้าประตูที่คุณเปิดด้วยเลือดตัวเอง — ประตูจะปิดทันทีที่คุณก้าวออก',[
+  {t:'🚪 อยู่เฝ้าประตูตลอดไป',s:'จบชีวิตนี้ · ชีวิตหน้าได้กรรมดีและชื่อเสียงมหาศาล',f(){dzEnd('refuge','ผู้เฝ้าประตูแดนอสูร — ยืนกั้นประตูให้ผู้ลี้ภัยหลายหมื่นกลับบ้าน')}},{t:'↩️ ยังไม่พร้อม',s:'',skip:1,f(){openDz()}}]);return}}
+function dzLeaveUp(why){const A=AB();A.on=0;S.flags.heretic=0;S.karma=Math.max(S.karma||0,0)+(why.includes('ผู้ลี้ภัย')?-80:0);satAdd(0);log(`☁️ <b>ตราประทับเทพกลับคืนบนหน้าผากคุณ</b> — ${why} · บางคืนคุณยังได้ยินเสียงจากข้างล่าง`,'myth',true);try{keyAdd('ล้างบาปกลับแดนเทพ ด้วยการ'+why)}catch(e){}render()}
+const ABX={refuge:['⛓️','ผู้เฝ้าประตู','ชีวิตหน้าได้ กรรมดี +80 ชื่อเสียง +800',()=>{S.karma=(S.karma||0)+80;S.fame+=800}],sink:['🩸','อสูรไร้ชื่อ','ชีวิตหน้าเกิดพร้อมบารมีมาร 300 และพลังที่ไม่รู้ที่มา',()=>{S.mp=(S.mp||0)+300;S.power+=yrPow0()*30}],
+ end:['🔓','ผู้ปลดผนึก','ชีวิตหน้าเกิดในโลกหลังวันสิ้นโลก: พรสวรรค์ ×1.25 แต่อายุขัย −20%',()=>{S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.25).toFixed(2)});S.lifespan=Math.round(S.lifespan*.8)}],
+ ward:['🔒','ผู้คุมคุกตลอดกาล','ชีวิตหน้าได้ อายุขัย +100 และกายแกร่ง',()=>{S.lifespan+=100;S.maxHp+=100;S.hp=S.maxHp}],
+ tilt:['⚖️','ผู้ออกแบบโลกใหม่','ชีวิตหน้าเกิดในโลกที่คุณจัดสมดุลไว้เอง',()=>{const M=LS.get('murim_abtilt',{});LS.del('murim_abtilt');if(M.time)S.lifespan+=60;if(M.god)S.int+=40;if(M.mirror)S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.1).toFixed(2)});if(M.page)S.int+=60;if(M.dragon)S.power+=yrPow0()*40}],
+ self:['❔','ผู้ขังตัวเอง','ไม่มีใครรู้ว่าชีวิตหน้าจะเป็นอย่างไร',()=>{const r=Math.random();if(r<.5){S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.4).toFixed(2)})}else{S.lifespan+=200;S.karma=(S.karma||0)+100}}]};
+function dzEnd(k,cause){LS.set('murim_abx',k);try{keyAdd(cause)}catch(e){}setTimeout(()=>{for(let n=0;n<5&&S&&S.alive;n++){try{if(S.sys)S.sys.revive=0;S.eqSv=0;if(S.flags)S.flags.kidShield=0}catch(e){}S.deathCause=cause;S.hp=0;checkDeath()}},500)}
+const apX=()=>{try{const X=LS.get('murim_abx',null);if(X&&ABX[X]&&S){LS.del('murim_abx');ABX[X][3]();log(`${ABX[X][0]} <b>${ABX[X][1]}</b> — ${ABX[X][2]}`,'myth',true)}}catch(e){}};
+{const _s=startLife;startLife=function(){const r=_s.apply(this,arguments);setTimeout(apX,140);return r}}{const _i=inherit;inherit=function(){const r=_i.apply(this,arguments);setTimeout(apX,140);return r}}
+const ahPtX=v=>{try{if(S.ah)S.ah.pt+=v}catch(e){}};
+// ---- เหตุการณ์ในแดนอสูร ----
+const EV={};
+EV.order=d=>{const A=AB(),l=A.L[d.i];if(!l||!l.k.alive||!l.k.vas||l.own)return false;const k=l.k,task=pick([['กวาดล้างหมู่บ้านผู้ลี้ภัยที่ซ่อนอยู่ในหุบเขา','slave'],['ส่งทาสสามร้อยคนไปเป็นอาหารงานเลี้ยง','slave'],['ลอบสังหารราชันแคว้นข้างเคียง','king']]);
+ choice(`🤝 คำสั่งจาก${k.t}`,`${esc(k.n)}สั่งคุณ: "<b>${task[0]}</b>"`,[
+  {t:'✅ ทำตาม',s:task[1]==='slave'?'กรรมชั่ว · ผู้ลี้ภัยเกลียดคุณ':'ได้ใจนาย',f(){k.mood+=15;A.arm+=20;if(task[1]==='slave'){K(-40);fx({slave:-20,king:8});satAdd(-6)}else{fx({king:-5});const o=A.L.filter(x=>!x.own&&x.k.alive&&x.i!==l.i&&x.i!==4);if(o.length){const t=pick(o);t.k.alive=0;A.kills++;log(`🗡️ ${t.k.t} ${t.k.n}ตายในคืนเดียว — ${t.n}ไร้เจ้าของ`,'epic')}}log(`✅ คุณทำตามคำสั่ง ${k.n}พอใจ`,'');later(R(3,5),'order',d)}},
+  {t:'🙅 ปฏิเสธ',s:'นายจะไม่พอใจ',f(){k.mood-=30;satAdd(3);if(task[1]==='slave')fx({slave:8});log(`🙅 คุณปฏิเสธต่อหน้าราชสำนักอสูร — ${k.n}ยิ้มแต่ตาไม่ยิ้ม`,'');if(k.mood<-10)later(R(1,2),'kwar',d);else later(R(3,5),'order',d)}},
+  {t:'🎭 แกล้งทำ แต่แอบปล่อยพวกเขาหนี',s:'เสี่ยงถูกจับได้',f(){if(Math.random()<.6){fx({slave:15});K(15);satAdd(4);log('🎭 คุณรายงานว่าทำเสร็จ — คนสามร้อยคนกำลังเดินอยู่ในอุโมงค์ที่คุณขุดไว้','good')}else{k.mood=-60;fx({slave:10});log(`🎭 ${k.n}รู้ทัน — "ขุนพลที่โกหกนาย มีที่เดียวคือในหม้อ"`,'bad');later(1,'kwar',d)}}}])};
+EV.kwar=d=>{const A=AB(),l=A.L[d.i];if(!l||!l.k.alive||l.own)return false;const k=l.k;k.vas=0;fightThen(`${k.t} ${k.n}ที่โกรธจัด`,k.m*1.05,w=>{if(w){k.alive=0;l.own=1;A.kills++;log(`⚔️ นายเก่าบุกมาเอง และตายในแคว้นของตัวเอง — ${l.n}เป็นของคุณ`,'epic')}else{S.hp=Math.max(1,Math.round(S.hp*.3));A.arm=Math.round(A.arm*.6);const o=A.L.filter(x=>x.own&&x.i!==4);if(o.length){const x=pick(o);x.own=0;x.k={t:'ข้าหลวงของ'+k.n,n:k.n+'น้อย',m:+(k.m*.8).toFixed(2),alive:1,mood:-40,sp:0,vas:0};log(`🩸 ${k.n}ยึด${x.n}ไปจากคุณ`,'bad',true)}}})};
+EV.men=d=>{const A=AB();choice('🩸 ลูกน้องของราชันที่ตาย',`ขุนพลเก่าของ${esc(d.n)}รวมทัพที่เหลือ "เจ้ากลืนนายข้า… ข้าจะกลืนเจ้าคืน"`,[
+ {t:'⚔️ บดขยี้',s:'ดวล',f(){fightThen('ขุนพลเก่าของ'+d.n,.95,w=>{if(w){A.arm+=25;log('⚔️ ทัพที่เหลือคุกเข่ายอมแพ้ ทัพคุณ +25','epic')}else{S.hp=Math.max(1,Math.round(S.hp*.5));log('🩸 พวกมันเผาโกดังของคุณแล้วหายไป','bad')}})}},
+ {t:'🤝 รับพวกเขาเข้าทัพ',s:'ทัพเพิ่ม · อาจแทงข้างหลังวันหนึ่ง',f(){A.arm+=50;if(Math.random()<.4)later(R(4,7),'men2',{n:d.n});log('🤝 ทัพของราชันที่ตายเปลี่ยนธงมาเป็นของคุณ','good')}}])};
+EV.men2=d=>{const A=AB();A.arm=Math.round(A.arm*.7);S.hp=Math.max(1,Math.round(S.hp*.6));log(`🗡️ คืนหนึ่งลูกน้องเก่าของ${esc(d.n)}ก่อการกำเริบในค่ายคุณ — ทัพเสียไป 30%`,'bad',true)};
+EV.spared=d=>{const A=AB(),l=A.L[d.i];if(!l)return false;const k=l.k;if(Math.random()<.5+k.mood/200){A.arm+=40;fx({king:10});log(`🕊️ ${k.t} ${esc(k.n)}ที่คุณเคยไว้ชีวิต นำทัพมาช่วยกลางศึก "ข้าติดหนี้เจ้าหนึ่งชีวิต"`,'myth',true)}else{l.own=0;k.alive=1;k.sp=0;k.mood=-50;log(`🐍 ${k.t} ${esc(k.n)}ที่คุณไว้ชีวิตลุกขึ้นกบฏ ยึด${l.n}คืน`,'bad',true)}};
+EV.rum=d=>{const A=AB(),l=A.L[d.i];if(!l||!l.k.alive||l.own)return false;const k=l.k,f=A.L[d.from];
+ if(d.kind==='free'){choice(`⛓️ ข่าวลือถึง${l.n}`,`ทาสใน${l.n}ได้ยินเรื่อง${f?f.n:'แคว้นอื่น'} ${esc(k.n)}กลัวกบฏ จึงสั่งตัดลิ้นทาสทุกคน`,[
+   {t:'🏃 ส่งคนไปพาทาสหนีมา',s:'ทาสเพิ่ม · ราชันแค้น',f(){fx({slave:12});k.mood-=25;A.arm+=30;K(10);log(`🏃 ทาสพันคนหนีจาก${l.n}มาเข้าทัพคุณ`,'good')}},
+   {t:'🚶 ปล่อยไป',s:'',f(){fx({slave:-5});joy(-8);log(`🚶 เสียงกรีดร้องจาก${l.n}ลอยมาตามลมทั้งคืน`,'bad')}}])}
+ else if(d.kind==='kill'){if(Math.random()<.5){k.mood+=20;log(`📯 ${k.t} ${esc(k.n)}ได้ข่าวว่าคุณกลืนราชันได้ ส่งบรรณาการมาขอเป็นพันธมิตร`,'good');fx({king:6})}else{log(`📯 ${k.t} ${esc(k.n)}ได้ข่าวว่าคุณกลืนราชัน จึงชิงลงมือก่อน`,'bad');later(0,'kwar',{i:l.i})}}
+ else{log(`🐍 ข่าวเรื่องอุบายของคุณไปถึง${l.n} ${esc(k.n)}ฆ่าทูตทุกคนที่เข้าใกล้`,'');k.mood-=15}};
+EV.coal=()=>{const A=AB();if(A.coal<=0)return false;const n=A.L.filter(l=>l.slv&&!l.own&&l.k.alive).length;if(!n)return false;choice('⛓️ พันธมิตรผู้ค้าทาส',`ราชัน ${n} แคว้นที่ใช้ทาสรวมทัพมาบดแคว้นที่ทาสเป็นอิสระ`,[
+ {t:'⚔️ ปะทะกลางทุ่ง',s:`ดวล (แรง ×${(1+n*.15).toFixed(2)})`,f(){fightThen('ทัพพันธมิตรผู้ค้าทาส',1+n*.15,w=>{if(w){A.coal=0;fx({slave:15,king:-10});const g=pw(.06);seal('ในค่ายของพันธมิตรที่แตก');log(`⚔️ ทัพผู้ค้าทาสแตกพ่าย โซ่ที่พวกมันพกมาถูกหลอมเป็นอาวุธให้ทาส · พลังยุทธ์ +${fmt(g)}`,'myth',true)}else{const o=A.L.filter(l=>l.love);if(o.length){const x=pick(o);x.own=0;x.love=0;x.k={t:'ผู้คุมทาส',n:pick(KN1)+pick(KN2),m:1.1,alive:1,mood:-50,sp:0,vas:0};log(`🩸 ${x.n}ถูกยึดคืน ทาสถูกล่ามโซ่อีกครั้ง`,'bad',true)}fx({slave:-15})}})}},
+ {t:'🏃 อพยพทาสไปซ่อน',s:'เสียแคว้น แต่ไม่เสียคน',f(){const o=A.L.filter(l=>l.love);o.forEach(x=>{x.own=0;x.k={t:'ผู้คุมทาส',n:pick(KN1)+pick(KN2),m:1,alive:1,mood:-20,sp:0,vas:0}});fx({slave:10});A.coal=0;log('🏃 คุณทิ้งแคว้นแต่พาคนไปหมด — ผู้ลี้ภัยเริ่มเรียกคุณว่า "ผู้นำ"','good')}}])};
+EV.spy=()=>{const A=AB();if(A.spyOk!=null)return false;choice('☁️ คนที่ไม่ควรอยู่ในแดนอสูร',`ชายเสื้อคลุมเทาเปิดฝ่ามือให้ดู — ตราเทวสภาเรืองแสงจางๆ "สวรรค์อยากได้ตาข้างหนึ่งในแดนนี้ แลกกับการล้างบาปให้เจ้าในวันหน้า"`,[
+ {t:'🤝 รับงานสายลับ',s:'ทัพสวรรค์จะไม่บุกคุณ · ทางกลับแดนเทพเปิด',f(){A.spyOk=1;fx({spy:35});log('☁️ คุณกลายเป็นตาของสวรรค์ในแดนอสูร','epic');later(R(3,5),'spyjob',{})}},
+ {t:'🩸 ฆ่าเขาทิ้ง',s:'ราชันชอบ · สวรรค์จำ',f(){A.spyOk=0;fx({king:15,spy:-40});A.spyBetray=1;log('🩸 คุณส่งหัวสายลับไปให้ราชันอสูร — ทั่วแดนรู้ว่าคุณไม่ใช่คนของสวรรค์','epic')}},
+ {t:'🌫️ ปฏิเสธ ปล่อยเขาไป',s:'',f(){A.spyOk=0;log('🌫️ "เจ้าจะเปลี่ยนใจ" เขาพูดแล้วกลืนหายไปกับหมอก')}}])};
+EV.spyjob=()=>{const A=AB();if(A.spyOk!==1)return false;const t=A.L.filter(l=>!l.own&&l.k.alive);if(!t.length)return false;const l=pick(t);choice('☁️ งานจากสวรรค์',`สายลับขอแผนผังค่ายของ${l.k.t} ${esc(l.k.n)}`,[
+ {t:'📜 ส่งให้',s:'สายลับไว้ใจ+',f(){fx({spy:15});l.k.m=+(l.k.m*.85).toFixed(2);log(`📜 แผนผังถูกส่งขึ้นฟ้า — ${l.k.n}อ่อนแอลงอย่างไม่รู้สาเหตุ`,'');later(R(3,6),'spyjob',{})}},
+ {t:'🎭 ส่งแผนปลอม',s:'หักหลังสวรรค์ (เสี่ยง)',f(){if(Math.random()<.5){fx({king:10});log('🎭 ทัพสวรรค์ตกหลุมพรางที่คุณวาดไว้ ราชันอสูรหัวเราะลั่น','epic')}else{A.spyOk=0;A.spyBetray=1;fx({spy:-60});log('🎭 สวรรค์รู้ทัน — ชื่อคุณถูกขีดออกจากบัญชีล้างบาป','bad',true)}}},
+ {t:'🙅 เลิกเป็นสายลับ',s:'',f(){A.spyOk=0;fx({spy:-20});log('🙅 คุณเผาตราเทวสภาทิ้ง')}}])};
+EV.heaven=()=>{const A=AB();choice('🔥 ทัพสวรรค์บุกปราบ',`แม่ทัพสวรรค์นำทัพเทพนับหมื่นทะลวงลงมา${A.spyBetray?' "สายลับทรยศต้องตาย"':' "ชำระแดนอสูรให้สิ้นซาก"'}`,[
+ {t:'⚔️ นำทัพอสูรต้าน',s:`ดวล (แรง ×${(1.1+owned()*.04).toFixed(2)})`,f(){fightThen('แม่ทัพสวรรค์',1.1+owned()*.04,w=>{if(w){fx({king:12});const g=pw(.07);A.arm+=30;log(`🔥 ทัพสวรรค์ถอยกลับขึ้นฟ้า ราชันทั่วแดนยอมรับคุณ · พลังยุทธ์ +${fmt(g)}`,'myth',true);if(Math.random()<.4)seal('จากศพแม่ทัพสวรรค์')}else{const o=A.L.filter(l=>l.own&&l.i!==4);if(o.length){const x=pick(o);x.own=0;x.k={t:'ข้าหลวงสวรรค์',n:'เทพ'+pick(KN2),m:1.2,alive:1,mood:-30,sp:0,vas:0};log(`🩸 ทัพสวรรค์ยึด${x.n}ไป`,'bad',true)}S.hp=Math.max(1,Math.round(S.hp*.4))}})}},
+ {t:'🏃 หลบลงใต้ดิน',s:'เสียหนึ่งแคว้น ไม่เสียทัพ',f(){const o=A.L.filter(l=>l.own&&l.i!==4);if(o.length){const x=pick(o);x.own=0;x.k={t:'ข้าหลวงสวรรค์',n:'เทพ'+pick(KN2),m:1.1,alive:1,mood:-20,sp:0,vas:0};log(`🏃 คุณทิ้ง${x.n}ให้ทัพสวรรค์`,'bad')}}}])};
+const POOL=()=>{const P=[];if(S.sp&&S.spouse)P.push(['sp',S.sp.n,'คู่ชีวิต']);if(S.ah&&S.ah.dis)P.push(['dis',S.ah.dis.n,'ศิษย์']);if(S.ah&&S.ah.ally)P.push(['ally',S.ah.ally.n,'พันธมิตร']);const v=AB().L.filter(l=>l.own&&l.k.sp&&l.k.alive);v.forEach(l=>P.push(['king'+l.i,l.k.n,'ราชันเมืองขึ้น']));return P};
+EV.mimic=()=>{const P=POOL();if(!P.length)return false;const [id,n,role]=pick(P),fake=Math.random()<.55;const clue=pick(fake?['เรียกชื่อเล่นของคุณผิดไปหนึ่งพยางค์','ไม่มีเงาตอนยืนหน้ากองไฟ','จำเรื่องที่เพิ่งคุยกันเมื่อวานไม่ได้','ยิ้มทั้งที่ตาไม่กะพริบเลย']:['นอนละเมอเรียกชื่อคนที่ตายไปแล้ว','หายไปทั้งคืนโดยไม่บอก','ดูเหนื่อยผิดปกติ','พูดน้อยกว่าเดิม']);
+ const kill=()=>{if(id==='sp'){S.spouse=null;S.sp=null;S.spouseP=null}else if(id==='dis')S.ah.dis=null;else if(id==='ally')S.ah.ally=null;else{const l=AB().L[+id.slice(4)];if(l){l.k.alive=0}}};
+ choice('🎭 อสูรสวมรอย?',`ข่าวลือว่าหุบเงาส่งอสูรสวมรอยออกมาแล้ว — และ${role}ของคุณ <b>${esc(n)}</b> ${clue}`,[
+  {t:'🗡️ ฆ่าทิ้งก่อน',s:'ถ้าผิดตัว คนจริงก็ตายไปแล้ว',f(){kill();if(fake){satAdd(-2);const g=pw(.04);log(`🗡️ ร่างของ${esc(n)}ละลายเป็นเงาดำ — มันเป็นตัวปลอมจริงๆ · พลังยุทธ์ +${fmt(g)}`,'epic')}else{joy(-40);satAdd(-15);K(-20);log(`🕯️ เลือดของ${esc(n)}เป็นสีแดง… เป็นคนจริง คุณฆ่า${role}ของตัวเองด้วยความหวาดระแวง`,'bad',true);try{keyAdd('ฆ่า'+n+'เพราะคิดว่าเป็นอสูรสวมรอย')}catch(e){}}}},
+  {t:'❓ ถามเรื่องที่มีแต่เขารู้',s:`ขึ้นกับปัญญา ~${Math.round(clamp(.45+(S.int||0)/1500,.45,.9)*100)}%`,f(){if(Math.random()<clamp(.45+(S.int||0)/1500,.45,.9)){if(fake){kill();log(`❓ มันตอบไม่ได้ แล้วกระโจนใส่คุณ — คุณบดมันจนแหลก (${esc(n)}ตัวจริงตายไปนานแล้ว)`,'epic');satAdd(-4)}else{satAdd(4);log(`❓ ${esc(n)}ตอบได้ทุกข้อ แล้วกอดคุณแน่น "ข้าก็กลัวว่าเจ้าจะเป็นตัวปลอม"`,'good')}}else{if(fake){S.hp=Math.max(1,Math.round(S.hp*.5));kill();log('❓ มันตอบได้เกือบทุกข้อ แล้วแทงคุณตอนเผลอก่อนหนีไป','bad',true)}else{log(`❓ คำถามของคุณทำให้${esc(n)}เสียใจ`,'');joy(-5)}}}},
+  {t:'🤲 เชื่อใจ ปล่อยไว้',s:'',f(){if(fake){later(R(1,3),'mimic2',{id,n});log('🤲 คุณเลือกเชื่อ')}else{satAdd(5);log(`🤲 คุณเลือกเชื่อ — และ${esc(n)}ก็คือ${esc(n)}`,'good')}}}])};
+EV.mimic2=d=>{const A=AB();S.hp=Math.max(1,Math.round(S.hp*.35));A.arm=Math.round(A.arm*.75);const o=A.L.filter(l=>l.own&&l.i!==4);if(o.length){const x=pick(o);x.own=0;x.k={t:'ราชันไร้หน้า',n:'ที่สวมรอย'+d.n,m:1.15,alive:1,mood:-60,sp:0,vas:0}}if(d.id==='sp'){S.spouse=null;S.sp=null}else if(d.id==='dis'&&S.ah)S.ah.dis=null;else if(d.id==='ally'&&S.ah)S.ah.ally=null;
+ log(`🎭 "<b>${esc(d.n)}</b>" ลอกหน้าออกกลางงานเลี้ยง แทงคุณแล้วเปิดประตูเมืองให้ทัพหุบเงา — ${esc(d.n)}ตัวจริงตายไปตั้งแต่วันที่คุณเลือกเชื่อ`,'bad',true)};
+EV.feast=()=>{const A=AB(),t=A.L.filter(l=>!l.own&&l.k.alive&&l.i!==4);if(!t.length)return false;const l=pick(t);choice('🩸 งานเลี้ยงกลืนวิญญาณ',`${l.k.t} ${esc(l.k.n)}เชิญไปกินเลี้ยง อาหารบนโต๊ะคือวิญญาณเชลยที่ยังร้องไห้อยู่`,[
+ {t:'🍷 กิน',s:'พลัง+ · กรรมชั่ว · ราชันชอบ',f(){const g=pw(.05);K(-30);satAdd(-7);A.hun=Math.max(0,A.hun-30);l.k.mood+=25;fx({king:10});log(`🍷 คุณกินจนหมดจาน — พลังยุทธ์ +${fmt(g)} · ${l.k.n}ยกจอกให้`,'epic')}},
+ {t:'🙅 ไม่แตะ',s:'ราชันถือว่าดูถูก',f(){l.k.mood-=30;satAdd(4);if(Math.random()<.4)later(0,'kwar',{i:l.i});log(`🙅 คุณวางตะเกียบ ทั้งโต๊ะเงียบกริบ`,'')}},
+ {t:'🔓 ปล่อยวิญญาณทั้งหมดกลางงาน',s:'ต้องใจดี · สงครามแน่นอน',f(){K(30);satAdd(8);fx({slave:15,king:-15});l.k.mood=-100;log(`🔓 วิญญาณนับร้อยลอยออกทางหลังคา — ${l.k.n}ประกาศสงคราม`,'myth',true);later(0,'kwar',{i:l.i})}}])};
+EV.market=()=>{const A=AB();choice('⚖️ ตลาดวิญญาณ',`พ่อค้าวางเทพตกสวรรค์ในกรงเหล็ก "ทาสรบชั้นดี หรือจะซื้อไปปล่อยก็แล้วแต่ท่าน"`,[
+ {t:'💰 ซื้อเป็นทาสรบ',s:'ทัพ +40',f(){A.arm+=40;K(-10);log('💰 เทพตกสวรรค์สี่สิบตนเดินตามคุณด้วยโซ่ที่คอ','')}},
+ {t:'🔓 ซื้อแล้วปล่อย',s:'กรรมดี · อาจได้คืนหรือโดนแก้แค้น',f(){K(15);fx({slave:8});if(Math.random()<.5)later(R(3,6),'freed',{});log('🔓 คุณหักโซ่ทุกเส้นแล้วเปิดกรง','good')}},
+ {t:'🚶 เดินผ่าน',s:'',f(){}}])};
+EV.freed=()=>{const A=AB();if(Math.random()<.6){A.arm+=60;fx({spy:10});log('🕊️ เทพที่คุณเคยปล่อยกลับมาพร้อมพวกอีกหกสิบตน "คราวนี้เราเลือกเอง"','myth',true)}else{S.hp=Math.max(1,Math.round(S.hp*.6));log('🐍 เทพที่คุณปล่อยกลับมาลอบทำร้าย "การถูกซื้อ ไม่ว่าเพื่ออะไร ก็คือความอัปยศ"','bad')}};
+EV.nest=()=>{const A=AB();choice('🕷️ รังแม่พันธุ์',`ไข่อสูรร้อยฟองเรืองแสงในความมืด แม่ของมันออกไปล่าเหยื่อ`,[
+ {t:'🥚 ขโมยไข่ไปเลี้ยง',s:'ได้สัตว์คู่กาย · แม่มันจะตามมา',f(){A.arm+=30;const g=pw(.03);log(`🥚 ลูกอสูรฟักออกมาเรียกคุณว่าแม่ · พลังยุทธ์ +${fmt(g)}`,'epic');later(R(2,4),'mother',{})}},
+ {t:'🔥 เผารังทิ้ง',s:'ตัดภัยในอนาคต',f(){satAdd(-2);fx({king:5});log('🔥 กลิ่นไหม้ลอยไปทั้งหุบ')}},
+ {t:'🚶 ถอยออกมาเงียบๆ',s:'',f(){}}])};
+EV.mother=()=>{fightThen('มารดาแห่งรังที่คลั่งแค้น',1.35,w=>{if(w){const g=pw(.08);seal('ในท้องมารดาแห่งรัง');log(`🕷️ มารดาแห่งรังตายบนกองไข่ของตัวเอง · พลังยุทธ์ +${fmt(g)}`,'myth',true)}else{AB().arm=Math.round(AB().arm*.6);S.hp=Math.max(1,Math.round(S.hp*.3));log('🕷️ มันเอาลูกคืนไปหมด พร้อมทัพของคุณครึ่งหนึ่ง','bad',true)}})};
+EV.bone=()=>{const A=AB();if(A.kills<2||A.done.bone)return false;A.done.bone=1;fightThen('ราชันเก่าในร่างกระดูก',1.25+A.kills*.04,w=>{if(w){const g=pw(.06);seal('ในกะโหลกราชันเก่า');log(`🦴 ราชันทุกตนที่คุณเคยฆ่ารวมร่างกระดูกเป็นหนึ่งเดียวลุกขึ้นมาอีก — และแหลกไปอีกครั้ง · พลังยุทธ์ +${fmt(g)}`,'myth',true)}else{S.hp=1;log('🦴 กองกระดูกเหยียบคุณจนเกือบตาย แล้วสลายไปกับลม','bad',true)}})};
+EV.plea=()=>{const A=AB();choice('⛓️ เด็กทาสที่หนีมา',`เด็กหญิงคนหนึ่งคลานมาถึงค่ายคุณ เท้าเลือดโชก "ได้ยินว่าท่านไม่กินคน"`,[
+ {t:'🤲 รับไว้',s:'ผู้ลี้ภัยไว้ใจ+',f(){fx({slave:10});K(8);satAdd(3);log('🤲 คืนนั้นมีผู้ลี้ภัยอีกสามสิบคนตามรอยเท้าเลือดของเธอมา','good')}},
+ {t:'🩸 กลืน',s:'ความหิวหาย · กรรมดิ่ง',f(){A.hun=0;K(-50);satAdd(-12);fx({slave:-25});log('🩸 ไม่มีใครได้ยินเสียงอะไรจากเต็นท์ของคุณ','bad',true)}},
+ {t:'↩️ ส่งคืนเจ้าของ',s:'ราชันพอใจ',f(){fx({king:8,slave:-15});K(-15);log('↩️ เธอไม่ร้องไห้ตอนถูกลากกลับ')}}])};
+// ---- ลูปรายปี ----
+let pend=0;const fire=(id,d)=>{if(pend)return;pend=1;wpWait(()=>{pend=0;try{if(!S||!S.alive||choice._cur||!dzOn())return;const f=EV[id];if(f&&f(d)!==false)AB().last=S.age}catch(e){console.error(e)}})};
+{const _py=passYear;passYear=function(){const a0=S?S.age:0;const r=_py.apply(this,arguments);try{if(!S||!S.alive)return r;const dy=Math.max(1,Math.min(10,S.age-a0));
+  if(!dzOn()){dzGates(dy);return r}const A=AB();if(A.fr&&A.fr.on)return r;
+  A.hun=clamp(A.hun+5*dy,0,100);if(A.hun>=100){S.maxHp=Math.max(50,Math.round(S.maxHp*(1-.03*dy)));S.hp=Math.min(S.hp,S.maxHp);if(Math.random()<.4)log('🩸 ความหิวกัดกินร่างจากข้างใน — พลังชีวิตสูงสุดลดลง','bad')}
+  if(A.hun>=70)satAdd(-1*dy);if((S.karma||0)>=50)satAdd(.5*dy);
+  if(A.sat<=0){A.end='sink';log('🩸 <b>สติสุดท้ายดับลง</b>','myth',true);dzEnd('sink','จมหายเป็นอสูรไร้ชื่อในแดนอสูร');return r}
+  if(A.sat<25&&Math.random()<.2*dy&&!choice._cur){const v=pick(['กลืนทาสในค่ายไปสามคน','ฆ่าทูตที่มาเจรจาทั้งคณะ','ฉีกร่างลูกน้องที่พูดเสียงดัง']);K(-25);fx({slave:-8});A.hun=Math.max(0,A.hun-25);log(`🌑 <b>สติแตก</b> — คุณตื่นมาพบว่าตัวเอง${v} โดยจำไม่ได้ว่าทำไปตอนไหน`,'bad',true)}
+  if(A.throne&&Math.random()<.5)S.money+=Math.round(sxBiz()*.3*dy);
+  if(pend)return r;const due=A.q.findIndex(x=>x.at<=S.age);if(due>=0){const x=A.q.splice(due,1)[0];fire(x.id,x.d);return r}
+  if(S.age-A.last<2)return r;
+  if(A.spyOk==null&&S.age-A.y0>=2&&Math.random()<.35)return fire('spy'),r;
+  const hc=A.spyOk===1&&!A.spyBetray?0:A.spyBetray?.09:.04;if(owned()&&Math.random()<hc*dy)return fire('heaven'),r;
+  if(Math.random()<.35){const L=['mimic','feast','market','nest','plea','bone'].filter(k=>!(A.done[k]&&S.age-A.done[k]<12));if(L.length){const k=pick(L);A.done[k]=S.age;return fire(k),r}}}catch(e){console.error(e)}return r}}
+// ---- ประตูทางเข้า ----
+function dzGates(dy){if(S.beastMode||(!S.xian&&!S.xt))return;const H=S.ah||{},G=S.abG||(S.abG={});if(choice._cur||pend)return;
+ if(S.xt&&(S.karma||0)<=-500&&!G.trial){G.trial=1;return wpWait(()=>{if(choice._cur)return;choice('⚖️ ศาลสวรรค์',`เทวสภาเรียกคุณขึ้นศาล "กรรมของเจ้าหนักจนแผ่นดินสวรรค์ทรุด"`,[
+  {t:'🙇 ยอมรับโทษ',s:'พลังยุทธ์ −30% · อยู่แดนเทพต่อ',f(){S.power=Math.round(S.power*.7);S.karma=Math.round(S.karma*.5);log('🙇 สายฟ้าลงทัณฑ์ฟาดร่างคุณเก้าครั้ง แต่คุณยังยืนอยู่บนสวรรค์','bad',true)}},
+  {t:'🔥 ฉีกป้ายเทพ หนีลงแดนอสูร',s:'เริ่มชีวิตใหม่ในแดนอสูร',f(){dzEnter('exile')}}])})}
+ if(H.done&&H.done.wf&&(H.yd|0)>=3&&(S.karma||0)<0&&!G.drag&&Math.random()<.25*dy){G.drag=1;return wpWait(()=>{if(choice._cur)return;choice('🩸 มือจากใต้ดิน',`มารในใจไม่ได้อยู่แค่ในใจอีกแล้ว — พื้นใต้เท้าคุณแตกออก มือนับพันลากข้อเท้าคุณลงไป`,[
+  {t:'🩸 ปล่อยให้มันลาก',s:'ลงแดนอสูร (ประตูถูกลากลงมา)',f(){dzEnter('drag')}},{t:'🔥 สลายพลังมารเพื่อดิ้นหลุด',s:'บารมีมาร −40% · พลังชีวิต −50%',f(){S.mp=Math.round(mpOf()*.6);S.hp=Math.max(1,Math.round(S.hp*.5));log('🔥 คุณเผาพลังมารจนมือพวกนั้นหลุด','bad')}}])})}
+ if(typeof q4==='function'&&q4()==='anti'&&mpOf()>=800&&!G.walk&&Math.random()<.04*dy){G.walk=1;return wpWait(()=>{if(choice._cur)return;choice('🌗 บันไดที่ลงไปข้างล่าง',`ผู้ลี้ภัยจากแดนอสูรคนหนึ่งเล่าว่าข้างล่างมีทาสหลายแสนที่ไม่มีใครไปช่วย "พวกเขาเชื่อว่ามีมารตนหนึ่งที่ไม่กินคน"`,[
+  {t:'🌗 เดินลงไปเอง',s:'ลงแดนอสูร (ประตูเดินลงมาเอง)',f(){dzEnter('walk')}},{t:'🚶 ยังไม่ใช่ตอนนี้',s:'จะเปิดได้อีกที่หน้าสายกับใจ',f(){}}])})}
+ if(!G.rift&&Math.random()<.004*dy){G.rift=1;return wpWait(()=>{if(choice._cur)return;choice('🕳️ รอยแยกกลางฟ้า',`มิติฉีกขาดตรงหน้า แรงดูดกระชากคุณเข้าไปครึ่งตัว`,[
+  {t:'✊ เกาะขอบไว้สุดแรง',s:'พลังชีวิต −40%',f(){S.hp=Math.max(1,Math.round(S.hp*.6));log('✊ คุณดึงตัวเองออกมาได้ รอยแยกปิดลงพร้อมเสียงคำราม','')}},{t:'🕳️ ปล่อยมือ',s:'ตกสู่แดนอสูร (ประตูรอยแยก)',f(){dzEnter('rift')}}])})}}
+// ---- แดนต้องห้าม: คุก 7 ห้อง ----
+const RM={time:['⏳','มารกินกาลเวลา','มันกินปีของทุกสิ่งที่เข้าใกล้'],mirror:['🪞','เงาของคุณจากทุกชาติ','ทุกชาติที่คุณเคยเป็น ยืนเรียงกันในกระจก'],god:['👼','เทพองค์แรกที่สวรรค์ทรยศ','ปีกของเขาถูกตอกตะปูไว้กับผนังมาตั้งแต่ก่อนสวรรค์มีชื่อ'],
+ dragon:['🐉','มังกรที่กลืนจักรวาลก่อนหน้า','มันหลับอยู่ ลมหายใจแต่ละครั้งยาวพันปี'],page:['📖','หน้ากระดาษที่ถูกฉีกจากนวนิยาย','บนกระดาษมีชื่อคุณเขียนอยู่'],warden:['👁️','ผู้คุมคุกคนก่อน','ชายชราที่ไม่มีเงาและไม่มีชื่อ'],empty:['❔','ห้องว่าง','ไม่มีอะไรถูกขังไว้… ยังไม่มี']};
+const RK=Object.keys(RM);
+window.dzDeep=function(){const A=AB();if(A.seals<3)return toast('ต้องมีเศษผนึก 3 ชิ้น');closeM();choice('🌑 ประตูแดนต้องห้าม','เศษผนึกสามชิ้นต่อกันเป็นกุญแจ — ประตูข้างหน้าไม่มีใครเคยเดินออกมา<br><span class="tag2">เข้าไปแล้วออกไม่ได้ จนกว่าจะตัดสินใจครบทุกห้อง หรือตาย</span>',[
+ {t:'🌑 เข้าไป',s:'',f(){A.fr={on:1,y0:S.age,r:{},mem:0};log('🌑 <b>แดนต้องห้าม</b> — คุก 7 ห้อง แต่ละห้องขังสิ่งที่มีมาก่อนจักรวาล · เลือกห้องไหนก่อนก็ได้','myth',true);try{keyAdd('เข้าสู่แดนต้องห้าม')}catch(e){}setTimeout(openFz,500)}},{t:'↩️ ยังก่อน',s:'',skip:1,f(){openDz()}}])};
+const frDone=()=>Object.keys(AB().fr.r).length;
+const rmM=k=>{const r=AB().fr.r;let m={time:1.35,mirror:1+((S.lineage||[]).length*.04)+Math.abs(S.karma||0)/3000,god:1.55,dragon:1.9,page:1,warden:1.3,empty:1}[k];if(k==='dragon'&&r.god==='free')m+=.4;if(k==='dragon'&&r.time==='kill')m-=.25;if(k==='god'&&r.mirror==='free')m-=.2;if(k==='warden'&&r.page==='deal')m-=.2;return +m.toFixed(2)};
+window.openFz=function(){const A=AB(),F=A.fr,emptyOpen=F.r.warden==='kill'||frDone()>=5;
+ const st={kill:'⚔️ สังหาร/ผนึก',free:'🔓 ปล่อย',deal:'🤝 ข้อตกลง',self:'❔ ขังตัวเอง',ward:'🔒 รับเป็นผู้คุม'};
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="dzhd fr"><h3>🌑 แดนต้องห้าม</h3><p>ตัดสินใจแล้ว ${frDone()}/7 ห้อง · ทุกห้องเกี่ยวโยงกัน: สิ่งที่ทำกับห้องหนึ่ง เปลี่ยนอีกห้อง</p></div>
+ <div class="dzmap fr">${RK.map(k=>{const v=RM[k],d=F.r[k],lock=k==='empty'&&!emptyOpen;return`<button class="dzc ${d?'own':''}" onclick="${lock?"toast('🔒 ห้องนี้ยังไม่เปิด')":`fzRoom('${k}')`}"><span class="ic">${lock?'🔒':v[0]}</span><b>${v[1]}</b><small>${d?st[d]:lock?'ยังไม่เปิด':'แรง ×'+rmM(k)}</small></button>`}).join('')}</div>
+ ${frDone()>=6||F.r.warden==='ward'||F.r.empty==='self'?'<button class="pbtn" style="width:100%" onclick="fzEnd()">📜 ปิดบทแดนต้องห้าม (ตอนจบตามผลรวม)</button>':'<p class="tag2">ตัดสินใจครบ 6 ห้องจึงปิดบทได้ · รับเป็นผู้คุม หรือขังตัวเองในห้องว่าง ปิดบททันที</p>'}`,'frbd')};
+window.fzRoom=function(k){const F=AB().fr;if(F.r[k])return toast('ตัดสินใจห้องนี้ไปแล้ว');closeM();const v=RM[k],m=rmM(k),set=s=>{F.r[k]=s;setTimeout(openFz,700)};const K2=(who,cb)=>fightThen(who,m,w=>{if(w){cb();set('kill')}else{S.hp=Math.max(1,Math.round(S.hp*.25));log(`🩸 ${v[1]}เหวี่ยงคุณกระเด็นออกมาจากห้อง`,'bad');setTimeout(openFz,700)}});
+ const O={
+ time:[{t:'⚔️ สังหารมัน',s:`ดวล ×${m} · มังกรจะอ่อนลง`,f(){K2(v[1],()=>{const g=pw(.1);log(`⏳ เวลาหยุดไหลในห้องนั้นตลอดกาล · พลังยุทธ์ +${fmt(g)}`,'myth',true)})}},
+  {t:'🔓 ปล่อยมัน',s:'กาลเวลาข้างนอกจะไหลผิด',f(){S.lifespan=Math.round(S.lifespan*.85);log('🔓 มันกลืนปีของคุณไปคำหนึ่งตอนเดินผ่าน แล้วหายไปข้างนอก','bad');set('free')}},
+  {t:'🤝 ข้อตกลง: อายุแลกความทรงจำ',s:'อายุขัยมหาศาล · ทุกปีความทรงจำหายหนึ่งเรื่อง',f(){lsAddX(5000);F.mem=1;log('🤝 มันคืนปีให้คุณห้าพันปี — แลกกับความทรงจำปีละเรื่อง ไปจนตาย','myth',true);set('deal')}}],
+ mirror:[{t:'⚔️ สู้กับตัวเองทุกชาติ',s:`ดวล ×${m}`,f(){K2(v[1],()=>{const g=pw(.15);log(`🪞 กระจกแตก ทุกชาติของคุณกลายเป็นคุณคนเดียว · พลังยุทธ์ +${fmt(g)}`,'myth',true)})}},
+  {t:'🔓 ปล่อยเงาให้รวมเข้ากับคุณ',s:'พลัง+ · กรรมถูกดึงเข้าหาศูนย์ · เทพองค์แรกจะอ่อนลง',f(){const g=pw(.2);S.karma=Math.round((S.karma||0)*.3);log(`🔓 เงาทุกตนไหลเข้าร่าง ความดีและความชั่วของทุกชาติหักล้างกัน · พลังยุทธ์ +${fmt(g)}`,'myth',true);set('free')}},
+  {t:'🤝 แลกพรสวรรค์กับเงา',s:'พรสวรรค์ ×1.15 · กรรมกลับขั้ว',f(){S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.15).toFixed(2)});S.karma=-(S.karma||0);log('🤝 คุณกับเงาสลับที่กัน — คนดีกลายเป็นชั่ว คนชั่วกลายเป็นดี','myth',true);set('deal')}}],
+ god:[{t:'⚔️ ผนึกเขาซ้ำ',s:`ดวล ×${m} · สวรรค์ติดหนี้คุณ`,f(){K2(v[1],()=>{fx({spy:30});log('👼 คุณตอกตะปูเล่มที่สิบลงบนปีกเขา สวรรค์ส่งคำขอบคุณลงมาเป็นครั้งแรก','epic')})}},
+  {t:'🔓 ถอนตะปูปล่อยเขา',s:'เขาเป็นหนี้คุณ · มังกรจะตื่น',f(){const g=pw(.15);log(`🔓 เทพองค์แรกบินออกไปทางเพดาน — ไกลออกไปมีเสียงสวรรค์แตกร้าว · พลังยุทธ์ +${fmt(g)}`,'myth',true);set('free')}},
+  {t:'🤝 ขอวิชาแลกกับคำสัญญา',s:'ได้วิชาสูงสุด · สัญญาว่าจะกลับมาปล่อย',f(){try{const a=newArt(4);S.arts.push(a);log(`🤝 เขาสอนคุณผ่านลูกกรง — ได้ ${artHtml(a)}`,'myth',true)}catch(e){}set('deal')}}],
+ dragon:[{t:'⚔️ ฆ่ามังกร',s:`ดวล ×${m}`,f(){K2(v[1],()=>{const g=pw(.4);log(`🐉 คุณฆ่าสิ่งที่กลืนจักรวาลก่อนหน้า · พลังยุทธ์ +${fmt(g)}`,'myth',true);try{keyAdd('สังหารมังกรกลืนจักรวาล')}catch(e){}})}},
+  {t:'🔓 ปลุกและปล่อยมัน',s:'มันจะกลืนจักรวาลนี้ด้วย',f(){log('🔓 มังกรลืมตา — ข้างนอกดวงดาวเริ่มดับทีละดวง','bad',true);set('free')}},
+  {t:'🤝 กล่อมให้หลับตลอดกาล',s:'อายุขัยครึ่งหนึ่งเป็นค่ากล่อม',f(){S.lifespan=Math.max(S.age+10,Math.round(S.age+(S.lifespan-S.age)/2));log('🤝 คุณร้องเพลงกล่อมจนเสียงแหบ มันหลับไปพร้อมอายุครึ่งหนึ่งของคุณ','myth');set('deal')}}],
+ page:[{t:'🔥 เผาหน้ากระดาษ',s:'ไม่มีใครรู้ความจริงอีก',f(){satAdd(5);log('🔥 กระดาษไหม้ คุณลืมว่าเคยอ่านอะไร','');set('kill')}},
+  {t:'🔓 ปล่อยหน้ากระดาษออกสู่โลก',s:'ชีวิตหน้าเกิดมาพร้อมความรู้',f(){S.int+=50;log('🔓 หน้ากระดาษปลิวออกไป ทุกคนในโลกฝันเห็นประโยคเดียวกันคืนนั้น','myth');set('free')}},
+  {t:'📖 อ่านจนจบ',s:'รู้ความจริงของโลกนี้ · ผู้คุมจะอ่อนลง',f(){S.int+=30;log('📖 <b>"ทุกคนในเรื่องนี้รู้ตัวว่าอยู่ในนวนิยาย ยกเว้นคนที่อ่านอยู่"</b> — คุณเงยหน้าขึ้นมองคนที่ถือหน้าจอนี้อยู่','myth',true);try{keyAdd('อ่านหน้ากระดาษที่ถูกฉีกจากนวนิยาย')}catch(e){}set('deal')}}],
+ warden:[{t:'⚔️ ฆ่าผู้คุม',s:`ดวล ×${m} · ห้องว่างจะเปิด`,f(){K2(v[1],()=>{log('👁️ กุญแจทุกดอกตกลงในมือคุณ — ห้องสุดท้ายเปิดออกเอง','myth',true)})}},
+  {t:'🔒 รับเป็นผู้คุมแทนเขา',s:'ปิดบททันที — ผู้คุมคุกตลอดกาล',f(){F.r[k]='ward';fzEnd()}},
+  {t:'🤝 ให้เขาไปพัก แล้วรับกุญแจ',s:'ปิดบทแบบสมดุลได้ง่ายขึ้น',f(){F.keys=1;log('🤝 ชายชราเดินออกไปพร้อมรอยยิ้มแรกในรอบหมื่นปี','good');set('deal')}}],
+ empty:[{t:'❔ ขังตัวเองไว้ในห้องนี้',s:'ตอนจบลับ',f(){F.r[k]='self';fzEnd()}},{t:'🚪 ปิดห้องไว้ว่างๆ',s:'',f(){set('kill')}}]};
+ choice(`${v[0]} ${v[1]}`,`${v[2]}`,O[k].concat([{t:'↩️ ยังก่อน',s:'',skip:1,f(){openFz()}}]))};
+const lsAddX=v=>{try{if(S.xt)S.glExtra=(S.glExtra||0)+v;else lsAdd(v)}catch(e){S.lifespan+=v}};
+window.fzEnd=function(){const F=AB().fr,r=F.r,v=Object.values(r),free=v.filter(x=>x==='free').length;closeM();
+ let k,c;if(r.empty==='self'){k='self';c='ขังตัวเองไว้ในห้องว่างของแดนต้องห้าม'}else if(r.warden==='ward'){k='ward';c='รับเป็นผู้คุมคุกแดนต้องห้ามตลอดกาล'}else if(free>=4||r.dragon==='free'){k='end';c='ปลดผนึกแดนต้องห้าม — จักรวาลนี้จบลงด้วยมือของคุณ'}else{k='tilt';c='ปิดคุกแดนต้องห้ามแบบไม่สมดุล — โลกหน้าเป็นไปตามที่คุณจัดวาง';const M={};RK.forEach(x=>{if(r[x]==='free'||r[x]==='deal')M[x]=1});LS.set('murim_abtilt',M)}
+ const sum=RK.map(x=>`${RM[x][0]} ${r[x]?{kill:'ผนึก',free:'ปล่อย',deal:'ตกลง',self:'ขังตัวเอง',ward:'ผู้คุม'}[r[x]]:'—'}`).join(' · ');
+ log(`📜 <b>บทสรุปแดนต้องห้าม</b> — ${sum}`,'myth',true);dzEnd(k,c)};
+// ความทรงจำหายจากข้อตกลงกับมารกินกาลเวลา
+{const _py2=passYear;passYear=function(){const r=_py2.apply(this,arguments);try{if(S&&S.alive&&S.ab&&S.ab.fr&&S.ab.fr.mem&&S.key&&S.key.length>3&&Math.random()<.5){const i=R(1,S.key.length-2);const t=S.key.splice(i,1)[0];log(`⏳ ความทรงจำหนึ่งหายไป: <s>${String(t).replace(/<[^>]+>/g,'').slice(0,60)}</s>`,'bad')}}catch(e){}return r}}
+// ---- ป้าย / ทางเข้าเมนู ----
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const t=$('gTags');if(!t)return r;const o=t.querySelector('.dzb');if(!dzOn()){if(o)o.remove();return r}const A=AB(),h=`<span class="tag dzb" onclick="event.stopPropagation();openDz()">${A.fr&&A.fr.on?'🌑 แดนต้องห้าม':'👹 แดนอสูร '+owned()+'/9'}${A.hun>=70?' 🩸':''}${A.sat<30?' 🧠':''}</span>`;if(o){if(o.outerHTML!==h)o.outerHTML=h}else t.insertAdjacentHTML('afterbegin',h)}catch(e){}return r}}
+{const _q=window.openQ4;if(_q)window.openQ4=function(){const r=_q.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.dzgo')&&!dzOn()&&(S.xian||S.xt)&&typeof q4==='function'&&q4()==='anti'&&mpOf()>=800)m.insertAdjacentHTML('beforeend','<button class="pbtn dzgo" style="width:100%;margin-top:8px" onclick="closeM();dzEnter(\'walk\')">🌗 เดินลงแดนอสูรด้วยตัวเอง</button>');else if(m&&dzOn()&&!m.querySelector('.dzgo'))m.insertAdjacentHTML('beforeend','<button class="gbtn dzgo" style="width:100%;margin-top:8px" onclick="openDz()">👹 แผนที่แดนอสูร</button>')}catch(e){}return r}}
+try{document.head.insertAdjacentHTML('beforeend',`<style>
+.dzhd{background:radial-gradient(circle at 50% 0,#4a0a14,#14040a 75%);color:#ffd8dc;border-radius:14px;padding:12px;margin:-4px -4px 8px;border:1px solid #7a1a2a}.dzhd h3{color:#ff6a6a;margin:0}.dzhd p{margin:2px 0;font-size:13px}.dzhd .tag2{color:#f0b8c0!important;opacity:1}
+.dzhd.fr{background:radial-gradient(circle at 50% 0,#2a0a4a,#08040e 75%);border-color:#4a2a7a}.dzhd.fr h3{color:#c89aff}
+.dzst{display:grid;grid-template-columns:auto 1fr;gap:3px 8px;align-items:center;font-size:12px;margin:6px 0}
+.dzbar,.dzfb{height:8px;border-radius:5px;background:#ffffff18;overflow:hidden;position:relative}.dzbar i{display:block;height:100%}.dzfb i{position:absolute;top:0;bottom:0}.dzfb:after{content:'';position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:#fff6}
+.dzmap{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:6px 0}.dzmap.fr{grid-template-columns:repeat(2,1fr)}
+.dzc{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;padding:8px 4px;border-radius:10px;border:1px solid #5a1a2a;background:linear-gradient(#2a0a12,#14060a);color:#f4d8dc;font-size:11px;text-align:center;min-height:84px}
+.dzc .ic{font-size:22px}.dzc b{font-size:12px}.dzc small{font-size:10px;opacity:.85;line-height:1.25}.dzc i{position:absolute;top:3px;right:5px;font-style:normal}
+.dzc.own{border-color:#ffd040;box-shadow:inset 0 0 12px rgba(255,208,64,.25)}.dzc.dead{opacity:.7}.dzmap.fr .dzc{background:linear-gradient(#1a0a2a,#08040e);border-color:#3a2a5a}
+.dzact{display:flex;gap:6px;flex-wrap:wrap}.dzact>button{flex:1 1 140px}.dzb{background:#3a0a14!important;color:#ff9aa0!important;border-color:#8a1a2a!important;cursor:pointer}
+</style>`)}catch(e){}
+try{SYS_GUIDE.push({s:'world',nw:1,ic:'👹',t:'แดนอสูรและแดนต้องห้าม',go:'openDz',d:'เข้าได้ 4 ทาง (โลกเซียนหรือแดนเทพ): ⚖️ ถูกเนรเทศจากแดนเทพเมื่อกรรมติดลบหนัก · 🌗 เดินลงไปเองถ้าเป็นมารใจดีบารมี 800+ · 🩸 ถูกลากลงไปเมื่อยอมมารในใจ · 🕳️ ตกรอยแยก — แผนที่ 9 แคว้นไม่มีลำดับ ยึดได้ 4 วิธี (ดวล · สวามิภักดิ์แล้วแทงข้างหลัง · ยุให้รบกัน · ปลดปล่อยทาส) ราชันจำทุกสิ่งที่คุณทำ · ความหิวกับสติ · ราชัน/ทาส/สายลับแดนเทพดึงคนละทาง · อสูรสวมรอยคนใกล้ตัว · ทางออก 5 ทาง · เศษผนึก 3 ชิ้นเปิด 🌑 แดนต้องห้าม คุก 7 ห้องที่เกี่ยวโยงกัน ตอนจบตามผลรวม'})}catch(e){}
+window._dzEV=EV;
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>
