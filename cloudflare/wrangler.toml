@@ -17,7 +17,7 @@ not_found_handling = "none"
 binding = "SAVES"
 bucket_name = "1inanovel"
 
-# 💳 ฐานข้อมูลคำสั่งซื้อ/สลิป/สิทธิ์ (D1) — ค่าลับ EASYSLIP_KEY ใส่ด้วย wrangler secret put
+# 💳 ฐานข้อมูลคำสั่งซื้อ/สลิป/สิทธิ์ (D1) — ค่าลับ SLIPOK_KEY + SLIPOK_BRANCH (หรือ EASYSLIP_KEY) ใส่ด้วย wrangler secret put · PAY_NAME (ชื่อผู้รับตามสลิป) ใส่เพิ่มได้
 [[d1_databases]]
 binding = "PAY_DB"
 database_name = "inanovel-pay"

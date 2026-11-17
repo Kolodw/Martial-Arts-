@@ -65,7 +65,7 @@ async function apiOne(request, url) {
   return r;
 }
 
-// 💳 ตรวจสลิปพร้อมเพย์อัตโนมัติ (EasySlip v2 + D1 "PAY_DB") — ต้องมีค่าลับ EASYSLIP_KEY และ binding PAY_DB ไม่มี = ตอบ unavailable แล้วหน้าเว็บจะใช้ระบบส่งสลิปให้ผู้พัฒนาตรวจเหมือนเดิม
+// 💳 ตรวจสลิปพร้อมเพย์อัตโนมัติ (SlipOK หรือ EasySlip v2 + D1 "PAY_DB") — ต้องมีค่าลับ SLIPOK_KEY + SLIPOK_BRANCH (หรือ EASYSLIP_KEY) และ binding PAY_DB · ตั้ง PAY_NAME เพิ่มได้เพื่อเช็กชื่อผู้รับ ไม่มี = ตอบ unavailable แล้วหน้าเว็บจะใช้ระบบส่งสลิปให้ผู้พัฒนาตรวจเหมือนเดิม
 const jr = (o, st = 200) => new Response(JSON.stringify(o), { status: st, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
 async function payProducts(env) {
   try { const r = await env.PAY_DB.prepare("SELECT sku,kind,scope,world_id,tier,days,n,price_baht FROM products WHERE active=1 ORDER BY sort").all(); return jr({ items: r.results || [] }) } catch (e) { return jr({ items: [] }) }
@@ -91,8 +91,9 @@ async function payAdmin(request, env, url) {
   return jr({ err: 'a' }, 400);
 }
 async function pay(request, env) {
-  if (request.method !== 'POST') { try { if (new URL(request.url).searchParams.get('diag') === '1') return jr({ db: !!env.PAY_DB, key: !!env.EASYSLIP_KEY }) } catch (e) {} return jr({ err: 'method' }, 405) }
-  if (!env.PAY_DB || !env.EASYSLIP_KEY) return jr({ ok: 0, st: 'unavailable' });
+  if (request.method !== 'POST') { try { if (new URL(request.url).searchParams.get('diag') === '1') return jr({ db: !!env.PAY_DB, slipok: !!(env.SLIPOK_KEY && env.SLIPOK_BRANCH), easyslip: !!env.EASYSLIP_KEY, name_check: !!env.PAY_NAME }) } catch (e) {} return jr({ err: 'method' }, 405) }
+  const useOK = !!(env.SLIPOK_KEY && env.SLIPOK_BRANCH);
+  if (!env.PAY_DB || !(useOK || env.EASYSLIP_KEY)) return jr({ ok: 0, st: 'unavailable' });
   let b; try { b = await request.json() } catch (e) { return jr({ ok: 0, st: 'bad' }, 400) }
   const uid = String(b.id || ''), pk = String(b.pk || ''), name = String(b.n || '').slice(0, 24);
   const h = await handler();
@@ -108,22 +109,60 @@ async function pay(request, env) {
   const oid = 'o' + now.toString(36) + Math.random().toString(36).slice(2, 8);
   await db.prepare("INSERT INTO orders(id,uid,pack,amount_satang,channel,status,created_at,expires_at) VALUES(?,?,?,?,?,?,?,?)").bind(oid, uid, pk, P.amt * 100, 'promptpay', 'pending', now, now + 3600e3).run();
   const fail = async (st, note, code = 200) => { try { await db.prepare("UPDATE orders SET status=?,note=? WHERE id=?").bind(st, String(note || '').slice(0, 200), oid).run() } catch (e) {} return jr({ ok: 0, st, note }, code) };
-  let j;
-  try {
-    const r = await fetch('https://api.easyslip.com/v2/verify/bank', { method: 'POST', headers: { authorization: 'Bearer ' + env.EASYSLIP_KEY, 'content-type': 'application/json' }, body: JSON.stringify({ base64: img, matchAccount: true, matchAmount: P.amt, checkDuplicate: true }) });
-    j = await r.json().catch(() => null);
-  } catch (e) { return fail('unavailable', 'fetch') }
-  if (!j) return fail('unavailable', 'nojson');
-  if (!j.success) { const c = (j.error && j.error.code) || ''; return fail(c === 'SLIP_PENDING' ? 'pending' : /SIZE|VALIDATION|INVALID|NOT_FOUND|SLIP/i.test(c) ? 'noslip' : 'unavailable', c) }
-  const d = j.data || {}, raw = d.rawSlip || {}, ref = String(raw.transRef || '');
+  // ผลตรวจที่ทุกผู้ให้บริการแปลงมาเป็นรูปเดียวกัน: ref, amt(สตางค์), sd(เวลาโอน ms), sender, receiver
+  let ref = '', amt = 0, sd = 0, sender = '', receiver = '', raw = {};
+  if (useOK) {
+    // SlipOK: ส่งรูปแบบ multipart · amount = ให้ SlipOK เทียบยอดให้ · log = ให้ SlipOK จำสลิปไว้กันใช้ซ้ำอีกชั้น
+    let j, hs = 0;
+    try {
+      const bin = Uint8Array.from(atob(img.split(',')[1]), c => c.charCodeAt(0)), fd = new FormData();
+      fd.append('files', new Blob([bin], { type: (img.match(/^data:([^;]+)/) || [])[1] || 'image/jpeg' }), 'slip.jpg');
+      fd.append('amount', String(P.amt)); fd.append('log', 'true');
+      const r = await fetch('https://api.slipok.com/api/line/apikey/' + encodeURIComponent(env.SLIPOK_BRANCH), { method: 'POST', headers: { 'x-authorization': env.SLIPOK_KEY }, body: fd });
+      hs = r.status; j = await r.json().catch(() => null);
+    } catch (e) { return fail('unavailable', 'fetch') }
+    if (!j) return fail('unavailable', 'nojson' + hs);
+    const code = Number(j.code || (j.data && j.data.code) || 0);
+    if (j.success !== true || !j.data) {
+      // รหัสของ SlipOK: 1012 สลิปซ้ำ · 1013 ยอดไม่ตรง · 1014 บัญชีผู้รับไม่ตรง · 1006/1007/1008 อ่านสลิปไม่ได้/ไม่ใช่สลิป · 1009/1010 ธนาคารยังไม่พร้อม
+      if (code === 1012) return fail('dup', 'slipok-1012');
+      if (code === 1013) return fail('amount', 'slipok-1013');
+      if (code === 1014) return fail('acct', 'slipok-1014');
+      if (code === 1009 || code === 1010) return fail('pending', 'slipok-' + code);
+      if (code >= 1005 && code <= 1008 || code === 1011) return fail('noslip', 'slipok-' + code);
+      return fail('unavailable', 'slipok-' + (code || hs) + ':' + String(j.message || '').slice(0, 60));
+    }
+    raw = j.data;
+    ref = String(raw.transRef || '');
+    amt = Math.round(Number(raw.amount || 0) * 100);
+    const td = String(raw.transDate || ''), tt = String(raw.transTime || '00:00:00');
+    sd = raw.transTimestamp ? Date.parse(raw.transTimestamp) : /^\d{8}$/.test(td) ? Date.parse(td.slice(0, 4) + '-' + td.slice(4, 6) + '-' + td.slice(6, 8) + 'T' + tt.slice(0, 8) + '+07:00') : 0;
+    const nm = o => String((o && (o.displayName || o.name)) || '');
+    sender = nm(raw.sender).slice(0, 60); receiver = nm(raw.receiver).slice(0, 60);
+    // ตั้ง PAY_NAME (ชื่อผู้รับตามสลิป เช่น นามสกุล/ชื่อบางส่วน) เพื่อให้เว็บเช็กเองอีกชั้นว่าโอนเข้าบัญชีเราจริง
+    if (env.PAY_NAME && !receiver.replace(/\s+/g, '').toLowerCase().includes(String(env.PAY_NAME).replace(/\s+/g, '').toLowerCase())) return fail('acct', 'receiver=' + receiver);
+  } else {
+    let j;
+    try {
+      const r = await fetch('https://api.easyslip.com/v2/verify/bank', { method: 'POST', headers: { authorization: 'Bearer ' + env.EASYSLIP_KEY, 'content-type': 'application/json' }, body: JSON.stringify({ base64: img, matchAccount: true, matchAmount: P.amt, checkDuplicate: true }) });
+      j = await r.json().catch(() => null);
+    } catch (e) { return fail('unavailable', 'fetch') }
+    if (!j) return fail('unavailable', 'nojson');
+    if (!j.success) { const c = (j.error && j.error.code) || ''; return fail(c === 'SLIP_PENDING' ? 'pending' : /SIZE|VALIDATION|INVALID|NOT_FOUND|SLIP/i.test(c) ? 'noslip' : 'unavailable', c) }
+    const d = j.data || {}; raw = d.rawSlip || {}; ref = String(raw.transRef || '');
+    if (!ref) return fail('noslip', 'noref');
+    if (d.isDuplicate) return fail('dup', 'easyslip-dup');
+    if (!d.matchedAccount) return fail('acct', 'not-our-account');
+    amt = Math.round(((raw.amount && raw.amount.amount) || 0) * 100);
+    if (d.isAmountMatched === false) return fail('amount', 'slip=' + amt);
+    sd = Date.parse(raw.date || '');
+    sender = String(((raw.sender || {}).account || {}).name && raw.sender.account.name.th || '').slice(0, 60); receiver = String(((raw.receiver || {}).account || {}).name && raw.receiver.account.name.th || '').slice(0, 60);
+  }
   if (!ref) return fail('noslip', 'noref');
-  if (d.isDuplicate) return fail('dup', 'easyslip-dup');
-  if (!d.matchedAccount) return fail('acct', 'not-our-account');
-  const amt = Math.round(((raw.amount && raw.amount.amount) || 0) * 100);
-  if (d.isAmountMatched === false || amt !== P.amt * 100) return fail('amount', 'slip=' + amt);
-  const sd = Date.parse(raw.date || ''); if (!sd || sd < now - 3 * 3600e3 || sd > now + 600e3) return fail('old', 'date=' + raw.date);
+  if (amt !== P.amt * 100) return fail('amount', 'slip=' + amt);
+  if (!sd || sd < now - 3 * 3600e3 || sd > now + 600e3) return fail('old', 'date=' + (raw.date || raw.transDate || ''));
   // จองสลิปนี้ (คีย์หลักซ้ำ = เคยใช้แล้ว)
-  try { await db.prepare("INSERT INTO slips(channel,trans_ref,order_id,amount_satang,sender_name,receiver_name,slip_date,verified_at) VALUES(?,?,?,?,?,?,?,?)").bind('promptpay', ref, oid, amt, String(((raw.sender || {}).account || {}).name && raw.sender.account.name.th || '').slice(0, 60), String(((raw.receiver || {}).account || {}).name && raw.receiver.account.name.th || '').slice(0, 60), String(raw.date || ''), now).run() }
+  try { await db.prepare("INSERT INTO slips(channel,trans_ref,order_id,amount_satang,sender_name,receiver_name,slip_date,verified_at) VALUES(?,?,?,?,?,?,?,?)").bind('promptpay', ref, oid, amt, sender, receiver, String(raw.date || raw.transDate || ''), now).run() }
   catch (e) { return fail('dup', 'slip-used') }
   await db.prepare("UPDATE orders SET status='paid',paid_at=?,trans_ref=? WHERE id=?").bind(now, ref, oid).run();
   try {
