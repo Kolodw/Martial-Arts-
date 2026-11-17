@@ -12193,7 +12193,7 @@ function benLook(name){try{const n=String(name||'');let sp=null;for(const [k,v] 
 const RKC={d:['','ตะวันเจิดจ้า','จันทร์เหนือเมฆ','ดาวประกาย'],w:['','จ้าวยุทธภพ','ขุนศึกไร้พ่าย','ยอดฝีมือผงาด'],m:['','จักรพรรดิเหนือฟ้า','มหาเทพบัญชาสวรรค์','ตำนานผู้ถูกจารึก']},RKC_TR={d:7,w:8,m:9},RKC_PN={d:'รายวัน',w:'รายสัปดาห์',m:'รายเดือน'};
 const RKC_OF=t=>{for(const p in RKC){const r=RKC[p].indexOf(t);if(r>0)return{p,r}}return null};
 function rkList(){const L=(LS.get('murim_rkttl',[])||[]).filter(x=>x&&x.t&&x.exp>Date.now());return L.sort((a,b)=>RKC_TR[b.p]-RKC_TR[a.p]||a.r-b.r)}
-function rkAdd(x){if(!x||!x.t||!RKC_OF(x.t))return;const o=RKC_OF(x.t),L=rkList().filter(y=>y.p!==o.p);L.push({t:x.t,p:o.p,r:o.r,c:x.c||'',exp:+x.exp||Date.now()+86400e3});LS.set('murim_rkttl',L)}
+function rkAdd(x){if(!x||!x.t)return;let o=RKC_OF(x.t);if(!o&&x.p&&RKC_TR[x.p]&&+x.r>=1&&+x.r<=3)o={p:x.p,r:+x.r};if(!o)return;L=rkList().filter(y=>y.p!==o.p);L.push({t:x.t,p:o.p,r:o.r,c:x.c||'',exp:+x.exp||Date.now()+86400e3});LS.set('murim_rkttl',L)}
 function rkSync(rk){if(!Array.isArray(rk))return;const had=new Set(rkList().map(x=>x.t+x.exp));rk.forEach(rkAdd);const nw=rkList().filter(x=>!had.has(x.t+x.exp));
  const cur=showTtl();if(nw.length&&(!cur||(cur.r<7)||(RKC_TR[nw[0].p]>=cur.r))){const b=nw[0];LS.set('murim_show',{t:b.t,r:RKC_TR[b.p],k:'rk'});toast('🏆 สวมฉายาทำเนียบ「'+b.t+'」ให้แล้ว (ชั่วคราว)')}
  nw.forEach(x=>{try{achPopShow({r:6,h:'🏆 ฉายาทำเนียบ'+RKC_PN[x.p],n:'「'+x.t+'」',d:'โชว์ในแชทและตอนคนอื่นดูคุณเล่น · หมดอายุ '+rkLeft(x)})}catch(e){}})}
@@ -14089,11 +14089,11 @@ function sp2List(){const box=$('sp2L');if(!box)return;const D=sp2Data(),q=SP2.q.
  let L=D.filter(x=>(SP2.tab==='all'||x.tab===SP2.tab)&&(!SP2.rar||(SP2.rar===6?x.r>=6:x.r===SP2.rar))&&(!q||x.t.toLowerCase().includes(q)||(x.g||'').toLowerCase().includes(q)));
  const G={};L.forEach(x=>{(G[x.g]=G[x.g]||[]).push(x)});const keys=Object.keys(G).sort((a,b)=>{const o=s=>/ทำเนียบ|อันดับ/.test(s)?0:/ลาน/.test(s)?1:/อีเวนต์/.test(s)?1.5:/เรียกขาน/.test(s)?3:2;return o(a)-o(b)||G[b].length-G[a].length});
  const cnt=$('sp2N');if(cnt)cnt.textContent=`${L.length} ฉายา`;
- if(!L.length){box.innerHTML='<p class="tag2" style="text-align:center;padding:16px 0">ไม่พบฉายาที่ค้นหา</p>';return}
+ if(!L.length){box.innerHTML=SP2.tab==='rk'&&!q?'<p class="tag2" style="text-align:center;padding:16px 8px">🏆 ยังไม่มีฉายาทำเนียบตอนนี้<br>ติดอันดับ 1–3 ของทำเนียบรายวัน / รายสัปดาห์ / รายเดือน (ดูที่ 🌐 ออนไลน์ → ทำเนียบ) แล้วฉายาจะมาอยู่ที่นี่อัตโนมัติ · ใช้ได้จนกว่ารอบถัดไปจะตัดสิน</p>':'<p class="tag2" style="text-align:center;padding:16px 0">ไม่พบฉายาที่ค้นหา</p>';return}
  box.innerHTML=keys.map(g=>{const A=G[g].sort((a,b)=>(b.r||0)-(a.r||0)||a.t.localeCompare(b.t,'th')),lim=SP2.more[g]||(q?999:24),sh=A.slice(0,lim);
   return`<details class="sp2g" open><summary>${esc(g)} <small>${A.length}</small></summary><div class="sp2grid">${sh.map(x=>`<button class="sp2c ${x.on?'on':''} ${x.t==='Nano Machine'?'nano':''}" style="--c:${x.t==='Nano Machine'?'#ff1e3c':SP2_RC[Math.min(9,x.r||0)]}" onclick='setShowTtl(${JSON.stringify(x.t).replace(/'/g,"&#39;")},${x.r||0},"${x.k}")'><b>${esc(x.t)}</b><small>${'★'.repeat(Math.min(6,Math.max(1,x.r||1)))}${x.sub?' · '+esc(x.sub):''}</small></button>`).join('')}</div>${A.length>lim?`<button class="gbtn sp2more" onclick="SP2.more[${JSON.stringify(g).replace(/"/g,'&quot;')}]=999;sp2List()">แสดงอีก ${A.length-lim} อัน</button>`:''}</details>`}).join('')}
 openShowPick=function(from){if(from)openShowPick._from=from;const sc0=(modalOpen&&$('modal').dataset.k==='showpick')?$('modal').scrollTop:0;setTimeout(()=>{try{if(sc0&&$('modal').dataset.k==='showpick')$('modal').scrollTop=sc0}catch(e){}},0);const cur=showTtl(),D=sp2Data(),back=openShowPick._from==='profile'?"openShowPick._from=null;openProfile()":'openBook()';
- const tabs=[['all','ทั้งหมด'],['rk','🏆 อันดับ'],['ar','🏟️ ฉายาแลก'],['a','📖 สมุดตำนาน'],['t','🏷️ ถูกเรียกขาน'],['ev','🎉 อีเวนต์/พิเศษ']].filter(([k])=>k==='all'||D.some(x=>x.tab===k));
+ const tabs=[['all','ทั้งหมด'],['rk','🏆 อันดับ'],['ar','🏟️ ฉายาแลก'],['a','📖 สมุดตำนาน'],['t','🏷️ ถูกเรียกขาน'],['ev','🎉 อีเวนต์/พิเศษ']].filter(([k])=>k==='all'||k==='rk'||D.some(x=>x.tab===k));
  if(!tabs.some(x=>x[0]===SP2.tab))SP2.tab='all';
  modal(`<button class="xbtn" onclick="${back}">✕</button><h3>🎖️ เลือกฉายาที่จะโชว์</h3><p class="tag2">โชว์ข้างชื่อคุณในแชทโลก ทำเนียบ และตอนคนอื่นดูคุณเล่น · เลือกได้ทีละ 1 อัน</p>
  <div class="sp2cur">ตอนนี้: ${cur?tchipH(cur.t,cur.r):'<span class="tag2">— ไม่โชว์ —</span>'} ${cur?`<button class="gbtn" style="padding:3px 10px" onclick="setShowTtl('',0,'')">ไม่โชว์</button>`:''}</div>
@@ -29338,6 +29338,16 @@ try{const _kbE=window.kpBeyond;if(typeof _kbE==='function'){window.kpBeyond=func
 {const _pyE=passYear;passYear=function(){try{const K=S&&S.kalpa;if(K&&K.pend&&Date.now()-(K._gl||0)<4000)return;if(K&&K.wait&&S.alive&&(S.age-(K.wY||S.age))%25===24)addFeed('ev',`⏳ คุณยังรั้งอยู่ที่ขอบของ${KAL_N[K.n]||'กัลป์'} — พร้อมเมื่อไหร่ ☰ เมนู → ♾️ ก้าวข้ามกัลป์`,'sum')}catch(e){}return _pyE.apply(this,arguments)}}
 {const _omE=openMenu;openMenu=function(){const r=_omE.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g&&S&&S.alive&&S.kalpa&&S.kalpa.wait&&!g.querySelector('.keB'))g.insertAdjacentHTML('afterbegin',`<button class="opt keB" onclick="keCross()">♾️ ก้าวข้ามกัลป์<small>ตอนนี้รั้งอยู่ที่ขอบของ${KAL_N[S.kalpa.n]||'กัลป์'}</small></button>`)}catch(e){}return r}}
 
+// ===================== กันหน้าต่างเด้งทับกัน: หน้าต่างที่ระบบเปิดเอง (ไม่ได้มาจากการแตะ) ทับตัวเลือก/หน้าต่างที่เปิดอยู่ → รอคิว =====================
+(function(){let lastTap=0,inPY=0;['pointerdown','keydown','touchstart'].forEach(e=>document.addEventListener(e,()=>{lastTap=Date.now()},true));
+ const MQ=[];
+ {const _p=passYear;passYear=function(){inPY++;try{return _p.apply(this,arguments)}finally{inPY--}}}
+ const _mG=modal;modal=function(html,k=''){try{const cur=$('modal').dataset.k||'';
+  if(modalOpen&&cur&&cur!==k&&k!=='choice'&&k!=='duel'&&Date.now()-lastTap>1200&&((cur==='choice'&&choice._cur)||inPY)){if(MQ.length<6&&!(k&&MQ.some(q=>q[1]===k)))MQ.push([html,k]);return}}catch(e){}return _mG.apply(this,arguments)};
+ setInterval(()=>{try{if(!MQ.length||modalOpen||choice._cur||(choice._q&&choice._q.length))return;const[h,k]=MQ.shift();_mG(h,k)}catch(e){}},700);
+ {const _sl=startLife;startLife=function(){MQ.length=0;return _sl.apply(this,arguments)}}})();
+
+try{SYS_GUIDE.push({s:'online',nw:1,ic:'🏆',t:'ฉายาทำเนียบ รายวัน/รายสัปดาห์/รายเดือน อยู่ไหน',go:'openShowPick',d:'ติดอันดับ 1–3 ของทำเนียบ (🌐 ออนไลน์ → ทำเนียบ) แล้วรอรอบตัดสิน · ฉายาจะเข้ามาเองตอนเปิดเกมครั้งถัดไป · ดู/สวมได้ที่ <b>โปรไฟล์ → 🎖️ เลือกฉายาที่จะโชว์ → แท็บ 🏆 อันดับ</b> · เป็นฉายาชั่วคราว ใช้ได้จนกว่ารอบถัดไปจะตัดสิน',te:'Where are daily/weekly rank titles',de:'Place top 3 on a leaderboard; after the round settles the title arrives automatically. Equip it in Profile → Choose title → Rank tab. Temporary until the next round.'})}catch(e){}
 </script>
 </body>
 </html>
