@@ -34212,6 +34212,27 @@ button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:2px so
 *{scrollbar-width:thin;scrollbar-color:#b98a3a66 transparent}
 ::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#b98a3a66;border-radius:8px;border:2px solid transparent;background-clip:padding-box}::-webkit-scrollbar-thumb:hover{background:#b98a3a;background-clip:padding-box;border:2px solid transparent}
 }`;document.head.appendChild(st)}
+
+// 🖥️ เลย์เอาต์จอคอมเพิ่มเติม: ใช้พื้นที่จอกว้างให้คุ้ม ฉากสูงขึ้น คอลัมน์ขยายตามจอ
+{const st=document.createElement('style');st.textContent=`@media (min-width:1000px){
+body.desk .scene{max-height:48vh}body.desk .scene canvas{max-height:46vh}
+body.desk .feed .bub{max-width:860px}
+body.desk #deskC{padding:0 2px}
+body.desk #deskL,body.desk #deskR{scrollbar-gutter:stable}
+body.desk .dmenu .dmb{min-height:52px}
+}
+@media (min-width:1500px){
+body.desk #game.screen{max-width:1640px}
+body.desk #game.on{grid-template-columns:360px minmax(0,1fr) 340px;gap:22px}
+body.desk .modal{max-width:880px}body.desk .mgrid{grid-template-columns:repeat(4,1fr)}
+body.desk .feed .bub{max-width:980px}
+}
+@media (min-width:1800px){
+body.desk #game.screen{max-width:1840px}
+body.desk #game.on{grid-template-columns:380px minmax(0,1fr) 380px}
+body.desk .dk-btns{grid-template-columns:1fr 1fr 1fr}body.desk .dk-btn{min-width:0}
+body.desk .scene{max-height:54vh}body.desk .scene canvas{max-height:52vh}
+}`;document.head.appendChild(st)}
 }catch(e){console.error('ev',e)}})();
 {const _rRt=render;render=function(){const r=_rRt.apply(this,arguments);try{if(S&&S.xian){const t=$('gTags');if(t){t.querySelectorAll('.rootTag').forEach(x=>x.remove());const rt=S.root||rootOf(S.talent);if(rt)t.insertAdjacentHTML('afterbegin',`<span class="tag rootTag">🌱 ${rt}</span>`)}}}catch(e){}return r}}
 
