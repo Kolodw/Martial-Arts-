@@ -115,12 +115,18 @@ async function pay(request, env) {
   if (useOK) {
     // SlipOK: ส่งรูปแบบ multipart · amount = ให้ SlipOK เทียบยอดให้ · log = ให้ SlipOK จำสลิปไว้กันใช้ซ้ำอีกชั้น
     let j, hs = 0;
+    let sz = 0, mt = '';
+    const callOK = async extras => {
+      const bin = Uint8Array.from(atob(img.split(',')[1]), c => c.charCodeAt(0)), fd = new FormData(); sz = bin.length; mt = (img.match(/^data:([^;]+)/) || [])[1] || 'image/jpeg';
+      fd.append('files', new Blob([bin], { type: mt }), 'slip.' + (/png/.test(mt) ? 'png' : 'jpg'));
+      if (extras) { if (!DON) fd.append('amount', String(P.amt)); fd.append('log', 'true') }
+      const r = await fetch('https://api.slipok.com/api/line/apikey/' + encodeURIComponent(String(env.SLIPOK_BRANCH).trim()), { method: 'POST', headers: { 'x-authorization': String(env.SLIPOK_KEY).trim() }, body: fd });
+      hs = r.status; return await r.json().catch(() => null);
+    };
     try {
-      const bin = Uint8Array.from(atob(img.split(',')[1]), c => c.charCodeAt(0)), fd = new FormData();
-      fd.append('files', new Blob([bin], { type: (img.match(/^data:([^;]+)/) || [])[1] || 'image/jpeg' }), 'slip.jpg');
-      if (!DON) fd.append('amount', String(P.amt)); fd.append('log', 'true');
-      const r = await fetch('https://api.slipok.com/api/line/apikey/' + encodeURIComponent(env.SLIPOK_BRANCH), { method: 'POST', headers: { 'x-authorization': env.SLIPOK_KEY }, body: fd });
-      hs = r.status; j = await r.json().catch(() => null);
+      j = await callOK(true);
+      // 1000 = พารามิเตอร์ไม่ถูกต้อง → ลองใหม่แบบส่งแค่รูป (ยอดเทียบเองฝั่งเรา)
+      if (j && Number(j.code || (j.data && j.data.code) || 0) === 1000) j = await callOK(false);
     } catch (e) { return fail('unavailable', 'fetch') }
     if (!j) return fail('unavailable', 'nojson' + hs);
     const code = Number(j.code || (j.data && j.data.code) || 0);
@@ -131,7 +137,7 @@ async function pay(request, env) {
       if (code === 1014) return fail('acct', 'slipok-1014');
       if (code === 1009 || code === 1010) return fail('pending', 'slipok-' + code);
       if (code >= 1005 && code <= 1008 || code === 1011) return fail('noslip', 'slipok-' + code);
-      return fail('unavailable', 'slipok-' + (code || hs) + ':' + String(j.message || '').slice(0, 60));
+      return fail('unavailable', 'slipok-' + (code || hs) + ':' + String(j.message || '').slice(0, 60) + ' [' + mt + ' ' + sz + 'B]');
     }
     raw = j.data;
     ref = String(raw.transRef || '');
