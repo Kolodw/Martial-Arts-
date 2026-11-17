@@ -28034,8 +28034,7 @@ window.vipMenu=function(){const t=T(),v=vget(),near=t&&t<3&&(endOf(v,t)-Date.now
  <div class="vx-free"><b>เล่นฟรีก็เล่นได้เหมือนกัน ไม่ต้องน้อยใจ</b><details><summary>อ่านรายละเอียด</summary><p>ผู้สนับสนุนไม่ได้พลัง เงิน หรือโบนัสในเกม ได้แค่สุ่มเกิดมากขึ้น กับตราประทับ กรอบ และฉายา ชีวิตทุกคนต้องเล่นเองทั้งชีวิตและแข่งทำเนียบด้วยกติกาเดียวกัน · สายฟรีสุ่มเกิดได้ 5 ครั้งต่อชีวิต และแลกกรรมเพิ่มได้ทุกวัน</p></details></div>
  ${stat}${P?tlHtml(P):''}${ins}${ttHtml()}
  ${card('v1')}${card('v2')}${card('v3')}
- <button class="vx-wallb" onclick="vipWall()">${ico('plaque')}<span>เข้าหอผู้ก่อตั้ง<small>ป้ายของผู้ก่อตั้ง เรียงตามวันที่เข้าร่วม</small></span><span class="go">${ico('chev')}</span></button>
- <button class="vx-wallb" onclick="supHall()">${ico('plaque')}<span>หอผู้สนับสนุน<small>อันดับผู้สนับสนุนเกม · เดือนนี้ / ตลอดกาล</small></span><span class="go">${ico('chev')}</span></button>
+ <button class="vx-wallb" onclick="vipWall()">${ico('plaque')}<span>เข้าหอผู้ก่อตั้ง<small>ป้ายผู้ก่อตั้ง · อันดับผู้สนับสนุน (อยู่ในหน้าเดียวกัน)</small></span><span class="go">${ico('chev')}</span></button>
  <details class="vfp"><summary>เงื่อนไขการซื้อ</summary><p class="tag2">ไม่ต่ออายุเอง ไม่มีการตัดเงินอัตโนมัติ · ซื้อซ้ำก่อนหมดอายุจะต่อวันให้ · สิทธิ์ผูกกับบัญชี (ล็อกอิน Google ไว้จะไม่หายเวลาเปลี่ยนเครื่อง) · แนบสลิปแล้วระบบตรวจอัตโนมัติ สิทธิ์เข้าทันที (ถ้าตรวจอัตโนมัติไม่ได้ ผู้พัฒนาตรวจให้ ปกติไม่เกิน 1 วัน) · ถ้าเกิน 48 ชม. ยังไม่ได้ แจ้งบั๊กเพื่อขอคืนเงินได้ · สิทธิ์สุ่มที่ซื้อเป็นแพ็กไม่หายเมื่อ VIP หมดอายุ</p></details>`);
  if(!vipMenu._ld){vipMenu._ld=1;const a=JSON.stringify([vget(),TT]);vxFetch(false).catch(()=>{}).then(()=>{vipMenu._ld=0;if(inVip()&&a!==JSON.stringify([vget(),TT]))vipMenu()})}};
 
@@ -35103,6 +35102,12 @@ window.supJoin=async function(off){const n=($('shlN')||{}).value||'',sa=($('shlS
 // 🔁 ผู้ย้อนกาล: เควสช่วยเพื่อนร่วมชะตาห้ามถูกข้าม — (1) โหมดออโต้หยุดรอ และดวลจริงไม่ถูกตัดสินอัตโนมัติ (2) ถ้ามีเหตุการณ์อื่นเด้งซ้อน ให้ต่อคิวรอ ไม่ให้ชะตาเลือกแทนตัวเลือกที่ค้างอยู่
 {const _chK=choice;choice=function(t,x,o){try{const cur=choice._cur;if(cur&&cur.keep){(choice._q=choice._q||[]).push([t,x,o,S]);return}}catch(e){}const r=_chK.apply(this,arguments);try{if(choice._cur&&/^🔁/.test(String(t)))choice._cur.keep=1}catch(e){}return r}}
 {const _crK=choiceRun;choiceRun=function(i){let rg=false;try{const c=choice._cur;rg=!!(c&&c.keep)}catch(e){}if(rg&&auto){auto=false;try{render()}catch(e){}try{toast('โหมดอัตโนมัติหยุดรอ — เรื่องของเพื่อนร่วมชะตา')}catch(e){}}const r=_crK.apply(this,arguments);try{if(!choice._cur&&choice._q&&choice._q.length){const a=choice._q.shift();if(a[3]===S)setTimeout(()=>{if(!choice._cur&&S===a[3]&&S.alive)choice.call(null,a[0],a[1],a[2]);else if(S===a[3])choice._q.unshift(a)},400)}}catch(e){}return r}}
+
+// 🏯💛 หมวดผู้ก่อตั้ง: แท็บสลับ หอผู้ก่อตั้ง / หอผู้สนับสนุน ในหน้าเดียวกัน
+(()=>{const st=document.createElement('style');st.textContent='.hlTabs{display:flex;gap:6px;margin:0 0 10px}.hlTabs button{flex:1;border:2px solid #c9a24a;background:#2a2016;color:#f1e3c2;border-radius:12px;padding:8px 6px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 3px 0 #000}.hlTabs button.on{background:linear-gradient(#ffe29a,#e8b54a);color:#3a2a08}';document.head.appendChild(st)})();
+const hlTabsH=w=>`<div class="hlTabs"><button class="${w==='f'?'on':''}" onclick="vipWall()">🏯 หอผู้ก่อตั้ง</button><button class="${w==='s'?'on':''}" onclick="supHall()">💛 หอผู้สนับสนุน</button></div>`;
+{const _vw=window.vipWall;window.vipWall=async function(){const r=_vw.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k!=='vipw2'){const h=m.querySelector('h3');if(h&&!m.querySelector('.hlTabs'))h.insertAdjacentHTML('afterend',hlTabsH('f'))}}catch(e){}return r}}
+{const _sh=window.supHall;window.supHall=async function(sc){const p=_sh.apply(this,arguments);try{const m=$('modal');if(m){const hd=m.querySelector('.shl .hd');if(hd&&!m.querySelector('.hlTabs'))hd.insertAdjacentHTML('beforebegin',hlTabsH('s'))}}catch(e){}const r=await p;try{const m=$('modal');const hd=m&&m.querySelector('.shl .hd');if(hd&&!m.querySelector('.hlTabs'))hd.insertAdjacentHTML('beforebegin',hlTabsH('s'))}catch(e){}return r}}
 </script>
 </body>
 </html>
