@@ -27635,14 +27635,14 @@ window.rrMenu=function(){const kb=kbGet(),kk=Math.max(kb.g,kb.e),cap=RR.used>=RR
  <div class="item"><b>☯️ ใช้กรรมแลก</b> <span class="tag2">${kOut?'วันนี้แลกครบแล้ว':`ครั้งนี้ ${fmt(kc)} กรรม`} · มี ${fmt(kk)}</span><button class="gbtn" style="float:right" ${cap||kOut||kk<kc?'disabled':''} onclick="rrUseKarma()">แลก 1 ครั้ง</button><p class="tag2">วันนี้แลกไปแล้ว ${kd.n}/${RR.kday} ครั้ง · ราคาเพิ่มเท่าตัวทุกครั้ง (${fmt(RR.kc)} → ${fmt(RR.kc*2)} → ${fmt(RR.kc*4)} …) รีเซ็ตเที่ยงคืน · ใช้กรรมฝั่งที่มีมากกว่า (กรรมเดียวกับร้านแลกกรอบ)</p></div>
  <h4 style="margin:12px 0 4px">💳 ซื้อสิทธิ์สุ่มเกิด</h4>
  <div class="rrpk">${Object.entries(RR.pk).map(([k,v])=>`<button class="opt" onclick="rrBuy('${k}')"><b>${v[1]} ครั้ง</b><small>${v[0]} บาท · ~${(v[0]/v[1]).toFixed(2)} บาท/ครั้ง</small></button>`).join('')}</div>
- <p class="tag2">สิทธิ์ผูกกับบัญชีของคุณ (ล็อกอิน Google ไว้จะไม่หายเวลาเปลี่ยนเครื่อง) · ได้สิทธิ์หลังผู้พัฒนาตรวจสลิปแล้ว ปกติไม่เกิน 1 วัน · ถ้าเกิน 48 ชม. ยังไม่ได้ แจ้งบั๊กเพื่อขอคืนเงินได้</p>`);
+ <p class="tag2">สิทธิ์ผูกกับบัญชีของคุณ (ล็อกอิน Google ไว้จะไม่หายเวลาเปลี่ยนเครื่อง) · แนบสลิปแล้วระบบตรวจอัตโนมัติ สิทธิ์เข้าทันที (ถ้าตรวจอัตโนมัติไม่ได้ ผู้พัฒนาตรวจให้ ปกติไม่เกิน 1 วัน) · ถ้าเกิน 48 ชม. ยังไม่ได้ แจ้งบั๊กเพื่อขอคืนเงินได้</p>`);
  if(RR.c==null&&!RR.ld){RR.ld=1;rrLoad().then(()=>{RR.ld=0;if(RR.c!=null&&$('modal').querySelector('.rrpk'))rrMenu()})}}
 window.rrUsePaid=async function(btn){if(RR.used>=RR.cap)return toast('ชีวิตนี้ใช้ครบแล้ว');btn.disabled=true;try{const j=await api('rruse',{});RR.c=+j.c||0;toast(`🎟️ ใช้สิทธิ์แล้ว เหลือ ${RR.c} ครั้ง`);rrGo()}catch(e){btn.disabled=false;if(e.message==='none'){RR.c=0;toast('ไม่มีสิทธิ์เหลือแล้ว')}else toast('ใช้สิทธิ์ไม่สำเร็จ ลองใหม่อีกครั้ง')}}
 window.rrUseKarma=function(){if(RR.used>=RR.cap)return toast('ชีวิตนี้ใช้ครบแล้ว');const kd=rrKD();if(kd.n>=RR.kday)return toast('วันนี้แลกด้วยกรรมครบแล้ว');const kc=rrKC(),kb=kbGet(),sd=kb.g>=kb.e?'g':'e';if(kb[sd]<kc)return toast('กรรมไม่พอ');kb[sd]-=kc;kbSet(kb);kd.n++;try{LS.set('murim_rrk',kd)}catch(e){}toast(`☯️ ใช้กรรม${sd==='g'?'ดี':'ชั่ว'} ${fmt(kc)}`);rrGo()}
 window.rrBuy=function(k){const v=RR.pk[k];if(!v)return;
  modal(`<button class="xbtn" onclick="rrMenu()">✕</button><h3>💳 ซื้อสุ่มเกิด ${v[1]} ครั้ง · ${v[0]} บาท</h3>
- <div style="text-align:center"><img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:46vh;border-radius:10px;background:#fff" draggable="false">
- <p style="margin:8px 0 2px">1) สแกนโอน <b>${v[0]} บาท</b> ด้วยแอปธนาคาร</p><p class="tag2">2) แนบสลิปแล้วกดส่งด้านล่าง · ผู้พัฒนาตรวจแล้วสิทธิ์จะเข้าเอง</p>
+ <div style="text-align:center"><img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:36vh;border-radius:10px;background:#fff" draggable="false">
+ <p style="margin:8px 0 2px">1) สแกนโอน <b>${v[0]} บาท</b> ด้วยแอปธนาคาร</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจให้อัตโนมัติ สิทธิ์เข้าทันที</p>
  <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
  <label class="supl">👤 ชื่อบัญชีที่โอน<input id="supPn" maxlength="40" placeholder="ช่วยให้ตรวจเร็วขึ้น"></label>
  <label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>
@@ -27708,7 +27708,7 @@ new MutationObserver(()=>{const b=$('rerollBtn');if(b&&b.disabled&&rerolls<=0&&!
 // หน้าสรุปชีวิต
 {const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);const add=()=>{try{const E=$('end');if(E&&E.innerHTML.trim()&&!E.querySelector('.rrEnd')&&!(S&&S.beastMode)){const host=E.querySelector('.box')||E;host.insertAdjacentHTML('beforeend','<p class="tag2 rrEnd" style="text-align:center;margin-top:10px">ชีวิตหน้าอยากเกิดดีกว่านี้? <button class="sysb" onclick="rrMenu()">🎲 สิทธิ์สุ่มเกิด</button><br><small>สิทธิ์ที่ซื้อเก็บไว้ใช้ได้ทุกชีวิต · ใช้กรรมแลกได้วันละ 5 ครั้ง</small></p>')}}catch(e){}};[50,600,1800].forEach(d=>setTimeout(add,d));return r}}
 // หน้าสนับสนุนผู้พัฒนา
-{const _os=openSupport;openSupport=function(){const r=_os.apply(this,arguments);try{const M=$('modal');if(M&&!M.querySelector('.rrSup')){const P=(window.RR_PKS||{s:[10,12],m:[29,40],l:[59,100]});const h=M.querySelector('h3');(h||M).insertAdjacentHTML(h?'afterend':'beforeend',`<div class="item rrSup"><b>🎲 สนับสนุนแล้วได้สิทธิ์สุ่มเกิดด้วย</b><p class="tag2">เลือกแพ็กแล้วโอนตามยอด สิทธิ์จะเข้าบัญชีหลังผู้พัฒนาตรวจสลิป</p><div class="rrpk">${Object.entries(P).map(([k,v])=>`<button class="opt" onclick="rrBuy('${k}')"><b>${v[1]} ครั้ง</b><small>${v[0]} บาท</small></button>`).join('')}</div></div>`)}}catch(e){}return r}}
+{const _os=openSupport;openSupport=function(){const r=_os.apply(this,arguments);try{const M=$('modal');if(M&&!M.querySelector('.rrSup')){const P=(window.RR_PKS||{s:[10,12],m:[29,40],l:[59,100]});const h=M.querySelector('h3');(h||M).insertAdjacentHTML(h?'afterend':'beforeend',`<div class="item rrSup"><b>🎲 สนับสนุนแล้วได้สิทธิ์สุ่มเกิดด้วย</b><p class="tag2">เลือกแพ็กแล้วโอนตามยอด แนบสลิป ระบบตรวจให้อัตโนมัติ สิทธิ์เข้าทันที</p><div class="rrpk">${Object.entries(P).map(([k,v])=>`<button class="opt" onclick="rrBuy('${k}')"><b>${v[1]} ครั้ง</b><small>${v[0]} บาท</small></button>`).join('')}</div></div>`)}}catch(e){}return r}}
 try{const st=document.createElement('style');st.textContent='#rerollBtn.rrNext{border-color:#e0a020;color:#c07a00;font-weight:800;animation:rrP 1.6s ease-in-out infinite}#rrMore small.rrPr{display:block;font-size:11px;opacity:.75;font-weight:400}';document.head.appendChild(st)}catch(e){}
 })()}catch(e){console.error(e)}
 
@@ -27739,10 +27739,10 @@ try{(()=>{const _of=openFuse;openFuse=function(){const r=_of.apply(this,argument
  if(hi>0)bad.push(`ขั้นวิชาเริ่มใหม่ที่ขั้น 1 (ตัวคูณขั้นเดิมถูกรวมเข้าพลังแล้ว แต่ต้องไต่ขั้นใหม่)`);if(law)bad.push('⚖️ บัลลังก์กฎที่วิชานี้ครองอยู่จะหลุด');if(sel.filter(x=>x.sk).length>1)bad.push('ความสามารถแห่งกัลป์ติดมาได้แค่อย่างเดียว');
  const b=M.querySelector('.pbtn');if(b)b.insertAdjacentHTML('beforebegin',`<div class="item" style="margin-top:6px"><p class="tag2">✅ ติดไปกับวิชาใหม่: ${ok.join(' · ')}</p>${bad.length?`<p class="tag2" style="color:#e07a5a">⚠️ ${bad.join(' · ')}</p>`:''}</div>`)}catch(e){console.error(e)}return r}})()}catch(e){console.error(e)}
 
-// ===================== v17.41 🏮 ผู้อุปถัมภ์สำนัก: สุ่มเกิดต่อชีวิต 30/60/100 · ตราประทับ · กรอบ · ป้ายในแชท · สุ่มรัว · หอบรรพชน (ไม่มีพลัง/เงินในเกม) =====================
+// ===================== v17.41 🏮 ผู้สนับสนุน: สุ่มเกิดต่อชีวิต 30/60/100 · ตราประทับ · กรอบ · ป้ายในแชท · สุ่มรัว · หอผู้ก่อตั้ง (ไม่มีพลัง/เงินในเกม) =====================
 try{(()=>{
-const TOT=[5,30,60,100],NM=['','ผู้อุปถัมภ์สำนัก','ผู้อาวุโสอุปถัมภ์','บรรพชนผู้อุปถัมภ์'],IC=['','🏮','🏯','👑'],SL=['','สำนัก','อาวุโส','บรรพชน'];
-const PK={v1:[39,1,'30 วัน'],v2:[99,2,'30 วัน'],v3:[599,3,'ถาวร']};
+const TOT=[5,30,60,100],NM=['','ผู้สนับสนุน','ผู้สนับสนุนพิเศษ','ผู้ก่อตั้ง'],IC=['','🏮','🏯','👑'],SL=['','สนับสนุน','พิเศษ','ก่อตั้ง'];
+const PK={v1:[39,1,'30 วัน'],v2:[99,2,'30 วัน'],v3:[599,3,'ตลอดไป']};
 let V=null;try{V=LS.get('murim_vip',null)}catch(e){}
 const tierOf=v=>!v?0:v.u?3:(v.e2||0)>Date.now()?2:(v.e1||0)>Date.now()?1:0;
 window.vipT=()=>tierOf(V);window.vipTot=()=>TOT[tierOf(V)];
@@ -27752,16 +27752,16 @@ const dTxt=ms=>new Date(ms).toLocaleDateString('th-TH',{day:'numeric',month:'sho
 const endOf=t=>t===2?V.e2:V.e1,daysLeft=t=>Math.max(1,Math.ceil((endOf(t)-Date.now())/864e5));
 const seal=(t,x)=>`<span class="vseal vs${t}${x||''}"><b>${t===3&&V&&V.ul?'№'+V.ul.o:SL[t]}</b></span>`;
 // กรอบรอบอวตาร: ต่างกันที่โครงสร้างเส้น (เดี่ยว / คู่ / คู่+มุมทอง)
-try{FRAMES.push({id:'f_vip1',n:'กรอบสำนัก',side:'h',c:0,ty:'static',c1:'#b8372a',c2:'#b8372a',d:'ผู้อุปถัมภ์สำนัก · เส้นเดี่ยวสีชาด'},
- {id:'f_vip2',n:'กรอบอาวุโส',side:'h',c:0,ty:'ring2',c1:'#a02d24',c2:'#d8c9a0',d:'ผู้อาวุโสอุปถัมภ์ · เส้นคู่'},
- {id:'f_vip3',n:'กรอบบรรพชน',side:'h',c:0,ty:'ring2 corner',c1:'#c9a24a',c2:'#f0dc9a',d:'บรรพชนผู้อุปถัมภ์ · ขอบทองเส้นคู่ มุมประดับ'})}catch(e){}
+try{FRAMES.push({id:'f_vip1',n:'กรอบผู้สนับสนุน',side:'h',c:0,ty:'static',c1:'#b8372a',c2:'#b8372a',d:'ผู้สนับสนุน · เส้นเดี่ยวสีชาด'},
+ {id:'f_vip2',n:'กรอบผู้สนับสนุนพิเศษ',side:'h',c:0,ty:'ring2',c1:'#a02d24',c2:'#d8c9a0',d:'ผู้สนับสนุนพิเศษ · เส้นคู่'},
+ {id:'f_vip3',n:'กรอบผู้ก่อตั้ง',side:'h',c:0,ty:'ring2 corner',c1:'#c9a24a',c2:'#f0dc9a',d:'ผู้ก่อตั้ง · ขอบทองเส้นคู่ มุมประดับ'})}catch(e){}
 function vipFrames(){try{const t=tierOf(V),d=frGet();let ch=0;[['f_vip1',1],['f_vip2',2],['f_vip3',3]].forEach(([id,n])=>{const has=d.own.includes(id);if(t>=n&&!has){d.own.push(id);ch=1}else if(t<n&&has){d.own=d.own.filter(x=>x!==id);if(d.eq===id)d.eq=null;ch=1}});if(ch){frSet(d);try{profPush()}catch(e){}}}catch(e){}}
 window.vipSet=function(v){try{if(!v)return;V={e1:+v.e1||0,e2:+v.e2||0,u:v.u?1:0,ul:v.ul||null};LS.set('murim_vip',V);const t=tierOf(V),tot=TOT[t],rr=R();
   if(rr.tot!=null&&tot>rr.tot&&!(typeof ADM!=='undefined'&&ADM.ok&&ADM.rr)&&CFG.chm!=1&&!CFG.daily&&$('birth')&&$('birth').classList.contains('on')){rerolls+=tot-rr.tot;$('rr').textContent=rerolls}
   rr.tot=tot;vipFrames();
   const ymd=new Date().toISOString().slice(0,10);
   if(t&&t<3){const dl=(endOf(t)-Date.now())/864e5;if(dl<=3&&LS.get('murim_vipw','')!==ymd){LS.set('murim_vipw',ymd);toast(`${IC[t]} ${NM[t]} เหลืออีก ${Math.max(1,Math.ceil(dl))} วัน — ซื้อต่อได้ที่ปุ่ม 🎲 สุ่มเพิ่ม`)}}
-  const lastEx=Math.max(V.e1,V.e2);if(!t&&lastEx&&LS.get('murim_vipx',0)!==lastEx){LS.set('murim_vipx',lastEx);toast('🏮 สิทธิ์ผู้อุปถัมภ์หมดอายุแล้ว — สุ่มฟรี 5 ครั้งเหมือนเดิม · สิทธิ์สุ่มที่ซื้อเป็นแพ็กยังอยู่')}
+  const lastEx=Math.max(V.e1,V.e2);if(!t&&lastEx&&LS.get('murim_vipx',0)!==lastEx){LS.set('murim_vipx',lastEx);toast('🏮 สิทธิ์ผู้สนับสนุนหมดอายุแล้ว — สุ่มฟรี 5 ครั้งเหมือนเดิม · สิทธิ์สุ่มที่ซื้อเป็นแพ็กยังอยู่')}
  }catch(e){console.error(e)}};
 setTimeout(vipFrames,1500);
 {const _gb=goBirth;goBirth=function(){const r=_gb.apply(this,arguments);try{if(CFG.chm!=1&&!(typeof ADM!=='undefined'&&ADM.ok&&ADM.rr)){rerolls=TOT[tierOf(V)];$('rr').textContent=rerolls}R().tot=TOT[tierOf(V)];try{const b=$('rerollBtn');if(b&&rerolls>0)b.disabled=false}catch(e){}}catch(e){}return r}}
@@ -27770,35 +27770,35 @@ setTimeout(vipFrames,1500);
 // หน้า 🎲 สุ่มเพิ่ม: สถานะแถวเดียว · ทางเข้า VIP · ย่อข้อความเล็ก · แก้บรรทัดราคา
 {const _rm=rrMenu;window.rrMenu=rrMenu=function(){const r=_rm.apply(this,arguments);try{const m=$('modal'),h=m&&m.querySelector('h3');if(!h||m.querySelector('#vipEnt'))return r;const t=tierOf(V),rc=R();
   const st=m.querySelector('p.tag2');if(st&&/สุ่มฟรีเหลือ/.test(st.textContent)){st.outerHTML=`<div class="rrst"><span>ฟรี <b>${rerolls}</b></span><span>ซื้อไว้ <b>${rc.c==null?'…':fmt(rc.c)}</b></span><span>ชีวิตนี้ใช้เพิ่ม <b>${rc.used||0}/${rc.cap||10}</b></span></div>`}
-  h.insertAdjacentHTML('afterend',`<div id="vipEnt" class="vipent"><button class="gbtn" onclick="vipMenu()">${t?seal(t,' mini')+' <span>'+NM[t]+'<small>'+(t===3?(V.ul?'ลำดับที่ '+V.ul.o:'ถาวร'):'อีก '+daysLeft(t)+' วัน')+'</small></span>':'<span>ผู้อุปถัมภ์สำนัก<small>สุ่มเกิด 30–100 ครั้งต่อชีวิต</small></span>'}</button>${t>=2?'<button class="gbtn" onclick="vipAutoMenu()">⚡ สุ่มรัว</button>':''}</div>`);
+  h.insertAdjacentHTML('afterend',`<div id="vipEnt" class="vipent"><button class="gbtn" onclick="vipMenu()">${t?seal(t,' mini')+' <span>'+NM[t]+'<small>'+(t===3?(V.ul?'ลำดับที่ '+V.ul.o:'ตลอดไป'):'อีก '+daysLeft(t)+' วัน')+'</small></span>':'<span>ผู้สนับสนุน<small>สุ่มเกิด 30–100 ครั้งต่อชีวิต</small></span>'}</button>${t>=2?'<button class="gbtn" onclick="vipAutoMenu()">⚡ สุ่มรัว</button>':''}</div>`);
   m.querySelectorAll('.rrpk small').forEach(x=>{x.innerHTML=x.textContent.replace(/\s*·\s*/,'<br>')});
   const ps=[...m.querySelectorAll('p.tag2')],last=ps[ps.length-1];
   if(last&&/ผูกกับบัญชี/.test(last.textContent)){const hint=document.createElement('p');hint.className='tag2';hint.style.margin='4px 0 0';hint.textContent='ไม่ซื้อก็เล่นได้เหมือนกัน — สุ่มฟรี 5 ครั้ง และแลกกรรมเพิ่มได้ทุกวัน';last.outerHTML=`<details class="vfp"><summary>เงื่อนไขการซื้อ</summary><p class="tag2">${last.innerHTML}</p></details>`;m.querySelector('.vipent').insertAdjacentElement('afterend',hint)}
  }catch(e){console.error(e)}return r}}
 const card=(k,nm,price,per,ls,btn,extra)=>{const n=PK[k][1];return`<div class="vcard vt${n}${tierOf(V)===n?' on':''}"><div class="vhd">${seal(n,k==='v3'?'':'')}<div><div class="vnm">${nm}</div><div class="vpr">${price} บาท <small>${per}</small></div></div></div><ul>${ls.map(x=>`<li>${x}</li>`).join('')}</ul>${extra||''}<button class="pbtn vbuy vt${n}" onclick="vipBuy('${k}')">${btn}</button></div>`};
 window.vipMenu=function(){const t=tierOf(V),near=t&&t<3&&(endOf(t)-Date.now())<3*864e5;
- const stat=t?`<div class="vstat">${seal(t,near?' fade':'')}<div><b>${NM[t]}</b><br><span class="tag2">${t===3?(V.ul?`ลำดับที่ ${V.ul.o} · เข้าร่วม ${dTxt(V.ul.t)}`:'ถาวร'):`ถึง ${dTxt(endOf(t))} · อีก ${daysLeft(t)} วัน${near?' — ใกล้หมดอายุ':''}`} · สุ่มเกิด ${TOT[t]} ครั้งต่อชีวิต</span></div></div>`:'';
- const ins=t===3&&V.ul?`<div class="vins"><label class="tag2">คำจารึกบนป้ายของคุณในหอบรรพชน (ไม่เกิน 40 ตัวอักษร)</label><div style="display:flex;gap:6px"><input id="vipW" maxlength="40" value="${esc(V.ul.w||'')}" placeholder="เช่น ขอให้เกมนี้อยู่ไปนานๆ"><button class="gbtn" onclick="vipSay(this)">บันทึก</button></div></div>`:'';
- modal(`<button class="xbtn" onclick="rrMenu()">✕</button><h3>ผู้อุปถัมภ์สำนัก</h3>
- <div class="vipfree"><b>เล่นฟรีก็เล่นได้เหมือนกัน ไม่ต้องน้อยใจนะ</b><br>ผู้อุปถัมภ์ไม่ได้พลัง เงิน หรือโบนัสในเกมเลย ได้แค่สุ่มเกิดได้มากขึ้น กับตราประทับ กรอบ และป้ายชื่อ ชีวิตทุกคนต้องเล่นเองทั้งชีวิตและแข่งทำเนียบด้วยกติกาเดียวกัน · สายฟรีสุ่มเกิดได้ <b>5 ครั้งต่อชีวิต</b> และแลกกรรมเพิ่มได้ทุกวัน</div>
+ const stat=t?`<div class="vstat">${seal(t,near?' fade':'')}<div><b>${NM[t]}</b><br><span class="tag2">${t===3?(V.ul?`ลำดับที่ ${V.ul.o} · เข้าร่วม ${dTxt(V.ul.t)}`:'ตลอดไป'):`ถึง ${dTxt(endOf(t))} · อีก ${daysLeft(t)} วัน${near?' — ใกล้หมดอายุ':''}`} · สุ่มเกิด ${TOT[t]} ครั้งต่อชีวิต</span></div></div>`:'';
+ const ins=t===3&&V.ul?`<div class="vins"><label class="tag2">คำจารึกบนป้ายของคุณในหอผู้ก่อตั้ง (ไม่เกิน 40 ตัวอักษร)</label><div style="display:flex;gap:6px"><input id="vipW" maxlength="40" value="${esc(V.ul.w||'')}" placeholder="เช่น ขอให้เกมนี้อยู่ไปนานๆ"><button class="gbtn" onclick="vipSay(this)">บันทึก</button></div></div>`:'';
+ modal(`<button class="xbtn" onclick="rrMenu()">✕</button><h3>ผู้สนับสนุน</h3>
+ <div class="vipfree"><b>เล่นฟรีก็เล่นได้เหมือนกัน ไม่ต้องน้อยใจนะ</b><br>ผู้สนับสนุนไม่ได้พลัง เงิน หรือโบนัสในเกมเลย ได้แค่สุ่มเกิดได้มากขึ้น กับตราประทับ กรอบ และป้ายชื่อ ชีวิตทุกคนต้องเล่นเองทั้งชีวิตและแข่งทำเนียบด้วยกติกาเดียวกัน · สายฟรีสุ่มเกิดได้ <b>5 ครั้งต่อชีวิต</b> และแลกกรรมเพิ่มได้ทุกวัน</div>
  ${stat}${ins}
- ${card('v1','ผู้อุปถัมภ์สำนัก',39,'/ 30 วัน',['สุ่มเกิดได้ <b>30 ครั้ง</b>ต่อชีวิต','ตราประทับชาดเส้นเดี่ยว · กรอบอวตารเส้นเดี่ยว','ป้าย 🏮 หน้าชื่อในแชท'],'สมัคร 39 บาท / 30 วัน')}
- ${card('v2','ผู้อาวุโสอุปถัมภ์',99,'/ 30 วัน',['สุ่มเกิดได้ <b>60 ครั้ง</b>ต่อชีวิต','ตราประทับชาดเส้นคู่ · กรอบอวตารเส้นคู่','แลกกรรมสุ่มได้วันละ 8 ครั้ง (ปกติ 5)','ปุ่ม ⚡ สุ่มรัว — ตั้งเงื่อนไขแล้วระบบสุ่มให้เอง'],'สมัคร 99 บาท / 30 วัน')}
- ${card('v3','บรรพชนผู้อุปถัมภ์',599,'ครั้งเดียว ถาวร',['สุ่มเกิดได้ <b>100 ครั้ง</b>ต่อชีวิต ตลอดไป','ทุกอย่างของผู้อาวุโส ตลอดไป · ตราทองแกะลาย กรอบขอบทอง','ลำดับที่ของคุณ เช่น "บรรพชนลำดับที่ 47" ซื้อซ้ำไม่ได้','ป้ายตั้งชื่อ คำจารึก และจุดธูปในหอบรรพชน'],'ซื้อถาวร 599 บาท','<div class="vcmp">599 บาท ≈ 99 บาท × 6 เดือน · จ่ายครั้งเดียว คุ้มตั้งแต่เดือนที่ 7</div>')}
- <button class="gbtn" style="width:100%;margin-top:4px" onclick="vipWall()">เข้าหอบรรพชน ›</button>
- <details class="vfp"><summary>เงื่อนไขการซื้อ</summary><p class="tag2">ไม่ต่ออายุเอง ไม่มีการตัดเงินอัตโนมัติ · ซื้อซ้ำก่อนหมดอายุจะต่อวันให้ · สิทธิ์ผูกกับบัญชี (ล็อกอิน Google ไว้จะไม่หายเวลาเปลี่ยนเครื่อง) · ได้สิทธิ์หลังผู้พัฒนาตรวจสลิปแล้ว ปกติไม่เกิน 1 วัน · ถ้าเกิน 48 ชม. ยังไม่ได้ แจ้งบั๊กเพื่อขอคืนเงินได้ · สิทธิ์สุ่มที่ซื้อเป็นแพ็กไม่หายเมื่อ VIP หมดอายุ</p></details>`);
+ ${card('v1','ผู้สนับสนุน',39,'/ 30 วัน',['สุ่มเกิดได้ <b>30 ครั้ง</b>ต่อชีวิต','ตราประทับชาดเส้นเดี่ยว · กรอบอวตารเส้นเดี่ยว','ป้าย 🏮 หน้าชื่อในแชท'],'สมัคร 39 บาท / 30 วัน')}
+ ${card('v2','ผู้สนับสนุนพิเศษ',99,'/ 30 วัน',['สุ่มเกิดได้ <b>60 ครั้ง</b>ต่อชีวิต','ตราประทับชาดเส้นคู่ · กรอบอวตารเส้นคู่','แลกกรรมสุ่มได้วันละ 8 ครั้ง (ปกติ 5)','ปุ่ม ⚡ สุ่มรัว — ตั้งเงื่อนไขแล้วระบบสุ่มให้เอง'],'สมัคร 99 บาท / 30 วัน')}
+ ${card('v3','ผู้ก่อตั้ง',599,'ครั้งเดียว ตลอดไป',['สุ่มเกิดได้ <b>100 ครั้ง</b>ต่อชีวิต ตลอดไป','ทุกอย่างของผู้อาวุโส ตลอดไป · ตราทองแกะลาย กรอบขอบทอง','ลำดับที่ของคุณ เช่น "บรรพชนลำดับที่ 47" ซื้อซ้ำไม่ได้','ป้ายตั้งชื่อ คำจารึก และจุดธูปในหอผู้ก่อตั้ง'],'ซื้อตลอดไป 599 บาท','<div class="vcmp">599 บาท ≈ 99 บาท × 6 เดือน · จ่ายครั้งเดียว คุ้มตั้งแต่เดือนที่ 7</div>')}
+ <button class="gbtn" style="width:100%;margin-top:4px" onclick="vipWall()">เข้าหอผู้ก่อตั้ง ›</button>
+ <details class="vfp"><summary>เงื่อนไขการซื้อ</summary><p class="tag2">ไม่ต่ออายุเอง ไม่มีการตัดเงินอัตโนมัติ · ซื้อซ้ำก่อนหมดอายุจะต่อวันให้ · สิทธิ์ผูกกับบัญชี (ล็อกอิน Google ไว้จะไม่หายเวลาเปลี่ยนเครื่อง) · แนบสลิปแล้วระบบตรวจอัตโนมัติ สิทธิ์เข้าทันที (ถ้าตรวจอัตโนมัติไม่ได้ ผู้พัฒนาตรวจให้ ปกติไม่เกิน 1 วัน) · ถ้าเกิน 48 ชม. ยังไม่ได้ แจ้งบั๊กเพื่อขอคืนเงินได้ · สิทธิ์สุ่มที่ซื้อเป็นแพ็กไม่หายเมื่อ VIP หมดอายุ</p></details>`);
  try{api('rrget').then(j=>{if(j&&j.vip){const o=JSON.stringify(V);vipSet(j.vip);if(o!==JSON.stringify(V)&&$('modal').querySelector('.vcard'))vipMenu()}}).catch(()=>{})}catch(e){}};
 window.vipSay=async function(b){const w=(($('vipW')||{}).value||'').trim();b.disabled=true;try{const j=await api('vipsay',{w});if(V&&V.ul)V.ul.w=j.w||'';try{LS.set('murim_vip',V)}catch(e){}toast('จารึกบนป้ายแล้ว')}catch(e){toast('บันทึกไม่สำเร็จ')}b.disabled=false};
 let WALL=[];
-window.vipWall=async function(){modal(`<button class="xbtn" onclick="vipMenu()">✕</button><h3>หอบรรพชน</h3><p class="tag2">ป้ายของผู้อุปถัมภ์ถาวร เรียงตามวันที่เข้าร่วม ทุกคนจ่ายเท่ากัน · กด "จุดธูป" เพื่อคารวะป้ายใดป้ายหนึ่ง</p><div id="vipWallL" class="tag2">กำลังโหลด…</div>`);
+window.vipWall=async function(){modal(`<button class="xbtn" onclick="vipMenu()">✕</button><h3>หอผู้ก่อตั้ง</h3><p class="tag2">ป้ายของผู้ก่อตั้ง เรียงตามวันที่เข้าร่วม ทุกคนจ่ายเท่ากัน · กด "จุดธูป" เพื่อคารวะป้ายใดป้ายหนึ่ง</p><div id="vipWallL" class="tag2">กำลังโหลด…</div>`);
  try{const j=await api('vipwall');WALL=(j&&j.n)||[];const el=$('vipWallL');if(!el)return;el.className='';el.innerHTML=WALL.length?`<div class="vtabs">${WALL.map(tabHtml).join('')}</div>`:'<p class="tag2">ยังไม่มีป้ายในหอ</p>'}catch(e){const el=$('vipWallL');if(el)el.textContent='โหลดไม่สำเร็จ'}};
 const tabHtml=r=>`<div class="vtab${r.k?' mine':''}" data-o="${r.o}"><div class="vto">ลำดับที่ ${r.o}</div><div class="vtn">${esc(r.n||'ไม่ระบุนาม')}</div><div class="vtd">${dTxt(r.t)}</div><div class="vtw">${r.w?esc(r.w):'<i>—</i>'}</div><div class="vtinc">${incHtml(r)}</div></div>`;
 const incHtml=r=>`<span class="sticks">${('<i class="stk'+(r.m?' lit':'')+'"></i>').repeat(Math.min(5,r.c))}</span><button class="gbtn" ${r.m?'disabled':''} onclick="vipInc(${r.o},this)">${r.m?'จุดแล้ว':'จุดธูป'}${r.c?` · ${r.c}`:''}</button>`;
 window.vipInc=async function(o,b){b.disabled=true;try{const j=await api('vipinc',{o});const r=WALL.find(x=>x.o===o);if(r){r.m=1;r.c=j.c||r.c+1;const el=document.querySelector(`.vtab[data-o="${o}"] .vtinc`);if(el)el.innerHTML=incHtml(r)}try{sfx('good')}catch(e){}}catch(e){b.disabled=false;toast('จุดธูปไม่สำเร็จ')}};
 window.vipBuy=function(k){const v=PK[k];if(!v)return;
  modal(`<button class="xbtn" onclick="vipMenu()">✕</button><h3>${NM[v[1]]} · ${v[0]} บาท (${v[2]})</h3>
- <div style="text-align:center"><img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:46vh;border-radius:10px;background:#fff" draggable="false">
- <p style="margin:8px 0 2px">1) สแกนโอน <b>${v[0]} บาท</b> ด้วยแอปธนาคาร</p><p class="tag2">2) แนบสลิปแล้วกดส่งด้านล่าง · ผู้พัฒนาตรวจแล้วสิทธิ์จะเข้าเอง</p>
+ <div style="text-align:center"><img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:36vh;border-radius:10px;background:#fff" draggable="false">
+ <p style="margin:8px 0 2px">1) สแกนโอน <b>${v[0]} บาท</b> ด้วยแอปธนาคาร</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจให้อัตโนมัติ สิทธิ์เข้าทันที</p>
  <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
  <label class="supl">👤 ชื่อบัญชีที่โอน<input id="supPn" maxlength="40" placeholder="ช่วยให้ตรวจเร็วขึ้น"></label>
  <label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>
@@ -27810,7 +27810,7 @@ window.vipPaid=async function(btn,k){const v=PK[k],pn=(($('supPn')||{}).value||'
   btn.textContent='✅ ส่งแล้ว — รอตรวจสลิป';toast('🙏 ส่งแล้ว ผู้พัฒนาตรวจแล้วสิทธิ์จะเข้าเอง');try{sfx('good')}catch(e){}}
  catch(e){btn.disabled=false;btn.textContent='📨 ส่งสลิป';toast(e.message==='rate'?'เพิ่งส่งไป รอสักครู่แล้วลองใหม่':'ส่งไม่สำเร็จ ลองใหม่อีกครั้ง')}};
 const AUTO=[[.1,'ติด 10% บนสุด','เฉลี่ยราว 10 ครั้ง'],[.03,'ติด 3% บนสุด','เฉลี่ยราว 30 ครั้ง'],[.01,'ติด 1% บนสุด','เฉลี่ยราว 100 ครั้ง'],[.001,'ติด 0.1% บนสุด','ยากมาก มักไม่พอ']];
-window.vipAutoMenu=function(){if(tierOf(V)<2)return toast('สุ่มรัวสำหรับผู้อาวุโสอุปถัมภ์ขึ้นไป');
+window.vipAutoMenu=function(){if(tierOf(V)<2)return toast('สุ่มรัวสำหรับผู้สนับสนุนพิเศษขึ้นไป');
  modal(`<button class="xbtn" onclick="rrMenu()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tag2">ระบบสุ่มให้เองจนกว่าจะได้ชีวิตที่หายากตามที่เลือก (ใช้โควตาสุ่มฟรีของชีวิตนี้ เหลือ ${rerolls} ครั้ง) · ถ้าสุ่มหมดก่อนเจอ จะอยู่ที่ผลสุดท้าย</p>
  <div class="rrpk" style="grid-template-columns:1fr 1fr">${AUTO.map((a,i)=>`<button class="opt" onclick="vipAutoGo(${i})"><b>${a[1]}</b><small>${a[2]}</small></button>`).join('')}</div>
  <label class="supl" style="display:flex;gap:6px;align-items:center;margin-top:8px"><input type="checkbox" id="vaNb" checked> ไม่เอาพรสวรรค์ร้าย / ร่างกายบกพร่อง</label>`)};
@@ -27860,9 +27860,9 @@ function own(){const t=Date.now();if(t-ownT<3000)return;ownT=t;try{add(LS.get('m
 {const _j=Response.prototype.json;Response.prototype.json=function(){return _j.apply(this,arguments).then(j=>{try{walk(j,0)}catch(e){}return j})}}
 })()}catch(e){console.error(e)}
 
-// ===================== v18.1 🏮 หน้า VIP/สุ่มเกิดใหม่: การ์ดต่างวัสดุ · แพ็กคุ้มสุด · สถานะการจ่าย · หน้าจอ "ได้รับแล้ว" · ฉายา · หอบรรพชนเข้ม =====================
+// ===================== v18.1 🏮 หน้า VIP/สุ่มเกิดใหม่: การ์ดต่างวัสดุ · แพ็กคุ้มสุด · สถานะการจ่าย · หน้าจอ "ได้รับแล้ว" · ฉายา · หอผู้ก่อตั้งเข้ม =====================
 try{(()=>{
-const NM=['','ผู้อุปถัมภ์สำนัก','ผู้อาวุโสอุปถัมภ์','บรรพชนผู้อุปถัมภ์'],SLb=['','สำนัก','อาวุโส','บรรพชน'];
+const NM=['','ผู้สนับสนุน','ผู้สนับสนุนพิเศษ','ผู้ก่อตั้ง'],SLb=['','สนับสนุน','พิเศษ','ก่อตั้ง'];
 const PK={v1:[39,1,30],v2:[99,2,30],v3:[599,3,0]};
 const vget=()=>{try{return LS.get('murim_vip',null)}catch(e){return null}};
 const tierOf=v=>!v?0:v.u?3:(v.e2||0)>Date.now()?2:(v.e1||0)>Date.now()?1:0;
@@ -27900,8 +27900,8 @@ async function vxFetch(re){const RR=window._RR||{};const j=await api('rrget');if
 // ---------- หน้า 🎲 สุ่มเกิดเพิ่ม ----------
 window.rrMenu=function(){const RR=window._RR||{pk:{},used:0,cap:10,kday:5,kc:1000},kb=kbGet(),kk=Math.max(kb.g,kb.e),cap=RR.used>=RR.cap,kd=kdGet(),kc=window.rrKC?window.rrKC():1000,kOut=kd.n>=RR.kday,t=T(),v=vget(),P=pend();
  const pk=Object.entries(RR.pk||{}),u0=pk.length?pk[0][1][0]/pk[0][1][1]:1;
- const ent=t?`<button class="vx-ent" onclick="vipMenu()">${seal(t,' mini')}<span><b>${NM[t]}</b><small>${t===3?(v.ul?'ลำดับที่ '+v.ul.o:'ถาวร'):'อีก '+daysLeft(v,t)+' วัน'} · สุ่มเกิด ${[0,30,60,100][t]} ครั้งต่อชีวิต</small></span><span class="go">${ico('chev')}</span></button>`
-  :`<button class="vx-ent" onclick="vipMenu()"><span class="vx-ei">${ico('lantern')}</span><span><b>ผู้อุปถัมภ์สำนัก</b><small>สุ่มเกิด 30–100 ครั้งต่อชีวิต · ตราประทับ · กรอบ · ฉายา</small></span><span class="go">${ico('chev')}</span></button>`;
+ const ent=t?`<button class="vx-ent" onclick="vipMenu()">${seal(t,' mini')}<span><b>${NM[t]}</b><small>${t===3?(v.ul?'ลำดับที่ '+v.ul.o:'ตลอดไป'):'อีก '+daysLeft(v,t)+' วัน'} · สุ่มเกิด ${[0,30,60,100][t]} ครั้งต่อชีวิต</small></span><span class="go">${ico('chev')}</span></button>`
+  :`<button class="vx-ent" onclick="vipMenu()"><span class="vx-ei">${ico('lantern')}</span><span><b>ผู้สนับสนุน</b><small>สุ่มเกิด 30–100 ครั้งต่อชีวิต · ตราประทับ · กรอบ · ฉายา</small></span><span class="go">${ico('chev')}</span></button>`;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3 class="vx-rr">สุ่มเกิดเพิ่ม</h3>
  ${ent}${t>=2?'<button class="vx-auto" onclick="vipAutoMenu()">'+ico('bolt')+'<span>สุ่มรัว <small>ตั้งเงื่อนไขแล้วระบบสุ่มให้เอง</small></span></button>':''}
  <div class="vx-chips"><div><b>${rerolls}</b><span>ฟรี</span></div><div><b>${RR.c==null?'…':fmt(RR.c)}</b><span>ซื้อไว้</span></div><div><b>${RR.used||0}/${RR.cap||10}</b><span>ใช้เพิ่มชีวิตนี้</span></div></div>
@@ -27912,7 +27912,7 @@ window.rrMenu=function(){const RR=window._RR||{pk:{},used:0,cap:10,kday:5,kc:100
  <h4 class="vx-h4">ซื้อสิทธิ์สุ่มเกิด</h4>
  <div class="vx-packs">${pk.map(([k,x],i)=>{const per=x[0]/x[1],sv=Math.round((1-per/u0)*100),best=i===pk.length-1&&pk.length>1;return`<button class="vx-pk${best?' best':''}" onclick="rrBuy('${k}')">${best?'<span class="vx-rib">คุ้มสุด</span>':''}<span class="n">${x[1]}</span><span class="u">ครั้ง</span><span class="s">${sv>0?'ถูกกว่า '+sv+'%':'&nbsp;'}</span><span class="p">${x[0]} บาท</span><span class="u">${per.toFixed(2)} บ./ครั้ง</span></button>`}).join('')}</div>
  <p class="vx-note">ไม่ซื้อก็เล่นได้เหมือนกัน — สุ่มฟรี 5 ครั้ง และแลกกรรมเพิ่มได้ทุกวัน · สิทธิ์ที่ซื้อไม่มีวันหมดอายุ</p>
- <details class="vfp"><summary>เงื่อนไขการซื้อ</summary><p class="tag2">สิทธิ์ผูกกับบัญชีของคุณ (ล็อกอิน Google ไว้จะไม่หายเวลาเปลี่ยนเครื่อง) · ได้สิทธิ์หลังผู้พัฒนาตรวจสลิปแล้ว ปกติไม่เกิน 1 วัน · ถ้าเกิน 48 ชม. ยังไม่ได้ แจ้งบั๊กเพื่อขอคืนเงินได้ · ไม่มีการตัดเงินอัตโนมัติ</p></details>`);
+ <details class="vfp"><summary>เงื่อนไขการซื้อ</summary><p class="tag2">สิทธิ์ผูกกับบัญชีของคุณ (ล็อกอิน Google ไว้จะไม่หายเวลาเปลี่ยนเครื่อง) · แนบสลิปแล้วระบบตรวจอัตโนมัติ สิทธิ์เข้าทันที (ถ้าตรวจอัตโนมัติไม่ได้ ผู้พัฒนาตรวจให้ ปกติไม่เกิน 1 วัน) · ถ้าเกิน 48 ชม. ยังไม่ได้ แจ้งบั๊กเพื่อขอคืนเงินได้ · ไม่มีการตัดเงินอัตโนมัติ</p></details>`);
  if(RR.c==null&&!RR.ld){RR.ld=1;vxFetch(false).catch(()=>{}).then(()=>{RR.ld=0;if(inRR())rrMenu()})}}
 
 // ---------- หน้า VIP ----------
@@ -27920,31 +27920,31 @@ const F=(ic,x)=>`<li>${ico(ic)}<span>${x}</span></li>`;
 function card(k){const n=PK[k][1],t=T(),v=vget(),have=t===n,low=t===3&&n<3;
  const L={1:[F('dice','สุ่มเกิดได้ <b>30 ครั้ง</b>ต่อชีวิต'),F('stamp','ตราประทับชาด <b>เส้นเดี่ยว</b>'),F('frame','กรอบอวตารเส้นเดี่ยวสีชาด'),F('lantern','ป้ายโคมหน้าชื่อในแชท'),F('tag','ฉายา เลือกจากชุดสำเร็จรูป 6 ชื่อ')],
   2:[F('dice','สุ่มเกิดได้ <b>60 ครั้ง</b>ต่อชีวิต'),F('stamp','ตราประทับชาด <b>เส้นคู่</b>'),F('frame','กรอบอวตารเส้นคู่'),F('yin','แลกกรรมสุ่มได้วันละ <b>8 ครั้ง</b> (ปกติ 5)'),F('bolt','ปุ่ม <b>สุ่มรัว</b> ตั้งเงื่อนไขแล้วระบบสุ่มให้เอง'),F('tag','ฉายาเลือกจากชุดสำเร็จรูป')],
-  3:[F('dice','สุ่มเกิดได้ <b>100 ครั้ง</b>ต่อชีวิต ตลอดไป'),F('stamp','ตราทองแกะลาย พร้อม <b>เลขลำดับ</b> ซื้อซ้ำไม่ได้'),F('frame','กรอบขอบทองเส้นคู่ ประดับมุม'),F('plaque','ป้ายชื่อในหอบรรพชน · คำจารึก · จุดธูป'),F('tag','ฉายา <b>ตั้งเองได้</b> (20 ตัวอักษร)'),F('bolt','ทุกอย่างของผู้อาวุโส ตลอดไป')]}[n];
- const price=n===3?'ครั้งเดียว ถาวร':'/ 30 วัน',lbl=have&&n<3?`ต่ออายุ ${PK[k][0]} บาท · 30 วัน`:n===3?`ซื้อถาวร ${PK[k][0]} บาท`:`สมัคร ${PK[k][0]} บาท · 30 วัน`;
- const cmp=n===3?`<div class="vx-cmp"><div><span>รายเดือน 99 × 6</span><i style="width:99%"></i><b>594</b></div><div><span>ถาวร</span><i style="width:100%" class="g"></i><b>599</b></div><p>จ่ายครั้งเดียว คุ้มตั้งแต่เดือนที่ 7 · ไม่ต้องต่ออายุอีก</p></div>`:'';
+  3:[F('dice','สุ่มเกิดได้ <b>100 ครั้ง</b>ต่อชีวิต ตลอดไป'),F('stamp','ตราทองแกะลาย พร้อม <b>เลขลำดับ</b> ซื้อซ้ำไม่ได้'),F('frame','กรอบขอบทองเส้นคู่ ประดับมุม'),F('plaque','ป้ายชื่อในหอผู้ก่อตั้ง · คำจารึก · จุดธูป'),F('tag','ฉายา <b>ตั้งเองได้</b> (20 ตัวอักษร)'),F('bolt','ทุกอย่างของผู้อาวุโส ตลอดไป')]}[n];
+ const price=n===3?'ครั้งเดียว ตลอดไป':'/ 30 วัน',lbl=have&&n<3?`ต่ออายุ ${PK[k][0]} บาท · 30 วัน`:n===3?`ซื้อตลอดไป ${PK[k][0]} บาท`:`สมัคร ${PK[k][0]} บาท · 30 วัน`;
+ const cmp=n===3?`<div class="vx-cmp"><div><span>30 วัน 99 × 6</span><i style="width:99%"></i><b>594</b></div><div><span>ตลอดไป</span><i style="width:100%" class="g"></i><b>599</b></div><p>จ่ายครั้งเดียว คุ้มตั้งแต่เดือนที่ 7 · ไม่ต้องต่ออายุอีก</p></div>`:'';
  const dis=(n===3&&t===3)||low;
- return`<div class="vx-card vk${n}${have?' on':''}${low?' dim':''}">${n===3?'<span class="vx-rib g">คุ้มสุด · ถาวร</span>':''}${have?'<span class="vx-rib o">ใช้อยู่</span>':''}
+ return`<div class="vx-card vk${n}${have?' on':''}${low?' dim':''}">${n===3?'<span class="vx-rib g">คุ้มสุด · ตลอดไป</span>':''}${have?'<span class="vx-rib o">ใช้อยู่</span>':''}
  <div class="vx-hd">${seal(n,'')}<div><div class="vx-nm">${NM[n]}</div><div class="vx-pr">${PK[k][0]} <small>บาท ${price}</small></div></div></div>
- <ul>${L.join('')}</ul>${cmp}<button class="vx-buy vk${n}" ${dis?'disabled':''} onclick="vipBuy('${k}')">${n===3&&t===3?'เป็นบรรพชนแล้ว':low?'มีสิทธิ์ถาวรอยู่แล้ว':lbl}</button></div>`}
+ <ul>${L.join('')}</ul>${cmp}<button class="vx-buy vk${n}" ${dis?'disabled':''} onclick="vipBuy('${k}')">${n===3&&t===3?'เป็นผู้ก่อตั้งแล้ว':low?'มีสิทธิ์ถาวรอยู่แล้ว':lbl}</button></div>`}
 function ttHtml(){const t=T();if(!t)return'';const cur=TT.tt||'';
  const body=t===3?`<div class="vx-ttin"><input id="vipT" maxlength="20" placeholder="ตั้งฉายาของคุณ (ไม่เกิน 20 ตัวอักษร)" value="${esc(cur)}"><button class="gbtn" onclick="vipTtl(document.getElementById('vipT').value)">บันทึก</button></div>`
   :`<div class="vx-tt">${(TT.ttl||[]).map(n=>`<button class="${n===cur?'on':''}" data-w="${esc(n)}" onclick="vipTtl(this.dataset.w)">${esc(n)}</button>`).join('')||'<small class="tag2">กำลังโหลด…</small>'}</div>`;
  return`<div class="vx-sec"><h4 class="vx-h4">ฉายาของคุณ</h4><p class="tag2" style="margin:0 0 6px">${cur?'ตอนนี้: <b>'+esc(cur)+'</b> · ':''}แสดงข้างชื่อในแชท${t<3?' · กดซ้ำที่ชื่อเดิมเพื่อถอด':''}</p>${body}</div>`}
 window.vipTtl=async function(w){w=String(w||'').trim();if(w&&w===TT.tt&&T()<3)w='';try{const j=await api('vipttl',{w});TT.tt=j.tt||'';try{LS.set('murim_vipt',TT)}catch(e){}toast(TT.tt?'ตั้งฉายาแล้ว':'ถอดฉายาแล้ว');if(inVip())vipMenu()}catch(e){toast(e.message==='preset'?'เลือกจากชุดที่มีให้':'บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง')}};
 window.vipMenu=function(){const t=T(),v=vget(),near=t&&t<3&&(endOf(v,t)-Date.now())<3*864e5,P=pend();
- const stat=t?`<div class="vx-stat">${seal(t,near?' fade':'')}<div><b>${NM[t]}</b><small>${t===3?(v.ul?`ลำดับที่ ${v.ul.o} · เข้าร่วม ${dTxt(v.ul.t)}`:'ถาวร'):`ถึง ${dTxt(endOf(v,t))} · อีก ${daysLeft(v,t)} วัน${near?' · ใกล้หมดอายุ':''}`}</small></div></div>`:'';
+ const stat=t?`<div class="vx-stat">${seal(t,near?' fade':'')}<div><b>${NM[t]}</b><small>${t===3?(v.ul?`ลำดับที่ ${v.ul.o} · เข้าร่วม ${dTxt(v.ul.t)}`:'ตลอดไป'):`ถึง ${dTxt(endOf(v,t))} · อีก ${daysLeft(v,t)} วัน${near?' · ใกล้หมดอายุ':''}`}</small></div></div>`:'';
  const ins=t===3&&v.ul?`<div class="vx-sec"><h4 class="vx-h4">คำจารึกบนป้าย</h4><div class="vx-ttin"><input id="vipW" maxlength="40" placeholder="ข้อความสั้นๆ (ไม่เกิน 40 ตัวอักษร)" value="${esc(v.ul.w||'')}"><button class="gbtn" onclick="vipSay(this)">จารึก</button></div></div>`:'';
- modal(`<button class="xbtn" onclick="rrMenu()">✕</button><h3 class="vx-vip">ผู้อุปถัมภ์สำนัก</h3>
- <div class="vx-free"><b>เล่นฟรีก็เล่นได้เหมือนกัน ไม่ต้องน้อยใจ</b><details><summary>อ่านรายละเอียด</summary><p>ผู้อุปถัมภ์ไม่ได้พลัง เงิน หรือโบนัสในเกม ได้แค่สุ่มเกิดมากขึ้น กับตราประทับ กรอบ และฉายา ชีวิตทุกคนต้องเล่นเองทั้งชีวิตและแข่งทำเนียบด้วยกติกาเดียวกัน · สายฟรีสุ่มเกิดได้ 5 ครั้งต่อชีวิต และแลกกรรมเพิ่มได้ทุกวัน</p></details></div>
+ modal(`<button class="xbtn" onclick="rrMenu()">✕</button><h3 class="vx-vip">ผู้สนับสนุน</h3>
+ <div class="vx-free"><b>เล่นฟรีก็เล่นได้เหมือนกัน ไม่ต้องน้อยใจ</b><details><summary>อ่านรายละเอียด</summary><p>ผู้สนับสนุนไม่ได้พลัง เงิน หรือโบนัสในเกม ได้แค่สุ่มเกิดมากขึ้น กับตราประทับ กรอบ และฉายา ชีวิตทุกคนต้องเล่นเองทั้งชีวิตและแข่งทำเนียบด้วยกติกาเดียวกัน · สายฟรีสุ่มเกิดได้ 5 ครั้งต่อชีวิต และแลกกรรมเพิ่มได้ทุกวัน</p></details></div>
  ${stat}${P?tlHtml(P):''}${ins}${ttHtml()}
  ${card('v1')}${card('v2')}${card('v3')}
- <button class="vx-wallb" onclick="vipWall()">${ico('plaque')}<span>เข้าหอบรรพชน<small>ป้ายของผู้อุปถัมภ์ถาวร เรียงตามวันที่เข้าร่วม</small></span><span class="go">${ico('chev')}</span></button>
- <details class="vfp"><summary>เงื่อนไขการซื้อ</summary><p class="tag2">ไม่ต่ออายุเอง ไม่มีการตัดเงินอัตโนมัติ · ซื้อซ้ำก่อนหมดอายุจะต่อวันให้ · สิทธิ์ผูกกับบัญชี (ล็อกอิน Google ไว้จะไม่หายเวลาเปลี่ยนเครื่อง) · ได้สิทธิ์หลังผู้พัฒนาตรวจสลิปแล้ว ปกติไม่เกิน 1 วัน · ถ้าเกิน 48 ชม. ยังไม่ได้ แจ้งบั๊กเพื่อขอคืนเงินได้ · สิทธิ์สุ่มที่ซื้อเป็นแพ็กไม่หายเมื่อ VIP หมดอายุ</p></details>`);
+ <button class="vx-wallb" onclick="vipWall()">${ico('plaque')}<span>เข้าหอผู้ก่อตั้ง<small>ป้ายของผู้ก่อตั้ง เรียงตามวันที่เข้าร่วม</small></span><span class="go">${ico('chev')}</span></button>
+ <details class="vfp"><summary>เงื่อนไขการซื้อ</summary><p class="tag2">ไม่ต่ออายุเอง ไม่มีการตัดเงินอัตโนมัติ · ซื้อซ้ำก่อนหมดอายุจะต่อวันให้ · สิทธิ์ผูกกับบัญชี (ล็อกอิน Google ไว้จะไม่หายเวลาเปลี่ยนเครื่อง) · แนบสลิปแล้วระบบตรวจอัตโนมัติ สิทธิ์เข้าทันที (ถ้าตรวจอัตโนมัติไม่ได้ ผู้พัฒนาตรวจให้ ปกติไม่เกิน 1 วัน) · ถ้าเกิน 48 ชม. ยังไม่ได้ แจ้งบั๊กเพื่อขอคืนเงินได้ · สิทธิ์สุ่มที่ซื้อเป็นแพ็กไม่หายเมื่อ VIP หมดอายุ</p></details>`);
  if(!vipMenu._ld){vipMenu._ld=1;const a=JSON.stringify([vget(),TT]);vxFetch(false).catch(()=>{}).then(()=>{vipMenu._ld=0;if(inVip()&&a!==JSON.stringify([vget(),TT]))vipMenu()})}};
 
 // ---------- หน้าชำระเงิน: ขั้นตอน 3 ข้อ + จำสถานะ ----------
-const steps=()=>`<ol class="vx-st"><li><i>1</i>สแกนโอน</li><li><i>2</i>แนบสลิป</li><li><i>3</i>รอตรวจ</li></ol>`;
+const steps=()=>`<ol class="vx-st"><li><i>1</i>สแกนโอน</li><li><i>2</i>แนบสลิป</li><li><i>3</i>สิทธิ์เข้า</li></ol>`;
 for(const f of ['vipBuy','rrBuy']){const o=window[f];if(typeof o!=='function')continue;window[f]=function(){const r=o.apply(this,arguments);try{const h=$('modal').querySelector('h3');if(h&&!$('modal').querySelector('.vx-st'))h.insertAdjacentHTML('afterend',steps())}catch(e){}return r}}
 {const o=window.vipPaid;if(typeof o==='function')window.vipPaid=async function(btn,k){const r=await o.apply(this,arguments);try{if(/ส่งแล้ว/.test(btn.textContent))setPend({t:Date.now(),k})}catch(e){}return r}}
 {const o=window.rrPaid;if(typeof o==='function')window.rrPaid=async function(btn,k){const r=await o.apply(this,arguments);try{if(/ส่งแล้ว/.test(btn.textContent)){const RR=window._RR||{};setPend({t:Date.now(),k:'',pk:k,n:(RR.pk&&RR.pk[k]&&RR.pk[k][1])||0,c0:RR.c||0})}}catch(e){}return r}}
@@ -27954,7 +27954,7 @@ window.vipCele=function(kind,n){const t=kind==='rr'?0:kind,v=vget();
  const conf=Array.from({length:22},(_,i)=>`<i style="--x:${Math.round(Math.random()*100)}%;--d:${(Math.random()*.8).toFixed(2)}s;--r:${Math.round(Math.random()*360)}deg;--c:${['#c9a24a','#f0dc9a','#b8372a','#fff'][i%4]}"></i>`).join('');
  const head=kind==='rr'?`สิทธิ์สุ่มเข้าแล้ว <b>+${n}</b> ครั้ง`:`ยินดีต้อนรับ <b>${NM[t]}</b>`;
  const det=kind==='rr'?'<li>สิทธิ์ไม่มีวันหมดอายุ เก็บไว้ใช้ได้ทุกชีวิต</li><li>ไปที่ 🎲 สุ่มเกิดเพิ่ม แล้วกด "ใช้ 1 ครั้ง"</li>'
-  :t===3?`<li>เลขลำดับของคุณ <b>${v&&v.ul?'№ '+v.ul.o:'ในหอบรรพชน'}</b> — ซื้อซ้ำไม่ได้</li><li>สุ่มเกิด 100 ครั้งต่อชีวิต ตลอดไป</li><li>กรอบบรรพชนอยู่ในโปรไฟล์ · ตั้งฉายาและคำจารึกได้แล้ว</li>`
+  :t===3?`<li>เลขลำดับของคุณ <b>${v&&v.ul?'№ '+v.ul.o:'ในหอผู้ก่อตั้ง'}</b> — ซื้อซ้ำไม่ได้</li><li>สุ่มเกิด 100 ครั้งต่อชีวิต ตลอดไป</li><li>กรอบบรรพชนอยู่ในโปรไฟล์ · ตั้งฉายาและคำจารึกได้แล้ว</li>`
   :`<li>สุ่มเกิด ${t===2?60:30} ครั้งต่อชีวิต${v&&endOf(v,t)?' · ถึง '+dTxt(endOf(v,t)):''}</li><li>ตราประทับและกรอบ${t===2?'เส้นคู่':'เส้นเดี่ยว'}อยู่ในโปรไฟล์</li><li>เลือกฉายาได้ที่หน้านี้</li>`;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="vx-cele cc${t}"><div class="vx-conf">${conf}</div><div class="vx-rays"></div>
  <div class="vx-stamp">${kind==='rr'?`<span class="vx-dice">${ico('dice')}</span>`:seal(t,' big')}</div><p class="vx-th">ได้รับแล้ว — ขอบคุณมากครับ</p><h3>${head}</h3><ul>${det}</ul>
@@ -27968,7 +27968,7 @@ setTimeout(()=>{try{if(pend())vxFetch(false).catch(()=>{})}catch(e){}},4500);
 {const _cr=chatRender;chatRender=function(){const r=_cr.apply(this,arguments);try{const box=$('chatBox');if(!box)return r;const ks=[...box.children].filter(e=>e.classList&&e.classList.contains('cm')),ms=chatMsgs||[];if(ks.length!==ms.length)return r;
   ks.forEach((e,i)=>{const q=ms[i]&&ms[i].vq;if(q&&!e.querySelector('.vtt')){const b=e.querySelector('.cmh b');if(b)b.insertAdjacentHTML('afterend',`<span class="vtt">${esc(String(q).slice(0,20))}</span>`)}})}catch(e){}return r}}
 
-// ---------- หอบรรพชน: หัวหอ ----------
+// ---------- หอผู้ก่อตั้ง: หัวหอ ----------
 {const o=window.vipWall;if(typeof o==='function')window.vipWall=async function(){const r=await o.apply(this,arguments);try{const m=$('modal'),n=m.querySelectorAll('.vtab').length;if(m.querySelector('.vx-wallhd'))return r;const h=m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',`<div class="vx-wallhd"><b>${n} ท่าน</b><span>เรียงตามวันที่เข้าร่วม ไม่ใช่ตามเงิน — ทุกคนจ่ายเท่ากัน</span></div>`);const mine=m.querySelector('.vtab.mine');if(mine)mine.scrollIntoView({block:'nearest'})}catch(e){}return r}}
 
 try{const st=document.createElement('style');st.textContent=`
@@ -30117,6 +30117,28 @@ window.SHOP_SKIN={
  _:{tiers:{1:'ผู้สนับสนุน',2:'ผู้สนับสนุนอาวุโส',3:'ผู้ก่อตั้ง'},rr:'โควตาเกิดใหม่'}};
 window.shopSkin=function(w){return window.SHOP_SKIN[w||window.WORLD_ID||'wuxia']||window.SHOP_SKIN._};
 try{const sk=shopSkin();if(typeof NM==='object'&&NM)Object.keys(sk.tiers).forEach(k=>{if(k in NM)NM[k]=sk.tiers[k]})}catch(e){}
+})()}catch(e){console.error(e)}
+
+// 🛒 v18.20 หน้าร้าน: ยอดโอนตัวใหญ่ · QR เล็กลง · แพ็กสุ่มชีวิตใหม่ขึ้นบน
+try{(()=>{
+const st=document.createElement('style');st.textContent=`.vx-amt{margin:8px 0;padding:10px 12px;border-radius:12px;text-align:center;background:linear-gradient(180deg,#ffffff10,#ffffff06);border:1px solid #ffffff22;font-size:13px;opacity:.95}.vx-amt b{display:block;font-size:30px;line-height:1.15;letter-spacing:.5px}.vx-amt small{opacity:.7}`;document.head.appendChild(st);
+const amt=n=>`<div class="vx-amt"><small>ยอดที่ต้องโอน (ต้องตรงเป๊ะ)</small><b>${n} บาท</b></div>`;
+const price=(f,k)=>{try{if(f==='vipBuy'){const t={v1:39,v2:99,v3:599};return t[k]}const R=window._RR&&window._RR.pk;return R&&R[k]?R[k][0]:null}catch(e){return null}};
+for(const f of ['vipBuy','rrBuy']){const o=window[f];if(typeof o!=='function')continue;window[f]=function(k){const r=o.apply(this,arguments);try{const m=$('modal'),n=price(f,k),h=m.querySelector('.vx-st')||m.querySelector('h3');if(n&&h&&!m.querySelector('.vx-amt'))h.insertAdjacentHTML('afterend',amt(n))}catch(e){}return r}}
+const om=window.rrMenu;if(typeof om==='function')window.rrMenu=function(){const r=om.apply(this,arguments);try{const m=$('modal'),ch=m.querySelector('.vx-chips'),h4=m.querySelector('h4.vx-h4'),pk=m.querySelector('.vx-packs');if(ch&&h4&&pk&&!m.querySelector('.vx-moved')){const w=document.createElement('div');w.className='vx-moved';w.appendChild(h4);w.appendChild(pk);ch.insertAdjacentElement('afterend',w)}}catch(e){}return r};
+})()}catch(e){console.error(e)}
+
+// 🖼️ v18.21 กรอบไม่ขึ้นเพราะรูปตัวละครใหญ่เกิน 8,000 ตัวอักษร (ตัวละครลายละเอียดมาก) เซิร์ฟเวอร์เคยปฏิเสธทั้งคำขอ ทำให้กรอบไม่ถูกบันทึกด้วย
+// ตอนนี้เซิร์ฟเวอร์เก็บกรอบให้ก่อน และหน้าเว็บลดสีรูปตัวละครแล้วส่งใหม่เอง
+try{(()=>{
+const quant=(url,mask)=>new Promise(res=>{const im=new Image();im.onload=()=>{try{const c=document.createElement('canvas');c.width=56;c.height=62;const x=c.getContext('2d');x.drawImage(im,0,0,56,62);const id=x.getImageData(0,0,56,62),D=id.data;for(let i=0;i<D.length;i+=4){D[i]&=mask;D[i+1]&=mask;D[i+2]&=mask;D[i+3]=D[i+3]>127?255:0}x.putImageData(id,0,0);res(c.toDataURL('image/png'))}catch(e){res('')}};im.onerror=()=>res('');im.src=url});
+const shrink=async url=>{for(const m of [0xF8,0xF0,0xE0,0xC0]){const q=await quant(url,m);if(q&&q.length<=7800)return q}return''};
+profPush=async function(){if(!onlineOK)return;let d=frGet();
+ const body=(av,alt)=>({av,fr:d.eq||'',up:d.avUp?1:0,alt,n:pname(),key:(typeof ADM!=='undefined'&&ADM.ok)?admK():''});
+ try{let j=await api('profile',body(d.av||'',d.snap||''));
+  if(j&&j.img===0&&!d.avUp){const q=await shrink(d.snap||d.av||'');if(q){d=frGet();d.snap=q;d.av=q;frSet(d);j=await api('profile',body(q,q))}}
+  if(j&&j.st){d=frGet();d.avSt=j.st;frSet(d)}}
+ catch(e){if(e&&e.message==='noup'){const d2=frGet();d2.av=d2.snap||'';d2.avUp=0;d2.avSt='';frSet(d2);return}if(e&&e.message==='avban'){toast('ถูกระงับการอัปโหลดรูปชั่วคราว');const d2=frGet();d2.av=d2.snap||'';d2.avUp=0;frSet(d2)}}};
 })()}catch(e){console.error(e)}
 </script>
 </body>

@@ -1823,13 +1823,14 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     }
     if (a === 'profile') {
       // รูปตัวละครจากเกม (PNG 56×62) ขึ้นได้ทันที · รูปที่อัปโหลดเอง (JPEG/WebP) ต้องรอแอดมินตรวจก่อนคนอื่นจะเห็น
-      const av = String(b.av || ''), alt = String(b.alt || ''), up = b.up ? 1 : 0, pu = id.slice(0, 12); let fr = String(b.fr || '').replace(/[^a-z0-9_]/g, '').slice(0, 20);
+      let av = String(b.av || ''), alt = String(b.alt || ''); const up = b.up ? 1 : 0, pu = id.slice(0, 12); let fr = String(b.fr || '').replace(/[^a-z0-9_]/g, '').slice(0, 20);
       if (/^f_adm/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id)))) fr = ''; // กรอบแอดมิน: ใส่ได้เฉพาะแอดมิน
       if (/^f_(arc|box|lg)\d/.test(fr)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.fr || []).includes(fr)) fr = '' } // กรอบลาน: ต้องมีในกระเป๋าเซิร์ฟเวอร์
       const isUp = /^data:image\/(jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(av);
       if (isUp && !isAdmKey(b.key)) return res.status(403).json({ err: 'noup' }); // อัปโหลดรูปเองปิดไว้ — เฉพาะแอดมิน
-      if (av && (av.length > 12000 || !(avSnapOk(av) || isUp))) return res.status(400).json({ err: 'av' });
-      if (alt && (alt.length > 8000 || !avSnapOk(alt))) return res.status(400).json({ err: 'alt' });
+      let imgBad = 0; // รูปตัวละครใหญ่เกินเกณฑ์ (ตัวละครลายละเอียดมาก) → ไม่ปฏิเสธทั้งคำขอ เก็บกรอบให้ก่อน แล้วบอกหน้าเว็บให้ย่อรูปส่งใหม่
+      if (av && (av.length > 12000 || !(avSnapOk(av) || isUp))) { av = ''; imgBad = 1 }
+      if (alt && (alt.length > 8000 || !avSnapOk(alt))) { alt = ''; imgBad = 1 }
       let pend = 0;
       if (up && isUp) {
         if (await cmd('GET', 'avban:' + id)) return res.status(403).json({ err: 'avban' });
@@ -1838,9 +1839,10 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         await cmd('HSET', 'avq', pu, JSON.stringify({ av, t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', id }));
         pend = 1;
       } else await cmd('HDEL', 'avq', pu);
-      const pub = avSnapOk(av) ? av : (alt || '');
+      let pub = avSnapOk(av) ? av : (alt || '');
+      if (imgBad && !pub) { const cur0 = jp(await cmd('HGET', 'prof', pu)); pub = (cur0 && cur0.av) || '' }
       await cmd('HSET', 'prof', pu, JSON.stringify({ av: pub, fr, pend }));
-      return res.json({ ok: 1, st: pend ? 'pend' : 'ok' });
+      return res.json({ ok: 1, st: pend ? 'pend' : 'ok', img: imgBad ? 0 : 1 });
     }
     if (a === 'profack') { await cmd('DEL', 'avwarn:' + id); return res.json({ ok: 1 }) }
     if (a === 'glogin') {
