@@ -31656,6 +31656,9 @@ setInterval(()=>{try{if(!inGame()||modalOpen||choice._cur||document.hidden)retur
 
 // ผู้เล่นโหมดยุคปัจจุบัน: ติดป้ายโลก 'c' ให้หน้าดูคนอื่นเล่นแยกหมวดได้
 {const _lsC=liveSnap;liveSnap=function(){const r=_lsC.apply(this,arguments);try{if(r&&S&&S.mw)r.wk='c'}catch(e){}return r}}
+
+// 🎟️ ตั๋วกาชาจากร้านค้าระบบ (ชั้นสุ่ม/ของชาติละครั้ง) ใช้ได้ทุกสายระบบ — เดิมปุ่มสุ่มมีเฉพาะระบบสายกาชา คนสายอื่นซื้อแล้วตั๋วไปค้างโดยไม่มีที่ให้กด
+try{{const _ss=sysSpecial;sysSpecial=function(){const r=_ss.apply(this,arguments);try{const s=S&&S.sys;if(s&&s.t!=='gacha'&&(s.tk|0)>0)return (r||'')+`<div class="sysq"><h4>🎟️ ตั๋วกาชา</h4>ตั๋ว 🎟️ <b>${s.tk}</b> · สุ่มแล้ว ${s.pulls|0} ครั้ง<br><span style="opacity:.75">การันตี SSR ในอีก ${Math.max(0,50-(s.pity|0))} ครั้ง · N 55% · R 30% · SR 11% · SSR 3.5% · UR 0.5%</span><div style="display:flex;gap:6px;margin-top:6px"><button class="sysb" onclick="gachaUI(1)">สุ่ม 1</button><button class="sysb" ${s.tk>=10?'':'disabled'} onclick="gachaUI(10)">สุ่ม 10</button><button class="sysb" onclick="gachaUI(${s.tk})">สุ่มทั้งหมด</button></div></div>`}catch(e){}return r}}}catch(e){console.error(e)}
 </script>
 </body>
 </html>
