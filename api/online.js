@@ -1463,6 +1463,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       await cmd('LPUSH', 'pa:cq', JSON.stringify({ u: id, n: clean(b.n, 20) || 'พ่อค้านิรนาม', w: ['m', 'x', 'g'].includes(b.w) ? b.w : 'm', r: Math.max(2, Math.min(5, +b.r || 3)) }));
       return res.json({ ok: 1, q: qn + 1 });
     }
+    if (a === 'paconcan') { // ถอนของที่ฝากขายซึ่งยังรอคิว (ยังไม่ขึ้นประมูล) คืน
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
+      const L = (await cmd('LRANGE', 'pa:cq', 0, 99)) || []; let n = 0;
+      for (const raw of L) { const o = jp(raw); if (o && o.u === id) { n += +(await cmd('LREM', 'pa:cq', 1, raw)) || 0 } }
+      return res.json({ ok: 1, n });
+    }
     if (a === 'paconst') {
       if (!okId(id)) return res.json({ l: [] });
       const [l] = await pipe([['LRANGE', 'pacs:' + id, 0, 19], ['DEL', 'pacs:' + id]]);
