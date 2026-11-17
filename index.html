@@ -1096,7 +1096,7 @@ function openMenu(){
   <button class="opt" onclick="openFamily()">👪 ครอบครัว<small>${moodOf(S.happy)[0]} ความสุข ${Math.round(S.happy)}</small></button>
   <button class="opt" onclick="openRanking()">📜 ทำเนียบสำนัก<small>${S.faction?'สำนักคุณอันดับ '+sectPos(S.faction.n):'สิบสำนักใหญ่'}</small></button>
   <button class="opt" onclick="openPeers()">👥 คนที่เกิดพร้อมกัน<small>${peers.filter(p=>p.alive).length}/4 ยังมีชีวิต</small></button>
-  ${S.items.length?`<button class="opt" onclick="openItems()">🎒 ของต่างโลก<small>${S.items.length} ชิ้น</small></button>`:''}
+  ${S.items.length?`<button class="opt" onclick="openItems()">🎒 ของต่างโลก<small>${S.items.filter(i=>i.passive||i.id==='gun'||i.left>0).length} ชิ้น</small></button>`:''}
   ${S.ow&&S.awake?`<button class="opt" onclick="openPortal()" ${S.portal>0?'style="background:var(--tb4)"':''}>🌌 ประตูมิติ<small>เปิดได้ ${S.portal} ครั้ง</small></button>`:''}
   ${S.sys?`<button class="opt" onclick="openSys()" style="background:var(--syBg);color:var(--syT);border-color:var(--syA)">🟦 ระบบ<small style="color:var(--syB)">Lv.${S.sys.lv} · แต้ม ${S.sys.pts}</small></button>`:''}
   <button class="opt" onclick="openTown()" style="background:var(--tb4)">🏘️ ${townName()}<small>ร้านค้า ภารกิจ ดันเจี้ยน</small></button>
@@ -1734,7 +1734,9 @@ function gachaArt(){
   modal(`<div class="gacha"><div class="tag2">${oddsTxt(a.p)}</div><h3 class="t${a.r}" style="padding:0">《${a.n}》</h3><div class="t${a.r}">ระดับ ${a.tier} · พลัง +${a.b}</div><br><div class="brow"><button class="gbtn" onclick="closeM()">ปิด</button>${S.gachaY<3?`<button class="pbtn" style="font-size:15px;padding:9px" onclick="gachaArt()">สุ่มอีก (${fmtM(gachaCost())})</button>`:''}</div></div>`,'gacha');render()},800);
 }
 function openArts(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📖 วิชายุทธ์</h3>`+(S.arts.length?S.arts.slice().sort((a,b)=>b.b*artM(b)-a.b*artM(a)).map(a=>`<div class="item"><div class="h"><b class="t${a.r}">《${a.n}》${a.heir?' 🏮':''}</b><span class="t${a.r}">${a.tier}</span></div><p><b>${AMN[a.lv||0]}</b> · พลังรวม +${Math.round(a.b*artM(a))}${(a.lv||0)<3?` <span class="tag2">(ระดับถัดไป ×${AMX[(a.lv||0)+1]})</span>`:' ✨'}${a.heir?' · มรดกตระกูล':''}</p></div>`).join(''):'<p>ยังไม่มีวิชา ลองสุ่มคัมภีร์หรือออกท่องยุทธภพ</p>'))}
-function openItems(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎒 ของจากต่างโลก</h3>`+S.items.map((it,i)=>`<div class="item"><div class="h"><b>${it.n}${it.heir?' 🏮':''}</b>${it.passive?'<span class="t2">ติดตัว</span>':it.id==='gun'?`<span class="tag2">กระสุน ${it.left}</span>`:it.left>0?`<button onclick="useItem(${i})">ใช้ (${it.left})</button>`:'<span class="tag2">หมดแล้ว</span>'}</div><p>${it.d}</p></div>`).join(''))}
+function openItems(){const sp=it=>!it.passive&&it.id!=='gun'&&!(it.left>0),row=(it,i)=>`<div class="item"${sp(it)?' style="opacity:.55"':''}><div class="h"><b>${it.n}${it.heir?' 🏮':''}</b>${it.passive?'<span class="t2">ติดตัว</span>':it.id==='gun'?`<span class="tag2">กระสุน ${it.left}</span>`:it.left>0?`<button onclick="useItem(${i})">ใช้ (${it.left})</button>`:'<span class="tag2">หมดแล้ว</span>'}</div><p>${it.d}</p></div>`;
+ const live=[],gone=[];S.items.forEach((it,i)=>(sp(it)?gone:live).push(row(it,i)));
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎒 ของจากต่างโลก</h3>`+(live.join('')||'<p class="tag2">ไม่มีของที่ใช้ได้แล้ว</p>')+(gone.length?`<details style="margin-top:10px"><summary style="cursor:pointer;opacity:.8">🗂️ ของที่ใช้หมดแล้ว (${gone.length})</summary>${gone.join('')}</details>`:''))}
 function useItem(i){
  const it=S.items[i];if(!it||it.left<=0)return;it.left--;
  switch(it.id){
