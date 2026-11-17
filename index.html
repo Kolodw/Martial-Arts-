@@ -34618,8 +34618,11 @@ function abAutoStep(force){try{const h=abH();if(!h||!S||!S.alive)return;if(!forc
  if(S.hp<S.maxHp*.55)return abAutoStop('เลือดต่ำกว่า 55% — พักก่อนค่อยลงต่อ');
  if(abK(n)===100)return abAutoStop(`ถึงบอสวงใหญ่ชั้น ${n} (แพ้ = ตาย) — ให้คุณตัดสินใจเอง`);
  const D=hlDoors(h);let best=null;
- D.forEach((x,i)=>{if(!x.nm||x.hid||x.trap)return;let bt=null,bm=1e18;Object.keys(HL2.T).forEach(t=>{const m=hlEp(h,x,n)*hlTacM(h,x,t);if(m<bm){bm=m;bt=t}});const r=bm/Math.max(1,total());if(!best||r<best.r)best={i,x,t:bt,r}});
- if(!best){const i=D.findIndex(x=>!x.nm&&!x.trap&&!x.hid);if(i>=0){hlGo(i);return choice._cur?'stop':'ok'}return abAutoStop('ข้างหน้าไม่มีประตูที่ปลอดภัย')}
+ D.forEach((x,i)=>{if(!x.nm||x.trap)return;let bt=null,bm=1e18;Object.keys(HL2.T).forEach(t=>{const m=hlEp(h,x,n)*hlTacM(h,x,t);if(m<bm){bm=m;bt=t}});const r=bm/Math.max(1,total());if(!best||r<best.r)best={i,x,t:bt,r}});
+ if(!best){let i=D.findIndex(x=>!x.nm&&!x.trap);if(i>=0){hlGo(i);return choice._cur?'stop':'ok'}
+  i=D.findIndex(x=>x.trap&&!x.nm);if(i<0)return abAutoStop('ข้างหน้าไม่มีประตูให้เข้า');
+  hlGo(i);const x2=D[i];if(choice._cur&&x2&&x2.nm){choice._cur=null;try{closeM()}catch(e){}let bt=null,bm=1e18;Object.keys(HL2.T).forEach(t=>{const m=hlEp(h,x2,n)*hlTacM(h,x2,t);if(m<bm){bm=m;bt=t}});const a1=auto;auto=true;try{abFight(h,x2,n,bt)}finally{auto=a1}if(S.alive&&h.lv<n)return abAutoStop(`พ่ายที่ชั้น ${n}`);return S.alive?'ok':'stop'}
+  return choice._cur?'stop':'ok'}
  if(best.r>1.05)return abAutoStop(`ผู้คุมชั้น ${n} แรงราว ${Math.round(best.r*100)}% ของคุณ — เสี่ยงเกินไป`);
  const a0=auto;auto=true;try{abFight(h,best.x,n,best.t)}finally{auto=a0}
  if(S.alive&&h.lv<n)return abAutoStop(`พ่ายที่ชั้น ${n}`);return S.alive?'ok':'stop'}catch(e){}}
