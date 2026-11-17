@@ -2683,3 +2683,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
 };
 module.exports.vkReset = vkReset;
 module.exports.vkRun = vkRun;
+// 💳 ให้สิทธิ์หลังตรวจสลิปอัตโนมัติสำเร็จ (เรียกจาก cloudflare/worker.js /api/pay) — pack: v1|v2|v3 = VIP, rs|rm|rl = ซื้อสุ่มเกิด
+module.exports.payPack = pk => { pk = String(pk || ''); if (VIP_PK[pk]) return { kind: 'vip', amt: VIP_PK[pk][0], tier: VIP_PK[pk][1], days: VIP_PK[pk][2] }; const r = pk[0] === 'r' && RR_PK[pk.slice(1)]; return r ? { kind: 'rr', amt: r[0], n: r[1] } : null };
+module.exports.payGrant = async (uid, pk, name) => {
+  const P = module.exports.payPack(pk); if (!P || !okId(uid)) throw new Error('bad pack/id');
+  if (P.kind === 'rr') { await cmd('INCRBY', 'rrc:' + uid, P.n); await cmd('SADD', 'supok', uid); return P }
+  await vipAdd(uid, P.tier, P.days, 1); await cmd('SADD', 'supok', uid);
+  if (P.tier === 3) { if (!(await cmd('HEXISTS', 'vipu', uid))) { const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', uid, JSON.stringify({ n: clean(String(name || ''), 24), o, t: Date.now() })) } else await vipHeal(uid) }
+  return P;
+};

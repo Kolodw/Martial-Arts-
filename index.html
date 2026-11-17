@@ -30075,6 +30075,22 @@ function realmPct(){try{const ri=realmIdx(),p=total();let lo,hi;if(ri<7){lo=REAL
 window._vxTest={VFX,vxStyle,vxTier,dsTier,pConv,pIdx,get VX(){return VX}};
 
 })();
+
+// 💳 v18.17 ตรวจสลิปพร้อมเพย์อัตโนมัติ (EasySlip ผ่าน /api/pay) — แนบสลิปแล้วกดส่ง ถ้าตรวจผ่านสิทธิ์เข้าทันที · ถ้าระบบอัตโนมัติใช้ไม่ได้ จะส่งให้ผู้พัฒนาตรวจแบบเดิม
+try{(()=>{
+const bigShrink=f=>new Promise(res=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);let q=.88,d=cv.toDataURL('image/jpeg',q);while(d.length>2.8e6&&q>.4){q-=.1;d=cv.toDataURL('image/jpeg',q)}res(d)};im.onerror=()=>res('');im.src=fr.result};fr.onerror=()=>res('');fr.readAsDataURL(f)});
+const MSG={noslip:'อ่านสลิปไม่ได้ ลองถ่าย/แคปสลิปให้เห็นทั้งใบ (ต้องเห็น QR มุมล่าง) แล้วลองใหม่',dup:'สลิปนี้เคยถูกใช้แล้ว',acct:'สลิปนี้ไม่ได้โอนเข้าบัญชีของเกม ตรวจว่าสแกน QR ถูกใบ',amount:'ยอดในสลิปไม่ตรงกับแพ็กที่เลือก',old:'สลิปเก่าเกินไป (รับเฉพาะสลิปที่โอนภายใน 3 ชั่วโมง)',pending:'ธนาคารยังอัปเดตสลิปไม่เสร็จ รอ 2-3 นาทีแล้วกดส่งใหม่อีกครั้ง',rate:'ลองบ่อยเกินไป รอสักครู่แล้วลองใหม่',img:'ไฟล์รูปไม่ถูกต้อง'};
+const wrap=(name,mkPk)=>{const o=window[name];if(typeof o!=='function')return;
+ window[name]=async function(btn,k){const f=$('supImg')&&$('supImg').files&&$('supImg').files[0];if(!f)return o.apply(this,arguments);
+  btn.disabled=true;btn.textContent='⏳ กำลังตรวจสลิป…';let j=null;
+  try{const img=await bigShrink(f);if(!img)throw 0;const r=await fetch('/api/pay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:pid,pk:mkPk(k),n:pname(),img})});j=await r.json().catch(()=>null)}catch(e){j=null}
+  if(j&&j.ok){btn.textContent='✅ ตรวจผ่านแล้ว สิทธิ์เข้าแล้ว!';toast('✅ ตรวจสลิปผ่าน สิทธิ์เข้าแล้ว ขอบคุณที่สนับสนุนครับ 💛');try{sfx('good')}catch(e){}
+   try{const g=await api('rrget');if(window._RR){window._RR.c=Math.max(0,+g.c||0)}window.vipSet&&window.vipSet(g.vip);window.rrBtn&&window.rrBtn()}catch(e){}return}
+  if(j&&MSG[j.st]){btn.disabled=false;btn.textContent='📨 ส่งสลิป';toast(MSG[j.st]);return}
+  btn.disabled=false;return o.apply(this,arguments)}};
+wrap('vipPaid',k=>k);wrap('rrPaid',k=>'r'+k);
+const t=document.querySelectorAll('.tag2');
+})()}catch(e){console.error(e)}
 </script>
 </body>
 </html>

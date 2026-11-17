@@ -65,6 +65,49 @@ async function apiOne(request, url) {
   return r;
 }
 
+// 💳 ตรวจสลิปพร้อมเพย์อัตโนมัติ (EasySlip v2 + D1 "PAY_DB") — ต้องมีค่าลับ EASYSLIP_KEY และ binding PAY_DB ไม่มี = ตอบ unavailable แล้วหน้าเว็บจะใช้ระบบส่งสลิปให้ผู้พัฒนาตรวจเหมือนเดิม
+const jr = (o, st = 200) => new Response(JSON.stringify(o), { status: st, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
+async function pay(request, env) {
+  if (request.method !== 'POST') return jr({ err: 'method' }, 405);
+  if (!env.PAY_DB || !env.EASYSLIP_KEY) return jr({ ok: 0, st: 'unavailable' });
+  let b; try { b = await request.json() } catch (e) { return jr({ ok: 0, st: 'bad' }, 400) }
+  const uid = String(b.id || ''), pk = String(b.pk || ''), name = String(b.n || '').slice(0, 24);
+  const h = await handler(), P = h.payPack && h.payPack(pk);
+  if (!P || !/^[a-z0-9]{6,24}$/.test(uid)) return jr({ ok: 0, st: 'bad' }, 400);
+  const img = String(b.img || ''); if (!/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(img) || img.length > 5.2e6) return jr({ ok: 0, st: 'img' }, 400);
+  const db = env.PAY_DB, now = Date.now();
+  // กันยิงรัว: ผู้เล่นเดียวกันตรวจได้ไม่เกิน 6 ครั้ง/10 นาที
+  try { const c = await db.prepare("SELECT COUNT(*) n FROM orders WHERE uid=? AND created_at>?").bind(uid, now - 600e3).first(); if (c && c.n >= 6) return jr({ ok: 0, st: 'rate' }, 429) } catch (e) {}
+  const oid = 'o' + now.toString(36) + Math.random().toString(36).slice(2, 8);
+  await db.prepare("INSERT INTO orders(id,uid,pack,amount_satang,channel,status,created_at,expires_at) VALUES(?,?,?,?,?,?,?,?)").bind(oid, uid, pk, P.amt * 100, 'promptpay', 'pending', now, now + 3600e3).run();
+  const fail = async (st, note, code = 200) => { try { await db.prepare("UPDATE orders SET status=?,note=? WHERE id=?").bind(st, String(note || '').slice(0, 200), oid).run() } catch (e) {} return jr({ ok: 0, st, note }, code) };
+  let j;
+  try {
+    const r = await fetch('https://api.easyslip.com/v2/verify/bank', { method: 'POST', headers: { authorization: 'Bearer ' + env.EASYSLIP_KEY, 'content-type': 'application/json' }, body: JSON.stringify({ base64: img, matchAccount: true, matchAmount: P.amt, checkDuplicate: true }) });
+    j = await r.json().catch(() => null);
+  } catch (e) { return fail('unavailable', 'fetch') }
+  if (!j) return fail('unavailable', 'nojson');
+  if (!j.success) { const c = (j.error && j.error.code) || ''; return fail(c === 'SLIP_PENDING' ? 'pending' : /SIZE|VALIDATION|INVALID|NOT_FOUND|SLIP/i.test(c) ? 'noslip' : 'unavailable', c) }
+  const d = j.data || {}, raw = d.rawSlip || {}, ref = String(raw.transRef || '');
+  if (!ref) return fail('noslip', 'noref');
+  if (d.isDuplicate) return fail('dup', 'easyslip-dup');
+  if (!d.matchedAccount) return fail('acct', 'not-our-account');
+  const amt = Math.round(((raw.amount && raw.amount.amount) || 0) * 100);
+  if (d.isAmountMatched === false || amt !== P.amt * 100) return fail('amount', 'slip=' + amt);
+  const sd = Date.parse(raw.date || ''); if (!sd || sd < now - 3 * 3600e3 || sd > now + 600e3) return fail('old', 'date=' + raw.date);
+  // จองสลิปนี้ (คีย์หลักซ้ำ = เคยใช้แล้ว)
+  try { await db.prepare("INSERT INTO slips(channel,trans_ref,order_id,amount_satang,sender_name,receiver_name,slip_date,verified_at) VALUES(?,?,?,?,?,?,?,?)").bind('promptpay', ref, oid, amt, String(((raw.sender || {}).account || {}).name && raw.sender.account.name.th || '').slice(0, 60), String(((raw.receiver || {}).account || {}).name && raw.receiver.account.name.th || '').slice(0, 60), String(raw.date || ''), now).run() }
+  catch (e) { return fail('dup', 'slip-used') }
+  await db.prepare("UPDATE orders SET status='paid',paid_at=?,trans_ref=? WHERE id=?").bind(now, ref, oid).run();
+  try {
+    const run = h.vkRun ? h.vkRun(() => h.payGrant(uid, pk, name)) : h.payGrant(uid, pk, name); await run;
+    try { h.vkReset && h.vkReset() } catch (e) {}
+  } catch (e) { console.error('PAY_GRANT', String(e && e.message || e)); await db.prepare("UPDATE orders SET status='paid_nogrant',note=? WHERE id=?").bind(String(e && e.message || e).slice(0, 150), oid).run().catch(() => {}); return jr({ ok: 0, st: 'grant', order: oid }) }
+  try { await db.prepare("INSERT INTO entitlements(uid,kind,starts_at,ends_at,order_id,source,created_at) VALUES(?,?,?,?,?,?,?)").bind(uid, P.kind === 'vip' ? 'vip' + P.tier : 'rr' + P.n, now, P.days ? now + P.days * 86400e3 : null, oid, 'order', now).run() } catch (e) {}
+  await db.prepare("UPDATE orders SET status='done' WHERE id=?").bind(oid).run().catch(() => {});
+  return jr({ ok: 1, order: oid });
+}
+
 // 💬 แชทเรียลไทม์: ห้องเดียวทั้งโลก (Durable Object แบบ SQLite ใช้ได้ในแพ็กฟรี) — แค่กระจายข้อความ ไม่เก็บข้อมูล
 // ผู้เล่นต่อ WebSocket แบบจำศีล (ไม่มีข้อความ = ไม่เสียโควต้า) · ข้อความจริงยังบันทึกใน Valkey ผ่าน api/online.js เหมือนเดิม
 export class ChatHub {
@@ -103,6 +146,7 @@ export default {
         return r;
       } catch (e) { console.error('API_ERR edgecache', String(e && e.message || e)) }
     }
+    if (url.pathname === '/api/pay') return pay(request, env);
     if (TRAP.some(r => r.test(url.pathname))) { url.search = '?a=trap&p=' + encodeURIComponent(url.pathname.slice(1)); url.pathname = '/api/online' }
     if (url.pathname === '/api/online' || url.pathname === '/api/online/') {
       const r = await api(request, url);
