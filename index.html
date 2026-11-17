@@ -35472,6 +35472,61 @@ window.evBuy=async function(pk){
  <p class="tag2">ซื้อครั้งเดียวถาวร ผูกกับบัญชี · ของแต่งล้วน ไม่มีผลต่อพลังหรืออันดับ</p>`,'evbuy')};
 setInterval(()=>{try{const t=$('tEv');if(t&&Date.now()<END){const d=Math.ceil((END-Date.now())/864e5);t.textContent='🏮 ลอยกระทง · เหลือ '+d+' วัน'}}catch(e){}},5000);
 }
+
+/* ===== แบนเนอร์ประกาศการซื้อ (เงินจริง) ในแชทออนไลน์ · ยิ่งแพงยิ่งหรู ===== */
+{
+const st=document.createElement('style');st.textContent=`
+.pbn{position:absolute;left:10px;right:10px;top:48px;z-index:6;border-radius:16px;padding:10px 14px;display:flex;gap:10px;align-items:center;overflow:hidden;cursor:pointer;transform:translateY(-130%);opacity:0;transition:transform .5s cubic-bezier(.2,1.2,.3,1),opacity .4s;font-weight:800;color:#2a1a04;box-shadow:0 6px 18px #0008}
+.pbn.in{transform:none;opacity:1}.pbn.out{transform:translateY(-130%);opacity:0}
+.pbn .ic{font-size:28px;line-height:1;flex:0 0 auto}.pbn .tx{min-width:0;font-size:13.5px;line-height:1.35}.pbn .ic,.pbn .tx{position:relative;z-index:1}.pbn .sp{z-index:0}.pbn .tx small{display:block;font-weight:600;font-size:11px;opacity:.85}.pbn .tx b{font-weight:900}
+.pbn.t0{background:linear-gradient(135deg,#f4f6fa,#c9d1de);border:2px solid #7b8798}
+.pbn.t1{background:linear-gradient(135deg,#ffe9a8,#f0b840 60%,#d99a1c);border:2px solid #7a5512}
+.pbn.t2{background:linear-gradient(135deg,#3a1d5e,#7a3fa8 55%,#c28a2e);border:2px solid #f0c860;color:#fff2c4;box-shadow:0 6px 22px #7a3fa8aa}
+.pbn.t3{background:linear-gradient(135deg,#1a0b2e,#5a1a4a 40%,#a8301a 75%,#e8a020);border:2.5px solid #ffe08a;color:#fff6d0;box-shadow:0 0 26px #ffb52acc,0 8px 22px #000a;padding:14px 16px}
+.pbn.t3 .ic{font-size:36px}.pbn.t3 .tx{font-size:15px}
+.pbn::after{content:"";position:absolute;top:0;bottom:0;left:0;width:45%;background:linear-gradient(110deg,transparent,#ffffff66,transparent);transform:translateX(-120%);pointer-events:none}
+.pbn.t1.in::after{animation:pbS 2.8s ease-in-out 2}.pbn.t2.in::after,.pbn.t3.in::after{animation:pbS 2.2s ease-in-out infinite}
+@keyframes pbS{to{transform:translateX(320%)}}
+.pbn .sp{position:absolute;font-size:14px;pointer-events:none;opacity:0}.pbn.t3.in .sp,.pbn.t2.in .sp{animation:pbU 2.4s ease-in infinite}
+@keyframes pbU{0%{transform:translateY(24px) scale(.6);opacity:0}30%{opacity:.95}100%{transform:translateY(-26px) scale(1.1);opacity:0}}
+@media (prefers-reduced-motion:reduce){.pbn::after,.pbn .sp{animation:none!important}}
+`;document.head.appendChild(st);
+const Q=[];let busy=0,seen=+(LS.get('murim_banT',0))||0,inited=0;
+const tier=a=>a>=500?3:a>=150?2:a>=50?1:0;
+const NM=(n)=>n?esc(n):'ผู้สนับสนุนนิรนาม';
+function txt(e){
+ const n='<b>'+NM(e.n)+'</b>';
+ if(e.k==='vip')return e.ti===3?[n+' เข้าหอผู้ก่อตั้ง','ขอบคุณที่ร่วมสร้างเกมนี้ด้วยกัน']:[n+' เป็นสมาชิก VIP','ขอบคุณที่สนับสนุนเกม'];
+ if(e.k==='rr')return [n+' ได้แพ็กสุ่มเกิด','ขอบคุณที่สนับสนุนเกม'];
+ let l=e.l;if(!l&&e.it&&e.it[0]){try{const f=FRAMES.find(x=>x.id===e.it[0]);if(f)l=f.n}catch(x){}}
+ return [n+' ได้ '+esc(l||'ของตกแต่งใหม่')+(e.sn&&e.cap?` <b>เลขที่ ${e.sn}/${e.cap}</b>`:''),'ขอบคุณที่สนับสนุนเกม'];}
+const IC=[['🪙'],['✨'],['👑'],['🏆']],SP=['✨','🌟','💫','✨','🌟'];
+function show(){
+ if(busy||!Q.length)return;const m=$('modal'),box=$('chatBox');
+ if(!m||!box||m.dataset.k!=='online'||document.hidden)return;
+ const e=Q.shift(),t=tier(e.a||0),tx=txt(e),d=document.createElement('div');d.className='pbn t'+t;
+ d.innerHTML=`<span class="ic">${t===3?'👑':t===2?'💎':t===1?'🌟':'🪙'}</span><span class="tx">${tx[0]}<small>${tx[1]}</small></span>`+(t>=2?SP.map((x,i)=>`<span class="sp" style="left:${12+i*19}%;top:${40+(i%2)*20}%;animation-delay:${i*.45}s">${x}</span>`).join(''):'');
+ m.appendChild(d);busy=1;
+ const hold=[5000,7000,10000,15000][t];
+ const end=()=>{d.classList.remove('in');d.classList.add('out');setTimeout(()=>{d.remove();busy=0;setTimeout(show,400)},550)};
+ d.onclick=end;requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('in')));setTimeout(end,hold)}
+async function poll(){
+ try{const m=$('modal');if(!m||m.dataset.k!=='online'||!$('chatBox')||document.hidden)return;
+  const j=await api('buyann');const l=(j&&j.l)||[];const now=Date.now();
+  const fresh=l.filter(e=>e.t>seen&&now-e.t<15*60000).sort((a,b)=>a.t-b.t);
+  if(l.length){const mx=Math.max(...l.map(e=>e.t));if(mx>seen){seen=mx;LS.set('murim_banT',seen)}}
+  fresh.slice(-4).forEach(e=>Q.push(e));show()}catch(e){}}
+setInterval(poll,40000);
+const oo=window.openOnline;
+window.openOnline=function(){const r=oo.apply(this,arguments);try{setTimeout(poll,1500)}catch(e){}return r};
+/* ซ่อนชื่อในประกาศ: ส่ง an=1 ไปกับคำสั่งซื้อ */
+const of=window.fetch;
+window.fetch=function(u,o){try{if(typeof u==='string'&&/\/api\/pay/.test(u)&&o&&typeof o.body==='string'&&LS.get('murim_banoff',0)){const b=JSON.parse(o.body);if(b&&b.pk&&b.pk!=='donate'){b.an=1;o=Object.assign({},o,{body:JSON.stringify(b)})}}}catch(e){}return of.call(this,u,o)};
+window.banOffTog=function(el){LS.set('murim_banoff',el.checked?1:0);toast(el.checked?'ซ่อนชื่อในประกาศแล้ว':'แสดงชื่อในประกาศ')};
+const op=window.openProfile;
+window.openProfile=function(){const r=op.apply(this,arguments);try{const m=$('modal');const ac=m&&m.querySelector('.pfpane[data-t="acc"]');if(ac&&!ac.querySelector('.pfban'))ac.insertAdjacentHTML('beforeend',`<div class="pfsec pfban"><h4>📣 ประกาศการซื้อ</h4><label class="tag2" style="display:flex;gap:6px;align-items:center"><input type="checkbox" ${LS.get('murim_banoff',0)?'checked':''} onchange="banOffTog(this)"> ซ่อนชื่อของฉันเวลามีประกาศซื้อของในแชท (ขึ้นเป็น "ผู้สนับสนุนนิรนาม")</label></div>`)}catch(e){}return r};
+window.pbnTest=function(a,n){Q.push({t:Date.now(),n:n||'ทดสอบ',a,k:'cos',l:'พญานาคเฝ้าท่า',sn:7,cap:100});show()};
+}
 </script>
 </body>
 </html>

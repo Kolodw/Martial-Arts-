@@ -688,6 +688,7 @@ module.exports = async (req, res) => {
       res.statusCode = 404; return res.end('The page could not be found\n\nNOT_FOUND\n');
     }
     // 🎲 สิทธิ์สุ่มเกิดที่ซื้อ (เก็บที่เซิร์ฟเวอร์ ผูกกับรหัสผู้เล่น/บัญชี Google)
+    if (a === 'buyann') { const l = ((await cmd('LRANGE', 'buyann', 0, 11)) || []).map(jp).filter(Boolean); return res.json({ l }) }
     if (a === 'cosget') {
       if (!okId(id)) { const ft0 = cosFeat(); return res.json({ own: [], eq: {}, feat: { pk: ft0.pk, p: cosPrice(ft0.pk), full: COS_BASE[ft0.pk][0], exp: ft0.exp } }) }
       const [own, q, ...evr] = await pipe([['SMEMBERS', 'cos:' + id], ['GET', 'cosq:' + id], ...Object.keys(EVM).map(k => ['GET', 'evn:' + k]), ['HMGET', 'evs:' + id, ...EV_MI], ['HGETALL', 'kb:' + id], ['SISMEMBER', 'supok', id]]);
@@ -2810,6 +2811,26 @@ module.exports.payGrant = async (uid, pk, name) => {
   if (P.kind === 'rr') { await cmd('INCRBY', 'rrc:' + uid, P.n); await cmd('SADD', 'supok', uid); return P }
   await vipAdd(uid, P.tier, P.days, 1); await cmd('SADD', 'supok', uid);
   if (P.tier === 3) { if (!(await cmd('HEXISTS', 'vipu', uid))) { const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', uid, JSON.stringify({ n: clean(String(name || ''), 24), o, t: Date.now() })) } else await vipHeal(uid) }
+  return P;
+};
+
+// ประกาศการซื้อด้วยเงินจริงลงแชท (แบนเนอร์ตามระดับราคา) · เก็บ 30 รายการล่าสุด
+const EVN = { f_e1: 'กระทงใบตอง', f_e4: 'พญานาคเฝ้าท่า', t_e1: 'ฉายาผู้ปล่อยโคม', t_e4: 'ฉายานาคาเฝ้าท่า', c_e1: 'ธีมริมน้ำคืนเพ็ญ', c_e4: 'ธีมท่าน้ำนาคา' };
+const EVBN = { evb1: 'ชุดผู้ปล่อยโคม', evb2: 'ชุดพญานาค' };
+const _pgBase = module.exports.payGrant;
+module.exports.payGrant = async (uid, pk, name, an) => {
+  const P = await _pgBase(uid, pk, name);
+  try {
+    if (P && P.amt > 0 && okId(uid)) {
+      const e = { t: Date.now(), n: an ? '' : clean(String(name || ''), 16), a: P.amt, k: P.kind, ti: P.tier || 0 };
+      if (P.kind === 'cos') {
+        e.it = (P.items || []).slice(0, 3);
+        e.l = P.bun ? (EVBN[P.key] || '') : (EVN[(P.items || [])[0]] || '');
+        if (P.ev && !P.bun) { e.sn = +(await cmd('HGET', 'evs:' + uid, P.items[0])) || 0; e.cap = P.cap || 0 }
+      }
+      await cmd('LPUSH', 'buyann', JSON.stringify(e)); await cmd('LTRIM', 'buyann', 0, 29);
+    }
+  } catch { }
   return P;
 };
 module.exports.isAdm = isAdmKey;
