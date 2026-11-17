@@ -70,6 +70,40 @@ const jr = (o, st = 200) => new Response(JSON.stringify(o), { status: st, header
 async function payProducts(env) {
   try { const r = await env.PAY_DB.prepare("SELECT sku,kind,scope,world_id,tier,days,n,price_baht FROM products WHERE active=1 ORDER BY sort").all(); return jr({ items: r.results || [] }) } catch (e) { return jr({ items: [] }) }
 }
+
+// 💛 หอผู้สนับสนุน: จัดอันดับตามยอดที่ยืนยันแล้ว (orders สถานะ done/donation) · ผู้เล่นเลือกเองว่าจะขึ้นชื่อ/โชว์ยอดหรือไม่ (ค่าเริ่มต้นนิรนาม ไม่ส่ง uid ออกนอกเซิร์ฟเวอร์)
+async function supHall(request, env, url) {
+  const h = await handler(), a = url.searchParams.get('a'), cmd = h.cmd; if (!env.PAY_DB || !cmd) return jr({ rows: [], me: null });
+  const db = env.PAY_DB, ST = "status IN ('done','donation')";
+  let uid = String(url.searchParams.get('uid') || ''), body = null;
+  if (a === 'supjoin') { try { body = await request.json() } catch (e) { return jr({ ok: 0 }, 400) } uid = String(body.id || '') }
+  const okU = /^[a-z0-9]{6,24}$/.test(uid);
+  const bk = new Date(Date.now() + 7 * 3600e3), ms = Date.UTC(bk.getUTCFullYear(), bk.getUTCMonth(), 1) - 7 * 3600e3;
+  const sum = async (u, since) => { const r = await db.prepare("SELECT COALESCE(SUM(amount_satang),0) s FROM orders WHERE uid=? AND " + ST + " AND paid_at>=?").bind(u, since).first(); return (r && r.s) || 0 };
+  if (a === 'supjoin') {
+    if (!okU || (await sum(uid, 0)) <= 0) return jr({ ok: 0, err: 'nopay' }, 403);
+    if (body.off) { await cmd('HDEL', 'supp', uid); return jr({ ok: 1 }) }
+    const n = h.clean(String(body.n || ''), 24).trim(); if (!n) return jr({ ok: 0, err: 'name' }, 400);
+    const look = body.look && JSON.stringify(body.look).length < 1600 ? body.look : null;
+    await cmd('HSET', 'supp', uid, JSON.stringify({ n, sa: body.sa ? 1 : 0, look, t: Date.now() })); return jr({ ok: 1 });
+  }
+  const scope = url.searchParams.get('s') === 'm' ? 'm' : 'a', since = scope === 'm' ? ms : 0, ck = 'supb:' + scope + ':' + (scope === 'm' ? ms : 0);
+  let raw = null; try { raw = JSON.parse(await cmd('GET', ck) || 'null') } catch (e) {}
+  if (!raw) {
+    const rs = await db.prepare("SELECT uid u, SUM(amount_satang) s FROM orders WHERE " + ST + " AND paid_at>=? GROUP BY uid HAVING s>0 ORDER BY s DESC LIMIT 50").bind(since).all();
+    raw = (rs.results || []).map(r => [r.u, r.s]); try { await cmd('SET', ck, JSON.stringify(raw), 'EX', 300) } catch (e) {}
+  }
+  const ids = raw.map(r => r[0]), ps = ids.length ? await cmd('HMGET', 'supp', ...ids) : [];
+  const rows = raw.map((r, i) => { let p = null; try { p = JSON.parse(ps[i] || 'null') } catch (e) {} return { r: i + 1, n: p ? p.n : '', look: p ? p.look : null, amt: p && p.sa ? Math.round(r[1] / 100) : null, me: r[0] === uid ? 1 : 0 } });
+  let me = null;
+  if (okU) {
+    const tot = await sum(uid, 0), mon = await sum(uid, ms); let p = null; try { p = JSON.parse(await cmd('HGET', 'supp', uid) || 'null') } catch (e) {}
+    const mine = scope === 'm' ? mon : tot; let rank = 0;
+    if (mine > 0) { const c = await db.prepare("SELECT COUNT(*) n FROM (SELECT uid, SUM(amount_satang) s FROM orders WHERE " + ST + " AND paid_at>=? GROUP BY uid HAVING s>?)").bind(since, mine).first(); rank = ((c && c.n) || 0) + 1 }
+    me = { tot: Math.round(tot / 100), mon: Math.round(mon / 100), rank, ok: tot > 0 ? 1 : 0, n: p ? p.n : '', sa: p ? p.sa : 0, joined: p ? 1 : 0 };
+  }
+  return jr({ rows, me, s: scope });
+}
 async function payAdmin(request, env, url) {
   const h = await handler(), a = url.searchParams.get('a');
   if (!h.isAdm || !h.isAdm(url.searchParams.get('key'))) return jr({ err: 'admin' }, 403);
@@ -239,7 +273,7 @@ export default {
         return r;
       } catch (e) { console.error('API_ERR edgecache', String(e && e.message || e)) }
     }
-    if (url.pathname === '/api/pay') return url.searchParams.get('a') === 'products' ? payProducts(env) : url.searchParams.get('a') ? payAdmin(request, env, url) : pay(request, env);
+    if (url.pathname === '/api/pay') return url.searchParams.get('a') === 'products' ? payProducts(env) : /^(supboard|supjoin)$/.test(url.searchParams.get('a') || '') ? supHall(request, env, url) : url.searchParams.get('a') ? payAdmin(request, env, url) : pay(request, env);
     if (TRAP.some(r => r.test(url.pathname))) { url.search = '?a=trap&p=' + encodeURIComponent(url.pathname.slice(1)); url.pathname = '/api/online' }
     if (url.pathname === '/api/online' || url.pathname === '/api/online/') {
       const r = await api(request, url);
