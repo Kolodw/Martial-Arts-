@@ -281,6 +281,14 @@ const RR_PK = { s: [10, 12], m: [29, 40], l: [59, 100] }; // แพ็กสุ�
 // 🏮 ผู้อุปถัมภ์: [ราคา บาท, ระดับ, จำนวนวัน (0 = ถาวร)] — ไม่มีพลัง/เงินในเกม ได้แค่สุ่มเกิดเพิ่ม ป้าย และสิทธิ์สะดวก
 const RP_SC = ['inn', 'mkt', 'gate', 'sky'];
 const VIP_PK = { v1: [39, 1, 30], v2: [99, 2, 30], v3: [599, 3, 0] };
+// 🎨 ร้านตกแต่ง (กรอบ/ฉายา/ธีมแชท) — ซื้อครั้งเดียวถาวร ไม่มีผลต่อพลังหรือการแข่งขัน
+const COS_FP = [39, 49, 39, 49, 49, 39, 39, 49], COS_SET = [79, 69, 59, 69, 69, 59, 59, 69];
+const COS_P = {}; // pk -> [ราคา, [ไอเทม]]
+for (let i = 1; i <= 8; i++) { COS_P['cf' + i] = [COS_FP[i - 1], ['f_p' + i]]; COS_P['ct' + i] = [i === 1 ? 29 : 19, ['t_p' + i]]; COS_P['cc' + i] = [i === 1 ? 29 : 19, ['c_p' + i]]; COS_P['cs' + i] = [COS_SET[i - 1], ['f_p' + i, 't_p' + i, 'c_p' + i]] }
+COS_P.call = [399, [...Array(8).keys()].flatMap(i => ['f_p' + (i + 1), 't_p' + (i + 1), 'c_p' + (i + 1)])];
+const COS_ALL = new Set(COS_P.call[1]);
+const cosOwn = async id => { try { return (await cmd('SMEMBERS', 'cos:' + id)) || [] } catch { return [] } };
+
 const VIP_NM = { 1: 'ผู้อุปถัมภ์สำนัก', 2: 'ผู้อาวุโสอุปถัมภ์', 3: 'บรรพชนผู้อุปถัมภ์' };
 const VIP_GIFT_UNTIL = Date.parse('2026-12-01T00:00:00+07:00'); // ผู้สนับสนุนเดิมที่เข้าเกมก่อนวันนี้ รับ VIP ฟรี 1 เดือน
 const vipTier = (v, t = Date.now()) => !v ? 0 : v.u ? 3 : (+v.e2 || 0) > t ? 2 : (+v.e1 || 0) > t ? 1 : 0;
@@ -664,6 +672,19 @@ module.exports = async (req, res) => {
       res.statusCode = 404; return res.end('The page could not be found\n\nNOT_FOUND\n');
     }
     // 🎲 สิทธิ์สุ่มเกิดที่ซื้อ (เก็บที่เซิร์ฟเวอร์ ผูกกับรหัสผู้เล่น/บัญชี Google)
+    if (a === 'cosget') {
+      if (!okId(id)) return res.json({ own: [], eq: {} });
+      const [own, q] = await pipe([['SMEMBERS', 'cos:' + id], ['GET', 'cosq:' + id]]);
+      return res.json({ own: own || [], eq: jp(q) || {} });
+    }
+    if (a === 'cosset') {
+      if (!okId(id)) return res.status(400).json({ err: 'id' });
+      const adm = isAdmKey(b.key) || !!(+(await cmd('SISMEMBER', 'admids', id))), own = new Set(await cosOwn(id)), has = x => COS_ALL.has(x) && (adm || own.has(x));
+      const t = String(b.t || ''), c = String(b.c || '');
+      const q = { t: has(t) ? t : '', c: has(c) ? c : '' };
+      await cmd('SET', 'cosq:' + id, JSON.stringify(q));
+      return res.json({ ok: 1, eq: q });
+    }
     if (a === 'rrget') {
       if (!okId(id)) return res.json({ c: 0 });
       let v = jp(await cmd('GET', 'vip:' + id));
@@ -730,6 +751,7 @@ module.exports = async (req, res) => {
       if (!(await cmd('SET', 'dup:rp:' + id + ':' + (hh >>> 0).toString(36), 1, 'NX', 'PX', 45000))) return res.status(429).json({ err: 'dup' });
       const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), x, a: act, pu: id.slice(0, 12) };
       try { const vj = jp(await cmd('GET', 'vip:' + id)), vt = vipTier(vj); if (vt) { m.vp = vt; if (vj.tt && (vt === 3 || VIP_TT.includes(vj.tt))) m.vq = String(vj.tt).slice(0, 20) } } catch {}
+      try { const cq = jp(await cmd('GET', 'cosq:' + id)); if (cq) { if (cq.t) m.ct = cq.t; if (cq.c) m.cc = cq.c } } catch {}
       await pipe([['LPUSH', 'rp:' + sc, JSON.stringify(m)], ['LTRIM', 'rp:' + sc, 0, 59], ['EXPIRE', 'rp:' + sc, 86400 * 3]]);
       return res.json({ ok: 1, m });
     }
@@ -1855,6 +1877,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       // รูปตัวละครจากเกม (PNG 56×62) ขึ้นได้ทันที · รูปที่อัปโหลดเอง (JPEG/WebP) ต้องรอแอดมินตรวจก่อนคนอื่นจะเห็น
       let av = String(b.av || ''), alt = String(b.alt || ''); const up = b.up ? 1 : 0, pu = id.slice(0, 12); let fr = String(b.fr || '').replace(/[^a-z0-9_]/g, '').slice(0, 20);
       if (/^f_adm/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id)))) fr = ''; // กรอบแอดมิน: ใส่ได้เฉพาะแอดมิน
+      if (/^f_p[1-8]$/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id))) && !(+(await cmd('SISMEMBER', 'cos:' + id, fr)))) fr = ''; // กรอบร้านค้า: ต้องซื้อแล้ว
       if (/^f_(arc|box|lg)\d/.test(fr)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.fr || []).includes(fr)) fr = '' } // กรอบลาน: ต้องมีในกระเป๋าเซิร์ฟเวอร์
       const isUp = /^data:image\/(jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(av);
       if (isUp && !isAdmKey(b.key)) return res.status(403).json({ err: 'noup' }); // อัปโหลดรูปเองปิดไว้ — เฉพาะแอดมิน
@@ -1944,6 +1967,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (isA) m.ad = 1;
       if (!b.nsp) { try { if (+(await cmd('SISMEMBER', 'supok', id))) m.sp = 1 } catch {} }
       try { const vj = jp(await cmd('GET', 'vip:' + id)), vt = vipTier(vj); if (vt) { m.vp = vt; if (vj.tt && (vt === 3 || VIP_TT.includes(vj.tt))) m.vq = String(vj.tt).slice(0, 20) } } catch {}
+      try { const cq = jp(await cmd('GET', 'cosq:' + id)); if (cq) { if (cq.t) m.ct = cq.t; if (cq.c) m.cc = cq.c } } catch {}
       if (/^ตำนานลานซีซั่น \d{1,4}$/.test(String(b.tt || '')) && !m.tt) { const wv0 = jp(await cmd('HGET', 'arwal', id)); if (isAdmKey(b.key) || (wv0 && wv0.own && (wv0.own.tt || []).includes(String(b.tt)))) { m.tt = String(b.tt); m.tr = 6 } }
       if (['นักล่าเงา', 'ผู้ไม่เคยถอย', 'ตำนานแห่งลาน', 'ราชันเงาอสูร', 'เทพสงครามแห่งลาน', 'ผู้ยืนหนึ่งเหนือพันศึก', 'จักรพรรดิแห่งเงา', 'ผู้ไต่ลานทองคำ', 'เพชรแห่งลานเงา', 'จ้าวลานประลอง', 'ปรมาจารย์ผู้ไร้เงา', 'ราชันหมื่นเงา', 'เทพยุทธ์แห่งยุค'].includes(m.tt) && !isAdmKey(b.key)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.tt || []).includes(m.tt)) { m.tt = ''; m.tr = 0 } }
       // แชร์การปลดปล่อยพลัง: แนบข้อมูลฉาก pixel (ตัวเลข/สี/คำสั้นๆ เท่านั้น) ให้คนอื่นเล่นซ้ำในแชทได้
@@ -2721,9 +2745,11 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
 module.exports.vkReset = vkReset;
 module.exports.vkRun = vkRun;
 // 💳 ให้สิทธิ์หลังตรวจสลิปอัตโนมัติสำเร็จ (เรียกจาก cloudflare/worker.js /api/pay) — pack: v1|v2|v3 = VIP, rs|rm|rl = ซื้อสุ่มเกิด
-module.exports.payPack = pk => { pk = String(pk || ''); if (VIP_PK[pk]) return { kind: 'vip', amt: VIP_PK[pk][0], tier: VIP_PK[pk][1], days: VIP_PK[pk][2] }; const r = pk[0] === 'r' && RR_PK[pk.slice(1)]; return r ? { kind: 'rr', amt: r[0], n: r[1] } : null };
+module.exports.payPack = pk => { pk = String(pk || ''); if (COS_P[pk]) return { kind: 'cos', amt: COS_P[pk][0], tier: 0, days: 0, n: 0, items: COS_P[pk][1], key: pk }; if (VIP_PK[pk]) return { kind: 'vip', amt: VIP_PK[pk][0], tier: VIP_PK[pk][1], days: VIP_PK[pk][2] }; const r = pk[0] === 'r' && RR_PK[pk.slice(1)]; return r ? { kind: 'rr', amt: r[0], n: r[1] } : null };
 module.exports.payGrant = async (uid, pk, name) => {
-  const P = pk && typeof pk === 'object' ? pk : module.exports.payPack(pk); if (!P || !okId(uid) || !(P.kind === 'rr' ? P.n > 0 : P.tier >= 1 && P.tier <= 3)) throw new Error('bad pack/id');
+  const P = pk && typeof pk === 'object' ? pk : module.exports.payPack(pk);
+  if (P && P.kind === 'cos' && okId(uid)) { const it = (P.items || []).filter(x => COS_ALL.has(x)); if (!it.length) throw new Error('bad pack/id'); await cmd('SADD', 'cos:' + uid, ...it); await cmd('SADD', 'supok', uid); return P }
+  if (!P || !okId(uid) || !(P.kind === 'rr' ? P.n > 0 : P.tier >= 1 && P.tier <= 3)) throw new Error('bad pack/id');
   if (P.kind === 'rr') { await cmd('INCRBY', 'rrc:' + uid, P.n); await cmd('SADD', 'supok', uid); return P }
   await vipAdd(uid, P.tier, P.days, 1); await cmd('SADD', 'supok', uid);
   if (P.tier === 3) { if (!(await cmd('HEXISTS', 'vipu', uid))) { const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', uid, JSON.stringify({ n: clean(String(name || ''), 24), o, t: Date.now() })) } else await vipHeal(uid) }

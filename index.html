@@ -5856,7 +5856,7 @@ function openFrameShop(){const d=frGet(),k=S?Math.round(S.karma):null,kb=kbGet()
 function frBuy(id){const f=frOf(id),d=frGet(),kb=kbGet();if(!f||d.own.includes(id))return;if(kb[f.side]<f.c){toast('กรรมไม่พอ');return}
  kb[f.side]-=f.c;kbSet(kb);d.own.push(id);d.eq=id;frSet(d);try{if(S&&S.alive)log(`🖼️ แลก<b>${f.n}</b>ด้วยคลัง${f.side==='g'?'กรรมดี':'กรรมชั่ว'} ${fmt(f.c)}`,'epic')}catch(e){}toast('ได้ '+f.n);profPush();try{render()}catch(e){}openFrameShop()}
 function frEquip(id){const d=frGet();d.eq=id;frSet(d);profPush();try{render()}catch(e){}if($('modal').dataset.k==='frames')openFrameShop();else if($('modal').dataset.k==='profile')openProfile()}
-async function profPush(){if(!onlineOK)return;const d=frGet();try{await api('profile',Object.assign({av:d.av||'',fr:d.eq||''},/^f_adm/.test(d.eq||'')&&admK()?{key:admK()}:{}))}catch(e){}}
+async function profPush(){if(!onlineOK)return;const d=frGet();try{await api('profile',Object.assign({av:d.av||'',fr:d.eq||''},/^f_(adm|p\d)/.test(d.eq||'')&&admK()?{key:admK()}:{}))}catch(e){}}
 function openProfile(){const d=frGet();const own=FRAMES.filter(f=>d.own.includes(f.id));
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👤 โปรไฟล์</h3><div style="display:flex;gap:14px;align-items:center;margin:8px 0 12px"><div class="frbig">${frWrap(`<span class="frph big">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,d.eq)}</div><div><div style="font-size:18px"><b>${esc(pname())}</b></div><div class="tag2">${d.eq?'กรอบ: '+frOf(d.eq).n:'ยังไม่มีกรอบ'}</div><div class="tag2">รูปนี้จะขึ้นข้างชื่อในแชทโลก</div></div></div>
   ${S?`<button class="pbtn" style="width:100%" onclick="profSnap()">📸 ใช้ตัวละครตอนนี้ (${esc(S.name)}) เป็นรูปโปรไฟล์</button>`:'<p class="tag2">เริ่มชีวิตก่อน แล้วกลับมากดใช้ตัวละครเป็นรูปโปรไฟล์ได้</p>'}
@@ -32705,6 +32705,167 @@ window._wld3={IT,KE,LEG,wBase};
 {const rep=M=>{try{if(!M)return;const L=M.L;if(L&&typeof L==='object'&&('edu' in L||'tr' in L)){if(typeof L.mem!=='object'||!L.mem)L.mem={};if(typeof L.tir!=='object')delete L.tir;if(typeof L.rk!=='object')delete L.rk}if(M.wx&&M.wx.id==='loop'&&!M.LP)M.LP={mem:0,tir:5,rk:0}}catch(e){}};
  const _y=mwYear;mwYear=function(){rep(S&&S.mw);return _y.apply(this,arguments)};
  const _r=render;render=function(){if(S&&S.mw&&!S.mw._lpfx){S.mw._lpfx=1;rep(S.mw)}return _r.apply(this,arguments)}}
+(function(){
+const M=window.FRSH_M,T=window.FRSH_T;if(!M||!T)return;
+const C1='fill:var(--c1)',C2='fill:var(--c2)',C3='fill:var(--c3)',PC='fill:var(--pc)',S1='stroke:var(--c1)',S2='stroke:var(--c2)',SPc='stroke:var(--pc)';
+const mir=d=>d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g,(m,x,y)=>(100-x)+' '+y);
+const star=(x,y,r,s)=>`<path style="${s||PC}" d="M${x} ${y-r}L${x+r*.28} ${y-r*.28}L${x+r} ${y}L${x+r*.28} ${y+r*.28}L${x} ${y+r}L${x-r*.28} ${y+r*.28}L${x-r} ${y}L${x-r*.28} ${y-r*.28}Z"/>`;
+const petal=(x,y,a,l,w,s)=>`<ellipse cx="${x}" cy="${y-l/2}" rx="${w}" ry="${l/2}" transform="rotate(${a} ${x} ${y})" style="${s}"/>`;
+const G=f=>()=>`<g transform="translate(20 20) scale(.6)">${f()}</g>`;
+// 🪷 บัวทองเซียน
+M.plotus=G(()=>{let o='';const bloom=(x,y,s,sc)=>{[-70,-40,-15,15,40,70].forEach((a,i)=>o+=petal(x,y,a,s*(i%2?1:.86),s*.3,`${i%2?C1:C2};stroke:var(--c3);stroke-width:.8`));[-28,0,28].forEach(a=>o+=petal(x,y,a,s*.78,s*.24,`${C2};${SPc};stroke-width:.7`));o+=`<circle cx="${x}" cy="${y}" r="${s*.14}" style="${PC}"/>`};
+ bloom(50,112,26);bloom(-2,-2,13);bloom(102,-2,13);bloom(-2,102,10);bloom(102,102,10);
+ [20,32,44,56,68,80].forEach((x,i)=>o+=`<circle cx="${x}" cy="-8" r="${i%2?2.6:3.4}" style="${PC}"/>`);
+ o+=`<path style="fill:none;${S2};stroke-width:1.6;stroke-dasharray:1 4;stroke-linecap:round" d="M-8 20Q-14 50 -8 80M108 20Q114 50 108 80"/>`;return o});
+// 🐉 มังกรหยก
+M.pdrag=G(()=>{let o='';const sc=(x,y,r)=>`<path style="${C1};stroke:var(--c3);stroke-width:.8" d="M${x-r} ${y}Q${x} ${y-r*1.3} ${x+r} ${y}Q${x} ${y+r*.5} ${x-r} ${y}Z"/>`;
+ // เขา+หนวด
+ o+=`<path style="${C2};${S1};stroke-width:1.2" d="M34 -2Q28 -16 18 -22Q30 -20 40 -6Z"/><path style="${C2};${S1};stroke-width:1.2" d="M66 -2Q72 -16 82 -22Q70 -20 60 -6Z"/>`;
+ o+=`<path style="fill:none;${S2};stroke-width:2;stroke-linecap:round" d="M30 -4Q10 -10 -2 -2Q-8 6 -4 18M70 -4Q90 -10 102 -2Q108 6 104 18"/>`;
+ o+=`<circle cx="50" cy="-5" r="6" style="${C1};${S2};stroke-width:1.4"/><circle cx="48" cy="-6" r="1.6" style="${C3}"/><circle cx="52" cy="-6" r="1.6" style="${C3}"/><path style="${C2}" d="M44 -1L50 5L56 -1Z"/>`;
+ // ลำตัวเกล็ดไหลตามขอบ
+ for(let i=0;i<7;i++){o+=sc(-5+Math.sin(i)*3,12+i*11,5.2)+sc(105-Math.sin(i)*3,12+i*11,5.2)}
+ for(let i=0;i<6;i++)o+=sc(16+i*14,106+(i%2)*3,5);
+ o+=`<path style="${C1};${S2};stroke-width:1.2" d="M104 96Q118 104 112 118Q104 110 96 108Z"/><path style="fill:none;${S2};stroke-width:1.6" d="M104 98Q110 104 108 112"/>`;
+ [[-12,40],[112,64]].forEach(p=>o+=`<circle cx="${p[0]}" cy="${p[1]}" r="3" style="${PC}"/>`);return o});
+// 🌙 จันทร์หิมะ
+M.pmoon=G(()=>{let o=`<path style="${C2};stroke:var(--c1);stroke-width:1.2" d="M92 -18A22 22 0 1 0 116 14A17 17 0 1 1 92 -18Z"/>`;
+ const fl=(x,y,r)=>[0,60,120].map(a=>{const t=a*Math.PI/180,dx=Math.cos(t)*r,dy=Math.sin(t)*r;return`<line x1="${x-dx}" y1="${y-dy}" x2="${x+dx}" y2="${y+dy}" style="${S2};stroke-width:1.8;stroke-linecap:round"/>`}).join('')+`<circle cx="${x}" cy="${y}" r="1.6" style="${PC}"/>`;
+ o+=fl(-4,-4,11)+fl(-6,104,9)+fl(104,106,8)+fl(-12,50,6)+fl(112,54,5);
+ [[22,-12,3],[44,-18,2.2],[66,-12,3.4],[10,110,2.4],[40,118,3],[70,112,2.2]].forEach(p=>o+=star(p[0],p[1],p[2]*1.8));
+ o+=`<path style="fill:none;${S2};stroke-width:1.2;stroke-dasharray:2 5;stroke-linecap:round" d="M-10 20Q50 -30 110 20"/>`;
+ [[-8,28],[-10,76],[108,34],[110,80]].forEach(p=>o+=`<circle cx="${p[0]}" cy="${p[1]}" r="2.2" style="${C2}"/>`);return o});
+// 🔥 หงส์อัคนี
+M.pphoenix=G(()=>{let o='';const wing=()=>{let w='';[[-10,34,-46,18,-30],[-14,46,-58,30,-22],[-14,58,-60,46,-12],[-10,70,-50,62,-4],[-4,80,-34,76,6]].forEach((f,i)=>w+=`<path style="${i%2?C1:C2};stroke:var(--c3);stroke-width:.9" d="M-2 ${f[1]}Q${f[0]-6} ${f[1]-8} ${f[2]} ${f[3]}Q${f[0]-2} ${f[1]+2} -2 ${f[1]+12}Z"/>`);return w};
+ o+=wing()+`<g transform="translate(100 0) scale(-1 1)">${wing()}</g>`;
+ o+=`<path style="${C1}" d="M36 -2Q38 -22 50 -34Q62 -22 64 -2Q50 -10 36 -2Z"/><path style="${C2}" d="M42 -4Q44 -18 50 -26Q56 -18 58 -4Q50 -9 42 -4Z"/><circle cx="50" cy="-12" r="2" style="${C3}"/>`;
+ o+=`<path style="${C1}" d="M14 108L10 90L20 98L22 82L32 98L34 110Z"/><path style="${C2}" d="M40 114L46 96L50 106L54 96L60 114Z"/><path style="${C1}" d="M86 108L90 90L80 98L78 82L68 98L66 110Z"/>`;
+ [[12,24],[88,30],[6,88],[96,92],[30,120],[72,118]].forEach((p,i)=>o+=`<circle cx="${p[0]}" cy="${p[1]}" r="${i%2?1.8:2.8}" style="${C2}"/>`);return o});
+// ⚡ อสนีฟ้าลิขิต
+M.pthunder=G(()=>{const bolt=(pts,w)=>`<path style="fill:none;${S2};stroke-width:${w};stroke-linejoin:miter;stroke-linecap:round" d="${pts}"/><path style="fill:none;${S1};stroke-width:${w*.4};stroke-linejoin:miter" d="${pts}"/>`;let o='';
+ o+=bolt('M-6 -12L8 8L-2 10L14 34',4)+bolt('M106 -12L92 8L102 10L86 34',4)+bolt('M-6 112L8 92L-2 90L14 66',4)+bolt('M106 112L92 92L102 90L86 66',4);
+ o+=bolt('M36 -8L44 4L38 6L48 20',3)+bolt('M64 -8L56 4L62 6L52 20',3)+bolt('M30 108L40 98L34 96L46 84',2.4)+bolt('M70 108L60 98L66 96L54 84',2.4);
+ [[-10,50],[110,50]].forEach(p=>o+=`<circle cx="${p[0]}" cy="${p[1]}" r="6" style="${C3};${S2};stroke-width:1.6"/><circle cx="${p[0]}" cy="${p[1]}" r="2.6" style="${C1}"/>`);
+ o+=`<circle cx="50" cy="-12" r="5" style="${C3};${S2};stroke-width:1.6"/>`+star(50,-12,6,C1);return o});
+// 🌸 ซากุระราตรี
+M.psakura=G(()=>{let o=`<path style="fill:none;stroke:#5a3a2a;stroke-width:3;stroke-linecap:round" d="M-14 -6Q10 -2 22 -14M-4 -2Q6 14 -2 30M104 -10Q86 4 70 -2"/><path style="fill:none;stroke:#5a3a2a;stroke-width:3;stroke-linecap:round" d="M114 106Q90 100 78 112M104 102Q94 86 102 70"/>`;
+ const fl=(x,y,s)=>{let f='';for(let i=0;i<5;i++)f+=petal(x,y,i*72,s,s*.5,`${i%2?C1:C2};stroke:var(--c3);stroke-width:.6`);return f+`<circle cx="${x}" cy="${y}" r="${s*.18}" style="${PC}"/>`};
+ [[-2,-10,10],[22,-14,8],[-12,26,9],[0,34,7],[72,-6,8],[104,-12,10],[110,100,9],[84,112,8],[100,68,7],[4,60,6]].forEach(p=>o+=fl(...p));
+ [[40,-22,3],[60,-26,2.4],[-16,60,2.8],[116,40,2.6],[30,118,2.6],[56,124,2.2],[72,120,3]].forEach((p,i)=>o+=petal(p[0],p[1],i*40,p[2]*2.4,p[2]*.9,PC));return o});
+// 🐚 ไข่มุกมหาสมุทร
+M.ppearl=G(()=>{let o='';
+ o+=`<path style="${C1};${S2};stroke-width:1.2;opacity:.95" d="M-2 100Q4 84 14 98Q24 82 34 100Q44 84 54 100Q64 84 74 100Q84 84 94 100Q100 90 102 100Q102 116 88 116L12 116Q-2 116 -2 100Z"/><path style="fill:none;${S2};stroke-width:1.6" d="M4 106Q12 98 22 106T42 106T62 106T82 106T98 106"/>`;
+ for(let i=0;i<9;i++){const a=(-180+i*22.5)*Math.PI/180;const x=50+Math.cos(a)*62,y=48+Math.sin(a)*56;o+=`<circle cx="${x}" cy="${y}" r="${i%2?3:4.2}" style="${C2};stroke:var(--c1);stroke-width:1"/><circle cx="${x-1}" cy="${y-1.2}" r="1.2" style="${PC}"/>`}
+ // เปลือกหอยบนยอด
+ o+=`<path style="${C2};stroke:var(--c1);stroke-width:1.2" d="M38 -4Q40 -22 50 -26Q60 -22 62 -4Z"/>`+[42,46,50,54,58].map((x,i)=>`<line x1="${x}" y1="-5" x2="${44+i*3}" y2="-23" style="${S1};stroke-width:1"/>`).join('')+`<circle cx="50" cy="-14" r="4" style="${PC};${S1};stroke-width:1"/>`;
+ [[-8,30],[108,40],[-10,66],[110,70]].forEach((p,i)=>o+=`<circle cx="${p[0]}" cy="${p[1]}" r="${2+i%2}" style="fill:none;${S2};stroke-width:1.2"/>`);return o});
+// 🌌 จักรวาลดารา
+M.pgalaxy=G(()=>{let o=`<ellipse cx="50" cy="50" rx="74" ry="26" transform="rotate(-28 50 50)" style="fill:none;${S2};stroke-width:1.4;opacity:.8"/><ellipse cx="50" cy="50" rx="64" ry="20" transform="rotate(-28 50 50)" style="fill:none;${S1};stroke-width:2.4;stroke-dasharray:1 5;stroke-linecap:round"/>`;
+ o+=`<circle cx="104" cy="24" r="9" style="${C1};${S2};stroke-width:1.4"/><ellipse cx="104" cy="24" rx="15" ry="4" transform="rotate(-20 104 24)" style="fill:none;${S2};stroke-width:1.6"/><circle cx="-6" cy="78" r="5" style="${C2}"/>`;
+ [[10,-14,4],[40,-22,3],[72,-16,5],[-14,24,3],[116,64,4],[22,116,5],[64,122,3],[98,108,4]].forEach(p=>o+=star(p[0],p[1],p[2]*1.8));
+ o+=`<path style="fill:none;${S2};stroke-width:2;stroke-linecap:round" d="M96 -20L66 -4"/><circle cx="98" cy="-21" r="3" style="${PC}"/>`;return o});
+const mk=(id,n,c1,c2,c3,pc,bd,ty,sh)=>{const f={id,n,side:'h',c:0,ty,c1,c2,c3,pc,bd,d:''};const i=FRAMES.findIndex(x=>x.id===id);if(i>=0)FRAMES[i]=f;else FRAMES.push(f);T[id]=sh};
+mk('f_p1','กรอบบัวทองเซียน','#ff9cc8','#fff0a0','#6a1a48','#ffffff','🪷','halo orbit sparkle corner badge','soft|plotus');
+mk('f_p2','กรอบมังกรหยก','#2ee6a0','#d8ffe8','#06392a','#ffffff','🐉','spin halo orbit corner badge','pdrag');
+mk('f_p3','กรอบจันทร์หิมะ','#9ac8ff','#f2f8ff','#0a1a3a','#ffffff','🌙','orbit sparkle star corner badge','soft|pmoon');
+mk('f_p4','กรอบหงส์อัคนี','#ff5a1a','#ffd24a','#4a0a00','#fff2c0','🔥','spin halo orbit aura2 sparkle corner badge','pphoenix');
+mk('f_p5','กรอบอสนีฟ้าลิขิต','#3ad8ff','#ffffff','#061c3a','#bff0ff','⚡','spin halo orbit sparkle star corner badge','pthunder');
+mk('f_p6','กรอบซากุระราตรี','#ff8ec0','#ffe0ee','#3a1030','#ffffff','🌸','orbit sparkle corner badge','soft|psakura');
+mk('f_p7','กรอบไข่มุกมหาสมุทร','#2fd8cc','#e6fffb','#04303a','#ffffff','🐚','halo orbit sparkle corner badge','rnd|ppearl');
+mk('f_p8','กรอบจักรวาลดารา','#8a5aff','#ff7ad8','#0a0420','#e0d0ff','🌌','spin halo orbit aura2 sparkle star corner badge','rnd|pgalaxy');
+})();
+
+// 🎨 ร้านตกแต่ง: กรอบ 8 · ฉายา 8 · ธีมแชท 8 (ซื้อถาวร ไม่มีผลต่อพลัง) — จ่ายผ่านสลิปพร้อมเพย์ตรวจอัตโนมัติ /api/pay
+(function(){try{
+const FP=[39,49,39,49,49,39,39,49],SP=[79,69,59,69,69,59,59,69],NMF=['กรอบบัวทองเซียน','กรอบมังกรหยก','กรอบจันทร์หิมะ','กรอบหงส์อัคนี','กรอบอสนีฟ้าลิขิต','กรอบซากุระราตรี','กรอบไข่มุกมหาสมุทร','กรอบจักรวาลดารา'],
+ NMT=['ผู้ก่อตั้งตำนานทองคำ','มังกรหยกพิทักษ์','รุ้งเหนือสวรรค์','เพลิงโลหิตไม่ดับ','อสนีฟ้าลิขิต','ซากุระร่ำราตรี','ไข่มุกมหาสมุทร','ดารานิรันดร์'],
+ NMC=['ทองมงคล','หยกมังกร','หิมะจันทรา','เพลิงอัคนี','สายฟ้านีออน','ซากุระราตรี','ไข่มุกทะเล','จักรวาลดารา'],
+ SN=['ชุดบัวทองผู้ก่อตั้ง','ชุดมังกรหยก','ชุดจันทร์หิมะ','ชุดหงส์อัคนี','ชุดอสนีฟ้าลิขิต','ชุดซากุระราตรี','ชุดไข่มุกมหาสมุทร','ชุดจักรวาลดารา'];
+const tP=i=>i===1?29:19,cP=i=>i===1?29:19,ALL=[];for(let i=1;i<=8;i++)ALL.push('f_p'+i,'t_p'+i,'c_p'+i);
+const ST=document.createElement('style');ST.textContent=`
+.ptt{display:inline-flex;align-items:center;gap:4px;padding:1px 9px;font-size:.82em;font-weight:bold;white-space:nowrap;border-radius:20px;vertical-align:middle;line-height:1.5}
+.ptt1{background:linear-gradient(180deg,#fff3b0,#e8a828 55%,#9a6410);color:#3a2204;border-radius:6px;box-shadow:0 0 8px #ffc83a88}
+.ptt2{background:linear-gradient(180deg,#1b5a48,#0c2e26);color:#d8ffe8;border:1.5px solid #5ae8b0;border-radius:5px;box-shadow:0 0 8px #2ee6a055}.ptt2::before,.ptt2::after{content:'❖';color:#5ae8b0;font-size:.85em}
+.ptt3{background:linear-gradient(90deg,#ff7ac8,#8a5aff,#3ad8ff,#8a5aff,#ff7ac8);background-size:200% 100%;color:#fff;text-shadow:0 1px 2px #0008;box-shadow:0 0 10px #8a5aff99;animation:pttsh 4s linear infinite}
+@keyframes pttsh{to{background-position:200% 0}}
+.ptt4{background:#12060a;color:#ff4a5a;border:1.5px solid #ff2a44;border-radius:4px;text-shadow:0 0 8px #ff2a44;box-shadow:0 0 10px #ff2a4477}
+.ptt5{background:linear-gradient(180deg,#10243c,#08121e);color:#bff0ff;border:1.5px solid #3ad8ff;text-shadow:0 0 6px #3ad8ff;box-shadow:0 0 10px #3ad8ff66}.ptt5::before,.ptt5::after{content:'⚡'}
+.ptt6{background:linear-gradient(180deg,#3a1030,#1c0818);color:#ffd6ea;border:1.5px solid #ff8ec0;box-shadow:0 0 8px #ff8ec066}.ptt6::before,.ptt6::after{content:'🌸';font-size:.85em}
+.ptt7{background:linear-gradient(180deg,#e8fffb,#7ae8dc);color:#04303a;border:1.5px solid #fff;box-shadow:0 0 8px #3ad8d099}
+.ptt8{color:#e8d8ff;border:1.5px solid #8a5aff;border-radius:5px;box-shadow:0 0 10px #8a5aff88;background:radial-gradient(1.5px 1.5px at 10% 30%,#fff,transparent),radial-gradient(1.5px 1.5px at 45% 70%,#fff,transparent),radial-gradient(1.5px 1.5px at 85% 40%,#ffd0ff,transparent),linear-gradient(135deg,#0a0420,#2a1060 50%,#0a0420)}
+#chatBox .cm.cmp .cmb[class*=ccx]{border-width:2px;border-style:solid;position:relative}
+#chatBox .cm.cmp .cmb.ccx1{background:linear-gradient(135deg,#3a2a0a,#241a06);border-color:#e8b830;box-shadow:0 0 14px #e8b83044,inset 0 0 14px #e8b83022;color:#fff3d0}.ccx1 .cmh b{color:#ffd86b;text-shadow:0 0 8px #ffb02088}
+#chatBox .cm.cmp .cmb.ccx2{background:linear-gradient(135deg,#0c3a2c,#06201a);border-color:#5ae8b0;box-shadow:0 0 14px #2ee6a044;color:#e0fff0}.ccx2 .cmh b{color:#9af0d0}
+#chatBox .cm.cmp .cmb.ccx3{background:linear-gradient(135deg,#1c2a44,#101828);border-color:#cfe4ff;box-shadow:0 0 16px #cfe4ff44;color:#f2f8ff}.ccx3 .cmh b{background:linear-gradient(90deg,#fff,#9ac8ff);-webkit-background-clip:text;background-clip:text;color:transparent}.ccx3::after{content:'❄';position:absolute;right:8px;top:-10px;font-size:18px;color:#cfe4ff}
+#chatBox .cm.cmp .cmb.ccx4{background:linear-gradient(135deg,#240608,#100204);border-color:#ff2a44;box-shadow:0 0 16px #ff2a4466,inset 0 0 16px #ff2a4422;color:#ffe0e0}.ccx4 .cmh b{color:#ff6a7a;text-shadow:0 0 8px #ff2a44}
+#chatBox .cm.cmp .cmb.ccx5{background:linear-gradient(135deg,#061c3a,#08101e);border-color:#3ad8ff;box-shadow:0 0 16px #3ad8ff55;color:#e8f8ff}.ccx5 .cmh b{background:linear-gradient(90deg,#fff,#3ad8ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+#chatBox .cm.cmp .cmb.ccx6{background:linear-gradient(135deg,#3a1030,#1c0818);border-color:#ff8ec0;box-shadow:0 0 14px #ff8ec044;color:#ffeaf4}.ccx6 .cmh b{color:#ffb0d8}.ccx6::after{content:'🌸';position:absolute;right:8px;top:-10px;font-size:18px}
+#chatBox .cm.cmp .cmb.ccx7{background:linear-gradient(135deg,#0a3a3e,#052024);border-color:#2fd8cc;box-shadow:0 0 14px #2fd8cc44;color:#e0fffc}.ccx7 .cmh b{color:#9af5ee}
+#chatBox .cm.cmp .cmb.ccx8{background:radial-gradient(2px 2px at 12% 25%,#fff,transparent),radial-gradient(2px 2px at 52% 70%,#fff,transparent),radial-gradient(2px 2px at 88% 30%,#ffd0ff,transparent),linear-gradient(135deg,#0c0624,#241058);border-color:#8a5aff;box-shadow:0 0 16px #8a5aff66;color:#f0e8ff}.ccx8 .cmh b{background:linear-gradient(90deg,#ff7ad8,#8a5aff,#3ad8ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cosb{margin:8px 0;padding:8px;border:2px solid var(--line,#444);border-radius:10px}.cosb .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.cosb .cbub{border-width:2px;border-style:solid;border-radius:4px 12px 12px 12px;padding:5px 9px;font-size:13px;min-width:140px;position:relative;flex:1}
+.cosb .cbub b{display:block;font-size:13px}.costab{display:flex;gap:6px;margin:6px 0;flex-wrap:wrap}.costab button.on{outline:2px solid var(--gold,#f0c860)}
+.cosb .cbub.ccx1,.cosb .cbub.ccx2,.cosb .cbub.ccx3,.cosb .cbub.ccx4,.cosb .cbub.ccx5,.cosb .cbub.ccx6,.cosb .cbub.ccx7,.cosb .cbub.ccx8{}
+`;document.head.appendChild(ST);
+// ผูก .ccxN ให้ใช้ได้ทั้งในแชทและตัวอย่างในร้าน (ตัวอย่างใช้ selector .cosb)
+{const t=ST.textContent.replace(/#chatBox \.cm\.cmp \.cmb\.ccx(\d)/g,'.cosb .cbub.ccx$1');const s2=document.createElement('style');s2.textContent=t.split('\n').filter(l=>/^\.cosb \.cbub\.ccx\d\{/.test(l)).join('\n')+'\n'+ST.textContent.split('\n').filter(l=>/^\.ccx\d \.cmh b|^\.ccx3::after|^\.ccx6::after/.test(l)).map(l=>l.replace(/\.ccx(\d) \.cmh b/g,'.cosb .ccx$1 .cmh b')).join('\n');document.head.appendChild(s2)}
+let CS={own:[],eq:{}};try{const o=JSON.parse(localStorage.getItem('murim_cos')||'null');if(o&&Array.isArray(o.own))CS=o}catch(e){}
+const save=()=>{try{localStorage.setItem('murim_cos',JSON.stringify(CS))}catch(e){}};
+const isA=()=>{try{return !!(typeof admK==='function'&&admK())}catch(e){return false}};
+const has=x=>isA()||CS.own.includes(x);
+const tid=x=>(x||'').replace(/\D/g,'');
+window.cosTitleHtml=function(t){const n=+tid(t);return n>=1&&n<=8?`<span class="ptt ptt${n}">${NMT[n-1]}</span>`:''};
+async function sync(){try{const j=await api('cosget');if(!j)return;CS.own=Array.isArray(j.own)?j.own:[];CS.eq=j.eq||{};save();
+ const d=frGet();let ch=0;CS.own.forEach(x=>{if(/^f_p[1-8]$/.test(x)&&!d.own.includes(x)){d.own.push(x);ch=1}});if(ch)frSet(d)}catch(e){}}
+window.cosSync=sync;
+// ซื้อ
+window.cosBuy=function(pk){const P=COSP[pk];if(!P)return;
+ modal(`<button class="xbtn" onclick="cosMenu()">✕</button><h3>🎨 ${P.n} · ${P.p} บาท</h3>
+ <div style="text-align:center"><img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:36vh;border-radius:10px;background:#fff" draggable="false">
+ <p style="margin:8px 0 2px">1) สแกนโอน <b>${P.p} บาท</b> ด้วยแอปธนาคาร (ตรงยอดเป๊ะ)</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจให้อัตโนมัติ ของเข้าทันที</p>
+ <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
+ <label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>
+ <button class="pbtn" style="width:100%;margin-top:8px" onclick="cosPaid(this,'${pk}')">📨 ส่งสลิป</button>
+ <p class="tag2">ซื้อครั้งเดียวถาวร ผูกกับบัญชี · เป็นของตกแต่งล้วน ไม่มีผลต่อพลังหรืออันดับ · ถ้าตรวจอัตโนมัติไม่ได้ ติดต่อผู้พัฒนาผ่านแจ้งบั๊กพร้อมสลิป</p>`)};
+const bigShrink=f=>new Promise(res=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);let q=.88,d=cv.toDataURL('image/jpeg',q);while(d.length>2.8e6&&q>.4){q-=.1;d=cv.toDataURL('image/jpeg',q)}res(d)};im.onerror=()=>res('');im.src=fr.result};fr.onerror=()=>res('');fr.readAsDataURL(f)});
+const MSG={noslip:'อ่านสลิปไม่ได้ ลองแคปให้เห็นทั้งใบ (ต้องเห็น QR) แล้วลองใหม่',dup:'สลิปนี้เคยถูกใช้แล้ว',acct:'สลิปนี้ไม่ได้โอนเข้าบัญชีของเกม',amount:'ยอดในสลิปไม่ตรงกับราคาที่เลือก',old:'สลิปเก่าเกินไป (รับเฉพาะที่โอนภายใน 3 ชั่วโมง)',pending:'ธนาคารยังอัปเดตสลิปไม่เสร็จ รอ 2-3 นาทีแล้วกดส่งใหม่',rate:'ลองบ่อยเกินไป รอสักครู่',img:'ไฟล์รูปไม่ถูกต้อง'};
+window.cosPaid=async function(btn,pk){const f=$('supImg')&&$('supImg').files&&$('supImg').files[0];if(!f)return toast('แนบสลิปก่อนนะ');
+ btn.disabled=true;btn.textContent='⏳ กำลังตรวจสลิป…';let j=null;
+ try{const img=await bigShrink(f);if(!img)throw 0;const r=await fetch('/api/pay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:pid,pk,n:pname(),img})});j=await r.json().catch(()=>null)}catch(e){j=null}
+ if(j&&j.ok){await sync();btn.textContent='✅ ตรวจผ่านแล้ว ของเข้าแล้ว!';toast('✅ ได้ของแล้ว ขอบคุณที่สนับสนุนครับ 💛');try{sfx('good')}catch(e){}setTimeout(()=>{if($('modal').dataset.k!=='cosshop')cosMenu(window._cosTab||'set')},1200);return}
+ btn.disabled=false;btn.textContent='📨 ส่งสลิป';toast(j&&MSG[j.st]?MSG[j.st]:'ตรวจสลิปไม่สำเร็จ ลองใหม่อีกครั้ง หรือแจ้งผู้พัฒนาพร้อมสลิป')};
+const COSP={};
+for(let i=1;i<=8;i++){COSP['cf'+i]={n:NMF[i-1],p:FP[i-1]};COSP['ct'+i]={n:'ฉายา '+NMT[i-1],p:tP(i)};COSP['cc'+i]={n:'ธีมแชท '+NMC[i-1],p:cP(i)};COSP['cs'+i]={n:SN[i-1],p:SP[i-1]}}
+COSP.call={n:'ครบทุกชุด (8 ชุด · 24 ชิ้น)',p:399};
+// สวมใส่
+window.cosEq=async function(kind,id){if(kind==='f'){frEquip(id||null);return}
+ const e=Object.assign({},CS.eq);e[kind]=id||'';CS.eq=e;save();try{await api('cosset',Object.assign({t:e.t||'',c:e.c||''},isA()?{key:admK()}:{}))}catch(x){toast('บันทึกไม่สำเร็จ')}cosMenu(window._cosTab||'set')};
+const av=()=>{const d=frGet();return d.av?`<img src="${d.av}">`:'🙂'};
+const frPrev=i=>`<div class="frprev">${frWrap(`<span class="frph">${av()}</span>`,'f_p'+i)}</div>`;
+const bub=i=>`<div class="cbub ccx${i}"><div class="cmh"><b>${esc(pname())}</b></div>ข้อความตัวอย่างธีม${NMC[i-1]}</div>`;
+const buyBtn=(pk,own)=>own?'':`<button class="pbtn" onclick="cosBuy('${pk}')">ซื้อ ${COSP[pk].p} บาท</button>`;
+const eqBtn=(kind,id,own,cur)=>own?(cur===id?`<button class="gbtn" onclick="cosEq('${kind}',null)">ถอด</button> <span class="tag2">✅ ใช้อยู่</span>`:`<button class="pbtn" onclick="cosEq('${kind}','${id}')">สวมใส่</button>`):'';
+window.cosMenu=function(tab){tab=window._cosTab=tab||window._cosTab||'set';const d=frGet(),eq=CS.eq||{};
+ const tabs=[['set','✨ เซ็ต'],['f','🖼️ กรอบ'],['t','🏷️ ฉายา'],['c','💬 ธีมแชท']];let b='';
+ if(tab==='set'){for(let i=1;i<=8;i++){const ids=['f_p'+i,'t_p'+i,'c_p'+i],all=ids.every(has),sum=FP[i-1]+tP(i)+cP(i);
+  b+=`<div class="cosb"><b>${SN[i-1]}</b> <span class="tag2">กรอบ+ฉายา+ธีมแชท · ${SP[i-1]} บาท (แยกซื้อ ${sum})</span><div class="row">${frPrev(i)}<div style="flex:1;min-width:150px">${cosTitleHtml('t_p'+i)}${bub(i)}</div></div>${all?'<span class="tag2">✅ มีครบแล้ว — ไปแท็บกรอบ/ฉายา/ธีมแชทเพื่อสวมใส่</span>':buyBtn('cs'+i,false)}</div>`}
+  const al=ALL.every(has);b+=`<div class="cosb" style="border-color:#e8b830"><b>👑 ครบทุกชุด</b> <span class="tag2">ทั้ง 24 ชิ้น · 399 บาท (แยกซื้อรวม ${FP.reduce((a,x)=>a+x,0)+[1,2,3,4,5,6,7,8].reduce((a,i)=>a+tP(i)+cP(i),0)} บาท)</span><br>${al?'<span class="tag2">✅ มีครบทุกชิ้นแล้ว</span>':buyBtn('call',false)}</div>`}
+ if(tab==='f'){for(let i=1;i<=8;i++){const id='f_p'+i,o=has(id);b+=`<div class="cosb"><div class="row">${frPrev(i)}<div style="flex:1"><b>${NMF[i-1]}</b><br>${o?eqBtn('f',id,1,d.eq):''}${buyBtn('cf'+i,o)}</div></div></div>`}}
+ if(tab==='t'){for(let i=1;i<=8;i++){const id='t_p'+i,o=has(id);b+=`<div class="cosb"><div class="row"><div style="flex:1">${cosTitleHtml(id)}<br>${o?eqBtn('t',id,1,eq.t):''}${buyBtn('ct'+i,o)}</div></div></div>`}}
+ if(tab==='c'){for(let i=1;i<=8;i++){const id='c_p'+i,o=has(id);b+=`<div class="cosb">${bub(i)}<div style="margin-top:6px">${o?eqBtn('c',id,1,eq.c):''}${buyBtn('cc'+i,o)}</div></div>`}}
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎨 ร้านตกแต่ง</h3><p class="tag2">ของแต่งล้วนๆ ซื้อครั้งเดียวถาวร ผูกกับบัญชี — ไม่ได้พลัง ไม่ได้เงิน ไม่มีผลต่อการแข่ง · เล่นฟรีก็ได้กรอบและฉายาจากในเกมได้เหมือนเดิม</p>
+ <div class="costab">${tabs.map(t=>`<button class="gbtn ${tab===t[0]?'on':''}" onclick="cosMenu('${t[0]}')">${t[1]}</button>`).join('')}</div>${b}`,'cosshop')};
+// แชท: ติดฉายา + ธีม
+{const _cr=chatRender;chatRender=function(){const r=_cr.apply(this,arguments);try{const box=$('chatBox');if(!box)return r;const ks=[...box.children].filter(e=>e.classList&&e.classList.contains('cm')),ms=chatMsgs||[];if(ks.length!==ms.length)return r;
+ ks.forEach((e,i)=>{const m=ms[i],c=+tid(m.cc),t=+tid(m.ct);if(c>=1&&c<=8&&/^c_p/.test(m.cc)){const bd=e.querySelector('.cmb');if(bd&&!bd.className.includes('ccx'))bd.classList.add('ccx'+c)}
+  if(t>=1&&t<=8&&/^t_p/.test(m.ct)&&!e.querySelector('.ptt')){const b=e.querySelector('.cmh b');if(b)b.insertAdjacentHTML('afterend',' '+cosTitleHtml(m.ct))}})}catch(e){}return r}}
+// ทางเข้า
+const btn=`<button class="gbtn" style="width:100%;margin-top:8px" onclick="cosMenu()">🎨 ร้านตกแต่ง (กรอบ ฉายา ธีมแชท)</button>`;
+['openProfile','openFrameShop','vipMenu'].forEach(n=>{const o=window[n]||(typeof eval(n)==='function'?eval(n):null);if(!o)return;const w=function(){const r=o.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.cosent')&&m.dataset.k!=='cosshop'){m.insertAdjacentHTML('beforeend',btn.replace('class="gbtn"','class="gbtn cosent"'))}}catch(e){}return r};window[n]=w;try{eval(n+'=w')}catch(e){}});
+// profPush: แอดมินส่งกุญแจเมื่อใช้กรอบร้านค้า
+setTimeout(sync,2500);setInterval(sync,300000);window.addEventListener('shop:paid',sync);
+}catch(e){console.error('cos',e)}})();
+
 </script>
 </body>
 </html>
