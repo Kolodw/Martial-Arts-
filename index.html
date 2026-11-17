@@ -32723,7 +32723,7 @@ const SHP={
  f_p8:polar(t=>.9+.1*Math.cos(4*(t+Math.PI/2)))};
 const clipOf=id=>'polygon('+SHP[id].map(p=>(50+p[0]*46).toFixed(1)+'% '+(50+p[1]*46).toFixed(1)+'%').join(',')+')';
 const pathOf=(id,k)=>{const q=SHP[id];return'M'+q.map(p=>(50+p[0]*50*k).toFixed(1)+' '+(50+p[1]*50*k).toFixed(1)).join('L')+'Z'};
-const OUT=id=>`<path d="${pathOf(id,1.02)}" style="fill:none;stroke:var(--c3);stroke-width:7;stroke-linejoin:round"/><path d="${pathOf(id,1.02)}" style="fill:none;${S1};stroke-width:3.4;stroke-linejoin:round"/><path class="fx-dash" d="${pathOf(id,.93)}" style="fill:none;${S2};stroke-width:1.2;stroke-dasharray:4 5;stroke-linejoin:round"/>`;
+const OUT=id=>`<path d="${pathOf(id,1.02)}" style="fill:none;stroke:var(--c1);stroke-width:15;opacity:.12;stroke-linejoin:round"/><path d="${pathOf(id,1.02)}" style="fill:none;stroke:var(--c1);stroke-width:10.5;opacity:.2;stroke-linejoin:round"/><path d="${pathOf(id,1.02)}" style="fill:none;stroke:var(--c3);stroke-width:7;stroke-linejoin:round"/><path d="${pathOf(id,1.02)}" style="fill:none;${S1};stroke-width:3.4;stroke-linejoin:round"/><path class="fx-dash" d="${pathOf(id,.93)}" style="fill:none;${S2};stroke-width:1.2;stroke-dasharray:4 5;stroke-linejoin:round"/>`;
 const A=(c,d,x)=>`<g class="${c}" style="animation-delay:${d}s">${x}</g>`;
 const star=(x,y,r,s)=>`<path style="${s||PC}" d="M${x} ${y-r}L${x+r*.28} ${y-r*.28}L${x+r} ${y}L${x+r*.28} ${y+r*.28}L${x} ${y+r}L${x-r*.28} ${y+r*.28}L${x-r} ${y}L${x-r*.28} ${y-r*.28}Z"/>`;
 const petal=(x,y,a,l,w,s)=>`<ellipse cx="${x}" cy="${y-l/2}" rx="${w}" ry="${l/2}" transform="rotate(${a} ${x} ${y})" style="${s}"/>`;
@@ -32787,7 +32787,6 @@ mk('f_p8','กรอบจักรวาลดารา','#8a5aff','#ff7ad8','#
 const css=document.createElement('style');css.textContent=`
 .frw.fsh{border-color:transparent!important;background:none!important;box-shadow:none!important;animation:none!important;border-radius:0!important}
 .frw.fsh>:first-child{clip-path:var(--clip);border-radius:0!important}
-.frw.fsh>.frsh{filter:drop-shadow(0 0 3px var(--c1))}
 .frsh g[class^=fx-]{transform-box:fill-box;transform-origin:50% 50%}
 .fx-sway{transform-origin:50% 100%!important;animation:fxSway 3.2s ease-in-out infinite alternate}.fx-sway2{transform-origin:50% 0!important;animation:fxSway 2.6s ease-in-out infinite alternate-reverse}
 .fx-breath{transform-origin:50% 100%!important;animation:fxBreath 2.8s ease-in-out infinite alternate}
@@ -32829,91 +32828,119 @@ for(let i=9;i<=11;i++)COSP['ct'+i]={n:'ฉายา '+NMT[i-1],p:9};
 COSP.call={n:'ครบทุกชุด (8 ชุด · 24 ชิ้น)',p:399};
 const st2=document.createElement('style');st2.textContent=`
 
-.ptt{display:inline-flex;align-items:center;gap:4px;padding:2px 12px;font-size:.82em;font-weight:800;white-space:nowrap;line-height:1.5;vertical-align:middle;cursor:pointer;position:relative;max-width:100%;overflow:hidden;text-overflow:ellipsis;letter-spacing:.2px}
-.ptt::before,.ptt::after{display:inline-block;font-size:.95em}
-@keyframes pSheen{from{background-position:200% 0,0 0}to{background-position:-100% 0,0 0}}
-@keyframes pRain{to{background-position:-30px -22px,26px -22px,200% 0}}
-@keyframes pFire{0%,100%{box-shadow:0 0 6px #ff2a44aa,inset 0 -6px 8px #ff6a1a66}50%{box-shadow:0 0 13px #ff6a2add,inset 0 -9px 11px #ffa02a88}}
-@keyframes pStreak{from{background-position:200% 0}to{background-position:-100% 0}}
-@keyframes pPearl{from{background-position:0 0,200% 0,0 0}to{background-position:0 -22px,-100% 0,0 0}}
-@keyframes pStars{to{background-position:-34px 0,-28px 0,-20px 0,0 0}}
+
+.ptt{display:inline-flex;align-items:center;gap:4px;padding:2px 12px;font-size:.82em;font-weight:800;white-space:nowrap;line-height:1.5;vertical-align:middle;cursor:pointer;position:relative;max-width:100%;overflow:hidden;text-overflow:ellipsis;letter-spacing:.2px;isolation:isolate}
+.ptt>i{position:absolute;pointer-events:none;will-change:transform;top:0;left:0;height:100%;width:100%}
+.ptt .zqt{position:relative;z-index:1}
+.ptt::before,.ptt::after{display:inline-block;font-size:.95em;position:relative;z-index:1}
+@keyframes lxSweep{from{transform:translateX(-33.34%)}to{transform:translateX(33.34%)}}
+@keyframes lxFlow{to{transform:translateX(-50%)}}
+@keyframes lxTile{to{transform:translate(var(--tx,0),var(--ty,0))}}
+@keyframes lxPulse{from{opacity:.35}to{opacity:1}}
+@keyframes lxFire{from{opacity:.55}to{opacity:1}}
+@keyframes lxZap{0%,100%{opacity:0}8%{opacity:1}12%{opacity:.05}16%{opacity:.9}22%{opacity:0}}
 @keyframes pBob{from{transform:translateY(-1px) rotate(-8deg)}to{transform:translateY(1.5px) rotate(8deg)}}
 @keyframes pBobM{from{transform:scaleX(-1) translateY(-1px) rotate(-8deg)}to{transform:scaleX(-1) translateY(1.5px) rotate(8deg)}}
 @keyframes pFlame{from{transform:scale(.85,.9) rotate(-6deg)}to{transform:scale(1.15,1.2) rotate(6deg)}}
 @keyframes pFlick{0%,100%{opacity:.15}5%{opacity:1}10%{opacity:.2}15%{opacity:1}24%{opacity:.15}}
 @keyframes pSpinS{to{transform:rotate(360deg)}}
 @keyframes pTw{0%,100%{opacity:.3;transform:scale(.7)}50%{opacity:1;transform:scale(1.2)}}
-@keyframes pTxt{0%,100%{text-shadow:0 0 4px #ff2a44}50%{text-shadow:0 0 10px #ff6a2a,0 0 2px #fff}}
-.ptt1{background:linear-gradient(110deg,transparent 35%,#fffbd8cc 50%,transparent 65%) 200% 0/250% 100% no-repeat,linear-gradient(180deg,#fff3b0,#e8a828 55%,#9a6410);color:#3a2204;clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,9px 100%,0 50%);padding:2px 20px;animation:pSheen 2.8s linear infinite}
-.ptt1::before{content:'✦';color:#7a4a08;animation:pTw 2s infinite}.ptt1::after{content:'✦';color:#7a4a08;animation:pTw 2s infinite -1s}
-.ptt2{background:linear-gradient(110deg,transparent 35%,#d8ffe8aa 50%,transparent 65%) 200% 0/250% 100% no-repeat,linear-gradient(180deg,#1f6a52,#0c2e26);color:#d8ffe8;border:1.5px solid #5ae8b0;border-radius:7px;box-shadow:0 0 8px #2ee6a066,inset 0 0 6px #5ae8b044;animation:pSheen 3.4s linear infinite}
-.ptt2::before{content:'🐉';animation:pBob 2s ease-in-out infinite alternate}.ptt2::after{content:'🐉';animation:pBobM 2s ease-in-out infinite alternate -1s}
-.ptt3{background:radial-gradient(1.5px 1.5px at 20% 70%,#fff,transparent) 0 0/30px 22px,radial-gradient(1.5px 1.5px at 70% 30%,#fff,transparent) 0 0/26px 22px,linear-gradient(90deg,#ff7ac8,#8a5aff,#3ad8ff,#8a5aff,#ff7ac8) 0 0/200% 100%;color:#fff;text-shadow:0 1px 2px #0008;border-radius:20px;box-shadow:0 0 10px #8a5aff99,inset 0 0 0 1.5px #fff6;animation:pRain 3s linear infinite}
+.ptt1{background:linear-gradient(180deg,#fff3b0,#e8a828 55%,#9a6410);color:#3a2204;clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,9px 100%,0 50%);padding:2px 20px}
+.ptt1 .zqx{width:300%;left:-100%;background:linear-gradient(110deg,transparent 42%,#fffbd8dd 50%,transparent 58%);animation:lxSweep 2.8s linear infinite}
+.ptt1::before{content:'✦';color:#7a4a08;animation:pTw 2s infinite}
+.ptt1::after{content:'✦';color:#7a4a08;animation:pTw 2s infinite -1s}
+.ptt2{background:linear-gradient(180deg,#1f6a52,#0c2e26);color:#d8ffe8;border:1.5px solid #5ae8b0;border-radius:7px;box-shadow:0 0 8px #2ee6a066,inset 0 0 6px #5ae8b044}
+.ptt2 .zqx{width:300%;left:-100%;background:linear-gradient(110deg,transparent 42%,#d8ffe8bb 50%,transparent 58%);animation:lxSweep 3.4s linear infinite}
+.ptt2::before{content:'🐉';animation:pBob 2s ease-in-out infinite alternate}
+.ptt2::after{content:'🐉';animation:pBobM 2s ease-in-out infinite alternate -1s}
+.ptt3{color:#fff;text-shadow:0 1px 2px #0008;border-radius:20px;box-shadow:0 0 10px #8a5aff99,inset 0 0 0 1.5px #fff6;background:#8a5aff}
+.ptt3 .zqx{width:200%;background:linear-gradient(90deg,#ff7ac8,#8a5aff,#3ad8ff,#8a5aff,#ff7ac8,#8a5aff,#3ad8ff,#8a5aff,#ff7ac8);animation:lxFlow 3s linear infinite}
+.ptt3 .zqy{left:0;top:0;width:calc(100% + 30px);height:calc(100% + 22px);background:radial-gradient(1.5px 1.5px at 20% 70%,#fff,transparent),radial-gradient(1.5px 1.5px at 70% 30%,#fff,transparent);background-size:30px 22px;--tx:-30px;--ty:-22px;animation:lxTile 1.6s linear infinite}
 .ptt3::before{content:'🌈';animation:pBob 2s ease-in-out infinite alternate}
-.ptt4{background:linear-gradient(0deg,#ff6a1a77,transparent 60%),#1a0608;color:#ffb08a;border:1.5px solid #ff4a2a;border-radius:4px;animation:pFire 1.2s ease-in-out infinite,pTxt 1.2s ease-in-out infinite}
-.ptt4::before{content:'🔥';animation:pFlame .7s ease-in-out infinite alternate}.ptt4::after{content:'🔥';animation:pFlame .7s ease-in-out infinite alternate -.35s}
-.ptt5{background:linear-gradient(115deg,#0a1a30 30%,#2a6a9a 50%,#0a1a30 70%) 0 0/250% 100%;color:#d8f6ff;border:1.5px solid #3ad8ff;border-radius:20px;text-shadow:0 0 6px #3ad8ff;box-shadow:0 0 10px #3ad8ff66;animation:pStreak 2.4s linear infinite}
-.ptt5::before{content:'⚡';animation:pFlick 2.6s steps(1) infinite}.ptt5::after{content:'⚡';animation:pFlick 2.6s steps(1) infinite -1.3s}
-.ptt6{background:radial-gradient(ellipse 3px 2px at 30% 30%,#fff,transparent) 0 0/30px 22px,linear-gradient(180deg,#ffd6ea,#ff8ec0);color:#5a1030;clip-path:polygon(0 0,100% 0,calc(100% - 8px) 50%,100% 100%,0 100%,8px 50%);padding:2px 20px;animation:pRain 5s linear infinite}
-.ptt6::before{content:'🌸';animation:pSpinS 6s linear infinite}.ptt6::after{content:'🌸';animation:pSpinS 6s linear infinite reverse}
-.ptt7{background:radial-gradient(circle,#fff9 0 2px,transparent 3px) 0 0/16px 22px,linear-gradient(110deg,transparent 35%,#fffc 50%,transparent 65%) 200% 0/250% 100% no-repeat,linear-gradient(180deg,#e8fffb,#7ae8dc);color:#04303a;border:1.5px solid #fff;border-radius:14px;box-shadow:0 0 8px #3ad8d099;animation:pPearl 3.2s linear infinite}
-.ptt7::before{content:'🐚';animation:pBob 2.4s ease-in-out infinite alternate}.ptt7::after{content:'🫧';animation:pBob 2s ease-in-out infinite alternate -1s}
-.ptt8{background:radial-gradient(1.5px 1.5px at 20% 40%,#fff,transparent) 0 0/34px 24px,radial-gradient(1.5px 1.5px at 60% 70%,#ffd0ff,transparent) 0 0/28px 24px,radial-gradient(1px 1px at 80% 20%,#fff,transparent) 0 0/20px 24px,linear-gradient(135deg,#0a0420,#2a1060 50%,#0a0420);color:#efe2ff;border:1.5px solid #8a5aff;border-radius:6px;text-shadow:0 0 6px #b08aff;box-shadow:0 0 10px #8a5aff88;animation:pStars 6s linear infinite}
-.ptt8::before{content:'✦';color:#ff9ae8;animation:pTw 1.8s infinite}.ptt8::after{content:'✧';color:#9ad8ff;animation:pTw 1.8s infinite -.9s}
+.ptt4{background:#1a0608;color:#ffb08a;border:1.5px solid #ff4a2a;border-radius:4px;box-shadow:0 0 10px #ff4a2acc;text-shadow:0 0 7px #ff6a2a}
+.ptt4 .zqx{background:linear-gradient(0deg,#ff6a1aaa,transparent 70%);animation:lxFire 1.2s ease-in-out infinite alternate}
+.ptt4 .zqy{left:0;top:0;width:calc(100% + 0px);height:calc(100% + 30px);top:-30px;background:radial-gradient(1.5px 1.5px at 30% 60%,#ffd24a,transparent),radial-gradient(1.5px 1.5px at 75% 30%,#ff8a2a,transparent);background-size:26px 30px;--ty:30px;animation:lxTile 1.8s linear infinite}
+.ptt4::before{content:'🔥';animation:pFlame .7s ease-in-out infinite alternate}
+.ptt4::after{content:'🔥';animation:pFlame .7s ease-in-out infinite alternate -.35s}
+.ptt5{background:#0a1a30;color:#d8f6ff;border:1.5px solid #3ad8ff;border-radius:20px;text-shadow:0 0 6px #3ad8ff;box-shadow:0 0 10px #3ad8ff66}
+.ptt5 .zqx{width:300%;left:-100%;background:linear-gradient(110deg,transparent 42%,#3ad8ffaa 50%,transparent 58%);animation:lxSweep 2.4s linear infinite}
+.ptt5::before{content:'⚡';animation:pFlick 2.6s steps(1) infinite}
+.ptt5::after{content:'⚡';animation:pFlick 2.6s steps(1) infinite -1.3s}
+.ptt6{background:linear-gradient(180deg,#ffd6ea,#ff8ec0);color:#5a1030;clip-path:polygon(0 0,100% 0,calc(100% - 8px) 50%,100% 100%,0 100%,8px 50%);padding:2px 20px}
+.ptt6 .zqx{left:0;top:0;width:calc(100% + 30px);height:calc(100% + 22px);top:-22px;background:radial-gradient(ellipse 3px 2px at 30% 30%,#fff,transparent),radial-gradient(ellipse 3px 2px at 75% 70%,#ff8ec0,transparent);background-size:30px 22px;--tx:-30px;--ty:22px;animation:lxTile 5s linear infinite}
+.ptt6::before{content:'🌸';animation:pSpinS 6s linear infinite}
+.ptt6::after{content:'🌸';animation:pSpinS 6s linear infinite reverse}
+.ptt7{background:linear-gradient(180deg,#e8fffb,#7ae8dc);color:#04303a;border:1.5px solid #fff;border-radius:14px;box-shadow:0 0 8px #3ad8d099}
+.ptt7 .zqx{left:0;top:0;width:calc(100% + 0px);height:calc(100% + 22px);top:0;background:radial-gradient(circle,#ffffffaa 0 2px,transparent 3px);background-size:16px 22px;--ty:-22px;height:calc(100% + 22px);animation:lxTile 3.2s linear infinite}
+.ptt7 .zqy{width:300%;left:-100%;background:linear-gradient(110deg,transparent 42%,#ffffffcc 50%,transparent 58%);animation:lxSweep 3.2s linear infinite}
+.ptt7::before{content:'🐚';animation:pBob 2.4s ease-in-out infinite alternate}
+.ptt7::after{content:'🫧';animation:pBob 2s ease-in-out infinite alternate -1s}
+.ptt8{background:linear-gradient(135deg,#0a0420,#2a1060 50%,#0a0420);color:#efe2ff;border:1.5px solid #8a5aff;border-radius:6px;text-shadow:0 0 6px #b08aff;box-shadow:0 0 10px #8a5aff88}
+.ptt8 .zqx{left:0;top:0;width:calc(100% + 34px);height:calc(100% + 0px);background:radial-gradient(1.5px 1.5px at 20% 40%,#fff,transparent),radial-gradient(1.5px 1.5px at 70% 75%,#ffd0ff,transparent);background-size:34px 24px;--tx:-34px;animation:lxTile 6s linear infinite}
+.ptt8 .zqy{left:0;top:0;width:calc(100% + 28px);height:calc(100% + 0px);background:radial-gradient(1px 1px at 60% 30%,#fff,transparent),radial-gradient(1.5px 1.5px at 25% 80%,#ffd0ff,transparent);background-size:28px 24px;--tx:-28px;animation:lxTile 9s linear infinite}
+.ptt8::before{content:'✦';color:#ff9ae8;animation:pTw 1.8s infinite}
+.ptt8::after{content:'✧';color:#9ad8ff;animation:pTw 1.8s infinite -.9s}
 .ptt9{background:#f4efe0;color:#5a4a2a;border:1.5px solid #c9b88a;border-radius:20px}.ptt10{background:#e4f2ff;color:#2a4a6a;border:1.5px solid #8ab8e0;border-radius:20px}.ptt11{background:#ffe8ee;color:#7a2a3a;border:1.5px solid #e8a0b0;border-radius:20px}
 #chatBox .cm.cmp .cmb[class*=ccxT]{border-width:2px;border-style:solid;position:relative;overflow:visible}
+.cmb[class*=ccxT]>.zqc,.cmb[class*=ccxT]>.zqg{position:absolute;pointer-events:none;border-radius:inherit}
+.cmb[class*=ccxT]>.zqc{inset:0;overflow:hidden}.cmb[class*=ccxT]>.zqg{inset:-2px}
+.zqc>i{position:absolute;pointer-events:none;will-change:transform}
+.cmb[class*=ccxT]>:not(.zqc):not(.zqg){position:relative;z-index:1}
 .cxs .cmb[class*=ccxT]::before,.cxs .cmb[class*=ccxT]::after,#chatBox .cmb[class*=ccxT]::before,#chatBox .cmb[class*=ccxT]::after{position:absolute;pointer-events:none;line-height:1}
 .cxoff,.cxoff *,.cxoff *::before,.cxoff *::after{animation-play-state:paused!important}
-@keyframes tGold{from{background-position:200% 0,0 0;box-shadow:0 0 10px #e8b83033}50%{box-shadow:0 0 22px #e8b83099}to{background-position:-100% 0,0 0;box-shadow:0 0 10px #e8b83033}}
-@keyframes tScale{to{background-position:14px 0,0 0}}
-@keyframes tSnow{to{background-position:0 30px,0 26px,0 36px,0 0}}
-@keyframes tFire{0%,100%{box-shadow:0 0 10px #ff2a4466,inset 0 -8px 14px #ff6a1a44}50%{box-shadow:0 0 22px #ff6a2acc,inset 0 -12px 18px #ffa02a77}}
-@keyframes tZap{0%,100%{border-color:#3ad8ff;box-shadow:0 0 14px #3ad8ff66}8%{border-color:#fff;box-shadow:0 0 26px #fff,0 0 44px #3ad8ff}12%{border-color:#3ad8ff}16%{border-color:#fff;box-shadow:0 0 20px #bff0ff}22%{border-color:#3ad8ff}}
-@keyframes tStreak{from{background-position:200% 0,0 0}to{background-position:-100% 0,0 0}}
-@keyframes tPetal{to{background-position:-46px 34px,-38px 30px,0 0}}
-@keyframes tWave{to{background-position:20px 100%,0 -30px,0 0}}
-@keyframes tStarsB{to{background-position:-40px 0,-30px 0,-22px 0,0 0}}
-@keyframes tComet{0%,55%{transform:translate(10px,-6px);opacity:0}65%{opacity:1}100%{transform:translate(-34px,12px);opacity:0}}
-#chatBox .cm.cmp .cmb.ccxT1,.cxs .cmb.ccxT1{background:linear-gradient(110deg,transparent 40%,#ffe9a055 50%,transparent 60%) 200% 0/250% 100% no-repeat,linear-gradient(135deg,#3a2a0a,#241a06);border-color:#e8b830;color:#fff3d0;outline:1px solid #e8b83066;outline-offset:2px;animation:tGold 3.2s linear infinite}
+#chatBox .cm.cmp .cmb.ccxT1,.cxs .cmb.ccxT1{background:linear-gradient(135deg,#3a2a0a,#241a06);border-color:#e8b830;color:#fff3d0;outline:1px solid #e8b83066;outline-offset:2px}
+#chatBox .cmb.ccxT1 .zqc>.zql,.cxs .cmb.ccxT1 .zqc>.zql{width:300%;left:-100%;top:0;height:100%;background:linear-gradient(110deg,transparent 42%,#ffe9a077 50%,transparent 58%);animation:lxSweep 3.2s linear infinite}
+#chatBox .cmb.ccxT1>.zqg,.cxs .cmb.ccxT1>.zqg{box-shadow:0 0 22px #e8b830aa;animation:lxPulse 2s ease-in-out infinite alternate}
 #chatBox .cm.cmp .cmb.ccxT1::before,.cxs .cmb.ccxT1::before{content:'❖';left:-8px;top:-10px;color:#ffd86b;font-size:15px;text-shadow:0 0 6px #ffb020;animation:pTw 2s infinite}
 #chatBox .cm.cmp .cmb.ccxT1::after,.cxs .cmb.ccxT1::after{content:'❖';right:-8px;bottom:-10px;color:#ffd86b;font-size:15px;text-shadow:0 0 6px #ffb020;animation:pTw 2s infinite -1s}
 #chatBox .cm.cmp .cmb.ccxT1 .cmh b,.cxs .cmb.ccxT1 .cmh b{color:#ffd86b;text-shadow:0 0 8px #ffb020aa}
-#chatBox .cm.cmp .cmb.ccxT2,.cxs .cmb.ccxT2{background:radial-gradient(circle at 50% 100%,transparent 0 5px,#2ee6a033 5.5px 6.5px,transparent 7px) 0 0/14px 8px,linear-gradient(135deg,#0c3a2c,#06201a);border-color:#5ae8b0;color:#e0fff0;box-shadow:0 0 14px #2ee6a055,inset 0 0 12px #2ee6a022;animation:tScale 3s linear infinite}
+#chatBox .cm.cmp .cmb.ccxT2,.cxs .cmb.ccxT2{background:linear-gradient(135deg,#0c3a2c,#06201a);border-color:#5ae8b0;color:#e0fff0}
+#chatBox .cmb.ccxT2 .zqc>.zql,.cxs .cmb.ccxT2 .zqc>.zql{left:0;top:0px;width:calc(100% + 14px);height:calc(100% + 0px);background:radial-gradient(circle at 50% 100%,transparent 0 5px,#2ee6a033 5.5px 6.5px,transparent 7px);background-size:14px 8px;--tx:-14px;--ty:0;animation:lxTile 3s linear infinite}
+#chatBox .cmb.ccxT2>.zqg,.cxs .cmb.ccxT2>.zqg{box-shadow:0 0 16px #2ee6a077,inset 0 0 12px #2ee6a033;animation:lxPulse 3s ease-in-out infinite alternate}
 #chatBox .cm.cmp .cmb.ccxT2::before,.cxs .cmb.ccxT2::before{content:'🐉';right:-6px;top:-15px;font-size:22px;transform-origin:50% 100%;animation:pBob 2.4s ease-in-out infinite alternate}
-#chatBox .cm.cmp .cmb.ccxT2::after,.cxs .cmb.ccxT2::after{content:'';}
 #chatBox .cm.cmp .cmb.ccxT2 .cmh b,.cxs .cmb.ccxT2 .cmh b{color:#9af0d0;text-shadow:0 0 6px #2ee6a0aa}
-#chatBox .cm.cmp .cmb.ccxT3,.cxs .cmb.ccxT3{background:radial-gradient(2px 2px at 20% 20%,#fff,transparent) 0 0/40px 30px,radial-gradient(1.5px 1.5px at 70% 60%,#cfe4ff,transparent) 0 0/32px 26px,radial-gradient(2.5px 2.5px at 45% 80%,#fff,transparent) 0 0/52px 36px,linear-gradient(135deg,#1c2a44,#101828);border-color:#cfe4ff;color:#f2f8ff;box-shadow:0 0 16px #cfe4ff55;animation:tSnow 4s linear infinite}
+#chatBox .cm.cmp .cmb.ccxT3,.cxs .cmb.ccxT3{background:linear-gradient(135deg,#1c2a44,#101828);border-color:#cfe4ff;color:#f2f8ff}
+#chatBox .cmb.ccxT3 .zqc>.zql,.cxs .cmb.ccxT3 .zqc>.zql{left:0;top:-36px;width:calc(100% + 0px);height:calc(100% + 36px);background:radial-gradient(2px 2px at 20% 25%,#fff,transparent),radial-gradient(2.5px 2.5px at 70% 70%,#fff,transparent);background-size:48px 36px;--tx:0;--ty:36px;animation:lxTile 4s linear infinite}
+#chatBox .cmb.ccxT3 .zqc>.zqm,.cxs .cmb.ccxT3 .zqc>.zqm{left:0;top:-26px;width:calc(100% + 0px);height:calc(100% + 26px);background:radial-gradient(1.5px 1.5px at 40% 30%,#cfe4ff,transparent),radial-gradient(1.5px 1.5px at 85% 80%,#cfe4ff,transparent);background-size:32px 26px;--tx:0;--ty:26px;animation:lxTile 2.6s linear infinite}
+#chatBox .cmb.ccxT3>.zqg,.cxs .cmb.ccxT3>.zqg{box-shadow:0 0 18px #cfe4ff66;animation:lxPulse 3s ease-in-out infinite alternate}
 #chatBox .cm.cmp .cmb.ccxT3::before,.cxs .cmb.ccxT3::before{content:'❄';left:-7px;bottom:-9px;color:#cfe4ff;font-size:15px;animation:pSpinS 7s linear infinite reverse}
 #chatBox .cm.cmp .cmb.ccxT3::after,.cxs .cmb.ccxT3::after{content:'❄';right:-7px;top:-10px;color:#fff;font-size:19px;text-shadow:0 0 8px #9ac8ff;animation:pSpinS 6s linear infinite}
 #chatBox .cm.cmp .cmb.ccxT3 .cmh b,.cxs .cmb.ccxT3 .cmh b{background:linear-gradient(90deg,#fff,#9ac8ff);-webkit-background-clip:text;background-clip:text;color:transparent}
-#chatBox .cm.cmp .cmb.ccxT4,.cxs .cmb.ccxT4{background:linear-gradient(0deg,#ff6a1a55,transparent 50%),linear-gradient(135deg,#240608,#100204);border-color:#ff2a44;color:#ffe0e0;animation:tFire 1.4s ease-in-out infinite}
+#chatBox .cm.cmp .cmb.ccxT4,.cxs .cmb.ccxT4{background:linear-gradient(135deg,#240608,#100204);border-color:#ff2a44;color:#ffe0e0}
+#chatBox .cmb.ccxT4 .zqc>.zql,.cxs .cmb.ccxT4 .zqc>.zql{inset:0;background:linear-gradient(0deg,#ff6a1a88,transparent 55%);animation:lxFire 1.3s ease-in-out infinite alternate}
+#chatBox .cmb.ccxT4 .zqc>.zqm,.cxs .cmb.ccxT4 .zqc>.zqm{left:0;top:0px;width:calc(100% + 0px);height:calc(100% + 30px);background:radial-gradient(1.5px 1.5px at 30% 60%,#ffd24a,transparent),radial-gradient(1.5px 1.5px at 75% 30%,#ff8a2a,transparent);background-size:40px 30px;--tx:0;--ty:-30px;animation:lxTile 3s linear infinite}
+#chatBox .cmb.ccxT4>.zqg,.cxs .cmb.ccxT4>.zqg{box-shadow:0 0 24px #ff6a2acc,inset 0 -10px 16px #ffa02a66;animation:lxPulse 1.4s ease-in-out infinite alternate}
 #chatBox .cm.cmp .cmb.ccxT4::before,.cxs .cmb.ccxT4::before{content:'🔥';left:-9px;bottom:-9px;font-size:18px;animation:pFlame .8s ease-in-out infinite alternate}
 #chatBox .cm.cmp .cmb.ccxT4::after,.cxs .cmb.ccxT4::after{content:'🔥';right:-9px;bottom:-9px;font-size:18px;animation:pFlame .8s ease-in-out infinite alternate -.4s}
-#chatBox .cm.cmp .cmb.ccxT4 .cmh b,.cxs .cmb.ccxT4 .cmh b{color:#ff8a7a;animation:pTxt 1.4s ease-in-out infinite}
-#chatBox .cm.cmp .cmb.ccxT5,.cxs .cmb.ccxT5{background:linear-gradient(115deg,transparent 40%,#3ad8ff44 50%,transparent 60%) 200% 0/250% 100% no-repeat,linear-gradient(135deg,#061c3a,#08101e);border-color:#3ad8ff;color:#e8f8ff;animation:tZap 3s infinite,tStreak 3.5s linear infinite}
+#chatBox .cm.cmp .cmb.ccxT4 .cmh b,.cxs .cmb.ccxT4 .cmh b{color:#ff8a7a;text-shadow:0 0 8px #ff2a44}
+#chatBox .cm.cmp .cmb.ccxT5,.cxs .cmb.ccxT5{background:linear-gradient(135deg,#061c3a,#08101e);border-color:#3ad8ff;color:#e8f8ff;box-shadow:0 0 14px #3ad8ff66}
+#chatBox .cmb.ccxT5 .zqc>.zql,.cxs .cmb.ccxT5 .zqc>.zql{width:300%;left:-100%;top:0;height:100%;background:linear-gradient(110deg,transparent 42%,#3ad8ff55 50%,transparent 58%);animation:lxSweep 3.5s linear infinite}
+#chatBox .cmb.ccxT5>.zqg,.cxs .cmb.ccxT5>.zqg{border:2px solid #fff;inset:-2px;box-shadow:0 0 26px #fff,0 0 44px #3ad8ff;animation:lxZap 3s steps(1) infinite}
 #chatBox .cm.cmp .cmb.ccxT5::before,.cxs .cmb.ccxT5::before{content:'⚡';left:-8px;top:-11px;font-size:19px;animation:pFlick 2.6s steps(1) infinite}
 #chatBox .cm.cmp .cmb.ccxT5::after,.cxs .cmb.ccxT5::after{content:'⚡';right:-8px;bottom:-11px;font-size:19px;animation:pFlick 2.6s steps(1) infinite -1.3s}
 #chatBox .cm.cmp .cmb.ccxT5 .cmh b,.cxs .cmb.ccxT5 .cmh b{background:linear-gradient(90deg,#fff,#3ad8ff);-webkit-background-clip:text;background-clip:text;color:transparent}
-#chatBox .cm.cmp .cmb.ccxT6,.cxs .cmb.ccxT6{background:radial-gradient(ellipse 3px 2px at 30% 20%,#ffb0d8,transparent) 0 0/46px 34px,radial-gradient(ellipse 2.5px 1.8px at 70% 70%,#ff8ec0,transparent) 0 0/38px 30px,linear-gradient(135deg,#3a1030,#1c0818);border-color:#ff8ec0;color:#ffeaf4;box-shadow:0 0 14px #ff8ec055;animation:tPetal 6s linear infinite}
+#chatBox .cm.cmp .cmb.ccxT6,.cxs .cmb.ccxT6{background:linear-gradient(135deg,#3a1030,#1c0818);border-color:#ff8ec0;color:#ffeaf4}
+#chatBox .cmb.ccxT6 .zqc>.zql,.cxs .cmb.ccxT6 .zqc>.zql{left:0;top:-34px;width:calc(100% + 46px);height:calc(100% + 34px);background:radial-gradient(ellipse 3px 2px at 30% 20%,#ffb0d8,transparent),radial-gradient(ellipse 3px 2px at 70% 70%,#ff8ec0,transparent);background-size:46px 34px;--tx:-46px;--ty:34px;animation:lxTile 6s linear infinite}
+#chatBox .cmb.ccxT6 .zqc>.zqm,.cxs .cmb.ccxT6 .zqc>.zqm{left:0;top:-30px;width:calc(100% + 38px);height:calc(100% + 30px);background:radial-gradient(ellipse 2.5px 1.8px at 50% 30%,#ffd6ea,transparent);background-size:38px 30px;--tx:38px;--ty:30px;animation:lxTile 7s linear infinite}
+#chatBox .cmb.ccxT6>.zqg,.cxs .cmb.ccxT6>.zqg{box-shadow:0 0 16px #ff8ec066;animation:lxPulse 3s ease-in-out infinite alternate}
 #chatBox .cm.cmp .cmb.ccxT6::before,.cxs .cmb.ccxT6::before{content:'🌸';left:-9px;top:-11px;font-size:18px;animation:pSpinS 8s linear infinite}
 #chatBox .cm.cmp .cmb.ccxT6::after,.cxs .cmb.ccxT6::after{content:'🌸';right:-8px;top:-9px;font-size:14px;animation:pSpinS 6s linear infinite reverse}
 #chatBox .cm.cmp .cmb.ccxT6 .cmh b,.cxs .cmb.ccxT6 .cmh b{color:#ffb0d8}
-#chatBox .cm.cmp .cmb.ccxT7,.cxs .cmb.ccxT7{background:radial-gradient(circle at 10px 100%,#2fd8cc66 0 6px,transparent 7px) 0 100%/20px 10px repeat-x,radial-gradient(1.5px 1.5px at 30% 60%,#fffa,transparent) 0 0/36px 30px,linear-gradient(135deg,#0a3a3e,#052024);border-color:#2fd8cc;color:#e0fffc;box-shadow:0 0 14px #2fd8cc55;animation:tWave 3s linear infinite}
+#chatBox .cm.cmp .cmb.ccxT7,.cxs .cmb.ccxT7{background:linear-gradient(135deg,#0a3a3e,#052024);border-color:#2fd8cc;color:#e0fffc}
+#chatBox .cmb.ccxT7 .zqc>.zql,.cxs .cmb.ccxT7 .zqc>.zql{left:0;top:auto;bottom:0;width:calc(100% + 20px);height:10px;background:radial-gradient(circle at 10px 100%,#2fd8cc88 0 6px,transparent 7px);background-size:20px 10px;--tx:-20px;animation:lxTile 3s linear infinite}
+#chatBox .cmb.ccxT7 .zqc>.zqm,.cxs .cmb.ccxT7 .zqc>.zqm{left:0;top:0px;width:calc(100% + 0px);height:calc(100% + 30px);background:radial-gradient(1.5px 1.5px at 30% 60%,#ffffffaa,transparent);background-size:36px 30px;--tx:0;--ty:-30px;animation:lxTile 3.4s linear infinite}
+#chatBox .cmb.ccxT7>.zqg,.cxs .cmb.ccxT7>.zqg{box-shadow:0 0 16px #2fd8cc66;animation:lxPulse 2.6s ease-in-out infinite alternate}
 #chatBox .cm.cmp .cmb.ccxT7::before,.cxs .cmb.ccxT7::before{content:'🫧';left:-9px;top:-11px;font-size:17px;animation:pBob 2.2s ease-in-out infinite alternate}
 #chatBox .cm.cmp .cmb.ccxT7::after,.cxs .cmb.ccxT7::after{content:'🐚';right:-9px;bottom:-10px;font-size:17px;animation:pBob 2.6s ease-in-out infinite alternate -1s}
 #chatBox .cm.cmp .cmb.ccxT7 .cmh b,.cxs .cmb.ccxT7 .cmh b{color:#9af5ee}
-#chatBox .cm.cmp .cmb.ccxT8,.cxs .cmb.ccxT8{background:radial-gradient(2px 2px at 12% 25%,#fff,transparent) 0 0/40px 30px,radial-gradient(2px 2px at 52% 70%,#ffd0ff,transparent) 0 0/34px 30px,radial-gradient(1.5px 1.5px at 88% 30%,#fff,transparent) 0 0/26px 30px,linear-gradient(135deg,#0c0624,#241058);border-color:#8a5aff;color:#f0e8ff;box-shadow:0 0 16px #8a5aff77;animation:tStarsB 8s linear infinite}
+#chatBox .cm.cmp .cmb.ccxT8,.cxs .cmb.ccxT8{background:linear-gradient(135deg,#0c0624,#241058);border-color:#8a5aff;color:#f0e8ff}
+#chatBox .cmb.ccxT8 .zqc>.zql,.cxs .cmb.ccxT8 .zqc>.zql{left:0;top:0px;width:calc(100% + 40px);height:calc(100% + 0px);background:radial-gradient(2px 2px at 12% 25%,#fff,transparent),radial-gradient(2px 2px at 62% 70%,#ffd0ff,transparent);background-size:40px 30px;--tx:-40px;--ty:0;animation:lxTile 8s linear infinite}
+#chatBox .cmb.ccxT8 .zqc>.zqm,.cxs .cmb.ccxT8 .zqc>.zqm{left:0;top:0px;width:calc(100% + 34px);height:calc(100% + 0px);background:radial-gradient(1.5px 1.5px at 80% 30%,#fff,transparent),radial-gradient(1.5px 1.5px at 30% 80%,#ffd0ff,transparent);background-size:34px 30px;--tx:-34px;--ty:0;animation:lxTile 11s linear infinite}
+#chatBox .cmb.ccxT8>.zqg,.cxs .cmb.ccxT8>.zqg{box-shadow:0 0 18px #8a5aff88;animation:lxPulse 3s ease-in-out infinite alternate}
 #chatBox .cm.cmp .cmb.ccxT8::before,.cxs .cmb.ccxT8::before{content:'✦';left:-8px;top:-11px;color:#ff9ae8;font-size:17px;animation:pTw 1.8s infinite}
-#chatBox .cm.cmp .cmb.ccxT8::after,.cxs .cmb.ccxT8::after{content:'☄️';right:2px;top:-12px;font-size:16px;animation:tComet 4.5s linear infinite}
+#chatBox .cm.cmp .cmb.ccxT8::after,.cxs .cmb.ccxT8::after{content:'☄️';right:2px;top:-12px;font-size:16px;animation:pTw 2.4s infinite}
 #chatBox .cm.cmp .cmb.ccxT8 .cmh b,.cxs .cmb.ccxT8 .cmh b{background:linear-gradient(90deg,#ff7ad8,#8a5aff,#3ad8ff);-webkit-background-clip:text;background-clip:text;color:transparent}
-#chatBox .cm.cxr1 .cav{filter:drop-shadow(0 0 5px #ffc83a)}
-#chatBox .cm.cxr2 .cav{filter:drop-shadow(0 0 5px #2ee6a0)}
-#chatBox .cm.cxr3 .cav{filter:drop-shadow(0 0 5px #9ac8ff)}
-#chatBox .cm.cxr4 .cav{filter:drop-shadow(0 0 5px #ff6a2a)}
-#chatBox .cm.cxr5 .cav{filter:drop-shadow(0 0 5px #3ad8ff)}
-#chatBox .cm.cxr6 .cav{filter:drop-shadow(0 0 5px #ff8ec0)}
-#chatBox .cm.cxr7 .cav{filter:drop-shadow(0 0 5px #2fd8cc)}
-#chatBox .cm.cxr8 .cav{filter:drop-shadow(0 0 5px #a07aff)}
+
 
 /* ร้าน */
 .cxs{--bg:#120d22}.cxs .hero{position:relative;overflow:hidden;border-radius:16px;padding:14px 14px 12px;margin:42px 0 10px;color:#fff;background:radial-gradient(120px 60px at 85% 20%,#ff7ad855,transparent),radial-gradient(140px 70px at 10% 90%,#3ad8ff44,transparent),linear-gradient(135deg,#2a1260,#120d22 70%);border:2px solid #4a3a8a;box-shadow:0 4px 0 #1c1240}
@@ -32957,7 +32984,7 @@ const has=x=>isA()||CS.own.includes(x);
 const tid=x=>+String(x||'').replace(/\D/g,'')||0;
 const featPk=()=>CS.feat&&CS.feat.exp>Date.now()?CS.feat.pk:'';
 const price=pk=>{const P=COSP[pk];if(!P)return 0;return featPk()===pk?CS.feat.p:P.p};
-window.cosTitleHtml=function(t){const n=tid(t);return /^t_p/.test(t||'')&&n>=1&&n<=11?`<span class="ptt ptt${n}" data-cs="t${n}">${NMT[n-1]}</span>`:''};
+window.cosTitleHtml=function(t){const n=tid(t);return /^t_p/.test(t||'')&&n>=1&&n<=11?`<span class="ptt ptt${n}" data-cs="t${n}"><i class="zqx"></i><i class="zqy"></i><span class="zqt">${NMT[n-1]}</span></span>`:''};
 async function sync(){try{const j=await api('cosget');if(!j)return;CS.own=Array.isArray(j.own)?j.own:[];CS.eq=j.eq||{};if(j.feat)CS.feat=j.feat;save();
  const d=frGet();let ch=0;CS.own.forEach(x=>{if(/^f_p[1-8]$/.test(x)&&!d.own.includes(x)){d.own.push(x);ch=1}});if(ch)frSet(d)}catch(e){}}
 window.cosSync=sync;
@@ -32983,7 +33010,9 @@ window.cosEq=async function(kind,id){if(kind==='f'){frEquip(id||null);setTimeout
 // องค์ประกอบ UI
 const av=()=>{const d=frGet();return d.av?`<img src="${d.av}">`:'🙂'};
 const frPrev=i=>`<div class="frprev">${frWrap(`<span class="frph">${av()}</span>`,'f_p'+i)}</div>`;
-const bub=(i,nm)=>`<div class="bubp"><div class="cmb ccxT${i}"><div class="cmh"><b>${esc(nm||pname())}</b></div>ข้อความตัวอย่างธีม${NMC[i-1]}</div></div>`;
+const OVL='<i class="zqc"><i class="zql"></i><i class="zqm"></i></i><i class="zqg"></i>';
+window.cosBubHtml=(i,nm,tx)=>`<div class="cmb ccxT${i}">${OVL}<div class="cmh"><b>${esc(nm)}</b></div>${tx}</div>`;
+const bub=(i,nm)=>`<div class="bubp">${cosBubHtml(i,nm||pname(),'ข้อความตัวอย่างธีม'+NMC[i-1])}</div>`;
 const priceH=pk=>{const P=COSP[pk],p=price(pk);return `<span class="pr"><b>${p}฿</b>${p<P.p?`<s>${P.p}฿</s>`:''}</span>`};
 const eqState=(kind,id,cur)=>cur===id?`<button class="g" onclick="cosEq('${kind}',null)">ถอด</button><span class="own-b">✅ ใช้อยู่</span>`:`<button onclick="cosEq('${kind}','${id}')">สวมใส่</button>`;
 const acts=(kind,id,pk,own,cur,tryk)=>`<div class="acts">${own?eqState(kind,id,cur):`<button class="g" onclick="cosTry('${tryk}')">👁️ ลองใส่</button><button onclick="cosBuy('${pk}')">ซื้อ ${price(pk)}฿</button>`}</div>`;
@@ -33007,6 +33036,7 @@ window.cosMenu=function(tab,focus){tab=window._cosTab=tab||window._cosTab||'set'
  if(tab==='c'){b='<div class="grid">'+[1,2,3,4,5,6,7,8].map(cardC).join('')+'</div>'}
  const hero=`<div class="hero"><span class="own">สะสมแล้ว ${owned()}/24</span><i class="sp" style="left:12%;top:20%"></i><i class="sp" style="left:60%;top:70%;animation-delay:-1s"></i><i class="sp" style="left:88%;top:40%;animation-delay:-.5s"></i><h4>🎨 ร้านตกแต่ง</h4><p>กรอบรูปทรงพิเศษที่ขยับได้ · ฉายาเรืองแสง · ธีมแชท<br>ของแต่งล้วนๆ ซื้อครั้งเดียวถาวร ไม่มีผลต่อพลังหรืออันดับ</p></div>`;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="cxs">${hero}<div class="tabs">${tabs.map(t=>`<button class="${tab===t[0]?'on':''}" onclick="cosMenu('${t[0]}')">${t[1]}</button>`).join('')}</div>${fh}${b}<p class="tag2" style="margin-top:10px">เล่นฟรีก็ได้กรอบและฉายาจากในเกมเหมือนเดิม · ผูกกับบัญชี ไม่หายเวลาเปลี่ยนเครื่อง</p></div>`,'cosshop');
+ try{document.querySelectorAll('.cxs .card,.cxs .feat').forEach(cxWatch)}catch(e){}
  if(focus){const el=document.getElementById('cs-'+focus);if(el){el.scrollIntoView({block:'center'});el.classList.add('hl')}}};
 // ลองใส่
 let TRY=null;
@@ -33014,7 +33044,7 @@ window.cosTry=function(k){const kind=k[0],i=+k.slice(1);let fr=null,tt='',cc=0,p
  if(kind==='f'){fr='f_p'+i;pk='cf'+i;nm=NMF[i-1]}else if(kind==='t'){tt='t_p'+i;pk='ct'+i;nm=NMT[i-1]}else if(kind==='c'){cc=i;pk='cc'+i;nm=NMC[i-1]}else{fr='f_p'+i;tt='t_p'+i;cc=i;pk='cs'+i;nm=SN[i-1]}
  const d=frGet();
  modal(`<button class="xbtn" onclick="cosMenu(window._cosTab)">✕</button><h3>👁️ ลองใส่: ${nm}</h3><div class="cxs try"><div class="big"><div class="frprev">${fr?frWrap(`<span class="frph">${av()}</span>`,fr):`<span class="frph">${av()}</span>`}</div></div>
- <div class="bubp" style="max-width:340px;margin:0 auto"><div class="cmb ${cc?'ccxT'+cc:''}" style="${cc?'':'border:2px solid var(--line,#444);background:#2a2842;color:#fff'}"><div class="cmh"><b>${esc(pname())}</b>${tt?cosTitleHtml(tt):''}</div>นี่คือหน้าตาของคุณในแชทโลก</div></div>
+ <div class="bubp" style="max-width:340px;margin:0 auto"><div class="cmb ${cc?'ccxT'+cc:''}" style="${cc?'':'border:2px solid var(--line,#444);background:#2a2842;color:#fff'}">${cc?OVL:''}<div class="cmh"><b>${esc(pname())}</b>${tt?cosTitleHtml(tt):''}</div>นี่คือหน้าตาของคุณในแชทโลก</div></div>
  <p class="tag2" style="margin-top:8px">${(kind==='t'||kind==='c'||kind==='s')?'กดปุ่มด้านล่างเพื่อลองในแชทจริง 10 นาที (เห็นเฉพาะบนเครื่องคุณ)':'กรอบจะเห็นเต็มๆ เมื่อสวมในโปรไฟล์'}</p>
  <div class="acts" style="margin-top:8px">${(kind==='t'||kind==='c'||kind==='s')?`<button class="g" onclick="cosTryChat('${k}')">💬 ลองในแชท 10 นาที</button>`:''}<button onclick="cosBuy('${pk}')">ซื้อ ${price(pk)}฿</button></div></div>`,'costry')};
 window.cosTryChat=function(k){const kind=k[0],i=+k.slice(1);TRY={t:(kind==='t'||kind==='s')?'t_p'+i:'',c:(kind==='c'||kind==='s')?'c_p'+i:'',until:Date.now()+600e3};toast('ลองใส่แล้ว 10 นาที — เปิดแชทโลกดูได้เลย');try{closeM()}catch(e){}};
@@ -33023,10 +33053,10 @@ const cxIO=typeof IntersectionObserver==='function'?new IntersectionObserver(es=
 {const _cr=chatRender;chatRender=function(){const r=_cr.apply(this,arguments);try{const box=$('chatBox');if(!box)return r;const ks=[...box.children].filter(e=>e.classList&&e.classList.contains('cm')),ms=chatMsgs||[];if(ks.length!==ms.length)return r;const me=String(pid||'').slice(0,12),tr=TRY&&TRY.until>Date.now()?TRY:null;
  ks.forEach((e,i)=>{const m=ms[i],mine=tr&&m.pu===me;let cc=m.cc,ct=m.ct;if(mine){if(tr.c)cc=tr.c;if(tr.t)ct=tr.t}
   const c=/^c_p/.test(cc||'')?tid(cc):0,t=/^t_p/.test(ct||'')?tid(ct):0;
-  if(c>=1&&c<=8)e.classList.add('cxr'+c);  if(c>=1&&c<=8){const bd=e.querySelector('.cmb');if(bd&&!/ccxT/.test(bd.className)){bd.classList.add('ccx','ccxT'+c);const h=bd.querySelector('.cmh');if(h)h.insertAdjacentHTML('beforeend','<span class="cosk" data-cs="c'+c+'" title="ดูธีมนี้ในร้าน">🎨</span>')}}
+  if(c>=1&&c<=8)e.classList.add('cxr'+c);  if(c>=1&&c<=8){const bd=e.querySelector('.cmb');if(bd&&!/ccxT/.test(bd.className)){bd.classList.add('ccx','ccxT'+c);if(!bd.querySelector(':scope>.zqc'))bd.insertAdjacentHTML('afterbegin',OVL);const h=bd.querySelector('.cmh');if(h)h.insertAdjacentHTML('beforeend','<span class="cosk" data-cs="c'+c+'" title="ดูธีมนี้ในร้าน">🎨</span>')}}
   if(t>=1&&t<=11&&!e.querySelector('.ptt')){const b=e.querySelector('.cmh b');if(b)b.insertAdjacentHTML('afterend',' '+cosTitleHtml(ct))}
   if(t>=1&&t<=11&&e.querySelector('.ptt'))e.querySelectorAll('.cmh .rkchip,.cmh .tchip,.cmh .ttl').forEach(x=>x.remove());
-  if(c||t>=1&&t<=8)cxWatch(e)})}catch(e){}return r}}
+  if(c||t>=1&&t<=8||e.querySelector('.frsh'))cxWatch(e)})}catch(e){}return r}}
 document.addEventListener('click',ev=>{try{const el=ev.target.closest&&ev.target.closest('#chatBox [data-cs]');if(!el)return;const k=el.dataset.cs;if(!k)return;ev.stopPropagation();cosMenu(k[0]==='c'?'c':'t','c'===k[0]?k:k)}catch(e){}},true);
 // ทางเข้า: แบนเนอร์ด้านบนของโปรไฟล์/ร้านแลกกรอบ/ผู้สนับสนุน + ปุ่มหน้าแรก
 const banner=()=>`<button class="cosent" onclick="cosMenu()"><span class="ic">🎨</span><span>ร้านตกแต่ง — กรอบรูปทรงพิเศษ ขยับได้<small>กรอบ ฉายา ธีมแชท เริ่มต้น 9 บาท · ลองใส่ก่อนซื้อได้${featPk()?' · 🔥 วันนี้ลด 20%':''}</small></span></button>`;
