@@ -500,8 +500,7 @@ const CHANGELOG=[
   '📦 <b>เซฟไม่เต็มง่ายขึ้น</b> — ภาพอัลบั้มบน Safari เล็กลง และสำเนาสำรองไม่เก็บภาพซ้ำ',
   '⚠️ <b>เตือนเมื่อเซฟไม่ลง</b> — ถ้าพื้นที่เก็บเต็ม จะมีแถบแดงค้างบนจอจนกว่าจะบันทึกได้ (เดิมเตือนครั้งเดียวแล้วหาย)',
   '💡 <b>เคล็ดลับ</b> — เล่นบน iPhone ให้จดรหัสที่เมนู 💾 ย้ายเซฟ ไว้สักครั้ง · ไอคอนบนหน้าจอโฮมเก็บเซฟแยกจาก Safari · เล่นในโหมดส่วนตัวเซฟจะหายเมื่อปิดแท็บ']},
- {v:'17.9',d:'14 พ.ย. 2026',l:['📢 <b>แจ้งจากผู้พัฒนา</b> — Claude (ผู้ช่วยพัฒนา) ใช้โควต้าหมดแล้ว อัปเดตถัดไปวันจันทร์ ระหว่างนี้แจ้งบั๊กหรือโหวตไอเดียไว้ได้เลย 🙏',
-  '🎲 <b>ระบบเลือกแทนแบบใหม่</b> — เหตุการณ์ซ้อนกันจะต่อคิว ไม่ถูกตอบทิ้ง · เรื่องสำคัญระบบจะหยุดรอให้เลือกเองเสมอ · เรื่องเล็กเลือกข้อที่ปลอดภัยที่สุด และแจ้งบนเกาะทุกครั้ง',
+ {v:'17.9',d:'14 พ.ย. 2026',l:['🎲 <b>ระบบเลือกแทนแบบใหม่</b> — เหตุการณ์ซ้อนกันจะต่อคิว ไม่ถูกตอบทิ้ง · เรื่องสำคัญระบบจะหยุดรอให้เลือกเองเสมอ · เรื่องเล็กเลือกข้อที่ปลอดภัยที่สุด และแจ้งบนเกาะทุกครั้ง',
   '⏳ <b>หลอดเวลาเดินตามจริง</b> — เหตุการณ์ขึ้นตามเดือนบนหลอด หลอดเต็มแล้วจึงขึ้นปีใหม่ · ปีที่เงียบข้ามเร็วพร้อมป้าย ⏩',
   '🧵 <b>ด้ายแดงข้ามชาติ</b> — ผูกด้ายแดงกับคู่รักเดียว แล้วตามหาเขาที่เกิดใหม่ในชาติหน้า ทั้งที่เขาจำคุณไม่ได้',
   '🗺️ <b>เส้นทางชีวิต</b> · ⚔️ <b>ภัยประจำสัปดาห์</b> ที่ทุกคนช่วยกัน · 🪦 <b>สุสานจอมยุทธ์</b> · 📊 <b>ไอเดียยอดนิยม</b> · 🏛️ <b>ดูแลแคว้นเบื้องล่าง</b> (โลกเทพ)',
@@ -23005,7 +23004,7 @@ const hlSenseN=()=>{const s=S&&S.hlS;return s?(s.blind?1:0)+(s.deaf?1:0)+(s.numb
 {const _ha=hlAdv;hlAdv=function(h,n,k,e){const x=window._hlX;window._hlX=null;const r=_ha.apply(this,arguments);try{
  if(h.wd==null)h.wd=6;h.wd=Math.min(8,h.wd+1);if(k==='well')h.wd=Math.max(1,h.wd-1);
  if(x&&x.gh&&k==='boss'){const a=newArt(3);if(x.gh.ar)a.n=x.gh.ar;Array.prototype.push.call(S.arts,a);log(`👻 วิญญาณของ <b>${esc(x.gh.n)}</b> สลายเป็นแสง ทิ้งวิชาที่เขาภูมิใจที่สุดไว้ให้ — ได้ ${artHtml(a)}`,'myth',true)}
- if(k==='boss'&&n%10===0&&n<100){S.hlS=S.hlS||{};const has=['blind','deaf','numb'].filter(z=>!S.hlS[z]);if(has.length&&!S.hlS['f'+n]){S.hlS['f'+n]=1;mdWait(()=>hlSenseAsk(n,has))}}}catch(er){console.error(er)}return r}}
+ if(k==='boss'&&n%10===0&&n<(h.ab?1000:100)){S.hlS=S.hlS||{};const has=['blind','deaf','numb'].filter(z=>!S.hlS[z]);if(has.length&&!S.hlS['f'+n]){S.hlS['f'+n]=1;mdWait(()=>hlSenseAsk(n,has))}}}catch(er){console.error(er)}return r}}
 const HL_SN={blind:['👁️ ควักดวงตา (ตาบอด)','ตัวเลือกทุกข้อจะไม่มีคำอธิบายอีกต่อไป'],deaf:['👂 สละการได้ยิน (หูหนวก)','จะไม่รู้กฎของผู้คุมและไม่รู้ว่ามันแรงแค่ไหน'],numb:['✋ สละความรู้สึก (ไร้ความรู้สึก)','จะมองไม่เห็นพลังชีวิตของตัวเอง']};
 function hlSenseAsk(n,has){choice(`🩸 พันธสัญญาชั้นที่ ${n}`,`เสียงกระซิบจากก้นนรก: "มอบบางอย่างของเจ้าให้ข้า แล้วข้าจะทำให้ผู้คุมทุกตนอ่อนแอลงต่อหน้าเจ้า"<br><span class="tag2">แลกแล้วเสียถาวรตลอดชีวิตนี้ · ผู้คุมอ่อนลง 12% ต่อหนึ่งประสาท · แก่นนรก +4 · พลังเพิ่มขึ้น</span>`,
  has.map(z=>({t:HL_SN[z][0],s:HL_SN[z][1],_x:1,noFate:1,f(){S.hlS=S.hlS||{};S.hlS[z]=1;const h=S.hell;if(h)h.ess+=4;try{pctPow(.03)}catch(e){}log(`🩸 คุณมอบ${HL_SN[z][0].slice(3)}ให้นรก — ${HL_SN[z][1]} · ผู้คุมทุกตนดูเล็กลงในสายตาที่เหลืออยู่`,'myth',true);mdBody()}})).concat([{t:'🙅 ไม่แลกอะไรทั้งนั้น',s:'ไปต่อด้วยตัวเอง',_x:1,noFate:1,f(){log('🙅 คุณไม่ยอมแลกอะไรกับเสียงกระซิบ','epic')}}]))}
@@ -23017,7 +23016,7 @@ function hlWarden(h){const ep=Math.round(hlEp(h,{k:'elite',ru:[],nm:'x'},Math.mi
  {t:'⚔️ หันกลับไปสู้',s:'ชนะ = ผู้คุมถอยไปไกล + แก่นนรก +5',_x:1,noFate:1,f(){setTimeout(()=>duel('ผู้คุมนรกไร้นาม',ep,w=>{if(w){h.wd=7;h.ess+=5;S.fame+=200;log('⛓️ คุณฟันโซ่ของผู้คุมขาด มันถอยกลับเข้าไปในความมืด — แต่คุณรู้ว่ามันจะกลับมา','myth',true)}else{h.wd=3;h.fail=(h.fail||0)+1;S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.4));
   if(h.fail>=3){S.deathCause=`ถูกผู้คุมนรกไร้นามลากลงไปใต้ชั้นที่ ${h.lv} ตลอดกาล`;S.hp=0;try{checkDeath()}catch(e){}}else log(`⛓️ ผู้คุมฟาดโซ่จนคุณกระเด็น แล้วหัวเราะ "ยังไม่ถึงเวลาของเจ้า" (พลาดได้อีก ${3-h.fail} ครั้ง)`,'bad',true)}render()}),300)}},
  {t:'🏃 ทิ้งแก่นนรกครึ่งหนึ่งแล้ววิ่งหนี',s:`เสียแก่นนรก ${Math.ceil((h.ess||0)/2)} · ผู้คุมห่างออกไปนิดหน่อย`,_x:1,noFate:1,f(){h.ess=Math.floor((h.ess||0)/2);h.wd=3;log('🏃 คุณโยนแก่นนรกทิ้งไว้ล่อ แล้ววิ่งหนีจนสุดแรง','bad')}}])}
-{const _oh=openHell2;openHell2=function(){const r=_oh.apply(this,arguments);try{const h=hl2();if(!h||h.lv>=100)return r;if(h.wd==null)h.wd=6;const m=$('modal'),it=m&&m.querySelector('.item');
+{const _oh=openHell2;openHell2=function(){const r=_oh.apply(this,arguments);try{const h=hl2();if(!h||h.lv>=(h.ab?1000:100))return r;if(h.wd==null)h.wd=6;const m=$('modal'),it=m&&m.querySelector('.item');
  if(it){const wd=h.wd,col=wd<=2?'#ff3a1a':wd<=4?'#ffb040':'#8a8a96';it.insertAdjacentHTML('afterend',`<div class="item" style="border-left:4px solid ${col}"><b>⛓️ ผู้คุมไล่ล่า: ห่าง ${wd} ก้าว</b> <span style="letter-spacing:2px">${'⬛'.repeat(Math.max(0,8-wd))}${'▫️'.repeat(Math.max(0,wd))}</span><p class="tag2" style="margin:2px 0">ทุกปีที่ลงได้แต่ยังไม่ลง มันใกล้เข้ามา 1 ก้าว · ลงชั้นใหม่ห่างออก 1 ก้าว · ถึง 0 ต้องสู้กับมัน</p>${S.hlS&&(S.hlS.blind||S.hlS.deaf||S.hlS.numb)?`<p class="tag2" style="margin:2px 0">🩸 สิ่งที่มอบให้นรกแล้ว: ${['blind','deaf','numb'].filter(z=>S.hlS[z]).map(z=>HL_SN[z][0].split(' (')[0]).join(' · ')}</p>`:''}</div>`)}
  if(S.hlS&&S.hlS.deaf)m.querySelectorAll('p.tag2').forEach(p=>{if(/แรงราว/.test(p.textContent))p.textContent='🔇 ไม่รู้ว่าแรงแค่ไหน'});
  if(h.lv>=20&&h.lv%5===0&&h.shr!==h.lv&&onlineOK){const row=m.querySelector('div[style*="display:flex;gap:6px"]');if(row)row.insertAdjacentHTML('afterend',`<button class="gbtn" style="width:100%;margin-top:6px" onclick="hlShrine()">⛩️ ศาลฝากของชั้น ${h.lv} — แลกของกับผู้เล่นคนก่อน</button>`)}
@@ -23098,7 +23097,7 @@ function rgSell(k){const G=S.rg;if(!G||!G.know[k]||(G.seen&&G.seen.sold))return;
 {const _or=openRegress;openRegress=function(){const r=_or.apply(this,arguments);try{const m=$('modal'),G=S.rg;if(m&&G&&!m.querySelector('.rgSellB')){const F=G.fx;m.insertAdjacentHTML('beforeend',`${F&&G.awake?`<div class="item" style="margin-top:8px"><b>🕯️ จุดที่เปลี่ยนไม่ได้</b><p class="tag2" style="margin:2px 0">${F.ok?`✅ ${esc(F.n)} รอดแล้ว`:`${esc(F.n)} ตายตอนคุณอายุ ${F.a} ทุกรอบ · เบาะแส ${F.c}/3`}</p></div>`:''}<button class="gbtn rgSellB" style="width:100%;margin-top:6px" onclick="rgSellUI()">🔮 ขายความทรงจำให้หมอดู</button>`)}}catch(e){}return r}}
 // ================= hooks รวม =================
 {const _pyM=passYear;passYear=function(){const pre=S&&S.hell?S.hell.lv:null;const r=_pyM.apply(this,arguments);try{if(!S||!S.alive)return r;
- if(S.ch==='hell'&&S.hell&&S.hell.h2&&S.hell.lv>=18&&S.hell.lv<100){const h=S.hell;if(h.wd==null)h.wd=6;if(S.age>h.cd&&h.lv===pre){h.wd--;if(h.wd<=2&&h.wd>0)log(`⛓️ เสียงโซ่ลากดังใกล้เข้ามา… ผู้คุมไล่ล่าห่างอีก ${h.wd} ก้าว`,'bad')}if(h.wd<=0)mdWait(()=>{if(S.hell&&S.hell.wd<=0)hlWarden(S.hell)})}
+ if(S.ch==='hell'&&S.hell&&S.hell.h2&&S.hell.lv>=(S.hell.ab?1:18)&&S.hell.lv<(S.hell.ab?1000:100)){const h=S.hell;if(h.wd==null)h.wd=6;if(S.age>h.cd&&h.lv===pre){h.wd--;if(h.wd<=2&&h.wd>0)log(`⛓️ เสียงโซ่ลากดังใกล้เข้ามา… ผู้คุมไล่ล่าห่างอีก ${h.wd} ก้าว`,'bad')}if(h.wd<=0)mdWait(()=>{if(S.hell&&S.hell.wd<=0)hlWarden(S.hell)})}
  if(S.ch==='short'){bkInit();bkTick();if(S.bloom&&S.age>=S.bloom){S.deathCause='เผาผลาญทุกปีที่เหลือในการบานครั้งสุดท้าย แล้วร่วงโรยดั่งดอกไม้';S.hp=0;const rv=S.sys?S.sys.revive:0;if(S.sys)S.sys.revive=0;try{checkDeath()}catch(e){}if(S.sys&&S.alive)S.sys.revive=rv}}
  if(S.ch==='junk')jkTick();mdBody()}catch(e){console.error(e)}return r}}
 {const _cdM=checkDeath;checkDeath=function(){const was=S&&S.alive;const r=_cdM.apply(this,arguments);try{if(was&&S&&!S.alive&&S.ch==='short'&&!S.mw){const W0=S.will,c=(S.willChain||0)+1;LS.set('murim_will',W0?Object.assign({},W0,{from:S.name,chain:c}):null)}mdBody()}catch(e){}return r}}
@@ -24858,14 +24857,14 @@ async function admPaStat(){try{const j=await api('pastat',{key:admK()});const L=
 
 // ===== แก้: โหมดนรกตั้งแต่ชั้น 19 หาทางลงชั้นถัดไปไม่เจอ (มีแค่ป้าย 🔥 เล็กๆ บนหัวจอ) =====
 // 1) ถึงเวลาลงได้ → เด้งถามเองครั้งเดียวต่อชั้น · 2) ป้ายบนหัวจอกะพริบเมื่อพร้อม · 3) ปุ่ม "🔥 ประตูนรก" ในเมนู
-function hlReady(){const h=S&&S.ch==='hell'&&hl2();return !!(h&&h.h2&&h.lv>=18&&h.lv<100&&S.alive&&S.age>=h.cd)}
+function hlReady(){const h=S&&S.ch==='hell'&&hl2();return !!(h&&h.h2&&h.lv>=(h.ab?0:18)&&h.lv<(h.ab?1000:100)&&S.alive&&S.age>=h.cd)}
 function hlAsk(){const h=hl2();if(!hlReady()||h.askLv===h.lv)return;if(choice._cur||modalOpen)return setTimeout(hlAsk,900);h.askLv=h.lv;const n=h.lv+1;
  choice(`🔥 ประตูนรกชั้นที่ ${n} เปิดแล้ว`,`ผู้คุมไล่ล่าอยู่ห่าง ${h.wd==null?6:h.wd} ก้าว — ${n%10===0?'ข้างหน้าคือ<b>บอสวงนรก</b>':'เลือกได้ 1 บานจากหลายประตู'}<br><span class="tag2">กดป้าย 🔥 บนหัวจอ หรือเมนู ☰ → 🔥 ประตูนรก ได้ทุกเมื่อ</span>`,[
   {t:'🚪 ไปเลือกประตู',_x:1,noFate:1,f(){setTimeout(openHell2,200)}},
   {t:'🗡️ ฝึกต่อก่อน',s:'ทุกปีที่ไม่ลง ผู้คุมใกล้เข้ามา 1 ก้าว',_x:1,noFate:1,skip:true,f(){}}])}
 {const _pyHR=passYear;passYear=function(){const r=_pyHR.apply(this,arguments);try{if(hlReady()){const h=hl2();if(h.askLv!==h.lv)setTimeout(hlAsk,600)}}catch(e){}return r}}
 {const _rdHR=render;render=function(){const r=_rdHR.apply(this,arguments);try{const b=document.querySelector('.hlb');if(b){const on=hlReady();b.classList.toggle('hlbReady',on);if(on&&!/ลงได้/.test(b.textContent))b.insertAdjacentHTML('beforeend',' · 🚪 ลงได้')}}catch(e){}return r}}
-{const _omHR=openMenu;openMenu=function(){const r=_omHR.apply(this,arguments);try{const h=S&&S.ch==='hell'&&hl2();if(h&&h.lv>=18&&h.lv<100){const m=$('modal'),g=m&&m.querySelector('.mgrid');if(g&&!m.querySelector('.hlMB'))g.insertAdjacentHTML('afterbegin',`<button class="opt hlMB" onclick="openHell2()">🔥 ประตูนรก<small>ชั้น ${h.lv+1}${hlReady()?' · ลงได้แล้ว':' · อีก '+Math.max(0,h.cd-S.age)+' ปี'}</small></button>`)}}catch(e){}return r}}
+{const _omHR=openMenu;openMenu=function(){const r=_omHR.apply(this,arguments);try{const h=S&&S.ch==='hell'&&hl2();if(h&&h.lv>=(h.ab?0:18)&&h.lv<(h.ab?1000:100)){const m=$('modal'),g=m&&m.querySelector('.mgrid');if(g&&!m.querySelector('.hlMB'))g.insertAdjacentHTML('afterbegin',`<button class="opt hlMB" onclick="openHell2()">🔥 ประตูนรก<small>ชั้น ${h.lv+1}${hlReady()?' · ลงได้แล้ว':' · อีก '+Math.max(0,h.cd-S.age)+' ปี'}</small></button>`)}}catch(e){}return r}}
 (()=>{const st=document.createElement('style');st.textContent='.hlb.hlbReady{animation:hlbP 1.2s ease-in-out infinite;font-weight:800}@keyframes hlbP{50%{box-shadow:0 0 10px #ff6a20;background:#6a1a0a}}';document.head.appendChild(st)})();
 
 // ===== กล่องซ่อน/เปิดชีวิตในทำเนียบ: ทำให้กะทัดรัด (เดิมปุ่มสูงใหญ่เกิน) =====
@@ -29327,6 +29326,18 @@ try{document.head.insertAdjacentHTML('beforeend',`<style>
 try{SYS_GUIDE.push({s:'world',nw:1,ic:'👹',t:'แดนอสูรและแดนต้องห้าม',go:'openDz',d:'เข้าได้ 4 ทาง (โลกเซียนหรือแดนเทพ): ⚖️ ถูกเนรเทศจากแดนเทพเมื่อกรรมติดลบหนัก · 🌗 เดินลงไปเองถ้าเป็นมารใจดีบารมี 800+ · 🩸 ถูกลากลงไปเมื่อยอมมารในใจ · 🕳️ ตกรอยแยก — แผนที่ 9 แคว้นไม่มีลำดับ ยึดได้ 4 วิธี (ดวล · สวามิภักดิ์แล้วแทงข้างหลัง · ยุให้รบกัน · ปลดปล่อยทาส) ราชันจำทุกสิ่งที่คุณทำ · ความหิวกับสติ · ราชัน/ทาส/สายลับแดนเทพดึงคนละทาง · อสูรสวมรอยคนใกล้ตัว · ทางออก 5 ทาง · เศษผนึก 3 ชิ้นเปิด 🌑 แดนต้องห้าม คุก 7 ห้องที่เกี่ยวโยงกัน ตอนจบตามผลรวม'})}catch(e){}
 window._dzEV=EV;
 })()}catch(e){console.error(e)}
+// ===================== รั้งอยู่ที่ขอบกัลป์: ไม่ต้องข้ามกัลป์ทันที ใช้ชีวิต/ฝึกต่อได้ · กันประตูกัลป์ซ้อน =====================
+kcap=function(){const K=S&&S.kalpa,b=1e6*(1+((K&&K.n)|0))+((K&&K.off)|0);return K&&K.wait&&S&&S.alive?Math.max(b,(S.age|0)+1):b};
+const KE_RX=/^(♾️ ขอบของ|👁️ ใจกลางวงจรกัลป์|🔀 ทางแยกนอกวงจรกัลป์|🌫️ ขอบของ)/;
+function keWait(){const K=S&&S.kalpa;if(!K)return;K.wait=1;K.pend=0;K.wY=S.age;log(`⏳ คุณยังไม่ก้าวข้าม — รั้งอยู่ที่ขอบของ${KAL_N[K.n]||'กัลป์'} ใช้ชีวิตและฝึกฝนต่อได้ตามปกติ · พร้อมเมื่อไหร่ไปที่ ☰ เมนู → ♾️ ก้าวข้ามกัลป์`,'myth',true);try{render()}catch(e){}}
+function keCross(){const K=S&&S.kalpa;if(!K||!S.alive)return;if(choice._cur){toast('ตอบเรื่องที่ค้างอยู่ก่อน');return}closeM();K.wait=0;K.off=Math.max(0,(S.age|0)-1e6*(1+(K.n|0)));K._gl=0;kalpaHit()}
+{const _chK=choice;const nc=function(title,text,opts){try{const K=S&&S.kalpa;if(K&&K.pend&&!(K.by>0)&&KE_RX.test(String(title))&&Array.isArray(opts)&&!opts.some(o=>o&&o._ke))opts=opts.concat([{t:'⏳ รั้งอยู่ที่ขอบกัลป์',s:'ยังไม่ข้าม · ใช้ชีวิต ฝึกวิชา ทำทุกอย่างต่อได้ตามปกติ · กลับมาก้าวข้ามได้ทุกเมื่อที่ ☰ เมนู',_ke:1,_x:1,noFate:1,f(){keWait()}}])}catch(e){}return _chK.call(this,title,text,opts)};for(const k in _chK)nc[k]=_chK[k];choice=nc}
+// กันประตูกัลป์/ระลอกซ้อนกัน ระหว่างช่วงรอยต่อของภัยแต่ละระลอก
+{const _kwE=kalpaWave;kalpaWave=function(){try{if(S&&S.kalpa)S.kalpa._gl=Date.now()}catch(e){}return _kwE.apply(this,arguments)}}
+try{const _kbE=window.kpBeyond;if(typeof _kbE==='function'){window.kpBeyond=function(){try{if(S&&S.kalpa)S.kalpa._gl=Date.now()}catch(e){}return _kbE.apply(this,arguments)}}}catch(e){}
+{const _pyE=passYear;passYear=function(){try{const K=S&&S.kalpa;if(K&&K.pend&&Date.now()-(K._gl||0)<4000)return;if(K&&K.wait&&S.alive&&(S.age-(K.wY||S.age))%25===24)addFeed('ev',`⏳ คุณยังรั้งอยู่ที่ขอบของ${KAL_N[K.n]||'กัลป์'} — พร้อมเมื่อไหร่ ☰ เมนู → ♾️ ก้าวข้ามกัลป์`,'sum')}catch(e){}return _pyE.apply(this,arguments)}}
+{const _omE=openMenu;openMenu=function(){const r=_omE.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g&&S&&S.alive&&S.kalpa&&S.kalpa.wait&&!g.querySelector('.keB'))g.insertAdjacentHTML('afterbegin',`<button class="opt keB" onclick="keCross()">♾️ ก้าวข้ามกัลป์<small>ตอนนี้รั้งอยู่ที่ขอบของ${KAL_N[S.kalpa.n]||'กัลป์'}</small></button>`)}catch(e){}return r}}
+
 </script>
 </body>
 </html>
