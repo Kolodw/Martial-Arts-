@@ -32824,8 +32824,8 @@ const COSP={};
 for(let i=1;i<=8;i++){COSP['cf'+i]={n:NMF[i-1],p:FP[i-1]};COSP['ct'+i]={n:'ฉายา '+NMT[i-1],p:tP(i)};COSP['cc'+i]={n:'ธีมแชท '+NMC[i-1],p:cP(i)};COSP['cs'+i]={n:SN[i-1],p:SP[i-1]}}
 for(let i=9;i<=11;i++)COSP['ct'+i]={n:'ฉายา '+NMT[i-1],p:9};
 COSP.call={n:'ครบทุกชุด (8 ชุด · 24 ชิ้น)',p:399};
-const AVM=[['a_f1','จอบทำนา',0,0,'ชาวนาผู้ถ่อมตน'],['a_f2','เทียนไข',0,0,'แสงเล็กๆ ในคืนมืด'],['a_f3','แมวจร',1,0,'เจ้าของถนนยามราตรี'],['a_f4','ดาบราตรี',2,0,'คมกริบใต้แสงจันทร์'],['a_p1','จิ้งจอกเก้าหาง',3,29,'เก้าหางพลิ้วไหว · ไฟลอยขึ้น · กะพริบตา'],['a_p2','ปักษาตะวัน',3,29,'ปีกกระพือ · รัศมีหมุนรอบตัว'],['a_p3','ต้นไม้โลก',2,39,'รากเรืองแสง · ใบไม้ร่วงพริ้ว'],['a_p4','ความว่างเปล่า',3,39,'วงแหวนเต้นเป็นจังหวะ · แสงโคจร']];
-window.AVT=AVM.map((x,i)=>({id:x[0],n:x[1],r:x[2],free:!x[3],p:x[3],d:x[4],pk:x[3]?'pa'+(i-3):'',i}));
+const AVM=[['a_f1','จอบทำนา',0,0,'ชาวนาผู้ถ่อมตน'],['a_f2','เทียนไข',0,0,'แสงเล็กๆ ในคืนมืด'],['a_f3','แมวจร',1,0,'เจ้าของถนนยามราตรี'],['a_f4','ดาบราตรี',2,0,'คมกริบใต้แสงจันทร์'],['a_p1','จิ้งจอกเก้าหาง',3,9,'เก้าหางพลิ้วไหว · ไฟลอยขึ้น · กะพริบตา'],['a_p2','ปักษาตะวัน',3,9,'ปีกกระพือ · รัศมีหมุนรอบตัว'],['a_p3','ต้นไม้โลก',2,15,'รากเรืองแสง · ใบไม้ร่วงพริ้ว'],['a_p4','ความว่างเปล่า',3,15,'วงแหวนเต้นเป็นจังหวะ · แสงโคจร'],['a_p5','ผลึกน้ำแข็งนิรันดร์',1,19,'หกแฉกส่องประกาย · หิมะโปรย'],['a_p6','ค่ายกลปราณ',1,19,'ลายแปดทิศ · หยินหยางหมุน'],['a_p7','เปลวไฟนิรันดร์',2,25,'แดง ส้ม เหลือง แกนน้ำเงิน'],['a_p8','ดาบบินทองคำ',2,25,'ปราณหมุนรอบ · ประกายพุ่ง'],['a_p9','สายฟ้าสวรรค์',3,29,'ฟ้าผ่ากลางพายุ · วาบทั้งภาพ'],['a_p10','วงแหวนวิญญาณ 9 ชั้น',3,29,'ขาว เหลือง ม่วง ดำ แดง หมุนซ้อนกัน']];
+window.AVT=AVM.map((x,i)=>({id:x[0],n:x[1],r:x[2],free:!x[3],p:x[3],d:x[4],pk:x[3]?'pa'+(i-3):'',i,hi:/^a_p([5-9]|10)$/.test(x[0])}));
 AVT.filter(a=>!a.free).forEach(a=>{COSP[a.pk]={n:'รูปโปรไฟล์ '+a.n+' (ขยับได้)',p:a.p}});
 
 const st2=document.createElement('style');st2.textContent=`
@@ -33039,7 +33039,7 @@ window.cosMenu=function(tab,focus){tab=window._cosTab=tab||window._cosTab||'set'
  if(tab==='t'){b=`<div class="starter"><b>🌱 เริ่มต้นแค่ 9 บาท</b> — ฉายาแบบเรียบ 3 แบบ ลองซื้อชิ้นแรกได้เลย</div><div class="grid">${[9,10,11].map(cardT).join('')}${[1,2,3,4,5,6,7,8].map(cardT).join('')}</div>`}
  if(tab==='c'){b='<div class="grid">'+[1,2,3,4,5,6,7,8].map(cardC).join('')+'</div>'}
  if(tab==='a'){const RC=['#888780','#378ADD','#7F77DD','#BA7517'],RN=['ธรรมดา','หายาก','ล้ำค่า','ตำนาน'],dd=frGet();
-  b=`<div class="starter"><b>🧑 รูปโปรไฟล์</b> — แบบนิ่งใส่ฟรีทุกคน · แบบขยับได้ 29–39 บาท (ในแชทแสดงเป็นภาพนิ่ง)</div><div class="grid">${AVT.map(a=>{const o=a.free||has(a.id),eq=dd.pf===a.id;return `<div class="card" id="cs-a${a.i}" style="--ac:${RC[a.r]}"><span class="rib">${a.free?'ฟรี · ':'✨ ขยับได้ · '}${RN[a.r]}</span><div class="pv">${avtHtml(a.id,84)}</div><b class="nm">${a.n}</b><div class="sub">${a.d}</div>${o?'':priceH(a.pk)}<div class="acts">${o?(eq?`<button class="g" onclick="avtOff()">ถอด</button><span class="own-b">✅ ใช้อยู่</span>`:`<button onclick="avtEquip('${a.id}')">ใช้เป็นรูปโปรไฟล์</button>`):`<button onclick="cosBuy('${a.pk}')">ซื้อ ${price(a.pk)}฿</button>`}</div></div>`}).join('')}</div>`}
+  b=`<div class="starter"><b>🧑 รูปโปรไฟล์</b> — แบบนิ่งใส่ฟรีทุกคน · แบบขยับได้ 9–29 บาท (ในแชทแสดงเป็นภาพนิ่ง)</div><div class="grid">${AVT.map(a=>{const o=a.free||has(a.id),eq=dd.pf===a.id;return `<div class="card" id="cs-a${a.i}" style="--ac:${RC[a.r]}"><span class="rib">${a.free?'ฟรี · ':'✨ ขยับได้ · '}${RN[a.r]}</span><div class="pv">${avtHtml(a.id,a.hi?120:84)}</div><b class="nm">${a.n}</b><div class="sub">${a.d}</div>${o?'':priceH(a.pk)}<div class="acts">${o?(eq?`<button class="g" onclick="avtOff()">ถอด</button><span class="own-b">✅ ใช้อยู่</span>`:`<button onclick="avtEquip('${a.id}')">ใช้เป็นรูปโปรไฟล์</button>`):`<button onclick="cosBuy('${a.pk}')">ซื้อ ${price(a.pk)}฿</button>`}</div></div>`}).join('')}</div>`}
  const hero=`<div class="hero"><span class="own">สะสมแล้ว ${owned()}/24</span><i class="sp" style="left:12%;top:20%"></i><i class="sp" style="left:60%;top:70%;animation-delay:-1s"></i><i class="sp" style="left:88%;top:40%;animation-delay:-.5s"></i><h4>🎨 ร้านตกแต่ง</h4><p>กรอบรูปทรงพิเศษที่ขยับได้ · ฉายาเรืองแสง · ธีมแชท<br>ของแต่งล้วนๆ ซื้อครั้งเดียวถาวร ไม่มีผลต่อพลังหรืออันดับ</p></div>`;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="cxs">${hero}<div class="tabs">${tabs.map(t=>`<button class="${tab===t[0]?'on':''}" onclick="cosMenu('${t[0]}')">${t[1]}</button>`).join('')}</div>${fh}${b}<p class="tag2" style="margin-top:10px">เล่นฟรีก็ได้กรอบและฉายาจากในเกมเหมือนเดิม · ผูกกับบัญชี ไม่หายเวลาเปลี่ยนเครื่อง</p></div>`,'cosshop');
  try{document.querySelectorAll('.cxs .card,.cxs .feat').forEach((e,i)=>{if(i>1)e.classList.add('cxoff');cxWatch(e)})}catch(e){}try{avtMount($('modal'))}catch(e){}
@@ -40526,13 +40526,68 @@ const DRAW={
 };
 window.AVD=DRAW;
 const live=new Set();let tm=null;
-const paint=(cv,id,t)=>{const ctx=cv.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.globalAlpha=1;try{DRAW[id](ctx,t)}catch(e){}ctx.globalAlpha=1};
-const tick=()=>{const t0=performance.now()/1000;live.forEach(o=>{if(!o.cv.isConnected){live.delete(o);return}paint(o.cv,o.id,t0)});if(!live.size&&tm){clearInterval(tm);tm=null}};
+const W=240;
+const lg=(x,y0,y1,s)=>{const g=x.createLinearGradient(0,y0,0,y1);s.forEach(([o,c])=>g.addColorStop(o,c));return g};
+const rg=(x,cx,cy,r0,r1,s)=>{const g=x.createRadialGradient(cx,cy,r0,cx,cy,r1);s.forEach(([o,c])=>g.addColorStop(o,c));return g};
+const circ=(x,cx,cy,r,f)=>{x.beginPath();x.arc(cx,cy,r,0,TAU);x.fillStyle=f;x.fill()};
+const sr=s=>{const v=sin(s*127.1+311.7)*43758.5453;return v-Math.floor(v)};
+const HI={
+a_p10(x,t){x.fillStyle=lg(x,0,W,[[0,'#06060f'],[1,'#12102a']]);x.fillRect(0,0,W,W);
+  const C=['#ffffff','#ffffff','#ffe14a','#ffe14a','#b46bff','#b46bff','#2a2a3a','#2a2a3a','#ff3b3b'];
+  x.fillStyle=rg(x,120,120,0,110,[[0,'rgba(255,255,255,.35)'],[1,'rgba(255,255,255,0)']]);x.fillRect(0,0,W,W);
+  x.fillStyle=lg(x,0,W,[[0,'rgba(255,255,255,0)'],[.5,'rgba(255,255,255,.55)'],[1,'rgba(255,255,255,0)']]);x.fillRect(116,10,8,220);
+  for(let k=8;k>=0;k--){const y=36+k*20,p=.5+.5*sin(t*2.5-k*.6),rx=44+sin(t*1.2+k)*3;x.lineWidth=5;
+   x.strokeStyle=C[k];x.shadowColor=C[k]==='#2a2a3a'?'#8a5aff':C[k];x.shadowBlur=8+p*12;
+   x.globalAlpha=.45;x.beginPath();x.ellipse(120,y,rx,10,0,Math.PI,TAU);x.stroke();
+   x.globalAlpha=1;x.beginPath();x.ellipse(120,y,rx,10,0,0,Math.PI);x.stroke();x.shadowBlur=0}
+  for(let i=0;i<20;i++){const q=(t*.3+i*.05)%1;x.globalAlpha=1-q;circ(x,120+sin(i*5)*50,230-q*220,1.8,'#fff')}x.globalAlpha=1},
+a_p9(x,t){x.fillStyle=lg(x,0,W,[[0,'#0a0a1c'],[1,'#1c1840']]);x.fillRect(0,0,W,W);
+  for(let i=0;i<7;i++){const cx=(i*47+t*8*(i%2?1:-1)+W*4)%(W+60)-30;circ(x,cx,30+(i%3)*14,40,rg(x,cx,30+(i%3)*14,0,40,[[0,'rgba(60,56,110,.9)'],[1,'rgba(40,36,90,0)']]))}
+  const T=t*1.6,id=Math.floor(T),ph=T-id,a=ph<.5?1-ph*2:0;
+  if(a>0){x.strokeStyle='rgba(200,225,255,'+a+')';x.shadowColor='#8ab8ff';x.shadowBlur=22;x.lineCap='round';
+   const bolt=(sx,sy,ex,ey,w,d)=>{let px=sx,py=sy;x.lineWidth=w;x.beginPath();x.moveTo(px,py);const n=9;for(let i=1;i<=n;i++){const u=i/n;const nx=sx+(ex-sx)*u+(sr(id*9+i+d)-.5)*34*(1-u*.4),ny=sy+(ey-sy)*u;x.lineTo(nx,ny);if(i===4||i===7){x.stroke();bolt(nx,ny,nx+(sr(id+i+d)-.5)*90,ny+60,w*.5,d+5);x.beginPath();x.moveTo(nx,ny)}px=nx;py=ny}x.stroke()};
+   bolt(110+sr(id)*40,10,100+sr(id+3)*50,200,4,0);
+   x.fillStyle='rgba(180,210,255,'+a*.25+')';x.fillRect(0,0,W,W)}x.shadowBlur=0;
+  x.fillStyle='#0d0c22';x.fillRect(0,200,W,40);circ(x,120,200,28,rg(x,120,200,0,28,[[0,'rgba(150,200,255,'+(.3+a*.6)+')'],[1,'rgba(150,200,255,0)']]))},
+a_p8(x,t){x.fillStyle=lg(x,0,W,[[0,'#0e1630'],[1,'#1c2a52']]);x.fillRect(0,0,W,W);
+  x.save();x.translate(120,120);
+  for(let k=0;k<3;k++){x.strokeStyle='rgba(255,214,90,'+(.55-k*.12)+')';x.lineWidth=3;x.beginPath();x.ellipse(0,0,86-k*14,24+k*5,t*.8*(k%2?-1:1)+k,0,TAU*.75);x.stroke()}
+  x.rotate(-Math.PI/4+sin(t*1.5)*.05);const by=sin(t*2)*4;x.translate(0,by);
+  x.shadowColor='#ffd866';x.shadowBlur=20;
+  x.fillStyle=lg(x,-80,80,[[0,'#fff6c8'],[.5,'#ffd23a'],[1,'#b8860b']]);x.beginPath();x.moveTo(0,-98);x.lineTo(9,-70);x.lineTo(8,40);x.lineTo(-8,40);x.lineTo(-9,-70);x.closePath();x.fill();x.shadowBlur=0;
+  x.fillStyle='rgba(255,255,255,.6)';x.fillRect(-1,-92,2,128);
+  x.fillStyle='#7a2a1a';x.fillRect(-26,40,52,7);x.fillStyle='#e8b830';x.fillRect(-26,40,52,2);x.fillStyle='#4a2a12';x.fillRect(-4,47,8,30);circ(x,0,82,7,'#e8b830');
+  for(let i=0;i<10;i++){const q=(t*.8+i*.1)%1;x.globalAlpha=1-q;circ(x,(sr(i)-.5)*30,100+q*60,2.5*(1-q)+.5,'#ffd866')}x.globalAlpha=1;x.restore()},
+a_p7(x,t){x.fillStyle=lg(x,0,W,[[0,'#160604'],[1,'#3a0e08']]);x.fillRect(0,0,W,W);
+  circ(x,120,170,100,rg(x,120,170,0,100,[[0,'rgba(255,120,40,.4)'],[1,'rgba(255,120,40,0)']]));
+  const fl=(w,h,c1,c2,ph)=>{x.beginPath();const S=8;for(let i=0;i<=S;i++){const u=i/S,y=220-h*u,half=w*(1-u*u*.95)+sin(t*4+ph+u*5)*6*u;x[i?'lineTo':'moveTo'](120-half+sin(t*3+ph+u*4)*5*u,y)}
+   for(let i=S;i>=0;i--){const u=i/S,y=220-h*u,half=w*(1-u*u*.95)+sin(t*4+ph+u*5)*6*u;x.lineTo(120+half+sin(t*3+ph+u*4)*5*u,y)}x.closePath();x.fillStyle=lg(x,220-h,220,[[0,c1],[1,c2]]);x.fill()};
+  x.shadowColor='#ff6a2a';x.shadowBlur=24;fl(60,190+sin(t*5)*8,'#ffb02a','#c4281a',0);x.shadowBlur=0;fl(42,150+sin(t*6)*8,'#fff08a','#ff7a1a',1.7);fl(22,100+sin(t*7)*6,'#ffffff','#4aa8ff',3.1);
+  for(let i=0;i<22;i++){const q=(t*.5+i*.045)%1;x.globalAlpha=1-q;circ(x,120+(sr(i)-.5)*100+sin(t*3+i)*8,210-q*190,2.2*(1-q)+.5,q<.5?'#ffd866':'#ff6a2a')}x.globalAlpha=1},
+a_p6(x,t){x.fillStyle=lg(x,0,W,[[0,'#04141a'],[1,'#0a2a34']]);x.fillRect(0,0,W,W);
+  circ(x,120,120,110,rg(x,120,120,0,110,[[0,'rgba(60,220,230,.28)'],[1,'rgba(60,220,230,0)']]));
+  x.save();x.translate(120,120);x.shadowColor='#3ad8e6';x.shadowBlur=10;x.strokeStyle='#5ae8f0';
+  x.lineWidth=2;x.beginPath();x.arc(0,0,104,0,TAU);x.stroke();x.beginPath();x.arc(0,0,60,0,TAU);x.stroke();
+  x.save();x.rotate(t*.3);for(let i=0;i<8;i++){x.rotate(TAU/8);for(let j=0;j<3;j++){x.lineWidth=4;x.beginPath();if((i+j)%2){x.moveTo(-12,-92+j*7);x.lineTo(12,-92+j*7)}else{x.moveTo(-12,-92+j*7);x.lineTo(-3,-92+j*7);x.moveTo(3,-92+j*7);x.lineTo(12,-92+j*7)}x.stroke()}}x.restore();
+  x.save();x.rotate(-t*.6);x.lineWidth=1.5;x.beginPath();for(let i=0;i<6;i++){const a=i/6*TAU;x[i?'lineTo':'moveTo'](cos(a)*80,sin(a)*80)}x.closePath();x.stroke();x.restore();x.shadowBlur=0;
+  x.save();x.rotate(t*1.1);circ(x,0,0,38,'#e8fdff');x.fillStyle='#0a2a34';x.beginPath();x.arc(0,0,38,-Math.PI/2,Math.PI/2);x.arc(0,19,19,Math.PI/2,-Math.PI/2,true);x.arc(0,-19,19,Math.PI/2,-Math.PI/2);x.fill();circ(x,0,-19,6,'#0a2a34');circ(x,0,19,6,'#e8fdff');x.restore();x.restore()},
+a_p5(x,t){x.fillStyle=lg(x,0,W,[[0,'#081a2e'],[1,'#17406a']]);x.fillRect(0,0,W,W);
+  circ(x,120,120,100,rg(x,120,120,0,100,[[0,'rgba(150,220,255,.35)'],[1,'rgba(150,220,255,0)']]));
+  x.save();x.translate(120,120);x.rotate(t*.25);x.shadowColor='#aee6ff';x.shadowBlur=16;x.strokeStyle='#e8f8ff';x.lineCap='round';
+  for(let i=0;i<6;i++){x.rotate(TAU/6);x.lineWidth=4;x.beginPath();x.moveTo(0,0);x.lineTo(0,-92);x.stroke();x.lineWidth=3;for(const [y,l] of [[-30,20],[-52,26],[-74,16]]){x.beginPath();x.moveTo(0,y);x.lineTo(-l,y-l*.8);x.moveTo(0,y);x.lineTo(l,y-l*.8);x.stroke()}}
+  x.shadowBlur=0;x.restore();circ(x,120,120,14,rg(x,120,120,0,14,[[0,'#fff'],[1,'#8fd8ff']]));
+  const sh=(t*.6)%1;x.save();x.translate(120,120);x.rotate(sh*TAU);x.fillStyle='rgba(255,255,255,.7)';x.fillRect(-1.5,-96,3,96);x.restore();
+  for(let i=0;i<28;i++){const q=(t*.18+i*.036)%1;x.globalAlpha=.9;circ(x,(i*41+sin(t+i)*10)%W,q*W,1.5+(i%3)*.5,'#fff')}x.globalAlpha=1}
+};
+
+Object.assign(DRAW,HI);const isHi=id=>!!HI[id];
+const paint=(cv,id,t)=>{const ctx=cv.getContext('2d');ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=!!HI[id];if(HI[id])ctx.setTransform(cv.width/240,0,0,cv.width/240,0,0);ctx.globalAlpha=1;ctx.lineCap='butt';ctx.shadowBlur=0;try{DRAW[id](ctx,t)}catch(e){}ctx.globalAlpha=1};
+const tick=()=>{const t0=performance.now()/1000;live.forEach(o=>{if(!o.cv.isConnected){live.delete(o);return}const b=o.cv.getBoundingClientRect();if(b.bottom<0||b.top>innerHeight)return;paint(o.cv,o.id,t0)});if(!live.size&&tm){clearInterval(tm);tm=null}};
 window.avtMount=function(root){try{(root||document).querySelectorAll('.avtph[data-avt]').forEach(el=>{if(el._m)return;el._m=1;const id=el.dataset.avt,px=+el.dataset.px||84,a=(window.AVT||[]).find(x=>x.id===id);if(!a||!DRAW[id])return;
- const cv=document.createElement('canvas');cv.width=24;cv.height=24;cv.style.cssText=`width:${px}px;height:${px}px;image-rendering:pixelated;border-radius:${Math.round(px*.12)}px;display:block`;el.appendChild(cv);paint(cv,id,.4);
- if(!a.free){live.add({cv,id});if(!tm)tm=setInterval(tick,90)}})}catch(e){console.error(e)}};
-window.avtHtml=(id,px)=>`<span class="avtph" data-avt="${id}" data-px="${px}" style="display:inline-block"></span>`;
-const snap=id=>{try{const c=document.createElement('canvas');c.width=c.height=24;paint(c,id,.4);const o=document.createElement('canvas');o.width=56;o.height=62;const x=o.getContext('2d');x.imageSmoothingEnabled=false;x.fillStyle='#111';x.fillRect(0,0,56,62);x.drawImage(c,0,3,56,56);return o.toDataURL('image/png')}catch(e){return''}};
+ const cv=document.createElement('canvas');cv.width=cv.height=HI[id]?144:24;cv.style.cssText=`width:${px}px;height:${px}px;image-rendering:${HI[id]?'auto':'pixelated'};border-radius:${Math.round(px*.12)}px;display:block`;el.appendChild(cv);paint(cv,id,.4);
+ if(!a.free&&!el.dataset.st){live.add({cv,id});if(!tm)tm=setInterval(tick,90)}})}catch(e){console.error(e)}};
+window.avtHtml=(id,px,st)=>`<span class="avtph" data-avt="${id}" data-px="${px}"${st?' data-st="1"':''} style="display:inline-block"></span>`;
+const snap=id=>{try{const n=HI[id]?144:24,c=document.createElement('canvas');c.width=c.height=n;paint(c,id,.4);const mk2=(src,sw,sh,dy,dh,sm)=>{const o=document.createElement('canvas');o.width=56;o.height=62;const x=o.getContext('2d');x.imageSmoothingEnabled=sm;x.fillStyle='#111';x.fillRect(0,0,56,62);x.drawImage(src,0,0,sw,sh,0,dy,56,dh);return o.toDataURL('image/png')};let u=mk2(c,n,n,3,56,!!HI[id]);if(u.length>7800){const h=document.createElement('canvas');h.width=28;h.height=31;const y=h.getContext('2d');y.imageSmoothingEnabled=true;y.drawImage(c,0,0,n,n,0,1.5,28,28);u=mk2(h,28,31,0,62,false)}return u}catch(e){return''}};
 window.avtSnap=snap;
 const cur=()=>{const m=$('modal');return m&&m.dataset?m.dataset.k:''};
 window.avtEquip=function(id){const a=(window.AVT||[]).find(x=>x.id===id);if(!a)return;
@@ -40548,7 +40603,7 @@ const RN=['ธรรมดา','หายาก','ล้ำค่า','ตำน
   const pane=m.querySelector('.pfpane[data-t="info"]')||m;if(pane.querySelector('.pfavt'))return r;
   const has=id=>{try{return window.cosHas?window.cosHas(id):false}catch(e){return false}};
   const sec=document.createElement('div');sec.className='pfsec pfavt';
-  sec.innerHTML=`<h4>🧑 รูปโปรไฟล์สำเร็จรูป</h4><p class="tag2">แบบนิ่งใส่ได้ฟรีทุกคน · แบบขยับได้อยู่ที่ <a href="#" onclick="cosMenu('a');return false">ร้านตกแต่ง › รูปโปรไฟล์</a> (ไม่เกิน 39฿) · ในแชทแสดงเป็นภาพนิ่ง</p><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">${A.map(a=>{const o=a.free||has(a.id),on=d.pf===a.id;return `<button class="gbtn" style="padding:4px;position:relative;${on?'outline:2px solid #ffc83a;':''}${o?'':'opacity:.55;'}" onclick="${o?`avtEquip('${a.id}')`:`cosMenu('a')`}" title="${a.n}">${avtHtml(a.id,56)}<small style="display:block;font-size:10px;line-height:1.2;margin-top:2px">${a.n}${o?'':' 🔒'}</small></button>`}).join('')}</div>${d.pf?`<button class="gbtn" style="width:100%;margin-top:6px" onclick="avtOff()">↩️ กลับไปใช้รูปตัวละคร</button>`:''}`;
+  sec.innerHTML=`<h4>🧑 รูปโปรไฟล์สำเร็จรูป</h4><p class="tag2">แบบนิ่งใส่ได้ฟรีทุกคน · แบบขยับได้อยู่ที่ <a href="#" onclick="cosMenu('a');return false">ร้านตกแต่ง › รูปโปรไฟล์</a> (9–29฿) · ในแชทแสดงเป็นภาพนิ่ง</p><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">${A.map(a=>{const o=a.free||has(a.id),on=d.pf===a.id;return `<button class="gbtn" style="padding:4px;position:relative;${on?'outline:2px solid #ffc83a;':''}${o?'':'opacity:.55;'}" onclick="${o?`avtEquip('${a.id}')`:`cosMenu('a')`}" title="${a.n}">${avtHtml(a.id,56,!o||d.pf!==a.id)}<small style="display:block;font-size:10px;line-height:1.2;margin-top:2px">${a.n}${o?'':' 🔒'}</small></button>`}).join('')}</div>${d.pf?`<button class="gbtn" style="width:100%;margin-top:6px" onclick="avtOff()">↩️ กลับไปใช้รูปตัวละคร</button>`:''}`;
   const ref=pane.querySelector('.pfsec');if(ref)ref.insertAdjacentElement('afterend',sec);else pane.appendChild(sec);avtMount(sec)}catch(e){console.error(e)}return r};window.openProfile=w;try{openProfile=w}catch(e){}}}
 })()}catch(e){console.error('block36',e)}
 
