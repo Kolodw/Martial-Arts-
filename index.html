@@ -41409,6 +41409,48 @@ function purge(){try{const s=S&&S.sys;if(!s||!S.alive||!Array.isArray(s.quests)|
  const boxes=[...m.querySelectorAll('.sysq')];s.quests.forEach((q,i)=>{if(q.k!=='secl'||!boxes[i]||boxes[i].querySelector('.secBtn'))return;
   const n=Math.max(1,Math.min(secRem(),Math.ceil(q.g-qProg(q))));const b=document.createElement('button');b.className='sysb secBtn';b.textContent='🧘 ปิดด่าน '+n+' ปี';b.onclick=()=>{try{closeM()}catch(e){}secGo(n)};boxes[i].querySelector('b').after(' ',b)})}catch(e){}return r}}
 })()}catch(e){console.error('block secl',e)}
+
+// ===================== คำอธิบายวิชา: การ์ดในหน้าวิชา + คำอธิบายประจำชนิด =====================
+try{(()=>{
+const KD={
+ pow:['💥','ทำลายล้าง','ใช้ในดวลได้ 1 ครั้งต่อศึก — ตีหนักราว 1.7 เท่าของท่าปกติ แต่ศัตรูยังโต้กลับได้ (รับความเสียหายราว 80%)'],
+ guard:['🛡️','คุ้มกาย','ใช้ในดวลได้ 1 ครั้งต่อศึก — ปัดการโจมตีของศัตรูตานั้นทิ้งทั้งหมด และตีสวนเบาๆ (ราว 0.5 เท่า)'],
+ poison:['☠️','พิษ','ใช้ในดวลได้ 1 ครั้งต่อศึก — ฝังพิษให้ศัตรูเสียพลังต่อเนื่องหลายตา พร้อมตีเบาๆ และโดนโต้กลับน้อยลง'],
+ heal:['💚','ฟื้นฟู','ใช้ในดวลได้ 1 ครั้งต่อศึก — ฟื้นพลังกายกลางศึกราว 28% และโดนโต้กลับน้อยลง']};
+const SP={
+ eye:['👁️','เนตร','มองเห็นไกล เตือนภัยซ่อนเร้น บางปีเจอขุมทรัพย์หรือเตือนผู้คนให้หลบภัย (ได้เงินหรือชื่อเสียง)'],
+ move:['💨','ตัวเบา','ตอนสู้ธรรมดา พลังรวมเพิ่มชั่วคราวราว +{p3}% · หลบหลีกได้ดีขึ้น'],
+ hide:['🌫️','ซ่อนปราณ','ลดโอกาสที่เงาลึกลับ/ผู้ล่าจะหมายหัวคุณในแต่ละปี'],
+ heal:['💚','ฟื้นฟู','ทุกปีฟื้นพลังชีวิตราว {h}% ของที่มี และมีโอกาสรักษาโรคเรื้อรังให้หายขาด'],
+ body:['🛡️','หลอมกาย','ทุกปีพลังชีวิตสูงสุดเพิ่ม +{b}'],
+ mind:['🧘','จิตมั่น','ทุกปีปัญญา +{m} · ลดโอกาสธาตุไฟเข้าแทรก · ทะลวงขั้นติดง่ายขึ้นเล็กน้อย'],
+ sound:['🎵','เสียง','ตอนสู้ธรรมดา พลังรวมเพิ่มชั่วคราวราว +{p4}%'],
+ poison:['☠️','พิษ','ตอนสู้ธรรมดา พลังรวมเพิ่มชั่วคราวราว +{p4}%'],
+ summon:['🐉','อัญเชิญ','ตอนสู้ธรรมดา พลังรวมเพิ่มชั่วคราวราว +{p5}%'],
+ charm:['🌸','เสน่ห์','ทุกปีเสน่ห์ +{c}'],
+ array:['🔯','ค่ายกล','ช่วยรับมือการลอบโจมตีของเงาลึกลับ บางครั้งเตือนภัยทัน'],
+ soul:['👻','สัมผัสวิญญาณ','รู้ภัยล่วงหน้า เพิ่มการรับรู้ และช่วยรับมือการลอบโจมตี']};
+const esc2=x=>String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function info(a){
+ let h='';const lv=a.lv||0,since=S.age-(a.ly!=null?a.ly:a.la);
+ const fx=Array.isArray(a.fx)?a.fx[0]:a.fx;
+ if(fx&&SP[fx]){const m=[1,1.3,1.7,2.2][Math.min(3,lv)],v=(.5+(a.r||0)*.5)*m,f=SP[fx];
+  const t=f[2].replace('{p3}',Math.round(v*3)).replace('{p4}',Math.round(v*4)).replace('{p5}',Math.round(v*5)).replace('{h}',Math.round(Math.min(.3,.05*v)*100)).replace('{b}',Math.max(1,Math.round(v*1.5))).replace('{m}',Math.max(1,Math.round(v*.8))).replace('{c}',Math.max(1,Math.round(v*.6)));
+  h+=`<div><b>${f[0]} วิชาพิเศษ · ${f[1]}</b><br>${t}<br><span style="opacity:.7">ออกฤทธิ์เองตลอด ไม่ต้องกดใช้ · แรงขึ้นตามระดับวิชา</span></div>`}
+ else{const k=(typeof artKind==='function')?artKind(a)[2]:'pow',f=KD[k]||KD.pow;h+=`<div><b>${f[0]} วิชา${f[1]}</b><br>${f[2]}</div>`}
+ h+=`<div>⚔️ ทุกวิชาเพิ่ม<b>พลังรวม</b>ถาวร (ตอนนี้ +${fmt(artVal(a))}) — ยิ่งระดับสูง ตัวคูณยิ่งแรง (ตอนนี้ ×${AMX[lv]||1})</div>`;
+ let up;
+ if(lv>=3)up='เป็นระดับสุดยอดแล้ว — ขั้นต่อไปต้องมีเงื่อนไขพิเศษของโลกที่คุณอยู่';
+ else{const need=Math.max(0,AMY[lv]-since);let p=0;try{p=artUpP(a)}catch(e){}up=`ฝึกซ้ำเองทุกปีเมื่อครบเวลา (ต้องอยู่กับวิชานี้ ${AMY[lv]} ปีก่อนลองขั้นถัดไป${need>0?` · อีก ${need} ปี`:' · พร้อมลองแล้ว'}) โอกาสสำเร็จแต่ละครั้งราว <b>${Math.round(p*100)}%</b> — ปัญญา ลมปราณ พรสวรรค์ และโฟกัสฝึกยุทธ์ช่วยให้ง่ายขึ้น ถ้าพลาดครั้งหน้าจะง่ายขึ้น`}
+ h+=`<div>📈 ${up}</div>`;
+ if(a.heir)h+='<div>🏮 วิชามรดกตระกูล — ส่งต่อให้ลูกหลานได้ อย่าลืมหรือสลายทิ้ง</div>';
+ return `<div class="tag2 artInfo" style="line-height:1.65;margin:8px 0;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.06);display:grid;gap:5px">${h}</div>`}
+{const _am=artMenu;artMenu=function(n){const r=_am.apply(this,arguments);try{const i=artFind(n),a=S.arts[i],m=$('modal');if(a&&m&&!m.querySelector('.artInfo')){const p=m.querySelector('p.tag2');if(p)p.insertAdjacentHTML('afterend',info(a))}}catch(e){console.error('artinfo',e)}return r}}
+{const _oa=openArts;openArts=function(){const r=_oa.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.artLegend')){
+ const L=Object.values(KD).map(f=>`<div>${f[0]} <b>${f[1]}</b> — ${f[2]}</div>`).join('')+'<div>✨ <b>วิชาพิเศษ</b> (เนตร ตัวเบา ซ่อนปราณ ฟื้นฟู หลอมกาย จิตมั่น เสียง พิษ เสน่ห์ ค่ายกล ฯลฯ) — ออกฤทธิ์เองทุกปีหรือตอนสู้ ไม่ต้องกดใช้ แตะวิชาเพื่อดูผลของแต่ละอัน</div><div>📈 วิชาทุกอันเลื่อนระดับได้เองเมื่อฝึกนานพอ แตะที่วิชาเพื่อดูโอกาสและเวลาที่ต้องรออีก</div>';
+ m.insertAdjacentHTML('beforeend',`<details class="artLegend tag2" style="margin-top:10px;line-height:1.65"><summary style="cursor:pointer;font-weight:700">❓ วิชาแต่ละชนิดทำอะไร</summary><div style="display:grid;gap:5px;margin-top:6px">${L}</div></details>`)}}catch(e){console.error('artlegend',e)}return r}}
+window._artInfo=info;
+})()}catch(e){console.error('artinfo block',e)}
 </script>
 </body>
 </html>
