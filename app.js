@@ -41208,3 +41208,5 @@ if(typeof glwTick==='function'&&typeof GLW!=='undefined'){const _g=glwTick;glwTi
 // ข้อความในฟีดที่อยู่นอกจอ: ไม่ต้องวาด
 const st=document.createElement('style');st.textContent=`#feed>*{content-visibility:auto;contain-intrinsic-size:auto 64px}`;document.head.appendChild(st);
 })()}catch(e){console.error('block45',e)}
+// ===== แก้: หน้าแรกแบบคนเล่นใหม่บนจอกว้าง (>820px) ไม่มีปุ่มเริ่มเล่น =====
+try{(()=>{const st=document.createElement('style');st.textContent='#title.nb #tStartIn{display:block!important;max-width:520px;margin-left:auto;margin-right:auto}';document.head.appendChild(st)})()}catch(e){console.error('nbStart',e)}
