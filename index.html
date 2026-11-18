@@ -39979,6 +39979,142 @@ try{const add=(w,a)=>{(WM[w]||[w]).forEach(cw=>{if(END[cw])END[cw].push(...a)})}
  add('hunter',[['ht_gob','S','ก๊อบลินที่ร้อยเอ็ด'],['ht_beast','A','สัตว์ร่วมรบรุ่นแรก'],['ht_union','A','บำนาญฮันเตอร์'],['ht_sib','B','เสียงน้องในหูฟัง'],['ht_cook','B','ร้านอาหารเกต']])}catch(e){}
 window._wld33={DEF,ids:[].concat(...Object.values(DEF).map(a=>a.map(e=>e.id)))};
 })()}catch(e){console.error('block33',e)}
+
+// ============================================================
+// BLOCK 34: ⭕ ทวีปจิตวิญญาณยุทธ์ — รอบ 1: ปลุกดวงจิต · ล่าวงแหวน · ไต่ระดับ
+// ============================================================
+try{(()=>{
+if(typeof CH_KEYS==='undefined')return;
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const on=()=>!!(S&&S.alive&&S.ch==='soul');
+const free=()=>!(choice._cur||modalOpen);
+// ---------- ดวงจิต: [id, ไอคอน, ชื่อ, สาย, คำบรรยาย, ความหายาก 0-3, ร่างแท้ที่ซ่อนอยู่?] ----------
+const TY={atk:['⚔️','สายโจมตี'],def:['🛡️','สายป้องกัน'],sup:['🌿','สายสนับสนุน'],ctrl:['🌀','สายควบคุม'],agi:['💨','สายว่องไว']};
+const SP=[
+ ['hoe','⛏️','จอบทำนา','def','จอบเก่าที่พ่อใช้ทำนามาทั้งชีวิต',0,['🌋','จอบเปิดแผ่นดิน','atk','ทุกครั้งที่ฟาดลง แผ่นดินแยกออกเป็นร่อง']],
+ ['candle','🕯️','เทียนไข','sup','แสงริบหรี่ที่ไม่เคยดับแม้ลมแรง',0,['🔥','เทียนนำวิญญาณ','sup','แสงเทียนพาวิญญาณที่หลงทางกลับบ้าน และพาศัตรูไปที่ที่ไม่มีทางกลับ']],
+ ['cat','🐈','แมวจร','agi','แมวผอมที่ตามคุณมาตั้งแต่จำความได้',0,null],
+ ['broom','🧹','ไม้กวาด','ctrl','ไม้กวาดลานวัด',0,['🌪️','ไม้กวาดพายุ','ctrl','กวาดทีเดียว ทั้งสนามรบปลิวเป็นใบไม้']],
+ ['reed','🌾','ต้นอ้อ','sup','อ้อริมบึงที่ลู่ลมแต่ไม่เคยหัก',0,null],
+ ['stone','🪨','ก้อนหินริมน้ำ','def','หินกลมเกลี้ยงที่น้ำเซาะมาพันปี',0,null],
+ ['needle','🪡','เข็มเย็บผ้า','atk','เข็มของแม่ที่ใช้ปะเสื้อให้ทุกคืน',0,['✨','เข็มร้อยดวงดาว','atk','เข็มเล่มเดียวแยกเป็นพันเล่มกลางอากาศ']],
+ ['bamboo','🎋','ไผ่','def','ลำไผ่ที่โตวันละศอก',0,null],
+ ['frog','🐸','กบนา','agi','กระโดดไกลกว่าที่ใครคิด',0,null],
+ ['lotus','🪷','บัวสาย','sup','บัวที่บานแม้ในน้ำโคลน',0,null],
+ ['ladle','🥄','ทัพพี','sup','ทัพพีทองเหลืองในครัวยาย',0,['🍲','ทัพพีจักรพรรดิครัว','sup','อาหารที่ปรุงด้วยทัพพีนี้ฟื้นพลังได้เท่ายาวิเศษ']],
+ ['rope','🪢','เชือกป่าน','ctrl','เชือกผูกควายที่คุณเล่นตอนเด็ก',0,null],
+ ['crow','🐦‍⬛','อีกา','ctrl','กาที่จำหน้าคนได้ทุกคน',0,null],
+ ['shadow','👤','เงาตัวเอง','agi','ดวงจิตที่คนหัวเราะเยาะ — แค่เงาของตัวเอง',0,['🌑','เงาที่ไม่ใช่ของเรา','atk','เงานั้นขยับก่อนคุณครึ่งวินาที และมันโหดกว่าคุณมาก']],
+ ['rain','🌧️','ละอองฝน','sup','เย็นชื่นเหมือนฝนแรกของปี',0,null],
+ ['wolf','🐺','หมาป่าเงิน','atk','เขี้ยวสีเงินกับหัวใจที่ภักดีต่อฝูง',1,null],
+ ['tort','🐢','เต่าหินเขียว','def','กระดองที่ดาบธรรมดาฟันไม่เข้า',1,null],
+ ['vine','🌿','เถาวัลย์เหล็ก','ctrl','รัดแน่นจนหินแตก',1,null],
+ ['hawk','🦅','เหยี่ยวลม','agi','สายตาที่มองเห็นจากยอดเขา',1,null],
+ ['spear','🔱','ทวนทองแดง','atk','ทวนที่สั่นทุกครั้งที่มีภัย',1,null],
+ ['bell','🔔','ระฆังวัด','ctrl','เสียงระฆังที่ทำให้ศัตรูหยุดนิ่ง',1,null],
+ ['mirror','🪞','กระจกโบราณ','ctrl','สะท้อนท่าของศัตรูกลับไปหาเจ้าของ',1,null],
+ ['tiger','🐅','เสือลายเพลิง','atk','ลายบนตัวลุกเป็นไฟเมื่อโกรธ',1,null],
+ ['bear','🐻','หมีดำภูเขา','def','ทนทานจนน่ากลัว',1,null],
+ ['bfly','🦋','ผีเสื้อพิษ','ctrl','ผงจากปีกทำให้หลับฝันร้าย',1,null],
+ ['herb','🌱','สมุนไพรร้อยปี','sup','กลิ่นของมันทำให้แผลปิดเร็วกว่าปกติสามเท่า',1,null],
+ ['thund','🔨','ค้อนฟ้าคำราม','atk','ฟาดลงเมื่อไหร่ ฟ้าผ่าตามมา',2,null],
+ ['icephx','🐦','หงส์น้ำแข็ง','agi','ปีกเย็นยะเยือกที่บินเร็วกว่าเสียง',2,null],
+ ['jade','🐍','งูหยกเก้ารอบ','ctrl','ขดเก้ารอบ — รอบสุดท้ายไม่มีใครหลุด',2,null],
+ ['sunl','🌸','บัวสุริยะ','sup','กลีบบัวที่ส่องแสงเหมือนดวงอาทิตย์ยามเช้า',2,null],
+ ['night','🗡️','ดาบราตรี','atk','ใบดาบที่มองไม่เห็นในความมืด',2,null],
+ ['mount','⛰️','ภูผาค้ำฟ้า','def','แบกน้ำหนักทั้งภูเขาไว้บนไหล่',2,null],
+ ['glass','⏳','นาฬิกาทราย','ctrl','ทรายไหลช้าลงรอบตัวคุณ — และรอบตัวศัตรูไหลเร็วขึ้น',2,null],
+ ['fox','🦊','จิ้งจอกเก้าหาง','agi','หางทั้งเก้าคือภาพลวงทั้งเก้า',2,null],
+ ['dbone','🐉','กระดูกมังกรบรรพกาล','atk','กระดูกที่ยังจำได้ว่าเคยเป็นราชันแห่งฟ้า',3,null],
+ ['wtree','🌳','ต้นไม้โลก','sup','รากหยั่งถึงใจกลางทวีป',3,null],
+ ['void','⚫','ความว่างเปล่า','ctrl','ไม่มีรูปร่าง ไม่มีสี — สิ่งที่มันแตะหายไป',3,null],
+ ['sunb','☀️','ปักษาตะวัน','atk','ไฟที่ไม่มีวันมอด',3,null],
+ ['moon','🌙','จันทราสีเลือด','agi','คืนเดือนเพ็ญ คุณเร็วจนเงาตามไม่ทัน',3,null]];
+const RAR=[['ธรรมดา','#bbb'],['หายาก','#4aa3ff'],['ล้ำค่า','#b47bff'],['ตำนาน','#ffcf3a']];
+// ---------- วงแหวน ----------
+const TIER=[['สิบปี','⚪','#e8e8e8'],['ร้อยปี','🟡','#f2c94c'],['พันปี','🟣','#a66bff'],['หมื่นปี','⚫','#3a3a3a'],['แสนปี','🔴','#e03a3a']];
+const BEAST=[
+ [['กระต่ายเขาเดียว','เขาพุ่งทะลวง'],['หนูหิน','ฟันบดศิลา'],['งูหญ้า','เลื้อยไร้เงา'],['นกกระจอกไฟ','ขนไฟพราว'],['กบตาแดง','ลิ้นพิษ'],['ลิงขโมย','มือไวไร้ร่องรอย']],
+ [['หมาป่าหลังเงิน','เขี้ยวจันทร์'],['หมูป่าเขาเหล็ก','ชนทลายกำแพง'],['เหยี่ยวพายุ','กรงเล็บลม'],['ตะขาบพิษร้อยปี','ร้อยขาพันพิษ'],['ลิงดำภูเขา','หมัดภูผา'],['จระเข้บึง','ขากรรไกรมรณะ']],
+ [['เสือดาวเงา','ก้าวเงาสังหาร'],['งูเหลือมหยก','รัดหยกบดกระดูก'],['หมีเกราะหิน','เกราะศิลาพันชั้น'],['กวางเขาฟ้าผ่า','เขาสายฟ้า'],['นกฮูกราตรี','ตาแห่งราตรี'],['แมงป่องทราย','หางทรายมรณะ']],
+ [['ราชสีห์เพลิง','คำรามเผาฟ้า'],['งูยักษ์ทะเลสาบ','วังวนมรณะ'],['ช้างศิลา','ย่ำแผ่นดินถล่ม'],['พญาอินทรีทอง','ปีกทองตัดฟ้า'],['แมงมุมราชินี','ใยกักวิญญาณ'],['กระทิงฟ้าร้อง','พุ่งชนพันฟ้าร้อง']]];
+const RANK=['ผู้ปลุกจิต','นักจิตยุทธ์','ปรมาจารย์จิต','จ้าวจิต','ราชันจิต','จักรพรรดิจิต','ปราชญ์จิต','มหาจิตยุทธ์','จิตอมตะ','ผู้ครองดวงจิต'];
+const SAFE=[1,1,2,2,2,3,3,3,3,4];
+const V=()=>S.sv;
+const spOf=id=>SP.find(x=>x[0]===id);
+const spNow=s=>{const p=spOf(s.id);return s.rev&&p[6]?{ic:p[6][0],n:p[6][1],t:p[6][2],d:p[6][3],r:Math.max(2,p[5])}:{ic:p[1],n:p[2],t:p[3],d:p[4],r:p[5]}};
+const rankOf=lv=>RANK[cl(Math.floor((Math.max(1,lv)-1)/10),0,9)];
+const capOf=G=>G.rings.length>=9?100:(G.rings.length+1)*10;
+const svInit=()=>{if(!S.sv)S.sv={aw:0,sp:[],lv:0,rings:[],seen:{},hy:-9};return S.sv};
+function roll(){const r=Math.random(),rr=r<.02?3:r<.12?2:r<.4?1:0;const L=SP.filter(x=>x[5]===rr);return ch(L)[0]}
+// ---------- พิธีปลุกดวงจิต (อายุ 6) ----------
+function awaken(){const G=svInit();if(G.aw)return;G.aw=1;const ids=[roll()];if(Math.random()<.03){let b=roll(),n=0;while(b===ids[0]&&n++<9)b=roll();ids.push(b)}
+ G.sp=ids.map(id=>({id,rev:0}));const best=Math.max(...G.sp.map(s=>spNow(s).r));
+ const inn=[[1,4],[3,6],[5,8],[8,10]][best];G.lv=Math.min(10,R(inn[0],inn[1])+(ids.length>1?1:0));
+ try{const B=LS.get('murim_svbook',{})||{};ids.forEach(id=>B[id]=1);LS.set('murim_svbook',B)}catch(e){}
+ const t=G.sp.map(s=>{const p=spNow(s);return`${p.ic} <b style="color:${RAR[p.r][1]}">${p.n}</b> <span class="tag2">(${TY[p.t][0]} ${TY[p.t][1]} · ${RAR[p.r][0]})</span>`}).join(' และ ');
+ const hidden=G.sp.some(s=>spOf(s.id)[6]&&!s.rev);
+ const cls=ids.length>1||best>=3||G.lv>=10?'myth':best>=2?'epic':'';
+ choice('⭕ พิธีปลุกดวงจิต',`อายุหกขวบ ผู้ปลุกจิตประจำหมู่บ้านวางลูกแก้วหกลูกรอบตัวคุณ แสงพุ่งขึ้นจากฝ่ามือ —<br><br>${t}<br><br>พลังจิตแต่กำเนิด <b>ระดับ ${G.lv}</b>${G.lv>=10?' — <b>เต็มแต่กำเนิด!</b>':''}${ids.length>1?'<br><b>ดวงจิตคู่!</b> หนึ่งในหมื่นคนจะมีแบบนี้':''}${hidden&&best===0?'<br><span class="tag2">เด็กคนอื่นหัวเราะ… แต่ดวงจิตของคุณสั่นเบาๆ เหมือนมีอะไรซ่อนอยู่ข้างใน</span>':''}`,[
+  {t:'✊ ตั้งใจจะเป็นผู้ฝึกจิต',s:'เริ่มฝึกทันที',f(){G.lv=Math.min(capOf(G),G.lv+1);log(`⭕ คุณกำดวงจิตไว้ในมือ — ทางของผู้ฝึกจิตเริ่มต้นที่นี่ (ระดับ ${G.lv})`,cls,true)}},
+  {t:'🏡 ใช้ชีวิตธรรมดาไปก่อน',s:'ฝึกช้าลงช่วงแรก',f(){G.slow=S.age+4;S.cha+=3;log('🏡 คุณเลือกเล่นกับเพื่อนในหมู่บ้านอีกสักพัก ดวงจิตยังรอคุณอยู่','',true)}}])}
+// ---------- ฝึกรายปี ----------
+function svYear(){const G=svInit();if(!G.aw){if(S.age>=6)G.wa=1;return}
+ const cap=capOf(G);if(G.lv<cap){const best=Math.max(...G.sp.map(s=>spNow(s).r));let g=R(1,3)+(best>=2?1:0)+(G.sp.length>1?1:0);g=Math.max(1,Math.round(g*Math.sqrt((S.talent&&S.talent.m)||1)*(G.slow&&S.age<G.slow?.5:1)));
+  const b=G.lv;G.lv=Math.min(cap,G.lv+g);if(Math.floor((G.lv-1)/10)>Math.floor((b-1)/10)&&G.lv>10){S.fame+=10*Math.floor(G.lv/10);log(`⭕ <b>ทะลวงสู่${rankOf(G.lv)}</b> — ระดับจิต ${G.lv}`,'epic',true)}
+  if(G.lv>=cap&&cap<100)log(`⭕ ระดับจิต ${G.lv} — <b>ถึงคอขวด</b> ต้องหลอมวงแหวนวงที่ ${G.rings.length+1} ก่อนจึงจะไปต่อได้`,'')}
+ // ปลดร่างแท้ของดวงจิตที่ดูไร้ค่า
+ if(G.lv>=30)G.sp.forEach(s=>{const p=spOf(s.id);if(p[6]&&!s.rev){s.rev=1;S.power+=pctPow(.08);S.fame+=40;log(`🌋 ดวงจิต <b>${p[2]}</b> ที่ทุกคนเคยหัวเราะเยาะ แตกเปลือกออก — <b>${p[6][0]} ${p[6][1]}</b>! ${p[6][3]}`,'myth',true)}});
+ // ถึงคอขวด → เสนอออกล่า
+ if(G.lv>=cap&&cap<100&&S.age>=8&&S.age-G.hy>=1)G.wh=1}
+setInterval(()=>{try{if(!on()||!free()||(typeof DU!=='undefined'&&DU))return;const G=svInit();if(G.wa&&!G.aw){G.wa=0;awaken();return}if(G.wh){G.wh=0;G.hy=S.age;hunt()}}catch(e){}},700);
+// ---------- ล่าวงแหวน ----------
+function hunt(){const G=V(),i=G.rings.length,safe=SAFE[i],maxT=Math.min(3,safe+1);
+ const opts=[];for(let t=0;t<=maxT;t++){const over=t-safe,b=ch(BEAST[t]);const risk=over<=0?'ปลอดภัย':over===1?'⚠️ เกินขีดร่างกาย — เสี่ยงบาดเจ็บหนัก':'☠️ เสี่ยงตาย';
+  opts.push({t:`${TIER[t][1]} ${b[0]} · ${TIER[t][0]}`,s:risk,f(){goHunt(t,b)}})}
+ opts.push({t:'⏳ ยังไม่ออกล่า',s:'ฝึกรากฐานรอไปก่อน',skip:true,f(){S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.1));log('⏳ คุณเลือกรอ ระดับจิตยังติดอยู่ที่คอขวด','')}});
+ choice(`⭕ ออกล่าวงแหวนวงที่ ${i+1}`,`ระดับจิตของคุณถึง ${G.lv} แล้ว ต้องหลอมวงแหวนจากสัตว์อสูรจึงจะไปต่อได้<br><span class="tag2">วงแหวนวงที่ ${i+1} ร่างกายรับได้อย่างปลอดภัยถึง ${TIER[safe][0]} · วงแหวนแก่กว่าแรงกว่าและให้ท่าที่ดีกว่า แต่ถ้าเกินขีด ร่างกายอาจแตกสลาย</span>`,opts)}
+function goHunt(t,b){const mult=[.35,.65,.95,1.25][t];const nm=`${b[0]} (${TIER[t][0]})`;
+ duel(nm,Math.max(5,Math.round(total()*mult)),w=>{try{if(!S||!S.alive)return;if(!w){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.15));log(`🩸 ${b[0]}หนีไปพร้อมรอยแผลบนตัวคุณ — ลองใหม่ปีหน้า`,'bad');return}absorb(t,b)}catch(e){console.error('sv hunt',e)}})}
+function absorb(t,b){const G=V(),i=G.rings.length,over=t-SAFE[i],best=Math.max(...G.sp.map(s=>spNow(s).r));
+ const pBad=over<=0?0:cl((over===1?.38:.72)-best*.04-(S.hp/S.maxHp-.5)*.2,.08,.9);
+ if(Math.random()<pBad){if(over>=2&&Math.random()<.45){S.deathCause=`หลอมวงแหวน${TIER[t][0]}ของ${b[0]}เกินขีดร่างกาย — ดวงจิตแตกสลาย`;log(`💥 พลังของวงแหวน${TIER[t][0]}ทะลักเกินกว่าร่างกายจะรับไหว…`,'bad',true);setTimeout(()=>{try{checkDeath()}catch(e){}},200);return}
+  S.maxHp=Math.max(30,Math.round(S.maxHp*.85));S.hp=Math.max(1,Math.round(S.hp*.4));G.lv=Math.max(1,G.lv-3);log(`💥 วงแหวนแตกกลางทางหลอม — คุณรอดมาได้ แต่เส้นจิตฉีกขาด (พลังชีวิตสูงสุด −15% · ระดับจิต −3)`,'bad',true);return}
+ const ring={t,b:b[0],sk:b[1]};G.rings.push(ring);G.lv=Math.min(100,G.lv+1+(over>0?2:0));
+ const pw=[.03,.06,.1,.16,.25][t]*(over>0?1.5:1);S.power+=pctPow(pw);S.fame+=[2,6,15,40,100][t];if(t>=2)S.maxHp+=[0,0,15,30,60][t];
+ try{const B=LS.get('murim_svring',{})||{};B[b[0]]=Math.max(B[b[0]]||0,t+1);LS.set('murim_svring',B)}catch(e){}
+ const sp=spNow(G.sp[0]);
+ log(`${TIER[t][1]} <b>หลอมวงแหวนวงที่ ${G.rings.length} สำเร็จ</b> — ${TIER[t][0]}ของ${b[0]} · ได้ท่า <b>「${sp.n}·${b[1]}」</b>${over>0?' · <b>หลอมเกินขีดสำเร็จ!</b>':''}`,over>0||t>=3?'myth':'epic',true)}
+// ---------- หน้าดวงจิต ----------
+window.openSoul=function(){if(!S||S.ch!=='soul')return toast('ใช้ได้เฉพาะชีวิตในทวีปจิตวิญญาณยุทธ์');const G=svInit();
+ const sp=G.aw?G.sp.map(s=>{const p=spNow(s),h=spOf(s.id)[6]&&!s.rev;return`<div class="item"><b>${p.ic} <span style="color:${RAR[p.r][1]}">${p.n}</span></b> <span class="tag2">${TY[p.t][0]} ${TY[p.t][1]} · ${RAR[p.r][0]}</span><br><span class="tag2">${p.d}${h?' · <i>มีบางอย่างซ่อนอยู่ข้างใน…</i>':''}</span></div>`}).join(''):'<div class="item">ยังไม่ได้ปลุกดวงจิต — พิธีปลุกจัดขึ้นตอนอายุ 6 ขวบ</div>';
+ const rg=G.rings.map((g,i)=>`<div style="display:flex;align-items:center;gap:8px;margin:3px 0"><span style="display:inline-block;width:22px;height:22px;border-radius:50%;border:4px solid ${TIER[g.t][2]};box-shadow:0 0 8px ${TIER[g.t][2]}"></span><span><b>วงที่ ${i+1}</b> · ${TIER[g.t][0]} · ${esc(g.b)}<br><span class="tag2">「${esc(spNow(G.sp[0]).n)}·${esc(g.sk)}」</span></span></div>`).join('')||'<p class="tag2">ยังไม่มีวงแหวน</p>';
+ const cap=capOf(G);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>⭕ ดวงจิตของ ${esc(S.name)}</h3>${sp}
+ <div class="item"><b>${G.aw?rankOf(G.lv):'—'}</b> · ระดับจิต <b>${G.lv}</b>/100<div style="height:8px;background:#0004;border-radius:4px;margin-top:4px"><div style="height:8px;width:${G.lv}%;background:linear-gradient(90deg,#6fd8ff,#b47bff);border-radius:4px"></div></div>${G.aw&&G.lv>=cap&&cap<100?`<span class="tag2">ถึงคอขวด — ต้องหลอมวงแหวนวงที่ ${G.rings.length+1}</span>`:''}</div>
+ <h4>วงแหวนวิญญาณ ${G.rings.length}/9</h4>${rg}
+ ${G.aw&&G.lv>=cap&&cap<100&&S.age>=8?`<button class="pbtn" style="width:100%;margin-top:8px" onclick="closeM();setTimeout(()=>{if(!choice._cur)window._svHunt()},150)">🏹 ออกล่าวงแหวนตอนนี้</button>`:''}
+ <button class="gbtn" style="width:100%;margin-top:6px" onclick="openSoulBook()">📖 สมุดดวงจิต</button>`)};
+window._svHunt=()=>{try{if(on())hunt()}catch(e){}};
+window.openSoulBook=function(){const B=LS.get('murim_svbook',{})||{},RB=LS.get('murim_svring',{})||{};const got=SP.filter(x=>B[x[0]]).length,rgot=BEAST.flat().filter(b=>RB[b[0]]).length;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📖 สมุดดวงจิต</h3><p class="tag2">ดวงจิตที่เคยปลุก ${got}/${SP.length} · สัตว์ที่เคยหลอมวงแหวน ${rgot}/${BEAST.flat().length}</p>
+ ${[3,2,1,0].map(r=>`<h4 style="color:${RAR[r][1]}">${RAR[r][0]}</h4><div style="line-height:1.9">${SP.filter(x=>x[5]===r).map(x=>B[x[0]]?`${x[1]} ${x[2]}`:'<span style="opacity:.45">❔ ???</span>').join(' · ')}</div>`).join('')}
+ <h4>สัตว์อสูร</h4>${BEAST.map((L,t)=>`<div style="margin:3px 0">${TIER[t][1]} ${L.map(b=>RB[b[0]]?b[0]:'<span style="opacity:.45">???</span>').join(' · ')}</div>`).join('')}`)};
+// ---------- ผูกเข้าเกม ----------
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(on())svYear()}catch(e){console.error('sv year',e)}return r}}
+// ข้อมูลใต้ชื่อ + ปุ่มลัด
+setInterval(()=>{try{let b=$('svPill');if(!on()){if(b)b.style.display='none';return}const a=$('brkPill')||$('ascPill');if(!b&&a){a.insertAdjacentHTML('afterend','<button id="svPill" class="ascpill" style="margin-right:6px;border-color:#b47bff;background:linear-gradient(180deg,#2a1a4a,#4a2a7a)" onclick="openSoul()"></button>');b=$('svPill')}if(!b)return;const G=svInit();b.style.display='';const t=G.aw?`⭕ ${G.lv} · ${'●'.repeat(G.rings.length)||'○'}`:'⭕ รอปลุก';if(b.textContent!==t)b.textContent=t}catch(e){}},1200);
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(on()){const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.svM'))g.insertAdjacentHTML('afterbegin',`<button class="opt svM" onclick="closeM();openSoul()">⭕ ดวงจิตและวงแหวน<small>ระดับจิต · วงแหวน · สมุดดวงจิต</small></button>`)}}catch(e){}return r}}
+{const _ld=lifeDetail;lifeDetail=function(){const d=_ld.apply(this,arguments);try{if(d&&S&&S.sv&&S.ch==='soul'){d.sv={lv:S.sv.lv,sp:S.sv.sp.map(s=>spNow(s).n),rg:S.sv.rings.map(g=>g.t)}}}catch(e){}return d}}
+// ---------- ลงทะเบียนโหมด ----------
+try{CH_N.soul='⭕ จิตวิญญาณยุทธ์';if(!CH_KEYS.includes('soul'))CH_KEYS.push('soul');const ix=CH_KEYS.indexOf('soul');
+ OPT_INFO.chm[ix]=()=>['⭕','ทวีปจิตวิญญาณยุทธ์','อายุหกขวบทุกคนจะได้ปลุก <b>ดวงจิต</b> ติดตัว — จอบ เทียน แมว หรือมังกร ทุกสิบระดับต้องออกล่าสัตว์อสูรมาหลอม <b>วงแหวนวิญญาณ</b> ยิ่งแก่ยิ่งแรง แต่ถ้าเกินขีดร่างกายอาจแตกสลาย ไต่ให้ถึง <b>ผู้ครองดวงจิต</b>',[['ดวงจิต 40 แบบ','g'],['วงแหวน 9 วง','g'],['หลอมเกินขีด = เสี่ยงตาย','r']]];
+ const add=()=>{const sg=document.querySelector('.seg[data-k="chm"]');if(!sg||sg.querySelector('[data-v="'+ix+'"]'))return;const b=document.createElement('button');b.dataset.v=String(ix);b.textContent='⭕ จิตวิญญาณยุทธ์';sg.appendChild(b);b.onclick=()=>{sg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');CFG.chm=ix;updateHints()};sg.classList.add('seg5');if(CFG.chm===ix)b.classList.add('on')};add();setTimeout(add,1500);
+ if(typeof QM_CH!=='undefined'&&QM_CH.length===ix)QM_CH.push(['⭕','จิตวิญญาณยุทธ์']);
+ if(typeof MODE_I!=='undefined')MODE_I.soul={ic:'⭕',n:'จิตวิญญาณยุทธ์',c:'#8a5ad8',chm:ix,p:'ปลุกดวงจิตตอนหกขวบ ล่าสัตว์อสูรหลอมวงแหวน ไต่ถึงผู้ครองดวงจิต'};
+ const _cs=chStart;chStart=function(){const r=_cs.apply(this,arguments);try{if(S.ch==='soul'){svInit();log('⭕ <b>ทวีปจิตวิญญาณยุทธ์</b> — ที่นี่ทุกคนจะได้ปลุกดวงจิตตอนอายุหกขวบ บางคนได้ดาบ บางคนได้จอบ และไม่มีใครรู้ว่าอะไรซ่อนอยู่ข้างใน','myth',true)}}catch(e){}return r}}catch(e){console.error('sv reg',e)}
+window._blk34={SP,BEAST,TIER,RANK,awaken,svYear,hunt,absorb,spNow,capOf};
+})()}catch(e){console.error('block34',e)}
 </script>
 </body>
 </html>
