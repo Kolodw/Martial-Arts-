@@ -26377,7 +26377,7 @@ try{GD2.push({s:'beast',ic:'🗺️',t:'สัตว์อสูร 2.0',nw:1,d:
 const st=document.createElement('style');st.textContent='.hlb.rdy{animation:hlRdy 1.1s ease-in-out infinite}@keyframes hlRdy{0%,100%{box-shadow:0 0 0 0 rgba(255,80,40,.0)}50%{box-shadow:0 0 10px 3px rgba(255,90,40,.9)}}';document.head.appendChild(st);
 const rdy=()=>{try{const h=typeof hl2==='function'?hl2():null;return !!(h&&S&&S.alive&&S.ch==='hell'&&h.lv<(h.ab?1000:100)&&(h.ab||h.lv>=18)&&S.age>=h.cd)}catch(e){return false}};
 setInterval(()=>{try{const r=rdy();document.querySelectorAll('.hlb').forEach(b=>b.classList.toggle('rdy',r));
- if(!r)return;const h=hl2();if(h.autoCd===h.cd)return;if(choice._cur||modalOpen||(document.querySelector('.ov.show')||($('birth')&&$('birth').classList.contains('on'))))return;
+ if(!r)return;const h=hl2();if(h.autoCd===h.cd)return;if(h.ab&&S.flags&&S.flags.abAuto)return;if(choice._cur||modalOpen||(document.querySelector('.ov.show')||($('birth')&&$('birth').classList.contains('on'))))return;
  if(!S.age||S.age<16)return;h.autoCd=h.cd;(h.ab?openAbyss:openHell2)()}catch(e){}},1500);
 }catch(e){console.error(e)}})();
 
@@ -41479,6 +41479,14 @@ function lore(a){const t=String(a.tier||'').split(' ')[0],P=OR[t];if(!P)return '
  return `<div class="tag2 artLore" style="line-height:1.7;margin:6px 0;padding:8px 10px;border-radius:10px;border-left:3px solid #d4a94a;background:rgba(212,169,74,.08)"><b>📜 ที่มาของ《${String(a.n).replace(/[<>&]/g,'')}》</b><br>${P[h%P.length]} ${END[(h>>>5)%END.length]}${sect}</div>`}
 {const _am=artMenu;artMenu=function(n){const r=_am.apply(this,arguments);try{const a=S.arts[artFind(n)],m=$('modal');if(a&&m&&!m.querySelector('.artLore')){const L=lore(a);if(L){const i=m.querySelector('.artInfo');if(i)i.insertAdjacentHTML('afterend',L);else{const p=m.querySelector('p.tag2');if(p)p.insertAdjacentHTML('afterend',L)}}}}catch(e){console.error('artlore',e)}return r}}
 })()}catch(e){console.error('artlore block',e)}
+
+// ===================== แก้: อเวจีลงอัตโนมัติ/ลงรวด — หน้าอเวจีเด้งเปิดเองหลังผ่านชั้นแล้วขวางการลงต่อ (ค้างจนกดปิด) =====================
+try{(()=>{
+window._abQ=0;
+{const _o=openHell2;openHell2=function(){if(Date.now()<(window._abQ||0))return;return _o.apply(this,arguments)}}
+{const _s=abAutoStep;abAutoStep=function(f){try{if(f||(S&&S.flags&&S.flags.abAuto))window._abQ=Date.now()+1600}catch(e){}return _s.apply(this,arguments)}}
+{const _b=window.abBatch;window.abBatch=function(){try{window._abQ=Date.now()+1600}catch(e){}const r=_b.apply(this,arguments);try{window._abQ=Date.now()+1600;if(typeof modalOpen!=='undefined'&&modalOpen){const m=$('modal');if(m&&/hell2|abyss/.test(m.dataset.k||''))closeM()}}catch(e){}return r}}
+})()}catch(e){console.error('abq block',e)}
 </script>
 </body>
 </html>
