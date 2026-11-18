@@ -1308,7 +1308,7 @@ function yearEnd(){
  if(has('nano'))S.hp=Math.min(S.maxHp,S.hp+15);
  if(S.shop)S.money+=inc(S.shop*R(120,220));
  if(S.done.includes('school'))S.money+=inc(R(50,120));
- S.maxHp=100+(tr('iron')?40:0)-(tr('frail')?20:0)+Math.min(40,Math.max(0,S.age-10)*2)+gv('armor')+(S.family.hp||0)+realmIdx()*25+(S.sys?S.sys.hp:0)+(S.clan&&S.clan.b&&S.clan.b.hp||0);
+ {let _wb=0;try{_wb=S.body&&typeof bodyHas==='function'&&bodyHas('whole')?30:0}catch(e){}const _b=100+(tr('iron')?40:0)-(tr('frail')?20:0)+Math.min(40,Math.max(0,S.age-10)*2)+gv('armor')+(S.family.hp||0)+realmIdx()*25+(S.sys?S.sys.hp:0)+(S.clan&&S.clan.b&&S.clan.b.hp||0)+_wb;const _ex=S._hpB==null?Math.max(0,S.maxHp-_b):S.maxHp-S._hpB;S._hpB=_b;S.maxHp=Math.max(10,Math.round(_b+_ex))}
  if(S.faction&&S.faction.b&&S.faction.b.int)S.int+=2;if(S.clan&&S.clan.b&&S.clan.b.int)S.int+=2;if(S.faction&&S.faction.b&&S.faction.b.cha)S.cha+=1;
  if(S.clanHead){S.money+=inc(300+Math.round(S.fame/5));S.fame+=3}
  if(S.age>50&&realmIdx()<4)S.hp-=R(0,6);
@@ -23827,7 +23827,7 @@ function bodyStart(){const b=S.body;if(!b||b._st)return;b._st=1;const L=bodyLk(b
 // ---------- ผลต่อการเติบโตรายปี ----------
 function bodyMul(k){if(!S||!S.body)return 1;let m=1;const B=bodyB();for(const c of S.body.cs||[]){const t=(B&&BODY_MB[c])||BODY_M[c];if(t&&t[k])m*=t[k]}
  if(S.body.oneArm&&(bodyHas('arm')||bodyHas('lostarm'))&&k==='power')m*=1.35;if(S.body.aid&&(bodyHas('leg')||bodyHas('lostleg'))&&k==='power')m*=1.08;return m}
-{const _ye11=yearEnd;yearEnd=function(){const r=_ye11.apply(this,arguments);try{if(S&&S.body&&bodyHas('whole')){S.maxHp+=30;S.hp=Math.min(S.hp,S.maxHp)}}catch(e){}return r}}
+{const _ye11=yearEnd;yearEnd=function(){const r=_ye11.apply(this,arguments);try{if(S)S.hp=Math.min(S.hp,S.maxHp)}catch(e){}return r}} // +30 ของกายครบส่วนรวมอยู่ในสูตรพลังชีวิตฐานแล้ว
 {const _py11=passYear;passYear=function(){if(!S||!S.alive||!S.body)return _py11.apply(this,arguments);
  const a0=S.age,b0={power:S.power,int:S.int,qi:S.qi,cha:S.cha},hp0=S.hp;const r=_py11.apply(this,arguments);
  try{if(S&&S.alive&&S.body){for(const k in b0){const m=bodyMul(k);if(m!==1&&typeof S[k]==='number'){const d=S[k]-b0[k];if(d>0)S[k]=k==='qi'?+(b0[k]+d*m).toFixed(2):Math.round(b0[k]+d*m)}}
