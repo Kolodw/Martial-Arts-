@@ -36102,6 +36102,7 @@ function ftBorrow(m){const T=S.ft,nx=nextP(),pw=ftPw(T);
  S.power+=g;S.qi+=+(.4*pw).toFixed(1);T.dr++;T.sy=Math.min(100,T.sy+R(6,10));T.bd=Math.min(100,T.bd+R(9,15)*(m>1?1.5:1));T.sus+=R(4,9);
  let t=`📡 คุณดื่มด่ำ${ER[era()].a}จากอนาคตหมื่นปี — พลัง +${fmt(g)}`;
  if(Math.random()<.1+.3*pw)t+=` · ได้วิชาที่ถูกขัดเกลาแล้ว ${artAdd(2)}`;
+ if(!T.sc&&T.dr>=3&&Math.random()<.35)setTimeout(()=>{try{if(S&&S.ft&&!S.ft.sc)ftScroll()}catch(e){}},200);
  log(t+` <span class="tag2">(ร่างสึก ${Math.round(T.bd)}%)</span>`,'epic');joy(-3)}
 function ftTalk(){const T=S.ft;if(T.path==='seek')T.cl++;T.sy=Math.min(100,T.sy+4);const r=R(1,4);
  if(r===1){S.int+=R(6,12);log('🗣️ ผู้ในฝันตอบสั้นๆ ว่า "ปัญญาเป็นสิ่งสุดท้ายที่เหลือรอด" — คุณตื่นมาพร้อมความคิดที่ชัดขึ้น','epic')}
@@ -36193,7 +36194,7 @@ function emWay(){const E=S.em;
   {t:'👶 ลืมตาใหม่เป็นเด็กธรรมดา',s:'เริ่มจากเด็ก · เก็บวิชา 70% · ครอบครัวใหม่ · ศัตรูชาติก่อนตามหา',noFate:true,f(){if(S.em)S.em._pk=[];later(()=>emPack(1))}},
   {t:'🪞 สิงร่างผู้สืบทอดวัยหนุ่มสาว',s:'อายุ 15–24 · เก็บวิชาครบ · ฝึกตามทันเร็วกว่า · ทิ้งชื่อและครอบครัวเดิม',noFate:true,f(){if(S.em)S.em._pk=[];later(()=>emPack(2))}},
   {t:'🏔️ ผนึกวิญญาณหลับยาวแล้วตื่นอีกหลายสิบปี',s:'อายุ 14 · โลกผ่านไป 30–70 ปี · ศัตรูแก่และอ่อนลง คนที่รักอาจจากไปแล้ว · ชื่อกลายเป็นตำนาน',noFate:true,f(){if(S.em)S.em._pk=[];later(()=>emPack(3))}}])}
-function emRebirth(mode){const E=S.em||(S.em=EM0());const oldPow=Math.round(total()),oldName=S.name,old=S.age;const lover=S.spouse&&S.spouse.n||(S.harem&&S.harem[0]&&S.harem[0].n)||null;E.shDone=0;E.drop=0;E.love=null;
+function emRebirth(mode){const E=S.em||(S.em=EM0());const oldPow=Math.round(total()),oldName=S.name,old=S.age;try{const tk=ttlOf();(E.ttl=E.ttl||[]).push(tk);E.tUse=0;log(`🩸 ชาตินี้ถูกจารึกด้วยฉายา <b>${TTL[tk][0]} ${TTL[tk][1]}</b>`,'myth');let wn=null;try{const g=gearOf('weapon');wn=g&&g.n}catch(e){}if(E.wp){if(E.wp.got){E.wp.got=0;E.wp.w++}else E.wp.w++}else E.wp={n:wn||ch(['กระบี่','ดาบ','ทวน','พัด'])+ch(['จันทร์ร้าว','ราตรีไร้นาม','หิมะเลือด','มังกรหลับ','เงาพระอาทิตย์']),w:1,got:0};const hn=(E.ally&&E.ally.n)||anyName(ch(['ชาย','หญิง']));E.thr={n:hn,k:ch(['tyr','tyr','good','war']),met:0,done:0}}catch(e){console.error(e)}const lover=S.spouse&&S.spouse.n||(S.harem&&S.harem[0]&&S.harem[0].n)||null;E.shDone=0;E.drop=0;E.love=null;
  E.pk=Math.max(E.pk,oldPow);E.pkR=Math.max(E.pkR,rawRealm());E.n++;E.ev=0;E.memD=0;E.tomb=0;
  const kp=peers.filter(p=>p&&p.killed).slice(0,3).map(p=>({n:p.name,p:Math.round(Math.max(150,oldPow*.35)),h:0}));
  while(kp.length<2)kp.push({n:ch(['ทายาทแห่งตระกูล','ศิษย์ผู้แค้น','ผู้ถูกทิ้งแห่งสำนัก'])+anyName(S.gender),p:Math.round(Math.max(150,oldPow*.3)),h:0});
@@ -36242,7 +36243,8 @@ function emYear(){if(!ok())return;let E=S.em;
  if(!E.tomb&&S.age-(E.rbY||S.age)>=10&&Math.random()<.08){E.tomb=2;E.thief={n:anyName(S.gender),p:Math.round(Math.max(200,E.pk*.45)),met:0};log(`⚰️ ข่าวลือแพร่มาว่าสุสานจักรพรรดิโบราณถูกเปิดแล้ว — โดยคนชื่อ <b>${esc(E.thief.n)}</b>`,'bad')}
  if(E.thief&&E.thief.met>=3&&S.age-(E.thY||0)>=6&&Math.random()<.3){E.thY=S.age;const Th=E.thief;go(()=>{if(!S.em.thief)return;const w=fight(Th.n,Math.round(Th.p));if(w){S.em.thief=null;S.em.tomb=3;S.power+=Math.round(S.em.pk*.06);log(`⚔️ ${esc(Th.n)}บุกมาหาคุณถึงที่ — แต่ท่าที่ลอกมาไม่มีวันเหนือกว่าต้นฉบับ`,'epic')}else{S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.35));log(`⚔️ ${esc(Th.n)}บุกมาด้วยท่าของคุณเอง ฟาดคุณจนบาดเจ็บหนัก`,'bad')}});return}
  if(S.age<12||Math.random()>.14)return;
- const L=[];if(!E.tomb&&S.age>=16)L.push(emTomb);if(E.thief)L.push(emThief);if(E.love&&!E.love.met&&S.age>=17)L.push(emLove);if(E.gold&&S.age>=12)L.push(emGold);if(E.foes.length)L.push(emFoe);if(E.ally&&!E.ally.met&&S.age>=18)L.push(emAlly);if(!E.memD)L.push(emMem);
+ if(E.n>=5&&!S.flags.emFinal&&S.age>=25&&S.age-(E.fnY||-99)>=5&&Math.random()<.4){go(()=>{if(!S.flags.emFinal)emFinal()});return}
+ const L=[];if(!E.tomb&&S.age>=16)L.push(emTomb);if(E.thr&&!E.thr.met&&!E.thr.done&&S.age>=18)L.push(emThrone);if(E.wp&&!E.wp.got&&S.age>=14)L.push(emWeapon);if(E.thief)L.push(emThief);if(E.love&&!E.love.met&&S.age>=17)L.push(emLove);if(E.gold&&S.age>=12)L.push(emGold);if(E.foes.length)L.push(emFoe);if(E.ally&&!E.ally.met&&S.age>=18)L.push(emAlly);if(!E.memD)L.push(emMem);
  if(L.length){const f=ch(L);go(()=>{if(S.em&&S.em.n)f()})}}
 
 // ----- v2: เลือกของพากลับ 3 อย่าง · เงาตัวเองที่คอขวด · สุสานถูกชิง · ตำนานในอนาคต · สายใยโยงชาติก่อน -----
@@ -36292,6 +36294,74 @@ function ftPrev(){const T=S.ft,E=S.em;T.who='prev';T.st=2;
   {t:'✂️ สาบานจะไม่เกิดใหม่อีก',s:'ปิดทางเกิดใหม่ถาวร · อายุขัย +30 · อนาคตดีขึ้นมาก',f(){E.lock=1;S.lifespan+=30;T.hum=cl(T.hum+25,0,100);joy(15);keyAdd('ตัดวงจรเกิดใหม่ เพื่อไม่ให้ตัวเองต้องติดอยู่หมื่นปี');log('✂️ ตัวคุณในอนาคตหลับตา "ขอบใจ... ข้าเหนื่อยเหลือเกิน" แล้วจางหายไปอย่างโล่งใจ','myth')}},
   {t:'🗡️ ขอวิชาของชาติที่ยังมาไม่ถึงมาเลย',s:'พลังมหาศาล · ชาติหน้าจะเก็บอะไรได้น้อยลง',noFate:true,f(){S.power+=Math.round(nextP().p*.25);const a=artAdd(3);E.debt=1;T.bd=Math.min(100,T.bd+30);log(`🗡️ คุณยืมจากตัวเองในอนาคต ได้ ${a} — ใบหน้านั้นยิ้มเศร้าๆ "อย่าลืมว่าข้าก็คือเจ้า"`,'myth')}}])}
 
+// ----- v3 (เบียว): ร่างอนาคต · ดวงตาเห็นจุดจบ · คัมภีร์ที่ยังไม่ถูกเขียน · ศัตรูจากหมื่นปี · ฉายาข้ามชาติ · บัลลังก์ว่าง · อาวุธที่จำเจ้าของ · วันสิ้นรัชกาล -----
+function bigFx(t,sub,col){try{const d=document.createElement('div');d.style.cssText=`position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle,${col||'#7a3cff'}55,#000e 70%);color:#fff;font-weight:900;text-align:center;pointer-events:none;transition:opacity .6s`;d.innerHTML=`<div style="font-size:clamp(26px,8vw,54px);letter-spacing:.08em;text-shadow:0 0 18px ${col||'#b48cff'},0 0 40px ${col||'#b48cff'}">${t}</div><div style="margin-top:10px;font-size:15px;opacity:.85">${sub||''}</div>`;document.body.appendChild(d);try{vib&&vib(120)}catch(e){}setTimeout(()=>{d.style.opacity='0'},1500);setTimeout(()=>d.remove(),2200)}catch(e){}}
+const TTL={blood:['🩸','ผู้เปื้อนเลือด','ศัตรูหวาดกลัว — พลังศัตรู −15%',x=>x.ep*=.85],guard:['🛡️','ผู้ไม่ทอดทิ้ง','เลือดฟื้นเต็ม',x=>{S.hp=S.maxHp}],name:['🌟','ผู้ที่ทั้งแผ่นดินจำ','ชื่อเสียงสะท้านฟ้า — พลังศัตรู −10%',x=>{x.ep*=.9;S.fame+=fameR(40)}],clan:['🏮','ผู้สร้างตระกูล','วิญญาณบรรพชนหนุนหลัง — พลังศัตรู −10%',x=>x.ep*=.9],war:['⚔️','ผู้มีศัตรูทั่วหล้า','ยิ่งศัตรูแรงยิ่งฮึก — พลังศัตรู −12%',x=>x.ep*=.88],young:['🥀','ผู้ตายก่อนวัย','ความแค้นของชีวิตที่สั้น — พลังศัตรู −15% แต่เลือด −20%',x=>{x.ep*=.85;S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.2))}],kneel:['🗡️','ผู้ไม่คุกเข่า','ไม่มีวันถอย — พลังศัตรู −12%',x=>x.ep*=.88],wait:['🕯️','ผู้รอคอย','ความอดทนหลายชาติ — พลังศัตรู −10% · ปัญญา +',x=>{x.ep*=.9;S.int+=5}]};
+function ttlOf(){const k=S.karma||0;if(k<=-40)return'blood';if(k>=60)return'guard';if((S.kids||0)>=3)return'clan';if((S.fame||0)>=4000)return'name';if(S.em&&S.em.foes&&S.em.foes.length>=3)return'war';if(S.age<40)return'young';if(S.flags&&(S.flags.emForceY||S.btFail>=3))return'kneel';return'wait'}
+// เมนูก่อนดวล
+{const _du=duel;duel=function(name,ep,cb){try{if(!duel._raw&&ok()&&S.age>=14&&typeof cb==='function'){const T=S.ft,E=S.em,tot=total(),dang=ep>tot*1.02||S.hp<S.maxHp*.45;
+  const av=T&&!T.end&&T.path!=='cut'&&T.dr>=1&&(T.av||0)<3&&dang,tt=E&&E.ttl&&E.ttl.length>=3&&!E.tUse&&dang;
+  if(av||tt){const O=[];if(av)O.push({t:`⚡ เรียกข้าในหมื่นปี (${3-(T.av||0)}/3)`,s:'ชนะแทบแน่นอน · ร่างสึกหนัก · อนาคตแย่ลง',noFate:true,f(){T.av=(T.av||0)+1;T.bd=Math.min(100,T.bd+25);T.hum=cl(T.hum-8,0,100);bigFx('ข้าในหมื่นปี','กระบวนท่าที่ยังไม่มีใครในยุคนี้ได้เห็น','#6fd8ff');log(`⚡ ดวงตาคุณเปลี่ยนเป็นสีเงิน ร่างกายเคลื่อนไหวเองด้วยท่าจากหมื่นปีข้างหน้า — <b>${esc(name)}</b>ไม่ทันได้เห็นด้วยซ้ำว่าโดนอะไร`,'myth');setTimeout(()=>{try{cb(true);render();checkDeath()}catch(e){console.error(e)}},50)}});
+   if(tt)O.push({t:`🩸 ขานฉายาทั้ง${E.ttl.length}`,s:E.ttl.map(k=>TTL[k][0]+' '+TTL[k][1]).join(' · ')+' · ครั้งเดียวต่อชีวิต',noFate:true,f(){E.tUse=1;const x={ep};E.ttl.forEach(k=>{try{TTL[k][3](x)}catch(e){}});bigFx(E.ttl.map(k=>TTL[k][1]).join(' · '),'ฉายาจากทุกชาติดังก้องพร้อมกัน','#ff4d6d');log(`🩸 คุณเอ่ยฉายาของตัวเองทีละชื่อ — ${E.ttl.map(k=>'<b>'+TTL[k][1]+'</b>').join(' ')} — เงาของทุกชาติยืนขึ้นข้างหลัง`,'myth');later(()=>{duel._raw=1;try{_du(name,Math.round(x.ep),cb)}finally{duel._raw=0}})}});
+   O.push({t:'⚔️ สู้ด้วยตัวเอง',s:'ไม่ใช้พลังพิเศษ',f(){later(()=>{duel._raw=1;try{_du(name,ep,cb)}finally{duel._raw=0}})}});
+   return later(()=>choice('⚡ ศึกเป็นตาย',`<b>${esc(name)}</b> แข็งแกร่งเกินกว่าที่ร่างนี้จะรับไหว — มีพลังที่ไม่ควรมีอยู่ในยุคนี้ รอให้คุณเรียกใช้`,O))}
+  if(T&&!T.end&&T.dr>=2&&Math.random()<.22){const r=tot/Math.max(1,ep),win=r>=1,tru=Math.random()<.75,say=tru?win:!win;
+   return later(()=>choice('👁️ ดวงตาที่เห็นจุดจบ',`ก่อนดาบจะออกจากฝัก ภาพหนึ่งวาบผ่านตา — ${say?`<b>${esc(name)}</b> ล้มลงที่กระบวนท่าที่เจ็ด`:`<b>ตัวคุณ</b>ล้มลงที่กระบวนท่าที่สาม`}<br><span class="tag2">ภาพจากสายใยไม่ได้จริงเสมอไป</span>`,say?[
+     {t:'😤 เชื่อภาพ บุกเต็มกำลัง',s:'ถ้าภาพจริง ศัตรูอ่อนลง · ถ้าหลอก ศัตรูแรงขึ้น',f(){const e2=Math.round(ep*(tru?.85:1.15));later(()=>{duel._raw=1;try{_du(name,e2,cb)}finally{duel._raw=0}})}},
+     {t:'🧊 ไม่ประมาท สู้ตามปกติ',s:'ไม่มีผลเพิ่ม',f(){later(()=>{duel._raw=1;try{_du(name,ep,cb)}finally{duel._raw=0}})}}]:[
+     {t:'🔄 เปลี่ยนแผนตามภาพ',s:'ถ้าภาพจริง เลี่ยงจุดตายได้ · ถ้าหลอก เสียจังหวะ',f(){const e2=Math.round(ep*(tru?.8:1.1));if(tru)log('👁️ คุณเบี่ยงตัวหลบกระบวนท่าที่สามได้หวุดหวิด — ภาพนั้นเป็นจริง','epic');later(()=>{duel._raw=1;try{_du(name,e2,cb)}finally{duel._raw=0}})}},
+     {t:'🗡️ ไม่สน ชะตาข้ากำหนดเอง',s:'สู้ตามปกติ',f(){later(()=>{duel._raw=1;try{_du(name,ep,cb)}finally{duel._raw=0}})}}]))}}}catch(e){console.error('b16 duel',e)}
+ return _du.apply(this,arguments)}}
+// 📖 คัมภีร์ที่ยังไม่ถูกเขียน
+const SCN=['ท่าที่ 0: ก่อนกาลจะเริ่ม','บทที่ไม่มีหน้า','กระบวนท่าที่ศิษย์คนสุดท้ายจดไว้','คัมภีร์ผู้ไร้นาม ฉบับหมื่นปี'];
+function ftScroll(){const T=S.ft;const a=newArt(3);a.n=ch(SCN);Array.prototype.push.call(S.arts,a);T.sc=a.n;log(`📖 ในฝันคราวนี้ ผู้ส่งยื่นคัมภีร์เล่มหนึ่งให้ หน้าปกเขียนว่า <b>《${esc(a.n)}》</b> — ผู้แต่ง: <i>(ลายมือถูกขีดทิ้ง)</i> ${artHtml(a)}`,'myth')}
+function ftScript(){const T=S.ft;T.scQ=S.age;const who=(S.em&&S.em.ally&&S.em.ally.n)||(S.children&&S.children[0]&&S.children[0].n)||'ศิษย์คนแรกของคุณ';
+ choice('📖 ผู้แต่งที่แท้จริง',`<b>${esc(who)}</b> ขอเรียนวิชา《${esc(T.sc)}》 คุณหยิบพู่กันจะเขียนตำราให้... แล้วมือก็หยุด — ลายมือของคุณ<b>คือลายมือที่ถูกขีดทิ้งบนปกคัมภีร์</b> ผู้แต่งคัมภีร์ที่คุณยืมมาจากอนาคต คือตัวคุณเอง`,[
+  {t:'✍️ เขียนให้จบ ปิดวงจรเวลา',s:'ฉากจบลับ · วิชากลายเป็นของคุณอย่างแท้จริง',noFate:true,f(){ftFin('loop');S.fame+=fameR(500);S.power+=Math.round(total()*.08);S.lifespan+=25;keyAdd(`เขียนคัมภีร์《${T.sc}》ที่ตัวเองยืมมาจากอนาคต — ปิดวงจรเวลาด้วยมือตัวเอง`);bigFx('วงจรปิดลง','ผู้แต่งคือผู้อ่าน · ผู้อ่านคือผู้แต่ง','#ffd34d');log(`✍️ หมึกหยดสุดท้ายแห้งลง เสียงในหัวพูดเป็นครั้งสุดท้าย "...ขอบใจที่เขียนมันขึ้นมา" — แล้วสายใยก็ไม่ใช่สายใยอีกต่อไป แต่เป็นวงกลม`,'myth')}},
+  {t:'🔥 เผาทิ้ง ไม่ให้ใครได้มันไป',s:'อนาคตเปลี่ยนมาก · เสียวิชานี้',f(){try{const i=Array.prototype.findIndex.call(S.arts,a=>a&&a.n===T.sc);if(i>=0)S.arts.splice(i,1)}catch(e){}T.hum=cl(T.hum+20,0,100);T.sc=null;log('🔥 คัมภีร์ลุกเป็นไฟ อนาคตที่ต้องพึ่งมันสั่นไหว — คุณไม่รู้ว่าทำถูกหรือผิด แต่รู้ว่ามันเป็นการตัดสินใจของคุณ','epic')}},
+  {t:'🤐 เก็บไว้ก่อน',s:'ยังไม่ถึงเวลา',skip:true,f(){}}])}
+// 🌑 ศัตรูจากหมื่นปีข้างหน้า
+function ftRv(){const T=S.ft,V=T.rv;const pw=Math.round(Math.max(V.p,total()*.95));V.st++;
+ if(V.st===1)return choice('🌑 อีกสายใยหนึ่ง',`<b>${esc(V.n)}</b> ใช้ท่าที่ไม่ควรมีอยู่ในยุคนี้ — เหมือนคุณ ดวงตาเขาเป็นสีเงินชั่ววูบ "เจ้าก็ได้ยินเสียงนั้นเหมือนกันสินะ... แต่อนาคตของข้าต้องการให้อนาคตของเจ้า<b>ไม่เกิดขึ้น</b>"`,[
+  {t:'⚔️ ปะทะทันที',s:'ชนะ = เขาเสียสาย',f(){duel(V.n,pw,w=>{if(w){V.p=Math.round(V.p*.8);T.hum=cl(T.hum+5,0,100);log(`⚔️ ${esc(V.n)}กระเด็นออกไป ดวงตาสีเงินดับลงชั่วขณะ`,'epic')}else{V.p=Math.round(V.p*1.1);T.hum=cl(T.hum-6,0,100);S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.3))}})}},
+  {t:'🗣️ ถามว่าอนาคตของเขาเป็นอย่างไร',s:'รู้จุดอ่อน',f(){V.wk=1;S.int+=5;log(`🗣️ "อนาคตของข้ามีมนุษย์เหลือแค่ร้อยคน ทุกคนเป็นทาสของสิ่งที่ส่งสายมาหาเจ้า" — คุณไม่แน่ใจว่าใครพูดจริง`,'epic')}},
+  {t:'🌫️ ถอย',s:'เขาจะกลับมา',skip:true,f(){}}]);
+ if(V.st===2)return choice('🌑 สงครามตัวแทน',`${esc(V.n)}เริ่มทำลายสิ่งที่อนาคตของคุณต้องพึ่ง — ${ch(['เผาหอตำราที่จะกลายเป็นรากฐานของวิชาในอนาคต','ตามล่าเด็กที่ในอนาคตจะเป็นผู้นำผู้รอดชีวิต','วางยาบ่อน้ำของเมืองที่จะเป็นที่หลบภัยสุดท้าย'])}`,[
+  {t:'🛡️ ปกป้องสิ่งนั้น',s:'อนาคตปลอดภัย · ต้องสู้',f(){duel(V.n,pw,w=>{if(w){T.hum=cl(T.hum+8,0,100);S.fame+=fameR(80);log('🛡️ คุณยืนขวางไว้ได้ อนาคตของคุณยังอยู่','epic')}else{T.hum=cl(T.hum-12,0,100);S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.3));log('🛡️ คุณช้าไปก้าวเดียว ภาพในฝันคืนนั้นมืดลงกว่าเดิม','bad')}})}},
+  {t:'🎯 ตอบโต้ — ทำลายสมอของอนาคตเขา',s:'กรรมลบ · เขาอ่อนลงมาก',f(){S.karma-=10;V.p=Math.round(V.p*.7);log(`🎯 คุณตามไปทำลายสิ่งที่อนาคตของ${esc(V.n)}ต้องพึ่งบ้าง — ไม่มีใครในยุคนี้เข้าใจว่าทำไมพวกคุณถึงทำแบบนี้`,'epic')}}]);
+ choice('🌑 สองอนาคตปะทะ',`ท้องฟ้าแยกเป็นสองสี ${esc(V.n)}ยืนอยู่อีกฝั่ง ดวงตาสีเงินของทั้งคู่ลุกโชน — มีได้อนาคตเดียว`,[
+  {t:'⚔️ ดวลตัดสินอนาคต',s:'ชนะ = อนาคตของเขาลบหาย · แพ้ = อนาคตของคุณลบหาย',noFate:true,f(){duel(V.n,Math.round(pw*(V.wk?.9:1)),w=>{T.rv=null;if(w){T.hum=cl(T.hum+20,0,100);S.flags.ft_rv=1;S.fame+=fameR(250);keyAdd('ชนะศึกตัวแทนข้ามเวลา — อนาคตของศัตรูไม่เคยเกิดขึ้น');bigFx('อนาคตหนึ่งถูกลบ','เหลือเพียงอนาคตของเจ้า','#6fd8ff');log(`⚔️ ร่างของ${esc(V.n)}ไม่ได้ล้ม — มันค่อยๆ โปร่งใสเหมือนไม่เคยมีอยู่จริง`,'myth')}else{T.hum=cl(T.hum-25,0,100);T.sy=Math.max(0,T.sy-30);S.hp=Math.max(5,Math.round(S.hp*.3));log('⚔️ สายใยของคุณสั่นจนเกือบขาด ภาพในฝันกลายเป็นอนาคตที่ไม่ใช่ของคุณ','bad')}})}},
+  {t:'🤝 รวมสองอนาคตเข้าด้วยกัน',s:'ใช้ปัญญา · ถ้าสำเร็จได้พันธมิตรข้ามเวลา',f(){if(roll01(.25+(S.int||0)/300+(V.wk?.15:0))){T.rv=null;T.hum=cl(T.hum+15,0,100);S.flags.ft_rv2=1;const a=artAdd(3);keyAdd('รวมสองอนาคตที่ปะทะกันให้เป็นหนึ่ง');log(`🤝 "ถ้าทั้งสองอนาคตมีศัตรูเดียวกัน..." — ${esc(V.n)}ลดดาบลง แล้วสอนท่าจากอนาคตของเขาให้ ${a}`,'myth')}else{S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.25));log(`🤝 ${esc(V.n)}ไม่เชื่อ เขาโจมตีทันทีที่คุณลดดาบ`,'bad')}}}])}
+// ⚰️ บัลลังก์ว่าง
+function emThrone(){const E=S.em,H=E.thr;H.met=1;const n=esc(H.n);
+ if(H.k==='tyr')return choice('⚰️ บัลลังก์ที่คุณทิ้งไว้',`<b>${n}</b> ศิษย์ที่คุณรักที่สุดในชาติก่อน ขึ้นครองตำแหน่งของคุณ — และกลายเป็นทรราช ภาพของคุณถูกแขวนทุกเมือง พร้อมคำว่า "ข้าทำตามที่ท่านอาจารย์สอน"`,[
+  {t:'⚔️ โค่นลงด้วยมือตัวเอง',s:'ดวลที่หนักที่สุดในชาตินี้',noFate:true,f(){duel(H.n,Math.round(Math.max(E.pk*.55,total()*1.05)),w=>{if(w){H.done=1;S.fame+=fameR(300);S.karma+=10;joy(-10);keyAdd(`โค่น${H.n} ศิษย์ที่กลายเป็นทรราชบนบัลลังก์ของตัวเอง`);log(`⚔️ ${n}ล้มลงแล้วมองหน้าคุณ — จำได้ในวินาทีสุดท้าย "ท่านอาจารย์... ข้าแค่อยากให้ท่านกลับมาดุข้า"`,'myth')}else{S.hp=Math.max(5,Math.round(S.hp*.3));H.met=0;log(`⚔️ ${n}เก่งกว่าที่คุณสอน`,'bad')}})}},
+  {t:'🗝️ เปิดเผยตัวตนกับเขา',s:'ใช้ปัญญา · ถ้าสำเร็จ เขากลับใจ',f(){if(roll01(.3+((S.int||0)+(S.cha||0))/450)){H.done=1;S.karma+=15;S.fame+=fameR(150);E.ally={n:H.n,met:1,w:1};log(`🗝️ คุณพูดประโยคที่สอนเขาในวันแรก ${n}ทรุดลงร้องไห้กลางท้องพระโรง — รัชสมัยแห่งความกลัวจบในคืนนั้น`,'myth')}else{S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.25));log(`🗝️ "คนตายไม่กลับมา" ${n}สั่งทหารโยนคุณออกนอกวัง`,'bad')}}},
+  {t:'🌫️ ปล่อยไป ชาตินี้ไม่ใช่ของเรื่องนั้น',s:'กรรมลบเล็กน้อย',skip:true,f(){S.karma-=4;H.done=1}}]);
+ if(H.k==='good'){H.done=1;return choice('⚰️ บัลลังก์ที่คุณทิ้งไว้',`<b>${n}</b> ขึ้นครองตำแหน่งของคุณและปกครองได้ดีกว่าที่คุณเคยทำ ผู้คนสุขสบาย ทุกปีมีพิธีระลึกถึง "ผู้ก่อตั้งที่จากไป"`,[
+  {t:'🍵 ไปร่วมพิธีในฐานะคนแปลกหน้า',s:'ใจสงบ',f(){joy(18);S.karma+=4;log(`🍵 คุณยืนท้ายแถว ${n}กล่าวสุนทรพจน์ด้วยถ้อยคำที่คุณเคยพูด — คุณยิ้มอยู่คนเดียว`,'epic')}},
+  {t:'🎁 ขอสิ่งที่เคยเป็นของตัวเองคืน',s:'ได้วิชาและเงิน · เขาจะรู้ว่าคุณคือใคร',f(){const a=artAdd(2);S.money+=R(1000,4000)*(1+realmIdx());log(`🎁 ${n}มองหน้าคุณนาน แล้วสั่งคนเปิดคลังโดยไม่ถามอะไรสักคำ ได้ ${a}`,'epic')}}])}
+ choice('⚰️ บัลลังก์ที่คุณทิ้งไว้',`หลังคุณตาย ศิษย์สามคนแย่งตำแหน่งกันจนแผ่นดินแตกเป็นสามก๊ก <b>${n}</b>คือหนึ่งในนั้น สงครามลากยาวมาจนถึงชาตินี้`,[
+  {t:'🏳️ รวมแผ่นดินด้วยตัวเอง',s:'ศึกสามครั้ง · ชื่อเสียงมหาศาล',noFate:true,f(){let i=0;const nx=()=>{if(i>=3){H.done=1;S.fame+=fameR(500);keyAdd('รวมแผ่นดินที่แตกเพราะการตายของตัวเองกลับมาเป็นหนึ่ง');bigFx('แผ่นดินเป็นหนึ่ง','สิ่งที่เจ้าทำพัง เจ้าซ่อมเอง','#ffd34d');return}duel(i===0?H.n:'ทายาทก๊กที่ '+(i+1),Math.round(total()*(.8+i*.12)),w=>{if(w){i++;later(nx)}else{H.met=0;S.hp=Math.max(5,Math.round(S.hp*.35));log('🏳️ ทัพแตก ต้องรวบรวมกำลังใหม่','bad')}})};nx()}},
+  {t:'🤝 เลือกข้าง หนุนก๊กที่ดีที่สุด',s:'ได้รางวัลจากผู้ชนะ',f(){H.done=1;S.money+=R(2000,6000)*(1+realmIdx());S.fame+=fameR(120);log('🤝 ก๊กที่คุณหนุนชนะในอีกห้าปี พวกเขาไม่รู้ว่ากุนซือนิรนามคือผู้ก่อตั้งที่ตายไปแล้ว','epic')}},
+  {t:'🌫️ อยู่ห่างจากมัน',s:'ไม่มีผล',skip:true,f(){H.done=1}}])}
+// 🗡️ อาวุธที่จำเจ้าของ
+function emWeapon(){const E=S.em,P=E.wp;const n=esc(P.n),pw=Math.round(E.pk*.04*P.w);
+ choice('🗡️ เสียงสั่นของเหล็กเก่า',`เดินผ่าน${ch(['ร้านของเก่า','คลังสมบัติของขุนนาง','มือของจอมยุทธ์แปลกหน้า'])} แล้วได้ยินเสียงหึ่ง — <b>${n}</b> อาวุธคู่กายของคุณ ${P.w>1?`รอคุณมาแล้ว ${P.w} ชาติ`:'ที่หายไปพร้อมร่างเก่า'} กำลังสั่นอยู่ในฝัก`,[
+  {t:'🖐️ ยื่นมือเรียกชื่อมัน',s:'ใช้ปัญญา · สำเร็จมันจะพุ่งมาหาเอง',f(){if(roll01(.4+(S.int||0)/300+P.w*.05)){emWpGet();}else{S.fame-=Math.min(S.fame,20);log(`🖐️ ไม่มีอะไรเกิดขึ้น คนรอบตัวหัวเราะ — แต่${n}สั่นแรงกว่าเดิม`)}}},
+  {t:'💰 ซื้อคืน',s:'เสียเงินก้อนใหญ่ · ได้แน่นอน',f(){const c=Math.round(Math.max(500,S.money*.35));if(S.money<c*.5){log('💰 เงินไม่พอ เจ้าของยิ้มเยาะ');return}S.money=Math.max(0,S.money-c);emWpGet()}},
+  {t:'⚔️ ชิงมาด้วยกำลัง',s:'ดวล · กรรมลบ',f(){duel('ผู้ครอบครอง'+P.n,Math.round(total()*.9),w=>{if(w){S.karma-=5;emWpGet()}else S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.25))})}}])}
+function emWpGet(){const E=S.em,P=E.wp;P.got=1;S.power+=Math.round(E.pk*.04*P.w);bigFx(P.n,`รอเจ้ามา ${P.w} ชาติ`,'#ffb347');log(`🗡️ <b>${esc(P.n)}</b> พุ่งเข้ามือเหมือนไม่เคยห่างกัน — พลัง +${fmt(Math.round(E.pk*.04*P.w))}`,'myth');keyAdd(`ได้${P.n}คืนหลังรอมา ${P.w} ชาติ`)}
+// 👑 วันสิ้นรัชกาล
+function emFinal(){const E=S.em;E.fnY=S.age;const k=Math.min(7,E.n);
+ choice('👑 วันสิ้นรัชกาล',`คืนนี้ไม่มีดวงจันทร์ คุณยืนอยู่กลางลานศิลา รอบตัวมีเงา ${k} ร่าง — <b>คุณทุกชาติ</b> แต่ละคนถือฉายาของชาติตัวเอง${E.ttl&&E.ttl.length?`<br>${E.ttl.slice(0,k).map(t=>TTL[t][0]+' '+TTL[t][1]).join(' · ')}`:''}<br>"ถ้าจะก้าวพ้นการเกิดและตาย ต้องผ่านพวกเราทุกคน"`,[
+  {t:`⚔️ สู้กับตัวเองทุกชาติ (${k} ศึก)`,s:'แพ้ศึกใดศึกหนึ่ง = ต้องรอใหม่ 5 ปี',noFate:true,f(){let i=0;const nx=()=>{if(i>=k)return later(emFinWin);const t=E.ttl&&E.ttl[i];duel(`เงาชาติที่ ${i+1}${t?' '+TTL[t][1]:''}`,Math.round(E.pk*(.55+i*.09)),w=>{if(w){i++;log(`👑 เงาชาติที่ ${i} สลาย${i<k?` — อีก ${k-i} ร่างก้าวเข้ามา`:''}`,'epic');later(nx)}else{S.hp=Math.max(5,Math.round(S.hp*.3));log(`👑 คุณล้มลงต่อหน้าเงาชาติที่ ${i+1} — เงาทุกร่างหายไป รอคืนไร้จันทร์ครั้งหน้า`,'bad')}})};duel._raw=1;try{nx()}finally{duel._raw=0}}},
+  {t:'⏳ ยังไม่ใช่คืนนี้',s:'กลับมาใหม่ใน 5 ปี',skip:true,f(){}}])}
+function emFinWin(){const E=S.em;
+ choice('👑 ผู้อยู่เหนือการเกิดและตาย','เงาร่างสุดท้ายคุกเข่า แล้วทุกร่างหลอมรวมเข้ามาในตัวคุณ ความทรงจำทุกชาติเรียงเป็นเส้นเดียว — คุณไม่ต้องตายเพื่อเริ่มใหม่อีกแล้ว',[
+  {t:'🌌 ก้าวข้ามวงจรไปเลย',s:'ฉากจบสูงสุดของสายนี้',noFate:true,f(){S.flags.emFinal=1;keyAdd('ชนะตัวเองทุกชาติ — ก้าวพ้นการเกิดและตาย');bigFx('ผู้อยู่เหนือการเกิดและตาย','ไม่มีชาติหน้า เพราะไม่จำเป็นต้องมี','#ffd34d');setTimeout(()=>dieBy('ชนะตัวเองทุกชาติในวันสิ้นรัชกาล ก้าวพ้นวงจรการเกิดและตาย กลายเป็นผู้อยู่เหนือการเกิดและตาย'),1600)}},
+  {t:'🏯 อยู่ต่อในโลกนี้',s:'อายุขัย +300 · พลังทุกชาติรวมเป็นหนึ่ง · ปิดทางเกิดใหม่',f(){S.flags.emFinal=1;S.flags.emStay=1;E.lock=1;S.lifespan+=300;S.power+=Math.round(E.pk*.5);S.rcap=rawRealm();S.fame+=fameR(800);keyAdd('ชนะตัวเองทุกชาติ แล้วเลือกอยู่ต่อในโลกนี้');bigFx('ราชันผู้ไม่สิ้นรัชกาล','','#ffd34d');log('🏯 คุณเดินออกจากลานศิลาตอนรุ่งสาง — ไม่มีอะไรในโลกนี้ที่คุณต้องกลัวอีก','myth')}}])}
+
 // ---------------- ต่อเข้าระบบเดิม ----------------
 {const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive){ftYear();emYear()}}catch(e){console.error('blk16',e)}return r}}
 function ftYear(){if(!ok()||S.age<14)return;let T=S.ft;
@@ -36300,6 +36370,8 @@ function ftYear(){if(!ok()||S.age<14)return;let T=S.ft;
  if(!T.path){if(S.age-(T.re||0)>=3){T.re=S.age;go(ftFirst)}return}
  const dk=(S.karma||0)-T.k0;T.k0=S.karma||0;const nk=Math.max(0,(S.kids||0)-T.kd);T.kd=S.kids||0;
  T.hum=cl(Math.round(T.hum+cl(dk*.25,-6,6)+nk*2),0,100);T.bd=Math.max(0,T.bd-3);T.sus=Math.max(0,T.sus-1);
+ if(!T.rv&&!T.rvD&&T.dr>=3&&Math.random()<.06){T.rvD=1;const pe=peers.filter(p=>p&&p.alive&&p.age>=14);T.rv={n:pe.length?ch(pe).name:anyName(S.gender==='ชาย'?'หญิง':'ชาย'),p:Math.round(total()*.95),st:0};log(`🌑 มีข่าวลือถึงจอมยุทธ์ชื่อ <b>${esc(T.rv.n)}</b> ที่จู่ๆ ก็เก่งขึ้นแบบไม่มีใครอธิบายได้ — คุณรู้สึกขนลุกโดยไม่รู้สาเหตุ`,'bad')}
+ if(T.rv)T.rv.p=Math.round(T.rv.p*1.03);
  if(T.path==='rx'&&T.sy>=20)S.power+=Math.round(REALMS[Math.min(REALMS.length-1,realmIdx())].p*.004*ftPw(T))+2;
  if(T.bd>=60&&Math.random()<.3){S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.08));log(`📡 ร่างกายสึกจากสายใยหมื่นปี มือสั่นและเลือดกำเดาไหล (${Math.round(T.bd)}%)`)}
  let ev=null;
@@ -36308,6 +36380,8 @@ function ftYear(){if(!ok()||S.age<14)return;let T=S.ft;
  else if(T.hum<=6&&T.sy>=70&&Math.random()<.5)ev=ftPulled;
  else if(T.path==='seek'&&T.cl>=3&&!T.who)ev=(S.em&&S.em.n>=1&&Math.random()<.6)?ftPrev:ftReveal;
  else if(T.dr>=4&&!T.lg&&Math.random()<.35)ev=ftLegend;
+ else if(T.sc&&S.age>=35&&S.age-(T.scQ||-99)>=8&&(S.kids||(S.em&&S.em.ally)||(S.faction&&S.rank>=2))&&Math.random()<.3)ev=ftScript;
+ else if(T.rv&&S.age-(T.rvY||-99)>=3&&Math.random()<.35){T.rvY=S.age;ev=ftRv}
  else if(T.sus>=40&&Math.random()<.3)ev=ftSus;
  else if(T.sy>=30&&S.age-(T.deal||-99)>=15&&Math.random()<.12)ev=ftDeal;
  else if(T.sy>=15&&T.hum<45&&Math.random()<.1)ev=ftEdit;
@@ -36324,9 +36398,12 @@ try{const add=(cat,arr)=>{const c=ACH.find(x=>x[0]===cat);if(!c)return;arr.forEa
   {id:'em_re',n:'จักรพรรดิผู้ตั้งใจตาย',d:'ตายด้วยเจตนาที่คอขวดแล้วเกิดใหม่พร้อมความทรงจำ',r:2,c:()=>!!(S.em&&S.em.n>=1)},
   {id:'em_sh',n:'ผู้ชนะตัวเอง',d:'ผ่านเงาของตัวเองในชาติก่อนที่คอขวด',r:3,c:()=>!!(S.flags.emShadow||S.flags.emShadow2)},
   {id:'em_love',n:'ด้ายแดงข้ามความตาย',d:'คนรักจากชาติก่อนจำคุณได้',r:3,c:()=>!!S.flags.emLove},
+  {id:'ft_loop',n:'ผู้แต่งคัมภีร์ที่ตัวเองยืมมา',d:'ปิดวงจรเวลาด้วยการเขียนคัมภีร์จากอนาคต',r:3,c:()=>!!S.flags.ft_loop},
+  {id:'ft_rv',n:'ผู้ลบอนาคตของศัตรู',d:'ชนะศึกตัวแทนข้ามเวลา',r:3,c:()=>!!(S.flags.ft_rv||S.flags.ft_rv2)},
+  {id:'em_fin',n:'ผู้อยู่เหนือการเกิดและตาย',d:'ชนะตัวเองทุกชาติในวันสิ้นรัชกาล',r:3,c:()=>!!S.flags.emFinal},
   {id:'em_3',n:'ผู้ทะลวงด้วยหลายชาติ',d:'ทะลวงคอขวดด้วยความทรงจำจากการเกิดใหม่หลายครั้ง',r:3,c:()=>!!S.flags.emTrans}])}catch(e){}
-try{TTL_SP.splice(3,0,['ftbloom',()=>S.flags.ft_bloom,'ผู้เปลี่ยนอนาคตหมื่นปี'],['emtrans',()=>S.flags.emTrans,'จักรพรรดิผู้ทะลวงด้วยหลายชาติ'])}catch(e){}
-window._blk16={emPack,emShadow,emThief,emLove,emGold,ftLegend,ftPrev,ftYear,emYear,ftFirst,ftDream,ftDeal,ftEdit,ftSus,ftCollapse,ftBloom,ftPulled,ftReveal,emOffer,emWay,emRebirth,emForce,emTrans,emLegacy,emTomb,emFoe,emAlly,emMem,ftBorrow,ftTalk,FT0,EM0};
+try{TTL_SP.splice(3,0,['ftbloom',()=>S.flags.ft_bloom,'ผู้เปลี่ยนอนาคตหมื่นปี'],['emtrans',()=>S.flags.emTrans,'จักรพรรดิผู้ทะลวงด้วยหลายชาติ'],['emfin',()=>S.flags.emFinal,'ผู้อยู่เหนือการเกิดและตาย'],['ftloop',()=>S.flags.ft_loop,'ผู้แต่งคัมภีร์จากหมื่นปี'])}catch(e){}
+window._blk16={ftScroll,ftScript,ftRv,emThrone,emWeapon,emFinal,emFinWin,ttlOf,TTL,bigFx,emPack,emShadow,emThief,emLove,emGold,ftLegend,ftPrev,ftYear,emYear,ftFirst,ftDream,ftDeal,ftEdit,ftSus,ftCollapse,ftBloom,ftPulled,ftReveal,emOffer,emWay,emRebirth,emForce,emTrans,emLegacy,emTomb,emFoe,emAlly,emMem,ftBorrow,ftTalk,FT0,EM0};
 }catch(e){console.error('block16',e)}})();
 
 // ===================== 🌍 ชุดตกแต่งตามโลก 9 ชุด (กรอบ+ฉายา+ธีมแชท) + 🔥 ลดราคาประจำวัน · อยู่ในแท็บ "ยุคปัจจุบัน" =====================
