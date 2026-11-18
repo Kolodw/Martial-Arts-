@@ -41392,6 +41392,23 @@ function bounty(v){const ep=total()*(.9+Math.random()*.4+Math.min(.4,v/1500));
  {t:'🏃 หลบหนี',s:'ชื่อเสียง −10 · เจ็บเล็กน้อย',skip:true,f(){S.fame=Math.max(0,S.fame-10);S.hp-=Math.round(S.maxHp*.05);log('🏃 คุณหนีออกนอกเมืองกลางดึก','bad')}}])}
 window._infamy={sync,tier,bounty};
 })()}catch(e){console.error('infamy block',e)}
+
+// ===================== แก้: เควสระบบ "ปิดด่าน" ถูกสุ่มให้ในโลกที่ปิดด่านไม่ได้ (โลกมนุษย์/ร่างสัตว์) =====================
+try{(()=>{
+const can=()=>{try{return secAvail()&&secRem()>5}catch(e){return false}};
+QOK.secl=()=>can();
+function purge(){try{const s=S&&S.sys;if(!s||!S.alive||!Array.isArray(s.quests)||can())return;
+ const bad=s.quests.filter(q=>q&&q.k==='secl');if(!bad.length)return;
+ s.quests=s.quests.filter(q=>!(q&&q.k==='secl'));
+ try{sysLog('📋 เควสปิดด่านถูกยกเลิกโดยไม่เสียแต้ม — ปิดด่านข้ามเวลาใช้ได้เฉพาะในโลกเซียน')}catch(e){log('📋 เควสปิดด่านถูกยกเลิกโดยไม่เสียแต้ม — ปิดด่านข้ามเวลาใช้ได้เฉพาะในโลกเซียน','sys')}
+ }catch(e){console.error('purge',e)}}
+{const _py=passYear;passYear=function(){purge();const r=_py.apply(this,arguments);purge();return r}}
+{const _sw=sysQSweep;sysQSweep=function(){purge();return _sw.apply(this,arguments)}}
+{const _os=openSys;openSys=function(){purge();const r=_os.apply(this,arguments);try{
+ const s=S.sys;if(!s||!can())return r;const m=$('modal');if(!m)return r;
+ const boxes=[...m.querySelectorAll('.sysq')];s.quests.forEach((q,i)=>{if(q.k!=='secl'||!boxes[i]||boxes[i].querySelector('.secBtn'))return;
+  const n=Math.max(1,Math.min(secRem(),Math.ceil(q.g-qProg(q))));const b=document.createElement('button');b.className='sysb secBtn';b.textContent='🧘 ปิดด่าน '+n+' ปี';b.onclick=()=>{try{closeM()}catch(e){}secGo(n)};boxes[i].querySelector('b').after(' ',b)})}catch(e){}return r}}
+})()}catch(e){console.error('block secl',e)}
 </script>
 </body>
 </html>
