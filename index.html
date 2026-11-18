@@ -19436,7 +19436,7 @@ function rgFate(c){const G=S.rg,P=rgPx(c.ev),kn=!!G.know[c.ev],nm=`<b>${esc(c.n)
  const easy=c.deja>=2?.2:0,rvT=rv?`<br><span class="tag2" style="color:#ff6a8a">⚠️ ${esc(G.rv.n)} — ผู้ย้อนกาลอีกคน — มาถึงก่อนคุณ ทุกอย่างยากขึ้น</span>`:'';
  const O=[{t:'🙈 ปล่อยไปตามชะตา',skip:true,f(){lose()}}];
  const go=(foresee)=>{const ok=foresee?rgForeOK():true;if(foresee&&!ok)log('😶 ความทรงจำสับสน — นี่รอบไหนกันแน่? คุณจำเหตุการณ์ผิดไป','bad');const fs=foresee&&ok;
-  if(P[5]==='duel'){duel(c.ev==='duel'?'ทายาทตระกูลใหญ่':c.ev==='tide'?'ราชาอสูรผู้นำกระแส':c.ev==='cult'?'ผู้นำลัทธิมาร':c.ev==='assassin'?'มือสังหารยามวิกาล':c.ev==='bandit'?'หัวหน้ากองโจรภูผาดำ':'ผู้พิทักษ์ถ้ำต้องสาป',Math.round(total()*(P[6]-(fs?.35:0)+(rv?.15:0)-easy)),w=>{if(w){S.fame+=40;if(c.ev==='cave'){const a=newArt(Math.min(4,2+Math.floor(realmIdx()/3)));Array.prototype.push.call(S.arts,a);log(`🗝️ ในถ้ำมี ${artHtml(a)}`,'epic')}save(fs?P[4]:'คุณสู้แทนเขาจนชนะ')}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.35));lose()}learn()});return}
+  if(P[5]==='duel'){duel(c.ev==='duel'?'ทายาทตระกูลใหญ่':c.ev==='tide'?'ราชาอสูรผู้นำกระแส':c.ev==='cult'?'ผู้นำลัทธิมาร':c.ev==='assassin'?'มือสังหารยามวิกาล':c.ev==='bandit'?'หัวหน้ากองโจรภูผาดำ':'ผู้พิทักษ์ถ้ำต้องสาป',Math.round(total()*(P[6]-(fs?.35:0)+(rv?.15:0)-easy)),w=>{if(w){S.fame+=40;if(c.ev==='cave'){const a=newArt(Math.min(4,2+Math.floor(realmIdx()/3)));Array.prototype.push.call(S.arts,a);log(`🗝️ ในถ้ำมี ${artHtml(a)}`,'epic')}save(fs?P[4]:'คุณสู้แทนเขาจนชนะ')}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.35));if(!c.rt){c.rt=1;c.ea=S.age+1;delete G.seen['f'+c.ev];log(`🩸 คุณแพ้ แต่${nm}ยังไม่ตาย — เขาบาดเจ็บสาหัส ปีหน้ายังมีโอกาสช่วยอีกครั้ง`,'bad',true)}else lose()}learn()});return}
   let p=0;if(P[5]==='int')p=Math.min(.9,P[6]+S.int/500);else if(P[5]==='karma')p=Math.min(.9,.25+Math.max(0,S.karma)/(P[6]*8));else if(P[5]==='money'){const cst=Math.round(sxBiz()*P[6]);if(S.money>=cst){S.money-=cst;p=.85}else p=.15}else if(P[5]==='herb')p=G.herb?1:.15;
   if(fs)p=Math.min(.97,p+.45);if(rv)p*=.6;p=Math.min(.97,p+easy);if(Math.random()<p){if(P[5]==='karma')S.karma+=10;save(fs?P[4]:'คุณช่วยไว้ได้อย่างหวุดหวิด')}else lose();learn()};
  if(kn)O.unshift({t:`🔮 ${P[4]}`,s:'ใช้ความรู้จากรอบก่อน'+(rgFat()>=50?' · จิตล้า อาจจำผิด 20%':''),f(){go(true)}});
@@ -19460,9 +19460,9 @@ rgYear=function(){if(!rgOn()||!S.alive)return false;const G=S.rg;if(G.v!==2){rgI
  for(const c of G.comp){const k1='m'+c.ev,k2='f'+c.ev;if(!G.seen[k1]&&S.age>=c.ma){G.seen[k1]=1;if(rgMeet(c))return true}if(!G.seen[k2]&&S.age>=c.ea){G.seen[k2]=1;if(rgFate(c))return true}}
  G.fr.forEach((f,i)=>{if(!G.seen['r'+i]&&S.age>=f.a){G.seen['r'+i]=1;rgFrag(f,i)}});
  // ผู้ย้อนกาลอีกคน
- if(rgRvOn()&&!G.seen.rv&&S.age>=G.rvY){G.seen.rv=1;choice('😈 ผู้ย้อนกาลอีกคน',`<b>${esc(G.rv.n)}</b> ยืนขวางทาง ยิ้มเยาะ "ข้าก็จำได้เหมือนกัน — รอบนี้ของทุกอย่างเป็นของข้า"<br><span class="tag2">ชนะแล้วเขาจะไม่ยุ่งกับเหตุการณ์ที่เหลือของรอบนี้ · ชนะครบ 3 รอบ เขาจะหยุดตลอดไป</span>`,[{t:'⚔️ สู้',s:'ดวลจริง',f(){duel(G.rv.n,Math.round(total()*1.15),w=>{if(w){G.rvBeat=1;G.rv.beat=(G.rv.beat||0)+1;S.fame+=80;log(`😈 ${esc(G.rv.n)} พ่ายแพ้ (${G.rv.beat}/3) ${G.rv.beat>=3?'— เขาหัวเราะเศร้าๆ "ข้าเหนื่อยแล้ว" แล้วหายไปจากวงจร':'"รอบหน้าข้าจะมาเร็วกว่านี้"'}`,'myth',true)}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));log('😈 เขาหัวเราะแล้วจากไป — รอบนี้เขาจะป่วนทุกอย่าง','bad')}})}},{t:'🏃 หลบ',skip:true,f(){}}]);return true}
+ if(rgRvOn()&&!G.seen.rv&&S.age>=G.rvY){G.seen.rv=1;choice('😈 ผู้ย้อนกาลอีกคน',`<b>${esc(G.rv.n)}</b> ยืนขวางทาง ยิ้มเยาะ "ข้าก็จำได้เหมือนกัน — รอบนี้ของทุกอย่างเป็นของข้า"<br><span class="tag2">ชนะแล้วเขาจะไม่ยุ่งกับเหตุการณ์ที่เหลือของรอบนี้ · ชนะครบ 3 รอบ เขาจะหยุดตลอดไป</span>`,[{t:'⚔️ สู้',s:'ดวลจริง',f(){duel(G.rv.n,Math.round(total()*1.15),w=>{if(w){G.rvBeat=1;G.rv.beat=(G.rv.beat||0)+1;S.fame+=80;log(`😈 ${esc(G.rv.n)} พ่ายแพ้ (${G.rv.beat}/3) ${G.rv.beat>=3?'— เขาหัวเราะเศร้าๆ "ข้าเหนื่อยแล้ว" แล้วหายไปจากวงจร':'"รอบหน้าข้าจะมาเร็วกว่านี้"'}`,'myth',true)}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));if(!G.rvRt){G.rvRt=1;delete G.seen.rv;G.rvY=S.age+2;log('😈 เขาหัวเราะแล้วจากไป "อีกสองปีข้าจะมาใหม่" — ยังมีโอกาสแก้มือ','bad',true)}else log('😈 เขาหัวเราะแล้วจากไป — รอบนี้เขาจะป่วนทุกอย่าง','bad')}})}},{t:'🏃 หลบ',skip:true,f(){}}]);return true}
  // ตอนจบ
- const all=G.comp.every(c=>c.saved);if(all&&!G.offer&&realmIdx()>=5&&S.age<=50){G.offer=1;rgEscapeOffer();return true}
+ const all=G.comp.every(c=>c.saved);if(all&&!G.offer&&realmIdx()>=5){G.offer=1;rgEscapeOffer();return true}
  if(!all&&!G.hint&&G.comp.filter(c=>c.found).every(c=>c.saved)&&G.comp.some(c=>c.found)){G.hint=1;log(`💭 คืนนั้นคุณฝันเห็นดวงไฟ ${G.n} ดวง แต่ในมือคุณมีแค่ ${sv} — ยังมีเพื่อนร่วมชะตาที่คุณยังไม่รู้จัก`,'epic')}
  if(Object.keys(G.frag).length>=7&&!G.brk&&S.age>=30&&Math.random()<.35){rgBreaker();return true}
  if(realmIdx()>=7&&!G.lonely&&!all){G.lonely=1;choice('👑 จุดสูงสุดของคนเดียว','คุณมาถึงจุดสูงสุดของโลกนี้แล้ว — แม้เพื่อนร่วมชะตาจะไม่อยู่ครบ ฟ้ายอมให้คุณออกจากวงจรได้',[{t:'👑 ออกจากวงจรคนเดียว',s:'ฉายาราชันผู้โดดเดี่ยว · รางวัลน้อยกว่าแบบผู้พิทักษ์',f(){rgEnd('lonely')}},{t:'⏳ ยังไม่ไป รอช่วยทุกคน',skip:true,f(){}}]);return true}
@@ -26905,7 +26905,7 @@ window.rgLetGo=function(){const G=S&&S.rg;if(!G||G.free||G.loop<10)return;closeM
 const _ry=rgYear;rgYear=function(){const G=S&&S.rg;try{insSet();if(rgOn()&&S.alive&&G&&G.v===2&&G.awake){
   const all=G.comp.every(c=>c.saved),sv=G.comp.filter(c=>c.saved).length;
   if(G.loop>=8){
-   if(!all&&sv>=NC()-1&&!G.offer&&realmIdx()>=5&&S.age<=50&&gate('protector')){G.offer=1;choice('🌅 ประตูนอกวงจร','เพื่อนร่วมชะตาเกือบทุกคนรอดแล้ว มีเพียงคนเดียวที่ช่วยไม่ทัน — แต่ฟ้าเห็นความพยายามของคุณมาแปดรอบ จึงเปิดประตูให้ <b>ครั้งนี้ครั้งเดียว</b>',[{t:'🌅 ก้าวผ่าน (ผู้พิทักษ์)',s:'จบวงจร · รางวัลใหญ่',f(){rgEnd('protector')}},{t:'⏳ ยังไม่ไป',skip:true,f(){S.rg.offer=0}}]);return true}
+   if(!all&&sv>=NC()-1&&!G.offer&&realmIdx()>=5&&gate('protector')){G.offer=1;choice('🌅 ประตูนอกวงจร','เพื่อนร่วมชะตาเกือบทุกคนรอดแล้ว มีเพียงคนเดียวที่ช่วยไม่ทัน — แต่ฟ้าเห็นความพยายามของคุณมาแปดรอบ จึงเปิดประตูให้ <b>ครั้งนี้ครั้งเดียว</b>',[{t:'🌅 ก้าวผ่าน (ผู้พิทักษ์)',s:'จบวงจร · รางวัลใหญ่',f(){rgEnd('protector')}},{t:'⏳ ยังไม่ไป',skip:true,f(){S.rg.offer=0}}]);return true}
    if(FR()>=7&&!G.brk&&S.age>=30&&gate('breaker')){rgBreaker();return true}
    if(S.age%6===0&&!G.seen['pt'+S.age]){G.seen['pt'+S.age]=1;const i=(G.fr||[]).findIndex((f,k)=>!G.frag[k]);if(i>=0)log(`💭 ความทรงจำรอบที่ผ่านมากระซิบ: ยังขาดเศษปริศนา「${G.fr[i].t}」`,'epic')}}
   if(G.loop>=10&&!G.seen['lg'+G.loop]&&S.age>=25){G.seen['lg'+G.loop]=1;G.seen['lgq']=1;choice('🍃 เสียงจากส่วนลึก',`คุณเวียนว่ายมา ${G.loop} รอบ จิตเริ่มล้า — จะปล่อยวางตอนนี้ก็ได้ (ตอนจบที่ 4) หรือสู้ต่อ · เปิดเมนู 🔁 วงจรย้อนกาล ได้ทุกเมื่อ`,[{t:'🍃 ปล่อยวาง จบวงจร',s:'รางวัลปานกลาง · ย้อนกลับไม่ได้',f(){rgEnd('letgo')}},{t:'⏳ ยังสู้ต่อ',skip:true,f(){}}]);return true}
@@ -26918,7 +26918,7 @@ const _or=openRegress;openRegress=function(){const r=_or.apply(this,arguments);t
  let h;
  if(G.free)h=`<div class="item rgRoad"><b>🏁 วงจรสิ้นสุดแล้ว</b></div>`;
  else h=`<div class="item rgRoad" style="border-left:4px solid #ffd040"><b>🧭 เส้นทางสู่ตอนจบ</b> <span class="tag2">รอบที่ ${G.loop} · ปกติจบใน 6–12 รอบ</span>
- ${row('🌅','ผู้พิทักษ์',false,`เพื่อนรอด ${sv}/${n}${pity?' (รอบ 8+ พลาดได้ 1 คน)':''} · ขั้น ${ri}/5 · อายุ ≤50 (ตอนนี้ ${S.age}) · รอบ ${G.loop}/${RG_MIN.protector} · เข้าใจ ${G.ins||0}/${RG_INS.protector}`)}
+ ${row('🌅','ผู้พิทักษ์',false,`เพื่อนรอด ${sv}/${n}${pity?' (รอบ 8+ พลาดได้ 1 คน)':''} · ขั้น ${ri}/5 · รอบ ${G.loop}/${RG_MIN.protector} · เข้าใจ ${G.ins||0}/${RG_INS.protector}`)}
  ${row('🔓','ผู้ทำลายวงจร',false,`เศษปริศนา ${fr}/7 · อายุ ≥30 · รอบ ${G.loop}/${RG_MIN.breaker} · เข้าใจ ${G.ins||0}/${RG_INS.breaker}${pity?' · เกิดแน่นอนเมื่อครบ':' · ลุ้น 35%/ปี'}`)}
  ${row('👑','ราชันผู้โดดเดี่ยว',ri>=7,`ขั้น ${ri}/7 · รอบ ${G.loop}/${RG_MIN.lonely} · เข้าใจ ${G.ins||0}/${RG_INS.lonely}`)}
  ${row('🍃','ผู้ปล่อยวาง',G.loop>=10,G.loop>=10?'พร้อมแล้ว':`เปิดที่รอบ 10 (ตอนนี้ ${G.loop})`)}${G.loop>=10?`<div class="brow"><button class="pbtn" onclick="rgLetGo()">🍃 ปล่อยวางตอนนี้</button></div>`:''}
@@ -41320,6 +41320,50 @@ ev(6,0,s=>s&&s.alive&&!s.sys&&!s.sysRefused&&(!s.ch||s.ch==='normal')&&s.age>=6&
 window._sysx={D,X,upgrade,milestone,chapter,ending,glitch,reboot,slots};
 })()}catch(e){console.error('blockSYSX',e)}
 
+
+// ============================================================
+// BLOCK 42: 🔁 ผู้ย้อนกาล — เช็คเงื่อนไขก่อนเกิดเหตุการณ์ · ไม่ปิดประตูทิ้ง · แพ้แล้วแก้มือได้ · บอกว่าขาดอะไร
+// ============================================================
+try{(()=>{
+if(typeof rgYear!=='function'||typeof RG_INS==='undefined'||typeof RG_MIN==='undefined')return;
+const NM={protector:'🌅 ผู้พิทักษ์',lonely:'👑 ราชันผู้โดดเดี่ยว',breaker:'🔓 ผู้ทำลายวงจร'};
+const rdy=k=>{const G=S.rg;return G.loop>=(RG_MIN[k]||1)&&(G.ins||0)>=(RG_INS[k]||0)};
+const need=k=>{const G=S.rg,a=[];if(G.loop<RG_MIN[k])a.push(`ต้องผ่านอย่างน้อย ${RG_MIN[k]} รอบ (ตอนนี้รอบที่ ${G.loop})`);if((G.ins||0)<RG_INS[k])a.push(`ความเข้าใจวงจร ${G.ins||0}/${RG_INS[k]}`);return a.join(' · ')};
+// ความเข้าใจที่ได้ในรอบนี้นับทันที ไม่ต้องรอตาย
+function insLive(G){try{G.ins=G.ins||0;G.insK=G.insK||{};const K=G.insK;let add=0;const got=(k,v)=>{if(!K[k]){K[k]=1;add+=v}};
+ (G.comp||[]).forEach((c,i)=>{if(c.found)got('f'+i,3);if(c.saved)got('s'+i,4)});Object.keys(G.frag||{}).forEach(i=>got('g'+i,4));if(G.rv&&(G.rv.beat||0)>0)got('rv'+G.rv.beat,5);
+ if(G.loop>=10&&!G.seen.insB){G.seen.insB=1;const b=5+(G.loop-10)*2;add+=b;log(`🧠 วนมา ${G.loop} รอบ ความเหนื่อยล้ากลายเป็นความเข้าใจ +${b}`,'sys')}
+ if(add){G.ins+=add;log(`🧠 <b>ความเข้าใจวงจร +${add}</b> (รวม ${G.ins}) — สิ่งที่ค้นพบในรอบนี้นับทันที`,'sys')}}catch(e){}}
+window.rgInsLive=insLive;
+{const _ry=rgYear;rgYear=function(){let G=null;try{G=S&&S.rg;if(rgOn()&&S.alive&&G&&G.v===2&&G.awake){G.seen=G.seen||{};insLive(G);G.hold=G.hold||{};const H=G.hold;
+  // ปล่อยของที่กักไว้เมื่อพร้อมแล้ว
+  if(H.protector&&rdy('protector')){H.protector=0;G.offer=0}if(H.breaker&&rdy('breaker')){H.breaker=0;G.brk=0}if(H.lonely&&rdy('lonely')){H.lonely=0;G.lonely=0}
+  const all=G.comp.every(c=>c.saved),fr=Object.keys(G.frag||{}).length;
+  const hold=(k,cond,set)=>{if(cond&&!rdy(k)&&!H[k]){H[k]=1;set();if(!G.seen['hh'+k]){G.seen['hh'+k]=1;log(`⏳ ${NM[k]} — คุณทำเงื่อนไขครบแล้ว แต่วงจรยังไม่ยอมปล่อย: ${need(k)} · ประตูจะรออยู่ ไม่หายไปไหน`,'myth',true)}}};
+  hold('protector',all&&realmIdx()>=5&&!G.offer,()=>{G.offer=1});
+  hold('breaker',fr>=7&&S.age>=30&&!G.brk,()=>{G.brk=1});
+  hold('lonely',realmIdx()>=7&&!all&&!G.lonely,()=>{G.lonely=1});
+ }}catch(e){console.error('b42',e)}
+ const r=_ry.apply(this,arguments);if(r)return r;
+ try{G=S&&S.rg;if(rgOn()&&S.alive&&G&&G.v===2&&G.awake&&!choice._cur){
+  // เศษปริศนาที่ยังอ่อนแอเกิน: ลองใหม่ทุกปี
+  (G.fr||[]).forEach((f,i)=>{if(!G.frag[i]&&G.seen['r'+i]&&S.age>=f.a)try{rgFrag(f,i)}catch(e){}});
+  // ผู้เฝ้ากาลมาแน่นอนเมื่อพร้อม
+  if(Object.keys(G.frag||{}).length>=7&&S.age>=30&&!G.brk&&rdy('breaker')&&!choice._cur){rgBreaker();return true}
+ }}catch(e){console.error('b42b',e)}return r}}
+{const _sl=rgStartLoop;rgStartLoop=function(){const r=_sl.apply(this,arguments);try{const G=S.rg;if(G&&G.v===2){G.rvRt=0;G.hold={};(G.comp||[]).forEach(c=>{c.rt=0})}}catch(e){}return r}}
+// ตอนดวลอยู่ ห้ามเหตุการณ์อื่นเด้งทับหน้าดวล
+{const _c=choice;const nc=function(t,x,o){try{if(typeof DU!=='undefined'&&DU&&!auto&&S&&S.alive){if(!choice._q)choice._q=[];choice._q.push([t,x,o,S]);return}}catch(e){}return _c.apply(this,arguments)};for(const k in _c)nc[k]=_c[k];choice=nc}
+{const _de=duelEnd;duelEnd=function(){const r=_de.apply(this,arguments);try{setTimeout(()=>{try{if(!(typeof DU!=='undefined'&&DU)&&!choice._cur&&typeof chDeq==='function')chDeq()}catch(e){}},900)}catch(e){}return r}}
+// หน้าวงจร: บอกว่ายังขาดอะไร
+{const _or=openRegress;openRegress=function(){try{if(S&&S.rg&&S.rg.v===2&&!S.rg.free)insLive(S.rg)}catch(e){}const r=_or.apply(this,arguments);try{const G=S.rg,m=$('modal');if(!m||m.dataset.k!=='regress'||!G||G.v!==2||G.free)return r;const box=m.querySelector('.rgRoad');if(!box||box.querySelector('.rgMiss'))return r;
+ const L=[],nf=G.comp.filter(c=>!c.found).length,fr=G.fr||[];
+ if(nf&&G.loop>=3)L.push(`👥 ยังมีเพื่อนร่วมชะตาที่คุณยังไม่รู้จัก <b>${nf} คน</b> — สังเกตคนแปลกหน้าที่ทำอะไรแบบคนโลกเดิม (ช่วงอายุ ${Math.min(...G.comp.filter(c=>!c.found).map(c=>c.ma))}+) แล้วเลือก "ทักด้วยภาษาโลกเดิม"`);
+ const un=G.comp.filter(c=>c.found&&!c.saved);if(un.length)L.push(`🌱 ยังไม่รอดในรอบนี้: ${un.map(c=>esc(c.n)+(c.dead?' (ตายแล้ว)':'')).join(', ')}`);
+ fr.forEach((f,i)=>{if(!G.frag[i])L.push(`🧩「${esc(f.t)}」 อายุ ${f.a}+ · ${f.need===0?'ไม่มีเงื่อนไข':f.need===1?'ต้องถึงขั้น '+REALMS[3].n:'ต้องถึงขั้น '+REALMS[5].n+' หรือปัญญา 150'}`)});
+ ['protector','breaker','lonely'].forEach(k=>{if(!rdy(k))L.push(`${NM[k]}: ${need(k)}`)});
+ box.insertAdjacentHTML('beforeend',`<div class="rgMiss" style="margin-top:6px;padding-top:6px;border-top:1px dashed #fff3"><b>📋 ยังขาดอะไรอยู่</b><div class="tag2" style="line-height:1.7">${L.length?L.join('<br>'):'ครบทุกเงื่อนไขแล้ว — ประตูจะเปิดในปีถัดไป'}</div><span class="tag2">ประตูที่ทำเงื่อนไขครบแล้วจะไม่ปิดหาย · แพ้ดวลสำคัญได้แก้มือ 1 ครั้งต่อรอบ</span></div>`)}catch(e){console.error(e)}return r}}
+})()}catch(e){console.error('block42',e)}
 </script>
 </body>
 </html>
