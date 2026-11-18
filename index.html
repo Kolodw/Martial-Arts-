@@ -40582,10 +40582,10 @@ a_p5(x,t){x.fillStyle=lg(x,0,W,[[0,'#081a2e'],[1,'#17406a']]);x.fillRect(0,0,W,W
 
 Object.assign(DRAW,HI);const isHi=id=>!!HI[id];
 const paint=(cv,id,t)=>{const ctx=cv.getContext('2d');ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=!!HI[id];if(HI[id])ctx.setTransform(cv.width/240,0,0,cv.width/240,0,0);ctx.globalAlpha=1;ctx.lineCap='butt';ctx.shadowBlur=0;try{DRAW[id](ctx,t)}catch(e){}ctx.globalAlpha=1};
-const tick=()=>{const t0=performance.now()/1000;live.forEach(o=>{if(!o.cv.isConnected){live.delete(o);return}const b=o.cv.getBoundingClientRect();if(b.bottom<0||b.top>innerHeight)return;paint(o.cv,o.id,t0)});if(!live.size&&tm){clearInterval(tm);tm=null}};
+const tick=()=>{if(document.hidden)return;const t0=performance.now()/1000;live.forEach(o=>{if(!o.cv.isConnected){live.delete(o);return}const b=o.cv.getBoundingClientRect();if(b.bottom<0||b.top>innerHeight)return;paint(o.cv,o.id,t0)});if(!live.size&&tm){clearInterval(tm);tm=null}};
 window.avtMount=function(root){try{(root||document).querySelectorAll('.avtph[data-avt]').forEach(el=>{if(el._m)return;el._m=1;const id=el.dataset.avt,px=+el.dataset.px||84,a=(window.AVT||[]).find(x=>x.id===id);if(!a||!DRAW[id])return;
- const cv=document.createElement('canvas');cv.width=cv.height=HI[id]?144:24;cv.style.cssText=`width:${px}px;height:${px}px;image-rendering:${HI[id]?'auto':'pixelated'};border-radius:${Math.round(px*.12)}px;display:block`;el.appendChild(cv);paint(cv,id,.4);
- if(!a.free&&!el.dataset.st){live.add({cv,id});if(!tm)tm=setInterval(tick,90)}})}catch(e){console.error(e)}};
+ const cv=document.createElement('canvas');cv.width=cv.height=HI[id]?(px>90?120:96):24;cv.style.cssText=`width:${px}px;height:${px}px;image-rendering:${HI[id]?'auto':'pixelated'};border-radius:${Math.round(px*.12)}px;display:block`;el.appendChild(cv);paint(cv,id,.4);
+ if(!a.free&&!el.dataset.st){live.add({cv,id});if(!tm)tm=setInterval(tick,110)}})}catch(e){console.error(e)}};
 window.avtHtml=(id,px,st)=>`<span class="avtph" data-avt="${id}" data-px="${px}"${st?' data-st="1"':''} style="display:inline-block"></span>`;
 const snap=id=>{try{const n=HI[id]?144:24,c=document.createElement('canvas');c.width=c.height=n;paint(c,id,.4);const mk2=(src,sw,sh,dy,dh,sm)=>{const o=document.createElement('canvas');o.width=56;o.height=62;const x=o.getContext('2d');x.imageSmoothingEnabled=sm;x.fillStyle='#111';x.fillRect(0,0,56,62);x.drawImage(src,0,0,sw,sh,0,dy,56,dh);return o.toDataURL('image/png')};let u=mk2(c,n,n,3,56,!!HI[id]);if(u.length>7800){const h=document.createElement('canvas');h.width=28;h.height=31;const y=h.getContext('2d');y.imageSmoothingEnabled=true;y.drawImage(c,0,0,n,n,0,1.5,28,28);u=mk2(h,28,31,0,62,false)}return u}catch(e){return''}};
 window.avtSnap=snap;
@@ -40594,17 +40594,21 @@ window.avtEquip=function(id){const a=(window.AVT||[]).find(x=>x.id===id);if(!a)r
  if(!a.free&&!(window.cosHas&&window.cosHas(id))){toast('ยังไม่ได้ซื้อรูปนี้');return}
  const u=snap(id);if(!u||u.length>7800){toast('ตั้งรูปไม่สำเร็จ');return}
  const d=frGet();d.pf=id;d.av=u;d.snap=u;d.avUp=0;d.avSt='';frSet(d);try{profPush()}catch(e){}toast('✅ ตั้งเป็นรูปโปรไฟล์แล้ว');
- if(cur()==='cosshop'&&window._cosTab==='a')cosMenu('a');else openProfile()};
-window.avtOff=function(){const d=frGet();d.pf='';const u=(typeof S!=='undefined'&&S)?snapAvatar():'';d.av=u;d.snap=u;d.avUp=0;d.avSt='';frSet(d);try{profPush()}catch(e){}toast('ถอดรูปโปรไฟล์แล้ว');if(cur()==='cosshop'&&window._cosTab==='a')cosMenu('a');else openProfile()};
+ if(cur()==='cosshop'&&window._cosTab==='a')cosMenu('a');else{window._avtBack=1;openProfile()}};
+window.avtOff=function(){const d=frGet();d.pf='';const u=(typeof S!=='undefined'&&S)?snapAvatar():'';d.av=u;d.snap=u;d.avUp=0;d.avSt='';frSet(d);try{profPush()}catch(e){}toast('ถอดรูปโปรไฟล์แล้ว');if(cur()==='cosshop'&&window._cosTab==='a')cosMenu('a');else{window._avtBack=1;openProfile()}};
 {const o=window.profSnap;if(typeof o==='function')window.profSnap=function(){const d=frGet();if(d.pf){d.pf='';frSet(d)}return o.apply(this,arguments)};try{profSnap=window.profSnap}catch(e){}}
 const RN=['ธรรมดา','หายาก','ล้ำค่า','ตำนาน'],RC=['#888780','#378ADD','#7F77DD','#BA7517'];
 {const o=window.openProfile;if(typeof o==='function'){const w=function(){const r=o.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='profile')return r;const d=frGet(),A=window.AVT||[];
   const big=m.querySelector('.frbig .frph');if(big&&d.pf&&DRAW[d.pf]&&!big.querySelector('.avtph')){big.innerHTML=avtHtml(d.pf,big.classList.contains('big')?64:56);avtMount(big)}
-  const pane=m.querySelector('.pfpane[data-t="info"]')||m;if(pane.querySelector('.pfavt'))return r;
+  const tb=m.querySelector('.pftabs');if(!tb||tb.querySelector('[data-t="avt"]'))return r;
   const has=id=>{try{return window.cosHas?window.cosHas(id):false}catch(e){return false}};
-  const sec=document.createElement('div');sec.className='pfsec pfavt';
-  sec.innerHTML=`<h4>🧑 รูปโปรไฟล์สำเร็จรูป</h4><p class="tag2">แบบนิ่งใส่ได้ฟรีทุกคน · แบบขยับได้อยู่ที่ <a href="#" onclick="cosMenu('a');return false">ร้านตกแต่ง › รูปโปรไฟล์</a> (9–29฿) · ในแชทแสดงเป็นภาพนิ่ง</p><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">${A.map(a=>{const o=a.free||has(a.id),on=d.pf===a.id;return `<button class="gbtn" style="padding:4px;position:relative;${on?'outline:2px solid #ffc83a;':''}${o?'':'opacity:.55;'}" onclick="${o?`avtEquip('${a.id}')`:`cosMenu('a')`}" title="${a.n}">${avtHtml(a.id,56,!o||d.pf!==a.id)}<small style="display:block;font-size:10px;line-height:1.2;margin-top:2px">${a.n}${o?'':' 🔒'}</small></button>`}).join('')}</div>${d.pf?`<button class="gbtn" style="width:100%;margin-top:6px" onclick="avtOff()">↩️ กลับไปใช้รูปตัวละคร</button>`:''}`;
-  const ref=pane.querySelector('.pfsec');if(ref)ref.insertAdjacentElement('afterend',sec);else pane.appendChild(sec);avtMount(sec)}catch(e){console.error(e)}return r};window.openProfile=w;try{openProfile=w}catch(e){}}}
+  const btn=document.createElement('button');btn.dataset.t='avt';btn.setAttribute('onclick',"pfTabGo('avt')");btn.textContent='🧑 รูป';
+  const tt=tb.querySelector('[data-t="ttl"]');if(tt)tt.insertAdjacentElement('afterend',btn);else tb.appendChild(btn);
+  const pane=document.createElement('div');pane.className='pfpane';pane.dataset.t='avt';
+  pane.innerHTML=`<div class="pfsec"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">${A.map(a=>{const o=a.free||has(a.id),on=d.pf===a.id;return `<button class="gbtn" style="padding:4px;${on?'outline:2px solid #ffc83a;':''}${o?'':'opacity:.5;'}" onclick="${o?`avtEquip('${a.id}')`:`cosMenu('a')`}" title="${a.n}">${avtHtml(a.id,60,1)}<small style="display:block;font-size:10px;line-height:1.2;margin-top:2px">${a.n}${o?'':' 🔒'}</small></button>`}).join('')}</div>${d.pf?`<button class="gbtn" style="width:100%;margin-top:8px" onclick="avtOff()">↩️ กลับไปใช้รูปตัวละคร</button>`:''}</div>`;
+  const lastp=[...m.querySelectorAll('.pfpane')].pop();(lastp||tb).insertAdjacentElement('afterend',pane);
+  if(window._avtBack){window._avtBack=0;pfTabGo('avt')}
+  avtMount(pane)}catch(e){console.error(e)}return r};window.openProfile=w;try{openProfile=w}catch(e){}}}
 })()}catch(e){console.error('block36',e)}
 
 // ---- แก้: ปิดด่านแล้วเควส "ปิดด่านรวม N ปี" ไม่ขยับ (ปิดด่านแบบผนึกถ้ำ/ข้ามเวลายาวไม่ถูกนับ + เวลาเควสหมดระหว่างปิดด่านจนเควสล้มแล้วเกิดใหม่เป็น 0/N) ----
