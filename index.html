@@ -36172,8 +36172,8 @@ function ftReveal(){const T=S.ft;if(T.who)return;const r=Math.random();T.who=r<.
 
 // ---------------- 👑 จักรพรรดิผู้ตั้งใจตาย ----------------
 const EM0=()=>({n:0,pk:0,pkR:0,rate:.1,foes:[],ally:null,tomb:0,ev:0,nx:0,gone:0,memD:0});
-function emElig(){if(!ok()||S.age<20||(S.flags&&S.flags.kEnd))return false;const raw=rawRealm(),ri=realmIdx();const stuck=S.rcap!=null&&raw>S.rcap;return(ri>=5&&stuck)||ri>=7}
-function emOffer(){const E=S.em||(S.em=EM0()),raw=rawRealm(),stuck=S.rcap!=null&&raw>S.rcap,pF=Math.min(85,Math.round((.45+E.n*.1)*100));
+function emElig(){if(!ok()||S.age<20||(S.flags&&S.flags.kEnd))return false;if(!S.emR&&!(S.em&&S.em.n))return false;const raw=rawRealm(),ri=realmIdx();const stuck=S.rcap!=null&&raw>S.rcap;return(ri>=5&&stuck)||ri>=7}
+function emOffer(){if(!S.em&&!S.emA){S.emA=1;bigFx('👑 จักรพรรดิผู้ตั้งใจตาย','ชะตา 1% — ทางที่สามเปิดออกให้เพียงหนึ่งในร้อยชีวิต','#ffd34d')}const E=S.em||(S.em=EM0()),raw=rawRealm(),stuck=S.rcap!=null&&raw>S.rcap,pF=Math.min(85,Math.round((.45+E.n*.1)*100));
  const txt=stuck?`พลังของคุณเต็มเปี่ยม แต่ประตูบานสุดท้ายไม่ยอมเปิด ไม่ว่าจะฝึกอีกกี่ปี ${E.n?'กำแพงเดิมที่เคยหยุดคุณในชาติก่อน กลับมาอีกครั้ง':'คุณเริ่มสงสัยว่าทางเดียวที่ผ่านไปได้ คือต้องเริ่มใหม่'}`:`คุณยืนอยู่บนจุดสูงสุดที่โลกนี้มอบให้ ไม่มีใครเหนือกว่า แต่ก็ไม่มีที่ให้ไปต่อ ${E.n?'ความทรงจำหลายชาติบอกว่า ยังมีทางอื่น':'ความคิดหนึ่งผุดขึ้นมาเงียบๆ'}`;
  const O=[
   {t:'⏳ ยังไม่ถึงเวลา',s:'ถามอีกครั้งในอีกหลายปี',f(){E.nx=S.age+6;log('👑 คุณเก็บความคิดนั้นไว้ก่อน — แต่มันไม่ได้หายไปไหน')}},
@@ -36379,7 +36379,7 @@ window.openFateBook=function(){if(!S)return;const T=S.ft,E=S.em;let h='<button c
   <br>💪 พลังสูงสุดชาติก่อน ${fmt(E.pk||0)} · ตอนนี้ ${fmt(Math.round(total()))}${fbBar(total()/Math.max(1,E.pk)*100,'#b48cff')}
   🪞 เงาที่คอขวด: ${E.shDone?'ผ่านแล้ว':'ยังรออยู่'}${E.wp?`<br>🗡️ ${esc(E.wp.n)}: ${E.wp.got?'อยู่ในมือ':'รอมา '+E.wp.w+' ชาติ'}`:''}${E.thief?`<br>⚰️ คนชิงสุสาน: <b>${esc(E.thief.n)}</b>`:''}${E.foes&&E.foes.length?`<br>🔥 ศัตรูชาติก่อน: ${E.foes.map(f=>esc(f.n)).join(', ')}`:''}${E.thr&&!E.thr.done?`<br>⚰️ บัลลังก์: ${esc(E.thr.n)} ${E.thr.met?'(ยังค้างคา)':''}`:''}
   <br>👑 วันสิ้นรัชกาล: ${S.flags.emFinal?'ผ่านแล้ว':E.n>=5?'<b>พร้อมแล้ว</b> — รอคืนไร้จันทร์':`ตายด้วยเจตนาอีก ${5-E.n} ชาติ`}</div>`}
- else if(!T)h+='<div class="item">ชาตินี้ยังไม่มีชะตาพิเศษ — 📡 สายใยหมื่นปี โอกาส 1% ต่อชีวิต · 👑 เปิดเมื่อถึงขั้นสูงสุดหรือติดคอขวดขั้นสูง</div>';
+ else if(!T)h+='<div class="item">ชาตินี้ยังไม่มีชะตาพิเศษ — 📡 สายใยหมื่นปี โอกาส 1% ต่อชีวิต · 👑 โอกาส 1% ต่อชีวิต เปิดเมื่อถึงขั้นสูงสุดหรือติดคอขวดขั้นสูง</div>';
  h+=fbEnds();modal(h,'fatebook')};
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(S&&(S.ft||S.em)){const g=document.querySelector('#modal .mgrid');if(g&&!g.querySelector('.fbk')){const b=document.createElement('button');b.className='opt fbk';b.onclick=()=>openFateBook();const T=S.ft,E=S.em;b.innerHTML=`📜 สมุดชะตา<small>${T&&!T.end?'📡 ':''}${E&&E.n?'👑 ชาติที่ '+(E.n+1):''}</small>`;g.insertBefore(b,g.children[1]||null)}}}catch(e){}return r}}
 {const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);try{if(S&&(S.ft||S.em)&&!S.mw){const L0=Object.assign({},LS.get('murim_b16end',{})||{});fbRec();const L=LS.get('murim_b16end',{})||{};const nw=FEND.filter(e=>L[e[0]]&&!L0[e[0]]);const T=S.ft,E=S.em;
@@ -36391,7 +36391,7 @@ window.openFateBook=function(){if(!S)return;const T=S.ft,E=S.em;let h='<button c
   t+='</div>';const box=$('end');if(box&&!box.querySelector('.b16sum')){const at=box.querySelector('.item');if(at)at.insertAdjacentHTML('beforebegin',t);else box.insertAdjacentHTML('beforeend',t)}}}catch(e){console.error('b16 end',e)}return r}}
 
 // ---------------- ต่อเข้าระบบเดิม ----------------
-{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{if(S&&!S.mw)S.ftR=Math.random()<.01?R(14,35):0}catch(e){}return r}}
+{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{if(S&&!S.mw)S.ftR=Math.random()<.01?R(14,35):0;S.emR=Math.random()<.01?1:0}catch(e){}return r}}
 {const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive){emYear();ftYear()}}catch(e){console.error('blk16',e)}return r}}
 function ftYear(){if(!ok()||S.age<14)return;let T=S.ft;
  if(!T){if(!S.ftR||S.age<S.ftR)return;go(()=>{if(!S.ft){S.ft=FT0();bigFx('📡 สายใยหมื่นปี','ชะตา 1% — มีเพียงหนึ่งในร้อยชีวิตที่ได้ยินเสียงนี้','#6fd8ff');ftFirst()}},1);return}
