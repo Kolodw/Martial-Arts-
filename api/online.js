@@ -1526,7 +1526,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const q = qOf(req); if (!isAdmKey(q.key)) return res.status(403).json({ err: 'admin' });
       const nx = { d: new Date(now + 7 * 3600e3).toISOString().slice(0, 10), w: week(new Date(now)), m: bdMon(now) }; // รอบที่กำลังแข่งอยู่ = ชุดที่จะแจกตอนจบรอบ
       if (/^[dwm]$/.test(q.roll || '')) { const sk = 'rksalt:' + q.roll + ':' + rkKey(nx[q.roll]), old = await cmd('GET', sk); let v; do { v = Math.random().toString(36).slice(2, 5).replace(/[^a-z0-9]/g, '') } while (!v || v === old); await cmd('SET', sk, v, 'EX', 86400 * 40) }
-      const CN = { m: '⚔️ ยุทธภพ', x: '☁️ เซียน', g: '🌟 เทพ', b: '🐾 อสูร', r: '🔁 ย้อนกาล', h: '🔥 นรก', s: '⏳ ชีวิตสั้น', j: '🦴 รากขยะ' };
+      const CN = { m: '⚔️ ยุทธภพ', x: '☁️ เซียน', g: '🌟 เทพ', b: '🐾 อสูร', r: '🔁 ย้อนกาล', h: '🔥 นรก', s: '⏳ ชีวิตสั้น', j: '🦴 รากขยะ', l: '⭕ จิตวิญญาณยุทธ์' };
       if (q.fmt === 'json') { const keys = {}; for (const p of ['d', 'w', 'm']) keys[p] = rkKey(nx[p], await cmd('GET', 'rksalt:' + p + ':' + rkKey(nx[p]))); return res.json({ nx, keys }) }
       let html = '<meta name="viewport" content="width=device-width"><style>body{font-family:sans-serif;background:#1a1420;color:#eee;padding:10px}td{padding:3px 6px;border-bottom:1px solid #333}a{color:#ffd040}</style><h3>🏆 ฉายาที่จะแจกรอบนี้</h3>';
       for (const p of ['d', 'w', 'm']) { const k = rkKey(nx[p], await cmd('GET', 'rksalt:' + p + ':' + rkKey(nx[p])));
