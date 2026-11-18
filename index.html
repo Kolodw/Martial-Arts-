@@ -28213,7 +28213,7 @@ try{(()=>{const _of=openFuse;openFuse=function(){const r=_of.apply(this,argument
  let pk=null,pkT=0;async function peek(){if(Date.now()-pkT<30000)return pk;pkT=Date.now();try{pk=await api('rpget&peek=1')}catch(e){}return pk}
  const hot=p=>p&&(p.n>=2||(p.last&&Date.now()-p.last<10*60e3));
  setInterval(async()=>{try{const box=$('chatBox');if(!box||document.hidden||!onlineOK)return;const p=await peek();const ex=document.getElementById('rpBar');if(!hot(p)){if(ex)ex.remove();return}
-  const c=SC[p.sc]||SC.inn,h=`<b>🎭 ${c[0]} ${c[1]}กำลังคึกคัก · ${p.n} คนในฉาก · พูดล่าสุด ${ago(p.last)}</b><span class="go">เข้าร่วม ▶</span>`;
+  const c=SC[p.sc]||SC.inn,h=`<b>🎭 ${c[0]} ${c[1]}กำลังคึกคัก${p.n>=1?` · ${p.n} คนในฉาก`:''} · พูดล่าสุด ${ago(p.last)}</b><span class="go">เข้าร่วม ▶</span>`;
   if(ex)ex.innerHTML=h;else{const d=document.createElement('div');d.id='rpBar';d.className='rpbar';d.innerHTML=h;d.onclick=()=>openOnline('rp');box.parentElement.insertBefore(d,box)}}catch(e){}},4000);
  {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal'),gr=m&&m.querySelector('.mgrid');if(gr&&!m.querySelector('.rpmenu')&&typeof onlineOK!=='undefined'&&onlineOK){const p=pk,c=SC[(p&&p.sc)||curSc()];gr.insertAdjacentHTML('afterbegin',`<button class="opt rpmenu" onclick="openOnline('rp')">🎭 ห้องเล่นบท<small>${p&&p.n?'🟢 '+p.n+' คนใน'+c[1]:c[0]+' ฉาก'+c[1]}</small></button>`);peek()}}catch(e){}return r}}
 }
@@ -37033,6 +37033,16 @@ try{(function(){const st=document.createElement('style');st.textContent=`
 
 // หน้าแรกบนคอม: ปุ่มโปรไฟล์ชิดซ้ายสุด · ปุ่มสนับสนุน/เฟส/ตกแต่ง/อีเวนต์ชิดขวาสุด
 try{(function(){const st=document.createElement('style');st.textContent='@media (min-width:900px){#title #tTop{position:fixed!important;left:14px!important;top:14px!important;right:auto!important;z-index:6}#title #tSup,#title #tFb,#title #tCos,#title #tEv{right:14px!important;left:auto!important}}';document.head.appendChild(st)})()}catch(e){}
+
+// แชทโลก (แอดมิน): ย้ายปุ่มประกาศ @everyone / โพล ไปไว้ในแถบพับ "🛡️ เครื่องมือแอดมิน" ไม่ให้กดโดนตอนพิมพ์ · ปุ่มประกาศทั้งหมดเป็นชิปเล็ก
+try{(function(){const st=document.createElement('style');st.textContent='.admTools{margin-top:14px;border:1.5px dashed color-mix(in srgb,var(--ink) 30%,transparent);border-radius:12px;padding:4px 10px}.admTools summary{cursor:pointer;font-size:12px;opacity:.7;list-style:none;padding:4px 0}.admTools summary::-webkit-details-marker{display:none}.admTools .row{display:flex;gap:8px;flex-wrap:wrap;padding:6px 0 4px}.admTools .row button{flex:1;min-width:120px;width:auto!important;margin:0!important;font-size:12.5px!important;padding:7px 10px!important}#annListBtn.annMini{width:auto!important;display:inline-flex;align-items:center;gap:4px;margin:4px 0 6px!important;padding:4px 12px!important;font-size:12px!important;border-radius:999px!important}';document.head.appendChild(st);
+const fix=()=>{try{const ci=$('chatIn');if(!ci)return;const L=document.getElementById('annListBtn');if(L&&!L.classList.contains('annMini')){L.classList.add('annMini');L.textContent='📜 ประกาศทั้งหมด'}
+ const h=document.getElementById('annHelp'),pb=document.getElementById('annPollBtn');if(!h&&!pb)return;if(document.getElementById('admTools'))return;
+ if(/@everyone/.test(ci.placeholder))ci.placeholder='พิมพ์ข้อความ…';
+ const d=document.createElement('details');d.id='admTools';d.className='admTools';d.innerHTML='<summary>🛡️ เครื่องมือแอดมิน ▾</summary><div class="row"></div>';
+ const anchor=(pb||h);anchor.parentElement.insertBefore(d,anchor);const row=d.querySelector('.row');
+ if(h){h.textContent='📢 ประกาศ @everyone';h.className='gbtn';row.appendChild(h)}if(pb){pb.textContent='📊 ประกาศ+โพล';row.appendChild(pb)}}catch(e){}};
+const _oo=openOnline;openOnline=function(tab){const r=_oo.apply(this,arguments);try{Promise.resolve(r).then(()=>setTimeout(fix,0));setTimeout(fix,0)}catch(e){}return r}})()}catch(e){console.error('mod-admchat',e)}
 </script>
 </body>
 </html>
