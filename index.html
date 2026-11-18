@@ -6550,7 +6550,7 @@ function blStageTxt(){const m=S.beastMode;const st=BL_ST[Math.min(BL_ST.length-1
 const AC_CAP={int:1e30,cha:1e30,fame:1e30,money:1e30,qi:1e30};
 let acPrev=null;
 function acSnap(){return{int:+S.int||0,cha:+S.cha||0,fame:+S.fame||0,money:+S.money||0,qi:+S.qi||0,pow:(()=>{try{return +total()||0}catch(e){return +S.power||0}})(),dis:S.ownSect?+S.ownSect.dis||0:0,kids:+S.kids||0,har:(S.harem||[]).length,age:+S.age||0}}
-function acFlag(why){if(!S||S._tp)return;S._tp=why;try{console.warn('integrity')}catch(e){}}
+function acFlag(why){if(!S||S._tp)return;S._tp=why;S._tpv=2;try{console.warn('integrity')}catch(e){}}
 let acObj=null;
 function acCheck(){try{if(!S||!S.alive||S.custom)return;if(S._tp&&/^(cap-|save-jump)/.test(String(S._tp)))delete S._tp;if(S!==acObj){const kp=acPrev&&acObj&&acObj.name===S.name&&Math.abs((+S.age||0)-acPrev.age)<=2;acObj=S;if(!kp)acPrev=null}
  for(const k of ['int','cha','fame','money','qi','power','karma']){const v=S[k];if(typeof v==='number'){if(v!==v)S[k]=0;else if(v>1e30)S[k]=1e30;else if(v<-1e30)S[k]=-1e30}}
@@ -10912,15 +10912,17 @@ function acSus(why){try{if(!S)return;let m=AC_SUS.get(S);if(!m){m={};AC_SUS.set(
 // ---- จับการเขียนค่าที่ไม่ได้มาจากโค้ดเกม (คอนโซล / สคริปต์ภายนอก) ----
 const AC_TK=['power','fame','money','qi','int','cha','age','lifespan','karma'],AC_SYM=Symbol('a'),AC_ORG=location.origin;
 function acCaller(){try{const L=String(new Error().stack||'').split('\n').map(l=>l.trim()).filter(l=>l&&!/^Error\b/.test(l)&&l.indexOf('__acS')<0&&l.indexOf('acCaller')<0);return!L.length||L.some(l=>l.indexOf(AC_ORG)>=0)}catch(e){return true}}
+function acConsole(){try{const t=String(new Error().stack||'');return /<anonymous>:\d|debugger eval|^\s*global code|at eval \(eval at <anonymous>|VM\d+:\d/m.test(t)}catch(e){return false}}
+function acBig(k){try{return({money:5e6*acW(),fame:5e4,power:1e5,qi:200,int:300,cha:300,age:10,lifespan:200,karma:300})[k]||1e5}catch(e){return 1e5}}
 function acTrap(o){if(!o||typeof o!=='object'||o[AC_SYM])return;try{Object.defineProperty(o,AC_SYM,{value:1});
  AC_TK.forEach(k=>{const d=Object.getOwnPropertyDescriptor(o,k);if(!d||!('value' in d)||!d.configurable)return;let v=d.value;
-  Object.defineProperty(o,k,{enumerable:true,configurable:false,get(){return v},set:function __acS(n){try{if(typeof n==='number'&&typeof v==='number'&&Math.abs(n-v)>Math.abs(v)*.03+5&&!acCaller()){acFlag('console-'+k);acSus('console-'+k)}}catch(e){}v=n}})})}catch(e){}}
+  Object.defineProperty(o,k,{enumerable:true,configurable:false,get(){return v},set:function __acS(n){try{if(typeof n==='number'&&typeof v==='number'&&Math.abs(n-v)>Math.abs(v)*.03+5&&!acCaller()){if(acConsole()&&Math.abs(n-v)>Math.max(Math.abs(v)*2,acBig(k))){acFlag('console-'+k);acSus('console-'+k)}else acSus('csm-'+k)}}catch(e){}v=n}})})}catch(e){}}
 setInterval(()=>{try{if(S&&S.alive&&!S.custom)acTrap(S)}catch(e){}},400);
 // ---- ลายเซ็นเซฟ: แก้ไฟล์เซฟในเครื่องแล้วโหลด = ติดธง ----
 function acH(t){let h=2166136261;t='m1n'+t+'#q7';for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(36)}
 const acSF=o=>[o.name,Math.round(o.age||0),Math.round(o.power||0),Math.round(o.fame||0),Math.round(o.money||0),Math.round((o.qi||0)*10),Math.round(o.int||0),Math.round(o.cha||0)].join('|');
 {const _sg=saveGame;saveGame=function(){const r=_sg.apply(this,arguments);try{if(S&&S.alive&&!S.custom){const g=LS.get('murim_ui9',{})||{};let t0=0;try{const raw=localStorage.getItem(slotKey(S.slot||1))||'';const mm=raw.slice(0,40).match(/"t":(\d+)/);t0=mm?+mm[1]:0}catch(x){}let hs=acSF(S),ag=Math.round(S.age||0);try{const rw=LS.get(slotKey(S.slot||1),null);if(rw&&rw.S&&rw.t===t0){hs=acSF(rw.S);ag=Math.round(rw.S.age||0)}}catch(x){}g[S.slot||1]={h:acH(hs),a:ag,t:t0};LS.set('murim_ui9',g)}}catch(e){}return r}}
-{const _lg=loadGame;loadGame=function(n){let t1=0;try{const raw=localStorage.getItem(slotKey(n||1))||'';const mm=raw.slice(0,40).match(/"t":(\d+)/);t1=mm?+mm[1]:0}catch(x){}window._acBak=0;const r=_lg.apply(this,arguments);try{if(S&&S._tp==='save-edit'&&!S._tpFx){S._tp=null;S._tpFx=1}const g=(LS.get('murim_ui9',{})||{})[n||1];let rw=null;try{rw=LS.get(slotKey(n||1),null)}catch(x){}if(S&&g&&g.t&&t1&&g.t===t1&&!window._acBak&&rw&&rw.S&&rw.t===t1&&g.a===Math.round(rw.S.age||0)&&g.h!==acH(acSF(rw.S))){S._tpFx=1;acFlag('save-edit');acSus('save-edit')}}catch(e){}window._acBak=0;return r}}
+{const _lg=loadGame;loadGame=function(n){let t1=0;try{const raw=localStorage.getItem(slotKey(n||1))||'';const mm=raw.slice(0,40).match(/"t":(\d+)/);t1=mm?+mm[1]:0}catch(x){}window._acBak=0;const r=_lg.apply(this,arguments);try{if(S&&S._tp&&S._tpv!==2&&/^(console|save-edit|save-sig|jump-hell)/.test(String(S._tp))){S._tp=null}if(S&&S._tp==='save-edit'&&!S._tpFx){S._tp=null;S._tpFx=1}const g=(LS.get('murim_ui9',{})||{})[n||1];let rw=null;try{rw=LS.get(slotKey(n||1),null)}catch(x){}if(S&&g&&g.t&&t1&&g.t===t1&&!window._acBak&&rw&&rw.S&&rw.t===t1&&g.a===Math.round(rw.S.age||0)&&g.h!==acH(acSF(rw.S))){S._tpFx=1;acSus('save-edit')}}catch(e){}window._acBak=0;return r}}
 
 // ===================== v15.2 บาลานซ์พลัง/ชื่อเสียง =====================
 // ชื่อเสียงจากการต่อสู้คิดตามขั้นและโลก ไม่ผูกกับพลังศัตรูอีกต่อไป
@@ -14838,7 +14840,7 @@ function svCheck(o){try{const c=o&&o._sg;if(!c||typeof c!=='object')return'';if(
   const over=(i,mul,add)=>n[i]>Math.abs(v[i])*mul+add;
   if(over(0,f?20:3,f?1e6:5e4)||over(1,f?5:2,f?500:50)||n[2]>v[2]+(f?3000:300)||n[3]>v[3]+(f?3000:300)||over(4,f?20:3,f?1e5:5000)||over(5,f?100:5,f?1e9:1e7)||n[6]>v[6]+(f?600:100)||over(7,f?10:2,f?5000:500)||over(8,f?10:2,f?5000:3000)||over(12,f?20:3,f?1e6:1e5))return'save-jump';return''}catch(e){return''}}
 {const _lsS=LS.set;LS.set=function(k,v){try{if(v&&typeof v==='object'&&v.S&&typeof v.S==='object'&&v.cfg===CFG&&v.v===VERSION&&S&&v.S.name===S.name){const vec=svVec(v.S);v.S._sg={v:vec,h:svHash(vec,v.S)}}}catch(e){}return _lsS.apply(this,arguments)}}
-{const _lgS=loadGame;loadGame=function(n){let bad='';try{const d=readSave(n==null?1:n);if(d&&d.S)bad=svCheck(d.S)}catch(e){}const r=_lgS.apply(this,arguments);try{if(bad&&S&&S.alive&&!S.custom){if(bad!=='save-jump')acFlag(bad);try{acSus(bad)}catch(e){}}}catch(e){}return r}}
+{const _lgS=loadGame;loadGame=function(n){let bad='';try{const d=readSave(n==null?1:n);if(d&&d.S)bad=svCheck(d.S)}catch(e){}const r=_lgS.apply(this,arguments);try{if(bad&&S&&S.alive&&!S.custom){try{acSus(bad)}catch(e){}}}catch(e){}return r}}
 
 // ---------- ส่งชีวิตขึ้นทำเนียบไม่สำเร็จ (เน็ตหลุด/เซิร์ฟเวอร์ขัดข้อง) → เก็บไว้แล้วส่งใหม่เองภายหลัง ----------
 function lifeQAdd(P){const q=(LS.get('murim_lifeq',[])||[]).filter(x=>x&&x.lid!==P.lid);q.push(Object.assign({},P,{_q:Date.now()}));while(q.length>3)q.shift();LS.set('murim_lifeq',q);
@@ -24135,10 +24137,10 @@ function kGateWrite(done){const L=(S.arts||[]).filter(a=>a&&typeof a==='object')
 const AC_HK=['lv','ess','rev','fail','heat','cs','frc'],AC_HSYM=Symbol('h');
 function acTrapH(o){if(!o||typeof o!=='object'||o[AC_HSYM])return;try{Object.defineProperty(o,AC_HSYM,{value:1});
  AC_HK.forEach(k=>{const d=Object.getOwnPropertyDescriptor(o,k);if(d&&(!('value' in d)||!d.configurable))return;let v=d?d.value:undefined;
-  Object.defineProperty(o,k,{enumerable:true,configurable:false,get(){return v},set:function __acS(n){try{if(n!==v&&!acCaller()){acFlag('console-hell-'+k);acSus('hlc-'+k)}}catch(e){}v=n}})})}catch(e){}}
+  Object.defineProperty(o,k,{enumerable:true,configurable:false,get(){return v},set:function __acS(n){try{if(n!==v&&!acCaller()){if(acConsole()){acFlag('console-hell-'+k);acSus('hlc-'+k)}else acSus('hsm-'+k)}}catch(e){}v=n}})})}catch(e){}}
 setInterval(()=>{try{if(S&&S.alive&&!S.custom&&S.hell)acTrapH(S.hell)}catch(e){}},400);
 // 3) ชั้นนรกกระโดดเกินทีละชั้น (ยกเว้นจารึกวิญญาณตอนเริ่ม) = น่าสงสัย
-let AC_HL=null;setInterval(()=>{try{if(!S||!S.alive||S.custom||!S.hell)return;const lv=+S.hell.lv||0;if(AC_HL&&AC_HL.o===S){const d=lv-AC_HL.lv;if(d>1&&!(S.hell.cs&&lv===S.hell.cs&&AC_HL.lv===0)){acFlag('jump-hell');acSus('jump-hell')}}AC_HL={o:S,lv}}catch(e){}},500);
+let AC_HL=null;setInterval(()=>{try{if(!S||!S.alive||S.custom||!S.hell)return;const lv=+S.hell.lv||0;if(AC_HL&&AC_HL.o===S){const d=lv-AC_HL.lv;if(d>1&&!(S.hell.cs&&lv===S.hell.cs&&AC_HL.lv===0)){acSus('jump-hell')}}AC_HL={o:S,lv}}catch(e){}},500);
 
 // ===================== v17.10.2 🎮 สอนปุ่มควบคุมด้านล่าง (แตะ · กดค้าง · ตั้งค่าที่หาไม่เจอ) =====================
 const CT_STEPS=[

@@ -1601,7 +1601,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (pre.length < 6) return res.json({ err: 'pre' });
       const ids = new Set(); if (pre.length >= 12) ids.add(pre);
       for (const hk of ['lm', 'om']) { let cur = '0', n = 0; do { const r = await cmd('HSCAN', hk, cur, 'MATCH', pre + '*', 'COUNT', 1000); cur = String(r[0]); for (let i = 0; i < r[1].length; i += 2) ids.add(r[1][i]); n++ } while (cur !== '0' && n < 400) }
-      const L = []; for (const x of ids) { if (on === '1') L.push(['SADD', 'cheaters', x]); else L.push(['SREM', 'cheaters', x], ['DEL', 'acf:' + x], ['DEL', 'acp:' + x]) }
+      const L = []; for (const x of ids) { if (on === '1') L.push(['SADD', 'cheaters', x]); else L.push(['SREM', 'cheaters', x], ['DEL', 'acf:' + x], ['DEL', 'acp:' + x], ['DEL', 'acfh:' + x], ['DEL', 'acfn:' + x]) }
       if (L.length) await pipe(L);
       return res.json({ ok: 1, n: ids.size });
     }
@@ -1728,7 +1728,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     const findLive = async (k2, adm) => { const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 90e3, '+inf']]); const f1 = (pub || []).find(x => x.slice(0, 6) + x.slice(-4) === k2); if (f1) return f1; if (adm) return (prv || []).find(x => x.slice(0, 6) + x.slice(-4) === k2) || null; return null };
     const RPC = [[120, 350, 800, 2200, 5500, 12000, 24000, 24000], [250, 900, 2500, 7000, 18000, 42000, 90000, 90000]];
     const powOk = (p, ri, x, age) => { ri = Math.max(0, Math.min(7, +ri || 0)); if (!(p >= 0) || !isFinite(p) || p > 1e16) return false; if (ri < 7 && p > RPC[x ? 1 : 0][ri] * 8 + 1000) return false; if (age != null && +age < 1000 && p > (x ? 60000 : 25000) * (1 + (+age || 1) / 8) + 300000) return false; return true };
-    const isBanned = async () => { const [c0, f0] = await pipe([['SISMEMBER', 'cheaters', id], ['GET', 'acf:' + id]]); return !!(+c0 || (f0 && !/^(srv-jump|srv-cap|jump|pow-age|stat|cap)/.test(String(f0)))) };
+    const isBanned = async () => { const [c0, f0, h0] = await pipe([['SISMEMBER', 'cheaters', id], ['GET', 'acf:' + id], ['GET', 'acfh:' + id]]); return !!(+c0 || h0 || (f0 && !/^(srv-jump|srv-cap|jump|pow-age|stat|cap|console|save|csm|hsm|hlc)/.test(String(f0)))) };
     const isAdmQ = k => !!ADM_KEY && String(k || '') === ADM_KEY;
     if (a === 'logget') {
       const k2 = String(qOf(req).t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -1964,9 +1964,9 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       // ค่าที่ขึ้นเร็วจากการเล่นจริง (กระโดด/เกินเพดานแบบนุ่ม) ไม่บันทึก ไม่ติดธง — บันทึกเฉพาะการแก้ค่า/แก้ไฟล์
       if (/^(jump|cap|pow-age|srv-jump|score|stat)/.test(why)) return res.json({ ok: 1 });
       const fresh = await cmd('SET', 'acsr:' + id + ':' + why, 1, 'NX', 'EX', 3600); if (!fresh) return res.json({ ok: 1 });
-      const st = b.st || {}, hard = /^(console|save-edit)/.test(why);
+      const st = b.st || {}, hard = /^console/.test(why) && !/^console-hell/.test(why) ? +(await cmd('INCR', 'acfn:' + id)) >= 2 : false; if (/^console/.test(why)) await cmd('EXPIRE', 'acfn:' + id, 86400 * 14);
       const L = [['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(b.n || ''), 24), age: +b.age || 0, why, st: { pow: +st.pow || 0, fame: +st.fame || 0, money: +st.money || 0 }, t: now })], ['LTRIM', 'acsus', 0, 199]];
-      if (hard) L.push(['SET', 'acf:' + id, why, 'EX', 86400 * 60]);
+      if (hard) L.push(['SET', 'acf:' + id, why, 'EX', 86400 * 60], ['SET', 'acfh:' + id, why, 'EX', 86400 * 60]);
       await pipe(L); return res.json({ ok: 1 });
     }
     if (a === 'rgp') {
