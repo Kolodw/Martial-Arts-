@@ -37676,6 +37676,64 @@ try{(function(){const N={idx:['⚡ ดัชนีพลัง','ตัวเล
  window.pModeSet=m=>{set(m);toast('รูปแบบตัวเลขพลัง: '+N[m][0]+' · มีผลกับข้อความใหม่');try{const md=$('modal');if(md&&md.dataset.k==='gfx')openGfx()}catch(e){}};
  window.pModeNext=()=>{const m=window.pMode?window.pMode():'idx',n=O[(O.indexOf(m)+1)%O.length];set(n);let tt=0;try{tt=total()}catch(e){}toast(N[n][0]+' · พลังรวมจริง '+fmt(tt)+' · ⚡'+pIdx(tt)+' · แตะอีกครั้งเพื่อสลับ')};
  if(typeof openGfx==='function'){const _og=openGfx;openGfx=function(){const r=_og.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='gfx'&&!m.querySelector('.pmSec')){const cur=window.pMode();m.insertAdjacentHTML('beforeend','<div class="pmSec"><h3 style="margin-top:14px">🔢 รูปแบบตัวเลขพลัง</h3><p class="tag2">เปลี่ยนแค่การแสดงผล การต่อสู้ อันดับ และเซฟไม่เปลี่ยน · แตะ ⚡ บนแถบหัวเพื่อสลับเร็วๆ ได้</p>'+O.map(k=>'<button class="opt '+(cur===k?'on':'')+'" onclick="pModeSet(\''+k+'\')">'+N[k][0]+' '+(cur===k?'✅':'')+'<small>'+N[k][1]+'</small></button>').join('')+'</div>')}}catch(e){}return r}}})()}catch(e){console.error('mod-pm',e)}
+
+// ============================================================
+// BLOCK 22: 📚 อัปเดตคู่มือ · บทเรียนรายโลก · สารานุกรม (📡/👑 · 10 โลกยุคปัจจุบัน · สายฮันเตอร์ · ประเภทเกม)
+// ============================================================
+try{(()=>{
+const b=t=>`<b>${t}</b>`;
+// ---------- 1) คู่มือ ----------
+const G=[
+ {s:'world',ic:'📡',t:'สายใยหมื่นปี',te:'Ten-Thousand-Year Thread',d:`ชะตาหายาก ${b('1% ต่อชีวิต')} ทอยตอนเกิด ใช้ได้ทุกยุค (ยุทธภพ/เซียน/เทพ/กัลป์) · ฝันเห็นอนาคตหมื่นปีแล้ว${b('ยืมวิชา')}กลับมา แลกกับ${b('ร่างสึก')}และ${b('ผู้คนสงสัย')} · ${b('ยิ่งช่วยโลก อนาคตยิ่งดี แต่วิชาที่ยืมยิ่งอ่อน')} · เลือกได้ว่าจะรับสาย ตัดสาย หรือสืบหาผู้ส่ง (มี 4 แบบ) · ในศึกเป็นตายเรียก ${b('⚡ ร่างอนาคต')} ได้ 3 ครั้ง · บางครั้งก่อนดวลจะ${b('👁️ เห็นภาพจุดจบ')} (จริง 75%) · มีคัมภีร์จากอนาคต ศัตรูที่ได้สายจากอีกอนาคต และฉากจบลับ`,de:'Rare 1%-per-life fate in every old era. Borrow future techniques at the cost of body wear and suspicion. Helping the world weakens what you borrow.'},
+ {s:'world',ic:'👑',t:'จักรพรรดิผู้ตั้งใจตาย',te:'The Emperor Who Chose Death',d:`ชะตาหายาก ${b('1% ต่อชีวิต')} · เปิดเมื่อถึงขั้นสูงสุดหรือติดคอขวดขั้นสูง → ${b('ตายด้วยเจตนาแล้วเกิดใหม่')} (เป็นเด็ก / สิงร่าง / ผนึกวิญญาณหลับหลายสิบปี) · ก่อนตาย${b('เลือกพากลับได้ 3 จาก 6')} (วิชา แค้น คนรัก สมบัติ ความลับ กล้ามเนื้อ) · ชาติใหม่จะเจอ ${b('🪞 เงาตัวเองที่คอขวดเดิม')} สุสานตัวเอง ศัตรูชาติก่อน อาวุธที่รอ บัลลังก์ที่ถูกแย่ง · ทุกชาติได้${b('🩸 ฉายา')} ครบ 3 ขานได้ในศึกเป็นตาย · ครบ ${b('5 ชาติ')} เปิด ${b('วันสิ้นรัชกาล')}`,de:'Rare 1% fate. At the peak, die on purpose and be reborn with memories. Pick 3 of 6 things to carry. Titles stack across lives; 5 rebirths unlock the final battle against all your past selves.'},
+ {s:'world',ic:'📜',t:'สมุดชะตา',te:'Book of Fate',go:'openFateBook',life:1,need:()=>!!(S&&(S.ft||S.em)),d:`☰ → 📜 สมุดชะตา (ขึ้นเฉพาะชีวิตที่มี 📡 หรือ 👑) · ดูทุกค่าในหน้าเดียว และ${b('ฉากจบที่ค้นพบ 15 แบบ')}พร้อมคำใบ้ · ตอนตายจะสรุปชะตาของชาตินั้นให้`,de:'Shows every value of the two rare fates and the 15 endings with hints.'},
+ {s:'mw',ic:'🗺️',t:'10 โลกในยุคปัจจุบัน',te:'The 10 modern worlds',d:`เกิดในยุคปัจจุบันจะสุ่มโลก (หรือเลือกได้ที่หน้าเกิด): 🏙️ ปกติ · 🌀 ฮันเตอร์ · 🌃 ใต้ดิน · 👻 ผีไทย · 🔁 วนลูป · 🧟 ซอมบี้ · 🗼 หอคอย · 🎮 ระบบเกม · 💀 เกตชนะ · ☄️ วันสิ้นโลก · ${b('แตะแถบโลกด้านบน')}เพื่อเปิดแผงโลก · ทุกโลกมี${b('ฉากจบระดับ S/A/B/C')} สะสมได้ที่สารานุกรมโลก`,de:'Ten worlds, each with its own panel (tap the world bar) and S/A/B/C endings.'},
+ {s:'mw',ic:'🏙️',t:'โลกปกติ',te:'Normal world',d:`ไม่มีพลังพิเศษ · เลือก${b('ฝัน 10 แบบ')} แต่ละฝันมี 3 ด่าน เลือกเสี่ยง/ค่อยเป็นค่อยไป/ประนีประนอม · ${b('แรงกดดัน')}จากเงิน ความสุข ลูก ถึง 50/75/90 จะเกิดเรื่องใหญ่ · คนรอบตัวที่ไว้ใจช่วยได้จริง`,de:'No powers. Pick a dream with 3 stages; manage pressure; neighbours help.'},
+ {s:'mw',ic:'🌀',t:'โลกฮันเตอร์: 21 สายพลัง',te:'Hunter: 21 power lines',d:`สายใหม่ 8 สาย แต่ละสายมีเหตุการณ์ของตัวเอง: 🎲 ${b('ผู้พนันชะตา')} (ทอยเต๋าทุกสกิล) · 🪞 ${b('ผู้ลอกเลียน')} (ลอกท่า 3 ช่อง) · 📜 ${b('ผู้ทำสัญญา')} (สัญญากับบอส ผิดเงื่อนไขพลังย้อน) · 🏙️ ${b('ผู้คุมพื้นที่')} (แทบอมตะในย่านตัวเอง) · 🩸 ${b('ผู้ใช้เลือดเป็นมานา')} · 📡 ${b('ผู้ฟังคลื่นเกต')} (รู้ก่อนว่าเกตเปิดที่ไหน) · 🕳️ ${b('ผู้เป็นเกต')} และ 🌗 ${b('ผู้มีสองแรงก์')} (ตำนาน) · สถานะเฉพาะสายดูที่ 🪪 บัตรฮันเตอร์`,de:'Eight new hunter lines with their own story events; status shows on the hunter card.'},
+ {s:'mw',ic:'🌃',t:'โลกใต้ดิน',te:'Underworld',d:`ไต่จากเด็กในซอยไปเป็นผู้มีอิทธิพล · คุมซอย ลูกน้องมีความภักดี${b('และความฝันของตัวเอง')} · ${b('ข้อตกลงกับผู้กอง')} (อาจขอเพิ่ม ถูกย้าย หรือเป็นสายสืบ) · เลือก${b('ธุรกิจหลัก')} 4 ทาง · ลูกน้องอาจยึดอำนาจ · อิทธิพลสูงลงเลือกตั้งได้`,de:'Turf, loyal lieutenants with dreams, police deals, four businesses, coups and elections.'},
+ {s:'mw',ic:'👻',t:'โลกผีไทย',te:'Thai ghosts',d:`ผีใหม่ 7 ตน ต้อง${b('สืบก่อน')}ว่าต้องการอะไร แล้วเลือก ${b('⚔️ ปราบ · 🙏 ทำบุญส่ง · 🤝 ผูกสัมพันธ์')} · ผิดวิธีย้อนเข้าตัว · ผีที่ผูกไว้ช่วยคุณได้แต่${b('ต้องเซ่นไหว้')} ไม่งั้นจะโกรธ`,de:'Investigate each ghost, then slay, release, or bond. Bonded ghosts need offerings.'},
+ {s:'mw',ic:'🔁',t:'โลกวนลูป',te:'Time loop',d:`วันซ้ำทุกรอบ · ${b('กฎของรอบสุ่มทุกปี')} 6 แบบ (ฝนไม่หยุด ไฟดับทั้งเมือง ทุกคนพูดความจริง ฯลฯ) · มี${b('อีกคนที่จำได้')} ร่วมมือ แข่ง หรือสอดแนม · เก็บเบาะแสครบ 5 ไปถึงประตูใต้ตึกเก่า`,de:'Each loop has a random rule; another looper can be ally or rival.'},
+ {s:'mw',ic:'🧟',t:'โลกซอมบี้',te:'Zombie',d:`เงินแทบไร้ค่า ใช้เสบียงแทน · เลือก${b('สายการเล่น')} (ฐาน/ถนน/แล็บ/ระบบ) · สร้างฐานที่มั่น · ซอมบี้${b('วิวัฒนาการ')}ตามเวลา · คนในกลุ่มมีนิสัยและความไว้ใจ`,de:'Supplies over money, play styles, bases, evolving zombies, a group with trust.'},
+ {s:'mw',ic:'🗼',t:'โลกหอคอย',te:'Tower',d:`ไต่หอคอยทีละชั้น · บอสที่ชั้น ${b('25 / 50 / 75')} · ยอดหอคอยมี${b('คำขอพร')} · มีทีม เพื่อนร่วมทีมตายได้ · ชั้นแปลกๆ มีกฎของตัวเอง`,de:'Climb floor by floor; bosses at 25/50/75; a wish at the top.'},
+ {s:'mw',ic:'🎮',t:'โลกระบบเกม',te:'Game system',d:`ตื่นระบบแล้ว${b('สุ่มประเภทเกม')}: ⚔️ MMORPG (ดันเจี้ยนเสี่ยงดวง ต้นสกิล คลาสซ่อน) · 🪂 แบทเทิลรอยัล · 🎰 กาชา (การันตี 90 · หนี้ระบบ) · 💘 เกมจีบ (เป้าหมาย+เส้นตาย) · 🕯️ สยองขวัญ (จุดเซฟ 3 จุด ย้อนแล้วของในโลกจริงหาย) · ${b('🌐 ค่าการรั่ว')}ทำให้โลกจริงกลายเป็นเกมทีละนิด จนเซิร์ฟเวอร์ประกาศปิด · มีไลฟ์สตรีม แฮกเกอร์/รอบแบน ภาคใหม่ และลูกที่ได้เกมคนละประเภท`,de:'Five game genres, a reality-leak meter that ends in a server shutdown, streaming, hacking, expansions and your children\'s own genres.'},
+ {s:'mw',ic:'💀',t:'โลกที่เกตชนะ',te:'The gates won',d:`มนุษย์แพ้แล้ว อยู่หลัง${b('กำแพง')} · ดูแลทรัพยากร ลาดตระเวน ยึดคืนทีละจุด (25/50/75) · ${b('ฝ่ายต่างๆ')}ในกำแพงมีอำนาจของตัวเอง อาจรัฐประหาร · ฝึกสัตว์อสูรได้ · เป้าหมายสุดท้ายคือปิดเกตแม่`,de:'Humanity lost; defend the wall, manage factions, retake ground, close the mother gate.'},
+ {s:'mw',ic:'☄️',t:'โลกวันสิ้นโลก',te:'Doomsday',d:`อุกกาบาตจะชนใน${b('ไม่กี่ปี')} · นับถอยหลังทุกปี · ลอตเตอรีที่หลบภัย จลาจล ลัทธิ คนที่ปฏิเสธความจริง · ${b('วันสุดท้ายไม่ได้ตายแน่นอน')} ผลขึ้นกับสิ่งที่เตรียมไว้`,de:'A countdown to impact; bunker lottery, riots, cults. The last day depends on what you prepared.'}];
+try{G.forEach(g=>{g.nw=1;g.te=g.te||g.t;g.de=g.de||g.d;if(!SYS_GUIDE.some(x=>x.t===g.t))SYS_GUIDE.push(g)})}catch(e){console.error('b22 guide',e)}
+
+// ---------- 2) บทเรียนรายโลก ----------
+const S1=(t,d)=>({sel:null,t,d});
+const LS2={
+ mw_w_tower:['🗼 โลกหอคอย',[S1('ไต่ทีละชั้น',`ปีที่โฟกัส${b('ไต่หอคอย')}จะขึ้นชั้น · ยิ่งสูงยิ่งอันตราย ${b('บอสอยู่ชั้น 25 / 50 / 75')}`),S1('ทีมและชั้นแปลก',`ทีมช่วยให้รอด แต่${b('เพื่อนตายได้จริง')} · บางชั้นมี${b('กฎเฉพาะ')} อ่านให้ดีก่อนเลือก`),S1('ยอดหอคอย',`ถึงยอดแล้วได้${b('ขอพร')} เลือกพรที่อยากได้ที่สุด`)]],
+ mw_w_game:['🎮 โลกระบบเกม',[S1('ประเภทเกมของคุณ',`ตื่นระบบแล้วจะ${b('สุ่มประเภทเกม')} 5 แบบ แต่ละแบบเล่นไม่เหมือนกัน ดูประเภทของคุณที่แผงโลก`),S1('🌐 ค่าการรั่ว',`ใช้บั๊ก แลกสกิลกับชีวิตจริง ย้อนเซฟ ฯลฯ ทำให้${b('โลกจริงกลายเป็นเกม')} · ถึง 75% เซิร์ฟเวอร์จะประกาศปิดใน 3 ปี · ช่วยคนหรือซ่อมรอยต่อเพื่อลดได้`),S1('เลเวลและบอสโลก',`เลเวล 60 เปิด${b('บอสโลก')} · ดันเจี้ยนให้เลือกลงต่อหรือถอนตัวทุกชั้น — ${b('ยิ่งลึกยิ่งได้ แต่พลาดชั้นลึกของหายครึ่ง')}`)]],
+ mw_w_gatewon:['💀 โลกที่เกตชนะ',[S1('ชีวิตหลังกำแพง',`ค่า${b('กำแพง')}ลดทุกปี ต้องซ่อม · ทรัพยากรมีจำกัด`),S1('ฝ่ายในกำแพง',`แต่ละฝ่ายมีอำนาจ ถ้าฝ่ายไหนอ่อนเกินไปอาจ${b('รัฐประหาร')} · เลือกข้างให้ดี`),S1('ยึดคืน',`ยึดคืนทีละจุดที่ ${b('25 / 50 / 75')} แล้วไปปิดเกตแม่`)]],
+ mw_w_doom:['☄️ โลกวันสิ้นโลก',[S1('นับถอยหลัง',`มี${b('จำนวนปีที่เหลือ')}แสดงที่แผงโลก ลดลงทุกปี`),S1('เตรียมตัว',`ลอตเตอรีที่หลบภัย รายชื่อผู้รอด ลัทธิ — ${b('ทุกอย่างที่เตรียมไว้มีผลวันสุดท้าย')}`),S1('วันสุดท้าย',`ไม่ได้ตายแน่นอน · ${b('ผลขึ้นกับสิ่งที่คุณทำมาทั้งหมด')}`)]]};
+const ADD={
+ mw_w_loop:[S1('🎲 กฎของรอบ',`ทุกปีสุ่ม${b('กฎใหม่')} เช่น ทุกคนพูดความจริง ไฟดับทั้งเมือง — แต่ละกฎมีเหตุการณ์ของตัวเอง`),S1('🃏 อีกคนที่จำได้',`จะเจอคนที่ติดลูปเหมือนคุณ ${b('ความไว้ใจ')}ที่สะสมไว้ตัดสินตอนจบที่ประตูเหล็ก`)],
+ mw_w_ghost:[S1('🔍 สืบก่อนลงมือ',`ผีแต่ละตนต้องการต่างกัน ${b('สืบครบ 3 ขั้น')}จะรู้วิธีที่ถูก · ผิดวิธีย้อนเข้าตัว`),S1('🤝 ผีที่ผูกไว้',`ช่วยคุณทุกปี แต่${b('ความไม่พอใจ')}เพิ่มขึ้น ต้องเซ่นไหว้`)],
+ mw_w_under:[S1('🚓 ผู้กอง',`ข้อตกลงช่วย${b('ลดความร้อน')}ทุกปี แต่อาจพังได้หลายแบบ`),S1('🌙 ความฝันของลูกน้อง',`ลูกน้องแต่ละคนอยากได้ไม่เหมือนกัน ${b('ภักดีต่ำ + อยากมีซอยเอง = ยึดอำนาจ')}`)],
+ mw_w_hunter:[S1('🎲 สายพลังใหม่',`มีสายใหม่ 8 สาย แต่ละสายมี${b('เหตุการณ์เฉพาะ')} และสถานะดูได้ที่ 🪪 บัตรฮันเตอร์`)]};
+try{Object.keys(LS2).forEach(k=>{LESSON[k]={t:LS2[k][0],s:LS2[k][1]}});
+ Object.keys(ADD).forEach(k=>{const L=LESSON[k];if(L&&L.s&&!L.s.some(x=>x.t===ADD[k][0].t))L.s.push(...ADD[k])});
+ const g=LSN_G.find(x=>x[1]==='ยุคปัจจุบัน');if(g)[['mw_w_tower','🗼','โลกหอคอย'],['mw_w_game','🎮','โลกระบบเกม: ประเภทเกมและการรั่ว'],['mw_w_gatewon','💀','โลกที่เกตชนะ'],['mw_w_doom','☄️','โลกวันสิ้นโลก']].forEach(x=>{if(!g[2].some(y=>y[0]===x[0]))g[2].push(x)});
+ const W=window._wld,calm=()=>{try{return S&&S.alive&&coCan()&&!document.getElementById('coach')}catch(e){return false}};
+ setInterval(()=>{try{const M=S&&S.mw;if(!M||!M.native||M.kid||!calm()||modalOpen||choice._cur||!W)return;const w=W.wOf(M);const id='mw_w_'+w;if(!LS2[id])return;const x=document.querySelector('.mwWX');if(!x||!coVis(x))return;if(!coSeen('mw_world'))return;if(!coSeen(id))coStart(id)}catch(e){}},2100)}catch(e){console.error('b22 lesson',e)}
+
+// ---------- 3) สารานุกรมยุคเก่า: ชะตาหายาก ----------
+try{const B=window._blk16;if(B&&B.FEND&&B.TTL){
+ {const _c=cdxTick;cdxTick=function(){const r=_c.apply(this,arguments);try{if(S&&S.flags){B.FEND.forEach(e=>{if(S.flags[e[0]])cdxAdd('fate16',e[0])});if(S.ft)cdxAdd('fate16','_ft');if(S.em&&S.em.n)cdxAdd('fate16','_em');(S.em&&S.em.ttl||[]).forEach(k=>cdxAdd('ttl16',k))}}catch(e){}return r}}
+ {const _cc=cxCats;cxCats=function(){const L=_cc.apply(this,arguments);try{if(!L.some(c=>c&&c.cat==='fate16')){
+  L.push({g:'other',ic:'📡',t:'ชะตาหายาก 📡/👑',te:'Rare fates',cat:'fate16',L:[['_ft','📡 ได้ยินเสียงจากหมื่นปี',1],['_em','👑 ตายด้วยเจตนาแล้วเกิดใหม่',1]].concat(B.FEND.map(e=>[e[0],e[1]+' '+e[2],1]))});
+  L.push({g:'other',ic:'🩸',t:'ฉายาข้ามชาติ',te:'Titles across lives',cat:'ttl16',L:Object.keys(B.TTL).map(k=>[k,B.TTL[k][0]+' '+B.TTL[k][1],0])})}}catch(e){}return L}}}}catch(e){console.error('b22 cdx',e)}
+
+// ---------- 4) สารานุกรมยุคปัจจุบัน: สายฮันเตอร์ + ประเภทเกม ----------
+try{const rec=(k,v)=>{const o=LS.get(k,{})||{};if(!o[v]){o[v]=1;LS.set(k,o)}};
+ setInterval(()=>{try{const M=S&&S.mw;if(!M)return;if(M.H&&M.H.cls&&M.H.aw!=='none')rec('murim_hcls',M.H.cls);if(M.GM&&M.GM.Y&&M.GM.Y.gn)rec('murim_ggn',M.GM.Y.gn)}catch(e){}},3000);
+ const _w=window.wCodex;if(_w)window.wCodex=function(){const r=_w.apply(this,arguments);try{const m=$('modal');if(!m||m.querySelector('.b22cx'))return r;const CL=window._wld7&&window._wld7.CL;const hs=LS.get('murim_hcls',{})||{},gs=LS.get('murim_ggn',{})||{};
+  const GN=[['mmo','⚔️ MMORPG'],['br','🪂 แบทเทิลรอยัล'],['gacha','🎰 กาชา'],['date','💘 เกมจีบ'],['horror','🕯️ สยองขวัญ']];
+  let h='';if(CL){const ks=Object.keys(CL),n=ks.filter(k=>hs[k]).length;h+=`<div class="item b22cx"><b>🌀 สายพลังฮันเตอร์ ${n}/${ks.length}</b><br>${ks.map(k=>hs[k]?`${CL[k].ic} ${CL[k].n}`:`<span style="opacity:.5">${CL[k].leg?'✦ ':''}???</span>`).join(' · ')}</div>`}
+  const g=GN.filter(x=>gs[x[0]]).length;h+=`<div class="item b22cx"><b>🎮 ประเภทเกม ${g}/${GN.length}</b><br>${GN.map(x=>gs[x[0]]?x[1]:'<span style="opacity:.5">???</span>').join(' · ')}</div>`;
+  m.insertAdjacentHTML('beforeend',h)}catch(e){}return r}}catch(e){console.error('b22 wcx',e)}
+})()}catch(e){console.error('block22',e)}
 </script>
 </body>
 </html>
