@@ -22967,7 +22967,7 @@ function scWin(){const c=scOf();return clamp(.5+(S.chuuni||0)/200+Math.min(.1,(S
 function scTick(dy){if(!scOK())return;const c=scOf();if(c.p>=100)return;const y=Math.min(dy,400);c.p=Math.min(100,c.p+Math.min(8,y*scRate()));
  if(Math.random()<Math.min(.3,.015*Math.min(dy,20))&&c.p>5){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.08));log('🧘 ระหว่างหยั่งรู้ฟ้า ลมปราณตีกลับเล็กน้อย — บาดเจ็บภายใน','bad')}
  if(c.p>=100&&!c.told){c.told=1;log('🧘 <b>ญาณแห่งเต๋าเต็มเปี่ยม</b> — รู้สึกได้ว่ามี "บางสิ่ง" เฝ้ามองอยู่เหนือฟ้า · เปิด ☰ เมนู → 🧘 หยั่งรู้ฟ้า เพื่อลองเรียกมัน','myth',true)}}
-function openSysCult(){if(!S)return;if(S.sys)return toast('คุณมีระบบอยู่แล้ว');try{if(chH()&&!chLuck())return toast('🔥 โหมดนรก: ฟ้าในนรกไม่ประทานระบบให้ใคร — หยั่งรู้ฟ้าไม่ได้')}catch(e){}if(!S.xian)return toast('บำเพ็ญหยั่งรู้ฟ้าได้เฉพาะโลกเซียนและโลกเทพ');const c=scOf();
+function openSysCult(){if(!S)return;if(S.sys)return toast('คุณมีระบบอยู่แล้ว');try{if(chH()&&!chLuck())return toast('🔥 โหมดนรก: หยั่งรู้ฟ้าเรียกระบบไม่ได้ — ระบบในนรกได้จากเหตุการณ์ "ปีศาจเสนอสัญญา" (ตัวเลือก 🟦 สัญญาหน้าต่างระบบ) เท่านั้น')}catch(e){}if(!S.xian)return toast('บำเพ็ญหยั่งรู้ฟ้าได้เฉพาะโลกเซียนและโลกเทพ');const c=scOf();
  if(c.won){if(!S.sys){S.sysEver=0;S.sysRefused=0;try{sysOffer()}catch(e){}return}return toast('ชีวิตนี้หยั่งรู้ฟ้าสำเร็จไปแล้ว')}const rd=c.p>=100,yrs=Math.ceil((100-c.p)/Math.max(.01,scRate()));
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🧘 บำเพ็ญหยั่งรู้ฟ้า</h3><p class="tag2">บำเพ็ญจนญาณแห่งเต๋าเต็ม แล้วลองสื่อถึง "สิ่งที่อยู่เหนือฟ้า" — หน้าต่างระบบอาจตอบรับ · สำเร็จได้ครั้งเดียวต่อชีวิต</p>
  <div class="item"><b>ญาณแห่งเต๋า ${Math.floor(c.p)}%</b><div class="hpbar" style="margin:6px 0"><i style="width:${c.p}%;background:#8ad0ff"></i></div>
