@@ -5785,7 +5785,7 @@ function dkLeft(){if(!S)return'';const ri=realmIdx(),r=REALMS[ri],nx=REALMS[ri+1
  ${dkBar('❤️ พลังชีวิต',S.hp,S.maxHp,'linear-gradient(90deg,#ff5a6a,#ff8a7a)',`${Math.max(0,Math.round(S.hp))}/${Math.round(S.maxHp)}`)}
  ${dkBar('⚔️ พลังรวม',nx?tot-r.p:1,nx?nx.p-r.p:1,'linear-gradient(90deg,#ffb83a,#ffe08a)',nx?`${fmt(tot)} / ${fmt(nx.p)}`:fmt(tot)+' · สูงสุด')}
  ${dkBar('⏳ อายุขัย',S.age,lm,'linear-gradient(90deg,#6ab0ff,#a8d4ff)',`${S.age} / ~${Math.round(lm)} ปี`)}
- <div class="dk-grid">${tile('🌀','ลมปราณ',fmtG(Math.round(S.qi*10)/10))}${tile('📜','ปัญญา',fmt(S.int))}${tile('🌸','เสน่ห์',fmt(S.cha))}${tile('🏮','ชื่อเสียง',fmt(S.fame))}${tile('☯️','กรรม',(S.karma>0?'+':'')+Math.round(S.karma),S.karma>=20?'#3a9a4a':S.karma<=-20?'#d84a4a':'')}${tile(moodOf(S.happy)[0],'ความสุข',Math.round(S.happy))}${tile('💰',S.xian?'หินวิญญาณ':'ตำลึง',fmtM(S.money))}${tile('⚔️','ชนะศึก',fmt(S.kills||0))}</div>
+ <div class="dk-grid">${tile('🌀','ลมปราณ',fmtG(Math.round(S.qi*10)/10))}${tile('📜','ปัญญา',fmt(S.int))}${tile('🌸','เสน่ห์',fmt(S.cha))}${tile('🏮','ชื่อเสียง',fmt(S.fame)+((S.infamy||0)>=1?` <small style="color:#d84a4a">🩸${Math.round(S.infamy)}</small>`:''))}${tile('☯️','กรรม',(S.karma>0?'+':'')+Math.round(S.karma),S.karma>=20?'#3a9a4a':S.karma<=-20?'#d84a4a':'')}${tile(moodOf(S.happy)[0],'ความสุข',Math.round(S.happy))}${tile('💰',S.xian?'หินวิญญาณ':'ตำลึง',fmtM(S.money))}${tile('⚔️','ชนะศึก',fmt(S.kills||0))}</div>
  ${trs.length?`<div class="dk-sec"><h5>✨ พรสวรรค์พิเศษ</h5><div class="dk-chips">${trs.map(t=>`<span>${esc(xT(t))}</span>`).join('')}</div></div>`:''}
  <div class="dk-sec"><h5>📖 วิชาเด่น</h5>${top.length?top.map(a=>`<div class="dk-art"><b class="t${a.r}">《${esc(a.n)}》</b><span>${AMN[a.lv||0]}</span></div>`).join(''):'<p class="tag2">ยังไม่มีวิชา</p>'}</div>`}
 function dkRight(){if(!S)return'';const ql=(typeof questList==='function'?questList():[]).filter(q=>!q.done).slice(0,3);
@@ -41364,6 +41364,34 @@ window.rgInsLive=insLive;
  ['protector','breaker','lonely'].forEach(k=>{if(!rdy(k))L.push(`${NM[k]}: ${need(k)}`)});
  box.insertAdjacentHTML('beforeend',`<div class="rgMiss" style="margin-top:6px;padding-top:6px;border-top:1px dashed #fff3"><b>📋 ยังขาดอะไรอยู่</b><div class="tag2" style="line-height:1.7">${L.length?L.join('<br>'):'ครบทุกเงื่อนไขแล้ว — ประตูจะเปิดในปีถัดไป'}</div><span class="tag2">ประตูที่ทำเงื่อนไขครบแล้วจะไม่ปิดหาย · แพ้ดวลสำคัญได้แก้มือ 1 ครั้งต่อรอบ</span></div>`)}catch(e){console.error(e)}return r}}
 })()}catch(e){console.error('block42',e)}
+
+// ===================== ชื่อเสียงชั่ว (infamy): ทำเลวแล้วมีราคา =====================
+try{(()=>{
+const TI=[[50,'ชื่อเริ่มมีคนซุบซิบในทางไม่ดี'],[150,'ถูกจับตา — ข่าวความโหดของคุณกระจายไปทั่ว'],[300,'ค่าหัวถูกติดป้ายตามเมือง'],[600,'ชื่อที่ผู้คนไม่กล้าเอ่ยออกมา']];
+const isDark=()=>!!(S&&((S.faction&&S.faction.t==='มาร')||S.karma<=-40));
+function sync(){try{if(!S||!S.alive)return;const k=+S.karma||0;if(S._ik==null||!isFinite(S._ik)){S._ik=k;return}
+ const d=S._ik-k;S._ik=k;
+ if(d>=2){S.infamy=Math.min(2000,(S.infamy||0)+Math.min(60,Math.round(d*3)))}
+ else if(d<=-2&&(S.infamy||0)>0){S.infamy=Math.max(0,S.infamy+Math.max(-30,Math.round(d*.8)))}
+ tier()}catch(e){}}
+function tier(){const v=S.infamy||0;let t=0;TI.forEach((x,i)=>{if(v>=x[0])t=i+1});const o=S._it|0;
+ if(t>o){S._it=t;const m=TI[t-1][1];try{log(`🩸 <b>ชื่อเสียงชั่ว ${Math.round(v)}</b> — ${m}`,'bad',true);toast('🩸 '+m)}catch(e){}}
+ else if(t<o&&v<TI[Math.max(0,t-1)][0]*0.7){S._it=t}}
+{const _r=render;render=function(){sync();return _r.apply(this,arguments)}}
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{
+ if(!S||!S.alive)return r;sync();let v=S.infamy||0;if(v<=0)return r;
+ S.infamy=Math.max(0,v-1.5);v=S.infamy;
+ if(isDark()){if(v>=150){const g=Math.round(v*1.5);S.money+=(typeof inc==='function'?inc(g):g);S.fame+=Math.round(v*.03)}}
+ else if(v>=100){S.fame=Math.max(0,S.fame-Math.round(v*.02))}
+ if(v>=150&&S.age>=12&&!choice._cur&&(S.age-(S._bhY||-99))>=8&&Math.random()<(v>=300?.1:.06)){S._bhY=S.age;bounty(v)}
+ }catch(e){console.error('infamy',e)}return r}}
+function bounty(v){const ep=total()*(.9+Math.random()*.4+Math.min(.4,v/1500));
+ choice('🩸 นักล่าค่าหัว',`ชื่อเสียงชั่วของคุณ (${Math.round(v)}) ไปถึงหูคนรับจ้างล่าตัว เขายืนขวางทางพร้อมป้ายค่าหัวในมือ`,[
+ {t:'⚔️ สู้',s:'ชนะแล้วชื่อเสียงชั่วยิ่งเพิ่ม',f(){if(fight('นักล่าค่าหัว',ep)){S.infamy=Math.min(2000,(S.infamy||0)+12);log('⚔️ คุณล้มนักล่าค่าหัวลง ข่าวนี้ทำให้ชื่อเสียงชั่วยิ่งดังขึ้น','good')}else log('🩸 นักล่าค่าหัวเอาชนะคุณได้ แล้วทิ้งรอยแผลไว้เป็นของฝาก','bad')}},
+ {t:'💰 จ่ายปิดปาก',s:'เสียเงิน 20% · ชื่อเสียงชั่ว −15',f(){S.money=Math.max(0,Math.round(S.money*.8));S.infamy=Math.max(0,(S.infamy||0)-15);log('💰 คุณจ่ายให้เขาเงียบ ป้ายค่าหัวหายไปจากเมืองนี้','good')}},
+ {t:'🏃 หลบหนี',s:'ชื่อเสียง −10 · เจ็บเล็กน้อย',skip:true,f(){S.fame=Math.max(0,S.fame-10);S.hp-=Math.round(S.maxHp*.05);log('🏃 คุณหนีออกนอกเมืองกลางดึก','bad')}}])}
+window._infamy={sync,tier,bounty};
+})()}catch(e){console.error('infamy block',e)}
 </script>
 </body>
 </html>
