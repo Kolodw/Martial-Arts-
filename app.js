@@ -14369,7 +14369,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
    else{h.fail=(h.fail||0)+1;S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.5));
     if(h.fail>=3){S.deathCause=`วิญญาณถูกขังไว้ใน${nm} (นรกชั้นที่ ${L+1}) ตลอดกาล`;S.hp=0;log(`⛓️ พ่ายที่ประตู${nm}เป็นครั้งที่ 3 — โซ่นรกลากวิญญาณคุณลงไป`,'bad',true);try{checkDeath()}catch(e){}}
     else{h.next=S.age+1;log(`🩸 พ่ายให้${bs} — ถอยกลับมาพร้อมบาดแผล · ประตูจะเปิดอีกครั้งปีหน้า (พลาดได้อีก ${3-h.fail} ครั้ง ไม่งั้นวิญญาณจะถูกขัง)`,'bad',true)}}render()})}
- function pact(){const h=S.hell,r=Math.random(),sysOK=S.sys?!S.ai:!S.sysEver;let k=r<.34?'sys':r<.67?'pow':'life';if(k==='sys'&&!sysOK)k=r<.17?'pow':'life';h.pactY=S.age;
+ function pact(){const h=S.hell,r=Math.random(),sysOK=S.sys?!S.ai:!S.sysEver;let k=r<.34?'sys':r<.67?'pow':'life';if(k==='sys'&&!sysOK)k=r<.17?'pow':'life';if(sysOK&&!h.pSys){k='sys';h.pSys=1}h.pactY=S.age;
   const O={sys:{t:S.sys?'🤖 สัญญาปัญญาประดิษฐ์':'🟦 สัญญาหน้าต่างระบบ',s:'แลกกับอายุขัยสูงสุด −30%',f(){h.lifeP-=.3;S.chSysOK=1;const hadSys=!!S.sys;try{if(S.sys){aiGive();if(!S.ai){aiGive._b=1;try{aiGive('pact')}finally{aiGive._b=0}}}else{const T=pickW(SYS_TYPES).v,G=pickW(SYS_GRADE).v;bindSys(T,G)}}catch(e){console.error(e)}if(hadSys?!S.ai:!S.sys){h.lifeP+=.3;const g=pctPow(.1);S.power+=g;log(`📜 ปีศาจผิดสัญญา — ${hadSys?'AI':'หน้าต่างระบบ'}ไม่ยอมมาหาคุณ! อายุขัยที่ขายไปถูก<b>คืนให้ครบ</b> และปีศาจชดเชยพลังยุทธ์ +${fmt(g)}`,'myth',true);return}log('📜 คุณประทับลายนิ้วมือด้วยเลือด — ปีศาจหัวเราะ "อายุของเจ้าเป็นของข้าแล้ว"','myth',true)}},
    pow:{t:'⚔️ สัญญาพลังมาร',s:'พลังยุทธ์ +30% · แลกกับกรรม −60 และคำสาปค่าหัวจากนรก',f(){const g=pctPow(.3);S.power+=g;S.karma-=60;addCurse('hunt');log(`📜 พลังมารไหลทะลักเข้าร่าง — พลังยุทธ์ +${fmt(g)}`,'myth',true)}},
    life:{t:'🌿 สัญญาอายุยืน',s:'อายุขัยสูงสุด +50% · แลกกับคำสาปสุ่ม 1 ข้อ',f(){h.lifeB+=.5;const ks=Object.keys(CUR).filter(x=>ncur(x)<3);addCurse(ch(ks));log('📜 ปีศาจต่อเส้นชีวิตให้คุณ — แต่ทิ้งรอยไหม้ไว้บนวิญญาณ','myth',true)}}}[k];
@@ -14381,7 +14381,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
   if(h.lv>=18)return;
   if(S.age>=h.next-2&&h.warn2!==h.next){h.warn2=h.next;h.bp=total();addFeed('ev',`🔥 แผ่นดินร้อนระอุ — <b>ประตู${HL_N[h.lv]}</b> (ชั้น ${h.lv+1}) จะเปิดในอีก 2 ปี · ผู้คุมจะแรงตามพลังของคุณตอนนี้ — ฝึกให้เกินกว่านี้ใน 2 ปีจะได้เปรียบ`,'sum')}
   if(S.age>=h.next&&free()){gate();return}
-  if(S.age>=14&&S.age-h.pactY>=8&&Math.random()<.07*(wm().pact||1)&&free())pact()}
+  if(S.age>=14&&S.age-h.pactY>=(h.pSys?8:3)&&Math.random()<(h.pSys?.07:.2)*(wm().pact||1)&&free())pact()}
  {const _py=passYear;passYear=function(){try{hInit()}catch(e){}const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(S&&S.age!==a0)tick()}catch(e){console.error(e)}return r}}
  {const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{hInit();const h=H();if(h)setTimeout(()=>{try{log(`🔥 <b>นรก 100 ชั้น</b> — สัปดาห์นี้: <b>${wm().n}</b> (${wm().d}) · ประตูนรกชั้นแรกเปิดตอนอายุ 16 ปี`,'myth',true)}catch(e){}},900)}catch(e){}return r}}
  // ---- แสดงสถานะบนหัวจอ ----
@@ -22608,7 +22608,7 @@ const hlSenseN=()=>{const s=S&&S.hlS;return s?(s.blind?1:0)+(s.deaf?1:0)+(s.numb
  if(x&&x.gh&&k==='boss'){const a=newArt(3);if(x.gh.ar)a.n=x.gh.ar;Array.prototype.push.call(S.arts,a);log(`👻 วิญญาณของ <b>${esc(x.gh.n)}</b> สลายเป็นแสง ทิ้งวิชาที่เขาภูมิใจที่สุดไว้ให้ — ได้ ${artHtml(a)}`,'myth',true)}
  if(k==='boss'&&n%10===0&&n<(h.ab?1000:100)){S.hlS=S.hlS||{};const has=['blind','deaf','numb'].filter(z=>!S.hlS[z]);if(has.length&&!S.hlS['f'+n]){S.hlS['f'+n]=1;mdWait(()=>hlSenseAsk(n,has))}}}catch(er){console.error(er)}return r}}
 const HL_SN={blind:['👁️ ควักดวงตา (ตาบอด)','ตัวเลือกทุกข้อจะไม่มีคำอธิบายอีกต่อไป'],deaf:['👂 สละการได้ยิน (หูหนวก)','จะไม่รู้กฎของผู้คุมและไม่รู้ว่ามันแรงแค่ไหน'],numb:['✋ สละความรู้สึก (ไร้ความรู้สึก)','จะมองไม่เห็นพลังชีวิตของตัวเอง']};
-function hlSenseAsk(n,has){choice(`🩸 พันธสัญญาชั้นที่ ${n}`,`เสียงกระซิบจากก้นนรก: "มอบบางอย่างของเจ้าให้ข้า แล้วข้าจะทำให้ผู้คุมทุกตนอ่อนแอลงต่อหน้าเจ้า"<br><span class="tag2">แลกแล้วเสียถาวรตลอดชีวิตนี้ · ผู้คุมอ่อนลง 12% ต่อหนึ่งประสาท · แก่นนรก +4 · พลังเพิ่มขึ้น</span>`,
+function hlSenseAsk(n,has){choice(`🩸 พันธสัญญาชั้นที่ ${n}`,`เสียงกระซิบจากก้นนรก: "มอบบางอย่างของเจ้าให้ข้า แล้วข้าจะทำให้ผู้คุมทุกตนอ่อนแอลงต่อหน้าเจ้า"<br><span class="tag2">⚠️ สัญญานี้ไม่ให้ระบบ (สัญญาระบบมาจาก "ปีศาจเสนอสัญญา") · แลกแล้วเสียถาวรตลอดชีวิตนี้ · ผู้คุมอ่อนลง 12% ต่อหนึ่งประสาท · แก่นนรก +4 · พลังเพิ่มขึ้น</span>`,
  has.map(z=>({t:HL_SN[z][0],s:HL_SN[z][1],_x:1,noFate:1,f(){S.hlS=S.hlS||{};S.hlS[z]=1;const h=S.hell;if(h)h.ess+=4;try{pctPow(.03)}catch(e){}log(`🩸 คุณมอบ${HL_SN[z][0].slice(3)}ให้นรก — ${HL_SN[z][1]} · ผู้คุมทุกตนดูเล็กลงในสายตาที่เหลืออยู่`,'myth',true);mdBody()}})).concat([{t:'🙅 ไม่แลกอะไรทั้งนั้น',s:'ไปต่อด้วยตัวเอง',_x:1,noFate:1,f(){log('🙅 คุณไม่ยอมแลกอะไรกับเสียงกระซิบ','epic')}}]))}
 function mdBody(){try{document.body.classList.toggle('hlNumb',!!(S&&S.alive&&S.ch==='hell'&&S.hlS&&S.hlS.numb))}catch(e){}}
 (()=>{const st=document.createElement('style');st.textContent='body.hlNumb .hpbar,body.hlNumb #gHp{visibility:hidden!important}body.hlNumb .duHp,body.hlNumb [id^="du"] .hpbar{visibility:hidden!important}';document.head.appendChild(st)})();
