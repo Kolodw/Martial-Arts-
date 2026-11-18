@@ -41047,7 +41047,8 @@ const TI=[0,1,3,5,7];
 const tN=()=>{const t=TIER[TI[Math.min(4,S.beastMode.st)]];return t?t[0]:''};
 const O=(t,s,f)=>({t,s,f});
 // ---------- เริ่มชีวิตเป็นสัตว์วิญญาณ ----------
-{const _cs=chStart;chStart=function(){const r=_cs.apply(this,arguments);try{if(S.ch==='soul'&&CFG.sbeast){const sp=ch(BL_SP),el=ch(BEL)[0];
+{const _bb=beastBirth;beastBirth=function(i){window.__sbOn=1;try{return _bb.apply(this,arguments)}finally{window.__sbOn=0}}}
+{const _cs=chStart;chStart=function(){const r=_cs.apply(this,arguments);try{if(S.ch==='soul'&&window.__sbOn&&!CFG.sbeast){S.sv={aw:3,sp:[],lv:0,rings:[],seen:{},hy:-9,retired:true,bs:1};return r}if(S.ch==='soul'&&CFG.sbeast){const sp=ch(BL_SP),el=ch(BEL)[0];
  S.sv={aw:3,sp:[],lv:0,rings:[],seen:{},hy:-9,retired:true,bs:1};S.beastMode={sp:sp[0],el,st:0,human:0};S.lifespan+=S.xian?400:180;S.focus='hunt';S.flags.lostParents=1;S.parents=[];S.sibs=[];
  S.name=ch(['เจ้า','อา','เสี่ยว'])+sp[0]+ch(['น้อย','ขาว','ดำ','ทอง','ไฟ','จันทร์']);
  setTimeout(()=>{try{log(`🌲 <b>${S.name}</b> ลืมตาขึ้นในป่าลึกของทวีปจิตวิญญาณยุทธ์ — ที่นี่เรียกพวกเจ้าว่า <b>สัตว์วิญญาณ</b> ผู้ฝึกจิตมนุษย์ล่าพวกเจ้าเพื่อเอาวงแหวน ทุกปีที่รอดคือหนึ่งปีบำเพ็ญ`,'myth',true);render()}catch(e){}},50)}}catch(e){console.error('b41 start',e)}return r}}
