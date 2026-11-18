@@ -13061,18 +13061,18 @@ const rgW=()=>S.xt?2:S.xian?1:0,rgN=k=>RG2[k]?RG2[k].n[rgW()]:'บ้านเ�
 function rgCan(){if(!S||!S.alive)return'ยังไม่ได้เล่น';if(relB())return'ร่างสัตว์เดินทางไกลไม่ได้ — แปลงกายก่อน';if(S.age<14)return'ยังเด็กเกินไป ออกเดินทางไกลไม่ได้';return''}
 function rgPing(rg){if(!onlineOK)return Promise.resolve(null);return api('rgp',{rg:rg||rgAt()||'home'}).then(j=>{if(j&&j.c)window._rgOn=j.c;return j}).catch(()=>null)}
 function openMap(){const why=rgCan();if(why)return toast(why);const cur=rgAt(),W=rgW(),on=window._rgOn||{};
- const card=(k,R)=>{const lk=R.lock&&!R.lock(),here=cur===k,cd=(S.trvY||-99)+3-S.age,bo=(S.rbY||{})[k],bcd=bo!=null?bo+8-S.age:0,won=S.flags['rb_'+k];
+ const card=(k,R)=>{const lk=R.lock&&!R.lock(),here=cur===k,cd=(S.age>=10000?-1:(S.trvY||-99)+3-S.age),bo=(S.rbY||{})[k],bcd=bo!=null?bo+8-S.age:0,won=S.flags['rb_'+k];
   return`<div class="rgc ${here?'cur':''} ${lk?'lock':''}"><img src="${pxThumb(R.ty,['m','x','g'][W],k.length*11+3)}"><div class="b"><b>${R.ic} ${R.n[W]}</b>${here?' <span class="tag">📍 อยู่ที่นี่</span>':''}${won?' <span class="tag">👑</span>':''}<br><span class="tag2">${R.b}</span>${on[k]?`<br><span class="rgon">👥 ผู้เล่นอยู่ที่นี่ ${on[k]} คน</span>`:''}
    <div class="ac">${lk?`<span class="tag2">🔒 ${R.lockT}</span>`:here?`<button class="sysb" onclick="rgBoss('${k}')" ${bcd>0?'disabled style="opacity:.5"':''}>⚔️ ท้าจ้าวถิ่น${bcd>0?` (${bcd} ปี)`:''}</button>`:`<button class="sysb" onclick="rgGo('${k}')" ${cd>0?'disabled style="opacity:.5"':''}>🧭 เดินทาง${cd>0?` (${cd} ปี)`:''}</button>`}</div></div></div>`};
  const rum=(S.rum||[]).slice(0,3),sc=(S.scars||[]).slice(0,4);
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🗺️ แผนที่${S.xt?'เก้าชั้นฟ้า':S.xian?'โลกเซียน':'ยุทธภพ'}</h3>
- <p class="tag2">📍 ตอนนี้: <b>${cur?RG2[cur].ic+' '+rgN(cur):'🏠 '+(S.town||'บ้านเกิด')}</b>${cur&&S.trvA!=null?` · อยู่มา ${S.age-S.trvA} ปี`:''} · ย้ายได้ทุก 3 ปี · 📜 ค่าหัว: <b style="color:${S.bty?'#e04050':'inherit'}">${bountyTxt()}</b>${S.bty&&cur==='capital'?` <button class="sysb" onclick="bountyPay()">จ่ายล้างค่าหัว</button>`:''}</p>
+ <p class="tag2">📍 ตอนนี้: <b>${cur?RG2[cur].ic+' '+rgN(cur):'🏠 '+(S.town||'บ้านเกิด')}</b>${cur&&S.trvA!=null?` · อยู่มา ${S.age-S.trvA} ปี`:''} · ย้ายได้ทุก 3 ปี${S.age>=10000?" (อายุหมื่นปีขึ้นไปย้ายได้ทันที)":""} · 📜 ค่าหัว: <b style="color:${S.bty?'#e04050':'inherit'}">${bountyTxt()}</b>${S.bty&&cur==='capital'?` <button class="sysb" onclick="bountyPay()">จ่ายล้างค่าหัว</button>`:''}</p>
  ${cur?`<button class="gbtn" style="width:100%;margin:4px 0" onclick="rgGo(null)">🏠 กลับบ้านเกิด</button>`:''}
  ${Object.keys(RG2).map(k=>card(k,RG2[k])).join('')}
  ${sc.length?`<div class="item"><b>🗺️ ร่องรอยของคุณบนแผ่นดิน</b><br><span class="tag2">${sc.map(x=>`「${esc(x.n)}」 ${REL_GR[x.sc][0]}`).join(' · ')}</span></div>`:''}
  ${rum.length?`<div class="item"><b>💬 ข่าวลือเกี่ยวกับคุณ</b><br><span class="tag2">${rum.map(x=>esc(x.t)).join('<br>')}</span></div>`:''}`,'map');
  if(!openMap._p||Date.now()-openMap._p>60000){openMap._p=Date.now();rgPing().then(j=>{if(j&&$('modal')&&modalOpen&&$('modal').querySelector('.rgc')&&j.c&&Object.values(j.c).some(Boolean))try{openMap()}catch(e){}})}}
-function rgGo(k){const why=rgCan();if(why)return toast(why);if(k&&RG2[k].lock&&!RG2[k].lock())return toast(RG2[k].lockT);const cd=(S.trvY||-99)+3-S.age;if(cd>0)return toast(`เพิ่งย้ายมา ต้องรออีก ${cd} ปี`);closeM();
+function rgGo(k){const why=rgCan();if(why)return toast(why);if(k&&RG2[k].lock&&!RG2[k].lock())return toast(RG2[k].lockT);const cd=(S.age>=10000?-1:(S.trvY||-99)+3-S.age);if(cd>0)return toast(`เพิ่งย้ายมา ต้องรออีก ${cd} ปี`);closeM();
  S.trvY=S.age;S.trvA=S.age;
  if(!k){const was=rgAt();S.region=null;S.regionUntil=null;log(`🏠 คุณเดินทางกลับบ้านเกิด${was?' หลังจากใช้ชีวิตที่'+rgN(was):''}`,'good');rgPing('home');render();saveGame();return}
  S.region=k;S.regionUntil=S.age+1e9;S.visited=[...new Set([...(S.visited||[]),k])];const R=RG2[k];
@@ -29037,7 +29037,7 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'👹',t:'แดนอสูรและ�
 window._dzEV=EV;
 })()}catch(e){console.error(e)}
 // ===================== รั้งอยู่ที่ขอบกัลป์: ไม่ต้องข้ามกัลป์ทันที ใช้ชีวิต/ฝึกต่อได้ · กันประตูกัลป์ซ้อน =====================
-kcap=function(){const K=S&&S.kalpa,b=1e6*(1+((K&&K.n)|0)+((K&&K.ofs)|0))+((K&&K.off)|0);return K&&K.wait&&S&&S.alive?Math.max(b,(S.age|0)+1):b};
+kcap=function(){const K=S&&S.kalpa,b=1e6*(1+((K&&K.n)|0)+((K&&K.ofs)|0))+((K&&K.off)|0);return K&&K.wait&&S&&S.alive?Math.max(b,(S.age|0)+150000):b};
 const KE_RX=/^(♾️ ขอบของ|👁️ ใจกลางวงจรกัลป์|🔀 ทางแยกนอกวงจรกัลป์|🌫️ ขอบของ)/;
 function keWait(){const K=S&&S.kalpa;if(!K)return;K.wait=1;K.pend=0;K.wY=S.age;log(`⏳ คุณยังไม่ก้าวข้าม — รั้งอยู่ที่ขอบของ${KAL_N[K.n]||'กัลป์'} ใช้ชีวิตและฝึกฝนต่อได้ตามปกติ · พร้อมเมื่อไหร่ไปที่ ☰ เมนู → ♾️ ก้าวข้ามกัลป์`,'myth',true);try{render()}catch(e){}}
 function keCross(){const K=S&&S.kalpa;if(!K||!S.alive)return;if(choice._cur){toast('ตอบเรื่องที่ค้างอยู่ก่อน');return}closeM();K.wait=0;K.off=Math.max(0,(S.age|0)-1e6*(1+(K.n|0)+(K.ofs|0)));K._gl=0;kalpaHit()}
@@ -41151,7 +41151,7 @@ body #game .focus.less:not(.more){-webkit-mask-image:linear-gradient(90deg,trans
 const $$=id=>document.getElementById(id);
 const gOn=()=>{const g=$$('game');return!!(g&&g.classList.contains('on'))};
 // --- ป้ายชื่อใต้ปุ่มล่าง ---
-const LB={pauseBtn:()=>paused?'เล่นต่อ':'หยุด',spdBtn:'ความเร็ว',bagBtn:'กระเป๋า',questBtn:'เควส',sysBtn:'ระบบ',autoBtn:'ออโต้',skipBtn:'ข้าม',logBtn:'บันทึก',menuBtn:'เมนู'};
+const LB={pauseBtn:()=>paused?'เล่นต่อ':'หยุด',spdBtn:'ความเร็ว',bagBtn:'กระเป๋า',questBtn:'เควส',sysBtn:'ระบบ',autoBtn:'ออโต้',skipBtn:'แสดงหมด',logBtn:'บันทึก',menuBtn:'เมนู'};
 function labels(){if(innerWidth>=700)return;for(const id in LB){const b=$$(id);if(!b)continue;const t=typeof LB[id]==='function'?LB[id]():LB[id];let l=b.querySelector('.cbL');if(!l){l=document.createElement('small');l.className='cbL';b.appendChild(l)}if(l.textContent!==t)l.textContent=t}}
 // --- ตำแหน่งเกาะ: เหนือแถวปุ่ม/แถบรอเลือก ---
 function islPos(){try{let v=24;if(gOn()){const c=document.querySelector('#game .ctrl'),pb=$$('pendBar');let top=c?c.getBoundingClientRect().top:innerHeight-118;if(pb&&pb.offsetHeight)top=Math.min(top,pb.getBoundingClientRect().top);v=Math.max(24,Math.round(innerHeight-top+8))}document.documentElement.style.setProperty('--islB',v+'px')}catch(e){}}
@@ -42368,3 +42368,49 @@ function yearly(M){const U=uS(M);U.heat=Math.max(0,U.heat-2-Math.floor(U.heat/25
 try{const g=window._guide2;if(g)g.add('world','🌃','โลกใต้ดิน 3 ประเภทย่อย + กระดานภารกิจ','เมื่ออายุ 16 โลกใต้ดินจะสุ่มประเภทย่อย: <b>นักเลงยุคปกติ</b> (กำลังคน เงิน เส้นสาย) · <b>เหนือมนุษย์</b> (ผู้ตื่นพลัง พลัง 0-10 ระวังโดนเห็น) · <b>มีระบบ</b> (ระบบโผล่มาพร้อมเป้าหมายใหญ่ มีบุคลิก และแต้มระบบ) ทุกแบบใช้ <b>📋 กระดานภารกิจโลกจริง</b> ในหน้าข้อมูล: เลือกวิธีทำ (กำลัง/เงิน/เส้นสาย) ภารกิจมีเส้นตาย ผลตามมาจริง (ความร้อน อิทธิพล ย่านที่คุม)','mwInfo',()=>!!UO())}catch(e){}
 window._ub={QN,QS,SUB,runQuest,refill,prog,subReveal};
 })()}catch(e){console.error('ub block',e)}
+// ============================================================
+// BLOCK 50: ♾️ ปลายเกม — ป้ายรั้งที่ขอบกัลป์ (แตะเพื่อก้าวข้าม) · การ์ดเส้นทางที่เหลือ · ผู้สร้างกัลป์ใหม่ (ฉากจบที่ส่งพรให้ชาติหน้า)
+// ============================================================
+try{(()=>{
+if(typeof KAL_N==='undefined')return;
+const st=document.createElement('style');st.textContent=`.keLock{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:10px;font-size:11.5px;background:linear-gradient(90deg,#3a2a6a,#5a3a9a);color:#ffe9a8;border:1px solid #b89aff;cursor:pointer;animation:keP 2s ease-in-out infinite}@keyframes keP{50%{box-shadow:0 0 10px #b89aff}}
+.rmL{padding:7px 0;border-bottom:1px dashed var(--line,#ccc);font-size:13px;line-height:1.5}.rmL b{display:block}.rmL .ok{color:#2a9a4a}.rmL .no{opacity:.75}`;document.head.appendChild(st);
+const K=()=>S&&S.kalpa;
+const late=()=>!!(S&&S.alive&&((S.kalpa&&S.kalpa.n>=1)||S.age>=1e6));
+// ---------- ป้ายรั้งอยู่ที่ขอบกัลป์ ----------
+window.keAsk=function(){const k=K();if(!k||!k.wait)return;modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>♾️ ขอบของ${KAL_N[k.n]||'กัลป์'}</h3>
+ <p>คุณกำลัง <b>รั้งอยู่ที่ขอบกัลป์</b> — ใช้ชีวิต ฝึก จำศีล ปิดด่านได้ตามปกติ แต่เรื่องราวหลักจะไม่ไปต่อจนกว่าคุณจะก้าวข้าม</p>
+ <p class="tag2">ก้าวข้ามแล้วจะเจอภัยสิ้นกัลป์ ${k.n>=8?'และด่านสุดท้ายสู่ฉากจบสูงสุด':'แล้วเข้าสู่'+(KAL_N[k.n+1]||'กัลป์ถัดไป')}</p>
+ <div class="brow"><button class="pbtn" onclick="closeM();keCross()">♾️ ก้าวข้ามตอนนี้</button><button class="gbtn" onclick="closeM()">⏳ ยังก่อน</button></div>`,'keask')};
+{const _r=render;render=function(){const r=_r.apply(this,arguments);try{const g=$('gRealm');if(!g)return r;const on=!!(S&&S.alive&&K()&&K().wait);const ex=g.querySelector('.keLock');if(!on){if(ex)ex.remove();return r}
+ if(!ex)g.insertAdjacentHTML('beforeend',' <span class="keLock" onclick="event.stopPropagation();keAsk()">⏳ รั้งที่ขอบกัลป์ · แตะเพื่อก้าวข้าม</span>')}catch(e){}return r}}
+// รั้งที่ขอบกัลป์: อายุขัยตามเพดานกัลป์ทุกร่าง (สัตว์ด้วย) — จำศีล/ปิดด่านยาวได้จริง
+{const _lm=lifeMax;lifeMax=function(){const v=_lm.apply(this,arguments);try{if(S&&S.alive&&S.kalpa&&S.kalpa.wait)return Math.max(v,kcap()-1)}catch(e){}return v}}
+// ---------- ผู้สร้างกัลป์ใหม่ ----------
+const CR='murim_creator';
+const crOK=()=>!!(S&&S.alive&&K()&&(K().n>=8||S.age>=9e6)&&!S.flags.kEnd);
+window.krCreate=function(){if(!crOK())return toast('ต้องไปถึงกัลป์ที่เก้าก่อน');modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌌 ผู้สร้างกัลป์ใหม่</h3>
+ <p>คุณมีชีวิตอยู่มา <b>${fmt(S.age)}</b> ปี ผ่านมาแล้ว ${(K().n|0)+1} กัลป์ — ไม่เหลืออะไรในจักรวาลนี้ให้พิสูจน์อีก</p>
+ <p>สละกายและวิญญาณทั้งหมด หลอมเป็นเมล็ดพันธุ์ของจักรวาลใหม่ ชีวิตนี้จะจบลงอย่างสงบ และ<b>ทุกคนที่เกิดในกัลป์ใหม่ (ชาติหน้าของคุณ) จะได้รับพรของผู้สร้าง</b></p>
+ <div class="item">🎁 ชาติถัดไป: ชื่อเสียง +300 · ปัญญา +30 · กรรมดี +50 · อายุขัย +20 · เริ่มด้วยตำนานว่าคุณคือลูกหลานของผู้สร้าง<br>🏷️ ฉายาถาวรบนหน้าแรก: 🌌 ผู้สร้างกัลป์</div>
+ <p class="tag2">⚠️ ชีวิตนี้จบทันที ย้อนกลับไม่ได้</p>
+ <div class="brow"><button class="pbtn" onclick="krGo()">🌌 สร้างกัลป์ใหม่</button><button class="gbtn" onclick="closeM()">ยังก่อน</button></div>`,'krcreate')};
+window.krGo=function(){if(!crOK())return;closeM();const C=LS.get(CR,null)||{n:0};C.n=(C.n|0)+1;C.last=S.name;C.age=S.age;C.d=Date.now();C.bonus=1;LS.set(CR,C);
+ S.flags.kCreator=1;S.flags.kEnd=1;try{keyAdd(`สละกายสร้างกัลป์ใหม่ เมื่ออายุ ${fmt(S.age)} ปี`)}catch(e){}
+ log(`🌌 <b>ผู้สร้างกัลป์</b> — ร่างของ${esc(S.name)}สลายเป็นแสงนับล้านดวง กลายเป็นดวงดาวดวงแรกของจักรวาลใหม่ ทุกชีวิตที่จะเกิดต่อจากนี้ล้วนมีเศษเสี้ยวของคุณอยู่ข้างใน`,'myth',true);
+ try{island({big:1,pri:1,ic:'🌌',h:'ฉากจบ',t:'ผู้สร้างกัลป์',d:'ชาติหน้าได้รับพรของผู้สร้าง',kind:'rainbow',ms:7000})}catch(e){}
+ setTimeout(()=>{try{S.deathCause=`สละกายและวิญญาณสร้างกัลป์ใหม่ขึ้นจากความว่างเปล่า — กลายเป็นดวงดาวดวงแรกของจักรวาลใหม่`;S.hp=0;S.nearY=S.age;checkDeath()}catch(e){console.error(e)}},1800)};
+{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{const C=LS.get(CR,null);if(C&&C.bonus&&S&&S.alive){C.bonus=0;LS.set(CR,C);S.fame=(S.fame||0)+300;S.int=(S.int||0)+30;S.karma=(S.karma||0)+50;S.lifespan=(S.lifespan||0)+20;
+ setTimeout(()=>{try{log(`🌌 <b>พรของผู้สร้างกัลป์</b> — ผู้เฒ่าในหมู่บ้านเล่าว่าดาวที่สว่างที่สุดบนฟ้าคือ ${esc(C.last||'ผู้สร้าง')} ผู้สละตัวเองสร้างโลกใบนี้ และคืนที่คุณเกิด ดาวดวงนั้นกะพริบสามครั้ง<br><span class="tag2">ชื่อเสียง +300 · ปัญญา +30 · กรรม +50 · อายุขัย +20</span>`,'myth',true)}catch(e){}},900)}}catch(e){}return r}}
+// ฉายาบนหน้าแรก (แผงตำนานของฉัน)
+setInterval(()=>{try{const C=LS.get(CR,null),el=document.getElementById('tsLeg');if(!C||!C.n||!el)return;const h=el.querySelector('h5');if(h&&!h.querySelector('.krT'))h.insertAdjacentHTML('beforeend',`<small class="krT" style="color:#c8b0ff">🌌 ผู้สร้างกัลป์${C.n>1?' ×'+C.n:''}</small>`)}catch(e){}},2000);
+// ---------- การ์ดเส้นทางที่เหลือ ----------
+window.openRoadEnd=function(){const k=K()||{n:0},m=S.beastMode,L=[];const row=(ok,t,d,btn)=>`<div class="rmL"><b class="${ok?'ok':'no'}">${ok?'✅':'⬜'} ${t}</b><span class="tag2">${d}</span>${btn||''}</div>`;
+ L.push(row((k.n|0)>=8,`วัฏจักรกัลป์ ${Math.min(9,(k.n|0)+1)}/9`,`ตอนนี้อยู่ใน${KAL_N[k.n|0]||'กัลป์'}${k.wait?' · ⏳ รั้งอยู่ที่ขอบกัลป์':''} · อยู่ถึงขอบกัลป์แล้วก้าวข้ามเพื่อไปต่อ`,k.wait?'<br><button class="sysb" onclick="closeM();keAsk()">♾️ ก้าวข้ามกัลป์</button>':''));
+ L.push(row(!!S.flags.kTop,'ฉากจบสูงสุด: ก้าวพ้นวัฏจักรกัลป์ทั้งเก้า','ผ่านกัลป์ที่เก้า เลือกเส้นทาง (ทรงจำ · กฎ · เงา) แล้วผ่านด่านนอกกาลทั้ง 3 ด่าน'));
+ L.push(row(!!S.flags.kCreator,'ฉากจบ: 🌌 ผู้สร้างกัลป์ใหม่','สละกายสร้างจักรวาลใหม่ ชาติหน้าได้รับพร · เปิดเมื่อถึงกัลป์ที่เก้า',crOK()?'<br><button class="sysb" onclick="krCreate()">🌌 สร้างกัลป์ใหม่</button>':''));
+ if(m){L.push(row((m.capX|0)>=9,`ทัณฑ์แสนปี ${(m.capX|0)}/9`,'ฝ่าทัณฑ์ที่ขอบอายุขัยทุก 100,000 ปี'));L.push(row(!!m.king,'ราชาอสูร','ครองป่าทั้งผืนเมื่อเป็นอสูรพันปี'));L.push(row(!!(m.human||S.flags.transformed),'แปลงกายเป็นมนุษย์','ทิ้งร่างสัตว์ไปใช้ชีวิตในร่างคน'))}
+ const C=LS.get(CR,null);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🧭 เส้นทางที่เหลือ</h3><p class="tag2">อายุ ${fmt(S.age)} ปี — สิ่งที่ยังรอคุณอยู่ในจักรวาลนี้${C&&C.n?` · 🌌 คุณเคยสร้างกัลป์มาแล้ว ${C.n} ครั้ง`:''}</p>${L.join('')}`,'roadend')};
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(!late())return r;const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.rmEnd')){const k=K();g.insertAdjacentHTML('afterbegin',`<button class="opt rmEnd" onclick="closeM();openRoadEnd()">🧭 เส้นทางที่เหลือ<small>${k&&k.wait?'⏳ รั้งที่ขอบกัลป์ · ':''}${KAL_N[(k&&k.n)|0]||''}</small></button>`)}}catch(e){}return r}}
+})()}catch(e){console.error('block50',e)}
