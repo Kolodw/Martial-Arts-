@@ -36176,10 +36176,10 @@ function emOffer(){const E=S.em||(S.em=EM0()),raw=rawRealm(),stuck=S.rcap!=null&
  const txt=stuck?`พลังของคุณเต็มเปี่ยม แต่ประตูบานสุดท้ายไม่ยอมเปิด ไม่ว่าจะฝึกอีกกี่ปี ${E.n?'กำแพงเดิมที่เคยหยุดคุณในชาติก่อน กลับมาอีกครั้ง':'คุณเริ่มสงสัยว่าทางเดียวที่ผ่านไปได้ คือต้องเริ่มใหม่'}`:`คุณยืนอยู่บนจุดสูงสุดที่โลกนี้มอบให้ ไม่มีใครเหนือกว่า แต่ก็ไม่มีที่ให้ไปต่อ ${E.n?'ความทรงจำหลายชาติบอกว่า ยังมีทางอื่น':'ความคิดหนึ่งผุดขึ้นมาเงียบๆ'}`;
  const O=[
   {t:'⏳ ยังไม่ถึงเวลา',s:'ถามอีกครั้งในอีกหลายปี',f(){E.nx=S.age+6;log('👑 คุณเก็บความคิดนั้นไว้ก่อน — แต่มันไม่ได้หายไปไหน')}},
-  {t:'🌑 ตายด้วยเจตนา เกิดใหม่พร้อมความทรงจำ',s:'เลือกวิธีเกิดได้ 3 แบบ · เก็บวิชาไว้ · ศัตรูชาติก่อนจะตามมา',noFate:true,f(){later(emWay)}},
+  E.lock?{t:'🔒 ทางเกิดใหม่ถูกปิด',s:'คุณสาบานไว้แล้วว่าจะไม่เกิดใหม่อีก',skip:true,f(){E.nx=S.age+8}}:{t:'🌑 ตายด้วยเจตนา เกิดใหม่พร้อมความทรงจำ',s:'เลือกวิธีเกิดได้ 3 แบบ · เก็บวิชาไว้ · ศัตรูชาติก่อนจะตามมา',noFate:true,f(){later(emWay)}},
   {t:'🩸 ฝืนทะลวงด้วยชีวิต',s:`สำเร็จ ${pF}% · ล้มเหลวมีโอกาสตายจริง ไม่เกิดใหม่`,noFate:true,f(){emForce(pF)}},
   {t:'📜 ถ่ายทอดทุกอย่าง แล้วจากไปอย่างสงบ',s:'ฉากจบ · ลูกหลานและศิษย์สืบวิชา',noFate:true,f(){emLegacy()}}];
- if(E.n>=2)O.splice(2,0,{t:'♾️ ทะลวงด้วยความทรงจำหลายชาติ',s:`ผ่านแน่นอน · เหนือกว่าทางอื่นทั้งหมด · ใช้ได้เพราะเกิดใหม่มา ${E.n} ครั้ง`,noFate:true,f(){emTrans()}});
+ if(E.n>=2||(E.sec&&E.n>=1))O.splice(2,0,{t:'♾️ ทะลวงด้วยความทรงจำหลายชาติ',s:`ผ่านแน่นอน · เหนือกว่าทางอื่นทั้งหมด · ใช้ได้เพราะเกิดใหม่มา ${E.n} ครั้ง`,noFate:true,f(){emTrans()}});
  choice('👑 ทางที่สาม',txt,O)}
 function emForce(p){const E=S.em;
  if(Math.random()*100<p){S.rcap=Math.max(S.rcap==null?0:S.rcap,rawRealm());S.btFail=0;S.lifespan+=30;S.fame+=fameR(200);S.hp=Math.max(S.hp,Math.round(S.maxHp*.5));keyAdd('ฝืนทะลวงคอขวดด้วยชีวิต และผ่านไปได้');log('🩸 คุณเผาลมปราณทุกหยดเข้าใส่กำแพง — มันร้าว แล้วแตก! คุณล้มลงด้วยเลือดทั้งตัวแต่ยืนขึ้นมาใหม่ในฐานะผู้ผ่านทัณฑ์','myth')}
@@ -36190,17 +36190,17 @@ function emTrans(){const E=S.em;S.rcap=Math.max(S.rcap==null?0:S.rcap,rawRealm()
 function emWay(){const E=S.em;
  choice('🌑 เลือกวิธีเกิดใหม่','คุณนั่งสงบแล้วตัดสายชีวิตด้วยมือตัวเอง ก่อนวิญญาณหลุดออก คุณต้องเลือกว่าจะไปที่ไหน',[
   {t:'↩️ ยังไม่พร้อม',s:'เปลี่ยนใจ',f(){E.nx=S.age+3}},
-  {t:'👶 ลืมตาใหม่เป็นเด็กธรรมดา',s:'เริ่มจากเด็ก · เก็บวิชา 70% · ครอบครัวใหม่ · ศัตรูชาติก่อนตามหา',noFate:true,f(){emRebirth(1)}},
-  {t:'🪞 สิงร่างผู้สืบทอดวัยหนุ่มสาว',s:'อายุ 15–24 · เก็บวิชาครบ · ฝึกตามทันเร็วกว่า · ทิ้งชื่อและครอบครัวเดิม',noFate:true,f(){emRebirth(2)}},
-  {t:'🏔️ ผนึกวิญญาณหลับยาวแล้วตื่นอีกหลายสิบปี',s:'อายุ 14 · โลกผ่านไป 30–70 ปี · ศัตรูแก่และอ่อนลง คนที่รักอาจจากไปแล้ว · ชื่อกลายเป็นตำนาน',noFate:true,f(){emRebirth(3)}}])}
-function emRebirth(mode){const E=S.em||(S.em=EM0());const oldPow=Math.round(total()),oldName=S.name,old=S.age;
+  {t:'👶 ลืมตาใหม่เป็นเด็กธรรมดา',s:'เริ่มจากเด็ก · เก็บวิชา 70% · ครอบครัวใหม่ · ศัตรูชาติก่อนตามหา',noFate:true,f(){if(S.em)S.em._pk=[];later(()=>emPack(1))}},
+  {t:'🪞 สิงร่างผู้สืบทอดวัยหนุ่มสาว',s:'อายุ 15–24 · เก็บวิชาครบ · ฝึกตามทันเร็วกว่า · ทิ้งชื่อและครอบครัวเดิม',noFate:true,f(){if(S.em)S.em._pk=[];later(()=>emPack(2))}},
+  {t:'🏔️ ผนึกวิญญาณหลับยาวแล้วตื่นอีกหลายสิบปี',s:'อายุ 14 · โลกผ่านไป 30–70 ปี · ศัตรูแก่และอ่อนลง คนที่รักอาจจากไปแล้ว · ชื่อกลายเป็นตำนาน',noFate:true,f(){if(S.em)S.em._pk=[];later(()=>emPack(3))}}])}
+function emRebirth(mode){const E=S.em||(S.em=EM0());const oldPow=Math.round(total()),oldName=S.name,old=S.age;const lover=S.spouse&&S.spouse.n||(S.harem&&S.harem[0]&&S.harem[0].n)||null;E.shDone=0;E.drop=0;E.love=null;
  E.pk=Math.max(E.pk,oldPow);E.pkR=Math.max(E.pkR,rawRealm());E.n++;E.ev=0;E.memD=0;E.tomb=0;
  const kp=peers.filter(p=>p&&p.killed).slice(0,3).map(p=>({n:p.name,p:Math.round(Math.max(150,oldPow*.35)),h:0}));
  while(kp.length<2)kp.push({n:ch(['ทายาทแห่งตระกูล','ศิษย์ผู้แค้น','ผู้ถูกทิ้งแห่งสำนัก'])+anyName(S.gender),p:Math.round(Math.max(150,oldPow*.3)),h:0});
  if(mode===3)kp.forEach(f=>{f.p=Math.round(f.p*.5);f.h=1});
  E.foes=(E.foes||[]).concat(kp).slice(-5);
  E.ally=mode===3?null:{n:anyName(S.gender),met:0};E.gone=mode===3?R(30,70):0;
- const rest=total()-S.power,k=mode===1?.10:mode===2?.14:.12,keep=mode===1?.7:mode===2?1:.85;E.rate=k;
+ const rest=total()-S.power,k=mode===1?.10:mode===2?.14:.12,keep=(mode===1?.7:mode===2?1:.85)*(E.debt?.6:1);E.rate=k;E.debt=0;
  try{if(S.arts&&S.arts.length){const A=Array.prototype.slice.call(S.arts).sort((a,b)=>((b&&b.b)||0)-((a&&a.b)||0));const nk=Math.max(1,Math.round(A.length*keep));S.arts.splice(0,S.arts.length);A.slice(0,nk).forEach(a=>Array.prototype.push.call(S.arts,a))}}catch(e){console.error(e)}
  S.power=Math.max(10,Math.round(oldPow*k)-rest);S.qi=+(S.qi*.35).toFixed(1);
  S.deathCause=null;S.chronic=null;S.shadow=null;S.flags.empRe=1;
@@ -36211,7 +36211,7 @@ function emRebirth(mode){const E=S.em||(S.em=EM0());const oldPow=Math.round(tota
  else{S.age=14;S.fame=Math.round(S.fame*.6);msg=`👑 คุณผนึกวิญญาณหลับไป <b>${E.gone} ปี</b> แล้วตื่นขึ้นในร่างเด็กอายุ 14 ชื่อเดิมของคุณกลายเป็นตำนานที่คนเล่าต่อกัน — ผู้คนที่เคยรู้จักคุณส่วนใหญ่จากไปแล้ว ศัตรูเก่าแก่ชราและอ่อนแอ`}
  S.hp=S.maxHp;S.int+=10;S.lifespan=Math.max(S.lifespan,S.age+(S.xian?150:60));S.rcap=rawRealm();S.btFail=0;S.tribPrep=0;if(S.xt){S.rcapG=1;S.pcap=-1;S.pcapG=1}
  S.key.push(`${old} ปี — ตายด้วยเจตนาที่คอขวดสุดท้าย (ชาติที่ ${E.n}) เกิดใหม่พร้อมความทรงจำทั้งหมด`);
- log(msg,'myth');try{render()}catch(e){}}
+ log(msg,'myth');try{emPackApply(E,oldPow,lover)}catch(e){console.error(e)}E.pack=null;E.rbY=S.age;if(S.ft&&!S.ft.end)log('📡 สายใยหมื่นปีไม่ได้ขาดไปกับร่างเก่า — คืนแรกในร่างใหม่ คุณยังได้ยินเสียงเดิม','epic');try{render()}catch(e){}}
 // ----- เหตุการณ์หลังเกิดใหม่ (ไม่เป็นเส้นตรง) -----
 function emTomb(){const E=S.em;E.tomb=1;const pk=E.pk;
  choice('👑 สุสานของตัวเอง',`คุณพบสุสานเก่าแก่ที่ผู้คนเล่าลือว่าเป็นของจักรพรรดิผู้หนึ่ง — จารึกบนหินคือลายมือของคุณเอง ร่างเก่ายังไม่เน่าเปื่อย เหลือแค่ร่องรอยพลังที่ไม่มีใครแตะ`,[
@@ -36237,9 +36237,60 @@ function emYear(){if(!ok())return;let E=S.em;
  if(!E||!E.n)return;
  if(S.age>=5&&total()<E.pk*.92){const gap=E.pk-total();S.power+=Math.round(Math.max(25,gap*E.rate));S.qi=+(S.qi+.2).toFixed(1)}
  const raw=rawRealm();if(S.rcap!=null&&raw>S.rcap&&raw<E.pkR)S.rcap=raw;
+ if(S.rcap!=null&&raw>S.rcap&&raw>=E.pkR&&!E.shDone&&S.age-(E.shY||-99)>=3){go(()=>{if(S.em&&!S.em.shDone)emShadow()});return}
+ if(E.thief&&E.thief.p)E.thief.p=Math.round(E.thief.p*1.04);
+ if(!E.tomb&&S.age-(E.rbY||S.age)>=10&&Math.random()<.08){E.tomb=2;E.thief={n:anyName(S.gender),p:Math.round(Math.max(200,E.pk*.45)),met:0};log(`⚰️ ข่าวลือแพร่มาว่าสุสานจักรพรรดิโบราณถูกเปิดแล้ว — โดยคนชื่อ <b>${esc(E.thief.n)}</b>`,'bad')}
+ if(E.thief&&E.thief.met>=3&&S.age-(E.thY||0)>=6&&Math.random()<.3){E.thY=S.age;const Th=E.thief;go(()=>{if(!S.em.thief)return;const w=fight(Th.n,Math.round(Th.p));if(w){S.em.thief=null;S.em.tomb=3;S.power+=Math.round(S.em.pk*.06);log(`⚔️ ${esc(Th.n)}บุกมาหาคุณถึงที่ — แต่ท่าที่ลอกมาไม่มีวันเหนือกว่าต้นฉบับ`,'epic')}else{S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.35));log(`⚔️ ${esc(Th.n)}บุกมาด้วยท่าของคุณเอง ฟาดคุณจนบาดเจ็บหนัก`,'bad')}});return}
  if(S.age<12||Math.random()>.14)return;
- const L=[];if(!E.tomb&&S.age>=16)L.push(emTomb);if(E.foes.length)L.push(emFoe);if(E.ally&&!E.ally.met&&S.age>=18)L.push(emAlly);if(!E.memD)L.push(emMem);
+ const L=[];if(!E.tomb&&S.age>=16)L.push(emTomb);if(E.thief)L.push(emThief);if(E.love&&!E.love.met&&S.age>=17)L.push(emLove);if(E.gold&&S.age>=12)L.push(emGold);if(E.foes.length)L.push(emFoe);if(E.ally&&!E.ally.met&&S.age>=18)L.push(emAlly);if(!E.memD)L.push(emMem);
  if(L.length){const f=ch(L);go(()=>{if(S.em&&S.em.n)f()})}}
+
+// ----- v2: เลือกของพากลับ 3 อย่าง · เงาตัวเองที่คอขวด · สุสานถูกชิง · ตำนานในอนาคต · สายใยโยงชาติก่อน -----
+const PK=[['art','📜','วิชาทั้งหมด','ไม่เลือก = เหลือวิชาเดียว'],['hate','🔥','บัญชีแค้น','รู้ชื่อศัตรูก่อน ศัตรูอ่อนลง'],['love','💞','ชื่อคนที่รัก','ตามหาเขาในชาติหน้าได้'],['gold','💰','ที่ซ่อนสมบัติ','ไม่เลือก = เงินหายเกือบหมด'],['sec','🗝️','ความลับของคอขวด','รู้จุดอ่อนเงาตัวเอง · ปลดทางหลายชาติเร็วขึ้น'],['body','🩸','ความจำของกล้ามเนื้อ','ฝึกตามทันพลังเดิมเร็วขึ้น']];
+function emPack(mode){const E=S.em||(S.em=EM0());if(!E._pk)E._pk=[];const left=PK.filter(p=>!E._pk.includes(p[0])&&!(p[0]==='love'&&!S.spouse&&!(S.harem&&S.harem.length)));
+ choice(`🎒 พากลับได้อีก ${3-E._pk.length} อย่าง`,`วิญญาณกำลังหลุดลอย ความทรงจำแตกเป็นเสี่ยง — คุณคว้าไว้ได้แค่สามอย่าง ที่เหลือจะหายไปกับร่างเก่า${E._pk.length?`<br><span class="tag2">เลือกแล้ว: ${E._pk.map(k=>PK.find(p=>p[0]===k)[1]).join(' ')}</span>`:''}`,
+  left.map(p=>({t:`${p[1]} ${p[2]}`,s:p[3],f(){E._pk.push(p[0]);if(E._pk.length<3&&left.length>1)later(()=>emPack(mode));else{E.pack=E._pk;E._pk=null;emRebirth(mode)}}})))}
+function emPackApply(E,oldPow,lover){const P=E.pack||['art','gold','body'];
+ if(!P.includes('art'))try{const A=Array.prototype.slice.call(S.arts);if(A.length>1){E.drop=A.length-1;const b=A.sort((a,c)=>((c&&c.b)||0)-((a&&a.b)||0))[0];S.arts.splice(0,S.arts.length);Array.prototype.push.call(S.arts,b)}}catch(e){}
+ if(P.includes('hate'))E.foes.forEach(f=>{f.p=Math.round(f.p*.7);f.kn=1});else E.foes.forEach(f=>{f.p=Math.round(f.p*1.15)});
+ if(P.includes('love')&&lover)E.love={n:lover,met:0};
+ if(P.includes('gold')){E.gold=Math.round(S.money*.6);S.money=Math.round(S.money*.05)}else S.money=Math.round(S.money*.03);
+ if(P.includes('sec')){E.sec=1;S.int+=15}
+ if(P.includes('body'))E.rate=Math.min(.22,E.rate+.05);
+ log(`🎒 สิ่งที่ติดวิญญาณมาด้วย: ${P.map(k=>{const p=PK.find(x=>x[0]===k);return p?p[1]+' '+p[2]:''}).join(' · ')}`,'epic')}
+function emShadow(){const E=S.em;E.shY=S.age;const nm=S.prevName||'ร่างเก่า';const pw=Math.round(E.pk*(E.sec?.85:1)*(E.drop?1.1:1));
+ choice('🪞 เงาที่ประตูบานสุดท้าย',`คุณกลับมายืนที่กำแพงเดิมที่เคยหยุดคุณในชาติก่อน — คราวนี้มีคนยืนขวางอยู่ คือ <b>${esc(nm)}</b> ตัวคุณในชาติก่อน${E.drop?` ถือวิชา ${E.drop} เล่มที่คุณเลือกทิ้งไว้`:''} "เจ้าทิ้งข้าไว้ที่นี่ แล้วคิดว่าจะเดินผ่านไปเฉยๆ หรือ"${E.sec?'<br><span class="tag2">🗝️ คุณจำได้ว่าเงานี้ปิดฝั่งซ้ายไม่ทันทุกครั้ง</span>':''}`,[
+  {t:'⚔️ สู้กับตัวเอง',s:`ชนะ = ผ่านคอขวด + ได้วิชาที่ทิ้งไว้คืน · แพ้ = บาดเจ็บหนัก`,noFate:true,f(){duel('เงาของ'+nm,pw,w=>{if(w){S.rcap=Math.max(S.rcap||0,rawRealm());S.btFail=0;E.shDone=1;S.flags.emShadow=1;const a=artAdd(E.drop?3:2);E.drop=0;S.fame+=fameR(150);keyAdd('เอาชนะเงาของตัวเองในชาติก่อนที่คอขวด');log(`🪞 เงานั้นยิ้มก่อนสลายเป็นแสง "ดีแล้ว ที่เจ้าแกร่งกว่าข้า" — ประตูเปิด และวิชาที่ทิ้งไว้กลับมาเป็น ${a}`,'myth')}else{S.hp=Math.max(5,Math.round(S.hp*.35));E.shN=(E.shN||0)+1;log('🪞 เงาของคุณไม่ปรานี มันรู้ทุกท่าที่คุณรู้ — และอีกหลายท่าที่คุณเลือกลืม','bad')}})}},
+  {t:'🗣️ ถามว่ามันต้องการอะไร',s:'ใช้ปัญญา · ผ่านได้แต่ต้องยอมเสียบางอย่าง',f(){if(roll01(.35+(S.int||0)/300+(E.sec?.15:0))){later(()=>choice('🪞 สิ่งที่เงาขอ','"ข้าจะหลีกทาง ถ้าเจ้ายอมคืนสิ่งหนึ่งที่ข้าเสียไป"',[
+    {t:'📛 คืนชื่อเสียง',s:'ชื่อเสียงหายครึ่งหนึ่ง',f(){S.fame=Math.round(S.fame*.5);emShPass('ชื่อเสียงที่สร้างใหม่ในชาตินี้ตกเป็นของเงา')}},
+    {t:'⏳ คืนเวลา',s:'อายุขัย −15 ปี',f(){S.lifespan=Math.max(S.age+5,S.lifespan-15);emShPass('อายุสิบห้าปีไหลกลับไปหาชาติก่อน')}},
+    {t:'💔 คืนความรู้สึก',s:'ความสุขลดถาวร · ใจนิ่งขึ้น',f(){joy(-25);S.int+=8;emShPass('คุณยังจำได้ว่าเคยรัก แต่จำไม่ได้ว่ารู้สึกอย่างไร')}}]))}else{S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.2));E.shN=(E.shN||0)+1;log('🪞 เงาหัวเราะ "เจ้ายังไม่รู้จักตัวเองพอจะถามคำถามนั้น"')}}},
+  {t:'⏳ ยังไม่พร้อมเผชิญ',s:'ไม่เสียอะไร · กลับมาใหม่ภายหลัง',skip:true,f(){log('🪞 คุณถอยออกมา เงายังยืนรออยู่ที่เดิม — มันไม่รีบ เพราะมันคือคุณ')}}])}
+function emShPass(t){const E=S.em;S.rcap=Math.max(S.rcap||0,rawRealm());S.btFail=0;E.shDone=1;S.flags.emShadow2=1;keyAdd('ต่อรองกับเงาของตัวเองในชาติก่อนจนได้ผ่านคอขวด');log(`🪞 ${t} — เงาก้าวหลบ ประตูเปิดออกช้าๆ`,'myth')}
+function emThief(){const E=S.em,Th=E.thief;Th.met=(Th.met||0)+1;const pw=Math.round(Math.max(Th.p,total()*.9));
+ choice('⚰️ คนที่ใช้ท่าของคุณ',`<b>${esc(Th.n)}</b> ขึ้นชื่อทั่วแผ่นดิน ท่าที่เขาใช้คือท่าที่คุณสร้างเองในชาติก่อน — เขาเปิดสุสานของคุณก่อนคุณจะไปถึง${Th.met>1?' และยิ่งเก่งขึ้นทุกปี':''}`,[
+  {t:'⚔️ ท้าดวลชิงคืน',s:'ชนะ = ได้วิชาและพลังเก่าคืน',noFate:true,f(){duel(Th.n,pw,w=>{if(w){E.thief=null;E.tomb=3;S.power+=Math.round(E.pk*.1);const a=artAdd(3);S.fame+=fameR(120);keyAdd('ชิงวิชาจากสุสานตัวเองคืนจาก '+Th.n);log(`⚔️ ท่าเดียวกันปะทะกัน แต่มีคนเดียวที่รู้ว่าท่านั้นจบอย่างไร — ได้ ${a} คืน`,'myth')}else{S.hp=Math.max(5,Math.round(S.hp*.4));Th.p=Math.round(Th.p*1.08);log(`⚔️ ${esc(Th.n)}ใช้ท่าของคุณเอาชนะคุณ — ความเจ็บใจยิ่งกว่าบาดแผล`,'bad')}})}},
+  {t:'🎯 ล่อให้ใช้ท่าที่มีจุดอ่อน',s:'ใช้ปัญญา · มีแต่ผู้สร้างที่รู้ช่องโหว่',f(){if(roll01(.4+(S.int||0)/250)){E.thief=null;E.tomb=3;S.power+=Math.round(E.pk*.06);S.fame+=fameR(80);log(`🎯 คุณยั่วให้${esc(Th.n)}ใช้ท่าที่สามเต็มแรง — แล้วก้าวเข้าช่องว่างที่มีแต่คนสร้างท่ารู้ เขาล้มลงต่อหน้าผู้คน`,'epic')}else{Th.p=Math.round(Th.p*1.05);S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.2));log(`🎯 ${esc(Th.n)}แก้ช่องโหว่นั้นไปแล้ว — เขาฉลาดกว่าที่คิด`)}}},
+  {t:'🧑‍🏫 รับเขาเป็นศิษย์',s:'จบแค้นด้วยสายสัมพันธ์ · กรรมบวก · วิชาไม่ได้คืน',f(){if(roll01(.3+((S.cha||0)+(S.int||0))/450)){E.thief=null;E.tomb=3;S.karma+=12;E.ally=E.ally||{n:Th.n,met:1};joy(10);S.fame+=fameR(60);log(`🧑‍🏫 คุณแก้ท่าของเขาให้ถูกต่อหน้าทุกคน ${esc(Th.n)}ตะลึงอยู่นานแล้วคุกเข่าลง "ท่านคือใครกันแน่"`,'epic')}else{S.fame-=Math.min(S.fame,30);log(`🧑‍🏫 ${esc(Th.n)}หัวเราะเยาะ "เด็กอย่างเจ้าจะสอนข้า?"`)}}},
+  {t:'🌫️ ปล่อยไปก่อน',s:'เขาจะแกร่งขึ้นเรื่อยๆ',skip:true,f(){log(`🌫️ คุณมองตาม${esc(Th.n)}ไป ท่าของคุณในมือคนอื่นดูแปลกตาเหลือเกิน`)}}])}
+function emLove(){const E=S.em,L=E.love;L.met=1;
+ choice('💞 คนที่คุณพาชื่อมาด้วย',`ในงานเทศกาลคุณได้ยินเสียงหัวเราะที่จำได้ทันที — <b>${esc(L.n)}</b> เกิดใหม่เช่นกัน หน้าตาไม่เหมือนเดิม และจำคุณไม่ได้เลย`,[
+  {t:'💬 เริ่มรู้จักใหม่ตั้งแต่ต้น',s:'ใช้เวลา · อาจได้คู่ชีวิตอีกครั้ง',f(){if(roll01(.45+(S.cha||0)/300)){S.spouse=S.spouse||{n:L.n,age:S.age,g:S.gender==='ชาย'?'หญิง':'ชาย',alive:true};joy(25);S.karma+=4;keyAdd('ได้พบคนรักจากชาติก่อนอีกครั้ง');log(`💞 หลายเดือนต่อมา ${esc(L.n)}เอ่ยว่า "แปลกนะ อยู่กับท่านแล้วรู้สึกเหมือนกลับบ้าน"`,'myth')}else{joy(-10);log(`💞 ${esc(L.n)}มีคนที่รักอยู่แล้วในชาตินี้ — คุณยิ้มให้และเดินจากมา`)}}},
+  {t:'🤫 เฝ้ามองอยู่ห่างๆ',s:'ใจสงบ · กรรมบวก',f(){S.karma+=6;joy(5);log(`🤫 คุณคอยปกป้อง${esc(L.n)}โดยไม่ให้รู้ตัว ปีละครั้งที่ศาลเจ้า คุณจะวางดอกไม้ไว้ให้`)}},
+  {t:'📜 เล่าความจริงทั้งหมด',s:'เสี่ยง · เขาอาจจำได้ หรือกลัวคุณ',f(){if(Math.random()<.35){S.spouse=S.spouse||{n:L.n,age:S.age,g:S.gender==='ชาย'?'หญิง':'ชาย',alive:true};joy(30);S.flags.emLove=1;keyAdd('คนรักจากชาติก่อนจำคุณได้');log(`📜 น้ำตาไหลก่อนคุณจะเล่าจบ — "ข้าฝันถึงท่านมาทั้งชีวิต"`,'myth')}else{joy(-12);log(`📜 ${esc(L.n)}ถอยหนี มองคุณเหมือนคนบ้า แล้วไม่กลับมาอีก`)}}}])}
+function emGold(){const E=S.em,g=E.gold;E.gold=0;S.money+=g;log(`💰 คุณกลับไปที่ซ่อนสมบัติตามความทรงจำ — ใต้แผ่นหินหลังศาลร้าง เงิน ${fmt(g)} ยังอยู่ครบ`,'epic')}
+function ftLegend(){const T=S.ft;T.lg=S.age;const k=S.karma||0,fm=S.fame||0;
+ const ttl=T.hum>=55&&k>=0?'ผู้ที่ทำให้มนุษย์รอด':k<=-30?'ต้นเหตุแห่งการล่มสลาย':fm>3000?'ตำนานที่ถูกเล่าผิดจากความจริง':'ชื่อที่ไม่มีใครจำได้';
+ const fac=S.faction&&S.faction.n;
+ choice('📜 ชื่อของคุณในอีกหมื่นปี',`ในฝันคราวนี้ คุณได้ยินเด็กกลุ่มหนึ่งท่องชื่อคุณในบทเรียน — คนในอนาคตเรียกคุณว่า <b>"${ttl}"</b>${fac?`<br>และ<b>${esc(fac)}</b>ยังอยู่ในโลกนั้น ศิษย์รุ่นหมื่นปีให้หลังจุดธูปให้คุณ`:''}`,[
+  fac?{t:`🎁 รับของจากศิษย์รุ่นหลังของ${esc(fac)}`,s:'ได้วิชา · พวกเขาขอให้คุณรักษาสำนักให้รอด',f(){const a=artAdd(2);T.fac=fac;log(`🎁 ศิษย์รุ่นหลังส่งท่าประจำสำนักที่ขัดเกลามาหมื่นปีให้ — ได้ ${a} "ได้โปรด อย่าให้สำนักล่มก่อนเวลา"`,'epic')}}:{t:'🙏 ขอให้คนในอนาคตช่วยชี้ทาง',s:'ได้ปัญญา',f(){S.int+=10;log('🙏 เด็กคนหนึ่งในฝันยกนิ้วชี้ทาง แล้วพูดประโยคที่คุณเก็บไปคิดได้ทั้งปี')}},
+  {t:'✍️ ทิ้งจารึกแก้ประวัติศาสตร์',s:'เสียเงิน · อนาคตดีขึ้น · ชื่อในอนาคตอาจเปลี่ยน',f(){const c=Math.round(S.money*.15);S.money-=c;T.hum=cl(T.hum+8,0,100);S.karma+=4;log(`✍️ คุณจ้างช่างสลักความจริงลงบนผาหิน (${fmt(c)}) — ให้คนหมื่นปีข้างหน้าได้อ่าน`,'epic')}},
+  {t:'😈 ใช้ชื่อนั้นให้เป็นประโยชน์',s:k<0?'ยิ่งร้ายยิ่งแรง · อนาคตแย่ลง':'ชื่อเสียงขึ้น · อนาคตแย่ลงเล็กน้อย',f(){T.hum=cl(T.hum-6,0,100);S.fame+=fameR(80);if(k<0){ftBorrow(1);S.karma-=5}log('😈 ถ้าโลกจะจำคุณแบบนั้นอยู่แล้ว ก็ให้มันคุ้ม')}}])}
+function ftPrev(){const T=S.ft,E=S.em;T.who='prev';T.st=2;
+ choice('🔗 ผู้ส่งคือตัวคุณ ที่เกิดใหม่มาแล้วหลายร้อยชาติ',`ผ้าคลุมเปิดออก ใบหน้านั้นคือคุณ — แต่ไม่ใช่คุณที่แก่ลง เป็นคุณที่<b>ตายด้วยเจตนาแล้วเกิดใหม่ต่อไปเรื่อยๆ</b> จนผ่านไปหมื่นปี "ข้าวนอยู่ในวงนี้นานจนลืมไปแล้วว่าทำไมเริ่ม"`,[
+  {t:'🔗 รวมสองสายเข้าด้วยกัน',s:'ปลดทางทะลวงด้วยหลายชาติทันที',noFate:true,f(){E.n=Math.max(E.n,2);E.link=1;S.int+=12;keyAdd('รวมสายใยหมื่นปีกับวงจรเกิดใหม่ของตัวเอง');log('🔗 ความทรงจำของทุกชาติที่ยังมาไม่ถึงไหลเข้ามา — คุณรู้แล้วว่าประตูบานสุดท้ายเปิดอย่างไร','myth')}},
+  {t:'✂️ สาบานจะไม่เกิดใหม่อีก',s:'ปิดทางเกิดใหม่ถาวร · อายุขัย +30 · อนาคตดีขึ้นมาก',f(){E.lock=1;S.lifespan+=30;T.hum=cl(T.hum+25,0,100);joy(15);keyAdd('ตัดวงจรเกิดใหม่ เพื่อไม่ให้ตัวเองต้องติดอยู่หมื่นปี');log('✂️ ตัวคุณในอนาคตหลับตา "ขอบใจ... ข้าเหนื่อยเหลือเกิน" แล้วจางหายไปอย่างโล่งใจ','myth')}},
+  {t:'🗡️ ขอวิชาของชาติที่ยังมาไม่ถึงมาเลย',s:'พลังมหาศาล · ชาติหน้าจะเก็บอะไรได้น้อยลง',noFate:true,f(){S.power+=Math.round(nextP().p*.25);const a=artAdd(3);E.debt=1;T.bd=Math.min(100,T.bd+30);log(`🗡️ คุณยืมจากตัวเองในอนาคต ได้ ${a} — ใบหน้านั้นยิ้มเศร้าๆ "อย่าลืมว่าข้าก็คือเจ้า"`,'myth')}}])}
 
 // ---------------- ต่อเข้าระบบเดิม ----------------
 {const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive){ftYear();emYear()}}catch(e){console.error('blk16',e)}return r}}
@@ -36255,7 +36306,8 @@ function ftYear(){if(!ok()||S.age<14)return;let T=S.ft;
  if(T.bd>=90)ev=ftCollapse;
  else if(T.hum>=75&&T.dr>=2&&Math.random()<.5)ev=ftBloom;
  else if(T.hum<=6&&T.sy>=70&&Math.random()<.5)ev=ftPulled;
- else if(T.path==='seek'&&T.cl>=3&&!T.who)ev=ftReveal;
+ else if(T.path==='seek'&&T.cl>=3&&!T.who)ev=(S.em&&S.em.n>=1&&Math.random()<.6)?ftPrev:ftReveal;
+ else if(T.dr>=4&&!T.lg&&Math.random()<.35)ev=ftLegend;
  else if(T.sus>=40&&Math.random()<.3)ev=ftSus;
  else if(T.sy>=30&&S.age-(T.deal||-99)>=15&&Math.random()<.12)ev=ftDeal;
  else if(T.sy>=15&&T.hum<45&&Math.random()<.1)ev=ftEdit;
@@ -36270,9 +36322,11 @@ try{const add=(cat,arr)=>{const c=ACH.find(x=>x[0]===cat);if(!c)return;arr.forEa
   {id:'ft_bloom',n:'อนาคตที่ไม่ต้องส่งสาย',d:'เปลี่ยนอนาคตจนสายใยหมื่นปีขาดไปเอง',r:3,c:()=>!!S.flags.ft_bloom},
   {id:'ft_slain',n:'ผู้ฆ่าสิ่งที่กลืนมนุษยชาติ',d:'ท้าสู้ผู้ล่อลวงปลายสายใยและเอาชนะ',r:3,c:()=>!!S.flags.ft_slain},
   {id:'em_re',n:'จักรพรรดิผู้ตั้งใจตาย',d:'ตายด้วยเจตนาที่คอขวดแล้วเกิดใหม่พร้อมความทรงจำ',r:2,c:()=>!!(S.em&&S.em.n>=1)},
+  {id:'em_sh',n:'ผู้ชนะตัวเอง',d:'ผ่านเงาของตัวเองในชาติก่อนที่คอขวด',r:3,c:()=>!!(S.flags.emShadow||S.flags.emShadow2)},
+  {id:'em_love',n:'ด้ายแดงข้ามความตาย',d:'คนรักจากชาติก่อนจำคุณได้',r:3,c:()=>!!S.flags.emLove},
   {id:'em_3',n:'ผู้ทะลวงด้วยหลายชาติ',d:'ทะลวงคอขวดด้วยความทรงจำจากการเกิดใหม่หลายครั้ง',r:3,c:()=>!!S.flags.emTrans}])}catch(e){}
 try{TTL_SP.splice(3,0,['ftbloom',()=>S.flags.ft_bloom,'ผู้เปลี่ยนอนาคตหมื่นปี'],['emtrans',()=>S.flags.emTrans,'จักรพรรดิผู้ทะลวงด้วยหลายชาติ'])}catch(e){}
-window._blk16={ftYear,emYear,ftFirst,ftDream,ftDeal,ftEdit,ftSus,ftCollapse,ftBloom,ftPulled,ftReveal,emOffer,emWay,emRebirth,emForce,emTrans,emLegacy,emTomb,emFoe,emAlly,emMem,ftBorrow,ftTalk,FT0,EM0};
+window._blk16={emPack,emShadow,emThief,emLove,emGold,ftLegend,ftPrev,ftYear,emYear,ftFirst,ftDream,ftDeal,ftEdit,ftSus,ftCollapse,ftBloom,ftPulled,ftReveal,emOffer,emWay,emRebirth,emForce,emTrans,emLegacy,emTomb,emFoe,emAlly,emMem,ftBorrow,ftTalk,FT0,EM0};
 }catch(e){console.error('block16',e)}})();
 
 // ===================== 🌍 ชุดตกแต่งตามโลก 9 ชุด (กรอบ+ฉายา+ธีมแชท) + 🔥 ลดราคาประจำวัน · อยู่ในแท็บ "ยุคปัจจุบัน" =====================
@@ -36477,6 +36531,172 @@ document.head.appendChild(css);
 try{(function(){const mc=()=>{try{if(S&&S.sys&&typeof MAINQ!=='undefined'&&MAINQ[S.sys.t]){mainCheck();try{render()}catch(e){}}}catch(e){}};
 {const _g=gupDo;gupDo=function(){const r=_g.apply(this,arguments);if(r)mc();return r}}
 {const _b=buySys;buySys=function(id){const r=_b.apply(this,arguments);if(id==='hammer')mc();return r}}})()}catch(e){console.error('mod-mq',e)}
+// ============================================================
+// BLOCK 17: เจาะลึก 🔁 วนลูป · 👻 ผีไทย · 🌃 ใต้ดิน
+// ============================================================
+try{(()=>{
+const W=window._wld,W4=window._wld4;if(!W||!W4)return;
+const wOf=W.wOf,CAND=W4.CAND,END=W4.END;
+const mn=M=>MW_MIN[M.cc||'th']||MW_MIN.th,money=(M,k)=>mwToB(mn(M)*k,M);
+const HP=p=>{const d=Math.round(S.maxHp*p/100);S.hp=Math.max(1,S.hp-d);return d};
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const O=(t,f,s)=>mwC(t,f,s?{s}:undefined);
+const say=(t,c,fx)=>mwSay(t,c||'',fx);
+const EV=(id,go)=>MW_R.push({id,w:0,cd:0,c:()=>false,go});
+const die=(c,t)=>{S.deathCause=c;log(t,'bad',true);setTimeout(()=>{try{checkDeath()}catch(e){}},300)};
+const feed=t=>addFeed('ev',t,'sum');
+const on=(M,w,k)=>M&&!M.kid&&S.alive&&wOf(M)===w&&M[k];
+
+// ---------------- 🔁 วนลูป: กฎประจำรอบ + อีกคนที่จำได้ ----------------
+const RULE={rain:['🌧️','ฝนไม่หยุดทั้งวัน','ทุกคนติดอยู่ในบ้าน'],dark:['🌑','ไฟดับทั้งเมือง','กล้องวงจรปิดใช้ไม่ได้'],truth:['🗣️','ทุกคนพูดแต่ความจริง','ถามอะไรก็ได้คำตอบตรง'],fast:['⏩','วันสั้นลงครึ่งหนึ่ง','เหนื่อยน้อย แต่จำได้น้อย'],known:['👀','คนแปลกหน้าจำคุณได้','เหมือนพวกเขาก็วนอยู่ด้วย'],calm:['☀️','วันธรรมดาที่สมบูรณ์แบบ','ไม่มีอะไรผิดปกติเลย']};
+const lI=M=>{const L=M.LP;L.X=L.X||{rule:'calm',rv:null,st:0,y:-9,trust:50,heist:0};return L.X};
+const RVN=['ภูมิ','แทน','กันต์','ไอซ์','เจได','บีม'];
+{const c=CAND.loop;CAND.loop=(M,foc,out)=>{c(M,foc,out);if(!on(M,'loop','LP'))return;const X=lI(M),L=M.LP;
+ if(X.st===0&&L.mem>=10&&Math.random()<.35)out.push({id:'lx_rv0',p:3});
+ else if(X.st===1&&M.y-X.y>=2&&Math.random()<.4)out.push({id:'lx_rv1',p:3});
+ else if(X.st===2&&M.y-X.y>=3&&(L.clue||0)>=3)out.push({id:'lx_rv2',p:5});
+ if(X.rule==='truth'&&Math.random()<.5)out.push({id:'lx_truth',p:2});
+ if(X.rule==='dark'&&Math.random()<.5)out.push({id:'lx_dark',p:2});
+ if(X.rule==='rain'&&Math.random()<.4)out.push({id:'lx_rain',p:1});
+ if(X.rule==='known'&&Math.random()<.45)out.push({id:'lx_known',p:2})}}
+EV('lx_rv0',M=>{const X=lI(M);X.rv={n:ch(RVN)};X.st=1;X.y=M.y;choice('🃏 อีกคนที่จำได้',`ผู้ชายใส่สูทนั่งข้างคุณในร้านกาแฟ แล้วพูดก่อนคุณจะสั่ง "ลาเต้เย็นหวานน้อย ใช่ไหม" — <b>${esc(X.rv.n)}</b> ก็ติดอยู่ในวันนี้เหมือนคุณ แต่เขาใช้มันซื้อหวยถูกทุกงวดมาสามปีแล้ว`,[
+ O('🤝 ร่วมมือกัน',()=>{X.side='ally';X.trust=65;mwFx({mon:money(M,4)});say(`🤝 ${esc(X.rv.n)}ยื่นมือมา "สองหัวดีกว่าหัวเดียว" คืนนั้นเขาแบ่งเลขเด็ดให้คุณ`,'good')},'ได้เงิน · เขาอาจมีแผนของตัวเอง'),
+ O('⚔️ แข่งกันว่าใครออกได้ก่อน',()=>{X.side='rival';M.LP.mem+=6;say('⚔️ "งั้นก็ลองดู" เขายักไหล่ แล้วจ่ายค่ากาแฟให้คุณก่อนเดินออกไป','')},'จำได้มากขึ้น · เขาจะขัดขวาง'),
+ O('🕵️ แอบตามดูว่าเขาทำอะไรอีก',()=>{X.side='spy';M.LP.clue=(M.LP.clue||0)+(Math.random()<.5?1:0);say('🕵️ คุณตามเขาไปถึงตึกเก่าที่อยู่ในเบาะแสของคุณ — เขาก็กำลังตามหาต้นตอเหมือนกัน','epic')},'อาจได้เบาะแส')])});
+EV('lx_rv1',M=>{const X=lI(M),n=esc(X.rv.n);X.st=2;X.y=M.y;
+ if(X.side==='ally')choice(`💼 แผนของ${n}`,`${n}ชวนปล้นตู้เซฟธนาคารตอนบ่ายสาม "พรุ่งนี้มันก็รีเซ็ต ไม่มีใครเจ็บจริง" เขาพูดเหมือนเคยทำมาแล้วหลายรอบ`,[
+  O('💰 ไปด้วย',()=>{X.heist++;X.trust+=10;mwFx({mon:money(M,10),joy:4});M.LP.tir=cl(M.LP.tir+8,0,100);say('💰 ปล้นสำเร็จ — แต่ยามคนนั้นมองหน้าคุณเหมือนจำได้ ทั้งที่ไม่ควรจำได้','epic')},'เงินเยอะ · ใจหนักขึ้น'),
+  O('🙅 ปฏิเสธ แต่ไม่ขวาง',()=>{X.trust-=10;say(`🙅 ${n}หัวเราะ "คนดีในลูป ไม่มีใครเห็นหรอก"`,'')}),
+  O('🚨 แจ้งตำรวจล่วงหน้า',()=>{X.trust-=35;X.side='rival';M.LP.mem+=5;say(`🚨 ${n}ถูกจับคาที่ — พรุ่งนี้เขาจะจำได้ว่าใครแจ้ง`,'bad')},'เขาจะกลายเป็นศัตรู')]);
+ else choice(`🧩 ${n}ขโมยเบาะแส`,`สมุดบันทึกของคุณหายจากโต๊ะ เหลือโน้ตแผ่นเดียว "ขอยืมนะ ไหนๆ พรุ่งนี้ก็คืนอยู่แล้ว — ${n}"`,[
+  O('🏃 ตามไปเอาคืนตอนนี้',()=>{if(Math.random()<.55){M.LP.clue=(M.LP.clue||0)+1;say('🏃 คุณดักเขาที่สถานีรถไฟ แย่งสมุดคืนพร้อมหน้าที่เขาจดเพิ่ม — ได้เบาะแสฟรีหนึ่งชิ้น','epic')}else{say(`🩸 ${n}รู้ทางหนีทุกซอย คุณล้มกลิ้งบนบันได พลังชีวิต −${HP(R(8,15))}`,'bad')}}),
+  O('🧠 ไม่เป็นไร จำทุกอย่างไว้ในหัวแล้ว',()=>{M.LP.mem+=8;M.LP.tir=cl(M.LP.tir+6,0,100);say('🧠 คุณนั่งเขียนใหม่ทั้งคืนจากความจำ เหนื่อย แต่แม่นกว่าเดิม','')}),
+  O('🤝 ยื่นข้อเสนอสงบศึก',()=>{X.side='ally';X.trust=45;say(`🤝 ${n}ตอบกลับทางข้อความ "โอเค แต่ฉันไม่เชื่อใจคุณหรอกนะ"`,'')})])});
+EV('lx_rv2',M=>{const X=lI(M),n=esc(X.rv.n),L=M.LP;X.st=3;const btr=X.side==='ally'&&X.trust<60;
+ choice(`🗝️ ${n}ที่หน้าประตูเหล็ก`,`${n}ยืนขวางประตูใต้ตึกเก่า ${btr?'มือถือปืนที่ชี้มาทางคุณ':'มือล้วงกระเป๋า'} "ถ้าวงจรนี้หยุด ฉันก็กลับไปเป็นพนักงานบัญชีที่ไม่มีใครจำชื่อ — ฉันไม่ยอม"`,[
+  O('🗣️ เกลี้ยกล่อมให้ออกไปด้วยกัน',()=>{if(Math.random()<cl(.3+X.trust/150,.15,.85)){M.fl.lx_duo=1;L.clue=Math.max(L.clue||0,5);mwFx({fame:5000,joy:12});say(`🌅 ${n}ลดมือลง "ถ้าข้างนอกมีคนหนึ่งคนที่จำฉันได้ ก็คงพอ" — พวกคุณเดินผ่านประตูไปด้วยกัน`,'epic')}else say(`🚪 ${n}ไม่ฟัง เขาวิ่งหนีไปพร้อมกุญแจ — ต้องรอลูปหน้า`,'bad')},'ใช้ความไว้ใจที่สะสมมา'),
+  O('👑 เข้าร่วมกับเขา ครองวันนี้ตลอดไป',()=>{M.fl.lx_king=1;mwFx({mon:money(M,25),joy:-6});L.tir=cl(L.tir-20,0,100);say(`👑 คุณกับ${n}กลายเป็นราชาของวันเดียวที่ไม่มีวันจบ — รวยทุกวัน และว่างเปล่าทุกคืน`,'epic')},'จบแบบไม่ต้องหนีอีก'),
+  O('🔒 ขังเขาไว้ในลูป แล้วออกไปคนเดียว',()=>{if(Math.random()<.6){M.fl.lx_trap=1;L.clue=Math.max(L.clue||0,5);say(`🔒 คุณล็อกประตูจากอีกฝั่ง เสียงทุบประตูของ${n}ค่อยๆ เบาลง — พรุ่งนี้ของคุณมาถึง แต่ของเขาไม่มีวันมา`,'epic')}else{say(`💥 ${n}ไวกว่า พลังชีวิต −${HP(R(20,35))}`,'bad')}},'ไม่ต้องเจรจา · เสี่ยง')])});
+EV('lx_truth',M=>{choice('🗣️ วันที่ทุกคนพูดความจริง','วันนี้ใครถามอะไรก็ตอบตรงหมด จะถามใคร?',[
+ O('💗 ถามคนที่แอบชอบ',()=>{if(Math.random()<.5)say('💗 "ชอบมาตั้งนานแล้ว แต่ไม่กล้า" — พรุ่งนี้เขาจะลืม แต่คุณไม่ลืม','good',{joy:15});else say('💔 "ไม่ได้คิดอะไรเลย" — อย่างน้อยก็ไม่ต้องสงสัยอีก','',{joy:-6})}),
+ O('🏢 ถามเจ้านายเรื่องเงินเดือน',()=>{say('🏢 "บริษัทกำไรสามเท่า แต่เราตั้งใจไม่ขึ้นให้" — คุณจดไว้ใช้ต่อรองในวันที่ลูปจบ','',{mon:money(M,2)})}),
+ O('🕰️ ถามคนแปลกหน้าเรื่อง 03:17',()=>{const L=M.LP;if((L.clue||0)<5){L.clue=(L.clue||0)+1;say('🕰️ คุณยายขายพวงมาลัยตอบตรงๆ "เครื่องนั้นพ่อของยายเป็นคนสร้าง" — เบาะแสเพิ่มหนึ่งชิ้น','epic')}else say('🕰️ ไม่มีใครรู้มากกว่าที่คุณรู้แล้ว','')})])});
+EV('lx_dark',M=>{choice('🌑 เมืองมืดทั้งเมือง','ไฟดับตั้งแต่เช้า กล้องวงจรปิดใช้ไม่ได้ ทั้งเมืองเหมือนไม่มีใครมองอยู่',[
+ O('🏥 ไปช่วยโรงพยาบาลที่เครื่องปั่นไฟพัง',()=>{say('🏥 คุณเข็นถังน้ำมันทั้งวัน ช่วยเด็กในตู้อบได้สามคน — ทุกวันที่ไฟดับ คุณจะไปที่นี่','good',{fame:800,joy:8})}),
+ O('🏦 ลองดูว่าทำอะไรได้บ้างตอนไม่มีกล้อง',()=>{if(Math.random()<.7)say('🏦 ไม่มีใครเห็น ไม่มีใครจำ — เงินในกระเป๋าคุณหนักขึ้น','',{mon:money(M,6),joy:-3});else say(`🚓 ตำรวจใช้ไฟฉายส่องหน้าคุณพอดี พลังชีวิต −${HP(12)}`,'bad')}),
+ O('🔭 ขึ้นดาดฟ้าดูดาว',()=>{M.LP.tir=cl(M.LP.tir-15,0,100);say('🔭 ไม่มีแสงเมือง ดาวเต็มฟ้า — คุณลืมไปเลยว่าวันนี้จะวนกลับมาอีก','good',{joy:10})})])});
+EV('lx_rain',M=>{M.LP.tir=cl(M.LP.tir-10,0,100);say('🌧️ ฝนตกทั้งวัน คุณนอนฟังเสียงฝนกับครอบครัว ไม่ได้ทำอะไรเลย และนั่นแหละคือสิ่งที่ต้องการ','good',{joy:8})});
+EV('lx_known',M=>{choice('👀 คนแปลกหน้าที่จำคุณได้','คนขับแท็กซี่เรียกชื่อคุณ "รอบที่แล้วพี่ลืมร่มไว้" — เขาไม่ควรจำได้',[
+ O('❓ ถามว่าจำอะไรได้อีก',()=>{M.LP.mem+=6;if(Math.random()<.4){M.LP.clue=(M.LP.clue||0)+1;say('❓ "ทุกคืนผมฝันถึงเสียงเครื่องจักร" — เบาะแสใหม่','epic')}else say('❓ เขาขมวดคิ้ว แล้วบอกว่าคงจำคนผิด','')}),
+ O('🏃 รีบลงจากรถ',()=>say('🏃 คุณลงกลางทาง หัวใจเต้นแรง — ลูปเริ่มรั่วแล้วหรือเปล่า','',{joy:-3}))])});
+{const _y=mwYear;mwYear=function(){const r=_y.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(on(M,'loop','LP')){const X=lI(M),k=Object.keys(RULE);X.rule=ch(k);const R0=RULE[X.rule];
+ if(X.rule==='fast')M.LP.tir=cl(M.LP.tir-4,0,100);if(X.rule==='known')M.LP.mem+=2;
+ feed(`${R0[0]} กฎของรอบนี้: <b>${R0[1]}</b> — ${R0[2]}`)}}catch(e){console.error('b17 loop',e)}return r}}
+
+// ---------------- 👻 ผีไทย: สืบก่อน แล้วค่อยเลือกวิธี ----------------
+// need: ทางที่ถูก (s=ปราบ, m=ทำบุญส่ง, b=ผูกสัมพันธ์)
+const SP={
+ tak:{ic:'🌳',n:'นางไม้ต้นตะเคียน',need:'b',c:['ผ้าเจ็ดสีผูกต้นไม้ถูกแก้ทิ้ง','คนงานที่ตัดกิ่งฝันถึงผู้หญิงร้องไห้','นางไม่ได้โกรธ นางแค่ไม่มีที่ไป'],pal:'นางไม้คอยเตือนภัยทุกครั้งที่มีคนคิดร้าย'},
+ klm:{ic:'🤰',n:'ผีตายทั้งกลมริมคลอง',need:'m',c:['ทุกคืนเดือนดับมีเสียงกล่อมเด็ก','สามีของนางไม่เคยกลับมาจากเกณฑ์ทหาร','นางรอคนที่ไม่มีวันมา และอยากให้ใครสักคนบอกความจริง'],pal:'ผีแม่ลูกคุ้มครองเด็กในบ้านคุณ'},
+ ksu:{ic:'🔥',n:'กระสือในหมู่บ้าน',need:'s',c:['ไก่ตายเป็นแถวตามทางเดินไปทุ่ง','แสงสีเขียวลอยออกจากบ้านหลังเดียวทุกคืน','เชื้อกระสือถูกส่งต่อโดยคนที่ไม่รู้ตัว — ต้องตัดที่ต้นตอ'],pal:'กระสือที่สำนึกบอกคุณว่าใครถูกส่งต่อเชื้อ'},
+ pob:{ic:'🫀',n:'ปอบสิงหญิงชรา',need:'s',c:['คนในหมู่บ้านป่วยทีละคน','ยายคนนั้นเคยเรียนวิชาแล้วผิดครู','ตัวยายไม่ใช่ปอบ — ปอบคือของที่ยายเลี้ยงไว้แล้วคุมไม่อยู่'],pal:'ยายที่รอดตายสอนคาถาที่หายไปจากตำราให้'},
+ pret:{ic:'🕳️',n:'เปรตในวัดร้าง',need:'m',c:['เสียงหวีดแหลมตอนตีสาม','วัดนี้ถูกยักยอกเงินสร้างโบสถ์เมื่อห้าสิบปีก่อน','เปรตคือคนที่โกงวัด ต้องการแค่ส่วนบุญที่ไม่มีใครเคยให้'],pal:'วิญญาณที่ได้ส่วนบุญคุ้มครองคุณในยามป่วย'},
+ kong:{ic:'🦶',n:'ผีกองกอยในป่า',need:'b',c:['รอยเท้าข้างเดียวกระโดดรอบแคมป์','ทุกคนที่หลงป่าแล้วรอดบอกว่า "มีเสียงพาออกมา"','มันไม่ได้ทำร้ายใคร มันแค่อยากให้คนรู้ว่ามันอยู่ตรงนี้'],pal:'ผีกองกอยนำทางคุณในป่าและที่มืด'},
+ tid:{ic:'🪢',n:'ผีเด็กในห้องเช่า',need:'m',c:['ของเล่นขยับเองทุกคืน','ห้องนี้เคยมีเด็กถูกทิ้งไว้คนเดียวหลายวัน','เด็กไม่รู้ว่าตัวเองตายแล้ว ยังรอแม่กลับมา'],pal:'ผีเด็กคอยเล่นกับลูกคุณ บ้านไม่มีขโมยเข้าอีกเลย'}};
+const AP={s:['⚔️','ปราบ'],m:['🙏','ทำบุญส่ง'],b:['🤝','ผูกสัมพันธ์']};
+const gxI=M=>{const G=M.G;G.X=G.X||{cur:null,pal:[],free:0,slain:0,ang:0,done:[]};return G.X};
+{const c=CAND.ghost;CAND.ghost=(M,foc,out)=>{c(M,foc,out);if(!on(M,'ghost','G'))return;const X=gxI(M);
+ if(!X.cur&&Math.random()<(foc==='wxg'?.35:.18)&&X.done.length<Object.keys(SP).length)out.push({id:'gx_new',p:2});
+ if(X.cur&&Math.random()<.6)out.push({id:'gx_step',p:3});
+ if(X.ang>=40&&X.pal.length&&Math.random()<.4)out.push({id:'gx_ang',p:4})}}
+EV('gx_new',M=>{const X=gxI(M),k=ch(Object.keys(SP).filter(k=>!X.done.includes(k))),s=SP[k];
+ choice(`${s.ic} เคสใหม่: ${s.n}`,`ชาวบ้านมาขอให้ช่วย — <b>${s.n}</b>${s.c[0]?' · '+s.c[0]:''}<br><span class="tag2">ผีแต่ละตนต้องการต่างกัน ปราบ ทำบุญส่ง หรือผูกสัมพันธ์ ถ้าใช้วิธีผิด อาจย้อนเข้าตัว</span>`,[
+  O('🔍 สืบให้ละเอียดก่อน',()=>{X.cur={k,ev:1};say(`🔍 คุณรับเคส${s.n} แล้วเริ่มถามคนแก่ในหมู่บ้านทีละบ้าน`,'')},'ใช้เวลา · รู้วิธีที่ถูก'),
+  O('⚡ ลงมือทันทีคืนนี้',()=>{X.cur={k,ev:0};later17(()=>gxAct(M))},'เร็ว · เดาวิธีเอง'),
+  O('🙅 ไม่รับ',()=>{X.done.push(k);say('🙅 คุณส่ายหน้า บางเคสไม่ใช่ของคุณ','')})])});
+function later17(fn){const t=()=>{if(!S||!S.alive)return;if(choice._cur||modalOpen)return setTimeout(t,500);try{fn()}catch(e){console.error(e)}};setTimeout(t,400)}
+EV('gx_step',M=>{const X=gxI(M),s=SP[X.cur.k];if(X.cur.ev>=3)return gxAct(M);
+ const clue=s.c[Math.min(X.cur.ev,2)];
+ choice(`🔍 สืบเรื่อง${s.n} (${X.cur.ev}/3)`,`สิ่งที่รู้เพิ่ม: <b>${clue}</b>`,[
+  O('🔍 สืบต่ออีก',()=>{X.cur.ev++;M.G.ward+=2;say(`🔍 ${X.cur.ev>=3?'ตอนนี้คุณรู้แล้วว่านางต้องการอะไร':'ยังมีอะไรซ่อนอยู่อีก'}`,'')}),
+  O('🕯️ พอแล้ว ลงมือคืนนี้',()=>later17(()=>gxAct(M)))])});
+function gxAct(M){const X=gxI(M),s=SP[X.cur.k],k=X.cur.k,ev=X.cur.ev;
+ const hint=ev>=3?`<br><span class="tag2">💡 คุณรู้แล้ว: ${AP[s.need][0]} ${AP[s.need][1]} คือทางที่ถูก</span>`:ev>=2?'<br><span class="tag2">💡 คุณพอเดาได้ แต่ยังไม่แน่ใจ</span>':'';
+ choice(`${s.ic} คืนเผชิญหน้า ${s.n}`,`คุณจุดธูปสามดอกหน้า${s.n} ลมเย็นพัดเทียนวูบ — จะใช้วิธีไหน${hint}`,['s','m','b'].map(a=>O(`${AP[a][0]} ${AP[a][1]}`,()=>{
+  const right=a===s.need,p=right?cl(.6+ev*.1+M.G.ward/600,.4,.95):cl(.15+M.G.ward/500,.05,.45);X.cur=null;X.done.push(k);
+  if(Math.random()<p){M.G.ward+=right?10:5;
+   if(a==='s'){X.slain++;say(`⚔️ ${s.n}สลายไปพร้อมเสียงกรีดร้อง — หมู่บ้านสงบ แต่คนแก่บางคนมองคุณด้วยสายตาไม่สบายใจ`,'epic',{mon:money(M,5),fame:600})}
+   else if(a==='m'){X.free++;say(`🙏 ควันธูปลอยตรงขึ้นฟ้า ${s.n}ก้มหัวลาแล้วจางหาย — ดวงที่ ${X.free} ที่คุณส่งไปสู่ที่ชอบ`,'epic',{joy:10,fame:400})}
+   else{X.pal.push(k);say(`🤝 ${s.n}ยอมผูกสัมพันธ์ — ${s.pal}`,'epic',{joy:6})}
+   if(!right)M.G.bad=cl(M.G.bad+8,0,100);
+   if(X.free>=4)M.fl.gx_free=1;if(X.pal.length>=3)M.fl.gx_pal3=1;if(X.slain>=4)M.fl.gx_hunt=1}
+  else{M.G.bad=cl(M.G.bad+R(12,20),0,100);say(`${s.ic} ${right?'วิธีถูก แต่กำลังไม่พอ':'ผิดวิธี'} — ${s.n}ย้อนเข้าตัวคุณ พลังชีวิต −${HP(R(15,28))}`,'bad');if(!right&&M.G.bad>=95&&Math.random()<.25)die('ถูกผีที่ใช้วิธีผิดด้วยตามเอาชีวิต','💀 '+s.n+'ไม่ยอมปล่อยคุณไป')}},a===s.need&&ev>=3?'ทางที่ถูก':'')))}
+EV('gx_ang',M=>{const X=gxI(M),k=ch(X.pal),s=SP[k];
+ choice(`${s.ic} ${s.n}ไม่พอใจ`,`ผีที่คุณผูกไว้ไม่ได้รับของเซ่นมานาน ของในบ้านพังทีละชิ้น ลูกคุณฝันร้ายทุกคืน`,[
+  O('🍚 จัดเซ่นไหว้ใหญ่ ขอขมา',()=>{const c=money(M,4);S.money=Math.max(0,S.money-c);X.ang=0;say(`🍚 เซ่นไหว้ใหญ่ทั้งคืน ${s.n}กลับมาสงบ`,'good')},'เสียเงิน'),
+  O('🙏 ทำบุญส่งไปเสีย',()=>{X.pal=X.pal.filter(x=>x!==k);X.free++;X.ang=Math.max(0,X.ang-25);say(`🙏 คุณปล่อย${s.n}ไป — บ้านเงียบลง แต่ก็เหงาลงด้วย`,'')}),
+  O('⚔️ ตัดสัมพันธ์ด้วยกำลัง',()=>{X.pal=X.pal.filter(x=>x!==k);if(Math.random()<.5){X.ang=0;say(`⚔️ คุณตัดสายสัมพันธ์ด้วยคาถาแรง ${s.n}หายไป`,'')}else{M.fl.gx_curse=1;M.G.bad=cl(M.G.bad+25,0,100);say(`💀 ${s.n}ไม่ยอม — มันสาปตระกูลคุณก่อนจากไป พลังชีวิต −${HP(25)}`,'bad')}})])});
+{const _y=mwYear;mwYear=function(){const r=_y.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(on(M,'ghost','G')){const X=gxI(M);if(X.pal.length){X.ang+=X.pal.length*R(3,7);M.G.ward+=X.pal.length;if(X.pal.includes('klm')||X.pal.includes('tid'))mwFx({joy:2});if(X.pal.includes('pret')&&S.hp<S.maxHp*.5)S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.15))}}}catch(e){console.error('b17 ghost',e)}return r}}
+
+// ---------------- 🌃 ใต้ดิน: ข้อตกลงกับตำรวจ · ธุรกิจ · ความฝันลูกน้อง ----------------
+const BIZ={gam:['🎲','บ่อนเถื่อน',6,4,-1],loan:['💸','ปล่อยกู้นอกระบบ',5,3,-3],rest:['🍜','ฟอกเงินผ่านร้านอาหาร',3,-4,0],drug:['💊','ค้ายา',11,9,-6]};
+const DRM=['อยากเลิกแล้วกลับไปทำนาที่บ้าน','อยากมีซอยเป็นของตัวเอง','ลูกสาวป่วยหนัก ต้องใช้เงินก้อน','อยากเรียนจบมหาลัยให้แม่ภูมิใจ'];
+const uxI=M=>{const U=M.U;U.X=U.X||{cop:null,biz:null,leg:0,y:-9,cy:-9};(U.lt||[]).forEach(l=>{if(l.dr==null)l.dr=R(0,DRM.length-1)});return U.X};
+{const c=CAND.under;CAND.under=(M,foc,out)=>{c(M,foc,out);if(!on(M,'under','U'))return;const X=uxI(M),U=M.U;if(U.jail>0)return;
+ if(!X.cop&&U.heat>=35&&Math.random()<.4)out.push({id:'ux_cop0',p:3});
+ else if(X.cop&&X.cop.ok&&M.y-X.cy>=3&&Math.random()<.35)out.push({id:'ux_cop1',p:3});
+ if(!X.biz&&U.inf>=25&&Math.random()<.35)out.push({id:'ux_biz',p:2});
+ if(U.lt&&U.lt.length&&Math.random()<.25)out.push({id:'ux_dream',p:2});
+ if(X.biz==='rest'&&X.leg>=6&&!M.fl.ux_legit)out.push({id:'ux_legit',p:4});
+ if(U.inf>=80&&!M.fl.ux_mayor&&!X.pol&&Math.random()<.25)out.push({id:'ux_pol',p:3});
+ if(U.lt&&U.lt.some(l=>l.loy<20&&l.dr===1)&&Math.random()<.35)out.push({id:'ux_coup',p:4})}}
+EV('ux_cop0',M=>{const X=uxI(M),n='ผู้กอง'+ch(['ชาติชาย','วีระ','ธนพล','สมเกียรติ','อนุชา']);
+ choice(`🚓 ${n}`,`${n}จอดรถหน้าบ่อนแล้วนั่งรอคุณในรถ "ผมไม่อยากปิดที่นี่ คุณก็ไม่อยากให้ผมปิด เดือนละซอง แล้วเราจะเป็นเพื่อนกัน"`,[
+  O('💵 จ่ายซองทุกเดือน',()=>{X.cop={n,ok:1,sp:Math.random()<.25,st:0};X.cy=M.y;M.U.heat=cl(M.U.heat-20,0,100);say(`💵 ${n}รับซองโดยไม่นับ — ความร้อนลดลงทันที`,'good')},'ความร้อนลดทุกปี · เสียเงินทุกปี'),
+  O('🎁 เสนอข้อมูลคู่แข่งแทนเงิน',()=>{X.cop={n,ok:1,inf:1,st:0};X.cy=M.y;M.U.heat=cl(M.U.heat-10,0,100);M.U.inf+=4;say(`🎁 คุณส่งที่อยู่โกดังของ${esc(M.U.rv.n)}ให้ — ${n}ยิ้มกว้าง`,'epic')},'ไม่เสียเงิน · คนในวงการอาจรู้'),
+  O('🙅 ปฏิเสธ',()=>{M.U.heat=cl(M.U.heat+10,0,100);X.cop={n,ok:0};say(`🙅 ${n}พยักหน้าช้าๆ "งั้นเจอกันในสำนวน"`,'bad')})])});
+EV('ux_cop1',M=>{const X=uxI(M),C=X.cop,n=esc(C.n);X.cy=M.y;C.st++;const r=Math.random();
+ if(C.sp&&C.st>=2)return choice(`🎙️ ${n}คือสายสืบ`,`ลูกน้องเจอเครื่องอัดเสียงในซองที่คุณคืนให้${n} — สองปีที่ผ่านมาเขาอัดทุกคำ`,[
+  O('🤝 ยอมเป็นสายให้ตำรวจ',()=>{M.fl.ux_cop=1;C.sp=0;M.U.heat=cl(M.U.heat-30,0,100);say(`🤝 คุณกลายเป็นคนสองหน้า คุมซอยกลางวัน ส่งรายงานกลางคืน`,'epic')},'ปลอดภัยจากคุก · ถ้าเพื่อนรู้ จบ'),
+  O('🔥 ทำลายหลักฐาน หนีไปตั้งตัวที่อื่น',()=>{M.U.inf=Math.round(M.U.inf*.6);M.U.heat=10;X.cop=null;say('🔥 คุณเผาโกดังทิ้งทั้งหลัง แล้วย้ายฐานในคืนเดียว','bad')}),
+  O('⚖️ จ้างทนายสู้คดี',()=>{const c=money(M,10);S.money=Math.max(0,S.money-c);if(Math.random()<.5){X.cop=null;M.U.heat=cl(M.U.heat-15,0,100);say('⚖️ ทนายหาช่องได้ หลักฐานใช้ไม่ได้ในศาล','good')}else{M.U.jail=R(1,3);say('⚖️ ศาลไม่ฟัง — คุณเข้าคุก','bad')}},'เสียเงินก้อน')]);
+ if(r<.5)choice(`📈 ${n}ขอเพิ่ม`,`"ผู้การคนใหม่ขอเพิ่ม" ${n}พูดโดยไม่มองหน้า ซองต้องหนาขึ้นเท่าตัว`,[
+  O('💵 จ่าย',()=>{S.money=Math.max(0,S.money-money(M,5));M.U.heat=cl(M.U.heat-15,0,100);say('💵 ซองหนาขึ้น ความเงียบก็ยาวขึ้น','')}),
+  O('📹 แอบถ่ายตอนรับซองไว้ต่อรอง',()=>{if(Math.random()<.6){C.hold=1;M.U.heat=cl(M.U.heat-20,0,100);say(`📹 ตอนนี้${n}ต้องกลัวคุณมากกว่าที่คุณกลัวเขา`,'epic')}else{M.U.heat=cl(M.U.heat+30,0,100);X.cop=null;say(`🚨 ${n}จับได้ — บ่อนโดนบุกทุกที่ในคืนเดียว`,'bad')}},'เสี่ยง')]);
+ else{X.cop=null;M.U.heat=cl(M.U.heat+15,0,100);say(`🚚 ${n}โดนย้ายไปชายแดน ผู้กองคนใหม่ไม่รู้จักคุณ — ข้อตกลงเดิมจบลง`,'bad')}});
+EV('ux_biz',M=>{const X=uxI(M);choice('💼 ธุรกิจหลักของคุณ','ค่าคุ้มครองอย่างเดียวไม่พอเลี้ยงคนสามสิบคน — ต้องเลือกว่าจะหาเงินทางไหน',Object.keys(BIZ).map(k=>{const b=BIZ[k];return O(`${b[0]} ${b[1]}`,()=>{X.biz=k;say(`${b[0]} คุณเริ่ม${b[1]} — ไม่มีทางย้อนกลับง่ายๆ`,'epic')},`เงิน ${'💰'.repeat(Math.ceil(b[2]/3))} · ความร้อน ${b[3]>0?'+'+b[3]:b[3]}/ปี`)}))});
+EV('ux_dream',M=>{const U=M.U,l=ch(U.lt),n=esc(l.n),d=DRM[l.dr];
+ choice(`🌙 ความฝันของ${n}`,`${n}ดื่มจนเมาแล้วพูดออกมา "พี่ ผม${d}"`,
+  l.dr===0?[O('🏡 ให้เงินก้อนแล้วปล่อยไป',()=>{S.money=Math.max(0,S.money-money(M,3));U.lt=U.lt.filter(x=>x!==l);mwFx({joy:8});say(`🏡 ${n}ไหว้คุณที่ป้ายรถทัวร์ "ถ้าพี่เลิกเมื่อไหร่ มาหาผมที่นานะ"`,'good')}),O('🔒 ไม่มีใครออกได้',()=>{l.loy=cl(l.loy-25,0,100);say(`🔒 ${n}ไม่พูดอะไรอีก แต่สายตาเปลี่ยนไป`,'bad')})]
+  :l.dr===1?[O('🗺️ แบ่งซอยให้คุม',()=>{const s=U.soi.find(x=>x.o===1);if(s){l.soi=s.n;l.loy=cl(l.loy+25,0,100);l.dr=3;say(`🗺️ ${n}ได้คุม${s.n} — เขาภักดีขึ้นมาก แต่ตอนนี้มีคนของตัวเอง`,'epic')}else say('🗺️ คุณยังไม่มีซอยให้แบ่ง','')}),O('😠 ตบหัวให้รู้ที่',()=>{l.loy=cl(l.loy-20,0,100);say(`😠 ${n}ก้มหน้ารับ แต่มือกำแน่น`,'bad')})]
+  :l.dr===2?[O('💊 จ่ายค่ารักษาให้หมด',()=>{S.money=Math.max(0,S.money-money(M,6));l.loy=100;l.dr=3;say(`💊 ลูกสาว${n}หายป่วย — ตั้งแต่นั้นเขาพร้อมตายแทนคุณ`,'epic')},'ภักดีสูงสุด'),O('🤷 ไม่ใช่เรื่องของเรา',()=>{l.loy=cl(l.loy-15,0,100);say(`🤷 ${n}ไปกู้เงินนอกระบบจากคนอื่น`,'')})]
+  :[O('🎓 ส่งเรียน',()=>{S.money=Math.max(0,S.money-money(M,3));l.loy=cl(l.loy+15,0,100);M.fl.ux_grad=1;say(`🎓 ${n}รับปริญญาสามปีต่อมา แม่เขาร้องไห้ทั้งงาน คุณยืนอยู่ข้างหลังสุด`,'good',{joy:10})}),O('📚 เรียนไปทำไม',()=>{l.loy=cl(l.loy-5,0,100);say(`📚 ${n}หัวเราะแห้งๆ "นั่นสิพี่"`,'')})])});
+EV('ux_legit',M=>{choice('🏢 เครือร้านอาหารของคุณ','ร้านอาหารที่ใช้ฟอกเงินกลายเป็นเครือหกสาขา กำไรจริงมากกว่าเงินที่ฟอกแล้ว นักบัญชีถามว่า "จะเลิกฝั่งมืดไหมครับ"',[
+ O('🤍 เลิกทุกอย่าง เป็นนักธุรกิจสีขาว',()=>{M.fl.ux_legit=1;M.U.heat=0;M.U.soi.forEach(s=>{if(s.o===1)s.o=0});say('🤍 คุณยกซอยทั้งหมดให้ลูกน้องที่ไว้ใจ แล้วไปตัดริบบิ้นเปิดสาขาที่เจ็ด — ไม่มีใครในงานรู้ว่าคุณเคยเป็นใคร','epic',{fame:15000,joy:10})}),
+ O('🌗 ทำทั้งสองฝั่ง',()=>{uxI(M).leg=0;mwFx({mon:money(M,8)});say('🌗 กลางวันเป็นเจ้าของร้าน กลางคืนเป็นเจ้าพ่อ — เหนื่อยเป็นสองเท่า','')})])});
+EV('ux_pol',M=>{const X=uxI(M);X.pol=1;choice('🗳️ ลงเลือกตั้ง','ผู้ใหญ่ในพื้นที่มาหาถึงบ้าน "คนในเขตนี้ฟังแต่คุณ ลงสมัครนายกเทศมนตรีเถอะ"',[
+ O('🗳️ ลงสมัคร',()=>{if(Math.random()<cl(.35+M.U.inf/300,.2,.8)){M.fl.ux_mayor=1;M.U.heat=cl(M.U.heat-30,0,100);say('🗳️ คุณชนะถล่มทลาย — ป้ายหาเสียงของคุณติดอยู่ทุกซอยที่เคยเก็บค่าคุ้มครอง','epic',{fame:30000})}else say('🗳️ แพ้ไปไม่กี่ร้อยคะแนน คู่แข่งขุดอดีตคุณมาแฉทุกเวที','bad',{fame:-3000})},'อิทธิพลสูงช่วยได้'),
+ O('🙅 อยู่หลังม่านดีกว่า',()=>{M.U.inf+=10;say('🙅 คุณส่งคนของตัวเองลงแทน แล้วคุมจากข้างหลัง','')})])});
+EV('ux_coup',M=>{const U=M.U,l=U.lt.find(x=>x.loy<20&&x.dr===1)||ch(U.lt),n=esc(l.n);
+ choice(`🗡️ ${n}ยึดอำนาจ`,`${n}รวบรวมลูกน้องครึ่งหนึ่งแล้วประกาศตัวเป็นหัวหน้า "ยุคพี่จบแล้ว"`,[
+  O('⚔️ สู้ชิงคืน',()=>{if(Math.random()<cl(.3+U.inf/250,.15,.8)){U.lt=U.lt.filter(x=>x!==l);U.inf+=8;say(`⚔️ คืนเดียวจบ ${n}หนีออกนอกจังหวัด`,'epic')}else{M.fl.ux_coup=1;U.inf=Math.round(U.inf*.4);U.soi.forEach(s=>{if(s.o===1)s.o=2});say(`🩸 คุณแพ้ — ${n}ยึดทุกซอยไป พลังชีวิต −${HP(R(25,40))}`,'bad')}}),
+  O('👑 ยกให้ แล้วถอยออกมา',()=>{M.fl.ux_coup=1;U.lt=U.lt.filter(x=>x!==l);U.heat=0;U.soi.forEach(s=>{if(s.o===1)s.o=0});say(`👑 คุณยื่นกุญแจให้${n} แล้วเดินออกจากบ่อนเป็นครั้งสุดท้าย — ตัวเบาอย่างประหลาด`,'',{joy:5})}),
+  O('🤝 เจรจาแบ่งเขต',()=>{if(Math.random()<.5){l.loy=50;l.dr=3;say(`🤝 คุณแบ่งครึ่งเมืองให้${n} ทั้งคู่ยังเป็นพี่น้อง — แค่ไม่ใช่แบบเดิม`,'')}else{M.fl.ux_coup=1;U.inf=Math.round(U.inf*.5);say(`🗡️ ระหว่างเจรจา ${n}หักหลัง`,'bad')}})])});
+{const _y=mwYear;mwYear=function(){const r=_y.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(on(M,'under','U')&&!M.U.jail){const X=uxI(M),U=M.U;
+ if(X.cop&&X.cop.ok){U.heat=cl(U.heat-(X.cop.hold?8:5),0,100);if(!X.cop.inf&&!X.cop.hold)S.money=Math.max(0,S.money-money(M,1))}
+ if(X.biz){const b=BIZ[X.biz];S.money+=money(M,b[2]*(1+U.inf/200));U.heat=cl(U.heat+b[3],0,100);if(b[4]&&M.fl)S.karma=(S.karma||0)+b[4];if(X.biz==='rest')X.leg++;feed(`${b[0]} รายได้จาก${b[1]}เข้ามาอีกปี`)}}}catch(e){console.error('b17 under',e)}return r}}
+
+// ---------------- แผง + ฉากจบ ----------------
+{const _p=window.wPanel;window.wPanel=function(){const r=_p.apply(this,arguments);try{const M=S&&S.mw,m=$('modal');if(!M||!m)return r;const w=wOf(M);let h='';
+ if(on(M,'loop','LP')){const X=lI(M),R0=RULE[X.rule];h=`<div class="item"><b>${R0[0]} กฎรอบนี้: ${R0[1]}</b>${X.rv?`<br>🃏 ${esc(X.rv.n)} — ${X.side==='ally'?'พันธมิตร (ไว้ใจ '+X.trust+')':X.side==='rival'?'คู่แข่ง':'กำลังจับตา'}`:''}</div>`}
+ if(on(M,'ghost','G')){const X=gxI(M);h=`<div class="item"><b>👻 สมุดเคส</b><br>ส่งวิญญาณ ${X.free} · ปราบ ${X.slain} · ผีที่ผูกไว้ ${X.pal.map(k=>SP[k].ic).join(' ')||'-'}${X.pal.length?` · ความไม่พอใจ ${Math.min(100,X.ang)}%`:''}${X.cur?`<br>🔍 กำลังสืบ: ${SP[X.cur.k].n} (${X.cur.ev}/3)`:''}</div>`}
+ if(on(M,'under','U')){const X=uxI(M);h=`<div class="item"><b>🌃 เบื้องหลัง</b><br>🚓 ${X.cop?(X.cop.ok?esc(X.cop.n)+' (มีข้อตกลง)':esc(X.cop.n)+' (เป็นศัตรู)'):'ยังไม่มีคนในเครื่องแบบ'} · 💼 ${X.biz?BIZ[X.biz][1]:'ยังไม่เลือกธุรกิจ'}${(M.U.lt||[]).length?'<br>'+M.U.lt.map(l=>`${esc(l.n)}: ${DRM[l.dr]||'ไม่มีอะไรค้างคา'}`).join('<br>'):''}</div>`}
+ if(h){const x=m.querySelector('.gbtn[onclick="wCodex()"]'),box=x&&x.parentElement;if(box)box.insertAdjacentHTML('beforebegin',h);else m.insertAdjacentHTML('beforeend',h)}}catch(e){}return r}}
+try{END.loop.push(['lx_duo','A','ออกจากลูปพร้อมอีกคนที่จำได้'],['lx_king','B','ราชาแห่งวันซ้ำ'],['lx_trap','B','ขังอีกคนไว้ในลูป']);
+ END.ghost.push(['gx_free','A','ส่งวิญญาณสู่ที่ชอบครบสี่ดวง'],['gx_pal3','A','มีผีเป็นมิตรสามตน'],['gx_hunt','B','นักปราบผีมือเปื้อน'],['gx_curse','C','ถูกผีที่ผูกไว้สาปตระกูล']);
+ END.under.push(['ux_mayor','S','จากเจ้าพ่อสู่นายกเทศมนตรี'],['ux_legit','A','นักธุรกิจสีขาว'],['ux_grad','B','ส่งลูกน้องเรียนจบ'],['ux_cop','B','คนสองหน้าของตำรวจ'],['ux_coup','C','โดนลูกน้องยึดอำนาจ'])}catch(e){console.error('b17 end',e)}
+window._wld17={ids:['lx_rv0','lx_rv1','lx_rv2','lx_truth','lx_dark','lx_rain','lx_known','gx_new','gx_step','gx_ang','ux_cop0','ux_cop1','ux_biz','ux_dream','ux_legit','ux_pol','ux_coup'],lI,gxI,uxI,gxAct};
+})()}catch(e){console.error('block17',e)}
 </script>
 </body>
 </html>
