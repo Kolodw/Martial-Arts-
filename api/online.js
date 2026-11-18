@@ -288,6 +288,12 @@ for (let i = 1; i <= 8; i++) { COS_BASE['cf' + i] = [COS_FP[i - 1], ['f_p' + i]]
 for (let i = 9; i <= 11; i++) COS_BASE['ct' + i] = [9, ['t_p' + i]]; // ฉายาเริ่มต้น 9 บาท
 COS_BASE.call = [399, [...Array(8).keys()].flatMap(i => ['f_p' + (i + 1), 't_p' + (i + 1), 'c_p' + (i + 1)])];
 const COS_ALL = new Set([...COS_BASE.call[1], 't_p9', 't_p10', 't_p11']);
+// 🏙️ ชุดตกแต่งยุคปัจจุบัน: 6 ชุด (กรอบ f_m · ฉายา t_m · ธีมแชท c_m) + ฉายาเสริม 18 แบบ (t_n) — ราคาเดียวกับสูตรของชุดยุทธภพ
+const MOD_F = [49, 39, 49, 49, 39, 49], MOD_T = [19, 19, 29, 29, 19, 19], MOD_C = 19, MOD_SET = [69, 59, 79, 79, 59, 69];
+for (let i = 1; i <= 6; i++) { COS_BASE['mf' + i] = [MOD_F[i - 1], ['f_m' + i]]; COS_BASE['mt' + i] = [MOD_T[i - 1], ['t_m' + i]]; COS_BASE['mc' + i] = [MOD_C, ['c_m' + i]]; COS_BASE['ms' + i] = [MOD_SET[i - 1], ['f_m' + i, 't_m' + i, 'c_m' + i]] }
+COS_BASE.mall = [299, [...Array(6).keys()].flatMap(i => ['f_m' + (i + 1), 't_m' + (i + 1), 'c_m' + (i + 1)])];
+for (let i = 1; i <= 18; i++) COS_BASE['mn' + i] = [i <= 14 ? 9 : 19, ['t_n' + i]];
+COS_BASE.mall[1].forEach(x => COS_ALL.add(x)); for (let i = 1; i <= 18; i++) COS_ALL.add('t_n' + i);
 // 🏮 อีเวนต์ลอยกระทง 2026 — ขายถึง 17 ธ.ค. 23:59 (เวลาไทย)
 // เงิน: [ราคา, ไอเทม, จำนวนจำกัด] (ฉบับเลขลำดับ) · กรรม: [ไอเทม, ราคากรรม, ฝั่ง g=กรรมดี e=กรรมชั่ว]
 const EV_END = Date.UTC(2026, 11, 17, 16, 59, 59);
