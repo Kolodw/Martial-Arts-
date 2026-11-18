@@ -21401,7 +21401,7 @@ function aliasTick(){const A=S.alias;if(!A||!wxOk())return;const W=S.xt?40:S.xia
 function aliasExposed(){const A=S.alias;A.risk=0;const who=ch(['ศิษย์น้องคนหนึ่ง','เด็กขายถั่วหน้าตลาด','สายลับของสำนักคู่แข่ง','คู่ปรับเก่า','หมอยาประจำเมือง']);
  choice('🎭 มีคนจำได้',`${who}เดินตามคุณกลับบ้านจากตลาดใต้ดิน และเห็นคุณถอดหน้ากาก<br>"<b>${esc(A.n)}</b>... ที่แท้คือท่าน?"`,[
   {t:'🙂 "ท่านจำคนผิดแล้ว"',s:'ตีหน้าตาย · ใช้ปัญญา',f(){if(roll01(Math.min(.85,.3+S.int/800))){log(`🙂 คุณพูดเรื่องราคาข้าวสารต่อหน้าตาเฉย จน${who}เริ่มไม่แน่ใจในสายตาตัวเอง — ความลับยังอยู่`,'')}else{log(`😬 ${who}ไม่เชื่อ — ข่าวลือว่า${esc(S.name)}คือ${esc(A.n)}เริ่มแพร่`,'bad');A.risk+=.05}}},
-  {t:'🎭 ยอมรับต่อหน้าทุกคน',s:'ชื่อเสียงลับรวมเข้ากับตัวจริง · ปิดตัวตนนี้',f(){const g=Math.round(A.f*.6+50);S.fame+=g;if(A.t==='kill'){S.karma-=20;grudgeAdd('ญาติของเหยื่อ'+A.n,'รู้แล้วว่าใครคือมือสังหารเงา',total()*1.5,'alias')}log(`🎭 คุณถอดหน้ากากต่อหน้าทุกคน — <b>${esc(A.n)}</b>กับ${esc(S.name)}คือคนเดียวกัน · ชื่อเสียง +${fmt(g)}`,'epic',true);keyAdd('เปิดเผยว่าตนคือ '+A.n);S.aliasOld=(S.aliasOld||[]).concat([A.n]);S.alias=null}},
+  {t:'🎭 ยอมรับต่อหน้าทุกคน',s:'ชื่อเสียงลับรวมเข้ากับตัวจริง · ปิดตัวตนนี้',f(){const g=Math.round(A.f*.6+50);S.fame+=g;if(A.t==='kill'){S.karma-=20;grudgeAdd('ญาติของเหยื่อ'+A.n,'รู้แล้วว่าใครคือมือสังหารเงา',total()*1.5,'alias')}log(`🎭 คุณถอดหน้ากากต่อหน้าทุกคน — <b>${esc(A.n)}</b>กับ${esc(S.name)}คือคนเดียวกัน · ชื่อเสียง +${fmt(g)}`,'epic',true);keyAdd('เปิดเผยว่าตนคือ '+A.n);if(A.inf>0){const t=Math.round(A.inf*.7);S.infamy=Math.min(2000,(S.infamy||0)+t);log(`🩸 ค่าหัวและชื่อเสียงชั่วของ ${esc(A.n)} (${Math.round(A.inf)}) ตกมาเป็นของคุณ ${t}`,'bad')}S.aliasOld=(S.aliasOld||[]).concat([A.n]);S.alias=null;S.al=null}},
   {t:'🤫 ขอให้เก็บเป็นความลับ',s:'เสียเงินปิดปาก · กรรมไม่ลด',f(){const c=Math.round(S.money*.15);S.money-=c;log(`🤫 ${who}รับถุงเงิน ${fmtM(c)} แล้วสัญญาว่าจะลืมทุกอย่าง — ส่วนจะลืมจริงไหม ไม่มีใครรู้`,'');A.risk+=.02}}])}
 // ---------- 5) เปลวไฟสวรรค์ ----------
 const FLAME=[['ไฟหิ่งห้อยป่าลึก','#9fe870'],['ไฟเทียนวัดร้าง','#ffd27a'],['ไฟใต้บ่อน้ำแข็ง','#9fe0ff'],['ไฟธูปพันปี','#ffb070'],['ไฟเกล็ดมังกรเผือก','#f0f0ff'],['ไฟปากปล่องภูเขาเหล็ก','#ff7a3a'],['ไฟหมอกม่วงหุบมรณะ','#c07aff'],['ไฟน้ำตาหงส์แดง','#ff4a6a'],['ไฟเงาจันทร์ดับ','#8a9aff'],['ไฟรากต้นไม้โลก','#5ad08a'],['ไฟกระดูกจักรพรรดิ','#e8e0c0'],['ไฟอสนีบาตเก้าชั้น','#7ad0ff'],['ไฟทะเลทรายไร้เงา','#ffe070'],['ไฟใต้ทะเลลึก','#3a9aff'],['ไฟดอกบัวดำ','#40304a'],['ไฟทองคำเหลวสวรรค์','#ffc840'],['ไฟผลาญวิญญาณ','#a0ffe0'],['ไฟกาลเวลาแตกร้าว','#d0b0ff'],['ไฟรุ่งอรุณแรก','#ffa0c0'],['ไฟดาวตก','#ffffff'],['ไฟความว่างไร้สี','#cccccc'],['ไฟหัวใจเทพที่ดับ','#ff9050'],['ไฟเริ่มต้นจักรวาล','#ffe0ff'],['ไฟที่ไม่มีชื่อ','#000000']];
@@ -40946,7 +40946,7 @@ const TI=[[50,'ชื่อเริ่มมีคนซุบซิบใน�
 const isDark=()=>!!(S&&((S.faction&&S.faction.t==='มาร')||S.karma<=-40));
 function sync(){try{if(!S||!S.alive)return;const k=+S.karma||0;if(S._ik==null||!isFinite(S._ik)){S._ik=k;return}
  const d=S._ik-k;S._ik=k;
- if(d>=2){S.infamy=Math.min(2000,(S.infamy||0)+Math.min(60,Math.round(d*3)))}
+ if(d>=2){const add=Math.min(60,Math.round(d*3));if(S.alias&&S.alias.on){S.alias.inf=Math.min(2000,(S.alias.inf||0)+add)}else S.infamy=Math.min(2000,(S.infamy||0)+add)}
  else if(d<=-2&&(S.infamy||0)>0){S.infamy=Math.max(0,S.infamy+Math.max(-30,Math.round(d*.8)))}
  tier()}catch(e){}}
 function tier(){const v=S.infamy||0;let t=0;TI.forEach((x,i)=>{if(v>=x[0])t=i+1});const o=S._it|0;
@@ -41533,3 +41533,129 @@ function fixNames(){try{if(!isMod()||S.mw.nmFix)return;S.mw.nmFix=1;const cc=ccO
 window.mwFixNames=fixNames;
 setInterval(()=>{try{if(isMod()&&!S.mw.nmFix&&!choice._cur)fixNames()}catch(e){}},700);
 })()}catch(e){console.error('block48',e)}
+
+// ===================== หน้ากากสองหน้า: ฟอกชื่อเสียงชั่ว · ผู้แอบอ้าง · คนรักหลงตัวตนลับ · สวมรอยสำนัก · นักสืบ =====================
+try{(()=>{
+const A0=()=>S&&S.alive&&S.alias&&wxOk()?S.alias:null;
+const AL=()=>A0()?(S.al||(S.al={cd:0})):null;
+const nm=()=>anyName(ch(['ชาย','หญิง']));
+const T=f=>Math.max(1,Math.round(total()*f));
+const addInf=(A,v)=>{A.inf=Math.min(2000,(A.inf||0)+v)};
+const hold=()=>!choice._cur&&!modalOpen;
+const endAlias=(wipe)=>{const A=S.alias;if(!A)return;if(wipe)A.inf=0;S.aliasOld=(S.aliasOld||[]).concat([A.n]);S.alias=null;S.al=null};
+// ---------- นักล่าค่าหัวของตัวตนลับ ----------
+function hunter(A,al){const ep=T(.9+Math.random()*.4+Math.min(.4,A.inf/1500));
+ choice(`🩸 นักล่าค่าหัวตามหา ${A.n}`,`ชื่อเสียงชั่วของ <b>${esc(A.n)}</b> (${Math.round(A.inf)}) ไปถึงหูคนรับจ้างล่าตัว เขาไม่รู้ว่าใต้หน้ากากคือใคร รู้แค่ว่ารางวัลนั้นหนักพอจะตามไปถึงสุดขอบแผ่นดิน`,[
+ {t:`⚔️ สู้ในนาม ${A.n}`,s:'ชนะ ชื่อเสียงลับเพิ่ม แต่ค่าหัวก็ดังขึ้น',noFate:true,f(){if(fight('นักล่าค่าหัว',ep)){addInf(A,14);A.f+=40;log(`⚔️ นักล่าค่าหัวล้มลง ข่าวนี้ทำให้ชื่อ ${esc(A.n)} ดังขึ้นอีกขั้น`,'good')}else{injure('นักล่าค่าหัว',6);A.risk+=.03;log('🩸 นักล่าค่าหัวชนะ และเห็นรอยแผลเก่าบนข้อมือคุณ — เขาจะจำมันไว้','bad')}}},
+ {t:'🪦 ปิดตัวตนนี้ทิ้ง',s:'ค่าหัวหายไปกับหน้ากาก · เสียชื่อเสียงลับทั้งหมด',noFate:true,f(){log(`🪦 ข่าวการตายของ ${esc(A.n)} ถูกปล่อยออกไป ศพที่ใช้แทนไม่มีใครตรวจ — ค่าหัวหายไปพร้อมชื่อนั้น`,'');endAlias(true)}},
+ al.imp?{t:'🪤 ชี้ไปที่ผู้แอบอ้าง',s:'ให้นักล่าไปหาตัวปลอมแทน',noFate:true,f(){if(roll01(.45+(S.int||0)/600)){const I=al.imp;al.imp=null;addInf(A,-Math.round(A.inf*.6));log(`🪤 นักล่าค่าหัวตามรอยไปเจอ ${esc(I.n)} ที่ใส่หน้ากากเหมือนคุณ — จบตรงนั้น ค่าหัวส่วนใหญ่หมดไปกับเขา`,'epic')}else{log('🪤 นักล่าไม่เชื่อ เขาคิดว่าคุณกำลังซื้อเวลา','bad');A.risk+=.02}}}
+ :{t:'💰 จ่ายปิดปาก',s:'เสียเงิน 20% · ชื่อเสียงชั่ว −15',skip:true,f(){S.money=Math.max(0,Math.round(S.money*.8));addInf(A,-15);log('💰 ถุงเงินเปลี่ยนมือ ป้ายค่าหัวหายไปจากเมืองนี้','')}}])}
+// ---------- ผู้แอบอ้าง ----------
+function impostor(A,al){const I=al.imp||(al.imp={n:nm(),kind:ch(['fan','thug','thug','spy']),y:S.age,k:0});I.k++;
+ if(I.k>1)return impWorse(A,al,I);
+ if(I.kind==='fan')return choice(`🎭 มีคนใส่หน้ากากเหมือน ${A.n}`,`ชายหนุ่มชื่อ <b>${esc(I.n)}</b> ใส่หน้ากากเหมือนคุณ ท่องท่าวิชาผิดครึ่งหนึ่ง แต่ใช้มันช่วยชาวบ้านจริงๆ เขาไม่รู้ว่าตัวตนที่เขาเลียนแบบเป็นคนที่เดินอยู่ตรงหน้านี้`,[
+   {t:'📖 รับเป็นศิษย์ลับ',s:'ได้สหาย · ชื่อเสียงลับเพิ่ม',noFate:true,f(){allyAdd(I.n,'ศิษย์ลับของ'+A.n);A.f+=120;al.imp=null;joy(6);log(`📖 คุณถอดหน้ากากต่อหน้าเขาคนเดียว — ${esc(I.n)} ไม่พูดอะไรเลย แล้วคุกเข่าลง`,'epic')}},
+   {t:'🚪 ไล่ไปเงียบๆ',s:'ไม่มีอะไรเกิดขึ้น',skip:true,f(){al.imp=null;log(`🚪 ${esc(I.n)} ถอดหน้ากากทิ้งแล้วเดินจากไปโดยไม่ถามเหตุผล`,'')}},
+   {t:'🙈 ปล่อยเขาไป',s:'ชื่อเสียงลับเพิ่มโดยไม่ต้องทำอะไร',skip:true,f(){al.imp=null;log('🙈 คุณปล่อยให้เขาใช้ชื่อต่อ แล้วเขาก็ไปไกลจนคุณตามข่าวไม่ทัน ชื่อเสียงลับเพิ่มขึ้นเอง','');A.f+=60}}]);
+ if(I.kind==='spy')return choice(`🎭 ใครบางคนใช้ชื่อ ${A.n}`,`<b>${esc(I.n)}</b> ใช้หน้ากากเหมือนคุณก่อเรื่องในที่ที่คุณไม่เคยไป — คนที่รู้จักคุณดีเกินกว่าจะเป็นฝีมือคนแปลกหน้า ใครบางคนส่งเขามาให้ชื่อนี้เสีย`,[
+   {t:'🕵️ สืบว่าใครส่งมา',s:'ใช้ปัญญา · ได้ชื่อศัตรูตัวจริง',noFate:true,f(){if(roll01(.35+(S.int||0)/500)){const foe=nm();grudgeAdd(foe,'ส่งคนมาปลอมเป็น '+A.n,T(.8),'alias');al.imp=null;log(`🕵️ คุณตามรอยจนเจอผู้อยู่เบื้องหลัง — จด <b>${esc(foe)}</b> ลงบัญชีแค้น`,'good')}else{A.f=Math.round(A.f*.9);log('🕵️ รอยขาดกลางทาง ชื่อเสียงลับเสียไปส่วนหนึ่ง','bad')}}},
+   {t:'🧨 สอนบทเรียนเขา',s:'ชนะ ชื่อกลับมาสะอาด · แพ้ ชื่อเสีย',noFate:true,f(){if(fight(I.n,T(.7))){al.imp=null;A.f+=80;log(`🧨 ${esc(I.n)} หนีไปพร้อมหน้ากากที่แตก`,'good')}else{A.f=Math.round(A.f*.85);injure(I.n,4);log('🧨 เขาเก่งกว่าที่คิด และยังใช้ชื่อต่อได้','bad')}}},
+   {t:'🪞 ปล่อยไว้ ใช้เป็นตัวล่อ',s:'ชื่อเสียงลับ −10% · นักสืบ (ถ้ามี) จะหลงไปหาเขา',skip:true,f(){A.f=Math.round(A.f*.9);if(al.dt)al.dt.clue=Math.max(0,al.dt.clue-3);log('🪞 คุณปล่อยให้เขารับหน้าแทน','')}}]);
+ choice(`🎭 ใครก็ไม่รู้ปล้นในนาม ${A.n}`,`<b>${esc(I.n)}</b> ใส่หน้ากากเหมือนคุณ ปล้นร้านค้าและทำร้ายคนในนามตัวตนลับของคุณ ชื่อที่คุณสร้างมาเริ่มเน่า`,[
+   {t:'🔎 ไล่ล่าเอง',s:'ใช้ปัญญาและฝีมือ',noFate:true,f(){if(roll01(.4+(S.int||0)/500)){if(fight(I.n,T(.75))){A.f+=100;al.imp=null;if(Math.random()<.35){log(`🔎 ${esc(I.n)} ร้องว่า "ข้ารู้ว่าเจ้าคือใคร!" — เขารู้ตัวจริงของคุณ`,'bad');knows(I,A,al)}else log(`🔎 คุณจับ ${esc(I.n)} ส่งเจ้าเมือง ชื่อ ${esc(A.n)} สะอาดขึ้น`,'epic')}else{injure(I.n,4);A.f=Math.round(A.f*.9);log('🔎 เขาหนีไปได้ และทิ้งรอยแผลไว้ให้คุณ','bad')}}else{A.f=Math.round(A.f*.88);log('🔎 คุณตามไม่ทัน ชื่อเสียงลับเสียไปอีก','bad')}}},
+   {t:'🎭 ประกาศ "ข้าคือตัวจริง"',s:'ชื่อเสียงลับ −10% · เสี่ยงถูกจำหน้า',noFate:true,f(){A.f=Math.round(A.f*.9);A.risk+=.04;log('🎭 คุณประกาศกลางตลาดว่าตัวจริงเหลือคนเดียว — คนที่ฟังเริ่มดูหน้ากากของคุณนานกว่าเดิม','')}},
+   {t:'🪦 ปล่อยให้ชื่อตาย',s:'เลิกใช้ตัวตนนี้ · ค่าหัวหาย',noFate:true,f(){log(`🪦 ${esc(A.n)} ถูกประกาศว่าตายไปแล้ว ตัวปลอมกลายเป็นเจ้าของชื่อที่ไม่มีใครเหลือให้ปล้นต่อ`,'');endAlias(true)}}])}
+function impWorse(A,al,I){choice(`🎭 ${I.n} ยังใช้ชื่อ ${A.n} อยู่`,`เรื่องเลวที่ทำในนามตัวตนลับของคุณหนักขึ้น มีคนตายแล้วหนึ่งคน ป้ายประกาศหาตัว ${esc(A.n)} ติดอยู่ที่ประตูเมือง`,[
+   {t:'⚔️ จัดการให้จบ',s:'ชนะ หายห่วง · แพ้ เสียหนัก',noFate:true,f(){if(fight(I.n,T(.9))){A.f+=140;al.imp=null;addInf(A,-Math.round((A.inf||0)*.5));log(`⚔️ ${esc(I.n)} ถูกจัดการ ป้ายประกาศถูกถอดลง`,'epic')}else{injure(I.n,8);A.f=Math.round(A.f*.7);addInf(A,30);log('⚔️ เขาชนะ และก่อเรื่องต่อในนามคุณ','bad')}}},
+   {t:'🎭 ถอดหน้ากาก ยอมเปิดเผย',s:'ปิดตัวตนนี้ · ชื่อเสียงลับรวมเข้าตัวจริง',noFate:true,f(){const g=Math.round(A.f*.5+50);S.fame+=g;if(A.inf>0){S.infamy=Math.min(2000,(S.infamy||0)+Math.round(A.inf*.7))}log(`🎭 คุณถอดหน้ากากต่อหน้าคนทั้งเมือง ชื่อเสียง +${fmt(g)}`,'epic',true);keyAdd('เปิดเผยว่าตนคือ '+A.n);endAlias(false)}},
+   {t:'🪦 ทิ้งชื่อนี้',s:'ค่าหัวหาย',skip:true,f(){log(`🪦 ${esc(A.n)} หายไปจากยุทธภพ ปล่อยให้ตัวปลอมรับกรรมไปคนเดียว`,'');endAlias(true)}}])}
+function knows(I,A,al){choice(`🗝️ ${I.n} รู้ตัวจริงของคุณ`,`เขาถูกมัดอยู่ตรงหน้า และยิ้มแบบคนที่ถือไพ่เหนือกว่า "ถ้าข้าพูดออกไป ${esc(A.n)} จะหมดทั้งชื่อ"`,[
+   {t:'💰 จ่ายเขา',s:'เสียเงิน 25%',noFate:true,f(){S.money=Math.max(0,Math.round(S.money*.75));al.imp=null;log('💰 เขารับเงินแล้วหายไป คุณไม่แน่ใจว่าจะไม่กลับมาอีก','');A.risk+=.03}},
+   {t:'🗡️ ปิดปาก',s:'กรรม −15 · ชื่อเสียงชั่วขึ้น',noFate:true,f(){S.karma-=15;if(A.on)addInf(A,25);else S.infamy=(S.infamy||0)+25;al.imp=null;log('🗡️ คุณจัดการเขาในที่ที่ไม่มีใครเห็น','bad')}},
+   {t:'🤝 ชวนเข้าพวก',s:'ปัญญา · ได้ลูกน้องลับ',noFate:true,f(){if(roll01(.4+(S.int||0)/500)){allyAdd(I.n,'ลูกน้องของ'+A.n);al.imp=null;log(`🤝 ${esc(I.n)} ตกลง — คนที่รู้ความลับของคุณกลายเป็นคนที่ต้องปกป้องมันด้วย`,'epic')}else{log('🤝 เขาหัวเราะแล้วกระเด็นหนีไป','bad');A.risk+=.06}}}])}
+// ---------- นักสืบ ----------
+function detective(A,al){const D=al.dt;if(!D)return;const c=D.clue;
+ if(c>=15){al.dt=null;log(`🔍 <b>${esc(D.n)}</b> เก็บเบาะแสครบ แล้วเดินมาหาคุณตรงๆ`,'bad');return aliasExposed()}
+ const mis=al.imp?{t:'🪤 ชี้ไปที่ผู้แอบอ้าง',s:'ปัญญา · ให้เขาหลงไปจับตัวปลอม',noFate:true,f(){if(roll01(.45+(S.int||0)/500)){const I=al.imp;al.imp=null;al.dt=null;A.f+=150;log(`🪤 ${esc(D.n)} ตามรอยไปเจอ ${esc(I.n)} ใส่หน้ากากเหมือนคุณ — คดีปิด และชื่อของ ${esc(A.n)} สะอาดขึ้น`,'epic')}else{D.clue+=2;log(`🪤 ${esc(D.n)} ไม่หลงกล และมองคุณนานกว่าเดิม`,'bad')}}}
+  :{t:'🌫️ ปล่อยข่าวปลอม',s:'ปัญญา · เบาะแสถอยหลัง',noFate:true,f(){if(roll01(.4+(S.int||0)/500)){D.clue=Math.max(0,D.clue-4);log('🌫️ ข่าวปลอมพาเขาไปผิดเมือง','good')}else{D.clue+=1;log('🌫️ เขาจับได้ว่าข่าวนั้นสะอาดเกินไป','bad')}}};
+ choice(`🔍 ${D.n} ใกล้ตัวคุณเข้ามาทุกที`,`<b>${esc(D.n)}</b> สืบเรื่อง ${esc(A.n)} มาหลายปี เขาไม่ได้ตามหาตัวคุณ แต่ตามหาคนที่ใช้หน้ากากใบนี้ — ${c>=10?'และตอนนี้เหลือคนไม่ถึงสามคนที่ตรงกับเงื่อนไข':'เบาะแสเริ่มรวมกันเป็นรูป'} (ความใกล้ ${c}/15)`,[
+  mis,
+  {t:'💰 ติดสินบน',s:'เสียเงิน 25% · เบาะแสลด · เขาอาจกลับมาขอเพิ่ม',noFate:true,f(){S.money=Math.max(0,Math.round(S.money*.75));D.clue=Math.max(0,D.clue-6);D.bribed=(D.bribed||0)+1;if(D.bribed>=2&&Math.random()<.5){D.clue+=4;log(`💰 ${esc(D.n)} รับเงินแต่เริ่มทวงเพิ่ม — การติดสินบนไม่เคยจบ`,'bad')}else log(`💰 ${esc(D.n)} หยุดสืบไปชั่วคราว`,'')}},
+  {t:'🗡️ ลอบกำจัด',s:'กรรม −15 · ชื่อเสียงชั่วขึ้น · เสี่ยงล้มเหลว',noFate:true,f(){if(fight(D.n,T(.85))){S.karma-=15;if(A.on)addInf(A,30);else S.infamy=(S.infamy||0)+30;al.dt=null;log(`🗡️ ${esc(D.n)} หายไปกลางทาง แฟ้มคดีถูกเผา`,'bad')}else{injure(D.n,6);D.clue+=3;log(`🗡️ ${esc(D.n)} ชนะและรู้แล้วว่าคุณพร้อมจะฆ่าเพื่อปิดความลับ`,'bad')}}},
+  {t:'🤝 ดึงมาเป็นพวก',s:'ปัญญา · ถ้าสำเร็จได้สหายในหอข่าว',noFate:true,f(){if(roll01(.3+(S.int||0)/450)){allyAdd(D.n,'อดีตนักสืบตามรอย'+A.n);al.dt=null;log(`🤝 ${esc(D.n)} ปิดแฟ้มคดีลงช้าๆ "เรื่องนี้ ข้าอยากรู้ว่าคุณจะไปไกลแค่ไหน"`,'epic')}else{D.clue+=3;log(`🤝 ${esc(D.n)} ปฏิเสธ และจดทุกคำที่คุณพูด`,'bad')}}}])}
+// ---------- คนรักหลงตัวตนลับ ----------
+function lover(A,al){const L=al.lv||(al.lv={n:S.spouse,st:0,y:S.age,tp:ch(['ซึ้ง','โกรธ','รู้อยู่แล้ว'])});const n=esc(L.n);
+ const reveal=()=>{const t=L.tp;if(t==='ซึ้ง'){joy(16);L.st=3;log(`💞 ${n} ฟังจนจบ แล้วบอกว่าเสียใจที่ไม่ใช่คนแรกที่คุณเลือกเล่า แต่เข้าใจ — ทั้งคู่นั่งเงียบกันนาน`,'epic')}else if(t==='โกรธ'){joy(-14);L.st=4;L.cold=S.age+4;log(`💢 ${n} หน้าชา "ข้าชมคนอื่นให้เจ้าฟังมาตั้งนาน เจ้าไม่เคยหยุดข้าเลย" — เขาไม่พูดกับคุณหลายวัน`,'bad')}else{joy(10);L.st=5;A.risk=Math.max(0,A.risk-.01);log(`😏 ${n} ยิ้ม "ข้ารู้ตั้งแต่ปีที่สอง ท่าเดินเจ้าไม่เคยเปลี่ยน" — แล้วเริ่มช่วยกลบข่าวให้`,'epic')}};
+ if(L.st===0)return choice(`💞 ${L.n} พูดถึง ${A.n} ด้วยแววตาแปลกๆ`,`คนข้างกายของคุณนั่งเล่าเรื่อง <b>${esc(A.n)}</b> ที่ได้ยินจากตลาดมาทั้งคืน ด้วยแววตาที่คุณไม่เคยเห็นตอนเขามองตัวจริง — และบ่นเรื่องคุณสองประโยคในตอนท้าย`,[
+   {t:'🙂 นั่งฟังเฉยๆ',s:'ความลับยังอยู่ · ใจฟูนิดๆ',noFate:true,f(){L.st=1;L.y=S.age;joy(4);log('🙂 คุณพยักหน้าในจังหวะที่ถูก และพยายามไม่ยิ้มตอนโดนชม','')}},
+   {t:'❓ ถามว่าชอบตรงไหน',s:'ได้รู้ใจเขา · ชื่อเสียงลับ +',noFate:true,f(){L.st=1;L.y=S.age;A.f+=80;joy(6);log(`❓ คำตอบของ ${n} ตรงกับสิ่งที่คุณพยายามทำจริงๆ มากกว่าที่คิด`,'good')}},
+   {t:'🎭 เฉลยเดี๋ยวนี้',s:'ผลขึ้นกับนิสัยของเขา (ซึ้ง/โกรธ/รู้มานานแล้ว)',noFate:true,f(){reveal()}},
+   {t:'🌹 ให้ตัวตนลับตอบรับความชื่นชม',s:'เสี่ยง · อาจซึ้ง อาจสับสน',noFate:true,f(){if(Math.random()<.55){L.st=2;L.y=S.age;joy(8);log(`🌹 คุณฝากดอกไม้พร้อมจดหมายสั้นๆ ในนามหน้ากาก — ${n} ถือไว้ทั้งวัน แล้วถามคุณว่า "เจ้าคิดว่าเขาคือใคร"`,'')}else{L.st=1;L.y=S.age;joy(-4);log(`🌹 จดหมายถูกส่งผิดจังหวะ ${n} งงว่าทำไมคนในตลาดถึงรู้ว่าบ้านเขาอยู่ไหน`,'bad')}}}]);
+ if(L.st===1||L.st===2)return choice(`💞 ${L.n} เริ่มสืบเอง`,`${n} ${L.st===2?'ถือจดหมายฉบับนั้นมาหาคุณ':'วางหน้ากากจำลองที่ซื้อจากตลาดไว้บนโต๊ะ'} แล้วมองคุณนานกว่าปกติ "เจ้ามีอะไรจะเล่าข้าไหม"`,[
+   {t:'🙏 บอกความจริง',s:'ผลขึ้นกับนิสัยของเขา',noFate:true,f(){reveal()}},
+   {t:'🎬 แสร้งต่อ',s:'ปัญญา · ล้มเหลวจะเสียใจ',noFate:true,f(){if(roll01(.35+(S.int||0)/400)){L.st=1;L.y=S.age;log('🎬 คุณหัวเราะแล้วเปลี่ยนเรื่อง ซึ่งเขายอมให้ผ่านไป — ครั้งนี้','')}else{joy(-10);L.st=4;L.cold=S.age+3;log('🎬 คุณโกหกแย่กว่าที่คิด ใบหน้าเขาเรียบลง','bad')}}},
+   {t:'🌙 พาไปดูตอนคุณทำงาน',s:'ชื่อเสียงลับ + · ความเสี่ยง +',noFate:true,f(){L.st=5;A.risk+=.02;A.f+=100;joy(12);log(`🌙 คุณพา ${n} ไปที่ตลาดใต้ดินในคืนหนึ่ง เขาไม่พูดสักคำ แต่จับมือคุณแน่นตลอดทาง`,'epic')}}])}
+// ---------- สวมรอยสำนัก ----------
+function offerInf(A,al){const L=FACTIONS.filter(f=>f&&f.n).sort(()=>Math.random()-.5).slice(0,3);
+ choice('🕶️ ประตูสำนักที่ไม่มีใครรู้จักหน้าคุณ',`ตัวตนลับ <b>${esc(A.n)}</b> ไม่มีประวัติในสำนักใดเลย — ถ้าสวมรอยสมัครเป็นศิษย์ จะเข้าไปเห็นของที่ตัวจริงเข้าไม่ได้ แต่ต้องอยู่หลายปีโดยไม่ให้ใครจำได้ เลือกสำนักที่จะแฝงเข้าไป`,
+  L.map(f=>({t:`🏯 ${f.n}`,s:`สำนัก${f.t||''} · อยู่หลายปี มีจุดตรวจ`,noFate:true,f(){al.si={sect:f.n,y:0,cover:100,cp:0,due:S.age+2,rank:0};log(`🕶️ ${esc(A.n)} สมัครเป็นศิษย์ใหม่ของ <b>${esc(f.n)}</b> โดยไม่มีใครสงสัยในวันแรก`,'epic');keyAdd('สวมรอยเข้า'+f.n)}})).concat([{t:'🚪 ไม่สนใจ',s:'ไม่เสียอะไร',skip:true,f(){al.siNo=S.age+12}}]))}
+function infStep(A,al){const I=al.si;if(!I)return false;I.due=S.age+R(2,3);
+ const sc=ch(['test','old','lib','elder']);
+ if(sc==='test')return choice(`🕶️ ${I.sect}: การทดสอบศิษย์ใหม่`,`ผู้ดูแลทดสอบศิษย์ใหม่ทุกคนกลางลานฝึก ${esc(A.n)} ต้องเลือกว่าจะแสดงฝีมือแค่ไหน (ความเนียนตอนนี้ ${I.cover}/100)`,[
+   {t:'🫣 ใช้ฝีมือครึ่งเดียว',s:'ความเนียน +10',noFate:true,f(){I.cover=Math.min(100,I.cover+10);log('🫣 คุณแพ้อย่างพอดีๆ ไม่มีใครสนใจศิษย์ใหม่ที่ธรรมดา','')}},
+   {t:'💪 โชว์ฝีมือจริง',s:'ได้ฐานะในสำนัก · ความเนียน −15',noFate:true,f(){I.cover-=15;I.rank++;S.fame+=fameR(120);log('💪 ผู้อาวุโสหลายคนจดชื่อ — และจำหน้าคุณได้ดีขึ้น','')}},
+   {t:'🙇 แพ้ให้เขาอย่างจงใจ',s:'ความเนียน +15 · เสียหน้า',noFate:true,f(){I.cover=Math.min(100,I.cover+15);S.fame=Math.max(0,S.fame-30);log('🙇 คุณก้มหัวแพ้ และมีคนหัวเราะ แต่ไม่มีใครสงสัย','')}}]);
+ if(sc==='old'){const O=(S.allies&&S.allies.length?ch(S.allies).n:nm());return choice(`🕶️ ${I.sect}: คนที่รู้จักตัวจริงเดินเข้ามา`,`<b>${esc(O)}</b> มาเยี่ยมสำนักนี้ และกำลังเดินตรงมาทางคุณ`,[
+   {t:'🙈 แสร้งไม่รู้จัก',s:'ปัญญา · ความเนียนขึ้นกับโชค',noFate:true,f(){if(roll01(.4+(S.int||0)/500)){log(`🙈 ${esc(O)} หยุดมองนานแล้วส่ายหน้า "คงจำผิด"`,'')}else{I.cover-=25;log(`🙈 ${esc(O)} เรียกชื่อจริงของคุณดังเกินไป — มีคนหันมา`,'bad')}}},
+   {t:'🤫 ดึงไปคุยลับ',s:'ได้ผู้ช่วยในสำนัก · อาจพลาด',noFate:true,f(){if(roll01(.5)){allyAdd(O,'ผู้ช่วยในสำนัก'+I.sect);I.cover+=8;log(`🤫 ${esc(O)} ตกลงเก็บความลับ และช่วยหนุนคุณจากข้างนอก`,'good')}else{I.cover-=20;log(`🤫 ${esc(O)} ตกใจเกินคาด`,'bad')}}},
+   {t:'🗡️ ปิดปากอย่างเงียบ',s:'กรรม −12 · ความเนียน +',noFate:true,f(){S.karma-=12;I.cover=Math.min(100,I.cover+10);if(A.on)addInf(A,20);else S.infamy=(S.infamy||0)+20;log('🗡️ คืนนั้นสำนักสงบผิดปกติ','bad')}}])}
+ if(sc==='lib')return choice(`🕶️ ${I.sect}: หอคัมภีร์เปิดชั่วคราว`,`ผู้ดูแลหอคัมภีร์ลาป่วย คนแทนคือศิษย์ใหม่ ซึ่งก็คือคุณ — คัมภีร์ลับอยู่ในตู้ไม้เก่าหลังโต๊ะ (ลอกไปแล้ว ${I.cp}/3 หน้า)`,[
+   {t:'📜 ลอกทีละหน้า',s:'ความเนียน −8 · ลอกครบ 3 ครั้งแล้วออกได้เงียบๆ',noFate:true,f(){I.cp++;I.cover-=8;if(I.cp>=3)return steal(A,al,I,true);log(`📜 คุณลอกอีกหน้า (${I.cp}/3)`,'')}},
+   {t:'🏃 ขโมยทั้งเล่มเดี๋ยวนี้',s:'เสี่ยงสูง · ได้วิชาแน่ถ้าไม่ถูกจับ',noFate:true,f(){if(roll01(.35+I.cover/250))steal(A,al,I,false);else caught(A,al,I)}},
+   {t:'⏳ รอก่อน',s:'ไม่ทำอะไร',skip:true,f(){log('⏳ คุณปิดตู้และล็อกกลอนตามเดิม','')}}]);
+ return choice(`🕶️ ${I.sect}: ผู้อาวุโสเอ็นดูคุณ`,`ผู้อาวุโสท่านหนึ่งสังเกตเห็นศิษย์ใหม่ที่ขยันและเงียบ เรียกไปสอนวิชาทีละท่า สายตาของเขาเหมือนตอนที่คุณเคยเชื่อใจใครสักคนครั้งสุดท้าย`,[
+   {t:'🙏 เป็นศิษย์จริงๆ',s:'ทิ้งภารกิจ · ได้วิชาและสหาย · กรรม +',noFate:true,f(){const a=newArt(3);Array.prototype.push.call(S.arts,a);S.karma+=10;allyAdd('ผู้อาวุโสแห่ง'+I.sect,'อาจารย์ตัวจริง');joy(10);log(`🙏 คุณเลิกคิดเรื่องขโมย ผู้อาวุโสสอน ${artHtml(a)} ให้ด้วยมือเขาเอง — ใต้หน้ากากนี้ คุณเริ่มลืมว่าตัวเองมาทำไม`,'myth');keyAdd('ใจเปลี่ยนที่'+I.sect);al.si=null;al.siNo=S.age+30}},
+   {t:'🗝️ ใช้ความเอ็นดูเข้าหอคัมภีร์',s:'ลอกคัมภีร์ได้หน้าหนึ่ง · ความเนียน −10',noFate:true,f(){I.cp++;I.cover-=10;log('🗝️ เขาให้กุญแจหอคัมภีร์ด้วยมือเอง และไม่ถามว่าจะเข้าไปทำอะไร','');if(I.cp>=3)steal(A,al,I,true)}},
+   {t:'🚶 ถอยห่าง',s:'ความเนียน +5',noFate:true,f(){I.cover=Math.min(100,I.cover+5);log('🚶 คุณขอตัวไปฝึกคนเดียว ผู้อาวุโสพยักหน้าช้าๆ','')}}])}
+function steal(A,al,I,quiet){const a=newArt(Math.random()<.35?4:3);Array.prototype.push.call(S.arts,a);S.fame+=fameR(200);al.si=null;al.siNo=S.age+15;
+ log(`🕶️ ${esc(A.n)} ออกจาก <b>${esc(I.sect)}</b>${quiet?'อย่างเงียบๆ':'กลางดึก'} พร้อม ${artHtml(a)}`,'myth');keyAdd('ขโมยวิชาลับจาก'+I.sect);
+ if(!quiet||Math.random()<.4)grudgeAdd('ผู้พิทักษ์แห่ง'+I.sect,'วิชาลับของสำนักหายไป',T(1.0),'alias');return false}
+function caught(A,al,I){al.si=null;al.siNo=S.age+10;
+ choice(`🕶️ ${I.sect}: ถูกจับได้`,`ศิษย์พี่ใหญ่ดึงหน้ากากของ ${esc(A.n)} ออกกลางลานฝึก — คนทั้งสำนักล้อมคุณไว้`,[
+   {t:'⚔️ สู้ฝ่าออก',s:'ชนะ ได้ชื่อ · แพ้ เสียเงินและเจ็บ',noFate:true,f(){if(fight('ศิษย์สำนัก'+I.sect,T(1.2))){S.fame+=fameR(150);log(`⚔️ คุณฝ่าวงล้อมออกมาได้ ${esc(I.sect)} ไม่มีทางลืมหน้ากากใบนั้น`,'good')}else{injure(I.sect,8);S.money=Math.max(0,Math.round(S.money*.8));log('⚔️ คุณหนีออกมาได้ด้วยชีวิตเดียว','bad')}grudgeAdd('ศิษย์พี่ใหญ่แห่ง'+I.sect,'เคยถูกหลอกโดย '+A.n,T(.9),'alias')}},
+   {t:'🗣️ ขอต่อรอง',s:'ปัญญา · เสียเงิน แต่ไม่ต้องสู้',noFate:true,f(){if(roll01(.35+(S.int||0)/500)){S.money=Math.max(0,Math.round(S.money*.7));log('🗣️ คุณจ่ายค่าเสียหายและสาบานว่าจะไม่กลับมาอีก','')}else{injure(I.sect,5);log('🗣️ ไม่มีใครฟัง','bad')}}}]);return true}
+// ---------- ตัวขับรายปี ----------
+function yearly(){const A=A0();if(!A)return;const al=AL();if(S._alY===S.age)return;S._alY=S.age;
+ A.inf=Math.max(0,(A.inf||0)-(A.on?0:1.5));A.risk=(A.risk||0)+(A.inf||0)/9000;
+ if(A.on){A.f+=Math.round(5+Math.random()*8);if(Math.random()<.03){A.on=0;log('🎭 คุณถอดหน้ากากกลับเป็นตัวเอง หลังจากทำเรื่องไม่ดีมานานเกินไป','')}}
+ if(al.dt)al.dt.clue+=1+(A.on?1:0)+((A.inf||0)>=100?1:0)-((al.lv&&al.lv.st===5)?1:0);
+ const iv=(A.inf||0);if(iv>=300&&!al._t3){al._t3=1;log(`🩸 ชื่อ ${esc(A.n)} กลายเป็นคำที่คนไม่กล้าเอ่ย (${Math.round(iv)})`,'bad')}
+ if(al.si){const I=al.si;I.y++;I.cover=Math.max(0,I.cover-R(2,9)+Math.round((S.int||0)/300)+((al.lv&&al.lv.st===5)?1:0)-(al.dt?1:0));if(I.cover<=0&&hold()){caught(A,al,I);al.cd=S.age+2;return}}
+ if(!hold()||S.age<(al.cd||0))return;
+
+ if(al.si&&S.age>=al.si.due){infStep(A,al);al.cd=S.age+1;if(choice._cur)return}
+ const W=[];
+ if(iv>=150)W.push([iv>=300?10:6,()=>hunter(A,al)]);
+ if(!al.imp&&A.f>=250)W.push([4,()=>impostor(A,al)]);else if(al.imp&&S.age-al.imp.y>=5&&al.imp.k<2)W.push([6,()=>impostor(A,al)]);
+ if(!al.dt&&(A.f>=150||iv>=80)&&S.age>=18)W.push([3,()=>{al.dt={n:nm(),clue:2};log(`🔍 ข่าวจากหอข่าว: มีคนเริ่มสืบเรื่อง ${esc(A.n)}`,'bad')}]);
+ else if(al.dt&&al.dt.clue>=5)W.push([8,()=>detective(A,al)]);
+ if(S.spouse&&(!al.lv||((al.lv.st===1||al.lv.st===2)&&S.age-al.lv.y>=6)))W.push([3,()=>lover(A,al)]);
+ if(al.lv&&al.lv.cold&&S.age<al.lv.cold)joy(-1);
+ if(!al.si&&S.age>=(al.siNo||0)&&S.age>=18&&!(al.imp&&al.imp.k))W.push([2,()=>offerInf(A,al)]);
+ if(!W.length)return;if(Math.random()>.4)return;
+ let t=W.reduce((a,b)=>a+b[0],0),r=Math.random()*t;for(const w of W){r-=w[0];if(r<=0){w[1]();al.cd=S.age+R(3,7);return}}}
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{yearly()}catch(e){console.error('mask',e)}return r}}
+{const _ae=aliasEnd;aliasEnd=function(){S.al=null;return _ae.apply(this,arguments)}}
+// ---------- หน้าจัดการ ----------
+window.openMask=function(){const A=S&&S.alias;if(!A)return toast('ยังไม่มีตัวตนลับ');const al=AL()||{};
+ const rows=[];rows.push(`<div class="item"><b>🎭 ${esc(A.n)}</b> · ชื่อเสียงลับ ${fmt(A.f)}${(A.inf||0)>0?` · <span style="color:#d84a4a">🩸 ชื่อเสียงชั่ว ${Math.round(A.inf)}</span>`:''}<br><span class="tag2">${A.on?'กำลังสวมหน้ากากทำเรื่องไม่ดี — กรรมที่ตกจะไปติดที่ตัวตนลับ แทนที่จะติดตัวจริง · แต่ถูกจับได้เมื่อไหร่ ค่าหัวตกมาเป็นของคุณ 70%':'ปิดอยู่ — ชื่อเสียงชั่วจะติดที่ตัวจริงตามปกติ'}</span><div style="margin-top:6px"><button class="gbtn" onclick="_maskTog()">${A.on?'🙂 ถอดหน้ากาก (หยุดฟอกชื่อ)':'😈 สวมหน้ากากทำเรื่องไม่ดี'}</button></div></div>`);
+ if(al.imp)rows.push(`<div class="item">🎭 <b>ผู้แอบอ้าง</b> — ${esc(al.imp.n)} กำลังใช้ชื่อ ${esc(A.n)}</div>`);
+ if(al.dt)rows.push(`<div class="item">🔍 <b>นักสืบ ${esc(al.dt.n)}</b> — ความใกล้ ${al.dt.clue}/15</div>`);
+ if(al.lv)rows.push(`<div class="item">💞 <b>${esc(al.lv.n)}</b> — ${['','ชื่นชมตัวตนลับ','ได้รับของจากตัวตนลับ','รู้แล้ว และซึ้ง','รู้แล้ว และโกรธ','รู้แล้ว และช่วยกลบข่าว'][al.lv.st]||''}</div>`);
+ if(al.si)rows.push(`<div class="item">🕶️ <b>สวมรอยใน ${esc(al.si.sect)}</b> — ปีที่ ${al.si.y} · ความเนียน ${al.si.cover}/100 · ลอกคัมภีร์ ${al.si.cp}/3</div>`);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎭 หน้ากากสองหน้า</h3><p class="tag2">เหตุการณ์เกิดเองตามสถานการณ์ ไม่ต้องกดตามขั้น — แต่ละเรื่องส่งผลถึงกัน (เช่น ผู้แอบอ้างใช้หลอกนักสืบได้ · คนรักที่รู้ความลับช่วยกลบข่าวได้)</p>${rows.join('')}<button class="gbtn" style="width:100%;margin-top:8px" onclick="openWuxia()">← กลับ</button>`,'mask')};
+window._maskTog=()=>{const A=S&&S.alias;if(!A)return;A.on=A.on?0:1;toast(A.on?'😈 สวมหน้ากากแล้ว':'🙂 ถอดหน้ากากแล้ว');openMask()};
+{const _ow=openWuxia;openWuxia=function(){const r=_ow.apply(this,arguments);try{if(S&&S.alias){const m=$('modal');if(m&&!m.querySelector('.maskBtn')){const b=document.createElement('button');b.className='gbtn maskBtn';b.style.cssText='width:100%;margin:6px 0';b.textContent='🎭 หน้ากากสองหน้า — จัดการตัวตนลับ';b.onclick=()=>openMask();const h=m.querySelector('h3');if(h&&h.nextSibling)h.parentNode.insertBefore(b,h.nextSibling);else m.appendChild(b)}}}catch(e){}return r}}
+window._mask={yearly,hunter,impostor,detective,lover,offerInf,infStep,steal,caught,AL,A0};
+try{const g=window._guide2;if(g)g.add('life','🎭','หน้ากากสองหน้า (ตัวตนลับขั้นสูง)','เมื่อมีตัวตนลับ เปิด 🎭 จัดการตัวตนลับได้จากหน้ายุทธภพ:<br>• 😈 <b>สวมหน้ากากทำเรื่องไม่ดี</b> — กรรมที่ตกจะไปเป็น "ชื่อเสียงชั่ว" ของตัวตนลับ ตัวจริงสะอาด แต่ค่าหัวทำให้นักล่าตามหา และถ้าถูกเปิดโปง 70% ตกมาเป็นของคุณ<br>• 🎭 <b>ผู้แอบอ้าง</b> — มีคนปลอมเป็นตัวตนลับ มีทั้งแฟนคลับที่ซื่อ คนปล้นจริง และสายลับศัตรู<br>• 🔍 <b>นักสืบ</b> — สะสมเบาะแสทีละปี ติดสินบน หลอก กำจัด หรือดึงมาเป็นพวก (หลอกให้ไปจับผู้แอบอ้างได้)<br>• 💞 <b>คนรักหลงตัวตนลับ</b> — เฉลยตอนไหนก็ได้ ผลขึ้นกับนิสัยของเขา (ซึ้ง โกรธ หรือรู้มานานแล้ว)<br>• 🕶️ <b>สวมรอยเข้าสำนัก</b> — แฝงตัวหลายปี มีจุดตรวจ ปลายทางมีหลายแบบ: ขโมยวิชา ใจเปลี่ยนเป็นศิษย์จริง หรือถูกจับได้','')}catch(e){}
+})()}catch(e){console.error('mask block',e)}
