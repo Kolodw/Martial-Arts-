@@ -1732,7 +1732,7 @@ const EVENTS=[
   {t:'ฝากไว้ที่วัด',f(){S.karma+=2;log('ฝากเด็กไว้กับพระชรา และส่งเงินไปให้ทุกปี')}},
   {t:'ตัดรากถอนโคน',s:'กรรม −−−',f(){S.karma-=25;joy(-10);log('...คุณไม่เคยเล่าเรื่องคืนนั้นให้ใครฟัง','bad')}}])}}
 ];
-function randomEvent(){S.evCd=S.evCd||{};const pool=EVENTS.map((e,i)=>({w:evW('ev'+i,e.w),i,e})).filter(x=>{const e=x.e,l=S.evCd[x.i];if(l!=null&&(e.once||S.age-l<(e.cd==null?7:e.cd)))return false;return e.c(S)});if(!pool.length)return;const x=pickW(pool).v;S.evCd[x.i]=S.age;newTag('ev'+x.i);evMark('ev'+x.i);x.e.f();render();checkDeath()}
+function randomEvent(){if(S&&S.ab&&S.ab.on&&Math.random()<.8)return;S.evCd=S.evCd||{};const pool=EVENTS.map((e,i)=>({w:evW('ev'+i,e.w),i,e})).filter(x=>{const e=x.e,l=S.evCd[x.i];if(l!=null&&(e.once||S.age-l<(e.cd==null?7:e.cd)))return false;return e.c(S)});if(!pool.length)return;const x=pickW(pool).v;S.evCd[x.i]=S.age;newTag('ev'+x.i);evMark('ev'+x.i);x.e.f();render();checkDeath()}
 
 // ============ ARTS / ITEMS ============
 function newArt(minTier=0){minTier=Math.min(minTier,ART_TIER.length-1);let t,gd=0;do{t=pickW(ART_TIER)}while(ART_TIER.indexOf(t.v)<minTier&&++gd<400);if(ART_TIER.indexOf(t.v)<minTier)t={v:ART_TIER[ART_TIER.length-1],p:.0003};if(tr('lucky')){const t2=pickW(ART_TIER);if(ART_TIER.indexOf(t2.v)>ART_TIER.indexOf(t.v))t=t2}if(S&&Math.random()<Math.min(.4,Math.max(0,((S.int||0)-30)/250))){const t3=pickW(ART_TIER);if(ART_TIER.indexOf(t3.v)>ART_TIER.indexOf(t.v))t=t3}const key=S.faction?S.faction.t:'none';
@@ -29190,12 +29190,12 @@ EV.m3=()=>{const A=AH();A.done.m3=S.age;choice('🎭 หน้ากากแต
  {t:'⚔️ ฆ่าคนที่เปิดโปงกลางที่ประชุม',s:'ศึกหนักมาก',f(){fightThen('ยอดฝีมือทั้งที่ประชุม',1.4,w=>{if(w){A.sec=30;A.mk++;K(-50);S.fame+=300;log('⚔️ ไม่มีใครกล้าพูดคำว่า "ความลับ" อีก — แต่ทุกคนรู้','epic',true)}else{S.hp=1;S.fame=Math.round(S.fame*.3);S.faction=null;log('🩸 คุณหนีออกมาได้แบบไม่เหลืออะไร','bad',true)}})}}])};
 window._ahEV=EV;
 // ---- ลูปรายปี ----
-let pend=0;const fire=(id,d)=>{if(pend)return;pend=1;wpWait(()=>{pend=0;try{if(!S||!S.alive||choice._cur)return;const f=EV[id];if(f&&f(d)!==false)AH().last=S.age}catch(e){console.error(e)}})};
+let pend=0,pendS=null,pendT=0;const pBusy=()=>!!(pend&&pendS===S&&Date.now()-pendT<90000);const fire=(id,d)=>{if(pBusy())return;pend=1;pendS=S;pendT=Date.now();wpWait(()=>{pend=0;try{if(!S||!S.alive||choice._cur)return;const f=EV[id];if(f&&f(d)!==false)AH().last=S.age}catch(e){console.error(e)}})};
 {const _py=passYear;passYear=function(){const a0=S?S.age:0,k0=S?S.karma||0:0;const r=_py.apply(this,arguments);try{if(!S||!S.alive||S.beastMode||S.age<16)return r;const A=AH(),dy=Math.max(1,Math.min(10,S.age-a0)),q=q4();
   if(q==='anti')A.ay+=dy;if(q==='mask'){A.my+=dy;const dk=(S.karma||0)-k0;if(dk<0)A.sec=clamp(A.sec+Math.min(15,-dk/6),0,100);A.sec=clamp(A.sec+.5*dy,0,100)}
   if(q==='anti'&&Math.random()<.5)RP({sect:-1,pp:1});
   if(mpOf()>=150&&A.wh<60)whAdd(Math.min(3,.5+.4*dmTi())*dy);
-  if(pend)return r;const due=A.q.findIndex(x=>x.at<=S.age);if(due>=0){const x=A.q.splice(due,1)[0];fire(x.id,x.d);return r}
+  if(pBusy())return r;const due=A.q.findIndex(x=>x.at<=S.age);if(due>=0){const x=A.q.splice(due,1)[0];fire(x.id,x.d);return r}
   if(S.age-A.last<3)return r;
   if(mpOf()>=300&&(S.karma||0)>-150&&A.wh>=10&&Math.random()<.05*dy*(1+A.wh/60))return fire('w'),r;
   if(q==='mask'){if(A.sec>=70&&(!A.done.m3||S.age-A.done.m3>30)&&Math.random()<A.sec/350*dy)return fire('m3'),r;if(Math.random()<.07*dy)return fire(pick(['m1','m2'])),r}
@@ -29273,7 +29273,7 @@ window.openDz=function(){if(!dzOn())return;const A=AB(),G=GATE[A.gate],yr=S.age-
   <p class="tag2">🧩 เศษผนึกแดนต้องห้าม ${A.seals}/3 · ลงมือได้ปีละ 1 แคว้น${A.ay===S.age?' (ปีนี้ลงมือแล้ว)':''}</p></div>
  <div class="dzmap">${A.L.map(cell).join('')}</div>
  <div class="dzact"><button class="pbtn" onclick="dzFeed()" ${A.fy===S.age?'disabled style="opacity:.45"':''}>🩸 กลืนแก่นอสูร<br><small>ความหิว −45 · สติ −6 · พลัง+</small></button>
- <button class="gbtn" onclick="dzExitMenu()">🚪 ทางออก (${ex.filter(x=>x.ok).length}/${ex.length})</button>${A.seals>=3?'<button class="pbtn" style="background:linear-gradient(#3a0a4a,#1a0420);color:#e8c0ff" onclick="dzDeep()">🌑 เดินลึกลงไปแดนต้องห้าม</button>':''}</div>
+ <button class="gbtn" onclick="dzCalm()" ${A.cy===S.age?'disabled style="opacity:.45"':''}>🧘 รวบรวมสติ<br><small>สติ +6 · ความหิว +10 · ปีละครั้ง</small></button><button class="gbtn" onclick="dzExitMenu()">🚪 ทางออก (${ex.filter(x=>x.ok).length}/${ex.length})</button>${A.seals>=3?'<button class="pbtn" style="background:linear-gradient(#3a0a4a,#1a0420);color:#e8c0ff" onclick="dzDeep()">🌑 เดินลึกลงไปแดนต้องห้าม</button>':''}</div>
  <p class="tag2">แตะแคว้นเพื่อเลือกวิธี: ⚔️ ดวลยึด · 🤝 สวามิภักดิ์ · 🐍 ยุให้รบกัน · ⛓️ ปลดปล่อยทาส (ต้องใจดี) — ราชันจำทุกสิ่งที่คุณทำ</p>`,'abyss')};
 window.dzFeed=function(){const A=AB();if(A.fy===S.age)return;A.fy=S.age;A.hun=Math.max(0,A.hun-45);satAdd(S.karma>=20?-4:-7);const g=pw(.05);log(`🩸 คุณกลืนแก่นอสูรที่ยังอุ่นอยู่ — พลังยุทธ์ +${fmt(g)} · เสียงในหัวดังขึ้นนิดหนึ่ง`,'epic');render();openDz()};
 window.dzLand=function(i){const A=AB(),l=A.L[i];if(!l)return;if(l.own){toast(`${l.n} เป็นของคุณแล้ว`);return}
@@ -29383,22 +29383,34 @@ EV.plea=()=>{const A=AB();choice('⛓️ เด็กทาสที่หนี
  {t:'🤲 รับไว้',s:'ผู้ลี้ภัยไว้ใจ+',f(){fx({slave:10});K(8);satAdd(3);log('🤲 คืนนั้นมีผู้ลี้ภัยอีกสามสิบคนตามรอยเท้าเลือดของเธอมา','good')}},
  {t:'🩸 กลืน',s:'ความหิวหาย · กรรมดิ่ง',f(){A.hun=0;K(-50);satAdd(-12);fx({slave:-25});log('🩸 ไม่มีใครได้ยินเสียงอะไรจากเต็นท์ของคุณ','bad',true)}},
  {t:'↩️ ส่งคืนเจ้าของ',s:'ราชันพอใจ',f(){fx({king:8,slave:-15});K(-15);log('↩️ เธอไม่ร้องไห้ตอนถูกลากกลับ')}}])};
+EV.rage=()=>{const A=AB(),v=pick(['ทาสในค่ายที่กำลังหลับ','ทูตที่มาเจรจา','ลูกน้องที่พูดเสียงดัง']);choice('🌑 สติกำลังจะแตก',`เสียงในหัวดังจนกลบทุกอย่าง มือของคุณสั่น สายตาจับจ้องไปที่${v} (สติ ${Math.round(A.sat)})`,[
+ {t:'🩸 ปล่อยให้มันเป็นไป',s:'ความหิว −25 · กรรม −25 · ทาสเกลียด',f(){K(-25);fx({slave:-8});A.hun=Math.max(0,A.hun-25);log(`🌑 <b>สติแตก</b> — คุณตื่นมาพบว่าตัวเองฆ่า${v} โดยจำไม่ได้ว่าทำไปตอนไหน`,'bad',true)}},
+ {t:'⛓️ ล่ามโซ่ตัวเองไว้ทั้งคืน',s:'พลังชีวิต −15% · สติ +5',f(){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.15));satAdd(5);log('⛓️ คุณกัดฟันดึงโซ่จนข้อมือเลือดออก เช้ามาไม่มีใครตาย','good')}},
+ {t:'🗣️ ตะโกนชื่อจริงของตัวเองซ้ำๆ',s:`ปัญญา ~${Math.round(clamp(.35+(S.int||0)/1000,.35,.85)*100)}% · สำเร็จ สติ +8`,f(){if(Math.random()<clamp(.35+(S.int||0)/1000,.35,.85)){satAdd(8);log('🗣️ คุณจำได้ว่าตัวเองเป็นใคร เสียงในหัวเงียบลง','good',true)}else{satAdd(-3);K(-10);log('🗣️ ชื่อนั้นฟังแปลกหูไปแล้ว… คุณทำร้ายคนรอบตัวไปหลายคนก่อนจะหยุดได้','bad')}}}])};
+EV.voice=()=>{const A=AB();const L=[
+ ['👶 ลูกอสูรหลงทาง','ลูกอสูรตัวเล็กหลงเข้ามาในค่าย ร้องหาแม่เป็นภาษาที่คุณเพิ่งเริ่มฟังออก',[{t:'🤲 พากลับไปส่ง',s:'สติ +6',f(){satAdd(6);K(5);log('🤲 แม่อสูรมองคุณนานก่อนพาลูกหายไปในความมืด','good')}},{t:'🍖 กิน',s:'ความหิว −30 · สติ −6',f(){A.hun=Math.max(0,A.hun-30);satAdd(-6);K(-20);log('🍖 เสียงร้องหยุดลง','bad')}},{t:'🪖 เลี้ยงเป็นทหาร',s:'ทัพ +15',f(){A.arm+=15;log('🪖 อีกสิบปีมันจะเป็นนักรบที่ภักดีที่สุดของคุณ')}}]],
+ ['🪞 เงาในบ่อเลือด','คุณเห็นใบหน้าตัวเองในบ่อเลือด — ยังเป็นหน้าคนอยู่ แต่ไม่ทั้งหมด',[{t:'🧘 นั่งมองจนกว่าจะจำได้',s:'สติ +7 · ความหิว +10',f(){satAdd(7);A.hun=clamp(A.hun+10,0,100);log('🧘 คุณนั่งอยู่ทั้งวันจนเงานั้นยิ้มตอบแบบที่คุณเคยยิ้ม','good')}},{t:'👊 ทุบทิ้ง',s:'สติ −2',f(){satAdd(-2);log('👊 บ่อเลือดกระเพื่อมแล้วนิ่งไปเหมือนเดิม')}}]],
+ ['🍶 พ่อค้ายาจากแดนมนุษย์','พ่อค้าแอบลงมาขายยาสงบจิต ราคาแพงลิบ',[{t:'💰 ซื้อ',s:'สติ +10 · เสียเงิน',f(){const c=Math.round(sxBiz()*.5);if(S.money<c){log('💸 เงินไม่พอ พ่อค้าหัวเราะแล้วเดินจากไป','bad');return}S.money-=c;satAdd(10);log('🍶 ยาขมจนลิ้นชา แต่เสียงในหัวเบาลงจริงๆ','good')}},{t:'🗡️ ปล้น',s:'กรรม −15 · สติ +6',f(){K(-15);satAdd(6);log('🗡️ คุณได้ยามา และพ่อค้าก็ไม่ได้กลับขึ้นไป','bad')}},{t:'🙅 ไม่สนใจ',s:'',f(){}}]],
+ ['🕯️ ผู้ลี้ภัยสวดมนต์','ผู้ลี้ภัยจุดเทียนสวดมนต์เป็นภาษามนุษย์ในหุบเขา เสียงนั้นทำให้หัวคุณปวด',[{t:'🙏 นั่งฟังด้วย',s:'สติ +6 · ผู้ลี้ภัยไว้ใจ+',f(){satAdd(6);fx({slave:6});log('🙏 คุณจำบทสวดนั้นได้ ทั้งที่ไม่เคยรู้ว่าเคยเรียน','good')}},{t:'🔥 ไล่ไป',s:'ราชันพอใจ · สติ −3',f(){fx({king:5,slave:-10});satAdd(-3);log('🔥 เทียนดับทีละเล่ม')}}]]];
+ const e=pick(L);choice(e[0],e[1],e[2])};
+window.dzCalm=function(){const A=AB();if(!A||A.cy===S.age)return;A.cy=S.age;satAdd(6);A.hun=clamp(A.hun+10,0,100);log('🧘 คุณนั่งนิ่งในถ้ำมืดทั้งคืน ไล่เสียงในหัวออกไปทีละเสียง — สติ +6 · ความหิว +10','good');render();openDz()};
 // ---- ลูปรายปี ----
-let pend=0;const fire=(id,d)=>{if(pend)return;pend=1;wpWait(()=>{pend=0;try{if(!S||!S.alive||choice._cur||!dzOn())return;const f=EV[id];if(f&&f(d)!==false)AB().last=S.age}catch(e){console.error(e)}})};
+let pend=0,pendS=null,pendT=0;const pBusy=()=>!!(pend&&pendS===S&&Date.now()-pendT<90000);const QCH=id=>{const f=EV[id];if(!f)return false;const src=String(f);return !(/fightThen\(|duel\(/.test(src)&&!/choice\(/.test(src))};const fire=(id,d)=>{if(pBusy())return;if(QCH(id)){try{const f=EV[id];if(f&&f(d)!==false)AB().last=S.age}catch(e){console.error(e)}return}pend=1;pendS=S;pendT=Date.now();wpWait(()=>{pend=0;try{if(!S||!S.alive||!dzOn())return;if(choice._cur||modalOpen){AB().q.unshift({at:S.age+1,id,d});return}const f=EV[id];if(f&&f(d)!==false)AB().last=S.age}catch(e){console.error(e)}})};
 {const _py=passYear;passYear=function(){const a0=S?S.age:0;const r=_py.apply(this,arguments);try{if(!S||!S.alive)return r;const dy=Math.max(1,Math.min(10,S.age-a0));
   if(!dzOn()){dzGates(dy);return r}const A=AB();if(A.fr&&A.fr.on)return r;
   A.hun=clamp(A.hun+5*dy,0,100);if(A.hun>=100){S.maxHp=Math.max(50,Math.round(S.maxHp*(1-.03*dy)));S.hp=Math.min(S.hp,S.maxHp);if(Math.random()<.4)log('🩸 ความหิวกัดกินร่างจากข้างใน — พลังชีวิตสูงสุดลดลง','bad')}
   if(A.hun>=70)satAdd(-1*dy);if((S.karma||0)>=50)satAdd(.5*dy);
   if(A.sat<=0){A.end='sink';log('🩸 <b>สติสุดท้ายดับลง</b>','myth',true);dzEnd('sink','จมหายเป็นอสูรไร้ชื่อในแดนอสูร');return r}
+  if(A.sat<25&&Math.random()<.2*dy&&!choice._cur&&!pBusy()&&!(A.vy&&S.age-A.vy<3)){A.vy=S.age;fire('rage');return r}
   if(A.sat<25&&Math.random()<.2*dy&&!choice._cur){const v=pick(['กลืนทาสในค่ายไปสามคน','ฆ่าทูตที่มาเจรจาทั้งคณะ','ฉีกร่างลูกน้องที่พูดเสียงดัง']);K(-25);fx({slave:-8});A.hun=Math.max(0,A.hun-25);log(`🌑 <b>สติแตก</b> — คุณตื่นมาพบว่าตัวเอง${v} โดยจำไม่ได้ว่าทำไปตอนไหน`,'bad',true)}
   if(A.throne&&Math.random()<.5)S.money+=Math.round(sxBiz()*.3*dy);
-  if(pend)return r;const due=A.q.findIndex(x=>x.at<=S.age);if(due>=0){const x=A.q.splice(due,1)[0];fire(x.id,x.d);return r}
-  if(S.age-A.last<2)return r;
+  if(pBusy())return r;const due=A.q.findIndex(x=>x.at<=S.age);if(due>=0){const x=A.q.splice(due,1)[0];fire(x.id,x.d);return r}
+  if(S.age-A.last<1)return r;
   if(A.spyOk==null&&S.age-A.y0>=2&&Math.random()<.35)return fire('spy'),r;
   const hc=A.spyOk===1&&!A.spyBetray?0:A.spyBetray?.09:.04;if(owned()&&Math.random()<hc*dy)return fire('heaven'),r;
-  if(Math.random()<.35){const L=['mimic','feast','market','nest','plea','bone'].filter(k=>!(A.done[k]&&S.age-A.done[k]<12));if(L.length){const k=pick(L);A.done[k]=S.age;return fire(k),r}}}catch(e){console.error(e)}return r}}
+  if(Math.random()<.6){const L=['mimic','feast','market','nest','plea','bone','voice'].filter(k=>!(A.done[k]&&S.age-A.done[k]<(k==='voice'?3:9)));if(L.length){const k=pick(L);A.done[k]=S.age;return fire(k),r}}}catch(e){console.error(e)}return r}}
 // ---- ประตูทางเข้า ----
-function dzGates(dy){if(S.beastMode||(!S.xian&&!S.xt))return;const H=S.ah||{},G=S.abG||(S.abG={});if(choice._cur||pend)return;
+function dzGates(dy){if(S.beastMode||(!S.xian&&!S.xt))return;const H=S.ah||{},G=S.abG||(S.abG={});if(choice._cur||pBusy())return;
  if(S.xt&&(S.karma||0)<=-500&&!G.trial){G.trial=1;return wpWait(()=>{if(choice._cur)return;choice('⚖️ ศาลสวรรค์',`เทวสภาเรียกคุณขึ้นศาล "กรรมของเจ้าหนักจนแผ่นดินสวรรค์ทรุด"`,[
   {t:'🙇 ยอมรับโทษ',s:'พลังยุทธ์ −30% · อยู่แดนเทพต่อ',f(){S.power=Math.round(S.power*.7);S.karma=Math.round(S.karma*.5);log('🙇 สายฟ้าลงทัณฑ์ฟาดร่างคุณเก้าครั้ง แต่คุณยังยืนอยู่บนสวรรค์','bad',true)}},
   {t:'🔥 ฉีกป้ายเทพ หนีลงแดนอสูร',s:'เริ่มชีวิตใหม่ในแดนอสูร',f(){dzEnter('exile')}}])})}
