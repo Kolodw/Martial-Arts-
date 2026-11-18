@@ -2712,7 +2712,7 @@ function sysSpecial(){const s=S.sys,box=h=>`<div class="sysq">${h}</div>`;
   case 'checkin':return `<h4>📅 เช็คอิน</h4>`+box(`เช็คอินมาแล้ว <b>${S.age-s.since}</b> ปี · ทุก 10 ปีได้รางวัลใหญ่`);
  }return ''}
 function openSys(){
- const s=S.sys;if(!s)return;sysFix();const T=sysType(),G=sysG(),need=expNeed(s.lv),L=MAINQ[s.t]||[];
+ const s=S.sys;if(!s)return;sysFix();try{mainCheck()}catch(e){}const T=sysType(),G=sysG(),need=expNeed(s.lv),L=MAINQ[s.t]||[];
  const statB=(k,l,d)=>`<button class="sysb" ${s.pts?'':'disabled'} onclick="allocPt('${k}')">${l}<small>${d}</small></button>`;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="sysbox">
  <div class="px" style="font-size:12px;opacity:.8">[ SYSTEM ]</div><h3 style="color:var(--syW)">${T.ic} ${sysName()}</h3>
@@ -36472,6 +36472,11 @@ TH.forEach((t,i)=>{const c='ccxT'+(31+i),sel='#chatBox .cm.cmp .cmb.'+c+',.cxs .
 document.head.appendChild(css);
 })()}catch(e){console.error('mod-world',e)}
 
+
+// แก้: เควสหลักของระบบ (เช่น ตีอาวุธถึง +5) เช็คทันทีหลังตีบวก/ใช้ค้อน ไม่ต้องรอปีถัดไป
+try{(function(){const mc=()=>{try{if(S&&S.sys&&typeof MAINQ!=='undefined'&&MAINQ[S.sys.t]){mainCheck();try{render()}catch(e){}}}catch(e){}};
+{const _g=gupDo;gupDo=function(){const r=_g.apply(this,arguments);if(r)mc();return r}}
+{const _b=buySys;buySys=function(id){const r=_b.apply(this,arguments);if(id==='hammer')mc();return r}}})()}catch(e){console.error('mod-mq',e)}
 </script>
 </body>
 </html>
