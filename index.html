@@ -4655,7 +4655,7 @@ function drawDuel(fin){
  <div class="tag2">คุณ · ${Math.max(0,Math.round(DU.me))}</div>${bar(DU.me,'#5fbf6f')}
  <div class="tag2" style="margin-top:6px">${DU.name} · ${Math.max(0,Math.round(DU.en))}${DU.charge?' ⚡ รวมพลังแล้ว!':''}</div>${bar(DU.en,'#ff5d73')}
  <p style="margin-top:10px">${DU.txt||'ทั้งสองฝ่ายจ้องตากัน ลมพัดใบไม้ปลิวผ่าน...'}</p>`+
- (fin?fin:`<p class="tag2">ยกที่ ${DU.r}/6 · ท่าทีศัตรู: <b>${hint[shown]}</b></p>
+ (fin?fin:`<p class="tag2">ยกที่ ${DU.r}/6 · ท่าทีศัตรู: <b>${hint[shown]}</b>${tr('eye')?' · 👁️ เนตรทิพย์ 100%':''}</p>
  <div class="mgrid"><button class="opt" onclick="duelAct('atk')">⚔️ บุก<small>ชนะการรวมพลัง</small></button><button class="opt" onclick="duelAct('def')">🛡️ ตั้งรับ<small>สวนกลับการบุก</small></button>
  <button class="opt" onclick="duelAct('sec')" ${DU.secret?'':'disabled style="opacity:.4"'}>✨ วิชาลับ<small>${DU.secret?'《'+(DU.art||'')+'》 ใช้ได้ 1 ครั้ง':'ใช้ไปแล้ว / ไม่มีวิชา'}</small></button><button class="opt" onclick="duelAct('flee')">🏃 หนี<small>ยอมแพ้ บาดเจ็บน้อย</small></button></div>${duelXBtns()}`),'duel');
 }
@@ -7623,14 +7623,14 @@ function duHint(e){const t=DU.tech;return{atk:`ขยับเท้าเตร
 {const _duel=duel;duel=function(name,ep,cb){const r=_duel.apply(this,arguments);try{if(DU&&!auto){DU.combo=0;DU.best=0;DU.reads=0}}catch(e){}return r}}
 function duClear(){clearInterval(DU&&DU._iv);clearTimeout(DU&&DU._early);if(DU){DU._iv=null;DU._early=null}}
 drawDuel=function(fin){if(!DU)return;duClear();
- if(!fin){if(!DU.tech||DU._r!==DU.r){DU.tech=duTech();DU._r=DU.r;DU.shown=(Math.random()<(DU.ar&&DU._wk?(tr('eye')?.85:.55):(tr('eye')?1:(S.ch==='hell'?.6:.75))))?DU.intent:ch(['atk','heavy','feint','def','chg'].filter(x=>x!==DU.intent))}}
+ if(!fin){if(!DU.tech||DU._r!==DU.r){DU.tech=duTech();DU._r=DU.r;DU.shown=(Math.random()<(DU.ar&&DU._wk?(tr('eye')?1:.55):(tr('eye')?1:(S.ch==='hell'?.6:.75))))?DU.intent:ch(['atk','heavy','feint','def','chg'].filter(x=>x!==DU.intent))}}
  const bar=(v,c)=>`<div class="hpbar" style="height:10px"><i style="width:${Math.max(0,v)}%;background:${c}"></i></div>`,T=duTime();
  const B=(a,ic,t,s,dis)=>`<button class="opt" onclick="duelAct('${a}')" ${dis?'disabled style="opacity:.4"':''}>${ic} ${t}<small>${s}</small></button>`;
  modal(`<h3>⚔️ ดวลกับ ${DU.name}</h3>
  <div class="tag2">คุณ · ${Math.max(0,Math.round(DU.me))}${DU.combo>1?` · 🔥 คอมโบ ×${DU.combo}`:''}</div>${bar(DU.me,'#5fbf6f')}
  <div class="tag2" style="margin-top:6px">${DU.name} · ${Math.max(0,Math.round(DU.en))}${DU.charge?' ⚡ รวมพลังแล้ว!':''}</div>${bar(DU.en,'#ff5d73')}
  <p style="margin-top:10px">${DU.txt||'ทั้งสองฝ่ายจ้องตากัน ลมพัดใบไม้ปลิวผ่าน...'}</p>`+
- (fin?fin:`<div class="item" style="margin:6px 0;border-left:4px solid #ff5d73"><span class="tag2">ยกที่ ${DU.r}/6 · ศัตรูจะใช้:</span><br> <b>${DU_INT[DU.shown][1]} ${duHint(DU.shown)}</b></div>
+ (fin?fin:`<div class="item" style="margin:6px 0;border-left:4px solid #ff5d73"><span class="tag2">ยกที่ ${DU.r}/6 · ศัตรูจะใช้:${tr('eye')?' · 👁️ เนตรทิพย์ อ่านได้ชัวร์ 100%':''}</span><br> <b>${DU_INT[DU.shown][1]} ${duHint(DU.shown)}</b></div>
  <div class="hpbar" style="height:7px;margin:4px 0 8px"><i id="duT" style="width:100%;background:#f0c860;transition:width .1s linear"></i></div>
  <div class="mgrid">${B('atk','⚔️','บุก','ชนะรวมพลัง · ขัดท่าหลอก')}${B('def','🛡️','ตั้งรับ','ลดแรงการบุก')}${B('dodge','💨','หลบ','พ้นท่าหนักแล้วเห็นช่องโหว่')}${B('ctr','↩️','สวนกลับ','ลงโทษการบุก/ท่าหลอก · โดนท่าหนักเจ็บ')}
  ${B('sec','✨','วิชาลับ',DU.secret?'《'+(DU.art||'')+'》 ใช้ได้ 1 ครั้ง':'ใช้ไปแล้ว / ไม่มีวิชา',!DU.secret)}${B('flee','🏃','หนี','ยอมแพ้ บาดเจ็บน้อย')}</div>${duelXBtns()}
@@ -26743,7 +26743,7 @@ const BEAT={atk:'fnt',def:'atk',fnt:'def'};
 function tfight(name,e,cb,title){const T={r:0,sc:0,last:null,card:1,log:[]};name=String(name);
  const fin=(w)=>{if(w){S.kills=(S.kills||0)+1;S.fame+=15}else{S.hp-=Math.round(S.maxHp*.12);if(Math.random()<.35)inj(name)}try{cb&&cb(w)}catch(x){console.error(x)}try{render()}catch(x){}};
  const round=()=>{if(T.r>=3){const r=total()/Math.max(1,e),v=T.sc+(r-1)*2.5+(Math.random()-.5);const w=v>0;log(`⚔️ ศึกกับ${name}: ${T.log.join(' ')} → <b>${w?'ชนะ':'แพ้'}</b>`,w?'epic':'bad');return fin(w)}
-  const s=ch(Object.keys(ST)),acc=.7+Math.min(.2,(S.int||0)/500),shown=Math.random()<acc?s:ch(Object.keys(ST).filter(k=>k!==s));
+  const s=ch(Object.keys(ST)),acc=.7+Math.min(.2,(S.int||0)/500),shown=tr('eye')||Math.random()<acc?s:ch(Object.keys(ST).filter(k=>k!==s));
   const go=p=>()=>{T.r++;let res;if(p==='card'){T.card=0;S.hp-=Math.round(S.maxHp*.1);res=Math.random()<.75?1.5:-1;T.log.push(res>0?'💥':'💢')}
    else if(p===T.last){res=-1;T.log.push('👁️');log(`👁️ ${name}อ่านทาง — คุณใช้${ST[p][0]}ซ้ำ`,'bad')}
    else{res=BEAT[p]===s?1:BEAT[s]===p?-1:0;T.log.push(res>0?'✅':res<0?'❌':'➖')}
@@ -26751,7 +26751,7 @@ function tfight(name,e,cb,title){const T={r:0,sc:0,last:null,card:1,log:[]};name
   const O=Object.keys(ST).map(k=>({t:ST[k][0],s:k===T.last?'⚠️ ใช้ซ้ำจะถูกอ่านทาง':({atk:'ชนะล่อหลอก',def:'ชนะการบุก',fnt:'ชนะการตั้งรับ'})[k],noFate:1,f:go(k)}));
   if(T.card)O.push({t:'💥 ไพ่ตาย',s:'ใช้ได้ครั้งเดียว · เสียพลังชีวิต 10% · 75% ได้เปรียบมาก',noFate:1,f:go('card')});
   if(T.r===0)O.push({t:'⏩ ให้ชะตาตัดสิน',s:'ทอยครั้งเดียวแบบเดิม',noFate:1,f(){fin(fight(name,e))}});
-  Ev(`${title||'⚔️ ศึกสำคัญ'} · เทิร์น ${T.r+1}/3`,`<b>${name}</b> ${ST[shown][1]}<br><span class="tag2">คะแนน ${T.sc>0?'+':''}${T.sc} · พลังคุณ/ศัตรู ${(total()/Math.max(1,e)).toFixed(2)} · บุกชนะหลอก · รับชนะบุก · หลอกชนะรับ${T.r?'':' · ท่าทีศัตรูอาจหลอกตา (ปัญญาสูงอ่านแม่นขึ้น)'}</span>`,O)};
+  Ev(`${title||'⚔️ ศึกสำคัญ'} · เทิร์น ${T.r+1}/3`,`<b>${name}</b> ${ST[shown][1]}<br><span class="tag2">คะแนน ${T.sc>0?'+':''}${T.sc} · พลังคุณ/ศัตรู ${(total()/Math.max(1,e)).toFixed(2)} · บุกชนะหลอก · รับชนะบุก · หลอกชนะรับ${tr('eye')?' · 👁️ เนตรทิพย์: ท่าที่เห็นคือท่าจริง 100%':T.r?'':' · ท่าทีศัตรูอาจหลอกตา (ปัญญาสูงอ่านแม่นขึ้น)'}</span>`,O)};
  round()}
 window.tfight=tfight;
 // ---------- 3) ยุคสมัย ----------
