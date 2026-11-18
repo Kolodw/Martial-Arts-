@@ -29462,10 +29462,10 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'👹',t:'แดนอสูรและ�
 window._dzEV=EV;
 })()}catch(e){console.error(e)}
 // ===================== รั้งอยู่ที่ขอบกัลป์: ไม่ต้องข้ามกัลป์ทันที ใช้ชีวิต/ฝึกต่อได้ · กันประตูกัลป์ซ้อน =====================
-kcap=function(){const K=S&&S.kalpa,b=1e6*(1+((K&&K.n)|0))+((K&&K.off)|0);return K&&K.wait&&S&&S.alive?Math.max(b,(S.age|0)+1):b};
+kcap=function(){const K=S&&S.kalpa,b=1e6*(1+((K&&K.n)|0)+((K&&K.ofs)|0))+((K&&K.off)|0);return K&&K.wait&&S&&S.alive?Math.max(b,(S.age|0)+1):b};
 const KE_RX=/^(♾️ ขอบของ|👁️ ใจกลางวงจรกัลป์|🔀 ทางแยกนอกวงจรกัลป์|🌫️ ขอบของ)/;
 function keWait(){const K=S&&S.kalpa;if(!K)return;K.wait=1;K.pend=0;K.wY=S.age;log(`⏳ คุณยังไม่ก้าวข้าม — รั้งอยู่ที่ขอบของ${KAL_N[K.n]||'กัลป์'} ใช้ชีวิตและฝึกฝนต่อได้ตามปกติ · พร้อมเมื่อไหร่ไปที่ ☰ เมนู → ♾️ ก้าวข้ามกัลป์`,'myth',true);try{render()}catch(e){}}
-function keCross(){const K=S&&S.kalpa;if(!K||!S.alive)return;if(choice._cur){toast('ตอบเรื่องที่ค้างอยู่ก่อน');return}closeM();K.wait=0;K.off=Math.max(0,(S.age|0)-1e6*(1+(K.n|0)));K._gl=0;kalpaHit()}
+function keCross(){const K=S&&S.kalpa;if(!K||!S.alive)return;if(choice._cur){toast('ตอบเรื่องที่ค้างอยู่ก่อน');return}closeM();K.wait=0;K.off=Math.max(0,(S.age|0)-1e6*(1+(K.n|0)+(K.ofs|0)));K._gl=0;kalpaHit()}
 {const _chK=choice;const nc=function(title,text,opts){try{const K=S&&S.kalpa;if(K&&K.pend&&!(K.by>0)&&KE_RX.test(String(title))&&Array.isArray(opts)&&!opts.some(o=>o&&o._ke))opts=opts.concat([{t:'⏳ รั้งอยู่ที่ขอบกัลป์',s:'ยังไม่ข้าม · ใช้ชีวิต ฝึกวิชา ทำทุกอย่างต่อได้ตามปกติ · กลับมาก้าวข้ามได้ทุกเมื่อที่ ☰ เมนู',_ke:1,_x:1,noFate:1,f(){keWait()}}])}catch(e){}return _chK.call(this,title,text,opts)};for(const k in _chK)nc[k]=_chK[k];choice=nc}
 // กันประตูกัลป์/ระลอกซ้อนกัน ระหว่างช่วงรอยต่อของภัยแต่ละระลอก
 {const _kwE=kalpaWave;kalpaWave=function(){try{if(S&&S.kalpa)S.kalpa._gl=Date.now()}catch(e){}return _kwE.apply(this,arguments)}}
