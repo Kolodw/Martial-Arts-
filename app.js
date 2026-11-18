@@ -42284,3 +42284,87 @@ window.sk4Use=function(){const s=S.sys,k=SK[s.t];if(!k||lv()<1||cd()>0)return;s.
 {const _os=openSys;openSys=function(){const r=_os.apply(this,arguments);try{const m=$('modal'),s=S.sys;if(s&&m&&SK[s.t]&&!m.querySelector('.sk4Btn')){const e=document.createElement('button');e.className='gbtn sk4Btn';e.style.cssText='width:100%;margin:6px 0';e.textContent=`${SK[s.t][0]} ${SK[s.t][1]} (ระดับ ${lv()}/10) · หลักไมล์ Lv.${TH.find(t=>t>s.lv)||'สูงสุด'}`;e.onclick=()=>openSk4();const h=m.querySelector('h3');if(h&&h.nextSibling)h.parentNode.insertBefore(e,h.nextSibling);else m.appendChild(e)}}catch(e){}return r}}
 window._sk4={MS,SK};
 })()}catch(e){console.error('sk4 block',e)}
+
+// ===================== โลกใต้ดิน: 3 ประเภทย่อย (ปกติ / เหนือมนุษย์ / มีระบบ) + กระดานภารกิจโลกจริง =====================
+try{(()=>{
+if(typeof MW_R==='undefined'||typeof mwToB==='undefined')return;
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const pk=a=>a[Math.floor(Math.random()*a.length)];
+const UO=()=>{const M=S&&S.alive&&S.mw;return(M&&M.wx&&M.wx.on&&M.wx.id==='under'&&M.U&&!M.kid)?M:null};
+const mny=(M,k)=>{try{return mwToB(MW_MIN[M.cc||'th']*k,M)}catch(e){return Math.round(1000*k)}};
+const RKN=['เด็กในซอย','นักเลงประจำย่าน','มือขวาก๊ก','หัวหน้าก๊ก','เจ้าพ่อย่าน','ผู้มีอิทธิพล'];
+const SUB={normal:['🏙️','นักเลงยุคปกติ','ไม่มีพลังพิเศษ ใช้กำลังคน เงิน และเส้นสาย · ได้โบนัสประสบการณ์ถนน (สำเร็จง่ายขึ้น ความร้อนลดเร็วขึ้น)'],super:['⚡','นักเลงเหนือมนุษย์','ผู้ตื่นพลังซ่อนอยู่ในโลกใต้ดิน คุณคือหนึ่งในนั้น'],sys:['🟦','นักเลงมีระบบ','ระบบโผล่มาพร้อมเป้าหมายใหญ่ของชีวิต']};
+const PERS={hot:['🔥','ใจร้อน','ชอบงานใช้กำลัง'],cun:['🧠','เจ้าเล่ห์','ชอบงานเงินและเส้นสาย'],mor:['🕊️','มีศีลธรรม','ชอบงานปกป้องคนอ่อนแอ']};
+const GOAL={debt:['💸','ล้างหนี้ของพ่อ','สะสมเงินก้อนใหญ่พอจะปิดหนี้ทั้งหมด'],boss:['👑','ขึ้นเป็นเจ้าพ่อ','ไต่ถึงอิทธิพลระดับสูงสุดของเมือง'],rev:['🩸','ล้างแค้นก๊กที่ฆ่าพี่','ผ่านภารกิจใช้กำลัง 5 งาน และมีอิทธิพลพอ'],prot:['🛡️','ปกป้องซอยบ้านเกิด','คุมย่านให้ครบทั้งห้า']};
+// ----- ภารกิจ -----
+// k: ชนิด v=กำลัง c=เงิน/เส้นสาย m=ปกป้อง · b: แนวที่ได้เปรียบ f/m/c · h: ความร้อน · i: อิทธิพล · r: เงิน(เท่าค่าครองชีพ) · cl: ยึดย่าน
+const QN=[
+ {id:'q_tax',n:'เก็บค่าคุ้มครองย่านใหม่',ic:'💵',k:'v',b:'f',h:10,i:6,r:1.5,cl:1,tx:'ย่านหนึ่งยังไม่มีใครคุม แม่ค้าพูดตรงๆ ว่าจะจ่ายให้คนที่ปกป้องพวกเธอได้จริง'},
+ {id:'q_esc',n:'คุ้มกันขบวนส่งของ',ic:'🚚',k:'c',b:'c',h:6,i:4,r:2.2,tx:'มีคนจ้างคุ้มกันรถส่งของผ่านย่านที่ไม่เป็นมิตร ไม่ถามว่าในกล่องมีอะไร'},
+ {id:'q_rv',n:'ปราบก๊กคู่แค้นที่ล้ำเส้น',ic:'🥊',k:'v',b:'f',h:14,i:9,r:.8,tx:'ลูกน้องก๊กตรงข้ามเริ่มมาเก็บเงินในย่านของคุณ ถ้าปล่อยไป ชื่อของคุณจะเสีย'},
+ {id:'q_gam',n:'เปิดบ่อนเถื่อนหลังซอย',ic:'🎲',k:'c',b:'m',h:20,i:5,r:4,tx:'เจ้าของโกดังเสนอที่ให้เปิดบ่อน รายได้สูงแต่ตำรวจมองอยู่'},
+ {id:'q_bail',n:'ประกันตัวลูกน้องที่ถูกจับ',ic:'🔓',k:'m',b:'m',h:-6,i:3,r:-1,tx:'ลูกน้องคนหนึ่งโดนจับตอนทำงานแทนคุณ ถ้าทิ้งเขา คนอื่นจะมองคุณยังไง'},
+ {id:'q_cop',n:'ซื้อใจนายสถานี',ic:'🚓',k:'c',b:'c',h:-18,i:1,r:-2,tx:'ผู้กำกับคนใหม่ยังไม่ติดใคร ถ้าเข้าถึงได้ ความร้อนจะลดลงมาก'},
+ {id:'q_mkt',n:'ปกป้องตลาดจากนักเลงต่างถิ่น',ic:'🛒',k:'m',b:'f',h:8,i:8,r:.4,tx:'นักเลงต่างถิ่นมารีดไถตลาดที่เด็กๆ ในซอยพึ่งพา ชาวบ้านมองมาที่คุณ'},
+ {id:'q_ship',n:'ลอบส่งของข้ามย่าน',ic:'📦',k:'c',b:'c',h:12,i:4,r:2.8,tx:'ลูกค้าต้องการของถึงปลายทางก่อนเช้า และไม่ต้องการให้ใครรู้ว่าผ่านมือคุณ'}];
+const QS=[
+ {id:'s_hunt',n:'ล่าผู้ตื่นหน้าใหม่',ic:'⚡',k:'v',b:'f',h:12,i:7,r:1,pw:1,tx:'มีเด็กวัยรุ่นใช้พลังเกินคนทั่วไปกลางตลาด ถ้าก๊กอื่นเจอก่อน เขาจะถูกใช้เป็นเครื่องมือ'},
+ {id:'s_hide',n:'ปกปิดพลังจากกล้องและตำรวจ',ic:'📹',k:'c',b:'c',h:-14,i:2,r:-1.5,tx:'วิดีโอจากกล้องวงจรปิดมีภาพคุณใช้พลังเมื่อคืน ต้องจัดการก่อนมันขึ้นข่าว'},
+ {id:'s_cell',n:'บุกก๊กลับของผู้ตื่น',ic:'🏴',k:'v',b:'f',h:18,i:12,r:2,pw:1,tx:'ก๊กลับที่รวบรวมผู้ตื่นเริ่มรับสมาชิกจากย่านของคุณ'},
+ {id:'s_test',n:'ทดสอบขีดจำกัดพลังกลางคืน',ic:'🌙',k:'m',b:'m',h:6,i:3,r:0,pw:1,tx:'พลังในตัวคุณเร่งขึ้นผิดปกติช่วงนี้ ต้องหาที่เงียบๆ ทดสอบว่ามันมีขีดจำกัดหรือไม่'}];
+const goalQ=g=>({debt:{id:'y_debt',n:'หาเงินก้อนใหญ่',ic:'💸',k:'c',b:'c',h:16,i:5,r:5,tx:'ระบบ: "เงินที่คุณต้องใช้ล้างหนี้ยังขาดอยู่ ตามที่ผมคำนวณ งานนี้ให้ผลดีที่สุด"'},boss:{id:'y_boss',n:'ท้าหัวหน้าก๊กใหญ่',ic:'👑',k:'v',b:'f',h:20,i:14,r:1.5,tx:'ระบบ: "หัวหน้าก๊กย่านเหนือเริ่มอ่อนแรง นี่คือโอกาสที่คุณรออยู่"'},rev:{id:'y_rev',n:'สืบตามหาคนที่ฆ่าพี่',ic:'🩸',k:'v',b:'f',h:16,i:8,r:1,tx:'ระบบ: "ผมได้ข้อมูลใหม่เกี่ยวกับก๊กที่เกี่ยวข้อง แต่ต้องไปเอาเอง"'},prot:{id:'y_prot',n:'ยึดซอยให้ปลอดภัย',ic:'🛡️',k:'m',b:'f',h:10,i:8,r:.6,cl:1,tx:'ระบบ: "ซอยที่ยังไม่มีใครดูแล คือซอยที่คนข้างในยังไม่ปลอดภัย"'}}[g]);
+// ----- สถานะ -----
+const uS=M=>{const U=M.U;U.qb=U.qb||[];U.qd=U.qd||0;U.q4=U.q4||0;return U};
+const crewN=U=>(U.lt||[]).length;
+const owned=U=>(U.soi||[]).filter(z=>z.o===1).length;
+const rkN=U=>RKN[Math.min(5,U.rk|0)];
+function refill(M){const U=uS(M);let ex=0;U.qb=U.qb.filter(q=>{if(S.age>q.dl){ex++;return false}return true});if(ex){U.inf=Math.max(0,U.inf-1);log(`📋 ภารกิจหมดเวลา ${ex} งาน — คนในย่านเริ่มพูดว่าคุณไม่ค่อยลงมือ (อิทธิพล −1)`,'')}
+ const pool=[...QN];if(U.sub==='super')pool.push(...QS,...QS);if(U.sub==='sys'&&U.sy&&U.sy.goal){const g=goalQ(U.sy.goal);pool.push(g,g)}
+ let n=0;while(U.qb.length<3&&n++<20){let w=pool.slice();if(U.sub==='sys'&&U.sy){const p=U.sy.pers;w=w.filter(()=>true);if(Math.random()<.5)w=w.filter(q=>(p==='hot'&&q.k==='v')||(p==='cun'&&q.k==='c')||(p==='mor'&&q.k==='m')||q.id[0]==='y')||w}
+  const q=pk(w);if(U.qb.some(z=>z.id===q.id))continue;U.qb.push(Object.assign({},q,{dl:S.age+2}))}}
+// ----- ทำภารกิจ -----
+function runQuest(i){const M=UO();if(!M)return;const U=uS(M),q=U.qb[i];if(!q)return;const sy=U.sy,P=sy?sy.pers:null,hint=U.hint?.2:0,sup=U.sub==='super'?(U.pw|0)*.035:0;
+ const cost=Math.max(0,mny(M,Math.abs(q.r<0?-q.r:1.2)));
+ const nb=U.sub==='normal'?.06:0;const F=cl(nb+.38+U.inf/450+crewN(U)*.04+sup+(P==='hot'?.06:0)+hint-U.heat/400+(q.b==='f'?.15:0),.08,.92);
+ const Mo=cl(nb+.62+(P==='cun'?.06:0)+hint-U.heat/500+(q.b==='m'?.15:0),.1,.93);
+ const C=cl(nb+.34+U.inf/300+(U.crew?.1:0)-U.heat/220+hint+(q.b==='c'?.15:0),.08,.9);
+ const pc=v=>Math.round(v*100)+'%';
+ const done=(ok)=>{U.hint=0;U.qb.splice(i,1);U.qd++;if(q.k==='v')U.q4++;
+  const mul=(P==='hot'&&q.k==='v')||(P==='cun'&&q.k==='c')||(P==='mor'&&q.k==='m')?1.25:1;
+  if(ok){const inf=Math.round(q.i*mul),g=Math.round(mny(M,Math.max(0,q.r))*mul);U.inf+=inf;S.money+=g;U.heat=cl(U.heat+Math.round(q.h*.3),0,100);if(q.cl){const f=(U.soi||[]).filter(z=>z.o!==1);if(f.length){pk(f).o=1;log('🗺️ คุณได้ย่านใหม่เพิ่มอีกหนึ่งย่าน','good')}}
+   if(q.pw&&U.sub==='super')U.pw=Math.min(10,(U.pw|0)+1);if(sy)sy.pt=(sy.pt|0)+(q.id[0]==='y'?2:1);
+   log(`✅ ภารกิจ <b>${q.n}</b> สำเร็จ — อิทธิพล +${inf}${g?` · เงิน +${fmt(g)}`:''}${sy?' · แต้มระบบ +'+(q.id[0]==='y'?2:1):''}`,'good')}
+  else{U.heat=cl(U.heat+Math.round(Math.abs(q.h)*.8+3),0,100);U.inf=Math.max(0,U.inf-2);S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.1));log(`❌ ภารกิจ <b>${q.n}</b> พลาด — ความร้อนขึ้น อิทธิพลลด และคุณบาดเจ็บ`,'bad')}
+  U.rk=Math.min(5,Math.floor(U.inf/60));try{render()}catch(e){}};
+ choice(`${q.ic} ${q.n}`,q.tx+`<br><span class="tag2">เส้นตาย: อายุ ${q.dl}${hint?' · ใช้เบาะแสแล้ว +20%':''}</span>`,[
+  {t:'🥊 ใช้กำลัง',s:`โอกาสสำเร็จ ${pc(F)}${q.b==='f'?' · เหมาะกับงานนี้':''}`,f(){done(Math.random()<F)}},
+  {t:`💵 ใช้เงิน (${fmt(cost)})`,s:`โอกาสสำเร็จ ${pc(Mo)}`,f(){if(S.money<cost){log('💵 เงินไม่พอ งานนี้เลยเลื่อนไปก่อน');return}S.money-=cost;done(Math.random()<Mo)}},
+  {t:'🤝 ใช้เส้นสาย',s:`โอกาสสำเร็จ ${pc(C)}${U.crew?' · มีก๊กหนุน':''}`,f(){done(Math.random()<C)}},
+  {t:'⏳ ปล่อยไว้ก่อน',s:'ดูภารกิจอื่น',skip:true,f(){}}])}
+window.openUBoard=function(){const M=UO();if(!M)return toast('ใช้ได้เฉพาะในโลกใต้ดิน');const U=uS(M);refill(M);const sy=U.sy,sb=SUB[U.sub||'normal'];
+ const head=`<div class="item"><b>${sb[0]} ${sb[1]}</b> · ${rkN(U)}<br><span class="tag2">อิทธิพล ${U.inf|0} · ความร้อน ${U.heat|0}/100 · ลูกน้อง ${crewN(U)} · ย่านที่คุม ${owned(U)}/5 · ภารกิจสำเร็จ ${U.qd|0}</span></div>`;
+ const sup=U.sub==='super'?`<div class="item">⚡ <b>พลังเหนือมนุษย์ ${U.pw|0}/10</b><br><span class="tag2">ยิ่งสูง โอกาสภารกิจกำลังดีขึ้น แต่ถ้าความร้อนสูง ทางการและองค์กรลับจะสนใจ</span></div>`:'';
+ const sys=sy&&sy.goal?`<div class="item">🟦 <b>ระบบ (${PERS[sy.pers][0]} ${PERS[sy.pers][1]})</b> · แต้ม ${sy.pt|0}<br>เป้าหมาย: ${GOAL[sy.goal][0]} <b>${GOAL[sy.goal][1]}</b> — ${GOAL[sy.goal][2]}<br>ความคืบหน้า ${Math.round(prog(M)*100)}%<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap"><button class="gbtn" onclick="uSys(1)">🧊 ลดความร้อน (2)</button><button class="gbtn" onclick="uSys(2)">🤝 ซื้อใจลูกน้อง (2)</button><button class="gbtn" onclick="uSys(3)">🔍 ขอเบาะแส (1)</button></div></div>`:'';
+ const qs=U.qb.map((q,i)=>`<button class="opt" onclick="uQuest(${i})">${q.ic} ${q.n}<small>${q.k==='v'?'งานกำลัง':q.k==='c'?'งานเงิน/เส้นสาย':'งานปกป้อง'} · ความร้อน ${q.h>0?'+':''}${q.h} · หมดเวลาอายุ ${q.dl}</small></button>`).join('')||'<p class="tag2">ยังไม่มีภารกิจ</p>';
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📋 กระดานภารกิจโลกจริง</h3>${head}${sup}${sys}<div class="mgrid">${qs}</div>`,'ubd')};
+window.uQuest=function(i){closeM();runQuest(i)};
+window.uSys=function(k){const M=UO();if(!M)return;const U=uS(M),sy=U.sy;if(!sy)return;const c=k===3?1:2;if((sy.pt|0)<c)return toast('แต้มระบบไม่พอ');sy.pt-=c;
+ if(k===1){U.heat=Math.max(0,U.heat-25);log('🟦 ระบบ: ความร้อนถูกลดลงด้วย "ข้อมูลที่ไม่ควรมีใครรู้" ')}else if(k===2){(U.lt||[]).forEach(l=>{l.loy=cl(l.loy+20,0,100)});log('🟦 ระบบ: ลูกน้องรู้สึกว่าคุณเข้าใจพวกเขามากขึ้น')}else{U.hint=1;log('🟦 ระบบ: เบาะแสถูกส่งมา — ภารกิจถัดไปได้เปรียบ')}openUBoard()};
+function prog(M){const U=M.U,sy=U.sy;if(!sy)return 0;return cl({debt:S.money/mny(M,300),boss:U.inf/300,rev:Math.min(U.q4/5,U.inf/100),prot:owned(U)/5}[sy.goal]||0,0,1)}
+function goalPick(){const M=UO();if(!M)return;const U=uS(M);choice('🟦 ระบบเลือกเป้าหมายชีวิต','ข้อความสีฟ้าลอยขึ้นตรงหน้าคุณกลางซอย: <b>"ผมคือระบบ — เลือกเป้าหมายใหญ่ของชีวิตคุณ แล้วผมจะส่งงานที่พาไปถึงที่นั่น"</b>',Object.keys(GOAL).map(k=>({t:`${GOAL[k][0]} ${GOAL[k][1]}`,s:GOAL[k][2],f(){U.sy=U.sy||{pers:pk(Object.keys(PERS)),pt:0,done:0};U.sy.goal=k;log(`🟦 เป้าหมาย: ${GOAL[k][0]} <b>${GOAL[k][1]}</b> · บุคลิกระบบ: ${PERS[U.sy.pers][0]} ${PERS[U.sy.pers][1]} (${PERS[U.sy.pers][2]})`,'epic');U.qb=U.qb.filter(q=>q.id[0]!=='y')}})))}
+// ----- เลือกประเภทย่อยครั้งแรก -----
+function subReveal(){const M=UO(),U=uS(M),r=Math.random();U.sub=r<.55?'normal':r<.8?'super':'sys';const sb=SUB[U.sub];
+ if(U.sub==='sys'){log(`🟦 <b>${sb[1]}</b> — ${sb[2]}`,'myth');goalPick();return}
+ choice(`${sb[0]} ${sb[1]}`,U.sub==='super'?'คืนหนึ่งคุณรู้สึกว่าร่างกายตอบสนองเร็วกว่าที่ควร และมีบางคนในย่านรู้ว่าคุณไม่ใช่คนธรรมดา — โลกใต้ดินส่วนหนึ่งเต็มไปด้วยผู้ตื่น และคุณเพิ่งเข้าร่วมโดยไม่ได้ขอ':'โลกที่คุณอยู่ไม่มีใครมีพลังวิเศษ ทุกอย่างเป็นเรื่องของคน เงิน และเส้นสาย ใครอยู่ได้ ก็เพราะรู้ว่าต้องทำอะไรเมื่อไหร่',[{t:'รับรู้',f(){if(U.sub==='super'){U.pw=2;log('⚡ ผู้ตื่นพลังระดับ 2 — คุณต้องระวังไม่ให้ใครเห็น','epic')}else log('🏙️ เส้นทางนักเลงแบบดั้งเดิม','epic')}}])}
+// ----- รายปี -----
+function yearly(M){const U=uS(M);U.heat=Math.max(0,U.heat-2-Math.floor(U.heat/25)-(U.sub==='normal'?1:0));refill(M);
+ if(U.sub==='super'){if(U.heat>=60&&(U.pw|0)>=3&&Math.random()<.3&&!choice._cur){choice('📹 มีคนเห็นพลังของคุณ','คลิปสั้นๆ ที่จับภาพคุณขยับเร็วเกินคนปกติ ถูกส่งต่อกันในกลุ่มแชท และมีคนที่คุณไม่รู้จักเริ่มถามหาตัวคุณ',[{t:'🧹 ซื้อและลบคลิป',s:'เสียเงิน ความร้อนลด',f(){S.money=Math.max(0,S.money-mny(M,3));U.heat=Math.max(0,U.heat-20)}},{t:'🏃 หายตัวไปสักพัก',s:'อิทธิพลลดเล็กน้อย',f(){U.inf=Math.max(0,U.inf-6);U.heat=Math.max(0,U.heat-30)}},{t:'⚡ ปล่อยให้มันแพร่',s:'ชื่อดัง แต่เสี่ยง',f(){U.inf+=10;U.heat=cl(U.heat+15,0,100);U.exp=(U.exp|0)+1}}])}
+  if((U.pw|0)>=10&&U.inf>=180&&!U.end){U.end=1;log('⚡ <b>จ้าวแห่งโลกใต้ดินเหนือมนุษย์</b> — ทั้งผู้ตื่นและคนธรรมดาในเมืองรู้จักชื่อคุณ','myth',true);S.fame+=3000}}
+ if(U.sub==='sys'&&U.sy&&U.sy.goal&&prog(M)>=1){const g=U.sy.goal;U.sy.done=(U.sy.done|0)+1;U.sy.pt+=5;log(`🟦 ระบบ: เป้าหมาย <b>${GOAL[g][1]}</b> สำเร็จ — แต้มระบบ +5`,'myth',true);
+  if(g==='debt'){S.money=Math.round(S.money*.5);U.inf+=15;S.fame+=500;joy(15)}else if(g==='boss'){S.fame+=2500}else if(g==='rev'){S.karma-=3;S.fame+=1000;joy(5)}else{S.karma+=10;S.fame+=1200;joy(10)}
+  U.sy.goal=null;if(U.sy.done<3)setTimeout(goalPick,500);else log('🟦 ระบบ: ภารกิจชีวิตของคุณครบแล้ว ต่อจากนี้เป็นเส้นทางที่คุณเลือกเอง','epic')}}
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const M=UO();if(M&&S._ubY!==S.age&&!choice._cur&&!modalOpen&&S.age>=16){S._ubY=S.age;const U=uS(M);if(!U.sub)subReveal();else yearly(M)}}catch(e){console.error('ub',e)}return r}}
+{const _i=mwInfo;mwInfo=function(){const r=_i.apply(this,arguments);try{const M=UO(),m=$('modal');if(M&&m&&!m.querySelector('.ubBtn')){const U=uS(M);const e=document.createElement('button');e.className='gbtn ubBtn';e.style.cssText='width:100%;margin:6px 0';e.textContent=`📋 กระดานภารกิจโลกจริง${U.sub?' · '+SUB[U.sub][1]:''} (${U.qb.length})`;e.onclick=()=>openUBoard();const h=m.querySelector('h3');if(h&&h.nextSibling)h.parentNode.insertBefore(e,h.nextSibling);else m.appendChild(e)}}catch(e){}return r}}
+try{const g=window._guide2;if(g)g.add('world','🌃','โลกใต้ดิน 3 ประเภทย่อย + กระดานภารกิจ','เมื่ออายุ 16 โลกใต้ดินจะสุ่มประเภทย่อย: <b>นักเลงยุคปกติ</b> (กำลังคน เงิน เส้นสาย) · <b>เหนือมนุษย์</b> (ผู้ตื่นพลัง พลัง 0-10 ระวังโดนเห็น) · <b>มีระบบ</b> (ระบบโผล่มาพร้อมเป้าหมายใหญ่ มีบุคลิก และแต้มระบบ) ทุกแบบใช้ <b>📋 กระดานภารกิจโลกจริง</b> ในหน้าข้อมูล: เลือกวิธีทำ (กำลัง/เงิน/เส้นสาย) ภารกิจมีเส้นตาย ผลตามมาจริง (ความร้อน อิทธิพล ย่านที่คุม)','mwInfo',()=>!!UO())}catch(e){}
+window._ub={QN,QS,SUB,runQuest,refill,prog,subReveal};
+})()}catch(e){console.error('ub block',e)}
