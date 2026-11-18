@@ -37751,6 +37751,76 @@ try{{const _st=sysTick;sysTick=function(){try{if(S&&S.sys&&S.sysRefused)S.sysRef
 // แก้: "ใช้เวลากับครอบครัว" เคยเก็บข้อมูลใน S.ft ชนกับ 📡 สายใยหมื่นปี (S.ft) → สมุดชะตาขึ้น NaN% · ย้ายไป S.ftm และล้างของเก่าที่ชน
 try{{const fx=()=>{try{if(S&&S.ft&&S.ft.d&&S.ft.hum==null){S.ftm=S.ft;delete S.ft}}catch(e){}};const _rd=render;render=function(){fx();return _rd.apply(this,arguments)};
  const _ofb=window.openFateBook;if(typeof _ofb==='function')window.openFateBook=function(){fx();return _ofb.apply(this,arguments)}}}catch(e){}
+
+// ===================== 🎒 ชุดสวมใส่แบบ RPG: หุ่นตัวละคร + ช่องรอบตัว · แตะช่องแล้วขึ้นเฉพาะของที่ใส่ได้ · เทียบดีกว่า/แย่กว่า · คลังแยกหมวด · ปุ่มสวมของดีที่สุด =====================
+try{(function(){if(typeof openEquip!=='function'||typeof EQI==='undefined')return;
+const GS=['weapon','armor','mount','house'],ES=()=>['fw','acc1','acc2','trs','fit'].filter(k=>k!=='fw'||(typeof EQS!=='undefined'&&EQS.fw));
+const LBL=k=>(GS.includes(k)?SLOT_N[k]:EQS[k])||k,ICO=k=>({weapon:'⚔️',armor:'🛡️',mount:'🐎',house:'🏠',fw:'🗡️',acc1:'💍',acc2:'💍',trs:'🧿',fit:'👘'})[k]||'▫️';
+const slotsOf=it=>!it?[]:it.s==='acc'?['acc1','acc2']:[it.s];
+const sc=it=>!it?0:(it.s==='fw'?((it.fwg|0)*1e6+(it.v||0)):(it.v||0));
+const curIt=k=>S.eq&&S.eq[k]?EQI[S.eq[k]]:null;
+const better=k=>{const c=curIt(k);return Object.keys(S.eqInv||{}).some(id=>{const it=EQI[id];return it&&slotsOf(it).includes(k)&&k!=='fit'&&sc(it)>sc(c)})};
+const cmp=(it,k)=>{const c=curIt(k);if(!c)return'<span class="eqU">⬆️ ช่องว่าง</span>';const a=sc(c),b=sc(it);if(b===a)return'<span class="eqE">= เท่ากัน</span>';if(it.s==='fw'){return b>a?'<span class="eqU">⬆️ ระดับสูงกว่า</span>':'<span class="eqD">⬇️ ระดับต่ำกว่า</span>'}const p=Math.round((b-a)/Math.max(1,a)*100);return p>0?'<span class="eqU">⬆️ +'+p+'%</span>':'<span class="eqD">⬇️ '+p+'%</span>'};
+const seen=()=>{S.eqSeen=S.eqSeen||{};return S.eqSeen};
+const CAT=[['all','ทั้งหมด',()=>true],['acc','💍 เครื่องประดับ',it=>it.s==='acc'],['trs','🧿 ของวิเศษ',it=>it.s==='trs'],['fit','👘 ชุด',it=>it.s==='fit'],['fw','🗡️ อาวุธหลอม',it=>it.s==='fw']];
+function tile(k){let ic='',nm='— ว่าง —',on=false;if(GS.includes(k)){const g=gearOf(k);if(g){on=true;nm=g.n+(k==='weapon'||k==='armor'?(gupLv(k)?' +'+gupLv(k):''):'')}}else{const it=curIt(k);if(it){on=true;ic=it.ic;nm=it.n}}
+ const sel=window._eqSel===k,dot=!GS.includes(k)&&better(k);
+ return '<button class="eqT'+(on?' on':'')+(sel?' sel':'')+'" onclick="eqSel(\''+k+'\')"><span class="eqTi">'+(ic||ICO(k))+'</span><span class="eqTt"><small>'+LBL(k).replace(/^\S+\s/,'')+'</small><b>'+esc(nm)+'</b></span>'+(dot?'<i class="eqDot"></i>':'')+'</button>'}
+function itemRow(id,k){const it=EQI[id];if(!it)return'';const n=S.eqInv[id]||0,nw=!seen()[id];const sl=k?[k]:slotsOf(it);
+ return '<div class="eqR"><div class="eqRh"><b>'+it.ic+' '+esc(it.n)+(n>1?' ×'+n:'')+'</b>'+(nw?'<span class="eqNew">✨ ใหม่</span>':'')+(sl.length===1&&sl[0]!=='fit'?' '+cmp(it,sl[0]):'')+'</div><div class="tag2">'+it.d+'</div><div class="eqRb">'+sl.map(s=>'<button class="sysb" onclick="eqPut(\''+s+'\',\''+id+'\');openEquip()">สวม'+(sl.length>1?(s==='acc1'?' ช่อง 1':' ช่อง 2'):'')+'</button>').join(' ')+' <button class="sysb" onclick="eqSell(\''+id+'\')">ขาย '+fmtM(Math.round(it.v*.4))+'</button>'+(typeof eqSalv==='function'?' <button class="sysb" onclick="eqSalv(\''+id+'\')">🔧 แยก</button>':'')+'</div></div>'}
+function panel(k){if(!k)return'';let h='<div class="eqP"><div class="eqPh"><b>'+ICO(k)+' '+LBL(k).replace(/^\S+\s/,'')+'</b><button class="sysb" onclick="eqSel(null)">ปิด</button></div>';
+ if(GS.includes(k)){const g=gearOf(k);h+='<div class="eqR"><div class="eqRh"><b>'+(g?esc(g.n)+((k==='weapon'||k==='armor')&&gupLv(k)?' +'+gupLv(k):''):'— ยังไม่มี —')+'</b></div><div class="tag2">'+(g?(k==='weapon'?'พลังรวม +'+fmt(gv(k)):k==='armor'?'พลังชีวิต +'+fmt(gv(k))+' · เจ็บน้อยลง '+Math.round(gv(k,'red')*100)+'%':k==='mount'?'เดินทางดีขึ้น':'ความสุข +'+(g.v||0)):'ซื้อได้ที่ตลาด')+'</div></div>';
+  let nx=null;try{nx=gearNext()}catch(e){}h+='<button class="pbtn" style="width:100%;margin-top:6px" onclick="openMarket()">🛒 '+(nx&&nx.k===k?'ของที่ดีกว่าในตลาด: '+esc(nx.n)+' ('+fmtM(nx.c)+')':'ไปตลาด / ตีบวก')+'</button></div>';return h}
+ const c=curIt(k);if(c)h+='<div class="eqR cur"><div class="eqRh"><b>ใส่อยู่: '+c.ic+' '+esc(c.n)+'</b></div><div class="tag2">'+c.d+(k==='trs'&&c.e&&c.e.save?' · เหลือ '+S.eqSv+' ครั้ง':'')+'</div><div class="eqRb"><button class="sysb" onclick="eqPut(\''+k+'\',null);openEquip()">ถอด</button></div></div>';
+ const L=Object.keys(S.eqInv||{}).filter(id=>EQI[id]&&slotsOf(EQI[id]).includes(k)).sort((a,b)=>sc(EQI[b])-sc(EQI[a]));
+ h+=L.length?L.map(id=>itemRow(id,k)).join(''):'<p class="tag2" style="margin:6px 2px">ยังไม่มีของสำหรับช่องนี้ในคลัง'+(k==='fw'?' — หลอมได้ที่ 🔨 งานช่าง → ตีเหล็ก':' — ได้จากการผจญภัย ภารกิจ และดันเจี้ยน')+'</p>';return h+'</div>'}
+window.eqSel=k=>{window._eqSel=k;openEquip();try{const p=document.querySelector('#modal .eqP');if(p)p.scrollIntoView({block:'nearest',behavior:'smooth'})}catch(e){}};
+window.eqTab=k=>{window._eqTab=k;openEquip()};
+window.eqBest=()=>{eqInit();let n=0;const put=(k,id)=>{if(S.eq[k]!==id){eqPut(k,id);n++}};
+ ES().filter(k=>k!=='fit'&&k!=='acc1'&&k!=='acc2').forEach(k=>{const c=curIt(k);let best=null;Object.keys(S.eqInv).forEach(id=>{const it=EQI[id];if(it&&slotsOf(it).includes(k)&&sc(it)>sc(best&&EQI[best]||c))best=id});if(best)put(k,best)});
+ for(let r=0;r<2;r++){const ks=['acc1','acc2'].sort((a,b)=>sc(curIt(a))-sc(curIt(b)));const k=ks[0],c=curIt(k);let best=null;Object.keys(S.eqInv).forEach(id=>{const it=EQI[id];if(it&&it.s==='acc'&&sc(it)>sc(best&&EQI[best]||c))best=id});if(best)put(k,best)}
+ if(!S.eq.fit){const f=Object.keys(S.eqInv).filter(id=>EQI[id]&&EQI[id].s==='fit').sort((a,b)=>sc(EQI[b])-sc(EQI[a]))[0];if(f)put('fit',f)}
+ toast(n?'⚡ สวมของที่ดีกว่าแล้ว '+n+' ชิ้น':'ใส่ของที่ดีที่สุดอยู่แล้ว');openEquip()};
+const _oe=openEquip;
+openEquip=function(){if(!S)return;eqInit();if(typeof mwOn==='function'&&mwOn())return _oe.apply(this,arguments);
+ try{const o=meLook(),ks=ES(),L1=['weapon',...(ks.includes('fw')?['fw']:[]),'armor','fit'],R1=['acc1','acc2','trs','mount','house'];
+  const inv=Object.keys(S.eqInv),tab=window._eqTab||'all',T=CAT.find(c=>c[0]===tab)||CAT[0];
+  const cnt=CAT.map(c=>[c,inv.filter(id=>EQI[id]&&c[2](EQI[id])).reduce((a,id)=>a+(S.eqInv[id]||0),0)]);
+  const list=inv.filter(id=>EQI[id]&&T[2](EQI[id])).sort((a,b)=>(seen()[a]?1:0)-(seen()[b]?1:0)||sc(EQI[b])-sc(EQI[a]));
+  const anyBetter=ks.some(k=>better(k));
+  modal('<button class="xbtn" onclick="closeM()">✕</button><h3>⚔️ ชุดสวมใส่</h3>'
+   +'<div class="eqDoll"><div class="eqCol">'+L1.map(tile).join('')+'</div><div class="eqMid"><canvas id="eqCv" width="168" height="186"></canvas><div class="tag2 eqSt">ดัชนีพลัง <b>'+(typeof pIdx==='function'?'⚡'+pIdx(total()):fmt(Math.round(total())))+'</b><br>❤️ '+Math.round(S.hp)+'/'+S.maxHp+(eqM('fight')>1?'<br>⚔️ ต่อสู้ ×'+eqM('fight').toFixed(2):'')+(eqM('train')>1?'<br>📈 ฝึก ×'+eqM('train').toFixed(2):'')+(eqM('qi')>1?'<br>🌀 ปราณ ×'+eqM('qi').toFixed(2):'')+'</div></div><div class="eqCol">'+R1.map(tile).join('')+'</div></div>'
+   +'<div class="eqBar"><button class="pbtn" onclick="eqBest()">⚡ สวมของที่ดีที่สุด'+(anyBetter?' <i class="eqDot in"></i>':'')+'</button><label class="tag2"><input type="checkbox" '+(S.eqAuto?'checked':'')+' onchange="S.eqAuto=this.checked?1:0"> สวมของดีกว่าให้อัตโนมัติ</label></div>'
+   +panel(window._eqSel)
+   +'<h4 style="margin:10px 0 6px">🎒 คลัง</h4><div class="eqTabs">'+cnt.filter(([c,n])=>c[0]==='all'||n>0).map(([c,n])=>'<button class="'+(c[0]===tab?'on':'')+'" onclick="eqTab(\''+c[0]+'\')">'+c[1]+' <small>'+n+'</small></button>').join('')+'</div>'
+   +(list.length?list.map(id=>itemRow(id,null)).join(''):'<p class="tag2">ยังไม่มีของ — ได้จากการผจญภัย ภารกิจ ดันเจี้ยน และงานช่าง</p>')
+   +'<button class="gbtn" style="width:100%;margin-top:8px" onclick="openMarket()">🛒 ไปตลาด</button>','equip');
+  inv.forEach(id=>{seen()[id]=1});
+  const cv=$('eqCv');if(cv&&cv.getContext('2d')){const ctx=cv.getContext('2d'),sg=g,sp=PS;g=ctx;PS=cv.width/28;ctx.setTransform(cv.width/28,0,0,cv.width/28,0,0);ctx.imageSmoothingEnabled=false;P(0,0,40,44,'#1c1a28');P(0,25,40,8,'#2a2638');try{person(14,29,o,'stand')}catch(e){}g=sg;PS=sp}
+ }catch(e){console.error('eqRPG',e);return _oe.apply(this,arguments)}};
+try{window.openEquip=openEquip}catch(e){}
+const st=document.createElement('style');st.textContent=`
+#modal .eqDoll{display:grid;grid-template-columns:minmax(0,1fr) 128px minmax(0,1fr);gap:6px;align-items:start;margin:4px 0 8px}
+#modal .eqCol{display:flex;flex-direction:column;gap:6px}
+#modal .eqMid{display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:4px}#modal .eqMid canvas{width:120px;height:132px;image-rendering:pixelated;border-radius:12px;border:2px solid var(--line)}
+#modal .eqSt{text-align:center;line-height:1.5}
+#modal .eqT{position:relative;display:flex;align-items:center;gap:6px;min-height:50px;padding:5px 7px;border:2px dashed color-mix(in srgb,var(--ink) 30%,transparent);border-radius:12px;background:color-mix(in srgb,var(--card) 92%,var(--ink) 8%);color:var(--ink);font:inherit;text-align:left;cursor:pointer;min-width:0}
+#modal .eqT.on{border-style:solid;border-color:var(--line);background:var(--card);box-shadow:2px 2px 0 var(--line)}
+#modal .eqT.sel{outline:3px solid var(--pink);outline-offset:1px}
+#modal .eqTi{font-size:20px;flex:none;width:24px;text-align:center}#modal .eqT:not(.on) .eqTi{opacity:.45}
+#modal .eqTt{display:flex;flex-direction:column;min-width:0;line-height:1.25}#modal .eqTt small{font-size:10px;opacity:.65}#modal .eqTt b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#modal .eqT:not(.on) .eqTt b{opacity:.5;font-weight:600}
+#modal .eqDot{position:absolute;right:5px;top:5px;width:9px;height:9px;border-radius:50%;background:#e8453c;box-shadow:0 0 6px #e8453c}#modal .eqDot.in{position:static;display:inline-block;vertical-align:middle;margin-left:4px}
+#modal .eqBar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:4px 0}#modal .eqBar .pbtn{flex:1;min-width:150px;padding:8px 12px!important;font-size:14px!important;min-height:0!important}
+#modal .eqP{margin:8px 0;padding:8px;border:2px solid var(--pink);border-radius:14px;background:color-mix(in srgb,var(--card) 90%,var(--pink) 10%)}
+#modal .eqPh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+#modal .eqR{padding:7px 9px;border:1.5px solid color-mix(in srgb,var(--ink) 18%,transparent);border-radius:10px;margin:5px 0;background:var(--card)}#modal .eqR.cur{border-color:var(--pink)}
+#modal .eqRh{display:flex;flex-wrap:wrap;gap:6px;align-items:center}#modal .eqRb{margin-top:5px;display:flex;gap:5px;flex-wrap:wrap}
+#modal .eqU{font-size:11px;font-weight:800;color:#2f9a4a}#modal .eqD{font-size:11px;font-weight:800;color:#d8453c}#modal .eqE{font-size:11px;opacity:.6}
+#modal .eqNew{font-size:10px;font-weight:800;color:#fff;background:#e8a32a;border-radius:99px;padding:0 7px}
+#modal .eqTabs{display:flex;gap:5px;overflow-x:auto;padding-bottom:4px;margin-bottom:4px;scrollbar-width:none}#modal .eqTabs::-webkit-scrollbar{display:none}
+#modal .eqTabs button{flex:none;border:1.5px solid color-mix(in srgb,var(--ink) 25%,transparent);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 11px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}#modal .eqTabs button.on{background:var(--pink);color:#fff;border-color:var(--pink)}#modal .eqTabs small{opacity:.75}
+@media (max-width:380px){#modal .eqDoll{grid-template-columns:minmax(0,1fr) 100px minmax(0,1fr)}#modal .eqMid canvas{width:96px;height:106px}}`;document.head.appendChild(st);
+})()}catch(e){console.error('mod-eqrpg',e)}
 </script>
 </body>
 </html>
