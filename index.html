@@ -26902,7 +26902,7 @@ const _ry=rgYear;rgYear=function(){const G=S&&S.rg;try{insSet();if(rgOn()&&S.ali
    if(FR()>=7&&!G.brk&&S.age>=30&&gate('breaker')){rgBreaker();return true}
    if(S.age%6===0&&!G.seen['pt'+S.age]){G.seen['pt'+S.age]=1;const i=(G.fr||[]).findIndex((f,k)=>!G.frag[k]);if(i>=0)log(`💭 ความทรงจำรอบที่ผ่านมากระซิบ: ยังขาดเศษปริศนา「${G.fr[i].t}」`,'epic')}}
   if(G.loop>=10&&!G.seen['lg'+G.loop]&&S.age>=25){G.seen['lg'+G.loop]=1;G.seen['lgq']=1;choice('🍃 เสียงจากส่วนลึก',`คุณเวียนว่ายมา ${G.loop} รอบ จิตเริ่มล้า — จะปล่อยวางตอนนี้ก็ได้ (ตอนจบที่ 4) หรือสู้ต่อ · เปิดเมนู 🔁 วงจรย้อนกาล ได้ทุกเมื่อ`,[{t:'🍃 ปล่อยวาง จบวงจร',s:'รางวัลปานกลาง · ย้อนกลับไม่ได้',f(){rgEnd('letgo')}},{t:'⏳ ยังสู้ต่อ',skip:true,f(){}}]);return true}
-  if(G.loop>=3&&!G.noAutoFF&&!G.ff&&G.ffAuto!==G.loop&&S.age<=16&&rgFFok()){G.ffAuto=G.loop;try{rgFFgo()}catch(e){}}
+  if(G.loop>=3&&G.autoFF&&!G.ff&&G.ffAuto!==G.loop&&S.age<=16&&rgFFok()){G.ffAuto=G.loop;try{rgFFgo()}catch(e){}}
  }}catch(e){console.error(e)}return _ry.apply(this,arguments)};
 // การ์ดเส้นทางสู่ตอนจบ
 const _or=openRegress;openRegress=function(){const r=_or.apply(this,arguments);try{const G=S.rg,m=$('modal');if(!m||m.dataset.k!=='regress'||!G||G.v!==2)return r;m.querySelectorAll('.rgRoad').forEach(x=>x.remove());
@@ -26916,7 +26916,7 @@ const _or=openRegress;openRegress=function(){const r=_or.apply(this,arguments);t
  ${row('👑','ราชันผู้โดดเดี่ยว',ri>=7,`ขั้น ${ri}/7 · รอบ ${G.loop}/${RG_MIN.lonely} · เข้าใจ ${G.ins||0}/${RG_INS.lonely}`)}
  ${row('🍃','ผู้ปล่อยวาง',G.loop>=10,G.loop>=10?'พร้อมแล้ว':`เปิดที่รอบ 10 (ตอนนี้ ${G.loop})`)}${G.loop>=10?`<div class="brow"><button class="pbtn" onclick="rgLetGo()">🍃 ปล่อยวางตอนนี้</button></div>`:''}
  <div class="tag2" style="padding-top:4px">💔 จิตแตก (จบแบบแพ้): เหนื่อย ${Math.round(G.fat||0)}/100 · ตายได้อีกราว <b>${left()}</b> ครั้ง</div>
- <div class="brow"><button class="${G.noAutoFF?'gbtn':'pbtn'}" onclick="S.rg.noAutoFF=!S.rg.noAutoFF;openRegress()">⏩ เดินตามความทรงจำอัตโนมัติ (รอบ 3+): ${G.noAutoFF?'ปิด':'เปิด'}</button></div></div>`;
+ <div class="brow"><button class="${G.autoFF?'pbtn':'gbtn'}" onclick="S.rg.autoFF=!S.rg.autoFF;openRegress()">⏩ เดินตามความทรงจำอัตโนมัติ (รอบ 3+): ${G.autoFF?'เปิด':'ปิด'}</button></div></div>`;
  const hd=m.querySelector('h3');if(hd)hd.insertAdjacentHTML('afterend',h);else m.insertAdjacentHTML('afterbegin',h)}catch(e){console.error(e)}return r};
 window._rg21={left};
 })()}catch(e){console.error(e)}
