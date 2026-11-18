@@ -40618,6 +40618,16 @@ const ext=n=>{try{if(n>0)qsAll().forEach(q=>{if(q.k==='secl'&&!q.pz&&q.dl!=null)
 {const _s=seclude;seclude=function(n){const a0=S?S.age:0;const r=_s.apply(this,arguments);try{if(S&&S.alive&&S.age>a0){ext(S.age-a0);sysQSweep();try{render()}catch(e){}}}catch(e){console.error(e)}return r}}
 {const _p=passYear;passYear=function(){const sealing=!!(S&&S.xseal>0),a0=S?S.age:0;const r=_p.apply(this,arguments);try{if(sealing&&S&&S.alive&&S.age>a0){const d=S.age-a0;S.flags=S.flags||{};S.flags.seclude=(S.flags.seclude||0)+d;ext(d);sysQSweep()}}catch(e){console.error(e)}return r}}
 })()}catch(e){console.error('block38',e)}
+
+// ---- ผู้ย้อนกาล: "เดินตามความทรงจำ" ต้องเป็นสิ่งที่ผู้เล่นกดเปิดในเซสชันนี้เท่านั้น — กันสถานะ ff ค้างจากเซฟ/รีเฟรชจนเกมเลือกซ้ำเหมือนรอบก่อนและข้ามเหตุการณ์เองโดยไม่รู้ตัว ----
+try{(()=>{
+window._rgFFlive=false;
+{const _go=rgFFgo;rgFFgo=function(){const r=_go.apply(this,arguments);window._rgFFlive=!!(S&&S.rg&&S.rg.ff);return r}}
+{const _st=rgFFstop;rgFFstop=function(){window._rgFFlive=false;return _st.apply(this,arguments)}}
+const kill=()=>{try{if(S&&S.rg&&S.rg.ff&&!window._rgFFlive){S.rg.ff=0;try{if(typeof speed!=='undefined'&&speed>=16)speed=S.rg.ffSp||1}catch(e){}try{rgFFbtn()}catch(e){}}}catch(e){}};
+{const _lg=loadGame;if(typeof _lg==='function')loadGame=function(){const r=_lg.apply(this,arguments);kill();try{if(r&&typeof r.then==='function')r.then(kill)}catch(e){}return r}}
+setInterval(kill,400);
+})()}catch(e){console.error('block39',e)}
 </script>
 </body>
 </html>
