@@ -1626,6 +1626,28 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (L.length) await pipe(L);
       return res.json({ ok: 1, n: ids.size });
     }
+    if (a === 'dlput' || a === 'dlget') {
+      // ชะตาประจำวัน v2 — กระดานอันดับรายวัน (วันตามเวลาไทย) · นับเฉพาะชีวิตแรกที่จบของวันนั้น
+      const dOf = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10), today = dOf(now), yd = dOf(now - 864e5);
+      const unpack = async (d, arr) => { const ids = [], sc = []; for (let i = 0; i < (arr || []).length; i += 2) { ids.push(arr[i]); sc.push(+arr[i + 1]) }
+        const m = ids.length ? ((await cmd('HMGET', 'dlm:' + d, ...ids)) || []).map(jp) : [];
+        return ids.map((x, i) => Object.assign({ s: sc[i], me: x === id ? 1 : 0 }, m[i] || { n: '?' })) };
+      if (a === 'dlput') {
+        if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
+        const d = String(b.d || ''); if (d !== today && d !== yd) return res.json({ err: 'day' });
+        const c = +(await cmd('INCR', 'dlr:' + id)) || 1; if (c === 1) await cmd('EXPIRE', 'dlr:' + id, 3600); if (c > 12) return res.status(429).json({ err: 'rate' });
+        const sc = Math.max(0, Math.min(1e12, Math.round(+b.s || 0)));
+        const rec = JSON.stringify({ n: clean(String(b.n || ''), 24) || 'ไร้นาม', t: clean(String(b.t || ''), 70), st: Math.max(0, Math.min(999, +b.st | 0)), at: now });
+        const added = +(await cmd('ZADD', 'dl:' + d, 'NX', sc, id)) === 1;
+        if (added) await pipe([['HSET', 'dlm:' + d, id, rec], ['EXPIRE', 'dl:' + d, 5 * 86400], ['EXPIRE', 'dlm:' + d, 5 * 86400]]);
+        const [rk, n] = await pipe([['ZREVRANK', 'dl:' + d, id], ['ZCARD', 'dl:' + d]]);
+        return res.json({ ok: 1, first: added ? 1 : 0, rank: rk == null ? null : +rk + 1, n: +n || 0 });
+      }
+      const qd = String(qOf(req).d || ''), d = /^\d{4}-\d{2}-\d{2}$/.test(qd) ? qd : today;
+      const [top, n, rk, yt] = await pipe([['ZREVRANGE', 'dl:' + d, 0, 19, 'WITHSCORES'], ['ZCARD', 'dl:' + d], ['ZREVRANK', 'dl:' + d, okId(id) ? id : '-'], ['ZREVRANGE', 'dl:' + yd, 0, 2, 'WITHSCORES']]);
+      let mine = null; if (rk != null && +rk >= 20) { const sc = await cmd('ZSCORE', 'dl:' + d, id); const m = jp(await cmd('HGET', 'dlm:' + d, id)); mine = Object.assign({ s: +sc, rank: +rk + 1, me: 1 }, m || {}) }
+      return res.json({ d, today, top: await unpack(d, top), n: +n || 0, rank: rk == null ? null : +rk + 1, mine, yd, ytop: await unpack(yd, yt) });
+    }
     if (a === 'rrclaim') {
       // ผู้เล่นกู้ตั๋วสุ่ม · VIP · ของแต่ง ที่เติมไว้ ย้ายมาไอดีปัจจุบัน — ยืนยันตัวด้วยข้อมูลที่ตรงกับรายการโอนซึ่งแอดมินยืนยันแล้ว (ชื่อบัญชี + ยอด + เวลา)
       if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });

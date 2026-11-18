@@ -41659,3 +41659,157 @@ window._maskTog=()=>{const A=S&&S.alias;if(!A)return;A.on=A.on?0:1;toast(A.on?'�
 window._mask={yearly,hunter,impostor,detective,lover,offerInf,infStep,steal,caught,AL,A0};
 try{const g=window._guide2;if(g)g.add('life','🎭','หน้ากากสองหน้า (ตัวตนลับขั้นสูง)','เมื่อมีตัวตนลับ เปิด 🎭 จัดการตัวตนลับได้จากหน้ายุทธภพ:<br>• 😈 <b>สวมหน้ากากทำเรื่องไม่ดี</b> — กรรมที่ตกจะไปเป็น "ชื่อเสียงชั่ว" ของตัวตนลับ ตัวจริงสะอาด แต่ค่าหัวทำให้นักล่าตามหา และถ้าถูกเปิดโปง 70% ตกมาเป็นของคุณ<br>• 🎭 <b>ผู้แอบอ้าง</b> — มีคนปลอมเป็นตัวตนลับ มีทั้งแฟนคลับที่ซื่อ คนปล้นจริง และสายลับศัตรู<br>• 🔍 <b>นักสืบ</b> — สะสมเบาะแสทีละปี ติดสินบน หลอก กำจัด หรือดึงมาเป็นพวก (หลอกให้ไปจับผู้แอบอ้างได้)<br>• 💞 <b>คนรักหลงตัวตนลับ</b> — เฉลยตอนไหนก็ได้ ผลขึ้นกับนิสัยของเขา (ซึ้ง โกรธ หรือรู้มานานแล้ว)<br>• 🕶️ <b>สวมรอยเข้าสำนัก</b> — แฝงตัวหลายปี มีจุดตรวจ ปลายทางมีหลายแบบ: ขโมยวิชา ใจเปลี่ยนเป็นศิษย์จริง หรือถูกจับได้','')}catch(e){}
 })()}catch(e){console.error('mask block',e)}
+// ============================================================
+// BLOCK 49: 📅 ชะตาประจำวัน v2 — หมุนโลก/โหมด/กฎพิเศษทุกวัน · เป้าหมายรายวัน · กระดานอันดับออนไลน์ · เหตุการณ์ชุดเดียวกันทุกคน · เล่นต่อเนื่อง
+// ============================================================
+try{(()=>{
+const DK=(t)=>new Date((t||Date.now())+7*3600e3).toISOString().slice(0,10);
+const YK=()=>DK(Date.now()-864e5);
+const RN=k=>mulberry(hashStr('dl2:'+k));
+const pickR=(r,a)=>a[Math.floor(r()*a.length)];
+const WN={m:['🏯','ยุทธภพ'],x:['☁️','โลกเทพเซียน'],mw:['🏙️','ยุคปัจจุบัน']};
+const MN={normal:['⚔️','ปกติ'],hell:['🔥','นรก'],short:['⏳','ชีวิตสั้น'],junk:['🗑️','รากขยะ'],regress:['🔁','ผู้ย้อนกาล'],soul:['⭕','จิตวิญญาณยุทธ์']};
+const THEME={1:{w:'m',ch:'normal'},2:{w:'x',ch:'hell'},3:{w:'m',ch:'soul'},4:{w:'mw',ch:'normal'},5:{w:'m',ch:'short'},6:{w:'x',ch:'regress'},0:null};
+const SUN=[{w:'m',ch:'junk'},{w:'m',ch:'hell'},{w:'x',ch:'normal'},{w:'m',ch:'soul'},{w:'mw',ch:'normal'},{w:'x',ch:'short'}];
+// ---------- กฎพิเศษ ----------
+const ep=m=>{S.dl.epm=(S.dl.epm||1)*m};
+const RULES=[
+ {id:'orphan',ic:'🧺',n:'กำพร้าแต่กำเนิด',d:'ไม่มีพ่อแม่พี่น้อง เริ่มชีวิตตัวคนเดียว',ok:c=>c.w!=='mw',go(){S.parents=[];S.sibs=[];S.flags.lostParents=1}},
+ {id:'hard',ic:'💀',n:'ศัตรูแข็งแกร่ง ×1.4',d:'ทุกการต่อสู้ยากขึ้นมาก',ok:c=>c.w!=='mw',go(){ep(1.4)}},
+ {id:'blood',ic:'🩸',n:'ยุคนองเลือด',d:'ศัตรูแรงขึ้น ×1.2 แต่เริ่มต้นแข็งแรงกว่าปกติ',ok:c=>c.w!=='mw',go(){ep(1.2);S.maxHp=Math.round(S.maxHp*1.25);S.hp=S.maxHp}},
+ {id:'long',ic:'🐢',n:'อายุยืนกว่าปกติ',d:'อายุขัย +30 ปี',ok:c=>c.w!=='mw'&&c.ch!=='short',go(){S.lifespan+=30}},
+ {id:'shortl',ic:'🕯️',n:'อายุขัยสั้นลง',d:'อายุขัยเหลือ 75%',ok:c=>c.w!=='mw'&&c.ch!=='short',go(){S.lifespan=Math.round(S.lifespan*.75)}},
+ {id:'broke',ic:'🪙',n:'เริ่มจากศูนย์',d:'ไม่มีเงินติดตัวสักแดง',ok:()=>true,go(){S.money=0}},
+ {id:'rich',ic:'💰',n:'เกิดบนกองเงิน',d:'เงินเริ่มต้น ×5',ok:()=>true,go(){S.money=Math.round((S.money||0)*5+500)}},
+ {id:'genius',ic:'🧠',n:'ปัญญาเลิศ',d:'ปัญญา +40',ok:()=>true,go(){S.int=(S.int||0)+40}},
+ {id:'frail',ic:'🥀',n:'ร่างกายอ่อนแอ',d:'พลังชีวิตสูงสุด −35%',ok:()=>true,go(){S.maxHp=Math.max(30,Math.round(S.maxHp*.65));S.hp=Math.min(S.hp,S.maxHp)}},
+ {id:'beauty',ic:'🌸',n:'หน้าตางดงาม',d:'เสน่ห์ +40',ok:()=>true,go(){S.cha=(S.cha||0)+40}},
+ {id:'karmaU',ic:'🙏',n:'บุญเก่าหนุนนำ',d:'กรรมดี +60',ok:()=>true,go(){S.karma=(S.karma||0)+60}},
+ {id:'karmaD',ic:'👹',n:'กรรมเก่าตามมา',d:'กรรม −60',ok:()=>true,go(){S.karma=(S.karma||0)-60}},
+ {id:'fast',ic:'⚡',n:'ฝึกไวเป็นพิเศษ',d:'พลังที่ได้ทุกปี ×1.3',ok:c=>c.w!=='mw',go(){S.dl.pm=1.3}},
+ {id:'slow',ic:'🌧️',n:'ฟ้าไม่เป็นใจ',d:'พลังที่ได้ทุกปี ×0.8',ok:c=>c.w!=='mw',go(){S.dl.pm=.8}},
+ {id:'qi',ic:'🌀',n:'ลมปราณหนาแน่น',d:'ลมปราณเริ่มต้น +5',ok:c=>c.w!=='mw'&&c.ch!=='soul',go(){S.qi=+((S.qi||0)+5).toFixed(1)}},
+ {id:'famous',ic:'📣',n:'เกิดมาเป็นที่รู้จัก',d:'ชื่อเสียง +100',ok:()=>true,go(){S.fame=(S.fame||0)+100}},
+ {id:'famine',ic:'🌾',n:'ยุคข้าวยากหมากแพง',d:'เงินหายไป 5% ทุกปี',ok:()=>true,go(){S.dl.tax=.05}}];
+// ---------- เป้าหมาย ----------
+const rnW=(i,w)=>{try{if(w==='x')return XREALM[i]||('ขั้น '+i);const L=(typeof W0!=='undefined'&&W0&&W0.realm)||REALMS.map(r=>r.n);return L[i]||('ขั้น '+i)}catch(e){return'ขั้น '+i}};let curW='m';const rn=i=>rnW(i,curW);
+const GOALS={
+ realm:{n:c=>`ไปถึง${rnW(c.K,c.w)}ให้เร็วที่สุด`,sc:D=>D.ra!=null?1e6-Math.max(1,D.ra)*1000:(D.mx.ri||0)*1000+Math.min(999,D.mx.age||0),tx:D=>D.ra!=null?`ถึง${rnW(D.K,D.w)}ตอนอายุ ${D.ra} ปี`:`ไปได้ถึง${rnW(D.mx.ri||0,D.w)}`},
+ power:{n:()=>'สะสมพลังรวมให้มากที่สุด',sc:D=>Math.round(D.mx.pow||0),tx:D=>`พลังรวมสูงสุด ${fmt(Math.round(D.mx.pow||0))}`},
+ age:{n:()=>'มีชีวิตรอดให้นานที่สุด',sc:D=>D.mx.age||0,tx:D=>`อยู่รอดถึงอายุ ${D.mx.age||0} ปี`},
+ fame:{n:()=>'สร้างชื่อเสียงให้มากที่สุด',sc:D=>Math.round(D.mx.fame||0),tx:D=>`ชื่อเสียงสูงสุด ${fmt(Math.round(D.mx.fame||0))}`},
+ kills:{n:()=>'ชนะศึกให้มากที่สุด',sc:D=>D.mx.kills||0,tx:D=>`ชนะศึก ${D.mx.kills||0} ครั้ง`},
+ money:{n:c=>c.w==='mw'?'สร้างเนื้อสร้างตัว — มีเงินมากที่สุด':'สะสมทรัพย์ให้มากที่สุด',sc:D=>Math.round(D.mx.money||0),tx:D=>`ทรัพย์สูงสุด ${fmt(Math.round(D.mx.money||0))}`},
+ follow:{n:()=>'มีผู้ติดตามออนไลน์มากที่สุด',sc:D=>Math.round(D.mx.fol||0),tx:D=>`ผู้ติดตาม ${fmt(Math.round(D.mx.fol||0))}`},
+ rings:{n:()=>'หลอมวงแหวนวิญญาณให้ได้มากที่สุด',sc:D=>(D.mx.rg||0)*1000+(D.mx.lv||0),tx:D=>`วงแหวน ${D.mx.rg||0} วง · ระดับจิต ${D.mx.lv||0}`}};
+const GMAP={'m:normal':[['realm',4],['power'],['fame'],['kills']],'x:normal':[['realm',3],['power'],['age']],'m:hell':[['age'],['power']],'x:hell':[['age'],['power']],
+ 'm:short':[['fame'],['power'],['realm',3]],'x:short':[['fame'],['power']],'m:junk':[['realm',3],['power']],'x:regress':[['realm',5],['power']],'m:regress':[['realm',5],['power']],'m:soul':[['rings']],'mw:normal':[['money'],['follow']]};
+// ---------- ชะตาของวัน ----------
+function cfgOf(k){const r=RN(k),dow=new Date(k+'T00:00:00Z').getUTCDay();let c=THEME[dow]?Object.assign({},THEME[dow]):Object.assign({},pickR(r,SUN));if(!CH_KEYS.includes(c.ch))c.ch='normal';
+ const okR=RULES.filter(x=>x.ok(c));const r1=pickR(r,okR);c.rules=[r1.id];if(dow===0){const r2=pickR(r,okR.filter(x=>x.id!==r1.id&&!(x.id==='karmaU'&&r1.id==='karmaD')&&!(x.id==='karmaD'&&r1.id==='karmaU')&&!(x.id==='fast'&&r1.id==='slow')&&!(x.id==='slow'&&r1.id==='fast')&&!(x.id==='long'&&r1.id==='shortl')&&!(x.id==='shortl'&&r1.id==='long')&&!(x.id==='rich'&&r1.id==='broke')&&!(x.id==='broke'&&r1.id==='rich')));if(r2)c.rules.push(r2.id)}
+ const gl=GMAP[c.w+':'+c.ch]||[['power']];const g=pickR(r,gl);c.goal=g[0];c.K=g[1]||0;
+ const pool=c.w==='mw'?EVM:EVA;const idx=pool.map((_,i)=>i).sort(()=>r()-.5).slice(0,5);const lo=c.w==='mw'?24:12,hi=c.w==='mw'?62:58;const ages=idx.map(()=>lo+Math.floor(r()*(hi-lo))).sort((a,b)=>a-b);
+ for(let i=1;i<ages.length;i++)if(ages[i]-ages[i-1]<4)ages[i]=ages[i-1]+4;c.ev=idx.map((x,i)=>({i:x,a:ages[i]}));c.k=k;c.dow=dow;return c}
+window.dlCfg=cfgOf;
+// ---------- เหตุการณ์ชุดเดียวกันทุกคน ----------
+const pp=p=>{const g=pctPow(p);S.power+=g;return g};
+const mny=f=>Math.max(50,Math.round((S.money||0)*f+200));
+const EVA=[
+ ['🌋 ภัยพิบัติถล่มเมือง','แผ่นดินไหวครั้งใหญ่ เมืองที่คุณอยู่พังครึ่งเมือง เสียงร้องขอความช่วยเหลือดังมาจากใต้ซากอาคาร',[['🤲 ขุดช่วยคนจนมือเลือดออก','กรรม + · บาดเจ็บ',()=>{S.karma+=15;S.fame+=20;S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.2));return'คุณดึงเด็กสามคนออกมาจากซากบ้าน ชาวเมืองจำหน้าคุณได้'}],['🏃 หนีเอาตัวรอด','ปลอดภัย',()=>'คุณรอดมาได้โดยไม่มีแผล แต่เสียงร้องพวกนั้นยังตามมาในฝัน'],['💰 ฉวยโอกาสเก็บของมีค่า','เงิน + · กรรม −',()=>{const m=mny(.5);S.money+=m;S.karma-=20;return`คุณได้เงินมา ${fmt(m)} — ไม่มีใครเห็น ยกเว้นตัวคุณเอง`}]]],
+ ['📜 คัมภีร์ปริศนา','ชายแก่ที่กำลังจะตายยัดม้วนคัมภีร์ขาดๆ ใส่มือคุณ "อย่าให้ใครรู้…"',[['🔥 ฝึกทันทีทั้งที่ยังไม่เข้าใจ','พลัง + · เสี่ยงธาตุไฟ',()=>{const g=pp(.08);S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.15));return`พลังพุ่งขึ้น ${fmt(g)} แต่เส้นลมปราณร้อนระอุไปหลายวัน`}],['💰 ขายให้นักสะสม','เงิน +',()=>{const m=mny(.4);S.money+=m;return`นักสะสมให้ราคา ${fmt(m)} โดยไม่ต่อรองสักคำ`}],['🏯 มอบให้สำนักใหญ่','ชื่อเสียง +',()=>{S.fame+=40;return'เจ้าสำนักลุกขึ้นคำนับคุณต่อหน้าศิษย์ทั้งสำนัก'}]]],
+ ['⚔️ ทัพมารบุกแผ่นดิน','ทัพมารหลายหมื่นข้ามเขาเข้ามา ทุกสำนักต้องเลือกข้าง',[['🗡️ ออกรบแนวหน้า','ดวลจริง · ชนะได้มาก',()=>{if(fight('แม่ทัพมาร',total()*1.1)){S.fame+=60;const g=pp(.1);return`คุณฟันแม่ทัพมารตกม้า พลัง +${fmt(g)}`}S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.4));return'คุณถูกฟันกลางหลัง รอดมาได้อย่างหวุดหวิด'}],['🧺 พาชาวบ้านอพยพ','กรรม + มาก',()=>{S.karma+=25;return'คุณพาคนสามร้อยคนหนีข้ามแม่น้ำได้ทันก่อนเมืองแตก'}],['🩸 แอบเข้าร่วมฝ่ายมาร','พลัง + · กรรม −−',()=>{const g=pp(.12);S.karma-=40;return`ฝ่ายมารมอบวิชาให้ พลัง +${fmt(g)} — มือคุณไม่เคยสะอาดอีกเลย`}]]],
+ ['🍶 ยอดฝีมือเมาริมทาง','ชายเมาหัวเราะอยู่ริมทาง เขาเตะก้อนหินทีเดียวทะลุกำแพง',[['🙇 ขอเป็นศิษย์','ปัญญา + · พลัง +',()=>{S.int+=10;const g=pp(.05);return`เขาสอนเคล็ดลับให้คืนเดียวแล้วหายไป พลัง +${fmt(g)}`}],['⚔️ ท้าประลอง','ดวลจริง',()=>{if(fight('ยอดฝีมือขี้เมา',total()*1.3)){S.fame+=80;return'เขาหัวเราะลั่น "เจ้าเด็กนี่ใช้ได้!" ข่าวลือไปทั่ว'}S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.25));return'คุณลอยไปตกบ่อน้ำ เขายังไม่ได้วางจอกเหล้าด้วยซ้ำ'}],['🍶 เลี้ยงสุราแล้วนั่งฟังเรื่อง','เงิน − · ชื่อเสียง +',()=>{S.money=Math.max(0,S.money-mny(.05));S.fame+=15;S.karma+=5;return'เรื่องที่เขาเล่ากลายเป็นบทเพลงของนักเล่าเรื่องทั้งแผ่นดิน'}]]],
+ ['💎 ถ้ำสมบัติที่ถูกลืม','น้ำป่าพัดดินถล่ม เผยปากถ้ำที่เต็มไปด้วยทองและกระดูก',[['💰 ขนกลับให้หมด','เงิน + มาก',()=>{const m=mny(1.2);S.money+=m;return`คุณขนทองกลับมาได้ ${fmt(m)}`}],['🤲 แบ่งให้หมู่บ้าน','กรรม + · ชื่อเสียง +',()=>{S.karma+=25;S.fame+=30;return'หมู่บ้านสร้างศาลเล็กๆ ไว้ให้คุณ'}],['🪦 ฝังกระดูกเจ้าของเดิมก่อน','กรรม + · ได้ของลับ',()=>{S.karma+=10;const g=pp(.05);return`ใต้กระดูกมีคัมภีร์เล่มเล็ก พลัง +${fmt(g)}`}]]],
+ ['🐉 สัตว์วิเศษบาดเจ็บ','กิเลนตัวหนึ่งนอนหอบอยู่ในป่า ลูกศรปักอยู่กลางหลัง นายพรานกำลังตามมา',[['🌿 รักษามัน','กรรม + · อายุขัย +',()=>{S.karma+=15;S.lifespan+=5;return'กิเลนแตะหน้าผากคุณก่อนหายไป คุณรู้สึกเบาสบายอย่างประหลาด'}],['🗡️ เอาแก่นของมัน','พลัง + มาก · กรรม −',()=>{const g=pp(.1);S.karma-=20;return`แก่นกิเลนร้อนแผดเผา พลัง +${fmt(g)}`}],['🚶 ปล่อยไว้ตามชะตา','—',()=>'คุณเดินผ่านไป เสียงนายพรานไล่หลังมาไม่นานนัก']]],
+ ['👑 ราชสำนักเรียกตัว','ราชโองการมาถึงหน้าบ้าน ฮ่องเต้ต้องการคนเก่งไปรับใช้',[['📜 รับราชการ','เงิน + · ชื่อเสียง +',()=>{S.money+=mny(.3);S.fame+=40;return'คุณได้ตราขุนนางและเงินเดือนก้อนแรก'}],['🙅 ปฏิเสธอย่างสุภาพ','ปัญญา +',()=>{S.int+=6;return'ขันทีมองคุณนาน ก่อนจะยิ้มบางๆ แล้วจากไป'}],['🕵️ รับแล้วแอบสืบความลับ','ปัญญา + · เสี่ยง',()=>{if(Math.random()<.6){S.int+=12;S.money+=mny(.2);return'คุณรู้ความลับที่ไม่ควรรู้ และขายมันได้ราคาดี'}S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));return'คุณถูกจับได้ หนีออกจากวังมาพร้อมแผลเต็มตัว'}]]],
+ ['🌙 คืนจันทร์สีเลือด','พระจันทร์เป็นสีแดงทั้งคืน พลังฟ้าดินปั่นป่วน',[['🧘 นั่งสมาธิดูดซับ','พลัง +',()=>{const g=pp(.06);return`ลมปราณไหลเข้าร่างไม่หยุด พลัง +${fmt(g)}`}],['🏹 ออกล่าสัตว์อสูรที่คลุ้มคลั่ง','ดวลจริง',()=>{if(fight('สัตว์อสูรคลั่ง',total()*.9)){S.kills=(S.kills||0)+1;S.fame+=25;return'คุณลากซากมันกลับเข้าเมืองตอนรุ่งสาง'}S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));return'มันข่วนแผลยาวเต็มแผ่นหลัง'}],['🏠 ปิดประตูนอน','พลังชีวิต +',()=>{S.hp=S.maxHp;return'คุณตื่นมาสดชื่นที่สุดในรอบปี'}]]]];
+const EVM=[
+ ['📉 ตลาดหุ้นร่วง','ข่าวเช้า: ดัชนีร่วงหนักสุดในรอบสิบปี เพื่อนในกลุ่มไลน์ตะโกนว่า "ช้อน!"',[['📈 ทุ่มซื้อตอนถูก','เสี่ยง · ได้มากถ้าถูก',()=>{const m=mny(.3);if(Math.random()<.55){S.money+=m*2;return`สามเดือนต่อมาตลาดเด้งกลับ คุณได้กำไร ${fmt(m*2)}`}S.money=Math.max(0,S.money-m);return`ตลาดร่วงต่อ คุณขาดทุน ${fmt(m)}`}],['🧘 นิ่งไว้ ไม่ทำอะไร','ปลอดภัย',()=>'คุณปิดแอปแล้วไปกินข้าว'],['💸 ขายหนีตาย','เสียเล็กน้อย',()=>{S.money=Math.max(0,S.money-mny(.05));return'คุณขาดทุนนิดหน่อย แต่นอนหลับสบาย'}]]],
+ ['📱 คลิปไวรัล','คลิปที่เพื่อนแอบถ่ายตอนคุณกระโดดข้ามรั้วสามเมตรไวรัลทั้งประเทศ',[['🎥 เปิดช่องทำคอนเทนต์','ผู้ติดตาม + · ความลับเสี่ยง',()=>{try{S.mw.fame=(S.mw.fame||0)+5000;S.mw.sec=Math.min(100,(S.mw.sec||0)+15)}catch(e){}return'ยอดผู้ติดตามพุ่งข้ามคืน'}],['🙈 ปฏิเสธว่าไม่ใช่ตัวเอง','ความลับปลอดภัย',()=>{try{S.mw.sec=Math.max(0,(S.mw.sec||0)-5)}catch(e){}return'คนลืมเรื่องนี้ภายในหนึ่งสัปดาห์'}],['💼 ขายลิขสิทธิ์คลิปให้สื่อ','เงิน +',()=>{S.money+=mny(.15);return'สำนักข่าวจ่ายค่าคลิปให้คุณ'}]]],
+ ['💼 โปรเจกต์ใหญ่จากเจ้านาย','เจ้านายเรียกเข้าห้อง "งานนี้ถ้าสำเร็จ ได้ขึ้นเงินเดือนแน่"',[['🔥 รับเต็มที่ ทำโอทีทุกคืน','เงิน + · สุขภาพ −',()=>{S.money+=mny(.25);S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.15));joy(-5);return'โปรเจกต์สำเร็จ แต่คุณป่วยไปหนึ่งสัปดาห์'}],['🤝 รับแล้วแบ่งงานให้ทีม','ชื่อเสียง +',()=>{S.fame+=20;joy(3);return'ทีมรักคุณมากขึ้น เจ้านายก็พอใจ'}],['🙅 ปฏิเสธ','ความสุข +',()=>{joy(6);return'คุณกลับบ้านตรงเวลา ได้กินข้าวเย็นกับที่บ้าน'}]]],
+ ['🌊 น้ำท่วมใหญ่','น้ำท่วมทั้งเขต บ้านเพื่อนบ้านจมถึงหลังคา',[['🛶 พายเรือช่วยคน','กรรม + · ชื่อเสียง +',()=>{S.karma+=20;S.fame+=25;return'คุณช่วยคนออกมาได้สิบกว่าคน มีคนถ่ายคลิปไว้'}],['📦 ขนของหนีขึ้นที่สูง','ปลอดภัย',()=>'ของสำคัญรอดหมด'],['💰 ขายน้ำดื่มราคาแพง','เงิน + · กรรม −',()=>{S.money+=mny(.1);S.karma-=15;return'ขายหมดในชั่วโมงเดียว แต่ไม่มีใครมองหน้าคุณอีก'}]]],
+ ['🏪 เพื่อนชวนเปิดร้าน','เพื่อนสนิทชวนลงทุนเปิดร้านกาแฟด้วยกัน',[['☕ ลงขันด้วย','เสี่ยง · ได้มากถ้ารอด',()=>{const m=mny(.3);if(Math.random()<.5){S.money+=m*2;return`ร้านติดตลาด คุณได้ปันผล ${fmt(m*2)}`}S.money=Math.max(0,S.money-m);return'ร้านปิดตัวในปีแรก แต่ยังเป็นเพื่อนกันอยู่'}],['🙅 ไม่ลงเงิน แต่ช่วยออกแบบร้าน','ความสัมพันธ์ +',()=>{joy(4);S.cha+=3;return'เพื่อนขอบคุณคุณทุกครั้งที่เจอ'}],['💬 บอกตรงๆ ว่าแผนไม่รอด','ปัญญา +',()=>{S.int+=4;return'เพื่อนโกรธไปพักใหญ่ ก่อนจะยอมรับว่าคุณพูดถูก'}]]],
+ ['🎰 แก๊งคอลเซ็นเตอร์โทรมา','"สวัสดีค่ะ ติดต่อจากธนาคาร บัญชีของท่านมีปัญหา…"',[['😤 ด่ากลับแล้ววางสาย','ปลอดภัย',()=>{joy(3);return'รู้สึกดีขึ้นมาก'}],['🕵️ แกล้งคุยแล้วแจ้งตำรวจ','ชื่อเสียง +',()=>{S.fame+=15;S.karma+=5;return'ตำรวจจับแก๊งได้ทั้งเครือข่าย'}],['😰 ทำตามที่เขาบอก','เงิน − มาก',()=>{const m=mny(.3);S.money=Math.max(0,S.money-m);return`เงินหายไป ${fmt(m)} — บทเรียนราคาแพง`}]]]];
+// ---------- เก็บสถิติ / บันทึก ----------
+const LSK='murim_dl2',ST='murim_dlstreak';
+const rec=()=>LS.get(LSK,{})||{};
+const streak=()=>{const s=LS.get(ST,null)||{};if(s.d!==DK()&&s.d!==YK())return 0;return s.n||0};
+const MILE=[[3,'🔥 ผู้ไม่ยอมแพ้'],[7,'🌙 เจ็ดราตรีแห่งชะตา'],[14,'⭐ ผู้ท้าชะตา'],[30,'👑 จ้าวแห่งชะตา']];
+function stTitle(n){let t='';MILE.forEach(m=>{if(n>=m[0])t=m[1]});return t}
+// ---------- เริ่มชีวิต ----------
+function begin(c){if(!S)return;S.dl={k:c.k,r:c.rules,g:c.goal,K:c.K,ev:c.ev,w:c.w,ch:c.ch,mx:{},f:{},pm:1,epm:1};S.daily='dl2:'+c.k;
+ c.rules.forEach(id=>{const R0=RULES.find(x=>x.id===id);try{R0&&R0.go()}catch(e){}});
+ const R=rec()[c.k]||{},ranked=!R.sub;S.dl.rk=ranked?1:0;
+ const L=c.rules.map(id=>RULES.find(x=>x.id===id)).filter(Boolean);
+ setTimeout(()=>{try{log(`📅 <b>ชะตาประจำวัน ${thD(c.k)}</b> — ${WN[c.w][0]} ${WN[c.w][1]} · ${MN[c.ch][0]} ${MN[c.ch][1]}<br>${L.map(x=>`${x.ic} <b>${x.n}</b> — ${x.d}`).join('<br>')}<br>🎯 เป้าหมาย: <b>${GOALS[c.goal].n(c)}</b><br><span class="tag2">${ranked?'🏆 รอบนี้นับอันดับ — ชีวิตแรกที่จบวันนี้เท่านั้น':'🧪 รอบซ้อม — วันนี้ส่งอันดับไปแล้ว'} · เหตุการณ์สำคัญ 5 เรื่องจะมาถึงทุกคนในช่วงอายุเดียวกัน</span>`,'myth',true);render()}catch(e){}},400)}
+const thD=k=>{try{const d=new Date(k+'T00:00:00Z');return d.toLocaleDateString('th-TH',{day:'numeric',month:'short',timeZone:'UTC'})}catch(e){return k}};
+let pend=null,prevC=null;
+window.dlStart=function(kk){const k=(typeof kk==='string'&&kk)||DK(),c=cfgOf(k);try{closeM()}catch(e){}prevC={chm:CFG.chm,xian:CFG.xian};
+ if(c.w==='mw'){if(typeof mwRandNative!=='function')return toast('ยุคปัจจุบันยังไม่เปิด');const o=Math.random;Math.random=mulberry(hashStr('dl2b:'+k));try{CFG.chm=0;mwRandNative(null)}finally{Math.random=o}
+  let n=0;const w=()=>{if(S&&S.mw&&S.alive){setTimeout(()=>{begin(c);CFG.chm=prevC.chm;CFG.xian=prevC.xian},600);return}if(n++<40)setTimeout(w,200)};w();return}
+ pend=c;CFG.chm=CH_KEYS.indexOf(c.ch);CFG.xian=c.w==='x'?1:0;setWorld(c.w==='x');rerolls=0;try{$('rr').textContent=0}catch(e){}show('birth');
+ const o=Math.random;Math.random=mulberry(hashStr('dl2b:'+k));try{doRoll(true)}finally{Math.random=o}roll.daily='dl2:'+k;toast(`📅 ชะตาประจำวัน — ${MN[c.ch][1]} · ${WN[c.w][1]}`)};
+{const _sl=startLife;startLife=function(){const isD=!!(roll&&String(roll.daily||'').startsWith('dl2:')&&pend);let c=null;if(isD){c=pend;pend=null;CFG.chm=CH_KEYS.indexOf(c.ch);CFG.xian=c.w==='x'?1:0}
+ const r=_sl.apply(this,arguments);try{if(isD){begin(c);if(prevC){CFG.chm=prevC.chm;CFG.xian=prevC.xian}}else if(pend&&!(roll&&roll.daily))pend=null}catch(e){console.error('dl begin',e)}return r}}
+// ---------- รายปี ----------
+{const _f=fight;fight=function(n,e){try{if(S&&S.dl&&!S.dl.done&&S.dl.epm!==1)e=e*S.dl.epm}catch(x){}return _f.call(this,n,e)}}
+{const _d=duel;duel=function(n,e,cb){try{if(S&&S.dl&&!S.dl.done&&S.dl.epm!==1)e=e*S.dl.epm}catch(x){}return _d.call(this,n,e,cb)}}
+function track(yr){const D=S.dl,m=D.mx;if(!(S.age>=0))return;let t=0;try{t=total()}catch(e){}m.pow=Math.max(m.pow||0,t);m.age=Math.max(m.age||0,S.age);m.fame=Math.max(m.fame||0,S.fame||0);m.kills=Math.max(m.kills||0,S.kills||0);m.money=Math.max(m.money||0,S.money||0);
+ try{const ri=realmIdx();m.ri=Math.max(m.ri||0,ri);if(yr&&D.g==='realm'&&D.ra==null&&ri>=D.K&&S.age>=1){D.ra=S.age;log(`🎯 <b>สำเร็จเป้าหมายประจำวัน!</b> ถึง${rnW(D.K,D.w)}ตอนอายุ ${S.age} ปี — ยิ่งเร็วยิ่งได้อันดับดี`,'myth',true);try{island({big:1,pri:1,ic:'🎯',h:'ชะตาประจำวัน',t:`ถึง${rnW(D.K,D.w)}ตอนอายุ ${S.age}`,kind:'gold'})}catch(e){}}}catch(e){}
+ try{if(S.mw)m.fol=Math.max(m.fol||0,S.mw.fame||0)}catch(e){}try{if(S.sv){m.rg=Math.max(m.rg||0,(S.sv.rings||[]).length);m.lv=Math.max(m.lv||0,S.sv.lv||0)}}catch(e){}}
+{const _py=passYear;passYear=function(){const D=S&&S.dl&&!S.dl.done?S.dl:null;const p0=D&&D.pm!==1?S.power:null;const r=_py.apply(this,arguments);try{if(S&&S.alive&&S.dl&&!S.dl.done){
+  if(p0!=null&&S.power>p0)S.power=Math.round(p0+(S.power-p0)*S.dl.pm);
+  if(S.dl.tax)S.money=Math.round((S.money||0)*(1-S.dl.tax));
+  track(1);
+  {const pool=S.dl.w==='mw'?EVM:EVA,D=S.dl;
+   const tt=i=>`${pool[i][0]} <span class="tag2">· ชะตาเดียวกัน</span>`;
+   const live=i=>{const t=tt(i);return !!((choice._cur&&choice._cur.title===t)||(choice._q||[]).some(q=>q[0]===t))};
+   if(D.pq!=null&&!D.f[D.pq]&&!live(D.pq))D.pq=null;
+   const e=D.pq==null?D.ev.find(x=>!D.f[x.i]&&S.age>=x.a):null;
+   if(e&&pool[e.i]){const E0=pool[e.i];D.pq=e.i;const n=Object.keys(D.f).length+1;
+    choice(tt(e.i),`${E0[1]}<br><span class="tag2">📅 ชะตาเดียวกัน ${n}/5 — วันนี้ทุกคนเจอเหตุการณ์นี้ตอนอายุ ${e.a} ปี แต่ละคนเลือกต่างกัน</span>`,E0[2].map(o=>({t:o[0],s:o[1],f(){D.f[e.i]=1;D.pq=null;let m='';try{m=o[2]()}catch(x){console.error(x)}if(m)log(`${E0[0].split(' ')[0]} ${m}`,'epic',true);try{(D.ch2=D.ch2||{})[e.i]=o[0]}catch(x){}}})))}}}}catch(e){console.error('dl yr',e)}return r}}
+// ---------- จบชีวิต: คะแนน · ส่งอันดับ · เล่นต่อเนื่อง ----------
+function finish(){try{if(!S||!S.dl||S.dl.done)return;const D=S.dl;D.done=1;track();const G=GOALS[D.g];const sc=G.sc(D),tx=G.tx(D);
+ const A=rec(),R=A[D.k]||(A[D.k]={});R.best=Math.max(R.best||0,sc);if(!R.bestT||sc>=R.best)R.bestT=tx;
+ const first=!R.sub&&D.rk;if(first){R.sub=1;R.sc=sc;R.tx=tx;
+  const s0=LS.get(ST,null)||{};let n=1;if(s0.d===D.k)n=s0.n||1;else if(s0.d===DK(new Date(D.k+'T12:00:00Z').getTime()-7*3600e3-864e5))n=(s0.n||0)+1;LS.set(ST,{d:D.k,n});
+  const tl=stTitle(n),old=stTitle(s0.n||0);if(tl&&tl!==old)setTimeout(()=>{try{island({big:1,pri:1,ic:'🔥',h:`ชะตาต่อเนื่อง ${n} วัน`,t:tl,kind:'rainbow',ms:6000})}catch(e){}},1500);
+  if(typeof onlineOK!=='undefined'&&onlineOK)api('dlput',{d:D.k,s:sc,n:S.name,t:tx,st:n}).then(j=>{try{if(j&&j.rank){const A2=rec();(A2[D.k]=A2[D.k]||{}).rank=j.rank;A2[D.k].of=j.n;LS.set(LSK,A2);toast(`📅 ชะตาประจำวัน: อันดับ ${j.rank} จาก ${j.n} คน`)}}catch(e){}}).catch(()=>{})}
+ const keys=Object.keys(A).sort();while(keys.length>20)delete A[keys.shift()];LS.set(LSK,A);
+ setTimeout(()=>{try{log(`📅 <b>ผลชะตาประจำวัน</b> — ${tx}${first?' · ส่งเข้ากระดานอันดับแล้ว':' · รอบซ้อม (ไม่นับอันดับ)'}`,'myth',true)}catch(e){}},300)}catch(e){console.error('dl fin',e)}}
+{const _sv=saveLegacy;saveLegacy=function(){try{finish()}catch(e){}return _sv.apply(this,arguments)}}
+// ---------- หน้าชะตาประจำวัน ----------
+const cdTxt=()=>{const ms=new Date(DK()+'T00:00:00Z').getTime()+864e5-7*3600e3-Date.now();const h=Math.floor(ms/36e5),m=Math.floor(ms%36e5/6e4);return `${h} ชม. ${m} นาที`};
+let lbC=null,lbT=0;
+async function lbLoad(force){if(typeof onlineOK==='undefined'||!onlineOK)return null;if(lbC&&!force&&Date.now()-lbT<45000)return lbC;try{const j=await api('dlget');if(j&&j.top){lbC=j;lbT=Date.now()}}catch(e){}return lbC}
+const st2=document.createElement('style');st2.textContent=`
+.dlH{border-radius:16px;padding:14px;margin:6px 0 10px;background:linear-gradient(150deg,#2b1d55,#14102e 70%);color:#f6ecd4;border:1.5px solid #c9a24a;box-shadow:0 6px 22px rgba(0,0,0,.3)}
+.dlH .tp{display:flex;justify-content:space-between;align-items:center;font-size:12px;opacity:.85}
+.dlH .wm{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 8px}.dlH .wm span{padding:5px 11px;border-radius:20px;background:rgba(255,255,255,.1);border:1px solid rgba(255,214,130,.35);font-weight:700;font-size:13.5px}
+.dlH .ru{margin:6px 0;padding:8px 10px;border-radius:10px;background:rgba(255,120,80,.12);border:1px solid rgba(255,150,100,.35);font-size:13px}
+.dlH .gl{margin:8px 0 2px;padding:10px;border-radius:10px;background:rgba(255,214,110,.14);border:1px solid rgba(255,214,110,.5);font-size:15px;font-weight:800;color:#ffe08a;text-align:center}
+.dlS{display:flex;gap:8px;margin:8px 0}.dlS div{flex:1;text-align:center;padding:8px 4px;border-radius:12px;background:var(--card,#fff);border:2px solid var(--line,#333);font-size:12px}.dlS b{display:block;font-size:17px}
+.dlLb .r{display:flex;align-items:center;gap:8px;padding:6px 8px;border-bottom:1px dashed var(--line,#ccc);font-size:13px}.dlLb .r.me{background:rgba(255,214,110,.25);border-radius:8px}
+.dlLb .n{width:26px;text-align:center;font-weight:800}.dlLb .x{flex:1;min-width:0}.dlLb .x small{display:block;opacity:.65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dlLb .s{font-weight:800;font-size:12px;white-space:nowrap}
+.dlGo{width:100%;padding:13px;font:inherit;font-size:17px;font-weight:800;border-radius:14px;border:3px solid #7a5410;background:linear-gradient(180deg,#ffe29a,#e8b54a 55%,#c98d22);color:#1d1405;box-shadow:0 4px 0 #7a5410;cursor:pointer;margin-top:6px}`;document.head.appendChild(st2);
+function lbHtml(j,c){if(!j)return`<p class="tag2">${typeof onlineOK!=='undefined'&&onlineOK?'กำลังโหลดอันดับ…':'ต่อออนไลน์เพื่อดูอันดับผู้เล่นทั้งแผ่นดิน'}</p>`;
+ if(!j.top.length)return'<p class="tag2">ยังไม่มีใครจบชะตาวันนี้ — คนแรกของวันอาจเป็นคุณ</p>';
+ const row=(x,i)=>`<div class="r ${x.me?'me':''}"><span class="n">${i<3?['🥇','🥈','🥉'][i]:i+1}</span><span class="x"><b>${esc(x.n||'?')}</b>${x.st>=3?` <span title="เล่นต่อเนื่อง">🔥${x.st}</span>`:''}<small>${esc(x.t||'')}</small></span></div>`;
+ return j.top.slice(0,10).map(row).join('')+(j.mine?`<div class="r me"><span class="n">${j.mine.rank}</span><span class="x"><b>${esc(j.mine.n||'คุณ')}</b><small>${esc(j.mine.t||'')}</small></span></div>`:'')+`<p class="tag2" style="text-align:right">ผู้เล่นวันนี้ ${j.n} คน</p>`}
+window.openDaily2=async function(){const k=DK(),c=cfgOf(k),R=rec()[k]||{},n=streak(),L=c.rules.map(id=>RULES.find(x=>x.id===id)).filter(Boolean);
+ const nx=MILE.find(m=>m[0]>n);
+ const draw=j=>{const yc=j&&j.ytop&&j.ytop[0];modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📅 ชะตาประจำวัน</h3>
+ <div class="dlH"><div class="tp"><span>${thD(k)} · ทุกคนได้ชะตาเดียวกัน</span><span>⏳ เหลือ ${cdTxt()}</span></div>
+ <div class="wm"><span>${WN[c.w][0]} ${WN[c.w][1]}</span><span>${MN[c.ch][0]} ${MN[c.ch][1]}</span></div>
+ ${L.map(x=>`<div class="ru">${x.ic} <b>${x.n}</b> — ${x.d}</div>`).join('')}
+ <div class="gl">🎯 ${GOALS[c.goal].n(c)}</div><div class="tag2" style="color:#d8ccff;text-align:center;margin-top:6px">⚡ เหตุการณ์สำคัญ 5 เรื่องจะมาถึงทุกคนในช่วงอายุเดียวกัน</div></div>
+ <div class="dlS"><div>🔥 ต่อเนื่อง<b>${n} วัน</b>${nx?`<small class="tag2">อีก ${nx[0]-n} วัน → ${nx[1]}</small>`:''}</div><div>🏆 ของคุณวันนี้<b>${R.rank?'#'+R.rank:R.sub?'ส่งแล้ว':'—'}</b><small class="tag2">${esc(R.tx||(R.sub?'':'ยังไม่ได้เล่น'))}</small></div></div>
+ ${yc?`<div class="item">👑 แชมป์เมื่อวาน: <b>${esc(yc.n)}</b> <span class="tag2">${esc(yc.t||'')}</span></div>`:''}
+ <h4 style="margin:10px 0 4px">🏆 อันดับวันนี้</h4><div class="dlLb">${lbHtml(j,c)}</div>
+ <button class="dlGo" onclick="dlStart()">${R.sub?'🧪 เล่นซ้อมอีกรอบ (ไม่นับอันดับ)':'▶ เริ่มชะตาวันนี้ (นับอันดับ)'}</button>
+ <p class="tag2" style="text-align:center;margin-top:6px">นับอันดับเฉพาะชีวิตแรกที่จบของวัน · รีเซ็ตเที่ยงคืนเวลาไทย · เล่นติดกัน 3/7/14/30 วันได้ฉายาประจำ</p>`,'daily2')};
+ draw(lbC);const j=await lbLoad(true);if($('modal').dataset.k==='daily2')draw(j)};
+goDaily=function(){openDaily2()};
+// ข้อความสั้นที่หน้าแรก
+setInterval(()=>{try{const b=$('dailyInfo');if(!b)return;const c=cfgOf(DK()),R=rec()[DK()]||{},n=streak();const t=`วันนี้: ${MN[c.ch][1]} · ${WN[c.w][1]}${R.rank?` · คุณอันดับ ${R.rank}`:R.sub?' · ส่งผลแล้ว':''}${n?` · 🔥${n}`:''}`;if(b.textContent!==t)b.textContent=t}catch(e){}},2000);
+})()}catch(e){console.error('block49',e)}
