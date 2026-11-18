@@ -37734,6 +37734,15 @@ try{const rec=(k,v)=>{const o=LS.get(k,{})||{};if(!o[v]){o[v]=1;LS.set(k,o)}};
   const g=GN.filter(x=>gs[x[0]]).length;h+=`<div class="item b22cx"><b>🎮 ประเภทเกม ${g}/${GN.length}</b><br>${GN.map(x=>gs[x[0]]?x[1]:'<span style="opacity:.5">???</span>').join(' · ')}</div>`;
   m.insertAdjacentHTML('beforeend',h)}catch(e){}return r}}catch(e){console.error('b22 wcx',e)}
 })()}catch(e){console.error('block22',e)}
+// 🔢 ปุ่ม "ตัวเลขพลัง" ในเมนูตั้งค่า (เมนูในเกม · เมนูหน้าแรก · เมนูคอม) + หน้าเลือก
+try{(function(){const N={idx:['⚡ ดัชนีพลัง','ตัวเลขสั้น อ่านง่าย · ทุก +1 แรงขึ้นราว 12% · พลังที่ได้แสดงเป็น %'],raw:['💥 พลังรวมจริง','ตัวเลขเต็มแบบสายพลังเวอร์ · พลังที่ได้แสดงเป็นตัวเลข'],both:['⚡+💥 ทั้งคู่','ดัชนีพร้อมตัวเลขจริงในวงเล็บ']};
+ const cur=()=>{try{return window.pMode?window.pMode():'idx'}catch(e){return'idx'}};
+ window.openPMode=function(){let tt=0;try{tt=S?total():0}catch(e){}const c=cur();modal('<button class="xbtn" onclick="closeM()">✕</button><h3>🔢 รูปแบบตัวเลขพลัง</h3><p class="tag2">เปลี่ยนแค่การแสดงผล การต่อสู้ อันดับ และเซฟไม่เปลี่ยน · ในเกมแตะ ⚡ บนแถบหัวเพื่อสลับเร็วๆ ได้</p>'+(tt?'<div class="item" style="text-align:center">ตอนนี้: ⚡'+pIdx(tt)+' = พลังรวมจริง <b>'+fmt(tt)+'</b></div>':'')+Object.keys(N).map(k=>'<button class="opt '+(c===k?'on':'')+'" style="width:100%;margin-top:6px" onclick="pModeSet(\''+k+'\');openPMode()">'+N[k][0]+' '+(c===k?'✅':'')+'<small>'+N[k][1]+'</small></button>').join(''),'pmode')};
+ const lab=()=>N[cur()][0];
+ const inject=()=>{try{const m=$('modal');if(!m||m.querySelector('.pmBtn'))return;const snd=m.querySelector('button[onclick^="openSound"]');if(!snd)return;const b=document.createElement('button');b.className=snd.className+' pmBtn';b.setAttribute('onclick','openPMode()');
+  b.innerHTML=/\bcb\b/.test(snd.className)?'<i>🔢</i>ตัวเลขพลัง':'🔢 ตัวเลขพลัง<small>'+lab()+'</small>';snd.insertAdjacentElement('afterend',b)}catch(e){}};
+ ['openMenu','openTitleMenu'].forEach(n=>{let o;try{o=eval(n)}catch(e){}if(typeof o!=='function')return;const w=function(){const r=o.apply(this,arguments);try{inject()}catch(e){}return r};try{eval(n+'=w')}catch(e){}window[n]=w});
+ try{const g=DK_GROUPS.find(x=>/ตั้งค่า/.test(x[0]));if(g&&!g[1].some(x=>x[2]==='openPMode'))g[1].splice(2,0,['🔢','ตัวเลขพลัง','openPMode',()=>lab()])}catch(e){}})()}catch(e){console.error('mod-pmbtn',e)}
 </script>
 </body>
 </html>
