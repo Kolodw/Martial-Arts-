@@ -2063,7 +2063,7 @@ function familyTick(){
   else if(!fired&&sp.aff>85&&Math.random()<.12){joy(10);log(`${sp.n}${sp.p==='อ่อนโยน'?'ชงชาอุ่นๆ รอคุณกลับบ้านทุกคืน':sp.p==='ร่าเริง'?'พาคุณไปเที่ยวงานโคมไฟจนดึก':'นั่งดูดาวกับคุณบนหลังคาบ้าน'} — ความรักของทั้งสองยังหวานเหมือนวันแรก`,'good')}}
  // children
  for(const c of S.children||[]){if(!c.alive)continue;c.age++;
-  const risk=c.age<=5?(F.inf||.05)*.7*(INF_DECAY[c.age-1]||.05)*(S.done.includes('med')||(S.faction&&S.faction.med)?.4:1):c.age>60?.02:.004;
+  const risk=c.age<=5?(F.inf||.05)*.45*(INF_DECAY[c.age-1]||.05)*(S.done.includes('med')||(S.faction&&S.faction.med)?.4:1):c.age>60?.02:c.age>50?.004:.0015;
   if(Math.random()<risk){c.alive=false;joy(-35);log(`💔 ลูก <b>${c.n}</b> จากไปด้วยวัยเพียง ${c.age} ปี`,'bad',true);continue}
   if(!c.fac&&c.age>=10&&c.age<=17&&Math.random()<.18){const ok=FACTIONS.filter(f=>f.need(S.karma,{family:F,gender:c.g,talent:c.tal,int:50}));if(ok.length){c.fac=ch(ok);joy(5);log(`ลูก ${c.n} สอบเข้า<b>${c.fac.n}</b>ได้!`,'good')}}
   if(!c.married&&c.age>=18&&Math.random()<.12){c.married=true;joy(8);log(`ลูก ${c.n} แต่งงาน คุณนั่งเป็นประธานในงานด้วยน้ำตาคลอ`,'good')}
