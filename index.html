@@ -14080,13 +14080,13 @@ function chLuck(){if(!S)return;if(S.chSysOK==null){S.chSysOK=chH()?(Math.random(
     {t:'🍃 ใช้เวลาที่เหลืออย่างสงบ',f(){joy(15)}}])}}
  // รากขยะ: โชคของขยะ · ความแค้น · ฝ่าขีดจำกัด
  if(chJ()){if(ri>ri0){const p=pctPow(.02);S.power+=p;S.flags.chJb=(S.flags.chJb||0)+1;log(`🗑️ <b>ฝ่าขีดจำกัดของรากขยะ!</b> คนที่บอกว่าคุณทำไม่ได้ต้องหุบปาก — พลัง +${fmt(p)}`,'epic',true)}
-  if((S.grudge||0)>=5){S.grudge=0;const p=pctPow(.05);S.power+=p;S.qi=+(S.qi+2).toFixed(1);S.flags.chJg=(S.flags.chJg||0)+1;log(`😤 <b>แรงฮึดจากความแค้น!</b> ทุกคำดูถูกกลายเป็นเชื้อเพลิง — พลัง +${fmt(p)} · ลมปราณ +2 ปี`,'myth',true)}
+  if((S.jgrd||0)>=5){S.jgrd=0;const p=pctPow(.05);S.power+=p;S.qi=+(S.qi+2).toFixed(1);S.flags.chJg=(S.flags.chJg||0)+1;log(`😤 <b>แรงฮึดจากความแค้น!</b> ทุกคำดูถูกกลายเป็นเชื้อเพลิง — พลัง +${fmt(p)} · ลมปราณ +2 ปี`,'myth',true)}
   if(S.age>=8&&Math.random()<.035){const k=R(0,3);if(k===0){const a=newArt(Math.random()<.3?3:2);S.arts.push(a);log(`🕳️ <b>โชคของขยะ</b> — ตกหน้าผาแต่ไม่ตาย กลับพบถ้ำของยอดฝีมือในอดีต ได้${artHtml(a)}`,'myth',true)}
    else if(k===1){S.qi=+(S.qi+4).toFixed(1);S.int+=5;log('🧓 <b>โชคของขยะ</b> — ชายชราขี้เมาที่คุณเลี้ยงข้าวคือยอดฝีมือเร้นกาย สอนลมปราณให้คืนหนึ่ง (ลมปราณ +4 · ปัญญา +5)','myth',true)}
    else if(k===2){S.chJm0=S.chJm0||(S.talent.m||.5);S.talent=Object.assign({},S.talent,{m:+Math.min(S.chJm0+.3,(S.talent.m||.5)+.06).toFixed(2)});log(`💊 <b>โชคของขยะ</b> — กลืนผลไม้ประหลาดที่ไม่มีใครกล้ากิน รากของคุณดีขึ้นเล็กน้อย (พรสวรรค์ ×${S.talent.m})`,'myth',true)}
-   else{S.grudge=(S.grudge||0)+2;log('🗣️ ศิษย์สำนักใหญ่หัวเราะเยาะกลางตลาด "รากขยะอย่างเจ้าฝึกไปก็เท่านั้น" — ความแค้น +2','bad')}}}
+   else{S.jgrd=(S.jgrd||0)+2;log('🗣️ ศิษย์สำนักใหญ่หัวเราะเยาะกลางตลาด "รากขยะอย่างเจ้าฝึกไปก็เท่านั้น" — ความแค้น +2','bad')}}}
 }catch(e){console.error(e)}return r}}
-{const _fgC=fight;fight=function(name,ep){const w=_fgC.apply(this,arguments);try{if(!w&&chJ())S.grudge=(S.grudge||0)+1}catch(e){}return w}}
+{const _fgC=fight;fight=function(name,ep){const w=_fgC.apply(this,arguments);try{if(!w&&chJ())S.jgrd=(S.jgrd||0)+1}catch(e){}return w}}
 // ---- ปลดปล่อยพลัง: ชีวิตสั้นได้ปีละ 2 ครั้ง · รากขยะมีคนดูถูกก่อนปล่อย ----
 {const _rcC=relCan;relCan=function(){if(S&&S.alive&&chS()){if(S.relY===S.age&&(S.relC||1)<2)return'';if(S.age<6)return'ยังเด็กเกินไป';if(S.relY!==S.age)return(relB()&&(S.beastMode.st|0)<1)?'ยังเป็นสัตว์ตัวน้อย พลังยังไม่พอ':''}return _rcC.apply(this,arguments)}}
 {const _rfC=relFire;relFire=function(){if(S&&chS())S.relC=S.relY===S.age?(S.relC||1)+1:1;return _rfC.apply(this,arguments)}}
@@ -21778,7 +21778,7 @@ const wxW=()=>S.xt?'g':S.xian?'x':'w';
 const wxGen=()=>S.gender==='หญิง'?'ชาย':'หญิง';
 const wxSur=()=>ch(['ซ่ง','หลิว','มู่','เยี่ยน','ไป๋','ฉิน','หลัว','ซู','หาน','เว่ย','ตงฟาง','ซือหม่า']);
 // ---------- 2) บัญชีแค้น ----------
-function grudges(){return S.grudge=S.grudge||[]}
+function grudges(){if(S.grudge!=null&&!Array.isArray(S.grudge)){S.jgrd=(S.jgrd||0)+(+S.grudge||0);S.grudge=[]}return S.grudge=S.grudge||[]}
 function grudgeAdd(n,why,pw,src){try{if(!wxOk()||!n)return;const L=grudges();const o=L.find(x=>x.n===n&&!x.done);if(o){o.why=why;o.pw=Math.max(o.pw,pw);return}if(L.filter(x=>!x.done).length>=12)return;
  L.push({n:String(n).slice(0,30),why:String(why).slice(0,80),pw:Math.max(10,Math.round(pw)),y:S.age,src:src||'',done:0});log(`📕 จดชื่อ <b>${esc(n)}</b> ลงบัญชีแค้น — ${esc(why)}`,'')}catch(e){}}
 {const _fgW=fight;fight=function(name,ep){const sp=wsp();if(sp&&wxOk())ep=ep/(1+.035*sp.lv);if(S&&S.body&&S.body.lv)ep=ep/(1+.02*S.body.lv);const w=_fgW.call(this,name,ep);
