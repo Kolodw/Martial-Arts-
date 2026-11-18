@@ -3976,7 +3976,7 @@ async function openOnline(tab){tab=tab||'chat';clearInterval(chatT);const tabs=[
  const head=`<button class="xbtn" onclick="clearInterval(chatT);closeM()">✕</button><h3>🌐 ออนไลน์</h3><p class="tag2">${onlineOK?`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิต`:Date.now()<_quotaUntil?'🛠️ ระบบออนไลน์ปิดชั่วคราว':'🔴 ยังเชื่อมต่อเซิร์ฟเวอร์ไม่ได้'}${ONL_HOST(location.hostname)?'':' · ระบบออนไลน์ใช้ได้บนเว็บ 1inanovel.com'}</p><div class="tabs">${tabs}</div>`;
  if(!onlineOK){modal(head+`<p class="tag2">${Date.now()<_quotaUntil?'แชทโลก ทำเนียบ และดูคนอื่นเล่น ปิดชั่วคราว ข้อมูลทั้งหมดยังอยู่ครบ จะกลับมาเร็วๆ นี้ — ระหว่างนี้เล่นเกมได้ตามปกติ เซฟในเครื่องปลอดภัย':'ระบบออนไลน์ต้องเปิดฐานข้อมูลก่อน หรือเครือข่ายตอนนี้ใช้ไม่ได้'}</p><button class="gbtn" style="width:100%" onclick="onlinePing().then(()=>openOnline('${tab}'))">ลองใหม่</button>`,'online');return}
  if(tab==='chat'){modal(head+`<div id="chatBox" class="chatbox"><div class="tag2">กำลังโหลด…</div></div><div class="chatin"><input id="chatIn" maxlength="200" placeholder="พิมพ์ข้อความ… (ลิงก์และคำหยาบถูกปิด)" onkeydown="if(event.key==='Enter')chatSend()"><button class="pbtn" onclick="chatSend()">ส่ง</button></div>${S?'<button class="gbtn" style="width:100%;margin-top:6px" onclick="shareLife()">📤 แชร์ชีวิตตอนนี้เข้าแชท</button>':''}<p class="tag2">⚑ รายงานข้อความที่ผิดกฎ · รายงานครบ 5 คนข้อความจะถูกซ่อน</p>`,'online');chatPoll();chatT=setInterval(()=>{if($('modal').dataset.k!=='online'||!$('chatBox'))return clearInterval(chatT);if(!document.hidden)chatPoll()},10000)}
- else if(tab==='board'){modal(head+'<div class="tag2">กำลังโหลด…</div>','online');try{const bp=openOnline._bp||'d',BPN={d:['วันนี้','เมื่อวาน','วัน'],w:['สัปดาห์นี้','สัปดาห์ก่อน','สัปดาห์'],m:['เดือนนี้','เดือนก่อน','เดือน']}[bp];const j=await api('board',{p:bp,cm:(typeof chmSel==='function'?chmSel():'h')});const row=(e,i)=>`<div class="item brd ${e.lid?'click':''}" ${e.lid?`onclick="openLifeView('${e.lid}')"`:''}><div class="h"><b>${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${e.pu?`<span class="pfav" data-pu="${e.pu}"></span>`:''}${esc(e.n)}${e.more?`<span class="lvKc" title="คนนี้มีชีวิตอื่นในกระดานนี้อีก ${e.more} ชีวิต (แสดงเฉพาะชีวิตที่ดีที่สุด)">+${e.more} ชีวิต</span>`:''}${e.kn?`<span class="lvKc">🙏${fmt(e.kn)}</span>`:''}${e.tt?tchipH(e.tt,e.tr):''}${e.ch&&typeof chBadge==='function'?chBadge(e.ch):''}${e.sp?'<span class="chbg" style="--c:#ff9a30" title="คะแนนโหมดชีวิตสั้นคิดจากความเร็ว">⚡ ความเร็ว</span>':''}${e.al?`<span class="chbg" style="--c:#7a3aff" title="โหมดอเวจี 1000 ชั้น">🕳️ อเวจี ชั้น ${e.al}</span>`:''}${e.hd===3?`<span class="chbg" style="--c:#b070ff" title="ทำเนียบจิตวิญญาณยุทธ์เรียงตามระดับพลังวิญญาณ ระดับเท่ากันค่อยเทียบคะแนน">⭕ ระดับ ${e.sl||0}</span>`:''}${e.hd&&e.hd!==3&&!e.al?`<span class="chbg" style="--c:#ff4a2a" title="ทำเนียบนรกเรียงตามชั้นที่ลงได้ลึกสุดก่อน ชั้นเท่ากันค่อยเทียบคะแนน">🔥 ชั้น ${e.hl||0}</span>`:''}${e.kl?`<span class="klb">♾️ กัลป์ ${e.kl+1}</span>`:''}${e.one?'<span class="klb oneb">🌟 หนึ่งเดียว</span>':''}</b><span class="px">${e.jk?`⛰️ ถึงตอนอายุ ${(1e6-(e.s%1e6))%1e6}`:e.hd===2||e.hd===3?fmt(e.hs!=null?e.hs:e.s%1e6):fmt(e.s)}</span></div><p class="tag2">${esc(e.r)} · ${esc(e.f)} · อายุ ${e.age}${e.x?' · ☁️ เซียน':''}${e.ga?` · ขึ้นโลกเทพตอนอายุ ${e.ga}`:e.x&&e.xa?` · เหาะสู่โลกเซียนตอนอายุ ${e.xa}`:''}${e.cu?' · ✍️':''}<br>${esc(e.c||'')}${e.lid?`<br>${e.pub?'👁 แตะเพื่อดูชีวิตนี้':'🔒 ส่วนตัว'}`:''}</p>${e.lid&&admK()?`<button class="sysb" style="margin-top:6px;border-color:#c55;color:#ff9b9b" onclick="event.stopPropagation();bdDelAsk('${e.lid}',this)" data-n="${esc(e.n)}" data-s="${e.s}">🗑 ลบออกจากทำเนียบ (แอดมิน)</button>`:''}</div>`;
+ else if(tab==='board'){modal(head+'<div class="tag2">กำลังโหลด…</div>','online');try{const bp=openOnline._bp||'d',BPN={d:['วันนี้','เมื่อวาน','วัน'],w:['สัปดาห์นี้','สัปดาห์ก่อน','สัปดาห์'],m:['เดือนนี้','เดือนก่อน','เดือน']}[bp];const j=await api('board',{p:bp,cm:(typeof chmSel==='function'?chmSel():'h')});const row=(e,i)=>`<div class="item brd ${e.lid?'click':''}" ${e.lid?`onclick="openLifeView('${e.lid}')"`:''}><div class="h"><b>${['🥇','🥈','🥉'][i]||'#'+(i+1)} ${e.pu?`<span class="pfav" data-pu="${e.pu}"></span>`:''}${esc(e.n)}${e.more?`<span class="lvKc" title="คนนี้มีชีวิตอื่นในกระดานนี้อีก ${e.more} ชีวิต (แสดงเฉพาะชีวิตที่ดีที่สุด)">+${e.more} ชีวิต</span>`:''}${e.kn?`<span class="lvKc">🙏${fmt(e.kn)}</span>`:''}${e.tt?tchipH(e.tt,e.tr):''}${e.ch&&typeof chBadge==='function'?chBadge(e.ch):''}${e.sp?'<span class="chbg" style="--c:#ff9a30" title="คะแนนโหมดชีวิตสั้นคิดจากความเร็ว">⚡ ความเร็ว</span>':''}${e.al?`<span class="chbg" style="--c:#7a3aff" title="โหมดอเวจี 1000 ชั้น">🕳️ อเวจี ชั้น ${e.al}</span>`:''}${e.hd===3?`<span class="chbg" style="--c:#b070ff" title="ทำเนียบจิตวิญญาณยุทธ์เรียงตามระดับพลังวิญญาณ ระดับเท่ากันค่อยเทียบคะแนน">⭕ ระดับ ${e.sl||0}</span>${e.sr>=5?`<span class="chbg" style="--c:${['','','','','','#e0b020','#3ab0e0','#c0c0d0','#e050c0'][e.sr]}" title="วงแหวนสูงสุด">${['','','','','','🌟 ล้านปี','💠 สิบล้านปี','✴️ ร้อยล้านปี','🌈 พันล้านปี'][e.sr]}</span>`:''}`:''}${e.hd&&e.hd!==3&&!e.al?`<span class="chbg" style="--c:#ff4a2a" title="ทำเนียบนรกเรียงตามชั้นที่ลงได้ลึกสุดก่อน ชั้นเท่ากันค่อยเทียบคะแนน">🔥 ชั้น ${e.hl||0}</span>`:''}${e.kl?`<span class="klb">♾️ กัลป์ ${e.kl+1}</span>`:''}${e.one?'<span class="klb oneb">🌟 หนึ่งเดียว</span>':''}</b><span class="px">${e.jk?`⛰️ ถึงตอนอายุ ${(1e6-(e.s%1e6))%1e6}`:e.hd===2||e.hd===3?fmt(e.hs!=null?e.hs:e.s%1e6):fmt(e.s)}</span></div><p class="tag2">${esc(e.r)} · ${esc(e.f)} · อายุ ${e.age}${e.x?' · ☁️ เซียน':''}${e.ga?` · ขึ้นโลกเทพตอนอายุ ${e.ga}`:e.x&&e.xa?` · เหาะสู่โลกเซียนตอนอายุ ${e.xa}`:''}${e.cu?' · ✍️':''}<br>${esc(e.c||'')}${e.lid?`<br>${e.pub?'👁 แตะเพื่อดูชีวิตนี้':'🔒 ส่วนตัว'}`:''}</p>${e.lid&&admK()?`<button class="sysb" style="margin-top:6px;border-color:#c55;color:#ff9b9b" onclick="event.stopPropagation();bdDelAsk('${e.lid}',this)" data-n="${esc(e.n)}" data-s="${e.s}">🗑 ลบออกจากทำเนียบ (แอดมิน)</button>`:''}</div>`;
    const bw=openOnline._bw!=null?openOnline._bw:(S?(S.ch&&S.ch!=='normal'?4:S.beastMode?2:S.xt?3:S.xian?1:0):(CFG.xian?1:0));const wf=e=>bw===2?!!e.bm:bw===3?(!e.bm&&!!e.g):(!e.bm&&!e.g&&(e.x?1:0)===bw);const T=bw===4?(j.ctop||[]).slice(0,20):(j.top||[]).filter(wf).slice(0,20),Pv=bw===4?(j.cprev||[]).slice(0,3):(j.prev||[]).filter(wf).slice(0,3);
    modal(head+`<div class="tabs">${[['d','📅 รายวัน'],['w','🗓️ รายสัปดาห์'],['m','🌙 รายเดือน']].map(([k,t])=>`<button class="tabb ${bp===k?'on':''}" onclick="openOnline._bp='${k}';openOnline('board')">${t}</button>`).join('')}</div><div class="tabs"><button class="tabb ${bw===0?'on':''}" onclick="openOnline._bw=0;openOnline('board')">⚔️ ยุทธภพ</button><button class="tabb ${bw===1?'on':''}" onclick="openOnline._bw=1;openOnline('board')">☁️ โลกเทพเซียน</button><button class="tabb ${bw===3?'on':''}" onclick="openOnline._bw=3;openOnline('board')">🌟 โลกเทพ</button><button class="tabb ${bw===2?'on':''}" onclick="openOnline._bw=2;openOnline('board')">🐾 สัตว์อสูร</button><button class="tabb chtab ${bw===4?'on':''}" onclick="openOnline._bw=4;openOnline('board')">🔥 ท้าทาย</button></div>${bw===4?chBoardHead(bp):''}<p class="tag2"${bw===4?' style="display:none"':''}>🏆 <b>ทำเนียบ${BPN[2]}นี้</b> แยกตามโลก — ${bp==='d'?'รีเซ็ตทุกเที่ยงคืน':bp==='w'?'รีเซ็ตทุกวันจันทร์':'รีเซ็ตทุกวันที่ 1'} · คะแนนคิดจาก<b>ค่าเฉลี่ยทุกด้าน</b> (พลัง ชื่อเสียง เงิน ปัญญา เสน่ห์ ลูกหลาน อายุ การต่อสู้ ความสำเร็จ กรรม ความสุข) · อันดับ 1–3 ของแต่ละโลกได้${bp==='d'?' 🥇🥈🥉 กรอบรางวัล':bp==='w'?' 👑💎🔶 กรอบรางวัลรายสัปดาห์':' 🌟🌙☀️ กรอบรางวัลรายเดือน (สวยที่สุด)'} + คลังกรรม ${fmt([0,30000,120000,400000][bp==='d'?1:bp==='w'?2:3])} (อันดับ 1)</p>${T.map(row).join('')||(bw===4?'<p class="tag2">ยังไม่มีใครรอดจากโหมดท้าทาย'+BPN[0]+' — เป็นคนแรกสิ 🔥</p>':'<p class="tag2">ยังไม่มีใครขึ้นทำเนียบ'+BPN[0]+'</p>')}${Pv.length?`<h4 style="margin:10px 0 4px">👑 สามอันดับแรก${BPN[1]}</h4>`+Pv.map(row).join(''):''}`,'online')}catch(e){modal(head+'<p class="tag2">โหลดไม่ได้</p>','online')}}
  else if(tab==='arena')modal(head+`<p>ส่งเงาของตัวละครไปประลองกับเงาของผู้เล่นคนอื่นในขั้นพลังใกล้เคียงกัน · ชนะได้ชื่อเสียง +10 · ปีละ 3 ครั้ง</p>${S?`<p class="tag2">พลังของคุณ ${fmt(Math.round(myPow()))} · ${REALMS[realmIdx()].n} · ปีนี้ประลองแล้ว ${S.arY===S.age?S.arN||0:0}/3</p><button class="pbtn" style="width:100%" onclick="arenaGo()">⚔️ หาคู่ประลอง</button>`:'<p class="tag2">ต้องอยู่ระหว่างเล่นชีวิตหนึ่งก่อน</p>'}`,'online');
@@ -4232,7 +4232,7 @@ function lifeDetail(score){const ri=realmIdx(),lifeAch=(S.achLife||[]).map(id=>A
   look:{robe:o.robe,trim:o.trim,belt:o.belt,hat:o.hat,skin:o.skin,hair:o.hair,hs:o.hs,g:o.g,age:o.age,mood:'neutral',aura:o.aura,sword:o.sword,staff:o.staff,seed:o.seed}}}
 function lifePubDef(){return LS.get('murim_lifepub',1)}
 async function sendLife(score){if(S&&S.custom){customNote();return}if(!onlineOK||!S||S._sent)return;S._sent=1;S._lid=pid.slice(0,6)+Date.now().toString(36);
- const P0={n:pname(),s:score,age:S.age,r:(typeof realmLabel==='function'?realmLabel().base:REALMS[realmIdx()].n),f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,g:S.xt?1:0,ga:S.gAge||0,tt:(showTtl()||{}).t||'',tr:(showTtl()||{}).r||0,xa:S.xAsc||0,cu:S.custom?1:0,bm:S.beastMode?1:0,ver:VERSION,tp:acTp(),lid:S._lid,pub:lifePubDef(),ch:S.ch&&S.ch!=='normal'?S.ch:'',hl:S.ch==='hell'&&S.hell&&!S.hell.ab?S.hell.lv:0,sl:S.ch==='soul'&&S.sv?(S.sv.lv|0):0,hcs:S.ch==='hell'&&S.hell&&!S.hell.ab?(S.hell.cs|0):0,ab:S.ch==='hell'&&S.hell&&S.hell.ab?1:0,al:S.ch==='hell'&&S.hell&&S.hell.ab?S.hell.lv:0,acs:S.ch==='hell'&&S.hell&&S.hell.ab?(S.hell.cs|0):0,kl:S.kalpa?S.kalpa.n:0,one:S.flags&&S.flags.one?1:0,det:xT(JSON.stringify(lifeDetail(score)))};try{const r=await api('life',P0);if(!r||!r.ok)throw new Error('life');if(!r.skip){lifePrivBox();lifeRankNote(r)}else lifeSkipBox(r)}catch(e){try{lifeQAdd(P0)}catch(e2){}}}
+ const P0={n:pname(),s:score,age:S.age,r:(typeof realmLabel==='function'?realmLabel().base:REALMS[realmIdx()].n),f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,g:S.xt?1:0,ga:S.gAge||0,tt:(showTtl()||{}).t||'',tr:(showTtl()||{}).r||0,xa:S.xAsc||0,cu:S.custom?1:0,bm:S.beastMode?1:0,ver:VERSION,tp:acTp(),lid:S._lid,pub:lifePubDef(),ch:S.ch&&S.ch!=='normal'?S.ch:'',hl:S.ch==='hell'&&S.hell&&!S.hell.ab?S.hell.lv:0,sl:S.ch==='soul'&&S.sv?(S.sv.lv|0):0,sr:S.ch==='soul'&&S.sv&&S.sv.rings&&S.sv.rings.length?Math.max(...S.sv.rings.map(r=>r.t|0)):-1,hcs:S.ch==='hell'&&S.hell&&!S.hell.ab?(S.hell.cs|0):0,ab:S.ch==='hell'&&S.hell&&S.hell.ab?1:0,al:S.ch==='hell'&&S.hell&&S.hell.ab?S.hell.lv:0,acs:S.ch==='hell'&&S.hell&&S.hell.ab?(S.hell.cs|0):0,kl:S.kalpa?S.kalpa.n:0,one:S.flags&&S.flags.one?1:0,det:xT(JSON.stringify(lifeDetail(score)))};try{const r=await api('life',P0);if(!r||!r.ok)throw new Error('life');if(!r.skip){lifePrivBox();lifeRankNote(r)}else lifeSkipBox(r)}catch(e){try{lifeQAdd(P0)}catch(e2){}}}
 function customNote(){const end=$('end');if(!end||$('lifePriv'))return;const b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b);b.innerHTML='<b>✍️ ชีวิตที่สร้างเอง — ไม่ติดอันดับทำเนียบ</b><p class="tag2">ชีวิตที่เลือกชาติกำเนิด กระดูก และพรสวรรค์เองจะไม่ถูกส่งขึ้นทำเนียบออนไลน์ เพื่อความยุติธรรมกับคนที่ให้ฟ้าลิขิต · เลือก 🎲 สุ่ม หรือ 🎨 ออกแบบหน้าตา เพื่อลุ้นขึ้นทำเนียบ</p>'}
 function lifePrivBox(){const end=$('end');if(!end||!S||!S._lid)return;let b=$('lifePriv');if(!b){b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b)}
  const pub=lifePubDef();b.innerHTML=`<b>🏆 ชีวิตนี้ขึ้นทำเนียบออนไลน์แล้ว</b><p class="tag2">${pub?'คนอื่นกดดูรายละเอียดชีวิตนี้ได้ (ไทม์ไลน์ ค่าพลัง ของ วิชา ครอบครัว)':'คนอื่นเห็นแค่ชื่อกับคะแนน กดดูรายละเอียดไม่ได้'}</p>
@@ -24775,7 +24775,7 @@ const CHM_T={h:{d:['','ผู้ฝ่าขุมนรก','ผู้ลุย
  s:{d:['','ดาวตกสามสิบปี','ผู้เผาเทียนสองปลาย','ชีวิตเดียวพันตำนาน'],w:['','จ้าวแห่งเวลาอันสั้น','ตำนานชั่วพริบตา','ผู้ใช้สามสิบปีให้คุ้ม'],m:['','จักรพรรดิแห่งพริบตา','ดาวหางผ่าฟ้า','ผู้ชนะเวลา']},
  j:{d:['','ผู้ท้าลิขิต','ขยะผู้ไม่ยอมแพ้','ธุลีที่ลุกขึ้น'],w:['','ราชันย์ไร้พรสวรรค์','ผู้ทวนชะตา','กระดูกขยะทะลวงฟ้า'],m:['','จักรพรรดิผู้ลบลิขิต','ตำนานจากธุลี','ผู้ทำลายคำพยากรณ์']},
  l:{d:['','ผู้ปลุกดวงจิตแห่งวัน','วงแหวนพันปีดวงแรก','ประกายจิตยุทธ์'],w:['','ราชันจิตวิญญาณ','จ้าวแห่งวงแหวนเก้าดวง','ผู้สืบทอดจิตเทพ'],m:['','จักรพรรดิจิตยุทธ์เหนือทวีป','เทพผู้ครองดวงจิต','ตำนานแห่งวงแหวนหมื่นปี']}};
-const CHM_N={h:['🔥','นรก','#ff4a2a','เรียงตามชั้นที่ลงได้ลึกสุดก่อน — ชั้นเท่ากันค่อยเทียบคะแนนเฉลี่ยทุกด้าน'],s:['⏳','ชีวิตสั้น','#3ab0ff','คะแนนเฉลี่ยทุกด้าน แบบเดียวกับโหมดปกติ'],j:['🗑️','รากขยะ','#9a7a4a','คะแนนเฉลี่ยทุกด้าน แบบเดียวกับโหมดปกติ'],l:['⭕','ทวีปจิตวิญญาณยุทธ์','#b070ff','ระดับพลังวิญญาณสูงสุดที่ฝึกได้ก่อน — ระดับเท่ากันค่อยเทียบคะแนนเฉลี่ยทุกด้าน']};
+const CHM_N={h:['🔥','นรก','#ff4a2a','เรียงตามชั้นที่ลงได้ลึกสุดก่อน — ชั้นเท่ากันค่อยเทียบคะแนนเฉลี่ยทุกด้าน'],s:['⏳','ชีวิตสั้น','#3ab0ff','คะแนนเฉลี่ยทุกด้าน แบบเดียวกับโหมดปกติ'],j:['🗑️','รากขยะ','#9a7a4a','คะแนนเฉลี่ยทุกด้าน แบบเดียวกับโหมดปกติ'],l:['⭕','ทวีปจิตวิญญาณยุทธ์','#b070ff','ระดับพลังวิญญาณก่อน — ระดับเท่ากันดูวงแหวนที่อายุสูงสุด แล้วค่อยเทียบคะแนนเฉลี่ยทุกด้าน']};
 try{for(const m of ['h','s','j','l'])for(const p of ['d','w','m']){RKC[p+m]=CHM_T[m][p];RKC_TR[p+m]=RKC_TR[p+'c']||RKC_TR[p];RKC_PN[p+m]=CHM_N[m][1]+(p==='d'?'รายวัน':p==='w'?'รายสัปดาห์':'รายเดือน')}}catch(e){}
 try{Object.assign(BD_CN,{ch:'🔥 ทำเนียบนรก',cs:'⏳ ทำเนียบชีวิตสั้น',cj:'🗑️ ทำเนียบรากขยะ',cl:'⭕ ทำเนียบจิตวิญญาณยุทธ์'})}catch(e){}
 FRAMES.push({id:'f_cl1',n:'กรอบวงแหวนหมื่นปีเหนือทวีป',side:'r',c:0,ty:'rainbow spin halo orbit ring2 aura2 sparkle star petal corner badge rk1',c1:'#ffd84a',c2:'#fff6c0',c3:'#7a2aff',pc:'#ffe9a0',bd:'⭕',d:'อันดับ 1 ทำเนียบทวีปจิตวิญญาณยุทธ์ — วงแหวนเก้าสีหมุนรอบตัว'},
@@ -40068,7 +40068,7 @@ const SP=[
  ['moon','🌙','จันทราสีเลือด','agi','คืนเดือนเพ็ญ คุณเร็วจนเงาตามไม่ทัน',3,null]];
 const RAR=[['ธรรมดา','#bbb'],['หายาก','#4aa3ff'],['ล้ำค่า','#b47bff'],['ตำนาน','#ffcf3a']];
 // ---------- วงแหวน ----------
-const TIER=[['สิบปี','⚪','#e8e8e8'],['ร้อยปี','🟡','#f2c94c'],['พันปี','🟣','#a66bff'],['หมื่นปี','⚫','#3a3a3a'],['แสนปี','🔴','#e03a3a']];
+const TIER=[['สิบปี','⚪','#e8e8e8'],['ร้อยปี','🟡','#f2c94c'],['พันปี','🟣','#a66bff'],['หมื่นปี','⚫','#3a3a3a'],['แสนปี','🔴','#e03a3a'],['ล้านปี','🌟','#ffd84a'],['สิบล้านปี','💠','#6ad8ff'],['ร้อยล้านปี','✴️','#ffffff'],['พันล้านปี','🌈','#ff7ae0']];
 const BEAST=[
  [['กระต่ายเขาเดียว','เขาพุ่งทะลวง'],['หนูหิน','ฟันบดศิลา'],['งูหญ้า','เลื้อยไร้เงา'],['นกกระจอกไฟ','ขนไฟพราว'],['กบตาแดง','ลิ้นพิษ'],['ลิงขโมย','มือไวไร้ร่องรอย']],
  [['หมาป่าหลังเงิน','เขี้ยวจันทร์'],['หมูป่าเขาเหล็ก','ชนทลายกำแพง'],['เหยี่ยวพายุ','กรงเล็บลม'],['ตะขาบพิษร้อยปี','ร้อยขาพันพิษ'],['ลิงดำภูเขา','หมัดภูผา'],['จระเข้บึง','ขากรรไกรมรณะ']],
@@ -40118,7 +40118,7 @@ function absorb(t,b){const G=V(),i=G.rings.length,over=t-SAFE[i],best=Math.max(.
  if(Math.random()<pBad){if(over>=2&&Math.random()<.45&&!(window._svDodge&&window._svDodge(G))){S.deathCause=`หลอมวงแหวน${TIER[t][0]}ของ${b[0]}เกินขีดร่างกาย — ดวงจิตแตกสลาย`;log(`💥 พลังของวงแหวน${TIER[t][0]}ทะลักเกินกว่าร่างกายจะรับไหว…`,'bad',true);setTimeout(()=>{try{checkDeath()}catch(e){}},200);return}
   S.maxHp=Math.max(30,Math.round(S.maxHp*.85));S.hp=Math.max(1,Math.round(S.hp*.4));G.lv=Math.max(1,G.lv-3);log(`💥 วงแหวนแตกกลางทางหลอม — คุณรอดมาได้ แต่เส้นจิตฉีกขาด (พลังชีวิตสูงสุด −15% · ระดับจิต −3)`,'bad',true);return}
  const ring={t,b:b[0],sk:b[1]};G.rings.push(ring);G.lv=Math.min(100,G.lv+1+(over>0?2:0));
- const pw=[.03,.06,.1,.16,.25][t]*(over>0?1.5:1);S.power+=pctPow(pw);S.fame+=[2,6,15,40,100][t];if(t>=2)S.maxHp+=[0,0,15,30,60][t];
+ const pw=[.03,.06,.1,.16,.25,.4,.6,.85,1.2][t]*(over>0?1.5:1);S.power+=pctPow(pw);S.fame+=[2,6,15,40,100,300,800,2000,5000][t];if(t>=2)S.maxHp+=[0,0,15,30,60,120,200,320,500][t];
  try{const B=LS.get('murim_svring',{})||{};B[b[0]]=Math.max(B[b[0]]||0,t+1);LS.set('murim_svring',B)}catch(e){}
  const sp=spNow(G.sp[0]);
  log(`${TIER[t][1]} <b>หลอมวงแหวนวงที่ ${G.rings.length} สำเร็จ</b> — ${TIER[t][0]}ของ${b[0]} · ได้ท่า <b>「${sp.n}·${b[1]}」</b>${over>0?' · <b>หลอมเกินขีดสำเร็จ!</b>':''}`,over>0||t>=3?'myth':'epic',true)}
@@ -40184,9 +40184,9 @@ const nmP=()=>anyName(Math.random()<.5?'ชาย':'หญิง');
 const TY={atk:'⚔️ สายโจมตี',def:'🛡️ สายป้องกัน',sup:'🌿 สายสนับสนุน',ctrl:'🌀 สายควบคุม',agi:'💨 สายว่องไว'};
 
 // =================== 1) สายมีผลจริง + ท่าวงแหวน ===================
-const RF=[.01,.015,.025,.035,.05];
+const RF=[.01,.015,.025,.035,.05,.08,.11,.15,.2];
 const ringOne=t=>RF[t]*(tp('atk')?2:1)*(S.sv.fused?1.2:1);
-function ringF(){const g=S&&S.sv;if(!g||g.aw!==1||g.retired)return 0;let v=g.rings.reduce((a,r)=>a+ringOne(r.t),0);if(g.bond>=80)v+=.03;if(g.pet)v+=.05;if(g.mate&&g.mate.alive)v+=.04;return cl(v,0,.4)}
+function ringF(){const g=S&&S.sv;if(!g||g.aw!==1||g.retired)return 0;let v=g.rings.reduce((a,r)=>a+ringOne(r.slp?Math.max(0,(r.t|0)-3):r.t)*(r.seal?.5:1),0);if(g.bond>=80)v+=.03;if(g.pet)v+=.05;if(g.mate&&g.mate.alive)v+=.04;return cl(v,0,g.rings.some(r=>r.t>=5&&!r.slp)?.6:.4)}
 let inDuel=0;
 {const _f=fight;fight=function(n,ep){try{if(!inDuel&&on())ep=ep*(1-ringF())}catch(e){}return _f.call(this,n,ep)}}
 {const _d=duel;duel=function(n,ep,cb){try{if(on())ep=ep*(1-ringF())}catch(e){}inDuel=1;try{return _d.call(this,n,ep,cb)}finally{inDuel=0}}}
@@ -40203,7 +40203,7 @@ window._svFail=g=>{if(Math.random()>=.04)return false;g.aw=2;g.sp=[];g.lv=0;X().
 // =================== 3) ทางเลือกนอกการฆ่า ===================
 const tameP=s=>cl(.3+(tp('ctrl')?.25:0)+(tp('sup')?.1:0)+(X().bond-50)/250+(S.karma>50?.05:0)-s*.04,.1,.8);
 function giftRing(t,n,sk,mult){const g=X();if(g.rings.length>=9)return;g.rings.push({t,b:n,sk});g.lv=Math.min(100,g.lv+1);
- S.power+=pctPow([.03,.06,.1,.16,.25][t]*(mult||1));S.fame+=[2,6,15,40,100][t];if(t>=2)S.maxHp+=[0,0,15,30,60][t];
+ S.power+=pctPow([.03,.06,.1,.16,.25,.4,.6,.85,1.2][t]*(mult||1));S.fame+=[2,6,15,40,100,300,800,2000,5000][t];if(t>=2)S.maxHp+=[0,0,15,30,60,120,200,320,500][t];
  try{const RB=LS.get('murim_svring',{})||{};RB[n]=Math.max(RB[n]||0,t+1);LS.set('murim_svring',RB)}catch(e){}
  log(`${TIER[t][1]} <b>หลอมวงแหวนวงที่ ${g.rings.length} สำเร็จ</b> — ${TIER[t][0]}ของ${esc(n)} · ได้ท่า <b>「${nm()}·${esc(sk)}」</b>`,t>=3?'myth':'epic',true)}
 window._svHuntX=(g0,i,safe,opts)=>{const g=X(),st=Math.min(3,safe),b=ch(BEAST[st]),p=tameP(st);
@@ -40430,6 +40430,231 @@ ev(5,0,s=>A2(s)&&s.sv.np&&s.sv.np.k&&s.sv.np.x>=40&&no('np3'),()=>{mark('np3');S
  if(h)m.insertAdjacentHTML('beforeend',`<div class="svX">${h}</div>`)}catch(e){console.error('sv2 ui',e)}return r}}
 window._blk35={ringF,tp,Q,giftRing,X,yr};
 })()}catch(e){console.error('block35',e)}
+
+// ============================================================
+// BLOCK 35G: ⭕ ทวีปจิตวิญญาณยุทธ์ — สัตว์วิญญาณระดับสูง: วงแหวนล้านปี · สิบล้านปี · ร้อยล้านปี · พันล้านปี
+//            สัตว์เลือกคน · สัญญากับวงแหวน · สัตว์สถิตจิต · ป่าต้องห้าม · สัตว์กลับชาติเป็นคน · แค้นเผ่าสัตว์
+// ============================================================
+try{(()=>{
+const B=window._blk34;if(!B||typeof EVENTS==='undefined')return;
+const {TIER,spNow,capOf}=B;
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const on=()=>!!(S&&S.alive&&S.ch==='soul'&&S.sv&&S.sv.aw===1);
+const A1=s=>!!(s&&s.alive&&s.ch==='soul'&&s.sv&&s.sv.aw===1&&!s.sv.retired);
+const O=(t,s,f)=>({t,s,f});
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const ev=(w,cd,c,f,once)=>EVENTS.push({w,cd,once:once?1:0,c:s=>{try{return!!c(s)}catch(e){return false}},f(){try{f()}catch(e){console.error('svG ev',e)}}});
+const BX=()=>{const g=S.sv;g.bx=g.bx||{af:0,met:{},keep:0,brk:0};g.spared=g.spared||[];g.kill=g.kill||0;if(g.bond==null)g.bond=50;return g.bx};
+const tp=k=>{const g=S.sv;return!!(g&&g.sp&&g.sp.some(s=>spNow(s).t===k))};
+const nm=()=>{const g=S.sv;return g&&g.sp&&g.sp[0]?spNow(g.sp[0]).n:'ดวงจิต'};
+const HP=p=>{const d=Math.round(S.maxHp*p/100);S.hp=Math.max(1,S.hp-d);return d};
+const die=why=>{S.deathCause=why;setTimeout(()=>{try{checkDeath()}catch(e){}},200)};
+const nmP=()=>{try{return anyName(Math.random()<.5?'ชาย':'หญิง')}catch(e){return pick(['หลินเยว่','ซูหาน','ม่อชิง','เฟิงหลาน'])}};
+
+// ---------- ความผูกพันกับสัตว์วิญญาณ (ซ่อน — เหตุการณ์บอกเป็นนัย) ----------
+function afOf(){const g=S.sv,x=BX();return cl(30+g.spared.length*7+(g.pet?12:0)+(+S.karma||0)/8-g.kill*6+((tp('sup')||tp('ctrl'))?6:0)+((g.bond||50)-50)/5+x.af-(x.curse?25:0),0,100)}
+window._svAf=()=>{try{return on()?Math.round(afOf()):0}catch(e){return 0}};
+
+// ---------- สัตว์วิญญาณระดับสูง [ชื่อ, ไอคอน, สาย, ท่า, สัญญา, ถิ่น] ----------
+const GB={
+ 5:[['หมาป่าหิมะเหนือภูน้ำแข็ง','🐺','agi','เขี้ยวหิมะพันลี้','kin','ภูน้ำแข็งเหนือสุด'],['พญางูเก้าเศียรแห่งบึงมรณะ','🐍','ctrl','เก้าเศียรกลืนฟ้า','body','บึงมรณะ'],['เต่าดำแบกภูผา','🐢','def','กระดองค้ำแผ่นดิน','dream','ก้นทะเลสาบใหญ่'],['หงส์เพลิงอมตะ','🔥','atk','เพลิงคืนชีพ','dream','ปากภูเขาไฟ'],['กิเลนหยกฟ้า','🦄','sup','ก้าวหยกรักษาพันแผล','kin','ทุ่งหมอกหยก'],['ราชินีผีเสื้อแสงจันทร์','🦋','ctrl','ผงจันทร์หลับใหล','nohunt','หุบเขาดอกไม้ราตรี'],['เสือขาวพยัคฆ์สวรรค์','🐅','atk','กรงเล็บทลายฟ้า','nohunt','ป่าดึกดำบรรพ์'],['วาฬเงินแห่งทะเลลึก','🐋','def','คลื่นเงินหมื่นลี้','dream','ทะเลลึกไร้แสง'],['ม้าขาวเหยียบเมฆ','🐎','agi','กีบเมฆเหยียบฟ้า','kin','ที่ราบลมหวน']],
+ 6:[['แมงป่องน้ำแข็งเหมันต์นิรันดร์','🦂','ctrl','หางเหมันต์ตรึงวิญญาณ','body','ทุ่งน้ำแข็งขั้วโลก'],['มังกรทองนิทรา','🐉','atk','ลมหายใจทองทลายภพ','dream','ถ้ำทองใต้ภูเขา'],['วานรเพลิงพันกร','🐒','atk','พันกรถล่มภูผา','kin','ภูเขาผลไม้เพลิง'],['จิ้งจอกเงาเก้าหาง','🦊','agi','เก้าหางลวงฟ้า','body','ป่าหมอกลวงตา'],['ต้นไผ่เทพพันข้อ','🎋','sup','ข้อไผ่ต่อชีวิต','nohunt','ทะเลไผ่']],
+ 7:[['ต้นไม้สวรรค์ผู้มีจิต','🌳','sup','รากหยั่งทวีป','kin','ใจกลางป่าต้องห้าม'],['วาฬดาวกลืนฟ้า','🌌','def','กลืนดาวทั้งราตรี','dream','ทะเลเหนือเมฆ'],['ปักษาเพลิงบรรพกาล','☀️','atk','อาทิตย์ดวงแรก','body','ยอดเขาที่ใกล้ตะวันที่สุด']],
+ 8:[['เทพมังกรต้นกำเนิด','🐲','atk','ลมหายใจแรกของโลก','dream','ใต้รากของทวีป'],['จิตแห่งทวีป','🌍','sup','ทวีปตอบรับ','kin','ทุกที่และไม่มีที่ใด']]};
+const LIKE={atk:['atk','agi'],def:['def','sup'],sup:['sup','def'],ctrl:['ctrl','agi'],agi:['agi','ctrl']};
+const PACT={kin:'คุ้มครองเผ่าพันธุ์ของมันในป่า',nohunt:'ไม่ล่าสัตว์วิญญาณตามอำเภอใจอีก',dream:'พามันไปทำสิ่งที่มันฝันมาทั้งชีวิต',body:'ให้มันได้ออกมาใช้ร่างของคุณในบางคืน'};
+const DREAM=['เห็นทะเลที่ไม่มีวันหมด','ชนะคู่อาฆาตที่มันแพ้เมื่อนานมาแล้ว','ดูมนุษย์ฉลองปีใหม่ในเมืองหลวง','ยืนบนยอดเขาที่สูงที่สุดของทวีป','ได้ยินเพลงของมนุษย์อีกครั้ง','กลับไปดูรังเกิดของตัวเอง'];
+const NEED={5:50,6:68,7:84,8:95},LVB={5:3,6:5,7:8,8:12};
+const tName=t=>TIER[t]?TIER[t][0]:'?';
+const beastFor=(t,pref)=>{const own=new Set(((S&&S.sv&&S.sv.rings)||[]).map(r=>r.b)),L0=GB[t]||GB[5],L=L0.filter(b=>!own.has(b[0])).length?L0.filter(b=>!own.has(b[0])):L0,m=L.filter(b=>pref&&LIKE[pref]&&LIKE[pref].includes(b[2]));return pick(m.length&&Math.random()<.7?m:L)};
+
+// ---------- หลอมวงแหวนระดับสูง ----------
+function bump(t,mult){S.power+=pctPow([.03,.06,.1,.16,.25,.4,.6,.85,1.2][t]*(mult||1));S.fame+=[2,6,15,40,100,300,800,2000,5000][t];S.maxHp+=[0,0,15,30,60,120,200,320,500][t]}
+function addRing(t,b,o){const g=S.sv;if(g.rings.length>=9)return null;const r=Object.assign({t,b:b[0],sk:b[3],gr:1,ic:b[1]},o||{});g.rings.push(r);
+ g.lv=Math.min(100,Math.min(Math.max(capOf(g),g.lv),g.lv+(LVB[t]||1)));bump(t,(r.seal?.5:1)*((o&&o.mult)||1));
+ try{const RB=LS.get('murim_svring',{})||{};RB[b[0]]=Math.max(RB[b[0]]||0,t+1);LS.set('murim_svring',RB)}catch(e){}
+ try{const x=BX();x.top=Math.max(x.top||0,t)}catch(e){}
+ log(`${TIER[t][1]} <b>หลอมวงแหวนวงที่ ${g.rings.length} — ${tName(t)}ของ${esc(b[0])}</b> · ได้ท่า <b>「${esc(nm())}·${esc(b[3])}」</b>${r.seal?' <span class="tag2">(ผนึกพลังไว้ครึ่งหนึ่ง)</span>':''}${r.slp?' <span class="tag2">(วงแหวนยังหลับ)</span>':''}`,'myth',true);return r}
+// ร่างกายรับไม่ไหว: willing = สัตว์ยอมเอง (ลดความต้องการระดับ)
+function crisis(t,b,o){const g=S.sv,need=NEED[t]-(o.willing?25:0)-(g.sp.length>1?5:0)-((g.bond||50)>=80?5:0),gap=need-g.lv;
+ if(gap<=0)return addRing(t,b,o);
+ const pOk=cl(.78-gap*.022+(tp('def')?.08:0)+(o.willing?.1:0),.05,.85);
+ const intro=pick([`พลังของ${esc(b[0])}ไหลเข้าสู่ร่าง เส้นจิตของคุณร้องลั่นเหมือนเชือกที่ถูกดึงจนสุด`,`วงแหวน${tName(t)}ลอยลงมาครอบตัวคุณ แสงของมันแรงจนผิวหนังเริ่มปริ`,`ร่างกายระดับ ${g.lv} ของคุณเล็กเกินกว่าจะใส่พลังขนาดนี้ — ${esc(b[0])}รู้ดี มันกระซิบถามว่าจะเอายังไง`]);
+ choice(`💥 ร่างกายรับไม่ไหว`,`${intro}<br><br><span class="tag2">ระดับที่ควรมีราว ${need} · ตอนนี้ ${g.lv}</span>`,[
+  O('💪 กัดฟันรับทั้งหมด',`สำเร็จราว ${Math.round(pOk*100)}% · พลาดแล้วอาจถึงตาย`,()=>{if(Math.random()<pOk){addRing(t,b,Object.assign({},o,{mult:1.15}));log('🔥 คุณทนผ่านคืนที่ยาวที่สุดในชีวิตมาได้ — ร่างกายถูกหลอมใหม่ทั้งร่าง','myth',true);S.maxHp+=40;return}
+   if(gap>28&&Math.random()<.55){die(`ดูดซับวงแหวน${tName(t)}ของ${b[0]}ด้วยร่างกายที่ยังเล็กเกินไป`);log(`💥 แสงของวงแหวน${tName(t)}กลืนร่างคุณทั้งร่าง…`,'bad',true);return}
+   S.maxHp=Math.max(30,Math.round(S.maxHp*.8));S.hp=Math.max(1,Math.round(S.hp*.3));g.lv=Math.max(1,g.lv-5);addRing(t,b,Object.assign({},o,{seal:1}));log(`🩸 คุณรอด แต่เส้นจิตฉีกขาดไปครึ่งหนึ่ง — ${esc(b[0])}ต้องผนึกตัวเองไว้ไม่ให้ฆ่าคุณ (พลังชีวิตสูงสุด −20% · ระดับ −5)`,'bad',true)}),
+  O('🔒 ขอให้มันผนึกพลังไว้ครึ่งหนึ่ง','ปลอดภัย · พลังครึ่งเดียวจนกว่าระดับจะถึง',()=>addRing(t,b,Object.assign({},o,{seal:1,need:NEED[t]-(o.willing?15:0)}))),
+  O('🌙 ให้วงแหวนหลับอยู่ในตัว','ตอนนี้ได้พลังแค่เศษเสี้ยว · ตื่นเองเมื่อคุณโตพอ — ตื่นแล้วแรงกว่าเดิม',()=>{const r=addRing(t,b,Object.assign({},o,{slp:1,need:NEED[t]-(o.willing?20:0),mult:.25}));if(r)r.slpT=t})])}
+window._svGreat={crisis,addRing,afOf,GB};
+
+// ---------- พลังวงแหวน: ผนึก/หลับ ----------
+// ringF ใน Block 35 ใช้ r.t → วงแหวนที่หลับคิดเป็นขั้นต่ำกว่า, ผนึกคิดครึ่งเดียว (ผ่าน effT)
+{const _yr=passYear;passYear=function(){const r=_yr.apply(this,arguments);try{if(!on())return r;const g=S.sv,x=BX();
+ for(const q of g.rings){if(!q.gr)continue;
+  if(q.slp&&g.lv>=(q.need||0)){q.slp=0;bump(q.slpT!=null?q.slpT:q.t,1.25);log(`${TIER[q.t][1]} <b>วงแหวน${tName(q.t)}ของ${esc(q.b)}ตื่นแล้ว</b> — มันหลับรอคุณมาตลอด ตอนนี้ร่างคุณใหญ่พอให้มันยืดตัวได้ทั้งตัว`,'myth',true)}
+  else if(q.seal&&q.need&&g.lv>=q.need&&!q.slp){q.seal=0;bump(q.t,.5);log(`🔓 <b>ผนึกบนวงแหวน${tName(q.t)}ของ${esc(q.b)}คลายออก</b> — พลังอีกครึ่งที่มันกดไว้ไหลกลับมาหาคุณ`,'myth',true)}
+  // วงแหวนที่รักษาสัญญามานาน เติบโตได้เองครั้งหนึ่ง
+  if(q.aw&&!q.ev&&q.t<8&&x.keep>=4&&Math.random()<.06){q.ev=1;q.t++;bump(q.t,.6);log(`🌠 <b>วงแหวนของ${esc(q.b)}เติบโต</b> — จาก${tName(q.t-1)}กลายเป็น<b>${tName(q.t)}</b> มันบอกว่าการได้อยู่กับคุณทำให้มันแก่ขึ้นแบบที่ป่าไม่เคยให้`,'myth',true)}}
+ if(x.inner){x.inner.y++;if(x.inner.y%4===0)S.int+=2}
+ if(x.rb&&x.rb.st===1)x.rb.y=(x.rb.y||0)+1}catch(e){console.error('svG yr',e)}return r}}
+{const _g=window._svGrow;window._svGrow=g=>{let m=_g?_g(g):1;try{const x=g.bx;if(x&&x.inner)m*=1.25;if(x&&x.rb&&x.rb.st===2)m*=1.1;if(x&&x.curse)m*=.9}catch(e){}return m}}
+
+// ---------- ล่าราชาสัตว์ (ทางนักล่า) ----------
+{const _hx=window._svHuntX;window._svHuntX=(g0,i,safe,opts)=>{if(_hx)_hx(g0,i,safe,opts);try{const g=S.sv;if(g.lv<60||g.rings.length>=9||S.age<18)return;const t=g.lv>=88?6:5,b=beastFor(t);
+ opts.push(O(`🗡️ บุกล่า${b[0]} · ${tName(t)}`,'☠️ เสี่ยงตายสูงมาก · เผ่าของมันจะไม่ลืม',()=>huntGreat(t,b)))}catch(e){console.error(e)}}}
+function huntGreat(t,b){const g=S.sv,x=BX();
+ const go=team=>duel(`${b[0]} (${tName(t)})`,Math.round(total()*(t===6?1.75:1.45)*(team?.8:1)),w=>{try{if(!S||!S.alive)return;
+  if(!w){if(Math.random()<(t===6?.4:.25)){die(`ถูก${b[0]}${tName(t)}ฆ่าระหว่างล่า`);log(`🩸 ${b[0]}ไม่ได้แค่ป้องกันตัว — มันล่าคุณกลับ`,'bad',true);return}HP(60);g.lv=Math.max(1,g.lv-3);log(`🩸 คุณถูกลากออกจาก${b[5]}ทั้งที่เลือดเต็มตัว ${team?'เพื่อนร่วมทีมสองคนไม่ได้กลับมาด้วย':'ไม่มีใครรู้ว่ารอดมาได้ยังไง'}`,'bad',true);return}
+  g.kill+=3;x.af-=25;x.curse={n:b[0],a:S.age,k:0};S.karma-=15;
+  log(`🏹 <b>${b[0]}ล้มลง</b> ป่าทั้งผืนเงียบกริบ แม้แต่ลมก็หยุดพัด`,'epic',true);crisis(t,b,{willing:0,mult:1.2,kill:1})}catch(e){console.error(e)}});
+ choice(`🗡️ ล่า${b[0]}`,`${b[0]}อายุ${tName(t)} ใช้ชีวิตอยู่ที่${b[5]} ทั้งทวีปมีคนที่เคยล่าสัตว์ระดับนี้สำเร็จนับคนได้`,[
+  O('⚔️ ลุยคนเดียว','',()=>go(0)),
+  O(`👥 จ้างทีมนักล่า (${fmt(t===6?40000:12000)} ตำลึง)`,'ง่ายขึ้น · แต่ต้องแบ่งชื่อเสียง',()=>{const c=t===6?40000:12000;if(S.money<c){log('💸 เงินไม่พอจ้างใคร','bad');return go(0)}S.money-=c;go(1)}),
+  O('🔙 เปลี่ยนใจ','',()=>{x.af+=3;log(`🍃 คุณยืนดู${b[0]}จากไกลๆ แล้วถอยออกมา มันรู้ว่าคุณอยู่ตรงนั้นตั้งแต่แรก`,'')})])}
+
+// ---------- 1) สัตว์วิญญาณเลือกคน ----------
+const SCN=[
+ b=>[`🌫️ ${b[0]}ที่กำลังจะหมดอายุ`,`${b[1]} ${b[0]}ลากร่างชราออกจาก${b[5]} มาหยุดตรงหน้าคุณ "ข้าอยู่มา${'{T}'} ไม่อยากให้ทุกอย่างจบในดิน — ให้ข้าไปต่อในตัวเจ้า"`],
+ b=>[`🩸 ${b[0]}หนีนักล่า`,`คืนฝนตก ${b[1]} ${b[0]}บาดเจ็บหนักล้มลงใกล้ที่พักของคุณ มีเสียงนักล่าไล่ตามมาไม่ไกล มันมองคุณด้วยตาที่ไม่ได้ขอความช่วยเหลือ — แต่เลือกแล้ว`],
+ b=>[`👁️ ${b[0]}เฝ้ามองคุณมานาน`,`ตลอดหลายปี คุณรู้สึกว่ามีอะไรตามดูอยู่ในป่า วันนี้ ${b[1]} ${b[0]}ก้าวออกมา "ข้าดูเจ้ามาตั้งแต่เจ้ายังตัวเท่านี้ เจ้าไม่ล่าเพราะอยากล่า — ข้าชอบแบบนั้น"`],
+ b=>[`⚡ ${b[0]}หนีทัณฑ์สวรรค์`,`ฟ้าเหนือ${b[5]}แตกเป็นรอยสายฟ้า ${b[1]} ${b[0]}ถึงวาระต้องรับทัณฑ์สวรรค์ซึ่งมันรู้ว่ารอดไม่ได้ ทางเดียวคือหลบเข้าไปอยู่ในดวงจิตมนุษย์ — และมันเลือกคุณ`],
+ b=>[`🎐 ${b[0]}ได้ยินเสียง${'{SP}'}`,`ดวงจิตของคุณสั่นทั้งคืนเหมือนมีใครเรียก เช้ามา ${b[1]} ${b[0]}นั่งรออยู่หน้าประตู "ดวงจิตของเจ้าร้องเพลงที่ข้าไม่ได้ยินมาหลายพันปี"`]];
+function chosen(t,pre){const g=S.sv,x=BX(),b=pre||beastFor(t,spNow(g.sp[0]).t);x.met[b[0]]=S.age;x.lastC=S.age;
+ const [ti0,tx0]=pick(SCN)(b),fx=v=>v.replace('{T}',tName(t)).replace('{SP}',esc(nm())),ti=fx(ti0),tx=fx(tx0);
+ const kid=g.rings.length===0,pk=b[4],dr=pick(DREAM);
+ const opts=[
+  O(`⭕ รับมันเป็นวงแหวน${kid?'วงแรก':''}`,`สัญญา: ${PACT[pk]}${pk==='dream'?` (${dr})`:''}`,()=>{x.pact={k:pk,n:b[0],dr,a:S.age};crisis(t,b,{willing:1,pact:pk})}),
+  O('🫂 ให้มันสถิตอยู่ในดวงจิต','ยังไม่เป็นวงแหวน · โตไปด้วยกัน · วันหนึ่งอาจกลายเป็นวงแหวนที่แรงกว่าเดิม',()=>{x.inner={n:b[0],ic:b[1],ty:b[2],sk:b[3],t,y:0,b};log(`${b[1]} <b>${b[0]}หลอมตัวเข้าไปอยู่ในดวงจิตของคุณ</b> — ไม่ใช่วงแหวน ไม่ใช่สัตว์คู่ใจ แต่คือเสียงที่สองในหัวคุณ`,'myth',true)}),
+  O('🙅 ปฏิเสธอย่างสุภาพ','มันอาจทิ้งอะไรไว้ให้',()=>{S.karma+=10;x.af+=6;const r=Math.random();
+   if(r<.35){S.power+=pctPow(.12);log(`🦴 ${b[0]}หัวเราะเบาๆ แล้วทิ้งกระดูกวิญญาณชิ้นหนึ่งไว้ให้ "คนที่ไม่โลภ ควรได้อะไรบ้าง"`,'epic',true)}
+   else if(r<.65&&!g.pet){g.pet={n:'ลูกของ'+b[0],t:Math.min(3,t-2),y:0};log(`🐾 ${b[0]}จากไป แต่ลูกตัวเล็กของมันไม่ยอมไปด้วย มันเดินตามคุณกลับบ้าน`,'epic',true)}
+   else{S.maxHp+=60;log(`🌿 ${b[0]}เป่าลมหายใจใส่หน้าผากคุณก่อนจากไป ร่างกายเบาขึ้นอย่างประหลาด (พลังชีวิตสูงสุด +60)`,'epic',true)}})];
+ if(g.rings.length>=9)opts.splice(0,1);
+ if(g.kill>=3||tp('atk'))opts.push(O('🗡️ ฆ่ามันเอาวงแหวนเต็มพลัง','ทรยศ · ได้วงแหวนแรงกว่า · ป่าทั้งทวีปจะรู้',()=>{g.kill+=3;x.af-=40;S.karma-=30;x.curse={n:b[0],a:S.age,k:0};log(`🩸 ${b[0]}ไม่ได้สู้กลับ มันแค่มองคุณจนวินาทีสุดท้าย`,'bad',true);crisis(t,b,{willing:0,mult:1.3,kill:1})}));
+ choice(ti,`${tx}<br><br><span class="tag2">${TIER[t][1]} สัตว์วิญญาณ${tName(t)} · ${b[1]} สาย${{atk:'โจมตี',def:'ป้องกัน',sup:'สนับสนุน',ctrl:'ควบคุม',agi:'ว่องไว'}[b[2]]}${kid?' · ถ้ารับ นี่จะเป็นวงแหวนวงแรกของคุณ':''}</span>`,opts)}
+const chT=()=>{const a=afOf(),g=S.sv,r=Math.random();if(a>=90&&g.lv>=60&&r<.04)return 7;if(a>=78&&g.lv>=35&&r<.22)return 6;return 5};
+// เด็ก (ยังไม่มีวงแหวน): โอกาสได้วงแรกล้านปี
+ev(2,20,s=>A1(s)&&s.age>=6&&s.age<=13&&s.sv.rings.length===0&&!(s.sv.bx&&s.sv.bx.lastC!=null)&&(afOf()>=48||s.sv.sp.length>1||s.sv.sp.some(z=>z.rev===0&&B.SP.find(p=>p[0]===z.id)&&B.SP.find(p=>p[0]===z.id)[6]))&&Math.random()<.35,()=>chosen(Math.random()<.12?6:5));
+// ผู้ใหญ่: ความผูกพันสูงพอ
+ev(2,8,s=>A1(s)&&s.age>=14&&s.sv.rings.length<9&&afOf()>=60&&(s.sv.bx==null||s.sv.bx.lastC==null||s.age-s.sv.bx.lastC>=12)&&!(s.sv.bx&&s.sv.bx.inner),()=>chosen(chT()));
+
+// ---------- 2) ป่าต้องห้าม ----------
+const FOREST={
+ kings(){const g=S.sv,x=BX(),A=beastFor(5),Bb=beastFor(5);
+  choice('⚔️ ราชาสองตนสู้กัน',`กลาง${A[5]} ${A[1]} ${A[0]}กับ ${Bb[1]} ${Bb[0]}สู้กันมาสามวันสามคืน ต้นไม้รอบตัวล้มเป็นวง ทั้งคู่บาดเจ็บหนัก`,[
+   O(`🛡️ ช่วย${A[0]} (ฝ่ายได้เปรียบ)`,'',()=>{x.af+=10;S.fame+=60;x.owe=A;log(`🤝 ${A[0]}ชนะ มันมองคุณนานกว่าที่สัตว์ควรมองมนุษย์ — แล้วจากไปโดยไม่พูดอะไร`,'epic',true)}),
+   O(`🩹 ช่วย${Bb[0]} (ฝ่ายกำลังแพ้)`,'ต้องสู้กับราชาอีกตนเอง',()=>duel(A[0],Math.round(total()*1.3),w=>{if(!S.alive)return;if(w){x.af+=20;x.owe=Bb;S.fame+=150;log(`🌟 คุณยืนขวาง${A[0]}จนมันถอย ${Bb[0]}ที่รอดมาได้ก้มหัวให้คุณครั้งแรกในชีวิตมัน`,'myth',true)}else{HP(55);log(`🩸 ${A[0]}ปัดคุณกระเด็นเหมือนใบไม้ แต่${Bb[0]}ก็อาศัยจังหวะนั้นหนีไปได้`,'bad',true);x.af+=8}})),
+   O('🗡️ รอให้ตัวหนึ่งตาย แล้วเก็บวงแหวน','ฉวยโอกาส',()=>{x.af-=20;g.kill+=2;const L=Math.random()<.5?A:Bb;if(g.rings.length<9)crisis(5,L,{willing:0,kill:1});else{S.power+=pctPow(.2);log(`🦴 คุณได้กระดูกวิญญาณของ${L[0]}มาแทน`,'epic',true)}}),
+   O('🍃 ถอยออกมา','',()=>log('🍃 บางเรื่องไม่ใช่เรื่องของมนุษย์',''))])},
+ old(){const g=S.sv,x=BX(),b=beastFor(Math.random()<.2?6:5);
+  choice(`🌫️ ${b[0]}ชรา`,`ลึกเข้าไปใน${b[5]} ${b[1]} ${b[0]}นอนนิ่งอยู่ใต้ต้นไม้ใหญ่ ลมหายใจของมันช้าลงทุกครั้ง มันลืมตาข้างเดียวมองคุณ`,[
+   O('🪑 นั่งเป็นเพื่อนมันจนวาระสุดท้าย','',()=>{x.af+=12;S.karma+=8;if(g.rings.length<9&&afOf()>=55&&Math.random()<.6){log(`🌙 คืนที่สาม ${b[0]}พูดขึ้นมาว่า "ข้าไม่อยากหายไปเฉยๆ"`,'epic',true);setTimeout(()=>{try{chosen(GB[6].includes(b)?6:5,b)}catch(e){}},400)}else log(`🕯️ ${b[0]}จากไปตอนรุ่งสาง ร่างของมันกลายเป็นแสงกระจายไปทั่วป่า คุณไม่ได้อะไรเลย และไม่ได้เสียใจที่อยู่`,'good',true)}),
+   O('🗡️ ปลิดชีพให้จบเร็ว แล้วรับวงแหวน','',()=>{x.af-=10;g.kill++;if(g.rings.length<9)crisis(GB[6].includes(b)?6:5,b,{willing:0,mult:.8});}),
+   O('🍃 ปล่อยมันไว้อย่างสงบ','',()=>{x.af+=4;log(`🍃 คุณเดินจากมา ข้างหลังมีเสียงถอนหายใจยาว — เหมือนขอบคุณ`,'')})])},
+ cub(){const g=S.sv,x=BX(),b=beastFor(5),money=R(20000,60000);
+  choice('🪤 ลูกสัตว์ในกับดัก',`กับดักเหล็กของนักล่าจับลูกของ ${b[1]} ${b[0]}ไว้ มันยังเล็กแต่อายุเกินพันปีแล้ว ตลาดมืดให้ราคาลูกสัตว์ระดับนี้ราว ${fmt(money)} ตำลึง`,[
+   O('🔓 ปล่อยมัน','',()=>{x.af+=20;x.mom={b,a:S.age};S.karma+=10;log(`🐾 ลูกของ${b[0]}วิ่งหายเข้าป่า ไกลออกไปมีเสียงคำรามต่ำๆ ตอบรับ`,'good',true)}),
+   O(`💰 ขายตลาดมืด (+${fmt(money)})`,'',()=>{S.money+=money;x.af-=30;S.karma-=20;x.curse={n:b[0],a:S.age,k:0};log(`💰 เงินก้อนโต — และคืนนั้นป่าทั้งป่าส่งเสียงหอนพร้อมกัน`,'bad',true)}),
+   O('🐾 เลี้ยงไว้เอง','ได้สัตว์คู่ใจ · แม่ของมันอาจตามมา',()=>{if(!g.pet)g.pet={n:'ลูก'+b[0],t:3,y:0};x.mom={b,a:S.age,took:1};log(`🐾 ลูกของ${b[0]}กัดมือคุณจนเลือดออก แล้วหลับไปในอ้อมแขน`,'epic',true)})])},
+ tide(){const g=S.sv,x=BX();
+  choice('🌊 คลื่นสัตว์วิญญาณ',`ป่าทั้งป่าเคลื่อนตัว สัตว์หลายพันตัวพุ่งออกไปทางหมู่บ้านชายป่า — มีบางอย่างที่ใหญ่กว่าไล่หลังพวกมันมา`,[
+   O('⚔️ ขวางไว้หน้าหมู่บ้าน','',()=>duel('คลื่นสัตว์วิญญาณ',Math.round(total()*1.2),w=>{if(!S.alive)return;if(w){S.fame+=200;x.af-=5;log('🏘️ หมู่บ้านรอด ชาวบ้านสร้างศาลเล็กๆ ให้คุณ','epic',true)}else{HP(45);S.fame+=40;log('🩸 คุณถ่วงเวลาได้พอให้คนหนีทัน','')}})),
+   O('🔍 ตามหาว่าอะไรไล่พวกมันมา','',()=>{x.af+=8;const b=beastFor(6);log(`👁️ ใจกลางป่า ${b[1]} ${b[0]}ระดับ${tName(6)}กำลังตื่นจากนิทรา — สัตว์ทั้งหลายแค่กลัว คุณพูดกับมันจนมันกลับไปหลับ`,'myth',true);x.saw6=b}),
+   O('🏃 พาชาวบ้านหนี','',()=>{S.karma+=8;S.fame+=60;log('🏃 ไม่มีใครตาย แต่บ้านหายไปครึ่งหมู่บ้าน','good')})])},
+ fruit(){const g=S.sv,x=BX();
+  choice('🍑 ผลไม้วิญญาณหมื่นปี',`ต้นไม้ประหลาดออกผลเพียงลูกเดียว สัตว์วิญญาณหลายตัวนั่งล้อมรอบเฝ้ารอให้มันสุก — พวกมันเห็นคุณแล้ว`,[
+   O('😋 แย่งกินเอง','',()=>{if(Math.random()<.6){g.lv=Math.min(capOf(g),g.lv+R(3,6));log(`🍑 พลังจิตพุ่งพรวด — ระดับ ${g.lv}`,'epic',true)}else{HP(40);log('🩸 คุณกินได้ครึ่งลูกก่อนโดนรุม','bad')}x.af-=8}),
+   O('🔪 แบ่งให้ทุกตัวเท่ากัน','',()=>{x.af+=12;g.lv=Math.min(capOf(g),g.lv+1);log('🍑 สัตว์ทั้งหลายมองหน้ากัน แล้วรับส่วนของตัวเองไปเงียบๆ ข่าวเรื่องมนุษย์ที่แบ่งผลไม้จะไปถึงหูสัตว์ที่ใหญ่กว่านี้','good',true)}),
+   O('🍃 ปล่อยให้พวกมัน','',()=>{x.af+=6;log('🍃 คุณเดินผ่านไป มีบางตัวพยักหน้าให้','')})])}};
+ev(2,8,s=>A1(s)&&s.age>=16&&s.sv.lv>=35,()=>{const k=pick(Object.keys(FOREST));
+ choice('🌲 ขอบป่าต้องห้าม',pick(['หมอกสีเงินลอยออกมาจากแนวไม้ ทุกคนในทวีปรู้ว่าข้างในมีสัตว์ที่อายุเก่ากว่าอาณาจักร','ป้ายไม้ผุๆ เขียนว่า "ผู้ฝึกจิตต่ำกว่าระดับหกสิบ ห้ามผ่าน" — ใครบางคนขีดฆ่าเลขหกสิบทิ้ง','เสียงป่าข้างในเงียบผิดปกติ เหมือนทั้งป่ากำลังกลั้นหายใจ']),[
+  O('🌲 เดินเข้าไป','ไม่รู้จะเจออะไร',()=>FOREST[k]()),
+  O('🏕️ ตั้งแคมป์ดูอยู่ข้างนอก','',()=>{BX().af+=2;log('🏕️ คืนนั้นมีดวงตาขนาดเท่าโคมไฟลอยผ่านแนวไม้ไปอย่างช้าๆ','')}),
+  O('🔙 กลับ','',()=>{})])});
+// ราชาที่เคยช่วย · แม่ของลูกสัตว์ กลับมา
+ev(4,0,s=>A1(s)&&s.sv.bx&&s.sv.bx.owe&&s.sv.rings.length<9&&!s.sv.bx.oweDone,()=>{const x=BX();x.oweDone=1;chosen(5,x.owe)});
+ev(4,0,s=>A1(s)&&s.sv.bx&&s.sv.bx.mom&&!s.sv.bx.mom.done&&s.age-s.sv.bx.mom.a>=2,()=>{const x=BX(),m=x.mom;m.done=1;
+ if(m.took){choice(`😠 แม่ของลูก${m.b[0]}`,`${m.b[1]} ${m.b[0]}ยืนขวางทางกลับบ้าน ลูกของมันวิ่งออกจากตัวคุณไปหาแม่ แล้ว… วิ่งกลับมาหาคุณ`,[
+  O('🫂 คืนลูกให้แม่','',()=>{S.sv.pet=null;x.af+=15;log(`🐾 ${m.b[0]}ใช้จมูกดุนลูกกลับเข้าป่า ก่อนไปมันหันมามองคุณ — ไม่ใช่ศัตรูอีกแล้ว`,'good',true);x.owe=m.b}),
+  O('⚔️ ไม่ยอมคืน','',()=>duel(m.b[0],Math.round(total()*1.35),w=>{if(!S.alive)return;if(w){x.af-=20;log('🩸 แม่ของมันถอยไปพร้อมแผลเต็มตัว ลูกในอ้อมแขนคุณร้องทั้งคืน','bad',true)}else{S.sv.pet=null;HP(50);log(`🩸 ${m.b[0]}เอาลูกคืนไป และเกือบเอาชีวิตคุณไปด้วย`,'bad',true)}}))])}
+ else{log(`🐾 ${m.b[1]} ${m.b[0]}มาหาคุณถึงหน้าบ้านพร้อมลูกที่โตขึ้น มันวางของบางอย่างไว้ที่ธรณีประตูแล้วจากไป`,'epic',true);x.af+=10;if(S.sv.rings.length<9&&Math.random()<.55)setTimeout(()=>{try{chosen(5,m.b)}catch(e){}},400);else{S.power+=pctPow(.1);log('🦴 เป็นกระดูกวิญญาณที่ยังอุ่นอยู่','epic')}}});
+
+// ---------- 3) สัญญากับวงแหวน ----------
+const keep=(r,why)=>{const x=BX();x.keep++;x.af+=4;if(x.keep>=2&&r&&!r.aw){r.aw=1;bump(r.t,.35);r.sk='ตื่นรู้·'+String(r.sk).replace(/^ตื่นรู้·/,'');log(`✨ <b>วงแหวน${tName(r.t)}ของ${esc(r.b)}ตื่นรู้</b> — ${why||'มันเชื่อใจคุณแล้ว'} ท่า「${esc(r.sk)}」เปลี่ยนไป`,'myth',true)}else log(`🤝 ${why||'คุณรักษาสัญญา'}`,'good',true)};
+const brk=r=>{const g=S.sv,x=BX();x.brk++;x.af-=20;x.pact=null;const p=Math.random();
+ if(r&&p<.18+r.t*.02&&g.rings.length){const i=g.rings.indexOf(r);g.rings.splice(i,1);g.lv=Math.max(1,g.lv-10);S.power=Math.max(0,S.power-pctPow(.3));log(`💔 <b>วงแหวนของ${esc(r.b)}แตกออกจากตัวคุณ</b> — มันไม่ได้ตาย มันแค่ไม่อยากอยู่กับคุณอีก (ระดับ −10)`,'bad',true)}
+ else if(r&&p<.55){r.seal=1;r.need=200;log(`🔒 วงแหวนของ${esc(r.b)}มืดลงครึ่งหนึ่ง มันยังอยู่ แต่ไม่ยอมให้พลังเต็มที่อีกต่อไป`,'bad',true)}
+ else{HP(40);g.lv=Math.max(1,g.lv-4);log(`🩸 วงแหวนของ${esc(r?r.b:'มัน')}พลิกพลังกลับเข้าหาคุณ คุณกระอักเลือดอยู่ครึ่งคืน (ระดับ −4)`,'bad',true)}};
+const pRing=()=>{const x=BX();return x.pact&&S.sv.rings.find(r=>r.b===x.pact.n)};
+const TEST={
+ kin(r,P){choice(`🏹 นักล่ามาที่ถิ่นของ${P.n}`,`ทีมผู้ฝึกจิตหกคนตั้งค่ายล่าเผ่าพันธุ์ของ${esc(P.n)} วงแหวนในตัวคุณร้อนจนแสบ`,[
+  O('⚔️ ไล่พวกมันออกไป','',()=>duel('หัวหน้าทีมนักล่า',Math.round(total()*1.1),w=>{if(!S.alive)return;if(w){S.fame+=50;keep(r,'คุณขวางนักล่าไว้ได้')}else{HP(35);keep(r,'คุณแพ้ แต่ถ่วงเวลาให้เผ่าของมันหนีทัน')}})),
+  O('💰 จ่ายให้พวกมันไปล่าที่อื่น',`${fmt(5000)} ตำลึง`,()=>{if(S.money>=5000){S.money-=5000;keep(r,'เงินซื้อเวลาได้อีกหลายปี')}else brk(r)}),
+  O('🙈 ทำเป็นไม่รู้','',()=>brk(r))])},
+ nohunt(r,P){choice('🤔 ทางลัด',`เพื่อนร่วมทีมเจอ${pick(['หมาป่าหลังเงิน','กวางเขาฟ้าผ่า','หมีเกราะหิน'])}ที่อ่อนแอ "ฆ่าเลย ได้วงแหวนฟรีๆ" — ${esc(P.n)}ในตัวคุณเงียบ รอดูว่าคุณจะทำยังไง`,[
+  O('🙅 ไม่ล่า','',()=>keep(r,'คุณเดินผ่านไป')),
+  O('🗡️ ล่าแค่ครั้งเดียว','',()=>{S.sv.kill++;brk(r)})])},
+ dream(r,P){choice(`🌠 ความฝันของ${P.n}`,`"เจ้าจำได้ไหมว่าสัญญาอะไรไว้" เสียงในดวงจิตถาม — มันอยาก<b>${esc(P.dr)}</b>`,[
+  O('🎒 ออกเดินทางให้มัน','เสียเวลาฝึกสองปี · เสียเงิน',()=>{S.sv.slow=S.age+2;S.money=Math.max(0,S.money-R(1000,4000));joy(10);keep(r,`คุณพามันไป${P.dr}`)}),
+  O('⏳ ขออีกสักพัก','',()=>{P.wait=(P.wait||0)+1;if(P.wait>=2)brk(r);else log('⏳ วงแหวนเงียบไปทั้งปี','')}),
+  O('🙅 ข้าไม่ว่าง','',()=>brk(r))])},
+ body(r,P){choice('🌕 คืนเดือนเต็ม',`${esc(P.n)}ขอออกมาใช้ร่างของคุณคืนนี้`,[
+  O('🫴 ยอมให้','ไม่รู้มันจะทำอะไร',()=>{const q=Math.random();if(q<.33){S.fame+=60;log(`🌕 คุณตื่นมาพบโจรภูเขายี่สิบคนนอนกองอยู่หน้าบ้าน ไม่มีใครตาย`,'epic',true)}else if(q<.66){S.karma-=5;S.money=Math.max(0,S.money-800);log('🐄 คุณตื่นมากลางทุ่ง ปากเปื้อนเลือดวัว ต้องจ่ายค่าเสียหายให้ชาวนา','bad',true)}else{joy(12);log('🌕 ชาวบ้านเล่าว่าเห็นคุณเต้นอยู่บนหลังคาทั้งคืน','good',true)}keep(r,'มันกลับเข้าไปในวงแหวนอย่างพอใจ')}),
+  O('🙅 ไม่ใช่คืนนี้','',()=>{P.no=(P.no||0)+1;BX().af-=4;if(P.no>=3)brk(r);else log('😤 วงแหวนสั่นทั้งคืนด้วยความไม่พอใจ','')})])}};
+ev(3,5,s=>A1(s)&&s.sv.bx&&s.sv.bx.pact&&s.age-s.sv.bx.pact.a>=2,()=>{const r=pRing(),x=BX();if(!r){x.pact=null;return}(TEST[x.pact.k]||TEST.kin)(r,x.pact)});
+
+// ---------- 4) สัตว์สถิตจิต ----------
+ev(3,4,s=>A1(s)&&s.sv.bx&&s.sv.bx.inner&&s.sv.bx.inner.y>=1,()=>{const x=BX(),I=x.inner,g=S.sv;
+ if(I.y>=7&&g.rings.length<9&&!I.ask){I.ask=1;const up=I.y>=14&&I.t<7?1:0,t=I.t+up;
+  choice(`${I.ic} ${I.n}: "ข้าพร้อมแล้ว"`,`${I.y} ปีที่${esc(I.n)}อยู่ในดวงจิตของคุณ ${up?`มันโตขึ้นจน<b>เกิน${tName(I.t)}</b>ไปแล้ว `:''}วันนี้มันบอกว่า "ให้ข้าเป็นวงแหวนของเจ้า"`,[
+   O(`⭕ รับเป็นวงแหวน${tName(t)}`,'',()=>{x.inner=null;crisis(t,I.b,{willing:1,mult:1.15})}),
+   O('🫂 อยู่ด้วยกันแบบนี้ต่อ','ถามใหม่ทีหลัง',()=>{I.ask=0;I.y=Math.max(0,I.y-4);S.int+=3;log(`${I.ic} ${I.n}หัวเราะ "ก็ได้ ข้าไม่รีบ"`,'good')}),
+   O('🕊️ คืนร่างให้มันได้เกิดใหม่เป็นคน','มันจะจากดวงจิตไป',()=>{x.inner=null;x.rb={n:nmP(),b:I.b,st:2,y:0,fromIn:1};x.af+=25;S.karma+=15;log(`🌸 แสงพุ่งออกจากหน้าอกคุณ แล้วกลายเป็นเด็กคนหนึ่งที่ยิ้มให้คุณ — ${esc(x.rb.n)} คือชื่อที่คุณตั้งให้`,'myth',true)})]);return}
+ const q=pick(['warn','fight','talk','scare']);
+ if(q==='warn'){S.int+=2;log(`${I.ic} ${esc(I.n)}กระซิบเตือนก่อนคุณจะก้าวลงสะพานเก่า — สะพานพังลงตามหลังคุณ`,'good',true)}
+ else if(q==='fight'){S.fame+=40;log(`${I.ic} โจรล้อมคุณกลางทาง ตาของคุณเปลี่ยนเป็นสีของ${esc(I.n)} — คุณจำอะไรไม่ได้อีก ตื่นมาก็เหลือแต่คุณยืนอยู่`,'epic',true)}
+ else if(q==='talk'){joy(6);log(`${I.ic} คืนนี้${esc(I.n)}เล่าให้ฟังเรื่องทวีปเมื่อหลายพันปีก่อน ตอนที่ยังไม่มีมนุษย์`,'good')}
+ else{S.cha=Math.max(0,(S.cha||0)-2);log(`${I.ic} ${esc(I.n)}โผล่ออกมาทางสายตาตอนคุณคุยกับคนอื่น เขาวิ่งหนีไปไม่หันกลับมา`,'')}});
+
+// ---------- 5) สัตว์กลับชาติเป็นคน ----------
+ev(1,0,s=>A1(s)&&s.age>=16&&s.sv.lv>=45&&!(s.sv.bx&&s.sv.bx.rb)&&Math.random()<.5,()=>{const x=BX(),b=beastFor(6),n=nmP();x.rb={n,b,st:1,y:0};
+ log(`👁️ คุณพบ<b>${esc(n)}</b> ผู้ฝึกจิตแปลกหน้าที่ตาเป็นสีของป่า ${pick(['เขาไม่ยอมกินเนื้อ','เธอพูดกับนกได้','เขาไม่เคยเข้าเมืองใหญ่','เธอนอนบนต้นไม้'])} — และมองคุณเหมือนเคยรู้จักกันมานาน`,'epic',true)},1);
+ev(4,0,s=>A1(s)&&s.sv.bx&&s.sv.bx.rb&&s.sv.bx.rb.st===1&&s.sv.bx.rb.y>=3,()=>{const x=BX(),P=x.rb,b=P.b,g=S.sv;P.st=3;
+ const o=[O('🤝 สาบานเป็นพี่น้อง','',()=>{P.st=2;S.fame+=120;joy(15);log(`🤝 คุณกับ${esc(P.n)}ดื่มเหล้าจอกเดียวกัน — สัตว์${tName(6)}กับมนุษย์ เป็นพี่น้องกันครั้งแรกในประวัติศาสตร์ทวีป`,'myth',true)}),
+  O('⚔️ ท้าประลอง','ดูว่าสัตว์ระดับนี้แรงแค่ไหน',()=>duel(P.n,Math.round(total()*1.4),w=>{if(!S.alive)return;if(w){S.fame+=250;P.st=2;log(`🏆 ${esc(P.n)}ล้มลงแล้วหัวเราะ "ข้าแพ้มนุษย์ครั้งแรก" — กลายเป็นเพื่อนกันตั้งแต่วันนั้น`,'myth',true)}else{HP(40);P.st=4;log(`🩸 ${esc(P.n)}ชนะแล้วเดินจากไป "ยังไม่ถึงเวลา"`,'bad',true)}}))];
+ if(g.rings.length<9)o.unshift(O('⭕ รับข้อเสนอของมัน','มันจะทิ้งร่างมนุษย์เพื่อเป็นวงแหวน',()=>{log(`🕯️ ${esc(P.n)}ยิ้มเป็นครั้งสุดท้ายในร่างคน`,'myth',true);crisis(6,b,{willing:1,mult:1.25})}));
+ choice(`🌲 ความลับของ${esc(P.n)}`,`${esc(P.n)}พาคุณมาที่${b[5]}แล้วบอกความจริง — เขาคือ ${b[1]} <b>${b[0]}</b> สัตว์วิญญาณ${tName(6)}ที่ทิ้งร่างเดิมมาเกิดเป็นคน "ข้าเลือกเดินทางนี้เพื่อตามหาคนที่จะเป็นเจ้าของข้า — ข้าเลือกเจ้า"`,o)});
+
+// ---------- 6) แค้นเผ่าสัตว์ ----------
+ev(3,5,s=>A1(s)&&s.sv.bx&&s.sv.bx.curse&&s.age-s.sv.bx.curse.a>=2,()=>{const x=BX(),C=x.curse;C.k++;C.a=S.age;
+ choice(`🐾 เผ่าของ${C.n}`,pick([`กลางดึก ฝูงสัตว์วิญญาณล้อมบ้านคุณไว้ทั้งหลัง พวกมันจำกลิ่นเลือดของ${esc(C.n)}ได้`,`ระหว่างเดินทาง ทั้งขบวนม้าหยุดนิ่ง — มีอะไรบางอย่างขวางอยู่บนถนน มันมาแก้แค้นแทน${esc(C.n)}`,`ลูกของ${esc(C.n)}โตแล้ว และมันมาหาคุณ`]),[
+  O('⚔️ สู้','',()=>duel(`เผ่าของ${C.n}`,Math.round(total()*(1+C.k*.12)),w=>{if(!S.alive)return;if(w){S.fame+=60;if(C.k>=3){x.curse=null;log('🩸 ครั้งนี้ไม่มีตัวไหนกลับไป — ความแค้นจบลงพร้อมเผ่าทั้งเผ่า','bad',true);S.karma-=20}else log('🩸 พวกมันถอยไป แต่จะกลับมาอีก','bad')}else{HP(50);if(Math.random()<.2){die(`ถูกเผ่าของ${C.n}ล้างแค้น`);return}log('🩸 คุณรอดมาได้เพราะพวกมันอยากให้คุณจำ','bad',true)}})),
+  O('🙇 คุกเข่าขอขมา','สละพลังส่วนหนึ่ง',()=>{S.power=Math.max(0,S.power-pctPow(.15));x.af+=15;S.karma+=15;x.curse=null;log('🙇 คุณกรีดเลือดตัวเองลงดินแทนคำขอโทษ จ่าฝูงดมเลือดนั้นนาน — แล้วพาเผ่าจากไป','good',true)}),
+  O('🏃 หนีย้ายเมือง','',()=>{S.money=Math.max(0,S.money-R(2000,6000));log('🏃 คุณย้ายบ้านกลางดึก รู้ดีว่าย้ายกี่ครั้งก็ไม่พ้น','')})])});
+
+// ---------- 7) ร้อยล้านปี · พันล้านปี — ลิขิตของทวีป ----------
+ev(1,0,s=>A1(s)&&s.age>=30&&s.sv.lv>=80&&s.sv.rings.length>=6&&!(s.sv.bx&&s.sv.bx.t7)&&(afOf()>=82||Math.random()<.04),()=>{const x=BX();x.t7=S.age;
+ if(S.sv.rings.length>=9){S.power+=pctPow(.5);S.fame+=1500;log('🌳 ต้นไม้สวรรค์ผู้มีจิตเรียกคุณไปพบ แต่วงแหวนเก้าวงของคุณเต็มแล้ว มันมอบกระดูกวิญญาณร้อยล้านปีให้แทน','myth',true);return}
+ chosen(7)},1);
+ev(1,0,s=>A1(s)&&s.age>=50&&s.sv.lv>=93&&s.sv.bx&&(s.sv.bx.top||0)>=6&&!s.sv.bx.t8&&(afOf()>=88||Math.random()<.015),()=>{const x=BX(),g=S.sv,b=pick(GB[8]);x.t8=S.age;
+ const o=[O('🏞️ ปฏิเสธ — ขอเป็นผู้พิทักษ์ทวีปแทน','ได้ฉายาถาวร · สัตว์ทั้งทวีปเป็นมิตร',()=>{x.af=200;S.fame+=8000;S.karma+=60;try{S.title='ผู้พิทักษ์ทวีปจิตวิญญาณ'}catch(e){}log(`🏞️ <b>${b[0]}ก้มลงแตะหน้าผากคุณ</b> — นับจากวันนี้ ไม่มีสัตว์วิญญาณตัวไหนในทวีปจะทำร้ายคุณอีก`,'myth',true)}),
+  O('👶 ขอให้ไปเลือกลูกหลานของข้า','สืบทอดให้รุ่นต่อไป',()=>{S.karma+=30;S.fame+=3000;log(`🌱 ${b[0]}หัวเราะดังจนภูเขาสั่น "มนุษย์ที่ไม่เอาเอง — ตกลง ข้าจะรอดูเด็กคนนั้น"`,'myth',true)})];
+ if(g.rings.length<9)o.unshift(O(`⭕ รับเป็นวงแหวน${tName(8)}`,'พลังสูงสุดในทวีป · ร่างกายอาจรับไม่ไหว',()=>crisis(8,b,{willing:1,mult:1.2})));
+ else o.unshift(O(`🔁 แทนที่วงแหวนวงที่อ่อนที่สุด`,'วงแหวนเดิมจะสลายไป',()=>{let k=0;g.rings.forEach((r,i)=>{if(r.t<g.rings[k].t)k=i});const old=g.rings.splice(k,1)[0];log(`🍂 วงแหวน${tName(old.t)}ของ${esc(old.b)}ค่อยๆ จางหายไป เปิดทางให้สิ่งที่ใหญ่กว่า`,'');crisis(8,b,{willing:1,mult:1.2})}));
+ choice(`${b[1]} ${b[0]}`,`ทวีปทั้งทวีปเงียบลงในวินาทีเดียว น้ำในแม่น้ำหยุดไหล ${b[1]} <b>${b[0]}</b> — สิ่งที่อยู่มาตั้งแต่ก่อนทวีปจะมีชื่อ — ลืมตาขึ้น และมองมาที่คุณ<br><br>"<i>${pick(['ข้าดูมนุษย์มาพันล้านปี เจ้าเป็นคนแรกที่ทำให้ข้าอยากลงมาเดินด้วย','ข้าจะหลับอีกครั้ง ก่อนหลับ ข้าอยากรู้ว่าโลกผ่านตามนุษย์เป็นยังไง','ทุกตัวในป่าพูดถึงเจ้า ข้าเลยต้องมาดูเอง'])}</i>"<br><br><span class="tag2">${TIER[8][1]} วงแหวน${tName(8)} — ทั้งทวีปมีได้แค่หนึ่ง</span>`,o)},1);
+
+// ---------- หน้าดวงจิต: วงแหวนระดับสูง / สัญญา / สัตว์สถิตจิต ----------
+{const _os=window.openSoul;window.openSoul=function(){const r=_os.apply(this,arguments);try{if(!on())return r;const g=S.sv,x=g.bx,m=$('modal');if(!m||!x)return r;const L=[];
+ const gr=g.rings.filter(q=>q.gr);if(gr.length)L.push(...gr.map(q=>`${TIER[q.t][1]} ${tName(q.t)} · ${esc(q.b)}${q.aw?' ✨ตื่นรู้':''}${q.slp?' 🌙หลับอยู่':''}${q.seal?' 🔒ผนึกครึ่งหนึ่ง':''}${q.ev?' 🌠เติบโตแล้ว':''}`));
+ if(x.pact)L.push(`📜 สัญญากับ${esc(x.pact.n)}: ${PACT[x.pact.k]}${x.pact.k==='dream'?` (${esc(x.pact.dr)})`:''} · รักษาแล้ว ${x.keep} ครั้ง`);
+ if(x.inner)L.push(`${x.inner.ic} สัตว์สถิตจิต: ${esc(x.inner.n)} (${x.inner.y} ปี)`);
+ if(x.rb&&x.rb.st===2)L.push(`🤝 พี่น้องร่วมสาบาน: ${esc(x.rb.n)}`);
+ if(x.curse)L.push(`🐾 เผ่าของ${esc(x.curse.n)}ยังตามล่าคุณ`);
+ const a=afOf();L.push(a>=85?'🌲 ป่าทั้งทวีปพูดถึงคุณ':a>=65?'🌿 สัตว์วิญญาณชอบกลิ่นของคุณ':a>=40?'🍃 ป่ายังไม่แน่ใจในตัวคุณ':'🥀 สัตว์วิญญาณหลบเมื่อคุณเดินผ่าน');
+ m.insertAdjacentHTML('beforeend',`<div class="svX"><h4>🌌 สัตว์วิญญาณระดับสูง</h4><div class="tag2" style="line-height:1.8">${L.join('<br>')}</div></div>`)}catch(e){console.error(e)}return r}}
+})()}catch(e){console.error('block35g',e)}
+
 
 // ---- กู้ตั๋วสุ่ม/VIP/ของแต่งที่เติมไว้ เมื่อรหัสเครื่องเปลี่ยน (ล้างข้อมูลเบราว์เซอร์/เปลี่ยนเครื่อง) ----
 try{(()=>{
