@@ -78,15 +78,17 @@ async function supHall(request, env, url) {
   let uid = String(url.searchParams.get('uid') || ''), body = null;
   if (a === 'supjoin') { try { body = await request.json() } catch (e) { return jr({ ok: 0 }, 400) } uid = String(body.id || '') }
   const okU = /^[a-z0-9]{6,24}$/.test(uid);
+  const TIER = [20000, 5000, 1000, 200, 1], tierOf = b => { for (let i = 0; i < TIER.length; i++) if (b >= TIER[i]) return 4 - i; return 0 };
   const bk = new Date(Date.now() + 7 * 3600e3), ms = Date.UTC(bk.getUTCFullYear(), bk.getUTCMonth(), 1) - 7 * 3600e3;
   const sum = async (u, since) => { const r = await db.prepare("SELECT COALESCE(SUM(amount_satang),0) s FROM orders WHERE uid=? AND " + ST + " AND paid_at>=?").bind(u, since).first(); return (r && r.s) || 0 };
   if (a === 'supjoin') {
     if (!okU || (await sum(uid, 0)) <= 0) return jr({ ok: 0, err: 'nopay' }, 403);
     const dm = ['tier', 'mask', 'hide'].includes(String(body.dm || '')) ? String(body.dm) : 'tier';
-    if (body.off) { let p0 = null; try { p0 = JSON.parse(await cmd('HGET', 'supp', uid) || 'null') } catch (e) {} await cmd('HSET', 'supp', uid, JSON.stringify(Object.assign({}, p0 || {}, { hide: 1, dm, t: Date.now() }))); return jr({ ok: 1 }) }
+    const tier = tierOf(Math.round((await sum(uid, 0)) / 100)), cb = body.cb ? 1 : 0;
+    if (body.off) { let p0 = null; try { p0 = JSON.parse(await cmd('HGET', 'supp', uid) || 'null') } catch (e) {} await cmd('HSET', 'supp', uid, JSON.stringify(Object.assign({}, p0 || {}, { hide: 1, dm, tier, t: Date.now() }))); return jr({ ok: 1 }) }
     const n = h.clean(String(body.n || ''), 24).trim(); if (!n) return jr({ ok: 0, err: 'name' }, 400);
     const look = body.look && JSON.stringify(body.look).length < 1600 ? body.look : null;
-    await cmd('HSET', 'supp', uid, JSON.stringify({ n, dm, look, t: Date.now() })); return jr({ ok: 1 });
+    await cmd('HSET', 'supp', uid, JSON.stringify({ n, dm, look, cb, tier, t: Date.now() })); return jr({ ok: 1 });
   }
   const scope = url.searchParams.get('s') === 'm' ? 'm' : 'a', since = scope === 'm' ? ms : 0, ck = 'supb:' + scope + ':' + (scope === 'm' ? ms : 0);
   let raw = null; try { raw = JSON.parse(await cmd('GET', ck) || 'null') } catch (e) {}
@@ -95,7 +97,6 @@ async function supHall(request, env, url) {
     raw = (rs.results || []).map(r => [r.u, r.s]); try { await cmd('SET', ck, JSON.stringify(raw), 'EX', 300) } catch (e) {}
   }
   // ระดับผู้สนับสนุน (ตามยอดสะสมตลอดกาล) · โชว์ยอดแบบปิดบางส่วนเท่านั้น (ยอดเต็มไม่ออกจากเซิร์ฟเวอร์)
-  const TIER = [20000, 5000, 1000, 200, 1], tierOf = b => { for (let i = 0; i < TIER.length; i++) if (b >= TIER[i]) return 4 - i; return 0 };
   const mask = b => { b = Math.max(0, Math.round(b)); const t = String(b); if (t.length <= 1) return t; const m = t[0] + 'x'.repeat(t.length - 1); return m.replace(/\B(?=(.{3})+(?!.))/g, ',') };
   const ids = raw.map(r => r[0]), ps = ids.length ? await cmd('HMGET', 'supp', ...ids) : [], ac = ids.length ? await h.pipe(ids.map(u => ['GET', 'acp:' + u])) : [];
   let allT = {}; if (ids.length) { try { if (scope === 'a') raw.forEach(r => allT[r[0]] = r[1]); else { const q = await db.prepare("SELECT uid u, SUM(amount_satang) s FROM orders WHERE " + ST + " AND uid IN (" + ids.map(() => '?').join(',') + ") GROUP BY uid").bind(...ids).all(); (q.results || []).forEach(x => allT[x.u] = x.s) } } catch (e) {} }
@@ -107,7 +108,8 @@ async function supHall(request, env, url) {
     const tot = await sum(uid, 0), mon = await sum(uid, ms); let p = null; try { p = JSON.parse(await cmd('HGET', 'supp', uid) || 'null') } catch (e) {}
     const mine = scope === 'm' ? mon : tot; let rank = 0;
     if (mine > 0) { const c = await db.prepare("SELECT COUNT(*) n FROM (SELECT uid, SUM(amount_satang) s FROM orders WHERE " + ST + " AND paid_at>=? GROUP BY uid HAVING s>?)").bind(since, mine).first(); rank = ((c && c.n) || 0) + 1 }
-    me = { tot: Math.round(tot / 100), mon: Math.round(mon / 100), rank, ok: tot > 0 ? 1 : 0, n: p ? p.n || '' : '', dm: p && p.dm ? p.dm : (p && p.sa ? 'mask' : 'tier'), hide: p && p.hide ? 1 : 0, joined: p && !p.hide ? 1 : 0, tier: tierOf(Math.round(tot / 100)) };
+    try { const tq = tierOf(Math.round(tot / 100)); if (p && p.tier !== tq) { p.tier = tq; await cmd('HSET', 'supp', uid, JSON.stringify(p)) } } catch (e) {}
+    me = { cb: p && p.cb ? 1 : 0, tot: Math.round(tot / 100), mon: Math.round(mon / 100), rank, ok: tot > 0 ? 1 : 0, n: p ? p.n || '' : '', dm: p && p.dm ? p.dm : (p && p.sa ? 'mask' : 'tier'), hide: p && p.hide ? 1 : 0, joined: p && !p.hide ? 1 : 0, tier: tierOf(Math.round(tot / 100)) };
   }
   return jr({ rows, me, s: scope });
 }

@@ -2139,6 +2139,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (!b.nsp) { try { if (+(await cmd('SISMEMBER', 'supok', id))) m.sp = 1 } catch {} }
       try { const vj = jp(await cmd('GET', 'vip:' + id)), vt = vipTier(vj); if (vt) { m.vp = vt; if (vj.tt && (vt === 3 || VIP_TT.includes(vj.tt))) m.vq = String(vj.tt).slice(0, 20) } } catch {}
       try { const cq = jp(await cmd('GET', 'cosq:' + id)); if (cq) { if (cq.t) m.ct = cq.t; if (cq.c) m.cc = cq.c; if (cq.n && /^t_e/.test(cq.t || '')) m.cn = cq.n } } catch {}
+      try { const sp0 = jp(await cmd('HGET', 'supp', id)); if (sp0 && sp0.cb && !sp0.hide && sp0.tier != null) m.st = Math.max(0, Math.min(4, sp0.tier | 0)) } catch {}
       if (/^ตำนานลานซีซั่น \d{1,4}$/.test(String(b.tt || '')) && !m.tt) { const wv0 = jp(await cmd('HGET', 'arwal', id)); if (isAdmKey(b.key) || (wv0 && wv0.own && (wv0.own.tt || []).includes(String(b.tt)))) { m.tt = String(b.tt); m.tr = 6 } }
       if (['นักล่าเงา', 'ผู้ไม่เคยถอย', 'ตำนานแห่งลาน', 'ราชันเงาอสูร', 'เทพสงครามแห่งลาน', 'ผู้ยืนหนึ่งเหนือพันศึก', 'จักรพรรดิแห่งเงา', 'ผู้ไต่ลานทองคำ', 'เพชรแห่งลานเงา', 'จ้าวลานประลอง', 'ปรมาจารย์ผู้ไร้เงา', 'ราชันหมื่นเงา', 'เทพยุทธ์แห่งยุค'].includes(m.tt) && !isAdmKey(b.key)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.tt || []).includes(m.tt)) { m.tt = ''; m.tr = 0 } }
       // แชร์การปลดปล่อยพลัง: แนบข้อมูลฉาก pixel (ตัวเลข/สี/คำสั้นๆ เท่านั้น) ให้คนอื่นเล่นซ้ำในแชทได้
