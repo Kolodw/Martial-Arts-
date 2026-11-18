@@ -345,6 +345,8 @@ for (let i = 1; i <= 8; i++) { COS_BASE['cf' + i] = [COS_FP[i - 1], ['f_p' + i]]
 for (let i = 9; i <= 11; i++) COS_BASE['ct' + i] = [9, ['t_p' + i]]; // ฉายาเริ่มต้น 9 บาท
 COS_BASE.call = [399, [...Array(8).keys()].flatMap(i => ['f_p' + (i + 1), 't_p' + (i + 1), 'c_p' + (i + 1)])];
 const COS_ALL = new Set([...COS_BASE.call[1], 't_p9', 't_p10', 't_p11']);
+// 🧑 รูปโปรไฟล์ขยับได้ (ร้านตกแต่ง หมวดรูปโปรไฟล์) — ราคาสูงสุด 39 บาท
+for (let i = 1; i <= 4; i++) { COS_BASE['pa' + i] = [[29, 29, 39, 39][i - 1], ['a_p' + i]]; COS_ALL.add('a_p' + i) }
 // 🏙️ ชุดตกแต่งยุคปัจจุบัน: 6 ชุด (กรอบ f_m · ฉายา t_m · ธีมแชท c_m) + ฉายาเสริม 18 แบบ (t_n) — ราคาเดียวกับสูตรของชุดยุทธภพ
 const MOD_F = [49, 39, 49, 49, 39, 49], MOD_T = [19, 19, 29, 29, 19, 19], MOD_C = 19, MOD_SET = [69, 59, 79, 79, 59, 69];
 for (let i = 1; i <= 6; i++) { COS_BASE['mf' + i] = [MOD_F[i - 1], ['f_m' + i]]; COS_BASE['mt' + i] = [MOD_T[i - 1], ['t_m' + i]]; COS_BASE['mc' + i] = [MOD_C, ['c_m' + i]]; COS_BASE['ms' + i] = [MOD_SET[i - 1], ['f_m' + i, 't_m' + i, 'c_m' + i]] }

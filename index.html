@@ -462,8 +462,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='19.1';
+const VERSION='19.2';
 const CHANGELOG=[
+  {v:'19.2',d:'18 พ.ย. 2026',l:['🧑 <b>รูปโปรไฟล์ใหม่</b> — แบบนิ่ง 4 แบบ <b>ใส่ได้ฟรีทุกคน</b> (จอบทำนา · เทียนไข · แมวจร · ดาบราตรี) เลือกที่ โปรไฟล์ › ข้อมูล','✨ <b>รูปโปรไฟล์ขยับได้</b> 4 แบบ ในร้านตกแต่ง หมวดใหม่ "รูปโปรไฟล์" ราคา 29–39 บาท (จิ้งจอกเก้าหาง · ปักษาตะวัน · ต้นไม้โลก · ความว่างเปล่า) — ซื้อครั้งเดียวถาวร ในแชทแสดงเป็นภาพนิ่ง']},
   {v:'19.1',d:'18 พ.ย. 2026',l:['⭕ <b>ทวีปจิตวิญญาณยุทธ์ รอบ 2</b> — ดวงจิต 5 สายมีผลจริง · ท่าวงแหวนลดพลังศัตรูได้จริง · เหตุการณ์เฉพาะทวีปกว่า 30 แบบ (งานของคนมีดวงจิต · สถาบัน · ทะเบียนศาลา · หนี้ · เพื่อนร่วมทีม · ลูกปลุกจิต · นักล่ากระดูกวิญญาณ ฯลฯ)','🤝 <b>ไม่ต้องฆ่าก็ได้</b> — สยบสัตว์อสูรเป็นสัตว์คู่ใจ · ซื้อวงแหวนตลาดมืด (อาจปลอม) · ไว้ชีวิตสัตว์ที่แพ้ แล้วมันอาจกลับมา · ฆ่ามากไปเผ่าสัตว์จะมาแก้แค้น','🌀 <b>ดวงจิตคู่แย่งร่าง</b> — กดให้หลับ / หลอมรวม / ปล่อยไป · 💞 <b>ดวงจิตมีนิสัยและพูดได้</b> ใจตรงกันแล้วฝึกเร็ว','🌑 <b>ไร้ดวงจิต</b> — โอกาส 4% ปลุกไม่ขึ้น เลือกเป็นช่าง หมอ พ่อค้า หรือนักวิชาการ · ⚡ <b>ปลายทางหลังวงที่ 9</b> — ทดสอบเทพ / ทุบวงแหวน / ถ่ายทอดให้ชีวิตถัดไป']},
   {v:'19.0',d:'18 พ.ย. 2026',l:['⭕ <b>โหมดใหม่ ทวีปจิตวิญญาณยุทธ์</b> — ตื่นรู้วิญญาณยุทธ์ 40 แบบ 5 สาย ล่าสัตว์วิญญาณดูดวงแหวน ไต่ระดับ 10 ขั้น มีสมุดบันทึกวิญญาณ (เลือกได้ที่ตัวเลือกโหมดท้าทาย)','📜 <b>ชีวิตไม่ซ้ำ</b> — สมุดเส้นทางชีวิต · คนแปลกหน้าที่เจอซ้ำได้ · ชะตาหายาก 1% ต่อปี · พื้นเพตอนเกิด (ยากจน/ตระกูลมั่งคั่ง/ฝาแฝด/ดาวเด่น/ได้รับการดูแล/กำพร้า) · เหตุการณ์ข้ามโลก','🎭 <b>เหตุการณ์เพิ่มทุกโลก</b> — เพิ่มอีก 25–30 เหตุการณ์ต่อโลก เหตุการณ์แตกต่างตามอาชีพ ตัวเลือกก่อนหน้ามีผลต่อเนื่อง ไม่เป็นเส้นตรง','🛒 <b>ซื้อด้วยเงินจริงต้องล็อกอิน Google ก่อน</b> — ตั๋วสุ่ม VIP ของแต่ง ผูกกับบัญชี ไม่หายเมื่อเปลี่ยนเครื่อง ล็อกอินเสร็จกลับหน้าซื้อให้เอง','🎲 <b>กู้ตั๋ว/VIP ที่เคยเติมไว้</b> — โปรไฟล์ → กู้ตั๋วสุ่ม/VIP ที่เคยเติมไว้ กรอกชื่อบัญชี ยอด เวลาตามสลิป ระบบย้ายมาเครื่องนี้ให้','🛡️ <b>กันเซฟหาย</b> — เซฟคลาวด์ถี่ขึ้นและทันทีหลังซื้อ · ชวนผูก Google · iPhone เตือนให้เพิ่มเกมลงหน้าจอโฮม · เตือนเมื่อเซฟคลาวด์ค้างหลายวัน','🔧 <b>แก้บั๊ก</b> — ซื้อเกราะแล้วเลือดไม่ขึ้น/ตกลง · ตัวละครที่ตายไม่ขึ้นทำเนียบเพราะ "ตรวจพบการแก้ไขค่า" ทั้งที่แค่รีเฟรช · ผู้เล่นปกติโดนแบนผิด (ผ่อนการตรวจให้ไม่เข้มเกิน) · ผู้ย้อนกาลเปิด/ปิดข้ามอัตโนมัติได้เอง ไม่ข้ามการเลือกโดยไม่ตั้งใจ']},
   {v:'18.14',d:'18 พ.ย. 2026',l:['🕳️ <b>อเวจี</b> — ลงอัตโนมัติ/ลงรวดผ่านชั้นลึกที่ประตูซ่อนได้ · เพิ่มป้ายผู้คุมพิเศษ 🟢/🟡/🔴 พร้อมรางวัล · แก้ปณิธานสัตว์อสูรเปลี่ยนไม่ได้ · แก้ป้ายด่านนรกหาย','🔁 <b>ผู้ย้อนกาล</b> — เควสช่วยเพื่อนร่วมชะตาไม่ถูกข้ามแล้ว (ออโต้หยุดรอ ดวลจริง ไม่ซ้อนทับ)','💛 <b>หอผู้สนับสนุน</b> — อันดับผู้สนับสนุนเกม เดือนนี้/ตลอดกาล ขึ้นชื่อแบบยินยอม','👁 ตัวละครยุคปัจจุบันในหน้าดูคนอื่นเล่นแสดงอาชีพ/สุขภาพแทนขั้นพลัง']},
@@ -32824,6 +32825,10 @@ const COSP={};
 for(let i=1;i<=8;i++){COSP['cf'+i]={n:NMF[i-1],p:FP[i-1]};COSP['ct'+i]={n:'ฉายา '+NMT[i-1],p:tP(i)};COSP['cc'+i]={n:'ธีมแชท '+NMC[i-1],p:cP(i)};COSP['cs'+i]={n:SN[i-1],p:SP[i-1]}}
 for(let i=9;i<=11;i++)COSP['ct'+i]={n:'ฉายา '+NMT[i-1],p:9};
 COSP.call={n:'ครบทุกชุด (8 ชุด · 24 ชิ้น)',p:399};
+const AVM=[['a_f1','จอบทำนา',0,0,'ชาวนาผู้ถ่อมตน'],['a_f2','เทียนไข',0,0,'แสงเล็กๆ ในคืนมืด'],['a_f3','แมวจร',1,0,'เจ้าของถนนยามราตรี'],['a_f4','ดาบราตรี',2,0,'คมกริบใต้แสงจันทร์'],['a_p1','จิ้งจอกเก้าหาง',3,29,'เก้าหางพลิ้วไหว · ไฟลอยขึ้น · กะพริบตา'],['a_p2','ปักษาตะวัน',3,29,'ปีกกระพือ · รัศมีหมุนรอบตัว'],['a_p3','ต้นไม้โลก',2,39,'รากเรืองแสง · ใบไม้ร่วงพริ้ว'],['a_p4','ความว่างเปล่า',3,39,'วงแหวนเต้นเป็นจังหวะ · แสงโคจร']];
+window.AVT=AVM.map((x,i)=>({id:x[0],n:x[1],r:x[2],free:!x[3],p:x[3],d:x[4],pk:x[3]?'pa'+(i-3):'',i}));
+AVT.filter(a=>!a.free).forEach(a=>{COSP[a.pk]={n:'รูปโปรไฟล์ '+a.n+' (ขยับได้)',p:a.p}});
+
 const st2=document.createElement('style');st2.textContent=`
 
 
@@ -33004,6 +33009,7 @@ window.cosPaid=async function(btn,pk){const f=$('supImg')&&$('supImg').files&&$(
  try{const img=await bigShrink(f);if(!img)throw 0;const r=await fetch('/api/pay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:pid,pk,n:pname(),img})});j=await r.json().catch(()=>null)}catch(e){j=null}
  if(j&&j.ok){await sync();btn.textContent='✅ ตรวจผ่านแล้ว ของเข้าแล้ว!';toast('✅ ได้ของแล้ว ขอบคุณที่สนับสนุนครับ 💛');try{sfx('good')}catch(e){}setTimeout(()=>cosMenu(window._cosTab||'set'),1200);return}
  btn.disabled=false;btn.textContent='📨 ส่งสลิป';toast(j&&j.st==='amount'&&j.need?'ยอดในสลิปไม่ตรง ต้องโอน '+j.need+' บาทพอดี (ไม่ขาดไม่เกิน) แล้วส่งสลิปใบใหม่':j&&MSG[j.st]?MSG[j.st]:'ตรวจสลิปไม่สำเร็จ ลองใหม่อีกครั้ง หรือแจ้งผู้พัฒนาพร้อมสลิป')};
+window.cosHas=has;
 window.cosEq=async function(kind,id){if(kind==='f'){frEquip(id||null);setTimeout(()=>cosMenu(window._cosTab),50);return}
  const e=Object.assign({},CS.eq);e[kind]=id||'';CS.eq=e;save();try{await api('cosset',Object.assign({t:e.t||'',c:e.c||''},isA()?{key:admK()}:{}))}catch(x){toast('บันทึกไม่สำเร็จ')}cosMenu(window._cosTab||'set')};
 // องค์ประกอบ UI
@@ -33025,7 +33031,7 @@ const cardS=i=>{const ids=['f_p'+i,'t_p'+i,'c_p'+i],all=ids.every(has),sum=FP[i-
  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:2px"><span class="sub">กรอบ+ฉายา+ธีมแชท · แยกซื้อ ${sum}฿</span>${all?'<span class="own-b">✅ มีครบแล้ว</span>':priceH(pk)}</div>
  ${all?'':`<div class="acts"><button class="g" onclick="cosTry('s${i}')">👁️ ลองใส่ทั้งชุด</button><button onclick="cosBuy('${pk}')">ซื้อชุดนี้ ${price(pk)}฿</button></div>`}</div>`};
 const owned=()=>ALL.filter(has).length;
-window.cosMenu=function(tab,focus){tab=window._cosTab=tab||window._cosTab||'set';const tabs=[['set','✨ เซ็ต'],['f','🖼️ กรอบ'],['t','🏷️ ฉายา'],['c','💬 ธีมแชท']];let b='';
+window.cosMenu=function(tab,focus){tab=window._cosTab=tab||window._cosTab||'set';const tabs=[['set','✨ เซ็ต'],['f','🖼️ กรอบ'],['t','🏷️ ฉายา'],['c','💬 ธีมแชท'],['a','🧑 รูปโปรไฟล์']];let b='';
  const ft=CS.feat&&CS.feat.exp>Date.now()?CS.feat:null;let fh='';
  if(ft){const k=ft.pk[1]==='s'?'s':'f',i=+ft.pk.slice(2);const own=k==='s'?['f_p'+i,'t_p'+i,'c_p'+i].every(has):has('f_p'+i);
   fh=`<div class="feat"><span class="tg">🔥 ลด 20% วันนี้ · ${cdText()}</span><b style="font-size:14px">⭐ ของแนะนำประจำวัน — ${COSP[ft.pk].n}</b><div class="trio" style="margin-top:6px">${frPrev(i)}<div class="tt">${k==='s'?cosTitleHtml('t_p'+i)+bub(i):`<span class="sub">${SHN[i-1]} · ตัวประดับขยับได้</span>`}<span class="pr"><b>${ft.p}฿</b><s>${ft.full}฿</s></span></div></div>${own?'<div class="own-b" style="margin-top:6px">✅ คุณมีแล้ว</div>':`<div class="acts" style="margin-top:8px"><button class="g" onclick="cosTry('${k}${i}')">👁️ ลองใส่</button><button onclick="cosBuy('${ft.pk}')">ซื้อ ${ft.p}฿</button></div>`}</div>`}
@@ -33033,9 +33039,11 @@ window.cosMenu=function(tab,focus){tab=window._cosTab=tab||window._cosTab||'set'
  if(tab==='f'){b='<div class="grid">'+[1,2,3,4,5,6,7,8].map(cardF).join('')+'</div>'}
  if(tab==='t'){b=`<div class="starter"><b>🌱 เริ่มต้นแค่ 9 บาท</b> — ฉายาแบบเรียบ 3 แบบ ลองซื้อชิ้นแรกได้เลย</div><div class="grid">${[9,10,11].map(cardT).join('')}${[1,2,3,4,5,6,7,8].map(cardT).join('')}</div>`}
  if(tab==='c'){b='<div class="grid">'+[1,2,3,4,5,6,7,8].map(cardC).join('')+'</div>'}
+ if(tab==='a'){const RC=['#888780','#378ADD','#7F77DD','#BA7517'],RN=['ธรรมดา','หายาก','ล้ำค่า','ตำนาน'],dd=frGet();
+  b=`<div class="starter"><b>🧑 รูปโปรไฟล์</b> — แบบนิ่งใส่ฟรีทุกคน · แบบขยับได้ 29–39 บาท (ในแชทแสดงเป็นภาพนิ่ง)</div><div class="grid">${AVT.map(a=>{const o=a.free||has(a.id),eq=dd.pf===a.id;return `<div class="card" id="cs-a${a.i}" style="--ac:${RC[a.r]}"><span class="rib">${a.free?'ฟรี · ':'✨ ขยับได้ · '}${RN[a.r]}</span><div class="pv">${avtHtml(a.id,84)}</div><b class="nm">${a.n}</b><div class="sub">${a.d}</div>${o?'':priceH(a.pk)}<div class="acts">${o?(eq?`<button class="g" onclick="avtOff()">ถอด</button><span class="own-b">✅ ใช้อยู่</span>`:`<button onclick="avtEquip('${a.id}')">ใช้เป็นรูปโปรไฟล์</button>`):`<button onclick="cosBuy('${a.pk}')">ซื้อ ${price(a.pk)}฿</button>`}</div></div>`}).join('')}</div>`}
  const hero=`<div class="hero"><span class="own">สะสมแล้ว ${owned()}/24</span><i class="sp" style="left:12%;top:20%"></i><i class="sp" style="left:60%;top:70%;animation-delay:-1s"></i><i class="sp" style="left:88%;top:40%;animation-delay:-.5s"></i><h4>🎨 ร้านตกแต่ง</h4><p>กรอบรูปทรงพิเศษที่ขยับได้ · ฉายาเรืองแสง · ธีมแชท<br>ของแต่งล้วนๆ ซื้อครั้งเดียวถาวร ไม่มีผลต่อพลังหรืออันดับ</p></div>`;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="cxs">${hero}<div class="tabs">${tabs.map(t=>`<button class="${tab===t[0]?'on':''}" onclick="cosMenu('${t[0]}')">${t[1]}</button>`).join('')}</div>${fh}${b}<p class="tag2" style="margin-top:10px">เล่นฟรีก็ได้กรอบและฉายาจากในเกมเหมือนเดิม · ผูกกับบัญชี ไม่หายเวลาเปลี่ยนเครื่อง</p></div>`,'cosshop');
- try{document.querySelectorAll('.cxs .card,.cxs .feat').forEach((e,i)=>{if(i>1)e.classList.add('cxoff');cxWatch(e)})}catch(e){}
+ try{document.querySelectorAll('.cxs .card,.cxs .feat').forEach((e,i)=>{if(i>1)e.classList.add('cxoff');cxWatch(e)})}catch(e){}try{avtMount($('modal'))}catch(e){}
  if(focus){const el=document.getElementById('cs-'+focus);if(el){el.scrollIntoView({block:'center'});el.classList.add('hl')}}};
 // ลองใส่
 let TRY=null;
@@ -40482,6 +40490,68 @@ for(const n of ['rrBuy','vipBuy','cosBuy','evBuy','modBuy']){const o=window[n];i
 {const og=gGot;gGot=async function(){const r=await og.apply(this,arguments);try{const f=window._gatePend;if(f&&Date.now()-(window._gateT||0)<10*60e3&&PFST&&PFST.g){window._gatePend=null;LINKED=true;setTimeout(()=>{try{f()}catch(e){}},400)}}catch(e){}return r}}
 window._gateOK=gateOK;
 })()}catch(e){console.error('block37',e)}
+
+/* ===== Block 36 (v19.2): รูปโปรไฟล์วาดสด — ฟรีแบบนิ่ง 4 แบบ · ขยับได้ 4 แบบ (ร้านตกแต่ง หมวดรูปโปรไฟล์ สูงสุด 39฿) ===== */
+try{(()=>{
+const TAU=Math.PI*2,sin=Math.sin,cos=Math.cos;
+const mk=(ctx)=>{const R=(x,y,w,h,c,a)=>{ctx.globalAlpha=a==null?1:a;ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),w,h)};
+ const P=(x,y,c,a)=>R(x,y,1,1,c,a);
+ const D=(cx,cy,r,c,a)=>{for(let y=-r;y<=r;y++)for(let x=-r;x<=r;x++)if(x*x+y*y<=r*r+r*.6)P(cx+x,cy+y,c,a)};
+ const G=(c1,c2)=>{for(let y=0;y<24;y++){const k=y/23,h=s=>parseInt(s,16),a=[h(c1.slice(1,3)),h(c1.slice(3,5)),h(c1.slice(5,7))],b=[h(c2.slice(1,3)),h(c2.slice(3,5)),h(c2.slice(5,7))];R(0,y,24,1,'rgb('+a.map((v,i)=>Math.round(v+(b[i]-v)*k)).join(',')+')')}};
+ return{R,P,D,G}};
+const DRAW={
+ a_f1(c,t){const{R,P,D,G}=mk(c);G('#bfe39a','#e9f3b8');D(18,6,3,'#ffd84a');R(0,16,24,8,'#7a5a34');for(let i=0;i<5;i++)R(i*5+1,18+(i%2)*2,4,1,'#5c4125');R(0,16,24,1,'#4f8a3a');
+  for(let i=0;i<12;i++)P(5+i,5+i,'#8a5a2b'),P(6+i,5+i,'#8a5a2b');R(15,16,6,2,'#9aa3ab');R(15,18,5,1,'#6c747b');R(14,15,2,2,'#6c747b');R(2,13,3,1,'#4f8a3a');R(1,14,2,2,'#4f8a3a')},
+ a_f2(c,t){const{R,P,D,G}=mk(c);G('#14122a','#2a2148');D(12,9,7,'#ffb04a',.12);D(12,9,4,'#ffb04a',.16);R(8,20,8,2,'#8a6a2a');R(7,22,10,1,'#6b4f1d');R(10,12,4,8,'#f4e9cc');R(10,12,1,8,'#fff8e1');R(13,13,1,3,'#e0cfa4');R(13,16,1,4,'#cdb98a');R(12,10,1,2,'#333');R(11,7,3,4,'#ff9a2a');R(12,6,1,1,'#ff9a2a');R(12,8,1,3,'#ffe27a');for(let i=0;i<4;i++)P(3+i*6,2+(i%2)*2,'#fff',.5)},
+ a_f3(c,t){const{R,P,D,G}=mk(c);G('#2f3d63','#55648f');D(18,5,3,'#f6f1d2');D(19,4,2,'#2f3d63',.5);P(5,4,'#fff');P(9,2,'#fff');P(3,8,'#fff');R(0,20,24,4,'#222a40');R(8,15,9,6,'#4a4a52');R(8,9,8,7,'#4a4a52');R(8,7,2,3,'#4a4a52');R(14,7,2,3,'#4a4a52');R(9,8,1,1,'#e9a3b0');R(15,8,1,1,'#e9a3b0');R(10,11,2,2,'#ffd54a');R(13,11,2,2,'#ffd54a');R(11,11,1,2,'#111');R(14,11,1,2,'#111');R(12,13,1,1,'#e9a3b0');R(17,17,3,2,'#4a4a52');R(19,13,2,5,'#4a4a52');R(9,20,2,1,'#6a6a74');R(14,20,2,1,'#6a6a74')},
+ a_f4(c,t){const{R,P,D,G}=mk(c);G('#1a1030','#3a2466');D(12,11,8,'#c9b8ff',.12);D(17,5,3,'#efe9ff');D(18,4,2,'#1a1030',.45);R(11,2,2,14,'#d8e2ee');R(11,2,1,14,'#ffffff');R(12,1,1,1,'#d8e2ee');R(7,16,10,2,'#c8a03a');R(7,16,10,1,'#f0cf6a');R(11,18,2,4,'#6b3b1d');R(10,22,4,1,'#c8a03a');P(4,6,'#fff',.7);P(20,13,'#fff',.7);P(6,18,'#fff',.5)},
+ a_p1(c,t){const{R,P,D,G}=mk(c);G('#1c1438','#3a2a6a');D(18,5,3,'#f4efff');D(19,4,2,'#2a2050',.4);
+  for(let k=0;k<9;k++){const a=-Math.PI*.5+(k-4)*.34+sin(t*1.6+k*.7)*.12;for(let r=3;r<=10;r++){const x=12+cos(a)*r*1.0,y=17+sin(a)*r*.85;R(x-1,y,r>8?2:3,2,r>8?'#fff4dc':'#ff8a2a')}}
+  R(9,11,6,5,'#ff8a2a');R(8,8,2,4,'#ff8a2a');R(14,8,2,4,'#ff8a2a');R(9,9,1,2,'#3a1a10');R(14,9,1,2,'#3a1a10');R(10,14,4,3,'#fff4dc');R(11,14,2,1,'#222');
+  const bl=(t%3.2)<.18;if(bl){R(10,12,1,1,'#222');R(13,12,1,1,'#222')}else{R(10,12,1,2,'#222');R(13,12,1,2,'#222');P(10,12,'#fff');P(13,12,'#fff')}
+  for(let k=0;k<7;k++){const p=(t*.55+k*.31)%1;P(4+k*2.6+sin(t*2+k)*1.2,22-p*20,'#ffb04a',1-p)}},
+ a_p2(c,t){const{R,P,D,G}=mk(c);G('#ffb347','#ff5a2a');for(let k=0;k<12;k++){const a=k/12*TAU+t*.5;for(let r=4;r<17;r++)P(12+cos(a)*r,12+sin(a)*r,'#ffe9a0',.35-r*.015)}
+  D(12,12,4,'#ffd23a',.9);const w=sin(t*6),f=Math.round(w*3);
+  for(let i=1;i<=7;i++){const y=12-Math.round(f*i/7)-(i>4?1:0);R(12-2-i,y,1,3,i>5?'#ffd23a':'#ff3b2a');R(12+2+i-1,y,1,3,i>5?'#ffd23a':'#ff3b2a')}
+  R(10,10,4,6,'#ff3b2a');R(11,7,3,4,'#ff3b2a');R(14,8,2,1,'#fff2a8');P(12,8,'#111');R(10,16,1,4+Math.round(sin(t*3)),'#ffd23a');R(13,16,1,4-Math.round(sin(t*3)),'#ffd23a');R(11,16,2,2,'#ffb02a')},
+ a_p3(c,t){const{R,P,D,G}=mk(c);G('#08201a','#143a30');const g=.45+.35*sin(t*2);
+  for(let i=0;i<5;i++){R(6+i*3,19+(i%2),1,4-(i%2),'#59ffa8',g);R(5+i*3,21,3,1,'#59ffa8',g*.8)}
+  D(12,16,7,'#59ffa8',.05+g*.08);R(11,9,2,11,'#6b4a2a');R(10,16,1,4,'#6b4a2a');R(13,15,1,5,'#6b4a2a');R(9,19,2,2,'#6b4a2a');R(13,19,2,2,'#6b4a2a');
+  D(12,6,5,'#2f9a4a');D(7,9,3,'#2a8040');D(17,9,3,'#2a8040');D(10,5,2,'#58c868');D(15,7,2,'#58c868');
+  for(let k=0;k<5;k++){const p=(t*.28+k*.2)%1;P(4+k*4+sin(t*1.5+k*2)*1.8,3+p*18,k%2?'#8be67a':'#c9f08a',1-p*.6)}},
+ a_p4(c,t){const{R,P,D,G}=mk(c);G('#040408','#0c0a1a');const rr=6+sin(t*2)*1.4;
+  for(let i=0;i<64;i++){const a=i/64*TAU;P(12+cos(a)*rr,12+sin(a)*rr,'#a07aff',.9);P(12+cos(a)*(rr+1.3),12+sin(a)*(rr+1.3),'#6a4aff',.35)}
+  for(let i=0;i<48;i++){const a=i/48*TAU;P(12+cos(a)*(rr-2),12+sin(a)*(rr-2),'#fff',.12)}
+  for(let k=0;k<6;k++){const a=t*(1.1+k*.04)+k/6*TAU,r=9.5+sin(t+k)*1;P(12+cos(a)*r,12+sin(a)*r,k%2?'#c9b8ff':'#fff')}
+  D(12,12,1,'#fff');P(12,12,'#fff');D(12,12,2,'#a07aff',.2+.2*sin(t*3))}
+};
+window.AVD=DRAW;
+const live=new Set();let tm=null;
+const paint=(cv,id,t)=>{const ctx=cv.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.globalAlpha=1;try{DRAW[id](ctx,t)}catch(e){}ctx.globalAlpha=1};
+const tick=()=>{const t0=performance.now()/1000;live.forEach(o=>{if(!o.cv.isConnected){live.delete(o);return}paint(o.cv,o.id,t0)});if(!live.size&&tm){clearInterval(tm);tm=null}};
+window.avtMount=function(root){try{(root||document).querySelectorAll('.avtph[data-avt]').forEach(el=>{if(el._m)return;el._m=1;const id=el.dataset.avt,px=+el.dataset.px||84,a=(window.AVT||[]).find(x=>x.id===id);if(!a||!DRAW[id])return;
+ const cv=document.createElement('canvas');cv.width=24;cv.height=24;cv.style.cssText=`width:${px}px;height:${px}px;image-rendering:pixelated;border-radius:${Math.round(px*.12)}px;display:block`;el.appendChild(cv);paint(cv,id,.4);
+ if(!a.free){live.add({cv,id});if(!tm)tm=setInterval(tick,90)}})}catch(e){console.error(e)}};
+window.avtHtml=(id,px)=>`<span class="avtph" data-avt="${id}" data-px="${px}" style="display:inline-block"></span>`;
+const snap=id=>{try{const c=document.createElement('canvas');c.width=c.height=24;paint(c,id,.4);const o=document.createElement('canvas');o.width=56;o.height=62;const x=o.getContext('2d');x.imageSmoothingEnabled=false;x.fillStyle='#111';x.fillRect(0,0,56,62);x.drawImage(c,0,3,56,56);return o.toDataURL('image/png')}catch(e){return''}};
+window.avtSnap=snap;
+const cur=()=>{const m=$('modal');return m&&m.dataset?m.dataset.k:''};
+window.avtEquip=function(id){const a=(window.AVT||[]).find(x=>x.id===id);if(!a)return;
+ if(!a.free&&!(window.cosHas&&window.cosHas(id))){toast('ยังไม่ได้ซื้อรูปนี้');return}
+ const u=snap(id);if(!u||u.length>7800){toast('ตั้งรูปไม่สำเร็จ');return}
+ const d=frGet();d.pf=id;d.av=u;d.snap=u;d.avUp=0;d.avSt='';frSet(d);try{profPush()}catch(e){}toast('✅ ตั้งเป็นรูปโปรไฟล์แล้ว');
+ if(cur()==='cosshop'&&window._cosTab==='a')cosMenu('a');else openProfile()};
+window.avtOff=function(){const d=frGet();d.pf='';const u=(typeof S!=='undefined'&&S)?snapAvatar():'';d.av=u;d.snap=u;d.avUp=0;d.avSt='';frSet(d);try{profPush()}catch(e){}toast('ถอดรูปโปรไฟล์แล้ว');if(cur()==='cosshop'&&window._cosTab==='a')cosMenu('a');else openProfile()};
+{const o=window.profSnap;if(typeof o==='function')window.profSnap=function(){const d=frGet();if(d.pf){d.pf='';frSet(d)}return o.apply(this,arguments)};try{profSnap=window.profSnap}catch(e){}}
+const RN=['ธรรมดา','หายาก','ล้ำค่า','ตำนาน'],RC=['#888780','#378ADD','#7F77DD','#BA7517'];
+{const o=window.openProfile;if(typeof o==='function'){const w=function(){const r=o.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='profile')return r;const d=frGet(),A=window.AVT||[];
+  const big=m.querySelector('.frbig .frph');if(big&&d.pf&&DRAW[d.pf]&&!big.querySelector('.avtph')){big.innerHTML=avtHtml(d.pf,big.classList.contains('big')?64:56);avtMount(big)}
+  const pane=m.querySelector('.pfpane[data-t="info"]')||m;if(pane.querySelector('.pfavt'))return r;
+  const has=id=>{try{return window.cosHas?window.cosHas(id):false}catch(e){return false}};
+  const sec=document.createElement('div');sec.className='pfsec pfavt';
+  sec.innerHTML=`<h4>🧑 รูปโปรไฟล์สำเร็จรูป</h4><p class="tag2">แบบนิ่งใส่ได้ฟรีทุกคน · แบบขยับได้อยู่ที่ <a href="#" onclick="cosMenu('a');return false">ร้านตกแต่ง › รูปโปรไฟล์</a> (ไม่เกิน 39฿) · ในแชทแสดงเป็นภาพนิ่ง</p><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">${A.map(a=>{const o=a.free||has(a.id),on=d.pf===a.id;return `<button class="gbtn" style="padding:4px;position:relative;${on?'outline:2px solid #ffc83a;':''}${o?'':'opacity:.55;'}" onclick="${o?`avtEquip('${a.id}')`:`cosMenu('a')`}" title="${a.n}">${avtHtml(a.id,56)}<small style="display:block;font-size:10px;line-height:1.2;margin-top:2px">${a.n}${o?'':' 🔒'}</small></button>`}).join('')}</div>${d.pf?`<button class="gbtn" style="width:100%;margin-top:6px" onclick="avtOff()">↩️ กลับไปใช้รูปตัวละคร</button>`:''}`;
+  const ref=pane.querySelector('.pfsec');if(ref)ref.insertAdjacentElement('afterend',sec);else pane.appendChild(sec);avtMount(sec)}catch(e){console.error(e)}return r};window.openProfile=w;try{openProfile=w}catch(e){}}}
+})()}catch(e){console.error('block36',e)}
 </script>
 </body>
 </html>
