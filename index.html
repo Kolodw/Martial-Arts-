@@ -41487,6 +41487,26 @@ window._abQ=0;
 {const _s=abAutoStep;abAutoStep=function(f){try{if(f||(S&&S.flags&&S.flags.abAuto))window._abQ=Date.now()+1600}catch(e){}return _s.apply(this,arguments)}}
 {const _b=window.abBatch;window.abBatch=function(){try{window._abQ=Date.now()+1600}catch(e){}const r=_b.apply(this,arguments);try{window._abQ=Date.now()+1600;if(typeof modalOpen!=='undefined'&&modalOpen){const m=$('modal');if(m&&/hell2|abyss/.test(m.dataset.k||''))closeM()}}catch(e){}return r}}
 })()}catch(e){console.error('abq block',e)}
+
+// ===================== คำอธิบายวิชากัลป์/วิชาความสามารถพิเศษ/ที่มาของวิชา =====================
+try{(()=>{
+const KST=['','ร่องรอยกัลป์ — เพิ่งผ่านกัลป์มาครั้งแรก','สืบกัลป์ — ผ่านมาแล้ว 2 กัลป์','ข้ามกัลป์ — ตามวิญญาณไปทุกชาติ (อ่อนลงเหลือ 10%)','อมตะไม่ดับสูญ — ตามไปทุกชาติ (เหลือ 20%) ขั้นสูงสุด'];
+function kinfo(a){
+ const h=[];const kp=a.kp|0;
+ if(a.sk&&typeof ASK!=='undefined'&&ASK[a.sk]){const K=ASK[a.sk];h.push(`<div><b>${K[0]} ความสามารถพิเศษ · ${K[1]}</b><br>${K[2]}<br><span style="opacity:.7">${K[3]?'ออกฤทธิ์เองอัตโนมัติ ไม่ต้องกด':'มีปุ่มในหน้าดวล ใช้ได้ 1 ครั้งต่อการดวล'} · ใช้ได้เมื่อวิชานี้อยู่ในตัวคุณ</span></div>`)}
+ if(kp>0){const m=(1+.5*kp).toFixed(1);
+  h.push(`<div><b>♾️ ${KST[Math.min(4,kp)]}</b><br>พลังวิชาคูณเพิ่ม ×${m} จากระดับกัลป์ (ซ้อนกับตัวคูณระดับวิชา)<br><span style="opacity:.7">ทุกครั้งที่ข้ามกัลป์ วิชาที่แกร่งที่สุดในตัวจะเลื่อนขั้นขึ้น 1 ขั้น (ร่องรอย → สืบ → ข้าม → อมตะ) ตั้งแต่ขั้นข้ามกัลป์ ชาติหน้าจะได้วิชานี้ติดตัวมาตั้งแต่เกิดด้วยพลังบางส่วน</span></div>`)}
+ if(a.kal)h.push('<div>🌌 <b>วิชาที่เกิดจากการข้ามกัลป์</b> — เป็นสิ่งที่คุณเห็นตอนจักรวาลเก่าดับ ได้ระดับสูงสุดตั้งแต่ได้มา และมีความสามารถพิเศษประจำตัวเสมอ</div>');
+ if(a.kart)h.push('<div>🔁 <b>วิชาที่ตามมาจากชาติก่อน</b> — เป็นความทรงจำของวิชาที่ข้ามกัลป์มาแล้ว กำลังเหลือ 10–20% ของต้นฉบับ แต่ยังเลื่อนระดับต่อได้</div>');
+ if(/จารึกประตูกัลป์/.test(String(a.tier||'')))h.push('<div>🚪 <b>วิชาที่จารึกไว้ที่ประตูกัลป์</b> — ผู้เล่นอีกคนทิ้งไว้ให้ผู้ที่มาทีหลัง คุณหยิบมาใช้ได้</div>');
+ if(a.ow&&typeof OW_TAG!=='undefined'&&OW_TAG[a.ow])h.push(`<div>${OW_TAG[a.ow]} — ติดตัวมาจากโลกนั้น ยังใช้ต่อได้หลังขึ้นสู่โลกใหม่</div>`);
+ if(a.cn)h.push('<div>✍️ <b>วิชาที่คุณสร้างเอง</b> — ฐานพลังคิดจากพลังรวมตอนสร้าง ปรับสมดุลกับวิชากัลป์ในมือแล้ว</div>');
+ if(!h.length)return '';
+ return `<div class="tag2 artKal" style="line-height:1.65;margin:8px 0;padding:8px 10px;border-radius:10px;background:rgba(160,120,255,.10);border-left:3px solid #a080ff;display:grid;gap:6px">${h.join('')}</div>`}
+{const _am=artMenu;artMenu=function(n){const r=_am.apply(this,arguments);try{const a=S.arts[artFind(n)],m=$('modal');if(a&&m&&!m.querySelector('.artKal')){const k=kinfo(a);if(k){const i=m.querySelector('.artInfo');if(i)i.insertAdjacentHTML('afterend',k);else{const p=m.querySelector('p.tag2');if(p)p.insertAdjacentHTML('afterend',k)}}}}catch(e){console.error('artkal',e)}return r}}
+{const _oa=openArts;openArts=function(){const r=_oa.apply(this,arguments);try{const d=$('modal')&&$('modal').querySelector('.artLegend>div');if(d&&!d.querySelector('.artKL'))d.insertAdjacentHTML('beforeend','<div class="artKL">♾️ <b>วิชากัลป์</b> — เกิดจากการข้ามกัลป์ มี 4 ขั้น (ร่องรอย → สืบ → ข้าม → อมตะ) แต่ละขั้นคูณพลังเพิ่ม ×0.5 และตั้งแต่ขั้นข้ามกัลป์จะตามไปทุกชาติ · บางวิชามี <b>ความสามารถพิเศษ</b> (กระบี่บิน ค่ายกล ย้อนกาล ฯลฯ) ใช้ในดวล</div>')}catch(e){}return r}}
+window._artKinfo=kinfo;
+})()}catch(e){console.error('artkal block',e)}
 </script>
 </body>
 </html>
