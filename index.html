@@ -8240,7 +8240,7 @@ openProfile=function(){const d=frGet(),own=FRAMES.filter(f=>d.own.includes(f.id)
    ${st.ban?`<p class="tag2" style="color:#d84a4a">⛔ ถูกระงับการอัปโหลดรูปอีกราว ${Math.ceil(st.ban/86400)} วัน</p>`:`<label class="tag2" style="display:flex;gap:6px;align-items:center;margin:4px 0"><input type="checkbox" id="pfAgree"> ยืนยันว่ารูปของฉันไม่ผิดกฎข้างบน</label><button class="gbtn" style="width:100%" onclick="profPickFile()">📤 อัปโหลดรูปจากเครื่อง</button><input type="file" id="pfFile" accept="image/*" style="display:none" onchange="profFile(this)">`}</div>
   <div class="pfsec"><h4>🎖️ ฉายาที่โชว์</h4><div style="display:flex;gap:8px;align-items:center">${cur?tchipH(cur.t,cur.r):'<span class="tag2">ยังไม่ได้เลือก</span>'}<button class="gbtn" style="margin-left:auto;padding:4px 12px" onclick="openShowPick('profile')">เลือกฉายา</button></div></div>
   <div class="pfsec"><h4>🖼️ กรอบของฉัน (${own.length}/${FRAMES.filter(f=>f.side!=='adm').length})</h4><div class="frlist"><button class="frpick ${!d.eq?'on':''}" onclick="frEquip(null)">${frWrap('<span class="frph">✕</span>',null)}<small>ไม่ใช้กรอบ</small></button>${own.map(f=>`<button class="frpick ${d.eq===f.id?'on':''}" onclick="frEquip('${f.id}')">${frWrap(`<span class="frph">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,f.id)}<small>${f.n}</small></button>`).join('')}</div><button class="gbtn" style="width:100%;margin-top:8px" onclick="openFrameShop()">🖼️ ไปร้านแลกกรอบ</button></div>
-  <div class="pfsec"><h4>💾 ย้ายเซฟข้ามเครื่อง</h4><p class="tag2" style="margin:0 0 6px">เอาเซฟไปเล่นต่อในมือถือ/คอมเครื่องอื่น ด้วยรหัสย้ายเซฟ</p><button class="gbtn" style="width:100%" onclick="openSaveCode._from='profile';openSaveCode()">💾 ส่งออก / นำเข้าเซฟ</button></div>
+  <div class="pfsec"><h4>💾 ย้ายเซฟข้ามเครื่อง</h4><p class="tag2" style="margin:0 0 6px">เอาเซฟไปเล่นต่อในมือถือ/คอมเครื่องอื่น ด้วยรหัสย้ายเซฟ</p><button class="gbtn" style="width:100%" onclick="openSaveCode._from='profile';openSaveCode()">💾 ส่งออก / นำเข้าเซฟ</button><button class="gbtn" style="width:100%;margin-top:6px" onclick="openClaimRR()">🎲 กู้ตั๋วสุ่ม / VIP ที่เคยเติมไว้</button></div>
   <div class="pfsec"><h4>🔐 บัญชี Google</h4><div id="gBox"><p class="tag2">กำลังโหลด…</p></div></div>`,'profile');
  gBoxFill();if(!profStat._t||Date.now()-profStat._t>20000){profStat._t=Date.now();profStat().then(j=>{if(j&&$('modal').dataset.k==='profile')openProfile()})}};
 // เลือกฉายาจากหน้าโปรไฟล์แล้วกลับมาหน้าโปรไฟล์
@@ -40115,6 +40115,25 @@ try{CH_N.soul='⭕ จิตวิญญาณยุทธ์';if(!CH_KEYS.inclu
  const _cs=chStart;chStart=function(){const r=_cs.apply(this,arguments);try{if(S.ch==='soul'){svInit();log('⭕ <b>ทวีปจิตวิญญาณยุทธ์</b> — ที่นี่ทุกคนจะได้ปลุกดวงจิตตอนอายุหกขวบ บางคนได้ดาบ บางคนได้จอบ และไม่มีใครรู้ว่าอะไรซ่อนอยู่ข้างใน','myth',true)}}catch(e){}return r}}catch(e){console.error('sv reg',e)}
 window._blk34={SP,BEAST,TIER,RANK,awaken,svYear,hunt,absorb,spNow,capOf};
 })()}catch(e){console.error('block34',e)}
+
+// ---- กู้ตั๋วสุ่ม/VIP/ของแต่งที่เติมไว้ เมื่อรหัสเครื่องเปลี่ยน (ล้างข้อมูลเบราว์เซอร์/เปลี่ยนเครื่อง) ----
+try{(()=>{
+window.openClaimRR=function(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎲 กู้ตั๋ว / VIP ที่เคยเติมไว้</h3>
+<p class="tag2">ถ้าเคยเติมเงินแล้วตั๋วสุ่มเกิดหรือ VIP หายไป (เพราะล้างข้อมูลเบราว์เซอร์หรือเปลี่ยนเครื่อง) กรอกข้อมูลตามสลิปโอนเงินครั้งที่แอดมินยืนยันแล้ว ระบบจะย้ายมาให้เครื่องนี้</p>
+<p class="tag2" style="margin:8px 0 2px">ชื่อบัญชีที่โอน (ตามสลิป)</p><input id="clPn" maxlength="40" style="width:100%;box-sizing:border-box" placeholder="เช่น สมชาย ใจดี">
+<p class="tag2" style="margin:8px 0 2px">ยอดที่โอน (บาท)</p><input id="clAm" type="number" inputmode="decimal" style="width:100%;box-sizing:border-box" placeholder="เช่น 59">
+<p class="tag2" style="margin:8px 0 2px">เวลาที่โอน (ตามสลิป)</p><input id="clTm" maxlength="20" style="width:100%;box-sizing:border-box" placeholder="เช่น 14:30">
+<div id="clMsg" class="tag2" style="margin:8px 0;min-height:18px"></div>
+<button class="gbtn" id="clGo" style="width:100%" onclick="doClaimRR()">📦 กู้คืน</button>
+<p class="tag2" style="margin-top:8px">กรอกผิดได้ไม่เกิน 6 ครั้งต่อชั่วโมง · ถ้ายังไม่ได้ ติดต่อแอดมินพร้อมสลิป</p>`)};
+window.doClaimRR=async function(){const m=$('clMsg'),g=$('clGo');const pn=$('clPn').value.trim(),am=parseFloat($('clAm').value),tm=$('clTm').value.trim();
+if(pn.length<3||!(am>0)||tm.replace(/\D/g,'').length<3){m.textContent='⚠️ กรอกให้ครบทั้ง 3 ช่อง (เวลาใส่ตัวเลขเช่น 14:30)';return}
+g.disabled=true;m.textContent='กำลังตรวจ…';
+try{const j=await api('rrclaim',{pn,amt:am,tm});
+ if(j&&j.ok){m.innerHTML='✅ กู้แล้ว! ตั๋วสุ่ม <b>'+(j.rr|0)+'</b>'+(j.vip?' · VIP':'')+((j.cos|0)?' · ของแต่ง '+(j.cos|0):'')+((j.saves|0)?' · เซฟคลาวด์ '+(j.saves|0)+' ช่อง (กู้ได้ที่เมนูเซฟคลาวด์)':'');try{rrLoad&&rrLoad()}catch(e){}try{toast('🎲 กู้ตั๋วสำเร็จ')}catch(e){}return}
+ const E={nomatch:'❌ ไม่พบรายการโอนที่ตรงกัน ตรวจชื่อบัญชี ยอด และเวลาให้ตรงกับสลิป (หรือแอดมินยังไม่ได้กดยืนยันยอดนั้น)',many:'⚠️ ข้อมูลตรงกับหลายรายการ ติดต่อแอดมินพร้อมสลิปครับ',active:'⚠️ เครื่องเก่ายังเปิดเล่นอยู่ ปิดเกมในเครื่องนั้นสักพักแล้วลองใหม่ หรือติดต่อแอดมิน',rate:'⏳ ลองหลายครั้งเกินไป รอสักครู่แล้วลองใหม่',input:'⚠️ กรอกข้อมูลไม่ครบ',id:'⚠️ ไม่พบรหัสเครื่องนี้ ลองรีเฟรชเกมแล้วทำใหม่'};
+ m.textContent=E[j&&j.err]||'ไม่สำเร็จ ลองใหม่อีกครั้ง'}catch(e){m.textContent='ต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่อีกครั้ง'}g.disabled=false};
+})()}catch(e){console.error('block35',e)}
 </script>
 </body>
 </html>

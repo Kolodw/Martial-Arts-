@@ -392,6 +392,22 @@ async function vipAdd(id, tier, days, sign) {
   await cmd('SET', 'vip:' + id, JSON.stringify(v)); try { await cmd('SADD', 'vipall', id) } catch {} return v;
 }
 // ผู้ถือบรรพชน (u) ที่ไม่มีชื่อในหอ (เช่น อนุมัติก่อนระบบหอเสร็จ) → ใส่ให้เองตามลำดับเวลาที่จ่าย ชื่อจากรายการจ่ายล่าสุด
+// ย้ายของทั้งหมดจากไอดีเก่า f → ไอดีใหม่ to (ใช้ทั้งแอดมินกด และผู้เล่นกู้เองผ่านรายการโอน)
+async function moveAcc(f, to, now, why) {
+  const rep = { to, rr: 0, vip: 0, cos: 0, sup: 0, saves: 0 };
+  const rr = +(await cmd('GET', 'rrc:' + f)) || 0; if (rr > 0) { await pipe([['INCRBY', 'rrc:' + to, rr], ['SET', 'rrc:' + f, 0]]); rep.rr = rr }
+  const vf = jp(await cmd('GET', 'vip:' + f)); if (vf) { const vt = jp(await cmd('GET', 'vip:' + to)) || {}; if (vf.u) vt.u = 1; vt.e1 = Math.max(+vt.e1 || 0, +vf.e1 || 0); vt.e2 = Math.max(+vt.e2 || 0, +vf.e2 || 0); if (vf.tt && !vt.tt) vt.tt = vf.tt; await pipe([['SET', 'vip:' + to, JSON.stringify(vt)], ['SADD', 'vipall', to]]); rep.vip = 1; const vu = await cmd('HGET', 'vipu', f); if (vu && !(await cmd('HEXISTS', 'vipu', to))) await pipe([['HSET', 'vipu', to, vu], ['HDEL', 'vipu', f]]) }
+  const cs = (await cmd('SMEMBERS', 'cos:' + f)) || []; if (cs.length) { await cmd('SADD', 'cos:' + to, ...cs); rep.cos = cs.length }
+  if (+(await cmd('SISMEMBER', 'supok', f))) await cmd('SADD', 'supok', to);
+  try { const ids = (await cmd('ZRANGE', 'suppayz', 0, -1)) || []; if (ids.length) { const vals = (await cmd('HMGET', 'suppay', ...ids)) || []; for (let i = 0; i < ids.length; i++) { const r = jp(vals[i]); if (r && r.fid === f) { r.fid = to; r.mvf = f; await cmd('HSET', 'suppay', ids[i], JSON.stringify(r)); rep.sup++ } } } } catch {}
+  // เซฟคลาวด์: คัดลอกทุกช่องของไอดีเก่าไปลงช่องที่ว่างของไอดีใหม่ (ไม่ทับเซฟที่ผู้เล่นมีอยู่)
+  const src = await cs3Fill(f, await pipe([1, 2, 3, 4, 5].map(n => ['GET', 'cs3:' + f + ':' + n]))), dst = await cs3Fill(to, await pipe([1, 2, 3, 4, 5].map(n => ['GET', 'cs3:' + to + ':' + n])));
+  const live = src.filter(v => v && !/^@/.test(String(v))); let slot = 0;
+  for (const v of live) { while (slot < 5 && dst[slot]) slot++; if (slot >= 5) break; await cmd('SET', 'cs3:' + to + ':' + (slot + 1), v, 'EX', 86400 * 90); dst[slot] = v; rep.saves++ }
+  if (rep.saves && !(await cmd('GET', 'cs2:' + to))) await cmd('SET', 'cs2:' + to, '@1', 'EX', 86400 * 90);
+  await cmd('LPUSH', 'acmovelog', JSON.stringify({ f, ...rep, t: now, ...(why || {}) })); await cmd('LTRIM', 'acmovelog', 0, 99);
+  return rep;
+}
 async function vipHeal(id) {
   if (await cmd('HEXISTS', 'vipu', id)) return;
   let nm = '', t0 = 0; try { const ids = (await cmd('ZRANGE', 'suppayz', 0, -1)) || [], vals = ids.length ? ((await cmd('HMGET', 'suppay', ...ids)) || []).map(jp) : []; for (const r of vals) if (r && r.fid === id && r.vp === 'v3' && r.st === 'ok') { nm = String(r.n || ''); t0 = +r.mt || 0 } } catch (e) {}
@@ -1605,6 +1621,28 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (L.length) await pipe(L);
       return res.json({ ok: 1, n: ids.size });
     }
+    if (a === 'rrclaim') {
+      // ผู้เล่นกู้ตั๋วสุ่ม · VIP · ของแต่ง ที่เติมไว้ ย้ายมาไอดีปัจจุบัน — ยืนยันตัวด้วยข้อมูลที่ตรงกับรายการโอนซึ่งแอดมินยืนยันแล้ว (ชื่อบัญชี + ยอด + เวลา)
+      if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
+      const c1 = +(await cmd('INCR', 'rcl:' + id)) || 1; if (c1 === 1) await cmd('EXPIRE', 'rcl:' + id, 3600);
+      const c2 = +(await cmd('INCR', 'rcli:' + ip)) || 1; if (c2 === 1) await cmd('EXPIRE', 'rcli:' + ip, 3600);
+      if (c1 > 6 || c2 > 20) return res.status(429).json({ err: 'rate' });
+      const nz = x => String(x || '').toLowerCase().replace(/(นางสาว|น\.ส\.|นาย|นาง|ด\.ช\.|ด\.ญ\.|mr\.?|mrs\.?|miss|ms\.?)/g, '').replace(/[\s.\-_,()]/g, '');
+      const pn = nz(clean(String(b.pn || ''), 40)), amt = Math.round((+b.amt || 0) * 100), tm = String(b.tm || '').replace(/\D/g, '').slice(0, 12);
+      if (pn.length < 3 || amt <= 0 || tm.length < 3) return res.json({ err: 'input' });
+      const ids = (await cmd('ZRANGE', 'suppayz', 0, -1)) || [], vals = ids.length ? ((await cmd('HMGET', 'suppay', ...ids)) || []).map(jp) : [];
+      const hit = vals.filter(r => { if (!r || r.st !== 'ok' || !okId(r.fid) || r.fid === id || r.mvf) return false; if (Math.round((+r.amt || 0) * 100) !== amt) return false;
+        const rp = nz(r.pn); if (rp.length < 3 || !(rp === pn || (Math.min(rp.length, pn.length) >= 4 && (rp.includes(pn) || pn.includes(rp))))) return false;
+        const rt = String(r.tm || '').replace(/\D/g, ''); if (rt.length >= 3 && !(rt.includes(tm) || tm.includes(rt))) return false; return true });
+      const fs = [...new Set(hit.map(r => r.fid))];
+      if (!fs.length) return res.json({ err: 'nomatch' });
+      if (fs.length > 1) return res.json({ err: 'many' });
+      const f = fs[0];
+      if (await cmd('GET', 'live:' + f) || await cmd('GET', 'livep:' + f)) return res.json({ err: 'active' });
+      const rep = await moveAcc(f, id, now, { self: 1 });
+      try { const adm = ((await cmd('SMEMBERS', 'admids')) || []).filter(x => x !== id).slice(0, 5); if (adm.length) await withCap(Promise.all(adm.map(x => noteTo(x, { t: '📦 ผู้เล่นกู้ตั๋วเอง', b: `${f.slice(0, 8)} → ${id.slice(0, 8)} · ตั๋ว ${rep.rr} · VIP ${rep.vip ? 'มี' : '-'} · ของแต่ง ${rep.cos}`, u: '/?go=sup', g: 'rcl-' + id }))), 5000) } catch (e) {}
+      return res.json({ ok: 1, rr: rep.rr, vip: rep.vip, cos: rep.cos, saves: rep.saves });
+    }
     if (a === 'acmove') {
       // แอดมิน: ผู้เล่นเซฟหาย/เปลี่ยนเครื่อง → ย้ายตั๋วสุ่มเกิด · VIP · ของแต่งตัว · ประวัติการสนับสนุน · เซฟคลาวด์ จากไอดีเก่าไปไอดีใหม่
       if (!isAdmKey(qOf(req).key) && !isAdmKey(b.key)) return res.status(403).json({ err: 'admin' });
@@ -1612,18 +1650,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (!okId(f) || to.length < 6) return res.json({ err: 'id' });
       if (!okId(to) || !(await cmd('HEXISTS', 'lm', to)) && !(await cmd('HEXISTS', 'om', to))) { const found = new Set(); for (const hk of ['lm', 'om']) { let cur = '0', n = 0; do { const r = await cmd('HSCAN', hk, cur, 'MATCH', to + '*', 'COUNT', 1000); cur = String(r[0]); for (let i = 0; i < r[1].length; i += 2) found.add(r[1][i]); n++ } while (cur !== '0' && n < 400) } if (found.size !== 1) return res.json({ err: found.size ? 'many' : 'notfound', n: found.size }); to = [...found][0] }
       if (to === f) return res.json({ err: 'same' });
-      const rep = { to, rr: 0, vip: 0, cos: 0, sup: 0, saves: 0 };
-      const rr = +(await cmd('GET', 'rrc:' + f)) || 0; if (rr > 0) { await pipe([['INCRBY', 'rrc:' + to, rr], ['SET', 'rrc:' + f, 0]]); rep.rr = rr }
-      const vf = jp(await cmd('GET', 'vip:' + f)); if (vf) { const vt = jp(await cmd('GET', 'vip:' + to)) || {}; if (vf.u) vt.u = 1; vt.e1 = Math.max(+vt.e1 || 0, +vf.e1 || 0); vt.e2 = Math.max(+vt.e2 || 0, +vf.e2 || 0); if (vf.tt && !vt.tt) vt.tt = vf.tt; await pipe([['SET', 'vip:' + to, JSON.stringify(vt)], ['SADD', 'vipall', to]]); rep.vip = 1; const vu = await cmd('HGET', 'vipu', f); if (vu && !(await cmd('HEXISTS', 'vipu', to))) await pipe([['HSET', 'vipu', to, vu], ['HDEL', 'vipu', f]]) }
-      const cs = (await cmd('SMEMBERS', 'cos:' + f)) || []; if (cs.length) { await cmd('SADD', 'cos:' + to, ...cs); rep.cos = cs.length }
-      if (+(await cmd('SISMEMBER', 'supok', f))) await cmd('SADD', 'supok', to);
-      try { const ids = (await cmd('ZRANGE', 'suppayz', 0, -1)) || []; if (ids.length) { const vals = (await cmd('HMGET', 'suppay', ...ids)) || []; for (let i = 0; i < ids.length; i++) { const r = jp(vals[i]); if (r && r.fid === f) { r.fid = to; r.mvf = f; await cmd('HSET', 'suppay', ids[i], JSON.stringify(r)); rep.sup++ } } } } catch {}
-      // เซฟคลาวด์: คัดลอกทุกช่องของไอดีเก่าไปลงช่องที่ว่างของไอดีใหม่ (ไม่ทับเซฟที่ผู้เล่นมีอยู่)
-      const src = await cs3Fill(f, await pipe([1, 2, 3, 4, 5].map(n => ['GET', 'cs3:' + f + ':' + n]))), dst = await cs3Fill(to, await pipe([1, 2, 3, 4, 5].map(n => ['GET', 'cs3:' + to + ':' + n])));
-      const live = src.filter(v => v && !/^@/.test(String(v))); let slot = 0;
-      for (const v of live) { while (slot < 5 && dst[slot]) slot++; if (slot >= 5) break; await cmd('SET', 'cs3:' + to + ':' + (slot + 1), v, 'EX', 86400 * 90); dst[slot] = v; rep.saves++ }
-      if (rep.saves && !(await cmd('GET', 'cs2:' + to))) await cmd('SET', 'cs2:' + to, '@1', 'EX', 86400 * 90);
-      await cmd('LPUSH', 'acmovelog', JSON.stringify({ f, ...rep, t: now })); await cmd('LTRIM', 'acmovelog', 0, 99);
+      const rep = await moveAcc(f, to, now);
       return res.json({ ok: 1, ...rep });
     }
     if (a === 'acinv') {
