@@ -280,6 +280,8 @@ const thDay = (ms, back = 0) => new Date(ms + 7 * 3600e3 - back * 86400e3).toISO
 const RR_PK = { s: [10, 12], m: [29, 40], l: [59, 100] }; // แพ็กสุ่มเกิด: [ราคา บาท, จำนวนครั้ง]
 // 🏮 ผู้อุปถัมภ์: [ราคา บาท, ระดับ, จำนวนวัน (0 = ถาวร)] — ไม่มีพลัง/เงินในเกม ได้แค่สุ่มเกิดเพิ่ม ป้าย และสิทธิ์สะดวก
 const RP_SC = ['inn', 'mkt', 'gate', 'sky'];
+// 🎭 ห้องเล่นบท: ห้องเดียว ฉากหมุนทุก 3 ชั่วโมง (เวลาไทย)
+const rpCur = () => { const t = Date.now() + 7 * 3600e3, k = Math.floor(t / (3 * 3600e3)); return { sc: RP_SC[k % RP_SC.length], nx: (k + 1) * 3 * 3600e3 - 7 * 3600e3 } };
 const VIP_PK = { v1: [39, 1, 30], v2: [99, 2, 30], v3: [599, 3, 0] };
 // 🎨 ร้านตกแต่ง (กรอบ/ฉายา/ธีมแชท) — ซื้อครั้งเดียวถาวร ไม่มีผลต่อพลังหรือการแข่งขัน
 const COS_FP = [39, 49, 39, 49, 49, 39, 39, 49], COS_SET = [79, 69, 59, 69, 69, 59, 59, 69];
@@ -800,13 +802,28 @@ module.exports = async (req, res) => {
       return res.json({ n: top.map((r, i) => ({ n: r.n, o: r.o, t: r.t, w: r.w, c: +rs[i * 2] || 0, m: +rs[i * 2 + 1] ? 1 : 0, k: r.id === id ? 1 : 0 })) });
     }
     // 🎭 ห้องเล่นบท (เฉพาะคนที่ล็อกอิน Google) — แยกจากแชทโลก ข้อความเก็บ 3 วัน
-    if (a === 'rpget' || a === 'rpsay') {
-      const sc = RP_SC.includes(String(b.sc || qOf(req).sc || '')) ? String(b.sc || qOf(req).sc) : 'inn';
+    if (a === 'rpget' || a === 'rpsay' || a === 'rplike') {
+      const cur = rpCur(), sc = cur.sc, q0 = qOf(req);
+      if (a === 'rpget' && q0.peek) {
+        const [pn, last] = await pipe([['ZCOUNT', 'rp:pres', now - 90e3, '+inf'], ['LINDEX', 'rp:all', 0]]); const lm = jp(last);
+        return res.json({ sc, nx: cur.nx, n: +pn || 0, last: lm ? lm.t : 0 });
+      }
+      if (a === 'rplike') {
+        if (!okId(id)) return res.status(403).json({ err: 'id' }); const mid = String(b.mid || '').slice(0, 20); if (!/^[a-z0-9]+$/.test(mid)) return res.status(400).json({ err: 'mid' });
+        const [ok] = await pipe([['SADD', 'rp:lkby:' + mid, id.slice(0, 16)], ['EXPIRE', 'rp:lkby:' + mid, 86400 * 4]]);
+        if (+ok) await pipe([['HINCRBY', 'rp:lk', mid, 1], ['EXPIRE', 'rp:lk', 86400 * 4]]);
+        const v = await cmd('HMGET', 'rp:lk', mid); return res.json({ ok: 1, n: +(Array.isArray(v) ? v[0] : v) || 0, me: 1 });
+      }
       const [off, gk] = await pipe([['GET', 'rp:off'], okId(id) ? ['GET', 'gof:' + id] : ['GET', 'rp:none']]);
-      let linked = 0; if (gk) { const cur = jp(await cmd('GET', gk)); if (cur && cur.id === id) linked = 1 }
+      let linked = 0; if (gk) { const cur2 = jp(await cmd('GET', gk)); if (cur2 && cur2.id === id) linked = 1 }
       if (a === 'rpget') {
-        const [list, hidden] = await pipe([['LRANGE', 'rp:' + sc, 0, 59], ['SMEMBERS', 'chat:hidden']]), hs = new Set(hidden || []);
-        return res.json({ off: off ? 1 : 0, ok: linked, sc, m: (list || []).map(jp).filter(m => m && !hs.has(m.i)) });
+        const cmds = [['LRANGE', 'rp:all', 0, 59], ['SMEMBERS', 'chat:hidden'], ['ZCOUNT', 'rp:pres', now - 90e3, '+inf']];
+        if (okId(id)) cmds.push(['ZADD', 'rp:pres', now, id.slice(0, 16)], ['ZREMRANGEBYSCORE', 'rp:pres', 0, now - 600e3]);
+        const [list, hidden, pn] = await pipe(cmds), hs = new Set(hidden || []);
+        const ms = (list || []).map(jp).filter(m => m && !hs.has(m.i));
+        let lk = []; if (ms.length) { try { lk = await cmd('HMGET', 'rp:lk', ...ms.map(m => m.i)) || [] } catch { lk = [] } }
+        ms.forEach((m, i) => { const v = +lk[i] || 0; if (v) m.lk = v });
+        return res.json({ off: off ? 1 : 0, ok: linked, sc, nx: cur.nx, n: Math.max(+pn || 0, okId(id) ? 1 : 0), m: ms });
       }
       if (off) return res.status(503).json({ err: 'off' });
       if (!linked) return res.status(403).json({ err: 'login' });
@@ -815,18 +832,18 @@ module.exports = async (req, res) => {
       if (mu || ch0) return res.status(429).json({ err: 'muted' });
       if (!ok) return res.status(429).json({ err: 'rate' });
       let hh = 0; for (let q = 0; q < x.length; q++) hh = (hh * 31 + x.charCodeAt(q)) | 0;
-      if (!(await cmd('SET', 'dup:rp:' + id + ':' + (hh >>> 0).toString(36), 1, 'NX', 'PX', 45000))) return res.status(429).json({ err: 'dup' });
-      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), x, a: act, pu: id.slice(0, 12) };
+      if (!(await cmd('SET', 'dup:rp:' + id + ':' + (hh >>> 0).toString(36), 1, 'NX', 'PX', b.k === 'qa' ? 15000 : 45000))) return res.status(429).json({ err: 'dup' });
+      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, sc, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), x, a: act, pu: id.slice(0, 12) };
       try { const vj = jp(await cmd('GET', 'vip:' + id)), vt = vipTier(vj); if (vt) { m.vp = vt; if (vj.tt && (vt === 3 || VIP_TT.includes(vj.tt))) m.vq = String(vj.tt).slice(0, 20) } } catch {}
       try { const cq = jp(await cmd('GET', 'cosq:' + id)); if (cq) { if (cq.t) m.ct = cq.t; if (cq.c) m.cc = cq.c; if (cq.n && /^t_e/.test(cq.t || '')) m.cn = cq.n } } catch {}
-      await pipe([['LPUSH', 'rp:' + sc, JSON.stringify(m)], ['LTRIM', 'rp:' + sc, 0, 59], ['EXPIRE', 'rp:' + sc, 86400 * 3]]);
+      await pipe([['LPUSH', 'rp:all', JSON.stringify(m)], ['LTRIM', 'rp:all', 0, 59], ['EXPIRE', 'rp:all', 86400 * 3], ['ZADD', 'rp:pres', now, id.slice(0, 16)]]);
       return res.json({ ok: 1, m });
     }
     if (a === 'rpadm') {
       const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
       const op = String(q.op || b.op || '');
       if (op === 'off') await cmd('SET', 'rp:off', 1); else if (op === 'on') await cmd('DEL', 'rp:off');
-      else if (op === 'clear') await pipe(RP_SC.map(k => ['DEL', 'rp:' + k]));
+      else if (op === 'clear') await pipe(RP_SC.map(k => ['DEL', 'rp:' + k]).concat([['DEL', 'rp:all'], ['DEL', 'rp:lk']]));
       else if (op === 'del') { const mid = String(q.mid || b.mid || '').slice(0, 20); if (mid) await cmd('SADD', 'chat:hidden', mid) }
       return res.json({ ok: 1, off: (await cmd('GET', 'rp:off')) ? 1 : 0 });
     }
