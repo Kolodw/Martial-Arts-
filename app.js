@@ -41389,3 +41389,110 @@ function loop(t){if(!want()){running=false;document.body.classList.remove('tsOn'
 function start(){if(running||!want())return;build();document.body.classList.add('tsOn');running=true;lastF=lastN=0;loadNews().then(()=>{try{fillNews()}catch(e){}});requestAnimationFrame(loop)}
 setInterval(start,700);addEventListener('resize',start);let nAt=0;setInterval(()=>{if(!want())return;const n=Date.now();if(!news.length||n-nAt>300000){nAt=n;loadNews().then(()=>{try{fillNews()}catch(e){}})}},20000);
 })()}catch(e){console.error('block47',e)}
+
+// ===================== ช่วงรอโลกเทพ: ศาลฟ้า · คู่แข่งพันปี · รอยร้าวกฎ · ประมูลข้ามกาล · ปุ่มปิดด่านรอ =====================
+try{(()=>{
+const XS=()=>{try{return S&&S.alive&&S.xian&&!S.xt&&!S.mw&&!S.custom&&!S.kalpa&&!(S.beastMode&&!S.beastMode.human)&&realmIdx()>=2?(S.xh||(S.xh={})):null}catch(e){return null}};
+const XY=()=>S.age-(S.xAge==null?Math.max(0,S.age-200):S.xAge);
+const T=f=>Math.max(1,Math.round(total()*f));
+const free=()=>!choice._cur&&!modalOpen;
+const pk=a=>{const b=newArt(a);Array.prototype.push.call(S.arts,b);return artHtml(b)};
+// ---------- 1) ศาลฟ้า ----------
+function witness(){const L=[];(S.allies||[]).forEach(a=>L.push({n:a.n,k:'ally',role:'ผู้ที่คุณเคยยื่นมือให้'}));
+ grudges().filter(g=>!g.done).forEach(g=>L.push({n:g.n,k:'foe',pw:g.pw,role:'ผู้ที่ยังจดชื่อคุณไว้ในบัญชีแค้น'}));
+ if(S.spouse)L.push({n:S.spouse,k:'love',role:'คู่ชีวิตที่คุณทิ้งไว้เบื้องล่าง'});
+ (S.children||[]).filter(c=>c&&c.n).slice(0,3).forEach(c=>L.push({n:c.n,k:'kid',role:'ลูกที่คุณทิ้งไว้เบื้องล่าง'}));
+ return L.length?ch(L):{n:anyName('ชาย'),k:'ghost',role:'วิญญาณพยานที่ฟ้าเรียกมาเอง'}}
+function rule(d,why){const c=S.xh.ct;c.n++;c.s+=d;log(`⚖️ ${why}`,d>0?'good':d<0?'bad':'')}
+function court(){const x=XS();if(!x)return;x.ct=x.ct||{n:0,s:0,w:[]};const c=x.ct,W=witness();
+ const kl=(S.key||[]).filter(k=>!/ปิดด่าน|ผนึก/.test(k)&&String(k).length>12),line=kl.length?ch(kl):null;
+ choice(`⚖️ ศาลฟ้าเปิดสำนวน (ครั้งที่ ${c.n+1})`,`ม่านเมฆแยกเป็นโถงศาล ผู้พิพากษาไร้ใบหน้าเปิดบัญชีชีวิตของคุณ${line?` แล้วอ่านบรรทัดหนึ่งเสียงเรียบ: <i>«${esc(String(line))}»</i>`:' แต่ไม่มีบรรทัดไหนเด่นพอจะอ่าน'} ก่อนเรียก <b>${esc(W.n)}</b> (${W.role}) ขึ้นให้การ`,[
+  {t:'🙇 ยอมรับตามที่จดไว้',s:'ชื่อเสียง −4% · ผ่านแน่นอน (+1)',noFate:true,f(){S.fame=Math.round(S.fame*.96);rule(1,'คุณยอมรับทุกบรรทัด ผู้พิพากษาพยักหน้าช้าๆ — บางครั้งการไม่แก้ตัวก็เป็นคำให้การ')}},
+  {t:'🗣️ โต้แย้งด้วยเหตุผล',s:'ใช้ปัญญา · ชนะ +2 · แพ้ −1',noFate:true,f(){if(roll01(.3+(S.int||0)/300))rule(2,'คุณชี้ช่องว่างในบัญชีได้ทีละข้อ จนผู้พิพากษาต้องแก้ตัวเลขเอง');else rule(-1,'คุณโต้แย้งเก่งจนเกินไป ศาลจึงจดว่า "รู้ตัวว่าผิด"')}},
+  W.k==='foe'?{t:`⚔️ ท้า ${W.n} ต่อหน้าศาล`,s:'ชนะ +2 และขีดชื่อเขาจากบัญชีแค้น · แพ้ −1 บาดเจ็บ',noFate:true,f(){duel(W.n,Math.max(W.pw||0,T(.6)),w=>{if(w){rule(2,`${W.n} ล้มลงกลางโถงศาล เสียงตัดสินดังขึ้นทันที`);try{const g=grudges().find(g=>g.n===W.n);if(g)g.done=1}catch(e){}}else{rule(-1,`${W.n} ยืนหยัดต่อหน้าศาลได้ — ศาลจดว่าคุณใช้กำลังแทนเหตุผล`);injure('ศาลฟ้า',8)}})}}
+  :{t:W.k==='ghost'?'🕯️ ถามพยานปริศนา':`🤝 ให้ ${W.n} เป็นฝ่ายพูด`,s:W.k==='ghost'?'เสี่ยง · ผลไม่แน่นอน':'ถ้าคุณเคยเป็นคนดี เขาจะช่วยพูด',noFate:true,f(){const p=W.k==='ghost'?.5:Math.max(.25,Math.min(.85,.55+(S.karma||0)/250));if(Math.random()<p){c.w.push(W.n);rule(2,W.k==='ghost'?'วิญญาณพยานเล่าเรื่องที่คุณลืมไปแล้ว และเป็นเรื่องดี':`${W.n} ยืนขึ้น พูดไม่กี่ประโยค แต่ทั้งโถงเงียบไปนาน`)}else rule(W.k==='ghost'?-1:0,W.k==='ghost'?'วิญญาณพยานเล่าเรื่องที่คุณไม่อยากให้ใครได้ยิน':`${W.n} มองคุณนานแล้วบอกว่า "ข้าไม่มีอะไรจะพูด" — ศาลจดว่าไม่มีคำให้การ`)}}])}
+function verdict(){const c=(S.xh||{}).ct;if(!c||!c.n||c.done)return;c.done=1;const s=c.s,wn=c.w.length?` · พยานที่ยืนข้างคุณ: <b>${c.w.slice(0,3).map(esc).join(', ')}</b>`:'';
+ let t,fx;if(s>=6){t='พ้นมลทินสิ้นเชิง';fx=()=>{S.power+=T(.12);S.fame+=fameR(2000);S.lifespan+=200}}else if(s>=3){t='ผ่านการไต่สวน';fx=()=>{S.power+=T(.06);S.fame+=fameR(800)}}else if(s>=0){t='รับฟังแล้ว ยังจับตาดู';fx=()=>{S.power+=T(.02)}}else{t='ตราบาปติดตัว';fx=()=>{injure('ตราบาปจากศาลฟ้า',10)}}
+ fx();log(`⚖️ <b>คำพิพากษาของศาลฟ้า: ${t}</b> (คะแนนไต่สวน ${s} จาก ${c.n} ครั้ง)${wn}`,s>=3?'myth':'epic');keyAdd('ศาลฟ้าพิพากษา: '+t)}
+// ---------- 2) คู่แข่งพันปี ----------
+function rivInit(){const x=XS();if(!x||x.rv)return;const L=[],why=['คนที่คุณเคยแย่งเส้นปราณมาจากมือเขา','คนที่หัวเราะตอนคุณล้มครั้งแรก','คนที่เดินทางเดียวกับคุณมาตลอด แต่ไม่เคยเอ่ยปากขอบคุณ','คนที่คุณเคยไว้ชีวิต และเขาไม่เคยให้อภัยเรื่องนั้น'];
+ grudges().filter(g=>!g.done).slice(0,2).forEach(g=>L.push({n:g.n,why:'ชื่อในบัญชีแค้นของคุณ',rel:-40}));
+ if(S.nemesis&&S.nemesis.n&&!L.some(r=>r.n===S.nemesis.n))L.push({n:S.nemesis.n,why:'ศัตรูที่ฟ้าส่งมาคู่กับคุณ',rel:-60});
+ while(L.length<2)L.push({n:anyName('ชาย'),why:ch(why),rel:R(-25,15)});
+ x.rv=L.slice(0,2).map(r=>{const y0=XY(),at=Math.max(R(480,900),y0+R(60,260)),lo=Math.max(250,y0+20);return Object.assign(r,{at,dy:Math.random()<.22&&at-20>lo?R(lo,at-20):0,st:0,vow:''})})}
+function rivStep(){const x=XS();if(!x||!x.rv)return false;for(const r of x.rv){if(r.st)continue;
+  if(r.dy&&XY()>=r.dy){r.st=2;log(`🕯️ ข่าวร้ายจากเบื้องบน: <b>${esc(r.n)}</b> (${r.why}) จบชีวิตกลางทัณฑ์ฟ้า — คนที่คุณเตรียมใจไว้จะเจอ ไม่มีแล้ว`,'epic');joy(-4);keyAdd(r.n+' ตายในทัณฑ์ฟ้า');return false}
+  if(XY()>=r.at){r.st=1;choice('📯 จดหมายจากเบื้องบน',`<b>${esc(r.n)}</b> (${r.why}) ผ่านทัณฑ์ขึ้นโลกเทพไปแล้ว คนส่งสาส์นบอกว่ามีข้อความฝากถึงคุณคำเดียว: <i>«ข้ารออยู่ข้างบน»</i>`,[
+    {t:'⚔️ ตอบรับคำท้า',s:'ตอนขึ้นไปจะได้สู้กัน · ชนะได้รางวัลมาก',noFate:true,f(){r.vow='duel';log(`📯 คุณส่งกลับไปแค่คำเดียวว่า "มา" — ${esc(r.n)} จะรอ`,'')}},
+    {t:'🤝 ส่งสาส์นขอเป็นมิตร',s:'อาจเปลี่ยนใจเขา · ถ้าเขาไม่เชื่อก็ต้องสู้อยู่ดี',noFate:true,f(){if(roll01(.4+(r.rel>-30?.3:0))){r.vow='friend';log(`📯 ${esc(r.n)} ตอบกลับสั้นๆ ว่า "ข้ามีเหล้ารออยู่"`,'good')}else{r.vow='duel';log(`📯 ${esc(r.n)} ไม่เชื่อ — เขาเขียนกลับมาว่า "ไว้ค่อยคุยกันที่ข้างบน"`,'bad')}}},
+    {t:'🔕 ไม่ตอบ',s:'ปล่อยให้เขารอไป',skip:true,f(){r.vow='';log('📯 คุณพับจดหมายเก็บ โดยยังไม่ตอบ','')}}]);return true}}return false}
+function arrive(){const x=S.xh;if(!x||!x.arr||!x.arr.length)return false;const r=x.arr.shift(),ep=Math.round(T(.9)*(r.vow==='duel'?1.25:1)*(.9+Math.random()*.25));
+ if(r.vow==='friend')choice(`🍶 ${r.n} รอที่ประตูจริงๆ`,`ไม่มีดาบ ไม่มีค่ายกล มีแค่เหล้าหนึ่งขวดกับม้านั่งสองตัว <b>${esc(r.n)}</b> ที่เคยเป็น${esc(r.why)} มองคุณแล้วบอกว่า "ช้ากว่าที่คิดไปนานนะ"`,[
+   {t:'🍶 นั่งดื่มด้วย',s:'ได้สหายเก่า · พลัง +3%',noFate:true,f(){allyAdd(r.n,'คู่แข่งพันปี');S.power+=T(.03);S.fame+=fameR(300);joy(12);keyAdd('ดื่มกับ'+r.n+'ที่ประตูโลกเทพ');log(`🍶 คุณกับ${esc(r.n)}นั่งดื่มโดยไม่ได้พูดถึงเรื่องเก่าสักคำ`,'epic')}},
+   {t:'⚔️ ขอประลองแบบเพื่อน',s:'ชนะได้ชื่อเสียง · แพ้ก็ไม่เสียอะไร',noFate:true,f(){duel(r.n,Math.round(ep*.8),w=>{allyAdd(r.n,'คู่แข่งพันปี');if(w){S.fame+=fameR(600);S.power+=T(.04)}joy(10);log(w?`⚔️ คุณชนะ แล้วเขาก็ยกขวดเหล้าให้ทั้งขวด`:`⚔️ คุณแพ้ แล้วเขาเป็นฝ่ายรินเหล้าให้`,'epic')})}}]);
+ else if(r.vow==='duel')choice(`⚔️ ${r.n} ยืนขวางทาง`,`<b>${esc(r.n)}</b> ยืนอยู่กลางทางขึ้นโลกเทพ ตั้งแต่ครั้งที่คุณตอบรับคำท้า เขาไม่ได้พักเลยสักวัน — ${esc(r.why)}`,[
+   {t:'⚔️ สู้',s:'รางวัลสูง · ความเสี่ยงสูง',noFate:true,f(){duel(r.n,ep,w=>{if(w){S.power+=T(.08);S.fame+=fameR(1000);keyAdd('ชนะ'+r.n+'ที่ประตูโลกเทพ');log(`⚔️ <b>${esc(r.n)}</b> ล้มลงตรงนั้น และเป็นครั้งแรกที่เขาไม่ได้เถียง`,'myth')}else{injure(r.n,10);joy(-10);log(`⚔️ ${esc(r.n)} ชนะ แต่ไม่ได้ซ้ำ — เขาทิ้งไว้แค่ประโยคเดียว "ยังไม่ถึงเวลาของเจ้า"`,'bad')}})}},
+   {t:'🕊️ ขอเลี่ยง',s:'เสียหน้า · ไม่ต้องสู้',skip:true,f(){S.fame=Math.round(S.fame*.97);log(`🕊️ คุณเดินอ้อมไป ${esc(r.n)} ไม่ได้ตามมา แต่คนเห็นหมดแล้ว`,'')}}]);
+ else choice(`🌫️ ${r.n} ที่ประตู`,`<b>${esc(r.n)}</b> ไม่ได้รอใครเลย แต่พอเห็นคุณก็ยิ้มจางๆ เหมือนรู้อยู่แล้วว่าจดหมายฉบับนั้นยังไม่ได้ตอบ`,[
+   {t:'👋 ทักทาย',s:'ได้ชื่อเสียงเล็กน้อย',skip:true,f(){S.fame+=fameR(150);log(`👋 ${esc(r.n)} พยักหน้ารับ แล้วต่างคนต่างไป`,'')}},
+   {t:'⚔️ ท้าเอง',s:'ชนะ ได้ผลตอบแทน · แพ้ บาดเจ็บ',noFate:true,f(){duel(r.n,ep,w=>{if(w){S.power+=T(.05);S.fame+=fameR(600)}else injure(r.n,8)})}}]);return true}
+// ---------- 3) รอยร้าวกฎ ----------
+function skipY(n){const lm=typeof lifeMax==='function'?lifeMax():S.lifespan;n=Math.max(0,Math.min(n,Math.floor(lm-S.age-5)));if(n<1)return 0;const m=(S.talent&&S.talent.m)||1;S.age+=n;S.qi+=n*(.6+Math.random()*.8)*m;(S.children||[]).forEach(c=>{if(c.alive)c.age+=n});return n}
+const BEINGS=[
+ ()=>choice('🌀 รอยร้าว: หญิงเฒ่าเฝ้าเตาที่ไม่มีไฟ',`ในรอยร้าวมีกระท่อมหลังเดียว หญิงเฒ่านั่งเฝ้าเตาเปล่า เธอไม่ถามชื่อ ถามอย่างเดียวว่า "ข้างนอกตอนนี้เป็นอย่างไรบ้าง"`,[
+   {t:'📖 เล่าตามจริง',s:'กรรม +; หยั่งรู้เต๋า',noFate:true,f(){S.karma+=6;daoGain('จากคำถามของหญิงเฒ่า');log('🌀 คุณเล่าทั้งส่วนที่งามและส่วนที่เน่า เธอหลับตาฟังจนจบ แล้วเตาก็มีไฟขึ้นมาหนึ่งดวง','good')}},
+   {t:'🍯 เล่าแต่เรื่องดี',s:'เธอมีความสุข · ได้เงิน',noFate:true,f(){S.money+=Math.max(500,Math.round(S.money*.15));S.karma-=2;log('🌀 เธอยิ้มจนน้ำตาไหล และยัดถุงเงินเก่าๆ ใส่มือคุณ คุณรู้ว่ามันไม่ใช่ความจริงทั้งหมด','')}},
+   {t:'🚪 เดินออก',s:'ไม่เสียอะไร',skip:true,f(){log('🌀 คุณเดินออกจากรอยร้าว ข้างหลังไม่มีเสียงอะไรเลย','')}}]),
+ ()=>choice('🌀 รอยร้าว: เด็กชายนับดาว',`เด็กชายนั่งบนก้อนหินลอยกลางความว่าง นับดาวที่ดับไปทีละดวงด้วยนิ้ว เขาบอกว่านับมาถึงเลข "เท่าไหร่ก็ไม่รู้แล้ว" และขอให้คุณตั้งชื่อให้ดวงล่าสุด`,[
+   {t:`✨ ตั้งชื่อตามตัวเอง (${S.name||'คุณ'})`,s:'ชื่อเสียง +; กรรม −',noFate:true,f(){S.fame+=fameR(900);S.karma-=3;log('🌀 ดาวดวงนั้นสว่างขึ้นครู่หนึ่งก่อนดับ เด็กชายจดชื่อคุณลงบนก้อนหิน','')}},
+   {t:'🕯️ ตั้งชื่อว่า "ที่นี่เคยมีคน"',s:'กรรม +; ลมปราณ +',noFate:true,f(){S.karma+=5;S.qi+=Math.max(3,S.qi*.01);log('🌀 เด็กชายนิ่งไปนาน แล้วขีดฆ่าตัวเลขทั้งหมดบนก้อนหิน เริ่มนับใหม่จากหนึ่ง','good')}},
+   {t:'🚪 ไม่ตั้ง',s:'ไม่เสียอะไร',skip:true,f(){log('🌀 เด็กชายไม่ได้โกรธ เขาแค่นับต่อ','')}}]),
+ ()=>choice('🌀 รอยร้าว: ช่างตีดาบที่ลืมว่าตนตายแล้ว',`ช่างตีดาบวิญญาณกำลังตีดาบเล่มสุดท้ายซ้ำเป็นครั้งที่ไม่รู้กี่พัน เขาขอยืมกำลังคุณตีให้เสร็จครั้งเดียว บอกว่าถ้าเสร็จ เขาจะ "ไปได้เสียที"`,[
+   {t:'⚒️ ช่วยตี',s:'พลัง −3% · ได้วิชาจากดาบเล่มนั้น',noFate:true,f(){S.power=Math.max(1,S.power-T(.03));log(`🌀 ดาบเสร็จเมื่อรุ่งสาง ช่างหายไปตอนแสงแรก ทิ้งตำราไว้ ${pk(3)}`,'epic')}},
+   {t:'💬 บอกเขาว่าเขาตายแล้ว',s:'กรรม +; ได้ความเข้าใจ',noFate:true,f(){S.karma+=4;S.int=(S.int||0)+6;log('🌀 เขาวางค้อนลงช้าๆ แล้วถามว่า "ตายมานานเท่าไหร่" คุณไม่กล้าตอบ','good')}},
+   {t:'🚪 ปล่อยเขาไว้',s:'ไม่เสียอะไร',skip:true,f(){log('🌀 เสียงค้อนยังตามมาถึงนอกรอยร้าว','')}}])];
+const RULES=[
+ ()=>choice('🌀 รอยร้าวกฎ: เวลาไหลเร็วยี่สิบเท่า',`รอยร้าวเปิดให้เห็นห้องเงียบๆ ที่เวลาไหลเร็วกว่าข้างนอกมาก ขอบประตูมีรอยนิ้วมือของคนที่เข้าไปแล้วไม่ได้กลับมาทัน`,[
+   {t:'⏳ อยู่ครึ่งชั่วยาม',s:'อายุ +10 ปี · ลมปราณเล็กน้อย',noFate:true,f(){const n=skipY(10);log(`🌀 คุณออกมาอายุมากขึ้น ${n} ปี ลมปราณเดินดีขึ้นเล็กน้อย`,'')}},
+   {t:'⏳ อยู่ทั้งวัน',s:'อายุ +40 ปี · ลมปราณมาก',noFate:true,f(){const n=skipY(40);log(`🌀 ออกมาแล้วอายุเพิ่ม ${n} ปี ปราณเดินคล่องจนเหมือนเปลี่ยนเส้นลมปราณใหม่`,'epic')}},
+   {t:'⚠️ อยู่จนเวลาหยุด',s:'อายุ +120 ปี · ลมปราณมหาศาล · เสี่ยงติดกฎ 25%',noFate:true,f(){if(Math.random()<.25){const n=skipY(300);S.power=Math.max(1,S.power-T(.1));joy(-12);log(`🌀 กฎเวลาเกี่ยวตัวคุณไว้ — ออกมาเมื่ออายุเพิ่ม ${n} ปี พลังหายไปหนึ่งส่วน และโลกข้างนอกเปลี่ยนไปหมด`,'bad')}else{const n=skipY(120);log(`🌀 คุณออกมาอายุเพิ่ม ${n} ปี ลมปราณหนาขึ้นเป็นเท่าตัว`,'myth')}}}]),
+ ()=>{const A=(S.arts||[]).filter(Boolean).sort((a,b)=>(b.b||0)-(a.b||0))[0];choice('🌀 รอยร้าวกฎ: เงาของคุณเมื่อร้อยปีก่อน',`ในรอยร้าวมีคนยืนหันหลังให้ พอหันมาก็คือ <b>คุณ</b> แต่ท่าทางเก่ากว่า ${A?`มือเขาจับท่าเดียวกับ《${esc(A.n)}》`:'ไม่มีอาวุธติดมือ'} เขาไม่ได้พูดอะไรเลย`,[
+   {t:'⚔️ สู้กับเงา',s:'ชนะได้พลังและหยั่งรู้เต๋า · แพ้บาดเจ็บ',noFate:true,f(){duel('เงาของ'+(S.name||'ตัวเอง'),T(.9),w=>{if(w){S.power+=T(.04);daoGain('จากการสู้กับตัวเองในรอยร้าว');log('🌀 เงาจางลงพร้อมยิ้มที่คุณจำได้ — มันคือรอยยิ้มของตัวเองเมื่อก่อน','epic')}else{injure('เงาในรอยร้าว',8);log('🌀 เงาชนะ แล้วหายไปโดยไม่ได้ซ้ำ','bad')}})}},
+   {t:'🪞 เดินผ่านไปเฉยๆ',s:'ไม่เสียอะไร · ไม่ได้อะไร',skip:true,f(){log('🌀 คุณเดินผ่านตัวเอง ทั้งคู่ไม่หันกลับมาดู','')}}])},
+ ()=>choice('🌀 รอยร้าวกฎ: ตาชั่งสามฝั่ง',`ในรอยร้าวมีตาชั่งสามอัน แต่ละอันวางของล่อไว้ต่างกัน ป้ายบนตาชั่งเขียนไว้ว่า "ของที่ได้ต้องหนักเท่าของที่เสีย" ไม่มีใครบอกว่าเสียอะไร`,[
+   {t:'⚖️ ตาชั่งซ้าย (ปลอดภัย)',s:'พลัง +2% แน่นอน',noFate:true,f(){S.power+=T(.02);log('🌀 ตาชั่งสมดุล ของที่ได้กับของที่เสียเบาพอๆ กัน คุณไม่รู้ตัวว่าเสียอะไรไป','')}},
+   {t:'⚖️ ตาชั่งกลาง (ครึ่งต่อครึ่ง)',s:'พลัง +7% หรือ −3%',noFate:true,f(){if(Math.random()<.5){S.power+=T(.07);log('🌀 ตาชั่งเอียงเข้าหาคุณ ของหนักเกินกว่าจะเสียอะไร','epic')}else{S.power=Math.max(1,S.power-T(.03));log('🌀 ตาชั่งเอียงออก คุณเสียส่วนที่ไม่เคยคิดว่าจะเสีย','bad')}}},
+   {t:'⚖️ ตาชั่งขวา (โลภ)',s:'20%: พลัง +20% · 80%: บาดเจ็บและเสียชื่อเสียง',noFate:true,f(){if(Math.random()<.2){S.power+=T(.2);log('🌀 ตาชั่งเงียบสนิท แล้วทั้งโถงก็สั่น — คุณได้ของที่ไม่ควรได้','myth')}else{injure('ตาชั่งโลภ',10);S.fame=Math.round(S.fame*.93);log('🌀 ตาชั่งพลิก เสียงหัวเราะดังมาจากที่ไหนสักแห่ง','bad')}}}]),
+ ()=>ch(BEINGS)()];
+function crack(){ch(RULES)()}
+// ---------- 4) ประมูลข้ามกาล ----------
+function auction(){const x=XS();if(!x||!S.sys||S.sys.sp<200)return false;const base=Math.max(150,Math.round(S.sys.sp*.12));
+ const POOL=[{n:'🕰️ ผลึกกาลเวลา',d:'ย่นเวลารอโลกเทพ 60 ปี',v:1.1,f(){S.xAge=(S.xAge==null?Math.max(0,S.age-200):S.xAge)-60;return 'เวลารอโลกเทพสั้นลง 60 ปี'}},
+  {n:'📜 คัมภีร์ไร้นาม',d:'วิชาระดับล้ำเลิศ 1 เล่ม',v:1.3,f(){return 'ได้ '+pk(3)}},{n:'🧿 แก่นปราณพันปี',d:'พลังยุทธ์ +6%',v:1,f(){S.power+=T(.06);return 'พลังยุทธ์ +6%'}},
+  {n:'♾️ ตราต่ออายุ',d:'อายุขัย +250 ปี',v:.9,f(){S.lifespan+=250;return 'อายุขัย +250 ปี'}},{n:'🔱 ใบรับรองจากหอข่าวสวรรค์',d:'ชื่อเสียงเพิ่มมาก',v:.8,f(){S.fame+=fameR(2000);return 'ชื่อเสียงพุ่งขึ้น'}}];
+ const it=ch(POOL),who=()=>'โฮสต์'+anyName('ชาย').split(' ')[0],cap=Math.round(base*it.v*R(140,260)/100);
+ const round=(cur,by,n)=>{const nx=Math.round(cur*1.2),now=Math.round(cur*1.7),sp=S.sys.sp,opts=[];
+  if(sp>=nx)opts.push({t:`✋ เสนอ ${fmt(nx)} SP`,s:'เขาอาจสู้ต่อ',noFate:true,f(){if(n<6&&Math.round(nx*1.15)<=cap&&Math.random()<.75){const w=who();log(`🔨 ${w} ให้ราคาสู้ ${fmt(Math.round(nx*1.15))} SP`,'');round(Math.round(nx*1.15),w,n+1)}else done(nx)}});
+  if(sp>=now&&now<=sp)opts.push({t:`💰 ฮุบทันที ${fmt(now)} SP`,s:'จบประมูลเลย',noFate:true,f(){done(now)}});
+  opts.push({t:'🚪 ถอนตัว',s:'ไม่เสีย SP',skip:true,f(){log(`🔨 ${esc(by)} ได้${it.n}ไปในราคา ${fmt(cur)} SP`,'')}});
+  choice(`🔨 ประมูลข้ามกาล — ${it.n}`,`${it.d}<br>ราคาตอนนี้ <b>${fmt(cur)} SP</b> (ผู้ให้ราคา: ${esc(by)}) · SP ของคุณ ${fmt(sp)}`,opts)};
+ const done=pr=>{S.sys.sp-=pr;const m=it.f();sysLog(`🔨 ชนะประมูล <b>${it.n}</b> ด้วย ${fmt(pr)} SP — ${m}`);keyAdd('ชนะประมูล'+it.n.replace(/^\S+\s/,''))};
+ round(Math.round(base*it.v),who(),0);return true}
+// ---------- ตัวขับ ----------
+function godGate(){const x=S.xh;if(x&&x.ct)verdict();if(x&&x.rv){x.arr=x.rv.filter(r=>r.st===1);}}
+{const _ag=ascendGod;ascendGod=function(){const r=_ag.apply(this,arguments);try{godGate()}catch(e){console.error('xh gate',e)}return r}}
+function tick(){if(!S||!S.alive)return;
+ if(S.xt&&S.xh&&S.xh.arr&&S.xh.arr.length&&free()&&S._xhA!==S.age){S._xhA=S.age;arrive();return}
+ const x=XS();if(!x||S._xhY===S.age||!free())return;S._xhY=S.age;const y=XY();if(y<1)return;
+ if(!x.rv)rivInit();if(x.nc==null){x.nc=y+R(30,60);x.nct=(Math.floor(y/100)+1)*100;x.na=y+R(60,120)}
+ if(rivStep())return;
+ if(y>=x.nct&&(x.ct?x.ct.n:0)<7&&!(x.ct&&x.ct.done)){x.nct+=100;return court()}
+ if(y>=x.na){x.na=y+R(90,130);if(auction())return}
+ if(y>=x.nc){x.nc=y+R(45,70);return crack()}}
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{tick()}catch(e){console.error('xh',e)}return r}}
+// ---------- 5) ปุ่มปิดด่านรอโลกเทพ ----------
+window.xhWait=n=>{try{secGo(n)}catch(e){}};
+{const _af=ascForce;ascForce=function(){try{if(S&&S.xian&&!S.xt&&typeof godReady==='function'&&secAvail()){const g=godReady();if(g.pOK&&!g.tOK&&g.left>0&&!choice._cur){const L=Math.ceil(g.left);return modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>⏳ รอโลกเทพอีก ${fmt(L)} ปี</h3><p class="tag2">ผ่านเงื่อนไขเหนือขีดจำกัดครบแล้ว เหลือแค่รอเวลา · ระหว่างรอมีเหตุการณ์ให้เล่น (ศาลฟ้า · คู่แข่ง · รอยร้าวกฎ · ประมูล) ถ้าปิดด่านข้าม จะพลาดเหตุการณ์เหล่านั้นทั้งหมด</p><div class="brow" style="flex-direction:column;gap:8px"><button class="pbtn" onclick="xhWait(${L})">🧘 ปิดด่านรอ ${fmt(L)} ปี (ข้ามหมด)</button>${L>100?`<button class="gbtn" onclick="xhWait(100)">🧘 ปิดด่านทีละ 100 ปี</button>`:''}<button class="gbtn" onclick="closeM();ascForce._o()">📋 ดูเงื่อนไข</button></div>`,'xwait')}}}catch(e){}return _af.apply(this,arguments)};ascForce._o=_af}
+window._xh={court,rivInit,rivStep,arrive,crack,auction,verdict,tick,XY,XS,godGate};
+try{const g=window._guide2;if(g)g.add('world','⏳','ช่วงรอโลกเทพ: ศาลฟ้า คู่แข่ง รอยร้าว ประมูล','ระหว่างอยู่โลกเซียนรอขึ้นโลกเทพ (เหตุการณ์เกิดตามจำนวนปีที่อยู่ ไม่ใช่การสุ่มล้วน):<br>• ⚖️ <b>ศาลฟ้า</b> ทุก 100 ปี (สูงสุด 7 ครั้ง) หยิบบรรทัดจากประวัติชีวิตคุณ + พยานจริงจากชีวิตคุณ (สหาย บัญชีแค้น คู่ชีวิต ลูก) เลือกยอมรับ โต้แย้ง หรือให้พยานพูด/ท้าดวล คะแนนรวมเป็น <b>คำพิพากษา</b> ที่ให้ของขวัญตอนขึ้นโลกเทพ<br>• 📯 <b>คู่แข่งพันปี</b> 2 คน (ดึงจากบัญชีแค้น/ศัตรู) ขึ้นโลกเทพก่อนคุณบางคนอาจตายในทัณฑ์ฟ้า ตอบจดหมายได้ว่าท้า เป็นมิตร หรือเพิกเฉย ตอนขึ้นไปจะเจอเขาที่ประตู<br>• 🌀 <b>รอยร้าวกฎ</b> ทุก 45–70 ปี ด่านสั้นที่มีกฎเฉพาะ (เวลาไหลเร็ว เงาตัวเอง ตาชั่งสามฝั่ง และผู้อาศัยประหลาด) ไม่ใช่การสู้ล้วน<br>• 🔨 <b>ประมูลข้ามกาล</b> ใช้ SP ที่ค้างแข่งกับโฮสต์อื่น ของมีชิ้นเดียว (ย่นเวลารอ วิชา พลัง อายุ ชื่อเสียง) เสนอราคา ฮุบทันที หรือถอน<br>• 🧘 กดแถบ "ขึ้นโลกเทพยังไม่ได้" แล้วเลือกปิดด่านรอได้ แต่ปิดด่านจะข้ามเหตุการณ์ทั้งหมด','')}catch(e){}
+})()}catch(e){console.error('xwait block',e)}
