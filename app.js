@@ -41840,3 +41840,83 @@ try{const g=window._guide2;if(g){g.add('grow','🏛️','กิจการป�
  g.TIPS.push(['spbig',()=>!!(S.sys&&S.sys.sp>=800),'🟦','SP ของคุณเหลือเยอะ','ลองใช้ SP ที่ 🏛️ กิจการประจำสายในหน้าต่างระบบ หรือร้านค้าระบบ (ของ % ราคาเพิ่มขึ้นเรื่อยๆ)','กิจการประจำสาย (ที่ใช้ SP)'])}}catch(e){}
 window._sysx={BZ,cost,lvOf};
 })()}catch(e){console.error('sysx block',e)}
+
+// ===================== ระบบบ่มเพาะ (เมื่อเลเวลตัน กดเปลี่ยนเอง · กลับได้) =====================
+try{(()=>{
+const ST=['ตัวอ่อน','วัยเยาว์','โตเต็มวัย','ร่างสมบูรณ์'],SI=['🥚','🐣','🐉','🌌'];
+const MAT={kar:['🔮','แก่นกรรม'],shard:['🧩','เศษระบบ'],time:['⏳','ผลึกกาลเวลา']};
+const K={pow:['พลังยุทธ์เพิ่มทุกปี',v=>{S.power+=Math.max(1,Math.round(total()*.0012*v))}],
+ qi:['ลมปราณเพิ่มทุกปี',v=>{S.qi+=.25*v}],kar:['กรรมดีเพิ่มทุกปี',v=>{S.karma+=.4*v}],
+ fame:['ชื่อเสียงเพิ่มทุกปี',v=>{S.fame+=8*v}],money:['เงินเข้าทุกปี',v=>{S.money+=Math.round(200*v*(1+S.age/100))}],
+ life:['พลังชีวิตสูงสุด/อายุขัยเพิ่ม',v=>{S.maxHp+=Math.max(1,Math.round(v/3));S.lifespan+=.04*v}],
+ sp:['ได้ SP ทุกปี',v=>{S.sys.sp+=Math.round(2*v)}],
+ art:['ทุก 10 ปีมีโอกาสได้วิชา',v=>{if(S.age%10===0&&Math.random()<.1+v*.01){const a=newArt(2);Array.prototype.push.call(S.arts,a);log(`🥚 ระบบบ่มเพาะมอบ ${artHtml(a)}`,'good')}}],
+ tk:['ได้ตั๋วกาชาทุก 5 ปี',v=>{if(S.age%5===0)S.sys.tk=(S.sys.tk||0)+Math.ceil(v/6)}],
+ hurt:['พลังยุทธ์เพิ่มทุกปี แต่กรรมลด',v=>{S.power+=Math.max(1,Math.round(total()*.0016*v));S.karma-=.3*v}]};
+const BR={saint:[['a','ศรัทธา','🕯️','kar'],['b','ผู้พิทักษ์','🛡️','life'],['c','ชื่อเสียงธรรม','📜','fame']],
+ martial:[['a','กายา','💪','pow'],['b','ปราณ','🌀','qi'],['c','อายุวัฒนะ','🍑','life']],
+ tycoon:[['a','ธนาคาร','🏦','money'],['b','การค้า','🚢','fame'],['c','ผูกขาด','🗝️','sp']],
+ demon:[['a','ลัทธิ','🩸','hurt'],['b','พิธีกรรม','🔮','qi'],['c','ปกครอง','👑','fame']],
+ checkin:[['a','นักเดินทาง','🧭','qi'],['b','นักสะสม','🎒','art'],['c','คนดัง','📸','fame']],
+ gacha:[['a','นักเสี่ยงโชค','🎲','tk'],['b','เจ้าของตู้','🎰','sp'],['c','ผู้โชคดี','🍀','art']],
+ villain:[['a','นักข่าว','📰','fame'],['b','ผู้ซ่อนเร้น','🕶️','qi'],['c','จอมวางแผน','♟️','money']],
+ alchemy:[['a','ช่างยา','⚗️','life'],['b','เซียนเตา','🔥','qi'],['c','พ่อค้ายา','💊','money']],
+ ring:[['a','ศิษย์','📚','art'],['b','ผู้สืบทอด','🧓','qi'],['c','จอมยุทธ์','⚔️','pow']],
+ transcend:[['a','ก้าวข้าม','🏋️','life'],['b','หลอมกาย','🔨','pow'],['c','ทะลวง','🌠','qi']]};
+const GEN=[['a','สายพลัง','💪','pow'],['b','สายปราณ','🌀','qi'],['c','สายชื่อเสียง','📜','fame']];
+// กิจกรรมประจำสาย (ใช้วัตถุดิบ 1 ชิ้น · เว้น 10 ปี) — แต่ละสายต่างกัน
+const PLACES=[['ปากเหวร้อยปี','qi'],['สุสานราชวงศ์เก่า','art'],['ยอดเขาเมฆ','fame'],['ตลาดมืด','money'],['ศาลาร้างกลางป่า','kar']];
+const ACT={saint:['🕯️','พิธีสวดมนต์ข้ามภพ',()=>{S.karma+=30;S.fame+=500;return'กรรมดี +30 ชื่อเสียง +500'}],
+ tycoon:['💼','ลงทุนข้ามโลก',()=>{if(Math.random()<.7){const g=Math.round(S.money*.18+5000);S.money+=g;return`กำไร ${fmt(g)}`}const l=Math.round(S.money*.1);S.money-=l;return`ขาดทุน ${fmt(l)}`}],
+ demon:['🩸','พิธีโลหิต',()=>{S.power+=Math.round(total()*.04);S.karma-=15;return'พลังยุทธ์ +4% กรรม −15'}],
+ checkin:['📍','เช็คอินสถานที่',()=>{const[n,k]=PLACES[Math.floor(Math.random()*PLACES.length)];if(k==='qi')S.qi+=6;else if(k==='art'){const a=newArt(2);Array.prototype.push.call(S.arts,a)}else if(k==='fame')S.fame+=700;else if(k==='money')S.money+=8000;else S.karma+=15;return`เช็คอินที่ ${n} ได้ของฝาก`}],
+ martial:['🥊','ประลองประจำปี',()=>{const w=fight('ผู้ท้าชิงประจำปี',Math.round(total()*.9));if(w){S.power+=Math.round(total()*.03);return'ชนะ พลังยุทธ์ +3%'}S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.2));return'แพ้ บาดเจ็บเล็กน้อย'}],
+ gacha:['🎰','สุ่มกาชาพิเศษ',()=>{S.sys.tk=(S.sys.tk||0)+3;return'ได้ตั๋วกาชา +3'}],
+ villain:['📰','ปล่อยข่าวลือ',()=>{S.fame+=800;S.money+=3000;return'ชื่อเสียง +800 เงิน +3,000'}],
+ alchemy:['⚗️','หลอมยาแก่นกรรม',()=>{S.lifespan+=5;S.qi+=2;return'อายุขัย +5 ลมปราณ +2'}],
+ ring:['📚','เปิดตำราผู้เฒ่า',()=>{const a=newArt(3);Array.prototype.push.call(S.arts,a);return'ได้วิชาจากผู้เฒ่า'}],
+ transcend:['🏋️','บททดสอบก้าวข้าม',()=>{S.maxHp+=20;S.power+=Math.round(total()*.02);return'พลังชีวิตสูงสุด +20 พลังยุทธ์ +2%'}]};
+const CU=()=>S&&S.sys&&S.sys.cu;
+const on=()=>{const c=CU();return !!(c&&c.on)};
+const brs=()=>BR[S.sys.t]||GEN;
+const feedC=c=>sgPrice(200+c.st*350);
+const brC=c=>sgPrice(Math.round(150*Math.pow(1.5,c.bl|0)));
+const mats=c=>(c.mat=c.mat||{kar:0,shard:0,time:0});
+const addMat=(k,n=1)=>{const c=CU();if(!c)return;mats(c)[k]=(c.mat[k]|0)+n;toast(`${MAT[k][0]} ได้ ${MAT[k][1]} +${n}`)};
+const anyMat=c=>{const m=mats(c);return m.kar+m.shard+m.time};
+const takeMat=c=>{const m=mats(c);for(const k of['shard','kar','time'])if(m[k]>0){m[k]--;return true}return false};
+const stuck=()=>{const s=S&&S.sys;if(!s)return false;return s.lv>=60||(s.lv>=30&&S.age-(s._lvA||s.since||0)>=40)};
+window._cuStuck=stuck;
+// ล็อกเลเวล: โหมดบ่มเพาะไม่ได้ EXP
+{const _g=gainExp;gainExp=function(n){if(on())return;return _g.apply(this,arguments)}}
+{const _f=fight;fight=function(){const r=_f.apply(this,arguments);try{if(r&&on()&&Math.random()<.25)addMat('shard')}catch(e){}return r}}
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const s=S&&S.sys;if(s&&S.alive){if(s._lvS!==s.lv){s._lvS=s.lv;s._lvA=S.age}
+ const c=s.cu;if(c&&c.on&&S._cuY!==S.age){S._cuY=S.age;const wait=S.xian&&!S.xt;if(wait){c.h=(c.h|0)+1;if(c.h%15===0)addMat('time')}
+  if(S.xt&&!c.bx&&c.h>0){c.bx=1;s.sp+=c.h*3;s.pts+=Math.floor(c.h/20);sysLog(`🌌 ระบบที่ฟักตัวระหว่างรอ ${c.h} ปี ตื่นขึ้นในโลกเทพ: SP +${c.h*3}`,'up')}
+  const m=(1+Math.min(1,(c.h|0)/200))*(c.st>=3?1.5:1),b=brs().find(z=>z[0]===c.br);
+  if(b&&c.st>=1)K[b[3]][1]((c.st+1)*Math.max(1,c.bl|0)*m);
+  if(Math.random()<(wait?.2:.12)){const x=Math.random();addMat(x<.4?'kar':x<.8?'shard':'time')}}}}catch(e){console.error('cu',e)}return r}}
+const bar=(a,b)=>`<div style="height:8px;background:#0004;border-radius:4px;margin:4px 0"><div style="height:8px;width:${Math.min(100,a/b*100)}%;background:linear-gradient(90deg,#9be37a,#6fd8ff);border-radius:4px"></div></div>`;
+window.openCult=function(){const s=S.sys;if(!s)return;const c=s.cu=s.cu||{on:0,st:0,fd:0,bl:0,mat:{kar:0,shard:0,time:0},h:0};mats(c);
+ if(!c.on){return modal(`<button class="xbtn" onclick="openSys()">←</button><h3>🥚 ระบบบ่มเพาะ</h3><p class="tag2">เมื่อเลเวลตัน ให้ระบบ "ฟักตัว" แทนการไล่ EXP — เลเวลถูกล็อกไว้ แต่ระบบเติบโตเป็น 4 ระยะ เลือกกิ่งเฉพาะสาย ทำกิจกรรมประจำสาย และฟักตัวระหว่างรอโลกเทพ<br>กลับมาไล่เลเวลได้ทุกเมื่อ ไม่เสียอะไร</p><button class="pbtn" style="width:100%" onclick="cuStart()">${stuck()?'เริ่มบ่มเพาะ':'เริ่มบ่มเพาะ (ยังไม่ตัน — แนะนำเมื่อ Lv.60+ หรือไม่ขึ้นเลเวลนาน)'}</button>`,'syscult')}
+ const b=brs().find(z=>z[0]===c.br),a=ACT[s.t],cd=Math.max(0,10-(S.age-(c.la||-99))),m=c.mat,wait=S.xian&&!S.xt;
+ modal(`<button class="xbtn" onclick="openSys()">←</button><h3>${SI[c.st]} ระบบบ่มเพาะ — ${ST[c.st]}</h3>
+ <div class="item"><b>เลเวลล็อกที่ ${s.lv}</b> · SP ${fmt(s.sp)}${wait?` · ฟักตัวมา ${c.h|0} ปี (ยิ่งนานยิ่งแรง)`:''}${bar(c.fd,5)}</div>
+ <div class="item">${Object.keys(MAT).map(k=>`${MAT[k][0]} ${MAT[k][1]} <b>${m[k]|0}</b>`).join(' · ')}<br><small>ได้จากทุกปี (ฟักตัวช่วงรอโลกเทพได้ง่ายกว่า) และชนะการต่อสู้</small></div>
+ ${c.st>=3?'<div class="item">🌌 <b>ร่างสมบูรณ์</b> ผลทุกกิ่ง ×1.5</div>':`<button class="pbtn" style="width:100%;margin:4px 0" onclick="cuFeed()">🍼 ป้อนระบบ (${fmt(feedC(c))} SP + วัตถุดิบ 1 · ${c.fd}/5)</button>`}
+ ${c.st>=1&&!c.br?`<div class="item"><b>เลือกกิ่งเฉพาะสาย (เลือกแล้วเปลี่ยนไม่ได้)</b></div><div class="mgrid">${brs().map(z=>`<button class="opt" onclick="cuPick('${z[0]}')">${z[2]} ${z[1]}<small>${K[z[3]][0]}</small></button>`).join('')}</div>`:b?`<div class="item">${b[2]} <b>กิ่ง${b[1]}</b> ระดับ ${c.bl|0}/10 — ${K[b[3]][0]}</div><button class="gbtn" style="width:100%;margin:4px 0" ${(c.bl|0)>=10?'disabled':''} onclick="cuBr()">⬆️ อัปเกรดกิ่ง (${fmt(brC(c))} SP + วัตถุดิบ 1)</button>`:''}
+ ${a?`<button class="gbtn" style="width:100%;margin:4px 0" ${cd>0?'disabled':''} onclick="cuAct()">${a[0]} ${a[1]} (วัตถุดิบ 1 ${cd>0?`· รออีก ${cd} ปี`:''})</button>`:''}
+ ${wait?`<button class="gbtn" style="width:100%;margin:4px 0" ${(m.time|0)<2?'disabled':''} onclick="cuCrystal()">⏳ ใช้ผลึกกาลเวลา 2 ชิ้น ย่นเวลารอโลกเทพ 40 ปี</button>`:''}
+ <button class="gbtn" style="width:100%;margin-top:10px" onclick="cuStop()">↩️ กลับไปไล่เลเวลตามปกติ</button>`,'syscult')};
+window.cuStart=function(){const c=S.sys.cu;c.on=1;sysLog(`🥚 ระบบเข้าสู่การบ่มเพาะ (เลเวลล็อกที่ ${S.sys.lv})`,'up');sfx('good');openCult()};
+window.cuStop=function(){S.sys.cu.on=0;sysLog('ระบบกลับสู่การไล่เลเวล','');openSys()};
+window.cuFeed=function(){const s=S.sys,c=s.cu,k=feedC(c);if(c.st>=3)return;if(s.sp<k)return toast('SP ไม่พอ');if(!anyMat(c))return toast('ไม่มีวัตถุดิบ');s.sp-=k;takeMat(c);c.fd++;
+ if(c.fd>=5){c.fd=0;c.st++;s.pts+=8*c.st;sysLog(`${SI[c.st]} ระบบเติบโตเป็น <b>${ST[c.st]}</b> (+${8*c.st} แต้มสถานะ)`,'up');if(c.st===1)toast('เลือกกิ่งเฉพาะสายได้แล้ว')}sfx('good');openCult()};
+window.cuPick=function(id){const c=S.sys.cu;if(c.br)return;c.br=id;c.bl=1;const b=brs().find(z=>z[0]===id);sysLog(`${b[2]} เลือกกิ่ง <b>${b[1]}</b>`,'up');openCult()};
+window.cuBr=function(){const s=S.sys,c=s.cu,k=brC(c);if((c.bl|0)>=10)return;if(s.sp<k)return toast('SP ไม่พอ');if(!anyMat(c))return toast('ไม่มีวัตถุดิบ');s.sp-=k;takeMat(c);c.bl++;sfx('good');openCult()};
+window.cuAct=function(){const s=S.sys,c=s.cu,a=ACT[s.t];if(!a||S.age-(c.la||-99)<10)return;if(!takeMat(c))return toast('ไม่มีวัตถุดิบ');c.la=S.age;let r='';try{r=a[2]()}catch(e){console.error(e)}log(`<span class="px">[ระบบ]</span> ${a[0]} ${a[1]}: ${r}`,'good');sfx('good');openCult()};
+window.cuCrystal=function(){const c=S.sys.cu;if(!(S.xian&&!S.xt)||mats(c).time<2)return;c.mat.time-=2;S.xAge=(S.xAge==null?Math.max(0,S.age-200):S.xAge)-40;sysLog('⏳ ผลึกกาลเวลาย่นเวลารอโลกเทพ 40 ปี','up');sfx('good');openCult()};
+{const _os=openSys;openSys=function(){const r=_os.apply(this,arguments);try{const m=$('modal');if(S.sys&&m&&!m.querySelector('.cuBtn')&&(stuck()||on())){const e=document.createElement('button');e.className='gbtn cuBtn';e.style.cssText='width:100%;margin:6px 0';e.textContent=on()?`${SI[S.sys.cu.st]} ระบบบ่มเพาะ (${ST[S.sys.cu.st]})`:'🥚 เลเวลตันแล้ว? เปลี่ยนเป็นระบบบ่มเพาะ';e.onclick=()=>openCult();const h=m.querySelector('h3');if(h&&h.nextSibling)h.parentNode.insertBefore(e,h.nextSibling);else m.appendChild(e)}}catch(e){}return r}}
+try{const g=window._guide2;if(g)g.add('grow','🥚','ระบบบ่มเพาะ (เมื่อเลเวลตัน)','เมื่อระบบ Lv.60+ หรือไม่ขึ้นเลเวลนาน จะมีปุ่มในหน้าต่างระบบให้เปลี่ยนเป็นโหมดบ่มเพาะ: เลเวลล็อก แต่ระบบโตเป็น 4 ระยะด้วย SP + วัตถุดิบ (แก่นกรรม/เศษระบบ/ผลึกกาลเวลา) เลือกกิ่งเฉพาะสาย ทำกิจกรรมประจำสาย (ทุก 10 ปี) และ <b>ฟักตัวช่วงรอโลกเทพ</b> ยิ่งนานยิ่งแรง ใช้ผลึกกาลเวลาย่นเวลารอได้ กลับไปไล่เลเวลได้ทุกเมื่อ','openSys',()=>!!(S&&S.sys&&(stuck()||on())))}catch(e){}
+window._cu={ST,BR,ACT,K};
+})()}catch(e){console.error('cult block',e)}
