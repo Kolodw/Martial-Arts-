@@ -1726,7 +1726,7 @@ const EVENTS=[
 function randomEvent(){S.evCd=S.evCd||{};const pool=EVENTS.map((e,i)=>({w:evW('ev'+i,e.w),i,e})).filter(x=>{const e=x.e,l=S.evCd[x.i];if(l!=null&&(e.once||S.age-l<(e.cd==null?7:e.cd)))return false;return e.c(S)});if(!pool.length)return;const x=pickW(pool).v;S.evCd[x.i]=S.age;newTag('ev'+x.i);evMark('ev'+x.i);x.e.f();render();checkDeath()}
 
 // ============ ARTS / ITEMS ============
-function newArt(minTier=0){let t;do{t=pickW(ART_TIER)}while(ART_TIER.indexOf(t.v)<minTier);if(tr('lucky')){const t2=pickW(ART_TIER);if(ART_TIER.indexOf(t2.v)>ART_TIER.indexOf(t.v))t=t2}if(S&&Math.random()<Math.min(.4,Math.max(0,((S.int||0)-30)/250))){const t3=pickW(ART_TIER);if(ART_TIER.indexOf(t3.v)>ART_TIER.indexOf(t.v))t=t3}const key=S.faction?S.faction.t:'none';
+function newArt(minTier=0){minTier=Math.min(minTier,ART_TIER.length-1);let t,gd=0;do{t=pickW(ART_TIER)}while(ART_TIER.indexOf(t.v)<minTier&&++gd<400);if(ART_TIER.indexOf(t.v)<minTier)t={v:ART_TIER[ART_TIER.length-1],p:.0003};if(tr('lucky')){const t2=pickW(ART_TIER);if(ART_TIER.indexOf(t2.v)>ART_TIER.indexOf(t.v))t=t2}if(S&&Math.random()<Math.min(.4,Math.max(0,((S.int||0)-30)/250))){const t3=pickW(ART_TIER);if(ART_TIER.indexOf(t3.v)>ART_TIER.indexOf(t.v))t=t3}const key=S.faction?S.faction.t:'none';
  const pool=tr('allarts')&&Math.random()<.5?allArtPool():tr('yinyang')&&Math.random()<.3?ART_P[ch(['ธรรมะ','มาร'])]:S.faction&&S.faction.arts&&Math.random()<.6?S.faction.arts:S.clan&&S.clan.arts&&Math.random()<.4?S.clan.arts:ART_P[key];
  return{n:ch(ART_S)+ch(pool),tier:t.v.n,b:Math.round(t.v.b*(.8+Math.random()*.4)),r:ART_TIER.indexOf(t.v),p:t.p}}
 const artHtml=a=>`<b class="t${a.r}">《${a.n}》</b> [${a.tier}]`;
@@ -36401,12 +36401,12 @@ const av=()=>{const d=frGet();return d.av?'<img src="'+d.av+'">':'🙂'};
 const frPrev=id=>'<div class="frprev">'+frWrap('<span class="frph">'+av()+'</span>',id)+'</div>';
 const bub=i=>'<div class="bubp"><div class="cmb ccxT'+(30+i)+'">'+OVL+'<div class="cmh"><b>'+esc(pname())+'</b></div>ข้อความตัวอย่างธีม'+NMC[i-1]+'</div></div>';
 const eqBtn=(kind,id,cur,label)=>cur===id?'<button class="g" onclick="cosEq(\''+kind+'\',null)">ถอด'+label+'</button>':'<button onclick="cosEq(\''+kind+'\',\''+id+'\')">ใส่'+label+'</button>';
-const piece=(kind,id,pk,p,cur,label)=>mhas(id)?eqBtn(kind,id,cur,label):'<button class="g" onclick="wBuy(\''+pk+'\')">'+label+' '+p+'฿</button>';
+const piece=(kind,id,pk,p,cur,label)=>mhas(id)?eqBtn(kind,id,cur,label):'<button class="g" onclick="wldBuy(\''+pk+'\')">'+label+' '+p+'฿</button>';
 const cardW=i=>{const ids=[IDF(i),IDT(i),IDC(i)],all=ids.every(mhas),sum=FP[i-1]+TP[i-1]+CP,e=meq(),d=frGet(),pk='ws'+i,q=dp(pk,SP[i-1]),hot=q<SP[i-1];
  return '<div class="card wide'+(hot?' dlhot':'')+'" id="cs-w'+i+'" style="--ac:'+ACC[i-1]+'"><span class="rib">'+(hot?'🔥 ลด 30% วันนี้':'เซ็ตสุดคุ้ม')+'</span><b class="nm" style="padding-left:'+(hot?112:70)+'px;font-size:15px">'+SN[i-1]+'</b>'
  +'<div class="trio" style="margin-top:4px"><div class="pv">'+frPrev(IDF(i))+'</div><div class="tt">'+titleH(IDT(i))+bub(i)+'</div></div>'
  +'<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:2px"><span class="sub">'+SUB[i-1]+' · แยกซื้อ '+sum+'฿</span>'+(all?'<span class="own-b">✅ มีครบแล้ว</span>':priceH(pk,SP[i-1]))+'</div>'
- +(all?'':'<div class="acts"><button class="g" onclick="wTry('+i+')">👁️ ลองใส่ทั้งชุด</button><button onclick="wBuy(\''+pk+'\')">ซื้อชุดนี้ '+q+'฿</button></div>')
+ +(all?'':'<div class="acts"><button class="g" onclick="wldTry('+i+')">👁️ ลองใส่ทั้งชุด</button><button onclick="wldBuy(\''+pk+'\')">ซื้อชุดนี้ '+q+'฿</button></div>')
  +'<div class="acts" style="margin-top:6px">'+piece('f',IDF(i),'wf'+i,FP[i-1],d.eq,'กรอบ')+piece('t',IDT(i),'wt'+i,TP[i-1],e.t,'ฉายา')+piece('c',IDC(i),'wc'+i,CP,e.c,'ธีม')+'</div></div>'};
 const allW=()=>{for(let i=1;i<=9;i++)if(![IDF(i),IDT(i),IDC(i)].every(mhas))return false;return true};
 const PN={};for(let i=1;i<=9;i++){PN['ws'+i]=[SN[i-1],SP[i-1]];PN['wf'+i]=[NMF[i-1],FP[i-1]];PN['wt'+i]=['ฉายา '+NMT[i-1],TP[i-1]];PN['wc'+i]=['ธีมแชท '+NMC[i-1],CP]}PN.wall=['ครบ 9 ชุดโลก (27 ชิ้น)',ALLP];
@@ -36414,8 +36414,8 @@ const fmt=ms=>{ms=Math.max(0,ms);const s=Math.floor(ms/1000);return String(Math.
 function dealBanner(cx){const d=deal(),nm=pk=>{const m=/^ms(\d)$/.exec(pk);if(m){const e=cx.querySelector('#cs-m'+m[1]+' .nm');return e?e.textContent:'ชุดยุคปัจจุบัน'}return SN[+pk.slice(2)-1]};
  const tn=pk=>{const e=cx.querySelector('#cs-n'+pk.slice(2)+' .pv');return e?e.textContent.trim():'ฉายาเสริม'};
  const tg=pk=>pk[0]==='w'?'cs-w'+pk.slice(2):'cs-m'+pk.slice(2);
- return '<div class="starter dlr"><b>🔥 ลดราคาวันนี้</b> · <a href="javascript:void 0" onclick="wGo(\''+tg(d.s)+'\')">'+esc(nm(d.s))+' <b>-30%</b></a> · ฉายา <a href="javascript:void 0" onclick="wGo(\'cs-n'+d.t[0].slice(2)+'\')">'+esc(tn(d.t[0]))+'</a>, <a href="javascript:void 0" onclick="wGo(\'cs-n'+d.t[1].slice(2)+'\')">'+esc(tn(d.t[1]))+'</a> <b>-25%</b> · หมดใน <b class="dlt">'+fmt(d.exp-Date.now())+'</b></div>'}
-window.wGo=function(id){try{const el=document.getElementById(id);if(el){el.scrollIntoView({block:'center',behavior:'smooth'});el.classList.add('hl')}}catch(e){}};
+ return '<div class="starter dlr"><b>🔥 ลดราคาวันนี้</b> · <a href="javascript:void 0" onclick="wldGo(\''+tg(d.s)+'\')">'+esc(nm(d.s))+' <b>-30%</b></a> · ฉายา <a href="javascript:void 0" onclick="wldGo(\'cs-n'+d.t[0].slice(2)+'\')">'+esc(tn(d.t[0]))+'</a>, <a href="javascript:void 0" onclick="wldGo(\'cs-n'+d.t[1].slice(2)+'\')">'+esc(tn(d.t[1]))+'</a> <b>-25%</b> · หมดใน <b class="dlt">'+fmt(d.exp-Date.now())+'</b></div>'}
+window.wldGo=function(id){try{const el=document.getElementById(id);if(el){el.scrollIntoView({block:'center',behavior:'smooth'});el.classList.add('hl')}}catch(e){}};
 // ปรับราคาลดในการ์ดยุคปัจจุบันเดิม
 function patchDeal(cx){const d=deal();
  if(/^ms\d$/.test(d.s)){const c=cx.querySelector('#cs-m'+d.s.slice(2));if(c&&!c.querySelector('.own-b')){const pr=c.querySelector(':scope>div>.pr b,.pr b'),p0=pr?parseInt(pr.textContent):0;if(p0){const q=Math.round(p0*.7);pr.parentElement.innerHTML='<s style="opacity:.55;margin-right:4px">'+p0+'฿</s><b>'+q+'฿</b>';c.querySelectorAll('.acts button').forEach(b=>{if(/ซื้อชุดนี้/.test(b.textContent))b.textContent='ซื้อชุดนี้ '+q+'฿'});const r=c.querySelector('.rib');if(r)r.textContent='🔥 ลด 30% วันนี้';const nm=c.querySelector('.nm');if(nm)nm.style.paddingLeft='112px';c.classList.add('dlhot')}}}
@@ -36423,7 +36423,7 @@ function patchDeal(cx){const d=deal();
 function worldRender(){const cx=document.querySelector('#modal .cxs');if(!cx||!cx.querySelector('[data-mod].on'))return;if(cx.querySelector('#wld-sec'))return;
  let b='<div id="wld-sec"><div class="starter" style="margin-top:10px"><b>🌍 ชุดตามโลก</b> — 9 โลกย่อยของยุคปัจจุบัน ชุดละกรอบ + ฉายา + ธีมแชท ทุกชุดขยับได้</div>';
  for(let i=1;i<=9;i++)b+=cardW(i);
- const al=allW();b+='<div class="card wide" style="--ac:#ffc83a"><span class="rib">👑 สุดคุ้ม</span><b class="nm" style="padding-left:70px;font-size:15px">ครบ 9 ชุดโลก 27 ชิ้น</b><div class="sub">กรอบ 9 · ฉายา 9 · ธีมแชท 9 · แยกซื้อ '+SP.reduce((a,x)=>a+x,0)+'฿ (ซื้อทีละชุด)</div>'+(al?'<div class="own-b">✅ มีครบทุกชิ้นแล้ว</div>':'<div class="acts"><button onclick="wBuy(\'wall\')">ซื้อครบทุกชุด '+ALLP+'฿</button></div>')+'</div></div>';
+ const al=allW();b+='<div class="card wide" style="--ac:#ffc83a"><span class="rib">👑 สุดคุ้ม</span><b class="nm" style="padding-left:70px;font-size:15px">ครบ 9 ชุดโลก 27 ชิ้น</b><div class="sub">กรอบ 9 · ฉายา 9 · ธีมแชท 9 · แยกซื้อ '+SP.reduce((a,x)=>a+x,0)+'฿ (ซื้อทีละชุด)</div>'+(al?'<div class="own-b">✅ มีครบทุกชิ้นแล้ว</div>':'<div class="acts"><button onclick="wldBuy(\'wall\')">ซื้อครบทุกชุด '+ALLP+'฿</button></div>')+'</div></div>';
  const t2=cx.querySelector('p.tag2');if(t2)t2.insertAdjacentHTML('beforebegin',b);else cx.insertAdjacentHTML('beforeend',b);
  patchDeal(cx);
  const tabs=cx.querySelector('.tabs');if(tabs&&!cx.querySelector('.dlr'))tabs.insertAdjacentHTML('afterend',dealBanner(cx));
@@ -36441,14 +36441,14 @@ const buyModal=(pk,name,p)=>{if(typeof modal!=='function')return;
  +'<label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>'
  +'<button class="pbtn" style="width:100%;margin-top:8px" onclick="cosPaid(this,\''+pk+'\')">📨 ส่งสลิป</button>'
  +'<p class="tag2">ซื้อครั้งเดียวถาวร ผูกกับบัญชี · ของแต่งล้วน ไม่มีผลต่อพลังหรืออันดับ · ถ้าตรวจอัตโนมัติไม่ได้ แจ้งบั๊กพร้อมสลิป</p>','cosbuy')};
-window.wBuy=function(pk){const P=PN[pk];if(P)buyModal(pk,P[0],dp(pk,P[1]))};
+window.wldBuy=function(pk){const P=PN[pk];if(P)buyModal(pk,P[0],dp(pk,P[1]))};
 {const _mb=window.modBuy;if(typeof _mb==='function')window.modBuy=function(pk){const r=_mb.apply(this,arguments);try{const k=rate(pk);if(k<1){const m=document.getElementById('modal');const big=m&&[...m.querySelectorAll('div')].find(x=>/^\d+ บาท$/.test(x.textContent.trim())&&x.style.fontSize==='26px');if(big){const q=Math.round(parseInt(big.textContent)*k);big.textContent=q+' บาท';m.querySelectorAll('p b').forEach(x=>{if(/^\d+ บาท$/.test(x.textContent))x.textContent=q+' บาท'})}}}catch(e){}return r}}
 {const _mt=window.modTry;if(typeof _mt==='function')window.modTry=function(i){const r=_mt.apply(this,arguments);try{const k=rate('ms'+i);if(k<1){document.querySelectorAll('#modal .acts button').forEach(b=>{const m=/ซื้อชุดนี้ (\d+)฿/.exec(b.textContent);if(m)b.textContent='ซื้อชุดนี้ '+Math.round(+m[1]*k)+'฿'})}}catch(e){}return r}}
-window.wTry=function(i){if(typeof modal!=='function')return;const q=dp('ws'+i,SP[i-1]);
+window.wldTry=function(i){if(typeof modal!=='function')return;const q=dp('ws'+i,SP[i-1]);
  modal('<button class="xbtn" onclick="cosMenu(\'mod\')">✕</button><h3>👁️ ลองใส่: '+SN[i-1]+'</h3><div class="cxs try"><div class="big">'+frPrev(IDF(i))+'</div>'
  +'<div class="bubp" style="max-width:340px;margin:0 auto"><div class="cmb ccxT'+(30+i)+'">'+OVL+'<div class="cmh"><b>'+esc(pname())+'</b>'+titleH(IDT(i))+'</div>นี่คือหน้าตาของคุณในแชทโลก</div></div>'
  +'<p class="tag2" style="margin-top:8px">ซื้อแล้วสวมกรอบในโปรไฟล์ได้ทันที ส่วนฉายากับธีมแชทจะขึ้นในแชทโลกของคุณ</p>'
- +'<div class="acts" style="margin-top:8px"><button onclick="wBuy(\'ws'+i+'\')">ซื้อชุดนี้ '+q+'฿</button></div></div>','costry')};
+ +'<div class="acts" style="margin-top:8px"><button onclick="wldBuy(\'ws'+i+'\')">ซื้อชุดนี้ '+q+'฿</button></div></div>','costry')};
 // ---------- CSS ----------
 const css=document.createElement('style');
 const RB=[['#d8ffe0','#4ad06a','#14702a','#052a10','#0a4a1c','✧'],['#f0e6ff','#9a6aef','#4a1a8a','#1a0a38','#3a1a6a','✦'],['#e8fbff','#35d0ff','#0a5a8a','#031a2a','#064a6a','◆'],['#fff4d0','#ffcc66','#a06a10','#2a1a05','#6a4408','✦'],['#e6ffb0','#8fdc3a','#3a6a10','#0a1a04','#1f4208','✚'],['#fff2c4','#e0b84a','#8a6a14','#2a1c04','#5a3e08','▲'],['#e0f0ff','#4aa8ff','#1a3a9a','#04102a','#0a2a6a','▣'],['#ffd0d6','#ff3a4a','#8a0a1a','#1a0408','#4a0610','✖'],['#ffe0b0','#ff7a2a','#8a2a04','#240a02','#5a1a02','✦']];
