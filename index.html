@@ -37821,6 +37821,30 @@ const st=document.createElement('style');st.textContent=`
 #modal .eqTabs button{flex:none;border:1.5px solid color-mix(in srgb,var(--ink) 25%,transparent);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 11px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}#modal .eqTabs button.on{background:var(--pink);color:#fff;border-color:var(--pink)}#modal .eqTabs small{opacity:.75}
 @media (max-width:380px){#modal .eqDoll{grid-template-columns:minmax(0,1fr) 100px minmax(0,1fr)}#modal .eqMid canvas{width:96px;height:106px}}`;document.head.appendChild(st);
 })()}catch(e){console.error('mod-eqrpg',e)}
+
+// ===================== 📖 ขายวิชาใหม่อัตโนมัติ: วิชาที่เข้ามาเอง (ระดับต่ำกว่าที่ตั้ง) ขายเป็นเงินทันที · ตั้งที่หน้า 📖 วิชายุทธ์ =====================
+try{(function(){if(typeof openArts!=='function')return;
+const LV=[['off','ปิด'],['0','สามัญ'],['1','ยอดยุทธ์'],['2','ล้ำเลิศ'],['3','ตำนาน']];
+const mode=()=>{try{const v=LS.get('murim_artauto','off');return LV.some(x=>x[0]===v)?v:'off'}catch(e){return'off'}};
+const keepArt=a=>!a||a.heir||a.heirScroll||a.cn||a.p===.0001||/วิชาของตัวเอง|ผสาน/.test(String(a.tier||''))||(a.lv|0)>=1;
+const price=a=>{const v=Math.round((a.b||50)*12);return v};
+const seenSet=()=>{S.artSeen=S.artSeen||{};return S.artSeen};
+const keyOf=a=>a.n+'|'+(a.r|0)+'|'+(a.b|0);
+function mark(){if(!S)return;const s=seenSet();(S.arts||[]).forEach(a=>{if(a)s[keyOf(a)]=1});(S.learnQ||[]).forEach(a=>{if(a)s[keyOf(a)]=1})}
+function sweep(quietLog){try{if(!S||!S.alive)return;const m=mode();if(m==='off'){mark();return}const mx=+m,s=seenSet();let n=0,got=0,names=[];
+ const A=S.arts||[];const best=A.filter(Boolean).slice().sort((x,y)=>(y.b||0)-(x.b||0))[0];
+ for(let i=A.length-1;i>=0;i--){const a=A[i];if(!a)continue;const k=keyOf(a);if(s[k])continue;s[k]=1;if((a.r|0)>mx||keepArt(a)||a===best||A.filter(Boolean).length<=1)continue;A.splice(i,1);const p=price(a);S.money+=p;got+=p;n++;names.push(a.n)}
+ const Q=S.learnQ||[];for(let i=Q.length-1;i>=0;i--){const a=Q[i];if(!a)continue;const k=keyOf(a);if(s[k])continue;s[k]=1;if((a.r|0)>mx||keepArt(a))continue;Q.splice(i,1);const p=price(a);S.money+=p;got+=p;n++;names.push(a.n)}
+ if(n&&!quietLog){try{log('🔁 <b>ขายวิชาอัตโนมัติ</b> '+n+' วิชา ('+names.slice(0,3).map(x=>'《'+esc(x)+'》').join(' ')+(n>3?' …':'')+') — ได้ '+(S.xian&&typeof stoneTxt==='function'?stoneTxt(got):fmtM(got)+' ตำลึง'),'')}catch(e){}}
+ return n}catch(e){}}
+window.artAutoSet=v=>{try{LS.set('murim_artauto',v)}catch(e){}if(v!=='off'){mark();toast('🔁 ตั้งแล้ว — ขายวิชาใหม่ระดับ '+LV.find(x=>x[0]===v)[1]+' ลงไปอัตโนมัติ (วิชาที่มีอยู่ตอนนี้ไม่ถูกขาย)')}else toast('ปิดขายวิชาอัตโนมัติแล้ว');openArts()};
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{sweep()}catch(e){}return r}}
+{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{if(S)mark()}catch(e){}return r}}
+setTimeout(()=>{try{if(S&&!S.artSeen)mark()}catch(e){}},2500);
+{const _oa=openArts;openArts=function(){if(S&&!S.artSeen)mark();const r=_oa.apply(this,arguments);try{const m=$('modal'),h3=m&&m.querySelector('h3');if(h3&&!m.querySelector('.artAu')){const cur=mode();
+ h3.insertAdjacentHTML('afterend','<div class="item artAu"><b>🔁 ขายวิชาใหม่อัตโนมัติ</b> <span class="tag2">ขายถึงระดับ</span><div class="artAuB">'+LV.map(x=>'<button class="'+(cur===x[0]?'on':'')+'" onclick="artAutoSet(\''+x[0]+'\')">'+x[1]+'</button>').join('')+'</div><span class="tag2">วิชาที่ได้มาใหม่ (รวมคัมภีร์รอฝึก) ระดับที่เลือกลงไป จะขายเป็นเงินทันที · ไม่ขาย: วิชามรดก 🏮 · วิชาที่ฝึกขั้นแล้ว · วิชาของตัวเอง · วิชาที่แรงที่สุด · วิชาที่มีอยู่ก่อนเปิด</span></div>')}}catch(e){}return r}}
+const st=document.createElement('style');st.textContent='.artAuB{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0 4px}.artAuB button{flex:1;min-width:58px;border:1.5px solid color-mix(in srgb,var(--ink) 25%,transparent);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 8px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}.artAuB button.on{background:var(--pink);color:#fff;border-color:var(--pink)}';document.head.appendChild(st);
+window._artAutoSweep=sweep})()}catch(e){console.error('mod-artauto',e)}
 </script>
 </body>
 </html>
