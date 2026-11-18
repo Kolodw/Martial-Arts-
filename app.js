@@ -15308,7 +15308,7 @@ try{FRAMES.push({id:'f_lg1',n:'กรอบลีกเงิน',side:'r',c:0,t
 // ===================== สวิตช์เปิดยุคปัจจุบันให้ทุกคน (false = เฉพาะแอดมิน) =====================
 var MW_PUBLIC=false;
 function mwAllowed(){return MW_PUBLIC||!!admK()}
-function mwTag(){return admK()&&!MW_PUBLIC?'(ทดสอบแอดมิน)':'(เบต้า)'}
+function mwTag(){return admK()&&!MW_PUBLIC?'(ทดสอบแอดมิน)':''}
 // ===================== ยุคปัจจุบัน องก์ 1 — ยอดฝีมือหลงยุค (ทดสอบ: เฉพาะโหมดแอดมิน) =====================
 // ค่าใหม่: S.mw = {y ปีในยุคนี้, sec ความลับรั่ว 0-100, fame ชื่อเสียงออนไลน์, adapt ความคุ้นเคยยุคใหม่ 0-100, qi ปราณ, lin ความผูกพันกับหลิน, past ข้อมูลจริงจากชีวิตก่อน}
 const MW_Y0=2026,MW_GATE=50000;
@@ -16801,7 +16801,7 @@ function openOldMW(){const M=S.mw,O=M.old;if(!O)return toast('ไม่มีข
 {const _mtO=mwTitle;mwTitle=function(M){if(M.fl.god&&!M.low)return mwQi(M)>=4?'เทพที่ตกสวรรค์ผู้คืนพลัง':'เทพที่ตกสวรรค์';return _mtO.apply(this,arguments)}}
 // ===================== เตรียมเปิดสาธารณะ =====================
 // ปุ่มหน้าแรก: เปลี่ยนป้าย "เร็วๆ นี้" เป็น "เบต้า" เมื่อเปิด
-setInterval(()=>{try{if(MW_PUBLIC)document.querySelectorAll('.mwseg i').forEach(i=>{if(i.textContent!=='เบต้า')i.textContent='เบต้า'})}catch(e){}},1500);
+setInterval(()=>{try{if(MW_PUBLIC)document.querySelectorAll('.mwseg i,.mwopt i').forEach(i=>{if(i.textContent==='เบต้า'||i.textContent==='เร็วๆ นี้')i.remove()})}catch(e){}},1500);
 // บันทึกอัปเดต: ขึ้นเฉพาะตอนเปิดสาธารณะ (ไม่มีฟีเจอร์แอดมิน/ระบบกันโกง)
 const MW_CHANGELOG={v:'17.0',d:'',l:['🏙️ <b>ยุคปัจจุบัน (เบต้า)</b> — ยอดฝีมือหลงยุค: ข้ามรอยแยกจากขั้นสูงสุด หรือมิติปริศนาในแดนเทพ หรือเริ่มจากปุ่มหน้าแรก · พลังเหลือนิดเดียว แต่เก็บตัวตนจากยุคเก่าไว้','🌍 6 ประเทศ (ไทย อเมริกา จีน ญี่ปุ่น เกาหลีใต้ ไต้หวัน) · ภาษา · เอกสารตัวตน · อาชีพจริง 8 อาชีพพร้อมเงินเดือนสกุลท้องถิ่น · ค่าครองชีพ บ้าน รถ ประกัน','💞 ความรัก แต่งงาน ลูก เล่นต่อเป็นลูก · หลิน เพื่อนสนิท สำนักของคุณในยุคนี้ · ฝังสมบัติในยุทธภพแล้วขุดในยุคปัจจุบัน · จักรวาลซ้อนกับผู้เล่นคนอื่น','🌀 ปราณยุคใหม่ 5 ขั้น · ต่อสู้ · ซ่อนพลังใช้ชีวิตไม่เด่น · เควสตามสถานการณ์ · เป้าหมายชีวิตและความสำเร็จ','🗡️ โลกฮันเตอร์: บางโลกมีเกตตั้งแต่แรก บางโลกเกตเปิดกลางชีวิต (หายาก) · ตื่นพลัง · แรงก์ E–S · กิลด์ · เกตแตก','🏠 ผู้ข้ามมิติที่มาจากโลกปัจจุบันได้เส้นเรื่อง "กลับบ้าน" ของตัวเอง']};
 {const _ouC=typeof openUpdate==='function'?openUpdate:null;if(_ouC)openUpdate=function(){const r=_ouC.apply(this,arguments);try{if(MW_PUBLIC){const m=$('modal'),h3=m&&m.querySelector('h3');if(h3&&!m.querySelector('.mwCL'))((()=>{let e=h3.nextElementSibling;while(e&&!/17\.5/.test(e.textContent||'')&&e.nextElementSibling)e=e.nextElementSibling;return e&&/17\.4/.test(e.textContent||'')?e:h3})()).insertAdjacentHTML('afterend',`<div class="mwCL box" style="padding:8px 10px;margin:6px 0;border-color:#6a4ab0"><b>🆕 ยุคปัจจุบัน (เบต้า)</b><ul style="margin:4px 0 0 16px;padding:0">${MW_CHANGELOG.l.map(x=>`<li>${x}</li>`).join('')}</ul></div>`)}}catch(e){}return r}}
@@ -20165,7 +20165,7 @@ body.islFloat #isl:not(.on){opacity:0}
 CFG.mw=0;
 function mwSegFix(){try{const sg=document.querySelector('#title .seg[data-k="xian"]');if(!sg)return;
  const old=sg.querySelector('.mwseg');if(old)old.remove();
- let b=sg.querySelector('.mwopt');if(!b){b=document.createElement('button');b.type='button';b.className='mwopt';b.dataset.v='2';b.innerHTML='🏙️ ยุคปัจจุบัน<i>เบต้า</i>';sg.appendChild(b);
+ let b=sg.querySelector('.mwopt');if(!b){b=document.createElement('button');b.type='button';b.className='mwopt';b.dataset.v='2';b.innerHTML='🏙️ ยุคปัจจุบัน';sg.appendChild(b);
   b.onclick=e=>{if(!mwAllowed()){toast('ยุคปัจจุบันยังไม่เปิด');return}if(!CFG.mw)try{tbModernNext()}catch(_){}sg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');CFG.mw=1;CFG.xian=0;try{titleMode()}catch(_){}try{updateHints()}catch(_){}try{const a=$('titleSub');if(a)a.textContent='วันนี้ จะได้เกิดเป็นใครในโลกปัจจุบัน?'}catch(_){}};try{segPills()}catch(_){}
   sg.querySelectorAll('button:not(.mwopt)').forEach(x=>{const f=x.onclick;x.onclick=function(ev){CFG.mw=0;return f&&f.call(this,ev)}})}
  if(!mwAllowed())b.style.display='none'}catch(e){console.error(e)}}
