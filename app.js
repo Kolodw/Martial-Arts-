@@ -2021,7 +2021,7 @@ const sysG=()=>SYS_GRADE[S.sys.gr||0];
 const sysM=()=>sysG().m*(1+.15*(S.sys.evo||0))*(1+.06*(S.sys.rk||0))*(S.sys.fin?1.25:1)*(S.sys.hf?1.1:1);
 const sysName=()=>sysType().n+(S.sys.evo?` (${EVO_N[S.sys.evo]})`:'')+` [อันดับ ${(typeof SRK!=='undefined'&&SRK[S.sys.rk||0]||{l:'F'}).l}]`;
 const sysTM=()=>S.sys?1.25*(1+.05*(S.sys.tc||0)):1;
-const expNeed=lv=>120+lv*90;
+const expNeed=lv=>Math.round(120+lv*90+(lv>25?Math.pow(lv-25,1.7)*6:0));
 const PROT_SN=['เย่','หลิน','เซียว','ฉิน','หาน','ลู่','มู่','ซู'],PROT_GN=['เทียน','เฟิง','หยาง','เฉิน','อวี่','หลง','ฟาน','เสวียน'];
 const ELDER_N=['เต๋าหยวน','ฉางคง','หวงซาน','อู๋จี๋','เซวียนหมิง','ไท่ชิง'];
 function sysFix(){const s=S.sys;if(!s)return;
@@ -2053,7 +2053,7 @@ function bindSys(T,G){
  if(S.age>=6)newQuest();
  render();
 }
-function gainExp(n){if(!S.sys)return;const s=S.sys;s.exp+=Math.round(n);let up=0;while(s.exp>=expNeed(s.lv)){s.exp-=expNeed(s.lv);s.lv++;s.pts+=5;s.sp+=10;up++}
+function gainExp(n){if(!S.sys)return;const s=S.sys;s.exp+=Math.round(n);let up=0;while(s.exp>=expNeed(s.lv)){s.exp-=expNeed(s.lv);s.lv++;s.pts+=5;s.sp+=(s.lv<=50?10:s.lv<=100?6:4);up++}
  if(up){sysLog(`เลเวลอัพ! <b>Lv.${s.lv}</b> · ได้แต้มสถานะ +${up*5} · SP +${up*10}`,'up');sfxLast.realm=0;sfx('realm');if(auto)autoAlloc();
   const ne=s.lv>=20?2:s.lv>=10?1:0;if(ne>(s.evo||0)){s.evo=ne;s.sp+=50;sysLog(`⚡ ระบบวิวัฒนาการเป็น <b>${sysName()}</b>! รางวัลเควสและผลประจำปีเพิ่มขึ้น · +50 SP`,'myth');S.key.push(`${S.age} ปี — ระบบวิวัฒนาการ (${EVO_N[ne]})`)}}}
 function mkQuest(k){const s=S.sys,[n,g,d]=QMK[k]();return{k,n,b:QV[k](),g,dl:S.age+d,rw:Math.round((60+s.lv*25)*(k==='realm'?2.2:k==='kid'||k==='marry'||k==='house'?1.5:1)),sp:R(12,28)*(k==='realm'?2:1)}}
@@ -2083,7 +2083,7 @@ function sysTick(){
   if(r<.1){const a=newArt(1);S.arts.push(a);txt=`เช็คอินปีที่ ${yrs} — ได้รับ ${artHtml(a)}`}else if(r<.4){const q=+(1+yrs*.05).toFixed(1);S.qi+=q;txt=`เช็คอินปีที่ ${yrs} — ลมปราณ +${q} ปี`}else{const g=inc(200+yrs*30);S.money+=g;txt=`เช็คอินปีที่ ${yrs} — ${fmtM(g)} ตำลึง`}
   if(yrs>0&&yrs%10===0){const a=newArt(1);S.arts.push(a);txt+=` · 🎁 รางวัลเช็คอินครบ ${yrs} ปี: ${artHtml(a)}`}
   s.sp+=R(4,10);if(S.age>=6)sysLog(txt)}
- if(T.id==='saint')gainExp(Math.max(0,S.karma)/3);
+ if(T.id==='saint')gainExp(Math.min(Math.max(0,S.karma)/3,30+s.lv*2));
  if(T.id==='tycoon')S.power+=Math.min(400,S.money/1500);
  if(T.id==='gacha'){if(Math.random()<.6)s.tk++;if(auto&&S.age>=6)while(s.tk>0)gachaPull(true)}
  if(T.id==='alchemy'&&S.age>=10)alchemyTick();
@@ -10282,7 +10282,7 @@ function bsysTick(){const m=S.beastMode;if(!m||m.human||!S.alive)return;
  S.power+=Math.round((4+s.lv*5)*mul*gm*(T.id==='martial'||T.id==='demon'?1.3:1));S.qi=+(S.qi+.06*s.lv).toFixed(1);gainExp(12);
  if(S.age<6)return;
  if(T.id==='checkin'&&Math.random()<.5){const g=+(.5+s.lv*.05).toFixed(1);S.qi=+(S.qi+g).toFixed(1);s.sp+=R(3,8);sysLog(`เช็คอินที่รังปีที่ ${S.age-s.since} — ลมปราณ +${g} ปี`)}
- if(T.id==='saint')gainExp(Math.max(0,S.karma)/3);
+ if(T.id==='saint')gainExp(Math.min(Math.max(0,S.karma)/3,30+s.lv*2));
  if(T.id==='alchemy'&&Math.random()<.4){S.hp=Math.min(S.maxHp,S.hp+30);sysLog('ระบบชี้ทางไปยังสมุนไพรวิญญาณ — ฟื้นพลังชีวิต +30')}
  if((T.id==='lust'||T.id==='clan')&&blM().mate&&blM().mate.alive)joy(3);
  if(T.id==='gacha'&&Math.random()<.6)s.tk=(s.tk||0)+1;
@@ -18460,7 +18460,7 @@ function sqDil(){const s=S.sys,C=sqC(),P=sqP(),D=C.d;setScene('system');
   if(w==='A'&&C===SQC.demon)S.karma-=30;if(w==='B'&&C===SQC.transcend)S.int=Math.max(0,S.int-5);if(w==='A'&&C===SQC.transcend)S.lifespan=Math.max(S.age+5,S.lifespan-10);
   Object.assign(s.qc,{st:3},sqGoal(C.g2,w==='B'&&C===SQC._?2:1.7,3));sysLog(`🟪 [${C.n}] ขั้น 3/4 — <b>${s.qc.n}</b> ภายใน ${s.qc.dl-S.age} ปี`)};
  choice(`🟪 ${C.n} · ขั้น 2/4`,`${D[0]}<br><span class="tag2">${P[0]}ดูเหมือนจะมีความเห็นเรื่องนี้…</span>`,[{t:D[1],s:D[2],f(){pick('A')}},{t:D[3],s:D[4],f(){pick('B')}}])}
-function sqWin(){const s=S.sys,C=sqC(),w=s.qc.f.p||'A';const txt=sqRw(w==='A'?C.rA:C.rB);const e=Math.round(expNeed(s.lv)*.8),sp=R(40,80);gainExp(e);s.sp+=sp;s.qcN=(s.qcN||0)+1;s.qc=null;s.qcY=S.age;sqAfAdd(15);
+function sqWin(){const s=S.sys,C=sqC(),w=s.qc.f.p||'A';const txt=sqRw(w==='A'?C.rA:C.rB);const e=Math.round(Math.min(expNeed(s.lv)*.3,500+s.lv*15)),sp=R(40,80);gainExp(e);s.sp+=sp;s.qcN=(s.qcN||0)+1;s.qc=null;s.qcY=S.age;sqAfAdd(15);
  try{keyAdd(`สำเร็จภารกิจสายเรื่อง「${C.n}」`)}catch(x){}
  choice(`🏆 ${C.n} · ตอนจบ`,`${w==='A'?C.eA:C.eB}<br><br><b>รางวัล:</b> ${txt} · EXP +${fmt(e)} · SP +${sp} · ความสัมพันธ์ +15`,[{t:'✨ รับรางวัล',f(){sqSay(true)}}])}
 function sqFail(why){const s=S.sys,C=sqC();const sp=Math.round(s.sp*.25),pw=Math.round(Math.min(S.power*.03,pctPow(.03)));s.sp-=sp;S.power-=pw;s.qcBad=S.age+5;s.qc=null;s.qcY=S.age;sqAfAdd(-12);
@@ -40694,7 +40694,7 @@ const EFF={
  qi(){S.qi+=Math.round(6*vm());S.fame+=Math.round(30*vm());return'ลมปราณ + ชื่อเสียง'},
  karma(){S.karma+=12;S.fame+=Math.round(25*vm());return'กรรมดี +12'},
  life(){const v=Math.round(Math.max(3,(S.lifespan||80)*.003)*vm());S.lifespan=(S.lifespan||80)+v;S.power+=pctPow(.008*vm());return`อายุขัย +${fmt(v)} ปี`},
- exp(){const v=Math.round(expNeed(S.sys.lv)*.6);gainExp(v);S.int+=2;return`EXP +${fmt(v)}`},
+ exp(){const v=Math.round(Math.min(expNeed(S.sys.lv)*.25,300+S.sys.lv*12));gainExp(v);S.int+=2;return`EXP +${fmt(v)}`},
  devour(){const v=pctPow(.016*vm()*(1+Math.min(2,(S.kills||0)/200)));S.power+=v;S.karma-=3;return`พลังยุทธ์ +${fmt(v)} · กรรม −3`},
  steal(){const v=pctPow(.026*vm());S.power+=v;S.fame+=Math.round(40*vm());S.karma-=5;try{if(S.sys.prot)S.sys.prot.r=Math.max(.1,(S.sys.prot.r||.8)-.05)}catch(e){}return`ชิงโอกาสมาได้ · พลังยุทธ์ +${fmt(v)}`},
  art(){try{const a=newArt(Math.min(4,1+X().v));S.arts.push(a);return`ได้วิชา ${artHtml?artHtml(a):a.n}`}catch(e){S.power+=pctPow(.04);return'ได้เศษวิชา'}},
@@ -41813,3 +41813,30 @@ goDaily=function(){openDaily2()};
 // ข้อความสั้นที่หน้าแรก
 setInterval(()=>{try{const b=$('dailyInfo');if(!b)return;const c=cfgOf(DK()),R=rec()[DK()]||{},n=streak();const t=`วันนี้: ${MN[c.ch][1]} · ${WN[c.w][1]}${R.rank?` · คุณอันดับ ${R.rank}`:R.sub?' · ส่งผลแล้ว':''}${n?` · 🔥${n}`:''}`;if(b.textContent!==t)b.textContent=t}catch(e){}},2000);
 })()}catch(e){console.error('block49',e)}
+
+// ===================== ระบบ: เลเวลขึ้นยากขึ้น (เพดาน EXP ต่อปี) · กิจการประจำสาย (ที่ใช้ SP) =====================
+try{(()=>{
+// เพดาน EXP ต่อปี: ตั้งแต่ Lv.30 รับเต็มได้ปีละไม่เกินครึ่งของ EXP ที่ต้องใช้ ส่วนเกินได้แค่ 15%
+{const _g=gainExp;gainExp=function(n){try{const s=S&&S.sys;if(s&&s.lv>=30&&n>0){if(s._ey!==S.age){s._ey=S.age;s._ea=0}const cap=expNeed(s.lv)*.5,room=Math.max(0,cap-(s._ea||0)),full=Math.min(n,room);s._ea=(s._ea||0)+full;n=full+Math.max(0,n-room)*.15}}catch(e){}return _g.call(this,n)}}
+const BZ={martial:['🥋','โรงฝึกยุทธ์','พลังยุทธ์เพิ่มทุกปี',L=>{S.power+=Math.max(1,Math.round(total()*.0015*L))}],
+ checkin:['📓','หอบันทึกประจำวัน','ลมปราณเพิ่มทุกปี',L=>{S.qi+=.3*L}],
+ saint:['⛩️','ธรรมศาลา','กรรมดีและชื่อเสียงเพิ่มทุกปี',L=>{S.karma+=.5*L;S.fame+=10*L}],
+ demon:['🏯','ป้อมโลหิต','พลังยุทธ์เพิ่มทุกปี แต่กรรมลด',L=>{S.power+=Math.max(1,Math.round(total()*.002*L));S.karma-=.5*L}],
+ tycoon:['🏦','เครือค้าข้ามโลก','เงินเข้าทุกปี',L=>{S.money+=Math.round(300*L*(1+S.age/100))}],
+ transcend:['🏋️','แท่นฝึกก้าวข้าม','พลังยุทธ์และพลังชีวิตสูงสุดเพิ่มทุกปี',L=>{S.power+=Math.max(1,Math.round(total()*.001*L));S.maxHp+=Math.max(1,Math.round(L/2))}],
+ gacha:['🎰','ตู้กาชาของระบบ','ได้ตั๋วกาชาฟรีทุก 5 ปี',L=>{if(S.age%5===0)S.sys.tk=(S.sys.tk||0)+Math.ceil(L/3)}],
+ villain:['📰','หอข่าวบุตรสวรรค์','ชื่อเสียงเพิ่มทุกปี',L=>{S.fame+=15*L}],
+ alchemy:['⚗️','ลานหลอมยา','ลมปราณและอายุขัยเพิ่มทุกปี',L=>{S.qi+=.4*L;S.lifespan+=.05*L}],
+ ring:['📚','หอตำราของผู้เฒ่า','ทุก 10 ปีมีโอกาสได้วิชา',L=>{if(S.age%10===0&&Math.random()<.15+L*.03){const a=newArt(2);Array.prototype.push.call(S.arts,a);log(`📚 หอตำรามอบ ${artHtml(a)} ให้คุณ`,'good')}}]};
+const bt=()=>S&&S.sys&&BZ[S.sys.t];
+const lvOf=()=>((S.sys.bz||{})[S.sys.t])|0;
+const cost=L=>sgPrice(Math.round(180*Math.pow(1.55,L)));
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const b=bt();if(b&&S.alive&&S._bzY!==S.age){S._bzY=S.age;const L=lvOf();if(L>0)b[3](L)}}catch(e){console.error('bz',e)}return r}}
+window.openBiz=function(){const b=bt();if(!b)return toast('ระบบนี้ยังไม่มีกิจการประจำสาย');const s=S.sys,L=lvOf(),c=cost(L);
+ modal(`<button class="xbtn" onclick="openSys()">←</button><h3>${b[0]} ${b[1]}</h3><p class="tag2">${b[2]} · ยิ่งอัปเกรดยิ่งได้มาก · ไม่ให้ EXP จึงไม่ทำให้เลเวลขึ้นเร็วขึ้น</p><div class="item"><b>ระดับ ${L}/10</b><div style="height:8px;background:#0004;border-radius:4px;margin-top:4px"><div style="height:8px;width:${L*10}%;background:linear-gradient(90deg,#6fd8ff,#b47bff);border-radius:4px"></div></div></div><button class="pbtn" style="width:100%;margin-top:8px" ${L>=10?'disabled':''} onclick="bizUp()">${L>=10?'สูงสุดแล้ว':`⬆️ อัปเกรด (${fmt(c)} SP · เหลือ ${fmt(s.sp)})`}</button>`,'sysbiz')};
+window.bizUp=function(){const b=bt();if(!b)return;const s=S.sys,L=lvOf(),c=cost(L);if(L>=10)return;if(s.sp<c)return toast('SP ไม่พอ');s.sp-=c;s.bz=s.bz||{};s.bz[s.t]=L+1;sysLog(`${b[0]} <b>${b[1]}</b> อัปเกรดเป็นระดับ ${L+1}`,'up');sfx('good');openBiz()};
+{const _os=openSys;openSys=function(){const r=_os.apply(this,arguments);try{const b=bt(),m=$('modal');if(b&&m&&!m.querySelector('.bizBtn')){const e=document.createElement('button');e.className='gbtn bizBtn';e.style.cssText='width:100%;margin:6px 0';e.textContent=`${b[0]} ${b[1]} (ระดับ ${lvOf()}/10) — ที่ใช้ SP`;e.onclick=()=>openBiz();const h=m.querySelector('h3');if(h&&h.nextSibling)h.parentNode.insertBefore(e,h.nextSibling);else m.appendChild(e)}}catch(e){}return r}}
+try{const g=window._guide2;if(g){g.add('grow','🏛️','กิจการประจำสาย (ที่ใช้ SP)','ทุกสายระบบมีกิจการของตัวเอง (เช่น สายสะสมบุญ = ธรรมศาลา, สายเศรษฐี = เครือค้า, สายยุทธ์ = โรงฝึก) อัปเกรดด้วย SP ได้ถึงระดับ 10 ผลเกิดทุกปี ไม่ให้ EXP · <b>เลเวลระบบขึ้นยากขึ้น:</b> EXP ที่ต้องใช้ต่อเลเวลเพิ่มเร็วขึ้นหลัง Lv.25, รับ EXP ได้เต็มปีละไม่เกินครึ่งหนึ่งของที่ต้องใช้ (ตั้งแต่ Lv.30), EXP รายปีของสายสะสมบุญมีเพดาน, SP ต่อเลเวลลดลงหลัง Lv.50 และ Lv.100','openSys',()=>!!(S&&S.sys));
+ g.TIPS.push(['spbig',()=>!!(S.sys&&S.sys.sp>=800),'🟦','SP ของคุณเหลือเยอะ','ลองใช้ SP ที่ 🏛️ กิจการประจำสายในหน้าต่างระบบ หรือร้านค้าระบบ (ของ % ราคาเพิ่มขึ้นเรื่อยๆ)','กิจการประจำสาย (ที่ใช้ SP)'])}}catch(e){}
+window._sysx={BZ,cost,lvOf};
+})()}catch(e){console.error('sysx block',e)}
