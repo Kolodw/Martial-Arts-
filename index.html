@@ -71,6 +71,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="1 ใน นวนิยาย">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Itim&family=Srisakdi:wght@700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f4eee2;--card:#fffdf8;--w:#fff;--ink:#2a2838;--mut:#8a8496;--pink:#ff6b9a;--pinkd:#d94a7a;--line:#2a2838;--grid:#0000000a;
@@ -4115,8 +4116,8 @@ function bgmSched(){const a=ac();if(!a||!BGM.on)return;bgmNodes();while(BGM.next
 // 🪷 เพลง Night of the Lotus เป็นเพลงหลักช่วงอีเวนต์ลอยกระทง (17 พ.ย. – 17 ธ.ค. 2026 23:59) · ใครเลือกเพลงอื่นเองหลังเริ่มอีเวนต์ จะได้เพลงที่เลือก · หมดอีเวนต์กลับเพลงเดิมเอง
 const LOTUS_T0=Date.UTC(2026,10,17,14,40),LOTUS_T1=Date.UTC(2026,11,17,16,59,59),LOTUS_ON=()=>{const n=Date.now();return n>=LOTUS_T0&&n<LOTUS_T1};
 const bgmTrack=()=>{const t=LS.get('murim_track','gen'),pk=+LS.get('murim_trkpick',0)||0;return LOTUS_ON()&&(t==='lotus'||pk<LOTUS_T0)?'lotus':t==='lotus'?'gen':t};let MIST=null,LOTUS=null;
-function lotusEl(){if(!LOTUS){LOTUS=new Audio('lotus.mp3');LOTUS.loop=true;LOTUS.preload='auto'}return LOTUS}
-function mistEl(){if(!MIST){MIST=new Audio('mists.mp3');MIST.loop=true;MIST.preload='auto'}return MIST}
+function lotusEl(){if(!LOTUS){LOTUS=new Audio('lotus.mp3');LOTUS.loop=true;LOTUS.preload='metadata'}return LOTUS}
+function mistEl(){if(!MIST){MIST=new Audio('mists.mp3');MIST.loop=true;MIST.preload='metadata'}return MIST}
 function startBgm(){if(!bgmOn)return;if(bgmTrack()==='lotus'){const a=lotusEl();a.volume=Math.min(1,VOL.b*.8);a.play().catch(()=>{});return}if(bgmTrack()==='mists'){const a=mistEl();a.volume=Math.min(1,VOL.b*.8);a.play().catch(()=>{});return}if(BGM.on||!ac())return;BGM.on=true;bgmNodes();BGM.next=ac().currentTime+.15;BGM.bar=0;BGM.out.gain.cancelScheduledValues(ac().currentTime);BGM.out.gain.setTargetAtTime(VOL.b*.55,ac().currentTime,.5);BGM.tid=setInterval(bgmSched,250);bgmSched()}
 function stopBgm(){if(MIST)MIST.pause();if(LOTUS)LOTUS.pause();BGM.on=false;clearInterval(BGM.tid);if(BGM.out&&AC)BGM.out.gain.setTargetAtTime(0,AC.currentTime,.3)}
 
