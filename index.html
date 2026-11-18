@@ -22144,7 +22144,7 @@ PACE.am=()=>LS.get('murim_automin',0)?1:0;
 
 // ===================== v17.8 ใช้เวลากับครอบครัว: คู่ชีวิต · ตำหนักใน · ลูก =====================
 const ftMf=n=>S.xian?stoneTxt(n):fmtM(n)+' ตำลึง';
-function ftInit(){if(!S.ft||S.ft.y!==S.age)S.ft={y:S.age,d:{}};return S.ft}
+function ftInit(){if(S.ft&&S.ft.d&&S.ft.hum==null){S.ftm=S.ft;delete S.ft}if(!S.ftm||S.ftm.y!==S.age)S.ftm={y:S.age,d:{}};return S.ftm}
 function ftList(){const L=[];if(S.sp)L.push({k:'sp',o:S.sp,n:S.sp.n,role:S.sp.wed===false?'💕 คนรัก':'💍 คู่ชีวิต',age:S.sp.age,p:1,v:S.sp.aff||0});
  (S.harem||[]).forEach(g=>L.push({k:'h:'+g.n,o:g,n:g.n,role:'🏯 ตำหนักใน'+(g.t?' · '+g.t:''),age:g.age,p:1,h:1,v:g.aff==null?65:g.aff}));
  (S.children||[]).forEach(c=>{if(c&&c.alive!==false&&!c.gone)L.push({k:'c:'+c.n,o:c,n:c.n,role:(c.g==='หญิง'?'👧 ลูกสาว':'👦 ลูกชาย')+(c.adopt?' (บุญธรรม)':''),age:c.age|0,c:1,v:c.rel==null?60:c.rel})});return L}
@@ -37747,6 +37747,10 @@ try{(function(){const N={idx:['⚡ ดัชนีพลัง','ตัวเล
 // แก้: ระบบที่ผูกแล้วแต่ติดธง "เคยปฏิเสธ" จะไม่ทำงาน/ไอคอนหาย — ล้างธงเมื่อมีระบบอยู่จริง
 try{{const _st=sysTick;sysTick=function(){try{if(S&&S.sys&&S.sysRefused)S.sysRefused=0}catch(e){}return _st.apply(this,arguments)}}
 {const _rd=render;render=function(){try{if(S&&S.sys&&S.sysRefused)S.sysRefused=0}catch(e){}return _rd.apply(this,arguments)}}}catch(e){}
+
+// แก้: "ใช้เวลากับครอบครัว" เคยเก็บข้อมูลใน S.ft ชนกับ 📡 สายใยหมื่นปี (S.ft) → สมุดชะตาขึ้น NaN% · ย้ายไป S.ftm และล้างของเก่าที่ชน
+try{{const fx=()=>{try{if(S&&S.ft&&S.ft.d&&S.ft.hum==null){S.ftm=S.ft;delete S.ft}}catch(e){}};const _rd=render;render=function(){fx();return _rd.apply(this,arguments)};
+ const _ofb=window.openFateBook;if(typeof _ofb==='function')window.openFateBook=function(){fx();return _ofb.apply(this,arguments)}}}catch(e){}
 </script>
 </body>
 </html>
