@@ -41275,3 +41275,117 @@ function tour(){try{if(LS.get('murim_modeTour',0)||LS.get('murim_mtoff',0)||LS.g
 setTimeout(paint,1500);
 try{const g=window._guide2;if(g)g.add('base','🎮','โหมดทั้งหมดของเกม','ที่หน้าเกิดกดปุ่ม <b>🎮 เล่นโหมดอื่น</b> เพื่อเลือก:<br>• 🔥 <b>นรก</b> — ลงนรก 100 ชั้น สู้ผู้คุม ขึ้นทำเนียบนรก<br>• ⏳ <b>ชีวิตสั้น</b> — ชีวิตสั้นนิดเดียว ทำ 5 อย่างก่อนตาย ส่งพินัยกรรมต่อ<br>• 🗑️ <b>รากขยะ</b> — พรสวรรค์ต่ำสุด จดชื่อคนที่ดูถูกแล้วกลับไปตบหน้า<br>• 🔁 <b>ผู้ย้อนกาล</b> — ตายแล้วย้อนไปอายุ 15 ใช้ความรู้รอบก่อน<br>• 🐾 <b>เกิดเป็นสัตว์</b> — เกิดเป็นลูกสัตว์ในป่า บำเพ็ญเป็นอสูร<br>• ⭕ <b>ทวีปจิตวิญญาณยุทธ์</b> — โลกดวงจิตและวงแหวนวิญญาณ<br>ทุกโหมดมีบทเรียนอ่านก่อนเล่นในเมนูบทเรียน และมีทำเนียบแยก','')}catch(e){}
 })()}catch(e){console.error('modebtn',e)}
+// ============================================================
+// BLOCK 47: 🖥️ หน้าแรกจอกว้าง (≥1100px) — แผงซ้าย/ขวาแบบกระจกใส · โปสเตอร์อีเวนต์ภาพพิกเซลเคลื่อนไหว · ตัวละครล่าสุด · ตำนานของฉัน · ชะตาวันนี้ · ข่าวยุทธภพสด · โคมลอย/หิ่งห้อยข้างจอ
+// ============================================================
+try{(()=>{
+const EV_END=Date.UTC(2026,11,17,16,59,59);
+const evOn=()=>Date.now()<EV_END&&typeof evMenu==='function';
+const st=document.createElement('style');st.textContent=`
+.tsP{position:fixed;top:212px;bottom:118px;width:clamp(250px,19vw,320px);z-index:5;display:none;flex-direction:column;gap:12px;overflow-y:auto;scrollbar-width:none;padding:2px 4px 8px}
+.tsP::-webkit-scrollbar{display:none}
+.tsP.l{left:24px}.tsP.r{right:24px}
+.tsP>.tsC{flex:0 0 auto}
+body.tsOn .tsP{display:flex;animation:tsIn .7s cubic-bezier(.2,.9,.3,1) backwards}.tsP.r{animation-delay:.12s!important}
+@keyframes tsIn{from{opacity:0;transform:translateY(18px)}}
+.tsC{position:relative;border-radius:16px;padding:12px 14px;color:#f3e8d0;background:linear-gradient(160deg,rgba(40,30,70,.62),rgba(14,10,30,.72));border:1px solid rgba(255,214,130,.28);box-shadow:0 10px 30px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);font-size:13px;line-height:1.5}
+.tsC h5{margin:0 0 8px;font-size:12.5px;letter-spacing:.4px;color:#ffd98a;display:flex;align-items:center;justify-content:space-between;font-weight:700;text-transform:none}
+.tsC h5 small{color:#cbb8ff;font-weight:400;font-size:11px}
+.tsB{display:block;width:100%;margin-top:8px;padding:8px 10px;border-radius:10px;border:1.5px solid #7a5410;background:linear-gradient(180deg,#ffe29a,#e8b54a 55%,#c98d22);color:#1d1405;font:inherit;font-weight:800;font-size:13.5px;cursor:pointer;box-shadow:0 3px 0 #7a5410;transition:transform .1s}
+.tsB:hover{transform:translateY(-1px)}.tsB:active{transform:translateY(2px);box-shadow:0 1px 0 #7a5410}
+.tsB.g{background:rgba(255,255,255,.08);color:#f3e8d0;border-color:rgba(255,214,130,.4);box-shadow:none;font-weight:700}
+.tsHero{display:flex;gap:12px;align-items:center}
+.tsHero canvas{width:72px;height:72px;image-rendering:pixelated;border-radius:12px;background:radial-gradient(circle at 50% 70%,rgba(255,214,130,.25),transparent 70%);flex:0 0 auto}
+.tsHero b{font-size:16px;color:#fff3d6;display:block}.tsHero span{opacity:.75;font-size:12px}
+.tsL{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px dashed rgba(255,214,130,.18)}.tsL:first-of-type{border-top:0}
+.tsL i{font-style:normal;font-size:18px;line-height:1.2}.tsL b{color:#fff0c8}.tsL small{display:block;opacity:.65;font-size:11.5px}
+.tsPo{padding:0;overflow:hidden;cursor:pointer}
+.tsPo canvas{display:block;width:100%;aspect-ratio:16/10;image-rendering:pixelated}
+.tsPo .tx{padding:10px 14px 12px}.tsPo .tx b{font-size:17px;color:#ffe08a;display:block;text-shadow:0 0 12px rgba(255,190,80,.5)}
+.tsPo .cd{display:inline-block;margin-top:4px;padding:2px 9px;border-radius:20px;background:rgba(255,120,60,.22);border:1px solid rgba(255,160,90,.5);font-size:11.5px;color:#ffd0a8}
+.tsNw{min-height:118px}.tsNw .it{animation:tsF .5s ease}@keyframes tsF{from{opacity:0;transform:translateX(8px)}}
+.tsOn2{display:flex;align-items:center;gap:8px}.tsOn2 .dot{width:9px;height:9px;border-radius:50%;background:#5fd08a;box-shadow:0 0 10px #5fd08a;animation:tsD 1.6s ease-in-out infinite}@keyframes tsD{50%{opacity:.4}}
+#tsDeco{position:fixed;inset:0;pointer-events:none;z-index:1;display:none}body.tsOn #tsDeco{display:block}
+@media (prefers-reduced-motion:reduce){.tsP{animation:none!important}}`;document.head.appendChild(st);
+const $$=id=>document.getElementById(id);
+const E=s=>{try{return esc(String(s==null?'':s))}catch(e){return ''}};
+let L=null,R=null,deco=null,built=false;
+function lastSv(){let best=null;try{SLOTS.forEach(n=>{const sv=readSave(n);if(sv&&sv.S&&sv.S.alive!==false&&(!best||(sv.t||0)>(best.sv.t||0)))best={n,sv}})}catch(e){}return best}
+function rName(ri,x){try{return REALMS[ri]?REALMS[ri].n:''}catch(e){return ''}}
+function build(){if(built)return;built=true;
+ L=document.createElement('div');L.className='tsP l';R=document.createElement('div');R.className='tsP r';
+ L.innerHTML=`<div class="tsC" id="tsMe"></div><div class="tsC" id="tsLeg"></div><div class="tsC" id="tsDay"></div>`;
+ R.innerHTML=`<div class="tsC tsPo" id="tsPo"><canvas id="tsPoC" width="160" height="100"></canvas><div class="tx" id="tsPoT"></div></div><div class="tsC tsNw" id="tsNw"></div><div class="tsC" id="tsOn"></div>`;
+ document.body.appendChild(L);document.body.appendChild(R);
+ deco=document.createElement('canvas');deco.id='tsDeco';document.body.appendChild(deco);
+ $$('tsPo').onclick=()=>{try{if(evOn())evMenu();else{CFG.chm=CH_KEYS.indexOf('soul');goBirthPick()}}catch(e){}}}
+// ---------- ซ้าย ----------
+function fillLeft(){const ls=lastSv(),me=$$('tsMe');
+ if(ls){const S0=ls.sv.S;me.innerHTML=`<h5>▶ ชีวิตที่ค้างไว้ <small>${ls.sv.t?E(ago(ls.sv.t)):''}</small></h5><div class="tsHero"><canvas id="tsHC" width="48" height="48"></canvas><div><b>${E(S0.name)}</b><span>อายุ ${E(S0.age)} ปี · ${S0.xt?'แดนเทพ':S0.xian?'โลกเซียน':S0.mw?'ยุคปัจจุบัน':'ยุทธภพ'}${S0.faction?' · '+E(S0.faction.n||S0.faction):''}</span></div></div><button class="tsB" onclick="loadGame(${ls.n})">▶ เล่นต่อ</button>`}
+ else me.innerHTML=`<h5>🌱 ยังไม่มีชีวิตที่ค้างไว้</h5><div style="opacity:.8">ทุกชาติสุ่มใหม่หมด — ชาติกำเนิด พรสวรรค์ และชะตา ไม่มีใครเหมือนกัน</div><button class="tsB" onclick="goBirthPick()">🎲 เกิดใหม่เลย</button>`;
+ const lg=(LS.get('murim_legacy',[])||[]).filter(x=>x&&x.n);const top=lg.slice().sort((a,b)=>(b.ri||0)-(a.ri||0)||(b.a||0)-(a.a||0)).slice(0,3);
+ $$('tsLeg').innerHTML=`<h5>📜 ตำนานของฉัน <small>${lg.length} ชาติ</small></h5>`+(top.length?top.map((x,i)=>`<div class="tsL"><i>${['🥇','🥈','🥉'][i]}</i><div><b>${E(x.n)}</b>${x.ep?` <span style="color:#ffd98a">「${E(x.ep)}」</span>`:''}<small>${E(rName(x.ri))} · อายุ ${E(x.a)} ปี${x.asc?' · ✨ บรรลุ':''}</small><small>${E(String(x.c||'').slice(0,46))}</small></div></div>`).join(''):'<div style="opacity:.7">ยังไม่มีชีวิตที่จบลง — ตำนานแรกของคุณรออยู่</div>');
+ const d=$$('dailyInfo');const dt=d?d.textContent.trim():'';
+ $$('tsDay').innerHTML=`<h5>📅 ชะตาประจำวัน <small>${new Date().toLocaleDateString('th-TH',{day:'numeric',month:'short'})}</small></h5><div style="opacity:.85">${dt?E(dt):'ทุกคนได้ชะตาเดียวกันทั้งวัน — ใครจะไปได้ไกลที่สุด?'}</div><button class="tsB g" onclick="goDaily()">📅 เล่นชะตาวันนี้</button>`;
+ heroCopy()}
+function heroCopy(){try{const s=$$('tHero'),c=$$('tsHC');if(!s||!c||!s.width)return;const g=c.getContext('2d');g.imageSmoothingEnabled=false;g.clearRect(0,0,48,48);const k=Math.min(48/s.width,48/s.height);const w=s.width*k,h=s.height*k;g.drawImage(s,(48-w)/2,(48-h)/2,w,h)}catch(e){}}
+// ---------- ขวา ----------
+let news=[],nI=0,nT=0;
+async function loadNews(){try{if(typeof gvLoad==='function'&&onlineOK){const g=await gvLoad();if(g&&g.length)news=g.slice(0,12)}}catch(e){}}
+function fillNews(){const el=$$('tsNw');if(!el)return;
+ if(!news.length){el.innerHTML=`<h5>📰 ข่าวยุทธภพ</h5><div class="it" style="opacity:.8">${onlineOK?'กำลังรอข่าวจากทั่วแผ่นดิน…':'เชื่อมต่อออนไลน์เพื่อดูว่าผู้เล่นคนอื่นเป็นอย่างไรบ้าง'}</div>`;return}
+ const sh=[0,1].map(k=>news[(nI+k)%news.length]).filter(Boolean);
+ el.innerHTML=`<h5>📰 ข่าวยุทธภพสด <small>ผู้เล่นจริง</small></h5>`+sh.map(g=>`<div class="tsL it"><i>🪦</i><div><b>${E(g.n)}</b>${g.e?` <span style="color:#ffd98a">「${E(g.e)}」</span>`:''}<small>${E(g.r)} · อายุ ${E(g.a)} ปี · ${E(ago(g.t))}</small><small>${E(String(g.c||'').slice(0,50))}</small></div></div>`).join('')+`<button class="tsB g" onclick="openGraves()">🪦 ไปสุสานจอมยุทธ์</button>`}
+function fillOn(){const el=$$('tsOn');if(!el)return;const n=($$('tOnN')&&$$('tOnN').textContent.trim())||'';
+ el.innerHTML=`<div class="tsOn2"><span class="dot"></span><div style="flex:1"><b style="color:#c8ffd8">${n?E(n)+' คน':'ออนไลน์'}</b> <span style="opacity:.75">กำลังท่องยุทธภพ</span></div></div><button class="tsB g" onclick="openOnline()">🌐 เข้าแชท · ลานประลอง</button>`}
+function fillPoT(){const t=$$('tsPoT');if(!t)return;
+ if(evOn()){const d=Math.max(0,Math.ceil((EV_END-Date.now())/864e5));t.innerHTML=`<b>🏮 เทศกาลลอยกระทง</b><div style="opacity:.85">กรอบนาค โคมลอย ดอกบัว — ของแต่งชุดพิเศษ มีถึงสิ้นเทศกาลเท่านั้น</div><span class="cd">⏳ เหลืออีก ${d} วัน</span>`}
+ else t.innerHTML=`<b>⭕ ทวีปจิตวิญญาณยุทธ์</b><div style="opacity:.85">ปลุกดวงจิต ล่าสัตว์อสูร หลอมวงแหวน ไต่สู่ผู้ครองดวงจิต</div><span class="cd">✨ โหมดใหม่ · แตะเพื่อเริ่ม</span>`}
+// ---------- โปสเตอร์ภาพพิกเซลเคลื่อนไหว ----------
+const PW=160,PH=100;const rnd=(a,b)=>a+Math.random()*(b-a);
+const stars=Array.from({length:46},()=>({x:rnd(0,PW)|0,y:rnd(0,58)|0,p:rnd(0,6.28)}));
+const krs=Array.from({length:5},(_,i)=>({x:rnd(-20,PW),y:84+i*3+rnd(-1,1),v:rnd(.06,.16),c:['#ff8fb1','#ffffff','#ffd36a','#ff9de0','#fff0a0'][i]}));
+const lans=Array.from({length:9},()=>({x:rnd(10,PW-10),y:rnd(10,110),v:rnd(.08,.2),w:rnd(0,6.28)}));
+function poster(t){const c=$$('tsPoC');if(!c)return;const g=c.getContext('2d');g.imageSmoothingEnabled=false;
+ const sky=g.createLinearGradient(0,0,0,80);const ev=evOn();sky.addColorStop(0,ev?'#0b0a2a':'#0a0f24');sky.addColorStop(1,ev?'#3a1d4a':'#2a1a4a');g.fillStyle=sky;g.fillRect(0,0,PW,80);
+ stars.forEach(s=>{const a=.4+.6*Math.abs(Math.sin(t/900+s.p));g.fillStyle=`rgba(255,250,220,${a})`;g.fillRect(s.x,s.y,1,1)});
+ // พระจันทร์เต็มดวง
+ g.fillStyle='rgba(255,240,190,.12)';g.beginPath();g.arc(118,24,17,0,7);g.fill();g.fillStyle='#fff3c4';g.beginPath();g.arc(118,24,11,0,7);g.fill();g.fillStyle='#ecdca6';g.fillRect(114,21,3,2);g.fillRect(121,27,2,2);
+ // ภูเขา + วัด
+ g.fillStyle='#23163a';g.beginPath();g.moveTo(0,72);for(let x=0;x<=PW;x+=8)g.lineTo(x,62+Math.sin(x*.07)*6);g.lineTo(PW,80);g.lineTo(0,80);g.fill();
+ g.fillStyle='#160e28';g.fillRect(26,52,10,26);g.fillRect(24,60,14,2);g.fillRect(28,46,6,6);g.fillRect(30,40,2,6);g.fillStyle='#ffcf6a';g.fillRect(29,64,2,2);g.fillRect(32,70,2,2);
+ // แม่น้ำ
+ const rv=g.createLinearGradient(0,78,0,PH);rv.addColorStop(0,'#1b1f4a');rv.addColorStop(1,'#0c0e26');g.fillStyle=rv;g.fillRect(0,78,PW,PH-78);
+ for(let i=0;i<7;i++){const y=81+i*3,o=(t/60+i*17)%PW;g.fillStyle='rgba(160,170,255,.10)';g.fillRect(o,y,10,1);g.fillRect((o+70)%PW,y,6,1)}
+ g.fillStyle='rgba(255,240,190,.18)';for(let i=0;i<6;i++)g.fillRect(114+Math.sin(t/300+i)*3,82+i*5,8-i,1);
+ if(ev){ // โคมลอย
+  lans.forEach(l=>{l.y-=l.v;l.x+=Math.sin(t/700+l.w)*.05;if(l.y<-6){l.y=rnd(70,90);l.x=rnd(10,PW-10)}const f=.75+.25*Math.sin(t/120+l.w);g.fillStyle=`rgba(255,150,60,${.25*f})`;g.fillRect(l.x-2,l.y-2,7,8);g.fillStyle='#ffb04a';g.fillRect(l.x,l.y,3,4);g.fillStyle='#ffe2a0';g.fillRect(l.x+1,l.y+3,1,1)});
+  // กระทง
+  krs.forEach(k=>{k.x+=k.v;if(k.x>PW+12)k.x=-14;const x=k.x|0,y=(k.y+Math.sin(t/400+k.x*.1)*.8)|0;
+   g.fillStyle='rgba(255,210,120,.18)';g.fillRect(x-1,y+3,12,3);g.fillStyle='#2f7a3a';g.fillRect(x,y,10,3);g.fillStyle='#4fae55';g.fillRect(x+1,y-1,8,1);
+   g.fillStyle=k.c;g.fillRect(x+1,y-3,2,2);g.fillRect(x+7,y-3,2,2);g.fillRect(x+3,y-4,4,3);g.fillStyle='#fff';g.fillRect(x+4,y-7,1,3);
+   const fl=Math.sin(t/80+k.x)>0;g.fillStyle=fl?'#ffd34a':'#ff9a2a';g.fillRect(x+4,y-9,1,2);g.fillStyle='rgba(255,200,80,.35)';g.fillRect(x+3,y-10,3,3)});
+ }else{ // หิ่งห้อย + วงแหวน
+  for(let i=0;i<14;i++){const x=(i*37+t/40)%PW,y=60+Math.sin(t/500+i)*14+i%5,a=.4+.6*Math.abs(Math.sin(t/300+i));g.fillStyle=`rgba(200,255,140,${a})`;g.fillRect(x|0,y|0,1,1)}
+  const r=10+Math.sin(t/400)*1.5;['#ffd34a','#b47bff','#6fd8ff'].forEach((c,i)=>{g.strokeStyle=c;g.globalAlpha=.7;g.beginPath();g.arc(80,90,r+i*4,0,7);g.stroke()});g.globalAlpha=1}
+}
+// ---------- ของตกแต่งข้างจอ ----------
+let parts=[];
+function decoTick(t){const c=deco;if(!c)return;const w=innerWidth,h=innerHeight,dpr=1;if(c.width!==w||c.height!==h){c.width=w;c.height=h}
+ const g=c.getContext('2d');g.clearRect(0,0,w,h);const ev=evOn(),side=Math.max(260,w*.22);
+ if(parts.length<(ev?26:34))parts.push({x:Math.random()<.5?rnd(8,side):rnd(w-side,w-8),y:ev?h+rnd(0,200):rnd(h*.3,h),v:ev?rnd(.25,.6):rnd(.1,.3),p:rnd(0,6.28),s:ev?rnd(5,9):rnd(1.5,2.6)});
+ parts.forEach(q=>{q.y-=q.v;q.x+=Math.sin(t/1400+q.p)*.25;
+  if(ev){const f=.8+.2*Math.sin(t/140+q.p);const gr=g.createRadialGradient(q.x,q.y,0,q.x,q.y,q.s*2.6);gr.addColorStop(0,`rgba(255,170,70,${.35*f})`);gr.addColorStop(1,'rgba(255,120,40,0)');g.fillStyle=gr;g.fillRect(q.x-q.s*3,q.y-q.s*3,q.s*6,q.s*6);
+   g.fillStyle='#ffb04a';g.fillRect(q.x-q.s/2,q.y-q.s*.6,q.s,q.s*1.2);g.fillStyle='#ffe6a8';g.fillRect(q.x-q.s/6,q.y+q.s*.3,q.s/3,q.s/4)}
+  else{const a=.35+.65*Math.abs(Math.sin(t/600+q.p));g.fillStyle=`rgba(210,255,150,${a})`;g.beginPath();g.arc(q.x,q.y,q.s,0,7);g.fill();g.fillStyle=`rgba(210,255,150,${a*.18})`;g.beginPath();g.arc(q.x,q.y,q.s*4,0,7);g.fill()}});
+ parts=parts.filter(q=>q.y>-30)}
+// ---------- ลูป ----------
+const want=()=>{const T=$$('title');return !!(T&&T.classList.contains('on')&&innerWidth>=1100&&!document.hidden)};
+let lastP=0,lastF=0,lastN=0,running=false;
+function loop(t){if(!want()){running=false;document.body.classList.remove('tsOn');return}requestAnimationFrame(loop);
+ if(t-lastP>=50){lastP=t;try{poster(t);decoTick(t)}catch(e){}}
+ if(t-lastF>=4000){lastF=t;try{fillLeft();fillOn();fillPoT();heroCopy()}catch(e){console.error('ts',e)}}
+ if(t-lastN>=7000){lastN=t;nI=(nI+1)%Math.max(1,news.length);try{fillNews()}catch(e){}}}
+function start(){if(running||!want())return;build();document.body.classList.add('tsOn');running=true;lastF=lastN=0;loadNews().then(()=>{try{fillNews()}catch(e){}});requestAnimationFrame(loop)}
+setInterval(start,700);addEventListener('resize',start);let nAt=0;setInterval(()=>{if(!want())return;const n=Date.now();if(!news.length||n-nAt>300000){nAt=n;loadNews().then(()=>{try{fillNews()}catch(e){}})}},20000);
+})()}catch(e){console.error('block47',e)}
