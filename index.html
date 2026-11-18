@@ -40644,7 +40644,7 @@ setInterval(kill,400);
 /* ===== คนเล่นใหม่งงน้อยลง: การ์ดต้อนรับ 3 หน้า + หน้าแรกแบบเรียบ (ปุ่มเดียว) + ปุ่ม "เล่นยังไง" + การ์ดหลังตายครั้งแรก ===== */
 try{(()=>{
 const css=document.createElement('style');css.textContent=`
-#title.nb .box.opts,#title.nb .dvRow,#title.nb #tNews,#title.nb .gbtn,#title.nb #contBox,#title.nb #legends,#title.nb #tTop,#title.nb #tEv,#title.nb #tCos,#title.nb #tSup,#title.nb #tFb,#title.nb .pbtn:not(#tStartIn),#title.nb .tonline,#title.nb .tsupport,#title.nb #onlineBadge{display:none!important}
+body.nbOn #tDock,#title.nb .box.opts,#title.nb .dvRow,#title.nb #tNews,#title.nb .gbtn,#title.nb #contBox,#title.nb #legends,#title.nb #tTop,#title.nb #tEv,#title.nb #tCos,#title.nb #tSup,#title.nb #tFb,#title.nb .pbtn:not(#tStartIn),#title.nb .tonline,#title.nb .tsupport,#title.nb #onlineBadge{display:none!important}
 .nbRow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0}
 .nbRow button{font:inherit;font-size:14px;font-weight:700;padding:9px 14px;border-radius:12px;border:2px solid #8a6d3b;background:#fff7e0;color:#4a3410;cursor:pointer}
 .nbWel{text-align:center}.nbWel .ic{font-size:54px;line-height:1.2;margin:6px 0}.nbWel h3{margin:4px 0 8px}.nbWel p{margin:6px 0;font-size:16px;line-height:1.6}
@@ -40662,14 +40662,14 @@ let si=0;
 window.nbWel=function(i){si=Math.max(0,Math.min(SL.length-1,i==null?0:i));const s=SL[si],last=si===SL.length-1;
  modal(`<div class="nbWel"><div class="ic">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p><div class="nbDots">${SL.map((_,k)=>`<i class="${k===si?'on':''}"></i>`).join('')}</div>${last?`<button class="go" onclick="nbDone(1)">▶ เริ่มเล่นเลย</button>`:`<button class="go" onclick="nbWel(${si+1})">ต่อไป ›</button>`}<button class="sk" onclick="nbDone(0)">${last?'ปิด':'ข้าม'}</button></div>`,'nbwel')};
 window.nbDone=function(go){try{LS.set('murim_welcome',1)}catch(e){}try{closeM()}catch(e){}if(go){setTimeout(()=>{try{goBirthPick()}catch(e){}},150)}};
-window.nbMore=function(){try{LS.set('murim_nbOff',1)}catch(e){}const T=document.getElementById('title');if(T)T.classList.remove('nb');const r=document.getElementById('nbRow');if(r)r.remove();mkHelp()};
+window.nbMore=function(){try{LS.set('murim_nbOff',1)}catch(e){}const T=document.getElementById('title');if(T)T.classList.remove('nb');document.body.classList.remove('nbOn');const r=document.getElementById('nbRow');if(r)r.remove();mkHelp()};
 function mkHelp(){const T=document.getElementById('title');if(!T)return;const old=document.getElementById('nbHelp');const nb=T.classList.contains('nb');
  let row=document.getElementById('nbRow');if(!row){const b=document.getElementById('tStartIn');if(!b)return;row=document.createElement('div');row.id='nbRow';row.className='nbRow';b.insertAdjacentElement('afterend',row)}
  row.innerHTML=`<button onclick="nbWel(0)">❓ เกมนี้เล่นยังไง</button>${nb?'<button onclick="nbMore()">⚙️ ตั้งค่า / โหมดอื่น</button>':''}`}
 const fix=()=>{try{const T=document.getElementById('title');if(!T||!T.classList.contains('on'))return;
- if(isNew()){T.classList.add('nb');const b=document.getElementById('tStartIn');if(b&&!/เริ่มเล่น/.test(b.textContent))b.innerHTML='▶ เริ่มเล่น<small>กดปุ่มเดียว เกมสุ่มชีวิตให้ทุกอย่าง</small>'}else T.classList.remove('nb');
+ if(isNew()){T.classList.add('nb');document.body.classList.add('nbOn');const b=document.getElementById('tStartIn');if(b&&!/เริ่มเล่น/.test(b.textContent))b.innerHTML='▶ เริ่มเล่น<small>กดปุ่มเดียว เกมสุ่มชีวิตให้ทุกอย่าง</small>'}else{T.classList.remove('nb');document.body.classList.remove('nbOn')}
  mkHelp()}catch(e){}};
-const _s=show;show=function(id){const r=_s.apply(this,arguments);if(id==='title'){setTimeout(fix,120);setTimeout(fix,900)}
+const _s=show;show=function(id){const r=_s.apply(this,arguments);if(id!=='title')document.body.classList.remove('nbOn');if(id==='title'){setTimeout(fix,120);setTimeout(fix,900)}
  if(id==='end'&&!LS.get('murim_fdeath',0)){LS.set('murim_fdeath',1);setTimeout(()=>{try{if(modalOpen)return;modal(`<div class="nbWel"><div class="ic">🌱</div><h3>ชีวิตนี้จบลงแล้ว</h3><p>เลื่อนลงเพื่อดูสรุปชีวิตของคุณได้<br>อยากลองอีกครั้ง กด <b>เกิดใหม่</b> — ทุกชาติสุ่มใหม่หมด ไม่ต้องกลัวพลาด</p><button class="go" onclick="closeM()">เข้าใจแล้ว</button></div>`,'nbdeath')}catch(e){}},1200)}
  return r};
 setTimeout(()=>{fix();try{if(isNew()){if(modalOpen&&$('modal').dataset.k==='update')closeUpdate();if(!LS.get('murim_welcome',0)&&!modalOpen)nbWel(0)}}catch(e){}},900);setTimeout(fix,2500);
