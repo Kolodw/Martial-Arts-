@@ -26223,7 +26223,7 @@ const HE=[
 // ---------- 5) ล้มแล้วได้ทางใหม่ + 7) คนจำได้ช่วยตอนจวนตัว ----------
 {const _f=fight;fight=function(n,e){let r=_f.apply(this,arguments);try{if(!r&&S&&S.alive&&!S.beastMode&&S.ch!=='hell'&&!window._duW){
  const fr=(S.mem||[]).filter(m=>m.v>=2);if(fr.length&&Math.random()<.12){const m=ch(fr);m.v--;log(`🤝 ${m.n}โผล่มาช่วยไว้ได้ทัน — "ข้ายังไม่ลืมที่ท่าน${m.why}"`,'good');return true}
- if(mortal()&&!S.scar&&S.age>=16&&Math.random()<.03){S.scar='arm';S.power=Math.max(1,S.power-pw(.08));seed('onearm',R(2,4));keyAdd(`เสียแขนข้างหนึ่งให้${String(n).replace(/<[^>]+>/g,'')}`);log(`🩸 ดาบของ${n}ตัดแขนซ้ายคุณขาด — วิชาเดิมใช้ไม่ได้อีกแล้ว`,'bad')}}}catch(x){}return r}}
+ if(mortal()&&!S.oneArm&&S.scar!=='arm'&&S.age>=16&&Math.random()<.03){S.oneArm=1;S.power=Math.max(1,S.power-pw(.08));seed('onearm',R(2,4));keyAdd(`เสียแขนข้างหนึ่งให้${String(n).replace(/<[^>]+>/g,'')}`);log(`🩸 ดาบของ${n}ตัดแขนซ้ายคุณขาด — วิชาเดิมใช้ไม่ได้อีกแล้ว`,'bad')}}}catch(x){}return r}}
 // ---------- 4) ปณิธานปลายทาง (ฉากจบหลายแบบ) ----------
 const GOALS={
  lord:['👑 เจ้ายุทธภพ','ชื่อเสียงสูงสุด และไม่มีใครเอาชนะได้',()=>S.fame>=2000&&rep().sect>=20],
@@ -26263,7 +26263,7 @@ function past(){const L=(S.mem||[]).filter(m=>S.age-m.a>=5&&m.v!==0);if(!L.lengt
 // ---------- ป้าย ----------
 {const _r=render;render=function(){const r=_r.apply(this,arguments);try{const t=$('gTags');if(t&&S){t.querySelectorAll('.nl2').forEach(x=>x.remove());const B=[];const R0=S.rep;
  if(R0)Object.entries(R0).filter(([k,v])=>Math.abs(v)>=15).sort((a,b)=>Math.abs(b[1])-Math.abs(a[1])).slice(0,2).forEach(([k,v])=>B.push(`${RG[k]} ${v>0?'+':''}${Math.round(v)}`));
- if(S.lg&&GOALS[S.lg])B.push(`🏁 ${GOALS[S.lg][0].split(' ').slice(1).join(' ')} ${S.lgp|0}/3`);if(S.scar)B.push('🦾 แขนเดียว');if(S.sealed)B.push('🔒 พลังถูกผนึก');if(S.wander)B.push('🍃 พเนจร');
+ if(S.lg&&GOALS[S.lg])B.push(`🏁 ${GOALS[S.lg][0].split(' ').slice(1).join(' ')} ${S.lgp|0}/3`);if(S.oneArm||S.scar==='arm')B.push('🦾 แขนเดียว');if(S.sealed)B.push('🔒 พลังถูกผนึก');if(S.wander)B.push('🍃 พเนจร');
  t.insertAdjacentHTML('beforeend',B.map(x=>`<span class="tag nl2">${x}</span>`).join(''))}}catch(e){}return r}}
 // ---------- รายปี ----------
 {const _py=passYear;passYear=function(){const a0=S?S.age:0;const r=_py.apply(this,arguments);try{if(!S||!S.alive||S.age===a0)return r;const st=Math.min(5,S.age-a0);
@@ -29630,7 +29630,7 @@ function dsFrame(k,t){bx.setTransform(1,0,0,1,0,0);bx.globalAlpha=1;bx.globalCom
  caps=[{t:DSX.tl,big:1,a:capFade(t,...tc)},{t:DSX.t2,a:capFade(t,.5,1.2,tc[2],tc[3])*.9,col:DSX.C[0]}];if(r.end)caps.push({t:r.end,big:1,a:capFade(t,...r.endT)});
  finish(r.shx,r.shy,sstep(0,.4,t)*(1-sstep(D-.5,D,t)),caps)}
 function dsEnd(){const X=DSX;DSX=null;const ov=$('dsOv');if(ov)ov.remove();if(!X||!X.rec||!S)return;
- const nm={1:'หินผา',2:'ภูผา',3:'เมือง',4:'ทวีป',5:'ดวงดาว'}[X.k];S.scar=S.scar||[];S.scar.push({k:X.k,y:S.age});if(S.scar.length>12)S.scar.shift();
+ const nm={1:'หินผา',2:'ภูผา',3:'เมือง',4:'ทวีป',5:'ดวงดาว'}[X.k];if(S.scar!=null&&!Array.isArray(S.scar)){if(S.scar==='arm')S.oneArm=1;S.scar=[]}S.scar=S.scar||[];S.scar.push({k:X.k,y:S.age});if(S.scar.length>12)S.scar.shift();
  try{log(`🌋 ${X.art?'《'+X.art+'》 ':''}${{1:'ผ่าหินผาขาดเป็นสองท่อน',2:'ผ่าภูผาทั้งลูกเป็นสองซีก ทิ้งรอยไว้ให้คนรุ่นหลังเห็น',3:'กวาดเมืองทั้งเมืองหายไปในคลื่นกระบี่ เหลือเพียงซาก',4:'ผ่าทวีปแยกเป็นสอง รอยแยกลุกเป็นไฟอยู่ชั่วกาล',5:'ทำให้ดาวดวงหนึ่งดับลง ฟ้าคืนนี้มีเนบิวลาเพิ่มขึ้นหนึ่งดวง'}[X.k]}`,X.k>=4?'myth':'epic')}catch(e){}}
 window.dsPlay=dsPlay;
 window._dsShot=(k,t,o)=>{if(!DSX)dsPlay(k,o);DSX.t0=performance.now()-t*1000;dsFrame(k,t);return dsC.toDataURL()};
@@ -29726,7 +29726,7 @@ function vxPose(st,p){const R0={h:[1.5,6],a:1.2},U={h:[-.5,-6.8],a:-2.0},F={h:[7
  if(o!==curMe){const hit=Math.max(0,Math.min(1,(p-.55)/.3)),kb=hit>0?Math.sin(Math.min(1,hit*3)*Math.PI/2)*(1-hit)*6:0;const s=g.globalAlpha;if(hit>0&&hit<.35&&((frame|0)&1))g.globalAlpha=s*.35;const r=_pp.call(this,x+kb,y,o,pose);g.globalAlpha=s;return r}
  return _pp.apply(this,arguments)}}
 // ร่องรอยที่เหลือ (ผลของฉากทำลายล้าง)
-function scarDraw(ctx,type){if(!S||!S.scar||!S.scar.length)return;if(!['road','fight','peak','aura','master'].includes(type))return;const t=frame*.15;
+function scarDraw(ctx,type){if(!S||!Array.isArray(S.scar)||!S.scar.length)return;if(!['road','fight','peak','aura','master'].includes(type))return;const t=frame*.15;
  ctx.save();for(const s of S.scar){const yrs=S.age-s.y;
   if(s.k===3&&yrs<8){for(let c=0;c<3;c++){const bx0=[14,26,146][c];for(let i=0;i<6;i++){const q=((t*.08+i/6+c*.3)%1),r=1.4+q*3;ctx.globalAlpha=.45*(1-q)*(1-yrs/8);ctx.fillStyle='#4a4048';ctx.beginPath();ctx.arc(bx0+q*6,36-q*22,r,0,7);ctx.fill()}}}
   if(s.k===2&&yrs<6){ctx.globalAlpha=.5*(1-yrs/6);ctx.fillStyle='#fff4d0';for(let i=0;i<8;i++)ctx.fillRect(132+i*1.6,22+i*2,1,1)}
@@ -41167,7 +41167,7 @@ function titleMid(){try{const t=$$('title');if(!t||!t.classList.contains('on')||
  const kids=[...t.children].filter(e=>{if(!e.offsetHeight)return false;const p=getComputedStyle(e).position;return p!=='absolute'&&p!=='fixed'});if(!kids.length)return;
  const cur=t._pm||0,top=kids[0].getBoundingClientRect().top+scrollY-cur,bot=kids[kids.length-1].getBoundingClientRect().bottom+scrollY-cur,h=bot-top;
  const want=Math.max(0,Math.min(innerHeight*.3,Math.round((innerHeight-h)/2-top)));if(Math.abs(want-cur)>6){t._pm=want;t.style.paddingTop=want+'px'}}catch(e){}}
-function tick(){labels();islPos();fcHint();coWatch();titleMid()}
+function tick(){if(document.hidden)return;if(gOn()){labels();fcHint()}islPos();coWatch();titleMid()}
 setInterval(tick,400);addEventListener('resize',tick);
 {const _r=render;render=function(){const r=_r.apply(this,arguments);try{labels();fcHint()}catch(e){}return r}}
 setTimeout(tick,300);
@@ -41189,3 +41189,22 @@ const _py=render;render=function(){const r=_py.apply(this,arguments);try{if(S&&S
  {t:'🔎 ตามหาคืน',s:'พลัง −3% · ได้วิชากลับมา',noFate:true,f(){const x=S.lostArts.shift();S.power=Math.max(1,S.power-Math.round(S.power*.03));S.arts.push(x.a);log(`📜 คุณตามรอยจนได้《${esc(x.a.n)}》กลับคืนมา`,'epic')}},
  {t:'🙅 ปล่อยไป',s:L.n>=1?'จะหายถาวร':'เศษวิชายังรออยู่อีกครั้ง',skip:true,f(){L.n=(L.n||0)+1;if(L.n>=2){S.lostArts.shift();log(`📜 ร่องรอยของ《${esc(L.a.n)}》เลือนหายไปแล้ว`,'')}}}])}}}}catch(e){console.error('lostArt',e)}return r}
 })()}catch(e){console.error('lostArts block',e)}
+// ============================================================
+// BLOCK 45: ⚡ ลื่นขึ้น — พักภาพฉาก/แสงเรืองตอนเลื่อนจอหรือมีหน้าต่างบัง · ลดเฟรมแสงเรือง · เครื่องสเปกต่ำปิดแสงเรืองเป็นค่าเริ่มต้น · ข้ามการวาดข้อความที่อยู่นอกจอ
+// ============================================================
+try{(()=>{
+const low=(()=>{try{const m=navigator.deviceMemory,c=navigator.hardwareConcurrency;return (m&&m<=4)||(c&&c<=4)}catch(e){return false}})();
+// เครื่องสเปกต่ำ: ปิดแสงเรือง (ถ้ายังไม่เคยตั้งเอง)
+try{if(low&&LS.get('murim_glow',null)==null&&typeof GLW!=='undefined')GLW.on=false}catch(e){}
+// ตรวจว่ากำลังเลื่อนจออยู่
+let scT=0;const mark=()=>{scT=performance.now()};
+['scroll','wheel','touchmove'].forEach(k=>addEventListener(k,mark,{passive:true,capture:true}));
+const busy=()=>{if(performance.now()-scT<220)return true;try{if(modalOpen&&$('mask').classList.contains('on')){const k=$('modal').dataset.k;if(k!=='duel'&&k!=='qigame')return true}}catch(e){}return false};
+window._perfBusy=busy;
+// ภาพฉาก: พักตอนเลื่อนจอหรือมีหน้าต่างบัง
+{const _ts=tickScene;tickScene=function(){try{if(busy())return}catch(e){}return _ts.apply(this,arguments)}}
+// แสงเรือง: พักตอนเลื่อนจอ · ไม่เกิน 10 เฟรม/วิ
+if(typeof glwTick==='function'&&typeof GLW!=='undefined'){const _g=glwTick;glwTick=function(now){if(busy()){requestAnimationFrame(glwTick);return}const r=_g.apply(this,arguments);try{GLW.iv=Math.max(GLW.iv,low?160:100)}catch(e){}return r}}
+// ข้อความในฟีดที่อยู่นอกจอ: ไม่ต้องวาด
+const st=document.createElement('style');st.textContent=`#feed>*{content-visibility:auto;contain-intrinsic-size:auto 64px}`;document.head.appendChild(st);
+})()}catch(e){console.error('block45',e)}
