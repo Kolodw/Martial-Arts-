@@ -41235,3 +41235,5 @@ function upd(){try{if(document.hidden)return;const b=document.body,g=document.ge
   const h=kids[kids.length-1].getBoundingClientRect().bottom-kids[0].getBoundingClientRect().top;T.classList.toggle('tMid',h<innerHeight*.72)}}catch(e){}}
 setInterval(upd,500);addEventListener('resize',upd);setTimeout(upd,200);
 })()}catch(e){console.error('block46',e)}
+// ===== ป้ายแนะนำครั้งแรก (#tipCard): อยู่เหนือแถวปุ่มล่าง ไม่บังปุ่ม =====
+try{(()=>{const st=document.createElement('style');st.textContent='@media (max-width:699px){#tipCard{bottom:calc(var(--islB,118px) + 6px)!important}}';document.head.appendChild(st)})()}catch(e){console.error('tipPos',e)}
