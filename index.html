@@ -2,6 +2,9 @@
 <html lang="th">
 <head>
 <script>
+// QoL: ตัวจับเวลาที่แค่อัปเดตหน้าจอ ไม่ต้องทำงานตอนแท็บถูกซ่อน (ประหยัดแบตเตอรี่)
+(function(){try{const si=window.setInterval,OK=/^(upd|tip|paTickUI|onPillUpd|mwNoWux|mwLockTick|rgFFbtn|glWatch|brkUpd|ascPillUpd|ascHintUpd|dvScan|acCheck|ef|tickNews)$/;
+window.setInterval=function(f,t){if(typeof f==='function'&&OK.test(f.name||'')){const g=f;f=function(){if(document.hidden)return;return g.apply(this,arguments)}}return si.apply(window,arguments.length>2?[f,t].concat([].slice.call(arguments,2)):[f,t])}}catch(e){}})();
 // ---- ย้ายเซฟจากเว็บเก่า (*.vercel.app) -> 1inanovel.com: อัปโหลดชั่วคราวผ่านเซิร์ฟเวอร์เกม แล้วเขียนลงเครื่องที่โดเมนใหม่ · ไม่ลบของเดิม ----
 (function(){var NEW='www.1inanovel.com',H=location.hostname,OLD=/^(martial-unknown|hahah-unknown-gt|hahah-git-main-unknown-gt)\.vercel\.app$/.test(H),isNew=H===NEW||H==='1inanovel.com',SKIP=/^murim_admk$/;
  function ls(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&!SKIP.test(k))o[k]=localStorage.getItem(k)}}catch(e){}return o}
@@ -349,6 +352,9 @@ details.item summary{cursor:pointer}
 @keyframes spScan{to{top:100%}}
 @keyframes spLine{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
 @keyframes spOut{0%{opacity:1;filter:none;transform:translate(-50%,-50%)}30%{opacity:1;filter:brightness(2) hue-rotate(20deg);transform:translate(-50%,-50%) skewX(-6deg)}100%{opacity:0;filter:blur(6px) brightness(2);transform:translate(-50%,-62%) scaleY(.2)}}
+
+/* QoL: ปุ่มใหญ่พอสำหรับนิ้ว (เฉพาะจอสัมผัส) */
+@media (pointer:coarse){.gbtn,.pbtn{min-height:44px}.xbtn{width:40px;height:40px}.qbtn{right:54px}button.mini,.tab,.chip{min-height:36px}}
 </style>
 </head>
 <body>
@@ -3987,7 +3993,7 @@ function v43Tick(){crTick();compTick();hhTick();auTick();tqRefresh()}
 
 // ============ v4.4 · หน้าแรกใหม่ · ฉากหลังพิกเซล · โลก 32×32 · เพลงจีนบรรเลง ============
 // ---------- เมนูขีดสามขีดหน้าแรก ----------
-function openSupport(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🙏 สนับสนุนผู้พัฒนา</h3><div style="text-align:center"><img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:60vh;border-radius:10px;background:#fff" draggable="false"><p style="margin:10px 0 4px">สนับสนุนได้ครับ ขอบคุณสนับสนุนกันครับ 🙏☺️</p><p class="tag2">สแกนด้วยแอปธนาคาร · ไม่บังคับ เล่นเกมได้ครบทุกอย่างฟรี</p><a class="gbtn" href="donate-qr.jpg" download="promptpay-qr.jpg" style="display:inline-block;margin-top:6px;text-decoration:none">⬇️ บันทึกรูป QR</a></div>`,'support')}
+function openSupport(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🙏 สนับสนุนผู้พัฒนา</h3><div style="text-align:center"><img loading="lazy" src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:60vh;border-radius:10px;background:#fff" draggable="false"><p style="margin:10px 0 4px">สนับสนุนได้ครับ ขอบคุณสนับสนุนกันครับ 🙏☺️</p><p class="tag2">สแกนด้วยแอปธนาคาร · ไม่บังคับ เล่นเกมได้ครบทุกอย่างฟรี</p><a class="gbtn" href="donate-qr.jpg" download="promptpay-qr.jpg" style="display:inline-block;margin-top:6px;text-decoration:none">⬇️ บันทึกรูป QR</a></div>`,'support')}
 function openTitleMenu(){const th=THEMES.find(x=>x[0]===theme)||['','☀️','ธีม'];
  const B=[['📖','ตำนาน','openBook()'],['🪦','สุสาน','openGraves()'],['📚','สารานุกรม','openCodex()'],['🐉','สมุดสัตว์','openBestiary()'],['📊','สถิติ','openStats()'],['📘','คู่มือ','openGuide()'],['💾','ย้ายเซฟ','openSaveCode()'],['📜','อัปเดต','openUpdate()'],
   [th[1],'ธีม: '+(th[2]||''),'cycleTheme();openTitleMenu()'],['🔊','เสียงและเพลง','openSound()'],['🔠','ตัวอักษร '+FS[fsz],'cycleFs();openTitleMenu()'],['🐞','แจ้งบั๊ก','openReport()'],['💬','ความคิดเห็น','openFeedback()'],['🌐','','']].filter(b=>b[1]);
@@ -5866,7 +5872,7 @@ function drawPortrait(cv,o,full){const ctx=cv&&cv.getContext&&cv.getContext('2d'
 function snapAvatar(){if(!S)return'';const c=document.createElement('canvas');c.width=56;c.height=62;drawPortrait(c);try{return c.toDataURL('image/png')}catch(e){return''}}
 function openFrameShop(){const d=frGet(),k=S?Math.round(S.karma):null,kb=kbGet();
  const card=f=>{const own=d.own.includes(f.id),eq=d.eq===f.id,can=kb[f.side]>=f.c;
-  return`<div class="item frshop"><div class="frprev">${frWrap(`<span class="frph">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,f.id)}</div><div style="flex:1;min-width:0"><b>${f.n}</b> <span class="tag2">${{static:'ปกติ',sparkle:'วิบวับ',shift:'สีเปลี่ยน',pulse:'อนิเมชั่น','sparkle shift':'วิบวับ + สีเปลี่ยน'}[f.ty]}</span><p class="tag2">${f.d}</p>
+  return`<div class="item frshop"><div class="frprev">${frWrap(`<span class="frph">${d.av?`<img loading="lazy" src="${d.av}">`:'🙂'}</span>`,f.id)}</div><div style="flex:1;min-width:0"><b>${f.n}</b> <span class="tag2">${{static:'ปกติ',sparkle:'วิบวับ',shift:'สีเปลี่ยน',pulse:'อนิเมชั่น','sparkle shift':'วิบวับ + สีเปลี่ยน'}[f.ty]}</span><p class="tag2">${f.d}</p>
   ${own?(eq?`<button class="gbtn" onclick="frEquip(null)">ถอดกรอบ</button> <span class="tag2">✅ ใช้อยู่</span>`:`<button class="pbtn" onclick="frEquip('${f.id}')">สวมกรอบนี้</button>`):`<button class="${can?'pbtn':'gbtn'}" ${can?'':'disabled'} onclick="frBuy('${f.id}')">แลกด้วย ${f.side==='g'?'☯️ กรรมดี':'☠️ กรรมชั่ว'} ${fmt(f.c)}</button>`}</div></div>`};
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🖼️ ร้านแลกกรอบ</h3><p class="tag2">ใช้<b>คลังกรรม</b>แลกกรอบรูป — ทุกครั้งที่จบชีวิต กรรมของชีวิตนั้นจะเข้าคลังถาวร (กรรมบวกเข้าคลังกรรมดี กรรมลบเข้าคลังกรรมชั่ว) สะสมข้ามชีวิตได้ไม่จำกัด<br>กรอบเป็นของคุณถาวรทุกชีวิต แสดงที่รูปตัวละครและรูปโปรไฟล์ในแชท</p>
   <div class="box" style="padding:8px 10px;margin-bottom:8px">🏦 คลังกรรม: <b style="color:#3a9a4a">☯️ ${fmt(kb.g)}</b> · <b style="color:#d84a4a">☠️ ${fmt(kb.e)}</b>${S&&S.alive?`<br><span class="tag2">ชีวิตนี้กรรม ${k>0?'+':''}${k} — จะเข้าคลังเมื่อจบชีวิต</span>`:''}</div>
@@ -5877,9 +5883,9 @@ function frBuy(id){const f=frOf(id),d=frGet(),kb=kbGet();if(!f||d.own.includes(i
 function frEquip(id){const d=frGet();d.eq=id;frSet(d);profPush();try{render()}catch(e){}if($('modal').dataset.k==='frames')openFrameShop();else if($('modal').dataset.k==='profile')openProfile()}
 async function profPush(){if(!onlineOK)return;const d=frGet();try{await api('profile',Object.assign({av:d.av||'',fr:d.eq||''},/^f_(adm|p\d|e\d)/.test(d.eq||'')&&admK()?{key:admK()}:{}))}catch(e){}}
 function openProfile(){const d=frGet();const own=FRAMES.filter(f=>d.own.includes(f.id));
- modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👤 โปรไฟล์</h3><div style="display:flex;gap:14px;align-items:center;margin:8px 0 12px"><div class="frbig">${frWrap(`<span class="frph big">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,d.eq)}</div><div><div style="font-size:18px"><b>${esc(pname())}</b></div><div class="tag2">${d.eq?'กรอบ: '+frOf(d.eq).n:'ยังไม่มีกรอบ'}</div><div class="tag2">รูปนี้จะขึ้นข้างชื่อในแชทโลก</div></div></div>
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👤 โปรไฟล์</h3><div style="display:flex;gap:14px;align-items:center;margin:8px 0 12px"><div class="frbig">${frWrap(`<span class="frph big">${d.av?`<img loading="lazy" src="${d.av}">`:'🙂'}</span>`,d.eq)}</div><div><div style="font-size:18px"><b>${esc(pname())}</b></div><div class="tag2">${d.eq?'กรอบ: '+frOf(d.eq).n:'ยังไม่มีกรอบ'}</div><div class="tag2">รูปนี้จะขึ้นข้างชื่อในแชทโลก</div></div></div>
   ${S?`<button class="pbtn" style="width:100%" onclick="profSnap()">📸 ใช้ตัวละครตอนนี้ (${esc(S.name)}) เป็นรูปโปรไฟล์</button>`:'<p class="tag2">เริ่มชีวิตก่อน แล้วกลับมากดใช้ตัวละครเป็นรูปโปรไฟล์ได้</p>'}
-  <h4 style="margin-top:12px">🖼️ กรอบของฉัน (${own.length}/${FRAMES.filter(f=>f.side!=='adm').length})</h4><div class="frlist"><button class="frpick ${!d.eq?'on':''}" onclick="frEquip(null)">${frWrap('<span class="frph">✕</span>',null)}<small>ไม่ใช้กรอบ</small></button>${own.map(f=>`<button class="frpick ${d.eq===f.id?'on':''}" onclick="frEquip('${f.id}')">${frWrap(`<span class="frph">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,f.id)}<small>${f.n}</small></button>`).join('')}</div>
+  <h4 style="margin-top:12px">🖼️ กรอบของฉัน (${own.length}/${FRAMES.filter(f=>f.side!=='adm').length})</h4><div class="frlist"><button class="frpick ${!d.eq?'on':''}" onclick="frEquip(null)">${frWrap('<span class="frph">✕</span>',null)}<small>ไม่ใช้กรอบ</small></button>${own.map(f=>`<button class="frpick ${d.eq===f.id?'on':''}" onclick="frEquip('${f.id}')">${frWrap(`<span class="frph">${d.av?`<img loading="lazy" src="${d.av}">`:'🙂'}</span>`,f.id)}<small>${f.n}</small></button>`).join('')}</div>
   <button class="gbtn" style="width:100%;margin-top:10px" onclick="openFrameShop()">🖼️ ไปร้านแลกกรอบ</button>`,'profile')}
 function profSnap(){const av=snapAvatar();if(!av)return;const d=frGet();d.av=av;frSet(d);profPush();toast('ตั้งรูปโปรไฟล์แล้ว');openProfile()}
 // --- frame on the character ---
@@ -6745,7 +6751,7 @@ try{['acCheck','acFlag','acTp','acSnap','sendLife','api','acSus','acW','acTrap',
 // ============ v10.7 แชทโลก: ข้อความเราอยู่ขวา · ประกาศ @everyone (แอดมิน) ============
 const myPu=()=>String(pid||'').slice(0,12);
 chatRender=function(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60,me=myPu();
- box.innerHTML=chatMsgs.map(m=>{const mine=!!m.pu&&m.pu===me,pf=m.pu&&chatProf[m.pu],av=pf&&pf.av?`<img src="${pf.av}" alt="">`:'🙂',tm=new Date(m.t).toTimeString().slice(0,5);
+ box.innerHTML=chatMsgs.map(m=>{const mine=!!m.pu&&m.pu===me,pf=m.pu&&chatProf[m.pu],av=pf&&pf.av?`<img loading="lazy" src="${pf.av}" alt="">`:'🙂',tm=new Date(m.t).toTimeString().slice(0,5);
   if(m.k==='ann')return`<div class="cm cmann"><div class="cmb"><div class="cmh"><b>📢 ประกาศจากผู้ดูแล</b> <span class="ct">${tm}</span></div><div class="cmx">${esc(String(m.x||'').replace(/^@everyone\s*/i,''))}</div></div></div>`;
   return`<div class="cm cmp ${mine?'me':''} ${m.k==='share'?'share':''}"><span class="cav">${frWrap(`<span class="frph sm">${av}</span>`,pf&&pf.fr)}</span><div class="cmb"><div class="cmh">${mine?`<span class="ct">${tm}</span> ${m.tt?tchipH(m.tt,m.tr):''}<b>คุณ</b>`:`<b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b>${m.tt?tchipH(m.tt,m.tr):''} <span class="ct">${tm}</span> <button class="rep" onclick="chatRep('${esc(m.i)}')" title="รายงาน">⚑</button>`}</div><div class="cmx">${m.k==='share'?'📤 ':''}${esc(m.x)}</div></div></div>`}).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';
  if(near)box.scrollTop=box.scrollHeight};
@@ -6867,7 +6873,7 @@ annClear=async function(ai,fromView){if(!admK())return;ai=ai||(annCur&&annCur.i)
  try{LS.set('murim_annX',ai)}catch(e){}if(annCur&&annCur.i===ai)annShow(null);try{const el=document.getElementById('annBar');if(el&&el.dataset.i===ai)el.remove();annIslOff(ai);if(typeof chatPollF==='function')setTimeout(chatPollF,400)}catch(e){}toast('ลบประกาศแล้ว');if(fromView)annList()};
 // ทุกประกาศในแชทกดเปิดอ่าน/โหวตได้ + ปุ่มประกาศย้อนหลัง
 chatRender=function(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60,me=myPu();
- box.innerHTML=chatMsgs.map(m=>{const mine=!!m.pu&&m.pu===me,pf=m.pu&&chatProf[m.pu],av=pf&&pf.av?`<img src="${pf.av}" alt="">`:'🙂',tm=new Date(m.t).toTimeString().slice(0,5);
+ box.innerHTML=chatMsgs.map(m=>{const mine=!!m.pu&&m.pu===me,pf=m.pu&&chatProf[m.pu],av=pf&&pf.av?`<img loading="lazy" src="${pf.av}" alt="">`:'🙂',tm=new Date(m.t).toTimeString().slice(0,5);
   if(m.k==='ann'){const hp=Array.isArray(m.poll)&&m.poll.length;return`<div class="cm cmann"><div class="cmb" onclick="annOpen('${esc(m.i)}')"><div class="cmh"><b>📢 ประกาศจากผู้ดูแล</b> <span class="ct">${tm}</span></div><div class="cmx">${esc(String(m.x||'').replace(/^@everyone\s*/i,''))}</div>${hp?`<div class="cmpoll">📊 โพล: ${m.poll.map(esc).join(' · ')}</div>`:''}<div class="cmopen">${hp?'📊 แตะเพื่อโหวต / ดูผล':'📢 แตะเพื่ออ่าน'} ›</div></div></div>`}
   return`<div class="cm cmp ${mine?'me':''} ${m.k==='share'?'share':''}"><span class="cav">${frWrap(`<span class="frph sm">${av}</span>`,pf&&pf.fr)}</span><div class="cmb"><div class="cmh">${mine?`<span class="ct">${tm}</span> ${m.tt?tchipH(m.tt,m.tr):''}<b>คุณ</b>`:`<b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b>${m.tt?tchipH(m.tt,m.tr):''} <span class="ct">${tm}</span> <button class="rep" onclick="chatRep('${esc(m.i)}')" title="รายงาน">⚑</button>`}</div><div class="cmx">${m.k==='share'?'📤 ':''}${esc(m.x)}</div></div></div>`}).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';
  if(near)box.scrollTop=box.scrollHeight};
@@ -8234,14 +8240,14 @@ function profName(v){v=String(v||'').replace(/[<>]/g,'').trim().slice(0,20);if(/
 openProfile=function(){const d=frGet(),own=FRAMES.filter(f=>d.own.includes(f.id)),st=PFST||{},cur=typeof showTtl==='function'?showTtl():null;
  const badge=d.avUp?(st.pend||d.avSt==='pend'?'<span class="pfbad pend">⏳ รอแอดมินตรวจ — ระหว่างนี้คนอื่นเห็นรูปตัวละครแทน</span>':'<span class="pfbad ok">✅ ผ่านการตรวจแล้ว</span>'):'';
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👤 โปรไฟล์</h3>
-  <div style="display:flex;gap:14px;align-items:center;margin:8px 0 6px"><div class="frbig">${frWrap(`<span class="frph big">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,d.eq)}</div><div style="min-width:0"><div style="font-size:18px"><b>${esc(pname())}</b>${cur?tchipH(cur.t,cur.r):''}</div><div class="tag2">${d.eq?'กรอบ: '+esc(frOf(d.eq).n):'ยังไม่มีกรอบ'}</div>${badge}</div></div>
+  <div style="display:flex;gap:14px;align-items:center;margin:8px 0 6px"><div class="frbig">${frWrap(`<span class="frph big">${d.av?`<img loading="lazy" src="${d.av}">`:'🙂'}</span>`,d.eq)}</div><div style="min-width:0"><div style="font-size:18px"><b>${esc(pname())}</b>${cur?tchipH(cur.t,cur.r):''}</div><div class="tag2">${d.eq?'กรอบ: '+esc(frOf(d.eq).n):'ยังไม่มีกรอบ'}</div>${badge}</div></div>
   <div class="pfsec"><h4>✏️ ชื่อที่แสดง</h4><p class="tag2" style="margin:0 0 4px">ใช้ในแชท ทำเนียบ และตอนคนอื่นดูคุณเล่น (เว้นว่าง = ใช้ชื่อตัวละคร)</p><div style="display:flex;gap:6px"><input class="crin" id="pfName" maxlength="20" value="${esc(LS.get('murim_pname',''))}" placeholder="${esc(S?S.name:'จอมยุทธ์นิรนาม')}" style="flex:1"><button class="pbtn" onclick="profName($('pfName').value)">บันทึก</button></div></div>
   <div class="pfsec"><h4>🖼️ รูปโปรไฟล์</h4>
    ${S?`<button class="pbtn" style="width:100%" onclick="profSnap()">📸 ใช้ตัวละครตอนนี้ (${esc(S.name)})</button>`:'<p class="tag2">เริ่มชีวิตก่อน แล้วกดใช้ตัวละครเป็นรูปโปรไฟล์ได้</p>'}
    <div class="pfrule">🚫 <b>ห้ามรูปโป๊ เปลือย อนาจาร หรือรุนแรงเด็ดขาด</b> — รูปที่อัปโหลดเองต้องผ่านการตรวจก่อนคนอื่นจะเห็น · ไม่ผ่าน = โดนเตือนและต้องเปลี่ยนรูป · โดนเตือนครบ 3 ครั้ง ระงับการอัปโหลด 30 วัน${st.strikes?`<br>⚠️ คุณโดนเตือนแล้ว ${st.strikes} ครั้ง`:''}</div>
    ${st.ban?`<p class="tag2" style="color:#d84a4a">⛔ ถูกระงับการอัปโหลดรูปอีกราว ${Math.ceil(st.ban/86400)} วัน</p>`:`<label class="tag2" style="display:flex;gap:6px;align-items:center;margin:4px 0"><input type="checkbox" id="pfAgree"> ยืนยันว่ารูปของฉันไม่ผิดกฎข้างบน</label><button class="gbtn" style="width:100%" onclick="profPickFile()">📤 อัปโหลดรูปจากเครื่อง</button><input type="file" id="pfFile" accept="image/*" style="display:none" onchange="profFile(this)">`}</div>
   <div class="pfsec"><h4>🎖️ ฉายาที่โชว์</h4><div style="display:flex;gap:8px;align-items:center">${cur?tchipH(cur.t,cur.r):'<span class="tag2">ยังไม่ได้เลือก</span>'}<button class="gbtn" style="margin-left:auto;padding:4px 12px" onclick="openShowPick('profile')">เลือกฉายา</button></div></div>
-  <div class="pfsec"><h4>🖼️ กรอบของฉัน (${own.length}/${FRAMES.filter(f=>f.side!=='adm').length})</h4><div class="frlist"><button class="frpick ${!d.eq?'on':''}" onclick="frEquip(null)">${frWrap('<span class="frph">✕</span>',null)}<small>ไม่ใช้กรอบ</small></button>${own.map(f=>`<button class="frpick ${d.eq===f.id?'on':''}" onclick="frEquip('${f.id}')">${frWrap(`<span class="frph">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,f.id)}<small>${f.n}</small></button>`).join('')}</div><button class="gbtn" style="width:100%;margin-top:8px" onclick="openFrameShop()">🖼️ ไปร้านแลกกรอบ</button></div>
+  <div class="pfsec"><h4>🖼️ กรอบของฉัน (${own.length}/${FRAMES.filter(f=>f.side!=='adm').length})</h4><div class="frlist"><button class="frpick ${!d.eq?'on':''}" onclick="frEquip(null)">${frWrap('<span class="frph">✕</span>',null)}<small>ไม่ใช้กรอบ</small></button>${own.map(f=>`<button class="frpick ${d.eq===f.id?'on':''}" onclick="frEquip('${f.id}')">${frWrap(`<span class="frph">${d.av?`<img loading="lazy" src="${d.av}">`:'🙂'}</span>`,f.id)}<small>${f.n}</small></button>`).join('')}</div><button class="gbtn" style="width:100%;margin-top:8px" onclick="openFrameShop()">🖼️ ไปร้านแลกกรอบ</button></div>
   <div class="pfsec"><h4>💾 ย้ายเซฟข้ามเครื่อง</h4><p class="tag2" style="margin:0 0 6px">เอาเซฟไปเล่นต่อในมือถือ/คอมเครื่องอื่น ด้วยรหัสย้ายเซฟ</p><button class="gbtn" style="width:100%" onclick="openSaveCode._from='profile';openSaveCode()">💾 ส่งออก / นำเข้าเซฟ</button><button class="gbtn" style="width:100%;margin-top:6px" onclick="openClaimRR()">🎲 กู้ตั๋วสุ่ม / VIP ที่เคยเติมไว้</button></div>
   <div class="pfsec"><h4>🔐 บัญชี Google</h4><div id="gBox"><p class="tag2">กำลังโหลด…</p></div></div>`,'profile');
  gBoxFill();if(!profStat._t||Date.now()-profStat._t>20000){profStat._t=Date.now();profStat().then(j=>{if(j&&$('modal').dataset.k==='profile')openProfile()})}};
@@ -10890,7 +10896,7 @@ const FR_TIER=[[0,'⚪ ธรรมดา'],[20000,'🟢 หายาก'],[1000
 const frTier=c=>{let t=0;FR_TIER.forEach((x,i)=>{if(c>=x[0])t=i});return t};
 openFrameShop=function(side){const d=frGet(),k=S?Math.round(S.karma):null,kb=kbGet();side=side||openFrameShop._s||'g';openFrameShop._s=side;
  const card=f=>{const own=d.own.includes(f.id),eq=d.eq===f.id,can=kb[f.side]>=f.c,tl=f.ty.split(' ').map(t=>FR_TY[t]||t).join(' · ');
-  return`<div class="item frshop"><div class="frprev">${frWrap(`<span class="frph">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,f.id)}</div><div style="flex:1;min-width:0"><b>${f.n}</b>${f.nw?'<span class="frnew">ใหม่</span>':''}<div class="tag2">✨ ${tl}</div><p class="tag2">${f.d}</p>
+  return`<div class="item frshop"><div class="frprev">${frWrap(`<span class="frph">${d.av?`<img loading="lazy" src="${d.av}">`:'🙂'}</span>`,f.id)}</div><div style="flex:1;min-width:0"><b>${f.n}</b>${f.nw?'<span class="frnew">ใหม่</span>':''}<div class="tag2">✨ ${tl}</div><p class="tag2">${f.d}</p>
   ${own?(eq?`<button class="gbtn" onclick="frEquip(null)">ถอดกรอบ</button> <span class="tag2">✅ ใช้อยู่</span>`:`<button class="pbtn" onclick="frEquip('${f.id}')">สวมกรอบนี้</button>`):`<button class="${can?'pbtn':'gbtn'}" ${can?'':'disabled'} onclick="frBuy('${f.id}')">แลกด้วย ${f.side==='g'?'☯️':'☠️'} ${fmt(f.c)}</button>${can?'':` <span class="tag2">ขาดอีก ${fmt(f.c-kb[f.side])}</span>`}`}</div></div>`};
  const L=FRAMES.filter(f=>f.side===side).sort((a,b)=>a.c-b.c),own=L.filter(f=>d.own.includes(f.id)).length;let body='',lt=-1;
  L.forEach(f=>{const t=frTier(f.c);if(t!==lt){lt=t;const n=L.filter(x=>frTier(x.c)===t);body+=`<div class="frtier">${FR_TIER[t][1]} <small>${n.filter(x=>d.own.includes(x.id)).length}/${n.length}</small></div>`}body+=card(f)});
@@ -11062,7 +11068,7 @@ FRAMES.push({id:'f_rk1',n:'กรอบตะวันทอง',side:'r',c:0,ty
  {id:'f_rk2',n:'กรอบจันทร์เงิน',side:'r',c:0,ty:'spin orbit star corner badge',c1:'#d8e0f0',c2:'#ffffff',c3:'#8a9ab8',pc:'#ffffff',bd:'🥈',d:'อันดับ 2 ของทำเนียบประจำวัน'},
  {id:'f_rk3',n:'กรอบดาวทองแดง',side:'r',c:0,ty:'spin corner badge',c1:'#d8884a',c2:'#ffc890',c3:'#8a4a20',pc:'#ffc890',bd:'🥉',d:'อันดับ 3 ของทำเนียบประจำวัน'});
 {const _ofs=openFrameShop;openFrameShop=function(){const r=_ofs.apply(this,arguments);try{const d=frGet(),m=$('modal'),bt=[...m.querySelectorAll('button')].pop();const L=FRAMES.filter(f=>f.side==='r');
- const h=`<div class="frtier">🏆 กรอบรางวัลทำเนียบ <small>${L.filter(f=>d.own.includes(f.id)).length}/${L.length} · แลกไม่ได้ ต้องติดอันดับ 1–3 ของวัน</small></div>`+L.map(f=>{const own=d.own.includes(f.id),eq=d.eq===f.id;return`<div class="item frshop"><div class="frprev">${frWrap(`<span class="frph">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,f.id)}</div><div style="flex:1;min-width:0"><b>${f.n}</b><p class="tag2">${f.d}</p>${own?(eq?'<span class="tag2">✅ ใช้อยู่</span>':`<button class="pbtn" onclick="frEquip('${f.id}')">สวมกรอบนี้</button>`):'<span class="tag2">🔒 ยังไม่ได้รับ</span>'}</div></div>`}).join('');
+ const h=`<div class="frtier">🏆 กรอบรางวัลทำเนียบ <small>${L.filter(f=>d.own.includes(f.id)).length}/${L.length} · แลกไม่ได้ ต้องติดอันดับ 1–3 ของวัน</small></div>`+L.map(f=>{const own=d.own.includes(f.id),eq=d.eq===f.id;return`<div class="item frshop"><div class="frprev">${frWrap(`<span class="frph">${d.av?`<img loading="lazy" src="${d.av}">`:'🙂'}</span>`,f.id)}</div><div style="flex:1;min-width:0"><b>${f.n}</b><p class="tag2">${f.d}</p>${own?(eq?'<span class="tag2">✅ ใช้อยู่</span>':`<button class="pbtn" onclick="frEquip('${f.id}')">สวมกรอบนี้</button>`):'<span class="tag2">🔒 ยังไม่ได้รับ</span>'}</div></div>`}).join('');
  if(bt)bt.insertAdjacentHTML('beforebegin',h)}catch(e){}return r}}
 const BD_CN={m:'⚔️ ยุทธภพ',x:'☁️ โลกเทพเซียน',g:'🌟 โลกเทพ',b:'🐾 สัตว์อสูร'},BD_KB=[0,30000,15000,8000],BD_KBP={d:[0,30000,15000,8000],w:[0,120000,60000,30000],m:[0,400000,200000,100000]},BD_FRP={d:'f_rk',w:'f_wk',m:'f_mo'},BD_PN={d:'ประจำวัน',w:'ประจำสัปดาห์',m:'ประจำเดือน'};
 async function bdClaim(){try{if(!onlineOK)return;const j=await api('bdrw');try{rkSync(j&&j.rk)}catch(e){}const L=(j&&j.l)||[];if(!L.length)return;const d=frGet(),kb=kbGet();let w=LS.get('murim_bdw',0)||0;const lines=[];
@@ -13021,7 +13027,7 @@ const FR_ADM=FRAMES.filter(f=>f.side==='adm').map(f=>f.id);
 {const _feA=frEquip;frEquip=function(id){if(/^f_adm/.test(String(id||''))&&!admK()){toast('กรอบนี้สำหรับแอดมินเท่านั้น');return}return _feA.apply(this,arguments)}}
 // แอดมิน: เห็นกรอบพิเศษในร้านแลกกรอบ (ผู้เล่นทั่วไปไม่เห็น)
 {const _ofA=openFrameShop;openFrameShop=function(){const r=_ofA.apply(this,arguments);try{if(!admK())return r;const d=frGet();let ch0=0;FR_ADM.forEach(id=>{if(!d.own.includes(id)){d.own.push(id);ch0=1}});if(ch0)frSet(d);const m=$('modal'),bt=[...m.querySelectorAll('button')].pop();
- const h=`<div class="frtier">🛡️ กรอบพิเศษแอดมิน <small>เห็นและใส่ได้เฉพาะแอดมิน</small></div>`+FR_ADM.map(id=>{const f=frOf(id),eq=d.eq===id;return`<div class="item frshop"><div class="frprev">${frWrap(`<span class="frph">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,id)}</div><div style="flex:1;min-width:0"><b>${f.n}</b><p class="tag2">${f.d}</p>${eq?'<span class="tag2">✅ ใช้อยู่</span>':`<button class="pbtn" onclick="frEquip('${id}')">สวมกรอบนี้</button>`}</div></div>`}).join('');
+ const h=`<div class="frtier">🛡️ กรอบพิเศษแอดมิน <small>เห็นและใส่ได้เฉพาะแอดมิน</small></div>`+FR_ADM.map(id=>{const f=frOf(id),eq=d.eq===id;return`<div class="item frshop"><div class="frprev">${frWrap(`<span class="frph">${d.av?`<img loading="lazy" src="${d.av}">`:'🙂'}</span>`,id)}</div><div style="flex:1;min-width:0"><b>${f.n}</b><p class="tag2">${f.d}</p>${eq?'<span class="tag2">✅ ใช้อยู่</span>':`<button class="pbtn" onclick="frEquip('${id}')">สวมกรอบนี้</button>`}</div></div>`}).join('');
  if(bt)bt.insertAdjacentHTML('beforebegin',h)}catch(e){console.error(e)}return r}}
 // ผู้เล่นทั่วไป: ไม่โผล่ในรายการ "กรอบของฉัน" ถ้าไม่ใช่แอดมิน (กันกรณีเซฟเก่า)
 try{const d=frGet();if(!admK()&&d){const o=d.own.length;d.own=d.own.filter(x=>!/^f_adm/.test(x));if(/^f_adm/.test(d.eq||''))d.eq='';if(o!==d.own.length)frSet(d)}}catch(e){}
@@ -13073,7 +13079,7 @@ function arOwnSet(o){LS.set('murim_arown',o)}
 function arSel(){return LS.get('murim_arsel',null)||{}}
 AR_SHOP.length=0;
 function arShopHtml(){const o=arOwn(),c=arC(),sel=arSel(),d=frGet(),alive=S&&S.alive;const btn=(dis,lab,on)=>`<button class="sysb" ${dis?'disabled':''} onclick="${on}">${lab}</button>`;
- const frc=(id,cost)=>{const f=frOf(id),own=d.own.includes(id);return`<div class="item arsi"><div class="arfr">${frWrap(`<span class="frph">${d.av?`<img src="${d.av}">`:'🙂'}</span>`,id)}</div><b>${f.n}</b><small class="tag2">${cost?'🪙 '+fmt(cost):f.d}</small>${own?(d.eq===id?'<span class="tag2">✅ ใช้อยู่</span>':btn(0,'สวม',`frEquip('${id}');arPage()`)):cost?btn(c<cost,'แลก',`arBuy2('fr','${id}',${cost})`):'<span class="tag2">🔒 หีบลาน</span>'}</div>`};
+ const frc=(id,cost)=>{const f=frOf(id),own=d.own.includes(id);return`<div class="item arsi"><div class="arfr">${frWrap(`<span class="frph">${d.av?`<img loading="lazy" src="${d.av}">`:'🙂'}</span>`,id)}</div><b>${f.n}</b><small class="tag2">${cost?'🪙 '+fmt(cost):f.d}</small>${own?(d.eq===id?'<span class="tag2">✅ ใช้อยู่</span>':btn(0,'สวม',`frEquip('${id}');arPage()`)):cost?btn(c<cost,'แลก',`arBuy2('fr','${id}',${cost})`):'<span class="tag2">🔒 หีบลาน</span>'}</div>`};
  return`<div class="arsh2">
  <h5>🏷️ ฉายาลาน <small>ใส่โชว์ในแชทได้ถาวร</small></h5><div class="arshop">${AR_TT.map(([t,r,cost])=>{const own=o.tt.includes(t);return`<div class="item arsi"><div class="arttl">${tchipH(t,r)}</div><small class="tag2">🪙 ${fmt(cost)}</small>${own?btn(0,'โชว์ฉายานี้',`setShowTtl('${t}',${r},'ar');openOnline('arena')`):btn(c<cost,'แลก',`arBuy2('tt','${t}',${cost})`)}</div>`}).join('')}</div>
  <h5>🖼️ กรอบ</h5><div class="arshop">${[['f_arc1',40],['f_arc2',120],['f_arc3',250],['f_arc4',400],['f_arc5',1000]].map(([id,cost])=>frc(id,cost)).join('')}</div>
@@ -27350,7 +27356,7 @@ const _cr=chatRender;chatRender=function(){const box=$('chatBox'),near=box?box.s
   const sb=document.querySelector('.chatin > button.pbtn');if(sb&&!sb.classList.contains('chSendI')){sb.classList.add('chSendI');sb.textContent='➤';sb.title='ส่ง'}
  }catch(e){console.error(e)}return r};
 // การ์ดผู้เล่นเมื่อแตะรูป
-window.cmCard=function(m){if(!m)return;const pf=m.pu&&chatProf&&chatProf[m.pu],av=pf&&pf.av?`<img src="${pf.av}" alt="">`:'🙂',mine=m.pu&&typeof myPu==='function'&&m.pu===myPu();
+window.cmCard=function(m){if(!m)return;const pf=m.pu&&chatProf&&chatProf[m.pu],av=pf&&pf.av?`<img loading="lazy" src="${pf.av}" alt="">`:'🙂',mine=m.pu&&typeof myPu==='function'&&m.pu===myPu();
  const n=L=>(chatMsgs||[]).filter(x=>x.pu===m.pu).length;const fr=pf&&pf.fr&&frOf(pf.fr);
  const box=$('chatBox'),st=box?box.scrollTop:0;
  const back=`<div class="brow"><button class="pbtn" onclick="openOnline('chat')">← กลับแชท</button>${!mine&&typeof chTag==='function'&&m.i?`<button class="gbtn" onclick="openOnline('chat');setTimeout(()=>{try{chTag('${esc(m.i)}')}catch(e){}},600)">↩︎ ตอบเขา</button>`:''}</div>`;
@@ -27748,7 +27754,7 @@ window.rrUsePaid=async function(btn){if(RR.used>=RR.cap)return toast('ชีว�
 window.rrUseKarma=function(){if(RR.used>=RR.cap)return toast('ชีวิตนี้ใช้ครบแล้ว');const kd=rrKD();if(kd.n>=RR.kday)return toast('วันนี้แลกด้วยกรรมครบแล้ว');const kc=rrKC(),kb=kbGet(),sd=kb.g>=kb.e?'g':'e';if(kb[sd]<kc)return toast('กรรมไม่พอ');kb[sd]-=kc;kbSet(kb);kd.n++;try{LS.set('murim_rrk',kd)}catch(e){}toast(`☯️ ใช้กรรม${sd==='g'?'ดี':'ชั่ว'} ${fmt(kc)}`);rrGo()}
 window.rrBuy=function(k){const v=RR.pk[k];if(!v)return;
  modal(`<button class="xbtn" onclick="rrMenu()">✕</button><h3>💳 ซื้อสุ่มเกิด ${v[1]} ครั้ง · ${v[0]} บาท</h3>
- <div style="text-align:center"><img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:36vh;border-radius:10px;background:#fff" draggable="false">
+ <div style="text-align:center"><img loading="lazy" src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:36vh;border-radius:10px;background:#fff" draggable="false">
  <p style="margin:8px 0 2px">1) สแกนโอน <b>${v[0]} บาท</b> ด้วยแอปธนาคาร</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจให้อัตโนมัติ สิทธิ์เข้าทันที</p>
  <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
  <label class="supl">👤 ชื่อบัญชีที่โอน<input id="supPn" maxlength="40" placeholder="ช่วยให้ตรวจเร็วขึ้น"></label>
@@ -27904,7 +27910,7 @@ const incHtml=r=>`<span class="sticks">${('<i class="stk'+(r.m?' lit':'')+'"></i
 window.vipInc=async function(o,b){b.disabled=true;try{const j=await api('vipinc',{o});const r=WALL.find(x=>x.o===o);if(r){r.m=1;r.c=j.c||r.c+1;const el=document.querySelector(`.vtab[data-o="${o}"] .vtinc`);if(el)el.innerHTML=incHtml(r)}try{sfx('good')}catch(e){}}catch(e){b.disabled=false;toast('จุดธูปไม่สำเร็จ')}};
 window.vipBuy=function(k){const v=PK[k];if(!v)return;
  modal(`<button class="xbtn" onclick="vipMenu()">✕</button><h3>${NM[v[1]]} · ${v[0]} บาท (${v[2]})</h3>
- <div style="text-align:center"><img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:36vh;border-radius:10px;background:#fff" draggable="false">
+ <div style="text-align:center"><img loading="lazy" src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:36vh;border-radius:10px;background:#fff" draggable="false">
  <p style="margin:8px 0 2px">1) สแกนโอน <b>${v[0]} บาท</b> ด้วยแอปธนาคาร</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจให้อัตโนมัติ สิทธิ์เข้าทันที</p>
  <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
  <label class="supl">👤 ชื่อบัญชีที่โอน<input id="supPn" maxlength="40" placeholder="ช่วยให้ตรวจเร็วขึ้น"></label>
@@ -33022,7 +33028,7 @@ window.cosSync=sync;
 window.cosBuy=function(pk){const P=COSP[pk];if(!P)return;const p=price(pk);
  modal(`<button class="xbtn" onclick="cosMenu()">✕</button><h3>🎨 ${P.n}</h3>
  <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#c98d22">${p} บาท${featPk()===pk?` <s style="font-size:14px;opacity:.5">${P.p}</s> <small style="color:#c81e3a">ลด 20% วันนี้</small>`:''}</div>
- <img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">
+ <img loading="lazy" src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">
  <p style="margin:8px 0 2px">1) สแกนโอน <b>${p} บาท</b> ตรงยอดเป๊ะ</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจอัตโนมัติ ของเข้าทันที</p>
  <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
  <label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>
@@ -33039,7 +33045,7 @@ window.cosHas=has;
 window.cosEq=async function(kind,id){if(kind==='f'){frEquip(id||null);setTimeout(()=>cosMenu(window._cosTab),50);return}
  const e=Object.assign({},CS.eq);e[kind]=id||'';CS.eq=e;save();try{await api('cosset',Object.assign({t:e.t||'',c:e.c||''},isA()?{key:admK()}:{}))}catch(x){toast('บันทึกไม่สำเร็จ')}cosMenu(window._cosTab||'set')};
 // องค์ประกอบ UI
-const av=()=>{const d=frGet();return d.av?`<img src="${d.av}">`:'🙂'};
+const av=()=>{const d=frGet();return d.av?`<img loading="lazy" src="${d.av}">`:'🙂'};
 const frPrev=i=>`<div class="frprev">${frWrap(`<span class="frph">${av()}</span>`,'f_p'+i)}</div>`;
 const OVL='<i class="zqc"><i class="zql"></i><i class="zqm"></i></i><i class="zqg"></i>';
 window.cosBubHtml=(i,nm,tx)=>`<div class="cmb ccxT${i}">${OVL}<div class="cmh"><b>${esc(nm)}</b></div>${tx}</div>`;
@@ -34139,7 +34145,7 @@ document.addEventListener('click',ev=>{try{const el=ev.target.closest&&ev.target
 // ---------- หน้าร้าน ----------
 const bigShrink=f=>new Promise(res=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);let q=.88,d=cv.toDataURL('image/jpeg',q);while(d.length>2.8e6&&q>.4){q-=.1;d=cv.toDataURL('image/jpeg',q)}res(d)};im.onerror=()=>res('');im.src=fr.result};fr.onerror=()=>res('');fr.readAsDataURL(f)});
 const MSG={noslip:'อ่านสลิปไม่ได้ ลองแคปให้เห็นทั้งใบ (ต้องเห็น QR) แล้วลองใหม่',dup:'สลิปนี้เคยถูกใช้แล้ว',acct:'สลิปนี้ไม่ได้โอนเข้าบัญชีของเกม',amount:'ยอดในสลิปไม่ตรงกับราคาที่เลือก',old:'สลิปเก่าเกินไป (รับเฉพาะที่โอนภายใน 3 ชั่วโมง)',pending:'ธนาคารยังอัปเดตสลิปไม่เสร็จ รอ 2-3 นาทีแล้วกดส่งใหม่',rate:'ลองบ่อยเกินไป รอสักครู่',img:'ไฟล์รูปไม่ถูกต้อง',bad:'อีเวนต์นี้ปิดขายแล้ว'};
-const av=()=>{const d=frGet();return d.av?`<img src="${d.av}">`:'🙂'};
+const av=()=>{const d=frGet();return d.av?`<img loading="lazy" src="${d.av}">`:'🙂'};
 const left=pk=>EV.ev&&EV.ev.left&&EV.ev.left[pk]!=null?EV.ev.left[pk]:null;
 const tl=()=>{const ms=Math.max(0,END-Date.now()),d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5);return ms<=0?'ปิดขายแล้ว':`เหลือ ${d} วัน ${h} ชม.`};
 const card=r=>{const id=ID(r),o=has(id),x=r[5],sn=EV.ev&&EV.ev.sn&&EV.ev.sn[id],kb=EV.ev&&EV.ev.kb||{g:0,e:0},open=Date.now()<END;
@@ -34176,7 +34182,7 @@ window.evClaim=async function(btn,pk){if(!btn._arm){btn._arm=1;const t=btn.textC
 window.evBuy=function(pk){const r=IT.find(x=>x[2]===pk);if(!r)return;const p=r[5].p,lf=left(pk);
  modal(`<button class="xbtn" onclick="evMenu()">✕</button><h3>🏮 ${r[3]}</h3>
  <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#c98d22">${p} บาท</div><div class="tag2">ฉบับจำกัด เหลือ ${lf==null?'?':lf}/${r[5].cap} ชิ้น · ได้เลขลำดับตามลำดับที่ชำระสำเร็จ</div>
- <img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">
+ <img loading="lazy" src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">
  <p style="margin:8px 0 2px">1) สแกนโอน <b>${p} บาท</b> ตรงยอดเป๊ะ</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจอัตโนมัติ ของเข้าทันที</p>
  <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
  <label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>
@@ -35423,7 +35429,7 @@ window.evBuy=async function(pk){
  const j=await info(true),sup=!!(j&&j.ev&&j.ev.sup),p=sup?disc(b.p):b.p;
  modal(`<button class="xbtn" onclick="evMenu()">✕</button><h3>${b.ic} ${b.n}</h3>
  <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#c98d22">${p} บาท</div><div class="tag2">${b.d}<br>ซื้อแยก ${sup?disc(b.full):b.full} บาท · เหมาชุดประหยัดกว่า · ได้เลขลำดับของแต่ละชิ้น</div>
- <img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">
+ <img loading="lazy" src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">
  <p style="margin:8px 0 2px">1) สแกนโอน <b>${p} บาท</b> ตรงยอดเป๊ะ</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจอัตโนมัติ ของเข้าทันที</p>
  <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
  <label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>
@@ -36091,7 +36097,7 @@ PN.mall=['ครบ 6 ชุดยุคปัจจุบัน (18 ชิ้�
 window.modBuy=function(pk){const P=PN[pk];if(!P||typeof modal!=='function')return;const p=P[1];
  modal('<button class="xbtn" onclick="cosMenu(\'mod\')">✕</button><h3>🎨 '+P[0]+'</h3>'
  +'<div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#c98d22">'+p+' บาท</div>'
- +'<img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">'
+ +'<img loading="lazy" src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">'
  +'<p style="margin:8px 0 2px">1) สแกนโอน <b>'+p+' บาท</b> ตรงยอดเป๊ะ</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจอัตโนมัติ ของเข้าทันที</p>'
  +'<a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>'
  +'<label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>'
@@ -36675,7 +36681,7 @@ setInterval(()=>{try{const e=document.querySelector('#modal .dlt');if(e){const d
 const buyModal=(pk,name,p)=>{if(typeof modal!=='function')return;
  modal('<button class="xbtn" onclick="cosMenu(\'mod\')">✕</button><h3>🎨 '+name+'</h3>'
  +'<div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#c98d22">'+p+' บาท</div>'
- +'<img src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">'
+ +'<img loading="lazy" src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">'
  +'<p style="margin:8px 0 2px">1) สแกนโอน <b>'+p+' บาท</b> ตรงยอดเป๊ะ</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจอัตโนมัติ ของเข้าทันที</p>'
  +'<a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>'
  +'<label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>'
