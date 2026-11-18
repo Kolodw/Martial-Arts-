@@ -37225,6 +37225,27 @@ try{END.game.splice(0,0,['lk_seal','S','ปิดรอยรั่ว คืน
  END.game.push(['lk_world','A','โลกทั้งใบกลายเป็นเกม'],['lk_code','A','หนีเข้าไปในโค้ดกับคนที่รัก'],['br_crown','A','ราชาแบทเทิลรอยัล'],['br_gift','A','ผู้ชนะสองคนคนแรกในประวัติศาสตร์'],['dt_true','A','ความรักที่ระบบไม่ได้เขียน'],['gc_whale','B','SSR ครบห้า'],['gc_quit','B','เลิกกาชาได้'],['hr_last','B','ใช้จุดเซฟจนหมด'],['lk_save','B','ช่วยครอบครัวจากเควสหลัก'],['lk_rest','B','กู้คนที่ถูกลบกลับมา'],['dt_route','B','พิชิตเป้าหมายตามบท'],['br_cold','C','ชนะด้วยการยิงเพื่อน'],['gc_debt','C','ถูกระบบยึดทรัพย์'],['dt_fail','C','โดนบทลงโทษเกมจีบ'],['lk_fail','C','เควสล้มเหลว'],['lk_scar','C','ปิดรอยรั่วไม่สนิท'])}catch(e){console.error('b19 end',e)}
 window._wld19={ids:['gn_roll','br_season','br_champ','gc_pull','gc_debt','dt_ev','dt_fail','hr_ev','lk_npc','lk_item','lk_quest','lk_qstep','lk_qfail','lk_del','lk_law','lk_fix','lk_end0','lk_end'],Y,brRun,dtStart,lk};
 })()}catch(e){console.error('block19',e)}
+// ฉายา "ผู้เล่นเลเวลสูงสุด" (t_w7 ชุดโลกระบบเกม): เอฟเฟกต์กลิตช์ทั้งป้าย
+try{(function(){const st=document.createElement('style');st.textContent=`
+.ptm-w7{animation:w7Gl 3.2s steps(1) infinite;will-change:transform}
+.ptm-w7 .zqx{animation:none!important;left:0!important;width:100%!important;background:repeating-linear-gradient(0deg,rgba(255,255,255,.16) 0 1px,transparent 1px 3px)!important;mix-blend-mode:overlay}
+.ptm-w7 .zqx::after{content:"";position:absolute;left:0;right:0;height:28%;top:-30%;background:linear-gradient(90deg,rgba(255,40,200,.75),rgba(40,255,240,.75));mix-blend-mode:screen;animation:w7Bar 3.2s steps(1) infinite}
+.ptm-w7 .zqt{position:relative;animation:w7Tx 3.2s steps(1) infinite}
+.ptm-w7::before,.ptm-w7::after{animation:w7Px .9s steps(2) infinite!important}
+@keyframes w7Gl{0%,8%,14%,47%,53%,78%,100%{transform:none;filter:none;clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 50%,calc(100% - 10px) 100%,10px 100%,0 50%)}
+ 9%{transform:translateX(-3px) skewX(-8deg);filter:hue-rotate(60deg) saturate(1.6)}
+ 11%{transform:translateX(4px);clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 38%,0 38%)}
+ 12%{transform:translateX(-2px);clip-path:polygon(0 52%,100% 52%,calc(100% - 10px) 100%,10px 100%)}
+ 48%{transform:translate(2px,-1px);filter:invert(.15) hue-rotate(-40deg)}
+ 50%{transform:translateX(-5px) skewX(10deg);clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 60%,0 60%)}
+ 79%{transform:translateX(3px);filter:contrast(1.6) hue-rotate(120deg)}}
+@keyframes w7Tx{0%,8%,14%,47%,53%,78%,100%{text-shadow:none;transform:none}
+ 9%,48%{text-shadow:-2px 0 #ff2bd6,2px 0 #2bf7ff;transform:translateX(1px)}
+ 11%,50%{text-shadow:3px 0 #ff2bd6,-3px 0 #2bf7ff;transform:translateX(-2px)}
+ 12%,79%{text-shadow:-1px 1px #ff2bd6,1px -1px #2bf7ff;transform:translateX(1px)}}
+@keyframes w7Bar{0%,8%,14%,47%,53%,78%,100%{top:-30%}9%{top:18%}11%{top:62%}12%{top:36%}48%{top:70%}50%{top:8%}79%{top:46%}}
+@keyframes w7Px{0%{opacity:1}50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.ptm-w7,.ptm-w7 .zqt,.ptm-w7 .zqx::after{animation:none!important}}`;document.head.appendChild(st)})()}catch(e){}
 </script>
 </body>
 </html>
