@@ -40134,6 +40134,49 @@ try{const j=await api('rrclaim',{pn,amt:am,tm});
  const E={nomatch:'❌ ไม่พบรายการโอนที่ตรงกัน ตรวจชื่อบัญชี ยอด และเวลาให้ตรงกับสลิป (หรือแอดมินยังไม่ได้กดยืนยันยอดนั้น)',many:'⚠️ ข้อมูลตรงกับหลายรายการ ติดต่อแอดมินพร้อมสลิปครับ',active:'⚠️ เครื่องเก่ายังเปิดเล่นอยู่ ปิดเกมในเครื่องนั้นสักพักแล้วลองใหม่ หรือติดต่อแอดมิน',rate:'⏳ ลองหลายครั้งเกินไป รอสักครู่แล้วลองใหม่',input:'⚠️ กรอกข้อมูลไม่ครบ',id:'⚠️ ไม่พบรหัสเครื่องนี้ ลองรีเฟรชเกมแล้วทำใหม่'};
  m.textContent=E[j&&j.err]||'ไม่สำเร็จ ลองใหม่อีกครั้ง'}catch(e){m.textContent='ต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่อีกครั้ง'}g.disabled=false};
 })()}catch(e){console.error('block35',e)}
+
+// ---- กันเซฟ/ตั๋วหาย: ชวนผูก Google หลังซื้อของ · เตือน iPhone ให้เพิ่มลงหน้าจอโฮม · เซฟคลาวด์ถี่ขึ้น + เตือนเมื่อค้าง ----
+try{(()=>{
+const DAY=864e5,ua=navigator.userAgent||'';
+const IOS=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const SA=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+const INAPP=/FBAN|FBAV|FB_IAB|FBIOS|Instagram|Line\/|TikTok|musical_ly|Messenger|MicroMessenger/i.test(ua);
+if(!LS.get('murim_fs35',0))LS.set('murim_fs35',Date.now());
+const hasValue=()=>{try{const R=window._RR;if(R&&R.c>0)return true;return typeof V!=='undefined'&&V&&(V.u||V.e1>Date.now()||V.e2>Date.now())}catch(e){return false}};
+async function showProtect(why){
+ if(modalOpen)return false;
+ let linked=false;try{const st=await profStat();linked=!!(st&&st.g)}catch(e){}
+ if(modalOpen)return false;
+ LS.set('murim_prot',Date.now());
+ const g=!linked&&typeof onlineOK!=='undefined'&&onlineOK,h=IOS&&!SA&&!INAPP,a=INAPP;
+ if(!g&&!h&&!a)return false;
+ let x='<button class="xbtn" onclick="closeM()">✕</button><h3>🛡️ กันเซฟและตั๋วหาย</h3>';
+ x+='<p class="tag2">เบราว์เซอร์บางตัวลบข้อมูลเว็บเองเมื่อไม่ได้เปิดนานๆ ทำให้ตัวละคร ตั๋วสุ่ม และ VIP หายได้ ทำตามนี้เพื่อกันไว้</p>';
+ if(g)x+='<div class="b35"><b>1) ผูกบัญชี Google</b> <small>(ได้ผลที่สุด)</small><p class="tag2" style="margin:2px 0 6px">ตั๋วสุ่ม VIP และเซฟคลาวด์จะผูกกับบัญชี เปลี่ยนเครื่องหรือล้างข้อมูลแล้วล็อกอินก็กลับมา</p><div id="gBox"></div></div>';
+ if(h)x+='<div class="b35"><b>'+(g?'2':'1')+') เพิ่มเกมลงหน้าจอโฮม</b><p class="tag2" style="margin:2px 0 0">Safari ลบข้อมูลเว็บหลังไม่ได้เปิด 7 วัน แต่ไอคอนบนหน้าจอโฮมไม่โดนกฎนี้<br>แตะปุ่มแชร์ ⬆️ ใน Safari → <b>เพิ่มที่หน้าจอโฮม</b> แล้วเปิดเกมจากไอคอนนั้น<br><b>⚠️ ทำหลังผูก Google</b> เพราะไอคอนใหม่เป็นที่เก็บข้อมูลแยกจาก Safari ต้องล็อกอิน Google ที่นั่นอีกครั้งเพื่อดึงเซฟกลับมา</p></div>';
+ if(a)x+='<div class="b35"><b>เปิดในเบราว์เซอร์ปกติ</b><p class="tag2" style="margin:2px 0 0">ตอนนี้เปิดผ่านแอปแชท/โซเชียล ซึ่งเก็บข้อมูลไม่ถาวร แตะเมนู ⋯ แล้วเลือก "เปิดในเบราว์เซอร์"</p></div>';
+ x+='<button class="gbtn" style="width:100%;margin-top:8px" onclick="closeM()">รับทราบ</button><button class="gbtn" style="width:100%;margin-top:6px;opacity:.7" onclick="LS.set(\'murim_prot\',Date.now()+30*864e5);closeM()">ไม่ต้องเตือน 30 วัน</button>';
+ modal(x,'protect');
+ if(g){try{gBoxFill()}catch(e){}}
+ return true}
+window.showProtect=showProtect;
+const st=document.createElement('style');st.textContent='.b35{background:#211d2a;border-radius:8px;padding:8px 10px;margin:8px 0;font-size:14px}';document.head.appendChild(st);
+// ซื้อ/ได้ตั๋วเพิ่ม (ตัวเลขตั๋วในเครื่องเพิ่มขึ้น) → ชวนผูกบัญชีทันที + เซฟคลาวด์ทันที
+const rrWatch=()=>{try{const R=window._RR;if(!R||R.c==null)return;const seen=+LS.get('murim_rrseen',-1);if(seen>=0&&R.c>seen){LS.set('murim_protnow',1);try{cloudAuto(true)}catch(e){}}if(R.c!==seen)LS.set('murim_rrseen',R.c)}catch(e){}};
+window._rrWatch=rrWatch;setInterval(rrWatch,5000);
+setInterval(()=>{try{
+ if(typeof S==='undefined'||!S||!S.alive||modalOpen||typeof onlineOK==='undefined'||!onlineOK)return;
+ const now=Date.now(),last=+LS.get('murim_prot',0)||0,fs=+LS.get('murim_fs35',now)||now;
+ if(last>now)return; // กดไม่ต้องเตือน 30 วัน
+ if(LS.get('murim_protnow',0)&&now-last>12*3600e3){LS.del('murim_protnow');showProtect('buy');return}
+ if(hasValue()&&now-last>3*DAY&&now-fs>600e3){showProtect('val');return}
+ if(IOS&&!SA&&!INAPP&&now-last>7*DAY&&now-fs>DAY){showProtect('ios')}
+}catch(e){}},25000);
+// เซฟคลาวด์ถี่ขึ้น (ทุก ~5 นาทีระหว่างเล่น) + เตือนถ้าเซฟคลาวด์ค้างเกิน 2 วัน
+setInterval(()=>{try{if(typeof S!=='undefined'&&S&&S.alive&&typeof onlineOK!=='undefined'&&onlineOK){cloudAuto(false);
+ const t=+LS.get('murim_cloudT',0)||0,now=Date.now();
+ if(t&&now-t>2*DAY&&now-(+LS.get('murim_cwarn',0)||0)>DAY){LS.set('murim_cwarn',now);toast('☁️ เซฟคลาวด์ไม่ได้อัปเดตมาหลายวัน ลองเปิดเมนูโปรไฟล์เพื่อเช็ค')}}}catch(e){}},300000);
+})()}catch(e){console.error('block36',e)}
 </script>
 </body>
 </html>
