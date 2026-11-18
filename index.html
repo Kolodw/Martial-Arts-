@@ -36084,7 +36084,7 @@ const free=()=>!(choice._cur||modalOpen);
 const later=fn=>{const t=()=>{if(!S||!S.alive)return;if(choice._cur||modalOpen){setTimeout(t,600);return}try{fn()}catch(e){console.error(e)}};setTimeout(t,500)};
 const era=()=>((S.flags&&S.flags.eternal)||(S.kalpa&&S.kalpa.n>0))?'k':S.xt?'g':S.xian?'x':'y';
 const ER={y:{a:'วิชายุทธ์',d:'ลานฝึกร้างที่ไม่มีใครเหลือ'},x:{a:'วิถีบำเพ็ญ',d:'ยอดเขาเซียนที่ไร้ผู้บำเพ็ญ'},g:{a:'กฎเต๋า',d:'ปราสาทเทพที่ว่างเปล่า'},k:{a:'วัฏจักร',d:'ซากจักรวาลที่เงียบงัน'}};
-const go=fn=>{if(!S||S._q16)return;S._q16=1;later(()=>{S._q16=0;if(ok())fn()})};
+const go=(fn,maj)=>{if(!S||S._q16)return;if(!maj&&S.age-(S._b16y==null?-99:S._b16y)<2)return;S._q16=1;S._b16y=S.age;later(()=>{S._q16=0;if(ok())fn()})};
 const dieBy=c=>{S.deathCause=c;try{checkDeath()}catch(e){console.error(e)}};
 const artAdd=(t)=>{const a=newArt(t);Array.prototype.push.call(S.arts,a);return artHtml(a)};
 const nextP=()=>{const ri=Math.min(6,realmIdx());return REALMS[ri+1]||REALMS[REALMS.length-1]};
@@ -36234,16 +36234,16 @@ function emMem(){const E=S.em;E.memD=1;
   {t:'🧠 รับไว้ทั้งหมด',s:'พลังเพิ่ม · ปัญญาเพิ่ม · ใจหม่นหมอง',f(){S.power+=Math.round(E.pk*.04);S.int+=10;joy(-8);log('🧠 คุณทนความปวดหัวไว้ได้ ตื่นมาพร้อมความเข้าใจที่ลึกกว่าเดิมมาก แต่ฝันร้ายตามมาหลายสัปดาห์','epic')}},
   {t:'🧘 วางความทรงจำ ใช้ชีวิตวันนี้',s:'ใจสงบ · ฝึกตามทันเร็วขึ้นเล็กน้อย',f(){joy(12);E.rate=Math.min(.2,E.rate+.02);S.karma+=3;log('🧘 คุณนั่งมองพระอาทิตย์ขึ้นแล้วปล่อยให้ความทรงจำไหลผ่านไป — ไม่ต้องจำทุกอย่างเพื่อเป็นตัวเอง')}}])}
 function emYear(){if(!ok())return;let E=S.em;
- if(emElig()&&S.age>=(E?E.nx:0)&&Math.random()<.3){go(()=>{if(emElig())emOffer()});return}
+ if(emElig()&&S.age>=(E?E.nx:0)&&Math.random()<.3){go(()=>{if(emElig())emOffer()},1);return}
  if(!E||!E.n)return;
  if(S.age>=5&&total()<E.pk*.92){const gap=E.pk-total();S.power+=Math.round(Math.max(25,gap*E.rate));S.qi=+(S.qi+.2).toFixed(1)}
  const raw=rawRealm();if(S.rcap!=null&&raw>S.rcap&&raw<E.pkR)S.rcap=raw;
- if(S.rcap!=null&&raw>S.rcap&&raw>=E.pkR&&!E.shDone&&S.age-(E.shY||-99)>=3){go(()=>{if(S.em&&!S.em.shDone)emShadow()});return}
+ if(S.rcap!=null&&raw>S.rcap&&raw>=E.pkR&&!E.shDone&&S.age-(E.shY||-99)>=3){go(()=>{if(S.em&&!S.em.shDone)emShadow()},1);return}
  if(E.thief&&E.thief.p)E.thief.p=Math.round(E.thief.p*1.04);
  if(!E.tomb&&S.age-(E.rbY||S.age)>=10&&Math.random()<.08){E.tomb=2;E.thief={n:anyName(S.gender),p:Math.round(Math.max(200,E.pk*.45)),met:0};log(`⚰️ ข่าวลือแพร่มาว่าสุสานจักรพรรดิโบราณถูกเปิดแล้ว — โดยคนชื่อ <b>${esc(E.thief.n)}</b>`,'bad')}
  if(E.thief&&E.thief.met>=3&&S.age-(E.thY||0)>=6&&Math.random()<.3){E.thY=S.age;const Th=E.thief;go(()=>{if(!S.em.thief)return;const w=fight(Th.n,Math.round(Th.p));if(w){S.em.thief=null;S.em.tomb=3;S.power+=Math.round(S.em.pk*.06);log(`⚔️ ${esc(Th.n)}บุกมาหาคุณถึงที่ — แต่ท่าที่ลอกมาไม่มีวันเหนือกว่าต้นฉบับ`,'epic')}else{S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.35));log(`⚔️ ${esc(Th.n)}บุกมาด้วยท่าของคุณเอง ฟาดคุณจนบาดเจ็บหนัก`,'bad')}});return}
  if(S.age<12||Math.random()>.14)return;
- if(E.n>=5&&!S.flags.emFinal&&S.age>=25&&S.age-(E.fnY||-99)>=5&&Math.random()<.4){go(()=>{if(!S.flags.emFinal)emFinal()});return}
+ if(E.n>=5&&!S.flags.emFinal&&S.age>=25&&S.age-(E.fnY||-99)>=5&&Math.random()<.4){go(()=>{if(!S.flags.emFinal)emFinal()},1);return}
  const L=[];if(!E.tomb&&S.age>=16)L.push(emTomb);if(E.thr&&!E.thr.met&&!E.thr.done&&S.age>=18)L.push(emThrone);if(E.wp&&!E.wp.got&&S.age>=14)L.push(emWeapon);if(E.thief)L.push(emThief);if(E.love&&!E.love.met&&S.age>=17)L.push(emLove);if(E.gold&&S.age>=12)L.push(emGold);if(E.foes.length)L.push(emFoe);if(E.ally&&!E.ally.met&&S.age>=18)L.push(emAlly);if(!E.memD)L.push(emMem);
  if(L.length){const f=ch(L);go(()=>{if(S.em&&S.em.n)f()})}}
 
@@ -36362,12 +36362,41 @@ function emFinWin(){const E=S.em;
   {t:'🌌 ก้าวข้ามวงจรไปเลย',s:'ฉากจบสูงสุดของสายนี้',noFate:true,f(){S.flags.emFinal=1;keyAdd('ชนะตัวเองทุกชาติ — ก้าวพ้นการเกิดและตาย');bigFx('ผู้อยู่เหนือการเกิดและตาย','ไม่มีชาติหน้า เพราะไม่จำเป็นต้องมี','#ffd34d');setTimeout(()=>dieBy('ชนะตัวเองทุกชาติในวันสิ้นรัชกาล ก้าวพ้นวงจรการเกิดและตาย กลายเป็นผู้อยู่เหนือการเกิดและตาย'),1600)}},
   {t:'🏯 อยู่ต่อในโลกนี้',s:'อายุขัย +300 · พลังทุกชาติรวมเป็นหนึ่ง · ปิดทางเกิดใหม่',f(){S.flags.emFinal=1;S.flags.emStay=1;E.lock=1;S.lifespan+=300;S.power+=Math.round(E.pk*.5);S.rcap=rawRealm();S.fame+=fameR(800);keyAdd('ชนะตัวเองทุกชาติ แล้วเลือกอยู่ต่อในโลกนี้');bigFx('ราชันผู้ไม่สิ้นรัชกาล','','#ffd34d');log('🏯 คุณเดินออกจากลานศิลาตอนรุ่งสาง — ไม่มีอะไรในโลกนี้ที่คุณต้องกลัวอีก','myth')}}])}
 
+// ----- v4: สมุดชะตา · จังหวะเหตุการณ์ · สรุปตอนจบ -----
+const FEND=[['ft_cut','📡','ตัดสายด้วยมือตัวเอง','ปฏิเสธเสียงจากอนาคตจนถึงที่สุด'],['ft_bloom','📡','อนาคตที่ไม่ต้องส่งสาย','ช่วยโลกจนอนาคตไม่ต้องขอความช่วยเหลืออีก'],['ft_merge','📡','หลอมรวมกับตัวเองในอนาคต','สืบหาผู้ส่ง... บางทีอาจเป็นใบหน้าที่คุ้นเคย'],['ft_slain','📡','ผู้ฆ่าสิ่งที่กลืนมนุษยชาติ','ผู้ส่งบางตนไม่ใช่มนุษย์'],['ft_pulled','📡','ตอบรับเสียงเรียก','ปล่อยให้อนาคตมืดสนิท แล้วฟังเสียงสุดท้าย'],['ft_loop','📡','ผู้แต่งคัมภีร์ที่ตัวเองยืมมา','คัมภีร์จากอนาคตเล่มหนึ่ง ลายมือผู้แต่งถูกขีดทิ้ง...'],['ft_rv','📡','ผู้ลบอนาคตของศัตรู','มีคนอื่นที่ได้ยินเสียงจากอนาคตเหมือนกัน'],['ft_rv2','📡','รวมสองอนาคตเป็นหนึ่ง','ศัตรูจากอนาคตอาจไม่ใช่ศัตรูเสมอไป'],
+ ['emShadow','👑','ชนะเงาตัวเอง','เกิดใหม่แล้วกลับไปที่คอขวดเดิม'],['emShadow2','👑','ต่อรองกับเงาตัวเอง','ไม่ใช่ทุกศึกต้องใช้ดาบ'],['emLove','👑','ด้ายแดงข้ามความตาย','พาชื่อคนที่รักติดวิญญาณไปด้วย'],['emLeg','👑','ถ่ายทอดแล้วจากไป','ที่ยอดสุดไม่จำเป็นต้องเกิดใหม่'],['emTrans','👑','ทะลวงด้วยหลายชาติ','เกิดใหม่ให้มากพอ หรือพาความลับติดตัวไป'],['emFinal','👑','ผู้อยู่เหนือการเกิดและตาย','ตายด้วยเจตนาครบห้าชาติ'],['emStay','👑','ราชันผู้ไม่สิ้นรัชกาล','ชนะวันสิ้นรัชกาลแล้วเลือกอีกทาง']];
+function fbRec(){try{if(!S||!S.flags)return;const L=LS.get('murim_b16end',{})||{};let ch2=0;FEND.forEach(e=>{if(S.flags[e[0]]&&!L[e[0]]){L[e[0]]=1;ch2=1}});if(ch2)LS.set('murim_b16end',L);return L}catch(e){return{}}}
+function fbEnds(){const L=fbRec()||{};const g=FEND.filter(e=>L[e[0]]).length;return`<div class="item"><b>🏁 ฉากจบที่ค้นพบ ${g}/${FEND.length}</b><br>`+FEND.map(e=>L[e[0]]?`${e[1]} <b>${e[2]}</b>`:`<span style="opacity:.6">${e[1]} ??? — <i>${e[3]}</i></span>`).join('<br>')+`</div>`}
+function fbBar(v,c){return`<div style="height:6px;border-radius:9px;background:#8883;overflow:hidden;margin:3px 0 6px"><div style="width:${cl(v,0,100)}%;height:100%;background:${c}"></div></div>`}
+window.openFateBook=function(){if(!S)return;const T=S.ft,E=S.em;let h='<button class="xbtn" onclick="closeM()">✕</button><h3>📜 สมุดชะตา</h3>';
+ if(T){const P={rx:'🌌 รับสัญญาณ',seek:'🔎 สืบหาผู้ส่ง',cut:'🔇 ตัดสายแล้ว'}[T.path]||'ยังไม่ตัดสินใจ';
+  h+=`<div class="item"><b>📡 สายใยหมื่นปี</b> — ${T.end?'<span class="tag2">จบแล้ว: '+((FEND.find(e=>e[0]==='ft_'+T.end)||[0,0,T.end])[2])+'</span>':P}<br>ฝันแล้ว ${T.dr} ครั้ง${T.who?` · ผู้ส่ง: <b>${({self:'ตัวคุณในอนาคต',last:'ผู้รอดชีวิตคนสุดท้าย',eat:'สิ่งที่กลืนมนุษยชาติ',prev:'ตัวคุณที่เกิดใหม่มาหมื่นปี'})[T.who]}</b>`:''}
+  <br>🌍 อนาคตมีผู้รอด ${T.hum}%${fbBar(T.hum,'#5fd38a')}🩻 ร่างสึก ${Math.round(T.bd)}%${fbBar(T.bd,'#e0565b')}👀 ผู้คนสงสัย ${Math.min(100,Math.round(T.sus))}%${fbBar(T.sus,'#e0b04d')}
+  ⚡ ร่างอนาคตเหลือ <b>${3-(T.av||0)}</b>/3${T.sc?` · 📖 ถือคัมภีร์《${esc(T.sc)}》`:''}${T.rv?`<br>🌑 ศัตรูจากอนาคต: <b>${esc(T.rv.n)}</b> (ขั้น ${T.rv.st}/3)`:''}
+  <br><span class="tag2">ยิ่งช่วยโลก อนาคตยิ่งดี แต่วิชาที่ยืมยิ่งอ่อน · ร่างสึก 90% จะพังทลาย</span></div>`}
+ if(E&&(E.n||(E.ttl&&E.ttl.length))){h+=`<div class="item"><b>👑 จักรพรรดิผู้ตั้งใจตาย</b> — ชาติที่ ${E.n+1}${E.lock?' · 🔒 สาบานไม่เกิดใหม่':''}
+  <br>🩸 ฉายา: ${(E.ttl||[]).map(k=>TTL[k][0]+' '+TTL[k][1]).join(' · ')||'-'}${E.ttl&&E.ttl.length>=3?` <span class="tag2">${E.tUse?'ใช้แล้วในชาตินี้':'ขานได้ในศึกเป็นตาย'}</span>`:` <span class="tag2">ครบ 3 จึงขานได้</span>`}
+  <br>💪 พลังสูงสุดชาติก่อน ${fmt(E.pk||0)} · ตอนนี้ ${fmt(Math.round(total()))}${fbBar(total()/Math.max(1,E.pk)*100,'#b48cff')}
+  🪞 เงาที่คอขวด: ${E.shDone?'ผ่านแล้ว':'ยังรออยู่'}${E.wp?`<br>🗡️ ${esc(E.wp.n)}: ${E.wp.got?'อยู่ในมือ':'รอมา '+E.wp.w+' ชาติ'}`:''}${E.thief?`<br>⚰️ คนชิงสุสาน: <b>${esc(E.thief.n)}</b>`:''}${E.foes&&E.foes.length?`<br>🔥 ศัตรูชาติก่อน: ${E.foes.map(f=>esc(f.n)).join(', ')}`:''}${E.thr&&!E.thr.done?`<br>⚰️ บัลลังก์: ${esc(E.thr.n)} ${E.thr.met?'(ยังค้างคา)':''}`:''}
+  <br>👑 วันสิ้นรัชกาล: ${S.flags.emFinal?'ผ่านแล้ว':E.n>=5?'<b>พร้อมแล้ว</b> — รอคืนไร้จันทร์':`ตายด้วยเจตนาอีก ${5-E.n} ชาติ`}</div>`}
+ else if(!T)h+='<div class="item">ชาตินี้ยังไม่มีชะตาพิเศษ — 📡 สายใยหมื่นปี โอกาส 1% ต่อชีวิต · 👑 เปิดเมื่อถึงขั้นสูงสุดหรือติดคอขวดขั้นสูง</div>';
+ h+=fbEnds();modal(h,'fatebook')};
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(S&&(S.ft||S.em)){const g=document.querySelector('#modal .mgrid');if(g&&!g.querySelector('.fbk')){const b=document.createElement('button');b.className='opt fbk';b.onclick=()=>openFateBook();const T=S.ft,E=S.em;b.innerHTML=`📜 สมุดชะตา<small>${T&&!T.end?'📡 ':''}${E&&E.n?'👑 ชาติที่ '+(E.n+1):''}</small>`;g.insertBefore(b,g.children[1]||null)}}}catch(e){}return r}}
+{const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);try{if(S&&(S.ft||S.em)&&!S.mw){const L0=Object.assign({},LS.get('murim_b16end',{})||{});fbRec();const L=LS.get('murim_b16end',{})||{};const nw=FEND.filter(e=>L[e[0]]&&!L0[e[0]]);const T=S.ft,E=S.em;
+  let t=`<div class="item b16sum" style="border:1px solid #b48cff88"><b>📜 ชะตาของชาตินี้</b>`;
+  if(T)t+=`<br>📡 ${T.end?'จบที่ <b>'+((FEND.find(e=>e[0]==='ft_'+T.end)||[0,0,T.end])[2])+'</b>':{rx:'รับสัญญาณ',seek:'สืบหาผู้ส่ง',cut:'ตัดสาย'}[T.path]||'ไม่ได้ตอบรับ'} · ฝัน ${T.dr} ครั้ง · อนาคตมีผู้รอด ${T.hum}%`;
+  if(E&&(E.n||(E.ttl&&E.ttl.length)))t+=`<br>👑 ชาติที่ ${E.n+1} · ฉายา ${(E.ttl||[]).map(k=>TTL[k][0]).join('')||'-'}`;
+  if(nw.length)t+=`<br>✨ ค้นพบฉากจบใหม่: ${nw.map(e=>'<b>'+e[2]+'</b>').join(', ')}`;
+  const lk=FEND.filter(e=>!L[e[0]]);if(lk.length){const h1=ch(lk);t+=`<br><span class="tag2">🔮 ยังมีทางที่ไม่เคยเดิน: <i>${h1[3]}</i> (${FEND.length-lk.length}/${FEND.length})</span>`}
+  t+='</div>';const box=$('end');if(box&&!box.querySelector('.b16sum')){const at=box.querySelector('.item');if(at)at.insertAdjacentHTML('beforebegin',t);else box.insertAdjacentHTML('beforeend',t)}}}catch(e){console.error('b16 end',e)}return r}}
+
 // ---------------- ต่อเข้าระบบเดิม ----------------
-{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive){ftYear();emYear()}}catch(e){console.error('blk16',e)}return r}}
+{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{if(S&&!S.mw)S.ftR=Math.random()<.01?R(14,35):0}catch(e){}return r}}
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive){emYear();ftYear()}}catch(e){console.error('blk16',e)}return r}}
 function ftYear(){if(!ok()||S.age<14)return;let T=S.ft;
- if(!T){if(S.age>62)return;const p=.005+(S.hp<S.maxHp*.3?.012:0)+cl(((S.int||0)-60)/9000,0,.01);if(Math.random()>p)return;go(()=>{if(!S.ft){S.ft=FT0();ftFirst()}});return}
+ if(!T){if(!S.ftR||S.age<S.ftR)return;go(()=>{if(!S.ft){S.ft=FT0();bigFx('📡 สายใยหมื่นปี','ชะตา 1% — มีเพียงหนึ่งในร้อยชีวิตที่ได้ยินเสียงนี้','#6fd8ff');ftFirst()}},1);return}
  if(T.end)return;
- if(!T.path){if(S.age-(T.re||0)>=3){T.re=S.age;go(ftFirst)}return}
+ if(!T.path){if(S.age-(T.re||0)>=3){T.re=S.age;go(ftFirst,1)}return}
  const dk=(S.karma||0)-T.k0;T.k0=S.karma||0;const nk=Math.max(0,(S.kids||0)-T.kd);T.kd=S.kids||0;
  T.hum=cl(Math.round(T.hum+cl(dk*.25,-6,6)+nk*2),0,100);T.bd=Math.max(0,T.bd-3);T.sus=Math.max(0,T.sus-1);
  if(!T.rv&&!T.rvD&&T.dr>=3&&Math.random()<.06){T.rvD=1;const pe=peers.filter(p=>p&&p.alive&&p.age>=14);T.rv={n:pe.length?ch(pe).name:anyName(S.gender==='ชาย'?'หญิง':'ชาย'),p:Math.round(total()*.95),st:0};log(`🌑 มีข่าวลือถึงจอมยุทธ์ชื่อ <b>${esc(T.rv.n)}</b> ที่จู่ๆ ก็เก่งขึ้นแบบไม่มีใครอธิบายได้ — คุณรู้สึกขนลุกโดยไม่รู้สาเหตุ`,'bad')}
@@ -36386,9 +36415,9 @@ function ftYear(){if(!ok()||S.age<14)return;let T=S.ft;
  else if(T.sy>=30&&S.age-(T.deal||-99)>=15&&Math.random()<.12)ev=ftDeal;
  else if(T.sy>=15&&T.hum<45&&Math.random()<.1)ev=ftEdit;
  else{const p=T.path==='rx'?.3:T.path==='seek'?.22:.06;if(S.age>=(T.nx||0)&&Math.random()<p)ev=ftDream}
- if(ev)go(()=>{if(!S.ft||S.ft.end)return;ev()})}
+ if(ev)go(()=>{if(!S.ft||S.ft.end)return;ev()},[ftCollapse,ftPulled,ftBloom,ftReveal,ftPrev,ftScript].includes(ev))}
 {const _ql=questList;questList=function(){const L=_ql.apply(this,arguments);try{const T=S&&S.ft,E=S&&S.em;
- if(T&&T.path&&!T.end)L.unshift({k:'ft',ic:'📡',n:'สายใยหมื่นปี',p:`ฝันแล้ว ${T.dr} ครั้ง · ร่างสึก ${Math.round(T.bd)}% · อนาคตมีผู้รอด ${T.hum}%`,d:T.path==='seek'?'คุณกำลังสืบหาว่าใครส่งสัญญาณมา — ถามผู้ในฝันให้ครบเพื่อรู้ความจริง':T.path==='rx'?'ยิ่งช่วยโลกให้ดีขึ้น วิชาที่ยืมมาจะยิ่งอ่อนลง — เลือกให้ดี':'คุณตัดสายไว้แล้ว แต่ความฝันยังแทรกมาบ้าง'});
+ if(T&&T.path&&!T.end)L.unshift({k:'ft',ic:'📡',n:'สายใยหมื่นปี',p:`ฝันแล้ว ${T.dr} ครั้ง · ร่างสึก ${Math.round(T.bd)}% · อนาคตมีผู้รอด ${T.hum}%`,d:T.path==='seek'?'คุณกำลังสืบหาว่าใครส่งสัญญาณมา — ถามผู้ในฝันให้ครบเพื่อรู้ความจริง':T.path==='rx'?'ยิ่งช่วยโลกให้ดีขึ้น วิชาที่ยืมมาจะยิ่งอ่อนลง — ดูทั้งหมดที่ ☰ → 📜 สมุดชะตา':'คุณตัดสายไว้แล้ว แต่ความฝันยังแทรกมาบ้าง'});
  if(E&&E.n&&E.foes&&E.foes.length)L.unshift({k:'em',ic:'👑',n:'เงาของชาติก่อน',p:`ศัตรูที่ยังตามอยู่ ${E.foes.length} คน`,d:'คนที่คุณเคยกำจัดในชาติก่อนมีทายาทตามหา — ดวล เปิดใจ หรือหลบก็ได้'})}catch(e){}return L}}
 try{const add=(cat,arr)=>{const c=ACH.find(x=>x[0]===cat);if(!c)return;arr.forEach(a=>{if(ACH_ALL.some(b=>b.id===a.id))return;c[1].push(a);ACH_ALL.push(a)})};
  add('ผู้ข้ามมิติ',[
@@ -36403,7 +36432,7 @@ try{const add=(cat,arr)=>{const c=ACH.find(x=>x[0]===cat);if(!c)return;arr.forEa
   {id:'em_fin',n:'ผู้อยู่เหนือการเกิดและตาย',d:'ชนะตัวเองทุกชาติในวันสิ้นรัชกาล',r:3,c:()=>!!S.flags.emFinal},
   {id:'em_3',n:'ผู้ทะลวงด้วยหลายชาติ',d:'ทะลวงคอขวดด้วยความทรงจำจากการเกิดใหม่หลายครั้ง',r:3,c:()=>!!S.flags.emTrans}])}catch(e){}
 try{TTL_SP.splice(3,0,['ftbloom',()=>S.flags.ft_bloom,'ผู้เปลี่ยนอนาคตหมื่นปี'],['emtrans',()=>S.flags.emTrans,'จักรพรรดิผู้ทะลวงด้วยหลายชาติ'],['emfin',()=>S.flags.emFinal,'ผู้อยู่เหนือการเกิดและตาย'],['ftloop',()=>S.flags.ft_loop,'ผู้แต่งคัมภีร์จากหมื่นปี'])}catch(e){}
-window._blk16={ftScroll,ftScript,ftRv,emThrone,emWeapon,emFinal,emFinWin,ttlOf,TTL,bigFx,emPack,emShadow,emThief,emLove,emGold,ftLegend,ftPrev,ftYear,emYear,ftFirst,ftDream,ftDeal,ftEdit,ftSus,ftCollapse,ftBloom,ftPulled,ftReveal,emOffer,emWay,emRebirth,emForce,emTrans,emLegacy,emTomb,emFoe,emAlly,emMem,ftBorrow,ftTalk,FT0,EM0};
+window._blk16={fbRec,FEND,ftScroll,ftScript,ftRv,emThrone,emWeapon,emFinal,emFinWin,ttlOf,TTL,bigFx,emPack,emShadow,emThief,emLove,emGold,ftLegend,ftPrev,ftYear,emYear,ftFirst,ftDream,ftDeal,ftEdit,ftSus,ftCollapse,ftBloom,ftPulled,ftReveal,emOffer,emWay,emRebirth,emForce,emTrans,emLegacy,emTomb,emFoe,emAlly,emMem,ftBorrow,ftTalk,FT0,EM0};
 }catch(e){console.error('block16',e)}})();
 
 // ===================== 🌍 ชุดตกแต่งตามโลก 9 ชุด (กรอบ+ฉายา+ธีมแชท) + 🔥 ลดราคาประจำวัน · อยู่ในแท็บ "ยุคปัจจุบัน" =====================
