@@ -41213,3 +41213,25 @@ try{(()=>{const st=document.createElement('style');st.textContent='#title.nb #tS
 
 // QoL: ร้านตกแต่งหน่วง — การ์ดที่อยู่นอกจอไม่ต้องคำนวณ/วาดจนกว่าจะเลื่อนมาถึง
 try{const st=document.createElement('style');st.textContent='.cxs .grid>.card,.cxs>.card,.cxs .card.wide{content-visibility:auto;contain-intrinsic-size:auto 240px}.cxs .card.wide{contain-intrinsic-size:auto 150px}';document.head.appendChild(st)}catch(e){}
+// ============================================================
+// BLOCK 46: 🖥️ จอคอม — หน้าแรกอยู่กลางจอ · ปุ่มฝึกเป็นตารางเรียบ · เกาะแจ้งเตือนมุมขวาล่าง (ไม่บังฉาก)
+// ============================================================
+try{(()=>{
+const st=document.createElement('style');st.textContent=`
+body.desk #game .focus{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:6px;overflow:visible!important;-webkit-mask-image:none!important;mask-image:none!important;margin-top:8px}
+body.desk #game .focus .fc{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;white-space:normal;line-height:1.2;padding:6px 4px;min-height:48px;border-radius:12px;font-size:13px;transition:transform .12s,box-shadow .12s}
+body.desk #game .focus .fc small{display:block!important;font-size:10.5px;opacity:.7;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+body.desk #game .focus .fc:hover{transform:translateY(-2px);box-shadow:0 4px 0 var(--line)}
+body.desk #game .focus .tuPill{display:none!important}
+body.islDR:not(.islBottom):not(.islFloat) #isl{left:var(--islDX)!important;top:auto!important;bottom:22px!important}
+body.islDR:not(.islBottom):not(.islFloat) #islDots{left:var(--islDX)!important;top:auto!important;bottom:12px!important}
+#title.tMid{display:flex!important;flex-direction:column;justify-content:center;min-height:100vh}`;document.head.appendChild(st);
+function upd(){try{if(document.hidden)return;const b=document.body,g=document.getElementById('game'),R=document.getElementById('deskR');
+ const on=b.classList.contains('desk')&&g&&g.classList.contains('on')&&R&&R.offsetWidth>0;
+ if(on){const r=R.getBoundingClientRect();b.style.setProperty('--islDX',Math.round(r.left+r.width/2)+'px')}b.classList.toggle('islDR',!!on);
+ // หน้าแรกจอกว้าง: ถ้าเนื้อหาสั้น ให้อยู่กลางจอ
+ const T=document.getElementById('title');if(T){const wide=innerWidth>=700;if(!wide||!T.classList.contains('on')){T.classList.remove('tMid');return}
+  const kids=[...T.children].filter(e=>e.offsetHeight&&!['fixed','absolute'].includes(getComputedStyle(e).position));if(!kids.length)return;
+  const h=kids[kids.length-1].getBoundingClientRect().bottom-kids[0].getBoundingClientRect().top;T.classList.toggle('tMid',h<innerHeight*.72)}}catch(e){}}
+setInterval(upd,500);addEventListener('resize',upd);setTimeout(upd,200);
+})()}catch(e){console.error('block46',e)}
