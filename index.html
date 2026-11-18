@@ -6588,7 +6588,7 @@ const UA={eye:{ic:'👁️',d:'มองไกล ตรวจจับภัย
  soul:{ic:'👻',d:'สัมผัสวิญญาณ รู้ภัยล่วงหน้า',m:['วิชาสัมผัสวิญญาณ','ศาสตร์ถอดจิต','วิชาฟังเสียงลม'],x:['ศาสตร์แยกร่างวิญญาณ','วิญญาณจุติพันร่าง','ศาสตร์หยั่งรู้อนาคต']},
  summon:{ic:'🐉',d:'อัญเชิญหรือควบคุมอาวุธ ได้เปรียบในการต่อสู้',m:['เพลงกระบี่บินได้','วิชาควบคุมอาวุธลับ','วิชาเรียกสัตว์ป่า'],x:['กระบี่บินพันเล่ม','อัญเชิญสัตว์วิญญาณ','ศาสตร์ควบคุมหุ่นเทพ','อัญเชิญเงาบรรพชน']}};
 const UA_COUNT=Object.values(UA).reduce((a,v)=>a+v.m.length+v.x.length,0);
-function uaNew(minR){const k=ch(Object.keys(UA)),u=UA[k];let t;do{t=pickW(ART_TIER)}while(ART_TIER.indexOf(t.v)<(minR||0));const r=ART_TIER.indexOf(t.v);return{n:ch(S&&S.xian?u.x:u.m),tier:t.v.n+' · วิชาพิเศษ',b:Math.round(t.v.b*.45*(.8+Math.random()*.4)),r,p:t.p,fx:k}}
+function uaNew(minR){const k=ch(Object.keys(UA)),u=UA[k];minR=Math.min(minR||0,ART_TIER.length-1);let t,gd=0;do{t=pickW(ART_TIER)}while(ART_TIER.indexOf(t.v)<minR&&++gd<400);if(ART_TIER.indexOf(t.v)<minR)t={v:ART_TIER[ART_TIER.length-1],p:.0003};const r=ART_TIER.indexOf(t.v);return{n:ch(S&&S.xian?u.x:u.m),tier:t.v.n+' · วิชาพิเศษ',b:Math.round(t.v.b*.45*(.8+Math.random()*.4)),r,p:t.p,fx:k}}
 {const _na=newArt;newArt=function(minTier){if(S&&!S.beastMode&&Math.random()<.22){try{return uaNew(minTier||0)}catch(e){}}return _na.apply(this,arguments)}}
 function artFx(k){if(!S||!S.arts)return 0;let v=0;for(const a of S.arts){if(!a)continue;const f=Array.isArray(a.fx)?a.fx:[a.fx];if(f.includes(k))v+=(.5+(a.r||0)*.5)*[1,1.3,1.7,2.2][Math.min(3,a.lv||0)]}return v}
 // ผลของวิชาพิเศษ
