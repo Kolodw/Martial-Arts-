@@ -41210,3 +41210,6 @@ const st=document.createElement('style');st.textContent=`#feed>*{content-visibil
 })()}catch(e){console.error('block45',e)}
 // ===== แก้: หน้าแรกแบบคนเล่นใหม่บนจอกว้าง (>820px) ไม่มีปุ่มเริ่มเล่น =====
 try{(()=>{const st=document.createElement('style');st.textContent='#title.nb #tStartIn{display:block!important;max-width:520px;margin-left:auto;margin-right:auto}';document.head.appendChild(st)})()}catch(e){console.error('nbStart',e)}
+
+// QoL: ร้านตกแต่งหน่วง — การ์ดที่อยู่นอกจอไม่ต้องคำนวณ/วาดจนกว่าจะเลื่อนมาถึง
+try{const st=document.createElement('style');st.textContent='.cxs .grid>.card,.cxs>.card,.cxs .card.wide{content-visibility:auto;contain-intrinsic-size:auto 240px}.cxs .card.wide{contain-intrinsic-size:auto 150px}';document.head.appendChild(st)}catch(e){}
