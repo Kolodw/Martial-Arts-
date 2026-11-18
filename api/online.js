@@ -1584,7 +1584,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       return res.json({ l: out });
     }
     if (a === 'cload') {
-      const p0 = String(qOf(req).p || '').replace(/[^a-z0-9]/g, '').slice(0, 24), tk = String(qOf(req).tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
+      const p0 = String(qOf(req).p || '').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 24), tk = String(qOf(req).tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
       const kq = String(qOf(req).k || 'cs2'), dk = /^s[1-5]$/.test(kq) ? 'cs3:' + p0 + ':' + kq.slice(1) : 'cs2:' + p0;
       let [tok, d] = await pipe([['GET', 'ctok:' + p0], ['GET', dk]]);
       if (!tok || tok !== tk) return res.status(404).json({ err: 'notfound' });
@@ -1597,7 +1597,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     }
     if (a === 'acban') {
       if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'forbidden' });
-      const pre = String(qOf(req).p || '').replace(/[^a-z0-9]/g, '').slice(0, 24), on = String(qOf(req).on || '');
+      const pre = String(qOf(req).p || '').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 24), on = String(qOf(req).on || '');
       if (pre.length < 6) return res.json({ err: 'pre' });
       const ids = new Set(); if (pre.length >= 12) ids.add(pre);
       for (const hk of ['lm', 'om']) { let cur = '0', n = 0; do { const r = await cmd('HSCAN', hk, cur, 'MATCH', pre + '*', 'COUNT', 1000); cur = String(r[0]); for (let i = 0; i < r[1].length; i += 2) ids.add(r[1][i]); n++ } while (cur !== '0' && n < 400) }
@@ -1608,7 +1608,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     if (a === 'acmove') {
       // แอดมิน: ผู้เล่นเซฟหาย/เปลี่ยนเครื่อง → ย้ายตั๋วสุ่มเกิด · VIP · ของแต่งตัว · ประวัติการสนับสนุน · เซฟคลาวด์ จากไอดีเก่าไปไอดีใหม่
       if (!isAdmKey(qOf(req).key) && !isAdmKey(b.key)) return res.status(403).json({ err: 'admin' });
-      const f = String(qOf(req).f || b.f || '').replace(/[^a-z0-9]/g, '').slice(0, 24); let to = String(qOf(req).t || b.t || '').replace(/[^a-z0-9]/g, '').slice(0, 24);
+      const f = String(qOf(req).f || b.f || '').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 24); let to = String(qOf(req).t || b.t || '').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 24);
       if (!okId(f) || to.length < 6) return res.json({ err: 'id' });
       if (!okId(to) || !(await cmd('HEXISTS', 'lm', to)) && !(await cmd('HEXISTS', 'om', to))) { const found = new Set(); for (const hk of ['lm', 'om']) { let cur = '0', n = 0; do { const r = await cmd('HSCAN', hk, cur, 'MATCH', to + '*', 'COUNT', 1000); cur = String(r[0]); for (let i = 0; i < r[1].length; i += 2) found.add(r[1][i]); n++ } while (cur !== '0' && n < 400) } if (found.size !== 1) return res.json({ err: found.size ? 'many' : 'notfound', n: found.size }); to = [...found][0] }
       if (to === f) return res.json({ err: 'same' });
@@ -1637,7 +1637,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const bd = []; for (const k0 of BD_CATS.flatMap(c => ['d', 'w', 'm'].flatMap(p0 => [bdKeyP(p0, c, now), bdKeyP(p0, c, now, 1)]))) { const all = await cmd('ZRANGE', k0, 0, -1); for (const m of (all || [])) { try { const e0 = JSON.parse(m); if (String(e0.n || '').includes(nm)) bd.push(e0) } catch {} } }
         const allcl = ((await cmd('LRANGE', 'cheatlog', 0, 99)) || []).length;
         return res.json({ hit, cl, bd, nlive: ids.length, allcl }) }
-      const pre = String(qOf(req).p || '').replace(/[^a-z0-9]/g, '').slice(0, 16); if (pre.length < 4) return res.json({ err: 'pre' });
+      const pre = String(qOf(req).p || '').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 16); if (pre.length < 4) return res.json({ err: 'pre' });
       const found = new Set();
       for (const hk of ['lm', 'om']) { let cur = '0', n = 0; do { const r = await cmd('HSCAN', hk, cur, 'MATCH', pre + '*', 'COUNT', 1000); cur = String(r[0]); for (let i = 0; i < r[1].length; i += 2) found.add(r[1][i]); n++ } while (cur !== '0' && n < 400) }
       const sum = d0 => { try { d0 = zUnpack(d0); const d = JSON.parse(Buffer.from(d0, 'base64').toString('utf8')), S = d.S || {}; const K = S.key || [];
