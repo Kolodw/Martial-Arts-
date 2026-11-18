@@ -2948,4 +2948,4 @@ module.exports.payGrant = async (uid, pk, name, an) => {
   return P;
 };
 module.exports.isAdm = isAdmKey;
-module.exports.cmd = cmd; module.exports.okId = okId; module.exports.clean = clean;
+module.exports.cmd = cmd; module.exports.okId = okId; module.exports.clean = clean; module.exports.pipe = pipe;

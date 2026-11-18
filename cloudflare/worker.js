@@ -82,25 +82,32 @@ async function supHall(request, env, url) {
   const sum = async (u, since) => { const r = await db.prepare("SELECT COALESCE(SUM(amount_satang),0) s FROM orders WHERE uid=? AND " + ST + " AND paid_at>=?").bind(u, since).first(); return (r && r.s) || 0 };
   if (a === 'supjoin') {
     if (!okU || (await sum(uid, 0)) <= 0) return jr({ ok: 0, err: 'nopay' }, 403);
-    if (body.off) { await cmd('HDEL', 'supp', uid); return jr({ ok: 1 }) }
+    const dm = ['tier', 'mask', 'hide'].includes(String(body.dm || '')) ? String(body.dm) : 'tier';
+    if (body.off) { let p0 = null; try { p0 = JSON.parse(await cmd('HGET', 'supp', uid) || 'null') } catch (e) {} await cmd('HSET', 'supp', uid, JSON.stringify(Object.assign({}, p0 || {}, { hide: 1, dm, t: Date.now() }))); return jr({ ok: 1 }) }
     const n = h.clean(String(body.n || ''), 24).trim(); if (!n) return jr({ ok: 0, err: 'name' }, 400);
     const look = body.look && JSON.stringify(body.look).length < 1600 ? body.look : null;
-    await cmd('HSET', 'supp', uid, JSON.stringify({ n, sa: body.sa ? 1 : 0, look, t: Date.now() })); return jr({ ok: 1 });
+    await cmd('HSET', 'supp', uid, JSON.stringify({ n, dm, look, t: Date.now() })); return jr({ ok: 1 });
   }
   const scope = url.searchParams.get('s') === 'm' ? 'm' : 'a', since = scope === 'm' ? ms : 0, ck = 'supb:' + scope + ':' + (scope === 'm' ? ms : 0);
   let raw = null; try { raw = JSON.parse(await cmd('GET', ck) || 'null') } catch (e) {}
   if (!raw) {
-    const rs = await db.prepare("SELECT uid u, SUM(amount_satang) s FROM orders WHERE " + ST + " AND paid_at>=? GROUP BY uid HAVING s>0 ORDER BY s DESC LIMIT 50").bind(since).all();
+    const rs = await db.prepare("SELECT uid u, SUM(amount_satang) s FROM orders WHERE " + ST + " AND paid_at>=? GROUP BY uid HAVING s>0 ORDER BY s DESC LIMIT 200").bind(since).all();
     raw = (rs.results || []).map(r => [r.u, r.s]); try { await cmd('SET', ck, JSON.stringify(raw), 'EX', 300) } catch (e) {}
   }
-  const ids = raw.map(r => r[0]), ps = ids.length ? await cmd('HMGET', 'supp', ...ids) : [];
-  const rows = raw.map((r, i) => { let p = null; try { p = JSON.parse(ps[i] || 'null') } catch (e) {} return { r: i + 1, n: p ? p.n : '', look: p ? p.look : null, amt: p && p.sa ? Math.round(r[1] / 100) : null, me: r[0] === uid ? 1 : 0 } });
+  // ระดับผู้สนับสนุน (ตามยอดสะสมตลอดกาล) · โชว์ยอดแบบปิดบางส่วนเท่านั้น (ยอดเต็มไม่ออกจากเซิร์ฟเวอร์)
+  const TIER = [20000, 5000, 1000, 200, 1], tierOf = b => { for (let i = 0; i < TIER.length; i++) if (b >= TIER[i]) return 4 - i; return 0 };
+  const mask = b => { b = Math.max(0, Math.round(b)); const t = String(b); if (t.length <= 1) return t; const m = t[0] + 'x'.repeat(t.length - 1); return m.replace(/\B(?=(.{3})+(?!.))/g, ',') };
+  const ids = raw.map(r => r[0]), ps = ids.length ? await cmd('HMGET', 'supp', ...ids) : [], ac = ids.length ? await h.pipe(ids.map(u => ['GET', 'acp:' + u])) : [];
+  let allT = {}; if (ids.length) { try { if (scope === 'a') raw.forEach(r => allT[r[0]] = r[1]); else { const q = await db.prepare("SELECT uid u, SUM(amount_satang) s FROM orders WHERE " + ST + " AND uid IN (" + ids.map(() => '?').join(',') + ") GROUP BY uid").bind(...ids).all(); (q.results || []).forEach(x => allT[x.u] = x.s) } } catch (e) {} }
+  const rows = raw.map((r, i) => { let p = null, a2 = null; try { p = JSON.parse(ps[i] || 'null') } catch (e) {} try { a2 = JSON.parse((ac && ac[i]) || 'null') } catch (e) {}
+    const hide = !!(p && p.hide), dm = p && p.dm ? p.dm : (p && p.sa ? 'mask' : 'tier'), n = hide ? '' : (p && p.n ? p.n : (a2 && a2.n ? h.clean(String(a2.n), 24) : ''));
+    return { r: i + 1, n, look: !hide && p ? p.look : null, tier: tierOf(Math.round((allT[r[0]] || r[1]) / 100)), mask: !hide && dm === 'mask' ? mask(r[1] / 100) : null, amt: null, auto: !p ? 1 : 0, me: r[0] === uid ? 1 : 0 } });
   let me = null;
   if (okU) {
     const tot = await sum(uid, 0), mon = await sum(uid, ms); let p = null; try { p = JSON.parse(await cmd('HGET', 'supp', uid) || 'null') } catch (e) {}
     const mine = scope === 'm' ? mon : tot; let rank = 0;
     if (mine > 0) { const c = await db.prepare("SELECT COUNT(*) n FROM (SELECT uid, SUM(amount_satang) s FROM orders WHERE " + ST + " AND paid_at>=? GROUP BY uid HAVING s>?)").bind(since, mine).first(); rank = ((c && c.n) || 0) + 1 }
-    me = { tot: Math.round(tot / 100), mon: Math.round(mon / 100), rank, ok: tot > 0 ? 1 : 0, n: p ? p.n : '', sa: p ? p.sa : 0, joined: p ? 1 : 0 };
+    me = { tot: Math.round(tot / 100), mon: Math.round(mon / 100), rank, ok: tot > 0 ? 1 : 0, n: p ? p.n || '' : '', dm: p && p.dm ? p.dm : (p && p.sa ? 'mask' : 'tier'), hide: p && p.hide ? 1 : 0, joined: p && !p.hide ? 1 : 0, tier: tierOf(Math.round(tot / 100)) };
   }
   return jr({ rows, me, s: scope });
 }
