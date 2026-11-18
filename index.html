@@ -36870,6 +36870,140 @@ const st=document.createElement('style');st.textContent=`
 .pfttl{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}.pfttl button{background:none;border:2px solid transparent;border-radius:10px;padding:3px;cursor:pointer}.pfttl button.on{border-color:#f0c040}
 .pfcur{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 6px}.pfcur .gbtn{padding:3px 10px;margin-left:auto}`;document.head.appendChild(st);
 })()}catch(e){console.error('mod-grp',e)}
+
+// ============================================================
+// BLOCK 18: 🎮 ระบบเกมเจาะลึก — ดันเจี้ยนเสี่ยงดวง · สายสกิล · ฤดูกาลเซิร์ฟ · ไอเทมตำนาน · เพื่อนปาร์ตี้ · คู่แข่งอันดับ · คลาสซ่อน
+// ============================================================
+try{(()=>{
+const W=window._wld,W4=window._wld4;if(!W||!W4)return;
+const wOf=W.wOf,CAND=W4.CAND,END=W4.END;
+const mn=M=>MW_MIN[M.cc||'th']||MW_MIN.th,money=(M,k)=>mwToB(mn(M)*k,M);
+const HP=p=>{const d=Math.round(S.maxHp*p/100);S.hp=Math.max(1,S.hp-d);return d};
+const heal=p=>{S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*p/100))};
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const O=(t,f,s)=>mwC(t,f,s?{s}:undefined);
+const say=(t,c,fx)=>mwSay(t,c||'',fx);
+const EV=(id,go)=>MW_R.push({id,w:0,cd:0,c:()=>false,go});
+const die=(c,t)=>{S.deathCause=c;log(t,'bad',true);setTimeout(()=>{try{checkDeath()}catch(e){}},300)};
+const feed=t=>addFeed('ev',t,'sum');
+const later=fn=>{const t=()=>{if(!S||!S.alive)return;if(choice._cur||modalOpen)return setTimeout(t,500);try{fn()}catch(e){console.error(e)}};setTimeout(t,400)};
+const on=M=>M&&!M.kid&&S.alive&&wOf(M)==='game'&&M.GM;
+const G0=M=>M.GM;
+const cap=G=>(G.fin||(G.X&&G.X.hc==='null'))?99:60;
+const lvUp=(G,n)=>{const b=G.lv;G.lv=cl(G.lv+n,1,cap(G));return G.lv-b};
+const xI=M=>{const G=M.GM;G.X=G.X||{sp:null,sp2:null,dep:0,run:null,it:null,pt:null,rv:null,sea:'none',hid:0,dk:0,cnt:0};return G.X};
+// ---------- สายสกิล ----------
+const SPC={war:[['ber','🔥','คลั่งเลือด','ดันเจี้ยนได้ของมากขึ้น แต่เจ็บหนักขึ้น'],['grd','🛡️','ผู้พิทักษ์','เพื่อนร่วมปาร์ตี้ไม่ตาย · บอสโลกง่ายขึ้นถ้าไปกับกิลด์']],
+ mage:[['sum','🐉','ผู้อัญเชิญ','สัตว์อัญเชิญรับดาเมจแทน 1 ครั้งต่อดัน'],['chr','⏳','จอมเวทกาล','ย้อนชั้นดันเจี้ยนที่พลาดได้ 1 ครั้ง']],
+ craft:[['smi','⚒️','ช่างตีอาวุธ','ไอเทมตำนานแรงขึ้น · ดันเจี้ยนรอดง่ายขึ้นเล็กน้อย'],['mer','💹','พ่อค้าประมูล','ขายของได้ราคาสองเท่า']],
+ rogue:[['ass','🗡️','นักฆ่า','ชนะ PK และคู่แข่งง่ายขึ้น'],['thf','🗝️','จอมโจร','มองเห็นกับดักทุกชั้น']]};
+const spOf=G=>{const X=G.X||{};return[X.sp,X.sp2]};
+const hasSp=(G,k)=>spOf(G).includes(k);
+// ---------- ฤดูกาลเซิร์ฟเวอร์ ----------
+const SEA={none:['🌐','ปกติ',''],exp:['✨','สัปดาห์ EXP สองเท่า','ล่ามอนได้เลเวลมากขึ้น'],pk:['🩸','อีเวนต์สงคราม PK','ทุกคนโจมตีกันได้ทุกที่'],nerf:['📉','แพตช์ปรับสมดุล','คลาสของคุณโดนลดพลัง'],buff:['📈','แพตช์บัฟ','คลาสของคุณแข็งแกร่งขึ้น'],down:['🔌','ระบบล่มทั้งประเทศ','ไม่มีใครใช้สกิลได้ทั้งปี'],gate:['🌀','ดันเจี้ยนพิเศษเปิด','ชั้นลึกให้รางวัลสามเท่า']};
+// ---------- ดันเจี้ยนเสี่ยงดวง ----------
+const DT=[['🔥','ถ้ำลาวา'],['❄️','ป้อมน้ำแข็ง'],['🌀','เขาวงกตกลับหัว'],['🕸️','รังแมงมุมยักษ์'],['🏚️','โรงพยาบาลร้างในดันเจี้ยน'],['🌊','วิหารใต้น้ำ'],['🪞','ห้องกระจกที่เลียนแบบคุณ']];
+const TRAP=[['ตะปูใต้พื้น',14],['ก๊าซพิษ',18],['เพดานถล่ม',22],['มอนสเตอร์ซุ่ม',16],['กระจกที่สะท้อนท่าคุณกลับ',20]];
+function dunStart(M){const G=G0(M),X=xI(M),t=ch(DT);X.run={t,f:1,loot:0,lv:0,hurt:0,rev:hasSp(G,'chr')?1:0,sum:hasSp(G,'sum')?1:0,sec:Math.random()<.05};dunFloor(M)}
+function dunFloor(M){const G=G0(M),X=xI(M),D=X.run;if(!D)return;const f=D.f,tr=ch(TRAP),mul=X.sea==='gate'?3:1;
+ const see=hasSp(G,'thf')||X.hc==='code'||(G.cls==='rogue'&&f===1);const risk=cl(.12+f*.09-(G.cls==='war'?.04:0)-(hasSp(G,'smi')?.03:0)+(X.sea==='nerf'?.06:0)-(X.sea==='buff'?.05:0)-(X.hc==='code'?.15:0),.04,.75);
+ const pt=X.pt&&X.pt.alive?`<br>👥 ${esc(X.pt.n)}ตามมาด้วย (ไว้ใจ ${X.pt.tr})`:'';
+ const O2=[];
+ O2.push(O(`⬇️ ลงชั้น ${f+1}`,()=>later(()=>dunStep(M,risk,tr,mul)),`เสี่ยง ${Math.round(risk*100)}%${see?' · เห็นกับดัก: '+tr[0]:''}`));
+ if(D.sec&&f>=3&&!X.hid)O2.push(O('🚪 ประตูที่ไม่มีในแผนที่',()=>later(()=>gmHidden(M)),'มีบางอย่างผิดปกติในโค้ดของชั้นนี้'));
+ O2.push(O('🏃 ถอนตัวพร้อมของ',()=>dunEnd(M,true),`เลเวล +${D.lv} · ของ ×${D.loot}`));
+ choice(`${D.t[0]} ${D.t[1]} — ชั้น ${f}`,`ยิ่งลึกยิ่งได้มาก แต่ถ้าพลาดในชั้นลึก คุณอาจเสียของทั้งหมดที่เก็บมา${D.hurt?` · บาดเจ็บสะสม ${D.hurt}%`:''}${pt}`,O2)}
+function dunStep(M,risk,tr,mul){const G=G0(M),X=xI(M),D=X.run;if(!D)return;
+ if(Math.random()<risk){
+  if(D.sum){D.sum=0;say(`🐉 สัตว์อัญเชิญกระโจนรับ${tr[0]}แทนคุณ แล้วสลายเป็นแสง`,'');}
+  else if(D.rev){D.rev=0;say(`⏳ คุณย้อนเวลาห้าวินาที ก้าวข้าม${tr[0]}ไปได้`,'');}
+  else if(X.pt&&X.pt.alive&&X.pt.tr>=60&&Math.random()<.5){if(hasSp(G,'grd')){say(`🛡️ ${esc(X.pt.n)}ถูก${tr[0]} แต่โล่ของคุณกันไว้ทัน`,'')}else{X.pt.alive=0;M.fl.gm_lost=1;say(`💔 ${esc(X.pt.n)}ผลักคุณออกจาก${tr[0]} แล้วรับไว้แทน — ในโลกนี้ ไม่มีการเกิดใหม่`,'bad',{joy:-20})}}
+  else{const d=Math.round(tr[1]*(G.cls==='war'?.75:1)*(hasSp(G,'ber')?1.3:1)*(1+D.f*.12));D.hurt+=d;HP(d);
+   if(D.f>=4&&Math.random()<.45){D.loot=Math.floor(D.loot/2);D.lv=Math.floor(D.lv/2);say(`💥 ${tr[0]}! คุณกระเด็นกลับไปชั้นบน ของในกระเป๋าหล่นไปครึ่งหนึ่ง พลังชีวิต −${d}%`,'bad');return dunEnd(M,false)}
+   say(`⚠️ ${tr[0]}! พลังชีวิต −${d}%`,'bad');
+   if(S.hp<=S.maxHp*.08&&D.f>=6&&Math.random()<.3)return die('ตายในดันเจี้ยนชั้นลึก — ในโลกที่ไม่มีปุ่มเกิดใหม่',`💀 หน้าจอสีฟ้าขึ้นข้อความสุดท้าย <b>YOU DIED</b> — และไม่มีปุ่ม Continue`)}}
+ D.f++;D.lv+=Math.max(1,Math.round((.5+D.f*.25)*(X.sea==='exp'?1.5:1)));D.loot+=mul*(hasSp(G,'ber')?2:1);
+ X.dep=Math.max(X.dep,D.f);if(X.dep>=10)M.fl.gm_deep=1;
+ if(D.f>=10){say('🌌 ชั้น 10 — ห้องว่างเปล่าที่มีเพียงข้อความ "ยังไม่ได้สร้าง" ลอยอยู่กลางอากาศ คุณคือคนแรกที่มาถึงตรงนี้','epic',{fame:6000});return dunEnd(M,true)}
+ later(()=>dunFloor(M))}
+function dunEnd(M,ok){const G=G0(M),X=xI(M),D=X.run;X.run=null;if(!D)return;const u=lvUp(G,D.lv);const m=money(M,D.loot*(.6+G.lv/40)*(hasSp(G,'mer')?2:1)*(G.cls==='craft'?1.4:1));
+ if(D.loot)mwFx({mon:m});feed(`${D.t[0]} ออกจาก${D.t[1]}ที่ชั้น ${D.f} · เลเวล +${u} · ของ ×${D.loot}`);
+ if(ok&&D.f>=5&&!X.it&&Math.random()<.12+D.f*.03)later(()=>gmItem(M))}
+// ---------- สายสกิล ----------
+function gmSpec(M,tier){const G=G0(M),X=xI(M),L=SPC[G.cls];if(!L)return;
+ choice(`⭐ ต้นสกิลแตกแขนง (เลเวล ${tier===1?20:40})`,tier===1?`คลาส${GCLN(G)}ของคุณมาถึงทางแยก — เลือกได้ทางเดียว และเปลี่ยนไม่ได้อีก`:'ทางแยกที่สอง — เลือกอีกทาง หรือเจาะลึกทางเดิมให้สุด',
+  (tier===1?L:L.filter(x=>x[0]!==X.sp).concat([[X.sp+'+','💠','เจาะลึกทางเดิม','พลังของสายแรกแรงขึ้นอีกขั้น']])).map(s=>O(`${s[1]} ${s[2]}`,()=>{if(tier===1)X.sp=s[0];else X.sp2=s[0].replace('+','');say(`⭐ สายสกิล <b>${s[2]}</b> ถูกสลักลงในหน้าต่างสถานะ`,'epic')},s[3])))}
+const GCLN=G=>({war:'นักรบ',mage:'นักเวท',craft:'ช่างคราฟต์',rogue:'โจร'})[G.cls]||'';
+// ---------- ไอเทมตำนาน ----------
+const ITN=['ดาบที่ไม่มีชื่อในฐานข้อมูล','แหวนของผู้พัฒนา','คัมภีร์ที่เขียนด้วยโค้ดดิบ','เกราะหนังของผู้เล่นคนแรก','ลูกแก้วบันทึกเซฟ'];
+function gmItem(M){const X=xI(M),n=ch(ITN);
+ choice('🌟 ดรอปตำนาน',`กล่องสมบัติเปล่งแสงสีรุ้ง — <b>${n}</b> ไอเทมชิ้นเดียวในเซิร์ฟเวอร์ ข้อความประกาศดังในหัวทุกคน: "มีผู้เล่นได้รับไอเทมระดับตำนาน"`,[
+  O('⚔️ เก็บไว้ใช้',()=>{X.it={n,u:1};say(`🌟 ${esc(n)}อยู่ในมือคุณ — บอสโลกจะง่ายขึ้นมาก แต่ทุกคนรู้แล้วว่ามันอยู่ที่ใคร`,'epic')},'บอสโลกง่ายขึ้น · มีคนจะมาแย่ง'),
+  O('💹 ขายในประมูล',()=>{const m=money(M,(hasSp(M.GM,'mer')?60:30));mwFx({mon:m,fame:1500});say(`💹 ประมูลจบที่ราคาที่ทำให้ข่าวหน้าหนึ่งพูดถึงคุณสามวัน`,'epic')},'เงินก้อนมหาศาล'),
+  O('🎁 มอบให้กิลด์/คนที่ต้องการ',()=>{M.GM.gd=M.GM.gd||1;M.fl.ghon=1;say('🎁 คุณยื่นมันให้คนที่ใช้มันได้ดีกว่า ข่าวนี้เปลี่ยนวิธีที่คนมองผู้เล่นระดับสูง','good',{fame:3000,joy:6})},'ระบบจำคุณ · กิลด์แข็งแรงขึ้น')])}
+EV('gx2_raid',M=>{const X=xI(M),n=esc(X.it.n);X.it.r=(X.it.r||0)+1;
+ choice('🩸 คนที่มาเอา'+n,`กิลด์ใหญ่สามกิลด์ร่วมมือกันประกาศค่าหัวคุณ — "ใครได้${n}มา จะได้เงินรางวัลด้วย"`,[
+  O('⚔️ สู้กลับ',()=>{const p=cl(.45+M.GM.lv/200+(M.GM.cls==='rogue'?.1:0)+(hasSp(M.GM,'ass')?.12:0),.2,.9);if(Math.random()<p)say('⚔️ ทีมล่าถูกตีแตกในคืนเดียว คลิปของคุณถูกแชร์ทั้งประเทศ','epic',{fame:4000});else{X.it=null;say(`💀 พวกมันมากเกินไป — ${n}หายไปจากกระเป๋า พลังชีวิต −${HP(R(20,35))}%`,'bad')}}),
+  O('🫥 หลบไปเงียบๆ จนกระแสซา',()=>say('🫥 คุณปิดสถานะออนไลน์และหายไปหนึ่งปี','',{fame:-500,joy:-4})),
+  O('🤝 เจรจาเช่าให้ใช้ปีละครั้ง',()=>say('🤝 ทั้งสามกิลด์ตกลง — ไอเทมกลายเป็นรายได้ประจำ','good',{mon:money(M,6)}))])});
+// ---------- เพื่อนร่วมปาร์ตี้ ----------
+const PTN=[['มิว','ฮีลเลอร์ที่กลัวเลือด'],['ต้นกล้า','แทงก์ที่เลเวลต่ำกว่าคุณสิบ'],['จูน','นักธนูที่พูดน้อย'],['หมอก','นักเวทอายุสิบหกที่หนีออกจากบ้าน']];
+EV('gx2_pt0',M=>{const X=xI(M),p=ch(PTN);
+ choice(`👥 ${p[0]}`,`<b>${p[0]}</b> ${p[1]} ยืนรอหน้าดันเจี้ยนคนเดียวมาสามวัน ไม่มีใครรับเข้าปาร์ตี้ "ขอไปด้วยได้ไหม ช่วยได้นิดเดียวก็ยังดี"`,[
+  O('🤝 รับเข้าปาร์ตี้',()=>{X.pt={n:p[0],d:p[1],tr:50,alive:1,lv:Math.max(1,M.GM.lv-R(5,12))};say(`🤝 ${p[0]}ยิ้มกว้างที่สุดที่คุณเคยเห็นในโลกที่ทุกคนมองแต่ตัวเลข`,'good',{joy:5})},'ร่วมดันเจี้ยน · มีเรื่องของตัวเอง'),
+  O('🙅 ไม่รับ',()=>say(`🙅 ${p[0]}ก้มหัวขอบคุณแล้วกลับไปยืนที่เดิม`,''))])});
+EV('gx2_pt1',M=>{const X=xI(M),P=X.pt,n=esc(P.n);X.cnt++;const r=X.cnt%3;
+ if(r===1)choice(`👥 ${n}ขอยืมเงิน`,`${n}ต้องจ่ายค่าเทอมน้องสาว เลเวลไม่ถึงเกณฑ์จ้างงาน`,[O('💸 ให้ ไม่ต้องคืน',()=>{P.tr+=20;S.money=Math.max(0,S.money-money(M,2));say(`💸 ${n}ไม่พูดอะไร แค่ก้มหัวนานมาก`,'good')}),O('📜 ให้ยืมพร้อมสัญญา',()=>{P.tr+=5;say('📜 เขาเซ็นด้วยมือสั่นๆ','')}),O('🙅 ไม่ให้',()=>{P.tr-=15;say(`🙅 ${n}เข้าใจ — แต่ปีนั้นเขาลงดันเดี่ยวบ่อยขึ้น`,'')})]);
+ else if(r===2)choice(`👥 ${n}ได้รับข้อเสนอ`,`กิลด์อันดับหนึ่งชวน${n}ไปร่วม เงินเดือนสามเท่า "แต่ฉันอยากอยู่กับคุณ... ถ้าคุณบอกให้อยู่"`,[O('🫂 บอกให้อยู่',()=>{P.tr+=15;say(`🫂 ${n}ฉีกจดหมายเชิญทิ้งต่อหน้าคุณ`,'good')}),O('🕊️ บอกให้ไป',()=>{X.pt=null;M.fl.gm_ptgo=1;say(`🕊️ ${n}ไปถึงอันดับสิบของประเทศในสองปี และยังส่งข้อความหาคุณทุกวันเกิด`,'good',{joy:4})})]);
+ else choice(`👥 ${n}กับความลับ`,`ตอนตีสี่ ${n}สารภาพ "ฉันถูกส่งมาสอดแนมคุณ ตอนแรกน่ะ... ตอนนี้ไม่ใช่แล้ว"`,[O('🤝 ให้อภัย',()=>{P.tr+=25;say(`🤝 ${n}ร้องไห้จนหลับไป`,'good')}),O('🔍 ใช้เขาส่งข้อมูลปลอมกลับไป',()=>{P.tr-=5;M.GM.lv=cl(M.GM.lv+3,1,cap(M.GM));say('🔍 คู่แข่งพลาดเป้าทั้งฤดูกาล','epic')}),O('🚪 ไล่ออก',()=>{X.pt=null;say(`🚪 ${n}เดินออกไปโดยไม่หันกลับ`,'bad',{joy:-6})})])});
+// ---------- คู่แข่งอันดับ ----------
+const RVN=['Kz_Shadow','น้ำแข็งสีดำ','ZeroMercy','ลูกพี่บอส','Aria_TH'];
+EV('gx2_rv',M=>{const G=G0(M),X=xI(M);if(!X.rv)X.rv={n:ch(RVN),w:0,l:0,lv:G.lv+R(3,8)};const V=X.rv,n=esc(V.n);V.lv=cl(Math.max(V.lv,G.lv+R(-3,6)),1,99);
+ const p=cl(.5+(G.lv-V.lv)*.04+(hasSp(G,'ass')?.12:0)+(X.it&&X.it.u?.1:0)+(X.sea==='nerf'?-.1:X.sea==='buff'?.1:0),.08,.92);
+ choice(`🏆 ${n} (Lv.${V.lv})`,`${n} อันดับเหนือคุณบนกระดาน ท้าดวลต่อหน้าไลฟ์สตรีมคนดูหลักล้าน${V.w||V.l?` <span class="tag2">สถิติ ชนะ ${V.w} แพ้ ${V.l}</span>`:''}`,[
+  O('⚔️ รับคำท้า',()=>{if(Math.random()<p){V.w++;mwFx({fame:3000*V.w});say(`🏆 ${n}ล้มลง คอมเมนต์ไหลเร็วจนอ่านไม่ทัน`,'epic');if(V.w>=3){M.fl.gm_rank1=1;say(`👑 ชนะ${n}ครบสามครั้ง — ชื่อคุณขึ้นอันดับหนึ่งของเซิร์ฟเวอร์`,'myth')}}else{V.l++;say(`💀 คุณแพ้ต่อหน้าคนทั้งประเทศ พลังชีวิต −${HP(R(10,22))}%`,'bad',{fame:-800,joy:-6})}},`โอกาสราว ${Math.round(p*100)}%`),
+  O('🧪 ศึกษาท่าเขาก่อนหนึ่งปี',()=>{V.lv=Math.max(1,V.lv-4);say(`🧪 คุณดูคลิปของ${n}ซ้ำสามร้อยรอบ — เห็นจังหวะที่เขาหายใจก่อนใช้สกิล`,'')},'ดวลครั้งหน้าง่ายขึ้น'),
+  O('🙅 ไม่สนอันดับ',()=>say('🙅 คนดูบางส่วนเรียกคุณว่าขี้ขลาด อีกส่วนเรียกว่าฉลาด','',{fame:-300}))])});
+// ---------- คลาสซ่อน ----------
+function gmHidden(M){const G=G0(M),X=xI(M);X.hid=1;
+ choice('🕳️ ห้องที่ไม่มีในโค้ด','หลังประตูมีหน้าต่างสถานะลอยอยู่ แต่ตัวอักษรเป็นอักษรที่ไม่มีภาษาไหนในโลก กลางห้องมีข้อความเดียวที่อ่านออก: <b>"เลือกคลาสใหม่ — ครั้งเดียว"</b>',[
+  O('👁️ ผู้มองเห็นโค้ด',()=>{X.hc='code';M.fl.gm_hidden=1;lvUp(G,8);say('👁️ โลกทั้งใบกลายเป็นตัวอักษรไหลลง — คุณเห็นว่ากับดักทุกอันเขียนไว้ตรงไหน','myth',{fame:10000})},'ดันเจี้ยนเสี่ยงน้อยลงมาก'),
+  O('🌑 ผู้ไร้คลาส',()=>{X.hc='null';M.fl.gm_hidden=1;say('🌑 คลาสของคุณถูกลบ หน้าต่างสถานะว่างเปล่า — แต่เพดานเลเวลก็หายไปด้วย','myth',{fame:10000})},'ไม่มีเพดานเลเวล 60'),
+  O('🚪 ปิดประตูกลับไป',()=>say('🚪 บางเรื่องไม่ควรรู้ คุณเดินกลับขึ้นบันได','',{joy:2}))])}
+// ---------- ฤดูกาล: อีเวนต์ตอนระบบล่ม ----------
+EV('gx2_down',M=>{choice('🔌 ระบบล่มทั้งประเทศ','หน้าต่างสีฟ้าของทุกคนหายไปพร้อมกัน — เลเวลไม่มีความหมาย ร้านค้าที่รับแต่ "ผู้เล่นเลเวล 25+" ปิดประตู คนเลเวลสูงที่เคยข่มคนอื่นเดินอย่างหวาดระแวง',[
+ O('🫂 ช่วยคนเลเวลต่ำที่ถูกทำร้าย',()=>say('🫂 คืนนั้นคุณยืนขวางกลุ่มคนที่มาเอาคืน — ไม่มีสกิล มีแต่กำปั้นกับความกล้า','good',{fame:2000,joy:8})),
+ O('🏋️ ฝึกร่างกายจริงๆ แทนสถานะ',()=>{S.maxHp=Math.round(S.maxHp*1.08);say('🏋️ พอระบบกลับมา ร่างกายคุณแข็งแรงกว่าตัวเลข — พลังชีวิตสูงสุด +8%','good')}),
+ O('💰 ฉวยโอกาสตอนไม่มีใครเห็น',()=>{if(Math.random()<.6)say('💰 ไม่มีบันทึกระบบ ไม่มีหลักฐาน','',{mon:money(M,5)});else say(`🚨 กล้องวงจรปิดธรรมดายังทำงาน พลังชีวิต −${HP(12)}%`,'bad')})])});
+// ---------- คัดเลือกเหตุการณ์ ----------
+{const c=CAND.game;CAND.game=(M,foc,out)=>{c(M,foc,out);if(!on(M))return;const G=G0(M),X=xI(M),r=Math.random;if(G.free||!G.cls)return;
+ if(G.lv>=20&&!X.sp)out.push({id:'gx2_sp1',p:6});
+ else if(G.lv>=40&&X.sp&&!X.sp2)out.push({id:'gx2_sp2',p:6});
+ if(r()<(foc==='wxq'?.45:.15))out.push({id:'gx2_dun',p:2.6});
+ if(!X.pt&&!X.ptD&&G.lv>=6&&r()<.14)out.push({id:'gx2_pt0',p:2});
+ if(X.pt&&X.pt.alive&&r()<.22)out.push({id:'gx2_pt1',p:2});
+ if(G.lv>=18&&r()<.13)out.push({id:'gx2_rv',p:2.2});
+ if(X.it&&X.it.u&&r()<.2)out.push({id:'gx2_raid',p:2.4});
+ if(X.sea==='down'&&r()<.6)out.push({id:'gx2_down',p:4})}}
+EV('gx2_sp1',M=>gmSpec(M,1));EV('gx2_sp2',M=>gmSpec(M,2));
+EV('gx2_dun',M=>dunStart(M));
+// ---------- รายปี: ฤดูกาล + ผลของสกิล/คลาสซ่อน ----------
+{const _y=mwYear;mwYear=function(){const foc=S&&S.focus;const r=_y.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(on(M)){const G=G0(M),X=xI(M);if(G.free||!G.cls)return r;
+ const ks=Object.keys(SEA);X.sea=Math.random()<.45?'none':ch(ks.filter(k=>k!=='none'));if(X.sea!=='none'){const s=SEA[X.sea];feed(`${s[0]} ฤดูกาลเซิร์ฟเวอร์: <b>${s[1]}</b> — ${s[2]}`)}
+ if(X.sea==='exp'&&foc==='wxq')lvUp(G,2);if(X.sea==='down'&&foc==='wxq')lvUp(G,-2);
+ if(X.pt&&X.pt.alive){X.pt.lv=cl(X.pt.lv+R(1,3),1,99);if(X.pt.tr>=90&&!M.fl.gm_party&&G.fin){M.fl.gm_party=1}}
+ if(X.pt&&!X.pt.alive)X.ptD=1}}catch(e){console.error('b18 year',e)}return r}}
+// บอสโลก: ผลของสาย/ไอเทม/เพื่อน
+{const g=MW_R.find(x=>x.id==='g_final');if(g){const go0=g.go;g.go=M=>{try{const G=G0(M),X=xI(M);G.pw=(G.pw||0)+(X.it&&X.it.u?3:0)+(hasSp(G,'grd')&&G.gd?2:0)+(X.pt&&X.pt.alive&&X.pt.tr>=70?2:0)+(X.hc?2:0)}catch(e){}return go0(M)}}}
+// ---------- HUD + แผง + ฉากจบ ----------
+{const _p=window.wPanel;window.wPanel=function(){const r=_p.apply(this,arguments);try{const M=S&&S.mw;if(!on(M))return r;const m=$('modal');if(!m)return r;const G=G0(M),X=xI(M);
+ const sp=spOf(G).filter(Boolean).map(k=>{for(const c in SPC){const f=SPC[c].find(x=>x[0]===k);if(f)return f[1]+' '+f[2]}return k}).join(' · ');
+ const h=`<div class="item"><b>🎮 สถานะผู้เล่น</b><br>สายสกิล: ${sp||'ยังไม่ถึงเลเวล 20'}${X.hc?` · 🕳️ ${X.hc==='code'?'ผู้มองเห็นโค้ด':'ผู้ไร้คลาส'}`:''}<br>🏰 ดันเจี้ยนลึกสุด ชั้น ${X.dep}${X.it?` · 🌟 ${esc(X.it.n)}`:''}${X.pt?`<br>👥 ${esc(X.pt.n)} — ${X.pt.alive?'ไว้ใจ '+X.pt.tr:'จากไปแล้ว'}`:''}${X.rv?`<br>🏆 ${esc(X.rv.n)} ชนะ ${X.rv.w} แพ้ ${X.rv.l}`:''}<br>${SEA[X.sea][0]} ฤดูกาลนี้: ${SEA[X.sea][1]}</div>`;
+ const x=m.querySelector('.gbtn[onclick="wCodex()"]'),box=x&&x.parentElement;if(box)box.insertAdjacentHTML('beforebegin',h);else m.insertAdjacentHTML('beforeend',h)}catch(e){}return r}}
+// กับดักน้อยลงสำหรับผู้มองเห็นโค้ด
+try{END.game.splice(2,0,['gm_hidden','S','ค้นพบคลาสซ่อน'],['gm_rank1','A','อันดับหนึ่งของเซิร์ฟเวอร์'],['gm_deep','A','ลงดันเจี้ยนถึงชั้นที่ยังไม่ได้สร้าง']);END.game.push(['gm_party','B','ปาร์ตี้ที่อยู่ด้วยกันจนจบเกม'],['gm_ptgo','B','ปล่อยเพื่อนไปเติบโต'],['gm_lost','C','เพื่อนตายแทนในดันเจี้ยน'])}catch(e){console.error('b18 end',e)}
+window._wld18={ids:['gx2_sp1','gx2_sp2','gx2_dun','gx2_pt0','gx2_pt1','gx2_rv','gx2_raid','gx2_down'],xI,dunStart,dunFloor,gmItem,gmHidden,gmSpec};
+})()}catch(e){console.error('block18',e)}
 </script>
 </body>
 </html>
