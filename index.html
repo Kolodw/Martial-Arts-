@@ -40551,6 +40551,14 @@ const RN=['ธรรมดา','หายาก','ล้ำค่า','ตำน
   sec.innerHTML=`<h4>🧑 รูปโปรไฟล์สำเร็จรูป</h4><p class="tag2">แบบนิ่งใส่ได้ฟรีทุกคน · แบบขยับได้อยู่ที่ <a href="#" onclick="cosMenu('a');return false">ร้านตกแต่ง › รูปโปรไฟล์</a> (ไม่เกิน 39฿) · ในแชทแสดงเป็นภาพนิ่ง</p><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">${A.map(a=>{const o=a.free||has(a.id),on=d.pf===a.id;return `<button class="gbtn" style="padding:4px;position:relative;${on?'outline:2px solid #ffc83a;':''}${o?'':'opacity:.55;'}" onclick="${o?`avtEquip('${a.id}')`:`cosMenu('a')`}" title="${a.n}">${avtHtml(a.id,56)}<small style="display:block;font-size:10px;line-height:1.2;margin-top:2px">${a.n}${o?'':' 🔒'}</small></button>`}).join('')}</div>${d.pf?`<button class="gbtn" style="width:100%;margin-top:6px" onclick="avtOff()">↩️ กลับไปใช้รูปตัวละคร</button>`:''}`;
   const ref=pane.querySelector('.pfsec');if(ref)ref.insertAdjacentElement('afterend',sec);else pane.appendChild(sec);avtMount(sec)}catch(e){console.error(e)}return r};window.openProfile=w;try{openProfile=w}catch(e){}}}
 })()}catch(e){console.error('block36',e)}
+
+// ---- แก้: ปิดด่านแล้วเควส "ปิดด่านรวม N ปี" ไม่ขยับ (ปิดด่านแบบผนึกถ้ำ/ข้ามเวลายาวไม่ถูกนับ + เวลาเควสหมดระหว่างปิดด่านจนเควสล้มแล้วเกิดใหม่เป็น 0/N) ----
+try{(()=>{
+const qsAll=()=>{const a=[];try{(S.sys&&S.sys.quests||[]).forEach(q=>q&&a.push(q));(S.nq||[]).forEach(q=>q&&a.push(q))}catch(e){}return a};
+const ext=n=>{try{if(n>0)qsAll().forEach(q=>{if(q.k==='secl'&&!q.pz&&q.dl!=null)q.dl+=n})}catch(e){}};
+{const _s=seclude;seclude=function(n){const a0=S?S.age:0;const r=_s.apply(this,arguments);try{if(S&&S.alive&&S.age>a0){ext(S.age-a0);sysQSweep();try{render()}catch(e){}}}catch(e){console.error(e)}return r}}
+{const _p=passYear;passYear=function(){const sealing=!!(S&&S.xseal>0),a0=S?S.age:0;const r=_p.apply(this,arguments);try{if(sealing&&S&&S.alive&&S.age>a0){const d=S.age-a0;S.flags=S.flags||{};S.flags.seclude=(S.flags.seclude||0)+d;ext(d);sysQSweep()}}catch(e){console.error(e)}return r}}
+})()}catch(e){console.error('block38',e)}
 </script>
 </body>
 </html>
