@@ -41169,3 +41169,13 @@ setInterval(tick,400);addEventListener('resize',tick);
 {const _r=render;render=function(){const r=_r.apply(this,arguments);try{labels();fcHint()}catch(e){}return r}}
 setTimeout(tick,300);
 })()}catch(e){console.error('block43',e)}
+// ============================================================
+// BLOCK 44: 🏙️ กล่องข้อมูลยุคปัจจุบัน — ปุ่มย่อ/ขยายเห็นชัด · มือถือเริ่มแบบย่อ
+// ============================================================
+try{(()=>{
+try{if(LS.get('murim_mwhmin',null)==null&&innerWidth<700)LS.set('murim_mwhmin',1)}catch(e){}
+const st=document.createElement('style');st.textContent=`#mwHud .mwhT{position:relative;padding-right:70px;min-height:30px;line-height:30px}
+#mwHud .mwHmB{position:absolute;right:0;top:50%;transform:translateY(-50%);width:auto!important;min-width:60px;min-height:30px;line-height:26px;text-align:center;border:1.5px solid #8a6ad0;border-radius:8px;background:#2a1450;color:#efe6ff!important;font-size:12px;padding:0 8px}
+#mwHud .mwHmB::after{content:' ย่อ'}#mwHud.mwMin .mwHmB::after{content:' ขยาย'}
+#mwHud.mwMin .mwhT{line-height:30px}`;document.head.appendChild(st);
+})()}catch(e){console.error('block44',e)}
