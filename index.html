@@ -30181,15 +30181,16 @@ function pnum(s){s=String(s).trim();const m=s.match(/^([\d.]+)×10([⁰¹²³⁴
 const STOP='(?!\\s*(?:เท่า|%|×|ปี|ครั้ง|คน|ตัว|ชั้น|ขั้น|วัน|เดือน|ข้อ|แต้ม|ดวง|ชิ้น|ระดับ|ใบ))';
 const RE_TOT=new RegExp('(พลัง(?:รวม|ยุทธ์)?)((?:\\s|:|<[^>]{0,60}>|เกิน|ถึง|อย่างน้อย)*)'+NUMRE+STOP+'(?:\\s*\\(\\d+[KMB]\\))?'+'((?:\\s|<[^>]{0,60}>)*/(?:\\s|<[^>]{0,60}>)*'+NUMRE+')?','g');
 const RE_GAIN=new RegExp('(พลัง(?:รวม|ยุทธ์)?\\s*)\\+'+NUMRE+STOP,'g');
-function pConv(t){if(typeof t!=='string'||t.indexOf('พลัง')<0)return t;let tot=0;try{tot=Math.max(1,total())}catch(e){tot=1}
- t=t.replace(RE_GAIN,(m,a,n)=>{const v=pnum(n);if(!isFinite(v))return m;const pc=v/Math.max(1,tot-v)*100;return a+(pc<.1?'+เล็กน้อย':'+'+(pc>=10?Math.round(pc):pc.toFixed(1))+'%')});
- t=t.replace(RE_TOT,(m,a,sp,n,rest,n2)=>{const v=pnum(n);if(!isFinite(v)||v<0)return m;const lab=a==='พลังรวม'?'ดัชนีพลัง':a;let s=lab+sp+'⚡'+pIdx(v);if(rest){const v2=pnum(n2);if(isFinite(v2))s+=rest.replace(n2,'⚡'+pIdx(v2))}return s});return t}
+const pMode=()=>{try{const m=LS.get('murim_pmode','idx');return m==='raw'||m==='both'?m:'idx'}catch(e){return'idx'}};window.pMode=pMode;
+function pConv(t){if(typeof t!=='string'||t.indexOf('พลัง')<0)return t;const PM=pMode();if(PM==='raw')return t;let tot=0;try{tot=Math.max(1,total())}catch(e){tot=1}
+ t=t.replace(RE_GAIN,(m,a,n)=>{const v=pnum(n);if(!isFinite(v))return m;const pc=v/Math.max(1,tot-v)*100;return a+(pc<.1?'+เล็กน้อย':'+'+(pc>=10?Math.round(pc):pc.toFixed(1))+'%')+(PM==='both'?' (+'+n+')':'')});
+ t=t.replace(RE_TOT,(m,a,sp,n,rest,n2)=>{const v=pnum(n);if(!isFinite(v)||v<0)return m;const lab=a==='พลังรวม'?'ดัชนีพลัง':a;let s=lab+sp+'⚡'+pIdx(v)+(PM==='both'?' ('+n+')':'');if(rest){const v2=pnum(n2);if(isFinite(v2))s+=rest.replace(n2,'⚡'+pIdx(v2)+(PM==='both'?' ('+n2+')':''))}return s});return t}
 window.pConv=pConv;
 {const _lg=log;log=function(t){if(typeof t==='string')arguments[0]=pConv(t);return _lg.apply(this,arguments)}}
 {const _md=modal;modal=function(html){if(typeof html==='string')arguments[0]=pConv(html);return _md.apply(this,arguments)}}
 {const _tt=toast;toast=function(t){if(typeof t==='string')arguments[0]=pConv(t);return _tt.apply(this,arguments)}}
 function realmPct(){try{const ri=realmIdx(),p=total();let lo,hi;if(ri<7){lo=REALMS[ri].p;hi=REALMS[ri+1].p}else{const L=postLv();lo=L<0?REALMS[7].p:postP(L);hi=L>=RS_MAX?null:postP(L+1)}if(!hi)return 100;return Math.max(0,Math.min(99,Math.floor((p-lo)/Math.max(1,hi-lo)*100)))}catch(e){return 0}}
-{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const e=$('gRealm');if(e&&S){const L=realmLabel(),tt=total();e.innerHTML=`⚔ <b>${L.base}</b> <small>${L.sub}</small> · ⚡<span class="px">${pIdx(tt)}</span> <small>· ${realmPct()}%</small>`;e.title='พลังรวมจริง '+fmt(tt);e.onclick=()=>toast('⚡ ดัชนีพลัง '+pIdx(tt)+' = พลังรวมจริง '+fmt(tt)+' · ทุก +1 แรงขึ้นราว 12%')}}catch(e){}return r}}
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const e=$('gRealm');if(e&&S){const L=realmLabel(),tt=total();const PM=pMode(),pv=PM==='raw'?`💥<span class="px">${fmt(tt)}</span>`:PM==='both'?`⚡<span class="px">${pIdx(tt)}</span> <small>(${fmt(tt)})</small>`:`⚡<span class="px">${pIdx(tt)}</span>`;e.innerHTML=`⚔ <b>${L.base}</b> <small>${L.sub}</small> · ${pv} <small>· ${realmPct()}%</small>`;e.title='แตะเพื่อสลับรูปแบบตัวเลขพลัง · พลังรวมจริง '+fmt(tt)+' · ดัชนี ⚡'+pIdx(tt);e.onclick=()=>pModeNext()}}catch(e){}return r}}
 
 /* ====================== ตั้งค่า ====================== */
 {const _og=openGfx;openGfx=function(){const r=_og.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='gfx')return r;const k=dsTier();
@@ -37668,6 +37669,13 @@ EV('xg_hr',M=>{V(M).xg.hr=1;choice('🕯️ คนที่จำได้ว่
 try{END.game.push(['ex_pio','A','ผู้บุกเบิกภาคใหม่'],['st_top','A','สตรีมเมอร์แสนผู้ติดตาม'],['fm_bond','A','ช่วยลูกผ่านเกมของลูก'],['xg_brwin','A','ชนะสนามที่ไม่ใช่เกมของตัวเอง'],['hk_ghost','A','ลบตัวเองออกจากระบบ'],['hk_gm','B','ตำรวจไซเบอร์ของระบบ'],['fm_heir','B','ส่งต่อให้รุ่นต่อไป'],['ex_mentor','B','ตำนานของแผนที่เก่า'],['ex_old','B','เซิร์ฟเวอร์ที่เวลาหยุด'],['xg_love','B','เป้าหมายที่ตกหลุมรักกลับ'],['xg_save','B','ช่วยผู้เล่นเกมจีบจำแม่ได้'],['xg_sis','B','พี่น้องจากเซฟที่ถูกลบ'],['hr_find','B','กู้รูปคนที่ถูกลบ'],['st_quit','B','เลิกไลฟ์อย่างสงบ'],['fm_erase','C','ลบทุกอย่างพร้อมตัวเอง'],['st_cancel','C','ถูกแบนช่อง'],['hk_ban','C','โดนแบนถาวร'])}catch(e){console.error('b21 end',e)}
 window._wld21={ids:['fm_kid','fm_kid2','fm_old','fm_will','st_on','st_live','st_spn','st_fan','st_drama','hk_hack','hk_cheat','hk_gm','hk_wave','ex_patch','ex_step','g5_br','g5_gc','g5_dt','g5_hr','xg_date','xg_br','xg_gc','xg_hr'],V};
 })()}catch(e){console.error('block21',e)}
+
+// 🔢 รูปแบบตัวเลขพลัง: ⚡ ดัชนี · 💥 พลังรวมจริง · ⚡+💥 ทั้งคู่ (แสดงผลอย่างเดียว ไม่กระทบการคำนวณ)
+try{(function(){const N={idx:['⚡ ดัชนีพลัง','ตัวเลขสั้น อ่านง่าย · ทุก +1 แรงขึ้นราว 12% · พลังที่ได้แสดงเป็น %'],raw:['💥 พลังรวมจริง','ตัวเลขเต็มแบบสายพลังเวอร์ · พลังที่ได้แสดงเป็นตัวเลข'],both:['⚡+💥 ทั้งคู่','ดัชนีพร้อมตัวเลขจริงในวงเล็บ']},O=['idx','raw','both'];
+ const set=m=>{try{LS.set('murim_pmode',m)}catch(e){}try{render()}catch(e){}};
+ window.pModeSet=m=>{set(m);toast('รูปแบบตัวเลขพลัง: '+N[m][0]+' · มีผลกับข้อความใหม่');try{const md=$('modal');if(md&&md.dataset.k==='gfx')openGfx()}catch(e){}};
+ window.pModeNext=()=>{const m=window.pMode?window.pMode():'idx',n=O[(O.indexOf(m)+1)%O.length];set(n);let tt=0;try{tt=total()}catch(e){}toast(N[n][0]+' · พลังรวมจริง '+fmt(tt)+' · ⚡'+pIdx(tt)+' · แตะอีกครั้งเพื่อสลับ')};
+ if(typeof openGfx==='function'){const _og=openGfx;openGfx=function(){const r=_og.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='gfx'&&!m.querySelector('.pmSec')){const cur=window.pMode();m.insertAdjacentHTML('beforeend','<div class="pmSec"><h3 style="margin-top:14px">🔢 รูปแบบตัวเลขพลัง</h3><p class="tag2">เปลี่ยนแค่การแสดงผล การต่อสู้ อันดับ และเซฟไม่เปลี่ยน · แตะ ⚡ บนแถบหัวเพื่อสลับเร็วๆ ได้</p>'+O.map(k=>'<button class="opt '+(cur===k?'on':'')+'" onclick="pModeSet(\''+k+'\')">'+N[k][0]+' '+(cur===k?'✅':'')+'<small>'+N[k][1]+'</small></button>').join('')+'</div>')}}catch(e){}return r}}})()}catch(e){console.error('mod-pm',e)}
 </script>
 </body>
 </html>
