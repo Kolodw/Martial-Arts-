@@ -873,10 +873,10 @@ module.exports = async (req, res) => {
     if (a === 'vipwall') {
       try { if (await cmd('SET', 'vipfix:lock', 1, 'NX', 'PX', 300000)) await vipFixAll() } catch (e) {}
       const raw = (await cmd('HGETALL', 'vipu')) || [], rows = [];
-      for (let i = 0; i + 1 < raw.length; i += 2) { const o = jp(raw[i + 1]); if (o) rows.push({ id: raw[i], n: String(o.n || ''), o: o.o | 0, t: +o.t || 0, w: String(o.w || '') }) }
+      for (let i = 0; i + 1 < raw.length; i += 2) { const o = jp(raw[i + 1]); if (o) rows.push({ id: raw[i], pu: String(raw[i]).replace(/[^a-z0-9]/g, '').slice(0, 12), n: String(o.n || ''), o: o.o | 0, t: +o.t || 0, w: String(o.w || '') }) }
       rows.sort((x, y) => x.o - y.o); const top = rows.slice(0, 300);
       const rs = top.length ? await pipe(top.flatMap(r => [['SCARD', 'vinc:' + r.id], ['SISMEMBER', 'vinc:' + r.id, okId(id) ? id : '-']])) : [];
-      return res.json({ n: top.map((r, i) => ({ n: r.n, o: r.o, t: r.t, w: r.w, c: +rs[i * 2] || 0, m: +rs[i * 2 + 1] ? 1 : 0, k: r.id === id ? 1 : 0 })) });
+      return res.json({ n: top.map((r, i) => ({ pu: r.pu, n: r.n, o: r.o, t: r.t, w: r.w, c: +rs[i * 2] || 0, m: +rs[i * 2 + 1] ? 1 : 0, k: r.id === id ? 1 : 0 })) });
     }
     // 🎭 ห้องเล่นบท (เฉพาะคนที่ล็อกอิน Google) — แยกจากแชทโลก ข้อความเก็บ 3 วัน
     if (a === 'rpget' || a === 'rpsay' || a === 'rplike') {
@@ -1385,7 +1385,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const [pubs, kns] = all.length ? await pipe([['MGET', ...all.map(x => 'lifep:' + x.lid)], ['MGET', ...all.map(x => 'lvkn:' + x.lid)]]) : [[], []];
       const pm = {}; all.forEach((x, i) => { pm[x.lid] = pubs[i] === '1' ? 1 : pubs[i] === '2' ? 2 : 0; if (+kns[i] > 0) x.kn = +kns[i] });
       const admB = !!ADM_KEY && String(qOf(req).key || '') === ADM_KEY;
-      const fix = l => l.map(x => { const v = x.lid ? pm[x.lid] || 0 : 0; const o = Object.assign(x, { pub: v === 1 || (admB && x.lid) ? 1 : 0 }); if (v === 2 && !admB) { o.n = 'ผู้ไม่ประสงค์ออกนาม'; o.f = ''; o.anon = 1 } return o });
+      const fix = l => l.map(x => { const v = x.lid ? pm[x.lid] || 0 : 0; const o = Object.assign(x, { pub: v === 1 || (admB && x.lid) ? 1 : 0 }); if (v === 2 && !admB) { o.n = 'ผู้ไม่ประสงค์ออกนาม'; o.f = ''; o.anon = 1 } const ow = x.lid && ownM[x.lid]; if (ow && !o.anon) o.pu = String(ow).replace(/[^a-z0-9]/g, '').slice(0, 12); return o });
       return res.json({ top: fix(T), prev: fix(Pv), ctop: fix(CT), cprev: fix(CP), cm: CHF[cmK], arena, daily: 1, p: per, rks: await (async () => { try { const L = { d: new Date(now + 7 * 3600e3).toISOString().slice(0, 10), w: week(new Date(now)), m: bdMon(now) }, v = await pipe(['d', 'w', 'm'].map(p0 => ['GET', 'rksalt:' + p0 + ':' + rkKey(L[p0])])); return { d: v[0] || '', w: v[1] || '', m: v[2] || '' } } catch { return {} } })() });
     }
     if (a === 'bdrw') {
@@ -1435,7 +1435,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         let vals = rA[0] || []; const lms = rA[1] || [], cnt = rA.slice(2);
         const missA = all.filter((x, i) => !vals[i]); if (missA.length) { const mv = await cmd('MGET', ...missA.map(x => x[1] + x[0])); vals = vals.slice(); let j = 0; all.forEach((x, i) => { if (!vals[i]) vals[i] = mv[j++] }) }
         const l = [];
-        all.forEach(([x, , pv], i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), ago: Math.max(0, Math.round((now - (sc[x] || now)) / 1000)), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: +s0.p || (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g', 'c'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null, wi: ((x => ['normal','hunter','under','ghost','loop','zombie','tower','game','gatewon','doom'].includes(x) ? x : undefined)(s0.wi || (s0.mx && s0.mx.i))), wr: (x => x ? String(x).replace(/[<>]/g, '').slice(0, 30) : undefined)(s0.wr || (s0.mx && s0.mx.r)), w: cnt[i] || 0, pv, m: (() => { try { return JSON.parse(lms[i]) } catch { return null } })() }) } catch {} });
+        all.forEach(([x, , pv], i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), pu: x.slice(0, 12), ago: Math.max(0, Math.round((now - (sc[x] || now)) / 1000)), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: +s0.p || (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g', 'c'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null, wi: ((x => ['normal','hunter','under','ghost','loop','zombie','tower','game','gatewon','doom'].includes(x) ? x : undefined)(s0.wi || (s0.mx && s0.mx.i))), wr: (x => x ? String(x).replace(/[<>]/g, '').slice(0, 30) : undefined)(s0.wr || (s0.mx && s0.mx.r)), w: cnt[i] || 0, pv, m: (() => { try { return JSON.parse(lms[i]) } catch { return null } })() }) } catch {} });
         await pipe([['ZREMRANGEBYSCORE', 'livezp', 0, now - 180e3]]);
         const onIds = await cmd('ZRANGEBYSCORE', 'online', now - 600e3, '+inf');
         const liveSet = new Set(all.map(x => x[0]));
@@ -1450,7 +1450,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       let vals = r1[0] || [];const cnt = r1.slice(1);
       const miss = ids.filter((x, i) => !vals[i]); if (miss.length) { const mv = await cmd('MGET', ...miss.map(x => 'live:' + x)); vals = vals.slice(); let j = 0; ids.forEach((x, i) => { if (!vals[i]) vals[i] = mv[j++] }) }
       const l = [];
-      ids.forEach((x, i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), ago: Math.max(0, Math.round((now - (sc[x] || now)) / 1000)), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: +s0.p || (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g', 'c'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null, wi: ((x => ['normal','hunter','under','ghost','loop','zombie','tower','game','gatewon','doom'].includes(x) ? x : undefined)(s0.wi || (s0.mx && s0.mx.i))), wr: (x => x ? String(x).replace(/[<>]/g, '').slice(0, 30) : undefined)(s0.wr || (s0.mx && s0.mx.r)), w: cnt[i] || 0 }) } catch {} });
+      ids.forEach((x, i) => { if (!vals[i]) return; try { const s0 = JSON.parse(vals[i]); l.push({ k: x.slice(0, 6) + x.slice(-4), id: x.slice(0, 6), pu: x.slice(0, 12), ago: Math.max(0, Math.round((now - (sc[x] || now)) / 1000)), n: s0.n, age: s0.age, r: s0.r, f: s0.f, fo: s0.fo, x: s0.x, hot: s0.hot ? 1 : 0, p: +s0.p || (s0.st && +s0.st.pow) || 0, wk: ['m', 'x', 'g', 'c'].includes(s0.wk) ? s0.wk : (s0.xt ? 'g' : s0.x ? 'x' : 'm'), look: s0.look || null, wi: ((x => ['normal','hunter','under','ghost','loop','zombie','tower','game','gatewon','doom'].includes(x) ? x : undefined)(s0.wi || (s0.mx && s0.mx.i))), wr: (x => x ? String(x).replace(/[<>]/g, '').slice(0, 30) : undefined)(s0.wr || (s0.mx && s0.mx.r)), w: cnt[i] || 0 }) } catch {} });
       const gone = await cmd('ZRANGEBYSCORE', 'livez', 0, now - 120e3); await pipe([['ZREMRANGEBYSCORE', 'livez', 0, now - 120e3], ...((gone || []).length ? [['HDEL', 'livem', ...gone]] : [])]);
       const tot = { o: l.filter(q => q.wk !== 'c').length, c: l.filter(q => q.wk === 'c').length }; const capEra = (arr, N, cmp) => { const c = arr.filter(q => q.wk === 'c').sort(cmp).slice(0, Math.ceil(N / 2)), o = arr.filter(q => q.wk !== 'c').sort(cmp).slice(0, N - c.length); return o.concat(c).sort(cmp) }; return res.json({ l: capEra(l, 40, (p, q) => q.w - p.w || q.age - p.age), tot, now });
     }
@@ -1477,7 +1477,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const v = f1 ? await cmd('GET', 'live:' + f1) : f2 ? await cmd('GET', 'livep:' + f2) : null;
         if (!v) return res.status(404).json({ err: 'off' });
         const [, , w] = await pipe([['ZADD', 'watcha:' + (f1 || f2), now, 'adm'], ['EXPIRE', 'watcha:' + (f1 || f2), 120], ['ZCOUNT', 'watch:' + (f1 || f2), now - 25e3, '+inf']]);
-        return res.json({ s: JSON.parse(v), w: w || 0, adm: 1, pv: f1 ? 0 : 1 });
+        return res.json({ s: JSON.parse(v), pu: (f1 || f2).slice(0, 12), w: w || 0, adm: 1, pv: f1 ? 0 : 1 });
       }
       const ids = await cmd('ZRANGEBYSCORE', 'livez', now - 60e3, '+inf');
       const full = (ids || []).find(x => x.slice(0, 6) + x.slice(-4) === k2);
@@ -1489,7 +1489,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const S0 = JSON.parse(v), ck = S0.ch && String(S0.ch.k || '').replace(/[^a-z0-9]/g, '').slice(0, 12), hk = S0.hot && String(S0.hot.k || '').replace(/[^a-z0-9]/g, '').slice(0, 12);
       const [, , w, , rxl, vt, bt, myv, myb] = await pipe([['ZADD', 'watch:' + full, now, viewer], ['ZREMRANGEBYSCORE', 'watch:' + full, 0, now - 25e3], ['ZCARD', 'watch:' + full], ['EXPIRE', 'watch:' + full, 120], ['LRANGE', 'lrxl:' + full, 0, 19], ['HGETALL', 'lvote:' + full + ':' + (ck || '-')], ['HGETALL', 'lbet:' + full + ':' + (hk || '-')], ['GET', 'lvd:' + full + ':' + (ck || '-') + ':' + viewer], ['GET', 'lbd:' + full + ':' + (hk || '-') + ':' + viewer]]);
       const hm = h => { const o = {}; if (Array.isArray(h)) for (let i = 0; i < h.length; i += 2) o[h[i]] = +h[i + 1]; else for (const k in (h || {})) o[k] = +h[k]; return o };
-      return res.json({ s: S0, w: w || 0, rx: (rxl || []).map(jp).filter(x => x && now - x.t < 15e3), vt: hm(vt), bt: hm(bt), myv: myv == null ? null : +myv, myb: myb == null ? null : +myb });
+      return res.json({ s: S0, pu: full.slice(0, 12), w: w || 0, rx: (rxl || []).map(jp).filter(x => x && now - x.t < 15e3), vt: hm(vt), bt: hm(bt), myv: myv == null ? null : +myv, myb: myb == null ? null : +myb });
     }
     if (a === 'migstat') {
       if (!USE_VK) return res.json({ vk: 0 });
@@ -1763,7 +1763,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const [kn, eu, kd, em] = await pipe([['GET', 'lvkn:' + lid], ['LRANGE', 'lveu:' + lid, 0, 19], ['EXISTS', 'lvkd:' + lid + ':' + id + ':' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10)], ['EXISTS', 'lvem:' + lid + ':' + id]]);
       const hs0 = new Set((await cmd('SMEMBERS', 'chat:hidden')) || []);
       const eul = (eu || []).map(jp).filter(x => x && !hs0.has(x.i)).map(x => ({ i: x.i, n: x.n, t: x.t, x: x.x, me: x.u === String(id).slice(0, 12) ? 1 : 0 }));
-      return res.json({ d: JSON.parse(d), pub: pub === '1' ? 1 : 0, mine: own === id ? 1 : 0, kn: +kn || 0, kd: +kd ? 1 : 0, eu: eul, em: +em ? 1 : 0 });
+      return res.json({ d: JSON.parse(d), pu: pub === '2' ? '' : String(own || '').replace(/[^a-z0-9]/g, '').slice(0, 12), pub: pub === '1' ? 1 : 0, mine: own === id ? 1 : 0, kn: +kn || 0, kd: +kd ? 1 : 0, eu: eul, em: +em ? 1 : 0 });
     }
     if (a === 'lvkneel' || a === 'lveu') {
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
@@ -1819,6 +1819,14 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       return res.json({ pa, av, nt });
     }
     if (a === 'gcfg') return res.json({ cid: process.env.GOOGLE_CLIENT_ID || '' });
+    if (a === 'pfget') {
+      // รูปโปรไฟล์ของผู้เล่นหลายคนรวดเดียว (หน้าอันดับ/ดูสด/หอผู้ก่อตั้ง) · เฉพาะรูปที่ผ่านแล้ว
+      const us = [...new Set(String(qOf(req).u || '').split(',').map(x => x.replace(/[^a-z0-9]/g, '').slice(0, 12)).filter(x => x.length >= 6))].slice(0, 40);
+      if (!us.length) return res.json({ p: {} });
+      const pv = await cmd('HMGET', 'prof', ...us), p = {};
+      us.forEach((u, i) => { const o = pv[i] && jp(pv[i]); if (o && (o.av || o.fr)) p[u] = { av: o.av || '', fr: o.fr || '' } });
+      return res.json({ p });
+    }
     if (a === 'profst') {
       if (!okId(id)) return res.json({});
       const pu = id.slice(0, 12), [q, w, s, bt, gk] = await pipe([['HEXISTS', 'avq', pu], ['GET', 'avwarn:' + id], ['GET', 'avstrike:' + id], ['TTL', 'avban:' + id], ['GET', 'gof:' + id]]);
