@@ -294,6 +294,14 @@ for (let i = 1; i <= 6; i++) { COS_BASE['mf' + i] = [MOD_F[i - 1], ['f_m' + i]];
 COS_BASE.mall = [299, [...Array(6).keys()].flatMap(i => ['f_m' + (i + 1), 't_m' + (i + 1), 'c_m' + (i + 1)])];
 for (let i = 1; i <= 18; i++) COS_BASE['mn' + i] = [i <= 14 ? 9 : 19, ['t_n' + i]];
 COS_BASE.mall[1].forEach(x => COS_ALL.add(x)); for (let i = 1; i <= 18; i++) COS_ALL.add('t_n' + i);
+// 🌍 ชุดตามโลก 9 ชุด (กรอบ f_w · ฉายา t_w · ธีมแชท c_w) · ครบทุกชุด wall
+const WLD_F = [39, 49, 49, 39, 49, 49, 39, 49, 49], WLD_T = [19, 19, 29, 19, 19, 29, 19, 19, 29], WLD_C = 19, WLD_SET = [59, 69, 79, 59, 69, 79, 59, 69, 79];
+for (let i = 1; i <= 9; i++) { COS_BASE['wf' + i] = [WLD_F[i - 1], ['f_w' + i]]; COS_BASE['wt' + i] = [WLD_T[i - 1], ['t_w' + i]]; COS_BASE['wc' + i] = [WLD_C, ['c_w' + i]]; COS_BASE['ws' + i] = [WLD_SET[i - 1], ['f_w' + i, 't_w' + i, 'c_w' + i]] }
+COS_BASE.wall = [449, [...Array(9).keys()].flatMap(i => ['f_w' + (i + 1), 't_w' + (i + 1), 'c_w' + (i + 1)])];
+COS_BASE.wall[1].forEach(x => COS_ALL.add(x));
+// 🔥 ลดราคาประจำวัน (เวลาไทย เปลี่ยนตอนเที่ยงคืน): ชุดตกแต่งยุคปัจจุบัน/โลก 1 ชุดลด 30% + ฉายาเสริม 2 แบบลด 25%
+const MDEAL_SETS = [...Array(6).keys()].map(i => 'ms' + (i + 1)).concat([...Array(9).keys()].map(i => 'ws' + (i + 1)));
+const mDeal = () => { const day = Math.floor((Date.now() + 7 * 3600e3) / 864e5), h = (day * 2654435761) >>> 0; let a = (h >>> 8) % 18, b = (h >>> 16) % 18; if (b === a) b = (b + 1) % 18; return { s: MDEAL_SETS[h % MDEAL_SETS.length], t: ['mn' + (a + 1), 'mn' + (b + 1)], exp: (day + 1) * 864e5 - 7 * 3600e3 } };
 // 🏮 อีเวนต์ลอยกระทง 2026 — ขายถึง 17 ธ.ค. 23:59 (เวลาไทย)
 // เงิน: [ราคา, ไอเทม, จำนวนจำกัด] (ฉบับเลขลำดับ) · กรรม: [ไอเทม, ราคากรรม, ฝั่ง g=กรรมดี e=กรรมชั่ว]
 const EV_END = Date.UTC(2026, 11, 17, 16, 59, 59);
@@ -307,7 +315,7 @@ const EV_IMP_CAP = 40000, EV_DEP_MAX = 3000, EV_DAY_MAX = 12000; // กันโ
 // ของแนะนำประจำวัน (เวลาไทย): ลด 20% ทั้งวัน — กรอบเดี่ยวหรือเซ็ต
 const COS_FEAT = [...Array(8).keys()].flatMap(i => ['cf' + (i + 1), 'cs' + (i + 1)]);
 const cosFeat = () => { const th = Date.now() + 7 * 3600e3, day = Math.floor(th / 864e5), pk = COS_FEAT[day % COS_FEAT.length]; return { pk, exp: (day + 1) * 864e5 - 7 * 3600e3 } };
-const cosPrice = pk => { const b = COS_BASE[pk]; if (!b) return 0; return cosFeat().pk === pk ? Math.round(b[0] * 0.8) : b[0] };
+const cosPrice = pk => { const b = COS_BASE[pk]; if (!b) return 0; if (cosFeat().pk === pk) return Math.round(b[0] * 0.8); const d = mDeal(); if (d.s === pk) return Math.round(b[0] * 0.7); if (d.t.includes(pk)) return Math.round(b[0] * 0.75); return b[0] };
 const COS_P = new Proxy({}, { get: (_, pk) => COS_BASE[pk] ? [cosPrice(pk), COS_BASE[pk][1]] : undefined, has: (_, pk) => !!COS_BASE[pk] });
 const cosOwn = async id => { try { return (await cmd('SMEMBERS', 'cos:' + id)) || [] } catch { return [] } };
 
@@ -696,11 +704,11 @@ module.exports = async (req, res) => {
     // 🎲 สิทธิ์สุ่มเกิดที่ซื้อ (เก็บที่เซิร์ฟเวอร์ ผูกกับรหัสผู้เล่น/บัญชี Google)
     if (a === 'buyann') { const l = ((await cmd('LRANGE', 'buyann', 0, 11)) || []).map(jp).filter(Boolean); return res.json({ l }) }
     if (a === 'cosget') {
-      if (!okId(id)) { const ft0 = cosFeat(); return res.json({ own: [], eq: {}, feat: { pk: ft0.pk, p: cosPrice(ft0.pk), full: COS_BASE[ft0.pk][0], exp: ft0.exp } }) }
+      if (!okId(id)) { const ft0 = cosFeat(); return res.json({ own: [], eq: {}, mdeal: mDeal(), feat: { pk: ft0.pk, p: cosPrice(ft0.pk), full: COS_BASE[ft0.pk][0], exp: ft0.exp } }) }
       const [own, q, ...evr] = await pipe([['SMEMBERS', 'cos:' + id], ['GET', 'cosq:' + id], ...Object.keys(EVM).map(k => ['GET', 'evn:' + k]), ['HMGET', 'evs:' + id, ...EV_MI], ['HGETALL', 'kb:' + id], ['SISMEMBER', 'supok', id]]);
       const ft = cosFeat(), EK = Object.keys(EVM), sn = evr[EK.length] || [], kbr = evr[EK.length + 1], kbo = {}; if (Array.isArray(kbr)) for (let i = 0; i + 1 < kbr.length; i += 2) kbo[kbr[i]] = kbr[i + 1]; else if (kbr && typeof kbr === 'object') Object.assign(kbo, kbr);
       const ev = { end: EV_END, sup: +evr[EK.length + 2] ? 1 : 0, left: {}, sn: {}, kb: { g: +kbo.g || 0, e: +kbo.e || 0, imp: kbo.imp ? 1 : 0 } }; EK.forEach((k, i) => { ev.left[k] = Math.max(0, EVM[k][2] - (+evr[i] || 0)) }); EV_MI.forEach((x, i) => { if (sn[i]) ev.sn[x] = +sn[i] });
-      return res.json({ own: own || [], eq: jp(q) || {}, ev, feat: { pk: ft.pk, p: cosPrice(ft.pk), full: COS_BASE[ft.pk][0], exp: ft.exp } });
+      return res.json({ own: own || [], eq: jp(q) || {}, ev, mdeal: mDeal(), feat: { pk: ft.pk, p: cosPrice(ft.pk), full: COS_BASE[ft.pk][0], exp: ft.exp } });
     }
     if (a === 'cosset') {
       if (!okId(id)) return res.status(400).json({ err: 'id' });
