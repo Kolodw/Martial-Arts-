@@ -40177,6 +40177,30 @@ setInterval(()=>{try{if(typeof S!=='undefined'&&S&&S.alive&&typeof onlineOK!=='u
  const t=+LS.get('murim_cloudT',0)||0,now=Date.now();
  if(t&&now-t>2*DAY&&now-(+LS.get('murim_cwarn',0)||0)>DAY){LS.set('murim_cwarn',now);toast('☁️ เซฟคลาวด์ไม่ได้อัปเดตมาหลายวัน ลองเปิดเมนูโปรไฟล์เพื่อเช็ค')}}}catch(e){}},300000);
 })()}catch(e){console.error('block36',e)}
+
+// ---- ซื้อของด้วยเงินจริงต้องล็อกอิน Google ก่อน (กันตั๋ว/VIP/ของแต่งหายเมื่อรหัสเครื่องเปลี่ยน) ----
+try{(()=>{
+let LINKED=false;
+async function gateOK(){
+ if(LINKED)return true;
+ try{if(typeof ADM!=='undefined'&&ADM.ok)return true}catch(e){}
+ if(typeof onlineOK==='undefined'||!onlineOK)return true; // ออฟไลน์ซื้อไม่ได้อยู่แล้ว ไม่ต้องดัก
+ try{if(GCID===null)GCID=(await api('gcfg')).cid||''}catch(e){return true}
+ if(!GCID)return true; // ยังไม่ได้ตั้งค่าล็อกอิน Google ฝั่งเซิร์ฟเวอร์ → ไม่ดัก
+ const st=await profStat();if(!st)return true; // ตรวจไม่ได้ → ปล่อยผ่าน ไม่ขวางคนซื้อ
+ if(st.g){LINKED=true;return true}return false}
+function showGate(cont){
+ window._gatePend=cont;window._gateT=Date.now();
+ modal('<button class="xbtn" onclick="window._gatePend=null;closeM()">✕</button><h3>🔐 ล็อกอิน Google ก่อนซื้อ</h3>'
+ +'<p>การซื้อด้วยเงินจริงต้อง<b>ผูกบัญชี Google</b>ก่อน เพื่อให้ตั๋วสุ่ม VIP และของที่ซื้อผูกกับบัญชีของคุณ ไม่หายเมื่อเปลี่ยนเครื่องหรือเบราว์เซอร์ล้างข้อมูล</p>'
+ +'<p class="tag2">ล็อกอินครั้งเดียว ใช้ได้ตลอด · เกมไม่เห็นรหัสผ่านของคุณ · ล็อกอินเสร็จจะกลับมาหน้าซื้อให้เอง</p><div id="gBox" class="b35"></div>'
+ +'<button class="gbtn" style="width:100%;margin-top:8px" onclick="window._gatePend=null;closeM()">ไว้ทีหลัง</button>','gate');
+ try{gBoxFill()}catch(e){}}
+for(const n of ['rrBuy','vipBuy','cosBuy','evBuy','modBuy']){const o=window[n];if(typeof o!=='function')continue;
+ window[n]=function(){const a=arguments,me=this;gateOK().then(ok=>{if(ok)return o.apply(me,a);showGate(()=>o.apply(me,a))}).catch(()=>{try{o.apply(me,a)}catch(e){}})}}
+{const og=gGot;gGot=async function(){const r=await og.apply(this,arguments);try{const f=window._gatePend;if(f&&Date.now()-(window._gateT||0)<10*60e3&&PFST&&PFST.g){window._gatePend=null;LINKED=true;setTimeout(()=>{try{f()}catch(e){}},400)}}catch(e){}return r}}
+window._gateOK=gateOK;
+})()}catch(e){console.error('block37',e)}
 </script>
 </body>
 </html>
