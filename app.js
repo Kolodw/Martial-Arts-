@@ -41237,3 +41237,41 @@ setInterval(upd,500);addEventListener('resize',upd);setTimeout(upd,200);
 })()}catch(e){console.error('block46',e)}
 // ===== ป้ายแนะนำครั้งแรก (#tipCard): อยู่เหนือแถวปุ่มล่าง ไม่บังปุ่ม =====
 try{(()=>{const st=document.createElement('style');st.textContent='@media (max-width:699px){#tipCard{bottom:calc(var(--islB,118px) + 6px)!important}}';document.head.appendChild(st)})()}catch(e){console.error('tipPos',e)}
+
+// ===================== QoL: ปุ่ม "เล่นโหมดอื่น" ที่หน้าเกิด · รายการโหมด · ทัวร์ครั้งเดียว · การ์ดคู่มือ =====================
+try{(()=>{
+const KEYS=['hell','short','junk','regress','beast'];
+const st=document.createElement('style');st.textContent=`
+#title details.tadv>summary.mBtn{display:block;margin:6px auto 0;max-width:340px;padding:9px 12px;border:2px solid var(--goldL,#e8b54a);border-radius:12px;background:rgba(232,181,74,.12);font-weight:700;font-size:14px;color:var(--goldL,#e8b54a)}
+#title details.tadv>summary.mBtn.pulse{animation:mBtnP 1.8s ease-in-out infinite}
+@keyframes mBtnP{0%,100%{box-shadow:0 0 0 0 rgba(232,181,74,.5)}50%{box-shadow:0 0 0 8px rgba(232,181,74,0)}}
+#title .mdList{margin:8px 0 4px;display:grid;gap:6px}
+#title .mdRow{display:flex;gap:8px;align-items:center;text-align:left;padding:7px 9px;border-radius:10px;border:1.5px solid var(--c,#888);background:rgba(255,255,255,.04);cursor:pointer}
+#title .mdRow.on{background:rgba(232,181,74,.18)}
+#title .mdRow i{font-style:normal;font-size:20px}
+#title .mdRow b{font-size:13px}#title .mdRow small{display:block;font-size:11px;opacity:.8;line-height:1.35}
+#title .mdRow em{font-style:normal;font-size:10px;color:#e8b830;margin-left:4px}
+#modeTour{position:fixed;left:8px;right:8px;bottom:18px;z-index:9000;max-width:420px;margin:0 auto;padding:10px 12px;border-radius:14px;background:#1c1830f2;color:#f3e8c8;border:1px solid #d4a94a;box-shadow:0 6px 24px #000a;font-size:13px;line-height:1.5}`;
+document.head.appendChild(st);
+const tried=()=>LS.get('murim_mtried',{})||{};
+function sel(k){const M=MODE_I[k];if(!M)return;if(M.beast){try{goBeastLife()}catch(e){}return}
+ CFG.chm=M.chm;document.querySelectorAll('.seg[data-k="chm"] button').forEach(b=>b.classList.toggle('on',+b.dataset.v===M.chm));try{updateHints()}catch(e){}toast(`${M.ic} ตั้งโหมด${M.n}แล้ว — กดเกิดได้เลย`);paint()}
+window._mdSel=sel;
+function paint(){try{const dt=document.querySelector('#title details.tadv');if(!dt)return;const sm=dt.querySelector('summary');if(!sm)return;
+ const T=tried(),n=KEYS.filter(k=>!T[k]).length,opened=LS.get('murim_modeOpen',0);
+ sm.classList.add('mBtn');sm.classList.toggle('pulse',!opened);
+ const tn=[...sm.childNodes].find(x=>x.nodeType===3);const txt=`🎮 เล่นโหมดอื่น · มี ${KEYS.length} โหมด ${dt.open?'▴':'▾'}`;if(tn){if(tn.textContent!==txt)tn.textContent=txt}else sm.insertAdjacentText('afterbegin',txt);
+ if(!dt._mdT){dt._mdT=1;dt.addEventListener('toggle',()=>{if(dt.open)LS.set('murim_modeOpen',1);paint()})}
+ let L=dt.querySelector('.mdList');if(!L){L=document.createElement('div');L.className='mdList';dt.appendChild(L)}
+ const cur=+CFG.chm||0;
+ L.innerHTML=KEYS.map(k=>{const M=MODE_I[k];if(!M)return'';const on=M.beast?false:M.chm===cur;return`<div class="mdRow${on?' on':''}" style="--c:${M.c}" onclick="_mdSel('${k}')"><i>${M.ic}</i><div><b>${M.n}${T[k]?'':'<em>🆕 ยังไม่เคยลอง</em>'}</b><small>${M.p}</small></div></div>`}).join('')}catch(e){}}
+window._mdPaint=paint;
+function tour(){try{if(LS.get('murim_modeTour',0)||LS.get('murim_mtoff',0)||LS.get('murim_modeOpen',0))return;if((+LS.get('murim_lifeN',0)||0)<1)return;const dt=document.querySelector('#title details.tadv');if(!dt||document.getElementById('modeTour'))return;
+ LS.set('murim_modeTour',1);const T=tried(),n=KEYS.filter(k=>!T[k]).length;
+ const el=document.createElement('div');el.id='modeTour';el.innerHTML=`<b>💡 รู้ไหม? เกมนี้มีโหมดอื่นให้เล่น</b><br>มีอีก ${KEYS.length} โหมด (นรก · ชีวิตสั้น · รากขยะ · ผู้ย้อนกาล · เกิดเป็นสัตว์) ที่ปุ่ม <b>🎮 เล่นโหมดอื่น</b> ด้านล่างหน้าจอ · ยังไม่เคยลอง ${n} โหมด<div style="margin-top:6px;display:flex;gap:8px;justify-content:flex-end"><button class="gbtn" id="mtrX">ไว้ก่อน</button><button class="pbtn" id="mtrGo">👉 เปิดดู</button></div>`;
+ document.body.appendChild(el);const close=()=>{try{el.remove()}catch(e){}};el.querySelector('#mtrX').onclick=close;
+ el.querySelector('#mtrGo').onclick=()=>{close();dt.open=true;LS.set('murim_modeOpen',1);paint();try{dt.scrollIntoView({block:'center',behavior:'smooth'})}catch(e){}};setTimeout(close,25000)}catch(e){}}
+{const _tt=toTitle;toTitle=function(){const r=_tt.apply(this,arguments);setTimeout(paint,350);setTimeout(tour,900);return r}}
+setTimeout(paint,1500);
+try{const g=window._guide2;if(g)g.add('base','🎮','โหมดทั้งหมดของเกม','ที่หน้าเกิดกดปุ่ม <b>🎮 เล่นโหมดอื่น</b> เพื่อเลือก:<br>• 🔥 <b>นรก</b> — ลงนรก 100 ชั้น สู้ผู้คุม ขึ้นทำเนียบนรก<br>• ⏳ <b>ชีวิตสั้น</b> — ชีวิตสั้นนิดเดียว ทำ 5 อย่างก่อนตาย ส่งพินัยกรรมต่อ<br>• 🗑️ <b>รากขยะ</b> — พรสวรรค์ต่ำสุด จดชื่อคนที่ดูถูกแล้วกลับไปตบหน้า<br>• 🔁 <b>ผู้ย้อนกาล</b> — ตายแล้วย้อนไปอายุ 15 ใช้ความรู้รอบก่อน<br>• 🐾 <b>เกิดเป็นสัตว์</b> — เกิดเป็นลูกสัตว์ในป่า บำเพ็ญเป็นอสูร<br>• ⭕ <b>ทวีปจิตวิญญาณยุทธ์</b> — โลกดวงจิตและวงแหวนวิญญาณ<br>ทุกโหมดมีบทเรียนอ่านก่อนเล่นในเมนูบทเรียน และมีทำเนียบแยก','')}catch(e){}
+})()}catch(e){console.error('modebtn',e)}
