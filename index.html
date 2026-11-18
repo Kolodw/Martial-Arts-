@@ -36075,6 +36075,205 @@ TH.forEach(t=>{const c=t[0],sel='#chatBox .cm.cmp .cmb.'+c+',.cxs .cmb.'+c+',.bu
  +'#chatBox .cm.cmp .cmb.'+c+'::after,.cxs .cmb.'+c+'::after{content:"'+t[5]+'";right:-8px;bottom:-10px;color:'+t[6]+';font-size:15px;text-shadow:0 0 6px '+t[1]+';animation:pTw 2s infinite -1s}'});
 document.head.appendChild(css);
 })()}catch(e){console.error('mod-cos',e)}
+
+// ============ BLOCK 16: 📡 สายใยหมื่นปี + 👑 จักรพรรดิผู้ตั้งใจตาย (ยุทธภพ / เซียน / แดนเทพ / กัลป์) ============
+;(function(){try{
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const ok=()=>!!(S&&S.alive&&!S.mw&&!(S.beastMode&&!S.beastMode.human));
+const free=()=>!(choice._cur||modalOpen);
+const later=fn=>{const t=()=>{if(!S||!S.alive)return;if(choice._cur||modalOpen){setTimeout(t,600);return}try{fn()}catch(e){console.error(e)}};setTimeout(t,500)};
+const era=()=>((S.flags&&S.flags.eternal)||(S.kalpa&&S.kalpa.n>0))?'k':S.xt?'g':S.xian?'x':'y';
+const ER={y:{a:'วิชายุทธ์',d:'ลานฝึกร้างที่ไม่มีใครเหลือ'},x:{a:'วิถีบำเพ็ญ',d:'ยอดเขาเซียนที่ไร้ผู้บำเพ็ญ'},g:{a:'กฎเต๋า',d:'ปราสาทเทพที่ว่างเปล่า'},k:{a:'วัฏจักร',d:'ซากจักรวาลที่เงียบงัน'}};
+const go=fn=>{if(!S||S._q16)return;S._q16=1;later(()=>{S._q16=0;if(ok())fn()})};
+const dieBy=c=>{S.deathCause=c;try{checkDeath()}catch(e){console.error(e)}};
+const artAdd=(t)=>{const a=newArt(t);Array.prototype.push.call(S.arts,a);return artHtml(a)};
+const nextP=()=>{const ri=Math.min(6,realmIdx());return REALMS[ri+1]||REALMS[REALMS.length-1]};
+
+// ---------------- 📡 สายใยหมื่นปี ----------------
+const FT0=()=>({st:1,dr:0,sy:0,bd:0,sus:0,hum:R(8,16),k0:S.karma||0,kd:S.kids||0,cl:0,who:null,path:null,end:0,nx:0,deal:0,tg:null});
+const ftPw=T=>Math.max(.4,1-Math.max(0,T.hum-30)/100*.8);
+function ftScene(T){const E=ER[era()];
+ const a=T.hum<25?[`คุณยืนกลาง${E.d} ซากผู้คนกองเป็นภูเขา แต่ท่ารำสุดท้ายของผู้รอดชีวิตงดงามจนน้ำตาไหล`,`ฟ้าสีเทา ไม่มีใครตีระฆัง ${E.a}ถูกจารึกบนกำแพงทุกแห่งราวกับคำสั่งเสีย`,`เงาคนสุดท้ายหันมามอง แล้วทำท่าที่คุณไม่เคยเห็น — แต่ร่างกายคุณเข้าใจมันทันที`]
+  :T.hum<60?[`ในฝันมีคนอยู่บ้างแล้ว เป็นกลุ่มเล็กๆ ที่ฝึก${E.a}อย่างหวาดระแวง ทุกคนมองฟ้าก่อนมองกัน`,`${E.d}เริ่มมีควันจากเตาไฟ ใครสักคนซ่อมกำแพง ใครสักคนเล่าเรื่องของคุณให้เด็กฟัง`,`ผู้ในฝันยื่นม้วนคัมภีร์ให้ แล้วพูดว่า "ของแบบนี้ พวกเราเกือบทำหายหมด"`]
+  :[`ในฝันมีตลาดและเสียงหัวเราะ ${E.a}กลายเป็นเรื่องของเด็กๆ ไม่ใช่เครื่องมือเอาชีวิตรอด`,`คุณเห็นคนแก่นั่งสอนท่าให้หลานใต้ต้นไม้ ไม่มีใครถืออาวุธ — แต่ทุกท่าที่เขาสอนล้ำลึกกว่าที่คุณรู้`,`ท้องฟ้าสว่าง ผู้ในฝันยิ้มเศร้าๆ "ถ้าเจ้าทำสำเร็จ ข้าคงไม่มีเหตุให้ส่งเสียงมาหาเจ้าอีก"`];
+ return ch(a)}
+function ftBorrow(m){const T=S.ft,nx=nextP(),pw=ftPw(T);
+ const g=Math.round(Math.max(40,(nx.p-total())*.12*m*pw+nx.p*.01*pw));
+ S.power+=g;S.qi+=+(.4*pw).toFixed(1);T.dr++;T.sy=Math.min(100,T.sy+R(6,10));T.bd=Math.min(100,T.bd+R(9,15)*(m>1?1.5:1));T.sus+=R(4,9);
+ let t=`📡 คุณดื่มด่ำ${ER[era()].a}จากอนาคตหมื่นปี — พลัง +${fmt(g)}`;
+ if(Math.random()<.1+.3*pw)t+=` · ได้วิชาที่ถูกขัดเกลาแล้ว ${artAdd(2)}`;
+ log(t+` <span class="tag2">(ร่างสึก ${Math.round(T.bd)}%)</span>`,'epic');joy(-3)}
+function ftTalk(){const T=S.ft;if(T.path==='seek')T.cl++;T.sy=Math.min(100,T.sy+4);const r=R(1,4);
+ if(r===1){S.int+=R(6,12);log('🗣️ ผู้ในฝันตอบสั้นๆ ว่า "ปัญญาเป็นสิ่งสุดท้ายที่เหลือรอด" — คุณตื่นมาพร้อมความคิดที่ชัดขึ้น','epic')}
+ else if(r===2){const m=R(200,1500)*(1+realmIdx());S.money+=m;log(`🗣️ ผู้ในฝันบอกว่าเมืองไหนจะรุ่งเรืองในอีกสิบปี คุณลงทุนตามจนได้เงิน ${fmt(m)}`,'epic')}
+ else if(r===3){S.fame+=fameR(R(15,40));log('🗣️ คุณเล่าความฝันเป็นนิทานให้ผู้คนฟัง ชื่อเสียงว่าเป็นผู้หยั่งรู้กระจายไปไกล','epic')}
+ else{const pe=peers.filter(p=>p&&p.alive);const n=pe.length?ch(pe).name:anyName(S.gender);T.tg=n;log(`🗣️ ผู้ในฝันเอ่ยชื่อ <b>${esc(n)}</b> ว่าเป็นหนึ่งในต้นเหตุที่ทำให้โลกล่ม — แต่ไม่ยอมบอกว่าทำอย่างไร`,'epic')}
+ if(T.path==='seek'&&T.cl>=3&&!T.who)later(ftReveal)}
+function ftFirst(){const E=ER[era()];S.ft.re=S.age;
+ choice('📡 ความฝันที่ไม่ใช่ของวันนี้',`คืนหนึ่งคุณฝันเห็น${E.d} ท้องฟ้าเป็นสีที่ไม่เคยเห็น มนุษย์เหลือเพียงเงา แต่มี<b>${E.a}</b>ที่สมบูรณ์กว่าทุกสำนักที่คุณเคยรู้จักลอยอยู่ตรงหน้า เสียงหนึ่งกระซิบว่า "นี่คือหมื่นปีให้หลัง... ได้ยินข้าไหม"`,[
+  {t:'🔇 ตัดสาย ไม่ฟังอีก',s:'ปลอดภัย · ความฝันยังแทรกมาบ้างเป็นครั้งคราว',f(){S.ft.path='cut';log('📡 คุณสะบัดหัวไล่เสียงนั้น แล้วบอกตัวเองว่าเป็นแค่ฝัน... แต่ท่าสุดท้ายที่เห็นยังติดอยู่ในมือ','');S.int+=3}},
+  {t:'🌌 เปิดใจรับสัญญาณ',s:'ยืมวิชาจากอนาคตได้ · ร่างกายสึก คนเริ่มสงสัย',noFate:true,f(){S.ft.path='rx';keyAdd('ได้ยินเสียงจากหมื่นปีให้หลัง และเลือกเปิดใจรับ');ftBorrow(1)}},
+  {t:'🔎 สืบหาว่าใครเป็นผู้ส่ง',s:'ต้องฝันอีกหลายคืน · ความจริงอาจน่ากลัว',f(){S.ft.path='seek';S.ft.cl=1;keyAdd('ได้ยินเสียงจากหมื่นปีให้หลัง และตัดสินใจสืบหาต้นสาย');log('📡 คุณจดทุกรายละเอียดในฝันลงสมุด — มือ ผ้าคลุม รอยแผลเป็น ทุกอย่างอาจเป็นเบาะแส','epic')}}]);
+}
+function ftDream(){const T=S.ft,E=ER[era()];
+ const O=[
+  {t:'🌌 ดื่มด่ำเข้าไป',s:`ยืม${E.a}จากอนาคต · ร่างกายสึก ผู้คนสงสัย`,f(){ftBorrow(1)}},
+  {t:'🔇 ตื่นขึ้นมาทันที',s:'ไม่ได้อะไร ไม่เสียอะไร',skip:true,f(){T.bd=Math.max(0,T.bd-8);T.sy=Math.max(0,T.sy-3);log('📡 คุณฝืนลืมตา เหงื่อชุ่มทั้งตัว สายใยจางลงเล็กน้อย')}},
+  {t:'🗣️ ถามผู้ในฝัน',s:'ได้ข้อมูลหรือของตอบแทน · ผู้ส่งอาจขอสิ่งแลก',f(){ftTalk()}}];
+ if(T.bd<50&&T.sy>=50)O.push({t:'⚡ ดึงลึกสุดตัว',s:'ยืมแรงกว่าเดิม 2 เท่า · ร่างสึกหนัก',noFate:true,f(){ftBorrow(2)}});
+ choice('📡 สายใยหมื่นปี',ftScene(T),O)}
+function ftDeal(){const T=S.ft;T.deal=S.age;
+ const pe=peers.filter(p=>p&&p.alive&&p.name!==T.tg);const tg=T.tg?{name:T.tg}:(pe.length?ch(pe):{name:anyName(S.gender)});const n=tg.name;const kill=Math.random()<.5;
+ const pw=Math.round(Math.max(200,total()*.85));
+ const trueQ=Math.random()<.5;
+ choice('📡 คำขอจากผู้ส่งสัญญาณ',`ผู้ในฝันเสียงสั่น "ข้าขอสิ่งเดียวจากโลกของเจ้า — ${kill?`หยุด <b>${esc(n)}</b> ก่อนที่เขาจะทำให้ทุกอย่างพัง`:`ช่วย <b>${esc(n)}</b> ให้รอด เพราะเขาคือคนสุดท้ายที่รู้วิธีหยุดมัน`}" คุณไม่แน่ใจว่าควรเชื่อหรือไม่`,[
+  {t:kill?`🗡️ ลงมือกำจัด ${esc(n)}`:`🛡️ ปกป้อง ${esc(n)}`,s:kill?'ดวลจริง · กรรมลบ · รางวัลสูง · ผู้ส่งอาจไม่จริงใจ':'เสียเงินและเวลา · กรรมบวก · ผู้ส่งอาจไม่จริงใจ',noFate:kill,f(){
+    const good=trueQ;
+    if(kill){duel(n,pw,w=>{if(w){S.karma-=14;ftBorrow(2);T.hum=cl(T.hum+(good?12:-10),0,100);log(good?`📡 หลังเขาล้ม ภาพในฝันสดใสขึ้นเล็กน้อย — คำขอนั้นเป็นความจริง`:`📡 หลังเขาล้ม ภาพในฝันกลับมืดลง... คุณเริ่มสงสัยว่าผู้ส่งต้องการอะไรจริงๆ`,'epic')}else{S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.3));T.sy=Math.max(0,T.sy-10);log('📡 คุณพ่ายแพ้ ผู้ในฝันเงียบไปหลายวัน')}})}
+    else{const c=Math.round(S.money*.15);S.money=Math.max(0,S.money-c);S.karma+=10;S.fame+=fameR(30);T.hum=cl(T.hum+(good?14:6),0,100);ftBorrow(1);log(`📡 คุณปกป้อง ${esc(n)} จนพ้นภัย (เสีย ${fmt(c)})`,'epic')}}},
+  {t:'❌ ปฏิเสธ ไม่เล่นตามบท',s:'สายใยเบาบางลง · ไม่มีใครบังคับคุณ',f(){T.sy=Math.max(0,T.sy-12);S.int+=4;log('📡 "ข้าไม่ใช่เครื่องมือของใคร" — คุณพูดกับความมืด และคืนนั้นก็ไม่มีฝันเลย')}}])}
+function ftEdit(){const T=S.ft;
+ choice('📡 ภาพที่เคยเกิดขึ้น',`ในฝันคุณเห็นเมืองที่คุณรู้จักถูกไฟกลืน ผู้ในฝันชี้ปีหนึ่งที่ตรงกับอีกไม่กี่ปีข้างหน้า "นี่คือจุดที่ทุกอย่างเริ่มพัง — เจ้าเปลี่ยนมันได้ แต่วิชาที่เจ้ายืมไปก็จะเปลี่ยนตาม"`,[
+  {t:'💰 ทุ่มเงินและชื่อเสียงสร้างกำแพง อพยพผู้คน',s:'เสียเงิน · กรรมบวก · อนาคตดีขึ้น วิชาที่ยืมอ่อนลง',f(){const c=Math.round(S.money*.25);S.money=Math.max(0,S.money-c);S.karma+=10;S.fame+=fameR(40);T.hum=cl(T.hum+10,0,100);log(`📡 คุณใช้เงิน ${fmt(c)} และชื่อเสียงจัดการภัยล่วงหน้า — ฝันคืนถัดมา ภาพเมืองไฟไหม้ไม่ปรากฏอีก`,'epic')}},
+  {t:'⚔️ ไปดักรอผู้ลงมือถึงที่',s:'ต้องสู้ · ถ้าชนะอนาคตดีขึ้นมาก',f(){duel(ch(['หัวหน้าโจร','ผู้บุกจากต่างแดน','ผู้คุมลัทธิ','กองทัพเงา'])+'ที่ถูกฝันเห็น',Math.round(Math.max(200,total()*.9)),w=>{if(w){S.karma+=8;S.fame+=fameR(70);T.hum=cl(T.hum+14,0,100);log('📡 คุณชนะศึกที่ไม่เคยมีในประวัติศาสตร์ — ผู้คนไม่รู้ด้วยซ้ำว่าเกือบเสียอะไรไป','epic')}else{S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.35));T.hum=cl(T.hum-4,0,100)}})}},
+  {t:'🕯️ ปล่อยให้เป็นไป เพื่อรักษาสิ่งที่ยืมมา',s:'ไม่ต้องเสียอะไร · อนาคตแย่ลง · กรรมลบ · พลังยืมแรงขึ้น',noFate:true,f(){T.hum=cl(T.hum-6,0,100);S.karma-=6;joy(-8);ftBorrow(1);log('📡 ปีนั้นเมืองไฟไหม้จริงตามฝัน... คุณยืนดูอยู่ไกลๆ และรู้สึกว่ามือตัวเองเย็นลงกว่าเดิม')}}])}
+function ftSus(){const T=S.ft;T.sus=Math.max(0,T.sus-25);
+ choice('📡 สายตาที่จับจ้อง',`ผู้อาวุโสท่านหนึ่งเรียกคุณไปถาม "วิชาที่เจ้าใช้ ไม่มีสำนักไหนมี ไม่มีบันทึกไหนเขียน... เจ้าได้มันมาจากไหน?"`,[
+  {t:'📜 อ้างว่าได้จากสุสานโบราณ',s:'ต้องใช้ปัญญาโน้มน้าว',f(){if(roll01(.4+(S.int||0)/300)){S.fame+=fameR(20);log('📜 ผู้อาวุโสพยักหน้ารับ เรื่องสุสานโบราณกลายเป็นตำนานที่คุณไม่ต้องเป็นคนแต่ง')}else{S.fame-=Math.min(S.fame,40);S.karma-=3;log('📜 คำโกหกไม่แนบเนียน ข่าวลือว่าคุณเป็นมารเร้นกายแพร่ไปทั่ว')}}},
+  {t:'🥋 สาธิตให้ดู ไม่ปิดบัง',s:'ชื่อเสียงขึ้น · สายตาจับจ้องยิ่งมากขึ้น',f(){S.fame+=fameR(60);T.sus+=12;log('🥋 ทุกคนในห้องเงียบ... บางคนมองด้วยความทึ่ง บางคนมองด้วยความกลัว','epic')}},
+  {t:'🚪 หนีจากที่นี่ไปอยู่เงียบๆ',s:S.faction?'ออกจากสำนัก · ตัดข้อสงสัยทั้งหมด':'ตัดข้อสงสัยทั้งหมด',f(){if(S.faction){S.faction=null;S.rank=0;S.merit=0}T.sus=0;joy(-4);log('🚪 คุณหายออกจากสายตาผู้คนในคืนเดียว วิชาที่ยืมมายังอยู่ในมือ แต่ชื่อของคุณเริ่มเลือน')}}])}
+function ftCollapse(){const T=S.ft;
+ choice('📡 ร่างกายแตกร้าว',`สายใยดึงมากเกินไป ร่างคุณสั่นกลางดึก เลือดซึมจากหู คุณเห็นภาพซ้อนสองโลกพร้อมกัน — ต้องเลือกว่าจะทำอย่างไรต่อ`,[
+  {t:'🛌 พักฟื้น ตัดสายสามปี',s:'ร่างสึก −50% · ไม่ฝันสามปี',f(){T.bd=Math.max(0,T.bd-50);T.nx=S.age+3;S.hp=Math.max(S.hp,Math.round(S.maxHp*.6));log('🛌 คุณนอนซมสามเดือน หมอบอกว่ารอดมาได้เพราะร่างกายแข็งแรงผิดคน')}},
+  {t:'🔥 ฝืนต่อ ยืมให้สุดตัว',s:'ยืมแรงมาก · เสียอายุขัย · เสี่ยงตาย',noFate:true,f(){const l=R(3,8);S.lifespan=Math.max(S.age+3,S.lifespan-l);S.hp=Math.max(5,Math.round(S.maxHp*.4));ftBorrow(2);T.bd=60;if(Math.random()<.08)dieBy('สายใยหมื่นปีเผาผลาญดวงจิต ร่างพังทลายกลางความฝันที่ไม่มีวันตื่น');else log(`🔥 คุณรอดมาได้ แต่อายุขัยหายไป ${l} ปี`,'epic')}},
+  {t:'✂️ ตัดสายถาวร',s:'จบสายใย · เก็บวิชาที่ยืมไว้ทั้งหมด',f(){T.path='cut';T.sy=0;T.bd=0;ftFin('cut');log('✂️ คุณตัดสายใยด้วยมือตัวเอง ความเงียบที่ตามมาเหมือนมีบางอย่างหายไปจากหัวใจ แต่ร่างกายคุณเบาขึ้นทันที')}}])}
+function ftFin(k){S.ft.end=k;S.flags['ft_'+k]=1}
+function ftBloom(){const T=S.ft;
+ choice('🌅 สายใยเงียบลง',`ภาพในฝันเปลี่ยนไปหมดแล้ว เมืองร้างที่เคยเห็นตอนนี้มีเด็กวิ่งเล่น ผู้ส่งสัญญาณไม่ได้พูดอะไร แค่ยิ้มและค่อยๆ จางหายไป — อนาคตที่ต้องส่งสายมาหาคุณ ไม่มีอยู่อีกแล้ว`,[
+  {t:'🙏 ขอบคุณและปล่อยสายไป',s:'จบสายใย · วิชาที่ยืมกลายเป็นของคุณจริงๆ · อายุขัย +20',f(){ftFin('bloom');S.lifespan+=20;joy(25);S.power+=Math.round(total()*.05);S.fame+=fameR(120);keyAdd('อนาคตที่ฝันเห็นถูกเปลี่ยนจนสายใยหมื่นปีขาดสะบั้น — ไม่มีใครต้องส่งสัญญาณมาอีก');log('🌅 คุณตื่นขึ้นมาโดยไม่มีเสียงใดในหัวอีก แต่ทุกท่าที่เคยยืมมายังอยู่ในกล้ามเนื้อ — คราวนี้เป็นของคุณจริงๆ','myth')}},
+  {t:'👁️ ยังอยากเห็นอนาคตต่อ',s:'สายยังไม่ขาด',skip:true,f(){T.nx=S.age+5}}])}
+function ftPulled(){const T=S.ft;
+ choice('📡 เสียงเรียกสุดท้าย',`ภาพในฝันไม่เหลืออะไรแล้ว ผู้ส่งสัญญาณคือเสียงสุดท้ายของโลกนั้น เขาไม่ได้ขออะไร แค่ขอให้คุณ "มาอยู่ด้วย" ก่อนทุกอย่างจะดับ`,[
+  {t:'🌱 ลงมือช่วยโลกตอนนี้ ทุ่มทั้งตัว',s:'เสียเงินครึ่งหนึ่ง · อนาคตดีขึ้นมาก',f(){S.money=Math.round(S.money*.5);S.karma+=15;T.hum=cl(T.hum+25,0,100);joy(5);log('🌱 คุณเทเงินและชื่อเสียงทั้งหมดไปกับการเตรียมรับสิ่งที่ฝันเห็น ฝันคืนต่อมาเห็นแสงริบหรี่','epic')}},
+  {t:'✂️ ตัดสายด้วยเลือด',s:'จบสายใย · เสียเลือดและอายุขัย',f(){S.hp=Math.max(5,Math.round(S.hp*.5));S.lifespan=Math.max(S.age+3,S.lifespan-10);T.path='cut';ftFin('cut');log('✂️ คุณกรีดฝ่ามือเขียนคำสาบานตัดสาย เสียงในหัวหายไปในที่สุด — พร้อมกับบางอย่างที่คุณไม่รู้ว่าคืออะไร')}},
+  {t:'🚪 ตอบรับเสียงเรียก',s:'ไม่ตื่นอีก · ตอนจบที่เงียบที่สุด',noFate:true,f(){ftFin('pulled');keyAdd('ตอบรับเสียงเรียกจากหมื่นปีให้หลัง');dieBy('ตอบรับเสียงเรียก ถูกสายใยแห่งกาลเวลาดึงเข้าไปในฝันอนาคต ไม่ตื่นอีกเลย')}}])}
+function ftReveal(){const T=S.ft;if(T.who)return;const r=Math.random();T.who=r<.4?'self':r<.75?'last':'eat';T.st=2;
+ if(T.who==='self')choice('🔎 ใบหน้าใต้ผ้าคลุม',`หลายคืนของการสืบมาถึงที่สุด ผู้ในฝันถอดผ้าคลุมออก — เป็น<b>ใบหน้าของคุณเอง</b> แก่กว่าหลายพันปี เขาเป็นผู้รอดชีวิตคนสุดท้ายที่ไม่มีใครเหลือให้สอนวิชา`,[
+   {t:'🧬 หลอมรวมกับตัวเองในอนาคต',s:'ได้วิชาและพลังมหาศาล · เสียอายุขัย 10 ปี · จบสายใย',noFate:true,f(){const a=artAdd(3),b=artAdd(2);S.power+=Math.round(nextP().p*.2);S.lifespan=Math.max(S.age+5,S.lifespan-10);ftFin('merge');keyAdd('พบว่าผู้ส่งสัญญาณจากหมื่นปีให้หลังคือตัวเอง และหลอมรวมกัน');log(`🧬 ทั้งสองคนยื่นมือแตะกัน — ความทรงจำหมื่นปีไหลเข้ามาในหัวพริบตา ได้ ${a} และ ${b}`,'myth')}},
+   {t:'🛤️ ปฏิเสธ จะไม่เป็นเขา',s:'อนาคตดีขึ้นมาก · ได้วิชาน้อยลง · สายใยยังอยู่',f(){T.hum=cl(T.hum+20,0,100);T.path='rx';T.sy=Math.max(T.sy,40);log('🛤️ "ข้าจะไม่กลายเป็นเจ้า" — คุณพูด และเงาแก่ชราตรงหน้าก็ยิ้มเหมือนรอคำพูดนี้มาทั้งชีวิต','epic')}}]);
+ else if(T.who==='last')choice('🔎 ผู้รอดชีวิตคนสุดท้าย',`ผู้ส่งสัญญาณไม่ใช่ใครที่คุณรู้จัก เป็นนักรบแก่คนสุดท้ายของมนุษยชาติ เขาเก็บ${ER[era()].a}ที่ขัดเกลามาหลายพันปีไว้เพื่อมอบให้ใครสักคนก่อนตาย และเลือกคุณ`,[
+   {t:'🤝 รับมรดกวิชา',s:'ได้วิชาระดับตำนาน · ยอมรับว่าโลกนั้นล่มแน่',f(){const a=artAdd(3);S.power+=Math.round(nextP().p*.1);T.hum=cl(T.hum-10,0,100);T.path='rx';T.sy=Math.max(T.sy,50);log(`🤝 เขาวางมือบนหัวคุณแล้วหลับไปตลอดกาล ได้ ${a}`,'myth')}},
+   {t:'🌱 สาบานจะไม่ให้เขาต้องส่งสายนี้อีก',s:'อนาคตดีขึ้นมาก · เส้นทางที่ยากกว่า',f(){T.hum=cl(T.hum+20,0,100);S.karma+=10;T.path='rx';T.sy=Math.max(T.sy,30);log('🌱 คุณสาบานต่อหน้าเงาแก่ชราว่าจะเปลี่ยนทุกอย่าง เขาหัวเราะเบาๆ แล้วพูดว่า "ถ้าเป็นเช่นนั้น เราคงไม่ได้เจอกันอีก"','epic')}}]);
+ else choice('🔎 สิ่งที่รอคอยอยู่ปลายสาย',`ผู้ส่งสัญญาณไม่ใช่คน มันคือสิ่งที่กลืนมนุษยชาติไปทั้งหมด และกำลัง<b>ล่อให้คุณพาวิชากลับไปให้มัน</b> — วิชาที่คุณยืมมาทั้งหมดคือเหยื่อ`,[
+   {t:'⚔️ ท้าสู้มันผ่านสายใย',s:'ดวลสุดแรง · ชนะ = ปลดปล่อยโลก · แพ้ = ตาย',noFate:true,f(){duel('ผู้กลืนหมื่นปี',Math.round(total()*(1.15+T.hum/400)),w=>{if(w){T.hum=cl(T.hum+30,0,100);ftFin('slain');S.fame+=fameR(300);S.power+=Math.round(nextP().p*.1);keyAdd('ท้าสู้สิ่งที่กลืนมนุษยชาติผ่านสายใยหมื่นปี และเอาชนะได้');log('⚔️ มันกรีดร้องเสียงที่ไม่ใช่เสียง แล้วสายใยก็ขาดสะบั้น ภาพในฝันสุดท้ายคือท้องฟ้าสีฟ้าที่ไม่มีใครเคยเห็น','myth')}else dieBy('ถูกสิ่งที่กลืนมนุษยชาติฉุดดึงผ่านสายใยหมื่นปี วิญญาณถูกกลืนไปกับกาลเวลา')})}},
+   {t:'🔌 ตัดสายทันที',s:'ปลอดภัย · จบสายใย · เสียวิชาที่ยืมมาส่วนหนึ่ง',f(){S.power=Math.round(S.power*.9);T.path='cut';ftFin('cut');log('🔌 คุณฟันสายใยขาดก่อนมันตะครุบ เสียงหัวเราะต่ำๆ ดังตามมาอีกสามคืนก่อนจะหายไป')}},
+   {t:'🎭 หลอกมันกลับ ขโมยสิ่งที่มันกลืนไว้',s:'ใช้ปัญญา · สำเร็จได้วิชา · พลาดเสียหนัก',f(){if(roll01(.3+(S.int||0)/300)){const a=artAdd(3);T.hum=cl(T.hum+10,0,100);T.path='rx';log(`🎭 คุณแสร้งยอมรับ แล้วฉกวิชาที่มันกลืนมาจากมนุษย์คนอื่นก่อนตัดสาย ได้ ${a}`,'myth')}else{T.bd=Math.min(100,T.bd+40);T.sus+=15;S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.3));log('🎭 มันรู้ทันตั้งแต่คำแรก — ความเจ็บแล่นจากหัวถึงปลายเท้า')}}}])}
+
+// ---------------- 👑 จักรพรรดิผู้ตั้งใจตาย ----------------
+const EM0=()=>({n:0,pk:0,pkR:0,rate:.1,foes:[],ally:null,tomb:0,ev:0,nx:0,gone:0,memD:0});
+function emElig(){if(!ok()||S.age<20||(S.flags&&S.flags.kEnd))return false;const raw=rawRealm(),ri=realmIdx();const stuck=S.rcap!=null&&raw>S.rcap;return(ri>=5&&stuck)||ri>=7}
+function emOffer(){const E=S.em||(S.em=EM0()),raw=rawRealm(),stuck=S.rcap!=null&&raw>S.rcap,pF=Math.min(85,Math.round((.45+E.n*.1)*100));
+ const txt=stuck?`พลังของคุณเต็มเปี่ยม แต่ประตูบานสุดท้ายไม่ยอมเปิด ไม่ว่าจะฝึกอีกกี่ปี ${E.n?'กำแพงเดิมที่เคยหยุดคุณในชาติก่อน กลับมาอีกครั้ง':'คุณเริ่มสงสัยว่าทางเดียวที่ผ่านไปได้ คือต้องเริ่มใหม่'}`:`คุณยืนอยู่บนจุดสูงสุดที่โลกนี้มอบให้ ไม่มีใครเหนือกว่า แต่ก็ไม่มีที่ให้ไปต่อ ${E.n?'ความทรงจำหลายชาติบอกว่า ยังมีทางอื่น':'ความคิดหนึ่งผุดขึ้นมาเงียบๆ'}`;
+ const O=[
+  {t:'⏳ ยังไม่ถึงเวลา',s:'ถามอีกครั้งในอีกหลายปี',f(){E.nx=S.age+6;log('👑 คุณเก็บความคิดนั้นไว้ก่อน — แต่มันไม่ได้หายไปไหน')}},
+  {t:'🌑 ตายด้วยเจตนา เกิดใหม่พร้อมความทรงจำ',s:'เลือกวิธีเกิดได้ 3 แบบ · เก็บวิชาไว้ · ศัตรูชาติก่อนจะตามมา',noFate:true,f(){later(emWay)}},
+  {t:'🩸 ฝืนทะลวงด้วยชีวิต',s:`สำเร็จ ${pF}% · ล้มเหลวมีโอกาสตายจริง ไม่เกิดใหม่`,noFate:true,f(){emForce(pF)}},
+  {t:'📜 ถ่ายทอดทุกอย่าง แล้วจากไปอย่างสงบ',s:'ฉากจบ · ลูกหลานและศิษย์สืบวิชา',noFate:true,f(){emLegacy()}}];
+ if(E.n>=2)O.splice(2,0,{t:'♾️ ทะลวงด้วยความทรงจำหลายชาติ',s:`ผ่านแน่นอน · เหนือกว่าทางอื่นทั้งหมด · ใช้ได้เพราะเกิดใหม่มา ${E.n} ครั้ง`,noFate:true,f(){emTrans()}});
+ choice('👑 ทางที่สาม',txt,O)}
+function emForce(p){const E=S.em;
+ if(Math.random()*100<p){S.rcap=Math.max(S.rcap==null?0:S.rcap,rawRealm());S.btFail=0;S.lifespan+=30;S.fame+=fameR(200);S.hp=Math.max(S.hp,Math.round(S.maxHp*.5));keyAdd('ฝืนทะลวงคอขวดด้วยชีวิต และผ่านไปได้');log('🩸 คุณเผาลมปราณทุกหยดเข้าใส่กำแพง — มันร้าว แล้วแตก! คุณล้มลงด้วยเลือดทั้งตัวแต่ยืนขึ้นมาใหม่ในฐานะผู้ผ่านทัณฑ์','myth')}
+ else if(Math.random()<.3)dieBy('ฝืนทะลวงคอขวดด้วยชีวิต พลังตีกลับจนวิญญาณแตกสลาย');
+ else{S.hp=Math.max(5,Math.round(S.hp*.3));S.lifespan=Math.max(S.age+3,S.lifespan-R(5,12));E.nx=S.age+8;S.btFail=(S.btFail||0)+1;log('🩸 กำแพงไม่ยอมแตก พลังตีกลับจนกระอักเลือด คุณรอดมาได้ แต่อายุขัยหายไปมาก')}}
+function emLegacy(){S.fame+=fameR(250);S.flags.emLeg=1;keyAdd('ถ่ายทอดวิชาทั้งหมดให้ลูกหลานและศิษย์ แล้วจากไปอย่างสงบ');dieBy('ถ่ายทอดวิชาทั้งหมดแก่ลูกหลานและศิษย์ แล้วหลับตาอย่างหลุดพ้นจากภาระ')}
+function emTrans(){const E=S.em;S.rcap=Math.max(S.rcap==null?0:S.rcap,rawRealm());S.btFail=0;S.lifespan+=50;S.power+=Math.round(E.pk*.15);S.fame+=fameR(400);S.flags.emTrans=1;keyAdd('ทะลวงคอขวดสุดท้ายด้วยความทรงจำหลายชาติ — ไม่ต้องตายอีก');log(`♾️ คุณหลับตา แล้วเห็นตัวเองทุกชาติเรียงกันเป็นแถว ทุกคนยื่นมือมาแตะแผ่นหลัง — กำแพงที่หยุดคุณมา ${E.n} ชาติ เปิดออกโดยไม่ต้องใช้แรง`,'myth')}
+function emWay(){const E=S.em;
+ choice('🌑 เลือกวิธีเกิดใหม่','คุณนั่งสงบแล้วตัดสายชีวิตด้วยมือตัวเอง ก่อนวิญญาณหลุดออก คุณต้องเลือกว่าจะไปที่ไหน',[
+  {t:'↩️ ยังไม่พร้อม',s:'เปลี่ยนใจ',f(){E.nx=S.age+3}},
+  {t:'👶 ลืมตาใหม่เป็นเด็กธรรมดา',s:'เริ่มจากเด็ก · เก็บวิชา 70% · ครอบครัวใหม่ · ศัตรูชาติก่อนตามหา',noFate:true,f(){emRebirth(1)}},
+  {t:'🪞 สิงร่างผู้สืบทอดวัยหนุ่มสาว',s:'อายุ 15–24 · เก็บวิชาครบ · ฝึกตามทันเร็วกว่า · ทิ้งชื่อและครอบครัวเดิม',noFate:true,f(){emRebirth(2)}},
+  {t:'🏔️ ผนึกวิญญาณหลับยาวแล้วตื่นอีกหลายสิบปี',s:'อายุ 14 · โลกผ่านไป 30–70 ปี · ศัตรูแก่และอ่อนลง คนที่รักอาจจากไปแล้ว · ชื่อกลายเป็นตำนาน',noFate:true,f(){emRebirth(3)}}])}
+function emRebirth(mode){const E=S.em||(S.em=EM0());const oldPow=Math.round(total()),oldName=S.name,old=S.age;
+ E.pk=Math.max(E.pk,oldPow);E.pkR=Math.max(E.pkR,rawRealm());E.n++;E.ev=0;E.memD=0;E.tomb=0;
+ const kp=peers.filter(p=>p&&p.killed).slice(0,3).map(p=>({n:p.name,p:Math.round(Math.max(150,oldPow*.35)),h:0}));
+ while(kp.length<2)kp.push({n:ch(['ทายาทแห่งตระกูล','ศิษย์ผู้แค้น','ผู้ถูกทิ้งแห่งสำนัก'])+anyName(S.gender),p:Math.round(Math.max(150,oldPow*.3)),h:0});
+ if(mode===3)kp.forEach(f=>{f.p=Math.round(f.p*.5);f.h=1});
+ E.foes=(E.foes||[]).concat(kp).slice(-5);
+ E.ally=mode===3?null:{n:anyName(S.gender),met:0};E.gone=mode===3?R(30,70):0;
+ const rest=total()-S.power,k=mode===1?.10:mode===2?.14:.12,keep=mode===1?.7:mode===2?1:.85;E.rate=k;
+ try{if(S.arts&&S.arts.length){const A=Array.prototype.slice.call(S.arts).sort((a,b)=>((b&&b.b)||0)-((a&&a.b)||0));const nk=Math.max(1,Math.round(A.length*keep));S.arts.splice(0,S.arts.length);A.slice(0,nk).forEach(a=>Array.prototype.push.call(S.arts,a))}}catch(e){console.error(e)}
+ S.power=Math.max(10,Math.round(oldPow*k)-rest);S.qi=+(S.qi*.35).toFixed(1);
+ S.deathCause=null;S.chronic=null;S.shadow=null;S.flags.empRe=1;
+ S.faction=null;S.rank=0;S.merit=0;S.spouse=null;S.harem=null;S.children=[];S.kids=0;
+ let msg='';
+ if(mode===1){S.age=R(5,8);S.prevName=oldName;S.name=anyName(S.gender);(S.parents||[]).forEach(p=>{p.alive=true});msg=`👑 คุณตัดสายชีวิตด้วยมือตัวเอง... แล้วลืมตาขึ้นเป็นเด็กอายุ <b>${S.age} ปี</b> ชื่อ <b>${esc(S.name)}</b> ในบ้านธรรมดา ทุกวิชาที่เคยรู้ยังอยู่ในหัว แต่ร่างเล็กๆ นี้ยังจำท่าได้ไม่ถึงครึ่ง`}
+ else if(mode===2){const pe=peers.filter(p=>p&&p.alive&&p.age>=12&&p.age<=30);const P=pe.length&&Math.random()<.7?ch(pe):null;const g=P?P.g:S.gender,nm=P?P.name:anyName(g),na=P?Math.max(15,Math.min(24,P.age)):R(15,24);if(P){P.alive=false;P.killed=false}S.prevName=oldName;S.name=nm;S.gender=g;S.age=na;S.fame=Math.round(S.fame*.15);msg=`👑 วิญญาณคุณหลุดออกจากร่างเก่า แล้วไหลเข้าไปในร่างของ <b>${esc(nm)}</b> อายุ ${na} ปี${P?' — คนที่ชะตาสบจังหวะกับคุณพอดี':''} ทุกวิชาตามมาด้วย แต่ชื่อเสียงเดิมของคุณตายไปพร้อมร่างเก่า`}
+ else{S.age=14;S.fame=Math.round(S.fame*.6);msg=`👑 คุณผนึกวิญญาณหลับไป <b>${E.gone} ปี</b> แล้วตื่นขึ้นในร่างเด็กอายุ 14 ชื่อเดิมของคุณกลายเป็นตำนานที่คนเล่าต่อกัน — ผู้คนที่เคยรู้จักคุณส่วนใหญ่จากไปแล้ว ศัตรูเก่าแก่ชราและอ่อนแอ`}
+ S.hp=S.maxHp;S.int+=10;S.lifespan=Math.max(S.lifespan,S.age+(S.xian?150:60));S.rcap=rawRealm();S.btFail=0;S.tribPrep=0;if(S.xt){S.rcapG=1;S.pcap=-1;S.pcapG=1}
+ S.key.push(`${old} ปี — ตายด้วยเจตนาที่คอขวดสุดท้าย (ชาติที่ ${E.n}) เกิดใหม่พร้อมความทรงจำทั้งหมด`);
+ log(msg,'myth');try{render()}catch(e){}}
+// ----- เหตุการณ์หลังเกิดใหม่ (ไม่เป็นเส้นตรง) -----
+function emTomb(){const E=S.em;E.tomb=1;const pk=E.pk;
+ choice('👑 สุสานของตัวเอง',`คุณพบสุสานเก่าแก่ที่ผู้คนเล่าลือว่าเป็นของจักรพรรดิผู้หนึ่ง — จารึกบนหินคือลายมือของคุณเอง ร่างเก่ายังไม่เน่าเปื่อย เหลือแค่ร่องรอยพลังที่ไม่มีใครแตะ`,[
+  {t:'🔓 เปิดสุสาน ดูดซับพลังเดิม',s:'พลังเพิ่มมาก · อาจติดกับดักที่ตัวเองวางไว้',f(){S.power+=Math.round(pk*.12);const a=artAdd(2);if(Math.random()<.25){S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.3));log(`🔓 กับดักที่คุณเคยวางไว้เองเกือบเอาชีวิตคุณ — แต่ได้พลังและ ${a}`,'epic')}else log(`🔓 พลังเก่าหลอมเข้าเส้นลมปราณราวกับน้ำคืนสู่ทะเล ได้ ${a}`,'epic')}},
+  {t:'🪦 ปิดผนึกให้เงียบ',s:'ไม่มีใครใช้พลังที่เหลือได้ · ศัตรูเก่าอ่อนลง · ใจสงบ',f(){S.karma+=4;joy(8);E.foes.forEach(f=>{f.p=Math.round(f.p*.8)});log('🪦 คุณปิดหินผนึกแล้วนั่งนิ่งอยู่หน้าสุสานทั้งคืน — ไม่ใช่ทุกอย่างที่ทิ้งไว้ ต้องเอากลับคืน')}},
+  {t:'🔥 เผาทำลายทิ้ง ตัดอดีต',s:'ไม่มีใครใช้ได้อีก · ศัตรูอ่อนลงมาก · เป้าหมายพลังเก่าลดลง',f(){E.foes.forEach(f=>{f.p=Math.round(f.p*.6)});E.pk=Math.round(E.pk*.88);joy(-4);log('🔥 เปลวไฟกินจารึกชื่อของคุณ — ตั้งแต่นี้ไม่มีใครเดินตามรอยเดิมได้')}}])}
+function emFoe(){const E=S.em;if(!E.foes.length)return;const f=ch(E.foes);const pw=Math.round(Math.max(f.p,total()*(f.h?.6:.85)));
+ choice('👑 เงาของชาติก่อน',`<b>${esc(f.n)}</b> ${f.h?'ผู้เฒ่าที่เคยเป็นศัตรูของคุณ':'ผู้สืบทอดความแค้นของคนที่คุณเคยกำจัด'} ตามหาคุณจนเจอ เขาไม่รู้ว่าคุณคือใคร รู้เพียงว่าสายตาและท่ายืนของคุณเหมือนคนที่เขาเกลียดที่สุด`,[
+  {t:'⚔️ ดวลตัดสิน',s:'ชนะ = จบแค้นนี้ · แพ้ = เขายิ่งแรงขึ้น',f(){duel(f.n,pw,w=>{if(w){E.foes=E.foes.filter(x=>x!==f);S.fame+=fameR(60);S.karma-=3;log(`⚔️ ${esc(f.n)} ล้มลง — แค้นสายนี้จบที่คุณ`,'epic')}else{f.p=Math.round(f.p*1.12);S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.25));log(`⚔️ ${esc(f.n)} เอาชนะคุณได้ แต่ยังไม่ลงมือปลิดชีพ — เขากำลังรอบางอย่าง`)}})}},
+  {t:'🕊️ เปิดใจขอโทษแทนตัวเองในชาติก่อน',s:'ใช้เสน่ห์และปัญญา · สำเร็จได้สหาย',f(){if(roll01(.35+((S.cha||0)+(S.int||0))/500)){E.foes=E.foes.filter(x=>x!==f);S.karma+=12;S.fame+=fameR(40);joy(12);log(`🕊️ ${esc(f.n)} เงียบไปนาน แล้วเอ่ยว่า "ข้าไม่รู้ว่าเจ้าคือใคร แต่ข้าเชื่อเจ้า" — แค้นเก่าสลายโดยไม่ต้องเสียเลือด`,'epic')}else{S.fame-=Math.min(S.fame,30);log(`🕊️ ${esc(f.n)} หัวเราะเยาะ — เขาไม่ฟังคำขอโทษจากคนที่ไม่รู้ว่าต้องขอโทษเรื่องอะไร`)}}},
+  {t:'🌫️ หลบหน้า ยังไม่ถึงเวลา',s:'ไม่เสียอะไร · เขาจะตามอีก',skip:true,f(){E.ev++;log(`🌫️ คุณหลบออกทางหลังร้าน ${esc(f.n)}ยืนมองอยู่ไกลๆ`);if(E.ev>=4)later(()=>{const w=fight(f.n,pw);if(w){E.foes=E.foes.filter(x=>x!==f);log(`⚔️ ${esc(f.n)}ตามมาถึงที่พัก แต่ถูกปราบในไม่กี่กระบวนท่า`,'epic')}else{S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.35));log(`⚔️ ${esc(f.n)}บุกมาฟาดคุณจนบาดเจ็บหนัก`)}})}}])}
+function emAlly(){const E=S.em;if(!E.ally||E.ally.met)return;E.ally.met=1;const n=E.ally.n;
+ choice('👑 คนที่จำท่าทางคุณได้',`<b>${esc(n)}</b> เคยเป็นศิษย์คนเล็กของคุณในชาติก่อน เขาจำท่าเดินและนิสัยการจิบชาของคุณได้ ทั้งที่หน้าตาไม่เหมือนเดิมเลย`,[
+  {t:'🧓 เปิดเผยตัวตน',s:'ได้สหายที่ภักดี · แต่ข่าวอาจรั่ว',f(){S.fame+=fameR(40);S.money+=R(300,1200)*(1+realmIdx());S.int+=5;E.ally.w=1;joy(15);log(`🧓 ${esc(n)}น้ำตาไหลแล้วคุกเข่าลง — "ท่านอาจารย์ ข้ารอมาสามสิบปีแล้ว" เขากลายเป็นแขนขาข้างหนึ่งของคุณทันที`,'epic')}},
+  {t:'🤫 ปกปิด แต่แอบช่วยเงียบๆ',s:'ปลอดภัยกว่า · ได้เล็กน้อย',f(){S.karma+=5;joy(5);log(`🤫 คุณยิ้มรับแล้วบอกว่าเขาจำคนผิด — แต่คืนนั้นคุณแอบส่งยาและเงินไปที่บ้านเขา`)}},
+  {t:'📜 สอนวิชาที่ยังไม่เคยสอนให้',s:'เขาเก่งขึ้นมาก · คุณได้ปัญญา',f(){S.int+=8;S.fame+=fameR(25);joy(10);log(`📜 คุณสอนท่าสุดท้ายที่ไม่เคยถ่ายทอดให้ใครในชาติก่อน ${esc(n)}ฝึกรอบเดียวก็ทำได้ แววตาเปล่งแสง`,'epic')}}])}
+function emMem(){const E=S.em;E.memD=1;
+ choice('👑 ความทรงจำหลั่งไหล','คืนหนึ่งความทรงจำของชาติก่อนทะลักเข้ามาในหัวพร้อมกัน ทุกท่า ทุกใบหน้า ทุกคำพูดสุดท้าย คุณต้องเลือกว่าจะรับมันไว้อย่างไร',[
+  {t:'🧠 รับไว้ทั้งหมด',s:'พลังเพิ่ม · ปัญญาเพิ่ม · ใจหม่นหมอง',f(){S.power+=Math.round(E.pk*.04);S.int+=10;joy(-8);log('🧠 คุณทนความปวดหัวไว้ได้ ตื่นมาพร้อมความเข้าใจที่ลึกกว่าเดิมมาก แต่ฝันร้ายตามมาหลายสัปดาห์','epic')}},
+  {t:'🧘 วางความทรงจำ ใช้ชีวิตวันนี้',s:'ใจสงบ · ฝึกตามทันเร็วขึ้นเล็กน้อย',f(){joy(12);E.rate=Math.min(.2,E.rate+.02);S.karma+=3;log('🧘 คุณนั่งมองพระอาทิตย์ขึ้นแล้วปล่อยให้ความทรงจำไหลผ่านไป — ไม่ต้องจำทุกอย่างเพื่อเป็นตัวเอง')}}])}
+function emYear(){if(!ok())return;let E=S.em;
+ if(emElig()&&S.age>=(E?E.nx:0)&&Math.random()<.3){go(()=>{if(emElig())emOffer()});return}
+ if(!E||!E.n)return;
+ if(S.age>=5&&total()<E.pk*.92){const gap=E.pk-total();S.power+=Math.round(Math.max(25,gap*E.rate));S.qi=+(S.qi+.2).toFixed(1)}
+ const raw=rawRealm();if(S.rcap!=null&&raw>S.rcap&&raw<E.pkR)S.rcap=raw;
+ if(S.age<12||Math.random()>.14)return;
+ const L=[];if(!E.tomb&&S.age>=16)L.push(emTomb);if(E.foes.length)L.push(emFoe);if(E.ally&&!E.ally.met&&S.age>=18)L.push(emAlly);if(!E.memD)L.push(emMem);
+ if(L.length){const f=ch(L);go(()=>{if(S.em&&S.em.n)f()})}}
+
+// ---------------- ต่อเข้าระบบเดิม ----------------
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive){ftYear();emYear()}}catch(e){console.error('blk16',e)}return r}}
+function ftYear(){if(!ok()||S.age<14)return;let T=S.ft;
+ if(!T){if(S.age>62)return;const p=.005+(S.hp<S.maxHp*.3?.012:0)+cl(((S.int||0)-60)/9000,0,.01);if(Math.random()>p)return;go(()=>{if(!S.ft){S.ft=FT0();ftFirst()}});return}
+ if(T.end)return;
+ if(!T.path){if(S.age-(T.re||0)>=3){T.re=S.age;go(ftFirst)}return}
+ const dk=(S.karma||0)-T.k0;T.k0=S.karma||0;const nk=Math.max(0,(S.kids||0)-T.kd);T.kd=S.kids||0;
+ T.hum=cl(Math.round(T.hum+cl(dk*.25,-6,6)+nk*2),0,100);T.bd=Math.max(0,T.bd-3);T.sus=Math.max(0,T.sus-1);
+ if(T.path==='rx'&&T.sy>=20)S.power+=Math.round(REALMS[Math.min(REALMS.length-1,realmIdx())].p*.004*ftPw(T))+2;
+ if(T.bd>=60&&Math.random()<.3){S.hp=Math.max(5,S.hp-Math.round(S.maxHp*.08));log(`📡 ร่างกายสึกจากสายใยหมื่นปี มือสั่นและเลือดกำเดาไหล (${Math.round(T.bd)}%)`)}
+ let ev=null;
+ if(T.bd>=90)ev=ftCollapse;
+ else if(T.hum>=75&&T.dr>=2&&Math.random()<.5)ev=ftBloom;
+ else if(T.hum<=6&&T.sy>=70&&Math.random()<.5)ev=ftPulled;
+ else if(T.path==='seek'&&T.cl>=3&&!T.who)ev=ftReveal;
+ else if(T.sus>=40&&Math.random()<.3)ev=ftSus;
+ else if(T.sy>=30&&S.age-(T.deal||-99)>=15&&Math.random()<.12)ev=ftDeal;
+ else if(T.sy>=15&&T.hum<45&&Math.random()<.1)ev=ftEdit;
+ else{const p=T.path==='rx'?.3:T.path==='seek'?.22:.06;if(S.age>=(T.nx||0)&&Math.random()<p)ev=ftDream}
+ if(ev)go(()=>{if(!S.ft||S.ft.end)return;ev()})}
+{const _ql=questList;questList=function(){const L=_ql.apply(this,arguments);try{const T=S&&S.ft,E=S&&S.em;
+ if(T&&T.path&&!T.end)L.unshift({k:'ft',ic:'📡',n:'สายใยหมื่นปี',p:`ฝันแล้ว ${T.dr} ครั้ง · ร่างสึก ${Math.round(T.bd)}% · อนาคตมีผู้รอด ${T.hum}%`,d:T.path==='seek'?'คุณกำลังสืบหาว่าใครส่งสัญญาณมา — ถามผู้ในฝันให้ครบเพื่อรู้ความจริง':T.path==='rx'?'ยิ่งช่วยโลกให้ดีขึ้น วิชาที่ยืมมาจะยิ่งอ่อนลง — เลือกให้ดี':'คุณตัดสายไว้แล้ว แต่ความฝันยังแทรกมาบ้าง'});
+ if(E&&E.n&&E.foes&&E.foes.length)L.unshift({k:'em',ic:'👑',n:'เงาของชาติก่อน',p:`ศัตรูที่ยังตามอยู่ ${E.foes.length} คน`,d:'คนที่คุณเคยกำจัดในชาติก่อนมีทายาทตามหา — ดวล เปิดใจ หรือหลบก็ได้'})}catch(e){}return L}}
+try{const add=(cat,arr)=>{const c=ACH.find(x=>x[0]===cat);if(!c)return;arr.forEach(a=>{if(ACH_ALL.some(b=>b.id===a.id))return;c[1].push(a);ACH_ALL.push(a)})};
+ add('ผู้ข้ามมิติ',[
+  {id:'ft_dream',n:'ผู้รับสัญญาณหมื่นปี',d:'ฝันเห็นอนาคตและยืมวิชาจากมัน',r:2,c:()=>!!(S.ft&&S.ft.dr>=1)},
+  {id:'ft_bloom',n:'อนาคตที่ไม่ต้องส่งสาย',d:'เปลี่ยนอนาคตจนสายใยหมื่นปีขาดไปเอง',r:3,c:()=>!!S.flags.ft_bloom},
+  {id:'ft_slain',n:'ผู้ฆ่าสิ่งที่กลืนมนุษยชาติ',d:'ท้าสู้ผู้ล่อลวงปลายสายใยและเอาชนะ',r:3,c:()=>!!S.flags.ft_slain},
+  {id:'em_re',n:'จักรพรรดิผู้ตั้งใจตาย',d:'ตายด้วยเจตนาที่คอขวดแล้วเกิดใหม่พร้อมความทรงจำ',r:2,c:()=>!!(S.em&&S.em.n>=1)},
+  {id:'em_3',n:'ผู้ทะลวงด้วยหลายชาติ',d:'ทะลวงคอขวดด้วยความทรงจำจากการเกิดใหม่หลายครั้ง',r:3,c:()=>!!S.flags.emTrans}])}catch(e){}
+try{TTL_SP.splice(3,0,['ftbloom',()=>S.flags.ft_bloom,'ผู้เปลี่ยนอนาคตหมื่นปี'],['emtrans',()=>S.flags.emTrans,'จักรพรรดิผู้ทะลวงด้วยหลายชาติ'])}catch(e){}
+window._blk16={ftYear,emYear,ftFirst,ftDream,ftDeal,ftEdit,ftSus,ftCollapse,ftBloom,ftPulled,ftReveal,emOffer,emWay,emRebirth,emForce,emTrans,emLegacy,emTomb,emFoe,emAlly,emMem,ftBorrow,ftTalk,FT0,EM0};
+}catch(e){console.error('block16',e)}})();
 </script>
 </body>
 </html>
