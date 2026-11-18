@@ -123,9 +123,9 @@ const cmd = USE_VK ? vkCmd : upCmd;
 const pipe = USE_VK ? vkPipe : upPipe;
 
 // ===== ทำเนียบรายวัน (v15.3): แยก 4 หมวด · คะแนนจากค่าเฉลี่ยทุกด้าน · รางวัลอันดับ 1–3 =====
-const BD_CATS = ['m', 'x', 'g', 'b', 'c', 'r', 'ch', 'cs', 'cj']; // c = ทำเนียบท้าทายรวม (เลิกใช้แล้ว) · ch นรก · cs ชีวิตสั้น · cj รากขยะ · r ผู้ย้อนกาล
-const CHC = { hell: 'ch', short: 'cs', junk: 'cj' }, CHM = { h: 'ch', s: 'cs', j: 'cj' }, CHF = { ch: 'h', cs: 's', cj: 'j' };
-const CH_OK = ['hell', 'short', 'junk', 'regress'];
+const BD_CATS = ['m', 'x', 'g', 'b', 'c', 'r', 'ch', 'cs', 'cj', 'cl']; // c = ทำเนียบท้าทายรวม (เลิกใช้แล้ว) · ch นรก · cs ชีวิตสั้น · cj รากขยะ · r ผู้ย้อนกาล
+const CHC = { hell: 'ch', short: 'cs', junk: 'cj', soul: 'cl' }, CHM = { h: 'ch', s: 'cs', j: 'cj', l: 'cl' }, CHF = { ch: 'h', cs: 's', cj: 'j', cl: 'l' };
+const CH_OK = ['hell', 'short', 'junk', 'regress', 'soul'];
 // ฉายาทำเนียบ (ชั่วคราว): รายวัน/สัปดาห์/เดือน · อันดับ 1–3
 const RKT = { d: ['', 'ตะวันเจิดจ้า', 'จันทร์เหนือเมฆ', 'ดาวประกาย'], w: ['', 'จ้าวยุทธภพ', 'ขุนศึกไร้พ่าย', 'ยอดฝีมือผงาด'], m: ['', 'จักรพรรดิเหนือฟ้า', 'มหาเทพบัญชาสวรรค์', 'ตำนานผู้ถูกจารึก'] };
 const RKT_C = { d: ['', 'ผู้ฝ่าขุมนรก', 'วิญญาณไม่ดับ', 'ผู้ท้าลิขิต'], w: ['', 'ราชันย์ไร้พรสวรรค์', 'จ้าวแห่งเปลวนรก', 'ผู้ทวนชะตา'], m: ['', 'จักรพรรดิผู้ลบลิขิต', 'มารฟ้าทลายกรรม', 'ตำนานจากธุลี'] };
@@ -135,8 +135,9 @@ const RKT_EXP = { d: 86400e3 * 1.1, w: 86400e3 * 7.2, m: 86400e3 * 31 }, RKT_TR 
 const RKT_H = { d: ['', 'ผู้ฝ่าขุมนรก', 'ผู้ลุยเพลิงอเวจี', 'วิญญาณไม่ดับ'], w: ['', 'จ้าวแห่งเปลวนรก', 'อสูรเพลิงกัลป์', 'ผู้เหยียบขุมไฟ'], m: ['', 'จักรพรรดิแห่งขุมนรก', 'มารฟ้าทลายกรรม', 'ผู้กลับจากอเวจี'] };
 const RKT_S = { d: ['', 'ดาวตกสามสิบปี', 'ผู้เผาเทียนสองปลาย', 'ชีวิตเดียวพันตำนาน'], w: ['', 'จ้าวแห่งเวลาอันสั้น', 'ตำนานชั่วพริบตา', 'ผู้ใช้สามสิบปีให้คุ้ม'], m: ['', 'จักรพรรดิแห่งพริบตา', 'ดาวหางผ่าฟ้า', 'ผู้ชนะเวลา'] };
 const RKT_J = { d: ['', 'ผู้ท้าลิขิต', 'ขยะผู้ไม่ยอมแพ้', 'ธุลีที่ลุกขึ้น'], w: ['', 'ราชันย์ไร้พรสวรรค์', 'ผู้ทวนชะตา', 'กระดูกขยะทะลวงฟ้า'], m: ['', 'จักรพรรดิผู้ลบลิขิต', 'ตำนานจากธุลี', 'ผู้ทำลายคำพยากรณ์'] };
-const RKT_M = { ch: RKT_H, cs: RKT_S, cj: RKT_J };
-const RKT_ALL = new Map(); [RKT, RKT_C, RKT_A, RKT_R, RKT_H, RKT_S, RKT_J].forEach(TT => Object.entries(TT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) })));
+const RKT_L = { d: ['', 'ผู้ปลุกดวงจิตแห่งวัน', 'วงแหวนพันปีดวงแรก', 'ประกายจิตยุทธ์'], w: ['', 'ราชันจิตวิญญาณ', 'จ้าวแห่งวงแหวนเก้าดวง', 'ผู้สืบทอดจิตเทพ'], m: ['', 'จักรพรรดิจิตยุทธ์เหนือทวีป', 'เทพผู้ครองดวงจิต', 'ตำนานแห่งวงแหวนหมื่นปี'] };
+const RKT_M = { ch: RKT_H, cs: RKT_S, cj: RKT_J, cl: RKT_L };
+const RKT_ALL = new Map(); [RKT, RKT_C, RKT_A, RKT_R, RKT_H, RKT_S, RKT_J, RKT_L].forEach(TT => Object.entries(TT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) })));
 // ===== ฉายา/กรอบทำเนียบแบบสุ่มจากคลังคำ (ไม่ใช้ AI) · ผลเหมือนกันทุกเครื่องจากรหัสรอบ =====
 // รหัสรอบที่มี "v" = ชุดที่ 2 (คลังคำใหญ่ + กรอบประกอบชิ้นส่วน) · ไม่มี "v" = ชุดแรก (คงไว้ให้ของที่แจกไปแล้วหน้าตาไม่เปลี่ยน)
 const RKG = (() => {
@@ -145,7 +146,7 @@ const RKG = (() => {
   const pk = (r, a) => a[Math.floor(r() * a.length)];
   // ---------- ชุดแรก (v1) ----------
   const PRE1 = ['อัสนี', 'หิมะ', 'โลหิต', 'จันทรา', 'เพลิงนิล', 'วายุ', 'ธาราฟ้า', 'หยกขาว', 'ทองคำ', 'เงามืด', 'อรุณ', 'สนธยา', 'ดารา', 'เมฆา', 'ศิลา', 'อำพัน', 'มรกต', 'หงส์ไฟ', 'พยัคฆ์', 'กิเลน', 'มังกรฟ้า', 'พันกระบี่', 'หมื่นลี้', 'เก้าสวรรค์', 'สามภพ', 'ไร้เงา', 'ไร้นาม', 'สายฟ้า', 'ราตรี', 'ทะเลเมฆ'];
-  const TH1 = { m: ['กระบี่', 'ยุทธภพ', 'ดาบเหล็ก', 'หมัดเหล็ก'], x: ['เซียน', 'เมฆหยก', 'ปราณฟ้า', 'โอสถทิพย์'], g: ['เทพ', 'สวรรค์', 'แสงทิพย์', 'บัลลังก์ฟ้า'], b: ['อสูร', 'เขี้ยวเหล็ก', 'พงไพร', 'กรงเล็บ'], r: ['กาลเวลา', 'วงจร', 'เข็มกาล', 'ทรายย้อน'], c: ['อเวจี', 'เพลิงกัลป์', 'ลิขิตแตก'], h: ['อเวจี', 'เพลิงกัลป์', 'ขุมนรก', 'ไฟบาป'], s: ['ชั่วพริบตา', 'ดาวตก', 'เทียนสองปลาย', 'สามสิบฤดู'], j: ['ธุลี', 'กระดูกขยะ', 'ไร้ราก', 'ฝุ่นทราย'] };
+  const TH1 = { m: ['กระบี่', 'ยุทธภพ', 'ดาบเหล็ก', 'หมัดเหล็ก'], x: ['เซียน', 'เมฆหยก', 'ปราณฟ้า', 'โอสถทิพย์'], g: ['เทพ', 'สวรรค์', 'แสงทิพย์', 'บัลลังก์ฟ้า'], b: ['อสูร', 'เขี้ยวเหล็ก', 'พงไพร', 'กรงเล็บ'], r: ['กาลเวลา', 'วงจร', 'เข็มกาล', 'ทรายย้อน'], c: ['อเวจี', 'เพลิงกัลป์', 'ลิขิตแตก'], h: ['อเวจี', 'เพลิงกัลป์', 'ขุมนรก', 'ไฟบาป'], s: ['ชั่วพริบตา', 'ดาวตก', 'เทียนสองปลาย', 'สามสิบฤดู'], j: ['ธุลี', 'กระดูกขยะ', 'ไร้ราก', 'ฝุ่นทราย'], l: ['ดวงจิต', 'วงแหวนวิญญาณ', 'จิตยุทธ์', 'ร่างแท้'] };
   const CORE1 = [null, ['จักรพรรดิ', 'ราชัน', 'อธิราช', 'มหาเทพ', 'จ้าว', 'ปฐมกษัตริย์'], ['ขุนศึก', 'ยอดยุทธ์', 'อัครเซียน', 'แม่ทัพ', 'ผู้พิชิต', 'จอมดาบ'], ['ดาวรุ่ง', 'ยอดฝีมือ', 'ผู้กล้า', 'นักดาบ', 'ผู้ท้าทาย', 'ศิษย์เอก']];
   const SUF1 = ['แห่งวสันต์', 'เหนือเมฆา', 'ไร้พ่าย', 'แห่งบูรพา', 'แห่งทะเลเหนือ', 'ใต้แสงจันทร์', 'ผู้ทลายฟ้า', 'ผู้ฝ่าพายุ', 'แห่งยุคใหม่', 'ผู้ลิขิตตำนาน', 'แห่งหมื่นศึก', 'ผู้ไม่หลับใหล'];
   function title1(p, c, k, r) {
@@ -166,7 +167,8 @@ const RKG = (() => {
     c: TH1.c.concat(['ลิขิตฟ้า', 'โซ่ตรวน', 'ทวนชะตา', 'บาปกรรม', 'เปลวทมิฬ']),
     h: TH1.h.concat(['ขุมที่สิบแปด', 'สะพานไร้กลับ', 'เพลิงทมิฬ', 'โซ่ตรวน', 'ยมโลก', 'ทะเลเลือด', 'ปีศาจไฟ', 'เถ้าถ่าน', 'ประตูผี', 'ลาวาดำ']),
     s: TH1.s.concat(['ดอกไม้ไฟ', 'เทียนไข', 'รุ้งชั่วคราว', 'ดาวหาง', 'น้ำค้างเช้า', 'ใบไม้ร่วง', 'ฤดูเดียว', 'เปลวเทียน', 'พลุสวรรค์', 'ชั่วลมหายใจ']),
-    j: TH1.j.concat(['เศษหิน', 'ใบหญ้า', 'ดินโคลน', 'กิ่งหัก', 'หญ้าป่า', 'เศษเหล็ก', 'ผู้ถูกทิ้ง', 'ขอทาน', 'ตรอกมืด', 'รากหญ้า'])
+    j: TH1.j.concat(['เศษหิน', 'ใบหญ้า', 'ดินโคลน', 'กิ่งหัก', 'หญ้าป่า', 'เศษเหล็ก', 'ผู้ถูกทิ้ง', 'ขอทาน', 'ตรอกมืด', 'รากหญ้า']),
+    l: TH1.l.concat(['วงแหวนหมื่นปี', 'ร่างแท้วิญญาณ', 'ทวีปจิตยุทธ์', 'ราชันจิต', 'แสงดวงจิต', 'วงแหวนทมิฬ', 'ตำนานจิตเทพ', 'ผู้ปลุกจิต', 'ดวงจิตคู่', 'ประกายวิญญาณ'])
   };
   const CORE = [null,
     CORE1[1].concat(['ราชันย์', 'จักรพรรดินี', 'เทพจักรพรรดิ', 'เจ้าโลก', 'ตำนาน', 'มหาราชัน', 'เทพเจ้า', 'อธิปไตย']),
@@ -183,16 +185,16 @@ const RKG = (() => {
   }
   // ---------- กรอบ ----------
   const PALS = [['#ffd040', '#fff4b0', '#ff9a20'], ['#ff70e0', '#ffffff', '#ffd040'], ['#6ad0ff', '#e8f8ff', '#3a6ad8'], ['#ff5d73', '#ffd0d8', '#8a1a2a'], ['#7ae07a', '#e8ffe0', '#2a8a4a'], ['#b070ff', '#f0e0ff', '#5a2aa8'], ['#ffb050', '#fff0d0', '#c85a1a'], ['#d8e0f0', '#ffffff', '#7a8aa8'], ['#40e0d0', '#e0fffa', '#1a7a8a'], ['#ff8a40', '#ffe0a0', '#a02a1a'], ['#e0c080', '#fff8e0', '#8a6a2a'], ['#ff4ab0', '#ffe0f0', '#6a1a5a']];
-  const SH1 = { m: ['sword', 'laurel', 'crown', 'dbl'], x: ['cloud', 'ringh', 'leaf', 'pearl'], g: ['ray', 'ringh', 'star4', 'lotus'], b: ['horn', 'scale', 'thorn', 'wing'], r: ['clock', 'moon', 'star4'], c: ['flame', 'thorn', 'chain'], h: ['flame', 'horn', 'drip', 'gate'], s: ['flame', 'star4', 'butterfly'], j: ['knob', 'chain', 'fade', 'leaf'] };
+  const SH1 = { m: ['sword', 'laurel', 'crown', 'dbl'], x: ['cloud', 'ringh', 'leaf', 'pearl'], g: ['ray', 'ringh', 'star4', 'lotus'], b: ['horn', 'scale', 'thorn', 'wing'], r: ['clock', 'moon', 'star4'], c: ['flame', 'thorn', 'chain'], h: ['flame', 'horn', 'drip', 'gate'], s: ['flame', 'star4', 'butterfly'], j: ['knob', 'chain', 'fade', 'leaf'], l: ['ringh', 'star4', 'lotus', 'ray', 'gem'] };
   const TY1 = [null, 'spin halo orbit ring2 aura2 sparkle star ember corner badge rk1', 'spin orbit ring2 snow corner badge rk2', 'corner badge rk3'];
   const PN = { d: 'ประจำวัน', w: 'ประจำสัปดาห์', m: 'ประจำเดือน' }, BD = { d: ['', '🌅', '🥈', '🥉'], w: ['', '⚔️', '🥈', '🥉'], m: ['', '🌟', '🥈', '🥉'] };
-  const RE = /^f_g([dwm])([mxgbrchsj])([0-9a-z]+)_([123])$/;
+  const RE = /^f_g([dwm])([mxgbrchsjl])([0-9a-z]+)_([123])$/;
   // ชุดที่ 2: สีจากวงล้อสี (โทนคู่ตรงข้าม/ข้างเคียง) · ลายประดับตามหมวด + ลายสุ่ม · แสงสุ่มชุดใหม่ทุกรอบ · ตราตามหมวด
   const hsl = (h, s, l) => { h = ((h % 360) + 360) % 360; s /= 100; l /= 100; const a = s * Math.min(l, 1 - l), f = n => { const k = (n + h / 30) % 12, c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); return Math.round(255 * c).toString(16).padStart(2, '0') }; return '#' + f(0) + f(8) + f(4) };
-  const SH = { m: ['sword', 'laurel', 'crown', 'dbl', 'gem'], x: ['cloud', 'ringh', 'leaf', 'pearl', 'gate'], g: ['ray', 'ringh', 'star4', 'lotus', 'crown'], b: ['horn', 'scale', 'thorn', 'wing', 'eye'], r: ['clock', 'moon', 'star4', 'ringh'], c: ['flame', 'thorn', 'chain', 'eye'], h: ['flame', 'horn', 'drip', 'gate', 'skull'], s: ['flame', 'star4', 'butterfly', 'petal'], j: ['knob', 'chain', 'fade', 'leaf'] };
+  const SH = { m: ['sword', 'laurel', 'crown', 'dbl', 'gem'], x: ['cloud', 'ringh', 'leaf', 'pearl', 'gate'], g: ['ray', 'ringh', 'star4', 'lotus', 'crown'], b: ['horn', 'scale', 'thorn', 'wing', 'eye'], r: ['clock', 'moon', 'star4', 'ringh'], c: ['flame', 'thorn', 'chain', 'eye'], h: ['flame', 'horn', 'drip', 'gate', 'skull'], s: ['flame', 'star4', 'butterfly', 'petal'], j: ['knob', 'chain', 'fade', 'leaf'], l: ['ringh', 'star4', 'lotus', 'ray', 'gem'] };
   const ANY = ['star4', 'gem', 'petal', 'snow', 'moon', 'ray', 'lightning', 'pearl', 'leaf', 'cloud', 'wing'];
   const FX = { 1: ['halo', 'orbit', 'ring2', 'aura2', 'sparkle', 'star', 'ember', 'snow', 'petal', 'rainbow', 'flow', 'glow'], 2: ['orbit', 'ring2', 'sparkle', 'snow', 'ember', 'petal', 'shift', 'glow', 'star'], 3: ['snow', 'ember', 'star', 'glow'] };
-  const MARK = { m: ['⚔️', '🗡️', '🏯'], x: ['☁️', '🌀', '🍑'], g: ['✨', '🌞', '🪷'], b: ['🐾', '🐉', '🐯'], r: ['⏳', '🕰️', '🌀'], c: ['🔥', '⛓️', '☄️'], h: ['💀', '🔥', '👹'], s: ['☄️', '🕯️', '🎆'], j: ['🦴', '🍂', '🪨'] };
+  const MARK = { m: ['⚔️', '🗡️', '🏯'], x: ['☁️', '🌀', '🍑'], g: ['✨', '🌞', '🪷'], b: ['🐾', '🐉', '🐯'], r: ['⏳', '🕰️', '🌀'], c: ['🔥', '⛓️', '☄️'], h: ['💀', '🔥', '👹'], s: ['☄️', '🕯️', '🎆'], j: ['🦴', '🍂', '🪨'], l: ['⭕', '🔮', '🌌'] };
   function frame(id) {
     const m = RE.exec(id); if (!m) return null; const [, p, c, k, rs] = m, r = +rs;
     const dt = String(k).replace(/[sv].*/, ''), dl = dt.length >= 8 ? dt.slice(6, 8) + '/' + dt.slice(4, 6) + '/' + dt.slice(0, 4) : dt.slice(4, 6) + '/' + dt.slice(0, 4);
@@ -211,10 +213,10 @@ const RKG = (() => {
   const fid = (p, c, k, r) => 'f_g' + p + c + k + '_' + r;
   const ALLC = [null, ...[1, 2, 3].map(r => CORE[r])];
   const rank = t => { t = String(t || ''); let best = 0, bl = 0; for (let r = 1; r <= 3; r++) for (const w of ALLC[r]) if (t.startsWith(w) && w.length > bl) { bl = w.length; best = r } return best };
-  const cat = t => { t = String(t || ''); for (const k of ['h', 's', 'j', 'r', 'b', 'x', 'g', 'c']) if (TH[k].some(w => t.includes(w))) return k; return 'm' };
+  const cat = t => { t = String(t || ''); for (const k of ['l', 'h', 's', 'j', 'r', 'b', 'x', 'g', 'c']) if (TH[k].some(w => t.includes(w))) return k; return 'm' };
   return { title, frame, fid, RE, H, rank, cat };
 })();
-const RKG_C = { m: 'm', x: 'x', g: 'g', b: 'b', r: 'r', c: 'c', ch: 'h', cs: 's', cj: 'j' };
+const RKG_C = { m: 'm', x: 'x', g: 'g', b: 'b', r: 'r', c: 'c', ch: 'h', cs: 's', cj: 'j', cl: 'l' };
 const rkKey = (lab, salt) => String(lab || '').replace(/[^0-9]/g, '') + 'v' + (salt || ''); // v = ชุดที่ 2
 const bdCat = e => e.bm ? 'b' : e.g ? 'g' : e.x ? 'x' : 'm';
 const bdKey = (c, ms, back = 0) => 'bd3:' + c + ':' + new Date(ms + 7 * 3600e3 - back * 86400e3).toISOString().slice(0, 10);
@@ -2267,6 +2269,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
           const okU = hb >= 100 || ab0 > 0, minA = 16 + Math.max(0, al - acs - 1); e.al = okU && al > 0 && ag >= minA && (!acs0 || acs) ? al : 0; if (acs) e.acs = acs;
           if (okId(id) && e.al > ab0) await cmd('SET', 'alb:' + id, e.al, 'EX', 86400 * 400) } }
       let ejC = null; if (e.ch === 'hell') { try { const hs = Math.max(0, Math.min(999999, Math.round(+e.s || 0))); ejC = JSON.stringify(Object.assign({}, e, { s: (e.al ? 100 + e.al : +e.hl || 0) * 1e6 + hs, hs, hd: 2 })) } catch {} }
+      if (e.ch === 'soul') { try { const lv = Math.max(0, Math.min(100, Math.floor(+b.sl || 0))), ag = +e.age || 0, hs = Math.max(0, Math.min(999999, Math.round(+e.s || 0))); e.sl = Math.max(0, Math.min(lv, ag - 6)); ejC = JSON.stringify(Object.assign({}, e, { s: e.sl * 1e6 + hs, hs, hd: 3 })) } catch {} }
       if (e.ch === 'short') { try { ejC = JSON.stringify(Object.assign({}, e, { s: e.s })) } catch {} }
       if (e.ch === 'regress') { try { const D0 = JSON.parse(String(b.det || '{}')), G = D0.rg || {}, rl = Math.max(1, Math.min(999, Math.floor(+G.loop || 1))), rf = G.free && (+e.age || 0) >= 15 ? 1 : 0; e.rl = rl; e.rf = rf; const vn = { r5: ' ⏪', nomem: ' 🧠', lim10: ' 🔟' }[String(G.var || '')] || ''; e.c = (rf ? '🔁 หลุดพ้นวงจรใน ' + rl + ' รอบ' : '🔁 ย้อนกาล ' + rl + ' รอบ') + vn + (e.c ? ' · ' + e.c : ''); e.c = e.c.slice(0, 80); ejC = JSON.stringify(Object.assign({}, e, { s: (rf ? 5e8 - rl * 1e6 : 0) + Math.min(4e8, bdScore(D0, e)), rg: 1 })) } catch {} }
       const cat = bdCat(e), ej = JSON.stringify(e), L = [['INCR', 'lives']];
