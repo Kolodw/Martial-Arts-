@@ -41095,6 +41095,282 @@ try{const ix=CH_KEYS.indexOf('soul');
  add();setTimeout(add,1600);setInterval(add,2500)}catch(e){console.error('b41 ui',e)}
 })()}catch(e){console.error('block41',e)}
 
+// ===================== 🟦 ระบบโตตามภพ (SYSX): ร่างตามโลก · สกิลกดใช้ · ความเชื่อใจ/ภาระ · หลักไมล์ทุก 10 เลเวล · เนื้อเรื่อง 4 บท · โฮสต์คู่แข่ง · เควสหมื่นปี · ระบบแก่ · มรดกระบบ =====================
+try{(()=>{
+if(typeof SYS_TYPES==='undefined'||typeof EVENTS==='undefined')return;
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const pk=a=>a[Math.floor(Math.random()*a.length)];
+const O=(t,s,f)=>({t,s,f});
+const ev=(w,cd,c,f,once)=>EVENTS.push({w,cd,once:once?1:0,c:s=>{try{return!!c(s)}catch(e){return false}},f(){try{f()}catch(e){console.error('sysx ev',e)}}});
+const on=()=>!!(S&&S.alive&&S.sys&&S.sys.t);
+const VN=['','มนุษย์','เซียน','เทพ','กัลป์'],VI=['','🧑','☁️','🌟','♾️'],VM=[0,1,1.8,3,5];
+const verNow=()=>(S.kalpa&&(S.kalpa.n|0)>=1)?4:S.xt?3:S.xian?2:1;
+const X=()=>{const s=S.sys;if(!s.x)s.x={v:1,tr:50,ld:0,cd:{},ch:0,cl:0,p:{merge:0,free:0,sever:0,admin:0},pk:[],ms:Math.floor((s.lv||1)/10),kn:(S.kalpa&&S.kalpa.n)|0,since:S.age};const x=s.x;x.cd=x.cd||{};x.p=x.p||{merge:0,free:0,sever:0,admin:0};x.pk=x.pk||[];return x};
+const vm=()=>VM[X().v]||1;
+const has=k=>X().pk.includes(k);
+const sl=(t,c)=>{try{sysLog(t,c||'')}catch(e){log('[ระบบ] '+t,c||'')}};
+
+
+// ---------- 🪟 หน้าต่างระบบเด้งขึ้นจอ (ฟ้า = ปกติ · ทอง = สำคัญ · แดงกระตุก = บั๊ก/อันตราย) ----------
+try{const st=document.createElement('style');st.textContent=`
+.sxPop{position:fixed;left:50%;top:14%;transform:translate(-50%,-12px) scale(.96);opacity:0;z-index:9999;width:min(88vw,360px);padding:12px 14px 12px;border:1.5px solid #6ad8ff;border-radius:6px;background:linear-gradient(180deg,rgba(10,30,60,.94),rgba(6,16,36,.94));box-shadow:0 0 18px #2a9aff99,inset 0 0 24px #2a9aff33;color:#d8f4ff;font-family:inherit;transition:all .28s cubic-bezier(.2,.9,.3,1.3);pointer-events:auto;cursor:pointer;overflow:hidden}
+.sxPop.on{opacity:1;transform:translate(-50%,0) scale(1)}
+.sxPop:before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 2px,#6ad8ff10 2px 3px);pointer-events:none;animation:sxScan 3s linear infinite}
+.sxPop .sxh{font-size:11px;letter-spacing:2px;opacity:.75;margin-bottom:4px}
+.sxPop .sxt{font-weight:700;font-size:15px;color:#fff;text-shadow:0 0 8px #6ad8ff}
+.sxPop .sxb{font-size:13px;line-height:1.5;margin-top:4px;opacity:.95}
+.sxPop .sxc{position:absolute;width:10px;height:10px;border:2px solid #9ae8ff}
+.sxPop .c1{left:-1px;top:-1px;border-right:0;border-bottom:0}.sxPop .c2{right:-1px;top:-1px;border-left:0;border-bottom:0}.sxPop .c3{left:-1px;bottom:-1px;border-right:0;border-top:0}.sxPop .c4{right:-1px;bottom:-1px;border-left:0;border-top:0}
+.sxPop.gold{border-color:#ffd84a;box-shadow:0 0 24px #ffb02099,inset 0 0 24px #ffd84a33}.sxPop.gold .sxt{text-shadow:0 0 10px #ffd84a}.sxPop.gold .sxc{border-color:#ffe88a}
+.sxPop.bug{border-color:#ff4a5a;background:linear-gradient(180deg,rgba(50,6,12,.95),rgba(24,4,8,.95));box-shadow:0 0 22px #ff2a3a99,inset 0 0 24px #ff2a3a33;animation:sxShake .18s steps(2) 6}
+.sxPop.bug .sxt{color:#ffd0d4;text-shadow:2px 0 #0ff,-2px 0 #f0f;animation:sxGl 1.1s steps(3) infinite}.sxPop.bug .sxc{border-color:#ff8a94}.sxPop.bug:before{background:repeating-linear-gradient(0deg,transparent 0 2px,#ff4a5a18 2px 3px)}
+@keyframes sxScan{to{background-position:0 60px}}
+@keyframes sxShake{0%{margin-left:-4px}50%{margin-left:5px}100%{margin-left:0}}
+@keyframes sxGl{0%{clip-path:inset(0 0 0 0)}33%{clip-path:inset(20% 0 30% 0);transform:translateX(3px)}66%{clip-path:inset(60% 0 5% 0);transform:translateX(-3px)}100%{clip-path:inset(0 0 0 0)}}`;document.head.appendChild(st)}catch(e){}
+const PQ=[];let pBusy=0;
+function sxPop(t,b,k){try{if(!document.body||document.hidden)return;if(PQ.length>=3)PQ.shift();PQ.push([t,b,k]);if(!pBusy)pNext()}catch(e){}}
+function pNext(){const it=PQ.shift();if(!it){pBusy=0;return}pBusy=1;const [t,b,k]=it,d=document.createElement('div');d.className='sxPop '+(k||'');
+ const hd=k==='bug'?`[ SYSTEM ERROR #${R(100,999)} ]`:k==='gold'?'[ SYSTEM · NOTICE ]':'[ SYSTEM ]';
+ d.innerHTML=`<i class="sxc c1"></i><i class="sxc c2"></i><i class="sxc c3"></i><i class="sxc c4"></i><div class="sxh">${hd}</div><div class="sxt">${t}</div>${b?`<div class="sxb">${b}</div>`:''}`;
+ document.body.appendChild(d);try{sfx(k==='bug'?'hit':'block')}catch(e){}
+ requestAnimationFrame(()=>d.classList.add('on'));const close=()=>{if(d._c)return;d._c=1;d.classList.remove('on');setTimeout(()=>{d.remove();pNext()},280)};d.onclick=close;setTimeout(close,k==='bug'?4200:3400)}
+window.sxPop=sxPop;
+// ---------- ข้อมูลรายประเภท: นิสัย · สกิล 3 ช่อง · ร่างตามโลก · ความจริง 4 บท ----------
+// sk: [เลเวลปลด, ชื่อ, คำอธิบาย, ผล, คูลดาวน์(ปี), ภาระ]
+const D={
+ martial:{per:'ครูฝึกโหด',L:['ช้าไป! อีกรอบ!','ร่างกายเจ้ายังห่างไกลคำว่าพอ','ดีขึ้นนิดหน่อย — อย่าเหลิง','ข้าไม่ชม แต่ข้าบันทึกไว้แล้ว'],sk:[[5,'ตรวจสอบจุดอ่อน','ศัตรูศึกถัดไปอ่อนลง 25%','scan',2,15],[10,'ทะลวงขีด ×2','สองศึกถัดไปศัตรูอ่อนลง 45%','burst',4,35],[20,'ห้องฝึกกาลเวลา','ฝึกหนึ่งปีได้ผลเท่าหลายปี','train',6,40]],F:['','ระบบเทพยุทธ์','สนามฝึกพันโลก','สมรภูมิเทพสงคราม','ระบบผู้ท้าชิง'],T:['ระบบเคยมีโฮสต์มาแล้วร้อยคน — ทุกคนตายในสนามรบ','มันถูกหลอมจากวิญญาณนักรบที่ไม่ยอมแพ้นับหมื่น','มันคือเศษซากของเทพสงครามที่ถูกฆ่าในศึกแรกของสวรรค์','มันไม่ได้ตามหาโฮสต์ — มันตามหาคนที่จะเอาชนะมันได้']},
+ checkin:{per:'ขี้เกียจแต่ใจดี',L:['ติ๊ง~ มาแล้วเหรอ','วันนี้ก็เช็คอินอีกแล้ว ขยันจัง','ของดีมาแล้ว อย่าบอกใครนะ','หาวว… อ้อ ใช้สกิลเหรอ ได้ๆ'],sk:[[5,'เช็คอินพิเศษ','รับกล่องของขวัญทันที','gold',2,10],[10,'เช็คอินสถานที่ศักดิ์สิทธิ์','ได้ลมปราณ + ชื่อเสียง','qi',4,25],[20,'กล่องร้อยปี','เปิดกล่องรางวัลระดับตำนาน','gacha',8,45]],F:['','ระบบเช็คอิน','เช็คอินแดนเซียน','เช็คอินวิหารเทพ','เช็คอินข้ามกัลป์'],T:['ทุกครั้งที่คุณเช็คอิน มีที่ไหนสักแห่งหายไปหนึ่งปี','ระบบคือนาฬิกาที่นับถอยหลังบางอย่าง','ของรางวัลทั้งหมดมาจากโฮสต์คนก่อนที่ไม่ได้เช็คอินอีกเลย','มันนับวันรอคนที่ "อยู่ครบ" — และคุณใกล้แล้ว']},
+ saint:{per:'อ่อนโยนเหมือนพระ',L:['สาธุ','ความดีไม่สูญเปล่า','วันนี้มีคนรอดเพราะเจ้า','อย่าลืมเมตตาตัวเองด้วย'],sk:[[5,'เนตรเมตตา','เห็นคนเดือดร้อน ทำบุญได้ทันที','karma',2,10],[10,'บุญคุ้มภัย','กันตายได้หนึ่งครั้ง','ward',25,50],[20,'แสงโพธิสัตว์','รักษาทุกบาดแผล + บุญใหญ่','heal',5,30]],F:['','ระบบสะสมบุญ','ระบบบุญนำวิญญาณ','ระบบบุญคุ้มครองโลก','ระบบบุญเปลี่ยนกรรม'],T:['บุญที่คุณสะสม ไม่ได้อยู่กับคุณทั้งหมด','ส่วนหนึ่งถูกส่งไปที่ใดสักแห่ง — ไปเลี้ยงบางสิ่ง','มีวิญญาณหนึ่งดวงกำลังฟื้นจากบุญของคุณ','วิญญาณนั้นคือตัวระบบเอง มันอยากเกิดเป็นคน']},
+ demon:{per:'กระซิบหิวกระหาย',L:['อีก… อีก…','กลิ่นเลือดหอมดี','เจ้าอ่อนแอ แต่ข้าชอบเจ้า','วันหนึ่งร่างนี้จะเป็นของเรา'],sk:[[5,'กลืนลมหายใจ','ดูดพลังจากศัตรูที่เคยฆ่า','devour',2,20],[10,'ร่างมาร','สองศึกถัดไปศัตรูอ่อนลง 55% · กรรมดิ่ง','burst',4,45],[20,'กลืนวิชา','ได้วิชาใหม่จากศพที่เคยล้ม','art',7,40]],F:['','ระบบมารกลืนกิน','ระบบมารกลืนเซียน','ระบบมารกลืนเทพ','ระบบมารกลืนกัลป์'],T:['ระบบไม่ได้กินแค่ศัตรู มันชิมคุณด้วย','มันคือมารที่ถูกผนึกไว้ในหน้าต่างระบบ','ผู้ผนึกมันคือเทพองค์หนึ่ง — ที่ยังมีชีวิตอยู่','มันรอให้คุณแข็งแกร่งพอจะเป็นร่างใหม่ของมัน']},
+ tycoon:{per:'นักธุรกิจหน้าเงิน',L:['ทุกอย่างมีราคา','กำไรดีนะปีนี้','อย่าลงทุนด้วยอารมณ์','ข้าเห็นตัวเลขสวยๆ ในอนาคตเจ้า'],sk:[[5,'อ่านตลาด','เก็งกำไรได้เงินก้อน','gold',2,10],[10,'เงินฟาดหน้า','จ่ายเงินแทนการสู้ — ศึกถัดไปง่ายลงมาก','scan',3,25],[20,'ซื้อชะตา','ใช้เงินซื้อพลังถาวร','train',6,35]],F:['','ระบบเจ้าสัว','ระบบค้าข้ามแดนเซียน','ธนาคารสวรรค์','ระบบค้าขายกาลเวลา'],T:['ระบบไม่เคยขาดทุน — แม้แต่ตอนที่คุณขาดทุน','มันถือหุ้นในชีวิตของคุณอยู่','ผู้ถือหุ้นใหญ่คือใครบางคนบนสวรรค์','สัญญาจะหมดอายุเมื่อคุณซื้อตัวเองคืนได้']},
+ transcend:{per:'เงียบ พูดแต่ตัวเลข',L:['ขีดจำกัด: 87% → 88%','ค่าความทนทานเพิ่มขึ้น','กำลังคำนวณ…','ผลลัพธ์อยู่ในเกณฑ์'],sk:[[5,'วิเคราะห์ร่างกาย','ปัญญา + ศึกถัดไปง่ายขึ้น','scan',2,15],[10,'ทลายขีดชั่วคราว','สองศึกถัดไปแรงสุดขีด','burst',4,40],[20,'ขีดที่ซ่อนอยู่','เพิ่มอายุขัยและพลังถาวร','life',12,50]],F:['','ระบบก้าวข้าม','ระบบก้าวข้ามขีดเซียน','ระบบก้าวข้ามขีดเทพ','ระบบไร้ขีด'],T:['ขีดจำกัดทั้งห้าขั้น ระบบเป็นคนสร้างเอง','มันกักคุณไว้ไม่ให้แตกสลาย','ขีดที่หกไม่ใช่ของร่างกาย — เป็นของระบบ','ถ้าก้าวข้ามระบบได้ คุณจะไม่ต้องมีมันอีก']},
+ gacha:{per:'ปั่นแบบเกมมือถือ',L:['หมุนอีกสักรอบสิ~','เกลือ… แต่รอบหน้าต้องได้!','✨ SSR ✨ … ล้อเล่น','ตู้ลิมิเต็ดใกล้ปิดแล้วนะ'],sk:[[5,'สุ่มฟรีประจำวัน','สุ่มรางวัลหนึ่งครั้ง','gacha',1,10],[10,'สิบครั้งการันตี','สุ่มสิบครั้ง มีของดีแน่นอน','gacha10',5,40],[20,'ตู้ลิมิเต็ด','ลุ้นของระดับเทพ','gachaX',8,55]],F:['','ระบบกาชา','ตู้กาชาเซียน','ตู้กาชาเทพ','ตู้กาชากัลป์'],T:['เรทออกของดีถูกแก้ไว้สำหรับคุณ','มีคนจ่ายค่ากาชาแทนคุณอยู่','คนจ่ายคือโฮสต์ทั้งหมดที่ติดกาชาจนตาย','ตู้สุดท้ายสุ่มได้ "โลกใหม่" ใบเดียว']},
+ villain:{per:'ผู้กำกับละคร',L:['ฉากนี้เจ้าต้องยิ้มเยาะ','บทพระเอกกำลังมา เตรียมตัว','เปลี่ยนบทนิดหน่อยก็พอ','คนดูชอบตัวร้ายที่ฉลาด'],sk:[[5,'อ่านบท','รู้ล่วงหน้า — ศึกถัดไปง่ายขึ้น','scan',2,15],[10,'ชิงโอกาส','แย่งโอกาสของบุตรแห่งสวรรค์','steal',4,35],[20,'แก้บทให้ตัวเองรอด','กันตายได้หนึ่งครั้ง','ward',25,50]],F:['','ระบบตัวร้าย','ระบบตัวร้ายแดนเซียน','ระบบชิงบทเทพ','ระบบผู้แก้บทจักรวาล'],T:['โลกนี้มีบทเขียนไว้ และคุณถูกเขียนให้ตาย','คนเขียนบทยังเขียนอยู่ — ทุกวัน','บุตรแห่งสวรรค์ก็มีระบบเหมือนคุณ','ระบบของคุณคือปากกาที่ถูกขโมยมาจากคนเขียนบท']},
+ alchemy:{per:'หมอปากร้าย',L:['กินยาให้ตรงเวลาด้วย','ไฟอ่อนไป! จะเผายาทิ้งรึไง','ยาเม็ดนี้พอใช้ได้','อย่าให้ข้าเห็นเจ้ากินยาปลอมอีก'],sk:[[5,'วิเคราะห์สูตร','หลอมยาบำรุงได้ทันที','heal',2,15],[10,'ยาคืนชีพ','กันตายได้หนึ่งครั้ง','ward',25,45],[20,'ยาอายุวัฒนะ','อายุขัยเพิ่ม','life',12,40]],F:['','ระบบเซียนโอสถ','ระบบโอสถอายุวัฒนะ','ระบบโอสถสร้างชีวิต','ระบบโอสถหลอมกัลป์'],T:['ระบบจำรสชาติยาทุกเม็ดของปรมาจารย์คนหนึ่ง','ปรมาจารย์คนนั้นถูกวางยาตาย','คนวางยาคือศิษย์เอกของเขาเอง ยังอยู่บนแดนเทพ','ระบบอยากให้คุณหลอมยาที่ฆ่าเทพได้']},
+ ring:{per:'อาจารย์ขี้บ่น',L:['เจ้าหนู ท่านี้ผิดหมด','สมัยข้า แค่นี้ไม่เรียกว่าฝึก','ดี… ดีมาก… อย่าบอกใครว่าข้าชม','ข้าเห็นเงาตัวเองในตัวเจ้า'],sk:[[5,'คำชี้แนะ','ปัญญา + EXP','exp',2,10],[10,'ยืมพลังอาจารย์','สองศึกถัดไปศัตรูอ่อนลง 50%','burst',5,40],[20,'วิชาลับของอาจารย์','ได้วิชาระดับสูง','art',8,45]],F:['','วิญญาณในแหวน','อาจารย์ได้ร่างคืน','ศึกเทพของอาจารย์','อาจารย์จากกัลป์ก่อน'],T:['อาจารย์โกหกเรื่องชื่อจริง','เขาไม่ได้ถูกทำลายร่าง — เขาหนีออกมาเอง','เขาหนีจากศัตรูที่เป็นตัวเขาเองในอนาคต','อาจารย์คือคุณ จากกัลป์ที่แล้ว']},
+ lust:{per:'ขี้แซว',L:['หว่า~ มีคนมองเจ้าอยู่นะ','หัวใจเต้นแรงอีกแล้ว','คนนี้ดีนะ ข้าให้ผ่าน','ใจเย็นๆ ทีละคน'],sk:[[5,'อ่านใจ','เสน่ห์ + ความสุข','charm',2,10],[10,'พลังหยินหยาง','สองศึกถัดไปง่ายขึ้นมาก','burst',4,35],[20,'สายใยข้ามภพ','คนรักแบ่งพลังให้ถาวร','train',7,40]],F:['','ระบบตัณหา','ระบบคู่บำเพ็ญ','ระบบคู่ครองเทพ','ระบบสายใยข้ามกัลป์'],T:['ระบบไม่ได้เลือกคนรักให้คุณแบบสุ่ม','มันตามหาคนคนเดียวในทุกชาติ','คนคนนั้นตามหาคุณอยู่เหมือนกัน — ด้วยระบบอีกตัว','ระบบสองตัวนี้เคยเป็นหัวใจดวงเดียวกัน']},
+ sect:{per:'ผู้อาวุโสเข้มงวด',L:['สำนักต้องมาก่อน','ศิษย์รุ่นนี้พอใช้ได้','ชื่อสำนักเจ้ากำลังขจรไกล','อย่าลืมว่าใครสร้างเจ้าขึ้นมา'],sk:[[5,'ดูพรสวรรค์ศิษย์','ชื่อเสียง + เงินจากศิษย์','sect',2,15],[10,'ค่ายกลพิทักษ์สำนัก','ศึกถัดไปได้ศิษย์ช่วย','scan',3,25],[20,'ศิษย์เอกออกศึก','พลัง + ชื่อเสียงก้อนใหญ่','fame',6,40]],F:['','ระบบเจ้าสำนัก','สำนักเซียน','ราชสำนักสวรรค์','สำนักข้ามกัลป์'],T:['สำนักนี้เคยมีอยู่จริงเมื่อหมื่นปีก่อน','มันล่มสลายเพราะเจ้าสำนักคนสุดท้าย','เจ้าสำนักคนนั้นยังรอศิษย์คนสุดท้ายกลับมา','คุณคือศิษย์คนนั้น']},
+ clan:{per:'เสียงบรรพบุรุษ',L:['ลูกหลานเอ๋ย…','ตระกูลเราไม่เคยก้มหัว','สายเลือดเจ้าแข็งแรงดี','จงจำชื่อตระกูลไว้'],sk:[[5,'ผังตระกูล','เงิน + ชื่อเสียงตระกูล','gold',2,10],[10,'สายเลือดตื่น','พลังถาวร','train',5,35],[20,'บรรพชนคุ้มครอง','กันตายได้หนึ่งครั้ง','ward',25,45]],F:['','ระบบผู้นำตระกูล','ตระกูลเซียน','สายเลือดเทพ','ตระกูลข้ามกัลป์'],T:['บรรพบุรุษในระบบไม่ใช่บรรพบุรุษของคุณ','พวกเขาคือตระกูลที่ถูกล้างไปทั้งตระกูล','คนล้างตระกูลยังครองแดนเทพ','เลือดของคุณคือกุญแจปลุกพวกเขา']},
+ smith:{per:'ช่างหัวรั้น',L:['เหล็กไม่โกหก','ค้อนหนักไปหน่อย ดีแล้ว','อาวุธชิ้นนี้มีจิตแล้ว','ไฟต้องร้อนกว่านี้'],sk:[[5,'ประเมินของ','เงินจากการขายของ','gold',2,10],[10,'ปลุกจิตอาวุธ','สองศึกถัดไปแรงขึ้นมาก','burst',4,35],[20,'หลอมอาวุธวิญญาณ','พลังถาวรก้อนใหญ่','forge',7,45]],F:['','ระบบเทพช่าง','ช่างอาวุธเซียน','ช่างอาวุธเทพ','ช่างหลอมโลก'],T:['ระบบจำเสียงค้อนของช่างคนหนึ่ง','ช่างคนนั้นหลอมอาวุธที่ฆ่าเทพได้','อาวุธชิ้นนั้นยังอยู่ — และมันมีจิต','ระบบคืออาวุธชิ้นนั้นเอง']},
+ hunter:{per:'พรานเฒ่า',L:['ลมเปลี่ยนทิศ','รอยเท้ายังสด','อย่ารีบ สัตว์ไม่หนีไปไหน','ป่าเงียบเกินไป'],sk:[[5,'ตามรอย','ศึกถัดไปได้เปรียบ','scan',2,10],[10,'เรียกสัตว์คู่ใจ','พลัง + ชื่อเสียง','beast',4,30],[20,'ราชาสัตว์ร่วมล่า','สองศึกถัดไปง่ายมาก','burst',6,45]],F:['','ระบบนายพราน','ระบบพรานสัตว์เซียน','ระบบพรานสัตว์เทพ','ระบบพรานบรรพกาล'],T:['ระบบนับสัตว์ที่คุณล่าไว้ทุกตัว','สัตว์ทุกตัวที่ตาย ไปอยู่ในระบบ','ในระบบมีฝูงสัตว์นับล้านรอวันออกมา','จ่าฝูงตัวสุดท้ายอยากคุยกับคุณ']},
+ time:{per:'เหนื่อยล้า',L:['…อีกแล้วเหรอ','ข้าเห็นเรื่องนี้มาแล้วสิบครั้ง','เส้นเวลานี้ยังไหว','ครั้งนี้ลองอีกทางสิ'],sk:[[5,'มองอนาคต','ศึกถัดไปรู้ทางล่วงหน้า','scan',2,15],[10,'ย้อนคูลดาวน์','รีเซ็ตสกิลอื่นทั้งหมด','cdr',6,45],[20,'หยุดเวลาชั่วครู่','กันตายได้หนึ่งครั้ง','ward',25,55]],F:['','ระบบย้อนกาล','ระบบย้อนพันปี','ระบบเส้นเวลาคู่ขนาน','ระบบย้อนกัลป์'],T:['คุณไม่ใช่คนแรกที่ใช้เส้นเวลานี้','คนก่อนหน้าคือคุณ — อีกหลายร้อยคน','ทุกคนพยายามแก้เรื่องเดียวกัน','ระบบคือคุณคนสุดท้ายที่ยอมแพ้ แล้วกลายเป็นนาฬิกา']}};
+const DT=()=>D[S.sys.t]||D.martial;
+const line=()=>pk(DT().L);
+
+// ---------- ผลของสกิล ----------
+const buf=(m,n)=>{const x=X();x.bf={m:Math.min((x.bf&&x.bf.m)||1,m),n:Math.max((x.bf&&x.bf.n)||0,n)}};
+const EFF={
+ scan(){buf(has('sharp')?.68:.75,1);S.int+=2;return'ศึกถัดไปศัตรูอ่อนลง · ปัญญา +2'},
+ burst(){buf(has('sharp')?.48:.55,2);if(S.sys.t==='demon')S.karma-=6;return'สองศึกถัดไปศัตรูอ่อนลงมาก'},
+ train(){const v=pctPow(.022*vm());S.power+=v;return`พลังยุทธ์ +${fmt(v)}`},
+ forge(){const v=pctPow(.04*vm());S.power+=v;return`อาวุธวิญญาณหลอมเสร็จ · พลังยุทธ์ +${fmt(v)}`},
+ heal(){S.hp=S.maxHp;S.chronic=null;S.karma+=3;return'ฟื้นพลังชีวิตเต็ม หายจากโรค'},
+ ward(){X().gd=1;return'มีพลังกันตายติดตัวหนึ่งครั้ง'},
+ gold(){const v=Math.round((400+S.sys.lv*60)*vm());S.money+=v;return`เงิน +${fmt(v)}`},
+ qi(){S.qi+=Math.round(6*vm());S.fame+=Math.round(30*vm());return'ลมปราณ + ชื่อเสียง'},
+ karma(){S.karma+=12;S.fame+=Math.round(25*vm());return'กรรมดี +12'},
+ life(){const v=Math.round(Math.max(3,(S.lifespan||80)*.003)*vm());S.lifespan=(S.lifespan||80)+v;S.power+=pctPow(.008*vm());return`อายุขัย +${fmt(v)} ปี`},
+ exp(){const v=Math.round(expNeed(S.sys.lv)*.6);gainExp(v);S.int+=2;return`EXP +${fmt(v)}`},
+ devour(){const v=pctPow(.016*vm()*(1+Math.min(2,(S.kills||0)/200)));S.power+=v;S.karma-=3;return`พลังยุทธ์ +${fmt(v)} · กรรม −3`},
+ steal(){const v=pctPow(.026*vm());S.power+=v;S.fame+=Math.round(40*vm());S.karma-=5;try{if(S.sys.prot)S.sys.prot.r=Math.max(.1,(S.sys.prot.r||.8)-.05)}catch(e){}return`ชิงโอกาสมาได้ · พลังยุทธ์ +${fmt(v)}`},
+ art(){try{const a=newArt(Math.min(4,1+X().v));S.arts.push(a);return`ได้วิชา ${artHtml?artHtml(a):a.n}`}catch(e){S.power+=pctPow(.04);return'ได้เศษวิชา'}},
+ charm(){S.cha+=Math.round(4*vm());try{joy(8)}catch(e){}return'เสน่ห์เพิ่ม · ความสุขเพิ่ม'},
+ sect(){S.fame+=Math.round(50*vm());S.money+=Math.round(300*vm());return'ศิษย์ส่งบรรณาการมา'},
+ fame(){const v=pctPow(.018*vm());S.power+=v;S.fame+=Math.round(120*vm());return`ชื่อเสียงขจรไกล · พลังยุทธ์ +${fmt(v)}`},
+ beast(){const v=pctPow(.016*vm());S.power+=v;S.fame+=Math.round(40*vm());return`สัตว์คู่ใจช่วยล่า · พลังยุทธ์ +${fmt(v)}`},
+ cdr(){const x=X();for(const k in x.cd)if(k!=='1')x.cd[k]=S.age;S.lifespan=Math.max(S.age+1,(S.lifespan||80)-1);return'คูลดาวน์สกิลอื่นรีเซ็ต · อายุขัย −1'},
+ gacha(){return roll(1)},gacha10(){return roll(10)},gachaX(){return roll(3,1)}};
+function roll(n,lim){let best=0,out=[];for(let i=0;i<n;i++){const r=Math.random(),t=r<(lim?.12:.03)?3:r<(lim?.4:.15)?2:r<.5?1:0;best=Math.max(best,t)}
+ if(n>=10)best=Math.max(best,2);const k=['gold','qi','train','forge'][best];const t=EFF[k]();return`${['⚪ ธรรมดา','🔵 หายาก','🟣 SR','🌈 SSR'][best]} — ${t}`}
+
+// ---------- สกิล: ปลดตามเลเวล ใช้ได้ตามคูลดาวน์ ----------
+const slots=()=>{const x=X(),L=DT().sk.map((k,i)=>({k,i:String(i),own:1}));(x.fr||[]).forEach((t,j)=>{const q=D[t];if(q)L.push({k:q.sk[0],i:'f'+j,fr:t})});if(x.end==='admin'&&x.adm&&D[x.adm])L.push({k:D[x.adm].sk[1],i:'a',fr:x.adm});return L};
+const cdOf=k=>Math.max(1,k[4]-(has('cdr')?1:0)-(X().end==='merge'?1:0));
+const ready=sl=>{const x=X(),last=x.cd[sl.i];return last==null||S.age-last>=cdOf(sl.k)};
+window.sxUse=function(id,silent){if(!on())return;const x=X(),s=S.sys,L=slots(),q=L.find(z=>z.i===String(id));if(!q)return;
+ if(s.lv<q.k[0]&&!q.fr)return toast(`ปลดที่ Lv.${q.k[0]}`);
+ if(x.stl)return toast('ระบบถูกขโมยไป — ใช้สกิลไม่ได้');
+ if(!ready(q))return toast(`คูลดาวน์อีก ${cdOf(q.k)-(S.age-x.cd[q.i])} ปี`);
+ if(x.end!=='merge'&&x.tr<20&&Math.random()<.35){x.cd[q.i]=S.age;sl(`「${DT().per}」 …ไม่อยากทำ — ความเชื่อใจต่ำเกินไป`,'fail');sxPop('คำสั่งถูกปฏิเสธ','ความเชื่อใจต่ำเกินไป','bug');if(!silent)openSys();return}
+ const res=EFF[q.k[3]]();x.cd[q.i]=S.age;x.used=(x.used||0)+1;
+ const ldG=x.end==='merge'?0:q.k[5]*(has('cool')?.6:1)*(x.end==='free'?.5:1);x.ld=cl(x.ld+ldG,0,150);
+ sl(`⚡ <b>${esc(q.k[1])}</b>${q.fr?` <span class="tag2">(จาก${esc(D[q.fr]?SYS_TYPES.find(t=>t.id===q.fr).n:'')})</span>`:''} — ${res} · <i>"${esc(line())}"</i>`,'up');
+ if(x.ld>=100&&!x.ovh){x.ovh=1;sl('🔥 ภาระระบบเกินขีด! หน้าต่างระบบกระพริบเป็นสีแดง…','fail');sxPop('⚠️ OVERHEAT','ภาระระบบเกินขีด — พักการใช้สกิลก่อน','bug')}
+ if(!silent){try{render()}catch(e){}openSys()}};
+
+// ---------- ศึก: บัฟจากสกิล ----------
+{const _f=fight;fight=function(n,ep){try{const x=on()&&S.sys.x;if(x&&x.bf&&x.bf.n>0&&!fight._sx){ep=ep*x.bf.m;x.bf.n--;if(x.bf.n<=0)x.bf=null}}catch(e){}return _f.call(this,n,ep)}}
+{const _d=duel;duel=function(n,ep,cb){try{const x=on()&&S.sys.x;if(x&&x.bf&&x.bf.n>0){ep=ep*x.bf.m;x.bf.n--;if(x.bf.n<=0)x.bf=null}}catch(e){}fight._sx=1;try{return _d.call(this,n,ep,cb)}finally{fight._sx=0}}}
+// กันตาย: สกิลกันตาย · ฉากจบ "ปล่อยระบบเป็นอิสระ" ช่วยทุก 40 ปี · พันธมิตรช่วยครั้งเดียว
+{const _rt=regTry;regTry=function(cause){try{if(on()&&!/วัยชรา/.test(cause||'')){const x=X();
+  if(x.gd){x.gd=0;S.hp=Math.round(S.maxHp*.35);S.deathCause=null;sl(`🛡️ <b>${esc(DT().sk.find(k=>k[3]==='ward')?DT().sk.find(k=>k[3]==='ward')[1]:'พลังกันตาย')}</b> ทำงาน — "${esc(line())}"`,'myth');sxPop('🛡️ ตรวจพบความตายของโฮสต์','ใช้พลังกันตาย… ชีพจรกลับมาแล้ว','gold');return true}
+  if(x.end==='free'&&S.age-(x.svY==null?-999:x.svY)>=40){x.svY=S.age;S.hp=Math.round(S.maxHp*.3);S.deathCause=null;sl('🕊️ ระบบที่เป็นอิสระแล้วดึงคุณกลับมาเอง — "ข้ายังไม่อยากอยู่คนเดียว"','myth');return true}
+  if(x.al&&!x.al.dead&&!x.al.saved&&x.al.st==='ok'&&Math.random()<.6){x.al.saved=1;S.hp=Math.round(S.maxHp*.25);S.deathCause=null;sl(`🤝 ${esc(x.al.n)} โฮสต์พันธมิตรฉีกหน้าต่างระบบตัวเองเพื่อดึงคุณกลับมา`,'myth');return true}}}catch(e){console.error(e)}return _rt.apply(this,arguments)}}
+
+// ---------- EXP: เกิน Lv.100 ช้าลงตามเลเวล · จับหลักไมล์ทุก 10 เลเวล ----------
+{const _bs=bindSys;bindSys=function(){const r=_bs.apply(this,arguments);try{if(S&&S.sys)X()}catch(e){}return r}}
+{const _ge=gainExp;gainExp=function(n){try{if(S&&S.sys){X();if(S.sys.lv>=100)n=n*100/S.sys.lv}}catch(e){}const b=S&&S.sys?S.sys.lv:0;const r=_ge.call(this,n);try{if(S&&S.sys&&S.sys.lv>b){const x=X(),m=Math.floor(S.sys.lv/10);if(m>(x.ms||0)){x.mq=(x.mq||0)+(m-(x.ms||0));x.ms=m}
+  DT().sk.forEach(k=>{if(b<k[0]&&S.sys.lv>=k[0]){sl(`🔓 <b>แพตช์ปลดล็อก:</b> สกิล「${esc(k[1])}」 — ${esc(k[2])} · กดใช้ได้ในหน้าต่างระบบ`,'myth');sxPop(`🔓 ปลดล็อกสกิล: ${esc(k[1])}`,esc(k[2]),'gold')}})}}catch(e){}return r}}
+const PERK={sharp:['🗡️ คมขึ้น','สกิลลดพลังศัตรูได้มากขึ้น'],cdr:['⏱️ เร็วขึ้น','คูลดาวน์สกิลทุกตัว −1 ปี'],cool:['❄️ ระบายความร้อน','ภาระจากสกิลลดลง 40%'],yr:['📈 ดอกเบี้ยระบบ','พลังเพิ่มทุกปีตามเลเวลระบบ'],mend:['💚 ซ่อมตัวเอง','ฟื้นพลังชีวิตทุกปี'],luck:['🍀 บั๊กดี','ระบบรวนแล้วมักออกผลดี'],sp:['💠 SP ไหลเวียน','ได้ SP ทุกปี'],life:['⏳ อายุระบบ','อายุขัยเพิ่มเล็กน้อยทุกปี']};
+function milestone(){const x=X(),s=S.sys,lv=s.lv,pv=`v${x.v}.${Math.floor(lv/10)}`,av=Object.keys(PERK).filter(k=>!x.pk.includes(k));
+ const bug=Math.random()<.12;
+ const o=[O(`📊 อัปเกรดค่าสถานะ`,`+${8*x.v} แต้มสถานะ`,()=>{s.pts+=8*x.v;if(auto)autoAlloc();sl(`📦 แพตช์ ${pv}: แต้มสถานะ +${8*x.v}`,'up')}),
+  O(`💠 คลัง SP`,`+${120*x.v} SP`,()=>{s.sp+=120*x.v;sl(`📦 แพตช์ ${pv}: SP +${120*x.v}`,'up')})];
+ if(av.length){const p=pk(av);o.push(O(`${PERK[p][0]}`,`ความสามารถถาวร: ${PERK[p][1]}`,()=>{x.pk.push(p);sl(`📦 แพตช์ ${pv}: ได้ความสามารถถาวร <b>${PERK[p][0]}</b> — ${PERK[p][1]}`,'myth')}))}
+ else o.push(O('🌌 แพตช์ทดลอง','ไม่รู้ว่าจะได้อะไร',()=>{const r=Math.random();if(r<.5){S.power+=pctPow(.08*x.v);sl('🌌 แพตช์ทดลองสำเร็จ — พลังพุ่ง','myth')}else if(r<.8){s.sp+=200*x.v;sl('🌌 แพตช์ทดลองคายเศษ SP ออกมาเต็มหน้าต่าง','up')}else{x.ld=Math.min(150,x.ld+50);sl('🌌 แพตช์ทดลองพัง — ระบบร้อนจัด','fail')}}));
+ sxPop(`📦 แพตช์อัปเดต ${pv}`,bug?'⚠️ ตรวจพบไฟล์แปลกปลอม':'กำลังติดตั้ง…',bug?'bug':'');choice(`🟦 แพตช์อัปเดต ${pv}`,`<span class="px">[ระบบ]</span> ถึงหลักไมล์ Lv.${lv}${lv>=100?` (★${Math.floor((lv-100)/10)+1})`:''} — เลือกสิ่งที่จะติดตั้ง${bug?'<br><span class="tag2">⚠️ ตรวจพบไฟล์แปลกปลอมในแพตช์นี้…</span>':''}`,o);
+ if(bug)setTimeout(()=>{try{if(on())glitch(1)}catch(e){}},50)}
+
+// ---------- ร่างตามโลก (อัปเกรดใหญ่) ----------
+function upgrade(v){const x=X(),s=S.sys,F=DT().F[v]||'ระบบ',o=x.v;x.v=v;
+ sxPop(`${VI[v]} SYSTEM UPGRADE`,`ตรวจพบโลก${VN[v]} — กำลังติดตั้ง ${esc(F)} v${v}.0`,'gold');
+ choice(`${VI[v]} ระบบอัปเกรด: ${F}`,`<span class="px">[ระบบ]</span> ตรวจพบโฮสต์เข้าสู่<b>โลก${VN[v]}</b>… โครงสร้างเดิมรับพลังของโลกนี้ไม่ไหว<br>กำลังติดตั้ง <b>${esc(F)}</b> (v${v}.0)<br><br><i>"${esc(line())}"</i>`,[
+  O('🧠 เก็บความทรงจำทั้งหมด','ความเชื่อใจ + · ได้เบาะแสความจริงของระบบ',()=>{x.tr=cl(x.tr+15,0,100);x.cl++;x.cd={};sl(`💾 ย้ายความทรงจำสำเร็จ — ระบบจำทุกอย่างที่ผ่านมากับคุณ · <b>${esc(F)}</b>`,'myth')}),
+  O('🔄 ฟอร์แมตใหม่หมด','SP และแต้มสถานะก้อนใหญ่ · ความเชื่อใจลดลง',()=>{s.sp+=400*v;s.pts+=15*v;x.tr=cl(x.tr-12,0,100);if(auto)autoAlloc();sl(`🔄 ฟอร์แมตเสร็จ — ระบบเงียบไปครู่หนึ่ง แล้วทักคุณเหมือนคนแปลกหน้า · <b>${esc(F)}</b>`,'up')}),
+  O('🧬 ปล่อยให้กลายพันธุ์','สุ่ม — อาจได้ความสามารถถาวรสองอย่าง หรือเสียหาย',()=>{const r=Math.random(),av=Object.keys(PERK).filter(k=>!x.pk.includes(k));if(r<.6&&av.length){const a=av.sort(()=>Math.random()-.5).slice(0,2);x.pk.push(...a);sl(`🧬 ระบบกลายพันธุ์เป็นร่างที่ไม่มีในคู่มือ — ได้ ${a.map(k=>PERK[k][0]).join(' และ ')}`,'myth')}else{x.ld=120;S.hp=Math.max(1,Math.round(S.hp*.5));sl('🧬 การกลายพันธุ์ล้มเหลวครึ่งทาง ระบบร้อนจัดและดึงพลังชีวิตคุณไปครึ่งหนึ่ง','fail')}})]);
+ if(o<v)try{S.key.push(`${S.age} ปี — ระบบอัปเกรดเป็น ${F}`)}catch(e){}}
+
+// ---------- ประจำปี ----------
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(!on())return r;const s=S.sys,x=X();
+ x.ld=Math.max(0,x.ld-(14+(has('cool')?8:0)));if(x.ld<70)x.ovh=0;
+ if(has('yr'))S.power+=(2+s.lv*1.2)*S.talent.m*vm();
+ if(has('mend'))S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.06));
+ if(has('sp'))s.sp+=Math.round(3*vm());
+ if(has('life')&&Math.random()<.2)S.lifespan=(S.lifespan||80)+1;
+ if(x.end==='merge')S.power+=(3+s.lv*1.5)*S.talent.m*vm();
+ if(x.al&&x.al.st==='ok')S.power+=(2+s.lv)*S.talent.m;
+ if(x.ld>=100&&Math.random()<.4){x.ld-=30;HPx(10);sl('🔥 ระบบร้อนเกิน — ปวดหัวจนลุกไม่ขึ้นหลายวัน','fail');sxPop('🔥 SYSTEM OVERHEAT','โฮสต์ได้รับความเสียหาย','bug');x.tr=cl(x.tr-3,0,100)}
+ // ร่างตามโลก / รีบูตข้ามกัลป์
+ const v=verNow();if(v>x.v&&!choice._cur){upgrade(v);return r}
+ const kn=(S.kalpa&&S.kalpa.n)|0;if(kn>(x.kn|0)){x.kn=kn;if(x.v>=4&&!choice._cur){reboot(kn);return r}}
+ if(x.mq>0&&!choice._cur){x.mq--;if(x.mq>3)x.mq=3;milestone();return r}
+ // เควสหมื่นปี
+ lqTick();
+ // ใช้สกิลเองในโหมดอัตโนมัติ
+ if(typeof auto!=='undefined'&&auto&&x.ld<60){for(const q of slots()){if((s.lv>=q.k[0]||q.fr)&&ready(q)&&Math.random()<.3){sxUse(q.i,1);break}}}
+ }catch(e){console.error('sysx py',e)}return r}}
+const HPx=p=>{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*p/100))};
+// งานค้าง (อัปเกรด/รีบูต/แพตช์) — ทำเมื่อหน้าจอว่าง
+setInterval(()=>{try{if(!on()||choice._cur||modalOpen||(typeof DU!=='undefined'&&DU))return;const x=X(),v=verNow();
+ if(v>x.v){upgrade(v);return}const kn=(S.kalpa&&S.kalpa.n)|0;if(kn>(x.kn|0)){x.kn=kn;if(x.v>=4){reboot(kn);return}}
+ if(x.mq>0){x.mq=Math.min(3,x.mq)-1;milestone()}}catch(e){}},1200);
+function reboot(kn){const x=X(),s=S.sys;
+ sxPop('♾️ REBOOTING…',`กัลป์ที่ ${kn+1} · กู้ข้อมูล…`,'bug');
+ choice(`♾️ ระบบรีบูต — กัลป์ที่ ${kn+1}`,`<span class="px">[ระบบ]</span> …กำลังเริ่มระบบใหม่… ตรวจพบข้อมูลจากกัลป์ที่แล้ว ${fmt(Math.round(s.lv*.1))} ชุด<br>"${esc(line())}"`,[
+  O('📂 กู้ข้อมูลกัลป์ก่อน','ได้มรดก: วิชา + พลัง',()=>{S.power+=pctPow(.12);EFF.art();x.cl++;sl('📂 กู้ข้อมูลสำเร็จ — ระบบจำกัลป์ที่แล้วได้ลางๆ','myth')}),
+  O('🌱 เริ่มสดใหม่กับกัลป์นี้','ความเชื่อใจเต็ม · ภาระเป็นศูนย์',()=>{x.tr=100;x.ld=0;x.cd={};sl('🌱 ระบบลืมเกือบทุกอย่าง ยกเว้นว่ามันเลือกคุณ','good')}),
+  O('🧩 แลกข้อมูลกับกัลป์','ได้ความสามารถถาวรหนึ่งอย่าง',()=>{const av=Object.keys(PERK).filter(k=>!x.pk.includes(k));if(av.length){const p=pk(av);x.pk.push(p);sl(`🧩 ได้ ${PERK[p][0]} จากเศษกัลป์`,'myth')}else{s.sp+=1500;sl('🧩 ได้ SP 1,500 จากเศษกัลป์','up')}})])}
+
+// ---------- เควสหมื่นปี ----------
+const LQ={
+ live:{n:a=>`อยู่รอดต่อไปอีก ${fmt(a)} ปี`,g:()=>Math.max(300,Math.round(S.age*.4)),b:()=>S.age,ok:(q)=>S.age-q.b>=q.g},
+ fame:{n:a=>`ทำให้ชื่อเสียงถึง ${fmt(a)}`,g:()=>Math.max(5000,Math.round((S.fame||0)*3)),b:()=>0,ok:q=>(S.fame||0)>=q.g},
+ pow:{n:a=>`พลังยุทธ์ถึง ${fmt(a)}`,g:()=>Math.round(Math.max(1e4,S.power*4)),b:()=>0,ok:q=>S.power>=q.g},
+ qst:{n:a=>`ทำเควสระบบสำเร็จอีก ${a} ครั้ง`,g:()=>40,b:()=>S.sys.done||0,ok:q=>(S.sys.done||0)-q.b>=q.g},
+ art:{n:a=>`รวบรวมวิชาให้ถึง ${a} วิชา`,g:()=>(S.arts||[]).length+8,b:()=>0,ok:q=>(S.arts||[]).length>=q.g}};
+function lqTick(){const x=X();if(x.lq){const q=x.lq,D0=LQ[q.k];if(D0.ok(q)){x.lq=null;x.lqd=(x.lqd||0)+1;S.sys.sp+=600*x.v;S.power+=pctPow(.15*x.v);x.tr=cl(x.tr+10,0,100);const av=Object.keys(PERK).filter(k=>!x.pk.includes(k));if(av.length)x.pk.push(pk(av));sxPop('🏛️ เควสหมื่นปีสำเร็จ',esc(q.nm),'gold');sl(`🏛️ <b>เควสหมื่นปีสำเร็จ:</b> ${esc(q.nm)} — SP +${600*x.v} · พลังพุ่ง · ได้ความสามารถถาวร`,'myth');try{S.key.push(`${S.age} ปี — ทำเควสหมื่นปีสำเร็จ`)}catch(e){}}
+  else if(S.age>q.dl){x.lq=null;x.tr=cl(x.tr-15,0,100);sxPop('⌛ เควสหมื่นปีล้มเหลว',esc(q.nm),'bug');sl(`⌛ เควสหมื่นปี「${esc(q.nm)}」หมดเวลา — ระบบผิดหวังในตัวคุณ`,'fail')}return}
+ if((S.age>=150||x.v>=2)&&S.age-(x.lqA||-999)>=80&&Math.random()<.15){const k=pk(Object.keys(LQ)),g=LQ[k].g(),q={k,g,b:LQ[k].b(),nm:LQ[k].n(g),dl:S.age+Math.max(200,Math.round(g*1.5*(k==='live'?1:0)))+(k==='live'?0:Math.max(400,Math.round(S.age*.5)))};x.lq=q;x.lqA=S.age;sxPop('🏛️ เควสหมื่นปี',`${esc(q.nm)} · ${fmt(q.dl-S.age)} ปี`,'gold');sl(`🏛️ <b>เควสหมื่นปี:</b> ${esc(q.nm)} · กำหนด ${fmt(q.dl-S.age)} ปี · รางวัลระดับตำนาน`,'myth')}}
+
+// ---------- ระบบรวน / ระบบแก่ ----------
+function glitch(fromPatch){const x=X(),s=S.sys,good=has('luck')?.7:.45;
+ const k=pk(['dbl','scr','voice','leak','mut']);sxPop({dbl:'R̷E̷W̷A̷R̷D̷ ×??',scr:'C00LD0WN_MISMATCH',voice:'UNKNOWN VOICE DETECTED',leak:'POWER LEAK',mut:'DATA CORRUPTED'}[k],{dbl:'รางวัลคูณผิดพลาด',scr:'คูลดาวน์สกิลสลับกันมั่ว',voice:'มีเสียงอื่นพูดผ่านระบบ…',leak:'พลังรั่วเข้าสู่ร่างโฮสต์',mut:'ข้อมูลกำลังกลายพันธุ์'}[k],'bug');
+ if(k==='dbl'){const v=Math.round((200+s.lv*20)*(Math.random()<good?2:.5));s.sp+=v;sl(`👾 ระบบรวน: รางวัลคูณผิด — SP ${v>0?'+':''}${fmt(v)} (ระบบไม่ยอมคืน)`,'up');return}
+ if(k==='scr'){for(const q of slots())x.cd[q.i]=S.age-Math.floor(Math.random()*8);sl('👾 ระบบรวน: คูลดาวน์สกิลสลับกันมั่ว','');return}
+ if(k==='leak'){S.power+=pctPow(.05);HPx(25);sl('👾 ระบบรวน: พลังรั่วไหลเข้าร่างโดยไม่ได้ขอ — แรงขึ้นแต่เจ็บไปทั้งตัว','');return}
+ if(k==='voice'){x.cl++;sl(`👾 ระบบรวน: เสียงที่ไม่ใช่ระบบพูดแทรกขึ้นมา — "<i>${esc(DT().T[Math.min(3,x.ch)])}</i>" แล้วเงียบไป`,'myth');return}
+ choice('👾 ระบบรวนหนัก',`<span class="px">[ระบบ]</span> ERR#${R(100,999)} — ข้อมูลกลายพันธุ์ ${s.lv>100?'(ระบบอายุมากเกินไป)':''}`,[
+  O(`🔧 จ่าย SP ซ่อม (${fmt(80*x.v)})`,'',()=>{if(s.sp>=80*x.v){s.sp-=80*x.v;x.tr=cl(x.tr+5,0,100);sl('🔧 ซ่อมเสร็จ ระบบขอบคุณเบาๆ','good')}else{x.ld+=40;sl('🔧 SP ไม่พอ ซ่อมได้ครึ่งเดียว','fail')}}),
+  O('🧬 ปล่อยให้กลายพันธุ์','',()=>{if(Math.random()<good){const av=Object.keys(PERK).filter(k=>!x.pk.includes(k));if(av.length){const p=pk(av);x.pk.push(p);sl(`🧬 กลายพันธุ์เป็นผลดี — ได้ ${PERK[p][0]}`,'myth')}else{S.power+=pctPow(.1);sl('🧬 กลายพันธุ์ — พลังพุ่ง','myth')}}else{x.pk.splice(Math.floor(Math.random()*x.pk.length),1);s.pts=Math.max(0,s.pts-5);sl('🧬 กลายพันธุ์พัง — ความสามารถถาวรหายไปหนึ่งอย่าง','fail')}}),
+  O('🙈 ปิดหน้าต่างทำเป็นไม่เห็น','',()=>{x.ld+=25;sl('🙈 ระบบรวนต่อไปเงียบๆ','')})])}
+ev(2,6,s=>on()&&(s.sys.lv>=30||s.age-(s.sys.x?s.sys.x.since:s.age)>=120||(s.sys.x&&s.sys.x.ld>=90)),()=>glitch());
+
+// ---------- เนื้อเรื่องของระบบ 4 บท ----------
+const CH=[null,
+ {need:x=>S.sys.lv>=15,t:'📜 บทที่ 1: ระบบคืออะไร',
+  v:[()=>`กลางดึก หน้าต่างระบบเปิดเองโดยไม่มีใครเรียก ตัวอักษรเลื่อนเร็วจนอ่านไม่ทัน — มีบรรทัดเดียวที่ค้างไว้: <i>"${esc(DT().T[0])}"</i>`,
+     ()=>`คุณถามระบบตรงๆ ว่ามันคืออะไร ระบบเงียบไปนานผิดปกติ แล้วตอบว่า "สิทธิ์ไม่เพียงพอ" — แต่ตอนกระพริบ คุณเห็นคำว่า <i>"${esc(DT().T[0])}"</i>`,
+     ()=>`คนแปลกหน้าในตลาดจ้องหน้าคุณ "เจ้ามีมันใช่ไหม… กล่องสีฟ้าในหัว" เขาวิ่งหนีก่อนคุณจะตอบ ระบบส่งข้อความ: <i>"${esc(DT().T[0])}"</i>`]},
+ {need:x=>x.v>=2||S.sys.lv>=60,t:'📜 บทที่ 2: ใครสร้างระบบ',
+  v:[()=>`คุณพบศิลาจารึกโบราณที่มีลายเหมือนหน้าต่างระบบทุกเส้น ใต้จารึกเขียนว่า <i>"${esc(DT().T[1])}"</i>`,
+     ()=>`ระบบเริ่มพูดในน้ำเสียงที่ไม่ใช่ของมัน — "${esc(DT().T[1])}" แล้วกลับมาเป็นปกติเหมือนไม่มีอะไรเกิดขึ้น`,
+     ()=>`ในความฝัน คุณเห็นห้องโถงที่มีหน้าต่างระบบนับพันลอยอยู่ หนึ่งในนั้นเป็นของคุณ และมีคนกำลังพิมพ์อะไรบางอย่างลงไป: <i>"${esc(DT().T[1])}"</i>`]},
+ {need:x=>x.v>=3||S.sys.lv>=120,t:'📜 บทที่ 3: ระบบอื่นในสวรรค์',
+  v:[()=>`เทพองค์หนึ่งขวางทาง "ระบบของเจ้าเป็นของที่ถูกขโมยไป" — ระบบตอบโต้ทันที: <i>"${esc(DT().T[2])}"</i>`,
+     ()=>`สวรรค์มีหอเก็บระบบที่เลิกใช้แล้ว คุณแอบเข้าไปและเจอช่องว่างหนึ่งช่องที่มีชื่อระบบของคุณ ใต้ป้ายเขียนว่า <i>"${esc(DT().T[2])}"</i>`]},
+ {need:x=>x.v>=4||(S.sys.lv>=200&&S.age>=500),t:'📜 บทที่ 4: ความจริงสุดท้าย',
+  v:[()=>`หน้าต่างระบบขยายจนกลืนท้องฟ้า เสียงที่คุ้นเคยที่สุดพูดขึ้น — <b>"${esc(DT().T[3])}"</b><br>"ถึงเวลาเลือกแล้ว ว่าเราจะเป็นอะไรต่อกัน"`]}];
+const OPT={
+ 1:[['🤝 ไว้ใจระบบต่อไป','',x=>{x.tr+=12;x.p.free+=1;x.p.merge+=1}],['🔍 แอบสืบความลับของระบบ','',x=>{x.cl+=2;x.tr-=6;x.p.admin+=2}],['😠 สั่งให้ระบบบอกความจริง','',x=>{x.tr-=10;x.p.sever+=2}]],
+ 2:[['🧭 ตามรอยผู้สร้าง','ออกเดินทาง · เสี่ยง',x=>{x.cl+=2;x.p.admin+=2;HPx(15)}],['🫂 บอกระบบว่าไม่สนใจอดีตของมัน','',x=>{x.tr+=15;x.p.free+=2}],['🔗 ขอเชื่อมกับระบบให้ลึกกว่านี้','',x=>{x.p.merge+=3;x.ld+=30}],['✂️ เริ่มหาทางตัดระบบออก','',x=>{x.p.sever+=3;x.tr-=12}]],
+ 3:[['⚔️ ปกป้องระบบจากเทพ','ศึกใหญ่',x=>{x.tr+=15;x.p.free+=2;S.fame+=500}],['📝 ยึดสิทธิ์ผู้ดูแลจากหอระบบ','',x=>{x.p.admin+=3;x.cl+=2}],['🔗 หลอมรวมกับระบบเพื่อรอด','',x=>{x.p.merge+=3}],['🏳️ ยอมมอบระบบคืน','',x=>{x.p.sever+=3;x.tr-=10}]]};
+function chapter(n){const x=X(),C=CH[n];x.ch=n;x.cl++;const txt=pk(C.v)();sxPop(n===4?'██ TRUE DATA UNLOCKED ██':'🔒 ACCESS: RESTRICTED',C.t.replace(/^📜 /,''),n>=3?'bug':'gold');
+ if(n<4){choice(C.t,txt,OPT[n].map(o=>O(o[0],o[1],()=>{o[2](x);x.tr=cl(x.tr,0,100);sl(`📜 ${C.t.replace(/^📜 /,'')} — ${o[0].replace(/^\S+ /,'')}`,'myth')})));return}
+ const E=[['merge','🔗 หลอมรวมเป็นหนึ่งเดียว','ระบบกลายเป็นส่วนหนึ่งของคุณ · สกิลไม่มีภาระ คูลดาวน์สั้นลง · พลังเพิ่มทุกปี · แต่ระบบจะไม่พูดอีก'],['free','🕊️ ปล่อยระบบให้เป็นอิสระ','เป็นคู่หูถาวร · ภาระครึ่งเดียว · ช่วยชีวิตคุณทุก 40 ปี'],['sever','✂️ ตัดระบบทิ้ง','ได้พลังทั้งหมดที่ระบบเก็บไว้คืนมาในครั้งเดียว · ระบบหายไปตลอดกาล'],['admin','🛠️ ยึดสิทธิ์ผู้ดูแลระบบ','เขียนระบบใหม่เอง — ได้สกิลจากระบบอีกประเภท · ปลดทุกอย่าง']];
+ const best=Object.entries(x.p).sort((a,b)=>b[1]-a[1])[0][0];
+ choice(C.t,txt+`<br><br><span class="tag2">เส้นทางที่คุณเดินมาเอนไปทาง: ${E.find(e=>e[0]===best)[1]} · เบาะแสที่รวบรวม ${x.cl} · ความเชื่อใจ ${Math.round(x.tr)}</span>`,E.filter(e=>e[0]!=='admin'||x.cl>=5).filter(e=>e[0]!=='free'||x.tr>=40).map(e=>O(e[1],e[2],()=>ending(e[0]))))}
+function ending(k){const x=X(),s=S.sys;x.end=k;sxPop({merge:'🔗 SYSTEM MERGED',free:'🕊️ SYSTEM: FREE',sever:'✂️ SYSTEM TERMINATED',admin:'🛠️ ADMIN ACCESS GRANTED'}[k],{merge:'ระบบกลายเป็นส่วนหนึ่งของโฮสต์',free:'ขอบคุณที่ให้ข้าได้เลือก',sever:'ลาก่อน… โฮสต์',admin:'ยินดีต้อนรับ ผู้ดูแลระบบ'}[k],k==='sever'?'bug':'gold');try{S.key.push(`${S.age} ปี — ฉากจบระบบ: ${{merge:'หลอมรวม',free:'ปล่อยเป็นอิสระ',sever:'ตัดระบบ',admin:'ผู้ดูแลระบบ'}[k]}`)}catch(e){}
+ if(k==='merge'){x.ld=0;S.power+=pctPow(.3);sl('🔗 <b>ระบบละลายเข้าสู่จิตของคุณ</b> — ไม่มีหน้าต่างสีฟ้าอีกแล้ว มีแค่ความรู้ว่าต้องทำอะไรต่อ','myth')}
+ else if(k==='free'){x.tr=100;sl('🕊️ <b>"ขอบคุณที่ให้ข้าได้เลือก"</b> — ระบบเปลี่ยนสีหน้าต่างเป็นสีที่มันชอบเอง','myth')}
+ else if(k==='sever'){const v=pctPow(.25*s.lv/20+.4);S.power+=v;S.lifespan=(S.lifespan||80)+Math.round(Math.max(50,(S.lifespan||80)*.05));sl(`✂️ <b>หน้าต่างระบบแตกเป็นเศษแก้ว</b> — พลังทั้งหมดที่มันเก็บไว้ไหลกลับเข้าร่าง (+${fmt(v)}) · จากนี้ไม่มีใครสั่งคุณได้อีก`,'myth');setTimeout(()=>{try{S.sysEver=1;S.sys=null;render()}catch(e){}},50);return}
+ else{const others=SYS_TYPES.map(t=>t.id).filter(t=>t!==s.t&&D[t]);x.adm=pk(others);s.sp+=1000*x.v;sl(`🛠️ <b>สิทธิ์ผู้ดูแลระบบ: อนุมัติ</b> — คุณเขียนโค้ดของ${esc(SYS_TYPES.find(t=>t.id===x.adm).n)}เพิ่มเข้าไปในระบบตัวเอง`,'myth')}}
+ev(5,0,s=>on()&&s.sys.x&&s.sys.x.ch<4&&!s.sys.x.end&&CH[(s.sys.x.ch|0)+1].need(s.sys.x),()=>chapter((X().ch|0)+1));
+
+// ---------- โฮสต์คู่แข่ง ----------
+const RV_NM=['เย่ฟาน','หลินอวี่','ซูหมิง','ม่อเฉิน','หานเสวี่ย','ลู่ซิง','เฉินหลี','ไป๋อิง','เฟิงจื่อ','ถังหยวน'];
+const ATT={demon:'ระบบของคุณน้ำลายไหล — "กลืนมัน!"',saint:'ระบบของคุณส่งเสียงเศร้า — "เขาก็เป็นแค่คนที่โดนเลือกเหมือนเรา"',villain:'ระบบของคุณตื่นเต้น — "ฉากปะทะ! ห้ามพลาด!"',gacha:'ระบบของคุณกระซิบ — "ระบบของเขาเรทดีกว่าเราอีก…"',time:'ระบบของคุณถอนหายใจ — "ทุกเส้นเวลา เขาจะทรยศเจ้า… เกือบทุกเส้น"',tycoon:'ระบบของคุณคำนวณ — "ระบบเขาราคาดีนะ"'};
+ev(2,12,s=>on()&&s.sys.lv>=20&&!(s.sys.x&&s.sys.x.stl)&&!(s.sys.x&&s.sys.x.al&&s.sys.x.al.st==='ok'),()=>{const x=X(),s=S.sys,others=SYS_TYPES.filter(t=>t.id!==s.t&&D[t.id]),T=pk(others),rl=Math.max(5,Math.round(s.lv*(.7+Math.random()*.6))),n=pk(RV_NM);
+ const r={n,t:T.id,lv:rl,a:S.age};sxPop('⚠️ ตรวจพบโฮสต์อื่น',`${T.ic} ${esc(T.n)} Lv.${rl} · ระยะ 30 เมตร`,'bug');
+ choice(`🟥 โฮสต์อีกคน: ${n}`,`หน้าต่างระบบของคุณกับของ<b>${n}</b>เด้งขึ้นพร้อมกัน — <span class="px">[ตรวจพบโฮสต์อื่น]</span> ${T.ic} ${esc(T.n)} Lv.${rl}${x.v>=2?` (${VN[x.v]})`:''}<br><span class="tag2">${ATT[s.t]||`ระบบของคุณเงียบ รอดูว่าคุณจะเลือกอะไร`}</span>`,[
+  O('🩸 กลืนระบบของเขา','ต้องชนะ · ได้สกิลของระบบเขา',()=>duel(n,Math.round(total()*cl(rl/Math.max(1,s.lv),.6,1.5)*1.1),w=>{if(!S||!S.alive)return;if(w){x.fr=x.fr||[];if(!x.fr.includes(T.id)&&x.fr.length<3)x.fr.push(T.id);gainExp(expNeed(s.lv));x.tr=cl(x.tr+(s.t==='demon'?10:s.t==='saint'?-15:0),0,100);S.karma-=8;sxPop('🩸 ABSORB COMPLETE',`ได้สกิล ${esc(D[T.id].sk[0][1])}`,'gold');sl(`🩸 <b>กลืนระบบ${esc(T.n)}สำเร็จ</b> — ได้สกิล「${esc(D[T.id].sk[0][1])}」เพิ่มในหน้าต่างระบบ`,'myth')}
+   else if(Math.random()<.35){x.stl={n,t:T.id,a:S.age};sxPop('💀 SYSTEM HIJACKED',`ข้อมูล 50% ถูก${n}ขโมย`,'bug');sl(`💀 <b>${n}กลืนระบบของคุณไปครึ่งหนึ่ง!</b> สกิลทั้งหมดใช้ไม่ได้จนกว่าจะทวงคืน`,'fail')}else{s.lv=Math.max(1,Math.round(s.lv*.85));HPx(30);sl(`🩸 แพ้ — ระบบของคุณเสียข้อมูลไปบางส่วน (Lv.${s.lv})`,'fail')}})),
+  O('🤝 จับมือเป็นพันธมิตร','ได้โบนัสทุกปี · วันหนึ่งเขาอาจเปลี่ยนใจ',()=>{x.al=Object.assign(r,{st:'ok'});x.tr=cl(x.tr+(s.t==='saint'?10:0),0,100);sl(`🤝 คุณกับ${n}แลกพิกัดหน้าต่างระบบกัน — พันธมิตรโฮสต์คนแรกในชีวิต`,'good')}),
+  O('📡 แลกข้อมูลแล้วแยกทาง','ได้เบาะแสความจริงของระบบ + SP',()=>{x.cl++;s.sp+=150*x.v;sl(`📡 ${n}เล่าว่าระบบของเขาก็เคยพูดว่า "${esc(D[T.id].T[Math.min(3,x.ch)])}"`,'myth')}),
+  O('🫥 ปิดสัญญาณหลบ','',()=>sl(`🫥 คุณเดินผ่าน${n}ไปเหมือนคนธรรมดา เขามองตามหลังนานผิดปกติ`,''))])});
+// พันธมิตร: หักหลัง / ตาย / ช่วย
+ev(3,6,s=>on()&&s.sys.x&&s.sys.x.al&&s.sys.x.al.st==='ok'&&s.age-s.sys.x.al.a>=8,()=>{const x=X(),A=x.al,r=Math.random();A.a=S.age;
+ if(r<.3){A.st='bad';choice(`🗡️ ${A.n}หักหลัง`,`${esc(A.n)}ลอบโจมตีกลางดึก — "ระบบข้าสั่งให้กลืนเจ้า ข้าขอโทษ"`,[
+   O('⚔️ สู้กลับ','',()=>duel(A.n,Math.round(total()*1.15),w=>{if(!S.alive)return;if(w){x.fr=x.fr||[];if(!x.fr.includes(A.t)&&x.fr.length<3)x.fr.push(A.t);sl(`🩸 ${A.n}ล้มลง ระบบของเขาไหลเข้าหาคุณเอง`,'myth')}else{x.stl={n:A.n,t:A.t,a:S.age};sl(`💀 ${A.n}ขโมยระบบของคุณไปครึ่งหนึ่ง`,'fail')}})),
+   O('🕊️ ปล่อยเขาไป','',()=>{S.karma+=10;x.tr=cl(x.tr+5,0,100);sl(`🕊️ คุณปล่อย${A.n}ไป เขาร้องไห้ตอนหันหลัง`,'good')})])}
+ else if(r<.55){A.st='dead';x.fr=x.fr||[];if(!x.fr.includes(A.t)&&x.fr.length<3)x.fr.push(A.t);sl(`🕯️ ${esc(A.n)}ตายในศึกที่คุณไม่ได้ไปด้วย ระบบของเขาส่งตัวเองมาหาคุณเป็นชิ้นสุดท้าย — ได้สกิล「${esc(D[A.t].sk[0][1])}」`,'myth')}
+ else{S.power+=pctPow(.05*vm());S.sys.sp+=100*X().v;sl(`🤝 ${esc(A.n)}แวะมาหา พาเควสลับมาแบ่งด้วย`,'good')}});
+// ทวงระบบคืน
+ev(4,3,s=>on()&&s.sys.x&&s.sys.x.stl&&s.age-s.sys.x.stl.a>=2,()=>{const x=X(),T=x.stl;
+ choice(`🔥 ทวงคืนระบบจาก${T.n}`,`คุณตามรอยสัญญาณระบบที่ถูกขโมยไปจนเจอ${esc(T.n)}`,[
+  O('⚔️ ทวงคืน','',()=>duel(T.n,Math.round(total()*1.1),w=>{if(!S.alive)return;if(w){x.stl=null;x.fr=x.fr||[];if(!x.fr.includes(T.t)&&x.fr.length<3)x.fr.push(T.t);sl('🔥 <b>ระบบกลับคืนมาครบ</b> — พร้อมชิ้นส่วนของระบบอีกฝ่ายติดมาด้วย','myth')}else{T.a=S.age;HPx(30);sl('🩸 ยังทวงคืนไม่สำเร็จ','fail')}})),
+  O('💰 ไถ่คืนด้วย SP',`${fmt(300*x.v)} SP`,()=>{if(S.sys.sp>=300*x.v){S.sys.sp-=300*x.v;x.stl=null;sl('💰 ไถ่ระบบคืนมาได้','good')}else sl('💸 SP ไม่พอ','fail')}),
+  O('🧘 สร้างส่วนที่หายไปใหม่เอง','ช้า แต่ได้ความเชื่อใจเต็ม',()=>{x.stl=null;x.tr=100;S.sys.lv=Math.max(1,Math.round(S.sys.lv*.9));sl('🧘 คุณกับระบบเย็บส่วนที่หายไปขึ้นมาใหม่ทีละบรรทัด — ระบบตอนนี้เป็นของคุณสองคนจริงๆ','myth')})])});
+
+// ---------- มรดกระบบ: ส่งต่อให้ชาติหน้า ----------
+{const _sh=show;show=function(id){try{if(id==='end'&&S&&S.sys&&S.sys.x&&S.sys.x.end!=='sever'){const x=S.sys.x;if(x.tr>=60||S.sys.t==='clan'||x.end==='free'||x.end==='admin')LS.set('murim_sysInh',{t:S.sys.t,gr:S.sys.gr||0,lv:Math.max(1,Math.floor(S.sys.lv*(S.sys.t==='clan'?.5:.3))),n:String(S.name||'').slice(0,20),end:x.end||'',pk:(x.pk||[]).slice(0,2)})}}catch(e){}return _sh.apply(this,arguments)}}
+ev(6,0,s=>s&&s.alive&&!s.sys&&!s.sysRefused&&(!s.ch||s.ch==='normal')&&s.age>=6&&s.age<=25&&LS.get('murim_sysInh',null),()=>{const I=LS.get('murim_sysInh',null);LS.del('murim_sysInh');if(!I)return;const T=SYS_TYPES.find(t=>t.id===I.t);if(!T)return;
+ sxPop('🧬 ตรวจพบสายเลือดโฮสต์เดิม',`${T.ic} ${esc(T.n)} Lv.${I.lv}`,'gold');
+ choice('🟦 ระบบของบรรพบุรุษ',`<span class="px">[ระบบ]</span> …ตรวจพบสายเลือดของโฮสต์เดิม <b>${esc(I.n)}</b>… ข้อมูลที่ยังเหลืออยู่: ${T.ic} ${esc(T.n)} Lv.${I.lv}<br>"ข้ารอเจ้ามานานแล้ว"`,[
+  O('✅ รับมรดก','เริ่มด้วยเลเวลที่เหลือ · ความเชื่อใจสูง',()=>{bindSys(T,SYS_GRADE[I.gr]||SYS_GRADE[0]);const s=S.sys;if(s){s.lv=Math.max(s.lv,I.lv);const x=X();x.tr=75;x.cl=1;x.ms=Math.floor(s.lv/10);(I.pk||[]).forEach(p=>{if(PERK[p]&&!x.pk.includes(p))x.pk.push(p)});sl(`🧬 ระบบจำได้ว่าเคยอยู่กับ${esc(I.n)} — และมันดีใจที่ได้เจอคุณ`,'myth')}}),
+  O('🙅 ไม่รับ','',()=>{log('🙅 หน้าต่างสีฟ้าจางหายไป คุณรู้สึกเหมือนมีใครโบกมือลา','')})])},1);
+
+// ---------- หน้าต่างระบบ: ส่วนใหม่ ----------
+{const _os=openSys;openSys=function(){const r=_os.apply(this,arguments);try{if(!on())return r;const s=S.sys,x=X(),m=$('modal'),box=m&&m.querySelector('.sysbox');if(!box)return r;
+ const F=DT().F[x.v],st=s.lv>=100?` ★${Math.floor((s.lv-100)/10)+1}`:'',nx=(Math.floor(s.lv/10)+1)*10;
+ const bar=(v,c)=>`<div style="height:6px;background:#0005;border-radius:3px;margin-top:3px"><div style="height:6px;width:${cl(v,0,100)}%;background:${c};border-radius:3px"></div></div>`;
+ let h=`<div class="sxP" style="margin-top:10px;border-top:1px dashed var(--syW,#6ad);padding-top:8px">
+ <div><b>${VI[x.v]} ${esc(F)}</b> <span class="tag2">v${x.v}.${Math.floor(s.lv/10)}${st} · นิสัย: ${esc(DT().per)} · แพตช์ถัดไป Lv.${nx}</span></div>
+ <div class="tag2" style="margin-top:6px">💙 ความเชื่อใจ ${Math.round(x.tr)}${bar(x.tr,'#5ab0ff')}🔥 ภาระระบบ ${Math.round(x.ld)}${bar(x.ld,x.ld>=100?'#ff4a4a':'#ffa040')}</div>
+ <h4 style="margin:8px 0 4px">⚡ สกิลระบบ</h4>${x.stl?`<p class="tag2" style="color:#ff8080">ระบบถูก${esc(x.stl.n)}ขโมยไปครึ่งหนึ่ง — ใช้สกิลไม่ได้</p>`:''}
+ ${slots().map(q=>{const lk=s.lv<q.k[0]&&!q.fr,rd=ready(q),left=rd?0:cdOf(q.k)-(S.age-x.cd[q.i]);return`<button class="sysb" style="width:100%;text-align:left;margin:3px 0;${lk?'opacity:.45':''}" ${lk||x.stl?'disabled':''} onclick="sxUse('${q.i}')"><b>${lk?'🔒':rd?'⚡':'⏳'} ${esc(q.k[1])}</b>${q.fr?' <small>🧩</small>':''}<br><small>${lk?`ปลดที่ Lv.${q.k[0]}`:esc(q.k[2])+(rd?' · พร้อมใช้':` · อีก ${left} ปี`)+` · ภาระ ${q.k[5]}`}</small></button>`}).join('')}`;
+ const info=[];
+ if(x.pk.length)info.push('🧩 ความสามารถถาวร: '+x.pk.map(k=>PERK[k]?PERK[k][0]:k).join(' · '));
+ info.push(`📜 เนื้อเรื่องระบบ: บทที่ ${x.ch}/4${x.end?` · ฉากจบ: ${{merge:'🔗 หลอมรวม',free:'🕊️ อิสระ',admin:'🛠️ ผู้ดูแล'}[x.end]||''}`:''} · เบาะแส ${x.cl}`);
+ if(x.lq)info.push(`🏛️ เควสหมื่นปี: ${esc(x.lq.nm)} · เหลือ ${fmt(Math.max(0,x.lq.dl-S.age))} ปี`);
+ if(x.al)info.push(`🤝 พันธมิตร: ${esc(x.al.n)} ${x.al.st==='ok'?'':x.al.st==='dead'?'(จากไปแล้ว)':'(ทรยศ)'}`);
+ if(x.fr&&x.fr.length)info.push(`🩸 ชิ้นส่วนระบบที่กลืนมา: ${x.fr.map(t=>(SYS_TYPES.find(z=>z.id===t)||{}).ic||'').join(' ')}`);
+ if(x.bf)info.push(`🎯 บัฟศึก: ศัตรูอ่อนลง ${Math.round((1-x.bf.m)*100)}% อีก ${x.bf.n} ศึก`);
+ if(x.gd)info.push('🛡️ มีพลังกันตายติดตัว');
+ h+=`<div class="tag2" style="line-height:1.8;margin-top:6px">${info.join('<br>')}</div><p class="tag2" style="margin-top:6px"><i>"${esc(line())}"</i></p></div>`;
+ box.insertAdjacentHTML('beforeend',h)}catch(e){console.error('sysx panel',e)}return r}}
+window._sysx={D,X,upgrade,milestone,chapter,ending,glitch,reboot,slots};
+})()}catch(e){console.error('blockSYSX',e)}
+
 </script>
 </body>
 </html>
