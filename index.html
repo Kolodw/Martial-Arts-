@@ -41036,64 +41036,12 @@ window._blk40={T,teamF,alive,champ,mkMember,mkRival,ensure};
 })()}catch(e){console.error('block40',e)}
 
 // ============================================================
-// BLOCK 41: ⭕ จิตวิญญาณยุทธ์ — เกิดเป็นสัตว์วิญญาณ (เล่นเป็นสัตว์ได้)
+// BLOCK 41: ⭕ จิตวิญญาณยุทธ์ — เล่นได้เฉพาะมนุษย์ (ไม่มีเกิดเป็นสัตว์)
 // ============================================================
 try{(()=>{
-if(typeof BLX==='undefined'||typeof BL_SP==='undefined'||!window._blk34)return;
-const {TIER}=window._blk34;
-const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
-const isB=()=>!!(S&&S.alive&&S.ch==='soul'&&S.sv&&S.sv.aw===3&&S.beastMode&&!S.beastMode.human);
-const TI=[0,1,3,5,7];
-const tN=()=>{const t=TIER[TI[Math.min(4,S.beastMode.st)]];return t?t[0]:''};
-const O=(t,s,f)=>({t,s,f});
-// ---------- เริ่มชีวิตเป็นสัตว์วิญญาณ ----------
-{const _bb=beastBirth;beastBirth=function(i){window.__sbOn=1;try{return _bb.apply(this,arguments)}finally{window.__sbOn=0}}}
-{const _cs=chStart;chStart=function(){const r=_cs.apply(this,arguments);try{if(S.ch==='soul'&&window.__sbOn&&!CFG.sbeast){S.sv={aw:3,sp:[],lv:0,rings:[],seen:{},hy:-9,retired:true,bs:1};return r}if(S.ch==='soul'&&CFG.sbeast){const sp=ch(BL_SP),el=ch(BEL)[0];
- S.sv={aw:3,sp:[],lv:0,rings:[],seen:{},hy:-9,retired:true,bs:1};S.beastMode={sp:sp[0],el,st:0,human:0};S.lifespan+=S.xian?400:180;S.focus='hunt';S.flags.lostParents=1;S.parents=[];S.sibs=[];
- S.name=ch(['เจ้า','อา','เสี่ยว'])+sp[0]+ch(['น้อย','ขาว','ดำ','ทอง','ไฟ','จันทร์']);
- setTimeout(()=>{try{log(`🌲 <b>${S.name}</b> ลืมตาขึ้นในป่าลึกของทวีปจิตวิญญาณยุทธ์ — ที่นี่เรียกพวกเจ้าว่า <b>สัตว์วิญญาณ</b> ผู้ฝึกจิตมนุษย์ล่าพวกเจ้าเพื่อเอาวงแหวน ทุกปีที่รอดคือหนึ่งปีบำเพ็ญ`,'myth',true);render()}catch(e){}},50)}}catch(e){console.error('b41 start',e)}return r}}
-// ---------- ซิงก์ระดับ (กระดานอันดับ) ----------
-{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(isB()){const G=S.sv,m=S.beastMode;G.lv=Math.min(100,m.st*22+Math.min(21,Math.floor(S.age/5)));G.retired=true;G.wh=0;G.wa=0}}catch(e){}return r}}
-// ---------- เหตุการณ์สัตว์วิญญาณ ----------
-const B=()=>S.beastMode;
-BLX.push(
-{id:'sv_hunt',gap:5,c:()=>isB()&&S.age>=3,f(){const m=B();
- choice('🏹 ผู้ฝึกจิตเข้าป่า',`กลิ่นเหล็กและวงแหวนลอยมาตามลม — กลุ่มผู้ฝึกจิตมนุษย์ ${R(3,6)} คนกำลังตามหาสัตว์ที่${tN()}พอจะหลอมวงแหวนได้ และ${esc(S.name)}ตรงกับที่พวกเขาต้องการ`,[
-  O('🌿 ซ่อนตัว นิ่งให้เหมือนก้อนหิน','ปลอดภัยกว่า · เสียเวลาบำเพ็ญ',()=>{if(Math.random()<.78){S.int+=1;log('🌿 รองเท้าบูทเดินผ่านจมูกคุณไปไม่ถึงคืบ แล้วเสียงฝีเท้าก็ห่างออกไป','good')}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.35));log('🩸 มีคนเห็นเงาคุณ ลูกศรปักข้างลำตัว คุณหนีได้ด้วยความโชคช่วย','bad')}}),
-  O('⚔️ สู้กลับ','เสี่ยงตาย · ชนะได้ของ',()=>{if(fight('กลุ่มผู้ฝึกจิต',total()*(1.05+m.st*.18))){S.power+=pctPow(.1);S.fame+=30+m.st*20;S.karma-=3;log('⚔️ คุณกัดคอผู้นำกลุ่มจนล้ม ที่เหลือหนีไปทั้งอย่างนั้น ในกระเป๋าเขามีของดีหลายชิ้น','epic',true)}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.5));log('🩸 พวกเขารู้วิธีสู้กับสัตว์อย่างคุณมากเกินไป คุณหนีลงเหวเอาตัวรอด','bad',true)}}),
-  O('🪤 ล่อเข้าหุบเขาที่คุ้นเคย','ใช้สติปัญญา · ต้องฉลาดพอ',()=>{if(S.int>=20&&Math.random()<.4+S.int/300){S.fame+=25;S.int+=2;log('🪤 คุณล่อพวกเขาข้ามบึงดูดที่คุณเลี่ยงมาทั้งชีวิต ไม่มีใครกลับออกมา','good',true)}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.3));log('🪤 แผนไม่เป็นผล คุณต้องวิ่งหนีทั้งคืน','bad')}})])}},
-{id:'sv_child',gap:9,mx:1,c:()=>isB()&&S.age>=3&&!B().friend,f(){const m=B(),n=anyName(Math.random()<.5?'ชาย':'หญิง');
- choice('🧒 เด็กมนุษย์ริมป่า',`เด็กอายุราวหกขวบชื่อ <b>${n}</b> ยืนอยู่ริมป่า มือเปล่า ไม่มีวงแหวน ไม่มีอาวุธ เขาไม่ได้กลัวคุณ — เขาแบ่งขนมให้`,[
-  O('🤝 ยอมให้เขาเข้าใกล้','ได้เพื่อนมนุษย์ · เขาโตเป็นผู้ฝึกจิตในอนาคต',()=>{m.friend={n,age:S.age};joy(8);log(`🤝 ${n}ไม่ถามว่าคุณคืออะไร เขาแค่นั่งอยู่ข้างๆ จนค่ำ แล้ววิ่งกลับบ้าน`,'good',true)}),
-  O('🦷 ขู่ให้หนีไป','ปลอดภัย · ไม่มีเพื่อน',()=>{log(`🦷 ${n}วิ่งร้องไห้กลับไป คุณไม่รู้ว่าทำไมคืนนั้นถึงนอนไม่หลับ`)}),
-  O('🍖 กินเขา','กรรมหนัก · พลังเพิ่ม',()=>{S.karma-=30;S.power+=pctPow(.05);log('🍖 …คุณไม่ได้เล่าเรื่องนี้ให้ใครฟังอีกเลย','bad',true)})])}},
-{id:'sv_pact',gap:20,mx:1,c:()=>isB()&&B().friend&&B().st>=2&&S.age-B().friend.age>=10,f(){const m=B(),n=m.friend.n;
- choice(`💍 ${n} กลับมา`,`เด็กคนนั้นโตเป็นผู้ฝึกจิตแล้ว เขาติดคอขวดที่วงแหวนวงหนึ่ง และเขาไม่ได้มาพร้อมอาวุธ — เขามาขอร้อง <b>"เป็นวงแหวนของข้าได้ไหม โดยที่เจ้ายังมีชีวิตอยู่"</b> ตามตำราเรียกว่าสัญญาสมัครใจ — คนส่วนใหญ่เชื่อว่าเป็นไปไม่ได้`,[
-  O('🤝 ยอมเป็นคู่หูของเขา',`เจ้าสองคนแข็งแกร่งขึ้นด้วยกัน · ชะตาผูกกัน`,()=>{m.bound=n;S.power+=pctPow(.3);S.fame+=150;S.karma+=15;S.lifespan+=40;log(`🤝 ${n}ไม่ได้ฆ่าคุณ พลังของคุณทั้งสองไหลหากัน นี่คือครั้งแรกในทวีปที่ผู้ฝึกจิตกับสัตว์วิญญาณมีวงแหวนร่วมกัน`,'myth',true)}),
-  O('💔 สละร่างเป็นวงแหวนให้เขา','ตายทันที · ชีวิตหน้าได้ร่องรอยวงแหวน',()=>{try{LS.set('murim_svlegacy',{n:S.name})}catch(e){}S.karma+=25;S.fame+=300;log(`💔 คุณนอนลงต่อหน้า${n} "ใช้ข้าเถอะ ข้ารู้ว่าเจ้าจะไม่ทิ้งข้า" วงแหวนสีขาวลอยขึ้นจากร่างคุณช้าๆ`,'myth',true);S.hp=0;S.deathCause=`สละร่างเป็นวงแหวนให้${n}ด้วยความสมัครใจ`}),
-  O('🚫 ปฏิเสธ','เขาจากไปเงียบๆ · อาจกลับมาพร้อมพวก',()=>{m.friend.hurt=1;joy(-6);log(`🚫 ${n}ก้มหัวให้คุณ "ข้าเข้าใจ" แล้วเดินกลับเข้าหมู่บ้านโดยไม่หันหลังมามอง`)})])}},
-{id:'sv_king',gap:12,c:()=>isB()&&B().st>=2&&S.age>=15,f(){const m=B();
- choice('👑 ราชาอสูรเรียกประชุม',`สัตว์วิญญาณเก่าแก่ทั่วป่าถูกเรียกมารวมกันที่หน้าผา ราชาอสูรประกาศว่าผู้ฝึกจิตกำลังรุกคืบ ต้องการ <b>นักรบอสูร</b> ${m.king?'และเนื่องจากคุณเป็นราชา คำพูดของคุณคือกฎ':''}`,[
-  O('⚔️ อาสานำทัพ','ชื่อเสียงสูง · เสี่ยงเจ็บหนัก',()=>{if(fight('ทัพผู้ฝึกจิต',total()*(1+m.st*.1))){S.fame+=120+m.st*30;S.karma+=4;log('⚔️ ทัพสัตว์วิญญาณตีกองล่าแตกที่ช่องเขา ชื่อของคุณถูกเล่าในทุกโพรงถ้ำ','epic',true)}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.45));log('🩸 ทัพแตก คุณพาคนที่เหลือถอยออกมา','bad',true)}}),
-  O('🌕 ฝึกในที่เงียบ ไม่ยุ่ง','บำเพ็ญต่อ · ถูกมองว่าขี้ขลาด',()=>{S.qi+=3;S.fame-=10;log('🌕 คุณหลบไปดูดซับแสงจันทร์ มีสัตว์ตัวหนึ่งหันมามองคุณอย่างไม่พอใจ')}),
-  O('🕊️ เสนอเจรจากับมนุษย์','ลดการล่า · ราชาไม่พอใจ',()=>{S.karma+=8;S.cha+=3;S.fame+=20;log('🕊️ ที่ประชุมหัวเราะ แต่ปีต่อมาการล่าในเขตของคุณลดลงจริงๆ','good',true)})])}},
-{id:'sv_cage',gap:15,c:()=>isB()&&S.age>=5,f(){
- choice('⛓️ ตกลงในกรงเหล็ก',`คุณตื่นขึ้นในกรงที่ลายเหล็กสลักด้วยอักขระผนึกจิต พ่อค้าวัตถุดิบวิญญาณมองคุณแล้วหัวเราะ "หายากนะนี่ ${tN()}แล้ว!"`,[
-  O('💥 ฝืนพลังฉีกกรง','ใช้พลังมาก · เจ็บหนัก',()=>{if(Math.random()<.5+S.power/(S.power+3000)){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.3));S.fame+=30;log('💥 กรงเหล็กบิดเบี้ยว คุณวิ่งหนีเข้าป่าโดยมีโซ่ลากอยู่ที่ขา','good',true)}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.6));log('🩸 อักขระผนึกสะท้อนพลังกลับ คุณสลบไปสามวัน แต่ยังมีชีวิต','bad',true)}}),
-  O('🧠 แกล้งทำเป็นอ่อนแรง','ใช้ปัญญา',()=>{if(S.int>=25&&Math.random()<.55){S.int+=2;log('🧠 พ่อค้าเผลอเปิดกรงเพื่อป้อนน้ำ คุณพุ่งผ่านเขาไปโดยไม่ส่งเสียง','good',true)}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.25));log('🧠 เขาไม่ถูกหลอก แต่การเฝ้าคุณก็หย่อนลงในคืนที่สาม และคุณหนีได้ตอนนั้น','bad')}}),
-  O('🪽 รอคนมาช่วย','ต้องมีเพื่อน',()=>{if(B().friend&&!B().friend.hurt){S.karma+=5;log(`🪽 ${B().friend.n}ปรากฏตัวพร้อมกุญแจที่ขโมยมา — เขาโตขึ้นมากจนคุณแทบจำไม่ได้`,'myth',true)}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.5));log('🪽 ไม่มีใครมา คุณต้องหนีเองในท้ายที่สุด และเจ็บกว่าที่ควร','bad',true)}})])}}
-);
-// ---------- หน้าดวงจิตสำหรับสัตว์ ----------
-{const _os=window.openSoul;window.openSoul=function(){if(!isB())return _os.apply(this,arguments);const m=S.beastMode,sp=BL_SP.find(x=>x[0]===m.sp)||BL_SP[0],st=m.st;
- modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌲 สัตว์วิญญาณ — ${esc(S.name)}</h3><div class="item"><b>${esc(m.sp)}</b> ธาตุ${esc(m.el)} · <b>${tN()}</b> (${BL_ST[st]})<br><span class="tag2">${esc(sp[3])}</span></div>
- ${m.friend?`<div class="item">🧒 เพื่อนมนุษย์: <b>${esc(m.friend.n)}</b>${m.bound?' · 🤝 คู่หูที่แบ่งวงแหวนร่วมกัน':m.friend.hurt?' · 💔 คุณปฏิเสธเขาไว้':''}</div>`:''}
- <p class="tag2">ผู้ฝึกจิตล่าพวกเจ้าเพื่อเอาวงแหวน แต่ไม่ใช่ทุกคนที่มาด้วยเจตนาร้าย ระดับ ${S.sv.lv}/100 นับลงกระดานอันดับ</p>`)};}
-// ---------- ปุ่มเลือกตอนเริ่ม ----------
-try{const ix=CH_KEYS.indexOf('soul');
- const add=()=>{const sg=document.querySelector('.seg[data-k="chm"]');if(!sg||sg.querySelector('.sbBtn'))return;const sb=sg.querySelector('[data-v="'+ix+'"]');if(!sb)return;const b=document.createElement('button');b.className='sbBtn';b.dataset.v=String(ix);b.textContent='🌲 จิตวิญญาณฯ (เกิดเป็นสัตว์)';
-  b.onclick=()=>{sg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');CFG.chm=ix;CFG.sbeast=1;updateHints()};
-  sb.addEventListener('click',()=>{CFG.sbeast=0;b.classList.remove('on')});sg.querySelectorAll('button').forEach(x=>{if(x!==b&&x!==sb)x.addEventListener('click',()=>{CFG.sbeast=0;b.classList.remove('on')})});sb.after(b);if(CFG.chm===ix&&CFG.sbeast){sg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on')}};
- add();setTimeout(add,1600);setInterval(add,2500)}catch(e){console.error('b41 ui',e)}
+const sx=()=>{try{return CFG.chm===CH_KEYS.indexOf('soul')}catch(e){return false}};
+{const _bb=beastBirth;beastBirth=function(i){if(sx()){toast('โหมดจิตวิญญาณยุทธ์เล่นได้เฉพาะมนุษย์ — เลือกโหมดอื่นถ้าอยากเกิดเป็นสัตว์');return}return _bb.apply(this,arguments)}}
+{const _gb=goBeastLife;goBeastLife=function(){if(sx()){toast('โหมดจิตวิญญาณยุทธ์เล่นได้เฉพาะมนุษย์');return}return _gb.apply(this,arguments)}}
 })()}catch(e){console.error('block41',e)}
 
 // ===================== 🟦 ระบบโตตามภพ (SYSX): ร่างตามโลก · สกิลกดใช้ · ความเชื่อใจ/ภาระ · หลักไมล์ทุก 10 เลเวล · เนื้อเรื่อง 4 บท · โฮสต์คู่แข่ง · เควสหมื่นปี · ระบบแก่ · มรดกระบบ =====================
