@@ -35341,7 +35341,7 @@ window.evMenu=async function(){
   let h='';
   for(const k of Object.keys(BUN)){const b=BUN[k];if(b.ids.some(x=>own.includes(x)))continue;if(b.ks.some(x=>L[x]!=null&&L[x]<=0))continue;
    const pr=sup?disc(b.p):b.p;
-   h+=`<div class="evbn"><span class="ic">${b.ic}</span><span><b>🎁 ${b.n}</b><small>${b.d}</small><small>ซื้อแยก <s>${b.full}฿</s> → เหมาชุด <b style="display:inline">${pr}฿</b>${sup?' (รวมส่วนลดผู้สนับสนุน)':''} · ประหยัด ${b.full-pr}฿</small></span><button onclick="evBuy('${k}')">ซื้อชุด</button></div>`}
+   h+=`<div class="evbn"><span class="ic">${b.ic}</span><span><b>🎁 ${b.n}</b><small>${b.d}</small><small>ซื้อแยก <s>${b.full}฿</s> → เหมาชุด <b style="display:inline">${pr}฿</b>${sup?' (รวมส่วนลดผู้สนับสนุน)':''} · <b style="display:inline;color:#7dff8a">ประหยัด ${b.full-pr}฿ (${Math.round((1-pr/b.full)*100)}%)</b></small></span><button onclick="evBuy('${k}')">ซื้อชุด</button></div>`}
   if(sup)h+='<div class="evsup">💛 ผู้สนับสนุนลด 20% ทุกชิ้นในอีเวนต์</div>';
   if(h)hero.insertAdjacentHTML('afterend',h)}catch(e){}
  return r};
@@ -36697,6 +36697,53 @@ try{END.loop.push(['lx_duo','A','ออกจากลูปพร้อมอ�
  END.under.push(['ux_mayor','S','จากเจ้าพ่อสู่นายกเทศมนตรี'],['ux_legit','A','นักธุรกิจสีขาว'],['ux_grad','B','ส่งลูกน้องเรียนจบ'],['ux_cop','B','คนสองหน้าของตำรวจ'],['ux_coup','C','โดนลูกน้องยึดอำนาจ'])}catch(e){console.error('b17 end',e)}
 window._wld17={ids:['lx_rv0','lx_rv1','lx_rv2','lx_truth','lx_dark','lx_rain','lx_known','gx_new','gx_step','gx_ang','ux_cop0','ux_cop1','ux_biz','ux_dream','ux_legit','ux_pol','ux_coup'],lI,gxI,uxI,gxAct};
 })()}catch(e){console.error('block17',e)}
+
+// ===================== 🗂️ จัดหมวดกรอบ/ฉายาตามที่มา (อีเวนต์แยกตามงาน · ร้านตกแต่งแยกตามหมวด) + 🪨 ระดับหลอมกายในหน้าตัวละคร =====================
+try{(function(){
+// ---- หมวดกรอบในโปรไฟล์ ----
+const EVL=[['loy','🏮 อีเวนต์ลอยกระทง',/^f_e\d+$/],['hw','🎃 อีเวนต์ฮาโลวีน',/^f_hw\d+$/],['sk','💦 อีเวนต์สงกรานต์',/^f_sk\d+$/],['ny','🎆 อีเวนต์ปีใหม่',/^f_ny\d+$/]];
+const SHG=[['cs','🎨 ร้านตกแต่ง · ยุทธภพ',/^f_p\d+$/],['cm','🏙️ ร้านตกแต่ง · ยุคปัจจุบัน',/^f_m\d+$/],['cw','🌍 ร้านตกแต่ง · ชุดตามโลก',/^f_w\d+$/]];
+const grpOf=f=>{if(!f)return'';if(f.ev)return'ev'+f.ev;for(const [k,,re] of EVL)if(re.test(f.id))return'ev'+k;for(const [k,,re] of SHG)if(re.test(f.id))return k;return f.side};
+if(typeof FRG!=='undefined'&&Array.isArray(FRG)&&typeof frgItems==='function'){
+ FRG.unshift(...EVL.map(([k,t])=>['ev'+k,t]),...SHG.map(([k,t])=>[k,t]));
+ frgItems=function(k){const d=frGet();return FRAMES.filter(f=>d.own.includes(f.id)&&grpOf(f)===k)};
+ window.frGrpOf=grpOf}
+// ---- ฉายาตกแต่งในโปรไฟล์ (แท็บ 🎖️ ฉายา) ----
+const TG=[['🏮 อีเวนต์ลอยกระทง',/^t_e\d+$/],['🎃 อีเวนต์ฮาโลวีน',/^t_hw\d+$/],['💦 อีเวนต์สงกรานต์',/^t_sk\d+$/],['🎆 อีเวนต์ปีใหม่',/^t_ny\d+$/],['🎨 ร้านตกแต่ง · ยุทธภพ',/^t_p\d+$/],['🏙️ ร้านตกแต่ง · ยุคปัจจุบัน',/^t_[mn]\d+$/],['🌍 ร้านตกแต่ง · ชุดตามโลก',/^t_w\d+$/]];
+const cs=()=>{try{const o=JSON.parse(localStorage.getItem('murim_cos')||'null');return o&&Array.isArray(o.own)?o:{own:[],eq:{}}}catch(e){return{own:[],eq:{}}}};
+window.pfTtlEq=async function(id){const o=window.cosMenu;window.cosMenu=()=>{};try{await window.cosEq('t',id||null)}catch(e){}finally{window.cosMenu=o}window._pfTab='ttl';try{openProfile()}catch(e){}};
+function ttlSec(){const C=cs(),own=C.own.filter(x=>/^t_/.test(x)),cur=(C.eq||{}).t||'';if(typeof window.cosTitleHtml!=='function')return'';
+ let h='<div class="pfsec pfcos"><h4>🎨 ฉายาตกแต่งของฉัน ('+own.length+')</h4>';
+ if(!own.length)return h+'<p class="tag2" style="margin:0">ยังไม่มีฉายาตกแต่ง — ซื้อได้ที่ 🎨 ร้านตกแต่ง หรือ 🏮 อีเวนต์ ฉายานี้จะขึ้นข้างชื่อในแชทโลก</p></div>';
+ h+=(cur?'<div class="pfcur">ใส่อยู่: '+window.cosTitleHtml(cur)+' <button class="gbtn" onclick="pfTtlEq(null)">ถอด</button></div>':'<p class="tag2" style="margin:0 0 6px">ยังไม่ได้ใส่ฉายาตกแต่ง</p>');
+ const used=new Set();
+ TG.forEach(([t,re])=>{const L=own.filter(x=>re.test(x));if(!L.length)return;L.forEach(x=>used.add(x));
+  h+='<div class="frsub">'+t+' <span class="tag2">'+L.length+'</span></div><div class="pfttl">'+L.map(x=>'<button class="'+(x===cur?'on':'')+'" onclick="pfTtlEq(\''+x+'\')">'+window.cosTitleHtml(x)+'</button>').join('')+'</div>'});
+ const rest=own.filter(x=>!used.has(x));if(rest.length)h+='<div class="frsub">✨ อื่นๆ</div><div class="pfttl">'+rest.map(x=>'<button class="'+(x===cur?'on':'')+'" onclick="pfTtlEq(\''+x+'\')">'+window.cosTitleHtml(x)+'</button>').join('')+'</div>';
+ return h+'<p class="tag2" style="margin:6px 0 0">แตะเพื่อใส่ · ขึ้นข้างชื่อในแชทโลก</p></div>'}
+{const _op=window.openProfile;if(typeof _op==='function'){const w=function(){const r=_op.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='profile'||m.querySelector('.pfcos'))return r;const h=ttlSec();if(!h)return r;
+  const pane=m.querySelector('.pfpane[data-t="ttl"]');if(pane)pane.insertAdjacentHTML('beforeend',h);else{const s=[...m.querySelectorAll('.pfsec')].find(e=>/ฉายา/.test((e.querySelector('h4')||{}).textContent||''));if(s)s.insertAdjacentHTML('afterend',h)}
+  try{m.querySelectorAll('.pfcos .ptt').forEach(x=>x.removeAttribute('data-ms'))}catch(e){}}catch(e){console.error(e)}return r};window.openProfile=w;try{openProfile=w}catch(e){}}}
+// ---- 🪨 หลอมกายในหน้าตัวละคร ----
+function bodyBox(){if(!S||typeof BODY_N==='undefined')return'';const B=S.body||{lv:0,xp:0},lv=Math.max(0,B.lv|0),mx=BODY_N.length;let mw=false;try{mw=typeof mwOn==='function'&&mwOn()}catch(e){}
+ if(mw&&!lv)return'';const need=8+lv*lv*3,pct=lv>=mx?100:Math.max(0,Math.min(100,Math.floor((B.xp||0)/need*100))),cur=lv?BODY_N[lv-1]:'ยังไม่ได้เริ่ม',nx=lv<mx?BODY_N[lv]:null;
+ const lad=BODY_N.map((n,i)=>'<span class="bdl'+(i<lv?' ok':i===lv?' nx':'')+'" title="ขั้น '+(i+1)+'">'+(i<lv?'✓':i+1)+'</span>').join('');
+ return '<div class="item bdbox"><div class="h"><b>🪨 หลอมกาย: '+cur+'</b><span class="tag2">ขั้น '+lv+'/'+mx+'</span></div>'
+  +'<div class="bdbar"><i style="width:'+pct+'%"></i></div>'
+  +'<div class="bdlad">'+lad+'</div>'
+  +'<span class="tag2">'+(lv>=mx?'ถึงขั้นสูงสุดแล้ว — กายที่ฟ้าทำลายไม่ได้':'ขั้นถัดไป: <b>'+nx+'</b> · ความคืบหน้า '+Math.floor(B.xp||0)+'/'+need)
+  +'<br>ขั้นตั้งต้น: '+BODY_N[0]+' · ขั้นสูงสุด: '+BODY_N[mx-1]
+  +(lv?'<br>ผลตอนนี้: ศัตรูอ่อนลง '+(lv*2)+'% · พลังชีวิตสูงสุดเพิ่มทุกขั้น':'<br>เริ่มได้เมื่ออายุ 10 ปีขึ้นไป')
+  +(lv<mx?' · เลือกจุดมุ่งหมาย 🪨 หลอมกาย เพื่อฝึกต่อ':'')+'</span></div>'}
+{const _om=openMe;openMe=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='me'&&!m.querySelector('.bdbox')){const h=bodyBox();if(h){const it=m.querySelector('.item');if(it)it.insertAdjacentHTML('afterend',h);else{const h3=m.querySelector('h3');if(h3)h3.insertAdjacentHTML('afterend',h)}}}}catch(e){console.error(e)}return r};try{window.openMe=openMe}catch(e){}}
+const st=document.createElement('style');st.textContent=`
+.bdbox .h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.bdbar{height:8px;border-radius:99px;background:rgba(127,127,127,.25);overflow:hidden;margin:6px 0}.bdbar i{display:block;height:100%;background:linear-gradient(90deg,#8a6a4a,#d8b070,#fff0c0);border-radius:99px}
+.bdlad{display:flex;gap:3px;flex-wrap:wrap;margin:2px 0 6px}.bdl{width:22px;height:22px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;background:rgba(127,127,127,.18);color:inherit;opacity:.6}
+.bdl.ok{background:linear-gradient(135deg,#d8b070,#8a6a4a);color:#2a1a08;opacity:1}.bdl.nx{outline:2px solid #d8b070;opacity:1}
+.pfttl{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}.pfttl button{background:none;border:2px solid transparent;border-radius:10px;padding:3px;cursor:pointer}.pfttl button.on{border-color:#f0c040}
+.pfcur{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 6px}.pfcur .gbtn{padding:3px 10px;margin-left:auto}`;document.head.appendChild(st);
+})()}catch(e){console.error('mod-grp',e)}
 </script>
 </body>
 </html>
