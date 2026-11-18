@@ -37280,6 +37280,18 @@ const st=document.createElement('style');st.textContent=`
 .offv .frw.mx::before,.cxoff .frw.mx::before{animation-play-state:paused}
 @media (prefers-reduced-motion:reduce){.frsh .mxr,.frsh .mxPkW,.frsh .mxShk,.frw.mx::before{animation:none!important}.frsh .mxPkW{opacity:0}}`;document.head.appendChild(st);
 })()}catch(e){console.error('mod-mx',e)}
+
+// ร้านตกแต่ง: ตัวนับ "สะสมแล้ว" รวมทุกหมวด (ยุทธภพ · ยุคปัจจุบัน · ชุดโลก · ฉายาเสริม · อีเวนต์) + แถบความคืบหน้าแยกหมวด
+try{(function(){const R=(p,a,b)=>{const o=[];for(let i=a;i<=b;i++)o.push(p+i);return o};
+ const nEv=()=>{try{return Math.max(1,FRAMES.filter(f=>/^f_e\d+$/.test(f.id)).length)}catch(e){return 5}};
+ const CAT=()=>[['⚔️ ยุทธภพ',[...R('f_p',1,8),...R('t_p',1,11),...R('c_p',1,8)]],['🏙️ ยุคปัจจุบัน',[...R('f_m',1,6),...R('t_m',1,6),...R('c_m',1,6)]],['🌍 ชุดโลก',[...R('f_w',1,9),...R('t_w',1,9),...R('c_w',1,9)]],['🏷️ ฉายาเสริม',R('t_n',1,18)],['🏮 อีเวนต์',[...R('f_e',1,nEv()),...R('t_e',1,nEv()),...R('c_e',1,nEv())]]];
+ const own=()=>{let o=[];try{o=(JSON.parse(localStorage.getItem('murim_cos')||'null')||{}).own||[]}catch(e){}const s=new Set(o);try{(frGet().own||[]).forEach(x=>s.add(x))}catch(e){}let adm=false;try{adm=!!(typeof admK==='function'&&admK())}catch(e){}return{s,adm}};
+ const st=document.createElement('style');st.textContent='.cxs .colb{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}.cxs .colb span{flex:1 1 auto;min-width:0;white-space:nowrap;font-size:10.5px;font-weight:700;padding:4px 8px 6px;border-radius:10px;background:rgba(255,255,255,.12);color:inherit;position:relative;overflow:hidden}.cxs .colb span i{position:absolute;left:0;bottom:0;height:3px;background:linear-gradient(90deg,#ffd27a,#ff7ad8);border-radius:3px}.cxs .colb span.ok{background:rgba(255,210,122,.25)}';document.head.appendChild(st);
+ const fix=()=>{try{const h=document.querySelector('#modal .cxs .hero');if(!h)return;const o=h.querySelector('.own');if(!o)return;const {s,adm}=own(),C=CAT();let a=0,t=0;
+  const parts=C.map(([n,L])=>{const k=adm?L.length:L.filter(x=>s.has(x)).length;a+=k;t+=L.length;return'<span class="'+(k===L.length?'ok':'')+'">'+n+' '+k+'/'+L.length+'<i style="width:'+Math.round(k/L.length*100)+'%"></i></span>'});
+  o.textContent='สะสมแล้ว '+a+'/'+t;if(!h.querySelector('.colb'))h.insertAdjacentHTML('beforeend','<div class="colb">'+parts.join('')+'</div>');else h.querySelector('.colb').innerHTML=parts.join('')}catch(e){}};
+ const _cm=window.cosMenu;if(typeof _cm==='function'){window.cosMenu=function(){const r=_cm.apply(this,arguments);try{fix();setTimeout(fix,600)}catch(e){}return r}}
+ window.addEventListener('shop:paid',()=>setTimeout(fix,1500))})()}catch(e){console.error('mod-col',e)}
 </script>
 </body>
 </html>
