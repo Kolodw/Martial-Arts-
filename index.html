@@ -35771,6 +35771,24 @@ END.gatewon.splice(1,0,['rw_tame','A','สันติภาพที่เร�
 END.doom.splice(4,0,['dm_cult','B','ยืนรออุกกาบาตกับลัทธิ']);
 window._wld14={ids:['t_team','t_loss','t_floor','t_rule','g_sys','g_price','g_caste','r_cnc','r_coup','r_out','r_tame','r_pet','d_deny','d_cult','d_calm','d_list','d_tr'],fI,PK};
 })()}catch(e){console.error('block14',e)}
+
+// ===================== ลดแล็กร้านตกแต่ง: หยุดแอนิเมชันของพรีวิวที่เลื่อนพ้นจอ (เอฟเฟกต์ยังอยู่ครบ กลับมาเล่นเมื่อเลื่อนเห็น) =====================
+(()=>{
+ const SEL='#modal .frw,#modal .trio,#modal .bubp,#modal .frsh,#modal .cmb[class*=ccxT]';
+ const seen=new WeakSet();
+ let io=null;
+ try{io=new IntersectionObserver(ents=>{for(const e of ents){e.target.classList.toggle('offv',!e.isIntersecting)}},{root:null,rootMargin:'60px 0px'})}catch(e){io=null}
+ if(!io)return;
+ const st=document.createElement('style');
+ st.textContent='.offv,.offv *{animation-play-state:paused!important}';
+ document.head.appendChild(st);
+ setInterval(()=>{
+   if(document.hidden)return;
+   const m=document.getElementById('modal');
+   if(!m)return;
+   m.querySelectorAll(SEL).forEach(el=>{if(!seen.has(el)){seen.add(el);io.observe(el)}});
+ },600);
+})();
 </script>
 </body>
 </html>
