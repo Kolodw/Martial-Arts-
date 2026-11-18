@@ -462,8 +462,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='19.0';
+const VERSION='19.1';
 const CHANGELOG=[
+  {v:'19.1',d:'18 พ.ย. 2026',l:['⭕ <b>ทวีปจิตวิญญาณยุทธ์ รอบ 2</b> — ดวงจิต 5 สายมีผลจริง · ท่าวงแหวนลดพลังศัตรูได้จริง · เหตุการณ์เฉพาะทวีปกว่า 30 แบบ (งานของคนมีดวงจิต · สถาบัน · ทะเบียนศาลา · หนี้ · เพื่อนร่วมทีม · ลูกปลุกจิต · นักล่ากระดูกวิญญาณ ฯลฯ)','🤝 <b>ไม่ต้องฆ่าก็ได้</b> — สยบสัตว์อสูรเป็นสัตว์คู่ใจ · ซื้อวงแหวนตลาดมืด (อาจปลอม) · ไว้ชีวิตสัตว์ที่แพ้ แล้วมันอาจกลับมา · ฆ่ามากไปเผ่าสัตว์จะมาแก้แค้น','🌀 <b>ดวงจิตคู่แย่งร่าง</b> — กดให้หลับ / หลอมรวม / ปล่อยไป · 💞 <b>ดวงจิตมีนิสัยและพูดได้</b> ใจตรงกันแล้วฝึกเร็ว','🌑 <b>ไร้ดวงจิต</b> — โอกาส 4% ปลุกไม่ขึ้น เลือกเป็นช่าง หมอ พ่อค้า หรือนักวิชาการ · ⚡ <b>ปลายทางหลังวงที่ 9</b> — ทดสอบเทพ / ทุบวงแหวน / ถ่ายทอดให้ชีวิตถัดไป']},
   {v:'19.0',d:'18 พ.ย. 2026',l:['⭕ <b>โหมดใหม่ ทวีปจิตวิญญาณยุทธ์</b> — ตื่นรู้วิญญาณยุทธ์ 40 แบบ 5 สาย ล่าสัตว์วิญญาณดูดวงแหวน ไต่ระดับ 10 ขั้น มีสมุดบันทึกวิญญาณ (เลือกได้ที่ตัวเลือกโหมดท้าทาย)','📜 <b>ชีวิตไม่ซ้ำ</b> — สมุดเส้นทางชีวิต · คนแปลกหน้าที่เจอซ้ำได้ · ชะตาหายาก 1% ต่อปี · พื้นเพตอนเกิด (ยากจน/ตระกูลมั่งคั่ง/ฝาแฝด/ดาวเด่น/ได้รับการดูแล/กำพร้า) · เหตุการณ์ข้ามโลก','🎭 <b>เหตุการณ์เพิ่มทุกโลก</b> — เพิ่มอีก 25–30 เหตุการณ์ต่อโลก เหตุการณ์แตกต่างตามอาชีพ ตัวเลือกก่อนหน้ามีผลต่อเนื่อง ไม่เป็นเส้นตรง','🛒 <b>ซื้อด้วยเงินจริงต้องล็อกอิน Google ก่อน</b> — ตั๋วสุ่ม VIP ของแต่ง ผูกกับบัญชี ไม่หายเมื่อเปลี่ยนเครื่อง ล็อกอินเสร็จกลับหน้าซื้อให้เอง','🎲 <b>กู้ตั๋ว/VIP ที่เคยเติมไว้</b> — โปรไฟล์ → กู้ตั๋วสุ่ม/VIP ที่เคยเติมไว้ กรอกชื่อบัญชี ยอด เวลาตามสลิป ระบบย้ายมาเครื่องนี้ให้','🛡️ <b>กันเซฟหาย</b> — เซฟคลาวด์ถี่ขึ้นและทันทีหลังซื้อ · ชวนผูก Google · iPhone เตือนให้เพิ่มเกมลงหน้าจอโฮม · เตือนเมื่อเซฟคลาวด์ค้างหลายวัน','🔧 <b>แก้บั๊ก</b> — ซื้อเกราะแล้วเลือดไม่ขึ้น/ตกลง · ตัวละครที่ตายไม่ขึ้นทำเนียบเพราะ "ตรวจพบการแก้ไขค่า" ทั้งที่แค่รีเฟรช · ผู้เล่นปกติโดนแบนผิด (ผ่อนการตรวจให้ไม่เข้มเกิน) · ผู้ย้อนกาลเปิด/ปิดข้ามอัตโนมัติได้เอง ไม่ข้ามการเลือกโดยไม่ตั้งใจ']},
   {v:'18.14',d:'18 พ.ย. 2026',l:['🕳️ <b>อเวจี</b> — ลงอัตโนมัติ/ลงรวดผ่านชั้นลึกที่ประตูซ่อนได้ · เพิ่มป้ายผู้คุมพิเศษ 🟢/🟡/🔴 พร้อมรางวัล · แก้ปณิธานสัตว์อสูรเปลี่ยนไม่ได้ · แก้ป้ายด่านนรกหาย','🔁 <b>ผู้ย้อนกาล</b> — เควสช่วยเพื่อนร่วมชะตาไม่ถูกข้ามแล้ว (ออโต้หยุดรอ ดวลจริง ไม่ซ้อนทับ)','💛 <b>หอผู้สนับสนุน</b> — อันดับผู้สนับสนุนเกม เดือนนี้/ตลอดกาล ขึ้นชื่อแบบยินยอม','👁 ตัวละครยุคปัจจุบันในหน้าดูคนอื่นเล่นแสดงอาชีพ/สุขภาพแทนขั้นพลัง']},
   {v:'18.13',d:'17 พ.ย. 2026',l:['🏮 <b>งานลอยกระทง 2026</b> — กรอบ ฉายา ธีมแชทชุดลอยกระทง ขยับทั้งกรอบ (กระทงลอย ดาวไหว ควันธูป กลีบดอกไม้) พร้อมเพลง Night of the Lotus เป็นเพลงเริ่มต้นถึง 17 ธ.ค.','🎨 <b>ร้านตกแต่งเปิดเร็วขึ้น</b> — การ์ดที่ยังไม่เห็นหยุดขยับก่อนจนกว่าจะเลื่อนถึง เอฟเฟกต์กรอบ/ฉายา/ธีมครบเหมือนเดิม · แถบแท็บไม่ทับเนื้อหาแล้ว','🕳️ <b>อเวจีลงอัตโนมัติ</b> — เปิดปุ่ม 🤖 ที่หน้าอเวจี ระบบสู้ให้ปีละ 1 ชั้น · เพิ่มปุ่ม ⏩ <b>ลงรวด 10 / 50 / 100 ชั้น</b> สู้ต่อเนื่องในทีเดียว (ผลสู้เท่าเดิม ไม่ข้ามด่าน) แล้วรอ ~1 ปีต่อ 10 ชั้น · หยุดเองเมื่อเลือดต่ำ ผู้คุมแรงเกิน บอสวงใหญ่ หรือพ่ายแพ้','🔴 <b>ผู้คุมพิเศษอเวจี</b> — ประตูมีป้ายความแรง 🟢/🟡/🔴 · ชนะ 🟡 แก่นนรก ×1.5 · ชนะ 🔴 (แรงเกิน 105%) แก่นนรก ×2 + โอกาสได้วิชาอเวจี (สูงสุด 5 ชิ้น/ชาติ) · ปุ่ม ⚠️ ยอมเสี่ยง ให้ลงอัตโนมัติ/ลงรวดท้าผู้คุมได้ถึง 130% (แพ้เสียเท่าเดิม)','🏯 <b>แก้สำนักที่ตั้งจากระบบเจ้าสำนักอัปเลเวลไม่ได้</b> — ตอนนี้ศิษย์เพิ่มและสำนักเลื่อนระดับรายปี (20/60/150/400 คน)','⚖️ <b>ปุ่มท้าดวลชิงบัลลังก์กฎ 8 สาย</b> ในหน้ากฎ บอกเงื่อนไขและเวลารอชัดเจน','👁 <b>ดูคนอื่นเล่น</b> — ตัวเลขคนดูแม่นขึ้น · ยุคปัจจุบันไม่หายจากรายชื่อเมื่อคนเยอะ · ตัวละครยุคปัจจุบันแสดงอาชีพ/สุขภาพ/ทักษะแทนขั้นพลังยุทธภพ','💛 <b>หอผู้สนับสนุน</b> — อันดับผู้สนับสนุนเกมเรียงตามยอดที่ยืนยันแล้ว (เดือนนี้ / ตลอดกาล) ผู้เล่นเลือกเองว่าจะขึ้นชื่อหรือโชว์ยอดไหม ค่าเริ่มต้นเป็นนิรนาม · เข้าจากหน้า VIP','🔁 <b>แก้โหมดผู้ย้อนกาล</b> — เควสช่วยเพื่อนร่วมชะตาไม่ถูกข้ามแล้ว: ออโต้หยุดรอให้เลือกเอง ดวลจริงไม่ถูกตัดสินอัตโนมัติ และถ้ามีเหตุการณ์อื่นเด้งซ้อนจะต่อคิวรอ','🧬 หน้าตัวละครของฉันย้ายไปอยู่ในเมนู · เมนูในเกมเพิ่มสารานุกรม · จอคอมใช้พื้นที่กว้างขึ้นทั้งเว็บ']},
@@ -40049,7 +40050,7 @@ const capOf=G=>G.rings.length>=9?100:(G.rings.length+1)*10;
 const svInit=()=>{if(!S.sv)S.sv={aw:0,sp:[],lv:0,rings:[],seen:{},hy:-9};return S.sv};
 function roll(){const r=Math.random(),rr=r<.02?3:r<.12?2:r<.4?1:0;const L=SP.filter(x=>x[5]===rr);return ch(L)[0]}
 // ---------- พิธีปลุกดวงจิต (อายุ 6) ----------
-function awaken(){const G=svInit();if(G.aw)return;G.aw=1;const ids=[roll()];if(Math.random()<.03){let b=roll(),n=0;while(b===ids[0]&&n++<9)b=roll();ids.push(b)}
+function awaken(){const G=svInit();if(G.aw)return;G.aw=1;if(window._svFail&&window._svFail(G))return;const ids=[roll()];if(Math.random()<.03){let b=roll(),n=0;while(b===ids[0]&&n++<9)b=roll();ids.push(b)}
  G.sp=ids.map(id=>({id,rev:0}));const best=Math.max(...G.sp.map(s=>spNow(s).r));
  const inn=[[1,4],[3,6],[5,8],[8,10]][best];G.lv=Math.min(10,R(inn[0],inn[1])+(ids.length>1?1:0));
  try{const B=LS.get('murim_svbook',{})||{};ids.forEach(id=>B[id]=1);LS.set('murim_svbook',B)}catch(e){}
@@ -40060,26 +40061,27 @@ function awaken(){const G=svInit();if(G.aw)return;G.aw=1;const ids=[roll()];if(M
   {t:'✊ ตั้งใจจะเป็นผู้ฝึกจิต',s:'เริ่มฝึกทันที',f(){G.lv=Math.min(capOf(G),G.lv+1);log(`⭕ คุณกำดวงจิตไว้ในมือ — ทางของผู้ฝึกจิตเริ่มต้นที่นี่ (ระดับ ${G.lv})`,cls,true)}},
   {t:'🏡 ใช้ชีวิตธรรมดาไปก่อน',s:'ฝึกช้าลงช่วงแรก',f(){G.slow=S.age+4;S.cha+=3;log('🏡 คุณเลือกเล่นกับเพื่อนในหมู่บ้านอีกสักพัก ดวงจิตยังรอคุณอยู่','',true)}}])}
 // ---------- ฝึกรายปี ----------
-function svYear(){const G=svInit();if(!G.aw){if(S.age>=6)G.wa=1;return}
- const cap=capOf(G);if(G.lv<cap){const best=Math.max(...G.sp.map(s=>spNow(s).r));let g=R(1,3)+(best>=2?1:0)+(G.sp.length>1?1:0);g=Math.max(1,Math.round(g*Math.sqrt((S.talent&&S.talent.m)||1)*(G.slow&&S.age<G.slow?.5:1)));
+function svYear(){const G=svInit();if(!G.aw){if(S.age>=6)G.wa=1;return}if(G.aw===2)return;
+ const cap=capOf(G);if(G.lv<cap){const best=Math.max(...G.sp.map(s=>spNow(s).r));let g=R(1,3)+(best>=2?1:0)+(G.sp.length>1?1:0);g=Math.max(1,Math.round(g*Math.sqrt((S.talent&&S.talent.m)||1)*(G.slow&&S.age<G.slow?.5:1)*(window._svGrow?window._svGrow(G):1)));
   const b=G.lv;G.lv=Math.min(cap,G.lv+g);if(Math.floor((G.lv-1)/10)>Math.floor((b-1)/10)&&G.lv>10){S.fame+=10*Math.floor(G.lv/10);log(`⭕ <b>ทะลวงสู่${rankOf(G.lv)}</b> — ระดับจิต ${G.lv}`,'epic',true)}
   if(G.lv>=cap&&cap<100)log(`⭕ ระดับจิต ${G.lv} — <b>ถึงคอขวด</b> ต้องหลอมวงแหวนวงที่ ${G.rings.length+1} ก่อนจึงจะไปต่อได้`,'')}
  // ปลดร่างแท้ของดวงจิตที่ดูไร้ค่า
  if(G.lv>=30)G.sp.forEach(s=>{const p=spOf(s.id);if(p[6]&&!s.rev){s.rev=1;S.power+=pctPow(.08);S.fame+=40;log(`🌋 ดวงจิต <b>${p[2]}</b> ที่ทุกคนเคยหัวเราะเยาะ แตกเปลือกออก — <b>${p[6][0]} ${p[6][1]}</b>! ${p[6][3]}`,'myth',true)}});
  // ถึงคอขวด → เสนอออกล่า
- if(G.lv>=cap&&cap<100&&S.age>=8&&S.age-G.hy>=1)G.wh=1}
+ if(G.lv>=cap&&cap<100&&S.age>=8&&S.age-G.hy>=1&&!G.retired)G.wh=1}
 setInterval(()=>{try{if(!on()||!free()||(typeof DU!=='undefined'&&DU))return;const G=svInit();if(G.wa&&!G.aw){G.wa=0;awaken();return}if(G.wh){G.wh=0;G.hy=S.age;hunt()}}catch(e){}},700);
 // ---------- ล่าวงแหวน ----------
 function hunt(){const G=V(),i=G.rings.length,safe=SAFE[i],maxT=Math.min(3,safe+1);
  const opts=[];for(let t=0;t<=maxT;t++){const over=t-safe,b=ch(BEAST[t]);const risk=over<=0?'ปลอดภัย':over===1?'⚠️ เกินขีดร่างกาย — เสี่ยงบาดเจ็บหนัก':'☠️ เสี่ยงตาย';
   opts.push({t:`${TIER[t][1]} ${b[0]} · ${TIER[t][0]}`,s:risk,f(){goHunt(t,b)}})}
+ try{if(window._svHuntX)window._svHuntX(G,i,safe,opts)}catch(e){console.error(e)}
  opts.push({t:'⏳ ยังไม่ออกล่า',s:'ฝึกรากฐานรอไปก่อน',skip:true,f(){S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.1));log('⏳ คุณเลือกรอ ระดับจิตยังติดอยู่ที่คอขวด','')}});
  choice(`⭕ ออกล่าวงแหวนวงที่ ${i+1}`,`ระดับจิตของคุณถึง ${G.lv} แล้ว ต้องหลอมวงแหวนจากสัตว์อสูรจึงจะไปต่อได้<br><span class="tag2">วงแหวนวงที่ ${i+1} ร่างกายรับได้อย่างปลอดภัยถึง ${TIER[safe][0]} · วงแหวนแก่กว่าแรงกว่าและให้ท่าที่ดีกว่า แต่ถ้าเกินขีด ร่างกายอาจแตกสลาย</span>`,opts)}
 function goHunt(t,b){const mult=[.35,.65,.95,1.25][t];const nm=`${b[0]} (${TIER[t][0]})`;
- duel(nm,Math.max(5,Math.round(total()*mult)),w=>{try{if(!S||!S.alive)return;if(!w){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.15));log(`🩸 ${b[0]}หนีไปพร้อมรอยแผลบนตัวคุณ — ลองใหม่ปีหน้า`,'bad');return}absorb(t,b)}catch(e){console.error('sv hunt',e)}})}
+ duel(nm,Math.max(5,Math.round(total()*mult)),w=>{try{if(!S||!S.alive)return;if(!w){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.15*(window._svHurt?window._svHurt():1)));log(`🩸 ${b[0]}หนีไปพร้อมรอยแผลบนตัวคุณ — ลองใหม่ปีหน้า`,'bad');return}if(window._svWin)window._svWin(t,b,()=>absorb(t,b));else absorb(t,b)}catch(e){console.error('sv hunt',e)}})}
 function absorb(t,b){const G=V(),i=G.rings.length,over=t-SAFE[i],best=Math.max(...G.sp.map(s=>spNow(s).r));
- const pBad=over<=0?0:cl((over===1?.38:.72)-best*.04-(S.hp/S.maxHp-.5)*.2,.08,.9);
- if(Math.random()<pBad){if(over>=2&&Math.random()<.45){S.deathCause=`หลอมวงแหวน${TIER[t][0]}ของ${b[0]}เกินขีดร่างกาย — ดวงจิตแตกสลาย`;log(`💥 พลังของวงแหวน${TIER[t][0]}ทะลักเกินกว่าร่างกายจะรับไหว…`,'bad',true);setTimeout(()=>{try{checkDeath()}catch(e){}},200);return}
+ const pBad=over<=0?0:cl((over===1?.38:.72)-best*.04-(S.hp/S.maxHp-.5)*.2-(window._svRisk?window._svRisk(G,t,over):0),.08,.9);
+ if(Math.random()<pBad){if(over>=2&&Math.random()<.45&&!(window._svDodge&&window._svDodge(G))){S.deathCause=`หลอมวงแหวน${TIER[t][0]}ของ${b[0]}เกินขีดร่างกาย — ดวงจิตแตกสลาย`;log(`💥 พลังของวงแหวน${TIER[t][0]}ทะลักเกินกว่าร่างกายจะรับไหว…`,'bad',true);setTimeout(()=>{try{checkDeath()}catch(e){}},200);return}
   S.maxHp=Math.max(30,Math.round(S.maxHp*.85));S.hp=Math.max(1,Math.round(S.hp*.4));G.lv=Math.max(1,G.lv-3);log(`💥 วงแหวนแตกกลางทางหลอม — คุณรอดมาได้ แต่เส้นจิตฉีกขาด (พลังชีวิตสูงสุด −15% · ระดับจิต −3)`,'bad',true);return}
  const ring={t,b:b[0],sk:b[1]};G.rings.push(ring);G.lv=Math.min(100,G.lv+1+(over>0?2:0));
  const pw=[.03,.06,.1,.16,.25][t]*(over>0?1.5:1);S.power+=pctPow(pw);S.fame+=[2,6,15,40,100][t];if(t>=2)S.maxHp+=[0,0,15,30,60][t];
@@ -40088,13 +40090,13 @@ function absorb(t,b){const G=V(),i=G.rings.length,over=t-SAFE[i],best=Math.max(.
  log(`${TIER[t][1]} <b>หลอมวงแหวนวงที่ ${G.rings.length} สำเร็จ</b> — ${TIER[t][0]}ของ${b[0]} · ได้ท่า <b>「${sp.n}·${b[1]}」</b>${over>0?' · <b>หลอมเกินขีดสำเร็จ!</b>':''}`,over>0||t>=3?'myth':'epic',true)}
 // ---------- หน้าดวงจิต ----------
 window.openSoul=function(){if(!S||S.ch!=='soul')return toast('ใช้ได้เฉพาะชีวิตในทวีปจิตวิญญาณยุทธ์');const G=svInit();
- const sp=G.aw?G.sp.map(s=>{const p=spNow(s),h=spOf(s.id)[6]&&!s.rev;return`<div class="item"><b>${p.ic} <span style="color:${RAR[p.r][1]}">${p.n}</span></b> <span class="tag2">${TY[p.t][0]} ${TY[p.t][1]} · ${RAR[p.r][0]}</span><br><span class="tag2">${p.d}${h?' · <i>มีบางอย่างซ่อนอยู่ข้างใน…</i>':''}</span></div>`}).join(''):'<div class="item">ยังไม่ได้ปลุกดวงจิต — พิธีปลุกจัดขึ้นตอนอายุ 6 ขวบ</div>';
+ const sp=G.aw===2?'<div class="item">🌑 <b>ไร้ดวงจิต</b> — ลูกแก้วทั้งหกไม่เรืองแสง</div>':G.aw?G.sp.map(s=>{const p=spNow(s),h=spOf(s.id)[6]&&!s.rev;return`<div class="item"><b>${p.ic} <span style="color:${RAR[p.r][1]}">${p.n}</span></b> <span class="tag2">${TY[p.t][0]} ${TY[p.t][1]} · ${RAR[p.r][0]}</span><br><span class="tag2">${p.d}${h?' · <i>มีบางอย่างซ่อนอยู่ข้างใน…</i>':''}</span></div>`}).join(''):'<div class="item">ยังไม่ได้ปลุกดวงจิต — พิธีปลุกจัดขึ้นตอนอายุ 6 ขวบ</div>';
  const rg=G.rings.map((g,i)=>`<div style="display:flex;align-items:center;gap:8px;margin:3px 0"><span style="display:inline-block;width:22px;height:22px;border-radius:50%;border:4px solid ${TIER[g.t][2]};box-shadow:0 0 8px ${TIER[g.t][2]}"></span><span><b>วงที่ ${i+1}</b> · ${TIER[g.t][0]} · ${esc(g.b)}<br><span class="tag2">「${esc(spNow(G.sp[0]).n)}·${esc(g.sk)}」</span></span></div>`).join('')||'<p class="tag2">ยังไม่มีวงแหวน</p>';
  const cap=capOf(G);
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>⭕ ดวงจิตของ ${esc(S.name)}</h3>${sp}
  <div class="item"><b>${G.aw?rankOf(G.lv):'—'}</b> · ระดับจิต <b>${G.lv}</b>/100<div style="height:8px;background:#0004;border-radius:4px;margin-top:4px"><div style="height:8px;width:${G.lv}%;background:linear-gradient(90deg,#6fd8ff,#b47bff);border-radius:4px"></div></div>${G.aw&&G.lv>=cap&&cap<100?`<span class="tag2">ถึงคอขวด — ต้องหลอมวงแหวนวงที่ ${G.rings.length+1}</span>`:''}</div>
  <h4>วงแหวนวิญญาณ ${G.rings.length}/9</h4>${rg}
- ${G.aw&&G.lv>=cap&&cap<100&&S.age>=8?`<button class="pbtn" style="width:100%;margin-top:8px" onclick="closeM();setTimeout(()=>{if(!choice._cur)window._svHunt()},150)">🏹 ออกล่าวงแหวนตอนนี้</button>`:''}
+ ${G.aw===1&&!G.retired&&G.lv>=cap&&cap<100&&S.age>=8?`<button class="pbtn" style="width:100%;margin-top:8px" onclick="closeM();setTimeout(()=>{if(!choice._cur)window._svHunt()},150)">🏹 ออกล่าวงแหวนตอนนี้</button>`:''}
  <button class="gbtn" style="width:100%;margin-top:6px" onclick="openSoulBook()">📖 สมุดดวงจิต</button>`)};
 window._svHunt=()=>{try{if(on())hunt()}catch(e){}};
 window.openSoulBook=function(){const B=LS.get('murim_svbook',{})||{},RB=LS.get('murim_svring',{})||{};const got=SP.filter(x=>B[x[0]]).length,rgot=BEAST.flat().filter(b=>RB[b[0]]).length;
@@ -40104,7 +40106,7 @@ window.openSoulBook=function(){const B=LS.get('murim_svbook',{})||{},RB=LS.get('
 // ---------- ผูกเข้าเกม ----------
 {const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(on())svYear()}catch(e){console.error('sv year',e)}return r}}
 // ข้อมูลใต้ชื่อ + ปุ่มลัด
-setInterval(()=>{try{let b=$('svPill');if(!on()){if(b)b.style.display='none';return}const a=$('brkPill')||$('ascPill');if(!b&&a){a.insertAdjacentHTML('afterend','<button id="svPill" class="ascpill" style="margin-right:6px;border-color:#b47bff;background:linear-gradient(180deg,#2a1a4a,#4a2a7a)" onclick="openSoul()"></button>');b=$('svPill')}if(!b)return;const G=svInit();b.style.display='';const t=G.aw?`⭕ ${G.lv} · ${'●'.repeat(G.rings.length)||'○'}`:'⭕ รอปลุก';if(b.textContent!==t)b.textContent=t}catch(e){}},1200);
+setInterval(()=>{try{let b=$('svPill');if(!on()){if(b)b.style.display='none';return}const a=$('brkPill')||$('ascPill');if(!b&&a){a.insertAdjacentHTML('afterend','<button id="svPill" class="ascpill" style="margin-right:6px;border-color:#b47bff;background:linear-gradient(180deg,#2a1a4a,#4a2a7a)" onclick="openSoul()"></button>');b=$('svPill')}if(!b)return;const G=svInit();b.style.display='';const t=G.aw===2?'🌑 ไร้ดวงจิต':G.aw?`⭕ ${G.lv} · ${'●'.repeat(G.rings.length)||'○'}`:'⭕ รอปลุก';if(b.textContent!==t)b.textContent=t}catch(e){}},1200);
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(on()){const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.svM'))g.insertAdjacentHTML('afterbegin',`<button class="opt svM" onclick="closeM();openSoul()">⭕ ดวงจิตและวงแหวน<small>ระดับจิต · วงแหวน · สมุดดวงจิต</small></button>`)}}catch(e){}return r}}
 {const _ld=lifeDetail;lifeDetail=function(){const d=_ld.apply(this,arguments);try{if(d&&S&&S.sv&&S.ch==='soul'){d.sv={lv:S.sv.lv,sp:S.sv.sp.map(s=>spNow(s).n),rg:S.sv.rings.map(g=>g.t)}}}catch(e){}return d}}
 // ---------- ลงทะเบียนโหมด ----------
@@ -40116,6 +40118,284 @@ try{CH_N.soul='⭕ จิตวิญญาณยุทธ์';if(!CH_KEYS.inclu
  const _cs=chStart;chStart=function(){const r=_cs.apply(this,arguments);try{if(S.ch==='soul'){svInit();log('⭕ <b>ทวีปจิตวิญญาณยุทธ์</b> — ที่นี่ทุกคนจะได้ปลุกดวงจิตตอนอายุหกขวบ บางคนได้ดาบ บางคนได้จอบ และไม่มีใครรู้ว่าอะไรซ่อนอยู่ข้างใน','myth',true)}}catch(e){}return r}}catch(e){console.error('sv reg',e)}
 window._blk34={SP,BEAST,TIER,RANK,awaken,svYear,hunt,absorb,spNow,capOf};
 })()}catch(e){console.error('block34',e)}
+
+// ============================================================
+// BLOCK 35: ⭕ ทวีปจิตวิญญาณยุทธ์ — รอบ 2: สายมีผลจริง · ท่าวงแหวนใช้ได้จริง · เหตุการณ์เฉพาะทวีป ·
+//           ทางเลือกนอกการฆ่า · ดวงจิตคู่แย่งร่าง · ดวงจิตมีนิสัย · ไร้ดวงจิต · ปลายทางหลังวงที่เก้า
+// ============================================================
+try{(()=>{
+const B=window._blk34;if(!B||typeof EVENTS==='undefined')return;
+const {SP,BEAST,TIER,spNow,capOf}=B;
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const on=()=>!!(S&&S.alive&&S.ch==='soul'&&S.sv);
+const free=()=>!(choice._cur||modalOpen)&&!(typeof DU!=='undefined'&&DU);
+const A1=s=>!!(s&&s.alive&&s.ch==='soul'&&s.sv&&s.sv.aw===1);
+const A2=s=>!!(s&&s.alive&&s.ch==='soul'&&s.sv&&s.sv.aw===2);
+const X=()=>{const g=S.sv;g.f=g.f||{};if(g.bond==null)g.bond=50;g.q=g.q||[];g.spared=g.spared||[];g.kill=g.kill||0;return g};
+const F=k=>X().f[k];
+const mark=k=>{X().f[k]=S.age};
+const gap=(k,n)=>F(k)!=null&&S.age-F(k)>=n;
+const no=k=>F(k)==null;
+const act=g=>(g.dorm&&g.sp.length>1)?g.sp.slice(0,1):g.sp;
+const tp=k=>{const g=S&&S.sv;return!!(g&&g.aw===1&&act(g).some(s=>spNow(s).t===k))};
+const main=()=>{const g=S.sv;return g&&g.sp.length?spNow(g.sp[0]):null};
+const nm=()=>{const g=S.sv,p=main();if(!p)return'ดวงจิต';return g.fused&&g.sp[1]?`${p.n}×${spNow(g.sp[1]).n}`:p.n};
+const ic=()=>{const p=main();return p?p.ic:'⭕'};
+const HP=p=>{const d=Math.round(S.maxHp*p/100);S.hp=Math.max(1,S.hp-d);return d};
+const heal=p=>{S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*p/100))};
+const bond=d=>{const g=X();g.bond=cl(g.bond+d,0,100)};
+const O=(t,s,f)=>({t,s,f});
+const ev=(w,cd,c,f,once)=>EVENTS.push({w,cd,once:once?1:0,c:s=>{try{return!!c(s)}catch(e){return false}},f(){try{f()}catch(e){console.error('sv2 ev',e)}}});
+const nmP=()=>anyName(Math.random()<.5?'ชาย':'หญิง');
+const TY={atk:'⚔️ สายโจมตี',def:'🛡️ สายป้องกัน',sup:'🌿 สายสนับสนุน',ctrl:'🌀 สายควบคุม',agi:'💨 สายว่องไว'};
+
+// =================== 1) สายมีผลจริง + ท่าวงแหวน ===================
+const RF=[.01,.015,.025,.035,.05];
+const ringOne=t=>RF[t]*(tp('atk')?2:1)*(S.sv.fused?1.2:1);
+function ringF(){const g=S&&S.sv;if(!g||g.aw!==1||g.retired)return 0;let v=g.rings.reduce((a,r)=>a+ringOne(r.t),0);if(g.bond>=80)v+=.03;if(g.pet)v+=.05;if(g.mate&&g.mate.alive)v+=.04;return cl(v,0,.4)}
+let inDuel=0;
+{const _f=fight;fight=function(n,ep){try{if(!inDuel&&on())ep=ep*(1-ringF())}catch(e){}return _f.call(this,n,ep)}}
+{const _d=duel;duel=function(n,ep,cb){try{if(on())ep=ep*(1-ringF())}catch(e){}inDuel=1;try{return _d.call(this,n,ep,cb)}finally{inDuel=0}}}
+const EFX={atk:'วงแหวนกดพลังศัตรูได้ 2 เท่า',def:'หลอมเกินขีดเสี่ยงน้อยลง · ล่าพลาดเจ็บครึ่งเดียว',sup:'ฟื้นพลังชีวิต 8% ทุกปี · สยบสัตว์ง่ายขึ้น',ctrl:'สยบสัตว์อสูรง่ายขึ้นมาก · มีทางเลือกพิเศษในเหตุการณ์',agi:'รอดตายจากวงแหวนระเบิดได้หนึ่งครั้ง · ล่าพลาดแทบไม่เจ็บ'};
+// ตะขอที่ Block 34 เรียก
+window._svGrow=g=>{if(g.retired)return 0;let m=1;const b=g.bond==null?50:g.bond;if(b>=80)m*=1.2;else if(b<=20)m*=.6;if(g.acad)m*=1.2;if(g.fused)m*=1.3;if(g.sp.length>1&&!g.dual&&S.age>=12)m*=.8;if(g.job)m*=.9;return m};
+window._svRisk=(g,t,over)=>(tp('def')?.12:0)+((g.bond||50)>=80?.06:0)+(g.theory?.08:0);
+window._svDodge=g=>{if(tp('agi')&&!g.dodged){g.dodged=1;log(`💨 วินาทีที่วงแหวนระเบิด <b>${nm()}</b> ลากคุณหลุดออกมาจากกลางแรงระเบิด — รอดตายได้ครั้งเดียวในชีวิต`,'myth',true);return true}
+ if((g.bond||0)>=95&&!g.sac){g.sac=1;g.bond=60;log(`${ic()} <b>${nm()}</b> เอาตัวเข้ารับพลังที่ทะลักแทนคุณ มันเงียบไปทั้งปี… แต่คุณยังมีชีวิตอยู่`,'myth',true);return true}return false};
+window._svHurt=()=>Math.min(tp('agi')?.4:1,tp('def')?.5:1,tp('sup')?.6:1);
+window._svFail=g=>{if(Math.random()>=.04)return false;g.aw=2;g.sp=[];g.lv=0;X().q.push('np');
+ log('🌑 <b>ลูกแก้วทั้งหกไม่เรืองแสง</b> — ผู้ปลุกจิตลองซ้ำสามรอบ แล้วส่ายหน้า คุณคือหนึ่งในร้อยที่ <b>ไร้ดวงจิต</b>','myth',true);return true};
+
+// =================== 3) ทางเลือกนอกการฆ่า ===================
+const tameP=s=>cl(.3+(tp('ctrl')?.25:0)+(tp('sup')?.1:0)+(X().bond-50)/250+(S.karma>50?.05:0)-s*.04,.1,.8);
+function giftRing(t,n,sk,mult){const g=X();if(g.rings.length>=9)return;g.rings.push({t,b:n,sk});g.lv=Math.min(100,g.lv+1);
+ S.power+=pctPow([.03,.06,.1,.16,.25][t]*(mult||1));S.fame+=[2,6,15,40,100][t];if(t>=2)S.maxHp+=[0,0,15,30,60][t];
+ try{const RB=LS.get('murim_svring',{})||{};RB[n]=Math.max(RB[n]||0,t+1);LS.set('murim_svring',RB)}catch(e){}
+ log(`${TIER[t][1]} <b>หลอมวงแหวนวงที่ ${g.rings.length} สำเร็จ</b> — ${TIER[t][0]}ของ${esc(n)} · ได้ท่า <b>「${nm()}·${esc(sk)}」</b>`,t>=3?'myth':'epic',true)}
+window._svHuntX=(g0,i,safe,opts)=>{const g=X(),st=Math.min(3,safe),b=ch(BEAST[st]),p=tameP(st);
+ if(!g.pet&&S.age>=10)opts.push(O(`🤝 สยบ${b[0]}ให้เชื่อง`,`ได้สัตว์คู่ใจแทนวงแหวน (สำเร็จราว ${Math.round(p*100)}%)`,()=>{if(Math.random()<p){g.pet={n:b[0],t:st,y:0};S.karma+=5;log(`🤝 ${b[0]}ก้มหัวลงแตะมือคุณ — จากนี้มันคือ <b>สัตว์คู่ใจ</b> ช่วยคุณรบ และวันหนึ่งอาจมอบวงแหวนให้ด้วยใจ`,'epic',true)}else{HP(12);log(`🩸 ${b[0]}ไม่ยอมให้ใครสยบ มันฝากรอยเขี้ยวไว้แล้ววิ่งหายเข้าป่า`,'bad')}}));
+ const pr=[300,1200,5000,20000,60000][safe]||60000;
+ if(S.money>=pr)opts.push(O(`💰 ซื้อวงแหวนจากตลาดมืด (${fmt(pr)} ตำลึง)`,'ไม่ต้องล่า · อาจเป็นของปลอม · แรงน้อยกว่าวงแหวนที่ล่าเอง',()=>{S.money-=pr;const fake=Math.random()<cl(.35-(S.int||0)/600,.1,.35);
+  if(fake){HP(20);g.f.scammed=S.age;log('💸 วงแหวนที่ซื้อมาเป็นหินย้อมสีห่อพลังจิตบางๆ — หลอมไปได้ครึ่งทางก็แตกคามือ เงินหายและเส้นจิตช้ำ','bad',true)}
+  else{S.karma-=4;giftRing(st,'วงแหวนไร้นาม','เงาที่ซื้อมา',.7);log('🕳️ ไม่มีใครรู้ว่าสัตว์ตัวนั้นตายยังไง และคุณก็ไม่ได้ถาม','')}}))};
+window._svWin=(t,b,go)=>{if(t<1||!on())return go();
+ choice(`🏹 ${b[0]}ล้มลงตรงหน้า`,`${b[0]}${TIER[t][0]}หายใจรวยริน ดวงตาของมันจ้องคุณ วงแหวนสีจางๆ เริ่มลอยขึ้นจากร่าง รอให้คุณดูดซับ`,[
+  O('⭕ ดูดซับวงแหวน','ไปต่อบนเส้นทางผู้ฝึกจิต',()=>{if(t>=2)X().kill++;go()}),
+  O('🕊️ ไว้ชีวิตมัน','กรรม + · ยังติดคอขวด · มันอาจจำคุณได้',()=>{const g=X();S.karma+=8;g.spared.push({n:b[0],t,a:S.age});log(`🕊️ คุณลดอาวุธลง ${b[0]}ลุกขึ้นช้าๆ จ้องคุณครู่หนึ่ง แล้วหายเข้าไปในป่าลึก`,'good',true)})])};
+
+// =================== คิวเหตุการณ์ที่ต้องเกิดแน่ๆ ===================
+const NP={smith:['⚒️','ช่างตีอาวุธให้ผู้ฝึกจิต',['เด็กฝึกงาน','ช่างฝีมือ','ช่างใหญ่ประจำเมือง','ปรมาจารย์ช่าง','ช่างผู้หลอมอาวุธเทพ'],'S.fame'],
+ doc:['🌿','หมอรักษาเส้นจิต',['เด็กเก็บยา','หมอฝึกหัด','หมอประจำศาลา','หมอเทวดา','ผู้ต่อเส้นจิตที่แตกได้'],'S.karma'],
+ trade:['💰','พ่อค้าของผู้ฝึกจิต',['เด็กขายของ','พ่อค้าเร่','เจ้าของร้าน','นายห้างใหญ่','ผู้ถือเส้นทางการค้าทั้งทวีป'],'S.money'],
+ sch:['📚','นักวิชาการดวงจิต',['ลูกศิษย์อาลักษณ์','ผู้คัดตำรา','อาจารย์','ปราชญ์','ผู้เขียนตำราที่เปลี่ยนทวีป'],'S.int']};
+const npRank=g=>NP[g.np.k][2][cl(Math.floor(g.np.x/12),0,4)];
+const Q={
+ np(){const g=X();choice('🌑 ไร้ดวงจิต',`เด็กคนอื่นวิ่งกลับบ้านพร้อมดวงจิตในมือ มีแต่คุณที่มือเปล่า แม่กอดคุณแน่นตลอดทางกลับ<br><br>ทวีปนี้ไม่ได้เหลือที่ให้คนไร้ดวงจิตมากนัก — แต่ก็ยังเหลืออยู่ <span class="tag2">(ไม่มีทางได้ดวงจิตทีหลัง)</span>`,[
+  ...Object.entries(NP).map(([k,v])=>O(`${v[0]} ${v[1]}`,'เส้นทางของคนไร้ดวงจิต',()=>{g.np={k,x:0};log(`${v[0]} คุณตัดสินใจเป็น <b>${v[1]}</b> — ถ้าถือดวงจิตไม่ได้ ก็จะเป็นคนที่ผู้ถือดวงจิตต้องพึ่ง`,'epic',true)})),
+  O('🌾 ใช้ชีวิตเรียบง่าย','ไม่ไล่ตามอะไร · ใจสงบกว่า',()=>{g.np={k:null,x:0};joy(10);log('🌾 คุณช่วยพ่อทำนา ไม่มีใครถามเรื่องดวงจิตอีก และคุณก็ไม่ได้อยากให้ถาม','',true)})])},
+ dual(){const g=X(),a=spNow(g.sp[0]).n,b=spNow(g.sp[1]).n;choice('🌀 ดวงจิตทั้งสองแย่งร่าง',`ตั้งแต่อายุสิบสอง <b>${a}</b> กับ <b>${b}</b> เริ่มดึงพลังจิตไปคนละทาง กลางคืนคุณฝันว่าตัวเองถูกฉีกเป็นสองซีก ผู้ปลุกจิตบอกว่าต้องตัดสินใจก่อนร่างจะรับไม่ไหว`,[
+  O(`🔒 กด${b}ให้หลับ`,'ปลอดภัย · ใช้ได้แค่ดวงแรก',()=>{g.dual='dorm';g.dorm=1;log(`🔒 ${b}หลับลึกอยู่ในฝ่ามือซ้าย บางคืนคุณยังได้ยินมันหายใจ`,'',true)}),
+  O('🔥 หลอมรวมเป็นดวงเดียว',`สำเร็จราว ${Math.round((.45+g.bond/400)*100)}% · พลาด = บาดเจ็บถาวร`,()=>{if(Math.random()<.45+g.bond/400){g.dual='fuse';g.fused=1;S.power+=pctPow(.15);S.fame+=60;log(`🔥 <b>${a}×${b}</b> — ดวงจิตหลอมรวมที่ไม่เคยมีบันทึกในทวีป ฝึกเร็วขึ้น วงแหวนแรงขึ้น`,'myth',true)}else{S.maxHp=Math.max(30,Math.round(S.maxHp*.8));HP(40);g.dual='dorm';g.dorm=1;log(`💥 การหลอมล้มเหลว ${b}ถอยกลับไปหลับลึก ทิ้งรอยร้าวในเส้นจิต (พลังชีวิตสูงสุด −20%)`,'bad',true)}}),
+  O(`✂️ ปล่อย${b}ไป`,'เสียดวงจิตหนึ่งดวง · จิตนิ่ง ฝึกเร็วขึ้นทันที',()=>{g.sp.pop();g.dual='cut';g.lv=Math.min(capOf(g),g.lv+5);S.maxHp+=20;joy(-8);log(`✂️ ${b}ค่อยๆ จางหายจากฝ่ามือ คุณร้องไห้ทั้งคืนโดยไม่รู้ว่าทำไม — แต่เช้าวันต่อมาจิตใจนิ่งที่สุดในชีวิต`,'epic',true)})])},
+ gift(){const g=X(),p=g.pet;if(!p)return;const t=Math.min(4,p.t+1);choice('🐾 ของขวัญจากสัตว์คู่ใจ',`${p.n}ที่อยู่กับคุณมา ${p.y} ปีแก่ตัวลงแล้ว คืนนี้มันวางหัวลงบนตักคุณ แล้วปล่อยวงแหวนของตัวเองออกมา <b>ด้วยความเต็มใจ</b>`,[
+  O('⭕ รับวงแหวนที่มันมอบให้',`วงแหวน${TIER[t][0]} · ไม่มีความเสี่ยงเลย`,()=>{giftRing(t,p.n,'ใจภักดี');g.pet=null;bond(10);log(`🐾 ${p.n}หลับตาลงอย่างสงบในอ้อมแขนคุณ`,'epic',true)}),
+  O('🌳 พามันกลับไปตายในป่าที่เกิด','กรรม + · ไม่ได้วงแหวน',()=>{S.karma+=12;joy(5);g.pet=null;log(`🌳 คุณเดินไปส่ง${p.n}ถึงต้นไม้ที่เจอกันครั้งแรก มันไม่หันกลับมา`,'good',true)})])},
+ end(){const g=X();choice('⭕ ปลายทางของผู้ครองดวงจิต',`วงแหวนเก้าวงหมุนรอบตัวคุณ ทั้งทวีปเหลือคนที่ยืนระดับเดียวกันได้ไม่ถึงสิบคน มีเสียงหนึ่งดังมาจากฟ้า — และอีกเสียงดังมาจากในใจ`,[
+  O('⚡ ขึ้นไปรับการทดสอบเทพ','ชนะ = อายุยืนเป็นตำนาน · แพ้ = อาจตาย',()=>{duel('เงาแห่งเทพผู้ทดสอบ',Math.round(total()*1.5),w=>{try{if(!S||!S.alive)return;if(w){g.god=1;S.lifespan+=80;S.fame+=500;S.power+=pctPow(.3);log(`⚡ <b>ผ่านการทดสอบเทพ</b> — ${nm()}ส่องแสงทั่วทวีป ชื่อของคุณถูกจารึกบนเสาเทพ`,'myth',true)}else if(Math.random()<.5){S.deathCause='ล้มเหลวในการทดสอบเทพ — ร่างสลายเป็นแสง';checkDeath()}else{S.maxHp=Math.max(30,Math.round(S.maxHp*.7));g.retired=1;g.lock=g.lv;log('⚡ คุณร่วงลงจากบันไดเทพ รอดมาได้ แต่วงแหวนทั้งเก้าร้าวจนใช้ไม่ได้อีก','bad',true)}}catch(e){console.error(e)}})}),
+  O('💔 ทุบวงแหวนทิ้งทั้งเก้าวง','เลิกเป็นผู้ฝึกจิต · พลังลด อายุยืนขึ้น ใจเบาลง',()=>{g.retired=1;g.lock=g.lv;S.power=Math.round(S.power*.6);S.lifespan+=25;S.karma+=20;joy(25);log(`💔 วงแหวนเก้าวงแตกเป็นผงแสง ปลิวกลับไปหาป่าที่มันจากมา คุณกลับไปทำสิ่งที่${main().n}เคยทำตอนคุณหกขวบ`,'myth',true)}),
+  O('📜 ถ่ายทอดให้ลูกศิษย์','พลังลด ชื่อเสียงยืนยาว · ชีวิตถัดไปในทวีปนี้ได้มรดก',()=>{LS.set('murim_svlegacy',{n:S.name});S.power=Math.round(S.power*.8);S.fame+=250;g.heir=1;log(`📜 คุณถ่ายพลังวงแหวนส่วนหนึ่งให้ลูกศิษย์ — ร่องรอยของมันจะติดไปถึงผู้ฝึกจิตรุ่นหลัง`,'myth',true)}),
+  O('⏳ ยังไม่ตัดสินใจ','ถามใหม่อีกห้าปี',()=>{g.endq=0;g.endWait=S.age+5})])}};
+setInterval(()=>{try{if(!on()||!free())return;const g=X();if(!g.q.length)return;const k=g.q.shift();if(Q[k])Q[k]()}catch(e){console.error('sv2 q',e)}},900);
+
+// =================== รายปี ===================
+const JOBS={hoe:['ไถนาให้ทั้งหมู่บ้าน',40,90],candle:['จุดไฟให้ตลาดกลางคืน',30,80],ladle:['เปิดร้านข้าวต้ม',60,140],needle:['รับเย็บชุดให้ผู้ฝึกจิต',50,120],broom:['ดูแลลานวัดใหญ่',20,50],rope:['ลากซุงให้โรงเลื่อย',40,90],crow:['ส่งจดหมายข้ามเมือง',40,100],cat:['จับหนูในโกดังหลวง',30,70],frog:['ขนของข้ามบึง',20,60],lotus:['ปลูกบัวขายตลาด',30,70],rain:['เรียกฝนให้ไร่อ้อย',60,150],stone:['ก่อกำแพงเมือง',40,90],bamboo:['สร้างสะพานไผ่',40,90],reed:['ทำขลุ่ยขาย',20,60],shadow:['สืบข่าวให้ร้านน้ำชา',60,140]};
+const JOBT={atk:['คุ้มกันกองคาราวาน',80,180],def:['เฝ้าประตูเมือง',50,110],sup:['ผู้ช่วยหมอ',50,120],ctrl:['จับสัตว์อสูรส่งสวนหลวง',70,160],agi:['ผู้ส่งสารด่วน',60,130]};
+function npYear(g){if(!g.np||!g.np.k)return;const b=g.np.x;g.np.x+=R(1,3)+(S.int>80?1:0);const lv=cl(Math.floor(g.np.x/12),0,4),k=g.np.k;
+ if(k==='smith'){S.money+=inc(R(20,50)*(lv+1));S.fame+=lv}else if(k==='doc'){S.karma+=1;S.money+=inc(R(10,30)*(lv+1));heal(5)}else if(k==='trade'){S.money+=inc(R(40,90)*(lv+1))}else if(k==='sch'){S.int+=1+lv;S.fame+=lv>=3?2:0}
+ if(Math.floor(g.np.x/12)>Math.floor(b/12)&&lv<=4)log(`${NP[k][0]} <b>เลื่อนเป็น${NP[k][2][lv]}</b> — ${lv>=4?'ผู้ฝึกจิตระดับราชันยังต้องมาต่อคิว':'งานของคนไร้ดวงจิตที่ไม่มีใครกล้าดูถูกอีก'}`,lv>=4?'myth':'epic',true)}
+function yr(){const g=X();
+ if(g.aw===2){npYear(g);return}if(g.aw!==1)return;
+ if(g.retired&&g.lock!=null)g.lv=g.lock;
+ if(!g.lgc){g.lgc=1;const L=LS.get('murim_svlegacy',null);if(L&&L.n){LS.del('murim_svlegacy');g.lv=Math.min(capOf(g),g.lv+3);S.fame+=30;log(`📜 ผู้ปลุกจิตเห็น <b>ร่องรอยวงแหวนของ${esc(L.n)}</b> ในดวงจิตของคุณ — มรดกจากผู้ฝึกจิตรุ่นก่อน (ระดับจิต +3)`,'myth',true)}}
+ if(tp('sup'))heal(8);
+ if(g.job)S.money+=inc(R(g.job.lo,g.job.hi));
+ if(g.sp.length>1&&!g.dual&&S.age>=12){if(!g.dq){g.dq=1;g.q.push('dual')}else if(Math.random()<.35){HP(8);log('🌀 ดวงจิตทั้งสองแย่งร่างกันอีกแล้ว — ปวดหัวจนลุกไม่ขึ้นหลายวัน','bad')}}
+ if(g.pet){g.pet.y++;if(!g.pet.gift&&g.pet.y>=6&&g.rings.length<9&&Math.random()<.35){g.pet.gift=1;g.q.push('gift')}}
+ if(g.rings.length>=9&&g.lv>=95&&!g.endq&&!g.retired&&!g.god&&!g.heir&&S.age>=(g.endWait||0)){g.endq=1;g.q.push('end')}}
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(on())yr()}catch(e){console.error('sv2 year',e)}return r}}
+
+// =================== 2) เหตุการณ์เฉพาะทวีป ===================
+// --- ดวงจิตขยะ / แก้แค้น ---
+ev(5,0,s=>A1(s)&&s.age>=7&&s.age<=13&&no('bully')&&main().r===0,()=>{const g=X(),by=ch(['ลูกชายผู้ใหญ่บ้าน','เด็กที่ได้ดวงจิตหมาป่า','หลานเจ้าสำนักในเมือง']);g.bullyN=by;mark('bully');
+ choice('😤 "ดวงจิตขยะ!"',`${by}กับพวกล้อมคุณไว้หลังลานฝึก "ได้${nm()}เนี่ยนะ? เอาไว้ทำอะไร ทำนาเหรอ" ทุกคนหัวเราะ`,[
+  O('👊 สู้','เสี่ยงเจ็บ',()=>{if(fight(by,total()*1.1)){S.fame+=5;log(`👊 ${by}ล้มก้นจ้ำเบ้า ไม่มีใครหัวเราะอีก`,'good')}else log('🩸 โดนรุมจนเลือดกำเดาไหล แต่คุณไม่ร้องไห้','bad')}),
+  O('😶 เดินผ่านไป','จำไว้ในใจ',()=>{joy(-5);log(`😶 คุณกำ${nm()}ไว้แน่นจนมือสั่น แล้วเดินกลับบ้าน`)}),
+  (tp('ctrl')||tp('agi'))?O(`${ic()} ใช้ดวงจิตแกล้งกลับเงียบๆ`,'สายควบคุม/ว่องไว',()=>{S.cha+=2;joy(4);log(`${ic()} เช้าวันต่อมา ${by}ตื่นมาพบว่ารองเท้าตัวเองไปอยู่บนหลังคาศาลา ไม่มีใครรู้ว่าใครทำ`,'good')}):null].filter(Boolean))},1);
+ev(8,0,s=>A1(s)&&F('bully')!=null&&no('bully2')&&s.sv.sp.some(x=>x.rev),()=>{const g=X(),by=g.bullyN||'เด็กคนนั้น';mark('bully2');
+ choice('🌋 คนที่เคยหัวเราะ',`ข่าวที่${nm()}แตกเปลือกลือไปทั้งเมือง วันหนึ่ง${by}ยืนอยู่หน้าบ้านคุณ หน้าซีด มือถือของฝาก`,[
+  O('🤝 ให้อภัย','กรรม + · ได้คนรู้จักที่ภักดี',()=>{S.karma+=10;g.ally=by;log(`🤝 ${by}ร้องไห้ คุณรู้แค่ว่าตั้งแต่วันนั้นเขาจะยืนข้างคุณเสมอ`,'epic',true)}),
+  O('📣 ทวงคืนต่อหน้าทุกคน','ชื่อเสียง + · กรรม −',()=>{S.fame+=30;S.karma-=6;log(`📣 คุณให้${by}ก้มหัวกลางลานฝึก ทุกคนเงียบ — รวมถึงคนที่เคยหัวเราะด้วย`,'epic',true)}),
+  O('🙂 ยิ้มแล้วปิดประตู','ไม่ติดค้างอะไรกัน',()=>{joy(6);log('🙂 คุณไม่ได้โกรธแล้ว แค่ไม่อยากคุยด้วย')})])},1);
+// --- สถาบัน · ทะเบียน · หนี้ ---
+ev(5,0,s=>A1(s)&&s.age>=12&&s.age<=16&&no('acad'),()=>{const g=X(),fee=400;mark('acad');
+ choice('🏫 สถาบันจิตยุทธ์เปิดรับนักเรียน','สถาบันในเมืองหลวงรับปีละร้อยคน มีที่นั่งทุนสิบที่ ค่าเล่าเรียนแพงจนพ่อแม่เงียบไปทั้งมื้อ',[
+  O('📝 สอบชิงทุน','ต้องชนะการประลอง',()=>{if(fight('ผู้สมัครคู่แข่ง',total()*1.05)){g.acad=1;S.fame+=15;log('🏫 คุณได้ที่นั่งทุน — ฝึกเร็วขึ้นตลอดชีวิต','epic',true)}else{joy(-6);log('📝 แพ้คะแนนไปนิดเดียว คุณกลับบ้านพร้อมชื่อของคนที่ชนะ','bad')}}),
+  S.money>=fee?O(`💰 จ่ายค่าเล่าเรียน (${fee} ตำลึง)`,'ฝึกเร็วขึ้น',()=>{S.money-=fee;g.acad=1;log('🏫 คุณได้เข้าสถาบัน แต่พ่อขายควายไปตัวหนึ่ง','good',true)}):null,
+  O('🏡 ฝึกเองที่บ้าน','ปัญญา + · ประหยัด',()=>{S.int+=4;log(`🏡 คุณอ่านตำราที่ยืมมาจนขาด แล้วฝึกกับ${nm()}ในทุ่ง`)})].filter(Boolean))},1);
+ev(3,10,s=>A1(s)&&s.age>=16&&s.sv.lv>=20&&!s.sv.retired,()=>{const g=X(),fee=R(100,250)*(g.rings.length+1);
+ choice('📜 ศาลาดวงจิตเก็บค่าขึ้นทะเบียน',`เจ้าหน้าที่ศาลาเคาะประตู "ผู้ฝึกจิตระดับ ${g.lv} ต้องขึ้นทะเบียนทุกสิบปี ค่าธรรมเนียม ${fmt(fee)} ตำลึง"`,[
+  S.money>=fee?O('💰 จ่าย','ชื่อเสียง +',()=>{S.money-=fee;S.fame+=8;log('📜 ชื่อของคุณอยู่ในทะเบียนศาลาแล้ว')}):null,
+  O('🙅 ไม่จ่าย','อาจโดนตามล่า',()=>{mark('unreg');log('🙅 คุณปิดประตูใส่หน้าเจ้าหน้าที่','bad')})].filter(Boolean))});
+ev(6,0,s=>A1(s)&&gap('unreg',3)&&no('unreg2'),()=>{mark('unreg2');const g=X();
+ choice('⚖️ ศาลาส่งคนมาจับ','ผู้ฝึกจิตสามคนในชุดศาลาล้อมบ้านคุณ "ผู้ฝึกจิตเถื่อน ต้องไปรับโทษ"',[
+  O('⚔️ สู้','',()=>{if(fight('ผู้คุมศาลาดวงจิต',total()*1.2)){S.fame+=20;S.karma-=5;log('⚔️ ทั้งสามถอยกลับไปพร้อมรอยช้ำ — ตอนนี้คุณเป็นคนที่ศาลาจำชื่อได้','epic',true)}else{S.money=Math.round(S.money*.6);log('⛓️ คุณถูกคุมตัวไปสามเดือน และต้องจ่ายค่าปรับก้อนใหญ่','bad',true)}}),
+  O('💰 ยอมจ่ายค่าปรับสองเท่า','',()=>{S.money=Math.round(S.money*.75);log('💰 จ่ายไปจนกระเป๋าแฟบ','bad')}),
+  tp('agi')?O('💨 หนีข้ามแคว้น','สายว่องไว',()=>{S.fame-=5;log('💨 คืนนั้นคุณอยู่อีกแคว้นแล้ว ศาลาแห่งนั้นตามคุณไม่เจออีกเลย','good')}):null].filter(Boolean))},1);
+ev(3,0,s=>A1(s)&&s.age>=10&&s.age<=25&&no('loan')&&s.money<300,()=>{const g=X(),a=R(300,700);
+ choice('🪙 เงินกู้ซื้ออุปกรณ์ล่า','ร้านใต้สะพานปล่อยกู้ให้ผู้ฝึกจิตหนุ่มสาว "ชุดเกราะดีๆ ช่วยให้รอดจากเขี้ยวสัตว์อสูรนะ ดอกแค่นิดเดียว"',[
+  O(`💰 กู้ ${a} ตำลึง`,'ได้เงินก้อน · ต้องคืนเป็นสองเท่า',()=>{mark('loan');S.money+=a;g.loan=a*2;log(`🪙 คุณเซ็นชื่อลงในสมุดเล่มหนา`)}),
+  O('🙅 ไม่กู้','',()=>{S.int+=1;log('🙅 คุณเห็นแววตาของคนที่นั่งรอคิวอยู่หน้าร้าน แล้วตัดสินใจเดินกลับ')})])},1);
+ev(7,0,s=>A1(s)&&gap('loan',3)&&no('loan2'),()=>{const g=X(),a=g.loan||600;mark('loan2');
+ choice('👊 คนทวงหนี้มาถึงบ้าน',`ชายร่างใหญ่ที่มีดวงจิตเป็นกระบองหนามยืนขวางประตู "${fmt(a)} ตำลึง วันนี้"`,[
+  S.money>=a?O('💰 จ่ายให้จบ','',()=>{S.money-=a;g.loan=0;log('💰 หนี้หมดแล้ว — ปีนี้นอนหลับสนิทที่สุด','good')}):null,
+  O('⚔️ ไล่ไป','',()=>{if(fight('นักทวงหนี้ดวงจิตกระบอง',total()*1.15)){g.loan=0;S.karma-=3;log('⚔️ เขาไม่กลับมาอีก แต่เจ้าของร้านใต้สะพานจำชื่อคุณได้แล้ว','')}else{HP(20);S.money=Math.round(S.money*.5);log('🩸 คุณถูกซ้อม และของมีค่าในบ้านหายไปครึ่งหนึ่ง','bad',true)}}),
+  O('🔨 ขอทำงานใช้หนี้','เสียเวลาฝึกหนึ่งปี',()=>{g.loan=0;g.lv=Math.max(1,g.lv-2);S.cha+=2;log('🔨 คุณยกของในโกดังของเขาทั้งปี ได้เพื่อนเป็นคนแบกของมาสามคน','')})].filter(Boolean))},1);
+// --- ใช้ดวงจิตทำมาหากิน ---
+ev(4,12,s=>A1(s)&&s.age>=13&&!s.sv.job&&!s.sv.retired,()=>{const g=X(),p=main(),j=JOBS[g.sp[0].rev?'':g.sp[0].id]||JOBT[p.t];
+ choice('🧺 งานของคนมีดวงจิต',`ไม่มีใครบอกเด็กตอนปลุกจิตว่า ผู้ฝึกจิตส่วนใหญ่ในทวีปไม่ได้ออกล่าสัตว์ แต่ใช้ดวงจิตทำมาหากิน — มีคนมาเสนองาน <b>${j[0]}</b> ให้คุณ เพราะ${nm()}ของคุณเหมาะพอดี`,[
+  O('🧺 รับงาน',`ได้เงิน ${j[1]}–${j[2]} ตำลึงต่อปี · ฝึกช้าลงนิดหน่อย`,()=>{g.job={n:j[0],lo:j[1],hi:j[2]};mark('job');S.cha+=2;joy(5);log(`🧺 คุณเริ่ม${j[0]}ด้วย${nm()} — คนในเมืองเริ่มรู้จักคุณจากงาน ไม่ใช่จากระดับจิต`,'good',true)}),
+  O('⚔️ ไม่รับ จะฝึกอย่างเดียว','',()=>log('⚔️ คุณปฏิเสธ คนเสนองานยักไหล่ "ส่วนใหญ่ก็พูดแบบนี้ตอนอายุเท่าเธอ"'))])});
+ev(4,0,s=>A1(s)&&s.sv.job&&gap('job',5)&&no('job2'),()=>{const g=X(),j=g.job;mark('job2');
+ choice('🧺 งานเริ่มใหญ่กว่าที่คิด',`งาน${j.n}ของคุณขึ้นชื่อจนพ่อค้าจากเมืองหลวงมาขอร่วมหุ้น "ขยายเป็นสิบสาขา แต่คุณต้องดูแลเองทั้งหมด"`,[
+  O('📈 ขยายกิจการ','เงินเยอะขึ้นมาก · เวลาฝึกน้อยลง',()=>{j.lo*=2;j.hi*=2;g.lv=Math.max(1,g.lv-2);S.fame+=10;log(`📈 ${j.n}ของคุณมีสาขาในสามเมือง`,'epic',true)}),
+  O('🗡️ ยกงานให้คนอื่น กลับไปฝึก','ฝึกเต็มเวลาอีกครั้ง',()=>{g.job=null;S.karma+=4;log('🗡️ คุณยกงานให้ลูกมือที่ทำงานด้วยกันมาห้าปี แล้วกลับไปฝึกเต็มเวลา','')}),
+  O('🙂 ทำต่อแบบเดิม','',()=>{joy(4);log('🙂 คุณบอกว่าแค่นี้ก็พอแล้ว')})])},1);
+// --- ประลอง · เพื่อนร่วมทีม ---
+ev(4,6,s=>A1(s)&&s.age>=14&&s.age<=24&&s.sv.lv>=15,()=>{const g=X(),foe=ch(['อัจฉริยะดวงจิตหงส์ไฟ','ลูกชายเจ้าศาลา','เด็กสาวดวงจิตเงา','ศิษย์สถาบันหลวง']);
+ choice('🏟️ งานประลองจิตยุทธ์เยาวชน',`รอบชิงพบกับ<b>${foe}</b> คนดูหลายพันคน${g.rings.length?` วงแหวน ${g.rings.length} วงของคุณสว่างขึ้นพร้อมกัน`:''}`,[
+  O('⚔️ ลงประลอง','',()=>duel(foe,Math.round(total()*1.05),w=>{if(w){S.fame+=40;joy(8);log(`🏟️ <b>แชมป์ประลองเยาวชน</b> — ท่า「${nm()}」ถูกพูดถึงไปทั้งเมือง`,'epic',true)}else{S.fame+=8;log('🏟️ แพ้ในรอบชิง แต่คนดูจำท่าสุดท้ายของคุณได้','')}})),
+  O('🙇 สละสิทธิ์','',()=>{joy(-3);log('🙇 คุณดูรอบชิงจากอัฒจันทร์')})])});
+ev(5,0,s=>A1(s)&&s.age>=13&&s.age<=25&&!s.sv.mate&&no('mate'),()=>{const g=X();mark('mate');const my=main().t;const L=Object.keys(TY).filter(k=>k!==my).sort(()=>Math.random()-.5).slice(0,3);
+ choice('👥 หาเพื่อนร่วมทีมล่าวงแหวน','ผู้ฝึกจิตส่วนใหญ่ล่าเป็นทีม คนสามคนสนใจจะทีมกับคุณ — แต่ละคนเติมสิ่งที่คุณขาดคนละแบบ',[
+  ...L.map(k=>{const n=nmP();return O(`${TY[k]} — ${n}`,'ร่วมทีมระยะยาว',()=>{g.mate={n,t:k,alive:true};log(`👥 คุณกับ<b>${n}</b> (${TY[k]}) ตกลงเป็นทีมเดียวกัน — ศัตรูอ่อนลงเมื่อสู้ด้วยกัน`,'good',true)})}),
+  O('🚶 ล่าคนเดียว','',()=>log('🚶 คุณชอบเงียบมากกว่า'))])},1);
+ev(5,0,s=>A1(s)&&s.sv.mate&&s.sv.mate.alive&&gap('mate',4)&&no('mate2'),()=>{const g=X(),m=g.mate;mark('mate2');
+ choice('🆘 เพื่อนร่วมทีมขอความช่วยเหลือ',`${m.n}ติดคอขวด อยากล่าวงแหวนที่เกินขีดตัวเอง "ไปด้วยกันนะ ถ้าไม่มีเธอฉันไม่รอดแน่"`,[
+  O('🏹 ไปด้วย','เสี่ยงเจ็บ',()=>{if(fight('สัตว์อสูรเกินขีด',total()*1.25)){S.karma+=5;m.debt=1;log(`🏹 ${m.n}หลอมวงแหวนสำเร็จ แล้วร้องไห้กอดคุณกลางป่า`,'epic',true)}else{HP(25);m.alive=false;joy(-20);log(`🩸 ${m.n}ไม่ได้กลับออกมาจากป่านั้น`,'bad',true)}}),
+  O('🙅 ห้ามเขาไว้','',()=>{if(Math.random()<.5){g.mate=null;log(`🙅 ${m.n}ไปคนเดียว และไม่ได้คุยกับคุณอีก`,'bad')}else log(`🙅 ${m.n}โกรธอยู่สามวัน แล้วยอมรอไปอีกปี`)})])},1);
+ev(4,0,s=>A1(s)&&s.sv.mate&&s.sv.mate.alive&&gap('mate',10)&&no('mate3'),()=>{const g=X(),m=g.mate;mark('mate3');const r=Math.random();
+ if(r<.3){g.mate=null;S.money=Math.round(S.money*.7);log(`🗡️ <b>${m.n}หายไปพร้อมเงินกองกลางของทีม</b> — สิบปีที่ล่าด้วยกันไม่ได้แปลว่ารู้จักกัน`,'bad',true);joy(-12);return}
+ choice('💍 สิบปีกับเพื่อนร่วมทีม',`คืนหนึ่งหลังล่าเสร็จ ${m.n}นั่งข้างกองไฟนานกว่าปกติ "ฉันไม่อยากล่ากับใครอื่นอีกแล้ว ทั้งชีวิตเลย"`,[
+  O('💍 ใช้ชีวิตด้วยกัน','',()=>{mark('married');g.spouse=m.n;joy(15);log(`💍 คุณกับ${m.n}แต่งงานกันในศาลาเล็กๆ กลางป่า`,'epic',true)}),
+  O('🤝 เป็นทีมกันต่อ แค่นั้น','',()=>log(`🤝 ${m.n}พยักหน้า แล้วไม่พูดถึงเรื่องนี้อีก`))])},1);
+// --- รักและลูก ---
+ev(3,0,s=>A1(s)&&s.age>=18&&s.age<=35&&no('married')&&no('love'),()=>{mark('love');const n=nmP(),k=ch(Object.keys(TY));
+ choice('🌸 คนที่ดวงจิตเข้ากัน',`ในงานเทศกาล <b>${n}</b> ผู้ถือดวงจิต${TY[k]} มาขอยืมไฟจาก${nm()}ของคุณ ดวงจิตทั้งสองสั่นพร้อมกันเหมือนรู้จักกันมาก่อน`,[
+  O('💍 คบหาจนแต่งงาน','',()=>{mark('married');X().spouse=n;joy(12);log(`💍 คุณแต่งงานกับ${n}`,'epic',true)}),
+  O('🙂 แค่เพื่อน','',()=>log('🙂 คุณส่งเขากลับบ้าน แล้วไม่เจอกันอีก'))])},1);
+ev(6,0,s=>A1(s)&&gap('married',7)&&no('kid'),()=>{mark('kid');const p=SP[Math.floor(Math.random()*SP.length)],kn=nmP();
+ choice('👶 ลูกถึงวัยปลุกจิต',`${kn}ลูกของคุณอายุหกขวบ ในพิธีปลุก แสงพุ่งขึ้นจากฝ่ามือเล็กๆ — <b>${p[1]} ${p[2]}</b>${p[5]===0?' เด็กคนอื่นหัวเราะ':p[5]>=2?' ทั้งลานเงียบกริบ':''}`,[
+  O('🫂 "ดวงจิตอะไรก็ได้ พ่อแม่ภูมิใจ"','ลูกใจแข็ง',()=>{joy(8);S.karma+=5;log(`🫂 ${kn}หยุดร้องไห้ แล้วถือ${p[2]}เหมือนเป็นของมีค่าที่สุดในโลก`,'good',true)}),
+  O('🔥 "เริ่มฝึกพรุ่งนี้ ตีห้า"','ลูกเก่งเร็ว แต่ห่างเหิน',()=>{S.fame+=10;joy(-4);log(`🔥 ${kn}ฝึกหนักกว่าเด็กทุกคน และเรียกคุณว่า "อาจารย์" แทน "พ่อแม่"`,'',true)})])},1);
+// --- สืบทอดพิธีปลุก ---
+ev(3,0,s=>A1(s)&&s.age>=30&&s.sv.lv>=30&&no('awk'),()=>{mark('awk');
+ choice('🔮 ผู้ปลุกจิตชราขอให้สืบทอด','ผู้ปลุกจิตที่วางลูกแก้วรอบตัวคุณเมื่อหลายสิบปีก่อนเดินไม่ไหวแล้ว "เด็กในหมู่บ้านต้องมีคนปลุก รับลูกแก้วหกลูกนี้ไปได้ไหม"',[
+  O('🔮 รับสืบทอด','ปลุกจิตให้เด็กทุกปี',()=>{g_awk();}),
+  O('🙇 ปฏิเสธ','',()=>log('🙇 ปีต่อมาหมู่บ้านต้องพาเด็กเดินทางสามวันไปปลุกจิตที่เมือง'))])},1);
+function g_awk(){const g=X();g.awk=1;S.karma+=8;S.fame+=10;log('🔮 ปีแรกที่คุณปลุกจิต เด็กผู้หญิงผอมๆ คนหนึ่งได้ <b>👤 เงาตัวเอง</b> ทุกคนหัวเราะ — ยกเว้นคุณ','epic',true)}
+ev(6,0,s=>A1(s)&&s.sv.awk&&gap('awk',12)&&no('awk2'),()=>{mark('awk2');S.fame+=60;S.karma+=10;joy(10);
+ log('🌑 จ้าวจิตหญิงคนหนึ่งขี่ม้ามาถึงหมู่บ้าน เงาของเธอขยับก่อนตัวเธอครึ่งวินาที — "ตอนหกขวบ ทุกคนหัวเราะ มีแต่ท่านที่บอกว่ามันมีอะไรซ่อนอยู่" เธอคุกเข่าให้คุณต่อหน้าทั้งหมู่บ้าน','myth',true)},1);
+// --- ผลจากการไว้ชีวิต / ฆ่า ---
+ev(8,8,s=>A1(s)&&s.sv.spared&&s.sv.spared.some(x=>!x.back&&s.age-x.a>=3),()=>{const g=X(),x=g.spared.find(y=>!y.back&&S.age-y.a>=3);x.back=1;const atCap=g.lv>=capOf(g)&&g.rings.length<9;
+ choice(`🐾 ${x.n}กลับมา`,`คุณหลงป่าอยู่สามวัน ขาเจ็บ ไม่มีน้ำ — แล้ว${x.n}ตัวที่คุณเคยไว้ชีวิตก็ก้าวออกมาจากพุ่มไม้ มันจำคุณได้`,[
+  atCap?O('⭕ ยอมรับวงแหวนที่มันยื่นให้','มันเลือกมอบให้เอง · ไม่มีความเสี่ยง',()=>{giftRing(Math.min(4,x.t),x.n,'หนี้ชีวิต');S.karma+=5}):null,
+  O('🫂 ให้มันพาออกจากป่า','ฟื้นพลังชีวิต · กรรม +',()=>{heal(50);S.karma+=6;log(`🫂 ${x.n}เดินนำคุณออกจากป่า แล้วหันหลังกลับไปโดยไม่รอคำขอบคุณ`,'epic',true)})].filter(Boolean))});
+ev(6,8,s=>A1(s)&&s.sv.kill>=3,()=>{const g=X();
+ choice('🐺 ป่าทั้งป่าจำคุณได้',`คุณฆ่าสัตว์อสูรอายุพันปีขึ้นไปมาแล้ว ${g.kill} ตัว คืนนี้เสียงหอนดังรอบหมู่บ้าน — สัตว์อสูรทั้งเผ่ามาทวงคืน`,[
+  O('⚔️ ออกไปสู้','',()=>duel('ฝูงสัตว์อสูรผู้ทวงแค้น',Math.round(total()*1.2),w=>{if(w){S.fame+=40;g.kill=Math.max(0,g.kill-2);log('⚔️ ฝูงสัตว์ถอยกลับเข้าป่า — แต่ป่าไม่เคยลืม','epic',true)}else{HP(30);S.karma-=3;log('🔥 ไฟไหม้ไปสามหลังคาเรือน ชาวบ้านมองคุณด้วยสายตาอีกแบบ','bad',true)}})),
+  (tp('ctrl')||tp('sup')||S.karma>=40)?O('🕊️ ออกไปคุยกับจ่าฝูง','สายควบคุม/สนับสนุน หรือกรรมดี',()=>{g.kill=0;S.karma+=15;log('🕊️ คุณวางวงแหวนแห่งความเคารพไว้หน้าป่า จ่าฝูงดมกลิ่นอยู่นาน แล้วพาฝูงกลับไป','myth',true)}):null,
+  O('🏃 อพยพหนีไปอีกเมือง','',()=>{S.money=Math.round(S.money*.7);g.kill=Math.max(0,g.kill-1);joy(-6);log('🏃 คุณย้ายหนีกลางดึก ทิ้งบ้านไว้ข้างหลัง','bad')})].filter(Boolean))});
+// --- 5) ดวงจิตมีนิสัย ---
+const PER={atk:['ใจร้อน','"ไอ้คนนั้นมองเราแปลกๆ ไปท้าเลย!"','⚔️ ไปท้าตามที่มันขอ','🙅 "ไม่ใช่ตอนนี้"'],
+ def:['ขี้กังวล','"ปีนี้อย่าออกไปไหนเลยนะ ข้ารู้สึกไม่ดี"','🏡 อยู่บ้านพักหนึ่งปี','🚪 "ไม่เป็นไรหรอก"'],
+ sup:['ใจดี','"เด็กข้างทางนั่นป่วย ช่วยเขาหน่อยได้ไหม"','🌿 ช่วยรักษา','🚶 เดินผ่านไป'],
+ ctrl:['เจ้าเล่ห์','"พ่อค้าคนนั้นโกงตาชั่ง ข้ามีวิธีเอาคืน…"','🌀 ทำตามแผนของมัน','🙅 "อย่าเลย"'],
+ agi:['ซน','"เบื่อแล้ว! ไปดูทะเลกันเถอะ"','🌊 ออกเดินทาง','📚 "ฝึกก่อน"']};
+ev(5,3,s=>A1(s)&&s.age>=8&&!s.sv.retired,()=>{const g=X(),p=main(),P=PER[p.t],first=!g.f.talk;mark('talk');
+ choice(`${p.ic} ${nm()}กระซิบ`,`${first?`คืนหนึ่งคุณได้ยินเสียงในหัว — ไม่ใช่ความคิดตัวเอง <b>${nm()}พูดได้</b> และนิสัย<b>${P[0]}</b><br><br>`:''}${P[1]}<br><span class="tag2">ใจของดวงจิต ${g.bond}/100 — ใจตรงกันมาก ฝึกเร็วและหลอมวงแหวนปลอดภัยขึ้น</span>`,[
+  O(P[2],'ใจของดวงจิต +',()=>{bond(12);const t=p.t;
+   if(t==='atk'){if(fight('คนที่มันอยากให้ท้า',total()*1.1)){S.fame+=12;log(`${p.ic} ${nm()}สั่นด้วยความพอใจ`,'good')}else log(`${p.ic} แพ้ แต่${nm()}บอกว่า "สนุกดี"`,'')}
+   else if(t==='def'){heal(40);g.lv=Math.max(1,g.lv-1);log(`${p.ic} ปีนั้นมีโจรปล้นทางที่คุณมักเดินผ่าน${nm()}ไม่พูดอะไร แต่คุณรู้สึกว่ามันยิ้ม`,'good')}
+   else if(t==='sup'){S.karma+=6;S.money=Math.max(0,S.money-R(10,40));log(`${p.ic} เด็กหายป่วย แม่ของเขาเอาไข่มาให้ทุกเดือน`,'good')}
+   else if(t==='ctrl'){S.money+=inc(R(60,160));S.karma-=3;log(`${p.ic} พ่อค้าคนนั้นไม่รู้ตัวเลยว่าตาชั่งตัวเองหมุนกลับด้าน`,'')}
+   else{S.int+=3;joy(10);log(`${p.ic} คุณเห็นทะเลครั้งแรก ${nm()}วิ่งเล่นริมคลื่นทั้งวัน`,'good')}}),
+  O(P[3],'ใจของดวงจิต −',()=>{bond(-10);log(`${p.ic} ${nm()}เงียบไปหลายวัน`)})])});
+ev(7,5,s=>A1(s)&&s.sv.bond!=null&&s.sv.bond<=20,()=>{const g=X();
+ choice(`😤 ${nm()}งอน`,`${nm()}ไม่ยอมออกมาจากฝ่ามือคุณมาสามเดือนแล้ว ระดับจิตแทบไม่ขยับ`,[
+  O('🙏 ทำพิธีขอขมาดวงจิต','เสียเงิน · ใจดวงจิต ++',()=>{S.money=Math.max(0,S.money-R(50,150));bond(25);log(`🙏 คุณนั่งคุยกับ${nm()}ทั้งคืน ตอนเช้ามันออกมาเกาะไหล่คุณเหมือนตอนหกขวบ`,'good',true)}),
+  O('😠 บังคับให้มันออกมา','พลัง + เล็กน้อย · ใจดวงจิต −',()=>{bond(-8);S.power+=pctPow(.02);log(`😠 ${nm()}ออกมา แต่ไม่ได้มองหน้าคุณ`,'bad')})])});
+// --- วงแหวน · อันตรายของผู้ฝึกจิต ---
+ev(3,8,s=>A1(s)&&s.sv.rings.length>=2&&!s.sv.retired,()=>{const g=X(),r=ch(g.rings);
+ choice('🌙 ฝันของวงแหวน',`คืนเดือนมืด วงแหวน${TIER[r.t][0]}ของ${esc(r.b)}สั่น คุณฝันว่าตัวเองเป็นมัน — วิ่งในป่ากับลูกตัวเล็กๆ จนถึงวันที่เจอคุณ`,[
+  O('🕯️ จุดธูปให้มัน','กรรม + · ใจดวงจิต +',()=>{S.karma+=5;bond(6);log(`🕯️ วงแหวนของ${esc(r.b)}หยุดสั่น และสว่างขึ้นนิดหนึ่ง`,'good')}),
+  O('😶 ช่างมัน','',()=>{joy(-3);log('😶 คุณตื่นมาพร้อมหมอนเปียก แต่ไม่ได้เล่าให้ใครฟัง')})])});
+ev(4,10,s=>A1(s)&&s.sv.lv>=40&&!s.sv.retired,()=>{const g=X();
+ choice('🦴 นักล่ากระดูกวิญญาณ','คนกลุ่มหนึ่งไม่ล่าสัตว์อสูร — <b>พวกมันล่าผู้ฝึกจิต</b> เพื่อเอากระดูกที่ซึมวงแหวนไปขาย คืนนี้มันตามคุณมาถึงที่พัก',[
+  O('⚔️ สู้','',()=>duel('นักล่ากระดูกวิญญาณ',Math.round(total()*1.15),w=>{if(w){S.fame+=30;S.money+=inc(R(200,600));log('⚔️ คุณยึดค่าหัวผู้ฝึกจิตที่พวกมันพกมาได้ทั้งเล่ม — มีชื่อคนรู้จักอยู่ในนั้นด้วย','epic',true)}else{HP(25);log('🩸 คุณหนีรอดมาได้แบบเลือดท่วม','bad',true)}})),
+  tp('agi')?O('💨 หายตัวก่อนพวกมันจะรู้ตัว','สายว่องไว',()=>log('💨 พวกมันพังประตูเข้ามาเจอแต่ห้องว่าง','good')):null,
+  tp('ctrl')?O('🌀 ล่อให้พวกมันฆ่ากันเอง','สายควบคุม',()=>{S.fame+=20;S.karma-=2;log('🌀 เช้าวันต่อมาเหลือรอดแค่คนเดียว และมันไม่กล้ามองหน้าคุณ','epic')}):null].filter(Boolean))});
+ev(3,0,s=>A1(s)&&s.age>=18&&s.sv.lv>=20&&no('war'),()=>{mark('war');
+ choice('🚩 สองจักรวรรดิประกาศสงคราม','ราชโองการเกณฑ์ผู้ฝึกจิตระดับยี่สิบขึ้นไปทุกคนไปแนวหน้า',[
+  O('🚩 ไปรบ','',()=>{if(fight('ทัพผู้ฝึกจิตข้าศึก',total()*1.2)){S.fame+=50;S.money+=inc(R(300,800));log('🚩 คุณกลับมาพร้อมเหรียญตรา และฝันร้ายที่ไม่เล่าให้ใครฟัง','epic',true);joy(-6)}else{HP(35);S.maxHp=Math.max(30,Math.round(S.maxHp*.9));log('🩸 คุณกลับมาด้วยแผลเป็นยาวทั้งหลัง','bad',true)}}),
+  O('🫥 ซ่อนระดับจิต','กรรม −',()=>{S.karma-=5;log('🫥 คุณกดระดับจิตให้ดูต่ำกว่ายี่สิบ เพื่อนบ้านสองคนไม่ได้กลับมา')}),
+  tp('sup')?O('🌿 ไปเป็นหมอแนวหลัง','สายสนับสนุน',()=>{S.karma+=12;S.fame+=25;log('🌿 คุณรักษาทหารทั้งสองฝ่าย ทั้งสองจักรวรรดิส่งจดหมายขอบคุณมา','epic',true)}):null].filter(Boolean))},1);
+ev(4,0,s=>A1(s)&&s.sv.lv>=15&&no('elder'),()=>{mark('elder');
+ choice('🧓 ผู้เฒ่าวงแหวนแตก','ชายแก่นั่งขายถ่านข้างตลาด แขนข้างหนึ่งไม่มีเรี่ยวแรง เขาเห็นวงแหวนของคุณแล้วพูดเบาๆ "ข้าเคยมีเจ็ดวง วงที่แปดฆ่าข้าไปครึ่งตัว"',[
+  O('🍵 ดูแลเขาจนวันสุดท้าย','เสียเงินทุกปีสักพัก · ได้ทฤษฎีคอขวด',()=>{X().theory=1;S.money=Math.max(0,S.money-R(80,200));S.karma+=8;log('🍵 ก่อนตาย เขาเขียนวิธีอ่านคอขวดของร่างกายไว้ให้ — การหลอมเกินขีดของคุณปลอดภัยขึ้น','epic',true)}),
+  O('🪙 ซื้อถ่านแล้วเดินต่อ','',()=>log('🪙 ถ่านของเขาติดไฟดีกว่าเจ้าอื่น'))])},1);
+ev(3,6,s=>A1(s)&&s.age>=8&&s.age<=22&&s.sv.lv<capOf(s.sv),()=>{const g=X();
+ choice('🌧️ ฝึกกลางพายุ',`ฤดูมรสุม ครูฝึกบอกว่าพลังจิตไหลแรงที่สุดตอนฟ้าผ่า`,[
+  O('⚡ ออกไปฝึกกลางพายุ','ระดับจิต +2 · เสี่ยงเจ็บ',()=>{g.lv=Math.min(capOf(g),g.lv+2);HP(R(5,18));log(`⚡ ฟ้าผ่าห่างไปสามก้าว แต่${nm()}ดูดพลังไว้ทัน`,'good')}),
+  O('🏠 ฝึกในบ้าน','',()=>log('🏠 คุณนั่งสมาธิฟังเสียงฝน'))])});
+ev(3,0,s=>A1(s)&&s.age>=16&&no('plague'),()=>{mark('plague');
+ choice('🤒 โรคระบาดในเมืองท่า','คนป่วยเป็นพัน ศาลาดวงจิตขอให้ผู้ฝึกจิตทุกคนช่วย ใครดวงจิตแบบไหนก็ช่วยได้คนละแบบ',[
+  tp('sup')?O('🌿 รักษาด้วยดวงจิต','สายสนับสนุน',()=>{S.karma+=15;S.fame+=40;log(`🌿 ${nm()}ของคุณรักษาคนได้สามร้อยคน ชาวเมืองท่าตั้งศาลให้`,'myth',true)}):null,
+  tp('def')?O('🛡️ เฝ้าด่านกักโรค','สายป้องกัน',()=>{S.karma+=8;S.fame+=15;log('🛡️ คุณยืนเฝ้าด่านสี่สิบวัน ไม่มีใครฝ่าออกไปแพร่เชื้อได้','epic')}):null,
+  O('📦 ขนยาจากเมืองหลวง','เสี่ยงติดโรค',()=>{S.karma+=6;if(Math.random()<.3)HP(25);log('📦 คุณขนยามาสามเที่ยว เที่ยวสุดท้ายแทบเดินไม่ไหว','good')}),
+  O('🚪 ปิดประตูอยู่บ้าน','',()=>log('🚪 ปลอดภัยดี'))].filter(Boolean))},1);
+
+// =================== 6) ไร้ดวงจิต ===================
+ev(5,6,s=>A2(s)&&s.age>=10,()=>{const by=ch(['ผู้ฝึกจิตหนุ่มดวงจิตเสือ','ลูกเจ้าศาลา','เด็กรุ่นเดียวกันที่ได้ดวงจิตงู']);
+ choice('😒 "คนไร้ดวงจิต"',`${by}เดินชนคุณกลางตลาดแล้วหัวเราะ "หลบหน่อยสิ คนไร้ค่า"`,[
+  O('🙇 ก้มหน้าหลบ','',()=>{joy(-5);log('🙇 คุณหลบ แล้วรู้สึกเหมือนตัวเล็กลงหนึ่งนิ้ว')}),
+  O('🗣️ ตอบกลับด้วยคำพูด','ใช้เสน่ห์',()=>{if(S.cha>=40){S.fame+=6;log('🗣️ คนทั้งตลาดหัวเราะ — แต่หัวเราะใส่เขา','good')}else{HP(10);log('🩸 เขาไม่ชอบคำตอบของคุณ','bad')}}),
+  O('🧠 จำหน้าไว้','ปัญญา +',()=>{S.int+=2;log('🧠 วันหนึ่งเขาจะต้องมาซื้อของจากคุณ')})])});
+ev(6,0,s=>A2(s)&&s.sv.np&&s.sv.np.k&&s.sv.np.x>=12&&no('np1'),()=>{const g=X(),k=g.np.k;mark('np1');
+ const T={smith:['⚒️ อาวุธที่เข้ากับดวงจิต','จ้าวจิตดวงจิตมังกรสั่งดาบที่ "ไม่ทะเลาะกับดวงจิต" — ช่างทุกคนในเมืองปฏิเสธ',[['🔥 รับงาน ทำสามเดือนไม่หลับ',()=>{S.fame+=40;S.money+=inc(R(400,900));log('⚒️ ดาบเล่มนั้นทำให้ทั้งทวีปรู้ว่ามีช่างคนหนึ่งที่ไม่มีดวงจิต แต่เข้าใจดวงจิตดีกว่าใคร','myth',true)}],['🙅 ปฏิเสธ',()=>log('🙅 ไม่ใช่งานที่คุ้มเสี่ยง')]]],
+  doc:['🌿 ผู้ฝึกจิตหลอมเกินขีด','มีคนหามผู้ฝึกจิตหนุ่มที่หลอมวงแหวนเกินขีดมาที่ร้าน เส้นจิตแตกกระจาย หมอคนอื่นบอกว่าหมดหวัง',[['🌿 ลองต่อเส้นจิต',()=>{if(Math.random()<.55+S.int/400){S.fame+=40;S.karma+=15;log('🌿 เขารอด — และดวงจิตยังอยู่ ข่าวลือไปทั่วว่าหมอไร้ดวงจิตต่อเส้นจิตได้','myth',true)}else{S.karma+=3;joy(-10);log('🕯️ คุณพยายามทั้งคืน แต่ไม่ทัน','bad',true)}}],['🙅 ส่งต่อให้ศาลา',()=>log('🙅 คุณได้ยินทีหลังว่าเขาไม่รอด')]]],
+  trade:['💰 วงแหวนปลอม','คนรู้จักเสนอให้ร่วมขายวงแหวนปลอมให้ผู้ฝึกจิตมือใหม่ "กำไรสิบเท่า ไม่มีใครตรวจได้"',[['💰 ร่วมด้วย',()=>{S.money+=inc(R(800,2000));S.karma-=15;log('💰 กำไรมหาศาล คุณเลิกถามว่าเด็กที่ซื้อไปเป็นยังไงบ้าง','bad',true)}],['📢 แฉให้ศาลารู้',()=>{S.fame+=35;S.karma+=10;log('📢 ทั้งแก๊งโดนจับ ศาลาดวงจิตให้คุณเป็นผู้ค้าที่ได้รับรอง','epic',true)}]]],
+  sch:['📚 ทฤษฎีคอขวด','คุณค้นพบว่าคอขวดทุกสิบระดับไม่ได้ตายตัว — ขึ้นกับร่างกาย ไม่ใช่ดวงจิต ถ้าเผยแพร่ ผู้ฝึกจิตจะตายตอนหลอมวงแหวนน้อยลงมาก',[['📖 ตีพิมพ์',()=>{S.fame+=60;S.karma+=12;log('📖 ศาลาดวงจิตเกือบสั่งเผาตำรา แต่ผู้ฝึกจิตทั่วทวีปแอบคัดลอกไปหมดแล้ว','myth',true)}],['🗝️ เก็บไว้ขายเฉพาะคนจ่ายได้',()=>{S.money+=inc(R(1000,2500));log('🗝️ ลูกค้าของคุณมีแต่ตระกูลใหญ่','')}]]]}[k];
+ choice(T[0],T[1],T[2].map(x=>O(x[0],'',x[1])))},1);
+ev(4,0,s=>A2(s)&&s.age>=30&&no('np2'),()=>{mark('np2');const p=SP[Math.floor(Math.random()*SP.length)];
+ choice('👶 ลูกของคนไร้ดวงจิต',`ลูกของคุณวิ่งกลับมาจากพิธีปลุก ชู<b>${p[1]} ${p[2]}</b>ให้ดู "แม่/พ่อ ดูสิ! หนูมีแล้ว!"`,[
+  O('🫂 กอดลูกไว้','',()=>{joy(15);log('🫂 คุณกอดลูกนานกว่าปกติ ลูกไม่รู้ว่าทำไม','epic',true)}),
+  O('📏 สอนลูกว่าดวงจิตไม่ใช่ทุกอย่าง','',()=>{S.int+=2;S.karma+=4;log(`📏 ลูกพยักหน้า แล้วถาม "แต่${p[2]}เอาไว้ทำอะไรได้บ้าง" — คุณตอบได้ดีกว่าผู้ฝึกจิตทุกคนในเมือง`,'good',true)})])},1);
+ev(5,0,s=>A2(s)&&s.sv.np&&s.sv.np.k&&s.sv.np.x>=40&&no('np3'),()=>{mark('np3');S.fame+=80;S.karma+=8;
+ log(`🙇 ผู้ครองดวงจิตคนหนึ่งเดินเข้ามาในร้าน คนทั้งร้านลุกยืน แต่เขาตรงมาที่คุณแล้วก้มหัว "ตอนข้าอายุสิบหก ท่านช่วยข้าไว้ — ท่านคงจำไม่ได้" คุณจำไม่ได้จริงๆ`,'myth',true)},1);
+
+// =================== หน้าดวงจิต: ผลของสาย · ท่าวงแหวน · ใจดวงจิต ===================
+{const _os=window.openSoul;window.openSoul=function(){const r=_os.apply(this,arguments);try{if(!S||S.ch!=='soul'||!S.sv)return r;const g=X(),m=$('modal');if(!m)return r;let h='';
+ if(g.aw===2){h=`<div class="item">🌑 <b>ไร้ดวงจิต</b><br><span class="tag2">${g.np&&g.np.k?`${NP[g.np.k][0]} ${NP[g.np.k][1]} · ${npRank(g)}`:'ใช้ชีวิตเรียบง่าย'}</span></div>`}
+ else if(g.aw===1){const types=[...new Set(act(g).map(s=>spNow(s).t))];
+  h+=`<h4>ผลของสาย</h4>${types.map(t=>`<div class="item">${TY[t]}<br><span class="tag2">${EFX[t]}</span></div>`).join('')}`;
+  if(g.rings.length)h+=`<h4>ท่าวงแหวน</h4><div class="tag2" style="line-height:1.8">${g.rings.map((x,i)=>`วงที่ ${i+1} 「${esc(x.sk)}」 — ศัตรูอ่อนลง ${Math.round(ringOne(x.t)*100)}%`).join('<br>')}<br><b>รวมตอนต่อสู้: ศัตรูอ่อนลง ${Math.round(ringF()*100)}%</b>${g.retired?' (ทุบวงแหวนแล้ว)':''}</div>`;
+  const P=main()?PER[main().t]:null;
+  h+=`<div class="item">💞 ใจของดวงจิต <b>${g.bond}</b>/100${P?` · นิสัย${P[0]}`:''}<div style="height:6px;background:#0004;border-radius:3px;margin-top:4px"><div style="height:6px;width:${g.bond}%;background:#ff7ab8;border-radius:3px"></div></div></div>`;
+  const ex=[g.fused?'🔥 ดวงจิตหลอมรวม':null,g.dorm?'🔒 ดวงจิตที่สองหลับอยู่':null,(g.sp.length>1&&!g.dual)?'🌀 ดวงจิตคู่ยังแย่งร่าง':null,g.pet?`🐾 สัตว์คู่ใจ: ${esc(g.pet.n)} (${g.pet.y} ปี)`:null,g.mate&&g.mate.alive?`👥 เพื่อนร่วมทีม: ${esc(g.mate.n)}`:null,g.job?`🧺 งาน: ${esc(g.job.n)}`:null,g.acad?'🏫 นักเรียนสถาบันจิตยุทธ์':null,g.theory?'📜 รู้ทฤษฎีคอขวด':null,g.spared.length?`🕊️ เคยไว้ชีวิตสัตว์อสูร ${g.spared.length} ตัว`:null,g.kill>=3?`🐺 เผ่าสัตว์อสูรผูกใจเจ็บ (${g.kill})`:null,g.god?'⚡ ผ่านการทดสอบเทพ':null,g.retired?'💔 วางมือแล้ว':null,g.heir?'📜 ถ่ายทอดให้ลูกศิษย์แล้ว':null].filter(Boolean);
+  if(ex.length)h+=`<div class="tag2" style="line-height:1.8;margin-top:6px">${ex.join('<br>')}</div>`}
+ if(h)m.insertAdjacentHTML('beforeend',`<div class="svX">${h}</div>`)}catch(e){console.error('sv2 ui',e)}return r}}
+window._blk35={ringF,tp,Q,giftRing,X,yr};
+})()}catch(e){console.error('block35',e)}
 
 // ---- กู้ตั๋วสุ่ม/VIP/ของแต่งที่เติมไว้ เมื่อรหัสเครื่องเปลี่ยน (ล้างข้อมูลเบราว์เซอร์/เปลี่ยนเครื่อง) ----
 try{(()=>{
