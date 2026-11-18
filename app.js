@@ -41186,7 +41186,7 @@ const st=document.createElement('style');st.textContent=`#mwHud .mwhT{position:r
 // ===== ตามหาวิชาที่หายคืน =====
 try{(()=>{
 const _py=render;render=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive&&S.lostArts&&S.lostArts.length&&S._laY!==S.age){S._laY=S.age;if(!choice._cur&&!modalOpen&&!auto&&Math.random()<.12){const L=S.lostArts[0];if(S.age-L.y>=2){choice('📜 เศษวิชาที่หายไป',`คุณพบร่องรอยของ<b>${esc(L.a.n)}</b> — เศษวิชาที่หลุดไปเมื่อก่อน ยังเหลือพอให้ตามกลับมาได้`,[
- {t:'🔎 ตามหาคืน',s:'พลัง −3% · ได้วิชากลับมา',noFate:true,f(){const x=S.lostArts.shift();S.power=Math.max(1,S.power-Math.round(S.power*.03));S.arts.push(x.a);log(`📜 คุณตามรอยจนได้《${esc(x.a.n)}》กลับคืนมา`,'epic')}},
+ {t:'🔎 ตามหาคืน',s:'พลัง −3% · ได้วิชากลับมา',noFate:true,f(){const x=S.lostArts.shift();S.power=Math.max(1,S.power-Math.round(S.power*.03));Array.prototype.push.call(S.arts,x.a);log(`📜 คุณตามรอยจนได้《${esc(x.a.n)}》กลับคืนมา`,'epic')}},
  {t:'🙅 ปล่อยไป',s:L.n>=1?'จะหายถาวร':'เศษวิชายังรออยู่อีกครั้ง',skip:true,f(){L.n=(L.n||0)+1;if(L.n>=2){S.lostArts.shift();log(`📜 ร่องรอยของ《${esc(L.a.n)}》เลือนหายไปแล้ว`,'')}}}])}}}}catch(e){console.error('lostArt',e)}return r}
 })()}catch(e){console.error('lostArts block',e)}
 // ============================================================
