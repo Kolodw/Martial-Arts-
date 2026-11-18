@@ -27382,7 +27382,7 @@ const _br=brdRestyle;brdRestyle=function(){const keep={},kc={};try{for(const p o
 
 // ---- v17.26 แอดมิน: ดูฉายา+กรอบที่จะแจกรอบนี้ (ภาพจริง) · สุ่มใหม่ทีละรอบ ----
 try{(()=>{
-const CN=[['m','⚔️ ยุทธภพ'],['x','☁️ เซียน'],['g','🌟 เทพ'],['b','🐾 อสูร'],['r','🔁 ย้อนกาล'],['h','🔥 นรก'],['s','⏳ ชีวิตสั้น'],['j','🗑️ รากขยะ']];
+const CN=[['m','⚔️ ยุทธภพ'],['x','☁️ เซียน'],['g','🌟 เทพ'],['b','🐾 อสูร'],['r','🔁 ย้อนกาล'],['h','🔥 นรก'],['s','⏳ ชีวิตสั้น'],['j','🗑️ รากขยะ'],['l','⭕ จิตวิญญาณยุทธ์']];
 window.openRkAdmin=async function(p,roll){p=p||openRkAdmin._p||'d';openRkAdmin._p=p;if(!admK())return toast('เฉพาะแอดมิน');
  modal('<button class="xbtn" onclick="closeM()">✕</button><h3>🎲 ฉายาและกรอบรอบนี้</h3><p class="tag2">กำลังโหลด…</p>','rkadm');
  let j;try{const r=await fetch(API+'?a=rkprev&fmt=json&key='+encodeURIComponent(admK())+(roll?'&roll='+roll:''));j=await r.json();if(!j.keys)throw 0}catch(e){return modal('<button class="xbtn" onclick="closeM()">✕</button><h3>🎲 ฉายาและกรอบ</h3><p>โหลดไม่ได้ (คีย์แอดมินถูกไหม?)</p>','rkadm')}
@@ -32467,6 +32467,29 @@ const blk=()=>{const o=LS.get('murim_adm_abr',null)||{},f=o.fr&&frOf(o.fr);
  <label style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" ${o.on?'checked':''} onchange="admAbWeekly(this.checked)"> 🗓️ สุ่มใหม่เองทุกสัปดาห์ (ไม่ซ้ำสัปดาห์ก่อน)</label>
  ${AB_P.map(p=>`<div style="display:flex;align-items:center;gap:14px;margin-top:10px"><div style="flex:0 0 64px;text-align:center">${frWrap('<span class="frph sm">🙂</span>',p[0])}</div><div style="min-width:0;flex:1"><b>${esc(p[1])}</b><div class="tag2" style="margin-top:3px">${esc((frOf(p[0])||{}).n||'')} · ${p[2]}</div></div></div>`).join('')}</div>`};
 const _oR=window.openRkAdmin;if(typeof _oR==='function')window.openRkAdmin=async function(){const r=await _oR.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='rkadm'&&!m.querySelector('.admAbP')){const b=[...m.querySelectorAll('button.pbtn')].find(x=>/สุ่มชุด/.test(x.textContent));if(b)b.insertAdjacentHTML('afterend',blk())}}catch(e){console.error(e)}return r}})()}catch(e){console.error(e)}
+// ===== 🎲 แอดมิน: สุ่มกรอบ+ฉายาจิตวิญญาณยุทธ์ · ไม่ซ้ำอันเดิม · เปิดสุ่มใหม่เองตามเวลา (ทุกสัปดาห์) =====
+try{(()=>{
+const SL_F=[['f_cl1',1],['f_cl2',2],['f_cl3',3]];
+const SL_T=()=>{const o=[];['d','w','m'].forEach(p=>[1,2,3].forEach(r=>{const t=CHM_T.l[p][r];if(t&&!o.includes(t))o.push(t)}));return o};
+const wkId=()=>Math.floor((Date.now()+7*3600e3-4*86400e3)/604800e3);
+const KEY='murim_adm_slr';
+const st=()=>{const o=LS.get(KEY,null)||{};return{on:!!o.on,wk:o.wk|0,fr:o.fr||'',tt:o.tt||''}};
+const save=o=>LS.set(KEY,o);
+function admSlRoll(auto){if(!(typeof admK==='function'&&admK()))return;const o=st(),pool=SL_F.filter(p=>p[0]!==o.fr),pick=pool[Math.floor(Math.random()*pool.length)];if(!pick)return;
+ try{const g=frGet();SL_F.forEach(p=>{if(!g.own.includes(p[0]))g.own.push(p[0])});frSet(g)}catch(e){}
+ const tp=SL_T().filter(t=>t!==o.tt),tt=tp[Math.floor(Math.random()*tp.length)]||o.tt;
+ save({on:o.on,wk:wkId(),fr:pick[0],tt});frEquip(pick[0]);try{if(S&&S.alive)S.title=tt}catch(e){}
+ const f=frOf(pick[0]);toast((auto?'🎲 สัปดาห์ใหม่ — ':'🎲 ')+'สุ่มได้ '+(f?f.n:pick[0])+' · ฉายา '+tt)}
+window.admSlRoll=admSlRoll;window.admSlWeekly=v=>{const o=st();o.on=!!v;if(v)o.wk=wkId();save(o);toast(v?'🎲 เปิดสุ่มจิตวิญญาณยุทธ์รายสัปดาห์':'ปิดสุ่มรายสัปดาห์')};
+const tick=()=>{try{if(typeof admK!=='function'||!admK())return;const o=st();if(o.on&&o.wk!==wkId())admSlRoll(1)}catch(e){}};
+setInterval(tick,60000);setTimeout(tick,4500);
+const blk=()=>{const o=st(),f=o.fr&&frOf(o.fr);
+ return`<div class="item admSlP"><b>⭕ ทวีปจิตวิญญาณยุทธ์</b><p class="tag2" style="margin:2px 0 6px">สุ่มกรอบวงแหวน 1 ใน 3 กับฉายาจิตวิญญาณยุทธ์ ไม่ซ้ำอันเดิม · ${o.fr?'ตอนนี้ <b>'+esc(f?f.n:o.fr)+'</b> · ฉายา <b>'+esc(o.tt||'')+'</b>':'ยังไม่เคยสุ่ม'}</p>
+ <div class="adg"><button class="pbtn" onclick="admSlRoll();openRkAdmin()">🎲 สุ่มกรอบ/ฉายาจิตวิญญาณยุทธ์</button></div>
+ <label style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" ${o.on?'checked':''} onchange="admSlWeekly(this.checked)"> 🗓️ สุ่มใหม่เองทุกสัปดาห์ (ไม่ซ้ำสัปดาห์ก่อน)</label>
+ ${SL_F.map(p=>`<div style="display:flex;align-items:center;gap:14px;margin-top:10px"><div style="flex:0 0 64px;text-align:center">${frWrap('<span class="frph sm">🙂</span>',p[0])}</div><div style="min-width:0;flex:1"><b>${esc(CHM_T.l.m[p[1]])}</b><div class="tag2" style="margin-top:3px">${esc((frOf(p[0])||{}).n||'')} · อันดับ ${p[1]}</div></div></div>`).join('')}</div>`};
+const _oR=window.openRkAdmin;if(typeof _oR==='function')window.openRkAdmin=async function(){const r=await _oR.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='rkadm'&&!m.querySelector('.admSlP')){const a=m.querySelector('.admAbP');if(a)a.insertAdjacentHTML('afterend',blk());else{const b=[...m.querySelectorAll('button.pbtn')].find(x=>/สุ่มชุด/.test(x.textContent));if(b)b.insertAdjacentHTML('afterend',blk())}}}catch(e){console.error(e)}return r}
+})()}catch(e){console.error(e)}
 // ===================== 🌐 โลกชุดเจาะลึก: วัยเด็กตามโลก · มรดกทายาท · สรุปชีวิตตามโลก · เหตุการณ์ข้ามโลก · ของเฉพาะโลก =====================
 try{(()=>{
 const W=window._wld,W2=window._wld2;if(!W||!W2)return;
