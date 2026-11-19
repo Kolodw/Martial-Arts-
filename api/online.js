@@ -2368,6 +2368,9 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     const arWalPub = v => ({ c: v.c, own: v.own, pity: v.pity | 0, stk: v.stk | 0, q: v.q });
     const arLock = async () => !!(await cmd('SET', 'arwl:' + id, 1, 'NX', 'PX', 2500));
     const arUnlock = () => cmd('DEL', 'arwl:' + id);
+    if (a === 'ar2n') { // แจ้งเตือนเบา ๆ: มีคนท้าเงากี่ครั้ง (อ่านอย่างเดียว ไม่ล้างตัวนับ)
+      if (!okId(id)) return res.json({ nw: 0 }); const dn = await cmd('HGET', 'ardefn', id); return res.json({ nw: +dn || 0 })
+    }
     if (a === 'ar2') {
       if (!okId(id)) return res.json({ err: 'id' }); await arSettle();
       const [tk, rt, top, dl, dn, wt, pk0] = await Promise.all([arTk(0), arRt(id), cmd('ZREVRANGE', 'ars:' + W, 0, 9, 'WITHSCORES'), cmd('LRANGE', 'ardef:' + id, 0, 19), cmd('HGET', 'ardefn', id), cmd('ZREVRANGE', 'arwin:' + W, 0, 9, 'WITHSCORES'), cmd('HGET', 'arpk', id)]);

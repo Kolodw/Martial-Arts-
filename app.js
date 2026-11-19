@@ -42551,3 +42551,60 @@ async function cloudNewer(){try{
 }catch(e){}}
 setTimeout(cloudNewer,9000);
 })()}catch(e){console.error('cnewer',e)}
+
+// ---------- บันทึกวงศ์ตระกูล + เป้าหมายข้ามชีวิต · เหตุการณ์ใหญ่กลางเกม · ฉายาบนการ์ดแชร์ ----------
+try{(()=>{
+const GK='murim_gl';
+const gl=()=>{let o=LS.get(GK,null);if(!o||typeof o!=='object')o={};o.d=o.d||{};o.s=Object.assign({lives:0,maxAge:0,kills:0,kids:0,gen:1,peak:0},o.s||{});return o};
+const GOALS=[
+ {id:'rev',ic:'🩸',n:'ผู้ชำระแค้น',d:'ล้างแค้นตระกูลครบทุกชื่อ',ok:s=>!!(s.flags&&s.flags.oRev)},
+ {id:'cent',ic:'🎂',n:'อายุครบร้อย',d:'มีชีวิตถึง 100 ปี',ok:s=>s.age>=100},
+ {id:'peak',ic:'🏔️',n:'ยอดแห่งยุค',d:'ถึงระดับขั้นสูงมาก (ขั้นที่ 12 ขึ้นไป)',ok:()=>realmIdx()>=Math.min(12,REALMS.length-1)},
+ {id:'kill',ic:'⚔️',n:'ร้อยศพ',d:'ล้มคู่ต่อสู้ 100 คนในชีวิตเดียว',ok:s=>(s.kills||0)>=100},
+ {id:'peace',ic:'🕊️',n:'มือสะอาด',d:'อายุ 60 ขึ้นไปโดยไม่ปลิดชีพใคร',ok:s=>s.age>=60&&!(s.kills>0)},
+ {id:'fam',ic:'👨‍👩‍👧‍👦',n:'ตระกูลใหญ่',d:'มีลูก 5 คนขึ้นไป',ok:s=>(s.children||[]).length>=5},
+ {id:'rich',ic:'💰',n:'เศรษฐียุทธภพ',d:'มีเงิน 1 ล้านตำลึง',ok:s=>s.money>=1e6},
+ {id:'fame',ic:'📣',n:'เลื่องลือทั่วหล้า',d:'ชื่อเสียง 100,000',ok:s=>s.fame>=1e5},
+ {id:'gen3',ic:'🏮',n:'สามชั่วคน',d:'เล่นถึงรุ่นที่ 3 ของตระกูล',ok:s=>(s.gen||1)>=3},
+ {id:'l10',ic:'📚',n:'สิบชีวิต',d:'เล่นครบ 10 ชีวิต',ok:()=>gl().s.lives>=10}
+];
+function glEval(){try{if(!S||S._glDone)return;S._glDone=1;const o=gl(),s=o.s;s.lives++;s.maxAge=Math.max(s.maxAge,S.age|0);s.kills+=S.kills|0;s.kids+=(S.children||[]).length;s.gen=Math.max(s.gen,S.gen||1);s.peak=Math.max(s.peak,realmIdx());
+ const nw=[];GOALS.forEach(g=>{if(!o.d[g.id]){let ok=false;try{ok=g.ok(S)}catch(e){}if(ok){o.d[g.id]=Date.now();nw.push(g)}}});LS.set(GK,o);S._glNew=nw.map(g=>g.id)}catch(e){console.error('glEval',e)}}
+window.glLine=function(){try{const o=gl(),ids=((S&&S._glNew&&S._glNew.length)?S._glNew:Object.keys(o.d).sort((a,b)=>o.d[b]-o.d[a])).slice(0,2);return ids.map(i=>{const g=GOALS.find(x=>x.id===i);return g?g.ic+g.n:''}).filter(Boolean).join(' · ')}catch(e){return''}};
+window.glOpen=function(){try{const o=gl(),s=o.s,n=Object.keys(o.d).length;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📜 บันทึกวงศ์ตระกูล</h3>
+ <div class="box" style="padding:8px"><b>สถิติตลอดทุกชีวิต</b><p class="tag2">เล่นมาแล้ว ${s.lives} ชีวิต · อายุสูงสุด ${s.maxAge} ปี · รุ่นสูงสุด ${s.gen} · ล้มคู่ต่อสู้รวม ${fmt(s.kills)} · ลูกหลานรวม ${fmt(s.kids)}</p></div>
+ <h4>🎯 เป้าหมายข้ามชีวิต (${n}/${GOALS.length})</h4>`+GOALS.map(g=>{const t=o.d[g.id];return`<div class="item" style="${t?'':'opacity:.7'}"><div class="h"><b>${g.ic} ${g.n}</b><span>${t?'✅ สำเร็จ':'🔒'}</span></div><p class="tag2">${g.d}${t?' · '+new Date(t).toLocaleDateString('th-TH'):''}</p></div>`}).join('')+`<p class="tag2">เป้าหมายนับเมื่อจบชีวิต · ฉายาที่ทำสำเร็จจะขึ้นบนการ์ดแชร์</p>`,'glog')}catch(e){console.error(e)}};
+{const _eg=endGame;endGame=function(){try{glEval()}catch(e){}let r;try{r=_eg.apply(this,arguments)}finally{try{const E=$('end');if(E&&S&&S._glNew&&S._glNew.length&&!E.querySelector('.glNew')){const b=document.createElement('div');b.className='box glNew';b.style.cssText='margin:8px 0;padding:8px';b.innerHTML='<b>🎯 เป้าหมายข้ามชีวิตที่สำเร็จ</b><br>'+S._glNew.map(i=>{const g=GOALS.find(x=>x.id===i);return g?`${g.ic} <b>${g.n}</b> — <span class="tag2">${g.d}</span>`:''}).join('<br>');const h=E.querySelector('h2,h3');if(h&&h.parentNode===E)E.insertBefore(b,h.nextSibling);else E.insertBefore(b,E.firstChild)}}catch(e){}}return r}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal'),s=m&&m.querySelector('.svStat');if(s&&!m.querySelector('.glB')){s.insertAdjacentHTML('afterend',`<button class="gbtn glB" style="width:100%;margin:2px 0 6px" onclick="glOpen()">📜 บันทึกวงศ์ตระกูล</button>`)}}catch(e){}return r}}
+// ---- เหตุการณ์ใหญ่กลางเกม ทุก ~9 ปี ช่วงอายุ 30-65 ----
+const BIG=[
+ ()=>choice('⚔️ สงครามระหว่างสำนัก','สองสำนักใหญ่เปิดศึกกัน ทั้งสองฝ่ายส่งคนมาขอให้คุณเลือกข้าง',[
+  {t:'🛡️ เข้าข้างฝ่ายธรรมะ',s:'ได้ชื่อเสียง เสี่ยงบาดเจ็บ',f(){const w=Math.random()<.65;if(w){S.fame+=fameR(300);S.karma+=8;S.power+=pctPow(.03);log('⚔️ คุณนำพันธมิตรชนะศึก ชื่อเสียงขจรขจาย','epic',true)}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.3));S.fame+=fameR(80);log('⚔️ ฝ่ายคุณพ่ายแพ้ แต่ผู้คนจดจำความกล้า','bad',true)}}},
+  {t:'🕊️ เป็นคนกลางไกล่เกลี่ย',s:'กรรมดี ได้เงินค่าตอบแทน',f(){S.karma+=12;S.money+=inc(R(300,900));S.fame+=fameR(120);log('🕊️ คุณหยุดสงครามได้ด้วยคำพูด ทั้งสองสำนักตอบแทน','good',true)}},
+  {t:'🚪 ปิดประตูไม่ยุ่ง',s:'ปลอดภัย แต่ชื่อเสียงลด',f(){S.fame-=fameR(60);log('🚪 คุณไม่ยุ่งเรื่องนี้ บางคนว่าขลาด บางคนว่าฉลาด','')}}]),
+ ()=>choice('👑 ศึกชิงตำแหน่งประมุขยุทธภพ','ตำแหน่งประมุขว่างลง ผู้กล้าทั่วแคว้นมาแข่งกัน',[
+  {t:'🥊 ลงแข่ง',s:'ดวลหนึ่งนัด ชนะได้รางวัลใหญ่',f(){duel('ผู้ท้าชิงประมุข',total()*(.9+Math.random()*.3),w=>{if(w){S.fame+=fameR(1200);S.power+=pctPow(.05);S.karma+=3;log('👑 คุณได้รับการยอมรับเป็นผู้เก่งที่สุดแห่งยุค','epic',true)}else{S.fame+=fameR(100);S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.25));log('👑 พ่ายในรอบสุดท้าย แต่ได้เรียนรู้มาก','bad',true)}})}},
+  {t:'📖 เป็นกรรมการตัดสิน',s:'ได้ชื่อเสียงเล็กน้อย กรรมดี',f(){S.fame+=fameR(200);S.karma+=6;S.int+=6;log('📖 คุณตัดสินอย่างเที่ยงธรรม เป็นที่นับถือ','good',true)}},
+  {t:'🍶 ดูอยู่ห่าง ๆ',s:'ไม่มีอะไรเกิดขึ้น',f(){log('🍶 คุณนั่งดื่มชาดูศึกจากหอสูง','')}}]),
+ ()=>choice('🌾 ทุพภิกขภัยครั้งใหญ่','ข้าวยากหมากแพงทั่วแคว้น ชาวบ้านอดอยาก',[
+  {t:'🍚 เปิดยุ้งข้าวแจกจ่าย',s:'เสียเงิน ได้กรรมดีมาก',f(){const c=Math.round(Math.max(200,S.money*.2));S.money=Math.max(0,S.money-c);S.karma+=18;S.fame+=fameR(350);log(`🍚 คุณใช้เงิน ${fmtM(c)} ตำลึงช่วยผู้คน ชื่อคุณถูกพูดถึงไปทั่ว`,'good',true)}},
+  {t:'💰 กักตุนขายแพง',s:'ได้เงินมาก กรรมลด',f(){const g=Math.round(Math.max(500,S.money*.3));S.money+=g;S.karma-=15;S.fame-=fameR(100);log(`💰 กำไร +${fmtM(g)} ตำลึง แต่ผู้คนก่นด่า`,'bad',true)}},
+  {t:'🧘 บำเพ็ญในถ้ำ ไม่ยุ่ง',s:'พลังเพิ่มเล็กน้อย',f(){S.power+=pctPow(.02);S.qi+=4;log('🧘 ฤดูแล้งนี้คุณฝึกจนทะลวงหลายจุด','')}}]),
+ ()=>choice('📜 สหายเก่าขอความช่วยเหลือ','สหายเก่าถูกใส่ร้ายและหนีมาซ่อนที่บ้านคุณ ผู้ไล่ล่ากำลังตามมา',[
+  {t:'🤝 ซ่อนและช่วยเขา',s:'เสี่ยงปะทะ ได้เพื่อนแท้',f(){if(Math.random()<.6){S.karma+=10;S.fame+=fameR(200);S.int+=5;log('🤝 คุณพิสูจน์ความบริสุทธิ์ให้เขา มิตรภาพแน่นแฟ้นกว่าเดิม','good',true)}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.25));S.money=Math.max(0,S.money-Math.round(S.money*.1));log('🤝 ผู้ไล่ล่าบุกมาถึงบ้าน คุณบาดเจ็บแต่ช่วยเขาไว้ได้','bad',true)}}},
+  {t:'🙈 ปฏิเสธ ไม่รู้จัก',s:'ปลอดภัย กรรมลด',f(){S.karma-=10;log('🙈 คุณปิดประตูใส่หน้าสหายเก่า เขามองคุณเป็นครั้งสุดท้าย','bad',true)}}])
+];
+{const E=EVENTS;E.push({w:5,cd:3,c:s=>s.age>=30&&s.age<=65&&s.alive&&!(s.beastMode&&!s.beastMode.human)&&(s.age-((s.flags&&s.flags.bigY)||0)>=9),f(){S.flags=S.flags||{};S.flags.bigY=S.age;ch(BIG)()}})}
+// ---- ฉายาบนการ์ดแชร์ ----
+{const f=window.shareCard;if(typeof f==='function'){window.shareCard=function(){const x=document.createElement;let line='';try{line=glLine()}catch(e){}if(!line)return f.apply(this,arguments);const cc=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(){const c=cc.apply(this,arguments);try{if(c&&c.fillText&&!c._gl){c._gl=1;const ft=c.fillText.bind(c);c.fillText=function(t,a,b){const r=ft.apply(null,arguments);if(String(t).indexOf('มาลองเล่นดู')===0){const s=c.fillStyle,fo=c.font;c.fillStyle='#ffc23a';c.font='22px sans-serif';ft('🏅 '+line,34,300);c.fillStyle=s;c.font=fo}return r}}}catch(e){}return c};try{return f.apply(this,arguments)}finally{setTimeout(()=>{HTMLCanvasElement.prototype.getContext=cc},0)}}}}
+})()}catch(e){console.error('glblock',e)}
+
+// ---------- แจ้งเตือนตอนเปิดเกม: มีคนท้าเงาในลานประลองหมื่นเงา (อ่านอย่างเดียว) ----------
+try{(()=>{
+async function arNote(){try{if(!onlineOK||!pid||document.hidden||!LS.get('murim_arU',0))return;if(Date.now()-LS.get('murim_arnT',0)<4*3600*1000)return;LS.set('murim_arnT',Date.now());
+ const j=await api('ar2n',{});if(!j||!(j.nw>0))return;
+ island({big:1,pri:1,ms:10000,ic:'🏟️',h:'เงาของคุณถูกท้า',t:`ระหว่างที่คุณไม่อยู่ มีคนมาท้าเงาของคุณ ${j.nw} ครั้ง`,d:'แตะเพื่อดูบันทึกและล้างแค้น',act:{t:'ดูลาน',f:()=>{try{openOnline('arena')}catch(e){}}}})}catch(e){}}
+{const _ap=arPage;arPage=async function(){try{LS.set('murim_arU',1)}catch(e){}return _ap.apply(this,arguments)}}
+setTimeout(arNote,14000);
+})()}catch(e){console.error('arnote',e)}
