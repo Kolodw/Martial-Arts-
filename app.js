@@ -3517,7 +3517,7 @@ function openSaveCode(){const c=S?saveCode():'';modal(`<button class="xbtn" oncl
  ${S?`<p class="tag2">หรือรหัสยาว — ย้ายเฉพาะชีวิตนี้ (${fmt(c.length)} ตัวอักษร ใช้ได้แม้ไม่มีเน็ต)</p><textarea class="crin" rows="3" readonly onclick="this.select()">${c}</textarea><button class="gbtn" style="width:100%;margin:6px 0" onclick="try{navigator.clipboard.writeText(saveCode()).then(()=>toast('คัดลอกแล้ว'),()=>toast('คัดลอกไม่ได้ — กดค้างที่ช่องรหัสแล้วคัดลอกเอง'))}catch(e){toast('คัดลอกไม่ได้ — กดค้างที่ช่องรหัสแล้วคัดลอกเอง')}">📋 คัดลอกรหัส</button>`:''}
  ${onlineOK?`<div class="item"><b>☁️ ย้ายทั้งโปรไฟล์ (แนะนำ)</b><p class="tag2">เซฟทุกช่อง สมุดตำนาน ความสำเร็จ ฉายา กรอบ ไปด้วยครบ · ได้รหัสสั้น 8 ตัว ใช้ได้ 30 วัน</p><button class="pbtn" style="width:100%" onclick="cloudPut()">☁️ ฝากโปรไฟล์ทั้งหมด → รับรหัส</button></div>`:''}
  ${(onlineOK||LS.get('murim_cloudErr',null))?`<div class="item"><b>☁️ เซฟอัตโนมัติบนเซิร์ฟเวอร์</b><p class="tag2">เกมเซฟขึ้นเซิร์ฟเวอร์เองทุกประมาณ 5–10 นาทีขณะเล่น${LS.get('murim_cloudT',0)?' · ล่าสุด '+ago(LS.get('murim_cloudT',0)):' · ยังไม่เคยสำเร็จบนเครื่องนี้'}${cloudErrTxt()}<br>รหัสประจำเครื่องนี้ (ใช้โหลดเซฟล่าสุดในเครื่องอื่น อย่าให้ใคร):</p><div class="px" style="font-size:13px;word-break:break-all;user-select:all">${myCloudCode()}</div><button class="gbtn" style="width:100%;margin-top:6px" onclick="cloudNow()">☁️ เซฟขึ้นเซิร์ฟเวอร์ตอนนี้</button></div>`:''}
- <p class="tag2" style="margin-top:8px">นำเข้าเซฟ: วางรหัสยาว${onlineOK?' · รหัสสั้น 8 ตัว · หรือรหัสประจำเครื่อง':''}</p><textarea id="ldCode" class="crin" rows="2"></textarea><button class="gbtn" style="width:100%;margin-top:6px" onclick="const v=$('ldCode').value.trim();(/^[A-Za-z0-9]{6,24}-[A-Za-z0-9]{6,20}$/.test(v)&&onlineOK)?cloudPull(v):(v.length<=12&&onlineOK?cloudGet(v):loadCode(v))">📥 นำเข้า</button>`,'savecode')}
+ <p class="tag2" style="margin-top:8px">นำเข้าเซฟ: วางรหัสยาว${onlineOK?' · รหัสสั้น 8 ตัว · หรือรหัสประจำเครื่อง':''}</p><textarea id="ldCode" class="crin" rows="2"></textarea><button class="gbtn" style="width:100%;margin-top:6px" onclick="importAny($('ldCode').value)">📥 นำเข้า</button>`,'savecode')}
 
 // ---------- 13) ออนไลน์ ----------
 const ONL_HOST=h=>/vercel\.app$|(^|\.)1inanovel\.com$/.test(h);const API=ONL_HOST(location.hostname)||location.hostname==='localhost'?'/api/online':'https://www.1inanovel.com/api/online';
@@ -44047,3 +44047,24 @@ const KEEP=/🪦|ทายาท|ปลายทาง|จบชีวิต|ต
 window.mwEvGapSet=function(){const L=[1,2,3];const v=L[(L.indexOf(gap())+1)%L.length];LS.set('murim_mwEvGap',v);toast(v===1?'เหตุการณ์ยุคปัจจุบัน: ทุกปี (แบบเดิม)':`เหตุการณ์ยุคปัจจุบัน: ไม่เกิน 1 เรื่องต่อ ${v} ปี`);try{openMenu()}catch(e){}};
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(S&&S.mw){const m=$('modal'),sv=m&&m.querySelector('.svStat');if(sv&&!m.querySelector('.mwGapB')){const v=gap();sv.insertAdjacentHTML('afterend',`<button class="gbtn mwGapB" style="width:100%;margin:2px 0 6px" onclick="mwEvGapSet()">⏳ ความถี่เหตุการณ์: ${v===1?'ทุกปี':'1 เรื่อง / '+v+' ปี'} <small class="tag2">(แตะเพื่อเปลี่ยน)</small></button>`)}}}catch(e){}return r}}
 })()}catch(e){console.error('mwgap',e)}
+
+// ---------- นำเข้าเซฟ: ทนต่อรหัสที่คัดลอกมาเพี้ยน (ช่องว่าง ขึ้นบรรทัด ตัวอักษรล่องหน ขีดยาว ข้อความนำหน้า) · บอกสาเหตุให้ชัด ----------
+try{(()=>{
+const ZW=/[​-‍⁠﻿­]/g,DASH=/[‐-―−﹘﹣－]/g;
+const waitOn=()=>new Promise(r=>{if(onlineOK)return r(true);let n=0;const t=setInterval(()=>{if(onlineOK||++n>16){clearInterval(t);r(!!onlineOK)}},500)});
+window.importAny=async function(raw){let v=String(raw||'').replace(ZW,'').replace(DASH,'-').trim();if(!v)return toast('วางรหัสก่อน');
+ const flat=v.replace(/\s+/g,'');
+ // 1) รหัสประจำเครื่อง XXXX-YYYY (ดึงออกมาแม้มีข้อความอื่นปน)
+ const dm=/([A-Za-z0-9]{6,24})\s*-\s*([A-Za-z0-9]{6,20})/.exec(v);
+ if(dm&&flat.length<=60){const code=(dm[1]+'-'+dm[2]).toUpperCase();if(!(await waitOn()))return toast('ยังเชื่อมต่อเซิร์ฟเวอร์ไม่ได้ — เช็คอินเทอร์เน็ตแล้วลองใหม่');
+  try{const j=await api('cload&p='+dm[1].toLowerCase()+'&tk='+dm[2].toLowerCase());if(j&&j.d){loadCode(j.d);closeM();return}}catch(e){}
+  return modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☁️ ไม่พบเซฟของรหัสนี้</h3><p>รหัส <b>${esc(code)}</b> ถูกรูปแบบ แต่บนเซิร์ฟเวอร์ยังไม่มีเซฟของรหัสนี้</p><ul style="padding-left:18px;line-height:1.7"><li>ที่เครื่องเดิม เปิดเกม → 💾 ย้ายเซฟข้ามเครื่อง → กด <b>เซฟขึ้นเซิร์ฟเวอร์ตอนนี้</b> แล้วรอจนขึ้นว่าสำเร็จ</li><li>ถ้าเครื่องเดิมขึ้นข้อความสีแดง ให้แคปส่งมาที่ 🐞 แจ้งบั๊ก</li><li>หรือใช้ <b>รหัสยาว</b> / <b>ฝากโปรไฟล์ → รหัสสั้น 8 ตัว</b> แทน</li></ul>`,'imp')}
+ // 2) รหัสสั้น 8 ตัว (ฝากโปรไฟล์)
+ if(/^[A-Za-z0-9]{4,12}$/.test(flat)){if(!(await waitOn()))return toast('รหัสสั้นต้องใช้อินเทอร์เน็ต — ยังเชื่อมต่อไม่ได้');return cloudGet(flat)}
+ // 3) รหัสยาว (base64) — ตัดช่องว่าง รองรับ base64url เติม = ให้ครบ
+ let b=flat.replace(/-/g,'+').replace(/_/g,'/');const m4=b.length%4;if(m4===2)b+='==';else if(m4===3)b+='=';
+ let d=null;try{d=JSON.parse(decodeURIComponent(escape(atob(b))))}catch(e){}
+ if(d&&d.S){try{const n=freeSlot();LS.set(slotKey(n),d);toast('นำเข้าเซฟแล้ว (ช่อง '+n+')');renderLegends();closeM()}catch(e){toast('นำเข้าไม่สำเร็จ — พื้นที่เก็บเต็ม ลองลบช่องเซฟเก่า')}return}
+ const tooShort=flat.length<2000&&!/^[A-Za-z0-9]{4,12}$/.test(flat);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>❌ รหัสไม่ถูกต้อง</h3><p>${tooShort?'รหัสที่วางสั้นเกินกว่าจะเป็นรหัสยาว และไม่ตรงกับรหัสสั้น/รหัสประจำเครื่อง':'รหัสยาวน่าจะ<b>ไม่ครบ</b> — แอปแชทหลายแอป (เช่น LINE, Messenger) ตัดข้อความยาว ๆ ทิ้งบางส่วน'}</p><p class="tag2">วางมาได้ ${fmt(flat.length)} ตัวอักษร</p><ul style="padding-left:18px;line-height:1.7"><li>แนะนำ: ที่เครื่องเดิมกด <b>☁️ ฝากโปรไฟล์ทั้งหมด → รับรหัส</b> ได้รหัสสั้น 8 ตัว พิมพ์เองได้</li><li>หรือใช้ <b>รหัสประจำเครื่อง</b> (รูปแบบ XXXX-YYYY)</li><li>ถ้าจะใช้รหัสยาว ให้ส่งเป็นไฟล์โน้ต/อีเมลถึงตัวเอง ไม่ส่งผ่านแชท</li></ul>`,'imp')};
+})()}catch(e){console.error('importAny',e)}
