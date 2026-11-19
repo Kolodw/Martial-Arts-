@@ -39684,14 +39684,14 @@ const capOf=G=>G.rings.length>=9?100:(G.rings.length+1)*10;
 const svInit=()=>{if(!S.sv)S.sv={aw:0,sp:[],lv:0,rings:[],seen:{},hy:-9};return S.sv};
 function roll(){const r=Math.random(),rr=r<.02?3:r<.12?2:r<.4?1:0;const L=SP.filter(x=>x[5]===rr);return ch(L)[0]}
 // ---------- พิธีปลุกดวงจิต (อายุ 6) ----------
-function awaken(){const G=svInit();if(G.aw)return;G.aw=1;if(window._svFail&&window._svFail(G))return;const ids=[roll()];if(Math.random()<.03){let b=roll(),n=0;while(b===ids[0]&&n++<9)b=roll();ids.push(b)}
+function awaken(){const G=svInit();if(G.aw)return;G.aw=1;if(window._svFail&&window._svFail(G))return;const ids=[roll()];if(Math.random()<.05){let b=roll(),n=0;while(b===ids[0]&&n++<9)b=roll();ids.push(b)}
  G.sp=ids.map(id=>({id,rev:0}));const best=Math.max(...G.sp.map(s=>spNow(s).r));
  const inn=[[1,4],[3,6],[5,8],[8,10]][best];G.lv=Math.min(10,R(inn[0],inn[1])+(ids.length>1?1:0));
  try{const B=LS.get('murim_svbook',{})||{};ids.forEach(id=>B[id]=1);LS.set('murim_svbook',B)}catch(e){}
  const t=G.sp.map(s=>{const p=spNow(s);return`${p.ic} <b style="color:${RAR[p.r][1]}">${p.n}</b> <span class="tag2">(${TY[p.t][0]} ${TY[p.t][1]} · ${RAR[p.r][0]})</span>`}).join(' และ ');
  const hidden=G.sp.some(s=>spOf(s.id)[6]&&!s.rev);
  const cls=ids.length>1||best>=3||G.lv>=10?'myth':best>=2?'epic':'';
- choice('⭕ พิธีปลุกดวงจิต',`อายุหกขวบ ผู้ปลุกจิตประจำหมู่บ้านวางลูกแก้วหกลูกรอบตัวคุณ แสงพุ่งขึ้นจากฝ่ามือ —<br><br>${t}<br><br>พลังจิตแต่กำเนิด <b>ระดับ ${G.lv}</b>${G.lv>=10?' — <b>เต็มแต่กำเนิด!</b>':''}${ids.length>1?'<br><b>ดวงจิตคู่!</b> หนึ่งในหมื่นคนจะมีแบบนี้':''}${hidden&&best===0?'<br><span class="tag2">เด็กคนอื่นหัวเราะ… แต่ดวงจิตของคุณสั่นเบาๆ เหมือนมีอะไรซ่อนอยู่ข้างใน</span>':''}`,[
+ choice('⭕ พิธีปลุกดวงจิต',`อายุหกขวบ ผู้ปลุกจิตประจำหมู่บ้านวางลูกแก้วหกลูกรอบตัวคุณ แสงพุ่งขึ้นจากฝ่ามือ —<br><br>${t}<br><br>พลังจิตแต่กำเนิด <b>ระดับ ${G.lv}</b>${G.lv>=10?' — <b>เต็มแต่กำเนิด!</b>':''}${ids.length>1?'<br><b>👯 ดวงจิตคู่!</b> ราวหนึ่งในยี่สิบคนเท่านั้นที่ได้ดวงจิตสองดวง':''}${hidden&&best===0?'<br><span class="tag2">เด็กคนอื่นหัวเราะ… แต่ดวงจิตของคุณสั่นเบาๆ เหมือนมีอะไรซ่อนอยู่ข้างใน</span>':''}`,[
   {t:'✊ ตั้งใจจะเป็นผู้ฝึกจิต',s:'เริ่มฝึกทันที',f(){G.lv=Math.min(capOf(G),G.lv+1);log(`⭕ คุณกำดวงจิตไว้ในมือ — ทางของผู้ฝึกจิตเริ่มต้นที่นี่ (ระดับ ${G.lv})`,cls,true)}},
   {t:'🏡 ใช้ชีวิตธรรมดาไปก่อน',s:'ฝึกช้าลงช่วงแรก',f(){G.slow=S.age+4;S.cha+=3;log('🏡 คุณเลือกเล่นกับเพื่อนในหมู่บ้านอีกสักพัก ดวงจิตยังรอคุณอยู่','',true)}}])}
 // ---------- ฝึกรายปี ----------
@@ -39771,7 +39771,7 @@ const mark=k=>{X().f[k]=S.age};
 const gap=(k,n)=>F(k)!=null&&S.age-F(k)>=n;
 const no=k=>F(k)==null;
 const act=g=>(g.dorm&&g.sp.length>1)?g.sp.slice(0,1):g.sp;
-const tp=k=>{const g=S&&S.sv;return!!(g&&g.aw===1&&act(g).some(s=>spNow(s).t===k))};
+const tp=k=>{const g=S&&S.sv;return!!(g&&g.aw===1&&(act(g).some(s=>spNow(s).t===k)||(window._svTy&&window._svTy(g)===k)))};
 const main=()=>{const g=S.sv;return g&&g.sp.length?spNow(g.sp[0]):null};
 const nm=()=>{const g=S.sv,p=main();if(!p)return'ดวงจิต';return g.fused&&g.sp[1]?`${p.n}×${spNow(g.sp[1]).n}`:p.n};
 const ic=()=>{const p=main();return p?p.ic:'⭕'};
@@ -43705,3 +43705,70 @@ function rescueEv(){choice('🦸 เหตุการณ์ตรงหน้�
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(on()){const g=$('modal').querySelector('.mgrid'),x=X();if(g&&!g.querySelector('.mwXB'))g.insertAdjacentHTML('afterbegin',`<button class="opt mwXB" onclick="closeM();openMwFeed()">📱 ฟีดโซเชียล<small>${x.nw?x.nw+' โพสต์ใหม่':'โลกพูดถึงคุณ'}</small></button><button class="opt mwXB" onclick="closeM();openMwJob()">💼 งานเสริม<small>${x.job?JOB[x.job.k].L[x.job.lv]:'ยังไม่มี'}</small></button><button class="opt mwXB" onclick="closeM();openMwMap()">🗺️ ย่านในเมือง<small>${LOC()[x.loc][1]}</small></button>`)}}catch(e){}return r}}
 window._b58={feedYear,arena,shock,linAct,rescueEv,jobUp,X,post};
 })()}catch(e){console.error('block58',e)}
+
+// ---------- ⭕ วิญญาณยุทธ์ รอบ 3 (ข้อเสนอผู้เล่น): สายตามวงแหวน · เลือกวงแหวนหลายสาย · กระดูกวิญญาณ 6 ส่วน · แอนิเมชันวงแหวน · ระลอก 1: แคว้น สมุนไพร ----------
+try{(()=>{
+const B=window._blk34;if(!B)return;const {BEAST,TIER,spNow}=B;
+const on=()=>!!(S&&S.alive&&S.ch==='soul'&&S.sv&&S.sv.aw===1);
+const free=()=>!(choice._cur||modalOpen)&&!(typeof DU!=='undefined'&&DU);
+const R2=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pk=a=>a[R2(0,a.length-1)];
+const TY={atk:['⚔️','สายโจมตี'],def:['🛡️','สายป้องกัน'],sup:['🌿','สายสนับสนุน'],ctrl:['🌀','สายควบคุม'],agi:['💨','สายว่องไว']};
+const tc=t=>TIER[Math.max(0,Math.min(TIER.length-1,t|0))][2];
+// สายของสัตว์ (เดาจากชื่อ) — วงแหวนใหม่ได้สายของสัตว์ที่ล่ามา
+function beastTy(n){n=String(n||'');if(/งู|ใย|แมงมุม|ผีเสื้อ|เถา|ตะขาบ|แมงป่อง|ปลาหมึก|หมอก|วังวน/.test(n))return'ctrl';if(/เต่า|หมี|หิน|ศิลา|ช้าง|เกราะ|แรด|ภู|กระดอง/.test(n))return'def';if(/นก|เหยี่ยว|อินทรี|กระต่าย|เสือดาว|ลม|หงส์|จิ้งจอก|ค้างคาว|ม้า/.test(n))return'agi';if(/สมุนไพร|บัว|ต้นไม้|กวาง|ดอก|กระเรียน|วาฬ|ปลา/.test(n))return'sup';return'atk'}
+// สายหลัก = นับคะแนน ดวงจิตละ 2 · วงแหวนละ 1
+function svTy(g){if(!g||g.aw!==1||!g.sp.length)return null;const v={};g.sp.forEach(s=>{const t=spNow(s).t;v[t]=(v[t]||0)+2});(g.rings||[]).forEach(r=>{if(r.ty)v[r.ty]=(v[r.ty]||0)+1});let best=spNow(g.sp[0]).t,bv=v[best]||0;for(const k in v)if(v[k]>bv){best=k;bv=v[k]}return best}
+window._svTy=svTy;
+// ---- แอนิเมชันวงแหวน ----
+const css=document.createElement('style');css.textContent=`.svFx{position:fixed;inset:0;z-index:99980;pointer-events:none;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.svFx .rg{position:absolute;width:150px;height:150px;border-radius:50%;border:8px solid var(--c);box-shadow:0 0 30px var(--c),inset 0 0 20px var(--c);animation:svIn 1.6s cubic-bezier(.3,.9,.3,1) forwards}
+.svFx .rg:nth-child(2){animation-delay:.15s;opacity:.6}.svFx .ic{font-size:64px;animation:svPulse 1.6s ease;filter:drop-shadow(0 0 16px var(--c))}.svFx .tx{position:absolute;bottom:22%;background:#000c;color:#fff;padding:8px 16px;border-radius:12px;font-weight:700;border:2px solid var(--c);animation:svTx 2.2s ease forwards;text-align:center}
+@keyframes svIn{0%{transform:scale(3) rotateX(70deg);opacity:0}40%{opacity:1}100%{transform:scale(.55) rotateX(70deg);opacity:0}}@keyframes svPulse{50%{transform:scale(1.3)}}@keyframes svTx{0%{opacity:0;transform:translateY(20px)}15%,80%{opacity:1;transform:none}100%{opacity:0}}
+.svStrip{display:flex;justify-content:center;gap:5px;margin:2px 0 6px;perspective:300px}.svStrip i{width:22px;height:22px;border-radius:50%;border:4px solid var(--c);box-shadow:0 0 8px var(--c);animation:svUp .5s cubic-bezier(.2,1.5,.4,1) both;animation-delay:calc(var(--k)*90ms);transition:transform .2s,box-shadow .2s}.svStrip i.hit{transform:scale(1.6);box-shadow:0 0 22px var(--c),0 0 6px #fff}
+@keyframes svUp{from{transform:translateY(30px) scale(.2);opacity:0}}.svSk{text-align:center;font-weight:700;font-size:13.5px;min-height:18px;color:#b47bff;transition:opacity .3s}
+@media (prefers-reduced-motion:reduce){.svFx,.svStrip i{animation:none!important}}`;document.head.appendChild(css);
+function fx(t,ic,txt){try{const d=document.createElement('div');d.className='svFx';d.style.setProperty('--c',tc(t));d.innerHTML=`<div class="rg"></div><div class="rg"></div><div class="ic">${ic||'⭕'}</div><div class="tx">${txt}</div>`;document.body.appendChild(d);setTimeout(()=>d.remove(),2300)}catch(e){}}
+// ---- กระดูกวิญญาณ ----
+const BP=[['head','กะโหลก','🧠','ปัญญา +','int'],['body','ลำตัว','🫀','พลังชีวิตสูงสุด +','hp'],['la','แขนซ้าย','💪','พลังยุทธ์ +','pow'],['ra','แขนขวา','🦾','พลังยุทธ์ +','pow'],['ll','ขาซ้าย','🦵','ว่องไว (หลบ) +','pow'],['rl','ขาขวา','🦿','ว่องไว (หลบ) +','pow']];
+const BDROP=[0,0,.05,.1,.16,.24,.32,.4,.5];
+function boneGive(t,beast){const g=S.sv;g.bone=g.bone||{};const free=BP.filter(b=>!g.bone[b[0]]||g.bone[b[0]].t<t);if(!free.length)return;const b=pk(free),old=g.bone[b[0]];g.bone[b[0]]={t,n:`กระดูก${b[1]}${beast}`};
+ const m=(t+1)*(old?.5:1);let eff='';if(b[4]==='int'){const v=Math.round(5*m);S.int+=v;eff=`ปัญญา +${v}`}else if(b[4]==='hp'){const v=Math.round(S.maxHp*.04*m);S.maxHp+=v;S.hp+=v;eff=`พลังชีวิตสูงสุด +${fmt(v)}`}else{const v=pctPow(.015*m);S.power+=v;eff=`พลังยุทธ์ +${fmt(v)}`}
+ log(`🦴 <b>ได้กระดูกวิญญาณ${b[1]}</b> จาก${beast} (${TIER[t][0]}) — ${eff}${old?' · แทนที่กระดูกเดิม':''}`,'myth',true);setTimeout(()=>fx(t,'🦴',`🦴 กระดูกวิญญาณ${b[1]}<br><small>${TIER[t][0]}ของ${esc(beast)}</small>`),2400)}
+// ---- เฝ้าดูวงแหวนใหม่: ใส่สาย · แอนิเมชันดูดซับ · ลุ้นกระดูก ----
+setInterval(()=>{try{if(!on())return;const g=S.sv;if(!g._tyMig){g._tyMig=1;const st=spNow(g.sp[0]).t;g.rings.forEach(r=>{if(!r.ty)r.ty=st});g._rc=g.rings.length;return}
+ if(g._rc==null)g._rc=g.rings.length;if(g.rings.length>g._rc){for(let i=g._rc;i<g.rings.length;i++){const r=g.rings[i];if(!r.ty)r.ty=beastTy(r.b);const sp=spNow(g.sp[0]);fx(r.t,sp.ic,`⭕ หลอมวงแหวนวงที่ ${i+1}<br><small>${TIER[r.t|0][0]} · ${TY[r.ty][0]} ${TY[r.ty][1]} · 「${esc(r.sk||'')}」</small>`);if(Math.random()<(BDROP[r.t|0]||0))boneGive(r.t|0,r.b)}
+  const nt=svTy(g);if(g._lastTy&&nt!==g._lastTy)log(`🔄 วงแหวนของคุณเปลี่ยนแนวทางพลัง — สายหลักตอนนี้คือ <b>${TY[nt][0]} ${TY[nt][1]}</b>`,'epic',true);g._lastTy=nt}g._rc=g.rings.length;if(!g._lastTy)g._lastTy=svTy(g)}catch(e){}},900);
+// ---- ล่าวงแหวน: บอกสายของสัตว์ + มีตัวเลือกสัตว์ต่างสายในขั้นปลอดภัย ----
+{const _hx=window._svHuntX;window._svHuntX=(g0,i,safe,opts)=>{if(_hx)_hx(g0,i,safe,opts);try{
+ opts.forEach(o=>{const m=/^(\S+)\s(.+?)\s·\s/.exec(o.t||'');if(m&&!o._ty){const ty=beastTy(m[2]);o._ty=1;o.s=`${TY[ty][0]} ${TY[ty][1]} · ${o.s||''}`}});
+ const st=Math.min(3,safe),have=new Set(opts.filter(o=>o._ty).map(o=>beastTy((/^(\S+)\s(.+?)\s·\s/.exec(o.t)||[])[2])));
+ const alt=BEAST[st].filter(b=>!have.has(beastTy(b[0]))).sort(()=>Math.random()-.5).slice(0,2);
+ alt.forEach(b=>{const ty=beastTy(b[0]);opts.splice(Math.max(0,opts.length-1),0,{t:`${TIER[st][1]} ${b[0]} · ${TIER[st][0]}`,s:`${TY[ty][0]} ${TY[ty][1]} · ปลอดภัย · ทางเลือกต่างสาย`,_ty:1,f(){const mult=[.35,.65,.95,1.25][st];duel(`${b[0]} (${TIER[st][0]})`,Math.max(5,Math.round(total()*mult)),w=>{if(!S||!S.alive)return;if(!w){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.15));log(`🩸 ${b[0]}หนีไป — ลองใหม่ปีหน้า`,'bad');return}const go=()=>B.absorb(st,b);if(window._svWin)window._svWin(st,b,go);else go()})}})})}catch(e){console.error('svhx3',e)}}}
+// ---- หน้าดวงจิต: สายหลัก · สายของแต่ละวง · กระดูก · แคว้น · คู่แข่ง ----
+{const _os=window.openSoul;window.openSoul=function(){const r=_os.apply(this,arguments);try{if(!on())return r;const g=S.sv,m=$('modal');const ty=svTy(g);
+ const h=m.querySelector('h4');const rows=[...m.querySelectorAll('h4 ~ div')].filter(d=>/วงที่ \d/.test(d.textContent));rows.forEach((d,i)=>{const rg=g.rings[i];if(rg&&rg.ty&&!d.querySelector('.svT'))d.querySelector('span:last-child').insertAdjacentHTML('beforeend',` <span class="tag2 svT">· ${TY[rg.ty][0]} ${TY[rg.ty][1]}</span>`)});
+ const box=`<div class="item"><b>สายหลักตอนนี้: ${TY[ty][0]} ${TY[ty][1]}</b><br><span class="tag2">ดวงจิตนับ 2 เสียง วงแหวนนับวงละ 1 เสียง — เลือกวงแหวนต่างสายเพื่อเปลี่ยนแนวทางได้ ได้ผลพิเศษของทั้งสายดวงจิตและสายหลัก</span></div>`;
+ const bones=`<h4>🦴 กระดูกวิญญาณ ${Object.keys(g.bone||{}).length}/6</h4><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px">${BP.map(b=>{const x=(g.bone||{})[b[0]];return`<div class="item" style="text-align:center;padding:5px;margin:0;${x?`border-color:${tc(x.t)};box-shadow:0 0 8px ${tc(x.t)}`:'opacity:.5'}"><div style="font-size:20px">${b[2]}</div><small>${b[1]}</small>${x?`<br><small class="tag2">${TIER[x.t][0]}</small>`:''}</div>`}).join('')}</div><p class="tag2">ได้จากการหลอมวงแหวนพันปีขึ้นไป ยิ่งวงแก่ยิ่งมีโอกาส</p>`;
+ const RG=REG.find(x=>x[0]===g.reg)||REG[0];const rv=(g.rv||[]).map(x=>`<div style="margin:2px 0">${x.ic} <b>${esc(x.n)}</b> <span class="tag2">· ${esc(x.sp)} · ระดับจิต ${x.lv}${x.w||x.l?` · ชนะ ${x.w|0} แพ้ ${x.l|0}`:''}</span></div>`).join('');
+ const wv=`<h4>🗺️ ${RG[1]} ${RG[2]}</h4><p class="tag2">${RG[3]}</p>${rv?`<h4>⚔️ คู่แข่งรุ่นเดียวกัน</h4>${rv}`:''}`;
+ if(h)h.insertAdjacentHTML('beforebegin',box);const bk=m.querySelector('button[onclick="openSoulBook()"]');if(bk)bk.insertAdjacentHTML('beforebegin',bones+wv)}catch(e){console.error('svos3',e)}return r}}
+// ---- ปลดปล่อยวงแหวนตอนดวล + วงแหวนสว่างตอนใช้ท่า ----
+{const _dd=drawDuel;drawDuel=function(fin){const r=_dd.apply(this,arguments);try{if(!on()||!S.sv.rings.length)return r;const m=$('modal');if(!m||m.dataset.k!=='duel')return r;const g=S.sv;
+ let st=m.querySelector('.svStrip');if(!st){const h=m.querySelector('h3');if(!h)return r;h.insertAdjacentHTML('afterend',`<div class="svStrip">${g.rings.map((x,k)=>`<i style="--c:${tc(x.t)};--k:${k}"></i>`).join('')}</div><div class="svSk"></div>`);return r}
+ if(!fin&&Math.random()<.55){const k=R2(0,g.rings.length-1),x=g.rings[k],I=st.children[k],sk=m.querySelector('.svSk');if(I){I.classList.add('hit');setTimeout(()=>I.classList.remove('hit'),600)}if(sk){sk.style.color=tc(x.t);sk.textContent=`วงที่ ${k+1} 「${spNow(g.sp[0]).n}·${x.sk||''}」`;sk.style.opacity=1;clearTimeout(sk._t);sk._t=setTimeout(()=>sk.style.opacity=0,900)}}}catch(e){}return r}}
+// ===== ระลอก 1: แคว้น · สมุนไพรวิเศษ (เนื้อหาของเกมเอง · คู่แข่งใช้ระบบ 👥 ทีมและคู่แข่งที่มีอยู่แล้ว) =====
+const REG=[['north','❄️','แคว้นหมอกเหนือ','ภูเขาหิมะและหมาป่าเงิน คนที่นี่อดทนเหมือนน้ำแข็ง'],['gold','🌾','ที่ราบตะวันทอง','ทุ่งกว้างที่ตั้งของสถาบันจิตยุทธ์ชื่อดังหลายแห่ง'],['isle','🌊','หมู่เกาะคลื่นคราม','สัตว์วิญญาณทะเลและพ่อค้าข้ามสมุทร'],['wood','🌳','ป่าต้องห้ามพันพฤกษ์','สมุนไพรวิเศษเกิดที่นี่ แต่สัตว์วิญญาณพันปีก็เช่นกัน'],['jade','🏯','นครหลวงหยกขาว','ราชสำนักและตระกูลใหญ่ ที่ที่ชื่อเสียงมีค่ากว่าทอง']];
+const HERB=[['🌺','ดอกจันทร์กลืนจิต','ระดับจิต +3 (ไม่เกินคอขวด)',g=>{g.lv=Math.min(B.capOf(g),g.lv+3)}],['🍀','หญ้าเก้าใบน้ำค้าง','พลังชีวิตสูงสุด +8%',()=>{const v=Math.round(S.maxHp*.08);S.maxHp+=v;S.hp+=v}],['🍄','เห็ดเงาราตรี','ความผูกพันกับดวงจิต +12',g=>{g.bond=Math.min(100,(g.bond||50)+12)}],['🌸','บัวหิมะพันปี','หลอมเกินขีดครั้งหน้าเสี่ยงน้อยลงมาก',g=>{g.herbSafe=1}],['🔥','ผลไฟพันปี','พลังยุทธ์ +5%',()=>{S.power+=pctPow(.05)}],['🌿','รากหยกเขียว','ฟื้นพลังชีวิตเต็ม · กรรม +3',()=>{S.hp=S.maxHp;S.karma+=3}]];
+{const _rk=window._svRisk;window._svRisk=(g,t,over)=>{let v=_rk?_rk(g,t,over):0;if(g&&g.herbSafe&&over>0){g.herbSafe=0;v+=.25;log('🌸 พลังบัวหิมะพันปีประคองเส้นจิตไว้','good')}return v}}
+const RVN=['ไป๋อวี่','หลิงเฟิง','ซูเหยียน','หานเซียว','มู่ชิง','เยี่ยหลาน','ฉินโม่','เสวี่ยอิ๋ง'];
+function init3(){const g=S.sv;if(!g.reg)g.reg=pk(REG)[0];if(false&&!g.rv){const n=RVN.slice().sort(()=>Math.random()-.5).slice(0,4);g.rv=n.map(x=>{const sp=pk(B.SP.filter(p=>p[5]>=1));return{n:x,ic:sp[1],sp:sp[2],lv:Math.max(1,g.lv+R2(-2,3)),w:0,l:0}})}}
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(on()){init3();const g=S.sv;if(g.rv)g.rv.forEach(x=>{if(x.dead)return;x.lv=Math.min(100,x.lv+R2(0,3))});if(g.rv&&S.age%7===0){const x=pk(g.rv);log(`📰 ข่าวจากรุ่นเดียวกัน: <b>${esc(x.n)}</b> (${x.ic} ${esc(x.sp)}) ไต่ถึงระดับจิต ${x.lv} แล้ว${x.lv>g.lv?' — นำหน้าคุณอยู่':''}`,'')}}}catch(e){}return r}}
+const ok=s=>!!(s&&s.alive&&s.ch==='soul'&&s.sv&&s.sv.aw===1&&s.age>=10);
+EVENTS.push({w:2.5,cd:5,c:ok,f(){init3();const g=S.sv,hb=pk(HERB),RG=REG.find(x=>x[0]===g.reg)||REG[0],risk=g.reg==='wood'?.35:.5;
+ choice(`${hb[0]} ${hb[1]}`,`ใน${RG[2]} คุณพบ <b>${hb[1]}</b> ขึ้นอยู่กลางรังสัตว์วิญญาณ<br><span class="tag2">${hb[2]}</span>`,[
+ {t:'🌿 ลอบเก็บ',s:`เสี่ยงถูกพบราว ${Math.round(risk*100)}%`,noFate:1,f(){if(Math.random()<risk){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.2));log(`🩸 สัตว์เฝ้ารังตื่นขึ้น — คุณหนีออกมามือเปล่าพร้อมแผล`,'bad')}else{hb[3](g);log(`${hb[0]} ได้ <b>${hb[1]}</b> — ${hb[2]}`,'epic',true)}}},
+ {t:'⚔️ สู้กับสัตว์เฝ้ารัง',s:'ดวลแล้วเก็บแน่นอน',noFate:1,f(){duel('สัตว์วิญญาณเฝ้ารัง',Math.round(total()*.9),w=>{if(w){hb[3](g);log(`${hb[0]} ปราบสัตว์เฝ้ารังได้ — ได้ <b>${hb[1]}</b>`,'epic',true)}else log('🩸 สัตว์เฝ้ารังไล่คุณออกมา','bad')})}},
+ {t:'🙏 ปล่อยไว้',s:'กรรม +',noFate:1,f(){S.karma+=3;log('🙏 คุณปล่อยให้มันเติบโตต่อไป','')}}])}});
+EVENTS.push({w:1.2,cd:10,c:s=>ok(s)&&s.age>=14,f(){init3();const g=S.sv,L=REG.filter(x=>x[0]!==g.reg).sort(()=>Math.random()-.5).slice(0,3);
+ choice('🗺️ ออกเดินทางข้ามแคว้น','กองคาราวานกำลังจะออกเดินทาง มีที่ว่างให้คุณหนึ่งที่',L.map(x=>({t:`${x[1]} ${x[2]}`,s:x[3],noFate:1,f(){g.reg=x[0];S.int+=3;log(`🗺️ คุณย้ายไปอยู่ที่ <b>${x[2]}</b> — ${x[3]}`,'good',true)}})).concat([{t:'🏡 อยู่ที่เดิม',s:'',noFate:1,f(){log('🏡 คุณเลือกอยู่ที่เดิม','')}}]))}});
+})()}catch(e){console.error('sv3',e)}
