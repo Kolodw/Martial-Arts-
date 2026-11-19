@@ -1724,6 +1724,21 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       let mine = null; if (rk != null && +rk >= 20) { const sc = await cmd('ZSCORE', 'dl:' + d, id); const m = jp(await cmd('HGET', 'dlm:' + d, id)); mine = Object.assign({ s: +sc, rank: +rk + 1, me: 1 }, m || {}) }
       return res.json({ d, today, top: await unpack(d, top), n: +n || 0, rank: rk == null ? null : +rk + 1, mine, yd, ytop: await unpack(yd, yt) });
     }
+    if (a === 'mgput' || a === 'mgget') {
+      // สนามฝึกประจำวัน — มินิเกม 1 เกม/วัน (เวลาไทย) เก็บคะแนนดีที่สุดของแต่ละคน
+      const dOf = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10), today = dOf(now);
+      if (a === 'mgput') {
+        if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
+        if (String(b.d || '') !== today) return res.json({ err: 'day' });
+        const c = +(await cmd('INCR', 'mgr:' + id)) || 1; if (c === 1) await cmd('EXPIRE', 'mgr:' + id, 600); if (c > 30) return res.status(429).json({ err: 'rate' });
+        const sc = Math.max(0, Math.min(1000, Math.round(+b.s || 0)));
+        await pipe([['ZADD', 'mg:' + today, 'GT', sc, id], ['HSET', 'mgm:' + today, id, JSON.stringify({ n: clean(String(b.n || ''), 24) || 'ไร้นาม' })], ['EXPIRE', 'mg:' + today, 3 * 86400], ['EXPIRE', 'mgm:' + today, 3 * 86400]]);
+      }
+      const [top, n, rk, my] = await pipe([['ZREVRANGE', 'mg:' + today, 0, 9, 'WITHSCORES'], ['ZCARD', 'mg:' + today], ['ZREVRANK', 'mg:' + today, okId(id) ? id : '-'], ['ZSCORE', 'mg:' + today, okId(id) ? id : '-']]);
+      const ids = [], sc = []; for (let i = 0; i < (top || []).length; i += 2) { ids.push(top[i]); sc.push(+top[i + 1]) }
+      const m = ids.length ? ((await cmd('HMGET', 'mgm:' + today, ...ids)) || []).map(jp) : [];
+      return res.json({ ok: 1, d: today, n: +n || 0, rank: rk == null ? null : +rk + 1, best: my == null ? null : +my, top: ids.map((x, i) => ({ s: sc[i], me: x === id ? 1 : 0, n: (m[i] || {}).n || '?' })) });
+    }
     if (a === 'rrclaim') {
       // ผู้เล่นกู้ตั๋วสุ่ม · VIP · ของแต่ง ที่เติมไว้ ย้ายมาไอดีปัจจุบัน — ยืนยันตัวด้วยข้อมูลที่ตรงกับรายการโอนซึ่งแอดมินยืนยันแล้ว (ชื่อบัญชี + ยอด + เวลา)
       if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
