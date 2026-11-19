@@ -39,5 +39,9 @@ new_sqlite_classes = ["ChatHub"]
 [observability]
 enabled = true
 
+# ⏰ ทุกวัน 12:00 UTC = 19:00 เวลาไทย → push ดึงผู้เล่นที่หายไปกลับมา (action pushre)
+[triggers]
+crons = ["0 12 * * *"]
+
 # ค่าลับ (ใส่ด้วยคำสั่ง wrangler secret put ไม่ต้องเขียนในไฟล์นี้):
-#   VALKEY_URL, ADMIN_KEY, และตัวแปรอื่นที่ตั้งไว้ใน Vercel (ดูรายชื่อใน README)
+#   VALKEY_URL, ADMIN_KEY, CRON_SECRET (ไม่บังคับ ถ้าไม่ตั้งจะใช้ ADMIN_KEY2), และตัวแปรอื่นที่ตั้งไว้ใน Vercel (ดูรายชื่อใน README)

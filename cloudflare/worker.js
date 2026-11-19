@@ -297,4 +297,11 @@ export default {
     // โดเมนเดิม (www) → ใช้ไฟล์หน้าเว็บ
     return env.ASSETS.fetch(request);
   },
+  // ⏰ cron (ตั้งใน wrangler.toml [triggers]) → ส่ง push ดึงผู้เล่นที่หายไปกลับมา (แทน Vercel cron) · ใช้ CRON_SECRET หรือ ADMIN_KEY2 ที่ตั้งไว้ใน secret
+  async scheduled(event, env, ctx) {
+    const key = env.CRON_SECRET || '';
+    const req = new Request('https://1inanovel.com/api/online?a=pushre', { method: 'GET', headers: key ? { authorization: 'Bearer ' + key } : {} });
+    const url = new URL(req.url); if (!key && env.ADMIN_KEY2) url.searchParams.set('key', env.ADMIN_KEY2);
+    ctx.waitUntil(api(key ? req : new Request(url, { method: 'GET' }), url).then(r => r.text()).then(t => console.log('pushre', String(t).slice(0, 300))).catch(e => console.error('pushre err', String(e && e.message || e))));
+  },
 };
