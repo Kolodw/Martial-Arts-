@@ -1649,7 +1649,7 @@ function familyTick(){
   else if(!fired&&sp.aff>85&&Math.random()<.12){joy(10);log(`${sp.n}${sp.p==='อ่อนโยน'?'ชงชาอุ่นๆ รอคุณกลับบ้านทุกคืน':sp.p==='ร่าเริง'?'พาคุณไปเที่ยวงานโคมไฟจนดึก':'นั่งดูดาวกับคุณบนหลังคาบ้าน'} — ความรักของทั้งสองยังหวานเหมือนวันแรก`,'good')}}
  // children
  for(const c of S.children||[]){if(!c.alive)continue;c.age++;
-  const risk=c.age<=5?(F.inf||.05)*.45*(INF_DECAY[c.age-1]||.05)*(S.done.includes('med')||(S.faction&&S.faction.med)?.4:1):c.age>60?.02:c.age>50?.004:.0015;
+  const lb=c.lb||60,risk=c.age<=5?(F.inf||.05)*.3*(INF_DECAY[c.age-1]||.05)*(S.done.includes('med')||(S.faction&&S.faction.med)?.4:1):c.age>lb?.02:c.age>lb-10?.004:.0008;
   if(Math.random()<risk){c.alive=false;joy(-35);log(`💔 ลูก <b>${c.n}</b> จากไปด้วยวัยเพียง ${c.age} ปี`,'bad',true);continue}
   if(!c.fac&&c.age>=10&&c.age<=17&&Math.random()<.18){const ok=FACTIONS.filter(f=>f.need(S.karma,{family:F,gender:c.g,talent:c.tal,int:50}));if(ok.length){c.fac=ch(ok);joy(5);log(`ลูก ${c.n} สอบเข้า<b>${c.fac.n}</b>ได้!`,'good')}}
   if(!c.married&&c.age>=18&&Math.random()<.12){c.married=true;joy(8);log(`ลูก ${c.n} แต่งงาน คุณนั่งเป็นประธานในงานด้วยน้ำตาคลอ`,'good')}
@@ -45595,3 +45595,20 @@ try{const c=document.querySelector('#game .ctrl');if(c&&window.ResizeObserver)ne
 {const _pe=pendBar;pendBar=function(){const r=_pe.apply(this,arguments);try{const b=$('pendBar');if(b){b.classList.toggle('pbTop',b.style.display!=='none'&&LS.get('murim_pendpos','top')!=='bottom')}}catch(e){}return r}}
 addEventListener('resize',pos);setInterval(pos,1500);setTimeout(pos,500);
 })()}catch(e){console.error('block70',e)}
+
+// ---------- 👶 ลูกได้กรรมพันธุ์จากพ่อหรือแม่ + อายุยืนตามสายเลือด (ลูกผู้ฝึกยุทธ์ขั้นสูง/เซียนแก่ช้ากว่าคนธรรมดา) ----------
+try{(()=>{
+const rk=t=>{try{return TALENT.findIndex(x=>x.n===(t&&t.n))}catch(e){return -1}};
+function spTal(){const sp=S.sp;if(!sp)return null;if(sp.tal&&sp.tal.n)return sp.tal;try{const pp=S.spouseP!=null&&typeof peers!=='undefined'?peers[S.spouseP]:null;if(pp&&pp.tal&&pp.tal.n){sp.tal=pp.tal;return sp.tal}}catch(e){}sp.tal=pickW(TALENT).v;return sp.tal}
+function lifeBase(){let b=60;try{b+=Math.max(0,realmIdx())*10;if(S.xian)b+=S.xt?400:150;if(S.sp&&S.sp.tal&&rk(S.sp.tal)>=3)b+=10}catch(e){}return Math.min(b,1200)}
+window._kidTal=function(c){if(!c||c._inh)return;c._inh=1;const me=S.talent,sp=spTal(),r=Math.random();let t=null,from='';
+ if(me&&me.n&&r<.4){t=me;from='พ่อ'}else if(sp&&r<.7){t=sp;from='แม่'}
+ if(S.gender==='หญิง')from=from==='พ่อ'?'แม่':from==='แม่'?'พ่อ':'';
+ // พ่อแม่เก่งทั้งคู่ มีโอกาสลูกเก่งกว่าพ่อแม่ 1 ขั้น
+ try{const a=rk(me),b=rk(sp);if(a>=2&&b>=2&&Math.random()<.15){const up=TALENT[Math.min(TALENT.length-1,Math.max(a,b)+1)];if(up){t=up;from='สายเลือดของพ่อแม่รวมกัน'}}}catch(e){}
+ if(t){c.tal=t;c.from=from}c.lb=lifeBase()};
+{const _sf=syncFamily;syncFamily=function(){const n0=(S&&S.children||[]).length;const lg=log;let held=[];log=function(t,...a){if(/ตั้งชื่อลูกว่า/.test(String(t))){held.push([t,a]);return}return lg.call(this,t,...a)};let r;try{r=_sf.apply(this,arguments)}finally{log=lg}
+ try{(S.children||[]).slice(n0).forEach(c=>{window._kidTal(c);if(S.age>0)lg(`ตั้งชื่อลูกว่า <b>${esc(c.n)}</b> (${esc(c.tal&&c.tal.n||'')}${c.from?` · ได้มาจาก${c.from}`:''})`)})}catch(e){held.forEach(h=>lg(h[0],...h[1]))}return r}}
+// เซฟเดิม: ลูกที่ยังมีชีวิตได้อายุยืนตามสายเลือดปัจจุบัน
+{const _py=passYear;passYear=function(){try{(S&&S.children||[]).forEach(c=>{if(c.alive!==false)c.lb=Math.max(c.lb||0,lifeBase())})}catch(e){}return _py.apply(this,arguments)}}
+})()}catch(e){console.error('kidInh',e)}
