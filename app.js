@@ -43319,6 +43319,7 @@ const G={
  gulp:{n:'กลืนเปลวไฟ',ic:'🔥',how:'กดค้างดูดไฟ 3 ช่วง ปล่อยในโซนทอง เกินโซน = ไฟย้อน',rw:()=>'',init:(B,api)=>hold(B,api,{n:3,lo:.62,hi:.78,ms:1150,ic:'🔥',label:'กดค้างเพื่อดูดไฟ',col:'linear-gradient(#ffe08a,#ff5a1f)'})}
 };
 window._mg2G=G;
+window._mg2H={simon,lanes,hold,btn,rwMoney,rwInt,rwHp,rwKarma,mLv,yearly};
 // ---------- เลือกเกมตามโลก/โหมด ----------
 window.mg2Pick=function(){if(!live0())return false;const C=[];let soul=false;try{soul=CFG.chm===CH_KEYS.indexOf('soul')}catch(e){}
  if(nh())C.push('pounce','moon');else if(S.mw)C.push('stock','rider','typing');
@@ -43326,7 +43327,7 @@ window.mg2Pick=function(){if(!live0())return false;const C=[];let soul=false;try
   if(soul)C.push('drum','drum','drum');if(S.flags&&S.flags.regress)C.push('future','future');if(S.ab)C.push('heart','heart','heart');if(S.dyn)C.push('liar','liar')}
  const k=ch(C);if(!k)return false;S.mgA=S.age;return yearly(k)};
 // สัตว์อสูร/ยุคปัจจุบัน ไม่ผ่าน block55 → มีตัวเรียกเอง
-{const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(live0()&&S.age!==a0&&!auto&&free()&&(nh()||S.mw)&&S.age>=6&&S.age>=(S.mg2N||0)&&Math.random()<.09){S.mg2N=S.age+R(4,7);setTimeout(()=>{if(live0()&&free()&&!auto)mg2Pick()},450)}}catch(e){console.error('mg2py',e)}return r}}
+{const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(live0()&&S.age!==a0&&!auto&&free()&&(nh()||S.mw)&&S.age>=6&&S.age>=(S.mg2N||0)&&Math.random()<(S.mw?.18:.09)){S.mg2N=S.age+(S.mw?R(3,5):R(4,7));setTimeout(()=>{if(live0()&&free()&&!auto)mg2Pick()},450)}}catch(e){console.error('mg2py',e)}return r}}
 // ---------- ช่วงชี้เป็นชี้ตาย ----------
 const once=f=>{const R0=Math.random;let u=0;Math.random=function(){if(!u){u=1;Math.random=R0;return f(R0())}return R0()}};
 // ⚔️ ดวลอันตราย: อ่านท่า
@@ -43461,3 +43462,55 @@ window.mg2Pick=function(){if(!S||!S.alive)return false;const nh=!!(S.beastMode&&
 // สนามฝึกประจำวันเพิ่มเกมใหม่
 try{const add=['dummy','jar','poem','forge','climb','swordfly','talisman','spiritherb','judge','mathq','chat','torch','petition','turning'];if(window._mg2DG)add.forEach(x=>{if(!window._mg2DG.includes(x))window._mg2DG.push(x)})}catch(e){}
 })()}catch(e){console.error('block57',e)}
+
+// ---------- 🎮 มินิเกมยุคปัจจุบัน แยกตามโลกพิเศษและอาชีพ ----------
+try{(()=>{
+const G=window._mg2G,H=window._mg2H;if(!G||!H)return;
+const {simon,lanes,hold,btn,rwMoney,rwInt,rwHp,rwKarma,yearly}=H;
+const RP=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+// ของดี/ของเสียโผล่ แตะเฉพาะของดี
+function tapGood(B,api,{good,bad,N,bg,pr}){let gh=0,bh=0,gt=0,sp=0;N=N||9;B.innerHTML=`<div id="m3A" style="position:relative;height:190px;border:2px solid var(--line);border-radius:12px;background:${bg||'#0001'};overflow:hidden"></div><div id="m3H" style="text-align:center;margin:4px">✔ 0 · ✕ 0</div>`;const A=$('m3A');
+ const nx=()=>{if(!api.live())return;if(sp>=N){api.end();return}sp++;const g=Math.random()<(pr||.62);if(g)gt++;const e=document.createElement('button');e.textContent=g?good[RP(0,good.length-1)]:bad[RP(0,bad.length-1)];e.style.cssText=`position:absolute;left:${RP(4,80)}%;top:${RP(4,70)}%;font-size:34px;background:none;border:0;padding:4px;cursor:pointer;transition:transform .12s`;A.appendChild(e);let ok=0;
+  e.onpointerdown=ev=>{ev.preventDefault();if(ok)return;ok=1;if(g){gh++;e.style.transform='scale(1.4)';try{sfx('hit')}catch(x){}}else{bh++;e.textContent='❌';try{vib(60)}catch(x){}}const h=$('m3H');if(h)h.textContent=`✔ ${gh} · ✕ ${bh}`};
+  setTimeout(()=>{e.remove();setTimeout(nx,110)},Math.round((820-sp*28)*api.ez))};setTimeout(nx,400);return{sc:()=>gt?Math.max(0,(gh-bh*.7)/gt):0}}
+// เข็มแกว่ง แตะตอนใกล้ยอด n ครั้ง
+function peak(B,api,{ic,label,n}){n=n||4;const res=[];let raf,t0=performance.now(),sp=1.6+Math.random()*.6;B.innerHTML=`<div style="position:relative;height:160px;width:70px;margin:0 auto;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:#0001"><div style="position:absolute;left:0;right:0;top:0;height:${12*api.ez}%;background:#e8b83a88"></div><div id="m3N" style="position:absolute;left:-2px;right:-2px;height:6px;background:#d9534f;box-shadow:0 0 8px #f40"></div></div><div id="m3H" style="text-align:center;margin:6px;font-size:20px">${'○ '.repeat(n)}</div>${btn(ic+' '+label)}`;
+ let v=0;const lp=t=>{if(!api.live())return;v=(Math.sin((t-t0)/1000*sp*Math.PI)+1)/2;const N=$('m3N');if(N)N.style.bottom=(v*100)+'%';raf=requestAnimationFrame(lp)};raf=requestAnimationFrame(lp);
+ B.querySelector('.pbtn').onpointerdown=e=>{e.preventDefault();if(!api.live())return;const s=Math.max(0,1-(1-v)/(.12*api.ez)*.5);res.push(Math.min(1,s));sp+=.25;const h=$('m3H');if(h)h.textContent=res.map(x=>x>=.9?'◉':x>.45?'◐':'✕').concat(Array(n).fill('○')).slice(0,n).join(' ');if(res.length>=n)api.end()};
+ return{sc:()=>res.length?res.reduce((a,b)=>a+b,0)/n:0,stop:()=>cancelAnimationFrame(raf)}}
+const rwMF=x=>{let f=Math.round(10+40*x);try{S.fame=(S.fame||0)+f}catch(e){}return rwMoney(x)+` · ชื่อเสียง +${f}`};
+Object.assign(G,{
+ // 🌃 ใต้ดิน
+ ugDeal:{n:'โต๊ะต่อรอง',ic:'🃏',mt:'เจ้ามือย่าน',how:'ทายไพ่ใบต่อไป สูงหรือต่ำ · ถูก 3 ติด หรือหยุดเก็บเงินเมื่อไหร่ก็ได้',t:15,rw:G.cards.rw,init:G.cards.init},
+ ugRun:{n:'หนีตำรวจในซอย',ic:'🚓',mt:'เงาในซอยเปลี่ยว',how:'ปัดหลบด่านตรวจ ห้ามโดน 3 ครั้ง',t:9,rw:rwMoney,init:(B,api)=>lanes(B,api,{me:'🏃',ob:'🚓',bg:'#1c1c28',speed:1.1})},
+ // 👻 ผีไทย
+ ghChant:{n:'ท่องคาถากันผี',ic:'📿',mt:'หมอผีประจำหมู่บ้าน',how:'จำลำดับยันต์ที่สว่าง แล้วกดตาม',rw:x=>rwKarma(x)+' · '+rwInt(x),init:(B,api)=>simon(B,api,{syms:['🪬','📿','🕯️','🌙','🔔','🪷','⭐','🔱','🌀'],cols:3,len:5,show:430,title:'ยันต์กำลังเรืองแสง…'})},
+ ghIncense:{n:'ประคองธูปไม่ให้ดับ',ic:'🕯️',mt:'ผู้ประคองเปลวธูป',how:'กดค้างให้ควันลอยถึงโซนทอง 3 ครั้ง แล้วปล่อย',rw:x=>rwKarma(x)+' · '+rwHp(x),init:(B,api)=>hold(B,api,{n:3,lo:.62,hi:.8,ms:1500,ic:'🕯️',label:'กดค้าง ประคองธูป',col:'linear-gradient(#e8e0ff,#9a8ac8)'})},
+ // 🌀 ฮันเตอร์
+ huGate:{n:'ปิดเกตมอนสเตอร์',ic:'🌀',mt:'ผู้ปิดเกต',how:'แตะมอนสเตอร์ให้ทัน ห้ามโดนพลเรือน',rw:rwMF,init:(B,api)=>tapGood(B,api,{good:['👹','👺','🦇','🐺','🦂'],bad:['🧑','👩','🧒'],N:10,bg:'#1a1030'})},
+ huMeasure:{n:'ตรวจวัดพลังที่สมาคม',ic:'📟',mt:'ค่าพลังทะลุเครื่องวัด',how:'แตะตอนเข็มขึ้นสุด 4 ครั้ง ยิ่งเป๊ะค่ายิ่งสูง',rw:rwMF,init:(B,api)=>peak(B,api,{ic:'💥',label:'ปล่อยพลัง!',n:4})},
+ // 🧟 ซอมบี้
+ zbRun:{n:'หนีฝูงซอมบี้',ic:'🧟',mt:'ผู้รอดชีวิตตัวจริง',how:'ปัดหลบฝูงซอมบี้ ห้ามโดน 3 ครั้ง',t:9,rw:rwHp,init:(B,api)=>lanes(B,api,{me:'🏃',ob:'🧟',bg:'#20281c',speed:1.15})},
+ zbLoot:{n:'ค้นเสบียงในซูเปอร์ร้าง',ic:'🥫',mt:'นักค้นเสบียง',how:'แตะของกินของใช้ ห้ามแตะของติดเชื้อและซอมบี้',rw:x=>rwHp(x)+' · '+rwMoney(x*.6),init:(B,api)=>tapGood(B,api,{good:['🥫','💧','💊','🔋','🍞'],bad:['🦠','🧟','☣️'],N:10,bg:'#2a2a22'})},
+ // 🏰 หอคอย / 🎮 ระบบเกม
+ twCombo:{n:'กดคอมโบสกิล',ic:'🗡️',mt:'นักกดคอมโบ',how:'จำลำดับสกิลที่บอสอ่อนแอ แล้วกดตาม',rw:rwMF,init:(B,api)=>simon(B,api,{syms:['🗡️','🛡️','🔥','❄️','⚡','💚'],cols:3,len:6,show:400,title:'บอสกำลังเปิดจุดอ่อน…'})},
+ twBoss:{n:'หลบท่าบอส',ic:'💢',mt:'ไม่เคยโดนบอสตี',how:'ปัดหลบท่าโจมตีของบอส ห้ามโดน 3 ครั้ง',t:9,rw:rwMF,init:(B,api)=>lanes(B,api,{me:'🧙',ob:'💢',bg:'#281430',speed:1.2})},
+ // ☄️ วันสิ้นโลก / 💀 เกตชนะ
+ dmMeteor:{n:'หลบเศษอุกกาบาต',ic:'☄️',mt:'ผู้หลบดาวตก',how:'ปัดหลบเศษอุกกาบาต ห้ามโดน 3 ครั้ง',t:9,rw:rwHp,init:(B,api)=>lanes(B,api,{me:'🏃',ob:'☄️',bg:'#2a1408',speed:1.25})},
+ dmShare:{n:'แบ่งเสบียงให้ผู้รอด',ic:'⚖️',mt:'ผู้แบ่งอย่างเที่ยงธรรม',how:'นับน้ำหนักเสบียง แล้วเลื่อนให้เท่ากัน',rw:x=>rwKarma(x)+' · '+rwInt(x),init:G.scale.init},
+ // อาชีพ
+ jgCctv:{n:'จับขโมยในกล้องวงจรปิด',ic:'📹',mt:'ตาเหยี่ยวหน้าจอ',how:'แตะเฉพาะคนแต่งตัวมีพิรุธ ห้ามแตะคนทั่วไป',rw:rwMF,init:(B,api)=>tapGood(B,api,{good:['🕵️','🥷'],bad:['🧑','👩','🧓','🧒','👨‍💼'],N:10,pr:.45,bg:'#14281e'})},
+ jcMoves:{n:'สอนท่าตามจังหวะ',ic:'🥋',mt:'โค้ชตาไว',how:'จำลำดับท่าที่สาธิต แล้วกดตาม',rw:rwMF,init:(B,api)=>simon(B,api,{syms:['👊','🦵','🙌','🤸','🧘','🥋'],cols:3,len:5,show:420,title:'ดูท่าให้ดี…'})},
+ jsJump:{n:'กระโดดตึกฉากเสี่ยงตาย',ic:'🎬',mt:'สตันท์แมนไร้แผล',how:'แตะตอนเข็มขึ้นสุด 4 ครั้ง ช้าไปตก เร็วไปชน',rw:rwMF,init:(B,api)=>peak(B,api,{ic:'🤸',label:'กระโดด!',n:4})},
+ jfRing:{n:'ดวลบนเวที',ic:'🥊',mt:'แชมป์เวทีมวย',how:'จำท่าที่คู่ชกออก แล้วสวนกลับตามลำดับ',rw:rwMF,init:G.strike.init},
+ jhMix:{n:'ผสมยาสมุนไพร',ic:'🌿',mt:'หมอยาประจำย่าน',how:'จำลำดับสมุนไพรตามตำรา แล้วใส่ตาม',rw:x=>rwMoney(x)+' · '+rwHp(x),init:(B,api)=>simon(B,api,{syms:['🌿','🍄','🌸','🫚','🍋','🌶️'],cols:3,len:5,show:430,title:'อ่านตำรายา…'})},
+ jbBeam:{n:'ยกคานให้ได้ระดับ',ic:'🏗️',mt:'ช่างคุมเครน',how:'กดค้างยกคานให้ถึงโซนทอง 3 ครั้ง แล้วปล่อย',rw:rwMoney,init:(B,api)=>hold(B,api,{n:3,lo:.66,hi:.82,ms:1400,ic:'🏗️',label:'กดค้าง ยกคาน',col:'linear-gradient(#ffd27a,#d08a20)'})}
+});
+const WG={under:['ugDeal','ugRun'],ghost:['ghChant','ghIncense'],hunter:['huGate','huMeasure'],loop:['future'],zombie:['zbRun','zbLoot'],tower:['twCombo','twBoss'],game:['twCombo','twBoss'],doom:['dmMeteor','dmShare'],gatewon:['dmMeteor','dmShare','huGate']};
+const JG={rider:['rider'],guard:['jgCctv'],coach:['jcMoves'],stunt:['jsJump'],fight:['jfRing'],office:['typing','stock'],heal:['jhMix'],build:['jbBeam']};
+const _pk=window.mg2Pick;
+window.mg2Pick=function(){try{const M=S&&S.alive&&S.mw;if(!M||(S.beastMode&&!S.beastMode.human))return _pk.apply(this,arguments);
+ const MP=window.mg2Map&&window.mg2Map.mw,C=(MP?(MP[S.focus]||MP._):['stock','rider','typing']).slice();let w=null;if(M.wx&&M.wx.on&&WG[M.wx.id])w=WG[M.wx.id];else if(M.hw>0)w=WG.hunter;if(w)C.push(...w,...w);
+ const j=M.job&&JG[M.job.id];if(j)C.push(...j,...j);
+ let L=C.filter(k=>G[k]&&k!==S.mgLast);if(!L.length)L=C.filter(k=>G[k]);const k=L[Math.floor(Math.random()*L.length)];S.mgLast=k;S.mgA=S.age;return(window._mg2Y||yearly)(k)}catch(e){console.error('mwPick',e);return _pk.apply(this,arguments)}};
+})()}catch(e){console.error('mwmg',e)}
