@@ -46802,3 +46802,16 @@ setInterval(()=>{try{const T=$('title');if(!T||!T.classList.contains('on')||!$('
  set('position',cs.position==='fixed'?'fixed':'absolute');set('top',top+'px');set('right',cs.right);set('left','auto');set('width',ref.offsetWidth+'px');set('height',ref.offsetHeight+'px');const wide=ref.offsetWidth>100;set('flex-direction',wide?'row':'column');set('justify-content',wide?'flex-start':'center');set('gap',wide?'7px':'1px');set('padding',wide?'0 14px':'0');set('font-size',wide?'13px':'10.5px');const sp=b.querySelector('span'),tx=wide?'คัมภีร์ฤดูกาล':'คัมภีร์';if(sp&&sp.textContent!==tx)sp.textContent=tx;
  let c=null;try{c=LS.get('murim_spc',null)}catch(e){}const dt=b.querySelector('.dt');if(dt)dt.style.display=c&&c.can>0?'':'none'}catch(e){}},1000);
 })()}catch(e){console.error('block76',e)}
+
+try{(()=>{
+// 🩸 ระบบเลเวลสูงไม่ตัน (รายงาน: ระบบมารสวรรค์อยู่ Lv.124 นานจนอายุ 1000 ปี)
+// สาเหตุ: EXP ที่ต้องใช้โตแบบยกกำลัง (Lv.124 ≈ 26,000) แต่รางวัลเควสโตแบบเส้นตรง (≈3,200) · เควสชนะดวลต้องชนะ ~19 ครั้งใน 5–7 ปี (ทำไม่ทันในโลกสูง) → ล้มเหลวแล้วโดนหัก EXP
+// แก้: รางวัลเควสอย่างน้อย 30% ของ EXP เลเวลนั้น · เควสชนะจำกัดไม่เกิน 6 + ขั้น/2 · EXP พื้นฐานรายปีตามเลเวล (Lv.40+) · บทลงโทษหัก EXP เหลือไม่เกิน 15%
+const winCap=()=>6+Math.floor(Math.max(0,realmIdx())/2);
+{const _mk=mkQuest;mkQuest=function(k){const q=_mk.apply(this,arguments);try{const s=S.sys;if(q&&s){const m=k==='realm'?2.2:k==='kid'||k==='marry'||k==='house'?1.5:1;q.rw=Math.max(q.rw,Math.round(expNeed(s.lv)*.3*m));if(k==='win'&&q.g>winCap()){q.g=winCap();q.n=`ชนะการต่อสู้ ${q.g} ครั้ง`}}}catch(e){}return q}}
+{const _st=sysTick;sysTick=function(){const r=_st.apply(this,arguments);try{const s=S&&S.sys;if(s&&S.alive&&s.lv>=40&&S.age>=6)gainExp(Math.round(expNeed(s.lv)*.025))}catch(e){}return r}}
+{const _qf=qFail;qFail=function(q){const s=S&&S.sys;let ex=s?s.exp:0;const r=_qf.apply(this,arguments);try{if(s&&ex-s.exp>Math.round(expNeed(s.lv)*.15)){s.exp=Math.max(0,ex-Math.round(expNeed(s.lv)*.15))}}catch(e){}return r}}
+// เซฟเดิม: เควสที่ค้างอยู่ปรับให้ทำได้จริง
+setInterval(()=>{try{const s=S&&S.sys;if(!s||!S.alive||!Array.isArray(s.quests)||s._lvFix===S.age)return;s._lvFix=S.age;
+ s.quests.forEach(q=>{if(!q)return;if(q.k==='win'&&q.g>winCap()){q.g=winCap();q.n=`ชนะการต่อสู้ ${q.g} ครั้ง`}const mn=Math.round(expNeed(s.lv)*.3*sysM());if(q.rw<mn)q.rw=mn})}catch(e){}},3000);
+})()}catch(e){console.error('block77',e)}
