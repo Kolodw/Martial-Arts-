@@ -10506,7 +10506,7 @@ function acConsole(){try{const t=String(new Error().stack||'');return /<anonymou
 function acBig(k){try{return({money:5e6*acW(),fame:5e4,power:1e5,qi:200,int:300,cha:300,age:10,lifespan:200,karma:300})[k]||1e5}catch(e){return 1e5}}
 function acTrap(o){if(!o||typeof o!=='object'||o[AC_SYM])return;try{Object.defineProperty(o,AC_SYM,{value:1});
  AC_TK.forEach(k=>{const d=Object.getOwnPropertyDescriptor(o,k);if(!d||!('value' in d)||!d.configurable)return;let v=d.value;
-  Object.defineProperty(o,k,{enumerable:true,configurable:false,get(){return v},set:function __acS(n){try{if(typeof n==='number'&&typeof v==='number'&&Math.abs(n-v)>Math.abs(v)*.03+5&&!acCaller()){if(acConsole()&&Math.abs(n-v)>Math.max(Math.abs(v)*2,acBig(k))){acFlag('console-'+k);acSus('console-'+k)}else acSus('csm-'+k)}}catch(e){}v=n}})})}catch(e){}}
+  Object.defineProperty(o,k,{enumerable:true,configurable:false,get(){return v},set:function __acS(n){try{if(typeof n==='number'&&typeof v==='number'&&Math.abs(n-v)>Math.abs(v)*.03+5&&!acCaller()){if(acConsole()&&Math.abs(n-v)>Math.max(Math.abs(v)*2,acBig(k))){acSus('console-'+k);try{const H=(S._acH=S._acH||{});H[k]=1;if(k!=='maxHp'&&Object.keys(H).filter(x=>x!=='maxHp').length+(S._acN=(S._acN||0)+1)>=3)acFlag('console-'+k)}catch(e){}}else acSus('csm-'+k)}}catch(e){}v=n}})})}catch(e){}}
 setInterval(()=>{try{if(S&&S.alive&&!S.custom)acTrap(S)}catch(e){}},400);
 // ---- ลายเซ็นเซฟ: แก้ไฟล์เซฟในเครื่องแล้วโหลด = ติดธง ----
 function acH(t){let h=2166136261;t='m1n'+t+'#q7';for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(36)}

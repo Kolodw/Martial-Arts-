@@ -509,7 +509,7 @@ const annPoll = async (ann, id) => {
   } catch { return ann }
 };
 const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
-const SENS_A = new Set(['lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'life', 'live', 'liveend', 'sp', 'nv']);
+const SENS_A = new Set(['lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
 
 function uaMeta(req, now) {
   const ua = String(req.headers['user-agent'] || '');
@@ -2440,7 +2440,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       // ค่าที่ขึ้นเร็วจากการเล่นจริง (กระโดด/เกินเพดานแบบนุ่ม) ไม่บันทึก ไม่ติดธง — บันทึกเฉพาะการแก้ค่า/แก้ไฟล์
       if (/^(jump|cap|pow-age|srv-jump|score|stat)/.test(why)) return res.json({ ok: 1 });
       const fresh = await cmd('SET', 'acsr:' + id + ':' + why, 1, 'NX', 'EX', 3600); if (!fresh) return res.json({ ok: 1 });
-      const st = b.st || {}, hard = /^console/.test(why) && !/^console-hell/.test(why) ? +(await cmd('INCR', 'acfn:' + id)) >= 2 : false; if (/^console/.test(why)) await cmd('EXPIRE', 'acfn:' + id, 86400 * 14);
+      const st = b.st || {}, hard = /^console/.test(why) && !/^console-(hell|maxHp)/.test(why) ? +(await cmd('INCR', 'acfn:' + id)) >= 4 : false; if (/^console/.test(why)) await cmd('EXPIRE', 'acfn:' + id, 86400 * 14);
       const L = [['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(b.n || ''), 24), age: +b.age || 0, why, st: { pow: +st.pow || 0, fame: +st.fame || 0, money: +st.money || 0 }, t: now })], ['LTRIM', 'acsus', 0, 199]];
       if (hard) L.push(['SET', 'acf:' + id, why, 'EX', 86400 * 60], ['SET', 'acfh:' + id, why, 'EX', 86400 * 60]);
       await pipe(L); return res.json({ ok: 1 });
@@ -2692,7 +2692,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (!bad && det) {
           const D = JSON.parse(det), st = D.st || {}, kids = (D.kids || []).length, dis = +((String(D.sect || '').match(/ศิษย์\s*([0-9]+)/) || [])[1] || 0);
           const pw = +st.pow || 0, fm = +st.fame || 0, mn = +st.money || 0, ag = Math.max(1, +e.age || 1);
-          const BIG = v => !isFinite(v) || v > 1e30; if (BIG(+st.int || 0) || BIG(+st.cha || 0) || BIG(fm) || BIG(mn) || kids > 1e7 || BIG(dis) || BIG(pw)) bad = 'stat';
+          const BIG = v => !isFinite(v) || v > 1e150; // ช่วงท้ายเกม (แดนเทพ/กัลป์) ค่าโตเกิน 1e30 ได้จริง if (BIG(+st.int || 0) || BIG(+st.cha || 0) || BIG(fm) || BIG(mn) || kids > 1e7 || BIG(dis) || BIG(pw)) bad = 'stat';
           const powCap = ((e.x ? 60000 : 25000) * (1 + ag / 8) + 300000) * (e.bm ? 12 : 1) * (D.sys ? 3 : 1) * (D.ai ? 3 : 1);
           if (!bad && pw > powCap && ag < 1000) { try { await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(e.n || ''), 24), age: ag, why: 'pow-age', st: { pow: pw, fame: fm, money: mn }, t: now, info: 1 })], ['LTRIM', 'acsus', 0, 199]]) } catch {} }
           if (!bad && ag >= 1000 && pw > powCap * 50) { try { if (await cmd('SET', 'acold:' + id, 1, 'NX', 'EX', 86400)) await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(e.n || ''), 24), age: ag, why: 'pow-old', st: { pow: pw, fame: fm, money: mn }, t: now, info: 1 })], ['LTRIM', 'acsus', 0, 199]]) } catch {} }
