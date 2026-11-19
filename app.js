@@ -43192,9 +43192,14 @@ function lgDot(){try{const b=$('lgTBtn');if(!b)return;const d=b.querySelector('.
 function tBtn(){try{const t=$('title');if(!t||$('lgTBtn'))return;const ref=$('wcBtn')||t.querySelector('button[onclick="goDaily()"]');if(!ref)return;const b=document.createElement('button');b.id='lgTBtn';b.className='gbtn';b.style.cssText='width:100%;margin-top:8px';b.innerHTML='🎁 รับของล็อกอิน';b.onclick=()=>lgOpen();ref.parentNode.insertBefore(b,ref.nextSibling);lgDot()}catch(e){}}
 setTimeout(tBtn,900);{const _rl=renderLegends;renderLegends=function(){const r=_rl.apply(this,arguments);tBtn();return r}}
 let tries=0;const auto=setInterval(async()=>{try{tries++;if(tries>40)return clearInterval(auto);if(typeof onlineOK==='undefined'||!onlineOK)return;clearInterval(auto);if(!(await load()))return;lgDot();
- const dk=new Date(Date.now()+7*3600e3).toISOString().slice(0,10);if(ST.today||LS.get('murim_lgAuto','')===dk)return;
- const go=()=>{const t=$('title');if(modalOpen||choice._cur||(S&&S.alive)||!t||!t.classList.contains('on'))return false;LS.set('murim_lgAuto',dk);lgOpen();return true};
- if(!go()){let n=0;const w=setInterval(()=>{if(go()||++n>120)clearInterval(w)},2000)}}catch(e){}},1500);
+ // ยังไม่รับ = เด้งซ้ำทุกครั้งที่อยู่หน้าแรก (ปิดแล้วเด้งใหม่ใน 20 วิ) · ระหว่างเล่นมีชิป 🎁 บนเกาะ · หายเมื่อรับแล้วเท่านั้น
+ let lastClose=0;const pend=()=>ST&&!ST.today;
+ setInterval(()=>{try{if(!pend())return;const t=$('title');if(modalOpen){if($('modal').dataset.k==='lgin')lastClose=Date.now();return}
+  if(choice._cur||!t||!t.classList.contains('on')||Date.now()-lastClose<20000)return;lgOpen()}catch(e){}},2000);
+ setInterval(()=>{try{if(typeof islChipX!=='function')return;if(pend()&&S&&S.alive)islChipX('lgc','🎁','ยังไม่รับของ',()=>lgOpen());else islChipOff('lgc')}catch(e){}},4000);
+ // ข้ามวัน (เปิดค้างข้ามเที่ยงคืน) → โหลดสถานะใหม่
+ setInterval(()=>{try{if(ST&&ST.today&&onlineOK)load().then(()=>lgDot())}catch(e){}},30*60e3);
+ }catch(e){}},1500);
 // ตั๋วฟรีธรรมดา: ปุ่มแยกในหน้าสุ่มเพิ่ม
 window.rrUseFree=async function(btn){const RR=window._RR;if(!RR)return;if(RR.used>=RR.cap)return toast('ชีวิตนี้ใช้ครบแล้ว');if(btn)btn.disabled=true;try{const j=await api('rruse',{k:'f'});RR.f=+j.f||0;RR.c=+j.c||0;toast(`🎫 ใช้ตั๋วฟรี เหลือ ${RR.f} ใบ`);rerolls++;$('rr').textContent=rerolls;RR.used++;closeM();setTimeout(()=>{doRoll()},150)}catch(e){if(btn)btn.disabled=false;toast(e&&e.message==='none'?'ไม่มีตั๋วฟรีเหลือ':'ใช้ตั๋วไม่สำเร็จ')}};
 {const _rm=window.rrMenu;if(typeof _rm==='function')window.rrMenu=function(){const r=_rm.apply(this,arguments);try{const RR=window._RR;const ins=()=>{const m=$('modal');if(!m||m.querySelector('.rrFree')||!(RR.f>0))return;const b=m.querySelector('[onclick^="rrUsePaid"]');if(!b)return;const host=b.closest('.vx-act,.item,.act')||b.parentNode;host.insertAdjacentHTML('beforebegin',`<div class="item rrFree"><b>🎫 ตั๋วฟรี (ธรรมดา)</b> <span class="tag2">เหลือ ${RR.f} ใบ · ได้จากการจบชีวิต · ไม่การันตี</span><button class="gbtn" style="float:right" onclick="rrUseFree(this)">ใช้ 1 ใบ</button></div>`)};
