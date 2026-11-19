@@ -45791,3 +45791,18 @@ function prog(z){const v=VAL[z.ty]();return z.ty==='surv'?v:(z.ty==='win'?v:v)}
  L.push({k:'rx'+z.i,ic:'🔓',n:`ทางแก้ชะตา: ${z.t}`,p:`แก้ "${z.n}"`,d:wait?'เริ่มนับเมื่ออายุ 8 ปี':`แก้ "${esc(z.n)}" — สำเร็จแล้วเปลี่ยนเป็นพลัง`,gen:1,cur:z.ty==='surv'||z.ty==='win'||z.ty==='fame'||z.ty==='money'||z.ty==='pow'||z.ty==='qi'||z.ty==='int'||z.ty==='kar'?cur:0,need:z.g,how:z.ty==='surv'?`รอดถึงอายุ ${z.g} ปี — ระวังสุขภาพ เลี่ยงเรื่องเสี่ยง`:HOW[z.ty],go:GOF[z.ty]?`setFocus('${GOF[z.ty]}');closeM()`:'',cat:CATM[z.ty]||null,q:z})})}catch(e){}return L}}
 window._rx={gradeOf,shOf,mkTrials};
 })()}catch(e){console.error('rareX',e)}
+
+// ===================== 🌋 รากฐานล้นฟ้า ฉบับแดนเทพ (โลกสุดท้าย — ไม่มีโลกให้ข้าม พลังที่ล้นจึงหลอมเป็นของที่ใช้ได้จริง) =====================
+try{(()=>{const _ch=choice;
+choice=function(title,text,opts){try{if(S&&S.xt&&typeof title==='string'&&/ฟ้าดินรับไม่ไหว/.test(title)&&Array.isArray(opts)&&opts.length>=3&&!opts._god){
+ const o=Math.round(Math.max(0,Math.min(100,Math.log2(Math.max(1,olRatio()))*30-(S.olS||0)))),calm=n=>{S.olS=(S.olS||0)+n};
+ title='🌋 ฟ้าดินแดนเทพสั่นสะเทือน';
+ text=`แม้แต่แดนเทพก็เริ่มรับพลังของคุณไม่ไหว (ล้น ${o}%) — ดวงดาวรอบตัวสั่นไหวทุกครั้งที่คุณหายใจ<br><span class="tag2">แดนเทพคือโลกสุดท้าย พลังที่ล้นไม่มีที่ให้ข้ามไป — เลือกว่าจะหลอมมันเป็นอะไร</span>`;
+ const N=[opts[0],
+  {t:'⏳ หลอมพลังล้นเป็นอายุขัย',s:`อายุขัย +${30+Math.round(o/2)} ปี`,f(){const y=30+Math.round(o/2);S.lifespan=(S.lifespan||0)+y;calm(20);log(`⏳ คุณบีบพลังที่ล้นลงไปในแก่นวิญญาณ ให้มันกลายเป็นเวลา — อายุขัย +${y} ปี`,'epic',true)}},
+  {t:'🌀 กลั่นเป็นปราณเทพ',s:'ลมปราณ ++ · พลัง +',f(){const q=6+Math.round(o/10);S.qi+=q;S.power+=pctPow(.05);calm(20);log(`🌀 คุณนั่งสมาธิบนยอดเขาเมฆเก้าชั้น กลั่นพลังส่วนเกินจนใส — ลมปราณ +${q} · พลัง +5%`,'epic',true)}},
+  opts[2],
+  {t:'⚡ ท้าทัณฑ์เทพ',s:'ดวลกับทัณฑ์ · ชนะ = พลัง +12% และชื่อเสียงก้องแดนเทพ',f(){if(fight('ทัณฑ์เทพที่ถูกส่งมาไล่',total()*1.05)){S.power+=pctPow(.12);S.fame+=400;calm(30);log('⚡ คุณบดทัณฑ์เทพจนแหลกเป็นแสงดาว — เหล่าเทพทั้งเก้าชั้นฟ้าหันมามองพร้อมกัน (พลัง +12% · ชื่อเสียง +400)','myth',true);try{keyAdd('บดทัณฑ์เทพจนแหลกด้วยมือเปล่า')}catch(e){}}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.35));calm(10);log('⚡ สายฟ้าเทพผ่ากลางร่าง คุณร่วงลงจากฟ้าเก้าชั้น — แต่พลังที่ล้นก็ถูกเผาไปส่วนหนึ่ง','bad',true)}}}];
+ N._god=1;opts=N}}catch(e){}return _ch.call(this,title,text,opts)};
+Object.assign(choice,_ch);
+})()}catch(e){console.error('olGod',e)}
