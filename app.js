@@ -44744,8 +44744,11 @@ function estimate(F){const A=act(F);if(!A.length)return 1;const N=1500;let hit=0
 const pTot=(F,pf)=>Math.max(0,Math.min(pf,F.x?1/F.x:1));
 const fmt1=p=>p<=0?'แทบไม่มี':p>=.5?Math.round(p*100)+'%':'1 ใน '+fmt(Math.round(1/p));
 // ปุ่มในหน้าสุ่มเกิด
+try{const st=document.createElement('style');st.textContent=`#birth .brow{flex-wrap:wrap}#vaBtn{flex:1 1 100%;order:-1;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:0;padding:9px 12px;border-radius:12px;border:1.5px solid #c9a24a;background:linear-gradient(90deg,#c9a24a22,#c9a24a08);color:inherit;font:inherit;font-weight:700;font-size:14px;line-height:1.2;cursor:pointer}
+#vaBtn small{font-weight:400;font-size:11.5px;opacity:.75}#vaBtn.lk{border-style:dashed;opacity:.85}`;document.head.appendChild(st)}catch(e){}
 function btn(){try{const rb=$('rerollBtn');if(!rb)return;const row=rb.parentNode;let b=$('vaBtn');if(offM()||!$('birth').classList.contains('on')){if(b)b.remove();return}
- if(!b){row.insertAdjacentHTML('beforeend','<button class="gbtn" id="vaBtn" onclick="vaOpen()"></button>');b=$('vaBtn')}const t=T();b.innerHTML=t>=2?'⚡ สุ่มรัว':'⚡ สุ่มรัว 🔒';b.style.opacity=t>=2?'':'.8'}catch(e){}}
+ if(!b||b.parentNode!==row){if(b)b.remove();row.insertAdjacentHTML('afterbegin','<button type="button" id="vaBtn" onclick="vaOpen()"></button>');b=$('vaBtn')}
+ const t=T(),h=t>=2?`⚡ สุ่มรัว <small>· ให้ระบบสุ่มจนเจอชะตาที่ต้องการ</small>`:`⚡ สุ่มรัว 🔒 <small>· สำหรับผู้สนับสนุน</small>`;if(b.innerHTML!==h)b.innerHTML=h;b.classList.toggle('lk',t<2)}catch(e){}}
 setInterval(btn,1200);{const _gb=goBirth;goBirth=function(){const r=_gb.apply(this,arguments);setTimeout(btn,200);return r}}
 window.vaOpen=function(){const t=T();if(offM())return toast('โหมดนี้สุ่มใหม่ไม่ได้');if(t<2)return vaTeaser();if(t>=3)return vaAdv();return vaSimple()};
 window.vipAutoMenu=window.vaOpen;
