@@ -29093,7 +29093,7 @@ try{const _kbE=window.kpBeyond;if(typeof _kbE==='function'){window.kpBeyond=func
  const MQ=[];
  {const _p=passYear;passYear=function(){inPY++;try{return _p.apply(this,arguments)}finally{inPY--}}}
  const _mG=modal;modal=function(html,k=''){try{const cur=$('modal').dataset.k||'';
-  if(modalOpen&&cur&&cur!==k&&k!=='choice'&&k!=='duel'&&Date.now()-lastTap>1200&&((cur==='choice'&&choice._cur)||inPY)){if(MQ.length<6&&!(k&&MQ.some(q=>q[1]===k)))MQ.push([html,k]);return}}catch(e){}return _mG.apply(this,arguments)};
+  if(modalOpen&&cur&&cur!==k&&k!=='choice'&&k!=='duel'&&k!=='bye'&&Date.now()-lastTap>1200&&((cur==='choice'&&choice._cur)||inPY)){if(MQ.length<6&&!(k&&MQ.some(q=>q[1]===k)))MQ.push([html,k]);return}}catch(e){}return _mG.apply(this,arguments)};
  setInterval(()=>{try{if(!MQ.length||modalOpen||choice._cur||(choice._q&&choice._q.length))return;const[h,k]=MQ.shift();_mG(h,k)}catch(e){}},700);
  {const _sl=startLife;startLife=function(){MQ.length=0;return _sl.apply(this,arguments)}}})();
 
@@ -45652,7 +45652,7 @@ const Q=[];let me=null;window._mgQ=x=>{Q.push(x);me=S};
 {const _py=passYear;passYear=function(){if(Q.length&&S===me&&S&&S.alive)return;return _py.apply(this,arguments)}}
 const flush=()=>{try{if(!Q.length||busy())return;if(me&&S!==me){Q.length=0;return}while(Q.length&&Q[0][0]==='i'){const x=Q.shift();try{island(x[1])}catch(e){}}if(Q.length&&!modalOpen&&!choice._cur&&!(typeof DU!=='undefined'&&DU)){const x=Q.shift();try{if(x[0]==='m')modal(x[1],x[2]);else if(x[0]==='c')choice(...x[1]);else if(x[0]==='d')duel(...x[1])}catch(e){console.error('mgQ run',e)}}}catch(e){}};
 {const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);if(Q.length)setTimeout(flush,0);return r}}
-{const _m=modal;modal=function(html,k){if(busy()&&k!=='mg2'){Q.push(['m',html,k]);me=S;return}return _m.apply(this,arguments)}}
+{const _m=modal;modal=function(html,k){if(busy()&&k!=='mg2'&&k!=='bye'){Q.push(['m',html,k]);me=S;return}return _m.apply(this,arguments)}}
 {const _is=island;island=function(n){if(busy()){Q.push(['i',n]);me=S;return}return _is.apply(this,arguments)};try{window.island=island}catch(e){}}
 setInterval(flush,300);
 })()}catch(e){console.error('mgQ',e)}
@@ -46035,7 +46035,7 @@ try{(()=>{
 const css=document.createElement('style');css.textContent=`.m2Rdy{text-align:center;padding:14px 6px 8px}.m2RdyI{font-size:54px;line-height:1;margin-bottom:6px;animation:aqBo 2s ease-in-out infinite}.m2RdyH{font-size:13.5px;margin:4px 6px 12px;line-height:1.5}
 .m2Go{width:100%;max-width:280px;font-size:17px!important;padding:13px!important;animation:aqP 1.3s infinite}@keyframes aqBo{50%{transform:translateY(-5px)}}`;document.head.appendChild(css);
 const Q=[];const busy=()=>{try{return !!(window._mgBusy&&window._mgBusy())}catch(e){return false}};
-{const _m=modal;modal=function(html,k){if(k!=='mg2'&&busy()){if(Q.length<8)Q.push([this,arguments]);return}return _m.apply(this,arguments)}}
+{const _m=modal;modal=function(html,k){if(k!=='mg2'&&k!=='bye'&&busy()){if(Q.length<8)Q.push([this,arguments]);return}return _m.apply(this,arguments)}}
 setInterval(()=>{try{if(!Q.length||busy()||modalOpen)return;const [t,a]=Q.shift();modal.apply(t,a)}catch(e){}},400);
 })()}catch(e){console.error('block71',e)}
 
@@ -46827,3 +46827,15 @@ setInterval(()=>{try{const s=S&&S.sys;if(!s||!S.alive||!Array.isArray(s.quests)|
 try{(()=>{// ☁️ ทะลวงขึ้นโลกเทพระหว่างอยู่แดนอสูร = พ้นแดนอสูร (เดิมความหิว/สติยังเดินต่อ)
 const _ag=ascendGod;ascendGod=function(){const was=!!(S&&S.ab&&S.ab.on);const r=_ag.apply(this,arguments);try{if(was&&S.ab&&S.ab.on){S.ab.on=0;S.ab.hun=0;log('☁️ <b>คุณพ้นจากแดนอสูรแล้ว</b> — ทะลวงขึ้นโลกเทพ ความหิวและสติของแดนอสูรไม่มีผลอีกต่อไป','good');try{render()}catch(e){}}}catch(e){}return r};
 })()}catch(e){console.error('block78',e)}
+
+// ===================== 🪦 กันชีวิตหาย: ตายแล้วต้องได้หน้าสรุปและบันทึกเสมอ =====================
+// เดิม: ตอนตายเกมลบเซฟทันที แล้วรอให้กด "อำลา" → ถ้าหน้าต่างอำลาถูกคิวค้าง (มีหน้าต่างอื่นเปิดอยู่) แล้วผู้เล่นรีเฟรช ชีวิตนั้นหายทั้งหมด ไม่ขึ้นในชีวิตที่ผ่านมา
+try{(()=>{const PK='murim_pendEnd';
+{const _cd=checkDeath;checkDeath=function(){const was=S&&S.alive;const r=_cd.apply(this,arguments);try{if(was&&S&&S.alive===false&&!S._dt){S._dt=Date.now();try{LS.set(PK,{t:Date.now(),S})}catch(e){}}}catch(e){}return r}}
+{const _rl=recordLife;recordLife=function(){const r=_rl.apply(this,arguments);try{if(S){S._recd=1}LS.del(PK)}catch(e){}return r}}
+function finish(){try{if(!S||S.alive!==false||S._recd)return;try{endGame()}catch(e){console.error('endGame',e)}if(!S._recd){try{recordLife(lifeScore(),'')}catch(e){console.error('recordLife',e)}}}catch(e){}}
+// ระหว่างเล่น: ตายแล้ว 6 วิ ยังไม่มีหน้าต่างอำลา → เปิดหน้าสรุปให้เลย
+setInterval(()=>{try{if(!S||S.alive!==false||S._recd||!S._dt||Date.now()-S._dt<6000)return;if(endGame._busy)return;const k=modalOpen&&$('modal').dataset.k;if(k==='bye')return;finish()}catch(e){}},1500);
+// เปิดเกมใหม่: มีชีวิตที่ตายแต่ยังไม่ถูกบันทึก (เช่น รีเฟรชตอนค้าง) → กู้มาสรุปให้
+setTimeout(()=>{try{const P=LS.get(PK,null);if(!P||!P.S||P.S.alive!==false)return;if(Date.now()-(P.t||0)>14*864e5){LS.del(PK);return}if(S&&S.alive)return;S=P.S;S._dt=1;try{toast('🪦 กู้ชีวิตที่จบไปแต่ยังไม่ได้สรุป — '+(S.name||''))}catch(e){}setTimeout(finish,600)}catch(e){}},2500);
+})()}catch(e){console.error('endGuard',e)}
