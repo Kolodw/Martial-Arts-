@@ -24146,7 +24146,7 @@ const HQ_DROP=['join','rank','house','gear','money','cha','marry','kid','pill','
 const HQN={power:()=>`บ่มเพาะร่างเทพจนพลัง +{g}`,qi:()=>`กลั่นปราณ${hiK()?'จักรวาล':'สวรรค์'} +{g} ปี`,fame:()=>`ให้นามของคุณดังทั่ว${hiK()?'จักรวาลใหม่':'แดนเทพ'} +{g}`,win:()=>'ชนะศึกระดับเทพ {g} ครั้ง',
  art:()=>'หยั่งรู้วิชาใหม่ 1 วิชา',int:()=>'ทำความเข้าใจกฎฟ้าดิน ปัญญา +{g}',karma:()=>'สะสมบุญในภพสูง กรรมดี +{g}',karmaDown:()=>'ก่อกรรมมาร กรรมดิ่งลง {g}',joy:()=>'หาความสุขให้ใจที่อยู่มานาน +{g}'};
 Object.assign(QMK,{
- h_faith:()=>{const g=R(4,7);return[`ให้ผู้คน${hiK()?'ในจักรวาลใหม่':'ในภพล่าง'}ศรัทธาคุณเพิ่ม ${g}`,g,R(9,12)]},
+ h_faith:()=>{const g=R(4,7);return[`ให้ผู้คน${hiK()?'ในจักรวาลใหม่':'ในภพล่าง'}ศรัทธาคุณเพิ่ม ${g}`,g,R(14,18)]},
  h_deed:()=>{const g=R(2,4);return[`ตัดสินชะตาเรื่องราวของ${hiK()?'จักรวาล':'สวรรค์'} ${g} ครั้ง`,g,R(9,12)]},
  h_relic:()=>{const g=R(2,3);return[`เก็บซากจักรวาลเก่า ${g} ชิ้น`,g,R(10,13)]},
  h_civ:()=>{const g=R(2,3);return[`สร้างอารยธรรมใหม่ ${g} แห่ง`,g,R(10,13)]},
@@ -42454,3 +42454,15 @@ const pre=()=>{try{if(!S||!S.alive||Date.now()-SA.pre<180000)return;SA.pre=Date.
 {const _du=duel;duel=function(){pre();return _du.apply(this,arguments)}}
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='menu'||m&&m.querySelector('.mgrid')){m.querySelectorAll('.svStat').forEach(x=>x.remove());const h=m.querySelector('h3');const bad=saveGame._warn,cl=+cloudT||0;const html=`<p class="tag2 svStat" style="margin:4px 0">${bad?'⚠️ <b style="color:#ff7a7a">เซฟไม่ลง — พื้นที่เต็ม</b>':'💾 เซฟล่าสุด '+ago(SA.ok)}${cl?' · ☁️ คลาวด์ '+ago(cl):' · ☁️ ยังไม่ได้สำรอง'}</p>`;if(h)h.insertAdjacentHTML('afterend',html);else m.insertAdjacentHTML('afterbegin',html)}}catch(e){}return r}}
 })()}catch(e){console.error('svNotify',e)}
+
+// ===== เควสสายเทพ/กัลป์ (h_*): คำอธิบายวิธีทำ + เหตุการณ์มาถี่ขึ้นตอนมีเควสค้าง =====
+try{(()=>{const HOW={
+h_faith:'ได้จาก <b>เหตุการณ์ที่เด้งขึ้นเอง</b> (แดนเทพ/กัลป์) — เลือกตัวเลือกที่ผลลัพธ์มี "ศรัทธา +N" เช่น สอนผู้คน ปล่อยให้นิกายเติบโต ช่วยเหลือชาวภพล่าง · ดูคำใบ้ใต้ตัวเลือก · ถ้ายังไม่มีเหตุการณ์ ให้เดินเวลาต่อไปเรื่อยๆ',
+h_deed:'นับทุกครั้งที่คุณ <b>ตัดสินใจในเหตุการณ์สวรรค์/กัลป์</b> เลือกตัวเลือกไหนก็นับ — รอเหตุการณ์เด้งขึ้นระหว่างเดินเวลา',
+h_relic:'ได้จากเหตุการณ์ของ <b>กัลป์</b> ที่มีตัวเลือกเก็บ/ขุดซากจักรวาลเก่า (ผลลัพธ์ขึ้น "ซากจักรวาลเก่า +N")',
+h_civ:'ได้จากเหตุการณ์กัลป์ที่ตัวเลือกเป็นการ <b>สอน/สร้าง</b> เช่น เพาะปลูก ตีอาวุธ ตัวอักษร ภาษา (ผลลัพธ์ "อารยธรรมที่สร้าง +N") · ใช้ได้เมื่อเป็นบทบาทผู้สร้าง',
+h_save:'ได้จากเหตุการณ์กัลป์ที่ตัวเลือกเป็นการ <b>ปกป้อง</b> สิ่งมีชีวิตจากภัย (ผลลัพธ์ "ปกป้องได้ +N") · ใช้ได้เมื่อเป็นบทบาทผู้พิทักษ์',
+h_eat:'ได้จากเหตุการณ์กัลป์ที่ตัวเลือกเป็นการ <b>กลืนกิน</b> ผู้ท้าทาย (ผลลัพธ์ "กลืนกิน +N") · ใช้ได้เมื่อเป็นบทบาทมาร'};
+{const _os=openSys;openSys=function(){const r=_os.apply(this,arguments);try{const s=S&&S.sys,m=$('modal');if(!s||!m||!s.quests)return r;s.quests.forEach(q=>{const h=HOW[q.k];if(!h||!q.n)return;const key=String(q.n).replace(/<[^>]+>/g,'').slice(0,14);const el=[...m.querySelectorAll('.sysq')].find(e=>!e.querySelector('.qHow')&&(e.textContent||'').indexOf(key)>=0);if(el)el.insertAdjacentHTML('beforeend',`<div class="qHow tag2" style="margin-top:4px;font-size:11px;line-height:1.45">💡 ${h}</div>`)})}catch(e){console.error(e)}return r}}
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive&&S.sys&&!S.mw&&!choice._cur&&!modalOpen&&!S.hePend&&!(S.kalpa&&S.kalpa.pend)&&(S.sys.quests||[]).some(q=>HOW[q.k])&&Math.random()<.18){const w=hiK()?'k':hiG()&&!(S.beastMode&&!S.beastMode.human)?'g':0;if(w)heFire(w)}}catch(e){console.error(e)}return r}}
+})()}catch(e){console.error('hq-how',e)}
