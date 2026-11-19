@@ -5842,12 +5842,12 @@ function allyAdd(n,src){S.allies=S.allies||[];if(S.allies.some(a=>a.n===n))retur
 {const _f3=fight;fight=function(name,ep){const w=_f3.apply(this,arguments);try{if(!w&&S&&S.alive&&S.allies&&S.allies.length&&Math.random()<.22){const a=ch(S.allies);if(a.tr){S.allies=S.allies.filter(x=>x!==a);const d=Math.round(S.maxHp*.2),mn=Math.round((S.money||0)*.1);S.hp=Math.max(1,S.hp-d);S.money-=mn;log(`🗡️ <b>${esc(a.n)}</b> พันธมิตรที่รีบมาถึง… กลับแทงข้างหลังคุณ! ที่แท้เขาหักหลังคุณมาตั้งแต่วันสาบาน — พลังชีวิต −${d} เงิน −${fmtM(mn)}`,'bad',true);keyAdd(`ถูกผู้เล่น ${a.n} หักหลัง`);S.flags.betrayed=1;return false}if(a.bt)log(`😶 ${esc(a.n)} ยังมาช่วยคุณ… ทั้งที่คุณเคยแอบหักหลังเขา`,'');log(`🤝 พันธมิตร <b>${esc(a.n)}</b> (${a.src}) ปรากฏตัวมาช่วยไว้ได้ทันเวลา!`,'epic');return true}}catch(e){}return w}}
 // ---- พบผู้เล่นจริงแบบเรียลไทม์ ----
 let meetC=null,meetT=0;
-async function meetPoll(){try{if(!onlineOK||!S||!S.alive||S.beastMode||paused||document.hidden)return;if(Date.now()-meetT<(idleMs()>300000?300000:90000))return;meetT=Date.now();
+async function meetPoll(){try{if(!onlineOK||!S||!S.alive||S.beastMode||paused||document.hidden)return;if(Date.now()-meetT<(idleMs()>300000?600000:240000))return;meetT=Date.now();
  const j=await api('meet',Object.assign({n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0},typeof mwMe==='function'?mwMe():{}));try{if(typeof paNote==='function')paNote(j)}catch(e){};meetC=j.o?Object.assign(j.o,{at:Date.now()}):null;try{if(!j.o&&j.gh&&typeof ghSet==='function')ghSet(j.gh)}catch(e){}
  (j.inbox||[]).forEach(m=>{if(!S||!S.alive)return;if(m.kind==='ally'){if(m.ok){allyAdd(m.n,'ผู้เล่นจริง');log(`🤝 ผู้เล่น <b>${esc(m.n)}</b> สาบานเป็นพันธมิตรกับคุณข้ามจักรวาล — เขาจะมาช่วยตอนจวนตัว`,'epic',true)}}
   else if(m.kind==='gh'){try{ghInbox(m)}catch(e){}}else if(m.kind==='mmsg'||m.kind==='room'||m.kind==='mres'||/^bh/.test(m.kind||'')){try{mtInbox(m)}catch(e){}}else{if(m.win){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.08));S.fame=Math.max(0,S.fame-5);log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — คุณพ่ายแพ้ บาดเจ็บเล็กน้อย`,'bad',true)}else{S.fame+=20;log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา — แต่คุณเป็นฝ่ายชนะ! ชื่อเสียง +20`,'epic',true)}}});try{render()}catch(e){}}catch(e){}}
 setInterval(meetPoll,5000);
-function meetTick(){if(!meetC||Date.now()-meetC.at>90000||S.age<14||choice._cur||modalOpen||S.beastMode||Math.random()>.06)return;const o=meetC;meetC=null;const RN=S.xian?XREALM:REALMS.map(r=>r.n),ep=Math.max(50,o.p||100),r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100)));
+function meetTick(){if(!meetC||Date.now()-meetC.at>300000||S.age<14||choice._cur||modalOpen||S.beastMode||Math.random()>.06)return;const o=meetC;meetC=null;const RN=S.xian?XREALM:REALMS.map(r=>r.n),ep=Math.max(50,o.p||100),r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100)));
  choice(`🌐 พบผู้เล่นจริง!`,`รอยแยกมิติเปิดออกชั่วครู่ — <b>${esc(o.n)}</b> ผู้เล่นที่กำลังจำลองชีวิตอยู่ตอนนี้ ก้าวข้ามมาสู่จักรวาลของคุณ<br>${esc(RN[o.ri]||'')} · ${esc(o.f||'')} · อายุ ${fmt(o.age||0)} ปี<br><span class="tag2">พลังของคุณราว ${Math.round(r*100)}% ของเขา · สิ่งที่คุณเลือกจะส่งผลถึงเขาด้วย</span>`,[
   {t:'⚔️ ท้าดวล',s:`โอกาสชนะราว ${pw}%`,f(){const w=fight(o.n,ep);if(w){S.fame+=fameR(30);log(`🌐 ชนะผู้เล่น <b>${esc(o.n)}</b> ในการดวลข้ามจักรวาล!`,'epic',true)}else{S.hp-=Math.round(S.maxHp*.15);log(`🌐 แพ้ผู้เล่น <b>${esc(o.n)}</b> ถูกซัดกลับเข้ารอยแยกมิติ`,'bad',true)}api('meetact',{to:o.k,kind:'fight',win:w?1:0,n:pname(),ri:realmIdx(),x:S.xian?1:0}).catch(()=>{})}},
   {t:'🤝 ชวนเป็นพันธมิตร',s:'ใช้เสน่ห์ · ทั้งสองฝ่ายจะได้พันธมิตร',f(){const ok=roll01(.45+(S.cha||0)/300);if(ok){allyAdd(o.n,'ผู้เล่นจริง');log(`🤝 คุณกับผู้เล่น <b>${esc(o.n)}</b> สาบานเป็นพันธมิตรข้ามจักรวาล`,'epic',true)}else log(`ผู้เล่น ${esc(o.n)} ยังไม่ไว้ใจคุณ รอยแยกปิดลงก่อนจะได้คุยกัน`);api('meetact',{to:o.k,kind:'ally',ok:ok?1:0,n:pname(),ri:realmIdx(),x:S.xian?1:0}).catch(()=>{})}},
@@ -7186,12 +7186,12 @@ function mtApply(st){if(!st||!S||!S.alive)return;const o=st.o||{},rid=st.rid;if(
   if(theyB)setTimeout(()=>{if(S&&S.alive)log('🕵️ คืนนั้นคุณนอนไม่หลับ… ลางสังหรณ์บอกว่า <b>มีใครบางคนกำลังหักหลังคุณ</b>','bad',true)},1500)}
  {const L=x=>({fight:'⚔️ ท้าดวล',ally:'🤝 สาบาน',betray:'🗡️ แสร้งสาบาน',leave:'🙇 ถอย'}[x]||'-');log(`📜 สรุป: คุณเลือก <b>${L(R0.my)}</b> · ${n}เลือก <b>${L(R0.their)}</b>`,'')}
  mtMsgBox(rid);try{render()}catch(e){}}
-function mtInbox(m){if(!S||!S.alive||!m)return;if(m.kind==='room'){if(!mtDone(m.rid)&&!MT.inv.some(x=>x.rid===m.rid)&&Date.now()-(m.t||0)<55000)MT.inv.push(m);return}
+function mtInbox(m){if(!S||!S.alive||!m)return;if(m.kind==='room'){if(!mtDone(m.rid)&&!MT.inv.some(x=>x.rid===m.rid)&&Date.now()-(m.t||0)<80000)MT.inv.push(m);return}
  if(m.kind==='mmsg'){mtMsgShow(m.rid,m.n,m.x);return}
  if(m.kind==='mres'&&!mtDone(m.rid))api('mtst',{rid:m.rid}).then(j=>{if(j&&j.ok)mtApply(j.st)}).catch(()=>{})}
-setInterval(async()=>{try{if(!S||!S.alive||!MT.inv.length||choice._cur||S.beastMode)return;if(modalOpen&&['choice','duel','specfull'].includes($('modal').dataset.k))return;const m=MT.inv.shift();if(Date.now()-(m.t||0)>58000)return;
+setInterval(async()=>{try{if(!S||!S.alive||!MT.inv.length||choice._cur||S.beastMode)return;if(modalOpen&&['choice','duel','specfull'].includes($('modal').dataset.k))return;const m=MT.inv.shift();if(Date.now()-(m.t||0)>85000)return;
  const j=await api('mtst',{rid:m.rid});if(!j||!j.ok||!j.st||j.st.res)return j&&j.st&&mtApply(j.st);if(modalOpen)closeM();mtShow(j.st);mtWatch(m.rid)}catch(e){}},1000);
-meetTick=function(){if(!meetC||Date.now()-meetC.at>90000||S.age<14||choice._cur||modalOpen||S.beastMode||MT.busy||Math.random()>.06)return;const o=meetC;meetC=null;MT.busy=1;
+meetTick=function(){if(!meetC||Date.now()-meetC.at>300000||S.age<14||choice._cur||modalOpen||S.beastMode||MT.busy||Math.random()>.06)return;const o=meetC;meetC=null;MT.busy=1;
  api('mtopen',Object.assign({to:o.k,n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0},typeof mwMe==='function'?mwMe():{})).then(j=>{if(j&&j.ok&&j.st&&S&&S.alive&&!choice._cur){mtShow(j.st);mtWatch(j.st.rid)}}).catch(()=>{}).finally(()=>{MT.busy=0})};
 
 // ---- เล่นเองมากขึ้น: ดวลแบบจับเวลา (หลบ/สวนกลับ/อ่านท่า) + มินิเกมรวมปราณตอนเลื่อนขั้น ----
@@ -10082,7 +10082,7 @@ const BH={busy:0,inv:[],done:{},poll:null,st:null};
 const bhIsBeast=()=>!!(S&&S.beastMode&&!S.beastMode.human);
 const bhStN=()=>{try{const m=S.beastMode;const L=m.sp==='มังกร'?BL_STD:BL_ST;return L[m.st]||''}catch(e){return''}};
 // สัตว์อสูรเข้าร่วม pool ของการพบผู้เล่น (เป็นฝ่ายถูกล่า)
-{const _mp=meetPoll;meetPoll=async function(){if(!bhIsBeast())return _mp.apply(this,arguments);try{if(!onlineOK||!S||!S.alive||paused||document.hidden)return;if(Date.now()-meetT<(idleMs()>300000?300000:90000))return;meetT=Date.now();
+{const _mp=meetPoll;meetPoll=async function(){if(!bhIsBeast())return _mp.apply(this,arguments);try{if(!onlineOK||!S||!S.alive||paused||document.hidden)return;if(Date.now()-meetT<(idleMs()>300000?600000:240000))return;meetT=Date.now();
  const m=S.beastMode,j=await api('meet',{n:pname(),ri:m.st|0,x:S.xian?1:0,p:Math.round(total()),f:m.sp||'สัตว์อสูร',age:S.age,cha:0,bm:1,sp:m.sp||'',st:m.st|0});try{if(typeof paNote==='function')paNote(j)}catch(e){}
  (j.inbox||[]).forEach(x=>{if(x&&/^bh/.test(x.kind))bhInbox(x)})}catch(e){}}}
 // ดัก inbox ฝั่งมนุษย์: meetPoll เดิมส่งต่อเฉพาะชนิดที่รู้จัก → ห่อ mtInbox ให้รับ bh ด้วย
@@ -10092,7 +10092,7 @@ function bhInbox(m){if(!m||!S||!S.alive)return;if(BH.done[m.rid])return;if(m.kin
 setInterval(async()=>{try{if(!S||!S.alive||!BH.inv.length||BH.st)return;if(modalOpen&&['duel','specfull','bh'].includes($('modal').dataset.k))return;const m=BH.inv.shift();if(Date.now()-(m.t||0)>30000)return;
  const j=await api('bhst',{rid:m.rid});if(!j||!j.ok||!j.st)return;if(j.st.res)return bhApply(j.st);if(choice._cur){try{minChoice()}catch(e){}}if(modalOpen)closeM();bhShow(j.st);bhWatch(m.rid)}catch(e){}},1000);
 // มนุษย์เจอสัตว์อสูรผู้เล่นจริง
-{const _mt=meetTick;meetTick=function(){if(meetC&&meetC.bm&&!bhIsBeast()){if(Date.now()-meetC.at>90000||S.age<14||choice._cur||modalOpen||BH.busy||MT.busy||Math.random()>.08)return;const o=meetC;meetC=null;bhOffer(o);return}return _mt.apply(this,arguments)}}
+{const _mt=meetTick;meetTick=function(){if(meetC&&meetC.bm&&!bhIsBeast()){if(Date.now()-meetC.at>300000||S.age<14||choice._cur||modalOpen||BH.busy||MT.busy||Math.random()>.08)return;const o=meetC;meetC=null;bhOffer(o);return}return _mt.apply(this,arguments)}}
 function bhOffer(o){const r=total()/Math.max(1,o.p),v=r>1.5?'🟢 คุณเหนือกว่ามาก':r>1.1?'🟢 คุณเหนือกว่า':r>.9?'🟡 สูสี':r>.6?'🟠 มันแกร่งกว่า':'🔴 มันแกร่งกว่ามาก';
  choice('🐾 สัตว์อสูรของผู้เล่นจริง!',`ระหว่างเดินป่า คุณพบรอยเท้าของ<b>${esc(o.f||'สัตว์อสูร')}</b>ชื่อ <b>${esc(o.n)}</b> — มันคือ<b>ผู้เล่นจริง</b>ที่กำลังใช้ชีวิตเป็นสัตว์อสูร<br><span class="tag2">${v} · ถ้าล่าสำเร็จจะได้แก่นอสูรของมัน · อาจมีผู้เล่นอีกคนมาแย่งด้วย</span>`,[
   {t:'🏹 ออกล่า',s:'เปิดศึกแบบเรียลไทม์ 30 วิ',f(){BH.busy=1;api('bhopen',{to:o.k,n:pname(),x:S.xian?1:0,p:Math.round(total())}).then(j=>{if(j&&j.ok&&j.st&&S&&S.alive){bhShow(j.st);bhWatch(j.st.rid)}else log(j&&j.cd?'🐾 รอยเท้าเย็นชืดแล้ว — มีคนเพิ่งล่ามันไปเมื่อไม่นานนี้':'🐾 สัตว์ตัวนั้นหายเข้าป่าลึกไปแล้ว','')}).catch(()=>{}).finally(()=>{BH.busy=0})}},
@@ -44600,3 +44600,8 @@ setInterval(()=>{try{if(!DU||!S){miss=0;return}const m=$('modal');if(modalOpen&&
 // BLOCK 63: กันหน้าแรกรีโหลดเองระหว่างผู้เล่นกำลังเลือก/ตั้งค่าตัวละคร (มีอัปเดตใหม่บ่อย) — รีโหลดเฉพาะตอนไม่มีการแตะ 3 นาที ไม่งั้นโชว์แถบ "มีอัปเดตใหม่" ให้กดเอง
 // ============================================================
 try{(()=>{window._lastAct=Date.now();const t=()=>{window._lastAct=Date.now()};['pointerdown','keydown','touchstart','wheel'].forEach(e=>addEventListener(e,t,{passive:true,capture:true}))})()}catch(e){console.error('block63',e)}
+
+// ============================================================
+// BLOCK 64: 🤝 ลดคำขอ "เจอผู้เล่น" — ถามเซิร์ฟเวอร์ทุก 4 นาที (เดิม 90 วิ) · จดหมาย/คำเชิญห้องแจ้งผ่านคำขอภาพสดที่ส่งอยู่แล้ว (ไม่เพิ่มคำขอ) แล้วค่อยดึงทันที
+// ============================================================
+try{(()=>{const _a=api;api=async function(a,b){const r=await _a.apply(this,arguments);try{if(a==='live'&&r&&r.mb&&typeof meetPoll==='function'&&S&&S.alive&&!S.beastMode){if(Date.now()-(window._mbT||0)>20000){window._mbT=Date.now();meetT=0;setTimeout(()=>{try{meetPoll()}catch(e){}},300)}}}catch(e){}return r}})()}catch(e){console.error('block64',e)}

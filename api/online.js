@@ -2198,7 +2198,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (okId(id)) { try { const lm = uaMeta(req, now); lm.u = String(req.headers['user-agent'] || '').slice(0, 160); await cmd('HSET', 'lm', id, JSON.stringify(lm)) } catch {} }
       if (!b.spec) {
         const ps = String(b.s || '');
-        if (ps && ps.length <= 60000) { try { JSON.parse(ps); const r0 = (await pipe([['HSET', 'livem', id, liveMeta(ps)], ['DEL', 'live:' + id], ['ZREM', 'livez', id], ['SET', 'livep:' + id, ps, 'EX', 100], ['ZADD', 'livezp', now, id], ['GET', 'logreq:' + id], ['ZCOUNT', 'watcha:' + id, now - 25e3, '+inf']])).slice(1); return res.json({ w: 0, f: +r0[5] > 0 ? 1 : 0, lr: r0[4] ? 1 : 0 }) } catch {} }
+        if (ps && ps.length <= 60000) { try { JSON.parse(ps); const r0 = (await pipe([['HSET', 'livem', id, liveMeta(ps)], ['DEL', 'live:' + id], ['ZREM', 'livez', id], ['SET', 'livep:' + id, ps, 'EX', 100], ['ZADD', 'livezp', now, id], ['GET', 'logreq:' + id], ['ZCOUNT', 'watcha:' + id, now - 25e3, '+inf'], ['LLEN', 'mbox:' + id], ['LLEN', 'gbox:' + id]])).slice(1); return res.json({ w: 0, f: +r0[5] > 0 ? 1 : 0, lr: r0[4] ? 1 : 0, mb: (+r0[6] || 0) + (+r0[7] || 0) > 0 ? 1 : 0 }) } catch {} }
         await pipe([['HDEL', 'livem', id], ['DEL', 'live:' + id], ['ZREM', 'livez', id], ['DEL', 'livep:' + id], ['ZREM', 'livezp', id]]); return res.json({ w: 0 })
       }
       const snap = String(b.s || '');
@@ -2206,13 +2206,13 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       try { JSON.parse(snap) } catch { return res.status(400).json({ err: 'json' }) }
       const meta = liveMeta(snap);
       const [, , , , w] = await pipe([['SET', 'live:' + id, snap, 'EX', 70], ['ZADD', 'livez', now, id], ['DEL', 'livep:' + id], ['ZREM', 'livezp', id], ['ZCOUNT', 'watch:' + id, now - 25e3, '+inf'], ['HSET', 'livem', id, meta]]);
-      const [lr, fa] = await pipe([['GET', 'logreq:' + id], ['ZCOUNT', 'watcha:' + id, now - 25e3, '+inf']]);
+      const [lr, fa, mb1, mb2] = await pipe([['GET', 'logreq:' + id], ['ZCOUNT', 'watcha:' + id, now - 25e3, '+inf'], ['LLEN', 'mbox:' + id], ['LLEN', 'gbox:' + id]]);
       let ex = {}; try { const z = JSON.parse(snap), ck = z.ch && String(z.ch.k || '').replace(/[^a-z0-9]/g, '').slice(0, 12);
         const [rx, , vt] = await pipe([['HGETALL', 'lrx:' + id], ['DEL', 'lrx:' + id], ['HGETALL', 'lvote:' + id + ':' + (ck || '-')]]);
         const hm = h => { const o = {}; if (Array.isArray(h)) for (let i = 0; i < h.length; i += 2) o[h[i]] = +h[i + 1]; else for (const k in (h || {})) o[k] = +h[k]; return o };
         ex = { rx: hm(rx), vt: hm(vt), vk: ck || '' };
         const R = z.res; if (R && R.k) { const rk = String(R.k).replace(/[^a-z0-9]/g, '').slice(0, 12); if ((await cmd('SET', 'lbr:' + id + ':' + rk, 1, 'NX', 'EX', 7200)) === 'OK') { const mem = (await cmd('SMEMBERS', 'lbs:' + id + ':' + rk)) || []; const nm = clean(z.n, 20), ops = []; mem.forEach(m => { const [vw, p] = String(m).split('|'); if (okId(vw)) ops.push(['LPUSH', 'lbw:' + vw, JSON.stringify({ n: nm, ok: (+p === 1) === !!R.w ? 1 : 0, ev: clean(R.ev, 30), t: now })], ['LTRIM', 'lbw:' + vw, 0, 19], ['EXPIRE', 'lbw:' + vw, 86400]) }); if (ops.length) await pipe(ops) } } } catch {}
-      return res.json(Object.assign({ w: w || 0, f: (+w > 0 || +fa > 0) ? 1 : 0, lr: lr ? 1 : 0 }, ex));
+      return res.json(Object.assign({ w: w || 0, f: (+w > 0 || +fa > 0) ? 1 : 0, lr: lr ? 1 : 0, mb: (+mb1 || 0) + (+mb2 || 0) > 0 ? 1 : 0 }, ex));
     }
     if (a === 'csave') {
       const tk = String(b.tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20), d = String(b.d || '');
@@ -2723,7 +2723,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       // เงาผู้เล่น: เก็บร่องรอยคนที่เพิ่งเล่นไว้ 2 วัน ให้คนที่มาทีหลังเจอ "เงา" ได้แม้ไม่มีใครออนไลน์
       if (okMe && me.age >= 14) { try { await pipe([['HSET', 'mpold:' + x, id, JSON.stringify(me)], ['EXPIRE', 'mpold:' + x, 172800]]) } catch {} }
       const cand = [], stale = [];
-      for (let i = 0; i < (all || []).length; i += 2) { const k0 = all[i]; let v = null; try { v = JSON.parse(all[i + 1]) } catch {} if (!v || now - v.t > 120e3) { stale.push(k0); continue } if (k0 !== id) cand.push(Object.assign(v, { k: k0.slice(0, 6) + k0.slice(-4) })) }
+      for (let i = 0; i < (all || []).length; i += 2) { const k0 = all[i]; let v = null; try { v = JSON.parse(all[i + 1]) } catch {} if (!v || now - v.t > 300e3) { stale.push(k0); continue } if (k0 !== id) cand.push(Object.assign(v, { k: k0.slice(0, 6) + k0.slice(-4) })) }
       const L2 = [['EXPIRE', key, 3600]]; if (stale.length) L2.push(['HDEL', key, ...stale.slice(0, 50)]); if (box && box.length) L2.push(['DEL', 'mbox:' + id]); if (gbox && gbox.length) L2.push(['DEL', 'gbox:' + id]);
       await pipe(L2);
       // สัตว์อสูรไม่เป็นฝ่ายเริ่ม · มนุษย์มีโอกาสเจอสัตว์อสูร (ผู้เล่นจริง) มากขึ้นเมื่อมีในเซิร์ฟเวอร์
@@ -2735,7 +2735,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         try {
           const rf = await cmd('HRANDFIELD', 'mpold:' + x, 8, 'WITHVALUES'), live = new Set(); for (let i = 0; i < (all || []).length; i += 2) live.add(all[i]);
           const gs = [], old = [];
-          for (let i = 0; i < (rf || []).length; i += 2) { const k0 = rf[i]; let v = null; try { v = JSON.parse(rf[i + 1]) } catch {} if (!v || now - v.t > 172800e3) { old.push(k0); continue } if (k0 === id || live.has(k0) || now - v.t < 120e3) continue; gs.push(Object.assign(v, { k: k0.slice(0, 6) + k0.slice(-4), ago: now - v.t })) }
+          for (let i = 0; i < (rf || []).length; i += 2) { const k0 = rf[i]; let v = null; try { v = JSON.parse(rf[i + 1]) } catch {} if (!v || now - v.t > 172800e3) { old.push(k0); continue } if (k0 === id || live.has(k0) || now - v.t < 300e3) continue; gs.push(Object.assign(v, { k: k0.slice(0, 6) + k0.slice(-4), ago: now - v.t })) }
           if (old.length) await cmd('HDEL', 'mpold:' + x, ...old);
           if (gs.length) { const near = gs.filter(v => Math.abs((v.ri || 0) - me.ri) <= 2); const pool = near.length ? near : gs; gh = pool[Math.floor(Math.random() * pool.length)] }
         } catch {}
@@ -2861,7 +2861,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const to = String(b.to || '').replace(/[^a-z0-9]/g, '').slice(0, 12), x = b.x ? 1 : 0;
         const all = await cmd('HGETALL', 'mp:' + x); let tid = null, B = null;
         for (let i = 0; i < (all || []).length; i += 2) if (all[i].slice(0, 6) + all[i].slice(-4) === to) { tid = all[i]; try { B = JSON.parse(all[i + 1]) } catch {} }
-        if (!tid || tid === id || !B || now - B.t > 150e3 || B.bm) return res.json({ ok: 0 });
+        if (!tid || tid === id || !B || now - B.t > 330e3 || B.bm) return res.json({ ok: 0 });
         const A = { n: clean(b.n, 20) || 'นิรนาม', ri: Math.max(0, Math.min(12, +b.ri || 0)), p: Math.max(0, Math.min(1e13, +b.p || 0)), f: clean(b.f, 30), age: Math.max(0, +b.age || 0), c: Math.max(0, Math.min(999, Math.round(+b.cha || 0))), k: id.slice(0, 6) + id.slice(-4), g: b.g === 'f' ? 'f' : 'm', ms: b.ms ? 1 : 0, w: Math.max(0, Math.min(3, +b.w || 0)) };
         B = { n: B.n, ri: B.ri, p: B.p, f: B.f, age: B.age, c: B.c || 0, k: to, g: B.g || '', ms: B.ms ? 1 : 0, w: B.w || 0 };
         const rid = (now.toString(36) + Math.random().toString(36).slice(2, 6)).slice(-10);
