@@ -6006,6 +6006,7 @@ const SYS_GUIDE=[
  {ic:'🌐',t:'ออนไลน์',d:'<b>ทำเนียบ</b>ประจำสัปดาห์ · แชท · ดูคนอื่นเล่นสด · ระหว่างจำลองอาจ<b>เจอผู้เล่นจริง</b>ที่เล่นพร้อมกัน (ท้าดวลหรือเป็นพันธมิตร) หรือเกิดใน<b>จักรวาลซ้อนทับ</b>กับคนในทำเนียบ',go:"openOnline"},
  {ic:'🔒',t:'ความเป็นส่วนตัว',d:'เลือกได้ว่าชีวิตไหนจะ เปิดสาธารณะ · ซ่อนรายละเอียด · ซ่อนทั้งหมด (ชื่อไม่ขึ้น และไม่ถูกจับคู่เจอผู้เล่นอื่น) ถามก่อนเกิดใหม่ และเปลี่ยนได้ตลอดที่สุสาน',go:'openGraves'},
  {ic:'💬',t:'เสียงจากผู้เล่น',d:'แจ้งบั๊ก ขอฟีเจอร์ ให้คะแนนเกม แก้ไขข้อความของตัวเองได้ และผู้พัฒนาตอบกลับได้',go:'openReport'}];
+try{window._GDALL=[];const _gp=SYS_GUIDE.push;SYS_GUIDE.push=function(...a){try{a.forEach(g=>{if(g&&!window._GDALL.includes(g))window._GDALL.push(g)})}catch(e){}return _gp.apply(this,a)}}catch(e){}
 function openGuide(){const inLife=!!(S&&S.alive&&$('game')&&$('game').classList.contains('on'));
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📘 คู่มือระบบสำคัญ</h3><p class="tag2">ระบบในเกมมีเยอะ — อ่านตรงนี้ได้ทุกเมื่อจากเมนู ☰ · กด "เปิดดู" เพื่อไปที่หน้านั้น</p>
  ${SYS_GUIDE.map((g,i)=>{const can=g.go&&typeof window[g.go]==='function'&&(!g.life||inLife)&&(!g.need||g.need());return`<div class="item gdi"><div class="h"><b>${g.ic} ${g.t}</b>${can?`<button class="gbtn gdgo" onclick="closeM();setTimeout(()=>${g.go}(),60)">เปิดดู ▶</button>`:''}</div><p>${g.d}</p></div>`}).join('')}
@@ -44611,3 +44612,28 @@ try{(()=>{let q=0;
 setInterval(()=>{try{if(!S||!S.alive||S.mw||(S.beastMode&&!S.beastMode.human)||!coCan()||modalOpen||choice._cur||document.hidden||$('coach')||$('ctOv')){q=0;return}
  const id=S.xt?'god':S.xian?'xian':null;if(!id||coSeen(id)||!LESSON[id]){q=0;return}if(++q<2)return;q=0;coStart(id)}catch(e){}},1500);
 })()}catch(e){console.error('lsnWorld',e)}
+
+// ---------- 💡 อธิบายทุกหน้าโดยไม่ต้องถาม: เปิดระบบไหนครั้งแรก ขึ้นกล่อง "ระบบนี้คืออะไร" ด้านบน (ครั้งต่อไปพับเป็นปุ่ม ❓) · ข้อความมาจากคู่มือ SYS_GUIDE ----------
+try{(()=>{if(typeof SYS_GUIDE==='undefined')return;
+const SEEN='murim_tipseen';const seen=()=>{try{return LS.get(SEEN,{})||{}}catch(e){return{}}};
+const css=document.createElement('style');css.textContent=`.gdTip{margin:4px 0 8px;border:1px solid #e8b83a77;border-radius:10px;background:#e8b83a14;font-size:12.5px;line-height:1.5}
+.gdTip>summary{cursor:pointer;padding:5px 9px;font-weight:700;list-style:none}.gdTip>summary::-webkit-details-marker{display:none}.gdTip>div{padding:0 10px 8px}.gdTip.new{border-color:#e8b83a;box-shadow:0 0 0 2px #e8b83a33}`;document.head.appendChild(css);
+// รวมคำอธิบายของแต่ละหน้า (บางหน้ามีหลายหัวข้อ)
+const BY={};const ADDG=g=>{if(!g||!g.go)return;const L=(BY[g.go]=BY[g.go]||[]);if(!L.some(x=>x.t===g.t))L.push(g)};// คู่มือเคยทำหัวข้อหายตอนรีเซ็ตรายการ (อาชีพ ครอบครัว คนสนิท ฯลฯ) → เติมกลับเข้า 📚 คู่มือด้วย
+try{(window._GDALL||[]).forEach(g=>{if(g&&g.t&&!SYS_GUIDE.some(x=>x===g||x.t===g.t))SYS_GUIDE.push(g)})}catch(e){}
+SYS_GUIDE.forEach(ADDG);try{if(typeof GD2!=='undefined')GD2.forEach(ADDG)}catch(e){}
+const txt=g=>LANG==='en'&&g.de?g.de:g.d,ttl=g=>LANG==='en'&&g.te?g.te:g.t;
+function tip(go){try{if(!modalOpen)return;const m=$('modal');if(!m||m.querySelector('.gdTip'))return;const L=BY[go];if(!L||!L.length)return;const h=m.querySelector('h3');if(!h)return;
+ const S0=seen(),first=!S0[go];const body=L.map(g=>`${L.length>1?`<b>${g.ic||''} ${ttl(g)}</b><br>`:''}${txt(g)}`).join('<hr style="border:0;border-top:1px dashed #e8b83a55;margin:6px 0">');
+ h.insertAdjacentHTML('afterend',`<details class="gdTip${first?' new':''}"${first?' open':''}><summary>${first?'💡 ระบบนี้คืออะไร (ครั้งแรก)':'❓ ระบบนี้คืออะไร'}</summary><div>${body}</div></details>`);
+ if(first){S0[go]=1;try{LS.set(SEEN,S0)}catch(e){}}}catch(e){}}
+let n=0;Object.keys(BY).forEach(go=>{try{const f=window[go];if(typeof f!=='function')return;const w=function(){const r=f.apply(this,arguments);try{tip(go)}catch(e){}try{if(r&&typeof r.then==='function')r.then(()=>setTimeout(()=>tip(go),50),()=>{})}catch(e){}return r};
+ Object.assign(w,f);window[go]=w;try{if(window[go]===w)n++}catch(e){}}catch(e){}});
+window._gdTipN=n;
+})()}catch(e){console.error('gdTip',e)}
+
+// ---------- 🎓 บทเรียนระบบ/ภาคเรื่องราว: ขึ้นตอนจังหวะว่าง (เดิมเช็คแค่สิ้นปีที่ไม่มีหน้าต่าง จึงมักพลาด) ----------
+try{(()=>{let q=0;
+setInterval(()=>{try{if(!S||!S.alive||!coCan()||modalOpen||choice._cur||document.hidden||$('coach')||$('ctOv')){q=0;return}
+ const id=(S.sys&&!coSeen('sys')&&LESSON.sys)?'sys':(S.sarc&&!coSeen('arc')&&LESSON.arc)?'arc':null;if(!id){q=0;return}if(++q<2)return;q=0;coStart(id)}catch(e){}},1700);
+})()}catch(e){console.error('lsnSys',e)}
