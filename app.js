@@ -5068,7 +5068,7 @@ i18nStart();
 // ============ v6.2: แจ้งอัปเดตใหม่ + รายชื่อคนออนไลน์ที่ยังไม่มีภาพสด ============
 let _bd0=null;
 function bdCheck(bd){if(!bd)return;if(_bd0===null){_bd0=bd;return}if(bd===_bd0)return;
- if($('title')&&$('title').classList.contains('on')&&!modalOpen){location.reload();return}
+ if($('title')&&$('title').classList.contains('on')&&!modalOpen&&Date.now()-(window._lastAct||0)>180000&&!document.querySelector('#title input:focus')){location.reload();return}
  if(document.getElementById('updBar'))return;const e=document.createElement('div');e.id='updBar';e.style.cssText='position:fixed;left:50%;bottom:76px;transform:translateX(-50%);z-index:80;background:#2a2433;color:#ffe08a;border:2px solid #ffc23a;border-radius:10px;padding:8px 14px;font-size:13px;cursor:pointer;box-shadow:0 0 12px #ffc23a88';
  e.textContent='🔄 มีอัปเดตใหม่ — แตะเพื่อโหลด (บันทึกให้อัตโนมัติ)';e.onclick=()=>{try{if(S&&S.alive)saveGame()}catch(x){}location.reload()};document.body.appendChild(e)}
 
@@ -31356,7 +31356,7 @@ async function sync(force){
   if(!rem||str!==rawR){const z=await gz(str);await api('psput',{tk:ctok,d:z.d,z:z.z,n:Object.keys(merged).length})}
   if(chg.length){if(safeNow()){chg.forEach(k=>{try{localStorage.setItem(k,merged[k])}catch(e){}});PS.need=0;
     try{sessionStorage.setItem('pf_note',String(chg.length))}catch(e){}
-    const last=+sessionStorage.getItem('pf_rl')||0;if(Date.now()-last>60000){try{sessionStorage.setItem('pf_rl',String(Date.now()))}catch(e){}location.reload();return true}}
+    const last=+sessionStorage.getItem('pf_rl')||0;if(Date.now()-last>60000&&Date.now()-(window._lastAct||0)>90000){try{sessionStorage.setItem('pf_rl',String(Date.now()))}catch(e){}location.reload();return true}}
    else{PS.need=1;if(!PS.warned){PS.warned=1;try{toast('☁️ พบข้อมูลบัญชีจากเครื่องอื่น — จะรวมให้ตอนกลับหน้าแรก')}catch(e){}}}}
   PS.lh=hash(JSON.stringify({v:1,k:local()}));
   PS.last=Date.now();LS.set('murim_pst',PS.last);
@@ -44595,3 +44595,8 @@ setInterval(()=>{try{if(!DU||!S){miss=0;return}const m=$('modal');if(modalOpen&&
  else{try{drawDuel()}catch(e){const d=DU;DU=null;try{const w=fight(d.name,d.ep);d.cb&&d.cb(w);render();checkDeath()}catch(x){}}}
 }catch(e){console.error('duelFix',e)}},1000);
 })()}catch(e){console.error('duelFix',e)}
+
+// ============================================================
+// BLOCK 63: กันหน้าแรกรีโหลดเองระหว่างผู้เล่นกำลังเลือก/ตั้งค่าตัวละคร (มีอัปเดตใหม่บ่อย) — รีโหลดเฉพาะตอนไม่มีการแตะ 3 นาที ไม่งั้นโชว์แถบ "มีอัปเดตใหม่" ให้กดเอง
+// ============================================================
+try{(()=>{window._lastAct=Date.now();const t=()=>{window._lastAct=Date.now()};['pointerdown','keydown','touchstart','wheel'].forEach(e=>addEventListener(e,t,{passive:true,capture:true}))})()}catch(e){console.error('block63',e)}
