@@ -43237,7 +43237,7 @@ function mAdd(id,g){const m=MS();m[id]=(m[id]||0)+1;try{LS.set('murim_mg2',m)}ca
 let CUR=null;
 function play(id,o,cb){const g=G[id];if(!g)return false;o=o||{};const lv=o.daily?0:mLv(id),ez=(1+lv*.12)*(o.ez||1),T=Math.max(3,Math.round(o.t||g.t||10));
  if(CUR)try{CUR.fin(0,1)}catch(e){}
- modal(`<h3>${g.ic} ${o.title||g.n}${lv?` <small class="tag2">${'★'.repeat(lv)}</small>`:''}</h3>${o.tag?`<div class="mgMod">${o.tag}</div>`:''}<p class="tag2">${o.sub||g.how} · <b id="m2T">${T}</b> วิ</p><div id="m2B" style="user-select:none;-webkit-user-select:none;touch-action:manipulation"></div>${o.noSkip?'':`<button class="gbtn" id="m2S" style="width:100%;margin-top:8px">⏭ ข้าม (ได้ผลกลางๆ)</button>`}`,'mg2');
+ modal(`<h3>${g.ic} ${o.title||g.n}${lv?` <small class="tag2">${'★'.repeat(lv)}</small>`:''}</h3>${o.tag?`<div class="mgMod">${o.tag}</div>`:''}<p class="tag2">${o.sub||g.how} · <b id="m2T">${T}</b> วิ</p><div id="m2B" style="user-select:none;-webkit-user-select:none;touch-action:manipulation"></div>`,'mg2');
  const st={done:0,t0:performance.now()};const B=$('m2B');let inst=null,n=T,iv=null;
  const fin=(sc,skip)=>{if(st.done)return;st.done=1;clearInterval(iv);try{inst&&inst.stop&&inst.stop()}catch(e){}CUR=null;if($('modal').dataset.k==='mg2')closeM();sc=Math.max(0,Math.min(1,+sc||0));if(!skip&&!o.daily)mAdd(id,g);try{cb&&cb(sc,skip,inst)}catch(e){console.error('mg2cb',e)}};
  CUR={fin};const api={live:()=>!st.done&&$('modal').dataset.k==='mg2',end:sc=>setTimeout(()=>fin(sc!=null?sc:inst.sc(),0),280),ez,lv,o};
@@ -43245,10 +43245,11 @@ function play(id,o,cb){const g=G[id];if(!g)return false;o=o||{};const lv=o.daily
  try{o.after&&o.after(B,api)}catch(e){}
  const sk=$('m2S');if(sk)sk.onclick=()=>fin(.45,1);
  iv=setInterval(()=>{if(st.done)return;if($('modal').dataset.k!=='mg2'){fin(inst.sc(),0);return}n--;const e=$('m2T');if(e)e.textContent=Math.max(0,n);if(n<=0)fin(inst.sc(),0)},1000);return true}
-window.mg2Play=play;window._mg2Y=(id,o)=>yearly(id,o);window._mg2E={simon,lanes,hold,beat,track};
+window.mg2Play=play;window._mgBusy=()=>!!CUR&&$('modal').dataset.k==='mg2';window._mg2Y=(id,o)=>yearly(id,o);window._mg2E={simon,lanes,hold,beat,track};
 // คอมโบ + รางวัลจากมินิเกมรายปี
 function yearly(id,o2){o2=o2||{};const g=G[id];return play(id,o2,(sc,skip,inst)=>{if(!live0())return;const perf=sc>=.9&&!skip;S.mgc=perf?(S.mgc||0)+1:0;const cm=[1,1,1.2,1.5,2][Math.min(4,S.mgc||0)],lvm=1+mLv(id)*.05;let x=Math.min(2.4,Math.min(1.6,sc*cm*lvm)*(o2.mx||1));
  let rt='';try{rt=g.rw(skip?.45:x,inst)}catch(e){}
+ if(sc<.35){try{const d=Math.max(1,Math.round(S.maxHp*(sc<.15?.1:.06)));S.hp=Math.max(1,S.hp-d);joy(sc<.15?-4:-2);if(S.mgFail==null)S.mgFail=0;S.mgFail++;rt=(rt?rt+' · ':'')+`💢 พลาด — พลังชีวิต −${fmt(d)} · ความสุขลด`}catch(e){}}
  log(`${g.ic} ${g.n} — ${skip?'ทำแบบขอไปที':perf?'<b>สมบูรณ์แบบ!</b>':sc>=.6?'ทำได้ดี':'พลาดไปหลายจังหวะ'} (${Math.round(sc*100)}%)${cm>1?` · 🔥 คอมโบ ×${cm}`:''}${o2.tagL?' · '+o2.tagL:''}${rt?' · '+rt:''}`,perf?'epic':'good');try{o2.done&&o2.done(sc,skip)}catch(e){}try{render()}catch(e){}})}
 // ---------- ส่วนประกอบที่ใช้ซ้ำ ----------
 const btn=(t,st)=>`<button class="pbtn" style="width:100%;font-size:18px;padding:13px;${st||''}">${t}</button>`;
@@ -45612,3 +45613,9 @@ window._kidTal=function(c){if(!c||c._inh)return;c._inh=1;const me=S.talent,sp=sp
 // เซฟเดิม: ลูกที่ยังมีชีวิตได้อายุยืนตามสายเลือดปัจจุบัน
 {const _py=passYear;passYear=function(){try{(S&&S.children||[]).forEach(c=>{if(c.alive!==false)c.lb=Math.max(c.lb||0,lifeBase())})}catch(e){}return _py.apply(this,arguments)}}
 })()}catch(e){console.error('kidInh',e)}
+
+// ---------- 🎮 มินิเกม: ผู้เล่นต้องเล่นเอง — ห้ามเหตุการณ์อื่นเด้งทับจนมินิเกมจบเอง (เดิมหน้าต่างเหตุการณ์มาแทนที่แล้วมินิเกมสรุปผลทันที) · ไม่มีปุ่มข้าม ----------
+try{(()=>{const busy=()=>{try{return window._mgBusy&&window._mgBusy()}catch(e){return false}};
+{const _ch=choice;choice=function(...a){if(busy()){const me=S;let n=0;const t=setInterval(()=>{if(S!==me||!S||!S.alive||++n>150){clearInterval(t);return}if(busy())return;clearInterval(t);choice(...a)},400);return}return _ch.apply(this,a)};Object.assign(choice,_ch)}
+{const _du=duel;duel=function(...a){if(busy()){const me=S;let n=0;const t=setInterval(()=>{if(S!==me||!S||!S.alive||++n>150){clearInterval(t);return}if(busy())return;clearInterval(t);duel(...a)},400);return}return _du.apply(this,a)}}
+})()}catch(e){console.error('mgNoSkip',e)}
