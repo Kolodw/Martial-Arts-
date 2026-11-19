@@ -46591,8 +46591,8 @@ const css2=document.createElement('style');css2.textContent=`
 .spv .bar{flex:1;min-width:0}.spv .bar .t{display:flex;justify-content:space-between;font-size:11.5px;color:#cfeff0;gap:6px}
 .spv .bar .g{height:10px;border-radius:99px;background:#0009;border:1px solid #9ff0dc66;overflow:hidden;margin-top:4px}
 .spv .bar .g i{display:block;height:100%;background:linear-gradient(90deg,#3ae8b8,#7ab8ff,#b48aff,#3ae8b8);background-size:200% 100%;animation:spBg 3s linear infinite;border-radius:99px}
-.spv .tb{display:flex;gap:6px;overflow-x:auto;margin:12px 0 4px;scrollbar-width:none}.spv .tb::-webkit-scrollbar{display:none}
-.spv .tb button{flex:0 0 auto;padding:7px 12px;border-radius:99px;border:1px solid #9ff0dc44;background:#ffffff0a;color:#cfeff0;font:inherit;font-size:12.5px;font-weight:800}
+.spv .tb{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:12px 0 4px;padding:4px;border-radius:16px;background:#ffffff08;border:1px solid #9ff0dc22}
+.spv .tb button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0;padding:7px 2px;border-radius:12px;border:1px solid transparent;background:transparent;color:#cfeff0;font:inherit;font-size:11.5px;font-weight:800;line-height:1.15;white-space:nowrap;cursor:pointer}.spv .tb button i{font-style:normal;font-size:18px;line-height:1}
 .spv .tb button.on{background:linear-gradient(135deg,#bffff0,#3ae8b8);color:#03201a;border-color:#bffff0;box-shadow:0 3px 12px #3ae8b866}
 .spv .sec{margin:14px 2px 8px;font-weight:900;font-size:14.5px;color:#eafffa;display:flex;align-items:center;gap:8px}.spv .sec:after{content:"";flex:1;height:2px;background:linear-gradient(90deg,#9ff0dc88,transparent)}
 .spv .cmp3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
@@ -46688,7 +46688,7 @@ window.openSP=async function(tab){if(tab)TB=tab;
  <div class="hero2"><i class="au"></i><i class="au b"></i><i class="sn"></i><svg class="mtn" viewBox="0 0 390 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 60L50 22l30 18 46-32 52 40 34-20 60 34 52-30 66 28v0z" fill="#dfeef6" opacity=".9"/><path d="M0 60L70 36l44 16 60-24 70 32 56-18 90 18z" fill="#9ab8cc"/></svg>
  <div class="in"><span class="chip">ฤดูที่ 1 · ${j.s.open?'เหลือ '+cdTx(left):'ปิดฤดูแล้ว'}</span><h3>❄ ${j.s.n}</h3><p>คัมภีร์ฤดูกาล · ตำนานหมาป่าเงินใต้แสงเหนือ</p>
  <div class="lv"><div class="b">${j.lv}</div><div class="bar"><div class="t"><span>ขั้น ${j.lv} / 30</span><span>${j.lv>=30?'ครบแล้ว ✨':'อีก '+need+' แต้ม'}</span></div><div class="g"><i style="width:${j.lv>=30?100:(j.p%300)/3}%"></i></div></div></div></div></div>
- <div class="tb">${[['tr','🎁 รางวัล'],['st','📖 ตำนาน'],['how','❄ ได้แต้มยังไง'],['en','👑 หน้าจารึก']].map(t=>`<button class="${TB===t[0]?'on':''}" onclick="openSP('${t[0]}')">${t[1]}</button>`).join('')}</div>
+ <div class="tb">${[['tr','🎁','รางวัล'],['st','📖','ตำนาน'],['how','❄','ได้แต้ม'],['en','👑','จารึก']].map(t=>`<button class="${TB===t[0]?'on':''}" onclick="openSP('${t[0]}')"><i>${t[1]}</i>${t[2]}</button>`).join('')}</div>
  <div id="spBody">${body}</div><p class="tag2" style="text-align:center;margin-top:10px">ของแต่งล้วน ไม่มีผลต่อพลังหรืออันดับ</p></div>`,'sp');
  if(TB==='en'){try{const r=await api('sp',{o:'ens'});const b=$('spBody');if(b&&$('modal').dataset.k==='sp'&&TB==='en')b.innerHTML=`<div class="card" style="text-align:center"><b style="color:#fff">👑 หน้าจารึก ${esc(j.s.n)}</b><div class="tag2">รายชื่อผู้ถือฉบับจารึก เรียงตามวันที่จารึก · อยู่ในคัมภีร์ฤดูนี้ตลอดไป</div></div>`+((r.L||[]).length?`<div class="card" style="line-height:2">${r.L.map((x,i)=>`<span style="display:inline-block;margin:0 10px 0 0"><b style="color:#9ff0dc">${i+1}.</b> ${esc(x.n||'ผู้ไม่ประสงค์ออกนาม')}</span>`).join('')}</div>`:'<div class="card tag2" style="text-align:center">หน้านี้ยังว่าง — ชื่อแรกรอคุณอยู่</div>')}catch(e){}}
  try{islChipOff('spc')}catch(e){}};
