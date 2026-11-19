@@ -44708,3 +44708,96 @@ window.lkPaid=async function(btn,k){const v=LK.pk[k],pn=(($('supPn')||{}).value|
 // ทางเข้า: ในหน้าสุ่มเพิ่มแบบคลาสสิก
 setInterval(()=>{try{if($('birth')&&$('birth').classList.contains('on')&&roll&&!$('lkRow')&&!off())ui()}catch(e){}},1500);
 })()}catch(e){console.error('lk',e)}
+
+// ---------- ⚡ สุ่มรัว: ปุ่มในหน้าสุ่มเกิด · ระดับพิเศษ (99) เลือกเป้า % + เก็บชะตาที่ดีที่สุด · ผู้ก่อตั้ง (599) ตัวกรองละเอียด + เป้า 1 ใน X + งบตั๋วซื้อ + ความน่าจะเป็น + บันทึกตัวกรอง 3 ชุด · สุ่มเร็วมีแถบความคืบหน้า ----------
+try{(()=>{
+const T=()=>{try{return window.vipT?window.vipT():0}catch(e){return 0}};
+const offM=()=>!!(CFG.daily||CFG.chm==1||CFG.mw||(roll&&roll.daily));
+const TAL=['ไม่กำหนด','ดีขึ้นไป','หายากขึ้นไป','หายากมากขึ้นไป','ระดับตำนาน'];
+const FK=[['','ไม่กำหนด'],['rare','ชาติหายาก (1 ใน 200+)'],['noble','ขุนนาง / ทายาทธรรมะ'],['martial','ตระกูลยุทธ์ / ทายาทอธรรม'],['demon','สายมาร'],['merchant','พ่อค้า'],['orphan','กำพร้า']];
+const AUTO2=[[.1,'ติด 10% บนสุด'],[.03,'ติด 3% บนสุด'],[.01,'ติด 1% บนสุด'],[.001,'ติด 0.1% บนสุด']];
+const DEF={tal:0,fk:'',trG:0,noBad:1,body:1,ow:0,sys:0,g:'',era:'',x:1000,paid:0};
+let F=Object.assign({},DEF,(()=>{try{return LS.get('murim_vaF',{})||{}}catch(e){return{}}})());
+const trL=r=>(r&&r.trs&&r.trs.list||[]).map(x=>{try{return trOf(x)}catch(e){return null}}).filter(Boolean);
+const CK=[
+ ['tal',F=>F.tal>0,r=>rarOf(r.t.p)>=F.tal],
+ ['fk',F=>!!F.fk,r=>F.fk==='rare'?rarOf(r.f.p)>=3:famKind(r.f.v)===F.fk],
+ ['trG',F=>!!F.trG,r=>trL(r).some(t=>!t.bad)],
+ ['noBad',F=>!!F.noBad,r=>!trL(r).some(t=>t.bad)],
+ ['body',F=>!!F.body,r=>!(r.body&&bodyCs(r.body).some(c=>!c.good))],
+ ['ow',F=>!!F.ow,r=>!!r.isOw],
+ ['sys',F=>!!F.sys,r=>!!r.os],
+ ['g',F=>!!F.g,r=>r.g&&r.g.v.n===F.g],
+ ['era',F=>!!F.era,r=>r.era&&r.era.v.n===F.era]];
+const act=F=>CK.filter(c=>c[1](F));
+const okF=(F,r)=>{try{return act(F).every(c=>c[2](r))}catch(e){return false}};
+const frOf=r=>{try{return r.rare&&r.rare.k?r.rare.fr:1}catch(e){return 1}};
+const okX=(F,r)=>!F.x||frOf(r)<=1/F.x;
+const score=(F,r)=>{let m=0;try{act(F).forEach(c=>{try{if(c[2](r))m++}catch(e){}})}catch(e){}const all=act(F).length;return(m===all?1e6:0)+m*1e3+(okX(F,r)?500:0)-Math.log10(Math.max(1e-9,frOf(r)))};
+// ประมาณความน่าจะเป็นของตัวกรอง (สุ่มจำลอง ไม่ใช้สิทธิ์)
+function estimate(F){const A=act(F);if(!A.length)return 1;const N=1500;let hit=0;const L=window._LK&&window._LK.on||{};
+ for(let i=0;i<N;i++){try{const era=L.era?L.era.v:pickW(ERAS);const r=genRoll(Math.min(.6,era.v.ow*(CFG.xian?2.5:1)));['f','t','trs'].forEach(k=>{if(L[k])r[k]=L[k].v});r.era=era;if(F.body)r.body=bodyGen(false);if(okF(F,r))hit++}catch(e){}}
+ return hit/N}
+const pTot=(F,pf)=>Math.max(0,Math.min(pf,F.x?1/F.x:1));
+const fmt1=p=>p<=0?'แทบไม่มี':p>=.5?Math.round(p*100)+'%':'1 ใน '+fmt(Math.round(1/p));
+// ปุ่มในหน้าสุ่มเกิด
+function btn(){try{const rb=$('rerollBtn');if(!rb)return;const row=rb.parentNode;let b=$('vaBtn');if(offM()||!$('birth').classList.contains('on')){if(b)b.remove();return}
+ if(!b){row.insertAdjacentHTML('beforeend','<button class="gbtn" id="vaBtn" onclick="vaOpen()"></button>');b=$('vaBtn')}const t=T();b.innerHTML=t>=2?'⚡ สุ่มรัว':'⚡ สุ่มรัว 🔒';b.style.opacity=t>=2?'':'.8'}catch(e){}}
+setInterval(btn,1200);{const _gb=goBirth;goBirth=function(){const r=_gb.apply(this,arguments);setTimeout(btn,200);return r}}
+window.vaOpen=function(){const t=T();if(offM())return toast('โหมดนี้สุ่มใหม่ไม่ได้');if(t<2)return vaTeaser();if(t>=3)return vaAdv();return vaSimple()};
+window.vipAutoMenu=window.vaOpen;
+function vaTeaser(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>⚡ สุ่มรัว</h3><div class="item"><b>ระบบสุ่มให้เองจนเจอชีวิตที่ต้องการ</b><p class="tag2" style="margin:6px 0">🏮 <b>ผู้สนับสนุนพิเศษ (99 บาท / 30 วัน)</b> — เลือกเป้า ติด 10% / 3% / 1% / 0.1% บนสุด แล้วกดครั้งเดียว ระบบสุ่มให้จนเจอ · เก็บชะตาที่ดีที่สุดระหว่างทางให้ด้วย</p>
+ <p class="tag2" style="margin:6px 0">👑 <b>ผู้ก่อตั้ง (599 บาท ตลอดไป)</b> — ตั้งตัวกรองละเอียด: พรสวรรค์ขั้นต่ำ ชาติกำเนิด พรสวรรค์พิเศษ ผู้ข้ามมิติ ระบบติดตัว เพศ ยุค · ตั้งเป้า "1 ใน X" เอง · ตั้งงบตั๋วซื้อ · ดูโอกาสเจอก่อนกด · บันทึกตัวกรองได้ 3 ชุด</p></div>
+ <button class="pbtn" style="width:100%" onclick="vipMenu()">🏮 ดูสิทธิ์ผู้สนับสนุน</button>`)}
+function vaSimple(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tag2">ระบบสุ่มให้เองจนเจอชีวิตที่หายากตามเป้า ใช้สิทธิ์สุ่มฟรีของชีวิตนี้ (เหลือ ${rerolls} ครั้ง) · ถ้าหมดก่อนเจอ เลือกได้ว่าจะเอาผลสุดท้ายหรือผลที่ดีที่สุดระหว่างทาง${window._LK&&Object.keys(window._LK.on).length?' · 🔒 ชะตาที่ล็อกไว้ยังอยู่ทุกครั้ง':''}</p>
+ <div class="rrpk" style="grid-template-columns:1fr 1fr">${AUTO2.map((a,i)=>`<button class="opt" onclick="vaGoSimple(${i})"><b>${a[1]}</b><small>โอกาสต่อครั้ง ${fmt1(a[0])}</small></button>`).join('')}</div>
+ <label class="supl" style="display:flex;gap:6px;align-items:center;margin-top:8px"><input type="checkbox" id="vaNb" checked> ไม่เอาพรสวรรค์ร้าย / ร่างกายบกพร่อง</label>
+ <p class="tag2">👑 ผู้ก่อตั้งตั้งตัวกรองละเอียด เป้า 1 ใน X และใช้ตั๋วซื้อได้</p>`)}
+window.vaGoSimple=function(i){const nb=!$('vaNb')||$('vaNb').checked;closeM();run({tal:0,fk:'',trG:0,noBad:nb?1:0,body:nb?1:0,ow:0,sys:0,g:'',era:'',x:Math.round(1/AUTO2[i][0]),paid:0},2)};
+// ---- ผู้ก่อตั้ง ----
+const PRE=()=>{try{return LS.get('murim_vapre',[null,null,null])||[null,null,null]}catch(e){return[null,null,null]}};
+const sel=(id,opts,v)=>`<select id="${id}" onchange="vaRd()" style="width:100%;padding:6px;border-radius:8px">${opts.map(o=>`<option value="${esc(String(o[0]))}"${String(o[0])===String(v)?' selected':''}>${esc(o[1])}</option>`).join('')}</select>`;
+const cb=(id,t,v)=>`<label style="display:flex;gap:6px;align-items:center;margin:3px 0;font-size:13px"><input type="checkbox" id="${id}" onchange="vaRd()"${v?' checked':''}> ${t}</label>`;
+function vaAdv(){const RR=window._RR||{};const P=PRE();const L=window._LK&&window._LK.on||{};
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>⚡ สุ่มรัว · ผู้ก่อตั้ง</h3>
+ <p class="tag2">ตั้งเงื่อนไขแล้วระบบสุ่มให้จนเจอ · ใช้สิทธิ์ฟรีก่อน (เหลือ ${rerolls}) แล้วค่อยใช้ตั๋วซื้อตามงบ${Object.keys(L).length?' · 🔒 ชะตาที่ล็อกไว้ยังอยู่ทุกครั้ง':''}</p>
+ <div class="item" style="display:grid;gap:6px">
+  <div><b>🦴 พรสวรรค์ขั้นต่ำ</b>${sel('vaTal',TAL.map((n,i)=>[i,n]),F.tal)}</div>
+  <div><b>🏠 ชาติกำเนิด</b>${sel('vaFk',FK,F.fk)}</div>
+  <div><b>⚧ เพศ</b>${sel('vaG',[['','ไม่กำหนด']].concat(GENDER.map(g=>[g.n,g.n])),F.g)}</div>
+  <div><b>🌍 ยุคสมัย</b>${sel('vaEra',[['','ไม่กำหนด']].concat(ERAS.map(e=>[e.n,e.n])),F.era)}</div>
+  <div>${cb('vaTrG','✨ ต้องมีพรสวรรค์พิเศษ (ด้านดี)',F.trG)}${cb('vaNoBad','🚫 ห้ามมีพรสวรรค์ด้านร้าย',F.noBad)}${cb('vaBody','🩺 ไม่เอาร่างกายบกพร่อง',F.body)}${cb('vaOw','🌌 ต้องเป็นผู้ข้ามมิติ',F.ow)}${cb('vaSys','🟦 ต้องมีระบบติดตัว',F.sys)}</div>
+  <div><b>🎯 ความหายากรวม: 1 ใน</b> <input id="vaX" type="number" min="0" step="10" value="${F.x||0}" oninput="vaRd()" style="width:110px;padding:5px;border-radius:8px"> <span class="tag2">(0 = ไม่กำหนด)</span></div>
+  <div><b>🎟️ ใช้ตั๋วซื้อไม่เกิน</b> <input id="vaPaid" type="number" min="0" max="500" value="${F.paid||0}" oninput="vaRd()" style="width:80px;padding:5px;border-radius:8px"> ใบ <span class="tag2">(มี ${RR.c==null?'…':fmt(RR.c)})</span></div>
+ </div>
+ <div class="item" id="vaEst" style="font-size:13px">กำลังคำนวณโอกาส…</div>
+ <div class="item" style="font-size:12.5px"><b>💾 ตัวกรองที่บันทึกไว้</b><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:4px">${[0,1,2].map(i=>`<div style="text-align:center"><button class="sysb" style="width:100%;padding:4px" ${P[i]?'':'disabled'} onclick="vaLoad(${i})">${P[i]?'📂 ชุด '+(i+1):'ว่าง'}</button><button class="sysb" style="width:100%;padding:3px;margin-top:3px;font-size:11px" onclick="vaSave(${i})">💾 บันทึกที่ ${i+1}</button></div>`).join('')}</div></div>
+ <button class="pbtn" style="width:100%" onclick="vaStart()">⚡ เริ่มสุ่มรัว</button>`,'vaAdv');
+ if((window._RR||{}).c==null)try{api('rrget').then(j=>{if(window._RR){window._RR.c=Math.max(0,+j.c||0)}}).catch(()=>{})}catch(e){}
+ setTimeout(vaRd,30)}
+let estT=null;
+window.vaRd=function(){const v=id=>$(id);if(!v('vaTal'))return;F={tal:+v('vaTal').value||0,fk:v('vaFk').value,g:v('vaG').value,era:v('vaEra').value,trG:v('vaTrG').checked?1:0,noBad:v('vaNoBad').checked?1:0,body:v('vaBody').checked?1:0,ow:v('vaOw').checked?1:0,sys:v('vaSys').checked?1:0,x:Math.max(0,Math.round(+v('vaX').value||0)),paid:Math.max(0,Math.min(500,Math.round(+v('vaPaid').value||0)))};
+ try{LS.set('murim_vaF',F)}catch(e){}clearTimeout(estT);estT=setTimeout(()=>{try{const pf=estimate(F),p=pTot(F,pf),n=rerolls+F.paid,ch=1-Math.pow(1-p,Math.max(0,n));const e=$('vaEst');if(!e)return;
+  e.innerHTML=`🎯 ตัวกรองนี้เจอราว <b>${fmt1(pf)}</b> ชีวิต${F.x?` · รวมเป้า 1 ใน ${fmt(F.x)} ≈ <b>${fmt1(p)}</b>`:''}<br>งบ ${fmt(n)} ครั้ง (ฟรี ${rerolls} + ตั๋วซื้อ ${F.paid}) → โอกาสเจอราว <b>${n?Math.round(ch*1000)/10:0}%</b>${ch<.3&&n?' <span style="color:#e0503c">· ลองเพิ่มงบหรือลดเงื่อนไข</span>':''}<br><span class="tag2">ค่าประมาณจากการจำลอง ผลจริงอาจต่างได้</span>`}catch(x){}},120)};
+window.vaSave=function(i){const P=PRE();P[i]=Object.assign({},F);try{LS.set('murim_vapre',P)}catch(e){}toast(`💾 บันทึกตัวกรองชุด ${i+1} แล้ว`);vaAdv()};
+window.vaLoad=function(i){const P=PRE();if(!P[i])return;F=Object.assign({},DEF,P[i]);try{LS.set('murim_vaF',F)}catch(e){}vaAdv();toast(`📂 โหลดตัวกรองชุด ${i+1}`)};
+window.vaStart=function(){vaRd();const f=Object.assign({},F);if(f.paid>0){modal(`<button class="xbtn" onclick="vaAdv()">✕</button><h3>⚡ ยืนยันใช้ตั๋วซื้อ</h3><p>ถ้าสิทธิ์ฟรีหมดก่อนเจอ จะใช้<b>ตั๋วซื้อสูงสุด ${f.paid} ใบ</b> (ตั๋วทองจากของล็อกอินก่อน) · ตั๋วที่ดึงมาแต่ไม่ได้ใช้จะคืนให้อัตโนมัติ</p><button class="pbtn" style="width:100%" onclick="vaGo3()">⚡ ยืนยัน เริ่มเลย</button><button class="gbtn" style="width:100%;margin-top:6px" onclick="vaAdv()">กลับไปแก้</button>`);window._vaF=f;return}window._vaF=f;vaGo3()};
+window.vaGo3=function(){const f=window._vaF||F;closeM();run(f,3)};
+// ---- เครื่องสุ่ม ----
+let STOP=0;window.vaStop=()=>{STOP=1};
+async function run(F,tier){if(offM())return;STOP=0;const r0=rerolls;let n=0,taken=0,hit=false,best=roll,bS=score(F,roll);const t0=Date.now();
+ const prog=()=>{const e=$('vaPr');if(e)e.innerHTML=`<div style="height:10px;border-radius:6px;background:#0002;overflow:hidden"><div style="height:100%;width:${Math.min(100,Math.round(n/Math.max(1,r0+(tier>=3?F.paid:0))*100))}%;background:linear-gradient(90deg,#f1c94a,#d9604a)"></div></div><div class="tag2" style="margin-top:4px">สุ่มแล้ว ${n} ครั้ง · ใช้ตั๋วซื้อ ${Math.max(0,n-r0)} · ดีสุดตอนนี้: ${esc((best&&best.rare&&best.rare.k)?rareFrTxt(best.rare.fr):'ธรรมดา')}</div>`};
+ modal(`<h3>⚡ กำลังสุ่มรัว…</h3><div id="vaPr"></div><button class="gbtn" style="width:100%;margin-top:8px" onclick="vaStop()">⏹ หยุด</button>`,'varun');prog();
+ if(okF(F,roll)&&okX(F,roll))hit=true;
+ while(!hit&&!STOP){if(rerolls<=0){if(tier<3)break;const want=Math.min(10,F.paid-taken);if(want<=0)break;let j=null;try{j=await api('rrtake',{n:want})}catch(e){}if(!j||!j.got)break;taken+=j.got;rerolls+=j.got;try{if(window._RR)window._RR.c=Math.max(0,+j.c||0)}catch(e){}}
+  try{doRoll()}catch(e){console.error('va',e);break}n++;const s=score(F,roll);if(s>bS){bS=s;best=roll}if(okF(F,roll)&&okX(F,roll)){hit=true;break}if(n>=2500)break;if(n%12===0){prog();await new Promise(r=>setTimeout(r,0))}}
+ // คืนตั๋วที่ดึงมาแต่ไม่ได้ใช้
+ const usedPaid=Math.max(0,n-r0),back=Math.max(0,taken-usedPaid);if(back>0){rerolls=Math.max(0,rerolls-back);try{$('rr').textContent=rerolls}catch(e){}try{const j=await api('rrback',{n:back});if(window._RR&&window._RR.c!=null)window._RR.c+=j.back||0}catch(e){}}
+ const sum=`สุ่ม ${n} ครั้ง · สิทธิ์ฟรี ${Math.min(n,r0)} · ตั๋วซื้อ ${usedPaid} · ${Math.round((Date.now()-t0)/100)/10} วินาที`;
+ if(hit){closeM();toast(n?`⚡ เจอแล้ว! ${sum}`:'⚡ ชีวิตนี้ตรงเงื่อนไขอยู่แล้ว');try{sfx('good')}catch(e){}return}
+ const showBest=best&&best!==roll;
+ modal(`<h3>⚡ ${STOP?'หยุดแล้ว':'งบหมดแล้ว ยังไม่เจอ'}</h3><p class="tag2">${sum}</p>
+ ${showBest?`<div class="item"><b>⭐ ชะตาที่ดีที่สุดระหว่างทาง</b><br>${esc(best.t.v.n)} · ${esc(best.f.v.n)}${trL(best).length?' · '+esc(trL(best).map(t=>t.n).join(', ')):''}<br><span class="tag2">${best.rare&&best.rare.k?rareFrTxt(best.rare.fr):'ธรรมดา'}</span></div>
+ <button class="pbtn" style="width:100%" onclick="vaBest()">⭐ เอาชะตาที่ดีที่สุด</button><button class="gbtn" style="width:100%;margin-top:6px" onclick="closeM()">เอาผลสุดท้าย</button>`:`<button class="pbtn" style="width:100%" onclick="closeM()">ตกลง</button>`}`,'vaEnd');window._vaBest=best;try{sfx('bad')}catch(e){}}
+window.vaBest=function(){const p=window._vaBest,LK=window._LK;closeM();if(!p||!LK||p===roll)return;LK.undo={f:p.f,t:p.t,trs:p.trs,g:p.g,w:p.w,it:p.it,os:p.os,isOw:p.isOw,op:p.op,seed:p.seed,look:p.look,p:p.p,era:p.era,body:p.body,name:p.name,soul:p.soul};rerolls++;LK.noPrev=1;doRoll();toast('⭐ กลับไปชะตาที่ดีที่สุดแล้ว')};
+})()}catch(e){console.error('va',e)}

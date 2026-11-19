@@ -990,6 +990,16 @@ module.exports = async (req, res) => {
       if (!(left >= 0)) { await cmd('INCRBY', 'lkc:' + id, n); return res.status(402).json({ err: 'none', c: Math.max(0, +(await cmd('GET', 'lkc:' + id)) || 0) }) }
       return res.json({ ok: 1, c: left });
     }
+    if (a === 'rrtake' || a === 'rrback') { // ⚡ สุ่มรัว (ผู้ก่อตั้ง): ดึงตั๋วทีละชุด (ตั๋วทองก่อน แล้วตั๋วซื้อ) · คืนตั๋วที่ดึงไปแต่ไม่ได้ใช้ (ไม่เกินที่ดึงไปใน 1 วัน)
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'id' });
+      const n = Math.max(1, Math.min(50, b.n | 0 || 1)), tk = 'rrtk:' + id;
+      if (a === 'rrback') { const out = Math.max(0, +(await cmd('GET', tk)) || 0), m = Math.min(n, out); if (m > 0) { await cmd('INCRBY', 'rrc:' + id, m); await cmd('DECRBY', tk, m) } return res.json({ ok: 1, back: m }) }
+      let got = 0;
+      for (const key of ['rrg:' + id, 'rrc:' + id]) { if (got >= n) break; const have = Math.max(0, +(await cmd('GET', key)) || 0), take = Math.min(have, n - got); if (take > 0) { const left = +(await cmd('DECRBY', key, take)); if (left < 0) { await cmd('INCRBY', key, -left); got += take + left } else got += take } }
+      if (got > 0) { await cmd('INCRBY', tk, got); await cmd('EXPIRE', tk, 86400) }
+      const c = Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0) + Math.max(0, +(await cmd('GET', 'rrg:' + id)) || 0);
+      return res.json({ ok: 1, got, c });
+    }
     if (a === 'rruse') { // k=f → ตั๋วฟรีธรรมดา (จากจบชีวิต) · ปกติ → ตั๋วทองจากของล็อกอินก่อน แล้วค่อยตั๋วที่ซื้อ
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'id' });
       const rest = async () => ({ c: Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0) + Math.max(0, +(await cmd('GET', 'rrg:' + id)) || 0), f: Math.max(0, +(await cmd('GET', 'rrf:' + id)) || 0) });
