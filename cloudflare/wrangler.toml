@@ -1,4 +1,4 @@
-# 1 ใน นวนิยาย — ตั้งค่าสำหรับย้ายไป Cloudflare Workers (ยังไม่ได้ใช้ · เว็บจริงยังรันบน Vercel)
+# 1 ใน นวนิยาย — เว็บจริงรันบน Cloudflare Workers ตัวนี้แล้ว (vercel.json เป็นของเก่า ไม่ได้ใช้)
 # วิธีใช้ดูที่ cloudflare/README.md
 name = "martial-arts"
 main = "worker.js"
