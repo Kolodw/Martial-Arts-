@@ -2091,7 +2091,7 @@ function questPick(){ // เลือกเควสเอง 1 จาก 3
  setScene('system');
  choice('🟦 เลือกเควส',`<span class="px">[ระบบ]</span> ตรวจพบเส้นทางหลายสาย โฮสต์เลือกได้ 1 เควส`,qs.map(q=>({t:q.n,s:`ภายใน ${q.dl-S.age} ปี · ${Math.round(q.rw*m)} EXP · ${Math.round(q.sp*m)} SP`,f(){pushQuest(q)}})));
  return true}
-function qProg(q){return Math.max(0,QV[q.k]()-q.b)}
+function qProg(q){let v=0;try{v=Math.max(0,QV[q.k]()-q.b)}catch(e){}if(!(v<=(q.mx||0)))q.mx=v;return Math.max(v,q.mx||0)}
 function qFail(q){const s=S.sys;s.fail++;const r=R(1,4);
  if(r===1){const d=R(15,30);S.hp-=d;sysLog(`เควสล้มเหลว: ${q.n} — บทลงโทษ: กระแสไฟฟ้าไหลผ่านร่าง พลังชีวิต −${d}`,'fail')}
  else if(r===2){const d=Math.min(s.sp,R(15,30));s.sp-=d;sysLog(`เควสล้มเหลว: ${q.n} — บทลงโทษ: ยึด SP −${d}`,'fail')}
@@ -5602,7 +5602,7 @@ function nqOffer(){const q=nqMake();if(!q)return;
   {t:'✅ รับเควส',s:'ทำไม่ทันตามเวลาจะเสียความสุขและชื่อเสียงเล็กน้อย',f(){S.nq=S.nq||[];S.nq.push(q);log(`📜 รับเควสจาก<b>${q.gv}</b>: ${q.n} (ภายใน ${q.dl-S.age} ปี)`,'good')}},
   {t:'🙏 ปฏิเสธอย่างสุภาพ',s:q.gp?'ความสัมพันธ์ลดลงเล็กน้อย':'ไม่มีผลเสีย',skip:true,f(){const p=q.gp&&(S.parents||[]).find(x=>x.n===q.gp);if(p)p.rel=Math.max(0,(p.rel||0)-3);log(`คุณปฏิเสธเควสจาก${q.gv}`)}}])}
 function nqTick(){if(!S||!S.alive)return;S.nq=S.nq||[];
- for(const q of S.nq.slice()){if(q.pz){q.dl++;q.b=QV[q.k]();continue}const pr=QV[q.k]()-q.b,p=q.gp&&(S.parents||[]).find(x=>x.n===q.gp&&x.alive);
+ for(const q of S.nq.slice()){if(q.pz){q.dl++;q.b=QV[q.k]()-(q.mx||0);continue}const pr=qProg(q),p=q.gp&&(S.parents||[]).find(x=>x.n===q.gp&&x.alive);
   if(pr>=q.g){S.nq.splice(S.nq.indexOf(q),1);S.money+=q.mny;S.fame+=q.fm;joy(4);if(p)p.rel=Math.min(100,(p.rel||0)+8);log(`📜✅ ทำเควสของ<b>${q.gv}</b>สำเร็จ: ${q.n} — ได้ ${nqRwTxt(q)}`,'epic');}
   else if(S.age>=q.dl){S.nq.splice(S.nq.indexOf(q),1);joy(-3);S.fame=Math.max(0,S.fame-3);if(p)p.rel=Math.max(0,(p.rel||0)-5);log(`📜❌ เควสของ${q.gv}ล้มเหลว: ${q.n}`,'bad')}}
  if(S.beastMode||S.age<6||S.nq.length>=2||choice._cur||modalOpen)return;if(Math.random()<.14)nqOffer()}
@@ -5619,7 +5619,7 @@ questPick=function(){const keys=qKeys();if(keys.length<2){newQuest();return fals
  choice('🟦 เลือกเควส',`<span class="px">[ระบบ]</span> วิเคราะห์ช่วงชีวิตของโฮสต์: <b>${STAGE_N[lifeStage()]}</b> (อายุ ${S.age} ปี) — ตรวจพบเส้นทางหลายสาย เลือกได้ 1 เควส`,qs.map(q=>({t:q.n,s:`${q.why?q.why.split(' — ')[1]+' · ':''}ภายใน ${q.dl-S.age} ปี · ${Math.round(q.rw*m)} EXP · ${Math.round(q.sp*m)} SP`,f(){pushQuest(q)}})));return true};
 {const _ql=questList;questList=function(){const L=_ql.apply(this,arguments);try{
  L.forEach(x=>{if(x.q&&x.q.why&&/^sq/.test(x.k))x.d=`ผู้ให้เควส: ระบบ · ${x.q.why}<br>${x.d}`});
- (S.nq||[]).forEach((q,i)=>L.push({k:'nq'+i,ic:'📜',n:q.n,p:`${fmtG(+Math.max(0,QV[q.k]()-q.b).toFixed(1))}/${fmtG(q.g)} · ${q.pz?'⏸ พักไว้':'เหลือ '+Math.max(0,q.dl-S.age)+' ปี'}`,d:`ผู้ให้เควส: <b>${q.gv}</b> — ${q.why}<br>รางวัล ${nqRwTxt(q)}`,pz:1,q}))}catch(e){console.error(e)}return L}}
+ (S.nq||[]).forEach((q,i)=>L.push({k:'nq'+i,ic:'📜',n:q.n,p:`${fmtG(+qProg(q).toFixed(1))}/${fmtG(q.g)} · ${q.pz?'⏸ พักไว้':'เหลือ '+Math.max(0,q.dl-S.age)+' ปี'}`,d:`ผู้ให้เควส: <b>${q.gv}</b> — ${q.why}<br>รางวัล ${nqRwTxt(q)}`,pz:1,q}))}catch(e){console.error(e)}return L}}
 try{Object.assign(I18N.d,{'ฝากเควสมา':'gives you a quest','รับเควส':'Accept quest','ปฏิเสธอย่างสุภาพ':'Decline politely','ผู้ให้เควส':'Quest giver','รางวัล':'Reward','วัยทารก':'Infancy','วัยเด็ก':'Childhood','วัยรุ่น':'Teen years','วัยหนุ่มสาว':'Young adulthood','วัยกลางคน':'Middle age','วัยชรา':'Old age','ผู้ใหญ่บ้าน':'Village chief','ช่างตีเหล็กประจำเมือง':'Town blacksmith','นายอำเภอประจำเมือง':'District magistrate','ผู้เฒ่าลึกลับในโรงเตี๊ยม':'Mysterious old man at the inn','หลวงจีนแห่งวัดเส้าหลิน':'Shaolin monk','ลูกๆ ของคุณ':'Your children','ทำเควสของ':'Completed the quest of','เควสของ':'Quest of','ล้มเหลว':'failed','วิเคราะห์ช่วงชีวิตของโฮสต์':'Analyzing host life stage'})}catch(e){}
 
 // ---------- v8.1 สมุดตำนานแบบดาว + ฉายา ----------
@@ -18486,7 +18486,7 @@ function sqStart(){const s=S.sys,C=sqC();setScene('system');
 function sqDil(){const s=S.sys,C=sqC(),P=sqP(),D=C.d;setScene('system');
  const pick=(w)=>{s.qc.f.p=w;const like=w===P[1];sqAfAdd(like?8:-4);sysLog(`💬 <i>${like?(sqMood()===0?'…ก็ไม่เลว':'นี่แหละที่ข้าอยากเห็น'):(sqMood()===2?'ข้าไม่เห็นด้วย แต่ข้าเคารพการตัดสินใจเจ้า':'โง่เขลา')}</i> — ${P[0]}`);
   if(w==='A'&&C===SQC.demon)S.karma-=30;if(w==='B'&&C===SQC.transcend)S.int=Math.max(0,S.int-5);if(w==='A'&&C===SQC.transcend)S.lifespan=Math.max(S.age+5,S.lifespan-10);
-  Object.assign(s.qc,{st:3},sqGoal(C.g2,w==='B'&&C===SQC._?2:1.7,3));sysLog(`🟪 [${C.n}] ขั้น 3/4 — <b>${s.qc.n}</b> ภายใน ${s.qc.dl-S.age} ปี`)};
+  Object.assign(s.qc,{st:3,mx:0},sqGoal(C.g2,w==='B'&&C===SQC._?2:1.7,3));sysLog(`🟪 [${C.n}] ขั้น 3/4 — <b>${s.qc.n}</b> ภายใน ${s.qc.dl-S.age} ปี`)};
  choice(`🟪 ${C.n} · ขั้น 2/4`,`${D[0]}<br><span class="tag2">${P[0]}ดูเหมือนจะมีความเห็นเรื่องนี้…</span>`,[{t:D[1],s:D[2],f(){pick('A')}},{t:D[3],s:D[4],f(){pick('B')}}])}
 function sqWin(){const s=S.sys,C=sqC(),w=s.qc.f.p||'A';const txt=sqRw(w==='A'?C.rA:C.rB);const e=Math.round(Math.min(expNeed(s.lv)*.3,500+s.lv*15)),sp=R(40,80);gainExp(e);s.sp+=sp;s.qcN=(s.qcN||0)+1;s.qc=null;s.qcY=S.age;sqAfAdd(15);
  try{keyAdd(`สำเร็จภารกิจสายเรื่อง「${C.n}」`)}catch(x){}
@@ -18494,11 +18494,11 @@ function sqWin(){const s=S.sys,C=sqC(),w=s.qc.f.p||'A';const txt=sqRw(w==='A'?C.
 function sqFail(why){const s=S.sys,C=sqC();const sp=Math.round(s.sp*.25),pw=Math.round(Math.min(S.power*.03,pctPow(.03)));s.sp-=sp;S.power-=pw;s.qcBad=S.age+5;s.qc=null;s.qcY=S.age;sqAfAdd(-12);
  sysLog(`🟥 ภารกิจสายเรื่อง「${C.n}」ล้มเหลว (${why}) — SP −${sp} · พลังยุทธ์ −${fmt(pw)} · <b>ระบบผิดหวัง</b>: รางวัลเควส −15% อีก 5 ปี`,'fail');sqSay(false)}
 function sqTick(){const s=S.sys;if(!s||S.age<14)return false;sqAf();
- const q=s.qc;if(q){if(q.st===1||q.st===3){if(QV[q.k]()-q.b>=q.g){if(q.st===1){sysLog(`🟪 [${sqC().n}] ขั้น 1/4 สำเร็จ`,'up');sqAfAdd(3,0);sqDil();return true}sqWin();return true}if(S.age>=q.dl){sqFail('หมดเวลา');return false}}return false}
+ const q=s.qc;if(q){if(q.st===1||q.st===3){if(qProg(q)>=q.g){if(q.st===1){sysLog(`🟪 [${sqC().n}] ขั้น 1/4 สำเร็จ`,'up');sqAfAdd(3,0);sqDil();return true}sqWin();return true}if(S.age>=q.dl){sqFail('หมดเวลา');return false}}return false}
  if(Math.random()<(S.xian?.13:.1)&&S.age-(s.qcY==null?-99:s.qcY)>=6&&!choice._cur){sqStart();return true}return false}
 {const _stQ=sysTick;sysTick=function(){const s=S&&S.sys,d0=s?s.done:0;const r=_stQ.apply(this,arguments);try{const s2=S&&S.sys;if(s2&&S.alive){if(s2.done>d0){sqAfAdd(4*(s2.done-d0));if(Math.random()<.45)sqSay(true)}if(!r&&!(typeof mwOn==='function'&&mwOn())&&sqTick())return true}}catch(e){console.error(e)}return r}}
 {const _osQ=openSys;openSys=function(){const r=_osQ.apply(this,arguments);try{const s=S.sys;if(!s)return r;const b=$('modal').querySelector('.sysbox');if(!b||b.querySelector('.sqbox'))return r;const a=sqAf(),P=sqP(),q=s.qc,C=sqC(),m=sqM();
- const h=`<div class="sqbox" style="margin:8px 0;padding:8px;border:1px solid #6a5ac0;border-radius:8px;background:#1a1530"><b>🤖 ${P[0]}</b> · <span style="color:${SQ_MC[sqMood()]}">${SQ_MN[sqMood()]}</span> <span class="tag2">${a}/100</span><div class="hpbar" style="height:6px;margin:4px 0"><i style="width:${a}%;background:${SQ_MC[sqMood()]}"></i></div><span class="tag2">รางวัลเควส ×${m.toFixed(2)}${s.qcBad&&S.age<s.qcBad?` · ระบบผิดหวังอีก ${s.qcBad-S.age} ปี`:''} · ทำเควสสำเร็จ/ทำตามที่เขาชอบ = สนิทขึ้น · ล้มเหลว/ขัดใจ = เย็นชา</span>${q?`<div style="margin-top:6px">🟪 <b>${C.n}</b> ขั้น ${q.st}/4 — ${q.n} <span class="tag2">(${fmt(Math.max(0,QV[q.k]()-q.b))}/${fmt(q.g)} · เหลือ ${Math.max(0,q.dl-S.age)} ปี)</span></div>`:`<div class="tag2" style="margin-top:4px">ภารกิจสายเรื่องสำเร็จแล้ว ${s.qcN|0} เรื่อง</div>`}</div>`;
+ const h=`<div class="sqbox" style="margin:8px 0;padding:8px;border:1px solid #6a5ac0;border-radius:8px;background:#1a1530"><b>🤖 ${P[0]}</b> · <span style="color:${SQ_MC[sqMood()]}">${SQ_MN[sqMood()]}</span> <span class="tag2">${a}/100</span><div class="hpbar" style="height:6px;margin:4px 0"><i style="width:${a}%;background:${SQ_MC[sqMood()]}"></i></div><span class="tag2">รางวัลเควส ×${m.toFixed(2)}${s.qcBad&&S.age<s.qcBad?` · ระบบผิดหวังอีก ${s.qcBad-S.age} ปี`:''} · ทำเควสสำเร็จ/ทำตามที่เขาชอบ = สนิทขึ้น · ล้มเหลว/ขัดใจ = เย็นชา</span>${q?`<div style="margin-top:6px">🟪 <b>${C.n}</b> ขั้น ${q.st}/4 — ${q.n} <span class="tag2">(${fmt(qProg(q))}/${fmt(q.g)} · เหลือ ${Math.max(0,q.dl-S.age)} ปี)</span></div>`:`<div class="tag2" style="margin-top:4px">ภารกิจสายเรื่องสำเร็จแล้ว ${s.qcN|0} เรื่อง</div>`}</div>`;
  const h3=b.querySelector('h3');if(h3)h3.insertAdjacentHTML('afterend',h);else b.insertAdjacentHTML('afterbegin',h)}catch(e){console.error(e)}return r}}
 try{SYS_GUIDE.push({s:'world',nw:1,ic:'🤖',t:'นิสัยเจ้าระบบและความสัมพันธ์',d:'เจ้าระบบแต่ละแบบมีนิสัยของตัวเอง (เช่น ครูฝึกเย็นชา นักบัญชีงก ปู่ในแหวนขี้บ่น) และมีค่าความสัมพันธ์ 0–100 · ทำเควสสำเร็จ +4 · ล้มเหลว −6 · เลือกทางที่เขาชอบในภารกิจสายเรื่อง +8 · ความสัมพันธ์สูงได้รางวัลเควสสูงสุด ×1.2 · ต่ำสุด ×0.8 · ถึง 100 ครั้งแรกได้แต้มอิสระ +2 และ SP +100 · ดูได้ในหน้าระบบ'},{s:'world',nw:1,ic:'🟪',t:'ภารกิจสายเรื่อง',d:'ตั้งแต่อายุ 14 เจ้าระบบจะมอบภารกิจยาว 4 ขั้นที่เป็นเรื่องเฉพาะของระบบนั้น: ทำเป้าหมาย → เลือกทางแยก → ทำเป้าหมายที่ยากขึ้น → ตอนจบ (ต่างกันตามทางที่เลือก) · สำเร็จ: รางวัลพิเศษ + EXP เกือบครึ่งเลเวล + SP + ความสัมพันธ์ +15 · หมดเวลา: SP −25% พลัง −3% และระบบผิดหวัง (รางวัลเควส −15% 5 ปี) · ห่างกันอย่างน้อย 6 ปี'})}catch(e){}
 // ===================== v17.2 สรุปเนื้อเรื่อง · เปิด/ปิดเนื้อเรื่อง · หมวดเนื้อเรื่องในหน้าดูคนอื่น =====================
@@ -25980,7 +25980,7 @@ const _ql=questList;questList=function(){const L=_ql.apply(this,arguments);try{
   else x.p=base+(tqAccd(q)?'':' · ยังไม่ได้กดรับ (กดรับที่กระดานเมือง)')+left});
  L.forEach(x=>{if(x.q&&/^nq/.test(x.k)&&!x.q.pz&&QV[x.q.k]&&QV[x.q.k]()-x.q.b>=x.q.g){x.ready=1;x.p=x.p+' · ✅ ครบแล้ว — ส่งให้เองทันที'}})}catch(e){console.error(e)}return L};
 const _oq=openQuests;openQuests=function(){const r=_oq.apply(this,arguments);try{const L=questList(),m=$('modal');if(m){const its=m.querySelectorAll('.qitem');L.forEach((x,i)=>{const el=its[i];if(!el)return;if(x.ready)el.classList.add('qrdy');if(x.go&&!el.querySelector('.qgo'))el.insertAdjacentHTML('beforeend','<button class="sysb qgo" onclick="closeM();openTown(\'board\')">🏛️ ไปกระดานเมือง</button>')})}}catch(e){console.error(e)}return r};
-const nqNow=()=>{let n=0;for(const q of (S.nq||[]).slice()){if(q.pz)continue;if(QV[q.k]()-q.b<q.g)continue;const p=q.gp&&(S.parents||[]).find(x=>x.n===q.gp&&x.alive);S.nq.splice(S.nq.indexOf(q),1);S.money+=q.mny;S.fame+=q.fm;joy(4);if(p)p.rel=Math.min(100,(p.rel||0)+8);log(`📜✅ ทำเควสของ<b>${q.gv}</b>สำเร็จ: ${q.n} — ได้ ${nqRwTxt(q)}`,'epic');n++}return n};
+const nqNow=()=>{let n=0;for(const q of (S.nq||[]).slice()){if(q.pz)continue;if(qProg(q)<q.g)continue;const p=q.gp&&(S.parents||[]).find(x=>x.n===q.gp&&x.alive);S.nq.splice(S.nq.indexOf(q),1);S.money+=q.mny;S.fame+=q.fm;joy(4);if(p)p.rel=Math.min(100,(p.rel||0)+8);log(`📜✅ ทำเควสของ<b>${q.gv}</b>สำเร็จ: ${q.n} — ได้ ${nqRwTxt(q)}`,'epic');n++}return n};
 setInterval(()=>{try{if(!S||!S.alive||typeof tqAuto!=='function')return;let n=0;if((S.tq||[]).length)n+=tqAuto();if((S.nq||[]).length)n+=nqNow();if(n){render();const m=$('modal');if(m&&m.dataset.k==='town')openTown('board')}}catch(e){}},2000);
 }catch(e){console.error(e)}})();
 
@@ -45655,7 +45655,7 @@ function info(x){const o={cur:null,need:null,left:null,how:'',go:'',ready:!!x.re
   else if(K==='power'){o.cur=Math.round(total());o.need=q.need;o.cat='pow';o.how=fTxt('train');o.go="setFocus('train');closeM()"}
   else if(K==='fame'){o.cur=Math.max(0,S.fame-q.k0);o.need=q.need;o.cat='fame';o.how='สร้างชื่อเสียง — ดวลชนะ ทำภารกิจ ช่วยเหลือผู้คน';o.go="setFocus('adv');closeM()"}
   else if(K==='fight'){o.cat='ft';o.how='พร้อมแล้ว — ไปกระดานเมือง กด ⚔️ ออกปฏิบัติ';o.go="closeM();openTown('board')"}}
- else if(/^nq/.test(x.k)||/^sq/.test(x.k)){const q=x.q;if(!q)return o;o.q=q;o.cur=/^sq/.test(x.k)?qProg(q):Math.max(0,QV[q.k]()-q.b);o.need=q.g;o.left=q.dl-S.age;const f=QHINT[q.k];if(f){o.how=fTxt(f);o.go=`setFocus('${f}');closeM()`;o.cat=CAT[f]}o.ready=o.cur>=o.need}
+ else if(/^nq/.test(x.k)||/^sq/.test(x.k)){const q=x.q;if(!q)return o;o.q=q;o.cur=qProg(q);o.need=q.g;o.left=q.dl-S.age;const f=QHINT[q.k];if(f){o.how=fTxt(f);o.go=`setFocus('${f}');closeM()`;o.cat=CAT[f]}o.ready=o.cur>=o.need}
  else if(/^mwq/.test(x.k)){const M=mwM(),q=x.q;if(!M||!q)return o;o.q=q;try{o.cur=MWQ_V[q.v](M)}catch(e){o.cur=0}o.need=q.tgt;o.left=q.dl-M.y;o.how='ดูวิธีทำในหน้าเควสยุคนี้';o.go="closeM();openMwQuests()";o.cat={money:'mon',save:'mon',qi:'qi',fame:'fame'}[q.v]||null}
  else if(x.k==='goal'){o.how=x.d||''}}catch(e){}return o}
 const num=v=>v==null?'':(typeof fmtG==='function'?fmtG(+(+v).toFixed(1)):fmt(v));
@@ -45806,3 +45806,16 @@ choice=function(title,text,opts){try{if(S&&S.xt&&typeof title==='string'&&/ฟ�
  N._god=1;opts=N}}catch(e){}return _ch.call(this,title,text,opts)};
 Object.assign(choice,_ch);
 })()}catch(e){console.error('olGod',e)}
+
+// ===================== 📋 เควส: เก็บความคืบหน้าสูงสุด (ทำถึงแล้วไม่ล้มเหลวเพราะค่าลดภายหลัง) · ยกเลิกเควสที่เป็นไปไม่ได้แล้วโดยไม่เสียอะไร · ไม่สร้างเควสทะลวงขั้นตอนติดเพดานขั้น =====================
+try{(()=>{
+const capped=()=>{try{return realmIdx()>=7||(S.rcap!=null&&!S.beastMode&&realmIdx()>=S.rcap)}catch(e){return false}};
+const IMP={realm:capped,rank:()=>!S.faction||S.rank>=4,gear:()=>{try{return!gearNext()}catch(e){return false}},house:()=>{try{return houseT()>=3}catch(e){return false}},kid:()=>!isWed()&&S.age>=(S.xian?Math.max(50,lifeMax()*.6):50),join:()=>!!S.ownSect&&!S.faction,pill:()=>!S.sys||S.sys.t!=='alchemy'};
+const NM={realm:'ติดเพดานขั้นของโลกนี้แล้ว',rank:'ไม่ได้อยู่สำนักหรือตำแหน่งสูงสุดแล้ว',gear:'อุปกรณ์อัปเกรดสูงสุดแล้ว',house:'บ้านดีที่สุดแล้ว',kid:'ไม่มีคู่และเลยวัยแล้ว',join:'ตั้งสำนักของตัวเองแล้ว',pill:'ไม่ใช่ระบบหลอมยา'};
+try{const r0=QOK.realm;QOK.realm=()=>!capped()&&(!r0||r0())}catch(e){}try{const r1=NQOK.realm;NQOK.realm=()=>!capped()&&(!r1||r1())}catch(e){}
+function sweep(){if(!S||!S.alive)return;const A=[];try{if(S.sys&&Array.isArray(S.sys.quests))A.push(['s',S.sys.quests])}catch(e){}if(Array.isArray(S.nq))A.push(['n',S.nq]);
+ A.forEach(([t,L])=>{L.slice().forEach(q=>{if(!q||!q.k)return;let p=0;try{p=qProg(q)}catch(e){return}if(p>=q.g)return;const f=IMP[q.k];let bad=false;try{bad=!!(f&&f())}catch(e){}
+  if(bad){L.splice(L.indexOf(q),1);const m=`📋 ยกเลิกเควส「${esc(q.n)}」อัตโนมัติ — ทำต่อไม่ได้แล้ว (${NM[q.k]||'เงื่อนไขหายไป'}) ไม่เสียอะไร`;try{if(t==='s'&&typeof sysLog==='function')sysLog(m);else log(m,'')}catch(e){}if(S.qPin&&/^(sq|nq)/.test(S.qPin))S.qPin=null}})})}
+{const _py=passYear;passYear=function(){try{sweep()}catch(e){}const r=_py.apply(this,arguments);try{sweep()}catch(e){}return r}}
+setInterval(()=>{try{sweep()}catch(e){}},3000);
+})()}catch(e){console.error('qfix',e)}
