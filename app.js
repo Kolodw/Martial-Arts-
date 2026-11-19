@@ -44104,3 +44104,23 @@ window.mwBuy=function(k){const M=S.mw,it=SHOP.find(x=>x[0]===k);if(!M||!it)retur
    const h=`<div class="dk-grp dkMw"><h5>🏙️ ยุคปัจจุบัน</h5><div class="dk-btns">${L.map(x=>`<button class="dk-btn" onclick="try{${x[2]}()}catch(e){}"><span class="dk-bi">${x[0]}</span><span class="dk-bt">${x[1]}</span></button>`).join('')}</div></div>`;const q=dr.querySelector('.dk-q');if(q)q.insertAdjacentHTML('afterend',h);else dr.insertAdjacentHTML('afterbegin',h)}}}catch(e){}return r}}
 window._b61={SHOP};
 })()}catch(e){console.error('block61',e)}
+
+// ---------- รหัสยาว: คัดลอกได้แน่นอนขึ้น (สำรองหลายทาง) · คัดลอกได้จากหน้าแรกทุกช่อง · บันทึก/เปิดเป็นไฟล์ ----------
+try{(()=>{
+const codeOf=n=>{try{const d=n?readSave(n):(S?(saveGame(),LS.get(slotKey(S.slot||1),null)):null);return d?btoa(unescape(encodeURIComponent(JSON.stringify(d)))):''}catch(e){return''}};
+function legacyCopy(t){try{const ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;width:1px;height:1px;opacity:0';document.body.appendChild(ta);ta.focus();ta.select();try{ta.setSelectionRange(0,t.length)}catch(e){}const ok=document.execCommand&&document.execCommand('copy');ta.remove();return!!ok}catch(e){return false}}
+window.copyLong=async function(n,btn){const t=codeOf(n);if(!t)return toast('ไม่มีเซฟให้คัดลอก');let ok=false;
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);ok=true}}catch(e){}
+ if(!ok)ok=legacyCopy(t);
+ if(ok){toast(`📋 คัดลอกรหัสยาวแล้ว (${fmt(t.length)} ตัวอักษร)`);if(btn){btn.textContent='✅ คัดลอกแล้ว';setTimeout(()=>{try{btn.textContent='📋 คัดลอกรหัสยาว'}catch(e){}},2000)}return}
+ try{if(navigator.share){await navigator.share({title:'รหัสเซฟ 1 ใน นวนิยาย',text:t});return}}catch(e){if(e&&e.name==='AbortError')return}
+ const ta=$('modal')&&$('modal').querySelector('textarea.crin[readonly]');if(ta){ta.value=t;ta.focus();ta.select();try{ta.setSelectionRange(0,t.length)}catch(e){}}toast('เครื่องนี้ไม่ให้คัดลอกอัตโนมัติ — เลือกข้อความในช่องแล้วกดคัดลอกเอง หรือกด 💾 บันทึกเป็นไฟล์')};
+window.saveLongFile=function(n){const t=codeOf(n);if(!t)return toast('ไม่มีเซฟ');try{const d=n?readSave(n):S;const nm=((d&&d.S?d.S.name:d&&d.name)||'save').replace(/[\\/:*?"<>|\s]+/g,'_');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=`1inanovel-${nm}.txt`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);toast('💾 บันทึกไฟล์แล้ว — เปิดที่เครื่องใหม่ด้วยปุ่ม 📂 เปิดไฟล์รหัส')}catch(e){toast('บันทึกไฟล์ไม่ได้')}};
+window.loadLongFile=function(inp){const f=inp&&inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{importAny(String(r.result||''))}catch(e){toast('อ่านไฟล์ไม่ได้')}};r.readAsText(f)};
+{const _o=openSaveCode;openSaveCode=function(){const r=_o.apply(this,arguments);try{const m=$('modal');
+ const cb=[...m.querySelectorAll('button')].find(b=>/คัดลอกรหัส/.test(b.textContent)&&/clipboard/.test(b.getAttribute('onclick')||''));
+ if(cb){cb.setAttribute('onclick','copyLong(0,this)');cb.textContent='📋 คัดลอกรหัสยาว';cb.insertAdjacentHTML('afterend','<button class="gbtn" style="width:100%;margin:0 0 6px" onclick="saveLongFile(0)">💾 บันทึกรหัสยาวเป็นไฟล์</button>')}
+ if(!S){const L=SLOTS.map(n=>{const d=readSave(n);return d&&d.S?`<div class="item"><b>ช่อง ${n}: ${esc(d.S.name||'')}</b> <span class="tag2">อายุ ${d.S.age|0}</span><div class="brow" style="margin-top:4px"><button class="gbtn" style="flex:1" onclick="copyLong(${n},this)">📋 คัดลอกรหัสยาว</button><button class="gbtn" style="flex:1" onclick="saveLongFile(${n})">💾 บันทึกเป็นไฟล์</button></div></div>`:''}).join('');
+  if(L){const h=m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',`<p class="tag2">รหัสยาวของแต่ละช่อง — ใช้ได้แม้ไม่มีเน็ต · ถ้าส่งผ่านแชทแล้วรหัสขาด ให้ใช้ "บันทึกเป็นไฟล์" แทน</p>${L}`)}}
+ const ld=m.querySelector('#ldCode');if(ld&&!m.querySelector('#ldFile'))ld.insertAdjacentHTML('afterend','<label class="gbtn" style="display:block;text-align:center;width:100%;margin-top:6px;cursor:pointer">📂 เปิดไฟล์รหัส<input id="ldFile" type="file" accept=".txt,text/plain" style="display:none" onchange="loadLongFile(this)"></label>')}catch(e){console.error('osc3',e)}return r}}
+})()}catch(e){console.error('copyLong',e)}
