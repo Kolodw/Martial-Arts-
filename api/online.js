@@ -1728,6 +1728,13 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       let mine = null; if (rk != null && +rk >= 20) { const sc = await cmd('ZSCORE', 'dl:' + d, id); const m = jp(await cmd('HGET', 'dlm:' + d, id)); mine = Object.assign({ s: +sc, rank: +rk + 1, me: 1 }, m || {}) }
       return res.json({ d, today, top: await unpack(d, top), n: +n || 0, rank: rk == null ? null : +rk + 1, mine, yd, ytop: await unpack(yd, yt) });
     }
+    if (a === 'hoststat') {
+      // ผู้เล่นเข้าเกมจากที่อยู่เว็บไหน (นับจากข้อมูลเครื่องล่าสุดของแต่ละคน) — แอดมินเท่านั้น
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
+      const H = {}; let cur = '0', n = 0;
+      do { const r = await cmd('HSCAN', 'lm', cur, 'COUNT', 1000); cur = String(r[0]); const L = r[1] || []; for (let i = 0; i < L.length; i += 2) { let v = null; try { v = JSON.parse(L[i + 1]) } catch {} if (!v) continue; const o = String(v.o || 'ไม่ระบุ').slice(0, 60), t = +v.t || 0, h = H[o] || (H[o] = { all: 0, d7: 0, d1: 0 }); h.all++; if (now - t < 7 * 864e5) h.d7++; if (now - t < 864e5) h.d1++ } n++ } while (cur !== '0' && n < 400);
+      return res.json({ ok: 1, hosts: Object.entries(H).sort((x, y) => y[1].d7 - x[1].d7 || y[1].all - x[1].all).slice(0, 40).map(([o, v]) => Object.assign({ o }, v)) });
+    }
     if (a === 'mst' || a === 'mstget') {
       // สถิติการเล่นแยกโหมด (นับรายวัน เวลาไทย) — ไม่เก็บข้อมูลส่วนตัว
       const dOf = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10), today = dOf(now);
