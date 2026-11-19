@@ -42908,3 +42908,63 @@ function carry(why){const r=olRatio()*(S.olX||1);const k=Math.min(4,Math.floor(M
   olEv()}catch(e){console.error('blk54',e)}return r}}
 window._b54={epAdj,tCat,olv,carry,rpCheck};
 })()}catch(e){console.error('block54',e)}
+
+// ---------- 📊 ตัวนับจุดที่ไปถึง · 🧭 ตอนนี้ควรทำอะไร · 🌱 เมนูเรียบง่ายชีวิตแรก · 🎯 เลือกแนวทางทุก 5 ปี · 🗓️ ความท้าทายประจำสัปดาห์ ----------
+try{(()=>{
+const DAY=864e5,GKk='murim_gl';
+const glX=()=>{let o=LS.get(GKk,null);if(!o||typeof o!=='object')o={};o.d=o.d||{};o.s=Object.assign({lives:0},o.s||{});return o};
+const isNew=()=>{try{return glX().s.lives===0&&!(LS.get('murim_graves',[])||[]).length}catch(e){return false}};
+// 1) funnel: ส่งแต่ละจุดครั้งเดียวต่อเครื่อง (hint/simple/wkc นับทุกวัน)
+function fn(k,daily){try{const F=LS.get('murim_fn',{}),id=daily?k+':'+new Date(Date.now()+7*3600e3).toISOString().slice(0,10):k;if(F[id])return;F[id]=1;LS.set('murim_fn',F);const go=()=>{if(typeof onlineOK!=='undefined'&&onlineOK)api('fn',{k}).catch(()=>{delete F[id];LS.set('murim_fn',F)});else setTimeout(go,5000)};go()}catch(e){}}
+window.fnHit=fn;
+setTimeout(()=>{fn('open');try{const f=LS.get('murim_firstv',0);if(f){const d=(Date.now()-f)/DAY;if(d>=1&&d<3)fn('d2');if(d>=6&&d<10)fn('d7')}}catch(e){}},3000);
+{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);fn('born');return r}}
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive){if(S.age===16)fn('a16');if(S.age===40)fn('a40')}}catch(e){}return r}}
+{const _eg=endGame;endGame=function(){try{const n=glX().s.lives;if(n===0)fn('end1');if(n===1)fn('lives2')}catch(e){}return _eg.apply(this,arguments)}}
+// 2) ปุ่ม 🧭 ตอนนี้ควรทำอะไร
+function tips(){const T=[];if(!S||!S.alive)return T;const B=S.beastMode&&!S.beastMode.human;
+ if(S.hp<S.maxHp*.35)T.push(['❤️','บาดเจ็บหนัก — เปลี่ยนแนวทางเป็น 🍵 พักผ่อน','setFocus("rest");closeM()']);
+ if(S.sys&&S.sys.pts>0)T.push(['🟦',`มีแต้มระบบ ${S.sys.pts} แต้มยังไม่ใส่`,'openSys()']);
+ if(S.sys&&S.sys.quests&&S.sys.quests.length)T.push(['📋',`เควสระบบ ${S.sys.quests.length} รายการ — ดูว่าต้องทำอะไร`,'openSys()']);
+ if((S.learnQ||[]).length)T.push(['📕',`มีคัมภีร์รอฝึก ${S.learnQ.length} เล่ม`,'openArts()']);
+ try{if(S.arts.length>=artCap())T.push(['🧠','ความจำวิชาเต็ม — หลอมหรือลืมวิชาที่อ่อนเพื่อเปิดที่','openArts()'])}catch(e){}
+ if(!B&&!S.faction&&S.age>=14&&S.age<50)T.push(['🏯','ยังไม่มีสำนัก — เข้าสำนักได้วิชาและเพื่อน','openFaction()']);
+ try{const K=S.o&&S.o.kl;if(K&&K.some(x=>x.seen&&!x.dead))T.push(['🩸','รู้ที่ซ่อนศัตรูตระกูลแล้ว — ดูในแผนที่','openMap()'])}catch(e){}
+ try{const o=LS.get('murim_dly',{});if(o.d!==new Date(Date.now()+7*3600e3).toISOString().slice(0,10)&&typeof dailyOpen==='function')T.push(['🎁','ยังไม่ได้เช็คอินวันนี้','dailyOpen()'])}catch(e){}
+ if(!B&&!S.spouse&&S.age>=20&&S.age<40)T.push(['🌸','ยังไม่มีคู่ — แนวทาง 🌸 ครอบครัว ช่วยหาคู่','setFocus("love");closeM()']);
+ if(!T.length)T.push(['🗡️','ทุกอย่างเรียบร้อย — ฝึกต่อหรือออกท่องยุทธภพหาโอกาสใหม่','closeM()']);
+ return T.slice(0,4)}
+window.whatNow=function(){try{fn('hint',1);const T=tips();modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🧭 ตอนนี้ควรทำอะไร?</h3><p class="tag2">เลือกจากสถานะตอนนี้ของ ${esc(S.name)} · อายุ ${S.age|0}</p>`+T.map(t=>`<button class="opt" style="width:100%;text-align:left;margin-top:6px" onclick='${t[2]}'>${t[0]} ${t[1]}</button>`).join(''),'whatnow')}catch(e){console.error(e)}};
+function wnBtn(){try{const hr=document.querySelector('#game .hudr');if(!hr||$('wnBtn'))return;const b=document.createElement('button');b.id='wnBtn';b.className='watchb';b.style.cssText='display:inline-block';b.textContent='🧭';b.title='ตอนนี้ควรทำอะไร?';b.onclick=e=>{e.stopPropagation();whatNow()};hr.insertBefore(b,hr.firstChild)}catch(e){}}
+{const _r=render;render=function(){const r=_r.apply(this,arguments);wnBtn();return r}}
+// 3) เมนูเรียบง่ายสำหรับชีวิตแรก (ผู้เล่นใหม่เท่านั้น · กดแสดงทั้งหมดได้)
+const CORE=/openMe\(|openArts\(|openFaction\(|openMarket\(|openFamily\(|openSys\(|openTown\(|openMap\(|openQuests\(|openItems\(|openPortal\(/;
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(!isNew()||LS.get('murim_fullmenu',0))return r;const G=[...$('modal').querySelectorAll('.mgrid')];if(!G.length)return r;let n=0;const g=G[G.length-1];
+ G.forEach(gr=>{let vis=0;[...gr.children].forEach(b=>{if(b.tagName==='BUTTON'&&!CORE.test(b.getAttribute('onclick')||'')){b.style.display='none';b.classList.add('smHid');n++}else vis++});if(!vis){gr.style.display='none';gr.classList.add('smHid');const h=gr.previousElementSibling;if(h&&h.classList.contains('mch15')){h.style.display='none';h.classList.add('smHid')}}});
+ if(n){fn('simple',1);g.insertAdjacentHTML('afterend',`<button class="gbtn" style="width:100%;margin-top:6px" onclick="LS.set('murim_fullmenu',1);document.querySelectorAll('#modal .smHid').forEach(x=>{x.style.display=''});this.remove()">🌱 ชีวิตแรกแสดงเฉพาะเมนูหลัก — แสดงอีก ${n} เมนู</button>`)}}catch(e){}return r}}
+// 4) ทุก 5 ปี (16–80) ถามแนวทางช่วงนี้บนเกาะ — ไม่หยุดเกม
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(!S||!S.alive||auto||(S.beastMode&&!S.beastMode.human)||S.age<16||S.age>80||S.age%5||typeof islOn!=='function'||!islOn())return r;
+ const L=FOCUS.filter(f=>f[0]!==S.focus&&focusOK(f[0])&&['train','qi','study','adv','work','love','rest','mission'].includes(f[0]));if(L.length<2)return r;
+ const pick=L.sort(()=>Math.random()-.5).slice(0,3),cur=FOCUS.find(f=>f[0]===S.focus);
+ island({big:1,ms:9000,ic:'🎯',h:`อายุ ${S.age} — ช่วงนี้จะมุ่งอะไร?`,t:`ตอนนี้: ${cur?cur[1]+' '+cur[2]:'-'}`,btns:pick.map(f=>({t:f[1]+' '+f[2],f:()=>{setFocus(f[0]);toast(`${f[1]} ช่วงนี้มุ่ง${f[2]}`)}}))})}catch(e){}return r}}
+// 5) ความท้าทายประจำสัปดาห์
+const wkN=()=>Math.floor((Date.now()+7*3600e3-4*DAY)/(7*DAY));
+const WC=[
+ {id:'nosect',ic:'🚶',n:'จอมยุทธ์ไร้สังกัด',d:'ห้ามเข้าสำนักตลอดชีวิต · คะแนน = ระดับขั้นสูงสุด',fail:s=>!!s.faction,sc:()=>realmIdx()*1000+(S.age|0)},
+ {id:'peace',ic:'🕊️',n:'มือไม่เปื้อนเลือด',d:'ห้ามปลิดชีพใคร · คะแนน = อายุที่อยู่ได้',fail:s=>(s.kills||0)>0,sc:()=>(S.age|0)*10+realmIdx()},
+ {id:'poor',ic:'🪙',n:'ตั้งตัวจากศูนย์',d:'เริ่มไม่มีเงินเลย · คะแนน = เงินตอนจบ (หลักพัน)',start:()=>{S.money=0},sc:()=>Math.round((S.money||0)/1000)},
+ {id:'solo',ic:'🗻',n:'ผู้สันโดษ',d:'ห้ามแต่งงาน · คะแนน = ระดับขั้นสูงสุด',fail:s=>!!s.spouse,sc:()=>realmIdx()*1000+(S.age|0)},
+ {id:'sage',ic:'📚',n:'ปราชญ์ยุทธภพ',d:'คะแนน = ปัญญาตอนจบ',sc:()=>Math.round(S.int||0)},
+ {id:'fame',ic:'📣',n:'ชื่อก้องแผ่นดิน',d:'คะแนน = ชื่อเสียงตอนจบ (หลักร้อย)',sc:()=>Math.round((S.fame||0)/100)}];
+const wcCur=()=>WC[wkN()%WC.length];
+window.wcStart=function(){LS.set('murim_wcPend',wkN());closeM();try{CFG.daily=null}catch(e){}goBirthPick()};
+{const _sl=startLife;startLife=function(){const pend=LS.get('murim_wcPend',null);const r=_sl.apply(this,arguments);try{if(pend!=null){LS.del('murim_wcPend');if(pend===wkN()&&S&&!S.custom&&!(roll&&roll.daily)){const c=wcCur();S.wkc={id:c.id,w:pend};try{c.start&&c.start()}catch(e){}fn('wkc',1);setTimeout(()=>{try{log(`🗓️ <b>ความท้าทายประจำสัปดาห์: ${c.ic} ${c.n}</b> — ${c.d}`,'epic',true)}catch(e){}},500)}}}catch(e){}return r}}
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.wkc&&!S.wkc.f){const c=WC.find(x=>x.id===S.wkc.id);if(c&&c.fail&&c.fail(S)){S.wkc.f=1;log(`🗓️ ผิดกติกา "${c.n}" — ชีวิตนี้ไม่นับคะแนนความท้าทาย`,'bad')}}}catch(e){}return r}}
+{const _eg=endGame;endGame=function(){let res=null;try{if(S&&S.wkc&&!S.wkc.done){S.wkc.done=1;const c=WC.find(x=>x.id===S.wkc.id);if(c&&!S.wkc.f&&!(c.fail&&c.fail(S))&&S.wkc.w===wkN()){const sc=Math.max(1,c.sc()|0);res={c,sc};const M=LS.get('murim_wcBest',{});if(!M[S.wkc.w]||M[S.wkc.w]<sc){M[S.wkc.w]=sc;LS.set('murim_wcBest',M)}const T=LS.get('murim_wcT',[]);if(!T.includes(c.id)){T.push(c.id);LS.set('murim_wcT',T);try{const o=glX();o.sp=(o.sp||0)+3;LS.set(GKk,o)}catch(e){}}fn('wkcok',1);if(onlineOK)api('wkcsub',{w:String(S.wkc.w),s:sc,n:pname()}).catch(()=>{})}}}catch(e){}
+ const r=_eg.apply(this,arguments);try{if(res){const E=$('end');if(E&&!E.querySelector('.wcEnd')){const b=document.createElement('div');b.className='box wcEnd';b.style.cssText='margin:8px 0;padding:8px';b.innerHTML=`🗓️ <b>ความท้าทาย ${res.c.ic} ${res.c.n}</b> — คะแนน <b>${fmt(res.sc)}</b> <span class="tag2">· ทำครั้งแรกได้ 🔮 3 แต้ม · ดูอันดับที่หน้าแรก</span>`;E.insertBefore(b,E.firstChild)}}}catch(e){}return r}}
+window.wcOpen=async function(){const c=wcCur(),w=wkN(),best=LS.get('murim_wcBest',{})[w];
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🗓️ ความท้าทายประจำสัปดาห์</h3><div class="box" style="padding:10px"><b>${c.ic} ${c.n}</b><p class="tag2">${c.d}<br>เปลี่ยนโจทย์ทุกวันจันทร์ · ทำสำเร็จครั้งแรกได้ 🔮 3 แต้มวิญญาณ${best?` · คะแนนดีสุดของคุณ ${fmt(best)}`:''}</p><button class="pbtn" style="width:100%" onclick="wcStart()">🐣 เริ่มชีวิตความท้าทาย</button></div><h4>🏆 อันดับสัปดาห์นี้</h4><div id="wcTop"><p class="tag2">กำลังโหลด…</p></div>`,'wkc');
+ try{const j=await api('wkc&w='+w);const el=$('wcTop');if(el)el.innerHTML=(j.top||[]).length?j.top.map((x,i)=>`<div class="item" style="${x.me?'border-color:#ffc23a':''}"><b>${i+1}. ${esc(x.n)}</b> <span style="float:right">${fmt(x.s)}</span></div>`).join(''):'<p class="tag2">ยังไม่มีใครทำสำเร็จสัปดาห์นี้ — เป็นคนแรกได้เลย</p>'}catch(e){const el=$('wcTop');if(el)el.innerHTML='<p class="tag2">โหลดอันดับไม่ได้ (ออฟไลน์)</p>'}};
+function wcBtn(){try{const t=$('title');if(!t||$('wcBtn'))return;const d=t.querySelector('button[onclick="goDaily()"]');if(!d)return;const b=document.createElement('button');b.id='wcBtn';b.className='gbtn';b.style.cssText='width:100%;margin-top:8px';const c=wcCur();b.innerHTML=`🗓️ ความท้าทายประจำสัปดาห์<br><small class="tag2">${c.ic} ${c.n}</small>`;b.onclick=()=>wcOpen();d.parentNode.insertBefore(b,d.nextSibling)}catch(e){}}
+setTimeout(wcBtn,700);{const _rl=renderLegends;renderLegends=function(){const r=_rl.apply(this,arguments);wcBtn();return r}}
+})()}catch(e){console.error('wn/wkc',e)}

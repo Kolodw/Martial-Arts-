@@ -1094,6 +1094,31 @@ module.exports = async (req, res) => {
       if (b.test) { const r0 = await pushHashes([h], { t: '🔔 เปิดแจ้งเตือนแล้ว', b: 'คุณจะได้รับแจ้งเตือนเมื่อผู้ดูแลตอบกลับหรือมีประกาศสำคัญ', u: '/', g: 'hello' }); return res.json({ ok: 1, test: r0.sent }) }
       return res.json({ ok: 1 });
     }
+    if (a === 'fn') { // 📊 ตัวนับจุดที่ผู้เล่นไปถึง (ไม่เก็บตัวตน · นับรวมต่อวัน · key เดียวต่อวัน)
+      const k = String(b.k || ''); if (!/^(open|born|a16|a40|end1|d2|d7|hint|simple|wkc|wkcok|lives2)$/.test(k)) return res.json({ ok: 0 });
+      const dk = 'fn:' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
+      try { await pipe([['HINCRBY', dk, k, 1], ['EXPIRE', dk, 86400 * 60]]) } catch (e) {}
+      return res.json({ ok: 1 });
+    }
+    if (a === 'fnstat') {
+      if (!isAdmKey(qOf(req).key || b.key)) return res.status(403).json({ err: 'admin' });
+      const days = []; for (let i = 0; i < 14; i++) days.push(new Date(now + 7 * 3600e3 - i * 86400e3).toISOString().slice(0, 10));
+      const rs = await pipe(days.map(d => ['HGETALL', 'fn:' + d]));
+      const out = days.map((d, i) => { const r = rs[i], o = {}; if (Array.isArray(r)) for (let j = 0; j + 1 < r.length; j += 2) o[r[j]] = +r[j + 1]; else Object.assign(o, r || {}); return { d, ...o } });
+      return res.json({ days: out });
+    }
+    if (a === 'wkcsub' || a === 'wkc') { // 🗓️ ทำเนียบความท้าทายประจำสัปดาห์ (เก็บ 30 วัน · ท็อป 20)
+      const w = String((a === 'wkc' ? qOf(req).w : b.w) || '').replace(/[^0-9]/g, '').slice(0, 6); if (!w) return res.json({ top: [] });
+      const zk = 'wkc:' + w, nk = 'wkcn:' + w;
+      if (a === 'wkcsub') {
+        if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'id' });
+        const sc = Math.max(0, Math.min(1e7, Math.round(+b.s || 0))); if (!sc) return res.json({ ok: 0 });
+        await pipe([['ZADD', zk, 'GT', sc, id], ['HSET', nk, id, clean(String(b.n || ''), 24) || 'นิรนาม'], ['EXPIRE', zk, 86400 * 30], ['EXPIRE', nk, 86400 * 30], ['ZREMRANGEBYRANK', zk, 0, -201]]);
+      }
+      const top = await cmd('ZREVRANGE', zk, 0, 19, 'WITHSCORES'), ids = []; for (let i = 0; i < (top || []).length; i += 2) ids.push(top[i]);
+      const nm = ids.length ? await cmd('HMGET', nk, ...ids) : [];
+      return res.json({ ok: 1, top: ids.map((x, i) => ({ n: nm[i] || 'นิรนาม', s: +top[i * 2 + 1], me: x === id ? 1 : 0 })) });
+    }
     if (a === 'pushre') { // 🔔 ดึงผู้เล่นที่หายไปกลับมา: ส่ง push ให้เฉพาะคนที่เปิดแจ้งเตือนไว้ และห่างหาย 3–45 วัน · คนละไม่เกิน 1 ครั้ง/7 วัน · เรียกจาก cron รายวัน (CRON_SECRET) หรือแอดมิน
       const au = String(req.headers['authorization'] || ''), cs = process.env.CRON_SECRET || '';
       if (!(cs && au === 'Bearer ' + cs) && !isAdmKey(qOf(req).key || b.key)) return res.status(403).json({ err: 'forbidden' });
