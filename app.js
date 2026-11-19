@@ -45575,3 +45575,23 @@ const css=document.createElement('style');css.textContent=`#birth.svB h2{color:#
 #birth.svB .trait:before{content:'';position:absolute;right:-26px;top:-26px;width:70px;height:70px;border-radius:50%;border:2px solid #8ab4ff33;box-shadow:0 0 0 8px #b07aff14,0 0 0 16px #8ab4ff0d;pointer-events:none}
 #birth.svB .box.hcard{border-color:#8ab4ff88!important;background:radial-gradient(120% 90% at 50% 0%,#2a2a6a,#141026)!important}`;document.head.appendChild(css);
 })()}catch(e){console.error('block69',e)}
+
+// ============================================================
+// BLOCK 70: ⏸ แถบ "เวลาหยุดรอ" ไม่กระตุก/ไม่ลอยทับหน้าต่าง — เดิมแอนิเมชันกระพริบใช้ transform ทับการจัดกึ่งกลาง (แถบกระโดดซ้ายขวาทุกจังหวะ)
+//           และลอยอยู่เหนือหน้าต่างอื่น (z-index 9000) → จัดกึ่งกลางด้วย margin · กระพริบด้วยแสงอย่างเดียว · ยึดตำแหน่งเหนือแถบปุ่มล่าง · ซ่อนตอนมีหน้าต่างเปิด
+// ============================================================
+try{(()=>{
+const css=document.createElement('style');css.textContent=`
+#pendBar{animation:pbP2 1.6s ease-in-out infinite!important;transform:none!important;will-change:auto}
+@keyframes pbP2{50%{filter:brightness(1.15);box-shadow:0 0 0 2px #e8b54a66,0 4px 18px #e8b54a44}}
+#pendBar.pbBot{position:fixed!important;left:0!important;right:0!important;margin:0 auto!important;transform:none!important;width:min(94vw,440px)!important;bottom:var(--pbB,calc(env(safe-area-inset-bottom) + 140px))!important;z-index:45!important}
+#pendBar.pbTop{position:fixed!important;left:0!important;right:0!important;margin:0 auto!important;width:min(94vw,440px)!important;top:var(--pbT,120px)!important;z-index:45!important;box-shadow:0 6px 20px #0008}
+body:has(#mask.on) #pendBar.pbBot,body:has(#mask.on) #pendBar.pbTop{visibility:hidden}
+#pendBar .pbPos{float:right}`;document.head.appendChild(css);
+let last=-1;
+let lastT=-1;
+function pos(){try{const t=document.querySelector('#game .box.top');if(t&&t.offsetParent){const v=Math.round(t.getBoundingClientRect().bottom+6);if(Math.abs(v-lastT)>2){lastT=v;document.documentElement.style.setProperty('--pbT',v+'px')}}const c=document.querySelector('#game .ctrl');if(!c||!c.offsetParent)return;const v=Math.max(60,Math.round(innerHeight-c.getBoundingClientRect().top+6));if(Math.abs(v-last)>2){last=v;document.documentElement.style.setProperty('--pbB',v+'px')}}catch(e){}}
+try{const c=document.querySelector('#game .ctrl');if(c&&window.ResizeObserver)new ResizeObserver(pos).observe(c)}catch(e){}
+{const _pe=pendBar;pendBar=function(){const r=_pe.apply(this,arguments);try{const b=$('pendBar');if(b){b.classList.toggle('pbTop',b.style.display!=='none'&&LS.get('murim_pendpos','top')!=='bottom')}}catch(e){}return r}}
+addEventListener('resize',pos);setInterval(pos,1500);setTimeout(pos,500);
+})()}catch(e){console.error('block70',e)}
