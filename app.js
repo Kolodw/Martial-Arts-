@@ -45819,3 +45819,7 @@ function sweep(){if(!S||!S.alive)return;const A=[];try{if(S.sys&&Array.isArray(S
 {const _py=passYear;passYear=function(){try{sweep()}catch(e){}const r=_py.apply(this,arguments);try{sweep()}catch(e){}return r}}
 setInterval(()=>{try{sweep()}catch(e){}},3000);
 })()}catch(e){console.error('qfix',e)}
+
+// ===================== 😈 ทางมารทะลวงขั้นได้อย่างยุติธรรม: ผู้ที่กรรมติดลบใช้ "จิตมาร" (ความชั่วที่ตั้งมั่น) แทนกรรมดีในการคำนวณทัณฑ์ =====================
+try{(()=>{const _ts=tribStats;tribStats=function(t,k){const r=_ts.apply(this,arguments);try{if(S&&(S.karma||0)<0&&r&&Array.isArray(r.parts)){const T=tribT(k||'r',t),n=v=>Math.max(0,Math.min(1,v)),i=r.parts.findIndex(p=>p[0]==='กรรม');
+ if(i>=0){const v=n((-(S.karma||0)+80)/(150+100*Math.pow(1.25,T)));if(v>r.parts[i][1]){r.parts[i]=['😈 จิตมาร',v];r.sc=r.parts.reduce((a,x)=>a+x[1],0)/r.parts.length}}}}catch(e){}return r}})()}catch(e){console.error('demonTrib',e)}
