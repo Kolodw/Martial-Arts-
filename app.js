@@ -43905,6 +43905,7 @@ const RB={north:[['จิ้งจอกหิมะ','หางเกล็ด�
  isle:[['ปูเปลือกคราม','ก้ามหนีบคลื่น','def'],['ปลาโลมาคลื่น','ว่ายทะลุคลื่น','agi'],['ปลาหมึกยักษ์หมอกทะเล','หมึกพรางวิญญาณ','ctrl'],['เต่ามหาสมุทร','กระดองค้ำทะเล','def']],
  wood:[['กวางดาวพราว','เขาเรืองแสงรักษา','sup'],['งูเถาวัลย์','รัดเถาพันชั้น','ctrl'],['ลิงภูตไม้','ปีนพันกิ่ง','agi'],['ต้นไม้เดินได้พันปี','รากเรียกชีวิต','sup']],
  jade:[['นกยูงหยก','รำพรางตา','ctrl'],['เสือขาวราชวัง','คำรามพิทักษ์วัง','atk'],['กิเลนหยก','มงคลคุ้มภัย','sup'],['หงส์ขาวราชสำนัก','ปีกพันธนาการ','ctrl']]};
+window._svRB=RB;window._svRN=RN;
 {const _hx=window._svHuntX;window._svHuntX=(g0,i,safe,opts)=>{if(_hx)_hx(g0,i,safe,opts);try{const g=S.sv,reg=g.reg||'gold',L=RB[reg];if(!L)return;const st=Math.min(3,safe),b=L[st];
  opts.splice(Math.max(0,opts.length-1),0,{t:`${TIER[st][1]} ${b[0]} · ${TIER[st][0]}`,s:`${TYN[b[2]]} · สัตว์ประจำ${RN[reg]} · ปลอดภัย`,_ty:1,f(){const mult=[.35,.65,.95,1.25][st];duel(`${b[0]} (${TIER[st][0]})`,Math.max(5,Math.round(total()*mult)),w=>{if(!S||!S.alive)return;if(!w){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.15));log(`🩸 ${b[0]}หนีไป — ลองใหม่ปีหน้า`,'bad');return}const go=()=>{const n0=g.rings.length;B.absorb(st,b);const r=g.rings[g.rings.length-1];if(g.rings.length>n0&&r)r.ty=b[2]};if(window._svWin)window._svWin(st,b,go);else go()})}})}catch(e){console.error('sv5hx',e)}}}
 // ---- เหตุการณ์เฉพาะแคว้น ----
@@ -44197,3 +44198,55 @@ window.gRestoreNow=async function(){if(!onlineOK)return toast('ต้องอ�
  h.insertAdjacentElement('afterend',g);g.insertAdjacentElement('afterend',det);
  const back=m.querySelector('.scback');if(back&&det.contains(back))m.insertBefore(back,h)}catch(e){console.error('svLayout',e)}return r}}
 })()}catch(e){console.error('svLayout',e)}
+
+// ---------- ⭕ วิญญาณยุทธ์ ระลอก 4: เนื้อเรื่องหลัก "ลัทธิกลืนดวงจิต" 5 บท · สมุดดวงจิตนับสัตว์ประจำแคว้น · รวมสอบชิงทุนเก่าเข้าระบบสถาบัน ----------
+try{(()=>{
+const B=window._blk34;if(!B)return;
+const on=()=>!!(S&&S.alive&&S.ch==='soul'&&S.sv&&S.sv.aw===1);
+const R2=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pk=a=>a[R2(0,a.length-1)];
+const O=(t,s,f)=>({t,s,noFate:1,f});
+const hurt=p=>{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*p))};
+const A=()=>{const g=S.sv;if(!g.arc4)g.arc4={ch:0,y:-99,fl:{}};return g.arc4};
+const ac=()=>{const g=S.sv;return g.ac&&window._sv4?window._sv4.AC[g.ac.id]:null};
+const rv=()=>{const t=S.sv.tm;return t&&t.rv?t.rv.filter(r=>r.al):[]};
+const team=()=>{const t=S.sv.tm;return t&&t.m?t.m.filter(x=>x.al).length:0};
+const pst=()=>S.sv.ps||'team';
+const regN=()=>{try{return(window._svRN||{})[S.sv.reg||'gold']||'ทวีป'}catch(e){return'ทวีป'}};
+const done=(ch,why)=>{const a=A();a.ch=ch;a.y=S.age;if(why)(a.log=a.log||[]).push(why)};
+// ---- บทที่ 1: เด็กหายในแคว้น ----
+const C1=()=>{const a=A(),t=ac();choice('📜 ลัทธิกลืนดวงจิต · บทที่ 1: เด็กที่หายไป',`ใน${regN()}มีผู้ฝึกจิตรุ่นเยาว์หายตัวไปสามคนในเดือนเดียว ทุกคนถูกพบอีกครั้ง… ยังมีชีวิต แต่<b>ดวงจิตหายไป</b>`,[
+ O('🔍 สืบเองเงียบ ๆ','มินิเกมจำร่องรอย',()=>{const go=()=>window.mg2Play&&window.mg2Play('future',{noSkip:1,title:'ปะติดปะต่อร่องรอย',sub:'จำลำดับเหตุการณ์ที่พยานเล่า'},sc=>{if(sc>=.5){a.fl.clue=1;S.int+=6;log('🔍 คุณพบสัญลักษณ์งูกลืนหางสลักไว้ทุกที่ที่เด็กหายตัว — <b>ลัทธิกลืนดวงจิต</b>','myth',true)}else log('🔍 ร่องรอยขาดหาย แต่คุณรู้แน่ว่ามีคนอยู่เบื้องหลัง','');done(1);try{render()}catch(e){}});setTimeout(go,300)}),
+ O(t?`🏫 แจ้ง${t[1]}`:'🏛️ แจ้งทางการ','ปลอดภัย · ชื่อเสียง +',()=>{S.fame+=20;a.fl.told=1;log(t?`🏫 อาจารย์ใหญ่แห่ง${t[1]}ฟังแล้วหน้าซีด "เรื่องนี้ห้ามบอกใคร"`:'🏛️ ทางการรับเรื่องไว้ แล้วก็เงียบหายไป','');done(1)}),
+ O('🙈 ไม่ใช่เรื่องของเรา','',()=>{log('🙈 คุณหันหลังให้ข่าวลือ — แต่ข่าวลือไม่หันหลังให้คุณ','');done(1)})])};
+// ---- บทที่ 2: เพื่อนหายตัว ----
+const C2=()=>{const a=A(),r=pk(rv())||null,nm=r?r.n:anyName(Math.random()<.5?'ชาย':'หญิง');a.fl.fr=nm;
+ choice('📜 ลัทธิกลืนดวงจิต · บทที่ 2: คนที่คุณรู้จัก',`<b>${esc(nm)}</b>${r?' คู่แข่งรุ่นเดียวกันของคุณ':' เพื่อนสมัยเด็ก'} หายตัวไป เหลือไว้แค่ป้ายผ้าสีดำลายงูกลืนหาง`,[
+ O('🗡️ บุกฐานลับ','ดวลกับผู้คุมลัทธิ',()=>{duel('ผู้คุมลัทธิกลืนดวงจิต',Math.round(total()*1),w=>{if(w){a.fl.saved=1;S.fame+=60;S.karma+=8;if(r)r.rel=(r.rel||0)+30;log(`🗡️ คุณพัง${'ประตูฐานลับ'}และพา <b>${esc(nm)}</b> ออกมาได้ก่อนพิธีกลืนดวงจิตจะเริ่ม`,'epic',true)}else{a.fl.lost=1;hurt(.3);log(`🩸 คุณมาช้าไป — <b>${esc(nm)}</b> รอด แต่ดวงจิตถูกกลืนไปแล้ว`,'bad',true);if(r)r.lv=Math.max(1,Math.round(r.lv*.3))}done(2)})}),
+ O('🕵️ ปลอมตัวแฝงเข้าไป','เสี่ยงถูกจับได้ · ได้ข้อมูลมาก',()=>{if(Math.random()<.5+(S.int||0)/400){a.fl.inside=1;S.int+=8;log('🕵️ คุณแฝงตัวได้สามคืน รู้ว่าลัทธินี้กลืนดวงจิตเพื่อ "ปลุกบางสิ่ง" ในป่าต้องห้าม','myth',true)}else{hurt(.35);log('🕵️ ถูกจับได้ คุณหนีออกมาได้ด้วยแผลเต็มตัว','bad')}done(2)})])};
+// ---- บทที่ 3: สัตว์แสนปีตื่นก่อนเวลา ----
+const C3=()=>{const a=A();choice('📜 ลัทธิกลืนดวงจิต · บทที่ 3: ป่าลุกเป็นไฟ','ลัทธิใช้ดวงจิตที่ขโมยมาปลุก <b>สัตว์วิญญาณแสนปี</b> ในป่าต้องห้ามก่อนเวลา มันคลั่งและกำลังมุ่งหน้าเข้าเมือง',[
+ O('🛡️ ตั้งแนวป้องกันหมู่บ้าน','ดวล · ช่วยชาวบ้าน',()=>{duel('สัตว์วิญญาณแสนปีที่คลั่ง',Math.round(total()*1.15),w=>{if(w){S.karma+=15;S.fame+=150;a.fl.vill=1;log('🛡️ แนวป้องกันของคุณยื้อมันไว้ได้จนรุ่งเช้า มันสงบลงและหันกลับเข้าป่า','myth',true)}else{hurt(.35);S.fame+=40;log('🛡️ แนวป้องกันแตก แต่ชาวบ้านส่วนใหญ่หนีทัน','bad',true)}done(3)})}),
+ O('🎯 ตามล่าผู้ทำพิธี','ตัดต้นตอ · ชาวบ้านเสี่ยง',()=>{duel('นักบวชลัทธิผู้ทำพิธี',Math.round(total()*1.05),w=>{if(w){a.fl.priest=1;S.power+=pctPow(.04);log('🎯 คุณหยุดพิธีได้ สัตว์แสนปีหลับลงกลางป่า — แต่หมู่บ้านชายป่าพังไปครึ่งหนึ่ง','epic',true);S.karma-=3}else{hurt(.3);log('🎯 นักบวชหนีไปได้','bad')}done(3)})})])};
+// ---- บทที่ 4: ผู้อยู่เบื้องหลัง ----
+const C4=()=>{const a=A(),t=ac();const who=t&&Math.random()<.5?`อาจารย์ใหญ่แห่ง${t[1]}`:'ขุนนางชั้นสูงในนครหลวงหยกขาว';a.fl.who=who;
+ choice('📜 ลัทธิกลืนดวงจิต · บทที่ 4: หน้ากากหลุด',`หลักฐานทั้งหมดชี้ไปที่คนคนเดียว — <b>${who}</b> ผู้ที่ทุกคนเคารพ`,[
+ O('📣 เปิดโปงต่อหน้าทุกคน','เสี่ยงคนไม่เชื่อ · ชื่อเสียงมาก',()=>{const p=.45+(a.fl.clue?.15:0)+(a.fl.inside?.15:0)+(S.fame>2000?.1:0);if(Math.random()<p){S.fame+=300;a.fl.exp=1;log(`📣 หลักฐานของคุณมัดแน่น — <b>${who}</b> ถูกปลด ลัทธิสูญเสียที่กำบัง`,'myth',true)}else{S.fame=Math.max(0,S.fame-200);a.fl.disb=1;log('📣 ไม่มีใครเชื่อ — คุณถูกตราหน้าว่าใส่ร้ายผู้ใหญ่','bad',true)}done(4)}),
+ O('🕸️ เก็บไว้เป็นไพ่ตาย','ไม่เสี่ยงตอนนี้ · ได้เปรียบในศึกสุดท้าย',()=>{a.fl.card=1;S.int+=5;log('🕸️ คุณเก็บหลักฐานไว้เงียบ ๆ รอวันที่มันจะมีค่าที่สุด','');done(4)})])};
+// ---- บทที่ 5: ศึกปกป้องทวีป (3 รอบ) ----
+const C5=()=>{const a=A();const ally=pst()==='solo'?'คุณเลือกเดินคนเดียว — แต่ความโดดเดี่ยวทำให้คุณแกร่งกว่าใคร':pst()==='duo'?'คู่หูของคุณยืนอยู่ข้างกาย':`ทีมของคุณ ${team()} คนพร้อมแล้ว`;
+ const help=(a.fl.vill?.04:0)+(a.fl.exp?.06:0)+(a.fl.card?.05:0)+(a.fl.saved?.04:0)+(pst()==='team'?Math.min(.08,team()*.015):pst()==='duo'&&team()?.05:0);
+ const F=[['กองทัพสาวกลัทธิ',.95],['ผู้พิทักษ์สามตนของลัทธิ',1.1],['เจ้าลัทธิกลืนดวงจิต',1.35]];let i=0;
+ choice('📜 ลัทธิกลืนดวงจิต · บทที่ 5: ศึกปกป้องทวีป',`ลัทธิเปิดศึกกลางทวีป ดวงจิตนับพันที่ถูกขโมยไปหมุนวนเหนือหัวเจ้าลัทธิ<br>${ally}<br><span class="tag2">สิ่งที่คุณทำในบทก่อน ๆ ช่วยให้ศัตรูอ่อนลงราว ${Math.round(help*100)}%</span>`,[
+ O('⚔️ ออกศึก','ดวล 3 รอบ',()=>{const go=()=>{const f=F[i];duel(f[0],Math.round(total()*f[1]*(1-help)),w=>{if(!S||!S.alive)return;if(w){i++;if(i>=3){a.win=1;S.fame+=3000;S.power+=pctPow(.15);S.karma+=20;try{const d=LS.get('murim_ttl',{});const tt='ผู้ปกป้องทวีปวิญญาณ';if(!d[tt]){d[tt]={n:S.name,t:Date.now(),c:1};LS.set('murim_ttl',d)}}catch(e){}log(`🌅 <b>เจ้าลัทธิกลืนดวงจิตพ่ายแพ้</b> — ดวงจิตนับพันดวงถูกปลดปล่อยกลับไปหาเจ้าของ${a.fl.lost&&a.fl.fr?` รวมถึงดวงจิตของ <b>${esc(a.fl.fr)}</b>`:''} · ได้ฉายา 「ผู้ปกป้องทวีปวิญญาณ」`,'myth',true);done(5,'win');return}log(`⚔️ ผ่าน${f[0]}แล้ว`,'epic');setTimeout(go,500)}else{hurt(.4);log(`🩸 คุณพ่ายให้${f[0]} — ลัทธิหนีไปตั้งหลัก อีกสิบปีมันจะกลับมา`,'bad',true);a.ch=4;a.y=S.age+6}})};go()}),
+ O('⏳ ยังไม่พร้อม','ลัทธิจะรอ… แต่ไม่นาน',()=>{a.y=S.age;log('⏳ คุณถอยไปฝึกต่อ ข่าวการรุกคืบของลัทธิดังมาทุกปี','')})])};
+const CH=[[1,12,15,C1],[2,13,30,C2],[3,15,45,C3],[4,17,60,C4],[5,19,75,C5]];
+EVENTS.push({w:6,cd:2,c:s=>{if(!(s&&s.alive&&s.ch==='soul'&&s.sv&&s.sv.aw===1))return false;const a=A();if(a.win)return false;const c=CH[a.ch];return!!(c&&s.age>=c[1]&&s.sv.lv>=c[2]&&s.age-a.y>=3)},f(){const a=A();const c=CH[a.ch];if(c)c[3]()}});
+// แสดงความคืบหน้าในหน้าดวงจิต
+{const _os=window.openSoul;window.openSoul=function(){const r=_os.apply(this,arguments);try{if(!on())return r;const a=A(),m=$('modal'),bk=m.querySelector('button[onclick="openSoulBook()"]');if(bk&&!m.querySelector('.svArc')){const nx=CH[a.ch];bk.insertAdjacentHTML('beforebegin',`<div class="item svArc"><b>📜 ลัทธิกลืนดวงจิต</b> · ${a.win?'🌅 จบแล้ว — คุณปกป้องทวีปได้':`บทที่ ${a.ch}/5`}<br><span class="tag2">${a.win?'ได้ฉายา ผู้ปกป้องทวีปวิญญาณ':nx?`บทถัดไปเปิดเมื่ออายุ ${nx[1]}+ และระดับจิต ${nx[2]}+`:''}</span></div>`)}}catch(e){}return r}}
+// ---- สมุดดวงจิต: นับสัตว์ประจำแคว้น ----
+{const _ob=window.openSoulBook;window.openSoulBook=function(){const r=_ob.apply(this,arguments);try{const RB=window._svRB,RN=window._svRN||{};if(!RB)return r;const got=LS.get('murim_svring',{})||{};const all=Object.values(RB).flat();const n=all.filter(b=>got[b[0]]).length;const m=$('modal');
+ m.insertAdjacentHTML('beforeend',`<h4>🗺️ สัตว์ประจำแคว้น ${n}/${all.length}</h4>${Object.entries(RB).map(([k,L])=>`<div style="margin:3px 0"><b>${esc(RN[k]||k)}</b>: ${L.map(b=>got[b[0]]?b[0]:'<span style="opacity:.45">???</span>').join(' · ')}</div>`).join('')}`)}catch(e){}return r}}
+// ---- รวมสอบชิงทุนเก่าเข้าระบบสถาบัน ----
+{const _ch=choice;choice=function(t){try{if(on()&&/สถาบันจิตยุทธ์เปิดรับนักเรียน/.test(String(t||''))&&window._sv4){const g=S.sv;if(!g.ac&&S.age>=11&&S.age<=16)setTimeout(()=>{if(on()&&!choice._cur)window._sv4.examOffer()},300);return}}catch(e){}return _ch.apply(this,arguments)};Object.assign(choice,_ch)}
+window._sv6={A,CH};
+})()}catch(e){console.error('sv6',e)}
