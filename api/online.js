@@ -844,8 +844,8 @@ module.exports = async (req, res) => {
       if (vo.u) { try { await vipHeal(id) } catch (e) {} }
       if (vo.t) { try { await cmd('SADD', 'vipall', id) } catch (e) {} }
       if (vo.u) { const ul = jp(await cmd('HGET', 'vipu', id)); if (ul) vo.ul = { o: ul.o | 0, t: +ul.t || 0, w: ul.w || '' } }
-      const rrP = Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0), rrF = Math.max(0, +(await cmd('GET', 'rrf:' + id)) || 0);
-      return res.json({ c: rrP + rrF, f: rrF, pk: RR_PK, vp: VIP_PK, vip: vo });
+      const rrP = Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0), rrF = Math.max(0, +(await cmd('GET', 'rrf:' + id)) || 0), rrG = Math.max(0, +(await cmd('GET', 'rrg:' + id)) || 0);
+      return res.json({ c: rrP + rrG, f: rrF, g: rrG, pk: RR_PK, vp: VIP_PK, vip: vo });
     }
     if (a === 'vipset') {
       const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
@@ -978,14 +978,30 @@ module.exports = async (req, res) => {
       if (!to) return res.json({ err: 'none' });
       await cmd('SADD', 'vinc:' + to, id); return res.json({ ok: 1, c: +(await cmd('SCARD', 'vinc:' + to)) || 0 });
     }
-    if (a === 'rruse') {
+    if (a === 'rruse') { // k=f → ตั๋วฟรีธรรมดา (จากจบชีวิต) · ปกติ → ตั๋วทองจากของล็อกอินก่อน แล้วค่อยตั๋วที่ซื้อ
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'id' });
-      const lf = +(await cmd('DECR', 'rrf:' + id)); // ใช้ตั๋วฟรี (ได้จากการเล่นจบชีวิต) ก่อนตั๋วที่ซื้อ
-      if (lf >= 0) { const rest = Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0); return res.json({ ok: 1, c: lf + rest }) }
-      await cmd('INCR', 'rrf:' + id);
+      const rest = async () => ({ c: Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0) + Math.max(0, +(await cmd('GET', 'rrg:' + id)) || 0), f: Math.max(0, +(await cmd('GET', 'rrf:' + id)) || 0) });
+      if (b.k === 'f') { const lf = +(await cmd('DECR', 'rrf:' + id)); if (!(lf >= 0)) { await cmd('INCR', 'rrf:' + id); return res.status(402).json({ err: 'none', ...(await rest()) }) } return res.json({ ok: 1, kind: 'f', ...(await rest()) }) }
+      const lg = +(await cmd('DECR', 'rrg:' + id)); if (lg >= 0) return res.json({ ok: 1, kind: 'g', ...(await rest()) });
+      await cmd('INCR', 'rrg:' + id);
       const left = +(await cmd('DECR', 'rrc:' + id));
       if (!(left >= 0)) { await cmd('INCR', 'rrc:' + id); return res.status(402).json({ err: 'none', c: 0 }) }
-      return res.json({ ok: 1, c: left + Math.max(0, +(await cmd('GET', 'rrf:' + id)) || 0) });
+      return res.json({ ok: 1, kind: 'p', ...(await rest()) });
+    }
+    if (a === 'lgget' || a === 'lgclaim') { // 🎁 รับของล็อกอิน: ผู้มาใหม่ 7 วัน (ครั้งเดียว) แล้วต่อด้วยรอบประจำ 14 วัน · ขาดวันไม่รีเซ็ต · วันละ 1 ครั้ง (เวลาไทย)
+      if (!okId(id)) return res.json({ err: 'id' });
+      const day = new Date(now + 7 * 3600e3).toISOString().slice(0, 10), k = 'lg:' + id;
+      const st0 = jp(await cmd('GET', k)) || { n: 0, r: 0, cy: 0, d: '' };
+      const NG = { 7: 5 }, RG = { 7: 2, 14: 4 }; // ตั๋วทองที่แจก (วันที่ → จำนวน)
+      if (a === 'lgget') return res.json({ ...st0, today: st0.d === day ? 1 : 0, ng: NG, rg: RG });
+      if (req.method !== 'POST') return res.status(400).json({ err: 'post' });
+      if (!(await cmd('SET', 'lgl:' + id, 1, 'NX', 'EX', 5))) return res.json({ err: 'busy' });
+      if (st0.d === day) return res.json({ err: 'done', ...st0, today: 1 });
+      const st = { ...st0, d: day }; let tr, dn, g = 0;
+      if (st.n < 7) { st.n++; tr = 'n'; dn = st.n; g = NG[dn] || 0 } else { st.r++; tr = 'r'; dn = st.r; g = RG[dn] || 0; if (st.r >= 14) { st.r = 0; st.cy = (st.cy || 0) + 1 } }
+      const P = [['SET', k, JSON.stringify(st), 'EX', 86400 * 400]]; if (g) P.push(['INCRBY', 'rrg:' + id, g], ['EXPIRE', 'rrg:' + id, 86400 * 365]);
+      await pipe(P);
+      return res.json({ ok: 1, tr, dn, g, ...st, today: 1, ng: NG, rg: RG });
     }
     if (a === 'rrearn') { // ตั๋วสุ่มเกิดฟรี 1 ใบเมื่อเล่นจบชีวิต: อายุ 18+, ห่างกัน 5 นาที, ไม่เกิน 3 ใบ/วัน, ถือไว้ไม่เกิน 10 ใบ
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'id' });
@@ -997,7 +1013,7 @@ module.exports = async (req, res) => {
       if (n === 1) await cmd('EXPIRE', dk, 172800);
       if (n > 3) return res.json({ ok: 0, why: 'day', f: cur });
       const f = +(await cmd('INCR', 'rrf:' + id)) || 1; await cmd('EXPIRE', 'rrf:' + id, 86400 * 180);
-      return res.json({ ok: 1, f, c: f + Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0) });
+      return res.json({ ok: 1, f });
     }
     if (a === 'supmark') {
       if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
@@ -1095,7 +1111,7 @@ module.exports = async (req, res) => {
       return res.json({ ok: 1 });
     }
     if (a === 'fn') { // 📊 ตัวนับจุดที่ผู้เล่นไปถึง (ไม่เก็บตัวตน · นับรวมต่อวัน · key เดียวต่อวัน)
-      const k = String(b.k || ''); if (!/^(open|born|a16|a40|end1|d2|d7|hint|simple|wkc|wkcok|lives2)$/.test(k)) return res.json({ ok: 0 });
+      const k = String(b.k || ''); if (!/^(open|born|a16|a40|end1|d2|d7|hint|simple|wkc|wkcok|lives2|lgc)$/.test(k)) return res.json({ ok: 0 });
       const dk = 'fn:' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
       try { await pipe([['HINCRBY', dk, k, 1], ['EXPIRE', dk, 86400 * 60]]) } catch (e) {}
       return res.json({ ok: 1 });

@@ -42757,7 +42757,7 @@ try{if(typeof TTL_SP!=='undefined')TTL_SP.unshift(['dyn_emp',()=>!!(S&&S.flags&&
 
 // ---------- ตั๋วสุ่มเกิดฟรี: เล่นจบชีวิต (อายุ 18+) ได้ 1 ใบ · ไม่เกิน 3 ใบ/วัน · ถือได้ 10 ใบ ----------
 try{(()=>{
-{const _eg=endGame;endGame=function(){try{if(S&&!S._rrE&&onlineOK&&(S.age|0)>=18&&!S.custom){S._rrE=1;const age=S.age|0;api('rrearn',{a:age}).then(j=>{try{if(j&&j.ok){window._RR&&(window._RR.c=j.c);S._rrGot=1;const E=$('end');if(E&&!E.querySelector('.rrNew')){const b=document.createElement('div');b.className='box rrNew';b.style.cssText='margin:8px 0;padding:8px';b.innerHTML=`🎟️ <b>ได้ตั๋วสุ่มเกิดฟรี 1 ใบ</b> <span class="tag2">· มี ${j.f} ใบ (ใช้ก่อนตั๋วที่ซื้อ · ได้ไม่เกิน 3 ใบ/วัน · ถือได้ 10 ใบ)</span>`;const h=E.querySelector('h2,h3');if(h&&h.parentNode===E)E.insertBefore(b,h.nextSibling);else E.insertBefore(b,E.firstChild)}else toast('🎟️ ได้ตั๋วสุ่มเกิดฟรี 1 ใบ')}}catch(e){}}).catch(()=>{})}}catch(e){}return _eg.apply(this,arguments)}}
+{const _eg=endGame;endGame=function(){try{if(S&&!S._rrE&&onlineOK&&(S.age|0)>=18&&!S.custom){S._rrE=1;const age=S.age|0;api('rrearn',{a:age}).then(j=>{try{if(j&&j.ok){window._RR&&(window._RR.f=j.f);S._rrGot=1;const E=$('end');if(E&&!E.querySelector('.rrNew')){const b=document.createElement('div');b.className='box rrNew';b.style.cssText='margin:8px 0;padding:8px';b.innerHTML=`🎟️ <b>ได้ตั๋วสุ่มเกิดฟรี 1 ใบ</b> <span class="tag2">· มี ${j.f} ใบ (ตั๋วธรรมดา · ใช้ได้ที่ 🎲 สุ่มเพิ่ม · ได้ไม่เกิน 3 ใบ/วัน · ถือได้ 10 ใบ)</span>`;const h=E.querySelector('h2,h3');if(h&&h.parentNode===E)E.insertBefore(b,h.nextSibling);else E.insertBefore(b,E.firstChild)}else toast('🎟️ ได้ตั๋วสุ่มเกิดฟรี 1 ใบ')}}catch(e){}}).catch(()=>{})}}catch(e){}return _eg.apply(this,arguments)}}
 })()}catch(e){console.error('rrearn',e)}
 // ============================================================
 // BLOCK 53: 🎟️ ตั๋วทอง — สุ่มด้วยสิทธิ์ที่ซื้อ: การันตีอย่างน้อย 1 ช่องหายาก · ครบ 10 ใบการันตีตำนาน · เอฟเฟกต์ทอง (ไม่มีผลกับชะตาประจำวัน/กรรม)
@@ -42804,7 +42804,8 @@ function visit(){try{const now=Date.now(),last=LS.get('murim_lastv',0),first=LS.
  const msgs=[];
  if(last&&now-last>=7*DAY){const dd=Math.floor((now-last)/DAY);addSp(2);msgs.push({ic:'👋',h:'ยินดีต้อนรับกลับ',t:`ห่างหายไป ${dd} วัน — ได้ 🔮 2 แต้มวิญญาณ`,d:'ดูของใหม่ได้ที่ "บันทึกอัปเดต" · เล่นต่อที่ปุ่ม ▶ ได้เลย'})}
  const g=LS.get('murim_wg',{d:{}}),f=LS.get('murim_firstv',now);
- if(now-f<14*DAY&&!g.d[dk()]&&Object.keys(g.d).length<7){g.d[dk()]=1;const n=Object.keys(g.d).length,pt=n===7?5:n===3?3:2;addSp(pt);LS.set('murim_wg',g);msgs.push({ic:'🎁',h:`ของขวัญต้อนรับ วันที่ ${n}/7`,t:`ได้ 🔮 ${pt} แต้มวิญญาณ`,d:n<7?'กลับมาอีกวัน รับต่อจนครบ 7 วัน (แลกของติดตัวที่ 📜 บันทึกวงศ์ตระกูล)':'ครบ 7 วันแล้ว ขอบคุณที่เล่นด้วยกัน'})}
+ if(false&&now-f<14*DAY&&!g.d[dk()]&&Object.keys(g.d).length<7){ // แทนด้วยหน้ารับของล็อกอิน
+g.d[dk()]=1;const n=Object.keys(g.d).length,pt=n===7?5:n===3?3:2;addSp(pt);LS.set('murim_wg',g);msgs.push({ic:'🎁',h:`ของขวัญต้อนรับ วันที่ ${n}/7`,t:`ได้ 🔮 ${pt} แต้มวิญญาณ`,d:n<7?'กลับมาอีกวัน รับต่อจนครบ 7 วัน (แลกของติดตัวที่ 📜 บันทึกวงศ์ตระกูล)':'ครบ 7 วันแล้ว ขอบคุณที่เล่นด้วยกัน'})}
  msgs.forEach((m,i)=>setTimeout(()=>{try{island({big:1,pri:1,ms:7000,ic:m.ic,h:m.h,t:m.t,d:m.d})}catch(e){}},2500+i*7500))}catch(e){}}
 setTimeout(visit,1800);
 // 8) เช็คอินให้แต้มวิญญาณ +1
@@ -43108,3 +43109,92 @@ const css=document.createElement('style');css.textContent=`.ixSpot{animation:ixS
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(S&&S.ix&&ok()){const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.fpMB'))g.insertAdjacentHTML('afterbegin',`<button class="opt fpMB" onclick="closeM();openFate()">🎲 แต้มชะตา<small>${S.ix.fp}/${FPM} · เรื่องค้าง ${S.ix.sd.length}</small></button>`)}}catch(e){}return r}}
 window._b55={seedPay,hwOpen,rvNew,rvTick,mgOpen,betOffer,betTick,fpAdd,IX};
 })()}catch(e){console.error('block55',e)}
+
+// ---------- 🎁 รับของล็อกอิน 7 วัน (ผู้มาใหม่) + 14 วัน (ประจำ) · ตั๋วฟรีธรรมดาแยกจากตั๋วทอง ----------
+try{(()=>{
+const GKk='murim_gl';
+const glX=()=>{let o=LS.get(GKk,null);if(!o||typeof o!=='object')o={};o.d=o.d||{};o.s=Object.assign({lives:0},o.s||{});return o};
+const addSp=n=>{const o=glX();o.sp=(o.sp||0)+n;LS.set(GKk,o)};
+const NEWF='f_lgnew',LOYF='f_lgloy',NEWT='ผู้มาเยือนยุทธภพ',LOYT=['ศิษย์ผู้ภักดี','จอมยุทธ์ผู้ภักดี','ปรมาจารย์ผู้ภักดี','ตำนานผู้ไม่เคยจากไป'];
+try{FRAMES.push({id:NEWF,n:'กรอบผู้มาเยือน',side:'r',c:0,ty:'halo sparkle corner badge',c1:'#ffb84a',c2:'#fff4d6',c3:'#5a2a08',pc:'#ffe2a8',bd:'🏮',d:'รับของล็อกอินผู้มาใหม่ครบ 7 วัน'},{id:LOYF,n:'กรอบผู้ภักดี',side:'r',c:0,ty:'spin halo orbit sparkle star corner badge',c1:'#ff6a8a',c2:'#ffe6ee',c3:'#4a0a24',pc:'#ffc8d8',bd:'🌸',d:'รับของล็อกอินประจำครบรอบ 14 วัน'})}catch(e){}
+// ของแต่ละวัน: [ไอคอน, ชื่อ, ฟังก์ชันให้ของฝั่งเครื่อง] · ตั๋วทอง (g) เซิร์ฟเวอร์ให้เอง
+const lifeQ=(k,v)=>{const q=LS.get('murim_lgq',{});q[k]=(q[k]||0)+v;LS.set('murim_lgq',q)};
+const giveMoney=n=>{if(S&&S.alive)S.money=(S.money||0)+n;else lifeQ('m',n)},giveArt=t=>{if(S&&S.alive){try{_nPush.call(S.arts,newArt(t))}catch(e){}}else lifeQ('a'+t,1)};
+const frAdd=id=>{try{const d=frGet();if(!d.own.includes(id)){d.own.push(id);frSet(d);try{profPush()}catch(e){}}}catch(e){}},ttAdd=t=>{try{const d=LS.get('murim_ttl',{});if(!d[t])d[t]={n:(S&&S.name)||'',t:Date.now(),c:1};LS.set('murim_ttl',d)}catch(e){}};
+const NEW=[null,['🔮','แต้มวิญญาณ ×3',()=>addSp(3)],['💰','เงิน 1,500',()=>giveMoney(1500)],['🔮','แต้มวิญญาณ ×3',()=>addSp(3)],['📖','คัมภีร์ระดับดี',()=>giveArt(2)],['🔮','แต้มวิญญาณ ×5',()=>addSp(5)],['💰','เงิน 3,000',()=>giveMoney(3000)],['🎟️','ตั๋วทอง ×5 · กรอบ · ฉายา',()=>{frAdd(NEWF);ttAdd(NEWT)}]];
+const REG=i=>i===7?['🎟️','ตั๋วทอง ×2',()=>{}]:i===14?['👑','ตั๋วทอง ×4 · ฉายาผู้ภักดี',cy=>{frAdd(LOYF);ttAdd(LOYT[Math.min(LOYT.length-1,Math.max(0,cy-1))])}]:i%4===0?['📖','คัมภีร์',()=>giveArt(1)]:i%2?['🔮','แต้มวิญญาณ ×2',()=>addSp(2)]:['💰','เงิน 800',()=>giveMoney(800)];
+{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{const q=LS.get('murim_lgq',null);if(q&&S&&S.alive){LS.del('murim_lgq');const L=[];if(q.m){S.money=(S.money||0)+q.m;L.push('💰 '+fmt(q.m))}for(const k in q)if(/^a\d$/.test(k))for(let i=0;i<q[k];i++){try{_nPush.call(S.arts,newArt(+k.slice(1)));L.push('📖 คัมภีร์')}catch(e){}}if(L.length)setTimeout(()=>{try{log('🎁 ของล็อกอินที่เก็บไว้ส่งถึงมือ: '+L.join(' · '),'good')}catch(e){}},600)}}catch(e){}return r}}
+// ---- ตัวละครนำทาง (วาดเอง · ศิษย์พี่หญิงถือห่อของขวัญ) ----
+const GUIDE=`<svg class="lgGuide" viewBox="0 0 120 150" aria-hidden="true"><g class="lgBody">
+<ellipse cx="60" cy="144" rx="30" ry="4" fill="#0003"/>
+<path d="M30 140 Q34 92 60 88 Q86 92 90 140Z" fill="#c23a4a"/><path d="M44 140 Q48 100 60 96 Q72 100 76 140Z" fill="#f2d6a8"/>
+<path d="M30 140 Q34 92 60 88 Q86 92 90 140" fill="none" stroke="#7a1a28" stroke-width="2"/><rect x="40" y="104" width="40" height="7" rx="2" fill="#e8b54a"/>
+<g class="lgArm"><path d="M34 102 Q24 116 40 122" fill="none" stroke="#c23a4a" stroke-width="9" stroke-linecap="round"/></g>
+<rect x="44" y="112" width="32" height="22" rx="3" fill="#e8b54a" stroke="#7a4a08" stroke-width="2"/><rect x="57" y="112" width="6" height="22" fill="#c23a4a"/><path d="M60 112 Q50 102 54 110 M60 112 Q70 102 66 110" fill="none" stroke="#c23a4a" stroke-width="3"/>
+<path d="M86 102 Q96 116 80 122" fill="none" stroke="#c23a4a" stroke-width="9" stroke-linecap="round"/>
+<path d="M28 52 Q26 20 60 18 Q94 20 92 52 L94 92 Q84 86 82 70 L38 70 Q36 86 26 92Z" fill="#2a1a2a"/>
+<circle cx="60" cy="54" r="27" fill="#ffe2c4"/>
+<path d="M33 50 Q36 26 60 26 Q84 26 87 50 Q78 38 66 40 Q62 34 58 40 Q44 36 33 50Z" fill="#2a1a2a"/>
+<circle cx="60" cy="16" r="11" fill="#2a1a2a"/><g class="lgPin"><rect x="66" y="6" width="3" height="20" rx="1" fill="#e8b54a" transform="rotate(30 67 16)"/><circle cx="74" cy="9" r="4" fill="#ff6a8a"/></g>
+<g class="lgEye"><ellipse cx="49" cy="57" rx="4" ry="5" fill="#2a1a2a"/><ellipse cx="71" cy="57" rx="4" ry="5" fill="#2a1a2a"/><circle cx="50.5" cy="55" r="1.6" fill="#fff"/><circle cx="72.5" cy="55" r="1.6" fill="#fff"/></g>
+<ellipse cx="42" cy="66" rx="5" ry="3" fill="#ff9aa8" opacity=".6"/><ellipse cx="78" cy="66" rx="5" ry="3" fill="#ff9aa8" opacity=".6"/><path d="M55 68 Q60 73 65 68" fill="none" stroke="#a03a3a" stroke-width="2" stroke-linecap="round"/>
+</g></svg>`;
+const css=document.createElement('style');css.textContent=`
+#modal[data-k="lgin"]{padding:0!important;overflow:hidden auto;border-width:3px}
+.lgW{position:relative;padding:14px 14px 16px;background:linear-gradient(180deg,#3a1a2a 0,#5a2436 120px,var(--card) 121px)}
+.lgHead{display:flex;align-items:flex-end;gap:8px;min-height:118px;color:#fff3dc}
+.lgGuide{width:96px;height:120px;flex-shrink:0;filter:drop-shadow(0 4px 0 #0004);animation:lgIn .6s cubic-bezier(.2,1.4,.4,1) both}
+.lgBody{animation:lgFloat 2.6s ease-in-out infinite;transform-origin:60px 140px}.lgEye{animation:lgBlink 4s infinite;transform-origin:60px 57px}.lgPin{animation:lgSway 2s ease-in-out infinite;transform-origin:67px 16px}.lgArm{animation:lgWave 1.4s ease-in-out infinite;transform-origin:36px 104px}
+.lgBub{flex:1;background:#fff8ec;color:#3a1a2a;border:2px solid #2a1a2a;border-radius:12px;padding:8px 10px;font-size:13.5px;line-height:1.45;position:relative;margin-bottom:22px;animation:lgPop .45s .25s cubic-bezier(.2,1.5,.4,1) both}
+.lgBub:before{content:'';position:absolute;left:-9px;bottom:12px;border:8px solid transparent;border-right-color:#2a1a2a;border-left:0}.lgBub b{color:#c23a4a}
+.lgTabs{display:flex;gap:6px;margin:10px 0 8px}.lgTabs span{flex:1;text-align:center;font-size:12.5px;padding:6px 4px;border-radius:8px;border:2px solid var(--line);background:var(--w);opacity:.55}.lgTabs span.on{opacity:1;background:#c23a4a;color:#fff;border-color:#7a1a28}
+.lgG{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.lgG.r14{grid-template-columns:repeat(5,minmax(0,1fr))}
+.lgD{position:relative;border:2px solid var(--line);border-radius:10px;background:var(--w);text-align:center;padding:5px 2px 6px;font-size:10.5px;line-height:1.25;animation:lgCard .4s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--i)*45ms + .3s)}
+.lgD i{display:block;font-style:normal;font-size:20px;margin:1px 0}.lgD small{display:block;opacity:.75;font-size:10px}
+.lgD.got{background:color-mix(in srgb,var(--w) 70%,#6fd08a)}.lgD.got:after{content:'✔';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px;color:#2a8a4a;background:#ffffff8a;border-radius:8px;animation:lgStamp .35s cubic-bezier(.2,1.6,.4,1) both}
+.lgD.now{border-color:#e8b54a;background:#fff4d6;color:#5a2a08;animation:lgCard .4s cubic-bezier(.2,1.3,.4,1) both,lgGlow 1.6s ease-in-out 1s infinite;animation-delay:calc(var(--i)*45ms + .3s),1s}
+.lgD.big{grid-column:span 2;background:linear-gradient(135deg,#fff4d6,#ffd88a);border-color:#c88a1a;color:#5a2a08;overflow:hidden}.lgD.big:before{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,#fff9,transparent);transform:skewX(-20deg);animation:lgShine 2.8s ease-in-out infinite}
+.lgBtn{width:100%;margin-top:12px;padding:12px;font-size:16px;font-weight:700;border-radius:12px;border:3px solid #7a1a28;background:#c23a4a;color:#fff;box-shadow:0 4px 0 #7a1a28;cursor:pointer;transition:transform .1s}.lgBtn:active{transform:translateY(3px);box-shadow:0 1px 0 #7a1a28}.lgBtn[disabled]{background:#8a7a7a;border-color:#5a4a4a;box-shadow:none;cursor:default}
+.lgNote{text-align:center;font-size:11.5px;opacity:.7;margin-top:6px}
+.lgFx{position:absolute;inset:0;pointer-events:none;overflow:hidden}.lgFx b{position:absolute;font-size:18px;animation:lgBurst 1.1s cubic-bezier(.2,.8,.3,1) forwards}
+.lgRw{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);background:#fff8ec;border:3px solid #c88a1a;border-radius:14px;padding:12px 18px;text-align:center;color:#5a2a08;box-shadow:0 8px 0 #0003;animation:lgRw 2.4s ease forwards;z-index:3;min-width:60%}.lgRw i{font-style:normal;font-size:36px;display:block;animation:lgSpin .8s ease}
+#lgTBtn{position:relative}#lgTBtn .dot{position:absolute;top:6px;right:10px;width:10px;height:10px;border-radius:50%;background:#ff4a5a;box-shadow:0 0 0 2px var(--card);animation:lgGlow 1.2s infinite}
+@keyframes lgIn{from{transform:translateX(-30px) scale(.6);opacity:0}}@keyframes lgFloat{50%{transform:translateY(-4px)}}@keyframes lgBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}@keyframes lgSway{50%{transform:rotate(8deg)}}@keyframes lgWave{50%{transform:rotate(-10deg)}}
+@keyframes lgPop{from{transform:scale(.4);opacity:0}}@keyframes lgCard{from{transform:translateY(14px) scale(.8);opacity:0}}@keyframes lgGlow{50%{box-shadow:0 0 0 3px #ffd88a,0 0 14px #ffb84a}}
+@keyframes lgShine{0%{left:-60%}60%,100%{left:130%}}@keyframes lgStamp{from{transform:scale(2.2);opacity:0}}@keyframes lgBurst{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+@keyframes lgRw{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}15%{transform:translate(-50%,-50%) scale(1.08);opacity:1}25%,80%{transform:translate(-50%,-50%) scale(1)}100%{transform:translate(-50%,-80%) scale(.9);opacity:0}}@keyframes lgSpin{from{transform:rotateY(540deg) scale(.4)}}
+@media (prefers-reduced-motion:reduce){.lgW *{animation:none!important}}`;document.head.appendChild(css);
+let ST=null;
+const LINES=['กลับมาแล้วรึ ศิษย์น้อง! ศิษย์พี่เก็บของไว้ให้แล้ว','ยุทธภพวันนี้ลมสงบ รับของก่อนออกเดินทางนะ','มาทุกวันเถอะ ศิษย์พี่ห่อของไว้ให้ทุกวัน','วันนี้ฟ้าเปิด ชะตาเจ้าน่าจะดี'];
+function grid(st){const nw=st.n<7||(st.n===7&&st.r===0&&st.cy===0&&st.today&&st._tr!=='r');
+ if(nw){const done=st.n,now=st.today?0:done+1;return{nw:1,h:Array.from({length:7},(_,j)=>{const i=j+1,R=NEW[i],c=i<=done?'got':i===now?'now':'';return`<div class="lgD ${c} ${i===7?'big':''}" style="--i:${j}">วัน ${i}<i>${R[0]}</i><small>${R[1]}</small></div>`}).join('')}}
+ const done=st.r===0&&st.today&&st.cy>0?14:st.r,now=st.today?0:done+1;return{nw:0,h:Array.from({length:14},(_,j)=>{const i=j+1,R=REG(i),c=i<=done?'got':i===now?'now':'';return`<div class="lgD ${c}" style="--i:${j}">วัน ${i}<i>${R[0]}</i><small>${R[1].replace(' · ฉายาผู้ภักดี','')}</small></div>`}).join('')}}
+function draw(msg){const st=ST,G=grid(st),line=msg||(st.today?'วันนี้รับไปแล้ว พรุ่งนี้มาใหม่นะ ศิษย์พี่จะห่อของรอไว้':LINES[new Date().getDate()%LINES.length]);
+ const m=$('modal');m.innerHTML=xT(`<div class="lgW"><button class="xbtn" onclick="closeM()" style="z-index:4">✕</button><div class="lgHead">${GUIDE}<div class="lgBub">${line}${st.today?'':`<br><b>วันนี้: ${(G.nw?NEW[st.n+1]:REG(st.r+1))[1]}</b>`}</div></div>
+ <div class="lgTabs"><span class="${G.nw?'on':''}">🏮 ผู้มาใหม่ 7 วัน</span><span class="${G.nw?'':'on'}">🌸 ประจำ 14 วัน${st.cy?` · ครบ ${st.cy} รอบ`:''}</span></div>
+ <div class="lgG ${G.nw?'':'r14'}">${G.h}</div>
+ <button class="lgBtn" ${st.today?'disabled':''} onclick="lgClaim(this)">${st.today?'รับของวันนี้แล้ว':'🎁 รับของวันนี้'}</button>
+ <div class="lgNote">ขาดวันไหนไม่รีเซ็ต รับต่อจากเดิมได้ · 🎟️ ตั๋วทองใช้ที่ 🎲 สุ่มเพิ่มตอนเกิด การันตีชะตาดี</div><div class="lgFx"></div></div>`)}
+async function load(){try{ST=await api('lgget',{});return ST&&!ST.err}catch(e){return false}}
+window.lgOpen=async function(){if(!onlineOK)return toast('ต้องออนไลน์เพื่อรับของล็อกอิน');if(!(await load()))return toast('โหลดของล็อกอินไม่ได้ ลองใหม่อีกครั้ง');modal('','lgin');draw();lgDot()};
+function burst(){const fx=$('modal').querySelector('.lgFx');if(!fx)return;const I=['✨','🌸','⭐','🏮','💫','🎉'];for(let i=0;i<22;i++){const b=document.createElement('b');const a=Math.random()*Math.PI*2,d=80+Math.random()*120;b.textContent=I[i%I.length];b.style.cssText=`left:50%;top:55%;--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d}px;--r:${Math.random()*360}deg`;fx.appendChild(b)}setTimeout(()=>fx.innerHTML='',1200)}
+window.lgClaim=async function(btn){if(!ST||ST.today)return;btn.disabled=true;let j;try{j=await api('lgclaim',{})}catch(e){btn.disabled=false;return toast('รับไม่สำเร็จ ลองใหม่อีกครั้ง')}
+ if(!j||j.err){if(j&&j.err==='done'){ST=Object.assign(ST,j);draw();return}btn.disabled=false;return toast('รับไม่สำเร็จ ลองใหม่อีกครั้ง')}
+ const R=j.tr==='n'?NEW[j.dn]:REG(j.dn);try{R[2](j.cy)}catch(e){}if(j.g&&window._RR)window._RR.c=(window._RR.c||0)+j.g;
+ ST=Object.assign({},j,{_tr:j.tr});try{sfx('good')}catch(e){}
+ draw(j.tr==='n'&&j.dn===7?'ครบ 7 วันแล้ว! ศิษย์พี่ภูมิใจในตัวเจ้า — จากนี้มีของให้ทุกวันแบบรอบ 14 วัน':j.tr==='r'&&j.dn===14?'ครบรอบแล้ว! ฉายาผู้ภักดีเป็นของเจ้า':'รับไปแล้ว พรุ่งนี้มาอีกนะ');
+ const W=$('modal').querySelector('.lgW');if(W){W.insertAdjacentHTML('beforeend',`<div class="lgRw"><i>${R[0]}</i><b>วันที่ ${j.dn}</b><br>${R[1]}</div>`);burst();setTimeout(()=>{const r=W.querySelector('.lgRw');if(r)r.remove()},2500)}
+ try{if(window.fnHit)fnHit('lgc',1)}catch(e){}lgDot()};
+// ปุ่มหน้าแรก + เด้งอัตโนมัติวันละครั้ง
+function lgDot(){try{const b=$('lgTBtn');if(!b)return;const d=b.querySelector('.dot');const on=ST&&!ST.today;if(on&&!d)b.insertAdjacentHTML('beforeend','<span class="dot"></span>');if(!on&&d)d.remove()}catch(e){}}
+function tBtn(){try{const t=$('title');if(!t||$('lgTBtn'))return;const ref=$('wcBtn')||t.querySelector('button[onclick="goDaily()"]');if(!ref)return;const b=document.createElement('button');b.id='lgTBtn';b.className='gbtn';b.style.cssText='width:100%;margin-top:8px';b.innerHTML='🎁 รับของล็อกอิน';b.onclick=()=>lgOpen();ref.parentNode.insertBefore(b,ref.nextSibling);lgDot()}catch(e){}}
+setTimeout(tBtn,900);{const _rl=renderLegends;renderLegends=function(){const r=_rl.apply(this,arguments);tBtn();return r}}
+let tries=0;const auto=setInterval(async()=>{try{tries++;if(tries>40)return clearInterval(auto);if(typeof onlineOK==='undefined'||!onlineOK)return;clearInterval(auto);if(!(await load()))return;lgDot();
+ const dk=new Date(Date.now()+7*3600e3).toISOString().slice(0,10);if(ST.today||LS.get('murim_lgAuto','')===dk)return;
+ const go=()=>{const t=$('title');if(modalOpen||choice._cur||(S&&S.alive)||!t||!t.classList.contains('on'))return false;LS.set('murim_lgAuto',dk);lgOpen();return true};
+ if(!go()){let n=0;const w=setInterval(()=>{if(go()||++n>120)clearInterval(w)},2000)}}catch(e){}},1500);
+// ตั๋วฟรีธรรมดา: ปุ่มแยกในหน้าสุ่มเพิ่ม
+window.rrUseFree=async function(btn){const RR=window._RR;if(!RR)return;if(RR.used>=RR.cap)return toast('ชีวิตนี้ใช้ครบแล้ว');if(btn)btn.disabled=true;try{const j=await api('rruse',{k:'f'});RR.f=+j.f||0;RR.c=+j.c||0;toast(`🎫 ใช้ตั๋วฟรี เหลือ ${RR.f} ใบ`);rerolls++;$('rr').textContent=rerolls;RR.used++;closeM();setTimeout(()=>{doRoll()},150)}catch(e){if(btn)btn.disabled=false;toast(e&&e.message==='none'?'ไม่มีตั๋วฟรีเหลือ':'ใช้ตั๋วไม่สำเร็จ')}};
+{const _rm=window.rrMenu;if(typeof _rm==='function')window.rrMenu=function(){const r=_rm.apply(this,arguments);try{const RR=window._RR;const ins=()=>{const m=$('modal');if(!m||m.querySelector('.rrFree')||!(RR.f>0))return;const b=m.querySelector('[onclick^="rrUsePaid"]');if(!b)return;const host=b.closest('.vx-act,.item,.act')||b.parentNode;host.insertAdjacentHTML('beforebegin',`<div class="item rrFree"><b>🎫 ตั๋วฟรี (ธรรมดา)</b> <span class="tag2">เหลือ ${RR.f} ใบ · ได้จากการจบชีวิต · ไม่การันตี</span><button class="gbtn" style="float:right" onclick="rrUseFree(this)">ใช้ 1 ใบ</button></div>`)};
+ if(RR.f==null&&onlineOK)api('rrget').then(j=>{RR.f=+j.f||0;ins()}).catch(()=>{});else ins()}catch(e){}return r}}
+})()}catch(e){console.error('lgin',e)}
