@@ -44582,3 +44582,16 @@ setInterval(()=>{try{if(!S||!S.alive||S.ch!=='soul'||!S.sv||S.sv.aw!==1||coSeen(
 // ในโหมดนี้ บทเริ่มต้นแบบยุทธภพพูดถึงสำนัก/ตลาด → ใช้บทของโหมดแทน
 {const _cs=coStart;coStart=function(id,force){try{if(id==='start'&&!force&&S&&S.ch==='soul'){coMark('start');id='m_soul'}if(/^(town|sect|scult)$/.test(id)&&!force&&S&&S.ch==='soul'&&window._dlPure&&window._dlPure())return}catch(e){}return _cs.call(this,id,force)}}
 })()}catch(e){console.error('svlsn',e)}
+
+// ---------- 🛟 กันเกมค้าง: หน้าต่างดวลถูกหน้าต่างอื่นทับ/ปิดไปก่อนกด "ต่อไป" → DU ค้าง ทุกตัวเลือกถูกเข้าคิว และปีไม่เดิน ----------
+try{(()=>{
+{const _de=duelEnd;duelEnd=function(win,fled){try{if(DU){DU._end=1;DU._w=!!win}}catch(e){}return _de.apply(this,arguments)}}
+let miss=0;
+setInterval(()=>{try{if(!DU||!S){miss=0;return}const m=$('modal');if(modalOpen&&m&&m.dataset.k==='duel'){miss=0;return}
+ if(modalOpen){miss=0;return}// มีหน้าต่างอื่นเปิดอยู่ รอให้ปิดก่อน
+ if(++miss<2)return;miss=0;
+ if(!S.alive){DU=null;return}
+ if(DU._end){const cb=window._dcb,w=DU._w;DU=null;try{cb&&cb(w)}catch(e){console.error('duelFix cb',e)}try{render();checkDeath()}catch(e){}}
+ else{try{drawDuel()}catch(e){const d=DU;DU=null;try{const w=fight(d.name,d.ep);d.cb&&d.cb(w);render();checkDeath()}catch(x){}}}
+}catch(e){console.error('duelFix',e)}},1000);
+})()}catch(e){console.error('duelFix',e)}
