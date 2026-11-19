@@ -7842,13 +7842,14 @@ async function gBoxFill(){const box=$('gBox');if(!box)return;if(typeof onlineOK=
  if(window.google&&google.accounts&&google.accounts.id)return draw();if(!GSI){GSI=1;const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;s.onload=()=>{if($('gBtn'))draw()};s.onerror=()=>{GSI=0;const g=$('gBtn');if(g)g.innerHTML='<p class="tag2">โหลดปุ่ม Google ไม่ได้ (เน็ตหรือเบราว์เซอร์บล็อก)</p>'};document.head.appendChild(s)}else setTimeout(()=>{if(window.google&&google.accounts)draw()},1500)}
 async function gGot(resp){try{const j=await api('glogin',{cred:resp.credential,tk:ctok});if(!j||!j.ok)throw 0;
   if(j.linked){toast('✅ เชื่อมบัญชี Google แล้ว');await profStat();openProfile();return}
+  if(j.other&&window.gFresh&&gFresh()){toast('🔐 พบข้อมูลเกมของบัญชีนี้ — กำลังดึงมาที่เครื่องนี้');gSwitch(j.other);return}
   if(j.other){modal(`<h3>🔐 บัญชีนี้มีข้อมูลเกมอยู่แล้ว</h3><p>บัญชี <b>${esc(j.e)}</b> เคยเชื่อมกับข้อมูลเกมจากอีกเครื่อง</p><p class="tag2">สลับไปใช้ชุดนั้น = เครื่องนี้จะใช้ชื่อออนไลน์และเซฟคลาวด์ของบัญชีนี้ แล้วเปิดหน้ากู้เซฟให้เลือก · เซฟที่อยู่ในเครื่องนี้ยังอยู่ครบ ไม่ถูกลบ</p><div class="brow"><button class="gbtn" onclick="openProfile()">ยกเลิก</button><button class="pbtn" onclick='gSwitch(${JSON.stringify(j.other).replace(/'/g,"&#39;")})'>สลับไปใช้บัญชีนี้</button></div>`,'gsw')}}
  catch(e){toast('ล็อกอินไม่สำเร็จ ลองใหม่อีกครั้ง'+(e&&e.message?' ('+String(e.message).slice(0,40)+')':''))}}
 function gSwitch(o){try{if(S&&S.alive)saveGame()}catch(e){}if(!o||!o.id)return;LS.set('murim_pid',o.id);if(o.tk)LS.set('murim_ctok',o.tk);LS.set('murim_gpull',1);location.reload()}
 async function gUnlink(){if(!confirm('ยกเลิกการเชื่อมบัญชี Google?'))return;try{await api('gunlink',{});toast('ยกเลิกแล้ว')}catch(e){toast('ไม่สำเร็จ')}await profStat();openProfile()}
 // หลังสลับบัญชี: เปิดหน้ากู้เซฟคลาวด์ให้ · ถ้ารูปไม่ผ่านการตรวจ: เตือนและให้เปลี่ยนรูป
 setTimeout(async function pfBoot(){if(typeof onlineOK==='undefined'||!onlineOK){if(!pfBoot.n||pfBoot.n<6){pfBoot.n=(pfBoot.n||0)+1;setTimeout(pfBoot,5000)}return}
- try{if(LS.get('murim_gpull',0)){LS.del('murim_gpull');let n=0;const go=()=>{if(modalOpen&&n++<40)return setTimeout(go,1500);toast('🔐 สลับบัญชีแล้ว — เลือกเซฟที่จะกู้');openCloudRestore()};go()}}catch(e){}
+ try{if(LS.get('murim_gpull',0)){LS.del('murim_gpull');let n=0;const go=()=>{if(modalOpen&&n++<40)return setTimeout(go,1500);if(window.gAutoRestore)gAutoRestore();else{toast('🔐 สลับบัญชีแล้ว — เลือกเซฟที่จะกู้');openCloudRestore()}};go()}}catch(e){}
  const st=await profStat();if(st&&st.warn){const d=frGet();d.av=d.snap||'';d.avUp=0;d.avSt='';frSet(d);try{await api('profack',{})}catch(e){}profPush();
   const show=()=>{if(modalOpen&&$('modal').dataset.k==='choice')return setTimeout(show,3000);modal(`<h3>⚠️ รูปโปรไฟล์ไม่ผ่านการตรวจ</h3><p>รูปที่คุณอัปโหลดผิดกฎ (ห้ามรูปโป๊ เปลือย อนาจาร หรือรุนแรง) จึงถูกลบออกแล้ว</p><p class="tag2">นี่คือการเตือนครั้งที่ ${st.strikes||1} — ครบ 3 ครั้งจะถูกระงับการอัปโหลดรูป 30 วัน</p><button class="pbtn" style="width:100%" onclick="openProfile()">เปลี่ยนรูปโปรไฟล์</button>`,'pfwarn')};show()}},4000);
 
@@ -31364,7 +31365,7 @@ async function sync(force){
  }catch(e){return false}finally{PS.busy=false}}
 const dirty=()=>{try{return hash(JSON.stringify({v:1,k:local()}))!==PS.lh}catch(e){return false}};
 window.psNow=async()=>{try{toast('☁️ กำลังซิงค์ข้อมูล…')}catch(e){}PS.retry=0;const ok=await sync(true);try{toast(ok||PS.linked?'☁️ ซิงค์ข้อมูลบัญชีเรียบร้อย':'ซิงค์ไม่สำเร็จ ลองใหม่อีกครั้ง')}catch(e){}try{if(typeof gBoxFill==='function')gBoxFill()}catch(e){}};
-window._ps=PS;
+window._ps=PS;window._psSync=sync;
 // ตัวจับเวลา: เช็กทุก 30 วิ — ถ้ามีข้อมูลเปลี่ยนและเกิน 90 วิ → ซิงค์ · ครบ 10 นาที → ดึงของใหม่จากเครื่องอื่น · ถ้ามีของรอรวมและกลับหน้าแรกแล้ว → รวมทันที
 setInterval(()=>{try{if(document.hidden)return;if(PS.need&&safeNow()&&!PS.busy){sync(true);return}
  if(Date.now()-PS.last>600000||dirty())sync(false)}catch(e){}},30000);
@@ -44151,3 +44152,31 @@ window.impNote=impNote;
 {const _ar=arReady;arReady=function(){if(S&&S.imp)return'📥 ชีวิตที่นำเข้าจากเครื่องอื่นลงลานประลองไม่ได้';return _ar.apply(this,arguments)}}
 {const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const n=$('gName');if(n&&S&&S.imp&&!/📥/.test(n.textContent))n.textContent='📥 '+n.textContent}catch(e){}return r}}
 })()}catch(e){console.error('impguard',e)}
+
+// ---------- ล็อกอิน Google ให้ลื่นแบบเว็บทั่วไป: กู้เซฟทุกช่องอัตโนมัติ · ซิงค์ทันทีตอนสำคัญ · เครื่องใหม่สลับให้เอง · ชวนล็อกอิน · แสดงสถานะซิงค์ ----------
+try{(()=>{
+const linked=()=>{try{return!!(typeof PFST!=='undefined'&&PFST&&PFST.g)}catch(e){return false}};
+const agoT=t=>{if(!t)return'ยังไม่เคย';const m=Math.round((Date.now()-t)/60000);return m<1?'เมื่อสักครู่':m<60?`${m} นาทีที่แล้ว`:m<1440?`${Math.round(m/60)} ชั่วโมงที่แล้ว`:`${Math.round(m/1440)} วันที่แล้ว`};
+// เครื่องนี้ยังไม่มีความคืบหน้า → สลับไปใช้ข้อมูลบัญชีได้เลยโดยไม่ต้องถาม
+window.gFresh=function(){try{if(SLOTS.some(n=>readSave(n)))return false;if((LS.get('murim_graves',[])||[]).length)return false;const g=LS.get('murim_gl',null);if(g&&g.s&&g.s.lives>0)return false;return true}catch(e){return false}};
+// 1) กู้เซฟทุกช่องจากเซิร์ฟเวอร์ (ช่องว่าง → ใส่เลย · ชนกัน → เก็บอันใหม่กว่า อันเดิมสำรองไว้)
+window.gAutoRestore=async function(){let add=0,upd=0,same=0;try{for(const n of SLOTS){let j=null;try{j=await api('cload&p='+pid+'&tk='+ctok+'&k=s'+n)}catch(e){continue}if(!j||!j.d)continue;let d=null;try{d=JSON.parse(decodeURIComponent(escape(atob(j.d))))}catch(e){}if(!d||!d.S)continue;
+  const loc=readSave(n);if(!loc){LS.set(slotKey(n),d);add++;continue}
+  const sameLife=loc.S&&loc.S.name===d.S.name&&loc.S.seed===d.S.seed;if((d.t||0)>(loc.t||0)+30000){try{LS.set('murim_arc_gsw'+n,loc)}catch(e){}LS.set(slotKey(n),d);sameLife?upd++:upd++}else same++}
+ }catch(e){console.error('gAutoRestore',e)}try{renderLegends()}catch(e){}
+ if(add||upd)modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☁️ ดึงข้อมูลบัญชีมาแล้ว</h3><p>กู้เซฟชีวิตจากเซิร์ฟเวอร์ ${add} ช่อง${upd?` · อัปเดตเป็นฉบับใหม่กว่า ${upd} ช่อง (ฉบับเดิมในเครื่องเก็บสำรองไว้)`:''}</p><p class="tag2">สมุดตำนาน ความสำเร็จ ฉายา กรอบ และคลังกรรมจะรวมเข้ามาเองภายในไม่กี่นาที</p><button class="pbtn" style="width:100%" onclick="closeM()">เล่นต่อ</button>`,'gsw');
+ else{toast('🔐 สลับบัญชีแล้ว — เลือกเซฟที่จะกู้');try{openCloudRestore()}catch(e){}}};
+// 2) ซิงค์ทันทีตอนสำคัญ (สลับแอป/ปิดหน้า · จบชีวิต · กลับหน้าแรก) — ห่างกันอย่างน้อย 20 วิ
+let lastQ=0;const now=why=>{try{if(!linked()||!onlineOK)return;if(Date.now()-lastQ<20000)return;lastQ=Date.now();try{if(S&&S.alive)cloudAuto(true)}catch(e){}if(window._psSync)window._psSync(true)}catch(e){}};
+document.addEventListener('visibilitychange',()=>{if(document.hidden)now('hide')});window.addEventListener('pagehide',()=>now('hide'));
+{const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);setTimeout(()=>{lastQ=0;now('end')},1500);try{endLoginAsk()}catch(e){}return r}}
+{const _tt=toTitle;toTitle=function(){const r=_tt.apply(this,arguments);setTimeout(()=>now('title'),800);setTimeout(stTitle,900);return r}}
+// 4) ชวนล็อกอิน: หลังจบชีวิต (ถ้ายังไม่เชื่อม) และในหน้ารับของล็อกอิน
+function endLoginAsk(){if(linked()||!onlineOK)return;const E=$('end');if(!E||E.querySelector('.gAsk'))return;const b=document.createElement('div');b.className='box gAsk';b.style.cssText='margin:8px 0;padding:10px';b.innerHTML='<b>🔐 เก็บความคืบหน้าไว้ไม่ให้หาย</b><p class="tag2" style="margin:4px 0 8px">ล็อกอิน Google ครั้งเดียว — สมุดตำนาน ฉายา กรอบ คลังกรรม และเซฟทุกช่องจะตามไปทุกเครื่อง เปลี่ยนมือถือหรือล้างเครื่องก็ไม่หาย</p><button class="pbtn" style="width:100%" onclick="openProfile()">🔐 ล็อกอินด้วย Google</button>';E.insertBefore(b,E.firstChild)}
+{const _lo=window.lgOpen;if(_lo)window.lgOpen=async function(){const r=await _lo.apply(this,arguments);try{if(!linked()){const W=$('modal').querySelector('.lgW');if(W&&!W.querySelector('.gAsk2'))W.insertAdjacentHTML('beforeend','<div class="gAsk2 lgNote" style="margin-top:8px;opacity:1"><button class="gbtn" style="width:100%" onclick="openProfile()">🔐 ล็อกอิน Google เพื่อเก็บของที่ได้ไว้ไม่ให้หาย</button></div>')}}catch(e){}return r}}
+// 5) สถานะซิงค์: หน้าแรก + เมนู
+function stTxt(){const ps=+LS.get('murim_pst',0)||0,ct=+LS.get('murim_cloudT',0)||0;return linked()?`☁️ ซิงค์บัญชี Google ล่าสุด ${agoT(ps)}${ct?` · เซฟชีวิตขึ้นเซิร์ฟเวอร์ ${agoT(ct)}`:''}`:'⚠️ ยังไม่ได้ล็อกอิน Google — ข้อมูลอยู่แค่ในเครื่องนี้'}
+function stTitle(){try{const t=$('title');if(!t||!t.classList.contains('on'))return;let e=$('syncSt');if(!e){const ref=$('contBig')||t.querySelector('.box.opts');if(!ref)return;e=document.createElement('div');e.id='syncSt';e.className='tag2';e.style.cssText='text-align:center;margin:2px 0 6px;font-size:12px;cursor:pointer';e.onclick=()=>{if(linked()&&window.psNow)psNow();else openProfile()};ref.parentNode.insertBefore(e,ref)}e.textContent=stTxt()}catch(e){}}
+setTimeout(stTitle,3000);setInterval(stTitle,30000);
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal'),sv=m&&m.querySelector('.svStat');if(sv&&!m.querySelector('.syncM'))sv.insertAdjacentHTML('afterend',`<div class="tag2 syncM" style="text-align:center;margin:0 0 6px;cursor:pointer" onclick="${linked()?'psNow()':'openProfile()'}">${stTxt()} <u>${linked()?'ซิงค์ตอนนี้':'ล็อกอิน'}</u></div>`)}catch(e){}return r}}
+})()}catch(e){console.error('gsmooth',e)}
