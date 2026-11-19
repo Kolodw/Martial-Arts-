@@ -284,6 +284,7 @@ const noAdm = x => /ผู้ดูแล|แอดมิน|admin|ทีมง�
 const thDay = (ms, back = 0) => new Date(ms + 7 * 3600e3 - back * 86400e3).toISOString().slice(0, 10);
 // IP ของผู้ใช้จริง (Vercel ใส่ x-forwarded-for / x-real-ip ให้)
 const RR_PK = { s: [10, 12], m: [29, 40], l: [59, 100] }; // แพ็กสุ่มเกิด: [ราคา บาท, จำนวนครั้ง]
+const LK_PK = { '1': [5, 1], '2': [10, 2], '10': [45, 10], '25': [99, 25] }; // 🔒 ตั๋วล็อกชะตา: [ราคา บาท, จำนวนใบ] · 1 ใบ = ล็อก 1 อย่างจนเริ่มชีวิต · รหัสแพ็ก = 'lk' + key
 // 🏮 ผู้อุปถัมภ์: [ราคา บาท, ระดับ, จำนวนวัน (0 = ถาวร)] — ไม่มีพลัง/เงินในเกม ได้แค่สุ่มเกิดเพิ่ม ป้าย และสิทธิ์สะดวก
 const RP_SC = ['inn', 'mkt', 'gate', 'sky'];
 // 🎭 ห้องเล่นบท: ห้องเดียว ฉากหมุนทุก 3 ชั่วโมง (เวลาไทย)
@@ -982,6 +983,13 @@ module.exports = async (req, res) => {
       if (!to) return res.json({ err: 'none' });
       await cmd('SADD', 'vinc:' + to, id); return res.json({ ok: 1, c: +(await cmd('SCARD', 'vinc:' + to)) || 0 });
     }
+    if (a === 'lkget') { if (!okId(id)) return res.json({ c: 0, pk: LK_PK }); return res.json({ c: Math.max(0, +(await cmd('GET', 'lkc:' + id)) || 0), pk: LK_PK }) }
+    if (a === 'lkuse') { // 🔒 ใช้ตั๋วล็อกชะตา n ใบ (1–2)
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'id' });
+      const n = Math.max(1, Math.min(2, b.n | 0 || 1)); const left = +(await cmd('DECRBY', 'lkc:' + id, n));
+      if (!(left >= 0)) { await cmd('INCRBY', 'lkc:' + id, n); return res.status(402).json({ err: 'none', c: Math.max(0, +(await cmd('GET', 'lkc:' + id)) || 0) }) }
+      return res.json({ ok: 1, c: left });
+    }
     if (a === 'rruse') { // k=f → ตั๋วฟรีธรรมดา (จากจบชีวิต) · ปกติ → ตั๋วทองจากของล็อกอินก่อน แล้วค่อยตั๋วที่ซื้อ
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'id' });
       const rest = async () => ({ c: Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0) + Math.max(0, +(await cmd('GET', 'rrg:' + id)) || 0), f: Math.max(0, +(await cmd('GET', 'rrf:' + id)) || 0) });
@@ -1026,6 +1034,7 @@ module.exports = async (req, res) => {
       if (v === 'del') await pipe([['HDEL', 'suppay', sid], ['ZREM', 'suppayz', sid], ['DEL', 'supimg:' + sid]]);
       else { const cur = jp(await cmd('HGET', 'suppay', sid)); if (cur) { const was = cur.st; cur.st = v === 'ok' ? 'ok' : v === 'no' ? 'no' : ''; cur.mt = now;
         let pr = null; if (cur.st === 'ok' && was !== 'ok' && okId(cur.fid)) { await cmd('SADD', 'supok', cur.fid); if (String(qOf(req).ty || '1') === '1' && !cur.rp) { const x = '🙏 ได้รับแล้ว ขอบคุณมากครับ! เงินสนับสนุนจะเอาไปพัฒนาเกมต่อ 💛'; cur.rp = { x, t: now, auto: 1 }; pr = await withCap(noteTo(cur.fid, { t: '💬 ผู้พัฒนาตอบคุณ', b: x, u: '/?go=support' }), 4000) } }
+        try { if (cur.lk && LK_PK[cur.lk] && okId(cur.fid)) { if (cur.st === 'ok' && !cur.lg) { cur.lg = LK_PK[cur.lk][1]; await cmd('INCRBY', 'lkc:' + cur.fid, cur.lg) } else if (cur.st !== 'ok' && cur.lg) { const left = +(await cmd('DECRBY', 'lkc:' + cur.fid, cur.lg)) || 0; if (left < 0) await cmd('SET', 'lkc:' + cur.fid, 0); cur.lg = 0 } } } catch (e) {}
         try { if (cur.pk && RR_PK[cur.pk] && okId(cur.fid)) { if (cur.st === 'ok' && !cur.rg) { cur.rg = RR_PK[cur.pk][1]; await cmd('INCRBY', 'rrc:' + cur.fid, cur.rg) } else if (cur.st !== 'ok' && cur.rg) { const left = +(await cmd('DECRBY', 'rrc:' + cur.fid, cur.rg)) || 0; if (left < 0) await cmd('SET', 'rrc:' + cur.fid, 0); cur.rg = 0 } } } catch (e) {}
         try { if (cur.vp && VIP_PK[cur.vp] && okId(cur.fid)) { const vx = VIP_PK[cur.vp]; if (cur.st === 'ok' && !cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], 1); cur.vg = 1; if (vx[1] === 3 && !(await cmd('HEXISTS', 'vipu', cur.fid))) { const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', cur.fid, JSON.stringify({ n: clean(String(cur.n || ''), 24), o, t: Date.now() })) } } else if (cur.st === 'ok' && cur.vg && vx[1] === 3) { await vipHeal(cur.fid) } else if (cur.st !== 'ok' && cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], -1); cur.vg = 0; if (vx[1] === 3) await cmd('HDEL', 'vipu', cur.fid) } } } catch (e) {}
         if (cur.st !== 'ok' && was === 'ok' && okId(cur.fid)) { const others = ((await cmd('HVALS', 'suppay')) || []).map(jp).filter(z => z && z.fid === cur.fid && z.i !== cur.i && z.st === 'ok'); if (!others.length) await cmd('SREM', 'supok', cur.fid) }
@@ -2171,6 +2180,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const sid = now.toString(36) + Math.random().toString(36).slice(2, 6), img = String(b.img || '');
       const hasImg = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(img) && img.length < 400000;
       const rec = { ...base, i: sid, amt: Math.max(0, Math.min(1e7, Math.round((+b.amt || 0) * 100) / 100)), pn: clean(String(b.pn || ''), 40), tm: clean(String(b.tm || ''), 20), msg: clean(String(b.msg || ''), 200), img: hasImg ? 1 : 0, st: '' };
+      if (LK_PK[String(b.lk || '')]) { rec.lk = String(b.lk); rec.msg = ('[🔒 ซื้อตั๋วล็อกชะตา ' + LK_PK[rec.lk][1] + ' ใบ · ' + LK_PK[rec.lk][0] + ' บาท] ' + rec.msg).slice(0, 240) }
       if (RR_PK[String(b.pk || '')]) { rec.pk = String(b.pk); rec.msg = ('[🎲 ซื้อสุ่มเกิด ' + RR_PK[rec.pk][1] + ' ครั้ง · ' + RR_PK[rec.pk][0] + ' บาท] ' + rec.msg).slice(0, 240) }
       if (VIP_PK[String(b.vp || '')]) { rec.vp = String(b.vp); const vx = VIP_PK[rec.vp]; rec.msg = ('[🏮 ' + VIP_NM[vx[1]] + ' · ' + vx[0] + ' บาท' + (vx[2] ? ' · ' + vx[2] + ' วัน' : ' · ถาวร') + '] ' + rec.msg).slice(0, 240) }
       const L = [['HSET', 'suppay', sid, JSON.stringify(rec)], ['ZADD', 'suppayz', now, sid], ['HINCRBY', 'supd:' + d0, 'paid', 1], ['EXPIRE', 'supd:' + d0, 86400 * 120]];
@@ -3140,12 +3150,13 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
 module.exports.vkReset = vkReset;
 module.exports.vkRun = vkRun;
 // 💳 ให้สิทธิ์หลังตรวจสลิปอัตโนมัติสำเร็จ (เรียกจาก cloudflare/worker.js /api/pay) — pack: v1|v2|v3 = VIP, rs|rm|rl = ซื้อสุ่มเกิด
-module.exports.payPack = pk => { pk = String(pk || ''); if (EVB[pk]) return evOpen() ? { kind: 'cos', amt: EVB[pk][0], tier: 0, days: 0, n: 0, items: EVB[pk][1].map(k => EVM[k][1]), key: pk, ev: 1, bun: EVB[pk][1] } : null; if (EVM[pk]) return evOpen() ? { kind: 'cos', amt: EVM[pk][0], tier: 0, days: 0, n: 0, items: [EVM[pk][1]], key: pk, ev: 1, cap: EVM[pk][2] } : null; if (COS_P[pk]) return { kind: 'cos', amt: COS_P[pk][0], tier: 0, days: 0, n: 0, items: COS_P[pk][1], key: pk }; if (VIP_PK[pk]) return { kind: 'vip', amt: VIP_PK[pk][0], tier: VIP_PK[pk][1], days: VIP_PK[pk][2] }; const r = pk[0] === 'r' && RR_PK[pk.slice(1)]; return r ? { kind: 'rr', amt: r[0], n: r[1] } : null };
+module.exports.payPack = pk => { pk = String(pk || ''); if (EVB[pk]) return evOpen() ? { kind: 'cos', amt: EVB[pk][0], tier: 0, days: 0, n: 0, items: EVB[pk][1].map(k => EVM[k][1]), key: pk, ev: 1, bun: EVB[pk][1] } : null; if (EVM[pk]) return evOpen() ? { kind: 'cos', amt: EVM[pk][0], tier: 0, days: 0, n: 0, items: [EVM[pk][1]], key: pk, ev: 1, cap: EVM[pk][2] } : null; if (COS_P[pk]) return { kind: 'cos', amt: COS_P[pk][0], tier: 0, days: 0, n: 0, items: COS_P[pk][1], key: pk }; if (VIP_PK[pk]) return { kind: 'vip', amt: VIP_PK[pk][0], tier: VIP_PK[pk][1], days: VIP_PK[pk][2] }; const lk = /^lk\d+$/.test(pk) && LK_PK[pk.slice(2)]; if (lk) return { kind: 'lk', amt: lk[0], n: lk[1] }; const r = pk[0] === 'r' && RR_PK[pk.slice(1)]; return r ? { kind: 'rr', amt: r[0], n: r[1] } : null };
 module.exports.payGrant = async (uid, pk, name) => {
   const P = pk && typeof pk === 'object' ? pk : module.exports.payPack(pk);
   if (P && P.bun && okId(uid)) { const own = new Set((await cmd('SMEMBERS', 'cos:' + uid)) || []), todo = P.bun.filter(k => !own.has(EVM[k][1])); for (const k of todo) { if ((+(await cmd('GET', 'evn:' + k)) || 0) >= EVM[k][2]) throw new Error('soldout') } const got = []; for (const k of todo) { const sn = +(await cmd('INCR', 'evn:' + k)); if (sn > EVM[k][2]) { await cmd('DECR', 'evn:' + k); continue } await cmd('HSET', 'evs:' + uid, EVM[k][1], sn); await cmd('LPUSH', 'evlog', JSON.stringify({ t: Date.now(), u: uid, k, i: EVM[k][1], m: 'pay', n: sn })); got.push(EVM[k][1]) } await cmd('LTRIM', 'evlog', 0, 299); if (!got.length) throw new Error('already'); await cmd('SADD', 'cos:' + uid, ...got); await cmd('SADD', 'supok', uid); return P }
   if (P && P.kind === 'cos' && okId(uid)) { const it = (P.items || []).filter(x => COS_ALL.has(x)); if (!it.length) throw new Error('bad pack/id'); if (P.ev && !(+(await cmd('SISMEMBER', 'cos:' + uid, it[0])))) { const sn = +(await cmd('INCR', 'evn:' + P.key)); if (sn > P.cap) { await cmd('DECR', 'evn:' + P.key); throw new Error('soldout') } await cmd('HSET', 'evs:' + uid, it[0], sn); await cmd('LPUSH', 'evlog', JSON.stringify({ t: Date.now(), u: uid, k: P.key, i: it[0], m: 'pay', n: sn })); await cmd('LTRIM', 'evlog', 0, 299) } await cmd('SADD', 'cos:' + uid, ...it); await cmd('SADD', 'supok', uid); return P }
-  if (!P || !okId(uid) || !(P.kind === 'rr' ? P.n > 0 : P.tier >= 1 && P.tier <= 3)) throw new Error('bad pack/id');
+  if (!P || !okId(uid) || !(P.kind === 'rr' || P.kind === 'lk' ? P.n > 0 : P.tier >= 1 && P.tier <= 3)) throw new Error('bad pack/id');
+  if (P.kind === 'lk') { await cmd('INCRBY', 'lkc:' + uid, P.n); await cmd('SADD', 'supok', uid); return P }
   if (P.kind === 'rr') { await cmd('INCRBY', 'rrc:' + uid, P.n); await cmd('SADD', 'supok', uid); return P }
   await vipAdd(uid, P.tier, P.days, 1); await cmd('SADD', 'supok', uid);
   if (P.tier === 3) { if (!(await cmd('HEXISTS', 'vipu', uid))) { const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', uid, JSON.stringify({ n: clean(String(name || ''), 24), o, t: Date.now() })) } else await vipHeal(uid) }

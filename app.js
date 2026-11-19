@@ -29995,9 +29995,9 @@ const accent=()=>{try{return (shopSkin().accent)||'#c9553f'}catch(e){return'#c95
 const RRs=()=>window._RR||{pk:{s:[10,12],m:[29,40],l:[59,100]},c:null,used:0,cap:10,kday:5};
 const render=()=>{css();const m=gs(),t=tierNow(),v=vget(),R=RRs(),sealMode=m==='seal';
  const em=(n,sz)=>sealMode?embHtml(n,sz):'<span class="dot"></span>';
- const top=`<div class="sh2-top"><button class="${tab==='m'?'on':''}" onclick="shopTab('m')">สิทธิ์สมาชิก</button><button class="${tab==='r'?'on':''}" onclick="shopTab('r')">สุ่มชีวิตใหม่</button></div>`;
+ const top=`<div class="sh2-top"><button class="${tab==='m'?'on':''}" onclick="shopTab('m')">สิทธิ์สมาชิก</button><button class="${tab==='r'?'on':''}" onclick="shopTab('r')">สุ่มชีวิตใหม่</button><button class="${tab==='l'?'on':''}" onclick="shopTab('l')">🔒 ล็อกชะตา</button></div>`;
  let body='';
- if(tab==='m'){
+ if(tab==='l'&&window.lkShopBody){body=window.lkShopBody()}else if(tab==='m'){
   const st=t?`<div class="sh2-st">${sealMode?embHtml(t,36):''}<div><b>${TIER[t].n}</b><small>${t===3?(v.ul?'ลำดับที่ '+v.ul.o:'ตลอดไป'):'อีก '+left(v,t)+' วัน'}</small></div></div>`:'';
   const rows=[1,2,3].map(n=>{const T=TIER[n];return`<button class="sh2-row${sel===n?' on':''}" onclick="shopSel(${n})"><div class="hd">${sealMode?embHtml(n,34):'<span class="dot"></span>'}<span class="nm">${T.n}${n===3?'<span class="best">คุ้มสุด</span>':''}</span><span class="pr">${T.p}<small> บาท / ${T.per}</small></span></div><div class="chips">${T.chips.map(c=>`<span>${c}</span>`).join('')}</div></button>`}).join('');
   const tb=`<table><tr><th></th><th>${TIER[1].n.replace('ผู้','')}</th><th>พิเศษ</th><th>ก่อตั้ง</th></tr>${ROWS.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</table>`;
@@ -30021,7 +30021,7 @@ window.shopSel=n=>{sel=n;render()};
 window.shopClassic=()=>{try{oldVip()}catch(e){}};
 const ld=async()=>{try{const j=await api('rrget');const R=window._RR;if(R){R.c=Math.max(0,+j.c||0);if(j.pk)R.pk=j.pk}window.vipSet&&window.vipSet(j.vip);if(inShop())render()}catch(e){}};
 const open=t=>{if(gs()==='classic')return t==='m'?oldVip():oldRr();tab=t;sel=tierNow()||2;render();ld()};
-window.vipMenu=function(){open('m')};window.rrMenu=function(){open('r')};
+window.vipMenu=function(){open('m')};window.rrMenu=function(){open('r')};window.lkMenu=function(){if(gs()==='classic'&&window.lkMenuClassic)return window.lkMenuClassic();open('l')};
 // ฉลองตอนซื้อสำเร็จ (แบบ seal มีประกายพิกเซล)
 window.addEventListener('shop:paid',()=>{try{if(gs()!=='seal')return;const b=document.createElement('div');b.className='sh2-burst';const C=['#f1c94a','#d9604a','#fff3b0','#c9ced8'];for(let i=0;i<46;i++){const e=document.createElement('i');const a=Math.random()*6.28,d=80+Math.random()*180;e.style.cssText=`left:50%;top:45%;--c:${C[i%4]};--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d-60}px;animation-delay:${Math.random()*.2}s`;b.appendChild(e)}document.body.appendChild(b);setTimeout(()=>b.remove(),1800)}catch(e){}});
 // ตั้งค่า → หน้าร้าน
@@ -44637,3 +44637,74 @@ try{(()=>{let q=0;
 setInterval(()=>{try{if(!S||!S.alive||!coCan()||modalOpen||choice._cur||document.hidden||$('coach')||$('ctOv')){q=0;return}
  const id=(S.sys&&!coSeen('sys')&&LESSON.sys)?'sys':(S.sarc&&!coSeen('arc')&&LESSON.arc)?'arc':null;if(!id){q=0;return}if(++q<2)return;q=0;coStart(id)}catch(e){}},1700);
 })()}catch(e){console.error('lsnSys',e)}
+
+// ---------- 🔒 ล็อกชะตา (ตั๋วล็อก · หมวดเติมเงิน): 1 ใบ = ล็อก 1 อย่างค้างไว้จนเริ่มชีวิต (สูงสุด 2 อย่าง) · ⏪ ย้อนชะตาก่อนหน้า 1 ใบ · แทนระบบล็อกเดิมที่ใช้สิทธิ์สุ่ม 2 ครั้ง ----------
+try{(()=>{
+const LK=window._LK={c:null,pk:{'1':[5,1],'2':[10,2],'10':[45,10],'25':[99,25]},on:{},w:null,prev:null,undo:null,busy:0};
+const KN={t:['🦴','พรสวรรค์'],f:['🏠','ชาติกำเนิด'],trs:['✨','พรสวรรค์พิเศษ'],era:['🌍','ยุคสมัย']};
+const off=()=>!!(CFG.daily||CFG.chm==1||CFG.mw||(roll&&roll.daily));
+const wKey=()=>(CFG.xian?'x':'m')+':'+CFG.chm;
+const nOn=()=>Object.keys(LK.on).length;
+const vOf=(k,r)=>{r=r||roll;if(!r)return'';try{if(k==='era')return r.era&&r.era.v?r.era.v.n:'';if(k==='t')return CFG.xian?(r.root||r.t.v.n):r.t.v.n;if(k==='f')return r.f.v.n;if(k==='trs'){const L=(r.trs&&r.trs.list||[]).map(x=>{try{return trOf(x).n}catch(e){return x}});return L.length?L.join(' · '):'ไม่มี'}}catch(e){}return''};
+async function load(){try{const j=await api('lkget');LK.c=Math.max(0,+j.c||0);if(j.pk)LK.pk=j.pk}catch(e){}ui();try{const m=$('modal');if(m&&m.querySelector('.sh2')&&m.querySelector('.sh2-top button.on')&&/ล็อก/.test(m.querySelector('.sh2-top button.on').textContent))window.shopTab('l')}catch(e){}}
+window.lkLoad=load;
+// ใส่ค่าที่ล็อกตอนสุ่ม
+{const _gr=genRoll;genRoll=function(){const r=_gr.apply(this,arguments);try{if(!LK.inRoll)return r;if(r&&LK.undo){const p=LK.undo;['f','t','trs','g','w','it','os','isOw','op','seed','look','p','soul'].forEach(k=>{if(k in p)r[k]=p[k]})}else if(r&&!off())['f','t','trs'].forEach(k=>{if(LK.on[k])r[k]=LK.on[k].v})}catch(e){}return r}}
+{const _pw=pickW;pickW=function(arr){try{if(arr===ERAS&&LK.inRoll){if(LK.undo&&LK.undo.era)return LK.undo.era;if(LK.on.era&&!off())return LK.on.era.v}}catch(e){}return _pw.apply(this,arguments)}}
+{const _bg=bodyGen;bodyGen=function(){if(LK.undo&&LK.undo.body)return LK.undo.body;return _bg.apply(this,arguments)}}
+{const _gn=genName;genName=function(){if(LK.undo&&LK.undo.name)return LK.undo.name;return _gn.apply(this,arguments)}}
+{const _gs=genSoul;genSoul=function(){if(LK.undo&&LK.undo.soul)return LK.undo.soul;return _gs.apply(this,arguments)}}
+{const _dr=doRoll;doRoll=function(first){const before=roll;LK.inRoll=1;let r;try{r=_dr.apply(this,arguments)}finally{LK.inRoll=0;LK.undo=null}try{if(!first&&roll&&roll!==before&&before&&!LK.noPrev)LK.prev=before;LK.noPrev=0}catch(e){}setTimeout(ui,90);setTimeout(ui,1500);return r}}
+{const _gb=goBirth;goBirth=function(){const r=_gb.apply(this,arguments);try{if(LK.w&&LK.w!==wKey()&&nOn()){LK.on={};toast('🔒 เปลี่ยนโลก/โหมดแล้ว ล็อกชะตาเดิมใช้ไม่ได้')}LK.prev=null;if(LK.c==null)load();else setTimeout(ui,150)}catch(e){}return r}}
+{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{LK.on={};LK.prev=null;LK.w=null}catch(e){}return r}}
+// ปิดระบบล็อกเดิม (ใช้สิทธิ์สุ่ม 2 ครั้ง)
+try{const st=document.createElement('style');st.textContent=`#bLockRow{display:none!important}
+#lkRow{margin:10px 0 4px;padding:9px;border:2px solid #c9a24a;border-radius:12px;background:linear-gradient(180deg,#fff7e0,#ffeec4);color:#3a2a00;text-align:center}
+#lkRow .lkh{font-size:12.5px;margin-bottom:6px}#lkRow .lkb{display:inline-flex;flex-direction:column;align-items:center;margin:3px;padding:5px 9px;border-radius:10px;border:1px solid #c9a24a;background:#fff;color:#3a2a00;font:inherit;font-size:12.5px;min-width:30%;cursor:pointer}
+#lkRow .lkb small{font-size:10.5px;opacity:.75;max-width:12em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#lkRow .lkb.on{background:#c9a24a;color:#fff;border-color:#a8822a}
+#lkRow .lkx{display:block;width:100%;margin-top:6px;padding:6px;border-radius:10px;border:1px dashed #c9a24a;background:transparent;color:#7a5a10;font:inherit;font-size:12.5px}`;document.head.appendChild(st)}catch(e){}
+try{window._bLock=null;window.bLockSet=function(){toast('ใช้ 🔒 ล็อกชะตาแบบใหม่ด้านล่างแทน')}}catch(e){}
+function ui(){try{const b=$('traits');if(!b||!$('birth')||!$('birth').classList.contains('on')||!roll){return}let el=$('lkRow');if(off()){if(el)el.remove();return}
+ if(!el){(($('bLockRow'))||b).insertAdjacentHTML('afterend','<div id="lkRow"></div>');el=$('lkRow')}
+ const n=nOn();el.innerHTML=`<div class="lkh">🔒 <b>ล็อกชะตา</b> — ล็อกแล้วอยู่ไปจนกดเริ่มชีวิต สุ่มใหม่กี่ครั้งก็ไม่เปลี่ยน · ล็อกได้ 2 อย่าง<br>ตั๋วล็อก <b>${LK.c==null?'…':fmt(LK.c)}</b> ใบ · <a href="#" onclick="lkMenu();return false" style="color:#7a5a10">ซื้อเพิ่ม</a></div>`+
+  Object.keys(KN).map(k=>{const on=!!LK.on[k];return`<button class="lkb${on?' on':''}" onclick="lkTap('${k}')">${on?'🔒':KN[k][0]} ${KN[k][1]}<small>${esc(on?LK.on[k].n:vOf(k))}</small></button>`}).join('')+
+  (LK.prev&&LK.prev!==roll?`<button class="lkx" onclick="lkUndo()">⏪ ย้อนกลับไปชะตาก่อนหน้า (ตั๋วล็อก 1 ใบ) <small>— ${esc(vOf('t',LK.prev))} · ${esc(vOf('f',LK.prev))}</small></button>`:'')}catch(e){console.error('lkui',e)}}
+async function spend(n){if(LK.busy)return false;LK.busy=1;try{const j=await api('lkuse',{n});LK.c=Math.max(0,+j.c||0);return true}catch(e){if(e.message==='none'){LK.c=0;toast('ตั๋วล็อกไม่พอ');lkMenu()}else toast('ใช้ตั๋วไม่สำเร็จ ลองใหม่อีกครั้ง');return false}finally{LK.busy=0;ui()}}
+window.lkTap=function(k){if(off())return toast('โหมดนี้ล็อกชะตาไม่ได้');if(LK.on[k])return toast(`🔒 ${KN[k][1]}ล็อกไว้แล้ว — อยู่ไปจนเริ่มชีวิต`);if(nOn()>=2)return toast('ล็อกได้สูงสุด 2 อย่าง');
+ if(LK.c==null){load();return toast('กำลังโหลดตั๋วล็อก…')}if(LK.c<1)return lkMenu();
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🔒 ล็อก${KN[k][1]}</h3><div class="item" style="text-align:center"><div class="tag2">${KN[k][0]} ${KN[k][1]}ตอนนี้</div><b style="font-size:18px">${esc(vOf(k))}</b></div>
+ <p class="tag2">ใช้ตั๋วล็อก 1 ใบ (เหลือ ${fmt(LK.c)}) · ล็อกแล้วสุ่มใหม่กี่ครั้งก็ได้${KN[k][1]}นี้เสมอ จนกว่าจะกดเริ่มชีวิต · ปลดล็อกไม่ได้และไม่คืนตั๋ว</p>
+ <button class="pbtn" style="width:100%" onclick="lkDo('${k}')">🔒 ล็อกเลย (1 ใบ)</button><button class="gbtn" style="width:100%;margin-top:6px" onclick="closeM()">ยังก่อน</button>`)};
+window.lkDo=async function(k){closeM();if(!roll||LK.on[k]||nOn()>=2)return;const v=k==='era'?roll.era:roll[k];if(!v)return;const nm=vOf(k);if(!(await spend(1)))return;LK.on[k]={v,n:nm};LK.w=wKey();try{sfx('good')}catch(e){}toast(`🔒 ล็อก${KN[k][1]}「${nm}」แล้ว`);ui()};
+window.lkUndo=async function(){const p=LK.prev;if(!p||p===roll)return;if(LK.c==null){load();return}if(LK.c<1)return lkMenu();if(!(await spend(1)))return;
+ LK.undo={f:p.f,t:p.t,trs:p.trs,g:p.g,w:p.w,it:p.it,os:p.os,isOw:p.isOw,op:p.op,seed:p.seed,look:p.look,p:p.p,era:p.era,body:p.body,name:p.name,soul:p.soul};
+ const cur=roll;rerolls++;try{$('rr').textContent=rerolls}catch(e){}LK.noPrev=1;doRoll();LK.prev=cur;toast('⏪ ย้อนกลับไปชะตาก่อนหน้าแล้ว');ui()};
+// หน้าร้าน (แท็บ 🔒 ในร้านสนับสนุน) + แบบคลาสสิก
+const pkHtml=cls=>Object.entries(LK.pk).sort((a,b)=>a[1][0]-b[1][0]).map(([k,v],i,A)=>{const per=v[0]/v[1],best=i===A.length-1;return`<button class="${cls||''}${best?' best1':''}" onclick="lkBuy('${k}')">${best?'<span class="rb">คุ้มสุด</span>':''}<b>${v[1]}</b><small>ใบ</small><span class="p">${v[0]} บาท</span><small>${per.toFixed(1)} บ./ใบ</small></button>`}).join('');
+window.lkShopBody=function(){if(LK.c==null)setTimeout(load,0);return`<div class="sh2-sum"><div><b>${LK.c==null?'…':fmt(LK.c)}</b><small>ตั๋วล็อกที่มี</small></div><div><b>${nOn()}/2</b><small>ล็อกอยู่ตอนนี้</small></div></div>
+ <p class="note" style="margin:6px 0">🔒 <b>ตั๋วล็อก 1 ใบ = ล็อก 1 อย่าง</b> (พรสวรรค์ · ชาติกำเนิด · พรสวรรค์พิเศษ · ยุคสมัย) ค้างไว้จนกดเริ่มชีวิต สุ่มส่วนที่เหลือด้วยสิทธิ์สุ่มปกติ · ล็อกได้ 2 อย่างต่อชีวิต · ⏪ ย้อนกลับไปชะตาก่อนหน้าใช้ 1 ใบ</p>
+ <div class="pk" style="flex-wrap:wrap">${pkHtml()}</div>
+ <p class="note">ใช้ได้ทุกโหมด ยกเว้น 🔥 นรก และชาเลนจ์รายวัน (เพื่อให้ทำเนียบยุติธรรม) · ตั๋วไม่มีวันหมดอายุ ผูกกับบัญชี · แนบสลิปแล้วเข้าทันที</p>`};
+window.lkMenuClassic=function(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🔒 ตั๋วล็อกชะตา</h3>${window.lkShopBody().replace('class="pk"','class="rrpk"')}`);if(LK.c==null)load().then(()=>{if($('modal').querySelector('.rrpk'))window.lkMenuClassic()})};
+if(typeof window.lkMenu!=='function')window.lkMenu=window.lkMenuClassic;
+window.lkBuy=function(k){const v=LK.pk[k];if(!v)return;
+ modal(`<button class="xbtn" onclick="lkMenu()">✕</button><h3>🔒 ตั๋วล็อกชะตา ${v[1]} ใบ · ${v[0]} บาท</h3>
+ <div style="text-align:center"><img loading="lazy" src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:36vh;border-radius:10px;background:#fff" draggable="false">
+ <p style="margin:8px 0 2px">1) สแกนโอน <b>${v[0]} บาท</b> ด้วยแอปธนาคาร</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจให้อัตโนมัติ ตั๋วเข้าทันที</p>
+ <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
+ <label class="supl">👤 ชื่อบัญชีที่โอน<input id="supPn" maxlength="40" placeholder="ช่วยให้ตรวจเร็วขึ้น"></label>
+ <label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>
+ <button class="pbtn" style="width:100%;margin-top:8px" onclick="lkPaid(this,'${k}')">📨 ส่งสลิป</button>
+ <p class="tag2">โอนผิดยอดหรือไม่แนบสลิป อาจตรวจไม่ได้ · ไม่มีการตัดเงินอัตโนมัติ</p>`);try{supEv('view')}catch(e){}};
+const shrink=f=>new Promise(res=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const z=Math.min(1,1600/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*z);cv.height=Math.round(im.height*z);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);let q=.88,d=cv.toDataURL('image/jpeg',q);while(d.length>2.8e6&&q>.4){q-=.1;d=cv.toDataURL('image/jpeg',q)}res(d)};im.onerror=()=>res('');im.src=fr.result};fr.onerror=()=>res('');fr.readAsDataURL(f)});
+window.lkPaid=async function(btn,k){const v=LK.pk[k],pn=(($('supPn')||{}).value||'').trim(),f=$('supImg')&&$('supImg').files&&$('supImg').files[0];if(!f&&!pn)return toast('แนบสลิป หรือใส่ชื่อบัญชีอย่างน้อยหนึ่งอย่างนะ');
+ btn.disabled=true;btn.textContent='⏳ กำลังตรวจสลิป…';
+ if(f){let j=null;try{const img=await shrink(f);if(img){const r=await fetch('/api/pay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:pid,pk:'lk'+k,n:pname(),img})});j=await r.json().catch(()=>null)}}catch(e){}
+  if(j&&j.ok){btn.textContent='✅ ตรวจผ่านแล้ว ตั๋วเข้าแล้ว!';toast(`✅ ได้ตั๋วล็อก ${v[1]} ใบ ขอบคุณที่สนับสนุนครับ 💛`);try{window.dispatchEvent(new Event('shop:paid'))}catch(e){}try{sfx('good')}catch(e){}await load();return}
+  if(j&&j.st&&j.st!=='bad'&&j.st!=='grant'&&j.st!=='err'&&j.st!=='down'){btn.disabled=false;btn.textContent='📨 ส่งสลิป';toast(j.st==='amount'&&j.need?'ยอดในสลิปไม่ตรง ต้องโอน '+j.need+' บาทพอดี แล้วส่งสลิปใบใหม่':j.st==='dup'?'สลิปนี้เคยถูกใช้แล้ว':j.st==='acct'?'สลิปนี้ไม่ได้โอนเข้าบัญชีของเกม':j.st==='old'?'สลิปเก่าเกินไป (รับภายใน 3 ชั่วโมง)':'อ่านสลิปไม่ได้ ลองแคปให้เห็นทั้งใบแล้วลองใหม่');return}}
+ // ตรวจอัตโนมัติไม่ได้ → ส่งให้ผู้พัฒนาตรวจเอง
+ try{const img=f?await supShrink(f):'';const d=new Date();await api('sup',{e:'paid',lk:k,n:pname(),src:'lock',amt:v[0],pn,tm:String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'),msg:'',img});btn.textContent='✅ ส่งแล้ว — รอตรวจสลิป';toast('🙏 ส่งแล้ว ผู้พัฒนาตรวจแล้วตั๋วจะเข้าเอง')}
+ catch(e){btn.disabled=false;btn.textContent='📨 ส่งสลิป';toast(e.message==='rate'?'เพิ่งส่งไป รอสักครู่แล้วลองใหม่':'ส่งไม่สำเร็จ ลองใหม่อีกครั้ง')}};
+// ทางเข้า: ในหน้าสุ่มเพิ่มแบบคลาสสิก
+setInterval(()=>{try{if($('birth')&&$('birth').classList.contains('on')&&roll&&!$('lkRow')&&!off())ui()}catch(e){}},1500);
+})()}catch(e){console.error('lk',e)}
