@@ -1724,6 +1724,27 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       let mine = null; if (rk != null && +rk >= 20) { const sc = await cmd('ZSCORE', 'dl:' + d, id); const m = jp(await cmd('HGET', 'dlm:' + d, id)); mine = Object.assign({ s: +sc, rank: +rk + 1, me: 1 }, m || {}) }
       return res.json({ d, today, top: await unpack(d, top), n: +n || 0, rank: rk == null ? null : +rk + 1, mine, yd, ytop: await unpack(yd, yt) });
     }
+    if (a === 'mst' || a === 'mstget') {
+      // สถิติการเล่นแยกโหมด (นับรายวัน เวลาไทย) — ไม่เก็บข้อมูลส่วนตัว
+      const dOf = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10), today = dOf(now);
+      if (a === 'mst') {
+        if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
+        const c = +(await cmd('INCR', 'msr:' + id)) || 1; if (c === 1) await cmd('EXPIRE', 'msr:' + id, 600); if (c > 60) return res.status(429).json({ err: 'rate' });
+        const md = String(b.m || '').replace(/[^a-z0-9_]/g, '').slice(0, 24) || 'x', ev = ['st', 'ed', 'ab', 'in'].includes(b.e) ? b.e : null; if (!ev) return res.json({ err: 'ev' });
+        const y = Math.max(0, Math.min(9999, +b.y | 0)), bk = y < 1 ? '0' : y < 3 ? '1-2' : y < 6 ? '3-5' : y < 15 ? '6-14' : y < 40 ? '15-39' : '40+';
+        const L = [['HINCRBY', 'ms:' + today, md + ':' + ev, 1], ['EXPIRE', 'ms:' + today, 40 * 86400]];
+        if (ev !== 'st' && ev !== 'in') L.push(['HINCRBY', 'ms:' + today, md + ':' + ev + ':' + bk, 1]);
+        if (ev === 'st' || ev === 'in') L.push(['PFADD', 'msu:' + today + ':' + md, id], ['EXPIRE', 'msu:' + today + ':' + md, 40 * 86400]);
+        await pipe(L); return res.json({ ok: 1 });
+      }
+      if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
+      const days = Math.max(1, Math.min(30, +qOf(req).n || 7)), D = []; for (let i = 0; i < days; i++) D.push(dOf(now - i * 864e5));
+      const H = await pipe(D.map(d => ['HGETALL', 'ms:' + d])); const out = {};
+      H.forEach((h, i) => { const o = {}; if (Array.isArray(h)) for (let k = 0; k < h.length; k += 2) o[h[k]] = +h[k + 1]; else Object.assign(o, h || {}); out[D[i]] = o });
+      const modes = new Set(); Object.values(out).forEach(o => Object.keys(o).forEach(k => modes.add(k.split(':')[0])));
+      const U = {}; for (const m of modes) { U[m] = +(await cmd('PFCOUNT', ...D.map(d => 'msu:' + d + ':' + m))) || 0 }
+      return res.json({ ok: 1, days: D, data: out, users: U });
+    }
     if (a === 'mgput' || a === 'mgget') {
       // สนามฝึกประจำวัน — มินิเกม 1 เกม/วัน (เวลาไทย) เก็บคะแนนดีที่สุดของแต่ละคน
       const dOf = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10), today = dOf(now);
