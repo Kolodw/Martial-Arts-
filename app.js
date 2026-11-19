@@ -45823,3 +45823,84 @@ setInterval(()=>{try{sweep()}catch(e){}},3000);
 // ===================== 😈 ทางมารทะลวงขั้นได้อย่างยุติธรรม: ผู้ที่กรรมติดลบใช้ "จิตมาร" (ความชั่วที่ตั้งมั่น) แทนกรรมดีในการคำนวณทัณฑ์ =====================
 try{(()=>{const _ts=tribStats;tribStats=function(t,k){const r=_ts.apply(this,arguments);try{if(S&&(S.karma||0)<0&&r&&Array.isArray(r.parts)){const T=tribT(k||'r',t),n=v=>Math.max(0,Math.min(1,v)),i=r.parts.findIndex(p=>p[0]==='กรรม');
  if(i>=0){const v=n((-(S.karma||0)+80)/(150+100*Math.pow(1.25,T)));if(v>r.parts[i][1]){r.parts[i]=['😈 จิตมาร',v];r.sc=r.parts.reduce((a,x)=>a+x[1],0)/r.parts.length}}}}catch(e){}return r}})()}catch(e){console.error('demonTrib',e)}
+
+// ===================== 💰 ทุ่มทรัพย์: ที่ผลาญเงินให้หายเฟ้อ (ทุกโลก ทุกโหมด — ราคาคิดตามโลกและตาม % ของเงินที่มี) =====================
+try{(()=>{
+const ok=()=>S&&S.alive&&!(S.beastMode&&!S.beastMode.human);
+const wB=()=>{let r=0;try{r=Math.max(0,realmIdx())}catch(e){}return(S.xt?1e5:S.xian?1e4:1e3)*(1+r)};
+const W=()=>Math.max(0,Math.round(S.money||0));
+const pr=(base,pct)=>Math.round(Math.max(base,W()*pct)/10)*10;
+const M=v=>typeof fmtM==='function'?fmtM(v):fmt(v);
+function st(){S.wl=S.wl||{est:0,y:-1,rn:0,bet:0,mk:null,mkY:-1,tp:0,bought:{}};const w=S.wl;if(w.y!==S.age){w.y=S.age;w.rn=0;w.bet=0}return w}
+function pay(c){if(S.money<c){toast('💸 เงินไม่พอ');return false}S.money-=c;S.wlSpent=(S.wlSpent||0)+c;return true}
+const css=document.createElement('style');css.textContent=`.wlT{display:flex;gap:4px;overflow-x:auto;margin:6px 0}.wlT button{flex:0 0 auto;padding:5px 9px;border-radius:9px;border:1px solid var(--line,#5556);background:#ffffff08;color:inherit;font:inherit;font-size:12.5px}.wlT button.on{background:#e8b83a;color:#2a1a00;border-color:#e8b83a;font-weight:700}.wlC{padding:9px;border-radius:10px;border:1px solid var(--line,#5554);margin:6px 0;background:#ffffff08}.wlC .r{display:flex;gap:6px;align-items:center}.wlC .r b{flex:1}`;document.head.appendChild(css);
+// ---------- 1) อาณาเขต ----------
+const EST=['ยังไม่มี','🏠 เรือนพัก','🏡 คฤหาสน์','🏯 ป้อมปราการ','🏘️ เมืองเล็ก','🏙️ นครอิสระ','🗺️ แคว้น','👑 อาณาจักร','🌌 ดินแดนในตำนาน'];
+const estN=l=>l<EST.length?EST[l]:`🌌 ดินแดนในตำนาน ขั้น ${l-EST.length+2}`;
+const estC=l=>Math.round(wB()*20*Math.pow(2.2,l));
+function estUp(){const w=st(),c=estC(w.est);if(!pay(c))return;w.est++;log(`🏯 ขยายอาณาเขตเป็น <b>${estN(w.est)}</b> — ใช้ ${M(c)}`,'epic');if(w.est%3===0)try{keyAdd(`สร้าง${estN(w.est).replace(/^\S+\s/,'')}`)}catch(e){}try{LS.set('murim_wlest',Math.max(+LS.get('murim_wlest',0)||0,Math.floor(w.est/3)))}catch(e){}openWealth('est')}
+// ---------- 2) ทรัพยากรฝึก ----------
+const RES=[['herb','🌿 สมุนไพรบำรุงปราณ','ลมปราณ',()=>{const g=+(Math.max(.3,(S.qi||0)*.03)).toFixed(1);S.qi+=g;return`ลมปราณ +${g}`}],['pill','💊 ยาเสริมกำลัง','พลัง',()=>{const g=pctPow(.03);S.power+=g;return`พลัง +${fmt(g)}`}],['book','📚 ตำราหายาก','ปัญญา',()=>{const g=Math.max(3,Math.round((S.int||0)*.03));S.int+=g;return`ปัญญา +${g}`}]];
+const resC=()=>Math.round(pr(wB()*5,.08)*Math.pow(1.45,st().rn));
+function resBuy(k){const w=st(),c=resC(),R0=RES.find(x=>x[0]===k);if(!R0||!pay(c))return;const eff=1/(1+w.rn*.4);w.rn++;const s0={p:S.power,q:S.qi,i:S.int};let t='';
+ const p0=S.power,q0=S.qi,i0=S.int;t=R0[3]();S.power=p0+(S.power-p0)*eff;S.qi=q0+(S.qi-q0)*eff;S.int=i0+(S.int-i0)*eff;S.qi=+(+S.qi).toFixed(2);S.power=Math.round(S.power);S.int=Math.round(S.int);
+ toast(`${R0[1]} — ${t}${eff<1?` (ได้ผล ${Math.round(eff*100)}%)`:''}`);openWealth('res')}
+// ---------- 3) พิธีเตรียมรับทัณฑ์ ----------
+const tpC=()=>pr(wB()*30,.2)*Math.pow(1.6,Math.round((S.tribPill||0)/.04));
+function tpBuy(){const c=tpC();if((S.tribPill||0)>=.2){toast('⚡ เตรียมพิธีเต็มที่แล้ว (+20%)');return}if(!pay(c))return;S.tribPill=+(((S.tribPill||0)+.04).toFixed(2));log(`⚡ จ้างนักพรตตั้งค่ายกลรับทัณฑ์ — โอกาสผ่านทัณฑ์ครั้งหน้า +${Math.round(S.tribPill*100)}% (ใช้ ${M(c)})`,'epic');openWealth('trib')}
+// ---------- 4) บ่อนทายผลประลอง ----------
+const FN=['ดาบเหล็กไร้เงา','หมัดพยัคฆ์คำราม','นางพญางูขาว','จอมยุทธ์ขี้เมา','ศิษย์วัดเส้าหลินหนีเที่ยว','มือสังหารหน้ากากเงิน','บัณฑิตพัดหยก','ยักษ์ภูเขาเหล็ก','นักพรตสวมงอบ','เด็กเลี้ยงควายลึกลับ','ทวนมังกรแดง','เจ้าแม่กระบี่บิน'];
+function betNew(){const w=st();const a=ch(FN);let b=ch(FN);while(b===a)b=ch(FN);const p=R(52,72)/100;w.bt={a,b,p};return w.bt}
+function bet(side,pc){const w=st();if(w.bet>=5){toast('🎲 บ่อนปิดรับแทงปีนี้แล้ว (5 ครั้ง/ปี)');return}const bt=w.bt||betNew(),c=Math.max(10,Math.round(W()*pc));if(!pay(c))return;w.bet++;
+ const pw=side==='a'?bt.p:1-bt.p,odd=+(.92/pw).toFixed(2),win=Math.random()<(side==='a'?bt.p:1-bt.p),who=Math.random()<bt.p?bt.a:bt.b,me=side==='a'?bt.a:bt.b;
+ const real=win?me:(me===bt.a?bt.b:bt.a),FX=['ฟันฉับเดียวจบ','แลกหมัดกันสามร้อยกระบวนท่า','พลิกเกมในวินาทีสุดท้าย','ล้มคู่ต่อสู้ด้วยท่าที่ไม่มีใครเคยเห็น','ชนะเพราะอีกฝ่ายลื่นล้มเอง'];void who;
+ if(win){const g=Math.round(c*odd);S.money+=g;S.wlSpent-=g;log(`🎲 ${esc(real)} ${ch(FX)} — คุณแทงถูก! ได้ ${M(g)} (×${odd})`,'good')}else log(`🎲 ${esc(real)} ${ch(FX)} — คุณแทงผิด เสีย ${M(c)}`,'bad');
+ w.bt=null;openWealth('bet')}
+// ---------- 5) ตลาดมืดของหายาก ----------
+const MK=[['🐉 กระดูกมังกรบดผง','พลังชีวิตสูงสุด +12%',()=>{const g=Math.max(20,Math.round(S.maxHp*.12));S.maxHp+=g;S.hp+=g;return`พลังชีวิตสูงสุด +${typeof fmtH==='function'?fmtH(g):g}`}],['⏳ โอสถต่ออายุพันปี','อายุขัย +12 ปี',()=>{S.lifespan=(S.lifespan||0)+12;return'อายุขัย +12 ปี'}],['📜 คัมภีร์ลับไร้ชื่อ','พลัง +8% · ปัญญา +10',()=>{S.power+=pctPow(.08);S.int+=10;return'พลัง +8% · ปัญญา +10'}],['💠 ศิลาเต๋าแตกร้าว','ลมปราณ +8%',()=>{const g=+(Math.max(1,(S.qi||0)*.08)).toFixed(1);S.qi+=g;return`ลมปราณ +${g}`}],['🎭 หน้ากากนักเล่าเรื่อง','ชื่อเสียง +150 · เสน่ห์ +10',()=>{S.fame+=150;S.cha=(S.cha||0)+10;return'ชื่อเสียง +150 · เสน่ห์ +10'}],['🪷 ดอกบัวล้างกรรม','กรรมเข้าใกล้ศูนย์ 50% · ความสุข +20',()=>{S.karma=Math.round((S.karma||0)*.5);joy(20);return'กรรมถูกชำระครึ่งหนึ่ง · ความสุข +20'}],['🔮 ลูกแก้วเห็นชะตา','เพิ่มโอกาสทะลวงทัณฑ์ +6%',()=>{S.tribPill=Math.min(.3,(S.tribPill||0)+.06);return'โอกาสผ่านทัณฑ์ +6%'}],['🗡️ อาวุธไร้นามของผู้ล่วงลับ','พลัง +12%',()=>{S.power+=pctPow(.12);return'พลัง +12%'}]];
+function mkNow(){const w=st();if(w.mkY!==S.age){w.mkY=S.age;const ix=MK.map((_,i)=>i).sort(()=>Math.random()-.5).slice(0,3);w.mk=ix.map(i=>({i,c:Math.round(pr(wB()*40,R(18,35)/100)*R(9,13)/10),s:0}))}return w.mk}
+function mkBuy(j){const it=mkNow()[j];if(!it||it.s)return;if(!pay(it.c))return;it.s=1;const r=MK[it.i][2]();log(`💎 ซื้อ <b>${MK[it.i][0]}</b> จากตลาดมืด ${M(it.c)} — ${r}`,'epic');openWealth('mk')}
+// ---------- 6) คลังตระกูลข้ามชาติ ----------
+const vR=()=>+(LS.get('murim_wvault',0)||0);
+const vPts=r=>Math.min(60,Math.floor(Math.sqrt(r)));
+function vDep(pc){const c=Math.round(W()*pc);if(c<10||!pay(c))return;const r=vR()+c/wB();LS.set('murim_wvault',r);log(`🏛️ ฝากเข้าคลังตระกูล ${M(c)} — ชีวิตหน้าจะได้รากฐานตระกูล <b>${vPts(r)}</b> ชั้น`,'');openWealth('vault')}
+{const _sl=startLife;startLife=function(){const o=_sl.apply(this,arguments);try{if(!S)return o;const p=vPts(vR());if(p>0){LS.set('murim_wvault',0);S.int+=p;S.qi=+((S.qi||0)+p*.3).toFixed(1);S.money+=Math.min(30000,p*150);S.fame+=p*2;log(`🏛️ <b>คลังตระกูลจากชาติก่อน</b> เปิดออก — รากฐาน ${p} ชั้น: ปัญญา +${p} · ลมปราณ +${(p*.3).toFixed(1)} · ทุนตั้งตัว ${M(Math.min(30000,p*150))}`,'epic',true)}
+ const e=+(LS.get('murim_wlest',0)||0);if(e>0){LS.set('murim_wlest',0);S.power+=Math.round(pctPow(.05*e));S.fame+=e*15;log(`🏯 ซากอาณาเขตจากชาติก่อนยังมีคนจำได้ — เด็กคนนี้เติบโตในเงาของมัน (พลัง +${5*e}% · ชื่อเสียง +${e*15})`,'epic',true)}}catch(e){}return o}}
+// ---------- รายปี: อาณาเขตให้ผล · ความรวยดึงดูดภัย ----------
+{const _py=passYear;passYear=function(){const a0=S&&S.age,me=S;const r=_py.apply(this,arguments);try{if(!ok()||S!==me||S.age===a0)return r;const w=st();
+ if(w.est>0){const l=w.est,k=Math.sqrt(l);S.fame+=Math.round(2*l);S.qi=+((S.qi||0)+.05*k).toFixed(2);S.power+=Math.round(pctPow(.003*k));joy(Math.min(3,l*.5))}
+ const rich=W()/wB();if(rich>=150&&!w.dzP&&Math.random()<Math.min(.12,.03+Math.log10(rich/150+1)*.05)&&S.age-(w.dz||-9)>=3){w.dz=S.age;w.dzP=1}}catch(e){}return r}}
+setInterval(()=>{try{if(ok()&&S.wl&&S.wl.dzP&&!choice._cur&&!modalOpen&&!(typeof DU!=='undefined'&&DU)&&!(window._mgBusy&&window._mgBusy())){S.wl.dzP=0;danger()}}catch(e){}},1500);
+function danger(){const c=p=>Math.round(W()*p),k=R(0,2);
+ if(k===0)choice('🦹 โจรหมายตาทรัพย์สมบัติ','ข่าวความร่ำรวยของคุณลือไปไกล คืนนี้มีเงาดำนับสิบปีนข้ามกำแพงเข้ามา',[
+  {t:`🛡️ จ้างคุ้มกันเต็มอัตรา (${M(c(.05))})`,s:'ปลอดภัยแน่นอน',f(){S.money-=c(.05);log('🛡️ ยามที่จ้างมาจับโจรได้ทั้งแก๊ง ส่งทางการแลกรางวัลนิดหน่อย','good')}},
+  {t:'⚔️ ออกไปจัดการเอง',s:'ชนะ = ชื่อเสียง · แพ้ = เสียเงินก้อนใหญ่',f(){if(fight('แก๊งโจรปล้นคฤหาสน์',total()*.9)){S.fame+=40;log('⚔️ คุณเดินออกไปคนเดียว รุ่งเช้าโจรทั้งแก๊งนั่งเรียงแถวรอทางการอยู่หน้าประตู','epic')}else{const l=c(.2);S.money-=l;log(`⚔️ โจรมีมากเกินไป พวกมันขนของไปได้ ${M(l)}`,'bad')}}},
+  {t:'🙈 ปล่อยไป ทรัพย์ภายนอกไม่ใช่ของเรา',s:`เสีย ~${M(c(.12))} · กรรม +`,f(){const l=c(.12);S.money-=l;S.karma+=3;log(`🙈 คุณนั่งจิบชามองโจรขนของ — หายไป ${M(l)} แต่ใจคุณสงบ`,'')}}]);
+ else if(k===1)choice('🏛️ ขุนนางมาเยือนพร้อมบัญชีภาษี','ขุนนางท้องถิ่นยิ้มกว้าง กางม้วนบัญชีที่ยาวผิดปกติ "ทรัพย์สินระดับนี้ ต้องเสียภาษีพิเศษ"',[
+  {t:`📜 จ่ายตามบัญชี (${M(c(.08))})`,s:'ชื่อเสียง + · ทางการเกรงใจ',f(){S.money-=c(.08);S.fame+=25;log('📜 คุณจ่ายครบ ขุนนางก้มหัวจนหมวกแทบหล่น เรื่องนี้ทำให้ชาวเมืองนับถือ','good')}},
+  {t:`💰 ยัดใต้โต๊ะ (${M(c(.04))})`,s:'ถูกกว่า · กรรม −',f(){S.money-=c(.04);S.karma-=6;log('💰 ซองหนาๆ ทำให้บัญชีสั้นลงอย่างน่าอัศจรรย์','')}},
+  {t:'😤 ปฏิเสธ แล้วไล่ออกไป',s:'ไม่เสียเงิน · ชื่อเสียงอาจลด · เสี่ยงถูกกลั่นแกล้ง',f(){if(Math.random()<.5){S.fame=Math.max(0,S.fame-30);const l=c(.06);S.money-=l;log(`😤 ขุนนางแค้น ส่งคนมาตรวจค้นจนธุรกิจเสียหาย ${M(l)}`,'bad')}else log('😤 ขุนนางหน้าซีดกลับไป และไม่กล้ามาอีกเลย','good')}}]);
+ else choice('👪 ญาติห่างๆ มาขอยืมเงิน','ญาติที่คุณจำหน้าแทบไม่ได้ มายืนบิดชายเสื้ออยู่หน้าประตู "ขอยืมไปตั้งตัวสักหน่อย ไม่นานจะคืน"',[
+  {t:`🤝 ให้ยืม (${M(c(.1))})`,s:'กรรม + · ความสุข + · อาจได้คืนพร้อมดอก',f(){const l=c(.1);S.money-=l;S.karma+=5;joy(6);S.wlLoan={a:Math.round(l*1.6),y:S.age+R(3,6)};log('🤝 ญาติร้องไห้ก้มกราบ สัญญาว่าจะคืนให้','good')}},
+  {t:`🎁 ให้เปล่าไปเลย (${M(c(.05))})`,s:'กรรม ++',f(){S.money-=c(.05);S.karma+=10;joy(4);log('🎁 "ไม่ต้องคืน เอาไปสร้างชีวิตให้ดี" — ข่าวนี้ทำให้ทั้งตระกูลรักคุณ','good')}},
+  {t:'🚪 ปฏิเสธ',s:'ความสุข −',f(){joy(-6);log('🚪 ญาติเดินคอตกกลับไป เสียงนินทาตามมาอีกหลายปี','')}}]);
+}
+{const _py2=passYear;passYear=function(){const r=_py2.apply(this,arguments);try{const L=S&&S.wlLoan;if(L&&S.age>=L.y){S.wlLoan=null;if(Math.random()<.55){S.money+=L.a;log(`👪 ญาติที่เคยยืมเงินกลับมา ร่ำรวยแล้ว คืนให้ ${M(L.a)} พร้อมไก่ย่างหนึ่งตัว`,'good')}else log('👪 ข่าวว่าญาติที่ยืมเงินไปย้ายเมืองหนีไปแล้ว','')}}catch(e){}return r}}
+// ---------- หน้า ----------
+const TABS=[['est','🏯 อาณาเขต'],['res','⚗️ ทรัพยากร'],['trib','⚡ พิธีทัณฑ์'],['bet','🎲 บ่อน'],['mk','💎 ตลาดมืด'],['vault','🏛️ คลังตระกูล']];
+window.openWealth=function(tab){if(!ok())return;tab=tab||openWealth._t||'est';openWealth._t=tab;const w=st();let b='';
+ if(tab==='est'){const c=estC(w.est),l=w.est,k=Math.sqrt(l||0);b=`<div class="wlC"><div class="r"><b>${estN(l)}</b><span class="tag2">ขั้น ${l}</span></div><p class="tag2">${l?`ผลทุกปี: ชื่อเสียง +${2*l} · ลมปราณ +${(.05*k).toFixed(2)} · พลัง +${(.3*k).toFixed(1)}% · ความสุข +`:'ยังไม่มีอาณาเขต'}</p><p class="tag2">ทุก 3 ขั้น = มรดกส่งถึงชีวิตหน้า (พลัง +5% ต่อชั้น)</p><button class="sysb" style="width:100%" onclick="wlEst()" ${S.money>=c?'':'disabled style="opacity:.5;width:100%"'}>⬆️ ขยายเป็น ${estN(l+1)} · ${M(c)}</button></div>`}
+ if(tab==='res'){const c=resC();b=`<p class="tag2">ซื้อได้ไม่จำกัด แต่ทุกครั้งในปีเดียวกันแพงขึ้นและได้ผลน้อยลง (ครั้งที่ ${w.rn+1} ปีนี้ · ได้ผล ${Math.round(100/(1+w.rn*.4))}%)</p>`+RES.map(x=>`<div class="wlC"><div class="r"><b>${x[1]}</b><button class="sysb" onclick="wlRes('${x[0]}')">${M(c)}</button></div><p class="tag2">เพิ่ม${x[2]}</p></div>`).join('')}
+ if(tab==='trib'){const c=tpC(),cur=Math.round((S.tribPill||0)*100);b=`<div class="wlC"><b>⚡ ค่ายกลรับทัณฑ์</b><p class="tag2">จ้างนักพรตตั้งค่ายกล เพิ่มโอกาสผ่านทัณฑ์/ทะลวงครั้งหน้า +4% ต่อครั้ง (สูงสุด +20% · หมดเมื่อทะลวงสำเร็จ)</p><p>ตอนนี้: <b>+${cur}%</b></p><button class="sysb" style="width:100%" onclick="wlTrib()" ${cur>=20?'disabled':''}>${cur>=20?'เต็มแล้ว':'🧿 ตั้งค่ายกล · '+M(c)}</button></div>`}
+ if(tab==='bet'){const bt=w.bt||betNew(),oa=(.92/bt.p).toFixed(2),ob=(.92/(1-bt.p)).toFixed(2);b=`<div class="wlC"><b>🎲 คู่ประลองวันนี้</b> <span class="tag2">แทงแล้ว ${w.bet}/5 ปีนี้</span><p>🔴 <b>${esc(bt.a)}</b> <span class="tag2">เต็ง ${Math.round(bt.p*100)}% · จ่าย ×${oa}</span><br>🔵 <b>${esc(bt.b)}</b> <span class="tag2">รอง ${Math.round((1-bt.p)*100)}% · จ่าย ×${ob}</span></p>
+  ${[['a','🔴'],['b','🔵']].map(([s,ic])=>`<div class="r" style="margin-top:4px">${ic}${[.1,.25,.5].map(p=>`<button class="sysb" style="flex:1" onclick="wlBet('${s}',${p})">${Math.round(p*100)}%<br><small>${M(Math.max(10,Math.round(W()*p)))}</small></button>`).join('')}</div>`).join('')}<p class="tag2">เจ้ามือกินส่วนต่าง 8% — เล่นสนุก อย่าหวังรวย</p></div>`}
+ if(tab==='mk'){const L=mkNow();b=`<p class="tag2">ของหมุนเวียนทุกปี · ชิ้นละครั้งเดียว</p>`+L.map((it,j)=>{const x=MK[it.i];return`<div class="wlC"><div class="r"><b>${x[0]}</b>${it.s?'<span class="tag2">✅ ซื้อแล้ว</span>':`<button class="sysb" onclick="wlMk(${j})" ${S.money>=it.c?'':'disabled style="opacity:.5"'}>${M(it.c)}</button>`}</div><p class="tag2">${x[1]}</p></div>`}).join('')}
+ if(tab==='vault'){const r=vR(),p=vPts(r),nx=Math.pow(p+1,2)-r;b=`<div class="wlC"><b>🏛️ คลังตระกูลข้ามชาติ</b><p class="tag2">เงินที่ฝากจะหายจากชีวิตนี้ แต่ชีวิตหน้าได้ "รากฐานตระกูล": ปัญญา + · ลมปราณ + · ชื่อเสียง + · ทุนตั้งตัวเล็กน้อย (สูงสุด 60 ชั้น · ยิ่งฝากเยอะยิ่งขึ้นช้าลง)</p><p>ตอนนี้: <b>${p} ชั้น</b> <span class="tag2">· อีก ~${M(Math.ceil(nx*wB()))} ถึงชั้นถัดไป</span></p><div class="r">${[.1,.25,.5,1].map(x=>`<button class="sysb" style="flex:1" onclick="wlVault(${x})">${Math.round(x*100)}%</button>`).join('')}</div></div>`}
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>💰 ทุ่มทรัพย์</h3><p class="tag2">เงินตอนนี้ <b>${M(W())}</b> · ใช้ไปแล้วทั้งชีวิต ${M(Math.max(0,S.wlSpent||0))}</p><div class="wlT">${TABS.map(t=>`<button class="${t[0]===tab?'on':''}" onclick="openWealth('${t[0]}')">${t[1]}</button>`).join('')}</div>${b}`,'wealth')};
+Object.assign(window,{wlEst:estUp,wlRes:resBuy,wlTrib:tpBuy,wlBet:bet,wlMk:mkBuy,wlVault:vDep});
+// ---------- ปุ่มเข้า ----------
+const addBtn=()=>{try{const g=document.querySelector('#modal .mgrid');if(!g||g.querySelector('.wlBtn')||!ok())return;g.insertAdjacentHTML('beforeend',`<button class="opt wlBtn" onclick="openWealth()">💰 ทุ่มทรัพย์<small>อาณาเขต · บ่อน · ตลาดมืด · คลังตระกูล</small></button>`)}catch(e){}};
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);addBtn();return r}}
+{const _ot=openTown;openTown=function(p){const r=_ot.apply(this,arguments);if(!p||p==='main')addBtn();return r}}
+try{SYS_GUIDE.push({ic:'💰',t:'ทุ่มทรัพย์',d:'ที่ใช้เงินก้อนโต: ขยายอาณาเขต (ให้ผลทุกปี) · ซื้อทรัพยากรฝึก · ตั้งค่ายกลเพิ่มโอกาสทะลวง · บ่อนทายผลประลอง · ตลาดมืดของหายาก · คลังตระกูลส่งต่อชีวิตหน้า · รวยมากจะมีโจร ขุนนาง ญาติมาเยือน',go:()=>openWealth()})}catch(e){}
+})()}catch(e){console.error('wealth',e)}
