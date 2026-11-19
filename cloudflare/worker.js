@@ -25,7 +25,7 @@ async function handler() {
 async function api(request, url) {
   const h = await handler();
   const run = h.vkRun ? h.vkRun(() => apiOne(request, url)) : apiOne(request, url);
-  return Promise.race([run, new Promise(r => setTimeout(() => r(new Response('{"err":"timeout"}', { status: 504, headers: { 'content-type': 'application/json' } })), 20000))]);
+  return Promise.race([run, new Promise(r => setTimeout(() => r(new Response('{"err":"timeout"}', { status: 504, headers: { 'content-type': 'application/json' } })), 12000))]);
 }
 
 async function apiOne(request, url) {

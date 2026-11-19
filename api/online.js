@@ -28,6 +28,8 @@ async function upPipe(list) {
 // ---------- Valkey/Redis (RESP2) แบบไม่ต้องลงแพ็กเกจเพิ่ม ----------
 const net = require('net'), tls = require('tls');
 const VK0 = { sock: null, ready: null, buf: Buffer.alloc(0), q: [], io: 0 };
+// ฐานข้อมูลไม่ตอบ → พักการต่อใหม่ 5 วิ (ตอบผู้เล่นทันทีแทนการค้างรอ) · ใช้ร่วมกันทั้ง isolate
+let VK_DOWN = 0;
 // Cloudflare Workers: socket ใช้ข้ามคำขอไม่ได้ → ให้แต่ละคำขอมี VK ของตัวเอง (AsyncLocalStorage) ทำหลายคำขอพร้อมกันได้ · Vercel ไม่เรียก vkRun จึงใช้ VK0 ตัวเดียวเหมือนเดิม
 const { AsyncLocalStorage: _ALS } = require('node:async_hooks');
 const VKS = new _ALS();
@@ -67,6 +69,7 @@ function vkDrop(err, V = vkCtx()) {
 function vkConnect() {
   const V = vkCtx();
   if (V.ready) return V.ready;
+  if (Date.now() < VK_DOWN) return Promise.reject(new Error('valkey down'));
   V.ready = new Promise((res, rej) => {
     let u; try { u = new URL(VK_URL) } catch { return rej(new Error('VALKEY_URL invalid')) }
     const port = +u.port || 6379, host = u.hostname, secure = u.protocol === 'rediss:';
@@ -74,7 +77,7 @@ function vkConnect() {
     if (process.env.VALKEY_CA) opt.ca = process.env.VALKEY_CA;
     const s = secure ? tls.connect(opt) : net.connect(opt);
     V.cur = s; s.setNoDelay(true); s.setKeepAlive(true, 30000);
-    const to = setTimeout(() => { s.destroy(new Error('valkey connect timeout')) }, 8000);
+    const to = setTimeout(() => { VK_DOWN = Date.now() + 5000; s.destroy(new Error('valkey connect timeout')) }, 4000);
     s.on('data', d => {
       if (V.cur !== s) return;
       V.io = Date.now();
@@ -86,7 +89,7 @@ function vkConnect() {
     s.on('error', e => { clearTimeout(to); if (V.cur === s) vkDrop(e, V); rej(e) });
     s.on('close', () => { clearTimeout(to); if (V.cur === s) vkDrop(undefined, V) });
     s.once(secure ? 'secureConnect' : 'connect', async () => {
-      clearTimeout(to); V.sock = s; V.io = Date.now();
+      clearTimeout(to); V.sock = s; V.io = Date.now(); VK_DOWN = 0;
       try {
         const user = decodeURIComponent(u.username || ''), pass = decodeURIComponent(u.password || '');
         if (pass) await vkSend(user ? ['AUTH', user, pass] : ['AUTH', pass], V);
@@ -100,7 +103,7 @@ function vkSend(args, V = vkCtx()) {
   return new Promise((res, rej) => {
     if (!V.sock) return rej(new Error('valkey not connected'));
     // ไม่ตอบใน 5 วิ = socket ค้าง (เช่นฟังก์ชันถูกแช่แข็งแล้วปลุกขึ้นมา) → ทิ้ง socket ให้คำสั่งถัดไปต่อใหม่
-    const t = setTimeout(() => { rej(new Error('valkey timeout')); const sk = V.sock; if (sk) { vkDrop(new Error('valkey timeout'), V); try { sk.destroy() } catch {} } }, 5000);
+    const t = setTimeout(() => { rej(new Error('valkey timeout')); const sk = V.sock; if (sk) { vkDrop(new Error('valkey timeout'), V); try { sk.destroy() } catch {} } }, 4000);
     V.q.push({ res: v => { clearTimeout(t); res(v) }, rej: e => { clearTimeout(t); rej(e) } });
     V.sock.write(vkEnc(args));
   });
@@ -108,7 +111,7 @@ function vkSend(args, V = vkCtx()) {
 // socket ที่เงียบนานเกิน 40 วิ มักถูกปิดฝั่งเซิร์ฟเวอร์ไปแล้วแบบไม่บอก — ต่อใหม่ก่อนส่ง
 function vkFresh() { const V = vkCtx(); if (V.sock && Date.now() - V.io > 40e3 && !V.q.length) { const sk = V.sock; vkDrop(undefined, V); try { sk.destroy() } catch {} } }
 const vkConnErr = e => /not connected|closed|ECONNRESET|EPIPE|ETIMEDOUT|connect timeout|socket hang up|valkey timeout/i.test(String(e && e.message));
-async function vkTry(fn) { vkFresh(); try { await vkConnect(); return await fn() } catch (e) { if (!vkConnErr(e)) throw e; vkDrop(); await vkConnect(); return fn() } }
+async function vkTry(fn) { vkFresh(); try { await vkConnect(); return await fn() } catch (e) { if (!vkConnErr(e) || /connect timeout|valkey down/i.test(String(e && e.message))) throw e; vkDrop(); await vkConnect(); return fn() } }
 async function vkCmd(...args) { return vkTry(() => vkSend(args)) }
 async function vkPipe(list) {
   if (!list.length) return [];
@@ -3123,7 +3126,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     console.error('API_ERR', a, String(e && e.message || e).slice(0, 200), process.env.DEBUG_API ? (e && e.stack) : '');
     // บอกแค่ "ประเภท" ของปัญหา (ไม่เปิดข้อความจริง) เพื่อให้ผู้ดูแลเห็นสาเหตุจากหน้าเว็บ/โทรศัพท์ได้
     const em = String(e && e.message || e), why = /NOAUTH|WRONGPASS|AUTH/i.test(em) ? 'auth' : /OOM|maxmemory/i.test(em) ? 'oom' : /timeout/i.test(em) ? 'timeout' : /closed|not connected|ECONN|ENOTFOUND|EAI_AGAIN|socket|TLS|certificate|CERT|reset/i.test(em) ? 'conn' : /max (daily )?requests?|quota/i.test(em) ? 'quota' : /JSON|undefined|null|Cannot read/i.test(em) ? 'code' : 'other';
-    return res.status(500).json({ err: 'server', why });
+    return res.status(/timeout|valkey down|not connected|closed/i.test(em) ? 503 : 500).json({ err: /valkey down|connect timeout/i.test(em) ? 'db' : 'server', why });
   }
 };
 module.exports.vkReset = vkReset;

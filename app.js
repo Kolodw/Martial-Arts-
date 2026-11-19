@@ -3525,19 +3525,19 @@ let onlineOK=false,onlineN=0,onlineLives=0,chatT=null,chatLast=0,chatMsgs=[];
 const _freshDev=(()=>{try{return localStorage.getItem('murim_pid')==null&&localStorage.getItem('murim_ctok')==null}catch(e){return false}})();
 const pid=(()=>{let v=LS.get('murim_pid','');if(!v){v=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);LS.set('murim_pid',v)}return v})();
 const pname=()=>LS.get('murim_pname','')||(S?S.name:'จอมยุทธ์นิรนาม');
-let _quotaUntil=0;
+let _quotaUntil=0,_downUntil=0,_downN=0;const _apiEss=/^(csave|psput|psget|save|gsw|pay|slip)/;
 const _apiFly={};
-async function api(a,body){if(Date.now()<_quotaUntil)throw new Error('quota');const s0=_mSeq,key=body?null:a;
+async function api(a,body){if(Date.now()<_quotaUntil)throw new Error('quota');if(Date.now()<_downUntil&&!_apiEss.test(a)){const e=new Error('offline');e._quiet=1;e.down=1;throw e}const s0=_mSeq,key=body?null:a;
  const run=async()=>{for(let t=0;;t++){const ctl=typeof AbortController!=='undefined'?new AbortController():null,tm=setTimeout(()=>{try{if(ctl){const er=new Error('timeout');er.name='AbortError';er._quiet=1;ctl.abort(er)}}catch(e){}},body?15000:10000);
   try{const o=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({id:pid},body))}:{};if(ctl)o.signal=ctl.signal;
    const r=await fetch(API+'?a='+a+(body?'':'&id='+pid),o);const j=await r.json().catch(()=>({}));
    if(!r.ok){if(j.err==='quota'){_quotaUntil=Date.now()+120000;try{quotaNote()}catch(e){}}const e=new Error(j.err||r.status);e.http=r.status;e.why=j.why;e.q=j.err==='quota';throw e}return j}
   catch(e){const net=e.name==='AbortError'||!e.http||e.http>=500;if(body||t>=1||e.q||!net)throw e.name==='AbortError'?new Error('timeout'):e;await new Promise(r=>setTimeout(r,700))}finally{clearTimeout(tm)}}};
- let p;if(key&&_apiFly[key])p=_apiFly[key];else{p=run();if(key){_apiFly[key]=p;p.then(()=>{delete _apiFly[key]},()=>{delete _apiFly[key]})}}
+ let p;if(key&&_apiFly[key])p=_apiFly[key];else{p=run();p.then(()=>{_downN=0;_downUntil=0},e=>{try{if(e&&!e.q&&!e.down&&(e.message==='timeout'||!e.http||e.http>=500)){_downN++;_downUntil=Date.now()+Math.min(60000,5000*Math.pow(2,_downN-1))}}catch(x){}});if(key){_apiFly[key]=p;p.then(()=>{delete _apiFly[key]},()=>{delete _apiFly[key]})}}
  const j=await p;_apiS0=s0;setTimeout(()=>{if(_apiS0===s0)_apiS0=null},0);return j}
 window._act=Date.now();['pointerdown','keydown','wheel','touchstart'].forEach(ev=>addEventListener(ev,()=>{window._act=Date.now()},{passive:true,capture:true}));const idleMs=()=>Date.now()-(window._act||0);
 async function onlinePing(){if(onlinePing._f)return;onlinePing._f=1;try{let st='';try{st='&st='+encodeURIComponent(actSnap())}catch(e){}window._lastPing=Date.now();const j=await api('ping&v='+VERSION+st);onlineOK=true;onlineN=j.n||0;onlineLives=j.lives||0;try{bdCheck(j.bd)}catch(e){}try{if('ann' in j)annShow(j.ann)}catch(e){}try{if(j.tg&&j.tg.length)tagShow(j.tg)}catch(e){}onlinePing._e=0}catch(e){onlinePing._e=(onlinePing._e||0)+1;if(onlinePing._e>=2||e.message==='quota'||!onlineOK)onlineOK=false;else setTimeout(()=>{onlinePing()},4000)}finally{onlinePing._f=0}{const t=$('tOnN');if(t){t.textContent=onlineOK?fmt(onlineN):'';t.parentNode.classList.toggle('on',onlineOK)}}const el=$('onlineBadge');if(el){el.style.display=onlineOK?'':'none';el.innerHTML=`🟢 ${fmt(onlineN)} คนออนไลน์ · ${fmt(onlineLives)} ชีวิตที่เคยเล่น`}}
-setTimeout(onlinePing,1500);setInterval(()=>{if(!document.hidden&&Date.now()-(window._lastPing||0)>=(idleMs()>300000?600000:240000)-5000)onlinePing()},60000);
+setTimeout(onlinePing,1500);setInterval(()=>{try{if(!onlineOK&&!document.hidden&&Date.now()>=_downUntil&&Date.now()>=_quotaUntil&&Date.now()-(window._lastPing||0)>=15000)onlinePing()}catch(e){}},5000);setInterval(()=>{if(!document.hidden&&Date.now()-(window._lastPing||0)>=(idleMs()>300000?600000:240000)-5000)onlinePing()},60000);
 function myTitle(){if(!S)return'';const ri=realmIdx();return REALMS[ri].n}
 function chatRender(){const box=$('chatBox');if(!box)return;const near=box.scrollHeight-box.scrollTop-box.clientHeight<60;box.innerHTML=chatMsgs.map(m=>`<div class="cm ${m.k==='share'?'share':''}"><span class="ct">${new Date(m.t).toTimeString().slice(0,5)}</span> <b>${esc(m.ti?'['+m.ti+'] ':'')}${esc(m.n)}</b> ${m.k==='share'?'📤 ':''}${esc(m.x)} <button class="rep" onclick="chatRep('${m.i}')" title="รายงาน">⚑</button></div>`).join('')||'<div class="tag2">ยังไม่มีข้อความ</div>';if(near)box.scrollTop=box.scrollHeight}
 async function chatPoll(){try{const j=await api('chat');chatMsgs=(j.m||[]).slice().sort((x,y)=>(x.t||0)-(y.t||0));chatRender()}catch(e){const b=$('chatBox');if(b)b.innerHTML='<div class="tag2">เชื่อมต่อไม่ได้</div>'}}
