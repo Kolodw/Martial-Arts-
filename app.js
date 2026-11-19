@@ -43242,10 +43242,17 @@ function play(id,o,cb){const g=G[id];if(!g)return false;o=o||{};const lv=o.daily
  const st={done:0,t0:performance.now()};const B=$('m2B');let inst=null,n=T,iv=null;
  const fin=(sc,skip)=>{if(st.done)return;st.done=1;clearInterval(iv);try{inst&&inst.stop&&inst.stop()}catch(e){}CUR=null;if($('modal').dataset.k==='mg2')closeM();sc=Math.max(0,Math.min(1,+sc||0));if(!skip&&!o.daily)mAdd(id,g);try{cb&&cb(sc,skip,inst)}catch(e){console.error('mg2cb',e)}};
  CUR={fin};const api={live:()=>!st.done&&$('modal').dataset.k==='mg2',end:sc=>setTimeout(()=>fin(sc!=null?sc:inst.sc(),0),280),ez,lv,o};
- try{inst=g.init(B,api)}catch(e){console.error('mg2 init',id,e);fin(.5,1);return true}
- try{o.after&&o.after(B,api)}catch(e){}
- const sk=$('m2S');if(sk)sk.onclick=()=>fin(.45,1);
- iv=setInterval(()=>{if(st.done)return;if($('modal').dataset.k!=='mg2'){fin(inst.sc(),0);return}n--;const e=$('m2T');if(e)e.textContent=Math.max(0,n);if(n<=0)fin(inst.sc(),0)},1000);return true}
+ // ด่านเริ่ม: เกมยังไม่เดิน เวลายังไม่นับ จนกว่าผู้เล่นจะแตะ "เริ่ม" (เดิมเกมเริ่มเองทันทีที่เปิด จนดูเหมือนระบบเล่นเอง)
+ const go=()=>{if(st.done||inst)return;clearInterval(iv);document.removeEventListener('keydown',kd,true);B.innerHTML='';st.t0=performance.now();
+  try{inst=g.init(B,api)}catch(e){console.error('mg2 init',id,e);fin(.5,1);return}
+  try{o.after&&o.after(B,api)}catch(e){}
+  const sk=$('m2S');if(sk)sk.onclick=()=>fin(.45,1);
+  iv=setInterval(()=>{if(st.done)return;if($('modal').dataset.k!=='mg2'){fin(inst.sc(),0);return}n--;const e=$('m2T');if(e)e.textContent=Math.max(0,n);if(n<=0)fin(inst.sc(),0)},1000)};
+ const kd=e=>{if((e.key===' '||e.key==='Enter')&&!inst&&$('modal').dataset.k==='mg2'){e.preventDefault();e.stopPropagation();go()}};
+ if(o.now)go();else{B.innerHTML=`<div class="m2Rdy"><div class="m2RdyI">${g.ic}</div><div class="m2RdyH">${o.sub||g.how}</div><button class="pbtn m2Go" type="button">▶ แตะเพื่อเริ่ม</button><div class="tag2" style="margin-top:6px">มี ${T} วินาที · เวลาเริ่มนับเมื่อกดเริ่ม</div><button class="gbtn m2Sk" type="button" style="margin-top:8px;font-size:12px;padding:5px 12px">ข้ามเกมนี้</button></div>`;
+  B.querySelector('.m2Go').onclick=e=>{e.stopPropagation();go()};B.querySelector('.m2Sk').onclick=e=>{e.stopPropagation();fin(.45,1)};document.addEventListener('keydown',kd,true);
+  iv=setInterval(()=>{if(st.done)return;if(!inst&&$('modal').dataset.k!=='mg2'){fin(.45,1)}},500)}
+ return true}
 window.mg2Play=play;window._mgBusy=()=>!!CUR&&$('modal').dataset.k==='mg2';window._mg2Y=(id,o)=>yearly(id,o);window._mg2E={simon,lanes,hold,beat,track};
 // คอมโบ + รางวัลจากมินิเกมรายปี
 function yearly(id,o2){o2=o2||{};const g=G[id];return play(id,o2,(sc,skip,inst)=>{if(!live0())return;const perf=sc>=.9&&!skip;S.mgc=perf?(S.mgc||0)+1:0;const cm=[1,1,1.2,1.5,2][Math.min(4,S.mgc||0)],lvm=1+mLv(id)*.05;let x=Math.min(2.4,Math.min(1.6,sc*cm*lvm)*(o2.mx||1));
@@ -46006,3 +46013,45 @@ window._choiceHint=hint;
 // ---------- 3) ของที่ไม่มีคำอธิบาย ----------
 try{const _bd=bagDesc;bagDesc=function(id){const r=_bd.apply(this,arguments);if(!r&&id==='mirror')return'ของแปลกจากต่างโลก ใช้เองไม่ได้ — เอาไปขายให้ขุนนางได้ราคาดี (ซื้อได้จากร้านค้าข้ามมิติ)';return r}}catch(e){}
 })()}catch(e){console.error('explainX',e)}
+
+// ============================================================
+// BLOCK 71: 🎮 มินิเกมไม่ถูกขัด — ระหว่างเล่น หน้าต่างอื่นที่เด้งมา (คำเชิญ ออนไลน์ ตัวเลือก ฯลฯ) รอคิวจนเล่นจบ
+//           (เดิมหน้าต่างอื่นเปิดทับ = เกมจบเองทันทีด้วยคะแนนที่มี)
+// ============================================================
+try{(()=>{
+const css=document.createElement('style');css.textContent=`.m2Rdy{text-align:center;padding:14px 6px 8px}.m2RdyI{font-size:54px;line-height:1;margin-bottom:6px;animation:aqBo 2s ease-in-out infinite}.m2RdyH{font-size:13.5px;margin:4px 6px 12px;line-height:1.5}
+.m2Go{width:100%;max-width:280px;font-size:17px!important;padding:13px!important;animation:aqP 1.3s infinite}@keyframes aqBo{50%{transform:translateY(-5px)}}`;document.head.appendChild(css);
+const Q=[];const busy=()=>{try{return !!(window._mgBusy&&window._mgBusy())}catch(e){return false}};
+{const _m=modal;modal=function(html,k){if(k!=='mg2'&&busy()){if(Q.length<8)Q.push([this,arguments]);return}return _m.apply(this,arguments)}}
+setInterval(()=>{try{if(!Q.length||busy()||modalOpen)return;const [t,a]=Q.shift();modal.apply(t,a)}catch(e){}},400);
+})()}catch(e){console.error('block71',e)}
+
+// ============================================================
+// BLOCK 72: 🖥️ จอคอม — ภาพฉากเล็กลงและปรับได้ 3 ขนาด · ย่อแผงโฟกัสด้านล่างได้ (จำค่าไว้) ให้ที่อ่านบันทึกมากขึ้น
+// ============================================================
+try{(()=>{
+const css=document.createElement('style');css.textContent=`
+body.desk #sceneBox{height:var(--scH,clamp(110px,19vh,190px));max-height:none!important;flex:0 0 auto}
+body.desk #sceneBox canvas{width:100%;height:100%;object-fit:cover;display:block}
+body.desk.scS #sceneBox{--scH:clamp(70px,11vh,110px)}
+body.desk.scH #sceneBox{--scH:30px}body.desk.scH #sceneBox canvas{opacity:0}body.desk.scH #sceneBox .scap{top:3px}
+#scTog{position:absolute;right:6px;top:6px;z-index:3;font:inherit;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;border:1px solid #ffffff44;background:#000a;color:#fff;cursor:pointer;opacity:.75}#scTog:hover{opacity:1}
+body:not(.desk) #scTog{display:none}
+#ctlTog{font:inherit;font-size:12px;font-weight:800;padding:4px 11px;border-radius:999px;border:1px solid color-mix(in srgb,var(--line) 70%,transparent);background:var(--w);color:var(--ink);cursor:pointer;margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
+#game .ctrl .onrow{display:flex;align-items:center;gap:6px}
+body.ctlMin #game #focus{display:none!important}
+body.ctlMin.desk #game .crow .cb .cbL{display:none}
+@media (min-width:900px){#wPick .wpS{flex-wrap:wrap;overflow:visible;scroll-snap-type:none;-webkit-mask:none;mask:none}#wPick .wc{flex:1 1 calc(33.3% - 10px);max-width:none;min-height:150px;padding:10px 11px}#wPick .wc b{font-size:15px}#wPick .wc .ic{font-size:28px}#wPick .wc small{font-size:11px}#wPick .wc .go{font-size:12.5px;padding:7px}#wPick .wDots{display:none}}
+`;document.head.appendChild(css);
+const SC=['n','s','h'],SCN={n:'🖼️ ภาพ: ปกติ',s:'🖼️ ภาพ: เล็ก',h:'🖼️ ภาพ: ซ่อน'};
+const scGet=()=>{const v=LS.get('murim_scsz','n');return SC.includes(v)?v:'n'};
+function scApply(){const v=scGet();document.body.classList.toggle('scS',v==='s');document.body.classList.toggle('scH',v==='h');const b=$('scTog');if(b)b.textContent=SCN[v]}
+window.scCycle=function(e){if(e)e.stopPropagation();LS.set('murim_scsz',SC[(SC.indexOf(scGet())+1)%3]);scApply()};
+const ctGet=()=>!!LS.get('murim_ctlmin',0);
+function ctApply(){const m=ctGet();document.body.classList.toggle('ctlMin',m);const b=$('ctlTog');if(!b)return;let f='';try{const on=document.querySelector('#focus .fc.on');if(on)f=on.innerText.split('\n')[0].trim()}catch(e){}const t=m?`▴ เปิดแผงโฟกัส${f?' · '+f:''}`:'▾ ย่อแผงโฟกัส';if(b.textContent!==t)b.textContent=t}
+window.ctToggle=function(){LS.set('murim_ctlmin',ctGet()?0:1);ctApply();try{const f=$('feed');if(f)f.scrollTop=f.scrollHeight}catch(e){}};
+function mount(){try{const sb=$('sceneBox');if(sb&&!$('scTog')){sb.insertAdjacentHTML('beforeend','<button id="scTog" type="button" onclick="scCycle(event)"></button>')}
+ const r=document.querySelector('#game .ctrl .onrow');if(r&&!$('ctlTog'))r.insertAdjacentHTML('afterbegin','<button id="ctlTog" type="button" onclick="ctToggle()"></button>');scApply();ctApply()}catch(e){}}
+setInterval(mount,1000);setTimeout(mount,300);
+document.addEventListener('keydown',e=>{try{if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName)||modalOpen)return;if(!document.body.classList.contains('desk')||!$('game').classList.contains('on'))return;if(e.key==='f'||e.key==='F'){ctToggle()}else if(e.key==='v'||e.key==='V'){scCycle()}}catch(x){}});
+})()}catch(e){console.error('block72',e)}
