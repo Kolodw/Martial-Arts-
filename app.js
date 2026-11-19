@@ -45150,3 +45150,156 @@ try{(()=>{
 // ดูแลแคว้น: ใช้ได้ในโลกเทพ รวมถึงหลังบรรลุอยู่ต่อ และในจักรวาลหลังวัฏจักรกัลป์
 try{const _hv=hvOk;hvOk=function(){try{if(S&&S.alive&&!(S.beastMode&&!S.beastMode.human)&&(S.xt||(S.flags&&S.flags.godMax)||(typeof hiK==='function'&&hiK())))return true}catch(e){}return _hv.apply(this,arguments)}}catch(e){}
 })()}catch(e){console.error('godReq',e)}
+
+// ============================================================
+// BLOCK 66: 💎 ร้านค้า (รวมเติมเงิน · สมาชิก · ล็อกชะตา · ของแต่ง · ของฟรี · สนับสนุน) · หน้าแรกการ์ด 2×2
+//           📱 มือถือ: แถบล่าง 5 ปุ่มใหญ่ (หยุด/เล่นตรงกลาง) · ความเร็ว/ออโต้เป็นชิปบนแถบปี · หัวจอเป้าหมาย+คู่ปรับแถวเดียว
+//           🔔 แจ้งเตือนเข้าคิว (จังหวะฟ้ามาก่อน) · ☰ เมนู: แถวลัด + กระโดดไปหมวด + ป้าย "ใหม่"
+// ============================================================
+try{(()=>{
+const css=document.createElement('style');css.textContent=`
+#modal:has(>.stWrap){background:#10121c!important;border-color:#c98a10!important;padding:5px!important}
+.stWrap{position:relative;border-radius:18px;padding:12px 12px 10px;background:radial-gradient(120% 55% at 50% -8%,#4a3208 0%,#1a1626 52%,#10121c 100%);color:#efe6d2;font-size:13px}
+.stWrap .xbtn{color:#ffe7a8}.stWrap .tag2{color:#c9bfa8}
+.stHd{position:relative;overflow:hidden;display:flex;align-items:center;gap:11px;margin:0 30px 10px 0}
+.stHd .lg{flex:0 0 48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:27px;background:linear-gradient(145deg,#fff1b8,#e8b54a 55%,#b07812);box-shadow:0 4px 16px #e8b83a66,inset 0 1px 0 #fff;animation:stGem 3s ease-in-out infinite}
+@keyframes stGem{50%{transform:rotate(-6deg) scale(1.05)}}
+.stHd h3{margin:0;font-size:19px;background:linear-gradient(90deg,#fff6c8,#ffd040,#fff6c8);-webkit-background-clip:text;background-clip:text;color:transparent}.stHd small{display:block;font-size:11px;color:#c9bfa8;margin-top:1px}
+.stBal{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}.stBal div{padding:7px 4px;border-radius:12px;background:#ffffff0d;border:1px solid #ffffff16;text-align:center}
+.stBal b{display:block;font-size:15px;color:#ffd86a;line-height:1.2}.stBal span{font-size:10px;color:#b8ae98}
+.stTabs{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:none;-webkit-mask:linear-gradient(90deg,#000 88%,transparent)}.stTabs::-webkit-scrollbar{display:none}
+.stTabs button{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:66px;padding:7px 9px 6px;border-radius:14px;border:1px solid #ffffff20;background:#ffffff0a;color:#d8ceb8;font:inherit;font-size:11.5px;font-weight:700}
+.stTabs button i{font-style:normal;font-size:19px;line-height:1.1}.stTabs button.on{background:linear-gradient(160deg,#ffe48a,#e0a020);color:#2a1a00;border-color:#ffd86a;box-shadow:0 3px 14px #e8b83a55}
+.stBody .sh2{--a:#d99a18!important;color:#efe6d2}.stBody .sh2 .sh2-top{display:none!important}.stBody .sh2 .sh2-buy{backdrop-filter:none;background:linear-gradient(0deg,#10121c 70%,transparent)}
+.stBody .sh2 .sh2-buy button,.stBody .sh2 .pk .rb,.stBody .sh2 .best{background:linear-gradient(135deg,#ffe48a,#e0a020)!important;color:#2a1a00!important}
+.stBody .sh2 .pk button{background:linear-gradient(160deg,#ffffff12,#ffffff05)}.stBody .sh2 .pk button.best1{box-shadow:0 0 0 1px #e0a020 inset,0 0 18px #e0a02044}
+.stCard{display:flex;gap:11px;align-items:center;width:100%;text-align:left;padding:11px;border-radius:15px;margin:7px 0;border:1px solid #ffffff18;background:linear-gradient(135deg,#ffffff10,#ffffff04);color:inherit;font:inherit;position:relative;overflow:hidden}
+.stCard .i{flex:0 0 44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:23px;background:var(--g,linear-gradient(145deg,#ffffff24,#ffffff08));box-shadow:inset 0 1px 0 #fff3}
+.stCard b{display:block;font-size:14px;color:#fff3d8}.stCard small{display:block;font-size:11.5px;color:#b8ae98;line-height:1.4}.stCard .go{margin-left:auto;flex:0 0 auto;font-size:11.5px;font-weight:800;padding:5px 10px;border-radius:999px;background:#e8b83a26;border:1px solid #e8b83a66;color:#ffd86a}
+.stCard.hot{border-color:#e8b83a88;background:linear-gradient(135deg,#e8b83a26,#ffffff05)}.stCard.hot .go{background:linear-gradient(135deg,#ffe48a,#e0a020);color:#2a1a00;border:0}
+.stCard.done{opacity:.6}.stSec{margin:12px 2px 4px;font-size:12px;font-weight:800;color:#ffd86a;letter-spacing:.3px}
+.stFr{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}.stFr div{text-align:center;padding:8px 4px;border-radius:12px;background:#00000030;border:1px solid #ffffff12;font-size:10.5px;color:#cfc5ae;line-height:1.3}.stFr .frw{margin:0 auto 4px}
+.stNote{font-size:11.5px;color:#b8ae98;text-align:center;margin:10px 4px 2px;line-height:1.5}
+.stSup img{display:block;max-width:100%;max-height:52vh;margin:0 auto;border-radius:12px;background:#fff}
+/* ---------- หน้าแรก: การ์ด 2×2 ---------- */
+#tGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;margin:2px 0 10px}
+#tGrid button{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:86px;padding:10px 11px;border-radius:16px;border:1px solid var(--bd);background:var(--bg);color:#fff;text-align:left;font-family:inherit;cursor:pointer;box-shadow:0 4px 16px #0005}
+#tGrid button i{font-style:normal;font-size:24px;line-height:1;filter:drop-shadow(0 2px 4px #0006)}#tGrid button b{font-size:14.5px;line-height:1.25;margin-top:3px}#tGrid button small{font-size:11px;line-height:1.35;opacity:.86;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#tGrid button:active{transform:scale(.97)}#tGrid .aqDot{top:8px;right:8px}
+#tGrid .gMw{--bd:#9a7aff;--bg:radial-gradient(120% 120% at 100% 0%,#5a3aa8,#24164a 60%,#160e30)}
+#tGrid .gAq{--bd:#e8b54a;--bg:radial-gradient(120% 120% at 100% 0%,#6a4a10,#2e1e06 60%,#1a1206)}
+#tGrid .gSt{--bd:#ffd86a;--bg:radial-gradient(120% 120% at 100% 0%,#c98a10,#6a4206 55%,#2a1a04);box-shadow:0 4px 18px #e8b54a55}
+#tGrid .gSt:after,#tGrid .gAq:after{content:'';position:absolute;top:0;bottom:0;width:35%;left:-45%;background:linear-gradient(100deg,transparent,#fff3,transparent);animation:mwShine 3.4s ease-in-out infinite}
+#tGrid .gOn{--bd:#3ad0b0;--bg:radial-gradient(120% 120% at 100% 0%,#127a6a,#0a3a34 60%,#062420)}
+#tGrid .gOn .ld{display:inline-block;width:7px;height:7px;border-radius:50%;background:#3aff8a;box-shadow:0 0 6px #3aff8a;margin-right:4px;animation:stLd 1.6s infinite}@keyframes stLd{50%{opacity:.35}}
+body:has(#tGrid) #tMwCard,body:has(#tGrid) #tAqBtn{display:none!important}
+/* ---------- มือถือในเกม ---------- */
+@media (max-width:699px){
+ body #game .crow{display:flex!important;flex-wrap:wrap!important;gap:5px!important;align-items:center}
+ body #game .crow .ybar{order:2!important;flex:1 1 0!important;min-width:60px}
+ body #game .crow .crBr{order:5;flex:0 0 100%;height:0}
+ body #game .crow #spdBtn,body #game .crow #autoBtn,body #game .crow #skipBtn{order:1;flex:0 0 auto!important;min-height:30px!important;padding:0 10px!important;flex-direction:row!important;gap:3px;border-radius:999px!important;font-size:12.5px!important}
+ body #game .crow #skipBtn{order:3;display:none!important}body #game .crow.rvq #skipBtn{display:flex!important;animation:aqP 1.2s infinite}
+ body #game .crow #autoBtn{order:4}
+ body #game .crow #spdBtn .cbL,body #game .crow #autoBtn .cbL,body #game .crow #skipBtn .cbL{display:inline!important;margin:0!important;font-size:10.5px!important}
+ body #game .crow #logBtn{display:none!important}
+ body #game .crow #bagBtn{order:6}body #game .crow #questBtn{order:7}body #game .crow #pauseBtn{order:8}body #game .crow #aqCb{order:9}body #game .crow #sysBtn{order:10}body #game .crow #menuBtn{order:11}
+ body #game .crow :is(#bagBtn,#questBtn,#aqCb,#sysBtn,#menuBtn,#pauseBtn){flex:1 1 0!important;min-height:50px!important;border-radius:14px!important;font-size:18px!important;position:relative}
+ body #game .crow #pauseBtn{flex:1.35 1 0!important;min-height:54px!important;font-size:22px!important;color:#2a1a04!important;background:linear-gradient(180deg,#ffe9a8,#e8b54a 55%,#c98d22)!important;border:2px solid #7a5512!important;box-shadow:0 3px 0 #7a5512,0 0 14px #e8b54a55!important}
+ body #game .crow #pauseBtn .cbL{opacity:.9!important;font-weight:800!important}
+ body #game.pz .crow #pauseBtn{animation:stPz 1.3s ease-in-out infinite}@keyframes stPz{50%{box-shadow:0 3px 0 #7a5512,0 0 26px #ffd86a!important}}
+ body #game .crow #aqCb .aqDot{top:3px;right:6px}
+ #game>#goalBox:has(+#rvBar){align-self:flex-start;width:calc(50% - 3px)!important;height:30px!important;max-height:30px!important;overflow:hidden;font-size:11.5px!important;box-sizing:border-box;margin-top:4px!important;margin-bottom:0!important;white-space:nowrap;text-overflow:ellipsis;display:flex!important;align-items:center}
+ #game>#goalBox:has(+#rvBar)+#rvBar{align-self:flex-end;width:calc(50% - 3px)!important;height:30px!important;margin:-30px 0 2px 0!important;font-size:11px!important;box-sizing:border-box;display:flex!important}
+ #game>#goalBox:has(+#rvBar)+#rvBar>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 6px!important}
+}
+/* ---------- เมนู ---------- */
+.mnHero{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:7px;margin:4px 0 8px}
+.mnHero button{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:9px 10px;border-radius:14px;border:1px solid #ffffff22;color:#fff;font:inherit;text-align:left;min-height:62px;background:linear-gradient(145deg,#2a2440,#141226)}
+.mnHero button i{font-style:normal;font-size:21px}.mnHero button b{font-size:13px}.mnHero button small{font-size:10px;opacity:.8}
+.mnHero .hSt{background:radial-gradient(120% 120% at 100% 0%,#c98a10,#6a4206 55%,#2a1a04);border-color:#ffd86a;color:#fff3d0}.mnHero .hSt:after{content:'';position:absolute;top:0;bottom:0;width:35%;left:-45%;background:linear-gradient(100deg,transparent,#fff3,transparent);animation:mwShine 3.4s ease-in-out infinite}
+.mnHero .hAq{background:radial-gradient(120% 120% at 100% 0%,#5a3e0e,#2a1c08 60%,#18120a);border-color:#e8b54a99}
+.mnJump{position:sticky;top:-1px;z-index:2;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;padding:5px 0 7px;margin:0 0 4px;background:inherit}.mnJump::-webkit-scrollbar{display:none}
+.mnJump button{flex:0 0 auto;padding:5px 10px;border-radius:999px;border:1px solid color-mix(in srgb,currentColor 25%,transparent);background:color-mix(in srgb,currentColor 7%,transparent);color:inherit;font:inherit;font-size:12px;font-weight:700}
+.mnNew{position:absolute;top:3px;right:3px;font-size:9px;font-weight:900;padding:1px 5px;border-radius:999px;background:#ff3a5a;color:#fff;box-shadow:0 0 8px #ff3a5a88;animation:aqP 1.4s infinite;pointer-events:none}
+`;document.head.appendChild(css);
+const $$=id=>document.getElementById(id);
+const fmt0=n=>{try{return fmt(n)}catch(e){return String(n)}};
+// ================= 💎 ร้านค้า =================
+const TABS=[['r','🎟️','ตั๋วสุ่มเกิด'],['m','👑','สมาชิก'],['l','🔒','ล็อกชะตา'],['free','🎁','ของฟรี'],['cos','🖼️','ของแต่ง'],['sup','🙏','สนับสนุน']];
+let CUR='r',deco=0;
+const vipT=()=>{try{const v=LS.get('murim_vip',null);return !v?0:v.u?3:(v.e2||0)>Date.now()?2:(v.e1||0)>Date.now()?1:0}catch(e){return 0}};
+function head(){const R=window._RR||{},k=(()=>{try{const b=kbGet();return Math.max(b.g,b.e)}catch(e){return 0}})(),t=vipT();
+ return`<div class="stHd"><span class="lg">💎</span><div><h3>ร้านค้า</h3><small>เล่นฟรีได้ครบทุกอย่าง · ซื้อแล้วได้ความสะดวกและของแต่ง</small></div></div>
+ <div class="stBal"><div><b id="stBG">${R.c==null?'…':fmt0(R.c)}</b><span>🎟️ ตั๋วทอง</span></div><div><b id="stBF">${R.f==null?'…':fmt0(R.f)}</b><span>🎫 ตั๋วธรรมดา</span></div><div><b>${fmt0(Math.round(k))}</b><span>☯️ กรรม</span></div><div><b>${t?['','⭐','⭐⭐','👑'][t]:'—'}</b><span>${t?['','ผู้สนับสนุน','พิเศษ','ผู้ก่อตั้ง'][t]:'สมาชิก'}</span></div></div>`}
+const tabs=()=>`<div class="stTabs">${TABS.map(([k,i,t])=>`<button class="${CUR===k?'on':''}" onclick="openStore('${k}')"><i>${i}</i>${t}</button>`).join('')}</div>`;
+const scrollTab=()=>{try{const o=$('modal').querySelector('.stTabs .on');if(o)o.parentNode.scrollLeft=o.offsetLeft-70}catch(e){}};
+async function bal(){if(!onlineOK)return;try{const j=await api('rrget');const R=window._RR;if(R){R.c=Math.max(0,+j.c||0);R.f=Math.max(0,+j.f||0)}const g=$$('stBG'),f=$$('stBF');if(g)g.textContent=fmt0(+j.c||0);if(f)f.textContent=fmt0(+j.f||0)}catch(e){}}
+function frame(body,k){modal(`<div class="stWrap"><button class="xbtn" onclick="closeM()">✕</button>${head()}${tabs()}<div class="stBody">${body}</div></div>`,k||'store');scrollTab()}
+// ห่อหน้าร้านเดิม (สมาชิก/ตั๋ว/ล็อก) ด้วยหัวร้านใหม่
+function decorate(){const m=$('modal');if(!m||deco)return;const sh=m.querySelector(':scope>.sh2');if(!sh||m.querySelector('.stWrap'))return;deco=1;try{
+ const on=sh.querySelector('.sh2-top button.on'),bs=[...sh.querySelectorAll('.sh2-top button')];if(on){const i=bs.indexOf(on);CUR=['m','r','l'][i]||CUR}
+ const x=m.querySelector(':scope>.xbtn'),h=m.querySelector(':scope>h3');if(h)h.remove();
+ const w=document.createElement('div');w.className='stWrap';w.innerHTML=head()+tabs();const bd=document.createElement('div');bd.className='stBody';[...m.childNodes].forEach(n=>{if(n!==x)bd.appendChild(n)});w.appendChild(bd);if(x)w.prepend(x);m.appendChild(w);scrollTab();if(window._RR&&window._RR.f==null)bal()}finally{deco=0}}
+{const _m=modal;modal=function(){const r=_m.apply(this,arguments);try{decorate()}catch(e){}return r}}
+function card(ic,t,s,go,on,cls,g){return`<button class="stCard ${cls||''}" onclick="${on}"><span class="i" ${g?`style="--g:${g}"`:''}>${ic}</span><span style="min-width:0"><b>${t}</b><small>${s}</small></span><span class="go">${go}</span></button>`}
+function freeBody(){let dq=0,wq=0,lg='';try{const d=LS.get('murim_aq',{})||{};dq=((d.d||{}).q||[]).filter(q=>q.ok).length;wq=((d.w||{}).q||[]).filter(q=>q.ok).length}catch(e){}
+ return`<div class="stSec">🎁 รับได้ทุกวัน</div>
+ ${card('🎁','ของล็อกอินรายวัน','กดรับวันละครั้ง · วันที่ 7 และ 14 ของรอบได้ 🎟️ ตั๋วทอง','รับ ›',"closeM();lgOpen()",'hot','linear-gradient(145deg,#ff8a6a,#c8402a)')}
+ ${card('📜','ภารกิจรายวัน '+dq+'/3','ครบ 3 ข้อได้ 🎫 ตั๋วธรรมดา + พรภารกิจชีวิตหน้า','ไปทำ ›',"openAQ('d')",dq>=3?'done':'','linear-gradient(145deg,#ffd86a,#c98a10)')}
+ ${card('🎫','จบชีวิตตอนอายุ 18 ขึ้นไป','ได้ตั๋วธรรมดาฟรีทุกครั้ง (วันละ 3 ใบ · ถือได้ 10 ใบ)','เล่นเลย ›',"closeM()",'','linear-gradient(145deg,#7ad0ff,#2a70c0)')}
+ <div class="stSec">🗓️ ระยะยาว</div>
+ ${card('🗓️','ภารกิจรายสัปดาห์ '+wq+'/3','ครบได้ 🎟️ ตั๋วทอง 1 ใบ','ดู ›',"openAQ('w')",'','linear-gradient(145deg,#c0a0ff,#6a3ad0)')}
+ ${card('📖','สมุดภารกิจรายเดือน','30 ขั้น · 🎫×2 + 🎟️×2 + กรอบประจำเดือน','ดู ›',"openAQ('b')",'','linear-gradient(145deg,#ff9ad0,#c03a80)')}
+ ${card('⚡','ประกาศิตฟ้า','ทั้งเว็บมีผู้พิชิตได้คนเดียว · 🎟️ ตั๋วทอง 3 ใบ','ชิง ›',"openAQ('hq')",'hot','linear-gradient(145deg,#8a7aff,#2a1a7a)')}
+ ${card('🐉','บอสโลก','ช่วยกันตี · ทุกคนได้ 🎫 · 3 อันดับแรกได้ 🎟️','ตี ›',"openAQ('wb')",'','linear-gradient(145deg,#ff6a3a,#8a1a0a)')}
+ ${card('☯️','แลกกรรมเป็นสิทธิ์สุ่มเกิด','ใช้กรรมที่สะสมจากทุกชีวิต รีเซ็ตทุกเที่ยงคืน','แลก ›',"openStore('r')",'','linear-gradient(145deg,#a0e0a0,#2a8a4a)')}`}
+function cosBody(){let L=[];try{L=FRAMES.filter(f=>f.side==='r'&&f.ty&&/spin/.test(f.ty)).sort(()=>Math.random()-.5).slice(0,6)}catch(e){}const own=(()=>{try{return frGet().own.length}catch(e){return 0}})();
+ return`${card('🖼️','ร้านแลกกรอบ','ใช้กรรมแลกกรอบรูปโปรไฟล์ · มีอยู่ '+own+' กรอบ','เปิด ›',"closeM();openFrameShop()",'hot','linear-gradient(145deg,#ffd86a,#c98a10)')}
+ ${card('🎖️','ของตกแต่ง','ธีมสีพิเศษ เอฟเฟกต์ และของแต่งหน้าจอ','เปิด ›',"closeM();openCosmetic()",'','linear-gradient(145deg,#c0a0ff,#6a3ad0)')}
+ ${card('🏷️','ฉายาและคำจารึก','ป้ายหน้าชื่อในแชทและทำเนียบ (สมาชิก)','ดู ›',"openStore('m')",'','linear-gradient(145deg,#7ad0ff,#2a70c0)')}
+ ${L.length?`<div class="stSec">✨ กรอบหายากที่หาได้จากในเกม</div><div class="stFr">${L.map(f=>{let p='';try{p=frWrap('<span class="frph">🙂</span>',f.id)}catch(e){}return`<div>${p}<b style="display:block;color:#fff3d8">${esc(f.n)}</b>${esc(f.d||'')}</div>`}).join('')}</div>`:''}`}
+window.openStore=function(t){t=t||'r';CUR=t;try{if(t==='m')return vipMenu();if(t==='r')return rrMenu();if(t==='l')return lkMenu()}catch(e){}
+ if(t==='free')frame(freeBody());else if(t==='cos')frame(cosBody());
+ else if(t==='sup'){try{openSupport()}catch(e){}const m=$('modal');if(m.dataset.k!=='support')return;const sup=m.querySelector('.rrSup');if(sup)sup.remove();const x=m.querySelector(':scope>.xbtn'),h=m.querySelector(':scope>h3');if(x)x.remove();if(h)h.remove();
+  const inner=m.innerHTML;m.innerHTML=`<div class="stWrap"><button class="xbtn" onclick="closeM()">✕</button>${head()}${tabs()}<div class="stBody stSup"><div class="stCard hot" style="cursor:default"><span class="i" style="--g:linear-gradient(145deg,#ffd86a,#c98a10)">🙏</span><span><b>สนับสนุนผู้พัฒนา</b><small>ไม่บังคับ · ทุกบาทช่วยให้เกมได้อัปเดตต่อ</small></span></div>${inner}</div></div>`;scrollTab()}
+ if(t!=='r'&&window._RR&&(window._RR.c==null||window._RR.f==null))bal()};
+// เข้าร้านจากที่เดิม (ปุ่มสนับสนุนบนหน้าแรก/เมนูตั้งค่า) → เปิดร้านแท็บตั๋ว
+{const _gs=window.goOpen;if(typeof _gs==='function')window.goOpen=function(g){if(g==='store')return openStore();return _gs.apply(this,arguments)}}
+// ================= 🏠 หน้าแรก: การ์ด 2×2 =================
+function tGrid(){try{const T=$$('title'),s=$$('tStartIn');if(!T||!s||!T.classList.contains('on')||!s.offsetParent)return;let g=$$('tGrid');
+ if(!g){g=document.createElement('div');g.id='tGrid';g.innerHTML=`<button class="gMw" id="tgMw"><i>🏙️</i><b>ยุคปัจจุบัน</b><small></small></button><button class="gAq" onclick="openAQ()"><i>📜</i><b>ภารกิจ</b><small></small><i class="aqDot" style="display:none"></i></button><button class="gSt" onclick="openStore()"><i>💎</i><b>ร้านค้า</b><small></small></button><button class="gOn" onclick="openOnline()"><i>🌐</i><b>ออนไลน์</b><small></small></button>`}
+ if(g.previousElementSibling!==s)s.insertAdjacentElement('afterend',g);
+ const mw=$$('tgMw'),mwOk=(()=>{try{return mwAllowed()}catch(e){return false}})();
+ if(mwOk){mw.onclick=()=>mwQuickStart();mw.querySelector('i').textContent='🏙️';mw.querySelector('b').textContent='ยุคปัจจุบัน';mw.querySelector('small').textContent=`เกิดเป็นคนยุค ${typeof MW_Y0!=='undefined'?MW_Y0:2026} · สุ่มโลกฮันเตอร์ ซอมบี้ ผี`}
+ else{mw.onclick=()=>goDaily();mw.querySelector('i').textContent='📅';mw.querySelector('b').textContent='ชะตาวันนี้';mw.querySelector('small').textContent='ชีวิตเดียวกันทั้งเว็บ วันละรอบ'}
+ const sm=(sel,t)=>{const e=g.querySelector(sel+' small');if(e&&e.textContent!==t)e.textContent=t};
+ let dq=0;try{dq=((LS.get('murim_aq',{})||{}).d||{}).q.filter(q=>q.ok).length}catch(e){}
+ sm('.gAq',`วันนี้ ${dq}/3 · ⚡ ประกาศิตฟ้า · 🐉 บอสโลก`);
+ const R=window._RR||{};sm('.gSt',R.c!=null?`🎟️ ${fmt0(R.c)} · 🎫 ${fmt0(R.f||0)} · ของฟรีทุกวัน`:'ตั๋วสุ่มเกิด · สมาชิก · ของฟรีทุกวัน');
+ const n=($$('tOnN')||{}).textContent;const on=g.querySelector('.gOn small');const ht=n?`<span class="ld"></span>${esc(n)} คนออนไลน์ · แชท · ลาน`:'แชท · ลานประลอง · ทำเนียบ';if(on&&on.innerHTML!==ht)on.innerHTML=ht}catch(e){}}
+setInterval(tGrid,1500);setTimeout(tGrid,400);
+// ================= 📱 แถบล่างในเกม =================
+function crow(){try{const c=document.querySelector('#game .crow');if(!c)return;if(!c.querySelector('.crBr'))c.insertAdjacentHTML('beforeend','<i class="crBr"></i>');
+ if(!$$('aqCb')){const m=$$('menuBtn');if(m)m.insertAdjacentHTML('beforebegin','<button class="cb" id="aqCb" onclick="openAQ()">📜<small class="cbL">ภารกิจวัน</small><i class="aqDot" style="display:none"></i></button>')}
+ c.classList.toggle('rvq',!!(typeof revealQ!=='undefined'&&revealQ.length));const G=$$('game');if(G)G.classList.toggle('pz',typeof paused!=='undefined'&&!!paused&&!!(S&&S.alive))}catch(e){}}
+setInterval(crow,500);setTimeout(crow,300);
+// ================= 🔔 แจ้งเตือนทีละอย่าง (จังหวะฟ้ามีเวลากด → มาก่อน) =================
+if(typeof island==='function'){const _is=island;const Q=[];island=function(n){try{if($$('hwCard')){if(Q.length<6)Q.push(n);return}}catch(e){}return _is.apply(this,arguments)};
+ setInterval(()=>{try{if(Q.length&&!$$('hwCard')){const n=Q.shift();_is(n)}}catch(e){}},700)}
+// ================= ☰ เมนู: แถวลัด · กระโดดไปหมวด · ป้าย "ใหม่" =================
+const SEEN='murim_mnseen';
+const lbl=b=>[...b.childNodes].filter(n=>n.nodeType===3||!/^(SMALL|I|SPAN|CANVAS|IMG)$/.test(n.tagName)).map(n=>n.textContent).join('').replace(/[\d,./%×:]+/g,'').replace(/\s+/g,' ').trim().slice(0,30);
+function mnEnh(){try{const m=$('modal');if(m.dataset.k!=='menu')return;
+ m.querySelectorAll('.mgrid .aqB').forEach(e=>e.remove());
+ const first=[...m.querySelectorAll('h4.mnH,.mgrid')].find(e=>!e.closest('.mnHero'));
+ if(first&&!m.querySelector('.mnHero')){m.querySelectorAll('.mnJump').forEach(e=>e.remove());const R=window._RR||{};let dq=0;try{dq=((LS.get('murim_aq',{})||{}).d||{}).q.filter(q=>q.ok).length}catch(e){}
+  first.insertAdjacentHTML('beforebegin',`<div class="mnHero"><button class="hSt" onclick="closeM();openStore()"><i>💎</i><b>ร้านค้า</b><small>${R.c!=null?'🎟️ '+fmt0(R.c)+' · 🎫 '+fmt0(R.f||0):'ตั๋ว · สมาชิก · ของฟรี'}</small></button><button class="hAq" onclick="closeM();openAQ()"><i>📜</i><b>ภารกิจ</b><small>วันนี้ ${dq}/3</small><i class="aqDot" style="display:none"></i></button><button onclick="closeM();openLifeLog()"><i>📖</i><b>บันทึกชีวิต</b><small>ทุกเหตุการณ์</small></button></div>`);
+  }if(first&&!m.querySelector('.mnJump')){const H=[...m.querySelectorAll('h4.mnH')];if(H.length>2){const j=document.createElement('div');j.className='mnJump';H.forEach((h,i)=>{const t=String(h.innerText||'').replace(/[▾▸|]/g,'').trim().split('\n')[0];const b=document.createElement('button');b.textContent=t.length>16?t.slice(0,15)+'…':t;b.onclick=()=>{try{const g=h.nextElementSibling;if(h.classList.contains('smHid')||(g&&g.classList.contains('smHid')))h.click()}catch(e){}h.scrollIntoView({behavior:'smooth',block:'start'})};j.appendChild(b)});m.querySelector('.mnHero').insertAdjacentElement('afterend',j)}}
+ // ป้าย "ใหม่": ปุ่มที่เพิ่งโผล่มา (ปลดล็อกระบบใหม่) จนกว่าจะกด · ครั้งแรกที่เปิดเมนูจำทุกปุ่มไว้ก่อน ไม่ขึ้นป้ายรก
+ let seen=null;try{seen=LS.get(SEEN,null)}catch(e){}const init=!Array.isArray(seen);seen=init?[]:seen;let ch=0;
+ m.querySelectorAll('.mgrid button').forEach(b=>{const k=lbl(b);if(!k)return;if(!seen.includes(k)){if(init){seen.push(k);ch=1}else if(!b.querySelector('.mnNew')){b.style.position='relative';b.insertAdjacentHTML('beforeend','<i class="mnNew">ใหม่</i>');b.addEventListener('click',()=>{try{const s=LS.get(SEEN,[])||[];if(!s.includes(k)){s.push(k);LS.set(SEEN,s.slice(-400))}}catch(e){}},{capture:true})}}});
+ if(ch)LS.set(SEEN,seen.slice(-400));
+ }catch(e){console.error('mn66',e)}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);mnEnh();setTimeout(mnEnh,0);setTimeout(mnEnh,200);return r}}
+})()}catch(e){console.error('block66',e)}
