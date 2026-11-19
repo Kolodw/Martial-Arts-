@@ -45635,3 +45635,90 @@ const flush=()=>{try{if(!Q.length||busy())return;if(me&&S!==me){Q.length=0;retur
 {const _is=island;island=function(n){if(busy()){Q.push(['i',n]);me=S;return}return _is.apply(this,arguments)};try{window.island=island}catch(e){}}
 setInterval(flush,300);
 })()}catch(e){console.error('mgQ',e)}
+
+// ===================== 📌 ระบบเดินเควส: แถบติดตามบนจอ · ป้าย "ช่วยเควส" ในตัวเลือก · เวลาเป็นมิตร (ติดตาม = เวลา 2 เท่า · เตือน/หยุดรอ · จำกัดความเร็ว 2×) · รับงานอัตโนมัติ · ทำเกินครึ่งได้ครึ่ง · ต่อเวลา 1 ครั้ง · เควสต่อเนื่องแบบเนื้อเรื่อง · หน้าเควสจัดกลุ่ม =====================
+try{(()=>{
+const FN={};try{FOCUS.forEach(f=>FN[f[0]]=f)}catch(e){}
+const fTxt=f=>FN[f]?`ตั้งโฟกัส ${FN[f][1]} ${FN[f][2]}`:'';
+const CAT={train:'pow',qi:'qi',work:'mon',adv:'ft',study:'int',love:'love',mission:'ft'};
+const RX={ft:/สู้|ต่อสู้|ดวล|ฆ่า|ปราบ|กำจัด|โจมตี|บุก|ไล่ล่า|ล่า/,pow:/ฝึก|บำเพ็ญ|ทะลวง/,qi:/ปราณ|สมาธิ|นั่งสมาธิ|บำเพ็ญ/,int:/ศึกษา|อ่าน|เรียน|ตำรา|คัมภีร์|ค้นคว้า/,mon:/เงิน|ค้า|ขาย|รับจ้าง|ทำงาน|ตำลึง|ลงทุน/,fame:/ช่วย|ปกป้อง|ประลอง|ชื่อเสียง|วีรกรรม/,love:/รัก|แต่ง|คู่|จีบ|หมั้น/,kar:/ช่วย|เมตตา|ให้อภัย|บริจาค|ปล่อย/};
+const mwM=()=>S&&S.mw;
+// ---- ข้อมูลเควสแบบเดียวกันทุกระบบ ----
+function info(x){const o={cur:null,need:null,left:null,how:'',go:'',ready:!!x.ready,cat:null};try{
+ if(/^tq/.test(x.k)){const q=(S.tq||[]).find(z=>'tq'+z.id===x.k);if(!q)return o;o.q=q;o.left=q.left;const T=tqV(q);o.ready=!!T.ok||q.kind==='fight';
+  const K=q.kind;if(K==='kills'){o.cur=Math.max(0,S.kills-q.k0);o.need=q.need;o.cat='ft';o.how='ชนะการต่อสู้ — ท่องยุทธภพ ลุยดันเจี้ยน หรือรับดวล';o.go="setFocus('adv');closeM()"}
+  else if(K==='item'){o.cur=bagN(q.m);o.need=q.need;o.cat='item';o.item=(BAGIT[q.m]||{}).n;o.how=`หา ${(BAGIT[q.m]||{}).ic||''} ${(BAGIT[q.m]||{}).n||'ของ'} — ซื้อในเมือง ได้จากท่องยุทธภพ/ล่าสัตว์`;o.go="closeM();openTown()"}
+  else if(K==='donate'){o.cur=Math.min(S.money,q.need);o.need=q.need;o.cat='mon';o.how='หาเงินให้ถึงยอด — ตั้งโฟกัสทำงาน/อาชีพ';o.go="setFocus('work');closeM()"}
+  else if(K==='int'){o.cur=Math.round(S.int);o.need=q.need;o.cat='int';o.how=fTxt('study');o.go="setFocus('study');closeM()"}
+  else if(K==='power'){o.cur=Math.round(total());o.need=q.need;o.cat='pow';o.how=fTxt('train');o.go="setFocus('train');closeM()"}
+  else if(K==='fame'){o.cur=Math.max(0,S.fame-q.k0);o.need=q.need;o.cat='fame';o.how='สร้างชื่อเสียง — ดวลชนะ ทำภารกิจ ช่วยเหลือผู้คน';o.go="setFocus('adv');closeM()"}
+  else if(K==='fight'){o.cat='ft';o.how='พร้อมแล้ว — ไปกระดานเมือง กด ⚔️ ออกปฏิบัติ';o.go="closeM();openTown('board')"}}
+ else if(/^nq/.test(x.k)||/^sq/.test(x.k)){const q=x.q;if(!q)return o;o.q=q;o.cur=/^sq/.test(x.k)?qProg(q):Math.max(0,QV[q.k]()-q.b);o.need=q.g;o.left=q.dl-S.age;const f=QHINT[q.k];if(f){o.how=fTxt(f);o.go=`setFocus('${f}');closeM()`;o.cat=CAT[f]}o.ready=o.cur>=o.need}
+ else if(/^mwq/.test(x.k)){const M=mwM(),q=x.q;if(!M||!q)return o;o.q=q;try{o.cur=MWQ_V[q.v](M)}catch(e){o.cur=0}o.need=q.tgt;o.left=q.dl-M.y;o.how='ดูวิธีทำในหน้าเควสยุคนี้';o.go="closeM();openMwQuests()";o.cat={money:'mon',save:'mon',qi:'qi',fame:'fame'}[q.v]||null}
+ else if(x.k==='goal'){o.how=x.d||''}}catch(e){}return o}
+const num=v=>v==null?'':(typeof fmtG==='function'?fmtG(+(+v).toFixed(1)):fmt(v));
+const pct=o=>o.need?Math.max(0,Math.min(1,o.cur/o.need)):null;
+// ยุคปัจจุบัน: เควสยุคนี้อยู่ในรายการเดียวกัน
+{const _ql=questList;questList=function(){const L=_ql.apply(this,arguments);try{const M=mwM();if(M&&(M.qs||[]).length&&!L.some(x=>/^mwq/.test(x.k)))M.qs.forEach(q=>L.unshift({k:'mwq'+q.k,ic:'🏙️',n:q.t,p:'',d:'',q}))}catch(e){}return L}}
+// เควสที่กำลังติดตาม (ปักหมุด) หรือเลือกให้อัตโนมัติ (ใกล้หมดเวลาที่สุด)
+function tracked(){if(!S||!S.alive)return null;let L=[];try{L=questList().filter(x=>!x.done)}catch(e){return null}
+ let x=S.qPin&&L.find(z=>z.k===S.qPin);if(x)return{x,o:info(x),pin:1};
+ const C=L.map(z=>({x:z,o:info(z)})).filter(z=>z.o.left!=null&&z.o.need!=null);C.sort((a,b)=>(b.o.ready-a.o.ready)||(a.o.left-b.o.left));return C[0]?{x:C[0].x,o:C[0].o,pin:0}:null}
+window._qTracked=tracked;
+// ---- 1) แถบติดตามบนจอ ----
+const css=document.createElement('style');css.textContent=`#qTrk{margin:6px 8px 0;padding:7px 10px;border-radius:12px;border:1.5px solid #e8b83a99;background:linear-gradient(180deg,#2a2210ee,#1a150aee);color:#f1e8d4;font-size:12.5px;line-height:1.35;cursor:pointer}
+#qTrk .h{display:flex;gap:6px;align-items:center}#qTrk .h b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#qTrk .bar{height:6px;border-radius:4px;background:#0006;overflow:hidden;margin:4px 0}#qTrk .bar i{display:block;height:100%;background:linear-gradient(90deg,#f1c94a,#5fd05f)}
+#qTrk .how{opacity:.85}#qTrk .go{border:1px solid #e8b83a;background:#e8b83a;color:#2a1a00;border-radius:8px;padding:2px 8px;font:inherit;font-weight:700;font-size:12px}#qTrk.urg{border-color:#e0503c;box-shadow:0 0 0 2px #e0503c55}#qTrk.rdy{border-color:#5fd05f;box-shadow:0 0 0 2px #5fd05f55}
+.qTag{display:inline-block;margin-left:6px;padding:0 6px;border-radius:6px;background:#e8b83a;color:#2a1a00;font-size:11px;font-weight:700;vertical-align:middle}
+.qG{margin:8px 0 4px;font-weight:800}.qC{padding:8px;border-radius:10px;border:1px solid var(--line,#5554);margin:5px 0;background:#ffffff08}.qC.pin{border-color:#e8b83a;box-shadow:0 0 0 1px #e8b83a77}.qC .bar{height:6px;border-radius:4px;background:#0005;overflow:hidden;margin:5px 0}.qC .bar i{display:block;height:100%;background:linear-gradient(90deg,#f1c94a,#5fd05f)}.qC .bt{display:flex;gap:6px;margin-top:6px}.qC .bt button{flex:1}`;document.head.appendChild(css);
+function hud(){try{const g=$('game');if(!g||!S||!S.alive){const e=$('qTrk');if(e)e.remove();return}const t=tracked();let e=$('qTrk');if(!t||LS.get('murim_qtrkoff',0)){if(e)e.remove();return}
+ if(!e){const anchor=$('qTrack')||document.querySelector('#game .top');const h='<div id="qTrk"></div>';if(anchor&&anchor.id==='qTrack')anchor.insertAdjacentHTML('afterend',h);else if(anchor)anchor.insertAdjacentHTML('afterend',h);else g.insertAdjacentHTML('afterbegin',h);e=$('qTrk');try{const o=$('qTrack');if(o)o.style.display='none'}catch(x){}}
+ const {x,o,pin}=t,p=pct(o),urg=o.left!=null&&o.left<=1&&!o.ready;e.className=urg?'urg':o.ready?'rdy':'';
+ const h=`<div class="h">${pin?'📌':'🧭'} <b>${x.ic} ${esc(String(x.n).replace(/<[^>]+>/g,''))}</b>${o.left!=null?`<span>${urg?'🔥':'⏳'} ${Math.max(0,o.left)} ปี</span>`:''}${o.go?`<button class="go" onclick="event.stopPropagation();${o.go}">▶ ไปทำ</button>`:''}</div>${p!=null?`<div class="bar"><i style="width:${Math.round(p*100)}%"></i></div>`:''}<div class="how">${o.ready?'✅ ':''}${p!=null?`${num(o.cur)}/${num(o.need)} · `:''}${esc(o.how||'')}${pin?'':' · <u>แตะเพื่อเลือกเควสที่จะติดตาม</u>'}</div>`;
+ if(e.innerHTML!==h)e.innerHTML=h;e.onclick=()=>openQuests()}catch(err){}}
+setInterval(hud,1500);{const _r=render;render=function(){const r=_r.apply(this,arguments);try{hud()}catch(e){}return r}}
+try{qTrack=function(){const e=$('qTrack');if(e)e.style.display='none'}}catch(e){}
+window.qtrkToggle=()=>{LS.set('murim_qtrkoff',LS.get('murim_qtrkoff',0)?0:1);hud();openQuests()};
+// ---- 2) ป้าย 📌 ช่วยเควส ในตัวเลือก + บันทึกเมื่อคืบหน้า ----
+{const _cs=choiceShow;choiceShow=function(){const r=_cs.apply(this,arguments);try{const t=tracked();if(!t||!t.o)return r;const o=t.o;let rx=o.cat==='item'&&o.item?new RegExp(o.item.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')):RX[o.cat];if(!rx)return r;
+ document.querySelectorAll('#modal .opt').forEach(b=>{if(b.querySelector('.qTag'))return;if(rx.test(b.textContent))b.insertAdjacentHTML('beforeend','<span class="qTag">📌 ช่วยเควส</span>')})}catch(e){}return r}}
+let lastP=null;
+{const _py=passYear;passYear=function(){const a0=S&&S.age,me=S;let t0=null;try{t0=tracked()}catch(e){}const r=_py.apply(this,arguments);try{if(!S||S!==me||!S.alive||S.age===a0)return r;
+ // เวลา 2 เท่าสำหรับเควสที่ปักหมุด (ชดเชยครึ่งหนึ่งของเวลาที่ผ่าน)
+ if(S.qPin){S._qhf=!S._qhf;if(S._qhf){const L=questList(),x=L.find(z=>z.k===S.qPin),o=x&&info(x);if(o&&o.q){if(/^tq/.test(x.k))o.q.left=(o.q.left||0)+1;else if(/^(nq|sq|mwq)/.test(x.k))o.q.dl=(o.q.dl||0)+1}}}
+ const t=tracked();if(t&&t0&&t.x.k===t0.x.k&&t.o.cur!=null&&t0.o.cur!=null&&t.o.cur>t0.o.cur)addFeed('ev',`📌 เควส「${esc(String(t.x.n).replace(/<[^>]+>/g,''))}」คืบหน้า ${num(t.o.cur)}/${num(t.o.need)} (+${num(t.o.cur-t0.o.cur)})`,'sum')}catch(e){}return r}}
+// ---- 3) เตือน/หยุดรอ + จำกัดความเร็วตอนติดตาม ----
+let spT=null;
+setInterval(()=>{try{if(!S||!S.alive||auto||modalOpen||choice._cur)return;const t=tracked();if(!t)return;const{x,o}=t,q=o.q||x;
+ if(S.qPin&&(speed===0||speed>2)){speed=2;try{render()}catch(e){}if(spT!==S.qPin){spT=S.qPin;toast('📌 ติดตามเควสอยู่ — ความเร็วสูงสุด 2× (เลิกติดตามเพื่อเร่ง)')}}
+ const id=x.k+':'+(o.left!=null?o.left:'');
+ if(o.ready&&!q._qr&&(t.pin||/^tq/.test(x.k))&&o.go){q._qr=1;paused=true;render();try{island({big:1,pri:1,ic:'📌',h:'เควสพร้อมแล้ว',t:String(x.n).replace(/<[^>]+>/g,'').slice(0,40),kind:'gold'})}catch(e){}toast('📌 เควสพร้อมแล้ว — กด ▶ ไปทำ ที่แถบด้านบน (เกมหยุดรอ)')}
+ else if(o.left!=null&&o.left<=1&&!o.ready&&!q._qw&&t.pin){q._qw=1;paused=true;render();try{island({big:1,pri:1,ic:'🔥',h:'เควสใกล้หมดเวลา',t:String(x.n).replace(/<[^>]+>/g,'').slice(0,40),kind:'red'})}catch(e){}toast('🔥 เควสที่ติดตามเหลือไม่ถึง 1 ปี — เกมหยุดรอให้วางแผน')}}catch(e){}},1200);
+// ---- 5) รับงานอัตโนมัติ · ทำเกินครึ่งได้ครึ่ง · ต่อเวลา 1 ครั้ง ----
+{const _tn=tqNew;tqNew=function(){const q=_tn.apply(this,arguments);try{if(q){q.acc=1;if(q.chain&&q.chain.step===1){q.left=99;q.dl=0;q.d=(q.d||'')+' · ขั้นแรกไม่มีกำหนดเวลา'}}}catch(e){}return q}}
+{const _pr=passYear;passYear=function(){try{(S&&S.tq||[]).forEach(q=>{if(q&&q.v2&&!q.acc)q.acc=1})}catch(e){}return _pr.apply(this,arguments)}}
+{const _tr=tqRefresh;tqRefresh=function(){try{if(S&&S.tqY!==S.age)(S.tq||[]).slice().forEach(q=>{if(!q||!q.v2||q.left-1>=0||q.kind==='fight')return;const o=info({k:'tq'+q.id}),p=pct(o)||0;
+  if(S.qPin==='tq'+q.id&&!q.ext&&p<1){q.ext=1;q.left+=2;S.fame=Math.max(0,(S.fame||0)-5);log(`📌 ขอต่อเวลาเควส「${esc(q.n)}」อีก 2 ปี — ชื่อเสียง −5 (ต่อได้ครั้งเดียว)`,'');return}
+  if(p>=.5&&p<1){q.dl=0;try{tqPay(q,.5,`⌛ ภารกิจ「${esc(q.n)}」หมดเวลา แต่ทำได้ ${Math.round(p*100)}% — ได้รางวัลครึ่งหนึ่ง`)}catch(e){}}})}catch(e){}return _tr.apply(this,arguments)}}
+// ---- 4) เควสต่อเนื่องแบบเนื้อเรื่อง ----
+const STORY={1:f=>[`🧩 เบาะแสชิ้นสุดท้ายประกอบกันได้ — ร่องรอยของ<b>${f}</b>ชี้ไปยังรังลับนอกเมือง`,'คนในโรงเตี๊ยมกระซิบว่าเห็นลูกน้องของมันซื้อเสบียงล็อตใหญ่ เหมือนเตรียมย้ายรัง'],2:f=>[`🧩 รังของ<b>${f}</b>แตกพ่าย ลูกน้องที่เหลือหนีกระเจิง`,`มันทิ้งจดหมายท้าไว้กลางลาน "ถ้าแน่จริง มาเจอข้าตัวต่อตัว"`]};
+{const _tp=tqPay;tqPay=function(q,mult,msg){const r=_tp.apply(this,arguments);try{const c=q&&q.chain;if(c&&mult>=1){if(c.step<3){const s=STORY[c.step]&&STORY[c.step](esc(c.foe||'ศัตรู'));if(s)log(s[0]+' — '+s[1],'epic',true)}
+  else{const f=esc(c.foe||'ศัตรู');setTimeout(()=>{if(!S||!S.alive)return;choice(`🧩 ตอนจบ: ชะตาของ${f}`,`${f}ล้มลงตรงหน้าคุณ ดาบของคุณจ่ออยู่ที่คอ ชาวบ้านที่ตามมาดูยืนเงียบ รอว่าคุณจะทำอย่างไร`,[
+   {t:'🗡️ ปลิดชีพ',s:'ชื่อเสียง + · กรรม −',f(){S.fame+=40;S.karma-=8;log(`🗡️ คุณจบชีวิต${f} — เรื่องเล่าของวันนี้ถูกเล่าต่อในโรงเตี๊ยมไปอีกหลายปี`,'myth',true);try{keyAdd(`ปลิดชีพ${c.foe}ปิดเควสต่อเนื่อง`)}catch(e){}}},
+   {t:'⛓️ จับส่งทางการ',s:'ชื่อเสียง ++ · กรรม + · เงินรางวัลนำจับ',f(){S.fame+=60;S.karma+=6;const m=Math.round(((q.rw&&q.rw.money)||200)*1.5);S.money+=m;log(`⛓️ คุณมัด${f}ส่งศาลาว่าการ ได้เงินรางวัลนำจับ ${fmtM?fmtM(m):m} — ผู้คนเรียกคุณว่าผู้พิทักษ์`,'myth',true);try{keyAdd(`จับ${c.foe}ส่งทางการ`)}catch(e){}}},
+   {t:'🕊️ ปล่อยไป ให้กลับตัว',s:'กรรม ++ · อาจกลับมาตอบแทน',f(){S.karma+=12;S.fame=Math.max(0,S.fame-10);S._foeFree=(S._foeFree||[]).concat([c.foe]);log(`🕊️ คุณเก็บดาบ "ไปเสีย และอย่าให้ข้าเห็นอีก" — ${f}คุกเข่าก้มหัวจนหน้าผากแตะดิน`,'myth',true);try{keyAdd(`ไว้ชีวิต${c.foe}`)}catch(e){}}}])},500)}}}catch(e){}return r}}
+// ---- 6) หน้าเควสจัดกลุ่ม ----
+const _oqAll=openQuests;
+window.openQuestsOld=_oqAll;
+openQuests=function(){try{if(typeof sysQSweep==='function')sysQSweep()}catch(e){}if(!S)return;let L=[];try{L=questList()}catch(e){return _oqAll.apply(this,arguments)}
+ const T=L.map(x=>({x,o:info(x)})),isQ=z=>z.o.need!=null||/^(tq|nq|sq|mwq)/.test(z.x.k),U=[],RD=[],DO=[],OT=[];
+ T.forEach(z=>{if(z.x.done)return;if(!isQ(z)){OT.push(z);return}if(z.o.ready)RD.push(z);else if(z.o.left!=null&&z.o.left<=1)U.push(z);else DO.push(z)});DO.sort((a,b)=>(a.o.left??99)-(b.o.left??99));
+ const card=({x,o})=>{const p=pct(o),pin=S.qPin===x.k;return`<div class="qC${pin?' pin':''}"><div style="display:flex;gap:6px"><b style="flex:1">${x.ic} ${x.n}</b>${o.left!=null?`<span class="tag2">${o.left<=1?'🔥':'⏳'} ${Math.max(0,o.left)} ปี</span>`:''}</div>${p!=null?`<div class="bar"><i style="width:${Math.round(p*100)}%"></i></div><div class="tag2">${num(o.cur)}/${num(o.need)}</div>`:`<div class="tag2">${x.p||''}</div>`}${o.how?`<div style="font-size:12.5px;margin-top:3px">👉 ${esc(o.how)}</div>`:''}${x.d&&!/^goal$/.test(x.k)?`<div class="tag2">${x.d}</div>`:''}
+  <div class="bt"><button class="sysb" onclick="qPin('${x.k}')">${pin?'📌 เลิกติดตาม':'📌 ติดตาม'}</button>${o.go?`<button class="sysb" onclick="${o.go}">▶ ไปทำ</button>`:''}</div></div>`};
+ const sec=(t,A)=>A.length?`<div class="qG">${t} <span class="tag2">(${A.length})</span></div>${A.map(card).join('')}`:'';
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📋 เควส</h3><p class="tag2">📌 ติดตามเควส = เวลาเควสนั้นเดินช้าลงครึ่งหนึ่ง · เตือนก่อนหมดเวลา · ตัวเลือกที่ช่วยได้มีป้าย 📌 · ทำได้เกินครึ่งแต่หมดเวลา ได้รางวัลครึ่งหนึ่ง</p>
+ ${sec('✅ พร้อมส่ง / พร้อมทำ',RD)}${sec('🔥 ใกล้หมดเวลา',U)}${sec('📋 กำลังทำ',DO)}${!RD.length&&!U.length&&!DO.length?'<p class="tag2">ยังไม่มีเควสตอนนี้ — ภารกิจเมืองมาใหม่ทุกปีที่กระดานเมือง</p>':''}
+ ${OT.length?`<details style="margin-top:8px"><summary class="qG" style="cursor:pointer">ℹ️ เป้าหมายและสถานะอื่น (${OT.length})</summary>${OT.map(card).join('')}</details>`:''}
+ <label style="display:flex;gap:6px;align-items:center;margin-top:8px;font-size:12.5px"><input type="checkbox" ${LS.get('murim_qtrkoff',0)?'':'checked'} onchange="qtrkToggle()"> แสดงแถบติดตามเควสบนจอ</label>`,'quests')};
+try{qPin=function(k){S.qPin=S.qPin===k?null:k;try{sfx('click')}catch(e){}if(S.qPin)toast('📌 ติดตามแล้ว — เวลาของเควสนี้เดินช้าลงครึ่งหนึ่ง');render();openQuests()}}catch(e){}
+})()}catch(e){console.error('questX',e)}
