@@ -42758,3 +42758,29 @@ try{if(typeof TTL_SP!=='undefined')TTL_SP.unshift(['dyn_emp',()=>!!(S&&S.flags&&
 try{(()=>{
 {const _eg=endGame;endGame=function(){try{if(S&&!S._rrE&&onlineOK&&(S.age|0)>=18&&!S.custom){S._rrE=1;const age=S.age|0;api('rrearn',{a:age}).then(j=>{try{if(j&&j.ok){window._RR&&(window._RR.c=j.c);S._rrGot=1;const E=$('end');if(E&&!E.querySelector('.rrNew')){const b=document.createElement('div');b.className='box rrNew';b.style.cssText='margin:8px 0;padding:8px';b.innerHTML=`🎟️ <b>ได้ตั๋วสุ่มเกิดฟรี 1 ใบ</b> <span class="tag2">· มี ${j.f} ใบ (ใช้ก่อนตั๋วที่ซื้อ · ได้ไม่เกิน 3 ใบ/วัน · ถือได้ 10 ใบ)</span>`;const h=E.querySelector('h2,h3');if(h&&h.parentNode===E)E.insertBefore(b,h.nextSibling);else E.insertBefore(b,E.firstChild)}else toast('🎟️ ได้ตั๋วสุ่มเกิดฟรี 1 ใบ')}}catch(e){}}).catch(()=>{})}}catch(e){}return _eg.apply(this,arguments)}}
 })()}catch(e){console.error('rrearn',e)}
+// ============================================================
+// BLOCK 53: 🎟️ ตั๋วทอง — สุ่มด้วยสิทธิ์ที่ซื้อ: การันตีอย่างน้อย 1 ช่องหายาก · ครบ 10 ใบการันตีตำนาน · เอฟเฟกต์ทอง (ไม่มีผลกับชะตาประจำวัน/กรรม)
+// ============================================================
+try{(()=>{
+const PK='murim_pity',PN=10;
+const pity=()=>{try{return +LS.get(PK)||0}catch(e){return 0}};
+const pSet=n=>{try{LS.set(PK,n)}catch(e){}};
+let gold=0;
+const tw=()=>TRAITS.reduce((a,x)=>a+(x.w||0),0);
+const fGood=f=>!f.v.orphan&&((f.v.money||0)>=700||(f.v.power||0)>=80);
+const okR=(r,leg)=>{const tm=r.t.v.m||1;if(tm<1)return false;let bd=false,gt=false;try{(r.trs.list||[]).forEach(id=>{const t=trOf(id);if(!t)return;if(t.bad)bd=true;else if((t.w||0)/tw()<=(leg?.005:.1))gt=true})}catch(e){}if(bd)return false;
+ if(leg)return tm>=2||(fGood(r.f)&&r.f.p<=.005)||gt;return tm>=1.4||(fGood(r.f)&&r.f.p<=.1)||gt};
+const sc=r=>(r.t.v.m||1)*(fGood(r.f)?1.5:1);
+{const _gr=genRoll;genRoll=function(){if(!gold||CFG.daily)return _gr.apply(this,arguments);
+ const leg=gold===2;let r=null,bs=null,bv=9;
+ for(let i=0;i<(leg?30000:3000);i++){const c=_gr.apply(this,arguments);if(okR(c,leg)){r=c;break}const v=-sc(c);if(v<bv){bv=v;bs=c}}
+ return r||bs}}
+{const _dr=doRoll;doRoll=function(first){const g=gold;const r=_dr.apply(this,arguments);gold=0;if(g&&!first){try{const t=$('traits');t.classList.add('goldRoll');setTimeout(()=>t.classList.remove('goldRoll'),2600)}catch(e){}
+ try{island({big:1,pri:1,ic:'🎟️',h:g===2?'ตั๋วทอง · การันตีตำนาน':'ตั๋วทอง',t:g===2?'ครบ 10 ใบ — ชะตาระดับตำนาน':`การันตีชะตาดี · อีก ${PN-pity()} ใบได้ตำนาน`,kind:'gold'})}catch(e){toast('🎟️ ตั๋วทอง!')}}return r}}
+{const _u=window.rrUsePaid;window.rrUsePaid=async function(btn){const r0=rerolls;
+ if(!CFG.daily){const n=pity()+1;gold=n>=PN?2:1;}
+ try{await _u.apply(this,arguments)}finally{if(rerolls>r0&&!CFG.daily){const n=pity()+1;pSet(n>=PN?0:n)}else gold=0}}}
+{const pIns=()=>{try{const b=$('modal').querySelector('[onclick^="rrUsePaid"]');if(b&&!$('modal').querySelector('.pityTx')){const left=PN-pity();(b.closest('.vx-act,.item,.act')||b.parentNode).insertAdjacentHTML('afterend',`<div class="pityTx" style="margin:4px 0 8px;padding:7px 10px;border-radius:10px;background:linear-gradient(90deg,#fff3c4,#ffe08a);color:#5a3d00;font-size:12.5px;border:1px solid #e0b040">✨ <b>ตั๋วทอง</b> — ทุกใบการันตีชะตาดีอย่างน้อย 1 ช่อง ไม่มีกระดูกขยะ · ${left<=1?'<b>ใบถัดไปการันตีระดับตำนาน!</b>':`อีก <b>${left}</b> ใบการันตีระดับตำนาน`}<div style="height:5px;background:#0001;border-radius:4px;margin-top:5px"><div style="height:100%;width:${(PN-left)/PN*100}%;background:#c98a00;border-radius:4px"></div></div></div>`)}}catch(e){}};try{new MutationObserver(pIns).observe($('modal'),{childList:true,subtree:true})}catch(e){}}
+const st=document.createElement('style');st.textContent=`#traits.goldRoll .trait{animation:gRoll 1.2s ease-out}#traits.goldRoll{position:relative}#traits.goldRoll::after{content:'';position:absolute;inset:-6px;border-radius:14px;pointer-events:none;box-shadow:0 0 0 2px #e0b040,0 0 24px #ffcf4d;animation:gGlow 2.6s ease-out forwards}@keyframes gRoll{0%{background:#ffe8a0;transform:scale(.96)}100%{background:transparent;transform:none}}@keyframes gGlow{0%{opacity:1}100%{opacity:0}}`;document.head.appendChild(st);
+window._gold={pity,pSet,set:v=>gold=v};
+})()}catch(e){console.error('block53',e)}
