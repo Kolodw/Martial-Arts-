@@ -7054,7 +7054,7 @@ function aiTick(st){const a=S.ai;if(!a)return;const y=Math.max(1,st||1);a.heat=M
  const g=aiPowV([.15,.3,.5][a.lv]);S.power+=g;
  if(Math.random()<[.02,.04,.07][a.lv]){const r=Math.random();if(S.chronic&&r<.4){const n=S.chronic.n;S.chronic=null;aiLog(`ซ่อมแซมเซลล์ที่เสียหาย — หายจาก${n}`,'good')}else if(r<.85){const h=[5,10,20][a.lv];S.maxHp+=h;aiLog(`ปรับโครงสร้างกล้ามเนื้อและกระดูกระหว่างคุณหลับ — พลังชีวิตสูงสุด +${h}`,'good')}else if(a.lv===2){S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.02).toFixed(2)});aiLog('ปรับแต่งเส้นลมปราณให้เหมาะสมที่สุด — ความเร็วฝึก ×1.02 ถาวร','myth')}}}
 {const _fg=fight;fight=function(name,ep){const w=_fg.apply(this,arguments);try{if(aiOn()&&S.alive){const a=S.ai;if(!w){a.lost.unshift(String(name).replace(/<[^>]+>/g,'').slice(0,30));a.lost=a.lost.slice(0,5)}
-  if(a.cy!==S.age&&Math.random()<(w?[.05,.09,.14]:[.025,.05,.08])[a.lv]){a.cy=S.age;const t=newArt(a.lv);t.n=`${t.n} (คัดลอก)`;artForce(t);a.cp++;aiSync(10);aiLog(`วิเคราะห์ท่าของ${name}เสร็จสิ้น — คัดลอกได้ ${artHtml(t)}`,'epic')}}}catch(e){console.error(e)}return w}}
+  if(a.cy!==S.age&&aiCpOn()&&Math.random()<(w?[.05,.09,.14]:[.025,.05,.08])[a.lv]){a.cy=S.age;const t=newArt(a.lv);t.n=`${t.n} (คัดลอก)`;aiCpPut(t);a.cp++;aiSync(10);aiLog(`วิเคราะห์ท่าของ${name}เสร็จสิ้น — คัดลอกได้ ${artHtml(t)}`,'epic')}}}catch(e){console.error(e)}return w}}
 
 // ---- AI เลือกเส้นทาง ----
 function aiScore(o,c){const a=S.ai,t=(o.t||'')+' '+(o.s||''),low=S.hp<S.maxHp*.4,rk=low?2:1;let sc=Math.random()*[2.5,1.5,.7][a.lv];
@@ -7077,7 +7077,7 @@ function aiAct(k,x){if(!aiOn())return toast(S&&S.ai&&S.ai.off?'AI ออฟไ�
  else if(k==='foe'){const n=x!=null&&a.lost[x]?a.lost[x]:(S.nem&&S.nem.alive?S.nem.n:'ศัตรูที่แข็งแกร่งที่สุดในฐานข้อมูล');a.sim++;aiSync(8);
   if(Math.random()<[.25,.18,.1][a.lv]){const d=Math.round(S.maxHp*.25);S.hp=Math.max(1,S.hp-d);aiLog(`🟥 ห้วงลึก: โฮโลแกรมของ${esc(n)}แรงเกินคาด ความเจ็บสะท้อนกลับสู่ร่างจริง — พลังชีวิต −${d}`,'bad')}
   const g=aiPowV([3,4,6][a.lv]);S.power+=g;aiLog(`🟥 ห้วงลึก: จำลองศึกกับ<b>${esc(n)}</b>ซ้ำแล้วซ้ำเล่าจนจับจังหวะได้ — พลังยุทธ์ +${fmt(g)}`,'epic');
-  if(Math.random()<[.05,.1,.15][a.lv]){const t=newArt(a.lv);t.n=`${t.n} (คัดลอก)`;artForce(t);a.cp++;aiLog(`ระหว่างจำลอง คัดลอกท่าของ${esc(n)}ได้ ${artHtml(t)}`,'epic')}died=aiHeat(30)}
+  if(aiCpOn()&&Math.random()<[.05,.1,.15][a.lv]){const t=newArt(a.lv);t.n=`${t.n} (คัดลอก)`;aiCpPut(t);a.cp++;aiLog(`ระหว่างจำลอง คัดลอกท่าของ${esc(n)}ได้ ${artHtml(t)}`,'epic')}died=aiHeat(30)}
  else if(k==='future'){if(a.lv<2)return;a.sim++;aiSync(10);const g=aiPowV(9);S.power+=g;S.int+=3;aiLog(`🟪 ห้วงลึก: จำลองตัวคุณในอีกร้อยปีข้างหน้าแล้วสู้กับมัน — แพ้ยับ แต่ได้เห็นทางที่ตัวเองจะเดิน · พลังยุทธ์ +${fmt(g)} ปัญญา +3`,'myth');died=aiHeat(45)}
  else if(k==='art'){if(!S.arts.length)return toast('ยังไม่มีวิชาให้วิเคราะห์');const t=ch(S.arts),p=[.1,.15,.25][a.lv];t.b=Math.round(t.b*(1+p));aiSync(4);aiLog(`วิเคราะห์จุดบกพร่องของ ${artHtml(t)} แล้วปรับแก้ — พลังวิชา +${Math.round(p*100)}%`,'good');died=aiHeat(20)}
  else if(k==='tog'){a.on=a.on?0:1;toast(a.on?'AI จะเลือกเส้นทางแทนเมื่อชะตาต้องตัดสินและตอนโหมดอัตโนมัติ':'AI จะไม่เลือกแทนแล้ว')}
@@ -9788,7 +9788,7 @@ function ai2Act(k,x){const a=ai2Fix(),F=aiFused();let died=false;
   if(x==='work'){const g=Math.round((400+ri*500)*W15());S.money+=g;aiLog(`🔗 สั่ง AI ทำงานแทนระหว่างคุณหลับ — ได้เงิน ${fmtM(g)} ตำลึง`,'good')}
   else if(x==='train'){const g=aiPowV(4);S.power+=g;aiLog(`🔗 สั่ง AI ควบคุมกล้ามเนื้อฝึกเองตลอดคืน — พลังยุทธ์ +${fmt(g)}`,'good')}
   else if(x==='study'){S.int+=6+a.lv*2;aiLog('🔗 สั่ง AI อ่านคัมภีร์ทั้งหอสมุดลงความจำ — ปัญญา +'+(6+a.lv*2),'good')}
-  else if(x==='copy'){const t=newArt(a.lv);t.n=`${t.n} (คัดลอก)`;artForce(t);a.cp++;aiLog(`🔗 สั่ง AI ถอดท่าจากความจำการต่อสู้ — ได้ ${artHtml(t)}`,'epic')}
+  else if(x==='copy'){const t=newArt(a.lv);t.n=`${t.n} (คัดลอก)`;aiCpPut(t);a.cp++;aiLog(`🔗 สั่ง AI ถอดท่าจากความจำการต่อสู้ — ได้ ${artHtml(t)}`,'epic')}
   else if(x==='heal'){S.hp=S.maxHp;S.chronic=null;aiLog('🔗 สั่ง AI ซ่อมร่างกายทั้งหมด — พลังชีวิตเต็ม หายจากโรค','good')}}
  render();if(died||S.hp<=0){closeM();checkDeath();return}openAI()}
 // ---------- 3) นิสัย ความผูกพัน และเรื่องยาว AI ตื่นรู้ ----------
@@ -9825,7 +9825,7 @@ function ai2End(k){const a=S.ai;a.end=k;if(k==='fuse'){a.bondOld=a.bond;a.bond=0
 // อัปโหลด: ส่งต่อ AI ให้ทายาท
 {const _ih2=inherit;inherit=function(ci){const P=S,pa=P.ai&&P.ai.upl?JSON.parse(JSON.stringify(P.ai)):null;const r=_ih2.apply(this,arguments);try{if(pa&&S!==P&&!S.ai){S.ai=Object.assign(pa,{heat:0,off:0,src:'inherit',scanY:null,mktY:null,cmdY:null,saveY:null,end:null,upl:0,arc:2,sync:Math.round((pa.sync||0)*.6)});aiLog(`💾 ชิปที่สืบทอดมาเปิดทำงาน — "สวัสดี ฉันรู้จักพ่อแม่ของคุณดี"`,'myth');keyAdd('ได้รับ AI ที่สืบทอดมาจากบรรพชน')}}catch(e){console.error(e)}return r}}
 // สายปราชญ์: คัดลอกวิชาง่ายขึ้น
-{const _fg2=fight;fight=function(name,ep){const w=_fg2.apply(this,arguments);try{const a=S.ai;if(a&&aiOn()&&aiHasBr('sage')&&a.cy!==S.age&&Math.random()<(w?.1:.05)*a.br.filter(x=>x==='sage').length){a.cy=S.age;const t=newArt(a.lv);t.n=`${t.n} (คัดลอก)`;artForce(t);a.cp++;aiLog(`📚 สายปราชญ์ถอดท่าของ${name}ได้ — ${artHtml(t)}`,'epic')}}catch(e){}return w}}
+{const _fg2=fight;fight=function(name,ep){const w=_fg2.apply(this,arguments);try{const a=S.ai;if(a&&aiOn()&&aiHasBr('sage')&&aiCpOn()&&a.cy!==S.age&&Math.random()<(w?.1:.05)*a.br.filter(x=>x==='sage').length){a.cy=S.age;const t=newArt(a.lv);t.n=`${t.n} (คัดลอก)`;aiCpPut(t);a.cp++;aiLog(`📚 สายปราชญ์ถอดท่าของ${name}ได้ — ${artHtml(t)}`,'epic')}}catch(e){}return w}}
 // สายต่อสู้ / ทะเยอทะยาน: ห้วงลึกแรงขึ้น (คูณพลังที่ได้เพิ่มหลังคำสั่ง)
 {const _apv=aiPowV;aiPowV=function(k){let v=_apv.apply(this,arguments);try{const a=S.ai;if(a){if(aiHasBr('war'))v*=1+.25*a.br.filter(x=>x==='war').length;if(a.per===3&&!aiFused())v*=1.2;if(aiFused())v*=1.3}}catch(e){}return Math.round(v)}}
 // สายพ่อค้า: ร้านสมบัติถูกลง
@@ -42614,3 +42614,141 @@ async function arNote(){try{if(!onlineOK||!pid||document.hidden||!LS.get('murim_
 {const _ap=arPage;arPage=async function(){try{LS.set('murim_arU',1)}catch(e){}return _ap.apply(this,arguments)}}
 setTimeout(arNote,14000);
 })()}catch(e){console.error('arnote',e)}
+// ============================================================
+// BLOCK 51: ข้อเสนอผู้เล่น — ตั้งค่า AI คัดลอกวิชา · ตามหาเปลวไฟสวรรค์ · เปลวไฟรับประกันตอนข้ามโลก/ทะลวงกัลป์ · พรสวรรค์เปลี่ยนตามโลก · ล็อกชะตา 1 ช่องตอนสุ่ม · สัตว์ใช้สิทธิ์สุ่มเพิ่ม/VIP ได้
+// ============================================================
+try{(()=>{
+// ---------- 1) AI คัดลอกวิชา ----------
+function aiCpMode(){return LS.get('murim_aicp','keep')||'keep'}
+function aiCpOn(){return aiCpMode()!=='off'}
+window.aiCpOn=aiCpOn;
+function aiCpPut(t){const m=aiCpMode();let keep=m==='keep'||m==='off';
+ if(m==='better'){const L=(S.arts||[]).filter(x=>x&&!x.sealed);keep=L.length<artCap()||L.some(x=>(x.b||0)<(t.b||0))}
+ if(keep){artForce(t);return true}
+ const v=Math.round((t.b||25)*30*(S.xt?40:S.xian?6:1));S.money+=v;window._aiSup={n:t.n,v};return false}
+window.aiCpPut=aiCpPut;
+{const _al=aiLog;aiLog=function(t,c){const x=window._aiSup;if(x){window._aiSup=null;return _al.call(this,`คัดลอก《${esc(x.n)}》ได้ แต่ตามที่ตั้งไว้ จึง<b>ขายทิ้งทันที</b> +${fmtM?fmtM(x.v):x.v}`,'good')}return _al.apply(this,arguments)}}
+window.aiCpSet=function(m){LS.set('murim_aicp',m);toast({keep:'🤖 คัดลอกและเก็บทุกวิชา',better:'🤖 เก็บเฉพาะวิชาที่ดีกว่าที่มี · ที่เหลือขายทิ้ง',sell:'🤖 คัดลอกแล้วขายทิ้งทั้งหมด',off:'🤖 ปิดการคัดลอกอัตโนมัติ'}[m]||'');try{openAI()}catch(e){}};
+{const _oa=openAI;openAI=function(){const r=_oa.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.aiCpBox')){const cur=aiCpMode(),b=(k,t)=>`<button class="sysb" style="${cur===k?'outline:2px solid var(--gold,#c9a24a)':''}" onclick="aiCpSet('${k}')">${t}</button>`;
+ const box=`<div class="item aiCpBox"><b>📋 การคัดลอกวิชาอัตโนมัติ</b><br><span class="tag2">ระหว่างต่อสู้/จำลอง AI จะถอดท่าศัตรูมาเป็นวิชา — เลือกว่าจะเก็บอย่างไร (สั่งคัดลอกเองยังได้เสมอ)</span><div class="brow" style="margin-top:6px;flex-wrap:wrap">${b('keep','📥 เก็บทุกวิชา')}${b('better','⭐ เก็บเฉพาะที่ดีกว่า')}${b('sell','💰 ขายทิ้งทั้งหมด')}${b('off','⛔ ปิด')}</div></div>`;
+ const last=m.querySelector('.brow:last-of-type')||m.lastElementChild;m.querySelector('h3').insertAdjacentHTML('afterend',box)}}catch(e){console.error(e)}return r}}
+// ---------- 2) เปลวไฟสวรรค์ ----------
+function flRange(){const base=S.xt?14:S.xian?7:0;return[base,Math.min(23,base+9)]}
+function flPick(){const F=flames(),[a,b]=flRange();let L=[];for(let i=a;i<=b;i++)if(!F.includes(i))L.push(i);if(!L.length)for(let i=0;i<24;i++)if(!F.includes(i))L.push(i);return L.length?L[Math.floor(Math.random()*L.length)]:null}
+function flameOffer(r,why){if(r==null||!S||!S.alive)return;const F=FLAME[r],base=S.xt?14:S.xian?7:0;const risk=Math.max(.05,Math.min(.75,.55+r*.035-(S.qi||0)/(400*(1+base))-(S.body&&S.body.lv||0)*.03));
+ try{setScene('aura')}catch(e){}
+ choice(`🔥 เปลวไฟสวรรค์อันดับ ${24-r}`,`${why||''} <b style="color:${F[1]==='#000000'?'#ccc':F[1]}">${F[0]}</b> ลอยนิ่งอยู่ตรงหน้า อากาศรอบตัวมันบิดเบี้ยว<br><span class="tag2">กลืนแล้วพลังและลมปราณพุ่ง · ร่างรับไม่ไหวไฟจะเผาจากข้างใน (เสี่ยงราว ${Math.round(risk*100)}%) · มีแล้ว ${flames().length}/24</span>`,[
+  {t:'🔥 กลืนเปลวไฟ',s:`เสี่ยง ~${Math.round(risk*100)}%`,f(){if(Math.random()>risk){flames().push(r);flames().sort((a,b)=>b-a);S.power+=pctPow(.02+r*.005);S.qi=+(S.qi+2+r*.6).toFixed(1);if(S.cr&&S.cr.xp)S.cr.xp.alch=(S.cr.xp.alch||0)+10+r*2;log(`🔥 <b>${F[0]}</b>สงบลงในตันเถียน · พลัง +${Math.round((2+r*.5)*10)/10}% · ลมปราณ +${2+Math.round(r*.6)}`,'myth',true);try{keyAdd('กลืน'+F[0])}catch(e){}try{cdxAdd('flame','f'+r)}catch(e){}}
+   else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.6));S.qi=Math.max(0,+(S.qi*.85).toFixed(1));S.flHold=r;log(`💥 ${F[0]}พุ่งออกทางผิวหนัง คุณรอดมาได้ — มันยังลอยวนอยู่ใกล้ๆ ปีหน้าลองใหม่ได้`,'bad',true)}render();checkDeath()}},
+  {t:'🏺 ผนึกใส่ขวดหยกไว้ขาย',s:'ได้เงินก้อนใหญ่ · ไม่เสี่ยง',f(){const c=Math.round((2000+r*r*600)*(S.xt?40:S.xian?6:1));S.money+=c;log(`🏺 ผนึก${F[0]}ขายได้ ${fmtM(c)}`,'epic')}},
+  {t:'⏳ ยังไม่พร้อม เก็บตำแหน่งไว้',s:'กลับมาลองได้ในอีก 3 ปี',skip:true,f(){S.flHold=r;S.flHoldY=S.age+3;log(`🗺️ คุณจดตำแหน่ง${F[0]}ไว้ — อีกสามปีจะกลับมา`)}}])}
+window.flameOffer=flameOffer;
+window.flHunt=function(){if(!S||!S.alive)return;if(S.mw)return toast('ยุคปัจจุบันไม่มีเปลวไฟสวรรค์');if(S.age<16)return toast('อายุ 16 ปีขึ้นไปจึงออกตามหาได้');if(S.fh)return toast(`กำลังตามหาอยู่ — อีก ${Math.max(0,S.fh.u-S.age)} ปี`);if((S.fhCd||0)>S.age)return toast(`เพิ่งกลับมา ออกตามหาได้อีกใน ${S.fhCd-S.age} ปี`);
+ const r=flPick();if(r==null)return toast('คุณมีเปลวไฟครบทั้ง 24 ดวงแล้ว');closeM();const y=S.xt?8:S.xian?6:5;S.fh={u:S.age+y,r};log(`🔥 คุณออกเดินทางตามหาเปลวไฟสวรรค์ — ร่องรอยชี้ไปทาง${ch(['หุบเหวทางเหนือ','ภูเขาไฟที่ดับแล้ว','ทะเลทรายเกลือ','ใต้ธารน้ำแข็ง','ซากวัดกลางป่า'])} ใช้เวลาราว ${y} ปี (ระหว่างทางอาจบาดเจ็บ)`,'epic',true);render()};
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(!S||!S.alive)return r;
+ if(S.fh){if(Math.random()<.18){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.12));addFeed('ev','🔥 ระหว่างตามหาเปลวไฟ คุณพลัดตกหน้าผาแต่รอดมาได้','sum')}
+  if(S.age>=S.fh.u){const x=S.fh.r;S.fh=null;S.fhCd=S.age+10;flameOffer(x,'หลังเดินทางหลายปี ในที่สุดคุณก็พบ')}}
+ else if(S.flHold!=null&&S.age>=(S.flHoldY||0)&&!flames().includes(S.flHold)&&Math.random()<.5){const x=S.flHold;S.flHold=null;flameOffer(x,'คุณกลับมายังที่เดิม')}}catch(e){console.error('fh',e)}return r}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(S&&S.alive&&!S.mw&&!(S.beastMode&&!S.beastMode.human)&&S.age>=16){const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.flHB'))g.insertAdjacentHTML('beforeend',`<button class="opt flHB" onclick="flHunt()">🔥 ตามหาเปลวไฟสวรรค์<small>${S.fh?`กำลังตามหา · อีก ${Math.max(0,S.fh.u-S.age)} ปี`:`มีแล้ว ${flames().length}/24 · รับประกันได้ดวงใหม่`}</small></button>`)}}catch(e){}return r}}
+// รับประกัน 1 ดวงตอนข้ามโลก/ทะลวงกัลป์
+const flGift=(why)=>setTimeout(()=>{try{const r=flPick();if(r!=null){if(choice._cur)return setTimeout(()=>flameOffer(r,why),3000);flameOffer(r,why)}}catch(e){}},2500);
+{const _a=ascendToX;ascendToX=function(){const r=_a.apply(this,arguments);flGift('ฟ้าโลกเซียนเปิดรับผู้มาใหม่ด้วยของขวัญ —');return r}}
+{const _a=ascendGod;ascendGod=function(){const r=_a.apply(this,arguments);flGift('ประตูแดนเทพเปิดออก และบางอย่างลอยตามคุณเข้ามา —');return r}}
+{const _a=kalpaWin;kalpaWin=function(){const r=_a.apply(this,arguments);flGift('จากเถ้าถ่านของกัลป์ที่ดับไป มีเปลวไฟดวงหนึ่งไม่ยอมมอด —');return r}}
+// ---------- 4) พรสวรรค์เปลี่ยนตามโลก ----------
+const TLW={x:['รากวิญญาณขยะ','รากวิญญาณสามัญ','รากวิญญาณดี','รากวิญญาณฟ้า','รากวิญญาณเก้าสวรรค์','รากวิญญาณมารสวรรค์'],g:['กระดูกเทพแตกร้าว','กระดูกเทพสามัญ','กระดูกเทพทอง','กระดูกเทพมังกร','กระดูกเทพเก้าสวรรค์','กระดูกปฐมเทพ']};
+const TLD={x:'พรสวรรค์จากยุทธภพกลายเป็นรากวิญญาณเมื่อขึ้นสู่โลกเซียน',g:'รากวิญญาณถูกหลอมเป็นกระดูกเทพเมื่อขึ้นสู่แดนเทพ'};
+const tTier=m=>m<=.6?0:m<1.4?1:m<2?2:m<3?3:m<4?4:5;
+function tlWorld(w){try{if(!S||!S.talent)return;const T=S.talent,i=tTier(T.m||1),n=TLW[w][i];if(T.n===n)return;S.talent=Object.assign({},T,{n0:T.n0||T.n,n,d:TLD[w]});log(`🌱 <b>${esc(T.n)}</b> ${w==='x'?'ซึมเข้าสู่แก่นวิญญาณ':'ถูกหลอมด้วยไฟสวรรค์'} — กลายเป็น <b>${n}</b> (ความเร็วฝึกเท่าเดิม ×${(T.m||1).toFixed(1)})`,'epic',true)}catch(e){console.error(e)}}
+{const _a=ascendToX;ascendToX=function(){const r=_a.apply(this,arguments);tlWorld('x');return r}}
+{const _a=ascendGod;ascendGod=function(){const r=_a.apply(this,arguments);tlWorld('g');return r}}
+// ---------- 5) ล็อกชะตา 1 ช่องตอนสุ่ม ----------
+const LKN={f:'🏠 ชาติกำเนิด',t:'🦴 กระดูก/พรสวรรค์',trs:'✨ พรสวรรค์พิเศษ',g:'⚧ เพศ'};
+window._bLock=null;
+window.bLockSet=function(k){window._bLock=window._bLock===k?null:k;bLockUI()};
+function bLockUI(){try{const b=$('traits');if(!b||CFG.daily||!roll||roll.daily)return;let el=$('bLockRow');if(!el){b.insertAdjacentHTML('afterend','<div id="bLockRow" style="margin:10px 0 4px;padding:8px;border:2px dashed var(--line,#999);border-radius:12px;text-align:center"></div>');el=$('bLockRow')}
+ el.innerHTML=`<div class="tag2" style="margin-bottom:4px">🔒 ล็อกชะตา 1 อย่างตอนสุ่มใหม่ <b>(ใช้สิทธิ์สุ่ม 2 ครั้ง)</b></div>`+Object.keys(LKN).map(k=>`<button class="sysb" style="margin:2px;padding:4px 9px;font-size:12.5px;width:auto;display:inline-block;${window._bLock===k?'outline:2px solid #c9a24a;background:#ffe7a8;color:#3a2a00':''}" onclick="bLockSet('${k}')">${window._bLock===k?'🔒 ':''}${LKN[k]}</button>`).join('')}catch(e){}}
+{const _gr=genRoll;genRoll=function(){const r=_gr.apply(this,arguments);try{const L=window._bLockNow;if(L&&r&&L.v!=null)r[L.k]=L.v}catch(e){}return r}}
+{const _dr=doRoll;doRoll=function(first){const k=window._bLock;if(!first&&k&&roll&&!CFG.daily&&!roll.daily){const inf=typeof ADM!=='undefined'&&ADM.ok&&ADM.rr;
+  if(!inf&&rerolls<2){toast('ล็อกต้องใช้สิทธิ์สุ่ม 2 ครั้ง — ครั้งนี้สุ่มแบบปกติ');window._bLock=null}else{window._bLockNow={k,v:roll[k]};if(!inf){rerolls--;try{$('rr').textContent=rerolls}catch(e){}}}}
+ let r;try{r=_dr.apply(this,arguments)}finally{window._bLockNow=null}setTimeout(bLockUI,80);return r}}
+{const _gb=goBirth;goBirth=function(){window._bLock=null;const r=_gb.apply(this,arguments);setTimeout(bLockUI,120);return r}}
+// ---------- 6) สัตว์: สิทธิ์สุ่มเท่าคน (รวม VIP) + ใช้ตั๋ว/กรรมสุ่มเพิ่มได้ ----------
+function bFreeN(){try{const V=LS.get('murim_vip',null)||{},n=Date.now();const t=V.u||(V.ul&&V.ul.o)?3:(V.e2||0)>n?2:(V.e1||0)>n?1:0;return[5,30,60,100][t]}catch(e){return 5}}
+{const _g=goBeastLife;goBeastLife=function(){const r=_g.apply(this,arguments);try{if(CFG.chm!=1&&!(typeof ADM!=='undefined'&&ADM.ok&&ADM.rr)&&typeof brRR!=='undefined'&&brRR<50){brRR=bFreeN();brShow(false)}}catch(e){}return r}}
+{const _br=brReroll;brReroll=function(){if(typeof brRR!=='undefined'&&brRR<=0&&CFG.chm!=1){window._brT=Date.now();try{rrMenu()}catch(e){}return}return _br.apply(this,arguments)}}
+{const _dr=doRoll;doRoll=function(first){if(!first&&window._brT&&Date.now()-window._brT<600000&&!$('birth').classList.contains('on')){window._brT=0;rerolls=Math.max(0,rerolls-1);brRR++;try{closeM()}catch(e){}setTimeout(()=>{try{brReroll()}catch(e){}},200);return}return _dr.apply(this,arguments)}}
+{const _bs=brShow;brShow=function(){const r=_bs.apply(this,arguments);try{if(typeof brRR!=='undefined'&&brRR<=0&&CFG.chm!=1){const b=[...$('modal').querySelectorAll('button')].find(x=>/brReroll/.test(x.getAttribute('onclick')||''));if(b){b.disabled=false;b.innerHTML='🎟️ สุ่มเพิ่ม <small>(ตั๋ว/กรรม)</small>'}}}catch(e){}return r}}
+})()}catch(e){console.error('block51',e)}
+// ============================================================
+// BLOCK 52: 👑 เส้นทางราชสำนัก — สามัญชนไต่เต้าเป็นจักรพรรดิได้ (แยกจากสำนัก) · สายทหาร/สายขุนนาง · การเมือง ใส่ร้าย ลอบสังหาร · ก่อกบฏ/รับสืบทอด
+// ============================================================
+try{(()=>{
+const RK={mil:['พลทหาร','นายกอง','แม่ทัพ','อ๋อง','จักรพรรดิ'],civ:['ขุนนางชั้นผู้น้อย','เจ้ากรม','อัครเสนาบดี','อ๋อง','จักรพรรดิ']};
+const PAY=[60,250,1200,5000,30000];
+const D=()=>S.dyn;
+const ok=()=>!!(S&&S.alive&&!S.xian&&!S.mw&&!(S.beastMode&&!S.beastMode.human)&&!(S.o&&S.o.pc));
+const nm=()=>{const d=D();return RK[d.tr][d.rk]};
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const O=(t,s,f)=>({t,s,f});
+const DQ=/ประกาศจากราชสำนัก|ศึกชายแดน ·|งานราชการ ·|ถูกใส่ร้ายในท้องพระโรง|ราชโองการจับกุม|ฮ่องเต้ประชวร|มือสังหารในวังหลัง/;const busy=()=>[choice._cur,...(choice._q||[])].some(c=>c&&DQ.test(String(c.title||c[0]||'')));
+function enter(tr){S.dyn={tr,rk:0,fav:35,y:S.age,ny:S.age+R(3,5),hz:0,pl:0};log(`👑 <b>เข้ารับราชการ</b> — ${tr==='mil'?'คุณสวมเกราะทหารหลวงเป็นครั้งแรก':'ชื่อของคุณถูกจารึกบนป้ายประกาศผลสอบหน้าประตูวัง'} · ตำแหน่ง <b>${RK[tr][0]}</b><br><span class="tag2">ไต่เต้าได้ถึงจักรพรรดิ — ทำงานควบคู่กับสำนักได้ · ความโปรดปรานต่ำเกินไปอาจถูกประหาร</span>`,'epic',true);render()}
+function promote(why){const d=D();d.rk=Math.min(4,d.rk+1);d.ny=S.age+R(4,7)+d.rk;S.fame+=[0,40,120,400,2000][d.rk];log(`👑 <b>เลื่อนเป็น${nm()}</b> — ${why}`,'myth',true);try{island({big:1,pri:1,ic:'👑',h:'ราชสำนัก',t:nm(),kind:'gold'})}catch(e){}if(d.rk===4)crown();render()}
+function crown(){const d=D();S.flags.dynEmp=1;S.fame+=3000;S.karma+=5;try{keyAdd('ขึ้นครองราชย์')}catch(e){}log(`🐉 <b>ขึ้นครองราชย์เป็นจักรพรรดิ</b> — สามัญชนที่ไต่ขึ้นมาจาก${d.tr==='mil'?'พลทหารเลวๆ':'ขุนนางชั้นผู้น้อย'} บัดนี้นั่งบนบัลลังก์มังกร ใต้หล้าก้มหัวพร้อมกัน`,'myth',true)}
+function fall(how){const d=D();if(!d)return;S.dyn=null;S.flags.dynFall=1;log(`⛓️ ${how}`,'bad',true);render()}
+// ---------- เข้าสู่ราชการ ----------
+function offer(){const civ=(S.int||0)>=40;choice('📜 ประกาศจากราชสำนัก',`ทางการติดประกาศทั่วเมือง — ราชสำนักต้องการคนเก่ง ${civ?'ทั้งทหารและบัณฑิตสอบขุนนาง':'โดยเฉพาะทหาร'}<br><span class="tag2">เส้นทางนี้ไต่ไปได้ถึงบัลลังก์ แต่ยิ่งสูงยิ่งหนาว</span>`,[
+ O('⚔️ สมัครเป็นทหารหลวง','สายทหาร · ใช้ฝีมือรบ',()=>{if(fight('ครูฝึกทหารหลวง',Math.max(30,total()*.6)))enter('mil');else log('⚔️ คุณสอบตกการคัดเลือก ครูฝึกบอกว่า "ปีหน้ามาใหม่"','bad')}),
+ ...(civ?[O('📚 สอบขุนนาง','สายขุนนาง · ใช้ปัญญา',()=>{if(Math.random()<cl(.15+(S.int||0)/300,.15,.9))enter('civ');else{S.int+=2;log('📚 ชื่อคุณไม่อยู่ในประกาศผล แต่คุณได้เรียนรู้อะไรหลายอย่าง','bad')}})]:[]),
+ O('🙅 ไม่สนใจ','',()=>{S.dynNo=S.age})])}
+// ---------- เหตุการณ์ระหว่างทาง ----------
+function stepEv(){const d=D(),T=d.tr;
+ if(d.rk<3&&S.age>=d.ny){
+  if(T==='mil'){choice(`⚔️ ศึกชายแดน · ${nm()}`,'ข้าศึกบุกด่านตะวันตก แม่ทัพใหญ่ต้องการคนนำทัพหน้า',[
+   O('🗡️ นำทัพหน้าบุกตรง','ดวลจริง · ชนะ = เลื่อนขั้น',()=>{if(fight('แม่ทัพข้าศึก',total()*(.85+d.rk*.15))){d.fav+=10;promote('ชนะศึกชายแดน ทหารทั้งกองร้องชื่อคุณ')}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.35));d.fav-=8;d.ny=S.age+3;log('🩸 ทัพหน้าแตก คุณรอดกลับมาพร้อมแผลกลางหลัง','bad',true)}}),
+   O('🧠 วางกลซุ่มโจมตี','ใช้ปัญญา',()=>{if(Math.random()<cl(.25+(S.int||0)/400,.25,.85)){d.fav+=8;promote('กลอุบายของคุณทำให้ข้าศึกแตกพ่ายโดยไม่เสียทหารสักคน')}else{d.ny=S.age+2;d.fav-=4;log('🧠 ข้าศึกไม่ติดกับ — ศึกจบแบบเสมอ','')}}),
+   O('🪙 ยกความดีความชอบให้เจ้านาย','ปลอดภัย · โปรดปราน +',()=>{d.fav+=6;d.ny=S.age+2;log('🪙 เจ้านายของคุณได้เลื่อนขั้นแทน — แต่เขาจะจำบุญคุณนี้')})])}
+  else{choice(`📜 งานราชการ · ${nm()}`,'ฮ่องเต้ทรงมอบงานยากที่ไม่มีใครอยากรับ — ปราบทุจริตในกรมคลัง',[
+   O('⚖️ สอบสวนอย่างตรงไปตรงมา','ปัญญา · เสี่ยงมีศัตรู',()=>{if(Math.random()<cl(.3+(S.int||0)/350,.3,.88)){d.fav+=10;d.hz+=15;promote('จับขุนนางทุจริตได้ทั้งเครือข่าย ฮ่องเต้ทรงพอพระทัย')}else{d.fav-=8;d.ny=S.age+3;log('⚖️ หลักฐานหายไปกลางทาง — คุณกลายเป็นตัวตลกในท้องพระโรง','bad')}}),
+   O('🤝 ประนีประนอม รับส่วนแบ่ง','เงิน + · ถ้าถูกจับได้จบเห่',()=>{S.money+=PAY[d.rk]*8;d.hz+=25;d.ny=S.age+2;S.karma-=10;log('🤝 คดีเงียบไป กระเป๋าคุณหนักขึ้น')}),
+   O('🙇 ขอตัวด้วยเหตุผลสุขภาพ','ปลอดภัย',()=>{d.ny=S.age+3;d.fav-=3})])}return true}
+ // ใส่ร้าย / ระแวง
+ if(d.rk>=1&&d.rk<4&&Math.random()<.07+d.hz/600){const who=anyName('ชาย');choice('🎭 ถูกใส่ร้ายในท้องพระโรง',`${who}ถวายฎีกากล่าวหาว่าคุณ${ch(['คิดกบฏ','ยักยอกเงินหลวง','ติดต่อกับข้าศึก'])}`,[
+  O('📜 แก้ต่างด้วยหลักฐาน','ปัญญา',()=>{if(Math.random()<cl(.35+(S.int||0)/400,.35,.9)){d.fav+=6;d.hz=Math.max(0,d.hz-10);log(`📜 ข้อกล่าวหาตกไป ${who}ถูกลดตำแหน่งแทน`,'good')}else{d.fav-=20;log('📜 ฮ่องเต้ทรงนิ่งนาน แล้วตรัสว่า "จะจับตาดูเจ้า"','bad')}}),
+  O('🗡️ ส่งคนเก็บผู้กล่าวหาเงียบๆ','กรรม − · ได้ผลแน่',()=>{S.karma-=25;d.hz+=20;log(`🗡️ ${who}ตกน้ำตายในคืนเดียวกัน คดีจบลงเอง`,'bad')}),
+  O('🎁 ถวายบรรณาการขอขมา','เสียเงิน',()=>{const c=PAY[d.rk]*10;S.money=Math.max(0,S.money-c);d.fav+=4;log(`🎁 คุณเสีย ${fmt(c)} — ความผิดถูกลืมไป`)})]);return true}
+ // ถูกจับ
+ if(d.fav<=8&&d.rk<4){choice('⛓️ ราชโองการจับกุม','องครักษ์เสื้อแพรล้อมบ้านคุณกลางดึก — ฮ่องเต้ไม่ไว้ใจคุณอีกแล้ว',[
+  O('⚔️ ฝ่าวงล้อมหนี','ดวลจริง · รอด = ถูกตัดออกจากราชการ',()=>{if(fight('องครักษ์เสื้อแพร',total()*1.1))fall('คุณฝ่าวงล้อมออกมาได้ กลายเป็นนักโทษหนีราชภัย — ทางราชการปิดลงตลอดกาล');else{S.deathCause='ถูกองครักษ์เสื้อแพรสังหารขณะหนีราชภัย';S.hp=0;checkDeath()}}),
+  O('🙇 ยอมมอบตัว','ลุ้นให้ฮ่องเต้เมตตา',()=>{if(Math.random()<.45){d.rk=Math.max(0,d.rk-1);d.fav=25;log(`🙇 ฮ่องเต้ทรงไว้ชีวิต แต่ลดตำแหน่งคุณเหลือ${nm()}`,'bad',true)}else{S.deathCause='ถูกประหารกลางลานประหารหน้าประตูวัง ด้วยข้อหากบฏ';S.hp=0;checkDeath()}})]);return true}
+ // อ๋อง: ทางสู่บัลลังก์
+ if(d.rk===3&&S.age-(d.ty||0)>=5&&Math.random()<.35){d.ty=S.age;choice('🐉 ฮ่องเต้ประชวรหนัก',`ทั่วเมืองหลวงลือกันว่าฮ่องเต้อยู่ได้อีกไม่นาน — ราชโอรสยังเยาว์ ขุนนางครึ่งหนึ่งมองมาทางคุณ (โปรดปราน ${Math.round(d.fav)})`,[
+  O('⚔️ ก่อกบฏยึดบัลลังก์','ดวล 3 ครั้งติด · แพ้ = ตาย',()=>coup(0)),
+  O('🤝 รอรับสืบทอดอย่างชอบธรรม','ต้องโปรดปราน 70+ · ลุ้นทุกปี',()=>{d.heir=1;log('🤝 คุณเลือกรอ — ในวังเริ่มมีคนเรียกคุณว่า "ว่าที่ผู้สำเร็จราชการ"')}),
+  O('🛡️ ปกป้ององค์ชายน้อย','กรรม + · โปรดปราน + มาก',()=>{d.fav+=25;S.karma+=20;log('🛡️ คุณยืนข้างบัลลังก์ของเด็กคนหนึ่ง — ใต้หล้าจดจำความภักดีนี้','good',true)})]);return true}
+ if(d.heir&&d.rk===3&&d.fav>=70&&Math.random()<.08){promote('ฮ่องเต้สวรรคตโดยทิ้งราชโองการแต่งตั้งคุณเป็นผู้สืบทอด');return true}
+ // จักรพรรดิ
+ if(d.rk===4&&Math.random()<.05){choice('🗡️ มือสังหารในวังหลัง','เงาหนึ่งพุ่งออกมาจากหลังม่าน — บัลลังก์ไม่เคยปลอดภัย',[O('⚔️ สู้เอง','ดวลจริง',()=>{if(fight('มือสังหารวังหลัง',total()*1.15)){S.fame+=200;log('⚔️ คุณบิดคอมือสังหารด้วยมือเปล่า — ไม่มีใครกล้าลองอีกนาน','epic',true)}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.5));log('🩸 องครักษ์มาทันเสี้ยววินาที — คุณรอด แต่แผลเป็นที่คอจะอยู่ไปตลอดชีวิต','bad',true)}}),O('🛡️ ให้องครักษ์จัดการ','ปลอดภัยกว่า',()=>{log('🛡️ มือสังหารถูกจับได้ คุณสั่งสอบสวนไปถึงต้นตอ')})]);return true}
+ return false}
+function coup(i){const d=D(),F=[['องครักษ์หน้าประตูวัง',.9],['แม่ทัพหลวง',1.1],['ราชครูผู้เฝ้าบัลลังก์',1.3]];const f=F[i];
+ duel(f[0],Math.max(5,Math.round(total()*f[1])),w=>{if(!S||!S.alive)return;if(w){if(i<2){log(`⚔️ ล้ม${f[0]}ได้ — เหลืออีก ${2-i} คน`,'epic');setTimeout(()=>{try{coup(i+1)}catch(e){}},500)}else{S.karma-=15;promote('ยึดบัลลังก์ด้วยกำลัง ขุนนางทั้งท้องพระโรงคุกเข่าพร้อมกัน')}}
+  else{S.deathCause=`ก่อกบฏไม่สำเร็จ ถูก${f[0]}สังหารกลางท้องพระโรง`;S.hp=0;checkDeath()}})}
+// ---------- รายปี ----------
+{const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(!ok()||S.age===a0)return r;const d=D();
+ if(!d){if(!busy()&&S.age>=16&&S.age<=45&&!(S.dynNo&&S.age-S.dynNo<10)&&!S.flags.dynFall&&Math.random()<.05)offer();return r}
+ S.money+=PAY[d.rk]*(d.tr==='civ'?1.2:1);d.fav=cl(d.fav+(S.karma>=0?.5:-.5)-(d.hz>50?1:0),0,100);d.hz=Math.max(0,d.hz-1);
+ if(!busy())stepEv()}catch(e){console.error('dyn',e)}return r}}
+// ---------- หน้าราชสำนัก ----------
+window.openDyn=function(){const d=D();if(!d)return;const T=RK[d.tr];
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👑 ราชสำนัก</h3><p class="tag2">${d.tr==='mil'?'สายทหาร':'สายขุนนาง'} · เข้ารับราชการตอนอายุ ${d.y} ปี · เบี้ยหวัด ${fmt(Math.round(PAY[d.rk]))}/ปี</p>
+ <div class="item">${T.map((n,i)=>`<span style="${i===d.rk?'font-weight:800;color:var(--gold,#b8860b)':i<d.rk?'opacity:.6':'opacity:.35'}">${i===d.rk?'▶ ':''}${n}</span>`).join(' → ')}</div>
+ <div class="item">🙇 ความโปรดปราน <b>${Math.round(d.fav)}</b>/100 ${d.fav<20?'<span style="color:var(--bad)">· อันตราย</span>':''}<br>🎭 ศัตรูในราชสำนัก <b>${Math.round(d.hz)}</b>${d.heir?'<br>🤝 รอรับสืบทอด (ต้องโปรดปราน 70+)':''}</div>
+ ${d.rk<4?`<button class="pbtn" style="width:100%" onclick="dynGift()">🎁 ถวายบรรณาการ (${fmt(PAY[d.rk]*6)}) · โปรดปราน +8</button>`:''}
+ <button class="gbtn" style="width:100%;margin-top:6px" onclick="dynQuit()">🚪 ลาออกจากราชการ</button>`,'dyn')};
+window.dynGift=function(){const d=D(),c=PAY[d.rk]*6;if(S.money<c)return toast('เงินไม่พอ');S.money-=c;d.fav=cl(d.fav+8,0,100);toast('🎁 ฮ่องเต้ทรงรับไว้');openDyn()};
+window.dynQuit=function(){closeM();fall('คุณถวายคืนตราประจำตำแหน่ง แล้วเดินออกจากประตูวังเป็นครั้งสุดท้าย');S.flags.dynFall=0;S.dynNo=S.age};
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const d=S&&S.alive&&D();if(d){const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.dynB'))g.insertAdjacentHTML('afterbegin',`<button class="opt dynB" onclick="closeM();openDyn()">👑 ราชสำนัก<small>${nm()} · โปรดปราน ${Math.round(d.fav)}</small></button>`)}}catch(e){}return r}}
+window._dynT={stepEv,offer,coup,promote};
+// ฉายาจักรพรรดิจากสามัญชน
+try{if(typeof TTL_SP!=='undefined')TTL_SP.unshift(['dyn_emp',()=>!!(S&&S.flags&&S.flags.dynEmp),'จักรพรรดิจากสามัญชน'])}catch(e){}
+})()}catch(e){console.error('block52',e)}
