@@ -484,6 +484,7 @@ const annPoll = async (ann, id) => {
   } catch { return ann }
 };
 const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
+const SENS_A = new Set(['lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'life', 'live', 'liveend']);
 
 function uaMeta(req, now) {
   const ua = String(req.headers['user-agent'] || '');
@@ -773,6 +774,11 @@ module.exports = async (req, res) => {
   // ฐานข้อมูลเต็มโควตา: ตอบทันทีโดยไม่ยิงซ้ำ (ยกเว้นหน้าผู้ดูแลที่ต้องเห็นสถานะ)
   if (QUOTA_AT && now - QUOTA_AT < 120e3 && a !== 'admin' && a !== 'kvdiag') return res.status(503).json({ err: 'quota' });
   const ip = cip(req);
+  // 🔐 คำสั่งที่แตะของของบัญชี (ตั๋วที่ซื้อ · VIP · ของแต่ง · บัญชี Google · ส่งข้อความในนามคนนั้น) ต้องมีรหัสลับของเครื่อง (ctok) ตรงกับที่ผูกไว้ — รหัสผู้เล่นอย่างเดียวไม่พอ เพราะรหัสผู้เล่นเห็นได้จากแชท/ทำเนียบ
+  if (SENS_A.has(a) && okId(id) && !isAdmKey(qOf(req).key || b.key)) {
+    const tk0 = String(req.headers['x-tk'] || b.tk || qOf(req).tk || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
+    try { const tok = await cmd('GET', 'ctok:' + id); if (tok && tok !== tk0) { try { await pipe([['INCR', 'authfail:' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10)], ['EXPIRE', 'authfail:' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10), 86400 * 14]]) } catch (e) {} return res.status(403).json({ err: 'auth' }) } } catch (e) { return res.status(503).json({ err: 'db' }) }
+  }
   try {
     // ---- 🛡️ กับดักบอทสแกนไฟล์ (/.env, /.git, *.php …) : จด IP + แบนจากระบบออนไลน์ แล้วตอบ 404 เหมือนไม่มีอะไร ----
     if (a === 'trap') {

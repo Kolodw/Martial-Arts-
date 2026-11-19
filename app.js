@@ -3531,9 +3531,9 @@ let _quotaUntil=0,_downUntil=0,_downN=0;const _apiEss=/^(csave|psput|psget|save|
 const _apiFly={};
 async function api(a,body){if(Date.now()<_quotaUntil)throw new Error('quota');if(Date.now()<_downUntil&&!_apiEss.test(a)){const e=new Error('offline');e._quiet=1;e.down=1;throw e}const s0=_mSeq,key=body?null:a;
  const run=async()=>{for(let t=0;;t++){const ctl=typeof AbortController!=='undefined'?new AbortController():null,tm=setTimeout(()=>{try{if(ctl){const er=new Error('timeout');er.name='AbortError';er._quiet=1;ctl.abort(er)}}catch(e){}},body?15000:10000);
-  try{const o=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({id:pid},body))}:{};if(ctl)o.signal=ctl.signal;
+  try{let _tk='';try{_tk=String(LS.get('murim_ctok','')||'')}catch(x){}const o=body?{method:'POST',headers:{'Content-Type':'application/json','x-tk':_tk},body:JSON.stringify(Object.assign({id:pid},body))}:{headers:{'x-tk':_tk}};if(ctl)o.signal=ctl.signal;
    const r=await fetch(API+'?a='+a+(body?'':'&id='+pid),o);const j=await r.json().catch(()=>({}));
-   if(!r.ok){if(j.err==='quota'){_quotaUntil=Date.now()+120000;try{quotaNote()}catch(e){}}const e=new Error(j.err||r.status);e.http=r.status;e.why=j.why;e.q=j.err==='quota';throw e}return j}
+   if(!r.ok){if(j.err==='auth'){try{if(!api._af||Date.now()-api._af>60000){api._af=Date.now();toast('🔐 เครื่องนี้ยืนยันตัวตนกับเซิร์ฟเวอร์ไม่ผ่าน — ลองเข้าสู่ระบบ Google ใหม่ หรือกู้บัญชีในหน้า 💾 ย้ายเซฟ')}}catch(x){}}if(j.err==='quota'){_quotaUntil=Date.now()+120000;try{quotaNote()}catch(e){}}const e=new Error(j.err||r.status);e.http=r.status;e.why=j.why;e.q=j.err==='quota';throw e}return j}
   catch(e){const net=e.name==='AbortError'||!e.http||e.http>=500;if(body||t>=1||e.q||!net)throw e.name==='AbortError'?new Error('timeout'):e;await new Promise(r=>setTimeout(r,700))}finally{clearTimeout(tm)}}};
  let p;if(key&&_apiFly[key])p=_apiFly[key];else{p=run();p.then(()=>{_downN=0;_downUntil=0},e=>{try{if(e&&!e.q&&!e.down&&(e.message==='timeout'||!e.http||e.http>=500)){_downN++;if(_downN>=2)_downUntil=Date.now()+Math.min(60000,5000*Math.pow(2,_downN-2))}}catch(x){}});if(key){_apiFly[key]=p;p.then(()=>{delete _apiFly[key]},()=>{delete _apiFly[key]})}}
  const j=await p;_apiS0=s0;setTimeout(()=>{if(_apiS0===s0)_apiS0=null},0);return j}
