@@ -47079,3 +47079,17 @@ try{const st=document.createElement('style');st.textContent=`.pfav.hlpf{display:
 .pfav.hlpfw{display:inline-flex;margin:0 8px 0 0;vertical-align:middle}.pfav.hlpfw .frph{width:40px!important;height:44px!important}
 .pl:has(.hlpf:not(:empty)) canvas,.pl:has(.hlpf:not(:empty)) .an,.pc:has(.hlpf:not(:empty)) canvas,.pc:has(.hlpf:not(:empty)) .an,.shl .rw:has(.hlpf:not(:empty)) canvas,.shl .rw:has(.hlpf:not(:empty)) .an{display:none!important}
 .shl .rw .pfav.hlpf{margin:0 6px 0 0}.shl .rw .pfav.hlpf .frph{width:40px!important;height:44px!important}`;document.head.appendChild(st)}catch(e){}
+
+try{(()=>{
+// 🖥️ จอคอม: ตัวเลือกไม่บังบันทึกเหตุการณ์ (รายงาน: หน้าจอ PC ตัวเลือกใหญ่จนกินพื้นที่บันทึก)
+// - หน้าต่างตัวเลือกชิดล่าง สูงไม่เกิน ~52% ของจอ พื้นหลังไม่มืดทั้งจอ → อ่านบันทึกด้านบนได้ระหว่างเลือก
+// - แผงปุ่มควบคุมด้านล่างสูงไม่เกิน 38% ของจอ (เลื่อนในแผงได้) และบันทึกมีพื้นที่อย่างน้อย 30% ของจอเสมอ
+const st=document.createElement('style');st.textContent=`
+body.desk #mask.on:has(#modal[data-k="choice"]){align-items:flex-end;padding-bottom:10px;background:linear-gradient(180deg,transparent 0,transparent 38%,rgba(0,0,0,.5) 100%)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body.desk #modal[data-k="choice"]{max-height:52vh!important;overflow-y:auto!important;width:min(760px,46vw)!important;box-shadow:0 -6px 40px rgba(0,0,0,.55)!important}
+body.desk #modal[data-k="choice"] .sumBox,body.desk #modal[data-k="choice"] [class*="ysum"]{max-height:12vh;overflow:auto}
+body.desk #deskC .ctrl{max-height:38vh;overflow-y:auto;overscroll-behavior:contain}
+body.desk #deskC #feed{min-height:30vh!important}
+@media (max-height:820px){body.desk #deskC #sceneBox{max-height:20vh;overflow:hidden}body.desk #deskC #qTrk .how{display:none}}
+`;document.head.appendChild(st);
+})()}catch(e){console.error('block79',e)}
