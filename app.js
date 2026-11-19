@@ -43028,7 +43028,7 @@ function rvTick(pt){const X=IX(),r=X.rv,tot=total();if(!r||!r.alive&&r.alive!==u
  else if(Math.random()<.04){r.p*=.85;log(`🎯 ข่าวลือ: <b>${r.n}</b>${ch(['บาดเจ็บหนักจากศึกชายแดน','ธาตุไฟเข้าแทรก','ถูกหักหลังโดยพี่น้องร่วมสำนัก'])}`,'')}
  const ri=riOf(r.p);if(ri>r.ri){r.ri=ri;if(ri>=2)log(`🎯 <b>${r.n}</b>ทะลวงสู่<b>${RNm(ri)}</b>${ri>realmIdx()?' — <b>ก่อนคุณ</b>':''}`,ri>realmIdx()?'bad':'')}
  const ld=r.p>tot;if(ld!==r.ld){r.ld=ld;try{island({big:1,ic:'🎯',h:'คู่ปรับ',t:ld?`${r.n} แซงคุณแล้ว!`:`คุณแซง ${r.n} แล้ว!`,kind:ld?'bad':'gold'})}catch(e){}log(ld?`🎯 ทั้งเมืองพูดกันว่าตอนนี้ <b>${r.n}</b> เก่งกว่าคุณแล้ว`:`🎯 ทั้งเมืองพูดกันว่าตอนนี้คุณทิ้ง <b>${r.n}</b> ไปไกลแล้ว`,ld?'bad':'good')}
- if(S.age>=r.mt&&free()){r.mt=S.age+R(10,15);const ep=Math.round(r.p);
+ if(S.age>=r.mt&&free()&&(!window.ixBudget||ixBudget())){r.mt=S.age+R(10,15);const ep=Math.round(r.p);
   choice(`🎯 คู่ปรับ — ${r.n}`,`${ch(['ทั้งคู่บังเอิญพักโรงเตี๊ยมเดียวกัน','เขาดักรออยู่ที่ประตูเมือง','งานชุมนุมยุทธ์จับคู่ให้เจอกันพอดี'])} — ${r.n}เดินเข้ามาพร้อมรอยยิ้มเดิม<br><span class="tag2">พลังเขา ≈ ${fmt(ep)} (${Math.round(ep/Math.max(1,tot)*100)}% ของคุณ) · เคยชนะ ${r.w} แพ้ ${r.l}</span>`,[
    {t:'⚔️ ประลอง',s:'ดวลจริง · ผลส่งต่อความเร็วการโตของเขา',f(){duel(r.n,ep,w=>{if(w){r.w++;r.g=Math.max(.9,r.g-.04);S.fame+=Math.round(30+Math.sqrt(ep));log(`🎯 คุณชนะ${r.n} — เขาเช็ดเลือดที่มุมปาก "ครั้งหน้า"`,'epic',true)}else{r.l++;r.g=Math.min(1.12,r.g+.03);log(`🎯 ${r.n}ชนะ — เขาไม่หัวเราะเยาะ แต่สายตานั้นแย่กว่าการหัวเราะ`,'bad',true)}})}},
    {t:'🍶 ดื่มสุราคุยเรื่องเก่า',s:'ใจเบิกบาน · ทั้งคู่โตเร็วขึ้นนิด',f(){r.fr++;joy(8);S.power+=Math.round(total()*.02);r.p*=1.02;log(`🍶 คืนนั้นคุยกันจนรุ่งสาง เรื่องที่ทั้งคู่ไม่เคยบอกใคร`,'good')}},
@@ -43104,7 +43104,7 @@ const css=document.createElement('style');css.textContent=`.ixSpot{animation:ixS
   // กรรมย้อนคืน (1 เรื่อง/ปี)
   const due=X.sd.findIndex(s=>S.age>=s.d);if(due>=0){const s=X.sd.splice(due,1)[0];try{seedPay(s)}catch(e){console.error(e)}}
   if(!X.rv&&S.age>=10&&!X.rvDone){X.rvDone=1;rvNew()}rvTick(pt);betTick();
-  if(free()&&!auto){if(X.hwF||(S.age>=X.hw&&S.age>=12&&Math.random()<.12)){X.hwF=0;hwOpen()}
+  if(free()&&!auto&&(X.hwF||!S.mw||(window.ixBudget&&ixBudget(1)))){if(X.hwF||(S.age>=X.hw&&S.age>=12&&Math.random()<.12)){X.hwF=0;hwOpen()}
    else if(S.age>=X.mg&&S.age>=12&&Math.random()<.08)setTimeout(()=>{if(ok()&&free()&&!auto)mgOpen()},400);
    else if(S.age>=16&&S.age-(X.bc||0)>=6&&Math.random()<.06){if(betOffer())X.bc=S.age}}
  }catch(e){console.error('blk55',e)}return r}}
@@ -43331,6 +43331,7 @@ window.mg2Pick=function(){if(!live0())return false;const C=[];let soul=false;try
  const k=ch(C);if(!k)return false;S.mgA=S.age;return yearly(k)};
 // สัตว์อสูร/ยุคปัจจุบัน ไม่ผ่าน block55 → มีตัวเรียกเอง
 {const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(live0()&&S.age!==a0&&!auto&&free()&&(nh()||S.mw)&&S.age>=6&&S.age>=(S.mg2N||0)&&Math.random()<(S.mw?.12:.09)){S.mg2N=S.age+(S.mw?R(4,6):R(4,7));setTimeout(()=>{if(live0()&&free()&&!auto)mg2Pick()},450)}}catch(e){console.error('mg2py',e)}return r}}
+{const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(live0()&&S.age!==a0&&!auto&&free()&&(nh()||S.mw)&&S.age>=6&&S.age>=(S.mg2N||0)&&Math.random()<(S.mw?.12:.09)&&(!S.mw||(window.ixBudget&&ixBudget()))){S.mg2N=S.age+(S.mw?R(3,5):R(4,7));setTimeout(()=>{if(live0()&&free()&&!auto)mg2Pick()},450)}}catch(e){console.error('mg2py',e)}return r}}
 // ---------- ช่วงชี้เป็นชี้ตาย ----------
 const once=f=>{const R0=Math.random;let u=0;Math.random=function(){if(!u){u=1;Math.random=R0;return f(R0())}return R0()}};
 // ⚔️ ดวลอันตราย: อ่านท่า
@@ -43647,7 +43648,7 @@ const JOB={stunt:{n:'สตันท์แมนกองถ่าย',ic:'🎬'
  taichi:{n:'ครูไทเก็กออนไลน์',ic:'☯️',L:['สอนป้าๆ ในสวน','คลาสออนไลน์เล็กๆ','คอร์สขายดี','สำนักออนไลน์'],pay:[1500,7000,22000,60000]}};
 window.openMwJob=function(){const x=X(),j=x.job;modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>💼 อาชีพเสริม</h3><p class="tag2">ทำควบคู่กับโฟกัสหลักได้ · ได้เงินทุกปี · เลื่อนขั้นผ่านเหตุการณ์และมินิเกม</p>${Object.entries(JOB).map(([k,J])=>`<div class="item" style="${j&&j.k===k?'outline:2px solid #c9a24a':''}"><b>${J.ic} ${J.n}</b>${j&&j.k===k?` · <b>${J.L[j.lv]}</b> (${j.xp}/${3+j.lv*2})`:''}<p class="tag2">${J.L.join(' → ')}</p>${j&&j.k===k?'<span class="tag2">กำลังทำอยู่</span>':`<button class="sysb" onclick="mwJobPick('${k}')">${j?'เปลี่ยนมาทำ (เริ่มใหม่)':'เริ่มทำ'}</button>`}</div>`).join('')}`,'mwjob')};
 window.mwJobPick=function(k){X().job={k,lv:0,xp:0};say(`${JOB[k].ic} คุณเริ่มงานใหม่: <b>${JOB[k].n}</b> — ตำแหน่งแรก ${JOB[k].L[0]}`,'good');closeM();render()};
-function jobYear(){const x=X(),j=x.job;if(!j)return;const J=JOB[j.k],pay=Math.round(J.pay[j.lv]*(C().rate||1)*12/12);fx({mon:pay});j.xp++;if(j.lv<3&&j.xp>=3+j.lv*2&&!choice._cur)jobUp()}
+function jobYear(){const x=X(),j=x.job;if(!j)return;const J=JOB[j.k],pay=Math.round(J.pay[j.lv]*(C().rate||1)*12/12);fx({mon:pay});j.xp++;if(j.lv<3&&j.xp>=3+j.lv*2&&!choice._cur&&x.juY!==M().y&&window.ixBudget&&ixBudget()){x.juY=M().y;jobUp()}}
 function up(){const x=X(),j=x.job,J=JOB[j.k];j.lv++;j.xp=0;say(`${J.ic} <b>เลื่อนขั้น: ${J.L[j.lv]}</b>`,'epic',null,true);post({stunt:'ใครเห็นคิวบู๊ในหนังใหม่บ้าง คนแสดงแทนคนนี้ต้องเป็นนักกีฬาระดับชาติแน่ๆ',guard:'การ์ดของเศรษฐีเมื่อวานจับมือคนร้ายได้ก่อนที่มีดจะออกจากกระเป๋า เร็วจนกล้องจับไม่ทัน',taichi:'คอร์สไทเก็กออนไลน์ของลุงคนนี้เต็มอีกแล้ว ใครได้ที่นั่งบ้าง'}[j.k],{ic:J.ic})}
 function jobUp(){const x=X(),j=x.job,J=JOB[j.k],lv=j.lv+1;const T={
  stunt:[['🎬 ฉากตกจากตึกห้าชั้น','ผู้กำกับอยากได้ฉากตกจริง ไม่ใช้สลิง — "ทำได้ไหม"','rescue','ทำแบบคนธรรมดาที่ฝึกมา (ระวังเร็วเกิน)'],['🎬 พระเอกเจ็บ ต้องแสดงแทนฉากบู๊','ฉากต่อสู้ยาวสามนาที ต้องรับคิวให้ทัน','dummy','รับคิวบู๊'],['🎬 ผู้กำกับต่างชาติขอดูฝีมือ','เขาขอดูท่าเดียว — ถ้าชอบ คุณจะได้เป็นครูฝึกคิวบู๊','beastread','โชว์ท่าที่ไม่เคยมีใครเห็น']],
@@ -43655,7 +43656,7 @@ function jobUp(){const x=X(),j=x.job,J=JOB[j.k],lv=j.lv+1;const T={
  taichi:[['☯️ ลูกศิษย์คนแรก','ป้าคนหนึ่งในสวนสาธารณะขอเรียน "ท่าที่ทำให้หายปวดหลัง"','breath','สอนหายใจ'],['☯️ คลิปสอนไวรัล','คนดูขอให้ไลฟ์สอนสด','live','ไลฟ์สอนสด'],['☯️ เปิดสำนักออนไลน์','ต้องออกแบบคอร์สให้คนเมืองเรียนได้จริง','poem','เรียบเรียงคำสอน']]}[j.k][j.lv];
  choice(T[0],T[1],[{t:'🎮 '+T[3],s:'มินิเกม · ผ่าน = เลื่อนขั้น',f(){playY(T[2],(sc,skip,I)=>{if(T[2]==='rescue'&&I&&I.fast)fx({sec:I.fast*5});if(skip?Math.random()<.5:sc>=.5)up();else{j.xp=Math.max(0,j.xp-2);say(`${J.ic} ยังไม่ผ่าน — ลองใหม่ในอีกสองสามปี`,'bad')}})}},{t:'🙅 ยังไม่พร้อม',skip:true,f(){j.xp=Math.max(0,j.xp-1)}}])}
 // ================= 🅿️ ลานประลองใต้ดิน =================
-function arena(){const x=X(),m=M();x.ar=m.y+R(3,4);const tot=total();
+function arena(){const x=X(),m=M();x.ar=m.y+R(4,6);const tot=total();
  choice('🅿️ ลานประลองใต้ดิน',`ชั้น B4 ของลานจอดรถร้าง — ไฟฉายจากมือถือหลายสิบเครื่องส่องไปที่วงกลมกลางพื้น คนที่ยืนอยู่ในวงล้วน<b>หลงยุคมาเหมือนคุณ</b><br><span class="tag2">ชนะติดกัน ${x.mask} ครั้ง${x.mask>=2?' · มีคนเริ่มตามสืบว่าคนใส่หน้ากากคือใคร':''}</span>`,[
   {t:'🎭 ใส่หน้ากากลงสนาม',s:'สู้ 3 รอบ · ชนะได้เงินรางวัล',f(){let w=0;const F=[['นักดาบหลงยุคสมัยหมิง',.7],['พระนักสู้จากวัดที่ไม่มีบนแผนที่',.9],['แชมป์เก่าที่ไม่เคยถอดหน้ากาก',1.08]];for(const [n,k] of F){if(fight(n,tot*k))w++;else break}
    const g=Math.round([0,6000,15000,40000][w]*(C().rate||1));if(w===3){x.mask++;x.arW++;say(`🏆 คุณชนะครบสามรอบ ไม่มีใครเห็นหน้า — เงินรางวัล`,'epic',{mon:g,sec:x.mask>=3?6:2},true);ripple('ลือกันในกลุ่มลับ: มีคนใส่หน้ากากชนะลานใต้ดินโดยไม่มีแผลสักแผล',{ic:'🎭'},1);if(x.mask===3)ripple('มีคนโพสต์ภาพเบลอๆ ของ "ชายหน้ากาก" ขึ้นรถเมล์สายที่ผ่านซอยคุณ',{ic:'🕵️'},1)}else{x.mask=0;say(`🅿️ คุณชนะ ${w} รอบ แล้วพ่ายในรอบที่ ${w+1} — หน้ากากยังอยู่บนหน้า`,w?'':'bad',{mon:g})}}},
@@ -43700,7 +43701,7 @@ function rescueEv(){choice('🦸 เหตุการณ์ตรงหน้�
 {const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(!on()||S.age===a0)return r;const x=X(),m=M();
  feedYear();jobYear();locYear();
  if(!choice._cur||Math.random()<.5){const q=[];if(m.y>=3&&m.y>=x.ar&&(m.fl.others||m.y>=5))q.push(arena);if(m.linMet&&m.y>=(x.lin||0)&&m.y>=2)q.push(linAct);if(m.adapt<75&&Math.random()<.35)q.push(shock);if(Math.random()<.12)q.push(rescueEv);if(!x.job&&m.y>=2&&!x.jobAsk){q.push(()=>(x.jobAsk=1,choice('💼 งานเสริม',`${LIN()}ส่งประกาศรับสมัครงานมาให้สามที่ "ปู่ลองดูไหม"`,Object.entries(JOB).map(([k,J])=>({t:`${J.ic} ${J.n}`,s:J.L.join(' → '),f(){mwJobPick(k)}})).concat([{t:'🙅 ยังไม่สนใจ',skip:true,f(){}}]))))}
-  if(q.length)ch(q)()}
+  if(q.length&&Math.random()<.6&&window.ixBudget&&ixBudget())ch(q)()}
  }catch(e){console.error('blk58',e)}return r}}
 // ================= ปุ่มในแถบยุคปัจจุบัน =================
 {const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{if(!on())return r;const h=$('mwHud');if(!h||h.querySelector('.mwX'))return r;const x=X();h.insertAdjacentHTML('beforeend',`<div class="mwX" style="display:flex;gap:6px;margin-top:6px"><button class="sysb" style="flex:1" onclick="openMwFeed()">📱 ฟีด${x.nw?` <b style="color:#ff6b8a">●${x.nw}</b>`:''}</button><button class="sysb" style="flex:1" onclick="openMwJob()">${x.job?JOB[x.job.k].ic+' '+JOB[x.job.k].L[x.job.lv]:'💼 งานเสริม'}</button><button class="sysb" style="flex:1" onclick="openMwMap()">${LOC()[x.loc][0]} ${LOC()[x.loc][1]}</button></div>`)}catch(e){}return r}}
@@ -43961,7 +43962,7 @@ function goalNow(M){M.gd=M.gd||{};return GOALS.find(g=>!M.gd[g[0]])}
 // ================= 🏙️ 5) ขั้นในยุคใหม่ =================
 const MR=[[0,'👤','คนแปลกหน้า','ไม่มีใครรู้จักคุณ'],[30,'🏘️','คนในซอย','พี่วินกับป้าแดงรู้จักชื่อคุณ'],[52,'🗣️','คนที่ย่านรู้จัก','เด็กในย่านเล่าเรื่องคุณให้กันฟัง'],[72,'🌃','ตำนานเมือง','ทั้งเมืองมีเรื่องเล่าเกี่ยวกับคุณ'],[90,'🛡️','ผู้พิทักษ์เมือง','เมืองนี้ปลอดภัยขึ้นเพราะคุณอยู่']];
 const MRB=[null,{qi:.3,mon:3000},{qi:.5,fame:1500},{qi:1,fame:5000,mon:15000},{qi:2,fame:15000,mon:40000}];
-function mScore(M){const x=M.x||{};let s=(M.adapt||0)*.35+Math.log10((M.fame||0)+1)*7+(M.linMet?4:0)+(x.job?x.job.lv*6:0)+(x.arW||0)*3+((x.locs||[]).length-1)*2+Object.keys(M.gd||{}).length*2+Math.min(10,(M.y||0)*.5);return Math.round(s)}
+function mScore(M){const x=M.x||{};let s=(M.adapt||0)*(M.native?.12:.35)+Math.log10((M.fame||0)+1)*7+(M.linMet?4:0)+(x.job?x.job.lv*6:0)+(x.arW||0)*3+((x.locs||[]).length-1)*2+Object.keys(M.gd||{}).length*2+Math.min(10,(M.y||0)*.5);return Math.round(s)}
 const rOf=s=>{let r=0;MR.forEach((m,i)=>{if(s>=m[0])r=i});return r};
 function rankTick(M){const s=mScore(M),r=rOf(s);M.mr=M.mr||0;if(r>M.mr){for(let i=M.mr+1;i<=r;i++){const m=MR[i];mwSay(`${m[1]} <b>ขั้นในยุคใหม่: ${m[2]}</b> — ${m[3]}`,'myth',MRB[i],true);try{island({big:1,pri:1,ic:m[1],h:'ขั้นในยุคใหม่',t:m[2],kind:'gold'})}catch(e){}try{keyAdd('ขั้นในยุคใหม่: '+m[2])}catch(e){}}M.mr=r}}
 window.mwRankInfo=function(){const M=S.mw;if(!M)return;const s=mScore(M),r=rOf(s),nx=MR[r+1];modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>${MR[r][1]} ${MR[r][2]}</h3><p class="tag2">${MR[r][3]}</p><div class="item">คะแนนยุคใหม่ <b>${s}</b>${nx?` · ขั้นถัดไป <b>${nx[1]} ${nx[2]}</b> ที่ ${nx[0]}`:' · ขั้นสูงสุดแล้ว'}<div style="height:8px;background:#0002;border-radius:5px;margin:6px 0;overflow:hidden"><div style="height:100%;width:${nx?Math.min(100,(s-MR[r][0])/(nx[0]-MR[r][0])*100):100}%;background:#8a5ae0"></div></div><span class="tag2">ได้จาก: ความคุ้นเคย · ผู้ติดตาม · หลิน · งานเสริม · ชนะลานใต้ดิน · ย่านที่ปลดล็อก · เป้าหมาย · ปีที่อยู่ในยุคนี้</span></div>${MR.map((m,i)=>`<div class="tag2" style="${i===r?'font-weight:800;color:#8a5ae0':i<r?'':'opacity:.5'}">${m[1]} ${m[2]} (${m[0]})</div>`).join('')}`,'mwrank')};
@@ -44068,3 +44069,38 @@ window.importAny=async function(raw){let v=String(raw||'').replace(ZW,'').replac
  const tooShort=flat.length<2000&&!/^[A-Za-z0-9]{4,12}$/.test(flat);
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>❌ รหัสไม่ถูกต้อง</h3><p>${tooShort?'รหัสที่วางสั้นเกินกว่าจะเป็นรหัสยาว และไม่ตรงกับรหัสสั้น/รหัสประจำเครื่อง':'รหัสยาวน่าจะ<b>ไม่ครบ</b> — แอปแชทหลายแอป (เช่น LINE, Messenger) ตัดข้อความยาว ๆ ทิ้งบางส่วน'}</p><p class="tag2">วางมาได้ ${fmt(flat.length)} ตัวอักษร</p><ul style="padding-left:18px;line-height:1.7"><li>แนะนำ: ที่เครื่องเดิมกด <b>☁️ ฝากโปรไฟล์ทั้งหมด → รับรหัส</b> ได้รหัสสั้น 8 ตัว พิมพ์เองได้</li><li>หรือใช้ <b>รหัสประจำเครื่อง</b> (รูปแบบ XXXX-YYYY)</li><li>ถ้าจะใช้รหัสยาว ให้ส่งเป็นไฟล์โน้ต/อีเมลถึงตัวเอง ไม่ส่งผ่านแชท</li></ul>`,'imp')};
 })()}catch(e){console.error('importAny',e)}
+// ============================================================
+// BLOCK 61: ยุคปัจจุบัน — 🔕 จำกัดป๊อปอัปเสริมปีละไม่เกิน 1 · 🏬 ห้างและร้านค้า (มือถือ+คอม) · เอาของยุทธภพออกจากแผงขวาบนคอม
+// ============================================================
+try{(()=>{
+// ---------- 🔕 งบป๊อปอัป ----------
+// ยุคปัจจุบัน: ระบบเสริม (มินิเกม/คู่ปรับ/ลานใต้ดิน/งานเสริม/ช็อกวัฒนธรรม/ทายชะตา) ใช้ได้รวมกันปีละ 1 ครั้ง และไม่เด้งในปีที่มีเหตุการณ์หลักของยุคนี้อยู่แล้ว
+window.ixBudget=function(peek){try{if(!S||!S.mw)return true;const M=S.mw;if(S._ixY===S.age)return false;if(choice._cur||(choice._q&&choice._q.length)||(M.q&&M.q.length))return false;if(peek===1&&Math.random()<.5)return false;S._ixY=S.age;return true}catch(e){return true}};
+const on=()=>!!(S&&S.alive&&S.mw);
+// ---------- 🏬 ห้างและร้านค้า ----------
+const SHOP=[['phone','📱','สมาร์ตโฟนรุ่นใหม่',25000,'ความคุ้นเคย +8 · ผู้ติดตาม +',3,M=>({adapt:8,fame:800})],
+ ['vit','💊','วิตามินและอาหารเสริม',1500,'ฟื้นพลังชีวิต 25%',1,M=>{S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.25));return{}}],
+ ['gym','🏋️','สมาชิกฟิตเนส 1 ปี',12000,'พลัง + · พลังชีวิตสูงสุด +',1,M=>{S.power+=Math.max(3,Math.round(total()*.05));S.maxHp+=8;return{joy:2}}],
+ ['course','📚','คอร์สออนไลน์',4000,'ปัญญา +4 · ความคุ้นเคย +3',1,M=>{S.int=(S.int||0)+4;return{adapt:3}}],
+ ['cloth','👔','เสื้อผ้าชุดใหม่',3000,'เสน่ห์ +3 · ใจเบิกบาน',1,M=>{S.cha=(S.cha||0)+3;return{joy:4}}],
+ ['tea','🍵','ชาสมุนไพรจากร้านยาจีน',2500,'ปราณ +0.3',1,M=>({qi:.3})],
+ ['concert','🎫','ตั๋วคอนเสิร์ตไปกับหลิน',5000,'ความผูกพันหลิน +8',1,M=>({lin:8,joy:5}),M=>!!M.linMet],
+ ['gift','🎁','ของขวัญให้ครอบครัว',2000,'ใจเบิกบาน +6',1,M=>({joy:6})],
+ ['bike','🛵','มอเตอร์ไซค์มือสอง',35000,'งานเสริมได้เงินเพิ่ม 20% ถาวร',99,M=>{M.fl.bike=1;return{adapt:2}},M=>!M.fl.bike]];
+const cur=()=>{try{const C=mwCC();return{r:C.rate||1,u:C.cur||'บาท'}}catch(e){return{r:1,u:'บาท'}}};
+const price=p=>Math.round(p*cur().r);
+window.openMwShop=function(){if(!on())return;const M=S.mw;M.shop=M.shop||{};const c=cur();
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏬 ห้างและร้านค้า</h3><p class="tag2">มี ${fmt(Math.round((S.money||0)*c.r))} ${c.u} · ของแต่ละอย่างซื้อซ้ำได้ตามรอบที่บอก</p>${SHOP.filter(it=>!it[7]||it[7](M)).map(it=>{const last=M.shop[it[0]],cd=it[5],left=last!=null?Math.max(0,last+cd-M.y):0;return`<div class="item" style="display:flex;gap:8px;align-items:center"><div style="font-size:26px">${it[1]}</div><div style="flex:1;min-width:0"><b>${it[2]}</b><div class="tag2">${it[4]}</div></div><button class="sysb" ${left?'disabled':''} onclick="mwBuy('${it[0]}')">${left?`อีก ${left} ปี`:`${fmt(Math.round(it[3]*c.r))} ${c.u}`}</button></div>`}).join('')}`,'mwshop')};
+window.mwBuy=function(k){const M=S.mw,it=SHOP.find(x=>x[0]===k);if(!M||!it)return;M.shop=M.shop||{};const last=M.shop[k];if(last!=null&&M.y<last+it[5])return toast('ยังซื้อซ้ำไม่ได้');if((S.money||0)<it[3])return toast('เงินไม่พอ');S.money-=it[3];M.shop[k]=M.y;const o=it[6](M)||{};let t='';try{t=mwFx(o)}catch(e){}log(`${it[1]} ซื้อ<b>${it[2]}</b>${t}`,'good');try{sfx('good')}catch(e){}render();openMwShop()};
+// มอเตอร์ไซค์: งานเสริมได้เงินเพิ่ม
+{const _fx=window.mwFx;if(typeof _fx==='function'){}}
+{const _py=passYear;passYear=function(){const a0=S&&S.age,m0=S&&S.money;const r=_py.apply(this,arguments);try{if(on()&&S.age!==a0&&S.mw.fl&&S.mw.fl.bike&&S.mw.x&&S.mw.x.job){const g=Math.round(Math.max(0,(S.money||0)-(m0||0))*.2);if(g>0){S.money+=g}}}catch(e){}return r}}
+// ปุ่มในเมนูมือถือ + แถบยุคปัจจุบัน
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(on()){const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.mwShopB'))g.insertAdjacentHTML('afterbegin',`<button class="opt mwShopB" onclick="closeM();openMwShop()">🏬 ห้างและร้านค้า<small>ซื้อของ · มือถือ ฟิตเนส ของขวัญ</small></button>`)}}catch(e){}return r}}
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{if(!on())return r;const row=document.querySelector('#mwHud .mwX');if(row&&!row.querySelector('.mwShopR'))row.insertAdjacentHTML('afterbegin',`<button class="sysb mwShopR" style="flex:1" onclick="openMwShop()">🏬 ร้าน</button>`);
+ // คอม: แผงขวา เอาของยุทธภพออก ใส่ของยุคนี้แทน
+ const dr=$('deskR');if(dr){const RX=/(openAdvice|openTown|openMarket|openArts|openEquip|openQuests|openDungeons|gachaArt|openRealm|openFaction|openCraft|openBeastComp|openMap|relMenu|openHouse|openFamily|openPeople|openPeers|openRanking|openBestiary|openBury)\(/;dr.querySelectorAll('.dk-btn').forEach(b=>{if(RX.test(b.getAttribute('onclick')||''))b.style.display='none'});dr.querySelectorAll('.dk-grp').forEach(g=>{if(![...g.querySelectorAll('.dk-btn')].some(b=>b.style.display!=='none'))g.style.display='none'});
+  if(!dr.querySelector('.dkMw')){const L=[['🏬','ห้างและร้านค้า','openMwShop'],['💼','งาน','openJobs'],['🏠','บ้านและทรัพย์สิน','openAssets'],['👥','คนรอบตัว','openPeopleMW'],['📱','ฟีดโซเชียล','openMwFeed'],['🗺️','ย่านในเมือง','openMwMap'],['🎬','งานเสริม','openMwJob'],['🎯','เป้าหมาย','openGoals']].filter(x=>typeof window[x[2]]==='function');
+   const h=`<div class="dk-grp dkMw"><h5>🏙️ ยุคปัจจุบัน</h5><div class="dk-btns">${L.map(x=>`<button class="dk-btn" onclick="try{${x[2]}()}catch(e){}"><span class="dk-bi">${x[0]}</span><span class="dk-bt">${x[1]}</span></button>`).join('')}</div></div>`;const q=dr.querySelector('.dk-q');if(q)q.insertAdjacentHTML('afterend',h);else dr.insertAdjacentHTML('afterbegin',h)}}}catch(e){}return r}}
+window._b61={SHOP};
+})()}catch(e){console.error('block61',e)}
