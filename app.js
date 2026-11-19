@@ -42529,3 +42529,25 @@ const css=document.createElement('style');css.textContent='#pendBar.pbBot{positi
 window.pendPos=function(ev){try{if(ev)ev.stopPropagation();LS.set('murim_pendpos',pb()==='top'?'bottom':'top');pendBar()}catch(e){}};
 {const _pe=pendBar;pendBar=function(){const r=_pe.apply(this,arguments);try{const b=$('pendBar');if(b&&b.style.display!=='none'){b.classList.toggle('pbBot',pb()==='bottom');if(!b.querySelector('.pbPos'))b.insertAdjacentHTML('afterbegin',`<button class="pbPos" onclick="pendPos(event)">${pb()==='top'?'⬇ ย้ายลงล่าง':'⬆ ย้ายขึ้นบน'}</button>`)}}catch(e){}return r}}
 })()}catch(e){console.error('pendpos',e)}
+
+// ---------- เช็คเซฟบนคลาวด์ใหม่กว่าเครื่องนี้ (ไม่เขียนทับของเดิมเด็ดขาด — ถามก่อนแล้วนำเข้าเป็นช่องใหม่) ----------
+try{(()=>{
+const parse=c=>{try{return JSON.parse(decodeURIComponent(escape(atob(String(c).trim()))))}catch(e){return null}};
+async function cloudNewer(){try{
+ if(!onlineOK||!pid||!ctok||document.hidden)return;
+ if(Date.now()-LS.get('murim_cchk',0)<6*3600*1000)return;LS.set('murim_cchk',Date.now());
+ const seen=LS.get('murim_cseen',{});let found=null;
+ for(let n=1;n<=5;n++){
+  const loc=readSave?readSave(n):null,lt=loc&&loc.t||0;
+  if(!lt&&n>1)continue; // ช่องที่ไม่เคยมีในเครื่อง: ข้าม ยกเว้นช่อง 1
+  let j=null;try{j=await api('cload&p='+pid+'&tk='+ctok+'&k=s'+n)}catch(e){if(e&&e.http===404)continue;else return}
+  const d=j&&j.d?parse(j.d):null;if(!d||!d.S||!d.t)continue;
+  if(d.t>lt+10*60*1000&&seen[n]!==d.t&&d.S.alive!==false){found={n,d,t:d.t,lt,raw:j.d};break}
+ }
+ if(!found)return;
+ const nm=found.d.S.name||'ตัวละคร',ag=found.d.S.age;
+ island({big:1,pri:1,ms:12000,ic:'☁️',h:'เซฟบนคลาวด์ใหม่กว่าเครื่องนี้',t:`${nm} อายุ ${ag} (ช่อง ${found.n})`,d:found.lt?'แตะเพื่อนำเข้าเป็นช่องใหม่ (ไม่ทับเซฟเดิม)':'เครื่องนี้ไม่มีเซฟช่องนี้ แตะเพื่อนำเข้า',act:{t:'นำเข้า',f:()=>{try{const s2=LS.get('murim_cseen',{});s2[found.n]=found.t;LS.set('murim_cseen',s2);loadCode(found.raw)}catch(e){toast('นำเข้าไม่สำเร็จ')}}}});
+ const s3=LS.get('murim_cseen',{});s3[found.n]=found.t;LS.set('murim_cseen',s3);
+}catch(e){}}
+setTimeout(cloudNewer,9000);
+})()}catch(e){console.error('cnewer',e)}
