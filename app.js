@@ -41953,7 +41953,8 @@ const inSoul=()=>!!(S&&S.alive&&S.ch==='soul');
 const pure=()=>inSoul()&&!LS.get('murim_dlMix',0);
 // 1) ซ่อนเหตุการณ์สุ่มที่เป็นเรื่องยุทธ์ภพล้วน (สำนัก/ศิษย์/ชิงตำรา/ลัทธิ ฯลฯ)
 const RE=/สำนัก|ยุทธ์ภพ|ยุทธภพ|จอมยุทธ์|ศิษย์|ชิงตำรา|นิกาย|ลัทธิ|ปรมาจารย์|พรรค|เจ้าสำนัก/;
-const mark=()=>{for(const e of EVENTS){if(e._dl)continue;e._dl=1;try{if(e.dlMurim||RE.test(e.f.toString())){const c=e.c;e.c=function(x){return pure()?false:c.call(this,x)}}}catch(_){}}};
+const SVOK=/ch==='soul'|\.sv\b|svOk/;
+const mark=()=>{for(const e of EVENTS){if(e._dl)continue;e._dl=1;try{if(e.svOk||(!e.dlMurim&&SVOK.test(String(e.c))))continue;if(e.dlMurim||RE.test(e.f.toString())){const c=e.c;e.c=function(x){return pure()?false:c.call(this,x)}}}catch(_){}}};
 mark();window._dlPure=pure;
 // เหตุการณ์ที่ถูกเพิ่มทีหลัง (บล็อกที่โหลดถัดมา) ต้องถูกกรองด้วย → กรองซ้ำทุกครั้งก่อนข้ามปี
 {const _pyD=passYear;passYear=function(){try{mark()}catch(e){}return _pyD.apply(this,arguments)}}
@@ -44250,3 +44251,29 @@ EVENTS.push({w:6,cd:2,c:s=>{if(!(s&&s.alive&&s.ch==='soul'&&s.sv&&s.sv.aw===1))r
 {const _ch=choice;choice=function(t){try{if(on()&&/สถาบันจิตยุทธ์เปิดรับนักเรียน/.test(String(t||''))&&window._sv4){const g=S.sv;if(!g.ac&&S.age>=11&&S.age<=16)setTimeout(()=>{if(on()&&!choice._cur)window._sv4.examOffer()},300);return}}catch(e){}return _ch.apply(this,arguments)};Object.assign(choice,_ch)}
 window._sv6={A,CH};
 })()}catch(e){console.error('sv6',e)}
+
+// ---------- ⭕ วิญญาณยุทธ์ ระลอก 5: วงแหวนแยกของดวงจิตคู่ · ท่าผสานคู่ · ซ่อนเมนูยุทธภพในโหมดล้วน ----------
+try{(()=>{
+const B=window._blk34;if(!B)return;const {TIER,spNow}=B;
+const on=()=>!!(S&&S.alive&&S.ch==='soul'&&S.sv&&S.sv.aw===1);
+const twin=g=>!!(g&&g.sp&&g.sp.length>1&&!g.fused&&!g.dorm);
+const TYN={atk:'⚔️ โจมตี',def:'🛡️ ป้องกัน',sup:'🌿 สนับสนุน',ctrl:'🌀 ควบคุม',agi:'💨 ว่องไว'};
+// วงแหวนใหม่ของคนมีดวงจิตคู่ → เลือกว่าจะหลอมเข้าดวงไหน
+let asking=0;
+setInterval(()=>{try{if(!on()||asking)return;const g=S.sv;if(!twin(g)){g.rings.forEach(r=>{if(r.sp==null)r.sp=0});return}
+ if(g._spMig==null){g._spMig=1;g.rings.forEach((r,i)=>{if(r.sp==null)r.sp=i%2})}
+ const i=g.rings.findIndex(r=>r.sp==null);if(i<0||choice._cur||modalOpen)return;const r=g.rings[i];asking=1;
+ const P=g.sp.map(spNow),cnt=k=>g.rings.filter(x=>x.sp===k).length;
+ choice(`⭕ วงแหวนวงที่ ${i+1} — หลอมเข้าดวงจิตไหน`,`${TIER[r.t|0][1]} ${TIER[r.t|0][0]}ของ${esc(r.b||'')} ลอยอยู่ระหว่างดวงจิตทั้งสองของคุณ<br><span class="tag2">วงแหวนจะใช้ชื่อท่าตามดวงจิตที่รับไว้ · ทั้งสองดวงมีวงแหวนครบ 3 วงจะปลด <b>ท่าผสานคู่</b></span>`,
+  P.map((p,k)=>({t:`${p.ic} ${p.n} (มี ${cnt(k)} วง)`,s:`${TYN[p.t]||''} · ท่า「${p.n}·${r.sk||''}」`,noFate:1,f(){r.sp=k;asking=0;log(`⭕ วงแหวนวงที่ ${i+1} หลอมเข้า <b>${p.ic} ${p.n}</b> — ได้ท่า 「${p.n}·${esc(r.sk||'')}」`,'epic');combo()}})));
+ setTimeout(()=>{asking=0},60000)}catch(e){asking=0}},1500);
+function combo(){const g=S.sv;if(g.twinCombo||!twin(g))return;if([0,1].every(k=>g.rings.filter(x=>x.sp===k).length>=3)){g.twinCombo=1;const P=g.sp.map(spNow);S.power+=pctPow(.12);S.fame+=300;log(`🌀 <b>ท่าผสานคู่ปลดล็อก</b> — ${P[0].ic}${P[0].n} กับ ${P[1].ic}${P[1].n} หมุนวนเป็นหนึ่งเดียว 「${P[0].n}×${P[1].n}·สองดวงหนึ่งใจ」`,'myth',true);try{const d=LS.get('murim_ttl',{});const t='ผู้ครองดวงจิตคู่';if(!d[t]){d[t]={n:S.name,t:Date.now(),c:1};LS.set('murim_ttl',d)}}catch(e){}}}
+// หน้าดวงจิต: แยกวงแหวนตามดวงจิต
+{const _os=window.openSoul;window.openSoul=function(){const r=_os.apply(this,arguments);try{if(!on())return r;const g=S.sv;if(!twin(g))return r;const m=$('modal'),bk=m.querySelector('button[onclick="openSoulBook()"]');if(!bk||m.querySelector('.svTw'))return r;const P=g.sp.map(spNow);
+ bk.insertAdjacentHTML('beforebegin',`<div class="item svTw"><b>👯 วงแหวนแยกตามดวงจิต</b>${P.map((p,k)=>{const L=g.rings.map((x,i)=>[x,i]).filter(([x])=>x.sp===k);return`<div style="margin-top:4px">${p.ic} <b>${p.n}</b> · ${L.length} วง ${L.map(([x,i])=>`<span title="วงที่ ${i+1}" style="display:inline-block;width:14px;height:14px;border-radius:50%;border:3px solid ${TIER[x.t|0][2]};vertical-align:middle;margin-left:2px"></span>`).join('')}</div>`}).join('')}<span class="tag2">${g.twinCombo?'🌀 ท่าผสานคู่ปลดแล้ว':'ทั้งสองดวงมีครบ 3 วง → ปลดท่าผสานคู่'}</span></div>`)}catch(e){}return r}}
+// ท่าตอนดวล: วงแหวนของดวงไหน ใช้ชื่อดวงนั้น
+{const _dd=drawDuel;drawDuel=function(fin){const r=_dd.apply(this,arguments);try{if(!on()||!twin(S.sv))return r;const m=$('modal'),sk=m&&m.querySelector('.svSk');if(sk&&sk.textContent){const mm=/^วงที่ (\d+)/.exec(sk.textContent);if(mm){const x=S.sv.rings[+mm[1]-1];if(x&&x.sp!=null){const p=spNow(S.sv.sp[x.sp]);sk.textContent=`วงที่ ${mm[1]} 「${p.n}·${x.sk||''}」`}}}}catch(e){}return r}}
+// ซ่อนเมนูยุทธภพในโหมดล้วน (สำนัก · ทำเนียบสิบสำนัก · สุ่มคัมภีร์ยุทธ์ · ยุทธภพของฉัน)
+const HIDE=/^(openFaction|openRanking|gachaArt|openWuxia)\(/;
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(!(window._dlPure&&window._dlPure()))return r;const m=$('modal');m.querySelectorAll('button').forEach(b=>{const oc=(b.getAttribute('onclick')||'').replace(/^closeM\(\);/,'');if(HIDE.test(oc))b.style.display='none'})}catch(e){}return r}}
+})()}catch(e){console.error('sv7',e)}
