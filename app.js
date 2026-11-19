@@ -46848,3 +46848,12 @@ function fix(el){try{if(!el||!/^(INPUT|TEXTAREA)$/.test(el.tagName)||/^(checkbox
 document.addEventListener('focusin',e=>fix(e.target),true);document.addEventListener('input',e=>fix(e.target),true);
 setInterval(()=>{try{document.querySelectorAll('#chatIn,#modal input,#modal textarea').forEach(fix)}catch(e){}},2000);
 })()}catch(e){}
+
+// ❓ หน้าคัมภีร์ฤดูกาล: อธิบาย "ตำนานหมาป่าเงิน (5 บท)" และ "ชาติกำเนิดสายเลือดหมาป่าเงิน"
+try{(()=>{const css=document.createElement('style');css.textContent=`.spX{margin:8px 0;padding:8px 10px;border-radius:12px;background:#ffffff10;border:1px solid #9fd8ff44;color:#e8f2f8;font-size:12.5px;line-height:1.55}.spX summary{cursor:pointer;font-weight:800;color:#bfe6ff}.spX b{color:#fff}`;document.head.appendChild(css);
+const TX={st:`<b>📖 ตำนานหมาป่าเงิน คืออะไร</b><br>เนื้อเรื่องประจำฤดูหิมะเหนือ มี <b>5 บท</b> อ่านเหมือนนิยายสั้น — แต่ละบทเปิดเมื่อคัมภีร์ถึงขั้นที่กำหนด · บทที่ 1–4 ให้เลือกทาง 3 ทาง (เลือกแล้วเปลี่ยนไม่ได้) · <b>บทที่ 5 เป็นตอนจบ 3 แบบ</b> ขึ้นกับทางที่เลือกในบท 1–4 · เส้นฟรีอ่านต้นบทได้ ฉบับเต็มอยู่ในคัมภีร์ทอง · เป็นเรื่องให้อ่าน ไม่มีผลต่อพลังหรืออันดับ`,
+ tr:`<b>🐺 ชาติกำเนิด "สายเลือดหมาป่าเงิน" คืออะไร</b><br>รางวัล<b>ขั้น 20 ของคัมภีร์ทอง</b> · รับแล้ว ทุกชีวิตที่เริ่มในช่วงฤดูนี้มี<b>โอกาส 25%</b> เกิดมาพร้อมสายเลือดนี้: ลมปราณ +2 · พลังชีวิต +30 · ชื่อเสียงและเสน่ห์เล็กน้อย + ฉากเกิดพิเศษ (หิมะหยุดตก มีรอยเท้าหมาป่ารอบบ้าน) · ได้เฉพาะช่วงที่ฤดูยังเปิดอยู่`};
+const SEEN='murim_spXseen';
+{const _o=window.openSP;if(typeof _o==='function')window.openSP=async function(tab){const r=await _o.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='sp')return r;const tb=m.querySelector('.tb .on'),k=(tb&&/openSP\('(\w+)'\)/.exec(tb.getAttribute('onclick')||'')||[])[1]||'tr';const t=TX[k];const body=$('spBody');if(!t||!body||body.querySelector('.spX'))return r;
+ const s=LS.get(SEEN,{})||{},first=!s[k];body.insertAdjacentHTML('afterbegin',`<details class="spX"${first?' open':''}><summary>${first?'💡 ':'❓ '}${k==='st'?'ตำนาน 5 บทคืออะไร':'ชาติกำเนิดหมาป่าเงินคืออะไร'}</summary><div style="margin-top:4px">${t}</div></details>`);if(first){s[k]=1;LS.set(SEEN,s)}}catch(e){}return r}}
+})()}catch(e){}
