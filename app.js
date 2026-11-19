@@ -44,8 +44,9 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='19.6';
+const VERSION='20.0';
 const CHANGELOG=[
+  {v:'20.0',d:'19 พ.ย. 2026',l:['❄ <b>คัมภีร์ฤดูกาล: ฤดูหิมะเหนือ</b> — 30 ขั้น เส้นฟรีทุกคน · คัมภีร์ทอง 59฿ · ฉบับจารึก 129฿ (ข้าม 10 ขั้น + ชุดจักรพรรดิเหมันต์ + จารึกชื่อ) · แต้มจากภารกิจรายวัน/สัปดาห์ จบชีวิต เหตุการณ์ฤดูหิมะ บอสโลก ประกาศิตฟ้า ศึกสำนัก · เริ่มช้ามีตัวช่วยตามทัน · ปุ่มเข้าที่หน้าแรกและเมนู','🐺 <b>ตำนานหมาป่าเงิน</b> — เรื่องฤดูกาล 5 บท ทางเลือก 3 ทางทุกบท ตอนจบ 3 แบบตามที่เลือก · ❄ เหตุการณ์ฤดูหิมะ 6 แบบระหว่างใช้ชีวิต · ชาติกำเนิด “สายเลือดหมาป่าเงิน”','🖼️ <b>ของแต่งฤดูหิมะเหนือ</b> — กรอบ ฉายา ธีมแชท 3 ระดับ: ลมหนาว (ฟรี) · หมาป่าเงินแสงเหนือ (หัวหมาป่าตาเรือง แสงเหนือพลิ้ว หิมะร่วง) · จักรพรรดิเหมันต์ (มงกุฎน้ำแข็ง ปีกผลึก วงแสงเหนือหมุน)','📕 <b>นิยายปกแข็ง</b> — เปลี่ยนชีวิตที่จบแล้วเป็นหนังสือปกผ้าลายทอง แบ่งบทตามวัย ภาพตัวละคร 4 ช่วงอายุ เก็บถาวร แชร์ลิงก์ให้คนอื่นอ่าน · เล่มละ 19฿ · ผู้สนับสนุนพิเศษฟรีเดือนละ 3 เล่ม · เปิดจากหน้าดูชีวิต','⭐ <b>สิทธิ์ผู้สนับสนุน</b> — เปลี่ยนภารกิจรายวันได้เพิ่ม (39 = 2 ครั้ง · 99 = 3 ครั้ง) · ภารกิจข้อที่ 4 ได้ตั๋วธรรมดา · ได้ตั๋วล็อกชะตาทุกรอบ 30 วัน · 🏮 หอผู้ก่อตั้งมีระเบียงผู้อุปถัมภ์รายเดือน ป้ายเปลี่ยนวัสดุตามเดือนที่สนับสนุน + สมุดรายนามประจำเดือน','📜 <b>ภารกิจบัญชี</b> — รายวัน 52 แบบ · รายสัปดาห์ 30 แบบ หมุนไม่ซ้ำ · สมุดภารกิจรายเดือน · สายตำนาน · ภารกิจลับ · ⚡ ประกาศิตฟ้า (คนเดียวทั้งเว็บ) · 🐉 บอสโลกช่วยกันตี · ⚔️ ศึกสำนักรายเดือน','💎 <b>ร้านค้ารวม + หน้าแรกใหม่</b> — ตั๋ว สมาชิก ตั๋วล็อก ของฟรี ของแต่งอยู่ที่เดียว · การ์ดภารกิจ/ร้านค้า/ออนไลน์ · มือถือมีแถบล่าง 5 ปุ่ม · 🎨 ธีมทองราตรีเป็นค่าเริ่มต้น · เลือกโลกแบบการ์ดปัด กดครั้งเดียวเกิด','🎯 <b>เป้าหมาย 2.0</b> — 3 ระดับ ทองแดง/เงิน/ทอง ได้รางวัลทุกระดับ · ชะตาอ่อนได้เป้าง่ายลง · เป้าหมายใหม่ 11 ข้อ + สัตว์อสูร 6 ข้อ + วิญญาณยุทธ์ 13 ข้อ · เป้าหมายที่พังเปลี่ยนได้ฟรี 1 ครั้ง','🎲 <b>ชะตาดี/ร้ายมีเกรด S+ ถึง D</b> — ชะตาดีหายากมีโล่สวรรค์คุ้มตัวตอนเด็ก · ชะตาร้ายทุกแบบมีภารกิจแก้ชะตาที่เปลี่ยนเป็นพลังได้','📌 <b>ติดตามเควส</b> — แถบติดตามบนจอ บอกความคืบหน้า ปีที่เหลือ วิธีทำ · ตัวเลือกที่ช่วยเควสมีป้ายบอก · เควสที่ทำไม่ได้แล้วยกเลิกเองไม่เสียอะไร · ความคืบหน้าไม่ถอยหลัง','💰 <b>ใช้เงินให้เกิดประโยชน์</b> — คฤหาสน์ตระกูล ทรัพยากรฝึกฝน ค่ายกลรับทัณฑ์ บ่อนพนันดวล ตลาดมืดประจำปี คลังตระกูลส่งต่อชาติหน้า · รวยมากมีเรื่องตามมา','👶 <b>ลูกหลาน</b> — สืบพรสวรรค์จากพ่อหรือแม่ อาจเก่งกว่า · อายุขัยตามสายเลือด ลูกผู้ฝึกตนไม่ตายตอน 60 อีก','🎮 <b>มินิเกม</b> — มีหน้า ▶ แตะเพื่อเริ่ม · หน้าต่างอื่นรอคิวจนเล่นจบ ไม่ทำให้เกมจบเอง · ต้องเล่นเอง เล่นแย่เสียเลือดเล็กน้อย','🖥️ <b>จอคอมใหม่</b> — หน้าสุ่มกำเนิด 3 คอลัมน์ (ตัวละครหลายวัย + ประวัติสุ่ม) · กราฟชีวิต + คนสำคัญ · แผงขวาเป็นแท็บ · ภาพฉากปรับได้ 3 ขนาด (V) · ย่อแผงโฟกัส (F) · คีย์ลัด ?','⭕ <b>ทวีปจิตวิญญาณยุทธ์</b> — หน้าสุ่มกำเนิดใหม่: แคว้นที่เกิด ครอบครัว ลางดวงจิต ดวงจิตพ่อแม่ (มีผลจริงตอนปลุก) ล็อกด้วยตั๋วได้ · ดูสด/ทำเนียบแสดงระดับวิญญาณและวงแหวน','❤️ <b>พลังชีวิตไม่มีเพดานแล้ว</b> — ตัวเลขยาวแสดงแบบย่อ K/M/B · 😈 สายมารผ่านทัณฑ์ด้วยใจมารได้ · 🌋 แดนเทพ: พลังล้นเปลี่ยนเป็นอายุขัย/ปราณเทพ/มรดก · 🏁 จบชีวิตนี้เองได้จากเมนู','🛠️ <b>แก้บั๊ก</b> — แถบ ⏸ เวลาหยุดรอไม่กระตุก · ภารกิจยุคปัจจุบันจากแถบล่างเปิดถูกหน้า · ความหิวแดนมารบอกวิธีแก้และคืนเลือด · เกษียณยุคปัจจุบันไม่เด้งทุกปี · สีตัวอักษรหลุดใน 30+ หน้าต่าง']},
   {v:'19.6',d:'19 พ.ย. 2026',l:['⭕ <b>ทวีปจิตวิญญาณยุทธ์ ครบทุกระลอก</b> — ชื่อระดับของทวีป (นักวิญญาณฝึกหัด → จอมวิญญาณ → … → จอมจิต → เทพ) · ระดับ 91 ได้ฉายาจอมจิตของตัวเอง · 5 แคว้นมีสัตว์และเหตุการณ์เฉพาะ · สถาบันประจำแคว้น · เล่นเดี่ยว/คู่หู/ทีม · เนื้อเรื่องหลักสุ่ม 1 ใน 4 ต่อชีวิต · 🗡️ กระบี่ผ่าฟ้า ดวงจิตอันดับหนึ่ง · อายุขัยตามระดับจิต (เทพ = อมตะ)','🎒 <b>ถุงวิญญาณ</b> — สมุนไพรเซียน 6 ชนิด (เก็บไว้กินทีหลัง) · อาวุธลับใช้เองตอนดวล · เครื่องมือวิญญาณ (ถุงเก็บ · ปืนใหญ่ · ปีกกันตาย) · กระดูกวิญญาณครบ 6 ชิ้นได้โบนัสชุด','🏆 <b>เหตุการณ์ใหญ่ทวีปวิญญาณ</b> — การแข่งขันทั่วทวีป 4 รอบ · เมืองสังหาร · บททดสอบเทพ 9 ขั้น (ทางที่สองสู่เทพ) · สัตว์วิญญาณบุกเมือง · สงครามสองจักรวรรดิ','🎮 <b>มินิเกมทุกโลกทุกโหมด</b> — ยุทธภพ เซียน แดนเทพ ยุคปัจจุบันแยกตามโลก (ฮันเตอร์ ผีไทย ซอมบี้ หอคอย ฯลฯ) · ทวีปวิญญาณ 5 เกมใหม่ (ซับวงแหวน ซัดเข็ม ผสานทักษะ ตามรอยสัตว์ แยกสมุนไพร) · ตัวปรับสุ่ม · โอกาสทอง · คอมโบ · ความชำนาญ · สนามฝึกประจำวันมีอันดับ','🏙️ <b>ยุคปัจจุบัน</b> — 3 ปีแรกเป็นช่วงตั้งตัวพร้อมเป้าหมายทีละข้อ · ขั้นในยุคใหม่ · ฟีดโซเชียล อาชีพเสริม สังเวียนใต้ดิน ย่านในเมือง · ป๊อปอัปน้อยลง (ไม่เกินปีละ 1) · เมือง/ร้านค้ากดได้บนมือถือ','🔒 <b>ล็อกชะตา</b> — ในหน้าสุ่มเกิด ล็อกพรสวรรค์ ชาติกำเนิด พรสวรรค์พิเศษ หรือยุค ค้างไว้จนเริ่มชีวิต (สูงสุด 2 อย่าง) · ⏪ ย้อนกลับไปชะตาก่อนหน้า · ซื้อตั๋วล็อกได้ในร้านสนับสนุน','⚡ <b>ปุ่มสุ่มรัวในหน้าสุ่มเกิด</b> — ผู้สนับสนุนพิเศษเลือกเป้า % และเก็บชะตาที่ดีที่สุดระหว่างทาง · ผู้ก่อตั้งตั้งตัวกรองละเอียด เป้า 1 ใน X งบตั๋ว ดูโอกาสเจอก่อนกด และบันทึกตัวกรองได้ 3 ชุด','🎁 <b>หน้ารับของล็อกอิน</b> — ผู้มาใหม่ 7 วัน (วันที่ 7 ตั๋วทอง 5 ใบ + กรอบ + ฉายา) และประจำ 14 วัน · ขึ้นค้างจนกว่าจะกดรับ · ☯️ แต้มวิญญาณรวมเข้าคลังกรรม (1 แต้ม = 100 กรรม)','💡 <b>อธิบายเองโดยไม่ต้องถาม</b> — เปิดระบบไหนครั้งแรกจะมีกล่อง “ระบบนี้คืออะไร” · บทเรียนโลกเซียน แดนเทพ ระบบ และภาคเรื่องราวขึ้นตอนเล่นจริง · ทวีปวิญญาณมีคู่มือและบทสอนของตัวเอง · 📚 คู่มือหัวข้อที่เคยหายกลับมาครบ · 🧭 ปุ่ม “ตอนนี้ควรทำอะไร”','⏳ <b>ไม่ให้ชีวิตยืดเยื่อ</b> — กรรมที่หว่านไว้ย้อนมาหาในอีกหลายปี · ช่วงเวลาสวรรค์เปิด · คู่แข่งตลอดชีวิตบนหน้าจอ · ความท้าทายประจำสัปดาห์','💾 <b>เซฟ</b> — ล็อกอิน Google แล้วซิงก์ทุกช่องลื่นขึ้น · รหัสยาวกดคัดลอกได้ทุกเครื่อง · นำเข้ารหัสที่คัดลอกเพี้ยนได้','❤️ <b>เพดานพลังชีวิตตามโลก</b> — ยุทธภพ/ยุคปัจจุบัน/วิญญาณยุทธ์ 1,000 · เซียน 10,000 · แดนเทพ 100,000 (เซฟเดิมปรับลงโดยคงสัดส่วนเลือด) · 🐾 สัตว์อสูรรอดง่ายขึ้น พักฟื้นได้จริง','🛠️ <b>แก้บั๊ก</b> — เกมค้างไม่เดินเรื่องหลังหน้าต่างดวลถูกทับ · ระบบออนไลน์ตอบเร็วขึ้นเวลาเซิร์ฟเวอร์สะดุดและต่อใหม่เอง · หน้าแรกไม่รีโหลดเองระหว่างเล่น · ฉากทำลายล้างหลังชนะลานประลองในเมือง · ประมูลทั่วยุทธภพไม่ขึ้นในทวีปวิญญาณ']},
   {v:'19.5',d:'19 พ.ย. 2026',l:['🎟️ <b>ตั๋วสุ่มเกิดฟรี</b> — เล่นจนจบชีวิต (อายุ 18+) ได้ตั๋วสุ่มเกิดฟรี 1 ใบ · ไม่เกิน 3 ใบ/วัน · ถือได้ 10 ใบ · ใช้ก่อนตั๋วที่ซื้อ','🥇 <b>ตั๋วทอง</b> — สุ่มเกิดด้วยตั๋วที่ซื้อรับประกันช่องชะตาดี และใบที่ 10 รับประกันตำนาน','📜 <b>บันทึกวงศ์ตระกูล</b> (ในเมนู) — สถิติทุกชีวิต + เป้าหมายข้ามชีวิต 10 ข้อ เห็นความคืบหน้า ใกล้สำเร็จมีชิป 🎯 บนเกาะ · ฉายาที่ทำได้ขึ้นบนการ์ดแชร์','☯️ <b>มรดกจากชาติก่อน</b> — จบชีวิตได้กรรมโบนัสจากเป้าหมายและอายุ ใช้คลังกรรมแลกของติดตัวให้ชีวิตหน้า (เงิน ปัญญา วิชา ชื่อเสียง)','⚔️ <b>เหตุการณ์ใหญ่กลางเกม</b> — อายุ 30–65 ทุก ~9 ปี เจอสงครามสำนัก ศึกชิงประมุข ทุพภิกขภัย หรือสหายเก่าขอความช่วย','👋 <b>ผู้เล่นใหม่และคนที่กลับมา</b> — ปุ่ม ▶ ไปต่อชีวิตใหญ่ที่หน้าแรก · ยินดีต้อนรับกลับเมื่อห่างหาย 7 วัน · ของขวัญต้อนรับ 7 วันแรก · เช็คอินให้กรรมเข้าคลัง · แจ้งเรื่องที่รออยู่ตอนเล่นต่อ · ป้ายนำทางชีวิตแรก','🏟️ <b>ลานประลองหมื่นเงา</b> — เปิดเกมมาแจ้งเตือนถ้ามีคนท้าเงาของคุณระหว่างไม่อยู่','☁️ <b>เซฟคลาวด์ใหม่กว่า</b> — ถ้าคลาวด์ใหม่กว่าเครื่องนี้ จะถามก่อนแล้วนำเข้าเป็นช่องใหม่ ไม่ทับเซฟเดิม','🛠️ <b>แก้บั๊ก</b> — วิชาเกินขีดจำกัด (หลอมรวมอัตโนมัติ) · ปุ่มซ่อน/เปิดข้อมูลทำเนียบค้างหลังตาย · กรอบประตูนรกบังเมนู · เด้งไปหน้าระบบเอง · ปุ่มชำระแค้นในบัญชีแค้นตระกูล · ปุ่ม ✕ หาย · ความจำเสื่อมแล้ววิชาไม่คืน · เลือกตำแหน่งแถบตัวเลือกที่ย่อไว้ได้ บน/ล่าง','⭕ <b>จากผู้เล่น</b> — ตั้งค่า AI คัดลอกวิชา · ล่าเปลวไฟสวรรค์ · พรสวรรค์แยกตามโลก · ล็อกชะตาตอนเกิด · สุ่มเกิดของสัตว์ · เส้นทางราชสำนักของสามัญชน']},
   {v:'19.1',d:'18 พ.ย. 2026',l:['⭕ <b>ทวีปจิตวิญญาณยุทธ์ รอบ 2</b> — ดวงจิต 5 สายมีผลจริง · ท่าวงแหวนลดพลังศัตรูได้จริง · เหตุการณ์เฉพาะทวีปกว่า 30 แบบ (งานของคนมีดวงจิต · สถาบัน · ทะเบียนศาลา · หนี้ · เพื่อนร่วมทีม · ลูกปลุกจิต · นักล่ากระดูกวิญญาณ ฯลฯ)','🤝 <b>ไม่ต้องฆ่าก็ได้</b> — สยบสัตว์อสูรเป็นสัตว์คู่ใจ · ซื้อวงแหวนตลาดมืด (อาจปลอม) · ไว้ชีวิตสัตว์ที่แพ้ แล้วมันอาจกลับมา · ฆ่ามากไปเผ่าสัตว์จะมาแก้แค้น','🌀 <b>ดวงจิตคู่แย่งร่าง</b> — กดให้หลับ / หลอมรวม / ปล่อยไป · 💞 <b>ดวงจิตมีนิสัยและพูดได้</b> ใจตรงกันแล้วฝึกเร็ว','🌑 <b>ไร้ดวงจิต</b> — โอกาส 4% ปลุกไม่ขึ้น เลือกเป็นช่าง หมอ พ่อค้า หรือนักวิชาการ · ⚡ <b>ปลายทางหลังวงที่ 9</b> — ทดสอบเทพ / ทุบวงแหวน / ถ่ายทอดให้ชีวิตถัดไป']},
@@ -43249,6 +43250,7 @@ function play(id,o,cb){const g=G[id];if(!g)return false;o=o||{};const lv=o.daily
   const sk=$('m2S');if(sk)sk.onclick=()=>fin(.45,1);
   iv=setInterval(()=>{if(st.done)return;if($('modal').dataset.k!=='mg2'){fin(inst.sc(),0);return}n--;const e=$('m2T');if(e)e.textContent=Math.max(0,n);if(n<=0)fin(inst.sc(),0)},1000)};
  const kd=e=>{if((e.key===' '||e.key==='Enter')&&!inst&&$('modal').dataset.k==='mg2'){e.preventDefault();e.stopPropagation();go()}};
+ if(!B){fin(.45,1);return true}
  if(o.now)go();else{B.innerHTML=`<div class="m2Rdy"><div class="m2RdyI">${g.ic}</div><div class="m2RdyH">${o.sub||g.how}</div><button class="pbtn m2Go" type="button">▶ แตะเพื่อเริ่ม</button><div class="tag2" style="margin-top:6px">มี ${T} วินาที · เวลาเริ่มนับเมื่อกดเริ่ม</div><button class="gbtn m2Sk" type="button" style="margin-top:8px;font-size:12px;padding:5px 12px">ข้ามเกมนี้</button></div>`;
   B.querySelector('.m2Go').onclick=e=>{e.stopPropagation();go()};B.querySelector('.m2Sk').onclick=e=>{e.stopPropagation();fin(.45,1)};document.addEventListener('keydown',kd,true);
   iv=setInterval(()=>{if(st.done)return;if(!inst&&$('modal').dataset.k!=='mg2'){fin(.45,1)}},500)}
@@ -44963,9 +44965,12 @@ function cyc(pool,L,nw,tag,c){const key=tag+c;if(CYC[key])return CYC[key];const 
 const DIX=()=>Math.floor((Date.now()+7*3600e3)/864e5);
 const dayQ=di=>{const c=Math.floor(di/16);return cyc(DQ,16,12,'d',c)[di-c*16]};
 const wkQ=wi=>{const c=Math.floor(wi/10);return cyc(WQ,10,8,'w',c)[wi-c*10]};window._aqRot={dayQ,wkQ,DQ,WQ};
+const vipT=()=>{try{const v=LS.get('murim_vip',null)||{},t=Date.now();return v.u?3:(+v.e2||0)>t?2:(+v.e1||0)>t?1:0}catch(e){return 0}};window._vipT=vipT;
+const rrMax=k=>1+(k==='d'?Math.min(2,vipT()):0);
 function roll(d){const td=TD(),wk=WK(),di=DIX(),wi=Math.floor((di-((TH(Date.now()).getUTCDay()+6)%7))/7);
  if(!d.d||d.d.p!==td)d.d={p:td,rr:0,q:dayQ(di).map(q=>({id:q.id,v:0}))};
  if(!d.w||d.w.p!==wk)d.w={p:wk,rr:0,q:wkQ(wi).map(q=>({id:q.id,v:0}))};
+ if(vipT()>=1&&!d.d.q.some(q=>q.x4)){const nw=pick(DQ.filter(q=>!q.g),1,'v4'+td+pidS(),d.d.q.map(q=>q.id).concat(d.d.q.map(q=>(defOf('d',q.id)||{}).x).filter(Boolean)))[0];if(nw)d.d.q.push({id:nw.id,v:0,x4:1})}
  return d}
 const defOf=(k,id)=>(k==='d'?DQ:WQ).find(q=>q.id===id);
 const qT=q=>typeof q.t==='function'?q.t():q.t;
@@ -44973,7 +44978,7 @@ const qT=q=>typeof q.t==='function'?q.t():q.t;
 let syncing=0;
 async function sync(){if(syncing||!on())return;syncing=1;try{const d=roll(st());let ch=0;
  for(const k of ['d','w']){const P=d[k];for(const q of P.q){if(q.ok&&!q.sy){try{const j=await api('aq',{o:'pt',k,p:P.p,q:q.id});if(j&&(j.ok||j.dup||j.cap)){q.sy=1;ch=1;if(j.bp!=null)d.bp={m:MO(),v:j.bp}}if(j&&j.err==='period'){q.sy=1;ch=1}}catch(e){if(e&&e.message==='rate')break}}}
-  if(P.q.every(q=>q.ok&&q.sy)&&!P.al){try{const j=await api('aq',{o:'all',k,p:P.p});if(j&&(j.ok||j.dup||j.err==='period')){P.al=1;ch=1;if(j.ok){if(k==='d'){LS.set('murim_aqbless',1);pop('📜','ภารกิจรายวันครบ!',`${tkTx(j.f,0)} + พรภารกิจติดตัวชีวิตหน้า`,1)}else pop('🗓️','ภารกิจรายสัปดาห์ครบ!',tkTx(0,j.g),1);try{if(window._RR){if(j.f)window._RR.f=(+window._RR.f||0)+j.f;if(j.g)window._RR.c=(+window._RR.c||0)+j.g}}catch(e){}}}}catch(e){}}}
+  if(P.q.filter(q=>!q.x4).every(q=>q.ok&&q.sy)&&!P.al){try{const j=await api('aq',{o:'all',k,p:P.p});if(j&&(j.ok||j.dup||j.err==='period')){P.al=1;ch=1;if(j.ok){if(k==='d'){LS.set('murim_aqbless',1);pop('📜','ภารกิจรายวันครบ!',`${tkTx(j.f,0)} + พรภารกิจติดตัวชีวิตหน้า`,1)}else pop('🗓️','ภารกิจรายสัปดาห์ครบ!',tkTx(0,j.g),1);try{if(window._RR){if(j.f)window._RR.f=(+window._RR.f||0)+j.f;if(j.g)window._RR.c=(+window._RR.c||0)+j.g}}catch(e){}}}}catch(e){}}}
  const L=d.L;for(const g of LG){if(d.lgg[g.id]||g.v(L)<g.n)continue;try{const j=await api('aq',{o:'lg',l:g.id});if(j&&(j.ok||j.dup)){d.lgg[g.id]=1;ch=1;if(j.ok){if(g.fr)frGive(g.fr);if(g.k)kAdd(g.k);pop(g.ic,'สายตำนาน: '+g.t,[g.fr?'กรอบใหม่':'',g.k?`กรรม +${g.k}`:'',j.g?tkTx(0,j.g):''].filter(Boolean).join(' + '),1)}}}catch(e){}}
  for(const s of SEC){const v=d.sec[s.id];if(v&&v!==2){try{const j=await api('aq',{o:'sec',s:s.id});if(j&&(j.ok||j.dup||j.ok===0)){d.sec[s.id]=2;ch=1}}catch(e){}}}
  if(ch)sv(d)}finally{syncing=0}dot()}
@@ -45091,14 +45096,14 @@ let TAB='d';
 const cd=ms=>{ms=Math.max(0,ms);const h=Math.floor(ms/3600e3),m=Math.floor(ms%3600e3/60e3);return h>=24?`${Math.floor(h/24)} วัน ${h%24} ชม.`:h?`${h} ชม. ${m} นาที`:`${m} นาที`};
 const msToMid=()=>{const t=TH(Date.now());return 864e5-(t.getUTCHours()*3600e3+t.getUTCMinutes()*60e3+t.getUTCSeconds()*1e3)};
 function qRow(k,q,i,P){const D=defOf(k,q.id);if(!D)return'';const pc=Math.min(100,(q.v||0)/D.n*100);
- return`<div class="aqQ ${q.ok?'ok':''}"><span class="i">${q.ok?'✓':D.ic}</span><div class="m"><b>${qT(D)}</b><small>${q.ok?(q.sy?'สำเร็จแล้ว':'⏳ กำลังส่งรับรางวัล'):`${fmt(q.v||0)} / ${fmt(D.n)}${D.u?' '+D.u:''}`}</small><div class="aqBar"><i style="width:${pc}%"></i></div></div><span class="aqPill">☯️ +${k==='d'?D.k:WK_K}</span>${!q.ok&&!P.rr?`<button class="aqRr" title="เปลี่ยนข้อนี้" onclick="aqReroll('${k}',${i})">🔄</button>`:''}</div>`}
-const head=()=>{const d=roll(st()),m=MO(),bp=(d.bp&&d.bp.m===m)?d.bp.v:0,dn=d.d.q.filter(q=>q.ok).length,wn=d.w.q.filter(q=>q.ok).length;
+ return`<div class="aqQ ${q.ok?'ok':''}"><span class="i">${q.ok?'✓':D.ic}</span><div class="m"><b>${qT(D)}</b><small>${q.ok?(q.sy?'สำเร็จแล้ว':'⏳ กำลังส่งรับรางวัล'):`${fmt(q.v||0)} / ${fmt(D.n)}${D.u?' '+D.u:''}`}</small><div class="aqBar"><i style="width:${pc}%"></i></div></div><span class="aqPill">${q.x4?'⭐ 🎫+1':'☯️ +'+(k==='d'?D.k:WK_K)}</span>${!q.ok&&(P.rr|0)<rrMax(k)?`<button class="aqRr" title="เปลี่ยนข้อนี้" onclick="aqReroll('${k}',${i})">🔄</button>`:''}</div>`}
+const head=()=>{const d=roll(st()),m=MO(),bp=(d.bp&&d.bp.m===m)?d.bp.v:0,dn=d.d.q.filter(q=>q.ok&&!q.x4).length,wn=d.w.q.filter(q=>q.ok).length;
  return`<div class="aqHead"><span class="lg">📜</span><div><h3>ภารกิจ</h3><small>${HQS&&HQS.ok?(HQS.ph==='cd'?`⚡ ประกาศิตรอบนี้มีผู้พิชิตแล้ว`:`⚡ ประกาศิตฟ้า「${(HQ[HQS.q]||{}).n}」ยังรอผู้พิชิต`):'ทำภารกิจ รับตั๋ว รับกรอบ'}</small></div></div>
  <div class="aqSum"><div><b>${dn}/3</b><span>📅 วันนี้</span></div><div><b>${wn}/3</b><span>🗓️ สัปดาห์นี้</span></div><div><b>${Math.min(30,Math.floor(bp/4))}/30</b><span>📖 ขั้นสมุด</span></div></div>`};
 const tabs=()=>`<div class="aqTabs">${[['d','📅 รายวัน'],['w','🗓️ สัปดาห์'],['b','📖 สมุด'],['hq','⚡ ประกาศิตฟ้า'],['wb','🐉 บอสโลก'],['sw','⚔️ ศึกสำนัก'],['l','🏆 ตำนาน'],['s','❓ ลับ']].map(([k,t])=>`<button class="${TAB===k?'on':''}" onclick="openAQ('${k}')">${t}</button>`).join('')}</div>`;
 window.openAQ=async function(tab){if(tab)TAB=tab;const d=roll(st());sv(d);let h='';
  if(TAB==='d'||TAB==='w'){const P=d[TAB],all=P.q.every(q=>q.ok);
-  h=`<div class="aqNote">${TAB==='d'?`⏳ รีเซ็ตใน ${cd(msToMid())} · 🔄 เปลี่ยนข้อได้วันละ 1 ครั้ง`:'⏳ รีเซ็ตทุกวันจันทร์ · 🔄 เปลี่ยนข้อได้สัปดาห์ละ 1 ครั้ง'}</div>${P.q.map((q,i)=>qRow(TAB,q,i,P)).join('')}
+  h=`<div class="aqNote">${TAB==='d'?`⏳ รีเซ็ตใน ${cd(msToMid())} · 🔄 เปลี่ยนข้อได้วันละ ${rrMax('d')} ครั้ง${vipT()?' (สิทธิ์ผู้สนับสนุน)':''}${d.d.q.some(q=>q.x4)?' · ⭐ ข้อที่ 4 ของผู้สนับสนุน: ได้ตั๋วธรรมดา 1 ใบ':''}`:'⏳ รีเซ็ตทุกวันจันทร์ · 🔄 เปลี่ยนข้อได้สัปดาห์ละ 1 ครั้ง'}</div>${P.q.map((q,i)=>qRow(TAB,q,i,P)).join('')}
   <div class="aqRw"><div>${TAB==='d'?'ครบ 3 ข้อ: <b>🎫 ตั๋วธรรมดา 1 ใบ</b> + <b>พรภารกิจ</b> (ชีวิตหน้าเริ่มพร้อมเงินและปราณ) + แต้มสมุด':'ครบ 3 ข้อ: <b>🎟️ ตั๋วทอง 1 ใบ</b> · ทุกข้อได้แต้มสมุด 3'}${all?(P.al?'<br>✅ <b>รับแล้ว</b>':'<br>⏳ กำลังส่ง…'):''}</div></div>
   ${TAB==='d'?`<div class="aqNote">🔄 โหมดแห่งวัน: <b style="color:#ffd86a">${mday()[1]}</b> · นับทั้งตอนกดเองและเล่นอัตโนมัติ</div>`:''}${on()?'':'<p class="aqNote">⚠️ ออฟไลน์อยู่ — ความคืบหน้าเก็บไว้ ส่งรับตั๋วเมื่อกลับมาออนไลน์</p>'}`}
  else if(TAB==='b'){const m=MO(),bp=(d.bp&&d.bp.m===m)?d.bp.v:0,got=d.bk[m]||[],tier=Math.min(30,Math.floor(bp/4));const RW=t=>t===30?'🖼️+🎟️':t===20?'🎟️':t===10?'🎫×2':t%5===0?'☯️25':'☯️10';
@@ -45111,8 +45116,8 @@ window.openAQ=async function(tab){if(tab)TAB=tab;const d=roll(st());sv(d);let h=
  else if(TAB==='wb'){modal(`<div class="aqWrap"><button class="xbtn" onclick="closeM()">✕</button>${head()}${tabs()}<div class="aqCard tag2" style="text-align:center">✨ กำลังเปิดฟ้า…</div></div>`,'aq');await wbLoad();if($('modal').dataset.k!=='aq'||TAB!=='wb')return;h=wbHtml()}
  else if(TAB==='sw'){modal(`<div class="aqWrap"><button class="xbtn" onclick="closeM()">✕</button>${head()}${tabs()}<div class="aqCard tag2" style="text-align:center">✨ กำลังเปิดฟ้า…</div></div>`,'aq');try{SW=await api('sw')}catch(e){SW=null}if($('modal').dataset.k!=='aq'||TAB!=='sw')return;h=swHtml()}
  modal(`<div class="aqWrap"><button class="xbtn" onclick="closeM()">✕</button>${head()}${tabs()}${h}</div>`,'aq');try{const o=$('modal').querySelector('.aqTabs .on');if(o)o.parentNode.scrollLeft=o.offsetLeft-60}catch(e){}try{islChipOff('aqc')}catch(e){}};
-window.aqReroll=function(k,i){const d=roll(st()),P=d[k];if(P.rr||!P.q[i]||P.q[i].ok)return;const di=DIX(),wi=Math.floor((di-((TH(Date.now()).getUTCDay()+6)%7))/7),prev=(k==='d'?dayQ(di-1):wkQ(wi-1)).map(q=>q.id),hasW=P.q.some((q,j)=>j!==i&&(defOf(k,q.id)||{}).g);
- const nw=pick((k==='d'?DQ:WQ).filter(q=>!(hasW&&q.g)),1,'r'+P.p+Date.now(),P.q.map(q=>q.id).concat(prev,P.q.map(q=>(defOf(k,q.id)||{}).x).filter(Boolean)))[0];if(!nw)return;P.q[i]={id:nw.id,v:0};P.rr=1;sv(d);openAQ()};
+window.aqReroll=function(k,i){const d=roll(st()),P=d[k];if((P.rr|0)>=rrMax(k)||!P.q[i]||P.q[i].ok)return;const di=DIX(),wi=Math.floor((di-((TH(Date.now()).getUTCDay()+6)%7))/7),prev=(k==='d'?dayQ(di-1):wkQ(wi-1)).map(q=>q.id),hasW=P.q.some((q,j)=>j!==i&&(defOf(k,q.id)||{}).g);
+ const nw=pick((k==='d'?DQ:WQ).filter(q=>!(hasW&&q.g)),1,'r'+P.p+Date.now(),P.q.map(q=>q.id).concat(prev,P.q.map(q=>(defOf(k,q.id)||{}).x).filter(Boolean)))[0];if(!nw)return;P.q[i]=Object.assign({id:nw.id,v:0},P.q[i].x4?{x4:1}:{});P.rr=(P.rr|0)+1;sv(d);openAQ()};
 window.aqBk=async function(t){if(!on())return toast('ต้องออนไลน์');try{const j=await api('aq',{o:'bk',t});const d=st(),m=MO();if(j&&(j.ok||j.dup)){d.bk[m]=d.bk[m]||[];if(!d.bk[m].includes(t))d.bk[m].push(t);sv(d)}
  if(j&&j.ok){const r=[];if(t===30){if(frGive('f_aqb_'+m.replace('-','')))r.push('🖼️ กรอบประจำเดือน')}if(t%5===0&&t%10)kAdd(25),r.push('☯️ กรรม 25');else if(t%10)kAdd(10),r.push('☯️ กรรม 10');if(j.f||j.g)r.push(tkTx(j.f,j.g));toast('📖 ขั้น '+t+': '+r.join(' + '))}else if(j&&j.err==='notyet')toast('แต้มยังไม่ถึง')}catch(e){toast('รับไม่สำเร็จ')}openAQ('b');dot()};
 function hqHtml(){const H=HQS;if(!H||!H.ok)return'<p class="tag2">โหลดประกาศิตฟ้าไม่ได้ (ต้องออนไลน์)</p>';const Q=HQ[H.q]||HQ[0],now=Date.now(),off=(H.now||now)-now;
@@ -46408,3 +46413,375 @@ window.vipMon=async function(){
 window.vmSave=async function(off){const n=(($('vmN')||{}).value||'').trim(),w=(($('vmW')||{}).value||'').trim();if(!off&&!n){toast('ใส่ชื่อก่อน');return}
  try{const r=await fetch('/api/pay?a=vipmonjoin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:pid,n,w,off:off?1:0})});const j=await r.json();if(j&&j.ok){toast(off?'ป้ายของคุณเป็นนิรนามแล้ว 🕊️':'แขวนป้ายเรียบร้อย 🏮');vipMon()}else toast(j&&j.err==='nopay'?'ต้องเคยสนับสนุนรายเดือนก่อน':'ทำไม่สำเร็จ')}catch(e){toast('ทำไม่สำเร็จ')}};
 })()}catch(e){console.error('block74',e)}
+
+// ============================================================
+// BLOCK 75: ❄ คัมภีร์ฤดูกาล "ฤดูหิมะเหนือ" — เส้นฟรี/คัมภีร์ทอง/ฉบับจารึก · ของแต่งฤดู (กรอบ ฉายา ธีมแชท) · ตำนานหมาป่าเงิน 5 บท
+//           แต้มคัมภีร์: ภารกิจรายวัน/สัปดาห์ · จบชีวิต · เหตุการณ์ฤดูหิมะ · บอสโลก · ประกาศิตฟ้า · ศึกสำนัก (คิดที่เซิร์ฟเวอร์)
+//           📕 นิยายปกแข็ง: เปลี่ยนชีวิตที่จบแล้วเป็นหนังสือแชร์ได้
+// ============================================================
+try{(()=>{
+const SEA={id:'s1',n:'ฤดูหิมะเหนือ',a:Date.parse('2026-11-19T00:00:00+07:00'),b:Date.parse('2027-01-01T00:00:00+07:00')};
+const seaOpen=()=>{const t=Date.now();return t>=SEA.a&&t<SEA.b};
+const on=()=>{try{return !!onlineOK}catch(e){return false}};
+const live=()=>!!(S&&S.alive);
+const has=x=>{try{return typeof window.cosHas==='function'&&window.cosHas(x)}catch(e){return false}};
+const pop=(ic,h,t,big)=>{try{if(live()&&typeof island==='function'){island({big:big?1:0,pri:big?1:0,ic,h,t,kind:'gold'});return}}catch(e){}toast(`${ic} ${h}${t?': '+t:''}`)};
+const cdTx=ms=>{ms=Math.max(0,ms);const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/3600e3);return d?`${d} วัน ${h} ชม.`:`${h} ชม. ${Math.floor(ms%3600e3/60e3)} นาที`};
+// ---------- ❄ ของแต่งฤดู: เอนจินเดียวกับร้านตกแต่ง ----------
+const M=window.FRSH_M,T=window.FRSH_T;
+if(M&&T){
+const C1='fill:var(--c1)',C2='fill:var(--c2)',PC='fill:var(--pc)',S1='stroke:var(--c1)',S2='stroke:var(--c2)';
+const polar=(f,n=96)=>Array.from({length:n},(_,i)=>{const t=i/n*Math.PI*2-Math.PI/2,r=f(t);return[Math.cos(t)*r,Math.sin(t)*r]});
+const SHP={f_s2:polar(t=>.9+.1*Math.pow(Math.abs(Math.cos(6*(t+Math.PI/2))),3),144),f_s3:Array.from({length:12},(_,i)=>{const t=i/12*Math.PI*2-Math.PI/2,r=i%2?.86:1;return[Math.cos(t)*r,Math.sin(t)*r]})};
+const clipOf=id=>'polygon('+SHP[id].map(p=>(50+p[0]*46).toFixed(1)+'% '+(50+p[1]*46).toFixed(1)+'%').join(',')+')';
+const pathOf=(id,k)=>{const q=SHP[id];return'M'+q.map(p=>(50+p[0]*50*k).toFixed(1)+' '+(50+p[1]*50*k).toFixed(1)).join('L')+'Z'};
+const OUT=id=>`<path d="${pathOf(id,1.02)}" style="fill:none;stroke:var(--c1);stroke-width:15;opacity:.12;stroke-linejoin:round"/><path d="${pathOf(id,1.02)}" style="fill:none;stroke:var(--c1);stroke-width:10.5;opacity:.2;stroke-linejoin:round"/><path d="${pathOf(id,1.02)}" style="fill:none;stroke:var(--c3);stroke-width:6;stroke-linejoin:round"/><path d="${pathOf(id,1.02)}" style="fill:none;stroke:var(--c1);stroke-width:3.4;stroke-linejoin:round"/><path d="${pathOf(id,.955)}" style="fill:none;stroke:var(--c2);stroke-width:1.2;opacity:.85;stroke-dasharray:3 6" class="fx-dashP"/>`;
+const A=(c,d,x)=>`<g class="${c}" style="animation-delay:${d}s">${x}</g>`;
+const star=(x,y,r,s)=>`<path style="${s||PC}" d="M${x} ${y-r}L${x+r*.28} ${y-r*.28}L${x+r} ${y}L${x+r*.28} ${y+r*.28}L${x} ${y+r}L${x-r*.28} ${y+r*.28}L${x-r} ${y}L${x-r*.28} ${y-r*.28}Z"/>`;
+const sflake=(x,y,r)=>[0,60,120].map(a=>{const t=a*Math.PI/180,dx=Math.cos(t)*r,dy=Math.sin(t)*r;return`<line x1="${x-dx}" y1="${y-dy}" x2="${x+dx}" y2="${y+dy}" style="${S2};stroke-width:1.8;stroke-linecap:round"/>`}).join('')+[0,60,120,180,240,300].map(a=>{const t=a*Math.PI/180,x2=x+Math.cos(t)*r*.62,y2=y+Math.sin(t)*r*.62,t1=t+.5,t2=t-.5;return`<path d="M${x+Math.cos(t1)*r*.82} ${y+Math.sin(t1)*r*.82}L${x2} ${y2}L${x+Math.cos(t2)*r*.82} ${y+Math.sin(t2)*r*.82}" style="fill:none;${S1};stroke-width:1.1;stroke-linecap:round"/>`}).join('')+`<circle cx="${x}" cy="${y}" r="${r*.18}" style="${PC}"/>`;
+const G=f=>()=>`<g transform="translate(20 20) scale(.6)">${f()}</g>`;
+const aur=(y,h,cl,op)=>`<path style="fill:${cl};opacity:${op}" d="M-14 ${y}Q12 ${y-h} 34 ${y-h*.3}Q52 ${y+h*.5} 70 ${y-h*.4}Q92 ${y-h*1.1} 114 ${y}L114 ${y+5}Q92 ${y-h*.7} 70 ${y}Q52 ${y+h*.9} 34 ${y+h*.2}Q12 ${y-h*.6} -14 ${y+5}Z"/>`;
+const wolf=()=>`<path style="${C2};${S1};stroke-width:1.4;stroke-linejoin:round" d="M36 4L31 -22L43 -10Q50 -13 57 -10L69 -22L64 4Q60 14 50 20Q40 14 36 4Z"/><path style="fill:var(--c3);opacity:.55" d="M34 -18L42 -10L38 -2ZM66 -18L58 -10L62 -2Z"/><path style="${C1}" d="M46 10L50 16L54 10Q50 8 46 10Z"/><path style="fill:none;${S1};stroke-width:1" d="M50 16L50 19M44 -1Q50 3 56 -1"/>`;
+const shard=(x,y,a,l,w,s)=>`<path transform="rotate(${a} ${x} ${y})" style="${s}" d="M${x} ${y}L${x-w} ${y-l*.35}L${x} ${y-l}L${x+w} ${y-l*.35}Z"/>`;
+M.s_aurora=G(()=>{let o=OUT('f_s2');
+ o+=A('fx-wave',0,aur(-6,12,'var(--c1)',.55))+A('fx-wave',-1.1,aur(-2,9,'var(--pc)',.45))+A('fx-wave',-.6,aur(2,7,'var(--c2)',.35));
+ o+=A('fx-breath',0,wolf())+A('fx-glint',0,`<circle cx="44.5" cy="-1" r="1.9" style="fill:#7affea"/><circle cx="55.5" cy="-1" r="1.9" style="fill:#7affea"/>`);
+ [[-6,10,11],[106,10,11],[-10,92,9],[110,92,9]].forEach((p,i)=>o+=A('fx-spinS',-i*1.4,`<circle cx="${p[0]}" cy="${p[1]}" r="${p[2]+2}" style="fill:none"/>`+sflake(p[0],p[1],p[2])));
+ [[24,104,14,-8],[38,106,20,-3],[50,107,24,0],[62,106,20,3],[76,104,14,8]].forEach((p,i)=>o+=A('fx-sway2',-i*.5,shard(p[0],p[1],180+p[3],p[2],4,`${C2};${S1};stroke-width:.8`)));
+ [[14,-10,2.6],[86,-10,2.6],[118,46,2.2],[-18,52,2.2],[30,120,2],[70,120,2]].forEach((p,i)=>o+=A('fx-twk',-i*.4,star(p[0],p[1],p[2]*2)));
+ [[8,-4],[30,-14],[70,-14],[92,-4],[-12,30],[112,30],[-8,66],[108,70]].forEach((p,i)=>o+=A('fx-fall',-i*.55,`<circle cx="${p[0]}" cy="${p[1]}" r="${i%2?1.6:2.3}" style="fill:#fff"/>`));
+ return o});
+const WG=[[-4,40,-62,44,8],[-2,52,-82,40,7],[0,64,-104,32,6]];
+M.s_emperor=G(()=>{let o=OUT('f_s3');
+ o+=`<defs><linearGradient id="sAur" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7affc8"/><stop offset=".5" stop-color="#7ab8ff"/><stop offset="1" stop-color="#d08aff"/></linearGradient></defs>`;
+ o+=A('fx-spinS',0,`<ellipse cx="50" cy="50" rx="70" ry="70" style="fill:none;stroke:url(#sAur);stroke-width:2.6;stroke-dasharray:22 10 4 10;opacity:.9"/>`);
+ o+=A('fx-spinR',0,`<ellipse cx="50" cy="50" rx="62" ry="62" style="fill:none;${S2};stroke-width:1;stroke-dasharray:1 7;opacity:.9"/>`);
+ const wg=WG.map(q=>shard(q[0],q[1],q[2],q[3],q[4],`${C2};${S1};stroke-width:1;opacity:.95`)).join('');
+ o+=A('fx-flapL',0,wg)+`<g transform="translate(100 0) scale(-1 1)">${A('fx-flapL',0,wg)}</g>`;
+ o+=A('fx-breath',0,`<path style="${C2};${S1};stroke-width:1.4;stroke-linejoin:round" d="M30 2L28 -16L38 -6L44 -24L50 -8L56 -24L62 -6L72 -16L70 2Z"/>`+star(50,-30,7,'fill:#fff')+`<circle cx="44" cy="-24" r="2" style="${C1}"/><circle cx="56" cy="-24" r="2" style="${C1}"/><circle cx="50" cy="-4" r="3" style="fill:#7affea;stroke:#fff;stroke-width:.8"/>`);
+ o+=A('fx-orbit',0,`<circle cx="50" cy="50" r="66" style="fill:none"/>`+shard(116,50,90,12,4,`fill:#fff;${S1};stroke-width:.8`)+shard(-16,50,-90,10,3,`${C2}`));
+ [[18,112,10],[50,122,14],[82,112,10]].forEach((p,i)=>o+=A('fx-sway2',-i*.6,shard(p[0],p[1]-p[2],180,p[2],3.4,`${C2};${S1};stroke-width:.8`)));
+ [[6,6],[94,6],[-12,80],[112,80],[30,-20],[70,-20],[50,118]].forEach((p,i)=>o+=A('fx-rise',-i*.5,star(p[0],p[1],3.2,'fill:#fff')));
+ [[16,-6],[84,-6],[-14,30],[114,34],[0,104],[100,104]].forEach((p,i)=>o+=A('fx-fall',-i*.7,`<circle cx="${p[0]}" cy="${p[1]}" r="1.8" style="fill:#fff"/>`));
+ return o});
+const mk=(id,n,c1,c2,c3,pc,bd,sh,d)=>{const f={id,n,side:'h',c:0,ty:'static',c1,c2,c3,pc,bd,d:d||''};const i=FRAMES.findIndex(x=>x.id===id);if(i>=0)FRAMES[i]=f;else FRAMES.push(f);T[id]=sh};
+mk('f_s1','กรอบลมหนาว','#9ac0d8','#e8f4ff','#1a2a3a','#ffffff','❄️','snow','คัมภีร์ฤดูหิมะเหนือ (เส้นฟรี)');
+mk('f_s2','กรอบหมาป่าเงินแสงเหนือ','#3ae8b8','#eef8ff','#06222a','#b48aff','🐺','s_aurora','คัมภีร์ฤดูหิมะเหนือ (คัมภีร์ทอง)');
+mk('f_s3','กรอบจักรพรรดิเหมันต์','#8ad8ff','#ffffff','#0a1430','#c8a0ff','👑','s_emperor','คัมภีร์ฤดูหิมะเหนือ (ฉบับจารึก)');
+{const _w=frWrap;frWrap=function(inner,id){const h=_w.apply(this,arguments);try{if(typeof h==='string'&&SHP[id]){const f=FRAMES.find(x=>x.id===id);return h.replace(/class="frw /,'class="frw fsh ').replace(/style="/,`style="--clip:${clipOf(id)};--c3:${f.c3};--pc:${f.pc};`)}}catch(e){}return h}}
+}
+const STN={t_s1:'ผู้ฝ่าหิมะ',t_s2:'ทายาทหมาป่าเงิน',t_s3:'จักรพรรดิเหมันต์'},SCN={c_s1:'ลมหนาว',c_s2:'หิมะโปรยแสงเหนือ',c_s3:'แสงเหนือจักรพรรดิ'};
+const sTitle=id=>STN[id]?`<span class="ptt pts${id.slice(-1)}" data-sp="1"><i class="zqx"></i><i class="zqy"></i><span class="zqt">${STN[id]}</span></span>`:'';
+const OVL='<i class="zqc"><i class="zql"></i><i class="zqm"></i></i><i class="zqg"></i>';
+const sBub=(k,nm,tx)=>`<div class="bubp"><div class="cmb ccxTs${k}">${OVL}<div class="cmh"><b>${esc(nm)}</b></div>${tx}</div></div>`;
+window.spTitleHtml=sTitle;
+{const _t=window.cosTitleHtml;window.cosTitleHtml=function(t){if(STN[t])return sTitle(t);return typeof _t==='function'?_t.apply(this,arguments):''}}
+const B2=(sel,body)=>`#chatBox .cm.cmp ${sel},.cxs ${sel},.spv ${sel},.bubp ${sel}{${body}}`;
+const css=document.createElement('style');css.textContent=`
+.fx-glint{animation:fxGlint 2.4s ease-in-out infinite}@keyframes fxGlint{0%,70%,100%{opacity:.35}80%{opacity:1}}
+.fx-spinR{animation:fxSpin 22s linear infinite reverse}.fx-dashP{animation:fxDash 3s linear infinite}
+@keyframes spBg{to{background-position:-200% 0}}
+.pts1{background:#e6f1f8;color:#24465a;border:1.5px solid #9ac0d8;border-radius:20px}.pts1::before{content:'❄';color:#5a8aaa}
+.pts2{background:linear-gradient(180deg,#0e3a40,#071c22);color:#e6fffa;border:1.5px solid #9ff0dc;border-radius:7px;box-shadow:0 0 10px #3ae8b877,inset 0 0 6px #3ae8b844;text-shadow:0 0 6px #3ae8b8}
+.pts2 .zqx{width:200%;background:linear-gradient(90deg,#3ae8b800,#3ae8b855,#7ab8ff55,#b48aff55,#3ae8b855,#3ae8b800,#3ae8b855,#7ab8ff55,#b48aff55,#3ae8b800);animation:lxFlow 4s linear infinite}
+.pts2 .zqy{left:0;top:-22px;width:100%;height:calc(100% + 22px);background:radial-gradient(1.5px 1.5px at 25% 30%,#fff,transparent),radial-gradient(1.2px 1.2px at 75% 70%,#fff,transparent);background-size:24px 22px;--ty:22px;animation:lxTile 2.6s linear infinite}
+.pts2::before{content:'🐺';animation:pBob 2.2s ease-in-out infinite alternate}.pts2::after{content:'❄';color:#bff8ec;animation:pSpinS 5s linear infinite}
+.pts3{background:linear-gradient(180deg,#ffffff,#cfe8ff 45%,#8ab8e8);color:#0a1e3a;clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 50%,calc(100% - 10px) 100%,10px 100%,0 50%);padding:2px 22px;filter:drop-shadow(0 0 6px #8ad8ff)}
+.pts3 .zqx{width:300%;left:-100%;background:linear-gradient(110deg,transparent 40%,#ffffffee 48%,#b48aff66 52%,transparent 60%);animation:lxSweep 2.6s linear infinite}
+.pts3 .zqy{width:200%;top:auto;bottom:0;height:3px;background:linear-gradient(90deg,#3ae8b8,#7ab8ff,#b48aff,#3ae8b8,#7ab8ff,#b48aff,#3ae8b8);animation:lxFlow 2.4s linear infinite}
+.pts3::before{content:'👑';animation:pBob 2s ease-in-out infinite alternate}.pts3::after{content:'✦';color:#7a5ad8;animation:pTw 1.6s infinite}
+${B2('.cmb.ccxTs1','background:#1a2630;border-color:#6a8aa0;color:#e6f0f6')}
+${B2('.cmb.ccxTs2','background:linear-gradient(135deg,#0a2228,#0e3038 60%,#1a2440);border-color:#9ff0dc;color:#eafffa')}
+${B2('.cmb.ccxTs2 .zqc>.zql','width:300%;left:-100%;top:0;height:60%;background:linear-gradient(100deg,transparent 30%,#3ae8b855 40%,#7ab8ff44 48%,#b48aff44 55%,transparent 65%);filter:blur(3px);animation:lxSweep 5s ease-in-out infinite alternate')}
+${B2('.cmb.ccxTs2 .zqc>.zqm','left:0;top:-36px;width:100%;height:calc(100% + 36px);background:radial-gradient(2px 2px at 20% 25%,#fff,transparent),radial-gradient(1.6px 1.6px at 70% 70%,#dffff8,transparent);background-size:44px 36px;--ty:36px;animation:lxTile 3.6s linear infinite')}
+${B2('.cmb.ccxTs2>.zqg','box-shadow:0 0 18px #3ae8b866;animation:lxPulse 2.6s ease-in-out infinite alternate')}
+${B2('.cmb.ccxTs2::before',"content:'🐺';left:-9px;bottom:-10px;font-size:16px;animation:pBob 2.4s ease-in-out infinite alternate")}
+${B2('.cmb.ccxTs2::after',"content:'❄';right:-7px;top:-10px;color:#fff;font-size:18px;text-shadow:0 0 8px #3ae8b8;animation:pSpinS 6s linear infinite")}
+${B2('.cmb.ccxTs2 .cmh b','background:linear-gradient(90deg,#9ff0dc,#7ab8ff,#d0b0ff);-webkit-background-clip:text;background-clip:text;color:transparent')}
+${B2('.cmb.ccxTs3','background:linear-gradient(135deg,#0c1630,#1a2a52 55%,#2a1a4a);border-color:#eaf6ff;color:#f4faff;outline:1px solid #8ad8ff88;outline-offset:2px')}
+${B2('.cmb.ccxTs3 .zqc>.zql','width:200%;left:0;top:0;height:100%;background:linear-gradient(90deg,#3ae8b833,#7ab8ff44,#b48aff44,#3ae8b833,#7ab8ff44,#b48aff44,#3ae8b833);animation:lxFlow 5s linear infinite')}
+${B2('.cmb.ccxTs3 .zqc>.zqm','left:0;top:-30px;width:100%;height:calc(100% + 30px);background:radial-gradient(2px 2px at 15% 20%,#fff,transparent),radial-gradient(1.5px 1.5px at 60% 75%,#e0d0ff,transparent),radial-gradient(1.2px 1.2px at 85% 40%,#fff,transparent);background-size:40px 30px;--ty:30px;animation:lxTile 3s linear infinite')}
+${B2('.cmb.ccxTs3>.zqg','box-shadow:0 0 24px #8ad8ffaa,0 0 40px #b48aff55;animation:lxPulse 2s ease-in-out infinite alternate')}
+${B2('.cmb.ccxTs3::before',"content:'👑';left:-9px;top:-13px;font-size:17px;animation:pBob 2s ease-in-out infinite alternate")}
+${B2('.cmb.ccxTs3::after',"content:'✦';right:-6px;bottom:-9px;color:#fff;font-size:18px;text-shadow:0 0 8px #b48aff;animation:pTw 1.8s infinite")}
+${B2('.cmb.ccxTs3 .cmh b','background:linear-gradient(90deg,#fff,#8ad8ff,#d0b0ff,#fff);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:spBg 3s linear infinite')}
+`;document.head.appendChild(css);
+// แชท: ธีม + ฉายาฤดู
+try{const _cr=chatRender;chatRender=function(){const r=_cr.apply(this,arguments);try{const box=$('chatBox');if(!box)return r;const ks=[...box.children].filter(e=>e.classList&&e.classList.contains('cm')),ms=chatMsgs||[];if(ks.length!==ms.length)return r;
+ ks.forEach((e,i)=>{const m=ms[i];const mc=/^c_s([1-3])$/.exec(m.cc||'');
+  if(mc){const bd=e.querySelector('.cmb');if(bd&&!/ccxT/.test(bd.className)){bd.classList.add('ccx','ccxTs'+mc[1]);if(!bd.querySelector(':scope>.zqc'))bd.insertAdjacentHTML('afterbegin',OVL)}}
+  if(STN[m.ct||'']&&!e.querySelector('.pts1,.pts2,.pts3')){const b=e.querySelector('.cmh b');if(b){e.querySelectorAll('.cmh .rkchip,.cmh .tchip,.cmh .ttl').forEach(x=>x.remove());b.insertAdjacentHTML('afterend',' '+sTitle(m.ct))}}})}catch(e){}return r}}catch(e){}
+
+// ---------- 📖 ตำนานหมาป่าเงิน (5 บท · บทนำอ่านฟรี · ฉบับเต็มและทางเลือกของคัมภีร์ทอง · ตอนจบมี 3 แบบตามทางที่เลือก) ----------
+const ST=[
+ {t:'รอยเท้าที่จบกลางทุ่ง',i:`หมู่บ้านไป๋เสวี่ยอยู่สุดทางเหนือ ที่ซึ่งหิมะตกเร็วกว่าที่อื่นหนึ่งเดือนเสมอ เช้าวันแรกของหนาวปีนี้ ชาวบ้านเห็นรอยเท้าหมาป่าขนาดเท่าฝ่ามือคนเดินตรงจากตีนเขามากลางทุ่ง แล้วหายไปเฉยๆ ไม่มีรอยเลี้ยว ไม่มีรอยกระโดด`,
+  f:`พรานเฒ่าหลิวยืนดูรอยนั้นนานจนเคราเป็นน้ำแข็ง "มันมาเก็บของ" เขาพึมพำ ไม่ยอมบอกว่าของอะไร คืนนั้นประกาศจากที่ว่าการอำเภอติดหน้าศาลเจ้า: หนังหมาป่าเงินหนึ่งผืน แลกเงินสามร้อยตำลึง พรานหนุ่มสามคนเริ่มลับมีดทันที`,
+  q:'คุณจะทำอย่างไรกับรอยเท้านั้น',o:[['ตามรอยไปคนเดียวก่อนหิมะกลบ','m','ลำพังเงียบๆ ไม่มีใครเห็น'],['เข้าร่วมกลุ่มพรานหนุ่มเพื่อเงินรางวัล','f','แบ่งกันสามร้อยตำลึงก็ยังมาก'],['ไปถามพรานเฒ่าหลิวว่า "ของ" ที่ว่าคืออะไร','c','คนแก่มักรู้มากกว่าที่พูด']]},
+ {t:'ไฟสีครามในศาลน้ำแข็ง',i:`กลางป่าสนมีศาลเก่าที่ถูกน้ำแข็งห่อไว้ทั้งหลัง ข้างในมีไฟสีครามลุกอยู่โดยไม่มีฟืน หญิงชราคนหนึ่งนั่งเฝ้าไฟ ราวกับรู้อยู่แล้วว่าคุณจะมา`,
+  f:`"หมาป่าตัวนั้นไม่ได้ล่าสัตว์" นางพูดโดยไม่หันมา "มันเป็นคนทวงหนี้ของภูเขา ทุกหนาวต้องมีคนหนึ่งที่จ่าย ปีไหนไม่มีใครจ่าย หิมะจะไม่หยุดตก" ไฟสีครามกระพือครั้งหนึ่ง เหมือนเห็นด้วย`,
+  q:'คุณจะทำอะไรต่อในศาลนี้',o:[['ช่วยนางเติมน้ำมันตะเกียง แล้วฟังเรื่องต่อ','m','ไม่ถาม แค่ช่วย'],['แอบตักไฟสีครามใส่ตะเกียงตัวเองออกมา','f','ไฟที่ไม่ใช้ฟืนต้องมีค่าแน่'],['ถามตรงๆ ว่าปีนี้ "ใคร" เป็นหนี้','c','ชื่อเดียวก็พอ']]},
+ {t:'เหยื่อพิษของนายอำเภอ',i:`คนของนายอำเภอขึ้นมาถึงหมู่บ้านพร้อมเกวียนเนื้อแกะเต็มคัน ทุกชิ้นทาด้วยผงสีเหลืองกลิ่นฉุน "วางให้ทั่วตีนเขา" หัวหน้าสั่ง "ตัวไหนกินก็ได้ทั้งนั้น ขอแค่มีหนังสีเงินหนึ่งผืน"`,
+  f:`คืนนั้นสุนัขในหมู่บ้านสองตัวตายเพราะแอบกินเนื้อ เด็กชายคนหนึ่งร้องไห้ทั้งคืน พรานเฒ่าหลิวมองเกวียนแล้วบอกคุณเบาๆ ว่า "หนี้ปีนี้ ไม่ใช่ของหมู่บ้านเรา" เขาชี้ไปที่ธงของที่ว่าการ`,
+  q:'เหยื่อพิษทั้งคัน คุณจะจัดการอย่างไร',o:[['ขนเหยื่อทั้งหมดไปฝังใต้หิมะคืนนี้','m','ไม่ให้อะไรต้องตายอีก'],['ช่วยวางเหยื่อ ส่วนแบ่งรางวัลจะได้มากขึ้น','f','ธุระของนายอำเภอ ไม่ใช่ของเรา'],['เปลี่ยนป้ายเกวียนให้ชี้กลับไปที่ที่ว่าการ','c','ให้ภูเขาตามกลิ่นถูกคน']]},
+ {t:'คืนที่แสงเหนือแตะพื้น',i:`คืนหนาวที่สุดของปี ฟ้าทางเหนือมีแถบแสงสีเขียวม่วงพาดลงมาจนแตะยอดสน หมาป่าสีเงินยืนอยู่ปลายแถบแสงนั้น ตัวใหญ่กว่าม้า ดวงตาเป็นสีเดียวกับไฟในศาล`,
+  f:`มันไม่ได้เข้ามาใกล้ มันพูด เสียงเหมือนลมผ่านซอกหิน "ข้าเคยเป็นพรานแบบเจ้า ข้ารับเงินสามร้อยตำลึงเมื่อห้าสิบหนาวก่อน แล้วภูเขาก็ให้ข้าทวงหนี้แทนมันตั้งแต่นั้น" มันก้มหัวลงต่ำ "ปีนี้ข้าเหนื่อยแล้ว"`,
+  q:'หมาป่าเหนื่อยแล้ว คุณจะตอบมันว่าอย่างไร',o:[['"ข้าจะอยู่เป็นเพื่อนเจ้าจนหิมะหยุด"','m','บางครั้งคนที่เหนื่อยแค่ต้องการเพื่อน'],['ชักอาวุธ เพราะนี่คือโอกาสเดียว','f','สามร้อยตำลึงอยู่ตรงหน้า'],['"บอกข้ามา ว่าหนี้ปีนี้เป็นของใคร"','c','ปมต้องแก้ที่ต้นเชือก']]},
+ {t:'หิมะหยุดตก',i:`เช้าวันต่อมา หิมะหยุดตกเป็นครั้งแรกในรอบสี่สิบวัน ชาวบ้านออกมายืนกลางทุ่ง มองรอยเท้าชุดใหม่ที่ทอดยาวขึ้นไปบนเขา`,
+  E:{m:['ผู้เฝ้าภูเขา',`รอยเท้าบนเขาเป็นรอยเท้าคน ไม่ใช่หมาป่า คุณเดินขึ้นไปกับมันทั้งคืน และเมื่อแสงเหนือจางลง หมาป่าก็นอนลงและไม่ลุกขึ้นอีก หนาวปีต่อมา ชาวไป๋เสวี่ยเห็นใครคนหนึ่งยืนบนยอดเขาตอนหิมะแรกตก สวมเสื้อขนสีเงิน ไม่มีใครกล้าล่าอะไรบนเขานั้นอีกเลย`],
+   f:['หนังสีเงิน',`คุณได้หนังสีเงินหนึ่งผืนและเงินสามร้อยตำลึง หิมะหยุดตกจริง แต่ทุกคืนหลังจากนั้น คุณได้ยินเสียงลมผ่านซอกหินอยู่ข้างหน้าต่าง ห้าสิบหนาวต่อมา มีพรานหนุ่มคนหนึ่งเห็นรอยเท้าหมาป่าขนาดเท่าฝ่ามือคน จบลงกลางทุ่งพอดี`],
+   c:['หนี้ที่ส่งคืนเจ้าของ',`ตอนเที่ยง ม้าเร็วจากที่ว่าการวิ่งเข้าหมู่บ้าน ข่าวมาว่านายอำเภอหายตัวไปกลางดึก ในห้องของเขาเหลือแค่รอยเท้าหมาป่าบนพื้นไม้ กับเงินสามร้อยตำลึงที่วางเรียงบนโต๊ะ ชาวบ้านนำเงินนั้นมาซ่อมศาลน้ำแข็ง ไฟสีครามยังลุกอยู่ที่นั่นจนทุกวันนี้`]}}];
+const stGet=()=>{try{return LS.get('murim_spst',{})||{}}catch(e){return{}}},stSet=o=>{try{LS.set('murim_spst',o)}catch(e){}};
+const endKey=()=>{const s=stGet(),c={m:0,f:0,c:0};[0,1,2,3].forEach(i=>{if(s[i])c[s[i]]++});return c.f>=c.m&&c.f>=c.c?'f':c.c>c.m?'c':'m'};
+// ---------- ❄ เหตุการณ์ฤดูหิมะในชีวิต (ได้แต้มคัมภีร์ วันละ 3 ครั้ง) ----------
+const SEV=[
+ {t:'❄ หิมะแรกของปี',x:'หิมะแรกตกเร็วกว่าทุกปี ชาวบ้านเล่าว่าเห็นหมาป่าสีเงินยืนบนสันเขา',o:[['ออกไปช่วยชาวบ้านเก็บฟืนก่อนพายุมา','k+4 c+2 j+3','ชาวบ้านจำน้ำใจคุณได้'],['ขึ้นสันเขาไปดูหมาป่าให้เห็นกับตา','q+1 f+3','ลมหนาวบาดผิว แต่ใจตื่น'],['ปิดประตูนั่งสมาธิข้างเตา','i+3 h+15','ความเงียบของหิมะช่วยให้จิตนิ่ง']]},
+ {t:'🌨️ พายุหิมะกลางทาง',x:'พายุหิมะพัดมาโดยไม่มีสัญญาณเตือน ทางข้างหน้าหายไปในสีขาว',o:[['ขุดถ้ำหิมะรอให้พายุผ่าน','h+20 i+2','ช้าแต่รอด'],['ฝ่าพายุต่อไปด้วยลมปราณ','q+2 p+40 h-15','ปราณร้อนวิ่งทั่วร่าง'],['พาคนหลงทางที่เจอกลางพายุไปด้วย','k+6 f+4 h-10','สองคนอุ่นกว่าคนเดียว']]},
+ {t:'🐺 หมาป่าเงินมองมา',x:'หมาป่าตัวใหญ่สีเงินยืนนิ่งอยู่ปลายทุ่ง ดวงตาสีครามจับจ้องคุณ ไม่ขู่ ไม่หนี',o:[['วางเนื้อแห้งไว้แล้วถอยออกมา','k+5 j+4','มันก้มดม แล้วหันหลังเดินจากไปช้าๆ'],['ยืนสบตามันไม่หลบ','f+5 q+1','ผ่านไปนานเท่าไรไม่รู้ มันเป็นฝ่ายเบือนหน้าก่อน'],['ร่างภาพมันไว้ในสมุด','i+4 c+2','ภาพนั้นมีคนขอซื้อในราคาไม่น้อย']]},
+ {t:'💠 ถ้ำน้ำแข็งเรืองแสง',x:'รอยแยกบนหน้าผาเผยถ้ำที่ผนังเป็นน้ำแข็งสีฟ้าเรืองแสงเอง',o:[['เข้าไปลึกเพื่อหาผลึกน้ำแข็งพันปี','$+300 h-10','มือชาแต่กระเป๋าหนักขึ้น'],['นั่งฝึกปราณที่ปากถ้ำ','q+2 i+2','ไอเย็นช่วยเก็บปราณให้แน่น'],['จำทางไว้แล้วบอกพรานในหมู่บ้าน','k+3 f+3','ข่าวดีเดินทางเร็วกว่าลม']]},
+ {t:'🔥 ไฟสีครามในป่าสน',x:'กลางดึกคุณเห็นไฟสีครามลุกอยู่ในป่า ไม่มีควัน ไม่มีเสียงไม้ปะทุ',o:[['เข้าไปผิงไฟ','h+25 j+3','อุ่นกว่าที่คิด และไม่ร้อนเลย'],['ตักไฟใส่ตะเกียงกลับมา','$+150 k-3','ไฟดับทันทีที่ถึงหมู่บ้าน เหลือแค่ผงสีฟ้า'],['เฝ้ามองจนไฟดับเอง','i+3 q+1','บางอย่างควรปล่อยให้เป็นแบบนั้น']]},
+ {t:'🌌 แสงเหนือพาดฟ้า',x:'แถบแสงสีเขียวม่วงพาดลงมาเกือบแตะยอดเขา ทุกคนในหมู่บ้านออกมายืนดู',o:[['อธิษฐานกับแสงนั้น','j+6 k+2','บางคนบอกว่าแสงเหนือรับคำขอแค่ปีละครั้ง'],['ขึ้นยอดเขาไปให้ใกล้ที่สุด','q+2 f+3 h-10','ยิ่งใกล้ ยิ่งได้ยินเสียงเหมือนหมาป่าหอน'],['ชวนคนที่สนิทออกมาดูด้วยกัน','c+4 j+4','คืนนั้นกลายเป็นความทรงจำร่วม']]}];
+let sevT=0;
+function sevTry(){try{if(!seaOpen()||!live()||S.mw||S.beastMode||(S.age|0)<8||choice._cur||modalOpen)return;if((S._spSev|0)>=3||Date.now()-sevT<20000)return;
+ const k=(has('o_s1')&&S._spWolf)? 0.11 : 0.06;if(Math.random()>k)return;S._spSev=(S._spSev|0)+1;sevT=Date.now();
+ const E=SEV[Math.floor(Math.random()*SEV.length)];
+ choice(E.t,`${E.x}<br><span class="tag2">❄ เหตุการณ์ฤดูหิมะเหนือ · ได้แต้มคัมภีร์</span>`,E.o.map(o=>({t:o[0],s:o[2],f(){try{applyFx(o[1])}catch(e){}log(`❄ ${o[0]} — ${o[2]}`,'epic');spPt('sev')}})))}catch(e){}}
+async function spPt(o,x){if(!on()||!seaOpen())return;try{const j=await api('sp',Object.assign({o},x||{}));if(j&&j.add>0)pop('❄','แต้มคัมภีร์ +'+j.add,o==='life'?'จบชีวิต':'เหตุการณ์ฤดูหิมะ')}catch(e){}}
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{setTimeout(sevTry,600)}catch(e){}return r}}
+{const _eg=endGame;endGame=function(){try{if(S&&!S._spE&&(S.age|0)>=1){S._spE=1;const a=S.age|0;setTimeout(()=>spPt('life',{age:a}),1200)}}catch(e){}return _eg.apply(this,arguments)}}
+// ชาติกำเนิดฤดู: ทายาทหมาป่าเงิน (ขั้น 20 คัมภีร์ทอง) — สุ่มติดตอนเริ่มชีวิตช่วงฤดูนี้
+{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{if(S&&seaOpen()&&has('o_s1')&&Math.random()<.25){S._spWolf=1;setTimeout(()=>{try{if(!live()||S._spWolfL)return;S._spWolfL=1;applyFx('q+2 h+30 f+5 c+3');S.flags=S.flags||{};S.flags.silverWolf=1;log('🐺 <b>สายเลือดหมาป่าเงิน</b> — คืนที่คุณเกิด หิมะหยุดตกกลางคัน และมีรอยเท้าหมาป่ามาจบหน้าประตูบ้าน (ลมปราณ ชีวิต ชื่อเสียง เสน่ห์ เพิ่มขึ้น · เหตุการณ์ฤดูหิมะเกิดบ่อยขึ้น)','myth')}catch(e){}},1500)}}catch(e){}return r}}
+// ป้ายแต้มที่ได้จากภารกิจ/บอสโลก
+{const _a=api;api=async function(a,b){const r=await _a.apply(this,arguments);try{if(b&&(a==='aq'||a==='wb')&&r&&r.sp>0)pop('❄','แต้มคัมภีร์ +'+r.sp,a==='wb'?'ตีบอสโลก':(b.k==='w'?'ภารกิจรายสัปดาห์':'ภารกิจรายวัน'));if(b&&a==='aq'&&r&&r.t4)pop('⭐','ภารกิจข้อที่ 4 ของผู้สนับสนุน','🎫 ตั๋วธรรมดา +1')}catch(e){}return r}}
+
+// ---------- 💳 ซื้อ (สแกน QR + แนบสลิป · ตรวจอัตโนมัติ) ----------
+const shrink=f=>new Promise(res=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);let q=.88,d=cv.toDataURL('image/jpeg',q);while(d.length>2.8e6&&q>.4){q-=.1;d=cv.toDataURL('image/jpeg',q)}res(d)};im.onerror=()=>res(null);im.src=fr.result};fr.onerror=()=>res(null);fr.readAsDataURL(f)});
+const PMSG={noslip:'อ่านสลิปไม่ได้ ลองแคปให้เห็นทั้งใบ (ต้องเห็น QR) แล้วลองใหม่',dup:'สลิปนี้เคยถูกใช้แล้ว',acct:'สลิปนี้ไม่ได้โอนเข้าบัญชีของเกม',img:'รูปสลิปใหญ่เกินหรือไม่ใช่รูป'};
+const PK={sp1:['❄ คัมภีร์ทอง · ฤดูหิมะเหนือ',59,'ปลดเส้นคัมภีร์ทองครบ 30 ขั้น · ตำนานหมาป่าเงินฉบับเต็ม · กรอบ ฉายา ธีมแชทหมาป่าเงิน · ชาติกำเนิดฤดู'],sp2:['👑 ฉบับจารึก · ฤดูหิมะเหนือ',129,'ทุกอย่างของคัมภีร์ทอง + ข้ามทันที 10 ขั้น + ชุดจักรพรรดิเหมันต์ (กรอบ ฉายา ธีมแชท) + ชื่อจารึกในคัมภีร์ถาวร'],sp21:['👑 อัปเกรดเป็นฉบับจารึก',70,'จ่ายส่วนต่าง: ข้ามทันที 10 ขั้น + ชุดจักรพรรดิเหมันต์ + ชื่อจารึกในคัมภีร์'],nv1:['📕 นิยายปกแข็ง 1 เล่ม',19,'เปลี่ยนชีวิตที่จบแล้ว 1 ชีวิตให้เป็นนิยายปกแข็ง เก็บถาวรและแชร์ลิงก์ให้คนอื่นอ่านได้']};
+window.spBuy=function(pk,back){const P=PK[pk];if(!P)return;window._spBack=back||'sp';
+ modal(`<button class="xbtn" onclick="${back==='nv'?'openNovels()':'openSP()'}">✕</button><h3>${P[0]}</h3><p class="tag2" style="text-align:center;margin:0 0 6px">${P[2]}</p>
+ <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#c98d22">${P[1]} บาท</div>
+ <img loading="lazy" src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">
+ <p style="margin:8px 0 2px">1) สแกนโอน <b>${P[1]} บาท</b> ตรงยอดเป๊ะ</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจอัตโนมัติ ของเข้าทันที</p>
+ <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
+ <label class="supl">🧾 แนบสลิป<input id="spImg" type="file" accept="image/*"></label>
+ <button class="pbtn" style="width:100%;margin-top:8px" onclick="spPaid(this,'${pk}')">📨 ส่งสลิป</button>
+ <p class="tag2">ของแต่งและความสะดวกล้วน ไม่มีผลต่อพลังหรืออันดับ · ผูกกับบัญชี · ถ้าตรวจอัตโนมัติไม่ได้ แจ้งบั๊กพร้อมสลิป</p>`,'spbuy')};
+window.spPaid=async function(btn,pk){const f=$('spImg')&&$('spImg').files&&$('spImg').files[0];if(!f)return toast('แนบสลิปก่อนนะ');btn.disabled=true;btn.textContent='⏳ กำลังตรวจสลิป…';let j=null;
+ try{const img=await shrink(f);if(!img)throw 0;const r=await fetch('/api/pay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:pid,pk,n:pname(),img})});j=await r.json().catch(()=>null)}catch(e){j=null}
+ if(j&&j.ok){btn.textContent='✅ ตรวจผ่านแล้ว!';toast('✅ ได้ของแล้ว ขอบคุณที่สนับสนุนครับ 💛');try{sfx('good')}catch(e){}try{await window.cosSync()}catch(e){}setTimeout(()=>{if(window._spBack==='nv'){const l=window._nvWant;window._nvWant=null;if(l)nvMake(l);else openNovels()}else openSP()},1000);return}
+ btn.disabled=false;btn.textContent='📨 ส่งสลิป';toast(j&&j.st==='amount'&&j.need?'ยอดในสลิปไม่ตรง ต้องโอน '+j.need+' บาทพอดี':j&&PMSG[j.st]?PMSG[j.st]:'ตรวจสลิปไม่สำเร็จ ลองใหม่อีกครั้ง หรือแจ้งบั๊กพร้อมสลิป')};
+// ---------- ❄ หน้าคัมภีร์ฤดูกาล ----------
+const css2=document.createElement('style');css2.textContent=`
+#modal[data-k="sp"]{background:#06121a!important;border-color:#3ae8b8!important;padding:5px!important}
+.spv{margin:0;padding:10px 10px 12px;border-radius:18px;background:radial-gradient(120% 50% at 50% -5%,#0e3a40 0%,#08141c 55%,#060c12 100%);color:#e6f6f4;font-size:13px}
+.spv .xbtn{color:#dffff8}.spv .tag2{color:#9fb8c8}
+.spv .hero2{position:relative;overflow:hidden;border-radius:18px;border:2px solid #9ff0dc;padding:16px 14px 14px;background:#06121a;box-shadow:0 0 22px #3ae8b844}
+.spv .hero2 .au{position:absolute;inset:-40% -60%;background:linear-gradient(100deg,transparent 30%,#3ae8b866 40%,#7ab8ff55 48%,#b48aff55 56%,transparent 66%);filter:blur(14px);animation:spAu 7s ease-in-out infinite alternate;pointer-events:none}
+.spv .hero2 .au.b{animation-duration:9s;animation-direction:alternate-reverse;opacity:.7;top:-20%}
+@keyframes spAu{from{transform:translateX(-18%) skewY(-6deg)}to{transform:translateX(18%) skewY(6deg)}}
+.spv .hero2 .sn{position:absolute;inset:-70px 0 0;background:radial-gradient(2px 2px at 10% 20%,#fff,transparent),radial-gradient(1.5px 1.5px at 60% 60%,#fff,transparent),radial-gradient(2px 2px at 85% 35%,#dffff8,transparent);background-size:90px 70px;animation:spSn 5s linear infinite;opacity:.8;pointer-events:none}
+@keyframes spSn{to{transform:translateY(70px)}}
+.spv .hero2 svg.mtn{position:absolute;left:0;right:0;bottom:0;width:100%;height:56px;pointer-events:none}
+.spv .hero2 .in{position:relative}
+.spv .chip{display:inline-block;font-size:11px;font-weight:800;border:1px solid #9ff0dc88;border-radius:99px;padding:2px 10px;color:#dffff8;background:#0008}
+.spv .hero2 h3{margin:8px 0 0;font-size:25px;color:#fff;text-shadow:0 0 14px #3ae8b8,0 2px 0 #000;letter-spacing:.5px}
+.spv .hero2 p{margin:2px 0 0;color:#cfeff0;font-size:12.5px}
+.spv .lv{display:flex;align-items:center;gap:10px;margin-top:12px}
+.spv .lv .b{flex:none;width:50px;height:50px;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:21px;color:#06121a;background:linear-gradient(#fff,#9ff0dc);box-shadow:0 0 14px #3ae8b8}
+.spv .bar{flex:1;min-width:0}.spv .bar .t{display:flex;justify-content:space-between;font-size:11.5px;color:#cfeff0;gap:6px}
+.spv .bar .g{height:10px;border-radius:99px;background:#0009;border:1px solid #9ff0dc66;overflow:hidden;margin-top:4px}
+.spv .bar .g i{display:block;height:100%;background:linear-gradient(90deg,#3ae8b8,#7ab8ff,#b48aff,#3ae8b8);background-size:200% 100%;animation:spBg 3s linear infinite;border-radius:99px}
+.spv .tb{display:flex;gap:6px;overflow-x:auto;margin:12px 0 4px;scrollbar-width:none}.spv .tb::-webkit-scrollbar{display:none}
+.spv .tb button{flex:0 0 auto;padding:7px 12px;border-radius:99px;border:1px solid #9ff0dc44;background:#ffffff0a;color:#cfeff0;font:inherit;font-size:12.5px;font-weight:800}
+.spv .tb button.on{background:linear-gradient(135deg,#bffff0,#3ae8b8);color:#03201a;border-color:#bffff0;box-shadow:0 3px 12px #3ae8b866}
+.spv .sec{margin:14px 2px 8px;font-weight:900;font-size:14.5px;color:#eafffa;display:flex;align-items:center;gap:8px}.spv .sec:after{content:"";flex:1;height:2px;background:linear-gradient(90deg,#9ff0dc88,transparent)}
+.spv .cmp3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.spv .tc{position:relative;border-radius:14px;padding:24px 5px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;overflow:hidden}
+.spv .tc .hd{z-index:3;position:absolute;left:0;right:0;top:0;font-size:11px;font-weight:900;padding:3px 0}
+.spv .tc.t0{background:#141c22;border:2px solid #3a4a56}.spv .tc.t0 .hd{background:#2a3640;color:#cfdce6}
+.spv .tc.t1{background:radial-gradient(80px 60px at 50% 20%,#3ae8b833,transparent),linear-gradient(#0c2a30,#071a1e);border:2px solid #3ae8b8;box-shadow:0 0 14px #3ae8b844}.spv .tc.t1 .hd{background:linear-gradient(90deg,#1a6a5a,#2a8a7a);color:#fff}
+.spv .tc.t2{background:radial-gradient(80px 60px at 50% 20%,#b48aff44,transparent),linear-gradient(#141e3a,#0a1024);border:2px solid #eaf6ff;box-shadow:0 0 18px #8ad8ff66}.spv .tc.t2 .hd{background:linear-gradient(90deg,#8ad8ff,#d0b0ff,#8ad8ff);background-size:200% 100%;animation:spBg 3s linear infinite;color:#0a1430}
+.spv .tc .frprev{transform:scale(1.15);margin:10px 0 6px;position:relative;z-index:1;padding:0}
+.spv .frph{display:inline-flex;align-items:center;justify-content:center;width:44px;height:48px;background:#1c1a28;overflow:hidden;font-size:22px}.spv .frph img{width:100%;height:100%;object-fit:cover}
+.spv .tc .ptt{font-size:10px;max-width:100%;padding-left:8px;padding-right:8px}.spv .tc .ptt.pts3{padding-left:14px;padding-right:14px}
+.spv .bubp{width:100%;text-align:left}.spv .bubp .cmb{font-size:10.5px;padding:5px 7px;border-radius:4px 10px 10px 10px;border-width:2px;border-style:solid;position:relative}
+.spv .tc .pr{font-weight:900;font-size:15px;color:#fff}.spv .tc.t0 .pr{color:#cfdce6}.spv .tc .own{position:absolute;right:4px;bottom:4px;font-size:10px;color:#7affc8;font-weight:800}
+.spv .rw{display:grid;grid-template-columns:40px minmax(0,1fr) minmax(0,1fr);gap:7px;margin:7px 0}
+.spv .rw .n{border-radius:10px;display:grid;place-items:center;font-weight:900;background:#14202a;color:#8aa4b4}
+.spv .rw.rch .n{background:linear-gradient(#2a5a5a,#16303a);color:#dffff8}.spv .rw.cur .n{background:linear-gradient(#fff,#9ff0dc);color:#06121a;box-shadow:0 0 12px #3ae8b8}
+.spv .cl{border-radius:12px;padding:8px;display:flex;align-items:center;gap:8px;min-height:58px;font-size:12px;position:relative;overflow:hidden;border:1.5px solid;font-family:inherit;text-align:left;width:100%;box-sizing:border-box}
+.spv .cl.f{background:#141c22;border-color:#34424c;color:#cfdce6}.spv .cl.p{background:linear-gradient(135deg,#0e3038,#0a1e28 60%,#1a1a3a);border-color:#3ae8b8;color:#eafffa}
+.spv .cl.p:after{content:"";position:absolute;inset:0;width:300%;left:-100%;background:linear-gradient(110deg,transparent 44%,#ffffff1c 50%,transparent 56%);animation:lxSweep 3.4s linear infinite;pointer-events:none}
+.spv .cl.no{opacity:.55}.spv .cl.em{visibility:hidden}
+.spv .cl.can{cursor:pointer;box-shadow:0 0 0 2px #ffe08a,0 0 16px #ffe08a88;animation:spCan 1.3s ease-in-out infinite}@keyframes spCan{50%{box-shadow:0 0 0 2px #ffe08a,0 0 26px #ffe08acc}}
+.spv .cl .st{position:absolute;right:6px;top:4px;font-size:11px}.spv .cl .st.ok{color:#7affc8}
+.spv .cl .frprev{padding:0;transform:scale(.78);margin:-6px -6px;flex:none}.spv .cl .ptt{font-size:10px;max-width:100%}
+.spv .cl b{display:block;font-size:12px;line-height:1.3}.spv .cl small{display:block;font-size:10.5px;opacity:.75;line-height:1.3}
+.spv .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:18px;flex:none;background:#0006}
+.spv .buy{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}.spv .buy.one{grid-template-columns:1fr}
+.spv .bb{position:relative;overflow:hidden;border:none;border-radius:14px;padding:11px 8px;font:inherit;font-weight:900;font-size:15px;cursor:pointer;line-height:1.25}
+.spv .bb small{display:block;font-weight:600;font-size:11px;opacity:.85}
+.spv .bb.g1{background:linear-gradient(#5affd8,#1aa88a);color:#03201a;box-shadow:0 4px 0 #0a5a4a,0 0 14px #3ae8b866}
+.spv .bb.g2{background:linear-gradient(#fff,#bfe4ff 50%,#d0b0ff);color:#0a1430;box-shadow:0 4px 0 #4a3a8a,0 0 18px #b48aff88}
+.spv .bb.g2:after{content:"";position:absolute;inset:0;width:300%;left:-100%;background:linear-gradient(110deg,transparent 44%,#fff 50%,transparent 56%);animation:lxSweep 2.6s linear infinite}
+.spv .bb.gc{width:100%;margin-top:8px;background:linear-gradient(#ffe48a,#e0a020);color:#2a1a00;box-shadow:0 4px 0 #8a5a10,0 0 14px #e8b83a77}
+.spv .card{border-radius:14px;border:1px solid #9ff0dc33;background:#ffffff08;padding:10px 12px;margin:8px 0}
+.spv .eq{display:flex;align-items:center;gap:10px;padding:8px;border-radius:12px;background:#ffffff08;border:1px solid #ffffff14;margin:6px 0}
+.spv .eq .m{flex:1;min-width:0}.spv .eq button{flex:none;border:1px solid #9ff0dc;background:#0e3038;color:#dffff8;border-radius:10px;padding:6px 10px;font:inherit;font-size:12px;font-weight:800}.spv .eq button.on{background:#9ff0dc;color:#03201a}
+.spv .src{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:8px 10px;border-radius:12px;background:#ffffff08;margin:5px 0}.spv .src b{color:#fff}.spv .src span:last-child{font-weight:800;color:#9ff0dc;white-space:nowrap}
+.spv .chp{display:flex;gap:10px;align-items:center;padding:10px;border-radius:14px;margin:7px 0;border:1px solid #9ff0dc44;background:linear-gradient(135deg,#0e3038,#0a1620);cursor:pointer;width:100%;box-sizing:border-box;font:inherit;color:inherit;text-align:left}
+.spv .chp.lk{opacity:.5;cursor:default}.spv .chp .n{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:900;background:#dffff8;color:#06121a}
+.spv .rd{white-space:pre-line;line-height:1.75;font-size:14px;padding:12px 14px;border-radius:14px;background:linear-gradient(#f2ead6,#ddd0b0);color:#2a2214;margin:8px 0;box-shadow:inset 0 0 30px #8a6a3a33}
+.spv .rd.fx{background:linear-gradient(#e6f4f6,#c8dee6);color:#0e2630}
+.spv .opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 12px;border-radius:12px;border:1px solid #9ff0dc66;background:#0e3038;color:#eafffa;font:inherit}.spv .opt small{display:block;opacity:.7;font-size:11px}
+#tSea{position:relative;display:flex;align-items:center;gap:10px;width:100%;margin:10px 0 4px;padding:11px 12px;border-radius:16px;border:2px solid #9ff0dc;background:#06121a;color:#eafffa;text-align:left;font:inherit;overflow:hidden;box-shadow:0 0 18px #3ae8b855,0 4px 0 #04302a;cursor:pointer;box-sizing:border-box}
+#tSea .au{position:absolute;inset:-60% -40%;background:linear-gradient(100deg,transparent 30%,#3ae8b866 40%,#7ab8ff55 48%,#b48aff55 56%,transparent 66%);filter:blur(12px);animation:spAu 6s ease-in-out infinite alternate;pointer-events:none}
+#tSea .sn{position:absolute;inset:-70px 0 0;background:radial-gradient(1.6px 1.6px at 10% 20%,#fff,transparent),radial-gradient(1.2px 1.2px at 60% 60%,#fff,transparent);background-size:70px 70px;animation:spSn 5s linear infinite;opacity:.7;pointer-events:none}
+#tSea .i{position:relative;flex:none;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:24px;background:linear-gradient(145deg,#dffff8,#3ae8b8);box-shadow:0 0 12px #3ae8b8}
+#tSea .m{position:relative;flex:1;min-width:0}#tSea b{display:block;font-size:15px;color:#fff;text-shadow:0 0 8px #3ae8b8}#tSea small{display:block;font-size:11.5px;color:#cfeff0}
+#tSea .go{position:relative;flex:none;font-weight:900;font-size:12px;padding:6px 10px;border-radius:10px;background:linear-gradient(#bffff0,#3ae8b8);color:#03201a}
+#tSea .g{display:block;height:5px;border-radius:9px;background:#0008;margin-top:5px;overflow:hidden}#tSea .g i{display:block;height:100%;background:linear-gradient(90deg,#3ae8b8,#7ab8ff,#b48aff);border-radius:9px}
+#tSea .dot{position:absolute;right:6px;top:6px;width:10px;height:10px;border-radius:50%;background:#ff3a3a;box-shadow:0 0 0 2px #fff,0 0 8px #ff3a3a}
+.mnHero .hSp{background:radial-gradient(120% 120% at 0 0,#0e3a40,#06121a)!important;border-color:#9ff0dc!important;color:#eafffa!important;box-shadow:0 0 14px #3ae8b855!important}
+`;document.head.appendChild(css2);
+let J=null,TB='tr';
+const cache=()=>{try{return LS.get('murim_spc',null)}catch(e){return null}};
+const lvOf=p=>Math.min(30,Math.floor((+p||0)/300));
+const canList=j=>{if(!j||!j.R)return[];const L=[];for(const tr of ['f','p'])for(const k in j.R[tr]){const lv=+k;if(lv<=j.lv&&!(j.cl||[]).includes(tr+lv)&&(tr==='f'||j.t>=1))L.push([tr,lv])}return L};
+async function spLoad(){if(!on())return J=J||cache();try{const j=await api('sp');if(j&&j.ok){J=j;try{LS.set('murim_spc',{lv:j.lv,p:j.p,t:j.t,b:j.s.b,can:canList(j).length})}catch(e){}}}catch(e){}return J}
+const frPv=id=>{let h='';try{h=frWrap('<span class="frph">'+(()=>{try{const d=frGet();return d.av?`<img src="${d.av}">`:'🙂'}catch(e){return'🙂'}})()+'</span>',id)}catch(e){}return`<div class="frprev">${h}</div>`};
+const RWH=r=>{const[t,v]=r;if(t==='f')return`<span class="ic">🎫</span><div><b>ตั๋วธรรมดา ×${v}</b></div>`;if(t==='g')return`<span class="ic">🎟️</span><div><b>ตั๋วทอง ×${v}</b></div>`;if(t==='lk')return`<span class="ic">🔒</span><div><b>ตั๋วล็อกชะตา ×${v}</b></div>`;
+ if(t==='ch')return`<span class="ic">📜</span><div><b>ตำนาน บทที่ ${v}</b><small>บทนำ อ่านได้ทุกคน</small></div>`;if(t==='chx')return`<span class="ic">📖</span><div><b>บทที่ ${v} ฉบับเต็ม</b><small>มีทางเลือก</small></div>`;
+ if(t==='org')return`<span class="ic">🐺</span><div><b>ชาติกำเนิด</b><small>สายเลือดหมาป่าเงิน · ฤดูนี้</small></div>`;if(t==='nv')return`<span class="ic">📕</span><div><b>นิยายปกแข็ง ×1</b></div>`;
+ if(t==='cos'){if(/^f_/.test(v))return frPv(v)+`<div><b>${esc((frOf(v)||{}).n||'กรอบ')}</b><small>ขยับได้</small></div>`;if(/^t_/.test(v))return`<div style="flex:1;min-width:0"><small>ฉายา</small>${sTitle(v)}</div>`;if(/^c_/.test(v))return`<div style="flex:1;min-width:0">${sBub(+v.slice(-1),'ธีมแชท',SCN[v])}</div>`}return''};
+function trackH(){const j=J,L=[];for(let lv=1;lv<=30;lv++){const f=j.R.f[lv],p=j.R.p[lv],rch=j.lv>=lv;
+ const cell=(tr,r)=>{if(!r)return`<div class="cl ${tr} em"></div>`;const got=(j.cl||[]).includes(tr+lv),can=rch&&!got&&(tr==='f'||j.t>=1);return`<button type="button" class="cl ${tr} ${can?'can':''} ${!rch||(tr==='p'&&j.t<1)?'no':''}" ${can?`onclick="spCl('${tr}',${lv})"`:''}>${RWH(r)}<span class="st ${got?'ok':''}">${got?'✓':can?'🎁':tr==='p'&&j.t<1?'🔒':''}</span></button>`};
+ L.push(`<div class="rw ${rch?'rch':''} ${lv===j.lv+1?'cur':''}"><div class="n">${lv}</div>${cell('f',f)}${cell('p',p)}</div>`)}return L.join('')}
+const tc=(k,h,pr,own)=>{const id=['f_s1','f_s2','f_s3'][k];return`<div class="tc t${k}"><div class="hd">${h}</div>${frPv(id)}${sTitle(['t_s1','t_s2','t_s3'][k])}${sBub(k+1,pname()||'คุณ','หิมะตกแล้ว')}<div class="pr">${pr}</div>${own?'<span class="own">✓ ของคุณ</span>':''}</div>`};
+function buyH(){const t=J.t,open=J.s.open;if(!open)return'<div class="card tag2" style="text-align:center">ฤดูนี้ปิดขายแล้ว · รับรางวัลที่ค้างได้อีก 7 วัน</div>';
+ if(t>=2)return`<div class="card" style="text-align:center;border-color:#eaf6ff88"><b style="color:#fff">👑 ฉบับจารึก</b><div class="tag2">ชื่อคุณอยู่ในหน้าจารึกของฤดูนี้แล้ว · ขอบคุณที่สนับสนุนครับ</div></div>`;
+ if(t===1)return`<div class="buy one"><button class="bb g2" onclick="spBuy('sp21')">อัปเกรดเป็นฉบับจารึก 70฿<small>ข้ามทันที 10 ขั้น · ชุดจักรพรรดิเหมันต์ · จารึกชื่อ</small></button></div>`;
+ return`<div class="buy"><button class="bb g1" onclick="spBuy('sp1')">คัมภีร์ทอง 59฿<small>ปลดทุกขั้น + ตำนานเต็ม</small></button><button class="bb g2" onclick="spBuy('sp2')">ฉบับจารึก 129฿<small>+ข้าม 10 ขั้น · ของพิเศษ</small></button></div>`}
+function eqH(){const L=['f_s1','t_s1','c_s1','f_s2','t_s2','c_s2','f_s3','t_s3','c_s3'].filter(has);if(!L.length)return'';let fe='',ce={};try{fe=frGet().eq}catch(e){}try{ce=JSON.parse(localStorage.getItem('murim_cos')||'{}').eq||{}}catch(e){}
+ return`<div class="sec">ของฤดูที่คุณมี</div>`+L.map(id=>{const k=id[0],cur=k==='f'?fe===id:(ce[k]===id);const pv=k==='f'?frPv(id):k==='t'?sTitle(id):sBub(+id.slice(-1),pname()||'คุณ',SCN[id]);return`<div class="eq">${k==='f'?pv:''}<div class="m">${k==='f'?`<b>${esc((frOf(id)||{}).n||'')}</b>`:pv}</div><button class="${cur?'on':''}" onclick="spEq('${k}','${id}',${cur?1:0})">${cur?'✓ ใช้อยู่':'สวมใส่'}</button></div>`}).join('')}
+function storyH(){const j=J,s=stGet();const at=(tr,n)=>{for(const k in j.R[tr]){const r=j.R[tr][k];if(r[0]===(tr==='f'?'ch':'chx')&&r[1]===n)return+k}return 99};
+ return`<div class="card tag2">ตำนานหมาป่าเงิน 5 บท · บทนำอ่านได้ทุกคนเมื่อถึงขั้น · ฉบับเต็มมีทางเลือก และตอนจบมี 3 แบบตามทางที่คุณเลือก</div>`+ST.map((c,i)=>{const n=i+1,fi=at('f',n),fx=at('p',n),okI=j.lv>=fi,okF=j.t>=1&&j.lv>=fx;
+  return`<button type="button" class="chp ${okI?'':'lk'}" ${okI?`onclick="spRead(${n})"`:''}><span class="n">${okI?n:'🔒'}</span><span style="flex:1;min-width:0"><b>บทที่ ${n} · ${c.t}</b><small class="tag2">${okI?(okF?(s[i]||n===5?'📖 ฉบับเต็ม':'📖 ฉบับเต็ม · ยังไม่ได้เลือกทาง'):'📜 บทนำ · ฉบับเต็มที่ขั้น '+fx+' (คัมภีร์ทอง)'):'ปลดที่ขั้น '+fi}</small></span></button>`}).join('')}
+function howH(){const d=J.dd||{};let dq=0,wq=0;try{const a=LS.get('murim_aq',{})||{};dq=((a.d||{}).q||[]).filter(q=>q.ok&&!q.x4).length;wq=((a.w||{}).q||[]).filter(q=>q.ok).length}catch(e){}
+ const R=(ic,t,v,c)=>`<div class="src"><span>${ic}</span><span><b>${t}</b><br><small class="tag2">${v}</small></span><span>${c}</span></div>`;
+ return`<div class="card"><b>ขั้นละ 300 แต้ม · 30 ขั้น</b><div class="tag2">ตัวคูณตอนนี้ ×${J.mul||1}${(J.mul||1)>1?' (ผู้สนับสนุนพิเศษ +20% / ตามทันเมื่อขั้นต่ำกว่าเกณฑ์ / สัปดาห์สุดท้าย ×2)':' · ผู้สนับสนุนพิเศษ +20% · ตามหลังเกณฑ์ ×1.5 · สัปดาห์สุดท้ายยังไม่ครบ ×2'}</div></div>
+ ${R('📋','ภารกิจรายวัน','ข้อละ 30 · วันละ 3 ข้อ',`${dq}/3`)}${R('🗓️','ภารกิจรายสัปดาห์','ข้อละ 150 · สัปดาห์ละ 3 ข้อ',`${wq}/3`)}
+ ${R('🕯️','จบชีวิต','20 แต้ม (อายุ 60+ ได้ 30) · วันละ 3 ชีวิต',`${Math.min(3,d.life||0)}/3`)}${R('❄','เหตุการณ์ฤดูหิมะในชีวิต','10 แต้ม · สุ่มเกิดระหว่างใช้ชีวิตในยุทธภพ/เซียน/เทพ',`${Math.min(3,d.sev||0)}/3`)}
+ ${R('🐉','ตีบอสโลก','10 แต้ม · วันละ 3 ครั้ง','เปิด 📜')}${R('⚡','ประกาศิตฟ้า','ผู้พิชิต 200 · ลำดับ 2–6 ได้ 50','')}${R('⚔️','ศึกสำนัก','สำนักชนะ 200 · ร่วมรบ 50','')}
+ <div class="tag2" style="margin-top:8px">ซื้อขั้นด้วยเงินไม่ได้ (ยกเว้นฉบับจารึกข้ามให้ 10 ขั้นครั้งเดียว) · ของทุกอย่างเป็นของแต่งและความสะดวก ไม่มีผลต่อพลังหรืออันดับ</div>`}
+window.openSP=async function(tab){if(tab)TB=tab;
+ if(!J){modal(`<div class="spv"><button class="xbtn" onclick="closeM()">✕</button><div class="card tag2" style="text-align:center">❄ กำลังเปิดคัมภีร์…</div></div>`,'sp')}
+ await spLoad();if(!J||!J.s){modal(`<div class="spv"><button class="xbtn" onclick="closeM()">✕</button><div class="card tag2" style="text-align:center">${on()?'ยังไม่มีฤดูกาลที่เปิดอยู่':'ต้องออนไลน์เพื่อเปิดคัมภีร์ฤดูกาล'}</div></div>`,'sp');return}
+ const j=J,left=j.s.b-Date.now(),need=j.lv>=30?0:300-(j.p%300),can=canList(j).length;
+ let body='';
+ if(TB==='tr')body=`<div class="sec">ของแต่ละเส้นทาง</div><div class="cmp3">${tc(0,'ฟรี','ฟรี',has('f_s1'))}${tc(1,'คัมภีร์ทอง','59฿',j.t>=1)}${tc(2,'ฉบับจารึก','129฿',j.t>=2)}</div>${buyH()}
+  ${can?`<button class="bb gc" onclick="spClAll()">🎁 รับรางวัลทั้งหมด (${can})</button>`:''}
+  <div class="sec">เส้นทางคัมภีร์</div><div class="rw" style="margin-bottom:0;font-size:11px;font-weight:900;color:#9fb8c8"><div></div><div style="text-align:center">ฟรี</div><div style="text-align:center;color:#9ff0dc">คัมภีร์ทอง</div></div>${trackH()}${eqH()}`;
+ else if(TB==='st')body=storyH();else if(TB==='how')body=howH();
+ else if(TB==='en'){body=`<div class="card tag2" style="text-align:center">กำลังเปิดหน้าจารึก…</div>`}
+ modal(`<div class="spv"><button class="xbtn" onclick="closeM()">✕</button>
+ <div class="hero2"><i class="au"></i><i class="au b"></i><i class="sn"></i><svg class="mtn" viewBox="0 0 390 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 60L50 22l30 18 46-32 52 40 34-20 60 34 52-30 66 28v0z" fill="#dfeef6" opacity=".9"/><path d="M0 60L70 36l44 16 60-24 70 32 56-18 90 18z" fill="#9ab8cc"/></svg>
+ <div class="in"><span class="chip">ฤดูที่ 1 · ${j.s.open?'เหลือ '+cdTx(left):'ปิดฤดูแล้ว'}</span><h3>❄ ${j.s.n}</h3><p>คัมภีร์ฤดูกาล · ตำนานหมาป่าเงินใต้แสงเหนือ</p>
+ <div class="lv"><div class="b">${j.lv}</div><div class="bar"><div class="t"><span>ขั้น ${j.lv} / 30</span><span>${j.lv>=30?'ครบแล้ว ✨':'อีก '+need+' แต้ม'}</span></div><div class="g"><i style="width:${j.lv>=30?100:(j.p%300)/3}%"></i></div></div></div></div></div>
+ <div class="tb">${[['tr','🎁 รางวัล'],['st','📖 ตำนาน'],['how','❄ ได้แต้มยังไง'],['en','👑 หน้าจารึก']].map(t=>`<button class="${TB===t[0]?'on':''}" onclick="openSP('${t[0]}')">${t[1]}</button>`).join('')}</div>
+ <div id="spBody">${body}</div><p class="tag2" style="text-align:center;margin-top:10px">ของแต่งล้วน ไม่มีผลต่อพลังหรืออันดับ</p></div>`,'sp');
+ if(TB==='en'){try{const r=await api('sp',{o:'ens'});const b=$('spBody');if(b&&$('modal').dataset.k==='sp'&&TB==='en')b.innerHTML=`<div class="card" style="text-align:center"><b style="color:#fff">👑 หน้าจารึก ${esc(j.s.n)}</b><div class="tag2">รายชื่อผู้ถือฉบับจารึก เรียงตามวันที่จารึก · อยู่ในคัมภีร์ฤดูนี้ตลอดไป</div></div>`+((r.L||[]).length?`<div class="card" style="line-height:2">${r.L.map((x,i)=>`<span style="display:inline-block;margin:0 10px 0 0"><b style="color:#9ff0dc">${i+1}.</b> ${esc(x.n||'ผู้ไม่ประสงค์ออกนาม')}</span>`).join('')}</div>`:'<div class="card tag2" style="text-align:center">หน้านี้ยังว่าง — ชื่อแรกรอคุณอยู่</div>')}catch(e){}}
+ try{islChipOff('spc')}catch(e){}};
+async function clOne(tr,lv){const j=await api('sp',{o:'cl',tr,lv});if(j&&(j.ok||j.dup)){J.cl=J.cl||[];if(!J.cl.includes(tr+lv))J.cl.push(tr+lv);return j.ok?j.r:null}return null}
+async function afterCl(rs){let cos=0;const tx=[];rs.forEach(r=>{if(!r)return;const[t,v]=r;if(t==='cos'||t==='org')cos=1;tx.push(t==='f'?`🎫×${v}`:t==='g'?`🎟️×${v}`:t==='lk'?`🔒×${v}`:t==='nv'?`📕×${v}`:t==='cos'?(/^f_/.test(v)?'🖼️ '+((frOf(v)||{}).n||''):/^t_/.test(v)?'🏷️ '+STN[v]:'💬 '+SCN[v]):t==='org'?'🐺 ชาติกำเนิด':t==='ch'||t==='chx'?'📖 บทที่ '+v:'')});
+ if(cos){try{await window.cosSync()}catch(e){}try{const d=frGet();let ch=0;['f_s1','f_s2','f_s3'].forEach(f=>{if(has(f)&&!d.own.includes(f)){d.own.push(f);ch=1}});if(ch){frSet(d);try{profPush()}catch(e){}}}catch(e){}}
+ if(tx.length)pop('❄','ได้รับจากคัมภีร์',tx.filter(Boolean).join(' · '),1);try{if(window._RR){window._RR.c=null;window._RR.f=null}}catch(e){}}
+window.spCl=async function(tr,lv){if(!on())return toast('ต้องออนไลน์');try{const r=await clOne(tr,lv);await afterCl([r])}catch(e){toast('รับไม่สำเร็จ')}openSP()};
+window.spClAll=async function(){if(!on())return toast('ต้องออนไลน์');const L=canList(J),rs=[];for(const[tr,lv]of L){try{rs.push(await clOne(tr,lv))}catch(e){break}}await afterCl(rs);openSP()};
+window.spEq=async function(k,id,off){try{if(k==='f'){frEquip(off?null:id)}else{const o=window.cosMenu;window.cosMenu=()=>{};try{await window.cosEq(k,off?null:id)}finally{window.cosMenu=o}}}catch(e){}openSP()};
+window.spRead=function(n){const c=ST[n-1],j=J,s=stGet();let fx=99;for(const k in j.R.p){const r=j.R.p[k];if(r[0]==='chx'&&r[1]===n)fx=+k}const full=j.t>=1&&j.lv>=fx;
+ let h=`<div class="rd">${esc(c.i)}</div>`;
+ if(!full)h+=`<div class="card" style="text-align:center"><b>📖 ฉบับเต็มของบทนี้อยู่ในคัมภีร์ทอง (ขั้น ${fx})</b><div class="tag2">เรื่องต่อจากนี้ ทางเลือก และตอนจบ 3 แบบ</div></div>${j.t<1&&j.s.open?'<div class="buy"><button class="bb g1" onclick="spBuy(\'sp1\')">คัมภีร์ทอง 59฿</button><button class="bb g2" onclick="spBuy(\'sp2\')">ฉบับจารึก 129฿</button></div>':''}`;
+ else if(n<5){h+=`<div class="rd fx">${esc(c.f)}</div>`;if(s[n-1]){const o=c.o.find(x=>x[1]===s[n-1]);h+=`<div class="card">✔ คุณเลือก: <b>${esc(o?o[0]:'')}</b></div>`}else h+=`<div class="sec">${esc(c.q)}</div>`+c.o.map(o=>`<button class="opt" onclick="spPick(${n},'${o[1]}')">${esc(o[0])}<small>${esc(o[2])}</small></button>`).join('')}
+ else{const done=[0,1,2,3].every(i=>s[i]);if(!done)h+=`<div class="card tag2" style="text-align:center">ตอนจบขึ้นอยู่กับทางที่คุณเลือกในบทที่ 1–4 · ยังเลือกไม่ครบ</div>`;else{const e=c.E[endKey()];h+=`<div class="sec">ตอนจบ: ${esc(e[0])}</div><div class="rd fx">${esc(e[1])}</div><div class="tag2" style="text-align:center">ตอนจบมี 3 แบบ · ทางเลือกของคุณพาคุณมาที่นี่</div>`}}
+ modal(`<div class="spv"><button class="xbtn" onclick="openSP('st')">✕</button><div class="card" style="text-align:center"><span class="chip">ตำนานหมาป่าเงิน · บทที่ ${n}</span><h3 style="margin:8px 0 0;color:#fff">${esc(c.t)}</h3></div>${h}<button class="gbtn" style="width:100%;margin-top:8px" onclick="openSP('st')">← กลับไปหน้าตำนาน</button></div>`,'sp')};
+window.spPick=function(n,k){const s=stGet();if(s[n-1])return;s[n-1]=k;stSet(s);spRead(n)};
+// ---------- ปุ่มเข้า: หน้าแรก + เมนูในเกม + ร้านค้า ----------
+function tSea(){try{const t=$('title'),g=$('tGrid')||$('tAqBtn');if(!t||!g||!t.classList.contains('on')||!g.offsetParent){return}
+ let b=$('tSea');const c=cache()||{},open=seaOpen();if(!open&&!(c.can>0)){if(b)b.remove();return}
+ if(!b){b=document.createElement('button');b.id='tSea';b.type='button';b.onclick=()=>openSP('tr');b.innerHTML='<i class="au"></i><i class="sn"></i><span class="i">❄</span><span class="m"><b></b><small></small><span class="g"><i></i></span></span><span class="go">เปิด ›</span><i class="dot" style="display:none"></i>'}
+ if(b.previousElementSibling!==g)g.insertAdjacentElement('afterend',b);
+ const lv=c.lv|0,tx=`คัมภีร์ฤดูกาล · ขั้น ${lv}/30 · ${open?'เหลือ '+cdTx(SEA.b-Date.now()):'รับรางวัลที่ค้าง'}`;
+ const bb=b.querySelector('b'),sm=b.querySelector('small'),gi=b.querySelector('.g i'),dt=b.querySelector('.dot');
+ if(bb.textContent!=='❄ '+SEA.n)bb.textContent='❄ '+SEA.n;if(sm.textContent!==tx)sm.textContent=tx;gi.style.width=Math.min(100,lv/30*100)+'%';dt.style.display=c.can>0?'':'none'}catch(e){}}
+setInterval(tSea,1200);setTimeout(()=>{spLoad().then(tSea)},4000);setInterval(()=>{if(on()&&!document.hidden)spLoad()},300000);
+setInterval(()=>{try{const h=document.querySelector('.mnHero');if(h&&!h.querySelector('.hSp')&&(seaOpen()||((cache()||{}).can>0))){const c=cache()||{};const b=document.createElement('button');b.className='hSp';b.onclick=()=>{closeM();openSP('tr')};b.innerHTML=`<i>❄</i><b>คัมภีร์ฤดูกาล</b><small>ขั้น ${c.lv|0}/30${c.can>0?' · 🎁 รับได้':''}</small>`;h.insertBefore(b,h.firstChild)}}catch(e){}},700);
+{const _os=window.openStore;if(typeof _os==='function')window.openStore=function(t){if(t==='sp')return openSP('tr');if(t==='nv')return openNovels();return _os.apply(this,arguments)}}
+// แจ้งเตือนมีรางวัลรอรับระหว่างเล่น
+setInterval(()=>{try{const c=cache()||{};if(live()&&c.can>0&&!modalOpen&&typeof islChipX==='function')islChipX('spc','❄','รับรางวัลคัมภีร์',()=>openSP('tr'))}catch(e){}},15000);
+
+// ---------- 📕 นิยายปกแข็ง ----------
+const css3=document.createElement('style');css3.textContent=`
+#modal[data-k="nv"]{background:#140c08!important;border-color:#c9a24a!important}
+.npv{color:#f6ead0}.npv h3{color:#ffe2a0}.npv .tag2{color:#cdbb92}
+.npv .bk3{perspective:900px;display:flex;justify-content:center;padding:12px 0 6px}
+.npv .bk{position:relative;width:210px;height:290px;transform:rotateY(-16deg) rotateX(4deg);transform-style:preserve-3d;animation:nbF 5s ease-in-out infinite alternate}
+@keyframes nbF{to{transform:rotateY(-6deg) rotateX(2deg) translateY(-4px)}}
+.npv .bk .pg{position:absolute;right:-10px;top:6px;bottom:6px;width:14px;background:repeating-linear-gradient(#f4ead0 0 2px,#d8c8a0 2px 3px);transform:translateZ(-6px);border-radius:0 3px 3px 0}
+.npv .bk .cv{position:absolute;inset:0;border-radius:4px 12px 12px 4px;background:radial-gradient(120% 70% at 30% 20%,#a82a1a,#6a140c 60%,#3a0804);box-shadow:0 22px 36px #000c,inset 0 0 0 1px #000,inset 10px 0 0 #3a0804,inset 12px 0 0 #c9a24a66;overflow:hidden}
+.npv .bk .cv:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,#ffffff06 0 2px,transparent 2px 5px)}
+.npv .fr1{position:absolute;inset:12px 12px 12px 22px;border:2px solid #e8b54a;border-radius:4px}.npv .fr2{position:absolute;inset:17px 17px 17px 27px;border:1px solid #e8b54a77}
+.npv .cn{position:absolute;width:22px;height:22px;border:2px solid #ffd27a}
+.npv .ttl{position:absolute;left:22px;right:12px;top:28px;text-align:center}
+.npv .ttl small{display:block;font-size:10px;letter-spacing:3px;color:#f3d27a}
+.npv .ttl b{display:block;font-size:24px;line-height:1.15;margin-top:4px;background:linear-gradient(180deg,#fff6c8,#e8b54a 60%,#a06a10);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 #2a0402);word-break:break-word}
+.npv .ttl span{display:block;font-size:11px;color:#f1d9a8;margin-top:3px}
+.npv .md{position:absolute;left:50%;top:124px;transform:translateX(-50%);margin-left:5px;width:86px;height:96px;border-radius:44px 44px 10px 10px;border:2px solid #e8b54a;background:#1c1a28;overflow:hidden;box-shadow:0 0 0 4px #3a0804,0 0 0 5px #e8b54a77}
+.npv .md canvas{width:100%;height:100%;image-rendering:pixelated}
+.npv .ft{position:absolute;left:22px;right:12px;bottom:24px;text-align:center;font-size:10.5px;color:#f3d27a}
+.npv .rib{position:absolute;right:28px;top:-4px;width:14px;height:64px;background:linear-gradient(#ffe29a,#c98a1a);clip-path:polygon(0 0,100% 0,100% 100%,50% 84%,0 100%)}
+.npv .foil{position:absolute;inset:0;width:300%;left:-100%;background:linear-gradient(110deg,transparent 42%,#fff2c855 50%,transparent 58%);animation:lxSweep 3.6s linear infinite;pointer-events:none}
+.npv .ages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:12px}
+.npv .ages div{text-align:center;font-size:11px;color:#d9c49a}.npv .ages canvas{width:100%;height:62px;image-rendering:pixelated;border-radius:10px;border:2px solid #6a5430;background:#1c1a28;display:block;margin-bottom:3px}
+.npv .pgx{margin-top:12px;border-radius:14px;overflow:hidden;border:2px solid #4a3a22;background:linear-gradient(#f2e4c0,#dcc69c);color:#3a2a14;box-shadow:0 3px 0 #000}
+.npv .pgx h5{margin:0;padding:9px 12px;background:linear-gradient(#7a2a1a,#5a1a10);color:#ffe2a0;font-size:13.5px}
+.npv .pgx .bd{padding:8px 14px 12px;font-size:13.5px;line-height:1.75}.npv .pgx .bd p{margin:0 0 6px}.npv .pgx .bd b{color:#7a2a10}
+.npv .end{text-align:center;font-style:italic;color:#5a3a14;padding:4px 12px 12px}
+.npv .vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.npv .vs>div{border-radius:12px;padding:10px;font-size:12px;line-height:1.5}
+.npv .vs .a{border:2px dashed #5a4a32;background:#1a130c;color:#d9c49a}.npv .vs .b{position:relative;overflow:hidden;border:2px solid #e8b54a;background:linear-gradient(160deg,#3a2410,#241608);box-shadow:0 0 14px #e8b54a55}
+.npv .go{position:relative;overflow:hidden;width:100%;margin-top:10px;border:none;border-radius:14px;padding:13px;font:inherit;font-weight:900;font-size:16px;background:linear-gradient(#ffe29a,#e8b54a);color:#3a2a08;box-shadow:0 4px 0 #6a4a10,0 0 16px #e8b54a66;cursor:pointer}
+.npv .lr{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;border:1px solid #4a3a22;background:#1e150c;margin:6px 0}.npv .lr .m{flex:1;min-width:0}.npv .lr small{display:block;color:#bba882;font-size:11.5px}
+.npv .lr button{flex:none;border:none;border-radius:10px;padding:8px 10px;font:inherit;font-size:12.5px;font-weight:800;background:linear-gradient(#ffe29a,#e8b54a);color:#3a2a08}.npv .lr button.o{background:#2a2016;color:#f1e3c2;border:1px solid #c9a24a}
+`;document.head.appendChild(css3);
+const strip=t=>String(t||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+const STG=[[0,12,'วัยเยาว์'],[13,19,'วัยหนุ่มสาว'],[20,34,'ออกท่องโลก'],[35,59,'วัยกลางคน'],[60,1e12,'บั้นปลาย']];
+function chapters(d){const ev=(d.key||[]).map(k=>{const m=/^(\d+) ปี — ([\s\S]*)$/.exec(k);return m?[+m[1],strip(m[2])]:[null,strip(k)]}).filter(x=>x[1]);let la=0;ev.forEach(x=>{if(x[0]==null)x[0]=la;la=x[0]});
+ return STG.map(s=>({s,ev:ev.filter(x=>x[0]>=s[0]&&x[0]<=s[1])})).filter(c=>c.ev.length)}
+const ageLook=(lk,i)=>{lk=Object.assign({},lk||{});if(i===3)lk.hair='#e4e4ec';return lk};
+window.openBook=async function(lid,from){let j=null;try{j=await api('lifeview&l='+encodeURIComponent(lid))}catch(e){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📕 เปิดนิยายไม่ได้</h3><p class="tag2">${e.message==='private'?'เจ้าของตั้งเป็นส่วนตัว':'ไม่พบเล่มนี้ หรือข้อมูลหมดอายุแล้ว'}</p>`,'nv');return}
+ const d=j.d||{},ch=chapters(d),hard=!!j.h,cs=ch.length;window._nvFrom=from||'';
+ const cover=`<div class="bk3"><div class="bk"><div class="pg"></div><div class="cv"><div class="fr1"></div><div class="fr2"></div><i class="cn" style="left:20px;top:10px;border-right:none;border-bottom:none"></i><i class="cn" style="right:10px;top:10px;border-left:none;border-bottom:none"></i><i class="cn" style="left:20px;bottom:10px;border-right:none;border-top:none"></i><i class="cn" style="right:10px;bottom:10px;border-left:none;border-top:none"></i>
+ <div class="ttl"><small>บันทึกชีวิต</small><b>${esc(d.n||'นิรนาม')}</b><span>${esc(d.ep||'')}</span></div><div class="md"><canvas width="140" height="154" id="nvC"></canvas></div><div class="ft">${d.x?'โลกเทพเซียน':'ยุทธภพ'} · ${fmt(d.age||0)} ปี · ${cs} บท</div><div class="rib"></div><i class="foil"></i></div></div></div>`;
+ const ages=`<div class="ages">${['เด็ก','หนุ่มสาว','กลางคน','ชรา'].map(a=>`<div><canvas width="140" height="154" class="nvA"></canvas>${a}</div>`).join('')}</div>`;
+ let body='';
+ if(hard)body=ch.map((c,i)=>`<div class="pgx"><h5>บทที่ ${i+1} · ${c.s[2]} <small style="opacity:.8">(${c.ev[0][0]===c.ev[c.ev.length-1][0]?c.ev[0][0]:c.ev[0][0]+'–'+c.ev[c.ev.length-1][0]} ปี)</small></h5><div class="bd">${c.ev.slice(0,14).map(x=>`<p><b>${x[0]} ปี</b> — ${esc(x[1])}</p>`).join('')}${c.ev.length>14?`<p style="opacity:.7">… และอีก ${c.ev.length-14} เหตุการณ์</p>`:''}</div></div>`).join('')+`<div class="pgx"><h5>บทส่งท้าย</h5><div class="bd"><p>🪦 ${esc(d.cause||'')} · อายุ ${fmt(d.age||0)} ปี</p></div>${d.bye?`<div class="end">“${esc(d.bye)}”</div>`:''}</div>
+  <button class="go" onclick="nvShare('${lid}')">🔗 คัดลอกลิงก์ให้คนอื่นอ่าน<i class="foil"></i></button>`;
+ else body=`<div class="pgx"><h5>สารบัญ</h5><div class="bd">${ch.map((c,i)=>`<p><b>บทที่ ${i+1}</b> ${c.s[2]} <span style="float:right;opacity:.7">${c.ev.length} เหตุการณ์</span></p>`).join('')}</div></div>
+  <div class="vs"><div class="a"><b>ฟรี</b><br>ดูชีวิตแบบสรุปในทำเนียบ · เก็บไว้ 40 วัน</div><div class="b"><b style="color:#ffe29a">ปกแข็ง</b><br>ปกผ้าลายทอง แบ่งบทตามวัย เก็บถาวร แชร์ลิงก์ได้<i class="foil"></i></div></div>
+  ${j.mine?`<button class="go" onclick="nvMake('${lid}')">📕 ทำเป็นปกแข็ง<i class="foil"></i></button><p class="tag2" style="text-align:center">ใช้เล่มที่มีอยู่ (ผู้สนับสนุนพิเศษฟรีเดือนละ 3 เล่ม) หรือซื้อเล่มละ 19 บาท</p>`:'<p class="tag2" style="text-align:center">เจ้าของชีวิตนี้ยังไม่ได้ทำเป็นปกแข็ง</p>'}`;
+ modal(`<button class="xbtn" onclick="${from==='list'?'openNovels()':'closeM()'}">✕</button><div class="npv"><h3 style="text-align:center;margin:0">📕 ${hard?'นิยายปกแข็ง':'ตัวอย่างนิยายปกแข็ง'}</h3>${cover}${ages}${body}</div>`,'nv');
+ try{spAva($('nvC'),d.look||{})}catch(e){}document.querySelectorAll('.nvA').forEach((c,i)=>{try{spAva(c,ageLook(d.look,i))}catch(e){}})};
+window.nvShare=function(lid){const u=location.origin+'/?book='+lid;try{navigator.clipboard.writeText(u);toast('คัดลอกลิงก์แล้ว 📕')}catch(e){prompt('คัดลอกลิงก์นี้',u)}};
+window.nvMake=async function(lid){if(!on())return toast('ต้องออนไลน์');try{const j=await api('nv',{o:'mk',lid});if(j&&j.ok){toast('📕 ทำปกแข็งเรียบร้อย');try{sfx('good')}catch(e){}return openBook(lid,'list')}
+ if(j&&j.err==='nocredit'){window._nvWant=lid;return spBuy('nv1','nv')}toast(j&&j.err==='gone'?'ข้อมูลชีวิตนี้หมดอายุแล้ว (เก็บไว้ 40 วัน)':j&&j.err==='owner'?'ต้องเป็นชีวิตของคุณเอง':'ทำไม่สำเร็จ')}catch(e){toast('ทำไม่สำเร็จ')}};
+window.openNovels=async function(){let I={c:0,vf:0,bk:[]};try{if(on())I=await api('nv')||I}catch(e){}
+ const G=(()=>{try{return LS.get('murim_graves',[])||[]}catch(e){return[]}})().filter(g=>g.lid&&(Date.now()-(g.t||0)<40*864e5||(I.bk||[]).includes(g.lid))).slice(0,30);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="npv"><h3 style="text-align:center;margin:0">📕 นิยายปกแข็ง</h3><p class="tag2" style="text-align:center;margin:2px 0 8px">เปลี่ยนชีวิตที่จบแล้วให้เป็นนิยายหนึ่งเล่ม · เก็บถาวร · แชร์ลิงก์ให้คนอื่นอ่าน</p>
+ <div class="vs" style="margin-top:0"><div class="a" style="text-align:center"><b style="font-size:20px;color:#ffe29a">${I.c|0}</b><br>เล่มที่มีอยู่</div><div class="b" style="text-align:center"><b style="font-size:20px;color:#ffe29a">${I.vt>=2?I.vf:'—'}</b><br>${I.vt>=2?'ฟรีเดือนนี้ (ผู้สนับสนุนพิเศษ)':'ผู้สนับสนุนพิเศษได้ฟรีเดือนละ 3'}<i class="foil"></i></div></div>
+ ${G.length?G.map(g=>{const h=(I.bk||[]).includes(g.lid);return`<div class="lr"><span style="font-size:22px">${h?'📕':'🪦'}</span><div class="m"><b>${esc(g.n||'')}</b><small>${esc(g.e||'')} · ${g.a|0} ปี · ${esc(g.d||'')}</small></div>${h?`<button onclick="openBook('${g.lid}','list')">อ่าน</button>`:`<button class="o" onclick="openBook('${g.lid}','list')">ดูตัวอย่าง</button>`}</div>`}).join(''):'<p class="tag2" style="text-align:center">ยังไม่มีชีวิตที่จบแล้ว (ต้องออนไลน์ตอนจบชีวิต · เก็บไว้ 40 วัน)</p>'}
+ <button class="go" onclick="spBuy('nv1','nv')">💳 ซื้อ 1 เล่ม 19 บาท<i class="foil"></i></button></div>`,'nv')};
+{const _lv=openLifeView;openLifeView=async function(lid,tab){const r=await _lv.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='lifeview'&&!m.querySelector('.nvBtn')){const b=document.createElement('button');b.className='pbtn nvBtn';b.style.cssText='width:100%;margin-top:8px;background:linear-gradient(#ffe29a,#e8b54a);color:#3a2a08';b.textContent='📕 เปิดแบบนิยายปกแข็ง';b.onclick=()=>openBook(lid);const g=m.querySelector('.gbtn:last-of-type');if(g)g.insertAdjacentElement('beforebegin',b);else m.appendChild(b)}}catch(e){}return r}}
+// ลิงก์ ?book=… เปิดนิยายทันที
+(function(){try{const q=new URLSearchParams(location.search),b=q.get('book');if(!b)return;const lid=b.replace(/[^a-z0-9]/g,'').slice(0,16);q.delete('book');history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:''));let n=0;const t=setInterval(()=>{n++;try{if((typeof onlineOK!=='undefined'&&onlineOK)||n>12){clearInterval(t);openBook(lid)}}catch(e){}},700)}catch(e){}})();
+})()}catch(e){console.error('block75',e)}

@@ -351,7 +351,7 @@ const COS_BASE = Object.create(null); // pk -> [ราคาเต็ม, [ไ�
 for (let i = 1; i <= 8; i++) { COS_BASE['cf' + i] = [COS_FP[i - 1], ['f_p' + i]]; COS_BASE['ct' + i] = [i === 1 ? 29 : 19, ['t_p' + i]]; COS_BASE['cc' + i] = [i === 1 ? 29 : 19, ['c_p' + i]]; COS_BASE['cs' + i] = [COS_SET[i - 1], ['f_p' + i, 't_p' + i, 'c_p' + i]] }
 for (let i = 9; i <= 11; i++) COS_BASE['ct' + i] = [9, ['t_p' + i]]; // ฉายาเริ่มต้น 9 บาท
 COS_BASE.call = [399, [...Array(8).keys()].flatMap(i => ['f_p' + (i + 1), 't_p' + (i + 1), 'c_p' + (i + 1)])];
-const COS_ALL = new Set([...COS_BASE.call[1], 't_p9', 't_p10', 't_p11']);
+const COS_ALL = new Set([...COS_BASE.call[1], 't_p9', 't_p10', 't_p11', 'f_s1', 't_s1', 'c_s1', 'f_s2', 't_s2', 'c_s2', 'f_s3', 't_s3', 'c_s3']);
 // 🧑 รูปโปรไฟล์ขยับได้ (ร้านตกแต่ง หมวดรูปโปรไฟล์) — ราคา 9–29 บาท
 for (let i = 1; i <= 10; i++) { COS_BASE['pa' + i] = [[9, 9, 15, 15, 19, 19, 25, 25, 29, 29][i - 1], ['a_p' + i]]; COS_ALL.add('a_p' + i) }
 // 🏙️ ชุดตกแต่งยุคปัจจุบัน: 6 ชุด (กรอบ f_m · ฉายา t_m · ธีมแชท c_m) + ฉายาเสริม 18 แบบ (t_n) — ราคาเดียวกับสูตรของชุดยุทธภพ
@@ -394,6 +394,31 @@ const VIP_GIFT_UNTIL = Date.parse('2026-12-01T00:00:00+07:00'); // ผู้ส�
 const vipTier = (v, t = Date.now()) => !v ? 0 : v.u ? 3 : (+v.e2 || 0) > t ? 2 : (+v.e1 || 0) > t ? 1 : 0;
 const VIP_TT = ['ผู้สนับสนุนสำนัก', 'ศิษย์ใต้โคมแดง', 'ผู้ถือตราชาด', 'ผู้เฝ้าหอโคม', 'สหายแห่งยุทธภพ', 'ผู้ค้ำจุนสำนัก'];
 const vipOut = v => ({ t: vipTier(v), e1: +(v && v.e1) || 0, e2: +(v && v.e2) || 0, u: v && v.u ? 1 : 0, tt: String((v && v.tt) || ''), ttl: VIP_TT });
+// ❄ คัมภีร์ฤดูกาล: ฤดูละ ~6 สัปดาห์ · 30 ขั้น ขั้นละ 300 แต้ม · เส้นฟรี + เส้นคัมภีร์ทอง (59) / ฉบับจารึก (129 = ทอง + ข้าม 10 ขั้น + ชุดจักรพรรดิ)
+const SEA = [{ id: 's1', n: 'ฤดูหิมะเหนือ', a: Date.parse('2026-11-19T00:00:00+07:00'), b: Date.parse('2027-01-01T00:00:00+07:00') }];
+const SP_LV = 300, SP_MAX = 30, SP_GRACE = 7 * 864e5;
+const seaNow = (t = Date.now()) => SEA.find(s => t >= s.a && t < s.b) || null;
+const seaClaim = (t = Date.now()) => SEA.find(s => t >= s.a && t < s.b + SP_GRACE) || null;
+// รางวัล: f=ตั๋วธรรมดา g=ตั๋วทอง lk=ตั๋วล็อก cos=ของแต่ง ch=บทนำ chx=บทเต็ม org=ชาติกำเนิดฤดู nv=นิยายปกแข็ง
+const SPR = { s1: {
+  f: { 1: ['f', 2], 2: ['ch', 1], 3: ['f', 2], 5: ['cos', 't_s1'], 6: ['f', 3], 8: ['ch', 2], 10: ['g', 1], 12: ['lk', 1], 14: ['ch', 3], 15: ['f', 3], 18: ['cos', 'c_s1'], 20: ['cos', 'f_s1'], 22: ['ch', 4], 24: ['f', 4], 26: ['ch', 5], 28: ['lk', 1], 30: ['g', 1] },
+  p: { 1: ['g', 1], 2: ['chx', 1], 3: ['f', 4], 4: ['lk', 1], 5: ['cos', 'f_s2'], 6: ['f', 4], 7: ['lk', 1], 8: ['chx', 2], 9: ['f', 5], 10: ['cos', 't_s2'], 11: ['g', 1], 12: ['lk', 2], 13: ['f', 5], 14: ['chx', 3], 15: ['cos', 'c_s2'], 16: ['f', 5], 17: ['lk', 1], 18: ['g', 1], 19: ['f', 6], 20: ['org', 'o_s1'], 21: ['lk', 2], 22: ['chx', 4], 23: ['f', 6], 24: ['g', 1], 25: ['nv', 1], 26: ['chx', 5], 27: ['lk', 2], 28: ['f', 8], 29: ['g', 1], 30: ['g', 2] } } };
+const SP_COS = ['f_s1', 't_s1', 'c_s1', 'f_s2', 't_s2', 'c_s2', 'f_s3', 't_s3', 'c_s3'];
+const spKey = (s, id) => 'sp:' + s.id + ':' + id;
+const spLvOf = p => Math.min(SP_MAX, Math.floor((+p || 0) / SP_LV));
+// ตัวคูณ: ผู้สนับสนุนพิเศษ/ผู้ก่อตั้ง +20% · ตามหลังเกณฑ์ ×1.5 · สัปดาห์สุดท้ายยังไม่ครบ ×2
+async function spMul(s, id, p) {
+  let m = 1; try { const v = jp(await cmd('GET', 'vip:' + id)); if (vipTier(v) >= 2) m *= 1.2 } catch {}
+  const now = Date.now(), lv = spLvOf(p), exp = SP_MAX * (now - s.a) / Math.max(1, s.b - s.a - 7 * 864e5);
+  if (lv < SP_MAX && s.b - now <= 7 * 864e5) m *= 2; else if (lv < exp - 2) m *= 1.5;
+  return m;
+}
+async function spAdd(id, pts, cap) {
+  const s = seaNow(); if (!s || !okId(id) || !(pts > 0)) return 0;
+  if (cap) { const day = new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10), ck = 'spd:' + id + ':' + day, u = +(await cmd('HINCRBY', ck, cap[0], 1)) || 0; await cmd('EXPIRE', ck, 172800); if (u > cap[1]) return 0 }
+  const k = spKey(s, id), p0 = +(await cmd('HGET', k, 'p')) || 0, add = Math.round(pts * (await spMul(s, id, p0)));
+  await pipe([['HINCRBY', k, 'p', add], ['EXPIRE', k, 86400 * 120]]); return add;
+}
 async function vipAdd(id, tier, days, sign) {
   const v = jp(await cmd('GET', 'vip:' + id)) || {}, t = Date.now();
   if (tier === 3) { if (sign > 0) v.u = 1; else delete v.u }
@@ -484,7 +509,7 @@ const annPoll = async (ann, id) => {
   } catch { return ann }
 };
 const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
-const SENS_A = new Set(['lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'life', 'live', 'liveend']);
+const SENS_A = new Set(['lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'life', 'live', 'liveend', 'sp', 'nv']);
 
 function uaMeta(req, now) {
   const ua = String(req.headers['user-agent'] || '');
@@ -1791,6 +1816,52 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     // 📜 ภารกิจบัญชี (รายวัน/รายสัปดาห์/สมุดรายเดือน/ตำนาน/ลับ) · ⚡ ประกาศิตฟ้า (คนเดียวทั้งเว็บ) · 🐉 บอสโลก · ⚔️ ศึกสำนัก
     // ความคืบหน้าทำในเครื่อง แต่ "ของที่มีค่า" (ตั๋ว) จ่ายที่นี่ และมีเพดานต่อวัน/สัปดาห์/เดือน → โกงได้ไม่เกินที่คนเล่นจริงได้
     // ============================================================
+    // ========== ❄ คัมภีร์ฤดูกาล ==========
+    if (a === 'sp') {
+      const s = seaClaim(), o = String(b.o || qOf(req).o || 'get'), now2 = Date.now(); if (!s) return res.json({ ok: 0, err: 'none' });
+      const open = now2 < s.b, day = new Date(now2 + 7 * 3600e3).toISOString().slice(0, 10);
+      if (o === 'get') { const S0 = { id: s.id, n: s.n, a: s.a, b: s.b, open: open ? 1 : 0 };
+        if (!okId(id)) return res.json({ ok: 1, s: S0, p: 0, lv: 0, t: 0, cl: [], R: SPR[s.id] });
+        const [h, cl, dd, en] = await pipe([['HGETALL', spKey(s, id)], ['SMEMBERS', 'spc:' + s.id + ':' + id], ['HGETALL', 'spd:' + id + ':' + day], ['HLEN', 'spe:' + s.id]]);
+        const H = {}; if (Array.isArray(h)) for (let i = 0; i + 1 < h.length; i += 2) H[h[i]] = h[i + 1]; else if (h) Object.assign(H, h);
+        const D = {}; if (Array.isArray(dd)) for (let i = 0; i + 1 < dd.length; i += 2) D[dd[i]] = +dd[i + 1]; else if (dd) Object.assign(D, dd);
+        const p = +H.p || 0, mul = open ? await spMul(s, id, p) : 1;
+        return res.json({ ok: 1, s: S0, p, lv: spLvOf(p), t: +H.t || 0, cl: cl || [], R: SPR[s.id], dd: D, mul: Math.round(mul * 100) / 100, en: +en || 0, now: now2 }) }
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'post' });
+      if ((o === 'life' || o === 'sev') && (await cmd('SET', 'spr:' + id, 1, 'NX', 'PX', 700)) !== 'OK') return res.json({ ok: 0, err: 'fast' });
+      if (o === 'life') { if (!open) return res.json({ ok: 0 }); const ag = Math.max(0, +b.age || 0), add = await spAdd(id, ag >= 60 ? 30 : 20, ['life', 3]); return res.json({ ok: 1, add }) }
+      if (o === 'sev') { if (!open) return res.json({ ok: 0 }); const add = await spAdd(id, 10, ['sev', 3]); return res.json({ ok: 1, add }) }
+      if (o === 'cl') {
+        const tr = b.tr === 'p' ? 'p' : 'f', lv = Math.floor(+b.lv || 0), R = (SPR[s.id] || {})[tr] || {}, r = R[lv]; if (!r) return res.json({ err: 'lv' });
+        const H = await cmd('HMGET', spKey(s, id), 'p', 't'), p = +(H && H[0]) || 0, t = +(H && H[1]) || 0;
+        if (spLvOf(p) < lv) return res.json({ ok: 0, err: 'notyet' }); if (tr === 'p' && t < 1) return res.json({ ok: 0, err: 'pass' });
+        if (!+(await cmd('SADD', 'spc:' + s.id + ':' + id, tr + lv))) return res.json({ ok: 0, dup: 1 }); await cmd('EXPIRE', 'spc:' + s.id + ':' + id, 86400 * 400);
+        const [ty, v] = r;
+        if (ty === 'f') await pipe([['INCRBY', 'rrf:' + id, v], ['EXPIRE', 'rrf:' + id, 86400 * 180]]);
+        else if (ty === 'g') await pipe([['INCRBY', 'rrg:' + id, v], ['EXPIRE', 'rrg:' + id, 86400 * 365]]);
+        else if (ty === 'lk') await cmd('INCRBY', 'lkc:' + id, v);
+        else if (ty === 'cos' || ty === 'org') await cmd('SADD', 'cos:' + id, v);
+        else if (ty === 'nv') await cmd('INCRBY', 'nvc:' + id, v);
+        return res.json({ ok: 1, r }) }
+      if (o === 'ens') { const h = await cmd('HGETALL', 'spe:' + s.id), L = []; if (Array.isArray(h)) for (let i = 0; i + 1 < h.length; i += 2) { const x = jp(h[i + 1]); if (x) L.push(x) } L.sort((x, y) => x.t - y.t); return res.json({ ok: 1, L: L.slice(0, 300).map(x => ({ n: x.n, t: x.t })) }) }
+      return res.json({ err: 'op' });
+    }
+    // ========== 📕 นิยายปกแข็ง ==========
+    if (a === 'nv') {
+      const o = String(b.o || qOf(req).o || 'get'), MONn = new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 7);
+      if (!okId(id)) return res.json({ ok: 0, err: 'id' });
+      const vt = vipTier(jp(await cmd('GET', 'vip:' + id))), vf = vt >= 2 ? Math.max(0, 3 - (+(await cmd('GET', 'nvv:' + id + ':' + MONn)) || 0)) : 0;
+      if (o === 'get') { const [c, bk] = await pipe([['GET', 'nvc:' + id], ['SMEMBERS', 'nvb:' + id]]); return res.json({ ok: 1, c: +c || 0, vf, vt, bk: bk || [] }) }
+      if (o === 'mk') { if (req.method !== 'POST') return res.status(400).json({ err: 'post' });
+        const lid = String(b.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16); if (lid.length < 6) return res.json({ ok: 0, err: 'lid' });
+        const [own, d, hc] = await pipe([['GET', 'lifeo:' + lid], ['EXISTS', 'lifed:' + lid], ['GET', 'lifeh:' + lid]]);
+        if (own !== id) return res.json({ ok: 0, err: 'owner' }); if (!+d) return res.json({ ok: 0, err: 'gone' });
+        if (!hc) { let paid = ''; if (vf > 0) { const u = +(await cmd('INCR', 'nvv:' + id + ':' + MONn)) || 1; await cmd('EXPIRE', 'nvv:' + id + ':' + MONn, 86400 * 40); if (u <= 3) paid = 'vip' }
+          if (!paid) { const left = +(await cmd('DECR', 'nvc:' + id)); if (left < 0) { await cmd('INCR', 'nvc:' + id); return res.json({ ok: 0, err: 'nocredit' }) } paid = 'c' }
+          await pipe([['SET', 'lifeh:' + lid, paid], ['PERSIST', 'lifed:' + lid], ['PERSIST', 'lifeo:' + lid], ['SET', 'lifep:' + lid, '1'], ['SADD', 'nvb:' + id, lid]]) }
+        return res.json({ ok: 1, lid }) }
+      return res.json({ err: 'op' });
+    }
     if (a === 'aq' || a === 'hq' || a === 'wb' || a === 'sw') {
       const o = String(b.o || qOf(req).o || 'get'), adm = isAdmKey(b.key || qOf(req).key);
       const DAY = new Date(now + 7 * 3600e3).toISOString().slice(0, 10), MON = DAY.slice(0, 7);
@@ -1807,7 +1878,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const hqNew = async (S0) => { const r = (S0 ? S0.r : 0) + 1, lq = ((await cmd('LRANGE', 'hq:lq', 0, 4)) || []).map(Number); if (S0 && !lq.includes(S0.q)) lq.unshift(S0.q); // ไม่ซ้ำ 5 รอบล่าสุด
         const can = Array.from({ length: HQN }, (_, i) => i).filter(i => !lq.slice(0, 5).includes(i)), q = can[Math.floor(Math.random() * can.length)];
         const S1 = { r, q, g: HQ_MG[Math.floor(Math.random() * HQ_MG.length)], t0: now, ph: 'on' }; await pipe([['SET', 'hq:s', JSON.stringify(S1)], ['LPUSH', 'hq:lq', q], ['LTRIM', 'hq:lq', 0, 4]]); if (S0 && S0.ph === 'on') await pipe([['LPUSH', 'hq:hof', JSON.stringify({ r: S0.r, q: S0.q, n: '', t: now, x: 1 })], ['LTRIM', 'hq:hof', 0, 49]]); await pub(); return S1 };
-      const hqWin = async (H, c) => { H.ph = 'cd'; H.wt = now; H.wn = c.n; H.wu = c.u; await give(c.u, 0, 3); await gfr(c.u, 'f_hq1'); await pipe([['SET', 'hq:s', JSON.stringify(H)], ['LPUSH', 'hq:hof', JSON.stringify({ r: H.r, q: H.q, g: H.g, n: c.n, t: now })], ['LTRIM', 'hq:hof', 0, 49], ['LPUSH', 'hq:rw', c.u], ['LTRIM', 'hq:rw', 0, 1]]); await pub() };
+      const hqWin = async (H, c) => { H.ph = 'cd'; H.wt = now; H.wn = c.n; H.wu = c.u; await give(c.u, 0, 3); try { await spAdd(c.u, 200) } catch {} await gfr(c.u, 'f_hq1'); await pipe([['SET', 'hq:s', JSON.stringify(H)], ['LPUSH', 'hq:hof', JSON.stringify({ r: H.r, q: H.q, g: H.g, n: c.n, t: now })], ['LTRIM', 'hq:hof', 0, 49], ['LPUSH', 'hq:rw', c.u], ['LTRIM', 'hq:rw', 0, 1]]); await pub() };
       const hqTick = async () => {
         let H = jp(await cmd('GET', 'hq:s'));
         if (!H) return await hqNew(null);
@@ -1824,7 +1895,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (!ok) { const rw0 = (await cmd('LRANGE', 'hq:rw', 0, 1)) || [], rest = L.map(jp).filter(x => x && x.st === 'p' && x.u !== u && !rw0.includes(x.u)); if (H.ph === 'chk') { if (rest.length) H.wn = rest[0].n; else { H.ph = 'on'; H.wn = '' } await cmd('SET', 'hq:s', JSON.stringify(H)); await pub() } return 'no' }
         const rw = (await cmd('LRANGE', 'hq:rw', 0, 1)) || [];
         if (H.ph !== 'cd' && !rw.includes(u)) { await hqWin(H, c); return 'win' }
-        const nOk = L.map(jp).filter(x => x && x.st === 'ok').length; if (nOk <= 5) { await give(u, 2, 0); await gfr(u, 'f_hq2') } return 'run' }
+        const nOk = L.map(jp).filter(x => x && x.st === 'ok').length; if (nOk <= 5) { await give(u, 2, 0); await gfr(u, 'f_hq2'); try { await spAdd(u, 50) } catch {} } return 'run' }
       // ---------- 🐉 บอสโลก ----------
       const WBN = [['🐉', 'มังกรเพลิงเก้าหาง'], ['🦂', 'ราชาแมงป่องทะเลทราย'], ['👹', 'อสูรร้อยตา'], ['🐢', 'เต่ายักษ์แบกภูเขา'], ['🦅', 'พญาอินทรีย์สายฟ้า'], ['🕷️', 'แม่นางแมงมุมเงา'], ['🐍', 'งูขาวพันปี'], ['🦍', 'วานรหินผา'], ['🐗', 'หมูป่าเขี้ยวเหล็ก'], ['🦑', 'ปลาหมึกยักษ์ใต้ทะเลลึก'], ['🐻', 'หมีดำกลืนจันทร์'], ['👻', 'เงาเจ้าเมืองไร้หัว'], ['🦇', 'ค้างคาวโลหิตพันปี'], ['🐊', 'จระเข้ราชาบึงดำ']];
       const wbTick = async () => {
@@ -1848,9 +1919,10 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
           if (String(b.p || '') !== p || !q) return res.json({ err: 'period' });
           if ((await cmd('SET', 'aqp:' + id + ':' + p + ':' + q, 1, 'NX', 'EX', 86400 * 9)) !== 'OK') return res.json({ ok: 0, dup: 1 });
           const n = +(await cmd('INCR', 'aqn:' + id + ':' + p)) || 1; await cmd('EXPIRE', 'aqn:' + id + ':' + p, 86400 * 9);
-          if (n > 3) return res.json({ ok: 0, cap: 1 });
+          if (n > 3) { if (k === 'd' && n === 4 && vipTier(jp(await cmd('GET', 'vip:' + id))) >= 1) { await give(id, 1, 0); return res.json({ ok: 1, n, t4: 1, f: 1 }) } return res.json({ ok: 0, cap: 1 }) }
           const pt = k === 'w' ? 3 : 1, bp = +(await cmd('HINCRBY', 'aqb:' + id, MON, pt)) || 0; await cmd('EXPIRE', 'aqb:' + id, 86400 * 70); await swAdd(id, pt);
-          return res.json({ ok: 1, n, bp }) }
+          let sp = 0; try { sp = await spAdd(id, k === 'w' ? 150 : 30) } catch {}
+          return res.json({ ok: 1, n, bp, sp }) }
         if (o === 'all') { // ครบ 3 ข้อ: รายวัน → ตั๋วธรรมดา 1 + แต้มสมุด 1 · รายสัปดาห์ → ตั๋วทอง 1
           const k = b.k === 'w' ? 'w' : 'd', p = k === 'w' ? W : DAY; if (String(b.p || '') !== p) return res.json({ err: 'period' });
           if ((+(await cmd('GET', 'aqn:' + id + ':' + p)) || 0) < 3) return res.json({ ok: 0, err: 'notyet' });
@@ -1909,9 +1981,9 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
           const hk = 'wbh:' + id + ':' + DAY, hn = +(await cmd('INCR', hk)) || 1; if (hn === 1) await cmd('EXPIRE', hk, 172800); if (hn > 3) return res.json({ ok: 0, err: 'day' });
           const s = Math.max(0, Math.min(1, +b.s || 0)), dmg = Math.round(300 + 1700 * s * s);
           const [left] = await pipe([['DECRBY', 'wb:hp', dmg], ['ZINCRBY', 'wb:d:' + W0.r, dmg, id], ['HSET', 'wb:n:' + W0.r, id, nm], ['EXPIRE', 'wb:d:' + W0.r, 86400 * 20], ['EXPIRE', 'wb:n:' + W0.r, 86400 * 20]]);
-          await swAdd(id, 1);
+          await swAdd(id, 1); let sp = 0; try { sp = await spAdd(id, 10) } catch {}
           let kill = 0; if (+left <= 0 && (await cmd('SET', 'wbk:' + W0.r, id, 'NX', 'EX', 86400 * 20)) === 'OK') { kill = 1; W0.ph = 'dead'; W0.dt = now; W0.kn = nm; W0.ku = id; await cmd('SET', 'wb:s', JSON.stringify(W0)); await gfr(id, 'f_wb1') }
-          await pub(); return res.json({ ok: 1, dmg, hp: Math.max(0, +left), kill, hits: hn }) }
+          await pub(); return res.json({ ok: 1, dmg, hp: Math.max(0, +left), kill, hits: hn, sp }) }
         if (o === 'claim') {
           if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
           const r = +b.r || W0.r; const Wr = r === W0.r ? W0 : null; if (!Wr || Wr.ph !== 'dead') return res.json({ ok: 0, err: 'alive' });
@@ -1935,7 +2007,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
           const v = (await cmd('HGETALL', 'sw:' + MON0)) || {}, o2 = {}; if (Array.isArray(v)) for (let i = 0; i + 1 < v.length; i += 2) o2[v[i]] = +v[i + 1] || 0; else Object.entries(v).forEach(([k, x]) => o2[k] = +x || 0);
           const scs = [0, 1, 2].map(i => (o2['p' + i] || 0) / Math.max(3, o2['a' + i] || 0)), w = scs.indexOf(Math.max(...scs));
           if ((await cmd('SET', 'swc:' + MON0 + ':' + id, 1, 'NX', 'EX', 86400 * 75)) !== 'OK') return res.json({ ok: 0, dup: 1 });
-          const win = +s === w; await give(id, win ? 0 : 1, win ? 1 : 0); if (win) await gfr(id, 'f_sw' + w); return res.json({ ok: 1, win: win ? 1 : 0, s: +s, w }) }
+          const win = +s === w; await give(id, win ? 0 : 1, win ? 1 : 0); try { await spAdd(id, win ? 200 : 50) } catch {} if (win) await gfr(id, 'f_sw' + w); return res.json({ ok: 1, win: win ? 1 : 0, s: +s, w }) }
         return res.json({ err: 'op' });
       }
     }
@@ -2093,7 +2165,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const [kn, eu, kd, em] = await pipe([['GET', 'lvkn:' + lid], ['LRANGE', 'lveu:' + lid, 0, 19], ['EXISTS', 'lvkd:' + lid + ':' + id + ':' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10)], ['EXISTS', 'lvem:' + lid + ':' + id]]);
       const hs0 = new Set((await cmd('SMEMBERS', 'chat:hidden')) || []);
       const eul = (eu || []).map(jp).filter(x => x && !hs0.has(x.i)).map(x => ({ i: x.i, n: x.n, t: x.t, x: x.x, me: x.u === String(id).slice(0, 12) ? 1 : 0 }));
-      return res.json({ d: JSON.parse(d), pu: pub === '2' ? '' : String(own || '').replace(/[^a-z0-9]/g, '').slice(0, 12), pub: pub === '1' ? 1 : 0, mine: own === id ? 1 : 0, kn: +kn || 0, kd: +kd ? 1 : 0, eu: eul, em: +em ? 1 : 0 });
+      const hc = await cmd('GET', 'lifeh:' + lid);
+      return res.json({ d: JSON.parse(d), pu: pub === '2' ? '' : String(own || '').replace(/[^a-z0-9]/g, '').slice(0, 12), pub: pub === '1' ? 1 : 0, h: hc ? 1 : 0, mine: own === id ? 1 : 0, kn: +kn || 0, kd: +kd ? 1 : 0, eu: eul, em: +em ? 1 : 0 });
     }
     if (a === 'lvkneel' || a === 'lveu') {
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
@@ -2451,7 +2524,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       // รูปตัวละครจากเกม (PNG 56×62) ขึ้นได้ทันที · รูปที่อัปโหลดเอง (JPEG/WebP) ต้องรอแอดมินตรวจก่อนคนอื่นจะเห็น
       let av = String(b.av || ''), alt = String(b.alt || ''); const up = b.up ? 1 : 0, pu = id.slice(0, 12); let fr = String(b.fr || '').replace(/[^a-z0-9_]/g, '').slice(0, 20);
       if (/^f_adm/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id)))) fr = ''; // กรอบแอดมิน: ใส่ได้เฉพาะแอดมิน
-      if (/^f_(p[1-8]|e[1-5])$/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id))) && !(+(await cmd('SISMEMBER', 'cos:' + id, fr)))) fr = ''; // กรอบร้านค้า: ต้องซื้อแล้ว
+      if (/^f_(p[1-8]|e[1-5]|s[1-3])$/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id))) && !(+(await cmd('SISMEMBER', 'cos:' + id, fr)))) fr = ''; // กรอบร้านค้า: ต้องซื้อแล้ว
       if (/^f_(arc|box|lg)\d/.test(fr)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.fr || []).includes(fr)) fr = '' } // กรอบลาน: ต้องมีในกระเป๋าเซิร์ฟเวอร์
       const isUp = /^data:image\/(jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(av);
       if (isUp && !isAdmKey(b.key)) return res.status(403).json({ err: 'noup' }); // อัปโหลดรูปเองปิดไว้ — เฉพาะแอดมิน
@@ -3324,11 +3397,18 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
 module.exports.vkReset = vkReset;
 module.exports.vkRun = vkRun;
 // 💳 ให้สิทธิ์หลังตรวจสลิปอัตโนมัติสำเร็จ (เรียกจาก cloudflare/worker.js /api/pay) — pack: v1|v2|v3 = VIP, rs|rm|rl = ซื้อสุ่มเกิด
-module.exports.payPack = pk => { pk = String(pk || ''); if (EVB[pk]) return evOpen() ? { kind: 'cos', amt: EVB[pk][0], tier: 0, days: 0, n: 0, items: EVB[pk][1].map(k => EVM[k][1]), key: pk, ev: 1, bun: EVB[pk][1] } : null; if (EVM[pk]) return evOpen() ? { kind: 'cos', amt: EVM[pk][0], tier: 0, days: 0, n: 0, items: [EVM[pk][1]], key: pk, ev: 1, cap: EVM[pk][2] } : null; if (COS_P[pk]) return { kind: 'cos', amt: COS_P[pk][0], tier: 0, days: 0, n: 0, items: COS_P[pk][1], key: pk }; if (VIP_PK[pk]) return { kind: 'vip', amt: VIP_PK[pk][0], tier: VIP_PK[pk][1], days: VIP_PK[pk][2] }; const lk = /^lk\d+$/.test(pk) && LK_PK[pk.slice(2)]; if (lk) return { kind: 'lk', amt: lk[0], n: lk[1] }; const r = pk[0] === 'r' && RR_PK[pk.slice(1)]; return r ? { kind: 'rr', amt: r[0], n: r[1] } : null };
+module.exports.payPack = pk => { pk = String(pk || ''); if (/^sp(1|2|21)$/.test(pk)) { const s = seaNow(); if (!s) return null; return { kind: 'sp', amt: pk === 'sp1' ? 59 : pk === 'sp2' ? 129 : 70, tier: pk === 'sp1' ? 1 : 2, up: pk === 'sp21' ? 1 : 0, sea: s.id, key: pk } } if (pk === 'nv1') return { kind: 'nv', amt: 19, n: 1 }; if (EVB[pk]) return evOpen() ? { kind: 'cos', amt: EVB[pk][0], tier: 0, days: 0, n: 0, items: EVB[pk][1].map(k => EVM[k][1]), key: pk, ev: 1, bun: EVB[pk][1] } : null; if (EVM[pk]) return evOpen() ? { kind: 'cos', amt: EVM[pk][0], tier: 0, days: 0, n: 0, items: [EVM[pk][1]], key: pk, ev: 1, cap: EVM[pk][2] } : null; if (COS_P[pk]) return { kind: 'cos', amt: COS_P[pk][0], tier: 0, days: 0, n: 0, items: COS_P[pk][1], key: pk }; if (VIP_PK[pk]) return { kind: 'vip', amt: VIP_PK[pk][0], tier: VIP_PK[pk][1], days: VIP_PK[pk][2] }; const lk = /^lk\d+$/.test(pk) && LK_PK[pk.slice(2)]; if (lk) return { kind: 'lk', amt: lk[0], n: lk[1] }; const r = pk[0] === 'r' && RR_PK[pk.slice(1)]; return r ? { kind: 'rr', amt: r[0], n: r[1] } : null };
 module.exports.payGrant = async (uid, pk, name) => {
   const P = pk && typeof pk === 'object' ? pk : module.exports.payPack(pk);
   if (P && P.bun && okId(uid)) { const own = new Set((await cmd('SMEMBERS', 'cos:' + uid)) || []), todo = P.bun.filter(k => !own.has(EVM[k][1])); for (const k of todo) { if ((+(await cmd('GET', 'evn:' + k)) || 0) >= EVM[k][2]) throw new Error('soldout') } const got = []; for (const k of todo) { const sn = +(await cmd('INCR', 'evn:' + k)); if (sn > EVM[k][2]) { await cmd('DECR', 'evn:' + k); continue } await cmd('HSET', 'evs:' + uid, EVM[k][1], sn); await cmd('LPUSH', 'evlog', JSON.stringify({ t: Date.now(), u: uid, k, i: EVM[k][1], m: 'pay', n: sn })); got.push(EVM[k][1]) } await cmd('LTRIM', 'evlog', 0, 299); if (!got.length) throw new Error('already'); await cmd('SADD', 'cos:' + uid, ...got); await cmd('SADD', 'supok', uid); return P }
   if (P && P.kind === 'cos' && okId(uid)) { const it = (P.items || []).filter(x => COS_ALL.has(x)); if (!it.length) throw new Error('bad pack/id'); if (P.ev && !(+(await cmd('SISMEMBER', 'cos:' + uid, it[0])))) { const sn = +(await cmd('INCR', 'evn:' + P.key)); if (sn > P.cap) { await cmd('DECR', 'evn:' + P.key); throw new Error('soldout') } await cmd('HSET', 'evs:' + uid, it[0], sn); await cmd('LPUSH', 'evlog', JSON.stringify({ t: Date.now(), u: uid, k: P.key, i: it[0], m: 'pay', n: sn })); await cmd('LTRIM', 'evlog', 0, 299) } await cmd('SADD', 'cos:' + uid, ...it); await cmd('SADD', 'supok', uid); return P }
+  if (P && P.kind === 'nv' && okId(uid)) { await cmd('INCRBY', 'nvc:' + uid, P.n || 1); await cmd('SADD', 'supok', uid); return P }
+  if (P && P.kind === 'sp' && okId(uid)) { const s = SEA.find(x => x.id === P.sea) || seaNow(); if (!s) throw new Error('season');
+    const k = spKey(s, uid), t0 = +(await cmd('HGET', k, 't')) || 0;
+    if (P.up && t0 < 1) throw new Error('need sp1');
+    if (P.tier > t0) await cmd('HSET', k, 't', P.tier);
+    if (P.tier === 2 && t0 < 2) { await pipe([['HINCRBY', k, 'p', SP_LV * 10], ['SADD', 'cos:' + uid, 'f_s3', 't_s3', 'c_s3'], ['HSET', 'spe:' + s.id, uid, JSON.stringify({ n: clean(String(name || ''), 24), t: Date.now() })]]) }
+    await pipe([['EXPIRE', k, 86400 * 120], ['SADD', 'supok', uid]]); return P }
   if (!P || !okId(uid) || !(P.kind === 'rr' || P.kind === 'lk' ? P.n > 0 : P.tier >= 1 && P.tier <= 3)) throw new Error('bad pack/id');
   if (P.kind === 'lk') { await cmd('INCRBY', 'lkc:' + uid, P.n); await cmd('SADD', 'supok', uid); return P }
   if (P.kind === 'rr') { await cmd('INCRBY', 'rrc:' + uid, P.n); await cmd('SADD', 'supok', uid); return P }
@@ -3351,6 +3431,8 @@ module.exports.payGrant = async (uid, pk, name, an) => {
         e.l = P.bun ? (EVBN[P.key] || '') : (EVN[(P.items || [])[0]] || '');
         if (P.ev && !P.bun) { e.sn = +(await cmd('HGET', 'evs:' + uid, P.items[0])) || 0; e.cap = P.cap || 0 }
       }
+      if (P.kind === 'sp') e.l = P.tier === 2 ? 'คัมภีร์ฤดูกาล ฉบับจารึก' : 'คัมภีร์ฤดูกาล คัมภีร์ทอง';
+      if (P.kind === 'nv') e.l = 'นิยายปกแข็ง';
       await cmd('LPUSH', 'buyann', JSON.stringify(e)); await cmd('LTRIM', 'buyann', 0, 29);
     }
   } catch { }

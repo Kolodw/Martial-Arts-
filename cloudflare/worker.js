@@ -283,7 +283,7 @@ async function pay(request, env) {
     const run = h.vkRun ? h.vkRun(() => h.payGrant(uid, P, name, b.an ? 1 : 0)) : h.payGrant(uid, P, name, b.an ? 1 : 0); await run;
     try { h.vkReset && h.vkReset() } catch (e) {}
   } catch (e) { console.error('PAY_GRANT', String(e && e.message || e)); await db.prepare("UPDATE orders SET status='paid_nogrant',note=? WHERE id=?").bind(String(e && e.message || e).slice(0, 150), oid).run().catch(() => {}); return jr({ ok: 0, st: 'grant', order: oid }) }
-  try { await db.prepare("INSERT INTO entitlements(uid,kind,starts_at,ends_at,order_id,source,created_at,world_id) VALUES(?,?,?,?,?,?,?,?)").bind(uid, P.kind === 'vip' ? 'vip' + P.tier : P.kind === 'cos' ? 'cos:' + (P.key || '') : P.kind === 'lk' ? 'lk' + P.n : 'rr' + P.n, now, P.days ? now + P.days * 86400e3 : null, oid, 'order', now, worldId).run() } catch (e) {}
+  try { await db.prepare("INSERT INTO entitlements(uid,kind,starts_at,ends_at,order_id,source,created_at,world_id) VALUES(?,?,?,?,?,?,?,?)").bind(uid, P.kind === 'vip' ? 'vip' + P.tier : P.kind === 'sp' ? 'sp' + P.tier + ':' + (P.sea || '') : P.kind === 'nv' ? 'nv' : P.kind === 'cos' ? 'cos:' + (P.key || '') : P.kind === 'lk' ? 'lk' + P.n : 'rr' + P.n, now, P.days ? now + P.days * 86400e3 : null, oid, 'order', now, worldId).run() } catch (e) {}
   await db.prepare("UPDATE orders SET status='done' WHERE id=?").bind(oid).run().catch(() => {});
   return jr({ ok: 1, order: oid });
 }
