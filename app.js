@@ -42892,7 +42892,7 @@ function olEv(){const o=olv();S.olT=S.olT||0;for(let i=0;i<OLT.length;i++)if(o>=
   {t:'🏛️ วางรากฐานไว้ให้คนรุ่นหลัง',s:'มรดกส่งถึงชีวิตหน้า',f(){S.olLeg=(S.olLeg||0)+1;try{const L=LS.get('murim_olleg',0)||0;LS.set('murim_olleg',Math.min(5,L+1))}catch(e){}log('🏛️ คุณสลักเคล็ดวิชาลงบนหน้าผาให้คนรุ่นหลัง — ชีวิตหน้าจะเริ่มด้วยรากฐานที่แข็งแกร่งกว่าเดิม','epic',true)}},
   {t:'⚡ ท้าฟ้าก่อนเวลา',s:'ดวลกับทัณฑ์ฟ้า · ชนะ = รากฐานล้นฟ้า ×1.5',f(){if(fight('ทัณฑ์ฟ้าที่ถูกส่งมาไล่',total()*1.05)){S.olX=(S.olX||1)*1.5;log('⚡ คุณฉีกเมฆทัณฑ์ออกเป็นสองท่อนด้วยมือเปล่า — ฟ้าจดชื่อคุณไว้แล้ว รากฐานล้นฟ้า ×1.5','myth',true)}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.5));log('⚡ อัสนีเก้าสายผ่ากลางหลัง คุณคุกเข่าบนยอดเขาที่ไหม้ดำ — ฟ้ายังไม่ยอมรับคุณ','bad',true)}}}])}
 // มรดกจาก "วางรากฐาน" ชีวิตก่อน
-{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{const L=+LS.get('murim_olleg',0)||0;if(L>0&&S){LS.set('murim_olleg',0);S.power+=Math.round(REALMS[Math.min(3,L)].p*.6);S.qi+=L*4;log(`🏛️ หน้าผาที่ชาติก่อนสลักไว้ยังอยู่ — เด็กคนนี้ฝึกจากมันตั้งแต่จำความได้ (รากฐาน ${L} ชั้น)`,'epic',true)}}catch(e){}return r}}
+{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{const L=Math.max(0,Math.min(5,Math.floor(+LS.get('murim_olleg',0)||0)||0));if(L>0&&S){LS.set('murim_olleg',0);S.power+=Math.round(REALMS[Math.min(3,L)].p*.6);S.qi+=L*4;log(`🏛️ หน้าผาที่ชาติก่อนสลักไว้ยังอยู่ — เด็กคนนี้ฝึกจากมันตั้งแต่จำความได้ (รากฐาน ${L} ชั้น)`,'epic',true)}}catch(e){}return r}}
 function carry(why){const r=olRatio()*(S.olX||1);const k=Math.min(4,Math.floor(Math.log2(Math.max(1,r))));S.olB=0;S.olS=0;S.olT=0;S.olX=1;S.rpk=null;if(k<1)return;
  const tgt=REALMS[Math.min(1+k,5)].p;if(total()<tgt){S.power+=tgt-total()+10}S.qi+=k*6;S.lifespan+=k*15;
  log(`🌋 <b>รากฐานล้นฟ้า ${k} ชั้น</b> — พลังที่โลกเก่ารับไม่ไหว กลายเป็นรากฐานในโลกใหม่ ${why} · เริ่มที่ <b>${(typeof rnW==='function'?rnW(realmIdx()):REALMS[realmIdx()].n)}</b> · อายุขัย +${k*15}`,'myth',true);keyAdd(`ข้ามโลกพร้อมรากฐานล้นฟ้า ${k} ชั้น`)}
@@ -45861,11 +45861,11 @@ const MK=[['🐉 กระดูกมังกรบดผง','พลังช
 function mkNow(){const w=st();if(w.mkY!==S.age){w.mkY=S.age;const ix=MK.map((_,i)=>i).sort(()=>Math.random()-.5).slice(0,3);w.mk=ix.map(i=>({i,c:Math.round(pr(wB()*40,R(18,35)/100)*R(9,13)/10),s:0}))}return w.mk}
 function mkBuy(j){const it=mkNow()[j];if(!it||it.s)return;if(!pay(it.c))return;it.s=1;const r=MK[it.i][2]();log(`💎 ซื้อ <b>${MK[it.i][0]}</b> จากตลาดมืด ${M(it.c)} — ${r}`,'epic');openWealth('mk')}
 // ---------- 6) คลังตระกูลข้ามชาติ ----------
-const vR=()=>+(LS.get('murim_wvault',0)||0);
+const vR=()=>{const v=+(LS.get('murim_wvault',0)||0);return isFinite(v)&&v>0?Math.min(v,3600):0};
 const vPts=r=>Math.min(60,Math.floor(Math.sqrt(r)));
 function vDep(pc){const c=Math.round(W()*pc);if(c<10||!pay(c))return;const r=vR()+c/wB();LS.set('murim_wvault',r);log(`🏛️ ฝากเข้าคลังตระกูล ${M(c)} — ชีวิตหน้าจะได้รากฐานตระกูล <b>${vPts(r)}</b> ชั้น`,'');openWealth('vault')}
 {const _sl=startLife;startLife=function(){const o=_sl.apply(this,arguments);try{if(!S)return o;const p=vPts(vR());if(p>0){LS.set('murim_wvault',0);S.int+=p;S.qi=+((S.qi||0)+p*.3).toFixed(1);S.money+=Math.min(30000,p*150);S.fame+=p*2;log(`🏛️ <b>คลังตระกูลจากชาติก่อน</b> เปิดออก — รากฐาน ${p} ชั้น: ปัญญา +${p} · ลมปราณ +${(p*.3).toFixed(1)} · ทุนตั้งตัว ${M(Math.min(30000,p*150))}`,'epic',true)}
- const e=+(LS.get('murim_wlest',0)||0);if(e>0){LS.set('murim_wlest',0);S.power+=Math.round(pctPow(.05*e));S.fame+=e*15;log(`🏯 ซากอาณาเขตจากชาติก่อนยังมีคนจำได้ — เด็กคนนี้เติบโตในเงาของมัน (พลัง +${5*e}% · ชื่อเสียง +${e*15})`,'epic',true)}}catch(e){}return o}}
+ const e=Math.max(0,Math.min(10,Math.floor(+(LS.get('murim_wlest',0)||0))||0));if(e>0){LS.set('murim_wlest',0);S.power+=Math.round(pctPow(.05*e));S.fame+=e*15;log(`🏯 ซากอาณาเขตจากชาติก่อนยังมีคนจำได้ — เด็กคนนี้เติบโตในเงาของมัน (พลัง +${5*e}% · ชื่อเสียง +${e*15})`,'epic',true)}}catch(e){}return o}}
 // ---------- รายปี: อาณาเขตให้ผล · ความรวยดึงดูดภัย ----------
 {const _py=passYear;passYear=function(){const a0=S&&S.age,me=S;const r=_py.apply(this,arguments);try{if(!ok()||S!==me||S.age===a0)return r;const w=st();
  if(w.est>0){const l=w.est,k=Math.sqrt(l);S.fame+=Math.round(2*l);S.qi=+((S.qi||0)+.05*k).toFixed(2);S.power+=Math.round(pctPow(.003*k));joy(Math.min(3,l*.5))}
@@ -45927,3 +45927,6 @@ let SW=null;
 // ทำเนียบ: แถวของชีวิตโหมดนี้ ตัดคำซ้ำ
 {const _md2=modal;modal=function(h){try{if(typeof h==='string'&&h.indexOf('item brd')>=0&&h.indexOf(MK)>=0)h=h.split(MK+' · ').join('⭕ ')}catch(e){}arguments[0]=h;return _md2.apply(this,arguments)}}
 })()}catch(e){console.error('svOnline',e)}
+
+// 🛡️ กันโกง: เลือดไม่มีเพดานแล้ว → เฝ้าการเขียนพลังชีวิตสูงสุดจากคอนโซลด้วย
+try{AC_TK.push('maxHp')}catch(e){}
