@@ -43774,3 +43774,60 @@ EVENTS.push({w:2.5,cd:5,c:ok,f(){init3();const g=S.sv,hb=pk(HERB),RG=REG.find(x=
 EVENTS.push({w:1.2,cd:10,c:s=>ok(s)&&s.age>=14,f(){init3();const g=S.sv,L=REG.filter(x=>x[0]!==g.reg).sort(()=>Math.random()-.5).slice(0,3);
  choice('🗺️ ออกเดินทางข้ามแคว้น','กองคาราวานกำลังจะออกเดินทาง มีที่ว่างให้คุณหนึ่งที่',L.map(x=>({t:`${x[1]} ${x[2]}`,s:x[3],noFate:1,f(){g.reg=x[0];S.int+=3;log(`🗺️ คุณย้ายไปอยู่ที่ <b>${x[2]}</b> — ${x[3]}`,'good',true)}})).concat([{t:'🏡 อยู่ที่เดิม',s:'',noFate:1,f(){log('🏡 คุณเลือกอยู่ที่เดิม','')}}]))}});
 })()}catch(e){console.error('sv3',e)}
+
+// ---------- ⭕ วิญญาณยุทธ์ ระลอก 2: สถาบันประจำแคว้น · สอบเข้า · ชั้นในสถาบัน · ศึกระหว่างสถาบัน · อาจารย์ · จบการศึกษา · คู่แข่งสังกัดสถาบัน ----------
+try{(()=>{
+const B=window._blk34;if(!B)return;
+const on=()=>!!(S&&S.alive&&S.ch==='soul'&&S.sv&&S.sv.aw===1);
+const R2=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pk=a=>a[R2(0,a.length-1)];
+const TYN={atk:'⚔️ โจมตี',def:'🛡️ ป้องกัน',sup:'🌿 สนับสนุน',ctrl:'🌀 ควบคุม',agi:'💨 ว่องไว'};
+const AC={north:['❄️','สถาบันหิมะเงิน','def','เข้มงวด เน้นความอดทน ศิษย์สายป้องกันเติบโตเร็ว',1.1],gold:['🌾','สถาบันตะวันทองหลวง','atk','สถาบันเก่าแก่ที่สุดของทวีป รับยากที่สุด',1.3],isle:['🌊','สถาบันคลื่นสมุทร','agi','สอนกลางทะเล เน้นความเร็วและการเอาตัวรอด',1],wood:['🌳','สถาบันพันพฤกษ์','sup','อยู่ชายป่าต้องห้าม เด่นเรื่องสมุนไพรและการสยบสัตว์',.95],jade:['🏯','สถาบันหยกขาวราชสำนัก','ctrl','ลูกหลานขุนนางเรียนที่นี่ เส้นสายสำคัญพอ ๆ กับฝีมือ',1.2]};
+const RK=['🎒 นักเรียนใหม่','📘 นักเรียนอาวุโส','🎽 ทีมตัวแทนสถาบัน','👑 หัวหน้าทีมตัวแทน'];
+const X=()=>S.sv;const tm=()=>X().tm;
+const regOf=()=>X().reg||'gold';
+function rvAc(){const t=tm();if(!t||!t.rv)return;const ks=Object.keys(AC);t.rv.forEach(r=>{if(!r.ac)r.ac=pk(ks)})}
+// ---- สอบเข้า (อายุ 11–16) ----
+function examOffer(){const g=X();const home=regOf(),ks=Object.keys(AC).filter(k=>k!==home);const L=[home,pk(ks)];
+ choice('🏫 ฤดูสอบเข้าสถาบัน',`ประกาศรับสมัครติดอยู่ทั่วเมือง — ผู้ฝึกจิตรุ่นเยาว์ทั้งแคว้นแห่ไปสอบ<br><span class="tag2">สอบภาคปฏิบัติ: อ่านท่าแล้วตอบโต้ (มินิเกม) · ผ่านแล้วฝึกเร็วขึ้น และได้ผลพิเศษถ้าสายตรงกับสถาบัน</span>`,L.map(k=>{const a=AC[k];return{t:`${a[0]} ${a[1]}`,s:`ถนัด${TYN[a[2]]} · ${a[3]}`,noFate:1,f(){exam(k)}}}).concat([{t:'🏡 ฝึกเองที่บ้าน',s:'อิสระ แต่ช้ากว่า',noFate:1,f(){g.acSkip=S.age;log('🏡 คุณเลือกฝึกเองตามทางของตัวเอง','')}}]))}
+function exam(k){const a=AC[k],g=X();const need=.45+(a[4]-1)*.5-(g.lv-10)/100;
+ const wf=fn=>{let n=0;const t=setInterval(()=>{if(++n>40){clearInterval(t);return}if(choice._cur||modalOpen)return;clearInterval(t);fn()},150)};
+ wf(()=>{const ok=window.mg2Play&&window.mg2Play('strike',{noSkip:1,title:`สอบเข้า${a[1]}`,sub:'กรรมการสาธิตท่า จำแล้วตอบโต้ตามลำดับ'},(sc)=>{const pass=sc>=need;if(pass){g.ac={id:k,y:S.age,rk:0,pt:0};g.acad=1;S.fame+=10;log(`${a[0]} <b>สอบผ่าน!</b> คุณได้เป็นนักเรียนของ <b>${a[1]}</b> (คะแนน ${Math.round(sc*100)}%)`,'epic',true)}else{g.acSkip=S.age;log(`${a[0]} สอบ${a[1]}ไม่ผ่าน (คะแนน ${Math.round(sc*100)}% · ต้องการ ${Math.round(need*100)}%) — ปีหน้าค่อยลองใหม่`,'bad')}try{render()}catch(e){}});
+  if(!ok){g.ac={id:k,y:S.age,rk:0,pt:0};g.acad=1}})}
+// ---- ผลของสถาบัน: ฝึกเร็วขึ้น · สายตรงกับสถาบันเร็วขึ้นอีก ----
+{const _g=window._svGrow;window._svGrow=g=>{let m=_g?_g(g):1;try{if(g.ac&&!g.ac.done){const a=AC[g.ac.id];if(a&&window._svTy&&window._svTy(g)===a[2])m*=1.15;m*=1+g.ac.rk*.04}}catch(e){}return m}}
+// ---- รายปี ----
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(!on())return r;const g=X();rvAc();
+ if(!g.ac&&S.age>=11&&S.age<=16&&(g.acSkip==null||S.age-g.acSkip>=1)&&!choice._cur&&!g._exQ){g._exQ=1;setTimeout(()=>{g._exQ=0;if(on()&&!g.ac&&!choice._cur)examOffer()},600)}
+ if(g.ac&&!g.ac.done){g.ac.pt+=R2(1,3)+(g.ac.rk>=2?1:0);const need=[6,14,24][g.ac.rk];if(need&&g.ac.pt>=need){g.ac.rk++;S.fame+=10*g.ac.rk;log(`🏫 เลื่อนชั้นเป็น <b>${RK[g.ac.rk]}</b> แห่ง${AC[g.ac.id][1]}`,'epic',true)}
+  if(S.age-g.ac.y>=8||S.age>=24)grad()}}catch(e){console.error('sv4 yr',e)}return r}}
+function grad(){const g=X(),a=AC[g.ac.id];g.ac.done=1;const t=['ผู้สำเร็จการศึกษา','ศิษย์เกียรตินิยม','ศิษย์ดีเด่นแห่งรุ่น','ศิษย์อันดับหนึ่งแห่งรุ่น'][g.ac.rk];
+ S.fame+=[20,50,120,300][g.ac.rk];S.power+=pctPow([.02,.04,.07,.12][g.ac.rk]);if(g.ac.rk>=2){try{const d=LS.get('murim_ttl',{});const tt=`${t}${a[1]}`;if(!d[tt]){d[tt]={n:S.name,t:Date.now(),c:1};LS.set('murim_ttl',d)}}catch(e){}}
+ log(`🎓 <b>จบการศึกษาจาก${a[1]}</b> — ${t}${g.ac.cups?` · ถ้วยศึกระหว่างสถาบัน ${g.ac.cups} ใบ`:''}`,'myth',true)}
+const ok=s=>!!(s&&s.alive&&s.ch==='soul'&&s.sv&&s.sv.aw===1&&s.sv.ac&&!s.sv.ac.done);
+// ---- ศึกระหว่างสถาบัน (ทีมตัวแทนขึ้นไป ทุก ~3 ปี) ----
+EVENTS.push({w:4,cd:3,c:s=>ok(s)&&s.sv.ac.rk>=2&&S.age-(s.sv.ac.cy||0)>=3,f(){const g=X(),me=AC[g.ac.id];g.ac.cy=S.age;rvAc();const others=Object.keys(AC).filter(k=>k!==g.ac.id).sort(()=>Math.random()-.5).slice(0,3);const t=tm(),rv=t&&t.rv?t.rv.filter(r=>r.al):[];
+ const opp=others.map((k,i)=>{const r=rv.find(x=>x.ac===k&&!x._used);if(r)r._used=1;return{k,n:r?r.n:`ตัวแทน${AC[k][1].replace('สถาบัน','')}`,r,lv:r?r.lv:g.lv+R2(-3,4)+i*2}});if(t&&t.rv)t.rv.forEach(x=>delete x._used);
+ let rd=0;const RN=['รอบแรก','รอบรองชนะเลิศ','รอบชิงชนะเลิศ'];
+ const go=()=>{const o=opp[rd],a=AC[o.k],ep=Math.max(5,Math.round(total()*(.75+rd*.2+Math.max(-.2,Math.min(.4,(o.lv-g.lv)/60)))));
+  choice(`🏟️ ศึกระหว่างสถาบัน · ${RN[rd]}`,`${me[0]} ${me[1]} พบ ${a[0]} ${a[1]}<br>คู่ต่อสู้: <b>${esc(o.n)}</b>${o.r?' <span class="tag2">(คู่แข่งที่คุณรู้จัก)</span>':''} ระดับจิตราว ${Math.round(o.lv)}`,[
+   {t:'⚔️ ลงสนาม',s:'ดวล',noFate:1,f(){duel(o.n,ep,w=>{if(!S||!S.alive)return;if(w){if(o.r)o.r.rel=(o.r.rel||0)+(o.r.k==='kind'?6:-4);S.fame+=20+rd*20;if(rd>=2){g.ac.cups=(g.ac.cups||0)+1;g.ac.pt+=6;S.fame+=150;S.power+=pctPow(.04);log(`🏆 <b>${me[1]}คว้าแชมป์ศึกระหว่างสถาบัน!</b> คุณคือคนที่ทั้งทวีปจับตามอง`,'myth',true);return}log(`🏟️ ชนะ${RN[rd]} — ${esc(o.n)} ยอมรับความพ่ายแพ้`,'epic');rd++;setTimeout(go,500)}else{if(o.r)o.r.rel=(o.r.rel||0)+(o.r.k==='kind'?3:-2);S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.15));log(`🏟️ ตกรอบ${RN[rd]} — ${me[1]}จบที่${['รอบแรก','อันดับสาม','รองแชมป์'][rd]}`,'bad',true);if(rd>=1)S.fame+=30*rd}})}},
+   {t:'🏳️ ถอนตัว',s:'ไม่เสี่ยงบาดเจ็บ · ชื่อเสียงลด',noFate:1,f(){S.fame=Math.max(0,S.fame-20);log('🏳️ คุณถอนตัว — อาจารย์มองคุณด้วยสายตาผิดหวัง','')}}])};go()}});
+// ---- อาจารย์ในสถาบัน ----
+EVENTS.push({w:2.5,cd:4,c:ok,f(){const g=X(),a=AC[g.ac.id];const nm=anyName(Math.random()<.5?'ชาย':'หญิง');
+ choice(`👨‍🏫 อาจารย์${nm}แห่ง${a[1]}`,`อาจารย์${nm}เรียกคุณไปพบหลังเลิกเรียน "เจ้ามีแวว — อยากฝึกเพิ่มแบบไหน?"`,[
+  {t:'🔥 ฝึกหนักจนล้มทั้งยืน',s:'ระดับจิต +2 · พลังชีวิตลด',noFate:1,f(){g.lv=Math.min(B.capOf(g),g.lv+2);S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.2));g.ac.pt+=2;log(`🔥 อาจารย์${nm}ฝึกคุณหนักจนเดินแทบไม่ไหว — ระดับจิต ${g.lv}`,'good')}},
+  {t:'📚 ศึกษาทฤษฎีวงแหวน',s:'หลอมเกินขีดเสี่ยงน้อยลง',noFate:1,f(){g.theory=1;S.int+=5;g.ac.pt+=1;log('📚 คุณเข้าใจโครงสร้างวงแหวนลึกขึ้น — หลอมเกินขีดเสี่ยงน้อยลง','good')}},
+  {t:'🤝 ฝึกทำงานเป็นทีม',s:'ความผูกพันดวงจิต + · ชื่อเสียง +',noFate:1,f(){g.bond=Math.min(100,(g.bond||50)+8);S.fame+=15;g.ac.pt+=1;log('🤝 คุณได้เพื่อนร่วมทีมที่ไว้ใจได้','good')}}])}});
+// ---- เหตุการณ์ชีวิตในสถาบัน ----
+EVENTS.push({w:2,cd:5,c:ok,f(){const g=X(),a=AC[g.ac.id];const E=[
+ ['📜 สอบกลางภาค','ข้อสอบวันนี้ยากผิดปกติ',[['✍️ ตั้งใจทำ',()=>{const p=Math.random()<.55+(S.int||0)/400;g.ac.pt+=p?3:0;S.int+=2;log(p?'📜 ได้คะแนนสูงสุดของชั้น':'📜 สอบได้แค่พอผ่าน',p?'good':'')}],['👀 ลอกเพื่อน',()=>{if(Math.random()<.4){g.ac.pt=Math.max(0,g.ac.pt-4);S.fame-=20;log('👀 ถูกจับได้ — ถูกหักคะแนนและประจาน','bad')}else{g.ac.pt+=2;S.karma-=3;log('👀 รอดไปได้… ครั้งนี้','')}}]]],
+ ['🌲 ฝึกภาคสนามในป่า','อาจารย์พาทั้งชั้นเข้าป่าล่าวงแหวนสิบปีให้รุ่นน้อง',[['🛡️ คุ้มกันรุ่นน้อง',()=>{g.ac.pt+=2;S.karma+=4;S.fame+=10;log('🛡️ รุ่นน้องทุกคนกลับมาครบ — อาจารย์ชมต่อหน้าทั้งชั้น','good')}],['🏹 แยกไปล่าเอง',()=>{if(Math.random()<.5){S.power+=pctPow(.02);log('🏹 คุณเจอสัตว์วิญญาณแก่กว่าที่คิดและเอาชนะได้','good')}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.2));g.ac.pt=Math.max(0,g.ac.pt-1);log('🏹 คุณหลงป่าและบาดเจ็บ อาจารย์ต้องออกตามหา','bad')}}]]],
+ ['🎐 งานเทศกาลสถาบัน','ทั้งสถาบันจัดงานประจำปี มีแข่งโชว์ดวงจิต',[['✨ ขึ้นโชว์ดวงจิต',()=>{const p=Math.random()<.5+(S.cha||0)/300;S.fame+=p?40:5;log(p?'✨ ดวงจิตของคุณเรียกเสียงปรบมือทั้งลาน':'✨ โชว์ผ่านไปเงียบ ๆ',p?'good':'')}],['🍡 เดินเที่ยวกับเพื่อน',()=>{S.happy=Math.min(100,(S.happy||60)+8);log('🍡 คืนนั้นสนุกจนลืมเรื่องฝึกไปชั่วคราว','good')}]]]];
+ const e=pk(E);choice(`${e[0]} · ${a[1]}`,e[1],e[2].map(o=>({t:o[0],s:'',noFate:1,f:o[1]})))}});
+// ---- หน้าดวงจิต: แสดงสถาบัน + สังกัดของคู่แข่ง ----
+{const _os=window.openSoul;window.openSoul=function(){const r=_os.apply(this,arguments);try{if(!on())return r;const g=X(),m=$('modal');rvAc();
+ const h=[...m.querySelectorAll('h4')].find(x=>/^🗺️/.test(x.textContent));const c=g.ac?AC[g.ac.id]:null;
+ const html=`<div class="item"><b>🏫 ${c?`${c[0]} ${c[1]}`:'ยังไม่มีสถาบัน'}</b><br><span class="tag2">${c?`${g.ac.done?'🎓 จบการศึกษาแล้ว':RK[g.ac.rk]+` · คะแนนสะสม ${g.ac.pt}`} · ถนัด${TYN[c[2]]}${g.ac.cups?` · 🏆 ×${g.ac.cups}`:''}`:'สอบเข้าได้ช่วงอายุ 11–16 · ฝึกเร็วขึ้นและได้ผลพิเศษถ้าสายตรงกับสถาบัน'}</span>${tm()&&tm().rv&&tm().rv.length?`<br><span class="tag2">คู่แข่ง: ${tm().rv.map(x=>`${x.ic||''}${esc(x.n)} (${(AC[x.ac]||['',''])[1].replace('สถาบัน','')})`).join(' · ')}</span>`:''}</div>`;
+ if(h)h.insertAdjacentHTML('beforebegin',html)}catch(e){console.error('sv4 os',e)}return r}}
+window._sv4={AC,examOffer,grad};
+})()}catch(e){console.error('sv4',e)}
