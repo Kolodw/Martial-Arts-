@@ -39835,7 +39835,7 @@ const Q={
   O('⭕ รับวงแหวนที่มันมอบให้',`วงแหวน${TIER[t][0]} · ไม่มีความเสี่ยงเลย`,()=>{giftRing(t,p.n,'ใจภักดี');g.pet=null;bond(10);log(`🐾 ${p.n}หลับตาลงอย่างสงบในอ้อมแขนคุณ`,'epic',true)}),
   O('🌳 พามันกลับไปตายในป่าที่เกิด','กรรม + · ไม่ได้วงแหวน',()=>{S.karma+=12;joy(5);g.pet=null;log(`🌳 คุณเดินไปส่ง${p.n}ถึงต้นไม้ที่เจอกันครั้งแรก มันไม่หันกลับมา`,'good',true)})])},
  end(){const g=X();choice('⭕ ปลายทางของผู้ครองดวงจิต',`วงแหวนเก้าวงหมุนรอบตัวคุณ ทั้งทวีปเหลือคนที่ยืนระดับเดียวกันได้ไม่ถึงสิบคน มีเสียงหนึ่งดังมาจากฟ้า — และอีกเสียงดังมาจากในใจ`,[
-  O('⚡ ขึ้นไปรับการทดสอบเทพ','ชนะ = อายุยืนเป็นตำนาน · แพ้ = อาจตาย',()=>{duel('เงาแห่งเทพผู้ทดสอบ',Math.round(total()*1.5),w=>{try{if(!S||!S.alive)return;if(w){g.god=1;S.lifespan+=80;S.fame+=500;S.power+=pctPow(.3);log(`⚡ <b>ผ่านการทดสอบเทพ</b> — ${nm()}ส่องแสงทั่วทวีป ชื่อของคุณถูกจารึกบนเสาเทพ`,'myth',true)}else if(Math.random()<.5){S.deathCause='ล้มเหลวในการทดสอบเทพ — ร่างสลายเป็นแสง';checkDeath()}else{S.maxHp=Math.max(30,Math.round(S.maxHp*.7));g.retired=1;g.lock=g.lv;log('⚡ คุณร่วงลงจากบันไดเทพ รอดมาได้ แต่วงแหวนทั้งเก้าร้าวจนใช้ไม่ได้อีก','bad',true)}}catch(e){console.error(e)}})}),
+  O('🌟 มุ่งสู่ประตูเทวา','ฝึกต่อจนระดับจิต 100 · ประตูเทวาจะเปิดให้ทดสอบ 3 บท · ผ่าน = เป็นเทพอมตะ',()=>{g.endq=0;g.endWait=S.age+5;log('🌟 คุณตั้งใจไปให้ถึงประตูเทวา — เมื่อระดับจิตถึง 100 แสงจากเหนือฟ้าจะลงมาเรียก','epic',true)}),
   O('💔 ทุบวงแหวนทิ้งทั้งเก้าวง','เลิกเป็นผู้ฝึกจิต · พลังลด อายุยืนขึ้น ใจเบาลง',()=>{g.retired=1;g.lock=g.lv;S.power=Math.round(S.power*.6);S.lifespan+=25;S.karma+=20;joy(25);log(`💔 วงแหวนเก้าวงแตกเป็นผงแสง ปลิวกลับไปหาป่าที่มันจากมา คุณกลับไปทำสิ่งที่${main().n}เคยทำตอนคุณหกขวบ`,'myth',true)}),
   O('📜 ถ่ายทอดให้ลูกศิษย์','พลังลด ชื่อเสียงยืนยาว · ชีวิตถัดไปในทวีปนี้ได้มรดก',()=>{LS.set('murim_svlegacy',{n:S.name});S.power=Math.round(S.power*.8);S.fame+=250;g.heir=1;log(`📜 คุณถ่ายพลังวงแหวนส่วนหนึ่งให้ลูกศิษย์ — ร่องรอยของมันจะติดไปถึงผู้ฝึกจิตรุ่นหลัง`,'myth',true)}),
   O('⏳ ยังไม่ตัดสินใจ','ถามใหม่อีกห้าปี',()=>{g.endq=0;g.endWait=S.age+5})])}};
@@ -43971,3 +43971,22 @@ window.mwRankInfo=function(){const M=S.mw;if(!M)return;const s=mScore(M),r=rOf(s
    if(M.y<3&&!M.kid)h.querySelectorAll('.mwh1').forEach(e=>{if(/ผู้ติดตาม|ปราณ/.test(e.textContent))e.style.display='none'})}}catch(e){}return r}}
 window._b60={modeKey,mScore,rankTick,goalNow,card};
 })()}catch(e){console.error('block60',e)}
+
+// ---------- ⭕ วิญญาณยุทธ์: อายุขัยตามระดับจิต · เทพอมตะ · ขึ้นสู่ดินแดนเทพ ----------
+try{(()=>{
+const soul=()=>!!(S&&S.ch==='soul'&&S.sv&&S.sv.aw);
+const isGod=()=>{const g=S&&S.sv;return!!(g&&(g.god||(g.x&&(g.x.god||(g.x.done||[]).includes('god')))))};
+const CAP=lv=>lv>=99?250:lv>=90?180:lv>=70?140:lv>=30?110:90;
+{const _l0=lifeMax0;lifeMax0=function(){const v0=_l0.apply(this,arguments);try{if(!soul()||(S.beastMode&&!S.beastMode.human))return v0;const g=S.sv;if(isGod())return 1e6;
+ if(g._ls0==null)g._ls0=S.lifespan||60;const jit=.85+Math.max(0,Math.min(1,((g._ls0||60)-40)/40))*.15,bonus=Math.max(0,(S.lifespan||0)-g._ls0);
+ let v=Math.round(CAP(g.aw===1?g.lv:0)*jit)+bonus;if(g._lsFl==null)g._lsFl=v<S.age+10?S.age+10:0;if(g._lsFl)v=Math.max(v,g._lsFl);return v}catch(e){return v0}}}
+// เป็นเทพแล้ว → เลือกขึ้นสู่ดินแดนเทพ (จบแบบตำนาน) หรืออยู่ต่อเป็นเทพผู้พิทักษ์
+function ascend(){S.flags=S.flags||{};S.flags.svAsc=1;S.fame+=50000;try{const d=LS.get('murim_ttl',{});const t='เทพวิญญาณผู้ขึ้นสู่ดินแดนเทพ';if(!d[t]){d[t]={n:S.name,t:Date.now(),c:1};LS.set('murim_ttl',d)}}catch(e){}
+ log('🌟 <b>ประตูดินแดนเทพเปิดออก</b> — คุณก้าวขึ้นไปโดยไม่หันกลับมามอง','myth',true);
+ // จบชีวิตตรง ๆ ไม่ผ่านระบบชุบชีวิต/กันตายต่าง ๆ (นี่ไม่ใช่ความตาย)
+ setTimeout(()=>{try{if(!S||!S.alive)return;const cause='ขึ้นสู่ดินแดนเทพ — วงแหวนทั้งเก้ากลายเป็นแสงนำทาง ชื่อของคุณถูกจารึกเป็นตำนานแห่งทวีป';S.flags.ascended=1;try{flushReveal()}catch(e){}S.alive=false;S.cause=cause;try{saveLegacy()}catch(e){}try{clearSave()}catch(e){}try{setScene('aura');sfx('good')}catch(e){}log('🌟 '+cause,'myth');const dn=S;setTimeout(()=>{if(S===dn){try{choice._cur=null;closeM()}catch(e){}endGame()}},1800)}catch(e){console.error('svAsc',e)}},400)}
+window.svAscend=function(){if(!soul()||!isGod()||!S.alive)return;closeM();choice('🌟 ขึ้นสู่ดินแดนเทพ','เทพผู้เป็นอมตะไม่จำเป็นต้องอยู่ในทวีปอีกต่อไป ประตูเปิดรอคุณอยู่',[{t:'🌟 ขึ้นไปตอนนี้',s:'จบชีวิตแบบตำนาน · ชื่อเสียงมหาศาล · ฉายาเทพวิญญาณ',noFate:1,f:ascend},{t:'🛡️ อยู่ต่อเป็นเทพผู้พิทักษ์',s:'อมตะ · ขึ้นไปเมื่อไหร่ก็ได้ที่หน้าดวงจิต',noFate:1,f(){log('🛡️ คุณเลือกเฝ้าทวีปต่อไป — ขึ้นสู่ดินแดนเทพได้ทุกเมื่อที่หน้าดวงจิต','epic')}}])};
+setInterval(()=>{try{if(!soul()||!S.alive||!isGod()||S.sv._godAsk||choice._cur||modalOpen)return;S.sv._godAsk=1;log('🌟 <b>คุณกลายเป็นเทพ</b> — อายุขัยไม่มีขีดจำกัดอีกต่อไป','myth',true);svAscend()}catch(e){}},1500);
+{const _os=window.openSoul;if(_os)window.openSoul=function(){const r=_os.apply(this,arguments);try{if(!soul())return r;const m=$('modal'),h=m.querySelector('h3');if(!h||m.querySelector('.svLife'))return r;const g=S.sv,lm=Math.round(lifeMax());
+ h.insertAdjacentHTML('afterend',`<div class="item svLife"><b>⏳ อายุขัย</b> · ${isGod()?'<b>♾️ อมตะ (เทพ)</b>':`ราว ${lm} ปี <span class="tag2">(อายุตอนนี้ ${S.age})</span>`}<br><span class="tag2">ยิ่งระดับจิตสูงยิ่งอายุยืน: ต่ำกว่า 30 ≈ 90 · 30+ ≈ 110 · 70+ ≈ 140 · 90+ ≈ 180 · 99 ≈ 250 · เป็นเทพ = อมตะ</span>${isGod()?'<button class="pbtn" style="width:100%;margin-top:6px" onclick="svAscend()">🌟 ขึ้นสู่ดินแดนเทพ</button>':''}</div>`)}catch(e){}return r}}
+})()}catch(e){console.error('svlife',e)}
