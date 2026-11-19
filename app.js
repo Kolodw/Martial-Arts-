@@ -23,7 +23,15 @@ function dec(v){let p=P.length;const n=((v.charCodeAt(p)-0x100)<<8)|(v.charCodeA
  return res.join('')}
 return{P,enc,dec}})();
 const ZK=/^murim_(save(_\d)?|bak_\d|arc_.+|flog_\d+)$/;
-const LS={raw(k){try{const v=localStorage.getItem(k);return v!=null&&v.startsWith(ZQ.P)?ZQ.dec(v):v}catch(e){return null}},get(k,d){try{let v=localStorage.getItem(k);if(v==null)return d;if(v.startsWith(ZQ.P))v=ZQ.dec(v);return JSON.parse(v)}catch(e){return d}},set(k,v){try{let s=JSON.stringify(v);if(s.length>3000&&ZK.test(k)){try{const z=ZQ.enc(s);if(z&&z.length<s.length*.8&&ZQ.dec(z)===s)s=z}catch(e){}}localStorage.setItem(k,s);return true}catch(e){return false}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+const ID=(()=>{const o={ok:false,db:null,ov:new Map(),q:Promise.resolve()};const off=()=>{try{return localStorage.getItem('murim_noidb')==='1'}catch(e){return true}};
+const tx=(m,f)=>new Promise((res,rej)=>{try{const t=o.db.transaction('kv',m),st=t.objectStore('kv'),r=f(st);t.oncomplete=()=>res(r&&r.result);t.onerror=t.onabort=()=>rej(t.error)}catch(e){rej(e)}});
+o.put=(k,v)=>{if(!o.db)return;o.q=o.q.then(()=>tx('readwrite',st=>st.put(v,k))).catch(()=>{})};
+o.del=k=>{if(!o.db)return;o.q=o.q.then(()=>tx('readwrite',st=>st.delete(k))).catch(()=>{})};
+o.init=()=>{try{if(off()||typeof indexedDB==='undefined')return;const rq=indexedDB.open('murim_kv',1);rq.onupgradeneeded=()=>{try{rq.result.createObjectStore('kv')}catch(e){}};rq.onerror=()=>{};rq.onsuccess=()=>{try{o.db=rq.result;const t=o.db.transaction('kv','readonly'),st=t.objectStore('kv'),kr=st.getAllKeys(),vr=st.getAll();t.oncomplete=()=>{try{const ks=kr.result||[],vs=vr.result||[];ks.forEach((k,i)=>{try{if(typeof k!=='string'||typeof vs[i]!=='string')return;if(localStorage.getItem(k)==null){try{localStorage.setItem(k,vs[i])}catch(e){o.ov.set(k,vs[i])}}}catch(e){}});o.ok=true;try{if(o.ov.size||ks.length){if(typeof renderLegends==='function'&&!S)renderLegends()}}catch(e){}}catch(e){o.ok=true}}}catch(e){}}}catch(e){}};
+return o})();
+try{const _rm=Storage.prototype.removeItem;ID.rm=k=>{try{_rm.call(localStorage,k)}catch(e){}};Storage.prototype.removeItem=function(k){try{if(this===localStorage&&ZK.test(k)){ID.ov.delete(k);ID.del(k)}}catch(e){}return _rm.apply(this,arguments)}}catch(e){}
+const LS={raw(k){try{let v=ID.ov.has(k)?ID.ov.get(k):localStorage.getItem(k);return v!=null&&v.startsWith(ZQ.P)?ZQ.dec(v):v}catch(e){return null}},get(k,d){try{let v=ID.ov.has(k)?ID.ov.get(k):localStorage.getItem(k);if(v==null)return d;if(v.startsWith(ZQ.P))v=ZQ.dec(v);return JSON.parse(v)}catch(e){return d}},set(k,v){try{let s=JSON.stringify(v);const z=ZK.test(k);if(s.length>3000&&z){try{const c=ZQ.enc(s);if(c&&c.length<s.length*.8&&ZQ.dec(c)===s)s=c}catch(e){}}try{localStorage.setItem(k,s);if(z){ID.ov.delete(k);ID.put(k,s)}return true}catch(e){if(z&&ID.ok&&ID.db){ID.ov.set(k,s);ID.put(k,s);ID.rm(k);return true}return false}}catch(e){return false}},del(k){try{localStorage.removeItem(k)}catch(e){}try{ID.ov.delete(k);if(ZK.test(k))ID.del(k)}catch(e){}}};
+setTimeout(()=>{try{ID.init()}catch(e){}},0);
 
 // ============ THEME ============
 const THEMES=[['light','☀️','สว่าง'],['dark','🌙','มืด'],['mono','⚫','ขาวดำ'],['jade','🍃','หยกเขียว'],['ember','🩸','โลหิตมาร'],['gold','✨','ทองเซียน']];
