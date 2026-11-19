@@ -46312,3 +46312,99 @@ function hqPaint(){const el=$$('tsHq');if(!el)return;const H=HQc&&HQc.ok?HQc:nul
  el.innerHTML=`<h5>⚡ สด · ทั้งเว็บ</h5>${H?`<div class="r"><i>⚡</i><div style="flex:1"><b>ประกาศิตฟ้า ครั้งที่ ${H.r}</b><small>${H.ph==='cd'?`พิชิตแล้วโดย ${esc(H.wn)}`:H.ph==='chk'?'มีคนอ้างว่าพิชิตแล้ว รอตรวจ':'ยังไม่มีใครพิชิต — ชิงตั๋วทอง 3 ใบ'}</small></div></div>`:''}${B?`<div class="r" onclick="event.stopPropagation();openAQ('wb')"><i>${B.ic||'🐉'}</i><div style="flex:1"><b>${esc(B.n||'บอสโลก')}</b><small>${B.ph==='on'?`เลือด ${Math.round(B.hp/B.mx*100)}% · ${B.np} คนร่วมตี`:B.ph==='dead'?'ล้มแล้ว':'หนีไปแล้ว'}</small>${B.ph==='on'?`<div class="hp"><i style="width:${B.hp/B.mx*100}%"></i></div>`:''}</div></div>`:''}`}
 setInterval(()=>{if($$('title')&&$$('title').classList.contains('on')&&W()){titleWide();hqFetch()}},4000);setTimeout(titleWide,1500);
 })()}catch(e){console.error('block73',e)}
+
+try{(()=>{
+// 🏮 ระเบียงผู้อุปถัมภ์รายเดือน (39/99) — แท็บที่ 3 ในหอผู้ก่อตั้ง · ป้ายขึ้นเฉพาะช่วงที่สิทธิ์ยังไม่หมด · สมุดรายนามประจำเดือนถาวร
+const st=document.createElement('style');st.textContent=`
+.vmn{--wd:#6b4423;--wd2:#3e2614}
+.vmn .hero{position:relative;overflow:hidden;border:2px solid #c9a24a;border-radius:16px;padding:14px 12px 12px;text-align:center;background:radial-gradient(120% 90% at 50% 0%,#5a1d16 0%,#2a1410 55%,#170c09 100%);box-shadow:0 4px 0 #000,inset 0 0 30px #ff7a3a22}
+.vmn .hero h3{margin:22px 0 2px;color:#ffe2a0;font-size:18px;letter-spacing:.5px;text-shadow:0 2px 0 #000,0 0 14px #ff9a4a88}
+.vmn .hero p{margin:0;color:#e9cfa0;font-size:12px;opacity:.9}
+.vmn .hero .cnt{display:flex;justify-content:center;gap:8px;margin-top:9px;flex-wrap:wrap}
+.vmn .hero .cnt span{font-size:11.5px;font-weight:800;border:1px solid #c9a24a88;border-radius:99px;padding:2px 10px;background:#00000055;color:#ffe2a0}
+.vmn .lrow{position:absolute;top:0;left:0;right:0;height:30px;display:flex;justify-content:space-around;pointer-events:none}
+.vmn .lrow:before{content:"";position:absolute;left:-10px;right:-10px;top:6px;height:14px;border-bottom:2px solid #8a5a2a;border-radius:0 0 50% 50%}
+.vmn .lan{position:relative;width:16px;height:21px;margin-top:9px;border-radius:7px;background:radial-gradient(circle at 50% 40%,#ffd27a,#e0402a 60%,#8a1a10);box-shadow:0 0 12px #ff6a3aaa;transform-origin:50% -6px;animation:vmSw 3.2s ease-in-out infinite alternate}
+.vmn .lan:nth-child(2n){animation-delay:-1.4s}.vmn .lan:nth-child(3n){animation-duration:2.6s}
+.vmn .lan:before{content:"";position:absolute;left:4px;right:4px;top:-3px;height:3px;background:#2a1408;border-radius:2px}
+.vmn .lan:after{content:"";position:absolute;left:7px;bottom:-6px;width:2px;height:6px;background:#ffcf6a}
+@keyframes vmSw{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+.vmn .sec{margin:16px 0 6px;display:flex;align-items:center;gap:8px;color:#f3d27a;font-weight:800;font-size:14px}
+.vmn .sec:after{content:"";flex:1;height:2px;background:linear-gradient(90deg,#c9a24a88,transparent)}
+.vmn .sec small{font-weight:600;color:#cdbb92;font-size:11px}
+.vmn .wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(102px,1fr));gap:12px 8px;padding-top:4px}
+.vmn .wall.w2{grid-template-columns:repeat(auto-fill,minmax(122px,1fr))}
+.vmn .pl{position:relative;text-align:center;padding:22px 6px 9px;border-radius:12px;border:2px solid #4a3a22;background:linear-gradient(#2a2016,#1a130c);box-shadow:0 3px 0 #000;animation:vmIn .45s both}
+@keyframes vmIn{from{opacity:0;transform:translateY(6px)}}
+.vmn .pl .hk{position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:44px;height:14px;border:2px solid #8a6a3a;border-bottom:none;border-radius:22px 22px 0 0}
+.vmn .pl .tg{position:absolute;top:4px;left:6px;right:6px;display:flex;justify-content:space-between;font-size:10px;font-weight:800}
+.vmn .pl canvas{width:52px;height:57px;image-rendering:pixelated;border-radius:8px;background:#1c1a28;display:block;margin:0 auto 4px}
+.vmn .pl .an{width:52px;height:57px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:24px;border-radius:8px;background:#00000040}
+.vmn .pl .nm{font-weight:800;font-size:13px;color:#f6ead0;word-break:break-word;line-height:1.25}
+.vmn .pl .mo{font-size:10.5px;color:#d9c49a;margin-top:3px}
+.vmn .pl .ws{font-size:10.5px;color:#f0dcb0;font-style:italic;margin-top:4px;padding-top:4px;border-top:1px dashed #ffffff26;word-break:break-word}
+.vmn .pl.me{box-shadow:0 3px 0 #000,0 0 0 2px #ffd24a,0 0 16px #ffd24a55}
+.vmn .pl.m0{background:linear-gradient(#5a3a1e,#3a2412);border-color:#8a5a2a}
+.vmn .pl.m1{background:linear-gradient(#4a4e58,#2a2d34);border-color:#c8d0dc}.vmn .pl.m1 .nm{color:#f2f6fb}
+.vmn .pl.m2{background:linear-gradient(#1f5a48,#0f3328);border-color:#6fd0a8}.vmn .pl.m2 .nm{color:#dcfff0}
+.vmn .pl.m3{background:linear-gradient(135deg,#1f6a58,#0c3a30 45%,#2a5a7a);border-color:#9ff0d0;box-shadow:0 3px 0 #000,0 0 14px #7ff0c866}
+.vmn .pl.m3:after{content:"";position:absolute;inset:0;border-radius:10px;background:linear-gradient(110deg,transparent 35%,#ffffff2a 50%,transparent 65%);background-size:250% 100%;animation:vmSh 3.5s linear infinite;pointer-events:none}
+@keyframes vmSh{from{background-position:120% 0}to{background-position:-120% 0}}
+.vmn .w2 .pl{padding-top:24px}.vmn .w2 .pl canvas,.vmn .w2 .pl .an{width:62px;height:68px}
+.vmn .w2 .pl:before{content:"";position:absolute;inset:3px;border:1px solid #ffffff22;border-radius:9px;pointer-events:none}
+.vmn .empty{text-align:center;color:#cdbb92;font-size:12px;padding:14px 8px;border:2px dashed #4a3a22;border-radius:12px}
+.vmn .mine{border:2px solid #c9a24a;border-radius:14px;background:linear-gradient(#2c2014,#1c140c);padding:11px 12px;margin:16px 0 4px;box-shadow:0 3px 0 #000}
+.vmn .mine h4{margin:0 0 4px;color:#f3d27a;font-size:14px}.vmn .mine .tag2{color:#d9c49a}
+.vmn .mine label{display:block;font-size:12px;margin:7px 0 0;color:#e8d8b0}
+.vmn .mine input{width:100%;box-sizing:border-box;border:2px solid #6a5430;border-radius:8px;background:#120d08!important;color:#f6ead0!important;-webkit-text-fill-color:#f6ead0!important;padding:7px 9px;font:inherit;margin-top:3px}
+.vmn .mine .row{display:flex;gap:6px;margin-top:9px}.vmn .mine .row button,.vmn .cta{font-size:14px!important;padding:9px 8px!important;min-height:0!important;white-space:nowrap;line-height:1.2!important}
+.vmn .pg{height:9px;border-radius:99px;background:#00000066;border:1px solid #6a5430;overflow:hidden;margin:7px 0 3px}.vmn .pg i{display:block;height:100%;background:linear-gradient(90deg,#c08a3a,#ffd27a);border-radius:99px}
+.vmn .mats{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}.vmn .mats span{font-size:10.5px;border-radius:99px;padding:1px 8px;border:1px solid #6a5430;color:#cdbb92}.vmn .mats span.on{border-color:#ffd24a;color:#ffe08a;background:#3a2a10}
+.vmn .bk{border:2px solid #4a3a22;border-radius:12px;background:linear-gradient(#efe0bc,#d9c39a);color:#3a2a14;margin:6px 0;box-shadow:0 3px 0 #000;overflow:hidden}
+.vmn .bk summary{list-style:none;cursor:pointer;padding:8px 12px;font-weight:800;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(#7a2a1a,#5a1a10);color:#ffe2a0}
+.vmn .bk summary::-webkit-details-marker{display:none}.vmn .bk summary:after{content:"▾";transition:transform .2s}.vmn .bk[open] summary:after{transform:rotate(180deg)}
+.vmn .bk summary small{font-weight:600;opacity:.85;margin-left:auto;margin-right:8px}
+.vmn .bk .ls{padding:8px 12px 10px;display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12.5px;background:repeating-linear-gradient(#0000 0 21px,#8a6a3a22 21px 22px)}
+.vmn .bk .ls span{white-space:nowrap}.vmn .bk .ls span.me{font-weight:800;color:#8a1a10}.vmn .bk .ls span b{color:#8a5a10}
+.vmn .note{font-size:11px;color:#bba882;text-align:center;margin:12px 4px 0;line-height:1.5}
+.vmn .cta{display:block;width:100%;margin-top:10px}
+`;document.head.appendChild(st);
+const MAT=[['🪵','ป้ายไม้',0],['🥈','ป้ายเงิน',3],['💠','ป้ายหยก',6],['✨','หยกเรืองแสง',12]],mat=mo=>mo>=12?3:mo>=6?2:mo>=3?1:0;
+const TM=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const mName=k=>{const[y,m]=k.split('-');return TM[(+m)-1]+' '+((+y)+543)};
+const dTH=t=>{const d=new Date(t);return d.getDate()+' '+TM[d.getMonth()].slice(0,3)+'.'};
+const tabs=w=>`<div class="hlTabs"><button class="${w==='f'?'on':''}" onclick="vipWall()">🏯 ผู้ก่อตั้ง</button><button class="${w==='m'?'on':''}" onclick="vipMon()">🏮 รายเดือน</button><button class="${w==='s'?'on':''}" onclick="supHall()">💛 ผู้สนับสนุน</button></div>`;
+const fixTabs=()=>{try{const m=$('modal'),t=m&&m.querySelector('.hlTabs');if(!t||t.querySelector('.vmT'))return;const bs=t.querySelectorAll('button');if(bs[0])bs[0].textContent='🏯 ผู้ก่อตั้ง';if(bs[1]&&/สนับสนุน/.test(bs[1].textContent))bs[1].textContent='💛 ผู้สนับสนุน';const b=document.createElement('button');b.className='vmT';b.textContent='🏮 รายเดือน';b.onclick=()=>vipMon();t.insertBefore(b,bs[1]||null)}catch(e){}};
+{const _w=window.vipWall;if(typeof _w==='function')window.vipWall=async function(){const p=_w.apply(this,arguments);fixTabs();const r=await p;fixTabs();setTimeout(fixTabs,60);return r}}
+{const _s=window.supHall;if(typeof _s==='function'){window.supHall=async function(){const p=_s.apply(this,arguments);fixTabs();const r=await p;fixTabs();return r};}}
+window.vipMon=async function(){
+ const lans='<div class="lrow">'+'<i class="lan"></i>'.repeat(7)+'</div>';
+ modal(`<button class="xbtn" onclick="vipMenu()">✕</button><h3>หอผู้ก่อตั้ง</h3>${tabs('m')}<div class="vmn"><div class="hero">${lans}<h3>🏮 ระเบียงผู้อุปถัมภ์</h3><p>ป้ายของผู้สนับสนุนรายเดือน · แขวนไว้ตลอดช่วงที่ยังสนับสนุนอยู่</p></div><div class="empty" style="margin-top:12px">กำลังจุดโคม…</div></div>`,'vipm');
+ let j=null;try{const r=await fetch('/api/pay?a=vipmon&uid='+encodeURIComponent(pid));j=await r.json()}catch(e){}
+ const m=$('modal');if(!m||m.dataset.k!=='vipm')return;const box=m.querySelector('.vmn');
+ if(!j||!j.act){box.querySelector('.empty').textContent='โหลดไม่สำเร็จ ลองใหม่อีกครั้ง';return}
+ const a2=j.act.filter(x=>x.t===2),a1=j.act.filter(x=>x.t===1),me=j.me||{};
+ const pl=(x,i)=>{const k=mat(x.mo);return`<div class="pl m${k} ${x.me?'me':''}" style="animation-delay:${Math.min(i,14)*.04}s"><i class="hk"></i><div class="tg"><span>${MAT[k][0]}</span><span>${x.fd?'👑':''}${x.t===2?'⭐⭐':'⭐'}</span></div>${x.look?`<canvas width="140" height="154" data-p="${esc(x.pu)}"></canvas>`:`<div class="an">${x.n?'🏮':'🕊️'}</div>`}<div class="nm">${esc(x.n||'ผู้ไม่ประสงค์ออกนาม')}${x.me?' <small>(คุณ)</small>':''}</div><div class="mo">สนับสนุนมา ${x.mo} เดือน</div>${x.w?`<div class="ws">“${esc(x.w)}”</div>`:''}</div>`};
+ const wall=(l,c,e)=>l.length?`<div class="wall ${c}">${l.map(pl).join('')}</div>`:`<div class="empty">${e}</div>`;
+ let mineH='';
+ if(me.has){const k=mat(me.mo),nx=MAT[k+1],pr=nx?Math.min(100,(me.mo-MAT[k][2])/(nx[2]-MAT[k][2])*100):100;
+  mineH=`<div class="mine"><h4>ป้ายของคุณ ${MAT[k][0]} ${MAT[k][1]}</h4><div class="tag2">${me.t?`กำลังแขวนอยู่ที่${me.t===2?'ระเบียงผู้อุปถัมภ์ ⭐⭐':'ลานผู้สนับสนุน ⭐'} ถึง ${dTH(me.until)}`:'สิทธิ์หมดแล้ว ป้ายเก็บเข้ากรุ — ชื่อยังอยู่ในสมุดรายนามตลอดไป'} · สนับสนุนรวม <b>${me.mo}</b> เดือน</div>
+  <div class="pg"><i style="width:${pr}%"></i></div><div class="tag2" style="font-size:11px">${nx?`อีก ${nx[2]-me.mo} เดือน ป้ายจะเปลี่ยนเป็น ${nx[0]} ${nx[1]}`:'ถึงขั้นสูงสุดแล้ว ✨ ขอบคุณที่อยู่ด้วยกันมาตลอดปี'}</div>
+  <div class="mats">${MAT.map((q,i)=>`<span class="${i<=k?'on':''}">${q[0]} ${q[2]||1}+ เดือน</span>`).join('')}</div>
+  <label>ชื่อบนป้าย<input id="vmN" maxlength="24" value="${esc(me.hide?'':(me.n||pname()))}"></label>
+  <label>คำอธิษฐานใต้ป้าย <span class="tag2">(ไม่ใส่ก็ได้)</span><input id="vmW" maxlength="40" value="${esc(me.w||'')}" placeholder="เช่น ขอให้ยุทธภพนี้อยู่ยืนยาว"></label>
+  <div class="row"><button class="pbtn" style="flex:1" onclick="vmSave(0)">🏮 แขวนป้าย</button>${me.hide?'':'<button class="gbtn" style="flex:1" onclick="vmSave(1)">🕊️ นิรนาม</button>'}</div>
+  <p class="tag2" style="margin:6px 0 0;font-size:11px">ตอนนี้${me.hide?'แสดงเป็นนิรนาม':me.ok?`ขึ้นชื่อ “${esc(me.n)}”`:'ขึ้นชื่อตัวละครล่าสุดอัตโนมัติ'} · เปลี่ยนหรือซ่อนได้ทุกเมื่อ</p>${me.t?'':'<button class="pbtn cta" onclick="vipMenu()">🏮 จุดโคมอีกครั้ง (ต่อสิทธิ์)</button>'}</div>`}
+ else mineH=`<div class="mine" style="text-align:center"><h4>อยากแขวนป้ายของคุณที่นี่?</h4><div class="tag2">สนับสนุนรายเดือน ⭐ 39 บาท หรือ ⭐⭐ 99 บาท ป้ายจะขึ้นทันทีหลังยืนยันสลิป</div><button class="pbtn cta" onclick="vipMenu()">ดูสิทธิ์ผู้สนับสนุน ›</button></div>`;
+ const bookH=(j.book||[]).length?(j.book||[]).map((b,i)=>`<details class="bk" ${i===0?'open':''}><summary>📜 ${mName(b.m)}<small>${b.l.length} ท่าน</small></summary><div class="ls">${b.l.map(x=>`<span class="${x.me?'me':''}"><b>${x.t===2?'⭐⭐':'⭐'}</b> ${esc(x.n||'ผู้ไม่ประสงค์ออกนาม')}</span>`).join('')}</div></details>`).join(''):'<div class="empty">สมุดยังว่าง — หน้าแรกรอชื่อของคุณอยู่</div>';
+ box.innerHTML=`<div class="hero">${lans}<h3>🏮 ระเบียงผู้อุปถัมภ์</h3><p>ป้ายของผู้สนับสนุนรายเดือน · แขวนไว้ตลอดช่วงที่ยังสนับสนุนอยู่</p><div class="cnt"><span>⭐⭐ ${a2.length} ท่าน</span><span>⭐ ${a1.length} ท่าน</span><span>📜 ${(j.book||[]).length} เดือน</span></div></div>
+ <div class="sec">⭐⭐ ระเบียงผู้อุปถัมภ์ <small>99 บาท / เดือน</small></div>${wall(a2,'w2','ระเบียงยังว่าง — ป้ายแรกรอคุณอยู่')}
+ <div class="sec">⭐ ลานผู้สนับสนุน <small>39 บาท / เดือน</small></div>${wall(a1,'w1','ลานยังว่าง — ป้ายแรกรอคุณอยู่')}
+ ${mineH}
+ <div class="sec">📜 สมุดรายนามประจำเดือน <small>บันทึกถาวร</small></div>${bookH}
+ <p class="note">ป้ายเปลี่ยนวัสดุตามจำนวนเดือนที่สนับสนุนสะสม 🪵 → 🥈 3 เดือน → 💠 6 เดือน → ✨ 12 เดือน<br>หมดสิทธิ์แล้วป้ายจะเก็บเข้ากรุ แต่ชื่อในสมุดรายนามอยู่ตลอดไป · ไม่แสดงยอดเงินของใคร</p>`;
+ box.querySelectorAll('canvas[data-p]').forEach(c=>{const x=j.act.find(q=>q.pu===c.dataset.p);try{spAva(c,x&&x.look)}catch(e){}});
+};
+window.vmSave=async function(off){const n=(($('vmN')||{}).value||'').trim(),w=(($('vmW')||{}).value||'').trim();if(!off&&!n){toast('ใส่ชื่อก่อน');return}
+ try{const r=await fetch('/api/pay?a=vipmonjoin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:pid,n,w,off:off?1:0})});const j=await r.json();if(j&&j.ok){toast(off?'ป้ายของคุณเป็นนิรนามแล้ว 🕊️':'แขวนป้ายเรียบร้อย 🏮');vipMon()}else toast(j&&j.err==='nopay'?'ต้องเคยสนับสนุนรายเดือนก่อน':'ทำไม่สำเร็จ')}catch(e){toast('ทำไม่สำเร็จ')}};
+})()}catch(e){console.error('block74',e)}

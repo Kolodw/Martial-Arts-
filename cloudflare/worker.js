@@ -124,6 +124,37 @@ async function supHall(request, env, url) {
   }
   return jr({ rows, me, s: scope });
 }
+// 🏮 ระเบียงผู้อุปถัมภ์รายเดือน (39/99): ป้ายขึ้นเฉพาะช่วงที่สิทธิ์ยังไม่หมด + สมุดรายนามประจำเดือน (ย้อนหลังจาก entitlements จริง)
+// ชื่อ: ที่ตั้งเองในระเบียง (vmn) > หอผู้สนับสนุน (supp) > ชื่อตัวละครล่าสุด (เหมือนหอผู้สนับสนุน) · กดซ่อนเป็นนิรนามได้ทุกเมื่อ
+async function vipMon(request, env, url) {
+  const h = await handler(), cmd = h.cmd, a = url.searchParams.get('a'); if (!env.PAY_DB || !cmd) return jr({ act: [], book: [], me: null });
+  const db = env.PAY_DB, now = Date.now(), M30 = 30 * 86400e3;
+  const mk = t => { const d = new Date(t + 7 * 3600e3); return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0') };
+  if (a === 'vipmonjoin') {
+    let b = null; try { b = await request.json() } catch (e) { return jr({ ok: 0 }, 400) }
+    const uid = String(b.id || ''); if (!/^[a-z0-9]{6,24}$/.test(uid)) return jr({ ok: 0 }, 400);
+    const c = await db.prepare("SELECT COUNT(*) n FROM entitlements WHERE uid=? AND kind IN ('vip1','vip2')").bind(uid).first(); if (!c || !c.n) return jr({ ok: 0, err: 'nopay' }, 403);
+    if (b.off) { await cmd('HSET', 'vmn', uid, JSON.stringify({ hide: 1, t: now })); await cmd('DEL', 'vmon:c'); return jr({ ok: 1 }) }
+    const n = h.clean(String(b.n || ''), 24).trim(); if (!n) return jr({ ok: 0, err: 'name' }, 400);
+    await cmd('HSET', 'vmn', uid, JSON.stringify({ n, w: h.clean(String(b.w || ''), 40).trim(), t: now })); await cmd('DEL', 'vmon:c'); return jr({ ok: 1 });
+  }
+  let rows = null; try { rows = JSON.parse(await cmd('GET', 'vmon:c') || 'null') } catch (e) {}
+  if (!rows) { const r = await db.prepare("SELECT uid u, kind k, starts_at s, ends_at e FROM entitlements WHERE kind IN ('vip1','vip2') ORDER BY starts_at").all(); rows = (r.results || []).map(x => [x.u, x.k === 'vip2' ? 2 : 1, +x.s || 0, +x.e || 0]); try { await cmd('SET', 'vmon:c', JSON.stringify(rows), 'EX', 120) } catch (e) {} }
+  const P = {}; for (const [u, t, s, e] of rows) { const p = P[u] || (P[u] = { u, mo: 0, f: s, end: 0, top: 0, ms: {} }); const k = Math.max(1, Math.round((e - s) / M30)); p.mo += k; p.end = Math.max(p.end, e); p.top = Math.max(p.top, t); const m = mk(s); p.ms[m] = Math.max(p.ms[m] || 0, t) }
+  const ids = Object.keys(P);
+  const [vs, nm, sp, ac] = ids.length ? await Promise.all([cmd('MGET', ...ids.map(u => 'vip:' + u)), cmd('HMGET', 'vmn', ...ids), cmd('HMGET', 'supp', ...ids), cmd('MGET', ...ids.map(u => 'acp:' + u))]) : [[], [], [], []];
+  const J = x => { try { return JSON.parse(x || 'null') } catch (e) { return null } };
+  ids.forEach((u, i) => { const p = P[u], v = J(vs && vs[i]) || {}, q = J(nm && nm[i]), s2 = J(sp && sp[i]), a2 = J(ac && ac[i]);
+    const e2 = +v.e2 || 0, e1 = +v.e1 || 0; p.tier = e2 > now ? 2 : e1 > now ? 1 : 0; p.until = p.tier === 2 ? e2 : p.tier === 1 ? e1 : 0; p.fd = v.u ? 1 : 0;
+    p.hide = q ? (q.hide ? 1 : 0) : (s2 && s2.hide ? 1 : 0); p.ok = q && !q.hide ? 1 : 0; p.n = p.hide ? '' : (q && q.n) || (s2 && s2.n) || (a2 && a2.n ? h.clean(String(a2.n), 24) : ''); p.w = p.ok ? q.w || '' : ''; p.look = !p.hide && s2 && s2.look ? s2.look : null });
+  const pu = u => String(u).replace(/[^a-z0-9]/g, '').slice(0, 12), uid = String(url.searchParams.get('uid') || '');
+  const act = ids.map(u => P[u]).filter(p => p.tier).sort((x, y) => y.tier - x.tier || y.mo - x.mo || x.f - y.f)
+    .map(p => ({ pu: pu(p.u), n: p.n, w: p.w, t: p.tier, mo: p.mo, f: p.f, fd: p.fd, look: p.look, me: p.u === uid ? 1 : 0 }));
+  const B = {}; ids.forEach(u => { const p = P[u]; for (const m in p.ms) (B[m] || (B[m] = [])).push({ n: p.n, t: p.ms[m], mo: p.mo, me: u === uid ? 1 : 0 }) });
+  const book = Object.keys(B).sort().reverse().map(m => ({ m, l: B[m].sort((x, y) => y.t - x.t || y.mo - x.mo) }));
+  const p = P[uid]; const me = p ? { has: 1, n: p.n, w: p.w, ok: p.ok, hide: p.hide, mo: p.mo, t: p.tier, until: p.until, top: p.top } : { has: 0 };
+  return jr({ act, book, me, now });
+}
 async function payAdmin(request, env, url) {
   const h = await handler(), a = url.searchParams.get('a');
   if (!h.isAdm || !h.isAdm(url.searchParams.get('key'))) return jr({ err: 'admin' }, 403);
@@ -295,7 +326,7 @@ export default {
         return r;
       } catch (e) { console.error('API_ERR edgecache', String(e && e.message || e)) }
     }
-    if (url.pathname === '/api/pay') return url.searchParams.get('a') === 'products' ? payProducts(env) : /^(supboard|supjoin)$/.test(url.searchParams.get('a') || '') ? supHall(request, env, url) : url.searchParams.get('a') ? payAdmin(request, env, url) : pay(request, env);
+    if (url.pathname === '/api/pay') return url.searchParams.get('a') === 'products' ? payProducts(env) : /^(supboard|supjoin)$/.test(url.searchParams.get('a') || '') ? supHall(request, env, url) : /^(vipmon|vipmonjoin)$/.test(url.searchParams.get('a') || '') ? vipMon(request, env, url) : url.searchParams.get('a') ? payAdmin(request, env, url) : pay(request, env);
     if (TRAP.some(r => r.test(url.pathname))) { url.search = '?a=trap&p=' + encodeURIComponent(url.pathname.slice(1)); url.pathname = '/api/online' }
     if (url.pathname === '/api/online' || url.pathname === '/api/online/') {
       const r = await api(request, url);
