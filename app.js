@@ -46055,3 +46055,75 @@ function mount(){try{const sb=$('sceneBox');if(sb&&!$('scTog')){sb.insertAdjacen
 setInterval(mount,1000);setTimeout(mount,300);
 document.addEventListener('keydown',e=>{try{if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName)||modalOpen)return;if(!document.body.classList.contains('desk')||!$('game').classList.contains('on'))return;if(e.key==='f'||e.key==='F'){ctToggle()}else if(e.key==='v'||e.key==='V'){scCycle()}}catch(x){}});
 })()}catch(e){console.error('block72',e)}
+// ===================== 🎯 ปณิธาน 2.0: 3 ขั้น 🥉🥈🥇 · เป้าเบาลงสำหรับชะตาลำบาก · ปณิธานใหม่ผูกกับระบบในเกม · ปณิธานเปราะบางยืดหยุ่นขึ้น + บอกเมื่อพัง (เปลี่ยนฟรี 1 ครั้ง) · ติดตามบนแถบเควส · รางวัลทุกขั้น · สมุดปณิธาน =====================
+try{(()=>{
+GMUL[1]=GMUL[1]||1.3;
+const W=(m,x,g)=>S&&S.xt?(g!=null?g:x):gW()==='x'?x:m;
+const P=(a,b)=>gPct(a,b);
+// ---------- ปณิธานใหม่ ----------
+const NEW=[
+ {id:'g_est',lv:2,n:'เจ้าแห่งแคว้น',d:()=>'ขยายอาณาเขต (💰 ทุ่มทรัพย์) ถึงขั้น 6 — แคว้น',c:()=>(S.wl&&S.wl.est||0)>=6,pr:()=>P(S.wl&&S.wl.est,6),p:()=>`อาณาเขตขั้น ${S.wl&&S.wl.est||0} / 6`,how:"ทุ่มทรัพย์ → 🏯 อาณาเขต",go:"openWealth('est')"},
+ {id:'g_cure',lv:2,sp:r=>!!(r&&r.rare&&r.rare.B&&r.rare.B.length),n:'ฝ่าลิขิตฟ้า',d:()=>'พลิกชะตาร้ายที่ติดตัวมาให้ครบทุกอย่าง (ดูทางแก้ในหน้า 📋 เควส)',c:()=>!!(S.rx&&S.rx.tri.length&&S.rx.tri.every(z=>z.st)),pr:()=>S.rx&&S.rx.tri.length?S.rx.tri.filter(z=>z.st).length/S.rx.tri.length:0,p:()=>S.rx?`แก้แล้ว ${S.rx.tri.filter(z=>z.st).length} / ${S.rx.tri.length}`:'—',how:'ทำ 🔓 ทางแก้ชะตาในหน้าเควส',go:'openQuests()'},
+ {id:'g_quest',lv:2,n:'ผู้รับใช้แผ่นดิน',d:()=>'ทำเควสสำเร็จรวม 30 เควส (เมือง · คนรู้จัก · ระบบ)',c:()=>qN()>=30,pr:()=>P(qN(),30),p:()=>`เควสสำเร็จ ${qN()} / 30`,how:'รับงานที่กระดานเมือง · ทำเควสที่ติดตาม 📌',go:"closeM();openTown('board')"},
+ {id:'g_dung',lv:2,n:'นักล่าดันเจี้ยน',d:()=>`พิชิตดันเจี้ยนต่างกัน ${dgN()} แห่ง`,c:()=>(S.dgClr||[]).length>=dgN(),pr:()=>P((S.dgClr||[]).length,dgN()),p:()=>`พิชิตแล้ว ${(S.dgClr||[]).length} / ${dgN()}`,how:'เมือง → 🏰 ดันเจี้ยน (ลงได้ทุก 2 ปี)',go:'closeM();openDungeons()'},
+ {id:'g_auc',lv:2,n:'นักสะสมสมบัติ',d:()=>'ชนะการประมูลที่โรงประมูล 5 ครั้ง',c:()=>(S.aucW||0)>=5,pr:()=>P(S.aucW,5),p:()=>`ชนะประมูล ${S.aucW||0} / 5`,how:'เมือง → 🏺 โรงประมูล (ของใหม่ทุกปี)',go:'closeM();openAuction()'},
+ {id:'g_beast',lv:1,n:'นักสำรวจสัตว์',d:()=>'บันทึกสัตว์ใหม่ลงสมุดสัตว์ 20 ตัวในชีวิตนี้',c:()=>bxN()>=20,pr:()=>P(bxN(),20),p:()=>`สัตว์ใหม่ ${bxN()} / 20`,how:'ท่องยุทธภพ · ออกล่า · เข้าป่า',go:"setFocus('hunt');closeM()"},
+ {id:'g_travel',lv:1,n:'จอมยุทธ์พเนจร',d:()=>`ท่องไปแคว้นต่างๆ ให้ได้ ${rgN()} แห่ง`,c:()=>(S.visited||[]).length>=rgN(),pr:()=>P((S.visited||[]).length,rgN()),p:()=>`ไปมาแล้ว ${(S.visited||[]).length} / ${rgN()}`,how:'ตั้งโฟกัสท่องยุทธภพ — มีโอกาสได้เดินทางไปแคว้นใหม่',go:"setFocus('adv');closeM()"},
+ {id:'g_grudge',lv:2,n:'ชำระแค้น',d:()=>'ชำระบัญชีแค้นให้ครบ 4 ราย',c:()=>gdN()>=4,pr:()=>P(gdN(),4),p:()=>`ชำระแล้ว ${gdN()} / 4`,how:'เมนู → 🗡️ บัญชีแค้น (คนที่ทำร้ายคุณจะถูกจดไว้)',go:'closeM();openWuxia()'},
+ {id:'g_secl',lv:1,n:'ผู้บำเพ็ญเงียบ',d:()=>'ปิดด่านบำเพ็ญรวม 30 ปี',c:()=>(S.secY||0)>=30,pr:()=>P(S.secY,30),p:()=>`ปิดด่านแล้ว ${S.secY||0} / 30 ปี`,how:'ปุ่ม 🧘 ปิดด่าน (ในหน้าเควสระบบ/ตัวละคร)',go:''},
+ {id:'g_craft',lv:2,n:'ยอดช่างแห่งยุค',d:()=>'ฝีมือช่างสายใดก็ได้ถึงขั้น 8',c:()=>crMax()>=8,pr:()=>P(crMax(),8),p:()=>`ช่างสูงสุดขั้น ${crMax()} / 8`,how:'ตั้งโฟกัส 🔨 งานช่าง · ซื้อตำรับในเมือง',go:"setFocus('craft');closeM()"},
+ {id:'g_tycoon',lv:3,n:'ผู้ทุ่มทั้งแผ่นดิน',d:()=>`ทุ่มทรัพย์รวม ${fmtM(W(500000,5000000,50000000))}`,c:()=>(S.wlSpent||0)>=W(5e5,5e6,5e7),pr:()=>P(S.wlSpent,W(5e5,5e6,5e7)),p:()=>`ใช้ไป ${fmtM(Math.max(0,S.wlSpent||0))} / ${fmtM(W(5e5,5e6,5e7))}`,how:'💰 ทุ่มทรัพย์: อาณาเขต ทรัพยากร ตลาดมืด คลังตระกูล',go:'openWealth()'}];
+function qN(){return((S.sys&&S.sys.done)||0)+(S.gqT||0)+(S.gqN||0)}
+function dgN(){try{return Math.min(4,DUNG.length)}catch(e){return 4}}
+function rgN(){try{return Math.min(5,Object.keys(REGION).length)}catch(e){return 4}}
+function bxN(){try{return Math.max(0,Object.keys(bdexGet()||{}).length-(S.bdx0||0))}catch(e){return 0}}
+function gdN(){try{return grudges().filter(x=>x.done).length}catch(e){return 0}}
+function crMax(){try{return Math.max(0,...Object.values((S.cr&&S.cr.lv)||{}).map(v=>+v||0))}catch(e){return 0}}
+NEW.forEach(x=>{if(GOALS.some(g=>g.id===x.id))return;const g={id:x.id,lv:x.lv,sp:x.sp,c:x.c,pr:x.pr,p:x.p,how:x.how,go:x.go};Object.defineProperty(g,'n',{value:x.n,enumerable:true});Object.defineProperty(g,'d',{get:x.d,enumerable:true});GOALS.push(g)});
+// ---------- ตัวนับ ----------
+{const _tp=tqPay;tqPay=function(q,m){const r=_tp.apply(this,arguments);try{if(m>=1)S.gqT=(S.gqT||0)+1}catch(e){}return r}}
+{const _lg=log;log=function(t){try{if(S&&typeof t==='string'&&t.indexOf('📜✅')===0)S.gqN=(S.gqN||0)+1}catch(e){}return _lg.apply(this,arguments)}}
+try{const _aw=aucWin;aucWin=function(){const r=_aw.apply(this,arguments);try{S.aucW=(S.aucW||0)+1}catch(e){}return r}}catch(e){}
+{const _sc=seclude;seclude=function(){const a0=S?S.age:0,me=S;const r=_sc.apply(this,arguments);try{if(S===me&&S.age>a0)S.secY=(S.secY||0)+(S.age-a0)}catch(e){}return r}}
+{const _sl=startLife;startLife=function(){const o=_sl.apply(this,arguments);try{if(S){S.bdx0=Object.keys(bdexGet()||{}).length;const L=Math.max(0,Math.min(3,Math.floor(+(LS.get('murim_gleg',0)||0))||0));if(L>0){LS.set('murim_gleg',0);S.qi=+((S.qi||0)+L).toFixed(1);S.int+=L*8;S.fame+=L*10;log(`🎯 ปณิธานที่ชาติก่อนทำได้ยังติดอยู่ในใจ — ปัญญา +${L*8} · ลมปราณ +${L} · ชื่อเสียง +${L*10}`,'epic')}}}catch(e){}return o}}
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive&&S.spouse&&S.wedA==null)S.wedA=S.age}catch(e){}return r}}
+// ---------- ปณิธานเปราะบาง: ยืดหยุ่นขึ้น ----------
+const REP={
+ pacifist:{lv:3,n:'มือไม่เปื้อนเลือด',d:()=>`ถึงขั้น${gRN(5)}โดยสังหารคนไม่เกิน 3 คน`,c:()=>(S.kills||0)<=3&&realmIdx()>=5,pr:()=>(S.kills||0)>3?0:realmIdx()/5,p:()=>(S.kills||0)>3?`❌ สังหารไปแล้ว ${S.kills} คน`:`${gRN(realmIdx())} / ${gRN(5)} · สังหาร ${S.kills||0}/3`,brk:()=>(S.kills||0)>3},
+ love:{lv:2,n:'รักเดียวใจเดียว',d:()=>'แต่งงานครั้งเดียว และอยู่กับคู่แรกครบ 40 ปี',c:()=>!!S.spouse&&(S.marN||0)===1&&S.wedA!=null&&S.age-S.wedA>=40,pr:()=>S.spouse&&(S.marN||0)===1&&S.wedA!=null?P(S.age-S.wedA,40):0,p:()=>S.spouse&&S.wedA!=null?`อยู่ด้วยกัน ${S.age-S.wedA} / 40 ปี`:'ยังไม่แต่งงาน',brk:()=>(S.marN||0)>1||(S.wedA!=null&&!S.spouse)}};
+Object.keys(REP).forEach(id=>{const i=GOALS.findIndex(g=>g.id===id);if(i<0)return;const x=REP[id],o=GOALS[i],g={id,lv:x.lv,sp:o.sp,c:x.c,pr:x.pr,p:x.p,brk:x.brk};Object.defineProperty(g,'n',{value:x.n,enumerable:true});Object.defineProperty(g,'d',{get:x.d,enumerable:true});GOALS[i]=g});
+const BRK={free:()=>!!S.everFac,demon:()=>!!(S.faction&&S.faction.t!=='มาร'&&S.rank>=3)};
+// ---------- ความยากตามชะตา ----------
+const K={D:.6,C:.8,B:.9};const kOf=()=>{try{return K[S.rx&&S.rx.g]||1}catch(e){return 1}};
+const prOf=g=>{try{return Math.max(0,Math.min(1,+g.pr()||0))}catch(e){return 0}};
+function tierNow(g){if(!g)return 0;let ok=false;try{ok=!!g.c()}catch(e){}const k=kOf(),p=prOf(g);if(ok||p>=k-1e-9)return 3;if(p>=.7*k)return 2;if(p>=.4*k)return 1;return 0}
+const TN=['ยังไม่ถึงขั้นแรก','🥉 ทองแดง','🥈 เงิน','🥇 ทอง'];window._gTier=()=>S&&S.goal?Math.max(S.gT||0,tierNow(goalOf(S.goal))):0;
+// ---------- ตรวจทุกปี: ขึ้นขั้น · รางวัล · พัง ----------
+function gTick(){if(!S||!S.alive||!S.goal)return;const g=goalOf(S.goal);if(!g)return;const t=Math.max(S.gT||0,tierNow(g));
+ while((S.gT||0)<t){S.gT=(S.gT||0)+1;const n=S.gT;
+  if(n===1){S.fame+=20;joy(8);log(`🥉 <b>ปณิธาน「${esc(g.n)}」ขั้นทองแดง</b> — ก้าวแรกของสิ่งที่ตั้งใจ (ชื่อเสียง +20)`,'epic')}
+  else if(n===2){S.fame+=40;joy(10);try{LS.set('murim_gleg',Math.min(3,(+LS.get('murim_gleg',0)||0)+1))}catch(e){}log(`🥈 <b>ปณิธาน「${esc(g.n)}」ขั้นเงิน</b> — ครึ่งทางที่คนส่วนใหญ่ไปไม่ถึง (ชื่อเสียง +40 · ชีวิตหน้าได้มรดกปณิธาน)`,'epic',true)}
+  else{if(!S.goalDone){S.goalDone=true;S.fame+=50;joy(20);S.flags.goal=1;log(`🥇 <b>ปณิธานสำเร็จ: ${esc(g.n)}</b> — สิ่งที่ตั้งใจไว้ตั้งแต่เกิด ในที่สุดก็เป็นจริง`,'myth',true);try{setScene('aura')}catch(e){}}
+   try{keyAdd(`ปณิธาน「${g.n}」สำเร็จระดับทอง`)}catch(e){}try{const B=LS.get('murim_gbook',{})||{};if(!B[g.id]){B[g.id]=1;LS.set('murim_gbook',B);log(`📕 <b>สมุดปณิธาน</b> บันทึก「${esc(g.n)}」ระดับทอง — สะสมแล้ว ${Object.keys(B).length} แบบ`,'myth')}}catch(e){}
+   try{island({big:1,pri:1,ic:'🥇',h:'ปณิธานสำเร็จ',t:g.n,kind:'gold'})}catch(e){}}}
+ if(!S.goalDone&&!S.gBrk){let b=false;try{b=!!((g.brk&&g.brk())||(BRK[g.id]&&BRK[g.id]()))}catch(e){}if(b){S.gBrk=1;S.gFree=1;log(`💔 <b>ปณิธาน「${esc(g.n)}」เป็นไปไม่ได้แล้ว</b> — เปลี่ยนปณิธานใหม่ได้ฟรี 1 ครั้ง (ขั้นที่ได้ไปแล้วยังเก็บไว้)`,'bad',true);setTimeout(()=>{try{if(S&&S.alive&&S.gFree&&!choice._cur)gChange()}catch(e){}},800)}}}
+window.gChange=function(){if(!S||!S.alive)return;const ids=goalOffer({os:S.sys?1:0,isOw:!!S.ow,rare:null}).filter(id=>id!==S.goal);choice('🎯 ตั้งปณิธานใหม่','ปณิธานเดิมเป็นไปไม่ได้แล้ว — จะตั้งใจทำอะไรต่อจากนี้?',ids.map(id=>{const g=goalOf(id);return{t:`${g.n} ${'⭐'.repeat(g.lv)}`,s:g.d,f(){S.goal=id;S.goalDone=false;S.gT=0;S.gBrk=0;S.gFree=0;log(`🎯 ตั้งปณิธานใหม่: <b>${esc(g.n)}</b>`,'epic')}}}).concat([{t:'✋ เก็บปณิธานเดิมไว้',s:'ไม่เปลี่ยน (เปลี่ยนทีหลังได้จากหน้าเควส)',f(){}}]))};
+{const _gc=goalCheck;goalCheck=function(){const r=_gc.apply(this,arguments);try{gTick()}catch(e){}return r}}
+{const _py2=passYear;passYear=function(){const r=_py2.apply(this,arguments);try{gTick()}catch(e){}return r}}
+// ---------- คะแนน: ได้ทุกขั้น · ชะตาแกร่งได้โบนัสน้อยลง ----------
+goalFinMul=function(){if(!S||!S.goal)return 1;const g=goalOf(S.goal);if(!g)return S.goalDone?1.5:1;const t=Math.max(S.gT||0,tierNow(g),S.goalDone?3:0),m=goalMul(g),st=S.rx&&/^S/.test(S.rx.g)?.85:1;
+ const v=t>=3?m:t===2?1+(m-1)*.5:t===1?1.1:1;return +(1+(v-1)*st).toFixed(2)};
+// ---------- ตอนเกิด: ง่าย 1 · กลาง 1 · ยาก 1 · พิเศษ 1 ----------
+{const _goS=goalOffer;goalOffer=function(r0){try{if((typeof isSoul==='function'&&isSoul())||(S&&S.alive&&S.ch==='soul'))return _goS.apply(this,arguments)}catch(e){}const r=r0||roll,base=GOALS.filter(g=>!g.sp).sort(()=>Math.random()-.5),spc=GOALS.filter(g=>g.sp&&(()=>{try{return g.sp(r)}catch(e){return false}})()).sort(()=>Math.random()-.5);
+ const by=l=>base.filter(g=>g.lv===l),pick=(L,used)=>L.find(g=>!used.includes(g.id));const out=[];
+ [[1],[2],[3]].forEach(([l])=>{const g=pick(by(l),out)||pick(base,out);if(g)out.push(g.id)});
+ const s=pick(spc,out)||pick(by(2),out)||pick(base,out);if(s)out.push(s.id);return out}}
+{const _rg=renderGoalPick;renderGoalPick=function(){const r=_rg.apply(this,arguments);try{const box=$('goalOpts');if(!box)return r;const B=LS.get('murim_gbook',{})||{},n=Object.keys(B).length,tot=GOALS.filter(g=>!g.beast&&!g.soul).length;
+ box.querySelectorAll('.opt').forEach(b=>{const m=/roll\.goal='([^']+)'/.exec(b.getAttribute('onclick')||'');if(m&&B[m[1]]&&!b.querySelector('.gbk'))b.insertAdjacentHTML('beforeend','<span class="gbk tag2"> · 📕 เคยได้ทองแล้ว</span>')});
+ if(!box.querySelector('.gbH'))box.insertAdjacentHTML('afterbegin',`<div class="gbH tag2" style="margin:2px 0 4px">📕 สมุดปณิธาน: ได้ทองแล้ว ${n}/${tot} แบบ</div>`)}catch(e){}return r}}
+// ---------- แถบติดตาม + หน้าเควส ----------
+{const _ql=questList;questList=function(){const L=_ql.apply(this,arguments);try{const i=L.findIndex(x=>x.k==='goal');if(i>=0&&S&&S.goal){const g=goalOf(S.goal);if(g){const t=Math.max(S.gT||0,tierNow(g)),p=prOf(g),k=kOf(),exp=Math.min(1,S.age/(S.xian?300:S.xt?600:65));
+  const pace=t>=3?'':p/k>=exp+.1?' · 🚀 เร็วกว่าแผน':p/k>=exp-.15?' · ⏱️ ตามแผน':' · 🐢 ช้ากว่าแผน';
+  L[i]=Object.assign({},L[i],{gen:1,cur:Math.round(Math.min(1,p/k)*100),need:100,done:t>=3,how:`${TN[t]}${t<3?` → ถัดไป ${TN[t+1]}`:''}${pace}${g.how?' · '+g.how:''}${k<1?` · ชะตาลำบาก เป้าเบาลง ${Math.round((1-k)*100)}%`:''}`,go:g.go||'',n:'ปณิธาน: '+g.n+(t?` ${['','🥉','🥈','🥇'][t]}`:'')})}}}catch(e){}return L}}
+try{SYS_GUIDE.push({s:'base',ic:'🎯',t:'ปณิธาน 3 ขั้น',d:'ทุกปณิธานมีขั้น 🥉 ทองแดง (40%) · 🥈 เงิน (70%) · 🥇 ทอง (สำเร็จ) ได้รางวัลทุกขั้น — เงินส่งมรดกถึงชีวิตหน้า ทองลง 📕 สมุดปณิธานถาวร · ชะตาเกรด B/C/D เป้าเบาลง 10/20/40% · ปณิธานที่เป็นไปไม่ได้แล้ว เกมบอกทันทีและให้เปลี่ยนฟรี 1 ครั้ง · ปักหมุด 📌 ปณิธานในหน้าเควสเพื่อดูความคืบหน้าบนแถบด้านบน',go:'openQuests',life:1,nw:1})}catch(e){}
+})()}catch(e){console.error('goalX',e)}
