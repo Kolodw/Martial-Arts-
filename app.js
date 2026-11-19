@@ -41952,8 +41952,10 @@ const inSoul=()=>!!(S&&S.alive&&S.ch==='soul');
 const pure=()=>inSoul()&&!LS.get('murim_dlMix',0);
 // 1) ซ่อนเหตุการณ์สุ่มที่เป็นเรื่องยุทธ์ภพล้วน (สำนัก/ศิษย์/ชิงตำรา/ลัทธิ ฯลฯ)
 const RE=/สำนัก|ยุทธ์ภพ|ยุทธภพ|จอมยุทธ์|ศิษย์|ชิงตำรา|นิกาย|ลัทธิ|ปรมาจารย์|พรรค|เจ้าสำนัก/;
-const mark=()=>{for(const e of EVENTS){if(e._dl)continue;e._dl=1;try{if(RE.test(e.f.toString())){const c=e.c;e.c=function(x){return pure()?false:c.call(this,x)}}}catch(_){}}};
-mark();
+const mark=()=>{for(const e of EVENTS){if(e._dl)continue;e._dl=1;try{if(e.dlMurim||RE.test(e.f.toString())){const c=e.c;e.c=function(x){return pure()?false:c.call(this,x)}}}catch(_){}}};
+mark();window._dlPure=pure;
+// เหตุการณ์ที่ถูกเพิ่มทีหลัง (บล็อกที่โหลดถัดมา) ต้องถูกกรองด้วย → กรองซ้ำทุกครั้งก่อนข้ามปี
+{const _pyD=passYear;passYear=function(){try{mark()}catch(e){}return _pyD.apply(this,arguments)}}
 // 2) เปลี่ยนศัพท์ในข้อความ (เฉพาะโหมดล้วน)
 const DICT=[['เจ้าสำนัก','อธิการบดี'],['สำนัก','สถาบัน'],['ยุทธ์ภพ','ทวีปวิญญาณ'],['ยุทธภพ','ทวีปวิญญาณ'],['จอมยุทธ์','ผู้ฝึกวิญญาณ'],['ศิษย์พี่','รุ่นพี่'],['ศิษย์น้อง','รุ่นน้อง'],['ศิษย์','นักเรียน'],['อาจารย์','ครูวิญญาณ'],['ตำราลับ','บันทึกวงแหวน']];
 {const _x=xT;xT=function(t){if(typeof t==='string'&&pure()){for(const[a,b]of DICT)if(t.includes(a))t=t.split(a).join(b)}return _x.call(this,t)}}
@@ -42604,7 +42606,7 @@ const BIG=[
   {t:'🤝 ซ่อนและช่วยเขา',s:'เสี่ยงปะทะ ได้เพื่อนแท้',f(){if(Math.random()<.6){S.karma+=10;S.fame+=fameR(200);S.int+=5;log('🤝 คุณพิสูจน์ความบริสุทธิ์ให้เขา มิตรภาพแน่นแฟ้นกว่าเดิม','good',true)}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.25));S.money=Math.max(0,S.money-Math.round(S.money*.1));log('🤝 ผู้ไล่ล่าบุกมาถึงบ้าน คุณบาดเจ็บแต่ช่วยเขาไว้ได้','bad',true)}}},
   {t:'🙈 ปฏิเสธ ไม่รู้จัก',s:'ปลอดภัย กรรมลด',f(){S.karma-=10;log('🙈 คุณปิดประตูใส่หน้าสหายเก่า เขามองคุณเป็นครั้งสุดท้าย','bad',true)}}])
 ];
-{const E=EVENTS;E.push({w:5,cd:3,c:s=>s.age>=30&&s.age<=65&&s.alive&&!(s.beastMode&&!s.beastMode.human)&&(s.age-((s.flags&&s.flags.bigY)||0)>=9),f(){S.flags=S.flags||{};S.flags.bigY=S.age;ch(BIG)()}})}
+{const E=EVENTS;E.push({w:5,cd:3,c:s=>s.age>=30&&s.age<=65&&s.alive&&!(s.beastMode&&!s.beastMode.human)&&(s.age-((s.flags&&s.flags.bigY)||0)>=9),f(){S.flags=S.flags||{};S.flags.bigY=S.age;const pu=window._dlPure&&window._dlPure();ch(pu?BIG.slice(2):BIG)()}})}
 // ---- ฉายาบนการ์ดแชร์ ----
 {const f=window.shareCard;if(typeof f==='function'){window.shareCard=function(){const x=document.createElement;let line='';try{line=glLine()}catch(e){}if(!line)return f.apply(this,arguments);const cc=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(){const c=cc.apply(this,arguments);try{if(c&&c.fillText&&!c._gl){c._gl=1;const ft=c.fillText.bind(c);c.fillText=function(t,a,b){const r=ft.apply(null,arguments);if(String(t).indexOf('มาลองเล่นดู')===0){const s=c.fillStyle,fo=c.font;c.fillStyle='#ffc23a';c.font='22px sans-serif';ft('🏅 '+line,34,300);c.fillStyle=s;c.font=fo}return r}}}catch(e){}return c};try{return f.apply(this,arguments)}finally{setTimeout(()=>{HTMLCanvasElement.prototype.getContext=cc},0)}}}}
 })()}catch(e){console.error('glblock',e)}
@@ -43567,7 +43569,7 @@ const EV=[
  {c:s=>s.age>=10,f(){choice('🔥 ไฟไหม้หมู่บ้าน','เปลวไฟลุกโชนกลางหมู่บ้าน มีคนติดอยู่หลายคน',[
   {t:'🚒 วิ่งเข้าไปช่วย',s:'แตะช่วยคน ห้ามแตะไฟ',noFate:1,f(){go('fireSave',{cb:sc=>{const k=Math.round(4+sc*16);S.karma+=k;S.fame+=Math.round(sc*80);if(sc<.4)S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.15));log(`🔥 ช่วยชาวบ้านได้ ${Math.round(sc*100)}% · กรรม +${k}${sc<.4?' · ถูกไฟลวก':''}`,sc>=.6?'good':'')}})}},
   {t:'🙈 ไม่ใช่เรื่องของเรา',s:'กรรม −',noFate:1,f(){S.karma-=5;log('🙈 คุณเดินผ่านไป เสียงร้องดังไล่หลัง','bad')}}])}},
- {c:s=>s.age>=16&&!!s.faction,f(){choice('📜 หอคัมภีร์ต้องห้าม','คืนนี้ยามเฝ้าหอคัมภีร์ต้องห้ามดูง่วงเป็นพิเศษ',[
+ {c:s=>s.age>=16&&!!s.faction&&!(window._dlPure&&window._dlPure()),f(){choice('📜 หอคัมภีร์ต้องห้าม','คืนนี้ยามเฝ้าหอคัมภีร์ต้องห้ามดูง่วงเป็นพิเศษ',[
   {t:'🥷 แอบเข้าไป',s:'กดตอนจังหวะเงียบที่สุด',noFate:1,f(){go('sneak',{cb:sc=>{if(sc>=.6){try{const a=newArt(sc>=.9?3:2);_nPush.call(S.arts,a);log(`📜 ขโมยคัมภีร์ ${artHtml(a)} ออกมาได้!`,'epic')}catch(e){}}else{S.merit=Math.max(0,(S.merit||0)-30);S.fame-=40;log('📜 ถูกจับได้ — ถูกลงโทษหน้าสำนัก','bad')}}})}},
   {t:'🛏️ ไปนอน',s:'',noFate:1,f(){log('🛏️ คุณเลือกเป็นศิษย์ดี','')}}])}},
  {c:s=>s.age>=15,f(){choice('🐎 ศัตรูไล่ล่า','ศัตรูเก่ากลุ่มใหญ่ไล่ตามมา คุณกระโดดขึ้นหลังม้า',[
