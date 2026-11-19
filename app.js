@@ -45930,3 +45930,9 @@ let SW=null;
 
 // 🛡️ กันโกง: เลือดไม่มีเพดานแล้ว → เฝ้าการเขียนพลังชีวิตสูงสุดจากคอนโซลด้วย
 try{AC_TK.push('maxHp')}catch(e){}
+// 🛡️ ลายเซ็นเซฟรุ่น 2: นับพลังชีวิตสูงสุดด้วย — เซฟเก่าที่ยังไม่มีลายเซ็นรุ่นนี้จะได้รับลายเซ็นใหม่ตอนเซฟครั้งถัดไป (ไม่ติดธงย้อนหลัง)
+try{(()=>{const h2=o=>acH(acSF(o)+'|hp'+Math.round(+o.maxHp||0));
+{const _sg=saveGame;saveGame=function(){const r=_sg.apply(this,arguments);try{if(S&&S.alive&&!S.custom){const k=S.slot||1,g=LS.get('murim_ui9',{})||{},e=g[k];if(e){let src=S;try{const rw=LS.get(slotKey(k),null);if(rw&&rw.S&&rw.t===e.t)src=rw.S}catch(x){}e.h2=h2(src);LS.set('murim_ui9',g)}}}catch(e){}return r}}
+{const _lg=loadGame;loadGame=function(n){const k=n||1;let pre=null;try{const g=(LS.get('murim_ui9',{})||{})[k],rw=LS.get(slotKey(k),null);if(g&&g.h2&&g.t&&rw&&rw.S&&rw.t===g.t&&g.a===Math.round(rw.S.age||0)&&g.h===acH(acSF(rw.S)))pre=g.h2!==h2(rw.S)}catch(e){}
+ const r=_lg.apply(this,arguments);try{if(pre&&S&&!window._acBak){S._tpFx=1;acSus('save-edit-hp')}}catch(e){}return r}}
+})()}catch(e){}
