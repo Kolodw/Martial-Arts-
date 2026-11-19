@@ -46839,3 +46839,12 @@ setInterval(()=>{try{if(!S||S.alive!==false||S._recd||!S._dt||Date.now()-S._dt<6
 // เปิดเกมใหม่: มีชีวิตที่ตายแต่ยังไม่ถูกบันทึก (เช่น รีเฟรชตอนค้าง) → กู้มาสรุปให้
 setTimeout(()=>{try{const P=LS.get(PK,null);if(!P||!P.S||P.S.alive!==false)return;if(Date.now()-(P.t||0)>14*864e5){LS.del(PK);return}if(S&&S.alive)return;S=P.S;S._dt=1;try{toast('🪦 กู้ชีวิตที่จบไปแต่ยังไม่ได้สรุป — '+(S.name||''))}catch(e){}setTimeout(finish,600)}catch(e){}},2500);
 })()}catch(e){console.error('endGuard',e)}
+
+// ✍️ ช่องพิมพ์: ถ้าพื้นหลังช่องเข้มแต่ตัวอักษรเข้มด้วย (มองไม่เห็นตอนพิมพ์) → บังคับตัวอักษรเป็นสีขาว ทุกธีม ทุกหน้า
+try{(()=>{const lum=c=>{const m=/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/.exec(c||'');if(!m)return null;if(m[4]!=null&&+m[4]<.35)return null;return(.2126*m[1]+.7152*m[2]+.0722*m[3])/255};
+const bgOf=el=>{for(let e=el;e&&e.nodeType===1;e=e.parentElement){const b=getComputedStyle(e).backgroundColor,l=lum(b);if(l!=null)return l}return 1};
+function fix(el){try{if(!el||!/^(INPUT|TEXTAREA)$/.test(el.tagName)||/^(checkbox|radio|range|color|file|button|submit)$/i.test(el.type||''))return;const cs=getComputedStyle(el),tl=lum(cs.webkitTextFillColor&&cs.webkitTextFillColor!=='currentcolor'?cs.webkitTextFillColor:cs.color),bl=bgOf(el);if(tl==null)return;
+ if(bl<.4&&tl<.55){el.style.setProperty('color','#f5efe0','important');el.style.setProperty('-webkit-text-fill-color','#f5efe0','important');el.style.setProperty('caret-color','#f5d77a','important')}else if(bl>.6&&tl>.6){el.style.setProperty('color','#1a1410','important');el.style.setProperty('-webkit-text-fill-color','#1a1410','important')}}catch(e){}}
+document.addEventListener('focusin',e=>fix(e.target),true);document.addEventListener('input',e=>fix(e.target),true);
+setInterval(()=>{try{document.querySelectorAll('#chatIn,#modal input,#modal textarea').forEach(fix)}catch(e){}},2000);
+})()}catch(e){}
