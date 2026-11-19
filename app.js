@@ -27442,9 +27442,11 @@ const TOT=[5,30,60,100],NM=['','ผู้สนับสนุน','ผู้ส
 const PK={v1:[39,1,'30 วัน'],v2:[99,2,'30 วัน'],v3:[599,3,'ตลอดไป']};
 let V=null;try{V=LS.get('murim_vip',null)}catch(e){}
 const tierOf=v=>!v?0:v.u?3:(v.e2||0)>Date.now()?2:(v.e1||0)>Date.now()?1:0;
-window.vipT=()=>tierOf(V);window.vipTot=()=>TOT[tierOf(V)];
+// แอดมิน: ได้สิทธิ์ใช้งานเท่าผู้ก่อตั้ง (สุ่มต่อชีวิต แลกกรรม สุ่มรัว) แต่ไม่ขึ้นเป็นผู้สนับสนุน/ผู้ก่อตั้งในสิ่งที่ผู้เล่นอื่นเห็น (ตรา กรอบ ฉายา หอผู้ก่อตั้ง ป้ายแชท)
+const tierF=()=>Math.max(tierOf(V),(typeof ADM!=='undefined'&&ADM.ok)?3:0);
+window.vipT=()=>tierF();window.vipTot=()=>TOT[tierF()];window.vipTShown=()=>tierOf(V);
 const R=()=>window._RR||{};
-try{Object.defineProperty(R(),'kday',{get(){return tierOf(V)>=2?8:5},set(){},configurable:true})}catch(e){}
+try{Object.defineProperty(R(),'kday',{get(){return tierF()>=2?8:5},set(){},configurable:true})}catch(e){}
 const dTxt=ms=>new Date(ms).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});
 const endOf=t=>t===2?V.e2:V.e1,daysLeft=t=>Math.max(1,Math.ceil((endOf(t)-Date.now())/864e5));
 const seal=(t,x)=>`<span class="vseal vs${t}${x||''}"><b>${t===3&&V&&V.ul?'№'+V.ul.o:SL[t]}</b></span>`;
@@ -27461,7 +27463,7 @@ window.vipSet=function(v){try{if(!v)return;V={e1:+v.e1||0,e2:+v.e2||0,u:v.u?1:0,
   const lastEx=Math.max(V.e1,V.e2);if(!t&&lastEx&&LS.get('murim_vipx',0)!==lastEx){LS.set('murim_vipx',lastEx);toast('🏮 สิทธิ์ผู้สนับสนุนหมดอายุแล้ว — สุ่มฟรี 5 ครั้งเหมือนเดิม · สิทธิ์สุ่มที่ซื้อเป็นแพ็กยังอยู่')}
  }catch(e){console.error(e)}};
 setTimeout(vipFrames,1500);
-{const _gb=goBirth;goBirth=function(){const r=_gb.apply(this,arguments);try{if(CFG.chm!=1&&!(typeof ADM!=='undefined'&&ADM.ok&&ADM.rr)){rerolls=TOT[tierOf(V)];$('rr').textContent=rerolls}R().tot=TOT[tierOf(V)];try{const b=$('rerollBtn');if(b&&rerolls>0)b.disabled=false}catch(e){}}catch(e){}return r}}
+{const _gb=goBirth;goBirth=function(){const r=_gb.apply(this,arguments);try{if(CFG.chm!=1&&!(typeof ADM!=='undefined'&&ADM.ok&&ADM.rr)){rerolls=TOT[tierF()];$('rr').textContent=rerolls}R().tot=TOT[tierF()];try{const b=$('rerollBtn');if(b&&rerolls>0)b.disabled=false}catch(e){}}catch(e){}return r}}
 {const _cr=chatRender;chatRender=function(){const r=_cr.apply(this,arguments);try{const box=$('chatBox');if(!box)return r;const ks=[...box.children].filter(e=>e.classList&&e.classList.contains('cm')),ms=chatMsgs||[];if(ks.length!==ms.length)return r;
   ks.forEach((e,i)=>{const t=+ms[i].vp||0;if(t&&!e.querySelector('.vpb')){const b=e.querySelector('.cmh b');if(b)b.insertAdjacentHTML('beforebegin',`<span class="vpb" title="${NM[t]}">${IC[t]}</span>`)}})}catch(e){}return r}}
 // หน้า 🎲 สุ่มเพิ่ม: สถานะแถวเดียว · ทางเข้า VIP · ย่อข้อความเล็ก · แก้บรรทัดราคา
@@ -27540,7 +27542,7 @@ try{const st=document.createElement('style');st.textContent=`
 .vtinc{display:flex;flex-direction:column;align-items:center;gap:6px}.vtinc .gbtn{padding:5px 10px;font-size:12px;background:#3a2c1c;color:#f1e3c2;border-color:#c9a24a;box-shadow:0 2px 0 #000}.vtinc .gbtn:disabled{opacity:.7}.vipent .gbtn span{font-size:14px}
 .sticks{display:flex;gap:5px;height:26px;align-items:flex-end}.stk{display:block;width:3px;height:22px;background:#8a6a3a;position:relative;border-radius:1px}.stk.lit::before{content:"";position:absolute;left:-1px;top:-4px;width:5px;height:5px;border-radius:50%;background:#ff7a2a;box-shadow:0 0 6px 2px #ff7a2a99}.stk.lit::after{content:"";position:absolute;left:1px;top:-14px;width:1px;height:10px;background:linear-gradient(#ffffff55,transparent)}
 .vpb{margin-right:3px}`;document.head.appendChild(st)}catch(e){}
-try{setTimeout(()=>{const rr=R();rr.tot=TOT[tierOf(V)]},0)}catch(e){}
+try{setTimeout(()=>{const rr=R();rr.tot=TOT[tierF()]},0)}catch(e){}
 })()}catch(e){console.error(e)}
 
 // ===================== v18.0.1 🛡️ ชื่อผู้เล่นไม่ถูกแปลงเป็นศัพท์โลกเซียน (เช่น "มารสวรรค์" → "ราชันมาร") =====================
