@@ -46094,7 +46094,7 @@ const REP={
 Object.keys(REP).forEach(id=>{const i=GOALS.findIndex(g=>g.id===id);if(i<0)return;const x=REP[id],o=GOALS[i],g={id,lv:x.lv,sp:o.sp,c:x.c,pr:x.pr,p:x.p,brk:x.brk};Object.defineProperty(g,'n',{value:x.n,enumerable:true});Object.defineProperty(g,'d',{get:x.d,enumerable:true});GOALS[i]=g});
 const BRK={free:()=>!!S.everFac,demon:()=>!!(S.faction&&S.faction.t!=='มาร'&&S.rank>=3)};
 // ---------- ความยากตามชะตา ----------
-const K={D:.6,C:.8,B:.9};const kOf=()=>{try{return K[S.rx&&S.rx.g]||1}catch(e){return 1}};
+const K={D:.6,C:.8,B:.9};const kOf=()=>{try{if(S&&S.beastMode&&!S.beastMode.human0){const m=(S.talent&&S.talent.m)||1;return m<1?.6:m<1.25?.8:m<1.8?.9:1}return K[S.rx&&S.rx.g]||1}catch(e){return 1}};
 const prOf=g=>{try{return Math.max(0,Math.min(1,+g.pr()||0))}catch(e){return 0}};
 function tierNow(g){if(!g)return 0;let ok=false;try{ok=!!g.c()}catch(e){}const k=kOf(),p=prOf(g);if(ok||p>=k-1e-9)return 3;if(p>=.7*k)return 2;if(p>=.4*k)return 1;return 0}
 const TN=['ยังไม่ถึงขั้นแรก','🥉 ทองแดง','🥈 เงิน','🥇 ทอง'];window._gTier=()=>S&&S.goal?Math.max(S.gT||0,tierNow(goalOf(S.goal))):0;
@@ -46114,7 +46114,7 @@ window.gChange=function(){if(!S||!S.alive)return;const ids=goalOffer({os:S.sys?1
 goalFinMul=function(){if(!S||!S.goal)return 1;const g=goalOf(S.goal);if(!g)return S.goalDone?1.5:1;const t=Math.max(S.gT||0,tierNow(g),S.goalDone?3:0),m=goalMul(g),st=S.rx&&/^S/.test(S.rx.g)?.85:1;
  const v=t>=3?m:t===2?1+(m-1)*.5:t===1?1.1:1;return +(1+(v-1)*st).toFixed(2)};
 // ---------- ตอนเกิด: ง่าย 1 · กลาง 1 · ยาก 1 · พิเศษ 1 ----------
-{const _goS=goalOffer;goalOffer=function(r0){try{if((typeof isSoul==='function'&&isSoul())||(S&&S.alive&&S.ch==='soul'))return _goS.apply(this,arguments)}catch(e){}const r=r0||roll,base=GOALS.filter(g=>!g.sp).sort(()=>Math.random()-.5),spc=GOALS.filter(g=>g.sp&&(()=>{try{return g.sp(r)}catch(e){return false}})()).sort(()=>Math.random()-.5);
+{const _goS=goalOffer;goalOffer=function(r0){try{if((CH_KEYS[CFG.chm]==='soul'&&!CFG.mw&&!CFG.daily)||(S&&S.alive&&S.ch==='soul'))return _goS.apply(this,arguments)}catch(e){}const r=r0||roll,base=GOALS.filter(g=>!g.sp).sort(()=>Math.random()-.5),spc=GOALS.filter(g=>g.sp&&(()=>{try{return g.sp(r)}catch(e){return false}})()).sort(()=>Math.random()-.5);
  const by=l=>base.filter(g=>g.lv===l),pick=(L,used)=>L.find(g=>!used.includes(g.id));const out=[];
  [[1],[2],[3]].forEach(([l])=>{const g=pick(by(l),out)||pick(base,out);if(g)out.push(g.id)});
  const s=pick(spc,out)||pick(by(2),out)||pick(base,out);if(s)out.push(s.id);return out}}
@@ -46127,3 +46127,47 @@ goalFinMul=function(){if(!S||!S.goal)return 1;const g=goalOf(S.goal);if(!g)retur
   L[i]=Object.assign({},L[i],{gen:1,cur:Math.round(Math.min(1,p/k)*100),need:100,done:t>=3,how:`${TN[t]}${t<3?` → ถัดไป ${TN[t+1]}`:''}${pace}${g.how?' · '+g.how:''}${k<1?` · ชะตาลำบาก เป้าเบาลง ${Math.round((1-k)*100)}%`:''}`,go:g.go||'',n:'ปณิธาน: '+g.n+(t?` ${['','🥉','🥈','🥇'][t]}`:'')})}}}catch(e){}return L}}
 try{SYS_GUIDE.push({s:'base',ic:'🎯',t:'ปณิธาน 3 ขั้น',d:'ทุกปณิธานมีขั้น 🥉 ทองแดง (40%) · 🥈 เงิน (70%) · 🥇 ทอง (สำเร็จ) ได้รางวัลทุกขั้น — เงินส่งมรดกถึงชีวิตหน้า ทองลง 📕 สมุดปณิธานถาวร · ชะตาเกรด B/C/D เป้าเบาลง 10/20/40% · ปณิธานที่เป็นไปไม่ได้แล้ว เกมบอกทันทีและให้เปลี่ยนฟรี 1 ครั้ง · ปักหมุด 📌 ปณิธานในหน้าเควสเพื่อดูความคืบหน้าบนแถบด้านบน',go:'openQuests',life:1,nw:1})}catch(e){}
 })()}catch(e){console.error('goalX',e)}
+
+// ===================== 🐾⭕ ปณิธานสัตว์อสูร + จิตวิญญาณยุทธ์: ปณิธานใหม่ผูกกับระบบของโหมด · ตอนเกิด ง่าย/กลาง/ยาก/พิเศษ · บอกเมื่อพัง · แก้ตัวคูณระดับ 5 =====================
+try{(()=>{
+GMUL[5]=3.0;
+const Pc=(a,b)=>Math.max(0,Math.min(1,(+a||0)/b));
+const mk=(o,flag)=>{if(GOALS.some(g=>g.id===o.id))return;const g={id:o.id,lv:o.lv,sp:()=>false,c:()=>{try{return!!o.c()}catch(e){return false}},pr:()=>{try{return Math.max(0,Math.min(1,+o.pr()||0))}catch(e){return 0}},p:()=>{try{return o.p()}catch(e){return''}},how:o.how,go:o.go,brk:o.brk,xsp:o.xsp};g[flag]=1;Object.defineProperty(g,'n',{value:o.n,enumerable:true});Object.defineProperty(g,'d',{get:()=>{try{return typeof o.d==='function'?o.d():o.d}catch(e){return''}},enumerable:true});GOALS.push(g)};
+// ---------- 🐾 สัตว์อสูร ----------
+const BM=()=>S.beastMode||{},X2=()=>{const m=BM();return m.x2||{tr:[],pk:null}};
+const terrN=()=>{try{return b2Mine().length}catch(e){return 0}},evoN=()=>(X2().tr||[]).length,pk=()=>(X2().pk&&X2().pk.mem)||[];
+[{id:'bg_x_terr',lv:3,n:'เจ้าแห่งหลายถิ่น',d:'ครองอาณาเขตพร้อมกัน 5 ถิ่น',c:()=>terrN()>=5,pr:()=>Pc(terrN(),5),p:()=>`ครองอยู่ ${terrN()} / 5 ถิ่น`,how:'🗺️ อาณาเขต → ยึดถิ่นใหม่ (ปีละ 1 อย่าง)',go:'closeM();openTerr()'},
+ {id:'bg_x_evo',lv:3,n:'สายพันธุ์ใหม่',d:'วิวัฒนาการได้ 5 ลักษณะ',c:()=>evoN()>=5,pr:()=>Pc(evoN(),5),p:()=>`ลักษณะ ${evoN()} / 5`,how:'ขึ้นขั้นแล้วเลือกลักษณะใน 🧬 วิวัฒนาการ',go:'closeM();openB2Evo()'},
+ {id:'bg_x_hib',lv:2,n:'หลับใหลผ่านกาลเวลา',d:'จำศีลรวม 100 ปี',c:()=>(S.hibY||0)>=100,pr:()=>Pc(S.hibY,100),p:()=>`จำศีลแล้ว ${fmt(S.hibY||0)} / 100 ปี`,how:'🌙 จำศีล (ต้องมีไขมันสะสมพอ)',go:'closeM();openHib()'},
+ {id:'bg_x_fq',lv:2,n:'ผู้รับใช้พงไพร',d:'ทำภารกิจพงไพรสำเร็จ 15 งาน',c:()=>(S.fqDone||0)>=15,pr:()=>Pc(S.fqDone,15),p:()=>`สำเร็จ ${S.fqDone||0} / 15`,how:'🌲 ภารกิจพงไพร',go:'closeM();openForestQ()'},
+ {id:'bg_x_town',lv:3,n:'อสูรในคราบมนุษย์',d:'แปลงกายแล้วใช้ชีวิตแบบมนุษย์รวม 30 ปี',c:()=>(S.humY||0)>=30,pr:()=>Pc(S.humY,30),p:()=>`ใช้ชีวิตแบบมนุษย์ ${S.humY||0} / 30 ปี`,how:'ไต่ขั้นจนแปลงกายได้ แล้วเลือกใช้ชีวิตแบบมนุษย์'},
+ {id:'bg_x_pack',lv:3,n:'ฝูงที่ภักดีทุกตัว',d:'มีลูกฝูง 6 ตัวขึ้นไป และทุกตัวภักดี 80 ขึ้นไป',c:()=>pk().length>=6&&pk().every(z=>(z.loy||0)>=80),pr:()=>pk().length?Math.min(Pc(pk().length,6),Pc(Math.min(...pk().map(z=>z.loy||0)),80)):0,p:()=>`ฝูง ${pk().length}/6 · ภักดีต่ำสุด ${pk().length?Math.min(...pk().map(z=>z.loy||0)):0}/80`,how:'🐺 ฝูง: ให้งานตรงนิสัยแต่ละตัว',go:'closeM();openPack()'}].forEach(o=>mk(o,'beast'));
+// ตัวนับ
+try{const _hw=hibWake;hibWake=function(D,n){const a0=S?S.age:0,me=S;const r=_hw.apply(this,arguments);try{if(S===me&&S.age>a0)S.hibY=(S.hibY||0)+(S.age-a0)}catch(e){}return r}}catch(e){}
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive&&S.beastMode&&S.beastMode.human)S.humY=(S.humY||0)+1}catch(e){}return r}}
+// ปณิธานที่พังได้
+try{const G1=GOALS.find(g=>g.id==='bg_pace1');if(G1)G1.brk=()=>(S.kills||0)>12;const G2=GOALS.find(g=>g.id==='bg_pace2');if(G2)G2.brk=()=>(S.kills||0)>25;const G3=GOALS.find(g=>g.id==='bg_wild');if(G3)G3.brk=()=>!!(S.beastMode&&S.beastMode.human)}catch(e){}
+// ตอนเกิด: ง่าย(⭐⭐) · กลาง(⭐⭐⭐) · ยาก(⭐⭐⭐⭐) · ตามสายพันธุ์
+try{const _bo=bgOffer;bgOffer=function(r){let out=null;try{_bo.apply(this,arguments);const ok=GOALS.filter(g=>g.beast&&(()=>{try{return!g.bsp||g.bsp()}catch(e){return false}})()),spc=ok.filter(g=>g.bsp).sort(()=>Math.random()-.5),gen=ok.filter(g=>!g.bsp).sort(()=>Math.random()-.5);
+ out=[];[2,3,4].forEach(l=>{const g=gen.find(x=>x.lv===l&&!out.includes(x.id))||gen.find(x=>!out.includes(x.id));if(g)out.push(g.id)});const s=spc.find(x=>!out.includes(x.id))||gen.find(x=>!out.includes(x.id));if(s)out.push(s.id)}catch(e){}return out&&out.length?out:_bo.apply(this,arguments)}}catch(e){}
+// ---------- ⭕ จิตวิญญาณยุทธ์ ----------
+const V=()=>S.sv||{lv:0,rings:[],sp:[]},VB=()=>{const g=V();return g.bag||{xh:{},dev:{}}};
+const xhN=()=>Object.keys(VB().xh||{}).length,devN=()=>Object.keys(VB().dev||{}).filter(k=>VB().dev[k]).length;
+[{id:'sv_x_r12',lv:2,n:'อัจฉริยะวัยเยาว์',d:'หลอมวงแหวนวงแรกได้ก่อนอายุ 12',c:()=>!!V()._r12,pr:()=>V()._r12?1:(S.age<=12?Math.min(.9,(V().lv||0)/10):0),p:()=>V()._r12?'✅':S.age>12?'❌ เลยอายุ 12 แล้ว':`ระดับจิต ${V().lv||0} / 10`,how:'ฝึกจนระดับจิต 10 แล้วออกล่าสัตว์วิญญาณ',go:'closeM();openSoul()',brk:()=>!V()._r12&&S.age>12},
+ {id:'sv_x_30',lv:2,n:'จ้าวจิตแห่งรุ่น',d:'ไต่ถึงระดับจิต 30',c:()=>(V().lv||0)>=30,pr:()=>Pc(V().lv,30),p:()=>`ระดับจิต ${V().lv||0} / 30`,how:'ฝึก · หลอมวงแหวนทุก 10 ระดับ',go:'closeM();openSoul()'},
+ {id:'sv_x_xh',lv:2,n:'ผู้รู้แห่งสมุนไพรเซียน',d:'ได้สมุนไพรเซียน 3 ชนิด',c:()=>xhN()>=3,pr:()=>Pc(xhN(),3),p:()=>`สมุนไพร ${xhN()} / 3 ชนิด`,how:'เหตุการณ์หุบเขาสมุนไพร · ล่าสัตว์ · มินิเกมเก็บสมุนไพร',go:'closeM();openSoul()'},
+ {id:'sv_x_acad',lv:2,n:'ศิษย์สถาบันจิตยุทธ์',d:'ได้เข้าเรียนสถาบันจิตยุทธ์',c:()=>!!V().acad,pr:()=>V().acad?1:Pc(V().lv,20)*.6,p:()=>V().acad?'✅ เป็นนักเรียนแล้ว':'รอรับสมัคร (ประลองชิงทุน หรือจ่ายค่าเรียน)',how:'สถาบันจะเปิดรับสมัครเป็นเหตุการณ์ — ประลองชิงทุนหรือจ่ายค่าเรียน'},
+ {id:'sv_x_bond',lv:3,n:'ใจเป็นหนึ่งกับดวงจิต',d:'ความผูกพันกับดวงจิตถึง 95',c:()=>(V().bond||0)>=95,pr:()=>Pc(V().bond==null?50:V().bond,95),p:()=>`ผูกพัน ${V().bond==null?50:V().bond} / 95`,how:'ดูแลดวงจิต ฝึกด้วยกัน เลือกทางที่ดวงจิตชอบ',go:'closeM();openSoul()'},
+ {id:'sv_x_pet',lv:3,n:'สัตว์วิญญาณคู่ใจ',d:'มีสัตว์วิญญาณคู่ใจติดตัว',c:()=>!!V().pet,pr:()=>V().pet?1:0,p:()=>V().pet?`✅ ${esc(V().pet.n)}`:'ยังไม่มี',how:'ไว้ชีวิต/เลี้ยงลูกสัตว์วิญญาณตอนออกล่า'},
+ {id:'sv_x_dev',lv:3,n:'นักสะสมเครื่องมือวิญญาณ',d:'มีเครื่องมือวิญญาณครบ 3 แบบ (ถุง · กระบอก · ปีก)',c:()=>devN()>=3,pr:()=>Pc(devN(),3),p:()=>`เครื่องมือ ${devN()} / 3`,how:'โรงงานเครื่องมือวิญญาณ (เหตุการณ์ตั้งแต่อายุ 16)',go:'closeM();openSoul()'},
+ {id:'sv_x_tour',lv:4,n:'แชมป์ประลองทั่วทวีป',d:'ชนะการประลองจิตยุทธ์ระดับทวีป',c:()=>!!VB().tourW,pr:()=>VB().tourW?1:VB().tour?.5:Pc(V().lv,50)*.4,p:()=>VB().tourW?'✅ แชมป์':VB().tour?'เคยลงแข่งแล้ว':'รอการประลองระดับทวีป',how:'การประลองทวีปเป็นเหตุการณ์ — ฝึกให้แรงก่อนถึงวันแข่ง'},
+ {id:'sv_x_gt',lv:5,n:'ผู้ผ่านบททดสอบเทพ',d:'ผ่านบททดสอบเทพครบ 9 ด่าน',c:()=>(VB().gt||0)>=9,pr:()=>Pc(VB().gt,9),p:()=>`บททดสอบ ${VB().gt||0} / 9`,how:'เปิดเมื่อระดับจิต 80 — ด่านละปี'},
+ {id:'sv_x_kc',lv:4,n:'ผู้รอดจากเมืองสังหาร',d:'เข้าเมืองสังหารแล้วรอดออกมาได้',c:()=>!!VB().kcD,pr:()=>VB().kcD?1:Pc(V().lv,60)*.5,p:()=>VB().kcD?'✅ รอดแล้ว':'ยังไม่เคยเข้า',how:'เมืองสังหารเป็นเหตุการณ์ — ต้องแรงพอจะรอด'},
+ {id:'sv_x_bone',lv:4,n:'กระดูกวิญญาณครบชุด',d:'สะสมกระดูกวิญญาณจนได้โบนัสครบชุด',c:()=>!!VB().bset,pr:()=>VB().bset?1:0,p:()=>VB().bset?'✅ ครบชุด':'ยังไม่ครบ',how:'กระดูกวิญญาณได้จากสัตว์วิญญาณระดับสูง'},
+ {id:'sv_x_fuse',lv:4,n:'ทักษะผสาน',d:'ปลดล็อกทักษะผสานกับดวงจิตได้',c:()=>!!V().fused,pr:()=>V().fused?1:Pc(V().bond==null?50:V().bond,100)*.6,p:()=>V().fused?'✅':'ยังไม่ได้',how:'ความผูกพันกับดวงจิตสูงมากจะมีโอกาสได้'},
+ {id:'sv_x_twin',lv:4,n:'จิตยุทธ์คู่',d:'มีดวงจิต 2 ดวง และหลอมวงแหวนรวม 5 วง',c:()=>(V().sp||[]).length>=2&&(V().rings||[]).length>=5,pr:()=>(V().sp||[]).length>=2?Pc((V().rings||[]).length,5):0,p:()=>`ดวงจิต ${(V().sp||[]).length} · วงแหวน ${(V().rings||[]).length} / 5`,how:'ดูแลดวงจิตทั้งสอง หลอมวงแหวนให้ครบ',go:'closeM();openSoul()'}].forEach(o=>mk(o,'soul'));
+{const _py2=passYear;passYear=function(){const r=_py2.apply(this,arguments);try{const g=S&&S.alive&&S.sv;if(g&&!g._r12&&S.age<=12&&(g.rings||[]).length)g._r12=1}catch(e){}return r}}
+// ตอนเกิด (โหมดนี้): ง่าย 1 · กลาง 1 · ยาก 1 · พิเศษ 1
+{const _go=goalOffer;goalOffer=function(r0){try{const soul=(CH_KEYS[CFG.chm]==='soul'&&!CFG.mw&&!CFG.daily)||(S&&S.alive&&S.ch==='soul');if(soul){const r=r0||roll,L=GOALS.filter(g=>g.soul).sort(()=>Math.random()-.5),twin=!!(r&&r.svO&&((r.svO.sp||[]).length>=2||r.svO.twin));const out=[];
+ const pk=f=>{const g=L.find(x=>f(x)&&!x.xsp&&!out.includes(x.id));if(g)out.push(g.id)};pk(g=>g.lv<=2);pk(g=>g.lv===3);pk(g=>g.lv===4);pk(g=>g.lv>=5);void twin;return out}}catch(e){}return _go.apply(this,arguments)}}
+})()}catch(e){console.error('goalBS',e)}
