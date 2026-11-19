@@ -849,6 +849,12 @@ module.exports = async (req, res) => {
       if (vo.u) { try { await vipHeal(id) } catch (e) {} }
       if (vo.t) { try { await cmd('SADD', 'vipall', id) } catch (e) {} }
       if (vo.u) { const ul = jp(await cmd('HGET', 'vipu', id)); if (ul) vo.ul = { o: ul.o | 0, t: +ul.t || 0, w: ul.w || '' } }
+      // 🔒 ตั๋วล็อกชะตาจาก VIP: ผู้สนับสนุน 2 · พิเศษ 6 ต่อรอบ 30 วัน (ได้ใหม่เมื่อวันหมดอายุเปลี่ยน = สมัคร/ต่ออายุ) · ผู้ก่อตั้ง 10 ครั้งแรก + เดือนละ 5
+      try { if (vo.t && await cmd('SET', 'lkvl:' + id, 1, 'NX', 'EX', 5)) { const lk = jp(await cmd('GET', 'lkv:' + id)) || {}; let add = 0; const mon = new Date(now + 7 * 3600e3).toISOString().slice(0, 7);
+        if (vo.u) { if (!lk.u) { lk.u = 1; lk.m = mon; add += 10 } else if (lk.m !== mon) { lk.m = mon; add += 5 } }
+        else if (vo.t === 2 && vo.e2 > now) { if (String(lk.e2 || '') !== String(vo.e2)) { lk.e2 = vo.e2; add += 6 } }
+        else if (vo.t === 1 && vo.e1 > now) { if (String(lk.e1 || '') !== String(vo.e1)) { lk.e1 = vo.e1; add += 2 } }
+        if (add > 0) { await cmd('SET', 'lkv:' + id, JSON.stringify(lk)); await cmd('INCRBY', 'lkc:' + id, add); vo.lkg = add } await cmd('DEL', 'lkvl:' + id) } } catch (e) {}
       const rrP = Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0), rrF = Math.max(0, +(await cmd('GET', 'rrf:' + id)) || 0), rrG = Math.max(0, +(await cmd('GET', 'rrg:' + id)) || 0);
       return res.json({ c: rrP + rrG, f: rrF, g: rrG, pk: RR_PK, vp: VIP_PK, vip: vo });
     }
