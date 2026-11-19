@@ -44605,3 +44605,9 @@ try{(()=>{window._lastAct=Date.now();const t=()=>{window._lastAct=Date.now()};['
 // BLOCK 64: 🤝 ลดคำขอ "เจอผู้เล่น" — ถามเซิร์ฟเวอร์ทุก 4 นาที (เดิม 90 วิ) · จดหมาย/คำเชิญห้องแจ้งผ่านคำขอภาพสดที่ส่งอยู่แล้ว (ไม่เพิ่มคำขอ) แล้วค่อยดึงทันที
 // ============================================================
 try{(()=>{const _a=api;api=async function(a,b){const r=await _a.apply(this,arguments);try{if(a==='live'&&r&&r.mb&&typeof meetPoll==='function'&&S&&S.alive&&!S.beastMode){if(Date.now()-(window._mbT||0)>20000){window._mbT=Date.now();meetT=0;setTimeout(()=>{try{meetPoll()}catch(e){}},300)}}}catch(e){}return r}})()}catch(e){console.error('block64',e)}
+
+// ---------- 🎓 บทเรียนโลกเซียน/แดนเทพไม่ค่อยขึ้น: เดิมเช็คแค่ตอนสิ้นปีที่ "ไม่มีหน้าต่างเปิด" ซึ่งแทบไม่เกิดในโลกใหม่ → รอจังหวะว่างแล้วขึ้นเอง ----------
+try{(()=>{let q=0;
+setInterval(()=>{try{if(!S||!S.alive||S.mw||(S.beastMode&&!S.beastMode.human)||!coCan()||modalOpen||choice._cur||document.hidden||$('coach')||$('ctOv')){q=0;return}
+ const id=S.xt?'god':S.xian?'xian':null;if(!id||coSeen(id)||!LESSON[id]){q=0;return}if(++q<2)return;q=0;coStart(id)}catch(e){}},1500);
+})()}catch(e){console.error('lsnWorld',e)}
