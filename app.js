@@ -23,6 +23,7 @@ function dec(v){let p=P.length;const n=((v.charCodeAt(p)-0x100)<<8)|(v.charCodeA
  return res.join('')}
 return{P,enc,dec}})();
 const ZK=/^murim_(save(_\d)?|bak_\d|arc_.+|flog_\d+)$/;
+function hpG(x){const m=(typeof S!=='undefined'&&S&&S.maxHp)||0;if(!(m>0))return 0;const g=m*x;return Math.round(m<=1e6?g:g*Math.pow(1e6/m,.8))}
 const ID=(()=>{const o={ok:false,db:null,ov:new Map(),q:Promise.resolve()};const off=()=>{try{return localStorage.getItem('murim_noidb')==='1'}catch(e){return true}};
 const tx=(m,f)=>new Promise((res,rej)=>{try{const t=o.db.transaction('kv',m),st=t.objectStore('kv'),r=f(st);t.oncomplete=()=>res(r&&r.result);t.onerror=t.onabort=()=>rej(t.error)}catch(e){rej(e)}});
 o.put=(k,v)=>{if(!o.db)return;o.q=o.q.then(()=>tx('readwrite',st=>st.put(v,k))).catch(()=>{})};
@@ -7530,7 +7531,7 @@ function paEff(it){const w=ECO_W(),r=it.r,b=ecoV({r,w,fx:it.fx==='int'?'int':it.
   case'brk':{const n=r>=6?3:r>=4?2:1;return{v:n,d:`ยาทะลวงขั้น ×${n} · เตรียมรับทัณฑ์/รวมปราณ +${Math.min(3,n)}`}}
   case'myst':return{v:0,d:'❔ ไม่มีใครรู้ว่าข้างในคืออะไร — แต่ไม่เคยมีใครเปิดแล้วผิดหวัง'}}return{v:0,d:''}}
 function paApply(it){const e=paEff(it);let t=e.d;
- switch(it.fx){case'pow':S.power+=pctPow(e.v);break;case'hp':S.maxHp+=Math.max(10,Math.round(S.maxHp*e.v));S.hp=S.maxHp;break;
+ switch(it.fx){case'pow':S.power+=pctPow(e.v);break;case'hp':S.maxHp+=Math.max(10,hpG(e.v));S.hp=S.maxHp;break;
   case'qi':S.qi+=e.v;break;case'life':if(S.xt)S.glExtra=(S.glExtra||0)+e.v;else lsAdd(e.v);break;case'int':S.int+=e.v;break;case'cha':S.cha+=e.v;break;
   case'art':{const a=newArt(e.v);S.arts.push(a);t=`ได้ ${artHtml(a)}`;break}
   case'fight':S.buf=(S.buf||[]).filter(b=>b.k!=='fight'||b.u<=S.age||b.v<e.v);S.buf.push({k:'fight',v:e.v,u:S.age+e.y,n:it.n});break;
@@ -12792,7 +12793,7 @@ const PA_UQ=[
  else e=_paE(it);
  if(it.q!=null&&PA_UQ[it.q])e=Object.assign({},e,{d:e.d+` <i class="tag2">— ${PA_UQ[it.q][4]}</i>`});return e}}
 {const _paA=paApply;paApply=function(it){if(it.fx==='fame'||it.fx==='karma'||it.fx==='money'||it.fx==='duo'){const e=paEff(it);
-  if(it.fx==='fame')S.fame+=e.v;else if(it.fx==='karma')S.karma+=e.v;else if(it.fx==='money')S.money+=e.v;else{S.power+=pctPow(e.v);S.maxHp+=Math.max(10,Math.round(S.maxHp*e.v*1.5));S.hp=S.maxHp}
+  if(it.fx==='fame')S.fame+=e.v;else if(it.fx==='karma')S.karma+=e.v;else if(it.fx==='money')S.money+=e.v;else{S.power+=pctPow(e.v);S.maxHp+=Math.max(10,hpG(e.v*1.5));S.hp=S.maxHp}
   return e.d.replace(/ <i[\s\S]*$/,'')}
  const t=_paA(it);return typeof t==='string'?t.replace(/ <i[\s\S]*$/,''):t}}
 
@@ -14725,7 +14726,7 @@ const PA_OP=[
  const _pE=paEff;paEff=function(it){if(it&&it.fx==='op'&&PA_OP[it.op]){const P=parts(it);return{v:0,P,d:`<b class="paop">✨ สมบัติระดับเทพ — หลายผลในชิ้นเดียว</b><br>${P.map(p=>'• '+p.d).join('<br>')} <i class="tag2">— ${PA_OP[it.op][2]}</i>`}}return _pE(it)};
  const _pA=paApply;paApply=function(it){if(!it||it.fx!=='op'||!PA_OP[it.op])return _pA(it);const P=parts(it),out=[];
   P.forEach(p=>{try{const v=p.v;switch(p.fx){
-   case'pow':S.power+=pctPow(v);break;case'hp':S.maxHp+=Math.max(10,Math.round(S.maxHp*v));S.hp=S.maxHp;break;
+   case'pow':S.power+=pctPow(v);break;case'hp':S.maxHp+=Math.max(10,hpG(v));S.hp=S.maxHp;break;
    case'qi':S.qi+=v;break;case'life':if(S.xt)S.glExtra=(S.glExtra||0)+v;else lsAdd(v);break;case'int':S.int+=v;break;case'cha':S.cha+=v;break;
    case'money':S.money+=v;break;case'fame':S.fame+=v;break;
    case'tal':S.talent=Object.assign({},S.talent,{m:+(S.talent.m*(1+v)).toFixed(2)});break;
@@ -14746,7 +14747,7 @@ paTickUI=function(){if($('modal').dataset.k!=='pauc'){clearInterval(PA.tk);retur
  const sg=v=>(v>0?'+':'')+fmt(Math.round(v));
  function rw(o){const t=[];try{
   if(o.pw){S.power+=pctPow(o.pw);t.push(`พลังรวม ${o.pw>0?'+':''}${Math.round(o.pw*100)}%`)}
-  if(o.hp){S.maxHp=Math.max(10,Math.round(S.maxHp*(1+o.hp)));S.hp=o.hp>0?S.maxHp:Math.min(S.hp,S.maxHp);t.push(`พลังชีวิตสูงสุด ${o.hp>0?'+':''}${Math.round(o.hp*100)}%`)}
+  if(o.hp){S.maxHp=Math.max(10,S.maxHp+(o.hp>0?hpG(o.hp):Math.round(S.maxHp*o.hp)));S.hp=o.hp>0?S.maxHp:Math.min(S.hp,S.maxHp);t.push(`พลังชีวิตสูงสุด ${o.hp>0?'+':''}${Math.round(o.hp*100)}%`)}
   if(o.qi){const v=Math.round(o.qi*QU());S.qi+=v;t.push(`ลมปราณ ${sg(v)} ปี`)}
   if(o.life){const v=Math.round(o.life*LU());if(S.xt)S.glExtra=(S.glExtra||0)+v;else lsAdd(v);t.push(`อายุขัย ${sg(v)} ปี`)}
   if(o.mon){const v=Math.max(-(S.money||0),Math.round(o.mon*MU()));S.money=(S.money||0)+v;t.push(`เงิน ${sg(v)} ตำลึง`)}
@@ -20449,7 +20450,7 @@ Object.assign(RCP,{
  const res=_co.apply(this,arguments);try{if(res&&res.ok&&r){const o=r.out;
   if(o.fwep){const fid=o.fwep===2?'fw4':'fw'+res.gr;if(o.fwep===2)S.flags.fwSoul=1;eqGet(fid,o.fwep===2?'หลอมด้วยวิญญาณของเตา — ชาตินี้ทำได้ครั้งเดียว':'หลอมเสร็จจากเตา');res.got={fw:fid,n:0,lost:0}}
   else if(o.tribp){S.tribPill=Math.min(.35,(S.tribPill||0)+o.tribp*GRADE_M[res.gr]);res.got={n:0,lost:0}}
-  else if(o.hpP){const g=Math.round(S.maxHp*o.hpP*GRADE_M[res.gr]);S.maxHp+=g;S.hp+=g;res.got={n:0,lost:0}}}}catch(e){console.error(e)}return res}}
+  else if(o.hpP){const g=hpG(o.hpP*GRADE_M[res.gr]);S.maxHp+=g;S.hp+=g;res.got={n:0,lost:0}}}}catch(e){console.error(e)}return res}}
 {const _crC=crCan;crCan=function(id){const r=RCP[id];if(r&&r.out.fwep===2&&S.flags&&S.flags.fwSoul)return'ชาตินี้หลอมอาวุธวิญญาณไปแล้ว';return _crC.apply(this,arguments)}}
 const CR_TO=o=>o.fwep?'→ 🗡️ คลังชุดสวมใส่ (สวมให้เองถ้าดีกว่า)':o.eq?'→ 🛡️ คลังชุดสวมใส่':o.bag?'→ 🎒 กระเป๋า':o.buf?`→ ⏳ มีผล ${o.y} ปี`:o.tribp?'→ ⚡ ใช้ตอนรับทัณฑ์ครั้งถัดไป':'→ ✨ ค่าสถานะทันที';
 {const _cot=crOutTxt;crOutTxt=function(r){const o=r.out;let t;
