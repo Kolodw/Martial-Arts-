@@ -3814,7 +3814,7 @@ function lifeDetail(score){const ri=realmIdx(),lifeAch=(S.achLife||[]).map(id=>A
   key:(S.key||[]).map(k=>String(k).replace(/<[^>]+>/g,'')).slice(-60),ach:lifeAch.map(a=>a.n).slice(0,20),bye:S._bye||'',
   look:{robe:o.robe,trim:o.trim,belt:o.belt,hat:o.hat,skin:o.skin,hair:o.hair,hs:o.hs,g:o.g,age:o.age,mood:'neutral',aura:o.aura,sword:o.sword,staff:o.staff,seed:o.seed}}}
 function lifePubDef(){return LS.get('murim_lifepub',1)}
-async function sendLife(score){if(S&&S.custom){customNote();return}if(!onlineOK||!S||S._sent)return;S._sent=1;S._lid=pid.slice(0,6)+Date.now().toString(36);
+async function sendLife(score){if(S&&S.custom){customNote();return}if(S&&S.imp){try{window.impNote&&impNote()}catch(e){}return}if(!onlineOK||!S||S._sent)return;S._sent=1;S._lid=pid.slice(0,6)+Date.now().toString(36);
  const P0={n:pname(),s:score,age:S.age,r:(typeof realmLabel==='function'?realmLabel().base:REALMS[realmIdx()].n),f:S.faction?S.faction.n:'พเนจร',c:(S.cause||'').slice(0,60),x:S.xian?1:0,g:S.xt?1:0,ga:S.gAge||0,tt:(showTtl()||{}).t||'',tr:(showTtl()||{}).r||0,xa:S.xAsc||0,cu:S.custom?1:0,bm:S.beastMode?1:0,ver:VERSION,tp:acTp(),lid:S._lid,pub:lifePubDef(),ch:S.ch&&S.ch!=='normal'?S.ch:'',hl:S.ch==='hell'&&S.hell&&!S.hell.ab?S.hell.lv:0,sl:S.ch==='soul'&&S.sv?(S.sv.lv|0):0,sr:S.ch==='soul'&&S.sv&&S.sv.rings&&S.sv.rings.length?Math.max(...S.sv.rings.map(r=>r.t|0)):-1,hcs:S.ch==='hell'&&S.hell&&!S.hell.ab?(S.hell.cs|0):0,ab:S.ch==='hell'&&S.hell&&S.hell.ab?1:0,al:S.ch==='hell'&&S.hell&&S.hell.ab?S.hell.lv:0,acs:S.ch==='hell'&&S.hell&&S.hell.ab?(S.hell.cs|0):0,kl:S.kalpa?S.kalpa.n:0,one:S.flags&&S.flags.one?1:0,det:xT(JSON.stringify(lifeDetail(score)))};try{const r=await api('life',P0);if(!r||!r.ok)throw new Error('life');if(!r.skip){lifePrivBox();lifeRankNote(r)}else lifeSkipBox(r)}catch(e){try{lifeQAdd(P0)}catch(e2){}}}
 function customNote(){const end=$('end');if(!end||$('lifePriv'))return;const b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b);b.innerHTML='<b>✍️ ชีวิตที่สร้างเอง — ไม่ติดอันดับทำเนียบ</b><p class="tag2">ชีวิตที่เลือกชาติกำเนิด กระดูก และพรสวรรค์เองจะไม่ถูกส่งขึ้นทำเนียบออนไลน์ เพื่อความยุติธรรมกับคนที่ให้ฟ้าลิขิต · เลือก 🎲 สุ่ม หรือ 🎨 ออกแบบหน้าตา เพื่อลุ้นขึ้นทำเนียบ</p>'}
 function lifePrivBox(){const end=$('end');if(!end||!S||!S._lid)return;let b=$('lifePriv');if(!b){b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b)}
@@ -42965,7 +42965,7 @@ const wcCur=()=>WC[wkN()%WC.length];
 window.wcStart=function(){LS.set('murim_wcPend',wkN());closeM();try{CFG.daily=null}catch(e){}goBirthPick()};
 {const _sl=startLife;startLife=function(){const pend=LS.get('murim_wcPend',null);const r=_sl.apply(this,arguments);try{if(pend!=null){LS.del('murim_wcPend');if(pend===wkN()&&S&&!S.custom&&!(roll&&roll.daily)){const c=wcCur();S.wkc={id:c.id,w:pend};try{c.start&&c.start()}catch(e){}fn('wkc',1);setTimeout(()=>{try{log(`🗓️ <b>ความท้าทายประจำสัปดาห์: ${c.ic} ${c.n}</b> — ${c.d}`,'epic',true)}catch(e){}},500)}}}catch(e){}return r}}
 {const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.wkc&&!S.wkc.f){const c=WC.find(x=>x.id===S.wkc.id);if(c&&c.fail&&c.fail(S)){S.wkc.f=1;log(`🗓️ ผิดกติกา "${c.n}" — ชีวิตนี้ไม่นับคะแนนความท้าทาย`,'bad')}}}catch(e){}return r}}
-{const _eg=endGame;endGame=function(){let res=null;try{if(S&&S.wkc&&!S.wkc.done){S.wkc.done=1;const c=WC.find(x=>x.id===S.wkc.id);if(c&&!S.wkc.f&&!(c.fail&&c.fail(S))&&S.wkc.w===wkN()){const sc=Math.max(1,c.sc()|0);res={c,sc};const M=LS.get('murim_wcBest',{});if(!M[S.wkc.w]||M[S.wkc.w]<sc){M[S.wkc.w]=sc;LS.set('murim_wcBest',M)}const T=LS.get('murim_wcT',[]);if(!T.includes(c.id)){T.push(c.id);LS.set('murim_wcT',T);try{kbGive(300)}catch(e){}}fn('wkcok',1);if(onlineOK)api('wkcsub',{w:String(S.wkc.w),s:sc,n:pname()}).catch(()=>{})}}}catch(e){}
+{const _eg=endGame;endGame=function(){let res=null;try{if(S&&S.wkc&&!S.wkc.done){S.wkc.done=1;const c=WC.find(x=>x.id===S.wkc.id);if(c&&!S.wkc.f&&!(c.fail&&c.fail(S))&&S.wkc.w===wkN()){const sc=Math.max(1,c.sc()|0);res={c,sc};const M=LS.get('murim_wcBest',{});if(!M[S.wkc.w]||M[S.wkc.w]<sc){M[S.wkc.w]=sc;LS.set('murim_wcBest',M)}const T=LS.get('murim_wcT',[]);if(!T.includes(c.id)){T.push(c.id);LS.set('murim_wcT',T);try{kbGive(300)}catch(e){}}fn('wkcok',1);if(onlineOK&&!S.imp)api('wkcsub',{w:String(S.wkc.w),s:sc,n:pname()}).catch(()=>{})}}}catch(e){}
  const r=_eg.apply(this,arguments);try{if(res){const E=$('end');if(E&&!E.querySelector('.wcEnd')){const b=document.createElement('div');b.className='box wcEnd';b.style.cssText='margin:8px 0;padding:8px';b.innerHTML=`🗓️ <b>ความท้าทาย ${res.c.ic} ${res.c.n}</b> — คะแนน <b>${fmt(res.sc)}</b> <span class="tag2">· ทำครั้งแรกได้ ☯️ 300 กรรม · ดูอันดับที่หน้าแรก</span>`;E.insertBefore(b,E.firstChild)}}}catch(e){}return r}}
 window.wcOpen=async function(){const c=wcCur(),w=wkN(),best=LS.get('murim_wcBest',{})[w];
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🗓️ ความท้าทายประจำสัปดาห์</h3><div class="box" style="padding:10px"><b>${c.ic} ${c.n}</b><p class="tag2">${c.d}<br>เปลี่ยนโจทย์ทุกวันจันทร์ · ทำสำเร็จครั้งแรกได้ ☯️ 300 กรรม${best?` · คะแนนดีสุดของคุณ ${fmt(best)}`:''}</p><button class="pbtn" style="width:100%" onclick="wcStart()">🐣 เริ่มชีวิตความท้าทาย</button></div><h4>🏆 อันดับสัปดาห์นี้</h4><div id="wcTop"><p class="tag2">กำลังโหลด…</p></div>`,'wkc');
@@ -44053,7 +44053,7 @@ window.mwEvGapSet=function(){const L=[1,2,3];const v=L[(L.indexOf(gap())+1)%L.le
 try{(()=>{
 const ZW=/[​-‍⁠﻿­]/g,DASH=/[‐-―−﹘﹣－]/g;
 const waitOn=()=>new Promise(r=>{if(onlineOK)return r(true);let n=0;const t=setInterval(()=>{if(onlineOK||++n>16){clearInterval(t);r(!!onlineOK)}},500)});
-window.importAny=async function(raw){let v=String(raw||'').replace(ZW,'').replace(DASH,'-').trim();if(!v)return toast('วางรหัสก่อน');
+window.importAny=async function(raw){let v=String(raw||'').replace(ZW,'').replace(DASH,'-').trim();if(!v)return toast('วางรหัสก่อน');if(/^M2\./.test(v.replace(/\s+/g,''))&&window.impSigned)return impSigned(v.replace(/\s+/g,''));
  const flat=v.replace(/\s+/g,'');
  // 1) รหัสประจำเครื่อง XXXX-YYYY (ดึงออกมาแม้มีข้อความอื่นปน)
  const dm=/([A-Za-z0-9]{6,24})\s*-\s*([A-Za-z0-9]{6,20})/.exec(v);
@@ -44065,7 +44065,7 @@ window.importAny=async function(raw){let v=String(raw||'').replace(ZW,'').replac
  // 3) รหัสยาว (base64) — ตัดช่องว่าง รองรับ base64url เติม = ให้ครบ
  let b=flat.replace(/-/g,'+').replace(/_/g,'/');const m4=b.length%4;if(m4===2)b+='==';else if(m4===3)b+='=';
  let d=null;try{d=JSON.parse(decodeURIComponent(escape(atob(b))))}catch(e){}
- if(d&&d.S){try{const n=freeSlot();LS.set(slotKey(n),d);toast('นำเข้าเซฟแล้ว (ช่อง '+n+')');renderLegends();closeM()}catch(e){toast('นำเข้าไม่สำเร็จ — พื้นที่เก็บเต็ม ลองลบช่องเซฟเก่า')}return}
+ if(d&&d.S){window.impStore&&impStore(d,false);return}
  const tooShort=flat.length<2000&&!/^[A-Za-z0-9]{4,12}$/.test(flat);
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>❌ รหัสไม่ถูกต้อง</h3><p>${tooShort?'รหัสที่วางสั้นเกินกว่าจะเป็นรหัสยาว และไม่ตรงกับรหัสสั้น/รหัสประจำเครื่อง':'รหัสยาวน่าจะ<b>ไม่ครบ</b> — แอปแชทหลายแอป (เช่น LINE, Messenger) ตัดข้อความยาว ๆ ทิ้งบางส่วน'}</p><p class="tag2">วางมาได้ ${fmt(flat.length)} ตัวอักษร</p><ul style="padding-left:18px;line-height:1.7"><li>แนะนำ: ที่เครื่องเดิมกด <b>☁️ ฝากโปรไฟล์ทั้งหมด → รับรหัส</b> ได้รหัสสั้น 8 ตัว พิมพ์เองได้</li><li>หรือใช้ <b>รหัสประจำเครื่อง</b> (รูปแบบ XXXX-YYYY)</li><li>ถ้าจะใช้รหัสยาว ให้ส่งเป็นไฟล์โน้ต/อีเมลถึงตัวเอง ไม่ส่งผ่านแชท</li></ul>`,'imp')};
 })()}catch(e){console.error('importAny',e)}
@@ -44107,7 +44107,7 @@ window._b61={SHOP};
 
 // ---------- รหัสยาว: คัดลอกได้แน่นอนขึ้น (สำรองหลายทาง) · คัดลอกได้จากหน้าแรกทุกช่อง · บันทึก/เปิดเป็นไฟล์ ----------
 try{(()=>{
-const codeOf=n=>{try{const d=n?readSave(n):(S?(saveGame(),LS.get(slotKey(S.slot||1),null)):null);return d?btoa(unescape(encodeURIComponent(JSON.stringify(d)))):''}catch(e){return''}};
+const codeOf=n=>{try{return window._svCodeOf?_svCodeOf(n):''}catch(e){return''}};
 function legacyCopy(t){try{const ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;width:1px;height:1px;opacity:0';document.body.appendChild(ta);ta.focus();ta.select();try{ta.setSelectionRange(0,t.length)}catch(e){}const ok=document.execCommand&&document.execCommand('copy');ta.remove();return!!ok}catch(e){return false}}
 window.copyLong=async function(n,btn){const t=codeOf(n);if(!t)return toast('ไม่มีเซฟให้คัดลอก');let ok=false;
  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);ok=true}}catch(e){}
@@ -44124,3 +44124,30 @@ window.loadLongFile=function(inp){const f=inp&&inp.files&&inp.files[0];if(!f)ret
   if(L){const h=m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',`<p class="tag2">รหัสยาวของแต่ละช่อง — ใช้ได้แม้ไม่มีเน็ต · ถ้าส่งผ่านแชทแล้วรหัสขาด ให้ใช้ "บันทึกเป็นไฟล์" แทน</p>${L}`)}}
  const ld=m.querySelector('#ldCode');if(ld&&!m.querySelector('#ldFile'))ld.insertAdjacentHTML('afterend','<label class="gbtn" style="display:block;text-align:center;width:100%;margin-top:6px;cursor:pointer">📂 เปิดไฟล์รหัส<input id="ldFile" type="file" accept=".txt,text/plain" style="display:none" onchange="loadLongFile(this)"></label>')}catch(e){console.error('osc3',e)}return r}}
 })()}catch(e){console.error('copyLong',e)}
+
+// ---------- กันซื้อขายตัวละคร/แก้เซฟ: รหัสยาวมีลายเซ็น · เซฟที่นำเข้าจากเจ้าของอื่นติดป้าย 📥 ไม่ขึ้นทำเนียบ/ลานประลอง/อันดับความท้าทาย ----------
+try{(()=>{
+const K='1inN-sv-'+'k7Qz';
+const sig=str=>{let h1=0xdeadbeef^str.length,h2=0x41c6ce57^str.length;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return(4294967296*(2097151&h2)+(h1>>>0)).toString(36)};
+const enc=d=>btoa(unescape(encodeURIComponent(JSON.stringify(d))));
+const mk=d=>{if(!d)return'';const b=enc(d);return'M2.'+b+'.'+sig(K+b)};
+// ประทับเจ้าของในเซฟ
+{const _sg=saveGame;saveGame=function(){try{if(S&&!S._o)S._o=pid}catch(e){}return _sg.apply(this,arguments)}}
+// รหัสยาวรูปแบบใหม่ (มีลายเซ็น)
+saveCode=function(){if(!S)return'';saveGame();return mk(LS.get(slotKey(S.slot||1),null))};
+window._svCodeOf=n=>mk(n?readSave(n):(S?(saveGame(),LS.get(slotKey(S.slot||1),null)):null));
+// เก็บเซฟที่นำเข้า: trusted = มาจากเซิร์ฟเวอร์/ลายเซ็นถูก · ถ้าเจ้าของไม่ใช่เครื่องนี้ หรือเป็นรหัสไม่มีลายเซ็นที่วางเอง → ติดป้าย 📥
+window.impStore=function(d,trusted){try{if(!d||!d.S)throw 0;const own=d.S._o&&d.S._o===pid;const flag=!(own&&trusted);if(flag&&!d.S.imp){d.S.imp=1;d.S.impT=Date.now()}
+ const n=freeSlot();LS.set(slotKey(n),d);try{renderLegends()}catch(e){}closeM();
+ if(d.S.imp)modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📥 นำเข้าเซฟแล้ว (ช่อง ${n})</h3><p>เล่นต่อได้ตามปกติ แต่ชีวิตนี้ติดป้าย <b>📥 นำเข้า</b> — <b>ไม่ขึ้นทำเนียบออนไลน์ ลานประลอง และอันดับความท้าทาย</b></p><p class="tag2">เพื่อกันการซื้อขายตัวละครและการแก้เซฟ · ย้ายเครื่องของตัวเองแบบไม่ติดป้าย: ล็อกอิน Google บัญชีเดียวกันทั้งสองเครื่องแล้วซิงค์ หรือย้ายตอนเริ่มชีวิตใหม่ · ชีวิตถัดไปที่เกิดบนเครื่องนี้ขึ้นอันดับได้ตามปกติ</p>`,'imp');
+ else toast('นำเข้าเซฟแล้ว (ช่อง '+n+')');return true}catch(e){toast('นำเข้าไม่สำเร็จ — พื้นที่เก็บเต็ม ลองลบช่องเซฟเก่า');return false}};
+window.impSigned=function(v){const m=/^M2\.([A-Za-z0-9+/=_-]+)\.([a-z0-9]+)$/.exec(v);if(!m||sig(K+m[1])!==m[2])return modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>⛔ รหัสนี้ใช้ไม่ได้</h3><p>รหัสไม่ครบ หรือถูกแก้ไขหลังจากสร้าง — เกมรับเฉพาะรหัสที่ไม่ถูกดัดแปลง</p><p class="tag2">ถ้าคัดลอกมาเองแล้วเจอข้อความนี้ รหัสน่าจะขาดระหว่างส่ง ลองใช้ "บันทึกเป็นไฟล์" หรือรหัสสั้น 8 ตัวแทน</p>`,'imp');
+ let d=null;try{d=JSON.parse(decodeURIComponent(escape(atob(m[1]))))}catch(e){}if(!d||!d.S)return toast('รหัสไม่ถูกต้อง');return impStore(d,true)};
+// เส้นทางคลาวด์/รหัสเดิม (loadCode) → ผ่าน impStore
+loadCode=function(c){try{c=String(c||'').trim();if(/^M2\./.test(c))return impSigned(c.replace(/\s+/g,''));const d=JSON.parse(decodeURIComponent(escape(atob(c))));if(!d||!d.S)throw 0;return impStore(d,true)}catch(e){toast('รหัสไม่ถูกต้อง');return false}};
+// ผลของป้าย 📥
+function impNote(){const end=$('end');if(!end||$('lifePriv'))return;const b=document.createElement('div');b.id='lifePriv';b.className='box privbox';const rec=end.querySelector('.rec');(rec&&rec.nextSibling)?end.insertBefore(b,rec.nextSibling):end.appendChild(b);b.innerHTML='<b>📥 ชีวิตที่นำเข้า — ไม่ติดอันดับทำเนียบ</b><p class="tag2">เซฟนี้ถูกนำเข้าจากเครื่องอื่น จึงไม่ถูกส่งขึ้นทำเนียบออนไลน์ เพื่อกันการซื้อขายตัวละครและการแก้เซฟ</p>'}
+window.impNote=impNote;
+{const _ar=arReady;arReady=function(){if(S&&S.imp)return'📥 ชีวิตที่นำเข้าจากเครื่องอื่นลงลานประลองไม่ได้';return _ar.apply(this,arguments)}}
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const n=$('gName');if(n&&S&&S.imp&&!/📥/.test(n.textContent))n.textContent='📥 '+n.textContent}catch(e){}return r}}
+})()}catch(e){console.error('impguard',e)}
