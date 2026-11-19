@@ -15439,7 +15439,7 @@ const MW_PLAN=[[1,['e3','e4']],[2,['e5']],[3,['e6','e7']],[4,['e8','e9']],[5,['e
 function mwAct1End(k){const M=S.mw;M.act1=k||0;LS.set('murim_mw_a1',(LS.get('murim_mw_a1',0)||0)+1);addFeed('ev','🎬 <b>จบองก์แรก · ยอดฝีมือหลงยุค</b> — ชีวิตในยุคนี้ยังดำเนินต่อ… จนกว่าประตูจะเปิด','sum')}
 // ---------- ปีหนึ่งในยุคปัจจุบัน ----------
 const MW_FOC=[['mwjob','💼','ทำงาน'],['mwqi','🧘','นั่งสมาธิ'],['mwnet','📱','ทำคอนเทนต์'],['mwlearn','📚','เรียนรู้ยุคใหม่'],['mwlow','🍵','ใช้ชีวิตเงียบๆ'],['mwlin','🧒','อยู่กับหลิน']];
-const MW_FILL={lo:['🥫 คุณพยายามฟันกระป๋องน้ำอัดลมด้วยฝ่ามือเพราะเปิดไม่เป็น น้ำหวานพุ่งเต็มเพดาน','🚇 คุณยืนท้ารถไฟฟ้าที่ไม่ยอมหยุดให้ จนพนักงานต้องมาพาออกไปจากชานชาลา','🧊 ตู้เย็นคือถ้ำน้ำแข็งพกพา คุณนั่งสมาธิหน้าตู้เย็นทั้งบ่าย','🎤 รถแห่หาเสียงผ่านหน้าบ้าน คุณนึกว่าเป็นกองทัพขุนนางบุกเมือง','🔥 คุณจุดไฟในห้องเช่าเพื่อต้มน้ำชา สัญญาณกันไฟร้องลั่นตึก','📺 คุณดูละครจีนกำลังภายในแล้วตะโกนว่า "ท่านั้นผิด!" ใส่จอทั้งเรื่อง'],
+const MW_FILL={nat:['🍜 ร้านก๋วยเตี๋ยวหน้าปากซอยขึ้นราคาอีกห้าบาท คุณยังกินเหมือนเดิม','🌧️ ฝนตกหนักตอนเลิกงาน คุณยืนรอใต้กันสาดร้านสะดวกซื้อกับคนแปลกหน้า','🚌 รถเมล์สายประจำเปลี่ยนเป็นรถไฟฟ้า ค่ารถขึ้นแต่ถึงเร็วขึ้นครึ่งชั่วโมง','📱 แม่ส่งสติกเกอร์สวัสดีตอนเช้ามาในไลน์ครอบครัวทุกวันไม่เคยขาด','🐈 แมวส้มประจำซอยเริ่มมานอนหน้าห้องคุณทุกคืน','💡 บิลค่าไฟเดือนเมษาทำให้คุณต้องคิดใหม่เรื่องเปิดแอร์ทั้งคืน','🛵 พี่วินหน้าซอยจำได้แล้วว่าคุณลงตรงไหน ไม่ต้องบอก','🎆 คืนข้ามปี คุณดูพลุจากดาดฟ้าตึกกับคนในซอย','🍉 ป้าขายผลไม้แถมแตงโมให้ชิ้นหนึ่ง เพราะคุณซื้อประจำ','🏸 เด็กในซอยชวนตีแบดตอนเย็น คุณเล่นจนฟ้ามืด'],lo:['🥫 คุณพยายามฟันกระป๋องน้ำอัดลมด้วยฝ่ามือเพราะเปิดไม่เป็น น้ำหวานพุ่งเต็มเพดาน','🚇 คุณยืนท้ารถไฟฟ้าที่ไม่ยอมหยุดให้ จนพนักงานต้องมาพาออกไปจากชานชาลา','🧊 ตู้เย็นคือถ้ำน้ำแข็งพกพา คุณนั่งสมาธิหน้าตู้เย็นทั้งบ่าย','🎤 รถแห่หาเสียงผ่านหน้าบ้าน คุณนึกว่าเป็นกองทัพขุนนางบุกเมือง','🔥 คุณจุดไฟในห้องเช่าเพื่อต้มน้ำชา สัญญาณกันไฟร้องลั่นตึก','📺 คุณดูละครจีนกำลังภายในแล้วตะโกนว่า "ท่านั้นผิด!" ใส่จอทั้งเรื่อง'],
  mid:['🌧️ ฝนตกหนัก คุณยืนใต้กันสาดร้านสะดวกซื้อกับคนแปลกหน้าที่ยื่นร่มให้','🚌 คุณเริ่มจำสายรถเมล์ได้ครบทุกสายที่ผ่านซอย','💡 คุณเรียนรู้ว่าบิลค่าไฟคือศัตรูที่น่ากลัวกว่ายอดฝีมือคนไหน','🏸 เด็กในซอยขอให้คุณสอนตีแบดมินตัน ลูกขนไก่ไม่เคยตกพื้นเลยทั้งชั่วโมง'],
  hi:['🌙 คืนที่ไฟดับทั้งซอย ดาวบนฟ้ากรุงเทพฯ น้อยกว่าที่บ้านเกิดหลายพันดวง','📷 คุณเจอรูปถ่ายขาวดำเก่าในร้านของมือสอง คนในรูปไม่มีใครที่คุณรู้จักอีกแล้ว','🕯️ วันเกิดของคุณในยุคนี้ไม่มีใครรู้ คุณซื้อขนมเค้กชิ้นเล็กๆ มากินคนเดียว','🎐 เสียงกระดิ่งลมจากร้านข้างบ้าน คล้ายเสียงกระดิ่งหน้าสำนักในวันที่ฝนตก']};
 function mwYear(){const M=S.mw;yearSum&&0;S.age++;M.y++;ensureHeader();const f=S.focus,lt=M.linMet;
@@ -15458,7 +15458,7 @@ function mwYear(){const M=S.mw;yearSum&&0;S.age++;M.y++;ensureHeader();const f=S
  const pl=MW_PLAN.find(x=>x[0]===M.y);if(pl){const L=pl[1].filter(id=>!(id==='e10'&&M.adapt<30));mwQ(L);if(pl[1].includes('e10')&&M.adapt<30)M.fl.e10late=1}
  if(M.fl.e10late&&M.adapt>=30&&!M.seen.e10){M.fl.e10late=0;mwQ(['e10'])}
  // เรื่องเล็กๆ ตามความคุ้นเคย (มุกช็อกวัฒนธรรมหมดได้)
- if(!M.q.length&&Math.random()<.65){const b=M.adapt<35?'lo':M.adapt<70?'mid':'hi',used=M.fu=M.fu||[];const L=MW_FILL[b].filter((x,i)=>!used.includes(b+i));if(L.length){const t=ch(L);used.push(b+MW_FILL[b].indexOf(t));addFeed('ev',t,'sum')}}
+ if(!M.q.length&&Math.random()<.65){const b=M.native?'nat':M.adapt<35?'lo':M.adapt<70?'mid':'hi',used=M.fu=M.fu||[];const L=MW_FILL[b].filter((x,i)=>!used.includes(b+i));if(L.length){const t=ch(L);used.push(b+MW_FILL[b].indexOf(t));addFeed('ev',t,'sum')}}
  // นาฬิกาเซิร์ฟเวอร์
  if(M.q.length)mwRun(); M.clk=(M.clk||0)+1;if(M.clk>=1)mwClock(M.clk).then(j=>{if(j&&j.ok&&S&&S.mw)S.mw.clk=0}).catch(()=>{});
  S.hp=Math.min(S.maxHp,S.hp+R(3,8));render();checkDeath();saveGame()}
@@ -16634,13 +16634,13 @@ const MWQ_T=[
  ['save',M=>S.age>=18,M=>{const g=mwToB(mwYearCost(M).yr*1.5,M);return{t:`เก็บเงินเพิ่มอีก ${mwLocal(g*mwCC().rate,M)}`,v:'money',tgt:(S.money||0)+g,dl:3,rw:{joy:6,mon:Math.round(g*.1)}}}],
  ['job',M=>!M.job&&S.age>=18&&S.age<70,M=>({t:'หางานประจำให้ได้',v:'job',tgt:1,dl:2,rw:{joy:5,adapt:4}})],
  ['promo',M=>M.job&&M.job.lv<2,M=>({t:`เลื่อนตำแหน่งในงาน${mwTxt(mwJP(MW_JOBS[M.job.id],M)[0]).split(' ')[0]}`,v:'lv',tgt:M.job.lv+1,dl:4,rw:{joy:8,mon:mwToB(MW_MIN[M.cc||'th']*2,M)}})],
- ['qi',M=>mwQi(M)<5,M=>({t:`สะสมปราณเพิ่มอีก 3 (ตอนนี้ ${M.qi})`,v:'qi',tgt:(M.qi||0)+3,dl:3,rw:{qi:1,joy:4}})],
+ ['qi',M=>mwQi(M)<5&&(!M.native||(M.qi||0)>=1.5),M=>({t:`สะสมปราณเพิ่มอีก 3 (ตอนนี้ ${M.qi})`,v:'qi',tgt:(M.qi||0)+3,dl:3,rw:{qi:1,joy:4}})],
  ['hide',M=>(M.sec||0)>=40&&!M.fl.public,M=>({t:`ลดความลับรั่วให้เหลือต่ำกว่า ${Math.round(M.sec-15)}%`,v:'sec',tgt:-(M.sec-15),dl:3,rw:{joy:6}})],
  ['fame',M=>(M.fame||0)>=10000&&(M.fame||0)<5e6,M=>({t:`เพิ่มผู้ติดตามเป็น ${fmt(M.fame*2)}`,v:'fame',tgt:M.fame*2,dl:3,rw:{mon:mwToB(MW_MIN[M.cc||'th']*3,M),joy:4}})],
  ['stone',M=>(M.qi||0)>=2,M=>({t:'หาหินปราณให้ได้อีก 1 ก้อน',v:'stones',tgt:(M.stones||0)+1,dl:4,rw:{qi:2}})],
  ['trv',M=>(M.id||0)>=1&&S.age<85,M=>({t:'ไปเที่ยวประเทศใหม่ 1 ประเทศ',v:'vis',tgt:Object.keys(M.vis||{}).length+1,dl:4,rw:{joy:8,adapt:3}})],
  ['id',M=>(M.id||0)===0&&!M.native,M=>({t:'หาเอกสารตัวตนให้ได้',v:'id',tgt:1,dl:3,rw:{joy:6,adapt:5}})],
- ['dis',M=>M.y>=5&&mwQi(M)>=1,M=>({t:'รับศิษย์ในยุคนี้เพิ่ม 1 คน',v:'dis',tgt:(M.dis||0)+1,dl:5,rw:{joy:8,qi:1}})],
+ ['dis',M=>M.y>=5&&mwQi(M)>=1&&(!M.native||(M.qi||0)>=3),M=>({t:'รับศิษย์ในยุคนี้เพิ่ม 1 คน',v:'dis',tgt:(M.dis||0)+1,dl:5,rw:{joy:8,qi:1}})],
  ['home',M=>(M.ast||{}).h<2&&(M.id||0)>=1&&(S.money||0)>mwToB(mwCO(M).home[1]*.2,M),M=>({t:'ซื้อบ้านเป็นของตัวเอง',v:'home',tgt:2,dl:5,rw:{joy:10}})],
  ['lin',M=>M.linMet&&M.lin<85,M=>({t:`ใช้เวลากับ${mwCC().lin}ให้ผูกพันกันมากขึ้น`,v:'lin',tgt:Math.min(100,M.lin+15),dl:3,rw:{joy:6}})],
  ['ret',M=>S.age>=50&&((M.ast||{}).save||0)<mwToB(mwYearCost(M).yr*5,M),M=>({t:'เก็บเงินออมเกษียณให้ได้ 5 ปีของค่าครองชีพ',v:'save',tgt:mwToB(mwYearCost(M).yr*5,M),dl:8,rw:{joy:8}})],
@@ -21066,7 +21066,7 @@ function qqSpk(code,sit,W){const M={w:'ผู้อาวุโสคนหน�
  if(code==='f'){if((sit==='love'||sit==='child')&&S.spouse)return typeof S.spouse==='string'?S.spouse:(S.spouse.n||'คนรัก');return'คนที่บ้าน'}return''}
 function qqSeen(){try{return LS.get('murim_qqseen',{})||{}}catch(e){return{}}}
 function qqPick(sit){const W=qqWorld();let pool=[];
- if(W==='mw'){QQ.mw.a.forEach((t,i)=>pool.push(['mw.a.'+i,t]))}
+ if(W==='mw'){if(S.mw&&S.mw.native)return null;QQ.mw.a.forEach((t,i)=>pool.push(['mw.a.'+i,t]))}
  else{const Q=QQ[sit]||QQ.muse;(Q[W]||[]).forEach((t,i)=>pool.push([sit+'.'+W+'.'+i,t]));(Q.a||[]).forEach((t,i)=>pool.push([sit+'.a.'+i,t]))}
  if(!pool.length)return null;const seen=qqSeen(),mine=(S.qqL||[]);
  let fresh=pool.filter(p=>!seen[p[0]]&&!mine.includes(p[0]));if(!fresh.length)fresh=pool.filter(p=>!mine.includes(p[0]));if(!fresh.length)fresh=pool;
@@ -43039,19 +43039,19 @@ function hwOpen(){const X=IX(),h=ch(HW);let done=0;X.hw=S.age+R(3,6);const fit=h
  setTimeout(()=>{if(!done&&ok()){done=1;addFeed('ev',`${h[1]} ${h[2]} — แต่คุณไม่ทันสังเกต จังหวะผ่านไปแล้ว`,'sum')}},5600)}
 // =============== 🎯 3) คู่ปรับ ===============
 function rvNew(){const g=ch(['ชาย','หญิง']);IX().rv={n:anyName(g),g:+(0.97+Math.random()*.1).toFixed(3),p:Math.max(3,total()*(.9+Math.random()*.2)),y:S.age,mt:S.age+R(8,12),w:0,l:0,ri:0,ld:null,w0:S.xt?2:S.xian?1:0,die:S.age+R(60,110)*(S.xian?4:1),fr:0};
- const r=IX().rv;r.ri=riOf(r.p);r.ld=r.p>total();log(`🎯 <b>${r.n}</b> — เด็กจากหมู่บ้านข้างๆ ที่เกิดปีเดียวกับคุณ ทุกคนเอาคุณสองคนไปเทียบกันตั้งแต่จำความได้ <span class="tag2">(คู่ปรับคู่ชีวิต · ดูได้ที่แถบใต้เป้าหมาย)</span>`,'epic',true)}
+ const r=IX().rv;r.ri=riOf(r.p);r.ld=r.p>total();log(`🎯 <b>${r.n}</b> — ${S.mw?'เด็กจากซอยข้างๆ ที่เรียนห้องเดียวกันมาตั้งแต่อนุบาล ญาติทุกคนเอาคุณสองคนไปเทียบกันทุกงานรวมญาติ':'เด็กจากหมู่บ้านข้างๆ ที่เกิดปีเดียวกับคุณ ทุกคนเอาคุณสองคนไปเทียบกันตั้งแต่จำความได้'} <span class="tag2">(คู่ปรับคู่ชีวิต · ดูได้ที่แถบใต้เป้าหมาย)</span>`,'epic',true)}
 function rvTick(pt){const X=IX(),r=X.rv,tot=total();if(!r||!r.alive&&r.alive!==undefined)return;
  const w=S.xt?2:S.xian?1:0;if(w!==r.w0){r.w0=w;if(Math.random()<.6){r.p=Math.max(50,tot*(.8+Math.random()*.4));log(`🎯 ข่าวจากโลกเบื้องล่างมาถึง — <b>${r.n}</b>ก็ข้ามขึ้นมาได้เหมือนกัน "เจ้าคิดว่าจะหนีข้าพ้นหรือ"`,'epic',true)}else{log(`🎯 คุณมองลงไปจากโลกใหม่ — <b>${r.n}</b>ยังติดอยู่ข้างล่าง การแข่งขันทั้งชีวิตจบลงแค่นี้`,'',true);X.rv=null;return}}
  if(S.age>=r.die){log(`🎯 <b>${r.n}</b> คู่ปรับที่แข่งกับคุณมาทั้งชีวิตสิ้นใจลงแล้ว — ${r.w>r.l?'เขาทิ้งจดหมายไว้ "ข้าไม่เคยชนะเจ้าได้ แต่เพราะเจ้า ข้าถึงเดินมาได้ไกลขนาดนี้"':r.l>r.w?'บนโลงศพเขาสลักไว้ว่า "ผู้ที่ชนะ'+esc(S.name)+'"':'ไม่มีใครรู้ว่าใครเก่งกว่ากันจริงๆ'}`,'myth',true);keyAdd(`คู่ปรับ ${r.n} จากไป`);X.rv=null;return}
  const gr=Math.max(1,tot/Math.max(1,pt||tot));r.p*=Math.pow(gr,r.g)*(1+(Math.random()*.06-.015));r.g+=(1-r.g)*.05;r.p*=Math.pow(tot/Math.max(1,r.p),.08);
- if(Math.random()<.06){r.p*=1.15+Math.random()*.15;log(`🎯 ข่าวลือ: <b>${r.n}</b>${ch(['ได้คัมภีร์จากถ้ำโบราณที่คุณเคยเดินผ่าน','กราบยอดฝีมือลึกลับเป็นอาจารย์','กินผลไม้วิเศษพันปี','รอดจากการปิดด่านสามปี'])} — พลังพุ่งขึ้น`,'')}
- else if(Math.random()<.04){r.p*=.85;log(`🎯 ข่าวลือ: <b>${r.n}</b>${ch(['บาดเจ็บหนักจากศึกชายแดน','ธาตุไฟเข้าแทรก','ถูกหักหลังโดยพี่น้องร่วมสำนัก'])}`,'')}
+ if(Math.random()<.06){r.p*=1.15+Math.random()*.15;log(`🎯 ข่าวลือ: <b>${r.n}</b>${ch(S.mw?(S.mw.hw>0?['เคลียร์เกตระดับสูงคนเดียว','ได้สกิลหายากจากเกตลับ','ถูกกิลด์ใหญ่ดึงตัวไปฝึก','คลิปล่าบอสของเขาไวรัลทั้งประเทศ']:['ได้ทุนไปเรียนต่อต่างประเทศ','ได้งานบริษัทใหญ่ตำแหน่งดี','คลิปของเขาไวรัลจนคนติดตามเป็นแสน','ไปเข้าคอร์สกับโค้ชชื่อดังมาทั้งปี']):['ได้คัมภีร์จากถ้ำโบราณที่คุณเคยเดินผ่าน','กราบยอดฝีมือลึกลับเป็นอาจารย์','กินผลไม้วิเศษพันปี','รอดจากการปิดด่านสามปี'])} — พลังพุ่งขึ้น`,'')}
+ else if(Math.random()<.04){r.p*=.85;log(`🎯 ข่าวลือ: <b>${r.n}</b>${ch(S.mw?['โดนเลย์ออฟกลางปี','บาดเจ็บจากอุบัติเหตุรถ','โดนหุ้นส่วนโกงจนหมดตัว']:['บาดเจ็บหนักจากศึกชายแดน','ธาตุไฟเข้าแทรก','ถูกหักหลังโดยพี่น้องร่วมสำนัก'])}`,'')}
  const ri=riOf(r.p);if(ri>r.ri){r.ri=ri;if(ri>=2)log(`🎯 <b>${r.n}</b>ทะลวงสู่<b>${RNm(ri)}</b>${ri>realmIdx()?' — <b>ก่อนคุณ</b>':''}`,ri>realmIdx()?'bad':'')}
  const ld=r.p>tot;if(ld!==r.ld){r.ld=ld;try{island({big:1,ic:'🎯',h:'คู่ปรับ',t:ld?`${r.n} แซงคุณแล้ว!`:`คุณแซง ${r.n} แล้ว!`,kind:ld?'bad':'gold'})}catch(e){}log(ld?`🎯 ทั้งเมืองพูดกันว่าตอนนี้ <b>${r.n}</b> เก่งกว่าคุณแล้ว`:`🎯 ทั้งเมืองพูดกันว่าตอนนี้คุณทิ้ง <b>${r.n}</b> ไปไกลแล้ว`,ld?'bad':'good')}
  if(S.age>=r.mt&&free()&&(!window.ixBudget||ixBudget())){r.mt=S.age+R(10,15);const ep=Math.round(r.p);
-  choice(`🎯 คู่ปรับ — ${r.n}`,`${ch(['ทั้งคู่บังเอิญพักโรงเตี๊ยมเดียวกัน','เขาดักรออยู่ที่ประตูเมือง','งานชุมนุมยุทธ์จับคู่ให้เจอกันพอดี'])} — ${r.n}เดินเข้ามาพร้อมรอยยิ้มเดิม<br><span class="tag2">พลังเขา ≈ ${fmt(ep)} (${Math.round(ep/Math.max(1,tot)*100)}% ของคุณ) · เคยชนะ ${r.w} แพ้ ${r.l}</span>`,[
+  choice(`🎯 คู่ปรับ — ${r.n}`,`${ch(S.mw?['บังเอิญเจอกันที่งานเลี้ยงรุ่น','เขาทักแชทมานัดเจอที่ร้านกาแฟหน้าซอยเก่า','งานแข่งขันในเมืองจับคู่ให้เจอกันพอดี']:['ทั้งคู่บังเอิญพักโรงเตี๊ยมเดียวกัน','เขาดักรออยู่ที่ประตูเมือง','งานชุมนุมยุทธ์จับคู่ให้เจอกันพอดี'])} — ${r.n}เดินเข้ามาพร้อมรอยยิ้มเดิม<br><span class="tag2">พลังเขา ≈ ${fmt(ep)} (${Math.round(ep/Math.max(1,tot)*100)}% ของคุณ) · เคยชนะ ${r.w} แพ้ ${r.l}</span>`,[
    {t:'⚔️ ประลอง',s:'ดวลจริง · ผลส่งต่อความเร็วการโตของเขา',f(){duel(r.n,ep,w=>{if(w){r.w++;r.g=Math.max(.9,r.g-.04);S.fame+=Math.round(30+Math.sqrt(ep));log(`🎯 คุณชนะ${r.n} — เขาเช็ดเลือดที่มุมปาก "ครั้งหน้า"`,'epic',true)}else{r.l++;r.g=Math.min(1.12,r.g+.03);log(`🎯 ${r.n}ชนะ — เขาไม่หัวเราะเยาะ แต่สายตานั้นแย่กว่าการหัวเราะ`,'bad',true)}})}},
-   {t:'🍶 ดื่มสุราคุยเรื่องเก่า',s:'ใจเบิกบาน · ทั้งคู่โตเร็วขึ้นนิด',f(){r.fr++;joy(8);S.power+=Math.round(total()*.02);r.p*=1.02;log(`🍶 คืนนั้นคุยกันจนรุ่งสาง เรื่องที่ทั้งคู่ไม่เคยบอกใคร`,'good')}},
+   {t:S.mw?'🍻 นั่งดื่มคุยเรื่องเก่า':'🍶 ดื่มสุราคุยเรื่องเก่า',s:'ใจเบิกบาน · ทั้งคู่โตเร็วขึ้นนิด',f(){r.fr++;joy(8);S.power+=Math.round(total()*.02);r.p*=1.02;log(`🍶 คืนนั้นคุยกันจนรุ่งสาง เรื่องที่ทั้งคู่ไม่เคยบอกใคร`,'good')}},
    {t:'🚶 เดินผ่าน',skip:true,f(){log(`🚶 คุณเดินผ่านไปโดยไม่หันมอง — ได้ยินเขาหัวเราะเบาๆ ข้างหลัง`,'')}}])}}
 window.openRv=function(){const r=IX().rv;if(!r)return;const tot=total(),pc=r.p/Math.max(1,tot);modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎯 คู่ปรับ — ${esc(r.n)}</h3><div class="item">⚡ พลังเขา <b>${fmt(Math.round(r.p))}</b> · ของคุณ <b>${fmt(Math.round(tot))}</b><div style="height:8px;background:#0002;border-radius:5px;margin:6px 0;overflow:hidden"><div style="height:100%;width:${Math.min(100,pc/(pc+1)*100)}%;background:${pc>1?'#d9534f':'#c9a24a'}"></div></div>ขั้น: <b>${RNm(r.ri)}</b> · ประลอง ชนะ ${r.w} / แพ้ ${r.l}${r.fr?` · ดื่มด้วยกัน ${r.fr} ครั้ง`:''}<br><span class="tag2">เจอกันอีกราวอายุ ${r.mt} ปี · ${r.g>1.02?'ช่วงนี้เขาโตเร็วกว่าคุณ':r.g<.98?'ช่วงนี้เขาเริ่มหมดไฟ':'โตทันกันพอดี'}</span></div>`,'rv')};
 // =============== 🎲 4) แต้มชะตา ===============
@@ -43729,7 +43729,7 @@ function rescueEv(){choice('🦸 เหตุการณ์ตรงหน้�
 // ================= รายปี =================
 {const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(!on()||S.age===a0)return r;const x=X(),m=M();
  feedYear();jobYear();locYear();
- if(!choice._cur||Math.random()<.5){const q=[];if(m.y>=3&&m.y>=x.ar&&(m.fl.others||m.y>=5))q.push(arena);if(m.linMet&&m.y>=(x.lin||0)&&m.y>=2)q.push(linAct);if(m.adapt<75&&Math.random()<.35)q.push(shock);if(Math.random()<.12)q.push(rescueEv);if(!x.job&&m.y>=2&&!x.jobAsk){q.push(()=>(x.jobAsk=1,choice('💼 งานเสริม',`${LIN()}ส่งประกาศรับสมัครงานมาให้สามที่ "ปู่ลองดูไหม"`,Object.entries(JOB).map(([k,J])=>({t:`${J.ic} ${J.n}`,s:J.L.join(' → '),f(){mwJobPick(k)}})).concat([{t:'🙅 ยังไม่สนใจ',skip:true,f(){}}]))))}
+ if(!choice._cur||Math.random()<.5){const q=[];if(m.y>=3&&m.y>=x.ar&&(m.fl.others||m.y>=5))q.push(arena);if(m.linMet&&m.y>=(x.lin||0)&&m.y>=2)q.push(linAct);if(m.adapt<75&&Math.random()<.35)q.push(shock);if(Math.random()<.12)q.push(rescueEv);if(!x.job&&m.y>=2&&!x.jobAsk){q.push(()=>(x.jobAsk=1,choice('💼 งานเสริม',m.native&&!m.linMet?'เพื่อนส่งประกาศรับสมัครงานพาร์ตไทม์มาให้สามที่ "ลองดูไหม รายได้เสริมดีนะ"':`${LIN()}ส่งประกาศรับสมัครงานมาให้สามที่ "ปู่ลองดูไหม"`,Object.entries(JOB).map(([k,J])=>({t:`${J.ic} ${J.n}`,s:J.L.join(' → '),f(){mwJobPick(k)}})).concat([{t:'🙅 ยังไม่สนใจ',skip:true,f(){}}]))))}
   if(q.length&&Math.random()<.6&&window.ixBudget&&ixBudget())ch(q)()}
  }catch(e){console.error('blk58',e)}return r}}
 // ================= ปุ่มในแถบยุคปัจจุบัน =================
