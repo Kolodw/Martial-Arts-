@@ -44375,3 +44375,17 @@ window.clampHp=clampHp;
 {const _sg=saveGame;saveGame=function(){clampHp();return _sg.apply(this,arguments)}}
 {const _lg=loadGame;loadGame=function(){const r=_lg.apply(this,arguments);try{if(S){const m0=S.maxHp;S._hpP=null;clampHp();if(m0>S.maxHp*1.5)setTimeout(()=>{try{log(`⚖️ ปรับสมดุลพลังชีวิต: เพดานของโลกนี้คือ ${fmt(hpCap())} — พลังชีวิตสูงสุดถูกปรับเป็น ${fmt(S.maxHp)} (สัดส่วนเลือดคงเดิม · ความเสียหายส่วนใหญ่คิดเป็นเปอร์เซ็นต์ จึงไม่ทำให้อ่อนลง)`,'')}catch(e){}},800)}}catch(e){}return r}}
 })()}catch(e){console.error('hpcap',e)}
+
+// ===================== ประมูลทั่วยุทธภพเป็นของยุทธภพ — ปิดในโหมดจิตวิญญาณยุทธ์ (และยุคปัจจุบัน/ฮันเตอร์) =====================
+try{(()=>{
+ const off=()=>!!(typeof S!=='undefined'&&S&&(S.ch==='soul'||S.mw||S.hunter));
+ window._paOff=off;
+ // PA.sum ว่างเสมอเมื่อปิด → ปุ่มเมนู/ชิปเกาะ/แจ้งเตือนระบบ/รอบเร่งไม่ขึ้นเอง
+ try{let _s=PA.sum;Object.defineProperty(PA,'sum',{configurable:true,get(){return off()?null:_s},set(v){_s=v}})}catch(e){}
+ {const f=paCanSee;paCanSee=function(){if(off())return false;return f.apply(this,arguments)}}
+ {const f=paJoin;paJoin=function(){if(off()){try{paBanX()}catch(e){}return}return f.apply(this,arguments)}}
+ {const f=openPAuc;openPAuc=function(){if(off())return toast('ประมูลทั่วยุทธภพมีเฉพาะในยุทธภพ');return f.apply(this,arguments)}}
+ {const f=paBanner;paBanner=function(){if(off())return;return f.apply(this,arguments)}}
+ {const f=paNote;paNote=function(j){if(off()){const b=$('paBan');if(b)b.remove();try{if(j&&j.pw>0)paClaim()}catch(e){}return}return f.apply(this,arguments)}}
+ setInterval(()=>{try{if(off()){if($('paBan'))paBanX();if(typeof islChipOff==='function')islChipOff('pa')}}catch(e){}},1500);
+})()}catch(e){console.error('paSoulOff',e)}
