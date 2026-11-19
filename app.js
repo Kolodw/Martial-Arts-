@@ -44360,3 +44360,18 @@ const nh=()=>!!(S&&S.alive&&S.beastMode&&!S.beastMode.human);
 // สัญชาตญาณรอดตาย: ตายจากบาดแผล (ไม่ใช่ตายตามอายุ/ศึกตัดสินที่เลือกเอง) รอดได้ทุก 15 ปี
 {const _cd=checkDeath;checkDeath=function(){try{if(nh()&&S.hp<=0&&!S.deathCause&&S.age<lifeMax()&&S.hp>-S.maxHp*.6&&S.age-(S.bsvY==null?-99:S.bsvY)>=15){S.bsvY=S.age;S.hp=Math.max(1,Math.round(S.maxHp*.15));log(`🐾 <b>สัญชาตญาณสัตว์ป่า</b> — ลากร่างที่เลือดโชกกลับเข้าโพรงได้ทันก่อนสติจะดับ <span class="tag2">(รอดได้อีกครั้งในอีก 15 ปี · ควรซ่อนตัวพักฟื้น)</span>`,'epic',true);try{S.focus='hide';render()}catch(e){}return false}}catch(e){}return _cd.apply(this,arguments)}}
 })()}catch(e){console.error('block62',e)}
+
+// ---------- ⚖️ เพดานพลังชีวิตตามโลก: ยุทธภพ/ยุคปัจจุบัน/วิญญาณยุทธ์ 1,000 · โลกเซียน 10,000 · แดนเทพ 100,000 · สัตว์อสูรตามขั้นสายเลือด (สูงสุด 100,000) ----------
+try{(()=>{
+window.hpCap=function(){if(!S)return 1e3;const bm=S.beastMode;if(bm&&!bm.human)return Math.min(1e5,Math.round(1e3*Math.pow(10,Math.min(2,(bm.st||0)/4.5))*(S.xian?10:1)));if(S.xt)return 1e5;if(S.xian)return 1e4;return 1e3};
+function clampHp(){try{if(!S)return;const cap=hpCap();let m=+S.maxHp||0;if(!isFinite(m)||m<=0)return;
+ // ใกล้เพดาน: ส่วนที่เพิ่มขึ้นมาใหม่ได้น้อยลงเรื่อย ๆ (ไม่ชนเพดานเร็ว)
+ const p=S._hpP;if(p&&m>p&&p>cap*.5){const inc=m-p,k=Math.max(.02,(cap-p)/(cap*.5));const nm=Math.min(cap,p+Math.max(1,Math.round(inc*k)));const d=m-nm;m=nm;S.hp=Math.max(1,(S.hp||0)-d)}
+ if(m>cap){const r=Math.max(0,Math.min(1,(S.hp||0)/m));m=cap;S.hp=Math.max(S.hp>0?1:0,Math.round(cap*r))}
+ S.maxHp=Math.round(m);if(S.hp>S.maxHp)S.hp=S.maxHp;if(!isFinite(S.hp))S.hp=S.maxHp;S._hpP=S.maxHp}catch(e){}}
+window.clampHp=clampHp;
+{const _py=passYear;passYear=function(){clampHp();const r=_py.apply(this,arguments);clampHp();return r}}
+{const _rd=render;render=function(){clampHp();return _rd.apply(this,arguments)}}
+{const _sg=saveGame;saveGame=function(){clampHp();return _sg.apply(this,arguments)}}
+{const _lg=loadGame;loadGame=function(){const r=_lg.apply(this,arguments);try{if(S){const m0=S.maxHp;S._hpP=null;clampHp();if(m0>S.maxHp*1.5)setTimeout(()=>{try{log(`⚖️ ปรับสมดุลพลังชีวิต: เพดานของโลกนี้คือ ${fmt(hpCap())} — พลังชีวิตสูงสุดถูกปรับเป็น ${fmt(S.maxHp)} (สัดส่วนเลือดคงเดิม · ความเสียหายส่วนใหญ่คิดเป็นเปอร์เซ็นต์ จึงไม่ทำให้อ่อนลง)`,'')}catch(e){}},800)}}catch(e){}return r}}
+})()}catch(e){console.error('hpcap',e)}
