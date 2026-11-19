@@ -7150,7 +7150,7 @@ const MT_OPT=[['fight','⚔️ ท้าดวล','ชนะตามพลั�
 function mtDone(rid){S.mtd=S.mtd||[];return S.mtd.includes(rid)}
 function mtMark(rid){S.mtd=S.mtd||[];S.mtd.push(rid);if(S.mtd.length>30)S.mtd.shift()}
 function mtCountdown(rid,dl){clearInterval(MT.cd);MT.cd=setInterval(()=>{const c=choice._cur;if(!c||c.mt!==rid){clearInterval(MT.cd);return}const left=Math.max(0,Math.ceil((dl-Date.now())/1000));const e=$('chCd');if(e&&$('modal').dataset.k==='choice')e.textContent=`⏳ เหลือ ${left} วิ — ไม่เลือกจะสุ่มให้`;else{const pb=$('pendBar');if(pb&&choice._min)pb.innerHTML=`⏸ 🌐 ผู้เล่นจริงรอคุณอยู่ · เหลือ ${left} วิ — แตะเพื่อเลือก`}
- if(left<=0){clearInterval(MT.cd);const i=c.mtKeep?0:Math.floor(Math.random()*c.opts.length);addFeed('ev',`⏳ หมดเวลา — ${c.mtKeep?'คงตัวเลือกเดิม':'สุ่มให้'}: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');choiceRun(i)}},250)}
+ if(left<=0){clearInterval(MT.cd);const i=c.mtKeep?0:(window.mtStIdx?mtStIdx(c):Math.floor(Math.random()*c.opts.length));window._mtWho='⏳ หมดเวลา';addFeed('ev',`⏳ หมดเวลา — ${c.mtKeep?'คงตัวเลือกเดิม':'สุ่มให้'}: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');choiceRun(i)}},250)}
 function mtShow(st){const o=st.o||{},rid=st.rid,RN=S.xian?(typeof XREALM!=='undefined'?XREALM:[]):REALMS.map(r=>r.n),ep=Math.max(50,o.p||100),r=total()/ep;
  const pw=Math.round(Math.max(3,Math.min(97,Math.pow(total(),1.3)/(Math.pow(total(),1.3)+Math.pow(ep,1.3))*100)));
  MT.room={rid,o,ep,side:st.side};setScene('portal');let rv='';const tr=(S.allies||[]).find(x=>x.n===o.n&&x.tr);if(tr){S.allies=S.allies.filter(x=>x!==tr);S.flags.betrayed=1;rv=`<br><b style="color:#ff6b6b">🗡️ คุณจำใบหน้านี้ได้ — ${esc(o.n)} คือคนที่แอบหักหลังคุณตอนสาบานครั้งก่อน!</b>`;log(`🗡️ เจอกันอีกครั้ง… คุณรู้แล้วว่า <b>${esc(o.n)}</b> หักหลังคุณมาตลอด`,'bad',true);keyAdd(`รู้ว่าผู้เล่น ${o.n} หักหลัง`)}
@@ -42821,3 +42821,90 @@ setInterval(()=>{try{if(typeof islChipX!=='function'||!S||!S.alive||glX().s.live
  const a=S.age|0,t=a<6?'เล่นต่อไปเรื่อย ๆ — ชีวิตจะเดินเอง':a<16?'ช่วงวัยเด็ก: เลือกเรื่องที่ขึ้นมา · เป้าหมาย อายุ 16':a<25?'เลือกสำนักหรือทางเดินของคุณ · เป้าหมาย อายุ 25':a<60?'สะสมวิชา ชื่อเสียง และครอบครัว · เป้าหมาย อายุ 60':'ใช้ชีวิตบั้นปลายให้คุ้ม — จบชีวิตเพื่อรับแต้มวิญญาณ';
  islChipX('fg','🧭',a<16?'โตให้ถึง 16':a<25?'เลือกทางเดิน':a<60?'สะสมจนถึง 60':'จบชีวิตรับแต้ม',()=>toast('🧭 '+t))}catch(e){}},6000);
 })()}catch(e){console.error('welcome',e)}
+// ============================================================
+// BLOCK 54: 🌐 ท่าทีเมื่อพบผู้เล่น (ไม่ให้ AI/ชะตาเลือกสาบานแทน) · 🏷️ ฉายามีผล ดี/ร้าย/ผสม · 🏯 ขั้นพลังปลดกฎใหม่ · 🌋 พลังล้นโลก + รากฐานล้นฟ้าตอนข้ามโลก
+// ============================================================
+try{(()=>{
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const alive=()=>!!(S&&S.alive&&!(S.beastMode&&!S.beastMode.human));
+// ---------- 1) ท่าทีเมื่อพบผู้เล่น ----------
+const MK=['fight','ally','betray','leave','bond'],MTN={rand:'🎲 สุ่ม',fight:'⚔️ สู้',ally:'🤝 ผูกมิตร',leave:'🙇 ถอย'};
+const isMeet=c=>c&&/พบผู้เล่นจริง|พบเงาของผู้เล่น/.test(String(c.title||''));
+const st=()=>{try{return LS.get('murim_mtst','rand')||'rand'}catch(e){return'rand'}};
+window.mtStIdx=function(c){const s=st(),L=c.opts.map((o,i)=>i).filter(i=>c.opts[i].mk!=='bond'&&c.opts[i].mk!=='betray');if(s!=='rand'){const i=c.opts.findIndex(o=>o.mk===s);if(i>=0)return i}return L.length?ch(L):0};
+['mtShow','ghShow'].forEach(n=>{const f=window[n];if(typeof f!=='function')return;const w=function(){const r=f.apply(this,arguments);try{const c=choice._cur;if(isMeet(c))c.opts.forEach((o,i)=>{o.mk=MK[i]});else if(choice._q&&choice._q.length){const q=choice._q[choice._q.length-1];if(q&&isMeet({title:q[0]}))(q[2]||[]).forEach((o,i)=>{o.mk=MK[i]})}}catch(e){}return r};window[n]=w;try{if(n==='mtShow')mtShow=w;else ghShow=w}catch(e){}});
+{const _fc=fateChoice;fateChoice=function(){const c=choice._cur;if(isMeet(c)&&c.opts.some(o=>o.mk)){const i=mtStIdx(c);window._mtWho=auto?'🤖 ออโต้':'⏳ ชะตา';const o=c.opts[i];log(`${window._mtWho}เลือกแทนตามท่าทีที่ตั้งไว้ (${MTN[st()]}) → ${String(o.t).replace(/<[^>]+>/g,'')}`,'');window._mtWho='';return choiceRun(i)}return _fc.apply(this,arguments)}}
+{const _ap=aiPick;aiPick=function(c){if(isMeet(c)&&c.opts.some(o=>o.mk))return mtStIdx(c);return _ap.apply(this,arguments)}}
+{const _oa=openAuto;openAuto=function(){const r=_oa.apply(this,arguments);try{const m=$('modal'),it=m.querySelector('.item');if(it&&!m.querySelector('.mtStRow'))it.insertAdjacentHTML('beforebegin',`<div class="item mtStRow"><div class="h"><b>🌐 ท่าทีเมื่อพบผู้เล่น</b></div><p class="tag2">ใช้เมื่อออโต้/ชะตา/หมดเวลาต้องเลือกแทนคุณ (AI คู่หูจะไม่เลือกแทนอีก)</p>${Object.keys(MTN).map(k=>`<button class="sysb" style="margin:2px;${st()===k?'outline:2px solid #c9a24a;background:#ffe7a8;color:#3a2a00':''}" onclick="LS.set('murim_mtst','${k}');openAuto()">${MTN[k]}</button>`).join('')}</div>`)}catch(e){}return r}}
+// ---------- 2) ฉายามีผล ----------
+const TF={
+ power:['⛰️','ร่างหนักดั่งภูผา','ดวล +8%','ฝึกปราณช้าลง 10%'],qi:['🌀','ปราณไหลไม่หยุด','ปราณ +10%/ปี','ธาตุไฟเข้าแทรกง่าย'],int:['📜','มองขาดทุกกระดาน','ปัญญา +1/ปี · หลบกลศัตรู','ดวลด้วยกำลัง −5%'],
+ cha:['🌸','ใครเห็นใครหลง','เสน่ห์ +1/ปี · ใจเบิกบาน','ถูกท้าดวลเพราะความหึง'],kills:['🩸','ชื่อที่ศัตรูขยาด','พลังศัตรู −10%','ญาติผู้ตายตามล้างแค้น'],
+ evil:['😈','ราคาของมาร','ฝ่ายมารส่งบรรณาการทุกปี','ฝ่ายธรรมะไล่ล่า'],good:['🕊️','ผู้มีคุณต่อแผ่นดิน','มีคนมาช่วยตอนจวนตัว 20%','ทำชั่วเมื่อไหร่ ชื่อเสียงร่วงหนัก'],
+ fame:['🌟','นามที่ทุกคนรู้จัก','ชื่อเสียง ×1.2','ผู้ท้าดวลมาไม่หยุด'],money:['💰','ถุงเงินเดินได้','รายได้ +15%','โจรจ้องปล้น'],
+ love:['👨‍👩‍👧','บ้านที่ไม่เคยเงียบ','ใจเบิกบานทุกปี','เรื่องวุ่นในบ้าน'],elder:['🧓','เวลาอยู่ข้างข้า','อายุขัย +8%','ฝึกช้าลง 10%'],
+ hermit:['🏔️','ห่างโลก ใกล้ฟ้า','พลังจากการฝึก +10%','รายได้/ชื่อเสียง −15%'],sp:['👑','ฉายาที่ไม่มีใครซ้ำ','พลังศัตรู −12% · ชื่อเสียง ×1.1','ทุกคนอยากล้มคุณ']};
+const tCat=()=>{if(!S||!S.ttl)return null;try{if(TTL_SP.some(x=>x[2]===S.ttl))return'sp'}catch(e){}try{const m=Object.keys(TTL_MODOF).filter(x=>S.ttl.endsWith(x)).sort((a,b)=>b.length-a.length)[0];if(m)return TTL_MODOF[m]}catch(e){}return S.ttlC||null};
+const tMul=()=>{const c=tCat();if(c==='sp')return 1.5;try{return 1+.15*ttlTierOf(S.ttl)}catch(e){return 1}};
+const tOn=k=>alive()&&!S.beastMode&&tCat()===k;
+window.openTtlFx=function(){const c=tCat();if(!c||!TF[c])return toast('ยังไม่มีฉายา');const f=TF[c],m=tMul();modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏷️ 「${esc(S.ttl)}」</h3><div class="item"><b>${f[0]} ${f[1]}</b><p style="margin:6px 0 2px;color:var(--good,#2a8a3a)">✅ ${f[2]}</p><p style="margin:0;color:var(--bad,#c33)">⚠️ ${f[3]}</p><p class="tag2">ความแรง ×${m.toFixed(2)} ตามระดับฉายา · ฉายาเปลี่ยนตามวิถีชีวิต ผลก็เปลี่ยนตาม</p></div>`,'ttlfx')};
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const g=$('gName'),t=g&&g.querySelector('.ttl');if(t&&!t._fx){t._fx=1;t.style.cursor='pointer';t.addEventListener('click',e=>{e.stopPropagation();openTtlFx()})}}catch(e){}return r}}
+{const _tt=ttlTick;ttlTick=function(){const o=S&&S.ttl;const r=_tt.apply(this,arguments);try{if(S&&S.alive&&S.ttl&&S.ttl!==o){const c=tCat();if(c&&TF[c])log(`🏷️ ผลของฉายา: <b>${TF[c][0]} ${TF[c][1]}</b> — ✅ ${TF[c][2]} · ⚠️ ${TF[c][3]} <span class="tag2">(แตะฉายาที่ชื่อเพื่อดู)</span>`,'',false)}}catch(e){}return r}}
+// ปรับพลังศัตรูตามฉายา + ขั้นพลัง
+function epAdj(ep){if(!alive())return ep;let m=1;const t=tCat(),k=tMul();
+ if(t==='power')m/=1+.08*k;if(t==='kills')m*=1-.1*Math.min(1.6,k);if(t==='sp')m*=.88;if(t==='int')m*=1.05;
+ const ri=realmIdx(),tot=Math.max(1,total());if(ri>=3&&gv('weapon')>0)m*=.93;if(ep>tot*2.2)m*=1.2;return ep*m}
+{const _f=fight;fight=function(name,ep){if(!alive())return _f.apply(this,arguments);const tot=Math.max(1,total()),ri=realmIdx();
+ if(ri>=4&&ep<tot*.3&&!fight._nk){log(`🌬️ คุณแผ่ปราณออกมาเพียงเสี้ยวเดียว — ${name}คุกเข่าลงก่อนจะได้ชักอาวุธ`,'good');return true}
+ const hp0=S.hp;let w=_f.call(this,name,epAdj(ep));
+ if(!w&&tOn('good')&&Math.random()<.2){w=true;log(`🕊️ ชาวบ้านที่คุณเคยช่วยไว้แห่กันมาขวาง${name}ไว้ — คุณรอดเพราะบุญคุณที่เคยหว่าน`,'good')}
+ if(ri>=1&&S.hp<hp0){const back=Math.round((hp0-S.hp)*.3);S.hp=Math.min(S.maxHp,S.hp+back)}return w}}
+{const _d=duel;duel=function(name,ep,cb){try{if(!auto&&alive())ep=Math.round(epAdj(ep))}catch(e){}return _d.call(this,name,ep,cb)}}
+// ---------- 3) ขั้นพลังปลดกฎใหม่ ----------
+const RP=[null,['🛡️','ปราณคุ้มกาย','แผลจากการต่อสู้เบาลง 30%'],null,['🗡️','ปราณผ่านคมอาวุธ','ถืออาวุธแล้วศัตรูอ่อนลง 7%'],['🌬️','แรงกดดันแห่งปราณ','ศัตรูที่อ่อนกว่ามากคุกเข่าเอง ไม่ต้องดวล'],['♻️','ร่างฟื้นตัว','ฟื้นพลังชีวิต 15% ทุกปี'],['🌱','คืนสู่วัยเยาว์','ใบหน้าหยุดแก่ · อายุขัย +30'],['☯️','ร่างข้ามความตาย','รอดจากความตายได้ 1 ครั้ง']];
+window.realmPerks=()=>RP.map((p,i)=>p&&i<=realmIdx()?p:null).filter(Boolean);
+function rpCheck(){const ri=realmIdx();S.rpk=S.rpk==null?ri:S.rpk;if(ri<=S.rpk)return;for(let i=S.rpk+1;i<=ri;i++){const p=RP[i];if(!p)continue;
+ if(i===6&&!S.flags.rpYouth){S.flags.rpYouth=1;S.lifespan+=30}
+ log(`${p[0]} <b>ปลดกฎแห่งขั้น: ${p[1]}</b> — ${p[2]} <span class="tag2">ช่องว่างระหว่างขั้นคือกำแพง ศัตรูที่สูงกว่าคุณสองขั้นแทบไร้ทางชนะ</span>`,'myth',true);try{island({big:1,pri:1,ic:p[0],h:'ปลดกฎแห่งขั้น',t:p[1],kind:'gold'})}catch(e){}}S.rpk=ri}
+{const _cd=checkDeath;checkDeath=function(){try{if(S&&S.alive&&S.hp<=0&&!S.deathCause&&realmIdx()>=7&&!S.flags.rpRev&&!S.beastMode){S.flags.rpRev=1;S.hp=Math.round(S.maxHp*.4);log('☯️ หัวใจหยุดเต้นไปสามลมหายใจ — แล้วเต้นขึ้นใหม่ <b>ร่างข้ามความตาย</b>ใช้ไปแล้ว ครั้งหน้าจะไม่มีอีก','myth',true);keyAdd('ฟื้นจากความตายด้วยร่างข้ามความตาย');return false}}catch(e){}return _cd.apply(this,arguments)}}
+// ---------- 4) พลังล้นโลก ----------
+const TOP=7;
+function olv(){if(realmIdx()<TOP||S.beastMode)return 0;if(!S.olB||S.olW!==(S.xt?2:S.xian?1:0)){S.olB=Math.max(1,total());S.olW=S.xt?2:S.xian?1:0}const r=total()/S.olB;return cl(Math.log2(Math.max(1,r))*30-(S.olS||0),0,100)}
+window.olRatio=()=>S&&S.olB?total()/S.olB:1;
+const OLT=[[30,'🍂 ฤดูกาลเริ่มเพี้ยน — หิมะตกกลางฤดูร้อนทุกที่ที่คุณไปถึง ชาวบ้านเริ่มกระซิบว่าฟ้าไม่พอใจ'],[60,'⛰️ ภูเขาหลังบ้านร้าวเป็นทางยาวในคืนที่คุณแค่หายใจแรงเกินไป — โลกนี้เล็กเกินไปสำหรับคุณแล้ว'],[90,'⚡ เมฆทัณฑ์ลอยตามคุณไปทุกที่ ฟ้ากำลังไล่คุณออกจากโลกนี้']];
+function olEv(){const o=olv();S.olT=S.olT||0;for(let i=0;i<OLT.length;i++)if(o>=OLT[i][0]&&S.olT<=i){S.olT=i+1;log(OLT[i][1],'myth',true)}
+ if(o<20||choice._cur&&choice._cur.title&&/ฟ้าดินรับไม่ไหว/.test(choice._cur.title)||Math.random()>.07)return;
+ choice('🌋 ฟ้าดินรับไม่ไหว',`พลังของคุณเกินขีดที่โลกนี้จะรองรับ (ล้น ${Math.round(o)}%) — ทุกก้าวทิ้งรอยร้าวไว้บนแผ่นดิน<br><span class="tag2">พลังส่วนที่ล้นจะกลายเป็น "รากฐานล้นฟ้า" ติดตัวไปตอนข้ามโลก (ตอนนี้ ×${olRatio().toFixed(1)})</span>`,[
+  {t:'🧘 ผนึกพลังไว้ คุ้มครองคนรอบตัว',s:'กรรม + · ฟ้าสงบลง',f(){S.olS=(S.olS||0)+25;S.karma+=15;S.fame+=100;log('🧘 คุณปิดจุดชีพจรของตัวเองไปครึ่งหนึ่ง แผ่นดินหยุดสั่น เด็กๆ กลับมาวิ่งเล่นใต้ภูเขาได้อีกครั้ง','good',true)}},
+  {t:'🚶 ท่องโลกไร้คู่ต่อกร',s:'ชื่อเสียงมหาศาล · ไม่มีใครกล้าสู้',f(){const f=Math.round(500+total()*.01);S.fame+=f;keyAdd('ท่องโลกโดยไม่มีผู้ใดกล้ารับคำท้า');log(`🚶 คุณเดินผ่านสิบสามแคว้น ไม่มีใครกล้าออกมาขวาง — ชื่อเสียง +${fmt(f)}`,'epic',true)}},
+  {t:'🏛️ วางรากฐานไว้ให้คนรุ่นหลัง',s:'มรดกส่งถึงชีวิตหน้า',f(){S.olLeg=(S.olLeg||0)+1;try{const L=LS.get('murim_olleg',0)||0;LS.set('murim_olleg',Math.min(5,L+1))}catch(e){}log('🏛️ คุณสลักเคล็ดวิชาลงบนหน้าผาให้คนรุ่นหลัง — ชีวิตหน้าจะเริ่มด้วยรากฐานที่แข็งแกร่งกว่าเดิม','epic',true)}},
+  {t:'⚡ ท้าฟ้าก่อนเวลา',s:'ดวลกับทัณฑ์ฟ้า · ชนะ = รากฐานล้นฟ้า ×1.5',f(){if(fight('ทัณฑ์ฟ้าที่ถูกส่งมาไล่',total()*1.05)){S.olX=(S.olX||1)*1.5;log('⚡ คุณฉีกเมฆทัณฑ์ออกเป็นสองท่อนด้วยมือเปล่า — ฟ้าจดชื่อคุณไว้แล้ว รากฐานล้นฟ้า ×1.5','myth',true)}else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.5));log('⚡ อัสนีเก้าสายผ่ากลางหลัง คุณคุกเข่าบนยอดเขาที่ไหม้ดำ — ฟ้ายังไม่ยอมรับคุณ','bad',true)}}}])}
+// มรดกจาก "วางรากฐาน" ชีวิตก่อน
+{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{const L=+LS.get('murim_olleg',0)||0;if(L>0&&S){LS.set('murim_olleg',0);S.power+=Math.round(REALMS[Math.min(3,L)].p*.6);S.qi+=L*4;log(`🏛️ หน้าผาที่ชาติก่อนสลักไว้ยังอยู่ — เด็กคนนี้ฝึกจากมันตั้งแต่จำความได้ (รากฐาน ${L} ชั้น)`,'epic',true)}}catch(e){}return r}}
+function carry(why){const r=olRatio()*(S.olX||1);const k=Math.min(4,Math.floor(Math.log2(Math.max(1,r))));S.olB=0;S.olS=0;S.olT=0;S.olX=1;S.rpk=null;if(k<1)return;
+ const tgt=REALMS[Math.min(1+k,5)].p;if(total()<tgt){S.power+=tgt-total()+10}S.qi+=k*6;S.lifespan+=k*15;
+ log(`🌋 <b>รากฐานล้นฟ้า ${k} ชั้น</b> — พลังที่โลกเก่ารับไม่ไหว กลายเป็นรากฐานในโลกใหม่ ${why} · เริ่มที่ <b>${(typeof rnW==='function'?rnW(realmIdx()):REALMS[realmIdx()].n)}</b> · อายุขัย +${k*15}`,'myth',true);keyAdd(`ข้ามโลกพร้อมรากฐานล้นฟ้า ${k} ชั้น`)}
+['ascendToX','ascendGod'].forEach(n=>{try{const f=window[n]||eval(n);if(typeof f!=='function')return;const w=function(){const pre={r:olRatio(),x:S.olX||1};const r=f.apply(this,arguments);try{S.olB=S.olB||1;const keep=pre.r;S.olB=total()/keep;S.olX=pre.x;carry(n==='ascendGod'?'ร่างเทพแบกมันขึ้นมาด้วย':'ปราณมนุษย์ที่ล้นเหลือถูกหลอมเป็นปราณเซียน');S.olB=0}catch(e){console.error('olc',e)}return r};if(n==='ascendToX')ascendToX=w;else ascendGod=w;window[n]=w}catch(e){console.error('blk54 wrap',n,e)}});
+// ---------- รายปี ----------
+{const _py=passYear;passYear=function(){const a0=S&&S.age,q0=S&&S.qi,p0=S&&S.power,m0=S&&S.money,f0=S&&S.fame,k0=S&&S.karma;const r=_py.apply(this,arguments);
+ try{if(!alive()||S.age===a0||S.beastMode)return r;const t=tCat(),k=tMul(),dq=S.qi-q0,dp=S.power-p0,dm=S.money-m0,df=S.fame-f0;
+  if(t==='qi'&&dq>0)S.qi+=dq*.1*k;if(t==='power'&&dq>0)S.qi-=dq*.1;if(t==='money'&&dm>0)S.money+=Math.round(dm*.15*k);if(t==='hermit'){if(dp>0)S.power+=Math.round(dp*.1*k);if(dm>0)S.money-=Math.round(dm*.15);if(df>0)S.fame-=Math.round(df*.15)}
+  if((t==='fame'||t==='sp')&&df>0)S.fame+=Math.round(df*(t==='sp'?.1:.2*k));if(t==='elder'){if(!S.flags.ttlEl){S.flags.ttlEl=1;S.lifespan=Math.round(S.lifespan*1.08)}if(dp>0)S.power-=Math.round(dp*.1)}
+  if(t==='int')S.int+=1;if(t==='cha'){S.cha=(S.cha||0)+1;joy(1)}if(t==='love')joy(2);if(t==='evil')S.money+=Math.round(100*k*(1+realmIdx()));
+  if(t==='good'&&S.karma<k0-5){const l=Math.round(S.fame*.15);S.fame-=l;log(`🕊️ คนทั้งแคว้นรู้ข่าว — ผู้มีคุณต่อแผ่นดินทำเรื่องแบบนี้ได้อย่างไร ชื่อเสียง −${fmt(l)}`,'bad',true)}
+  // ข้อเสียของฉายา
+  if(t&&Math.random()<.05*Math.min(1.5,k)){const tot=total(),nm=anyName('ชาย');
+   const D={cha:()=>{const w=fight(`${nm}ที่หึงหวงคนรัก`,tot*.8);log(w?`🌸 ${nm}บุกมาท้าดวลเพราะคนรักของเขาเอาแต่พูดถึงคุณ — คุณสั่งสอนเขาจนเงียบ`:`🌸 ${nm}ผู้หึงหวงแทงคุณกลางตลาด`,w?'':'bad')},
+    kills:()=>{const w=fight(`ญาติของผู้ที่คุณเคยสังหาร`,tot*.95);log(w?'🩸 ลูกชายของคนที่คุณฆ่าเมื่อหลายปีก่อนมาทวงหนี้เลือด — คุณส่งเขาไปพบพ่อ':'🩸 หนี้เลือดถูกทวงคืนบางส่วน คุณรอดมาได้อย่างหวุดหวิด','bad')},
+    evil:()=>{const w=fight('กองปราบมารจากฝ่ายธรรมะ',tot*1);log(w?'😈 กองปราบมารแตกพ่าย — ฝ่ายธรรมะจะส่งคนที่เก่งกว่านี้มา':'😈 กองปราบมารล้อมคุณไว้สามวันสามคืน คุณหนีรอดมาพร้อมแผลเต็มตัว','bad')},
+    fame:()=>{const w=fight(`${nm}ผู้อยากมีชื่อ`,tot*.9);log(w?`🌟 ${nm}มาท้าดวลเพื่อเอาชื่อ — กลับไปพร้อมฟันที่หายไปสองซี่`:`🌟 ${nm}ล้มคุณได้ต่อหน้าฝูงชน ข่าวลือไปทั่ว`,w?'':'bad');if(!w)S.fame=Math.round(S.fame*.95)},
+    sp:()=>{const w=fight(`${nm}ผู้อยากล้มตำนาน`,tot*1.05);log(w?`👑 อีกคนที่อยากล้มตำนาน — และอีกคนที่ล้มเหลว`:`👑 ${nm}เกือบล้มตำนานได้สำเร็จ`,w?'':'bad')},
+    money:()=>{const w=fight('โจรที่จ้องถุงเงินมานาน',tot*.85);if(!w){const l=Math.round(S.money*.12);S.money-=l;log(`💰 โจรขนเงินไป ${fmt(l)}`,'bad')}else log('💰 โจรบุกคลังกลางดึก — คุณจับได้คาหนังคาเขา','')},
+    love:()=>{joy(-6);log(ch(['👨‍👩‍👧 ลูกสองคนทะเลาะกันเรื่องมรดกตั้งแต่คุณยังไม่ตาย','👨‍👩‍👧 บ้านแตกเป็นสองฝ่ายเพราะงานแต่งของลูกคนเล็ก','👨‍👩‍👧 คืนนี้ไม่มีใครในบ้านพูดกับคุณเลย']),'bad')},
+    qi:()=>{const h=Math.round(S.maxHp*.12);S.hp=Math.max(1,S.hp-h);log(`🌀 ปราณไหลแรงเกินไปจนย้อนเข้าเส้นลมปราณ — พลังชีวิต −${h}`,'bad')}};
+   if(D[t])try{D[t]()}catch(e){}}
+  // ขั้นพลัง
+  rpCheck();const ri=realmIdx();if(ri>=5)S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.15));
+  olEv()}catch(e){console.error('blk54',e)}return r}}
+window._b54={epAdj,tCat,olv,carry,rpCheck};
+})()}catch(e){console.error('block54',e)}
