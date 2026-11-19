@@ -44180,3 +44180,20 @@ function stTitle(){try{const t=$('title');if(!t||!t.classList.contains('on'))ret
 setTimeout(stTitle,3000);setInterval(stTitle,30000);
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal'),sv=m&&m.querySelector('.svStat');if(sv&&!m.querySelector('.syncM'))sv.insertAdjacentHTML('afterend',`<div class="tag2 syncM" style="text-align:center;margin:0 0 6px;cursor:pointer" onclick="${linked()?'psNow()':'openProfile()'}">${stTxt()} <u>${linked()?'ซิงค์ตอนนี้':'ล็อกอิน'}</u></div>`)}catch(e){}return r}}
 })()}catch(e){console.error('gsmooth',e)}
+
+// ---------- หน้าย้ายเซฟ: Google เป็นทางหลัก · รหัสทั้งหมดพับไว้ใน "วิธีอื่น" ----------
+try{(()=>{
+const linked=()=>{try{return!!(typeof PFST!=='undefined'&&PFST&&PFST.g)}catch(e){return false}};
+const agoT=t=>{if(!t)return'ยังไม่เคย';const m=Math.round((Date.now()-t)/60000);return m<1?'เมื่อสักครู่':m<60?`${m} นาทีที่แล้ว`:m<1440?`${Math.round(m/60)} ชั่วโมงที่แล้ว`:`${Math.round(m/1440)} วันที่แล้ว`};
+const css=document.createElement('style');css.textContent='#modal .svAlt{margin-top:10px;border:2px dashed var(--line);border-radius:10px;padding:6px 8px}#modal .svAlt>summary{cursor:pointer;font-weight:700;padding:4px 0;list-style:none}#modal .svAlt>summary::-webkit-details-marker{display:none}#modal .svAlt>summary:after{content:" ▾";opacity:.6}#modal .svAlt[open]>summary:after{content:" ▴"}#modal .gMain{border:3px solid #4a8af0;border-radius:12px;padding:10px;margin:6px 0;background:color-mix(in srgb,var(--w) 85%,#4a8af0)}';document.head.appendChild(css);
+window.gRestoreNow=async function(){if(!onlineOK)return toast('ต้องออนไลน์');toast('☁️ กำลังดึงเซฟจากบัญชี…');try{if(window._psSync)await window._psSync(true)}catch(e){}if(window.gAutoRestore)await gAutoRestore()};
+{const _o=openSaveCode;openSaveCode=function(){const r=_o.apply(this,arguments);try{const m=$('modal');if(!m||m.querySelector('.gMain'))return r;const h=m.querySelector('h3');if(!h)return r;
+ const rest=[];let n=h.nextSibling;while(n){const nx=n.nextSibling;rest.push(n);n=nx}
+ const det=document.createElement('details');det.className='svAlt';det.innerHTML='<summary>🔑 วิธีอื่น (ไม่ใช้ Google) — รหัสสั้น · รหัสประจำเครื่อง · รหัสยาว · ไฟล์</summary><p class="tag2" style="margin:2px 0 6px">ใช้เมื่อล็อกอิน Google ไม่ได้ (เช่น เปิดเว็บจากในแอป LINE/Facebook) หรือไม่อยากผูกบัญชี · นำเข้าเซฟจากรหัสก็อยู่ในส่วนนี้</p>';rest.forEach(x=>det.appendChild(x));
+ const ps=+LS.get('murim_pst',0)||0,ct=+LS.get('murim_cloudT',0)||0;
+ const g=document.createElement('div');g.className='gMain';
+ g.innerHTML=linked()?`<b>🔐 เชื่อมบัญชี Google แล้ว</b><p class="tag2" style="margin:4px 0 8px">ทุกอย่างซิงค์อัตโนมัติ — เซฟทุกช่อง สมุดตำนาน ความสำเร็จ ฉายา กรอบ คลังกรรม<br>ซิงค์บัญชีล่าสุด ${agoT(ps)}${ct?` · เซฟชีวิตขึ้นเซิร์ฟเวอร์ ${agoT(ct)}`:''}<br>เครื่องใหม่: แค่ล็อกอิน Google บัญชีเดียวกัน</p><div class="brow"><button class="pbtn" style="flex:1" onclick="psNow()">☁️ ซิงค์ตอนนี้</button><button class="gbtn" style="flex:1" onclick="gRestoreNow()">📥 ดึงเซฟจากบัญชี</button></div>`
+  :`<b>🔐 ล็อกอินด้วย Google (แนะนำ)</b><p class="tag2" style="margin:4px 0 8px">ล็อกอินครั้งเดียว ทุกอย่างซิงค์อัตโนมัติทุกเครื่อง — เปลี่ยนมือถือ ล้างเครื่อง หรือเล่นในคอมก็ไม่หาย ไม่ต้องจำรหัส<br>เครื่องใหม่: ล็อกอินบัญชีเดียวกัน เกมดึงเซฟมาให้เอง</p><button class="pbtn" style="width:100%" onclick="closeM();openProfile()">🔐 ล็อกอินด้วย Google</button>`;
+ h.insertAdjacentElement('afterend',g);g.insertAdjacentElement('afterend',det);
+ const back=m.querySelector('.scback');if(back&&det.contains(back))m.insertBefore(back,h)}catch(e){console.error('svLayout',e)}return r}}
+})()}catch(e){console.error('svLayout',e)}
