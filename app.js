@@ -45279,6 +45279,11 @@ function tGrid(){try{const T=$$('title'),s=$$('tStartIn');if(!T||!s||!T.classLis
  const R=window._RR||{};sm('.gSt',R.c!=null?`🎟️ ${fmt0(R.c)} · 🎫 ${fmt0(R.f||0)} · ของฟรีทุกวัน`:'ตั๋วสุ่มเกิด · สมาชิก · ของฟรีทุกวัน');
  const n=($$('tOnN')||{}).textContent;const on=g.querySelector('.gOn small');const ht=n?`<span class="ld"></span>${esc(n)} คนออนไลน์ · แชท · ลาน`:'แชท · ลานประลอง · ทำเนียบ';if(on&&on.innerHTML!==ht)on.innerHTML=ht}catch(e){}}
 setInterval(tGrid,1500);setTimeout(tGrid,400);
+// ปุ่มมุมขวาบนหน้าแรก: 🙏 สนับสนุน → 💎 ร้านค้า (สนับสนุนอยู่ในร้าน) · เอาปุ่ม 🎨 ตกแต่งออก (อยู่ในร้าน แท็บของแต่ง) แล้วเลื่อนปุ่มถัดไปขึ้นแทน
+function tTop(){try{const b=$$('tSup');if(b){if(b.dataset.st!=='1'){b.dataset.st='1';b.onclick=e=>{e.preventDefault();openStore()};b.setAttribute('onclick','openStore()');b.setAttribute('aria-label','ร้านค้า')}
+  const want='<i class="tbi">💎</i><span>ร้านค้า</span>';if(b.innerHTML!==want)b.innerHTML=want;b.title='ร้านค้า'}
+ const c=$$('tCos'),ev=$$('tEv');if(c){const top=getComputedStyle(c).top;c.style.setProperty('display','none','important');if(ev&&top&&top!=='auto')ev.style.setProperty('top',top,'important')}}catch(e){}}
+setInterval(tTop,700);setTimeout(tTop,200);
 // ================= 📱 แถบล่างในเกม =================
 function crow(){try{const c=document.querySelector('#game .crow');if(!c)return;if(!c.querySelector('.crBr'))c.insertAdjacentHTML('beforeend','<i class="crBr"></i>');
  if(!$$('aqCb')){const m=$$('menuBtn');if(m)m.insertAdjacentHTML('beforebegin','<button class="cb" id="aqCb" onclick="openAQ()">📜<small class="cbL">ภารกิจวัน</small><i class="aqDot" style="display:none"></i></button>')}
