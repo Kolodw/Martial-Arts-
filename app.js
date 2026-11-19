@@ -1527,7 +1527,7 @@ function gearNext(){const o=[];for(const k of['weapon','armor']){const cur=gearO
 function gupDo(k,silent){if(!gearTop(k)||gupLv(k)>=GUP_MAX)return false;const c=gupCost(k);if(S.money<c){if(!silent)toast('เงินไม่พอ');return false}S.money-=c;S.gup=S.gup||{};const u0=gupLv(k);if(u0>=10&&Math.random()<(u0-9)*.07){S.gup[k]=Math.max(10,u0-1);sfx('bad');log(`💥 ตีบวกขั้นเทพล้มเหลว! ${gearOf(k).n}ร้าวจนขั้นตกเป็น <b>+${S.gup[k]}</b> <span class="tag2">(ขั้น +11 ขึ้นไปมีโอกาสพลาด ${(u0-9)*7}%)</span>`,'bad');return true}S.gup[k]=u0+1;sfx('good');log(`🔨 ช่างตีบวก<b>${gearOf(k).n}</b>ขึ้นเป็น <b>+${S.gup[k]}</b>${S.gup[k]>10?' — ขั้นเทพ!':''}`,S.gup[k]>10?'epic':'good');return true}
 function gearQuick(){const n=gearNext();if(!n){toast('อาวุธและชุดเกราะอัปเกรดเต็มแล้ว');return}if(S.money<n.c){toast(`ต้องใช้ ${fmtM(n.c)} ตำลึง (มี ${fmtM(S.money)})`);return}
  if(n.t==='buy'){const cur=gearOf(n.k),it=GEAR[n.k].find(x=>x.id===n.id);S.money-=it.c;if(cur)S.money+=Math.round(cur.c*.4);S.gear=S.gear||{};S.gear[n.k]=n.id;sfx('good');log(`🛒 ${cur?`ขาย${cur.n}แล้ว`:''}ซื้อ <b>${it.n}</b>`,'good')}else gupDo(n.k);
- render();try{openSys()}catch(e){}}
+ render();try{sysRe()}catch(e){}}
 function gupRow(k){if(!gearTop(k))return'';const u=gupLv(k);return`<div class="item"><div class="h"><b>🔨 ตีบวก${gearOf(k).n} +${u}${u<GUP_MAX?` → +${u+1}`:' (สูงสุด)'}</b>${u<GUP_MAX?`<button onclick="if(gupDo('${k}'))render(),openMarket()" ${S.money>=gupCost(k)?'':'disabled style="opacity:.4"'}>${fmtM(gupCost(k))}</button>`:''}</div><p>ของชั้นสูงสุดแล้ว ตีบวกต่อได้ถึง +${GUP_MAX} · ${k==='weapon'?'พลังอาวุธ':'พลังชีวิตจากเกราะ'} +15% ต่อขั้น${k==='armor'?' · เจ็บน้อยลงอีก 1.5%':''} · นับเป็นเควสอัปเกรด</p></div>`}
 function buyGear(k,id){const it=GEAR[k].find(x=>x.id===id),cur=gearOf(k);if(S.money<it.c){toast('เงินไม่พอ');return}
  S.money-=it.c;S.gear=S.gear||{};S.gear[k]=id;sfx('good');
@@ -2159,7 +2159,7 @@ function gachaPull(quiet){const s=S.sys;if(s.tk<=0){toast('ไม่มีตั
  if(GACHA.indexOf(g)>=2||!quiet)sysLog(msg,GACHA.indexOf(g)>=3?'myth':'');
  if(GACHA.indexOf(g)>=3){sfxLast.realm=0;sfx('realm')}
  return{g,t}}
-function gachaUI(n){const s=S.sys,out=[];for(let i=0;i<n&&s.tk>0;i++){const r=gachaPull(true);if(r)out.push(r)}render();openSys();
+function gachaUI(n){const s=S.sys,out=[];for(let i=0;i<n&&s.tk>0;i++){const r=gachaPull(true);if(r)out.push(r)}render();sysRe();
  if(out.length)toast(out.map(r=>`[${r.g.r}]`).join(' '))}
 // ---- ตัวร้าย ----
 const CHANCE=['ถ้ำลับของเซียนโบราณ','คัมภีร์ที่ซ่อนอยู่ในหน้าผา','ผลไม้สวรรค์พันปี','ยอดฝีมือที่อยากรับศิษย์','หญิงงามแห่งสำนักใหญ่ที่แอบชอบเขา','สัตว์อสูรที่กำลังจะยอมเป็นสัตว์พันธสัญญา'];
@@ -2275,7 +2275,7 @@ function urgentQuest(){return eventQuest()}
 function autoAlloc(){const s=S.sys;while(s.pts>0){allocPt(ch(['pow','pow','qi','int','cha','hp']),true)}}
 function allocPt(k,silent){const s=S.sys;if(!s||s.pts<=0)return;s.pts--;const m=S.talent.m;
  {const v=srkPt(k);if(k==='pow')S.power+=v;if(k==='qi')S.qi+=v;if(k==='int')S.int+=v;if(k==='cha')S.cha+=v;if(k==='hp'){s.hp+=v;S.maxHp+=v;S.hp+=v}}
- if(!silent){render();openSys()}}
+ if(!silent){render();sysRe()}}
 function buySys(id){const s=S.sys,it=SHOP.find(x=>x.id===id);if(s.sp<it.c){toast('SP ไม่พอ');return}if(it.once&&s.upgrades.includes(it.once)){toast('ซื้อไปแล้ว');return}s.sp-=it.c;s.used++;
  switch(id){case 'pill':S.power+=150*S.talent.m;break;case 'heal':S.hp=S.maxHp;S.chronic=null;break;case 'qi':S.qi+=8;break;
   case 'art':{const a=newArt(2);S.arts.push(a);log(`<span class="px">[ระบบ]</span> เปิดกล่องคัมภีร์ได้ ${artHtml(a)}`,'sys');break}
@@ -2284,7 +2284,7 @@ function buySys(id){const s=S.sys,it=SHOP.find(x=>x.id===id);if(s.sp<it.c){toast
   case 'body':s.hp+=30;S.maxHp+=30;S.hp+=30;s.bodyP=Math.min(.3,(s.bodyP||0)+.1);break;
   case 'mask':s.hate=Math.max(0,s.hate-2);break;
   case 'soulp':{const a=newArt(1);S.arts.push(a);s.ringArt++;log(`💍 ผู้เฒ่า${s.elder}มีแรงขึ้น ถ่ายทอด ${artHtml(a)}`,'sys');break}}
- if(id!=='art'&&id!=='soulp')sysLog(`ซื้อ <b>${it.n}</b> สำเร็จ`);sfx('good');render();openSys();
+ if(id!=='art'&&id!=='soulp')sysLog(`ซื้อ <b>${it.n}</b> สำเร็จ`);sfx('good');render();sysRe();
 }
 function sysSpecial(){const s=S.sys,box=h=>`<div class="sysq">${h}</div>`;
  switch(s.t){
@@ -2295,6 +2295,7 @@ function sysSpecial(){const s=S.sys,box=h=>`<div class="sysq">${h}</div>`;
   case 'ring':return `<h4>💍 ผู้เฒ่า${s.elder}</h4>`+box(`วิชาที่สอน ${s.ringArt} · ชำระแค้น ${s.ringRev?'✅':'❌ (Lv.6+)'} · คืนร่าง ${s.ringBody?'✅ เป็นอาจารย์ติดตามคุณ':'❌ (Lv.12+ หลังชำระแค้น)'}`);
   case 'checkin':return `<h4>📅 เช็คอิน</h4>`+box(`เช็คอินมาแล้ว <b>${S.age-s.since}</b> ปี · ทุก 10 ปีได้รางวัลใหญ่`);
  }return ''}
+function sysRe(){try{const m=document.getElementById('modal');if(m&&m.dataset.k==='sys'&&modalOpen)openSys()}catch(e){}}
 function openSys(){
  const s=S.sys;if(!s)return;sysFix();try{mainCheck()}catch(e){}const T=sysType(),G=sysG(),need=expNeed(s.lv),L=MAINQ[s.t]||[];
  const statB=(k,l,d)=>`<button class="sysb" ${s.pts?'':'disabled'} onclick="allocPt('${k}')">${l}<small>${d}</small></button>`;
@@ -5939,9 +5940,9 @@ try{Object.assign(I18N.d,{'ซ่อนรายละเอียด':'Hide det
 {const _lpb=lifePrivBox;lifePrivBox=function(){const r=_lpb.apply(this,arguments);try{const b=$('lifePriv'),end=$('end');if(b&&end&&end.firstElementChild!==b){const h=end.querySelector('h2,h3');if(h&&h.parentNode===end)end.insertBefore(b,h.nextSibling);else end.insertBefore(b,end.firstChild)}}catch(e){}return r}}
 function pvAsk(next){const v=S&&S._pv!=null?S._pv:lifePubDef();
  modal(`<h3>🏆 ชีวิตของ ${esc(S.name)} ขึ้นทำเนียบแล้ว</h3><p class="tag2">ก่อนเกิดใหม่ — จะให้คนอื่นเห็นข้อมูลชีวิตนี้แค่ไหน? เปลี่ยนได้ตลอดที่เมนู 🪦 สุสาน</p>
- ${[1,0,2].map(k=>`<button class="${v===k?'pbtn':'gbtn'}" style="width:100%;margin-top:6px;text-align:left" onclick="pvPick(${k})"><b>${PV_T[k][0]} ${PV_T[k][1]}</b><br><small>${PV_T[k][2]}</small></button>`).join('')}
- <label style="display:flex;gap:6px;align-items:center;margin-top:10px;font-size:13px"><input type="checkbox" id="pvNo"> ใช้ตัวเลือกนี้ทุกชีวิต ไม่ต้องถามอีก</label>`,'pvask');window._pvNext=next}
-async function pvPick(k){const no=$('pvNo')&&$('pvNo').checked;if(no)LS.set('murim_pv_noask',1);try{await lifePub(k)}catch(e){}closeM();const n=window._pvNext;window._pvNext=null;if(n)n()}
+ ${[1,0,2].map(k=>`<button class="${v===k?'pbtn':'gbtn'}" style="width:100%;margin-top:6px;text-align:left" onclick="pvPrivPick(${k})"><b>${PV_T[k][0]} ${PV_T[k][1]}</b><br><small>${PV_T[k][2]}</small></button>`).join('')}
+ <label style="display:flex;gap:6px;align-items:center;margin-top:10px;font-size:13px"><input type="checkbox" id="pvNo"> ใช้ตัวเลือกนี้ทุกชีวิต ไม่ต้องถามอีก</label>`+`<button class="gbtn" style="width:100%;margin-top:8px" onclick="pvPrivPick(${v})">ข้าม (ใช้ค่าเดิม)</button>`,'pvask');window._pvNext=next}
+async function pvPrivPick(k){const no=$('pvNo')&&$('pvNo').checked;if(no)LS.set('murim_pv_noask',1);closeM();const n=window._pvNext;window._pvNext=null;try{S&&(S._pv=+k,S._pvSet=1);LS.set('murim_lifepub',+k)}catch(e){}try{Promise.resolve(lifePub(k)).catch(()=>{})}catch(e){}try{if(n)n()}catch(e){console.error(e)}}
 {const _tt=toTitle;toTitle=function(){const a=arguments,self=this;if(S&&S._lid&&!S._pvSet&&!LS.get('murim_pv_noask',0)&&!S.custom){S._pvSet=1;pvAsk(()=>_tt.apply(self,a));return}return _tt.apply(this,arguments)}}
 {const _oh=openHeirPick;openHeirPick=function(){const a=arguments,self=this;if(S&&S._lid&&!S._pvSet&&!LS.get('murim_pv_noask',0)&&!S.custom){S._pvSet=1;pvAsk(()=>_oh.apply(self,a));return}return _oh.apply(this,arguments)}}
 // ไม่เผยตัวตนของคนที่เลือกซ่อนทั้งหมด
@@ -6672,7 +6673,7 @@ Object.assign(QOK,{woo:()=>S.age>=18&&(!S.spouse||!S.haremOK||(S.harem||[]).leng
 MAINQ.lust=[['มีคนรักรวม 3 คน',()=>lovers()>=3],['ภารกิจรักสำเร็จ 12 ครั้ง',()=>(S.sys.lustP||0)>=12],['มีคนรักรวม 8 คน',()=>lovers()>=8]];
 SHOP.push({id:'perfume',n:'ยาหอมดึงดูดใจ',d:'เสน่ห์ +10',c:40,t:'lust'},{id:'redline',n:'ด้ายแดงลิขิตรัก',d:'ภารกิจรักครั้งถัดไปสำเร็จแน่นอน',c:90,t:'lust'},{id:'yinyang',n:'คัมภีร์หยินหยางคู่บำเพ็ญ',d:'พลังจากคนรักแต่ละคนเพิ่ม ×1.5 ถาวร (ซื้อได้ครั้งเดียว)',c:160,t:'lust',once:'yinyang'});
 {const _bu12=buySys;buySys=function(id){if(!['perfume','redline','yinyang'].includes(id))return _bu12.apply(this,arguments);const s=S.sys,it=SHOP.find(x=>x.id===id);if(s.sp<it.c){toast('SP ไม่พอ');return}if(it.once&&s.upgrades.includes(it.once)){toast('ซื้อไปแล้ว');return}
- s.sp-=it.c;s.used++;if(id==='perfume')S.cha+=10;else if(id==='redline')s.redline=1;else s.upgrades.push('yinyang');sysLog(`ซื้อ <b>${it.n}</b> สำเร็จ`);sfx('good');render();openSys()}}
+ s.sp-=it.c;s.used++;if(id==='perfume')S.cha+=10;else if(id==='redline')s.redline=1;else s.upgrades.push('yinyang');sysLog(`ซื้อ <b>${it.n}</b> สำเร็จ`);sfx('good');render();sysRe()}}
 {const _ss12=sysSpecial;sysSpecial=function(){const s=S.sys;if(s&&s.t==='lust'){const L=lovers(),pw=lustPow();return `<h4>💋 ระบบตัณหา</h4><div class="sysq">คนรัก <b>${L}</b> คน${S.harem&&S.harem.length?` (ตำหนักใน ${S.harem.length})`:''} · ภารกิจรักสำเร็จ <b>${s.lustP||0}</b> ครั้ง${s.redline?' · 🧶 ด้ายแดงพร้อมใช้':''}<br><span style="opacity:.75">พลังหยินหยางจากคนรัก +${fmt(pw)}/ปี · ลมปราณ +${(L*.04).toFixed(2)} ปี/ปี${S.age<18?' · ภารกิจรักจะเริ่มเมื่ออายุ 18 ปี':''}</span></div>`}return _ss12.apply(this,arguments)}}
 function lustPow(){const s=S.sys;return Math.round(lovers()*(6+s.lv*2)*S.talent.m*sysM()*(s.upgrades.includes('yinyang')?1.5:1))}
 function lustYear(){const s=S.sys,L=lovers();if(L){S.power+=lustPow();S.qi+=+(L*.04).toFixed(2);if(L>=3)S.fame+=L}}
@@ -7624,7 +7625,7 @@ function qGrade(){const G=pickW([{v:0,w:35},{v:1,w:45},{v:2,w:20}]).v.v;window._
 {const ad=(k,fmtv,base,rk)=>{const _o=QMK[k];QMK[k]=function(){const r=_o.apply(this,arguments);try{const gr=S.gr;if(!gr)return r;const G=qGrade(),d=r[2],v=Math.max(r[1],Math.ceil((gr[rk]||0)*d*G[1]));if(v<=r[1]&&G[1]<1.3){window._qG=0}r[1]=k==='win'?Math.max(1,Math.min(6+Math.max(0,realmIdx())*2,Math.round(v))):Math.round(v);r[0]=`${G[0]} `+fmtv(r[1]);}catch(e){}return r}};
  ad('power',v=>`ฝึกจนพลังยุทธ์เพิ่มขึ้น ${fmt(v)}`,0,'pow');ad('fame',v=>`ชื่อเสียงเพิ่มขึ้น ${fmt(v)}`,0,'fame');ad('win',v=>`ชนะการต่อสู้ ${v} ครั้ง`,0,'kills');ad('money',v=>`หาเงินเพิ่มให้ได้ ${fmtM(v)} ตำลึง`,0,'money')}
 {const _mq=mkQuest;mkQuest=function(k){window._qG=null;const q=_mq.apply(this,arguments);try{if(window._qG!=null){const G=QG3[window._qG];q.rw=Math.round(q.rw*G[2]);q.sp=Math.round(q.sp*G[2]);q.gd=window._qG}}catch(e){}window._qG=null;return q}}
-function sysRefuse(i){const s=S.sys;if(!s||!s.quests[i])return;const q=s.quests[i],c=Math.min(s.sp||0,10);s.sp-=c;s.quests.splice(i,1);sysLog(`ปฏิเสธเควส: ${q.n}${c?` — ระบบหัก SP −${c}`:''}`,'fail');render();openSys()}
+function sysRefuse(i){const s=S.sys;if(!s||!s.quests[i])return;const q=s.quests[i],c=Math.min(s.sp||0,10);s.sp-=c;s.quests.splice(i,1);sysLog(`ปฏิเสธเควส: ${q.n}${c?` — ระบบหัก SP −${c}`:''}`,'fail');render();sysRe()}
 {const _os=openSys;openSys=function(){const r=_os.apply(this,arguments);try{const s=S&&S.sys;if(!s||!s.quests||!s.quests.length)return r;const H=[...document.querySelectorAll('#modal h4')].find(h=>/เควสรอง/.test(h.textContent));if(!H)return r;let el=H.nextElementSibling,i=0;while(el&&el.classList&&el.classList.contains('sysq')&&i<s.quests.length){const b=document.createElement('button');b.className='sysb';b.style.cssText='margin-top:4px;font-size:11px;opacity:.85';b.textContent='✖ ปฏิเสธ (SP −10)';b.setAttribute('onclick',`sysRefuse(${i})`);el.appendChild(b);el=el.nextElementSibling;i++}}catch(e){console.error(e)}return r}}
 // ---- บันไดถุงมิติ: ถุงมิติ → แหวนมิติ → โลกในแหวน (ต้องทำเควสทุกขั้น) ----
 function bagQTick(b){if(!S.sys)return;const t=b.sp||0;if(t>=3)return;const need=[6,16,28][t];if(S.sys.lv<need)return;
@@ -7695,9 +7696,9 @@ function migPullAsk(){const done=!!LS.get('murim_migin',null);modal(`<button cla
 // ---- ยาทะลวงขั้นของระบบ (SP) ตอนอยู่ขั้นสูงสุดของโลก: เดิมหัก SP แต่ไม่ได้อะไร ----
 {const _bs=buySys;buySys=function(id){try{if(id==='break'&&S&&S.sys&&!S.xt&&realmIdx()>=7){const s=S.sys,it=SHOP.find(x=>x.id==='break');if(it&&s.sp>=it.c){
   if(S.pcap==null)S.pcap=-1;const t=S.pcap+1,w=typeof ascWait==='function'?ascWait():0;
-  if(t<=RS_MAX){s.sp-=it.c;s.used++;if(total()<postP(t))S.power+=Math.ceil(postP(t)-total()+1);S.pcap=t;S.btFail=0;postUp(t,'🟦 ยาทะลวงขั้นของระบบ ');sysLog(`ซื้อ <b>${it.n}</b> สำเร็จ`);sfx('good');render();openSys();return}
+  if(t<=RS_MAX){s.sp-=it.c;s.used++;if(total()<postP(t))S.power+=Math.ceil(postP(t)-total()+1);S.pcap=t;S.btFail=0;postUp(t,'🟦 ยาทะลวงขั้นของระบบ ');sysLog(`ซื้อ <b>${it.n}</b> สำเร็จ`);sfx('good');render();sysRe();return}
   if((S.tribSys||0)>=.2){toast('พลังยาทะลวงขั้นของระบบยังค้างอยู่ — จะใช้ตอนรับทัณฑ์สวรรค์ครั้งถัดไป');return}
-  s.sp-=it.c;s.used++;S.tribSys=.2;sysLog(`ยาทะลวงขั้นของระบบ — ถึงขีดสุดของโลกนี้แล้ว พลังยาจะเก็บไว้ช่วยตอนรับทัณฑ์สวรรค์: โอกาสผ่านทุกระลอก +20%${w>0?` (ทัณฑ์สวรรค์จะมาเมื่อบ่มเพาะครบอีกราว ${w} ปี)`:''}`,'up');sfx('good');render();openSys();return}}}catch(e){console.error(e)}
+  s.sp-=it.c;s.used++;S.tribSys=.2;sysLog(`ยาทะลวงขั้นของระบบ — ถึงขีดสุดของโลกนี้แล้ว พลังยาจะเก็บไว้ช่วยตอนรับทัณฑ์สวรรค์: โอกาสผ่านทุกระลอก +20%${w>0?` (ทัณฑ์สวรรค์จะมาเมื่อบ่มเพาะครบอีกราว ${w} ปี)`:''}`,'up');sfx('good');render();sysRe();return}}}catch(e){console.error(e)}
  return _bs.apply(this,arguments)}}
 // ทัณฑ์โลกมนุษย์: พลังยา (ระบบ/กระเป๋า) ช่วยให้ผ่านระลอกได้ง่ายขึ้นด้วย
 {const _aw2=ascendWave;ascendWave=function(n){try{if(S&&!S.xian&&!S.xt&&n>1&&n<=3&&(S.tribPill||0)>0&&Math.random()<S.tribPill){const W=['อัสนีเก้าสาย','เพลิงสวรรค์เผาจิต','มารในใจครั้งสุดท้าย'];log(`⚡ ระลอกที่ ${n}: ${W[n-1]} — พลังยาประคองไว้ ผ่าน!`,'epic');if(auto)return ascendWave(n+1);return choice(`⚡ ทัณฑ์สวรรค์ระลอกที่ ${n+1}`,`ผ่าน${W[n-1]}มาได้ พลังชีวิตเหลือ ${fmt(Math.round(S.hp))}`,[{t:'ไปต่อ',f(){ascendWave(n+1)}}])}}catch(e){}return _aw2.apply(this,arguments)}}
@@ -9674,7 +9675,7 @@ SHOP.push({id:'recruit',t:'sect',n:'ป้ายรับศิษย์',d:'ศ
  else if(id==='hammer'){S.gup=S.gup||{};S.gup.weapon=(S.gup.weapon||0)+1;sysLog(`🔨 ค้อนเทพช่าง — ${esc(gearOf('weapon').n)} ขึ้นเป็น +${S.gup.weapon}`)}
  else if(id==='lure'){let n=0;for(let i=0;i<12&&n<3;i++)if(bdexAdd(beastGen(R(0,BEAST_N-1)),'see'))n++;if(S.beast)S.beast.lv=Math.min(60,S.beast.lv+3);sysLog(`🐉 เหยื่อล่ออสูร — บันทึกสัตว์ใหม่ ${n} ตัว${S.beast?' · '+S.beast.nick+' +3 เลเวล':''}`)}
  else if(id==='sand'){s.rwY=null;sysLog('⏳ ทรายกาลเวลาไหลย้อน — ย้อนเวลาได้อีกครั้งแล้ว')}
- sfx('good');render();openSys()}}
+ sfx('good');render();sysRe()}}
 // ---- ระบบย้อนกาลเวลา ----
 const tsCan=()=>S.sys&&(S.sys.rwY==null||S.age-S.sys.rwY>=10);
 function tsSnap(){if(!S||!S.alive||!S.sys||S.sys.t!=='time')return;try{window._tsnap=JSON.stringify(S);window._tsnapAge=S.age}catch(e){window._tsnap=null}}
@@ -10295,7 +10296,7 @@ function bsysOffer(){if(choice._cur||modalOpen)return false;const T=pickW(SYS_TY
   {t:'❌ สะบัดหัวไล่เสียงนั้นออกไป',s:'ระบบจะสลายไปตลอดกาล',skip:true,f(){S.sysRefused=1;log('<span class="px">[ระบบ]</span> ...โฮสต์ปฏิเสธ ระบบกำลังสลายตัว...','sys')}}]);return true}
 const BS_NO=['recruit','deed','hammer','house'];
 {const _bs=buySys;buySys=function(id){if(bsB()){if(BS_NO.includes(id))return toast('🐾 สัตว์ป่ายังใช้ของชิ้นนี้ไม่ได้ — ต้องแปลงกายเป็นมนุษย์ก่อน');
-  if(id==='break'){const s=S.sys,it=SHOP.find(x=>x.id==='break');if(s.sp<it.c)return toast('SP ไม่พอ');s.sp-=it.c;S.qi=+(S.qi+10).toFixed(1);S.power+=(typeof bPct==='function'?bPct(.25):Math.round(total()*.25));sysLog('ซื้อ <b>ยาทะลวงขั้น</b> — กลืนลงไปแล้วพลังอสูรพุ่งพล่าน (ลมปราณ +10 ปี · พลัง +25%) ช่วยให้ขึ้นขั้นถัดไปได้เร็วขึ้น','up');try{blAdvance()}catch(e){}if(typeof openSys==='function')openSys();return}}
+  if(id==='break'){const s=S.sys,it=SHOP.find(x=>x.id==='break');if(s.sp<it.c)return toast('SP ไม่พอ');s.sp-=it.c;S.qi=+(S.qi+10).toFixed(1);S.power+=(typeof bPct==='function'?bPct(.25):Math.round(total()*.25));sysLog('ซื้อ <b>ยาทะลวงขั้น</b> — กลืนลงไปแล้วพลังอสูรพุ่งพล่าน (ลมปราณ +10 ปี · พลัง +25%) ช่วยให้ขึ้นขั้นถัดไปได้เร็วขึ้น','up');try{blAdvance()}catch(e){}if(typeof openSys==='function')sysRe();return}}
  return _bs.apply(this,arguments)}}
 function bsysTick(){const m=S.beastMode;if(!m||m.human||!S.alive)return;
  if(!S.sys){if(S.sysRefused||S.sysEver)return;if(S.bsysAt!=null&&S.age>=S.bsysAt){if(bsysOffer())S.bsysAt=null;return}if(S.age>=6&&m.st>=1&&Math.random()<.0006)bsysOffer();return}
@@ -13911,7 +13912,8 @@ const nb=(k,i)=>` <button onclick="nameAsk('${k}',${i})" style="font-size:12px;p
  {const _co=crOdds;crOdds=function(){const v=_co.apply(this,arguments);return oid()==='doctor'?Math.min(.97,v+.08):v}}
  // ---- แผนที่: บัญชีแค้น ----
  {const _om=openMap;openMap=function(){_om.apply(this,arguments);try{const K=S.o&&S.o.kl;if(!K||$('modal').dataset.k!=='map')return;const bossOpen=K.filter(x=>!x.boss).every(x=>x.dead);
-   $('modal').insertAdjacentHTML('beforeend',`<div class="item"><b>🩸 บัญชีแค้นของตระกูล (${K.filter(x=>x.dead).length}/5)</b><br><span class="tag2">${K.map(x=>x.dead?`<s>${esc(x.e)} ${esc(x.n)}</s> ✔️`:x.boss&&!bossOpen?'❓ ผู้บงการเบื้องหลัง — ยังไม่รู้ตัวตน':x.seen?`${esc(x.e)} <b>${esc(x.n)}</b> — ซ่อนตัวที่ ${RG2[x.rg].ic} ${rgN(x.rg)} ${rgAt()===x.rg?'<b>📍 คุณอยู่ที่นี่แล้ว — กดข้ามปีเพื่อเจอตัว</b>':'(ต้องเดินทางไปที่นี่)'} · ความแรง ≈ ${Math.round((.95+K.filter(k=>k.dead).length*.08)*100)}% ของพลังคุณ`:`${esc(x.e)} — ❓ ยังไม่รู้ว่าอยู่ที่ไหน`).join('<br>')}</span><br><span class="tag2"><b>วิธีล้างแค้น:</b> ① เดินทางไปดินแดนที่ซ่อนอยู่ ② กดข้ามปี ๑ ปี (ต้องอายุ 16+) ③ เลือก ⚔️ ชำระแค้น ถ้ายังไม่แรงพอเลือก "ยังไม่ถึงเวลา" ได้ · ได้เบาะแสใหม่ทุก ~4 ปี · <b>ผู้บงการ</b>จะเผยตัวเมื่อล้ม 4 ชื่อแรกครบ และแรงที่สุด (×1.35)</span></div>`)}catch(e){}}}
+   $('modal').insertAdjacentHTML('beforeend',`<div class="item"><b>🩸 บัญชีแค้นของตระกูล (${K.filter(x=>x.dead).length}/5)</b><br><span class="tag2">${K.map(x=>x.dead?`<s>${esc(x.e)} ${esc(x.n)}</s> ✔️`:x.boss&&!bossOpen?'❓ ผู้บงการเบื้องหลัง — ยังไม่รู้ตัวตน':x.seen?`${esc(x.e)} <b>${esc(x.n)}</b> — ซ่อนตัวที่ ${RG2[x.rg].ic} ${rgN(x.rg)} ${rgAt()===x.rg?'<b>📍 คุณอยู่ที่นี่แล้ว — กดข้ามปีเพื่อเจอตัว</b>':'(ต้องเดินทางไปที่นี่)'} · ความแรง ≈ ${Math.round((.95+K.filter(k=>k.dead).length*.08)*100)}% ของพลังคุณ`:`${esc(x.e)} — ❓ ยังไม่รู้ว่าอยู่ที่ไหน`).join('<br>')}</span><br><span class="tag2"><b>วิธีล้างแค้น:</b> ① เดินทางไปดินแดนที่ซ่อนอยู่ ② กดข้ามปี ๑ ปี (ต้องอายุ 16+) ③ เลือก ⚔️ ชำระแค้น ถ้ายังไม่แรงพอเลือก "ยังไม่ถึงเวลา" ได้ · ได้เบาะแสใหม่ทุก ~4 ปี · <b>ผู้บงการ</b>จะเผยตัวเมื่อล้ม 4 ชื่อแรกครบ และแรงที่สุด (×1.35)</span>${(()=>{const h=rgAt(),t=K.find(k=>!k.dead&&k.rg===h&&(!k.boss||bossOpen));return t&&S.age>=16?`<button class="pbtn" style="width:100%;margin-top:6px" onclick="kvGo()">⚔️ ชำระแค้น ${esc(t.e)} ${esc(t.n)} ตอนนี้</button>`:''})()}</div>`)}catch(e){}}}
+ window.kvGo=function(){try{const o=S.o;if(!o||!o.kl)return;closeM();o.kty=0;o.hy=999;const run=()=>{if(choice._cur||modalOpen)return setTimeout(run,300);massacreTick()};setTimeout(run,150)}catch(e){console.error(e)}};
  // ---- รายปี ----
  const FS=[['แม่น้ำใหญ่จะท่วมเมืองในฤดูฝนนี้',[['กักตุนเสบียงไว้ขายตอนน้ำท่วม',()=>{const m=Math.round(300+S.money*.15);S.money+=m;S.karma-=3;return`ขายเสบียงได้กำไร +${fmtM(m)} ตำลึง (กรรม −3)`}],['เตือนชาวบ้านให้อพยพ',()=>{S.karma+=8;S.fame+=150;return'ชาวบ้านรอดทั้งเมือง — กรรม +8 · ชื่อเสียง +150'}]]],
   ['ถ้ำทางทิศตะวันออกจะเผยคัมภีร์ลับในปีนี้',[['รีบไปชิงก่อนใคร',()=>{const a=newArt(2);S.arts.push(a);return`ได้ ${artHtml(a)} ก่อนที่ใครจะรู้`}],['ปล่อยให้เป็นวาสนาของคนอื่น',()=>{S.karma+=4;S.int+=8;return'ปล่อยวาง — ปัญญา +8 · กรรม +4'}]]],
@@ -17056,7 +17058,7 @@ const SX={
 const SX_REC=[['ยาฟื้นกาย','ฟื้นพลังชีวิต 10% ทุกปี'],['ยารวมปราณ','ลมปราณ +0.3 ทุกปี'],['ยาชะลอวัย','อายุขัย +1 ทุก 5 ปี'],['ยาหลอมกระดูก','พลัง +1% ทุกปี'],['ยาเปิดปัญญา','ปัญญา +1 ทุกปี'],['ยาเซียน','ลุ้นพรสวรรค์ ×1.02 (มีโอกาสระเบิด)']];
 function sxBiz(){return Math.max(500,(S.xt?2e6:S.xian?5e4:2000)*(1+realmIdx()*.5))}
 function sxBizC(x){return Math.round(sxBiz()*Math.pow(1.8,x.b||0))}
-function sxAct(t,i){const s=S&&S.sys;if(!s||s.t!==t||!SX[t]||!SX[t].act)return;const r=SX[t].act(s,sxX(),i);if(r){sysLog(r,'up');toast(r.replace(/<[^>]+>/g,'').slice(0,60))}render();openSys()}
+function sxAct(t,i){const s=S&&S.sys;if(!s||s.t!==t||!SX[t]||!SX[t].act)return;const r=SX[t].act(s,sxX(),i);if(r){sysLog(r,'up');toast(r.replace(/<[^>]+>/g,'').slice(0,60))}render();sysRe()}
 // ---- รายปี: กลไกเฉพาะ + สาย + บทสุดท้าย ----
 function sxYear(){const s=S&&S.alive&&S.sys;if(!s||S.age<6)return;const x=sxX(),T=SX[s.t];
  try{if(T)T.yr(s,x)}catch(e){console.error(e)}
@@ -20482,7 +20484,7 @@ const sgDisc=()=>Math.max(.75,1-.05*((S.sys&&S.sys.gr)|0));
 const sgPrice=c=>Math.max(1,Math.round(c*sgDisc()));
 function sgReq(){const s=S.sys,n=(s.gr|0)+1,R0=SG_UP[n];if(!R0)return null;const L=MAINQ[s.t]||[];const miss=[];if(s.sp<R0.sp)miss.push(`SP ${s.sp}/${R0.sp}`);if(s.lv<R0.lv)miss.push(`Lv.${s.lv}/${R0.lv}`);if(Math.min(s.main,L.length)<Math.min(R0.main,L.length))miss.push(`เควสหลัก ${s.main}/${R0.main}`);if(R0.hid&&(s.hid||[]).length<R0.hid)miss.push(`เควสลับ ${(s.hid||[]).length}/${R0.hid}`);return{n,R0,miss}}
 function sgUp(){const q=sgReq();if(!q)return;if(q.miss.length)return toast('ยังไม่ครบ: '+q.miss.join(' · '));const s=S.sys;s.sp-=q.R0.sp;s.gr=q.n;s.pts+=3*q.n;const G=sysG();
- sysLog(`💠 <b>ระบบยกระดับเป็น ${G.n}</b> — รางวัลเควส ×${G.m} · ส่วนลดร้านค้า ${Math.round((1-sgDisc())*100)}% · แต้มสถานะ +${3*q.n}`,'up');try{setScene('system')}catch(e){}try{sfx('realm')}catch(e){}keyAdd(`ระบบยกระดับเป็น${G.n}`);openSys()}
+ sysLog(`💠 <b>ระบบยกระดับเป็น ${G.n}</b> — รางวัลเควส ×${G.m} · ส่วนลดร้านค้า ${Math.round((1-sgDisc())*100)}% · แต้มสถานะ +${3*q.n}`,'up');try{setScene('system')}catch(e){}try{sfx('realm')}catch(e){}keyAdd(`ระบบยกระดับเป็น${G.n}`);sysRe()}
 // ชั้นสุ่ม
 const ROT=[
  {id:'tk3',r:0,n:'ตั๋วสุ่มกาชา ×3',c:40,f(){S.sys.tk+=3}},
@@ -20499,22 +20501,22 @@ const ROT=[
 const ROT_C=['#a8b4c4','#5ab0ff','#ffc030'],ROT_N=['ธรรมดา','หายาก','ล้ำค่า'];
 function rotGet(){const s=S.sys;const slots=3+((s.gr|0)>=3?1:0)+((s.gr|0)>=4?1:0),per=10;if(!s.rot||S.age-s.rot.y>=per||s.rot.L.length!==slots){const g=s.gr|0,ep=.04+.05*g,ra=.2+.06*g,L=[];
   for(let i=0;i<slots;i++){const x=Math.random(),r=x<ep?2:x<ep+ra?1:0;const pool=ROT.filter(z=>z.r===r&&!L.includes(z.id));L.push(ch(pool.length?pool:ROT).id)}s.rot={y:S.age,L,b:[]}}return s.rot}
-function rotBuy(i){const s=S.sys,R0=rotGet(),it=ROT.find(z=>z.id===R0.L[i]);if(!it||R0.b.includes(i))return;const c=sgPrice(it.c);if(s.sp<c)return toast('SP ไม่พอ');s.sp-=c;s.used=(s.used||0)+1;R0.b.push(i);it.f();sysLog(`ซื้อ <b>${it.n}</b> จากชั้นสุ่ม`,'');sfx('good');render();openSys()}
+function rotBuy(i){const s=S.sys,R0=rotGet(),it=ROT.find(z=>z.id===R0.L[i]);if(!it||R0.b.includes(i))return;const c=sgPrice(it.c);if(s.sp<c)return toast('SP ไม่พอ');s.sp-=c;s.used=(s.used||0)+1;R0.b.push(i);it.f();sysLog(`ซื้อ <b>${it.n}</b> จากชั้นสุ่ม`,'');sfx('good');render();sysRe()}
 // ของ % (ตั้งแต่ระดับกลาง)
 const PCT=[{id:'pp',n:'ยาเพิ่มพลังยุทธ์',d:'พลังยุทธ์ +2% (ทุกขั้นได้ไม่เกิน ~30% ก่อนเริ่มลดลง)',c:60,f(){S.power+=pctPow(.02)}},
  {id:'pq',n:'ยาขยายทะเลปราณ',d:'ลมปราณ +5%',c:60,f(){S.qi=+(S.qi*1.05+.5).toFixed(1)}},
  {id:'pl',n:'ยาต่ออายุขัย',d:'อายุขัย +3% (อย่างน้อย 5 ปี) · ไม่ถูกลดตามกฎยาซ้อน',c:85,f(){const L0=Math.max(80,lifeMax()||S.lifespan||80),g=Math.max(5,Math.round(L0*.03));if(mwOn&&mwOn()){S.mw.end+=g}else if(S.xt){S.glExtra=(S.glExtra||0)+g}else lsGive(g);log(`<span class="px">[ระบบ]</span> ⏳ อายุขัย +${fmt(g)} ปี (ตอนนี้ ${fmt(lifeMax())} ปี)`,'sys')}}];
 const pctC=id=>{const it=PCT.find(z=>z.id===id),n=((S.sys.pb||{})[id])|0;return sgPrice(Math.round(it.c*Math.pow(1.15,n)))};
-function pctBuy(id){const s=S.sys,it=PCT.find(z=>z.id===id),c=pctC(id);if(s.sp<c)return toast('SP ไม่พอ');s.sp-=c;s.pb=s.pb||{};s.pb[id]=(s.pb[id]|0)+1;it.f();sysLog(`ใช้ <b>${it.n}</b> · ครั้งถัดไปราคา ${pctC(id)} SP`,'');sfx('good');render();openSys()}
+function pctBuy(id){const s=S.sys,it=PCT.find(z=>z.id===id),c=pctC(id);if(s.sp<c)return toast('SP ไม่พอ');s.sp-=c;s.pb=s.pb||{};s.pb[id]=(s.pb[id]|0)+1;it.f();sysLog(`ใช้ <b>${it.n}</b> · ครั้งถัดไปราคา ${pctC(id)} SP`,'');sfx('good');render();sysRe()}
 // ของหายากชาติละครั้ง (ตั้งแต่ระดับสูง)
 const ONCE=[{id:'tal',n:'ล้างไขกระดูก',d:'พรสวรรค์ขึ้น 1 ขั้น',c:420,ok:()=>TALENT.some(t=>t.m>S.talent.m),f(){const nx=TALENT.filter(t=>t.m>S.talent.m).sort((a,b)=>a.m-b.m)[0];const old=S.talent.n;S.talent=Object.assign({},S.talent,{n:nx.n,d:nx.d,m:nx.m});log(`<span class="px">[ระบบ]</span> 🦴 ล้างไขกระดูก — พรสวรรค์จาก${esc(old)}เป็น <b>${esc(nx.n)}</b>`,'myth',true)}},
  {id:'kar',n:'ล้างกรรมชั่ว',d:'กรรมติดลบกลับเป็น 0',c:240,ok:()=>(S.karma||0)<0,f(){S.karma=0;log('<span class="px">[ระบบ]</span> 🕊️ กรรมชั่วทั้งหมดถูกชำระ','epic')}},
  {id:'swp',n:'เปลี่ยนสายระบบ',d:'เลือกสายใหม่ เลเวลและ SP อยู่ครบ (เควสหลักเริ่มใหม่)',c:300,ok:()=>true,f(){sysSwapPick();return 'wait'}},
  {id:'g11',n:'ตั๋วกาชา 10+1',d:'11 ใบ · การันตี SSR ขึ้นไปอย่างน้อย 1 ใบ',c:190,ok:()=>true,f(){S.sys.tk+=11;S.sys.pity=Math.max(S.sys.pity|0,19)}}];
 function onceBuy(id){const s=S.sys,it=ONCE.find(z=>z.id===id);s.ob=s.ob||[];if(s.ob.includes(id))return toast('ชาตินี้ซื้อไปแล้ว');if(!it.ok())return toast('ตอนนี้ยังใช้ไม่ได้');const c=sgPrice(it.c);if(s.sp<c)return toast('SP ไม่พอ');
- if(id==='swp'){window._swpC=c;return sysSwapPick()}s.sp-=c;s.ob.push(id);it.f();sfx('good');render();openSys()}
+ if(id==='swp'){window._swpC=c;return sysSwapPick()}s.sp-=c;s.ob.push(id);it.f();sfx('good');render();sysRe()}
 function sysSwapPick(){modal(`<button class="xbtn" onclick="openSys()">←</button><h3>🔀 เลือกสายระบบใหม่</h3><div class="mgrid">${SYS_TYPES.filter(t=>t.id!==S.sys.t).map(t=>`<button class="opt" onclick="sysSwap('${t.id}')">${t.ic} ${t.n}<small>${t.d||''}</small></button>`).join('')}</div>`,'sysswap')}
-function sysSwap(t){const s=S.sys,c=window._swpC||sgPrice(300);if(s.sp<c)return toast('SP ไม่พอ');s.sp-=c;s.ob=s.ob||[];s.ob.push('swp');s.t=t;s.main=0;s.quests=[];sysFix();sysLog(`🔀 ระบบเปลี่ยนสายเป็น <b>${sysName()}</b> — เลเวลและ SP อยู่ครบ`,'up');render();openSys()}
+function sysSwap(t){const s=S.sys,c=window._swpC||sgPrice(300);if(s.sp<c)return toast('SP ไม่พอ');s.sp-=c;s.ob=s.ob||[];s.ob.push('swp');s.t=t;s.main=0;s.quests=[];sysFix();sysLog(`🔀 ระบบเปลี่ยนสายเป็น <b>${sysName()}</b> — เลเวลและ SP อยู่ครบ`,'up');render();sysRe()}
 // การันตีกาชา 30
 {const _gp=gachaPull;gachaPull=function(){const s=S&&S.sys;if(s&&s.tk>0&&(s.pity|0)>=29){const w0=GACHA.map(g=>g.w);try{GACHA.forEach((g,i)=>{if(i<3)g.w=0});return _gp.apply(this,arguments)}finally{GACHA.forEach((g,i)=>g.w=w0[i])}}return _gp.apply(this,arguments)}}
 // ส่วนลดร้านเดิม + แผงใหม่ในหน้าระบบ
@@ -20589,7 +20591,7 @@ function huntYear(){const n=R(3,6),L=S.xian?HUNT_X:HUNT_M;let w=0,f=0;const loot
 {const _dfH=doFocus;doFocus=function(){try{if(S&&S.focus==='hhunt'&&focusOK('hhunt')){huntYear();return}}catch(e){console.error(e)}return _dfH.apply(this,arguments)}}
 // 4) สุ่มเควสรองใหม่ฟรี ทุก 10 ปี
 function sysReroll(i){const s=S.sys;if(!s||!s.quests[i])return;if(s.rrY!=null&&S.age-s.rrY<10)return toast('สุ่มฟรีได้อีกใน '+(10-(S.age-s.rrY))+' ปี');const keys=qKeys().filter(k=>k!==s.quests[i].k);if(!keys.length)return toast('ไม่มีเควสอื่นให้สุ่ม');
- const old=s.quests[i];s.quests[i]=mkQuest(ch(keys));s.rrY=S.age;sysLog(`🔄 สุ่มเควสใหม่: ${old.n} → <b>${s.quests[i].n}</b>`,'');render();openSys()}
+ const old=s.quests[i];s.quests[i]=mkQuest(ch(keys));s.rrY=S.age;sysLog(`🔄 สุ่มเควสใหม่: ${old.n} → <b>${s.quests[i].n}</b>`,'');render();sysRe()}
 {const _osR=openSys;openSys=function(){const r=_osR.apply(this,arguments);try{const s=S&&S.sys;if(!s)return r;const free=s.rrY==null||S.age-s.rrY>=10;
  document.querySelectorAll('#modal button[onclick^="sysRefuse("]').forEach(b=>{const i=+(b.getAttribute('onclick').match(/\d+/)||[0])[0];const x=document.createElement('button');x.className='sysb';x.style.cssText='margin:4px 0 0 6px;font-size:11px';x.textContent=free?'🔄 สุ่มใหม่ (ฟรี)':`🔄 สุ่มใหม่ได้อีก ${10-(S.age-s.rrY)} ปี`;if(!free)x.disabled=true;x.setAttribute('onclick',`sysReroll(${i})`);b.after(x)});
  // คำแนะนำใต้เควส
@@ -20841,7 +20843,7 @@ document.addEventListener('click',e=>{try{if(pendModal&&e.target.closest&&e.targ
 // 3) ร้านระบบ: ซื้อถุงมิติขั้นถัดไปได้ (ข้ามเควส)
 const BAG_UP=[{n:'ถุงมิติ',c:450},{n:'แหวนมิติ',c:1100},{n:'โลกในแหวน',c:2400}];
 function bagUpBuy(){const s=S.sys;if(!S.bag)bagInit();const b=S.bag,t=b.sp||0,U=BAG_UP[t];if(!U)return toast('มีโลกในแหวนแล้ว');const c=sgPrice(U.c);if(s.sp<c)return toast('SP ไม่พอ');if((s.lv|0)<[6,16,28][t])return toast('ระบบต้องถึง Lv.'+[6,16,28][t]);s.sp-=c;b.sp=t+1;b.cap=9999;b.nm=U.n;s.bagQ=null;S.flags.spBag=1;
- sysLog(`🎒 ได้รับ <b>${U.n}</b> จากร้านค้าระบบ — เก็บของได้ไม่จำกัด ไม่มีวันถูกขโมย${['',' · ชนะศัตรูได้ของเพิ่มเป็นสองเท่า',' · สมุนไพรและยางอกเงยในโลกในแหวนทุกปี'][t]||''}`,'myth');try{keyAdd('ได้รับ'+U.n+'จากร้านระบบ');cdxAdd('sysshop','bag'+t)}catch(e){}render();openSys()}
+ sysLog(`🎒 ได้รับ <b>${U.n}</b> จากร้านค้าระบบ — เก็บของได้ไม่จำกัด ไม่มีวันถูกขโมย${['',' · ชนะศัตรูได้ของเพิ่มเป็นสองเท่า',' · สมุนไพรและยางอกเงยในโลกในแหวนทุกปี'][t]||''}`,'myth');try{keyAdd('ได้รับ'+U.n+'จากร้านระบบ');cdxAdd('sysshop','bag'+t)}catch(e){}render();sysRe()}
 {const _osB=openSys;openSys=function(){const r=_osB.apply(this,arguments);try{const s=S.sys,m=$('modal'),box=m.querySelector('.sysbox');if(!box||m.querySelector('.bagUpR'))return r;if(!S.bag)bagInit();const t=S.bag.sp||0,U=BAG_UP[t];
  const h4=[...box.querySelectorAll('h4')].find(x=>x.textContent.trim()==='ร้านค้าระบบ');const nd=[6,16,28][t],lk=U&&(s.lv|0)<nd;const html=`<div class="sysq bagUpR" style="display:flex;justify-content:space-between;align-items:center;gap:6px"><div><b style="color:#ffd070">🎒 ${U?U.n:'โลกในแหวน'}</b><br><span style="opacity:.75">${U?(s.bagQ?'ข้ามเควสถุงมิติที่ทำอยู่ ได้ทันที':'ไม่ต้องทำเควส ได้ทันที · เก็บของไม่จำกัด'):'มีขั้นสูงสุดแล้ว'}</span></div>${U?`<button class="sysb" style="flex:0 0 auto" ${lk||s.sp<sgPrice(U.c)?'disabled':''} onclick="bagUpBuy()">${lk?'Lv.'+nd:sgPrice(U.c)+' SP'}</button>`:''}</div>`;
  if(h4)h4.insertAdjacentHTML('beforebegin',`<h4>🎒 ถุงมิติ</h4>`+html);}catch(e){console.error(e)}return r}}
@@ -21341,7 +21343,7 @@ setInterval(()=>{try{if(!S||!S.alive||paused&&!auto)return;const h=typeof hellIn
 const hellDue=()=>{try{const h=typeof hellInfo==='function'?hellInfo():null;return !!(h&&S&&S.alive&&h.lv<18&&S.age>=h.next)}catch(e){return false}};
 function hellOpen(){try{const h=hellInfo();if(!h||!hellDue())return false;if(choice._cur||modalOpen||document.querySelector('.kfx'))return false;if(h._gT&&Date.now()-h._gT<2500)return false;h._gT=Date.now();
  try{if(ISL.cur&&ISL.cur.key==='hellgate')islNext(true);ISL.q=ISL.q.filter(x=>x.key!=='hellgate')}catch(e){}gate();return true}catch(e){console.error(e);return false}}
-function hellWaitNote(){try{if(!islOn()||(ISL.cur&&ISL.cur.key==='hellgate')||ISL.q.some(x=>x.key==='hellgate'))return;const h=hellInfo();island({big:1,pri:1,sticky:1,key:'hellgate',ic:'🔥',h:'ประตูนรกกำลังเปิด',t:`ชั้นที่ ${h.lv+1}/100 — เวลาหยุดรอ`,d:'ตัดสินใจเรื่องที่ค้างให้เสร็จ แล้วประตูจะเปิดทันที',kind:'bad'})}catch(e){}}
+function hellWaitNote(){try{if(!islOn()||(ISL.cur&&ISL.cur.key==='hellgate')||ISL.q.some(x=>x.key==='hellgate'))return;if(Date.now()-(window._hgT||0)<25000)return;window._hgT=Date.now();const h=hellInfo();island({big:1,pri:1,ms:4500,key:'hellgate',ic:'🔥',h:'ประตูนรกกำลังเปิด',t:`ชั้นที่ ${h.lv+1}/100 — เวลาหยุดรอ`,d:'ตัดสินใจเรื่องที่ค้างให้เสร็จ แล้วประตูจะเปิดทันที',kind:'bad'})}catch(e){}}
 {const _pyH=passYear;passYear=function(){try{if(hellDue()){if(!hellOpen())hellWaitNote();return}}catch(e){}return _pyH.apply(this,arguments)}}
 setInterval(()=>{try{if(!hellDue())return;if(!hellOpen()&&(choice._cur||modalOpen))hellWaitNote()}catch(e){}},700);
 
@@ -27001,8 +27003,8 @@ setInterval(check,1500);window._rwFix=check;
 try{(()=>{
 const N=()=>{const v=LS.get('murim_apn',1);return v==='all'?'all':Math.max(1,Math.min(1e6,parseInt(v,10)||1))};
 const _ap=allocPt;allocPt=function(k,silent){if(silent)return _ap.apply(this,arguments);const s=S&&S.sys;if(!s||s.pts<=0)return;const n0=N(),n=n0==='all'?s.pts:Math.min(n0,s.pts);
- for(let i=0;i<n;i++)_ap.call(this,k,true);try{toast(`ใส่ ${fmt(n)} แต้ม`)}catch(e){}render();openSys()};
-window._apSet=v=>{LS.set('murim_apn',v);openSys()};
+ for(let i=0;i<n;i++)_ap.call(this,k,true);try{toast(`ใส่ ${fmt(n)} แต้ม`)}catch(e){}render();sysRe()};
+window._apSet=v=>{LS.set('murim_apn',v);sysRe()};
 const _os=openSys;openSys=function(){const r=_os.apply(this,arguments);try{const m=$('modal'),g=m&&m.querySelector('.sysg'),s=S.sys;if(g&&s&&!m.querySelector('.apRow')){const n=N(),b=(v,t)=>`<button class="apB${n===v?' on':''}" onclick="_apSet(${typeof v==='string'?`'${v}'`:v})">${t}</button>`;
  if(!document.getElementById('apSt')){const st=document.createElement('style');st.id='apSt';st.textContent='.apB{flex:1;padding:7px 2px;border:2px solid currentColor;border-radius:10px;background:transparent;color:inherit;font:inherit;font-weight:bold;cursor:pointer;opacity:.75}.apB.on{background:#ffd040;color:#2a1a00;border-color:#ffd040;opacity:1}.apIn{width:64px!important;padding:6px!important;border:2px solid currentColor!important;border-radius:10px!important;font:inherit;background:transparent!important;color:inherit!important}.apIn::placeholder{color:inherit;opacity:.6}';document.head.appendChild(st)}
  g.insertAdjacentHTML('beforebegin',`<div class="apRow" style="display:flex;gap:4px;align-items:center;margin:4px 0 6px"><span class="tag2" style="flex:0 0 auto">กดทีละ</span>${b(1,'+1')}${b(10,'+10')}${b(100,'+100')}${b('all','ทั้งหมด')}<input class="apIn" type="number" min="1" inputmode="numeric" placeholder="พิมพ์" value="${[1,10,100,'all'].includes(n)?'':n}" onchange="_apSet(this.value)"></div>`);
@@ -31743,9 +31745,9 @@ const aMsg=(n0,key,nm,ic)=>{const n=aC();if(n[1]>n0[1])isl({ic:'📕',h:'ซื�
 {const _bi=bagInit;bagInit=function(){ini++;try{return _bi.apply(this,arguments)}finally{ini--}}}
 {const _ba=bagAdd;bagAdd=function(id,q,quiet){const r=_ba.apply(this,arguments);try{if(r&&!ini&&S&&S.alive){const I=BAGIT[id]||{};isl({ic:'🎒',h:'เก็บเข้ากระเป๋าแล้ว',t:`<b>${esc((I.ic||'')+' '+(I.n||id))}</b>${r>1?' ×'+r:''} อยู่ใน${esc((S.bag&&S.bag.nm)||'กระเป๋า')}`,d:'กดปุ่ม 🎒 ที่แถบด้านบนเพื่อดู/ใช้ของ',kind:'ok',key:'bag'+id,ms:2800,btns:[{t:'🎒 เปิดกระเป๋า',f:()=>openBag()}]})}}catch(e){}return r}}
 {const _bs=buySys;buySys=function(id){const s=S&&S.sys,sp0=s?s.sp:0,n0=aC();const r=_bs.apply(this,arguments);try{if(s&&s.sp<sp0){const it=SHOP.find(x=>x.id===id)||{n:id};
-  if(id==='ticket')isl({ic:'🎟️',h:'ซื้อสำเร็จ',t:`<b>ตั๋วสุ่มกาชา</b> เหลือ ${s.tk} ใบ`,d:'เก็บไว้ในหน้าต่างระบบ 🟦 — เลื่อนลงหา "ตั๋วกาชา" แล้วกดสุ่ม',kind:'gold',key:'shp'+id,ms:4200,btns:[{t:'🟦 เปิดระบบ',f:()=>openSys()}]});
+  if(id==='ticket')isl({ic:'🎟️',h:'ซื้อสำเร็จ',t:`<b>ตั๋วสุ่มกาชา</b> เหลือ ${s.tk} ใบ`,d:'เก็บไว้ในหน้าต่างระบบ 🟦 — เลื่อนลงหา "ตั๋วกาชา" แล้วกดสุ่ม',kind:'gold',key:'shp'+id,ms:4200,btns:[{t:'🟦 เปิดระบบ',f:()=>sysRe()}]});
   else if(aMsg(n0,'shp'+id,it.n)){}
-  else if(it.once)isl({ic:'🟦',h:'ซื้อสำเร็จ',t:`<b>${esc(it.n)}</b> ติดตั้งถาวรแล้ว`,d:'ดูได้ที่หน้าต่างระบบ 🟦',kind:'gold',key:'shp'+id,ms:3800,btns:[{t:'🟦 เปิดระบบ',f:()=>openSys()}]});
+  else if(it.once)isl({ic:'🟦',h:'ซื้อสำเร็จ',t:`<b>${esc(it.n)}</b> ติดตั้งถาวรแล้ว`,d:'ดูได้ที่หน้าต่างระบบ 🟦',kind:'gold',key:'shp'+id,ms:3800,btns:[{t:'🟦 เปิดระบบ',f:()=>sysRe()}]});
   else isl({ic:'✨',h:'ซื้อสำเร็จ',t:`<b>${esc(it.n)}</b> ใช้ทันที`,d:'ผลเข้าสถานะเลย ไม่เก็บในกระเป๋า · ดูที่หน้าสถานะ/บันทึกชีวิต',kind:'gold',key:'shp'+id,ms:3600})}}catch(e){}return r}}
 {const _eb=ecoBuy;ecoBuy=function(id){const m0=S.money,n0=aC(),it=ecoCat(ECO_W()).find(x=>x.id===id);const r=_eb.apply(this,arguments);try{if(it&&S.money<m0){
   if(aMsg(n0,'eco'+id,it.n)){}
@@ -40737,12 +40739,12 @@ window.sxUse=function(id,silent){if(!on())return;const x=X(),s=S.sys,L=slots(),q
  if(s.lv<q.k[0]&&!q.fr)return toast(`ปลดที่ Lv.${q.k[0]}`);
  if(x.stl)return toast('ระบบถูกขโมยไป — ใช้สกิลไม่ได้');
  if(!ready(q))return toast(`คูลดาวน์อีก ${cdOf(q.k)-(S.age-x.cd[q.i])} ปี`);
- if(x.end!=='merge'&&x.tr<20&&Math.random()<.35){x.cd[q.i]=S.age;sl(`「${DT().per}」 …ไม่อยากทำ — ความเชื่อใจต่ำเกินไป`,'fail');sxPop('คำสั่งถูกปฏิเสธ','ความเชื่อใจต่ำเกินไป','bug');if(!silent)openSys();return}
+ if(x.end!=='merge'&&x.tr<20&&Math.random()<.35){x.cd[q.i]=S.age;sl(`「${DT().per}」 …ไม่อยากทำ — ความเชื่อใจต่ำเกินไป`,'fail');sxPop('คำสั่งถูกปฏิเสธ','ความเชื่อใจต่ำเกินไป','bug');if(!silent)sysRe();return}
  const res=EFF[q.k[3]]();x.cd[q.i]=S.age;x.used=(x.used||0)+1;
  const ldG=x.end==='merge'?0:q.k[5]*(has('cool')?.6:1)*(x.end==='free'?.5:1);x.ld=cl(x.ld+ldG,0,150);
  sl(`⚡ <b>${esc(q.k[1])}</b>${q.fr?` <span class="tag2">(จาก${esc(D[q.fr]?SYS_TYPES.find(t=>t.id===q.fr).n:'')})</span>`:''} — ${res} · <i>"${esc(line())}"</i>`,'up');
  if(x.ld>=100&&!x.ovh){x.ovh=1;sl('🔥 ภาระระบบเกินขีด! หน้าต่างระบบกระพริบเป็นสีแดง…','fail');sxPop('⚠️ OVERHEAT','ภาระระบบเกินขีด — พักการใช้สกิลก่อน','bug')}
- if(!silent){try{render()}catch(e){}openSys()}};
+ if(!silent){try{render()}catch(e){}sysRe()}};
 
 // ---------- ศึก: บัฟจากสกิล ----------
 {const _f=fight;fight=function(n,ep){try{const x=on()&&S.sys.x;if(x&&x.bf&&x.bf.n>0&&!fight._sx){ep=ep*x.bf.m;x.bf.n--;if(x.bf.n<=0)x.bf=null}}catch(e){}return _f.call(this,n,ep)}}
@@ -41931,7 +41933,7 @@ window.openCult=function(){const s=S.sys;if(!s)return;const c=s.cu=s.cu||{on:0,s
  ${wait?`<button class="gbtn" style="width:100%;margin:4px 0" ${(m.time|0)<2?'disabled':''} onclick="cuCrystal()">⏳ ใช้ผลึกกาลเวลา 2 ชิ้น ย่นเวลารอโลกเทพ 40 ปี</button>`:''}
  <button class="gbtn" style="width:100%;margin-top:10px" onclick="cuStop()">↩️ กลับไปไล่เลเวลตามปกติ</button>`,'syscult')};
 window.cuStart=function(){const c=S.sys.cu;c.on=1;sysLog(`🥚 ระบบเข้าสู่การบ่มเพาะ (เลเวลล็อกที่ ${S.sys.lv})`,'up');sfx('good');openCult()};
-window.cuStop=function(){S.sys.cu.on=0;sysLog('ระบบกลับสู่การไล่เลเวล','');openSys()};
+window.cuStop=function(){S.sys.cu.on=0;sysLog('ระบบกลับสู่การไล่เลเวล','');sysRe()};
 window.cuFeed=function(){const s=S.sys,c=s.cu,k=feedC(c);if(c.st>=3)return;if(s.sp<k)return toast('SP ไม่พอ');if(!anyMat(c))return toast('ไม่มีวัตถุดิบ');s.sp-=k;takeMat(c);c.fd++;
  if(c.fd>=5){c.fd=0;c.st++;s.pts+=8*c.st;sysLog(`${SI[c.st]} ระบบเติบโตเป็น <b>${ST[c.st]}</b> (+${8*c.st} แต้มสถานะ)`,'up');if(c.st===1)toast('เลือกกิ่งเฉพาะสายได้แล้ว')}sfx('good');openCult()};
 window.cuPick=function(id){const c=S.sys.cu;if(c.br)return;c.br=id;c.bl=1;const b=brs().find(z=>z[0]===id);sysLog(`${b[2]} เลือกกิ่ง <b>${b[1]}</b>`,'up');openCult()};
@@ -42511,3 +42513,19 @@ window.shareCard=async function(){try{if(!S)return;const W=720,H=400,cv=document
  const u=cv.toDataURL('image/png');modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🖼️ การ์ดสรุปชีวิต</h3><img src="${u}" style="width:100%;border-radius:10px"><p class="tag2">กดค้างที่ภาพเพื่อบันทึก แล้วแชร์ได้เลย</p>`,'scard')}catch(e){console.error(e);toast('แชร์ไม่สำเร็จ')}};
 {const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);try{const E=$('end');if(E&&!E.querySelector('.shCardB')){const b=document.createElement('button');b.className='gbtn shCardB';b.style.cssText='width:100%;margin:6px 0';b.textContent='🖼️ แชร์การ์ดสรุปชีวิต';b.onclick=()=>shareCard();const first=E.querySelector('button');if(first)first.parentNode.insertBefore(b,first);else E.appendChild(b)}}catch(e){}return r}}
 })()}catch(e){console.error('retain',e)}
+
+try{(()=>{
+function artTrim(){try{if(!S||!S.alive||!Array.isArray(S.arts))return;const cap=artCap();const A=S.arts.filter(Boolean);if(A.length<=cap+2)return;
+ const keep=A.filter(a=>a.heir||a.own),rest=A.filter(a=>!(a.heir||a.own)).sort((x,y)=>(y.b||0)-(x.b||0));const room=Math.max(1,cap-keep.length);const stay=rest.slice(0,room),drop=rest.slice(room);if(!drop.length)return;
+ const add=Math.round(drop.reduce((t,a)=>t+(a.b||0),0)*.1);const L=keep.concat(stay);if(stay[0])stay[0].b=Math.round((stay[0].b||0)+add);
+ S.arts.length=0;L.forEach(a=>_nPush.call(S.arts,a));try{log(`📘 ความจำวิชาเต็ม (จำได้ ${cap} วิชาตามปัญญา) — วิชาที่อ่อนที่สุด ${drop.length} วิชาถูกหลอมรวมเข้ากับวิชาที่เก่งที่สุด พลังวิชา +${fmt(add)}`,'')}catch(e){}}catch(e){console.error('artTrim',e)}}
+window.artTrim=artTrim;
+{const _p=passYear;passYear=function(){try{artTrim()}catch(e){}return _p.apply(this,arguments)}}
+})()}catch(e){console.error('arttrim',e)}
+
+try{(()=>{
+const pb=()=>LS.get('murim_pendpos','top');
+const css=document.createElement('style');css.textContent='#pendBar.pbBot{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 70px);width:min(92vw,420px);z-index:9000;box-shadow:0 6px 24px #0008;margin:0}#pendBar .pbPos{float:right;margin-left:6px;border:1px solid var(--line);background:var(--w);color:var(--ink);border-radius:8px;font-size:12px;padding:2px 7px;cursor:pointer}';document.head.appendChild(css);
+window.pendPos=function(ev){try{if(ev)ev.stopPropagation();LS.set('murim_pendpos',pb()==='top'?'bottom':'top');pendBar()}catch(e){}};
+{const _pe=pendBar;pendBar=function(){const r=_pe.apply(this,arguments);try{const b=$('pendBar');if(b&&b.style.display!=='none'){b.classList.toggle('pbBot',pb()==='bottom');if(!b.querySelector('.pbPos'))b.insertAdjacentHTML('afterbegin',`<button class="pbPos" onclick="pendPos(event)">${pb()==='top'?'⬇ ย้ายลงล่าง':'⬆ ย้ายขึ้นบน'}</button>`)}}catch(e){}return r}}
+})()}catch(e){console.error('pendpos',e)}
