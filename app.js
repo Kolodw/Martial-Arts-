@@ -35,9 +35,9 @@ const LS={raw(k){try{let v=ID.ov.has(k)?ID.ov.get(k):localStorage.getItem(k);ret
 setTimeout(()=>{try{ID.init()}catch(e){}},0);
 
 // ============ THEME ============
-const THEMES=[['light','☀️','สว่าง'],['dark','🌙','มืด'],['mono','⚫','ขาวดำ'],['jade','🍃','หยกเขียว'],['ember','🩸','โลหิตมาร'],['gold','✨','ทองเซียน']];
-let theme=LS.get('murim_theme','light');
-function applyTheme(){document.body.classList.remove('dark','mono','jade','ember','gold');if(theme!=='light')document.body.classList.add(theme);const t=THEMES.find(x=>x[0]===theme);const tb=$('themeBtn');if(tb)tb.textContent=t[1]}
+const THEMES=[['royal','👑','ทองราตรี'],['light','☀️','สว่าง'],['dark','🌙','มืด'],['mono','⚫','ขาวดำ'],['jade','🍃','หยกเขียว'],['ember','🩸','โลหิตมาร'],['gold','✨','ทองเซียน']];
+let theme=LS.get('murim_theme','royal');if(theme==='dark'&&!LS.get('murim_thR',0)){theme='royal';LS.set('murim_thR',1);LS.set('murim_theme','royal')}
+function applyTheme(){document.body.classList.remove('dark','mono','jade','ember','gold','royal');if(theme==='royal')document.body.classList.add('dark','royal');else if(theme!=='light')document.body.classList.add(theme);const t=THEMES.find(x=>x[0]===theme);const tb=$('themeBtn');if(tb)tb.textContent=t[1]}
 function cycleTheme(){const U=THEMES.filter(t=>{const x=typeof XTHEME!=='undefined'&&XTHEME.find(y=>y[0]===t[0]);return !x||x[4]()});const i=U.findIndex(x=>x[0]===theme);theme=U[(i+1)%U.length][0];LS.set('murim_theme',theme);applyTheme();toast('ธีม: '+THEMES.find(x=>x[0]===theme)[2]);if(S&&modalOpen&&$('modal').dataset.k==='menu')openMenu()}
 applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
@@ -45326,3 +45326,115 @@ function mnEnh(){try{const m=$('modal');if(m.dataset.k!=='menu')return;
  }catch(e){console.error('mn66',e)}}
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);mnEnh();setTimeout(mnEnh,0);setTimeout(mnEnh,200);return r}}
 })()}catch(e){console.error('block66',e)}
+
+// ============================================================
+// BLOCK 67: 👑 ธีม "ทองราตรี" (ค่าเริ่มต้นใหม่ · โทนเดียวกับร้านค้า) + 🌏 หน้าเลือกโลกแบบการ์ด (กดครั้งเดียวเกิดได้เลย)
+// ============================================================
+try{(()=>{
+const css=document.createElement('style');css.id='royalCss';css.textContent=`
+body.royal{--bg:#100e1a;--card:#1b1828;--w:#25203a;--ink:#f1e8d4;--mut:#b9ad94;--line:#a8873e;--grid:#ffffff07;--pink:#e8b54a;--pinkd:#b8801e;--onacc:#2a1a04;
+ --good:#1c3326;--bad:#3a1c24;--epic:#3a2f14;--myth:#3a1c32;--peerb:#221e30;--think:#1c2640;--tb1:#1c2640;--tb2:#3a3020;--tb3:#3d1d2c;--tb4:#2d2340;--me:#3a1f2c;
+ --c0:#a8aeb6;--c1:#6aa8ff;--c2:#b98cff;--c3:#ffbc4c;--c4:#ff6a90;--gold:#e8b54a;--goldL:#ffd98a}
+body.royal{background:radial-gradient(120% 70% at 50% -10%,#2a1d3a 0%,#100e1a 60%) fixed,#100e1a}
+/* ---- หน้าต่าง ---- */
+body.royal .mask{background:#05040acc;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+body.royal .modal{background:radial-gradient(120% 50% at 50% -6%,#3a2808 0%,#1b1828 46%,#14121f 100%);border:1.5px solid #c98a10;border-radius:18px;box-shadow:0 12px 44px #000c,0 0 0 1px #ffd86a1c inset,0 0 26px #e8b54a22;color:var(--ink)}
+body.royal .modal>h3,body.royal .modal>div>h3:first-child{color:#ffe7a8;text-shadow:0 0 14px #e8b54a55;letter-spacing:.2px}
+body.royal .modal h4{color:#ffd98a}
+body.royal .modal .xbtn{background:#ffffff10;border:1px solid #ffffff2a;color:#ffe7a8;border-radius:12px;box-shadow:none}
+/* ---- ปุ่ม ---- */
+body.royal .pbtn{background:linear-gradient(180deg,#ffe9a8,#e8b54a 55%,#c98d22);color:#2a1a04;border:2px solid #7a5512;box-shadow:0 3px 0 #7a5512,0 0 14px #e8b54a44;border-radius:14px;text-shadow:none}
+body.royal .pbtn:disabled{filter:grayscale(.6);opacity:.55}
+body.royal .gbtn,body.royal .sysb{background:linear-gradient(160deg,#ffffff14,#ffffff06);color:var(--ink)!important;border:1px solid #e8b54a66;box-shadow:0 2px 0 #00000066;border-radius:12px}
+body.royal .modal .opt{background:linear-gradient(160deg,#ffffff12,#ffffff04);border:1px solid #ffffff1f;box-shadow:0 2px 0 #00000055;border-radius:14px;color:var(--ink)}
+body.royal .modal .opt.on,body.royal .modal .opt:active{border-color:#e8b54a;box-shadow:0 0 0 1px #e8b54a inset,0 0 14px #e8b54a33}
+body.royal .modal .item{background:linear-gradient(160deg,#ffffff0f,#ffffff04);border:1px solid #ffffff1a;border-radius:14px;box-shadow:none}
+body.royal .modal input,body.royal .modal textarea,body.royal .modal select{background:#0c0a14;color:var(--ink);border:1px solid #e8b54a55;border-radius:10px}
+body.royal .modal .tabs button,body.royal .modal .seg button{border-radius:999px}
+body.royal .modal .tabs button.on,body.royal .modal .seg button.on{background:linear-gradient(160deg,#ffe48a,#e0a020);color:#2a1a04;border-color:#ffd86a}
+body.royal .toast{background:#1b1828;color:#ffe7a8;border:1px solid #c98a10;border-radius:12px;box-shadow:0 6px 20px #000a}
+body.royal .modal .item button:not(.pbtn):not(.tabb){background:linear-gradient(180deg,#ffe9a8,#e8b54a 60%,#c98d22)!important;border:1px solid #7a5512!important;color:#2a1a04!important}
+body.royal .modal .item button.tabb:not(.on),body.royal .modal button.tabb:not(.on){background:#ffffff10!important;color:var(--ink)!important;border-color:#ffffff2a!important}
+body.royal .gdTip,body.royal .gdTip *{color:var(--ink)!important}body.royal .gdTip{background:#e8b83a14!important}
+body.dark [style*="color:var(--good"]{color:#6ad88a!important}body.dark [style*="color:var(--bad"]{color:#ff7a8a!important}
+body.royal .sysb.on{color:#2a1a04!important;background:linear-gradient(160deg,#ffe48a,#e0a020)!important;border-color:#ffd86a!important}
+body.royal .cosent small{color:#3a2608!important;opacity:.85}
+body.royal [style*="background:var(--ink)"]{color:var(--bg)!important}
+body.royal .modal .xbtn{background:#ffffff12!important;border:1px solid #e8b54a77!important;color:#ffe7a8!important;border-radius:12px!important;box-shadow:none!important}
+/* ---- ในเกม ---- */
+body.royal #game .box,body.royal #game .box.top{background:linear-gradient(160deg,#221d34,#17141f);border-color:#a8873e;border-radius:14px}
+body.royal #game .crow .cb,body.royal #game .focus .fc{background:linear-gradient(170deg,#262038,#1a1626);border-color:#a8873e88;color:var(--ink)}
+body.royal #game .focus .fc.on{background:linear-gradient(170deg,#ffe48a,#e0a020)!important;color:#2a1a04!important;border-color:#ffd86a!important}
+body.royal #game .crow #autoBtn.on{background:linear-gradient(170deg,#3a8a5a,#1f5a38);color:#eaffef}
+/* =================== 🌏 เลือกโลก =================== */
+#wPick{margin:4px 0 10px;width:100%}
+#wPick .wpH{display:flex;align-items:center;gap:8px;margin:0 2px 6px}#wPick .wpH b{font-size:14px;color:#ffe7a8}#wPick .wpH .sp{flex:1}
+#wPick .wpH button{font:inherit;font-size:12px;font-weight:800;padding:5px 11px;border-radius:999px;border:1px solid #e8b54a88;background:#e8b54a1f;color:#ffd98a}
+#wPick .wpS{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}#wPick .wpS::-webkit-scrollbar{display:none}
+#wPick .wc{position:relative;flex:0 0 74%;max-width:300px;scroll-snap-align:center;display:flex;flex-direction:column;gap:3px;min-height:168px;padding:12px 13px 11px;border-radius:18px;border:1.5px solid var(--bd);background:var(--bg);color:#fff;text-align:left;cursor:pointer;overflow:hidden;box-shadow:0 6px 18px #0006;transition:transform .15s,box-shadow .15s}
+#wPick .wc.on{box-shadow:0 0 0 2px #ffd86a,0 6px 22px #e8b54a55;transform:translateY(-2px)}
+#wPick .wc .ic{font-size:34px;line-height:1;filter:drop-shadow(0 3px 6px #0008)}#wPick .wc .bg{position:absolute;right:-14px;bottom:-22px;font-size:110px;opacity:.13;pointer-events:none;transform:rotate(-8deg)}
+#wPick .wc b{font-size:17px;margin-top:4px;text-shadow:0 2px 6px #0008}#wPick .wc small{font-size:11.5px;line-height:1.4;opacity:.9;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#wPick .wc .tg{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px}#wPick .wc .tg span{font-size:10px;padding:2px 7px;border-radius:999px;background:#0005;border:1px solid #ffffff22}
+#wPick .wc .tg .nw{background:#ff3a5a;border-color:#ff8aa0;font-weight:800;animation:aqP 1.4s infinite}
+#wPick .wc .go{margin-top:auto;align-self:stretch;font:inherit;font-weight:900;font-size:14px;padding:9px;border-radius:12px;border:0;background:linear-gradient(180deg,#ffe9a8,#e8b54a 55%,#c98d22);color:#2a1a04;box-shadow:0 3px 0 #7a5512}
+#wPick .wc:after{content:'';position:absolute;top:0;bottom:0;width:30%;left:-40%;background:linear-gradient(100deg,transparent,#ffffff22,transparent);animation:mwShine 4.2s ease-in-out infinite;pointer-events:none}
+#wPick .wDots{display:flex;justify-content:center;gap:5px;margin:-2px 0 8px}#wPick .wDots i{width:6px;height:6px;border-radius:50%;background:#ffffff33}#wPick .wDots i.on{background:#ffd86a;width:16px;border-radius:4px}
+#wPick .wpC{display:flex;gap:6px;align-items:center;overflow-x:auto;scrollbar-width:none;padding:2px}#wPick .wpC::-webkit-scrollbar{display:none}
+#wPick .wpC>span{flex:0 0 auto;font-size:11.5px;color:#c9bfa8;font-weight:700}
+#wPick .wpC button{flex:0 0 auto;font:inherit;font-size:12px;font-weight:700;padding:6px 11px;border-radius:999px;border:1px solid #ffffff2a;background:#ffffff0d;color:#e8dcc0}
+#wPick .wpC button.on{background:linear-gradient(160deg,#ffe48a,#e0a020);color:#2a1a04;border-color:#ffd86a}#wPick .wpC button:disabled{opacity:.35}
+#wPick .wpNote{font-size:11px;color:#b9ad94;margin:6px 2px 0;min-height:15px}
+#title .box.opts.wpOn>:not(#wPick){display:none!important}#title .box.opts.wpOn{padding:12px 10px!important}
+body:has(#wPick) #tGrid{grid-template-columns:repeat(3,1fr)}body:has(#wPick) #tGrid #tgMw{display:none}body:has(#wPick) #tGrid button{min-height:78px;padding:9px}body:has(#wPick) #tGrid button small{-webkit-line-clamp:3}
+`;document.head.appendChild(css);
+const $$=id=>document.getElementById(id);
+const tried=()=>{try{return LS.get('murim_mtried',{})||{}}catch(e){return{}}};
+const W=[
+ {k:'murim',ic:'⚔️',n:'ยุทธภพ',d:'สำนักธรรมะ อธรรม และมาร · ฝึกจากไร้ระดับสู่แซงซากยอง',tg:['อายุ 60–200 ปี','คลาสสิก'],bd:'#e8b54a',bg:'radial-gradient(120% 120% at 100% 0%,#8a3a1a,#3a1608 60%,#1c0a06)',x:0,c:0,ch:1},
+ {k:'xian',ic:'☁️',n:'โลกเทพเซียน',d:'รากวิญญาณ ถ้ำบ่มเพาะ ทัณฑ์สวรรค์ · ขึ้นสู่โลกเทพ',tg:['อายุหลายร้อยปี','ระบบบ่อย'],bd:'#b49aff',bg:'radial-gradient(120% 120% at 100% 0%,#5a4ab8,#22184a 60%,#120c26)',x:1,c:0,ch:1},
+ {k:'mw',ic:'🏙️',n:'ยุคปัจจุบัน',d:'เกิดเป็นคนยุค 2026 · อาจสุ่มได้โลกฮันเตอร์ ซอมบี้ หมอผี วันซ้ำ',tg:['มินิเกมเยอะ','ไม่ต้องรู้ระบบยุทธ์'],bd:'#7ad0ff',bg:'radial-gradient(120% 120% at 100% 0%,#1a6ab8,#0e2a5a 60%,#08142e)',mw:1},
+ {k:'soul',ic:'⭕',n:'จิตวิญญาณยุทธ์',d:'อายุ 6 ขวบปลุกวิญญาณยุทธ์ · ล่าวงแหวนวิญญาณ ไต่ระดับจิต',tg:['ทีม · ดูโอ · โซโล่'],bd:'#3ad0b0',bg:'radial-gradient(120% 120% at 100% 0%,#0f8a7a,#0a3a36 60%,#06201e)',x:0,c:5,tk:'soul'},
+ {k:'loop',ic:'🔁',n:'ผู้ย้อนกาล',d:'ตายแล้วย้อนไปอายุ 15 · ใช้ความรู้จากรอบก่อนช่วยเพื่อนร่วมชะตา',tg:['เล่าเรื่องต่อเนื่อง'],bd:'#8aa8ff',bg:'radial-gradient(120% 120% at 100% 0%,#3a5ad0,#18245a 60%,#0c1230)',x:0,c:4,tk:'regress'},
+ {k:'beast',ic:'🐾',n:'เกิดเป็นสัตว์',d:'เริ่มจากลูกสัตว์ในป่า บำเพ็ญจนเป็นอสูร แล้วเลือกแปลงกายหรือครองป่า',tg:['อายุยืนมาก'],bd:'#6ad08a',bg:'radial-gradient(120% 120% at 100% 0%,#2a8a4a,#103a1e 60%,#081e10)',beast:1,tk:'beast'}];
+const CHAL=[[0,'🙂','ปกติ'],[1,'🔥','นรก'],[2,'⏳','ชีวิตสั้น'],[3,'🗑️','รากขยะ']];
+const SPD=[[2500,'⚡ เร็ว'],[5000,'🍵 ปกติ'],[9000,'🐢 ช้า']];
+const mwOk=()=>{try{return mwAllowed()}catch(e){return false}};
+const list=()=>W.filter(w=>!w.mw||mwOk());
+const segBtn=(k,v)=>document.querySelector(`#title .seg[data-k="${k}"] button[data-v="${v}"]`);
+const click=(k,v)=>{const b=segBtn(k,v);if(b&&!b.classList.contains('on'))b.click();return !!b};
+function cur(){try{if(CFG.mw)return'mw';if(CFG.chm===5)return'soul';if(CFG.chm===4)return'loop';return CFG.xian?'xian':'murim'}catch(e){return'murim'}}
+let SEL=null;
+function apply(w){try{if(w.beast){SEL='beast';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}
+ if(w.mw){const b=document.querySelector('#title .seg[data-k="xian"] .mwopt');if(b){if(!b.classList.contains('on'))b.click()}else CFG.mw=1;SEL='mw';return}
+ click('xian',w.x);CFG.mw=0;if(w.c)click('chm',w.c);else if(CFG.chm>=4)click('chm',0);SEL=w.k}catch(e){console.error('wp',e)}}
+function go(k){const w=W.find(x=>x.k===k);if(!w)return;apply(w);try{LS.set('murim_wlast',{k,c:CFG.chm|0})}catch(e){}
+ if(w.beast){try{goBeastLife()}catch(e){}return}try{goBirthPick()}catch(e){try{goBirth()}catch(x){}}}
+window.wpGo=go;
+window.wpSel=function(k){const w=W.find(x=>x.k===k);if(!w)return;apply(w);paint();try{const c=document.querySelector(`#wPick .wc[data-k="${k}"]`);if(c)c.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}catch(e){}};
+window.wpChal=function(v){const w=W.find(x=>x.k===(SEL||cur()));if(!w||!w.ch)return toast('ความท้าทายใช้ได้กับยุทธภพและโลกเทพเซียน');click('chm',v);paint()};
+window.wpSpd=function(){const i=SPD.findIndex(s=>s[0]===CFG.len),n=SPD[(i+1)%SPD.length];click('len',n[0]);paint()};
+window.wpRand=function(){const L=list().filter(w=>w.k!==(SEL||cur()));const w=L[Math.floor(Math.random()*L.length)];wpSel(w.k);toast(`🎲 ฟ้าเลือกให้: ${w.ic} ${w.n}`)};
+function card(w){const T=tried(),nw=w.tk&&!T[w.tk];return`<div class="wc" data-k="${w.k}" style="--bd:${w.bd};--bg:${w.bg}" onclick="wpSel('${w.k}')"><span class="bg">${w.ic}</span><span class="ic">${w.ic}</span><b>${w.n}</b><small>${w.d}</small><span class="tg">${nw?'<span class="nw">🆕 ยังไม่เคยลอง</span>':''}${w.tg.map(t=>`<span>${t}</span>`).join('')}</span><button class="go" onclick="event.stopPropagation();wpGo('${w.k}')">▶ เกิดในโลกนี้</button></div>`}
+function build(){const L=list(),last=LS.get('murim_wlast',null);
+ return`<div class="wpH"><b>🌏 เลือกโลกที่จะไปเกิด</b><span class="sp"></span><button onclick="wpRand()">🎲 สุ่มโลก</button></div>
+ <div class="wpS">${L.map(card).join('')}</div><div class="wDots">${L.map(()=>'<i></i>').join('')}</div>
+ <div class="wpC"><span>🔥 ความท้าทาย</span>${CHAL.map(c=>`<button data-c="${c[0]}" onclick="wpChal(${c[0]})">${c[1]} ${c[2]}</button>`).join('')}<span style="margin-left:6px">⏱️</span><button class="spd" onclick="wpSpd()"></button></div>
+ <div class="wpNote"></div>`}
+function paint(){const P=$$('wPick');if(!P)return;const k=SEL||cur(),w=W.find(x=>x.k===k)||W[0];
+ P.querySelectorAll('.wc').forEach(c=>c.classList.toggle('on',c.dataset.k===k));
+ P.querySelectorAll('.wpC button[data-c]').forEach(b=>{b.disabled=!w.ch;b.classList.toggle('on',!!w.ch&&+b.dataset.c===(CFG.chm|0))});
+ const sb=P.querySelector('.wpC .spd');if(sb){const s=SPD.find(x=>x[0]===CFG.len)||SPD[1];sb.textContent=s[1]+' ▾'}
+ const n=P.querySelector('.wpNote');if(n){const ch=CHAL.find(c=>c[0]===(CFG.chm|0));n.textContent=w.ch?`เลือกแล้ว: ${w.ic} ${w.n}${ch&&ch[0]?` · ${ch[1]} ${ch[2]}`:''} — กดปุ่มเริ่มเล่นหรือ ▶ บนการ์ดได้เลย`:`เลือกแล้ว: ${w.ic} ${w.n} — โลกนี้มีความท้าทายในตัวอยู่แล้ว`}}
+function dots(){const P=$$('wPick');if(!P)return;const S0=P.querySelector('.wpS'),cs=[...P.querySelectorAll('.wc')],ds=[...P.querySelectorAll('.wDots i')];if(!S0||!cs.length)return;const mid=S0.scrollLeft+S0.clientWidth/2;let bi=0,bd=1e9;cs.forEach((c,i)=>{const d=Math.abs(c.offsetLeft+c.offsetWidth/2-mid);if(d<bd){bd=d;bi=i}});ds.forEach((d,i)=>d.classList.toggle('on',i===bi))}
+function mount(){try{const T=$$('title');if(!T||!T.classList.contains('on'))return;let P=$$('wPick');const box=T.querySelector('.box.opts'),st=$$('tStartIn');
+ const boxVis=!!(box&&getComputedStyle(box).display!=='none'),stVis=!!(st&&st.offsetParent);
+ if(!P){P=document.createElement('div');P.id='wPick';P.innerHTML=build();P.querySelector('.wpS').addEventListener('scroll',dots,{passive:true});P._new=1}
+ if(stVis&&!boxVis){if(box)box.classList.remove('wpOn');if(P.previousElementSibling!==st)st.insertAdjacentElement('afterend',P)}
+ else if(box){box.classList.add('wpOn');if(P.parentNode!==box||box.firstElementChild!==P)box.prepend(P)}else return;
+ if(P._new){P._new=0;setTimeout(()=>{try{const k=SEL||cur(),c=P.querySelector(`.wc[data-k="${k}"]`),sc=P.querySelector('.wpS');if(c&&sc)sc.scrollLeft=c.offsetLeft-(sc.clientWidth-c.offsetWidth)/2;dots()}catch(e){}},80)}
+ paint()}catch(e){console.error('wpick',e)}}
+setInterval(mount,1200);setTimeout(mount,300);
+// เปิดหน้าแรกใหม่ → ล้างการเลือกชั่วคราว (ใช้ค่าจริงจาก CFG)
+{const _sh=show;show=function(id){if(id==='title')SEL=null;return _sh.apply(this,arguments)}}
+})()}catch(e){console.error('block67',e)}
