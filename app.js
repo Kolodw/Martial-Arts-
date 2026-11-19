@@ -46171,3 +46171,144 @@ const xhN=()=>Object.keys(VB().xh||{}).length,devN=()=>Object.keys(VB().dev||{})
 {const _go=goalOffer;goalOffer=function(r0){try{const soul=(CH_KEYS[CFG.chm]==='soul'&&!CFG.mw&&!CFG.daily)||(S&&S.alive&&S.ch==='soul');if(soul){const r=r0||roll,L=GOALS.filter(g=>g.soul).sort(()=>Math.random()-.5),twin=!!(r&&r.svO&&((r.svO.sp||[]).length>=2||r.svO.twin));const out=[];
  const pk=f=>{const g=L.find(x=>f(x)&&!x.xsp&&!out.includes(x.id));if(g)out.push(g.id)};pk(g=>g.lv<=2);pk(g=>g.lv===3);pk(g=>g.lv===4);pk(g=>g.lv>=5);void twin;return out}}catch(e){}return _go.apply(this,arguments)}}
 })()}catch(e){console.error('goalBS',e)}
+
+// ============================================================
+// BLOCK 73: 🖥️ จอคอมเต็มรูปแบบ
+//   หน้าสุ่มกำเนิด 3 คอลัมน์ (ตัวละคร+ร่างตามวัย+ประวัติสุ่ม | การ์ดกำเนิด | แผงชะตา+ปุ่ม) · ชาติที่หายากที่สุดที่เคยสุ่มได้
+//   ในเกม: กราฟชีวิต + คนสำคัญ (แผงซ้าย) · แผงขวาเป็นแท็บ + ภารกิจวันนี้/บอสโลก · ไทม์ไลน์อายุข้างบันทึก · ปุ่ม ? คีย์ลัด
+//   หน้าแรก: เกร็ดเกมแทนกล่องข่าวว่าง + ⚡ ประกาศิตฟ้า/🐉 บอสโลกสด · หน้าต่างกว้าง 2 คอลัมน์
+// ============================================================
+try{(()=>{
+const $$=id=>document.getElementById(id);
+const W=()=>innerWidth>=1100;
+const N2=n=>{try{return oddsTxt(1/Math.max(1,n))}catch(e){return'1 ใน '+Math.round(n)}};
+const css=document.createElement('style');css.textContent=`
+/* ================= หน้าสุ่มกำเนิด ================= */
+body #birth.bdk.on{display:grid!important;grid-template-columns:270px minmax(0,1fr) 350px!important;gap:14px 16px!important;align-items:start!important;max-width:1480px!important;width:100%!important;margin:0 auto!important;padding:14px 18px 30px!important;box-sizing:border-box}
+body #birth.bdk.on>*{grid-row:auto!important}
+body #birth.bdk.on>#bBack{grid-column:1/-1;justify-self:start;width:auto}
+body #birth.bdk.on>h2{grid-column:1/-1;margin:0;text-align:center;font-size:26px}
+body #birth.bdk.on>#bWld{grid-column:1/-1;justify-content:center}
+body #birth.bdk.on>#bdL{grid-column:1;position:sticky;top:12px}
+body #birth.bdk.on>.hcard{grid-column:2;margin:0!important;width:auto!important;max-width:none!important}
+body #birth.bdk.on>#bdR{grid-column:3;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;scrollbar-width:thin}
+body #birth.bdk.on>:not(#bBack):not(h2):not(#bWld):not(#bdL):not(.hcard):not(#bdR){grid-column:2}
+#birth.bdk #traits{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important}
+#birth.bdk #traits .trait{width:auto!important;margin:0!important}#birth.bdk #traits .trait.wide{grid-column:span 2}
+#bdL .bdC,#bdR .bdC{border-radius:16px;padding:12px;margin:0 0 12px;background:linear-gradient(160deg,#ffffff10,#ffffff04);border:1px solid #ffffff1c}
+#bdL .row1{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+#bdL .bstage{width:100%!important;max-width:230px;height:auto!important;aspect-ratio:136/150}#bdL #bAva{width:100%!important;height:100%!important;image-rendering:pixelated}
+#bdL .bname{width:100%}#bdL #nameOut{font-size:22px}#bdL .btags{justify-content:center}
+.bdAge{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px}.bdAge div{text-align:center;font-size:10.5px;color:var(--mut)}.bdAge canvas{width:100%;aspect-ratio:1;image-rendering:pixelated;border-radius:10px;background:#0004;border:1px solid #ffffff18;display:block;margin-bottom:3px}
+.bdH{font-size:12.5px;font-weight:800;color:#ffd98a;margin:0 0 7px}
+.bdHi{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;background:#00000026;margin:4px 0;font-size:12px}.bdHi b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bdHi span{flex:0 0 auto;font-weight:800}
+.bdBest{text-align:center}.bdBest .n{font-size:20px;font-weight:900;background:linear-gradient(90deg,#fff3b0,#ffd040,#fff3b0);-webkit-background-clip:text;background-clip:text;color:transparent}
+#bdR #oddsBox{margin:0 0 12px!important;width:auto!important}
+#bdR .brow{position:static!important;display:grid!important;grid-template-columns:1fr 1.3fr 1fr;gap:8px;width:auto!important;margin:0 0 12px!important;padding:0!important;background:none!important;box-shadow:none!important;transform:none!important}
+#bdR .brow #vaBtn{grid-column:1/-1}#bdR .brow button{width:100%!important;margin:0!important}
+#bdR #lkRow,#bdR #goalBox{margin:0 0 12px!important;width:auto!important}
+/* ================= ในเกม ================= */
+#dkLife .lg{display:flex;gap:10px;font-size:11px;color:var(--mut);margin:4px 0 2px}#dkLife .lg i{display:inline-block;width:10px;height:3px;border-radius:2px;margin-right:4px;vertical-align:middle}
+#dkLife svg{width:100%;height:84px;display:block}
+.dkPpl{display:flex;flex-direction:column;gap:5px;margin-top:8px}.dkPpl div{display:flex;gap:8px;align-items:center;padding:6px 8px;border-radius:10px;background:#00000022;font-size:12.5px}.dkPpl i{font-style:normal;font-size:17px}.dkPpl small{margin-left:auto;color:var(--mut)}
+#dkTabs{display:flex;gap:4px;flex-wrap:wrap;margin:10px 0 8px}#dkTabs button{flex:1 1 auto;font:inherit;font-size:12px;font-weight:800;padding:6px 6px;border-radius:999px;border:1px solid #ffffff22;background:#ffffff0a;color:var(--ink);cursor:pointer}
+#dkTabs button.on{background:linear-gradient(160deg,#ffe48a,#e0a020);color:#2a1a04;border-color:#ffd86a}
+#dkFn.dkT .dk-grp{display:none}#dkFn.dkT .dk-grp.on{display:block}#dkFn.dkT .dk-grp>h5{display:none}
+#dkAqC{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 10px}#dkAqC button{display:flex;flex-direction:column;gap:1px;padding:8px 9px;border-radius:12px;border:1px solid #e8b54a66;background:linear-gradient(160deg,#3a2a0a,#1a1426);color:#fff3d8;font:inherit;text-align:left;cursor:pointer;position:relative}
+#dkAqC button b{font-size:12.5px}#dkAqC button small{font-size:10.5px;color:#c9bfa8}#dkAqC .hp{height:4px;border-radius:3px;background:#0006;overflow:hidden;margin-top:3px}#dkAqC .hp i{display:block;height:100%;background:linear-gradient(90deg,#ff3a2a,#ffb040)}
+body.desk #deskC{position:relative}
+#fdRail{position:absolute;right:2px;width:40px;display:flex;flex-direction:column;gap:3px;overflow:hidden;z-index:2;pointer-events:auto}
+#fdRail button{font:inherit;font-size:10.5px;font-weight:800;padding:3px 0;border-radius:8px;border:1px solid #ffffff1c;background:#0000003a;color:var(--mut);cursor:pointer;line-height:1.2}#fdRail button.ep{color:#ffd86a;border-color:#e8b54a66}#fdRail button.now{background:#e8b54a33;color:#fff}
+body.desk.fdR #feed{padding-right:46px!important}
+#kbHelp{position:absolute;left:8px;bottom:8px}
+.kbT{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;font-size:13px}.kbT kbd{font:inherit;font-weight:800;font-size:12px;padding:3px 9px;border-radius:7px;background:#ffffff14;border:1px solid #e8b54a66;color:#ffe7a8;text-align:center;min-width:28px}
+body.royal #lkRow{background:linear-gradient(160deg,#2a2210,#1a1626)!important;border-color:#e8b54a88!important;color:var(--ink)!important}body.royal #lkRow .lkb{background:linear-gradient(160deg,#ffffff14,#ffffff05)!important;color:var(--ink)!important;border-color:#e8b54a55!important}body.royal #lkRow .lkb.on{background:linear-gradient(160deg,#ffe48a,#e0a020)!important;color:#2a1a04!important}body.royal #lkRow .lkb small{color:var(--mut)!important}body.royal #lkRow .lkb.on small{color:#3a2608!important}body.royal #lkRow .lkx{background:#ffffff08!important;color:var(--ink)!important}
+/* ================= หน้าแรก ================= */
+#tsHq{cursor:pointer}#tsHq .r{display:flex;gap:9px;align-items:center;padding:7px 0}#tsHq .r+.r{border-top:1px solid #ffffff12}#tsHq .r i{font-style:normal;font-size:22px}#tsHq b{display:block;font-size:13px;color:#ffe7a8}#tsHq small{font-size:11px;opacity:.8}
+#tsHq .hp{height:5px;border-radius:3px;background:#0006;overflow:hidden;margin-top:3px}#tsHq .hp i{display:block;height:100%;background:linear-gradient(90deg,#ff3a2a,#ffb040)}
+.tsTip{font-size:12.5px;line-height:1.55;min-height:58px;transition:opacity .4s}
+/* ================= หน้าต่างกว้าง ================= */
+@media (min-width:1100px){.stWrap .stBody:not(:has(>.sh2)):not(.stSup){display:grid;grid-template-columns:1fr 1fr;gap:0 10px;align-items:start}.stWrap .stBody>.stSec,.stWrap .stBody>.stFr,.stWrap .stBody>.stNote,.stWrap .stBody>.aqRw,.stWrap .stBody>.aqCard{grid-column:1/-1}
+ .aqWrap .aqSecG{grid-template-columns:repeat(3,1fr)}.aqWrap .aqBk{grid-template-columns:repeat(10,1fr)}}
+`;document.head.appendChild(css);
+
+// ================= 🐣 หน้าสุ่มกำเนิด =================
+let moved=null;
+function bLayout(){try{const B=$$('birth');if(!B)return;const hc=B.querySelector('.hcard');if(!hc)return;const want=W()&&B.classList.contains('on');
+ if(want&&!B.classList.contains('bdk')){B.classList.add('bdk');const L=document.createElement('div');L.id='bdL';const R=document.createElement('div');R.id='bdR';hc.before(L);hc.after(R);
+  const r1=hc.querySelector('.row1'),ob=$$('oddsBox'),br=B.querySelector('.brow'),lk=$$('lkRow'),gb=$$('goalBox');
+  moved={r1,lk,ob,gb,br,obN:ob&&ob.nextSibling};
+  const c1=document.createElement('div');c1.className='bdC';if(r1)c1.appendChild(r1);c1.insertAdjacentHTML('beforeend','<div class="bdAge" id="bdAge"></div>');L.appendChild(c1);
+  L.insertAdjacentHTML('beforeend','<div class="bdC bdBest" id="bdBest"></div><div class="bdC" id="bdHist"></div>');
+  [ob,br,lk,gb].forEach(e=>e&&R.appendChild(e));paint()}
+ else if(!want&&B.classList.contains('bdk')&&moved){B.classList.remove('bdk');const L=$$('bdL'),R=$$('bdR');
+  if(moved.r1)hc.prepend(moved.r1);if(moved.lk)hc.appendChild(moved.lk);[moved.ob,moved.gb,moved.br].forEach(e=>e&&B.appendChild(e));if(L)L.remove();if(R)R.remove();moved=null}}catch(e){console.error('bLayout',e)}}
+let lastSeed=null;
+function paint(){try{if(!roll||!$$('bdAge'))return;const A=$$('bdAge');if(A.dataset.s!==String(roll.seed)+(roll.g&&roll.g.v.n)){A.dataset.s=String(roll.seed)+(roll.g&&roll.g.v.n);
+  A.innerHTML=[[6,'เด็ก'],[25,'หนุ่มสาว'],[72,'ชรา']].map(a=>`<div><canvas width="96" height="96" data-a="${a[0]}"></canvas>${a[1]}</div>`).join('');
+  A.querySelectorAll('canvas').forEach(cv=>{try{drawPortrait(cv,rollLook(roll,+cv.dataset.a),true)}catch(e){}})}
+ const H=LS.get('murim_rhist',[])||[],Bst=LS.get('murim_rbest',null);
+ const hb=$$('bdHist');if(hb)hb.innerHTML=`<div class="bdH">🕘 สุ่มล่าสุด</div>`+(H.length?H.slice(0,6).map((h,i)=>`<div class="bdHi"${i===0?' style="outline:1px solid #e8b54a66"':''}><b>${esc(h.n)}</b><span class="t${h.r||0}">${N2(h.N)}</span></div>`).join(''):'<div class="tag2">ยังไม่มี</div>');
+ const bb=$$('bdBest');if(bb)bb.innerHTML=Bst?`<div class="bdH">🏆 ชาติที่หายากที่สุดที่เคยสุ่มได้</div><div class="n">${N2(Bst.N)}</div><div class="tag2">${esc(Bst.n)} · ${esc(Bst.d||'')}</div>`:`<div class="bdH">🏆 ชาติที่หายากที่สุด</div><div class="tag2">สุ่มไปเรื่อย ๆ แล้วจะบันทึกไว้ที่นี่</div>`}catch(e){console.error('bdPaint',e)}}
+function record(){try{if(!roll)return;const key=String(roll.seed)+'|'+(roll.f&&roll.f.v.n)+'|'+(roll.t&&roll.t.v.n);if(key===lastSeed)return;lastSeed=key;
+ const N=roll.rare&&roll.rare.n?roll.rare.n:1/Math.max(1e-12,roll.p*(roll.era?roll.era.p:1));const n=(($$('nameOut')||{}).textContent||'').trim()||'ไร้นาม';let r=0;try{r=rarOf(1/N)}catch(e){}
+ const d=[roll.f&&roll.f.v.n,roll.t&&roll.t.v.n].filter(Boolean).join(' · ');const H=LS.get('murim_rhist',[])||[];H.unshift({n,N,r,d,t:Date.now()});LS.set('murim_rhist',H.slice(0,8));
+ const B=LS.get('murim_rbest',null);if(!B||N>B.N){LS.set('murim_rbest',{n,N,d,t:Date.now()});if(B&&N>B.N*1.0001)setTimeout(()=>{try{toast(`🏆 สถิติใหม่! ชาติที่หายากที่สุดที่เคยสุ่มได้ — ${N2(N)}`)}catch(e){}},1600)}}catch(e){}}
+{const _dr=doRoll;doRoll=function(){const r=_dr.apply(this,arguments);setTimeout(()=>{record();bLayout();paint()},60);return r}}
+setInterval(()=>{bLayout();if($$('bdL'))paint()},800);addEventListener('resize',bLayout);
+
+// ================= 🎮 ในเกม: กราฟชีวิต + คนสำคัญ =================
+{const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(S&&S.alive&&S.age!==a0){const H=S.lfH||(S.lfH=[]);let tp=0;try{tp=total()}catch(e){}H.push([S.age|0,Math.round(tp),Math.round(S.joy||0),Math.round(S.money||0)]);if(H.length>240){for(let i=1;i<H.length-1;i+=2)H.splice(i,1)}}}catch(e){}return r}}
+function spark(H,i,col,w,h){const v=H.map(x=>x[i]),mn=Math.min(...v),mx=Math.max(...v),rg=mx-mn||1;return`<polyline fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" points="${v.map((y,k)=>`${(k/(v.length-1||1)*w).toFixed(1)},${(h-3-(y-mn)/rg*(h-8)).toFixed(1)}`).join(' ')}"/>`}
+function lifePanel(){try{if(!document.body.classList.contains('desk')||!S||!S.alive)return;const L=$$('deskL');if(!L)return;let P=$$('dkLife');
+ if(!P){P=document.createElement('div');P.id='dkLife';P.className='box dk-panel';L.appendChild(P)}
+ const H=(S.lfH||[]).slice(-120);const sig=H.length+'|'+(S.spouse&&S.spouse.n)+'|'+(S.ix&&S.ix.rv&&S.ix.rv.w)+'|'+(S.nemesis&&S.nemesis.n);if(P.dataset.s===sig)return;P.dataset.s=sig;
+ const g=H.length>=2?`<svg viewBox="0 0 280 84" preserveAspectRatio="none">${spark(H,1,'#ffb040',280,84)}${spark(H,2,'#6ad88a',280,84)}${spark(H,3,'#7ab4ff',280,84)}</svg>`:'<div class="tag2" style="padding:20px 0;text-align:center">กราฟจะขึ้นเมื่อผ่านไปสักสองสามปี</div>';
+ const ppl=[];if(S.spouse&&S.spouse.n)ppl.push(['💞',S.spouse.n,'คู่ครอง']);const rv=S.ix&&S.ix.rv;if(rv&&rv.n)ppl.push(['🎯',rv.n,`คู่ปรับ · ชนะ ${rv.w||0} แพ้ ${rv.l||0}`]);if(S.nemesis&&S.nemesis.n)ppl.push(['⚔️',S.nemesis.n,'ศัตรู']);
+ const kids=Math.max(+S.kids||0,(S.children||[]).length);if(kids)ppl.push(['👶',`ลูก ${kids} คน`,'']);
+ P.innerHTML=`<h5>📈 กราฟชีวิต</h5><div class="lg"><span><i style="background:#ffb040"></i>พลัง</span><span><i style="background:#6ad88a"></i>ความสุข</span><span><i style="background:#7ab4ff"></i>เงิน</span></div>${g}
+  <h5 style="margin-top:10px">👥 คนสำคัญ</h5><div class="dkPpl">${ppl.length?ppl.map(p=>`<div><i>${p[0]}</i><b>${esc(p[1])}</b><small>${p[2]}</small></div>`).join(''):'<div class="tag2">ยังไม่มีใครเข้ามาในชีวิตมากพอ</div>'}</div>`}catch(e){console.error('lifeP',e)}}
+setInterval(lifePanel,2500);
+
+// ================= แผงขวา: แท็บ + ภารกิจวันนี้/บอสโลก =================
+let WBc=null,WBt=0;
+async function wbFetch(){if(Date.now()-WBt<5*60e3||!onlineOK)return;WBt=Date.now();try{WBc=await api('wb')}catch(e){}}
+function rightPanel(){try{if(!document.body.classList.contains('desk'))return;const R=$$('dkFn');if(!R)return;const G=[...R.querySelectorAll(':scope>.dk-grp')];if(G.length<2)return;
+ if(!$$('dkTabs')){const q=R.querySelector('.dk-q');const t=document.createElement('div');t.id='dkTabs';G.forEach((g,i)=>{const h=g.querySelector('h5');const b=document.createElement('button');b.type='button';b.textContent=(h?h.textContent:'หมวด '+(i+1)).trim();b.onclick=()=>{LS.set('murim_dktab',i);rightPanel()};t.appendChild(b)});(q||G[0]).after(t);R.classList.add('dkT')}
+ const tb=[...$$('dkTabs').children];if(tb.length!==G.length){$$('dkTabs').remove();return rightPanel()}let ix=LS.get('murim_dktab',0);if(ix>=G.length)ix=0;G.forEach((g,i)=>g.classList.toggle('on',i===ix));tb.forEach((b,i)=>b.classList.toggle('on',i===ix));
+ let C=$$('dkAqC');if(!C){C=document.createElement('div');C.id='dkAqC';R.prepend(C);wbFetch()}
+ let dq=0;try{dq=((LS.get('murim_aq',{})||{}).d||{}).q.filter(q=>q.ok).length}catch(e){}const W0=WBc&&WBc.ok?WBc:null;
+ const h=`<button onclick="openAQ('d')"><b>📜 ภารกิจวันนี้ ${dq}/3</b><small>${dq>=3?'ครบแล้ว — รับตั๋ว':'ครบ 3 ข้อได้ 🎫 ตั๋ว'}</small><i class="aqDot" style="display:none"></i></button><button onclick="openAQ('wb')"><b>${W0?W0.ic+' บอสโลก':'🐉 บอสโลก'}</b><small>${W0?(W0.ph==='on'?`เลือดเหลือ ${Math.round(W0.hp/W0.mx*100)}%`:W0.ph==='dead'?'ล้มแล้ว · รับรางวัล':'หนีไปแล้ว'):'ช่วยกันตีทั้งเว็บ'}</small>${W0&&W0.ph==='on'?`<div class="hp"><i style="width:${W0.hp/W0.mx*100}%"></i></div>`:''}</button>`;
+ if(C.dataset.h!==h){C.dataset.h=h;C.innerHTML=h}}catch(e){console.error('rp',e)}}
+setInterval(()=>{rightPanel();wbFetch()},2000);
+
+// ================= ไทม์ไลน์อายุข้างบันทึก =================
+function rail(){try{const on=document.body.classList.contains('desk')&&$$('game')&&$$('game').classList.contains('on');document.body.classList.toggle('fdR',!!on);const F=$$('feed'),C=$$('deskC');let R=$$('fdRail');
+ if(!on||!F||!C){if(R)R.style.display='none';return}if(!R){R=document.createElement('div');R.id='fdRail';C.appendChild(R)}R.style.display='';
+ const fr=F.getBoundingClientRect(),cr=C.getBoundingClientRect();R.style.top=(fr.top-cr.top+4)+'px';R.style.height=Math.max(60,fr.height-8)+'px';
+ const Y=[...F.querySelectorAll(':scope>.yr')];const sig=Y.length+'|'+F.childElementCount;if(R.dataset.s===sig)return;R.dataset.s=sig;
+ const max=Math.max(4,Math.floor((fr.height-8)/24));const pick=Y.slice(-max);
+ R.innerHTML=pick.map((y,i)=>{const a=(y.textContent.match(/\d+/)||[''])[0];let ep=0,n=y.nextElementSibling,k=0;while(n&&!n.classList.contains('yr')&&k++<40){if(/\b(epic|myth|good)\b/.test(n.className)){ep=1;break}n=n.nextElementSibling}return`<button class="${ep?'ep':''}${i===pick.length-1?' now':''}" data-i="${Y.length-pick.length+i}" title="อายุ ${a} ปี">${a}</button>`}).join('');
+ R.querySelectorAll('button').forEach(b=>b.onclick=()=>{const y=[...F.querySelectorAll(':scope>.yr')][+b.dataset.i];if(y)y.scrollIntoView({behavior:'smooth',block:'start'})})}catch(e){}}
+setInterval(rail,1500);addEventListener('resize',rail);
+
+// ================= ⌨️ คีย์ลัด ? =================
+window.openKeys=function(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>⌨️ คีย์ลัดบนคอม</h3><div class="kbT">
+<kbd>Space</kbd><span>หยุด / เล่นต่อ</span><kbd>S</kbd><span>เปลี่ยนความเร็ว</span><kbd>A</kbd><span>เปิด/ปิดออโต้</span><kbd>1–9</kbd><span>เลือกโฟกัส</span>
+<kbd>F</kbd><span>ย่อ/เปิดแผงโฟกัส</span><kbd>V</kbd><span>ขนาดภาพฉาก (ปกติ · เล็ก · ซ่อน)</span><kbd>Esc</kbd><span>ปิดหน้าต่าง</span><kbd>?</kbd><span>หน้านี้</span>
+<kbd>Space / Enter</kbd><span>เริ่มมินิเกม (ในหน้าแตะเพื่อเริ่ม)</span></div>`,'keys')};
+document.addEventListener('keydown',e=>{try{if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if(e.key==='?'&&!modalOpen){e.preventDefault();openKeys()}}catch(x){}});
+setInterval(()=>{try{const k=document.querySelector('#dkFn .dk-keys');if(k&&!k.querySelector('.kbMore')){k.insertAdjacentHTML('beforeend',' <a href="#" class="kbMore" onclick="openKeys();return false" style="color:#ffd98a;font-weight:800">⌨️ ทั้งหมด (?)</a>')}}catch(e){}},2000);
+
+// ================= 🏠 หน้าแรกจอกว้าง: เกร็ดเกม + ประกาศิตฟ้า/บอสโลกสด =================
+const TIPS=['💡 กด <b>?</b> ในเกมเพื่อดูคีย์ลัดทั้งหมด','💡 ภารกิจรายวันครบ 3 ข้อ ได้ตั๋วสุ่มเกิดฟรี + พรภารกิจชีวิตหน้า','💡 <b>⚡ ประกาศิตฟ้า</b> — ทั้งเว็บมีผู้พิชิตได้คนเดียว ผู้พิชิตได้ตั๋วทอง 3 ใบ','💡 ลองโลก <b>⭕ จิตวิญญาณยุทธ์</b> — ลางในฝันบอกใบ้ดวงจิตที่จะได้','💡 เลือกทางเมตตาวันนี้ อาจกลับมาช่วยคุณในอีกหลายสิบปี','💡 มินิเกมยิ่งเล่นยิ่งชำนาญ ★ ขึ้นแล้วรางวัลดีขึ้น','💡 <b>🏁 จบชีวิตนี้</b> อยู่ล่างสุดของเมนู ถ้าอยากปิดฉากเอง','💡 กด F ย่อแผงโฟกัส จะเหลือที่อ่านบันทึกมากขึ้น'];
+let tipI=0;
+function titleWide(){try{const nw=$$('tsNw');if(nw&&!nw.querySelector('.tsTip')&&/เชื่อมต่อออนไลน์|กำลังรอข่าว|ยังไม่มีข่าว/.test(nw.textContent)){nw.innerHTML='<h5>📰 ข่าวยุทธภพ · เกร็ดวันนี้</h5><div class="tsTip"></div>'}
+ const tp=nw&&nw.querySelector('.tsTip');if(tp){tipI=(tipI+1)%TIPS.length;tp.style.opacity=0;setTimeout(()=>{tp.innerHTML=TIPS[tipI];tp.style.opacity=1},380)}
+ if(nw&&!$$('tsHq')){nw.insertAdjacentHTML('beforebegin','<div class="tsC" id="tsHq" onclick="openAQ(\'hq\')"></div>');hqPaint();hqFetch()}}catch(e){}}
+let HQc=null,HQt=0;
+async function hqFetch(){if(!onlineOK||Date.now()-HQt<5*60e3)return;HQt=Date.now();try{HQc=await api('hq')}catch(e){}await wbFetch();hqPaint()}
+function hqPaint(){const el=$$('tsHq');if(!el)return;const H=HQc&&HQc.ok?HQc:null,B=WBc&&WBc.ok?WBc:null;if(!H&&!B){el.innerHTML='<h5>⚡ ประกาศิตฟ้า · 🐉 บอสโลก</h5><div class="tag2">เชื่อมต่อออนไลน์เพื่อดูสด</div>';return}
+ el.innerHTML=`<h5>⚡ สด · ทั้งเว็บ</h5>${H?`<div class="r"><i>⚡</i><div style="flex:1"><b>ประกาศิตฟ้า ครั้งที่ ${H.r}</b><small>${H.ph==='cd'?`พิชิตแล้วโดย ${esc(H.wn)}`:H.ph==='chk'?'มีคนอ้างว่าพิชิตแล้ว รอตรวจ':'ยังไม่มีใครพิชิต — ชิงตั๋วทอง 3 ใบ'}</small></div></div>`:''}${B?`<div class="r" onclick="event.stopPropagation();openAQ('wb')"><i>${B.ic||'🐉'}</i><div style="flex:1"><b>${esc(B.n||'บอสโลก')}</b><small>${B.ph==='on'?`เลือด ${Math.round(B.hp/B.mx*100)}% · ${B.np} คนร่วมตี`:B.ph==='dead'?'ล้มแล้ว':'หนีไปแล้ว'}</small>${B.ph==='on'?`<div class="hp"><i style="width:${B.hp/B.mx*100}%"></i></div>`:''}</div></div>`:''}`}
+setInterval(()=>{if($$('title')&&$$('title').classList.contains('on')&&W()){titleWide();hqFetch()}},4000);setTimeout(titleWide,1500);
+})()}catch(e){console.error('block73',e)}
