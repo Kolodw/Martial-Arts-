@@ -2692,7 +2692,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (!bad && det) {
           const D = JSON.parse(det), st = D.st || {}, kids = (D.kids || []).length, dis = +((String(D.sect || '').match(/ศิษย์\s*([0-9]+)/) || [])[1] || 0);
           const pw = +st.pow || 0, fm = +st.fame || 0, mn = +st.money || 0, ag = Math.max(1, +e.age || 1);
-          const BIG = v => !isFinite(v) || v > 1e150; // ช่วงท้ายเกม (แดนเทพ/กัลป์) ค่าโตเกิน 1e30 ได้จริง if (BIG(+st.int || 0) || BIG(+st.cha || 0) || BIG(fm) || BIG(mn) || kids > 1e7 || BIG(dis) || BIG(pw)) bad = 'stat';
+          const BIG = v => !isFinite(v) || v > 1e300; // ช่วงท้ายเกม (แดนเทพ/กัลป์) ค่าโตมากได้จริง — ตัดเฉพาะค่าพัง if (BIG(+st.int || 0) || BIG(+st.cha || 0) || BIG(fm) || BIG(mn) || kids > 1e7 || BIG(dis) || BIG(pw)) bad = 'stat';
           const powCap = ((e.x ? 60000 : 25000) * (1 + ag / 8) + 300000) * (e.bm ? 12 : 1) * (D.sys ? 3 : 1) * (D.ai ? 3 : 1);
           if (!bad && pw > powCap && ag < 1000) { try { await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(e.n || ''), 24), age: ag, why: 'pow-age', st: { pow: pw, fame: fm, money: mn }, t: now, info: 1 })], ['LTRIM', 'acsus', 0, 199]]) } catch {} }
           if (!bad && ag >= 1000 && pw > powCap * 50) { try { if (await cmd('SET', 'acold:' + id, 1, 'NX', 'EX', 86400)) await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(e.n || ''), 24), age: ag, why: 'pow-old', st: { pow: pw, fame: fm, money: mn }, t: now, info: 1 })], ['LTRIM', 'acsus', 0, 199]]) } catch {} }
