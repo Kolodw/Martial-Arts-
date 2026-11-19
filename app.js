@@ -11835,7 +11835,7 @@ function rkChip(t,tr){const o=RKC_OF(t),p=o?o.p:tr===9?'m':tr===8?'w':'d',r=o?o.
  const md=()=>document.getElementById('modal');
  let sel=null;const scEl=()=>{const m=md();return sel&&m&&m.contains(sel)&&document.contains(sel)?sel:m};f.querySelector('.mfup').onclick=()=>{const el=scEl();try{el.scrollTo({top:0,behavior:'smooth'});if(el!==md())md().scrollTo({top:0,behavior:'smooth'})}catch(e){el.scrollTop=0}};
  f.querySelector('.mfx').onclick=()=>{const m=md();const x=m&&[...m.querySelectorAll('.xbtn')].find(b=>!b.classList.contains('qbtn'));if(x)x.click();else closeM();upd()};
- const upd=()=>{try{const m=md(),el=scEl();const on=modalOpen&&m&&$('mask').classList.contains('on')&&((el.scrollHeight>el.clientHeight+150&&el.scrollTop>120)||(m.scrollHeight>m.clientHeight+150&&m.scrollTop>120));f.classList.toggle('on',!!on);if(on){const R0=m.getBoundingClientRect();f.style.top=Math.max(8,R0.top+8)+'px';f.style.right=Math.max(8,window.innerWidth-R0.right+8)+'px'}}catch(e){}};
+ const upd=()=>{try{const m=md(),el=scEl();const sc=((el.scrollHeight>el.clientHeight+150&&el.scrollTop>120)||(m.scrollHeight>m.clientHeight+150&&m.scrollTop>120)),on=modalOpen&&m&&$('mask').classList.contains('on')&&(sc||!/^(choice|duel|pvask|end|tut)/.test(m.dataset.k||'')||m.querySelector('.xbtn'));f.classList.toggle('nosc',!sc);f.classList.toggle('on',!!on);if(on){const R0=m.getBoundingClientRect();f.style.top=Math.max(8,R0.top+8)+'px';f.style.right=Math.max(8,window.innerWidth-R0.right+8)+'px'}}catch(e){}};
  document.addEventListener('scroll',e=>{const t=e.target,m=md();if(t&&t.nodeType===1&&m&&(t===m||m.contains(t))){if(t!==m)sel=t;upd()}},true);window.addEventListener('resize',upd);setInterval(upd,600);
  const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);f.classList.remove('on');return r}})();
 (function(){const st=document.createElement('style');st.textContent=`
@@ -12503,7 +12503,7 @@ function bkFilter(){const q=String(window._bkQ||'').trim().toLowerCase(),f=windo
 
 // ปุ่มลอย ⬆/✕: แสดงเฉพาะตอนปุ่มปิดเดิมของหน้าเลื่อนพ้นจอไปแล้ว (หน้าที่หัวค้างอยู่ เช่น สารานุกรม คู่มือ คัมภีร์ระดับ จะไม่โผล่มาทับ)
 (function(){const chk=()=>{try{const F=$('mFloat'),m=$('modal');if(!F||!m)return;let hide=false;if(F.classList.contains('on')){const x=[...m.querySelectorAll('.xbtn')].find(b=>!b.classList.contains('qbtn')&&b.offsetParent);if(x){const R=x.getBoundingClientRect(),M=m.getBoundingClientRect();if(R.bottom>M.top+4&&R.top<M.bottom&&R.height>0){const el=document.elementsFromPoint(R.left+R.width/2,R.top+R.height/2).find(e=>!F.contains(e));if(el&&(el===x||x.contains(el)))hide=true}}}F.classList.toggle('mfhide',hide)}catch(e){}};setInterval(chk,250);document.addEventListener('scroll',chk,true);try{const F=$('mFloat');if(F)new MutationObserver(m=>{if(m.some(x=>x.attributeName==='class'&&!/mfhide/.test(String(x.oldValue||''))===false||true))chk()}).observe(F,{attributes:true,attributeFilter:['class','style']})}catch(e){}})();
-(function(){const st=document.createElement('style');st.textContent='#mFloat.mfhide{display:none!important}';document.head.appendChild(st)})();
+(function(){const st=document.createElement('style');st.textContent='#mFloat.mfhide{display:none!important}#mFloat.nosc .mfup{display:none}';document.head.appendChild(st)})();
 
 // ===================== v15.7e ครอบครัวสัตว์อสูร: คู่อายุยืน · ลูกรายตัว · ความผูกพัน · เลือกลูกสืบทอด =====================
 function bMateLife(){const base=R(15,30)*(S.xian?4:1);let rem=0;try{rem=lifeMax()-S.age}catch(e){}return Math.round(Math.max(base,rem*(.35+Math.random()*.4)))}
