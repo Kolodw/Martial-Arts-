@@ -44367,13 +44367,31 @@ const nh=()=>!!(S&&S.alive&&S.beastMode&&!S.beastMode.human);
 
 // ---------- ⚖️ เพดานพลังชีวิตตามโลก: ยุทธภพ/ยุคปัจจุบัน/วิญญาณยุทธ์ 1,000 · โลกเซียน 10,000 · แดนเทพ 100,000 · สัตว์อสูรตามขั้นสายเลือด (สูงสุด 100,000) ----------
 try{(()=>{
-window.hpCap=function(){if(!S)return 1e3;const bm=S.beastMode;if(bm&&!bm.human)return Math.min(1e5,Math.round(1e3*Math.pow(10,Math.min(2,(bm.st||0)/4.5))*(S.xian?10:1)));if(S.xt)return 1e5;if(S.xian)return 1e4;return 1e3};
-function clampHp(){try{if(!S)return;const cap=hpCap();let m=+S.maxHp||0;if(!isFinite(m)||m<=0)return;
- // ใกล้เพดาน: ส่วนที่เพิ่มขึ้นมาใหม่ได้น้อยลงเรื่อย ๆ (ไม่ชนเพดานเร็ว)
- const p=S._hpP;if(p&&m>p&&p>cap*.5){const inc=m-p,k=Math.max(.02,(cap-p)/(cap*.5));const nm=Math.min(cap,p+Math.max(1,Math.round(inc*k)));const d=m-nm;m=nm;S.hp=Math.max(1,(S.hp||0)-d)}
- if(m>cap){const r=Math.max(0,Math.min(1,(S.hp||0)/m));m=cap;S.hp=Math.max(S.hp>0?1:0,Math.round(cap*r))}
- S.maxHp=Math.round(m);if(S.hp>S.maxHp)S.hp=S.maxHp;if(!isFinite(S.hp))S.hp=S.maxHp;S._hpP=S.maxHp}catch(e){}}
+// A) เพดานขยายตามขั้น: ขั้นต่ำสุด ×1 → ขั้นสูงสุด ×3 (สัตว์อสูรขยายตามขั้นสายเลือดอยู่แล้ว)
+const capW=()=>{const bm=S.beastMode;if(bm&&!bm.human)return Math.min(1e5,Math.round(1e3*Math.pow(10,Math.min(2,(bm.st||0)/4.5))*(S.xian?10:1)));if(S.xt)return 1e5;if(S.xian)return 1e4;return 1e3};
+const riS=()=>{try{return Math.max(0,Math.min(7,realmIdx()|0))}catch(e){return 0}};
+window.hpCapBase=function(){if(!S)return 1e3;const c=capW(),bm=S.beastMode;return bm&&!bm.human?c:Math.round(c*(1+2*riS()/7))};
+// C) เลือดโบนัส (แต้มระบบ · ยา/ของที่ตั้งใจเพิ่มเลือด): บวกเกินเพดานได้อีกไม่เกิน +50%
+const bEff=()=>Math.min(Math.max(0,+S.hpB||0),Math.round(hpCapBase()*.5));
+window.hpCap=function(){if(!S)return 1e3;return hpCapBase()+bEff()};
+// B) ส่วนที่ล้น → 🛡️ ความทนทาน (ลดความเสียหาย สูงสุด 40% · ยิ่งเยอะยิ่งได้น้อยลง) · ล้นจากการโตปกตินับ 10%
+window.hpTough=function(){if(!S)return 0;const c=hpCapBase(),x=Math.max(0,(+S.hpB||0)-c*.5)+.1*(+S.hpOv||0);return +(.4*(1-Math.exp(-x/Math.max(1,c)))).toFixed(4)};
+function tough(){try{if(!S||!S.alive)return;const l=S._hpL,t=hpTough();if(l!=null&&t>0&&S.hp<l&&S._hpM===S.maxHp){const g=Math.round((l-S.hp)*t);if(g>0)S.hp=Math.min(S.maxHp,S.hp+g)}S._hpL=S.hp;S._hpM=S.maxHp}catch(e){}}
+window.hpToughTick=tough;
+function clampHp(){try{if(!S)return;tough();const base=hpCapBase(),cap=base+bEff();let m=+S.maxHp||0;if(!isFinite(m)||m<=0)return;
+ // ใกล้เพดาน: ส่วนที่โตเองได้น้อยลงเรื่อย ๆ (ไม่ชนเพดานเร็ว) — ส่วนที่ถูกตัดไปนับเป็นความทนทาน
+ const p=S._hpP;if(p&&m>p&&p>cap*.5){const inc=m-p,k=Math.max(.02,(cap-p)/(cap*.5));const nm=Math.min(cap,p+Math.max(1,Math.round(inc*k)));const d=m-nm;S.hpOv=(+S.hpOv||0)+d;m=nm;S.hp=Math.max(1,(S.hp||0)-d)}
+ if(m>cap){const r=Math.max(0,Math.min(1,(S.hp||0)/m));S.hpOv=(+S.hpOv||0)+(m-cap);m=cap;S.hp=Math.max(S.hp>0?1:0,Math.round(cap*r))}
+ S.maxHp=Math.round(m);if(S.hp>S.maxHp)S.hp=S.maxHp;if(!isFinite(S.hp))S.hp=S.maxHp;S._hpP=S.maxHp;S._hpL=S.hp;S._hpM=S.maxHp}catch(e){}}
 window.clampHp=clampHp;
+// เพิ่มเลือดแบบตั้งใจ → เข้าเลือดโบนัส (แต้มระบบ · พรขั้นธาตุ)
+{const _ap=allocPt;allocPt=function(k){const s=S&&S.sys,had=s&&s.pts>0;try{if(k==='hp'&&had){const v=srkPt('hp');if(v>0){const t0=hpTough(),full=S.maxHp>=hpCap();S.hpB=(+S.hpB||0)+v;S._hpP=null;if(full&&hpTough()>t0)setTimeout(()=>{try{toast(`🛡️ เลือดเต็มเพดาน → ความทนทาน ${(hpTough()*100).toFixed(1)}%`)}catch(e){}},50)}}}catch(e){}return _ap.apply(this,arguments)}}
+{const L=()=>{try{const m=$('modal'),b=m&&m.querySelector('[onclick="allocPt(\'hp\')"] small');if(!b||!S)return;const room=hpCap()-S.maxHp,bx=Math.round(hpCapBase()*.5),bb=Math.min(+S.hpB||0,bx),t=hpTough();const tx=room>0?`+${fmt(srkPt('hp'))} · โบนัส ${fmt(bb)}/${fmt(bx)}`:`เต็ม → 🛡️ ทนทาน ${(t*100).toFixed(1)}%`;if(b.textContent!==tx)b.textContent=tx}catch(e){}};setInterval(()=>{if(modalOpen)L()},400)}
+{const _cd=checkDeath;checkDeath=function(){tough();return _cd.apply(this,arguments)}}
+// ชดเชยเซฟเดิม: แต้มเลือดจากระบบที่เคยใส่ (S.sys.hp) กลับมาเป็นเลือดโบนัส/ความทนทาน
+function fix(){try{if(!S||S._hpFx)return;S._hpFx=1;const sh=+(S.sys&&S.sys.hp)||0;if(sh>0&&!(+S.hpB)){const atCap=S.maxHp>=hpCapBase()*.9;S.hpB=sh;S._hpP=null;if(atCap)S.maxHp=Math.max(S.maxHp,Math.min(hpCap(),S.maxHp+bEff()));clampHp();
+ setTimeout(()=>{try{log(`🛡️ <b>คืนแต้มเลือดจากระบบ</b> — แต้มเลือด ${fmt(sh)} ที่เคยใส่กลายเป็น <b>เลือดโบนัส</b> (เกินเพดานได้ +50%)${hpTough()>0?` และ <b>ความทนทาน ${Math.round(hpTough()*100)}%</b> (ลดความเสียหาย)`:''}`,'epic')}catch(e){}},900)}}catch(e){}}
+setInterval(()=>{try{if(S&&S.alive)fix()}catch(e){}},2000);
 {const _py=passYear;passYear=function(){clampHp();const r=_py.apply(this,arguments);clampHp();return r}}
 {const _rd=render;render=function(){clampHp();return _rd.apply(this,arguments)}}
 {const _sg=saveGame;saveGame=function(){clampHp();return _sg.apply(this,arguments)}}
