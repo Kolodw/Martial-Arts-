@@ -28852,7 +28852,8 @@ const satAdd=v=>{AB().sat=clamp(AB().sat+v,0,100)};const fx=(o)=>{const F=AB().f
 const seal=(why)=>{const A=AB();if(A.seals>=3)return;A.seals++;log(`🧩 ได้เศษผนึกแดนต้องห้าม (${A.seals}/3)${why?' — '+why:''}`,'epic',A.seals>=3)};
 const rumor=(i,kind)=>{const others=AB().L.filter(l=>!l.own&&l.k.alive&&l.i!==i);if(others.length)later(R(2,4),'rum',{i:pick(others).i,kind,from:i})};
 // ---- แผนที่ ----
-window.openDz=function(){if(!dzOn())return;const A=AB(),G=GATE[A.gate],yr=S.age-A.y0,fr=A.fr&&A.fr.on;
+const thrFix=()=>{try{const A=AB();if(A&&!A.throne&&A.L&&A.L[4]&&A.L[4].own)dzThrone()}catch(e){}};
+window.openDz=function(){if(!dzOn())return;thrFix();const A=AB(),G=GATE[A.gate],yr=S.age-A.y0,fr=A.fr&&A.fr.on;
  if(fr)return openFz();
  const cell=l=>`<button class="dzc ${l.own?'own':''} ${l.k.alive?'':'dead'}" onclick="dzLand(${l.i})"><span class="ic">${l.ic}</span><b>${l.n}</b><small>${l.own?'👑 ของคุณ'+(l.love?' · ทาสรักคุณ':''):l.k.alive?`${l.k.t} ${l.k.n}${l.k.vas?' · คุณเป็นขุนพล':''}${l.k.sp?' · ไว้ชีวิตไว้':''}`:'ว่าง — ไร้เจ้าของ'}</small>${l.slv&&!l.own?'<i>⛓️</i>':''}</button>`;
  const ex=dzExits();
@@ -28885,15 +28886,18 @@ const i4=l=>l.i===4;
 function dzThrone(){const A=AB();A.throne=1;S.flags.abKing=1;const g=pw(.2);log(`👑 <b>คุณนั่งลงบนบัลลังก์กลางของแดนอสูร</b> — ราชันทุกแคว้นที่เหลือส่งบรรณาการมาภายในเจ็ดวัน · พลังยุทธ์ +${fmt(g)}`,'myth',true);try{keyAdd('จักรพรรดิแดนอสูร')}catch(e){}
  if(!S.asr)S.asr={army:Math.round(A.arm*3+mpOf()/10),lands:0,y:-1};else S.asr.army+=Math.round(A.arm*3);log('☁️ ทัพอสูรทั้งแดนรอคำสั่ง — ยกทัพขึ้นสวรรค์ได้ที่หน้าบารมีมาร','epic')}
 // ---- ทางออก ----
-function dzExits(){const A=AB();return[
- {k:'throne',ic:'👑',n:'นั่งบัลลังก์กลาง',d:'ครองแดนอสูร แล้วยกทัพขึ้นสวรรค์',ok:!!A.throne,need:'ยึดบัลลังก์กลาง (ต้องมี 5 แคว้นก่อน)'},
+function dzExits(){const A=AB();thrFix();const on=owned(),cOwn=!!(A.L[4]&&A.L[4].own);return[
+ {k:'throne',ic:'👑',n:'นั่งบัลลังก์กลาง',d:'ครองแดนอสูร แล้วยกทัพออกจากแดนนี้ได้',ok:!!A.throne,need:on<5?`ครองให้ได้ 5 แคว้นก่อน (ตอนนี้ ${on}/5) แล้วยึดบัลลังก์กลาง`:cOwn?'กำลังขึ้นครองบัลลังก์':`ครบ 5 แคว้นแล้ว — แตะช่อง "${A.L[4].n}" ตรงกลางแผนที่ แล้วดวลชิงบัลลังก์ (ปีละ 1 ครั้ง)`},
  {k:'heaven',ic:'☁️',n:'ล้างบาปกลับแดนเทพ',d:'ต้องทรยศใครสักฝ่ายในแดนอสูร',ok:A.fx.spy>=60&&A.spyOk===1,need:'รับงานสายลับแดนเทพ และสายลับไว้ใจ 60+'},
  {k:'refuge',ic:'⛓️',n:'พาผู้ลี้ภัยกลับยุทธภพ',d:'เปิดประตูให้คนนับหมื่น แต่คุณต้องอยู่เฝ้าประตูตลอดไป (จบชีวิตนี้)',ok:A.fx.slave>=60&&(S.karma||0)>=0,need:'ทาสและผู้ลี้ภัยไว้ใจ 60+ และกรรมไม่ติดลบ'},
  {k:'deep',ic:'🌑',n:'เดินลึกลงไปแดนต้องห้าม',d:'ไม่สนบัลลังก์ — ลงไปหาสิ่งที่ถูกขังไว้ก่อนจักรวาล',ok:A.seals>=3,need:'เศษผนึก 3 ชิ้น (ได้จากแคว้นที่ยึด)'},
  {k:'sink',ic:'🩸',n:'จมหายเป็นอสูรไร้ชื่อ',d:'ทางที่ไม่มีใครเลือกเอง — เกิดเมื่อสติหมด',ok:false,need:'เกิดเองเมื่อสติเหลือ 0'}]}
 window.dzExitMenu=function(){const L=dzExits();closeM();choice('🚪 ทางออกจากแดนอสูร','ไม่มีทางไหนถูกที่สุด — แต่ละทางพรากบางอย่างไปเสมอ',L.filter(x=>x.k!=='sink').map(x=>({t:`${x.ic} ${x.n}${x.ok?'':' 🔒'}`,s:x.ok?x.d:'ต้อง: '+x.need,f(){if(!x.ok){toast('🔒 '+x.need);return setTimeout(openDz,300)}dzExit(x.k)}})).concat([{t:'↩️ กลับแผนที่',s:'',skip:1,f(){openDz()}}]))};
 function dzExit(k){const A=AB();
- if(k==='throne'){log('👑 คุณคือจักรพรรดิแดนอสูรแล้ว — ใช้ทัพที่หน้าบารมีมาร (🩸) เพื่อบุกสวรรค์ หรือเดินลึกลงไปแดนต้องห้ามต่อ','epic');return openDm&&openDm()}
+ if(k==='throne'){return choice('👑 จักรพรรดิแดนอสูร','บัลลังก์เป็นของคุณแล้ว — จะทำอะไรต่อ?',[
+  {t:'🚪 ยกทัพออกจากแดนอสูร',s:'กลับไปโลกเดิมพร้อมทัพอสูร · ยังเป็นจักรพรรดิ (ส่งบรรณาการทุกปี)',f(){A.on=0;satAdd(0);log('👑 <b>คุณก้าวออกจากประตูแดนอสูร</b> ทัพอสูรนับหมื่นเดินตามหลัง — ราชันทั้งเก้าแคว้นยังส่งบรรณาการตามมาทุกปี','myth',true);try{keyAdd('จักรพรรดิแดนอสูรที่ยกทัพกลับขึ้นมา')}catch(e){}render()}},
+  {t:'🩸 อยู่ครองต่อ แล้วใช้ทัพบุกสวรรค์',s:'เปิดหน้าบารมีมาร',f(){log('👑 คุณเลือกอยู่บนบัลลังก์ต่อ — ทัพอยู่ที่หน้าบารมีมาร (🩸)','epic');try{openDm&&openDm()}catch(e){}}},
+  {t:'↩️ กลับ',s:'',f(){setTimeout(openDz,200)}}])}
  if(k==='deep')return dzDeep();
  if(k==='heaven'){choice('☁️ ราคาของการล้างบาป','สายลับแดนเทพยื่นเงื่อนไข: "เอาหัวมาแลกตราประทับคืน"',[
   {t:'👑 ทรยศราชันอสูร: ส่งแผนทัพทั้งหมดให้สวรรค์',s:'ราชันทุกตนจะล่าคุณจนถึงประตู',f(){fightThen('ราชันอสูรที่รู้ความจริง',1.3,w=>{if(w)dzLeaveUp('ทรยศราชันอสูร');else{S.hp=1;fx({king:-60});log('🩸 คุณไปไม่ถึงประตู ราชันลากคุณกลับลงมา','bad')}})}},
