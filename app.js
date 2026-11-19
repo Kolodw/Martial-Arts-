@@ -42944,7 +42944,7 @@ function wnBtn(){try{const hr=document.querySelector('#game .hudr');if(!hr||$('w
 {const _r=render;render=function(){const r=_r.apply(this,arguments);wnBtn();return r}}
 // 3) เมนูเรียบง่ายสำหรับชีวิตแรก (ผู้เล่นใหม่เท่านั้น · กดแสดงทั้งหมดได้)
 const CORE=/openMe\(|openArts\(|openFaction\(|openMarket\(|openFamily\(|openSys\(|openTown\(|openMap\(|openQuests\(|openItems\(|openPortal\(/;
-{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(!isNew()||LS.get('murim_fullmenu',0))return r;const G=[...$('modal').querySelectorAll('.mgrid')];if(!G.length)return r;let n=0;const g=G[G.length-1];
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(!isNew()||LS.get('murim_fullmenu',0)||!S||S.mw||S.xian||S.beastMode||(S.ch&&S.ch!=='normal'))return r;const G=[...$('modal').querySelectorAll('.mgrid')];if(!G.length)return r;let n=0;const g=G[G.length-1];
  G.forEach(gr=>{let vis=0;[...gr.children].forEach(b=>{if(b.tagName==='BUTTON'&&!CORE.test(b.getAttribute('onclick')||'')){b.style.display='none';b.classList.add('smHid');n++}else vis++});if(!vis){gr.style.display='none';gr.classList.add('smHid');const h=gr.previousElementSibling;if(h&&h.classList.contains('mch15')){h.style.display='none';h.classList.add('smHid')}}});
  if(n){fn('simple',1);g.insertAdjacentHTML('afterend',`<button class="gbtn" style="width:100%;margin-top:6px" onclick="LS.set('murim_fullmenu',1);document.querySelectorAll('#modal .smHid').forEach(x=>{x.style.display=''});this.remove()">🌱 ชีวิตแรกแสดงเฉพาะเมนูหลัก — แสดงอีก ${n} เมนู</button>`)}}catch(e){}return r}}
 // 4) ทุก 5 ปี (16–80) ถามแนวทางช่วงนี้บนเกาะ — ไม่หยุดเกม
@@ -43330,7 +43330,7 @@ window.mg2Pick=function(){if(!live0())return false;const C=[];let soul=false;try
   if(soul)C.push('drum','drum','drum');if(S.flags&&S.flags.regress)C.push('future','future');if(S.ab)C.push('heart','heart','heart');if(S.dyn)C.push('liar','liar')}
  const k=ch(C);if(!k)return false;S.mgA=S.age;return yearly(k)};
 // สัตว์อสูร/ยุคปัจจุบัน ไม่ผ่าน block55 → มีตัวเรียกเอง
-{const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(live0()&&S.age!==a0&&!auto&&free()&&(nh()||S.mw)&&S.age>=6&&S.age>=(S.mg2N||0)&&Math.random()<(S.mw?.18:.09)){S.mg2N=S.age+(S.mw?R(3,5):R(4,7));setTimeout(()=>{if(live0()&&free()&&!auto)mg2Pick()},450)}}catch(e){console.error('mg2py',e)}return r}}
+{const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(live0()&&S.age!==a0&&!auto&&free()&&(nh()||S.mw)&&S.age>=6&&S.age>=(S.mg2N||0)&&Math.random()<(S.mw?.12:.09)){S.mg2N=S.age+(S.mw?R(4,6):R(4,7));setTimeout(()=>{if(live0()&&free()&&!auto)mg2Pick()},450)}}catch(e){console.error('mg2py',e)}return r}}
 // ---------- ช่วงชี้เป็นชี้ตาย ----------
 const once=f=>{const R0=Math.random;let u=0;Math.random=function(){if(!u){u=1;Math.random=R0;return f(R0())}return R0()}};
 // ⚔️ ดวลอันตราย: อ่านท่า
@@ -44037,3 +44037,13 @@ function psPick(first){const g=S.sv;choice('🎯 จะเดินบนเส�
 window.svPsPick=function(){if(!on())return;const g=S.sv;if(g.psY!=null&&S.age-g.psY<5)return toast(`เปลี่ยนแนวทางได้อีกครั้งตอนอายุ ${g.psY+5}`);closeM();setTimeout(()=>psPick(0),200)};
 {const _os=window.openSoul;window.openSoul=function(){const r=_os.apply(this,arguments);try{if(!on())return r;const m=$('modal'),bk=m.querySelector('button[onclick="openSoulBook()"]');if(bk&&!m.querySelector('.svPs')){const k=ps(),v=PS[k];bk.insertAdjacentHTML('beforebegin',`<div class="item svPs"><b>🎯 แนวทาง: ${v[0]} ${v[1]}</b><br><span class="tag2">${v[2]}${hasSW()?'<br>🗡️ กระบี่ผ่าฟ้า: ศัตรูอ่อนลง 10% · หลอมเกินขีดง่ายขึ้น · ใจไม่นิ่ง (ผูกพันต่ำกว่า 40) พลังย้อน · ระดับจิต 70 ปลดร่างแท้':''}</span><button class="gbtn" style="width:100%;margin-top:6px" onclick="svPsPick()">เปลี่ยนแนวทาง</button></div>`)}}catch(e){}return r}}
 })()}catch(e){console.error('svsw',e)}
+
+// ---------- ยุคปัจจุบัน: เหตุการณ์เด้งถี่เกินไป → เหตุการณ์สุ่มตอนข้ามปีขึ้นได้ไม่เกิน 1 เรื่องต่อ 2 ปี (ปรับได้ในเมนู) ----------
+try{(()=>{
+let inPY=0;const gap=()=>{const v=+LS.get('murim_mwEvGap',2);return v>=1&&v<=4?v:2};
+const KEEP=/🪦|ทายาท|ปลายทาง|จบชีวิต|ตาย|เกิดใหม่|สอบเข้า|ทดสอบ/;
+{const _py=passYear;passYear=function(){inPY++;try{return _py.apply(this,arguments)}finally{inPY--}}}
+{const _ch=choice;choice=function(t){try{if(inPY&&S&&S.alive&&S.mw&&!KEEP.test(String(t||''))){const M=S.mw;if(M._evA!=null&&S.age-M._evA<gap()&&S.age>=M._evA)return;M._evA=S.age}}catch(e){}return _ch.apply(this,arguments)};Object.assign(choice,_ch)}
+window.mwEvGapSet=function(){const L=[1,2,3];const v=L[(L.indexOf(gap())+1)%L.length];LS.set('murim_mwEvGap',v);toast(v===1?'เหตุการณ์ยุคปัจจุบัน: ทุกปี (แบบเดิม)':`เหตุการณ์ยุคปัจจุบัน: ไม่เกิน 1 เรื่องต่อ ${v} ปี`);try{openMenu()}catch(e){}};
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(S&&S.mw){const m=$('modal'),sv=m&&m.querySelector('.svStat');if(sv&&!m.querySelector('.mwGapB')){const v=gap();sv.insertAdjacentHTML('afterend',`<button class="gbtn mwGapB" style="width:100%;margin:2px 0 6px" onclick="mwEvGapSet()">⏳ ความถี่เหตุการณ์: ${v===1?'ทุกปี':'1 เรื่อง / '+v+' ปี'} <small class="tag2">(แตะเพื่อเปลี่ยน)</small></button>`)}}}catch(e){}return r}}
+})()}catch(e){console.error('mwgap',e)}
