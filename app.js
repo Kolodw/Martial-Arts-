@@ -45,7 +45,7 @@ setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?
 // ============ UPDATE LOG ============
 const VERSION='19.6';
 const CHANGELOG=[
-  {v:'19.6',d:'19 พ.ย. 2026',l:['⭕ <b>ทวีปจิตวิญญาณยุทธ์ ครบทุกระลอก</b> — ชื่อระดับแบบในเรื่อง (นักวิญญาณฝึกหัด → จอมวิญญาณ → … → โต้วหลัว → เทพ) · ระดับ 91 ได้ฉายาโต้วหลัวของตัวเอง · 5 แคว้นมีสัตว์และเหตุการณ์เฉพาะ · สถาบันประจำแคว้น · เล่นเดี่ยว/คู่หู/ทีม · เนื้อเรื่องหลักสุ่ม 1 ใน 4 ต่อชีวิต · 🗡️ กระบี่ผ่าฟ้า ดวงจิตอันดับหนึ่ง · อายุขัยตามระดับจิต (เทพ = อมตะ)','🎒 <b>ถุงวิญญาณ</b> — สมุนไพรเซียน 6 ชนิด (เก็บไว้กินทีหลัง) · อาวุธลับใช้เองตอนดวล · เครื่องมือวิญญาณ (ถุงเก็บ · ปืนใหญ่ · ปีกกันตาย) · กระดูกวิญญาณครบ 6 ชิ้นได้โบนัสชุด','🏆 <b>เหตุการณ์ใหญ่ทวีปวิญญาณ</b> — การแข่งขันทั่วทวีป 4 รอบ · เมืองสังหาร · บททดสอบเทพ 9 ขั้น (ทางที่สองสู่เทพ) · สัตว์วิญญาณบุกเมือง · สงครามสองจักรวรรดิ','🎮 <b>มินิเกมทุกโลกทุกโหมด</b> — ยุทธภพ เซียน แดนเทพ ยุคปัจจุบันแยกตามโลก (ฮันเตอร์ ผีไทย ซอมบี้ หอคอย ฯลฯ) · ทวีปวิญญาณ 5 เกมใหม่ (ซับวงแหวน ซัดเข็ม ผสานทักษะ ตามรอยสัตว์ แยกสมุนไพร) · ตัวปรับสุ่ม · โอกาสทอง · คอมโบ · ความชำนาญ · สนามฝึกประจำวันมีอันดับ','🏙️ <b>ยุคปัจจุบัน</b> — 3 ปีแรกเป็นช่วงตั้งตัวพร้อมเป้าหมายทีละข้อ · ขั้นในยุคใหม่ · ฟีดโซเชียล อาชีพเสริม สังเวียนใต้ดิน ย่านในเมือง · ป๊อปอัปน้อยลง (ไม่เกินปีละ 1) · เมือง/ร้านค้ากดได้บนมือถือ','🔒 <b>ล็อกชะตา</b> — ในหน้าสุ่มเกิด ล็อกพรสวรรค์ ชาติกำเนิด พรสวรรค์พิเศษ หรือยุค ค้างไว้จนเริ่มชีวิต (สูงสุด 2 อย่าง) · ⏪ ย้อนกลับไปชะตาก่อนหน้า · ซื้อตั๋วล็อกได้ในร้านสนับสนุน','⚡ <b>ปุ่มสุ่มรัวในหน้าสุ่มเกิด</b> — ผู้สนับสนุนพิเศษเลือกเป้า % และเก็บชะตาที่ดีที่สุดระหว่างทาง · ผู้ก่อตั้งตั้งตัวกรองละเอียด เป้า 1 ใน X งบตั๋ว ดูโอกาสเจอก่อนกด และบันทึกตัวกรองได้ 3 ชุด','🎁 <b>หน้ารับของล็อกอิน</b> — ผู้มาใหม่ 7 วัน (วันที่ 7 ตั๋วทอง 5 ใบ + กรอบ + ฉายา) และประจำ 14 วัน · ขึ้นค้างจนกว่าจะกดรับ · ☯️ แต้มวิญญาณรวมเข้าคลังกรรม (1 แต้ม = 100 กรรม)','💡 <b>อธิบายเองโดยไม่ต้องถาม</b> — เปิดระบบไหนครั้งแรกจะมีกล่อง “ระบบนี้คืออะไร” · บทเรียนโลกเซียน แดนเทพ ระบบ และภาคเรื่องราวขึ้นตอนเล่นจริง · ทวีปวิญญาณมีคู่มือและบทสอนของตัวเอง · 📚 คู่มือหัวข้อที่เคยหายกลับมาครบ · 🧭 ปุ่ม “ตอนนี้ควรทำอะไร”','⏳ <b>ไม่ให้ชีวิตยืดเยื่อ</b> — กรรมที่หว่านไว้ย้อนมาหาในอีกหลายปี · ช่วงเวลาสวรรค์เปิด · คู่แข่งตลอดชีวิตบนหน้าจอ · ความท้าทายประจำสัปดาห์','💾 <b>เซฟ</b> — ล็อกอิน Google แล้วซิงก์ทุกช่องลื่นขึ้น · รหัสยาวกดคัดลอกได้ทุกเครื่อง · นำเข้ารหัสที่คัดลอกเพี้ยนได้','❤️ <b>เพดานพลังชีวิตตามโลก</b> — ยุทธภพ/ยุคปัจจุบัน/วิญญาณยุทธ์ 1,000 · เซียน 10,000 · แดนเทพ 100,000 (เซฟเดิมปรับลงโดยคงสัดส่วนเลือด) · 🐾 สัตว์อสูรรอดง่ายขึ้น พักฟื้นได้จริง','🛠️ <b>แก้บั๊ก</b> — เกมค้างไม่เดินเรื่องหลังหน้าต่างดวลถูกทับ · ระบบออนไลน์ตอบเร็วขึ้นเวลาเซิร์ฟเวอร์สะดุดและต่อใหม่เอง · หน้าแรกไม่รีโหลดเองระหว่างเล่น · ฉากทำลายล้างหลังชนะลานประลองในเมือง · ประมูลทั่วยุทธภพไม่ขึ้นในทวีปวิญญาณ']},
+  {v:'19.6',d:'19 พ.ย. 2026',l:['⭕ <b>ทวีปจิตวิญญาณยุทธ์ ครบทุกระลอก</b> — ชื่อระดับของทวีป (นักวิญญาณฝึกหัด → จอมวิญญาณ → … → จอมจิต → เทพ) · ระดับ 91 ได้ฉายาจอมจิตของตัวเอง · 5 แคว้นมีสัตว์และเหตุการณ์เฉพาะ · สถาบันประจำแคว้น · เล่นเดี่ยว/คู่หู/ทีม · เนื้อเรื่องหลักสุ่ม 1 ใน 4 ต่อชีวิต · 🗡️ กระบี่ผ่าฟ้า ดวงจิตอันดับหนึ่ง · อายุขัยตามระดับจิต (เทพ = อมตะ)','🎒 <b>ถุงวิญญาณ</b> — สมุนไพรเซียน 6 ชนิด (เก็บไว้กินทีหลัง) · อาวุธลับใช้เองตอนดวล · เครื่องมือวิญญาณ (ถุงเก็บ · ปืนใหญ่ · ปีกกันตาย) · กระดูกวิญญาณครบ 6 ชิ้นได้โบนัสชุด','🏆 <b>เหตุการณ์ใหญ่ทวีปวิญญาณ</b> — การแข่งขันทั่วทวีป 4 รอบ · เมืองสังหาร · บททดสอบเทพ 9 ขั้น (ทางที่สองสู่เทพ) · สัตว์วิญญาณบุกเมือง · สงครามสองจักรวรรดิ','🎮 <b>มินิเกมทุกโลกทุกโหมด</b> — ยุทธภพ เซียน แดนเทพ ยุคปัจจุบันแยกตามโลก (ฮันเตอร์ ผีไทย ซอมบี้ หอคอย ฯลฯ) · ทวีปวิญญาณ 5 เกมใหม่ (ซับวงแหวน ซัดเข็ม ผสานทักษะ ตามรอยสัตว์ แยกสมุนไพร) · ตัวปรับสุ่ม · โอกาสทอง · คอมโบ · ความชำนาญ · สนามฝึกประจำวันมีอันดับ','🏙️ <b>ยุคปัจจุบัน</b> — 3 ปีแรกเป็นช่วงตั้งตัวพร้อมเป้าหมายทีละข้อ · ขั้นในยุคใหม่ · ฟีดโซเชียล อาชีพเสริม สังเวียนใต้ดิน ย่านในเมือง · ป๊อปอัปน้อยลง (ไม่เกินปีละ 1) · เมือง/ร้านค้ากดได้บนมือถือ','🔒 <b>ล็อกชะตา</b> — ในหน้าสุ่มเกิด ล็อกพรสวรรค์ ชาติกำเนิด พรสวรรค์พิเศษ หรือยุค ค้างไว้จนเริ่มชีวิต (สูงสุด 2 อย่าง) · ⏪ ย้อนกลับไปชะตาก่อนหน้า · ซื้อตั๋วล็อกได้ในร้านสนับสนุน','⚡ <b>ปุ่มสุ่มรัวในหน้าสุ่มเกิด</b> — ผู้สนับสนุนพิเศษเลือกเป้า % และเก็บชะตาที่ดีที่สุดระหว่างทาง · ผู้ก่อตั้งตั้งตัวกรองละเอียด เป้า 1 ใน X งบตั๋ว ดูโอกาสเจอก่อนกด และบันทึกตัวกรองได้ 3 ชุด','🎁 <b>หน้ารับของล็อกอิน</b> — ผู้มาใหม่ 7 วัน (วันที่ 7 ตั๋วทอง 5 ใบ + กรอบ + ฉายา) และประจำ 14 วัน · ขึ้นค้างจนกว่าจะกดรับ · ☯️ แต้มวิญญาณรวมเข้าคลังกรรม (1 แต้ม = 100 กรรม)','💡 <b>อธิบายเองโดยไม่ต้องถาม</b> — เปิดระบบไหนครั้งแรกจะมีกล่อง “ระบบนี้คืออะไร” · บทเรียนโลกเซียน แดนเทพ ระบบ และภาคเรื่องราวขึ้นตอนเล่นจริง · ทวีปวิญญาณมีคู่มือและบทสอนของตัวเอง · 📚 คู่มือหัวข้อที่เคยหายกลับมาครบ · 🧭 ปุ่ม “ตอนนี้ควรทำอะไร”','⏳ <b>ไม่ให้ชีวิตยืดเยื่อ</b> — กรรมที่หว่านไว้ย้อนมาหาในอีกหลายปี · ช่วงเวลาสวรรค์เปิด · คู่แข่งตลอดชีวิตบนหน้าจอ · ความท้าทายประจำสัปดาห์','💾 <b>เซฟ</b> — ล็อกอิน Google แล้วซิงก์ทุกช่องลื่นขึ้น · รหัสยาวกดคัดลอกได้ทุกเครื่อง · นำเข้ารหัสที่คัดลอกเพี้ยนได้','❤️ <b>เพดานพลังชีวิตตามโลก</b> — ยุทธภพ/ยุคปัจจุบัน/วิญญาณยุทธ์ 1,000 · เซียน 10,000 · แดนเทพ 100,000 (เซฟเดิมปรับลงโดยคงสัดส่วนเลือด) · 🐾 สัตว์อสูรรอดง่ายขึ้น พักฟื้นได้จริง','🛠️ <b>แก้บั๊ก</b> — เกมค้างไม่เดินเรื่องหลังหน้าต่างดวลถูกทับ · ระบบออนไลน์ตอบเร็วขึ้นเวลาเซิร์ฟเวอร์สะดุดและต่อใหม่เอง · หน้าแรกไม่รีโหลดเองระหว่างเล่น · ฉากทำลายล้างหลังชนะลานประลองในเมือง · ประมูลทั่วยุทธภพไม่ขึ้นในทวีปวิญญาณ']},
   {v:'19.5',d:'19 พ.ย. 2026',l:['🎟️ <b>ตั๋วสุ่มเกิดฟรี</b> — เล่นจนจบชีวิต (อายุ 18+) ได้ตั๋วสุ่มเกิดฟรี 1 ใบ · ไม่เกิน 3 ใบ/วัน · ถือได้ 10 ใบ · ใช้ก่อนตั๋วที่ซื้อ','🥇 <b>ตั๋วทอง</b> — สุ่มเกิดด้วยตั๋วที่ซื้อรับประกันช่องชะตาดี และใบที่ 10 รับประกันตำนาน','📜 <b>บันทึกวงศ์ตระกูล</b> (ในเมนู) — สถิติทุกชีวิต + เป้าหมายข้ามชีวิต 10 ข้อ เห็นความคืบหน้า ใกล้สำเร็จมีชิป 🎯 บนเกาะ · ฉายาที่ทำได้ขึ้นบนการ์ดแชร์','☯️ <b>มรดกจากชาติก่อน</b> — จบชีวิตได้กรรมโบนัสจากเป้าหมายและอายุ ใช้คลังกรรมแลกของติดตัวให้ชีวิตหน้า (เงิน ปัญญา วิชา ชื่อเสียง)','⚔️ <b>เหตุการณ์ใหญ่กลางเกม</b> — อายุ 30–65 ทุก ~9 ปี เจอสงครามสำนัก ศึกชิงประมุข ทุพภิกขภัย หรือสหายเก่าขอความช่วย','👋 <b>ผู้เล่นใหม่และคนที่กลับมา</b> — ปุ่ม ▶ ไปต่อชีวิตใหญ่ที่หน้าแรก · ยินดีต้อนรับกลับเมื่อห่างหาย 7 วัน · ของขวัญต้อนรับ 7 วันแรก · เช็คอินให้กรรมเข้าคลัง · แจ้งเรื่องที่รออยู่ตอนเล่นต่อ · ป้ายนำทางชีวิตแรก','🏟️ <b>ลานประลองหมื่นเงา</b> — เปิดเกมมาแจ้งเตือนถ้ามีคนท้าเงาของคุณระหว่างไม่อยู่','☁️ <b>เซฟคลาวด์ใหม่กว่า</b> — ถ้าคลาวด์ใหม่กว่าเครื่องนี้ จะถามก่อนแล้วนำเข้าเป็นช่องใหม่ ไม่ทับเซฟเดิม','🛠️ <b>แก้บั๊ก</b> — วิชาเกินขีดจำกัด (หลอมรวมอัตโนมัติ) · ปุ่มซ่อน/เปิดข้อมูลทำเนียบค้างหลังตาย · กรอบประตูนรกบังเมนู · เด้งไปหน้าระบบเอง · ปุ่มชำระแค้นในบัญชีแค้นตระกูล · ปุ่ม ✕ หาย · ความจำเสื่อมแล้ววิชาไม่คืน · เลือกตำแหน่งแถบตัวเลือกที่ย่อไว้ได้ บน/ล่าง','⭕ <b>จากผู้เล่น</b> — ตั้งค่า AI คัดลอกวิชา · ล่าเปลวไฟสวรรค์ · พรสวรรค์แยกตามโลก · ล็อกชะตาตอนเกิด · สุ่มเกิดของสัตว์ · เส้นทางราชสำนักของสามัญชน']},
   {v:'19.1',d:'18 พ.ย. 2026',l:['⭕ <b>ทวีปจิตวิญญาณยุทธ์ รอบ 2</b> — ดวงจิต 5 สายมีผลจริง · ท่าวงแหวนลดพลังศัตรูได้จริง · เหตุการณ์เฉพาะทวีปกว่า 30 แบบ (งานของคนมีดวงจิต · สถาบัน · ทะเบียนศาลา · หนี้ · เพื่อนร่วมทีม · ลูกปลุกจิต · นักล่ากระดูกวิญญาณ ฯลฯ)','🤝 <b>ไม่ต้องฆ่าก็ได้</b> — สยบสัตว์อสูรเป็นสัตว์คู่ใจ · ซื้อวงแหวนตลาดมืด (อาจปลอม) · ไว้ชีวิตสัตว์ที่แพ้ แล้วมันอาจกลับมา · ฆ่ามากไปเผ่าสัตว์จะมาแก้แค้น','🌀 <b>ดวงจิตคู่แย่งร่าง</b> — กดให้หลับ / หลอมรวม / ปล่อยไป · 💞 <b>ดวงจิตมีนิสัยและพูดได้</b> ใจตรงกันแล้วฝึกเร็ว','🌑 <b>ไร้ดวงจิต</b> — โอกาส 4% ปลุกไม่ขึ้น เลือกเป็นช่าง หมอ พ่อค้า หรือนักวิชาการ · ⚡ <b>ปลายทางหลังวงที่ 9</b> — ทดสอบเทพ / ทุบวงแหวน / ถ่ายทอดให้ชีวิตถัดไป']},
   {v:'19.0',d:'18 พ.ย. 2026',l:['⭕ <b>โหมดใหม่ ทวีปจิตวิญญาณยุทธ์</b> — ตื่นรู้วิญญาณยุทธ์ 40 แบบ 5 สาย ล่าสัตว์วิญญาณดูดวงแหวน ไต่ระดับ 10 ขั้น มีสมุดบันทึกวิญญาณ (เลือกได้ที่ตัวเลือกโหมดท้าทาย)','📜 <b>ชีวิตไม่ซ้ำ</b> — สมุดเส้นทางชีวิต · คนแปลกหน้าที่เจอซ้ำได้ · ชะตาหายาก 1% ต่อปี · พื้นเพตอนเกิด (ยากจน/ตระกูลมั่งคั่ง/ฝาแฝด/ดาวเด่น/ได้รับการดูแล/กำพร้า) · เหตุการณ์ข้ามโลก','🎭 <b>เหตุการณ์เพิ่มทุกโลก</b> — เพิ่มอีก 25–30 เหตุการณ์ต่อโลก เหตุการณ์แตกต่างตามอาชีพ ตัวเลือกก่อนหน้ามีผลต่อเนื่อง ไม่เป็นเส้นตรง','🛒 <b>ซื้อด้วยเงินจริงต้องล็อกอิน Google ก่อน</b> — ตั๋วสุ่ม VIP ของแต่ง ผูกกับบัญชี ไม่หายเมื่อเปลี่ยนเครื่อง ล็อกอินเสร็จกลับหน้าซื้อให้เอง','🎲 <b>กู้ตั๋ว/VIP ที่เคยเติมไว้</b> — โปรไฟล์ → กู้ตั๋วสุ่ม/VIP ที่เคยเติมไว้ กรอกชื่อบัญชี ยอด เวลาตามสลิป ระบบย้ายมาเครื่องนี้ให้','🛡️ <b>กันเซฟหาย</b> — เซฟคลาวด์ถี่ขึ้นและทันทีหลังซื้อ · ชวนผูก Google · iPhone เตือนให้เพิ่มเกมลงหน้าจอโฮม · เตือนเมื่อเซฟคลาวด์ค้างหลายวัน','🔧 <b>แก้บั๊ก</b> — ซื้อเกราะแล้วเลือดไม่ขึ้น/ตกลง · ตัวละครที่ตายไม่ขึ้นทำเนียบเพราะ "ตรวจพบการแก้ไขค่า" ทั้งที่แค่รีเฟรช · ผู้เล่นปกติโดนแบนผิด (ผ่อนการตรวจให้ไม่เข้มเกิน) · ผู้ย้อนกาลเปิด/ปิดข้ามอัตโนมัติได้เอง ไม่ข้ามการเลือกโดยไม่ตั้งใจ']},
@@ -44430,10 +44430,10 @@ const col=(k,id)=>{try{const C=LS.get('murim_svcol',{})||{};C[k]=C[k]||{};if(!C[
 const isl=(ic,h,t,k)=>{try{island({big:1,pri:1,ic,h,t,kind:k||'gold'})}catch(e){}};
 
 // ===== 1) ชื่อระดับแบบในเรื่อง =====
-const RK=['นักวิญญาณฝึกหัด','จอมวิญญาณ','มหาจอมวิญญาณ','ผู้อาวุโสวิญญาณ','บรรพชนวิญญาณ','ราชาวิญญาณ','จักรพรรดิวิญญาณ','นักบุญวิญญาณ','โต้วหลัววิญญาณ','โต้วหลัวฉายา'];
+const RK=['นักวิญญาณฝึกหัด','จอมวิญญาณ','มหาจอมวิญญาณ','ผู้อาวุโสวิญญาณ','บรรพชนวิญญาณ','ราชาวิญญาณ','จักรพรรดิวิญญาณ','นักบุญวิญญาณ','มหาปราชญ์วิญญาณ','จอมจิตฉายา'];
 try{B.RANK.splice(0,B.RANK.length,...RK)}catch(e){}
 const ttlOf=g=>g.lv>=100?'เทพ':g.lv>=91&&g.ttl?g.ttl:null;
-const fixTxt=root=>{try{const g=S&&S.sv;if(!g||!root)return;const t=ttlOf(g);if(!t)return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode())if(n.nodeValue.includes('โต้วหลัวฉายา'))n.nodeValue=n.nodeValue.split('โต้วหลัวฉายา').join(t)}catch(e){}};
+const fixTxt=root=>{try{const g=S&&S.sv;if(!g||!root)return;const t=ttlOf(g);if(!t)return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode())if(n.nodeValue.includes('จอมจิตฉายา'))n.nodeValue=n.nodeValue.split('จอมจิตฉายา').join(t)}catch(e){}};
 {const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{if(on())fixTxt($('game'))}catch(e){}return r}}
 
 // ===== 2) ของ =====
@@ -44481,9 +44481,9 @@ Object.assign(G,{
 const MGS=['svAbsorb','svNeedle','svCombo','svTrack','svHerb'];
 {const _pk=window.mg2Pick;window.mg2Pick=function(){try{if(on()&&Math.random()<.6){const L=MGS.filter(k=>k!==S.mgLast&&(k!=='svCombo'||S.age>=12));const k=pk(L);S.mgLast=k;S.mgA=S.age;return window._mg2Y(k)}}catch(e){console.error('sv6pick',e)}return _pk.apply(this,arguments)}}
 
-// ===== 4) รายปี: ฉายาโต้วหลัว · ชุดกระดูก =====
+// ===== 4) รายปี: ฉายาจอมจิต · ชุดกระดูก =====
 {const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(!on()||S.age===a0)return r;const g=S.sv;
- if(g.lv>=91&&!g.ttl){g.ttl='โต้วหลัว'+B.spNow(g.sp[0]).n;S.fame+=5000;log(`👑 <b>ได้รับฉายา「${g.ttl}」</b> — ทั้งทวีปรู้จักชื่อนี้ ผู้คนเรียกคุณด้วยฉายาแทนชื่อจริง`,'myth',true);isl('👑','ได้รับฉายา',g.ttl)}
+ if(g.lv>=91&&!g.ttl){g.ttl='จอมจิต'+B.spNow(g.sp[0]).n;S.fame+=5000;log(`👑 <b>ได้รับฉายา「${g.ttl}」</b> — ทั้งทวีปรู้จักชื่อนี้ ผู้คนเรียกคุณด้วยฉายาแทนชื่อจริง`,'myth',true);isl('👑','ได้รับฉายา',g.ttl)}
  if(Object.keys(g.bone||{}).length>=6&&!bag().bset){bag().bset=1;const p=pctPow(.2),h=Math.round(S.maxHp*.2);S.power+=p;S.maxHp+=h;S.hp+=h;log(`🦴 <b>ชุดกระดูกวิญญาณครบ 6 ชิ้น</b> — กระดูกทั้งหกสั่นพ้องกัน · พลังยุทธ์ +${fmt(p)} · พลังชีวิตสูงสุด +${fmt(h)}`,'myth',true);isl('🦴','ชุดกระดูกวิญญาณ','ครบ 6 ชิ้น')}
 }catch(e){console.error('sv6y',e)}return r}}
 
@@ -44563,7 +44563,7 @@ try{(()=>{
 const sec=(ic,t,b,open)=>`<details class="item" style="margin:5px 0"${open?' open':''}><summary style="font-weight:700;cursor:pointer">${ic} ${t}</summary><div style="margin-top:6px;line-height:1.55;font-size:13px">${b}</div></details>`;
 const li=a=>a.map(x=>`• ${x}`).join('<br>');
 window.openSvGuide=function(){const g=S&&S.sv,lv=g&&g.aw===1?g.lv:0;
- const RK=[['1–10','นักวิญญาณฝึกหัด'],['11–20','จอมวิญญาณ'],['21–30','มหาจอมวิญญาณ'],['31–40','ผู้อาวุโสวิญญาณ'],['41–50','บรรพชนวิญญาณ'],['51–60','ราชาวิญญาณ'],['61–70','จักรพรรดิวิญญาณ'],['71–80','นักบุญวิญญาณ'],['81–90','โต้วหลัววิญญาณ'],['91–99','โต้วหลัวฉายา (ได้ฉายาของตัวเอง)'],['100','เทพ']];
+ const RK=[['1–10','นักวิญญาณฝึกหัด'],['11–20','จอมวิญญาณ'],['21–30','มหาจอมวิญญาณ'],['31–40','ผู้อาวุโสวิญญาณ'],['41–50','บรรพชนวิญญาณ'],['51–60','ราชาวิญญาณ'],['61–70','จักรพรรดิวิญญาณ'],['71–80','นักบุญวิญญาณ'],['81–90','มหาปราชญ์วิญญาณ'],['91–99','จอมจิตฉายา (ได้ฉายาของตัวเอง)'],['100','เทพ']];
  const cur=i=>{const[a,b]=RK[i][0].split('–').map(Number);return lv&&lv>=a&&lv<=(b||a)};
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📖 คู่มือทวีปจิตวิญญาณยุทธ์</h3><p class="tag2">แตะหัวข้อเพื่อเปิดอ่าน</p>
  ${sec('🎯','เป้าหมายของโหมดนี้',li(['เกิดมาเป็นคนธรรมดา อายุ <b>6 ขวบ</b> จะได้ปลุกดวงจิต','ฝึกทุกปีให้ระดับจิตขึ้น ล่าสัตว์วิญญาณเพื่อหลอมวงแหวน','ไต่จาก <b>นักวิญญาณฝึกหัด</b> ไปจนถึง <b>เทพ</b>','ไม่มีระบบยุทธภพ (สำนัก กระบี่ ปราณ) — ทุกอย่างหมุนรอบดวงจิตกับวงแหวน','ดูข้อมูลของตัวเองได้ที่ปุ่ม <b>⭕ ดวงจิต</b>']),1)}
@@ -45460,3 +45460,118 @@ window.endLifeNow=function(){if(!S||!S.alive)return;closeM();try{if(typeof pause
 // ตอนสกิลกันตายช่วยไว้ บอกทางจบเผื่อผู้เล่นอยากจบจริง
 {const _sl=window.log;let t=0;log=function(tx,c){const r=_sl.apply(this,arguments);try{if(/ทำงาน — |การ์ดคืนชีพ|ชะตาถูกแทรกแซง|ดึงคุณกลับมา/.test(String(tx))&&Date.now()-t>60000&&S&&S.alive){t=Date.now();setTimeout(()=>{try{addFeed('ev','💡 ถ้าอยากให้ชีวิตนี้จบจริง: ☰ เมนู → 🏁 จบชีวิตนี้ (ข้ามการกันตายทุกแบบ)','sum')}catch(e){}},400)}}catch(e){}return r}}
 })()}catch(e){console.error('block68',e)}
+
+// ============================================================
+// BLOCK 69: ⭕ หน้าสุ่มกำเนิดของทวีปจิตวิญญาณยุทธ์ — การ์ดของโลกนี้เอง และ "มีผลจริง"
+//   🗺️ แคว้นที่เกิด (S.sv.reg) · 🏠 ครอบครัวในทวีป (+ ❓ ตระกูลลับ 1%) · 💠 พลังวิญญาณแต่กำเนิด (ระดับตอนปลุก)
+//   🔮 ลางดวงจิต (เอนสาย/ความหายาก/ดวงจิตคู่) · 🧬 ดวงจิตพ่อแม่ (สืบทอด) · 🎯 ปณิธานของทวีป · 🔒 ล็อกช่องใหม่ได้
+// ============================================================
+try{(()=>{
+const B=window._blk34;if(!B)return;
+const isSoul=()=>{try{return CH_KEYS[CFG.chm]==='soul'&&!CFG.mw&&!CFG.daily}catch(e){return false}};
+const rw=a=>{let t=a.reduce((x,o)=>x+o.w,0),r=Math.random()*t;for(const o of a){r-=o.w;if(r<=0)return o}return a[a.length-1]};
+const REG=[['north','❄️','แคว้นหมอกเหนือ','ภูเขาหิมะและหมาป่าเงิน คนที่นี่อดทนเหมือนน้ำแข็ง'],['gold','🌾','ที่ราบตะวันทอง','ทุ่งกว้าง ที่ตั้งของสถาบันจิตยุทธ์ชื่อดังหลายแห่ง'],['isle','🌊','หมู่เกาะคลื่นคราม','สัตว์วิญญาณทะเลและพ่อค้าข้ามสมุทร'],['wood','🌳','ป่าต้องห้ามพันพฤกษ์','สมุนไพรวิเศษเกิดที่นี่ แต่สัตว์วิญญาณพันปีก็เช่นกัน'],['jade','🏯','นครหลวงหยกขาว','ราชสำนักและตระกูลใหญ่ ที่ที่ชื่อเสียงมีค่ากว่าทอง']];
+const TYN={atk:['⚔️','สายโจมตี'],def:['🛡️','สายป้องกัน'],sup:['🌿','สายสนับสนุน'],ctrl:['🌀','สายควบคุม'],agi:['💨','สายว่องไว']};
+const OMT={atk:'ฝันเห็นอาวุธเปล่งแสงกลางลานบ้าน',def:'ฝันเห็นกำแพงหินโบราณที่ไม่มีวันพัง',sup:'ฝันเห็นต้นไม้ใหญ่ออกดอกกลางหิมะ',ctrl:'ฝันเห็นวังวนกลางทะเลสาบที่หยุดนิ่ง',agi:'ฝันว่าวิ่งเร็วกว่าลม'};
+const OTIER=[{w:60,n:'ลางเลือนราง',bias:.4,up:0,dual:0},{w:30,n:'ลางชัดเจน',bias:.6,up:.3,dual:0},{w:8,n:'ลางสว่างจ้า',bias:.8,up:.6,dual:0},{w:2,n:'ลางแฝด',bias:.6,up:.3,dual:.5}];
+const RARN=['ธรรมดา','หายาก','ล้ำค่า','ตำนาน'],RARP=[.6,.28,.1,.02];
+const spRoll=sh=>{const r=Math.random(),k=r<.02+sh*.04?3:r<.12+sh*.12?2:r<.4+sh*.15?1:0;const L=B.SP.filter(x=>x[5]===k);return L[Math.floor(Math.random()*L.length)]};
+const spOf=id=>B.SP.find(x=>x[0]===id);
+// ครอบครัว: ป้ายของทวีป + ผลเสริม (พลังแต่กำเนิด/ลาง) — ค่าพื้นฐานเดิม (เงิน พลัง) ยังเหมือนเดิม
+function famOf(fv){const n=fv.n||'';if(fv.demon)return['🌑','สายเลือดลัทธิวิญญาณมืด','ดวงจิตมักออกสายโจมตี · ทั้งทวีปจับตามอง',{inn:1,sh:.3}];
+ if(fv.heirType)return['👑','ทายาทราชสำนัก','ได้ผู้ปลุกจิตประจำวังดูแลตั้งแต่เกิด',{inn:1,sh:.5}];
+ if(/ขุนนาง/.test(n))return['🏛️','ตระกูลขุนนางนครหลวง','มีทรัพย์ซื้อสมุนไพรวิญญาณให้ตั้งแต่เด็ก',{inn:0,sh:.25}];
+ if(fv.clan||/ใหญ่/.test(n))return['🏯','ตระกูลนักวิญญาณใหญ่','สายเลือดผู้ฝึกจิตหลายรุ่น · พลังแต่กำเนิดสูงขึ้น',{inn:1,sh:.35}];
+ if(/ท้องถิ่น/.test(n))return['⭕','ตระกูลนักวิญญาณท้องถิ่น','ได้ฝึกพื้นฐานพลังจิตตั้งแต่เด็ก · ลางชัดขึ้น',{inn:0,sh:.2}];
+ if(fv.orphan)return['🥀','เด็กกำพร้า','ไร้ที่พึ่ง แต่ไม่มีใครกำหนดทางให้',{inn:0,sh:0}];
+ if(/พ่อค้า/.test(n))return['💰','ลูกพ่อค้าในเมือง','มีทุนตั้งต้น · ได้เห็นสัตว์วิญญาณจากกองคาราวาน',{inn:0,sh:.05}];
+ return['🌾','ลูกชาวนา','ร่างกายแข็งแรง · ผู้ปลุกจิตประจำหมู่บ้านคอยดูแล',{inn:0,sh:0}]}
+// พลังวิญญาณแต่กำเนิด ← ระดับพรสวรรค์เดิม (ความเร็วฝึกเท่าเดิม แต่ตอนนี้กำหนดระดับตอนปลุกด้วย)
+const INN=[[.6,'พลังวิญญาณอ่อน',[1,2]],[1,'พลังวิญญาณปกติ',[2,5]],[1.4,'พลังวิญญาณดี',[4,7]],[2,'พลังวิญญาณสูง',[7,9]],[3,'พลังวิญญาณเต็มเปี่ยมแต่กำเนิด',[10,10]]];
+const innOf=m=>{let o=INN[0];INN.forEach(x=>{if((m||1)>=x[0])o=x});return o};
+// ---------- สุ่มช่องใหม่ (ล็อกได้ผ่านระบบล็อกเดิม) ----------
+{const _gr=genRoll;genRoll=function(){const r=_gr.apply(this,arguments);try{if(isSoul()&&r){const L=window._LK;if(L&&L.inRoll){if(L.undo&&L.prev&&L.prev.svO){r.svR=L.prev.svR;r.svO=L.prev.svO;r.svP=L.prev.svP}else['svR','svO','svP'].forEach(k=>{if(L.on[k])r[k]=JSON.parse(JSON.stringify(L.on[k].v))})}
+ if(r.svR==null)r.svR=REG[Math.floor(Math.random()*REG.length)][0];
+ if(r.svO==null){const ks=Object.keys(TYN),t=ks[Math.floor(Math.random()*ks.length)],ti=OTIER.indexOf(rw(OTIER));r.svO={t,ti}}
+ if(r.svP==null){const sh=famOf(r.f.v)[3].sh,a=spRoll(sh),b=spRoll(sh);r.svP=[a[0],b[0]]}
+ if(r.f&&r.f.svC==null)r.f.svC=Math.random()<.01?1:0}}catch(e){console.error('svB',e)}return r}}
+// ---------- แสดงการ์ด ----------
+const rarOfP=p=>{try{return rarOf(p)}catch(e){return 0}};
+function cards(){const r=roll,fm=famOf(r.f.v),inn=innOf(r.t.v.m),reg=REG.find(x=>x[0]===r.svR)||REG[1],O=r.svO,ot=OTIER[O.ti],pa=r.svP.map(spOf);
+ const innR=[Math.min(10,inn[2][0]+fm[3].inn),Math.min(10,inn[2][1]+fm[3].inn)];
+ const T=[['🗺️ แคว้นที่เกิด',`${reg[1]} ${reg[2]}`,reg[3],.2],['เพศ',r.g.v.n,'',r.g.p],
+  r.f.svC?['🏠 ครอบครัว','❓ ตระกูลที่ไม่มีใครรู้จัก','ปู่ทวดไม่เคยพูดถึงอดีต · ในห้องใต้ดินมีกระบี่สนิมเขรอะถูกโซ่พันไว้',r.f.p*.01]:['🏠 ครอบครัว',`${fm[0]} ${fm[1]}`,fm[2],r.f.p],
+  ['💠 พลังวิญญาณแต่กำเนิด',inn[1],`ตอนปลุกดวงจิตได้ระดับ ${innR[0]===innR[1]?innR[0]:innR[0]+'–'+innR[1]}${fm[3].inn?' (ครอบครัว +'+fm[3].inn+')':''} · ความเร็วฝึก ×${(r.t.v.m||1).toFixed(1)}`,r.t.p],
+  ['🔮 ลางดวงจิต',`${TYN[O.t][0]} ${OMT[O.t]}`,`${ot.n} — เอนไปทาง${TYN[O.t][1]} ${Math.round(ot.bias*100)}%${ot.up?` · ลุ้นความหายากขึ้น ${Math.round(ot.up*100)}%`:''}${ot.dual?` · ลุ้นดวงจิตคู่ ${Math.round(ot.dual*100)}%`:''}`,.2*ot.w/100],
+  ['🧬 ดวงจิตของพ่อแม่',`พ่อ ${pa[0][1]} ${pa[0][2]} · แม่ ${pa[1][1]} ${pa[1][2]}`,`${RARN[pa[0][5]]} / ${RARN[pa[1][5]]} — มีโอกาสสืบทอด หรือได้ดวงจิตคู่จากสายเลือด`,RARP[pa[0][5]]*RARP[pa[1][5]]*2]];
+ if(r.isOw)T.push(['วิญญาณ','ผู้ข้ามมิติ','ความทรงจำจากอีกโลกจะตื่นขึ้นช่วงอายุ 4–8 ขวบ',r.op]);
+ {const L=r.trs.list.map(trOf),tw=TRAITS.reduce((a,x)=>a+x.w,0);if(!L.length)T.push(['พรสวรรค์พิเศษ','ไม่มี','เกิดมาเป็นคนธรรมดา',.45]);else L.forEach(t=>T.push([t.bad?'⚠️ พรสวรรค์พิเศษ (ด้านร้าย)':'✨ พรสวรรค์พิเศษ',t.n,t.d,t.w/tw*.55]))}
+ try{if(r.body)bodyRows(r.body,T,false)}catch(e){}
+ return T}
+function soulPs(){const era=pickW(ERAS),r=genRoll(Math.min(.6,era.v.ow)),tw=TRAITS.reduce((a,x)=>a+x.w,0),bd=bodyGen(false),O=r.svO,pa=r.svP.map(spOf);
+ const ps=[.2,r.g.p,r.f.svC?r.f.p*.01:r.f.p,r.t.p,.2*OTIER[O.ti].w/100,RARP[pa[0][5]]*RARP[pa[1][5]]*2,bd.lkP,bd.cP];if(r.isOw)ps.push(r.op);const L=r.trs.list.map(trOf).filter(Boolean);if(!L.length)ps.push(.45);else L.forEach(t=>ps.push(t.w/tw*.55));return ps}
+function paint(){try{if(!isSoul()||!roll||!roll.svO)return;const T=cards();try{if(typeof RARE_DIST!=='undefined'&&!RARE_DIST.h5){const A=[];for(let i=0;i<2000;i++){try{A.push(Math.log10(rareN(soulPs())))}catch(e){A.push(0)}}A.sort((x,y)=>x-y);RARE_DIST.h5=A}}catch(e){}roll.rare=rareCalc(T,'h5');
+ $('traits').innerHTML=T.map(c=>{const r=rarOfP(c[3]);return`<div class="trait sv"><div><div class="k">${c[0]}</div><div class="v t${r}">${c[1]}</div>${c[2]?`<div class="d">${c[2]}</div>`:''}</div><span class="o t${r}">${oddsTxt(c[3])}</span></div>`}).join('');
+ [...document.querySelectorAll('#traits .trait')].forEach((e,i)=>setTimeout(()=>e.classList.add('show'),90*i+40));
+ const h=document.querySelector('#birth h2');if(h)h.innerHTML='⭕ ถือกำเนิดในทวีปวิญญาณ';$('birth').classList.add('svB')}catch(e){console.error('svPaint',e)}}
+{const _dr=doRoll;doRoll=function(){const r=_dr.apply(this,arguments);try{if(isSoul())paint();else{const b=$('birth');if(b&&b.classList.contains('svB')){b.classList.remove('svB');const h=b.querySelector('h2');if(h)h.textContent='คุณได้ถือกำเนิดขึ้นแล้ว'}}}catch(e){}return r}}
+// ---------- 🔒 ล็อกชะตา (ตั๋วล็อก): เพิ่มช่องของทวีป · ซ่อนยุคสมัย · ชื่อช่องเดิมเป็นแบบทวีป ----------
+const LKS={svR:['🗺️','แคว้น'],svO:['🔮','ลางดวงจิต'],svP:['🧬','ดวงจิตพ่อแม่']};
+const svVal=(k,r)=>{r=r||roll;try{if(k==='svR'){const g=REG.find(x=>x[0]===r.svR);return g?g[1]+' '+g[2]:''}if(k==='svO')return TYN[r.svO.t][0]+' '+OTIER[r.svO.ti].n;if(k==='svP')return r.svP.map(id=>(spOf(id)||[])[1]).join(' ')}catch(e){}return''};
+window.svLkTap=function(k){const L=window._LK;if(!L||!roll)return;if(L.on[k])return toast('🔒 ล็อกไว้แล้ว — อยู่ไปจนเริ่มชีวิต');if(Object.keys(L.on).length>=2)return toast('ล็อกได้สูงสุด 2 อย่าง');if(L.c==null){try{lkLoad()}catch(e){}return toast('กำลังโหลดตั๋วล็อก…')}if(L.c<1)return lkMenu();
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🔒 ล็อก${LKS[k][1]}</h3><div class="item" style="text-align:center"><div class="tag2">${LKS[k][0]} ${LKS[k][1]}ตอนนี้</div><b style="font-size:18px">${esc(svVal(k))}</b></div><p class="tag2">ใช้ตั๋วล็อก 1 ใบ (เหลือ ${fmt(L.c)}) · สุ่มใหม่กี่ครั้งก็ได้${LKS[k][1]}นี้เสมอ จนกว่าจะกดเริ่มชีวิต</p><button class="pbtn" style="width:100%" onclick="svLkDo('${k}')">🔒 ล็อกเลย (1 ใบ)</button><button class="gbtn" style="width:100%;margin-top:6px" onclick="closeM()">ยังก่อน</button>`)};
+window.svLkDo=async function(k){closeM();const L=window._LK;if(!L||!roll||L.on[k]||L.busy)return;const v=JSON.parse(JSON.stringify(roll[k])),n=svVal(k);L.busy=1;try{const j=await api('lkuse',{n:1});L.c=Math.max(0,+j.c||0)}catch(e){L.busy=0;if(e.message==='none'){L.c=0;toast('ตั๋วล็อกไม่พอ');lkMenu()}else toast('ใช้ตั๋วไม่สำเร็จ');return}L.busy=0;L.on[k]={v,n};L.w=(CFG.xian?'x':'m')+':'+CFG.chm;try{sfx('good')}catch(e){}toast(`🔒 ล็อก${LKS[k][1]}「${n}」แล้ว`);lkDeco(1)};
+function lkDeco(force){try{if(!isSoul()||!roll||!roll.svO)return;const el=$('lkRow');if(!el)return;const L=window._LK||{on:{}};
+ el.querySelectorAll('.lkb').forEach(b=>{const oc=b.getAttribute('onclick')||'';if(/lkTap\('era'\)/.test(oc)){b.style.display='none';return}
+  const st=(n,v)=>{if(n&&n.nodeValue!==v)n.nodeValue=v},stx=(e,v)=>{if(e&&e.textContent!==v)e.textContent=v};
+  if(/lkTap\('t'\)/.test(oc)){const f=b.firstChild;if(f&&f.nodeType===3&&/🦴|พรสวรรค์/.test(f.nodeValue))st(f,f.nodeValue.replace('🦴','💠').replace('พรสวรรค์','พลังวิญญาณ'));if(!L.on.t)stx(b.querySelector('small'),innOf(roll.t.v.m)[1])}
+  if(/lkTap\('f'\)/.test(oc)){const f=b.firstChild;if(f&&f.nodeType===3&&/ชาติกำเนิด/.test(f.nodeValue))st(f,f.nodeValue.replace('ชาติกำเนิด','ครอบครัว'));if(!L.on.f)stx(b.querySelector('small'),roll.f.svC?'❓ ตระกูลลับ':famOf(roll.f.v)[1])}});
+ try{const x=el.querySelector('.lkx small'),P=L.prev;if(x&&P&&P.t&&P.f){const v=`— ${innOf(P.t.v.m)[1]} · ${P.f.svC?'❓ ตระกูลลับ':famOf(P.f.v)[1]}`;if(x.textContent!==v)x.textContent=v}}catch(e){}
+ Object.keys(LKS).forEach(k=>{let b=el.querySelector(`[data-svk="${k}"]`);const on=!!L.on[k];if(!b){b=document.createElement('button');b.className='lkb';b.dataset.svk=k;b.onclick=()=>svLkTap(k);const x=el.querySelector('.lkx');x?el.insertBefore(b,x):el.appendChild(b)}
+  const h=`${on?'🔒':LKS[k][0]} ${LKS[k][1]}<small>${esc(on?L.on[k].n:svVal(k))}</small>`;if(b._h!==h){b._h=h;b.innerHTML=h}if(b.classList.contains('on')!==on)b.classList.toggle('on',on)})}catch(e){console.error('svLk',e)}}
+{let q=0;try{new MutationObserver(()=>{if(q||!isSoul())return;q=1;requestAnimationFrame(()=>{try{lkDeco()}finally{setTimeout(()=>{q=0},50)}})}).observe($('birth'),{childList:true,subtree:true})}catch(e){}}
+// หัวการ์ดตัวละคร + ชิปบนสุด: เปลี่ยนคำของยุทธภพเป็นของทวีป
+function heads(){try{if(!isSoul()||!roll||!roll.svO)return;const B0=$('birth');if(!B0)return;const reg=REG.find(x=>x[0]===roll.svR)||REG[1];
+ const map=new Map([['⚔️ ยุทธภพ','⭕ ทวีปวิญญาณ'],[roll.era&&roll.era.v?'🕰️ '+roll.era.v.n:'#',`${reg[1]} ${reg[2]}`],[roll.f.v.n,roll.f.svC?'❓ ตระกูลลับ':famOf(roll.f.v)[1]],[roll.t.v.n,innOf(roll.t.v.m)[1]]]);
+ B0.querySelectorAll('.bchip,.hcard span').forEach(e=>{if(e.closest('#traits,#lkRow'))return;const t=e.textContent.trim();if(map.has(t))e.textContent=map.get(t)})}catch(e){}}
+setInterval(heads,500);
+// ---------- เริ่มชีวิต: ส่งต่อค่าทั้งหมดเข้าเกม ----------
+{const _sl=startLife;startLife=function(){const r0=roll;const r=_sl.apply(this,arguments);try{if(S&&S.ch==='soul'&&r0&&r0.svO&&!S.svB){
+ S.svB={reg:r0.svR,o:r0.svO,p:r0.svP,fam:famOf(r0.f.v),inn:innOf(r0.t.v.m)[2],c:r0.f.svC?1:0};
+ if(!S.sv)S.sv={aw:0,sp:[],lv:0,rings:[],seen:{},hy:-9};S.sv.reg=r0.svR;
+ if(r0.f.svC){S.flags.swC0=1;S.flags.swClan=1;setTimeout(()=>{try{log('🗡️ คุณเกิดในตระกูลที่ไม่มีใครรู้จัก — ปู่ทวดไม่เคยพูดถึงอดีต และในห้องใต้ดินมีกระบี่สนิมเขรอะเล่มหนึ่งถูกโซ่พันไว้','myth',true)}catch(e){}},600)}
+ const reg=REG.find(x=>x[0]===r0.svR);setTimeout(()=>{try{addFeed('ev',`⭕ เกิดที่ <b>${reg?reg[1]+' '+reg[2]:'ทวีปวิญญาณ'}</b> · ${S.svB.fam[0]} ${S.svB.fam[1]} · 🔮 ${OMT[r0.svO.t]}`,'sum')}catch(e){}},900)}}catch(e){console.error('svStart',e)}return r}}
+// ---------- พิธีปลุก: ลาง · สายเลือดพ่อแม่ · พลังแต่กำเนิด มีผลจริง ----------
+const pickT=(t,rr)=>{for(let d=0;d<4;d++){const L=B.SP.filter(x=>x[3]===t&&(x[5]===rr+d||x[5]===rr-d));if(L.length)return L[Math.floor(Math.random()*L.length)]}return null};
+{const _ch=choice;choice=function(title,text,opts){try{if(title==='⭕ พิธีปลุกดวงจิต'&&S&&S.ch==='soul'&&S.svB&&S.sv&&S.sv.aw===1&&!S.svB.done){const X=S.svB,G=S.sv,ot=OTIER[X.o.ti],notes=[];X.done=1;
+ const cur=()=>spOf(G.sp[0].id);let m=cur(),inh=0;
+ const pa=X.p.map(spOf).filter(Boolean).sort((a,b)=>b[5]-a[5]);
+ if(pa[0]&&m&&pa[0][5]>m[5]&&Math.random()<.15){G.sp[0]={id:pa[0][0],rev:0};inh=1;notes.push(`🧬 สายเลือดตื่น — คุณได้ดวงจิตเดียวกับ${X.p[0]===pa[0][0]?'พ่อ':'แม่'}`)}
+ m=cur();if(!inh&&m&&m[3]!==X.o.t&&Math.random()<ot.bias){const n=pickT(X.o.t,m[5]);if(n){G.sp[0]={id:n[0],rev:0};notes.push(`🔮 ลางในฝันเป็นจริง — ดวงจิตออกมาเป็น${TYN[X.o.t][1]}`)}}
+ m=cur();if(!inh&&m&&m[5]<3&&Math.random()<ot.up+(X.fam[3].sh||0)*.3){const L=B.SP.filter(x=>x[3]===m[3]&&x[5]===m[5]+1);if(L.length){const n=L[Math.floor(Math.random()*L.length)];G.sp[0]={id:n[0],rev:0};notes.push('✨ แสงลางสว่างจ้าจนดวงจิตยกระดับขึ้นอีกขั้น')}}
+ if(!inh&&G.sp.length===1&&pa[0]&&pa[0][0]!==G.sp[0].id&&Math.random()<.05){G.sp.push({id:pa[0][0],rev:0});notes.push(`🧬 ดวงจิตของ${X.p[0]===pa[0][0]?'พ่อ':'แม่'}ตื่นขึ้นในตัวคุณด้วย — ดวงจิตคู่!`)}
+ if(G.sp.length===1&&ot.dual&&Math.random()<ot.dual){let n=null,k=0;while(k++<9){const c=spRoll(.2);if(c[0]!==G.sp[0].id){n=c;break}}if(n){G.sp.push({id:n[0],rev:0});notes.push('👯 ลางแฝดเป็นจริง — ดวงจิตคู่!')}}
+ const old=G.lv,lo=X.inn[0]+(X.fam[3].inn||0),hi=X.inn[1]+(X.fam[3].inn||0);G.lv=Math.max(0,Math.min(10,lo+Math.floor(Math.random()*(hi-lo+1))+(G.sp.length>1?1:0)));
+ try{const Bk=LS.get('murim_svbook',{})||{};G.sp.forEach(s=>Bk[s.id]=1);LS.set('murim_svbook',Bk)}catch(e){}
+ const desc=G.sp.map(s=>{const p=B.spNow?B.spNow(s):null,q=spOf(s.id);const ic=p?p.ic:q[1],n=p?p.n:q[2],t=p?p.t:q[3],rr=p?p.r:q[5];return`${ic} <b>${n}</b> <span class="tag2">(${TYN[t][0]} ${TYN[t][1]} · ${RARN[rr]||''})</span>`}).join(' และ ');
+ const i1=text.indexOf('<br><br>'),i2=text.indexOf('<br><br>',i1+8);if(i1>=0&&i2>i1)text=text.slice(0,i1+8)+desc+text.slice(i2);
+ text=text.replace(new RegExp('พลังจิตแต่กำเนิด <b>ระดับ '+old+'</b>'),`พลังจิตแต่กำเนิด <b>ระดับ ${G.lv}</b>`);
+ if(notes.length)text+='<br><br>'+notes.join('<br>')}}catch(e){console.error('svAw',e)}return _ch.call(this,title,text,opts)}}
+// ---------- 🎯 ปณิธานของทวีป ----------
+const sv=()=>S&&S.sv||{lv:0,rings:[]};
+const SG=[['sv_r9','หลอมวงแหวนครบ 9 วง','วงแหวนวิญญาณครบทุกวงในชีวิตเดียว',5,()=>(sv().rings||[]).length>=9,()=>(sv().rings||[]).length/9,()=>`วงแหวน ${(sv().rings||[]).length}/9`],
+ ['sv_r5','หลอมวงแหวน 5 วง','ผ่านคอขวดห้าครั้ง',3,()=>(sv().rings||[]).length>=5,()=>(sv().rings||[]).length/5,()=>`วงแหวน ${(sv().rings||[]).length}/5`],
+ ['sv_91','ได้ฉายาของตัวเอง (ระดับจิต 91)','ทั้งทวีปเรียกคุณด้วยฉายา',5,()=>sv().lv>=91,()=>sv().lv/91,()=>`ระดับจิต ${sv().lv}/91`],
+ ['sv_50','ไต่ถึงระดับจิต 50','กลายเป็นบรรพชนวิญญาณ',3,()=>sv().lv>=50,()=>sv().lv/50,()=>`ระดับจิต ${sv().lv}/50`],
+ ['sv_10k','วงแหวนหมื่นปีขึ้นไป','ล่าและดูดซับสัตว์วิญญาณหมื่นปีได้สำเร็จ',4,()=>(sv().rings||[]).some(g=>(g.t|0)>=3),()=>Math.min(1,Math.max(0,...(sv().rings||[{t:0}]).map(g=>g.t|0))/3),()=>{const m=Math.max(-1,...(sv().rings||[]).map(g=>g.t|0));return m<0?'ยังไม่มีวงแหวน':'วงแหวนสูงสุด '+['สิบปี','ร้อยปี','พันปี','หมื่นปี','แสนปี','ล้านปี','สิบล้านปี','ร้อยล้านปี','พันล้านปี'][m]}],
+ ['sv_r3y','หลอมวงแหวน 3 วงก่อนอายุ 30','พรสวรรค์ที่ทั้งสถาบันจับตา',4,()=>(sv().rings||[]).length>=3&&(S.age|0)<30,()=>(sv().rings||[]).length/3,()=>`วงแหวน ${(sv().rings||[]).length}/3 · อายุ ${S.age|0}/29`]];
+SG.forEach(x=>{const g={id:x[0],soul:1,sp:()=>false,c:()=>{try{return!!x[4]()}catch(e){return false}},pr:()=>{try{return Math.max(0,Math.min(1,x[5]()))}catch(e){return 0}},p:()=>{try{return x[6]()}catch(e){return''}},lv:x[3]};Object.defineProperty(g,'n',{get:()=>x[1],enumerable:true});Object.defineProperty(g,'d',{get:()=>x[2],enumerable:true});GOALS.push(g)});
+{const _go=goalOffer;goalOffer=function(){if(isSoul()){const L=GOALS.filter(g=>g.soul).sort(()=>Math.random()-.5);const out=L.slice(0,3);if(!out.some(g=>g.lv>=5)){const h=L.find(g=>g.lv>=5&&!out.includes(g));if(h)out[2]=h}const ids=out.map(g=>g.id);if(GOALS.some(g=>g.id==='slow'))ids.push('slow');return ids}return _go.apply(this,arguments)}}
+// ชื่อฉายาเดิมในเซฟ → ชื่อใหม่
+setInterval(()=>{try{const g=S&&S.sv;if(g&&g.ttl&&/^โต้วหลัว/.test(g.ttl))g.ttl=g.ttl.replace(/^โต้วหลัว/,'จอมจิต')}catch(e){}},3000);
+// หน้าตาการ์ดของทวีป
+const css=document.createElement('style');css.textContent=`#birth.svB h2{color:#bfe8ff;text-shadow:0 0 14px #6ad8ff66}
+#birth.svB .trait{border-color:#6a8aff66!important;background:linear-gradient(150deg,#1c2246,#141026)!important;position:relative;overflow:hidden}
+#birth.svB .trait:before{content:'';position:absolute;right:-26px;top:-26px;width:70px;height:70px;border-radius:50%;border:2px solid #8ab4ff33;box-shadow:0 0 0 8px #b07aff14,0 0 0 16px #8ab4ff0d;pointer-events:none}
+#birth.svB .box.hcard{border-color:#8ab4ff88!important;background:radial-gradient(120% 90% at 50% 0%,#2a2a6a,#141026)!important}`;document.head.appendChild(css);
+})()}catch(e){console.error('block69',e)}
