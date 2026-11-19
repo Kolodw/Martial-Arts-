@@ -25389,12 +25389,16 @@ function ttQMore(){const T=window._tt;if(!T||!T.q)return;const{hit}=T.q,L=$('ttR
 .frmore{display:block;margin:6px 0;width:100%;border:1.5px dashed var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:7px;font:inherit;font-size:13px;cursor:pointer}
 .frqi{width:100%;box-sizing:border-box;padding:8px 12px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:14px;margin:6px 0}`;document.head.appendChild(st)})();
 {const _feR=frEquip;frEquip=function(id){try{if(id){let a=LS.get('murim_frrc',[]);if(!Array.isArray(a))a=[];LS.set('murim_frrc',[id,...a.filter(x=>x!==id)].slice(0,5))}}catch(e){}return _feR.apply(this,arguments)}}
-const FRG=[['g','🌿 กรอบร้าน (ธรรมะ)'],['e','🩸 กรอบร้าน (อธรรม)'],['r','🏆 อันดับและผลงาน'],['h','🔥 โหมดนรก'],['adm','🛡️ แอดมิน']],FRN=12;
+const FRG=[['g','🌿 กรอบร้าน (ธรรมะ)'],['e','🩸 กรอบร้าน (อธรรม)'],['shop','💎 ร้านตกแต่ง (ซื้อ)'],['ev','🎉 อีเวนต์'],['sp','❄ ซีซันพาส'],['vip','🏮 VIP'],['r','🏆 อันดับและผลงาน'],['h','🔥 โหมดนรก · อเวจี'],['adm','🛡️ แอดมิน']],FRN=12;
+// หมวดกรอบ: แยกตามที่มา (id) ก่อน แล้วค่อยใช้ side เดิม · แอดมินเห็นและใส่ได้ทุกกรอบ
+const frCat=f=>/^f_e\d/.test(f.id)?'ev':/^f_s\d/.test(f.id)?'sp':/^f_v(ip)?\d$/.test(f.id)?'vip':/^f_[pmw]\d+$/.test(f.id)?'shop':f.side;
+const frAdmAll=()=>{try{return typeof admK==='function'&&!!admK()}catch(e){return false}};
+const frOwnQ=(d,id)=>frAdmAll()||d.own.includes(id);
 window._frg=window._frg||{open:{},sh:{},q:''};
 function frAvU(){const d=frGet();if(!d.av||!/^data:/.test(d.av))return d.av||'';if(window._frAvK===d.av.length&&window._frAvB)return window._frAvB;
  if(window._frAvK!==d.av.length){window._frAvK=d.av.length;window._frAvB=null;try{fetch(d.av).then(r=>r.blob()).then(b=>{window._frAvB=URL.createObjectURL(b)}).catch(()=>{})}catch(e){}}return d.av}
 function frPk(f,d,au){return`<button class="frpick ${d.eq===f.id?'on':''}" onclick="frEquip('${f.id}')">${frWrap(`<span class="frph">${au?`<img src="${au}">`:'🙂'}</span>`,f.id)}<small>${f.n}</small></button>`}
-function frgItems(k){const d=frGet();return FRAMES.filter(f=>d.own.includes(f.id)&&f.side===k)}
+function frgItems(k){const d=frGet();return FRAMES.filter(f=>frOwnQ(d,f.id)&&frCat(f)===k)}
 function frgChunk(k){const L=frgItems(k),box=$('frg_'+k);if(!box)return;const s=window._frg.sh[k]||0,e=Math.min(L.length,s+FRN),d=frGet(),au=frAvU();
  box.insertAdjacentHTML('beforeend',L.slice(s,e).map(f=>frPk(f,d,au)).join(''));window._frg.sh[k]=e;let b=box.nextElementSibling;const rest=L.length-e;
  if(rest>0){if(!b||!b.classList.contains('frmore')){box.insertAdjacentHTML('afterend',`<button class="frmore" onclick="frgChunk('${k}')"></button>`);b=box.nextElementSibling}b.textContent=`แสดงอีก ${Math.min(FRN,rest)} (เหลือ ${rest})`}else if(b&&b.classList.contains('frmore'))b.remove()}
@@ -25402,14 +25406,14 @@ function frgTog(k,force){const h=$('frgh_'+k),box=$('frg_'+k);if(!h||!box)return
  const b=box.nextElementSibling;if(b&&b.classList.contains('frmore'))b.style.display=op?'':'none';if(op&&!(window._frg.sh[k]>0))frgChunk(k)}
 function frgSearch(){const q=String(window._frg.q||'').trim().toLowerCase(),res=$('frRes'),main=$('frMain');if(!res||!main)return;
  if(!q){res.style.display='none';res.innerHTML='';main.style.display='';return}
- const d=frGet(),au=frAvU(),hit=FRAMES.filter(f=>d.own.includes(f.id)&&f.n.toLowerCase().includes(q));main.style.display='none';res.style.display='';
+ const d=frGet(),au=frAvU(),hit=FRAMES.filter(f=>frOwnQ(d,f.id)&&f.n.toLowerCase().includes(q));main.style.display='none';res.style.display='';
  res.innerHTML=hit.length?`<div class="frlist frcalm">${hit.slice(0,36).map(f=>frPk(f,d,au)).join('')}</div>${hit.length>36?`<p class="tag2">แสดง 36 จาก ${hit.length} — พิมพ์ให้เจาะจงขึ้น</p>`:''}`:'<p class="tag2">ไม่พบกรอบที่ค้นหา</p>'}
 {const _opF=openProfile;openProfile=function(){const r=_opF.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='profile')return r;const fl=m.querySelector('.frlist');if(!fl||fl.dataset.done)return r;
- const d=frGet(),own=FRAMES.filter(f=>d.own.includes(f.id)),au=frAvU(),nA=own.filter(f=>f.side==='adm').length,nT=FRAMES.filter(f=>f.side!=='adm').length,nO=own.length-nA;
+ const d=frGet(),own=FRAMES.filter(f=>frOwnQ(d,f.id)),au=frAvU(),nA=own.filter(f=>f.side==='adm').length,nT=FRAMES.filter(f=>f.side!=='adm').length,nO=own.length-nA;
  const h4=fl.previousElementSibling;if(h4&&h4.tagName==='H4')h4.textContent=`🖼️ กรอบของฉัน (${nO}/${nT})${nA?` · แอดมิน ${nA}`:''}`;
- const eq=d.eq?frOf(d.eq):null,rc=(LS.get('murim_frrc',[])||[]).filter(x=>x!==d.eq&&d.own.includes(x)&&frOf(x)).slice(0,3).map(frOf);
+ const eq=d.eq?frOf(d.eq):null,rc=(LS.get('murim_frrc',[])||[]).filter(x=>x!==d.eq&&frOwnQ(d,x)&&frOf(x)).slice(0,3).map(frOf);
  const none=`<button class="frpick ${!d.eq?'on':''}" onclick="frEquip(null)">${frWrap('<span class="frph">✕</span>',null)}<small>ไม่ใช้กรอบ</small></button>`;
- const top=`<div class="frsub">ใส่อยู่ตอนนี้</div><div class="frlist">${eq&&d.own.includes(eq.id)?frPk(eq,d,au):''}${none}</div>`+(rc.length?`<div class="frsub">ใช้ล่าสุด</div><div class="frlist frcalm">${rc.map(f=>frPk(f,d,au)).join('')}</div>`:'');
+ const top=`<div class="frsub">ใส่อยู่ตอนนี้</div><div class="frlist">${eq&&frOwnQ(d,eq.id)?frPk(eq,d,au):''}${none}</div>`+(rc.length?`<div class="frsub">ใช้ล่าสุด</div><div class="frlist frcalm">${rc.map(f=>frPk(f,d,au)).join('')}</div>`:'');
  const groups=FRG.filter(([k])=>frgItems(k).length).map(([k,t])=>`<div class="frgh" id="frgh_${k}" onclick="frgTog('${k}')"><span>${t}</span><span class="c">${frgItems(k).length}</span><span class="ar">▸</span></div><div class="frlist frcalm" id="frg_${k}" style="display:none"></div>`).join('');
  const host=document.createElement('div');host.dataset.done='1';host.innerHTML=`<input class="frqi" id="frQ" type="search" placeholder="🔍 ค้นหากรอบ…" value="${esc(window._frg.q||'')}"><div id="frMain">${top}${groups}</div><div id="frRes" style="display:none"></div>`;
  fl.replaceWith(host);const qi=$('frQ');qi.oninput=function(){window._frg.q=this.value;clearTimeout(window._frT);window._frT=setTimeout(frgSearch,160)};
@@ -47033,3 +47037,38 @@ if(HI&&DR&&Array.isArray(window.AVT)){
  setInterval(()=>{try{const m=$('modal');if(!m||m.dataset.k!=='profile')return;m.querySelectorAll('.pfpane[data-t="avt"] button[title]').forEach(b=>{const a=SA.find(z=>z[1]===b.title);if(a&&/cosMenu/.test(b.getAttribute('onclick')||''))b.setAttribute('onclick',"closeM();openSP('tr')")})}catch(e){}},500);
 }
 })()}catch(e){console.error('block76',e)}
+
+// ============================================================
+// BLOCK 77: 🗂️ หมวดของแต่งในโปรไฟล์ — รูป (ฟรี / ซื้อ·เติมเงิน / ซีซันพาส) · ฉายา (+อีเวนต์ / ซีซันพาส / VIP / ร้านตกแต่ง) · แอดมินใช้ได้ทุกอย่าง
+// ============================================================
+try{(()=>{
+const isAdm=()=>{try{return typeof admK==='function'&&!!admK()}catch(e){return false}};
+const hasC=id=>{try{return isAdm()||(window.cosHas?!!window.cosHas(id):false)}catch(e){return false}};
+const st=document.createElement('style');st.textContent=`.avg{margin:10px 0 4px;font-size:13px;font-weight:800;display:flex;gap:6px;align-items:center}.avg small{opacity:.6;font-weight:400}
+.sp2c.cos{display:flex;flex-direction:column;gap:3px;align-items:flex-start}.sp2c.cos .ptt{font-size:11px;max-width:100%}.sp2cos{margin:4px 0 6px;font-size:13px}`;document.head.appendChild(st);
+// ---------- 🧑 รูป: แยกหมวด ----------
+setInterval(()=>{try{const m=$('modal');if(!m||m.dataset.k!=='profile')return;const pane=m.querySelector('.pfpane[data-t="avt"]');if(!pane||pane.dataset.grp)return;
+ const grid=pane.querySelector('.pfsec>div');if(!grid)return;const A=window.AVT||[],bt=[...grid.children];if(!bt.length)return;pane.dataset.grp='1';
+ const G=[['f','🆓 ฟรี'],['p','💎 ซื้อ / เติมเงิน'],['s','❄ ซีซันพาส']],cat=a=>!a?'p':a.free?'f':a.sea?'s':'p',box={};
+ G.forEach(([k])=>box[k]=[]);bt.forEach(b=>{const a=A.find(x=>x.n===b.title);box[cat(a)].push([b,a])});
+ const frag=document.createDocumentFragment();
+ G.forEach(([k,t])=>{const L=box[k];if(!L.length)return;const own=L.filter(([b,a])=>a&&(a.free||hasC(a.id))).length;const h=document.createElement('div');h.className='avg';h.innerHTML=`${t} <small>${own}/${L.length}</small>`;const g=document.createElement('div');g.style.cssText=grid.getAttribute('style')||'';L.forEach(([b])=>g.appendChild(b));frag.appendChild(h);frag.appendChild(g)});
+ grid.replaceWith(frag)}catch(e){}},350);
+// ---------- 🎖️ ฉายา: เพิ่มฉายาของแต่ง (ขยับได้) แยกหมวด ----------
+const CAT=[['ev',/^t_e\d+$/,'🎉 อีเวนต์ (ฉายาขยับได้)',5],['sp',/^t_s\d+$/,'❄ ซีซันพาส',6],['vip',/^t_v\d+$/,'🏮 VIP',6],['shop',/^t_[pmnw]\d+$/,'💎 ร้านตกแต่ง',4]];
+let IDS=null;const NM={};
+const allIds=()=>{if(IDS)return IDS;const L=[],tmp=document.createElement('div');const tryId=id=>{try{const h=window.cosTitleHtml?window.cosTitleHtml(id):'';if(!h)return 0;tmp.innerHTML=h;const n=(tmp.textContent||'').trim();if(!n)return 0;NM[id]=n;L.push(id);return 1}catch(e){return 0}};
+ ['p','m','n','w','e','s','v'].forEach(p=>{let miss=0;for(let i=1;i<=40&&miss<3;i++){if(tryId('t_'+p+i))miss=0;else miss++}});return IDS=L};
+const tEq=()=>{try{return(JSON.parse(localStorage.getItem('murim_cos')||'{}').eq||{}).t||''}catch(e){return''}};
+const catOf=id=>CAT.find(c=>c[1].test(id));
+{const _sd=sp2Data;sp2Data=function(){const out=_sd.apply(this,arguments);try{const cur=tEq();allIds().forEach(id=>{const c=catOf(id);if(!c||!hasC(id))return;out.push({t:NM[id],r:c[3],k:'cos:'+id,g:c[2],tab:c[0],on:cur===id})})}catch(e){}return out}}
+{const _ss=setShowTtl;setShowTtl=function(t,r,k){const m=/^cos:(t_[a-z0-9_]+)$/.exec(k||'');if(!m)return _ss.apply(this,arguments);
+ (async()=>{if(typeof onlineOK!=='undefined'&&!onlineOK){toast('ต้องออนไลน์');return}const id=m[1],off=tEq()===id,o=window.cosMenu;window.cosMenu=()=>{};try{await window.cosEq('t',off?null:id)}catch(e){}finally{window.cosMenu=o}toast(off?'ถอดฉายาขยับได้แล้ว':'🎖️ ใส่ฉายา「'+(NM[id]||'')+'」แล้ว');try{openShowPick()}catch(e){}})()}}
+{const _sl=sp2List;sp2List=function(){const r=_sl.apply(this,arguments);try{document.querySelectorAll('#sp2L .sp2c').forEach(b=>{const m=/cos:(t_[a-z0-9_]+)/.exec(b.getAttribute('onclick')||'');if(!m||b.classList.contains('cos'))return;b.classList.add('cos');const bb=b.querySelector('b');if(bb&&window.cosTitleHtml)bb.outerHTML=window.cosTitleHtml(m[1])})}catch(e){}return r}}
+const MY=[['sp','❄ ซีซันพาส'],['vip','🏮 VIP'],['shop','💎 ร้านตกแต่ง']];
+{const _op=openShowPick;openShowPick=function(){const keep=SP2.tab;const r=_op.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='showpick')return r;const D=sp2Data(),tb=m.querySelector('.sp2tabs:not(.sp2r)');
+  if(tb){const evb=[...tb.children].find(b=>/SP2.tab='ev'/.test(b.getAttribute('onclick')||''));if(evb)evb.textContent='🎉 อีเวนต์';
+   MY.forEach(([k,n])=>{if(!D.some(x=>x.tab===k)||tb.querySelector(`[data-my="${k}"]`))return;const b=document.createElement('button');b.dataset.my=k;b.textContent=n;b.setAttribute('onclick',`SP2.tab='${k}';openShowPick()`);tb.appendChild(b)});
+   if(MY.some(x=>x[0]===keep)&&SP2.tab!==keep){SP2.tab=keep;[...tb.children].forEach(b=>b.classList.toggle('on',b.dataset.my===keep));sp2List()}}
+  const ce=tEq(),cu=m.querySelector('.sp2cur');if(cu&&!m.querySelector('.sp2cos'))cu.insertAdjacentHTML('afterend',`<div class="sp2cos">ฉายาขยับได้: ${ce&&window.cosTitleHtml?window.cosTitleHtml(ce)+` <button class="gbtn" style="padding:3px 10px" onclick="setShowTtl('',0,'cos:${ce}')">ถอด</button>`:'<span class="tag2">— ไม่ได้ใส่ — (เลือกจากหมวด อีเวนต์ / ซีซันพาส / VIP / ร้านตกแต่ง)</span>'}</div>`)}catch(e){console.error(e)}return r}}
+})()}catch(e){console.error('block77',e)}

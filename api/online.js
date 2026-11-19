@@ -2534,7 +2534,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (/^f_adm/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id)))) fr = ''; // กรอบแอดมิน: ใส่ได้เฉพาะแอดมิน
       if (vipCosN(fr) && vipTier(jp(await cmd('GET', 'vip:' + id))) < vipCosN(fr) && !(+(await cmd('SISMEMBER', 'admids', id)))) fr = ''; // กรอบ VIP: ต้องมีสิทธิ์ระดับนั้นอยู่
       if (/^f_(p[1-8]|e[1-5]|s[1-5])$/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id))) && !(+(await cmd('SISMEMBER', 'cos:' + id, fr)))) fr = ''; // กรอบร้านค้า: ต้องซื้อแล้ว
-      if (/^f_(arc|box|lg)\d/.test(fr)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.fr || []).includes(fr)) fr = '' } // กรอบลาน: ต้องมีในกระเป๋าเซิร์ฟเวอร์
+      if (/^f_(arc|box|lg)\d/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id)))) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.fr || []).includes(fr)) fr = '' } // กรอบลาน: ต้องมีในกระเป๋าเซิร์ฟเวอร์
       const isUp = /^data:image\/(jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(av);
       if (isUp && !isAdmKey(b.key)) return res.status(403).json({ err: 'noup' }); // อัปโหลดรูปเองปิดไว้ — เฉพาะแอดมิน
       let imgBad = 0; // รูปตัวละครใหญ่เกินเกณฑ์ (ตัวละครลายละเอียดมาก) → ไม่ปฏิเสธทั้งคำขอ เก็บกรอบให้ก่อน แล้วบอกหน้าเว็บให้ย่อรูปส่งใหม่
