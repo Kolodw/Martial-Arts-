@@ -1795,10 +1795,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const rl = async (k, n, ex) => { const c = +(await cmd('INCR', k)) || 1; if (c === 1) await cmd('EXPIRE', k, ex); return c <= n };
       const swAdd = async (u, p) => { try { const s = await cmd('HGET', 'swm:' + MON, u); if (s == null) return; const f = await cmd('HSETNX', 'swq:' + MON, u, 1); await pipe([['HINCRBY', 'sw:' + MON, 'p' + s, p], ['HINCRBY', 'swu:' + MON, u, p], ...(+f === 1 ? [['HINCRBY', 'sw:' + MON, 'a' + s, 1]] : []), ['EXPIRE', 'sw:' + MON, 86400 * 75], ['EXPIRE', 'swu:' + MON, 86400 * 75], ['EXPIRE', 'swq:' + MON, 86400 * 75]]) } catch (e) {} };
       // ---------- ⚡ ประกาศิตฟ้า ----------
-      const HQN = 6, HQ_CD = 3 * 86400e3, HQ_EXP = 7 * 86400e3, HQ_AUTO = 24 * 3600e3, HQ_MG = ['darts', 'drum', 'strike', 'moon', 'stars', 'pounce', 'heart', 'typing'];
+      const HQN = 15, HQ_CD = 3 * 86400e3, HQ_EXP = 7 * 86400e3, HQ_AUTO = 24 * 3600e3, HQ_MG = ['darts', 'drum', 'strike', 'moon', 'stars', 'pounce', 'heart', 'typing'];
       const pub = async () => { try { const [h, w] = await pipe([['GET', 'hq:s'], ['GET', 'wb:s']]); const H = jp(h), Wb = jp(w), hp = +(await cmd('GET', 'wb:hp')) || 0;
         await cmd('SET', 'gq:pub', JSON.stringify({ hq: H ? { r: H.r, ph: H.ph, wn: H.wn || '', nx: H.ph === 'cd' ? H.wt + HQ_CD : 0 } : null, wb: Wb ? { r: Wb.r, ph: Wb.ph, n: Wb.n, pc: Wb.mx ? Math.max(0, Math.round(hp / Wb.mx * 100)) : 0 } : null }), 'EX', 86400 * 10) } catch (e) {} };
-      const hqNew = async (S0) => { const r = (S0 ? S0.r : 0) + 1; let q = Math.floor(Math.random() * HQN); if (S0 && q === S0.q) q = (q + 1) % HQN; const S1 = { r, q, g: HQ_MG[Math.floor(Math.random() * HQ_MG.length)], t0: now, ph: 'on' }; await cmd('SET', 'hq:s', JSON.stringify(S1)); if (S0 && S0.ph === 'on') await pipe([['LPUSH', 'hq:hof', JSON.stringify({ r: S0.r, q: S0.q, n: '', t: now, x: 1 })], ['LTRIM', 'hq:hof', 0, 49]]); await pub(); return S1 };
+      const hqNew = async (S0) => { const r = (S0 ? S0.r : 0) + 1, lq = ((await cmd('LRANGE', 'hq:lq', 0, 4)) || []).map(Number); if (S0 && !lq.includes(S0.q)) lq.unshift(S0.q); // ไม่ซ้ำ 5 รอบล่าสุด
+        const can = Array.from({ length: HQN }, (_, i) => i).filter(i => !lq.slice(0, 5).includes(i)), q = can[Math.floor(Math.random() * can.length)];
+        const S1 = { r, q, g: HQ_MG[Math.floor(Math.random() * HQ_MG.length)], t0: now, ph: 'on' }; await pipe([['SET', 'hq:s', JSON.stringify(S1)], ['LPUSH', 'hq:lq', q], ['LTRIM', 'hq:lq', 0, 4]]); if (S0 && S0.ph === 'on') await pipe([['LPUSH', 'hq:hof', JSON.stringify({ r: S0.r, q: S0.q, n: '', t: now, x: 1 })], ['LTRIM', 'hq:hof', 0, 49]]); await pub(); return S1 };
       const hqWin = async (H, c) => { H.ph = 'cd'; H.wt = now; H.wn = c.n; H.wu = c.u; await give(c.u, 0, 3); await gfr(c.u, 'f_hq1'); await pipe([['SET', 'hq:s', JSON.stringify(H)], ['LPUSH', 'hq:hof', JSON.stringify({ r: H.r, q: H.q, g: H.g, n: c.n, t: now })], ['LTRIM', 'hq:hof', 0, 49], ['LPUSH', 'hq:rw', c.u], ['LTRIM', 'hq:rw', 0, 1]]); await pub() };
       const hqTick = async () => {
         let H = jp(await cmd('GET', 'hq:s'));
@@ -1818,10 +1820,10 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (H.ph !== 'cd' && !rw.includes(u)) { await hqWin(H, c); return 'win' }
         const nOk = L.map(jp).filter(x => x && x.st === 'ok').length; if (nOk <= 5) { await give(u, 2, 0); await gfr(u, 'f_hq2') } return 'run' }
       // ---------- 🐉 บอสโลก ----------
-      const WBN = [['🐉', 'มังกรเพลิงเก้าหาง'], ['🦂', 'ราชาแมงป่องทะเลทราย'], ['👹', 'อสูรร้อยตา'], ['🐢', 'เต่ายักษ์แบกภูเขา'], ['🦅', 'พญาอินทรีย์สายฟ้า'], ['🕷️', 'แม่นางแมงมุมเงา'], ['🐍', 'งูขาวพันปี'], ['🦍', 'วานรหินผา']];
+      const WBN = [['🐉', 'มังกรเพลิงเก้าหาง'], ['🦂', 'ราชาแมงป่องทะเลทราย'], ['👹', 'อสูรร้อยตา'], ['🐢', 'เต่ายักษ์แบกภูเขา'], ['🦅', 'พญาอินทรีย์สายฟ้า'], ['🕷️', 'แม่นางแมงมุมเงา'], ['🐍', 'งูขาวพันปี'], ['🦍', 'วานรหินผา'], ['🐗', 'หมูป่าเขี้ยวเหล็ก'], ['🦑', 'ปลาหมึกยักษ์ใต้ทะเลลึก'], ['🐻', 'หมีดำกลืนจันทร์'], ['👻', 'เงาเจ้าเมืองไร้หัว'], ['🦇', 'ค้างคาวโลหิตพันปี'], ['🐊', 'จระเข้ราชาบึงดำ']];
       const wbTick = async () => {
         let W0 = jp(await cmd('GET', 'wb:s'));
-        const spawn = async () => { const r = (W0 ? W0.r : 0) + 1, pc = W0 ? (+(await cmd('ZCARD', 'wb:d:' + W0.r)) || 0) : 0, mx = Math.max(30000, Math.min(500000, Math.round(pc * 2600))), z = WBN[(r - 1) % WBN.length];
+        const spawn = async () => { const r = (W0 ? W0.r : 0) + 1, pc = W0 ? (+(await cmd('ZCARD', 'wb:d:' + W0.r)) || 0) : 0, mx = Math.max(30000, Math.min(500000, Math.round(pc * 2600))), z = (() => { const L = WBN.filter(x => !W0 || x[1] !== W0.n); return L[Math.floor(Math.random() * L.length)] })();
           const W1 = { r, ic: z[0], n: z[1], mx, t0: now, ph: 'on' }; await pipe([['SET', 'wb:s', JSON.stringify(W1)], ['SET', 'wb:hp', mx]]); W0 = W1; await pub(); return W1 };
         if (!W0) return await spawn();
         if ((W0.ph === 'dead' || W0.ph === 'gone') && now > W0.dt + 2 * 86400e3) return await spawn();
