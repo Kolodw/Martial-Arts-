@@ -5,6 +5,7 @@ const R=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const ch=a=>a[Math.floor(Math.random()*a.length)];
 const $=id=>document.getElementById(id);
 const fmt=n=>{n=Math.round(+n||0);const a=Math.abs(n);if(!isFinite(n))return n<0?'-∞':'∞';if(a>=1e15){const e=Math.floor(Math.log10(a)),m=+(n/Math.pow(10,e)).toFixed(1),SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';return m+'×10'+String(e).replace(/\d/g,d=>SUP[d])}if(a>=1e8){const U=[[1e12,'ล้านล้าน'],[1e11,'แสนล้าน'],[1e10,'หมื่นล้าน'],[1e9,'พันล้าน'],[1e8,'ร้อยล้าน']];for(const [v,u] of U)if(a>=v){const x=n/v;return(Math.abs(x)>=100?Math.round(x).toLocaleString('th-TH'):(+x.toFixed(1)).toLocaleString('th-TH'))+' '+u}}return n.toLocaleString('th-TH')};
+const fmtH=n=>{n=+n||0;if(!isFinite(n))return n<0?'-∞':'∞';const a=Math.abs(n);if(a<1e4)return Math.round(n).toLocaleString('th-TH');const t=Math.floor(Math.log10(a)/3),m=n/Math.pow(10,t*3);let u;if(t<=4)u=['','K','M','B','T'][t];else{let i=t-5,s='';do{s=String.fromCharCode(97+i%26)+s;i=Math.floor(i/26)-1}while(i>=0);u=s.length<2?'a'+s:s}const am=Math.abs(m);return(+m.toFixed(am<10?2:am<100?1:0))+u};try{window.fmtH=fmtH}catch(e){}
 const fmtG=n=>n%1?n.toFixed(1):fmt(n);
 function pickW(arr){const t=arr.reduce((s,x)=>s+x.w,0);let r=Math.random()*t;for(const x of arr){if((r-=x.w)<=0)return{v:x,p:x.w/t}}const l=arr[arr.length-1];return{v:l,p:l.w/t}}
 const oddsTxt=p=>1/p<1.05?'ทั่วไป':'1 ใน '+fmt(1/p);
@@ -642,7 +643,7 @@ function render(){
  $('gTags').innerHTML=tg;
  $('gRealm').innerHTML=`⚔ <b>${REALMS[ri].n}</b> · พลังรวม <span class="px">${fmt(total())}</span>${nx?` / ${fmt(nx.p)}`:''}`;
  $('gHp').style.width=Math.max(0,S.hp/S.maxHp*100)+'%';
- const st=[['❤️ ชีวิต',`${Math.max(0,Math.round(S.hp))}`],['🌀 ลมปราณ',S.qi.toFixed(1)],['📜 ปัญญา',fmt(S.int)],['🌸 เสน่ห์',fmt(S.cha)],
+ const st=[['❤️ ชีวิต',`${fmtH(Math.max(0,S.hp))}`],['🌀 ลมปราณ',S.qi.toFixed(1)],['📜 ปัญญา',fmt(S.int)],['🌸 เสน่ห์',fmt(S.cha)],
   ['🏮 ชื่อเสียง',fameTierH()],['☯ กรรม',(S.karma>0?'+':'')+Math.round(S.karma)],['💰 ตำลึง',fmtM(S.money)],[moodOf(S.happy)[0]+' สุข',Math.round(S.happy)]];
  $('stats').innerHTML=st.map(s=>`<div class="st">${s[0]}<b class="px">${s[1]}</b></div>`).join('');
  const A=S.arc,ar=[];
@@ -5366,7 +5367,7 @@ function dkLeft(){if(!S)return'';const ri=realmIdx(),r=REALMS[ri],nx=REALMS[ri+1
  const top=(S.arts||[]).filter(a=>a&&a.n).slice().sort((a,b)=>b.b*artM(b)-a.b*artM(a)).slice(0,3);
  const trs=(S.traits||[]).map(t=>(TRAITS.find(x=>x.id===t)||{}).n).filter(Boolean);
  return `<div class="dk-hero"><canvas id="dkAva" width="168" height="186"></canvas><div class="dk-id"><div class="dk-age px">${S.age}<small> ปี</small></div><div class="dk-name">${esc(S.name)}</div><div class="dk-realm">${S.beastMode&&!S.beastMode.human?'🐾 ':S.xian?'☁️ ':'⚔️ '}<b>${r?r.n:''}</b></div><div class="dk-sub">${S.faction?esc(S.faction.n)+' · '+(RANKS[S.faction.t]||[])[S.rank]:'ไร้สังกัด'}</div><div class="dk-sub">${esc(xT(S.talent.n))} · ${esc(S.family.n)}</div>${watchN?`<div class="dk-sub">👁 มีคนดูอยู่ ${watchN}</div>`:''}</div></div>
- ${dkBar('❤️ พลังชีวิต',S.hp,S.maxHp,'linear-gradient(90deg,#ff5a6a,#ff8a7a)',`${Math.max(0,Math.round(S.hp))}/${Math.round(S.maxHp)}`)}
+ ${dkBar('❤️ พลังชีวิต',S.hp,S.maxHp,'linear-gradient(90deg,#ff5a6a,#ff8a7a)',`${fmtH(Math.max(0,S.hp))}/${fmtH(S.maxHp)}`)}
  ${dkBar('⚔️ พลังรวม',nx?tot-r.p:1,nx?nx.p-r.p:1,'linear-gradient(90deg,#ffb83a,#ffe08a)',nx?`${fmt(tot)} / ${fmt(nx.p)}`:fmt(tot)+' · สูงสุด')}
  ${dkBar('⏳ อายุขัย',S.age,lm,'linear-gradient(90deg,#6ab0ff,#a8d4ff)',`${S.age} / ~${Math.round(lm)} ปี`)}
  <div class="dk-grid">${tile('🌀','ลมปราณ',fmtG(Math.round(S.qi*10)/10))}${tile('📜','ปัญญา',fmt(S.int))}${tile('🌸','เสน่ห์',fmt(S.cha))}${tile('🏮','ชื่อเสียง',fmt(S.fame)+((S.infamy||0)>=1?` <small style="color:#d84a4a">🩸${Math.round(S.infamy)}</small>`:''))}${tile('☯️','กรรม',(S.karma>0?'+':'')+Math.round(S.karma),S.karma>=20?'#3a9a4a':S.karma<=-20?'#d84a4a':'')}${tile(moodOf(S.happy)[0],'ความสุข',Math.round(S.happy))}${tile('💰',S.xian?'หินวิญญาณ':'ตำลึง',fmtM(S.money))}${tile('⚔️','ชนะศึก',fmt(S.kills||0))}</div>
@@ -10711,7 +10712,7 @@ function openGuideCard(t){const g=GD2.find(x=>x.t===t);if(!g)return openGuide();
 // ---------- 5) ทำอะไรดี? ----------
 function adviceList(){const A=[],en=LANG==='en';if(!S||!S.alive)return A;const g=goalInfo();
  if(g){const miss=g.L.filter(x=>x.c<x.n);if(miss.length)miss.forEach(x=>A.push(`🎯 ${esc(g.t)}: ${x.l}ยังขาดอีก <b>${fmt(Math.ceil(x.n-x.c))}</b>${x.h?` → ลอง <b>${x.h}</b>`:''}`));else if(g.note)A.push(`🎯 ${esc(g.t)}: ${g.note}`)}
- if(S.hp<S.maxHp*.35)A.push(`❤️ พลังชีวิตเหลือน้อย (${Math.round(S.hp)}/${S.maxHp}) → ${S.beastMode&&!S.beastMode.human?'🌿 ซ่อนตัวพักฟื้น':'🍵 พักผ่อน หรือกินยา'}`);
+ if(S.hp<S.maxHp*.35)A.push(`❤️ พลังชีวิตเหลือน้อย (${fmtH(S.hp)}/${fmtH(S.maxHp)}) → ${S.beastMode&&!S.beastMode.human?'🌿 ซ่อนตัวพักฟื้น':'🍵 พักผ่อน หรือกินยา'}`);
  if(S.sys&&S.sys.quests&&S.sys.quests.length){S.sys.quests.forEach(q=>{const left=q.dl-S.age;if(left<=3)A.push(`🟦 เควสระบบ "<b>${esc(q.n)}</b>" เหลือ ${Math.max(0,left)} ปี (${fmt(Math.floor(qProg(q)))}/${fmt(q.g)})${QHINT[q.k]?` → ทิศทางแนะนำ <b>${(([...(S.beastMode&&!S.beastMode.human?BFOCUS:FOCUS)].find(f=>f[0]===QHINT[q.k])||[])[2])||QHINT[q.k]}</b>`:''}`)})}
  if((S.happy==null?60:S.happy)<25)A.push('😞 ความสุขต่ำ → พักผ่อน อยู่กับครอบครัว หรือไปเทศกาลเมือง');
  if(!S.beastMode&&S.age>=18&&!S.spouse&&!S.sp)A.push('💕 ยังไม่มีคู่ครอง → เลือก 🌸 ครอบครัว หรือคุยกับคนรู้จักในหน้าผู้คน');
@@ -10881,7 +10882,7 @@ const atN=v=>fmt(Math.round(v||0));
 // [เงื่อนไข, [ประโยค (ฟังก์ชันได้)]]
 const AT_CORE=[
  // ---- พลังชีวิต ----
- [()=>S.hp<S.maxHp*.3,[()=>`พลังชีวิตเหลือ ${atN(S.hp)}/${atN(S.maxHp)} แล้วนะ จะสู้ต่อจริงเหรอ`,'เลือดคุณไหลออกมามากกว่าความกล้าแล้วตอนนี้','ฉันเห็นกราฟพลังชีวิตคุณดิ่งลงเหมือนหน้าผา','ร่างกายคุณกำลังส่งสัญญาณขอความช่วยเหลือ ฟังมันบ้าง','ถ้าตายตอนนี้ ฉันจะต้องหาโฮสต์ใหม่นะ ไม่สนุกเลย','บาดแผลเยอะขนาดนี้ ยังจะไปหาเรื่องใครอีก?','แนะนำให้พักผ่อน… ไม่ใช่คำขอ เป็นคำสั่งทางการแพทย์',()=>`เหลือเลือดแค่ ${Math.round(S.hp/S.maxHp*100)}% — ระดับเดียวกับความอดทนของฉันตอนนี้`]],
+ [()=>S.hp<S.maxHp*.3,[()=>`พลังชีวิตเหลือ ${fmtH(S.hp)}/${fmtH(S.maxHp)} แล้วนะ จะสู้ต่อจริงเหรอ`,'เลือดคุณไหลออกมามากกว่าความกล้าแล้วตอนนี้','ฉันเห็นกราฟพลังชีวิตคุณดิ่งลงเหมือนหน้าผา','ร่างกายคุณกำลังส่งสัญญาณขอความช่วยเหลือ ฟังมันบ้าง','ถ้าตายตอนนี้ ฉันจะต้องหาโฮสต์ใหม่นะ ไม่สนุกเลย','บาดแผลเยอะขนาดนี้ ยังจะไปหาเรื่องใครอีก?','แนะนำให้พักผ่อน… ไม่ใช่คำขอ เป็นคำสั่งทางการแพทย์',()=>`เหลือเลือดแค่ ${Math.round(S.hp/S.maxHp*100)}% — ระดับเดียวกับความอดทนของฉันตอนนี้`]],
  [()=>S.hp>=S.maxHp*.95,['ร่างกายสมบูรณ์ 100% วันนี้ไม่มีข้ออ้างแล้วนะ','สุขภาพดีเยี่ยม เหมาะกับการไปหาเรื่องใครสักคน','ทุกเซลล์ในร่างคุณพร้อมใช้งาน — อย่าปล่อยให้เปล่าประโยชน์','ชีพจรปกติ ลมหายใจสม่ำเสมอ… น่าเบื่อจัง ไปผจญภัยกันไหม']],
  // ---- ทิศทาง (บ่น/ชม) ----
  [()=>S.focus==='rest',[()=>`${atFN()}อีกแล้วเหรอ? ฉันนับได้ว่าคุณพักมากกว่าฝึกนะ`,'การพักผ่อนดีต่อร่างกาย แต่ไม่ดีต่ออันดับในทำเนียบ','นอนเยอะขนาดนี้ หมอนคงได้ขั้นก่อนคุณ','ฉันจำลองแล้ว ถ้าคุณพักแบบนี้ต่อไป ศัตรูจะแซงหน้าใน 3 ปี','พักได้ แต่อย่าลืมตื่นนะ… ฉันเริ่มเหงาแล้ว']],
@@ -26750,7 +26751,7 @@ function nm(t){return{ghost:'ต้นไม้ผี',pit:'หลุมพร�
 window._wlGo=function(i){if(!X||X.busy)return;const n=X.nodes[i];if(!n||n.done)return;X.time++;n.nw=0;
  if(X.night&&Math.random()<(X.hide?.12:.25)+(X.curse?.15:0)){n.done=0;return fightIn(X.area==='cave'?'สิ่งที่คืบคลานในความมืด':'อสูรราตรี',1+(X.curse?.2:0),()=>{take(loot(1));return'คุณจัดการสิ่งที่ซุ่มอยู่ได้'},'มันคาบของในย่ามไปบางส่วน',()=>{X.loot.splice(0,Math.ceil(X.loot.length/3))})}
  const ev=(X.area==='cave'?CN:FN)[n.t](n);X.cur={i,ev};
- modal(`<h3>${ev.h}</h3><div class="fxbar"><span>${tod()} ${X.time}</span><span>❤️ ${Math.round(S.hp)}</span></div><div style="text-align:center;margin:6px 0"><img src="${icon(n.t)}" style="width:80px;height:80px;image-rendering:pixelated"></div><p>${ev.d}</p>`+ev.o.map((o,k)=>`<button class="opt" onclick="_wlPick(${k})">${o.t}${o.s?`<small>${o.s}</small>`:''}</button>`).join(''),'fx')};
+ modal(`<h3>${ev.h}</h3><div class="fxbar"><span>${tod()} ${X.time}</span><span>❤️ ${fmtH(S.hp)}</span></div><div style="text-align:center;margin:6px 0"><img src="${icon(n.t)}" style="width:80px;height:80px;image-rendering:pixelated"></div><p>${ev.d}</p>`+ev.o.map((o,k)=>`<button class="opt" onclick="_wlPick(${k})">${o.t}${o.s?`<small>${o.s}</small>`:''}</button>`).join(''),'fx')};
 window._wlPick=function(k){if(!X||!X.cur)return;const {i,ev}=X.cur;X.cur=null;X.nodes[i].done=1;const r=ev.o[k].f();if(r!=null)draw(r)};
 window._wlCamp=function(){if(!X)return;X.camp=1;draw('🔥 คุณก่อกองไฟเล็กๆ ตัดสินใจค้างคืนในป่า — <b>ของกลางคืนดีกว่า แต่ถูกซุ่มได้</b>')};
 window._wlEnd=function(){endTrip('home')};
@@ -44374,23 +44375,23 @@ const riS=()=>{try{return Math.max(0,Math.min(7,realmIdx()|0))}catch(e){return 0
 window.hpCapBase=function(){if(!S)return 1e3;const c=capW(),bm=S.beastMode;return bm&&!bm.human?c:Math.round(c*(1+2*riS()/7))};
 // C) เลือดโบนัส (แต้มระบบ · ยา/ของที่ตั้งใจเพิ่มเลือด): บวกเกินเพดานได้อีกไม่เกิน +50%
 const bEff=()=>Math.min(Math.max(0,+S.hpB||0),Math.round(hpCapBase()*.5));
-window.hpCap=function(){if(!S)return 1e3;return hpCapBase()+bEff()};
+window.hpCap=function(){return Infinity};
 // B) ส่วนที่ล้น → 🛡️ ความทนทาน (ลดความเสียหาย สูงสุด 40% · ยิ่งเยอะยิ่งได้น้อยลง) · ล้นจากการโตปกตินับ 10%
-window.hpTough=function(){if(!S)return 0;const c=hpCapBase(),x=Math.max(0,(+S.hpB||0)-c*.5)+.1*(+S.hpOv||0);return +(.4*(1-Math.exp(-x/Math.max(1,c)))).toFixed(4)};
+window.hpTough=function(){return 0;const c=hpCapBase(),x=Math.max(0,(+S.hpB||0)-c*.5)+.1*(+S.hpOv||0);return +(.4*(1-Math.exp(-x/Math.max(1,c)))).toFixed(4)};
 function tough(){try{if(!S||!S.alive)return;const l=S._hpL,t=hpTough();if(l!=null&&t>0&&S.hp<l&&S._hpM===S.maxHp){const g=Math.round((l-S.hp)*t);if(g>0)S.hp=Math.min(S.maxHp,S.hp+g)}S._hpL=S.hp;S._hpM=S.maxHp}catch(e){}}
 window.hpToughTick=tough;
 function clampHp(){try{if(!S)return;tough();const base=hpCapBase(),cap=base+bEff();let m=+S.maxHp||0;if(!isFinite(m)||m<=0)return;
  // ใกล้เพดาน: ส่วนที่โตเองได้น้อยลงเรื่อย ๆ (ไม่ชนเพดานเร็ว) — ส่วนที่ถูกตัดไปนับเป็นความทนทาน
- const p=S._hpP;if(p&&m>p&&p>cap*.5){const inc=m-p,k=Math.max(.02,(cap-p)/(cap*.5));const nm=Math.min(cap,p+Math.max(1,Math.round(inc*k)));const d=m-nm;S.hpOv=(+S.hpOv||0)+d;m=nm;S.hp=Math.max(1,(S.hp||0)-d)}
- if(m>cap){const r=Math.max(0,Math.min(1,(S.hp||0)/m));S.hpOv=(+S.hpOv||0)+(m-cap);m=cap;S.hp=Math.max(S.hp>0?1:0,Math.round(cap*r))}
+ // (เลิกจำกัดเพดานเลือดแล้ว — โตได้ไม่จำกัด แสดงเป็นตัวย่อ K/M/B/T/aa…)
+ void cap;
  S.maxHp=Math.round(m);if(S.hp>S.maxHp)S.hp=S.maxHp;if(!isFinite(S.hp))S.hp=S.maxHp;S._hpP=S.maxHp;S._hpL=S.hp;S._hpM=S.maxHp}catch(e){}}
 window.clampHp=clampHp;
 // เพิ่มเลือดแบบตั้งใจ → เข้าเลือดโบนัส (แต้มระบบ · พรขั้นธาตุ)
 {const _ap=allocPt;allocPt=function(k){const s=S&&S.sys,had=s&&s.pts>0;try{if(k==='hp'&&had){const v=srkPt('hp');if(v>0){const t0=hpTough(),full=S.maxHp>=hpCap();S.hpB=(+S.hpB||0)+v;S._hpP=null;if(full&&hpTough()>t0)setTimeout(()=>{try{toast(`🛡️ เลือดเต็มเพดาน → ความทนทาน ${(hpTough()*100).toFixed(1)}%`)}catch(e){}},50)}}}catch(e){}return _ap.apply(this,arguments)}}
-{const L=()=>{try{const m=$('modal'),b=m&&m.querySelector('[onclick="allocPt(\'hp\')"] small');if(!b||!S)return;const room=hpCap()-S.maxHp,bx=Math.round(hpCapBase()*.5),bb=Math.min(+S.hpB||0,bx),t=hpTough();const tx=room>0?`+${fmt(srkPt('hp'))} · โบนัส ${fmt(bb)}/${fmt(bx)}`:`เต็ม → 🛡️ ทนทาน ${(t*100).toFixed(1)}%`;if(b.textContent!==tx)b.textContent=tx}catch(e){}};setInterval(()=>{if(modalOpen)L()},400)}
+{const L=()=>{try{const m=$('modal'),b=m&&m.querySelector('[onclick="allocPt(\'hp\')"] small');if(!b||!S)return;const room=hpCap()-S.maxHp,bx=Math.round(hpCapBase()*.5),bb=Math.min(+S.hpB||0,bx),t=hpTough();const tx=`+${fmtH(srkPt('hp'))}`;if(b.textContent!==tx)b.textContent=tx}catch(e){}};setInterval(()=>{if(modalOpen)L()},400)}
 {const _cd=checkDeath;checkDeath=function(){tough();return _cd.apply(this,arguments)}}
 // ชดเชยเซฟเดิม: แต้มเลือดจากระบบที่เคยใส่ (S.sys.hp) กลับมาเป็นเลือดโบนัส/ความทนทาน
-function fix(){try{if(!S||S._hpFx)return;S._hpFx=1;const sh=+(S.sys&&S.sys.hp)||0;if(sh>0&&!(+S.hpB)){const atCap=S.maxHp>=hpCapBase()*.9;S.hpB=sh;S._hpP=null;if(atCap)S.maxHp=Math.max(S.maxHp,Math.min(hpCap(),S.maxHp+bEff()));clampHp();
+function fix(){try{if(S&&!S._hpRs){S._hpRs=1;const ov=Math.round(+S.hpOv||0);if(ov>0){const r=S.maxHp>0?Math.max(0,Math.min(1,S.hp/S.maxHp)):1;S.maxHp+=ov;S.hp=Math.round(S.maxHp*r);S.hpOv=0;S._hpP=null;setTimeout(()=>{try{log(`❤️ <b>คืนพลังชีวิต</b> — เลิกจำกัดเพดานเลือดแล้ว ส่วนที่เคยถูกตัดไป +${fmtH(ov)} คืนให้ครบ (พลังชีวิตสูงสุด ${fmtH(S.maxHp)})`,'epic')}catch(e){}},300)}}}catch(e){}try{if(!S||S._hpFx)return;S._hpFx=1;const sh=+(S.sys&&S.sys.hp)||0;if(sh>0&&!(+S.hpB)){const atCap=S.maxHp>=hpCapBase()*.9;S.hpB=sh;S._hpP=null;if(atCap)S.maxHp=Math.max(S.maxHp,Math.min(hpCap(),S.maxHp+bEff()));clampHp();
  setTimeout(()=>{try{log(`🛡️ <b>คืนแต้มเลือดจากระบบ</b> — แต้มเลือด ${fmt(sh)} ที่เคยใส่กลายเป็น <b>เลือดโบนัส</b> (เกินเพดานได้ +50%)${hpTough()>0?` และ <b>ความทนทาน ${Math.round(hpTough()*100)}%</b> (ลดความเสียหาย)`:''}`,'epic')}catch(e){}},900)}}catch(e){}}
 setInterval(()=>{try{if(S&&S.alive)fix()}catch(e){}},2000);
 {const _py=passYear;passYear=function(){clampHp();const r=_py.apply(this,arguments);clampHp();return r}}
@@ -45645,6 +45646,7 @@ const RX={ft:/สู้|ต่อสู้|ดวล|ฆ่า|ปราบ|ก�
 const mwM=()=>S&&S.mw;
 // ---- ข้อมูลเควสแบบเดียวกันทุกระบบ ----
 function info(x){const o={cur:null,need:null,left:null,how:'',go:'',ready:!!x.ready,cat:null};try{
+ if(x.gen){Object.assign(o,{cur:x.cur,need:x.need,left:x.left!=null?x.left:null,how:x.how||'',go:x.go||'',cat:x.cat||null,ready:x.cur>=x.need,q:x.q});return o}
  if(/^tq/.test(x.k)){const q=(S.tq||[]).find(z=>'tq'+z.id===x.k);if(!q)return o;o.q=q;o.left=q.left;const T=tqV(q);o.ready=!!T.ok||q.kind==='fight';
   const K=q.kind;if(K==='kills'){o.cur=Math.max(0,S.kills-q.k0);o.need=q.need;o.cat='ft';o.how='ชนะการต่อสู้ — ท่องยุทธภพ ลุยดันเจี้ยน หรือรับดวล';o.go="setFocus('adv');closeM()"}
   else if(K==='item'){o.cur=bagN(q.m);o.need=q.need;o.cat='item';o.item=(BAGIT[q.m]||{}).n;o.how=`หา ${(BAGIT[q.m]||{}).ic||''} ${(BAGIT[q.m]||{}).n||'ของ'} — ซื้อในเมือง ได้จากท่องยุทธภพ/ล่าสัตว์`;o.go="closeM();openTown()"}
@@ -45722,3 +45724,70 @@ openQuests=function(){try{if(typeof sysQSweep==='function')sysQSweep()}catch(e){
  <label style="display:flex;gap:6px;align-items:center;margin-top:8px;font-size:12.5px"><input type="checkbox" ${LS.get('murim_qtrkoff',0)?'':'checked'} onchange="qtrkToggle()"> แสดงแถบติดตามเควสบนจอ</label>`,'quests')};
 try{qPin=function(k){S.qPin=S.qPin===k?null:k;try{sfx('click')}catch(e){}if(S.qPin)toast('📌 ติดตามแล้ว — เวลาของเควสนี้เดินช้าลงครึ่งหนึ่ง');render();openQuests()}}catch(e){}
 })()}catch(e){console.error('questX',e)}
+
+// ===================== 🎲 ชะตาแยกดี/ร้าย · เกรดความแกร่ง · ฟ้าคุ้มครองชะตาดีหายาก · ทางแก้ชะตาร้าย (เปลี่ยนทุกข์เป็นพลัง) =====================
+try{(()=>{
+const tw=()=>TRAITS.reduce((a,x)=>a+x.w,0);
+const isBadRow=c=>/⚠️|🩹/.test(c[0])||/กระดูกขยะ|ชีพจรตายด้าน/.test(String(c[1]))||(c[0]==='ชาติกำเนิด'&&/กำพร้า/.test(String(c[1])));
+// ---- 1) แยกความหายากฝั่งดี / ฝั่งร้าย ----
+{const _rc=rareCalc;rareCalc=function(T,key){const r=_rc.apply(this,arguments);try{let g=1,b=1;const G=[],B=[];T.forEach(c=>{const p=c[3];if(!(p>0&&p<RARE_CUT))return;if(isBadRow(c)){b/=p;B.push(String(c[1]).replace(/<[^>]+>/g,''))}else{g/=p;G.push(String(c[1]).replace(/<[^>]+>/g,''))}});r.g=g;r.b=b;r.G=G;r.B=B}catch(e){}return r}}
+// ---- 2) เกรดความแกร่งของชะตา (คิดจากของจริง ไม่ใช่ความหายาก) ----
+function gradeOf(r){let sc=(r.t&&r.t.v&&r.t.v.m)||1,why=[],neg=[];try{
+ const f=r.f&&r.f.v||{};if(f.orphan){sc*=.85;neg.push('กำพร้า')}else if((f.money||0)>=700||(f.power||0)>=80){sc*=1.3;why.push('ชาติกำเนิดสูง')}
+ (r.trs&&r.trs.list||[]).forEach(id=>{const t=trOf(id);if(!t)return;if(t.bad){sc*=t.id==='crippled'?.35:.75;neg.push(t.n)}else{const rr=t.w/tw();sc*=rr<.02?1.45:rr<.06?1.3:1.18;why.push(t.n)}});
+ if(r.body){bodyCs(r.body).forEach(c=>{if(c.good){sc*=1.15;why.push(c.n)}else{sc*=.85;neg.push(c.n)}})}
+ if(r.os){sc*=1.5;why.push('ระบบติดตัว')}if(r.isOw){sc*=1.12;why.push('ความรู้จากอีกโลก')}
+ const tm=(r.t&&r.t.v&&r.t.v.m)||1;if(tm>=2)why.unshift(r.t.v.n);else if(tm<1)neg.unshift(r.t.v.n)}catch(e){}
+ const G=sc>=5?['S+','#ff5ad8']:sc>=3?['S','#ffd040']:sc>=2?['A','#5fd05f']:sc>=1.35?['B','#5ab0ff']:sc>=.6?['C','#c9c2b0']:['D','#e0503c'];
+ return{sc,g:G[0],c:G[1],why,neg}}
+window._rxGrade=gradeOf;
+const SAY={'S+':['ฟ้าดินยังต้องเหลียวมอง','ร้อยปีจะเกิดสักคน หรืออาจไม่เกิดเลย','ชะตาของผู้ครองแผ่นดิน'],'S':['ต้นกล้ามังกร ถ้ารอดก็รุ่ง','ชะตาเด่น เหลือแค่อย่าตายก่อนวัย','ฟ้าเปิดทางให้แล้ว'],'A':['ฐานดี เดินถูกทางไปได้ไกล','ดีกว่าคนส่วนใหญ่ชัดเจน','มีของ ต้องรู้จักใช้'],'B':['พอมีแวว ต้องพยายามเพิ่ม','กลางค่อนบน ความขยันตัดสิน','ไม่โดดเด่นแต่ไม่ถ่วง'],'C':['ชะตาคนธรรมดา ทุกก้าวต้องสู้เอง','ไม่มีแต้มต่อ แต่ก็ไม่มีภาระ','เส้นทางยาว แต่ไม่ปิด'],'D':['ชะตาลำบาก — แต่ทุกคำสาปมีทางแก้','เริ่มจากก้นหลุม ขึ้นได้ก็เป็นตำนาน','ทุกข์มาก แต่ถ้าผ่านไปได้ พลังจะมหาศาล']};
+const shOf=r=>{try{const fr=r.rare&&r.rare.g?rareFrac(r.rare.g,'h'+(CFG.xian?1:0)):1,gd=gradeOf(r).g;if(fr<=.0001||gd==='S+')return{to:15,n:3};if(fr<=.001||gd==='S')return{to:12,n:2};}catch(e){}return null};
+const css=document.createElement('style');css.textContent=`.rxB{margin-top:8px;padding:8px 10px;border-radius:10px;background:#0003;font-size:12.5px;line-height:1.5;text-align:left}.rxB .gr{display:inline-block;min-width:34px;text-align:center;padding:1px 8px;border-radius:8px;font-weight:900;color:#1a1208}.rxB .bd{color:#ff8a7a}.rxB .gd{color:#ffe08a}`;document.head.appendChild(css);
+{const _os=oddsShowR;oddsShowR=function(r){const o=_os.apply(this,arguments);try{if(!r||!r.rare||S&&S.alive&&false)return o;const ob=$('oddsBox');if(!ob)return o;let e=ob.querySelector('.rxB');if(!e){ob.insertAdjacentHTML('beforeend','<div class="rxB"></div>');e=ob.querySelector('.rxB')}
+ const G=gradeOf(r),R=r.rare,sh=shOf(r),say=SAY[G.g][r.seed%3];
+ e.innerHTML=`💪 ความแกร่งของชะตา <span class="gr" style="background:${G.c}">${G.g}</span> <i>${say}</i>
+ <br><span class="gd">✨ ฝั่งดี: ${R.g>1.5?'1 ใน '+fmt(Math.round(R.g)):'ไม่มีของดีหายาก'}</span>${R.G&&R.G.length?` <span class="tag2">(${esc(R.G.slice(0,3).join(', '))})</span>`:''}
+ <br><span class="bd">☠️ ชะตาร้าย: ${R.b>1.5?'1 ใน '+fmt(Math.round(R.b)):'ไม่มี'}</span>${R.B&&R.B.length?` <span class="tag2">(${esc(R.B.join(', '))})</span>`:''}
+ ${R.B&&R.B.length?'<br>🔓 ชะตาร้ายทุกอย่างมี <b>ทางแก้</b> ในเกม — ทำสำเร็จแล้วกลายเป็นพลัง (ดูในหน้า 📋 เควส)':''}
+ ${sh?`<br>🛡️ <b>ฟ้าคุ้มครอง</b> ถึงอายุ ${sh.to} ปี · รอดตายได้ ${sh.n} ครั้ง · ป่วยตายวัยทารกลดลงมาก`:''}
+ <br><span class="tag2">ความหายากรวมด้านบนนับทั้งของดีและร้าย — ดูเกรดความแกร่งเพื่อรู้ว่าชะตานี้ "เก่ง" แค่ไหน</span>`}catch(err){}return o}}
+// ---- 3) ฟ้าคุ้มครองชะตาดีหายากตอนเด็ก ----
+const SHS=['🛡️ แสงทองวาบขึ้นรอบร่าง — ฟ้ายังไม่ยอมให้ชะตานี้ดับเร็วนัก','🛡️ นักพรตพเนจรผ่านมาพอดี กดจุดห้ามเลือดแล้วหายไปโดยไม่บอกชื่อ','🛡️ หยกประจำตัวที่แม่ผูกไว้แตกเป็นเสี่ยง… แต่คุณยังหายใจ','🛡️ ในความฝัน มีเสียงหนึ่งบอกว่า "ยังไม่ถึงเวลาของเจ้า" แล้วคุณก็ลืมตา','🛡️ สัตว์ป่าตัวหนึ่งลากคุณออกจากอันตราย แล้วนั่งเฝ้าจนชาวบ้านมาพบ','🛡️ ลมหายใจสุดท้ายถูกดึงกลับ — ดวงดาวประจำตัวสว่างวาบกลางวัน'];
+{const _sl=startLife;startLife=function(){const r=roll;const o=_sl.apply(this,arguments);try{if(!S||!r||S.beastMode||S.mw)return o;const G=gradeOf(r),sh=shOf(r);S.rx={g:G.g,sh:sh?sh.to:0,shN:sh?sh.n:0,tri:[]};if(r.rare){S.rx.Ng=r.rare.g;S.rx.Nb=r.rare.b}
+  log(`💪 ความแกร่งของชะตา: <b>${G.g}</b>${G.why.length?` · จุดแข็ง: ${esc(G.why.slice(0,3).join(', '))}`:''}${G.neg.length?` · ภาระ: ${esc(G.neg.join(', '))}`:''}`,G.g[0]==='S'?'epic':'');
+  if(sh)log(`🛡️ <b>ฟ้าคุ้มครอง</b> — ชะตาที่หายากขนาดนี้ ฟ้าจะปกป้องจนอายุ ${sh.to} ปี (รอดตายได้ ${sh.n} ครั้ง)`,'epic');mkTrials()}catch(e){console.error('rx',e)}return o}}
+{const _cd=checkDeath;checkDeath=function(){try{const X=S&&S.alive&&S.rx;if(X&&X.shN>0&&S.age<X.sh&&S.hp<=0&&!(S.deathCause&&/อายุขัย|แก่/.test(S.deathCause))){X.shN--;S.hp=Math.max(20,Math.round(S.maxHp*.35));S.deathCause=null;log(ch(SHS)+` (เหลือ ${X.shN} ครั้ง)`,'epic',true);try{island({big:1,pri:1,ic:'🛡️',h:'ฟ้าคุ้มครอง',t:`รอดตาย · เหลือ ${X.shN} ครั้ง`,kind:'gold'})}catch(e){}return false}}catch(e){}return _cd.apply(this,arguments)}}
+{const _py=passYear;passYear=function(){const X=S&&S.rx;let F0=null;try{if(X&&X.sh&&S.age<=6&&S.family){F0=S.family;S.family=Object.assign({},F0,{inf:(F0.inf||.05)*.25})}}catch(e){}try{return _py.apply(this,arguments)}finally{try{if(F0&&S&&S.family!==F0&&S.family.inf!=null&&S.family.inf===(F0.inf||.05)*.25)S.family=F0}catch(e){}}}}
+// ---- 4) ทางแก้ชะตาร้าย ----
+const VAL={surv:()=>S.age,pow:()=>Math.round(total()),qi:()=>Math.round(S.qi),int:()=>Math.round(S.int),kar:()=>Math.round(S.karma),win:()=>S.kills||0,fame:()=>Math.round(S.fame),money:()=>Math.round(S.money)};
+const HOW={surv:'มีชีวิตรอดให้ถึงอายุนั้น — ระวังสุขภาพ เลี่ยงเรื่องเสี่ยง',pow:fTx('train'),qi:fTx('qi'),int:fTx('study'),kar:'ทำความดี ช่วยผู้คน ให้อภัย บริจาค',win:'ชนะการต่อสู้ — ท่องยุทธภพ ดวล ปราบโจร',fame:'สร้างชื่อเสียง — ประลอง ภารกิจ วีรกรรม',money:fTx('work')};
+const CATM={pow:'pow',qi:'qi',int:'int',kar:'kar',win:'ft',fame:'fame',money:'mon'},GOF={pow:'train',qi:'qi',int:'study',win:'adv',fame:'adv',money:'work',kar:'adv'};
+function fTx(f){try{const x=FOCUS.find(z=>z[0]===f);return x?`ตั้งโฟกัส ${x[1]} ${x[2]}`:''}catch(e){return''}}
+// แต่ละชะตาร้าย: ชื่อทางแก้ (สุ่มจากหลายแบบ) · ด่านที่ใช้ · ผลเมื่อสำเร็จ
+const CUR={
+ crippled:{T:['ทะลวงชีพจรด้วยเจตจำนง','ต่อเส้นชีพจรด้วยเลือดและน้ำตา','เดินลมปราณสวนทาง'],ty:['qi','pow','surv'],ok(){S.cured=1;S.power+=pctPow(.15);return'ชีพจรที่ตายด้านค่อยๆ เต้นขึ้นอีกครั้ง — เส้นที่ถูกทะลวงด้วยตัวเองแข็งแรงกว่าคนปกติ (ฝึกได้ตามปกติ · พลัง +15%)'}},
+ frail:{T:['หลอมกายในไฟทุกข์','ร่างอ่อนแอสู่ร่างเหล็ก','ฝึกกายกับสายลมหนาว'],ty:['surv','pow','qi'],ok(){rmTr('frail');S.maxHp+=45;S.hp=S.maxHp;return'ร่างที่เคยป่วยง่ายถูกหลอมจนแกร่ง — กลายเป็น "กายผ่านไฟ" (พลังชีวิตสูงสุด +45 · ไม่ป่วยง่ายอีก)'}},
+ unlucky:{T:['พลิกดาวอัปมงคล','สะสมบุญล้างเคราะห์','ท้าทายโชคชะตา'],ty:['kar','fame','win'],ok(){rmTr('unlucky');S.fame+=60;S.karma+=10;return'ดาวอัปมงคลกลับทิศ — โหรทั้งเมืองงงว่าดวงคุณเปลี่ยนได้อย่างไร (เคราะห์หาย · ชื่อเสียง +60 · กรรมดี +10)'}},
+ _body:{T:['ทำให้ตำหนิเป็นตำนาน','ฝึกจนร่างกายชดเชย','เปลี่ยนจุดอ่อนเป็นจุดแข็ง'],ty:['pow','surv','win'],ok(x){try{S.body.cs=(S.body.cs||[]).filter(k=>k!==x.id)}catch(e){}S.maxHp+=25;S.power+=pctPow(.06);return`ตำหนิ "${esc(x.n)}" ไม่เป็นภาระอีกต่อไป — ร่างกายเรียนรู้ที่จะชดเชย (พลังชีวิตสูงสุด +25 · พลัง +6%)`}},
+ _orph:{T:['ลูกของยุทธภพ','ตามหาสายเลือด','สร้างบ้านด้วยมือตัวเอง'],ty:['fame','money','kar'],ok(){S.fame+=80;S.karma+=8;S.money+=300;return'เด็กกำพร้าที่ไม่มีใครเหลียวแล วันนี้มีคนทั้งเมืองเรียกว่า "ลูกหลานของพวกเรา" (ชื่อเสียง +80 · เงิน +300 · กรรม +8)'}},
+ _trash:{T:['กระดูกขยะสู่กระดูกเหล็ก','ฝึกหนักกว่าคนอื่นสิบเท่า','พิสูจน์ว่าฟ้าดูผิด'],ty:['pow','qi','win'],ok(){S.talent=Object.assign({},S.talent,{m:Math.max(S.talent.m||.6,1),n:'กระดูกผ่านไฟ',d:'กระดูกขยะที่ถูกฝึกจนกลายเป็นปกติ'});S.power+=pctPow(.08);return'อาจารย์ที่เคยปฏิเสธคุณ มองคุณซ้ำแล้วพูดไม่ออก — กระดูกขยะกลายเป็นกระดูกธรรมดา (พรสวรรค์ ×1 · พลัง +8%)'}},
+ _gen:{T:['เอาชนะคำสาป','ทุกข์กลายเป็นพลัง','ฝ่าลิขิตฟ้า'],ty:['pow','surv','kar','fame'],ok(x){rmTr(x.id);S.power+=pctPow(.08);return`ชะตาร้าย "${esc(x.n)}" ถูกทำลาย (พลัง +8%)`}}};
+function rmTr(id){try{S.traits=(S.traits||[]).filter(k=>k!==id)}catch(e){}}
+const BONUS=[['qi',()=>{S.qi+=3;return'ลมปราณ +3'}],['int',()=>{S.int+=10;return'ปัญญา +10'}],['joy',()=>{try{joy(15)}catch(e){}return'ความสุข +15'}],['money',()=>{S.money+=250;return'เงิน +250'}],['fame',()=>{S.fame+=30;return'ชื่อเสียง +30'}],['hp',()=>{S.maxHp+=15;return'พลังชีวิตสูงสุด +15'}]];
+function need(ty){const a=S.age;switch(ty){case'surv':return a+R(10,16);case'pow':return Math.round(Math.max(total()*2.2,total()+300));case'qi':return Math.round(Math.max(S.qi+8,S.qi*1.8));case'int':return Math.round(Math.max(S.int+30,S.int*1.6));case'kar':return Math.round(Math.max(S.karma,0)+40);case'win':return(S.kills||0)+R(6,12);case'fame':return Math.round(S.fame+R(120,220));case'money':return Math.round(S.money+R(1500,3000))}return 1}
+function mkTrials(){const X=S.rx,L=[];(S.traits||[]).forEach(id=>{const t=trOf(id);if(t&&t.bad)L.push({key:CUR[id]?id:'_gen',id,n:t.n})});
+ try{bodyCs(S.body).forEach(c=>{if(!c.good)L.push({key:'_body',id:c.id,n:c.n})})}catch(e){}
+ if(S.family&&S.family.orphan)L.push({key:'_orph',id:'orph',n:'เด็กกำพร้า'});if(S.talent&&S.talent.m<1)L.push({key:'_trash',id:'trash',n:S.talent.n});
+ L.forEach((x,i)=>{const C=CUR[x.key],ty=ch(C.ty);X.tri.push({i,key:x.key,id:x.id,n:x.n,t:ch(C.T),ty,b:ty==='surv'?0:VAL[ty](),g:need(ty),st:0,y0:S.age})});
+ if(X.tri.length)log(`🔓 ชะตาร้าย ${X.tri.length} อย่างมี <b>ทางแก้</b> — ${X.tri.map(z=>'「'+esc(z.t)+'」').join(' ')} · ดูในหน้า 📋 เควส (ปักหมุด 📌 ได้)`,'')}
+function prog(z){const v=VAL[z.ty]();return z.ty==='surv'?v:(z.ty==='win'?v:v)}
+// ตอนเด็กเล็กยังไม่เริ่ม (เริ่มนับตั้งแต่อายุ 8 ยกเว้นรอดชีวิต)
+{const _py2=passYear;passYear=function(){const me=S;const r=_py2.apply(this,arguments);try{if(!S||S!==me||!S.alive||!S.rx)return r;S.rx.tri.forEach(z=>{if(z.st)return;if(z.ty!=='surv'&&S.age<8)return;if(prog(z)>=z.g){z.st=1;const C=CUR[z.key];let m='';try{m=C.ok(z)}catch(e){}const B=ch(BONUS);let bm='';try{bm=B[1]()}catch(e){}
+  log(`🔓 <b>ทางแก้ชะตา「${esc(z.t)}」สำเร็จ!</b> ${m} · โบนัส: ${bm}`,'myth',true);try{keyAdd(`พลิกชะตาร้าย「${z.n}」`)}catch(e){}try{island({big:1,pri:1,ic:'🔓',h:'พลิกชะตาสำเร็จ',t:z.t,kind:'gold'})}catch(e){}
+  if(S.rx.tri.every(q=>q.st)&&S.rx.tri.length>=2){S.power+=pctPow(.1);S.fame+=100;log('🌟 <b>ผู้ฝ่าลิขิตฟ้า</b> — ชะตาร้ายทุกอย่างถูกพลิกจนหมด ยุทธภพเล่าขานว่าคุณ "เกิดมาเพื่อเอาชนะฟ้า" (พลัง +10% · ชื่อเสียง +100)','myth',true);try{keyAdd('ผู้ฝ่าลิขิตฟ้า')}catch(e){}}}})}catch(e){}return r}}
+// แสดงในหน้าเควส / แถบติดตาม
+{const _ql=questList;questList=function(){const L=_ql.apply(this,arguments);try{if(S&&S.rx)S.rx.tri.forEach(z=>{if(z.st)return;const cur=prog(z),wait=z.ty!=='surv'&&S.age<8;
+ L.push({k:'rx'+z.i,ic:'🔓',n:`ทางแก้ชะตา: ${z.t}`,p:`แก้ "${z.n}"`,d:wait?'เริ่มนับเมื่ออายุ 8 ปี':`แก้ "${esc(z.n)}" — สำเร็จแล้วเปลี่ยนเป็นพลัง`,gen:1,cur:z.ty==='surv'||z.ty==='win'||z.ty==='fame'||z.ty==='money'||z.ty==='pow'||z.ty==='qi'||z.ty==='int'||z.ty==='kar'?cur:0,need:z.g,how:z.ty==='surv'?`รอดถึงอายุ ${z.g} ปี — ระวังสุขภาพ เลี่ยงเรื่องเสี่ยง`:HOW[z.ty],go:GOF[z.ty]?`setFocus('${GOF[z.ty]}');closeM()`:'',cat:CATM[z.ty]||null,q:z})})}catch(e){}return L}}
+window._rx={gradeOf,shOf,mkTrials};
+})()}catch(e){console.error('rareX',e)}
