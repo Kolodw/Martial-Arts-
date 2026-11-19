@@ -45349,7 +45349,7 @@ body.royal .gbtn,body.royal .sysb{background:linear-gradient(160deg,#ffffff14,#f
 body.royal .modal .opt{background:linear-gradient(160deg,#ffffff12,#ffffff04);border:1px solid #ffffff1f;box-shadow:0 2px 0 #00000055;border-radius:14px;color:var(--ink)}
 body.royal .modal .opt.on,body.royal .modal .opt:active{border-color:#e8b54a;box-shadow:0 0 0 1px #e8b54a inset,0 0 14px #e8b54a33}
 body.royal .modal .item{background:linear-gradient(160deg,#ffffff0f,#ffffff04);border:1px solid #ffffff1a;border-radius:14px;box-shadow:none}
-body.royal .modal input,body.royal .modal textarea,body.royal .modal select{background:#0c0a14;color:var(--ink);border:1px solid #e8b54a55;border-radius:10px}
+body.royal .modal input:not([type=checkbox]):not([type=radio]):not([type=range]),body.royal .modal textarea,body.royal .modal select{background:#0c0a14!important;color:var(--ink)!important;border:1px solid #e8b54a55!important;border-radius:10px}body.royal .modal input::placeholder,body.royal .modal textarea::placeholder{color:#8a8070}
 body.royal .modal .tabs button,body.royal .modal .seg button{border-radius:999px}
 body.royal .modal .tabs button.on,body.royal .modal .seg button.on{background:linear-gradient(160deg,#ffe48a,#e0a020);color:#2a1a04;border-color:#ffd86a}
 body.royal .toast{background:#1b1828;color:#ffe7a8;border:1px solid #c98a10;border-radius:12px;box-shadow:0 6px 20px #000a}
@@ -45438,3 +45438,25 @@ setInterval(mount,1200);setTimeout(mount,300);
 // เปิดหน้าแรกใหม่ → ล้างการเลือกชั่วคราว (ใช้ค่าจริงจาก CFG)
 {const _sh=show;show=function(id){if(id==='title')SEL=null;return _sh.apply(this,arguments)}}
 })()}catch(e){console.error('block67',e)}
+
+// ============================================================
+// BLOCK 68: 🏁 จบชีวิตนี้เอง — ข้ามการกันตายทุกแบบ (สกิลแก้บท · การ์ดคืนชีพ · แต้มชะตา · พันธมิตร ฯลฯ) เมื่อผู้เล่นอยากปิดฉากจริง
+// ============================================================
+try{(()=>{
+const vol=()=>!!(S&&S._volEnd);
+if(typeof regTry==='function'){const _r=regTry;regTry=function(){if(vol())return false;return _r.apply(this,arguments)}}
+if(typeof ndSys==='function'){const _n=ndSys;ndSys=function(){if(vol())return false;return _n.apply(this,arguments)}}
+if(typeof eqSaveTry==='function'){const _q=eqSaveTry;eqSaveTry=function(){if(vol())return false;return _q.apply(this,arguments)}}
+window.endLifeAsk=function(){if(!S||!S.alive)return;modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏁 จบชีวิตนี้</h3>
+ <p>ชีวิตของ <b>${esc(S.name)}</b> (อายุ ${S.age|0} ปี) จะจบลงตอนนี้เลย</p>
+ <div class="item" style="margin:8px 0"><div class="tag2" style="line-height:1.6">✅ ได้หน้าสรุปชีวิต ฉายา กรรม ตำนาน และตั๋วฟรีตามปกติ<br>⚠️ ข้ามการกันตายทุกแบบ (สกิลกันตาย การ์ดคืนชีพ แต้มชะตา ฯลฯ)<br>⚠️ ย้อนกลับไม่ได้</div></div>
+ <div class="brow" style="display:flex;gap:8px"><button class="gbtn" style="flex:1" onclick="closeM()">เล่นต่อ</button><button class="pbtn" style="flex:1" onclick="endLifeNow()">🏁 ปิดฉากเลย</button></div>`,'endask')};
+window.endLifeNow=function(){if(!S||!S.alive)return;closeM();try{if(typeof paused!=='undefined'&&paused)togglePause()}catch(e){}
+ S._volEnd=1;try{if(S.sys)S.sys.revive=0}catch(e){}try{if(S.sys&&S.sys.x)S.sys.x.gd=0}catch(e){}
+ S.deathCause=S.beastMode&&!S.beastMode.human?'หยุดวิ่ง หยุดล่า แล้วนอนลงใต้ต้นไม้ใหญ่ — เลือกปิดฉากชีวิตนี้ด้วยตัวเอง':S.mw?'ปิดหน้าจอโทรศัพท์ครั้งสุดท้าย — เลือกปิดฉากชีวิตนี้ด้วยตัวเอง':'วางกระบี่ลงอย่างสงบ — เลือกปิดฉากชีวิตนี้ด้วยตัวเอง ไม่มีพลังใดฝืนชะตาได้อีก';
+ S.hp=0;try{checkDeath()}catch(e){console.error('endLife',e)}};
+// ปุ่มท้ายเมนู
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(S&&S.alive){const m=$('modal');if(m&&!m.querySelector('.endLifeB'))m.insertAdjacentHTML('beforeend','<button class="gbtn endLifeB" style="width:100%;margin-top:12px;opacity:.85" onclick="closeM();endLifeAsk()">🏁 จบชีวิตนี้ <small class="tag2">— ข้ามการกันตาย</small></button>')}}catch(e){}return r}}
+// ตอนสกิลกันตายช่วยไว้ บอกทางจบเผื่อผู้เล่นอยากจบจริง
+{const _sl=window.log;let t=0;log=function(tx,c){const r=_sl.apply(this,arguments);try{if(/ทำงาน — |การ์ดคืนชีพ|ชะตาถูกแทรกแซง|ดึงคุณกลับมา/.test(String(tx))&&Date.now()-t>60000&&S&&S.alive){t=Date.now();setTimeout(()=>{try{addFeed('ev','💡 ถ้าอยากให้ชีวิตนี้จบจริง: ☰ เมนู → 🏁 จบชีวิตนี้ (ข้ามการกันตายทุกแบบ)','sum')}catch(e){}},400)}}catch(e){}return r}}
+})()}catch(e){console.error('block68',e)}
