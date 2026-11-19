@@ -22491,7 +22491,7 @@ async function openIdeas(){modal(`<button class="xbtn" onclick="openReport()">�
 {const _orI=openReport;openReport=async function(){const r=_orI.apply(this,arguments);try{const m=$('modal'),tb=m&&m.querySelector('.fbform .tabs');if(tb&&!tb.querySelector('.idB'))tb.insertAdjacentHTML('beforeend','<button class="tabb idB" onclick="openIdeas()">📊 ไอเดียยอดนิยม</button>')}catch(e){}return r}}
 // ---------- ปุ่มในเมนู ----------
 {const _omW=openMenu;openMenu=function(){const r=_omW.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.wpB')&&S){let h=`<button class="opt wpB" onclick="openRoadmap()">🗺️ เส้นทางชีวิต<small>ตอนนี้อยู่ตรงไหน ต้องทำอะไรต่อ</small></button><button class="opt" onclick="openCal()">⚔️ ภัยประจำสัปดาห์<small>ทุกคนช่วยกัน · มีรางวัล</small></button><button class="opt" onclick="openGraves()">🪦 สุสานจอมยุทธ์<small>คำอำลาของผู้เล่นจริง</small></button>`;
- if(S.xt)h+=`<button class="opt" onclick="openHeaven()">🏛️ ดูแลแคว้นเบื้องล่าง<small>${S.hv?esc(HV_REG[S.hv.reg]):'รับดูแลแคว้นในยุทธภพ'}</small></button>`;g.insertAdjacentHTML('afterbegin',h)}}catch(e){}return r}}
+ if(hvOk())h+=`<button class="opt" onclick="openHeaven()">🏛️ ดูแลแคว้นเบื้องล่าง<small>${S.hv?esc(HV_REG[S.hv.reg]):'รับดูแลแคว้นในยุทธภพ'}</small></button>`;g.insertAdjacentHTML('afterbegin',h)}}catch(e){}return r}}
 try{SYS_GUIDE.push({s:'life',nw:1,ic:'🗺️',t:'เส้นทางชีวิต',go:'openRoadmap',d:'เมนู → 🗺️ ดูว่าตอนนี้อยู่ช่วงไหนของเกม (ยุทธภพ → โลกเซียน → โลกเทพ → ก้าวข้ามสามภพ) และขั้นต่อไปต้องมีอะไรบ้าง'},
  {s:'life',nw:1,ic:'⚔️',t:'ภัยประจำสัปดาห์',go:'openCal',d:'ทุกสัปดาห์จะมีภัยพิบัติ 1 อย่างที่ผู้เล่นทุกคนช่วยกันสะสมแต้ม (ออกรบ บริจาค ส่งลมปราณ · วันละ 8 ครั้ง) · ครบเป้าแล้วคนที่ช่วยตั้งแต่ 6 แต้มรับรางวัลได้ · มีทำเนียบผู้ช่วยแผ่นดิน'},
  {s:'life',nw:1,ic:'🪦',t:'สุสานจอมยุทธ์',go:'openGraves',d:'ป้ายหลุมศพและคำอำลาสุดท้ายของผู้เล่นจริง · ไหว้ได้ปีละ 3 ป้าย ได้กรรมดีและความสุข ป้ายของยอดฝีมืออาจให้แรงบันดาลใจ'},
@@ -45101,3 +45101,17 @@ setTimeout(async()=>{await frSync();await hqLoad();await wbLoad();sync();dot();t
 setInterval(()=>{try{if(document.hidden)return;sync();if(Date.now()-hqT>30*60e3&&on())hqLoad()}catch(e){}},90000);
 setInterval(dot,6000);
 })()}catch(e){console.error('block65',e)}
+
+// ---------- 🌟 โลกเทพ: เงื่อนไขทัณฑ์สุดท้ายแสดงผิด (ใช้ของโลกเซียนจึงไม่ขึ้น ✅) · เส้นทางชีวิตนับ "อยู่ต่อหลังบรรลุ" ว่าจบแล้ว · ดูแลแคว้นได้ทุกช่วงของแดนเทพ ----------
+try{(()=>{
+{const _ar=ascReq;ascReq=function(){try{if(S&&S.xt){const ri=realmIdx(),top=REALMS.length-1,pl=postLv(),stay=!!(S.flags&&S.flags.ascStay);
+  const rOK=ri>=top,pOK=pl>=RS_MAX;const txt=stay?['✅ ผ่านทัณฑ์สุดท้ายแห่งโลกเทพแล้ว — อยู่ต่อในฐานะผู้ก้าวพ้นสามภพ','🌌 จากไปเมื่อไหร่ก็ได้ กดป้าย 🌌 ก้าวข้ามสามภพ บนหน้าเล่น']:
+   [rOK?`✅ ถึงขั้นสูงสุดของโลกเทพแล้ว (${esc(REALMS[top].n)})`:`⬜ ฝึกให้ถึงขั้นสูงสุดของโลกเทพ: ${esc(REALMS[top].n)} (ตอนนี้ ${esc(REALMS[ri].n)})`,
+    pOK?'✅ ผ่านชั้นเหนือขั้นสูงสุดครบแล้ว':`⬜ ผ่านชั้นเหนือขั้นสูงสุดให้ครบ ${RS_MAX+1} ชั้น (ตอนนี้ ${pl<0?'ยังไม่เริ่ม':'ชั้นที่ '+(pl+1)})`];
+  return{g:{ok:stay||(rOK&&pOK),tOK:true,pOK},w:0,txt}}}catch(e){}return _ar.apply(this,arguments)}}
+{const _or=openRoadmap;openRoadmap=function(){const r=_or.apply(this,arguments);try{if(S&&S.flags&&S.flags.ascStay){const m=$('modal'),it=[...m.querySelectorAll('.item')];const e=it.find(x=>/ก้าวข้ามสามภพ/.test(x.textContent)),g=it.find(x=>/โลกเทพ/.test(x.querySelector('b')?x.querySelector('b').textContent:''));
+  if(g){g.style.borderLeftColor='#5cb85c';const b=g.querySelector('b');if(b)b.innerHTML=b.innerHTML.replace('👉','✅')}
+  if(e){e.style.borderLeftColor='#5cb85c';e.style.opacity='';const b=e.querySelector('b');if(b)b.innerHTML=b.innerHTML.replace('🔒','✅');e.querySelectorAll('p.tag2').forEach(p=>{if(/เป้าหมายถัดไป/.test(p.textContent))p.remove()});e.insertAdjacentHTML('beforeend','<p class="tag2" style="margin:4px 0">✅ คุณผ่านทัณฑ์สุดท้ายแล้ว และเลือกอยู่ต่อ — ไม่ตายด้วยวัยชรา · ที่ยังทำได้: 🏛️ ดูแลแคว้นเบื้องล่าง · ⚖️ ชิงผู้ครองกฎ · ♾️ วัฏจักรกัลป์เมื่ออายุถึงล้านปี · 👪 ดูแลลูกหลาน · กด 🌌 บนหน้าเล่นเพื่อจากไป</p>')}}}catch(e){}return r}}
+// ดูแลแคว้น: ใช้ได้ในโลกเทพ รวมถึงหลังบรรลุอยู่ต่อ และในจักรวาลหลังวัฏจักรกัลป์
+try{const _hv=hvOk;hvOk=function(){try{if(S&&S.alive&&!(S.beastMode&&!S.beastMode.human)&&(S.xt||(S.flags&&S.flags.godMax)||(typeof hiK==='function'&&hiK())))return true}catch(e){}return _hv.apply(this,arguments)}}catch(e){}
+})()}catch(e){console.error('godReq',e)}
