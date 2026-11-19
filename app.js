@@ -42442,3 +42442,15 @@ try{(()=>{const _r=render;render=function(){const r=_r.apply(this,arguments);try
 // ===== บีบอัดเซฟเก่าที่ยังเป็นข้อความเต็ม (ครั้งเดียวตอนเปิดเกม · ตรวจย้อนกลับก่อนเขียนทับ) =====
 setTimeout(()=>{try{const ks=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&ZK.test(k))ks.push(k)}
  for(const k of ks){try{const v=localStorage.getItem(k);if(!v||v.length<3000||v.startsWith(ZQ.P))continue;if(S&&S.slot&&k===slotKey(S.slot)&&S.alive)continue;const d=LS.get(k,null);if(d==null)continue;LS.set(k,d)}catch(e){}}}catch(e){console.error('zmig',e)}},6000);
+
+// ===== แจ้งเตือนเซฟบน island: เซฟไม่ลง · คลาวด์ค้าง · เซฟก่อนเสี่ยง · สถานะในเมนู =====
+try{(()=>{const SA={ok:Date.now(),fail:0,cw:0,pre:0,t0:Date.now()},on=()=>{try{return islOn()&&typeof island==='function'&&S&&S.alive}catch(e){return false}};
+const ago=t=>{const m=Math.max(0,Math.round((Date.now()-t)/60000));return m<1?'เมื่อสักครู่':m<60?m+' นาทีที่แล้ว':Math.round(m/60)+' ชม.ที่แล้ว'};
+{const _sg=saveGame;saveGame=function(){const r=_sg.apply(this,arguments);try{if(S&&S.alive){if(saveGame._warn){if(on()&&Date.now()-SA.fail>240000){SA.fail=Date.now();island({big:1,pri:1,key:'savefail',ic:'⚠️',h:'เกมยังไม่ได้บันทึก!',t:'พื้นที่เก็บข้อมูลของเบราว์เซอร์เต็ม',d:'แตะเพื่อล้างพื้นที่ให้ — อย่าปิดเกมก่อน',kind:'bad',ms:6500,act:{t:'🧹 ล้างพื้นที่',f(){try{const f=storeRescue(4);saveGame();toast('🧹 ล้างพื้นที่แล้ว ~'+Math.round(f/1024)+' KB')}catch(e){}}}})}}else SA.ok=Date.now()}}catch(e){}return r}}
+const cw=()=>{try{if(!on())return;const last=Math.max(+cloudT||0,SA.t0);if(Date.now()-last<1800000||Date.now()-SA.cw<1800000)return;SA.cw=Date.now();island({big:1,key:'cloudwarn',ic:'☁️',h:'ยังไม่ได้สำรองบนเซิร์ฟเวอร์',t:(typeof onlineOK!=='undefined'&&onlineOK)?'สำรองไม่สำเร็จมาเกิน 30 นาที':'ออฟไลน์ — เซฟอยู่ในเครื่องนี้เท่านั้น',d:'ถ้าเครื่องเสียหรือล้างข้อมูลเบราว์เซอร์ ชีวิตนี้อาจหาย',kind:'bad',ms:5000})}catch(e){}};
+setInterval(cw,60000);
+const pre=()=>{try{if(!S||!S.alive||Date.now()-SA.pre<180000)return;SA.pre=Date.now();saveGame();try{if(typeof onlineOK!=='undefined'&&onlineOK)cloudAuto(true)}catch(e){}if(!saveGame._warn&&on())island({ic:'💾',t:'เซฟแล้ว — ก่อนเสี่ยง',key:'presave',kind:'ok'})}catch(e){}};
+{const _tg=tribGo;tribGo=function(){pre();return _tg.apply(this,arguments)}}
+{const _du=duel;duel=function(){pre();return _du.apply(this,arguments)}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='menu'||m&&m.querySelector('.mgrid')){m.querySelectorAll('.svStat').forEach(x=>x.remove());const h=m.querySelector('h3');const bad=saveGame._warn,cl=+cloudT||0;const html=`<p class="tag2 svStat" style="margin:4px 0">${bad?'⚠️ <b style="color:#ff7a7a">เซฟไม่ลง — พื้นที่เต็ม</b>':'💾 เซฟล่าสุด '+ago(SA.ok)}${cl?' · ☁️ คลาวด์ '+ago(cl):' · ☁️ ยังไม่ได้สำรอง'}</p>`;if(h)h.insertAdjacentHTML('afterend',html);else m.insertAdjacentHTML('afterbegin',html)}}catch(e){}return r}}
+})()}catch(e){console.error('svNotify',e)}
