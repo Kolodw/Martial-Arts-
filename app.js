@@ -42968,3 +42968,143 @@ window.wcOpen=async function(){const c=wcCur(),w=wkN(),best=LS.get('murim_wcBest
 function wcBtn(){try{const t=$('title');if(!t||$('wcBtn'))return;const d=t.querySelector('button[onclick="goDaily()"]');if(!d)return;const b=document.createElement('button');b.id='wcBtn';b.className='gbtn';b.style.cssText='width:100%;margin-top:8px';const c=wcCur();b.innerHTML=`🗓️ ความท้าทายประจำสัปดาห์<br><small class="tag2">${c.ic} ${c.n}</small>`;b.onclick=()=>wcOpen();d.parentNode.insertBefore(b,d.nextSibling)}catch(e){}}
 setTimeout(wcBtn,700);{const _rl=renderLegends;renderLegends=function(){const r=_rl.apply(this,arguments);wcBtn();return r}}
 })()}catch(e){console.error('wn/wkc',e)}
+// ============================================================
+// BLOCK 55: ไม่ให้เป็นแค่ idle — 🌱 กรรมย้อนคืน · ⚡ จังหวะฟ้าเปิด · 🎯 คู่ปรับคู่ชีวิต · 🎲 แต้มชะตา · 🧪 มินิเกม 10 วิ · 🔮 ทายชะตา · ⏸️ จังหวะเล่าเรื่อง
+// ============================================================
+try{(()=>{
+const aAdd=t=>{const a=newArt(t);Array.prototype.push.call(S.arts,a);return artHtml(a)};
+const ok=()=>!!(S&&S.alive&&!(S.beastMode&&!S.beastMode.human));
+const IX=()=>{if(!S.ix)S.ix={sd:[],fp:1,fpY:S.age,bt:[],rv:null,hw:0,mg:0,bc:0};return S.ix};
+const strip=t=>String(t||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+const free=()=>!choice._cur&&!modalOpen&&!document.hidden;
+const RNm=i=>{try{return S.xian?XREALM[i]:REALMS[i].n}catch(e){return''}};
+const riOf=p=>{let i=0;REALMS.forEach((r,k)=>{if(p>=r.p)i=k});return i};
+const scale=()=>Math.round(300*Math.pow(1+realmIdx(),1.6)*(S.xian?3:1));
+// =============== 🌱 1) กรรมย้อนคืน ===============
+const MERCY=/ช่วย|ไว้ชีวิต|ให้ทาน|แบ่ง|รักษา|ปล่อย|เมตตา|คืนให้|อุปการะ|รับเลี้ยง|ปกป้อง|สงสาร|ให้ข้าว|ให้เงิน|ยกโทษ|อภัย/;
+const CRUEL=/ฆ่า|สังหาร|ปล้น|ขโมย|หักหลัง|ทิ้ง|รีดไถ|ทรมาน|เผา|ฉวย|ลอบ|ข่มขู่|ชิง|แย่ง|โกง|หลอก/;
+{const _cr=choiceRun;choiceRun=function(i){try{const c=choice._cur,o=c&&c.opts&&c.opts[i];if(ok()&&o&&!c.mt&&!/^🌱|^🌑|ทายชะตา|คู่ปรับ/.test(String(c.title))){const tx=strip(o.t)+' '+strip(o.s),k=CRUEL.test(tx)?'c':MERCY.test(tx)?'m':null;const X=IX();
+ if(k&&X.sd.length<6&&Math.random()<(auto?.15:.3)&&!X.sd.some(s=>s.y===S.age))X.sd.push({k,y:S.age,d:S.age+R(8,32),o:strip(o.t).replace(/^[^\wก-๙]+/,'').slice(0,40),ti:strip(c.title).replace(/^[^\wก-๙]+/,'').slice(0,34)})}}catch(e){}return _cr.apply(this,arguments)}}
+function because(s){return `<span class="tag2">เพราะเมื่อ ${S.age-s.y} ปีก่อน คุณเลือก「${esc(s.o)}」ตอน${esc(s.ti)}</span>`}
+function seedPay(s){const nm=anyName(ch(['ชาย','หญิง'])),b=because(s),v=scale();
+ if(s.k==='m'){const r=R(0,3);
+  if(r===0){S.money+=v;log(`🌱 ${nm}เดินทางมาไกลเพื่อหาคุณ "ท่านจำข้าไม่ได้ แต่ข้าจำท่านได้ทุกวัน" — ทิ้งถุงเงิน ${fmt(v)} ไว้แล้วจากไป<br>${b}`,'epic',true)}
+  else if(r===1){IX().gd=1;log(`🌱 คนแปลกหน้าคนหนึ่งเริ่มเดินตามคุณห่างๆ ทุกที่ — "ถึงเวลาข้าตอบแทนแล้ว" <b>ครั้งหน้าที่คุณจวนตัว เขาจะยื่นมือเข้ามา</b><br>${b}`,'epic',true)}
+  else if(r===2){const h=aAdd(1);log(`🌱 ${nm}ซึ่งบัดนี้เป็นผู้อาวุโสของสำนักหนึ่ง ส่งคัมภีร์มาให้ — ${h}<br>${b}`,'epic',true)}
+  else choice('🌱 หนี้บุญคุณข้ามปี',`${nm}พาลูกชายวัยสิบขวบมาคุกเข่าหน้าบ้าน "ชีวิตของข้าเป็นของท่าน ชีวิตเขาก็เช่นกัน รับเขาเป็นศิษย์เถิด"<br>${b}`,[
+   {t:'🙏 รับเป็นศิษย์',s:'ชื่อเสียง + · ใจเบิกบาน',f(){S.fame+=Math.round(v/10);joy(8);keyAdd(`รับลูกของผู้ที่เคยช่วยไว้เป็นศิษย์`);log('🙏 เด็กคนนั้นตื่นก่อนไก่ทุกวันเพื่อกวาดลานฝึกให้คุณ','good')}},
+   {t:'💰 ขอเป็นของตอบแทนอย่างอื่น',s:'เงิน',f(){S.money+=Math.round(v*1.5);log('💰 เขายิ้มอย่างเข้าใจ แล้วทิ้งโฉนดที่ดินไว้ให้','')}},
+   {t:'🍵 ไม่ต้องตอบแทน',s:'กรรม +',f(){S.karma+=12;log('🍵 "ข้าช่วยเพราะอยากช่วย" — เขาร้องไห้ตอนเดินจากไป','good')}}])}
+ else{const r=R(0,3);
+  if(r===0)choice('🌑 หนี้ที่ถูกทวงคืน',`${nm}ยืนขวางทางพร้อมดาบที่ขึ้นสนิม "ท่านคงลืมไปแล้ว แต่ข้าไม่เคยลืม"<br>${b}`,[
+   {t:'⚔️ สู้',s:'ดวลจริง',f(){duel(nm,Math.round(total()*R(90,115)/100),w=>{if(w)log(`🌑 ${nm}ล้มลง — กรรมเก่าจบลงด้วยกรรมใหม่`,'');else{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.25));log(`🌑 ${nm}ทิ้งแผลยาวไว้ที่ใบหน้าคุณ "ทีนี้เราเสมอกัน"`,'bad',true)}})}},
+   {t:'💰 ชดใช้',s:'เสียเงิน 25% · กรรม +',f(){const l=Math.round(S.money*.25);S.money-=l;S.karma+=6;log(`💰 คุณชดใช้ ${fmt(l)} — เขารับไว้โดยไม่พูดอะไร`,'')}},
+   {t:'🙇 ก้มหัวขอโทษ',s:'ลุ้นด้วยเสน่ห์+ปัญญา',f(){if(Math.random()<Math.min(.8,.25+((S.cha||0)+(S.int||0))/600)){S.karma+=10;log(`🙇 ${nm}มองคุณนานมาก แล้วเก็บดาบเข้าฝัก "ข้ารอคำนี้มาทั้งชีวิต"`,'good',true)}else{const d=Math.round(S.maxHp*.3);S.hp=Math.max(1,S.hp-d);log(`🙇 "สายไปแล้ว" — ${nm}ฟันลงมาทั้งที่คุณยังก้มหัวอยู่`,'bad',true)}}}]);
+  else if(r===1){const l=Math.round(S.fame*.12);S.fame-=l;log(`🌑 เรื่องเก่าถูกขุดขึ้นมาเล่าในโรงเตี๊ยมทุกแห่ง ชื่อเสียง −${fmt(l)}<br>${b}`,'bad',true)}
+  else if(r===2){const l=Math.round(S.money*.15);S.money-=l;log(`🌑 ทายาทของเจ้าของเดิมมาพร้อมทางการ ยึดทรัพย์คืนไป ${fmt(l)}<br>${b}`,'bad',true)}
+  else{S.money+=v;log(`🌑 คนที่คุณเคยข่มไว้กลายเป็นสายข่าวให้คุณด้วยความกลัว — ส่งส่วยมา ${fmt(v)} · ทางมืดก็มีผลตอบแทนของมัน<br>${b}`,'',true)}}}
+// =============== ⚡ 2) จังหวะฟ้าเปิด ===============
+const HW=[['qi','🌌','ปราณฟ้าดินหนาแน่นผิดปกติ',['qi','moon','mwqi','rest','hide'],m=>{const g=+(Math.max(3,S.qi*.07)*m).toFixed(1);S.qi+=g;return`ปราณ +${g}`}],
+ ['tr','☄️','ดาวตกกลางวัน — ท่ามือผุดขึ้นในหัว',['train','body','adv','hunt','roam'],m=>{const g=Math.round(Math.max(6+realmIdx()*25,total()*.05)*m);S.power+=g;return`พลังยุทธ์ +${fmt(g)}`}],
+ ['mn','🐫','คาราวานของหายากผ่านเมือง',['work','mission','travel'],m=>{const g=Math.round(scale()*1.2*m);S.money+=g;return`เงิน +${fmt(g)}`}],
+ ['st','📚','ผู้เฒ่าลืมตำราไว้ใต้ต้นไม้',['study','mwlearn'],m=>{S.int+=Math.round(4*m);let t=`ปัญญา +${Math.round(4*m)}`;if(m>1)t+=' · '+aAdd(1);return t}]];
+function hwOpen(){const X=IX(),h=ch(HW);let done=0;X.hw=S.age+R(3,6);const fit=h[3].includes(S.focus);
+ const grab=()=>{if(done||!ok())return;done=1;const m=fit?2:1;const g=h[4](m);log(`${h[1]} <b>คว้าจังหวะฟ้าได้!</b> ${h[2]} — ${g}${fit?' · <b>โฟกัสตรงจังหวะ ×2</b>':''}`,fit?'epic':'good');try{sfx('rare')}catch(e){}};
+ try{let el=$('hwCard');if(el)el.remove();el=document.createElement('div');el.id='hwCard';el.innerHTML=`<div class="hwI">${h[1]}</div><div class="hwT"><small>⚡ จังหวะฟ้าเปิด${fit?' · ตรงโฟกัส ×2!':''}</small><b>${h[2]}</b><i class="hwBar"></i></div><button>✋ คว้า!</button>`;document.body.appendChild(el);const go=()=>{grab();el.classList.add('hwOk');setTimeout(()=>el.remove(),600)};el.querySelector('button').onclick=go;el.querySelector('.hwT').onclick=go;setTimeout(()=>{if(el.isConnected){el.classList.add('hwGone');setTimeout(()=>el.remove(),400)}},5000)}catch(e){}
+ setTimeout(()=>{if(!done&&ok()){done=1;addFeed('ev',`${h[1]} ${h[2]} — แต่คุณไม่ทันสังเกต จังหวะผ่านไปแล้ว`,'sum')}},5600)}
+// =============== 🎯 3) คู่ปรับ ===============
+function rvNew(){const g=ch(['ชาย','หญิง']);IX().rv={n:anyName(g),g:+(0.97+Math.random()*.1).toFixed(3),p:Math.max(3,total()*(.9+Math.random()*.2)),y:S.age,mt:S.age+R(8,12),w:0,l:0,ri:0,ld:null,w0:S.xt?2:S.xian?1:0,die:S.age+R(60,110)*(S.xian?4:1),fr:0};
+ const r=IX().rv;r.ri=riOf(r.p);r.ld=r.p>total();log(`🎯 <b>${r.n}</b> — เด็กจากหมู่บ้านข้างๆ ที่เกิดปีเดียวกับคุณ ทุกคนเอาคุณสองคนไปเทียบกันตั้งแต่จำความได้ <span class="tag2">(คู่ปรับคู่ชีวิต · ดูได้ที่แถบใต้เป้าหมาย)</span>`,'epic',true)}
+function rvTick(pt){const X=IX(),r=X.rv,tot=total();if(!r||!r.alive&&r.alive!==undefined)return;
+ const w=S.xt?2:S.xian?1:0;if(w!==r.w0){r.w0=w;if(Math.random()<.6){r.p=Math.max(50,tot*(.8+Math.random()*.4));log(`🎯 ข่าวจากโลกเบื้องล่างมาถึง — <b>${r.n}</b>ก็ข้ามขึ้นมาได้เหมือนกัน "เจ้าคิดว่าจะหนีข้าพ้นหรือ"`,'epic',true)}else{log(`🎯 คุณมองลงไปจากโลกใหม่ — <b>${r.n}</b>ยังติดอยู่ข้างล่าง การแข่งขันทั้งชีวิตจบลงแค่นี้`,'',true);X.rv=null;return}}
+ if(S.age>=r.die){log(`🎯 <b>${r.n}</b> คู่ปรับที่แข่งกับคุณมาทั้งชีวิตสิ้นใจลงแล้ว — ${r.w>r.l?'เขาทิ้งจดหมายไว้ "ข้าไม่เคยชนะเจ้าได้ แต่เพราะเจ้า ข้าถึงเดินมาได้ไกลขนาดนี้"':r.l>r.w?'บนโลงศพเขาสลักไว้ว่า "ผู้ที่ชนะ'+esc(S.name)+'"':'ไม่มีใครรู้ว่าใครเก่งกว่ากันจริงๆ'}`,'myth',true);keyAdd(`คู่ปรับ ${r.n} จากไป`);X.rv=null;return}
+ const gr=Math.max(1,tot/Math.max(1,pt||tot));r.p*=Math.pow(gr,r.g)*(1+(Math.random()*.06-.015));r.g+=(1-r.g)*.05;r.p*=Math.pow(tot/Math.max(1,r.p),.08);
+ if(Math.random()<.06){r.p*=1.15+Math.random()*.15;log(`🎯 ข่าวลือ: <b>${r.n}</b>${ch(['ได้คัมภีร์จากถ้ำโบราณที่คุณเคยเดินผ่าน','กราบยอดฝีมือลึกลับเป็นอาจารย์','กินผลไม้วิเศษพันปี','รอดจากการปิดด่านสามปี'])} — พลังพุ่งขึ้น`,'')}
+ else if(Math.random()<.04){r.p*=.85;log(`🎯 ข่าวลือ: <b>${r.n}</b>${ch(['บาดเจ็บหนักจากศึกชายแดน','ธาตุไฟเข้าแทรก','ถูกหักหลังโดยพี่น้องร่วมสำนัก'])}`,'')}
+ const ri=riOf(r.p);if(ri>r.ri){r.ri=ri;if(ri>=2)log(`🎯 <b>${r.n}</b>ทะลวงสู่<b>${RNm(ri)}</b>${ri>realmIdx()?' — <b>ก่อนคุณ</b>':''}`,ri>realmIdx()?'bad':'')}
+ const ld=r.p>tot;if(ld!==r.ld){r.ld=ld;try{island({big:1,ic:'🎯',h:'คู่ปรับ',t:ld?`${r.n} แซงคุณแล้ว!`:`คุณแซง ${r.n} แล้ว!`,kind:ld?'bad':'gold'})}catch(e){}log(ld?`🎯 ทั้งเมืองพูดกันว่าตอนนี้ <b>${r.n}</b> เก่งกว่าคุณแล้ว`:`🎯 ทั้งเมืองพูดกันว่าตอนนี้คุณทิ้ง <b>${r.n}</b> ไปไกลแล้ว`,ld?'bad':'good')}
+ if(S.age>=r.mt&&free()){r.mt=S.age+R(10,15);const ep=Math.round(r.p);
+  choice(`🎯 คู่ปรับ — ${r.n}`,`${ch(['ทั้งคู่บังเอิญพักโรงเตี๊ยมเดียวกัน','เขาดักรออยู่ที่ประตูเมือง','งานชุมนุมยุทธ์จับคู่ให้เจอกันพอดี'])} — ${r.n}เดินเข้ามาพร้อมรอยยิ้มเดิม<br><span class="tag2">พลังเขา ≈ ${fmt(ep)} (${Math.round(ep/Math.max(1,tot)*100)}% ของคุณ) · เคยชนะ ${r.w} แพ้ ${r.l}</span>`,[
+   {t:'⚔️ ประลอง',s:'ดวลจริง · ผลส่งต่อความเร็วการโตของเขา',f(){duel(r.n,ep,w=>{if(w){r.w++;r.g=Math.max(.9,r.g-.04);S.fame+=Math.round(30+Math.sqrt(ep));log(`🎯 คุณชนะ${r.n} — เขาเช็ดเลือดที่มุมปาก "ครั้งหน้า"`,'epic',true)}else{r.l++;r.g=Math.min(1.12,r.g+.03);log(`🎯 ${r.n}ชนะ — เขาไม่หัวเราะเยาะ แต่สายตานั้นแย่กว่าการหัวเราะ`,'bad',true)}})}},
+   {t:'🍶 ดื่มสุราคุยเรื่องเก่า',s:'ใจเบิกบาน · ทั้งคู่โตเร็วขึ้นนิด',f(){r.fr++;joy(8);S.power+=Math.round(total()*.02);r.p*=1.02;log(`🍶 คืนนั้นคุยกันจนรุ่งสาง เรื่องที่ทั้งคู่ไม่เคยบอกใคร`,'good')}},
+   {t:'🚶 เดินผ่าน',skip:true,f(){log(`🚶 คุณเดินผ่านไปโดยไม่หันมอง — ได้ยินเขาหัวเราะเบาๆ ข้างหลัง`,'')}}])}}
+window.openRv=function(){const r=IX().rv;if(!r)return;const tot=total(),pc=r.p/Math.max(1,tot);modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎯 คู่ปรับ — ${esc(r.n)}</h3><div class="item">⚡ พลังเขา <b>${fmt(Math.round(r.p))}</b> · ของคุณ <b>${fmt(Math.round(tot))}</b><div style="height:8px;background:#0002;border-radius:5px;margin:6px 0;overflow:hidden"><div style="height:100%;width:${Math.min(100,pc/(pc+1)*100)}%;background:${pc>1?'#d9534f':'#c9a24a'}"></div></div>ขั้น: <b>${RNm(r.ri)}</b> · ประลอง ชนะ ${r.w} / แพ้ ${r.l}${r.fr?` · ดื่มด้วยกัน ${r.fr} ครั้ง`:''}<br><span class="tag2">เจอกันอีกราวอายุ ${r.mt} ปี · ${r.g>1.02?'ช่วงนี้เขาโตเร็วกว่าคุณ':r.g<.98?'ช่วงนี้เขาเริ่มหมดไฟ':'โตทันกันพอดี'}</span></div>`,'rv')};
+// =============== 🎲 4) แต้มชะตา ===============
+const FPM=5;
+function fpAdd(n,why){const X=IX();const o=X.fp;X.fp=Math.min(FPM,X.fp+n);if(X.fp>o)addFeed('ev',`🎲 แต้มชะตา +${X.fp-o} (${X.fp}/${FPM}) — ${why}`,'sum')}
+window.openFate=function(){const X=IX(),fs=LS.get('murim_fpsave',1)!==0,sn=X.snap&&X.snap.a===S.age-1;
+ const L=(X.sd||[]).map(s=>`<div class="tag2">• อายุ ${s.y}: ${s.k==='m'?'🌱':'🌑'} สิ่งที่คุณทำตอน${esc(s.ti)}… ยังไม่จบ</div>`).join('')||'<div class="tag2">ยังไม่มี</div>';
+ const B=(X.bt||[]).map(b=>`<div class="tag2">• ${esc(b.q)} — คุณแทง <b>${esc(b.pk)}</b> ${fmt(b.st)} (จ่าย ×${b.x})</div>`).join('')||'<div class="tag2">ไม่มี</div>';
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎲 แต้มชะตา ${X.fp}/${FPM}</h3><p class="tag2">ได้ +1 ทุก 6 ปี และตอนชีวิตตกต่ำหนัก · ใช้แทรกแซงฟ้าได้</p>
+ <div class="item"><b>☠️ กันตาย (3 แต้ม)</b><p class="tag2">ตอนพลังชีวิตหมด จะใช้อัตโนมัติ (ไม่รวมตายตามอายุขัย)</p><button class="sysb" onclick="LS.set('murim_fpsave',${fs?0:1});openFate()">${fs?'✅ เปิดอยู่':'⛔ ปิดอยู่'}</button></div>
+ <button class="pbtn" style="width:100%;margin:4px 0" ${X.fp<2||!sn?'disabled':''} onclick="fpRewind()">⏪ ย้อนความสูญเสียปีที่แล้ว (2 แต้ม)${sn?'':' — ไม่มีให้ย้อน'}</button>
+ <button class="pbtn" style="width:100%;margin:4px 0" ${X.fp<1||X.hwF?'disabled':''} onclick="fpCall()">⚡ เรียกจังหวะฟ้าปีหน้า (1 แต้ม)${X.hwF?' — เรียกไว้แล้ว':''}</button>
+ <div class="item"><b>🌱 เรื่องที่ยังไม่จบ (${(X.sd||[]).length})</b>${L}</div><div class="item"><b>🔮 ทายชะตาที่ค้างอยู่</b>${B}</div>`,'fate')};
+window.fpRewind=function(){const X=IX(),s=X.snap;if(X.fp<2||!s||s.a!==S.age-1)return;X.fp-=2;const g=[];['hp','money','fame','power','qi'].forEach(k=>{if((S[k]||0)<s[k]){g.push(k);S[k]=s[k]}});log(`⏪ <b>คุณใช้แต้มชะตาย้อนรอยปีที่แล้ว</b> — ${g.length?'สิ่งที่เสียไปกลับคืนมา':'แต่ปีที่แล้วไม่มีอะไรให้ย้อน'}`,'epic');closeM();render()};
+window.fpCall=function(){const X=IX();if(X.fp<1)return;X.fp--;X.hwF=1;toast('⚡ ฟ้าจะเปิดปีหน้า — เตรียมนิ้วไว้');openFate()};
+{const _cd=checkDeath;checkDeath=function(){try{const X=S&&S.ix;if(S&&S.alive&&X&&S.hp<=0&&!S.deathCause&&X.fp>=3&&LS.get('murim_fpsave',1)!==0&&!(realmIdx()>=7&&!S.flags.rpRev)){X.fp-=3;S.hp=Math.round(S.maxHp*.5);log('🎲 <b>ชะตาถูกแทรกแซง</b> — วิญญาณที่หลุดออกจากร่างถูกดึงกลับมาด้วยเส้นด้ายบางๆ (ใช้แต้มชะตา 3)','myth',true);keyAdd('รอดตายด้วยแต้มชะตา');return false}}catch(e){}return _cd.apply(this,arguments)}}
+// =============== 🧪 5) มินิเกม 10 วิ ===============
+const MGK={qi:'br',moon:'br',rest:'br',hide:'br',mwqi:'br',train:'st',body:'st',adv:'st',hunt:'st',roam:'st',mission:'st',work:'hb',study:'hb',travel:'hb',mwlearn:'hb'};
+let MG=null;
+function mgEnd(sc,skip){if(!MG)return;const k=MG.k;clearInterval(MG.t);cancelAnimationFrame(MG.raf);MG=null;closeM();sc=Math.max(0,Math.min(1,sc));const perf=sc>=.9;
+ let g='';if(k==='br'){const q=+(Math.max(2,S.qi*.05)*(.4+sc*1.2)).toFixed(1);S.qi+=q;g=`ปราณ +${q}`}else if(k==='st'){const p=Math.round(Math.max(5+realmIdx()*20,total()*.035)*(.4+sc*1.2));S.power+=p;g=`พลังยุทธ์ +${fmt(p)}`}else{const m=Math.round(scale()*(.4+sc*1.4));S.money+=m;S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.1*sc));g=`ขายยาได้ ${fmt(m)}`}
+ log(`${k==='br'?'🌬️ เดินลมปราณ':k==='st'?'🔨 ฝึกจังหวะ':'🧪 ปรุงยา'} — ${skip?'ทำแบบขอไปที':perf?'<b>สมบูรณ์แบบ!</b>':sc>=.6?'ทำได้ดี':'พลาดไปหลายจังหวะ'} (${Math.round(sc*100)}%) · ${g}`,perf?'epic':'good');if(perf&&Math.random()<.3)fpAdd(1,'ฝีมือสมบูรณ์แบบจนฟ้าเหลียวมอง');render()}
+window.mgSkip=()=>mgEnd(.45,1);
+function mgShell(ti,sub,body){modal(`<h3>${ti}</h3><p class="tag2">${sub} · <b id="mgT">10</b> วิ</p>${body}<button class="gbtn" style="width:100%;margin-top:8px" onclick="mgSkip()">⏭ ข้าม (ได้ผลกลางๆ)</button>`,'mg');let n=10;MG.t=setInterval(()=>{n--;const e=$('mgT');if(e)e.textContent=n;if(n<=0||$('modal').dataset.k!=='mg')mgEnd(MG?MG.sc():0)},1000)}
+function mgStrike(){const z=[];for(let i=0;i<3;i++)z.push(.15+Math.random()*.6);let hit=[],pos=0,dir=1,sp=.012;
+ MG={k:'st',sc:()=>hit.reduce((a,b)=>a+b,0)/3};
+ mgShell('🔨 ฝึกจังหวะ','แตะ "ตี!" ตอนเข็มอยู่ในแถบทอง 3 ครั้ง',`<div id="mgBar" style="position:relative;height:34px;border:2px solid var(--line);border-radius:10px;overflow:hidden;background:#0001"><div id="mgZ" style="position:absolute;top:0;bottom:0;background:#e8b83a88;border-left:2px solid #c9a24a;border-right:2px solid #c9a24a"></div><div id="mgN" style="position:absolute;top:-2px;bottom:-2px;width:4px;background:#d9534f;box-shadow:0 0 6px #d9534f"></div></div><div id="mgH" style="text-align:center;margin:6px;font-size:20px">○ ○ ○</div><button class="pbtn" style="width:100%;font-size:20px;padding:14px" onclick="mgHit()">⚔️ ตี!</button>`);
+ const zw=.14,draw=()=>{const Z=$('mgZ'),N=$('mgN');if(!Z||!MG)return;const c=z[hit.length]||.5;Z.style.left=(c-zw/2)*100+'%';Z.style.width=zw*100+'%';N.style.left=pos*100+'%'};
+ const step=()=>{if(!MG)return;pos+=dir*sp;if(pos>1){pos=1;dir=-1}if(pos<0){pos=0;dir=1}draw();MG.raf=requestAnimationFrame(step)};MG.raf=requestAnimationFrame(step);
+ window.mgHit=()=>{if(!MG||hit.length>=3)return;const c=z[hit.length],d=Math.abs(pos-c),s=d<=.07/2+.035?1:Math.max(0,1-(d-.07)/.25);hit.push(s);sp*=1.35;const H=$('mgH');if(H)H.textContent=hit.map(x=>x>=.95?'◉':x>.4?'◐':'✕').concat(['○','○','○']).slice(0,3).join(' ');try{sfx(s>=.95?'good':'hit')}catch(e){}if(hit.length>=3)setTimeout(()=>mgEnd(MG?MG.sc():0),350)}}
+function mgBreath(){let res=[],v=0,hold=0,t0=0;const lo=.68,hi=.84;MG={k:'br',sc:()=>res.reduce((a,b)=>a+b,0)/3};
+ mgShell('🌬️ เดินลมปราณ','กดค้าง ให้ปราณขึ้นถึงแถบทองแล้วปล่อย 3 ลมหายใจ',`<div style="position:relative;height:150px;width:60px;margin:0 auto;border:2px solid var(--line);border-radius:30px;overflow:hidden;background:#0001"><div style="position:absolute;left:0;right:0;bottom:${lo*100}%;height:${(hi-lo)*100}%;background:#e8b83a88"></div><div id="mgF" style="position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(#7fd3ff,#3a8fd9)"></div></div><div id="mgH" style="text-align:center;margin:6px;font-size:20px">○ ○ ○</div><button id="mgHold" class="pbtn" style="width:100%;font-size:18px;padding:16px;touch-action:none;user-select:none">🫁 กดค้างเพื่อสูดลมหายใจ</button>`);
+ const b=$('mgHold'),F=()=>$('mgF');const up=()=>{if(!hold||!MG)return;hold=0;const s=v>=lo&&v<=hi?1:Math.max(0,1-Math.min(Math.abs(v-lo),Math.abs(v-hi))*4);res.push(s);v=0;const f=F();if(f)f.style.height='0';const H=$('mgH');if(H)H.textContent=res.map(x=>x>=.95?'◉':x>.4?'◐':'✕').concat(['○','○','○']).slice(0,3).join(' ');if(res.length>=3)setTimeout(()=>mgEnd(MG?MG.sc():0),300)};
+ const loop=()=>{if(!MG)return;if(hold){v=Math.min(1.05,(performance.now()-t0)/1400);const f=F();if(f)f.style.height=Math.min(100,v*100)+'%';if(v>=1.05)up()}MG.raf=requestAnimationFrame(loop)};MG.raf=requestAnimationFrame(loop);
+ b.addEventListener('pointerdown',e=>{e.preventDefault();if(res.length<3){hold=1;t0=performance.now()}});b.addEventListener('pointerup',up);b.addEventListener('pointerleave',up)}
+function mgHerb(){const EL=[['🔥','ไฟ'],['💧','น้ำ'],['🌿','ไม้']],H=[];const N=['โสมแดง','บัวหิมะ','เห็ดหลินจือ','ดอกเพลิง','รากมังกร','หญ้าจันทร์','ผลชาด','ใบหยก'];for(let i=0;i<6;i++){const e=ch(EL),n=N.splice(R(0,N.length-1),1)[0];H.push({n,e:e[0],w:R(1,2)})}
+ const tg={};H.forEach(h=>{tg[h.e]=(tg[h.e]||0)});const want=ch(EL)[0],want2=ch(EL.filter(x=>x[0]!==want))[0];let pk=[];
+ MG={k:'hb',sc:()=>{const c={};pk.forEach(i=>{c[H[i].e]=(c[H[i].e]||0)+1});let s=0;s+=Math.min(2,c[want]||0)*.35;s+=Math.min(1,c[want2]||0)*.3;if(pk.length===3&&(c[want]||0)===2&&(c[want2]||0)===1)s=1;return s}};
+ mgShell('🧪 ปรุงยา',`ตำรับ: <b>${want} 2 ส่วน + ${want2} 1 ส่วน</b> — เลือกสมุนไพร 3 อย่าง`,`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">${H.map((h,i)=>`<button class="opt mgHb" data-i="${i}" onclick="mgPick(${i},this)" style="padding:10px 4px">${h.e}<br><b>${h.n}</b></button>`).join('')}</div><div id="mgH" style="text-align:center;margin:6px">เลือกแล้ว 0/3</div>`);
+ window.mgPick=(i,el)=>{if(!MG||pk.includes(i)||pk.length>=3)return;pk.push(i);el.style.outline='3px solid #c9a24a';el.style.background='#ffe7a8';const e=$('mgH');if(e)e.textContent=`เลือกแล้ว ${pk.length}/3`;if(pk.length>=3)setTimeout(()=>mgEnd(MG?MG.sc():0),400)}}
+function mgOpen(){const k=MGK[S.focus]||ch(['br','st','hb']);IX().mg=S.age+R(4,7);if(k==='br')mgBreath();else if(k==='st')mgStrike();else mgHerb()}
+window._mgOpen=mgOpen;
+// =============== 🔮 6) ทายชะตา ===============
+function betOffer(){const X=IX();if((X.bt||[]).length>=2||S.money<60)return false;const st=Math.max(50,Math.round(S.money*.1));const T=[];
+ try{const F=FACTIONS.filter(f=>!S.faction||f.n!==S.faction.n);if(F.length>=2)T.push('sect')}catch(e){}
+ const kid=(S.children||[]).find(c=>c.alive!==false&&c.age!=null&&c.age<16);if(kid)T.push('kid');if(X.rv&&realmIdx()<7&&X.rv.ri<7)T.push('rv');if(!T.length)return false;const t=ch(T);
+ const mk=(q,txt,A,B,x1,x2,res,due)=>choice(`🔮 ทายชะตา`,`${txt}<br><span class="tag2">วางเดิมพัน ${fmt(st)} (10% ของเงิน) · ผลจะรู้ในอีกไม่กี่ปี</span>`,[
+  {t:`${A} (จ่าย ×${x1})`,s:'',f(){S.money-=st;X.bt.push({q,pk:A,x:x1,st,res,due,a:0})}},{t:`${B} (จ่าย ×${x2})`,s:'',f(){S.money-=st;X.bt.push({q,pk:B,x:x2,st,res,due,a:1})}},{t:'🙅 ไม่เล่น',skip:true,f(){}}]);
+ if(t==='sect'){const F=FACTIONS.filter(f=>!S.faction||f.n!==S.faction.n),a=ch(F),b=ch(F.filter(x=>x!==a)),pa=.3+Math.random()*.4;const x1=+(Math.max(1.2,.92/pa)).toFixed(1),x2=+(Math.max(1.2,.92/(1-pa))).toFixed(1);
+  mk(`${a.n} ปะทะ ${b.n}`,`ข่าวลือว่า <b>${a.n}</b> กับ <b>${b.n}</b> จะเปิดศึกกันที่ช่องเขาตะวันตก โรงเตี๊ยมทั้งเมืองเปิดรับแทง`,`⚔️ ${a.n}ชนะ`,`⚔️ ${b.n}ชนะ`,x1,x2,{k:'sect',pa,a:a.n,b:b.n},S.age+R(2,3))}
+ else if(t==='kid'){const p=Math.min(.95,.7+(S.children.length>2?0:.1));mk(`${kid.n} จะรอดถึง 20`,`หมอดูเร่ทักว่า <b>${kid.n}</b> ลูกของคุณ "ดวงแข็งแต่มีเคราะห์" — คุณจะเชื่อแค่ไหน`,'🙏 รอดถึง 20 แน่',`🥀 ไม่รอด`,1.3,3,{k:'kid',n:kid.n},S.age+(20-kid.age))}
+ else mk(`ใครทะลวงขั้นก่อน`,`ชาวบ้านแทงกันว่าใครจะทะลวงขั้นถัดไปก่อน — คุณ หรือ <b>${X.rv.n}</b>`,'🙋 ข้าเอง','🎯 '+X.rv.n,2,2,{k:'rv',me:realmIdx(),him:X.rv.ri},S.age+15);return true}
+function betTick(){const X=IX();if(!X.bt||!X.bt.length)return;X.bt=X.bt.filter(b=>{const r=b.res;let out=null;
+ if(r.k==='sect'){if(S.age<b.due)return true;out=Math.random()<r.pa?0:1;log(`🔮 ศึกช่องเขาตะวันตกจบลง — <b>${out?r.b:r.a}</b>ชนะ`,'')}
+ else if(r.k==='kid'){const c=(S.children||[]).find(x=>x.n===r.n);if(!c)return false;if(c.alive===false)out=1;else if(c.age>=20)out=0;else return true}
+ else if(r.k==='rv'){const me=realmIdx()>r.me,him=X.rv&&X.rv.ri>r.him;if(!X.rv)return false;if(me&&!him)out=0;else if(him&&!me)out=1;else if(me&&him)out=0;else if(S.age>=b.due){log(`🔮 ไม่มีใครทะลวงทันกำหนด — เจ้ามือคืนเงินเดิมพัน`,'');S.money+=b.st;return false}else return true}
+ if(out===b.a){const w=Math.round(b.st*b.x);S.money+=w;log(`🔮 <b>ทายถูก!</b> 「${esc(b.q)}」 — ได้ ${fmt(w)}`,'good')}else log(`🔮 ทายผิด 「${esc(b.q)}」 — เสียเดิมพัน ${fmt(b.st)}`,'bad');return false})}
+// =============== ⏸️ 7) จังหวะเล่าเรื่อง ===============
+{const _lg=log;log=function(t,c,key){const r=_lg.apply(this,arguments);try{if(S&&S.alive&&!auto&&speed>=1&&speed<=8&&(c==='myth'||(c==='epic'&&key))){CK.hold=Math.max(CK.hold||0,Date.now()+(c==='myth'?1700:1000));const f=$('feed'),e=f&&f.lastElementChild;if(e&&c==='myth')e.classList.add('ixSpot')}}catch(e){}return r}}
+const css=document.createElement('style');css.textContent=`.ixSpot{animation:ixSp 2.2s ease-out}@keyframes ixSp{0%{box-shadow:0 0 0 2px #e8b83a,0 0 22px #ffcf4d;background:#fff4c8}100%{box-shadow:none;background:transparent}}
+#hwCard{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--islB,150px) + 70px);z-index:9000;display:flex;align-items:center;gap:10px;width:min(92vw,420px);padding:10px 12px;border-radius:14px;background:linear-gradient(135deg,#2a1c05,#5a3d0a);color:#ffe9b0;border:2px solid #e8b83a;box-shadow:0 0 24px #ffcf4d99;animation:hwIn .35s ease-out}#hwCard .hwI{font-size:30px;animation:hwP 1s infinite}#hwCard .hwT{flex:1;min-width:0;cursor:pointer}#hwCard small{display:block;opacity:.85;font-size:11px}#hwCard b{font-size:14px}#hwCard .hwBar{display:block;height:4px;margin-top:5px;border-radius:3px;background:#ffcf4d;animation:hwB 5s linear forwards}#hwCard button{font-size:16px;font-weight:800;padding:10px 14px;border-radius:10px;border:2px solid #fff3;background:#ffcf4d;color:#3a2600}#hwCard.hwOk{animation:hwOk .5s forwards}#hwCard.hwGone{opacity:0;transition:.4s}@keyframes hwIn{from{transform:translate(-50%,30px);opacity:0}}@keyframes hwP{50%{transform:scale(1.2)}}@keyframes hwB{to{width:0}}@keyframes hwOk{to{transform:translate(-50%,-40px) scale(1.1);opacity:0}}
+#rvBar{display:flex;gap:6px;align-items:center;margin:4px 0;font-size:12px;line-height:1.3}#rvBar>div{flex:1;border:1px dashed var(--line);border-radius:8px;padding:4px 8px;cursor:pointer;min-width:0}#rvBar .rvP{height:4px;border-radius:3px;background:#0002;margin-top:3px;overflow:hidden}#rvBar .rvP i{display:block;height:100%}#rvBar .fpB{flex:0 0 auto}`;document.head.appendChild(css);
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const gb=$('goalBox');if(!gb||!S||!S.ix||!ok()){const e=$('rvBar');if(e)e.remove();return r}let e=$('rvBar');if(!e){e=document.createElement('div');e.id='rvBar';gb.insertAdjacentElement('afterend',e)}else if(e.previousElementSibling!==gb)gb.insertAdjacentElement('afterend',e);
+ const X=S.ix,rv=X.rv,tot=Math.max(1,total());const pc=rv?rv.p/tot:0;const h=(rv?`<div onclick="openRv()">🎯 <b>${esc(rv.n)}</b> ${pc>1?`<span style="color:#d9534f">▲ นำคุณ ${Math.round((pc-1)*100)}%</span>`:`<span style="color:#3a9a4a">▼ ตามหลัง ${Math.round((1-pc)*100)}%</span>`}<div class="rvP"><i style="width:${Math.min(100,pc/(pc+1)*100)}%;background:${pc>1?'#d9534f':'#c9a24a'}"></i></div></div>`:'')+`<div class="fpB" onclick="openFate()">🎲 ${X.fp}/${FPM}${X.sd&&X.sd.length?` · 🌱${X.sd.length}`:''}${X.bt&&X.bt.length?` · 🔮${X.bt.length}`:''}</div>`;if(e._h!==h){e._h=h;e.innerHTML=h}}catch(e){}return r}}
+// =============== รายปี ===============
+{const _py=passYear;passYear=function(){const a0=S&&S.age,pt=S&&ok()?total():0;let snap=null;if(S&&ok())snap={a:S.age,hp:S.hp,money:S.money,fame:S.fame,power:S.power,qi:S.qi};const r=_py.apply(this,arguments);
+ try{if(!ok()||S.age===a0||S.beastMode)return r;const X=IX();if(snap)X.snap=snap;
+  if(S.age-X.fpY>=6){X.fpY=S.age;fpAdd(1,'ฟ้าบันทึกชีวิตอีกหกปีของคุณ')}
+  if(snap&&S.hp<snap.hp*.5&&S.hp<S.maxHp*.35)fpAdd(1,'ฟ้าเห็นใจคนที่ล้มแล้วยังลุก');
+  // กรรมย้อนคืน (1 เรื่อง/ปี)
+  const due=X.sd.findIndex(s=>S.age>=s.d);if(due>=0){const s=X.sd.splice(due,1)[0];try{seedPay(s)}catch(e){console.error(e)}}
+  if(!X.rv&&S.age>=10&&!X.rvDone){X.rvDone=1;rvNew()}rvTick(pt);betTick();
+  if(free()&&!auto){if(X.hwF||(S.age>=X.hw&&S.age>=12&&Math.random()<.12)){X.hwF=0;hwOpen()}
+   else if(S.age>=X.mg&&S.age>=12&&Math.random()<.08)setTimeout(()=>{if(ok()&&free()&&!auto)mgOpen()},400);
+   else if(S.age>=16&&S.age-(X.bc||0)>=6&&Math.random()<.06){if(betOffer())X.bc=S.age}}
+ }catch(e){console.error('blk55',e)}return r}}
+// ผู้มาตอบแทนช่วยตอนจวนตัว
+{const _f=fight;fight=function(name,ep){let w=_f.apply(this,arguments);try{if(!w&&S&&S.ix&&S.ix.gd){S.ix.gd=0;w=true;log(`🌱 เงาคนหนึ่งพุ่งเข้ามาขวาง${name}ไว้ — คนแปลกหน้าที่เดินตามคุณมาตลอด "หนี้ของข้าใช้หมดแล้ว" แล้วหายไป`,'epic',true)}}catch(e){}return w}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(S&&S.ix&&ok()){const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.fpMB'))g.insertAdjacentHTML('afterbegin',`<button class="opt fpMB" onclick="closeM();openFate()">🎲 แต้มชะตา<small>${S.ix.fp}/${FPM} · เรื่องค้าง ${S.ix.sd.length}</small></button>`)}}catch(e){}return r}}
+window._b55={seedPay,hwOpen,rvNew,rvTick,mgOpen,betOffer,betTick,fpAdd,IX};
+})()}catch(e){console.error('block55',e)}
