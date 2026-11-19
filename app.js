@@ -42752,3 +42752,9 @@ window._dynT={stepEv,offer,coup,promote};
 // ฉายาจักรพรรดิจากสามัญชน
 try{if(typeof TTL_SP!=='undefined')TTL_SP.unshift(['dyn_emp',()=>!!(S&&S.flags&&S.flags.dynEmp),'จักรพรรดิจากสามัญชน'])}catch(e){}
 })()}catch(e){console.error('block52',e)}
+
+
+// ---------- ตั๋วสุ่มเกิดฟรี: เล่นจบชีวิต (อายุ 18+) ได้ 1 ใบ · ไม่เกิน 3 ใบ/วัน · ถือได้ 10 ใบ ----------
+try{(()=>{
+{const _eg=endGame;endGame=function(){try{if(S&&!S._rrE&&onlineOK&&(S.age|0)>=18&&!S.custom){S._rrE=1;const age=S.age|0;api('rrearn',{a:age}).then(j=>{try{if(j&&j.ok){window._RR&&(window._RR.c=j.c);S._rrGot=1;const E=$('end');if(E&&!E.querySelector('.rrNew')){const b=document.createElement('div');b.className='box rrNew';b.style.cssText='margin:8px 0;padding:8px';b.innerHTML=`🎟️ <b>ได้ตั๋วสุ่มเกิดฟรี 1 ใบ</b> <span class="tag2">· มี ${j.f} ใบ (ใช้ก่อนตั๋วที่ซื้อ · ได้ไม่เกิน 3 ใบ/วัน · ถือได้ 10 ใบ)</span>`;const h=E.querySelector('h2,h3');if(h&&h.parentNode===E)E.insertBefore(b,h.nextSibling);else E.insertBefore(b,E.firstChild)}else toast('🎟️ ได้ตั๋วสุ่มเกิดฟรี 1 ใบ')}}catch(e){}}).catch(()=>{})}}catch(e){}return _eg.apply(this,arguments)}}
+})()}catch(e){console.error('rrearn',e)}

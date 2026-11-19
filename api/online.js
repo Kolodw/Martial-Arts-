@@ -844,7 +844,8 @@ module.exports = async (req, res) => {
       if (vo.u) { try { await vipHeal(id) } catch (e) {} }
       if (vo.t) { try { await cmd('SADD', 'vipall', id) } catch (e) {} }
       if (vo.u) { const ul = jp(await cmd('HGET', 'vipu', id)); if (ul) vo.ul = { o: ul.o | 0, t: +ul.t || 0, w: ul.w || '' } }
-      return res.json({ c: Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0), pk: RR_PK, vp: VIP_PK, vip: vo });
+      const rrP = Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0), rrF = Math.max(0, +(await cmd('GET', 'rrf:' + id)) || 0);
+      return res.json({ c: rrP + rrF, f: rrF, pk: RR_PK, vp: VIP_PK, vip: vo });
     }
     if (a === 'vipset') {
       const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
@@ -979,9 +980,24 @@ module.exports = async (req, res) => {
     }
     if (a === 'rruse') {
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'id' });
+      const lf = +(await cmd('DECR', 'rrf:' + id)); // ใช้ตั๋วฟรี (ได้จากการเล่นจบชีวิต) ก่อนตั๋วที่ซื้อ
+      if (lf >= 0) { const rest = Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0); return res.json({ ok: 1, c: lf + rest }) }
+      await cmd('INCR', 'rrf:' + id);
       const left = +(await cmd('DECR', 'rrc:' + id));
       if (!(left >= 0)) { await cmd('INCR', 'rrc:' + id); return res.status(402).json({ err: 'none', c: 0 }) }
-      return res.json({ ok: 1, c: left });
+      return res.json({ ok: 1, c: left + Math.max(0, +(await cmd('GET', 'rrf:' + id)) || 0) });
+    }
+    if (a === 'rrearn') { // ตั๋วสุ่มเกิดฟรี 1 ใบเมื่อเล่นจบชีวิต: อายุ 18+, ห่างกัน 5 นาที, ไม่เกิน 3 ใบ/วัน, ถือไว้ไม่เกิน 10 ใบ
+      if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'id' });
+      if ((+b.a || 0) < 18) return res.json({ ok: 0, why: 'age' });
+      const cur = Math.max(0, +(await cmd('GET', 'rrf:' + id)) || 0);
+      if (cur >= 10) return res.json({ ok: 0, why: 'full', f: cur });
+      if (!(await cmd('SET', 'rrfc:' + id, 1, 'NX', 'EX', 300))) return res.json({ ok: 0, why: 'wait', f: cur });
+      const day = new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10), dk = 'rrfd:' + id + ':' + day, n = +(await cmd('INCR', dk)) || 1;
+      if (n === 1) await cmd('EXPIRE', dk, 172800);
+      if (n > 3) return res.json({ ok: 0, why: 'day', f: cur });
+      const f = +(await cmd('INCR', 'rrf:' + id)) || 1; await cmd('EXPIRE', 'rrf:' + id, 86400 * 180);
+      return res.json({ ok: 1, f, c: f + Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0) });
     }
     if (a === 'supmark') {
       if (!isAdmKey(qOf(req).key)) return res.status(403).json({ err: 'admin' });
