@@ -43457,7 +43457,7 @@ const MAP={
  god:{train:['stars'],qi:['stars','breath'],body:['scale'],study:['judge'],tech:['judge'],work:['wish'],craft:['wish'],adv:['wish','stars'],mission:['judge','scale'],hhunt:['beastread'],rest:['scale'],love:['lantern'],_:['stars','scale','judge','wish']},
  mw:{mwjob:['typing','call'],mwqi:['cctv'],mwnet:['viral','stock'],mwlearn:['mathq'],mwlow:['rider','drink'],mwlin:['chat'],_:['typing','rider','stock']},
  beast:{hunt:['pounce'],moon:['moon'],roam:['climb'],hide:['torch'],human:['peek'],patrol:['patrol'],devour:['core'],pack:['howl'],bond:['lantern'],seclude:['breath'],_:['pounce','moon']}};
-window.mg2Map=MAP;
+window.mg2Map=MAP;window._mg3E={targets,waitTap,dirs,balance,quiz,order,push,trace};
 window.mg2Pick=function(){if(!S||!S.alive)return false;const nh=!!(S.beastMode&&!S.beastMode.human);const w=nh?'beast':S.mw?'mw':S.xt?'god':S.xian?'xian':'murim';const M=MAP[w];let L=(M[S.focus]||M._).slice();
  let soul=false;try{soul=CFG.chm===CH_KEYS.indexOf('soul')}catch(e){}
  if(!nh&&!S.mw){const X=[];if(soul)X.push('drum','sync');if(S.flags&&S.flags.regress)X.push('future','turning');if(S.ab)X.push('heart','whisper');if(S.dyn)X.push('liar','petition');if(X.length&&Math.random()<.5)L=X}
@@ -43831,3 +43831,61 @@ EVENTS.push({w:2,cd:5,c:ok,f(){const g=X(),a=AC[g.ac.id];const E=[
  if(h)h.insertAdjacentHTML('beforebegin',html)}catch(e){console.error('sv4 os',e)}return r}}
 window._sv4={AC,examOffer,grad};
 })()}catch(e){console.error('sv4',e)}
+// ============================================================
+// BLOCK 59: 🎮 มินิเกมโลกย่อยยุคปัจจุบัน — ฮันเตอร์ · วันซ้ำ · ซอมบี้ · ใต้ดิน · ปราบผี · หอคอย · โลกเกม · หลังกำแพง · โลกใกล้แตก · เด็กยุคนี้
+// ============================================================
+try{(()=>{
+const G=window._mg2G,E=window._mg2E,E3=window._mg3E,W=window._wld;if(!G||!E||!E3)return;
+const MM=()=>S&&S.mw;
+const fx=o=>{try{return String(mwFx(o)).replace(/<[^>]+>/g,'').replace(/^\s*\(|\)\s*$/g,'').trim()}catch(e){return''}};
+const pw=x=>{const g=Math.max(1,Math.round(Math.max(2,total()*.03)*(.4+x*1.2)));S.power+=g;return`พลัง +${fmt(g)}`};
+const sh=a=>a.slice().sort(()=>Math.random()-.5);
+const btn=(t,st)=>`<button class="pbtn" style="width:100%;font-size:18px;padding:13px;${st||''}">${t}</button>`;
+const add=(o,k,v,mx)=>{if(!o)return'';o[k]=Math.max(0,Math.min(mx||1e9,(o[k]||0)+v));return''};
+// ---------- เครื่องยนต์ใหม่: อะไรเปลี่ยนไป ----------
+function spot(B,api,{pool,n}){const items=sh(pool).slice(0,n),idx=R(0,n-1),alt=sh(pool.filter(x=>!items.includes(x)))[0];const b2=items.slice();b2[idx]=alt;let ph=0,pick=-1;
+ const grid=(L,click)=>`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">${L.map((x,i)=>`<button class="opt m5s" data-i="${i}" style="font-size:30px;padding:10px 0" ${click?'':'disabled'}>${x}</button>`).join('')}</div>`;
+ B.innerHTML=`<div class="tag2" style="text-align:center;margin-bottom:6px" id="m5H">🔁 รอบก่อน — จำให้ดี</div>${grid(items,0)}`;
+ setTimeout(()=>{if(!api.live())return;B.innerHTML=`<div class="tag2" style="text-align:center;margin-bottom:6px">🔁 วันนี้อีกครั้ง… มีอย่างหนึ่งไม่เหมือนเดิม แตะมัน</div>${grid(b2,1)}`;ph=1;B.querySelectorAll('.m5s').forEach(b=>b.onclick=()=>{if(!api.live()||pick>=0)return;pick=+b.dataset.i;b.style.background=pick===idx?'#c8f0c0':'#f8c0c0';if(pick!==idx){const c=B.querySelector(`.m5s[data-i="${idx}"]`);if(c)c.style.outline='3px solid #2a8a3a'}api.end()})},Math.round(2600*api.ez));
+ return{sc:()=>pick===idx?1:0}}
+// ---------- เครื่องยนต์ใหม่: จัดกระเป๋า ----------
+function pack(B,api){const IT=sh([['💧','น้ำดื่ม',3,9],['🥫','อาหารกระป๋อง',3,8],['🩹','ชุดปฐมพยาบาล',2,8],['🔦','ไฟฉาย',1,6],['📻','วิทยุ',2,5],['🔋','แบตสำรอง',1,5],['🧥','เสื้อกันหนาว',3,4],['📷','อัลบั้มรูปครอบครัว',2,6],['🎸','กีตาร์',4,2],['💻','โน้ตบุ๊ก',3,2],['🧸','ตุ๊กตาตัวโปรด',1,3],['🗡️','กระบี่ประจำตัว',3,7]]).slice(0,8),CAP=10;
+ let best=0;(function bt(i,w,v){if(i>=IT.length){best=Math.max(best,v);return}bt(i+1,w,v);if(w+IT[i][2]<=CAP)bt(i+1,w+IT[i][2],v+IT[i][3])})(0,0,0);let sel=new Set(),done=0;
+ const W=()=>[...sel].reduce((a,i)=>a+IT[i][2],0),V=()=>[...sel].reduce((a,i)=>a+IT[i][3],0);
+ B.innerHTML=`<div id="m5W" style="text-align:center;font-weight:700;margin-bottom:6px"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">${IT.map((t,i)=>`<button class="opt m5p" data-i="${i}" style="padding:8px 4px;text-align:left">${t[0]} ${t[1]}<br><small>⚖️${t[2]} · ⭐${t[3]}</small></button>`).join('')}</div>${btn('🎒 ปิดกระเป๋า','margin-top:6px')}`;
+ const upd=()=>{B.querySelector('#m5W').textContent=`น้ำหนัก ${W()}/${CAP} · คุณค่า ⭐${V()}`;B.querySelectorAll('.m5p').forEach(b=>{const on=sel.has(+b.dataset.i);b.style.background=on?'#ffe7a8':'';b.style.outline=on?'2px solid #c9a24a':''})};upd();
+ B.querySelectorAll('.m5p').forEach(b=>b.onclick=()=>{if(!api.live()||done)return;const i=+b.dataset.i;if(sel.has(i))sel.delete(i);else if(W()+IT[i][2]<=CAP)sel.add(i);else{b.style.background='#f8c0c0';setTimeout(upd,200);return}upd()});
+ B.querySelector('.pbtn').onclick=()=>{done=1;B.querySelector('#m5W').textContent=`⭐${V()} จากที่ดีที่สุด ⭐${best}`;api.end()};return{sc:()=>best?V()/best:0}}
+// ---------- เกม ----------
+const SCH=[['☕ กินข้าวเช้ากับแม่','07:00'],['🚇 ขึ้นรถไฟฟ้าก่อนคนแน่น','07:40'],['🧑‍💼 ประชุมที่ทำงาน','09:00'],['🍜 ข้าวเที่ยงกับเพื่อนเก่า','12:00'],['📞 โทรหาคนที่ทะเลาะกันไว้','15:00'],['🌇 ดูพระอาทิตย์ตกริมแม่น้ำ','18:00'],['🍲 มื้อเย็นกับครอบครัว','19:30'],['🌙 เขียนบันทึกก่อนวันจะวนกลับ','23:50']];
+Object.assign(G,{
+ dungeon:{n:'ฝ่าดันเจี้ยน',ic:'🕳️',mt:'ผู้รอดจากเกตแดง',how:'หลบมอนสเตอร์ในทางเดิน 3 เลน',t:9,rw:x=>{const M=MM();add(M&&M.H,'pw',Math.round(10+40*x));return pw(x)+' · '+fx({mon:Math.round(3000*x),fame:Math.round(500*x)})},init:(B,a)=>E.lanes(B,a,{me:'🧑‍🎤',ob:'👹',bg:'linear-gradient(#1a0f2a,#3a1050)',speed:1.15})},
+ gateboss:{n:'อ่านสกิลบอสเกต',ic:'👹',mt:'นักล่าบอส',how:'จำลำดับสกิลบอส แล้วสวนตาม',rw:x=>{const M=MM();add(M&&M.H,'pw',Math.round(15+50*x));return pw(x*1.2)+' · '+fx({fame:Math.round(1500*x)})},init:(B,a)=>E.simon(B,a,{syms:['🔥','⚡','🌀','🗡️'],cols:4,len:5,show:400,title:'บอสกำลังร่ายสกิล…'})},
+ mana:{n:'เก็บคริสตัลมานา',ic:'💎',mt:'นักขุดมานา',how:'แตะคริสตัล ห้ามแตะกับดัก',rw:x=>fx({mon:Math.round(5000*x)})+' · '+pw(x*.5),init:(B,a)=>E3.targets(B,a,{good:'💎',bad:'💣',N:10,life:760,bg:'#14102a',badP:.3})},
+ loopspot:{n:'อะไรเปลี่ยนไป',ic:'🔍',mt:'ผู้จำทุกวินาที',how:'จำฉากวันก่อน แล้วหาสิ่งที่ต่างไป',t:12,rw:x=>{const M=MM();add(M&&M.LP,'mem',Math.round(2+6*x),100);add(M&&M.LP,'clue',x>=1?1:0);return`ความจำวนลูป +${Math.round(2+6*x)}${x>=1?' · เบาะแส +1':''}`},init:(B,a)=>spot(B,a,{pool:['☕','📱','🔑','🌂','📰','🐈','🚲','🎧','🕶️','🍞','🧢','🌹','⌚','📦','🕯️','🧸'],n:8})},
+ loopday:{n:'จัดตารางวันเดียว',ic:'⏱️',mt:'เจ้าแห่งหนึ่งวัน',how:'เรียงกิจกรรมตามเวลาให้ทันทุกนัด',t:12,rw:x=>{const M=MM();add(M&&M.LP,'tir',-Math.round(3*x),100);return fx({joy:Math.round(4+6*x)})||'ใจเบิกบาน'},init:(B,a)=>{const L=sh(SCH).slice(0,5).sort((p,q)=>p[1]<q[1]?-1:1);return E3.order(B,a,{items:L.map(x=>x[0]),head:'เรียงตามเวลา เช้า → ค่ำ (เวลาไม่บอก ต้องคิดเอง)'})}},
+ scav:{n:'เก็บของหลบซอมบี้',ic:'🥫',mt:'นักหาเสบียง',how:'แตะของกิน ห้ามแตะซอมบี้',rw:x=>{const M=MM();add(M&&M.Z,'sup',Math.round(2+6*x));add(M&&M.Z,'surv',Math.round(1+3*x));return`เสบียง +${Math.round(2+6*x)}`},init:(B,a)=>E3.targets(B,a,{good:'🥫',bad:'🧟',N:10,life:720,bg:'#2a2a20',badP:.35})},
+ board:{n:'ตอกไม้ปิดหน้าต่าง',ic:'🔨',mt:'ช่างหลังวันสิ้นโลก',how:'ตอกตามจังหวะก่อนฝูงจะมาถึง',rw:x=>{const M=MM();add(M&&M.Z,'surv',Math.round(2+5*x));return`ที่พักแข็งแรงขึ้น +${Math.round(2+5*x)}`},init:(B,a)=>E.beat(B,a,{n:8,iv0:620,iv1:470,ic:'🪵',label:'🔨 ตอก!'})},
+ ugbox:{n:'มวยใต้ดิน',ic:'🥊',mt:'ราชาลานใต้ดิน',how:'ปัดหมัดตามทิศที่มา',rw:x=>{const M=MM();add(M&&M.U,'inf',Math.round(2+6*x));add(M&&M.U,'heat',Math.round(4-3*x),100);return pw(x)+` · อิทธิพล +${Math.round(2+6*x)}`},init:(B,a)=>E3.dirs(B,a,{N:9,ic:'🥊',labels:['⬅️ ปัดซ้าย','⬆️ ก้มหลบ','➡️ ปัดขวา']})},
+ pour:{n:'รินเหล้าให้ผู้ใหญ่',ic:'🍶',mt:'มือรินของเจ้าพ่อ',how:'กดค้างรินให้พอดีแก้ว ล้นหรือขาด = เสียหน้า',rw:x=>{const M=MM();add(M&&M.U,'inf',Math.round(1+7*x));return`อิทธิพล +${Math.round(1+7*x)}`},init:(B,a)=>E.hold(B,a,{n:3,lo:.8,hi:.92,ms:1500,ic:'🍶',label:'กดค้างริน',col:'linear-gradient(#fff3c0,#e0a020)'})},
+ exorcise:{n:'สะกดผี',ic:'📿',mt:'หมอผีมือฉมัง',how:'ลากตามรอยยันต์ให้ครบก่อนผีจะตั้งตัว',t:10,rw:x=>{const M=MM();add(M&&M.G,'ward',Math.round(2+6*x));return`บารมี +${Math.round(2+6*x)}`},init:(B,a)=>E3.trace(B,a,{col:'#7a1fb3'})},
+ noturn:{n:'ห้ามหันหลัง',ic:'👻',mt:'ผู้ไม่กลัวความมืด',how:'ขยับได้เฉพาะตอนผีไม่มอง',t:12,rw:x=>{const M=MM();add(M&&M.G,'ward',Math.round(1+5*x));add(M&&M.G,'bad',-Math.round(3*x));return`บารมี +${Math.round(1+5*x)}`},init:(B,a)=>E3.waitTap(B,a,{N:3,wIc:'👻👀',wBg:'#2a1030',gIc:'👻💤',gBg:'#101018',ok:'🚶✨',fail:'😱',label:'🚶 ก้าวไปข้างหน้า'})},
+ incense:{n:'จุดธูปให้ควันตรง',ic:'🕯️',mt:'ผู้มีบารมี',how:'กดค้างจุดธูป ปล่อยตอนเปลวพอดี',rw:x=>{const M=MM();add(M&&M.G,'ward',Math.round(1+4*x));return fx({joy:Math.round(2+4*x)})||'ใจสงบ'},init:(B,a)=>E.hold(B,a,{n:3,lo:.6,hi:.78,ms:1300,ic:'🕯️',label:'กดค้างจุดธูป',col:'linear-gradient(#fff,#ccc)'})},
+ floor:{n:'ไต่ชั้นหอคอย',ic:'🧗',mt:'ผู้พิชิตยอดหอ',how:'แตะหินที่โผล่ ห้ามจับหินผุ',rw:x=>pw(x*1.1)+' · '+fx({fame:Math.round(800*x)}),init:(B,a)=>E3.targets(B,a,{good:'🪨',bad:'🧱',N:9,life:780,bg:'linear-gradient(#20203a,#4a4a6a)',badP:.3})},
+ trap:{n:'หลบกับดักประจำชั้น',ic:'🪤',mt:'นักเดินหอ',how:'หลบกับดักที่ร่วงลงมา',t:9,rw:x=>pw(x)+' · '+fx({mon:Math.round(2000*x)}),init:(B,a)=>E.lanes(B,a,{me:'🧗',ob:'🗡️',bg:'#3a3020',speed:1.1})},
+ combo:{n:'กดคอมโบสกิล',ic:'✨',mt:'ผู้เล่นสายคอมโบ',how:'จำคอมโบที่ระบบแนะนำ แล้วกดตาม',rw:x=>{const M=MM();add(M&&M.GM,'lv',x>=.99?1:0);return pw(x)+(x>=.99?' · เลเวล +1':'')},init:(B,a)=>E.simon(B,a,{syms:['Q','W','E','R','D','F'],cols:6,len:6,show:340,title:'[ระบบ] คอมโบแนะนำ…'})},
+ crit:{n:'จับเวลาคริติคอล',ic:'💥',mt:'คริทุกดาบ',how:'กดตอนวงแหวนตรงเป้า',rw:x=>pw(x*1.2),init:(B,a)=>E.beat(B,a,{n:7,iv0:560,iv1:520,ic:'🎯',label:'⚔️ โจมตี!'})},
+ auction:{n:'ประมูลไอเทม',ic:'🏷️',mt:'เศรษฐีในเกม',how:'เสนอราคาแข่งบอท ได้ของดีในราคาถูกที่สุด',t:12,rw:x=>fx({mon:Math.round(4000*x)}),init:(B,a)=>G.bargain.init(B,a)},
+ stampede:{n:'หลบฝูงสัตว์ยักษ์',ic:'🦖',mt:'ผู้รอดนอกกำแพง',how:'หลบฝูงที่วิ่งเข้ามา 3 เลน',t:9,rw:x=>pw(x)+' · '+fx({fame:Math.round(1200*x)}),init:(B,a)=>E.lanes(B,a,{me:'🏃',ob:'🦖',bg:'#3a4a20',speed:1.2})},
+ wallshot:{n:'ยิงจากบนกำแพง',ic:'🏹',mt:'พลธนูกำแพงสุดท้าย',how:'แตะสัตว์ร้าย ห้ามยิงโดนพวกเดียวกัน',rw:x=>pw(x)+' · '+fx({fame:Math.round(800*x)}),init:(B,a)=>E3.targets(B,a,{good:'🐺',bad:'🧑‍🌾',N:10,life:740,bg:'linear-gradient(#5a6a80,#3a4a30)',badP:.3})},
+ bag:{n:'จัดกระเป๋าเอาตัวรอด',ic:'🎒',mt:'ผู้เตรียมพร้อม',how:'เลือกของให้คุณค่ารวมสูงสุดโดยไม่เกินน้ำหนัก 10',t:20,rw:x=>{fx({joy:Math.round(2+4*x)});return`ความพร้อมเอาตัวรอด ${Math.round(x*100)}%`},init:(B,a)=>pack(B,a)},
+ photo:{n:'ถ่ายรูปความทรงจำ',ic:'📸',mt:'คนเก็บความทรงจำ',how:'รอให้ทุกคนยิ้มแล้วกดชัตเตอร์',t:12,rw:x=>fx({joy:Math.round(4+10*x)})||'ใจอบอุ่น',init:(B,a)=>E3.waitTap(B,a,{N:3,wIc:'😐😑😶',wBg:'#3a3040',gIc:'😄😁😊',gBg:'#5a4020',ok:'📸✨',fail:'📸💨',label:'📸 กดชัตเตอร์'})},
+ homework:{n:'ทำการบ้าน',ic:'📝',mt:'เด็กเรียนดี',how:'คิดเลขให้ทัน',t:12,rw:x=>{const g=Math.max(1,Math.round(4*x));S.int=(S.int||0)+g;return`ปัญญา +${g}`},init:(B,a)=>E3.quiz(B,a,{N:5,head:'การบ้านเลข',gen:()=>{const x=R(2,12),y=R(2,9),p=Math.random()<.5;const v=p?x+y:x*y;return{q:`${x} ${p?'+':'×'} ${y} = ?`,o:[String(v),String(v+R(1,3)),String(Math.max(0,v-R(1,3)))]}}})},
+ hide:{n:'ซ่อนแอบ',ic:'🙈',mt:'นินจาประจำซอย',how:'ขยับไปที่ซ่อนเฉพาะตอนคนหาปิดตา',t:12,rw:x=>fx({joy:Math.round(3+6*x)})||'สนุก',init:(B,a)=>E3.waitTap(B,a,{N:3,wIc:'🧒👀',wBg:'#3a3020',gIc:'🧒🙈',gBg:'#203a20',ok:'🫥',fail:'😆 เจอแล้ว!',label:'🏃 วิ่งไปซ่อน'})}
+});
+const WM={hunter:{mwgate:['dungeon','gateboss','mana']},loop:{wxl:['loopspot'],wxr:['loopday']},zombie:{wxz:['scav'],wxb:['board']},under:{wxu:['ugbox'],wxs:['pour','liar']},ghost:{wxg:['exorcise','noturn'],wxh:['incense']},tower:{wxt:['floor','trap'],wxtr:['breath']},game:{wxq:['combo','crit'],wxqp:['auction']},gatewon:{wxw:['stampede'],wxwv:['wallshot']},doom:{wxda:['bag'],wxdb:['photo']}};
+window.mg5Map=WM;
+{const _p=window.mg2Pick;window.mg2Pick=function(){try{const M=MM();if(S&&S.alive&&M&&!(S.beastMode&&!S.beastMode.human)){let L=null;if(M.kid&&S.age<15)L=['homework','hide'];else{const w=W&&W.wOf?W.wOf(M):'normal';const T=WM[w];if(T)L=T[S.focus]||(Math.random()<.5?[].concat(...Object.values(T)):null)}
+  if(L&&L.length){const k=ch(L);if(G[k]){S.mgA=S.age;return window._mg2Y(k)}}}}catch(e){console.error('mg5',e)}return _p.apply(this,arguments)}}
+try{if(window._mg2DG)['dungeon','loopspot','scav','ugbox','exorcise','combo','stampede','bag','photo'].forEach(k=>window._mg2DG.push(k))}catch(e){}
+})()}catch(e){console.error('block59',e)}
