@@ -351,7 +351,7 @@ const COS_BASE = Object.create(null); // pk -> [ราคาเต็ม, [ไ�
 for (let i = 1; i <= 8; i++) { COS_BASE['cf' + i] = [COS_FP[i - 1], ['f_p' + i]]; COS_BASE['ct' + i] = [i === 1 ? 29 : 19, ['t_p' + i]]; COS_BASE['cc' + i] = [i === 1 ? 29 : 19, ['c_p' + i]]; COS_BASE['cs' + i] = [COS_SET[i - 1], ['f_p' + i, 't_p' + i, 'c_p' + i]] }
 for (let i = 9; i <= 11; i++) COS_BASE['ct' + i] = [9, ['t_p' + i]]; // ฉายาเริ่มต้น 9 บาท
 COS_BASE.call = [399, [...Array(8).keys()].flatMap(i => ['f_p' + (i + 1), 't_p' + (i + 1), 'c_p' + (i + 1)])];
-const COS_ALL = new Set([...COS_BASE.call[1], 't_p9', 't_p10', 't_p11', 'f_s1', 't_s1', 'c_s1', 'f_s2', 't_s2', 'c_s2', 'f_s3', 't_s3', 'c_s3']);
+const COS_ALL = new Set([...COS_BASE.call[1], 't_p9', 't_p10', 't_p11', 'f_s1', 't_s1', 'c_s1', 'f_s2', 't_s2', 'c_s2', 'f_s3', 't_s3', 'c_s3', 'f_s4', 't_s4', 'f_s5', 't_s5', 'a_s1', 'a_s2', 'a_s3', 'a_s4', 'a_s5', 't_v1', 't_v2', 't_v3']);
 // 🧑 รูปโปรไฟล์ขยับได้ (ร้านตกแต่ง หมวดรูปโปรไฟล์) — ราคา 9–29 บาท
 for (let i = 1; i <= 10; i++) { COS_BASE['pa' + i] = [[9, 9, 15, 15, 19, 19, 25, 25, 29, 29][i - 1], ['a_p' + i]]; COS_ALL.add('a_p' + i) }
 // 🏙️ ชุดตกแต่งยุคปัจจุบัน: 6 ชุด (กรอบ f_m · ฉายา t_m · ธีมแชท c_m) + ฉายาเสริม 18 แบบ (t_n) — ราคาเดียวกับสูตรของชุดยุทธภพ
@@ -394,18 +394,23 @@ const VIP_GIFT_UNTIL = Date.parse('2026-12-01T00:00:00+07:00'); // ผู้ส�
 const vipTier = (v, t = Date.now()) => !v ? 0 : v.u ? 3 : (+v.e2 || 0) > t ? 2 : (+v.e1 || 0) > t ? 1 : 0;
 const VIP_TT = ['ผู้สนับสนุนสำนัก', 'ศิษย์ใต้โคมแดง', 'ผู้ถือตราชาด', 'ผู้เฝ้าหอโคม', 'สหายแห่งยุทธภพ', 'ผู้ค้ำจุนสำนัก'];
 const vipOut = v => ({ t: vipTier(v), e1: +(v && v.e1) || 0, e2: +(v && v.e2) || 0, u: v && v.u ? 1 : 0, tt: String((v && v.tt) || ''), ttl: VIP_TT });
-// ❄ คัมภีร์ฤดูกาล: ฤดูละ ~6 สัปดาห์ · 30 ขั้น ขั้นละ 300 แต้ม · เส้นฟรี + เส้นคัมภีร์ทอง (59) / ฉบับจารึก (129 = ทอง + ข้าม 10 ขั้น + ชุดจักรพรรดิ)
+// ❄ คัมภีร์ฤดูกาล: ฤดูละ ~6 สัปดาห์ · 60 ขั้น (1–30 ขั้นละ 300 · 31–60 ขั้นละ 200) · เส้นฟรี + เส้นคัมภีร์ทอง (59) / ฉบับจารึก (129 = ทอง + ข้าม 10 ขั้น + ชุดจักรพรรดิ)
 const SEA = [{ id: 's1', n: 'ฤดูหิมะเหนือ', a: Date.parse('2026-11-19T00:00:00+07:00'), b: Date.parse('2027-01-01T00:00:00+07:00') }];
-const SP_LV = 300, SP_MAX = 30, SP_GRACE = 7 * 864e5;
+const SP_LV = 300, SP_LV2 = 200, SP_MAX = 60, SP_GRACE = 7 * 864e5; // ขั้น 1–30 ขั้นละ 300 · ขั้น 31–60 ขั้นละ 200
 const seaNow = (t = Date.now()) => SEA.find(s => t >= s.a && t < s.b) || null;
 const seaClaim = (t = Date.now()) => SEA.find(s => t >= s.a && t < s.b + SP_GRACE) || null;
 // รางวัล: f=ตั๋วธรรมดา g=ตั๋วทอง lk=ตั๋วล็อก cos=ของแต่ง ch=บทนำ chx=บทเต็ม org=ชาติกำเนิดฤดู nv=นิยายปกแข็ง
 const SPR = { s1: {
-  f: { 1: ['f', 2], 2: ['ch', 1], 3: ['f', 2], 5: ['cos', 't_s1'], 6: ['f', 3], 8: ['ch', 2], 10: ['g', 1], 12: ['lk', 1], 14: ['ch', 3], 15: ['f', 3], 18: ['cos', 'c_s1'], 20: ['cos', 'f_s1'], 22: ['ch', 4], 24: ['f', 4], 26: ['ch', 5], 28: ['lk', 1], 30: ['g', 1] },
-  p: { 1: ['g', 1], 2: ['chx', 1], 3: ['f', 4], 4: ['lk', 1], 5: ['cos', 'f_s2'], 6: ['f', 4], 7: ['lk', 1], 8: ['chx', 2], 9: ['f', 5], 10: ['cos', 't_s2'], 11: ['g', 1], 12: ['lk', 2], 13: ['f', 5], 14: ['chx', 3], 15: ['cos', 'c_s2'], 16: ['f', 5], 17: ['lk', 1], 18: ['g', 1], 19: ['f', 6], 20: ['org', 'o_s1'], 21: ['lk', 2], 22: ['chx', 4], 23: ['f', 6], 24: ['g', 1], 25: ['nv', 1], 26: ['chx', 5], 27: ['lk', 2], 28: ['f', 8], 29: ['g', 1], 30: ['g', 2] } } };
-const SP_COS = ['f_s1', 't_s1', 'c_s1', 'f_s2', 't_s2', 'c_s2', 'f_s3', 't_s3', 'c_s3'];
+  f: { 1: ['f', 2], 2: ['ch', 1], 3: ['f', 2], 5: ['cos', 't_s1'], 6: ['f', 3], 8: ['ch', 2], 10: ['g', 1], 12: ['lk', 1], 14: ['ch', 3], 15: ['f', 3], 18: ['cos', 'c_s1'], 20: ['cos', 'f_s1'], 22: ['ch', 4], 24: ['f', 4], 26: ['ch', 5], 28: ['lk', 1], 30: ['g', 1], 33: ['f', 3], 36: ['lk', 1], 39: ['f', 3], 42: ['g', 1], 45: ['f', 4], 48: ['lk', 1], 51: ['f', 4], 54: ['g', 1], 57: ['f', 5], 60: ['cos', 'a_s2'] },
+  p: { 1: ['g', 1], 2: ['chx', 1], 3: ['f', 4], 4: ['lk', 1], 5: ['cos', 'f_s2'], 6: ['f', 4], 7: ['lk', 1], 8: ['chx', 2], 9: ['f', 5], 10: ['cos', 't_s2'], 11: ['g', 1], 12: ['lk', 2], 13: ['f', 5], 14: ['chx', 3], 15: ['cos', 'c_s2'], 16: ['f', 5], 17: ['lk', 1], 18: ['g', 1], 19: ['f', 6], 20: ['org', 'o_s1'], 21: ['lk', 2], 22: ['chx', 4], 23: ['f', 6], 24: ['g', 1], 25: ['nv', 1], 26: ['chx', 5], 27: ['lk', 2], 28: ['f', 8], 29: ['g', 1], 30: ['g', 2],
+    31: ['f', 5], 32: ['lk', 1], 33: ['f', 5], 34: ['g', 1], 35: ['cos', 'a_s1'], 36: ['f', 6], 37: ['lk', 2], 38: ['f', 6], 39: ['g', 1], 40: ['nv', 1], 41: ['f', 6], 42: ['lk', 2], 43: ['f', 7], 44: ['g', 1], 45: ['cos', 'a_s3'], 46: ['f', 7], 47: ['lk', 2], 48: ['g', 1], 49: ['f', 8], 50: ['cos', 't_s4'], 51: ['lk', 2], 52: ['f', 8], 53: ['g', 1], 54: ['f', 8], 55: ['cos', 'a_s4'], 56: ['lk', 3], 57: ['g', 2], 58: ['f', 10], 59: ['g', 2], 60: ['cos', 'f_s4'] },
+  // 👑 ฉบับจารึก: รางวัลขั้น 60 เฉพาะผู้ถือฉบับจารึก (กรอบ + ฉายา + รูปโปรไฟล์) และได้ป้าย "❄ ผู้พิชิต" ในหน้าจารึก
+  i: { 60: ['cosm', ['f_s5', 't_s5', 'a_s5']] } } };
+const SP_COS = ['f_s1', 't_s1', 'c_s1', 'f_s2', 't_s2', 'c_s2', 'f_s3', 't_s3', 'c_s3', 'f_s4', 't_s4', 'f_s5', 't_s5', 'a_s1', 'a_s2', 'a_s3', 'a_s4', 'a_s5'];
+// 🏮 ของแต่ง VIP: ใช้ได้เฉพาะตอนสิทธิ์ยังไม่หมด (ระดับ n ขึ้นไป) — หมดเดือนแล้วถอดออกเอง ต้องต่อใหม่ · 599 ใช้ได้ตลอด
+const vipCosN = x => { const m = /^[ft]_v([1-3])$/.exec(String(x || '')); return m ? +m[1] : 0 };
 const spKey = (s, id) => 'sp:' + s.id + ':' + id;
-const spLvOf = p => Math.min(SP_MAX, Math.floor((+p || 0) / SP_LV));
+const spLvOf = p => { p = +p || 0; return p < SP_LV * 30 ? Math.floor(p / SP_LV) : Math.min(SP_MAX, 30 + Math.floor((p - SP_LV * 30) / SP_LV2)) };
 // ตัวคูณ: ผู้สนับสนุนพิเศษ/ผู้ก่อตั้ง +20% · ตามหลังเกณฑ์ ×1.5 · สัปดาห์สุดท้ายยังไม่ครบ ×2
 async function spMul(s, id, p) {
   let m = 1; try { const v = jp(await cmd('GET', 'vip:' + id)); if (vipTier(v) >= 2) m *= 1.2 } catch {}
@@ -829,7 +834,7 @@ module.exports = async (req, res) => {
     }
     if (a === 'cosset') {
       if (!okId(id)) return res.status(400).json({ err: 'id' });
-      const adm = isAdmKey(b.key) || !!(+(await cmd('SISMEMBER', 'admids', id))), own = new Set(await cosOwn(id)), has = x => COS_ALL.has(x) && (adm || own.has(x));
+      const adm = isAdmKey(b.key) || !!(+(await cmd('SISMEMBER', 'admids', id))), own = new Set(await cosOwn(id)), vtq = vipTier(jp(await cmd('GET', 'vip:' + id))), has = x => COS_ALL.has(x) && (adm || own.has(x) || (vipCosN(x) > 0 && vtq >= vipCosN(x)));
       const t = String(b.t || ''), c = String(b.c || '');
       const q = { t: has(t) ? t : '', c: has(c) ? c : '' };
       if (/^t_e/.test(q.t)) { const sn = +(await cmd('HGET', 'evs:' + id, q.t)); if (sn) q.n = sn }
@@ -960,6 +965,7 @@ module.exports = async (req, res) => {
       const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, sc, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), x, a: act, pu: id.slice(0, 12), rl: clean(b.rl, 24), fn: clean(b.fn, 24), fr: /^f_[a-z0-9_]{1,16}$/.test(String(b.fr || '')) ? String(b.fr) : '' };
       try { const vj = jp(await cmd('GET', 'vip:' + id)), vt = vipTier(vj); if (vt) { m.vp = vt; if (vj.tt && (vt === 3 || VIP_TT.includes(vj.tt))) m.vq = String(vj.tt).slice(0, 20) } } catch {}
       try { const cq = jp(await cmd('GET', 'cosq:' + id)); if (cq) { if (cq.t) m.ct = cq.t; if (cq.c) m.cc = cq.c; if (cq.n && /^t_e/.test(cq.t || '')) m.cn = cq.n } } catch {}
+      if (vipCosN(m.ct) > (m.vp | 0)) delete m.ct; if (vipCosN(m.fr) > (m.vp | 0)) m.fr = '';
       await pipe([['LPUSH', 'rp:all', JSON.stringify(m)], ['LTRIM', 'rp:all', 0, 59], ['EXPIRE', 'rp:all', 86400 * 3], ['ZADD', 'rp:pres', now, id.slice(0, 16)]]);
       try { await rpStory(true) } catch { }
       return res.json({ ok: 1, m });
@@ -1832,18 +1838,20 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (o === 'life') { if (!open) return res.json({ ok: 0 }); const ag = Math.max(0, +b.age || 0), add = await spAdd(id, ag >= 60 ? 30 : 20, ['life', 3]); return res.json({ ok: 1, add }) }
       if (o === 'sev') { if (!open) return res.json({ ok: 0 }); const add = await spAdd(id, 10, ['sev', 3]); return res.json({ ok: 1, add }) }
       if (o === 'cl') {
-        const tr = b.tr === 'p' ? 'p' : 'f', lv = Math.floor(+b.lv || 0), R = (SPR[s.id] || {})[tr] || {}, r = R[lv]; if (!r) return res.json({ err: 'lv' });
+        const tr = b.tr === 'p' ? 'p' : b.tr === 'i' ? 'i' : 'f', lv = Math.floor(+b.lv || 0), R = (SPR[s.id] || {})[tr] || {}, r = R[lv]; if (!r) return res.json({ err: 'lv' });
         const H = await cmd('HMGET', spKey(s, id), 'p', 't'), p = +(H && H[0]) || 0, t = +(H && H[1]) || 0;
-        if (spLvOf(p) < lv) return res.json({ ok: 0, err: 'notyet' }); if (tr === 'p' && t < 1) return res.json({ ok: 0, err: 'pass' });
+        if (spLvOf(p) < lv) return res.json({ ok: 0, err: 'notyet' }); if (tr === 'p' && t < 1) return res.json({ ok: 0, err: 'pass' }); if (tr === 'i' && t < 2) return res.json({ ok: 0, err: 'pass' });
         if (!+(await cmd('SADD', 'spc:' + s.id + ':' + id, tr + lv))) return res.json({ ok: 0, dup: 1 }); await cmd('EXPIRE', 'spc:' + s.id + ':' + id, 86400 * 400);
         const [ty, v] = r;
         if (ty === 'f') await pipe([['INCRBY', 'rrf:' + id, v], ['EXPIRE', 'rrf:' + id, 86400 * 180]]);
         else if (ty === 'g') await pipe([['INCRBY', 'rrg:' + id, v], ['EXPIRE', 'rrg:' + id, 86400 * 365]]);
         else if (ty === 'lk') await cmd('INCRBY', 'lkc:' + id, v);
         else if (ty === 'cos' || ty === 'org') await cmd('SADD', 'cos:' + id, v);
+        else if (ty === 'cosm') await cmd('SADD', 'cos:' + id, ...v);
+        if (tr === 'i' && lv >= SP_MAX) await pipe([['SADD', 'spw:' + s.id, id], ['EXPIRE', 'spw:' + s.id, 86400 * 400]]);
         else if (ty === 'nv') await cmd('INCRBY', 'nvc:' + id, v);
         return res.json({ ok: 1, r }) }
-      if (o === 'ens') { const h = await cmd('HGETALL', 'spe:' + s.id), L = []; if (Array.isArray(h)) for (let i = 0; i + 1 < h.length; i += 2) { const x = jp(h[i + 1]); if (x) L.push(x) } L.sort((x, y) => x.t - y.t); return res.json({ ok: 1, L: L.slice(0, 300).map(x => ({ n: x.n, t: x.t })) }) }
+      if (o === 'ens') { const [h, wn] = await pipe([['HGETALL', 'spe:' + s.id], ['SMEMBERS', 'spw:' + s.id]]), W = new Set(wn || []), L = []; if (Array.isArray(h)) for (let i = 0; i + 1 < h.length; i += 2) { const x = jp(h[i + 1]); if (x) L.push(Object.assign(x, { w: W.has(h[i]) ? 1 : 0 })) } else if (h && typeof h === 'object') for (const k in h) { const x = jp(h[k]); if (x) L.push(Object.assign(x, { w: W.has(k) ? 1 : 0 })) } L.sort((x, y) => x.t - y.t); return res.json({ ok: 1, L: L.slice(0, 300).map(x => ({ n: x.n, t: x.t, w: x.w })) }) }
       return res.json({ err: 'op' });
     }
     // ========== 📕 นิยายปกแข็ง ==========
@@ -2524,7 +2532,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       // รูปตัวละครจากเกม (PNG 56×62) ขึ้นได้ทันที · รูปที่อัปโหลดเอง (JPEG/WebP) ต้องรอแอดมินตรวจก่อนคนอื่นจะเห็น
       let av = String(b.av || ''), alt = String(b.alt || ''); const up = b.up ? 1 : 0, pu = id.slice(0, 12); let fr = String(b.fr || '').replace(/[^a-z0-9_]/g, '').slice(0, 20);
       if (/^f_adm/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id)))) fr = ''; // กรอบแอดมิน: ใส่ได้เฉพาะแอดมิน
-      if (/^f_(p[1-8]|e[1-5]|s[1-3])$/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id))) && !(+(await cmd('SISMEMBER', 'cos:' + id, fr)))) fr = ''; // กรอบร้านค้า: ต้องซื้อแล้ว
+      if (vipCosN(fr) && vipTier(jp(await cmd('GET', 'vip:' + id))) < vipCosN(fr) && !(+(await cmd('SISMEMBER', 'admids', id)))) fr = ''; // กรอบ VIP: ต้องมีสิทธิ์ระดับนั้นอยู่
+      if (/^f_(p[1-8]|e[1-5]|s[1-5])$/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id))) && !(+(await cmd('SISMEMBER', 'cos:' + id, fr)))) fr = ''; // กรอบร้านค้า: ต้องซื้อแล้ว
       if (/^f_(arc|box|lg)\d/.test(fr)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.fr || []).includes(fr)) fr = '' } // กรอบลาน: ต้องมีในกระเป๋าเซิร์ฟเวอร์
       const isUp = /^data:image\/(jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(av);
       if (isUp && !isAdmKey(b.key)) return res.status(403).json({ err: 'noup' }); // อัปโหลดรูปเองปิดไว้ — เฉพาะแอดมิน
@@ -2615,6 +2624,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (!b.nsp) { try { if (+(await cmd('SISMEMBER', 'supok', id))) m.sp = 1 } catch {} }
       try { const vj = jp(await cmd('GET', 'vip:' + id)), vt = vipTier(vj); if (vt) { m.vp = vt; if (vj.tt && (vt === 3 || VIP_TT.includes(vj.tt))) m.vq = String(vj.tt).slice(0, 20) } } catch {}
       try { const cq = jp(await cmd('GET', 'cosq:' + id)); if (cq) { if (cq.t) m.ct = cq.t; if (cq.c) m.cc = cq.c; if (cq.n && /^t_e/.test(cq.t || '')) m.cn = cq.n } } catch {}
+      if (vipCosN(m.ct) > (m.vp | 0)) delete m.ct; if (vipCosN(m.fr) > (m.vp | 0)) m.fr = '';
       try { const sp0 = jp(await cmd('HGET', 'supp', id)); if (sp0 && sp0.cb && !sp0.hide && sp0.tier != null) m.st = Math.max(0, Math.min(4, sp0.tier | 0)) } catch {}
       if (/^ตำนานลานซีซั่น \d{1,4}$/.test(String(b.tt || '')) && !m.tt) { const wv0 = jp(await cmd('HGET', 'arwal', id)); if (isAdmKey(b.key) || (wv0 && wv0.own && (wv0.own.tt || []).includes(String(b.tt)))) { m.tt = String(b.tt); m.tr = 6 } }
       if (['นักล่าเงา', 'ผู้ไม่เคยถอย', 'ตำนานแห่งลาน', 'ราชันเงาอสูร', 'เทพสงครามแห่งลาน', 'ผู้ยืนหนึ่งเหนือพันศึก', 'จักรพรรดิแห่งเงา', 'ผู้ไต่ลานทองคำ', 'เพชรแห่งลานเงา', 'จ้าวลานประลอง', 'ปรมาจารย์ผู้ไร้เงา', 'ราชันหมื่นเงา', 'เทพยุทธ์แห่งยุค'].includes(m.tt) && !isAdmKey(b.key)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.tt || []).includes(m.tt)) { m.tt = ''; m.tr = 0 } }
