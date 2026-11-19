@@ -1094,6 +1094,25 @@ module.exports = async (req, res) => {
       if (b.test) { const r0 = await pushHashes([h], { t: '🔔 เปิดแจ้งเตือนแล้ว', b: 'คุณจะได้รับแจ้งเตือนเมื่อผู้ดูแลตอบกลับหรือมีประกาศสำคัญ', u: '/', g: 'hello' }); return res.json({ ok: 1, test: r0.sent }) }
       return res.json({ ok: 1 });
     }
+    if (a === 'pushre') { // 🔔 ดึงผู้เล่นที่หายไปกลับมา: ส่ง push ให้เฉพาะคนที่เปิดแจ้งเตือนไว้ และห่างหาย 3–45 วัน · คนละไม่เกิน 1 ครั้ง/7 วัน · เรียกจาก cron รายวัน (CRON_SECRET) หรือแอดมิน
+      const au = String(req.headers['authorization'] || ''), cs = process.env.CRON_SECRET || '';
+      if (!(cs && au === 'Bearer ' + cs) && !isAdmKey(qOf(req).key || b.key)) return res.status(403).json({ err: 'forbidden' });
+      if (!VAPID_PRIV || !VAPID_PUB) return res.json({ ok: 0, why: 'novapid' });
+      if (global._preB && Date.now() - global._preB < 600000) return res.json({ ok: 0, why: 'busy' }); global._preB = Date.now();
+      try {
+        const dry = qOf(req).dry === '1', ALL = await cmd('HGETALL', 'push'), recs = [];
+        const kv = Array.isArray(ALL) ? ALL : Object.entries(ALL || {}).flat();
+        for (let i = 0; i + 1 < kv.length; i += 2) { const v = jp(kv[i + 1]); if (v && v.id && v.t) recs.push({ h: kv[i], id: v.id, t: +v.t }) }
+        const old = recs.filter(r => now - r.t >= 3 * 86400e3 && now - r.t <= 45 * 86400e3).slice(0, 600), byId = new Map();
+        for (const r of old) if (!byId.has(r.id)) byId.set(r.id, []); for (const r of old) byId.get(r.id).push(r.h);
+        const ids = [...byId.keys()], okIds = [];
+        if (!dry && ids.length) { const rs = await pipe(ids.map(id => ['SET', 'pre:' + id, 1, 'NX', 'EX', 7 * 86400])); ids.forEach((id, i) => { if (rs[i]) okIds.push(id) }) } else okIds.push(...ids);
+        const COPY = [['🏯 ยุทธภพยังรอคุณอยู่', 'ชีวิตของคุณค้างอยู่ แตะเพื่อเล่นต่อ'], ['🔮 มรดกวิญญาณรอแลกอยู่', 'เป้าหมายข้ามชีวิตและของขวัญต้อนรับยังรออยู่ กลับมาเล่นต่อ'], ['🏟️ เงาของคุณยังอยู่ที่ลาน', 'มาดูว่ามีใครท้าเงาของคุณหรือยัง'], ['🎟️ ตั๋วสุ่มเกิดฟรีรอคุณอยู่', 'จบชีวิตแล้วรับตั๋วสุ่มเกิดฟรีได้ทุกวัน']];
+        let sent = 0, fail = 0, rm = 0;
+        if (!dry) for (let i = 0; i < okIds.length; i++) { const c = COPY[(Math.floor(now / 86400e3) + i) % COPY.length], r0 = await withCap(pushHashes(byId.get(okIds[i]), { t: c[0], b: c[1], u: '/', g: 'recall' }), 8000); sent += r0.sent | 0; fail += r0.fail | 0; rm += r0.rm | 0 }
+        return res.json({ ok: 1, subs: recs.length, cand: ids.length, targets: okIds.length, sent, fail, rm, dry: dry ? 1 : 0 });
+      } finally { global._preB = 0 }
+    }
     if (a === 'pushsend' || a === 'pushstat') {
       if (!isAdmKey(b.key || qOf(req).key)) return res.status(403).json({ err: 'admin' });
       const n = +(await cmd('HLEN', 'push')) || 0;

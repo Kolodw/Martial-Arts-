@@ -307,5 +307,11 @@
       "source": "/:f(.*/config\\.json)",
       "destination": "/api/online?a=trap&p=:f"
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/online?a=pushre",
+      "schedule": "0 12 * * *"
+    }
   ]
 }
