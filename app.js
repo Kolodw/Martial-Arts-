@@ -43990,3 +43990,50 @@ setInterval(()=>{try{if(!soul()||!S.alive||!isGod()||S.sv._godAsk||choice._cur||
 {const _os=window.openSoul;if(_os)window.openSoul=function(){const r=_os.apply(this,arguments);try{if(!soul())return r;const m=$('modal'),h=m.querySelector('h3');if(!h||m.querySelector('.svLife'))return r;const g=S.sv,lm=Math.round(lifeMax());
  h.insertAdjacentHTML('afterend',`<div class="item svLife"><b>⏳ อายุขัย</b> · ${isGod()?'<b>♾️ อมตะ (เทพ)</b>':`ราว ${lm} ปี <span class="tag2">(อายุตอนนี้ ${S.age})</span>`}<br><span class="tag2">ยิ่งระดับจิตสูงยิ่งอายุยืน: ต่ำกว่า 30 ≈ 90 · 30+ ≈ 110 · 70+ ≈ 140 · 90+ ≈ 180 · 99 ≈ 250 · เป็นเทพ = อมตะ</span>${isGod()?'<button class="pbtn" style="width:100%;margin-top:6px" onclick="svAscend()">🌟 ขึ้นสู่ดินแดนเทพ</button>':''}</div>`)}catch(e){}return r}}
 })()}catch(e){console.error('svlife',e)}
+
+// ---------- ⭕ วิญญาณยุทธ์: 🗡️ กระบี่ผ่าฟ้า (ดวงจิตอันดับหนึ่ง) + ตระกูลลับ · 🎯 แนวทางการเล่น โซโล่/ดูโอ/ทีม ----------
+try{(()=>{
+const B=window._blk34;if(!B)return;const {SP,spNow}=B;
+const soul=()=>!!(S&&S.alive&&S.ch==='soul'&&S.sv);
+const on=()=>soul()&&S.sv.aw===1;
+const R2=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const SW='skysw';
+if(!SP.some(x=>x[0]===SW))SP.push([SW,'🗡️','กระบี่ผ่าฟ้า','atk','กระบี่ที่ว่ากันว่าเคยผ่าทวีปเป็นสองซีก — ดวงจิตอันดับหนึ่งของทวีป',3,null]);
+const hasSW=()=>on()&&S.sv.sp.some(s=>s.id===SW);
+// ตระกูลลับ: เกิดในตระกูลราว 1% (เฉพาะโหมดนี้) → ปลุกได้กระบี่ผ่าฟ้าแน่นอน
+{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{if(S&&S.ch==='soul'&&!S.flags.swC0){S.flags.swC0=1;if(Math.random()<.01){S.flags.swClan=1;setTimeout(()=>{try{log('🗡️ คุณเกิดในตระกูลที่ไม่มีใครรู้จัก — ปู่ทวดไม่เคยพูดถึงอดีต และในห้องใต้ดินมีกระบี่สนิมเขรอะเล่มหนึ่งถูกล่ามโซ่ไว้','myth',true)}catch(e){}},700)}}}catch(e){}return r}}
+setInterval(()=>{try{if(!on())return;const g=S.sv;if(g._swc)return;g._swc=1;
+ if(S.flags&&S.flags.swClan&&!g.sp.some(s=>s.id===SW)){const old=spNow(g.sp[0]);g.sp[0]={id:SW,rev:0};g.lv=Math.min(B.capOf(g),Math.max(g.lv,8));log(`🗡️ ทันทีที่ <b>${old.n}</b> ปรากฏ แสงสีเงินก็ผ่ามันออกเป็นสองซีก — <b>กระบี่ผ่าฟ้า</b> ดวงจิตที่แท้จริงของสายเลือดคุณตื่นขึ้น ผู้ปลุกจิตทรุดลงกับพื้น`,'myth',true)}
+ if(g.sp.some(s=>s.id===SW))try{const Bk=LS.get('murim_svbook',{})||{};Bk[SW]=1;LS.set('murim_svbook',Bk)}catch(e){}}catch(e){}},1000);
+// กระบี่ผ่าฟ้ามีได้แค่สายเลือดเดียว — คู่แข่ง/สมาชิกที่สุ่มได้จะถูกเปลี่ยนเป็นดาบราตรี
+setInterval(()=>{try{if(!soul()||!S.sv.tm)return;['rv','m'].forEach(k=>(S.sv.tm[k]||[]).forEach(x=>{if(x.sp==='กระบี่ผ่าฟ้า'){x.sp='ดาบราตรี';x.ic='🗡️'}}))}catch(e){}},2000);
+// พลังของกระบี่: ศัตรูอ่อนลง · หลอมเกินขีดง่ายขึ้น · แต่พลังย้อนถ้าใจไม่นิ่ง · มีคนไล่ล่า
+{const _r=window._svRisk;window._svRisk=(g,t,o)=>(_r?_r(g,t,o):0)+(hasSW()?.15:0)}
+{const _f=fight;fight=function(n,ep){try{if(hasSW())ep*=.9}catch(e){}return _f.call(this,n,ep)}}
+{const _d=duel;duel=function(n,ep,cb){try{if(hasSW())ep*=.9}catch(e){}return _d.call(this,n,ep,cb)}}
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(!hasSW())return r;const g=S.sv;
+ if((g.bond==null?50:g.bond)<40&&Math.random()<.06){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.2));log('🗡️ กระบี่ผ่าฟ้าสั่นในมือ — ใจที่ไม่นิ่งทำให้คมของมันย้อนกลับมาเฉือนตัวคุณ (พลังชีวิต −20%)','bad')}
+ if(g.lv>=70&&!g.swTrue){g.swTrue=1;S.power+=pctPow(.2);S.fame+=500;log('⚔️ <b>ร่างแท้ของกระบี่ผ่าฟ้า</b> — คุณยกกระบี่ขึ้นครั้งเดียว เมฆทั้งท้องฟ้าแยกเป็นสองซีกไปจนสุดขอบฟ้า','myth',true);try{const d=LS.get('murim_ttl',{});const t='ผู้ถือกระบี่ผ่าฟ้า';if(!d[t]){d[t]={n:S.name,t:Date.now(),c:1};LS.set('murim_ttl',d)}}catch(e){}}}catch(e){}return r}}
+EVENTS.push({w:3,cd:8,c:s=>!!(s&&s.alive&&s.ch==='soul'&&s.sv&&s.sv.aw===1&&s.sv.sp.some(x=>x.id===SW)&&s.age>=12),f(){const n=R2(0,2);const T=[['🥷 นักล่าสายเลือด','กลุ่มชุดดำตามหาผู้ถือกระบี่ผ่าฟ้ามาหลายรุ่น — วันนี้พวกมันเจอคุณ',1],['🏯 ตระกูลใหญ่ต้องการกระบี่','ประมุขตระกูลใหญ่ส่งคนมาขอ "เชิญ" คุณเข้าตระกูล หรือไม่ก็…',1.05],['👁️ ผู้อาวุโสลึกลับ','ชายชราที่รู้จักชื่อปู่ทวดของคุณ ขอประลองดูว่ากระบี่ยังคมอยู่ไหม',1.15]][n];
+ choice(T[0],T[1],[{t:'🗡️ ชักกระบี่',s:'ดวล',noFate:1,f(){duel(T[0].replace(/^\S+\s/,''),Math.round(total()*T[2]),w=>{if(w){S.fame+=60;S.sv.bond=Math.min(100,(S.sv.bond||50)+5);log(n===2?'👁️ ชายชราหัวเราะ "ยังคมเหมือนเดิม" แล้วสอนเคล็ดลับของตระกูลให้หนึ่งท่า':'🗡️ คุณชนะ — ข่าวว่าผู้ถือกระบี่ผ่าฟ้ายังมีชีวิตแพร่ไปทั่วทวีป','epic',true);if(n===2)S.power+=pctPow(.05)}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.3));log('🩸 คุณถอยหนีมาพร้อมบาดแผลลึก','bad')}})}},
+  {t:'🌫️ ซ่อนตัว',s:'ปลอดภัย · ความผูกพันดวงจิตลด',noFate:1,f(){S.sv.bond=Math.max(0,(S.sv.bond||50)-5);log('🌫️ คุณซ่อนกระบี่ไว้ในเงา มันส่งเสียงครางเบา ๆ อย่างไม่พอใจ','')}}])}});
+// ---------- 🎯 แนวทางการเล่น ----------
+const PS={solo:['🗡️','สายเดี่ยว (โซโล่)','ไม่รับสมาชิกทีม · ศัตรูอ่อนลง 10% · ระดับจิตโตเร็วขึ้น 15% · หลอมเกินขีดเสี่ยงน้อยลง'],duo:['👥','สายคู่ (ดูโอ)','มีคู่หูได้ 1 คน · ความผูกพันโตเร็ว · ศัตรูอ่อนลงเพิ่ม 6% เมื่อมีคู่หู'],team:['🛡️','สายทีม','รับสมาชิกได้ถึง 6 คน · โบนัสทีมตามจำนวนและความหลากหลายของสาย (แบบเดิม)']};
+const tm=()=>S.sv.tm,mem=()=>tm()&&tm().m?tm().m.filter(x=>x.al):[];
+const ps=()=>(S.sv&&S.sv.ps)||'team';
+// บังคับเพดานสมาชิกตามแนวทาง (ห่อเงื่อนไขของเหตุการณ์รับสมาชิกเดิม)
+const capM=()=>ps()==='solo'?0:ps()==='duo'?1:6;
+function patchRec(){}
+{const _ch=choice;choice=function(t){try{if(on()&&/ขอร่วมทีม/.test(String(t||''))&&mem().length>=capM())return}catch(e){}return _ch.apply(this,arguments)};Object.assign(choice,_ch)}
+{const _g=window._svGrow;window._svGrow=g=>(_g?_g(g):1)*(g&&g.ps==='solo'?1.15:1)}
+{const _r=window._svRisk;window._svRisk=(g,t,o)=>(_r?_r(g,t,o):0)+(g&&g.ps==='solo'?.06:0)}
+{const _f=fight;fight=function(n,ep){try{if(on()){if(ps()==='solo')ep*=.9;else if(ps()==='duo'&&mem().length===1)ep*=.94}}catch(e){}return _f.call(this,n,ep)}}
+{const _d=duel;duel=function(n,ep,cb){try{if(on()){if(ps()==='solo')ep*=.9;else if(ps()==='duo'&&mem().length===1)ep*=.94}}catch(e){}return _d.call(this,n,ep,cb)}}
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{patchRec();if(on()&&ps()==='duo'){const m=mem()[0];if(m)m.bd=Math.min(100,(m.bd||50)+2)}
+ if(on()&&!S.sv.ps&&S.age>=9&&!S.sv._psW){S.sv._psW=1;let n=0;const t=setInterval(()=>{if(++n>60||!on()||S.sv.ps){clearInterval(t);if(S&&S.sv)S.sv._psW=0;return}if(choice._cur||modalOpen)return;clearInterval(t);S.sv._psW=0;psPick(1)},500)}}catch(e){}return r}}
+function psSet(k,first){const g=S.sv;g.ps=k;g.psY=S.age;if(k!=='team'&&tm()&&tm().m){const L=mem();const keep=capM();L.slice(keep).forEach(x=>{x.al=0;x.gone='part';(tm().hist=tm().hist||[]).push(`${x.n} แยกทางกันด้วยดี (${S.age})`)});if(L.length>keep)log(`👋 สมาชิก ${L.length-keep} คนแยกทางไปด้วยดี ตามแนวทางที่คุณเลือก`,'')}
+ log(`${PS[k][0]} คุณเลือกเดินบน<b>${PS[k][1]}</b> — ${PS[k][2]}`,first?'epic':'')}
+function psPick(first){const g=S.sv;choice('🎯 จะเดินบนเส้นทางแบบไหน',`ผู้ฝึกจิตบางคนเดินคนเดียว บางคนมีคู่หูคนเดียวที่ไว้ใจ บางคนสร้างทีม${first?'':'<br><span class="tag2">เปลี่ยนได้ทุก 5 ปี</span>'}`,Object.entries(PS).map(([k,v])=>({t:`${v[0]} ${v[1]}${g.ps===k?' (ตอนนี้)':''}`,s:v[2],noFate:1,f(){psSet(k,first)}})))}
+window.svPsPick=function(){if(!on())return;const g=S.sv;if(g.psY!=null&&S.age-g.psY<5)return toast(`เปลี่ยนแนวทางได้อีกครั้งตอนอายุ ${g.psY+5}`);closeM();setTimeout(()=>psPick(0),200)};
+{const _os=window.openSoul;window.openSoul=function(){const r=_os.apply(this,arguments);try{if(!on())return r;const m=$('modal'),bk=m.querySelector('button[onclick="openSoulBook()"]');if(bk&&!m.querySelector('.svPs')){const k=ps(),v=PS[k];bk.insertAdjacentHTML('beforebegin',`<div class="item svPs"><b>🎯 แนวทาง: ${v[0]} ${v[1]}</b><br><span class="tag2">${v[2]}${hasSW()?'<br>🗡️ กระบี่ผ่าฟ้า: ศัตรูอ่อนลง 10% · หลอมเกินขีดง่ายขึ้น · ใจไม่นิ่ง (ผูกพันต่ำกว่า 40) พลังย้อน · ระดับจิต 70 ปลดร่างแท้':''}</span><button class="gbtn" style="width:100%;margin-top:6px" onclick="svPsPick()">เปลี่ยนแนวทาง</button></div>`)}}catch(e){}return r}}
+})()}catch(e){console.error('svsw',e)}
