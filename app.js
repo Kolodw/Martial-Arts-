@@ -44389,3 +44389,149 @@ try{(()=>{
  {const f=paNote;paNote=function(j){if(off()){const b=$('paBan');if(b)b.remove();try{if(j&&j.pw>0)paClaim()}catch(e){}return}return f.apply(this,arguments)}}
  setInterval(()=>{try{if(off()){if($('paBan'))paBanX();if(typeof islChipOff==='function')islChipOff('pa')}}catch(e){}},1500);
 })()}catch(e){console.error('paSoulOff',e)}
+
+// ---------- ⭕ วิญญาณยุทธ์ ระลอก 6: ชื่อระดับแบบในเรื่อง · มินิเกม 5 แบบ · สมุนไพรเซียน/อาวุธลับ/เครื่องมือวิญญาณ/ชุดกระดูก · การแข่งขันทั่วทวีป · เมืองสังหาร · บททดสอบเทพ 9 ขั้น · สัตว์บุกเมือง · สงครามจักรวรรดิ ----------
+try{(()=>{
+const B=window._blk34,G=window._mg2G,H=window._mg2H,M3=window._mg3;if(!B||!G||!H)return;
+const on=()=>!!(S&&S.alive&&S.ch==='soul'&&S.sv&&S.sv.aw===1&&!(S.beastMode&&!S.beastMode.human));
+const R2=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pk=a=>a[R2(0,a.length-1)];
+const O=(t,s,f)=>({t,s,noFate:1,f});
+const hurt=p=>{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*p))};
+const lvUp=n=>{const g=S.sv,b=g.lv;g.lv=Math.min(B.capOf(g),g.lv+n);return g.lv-b};
+const ri=()=>{try{return realmIdx()}catch(e){return 0}};
+const price=k=>Math.max(300,Math.round(k*300*Math.pow(1+ri(),1.6)));
+const wf=fn=>{let n=0;const t=setInterval(()=>{if(++n>60){clearInterval(t);return}if(!S||!S.alive||choice._cur||modalOpen)return;clearInterval(t);fn()},150)};
+const play=(id,o,cb)=>wf(()=>{if(!on())return;window.mg2Play(id,Object.assign({noSkip:1},o||{}),(sc,sk)=>{try{cb(sk?.3:sc)}catch(e){console.error('sv6p',e)}try{render()}catch(e){}})});
+const bag=()=>{const g=S.sv;g.bag=g.bag||{xh:{},hw:null,dev:{},gt:0};return g.bag};
+const team=()=>{const t=S.sv.tm;return t&&t.m?t.m.filter(x=>x.al).length:0};
+const col=(k,id)=>{try{const C=LS.get('murim_svcol',{})||{};C[k]=C[k]||{};if(!C[k][id]){C[k][id]=1;LS.set('murim_svcol',C)}}catch(e){}};
+const isl=(ic,h,t,k)=>{try{island({big:1,pri:1,ic,h,t,kind:k||'gold'})}catch(e){}};
+
+// ===== 1) ชื่อระดับแบบในเรื่อง =====
+const RK=['นักวิญญาณฝึกหัด','จอมวิญญาณ','มหาจอมวิญญาณ','ผู้อาวุโสวิญญาณ','บรรพชนวิญญาณ','ราชาวิญญาณ','จักรพรรดิวิญญาณ','นักบุญวิญญาณ','โต้วหลัววิญญาณ','โต้วหลัวฉายา'];
+try{B.RANK.splice(0,B.RANK.length,...RK)}catch(e){}
+const ttlOf=g=>g.lv>=100?'เทพ':g.lv>=91&&g.ttl?g.ttl:null;
+const fixTxt=root=>{try{const g=S&&S.sv;if(!g||!root)return;const t=ttlOf(g);if(!t)return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode())if(n.nodeValue.includes('โต้วหลัวฉายา'))n.nodeValue=n.nodeValue.split('โต้วหลัวฉายา').join(t)}catch(e){}};
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{if(on())fixTxt($('game'))}catch(e){}return r}}
+
+// ===== 2) ของ =====
+const XH={x1:['🌸','บัวเก้าดวงแสนปี','ระดับจิต +5 (ไม่เกินคอขวด)',()=>`ระดับจิต +${lvUp(5)}`],
+ x2:['🍄','เห็ดหลินจือเลือดมังกร','พลังชีวิตสูงสุด +15%',()=>{const v=Math.round(S.maxHp*.15);S.maxHp+=v;S.hp+=v;return`พลังชีวิตสูงสุด +${fmt(v)}`}],
+ x3:['🌿','หญ้าเงินคราม','พลังยุทธ์ +10%',()=>{const v=pctPow(.10);S.power+=v;return`พลังยุทธ์ +${fmt(v)}`}],
+ x4:['🌼','ดอกเบญจมาศน้ำแข็งไฟ','ปัญญา +15',()=>{S.int=(S.int||0)+15;return'ปัญญา +15'}],
+ x5:['🍑','ท้อพันปีแห่งหุบลึก','อายุขัย +10 ปี',()=>{S.lifespan=(S.lifespan||60)+10;return'อายุขัย +10 ปี'}],
+ x6:['🪷','เมล็ดบัวจิตกระจ่าง','ซับวงแหวนครั้งหน้าปลอดภัยขึ้นมาก',()=>{S.sv.herbSafe=1;return'เส้นจิตมั่นคงขึ้น'}]};
+function giveXH(id,src){id=id||pk(Object.keys(XH));const b=bag();b.xh[id]=(b.xh[id]||0)+1;col('xh',id);const h=XH[id];log(`${h[0]} <b>ได้สมุนไพรเซียน「${h[1]}」</b>${src?' จาก'+src:''} — เก็บไว้ในถุงวิญญาณ <span class="tag2">(${h[2]} · กินได้จากหน้า ⭕ ดวงจิต)</span>`,'myth',true);isl(h[0],'สมุนไพรเซียน',h[1])}
+window.svEat=function(id){if(!on())return;const b=bag(),h=XH[id];if(!h||!(b.xh[id]>0))return;b.xh[id]--;const t=h[3]();log(`${h[0]} กิน「${h[1]}」 — ${t}`,'epic',true);try{closeM();openSoul()}catch(e){}try{render()}catch(e){}};
+const HW=[['🪡','เข็มพิรุณ',.88],['🌸','ดอกเหมยพันกลีบ',.82],['🌀','จักรพายุเงา',.75]];
+function giveHW(t,n){const b=bag();if(!b.hw||b.hw.t<t)b.hw={t,n:0};b.hw.n+=n;col('hw',t);const w=HW[b.hw.t];log(`${w[0]} <b>อาวุธลับ「${w[1]}」</b> ×${n} — ใช้เองอัตโนมัติตอนดวล (เหลือ ${b.hw.n})`,'epic',true)}
+const DEV={bag:['👜','ถุงเก็บวิญญาณ','หาสมุนไพรเซียนได้มากขึ้น',10],can:['💥','ปืนใหญ่วิญญาณ','ศัตรูอ่อนลง 8% ทุกการดวล',14],fly:['🪽','ปีกวิญญาณ','หนีรอดจากความตายได้ 1 ครั้ง',12]};
+function giveDev(k){const b=bag();b.dev[k]=1;col('dev',k);const d=DEV[k];log(`⚙️ <b>ได้เครื่องมือวิญญาณ ${d[0]}「${d[1]}」</b> — ${d[2]}`,'myth',true);isl(d[0],'เครื่องมือวิญญาณ',d[1])}
+// ดวล: อาวุธลับ + ปืนใหญ่ + ขอบเขตสังหาร
+{const _d=duel;duel=function(name,ep,cb){try{if(on()&&typeof ep==='number'){const b=bag();let m=1;const tg=[];
+ if(b.hw&&b.hw.n>0){const w=HW[b.hw.t];m*=w[2];b.hw.n--;tg.push(`${w[0]} ${w[1]}`)}if(b.dev.can){m*=.92;tg.push('💥 ปืนใหญ่')}if(b.kcD){m*=.95;tg.push('🩸 ขอบเขตสังหาร')}
+ if(m<1){ep=Math.max(1,Math.round(ep*m));addFeed('ev',`${tg.join(' · ')} — ศัตรูอ่อนลง ${Math.round((1-m)*100)}%`,'sum')}}}catch(e){}return _d.call(this,name,ep,cb)}}
+// ปีกวิญญาณ: กันตาย 1 ครั้ง (เฉพาะตายจากบาดแผล ไม่ใช่ตายตามอายุ)
+{const _cd=checkDeath;checkDeath=function(){try{if(on()&&S.hp<=0&&!S.deathCause&&S.age<lifeMax()){const b=bag();if(b.dev.fly&&!b.flyU){b.flyU=1;S.hp=Math.max(1,Math.round(S.maxHp*.2));log('🪽 <b>ปีกวิญญาณกางออกเอง</b> — พาร่างที่ใกล้ตายบินหนีออกมาได้ทัน (ใช้ได้ครั้งเดียว)','myth',true)}}}catch(e){}return _cd.apply(this,arguments)}}
+
+// ===== 3) มินิเกม 5 แบบ =====
+const rwP=x=>{const v=pctPow(.02+.05*x);S.power+=v;return`พลังยุทธ์ +${fmt(v)}`};
+Object.assign(G,{
+ svAbsorb:{n:'ซับพลังวงแหวน',ic:'💍',mt:'ผู้หลอมวงแหวน',how:'กดค้างดึงพลังให้อยู่ในโซนทอง 3 ครั้ง ปล่อยเกินโซน เส้นจิตปริ',t:14,
+  rw:x=>{if(x<.35){hurt(.12);return'เส้นจิตปริ พลังชีวิตลด'}const n=lvUp(x>=.9?2:1);return n?`ระดับจิต +${n}`:rwP(x)},
+  init:(B2,api)=>H.hold(B2,api,{n:3,lo:.6,hi:.8,ms:1500,ic:'💍',label:'ดึงพลัง',col:'linear-gradient(#ffe08a,#a66bff)'})},
+ svNeedle:{n:'ซัดเข็มตระกูลลับ',ic:'🪡',mt:'มือพันเข็ม',how:'แตะตอนเข็มขึ้นถึงโซนทอง 5 ครั้ง',t:12,
+  rw:x=>{let t=rwP(x);const b=bag();if(x>=.7&&b.hw){b.hw.n++;t+=` · ${HW[b.hw.t][0]} +1`}return t},
+  init:(B2,api)=>M3?M3.peak(B2,api,{ic:'🪡',label:'ซัด!',n:5}):H.hold(B2,api,{n:3,lo:.6,hi:.8,ms:1200})},
+ svCombo:{n:'ผสานทักษะทีม',ic:'🌀',mt:'หัวใจของทีม',how:'จำลำดับท่าของเพื่อนร่วมทีมแล้วกดตาม',t:16,
+  rw:x=>{const f=Math.round(30+150*x);S.fame+=f;return rwP(x)+` · ชื่อเสียง +${f}`},
+  init:(B2,api)=>H.simon(B2,api,{syms:['⚔️','🛡️','🌿','🌀','💨','🔥'],cols:3,len:5,show:430,title:'จำลำดับท่าผสาน'})},
+ svTrack:{n:'ตามรอยสัตว์วิญญาณ',ic:'🐾',mt:'นักตามรอย',how:'จำว่ารอยเท้าอยู่ทางไหน แล้วเลือกทางนั้นหลังหมอกลง',t:16,
+  rw:x=>{let t=rwP(x);if(x>=.75&&Math.random()<.3){giveXH(null,'รังสัตว์ที่ตามไปเจอ');t+=' · พบสมุนไพรเซียน'}return t},
+  init(B2,api){let r=0,ok=0;const N=4;const draw=()=>{if(!api.live())return;if(r>=N){api.end();return}const k=R2(0,2);
+   B2.innerHTML=`<div class="tag2" style="text-align:center">รอยที่ ${r+1}/${N} — จำทางที่มีรอยเท้า</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px">${[0,1,2].map(i=>`<button class="pbtn" data-i="${i}" style="font-size:30px;padding:18px 0">${i===k?'🐾':'🌲'}</button>`).join('')}</div>`;
+   const bs=[...B2.querySelectorAll('button')];bs.forEach(b=>b.disabled=true);
+   setTimeout(()=>{if(!api.live())return;bs.forEach(b=>{b.textContent='🌫️';b.disabled=false;b.onpointerdown=e=>{e.preventDefault();if(b.dataset.d)return;bs.forEach(x=>x.dataset.d=1);const hit=+b.dataset.i===k;if(hit)ok++;b.textContent=hit?'✅':'❌';if(!hit)bs[k].textContent='🐾';r++;setTimeout(draw,450)}})},Math.max(280,Math.round(700*api.ez)-r*100))};
+   draw();return{sc:()=>ok/N}}},
+ svHerb:{n:'แยกสมุนไพรเซียน',ic:'🌿',mt:'ตาทิพย์สมุนไพร',how:'แตะเฉพาะสมุนไพร ห้ามแตะหญ้าพิษ',t:10,
+  rw:x=>{if(x>=.7&&Math.random()<x*.6){giveXH(null,'การแยกสมุนไพร');return'พบสมุนไพรเซียน'}const g=Math.round(price(.5)*x);S.money+=g;return`ขายสมุนไพรธรรมดา +${fmt(g)}`},
+  init:(B2,api)=>M3?M3.tapGood(B2,api,{good:['🌸','🍄','🌿','🪷','🍑'],bad:['☠️','🍂','🕷️'],N:10,bg:'#0f2a18'}):H.hold(B2,api,{n:3,lo:.6,hi:.8,ms:1200})}});
+const MGS=['svAbsorb','svNeedle','svCombo','svTrack','svHerb'];
+{const _pk=window.mg2Pick;window.mg2Pick=function(){try{if(on()&&Math.random()<.6){const L=MGS.filter(k=>k!==S.mgLast&&(k!=='svCombo'||S.age>=12));const k=pk(L);S.mgLast=k;S.mgA=S.age;return window._mg2Y(k)}}catch(e){console.error('sv6pick',e)}return _pk.apply(this,arguments)}}
+
+// ===== 4) รายปี: ฉายาโต้วหลัว · ชุดกระดูก =====
+{const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(!on()||S.age===a0)return r;const g=S.sv;
+ if(g.lv>=91&&!g.ttl){g.ttl='โต้วหลัว'+B.spNow(g.sp[0]).n;S.fame+=5000;log(`👑 <b>ได้รับฉายา「${g.ttl}」</b> — ทั้งทวีปรู้จักชื่อนี้ ผู้คนเรียกคุณด้วยฉายาแทนชื่อจริง`,'myth',true);isl('👑','ได้รับฉายา',g.ttl)}
+ if(Object.keys(g.bone||{}).length>=6&&!bag().bset){bag().bset=1;const p=pctPow(.2),h=Math.round(S.maxHp*.2);S.power+=p;S.maxHp+=h;S.hp+=h;log(`🦴 <b>ชุดกระดูกวิญญาณครบ 6 ชิ้น</b> — กระดูกทั้งหกสั่นพ้องกัน · พลังยุทธ์ +${fmt(p)} · พลังชีวิตสูงสุด +${fmt(h)}`,'myth',true);isl('🦴','ชุดกระดูกวิญญาณ','ครบ 6 ชิ้น')}
+}catch(e){console.error('sv6y',e)}return r}}
+
+// ===== 5) เหตุการณ์ =====
+const ev=(w,cd,c,f)=>EVENTS.push({w,cd,c:s=>{try{return!!(s===S&&on()&&c(S.sv,bag()))}catch(e){return false}},f(){try{f(S.sv,bag())}catch(e){console.error('sv6ev',e)}}});
+// 🌿 หุบเขาสมุนไพร
+ev(1.6,7,g=>S.age>=12,(g,b)=>choice('🌿 หุบเขาสมุนไพรเซียน','หมอกจางลงเผยให้เห็นหุบเขาที่เต็มไปด้วยพืชวิญญาณ ปะปนกับหญ้าพิษที่หน้าตาเหมือนกันไม่ผิด',[
+ O('🌿 เข้าไปเก็บ','มินิเกมแยกสมุนไพร',()=>play('svHerb',{title:'แยกสมุนไพรเซียน'},sc=>{const n=(sc>=.9?2:sc>=.6?1:0)+(b.dev.bag&&sc>=.6?1:0);if(n)for(let i=0;i<n;i++)giveXH(null,'หุบเขาสมุนไพร');else{hurt(.1);log('☠️ แตะโดนหญ้าพิษ มือชาไปหลายวัน','bad')}})),
+ O('👀 สังเกตจากขอบหุบ','ปลอดภัย ได้ความรู้',()=>{S.int=(S.int||0)+3;log('👀 คุณจดจำลักษณะสมุนไพรไว้ — ปัญญา +3','good')})]));
+// 🪡 ช่างอาวุธลับ
+ev(1.5,6,g=>S.age>=10,(g,b)=>{const p1=price(6),p2=price(14);choice('🪡 ช่างอาวุธลับในตรอกแคบ','ชายชราตาเดียวนั่งตะไบเข็มเล่มเล็กจนแทบมองไม่เห็น "อาวุธลับไม่ต้องมีวงแหวน แค่ต้องแม่น"',[
+ O('🪡 ขอฝึกทำและซัดเอง','มินิเกมซัดเข็ม',()=>play('svNeedle',{title:'ฝึกซัดเข็ม'},sc=>{if(sc>=.5)giveHW(sc>=.9&&(!b.hw||b.hw.t<1)?1:0,sc>=.9?5:3);else log('🪡 เข็มปักผนังแทนเป้า ชายชราส่ายหน้า','')})),
+ O(`🌸 ซื้อ「${HW[1][1]}」`,`${fmt(p1)} ตำลึง · ×4`,()=>{if(S.money<p1)return log('💸 เงินไม่พอ','bad');S.money-=p1;giveHW(1,4)}),
+ ...(S.age>=28?[O(`🌀 ซื้อ「${HW[2][1]}」`,`${fmt(p2)} ตำลึง · ×4 · แรงที่สุด`,()=>{if(S.money<p2)return log('💸 เงินไม่พอ','bad');S.money-=p2;giveHW(2,4)})]:[]),
+ O('🚶 เดินผ่านไป','',()=>{})])});
+// ⚙️ โรงงานเครื่องมือวิญญาณ
+ev(1.1,8,(g,b)=>S.age>=16&&Object.keys(DEV).some(k=>!b.dev[k]),(g,b)=>{const L=Object.keys(DEV).filter(k=>!b.dev[k]);choice('⚙️ โรงงานเครื่องมือวิญญาณ','ช่างเครื่องมือวิญญาณกำลังทดลองของประหลาดที่ใช้พลังจิตแทนวงแหวน ทั้งส่งเสียงดังและควันโขมง',[
+ ...L.map(k=>{const d=DEV[k],p=price(d[3]);return O(`${d[0]} ซื้อ「${d[1]}」`,`${fmt(p)} ตำลึง · ${d[2]}`,()=>{if(S.money<p)return log('💸 เงินไม่พอ','bad');S.money-=p;giveDev(k)})}),
+ O('🔧 ช่วยประกอบแลกค่าแรง','มินิเกมผสานท่า · ถ้าเก่งได้ของฟรี',()=>play('svCombo',{title:'ประกอบเครื่องมือวิญญาณ'},sc=>{if(sc>=.9)giveDev(pk(L));else{const m=Math.round(price(1)*sc);S.money+=m;log(`🔧 ได้ค่าแรง +${fmt(m)}`,'good')}})),
+ O('🚶 ไว้วันหลัง','',()=>{})])});
+// 🏆 การแข่งขันนักวิญญาณชั้นยอดทั่วทวีป (ครั้งเดียวต่อชีวิต)
+ev(3,4,(g,b)=>S.age>=16&&S.age<=26&&g.lv>=25&&!b.tour,(g,b)=>{b.tour=1;const RN=['รอบแบ่งกลุ่ม','รอบแปดทีม','รอบรองชนะเลิศ','รอบชิงชนะเลิศ'],MU=[.8,.95,1.1,1.25],tb=Math.min(.25,team()*.04);
+ const prize=i=>{const f=[300,900,2500][i]||0;S.fame+=f;log(`🏆 จบการแข่งขันที่ <b>${RN[i]}</b> — ชื่อเสียง +${f}`,'good')};
+ const champ=()=>{b.tourW=1;S.fame+=6000;const p=pctPow(.2);S.power+=p;log(`🏆 <b>แชมป์การแข่งขันนักวิญญาณชั้นยอดทั่วทวีป!</b> — ชื่อทีมถูกจารึก · พลังยุทธ์ +${fmt(p)} · ชื่อเสียง +6000`,'myth',true);isl('🏆','แชมป์ทั่วทวีป','ทีมของคุณ');giveXH(null,'รางวัลแชมป์')};
+ const round=i=>{if(!on())return;if(i>=RN.length)return champ();choice(`🏆 การแข่งขันทั่วทวีป · ${RN[i]}`,`ทีมเจ็ดคนจากทุกสถาบันมารวมกัน${team()?` · เพื่อนร่วมทีมของคุณ ${team()} คนพร้อมลงสนาม`:' · คุณเข้าร่วมกับทีมรวมของเมือง'}`,[
+  O('⚔️ ลงสนามเดี่ยว','ดวลกับตัวเก่งของอีกทีม',()=>duel(`ตัวแทนทีมคู่แข่ง · ${RN[i]}`,Math.round(total()*MU[i]),w=>{if(!S||!S.alive)return;if(w)wf(()=>round(i+1));else prize(Math.max(0,i-1))})),
+  O('🌀 ใช้ทักษะผสานทีม','มินิเกม · เพื่อนยิ่งเยอะยิ่งง่าย',()=>play('svCombo',{title:`ทักษะผสาน · ${RN[i]}`},sc=>{if(sc+tb+Math.random()*.2>=.55+i*.07){log(`🌀 ทักษะผสานทะลวงแนวป้องกัน — ชนะ${RN[i]}`,'good');round(i+1)}else{hurt(.15);prize(Math.max(0,i-1))}})),
+  O('🏳️ ถอนตัว','',()=>prize(Math.max(0,i-1)))])};
+ choice('🏆 การแข่งขันนักวิญญาณชั้นยอดทั่วทวีป','ทุกห้าปีจะมีการแข่งขันระหว่างสถาบันทั่วทวีป ผู้ชนะได้รางวัลจากราชสำนักและชื่อเสียงไปตลอดชีวิต',[O('🔥 ลงแข่ง','สี่รอบ แพ้รอบไหนจบรอบนั้น',()=>round(0)),O('👀 ดูอยู่ข้างสนาม','ปัญญา +4',()=>{S.int=(S.int||0)+4;log('👀 คุณดูการแข่งขันและจดจำทักษะของทุกทีม','')})])});
+// 🩸 เมืองสังหาร (ครั้งเดียวต่อชีวิต)
+ev(1.3,6,(g,b)=>S.age>=20&&g.lv>=30&&!b.kc,(g,b)=>{const ST=[['ถนนโลหิต',1],['ลานประหาร',1.2],['บัลลังก์โลหิต',1.45]];let lost=0;
+ const fail=why=>{lost++;if(lost>=2){if(b.dev.fly&&!b.flyU){b.flyU=1;S.hp=1;log('🪽 ปีกวิญญาณพาคุณบินข้ามกำแพงเมืองสังหารออกมาได้ทัน','myth',true);return}die('ในเมืองสังหาร');return}hurt(.35);log(`🩸 ${why} — บาดเจ็บหนัก (พลาดได้อีกครั้งเดียว)`,'bad')};
+ const win=()=>{b.kcD=1;const p=pctPow(.25);S.power+=p;S.fame+=3000;log(`🩸 <b>รอดออกจากเมืองสังหาร</b> — ได้「ขอบเขตสังหาร」ติดตัว ศัตรูอ่อนลงทุกการดวล · พลังยุทธ์ +${fmt(p)}`,'myth',true);isl('🩸','รอดจากเมืองสังหาร','ขอบเขตสังหาร')};
+ const step=i=>{if(!on())return;if(i>=ST.length)return win();const s=ST[i];choice(`🩸 เมืองสังหาร · ${s[0]}`,'ที่นี่ไม่มีกฎ มีแต่ผู้ฆ่ากับผู้ถูกฆ่า ทุกสายตาจับจ้องคุณ',[
+  O('⚔️ สู้ฝ่าไป','ดวล',()=>duel(`นักฆ่าแห่ง${s[0]}`,Math.round(total()*s[1]),w=>{if(!S||!S.alive)return;if(w){S.money+=price(2);wf(()=>step(i+1))}else{fail('แพ้กลางเมืองสังหาร');if(S&&S.alive&&lost<2)wf(()=>step(i+1))}})),
+  O('🌫️ ซ่อนตัวรอจังหวะ','เสี่ยงถูกลอบโจมตี 40%',()=>{if(Math.random()<.4){fail('ถูกลอบแทงจากเงามืด');if(S&&S.alive&&lost<2)wf(()=>step(i+1))}else wf(()=>step(i+1))}),
+  ...(b.dev.fly?[O('🪽 บินหนีออกจากเมือง','ยอมแพ้ ปลอดภัย',()=>log('🪽 คุณบินหนีออกมา — ยังไม่พร้อมสำหรับที่นี่',''))]:[])])};
+ choice('🩸 ประตูเมืองสังหาร','เมืองที่คนบาปและนักฆ่ามาซ่อนตัว ใครรอดออกมาได้จะติดกลิ่นอายสังหารไปตลอดชีวิต แต่ส่วนใหญ่ไม่ได้ออกมา',[
+  O('🚪 ก้าวเข้าไป','3 ด่าน · พลาด 2 ครั้ง = ตาย',()=>{b.kc=1;step(0)}),O('🚶 หันหลังกลับ','',()=>log('🚶 คุณยังไม่อยากเสี่ยงชีวิตตอนนี้',''))])});
+// 🌊 บททดสอบเทพ 9 ขั้น (ปีละหนึ่งขั้น · เส้นทางที่สองสู่เทพ)
+const GTN=['ใจไม่หวั่น','ทะเลเพลิง','ภูเขากดทับ','ภาพลวงของคนรัก','พายุใต้สมุทร','ศึกเงาตนเอง','ความโดดเดี่ยวพันปี','เลือกผู้รอด','ประตูเทวา'];
+const GTG=['svAbsorb','svTrack','svNeedle','svCombo'];
+ev(4,1,(g,b)=>g.lv>=80&&!(g.x&&g.x.god)&&!b.gtNo&&(b.gt||0)<9&&S.age-(b.gtY==null?-9:b.gtY)>=1,(g,b)=>{b.gtY=S.age;const k=b.gt||0;
+ if(!b.gtOn)return choice('🌊 เสียงเรียกจากเทพ','ในฝันมีเสียงเรียกจากใต้ท้องทะเลลึก "ผ่านเก้าบททดสอบของเรา แล้วเจ้าจะได้เป็นเทพ"',[O('🙏 รับบททดสอบ','ปีละหนึ่งบท · ผ่านครบเก้า = เป็นเทพ',()=>{b.gtOn=1;log('🌊 คุณรับบททดสอบเทพ — บทแรกจะมาถึงในปีหน้า','epic',true)}),O('✋ ปฏิเสธ','จะไม่ถูกเรียกอีก',()=>{b.gtNo=1})]);
+ const pass=()=>{b.gt=k+1;lvUp(1);S.lifespan=(S.lifespan||60)+5;log(`🌊 <b>ผ่านบททดสอบเทพ ${k+1}/9 「${GTN[k]}」</b> — ระดับจิต +1 · อายุขัย +5`,'epic',true);
+  if(b.gt>=9){g.x=g.x||{};g.x.done=g.x.done||[];g.x.god=1;if(!g.x.done.includes('god'))g.x.done.push('god');S.lifespan+=100;S.fame+=20000;log('🌊 <b>ผ่านเก้าบททดสอบ — คุณกลายเป็นเทพ</b>','myth',true);isl('🌊','เป็นเทพ','ผ่านเก้าบททดสอบ','gold')}};
+ const failT=()=>{hurt(.2);log(`🌊 ไม่ผ่านบท「${GTN[k]}」 — ลองใหม่ปีหน้า`,'bad')};
+ choice(`🌊 บททดสอบเทพ ${k+1}/9 · ${GTN[k]}`,'แสงสีครามห่อหุ้มร่าง คุณถูกดึงเข้าไปในบททดสอบอีกครั้ง',[
+  O('⚔️ ผ่านด้วยพลัง','ดวลกับผู้พิทักษ์',()=>duel(`ผู้พิทักษ์บทที่ ${k+1}`,Math.round(total()*(.9+k*.08)),w=>{if(!S||!S.alive)return;w?pass():failT()})),
+  O('🧠 ผ่านด้วยใจ','มินิเกม',()=>play(GTG[k%GTG.length],{title:`บททดสอบ · ${GTN[k]}`},sc=>sc>=.55+k*.03?pass():failT())),
+  O('🕊️ ขอพักไว้ก่อน','',()=>log('🕊️ บททดสอบรอคุณอยู่เสมอ',''))])});
+// 🐉 สัตว์วิญญาณบุกเมือง
+ev(1.1,12,g=>S.age>=14,(g,b)=>choice('🐉 สัตว์วิญญาณบุกเมือง','ระฆังเตือนภัยดังทั่วเมือง ฝูงสัตว์วิญญาณนับพันพุ่งเข้าหากำแพง นำโดยตัวที่อายุนับหมื่นปี',[
+ O('🛡️ ประจำกำแพง ซัดอาวุธใส่ฝูง','มินิเกมซัดเข็ม',()=>play('svNeedle',{title:'ป้องกันกำแพงเมือง'},sc=>{if(sc>=.5){S.fame+=800;const p=pctPow(.06);S.power+=p;log(`🛡️ กำแพงไม่แตก — ชื่อเสียง +800 · พลังยุทธ์ +${fmt(p)}`,'good')}else{hurt(.25);log('🛡️ ฝูงสัตว์ทะลวงกำแพงได้บางส่วน คุณบาดเจ็บ','bad')}})),
+ O('⚔️ บุกหัวขบวน','ดวลกับจ่าฝูง · เสี่ยงสูง',()=>duel('จ่าฝูงสัตว์วิญญาณหมื่นปี',Math.round(total()*1.3),w=>{if(!S||!S.alive)return;if(w){S.fame+=2500;log('⚔️ <b>จ่าฝูงล้ม ฝูงสัตว์แตกกระเจิง</b> — ชาวเมืองยกย่องคุณเป็นวีรบุรุษ','epic',true);if(Math.random()<.5)giveXH(null,'รังของจ่าฝูง')}else hurt(.4)})),
+ O('🏃 พาชาวบ้านอพยพ','กรรม +',()=>{S.karma+=15;S.fame+=200;log('🏃 คุณพาเด็กและคนแก่ออกทางประตูหลังได้หลายร้อยคน — กรรม +15','good')})]));
+// ⚔️ สงครามสองจักรวรรดิ
+ev(1,15,g=>S.age>=20,(g,b)=>{const big=g.lv>=60,fine=Math.round(S.money*.2);choice('⚔️ สงครามสองจักรวรรดิ',big?'ราชสำนักส่งสาส์นเชิญคุณไปบัญชาการทัพแนวหน้า':'ทางการเกณฑ์นักวิญญาณทุกคนที่อายุถึงไปแนวหน้า',[
+ ...(big?[O('🎖️ บัญชาการทัพ','มินิเกมจับจังหวะบุก',()=>play('svNeedle',{title:'สั่งทัพบุกตามจังหวะ'},sc=>{if(sc>=.6){const m=price(8);S.money+=m;S.fame+=4000;log(`🎖️ <b>ชนะศึกใหญ่</b> — ได้บำเหน็จ +${fmt(m)} · ชื่อเสียง +4000`,'epic',true)}else{S.fame=Math.max(0,S.fame-500);hurt(.2);log('🎖️ ทัพแตก คุณถูกตำหนิจากราชสำนัก','bad')}}))]:[]),
+ O('⚔️ ออกรบแนวหน้า','ดวล',()=>duel('ทหารวิญญาณฝ่ายศัตรู',Math.round(total()*1.05),w=>{if(!S||!S.alive)return;if(w){const m=price(3);S.money+=m;S.fame+=600;log(`⚔️ รอดกลับมาพร้อมความดีความชอบ +${fmt(m)}`,'good')}else hurt(.35)})),
+ O('💰 จ่ายเงินแทนการไปรบ',`${fmt(fine)} ตำลึง`,()=>{S.money-=fine;log('💰 คุณจ่ายเงินและอยู่บ้านต่อ','')})])});
+
+// ===== 6) หน้าดวงจิต: ถุงวิญญาณ =====
+{const _os=window.openSoul;if(_os)window.openSoul=function(){const r=_os.apply(this,arguments);try{if(!on())return r;const m=$('modal');fixTxt(m);if(m.querySelector('.sv6Bag'))return r;const b=bag(),g=S.sv;
+ const xs=Object.keys(XH).filter(k=>b.xh[k]>0).map(k=>{const h=XH[k];return`<div style="display:flex;align-items:center;gap:6px;margin:3px 0"><span style="flex:1">${h[0]} <b>${h[1]}</b> ×${b.xh[k]}<br><span class="tag2">${h[2]}</span></span><button class="sysb" onclick="svEat('${k}')">กิน</button></div>`}).join('')||'<span class="tag2">ยังไม่มี — หาได้จากหุบเขาสมุนไพร มินิเกม และรางวัลใหญ่</span>';
+ const hw=b.hw&&b.hw.n>0?`${HW[b.hw.t][0]} <b>${HW[b.hw.t][1]}</b> เหลือ ${b.hw.n} ครั้ง <span class="tag2">(ศัตรูอ่อนลง ${Math.round((1-HW[b.hw.t][2])*100)}%)</span>`:'<span class="tag2">ไม่มี — หาช่างอาวุธลับ</span>';
+ const dv=Object.keys(DEV).map(k=>`<span style="opacity:${b.dev[k]?1:.35}">${DEV[k][0]} ${DEV[k][1]}${k==='fly'&&b.flyU?' (ใช้แล้ว)':''}</span>`).join(' · ');
+ let C={};try{C=LS.get('murim_svcol',{})||{}}catch(e){}const cn=['xh','hw','dev'].reduce((a,k)=>a+Object.keys(C[k]||{}).length,0),ct=Object.keys(XH).length+HW.length+Object.keys(DEV).length;
+ const st=[b.tourW?'🏆 แชมป์ทั่วทวีป':b.tour?'🏆 เคยลงแข่งทั่วทวีป':null,b.kcD?'🩸 รอดจากเมืองสังหาร':null,b.gtOn&&!(g.x&&g.x.god)?`🌊 บททดสอบเทพ ${b.gt||0}/9`:null,b.bset?'🦴 ชุดกระดูกครบ':null,g.ttl?`👑 ${g.ttl}`:null].filter(Boolean).join(' · ');
+ const html=`<div class="sv6Bag"><h4>🎒 ถุงวิญญาณ</h4><div class="item">${xs}</div><div class="item">🗡️ อาวุธลับ: ${hw}</div><div class="item">⚙️ ${dv}</div>${st?`<div class="item">${st}</div>`:''}<p class="tag2">📖 สะสมข้ามชาติ ${cn}/${ct} ชิ้น</p></div>`;
+ const bk=m.querySelector('button[onclick="openSoulBook()"]');if(bk)bk.insertAdjacentHTML('beforebegin',html);else m.insertAdjacentHTML('beforeend',html)}catch(e){console.error('sv6os',e)}return r}}
+window._sv7={XH,HW,DEV,giveXH,giveHW,giveDev,bag,MGS};
+})()}catch(e){console.error('sv6',e)}
