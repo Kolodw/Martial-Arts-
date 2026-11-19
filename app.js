@@ -11,7 +11,19 @@ const oddsTxt=p=>1/p<1.05?'ทั่วไป':'1 ใน '+fmt(1/p);
 const rarOf=p=>p>.3?0:p>.1?1:p>.03?2:p>.005?3:4;
 function toast(t){const e=$('toast');e.textContent=typeof xT==='function'?xT(t):t;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',1800)}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+const ZQ=(()=>{const P='Zq1:',O=0x2000,MAX=32768;
+function enc(s){const al=[],seen=new Map();for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);if(!seen.has(c)){seen.set(c,1);al.push(c)}}if(al.length>=MAX-2)return null;
+ let out=P+String.fromCharCode(0x100+(al.length>>8),0x100+(al.length&255));for(const c of al)out+=String.fromCharCode(0x100+(c>>8),0x100+(c&255));
+ const d=new Map();al.forEach((c,i)=>d.set(String.fromCharCode(c),i));let next=al.length,w='';const codes=[];
+ for(let i=0;i<s.length;i++){const ch=s[i],wc=w+ch;if(d.has(wc))w=wc;else{codes.push(d.get(w));if(next<MAX)d.set(wc,next++);w=ch}}
+ if(w!=='')codes.push(d.get(w));const parts=[];for(let i=0;i<codes.length;i+=6000)parts.push(String.fromCharCode.apply(null,codes.slice(i,i+6000).map(x=>x+O)));return out+parts.join('')}
+function dec(v){let p=P.length;const n=((v.charCodeAt(p)-0x100)<<8)|(v.charCodeAt(p+1)-0x100);p+=2;const dict=[];for(let i=0;i<n;i++){dict.push(String.fromCharCode(((v.charCodeAt(p)-0x100)<<8)|(v.charCodeAt(p+1)-0x100)));p+=2}
+ let next=n;if(p>=v.length)return'';let w=dict[v.charCodeAt(p)-O];const res=[w];
+ for(let i=p+1;i<v.length;i++){const c=v.charCodeAt(i)-O;let e;if(c<next)e=dict[c];else if(c===next)e=w+w[0];else throw new Error('zq');res.push(e);if(next<MAX)dict[next++]=w+e[0];w=e}
+ return res.join('')}
+return{P,enc,dec}})();
+const ZK=/^murim_(save(_\d)?|bak_\d|arc_.+|flog_\d+)$/;
+const LS={raw(k){try{const v=localStorage.getItem(k);return v!=null&&v.startsWith(ZQ.P)?ZQ.dec(v):v}catch(e){return null}},get(k,d){try{let v=localStorage.getItem(k);if(v==null)return d;if(v.startsWith(ZQ.P))v=ZQ.dec(v);return JSON.parse(v)}catch(e){return d}},set(k,v){try{let s=JSON.stringify(v);if(s.length>3000&&ZK.test(k)){try{const z=ZQ.enc(s);if(z&&z.length<s.length*.8&&ZQ.dec(z)===s)s=z}catch(e){}}localStorage.setItem(k,s);return true}catch(e){return false}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
 
 // ============ THEME ============
 const THEMES=[['light','☀️','สว่าง'],['dark','🌙','มืด'],['mono','⚫','ขาวดำ'],['jade','🍃','หยกเขียว'],['ember','🩸','โลหิตมาร'],['gold','✨','ทองเซียน']];
@@ -5203,7 +5215,7 @@ async function specFull(k){specTarget=null;clearTimeout(specT);const back=`<butt
 {const _os2=openSpectate;openSpectate=async function(k,tab){const r=await _os2.apply(this,arguments);try{if((tab||openSpectate._tab)==='feed'&&$('modal').dataset.k==='spec'&&!$('modal').querySelector('.sfbtn')){const tb=[...$('modal').querySelectorAll('.tabs')].pop();const h=`<button class="pbtn sfbtn" style="width:100%;margin:6px 0" onclick="specFull('${k}')">📜 โหลดบันทึกทั้งหมดตั้งแต่เกิด</button>`;if(tb)tb.insertAdjacentHTML('afterend',h);else $('modal').insertAdjacentHTML('beforeend',h)}}catch(e){}return r}}
 (function(){const st=document.createElement('style');st.textContent='.sfbox{max-height:60vh;overflow-y:auto;border:2px solid var(--line,#333);border-radius:8px;padding:8px;font-size:13px;line-height:1.5}.sfbox .yr{margin:8px 0 4px;text-align:center;opacity:.8}.sfbox .sfl{padding:3px 0;border-bottom:1px dashed rgba(128,128,128,.25)}';document.head.appendChild(st)})();
 
-{const _sg=saveGame;saveGame=function(){if(!S)return _sg.apply(this,arguments);const f=S.flog;delete S.flog;try{return _sg.apply(this,arguments)}finally{S.flog=f;try{if(f&&S.slot)localStorage.setItem('murim_flog_'+S.slot,JSON.stringify(f.length>800?f.slice(-800):f))}catch(e){}}}}
+{const _sg=saveGame;saveGame=function(){if(!S)return _sg.apply(this,arguments);const f=S.flog;delete S.flog;try{return _sg.apply(this,arguments)}finally{S.flog=f;try{if(f&&S.slot)LS.set('murim_flog_'+S.slot,f.length>800?f.slice(-800):f)}catch(e){}}}}
 {const _lg=loadGame;loadGame=function(n){const r=_lg.apply(this,arguments);try{if(S){const f=LS.get('murim_flog_'+(n||1),null);if(f&&!S.flog)S.flog=f}}catch(e){}return r}}
 {const _ds=delSlot;delSlot=function(n){try{localStorage.removeItem('murim_flog_'+n)}catch(e){}return _ds.apply(this,arguments)}}
 
@@ -10483,8 +10495,8 @@ setInterval(()=>{try{if(S&&S.alive&&!S.custom)acTrap(S)}catch(e){}},400);
 // ---- ลายเซ็นเซฟ: แก้ไฟล์เซฟในเครื่องแล้วโหลด = ติดธง ----
 function acH(t){let h=2166136261;t='m1n'+t+'#q7';for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(36)}
 const acSF=o=>[o.name,Math.round(o.age||0),Math.round(o.power||0),Math.round(o.fame||0),Math.round(o.money||0),Math.round((o.qi||0)*10),Math.round(o.int||0),Math.round(o.cha||0)].join('|');
-{const _sg=saveGame;saveGame=function(){const r=_sg.apply(this,arguments);try{if(S&&S.alive&&!S.custom){const g=LS.get('murim_ui9',{})||{};let t0=0;try{const raw=localStorage.getItem(slotKey(S.slot||1))||'';const mm=raw.slice(0,40).match(/"t":(\d+)/);t0=mm?+mm[1]:0}catch(x){}let hs=acSF(S),ag=Math.round(S.age||0);try{const rw=LS.get(slotKey(S.slot||1),null);if(rw&&rw.S&&rw.t===t0){hs=acSF(rw.S);ag=Math.round(rw.S.age||0)}}catch(x){}g[S.slot||1]={h:acH(hs),a:ag,t:t0};LS.set('murim_ui9',g)}}catch(e){}return r}}
-{const _lg=loadGame;loadGame=function(n){let t1=0;try{const raw=localStorage.getItem(slotKey(n||1))||'';const mm=raw.slice(0,40).match(/"t":(\d+)/);t1=mm?+mm[1]:0}catch(x){}window._acBak=0;const r=_lg.apply(this,arguments);try{if(S&&S._tp&&S._tpv!==2&&/^(console|save-edit|save-sig|jump-hell)/.test(String(S._tp))){S._tp=null}if(S&&S._tp==='save-edit'&&!S._tpFx){S._tp=null;S._tpFx=1}const g=(LS.get('murim_ui9',{})||{})[n||1];let rw=null;try{rw=LS.get(slotKey(n||1),null)}catch(x){}if(S&&g&&g.t&&t1&&g.t===t1&&!window._acBak&&rw&&rw.S&&rw.t===t1&&g.a===Math.round(rw.S.age||0)&&g.h!==acH(acSF(rw.S))){S._tpFx=1;acSus('save-edit')}}catch(e){}window._acBak=0;return r}}
+{const _sg=saveGame;saveGame=function(){const r=_sg.apply(this,arguments);try{if(S&&S.alive&&!S.custom){const g=LS.get('murim_ui9',{})||{};let t0=0;try{const raw=LS.raw(slotKey(S.slot||1))||'';const mm=raw.slice(0,40).match(/"t":(\d+)/);t0=mm?+mm[1]:0}catch(x){}let hs=acSF(S),ag=Math.round(S.age||0);try{const rw=LS.get(slotKey(S.slot||1),null);if(rw&&rw.S&&rw.t===t0){hs=acSF(rw.S);ag=Math.round(rw.S.age||0)}}catch(x){}g[S.slot||1]={h:acH(hs),a:ag,t:t0};LS.set('murim_ui9',g)}}catch(e){}return r}}
+{const _lg=loadGame;loadGame=function(n){let t1=0;try{const raw=LS.raw(slotKey(n||1))||'';const mm=raw.slice(0,40).match(/"t":(\d+)/);t1=mm?+mm[1]:0}catch(x){}window._acBak=0;const r=_lg.apply(this,arguments);try{if(S&&S._tp&&S._tpv!==2&&/^(console|save-edit|save-sig|jump-hell)/.test(String(S._tp))){S._tp=null}if(S&&S._tp==='save-edit'&&!S._tpFx){S._tp=null;S._tpFx=1}const g=(LS.get('murim_ui9',{})||{})[n||1];let rw=null;try{rw=LS.get(slotKey(n||1),null)}catch(x){}if(S&&g&&g.t&&t1&&g.t===t1&&!window._acBak&&rw&&rw.S&&rw.t===t1&&g.a===Math.round(rw.S.age||0)&&g.h!==acH(acSF(rw.S))){S._tpFx=1;acSus('save-edit')}}catch(e){}window._acBak=0;return r}}
 
 // ===================== v15.2 บาลานซ์พลัง/ชื่อเสียง =====================
 // ชื่อเสียงจากการต่อสู้คิดตามขั้นและโลก ไม่ผูกกับพลังศัตรูอีกต่อไป
@@ -25959,11 +25971,11 @@ setInterval(()=>{try{if(!S||!S.alive||typeof tqAuto!=='function')return;let n=0;
 // ---- v17.16 เซฟเต็ม: ล้างพื้นที่ให้เองเป็นขั้น (บันทึกชีวิตยาว → สำรองช่องปัจจุบัน → บันทึกชีวิตช่องอื่น) แล้วลองเซฟใหม่ ----
 function storeUse(){const r=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);r.push([k,(localStorage.getItem(k)||'').length+k.length])}}catch(e){}r.sort((a,b)=>b[1]-a[1]);return r}
 function storeRescue(lv){let freed=0;try{
- const trim=(k,n)=>{try{const v=localStorage.getItem(k);if(!v)return;const a=JSON.parse(v);if(Array.isArray(a)&&a.length>n){const t=JSON.stringify(a.slice(-n));freed+=v.length-t.length;localStorage.setItem(k,t)}}catch(e){}};
+ const trim=(k,n)=>{try{const v=localStorage.getItem(k);if(!v)return;const a=LS.get(k,null);if(Array.isArray(a)&&a.length>n){LS.set(k,a.slice(-n));freed+=Math.max(0,v.length-(localStorage.getItem(k)||'').length)}}catch(e){}};
  const fk=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/^murim_flog_/.test(k))fk.push(k)}
  fk.forEach(k=>trim(k,400));if(S&&Array.isArray(S.flog)&&S.flog.length>400)S.flog.splice(0,S.flog.length-400);
  if(lv>=2&&S&&S.slot){const k=bakKey(S.slot),v=localStorage.getItem(k);if(v){freed+=v.length;localStorage.removeItem(k)}}
- if(lv>=4){for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(!k)continue;if(/^murim_bak_/.test(k)&&!(S&&S.slot&&k===bakKey(S.slot))){const v=localStorage.getItem(k);if(v){freed+=v.length;localStorage.removeItem(k)}}else if(/^murim_save(_\d)?$/.test(k)){try{const v=localStorage.getItem(k),d=JSON.parse(v);if(d&&d.feed){d.feed='';const t=JSON.stringify(d);freed+=v.length-t.length;localStorage.setItem(k,t)}}catch(e){}}}}
+ if(lv>=4){for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(!k)continue;if(/^murim_bak_/.test(k)&&!(S&&S.slot&&k===bakKey(S.slot))){const v=localStorage.getItem(k);if(v){freed+=v.length;localStorage.removeItem(k)}}else if(/^murim_save(_\d)?$/.test(k)){try{const v=localStorage.getItem(k),d=LS.get(k,null);if(d&&d.feed){d.feed='';if(LS.set(k,d))freed+=Math.max(0,v.length-(localStorage.getItem(k)||'').length)}}catch(e){}}}}
  if(lv>=3){const me='murim_flog_'+(S&&S.slot||1);fk.forEach(k=>{if(k!==me){const v=localStorage.getItem(k);if(v){freed+=v.length;localStorage.removeItem(k)}}})}
 }catch(e){}return freed}
 {const _sgR=saveGame;saveGame=function(){let r=_sgR.apply(this,arguments);try{for(let lv=1;lv<=3&&saveGame._warn;lv++){saveGame._warn=0;storeRescue(lv);_sgR.apply(this,arguments)}if(!saveGame._warn)saveFailBar(false)}catch(e){}return r}}
@@ -31315,7 +31327,7 @@ function mergeB(loc,rem){const out={};for(const k of new Set(Object.keys(loc).co
   try{out[k]=JSON.stringify(mv(JSON.parse(a),JSON.parse(b)))}catch(e){out[k]=a}}return sorted(out)}
 function safeNow(){try{const t=$('title');return !!(t&&t.classList.contains('on'))&&(!modalOpen||$('modal').dataset.k==='update')}catch(e){return false}}
 function fit(k){let s=JSON.stringify({v:1,k});if(s.length<=4000000)return k;const ks=Object.keys(k).sort((x,y)=>k[y].length-k[x].length);const o=Object.assign({},k);for(const n of ks){delete o[n];if(JSON.stringify({v:1,k:o}).length<=4000000)break}return o}
-async function slots(){for(const n of [1,2,3,4,5]){const key=n>1?'murim_save_'+n:'murim_save';let raw=null;try{raw=localStorage.getItem(key)}catch(e){}if(!raw||raw.length<50)continue;const h=hash(raw);if(PS.sh[n]===h)continue;let d;try{d=btoa(unescape(encodeURIComponent(raw)))}catch(e){continue}if(d.length>880000)continue;
+async function slots(){for(const n of [1,2,3,4,5]){const key=n>1?'murim_save_'+n:'murim_save';let raw=null;try{raw=LS.raw(key)}catch(e){}if(!raw||raw.length<50)continue;const h=hash(raw);if(PS.sh[n]===h)continue;let d;try{d=btoa(unescape(encodeURIComponent(raw)))}catch(e){continue}if(d.length>880000)continue;
   try{await api('csave',{tk:ctok,d,sl:n});PS.sh[n]=h;LS.set('murim_psh',PS.sh)}catch(e){if(e&&(e.q||e.http===403||e.http===503))return}}}
 async function sync(force){
  if(PS.busy||typeof onlineOK==='undefined'||!onlineOK)return false;
@@ -42418,3 +42430,7 @@ window.openRoadEnd=function(){const k=K()||{n:0},m=S.beastMode,L=[];const row=(o
 
 // ===== hell: คืนประสาทสัมผัสเมื่อผ่านนรกครบ 100 ชั้น =====
 try{(()=>{const _r=render;render=function(){const r=_r.apply(this,arguments);try{const h=S&&S.alive&&S.ch==='hell'&&S.hell;if(h&&!h.ab&&h.lv>=100&&S.hlS&&(S.hlS.blind||S.hlS.deaf||S.hlS.numb)&&!S._senRet){S._senRet=1;const was=[S.hlS.blind&&'ดวงตา',S.hlS.deaf&&'การได้ยิน',S.hlS.numb&&'ความรู้สึก'].filter(Boolean).join(' · ');S.hlS.blind=0;S.hlS.deaf=0;S.hlS.numb=0;try{mdBody()}catch(e){}log(`🩸 <b>ประตูนรกถูกปิด</b> — สิ่งที่คุณมอบไว้ (${was}) ถูกคืนกลับมาแล้ว`,'epic',true)}}catch(e){console.error(e)}return r}})()}catch(e){console.error('senRet',e)}
+
+// ===== บีบอัดเซฟเก่าที่ยังเป็นข้อความเต็ม (ครั้งเดียวตอนเปิดเกม · ตรวจย้อนกลับก่อนเขียนทับ) =====
+setTimeout(()=>{try{const ks=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&ZK.test(k))ks.push(k)}
+ for(const k of ks){try{const v=localStorage.getItem(k);if(!v||v.length<3000||v.startsWith(ZQ.P))continue;if(S&&S.slot&&k===slotKey(S.slot)&&S.alive)continue;const d=LS.get(k,null);if(d==null)continue;LS.set(k,d)}catch(e){}}}catch(e){console.error('zmig',e)}},6000);
