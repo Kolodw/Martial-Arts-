@@ -44811,3 +44811,293 @@ window.vaBest=function(){const p=window._vaBest,LK=window._LK;closeM();if(!p||!L
 // ---------- 🔒 ตั๋วล็อกจากสิทธิ์ผู้สนับสนุน: แจ้งเมื่อได้รับ (เซิร์ฟเวอร์เติมให้ตอนดึงสิทธิ์) ----------
 try{(()=>{const o=window.vipSet;if(typeof o!=='function')return;window.vipSet=function(v){const r=o.apply(this,arguments);try{if(v&&v.lkg>0){const LK=window._LK;if(LK&&LK.c!=null)LK.c+=v.lkg;else if(window.lkLoad)window.lkLoad();
  toast(`🔒 ได้ตั๋วล็อกชะตา ${v.lkg} ใบจากสิทธิ์${v.u?'ผู้ก่อตั้ง':'ผู้สนับสนุน'} — ใช้ได้ในหน้าสุ่มเกิด`);try{island({big:1,ic:'🔒',h:'ตั๋วล็อกชะตา',t:'+'+v.lkg+' ใบ',kind:'gold'})}catch(e){}}}catch(e){}return r}})()}catch(e){console.error('lkvip',e)}
+// ============================================================
+// BLOCK 65: 📜 ภารกิจบัญชี — รายวัน · รายสัปดาห์ · สมุดภารกิจรายเดือน · สายตำนาน · ภารกิจลับ
+//           ⚡ ประกาศิตฟ้า (คนเดียวทั้งเว็บ ทุก 3 วัน) · 🐉 บอสโลก (ช่วยกันตี) · ⚔️ ศึกสำนัก (รายเดือน)
+//           ตั๋ว: รายวันครบ → ตั๋วธรรมดา 1 · สัปดาห์ครบ → ตั๋วทอง 1 · สมุด → ธรรมดา 2 + ทอง 2/เดือน · ประกาศิตฟ้า → ทอง 3
+// ============================================================
+try{(()=>{
+const LSK='murim_aq',TH=t=>new Date(t+7*3600e3);
+const TD=()=>TH(Date.now()).toISOString().slice(0,10),MO=()=>TD().slice(0,7);
+const WK=()=>{const t=TH(Date.now()),d=(t.getUTCDay()+6)%7;return new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate()-d)).toISOString().slice(0,10)};
+const live=()=>!!(S&&S.alive);
+const on=()=>{try{return !!onlineOK}catch(e){return false}};
+const nm=()=>{try{return pname()}catch(e){return''}};
+const hsh=s=>{let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
+const rng=seed=>{let x=hsh(seed)||1;return()=>{x^=x<<13;x>>>=0;x^=x>>17;x^=x<<5;x>>>=0;return x/4294967296}};
+const mk=()=>{try{return window._b60?window._b60.modeKey():'x'}catch(e){return'x'}};
+const wOf=m=>/^mw/.test(m)?'mw':m==='beast'?'beast':/^god/.test(m)?'god':/^xian/.test(m)?'xian':/^murim/.test(m)?'murim':m;
+const kAdd=n=>{try{const k=kbGet(),sd=(S&&S.karma<0)?'e':'g';k[sd]+=n;kbSet(k)}catch(e){}};
+const pop=(ic,h,t,big)=>{try{if(live()&&typeof island==='function'){island({big:big?1:0,pri:big?1:0,ic,h,t,kind:'gold'});return}}catch(e){}toast(`${ic} ${h}: ${t}`)};
+const tkTx=(f,g)=>[g?`🎟️ ตั๋วทอง ${g} ใบ`:'',f?`🎫 ตั๋วธรรมดา ${f} ใบ`:''].filter(Boolean).join(' + ');
+// ---------- โหมดแห่งวัน (หมุนทุกวัน · ช่วยกระจายคนไปโหมดที่คนน้อย) ----------
+const MDAY=[['mw','🏙️ ยุคปัจจุบัน'],['beast','🐾 สัตว์อสูร'],['murim','⚔️ ยุทธภพ'],['mw','🏙️ ยุคปัจจุบัน'],['xian','☁️ โลกเซียน'],['beast','🐾 สัตว์อสูร'],['murim','⚔️ ยุทธภพ']];
+const mday=()=>MDAY[Math.floor((Date.now()+7*3600e3)/864e5)%MDAY.length];
+// ---------- นิยามภารกิจ ----------
+const DQ=[
+ {id:'mgp',ic:'🎮',t:'ได้ "สมบูรณ์แบบ" ในมินิเกม',n:2,e:'mgp',k:8},
+ {id:'mg',ic:'🕹️',t:'เล่นมินิเกมให้จบ',n:5,e:'mg',k:5},
+ {id:'dws',ic:'⚔️',t:'ชนะดวลกับคนที่แรงกว่าคุณ',n:1,e:'dws',k:10},
+ {id:'dw',ic:'🗡️',t:'ชนะการดวล',n:3,e:'dw',k:6},
+ {id:'mer',ic:'🌱',t:'เลือกทางเมตตา',n:3,e:'mer',k:8,x:'cru'},
+ {id:'cru',ic:'🌑',t:'เลือกทางโหดเหี้ยม',n:3,e:'cru',k:8,x:'mer'},
+ {id:'hw',ic:'⚡',t:'คว้าจังหวะฟ้าได้ทัน',n:1,e:'hw',k:10},
+ {id:'brk',ic:'🌟',t:'ทะลวงขั้น / เลื่อนขั้นสำเร็จ',n:1,e:'brk',k:12},
+ {id:'mday',ic:'🔄',t:()=>`ใช้ชีวิตในโหมดแห่งวัน: ${mday()[1]}`,u:'ปี',n:10,e:'mday',k:15},
+ {id:'yr',ic:'⏳',t:'ใช้ชีวิตผ่านไป',u:'ปี',n:40,e:'yr',k:5},
+ {id:'l40',ic:'🕯️',t:'จบชีวิตตอนอายุ 40 ขึ้นไป',n:1,e:'l40',k:10},
+ {id:'wb',ic:'🐉',t:'ร่วมตีบอสโลก',n:1,e:'wb',k:10}];
+const WQ=[
+ {id:'l3m',ic:'🌌',t:'จบชีวิตใน 3 โหมดที่ต่างกัน',n:3,e:'lm'},
+ {id:'rvw',ic:'🎯',t:'ชนะคู่ปรับ',n:2,e:'rvw'},
+ {id:'mgp15',ic:'🎮',t:'ได้ "สมบูรณ์แบบ" ในมินิเกม',n:15,e:'mgp'},
+ {id:'mwr',ic:'🏘️',t:'ขึ้นถึง "คนในซอย" ในยุคปัจจุบัน',n:1,e:'mwr'},
+ {id:'brk5',ic:'🌟',t:'ทะลวงขั้น / เลื่อนขั้น',n:5,e:'brk'},
+ {id:'wb5',ic:'🐉',t:'ร่วมตีบอสโลก',n:5,e:'wb'},
+ {id:'sd3',ic:'🌱',t:'กรรมย้อนคืนออกผล',n:3,e:'seed'},
+ {id:'dws5',ic:'⚔️',t:'ชนะคนที่แรงกว่าคุณ',n:5,e:'dws'},
+ {id:'l30',ic:'🕯️',t:'จบชีวิตตอนอายุ 30 ขึ้นไป',n:5,e:'l30'},
+ {id:'byr',ic:'🐾',t:'ใช้ชีวิตเป็นสัตว์อสูร',u:'ปี',n:30,e:'byr'}];
+const WK_K=50;
+const LG=[
+ {id:'multi',ic:'🌌',t:'ผู้ท่องหลายจักรวาล',d:'จบชีวิตครบทั้ง 5 โลก: ยุทธภพ · เซียน · เทพ · สัตว์อสูร · ยุคปัจจุบัน',n:5,v:L=>Object.keys(L.wl||{}).filter(k=>['murim','xian','god','beast','mw'].includes(k)).length,fr:'f_aq_multi',g:2},
+ {id:'l10',ic:'💀',t:'สิบชีวิต',d:'จบชีวิตครบ 10 ชีวิต',n:10,v:L=>L.lives||0,k:50,g:0},
+ {id:'l50',ic:'💀',t:'ห้าสิบชีวิต',d:'จบชีวิตครบ 50 ชีวิต',n:50,v:L=>L.lives||0,fr:'f_aq_l50',g:1},
+ {id:'l100',ic:'☠️',t:'ร้อยชีวิต',d:'จบชีวิตครบ 100 ชีวิต',n:100,v:L=>L.lives||0,fr:'f_aq_l100',g:2},
+ {id:'mgm',ic:'🎮',t:'ผู้ไม่เคยพลาดจังหวะ',d:'มินิเกม 10 เกม ชำนาญถึง ★★★★ (เล่นเกมละ 20 ครั้ง)',n:10,v:()=>{try{return Object.values(LS.get('murim_mg2',{})||{}).filter(x=>x>=20).length}catch(e){return 0}},fr:'f_aq_mgm',g:1},
+ {id:'seed',ic:'🌱',t:'ผู้หว่านกรรม',d:'กรรมย้อนคืนออกผลครบ 30 ครั้ง',n:30,v:L=>L.seed||0,fr:'f_aq_seed',g:1},
+ {id:'boss',ic:'🐉',t:'นักล่ามังกร',d:'ตีบอสโลกครบ 30 ครั้ง',n:30,v:L=>L.wbh||0,fr:'f_aq_boss',g:1}];
+const SEC=[
+ {id:'cent',t:'ร้อยปีพอดี',d:'จบชีวิตตอนอายุ 100 พอดี'},
+ {id:'saint',t:'นักบุญ',d:'จบชีวิตตอนอายุ 50+ โดยเลือกทางเมตตา 10 ครั้งขึ้นไปและไม่เคยโหดเลย'},
+ {id:'tyrant',t:'ทรราช',d:'เลือกทางโหดเหี้ยม 20 ครั้งในชีวิตเดียว'},
+ {id:'butter',t:'มือลื่น',d:'พลาดมินิเกม 5 ครั้งติดกัน'},
+ {id:'owl',t:'ผู้ไม่หลับใหล',d:'ใช้ชีวิตในเกมช่วงตีสองถึงตีห้า'},
+ {id:'flow',t:'จิตไร้รอยต่อ',d:'สมบูรณ์แบบในมินิเกม 10 ครั้งติดกัน'},
+ {id:'broke',t:'หมดตัวแต่ไม่หมดใจ',d:'จบชีวิตตอนอายุ 60+ โดยไม่มีเงินเหลือเลย'}];
+const SECT=[['☀️','สำนักตะวันรุ่ง','#ff9a20'],['🌙','สำนักจันทร์เงา','#7a8aff'],['⭐','สำนักดาราเหนือ','#2ac0a0']];
+// ---------- ประกาศิตฟ้า (เลขตรงกับเซิร์ฟเวอร์ HQN=6) ----------
+const HQ=[
+ {n:'มือที่ไม่เคยสั่น',h:['ฟ้าเลือกการละเล่นไว้หนึ่งอย่าง… ผู้ที่ไม่พลาดเลยจะได้ยินเสียงฟ้า','ต้องไม่พลาด "ติดต่อกัน" หลายครั้ง','เล่นเกมที่ฟ้าเลือกในหน้านี้ ให้ได้สมบูรณ์แบบ 8 ครั้งติดกัน'],ck:()=>(hqS().n||0)>=8,pr:()=>`ติดกันตอนนี้ ${hqS().n||0}/8 · ดีที่สุด ${hqS().b||0}`},
+ {n:'สัตว์ที่กลายเป็นตำนาน',h:['สิ่งมีชีวิตที่ไม่ได้เกิดเป็นคน…','มันต้องแข็งแกร่งจนคนทั้งแผ่นดินกลัว','เกิดเป็นสัตว์อสูร แล้วมีพลังรวม 5,500 ขึ้นไปในชีวิตเดียว'],ck:()=>live()&&S.beastMode&&!S.beastMode.human&&total()>=5500,pr:()=>live()&&S.beastMode&&!S.beastMode.human?`พลังตอนนี้ ${fmt(Math.round(total()))}/5,500`:'ยังไม่ได้เป็นสัตว์อสูร'},
+ {n:'ผู้พิทักษ์เมืองใหม่',h:['ต่างยุค ต่างเมือง… คนธรรมดาก็เป็นตำนานได้','ทั้งเมืองต้องรู้จักชื่อคุณ','ยุคปัจจุบัน: ไต่ถึงขั้น 🛡️ ผู้พิทักษ์เมือง'],ck:()=>live()&&S.mw&&(S.mw.mr||0)>=4,pr:()=>live()&&S.mw?`ขั้นตอนนี้ ${(S.mw.mr||0)+1}/5`:'ยังไม่ได้อยู่ยุคปัจจุบัน'},
+ {n:'ชนะเงาของตัวเอง',h:['มีคนหนึ่งที่เกิดมาพร้อมคุณ…','เอาชนะเขาซ้ำแล้วซ้ำเล่า','ชนะคู่ปรับคู่ชีวิต 5 ครั้งในชีวิตเดียว'],ck:()=>live()&&S.ix&&S.ix.rv&&(S.ix.rv.w||0)>=5,pr:()=>live()&&S.ix&&S.ix.rv?`ชนะคู่ปรับ ${S.ix.rv.w||0}/5`:'ยังไม่มีคู่ปรับ'},
+ {n:'เมล็ดพันธุ์ห้าเมล็ด',h:['สิ่งที่คุณทำวันนี้ จะกลับมาหาคุณ…','ไม่ใช่ครั้งเดียว แต่หลายครั้งในชีวิตเดียว','กรรมย้อนคืนออกผล 5 ครั้งในชีวิตเดียว'],ck:()=>live()&&((S.aqL||{}).seed||0)>=5,pr:()=>live()?`ออกผลแล้ว ${((S.aqL||{}).seed||0)}/5`:''},
+ {n:'มือเซียนอายุยืน',h:['ความชำนาญที่สั่งสมทั้งชีวิต…','ต้องอยู่ให้ถึงวัยชรา','สมบูรณ์แบบในมินิเกม 25 ครั้งในชีวิตเดียว และมีอายุถึง 60 ปี'],ck:()=>live()&&((S.aqL||{}).mgp||0)>=25&&(S.age|0)>=60,pr:()=>live()?`สมบูรณ์แบบ ${((S.aqL||{}).mgp||0)}/25 · อายุ ${S.age|0}/60`:''}];
+const HQ_GN={darts:'ปาลูกดอก',drum:'กลองศึก',strike:'จังหวะฟัน',moon:'ชมจันทร์',stars:'เรียงดาว',pounce:'ตะครุบ',heart:'ฟังใจ',typing:'คัดอักษร'};
+const gName=g=>{try{const G=window._mg2G&&window._mg2G[g];if(G&&G.n)return G.ic?G.ic+' '+G.n:G.n}catch(e){}return HQ_GN[g]||g};
+// ---------- กรอบใหม่ ----------
+const FR=(id,n,ty,c1,c2,c3,pc,bd,d)=>({id,n,side:'r',c:0,ty,c1,c2,c3,pc,bd,d});
+const SPIN='spin halo orbit sparkle star corner badge';
+FRAMES.push(FR('f_hq1','กรอบผู้พิชิตประกาศิตฟ้า',SPIN,'#fff060','#ffffff','#3a70ff','#fffbd0','⚡','คนแรกของทั้งเว็บที่พิชิตประกาศิตฟ้า'),
+ FR('f_hq2','กรอบผู้ตามรอยฟ้า','spin orbit star corner badge','#9ad0ff','#ffffff','#2a4a8a','#e0f2ff','🌩️','พิชิตประกาศิตฟ้าเป็นลำดับ 2–6'),
+ FR('f_wb1','กรอบผู้ปลิดชีพบอสโลก',SPIN,'#ff5030','#ffd080','#4a0a0a','#ffe0b0','🐉','ตีบอสโลกครั้งสุดท้ายจนล้ม'),
+ FR('f_wb2','กรอบนักล่าสามอันดับแรก','spin orbit corner badge','#ff9a50','#fff0c0','#6a2a10','#ffe8c8','🏹','ทำความเสียหายต่อบอสโลกติด 3 อันดับแรก'),
+ FR('f_aq_multi','กรอบหลายจักรวาล',SPIN,'#c070ff','#80f0ff','#1a1040','#f0e0ff','🌌','จบชีวิตครบทั้ง 5 โลก'),
+ FR('f_aq_l50','กรอบห้าสิบชาติ','spin orbit corner badge','#b0b0c8','#ffffff','#2a2a3a','#e8e8f8','💀','จบชีวิตครบ 50 ชีวิต'),
+ FR('f_aq_l100','กรอบร้อยชาติภพ',SPIN,'#e8e8ff','#ffd0f0','#30203a','#ffffff','☠️','จบชีวิตครบ 100 ชีวิต'),
+ FR('f_aq_mgm','กรอบผู้ไม่เคยพลาดจังหวะ','spin orbit star corner badge','#40e0a0','#e0fff0','#0a3a2a','#d0ffe8','🎮','มินิเกม 10 เกมชำนาญ ★★★★'),
+ FR('f_aq_seed','กรอบผู้หว่านกรรม','spin orbit corner badge','#7ad04a','#f0ffd0','#1a3a10','#e8ffd0','🌱','กรรมย้อนคืนออกผลครบ 30 ครั้ง'),
+ FR('f_aq_boss','กรอบนักล่ามังกร','spin orbit corner badge','#e06030','#ffe0a0','#3a1408','#ffe8c0','🗡️','ตีบอสโลกครบ 30 ครั้ง'),
+ FR('f_aq_sec','กรอบผู้รู้ความลับฟ้า',SPIN,'#202030','#a0a0ff','#000000','#c8c8ff','❓','ค้นพบภารกิจลับครบทุกข้อ'),
+ ...SECT.map((s,i)=>FR('f_sw'+i,'กรอบ'+s[1]+'ผู้ชนะ','spin orbit star corner badge',s[2],'#ffffff','#1a1a2a','#ffffff',s[0],'สำนักที่ชนะศึกสำนักประจำเดือน')));
+const BKC=[['#ff6a8a','#ffe0ea','#5a1028'],['#ffb040','#fff0d0','#5a3008'],['#4ad0ff','#e0f8ff','#08304a'],['#8a6aff','#ece4ff','#20104a'],['#40d080','#e0ffee','#0a3a20'],['#ff5050','#ffe0d0','#4a0808']];
+const bkFr=m=>{const c=BKC[(+m.slice(5,7)||1)%BKC.length];return FR('f_aqb_'+m.replace('-',''),`กรอบสมุดภารกิจ ${m.slice(5,7)}/${m.slice(0,4)}`,SPIN,c[0],c[1],c[2],c[1],'📖',`ทำสมุดภารกิจเดือน ${m} ครบ 30 ขั้น (มีเฉพาะเดือนนั้น)`)};
+const bkEnsure=()=>{try{const own=frGet().own.filter(x=>/^f_aqb_/.test(x)),need=new Set([...own.map(x=>x.slice(6,10)+'-'+x.slice(10,12)),MO()]);need.forEach(m=>{const f=bkFr(m);if(!FRAMES.some(x=>x.id===f.id))FRAMES.push(f)})}catch(e){}};bkEnsure();
+const frGive=id=>{try{const d=frGet();if(d.own.includes(id))return false;if(/^f_aqb_/.test(id))bkEnsure();d.own.push(id);frSet(d);try{profPush()}catch(e){}return true}catch(e){return false}};
+// ---------- สถานะในเครื่อง ----------
+function st(){let d=null;try{d=LS.get(LSK,null)}catch(e){}d=d&&typeof d==='object'?d:{};d.L=d.L||{};d.sec=d.sec||{};d.lgg=d.lgg||{};d.bk=d.bk||{};return d}
+const sv=d=>{try{LS.set(LSK,d)}catch(e){}};
+function pick(pool,n,seed,excl){const r=rng(seed),L=pool.filter(q=>!(excl||[]).includes(q.id)),out=[];while(out.length<n&&L.length){const i=Math.floor(r()*L.length),q=L.splice(i,1)[0];if(q.x&&out.some(o=>o.id===q.x))continue;out.push(q)}return out}
+const pidS=()=>{try{return pid}catch(e){return'x'}};
+function roll(d){const td=TD(),wk=WK();
+ if(!d.d||d.d.p!==td)d.d={p:td,rr:0,q:pick(DQ,3,'d'+td+pidS()).map(q=>({id:q.id,v:0}))};
+ if(!d.w||d.w.p!==wk)d.w={p:wk,rr:0,q:pick(WQ,3,'w'+wk+pidS()).map(q=>({id:q.id,v:0}))};
+ return d}
+const defOf=(k,id)=>(k==='d'?DQ:WQ).find(q=>q.id===id);
+const qT=q=>typeof q.t==='function'?q.t():q.t;
+// ---------- ส่งความคืบหน้า/รับตั๋วที่เซิร์ฟเวอร์ ----------
+let syncing=0;
+async function sync(){if(syncing||!on())return;syncing=1;try{const d=roll(st());let ch=0;
+ for(const k of ['d','w']){const P=d[k];for(const q of P.q){if(q.ok&&!q.sy){try{const j=await api('aq',{o:'pt',k,p:P.p,q:q.id});if(j&&(j.ok||j.dup||j.cap)){q.sy=1;ch=1;if(j.bp!=null)d.bp={m:MO(),v:j.bp}}if(j&&j.err==='period'){q.sy=1;ch=1}}catch(e){if(e&&e.message==='rate')break}}}
+  if(P.q.every(q=>q.ok&&q.sy)&&!P.al){try{const j=await api('aq',{o:'all',k,p:P.p});if(j&&(j.ok||j.dup||j.err==='period')){P.al=1;ch=1;if(j.ok){if(k==='d'){LS.set('murim_aqbless',1);pop('📜','ภารกิจรายวันครบ!',`${tkTx(j.f,0)} + พรภารกิจติดตัวชีวิตหน้า`,1)}else pop('🗓️','ภารกิจรายสัปดาห์ครบ!',tkTx(0,j.g),1);try{if(window._RR){if(j.f)window._RR.f=(+window._RR.f||0)+j.f;if(j.g)window._RR.c=(+window._RR.c||0)+j.g}}catch(e){}}}}catch(e){}}}
+ const L=d.L;for(const g of LG){if(d.lgg[g.id]||g.v(L)<g.n)continue;try{const j=await api('aq',{o:'lg',l:g.id});if(j&&(j.ok||j.dup)){d.lgg[g.id]=1;ch=1;if(j.ok){if(g.fr)frGive(g.fr);if(g.k)kAdd(g.k);pop(g.ic,'สายตำนาน: '+g.t,[g.fr?'กรอบใหม่':'',g.k?`กรรม +${g.k}`:'',j.g?tkTx(0,j.g):''].filter(Boolean).join(' + '),1)}}}catch(e){}}
+ for(const s of SEC){const v=d.sec[s.id];if(v&&v!==2){try{const j=await api('aq',{o:'sec',s:s.id});if(j&&(j.ok||j.dup||j.ok===0)){d.sec[s.id]=2;ch=1}}catch(e){}}}
+ if(ch)sv(d)}finally{syncing=0}dot()}
+// ---------- รับเหตุการณ์จากเกม ----------
+function ev(e,n,extra){n=n||1;try{const d=roll(st());let ch=0,done=[];
+ for(const k of ['d','w'])d[k].q.forEach(q=>{if(q.ok)return;const D=defOf(k,q.id);if(!D||D.e!==e)return;
+  if(e==='lm'){q.m=q.m||[];if(!extra||q.m.includes(extra))return;q.m.push(extra);q.v=q.m.length}else q.v=(q.v||0)+n;ch=1;
+  if(q.v>=D.n){q.v=D.n;q.ok=1;done.push([k,D])}});
+ if(ch)sv(d);
+ done.forEach(([k,D])=>{const kk=k==='d'?D.k:WK_K;kAdd(kk);pop(D.ic,k==='d'?'ภารกิจรายวันสำเร็จ':'ภารกิจรายสัปดาห์สำเร็จ',`${qT(D)} · กรรม +${kk}`)});
+ if(done.length)setTimeout(sync,400);dot()}catch(x){console.error('aqev',x)}}
+function legend(f){const d=st();f(d.L);sv(d)}
+function secret(id){const d=st();if(d.sec[id])return;d.sec[id]=1;sv(d);const s=SEC.find(x=>x.id===id);kAdd(30);pop('❓','ค้นพบภารกิจลับ!',`${s?s.t:''} — กรรม +30 · ตั๋วธรรมดา 1`,1);
+ if(SEC.every(x=>d.sec[x.id])&&frGive('f_aq_sec'))setTimeout(()=>pop('❓','รู้ความลับฟ้าครบทุกข้อ','ได้ กรอบผู้รู้ความลับฟ้า',1),2500);setTimeout(sync,500)}
+window._aqEv=ev;
+const LC=()=>{if(!S)return{};if(!S.aqL)S.aqL={};return S.aqL};
+// 1) ทางเลือก เมตตา/โหด
+const MERCY=/ช่วย|ไว้ชีวิต|ให้ทาน|แบ่ง|รักษา|ปล่อย|เมตตา|คืนให้|อุปการะ|รับเลี้ยง|ปกป้อง|สงสาร|ให้ข้าว|ให้เงิน|ยกโทษ|อภัย/;
+const CRUEL=/ฆ่า|สังหาร|ปล้น|ขโมย|หักหลัง|ทิ้ง|รีดไถ|ทรมาน|เผา|ฉวย|ลอบ|ข่มขู่|ชิง|แย่ง|โกง|หลอก/;
+const strip=t=>String(t||'').replace(/<[^>]+>/g,' ');
+{const _cr=choiceRun;choiceRun=function(i){try{const c=choice._cur,o=c&&c.opts&&c.opts[i];if(live()&&o&&!c.mt){const tx=strip(o.t)+' '+strip(o.s),k=CRUEL.test(tx)?'cru':MERCY.test(tx)?'mer':null;if(k){const L=LC();L[k]=(L[k]||0)+1;ev(k);if(k==='cru'&&L.cru>=20)secret('tyrant')}}}catch(e){}return _cr.apply(this,arguments)}}
+// 2) มินิเกม: ผ่านตัวเปิดเกมกลาง + ข้อความผลลัพธ์ (เกมประจำปีภายในเรียกตรง ไม่ผ่านตัวเปิด)
+let mgT=0,mgRun={p:0,f:0};
+function mgRes(perf,fail){ev('mg');if(perf){ev('mgp');if(live()){const L=LC();L.mgp=(L.mgp||0)+1}}mgRun.p=perf?mgRun.p+1:0;mgRun.f=fail?mgRun.f+1:0;if(mgRun.p>=10)secret('flow');if(mgRun.f>=5)secret('butter')}
+if(typeof window.mg2Play==='function'){const _mp=window.mg2Play;window.mg2Play=function(id,o,cb){return _mp.call(this,id,o,function(sc,skip){try{if(!skip){mgT=Date.now();mgRes(sc>=.9,sc<.35)}}catch(e){}return cb&&cb.apply(this,arguments)})}}
+{const _lg=log;log=function(t,c){try{const s=String(t||'');
+ if(/\(\d{1,3}%\)/.test(s)&&/สมบูรณ์แบบ|ทำได้ดี|พลาดไปหลายจังหวะ/.test(s)&&Date.now()-mgT>2500)mgRes(/สมบูรณ์แบบ/.test(s),/พลาดไปหลายจังหวะ/.test(s));
+ if(/คว้าจังหวะฟ้าได้/.test(s))ev('hw');
+ if(/เพราะเมื่อ \d+ ปีก่อน คุณเลือก/.test(s)){ev('seed');LC().seed=(LC().seed||0)+1;legend(L=>{L.seed=(L.seed||0)+1})}
+ if(/^🎯 คุณชนะ/.test(s))ev('rvw')}catch(e){}return _lg.apply(this,arguments)}}
+// 3) ดวล
+{const _du=duel;duel=function(name,ep,cb){let strong=0;try{strong=+ep>total()}catch(e){}return _du.call(this,name,ep,function(w){try{if(w&&live()){ev('dw');if(strong)ev('dws')}}catch(e){}return cb&&cb.apply(this,arguments)})}}
+// 4) เริ่มชีวิต / ผ่านปี / ทะลวงขั้น
+{const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);try{if(S){S.aqT0=Date.now();S.aqL={}}
+ if(LS.get('murim_aqbless',0)){setTimeout(()=>{try{if(!live()||S._aqB)return;S._aqB=1;LS.set('murim_aqbless',0);const m=Math.round(400+Math.random()*400);S.money=(S.money||0)+m;S.qi=+((S.qi||0)+1).toFixed(1);S.hp=S.maxHp;addFeed('ev',`📜 <b>พรแห่งภารกิจ</b> — เพราะชาติก่อนทำภารกิจประจำวันครบ ชีวิตนี้เริ่มด้วย${S.xian?'หินวิญญาณ':'เงินติดตัว'} ${fmt(m)} · ปราณ +1`,'good')}catch(e){}},1800)}}catch(e){}return r}}
+{const _py=passYear;passYear=function(){const a0=S&&S.age,me=S;const r=_py.apply(this,arguments);try{if(!live()||S!==me||S.age===a0)return r;const dy=Math.max(1,(S.age|0)-(a0|0));
+ ev('yr',dy);const m=mk();if(wOf(m)===mday()[0])ev('mday',dy);if(m==='beast')ev('byr',dy);
+ const h=TH(Date.now()).getUTCHours();if(h>=2&&h<5)secret('owl')}catch(e){}return r}}
+setInterval(()=>{try{if(!live())return;let r=-1;if(S.mw)r=S.mw.mr||0;else r=realmIdx();if(S._aqR==null||S._aqRS!==mk()){S._aqR=r;S._aqRS=mk();return}if(r>S._aqR){ev('brk',r-S._aqR);S._aqR=r}if(S.mw&&(S.mw.mr||0)>=1&&!S._aqMw){S._aqMw=1;ev('mwr')}}catch(e){}},2500);
+// 5) จบชีวิต
+{const _eg=endGame;endGame=function(){try{if(S&&!S._aqE&&(S.age|0)>=1){S._aqE=1;const m=mk(),w=wOf(m),a=S.age|0,L=LC();
+ ev('lm',1,w);if(a>=40)ev('l40');if(a>=30)ev('l30');
+ legend(G=>{G.lives=(G.lives||0)+1;G.wl=G.wl||{};G.wl[w]=1});
+ if(a===100)secret('cent');if(a>=50&&(L.mer||0)>=10&&!(L.cru||0))secret('saint');if(a>=60&&(S.money||0)<=0)secret('broke');setTimeout(sync,800)}}catch(e){}return _eg.apply(this,arguments)}}
+// ---------- จุดแจ้งเตือน ----------
+function claimable(){try{const d=roll(st());if(['d','w'].some(k=>d[k].q.some(q=>q.ok&&!q.sy)))return 1;const bp=(d.bp&&d.bp.m===MO())?d.bp.v:0,got=(d.bk[MO()]||[]);for(let t=1;t<=30;t++)if(bp>=t*4&&!got.includes(t))return 1;if(LG.some(g=>!d.lgg[g.id]&&g.v(d.L)>=g.n))return 1;if(WB&&WB.ph==='dead'&&WB.my&&!WB.cl)return 1}catch(e){}return 0}
+function dot(){try{const c=claimable();document.querySelectorAll('.aqDot').forEach(e=>e.style.display=c?'':'none');if(live()&&typeof islChipX==='function'){if(c&&!modalOpen)islChipX('aqc','📜','รับรางวัลภารกิจ',()=>openAQ());else islChipOff('aqc')}}catch(e){}}
+// ---------- ประกาศิตฟ้า / บอสโลก / ศึกสำนัก (ข้อมูลจากเซิร์ฟเวอร์) ----------
+let HQS=null,WB=null,SW=null,hqT=0;
+const hqS=()=>{const r=HQS?HQS.r:0;let s=LS.get('murim_hqs',null);if(!s||s.r!==r)s={r,n:0,b:0};return s};
+async function hqLoad(){if(!on())return;try{const k=admK();HQS=await api('hq'+(k?'&key='+encodeURIComponent(k):''));hqT=Date.now()}catch(e){}}
+async function hqTry(){try{if(!HQS||!on()||HQS.ph==='cd'&&HQS.my)return;if(HQS.my||LS.get('murim_hqc',0)===HQS.r)return;const Q=HQ[HQS.q];if(!Q||!Q.ck())return;
+ if(HQS.q!==0&&!(S&&S.aqT0>=HQS.t0-60e3))return;
+ LS.set('murim_hqc',HQS.r);const pf={q:HQS.q,ls:S&&S.aqT0||0,a:S?S.age|0:0,m:mk(),p:S?Math.round(total()):0,st:hqS().b||0};
+ const j=await api('hq',{o:'claim',r:HQS.r,n:nm(),pf});if(j&&j.ok){pop('⚡','คุณพิชิตประกาศิตฟ้า!','ส่งผลให้ฟ้าตรวจสอบแล้ว — ผ่านแล้วรับรางวัลอัตโนมัติ',1);try{sfx('rare')}catch(e){}await hqLoad()}else if(j&&j.err&&j.err!=='fast')LS.set('murim_hqc',0)}catch(e){LS.set('murim_hqc',0)}}
+setInterval(()=>{try{if(live())hqTry()}catch(e){}},4000);
+async function wbLoad(){if(!on())return;try{WB=await api('wb');if(WB&&WB.ph==='dead'&&WB.my&&!WB.cl){const j=await api('wb',{o:'claim',r:WB.r});if(j&&j.ok){WB.cl=1;pop('🐉','รางวัลบอสโลก',tkTx(j.f,j.g)+(j.g?` · ติดอันดับ ${j.rk}`:''),1)}}}catch(e){}}
+async function frSync(){if(!on())return;try{const j=await api('aq');if(!j||!j.ok)return;const d=st();d.bp={m:j.m,v:j.bp};if(j.m)d.bk[j.m]=(j.bt||[]).map(Number);(j.lg||[]).forEach(l=>d.lgg[l]=1);(j.sc||[]).forEach(s=>d.sec[s]=2);sv(d);
+ const nw=(j.fr||[]).filter(f=>frGive(f));if(nw.length)pop('🖼️','ได้กรอบใหม่จากฟ้า',nw.map(f=>(frOf(f)||{}).n||f).join(' · '),1)}catch(e){}dot()}
+// แจ้งข่าวทั้งเว็บผ่าน ping ที่ส่งอยู่แล้ว (ไม่เพิ่มคำขอ)
+{const _a=api;api=async function(a,b){const r=await _a.apply(this,arguments);try{if(typeof a==='string'&&a.startsWith('ping')&&r&&r.gq)gqNote(r.gq)}catch(e){}return r}}
+function gqNote(g){const o=LS.get('murim_gqs',null)||{},n={};const H=g.hq,W=g.wb;const first=!o.i;
+ if(H){n.hr=H.r;n.hp=H.ph;if(!first){if(H.r>(o.hr||0))pop('⚡','ประกาศิตฟ้าใหม่ปรากฏ!','ทั้งเว็บมีได้แค่คนเดียว — เปิด 📜 ภารกิจ',1);else if(H.ph!==o.hp){if(H.ph==='chk')pop('⚡','ประกาศิตฟ้า',`${H.wn||'มีคน'} อ้างว่าพิชิตแล้ว — รอฟ้าตรวจสอบ`,1);else if(H.ph==='cd')pop('⚡','มีผู้พิชิตประกาศิตฟ้าแล้ว!',`${H.wn} — ประกาศิตใหม่ใน 3 วัน`,1)}}if(H.r!==(HQS&&HQS.r)||H.ph!==(HQS&&HQS.ph))hqLoad()}
+ if(W){n.wr=W.r;n.wp=W.ph;if(!first){if(W.r>(o.wr||0))pop(W.n?'🐉':'🐉','บอสโลกปรากฏ!',`${W.n} — ทุกคนช่วยกันตี`,1);else if(W.ph==='dead'&&o.wp!=='dead'){pop('🐉','บอสโลกล้มแล้ว!','ใครร่วมตีรับรางวัลได้ที่ 📜 ภารกิจ',1);wbLoad().then(dot)}}}
+ n.i=1;LS.set('murim_gqs',n)}
+// ---------- หน้าต่าง ----------
+const css=document.createElement('style');css.textContent=`
+#modal[data-k="aq"]{background:#10121c!important;border-color:#c98a10!important;padding:5px!important}
+.aqWrap{margin:0;padding:12px 12px 10px;border-radius:18px;background:radial-gradient(120% 60% at 50% -10%,#3a2a0a 0%,#171a2a 55%,#10121c 100%);color:#efe6d2;font-size:13px}
+.aqWrap .xbtn{color:#ffe7a8}.aqWrap .tag2{color:#c9bfa8}
+.aqHead{display:flex;align-items:center;gap:10px;margin:0 26px 10px 0}.aqHead .lg{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:26px;background:linear-gradient(145deg,#ffd86a,#c98a10);box-shadow:0 4px 14px #e8b83a55,inset 0 1px 0 #fff8}
+.aqHead h3{margin:0;font-size:18px;color:#ffe7a8;letter-spacing:.3px}.aqHead small{display:block;font-size:11px;color:#c9bfa8}
+.aqSum{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}.aqSum div{padding:7px 6px;border-radius:12px;background:#ffffff0d;border:1px solid #ffffff14;text-align:center}.aqSum b{display:block;font-size:15px;color:#ffd86a}.aqSum span{font-size:10.5px;color:#b8ae98}
+.aqTabs{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:none;-webkit-mask:linear-gradient(90deg,#000 90%,transparent)}.aqTabs::-webkit-scrollbar{display:none}
+.aqTabs button{flex:0 0 auto;padding:7px 12px;border-radius:999px;border:1px solid #ffffff22;background:#ffffff0a;font-size:12.5px;font-weight:700;color:#d8ceb8;font-family:inherit;transition:.15s}
+.aqTabs button.on{background:linear-gradient(135deg,#ffe48a,#e0a020);color:#2a1a00;border-color:#ffd86a;box-shadow:0 3px 12px #e8b83a55}
+.aqQ{display:flex;gap:10px;align-items:center;padding:10px;border-radius:14px;background:linear-gradient(135deg,#ffffff0f,#ffffff05);border:1px solid #ffffff17;margin:7px 0;position:relative;overflow:hidden}
+.aqQ.ok{background:linear-gradient(135deg,#2a7a3a33,#1a3a2222);border-color:#5ad07a66}.aqQ.ok:after{content:'✓';position:absolute;right:-6px;top:-14px;font-size:58px;font-weight:900;color:#5ad07a18}
+.aqQ .i{flex:0 0 40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:21px;background:linear-gradient(145deg,#ffffff22,#ffffff08);box-shadow:inset 0 1px 0 #fff2}
+.aqQ.ok .i{background:linear-gradient(145deg,#5ad07a,#2a8a4a)}.aqQ .m{flex:1;min-width:0}.aqQ b{display:block;font-size:13.5px;color:#fff3d8;line-height:1.3}.aqQ small{color:#b8ae98;font-size:11.5px;line-height:1.4}
+.aqPill{flex:0 0 auto;padding:4px 8px;border-radius:999px;background:#e8b83a26;border:1px solid #e8b83a55;color:#ffd86a;font-size:11px;font-weight:800;white-space:nowrap}
+.aqRr{flex:0 0 auto;width:30px;height:30px;border-radius:10px;border:1px solid #ffffff2a;background:#ffffff10;color:#fff;font-size:14px}
+.aqBar{height:7px;border-radius:5px;background:#00000055;margin-top:6px;overflow:hidden;box-shadow:inset 0 1px 2px #0008}.aqBar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#c98a10,#ffd86a,#fff2b0);background-size:200% 100%;animation:aqSh 2.4s linear infinite}
+.aqQ.ok .aqBar i{background:linear-gradient(90deg,#2a8a4a,#7ae09a)}@keyframes aqSh{to{background-position:-200% 0}}
+.aqRw{display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.5;padding:9px 11px;border-radius:12px;background:linear-gradient(135deg,#e8b83a1f,#e8b83a0a);border:1px dashed #e8b83a77;margin:9px 0;color:#f3e3b8}.aqRw:before{content:'🎁';font-size:18px}
+.aqNote{font-size:11.5px;color:#b8ae98;margin:4px 2px}.aqCard{padding:10px 12px;border-radius:14px;background:#ffffff0b;border:1px solid #ffffff17;margin:8px 0}.aqCard>b{color:#ffe7a8}
+.aqBk{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.aqBk button{padding:7px 2px 6px;border-radius:12px;border:1px solid #ffffff1c;background:#ffffff0a;font-size:10.5px;line-height:1.3;color:#cfc5ae;font-family:inherit}
+.aqBk button b{display:block;font-size:13px;color:#fff}.aqBk button.ms{border-color:#e8b83a88;background:#e8b83a14}.aqBk button.can{background:linear-gradient(145deg,#ffe48a,#e0a020);color:#3a2600;border-color:#ffd86a;font-weight:800;animation:aqP 1.2s infinite;box-shadow:0 0 14px #ffd86a77}.aqBk button.can b{color:#3a2600}.aqBk button.got{opacity:.38}
+@keyframes aqP{50%{transform:scale(1.07)}}.aqDot{position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:#ff3a3a;box-shadow:0 0 0 2px #fff,0 0 8px #ff3a3a}
+.aqHq{position:relative;overflow:hidden;padding:14px;border-radius:16px;background:radial-gradient(100% 80% at 80% 0%,#4a3aa0 0%,#1a1a50 45%,#0a0c20 100%);border:1px solid #8a7aff55;color:#fff;margin:4px 0 8px;box-shadow:0 6px 24px #3a2a9055}
+.aqHq:before{content:'';position:absolute;inset:0;background-image:radial-gradient(1px 1px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 60%,#fff,transparent),radial-gradient(1.5px 1.5px at 40% 80%,#ffe,transparent),radial-gradient(1px 1px at 85% 20%,#fff,transparent),radial-gradient(1px 1px at 10% 70%,#fff,transparent);opacity:.6;animation:aqTw 4s ease-in-out infinite;pointer-events:none}@keyframes aqTw{50%{opacity:.2}}
+.aqHq .tp{font-size:11px;color:#c8c0ff;letter-spacing:.4px}.aqHq .hn{font-size:20px;font-weight:900;margin:3px 0 8px;background:linear-gradient(90deg,#fff6b0,#ffd040,#fff6b0);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 18px #ffd04044}
+.aqHq .hh{position:relative;margin:6px 0;padding:8px 10px;border-radius:10px;background:#ffffff12;border:1px solid #ffffff18;font-size:12.5px;line-height:1.5}.aqHq .lk{color:#9a94c0;font-style:italic;background:#00000033}
+.aqHq .pbtn,.aqWb .pbtn{background:linear-gradient(135deg,#ffe48a,#e0a020);color:#2a1a00;border:0;font-weight:900;border-radius:12px;box-shadow:0 4px 14px #e8b83a55}
+.aqWb{position:relative;overflow:hidden;padding:14px;border-radius:16px;background:radial-gradient(100% 90% at 50% 0%,#8a2a10 0%,#3a0a0a 60%,#1a0505 100%);border:1px solid #ff6a3a55;color:#fff;margin:4px 0 8px;box-shadow:0 6px 24px #a0301055}
+.aqWb .bi{font-size:52px;line-height:1;margin-top:10px;text-align:center;filter:drop-shadow(0 4px 12px #ff3a0a99);animation:aqBo 2.2s ease-in-out infinite}@keyframes aqBo{50%{transform:translateY(-5px) scale(1.04)}}
+.aqWb .bn{text-align:center;font-size:18px;font-weight:900;color:#ffd0a0;margin:4px 0}.aqHp{height:14px;border-radius:8px;background:#00000088;overflow:hidden;margin:8px 0 6px;border:1px solid #ff8a5a44}.aqHp i{display:block;height:100%;background:linear-gradient(90deg,#ff2a1a,#ff8a2a,#ffd040);box-shadow:0 0 10px #ff5a2a}
+.aqRk{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;margin:3px 0;background:#ffffff08}.aqRk.me{background:#e8b83a22;border:1px solid #e8b83a55}.aqRk span:last-child{margin-left:auto;font-weight:800;color:#ffd86a}
+.aqSect{display:flex;gap:10px;align-items:center;padding:11px;border-radius:14px;margin:7px 0;border:1px solid var(--c);background:linear-gradient(135deg,color-mix(in srgb,var(--c) 22%,transparent),#ffffff05)}.aqSect .i{font-size:28px}.aqSect.me{box-shadow:0 0 0 2px var(--c),0 0 18px color-mix(in srgb,var(--c) 50%,transparent)}
+.aqSect .aqBar i{background:var(--c);animation:none}.aqSect b,.aqSect small{display:block}.aqSect .pbtn{flex:0 0 auto;border-radius:10px;font-size:12.5px;padding:7px 12px!important;width:auto}
+.aqSec{text-align:center;padding:10px 6px;border-radius:12px;border:1px dashed #ffffff25;background:#00000025}.aqSecG{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.aqSec.ok{border:1px solid #c0a0ff88;background:linear-gradient(145deg,#4a2a8a44,#1a103a44)}.aqSec .q{font-size:24px}.aqSec b{display:block;font-size:12.5px;color:#fff3d8}.aqSec small{font-size:10.5px;color:#b8ae98}
+#tAqBtn{position:relative;display:flex;align-items:center;gap:10px;width:100%;margin:0 0 10px;padding:10px 12px;border-radius:16px;border:1px solid #ffd86a;background:radial-gradient(120% 140% at 0% 0%,#5a3a08,#241808 60%,#14100a);color:#ffe8a0;text-align:left;font-family:inherit;cursor:pointer;box-shadow:0 4px 16px #e8b83a33;overflow:hidden}
+#tAqBtn:after{content:'';position:absolute;top:0;bottom:0;width:30%;left:-40%;background:linear-gradient(100deg,transparent,#ffe8a033,transparent);animation:mwShine 3.6s ease-in-out infinite}
+#tAqBtn b{font-size:14.5px;display:block}#tAqBtn small{font-size:11.5px;opacity:.85;display:block}#tAqBtn .i{font-size:22px;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#ffd86a,#c98a10);flex:0 0 38px}
+#tAqBtn .go{margin-left:auto;font-weight:900;font-size:12px;padding:5px 9px;border-radius:10px;background:#ffd86a;color:#2a1a00;flex:0 0 auto}`;document.head.appendChild(css);
+let TAB='d';
+const cd=ms=>{ms=Math.max(0,ms);const h=Math.floor(ms/3600e3),m=Math.floor(ms%3600e3/60e3);return h>=24?`${Math.floor(h/24)} วัน ${h%24} ชม.`:h?`${h} ชม. ${m} นาที`:`${m} นาที`};
+const msToMid=()=>{const t=TH(Date.now());return 864e5-(t.getUTCHours()*3600e3+t.getUTCMinutes()*60e3+t.getUTCSeconds()*1e3)};
+function qRow(k,q,i,P){const D=defOf(k,q.id);if(!D)return'';const pc=Math.min(100,(q.v||0)/D.n*100);
+ return`<div class="aqQ ${q.ok?'ok':''}"><span class="i">${q.ok?'✓':D.ic}</span><div class="m"><b>${qT(D)}</b><small>${q.ok?(q.sy?'สำเร็จแล้ว':'⏳ กำลังส่งรับรางวัล'):`${fmt(q.v||0)} / ${fmt(D.n)}${D.u?' '+D.u:''}`}</small><div class="aqBar"><i style="width:${pc}%"></i></div></div><span class="aqPill">☯️ +${k==='d'?D.k:WK_K}</span>${!q.ok&&!P.rr?`<button class="aqRr" title="เปลี่ยนข้อนี้" onclick="aqReroll('${k}',${i})">🔄</button>`:''}</div>`}
+const head=()=>{const d=roll(st()),m=MO(),bp=(d.bp&&d.bp.m===m)?d.bp.v:0,dn=d.d.q.filter(q=>q.ok).length,wn=d.w.q.filter(q=>q.ok).length;
+ return`<div class="aqHead"><span class="lg">📜</span><div><h3>ภารกิจ</h3><small>${HQS&&HQS.ok?(HQS.ph==='cd'?`⚡ ประกาศิตรอบนี้มีผู้พิชิตแล้ว`:`⚡ ประกาศิตฟ้า「${(HQ[HQS.q]||{}).n}」ยังรอผู้พิชิต`):'ทำภารกิจ รับตั๋ว รับกรอบ'}</small></div></div>
+ <div class="aqSum"><div><b>${dn}/3</b><span>📅 วันนี้</span></div><div><b>${wn}/3</b><span>🗓️ สัปดาห์นี้</span></div><div><b>${Math.min(30,Math.floor(bp/4))}/30</b><span>📖 ขั้นสมุด</span></div></div>`};
+const tabs=()=>`<div class="aqTabs">${[['d','📅 รายวัน'],['w','🗓️ สัปดาห์'],['b','📖 สมุด'],['hq','⚡ ประกาศิตฟ้า'],['wb','🐉 บอสโลก'],['sw','⚔️ ศึกสำนัก'],['l','🏆 ตำนาน'],['s','❓ ลับ']].map(([k,t])=>`<button class="${TAB===k?'on':''}" onclick="openAQ('${k}')">${t}</button>`).join('')}</div>`;
+window.openAQ=async function(tab){if(tab)TAB=tab;const d=roll(st());sv(d);let h='';
+ if(TAB==='d'||TAB==='w'){const P=d[TAB],all=P.q.every(q=>q.ok);
+  h=`<div class="aqNote">${TAB==='d'?`⏳ รีเซ็ตใน ${cd(msToMid())} · 🔄 เปลี่ยนข้อได้วันละ 1 ครั้ง`:'⏳ รีเซ็ตทุกวันจันทร์ · 🔄 เปลี่ยนข้อได้สัปดาห์ละ 1 ครั้ง'}</div>${P.q.map((q,i)=>qRow(TAB,q,i,P)).join('')}
+  <div class="aqRw"><div>${TAB==='d'?'ครบ 3 ข้อ: <b>🎫 ตั๋วธรรมดา 1 ใบ</b> + <b>พรภารกิจ</b> (ชีวิตหน้าเริ่มพร้อมเงินและปราณ) + แต้มสมุด':'ครบ 3 ข้อ: <b>🎟️ ตั๋วทอง 1 ใบ</b> · ทุกข้อได้แต้มสมุด 3'}${all?(P.al?'<br>✅ <b>รับแล้ว</b>':'<br>⏳ กำลังส่ง…'):''}</div></div>
+  ${TAB==='d'?`<div class="aqNote">🔄 โหมดแห่งวัน: <b style="color:#ffd86a">${mday()[1]}</b> · นับทั้งตอนกดเองและเล่นอัตโนมัติ</div>`:''}${on()?'':'<p class="aqNote">⚠️ ออฟไลน์อยู่ — ความคืบหน้าเก็บไว้ ส่งรับตั๋วเมื่อกลับมาออนไลน์</p>'}`}
+ else if(TAB==='b'){const m=MO(),bp=(d.bp&&d.bp.m===m)?d.bp.v:0,got=d.bk[m]||[],tier=Math.min(30,Math.floor(bp/4));const RW=t=>t===30?'🖼️+🎟️':t===20?'🎟️':t===10?'🎫×2':t%5===0?'☯️25':'☯️10';
+  h=`<div class="aqCard" style="display:flex;gap:12px;align-items:center"><div style="flex:0 0 auto">${frWrap('<span class="frph">📖</span>','f_aqb_'+m.replace('-',''))}</div><div style="flex:1;min-width:0"><b>📖 สมุดภารกิจ ${m.slice(5,7)}/${m.slice(0,4)}</b><div class="aqNote" style="margin:2px 0">ขั้น <b style="color:#ffd86a">${tier}</b>/30 · ${bp} แต้ม · ขั้นละ 4</div><div class="aqBar"><i style="width:${tier/30*100}%"></i></div><div class="aqNote">ภารกิจรายวัน 1 · ครบวัน +1 · รายสัปดาห์ 3</div></div></div>
+  <div class="aqBk">${Array.from({length:30},(_,i)=>{const t=i+1,g=got.includes(t),c=bp>=t*4&&!g;return`<button class="${g?'got':c?'can':''} ${t%10?'':'ms'}" ${c?`onclick="aqBk(${t})"`:'disabled'}><b>${t}</b>${g?'✅':RW(t)}</button>`}).join('')}</div>
+  <div class="aqRw"><div>ขั้น 10: <b>🎫 ตั๋วธรรมดา 2</b> · ขั้น 20: <b>🎟️ ตั๋วทอง 1</b> · ขั้น 30: <b>🎟️ ตั๋วทอง 1 + กรอบประจำเดือน</b> (หมดเดือนแล้วหาไม่ได้อีก) · ขั้นอื่น: กรรม 10–25</div></div>`}
+ else if(TAB==='l'){h=LG.map(g=>{const v=Math.min(g.n,g.v(d.L)),ok=d.lgg[g.id];return`<div class="aqQ ${ok?'ok':''}"><span class="i">${ok?'✓':g.ic}</span><div class="m"><b>${g.t}</b><small>${g.d} · <b style="display:inline;color:#ffd86a">${v}/${g.n}</b><br>🎁 ${[g.fr?'🖼️ '+((frOf(g.fr)||{}).n||''):'',g.k?'กรรม '+g.k:'',g.g?`🎟️ ตั๋วทอง ${g.g}`:''].filter(Boolean).join(' + ')}</small><div class="aqBar"><i style="width:${v/g.n*100}%"></i></div></div></div>`}).join('')}
+ else if(TAB==='s'){const n=SEC.filter(s=>d.sec[s.id]).length;h=`<div class="aqCard"><b>❓ ภารกิจลับ ${n}/${SEC.length}</b><div class="aqBar"><i style="width:${n/SEC.length*100}%"></i></div><div class="aqNote">ไม่มีใครบอกเงื่อนไข — เจอเองเมื่อทำบางอย่าง</div></div><div class="aqSecG">`+SEC.map(s=>d.sec[s.id]?`<div class="aqSec ok"><div class="q">🔓</div><b>${s.t}</b><small>${s.d}</small></div>`:`<div class="aqSec"><div class="q">🔒</div><b>? ? ?</b><small>ยังเป็นความลับของฟ้า</small></div>`).join('')+`</div><div class="aqRw"><div>ทุกข้อ: กรรม 30 + <b>🎫 ตั๋วธรรมดา 1</b> · ครบ ${SEC.length} ข้อ: <b>กรอบผู้รู้ความลับฟ้า</b></div></div>`}
+ else if(TAB==='hq'){modal(`<div class="aqWrap"><button class="xbtn" onclick="closeM()">✕</button>${head()}${tabs()}<div class="aqCard tag2" style="text-align:center">✨ กำลังเปิดฟ้า…</div></div>`,'aq');await hqLoad();if($('modal').dataset.k!=='aq'||TAB!=='hq')return;h=hqHtml()}
+ else if(TAB==='wb'){modal(`<div class="aqWrap"><button class="xbtn" onclick="closeM()">✕</button>${head()}${tabs()}<div class="aqCard tag2" style="text-align:center">✨ กำลังเปิดฟ้า…</div></div>`,'aq');await wbLoad();if($('modal').dataset.k!=='aq'||TAB!=='wb')return;h=wbHtml()}
+ else if(TAB==='sw'){modal(`<div class="aqWrap"><button class="xbtn" onclick="closeM()">✕</button>${head()}${tabs()}<div class="aqCard tag2" style="text-align:center">✨ กำลังเปิดฟ้า…</div></div>`,'aq');try{SW=await api('sw')}catch(e){SW=null}if($('modal').dataset.k!=='aq'||TAB!=='sw')return;h=swHtml()}
+ modal(`<div class="aqWrap"><button class="xbtn" onclick="closeM()">✕</button>${head()}${tabs()}${h}</div>`,'aq');try{const o=$('modal').querySelector('.aqTabs .on');if(o)o.parentNode.scrollLeft=o.offsetLeft-60}catch(e){}try{islChipOff('aqc')}catch(e){}};
+window.aqReroll=function(k,i){const d=roll(st()),P=d[k];if(P.rr||!P.q[i]||P.q[i].ok)return;const nw=pick(k==='d'?DQ:WQ,1,'r'+P.p+Date.now(),P.q.map(q=>q.id).concat(P.q.map(q=>(defOf(k,q.id)||{}).x).filter(Boolean)))[0];if(!nw)return;P.q[i]={id:nw.id,v:0};P.rr=1;sv(d);openAQ()};
+window.aqBk=async function(t){if(!on())return toast('ต้องออนไลน์');try{const j=await api('aq',{o:'bk',t});const d=st(),m=MO();if(j&&(j.ok||j.dup)){d.bk[m]=d.bk[m]||[];if(!d.bk[m].includes(t))d.bk[m].push(t);sv(d)}
+ if(j&&j.ok){const r=[];if(t===30){if(frGive('f_aqb_'+m.replace('-','')))r.push('🖼️ กรอบประจำเดือน')}if(t%5===0&&t%10)kAdd(25),r.push('☯️ กรรม 25');else if(t%10)kAdd(10),r.push('☯️ กรรม 10');if(j.f||j.g)r.push(tkTx(j.f,j.g));toast('📖 ขั้น '+t+': '+r.join(' + '))}else if(j&&j.err==='notyet')toast('แต้มยังไม่ถึง')}catch(e){toast('รับไม่สำเร็จ')}openAQ('b');dot()};
+function hqHtml(){const H=HQS;if(!H||!H.ok)return'<p class="tag2">โหลดประกาศิตฟ้าไม่ได้ (ต้องออนไลน์)</p>';const Q=HQ[H.q]||HQ[0],now=Date.now(),off=(H.now||now)-now;
+ const hints=Q.h.map((x,i)=>i<=H.stg||H.ph==='cd'?`<div class="hh">${i===2?'📜 <b>เงื่อนไขเต็ม:</b> ':'🔍 '}${x}</div>`:`<div class="hh lk">🔒 คำใบ้ถัดไปเปิดใน ${cd(H.t0+(i)*12*3600e3-(now+off))}</div>`).join('');
+ const S0=hqS();let me='';if(H.my==='p')me='⏳ คุณส่งผลแล้ว — รอฟ้าตรวจสอบ';else if(H.my==='ok')me='✅ ผ่านแล้ว — รางวัลเข้าแล้ว';else if(H.my==='no')me='❌ ฟ้าไม่รับผลนี้';
+ const st2=H.ph==='cd'?`⚡ <b>${esc(H.wn)}</b> พิชิตแล้ว · ประกาศิตใหม่ใน <b>${cd(H.nx-(now+off))}</b><br><span style="opacity:.8">ยังส่งผลชิงรางวัลรองได้ (ลำดับ 2–6)</span>`:H.ph==='chk'?`⏳ <b>${esc(H.wn)}</b> อ้างว่าพิชิตแล้ว — รอฟ้าตรวจสอบ (ถ้าไม่ผ่าน ยังแย่งได้)`:`🔥 ยังไม่มีใครพิชิต · หมดเวลาใน ${cd(H.nx-(now+off))}`;
+ return`<div class="aqHq"><div class="tp">⚡ ประกาศิตฟ้า ครั้งที่ ${H.r} · ทั้งเว็บมีผู้พิชิตได้แค่คนเดียว</div><div class="hn">「${Q.n}」</div>${hints}
+  ${H.q===0?`<div class="hh">🎮 เกมที่ฟ้าเลือก: <b>${gName(H.g)}</b> · ${Q.pr()}</div><button class="pbtn" style="width:100%" onclick="hqPlay()">🎮 ลองเลย</button>`:`<div class="hh">📊 ${Q.pr()}${H.q!==0?'<br><span style="opacity:.7">ต้องเป็นชีวิตที่เริ่มหลังประกาศิตนี้ปรากฏ</span>':''}</div>`}
+  <div class="hh">${st2}</div>${me?`<div class="hh"><b>${me}</b></div>`:''}${H.cool?'<div class="hh" style="opacity:.8">คุณเพิ่งพิชิตรอบก่อน — รอบนี้ชิงได้เฉพาะรางวัลรอง</div>':''}</div>
+ <div class="aqRw"><div>🏆 ผู้พิชิต: <b>🎟️ ตั๋วทอง 3 ใบ</b> + กรอบผู้พิชิตประกาศิตฟ้า · ลำดับ 2–6: 🎫 ตั๋วธรรมดา 2 ใบ + กรอบผู้ตามรอยฟ้า<br>ผลจะถูกตรวจก่อนจ่าย (ไม่เกิน 24 ชม.) · ผู้ชนะต้องเว้น 2 รอบถึงชิงรางวัลใหญ่ได้อีก</div></div>
+ ${(H.cl||[]).length?`<div class="aqCard"><b>👥 ผู้ส่งผลรอบนี้</b>${H.cl.map((c,i)=>`<div class="aqRk"><span>${c.st==='ok'?(H.ph==='cd'&&c.n===H.wn?'⚡':'🌩️'):'⏳'}</span><span>${esc(c.n)}</span><span>${c.st==='ok'?'ผ่าน':'รอตรวจ'}</span></div>`).join('')}</div>`:''}
+ <div class="aqCard"><b>🏛️ หอเกียรติยศ</b>${(H.hof||[]).length?(H.hof||[]).slice(0,12).map(x=>`<div class="aqRk"><span>#${x.r}</span><span>「${(HQ[x.q]||{}).n||'?'}」</span><span>${x.x?'<i style="opacity:.6">ไม่มีใครพิชิต</i>':'⚡ '+esc(x.n)}</span></div>`).join(''):'<div class="aqNote">ยังไม่มีผู้พิชิต — เป็นคนแรกที่ชื่อถูกจารึกสิ</div>'}</div>
+ ${H.adm?`<div class="item" style="border:1px dashed #c55"><b>🛡️ แอดมิน: ตรวจผล</b>${H.adm.map(c=>`<div class="tag2" style="margin:4px 0">${c.st==='p'?'⏳':c.st==='ok'?'✅':'❌'} <b>${esc(c.n)}</b> · ${new Date(c.t).toLocaleString('th-TH')}<br><code style="font-size:10px;word-break:break-all">${esc(c.pf||'')}</code>${c.st==='p'?`<br><button class="sysb" onclick="hqJudge('${c.u}',1)">✅ ผ่าน</button> <button class="sysb" onclick="hqJudge('${c.u}',0)">❌ ไม่ผ่าน</button>`:''}</div>`).join('')||'<div class="tag2">ยังไม่มีคนส่ง</div>'}<button class="sysb" style="margin-top:6px" onclick="if(confirm('ข้ามไปประกาศิตใหม่?'))hqSkip()">⏭️ เปลี่ยนประกาศิตใหม่</button></div>`:''}`}
+window.hqJudge=async(u,ok)=>{try{await api('hq',{o:'judge',u,ok,key:admK()});toast(ok?'ผ่านแล้ว':'ไม่ผ่าน')}catch(e){toast('ไม่สำเร็จ')}openAQ('hq')};
+window.hqSkip=async()=>{try{await api('hq',{o:'skip',key:admK()})}catch(e){}openAQ('hq')};
+window.hqPlay=function(){if(!HQS||HQS.q!==0)return;if(live()&&choice._cur)return toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');const r=HQS.r,g=HQS.g;
+ const okp=window.mg2Play(g,{daily:1,ez:.85},(sc,skip)=>{const s=hqS();if(s.r!==r)return;if(!skip&&sc>=.9){s.n++;s.b=Math.max(s.b,s.n)}else s.n=0;LS.set('murim_hqs',s);
+  toast(!skip&&sc>=.9?`⚡ สมบูรณ์แบบ! ติดกัน ${s.n}/8`:`ขาดช่วง — เริ่มนับใหม่ (ดีที่สุด ${s.b})`);
+  if(s.n>=8&&on()&&LS.get('murim_hqc',0)!==r){LS.set('murim_hqc',r);api('hq',{o:'claim',r,n:nm(),pf:{q:0,st:s.n,b:s.b}}).then(j=>{if(j&&j.ok){pop('⚡','คุณพิชิตประกาศิตฟ้า!','ส่งผลให้ฟ้าตรวจสอบแล้ว',1);try{sfx('rare')}catch(e){}}else LS.set('murim_hqc',0)}).catch(()=>LS.set('murim_hqc',0)).then(()=>setTimeout(()=>openAQ('hq'),600))}
+  else setTimeout(()=>openAQ('hq'),700)});if(okp===false)toast('เปิดเกมไม่ได้')};
+function wbHtml(){const W=WB;if(!W||!W.ok)return'<p class="tag2">โหลดบอสโลกไม่ได้ (ต้องออนไลน์)</p>';const now=Date.now(),off=(W.now||now)-now,pc=W.mx?W.hp/W.mx*100:0;
+ const stx=W.ph==='on'?`⏳ หนีไปใน ${cd(W.t0+4*864e5-(now+off))}`:W.ph==='dead'?`💀 ล้มแล้ว${W.kn?` — ดาบสุดท้ายโดย <b>${esc(W.kn)}</b>`:''} · ตัวใหม่ใน ${cd(W.dt+2*864e5-(now+off))}`:`💨 หนีไปแล้ว · ตัวใหม่ใน ${cd(W.dt+2*864e5-(now+off))}`;
+ return`<div class="aqWb"><div style="font-size:11px;color:#ffc0a0">🐉 บอสโลก ตัวที่ ${W.r} · ทั้งเว็บช่วยกันตี</div><div class="bi" style="${W.ph==='on'?'':'filter:grayscale(1);animation:none;opacity:.6'}">${W.ic}</div><div class="bn">${esc(W.n)}</div><div class="aqHp"><i style="width:${pc}%"></i></div><div style="display:flex;justify-content:space-between;font-size:12px"><span>❤️ ${fmt(W.hp)} / ${fmt(W.mx)}</span><span>👥 ${W.np} คน</span></div><div style="font-size:12px;margin-top:4px;color:#ffd0b0">${stx}</div>
+  ${W.ph==='on'?`<button class="pbtn" style="width:100%;margin-top:8px" ${W.hits>=3?'disabled':''} onclick="wbHit()">⚔️ โจมตี! <small style="font-weight:700;opacity:.8">เหลือวันนี้ ${Math.max(0,3-W.hits)}/3</small></button>`:''}</div>
+ <div class="aqRw"><div>บอสล้ม: ทุกคนที่ร่วมตี <b>🎫 ตั๋วธรรมดา 1</b> · 3 อันดับแรก <b>+🎟️ ตั๋วทอง 1</b> + กรอบนักล่า · ดาบสุดท้าย: กรอบผู้ปลิดชีพ<br>ยิ่งเล่นมินิเกมแม่น ยิ่งแรง (300–2,000) · ถ้าไม่ล้มใน 4 วัน บอสหนี</div></div>
+ ${W.my?`<div class="aqCard">⚔️ ความเสียหายของคุณ <b style="color:#ffd86a">${fmt(W.my)}</b>${W.cl?' · ✅ รับรางวัลแล้ว':''}</div>`:''}
+ <div class="aqCard"><b>🏆 อันดับความเสียหาย</b>${(W.top||[]).map((x,i)=>`<div class="aqRk ${x.me?'me':''}"><span>${['🥇','🥈','🥉'][i]||'#'+(i+1)}</span><span>${esc(x.n)}${x.me?' (คุณ)':''}</span><span>${fmt(x.d)}</span></div>`).join('')||'<div class="aqNote">ยังไม่มีใครตี — เปิดฉากเป็นคนแรก</div>'}</div>`}
+const WB_G=['strike','darts','drum','pounce'];
+window.wbHit=function(){if(!WB||WB.ph!=='on')return;if(live()&&choice._cur)return toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');const g=WB_G[Math.floor(Math.random()*WB_G.length)];
+ const okp=window.mg2Play(g,{daily:1},async(sc,skip)=>{try{const j=await api('wb',{o:'hit',s:skip?0:sc,n:nm()});if(j&&j.ok){ev('wb');legend(L=>{L.wbh=(L.wbh||0)+1});pop('🐉',j.kill?'ปลิดชีพบอสโลก!':'โจมตีบอสโลก',`ความเสียหาย ${fmt(j.dmg)}${j.kill?' — ดาบสุดท้ายของคุณ!':''}`,!!j.kill);if(j.kill)setTimeout(frSync,800)}else toast(j&&j.err==='day'?'วันนี้ตีครบ 3 ครั้งแล้ว':j&&j.err==='fast'?'รอสักครู่ก่อนตีอีกครั้ง':j&&j.err==='dead'?'บอสล้มไปแล้ว':'ตีไม่สำเร็จ')}catch(e){toast('ตีไม่สำเร็จ (ต้องออนไลน์)')}setTimeout(()=>openAQ('wb'),500)});if(okp===false)toast('เปิดเกมไม่ได้')};
+function swHtml(){const J=SW;if(!J||!J.ok)return'<p class="tag2">โหลดศึกสำนักไม่ได้ (ต้องออนไลน์)</p>';const best=Math.max(1,...J.s.map(x=>x.sc));
+ const rk=J.s.map((x,i)=>i).sort((a,b)=>J.s[b].sc-J.s[a].sc);const rows=J.s.map((x,i)=>`<div class="aqSect ${J.my===i?'me':''}" style="--c:${SECT[i][2]}"><span class="i">${SECT[i][0]}</span><div class="m" style="flex:1;min-width:0"><b style="color:#fff">${['👑 ','',''][rk.indexOf(i)]&&x.sc?'👑 ':''}${SECT[i][1]}${J.my===i?' · สำนักของคุณ':''}</b><small style="color:#d0c8b8">คะแนน <b style="display:inline;color:${SECT[i][2]}">${fmt(x.sc)}</b> · สมาชิก ${x.m} · ลงมือ ${x.a}</small><div class="aqBar"><i style="width:${x.sc/best*100}%"></i></div></div>${J.my<0?`<button class="pbtn" style="padding:6px 10px" onclick="swJoin(${i})">เข้าร่วม</button>`:''}</div>`).join('');
+ const last=J.w0>=0?`<div class="aqCard"><b>เดือนก่อน (${J.m0})</b><div class="tag2">ผู้ชนะ: ${SECT[J.w0][0]} <b>${SECT[J.w0][1]}</b></div>${J.my0>=0?(J.cl0?'<div class="tag2">✅ รับรางวัลแล้ว</div>':`<button class="pbtn" style="width:100%;margin-top:5px" onclick="swClaim()">🎁 รับรางวัลศึกสำนัก</button>`):''}</div>`:'';
+ const end=TH(Date.now());const eom=Date.UTC(end.getUTCFullYear(),end.getUTCMonth()+1,1)-7*3600e3;
+ return`<p class="aqNote">เลือกสำนักได้เดือนละครั้ง · ทุกภารกิจที่ทำ + การตีบอสโลก = แต้มให้สำนัก · คะแนน = แต้มเฉลี่ยต่อคนที่ลงมือจริง (สำนักเล็กก็ชนะได้) · จบเดือนใน ${cd(eom-Date.now())}</p>${rows}
+ ${J.my>=0?`<div class="aqCard">⚔️ แต้มที่คุณทำให้สำนัก <b>${fmt(J.myp)}</b> ${J.myp<8?'<span class="tag2">(ต้องถึง 8 ถึงรับรางวัลได้)</span>':''}</div>`:''}
+ <div class="aqRw"><div>สำนักที่ชนะ: <b>🎟️ ตั๋วทอง 1</b> + กรอบสำนักผู้ชนะ · สำนักอื่น: <b>🎫 ตั๋วธรรมดา 1</b> (ต้องทำแต้ม 8+)</div></div>${last}`}
+window.swJoin=async i=>{if(!confirm(`เข้าร่วม ${SECT[i][1]}? เปลี่ยนไม่ได้จนจบเดือน`))return;try{await api('sw',{o:'join',s:i});toast('เข้าร่วม '+SECT[i][1]+' แล้ว')}catch(e){toast('ไม่สำเร็จ')}openAQ('sw')};
+window.swClaim=async()=>{try{const j=await api('sw',{o:'claim'});if(j&&j.ok){if(j.win)frGive('f_sw'+j.w);pop(SECT[j.s][0],j.win?'สำนักของคุณชนะ!':'ศึกสำนักจบแล้ว',tkTx(j.win?0:1,j.win?1:0)+(j.win?' + กรอบสำนักผู้ชนะ':''),1)}else toast(j&&j.err==='few'?'แต้มที่ทำให้สำนักไม่ถึง 8':'รับแล้วหรือไม่มีสิทธิ์')}catch(e){toast('ไม่สำเร็จ')}openAQ('sw')};
+// ---------- ทางเข้า: เมนู · หน้าแรก ----------
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.aqB'))g.insertAdjacentHTML('afterbegin','<button class="opt aqB" style="position:relative" onclick="closeM();openAQ()">📜 ภารกิจ<small>รายวัน · ประกาศิตฟ้า · บอสโลก</small><i class="aqDot" style="display:none"></i></button>');dot()}catch(e){}return r}}
+function tBtn(){try{const t=$('title'),s=$('tStartIn');if(!t||!s||!t.offsetParent)return;let b=$('tAqBtn');if(!b){b=document.createElement('button');b.id='tAqBtn';b.type='button';b.onclick=()=>openAQ();b.innerHTML='<span class="i">📜</span><span><b>ภารกิจ · ประกาศิตฟ้า · บอสโลก</b><small id="tAqSub">ทำภารกิจรายวันรับตั๋ว · ทั้งเว็บชิงประกาศิตได้คนเดียว</small></span><span class="go">เปิด ›</span><i class="aqDot" style="display:none"></i>'}
+ const anchor=$('tMwCard')||s;if(b.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',b);
+ const sub=$('tAqSub');if(sub&&HQS&&HQS.ok){const tx=HQS.ph==='cd'?`⚡ ${HQS.wn} พิชิตประกาศิตแล้ว · ${WB&&WB.ph==='on'?'🐉 บอสโลกรออยู่':'ทำภารกิจรายวันรับตั๋ว'}`:HQS.ph==='chk'?`⚡ มีคนอ้างว่าพิชิตแล้ว รอตรวจ!`:`⚡ ประกาศิตฟ้า「${(HQ[HQS.q]||{}).n}」ยังไม่มีใครพิชิต`;if(sub.textContent!==tx)sub.textContent=tx}}catch(e){}}
+setInterval(tBtn,1500);setTimeout(tBtn,400);
+// ---------- เริ่มต้น / รอบซิงก์ ----------
+setTimeout(async()=>{await frSync();await hqLoad();await wbLoad();sync();dot();tBtn()},5000);
+setInterval(()=>{try{if(document.hidden)return;sync();if(Date.now()-hqT>30*60e3&&on())hqLoad()}catch(e){}},90000);
+setInterval(dot,6000);
+})()}catch(e){console.error('block65',e)}

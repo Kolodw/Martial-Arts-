@@ -1204,13 +1204,13 @@ module.exports = async (req, res) => {
         if (meta.b !== 'บอท' && +nid <= 600) await pipe([['ZADD', 'online', now, id], ['HSET', 'om', id, JSON.stringify(meta)], ...(act ? [['HSET', 'oa', id, JSON.stringify(act)]] : [])]);
         } catch (e) { if (/OOM/i.test(String(e && e.message))) { OOM_AT = Date.now() } else throw e }
       }
-      const [, n, lives, annV, cl0] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 1500e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann'], ['LINDEX', 'chat', 0]]);
+      const [, n, lives, annV, cl0, gq0] = await pipe([['ZREMRANGEBYSCORE', 'online', 0, now - 1500e3], ['ZCARD', 'online'], ['GET', 'lives'], ['GET', 'ann'], ['LINDEX', 'chat', 0], ['GET', 'gq:pub']]);
       let cl = null; try { const m = jp(cl0); if (m && m.i) cl = { i: m.i, t: m.t, n: String(m.n || '').slice(0, 20), x: String(m.x || '').slice(0, 90) } } catch {}
       let tg = null; if (okId(id)) { try { const tq = await cmd('LRANGE', 'tagq:' + id, 0, 9); if (tq && tq.length) { await cmd('DEL', 'tagq:' + id); tg = tq.map(jp).filter(Boolean) } } catch (e) {} }
       let ann = null; try { ann = annV ? JSON.parse(annV) : null } catch {}
       ann = await annPoll(ann, id);
       await Promise.race([Promise.all([autoMig(), autoCs()]), new Promise(r => setTimeout(r, 2500))]);
-      return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7), ann, ...(tg ? { tg } : {}), ...(cl ? { cl } : {}) });
+      return res.json({ n: n || 0, lives: +(lives || 0), bd: String(process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7), ann, ...(tg ? { tg } : {}), ...(cl ? { cl } : {}), ...(gq0 ? { gq: jp(gq0) } : {}) });
     }
     if (a === 'who' || a === 'admin' || a === 'bugfix') {
       const AK = ADM_KEY;
@@ -1780,6 +1780,156 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const modes = new Set(); Object.values(out).forEach(o => Object.keys(o).forEach(k => modes.add(k.split(':')[0])));
       const U = {}; for (const m of modes) { U[m] = +(await cmd('PFCOUNT', ...D.map(d => 'msu:' + d + ':' + m))) || 0 }
       return res.json({ ok: 1, days: D, data: out, users: U });
+    }
+    // ============================================================
+    // 📜 ภารกิจบัญชี (รายวัน/รายสัปดาห์/สมุดรายเดือน/ตำนาน/ลับ) · ⚡ ประกาศิตฟ้า (คนเดียวทั้งเว็บ) · 🐉 บอสโลก · ⚔️ ศึกสำนัก
+    // ความคืบหน้าทำในเครื่อง แต่ "ของที่มีค่า" (ตั๋ว) จ่ายที่นี่ และมีเพดานต่อวัน/สัปดาห์/เดือน → โกงได้ไม่เกินที่คนเล่นจริงได้
+    // ============================================================
+    if (a === 'aq' || a === 'hq' || a === 'wb' || a === 'sw') {
+      const o = String(b.o || qOf(req).o || 'get'), adm = isAdmKey(b.key || qOf(req).key);
+      const DAY = new Date(now + 7 * 3600e3).toISOString().slice(0, 10), MON = DAY.slice(0, 7);
+      const MON0 = (() => { const t = new Date(now + 7 * 3600e3); return new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth() - 1, 15)).toISOString().slice(0, 7) })();
+      const nm = clean(String(b.n || ''), 24) || 'ไร้นาม';
+      const give = async (u, f, g) => { const P = []; if (f) P.push(['INCRBY', 'rrf:' + u, f], ['EXPIRE', 'rrf:' + u, 86400 * 180]); if (g) P.push(['INCRBY', 'rrg:' + u, g], ['EXPIRE', 'rrg:' + u, 86400 * 365]); if (P.length) await pipe(P) };
+      const gfr = async (u, fr) => { await pipe([['SADD', 'gfr:' + u, fr], ['EXPIRE', 'gfr:' + u, 86400 * 400]]) };
+      const rl = async (k, n, ex) => { const c = +(await cmd('INCR', k)) || 1; if (c === 1) await cmd('EXPIRE', k, ex); return c <= n };
+      const swAdd = async (u, p) => { try { const s = await cmd('HGET', 'swm:' + MON, u); if (s == null) return; const f = await cmd('HSETNX', 'swq:' + MON, u, 1); await pipe([['HINCRBY', 'sw:' + MON, 'p' + s, p], ['HINCRBY', 'swu:' + MON, u, p], ...(+f === 1 ? [['HINCRBY', 'sw:' + MON, 'a' + s, 1]] : []), ['EXPIRE', 'sw:' + MON, 86400 * 75], ['EXPIRE', 'swu:' + MON, 86400 * 75], ['EXPIRE', 'swq:' + MON, 86400 * 75]]) } catch (e) {} };
+      // ---------- ⚡ ประกาศิตฟ้า ----------
+      const HQN = 6, HQ_CD = 3 * 86400e3, HQ_EXP = 7 * 86400e3, HQ_AUTO = 24 * 3600e3, HQ_MG = ['darts', 'drum', 'strike', 'moon', 'stars', 'pounce', 'heart', 'typing'];
+      const pub = async () => { try { const [h, w] = await pipe([['GET', 'hq:s'], ['GET', 'wb:s']]); const H = jp(h), Wb = jp(w), hp = +(await cmd('GET', 'wb:hp')) || 0;
+        await cmd('SET', 'gq:pub', JSON.stringify({ hq: H ? { r: H.r, ph: H.ph, wn: H.wn || '', nx: H.ph === 'cd' ? H.wt + HQ_CD : 0 } : null, wb: Wb ? { r: Wb.r, ph: Wb.ph, n: Wb.n, pc: Wb.mx ? Math.max(0, Math.round(hp / Wb.mx * 100)) : 0 } : null }), 'EX', 86400 * 10) } catch (e) {} };
+      const hqNew = async (S0) => { const r = (S0 ? S0.r : 0) + 1; let q = Math.floor(Math.random() * HQN); if (S0 && q === S0.q) q = (q + 1) % HQN; const S1 = { r, q, g: HQ_MG[Math.floor(Math.random() * HQ_MG.length)], t0: now, ph: 'on' }; await cmd('SET', 'hq:s', JSON.stringify(S1)); if (S0 && S0.ph === 'on') await pipe([['LPUSH', 'hq:hof', JSON.stringify({ r: S0.r, q: S0.q, n: '', t: now, x: 1 })], ['LTRIM', 'hq:hof', 0, 49]]); await pub(); return S1 };
+      const hqWin = async (H, c) => { H.ph = 'cd'; H.wt = now; H.wn = c.n; H.wu = c.u; await give(c.u, 0, 3); await gfr(c.u, 'f_hq1'); await pipe([['SET', 'hq:s', JSON.stringify(H)], ['LPUSH', 'hq:hof', JSON.stringify({ r: H.r, q: H.q, g: H.g, n: c.n, t: now })], ['LTRIM', 'hq:hof', 0, 49], ['LPUSH', 'hq:rw', c.u], ['LTRIM', 'hq:rw', 0, 1]]); await pub() };
+      const hqTick = async () => {
+        let H = jp(await cmd('GET', 'hq:s'));
+        if (!H) return await hqNew(null);
+        if (H.ph === 'cd' && now > H.wt + HQ_CD) return await hqNew(H);
+        const CL = ((await cmd('LRANGE', 'hq:c:' + H.r, 0, 19)) || []).map(jp).filter(Boolean);
+        // ตรวจอัตโนมัติ: แอดมินไม่ได้ตัดสินใน 24 ชม. → ผ่าน (ตามลำดับเวลาที่ส่ง)
+        const rw = (await cmd('LRANGE', 'hq:rw', 0, 1)) || [];
+        for (const c of CL) { if (c.st !== 'p' || now - c.t <= HQ_AUTO) continue; if (H.ph !== 'cd' && rw.includes(c.u)) continue; await hqJudge(H, c.u, 1); H = jp(await cmd('GET', 'hq:s')) }
+        if (H.ph === 'on' && !CL.some(c => c.st === 'p') && now > H.t0 + HQ_EXP) return await hqNew(H);
+        return H };
+      async function hqJudge(H, u, ok) {
+        const k = 'hq:c:' + H.r, L = (await cmd('LRANGE', k, 0, 19)) || []; const i = L.findIndex(x => (jp(x) || {}).u === u); if (i < 0) return 'none';
+        const c = jp(L[i]); if (c.st !== 'p') return 'done'; c.st = ok ? 'ok' : 'no'; await cmd('LSET', k, i, JSON.stringify(c));
+        if (!ok) { const rw0 = (await cmd('LRANGE', 'hq:rw', 0, 1)) || [], rest = L.map(jp).filter(x => x && x.st === 'p' && x.u !== u && !rw0.includes(x.u)); if (H.ph === 'chk') { if (rest.length) H.wn = rest[0].n; else { H.ph = 'on'; H.wn = '' } await cmd('SET', 'hq:s', JSON.stringify(H)); await pub() } return 'no' }
+        const rw = (await cmd('LRANGE', 'hq:rw', 0, 1)) || [];
+        if (H.ph !== 'cd' && !rw.includes(u)) { await hqWin(H, c); return 'win' }
+        const nOk = L.map(jp).filter(x => x && x.st === 'ok').length; if (nOk <= 5) { await give(u, 2, 0); await gfr(u, 'f_hq2') } return 'run' }
+      // ---------- 🐉 บอสโลก ----------
+      const WBN = [['🐉', 'มังกรเพลิงเก้าหาง'], ['🦂', 'ราชาแมงป่องทะเลทราย'], ['👹', 'อสูรร้อยตา'], ['🐢', 'เต่ายักษ์แบกภูเขา'], ['🦅', 'พญาอินทรีย์สายฟ้า'], ['🕷️', 'แม่นางแมงมุมเงา'], ['🐍', 'งูขาวพันปี'], ['🦍', 'วานรหินผา']];
+      const wbTick = async () => {
+        let W0 = jp(await cmd('GET', 'wb:s'));
+        const spawn = async () => { const r = (W0 ? W0.r : 0) + 1, pc = W0 ? (+(await cmd('ZCARD', 'wb:d:' + W0.r)) || 0) : 0, mx = Math.max(30000, Math.min(500000, Math.round(pc * 2600))), z = WBN[(r - 1) % WBN.length];
+          const W1 = { r, ic: z[0], n: z[1], mx, t0: now, ph: 'on' }; await pipe([['SET', 'wb:s', JSON.stringify(W1)], ['SET', 'wb:hp', mx]]); W0 = W1; await pub(); return W1 };
+        if (!W0) return await spawn();
+        if ((W0.ph === 'dead' || W0.ph === 'gone') && now > W0.dt + 2 * 86400e3) return await spawn();
+        if (W0.ph === 'on' && now > W0.t0 + 4 * 86400e3) { W0.ph = 'gone'; W0.dt = now; await cmd('SET', 'wb:s', JSON.stringify(W0)); await pub() }
+        return W0 };
+      // ========== ภารกิจบัญชี ==========
+      if (a === 'aq') {
+        if (!okId(id)) return res.json({ err: 'id' });
+        if (o === 'get') { const [bp, dn, wn, da, wa, lg, sc, fr] = await pipe([['HGET', 'aqb:' + id, MON], ['GET', 'aqn:' + id + ':' + DAY], ['GET', 'aqn:' + id + ':' + W], ['GET', 'aqa:' + id + ':' + DAY], ['GET', 'aqa:' + id + ':' + W], ['HKEYS', 'aql:' + id], ['HKEYS', 'aqs:' + id], ['SMEMBERS', 'gfr:' + id]]);
+          const bt = (await cmd('SMEMBERS', 'aqbt:' + id + ':' + MON)) || [];
+          return res.json({ ok: 1, d: DAY, w: W, m: MON, bp: +bp || 0, dn: +dn || 0, wn: +wn || 0, da: da ? 1 : 0, wa: wa ? 1 : 0, bt, lg: lg || [], sc: sc || [], fr: fr || [] }) }
+        if (req.method !== 'POST') return res.status(400).json({ err: 'post' });
+        if (!(await rl('aqr:' + id, 40, 600))) return res.status(429).json({ err: 'rate' });
+        if (o === 'pt') { // ทำภารกิจ 1 ข้อสำเร็จ → แต้มสมุด (รายวันสูงสุด 3 ข้อ/วัน · รายสัปดาห์ 3 ข้อ/สัปดาห์)
+          const k = b.k === 'w' ? 'w' : 'd', p = k === 'w' ? W : DAY, q = String(b.q || '').replace(/[^a-z0-9_]/gi, '').slice(0, 16);
+          if (String(b.p || '') !== p || !q) return res.json({ err: 'period' });
+          if ((await cmd('SET', 'aqp:' + id + ':' + p + ':' + q, 1, 'NX', 'EX', 86400 * 9)) !== 'OK') return res.json({ ok: 0, dup: 1 });
+          const n = +(await cmd('INCR', 'aqn:' + id + ':' + p)) || 1; await cmd('EXPIRE', 'aqn:' + id + ':' + p, 86400 * 9);
+          if (n > 3) return res.json({ ok: 0, cap: 1 });
+          const pt = k === 'w' ? 3 : 1, bp = +(await cmd('HINCRBY', 'aqb:' + id, MON, pt)) || 0; await cmd('EXPIRE', 'aqb:' + id, 86400 * 70); await swAdd(id, pt);
+          return res.json({ ok: 1, n, bp }) }
+        if (o === 'all') { // ครบ 3 ข้อ: รายวัน → ตั๋วธรรมดา 1 + แต้มสมุด 1 · รายสัปดาห์ → ตั๋วทอง 1
+          const k = b.k === 'w' ? 'w' : 'd', p = k === 'w' ? W : DAY; if (String(b.p || '') !== p) return res.json({ err: 'period' });
+          if ((+(await cmd('GET', 'aqn:' + id + ':' + p)) || 0) < 3) return res.json({ ok: 0, err: 'notyet' });
+          if ((await cmd('SET', 'aqa:' + id + ':' + p, 1, 'NX', 'EX', 86400 * 9)) !== 'OK') return res.json({ ok: 0, dup: 1 });
+          if (k === 'd') { await give(id, 1, 0); await cmd('HINCRBY', 'aqb:' + id, MON, 1); await swAdd(id, 1) } else await give(id, 0, 1);
+          return res.json({ ok: 1, f: k === 'd' ? 1 : 0, g: k === 'w' ? 1 : 0 }) }
+        if (o === 'bk') { // สมุดภารกิจ: ขั้นละ 4 แต้ม · 30 ขั้น
+          const t = +b.t | 0, RW = { 10: [2, 0], 20: [0, 1], 30: [0, 1] }; if (t < 1 || t > 30) return res.json({ err: 'tier' });
+          const bp = +(await cmd('HGET', 'aqb:' + id, MON)) || 0; if (bp < t * 4) return res.json({ ok: 0, err: 'notyet', bp });
+          const add = await cmd('SADD', 'aqbt:' + id + ':' + MON, t); await cmd('EXPIRE', 'aqbt:' + id + ':' + MON, 86400 * 70); if (!+add) return res.json({ ok: 0, dup: 1 });
+          const r = RW[t] || [0, 0]; await give(id, r[0], r[1]); return res.json({ ok: 1, f: r[0], g: r[1] }) }
+        if (o === 'lg') { const L = { multi: 2, l10: 0, l50: 1, l100: 2, mgm: 1, seed: 1, boss: 1 }, l = String(b.l || ''); if (!(l in L)) return res.json({ err: 'arg' });
+          if (+(await cmd('HSETNX', 'aql:' + id, l, now)) !== 1) return res.json({ ok: 0, dup: 1 }); await give(id, 0, L[l]); return res.json({ ok: 1, g: L[l] }) }
+        if (o === 'sec') { const s = String(b.s || '').replace(/[^a-z0-9_]/gi, '').slice(0, 12); if (!s) return res.json({ err: 'arg' }); const n = +(await cmd('HLEN', 'aqs:' + id)) || 0; if (n >= 12) return res.json({ ok: 0 });
+          if (+(await cmd('HSETNX', 'aqs:' + id, s, now)) !== 1) return res.json({ ok: 0, dup: 1 }); await give(id, 1, 0); return res.json({ ok: 1, f: 1 }) }
+        return res.json({ err: 'op' });
+      }
+      // ========== ⚡ ประกาศิตฟ้า ==========
+      if (a === 'hq') {
+        const H = await hqTick();
+        if (o === 'get') { const [cl, hof, rw] = await pipe([['LRANGE', 'hq:c:' + H.r, 0, 19], ['LRANGE', 'hq:hof', 0, 19], ['LRANGE', 'hq:rw', 0, 1]]);
+          const CL = (cl || []).map(jp).filter(Boolean), mine = okId(id) ? CL.find(c => c.u === id) : null;
+          return res.json({ ok: 1, r: H.r, q: H.q, g: H.g, t0: H.t0, ph: H.ph, wn: H.wn || '', wt: H.wt || 0, nx: H.ph === 'cd' ? H.wt + HQ_CD : H.t0 + HQ_EXP, now, stg: Math.min(2, Math.floor((now - H.t0) / (12 * 3600e3))),
+            cl: CL.filter(c => c.st !== 'no').map(c => ({ n: c.n, st: c.st, t: c.t })).reverse(), my: mine ? mine.st : '', cool: okId(id) && rw.includes(id) ? 1 : 0, hof: (hof || []).map(jp).filter(Boolean),
+            ...(adm ? { adm: CL.map(c => ({ u: c.u, n: c.n, st: c.st, t: c.t, pf: c.pf })) } : {}) }) }
+        if (o === 'claim') {
+          if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
+          if (!(await rl('hqr:' + id, 6, 3600))) return res.status(429).json({ err: 'rate' });
+          if (+b.r !== H.r) return res.json({ err: 'round' });
+          const pf = b.pf && typeof b.pf === 'object' ? b.pf : {}; const ls = +pf.ls || 0;
+          if (H.q !== 0 && (ls && ls < H.t0 - 60e3)) return res.json({ err: 'old' }); // ชีวิตต้องเริ่มหลังประกาศิตออก
+          if (now - H.t0 < 3 * 60e3) return res.json({ err: 'fast' });
+          const L = ((await cmd('LRANGE', 'hq:c:' + H.r, 0, 19)) || []).map(jp).filter(Boolean);
+          if (L.some(c => c.u === id)) return res.json({ ok: 0, dup: 1 });
+          if (L.filter(c => c.st !== 'no').length >= 8) return res.json({ ok: 0, full: 1 });
+          const c = { u: id, n: nm, t: now, st: 'p', pf: JSON.stringify(pf).slice(0, 400) };
+          await pipe([['RPUSH', 'hq:c:' + H.r, JSON.stringify(c)], ['EXPIRE', 'hq:c:' + H.r, 86400 * 30]]);
+          if (H.ph === 'on' && !((await cmd('LRANGE', 'hq:rw', 0, 1)) || []).includes(id)) { H.ph = 'chk'; H.wn = nm; await cmd('SET', 'hq:s', JSON.stringify(H)); await pub() }
+          return res.json({ ok: 1, ph: H.ph }) }
+        if (o === 'judge') { if (!adm) return res.status(403).json({ err: 'admin' }); const r = await hqJudge(H, String(b.u || ''), +b.ok ? 1 : 0); return res.json({ ok: 1, r }) }
+        if (o === 'skip') { if (!adm) return res.status(403).json({ err: 'admin' }); const N = await hqNew(H); return res.json({ ok: 1, r: N.r }) }
+        return res.json({ err: 'op' });
+      }
+      // ========== 🐉 บอสโลก ==========
+      if (a === 'wb') {
+        const W0 = await wbTick(), hp = Math.max(0, +(await cmd('GET', 'wb:hp')) || 0);
+        if (o === 'get') { const [top, my, nn, cl] = await pipe([['ZREVRANGE', 'wb:d:' + W0.r, 0, 9, 'WITHSCORES'], ['ZSCORE', 'wb:d:' + W0.r, okId(id) ? id : '-'], ['ZCARD', 'wb:d:' + W0.r], ['GET', 'wbc:' + W0.r + ':' + (okId(id) ? id : '-')]]);
+          const ids = [], sc = []; for (let i = 0; i < (top || []).length; i += 2) { ids.push(top[i]); sc.push(+top[i + 1]) }
+          const nms = ids.length ? ((await cmd('HMGET', 'wb:n:' + W0.r, ...ids)) || []) : [];
+          const hits = okId(id) ? +(await cmd('GET', 'wbh:' + id + ':' + DAY)) || 0 : 0;
+          return res.json({ ok: 1, r: W0.r, ic: W0.ic, n: W0.n, mx: W0.mx, hp, ph: W0.ph, t0: W0.t0, dt: W0.dt || 0, now, kn: W0.kn || '', np: +nn || 0, my: +my || 0, hits, cl: cl ? 1 : 0, top: ids.map((x, i) => ({ n: nms[i] || '?', d: sc[i], me: x === id ? 1 : 0 })) }) }
+        if (o === 'hit') {
+          if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
+          if (W0.ph !== 'on' || hp <= 0) return res.json({ ok: 0, err: 'dead' });
+          if ((await cmd('SET', 'wbt:' + id, 1, 'NX', 'EX', 20)) !== 'OK') return res.json({ ok: 0, err: 'fast' });
+          const hk = 'wbh:' + id + ':' + DAY, hn = +(await cmd('INCR', hk)) || 1; if (hn === 1) await cmd('EXPIRE', hk, 172800); if (hn > 3) return res.json({ ok: 0, err: 'day' });
+          const s = Math.max(0, Math.min(1, +b.s || 0)), dmg = Math.round(300 + 1700 * s * s);
+          const [left] = await pipe([['DECRBY', 'wb:hp', dmg], ['ZINCRBY', 'wb:d:' + W0.r, dmg, id], ['HSET', 'wb:n:' + W0.r, id, nm], ['EXPIRE', 'wb:d:' + W0.r, 86400 * 20], ['EXPIRE', 'wb:n:' + W0.r, 86400 * 20]]);
+          await swAdd(id, 1);
+          let kill = 0; if (+left <= 0 && (await cmd('SET', 'wbk:' + W0.r, id, 'NX', 'EX', 86400 * 20)) === 'OK') { kill = 1; W0.ph = 'dead'; W0.dt = now; W0.kn = nm; W0.ku = id; await cmd('SET', 'wb:s', JSON.stringify(W0)); await gfr(id, 'f_wb1') }
+          await pub(); return res.json({ ok: 1, dmg, hp: Math.max(0, +left), kill, hits: hn }) }
+        if (o === 'claim') {
+          if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
+          const r = +b.r || W0.r; const Wr = r === W0.r ? W0 : null; if (!Wr || Wr.ph !== 'dead') return res.json({ ok: 0, err: 'alive' });
+          const my = +(await cmd('ZSCORE', 'wb:d:' + r, id)) || 0; if (!my) return res.json({ ok: 0, err: 'none' });
+          if ((await cmd('SET', 'wbc:' + r + ':' + id, 1, 'NX', 'EX', 86400 * 20)) !== 'OK') return res.json({ ok: 0, dup: 1 });
+          const rk = +(await cmd('ZREVRANK', 'wb:d:' + r, id)); const top = rk >= 0 && rk < 3; await give(id, 1, top ? 1 : 0); if (top) await gfr(id, 'f_wb2');
+          return res.json({ ok: 1, f: 1, g: top ? 1 : 0, rk: rk + 1 }) }
+        return res.json({ err: 'op' });
+      }
+      // ========== ⚔️ ศึกสำนัก (รายเดือน) ==========
+      if (a === 'sw') {
+        if (o === 'get') { const [sm, my, myp, sm0, my0, c0] = await pipe([['HGETALL', 'sw:' + MON], ['HGET', 'swm:' + MON, okId(id) ? id : '-'], ['HGET', 'swu:' + MON, okId(id) ? id : '-'], ['HGETALL', 'sw:' + MON0], ['HGET', 'swm:' + MON0, okId(id) ? id : '-'], ['GET', 'swc:' + MON0 + ':' + (okId(id) ? id : '-')]]);
+          const obj = v => { const o2 = {}; if (Array.isArray(v)) for (let i = 0; i + 1 < v.length; i += 2) o2[v[i]] = +v[i + 1] || 0; else if (v) Object.entries(v).forEach(([k, x]) => o2[k] = +x || 0); return o2 };
+          const sc = v => [0, 1, 2].map(s => ({ p: v['p' + s] || 0, a: v['a' + s] || 0, m: v['m' + s] || 0, sc: Math.round((v['p' + s] || 0) / Math.max(3, v['a' + s] || 0) * 10) }));
+          const L0 = sc(obj(sm0)); const best = L0.reduce((b2, x, i) => x.sc > L0[b2].sc ? i : b2, 0);
+          return res.json({ ok: 1, m: MON, now, s: sc(obj(sm)), my: my == null ? -1 : +my, myp: +myp || 0, m0: MON0, s0: L0, w0: L0[best].sc > 0 ? best : -1, my0: my0 == null ? -1 : +my0, cl0: c0 ? 1 : 0 }) }
+        if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
+        if (o === 'join') { const s = +b.s | 0; if (s < 0 || s > 2) return res.json({ err: 'arg' }); if (+(await cmd('HSETNX', 'swm:' + MON, id, s)) !== 1) return res.json({ ok: 0, dup: 1 });
+          await pipe([['HINCRBY', 'sw:' + MON, 'm' + s, 1], ['EXPIRE', 'swm:' + MON, 86400 * 75], ['EXPIRE', 'sw:' + MON, 86400 * 75]]); return res.json({ ok: 1 }) }
+        if (o === 'claim') { const s = await cmd('HGET', 'swm:' + MON0, id); if (s == null) return res.json({ ok: 0, err: 'none' }); const up = +(await cmd('HGET', 'swu:' + MON0, id)) || 0; if (up < 8) return res.json({ ok: 0, err: 'few' });
+          const v = (await cmd('HGETALL', 'sw:' + MON0)) || {}, o2 = {}; if (Array.isArray(v)) for (let i = 0; i + 1 < v.length; i += 2) o2[v[i]] = +v[i + 1] || 0; else Object.entries(v).forEach(([k, x]) => o2[k] = +x || 0);
+          const scs = [0, 1, 2].map(i => (o2['p' + i] || 0) / Math.max(3, o2['a' + i] || 0)), w = scs.indexOf(Math.max(...scs));
+          if ((await cmd('SET', 'swc:' + MON0 + ':' + id, 1, 'NX', 'EX', 86400 * 75)) !== 'OK') return res.json({ ok: 0, dup: 1 });
+          const win = +s === w; await give(id, win ? 0 : 1, win ? 1 : 0); if (win) await gfr(id, 'f_sw' + w); return res.json({ ok: 1, win: win ? 1 : 0, s: +s, w }) }
+        return res.json({ err: 'op' });
+      }
     }
     if (a === 'mgput' || a === 'mgget') {
       // สนามฝึกประจำวัน — มินิเกม 1 เกม/วัน (เวลาไทย) เก็บคะแนนดีที่สุดของแต่ละคน
