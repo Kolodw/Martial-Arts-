@@ -44345,3 +44345,18 @@ const pure=()=>!!(window._dlPure&&window._dlPure());
   if(pure()&&MUR.test(tt)&&!/⭕|🐍|📜 ลัทธิ|⚔️ สงครามระหว่างแคว้น|🐾|👑 ทายาท/.test(tt))return;
   const g=S.sv;if(/สถาบันวิญญาณเปิดรับ/.test(tt)&&g.ac)return;if(/ฤดูสอบเข้าสถาบัน/.test(tt)&&g.x&&g.x.ac&&g.x.ac.on)return}}catch(e){}return _ch.apply(this,arguments)};Object.assign(choice,_ch)}
 })()}catch(e){console.error('svpure2',e)}
+// ============================================================
+// BLOCK 62: 🐾 สัตว์อสูรตายง่ายเกิน — ฟื้นตัวรายปีมากขึ้น (ซ่อนตัว=พักฟื้นจริง) · สัญชาตญาณรอดตาย (ทุก 8 ปี) · เตือนเมื่อบาดเจ็บหนัก
+// ============================================================
+try{(()=>{
+const nh=()=>!!(S&&S.alive&&S.beastMode&&!S.beastMode.human);
+{const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(!nh()||S.age===a0)return r;const m=S.beastMode,f=S.focus,mx=S.maxHp||100;
+ // ฟื้นตัว: ปกติ 12% · ซ่อนตัว/เข้าฌาน 35% · ลูกสัตว์ (ขั้น 0–1) ได้แม่ช่วยเลีย +8%
+ const rate=(f==='hide'||f==='seclude'?.28:.07)+((m.st||0)<=1?.06:0);const before=S.hp;S.hp=Math.min(mx,S.hp+Math.round(mx*rate));
+ if(f==='hide'||f==='seclude'){const g=Math.round(S.hp-before);if(g>0)addFeed('ev',`🌿 พักฟื้นในที่ซ่อน — พลังชีวิต +${fmt(g)}`,'sum')}
+ // เตือนเมื่อบาดเจ็บหนัก
+ if(S.hp<mx*.35&&f!=='hide'&&f!=='seclude'&&S.age-(S.bwY||-99)>=3){S.bwY=S.age;log(`🩸 <b>บาดเจ็บหนัก</b> (พลังชีวิต ${Math.round(S.hp)}/${Math.round(mx)}) — สัญชาตญาณบอกให้ <b>🌿 ซ่อนตัวพักฟื้น</b> สักปีสองปีก่อนออกล่าต่อ`,'bad');try{island({big:1,ic:'🩸',h:'บาดเจ็บหนัก',t:'ตั้งโฟกัส 🌿 ซ่อนตัวพักฟื้น',kind:'bad'})}catch(e){}}
+}catch(e){console.error('blk62',e)}return r}}
+// สัญชาตญาณรอดตาย: ตายจากบาดแผล (ไม่ใช่ตายตามอายุ/ศึกตัดสินที่เลือกเอง) รอดได้ทุก 15 ปี
+{const _cd=checkDeath;checkDeath=function(){try{if(nh()&&S.hp<=0&&!S.deathCause&&S.age<lifeMax()&&S.hp>-S.maxHp*.6&&S.age-(S.bsvY==null?-99:S.bsvY)>=15){S.bsvY=S.age;S.hp=Math.max(1,Math.round(S.maxHp*.15));log(`🐾 <b>สัญชาตญาณสัตว์ป่า</b> — ลากร่างที่เลือดโชกกลับเข้าโพรงได้ทันก่อนสติจะดับ <span class="tag2">(รอดได้อีกครั้งในอีก 15 ปี · ควรซ่อนตัวพักฟื้น)</span>`,'epic',true);try{S.focus='hide';render()}catch(e){}return false}}catch(e){}return _cd.apply(this,arguments)}}
+})()}catch(e){console.error('block62',e)}
