@@ -66,6 +66,17 @@ async function apiOne(request, url) {
 }
 
 // 💳 ตรวจสลิปพร้อมเพย์อัตโนมัติ (SlipOK หรือ EasySlip v2 + D1 "PAY_DB") — ต้องมีค่าลับ SLIPOK_KEY + SLIPOK_BRANCH (หรือ EASYSLIP_KEY) และ binding PAY_DB · ตั้ง PAY_NAME เพิ่มได้เพื่อเช็กชื่อผู้รับ ไม่มี = ตอบ unavailable แล้วหน้าเว็บจะใช้ระบบส่งสลิปให้ผู้พัฒนาตรวจเหมือนเดิม
+// 🛡️ หัวข้อความปลอดภัยของหน้าเว็บ (ใส่ซ้ำกับ _headers เผื่อกรณีไฟล์นั้นไม่ถูกใช้)
+const SEC_H = {
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), magnetometer=(), gyroscope=(), accelerometer=(), browsing-topics=()',
+  'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://www.1inanovel.com https://1inanovel.com wss://www.1inanovel.com wss://1inanovel.com https://accounts.google.com; frame-src https://accounts.google.com; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests",
+};
+function withSec(r) { try { if (!r || r.status === 101) return r; const o = new Response(r.body, r); for (const k in SEC_H) if (!o.headers.has(k)) o.headers.set(k, SEC_H[k]); return o } catch (e) { return r } }
 const jr = (o, st = 200) => new Response(JSON.stringify(o), { status: st, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
 async function payProducts(env) {
   try { const r = await env.PAY_DB.prepare("SELECT sku,kind,scope,world_id,tier,days,n,price_baht FROM products WHERE active=1 ORDER BY sort").all(); return jr({ items: r.results || [] }) } catch (e) { return jr({ items: [] }) }
@@ -295,7 +306,7 @@ export default {
       return r;
     }
     // โดเมนเดิม (www) → ใช้ไฟล์หน้าเว็บ
-    return env.ASSETS.fetch(request);
+    return withSec(await env.ASSETS.fetch(request));
   },
   // ⏰ cron (ตั้งใน wrangler.toml [triggers]) → ส่ง push ดึงผู้เล่นที่หายไปกลับมา (แทน Vercel cron) · ใช้ CRON_SECRET หรือ ADMIN_KEY2 ที่ตั้งไว้ใน secret
   async scheduled(event, env, ctx) {
