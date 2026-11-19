@@ -45616,11 +45616,22 @@ window._kidTal=function(c){if(!c||c._inh)return;c._inh=1;const me=S.talent,sp=sp
 
 // ---------- 🎮 มินิเกม: ผู้เล่นต้องเล่นเอง — ห้ามเหตุการณ์อื่นเด้งทับจนมินิเกมจบเอง (เดิมหน้าต่างเหตุการณ์มาแทนที่แล้วมินิเกมสรุปผลทันที) · ไม่มีปุ่มข้าม ----------
 try{(()=>{const busy=()=>{try{return window._mgBusy&&window._mgBusy()}catch(e){return false}};
-{const _ch=choice;choice=function(...a){if(busy()){const me=S;let n=0;const t=setInterval(()=>{if(S!==me||!S||!S.alive||++n>150){clearInterval(t);return}if(busy())return;clearInterval(t);choice(...a)},400);return}return _ch.apply(this,a)};Object.assign(choice,_ch)}
-{const _du=duel;duel=function(...a){if(busy()){const me=S;let n=0;const t=setInterval(()=>{if(S!==me||!S||!S.alive||++n>150){clearInterval(t);return}if(busy())return;clearInterval(t);duel(...a)},400);return}return _du.apply(this,a)}}
+{const _ch=choice;choice=function(...a){if(busy()&&window._mgQ){window._mgQ(['c',a]);return}return _ch.apply(this,a)};Object.assign(choice,_ch)}
+{const _du=duel;duel=function(...a){if(busy()&&window._mgQ){window._mgQ(['d',a]);return}return _du.apply(this,a)}}
 })()}catch(e){console.error('mgNoSkip',e)}
 
 // ---------- 📋 ปุ่มเควสในยุคปัจจุบันเปิดรายการของยุทธภพ (ว่างเปล่า) → เปิดเควสยุคนี้ + เป้าหมายตอนนี้ ----------
 try{(()=>{const _oq=openQuests;openQuests=function(){try{if(S&&S.alive&&S.mw&&typeof openMwQuests==='function'&&!(S.beastMode&&!S.beastMode.human)){openMwQuests();try{const M=S.mw,g=typeof goalNow==='function'?goalNow(M):null,m=$('modal'),h=m&&m.querySelector('h3');
  if(h&&g&&!m.querySelector('.mwGoalQ'))h.insertAdjacentHTML('afterend',`<div class="item mwGoalQ" style="border-left:4px solid #e8b83a"><b>🎯 เป้าหมายตอนนี้</b><br>${g[1]}</div>`);
  if(m&&!(M.qs||[]).length&&!m.querySelector('.mwQEmpty'))m.querySelector('h3').insertAdjacentHTML('afterend',`<p class="tag2 mwQEmpty">ยังไม่มีเควส — เควสยุคนี้เริ่มเกิดตั้งแต่อายุ 12 ปีและอยู่ในยุคนี้ครบ 2 ปี เกิดใหม่ทุกปีตามสถานการณ์ของคุณ (สูงสุด 3 เควสพร้อมกัน)</p>`)}catch(e){}return}}catch(e){}return _oq.apply(this,arguments)}})()}catch(e){console.error('mwQ',e)}
+
+// ---------- 🎮 ระหว่างเล่นมินิเกม: หน้าต่าง/ป้ายแจ้งเตือนอื่นทุกชนิดรอคิว แล้วขึ้นทีละอันหลังมินิเกมจบ (กันหน้าต่างอื่นทับจนมินิเกมจบเอง) ----------
+try{(()=>{const busy=()=>{try{return window._mgBusy&&window._mgBusy()}catch(e){return false}};
+const Q=[];let me=null;window._mgQ=x=>{Q.push(x);me=S};
+{const _py=passYear;passYear=function(){if(Q.length&&S===me&&S&&S.alive)return;return _py.apply(this,arguments)}}
+const flush=()=>{try{if(!Q.length||busy())return;if(me&&S!==me){Q.length=0;return}while(Q.length&&Q[0][0]==='i'){const x=Q.shift();try{island(x[1])}catch(e){}}if(Q.length&&!modalOpen&&!choice._cur&&!(typeof DU!=='undefined'&&DU)){const x=Q.shift();try{if(x[0]==='m')modal(x[1],x[2]);else if(x[0]==='c')choice(...x[1]);else if(x[0]==='d')duel(...x[1])}catch(e){console.error('mgQ run',e)}}}catch(e){}};
+{const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);if(Q.length)setTimeout(flush,0);return r}}
+{const _m=modal;modal=function(html,k){if(busy()&&k!=='mg2'){Q.push(['m',html,k]);me=S;return}return _m.apply(this,arguments)}}
+{const _is=island;island=function(n){if(busy()){Q.push(['i',n]);me=S;return}return _is.apply(this,arguments)};try{window.island=island}catch(e){}}
+setInterval(flush,300);
+})()}catch(e){console.error('mgQ',e)}
