@@ -46785,3 +46785,20 @@ window.openNovels=async function(){let I={c:0,vf:0,bk:[]};try{if(on())I=await ap
 // ลิงก์ ?book=… เปิดนิยายทันที
 (function(){try{const q=new URLSearchParams(location.search),b=q.get('book');if(!b)return;const lid=b.replace(/[^a-z0-9]/g,'').slice(0,16);q.delete('book');history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:''));let n=0;const t=setInterval(()=>{n++;try{if((typeof onlineOK!=='undefined'&&onlineOK)||n>12){clearInterval(t);openBook(lid)}}catch(e){}},700)}catch(e){}})();
 })()}catch(e){console.error('block75',e)}
+
+try{(()=>{
+// ❄ ปุ่มคัมภีร์ฤดูกาลมุมขวาบนหน้าแรก (ใต้ปุ่มอีเวนต์ลอยกระทง) — กันคนมองไม่เห็นการ์ดด้านล่าง
+const st=document.createElement('style');st.textContent=`#title #tSp{z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border-radius:15px;font:inherit;font-size:10.5px;line-height:1.1;font-weight:800;text-align:center;box-sizing:border-box;padding:0;overflow:hidden;color:#eafffa;background:#06121a;border:2px solid #9ff0dc;box-shadow:0 3px 0 #04302a,0 0 14px #3ae8b888;cursor:pointer}
+#title #tSp .au{position:absolute;inset:-60%;background:linear-gradient(100deg,transparent 30%,#3ae8b888 42%,#7ab8ff77 50%,#b48aff77 58%,transparent 70%);filter:blur(6px);animation:spAu 4s ease-in-out infinite alternate;pointer-events:none}
+#title #tSp .tbi,#title #tSp span{position:relative}#title #tSp .tbi{font-size:19px;font-style:normal;line-height:1;text-shadow:0 0 8px #3ae8b8}
+#title.nb #tSp{display:none!important}
+#title #tSp .dt{position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:#ff4a3a;box-shadow:0 0 0 2px #06121a}`;document.head.appendChild(st);
+const on=()=>{try{return Date.now()<Date.parse('2027-01-01T00:00:00+07:00')}catch(e){return false}};
+setInterval(()=>{try{const T=$('title');if(!T||!T.classList.contains('on')||!$('tSup'))return;let b=$('tSp');
+ if(!on()){if(b)b.remove();return}
+ if(!b){T.insertAdjacentHTML('afterbegin','<button id="tSp" type="button" onclick="openSP(\'tr\')"><i class="au"></i><i class="tbi">❄</i><span>คัมภีร์</span><i class="dt" style="display:none"></i></button>');b=$('tSp')}
+ const vis=e=>e&&e.getClientRects().length>0&&getComputedStyle(e).display!=='none',ref=vis($('tEv'))?$('tEv'):vis($('tFb'))?$('tFb'):null;if(!ref){b.style.setProperty('visibility','hidden');return}b.style.removeProperty('visibility');const cs=getComputedStyle(ref);
+ const top=(parseFloat(cs.top)||0)+ref.offsetHeight+(ref.id==='tEv'?6:60),set=(k,v)=>{if(b.style.getPropertyValue(k)!==v)b.style.setProperty(k,v,'important')};
+ set('position',cs.position==='fixed'?'fixed':'absolute');set('top',top+'px');set('right',cs.right);set('left','auto');set('width',ref.offsetWidth+'px');set('height',ref.offsetHeight+'px');const wide=ref.offsetWidth>100;set('flex-direction',wide?'row':'column');set('justify-content',wide?'flex-start':'center');set('gap',wide?'7px':'1px');set('padding',wide?'0 14px':'0');set('font-size',wide?'13px':'10.5px');const sp=b.querySelector('span'),tx=wide?'คัมภีร์ฤดูกาล':'คัมภีร์';if(sp&&sp.textContent!==tx)sp.textContent=tx;
+ let c=null;try{c=LS.get('murim_spc',null)}catch(e){}const dt=b.querySelector('.dt');if(dt)dt.style.display=c&&c.can>0?'':'none'}catch(e){}},1000);
+})()}catch(e){console.error('block76',e)}
