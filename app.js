@@ -45619,3 +45619,8 @@ try{(()=>{const busy=()=>{try{return window._mgBusy&&window._mgBusy()}catch(e){r
 {const _ch=choice;choice=function(...a){if(busy()){const me=S;let n=0;const t=setInterval(()=>{if(S!==me||!S||!S.alive||++n>150){clearInterval(t);return}if(busy())return;clearInterval(t);choice(...a)},400);return}return _ch.apply(this,a)};Object.assign(choice,_ch)}
 {const _du=duel;duel=function(...a){if(busy()){const me=S;let n=0;const t=setInterval(()=>{if(S!==me||!S||!S.alive||++n>150){clearInterval(t);return}if(busy())return;clearInterval(t);duel(...a)},400);return}return _du.apply(this,a)}}
 })()}catch(e){console.error('mgNoSkip',e)}
+
+// ---------- 📋 ปุ่มเควสในยุคปัจจุบันเปิดรายการของยุทธภพ (ว่างเปล่า) → เปิดเควสยุคนี้ + เป้าหมายตอนนี้ ----------
+try{(()=>{const _oq=openQuests;openQuests=function(){try{if(S&&S.alive&&S.mw&&typeof openMwQuests==='function'&&!(S.beastMode&&!S.beastMode.human)){openMwQuests();try{const M=S.mw,g=typeof goalNow==='function'?goalNow(M):null,m=$('modal'),h=m&&m.querySelector('h3');
+ if(h&&g&&!m.querySelector('.mwGoalQ'))h.insertAdjacentHTML('afterend',`<div class="item mwGoalQ" style="border-left:4px solid #e8b83a"><b>🎯 เป้าหมายตอนนี้</b><br>${g[1]}</div>`);
+ if(m&&!(M.qs||[]).length&&!m.querySelector('.mwQEmpty'))m.querySelector('h3').insertAdjacentHTML('afterend',`<p class="tag2 mwQEmpty">ยังไม่มีเควส — เควสยุคนี้เริ่มเกิดตั้งแต่อายุ 12 ปีและอยู่ในยุคนี้ครบ 2 ปี เกิดใหม่ทุกปีตามสถานการณ์ของคุณ (สูงสุด 3 เควสพร้อมกัน)</p>`)}catch(e){}return}}catch(e){}return _oq.apply(this,arguments)}})()}catch(e){console.error('mwQ',e)}
