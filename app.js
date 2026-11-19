@@ -27498,7 +27498,7 @@ window.vipSay=async function(b){const w=(($('vipW')||{}).value||'').trim();b.dis
 let WALL=[];
 window.vipWall=async function(){modal(`<button class="xbtn" onclick="vipMenu()">✕</button><h3>หอผู้ก่อตั้ง</h3><p class="tag2">ป้ายของผู้ก่อตั้ง เรียงตามวันที่เข้าร่วม ทุกคนจ่ายเท่ากัน · กด "จุดธูป" เพื่อคารวะป้ายใดป้ายหนึ่ง</p><div id="vipWallL" class="tag2">กำลังโหลด…</div>`);
  try{const j=await api('vipwall');WALL=(j&&j.n)||[];const el=$('vipWallL');if(!el)return;el.className='';el.innerHTML=WALL.length?`<div class="vtabs">${WALL.map(tabHtml).join('')}</div>`:'<p class="tag2">ยังไม่มีป้ายในหอ</p>'}catch(e){const el=$('vipWallL');if(el)el.textContent='โหลดไม่สำเร็จ'}};
-const tabHtml=r=>`<div class="vtab${r.k?' mine':''}" data-o="${r.o}"><div class="vto">ลำดับที่ ${r.o}</div><div class="vtn">${r.pu?`<span class="pfav" data-pu="${r.pu}"></span>`:''}${esc(r.n||'ไม่ระบุนาม')}</div><div class="vtd">${dTxt(r.t)}</div><div class="vtw">${r.w?esc(r.w):'<i>—</i>'}</div><div class="vtinc">${incHtml(r)}</div></div>`;
+const tabHtml=r=>`<div class="vtab${r.k?' mine':''}" data-o="${r.o}"><div class="vto">ลำดับที่ ${r.o}</div><div class="vtn">${r.pu?`<span class="pfav hlpf hlpfw" data-pu="${r.pu}"></span>`:''}${esc(r.n||'ไม่ระบุนาม')}</div><div class="vtd">${dTxt(r.t)}</div><div class="vtw">${r.w?esc(r.w):'<i>—</i>'}</div><div class="vtinc">${incHtml(r)}</div></div>`;
 const incHtml=r=>`<span class="sticks">${('<i class="stk'+(r.m?' lit':'')+'"></i>').repeat(Math.min(5,r.c))}</span><button class="gbtn" ${r.m?'disabled':''} onclick="vipInc(${r.o},this)">${r.m?'จุดแล้ว':'จุดธูป'}${r.c?` · ${r.c}`:''}</button>`;
 window.vipInc=async function(o,b){b.disabled=true;try{const j=await api('vipinc',{o});const r=WALL.find(x=>x.o===o);if(r){r.m=1;r.c=j.c||r.c+1;const el=document.querySelector(`.vtab[data-o="${o}"] .vtinc`);if(el)el.innerHTML=incHtml(r)}try{sfx('good')}catch(e){}}catch(e){b.disabled=false;toast('จุดธูปไม่สำเร็จ')}};
 window.vipBuy=function(k){const v=PK[k];if(!v)return;
@@ -34657,7 +34657,7 @@ window.supHall=async function(sc){sc=sc==='m'?'m':'a';supHall._s=sc;
  const m=$('modal');if(!m||m.dataset.k!=='vipw')return;
  if(!j){m.querySelector('.shl').innerHTML+='<p class="tag2">โหลดไม่สำเร็จ</p>';return}
  const rows=j.rows||[],me=j.me,T=['👑 ผู้สนับสนุนสูงสุด','🥈 อันดับ 2','🥉 อันดับ 3'],tit=r=>r<=3?T[r-1]:r<=10?'ผู้สนับสนุนดีเด่น':'ผู้สนับสนุน';
- const av=(x,big)=>x.look?`<canvas width="140" height="154" data-l="${x.r}"></canvas>`:`<div class="an">🕊️</div>`;
+ const av=(x,big)=>(x.pu?`<span class="pfav hlpf" data-pu="${esc(x.pu)}"></span>`:'')+(x.look?`<canvas width="140" height="154" data-l="${x.r}"></canvas>`:`<div class="an">🕊️</div>`);
  const TI=[['',''],['🤍','ผู้ร่วมจุดตะเกียง'],['🥉','ผู้อุปถัมภ์ทองแดง'],['🥈','ผู้อุปถัมภ์เงิน'],['🥇','ผู้อุปถัมภ์ทอง'],['💎','ผู้ค้ำจุนนวนิยาย']],tierH=k=>{k=Math.max(1,Math.min(5,(k|0)+1));return`<span class="stier st${k}">${TI[k][0]} ${TI[k][1]}</span>`};
  const amt=x=>`<div class="am">${tierH(x.tier)}${x.mask?` <span class="smask">฿${esc(x.mask)}</span>`:''}</div>`;
  const nmH=x=>esc(x.n||'ผู้สนับสนุนนิรนาม')+(x.me?' <small>(คุณ)</small>':'');
@@ -46401,7 +46401,7 @@ window.vipMon=async function(){
  const m=$('modal');if(!m||m.dataset.k!=='vipm')return;const box=m.querySelector('.vmn');
  if(!j||!j.act){box.querySelector('.empty').textContent='โหลดไม่สำเร็จ ลองใหม่อีกครั้ง';return}
  const a2=j.act.filter(x=>x.t===2),a1=j.act.filter(x=>x.t===1),me=j.me||{};
- const pl=(x,i)=>{const k=mat(x.mo);return`<div class="pl m${k} ${x.me?'me':''}" style="animation-delay:${Math.min(i,14)*.04}s"><i class="hk"></i><div class="tg"><span>${MAT[k][0]}</span><span>${x.fd?'👑':''}${x.t===2?'⭐⭐':'⭐'}</span></div>${x.look?`<canvas width="140" height="154" data-p="${esc(x.pu)}"></canvas>`:`<div class="an">${x.n?'🏮':'🕊️'}</div>`}<div class="nm">${esc(x.n||'ผู้ไม่ประสงค์ออกนาม')}${x.me?' <small>(คุณ)</small>':''}</div><div class="mo">สนับสนุนมา ${x.mo} เดือน</div>${x.w?`<div class="ws">“${esc(x.w)}”</div>`:''}</div>`};
+ const pl=(x,i)=>{const k=mat(x.mo);return`<div class="pl m${k} ${x.me?'me':''}" style="animation-delay:${Math.min(i,14)*.04}s"><i class="hk"></i><div class="tg"><span>${MAT[k][0]}</span><span>${x.fd?'👑':''}${x.t===2?'⭐⭐':'⭐'}</span></div>${x.pu&&x.n?`<span class="pfav hlpf" data-pu="${esc(x.pu)}"></span>`:''}${x.look?`<canvas width="140" height="154" data-p="${esc(x.pu)}"></canvas>`:`<div class="an">${x.n?'🏮':'🕊️'}</div>`}<div class="nm">${esc(x.n||'ผู้ไม่ประสงค์ออกนาม')}${x.me?' <small>(คุณ)</small>':''}</div><div class="mo">สนับสนุนมา ${x.mo} เดือน</div>${x.w?`<div class="ws">“${esc(x.w)}”</div>`:''}</div>`};
  const wall=(l,c,e)=>l.length?`<div class="wall ${c}">${l.map(pl).join('')}</div>`:`<div class="empty">${e}</div>`;
  let mineH='';
  if(me.has){const k=mat(me.mo),nx=MAT[k+1],pr=nx?Math.min(100,(me.mo-MAT[k][2])/(nx[2]-MAT[k][2])*100):100;
@@ -47072,3 +47072,10 @@ const MY=[['sp','❄ ซีซันพาส'],['vip','🏮 VIP'],['shop','💎
    if(MY.some(x=>x[0]===keep)&&SP2.tab!==keep){SP2.tab=keep;[...tb.children].forEach(b=>b.classList.toggle('on',b.dataset.my===keep));sp2List()}}
   const ce=tEq(),cu=m.querySelector('.sp2cur');if(cu&&!m.querySelector('.sp2cos'))cu.insertAdjacentHTML('afterend',`<div class="sp2cos">ฉายาขยับได้: ${ce&&window.cosTitleHtml?window.cosTitleHtml(ce)+` <button class="gbtn" style="padding:3px 10px" onclick="setShowTtl('',0,'cos:${ce}')">ถอด</button>`:'<span class="tag2">— ไม่ได้ใส่ — (เลือกจากหมวด อีเวนต์ / ซีซันพาส / VIP / ร้านตกแต่ง)</span>'}</div>`)}catch(e){console.error(e)}return r}}
 })()}catch(e){console.error('block77',e)}
+
+// หอผู้ก่อตั้งทุกแท็บ: โชว์รูปโปรไฟล์ (รูป + กรอบ) ของผู้เล่น · ไม่มีรูปโปรไฟล์ค่อยใช้รูปตัวละคร/สัญลักษณ์เดิม
+try{const st=document.createElement('style');st.textContent=`.pfav.hlpf{display:flex;justify-content:center;margin:14px auto 14px;line-height:0}.pfav.hlpf:empty{display:none}
+.pfav.hlpf .frph{width:54px!important;height:60px!important}.pfav.hlpf img{border-radius:8px}
+.pfav.hlpfw{display:inline-flex;margin:0 8px 0 0;vertical-align:middle}.pfav.hlpfw .frph{width:40px!important;height:44px!important}
+.pl:has(.hlpf:not(:empty)) canvas,.pl:has(.hlpf:not(:empty)) .an,.pc:has(.hlpf:not(:empty)) canvas,.pc:has(.hlpf:not(:empty)) .an,.shl .rw:has(.hlpf:not(:empty)) canvas,.shl .rw:has(.hlpf:not(:empty)) .an{display:none!important}
+.shl .rw .pfav.hlpf{margin:0 6px 0 0}.shl .rw .pfav.hlpf .frph{width:40px!important;height:44px!important}`;document.head.appendChild(st)}catch(e){}

@@ -113,7 +113,7 @@ async function supHall(request, env, url) {
   let allT = {}; if (ids.length) { try { if (scope === 'a') raw.forEach(r => allT[r[0]] = r[1]); else { const q = await db.prepare("SELECT uid u, SUM(amount_satang) s FROM orders WHERE " + ST + " AND uid IN (" + ids.map(() => '?').join(',') + ") GROUP BY uid").bind(...ids).all(); (q.results || []).forEach(x => allT[x.u] = x.s) } } catch (e) {} }
   const rows = raw.map((r, i) => { let p = null, a2 = null; try { p = JSON.parse(ps[i] || 'null') } catch (e) {} try { a2 = JSON.parse((ac && ac[i]) || 'null') } catch (e) {}
     const hide = !!(p && p.hide), dm = p && p.dm ? p.dm : (p && p.sa ? 'mask' : 'tier'), n = hide ? '' : (p && p.n ? p.n : (a2 && a2.n ? h.clean(String(a2.n), 24) : ''));
-    return { r: i + 1, n, look: !hide && p ? p.look : null, tier: tierOf(Math.round((allT[r[0]] || r[1]) / 100)), mask: !hide && dm === 'mask' ? mask(r[1] / 100) : null, amt: null, auto: !p ? 1 : 0, me: r[0] === uid ? 1 : 0 } });
+    return { r: i + 1, n, pu: hide ? '' : String(r[0]).replace(/[^a-z0-9]/g, '').slice(0, 12), look: !hide && p ? p.look : null, tier: tierOf(Math.round((allT[r[0]] || r[1]) / 100)), mask: !hide && dm === 'mask' ? mask(r[1] / 100) : null, amt: null, auto: !p ? 1 : 0, me: r[0] === uid ? 1 : 0 } });
   let me = null;
   if (okU) {
     const tot = await sum(uid, 0), mon = await sum(uid, ms); let p = null; try { p = JSON.parse(await cmd('HGET', 'supp', uid) || 'null') } catch (e) {}
