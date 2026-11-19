@@ -992,7 +992,7 @@ module.exports = async (req, res) => {
       if (!okId(id)) return res.json({ err: 'id' });
       const day = new Date(now + 7 * 3600e3).toISOString().slice(0, 10), k = 'lg:' + id;
       const st0 = jp(await cmd('GET', k)) || { n: 0, r: 0, cy: 0, d: '' };
-      const NG = { 7: 5 }, RG = { 7: 2, 14: 4 }; // ตั๋วทองที่แจก (วันที่ → จำนวน)
+      const NG = { 3: 1, 7: 5 }, RG = { 7: 2, 14: 4 }; // ตั๋วทองที่แจก (วันที่ → จำนวน)
       if (a === 'lgget') return res.json({ ...st0, today: st0.d === day ? 1 : 0, ng: NG, rg: RG });
       if (req.method !== 'POST') return res.status(400).json({ err: 'post' });
       if (!(await cmd('SET', 'lgl:' + id, 1, 'NX', 'EX', 5))) return res.json({ err: 'busy' });
