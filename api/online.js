@@ -28,8 +28,9 @@ async function upPipe(list) {
 // ---------- Valkey/Redis (RESP2) แบบไม่ต้องลงแพ็กเกจเพิ่ม ----------
 const net = require('net'), tls = require('tls');
 const VK0 = { sock: null, ready: null, buf: Buffer.alloc(0), q: [], io: 0 };
-// ฐานข้อมูลไม่ตอบ → พักการต่อใหม่ 5 วิ (ตอบผู้เล่นทันทีแทนการค้างรอ) · ใช้ร่วมกันทั้ง isolate
-let VK_DOWN = 0;
+// ฐานข้อมูลไม่ตอบ (ต่อไม่ติด 3 ครั้งใน 15 วิ) → พักการต่อใหม่ 4 วิ ตอบผู้เล่นทันทีแทนการค้างรอ · ใช้ร่วมกันทั้ง isolate
+let VK_DOWN = 0, VK_FAILS = [];
+const vkFailed = () => { const t = Date.now(); VK_FAILS = VK_FAILS.filter(x => t - x < 15000); VK_FAILS.push(t); if (VK_FAILS.length >= 3) { VK_DOWN = t + 4000; VK_FAILS = [] } };
 // Cloudflare Workers: socket ใช้ข้ามคำขอไม่ได้ → ให้แต่ละคำขอมี VK ของตัวเอง (AsyncLocalStorage) ทำหลายคำขอพร้อมกันได้ · Vercel ไม่เรียก vkRun จึงใช้ VK0 ตัวเดียวเหมือนเดิม
 const { AsyncLocalStorage: _ALS } = require('node:async_hooks');
 const VKS = new _ALS();
@@ -77,7 +78,7 @@ function vkConnect() {
     if (process.env.VALKEY_CA) opt.ca = process.env.VALKEY_CA;
     const s = secure ? tls.connect(opt) : net.connect(opt);
     V.cur = s; s.setNoDelay(true); s.setKeepAlive(true, 30000);
-    const to = setTimeout(() => { VK_DOWN = Date.now() + 5000; s.destroy(new Error('valkey connect timeout')) }, 4000);
+    const to = setTimeout(() => { vkFailed(); s.destroy(new Error('valkey connect timeout')) }, 6000);
     s.on('data', d => {
       if (V.cur !== s) return;
       V.io = Date.now();
@@ -89,7 +90,7 @@ function vkConnect() {
     s.on('error', e => { clearTimeout(to); if (V.cur === s) vkDrop(e, V); rej(e) });
     s.on('close', () => { clearTimeout(to); if (V.cur === s) vkDrop(undefined, V) });
     s.once(secure ? 'secureConnect' : 'connect', async () => {
-      clearTimeout(to); V.sock = s; V.io = Date.now(); VK_DOWN = 0;
+      clearTimeout(to); V.sock = s; V.io = Date.now(); VK_FAILS = [];
       try {
         const user = decodeURIComponent(u.username || ''), pass = decodeURIComponent(u.password || '');
         if (pass) await vkSend(user ? ['AUTH', user, pass] : ['AUTH', pass], V);
