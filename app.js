@@ -45904,3 +45904,26 @@ const addBtn=()=>{try{const g=document.querySelector('#modal .mgrid');if(!g||g.q
 {const _ot=openTown;openTown=function(p){const r=_ot.apply(this,arguments);if(!p||p==='main')addBtn();return r}}
 try{SYS_GUIDE.push({ic:'💰',t:'ทุ่มทรัพย์',d:'ที่ใช้เงินก้อนโต: ขยายอาณาเขต (ให้ผลทุกปี) · ซื้อทรัพยากรฝึก · ตั้งค่ายกลเพิ่มโอกาสทะลวง · บ่อนทายผลประลอง · ตลาดมืดของหายาก · คลังตระกูลส่งต่อชีวิตหน้า · รวยมากจะมีโจร ขุนนาง ญาติมาเยือน',go:()=>openWealth()})}catch(e){}
 })()}catch(e){console.error('wealth',e)}
+
+// ===================== ⭕ ดูคนอื่นเล่น + ทำเนียบ ในโหมดจิตวิญญาณยุทธ์ ให้แสดงข้อมูลของจิตวิญญาณยุทธ์ (ระดับจิต · ดวงจิต · วงแหวน) แทนของยุทธภพ =====================
+try{(()=>{
+const isSv=()=>!!(S&&S.ch==='soul'&&S.sv);
+const MK='⭕ ทวีปจิตวิญญาณยุทธ์';
+function info(){const B=window._blk34||{},G=S.sv,lv=G.lv|0,R=B.RANK||[];const rk=G.aw===2?'ไร้ดวงจิต':!G.aw?'ยังไม่ปลุกดวงจิต':(R[Math.max(0,Math.min(R.length-1,Math.floor((Math.max(1,lv)-1)/10)))]||'')+` ระดับ ${lv}`;
+ let sp=[];try{sp=(G.sp||[]).map(s=>{const p=B.spNow(s);return p.ic+' '+p.n})}catch(e){}
+ let rg=[];try{rg=(G.rings||[]).map(g=>{const t=(B.TIER||[])[g.t|0];return t?t[1]+' '+t[0]:''}).filter(Boolean)}catch(e){}
+ return{rk,sp,rg,txt:`${sp.length?'ดวงจิต '+sp.join(' + '):'ไม่มีดวงจิต'}${rg.length?` · วงแหวน ${rg.length} วง`:''}`}}
+// ตอนจบชีวิต (ส่งขึ้นทำเนียบ): ระดับจิตแทนขั้นยุทธ์ · ดวงจิตแทนสำนัก
+let SND=0;
+let SW=null;
+{const _rl=realmLabel;realmLabel=function(){const r=_rl.apply(this,arguments);try{if(SND&&isSv()&&S._sent===1&&!S._lid0){S._lid0=1;SW={f:S.faction};S.faction={...(S.faction||{}),n:(S.faction&&S.faction.n?S.faction.n+' · ':'')+info().txt};return Object.assign({},r,{base:MK+' · '+info().rk})}}catch(e){}return r}}
+{const _eg=endGame;endGame=function(){try{if(isSv())SND=1}catch(e){}
+ try{return _eg.apply(this,arguments)}finally{SND=0;if(SW){try{S.faction=SW.f}catch(e){}SW=null}}}}
+{const _ld=lifeDetail;lifeDetail=function(){let fk=null;if(SW){fk=S.faction;S.faction=SW.f}let d;try{d=_ld.apply(this,arguments)}finally{if(fk)S.faction=fk}try{if(d&&isSv()){const I=info();d.r=MK+' · '+I.rk;d.f=I.txt;d.wd='sv';d.arts=I.sp.map(x=>'⭕ ดวงจิต '+x).concat(I.rg.map((x,i)=>`💍 วงแหวนที่ ${i+1} · ${x}`),d.arts||[]).slice(0,40)}}catch(e){}return d}}
+// ดูคนอื่นเล่น (สด)
+{const _ls=liveSnap;liveSnap=function(){const d=_ls.apply(this,arguments);try{if(d&&isSv()){const I=info();d.r=MK+' · '+I.rk;d.f=I.txt+(S.faction?' · '+S.faction.n:'');d.wd='sv';d.arts=I.sp.map(x=>'⭕ ดวงจิต '+x).concat(I.rg.map((x,i)=>`💍 วงแหวนที่ ${i+1} · ${x}`),d.arts||[]).slice(0,40)}}catch(e){}return d}}
+// หัวหน้าดูชีวิต: เปลี่ยนป้ายโลก "⚔️ ยุทธภพ" เป็นทวีปจิตวิญญาณยุทธ์ (ดูจากข้อมูลที่ส่งมา)
+{const _md=modal;modal=function(h){try{if(typeof h==='string'&&h.indexOf('class="spechead"')>=0&&h.indexOf(MK)>=0){h=h.replace('⚔️ ยุทธภพ · อายุ','⭕ จิตวิญญาณยุทธ์ · อายุ').replace(MK+' · ','')}}catch(e){}arguments[0]=h;return _md.apply(this,arguments)}}
+// ทำเนียบ: แถวของชีวิตโหมดนี้ ตัดคำซ้ำ
+{const _md2=modal;modal=function(h){try{if(typeof h==='string'&&h.indexOf('item brd')>=0&&h.indexOf(MK)>=0)h=h.split(MK+' · ').join('⭕ ')}catch(e){}arguments[0]=h;return _md2.apply(this,arguments)}}
+})()}catch(e){console.error('svOnline',e)}
