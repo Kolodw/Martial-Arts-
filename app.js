@@ -5203,7 +5203,10 @@ function bakTick(d){try{if(!S||!S.slot)return;const c=Object.assign({},d,{feed:'
 // ลบเอง = ย้ายไปคลังสำรอง (กู้คืนได้)
 delSlot=function(n){const d=readSave(n);if(d)arcPut(d,'ลบเอง');try{localStorage.removeItem(slotKey(n));localStorage.removeItem(bakKey(n))}catch(e){}closeM();toast(`ย้ายช่อง ${n} ไปคลังสำรองแล้ว — กู้คืนได้ที่ 🗂️`);renderLegends()};
 // โหลดพัง → ไม่ทิ้งเกมไว้ครึ่งๆ กลางๆ ลองสำเนาสำรองแทน
-{const _lg=loadGame;loadGame=function(n=1){try{return _lg.call(this,n)}catch(e){console.error('load failed',e);const b=LS.get(bakKey(n),null);
+{const _lg=loadGame;loadGame=function(n=1){try{return _lg.call(this,n)}catch(e){console.error('load failed',e);
+ // เซฟโหลดขึ้นแล้วแต่หน้าจอพังระหว่างวาด → เซฟไม่ได้เสีย ห้ามสลับไปใช้สำเนาเก่า
+ try{const d0=readSave(n);if(S&&d0&&d0.S&&S.slot===n&&S.name===d0.S.name&&(S.age|0)===(d0.S.age|0)){try{show('game')}catch(x){}try{render()}catch(x){console.error('render after load',x)}try{startTimer()}catch(x){}try{toast('▶ โหลดชีวิตเดิมแล้ว — เล่นต่อได้เลย')}catch(x){}return}}catch(x){}
+ const b=LS.get(bakKey(n),null);
  if(b&&b.S&&b._tried!==1){try{b._tried=1;try{const m0=LS.get(slotKey(n),null);if(m0&&m0.S&&typeof arcPut==='function')arcPut(m0,'โหลดไม่ขึ้น')}catch(x){}window._acBak=1;LS.set(slotKey(n),b);toast('เซฟหลักเสียหาย — ใช้สำเนาสำรองแทน');return _lg.call(this,n)}catch(e2){console.error(e2)}}
  S=null;show('title');renderLegends();toast('โหลดช่องนี้ไม่ได้ — ข้อมูลยังอยู่ ลองกู้จาก 🗂️ คลังสำรอง หรือ ☁️ เซิร์ฟเวอร์');}}}
 // กู้จากเซิร์ฟเวอร์ (เซฟอัตโนมัติบนคลาวด์ของเครื่องนี้)
