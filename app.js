@@ -49782,3 +49782,202 @@ const _md=modal;modal=function(){const r=_md.apply(this,arguments);try{if(!_isA(
 
 // ลานประลอง: ส่งอายุไปช่วยจับคู่คนพลัง/อายุใกล้กัน
 {const _asAg=arSnap;arSnap=function(){const o=_asAg.apply(this,arguments);try{o.ag=Math.floor(S.age||0)}catch(e){}return o}}
+
+// กรอบแอดมิน v3 (จัดเต็ม): ทรงเฉพาะตัว + เครื่องประดับล้นกรอบ + ท่าไม้ตายวน · แทนลูกเล่นเดิมของ 4 กรอบแอดมิน
+{const R=(n,f)=>Array.from({length:n},(_,i)=>f(i)).join('');const rnd=(a,b)=>(a+Math.random()*(b-a)).toFixed(1);
+const BT=[8,30,52,74],KF=BT.map((t0,i)=>`@keyframes z3nb${i}{0%,${t0}%{opacity:0}${t0+.6}%{opacity:1}${t0+1.6}%{opacity:.2}${t0+2.2}%{opacity:1}${t0+3.6}%,100%{opacity:0}}`);let bk=0;
+const bolt=(cls,d)=>`<path class="z3bolt ${cls}" style="animation-name:z3nb${(bk++)%4}" d="${d}"/>`;
+const fangs=(n,r1,r2)=>{let p='';for(let i=0;i<n*2;i++){const a=Math.PI*i/n,r=i%2?r2:r1;p+=(i?'L':'M')+(100+Math.cos(a)*r).toFixed(1)+' '+(100+Math.sin(a)*r).toFixed(1)}return p+'Z'};
+const hexP=r=>R(6,i=>{const a=Math.PI/3*i-Math.PI/2;return (i?'L':'M')+(100+Math.cos(a)*r).toFixed(1)+' '+(100+Math.sin(a)*r).toFixed(1)})+'Z';
+const Z3F={
+ gojo:['กรอบโกโจ · อนันต์','วงกลมแสงขาวฟ้า · ตรา ∞ เรืองบนหัว · เกล็ดม่านกั้นหกเหลี่ยมโคจร · รัศมีแสงหมุน → ลูกแก้วฟ้า-แดงชนกัน ทรงกลมม่วงกลืนทั้งกรอบ','∞ อนันต์',
+  ()=>`<i class="z3bg"></i><i class="z3rays z3hide-sm"></i>
+  <svg class="z3orn z3back" viewBox="0 0 200 200"><defs><linearGradient id="z3gw" x1="0" x2="1"><stop offset="0" stop-color="#3a5cff" stop-opacity="0"/><stop offset="1" stop-color="#dff6ff"/></linearGradient></defs>
+   <g class="z3rot"><circle cx="100" cy="100" r="72" fill="none" stroke="#bfefff" stroke-width="1.5" stroke-dasharray="2 6" opacity=".8"/><circle cx="100" cy="100" r="80" fill="none" stroke="#5a8bff" stroke-width="1" stroke-dasharray="30 10 4 10" opacity=".7"/></g>
+   <g class="z3rotr z3hide-sm">${R(6,i=>{const a=Math.PI/3*i;const x=100+Math.cos(a)*88,y=100+Math.sin(a)*88;return `<polygon class="z3shard" transform="rotate(${i*60+30} ${x.toFixed(1)} ${y.toFixed(1)})" points="${[0,1,2,3,4,5].map(k=>{const b=Math.PI/3*k;return (x+Math.cos(b)*7).toFixed(1)+','+(y+Math.sin(b)*7).toFixed(1)}).join(' ')}"/>`})}</g>
+   <path class="z3hide-sm" d="M100 34 C80 30 56 34 36 48 M100 34 C120 30 144 34 164 48" stroke="url(#z3gw)" stroke-width="2" fill="none" opacity=".9"/>
+   <path class="z3hide-sm" d="M100 40 C84 38 66 42 50 52 M100 40 C116 38 134 42 150 52" stroke="#9fc0ff" stroke-width="1" fill="none" opacity=".7"/>
+  </svg>
+  <i class="z3edge"></i>
+  <svg class="z3orn z3front" viewBox="0 0 200 200"><g class="z3crest"><path d="M100 26 C92 16 78 16 78 26 C78 36 92 36 100 26 C108 16 122 16 122 26 C122 36 108 36 100 26Z" fill="none" stroke="#fff" stroke-width="3"/><circle cx="100" cy="26" r="2.5" fill="#fff"/></g>
+   <path d="M100 168 l6 8 -6 8 -6 -8z" fill="#dff6ff" filter="drop-shadow(0 0 4px #7fd8ff)"/></svg>
+  ${R(10,i=>`<i class="z3pin" style="--r:${180+(i-5)*14}deg;animation-delay:${(i*.12).toFixed(2)}s"></i>`)}${R(8,i=>`<i class="z3push" style="--x:${rnd(10,44)}px;--y:${rnd(-34,34)}px;animation-delay:${(i*.08).toFixed(2)}s"></i>`)}<i class="z3ob"></i><i class="z3or"></i><i class="z3sl"></i><i class="z3hp"></i><i class="z3rr"></i><i class="z3rr z3q2"></i><i class="z3imp"></i>`],
+ suk:['กรอบสุคุนะ · ราชาคำสาป','แปดเหลี่ยมสีชาด · เขาปีศาจคู่ · พระจันทร์เลือดข้างหลัง · วงเขี้ยวหมุน · เพลิงลุกจากด้านล่าง → ฟันรัว 9 ฉับ จอแดงสั่น กรอบแตกร้าว','呪 ราชาคำสาป',
+  ()=>`<i class="z3bg"></i><i class="z3moon z3hide-sm"></i>
+  <svg class="z3orn z3back" viewBox="0 0 200 200"><g class="z3fang"><path d="${fangs(16,62,74)}" fill="#2a0006" stroke="#ff3a4a" stroke-width="1.2"/></g>
+   <g transform="translate(0,6)"><g class="z3fl z3b"><path fill="#1a0003" d="M52 168C44 150 56 140 52 124 62 134 64 116 72 104 74 122 84 116 90 92 96 116 106 122 108 104 116 116 118 134 128 124 124 140 136 150 128 168Z"/></g><g class="z3fl"><path fill="#b0001e" d="M60 168C56 152 66 146 66 132 74 140 76 124 82 114 84 128 90 124 92 104 94 124 100 128 104 114 110 124 112 140 120 132 120 146 128 152 122 168Z"/><path fill="#ff4a5a" d="M72 168C72 158 78 154 78 146 84 150 86 140 90 132 92 142 96 140 98 132 102 140 104 150 110 146 110 154 116 158 112 168Z"/></g></g>
+   <g class="z3horn z3hide-sm"><path d="M66 58 C54 44 50 26 58 8 C62 26 70 38 82 48Z" fill="#14000a" stroke="#ff3a4a" stroke-width="1.5"/><path d="M134 58 C146 44 150 26 142 8 C138 26 130 38 118 48Z" fill="#14000a" stroke="#ff3a4a" stroke-width="1.5"/><path d="M60 14 C62 28 68 38 76 46" stroke="#ff8a96" stroke-width=".8" fill="none"/><path d="M140 14 C138 28 132 38 124 46" stroke="#ff8a96" stroke-width=".8" fill="none"/></g>
+  </svg>
+  <div class="z3shake"><svg class="z3orn z3front" viewBox="0 0 200 200"><path class="z3oct" d="M82 50 H118 L150 82 V118 L118 150 H82 L50 118 V82Z" fill="none" stroke="#ff2a40" stroke-width="5" stroke-linejoin="round"/><path d="M80 44 H120 L156 80 V120 L120 156 H80 L44 120 V80Z" fill="none" stroke="#ff6a7a" stroke-width="1" stroke-dasharray="6 4" opacity=".7"/>
+   <g class="z3hide-sm" fill="#14000a" stroke="#ff4a5a" stroke-width="1"><path d="M26 76 h26 l-4 5 h-26z"/><path d="M30 86 h18 l-4 5 h-18z"/><path d="M148 109 h26 l-4 5 h-26z"/><path d="M152 119 h18 l-4 5 h-18z"/></g>
+   <path d="M100 38 l7 9 -7 9 -7 -9z" fill="#ff2a40" filter="drop-shadow(0 0 4px #ff2a40)"/>
+   <g class="z3crack"><path pathLength="100" d="M50 90 L66 96 L74 92 L88 106 L100 102 L112 118 L124 114 L150 128"/><path pathLength="100" d="M88 106 L84 120 L92 132"/><path pathLength="100" d="M112 118 L120 100 L134 96"/></g></svg></div>
+  ${R(9,i=>`<i class="z3cut" style="--r:${[-35,38,-12,62,-55,20,-70,8,45][i]}deg;--o:${rnd(-20,20)}px;animation-delay:${(2.2+i*.07).toFixed(2)}s"></i>`)}<i class="z3sl"></i><i class="z3imp"></i>${R(7,i=>`<i class="z3em" style="left:${4+i*15}%;--x:${(i%2?1:-1)*(5+i*3)}px;animation-delay:${(i*.33).toFixed(2)}s"></i>`)}`],
+ cid:['กรอบซิด · เงามหาอำนาจ','ข้าวหลามตัดเงา · ปีกเงาสยายสองข้างขยับเหมือนหายใจ · จันทร์เสี้ยวบนหัว · เงาหยดจากปลายล่าง → จอมืด แกนแสงระเบิด เสาแสงพุ่งฟ้า คลื่นสามชั้น','影 เงามหาอำนาจ',
+  ()=>`<i class="z3bg"></i><i class="z3gal"></i>
+  <svg class="z3orn z3back" viewBox="0 0 200 200"><defs><linearGradient id="z3cwl" x1="1" x2="0"><stop offset="0" stop-color="#5a1aff"/><stop offset=".6" stop-color="#1a0040"/><stop offset="1" stop-color="#0a0014" stop-opacity="0"/></linearGradient><linearGradient id="z3cwr" x1="0" x2="1"><stop offset="0" stop-color="#5a1aff"/><stop offset=".6" stop-color="#1a0040"/><stop offset="1" stop-color="#0a0014" stop-opacity="0"/></linearGradient></defs>
+   <g class="z3wing z3wl"><path d="M70 100 C56 70 30 56 4 60 C20 68 26 76 28 84 C14 84 6 92 2 102 C16 98 24 102 28 108 C16 114 12 124 12 134 C30 120 48 116 70 108Z" fill="url(#z3cwl)" stroke="#b080ff" stroke-width="1"/><path d="M66 100 C50 80 30 70 12 70 M64 104 C44 100 26 104 14 112" stroke="#d0b0ff" stroke-width=".7" fill="none" opacity=".7"/></g>
+   <g class="z3wing z3wr"><path d="M130 100 C144 70 170 56 196 60 C180 68 174 76 172 84 C186 84 194 92 198 102 C184 98 176 102 172 108 C184 114 188 124 188 134 C170 120 152 116 130 108Z" fill="url(#z3cwr)" stroke="#b080ff" stroke-width="1"/><path d="M134 100 C150 80 170 70 188 70 M136 104 C156 100 174 104 186 112" stroke="#d0b0ff" stroke-width=".7" fill="none" opacity=".7"/></g>
+   <path class="z3hide-sm" d="M114 22 A20 20 0 1 1 86 22 A16 16 0 1 0 114 22Z" fill="#e8d8ff" filter="drop-shadow(0 0 6px #b080ff)" transform="rotate(180 100 22)"/>
+  </svg>
+  <svg class="z3orn z3front" viewBox="0 0 200 200"><path class="z3dia" d="M100 40 L160 100 L100 160 L40 100Z" fill="none" stroke="#a060ff" stroke-width="5" stroke-linejoin="round"/><path d="M100 32 L168 100 L100 168 L32 100Z" fill="none" stroke="#e0c8ff" stroke-width="1" opacity=".6"/>
+   <circle cx="40" cy="100" r="3.5" fill="#fff" filter="drop-shadow(0 0 4px #b080ff)"/><circle cx="160" cy="100" r="3.5" fill="#fff" filter="drop-shadow(0 0 4px #b080ff)"/></svg>
+  <i class="z3dr"></i>${R(7,i=>`<i class="z3st" style="top:${[-30,0,96,120,46,-20,76][i]}%;left:${[16,118,-26,64,-34,86,120][i]}%;animation-delay:${(i*.31).toFixed(2)}s"></i>`)}<i class="z3dim"></i>${R(12,i=>`<i class="z3chg" style="--r:${i*30}deg;animation-delay:${(i*.06).toFixed(2)}s"></i>`)}<i class="z3pil"></i><i class="z3core"></i><i class="z3sl"></i><i class="z3wv"></i><i class="z3wv z3q2"></i><i class="z3wv z3q3"></i>${R(8,i=>`<i class="z3ash" style="top:${rnd(0,100)}%;left:${rnd(-10,110)}%;--x:${rnd(-30,30)}px;animation-delay:${(i*.1).toFixed(1)}s"></i>`)}<i class="z3imp"></i>`],
+ nano:['กรอบ Nano Machine · ปีศาจโลหิต','หกเหลี่ยมกลจักร · ปีกใบมีดสามชั้นกางสะบัด · ดวงตาแดงลอยบนหัวพร้อมแฟลร์ · ออร่าหนาม · วงจรวิ่ง · สายฟ้าฟาดรอบ · ฝนเลือด · จอกระตุก','魔 BLOOD.SYS',
+  ()=>`<i class="z3bg"></i><i class="z3spk"></i>
+  <svg class="z3orn z3back" viewBox="0 0 200 200"><defs><linearGradient id="z3nb1" x1="1" x2="0"><stop offset="0" stop-color="#ff1a3c"/><stop offset="1" stop-color="#3a0010"/></linearGradient><linearGradient id="z3nb2" x1="0" x2="1"><stop offset="0" stop-color="#ff1a3c"/><stop offset="1" stop-color="#3a0010"/></linearGradient></defs>
+   <g class="z3blade z3bl"><path d="M58 92 L8 64 L22 80 L50 96Z" fill="url(#z3nb1)" stroke="#ff8aa0" stroke-width=".8"/><path d="M56 102 L2 100 L18 108 L52 108Z" fill="url(#z3nb1)" stroke="#d08aff" stroke-width=".8"/><path d="M58 112 L12 138 L26 136 L54 118Z" fill="url(#z3nb1)" stroke="#ff8aa0" stroke-width=".8"/></g>
+   <g class="z3blade z3br"><path d="M142 92 L192 64 L178 80 L150 96Z" fill="url(#z3nb2)" stroke="#ff8aa0" stroke-width=".8"/><path d="M144 102 L198 100 L182 108 L148 108Z" fill="url(#z3nb2)" stroke="#d08aff" stroke-width=".8"/><path d="M142 112 L188 138 L174 136 L146 118Z" fill="url(#z3nb2)" stroke="#ff8aa0" stroke-width=".8"/></g>
+   <g class="z3rot z3hide-sm"><circle cx="100" cy="100" r="76" fill="none" stroke="rgba(255,80,110,.7)" stroke-width="1.5" stroke-dasharray="3 5"/></g>
+   <g class="z3rotr"><circle cx="100" cy="100" r="68" fill="none" stroke="#ff3a5a" stroke-width="2.5" stroke-dasharray="40 60 20 90" filter="drop-shadow(0 0 3px #ff1a3c)"/></g>
+  </svg>
+  <i class="z3scan"></i>
+  <svg class="z3orn z3front" viewBox="0 0 200 200"><path class="z3hex" d="${hexP(56)}" fill="none" stroke="#ff2a4a" stroke-width="4.5" stroke-linejoin="round"/>
+   <path class="z3ck" d="${hexP(62)}" pathLength="100"/><path class="z3ck z3k2" d="${hexP(66)}" pathLength="100"/>
+   <g class="z3hide-sm" stroke="rgba(255,90,120,.7)" stroke-width="1" fill="none"><path d="M100 44 V30 H86 M100 156 V170 H114 M52 72 L40 66 V54 M148 128 L160 134 V146"/></g>
+   <g class="z3hide-sm" fill="#ff4a6a"><circle cx="86" cy="30" r="2"/><circle cx="114" cy="170" r="2"/><circle cx="40" cy="54" r="2"/><circle cx="160" cy="146" r="2"/></g>
+   ${bolt('','M30 50 L50 62 L42 68 L66 80')}${bolt('z3p','M170 46 L150 60 L158 66 L134 78')}${bolt('','M176 150 L152 138 L158 130 L132 122')}${bolt('z3p','M24 152 L48 138 L40 132 L66 122')}</svg>
+  <i class="z3eye"></i><i class="z3flr z3hide-sm"></i>${R(6,i=>`<i class="z3rn" style="left:${-10+i*24}%;animation-delay:${(i*.21).toFixed(2)}s"></i>`)}<i class="z3gl"></i>`]
+};
+
+const MAP={f_adm_gojo:['v3go','gojo'],f_adm_sukuna:['v3su','suk'],f_adm_cid:['v3ci','cid'],f_adm_nano:['v3na','nano']};
+const DD={f_adm_gojo:'กรอบแอดมิน — วงแสงอนันต์ ตรา ∞ เกล็ดม่านกั้นโคจร · ลูกแก้วฟ้า-แดงชนกันเป็นทรงกลมม่วง',f_adm_sukuna:'กรอบแอดมิน — แปดเหลี่ยมสีชาด เขาปีศาจ พระจันทร์เลือด · ฟันรัวเก้าฉับจนกรอบแตกร้าว',f_adm_cid:'กรอบแอดมิน — ข้าวหลามตัดเงา ปีกเงาสยาย จันทร์เสี้ยว · แกนแสงระเบิดเป็นเสาแสงพุ่งฟ้า',f_adm_nano:'กรอบแอดมิน — หกเหลี่ยมกลจักร ปีกใบมีด ดวงตาสีเลือด · สายฟ้าฟาด ฝนโลหิต'};
+Object.keys(MAP).forEach(id=>{const f=frOf(id);if(f){f.ty='xa3 '+MAP[id][0];f.d=DD[id]}});
+const _fw3=frWrap;frWrap=function(inner,id){const h=_fw3.apply(this,arguments),m=MAP[id];if(!m)return h;const d=Z3F[m[1]];bk=0;return h.replace(/<\/span>$/,d[3]()+`<i class="z3tag">${d[2]}</i></span>`)};
+const st=document.createElement('style');st.textContent=`@property --z3a{syntax:'<angle>';inherits:false;initial-value:0deg}
+.frw.fr-xa3::before,.frw.fr-xa3::after{display:none!important}.frw.fr-xa3{padding:0!important;animation:none!important;filter:none!important}
+.frw.fr-xa3{--s:48px;isolation:isolate;box-shadow:none!important;border:0!important;background:none!important;overflow:visible!important;border-radius:0!important}
+
+.frw.fr-xa3>i,.frw.fr-xa3>svg,.frw.fr-xa3>div,.frw.fr-xa3>i *,.frw.fr-xa3>svg *{pointer-events:none}
+.frw.fr-xa3 i{position:absolute;display:block;line-height:normal}
+
+.frw.fr-xa3>:first-child{position:relative;z-index:8;overflow:hidden}
+
+.z3orn{position:absolute;left:50%;top:50%;width:calc(var(--s)*2.1);height:calc(var(--s)*2.1);margin:calc(var(--s)*-1.05);overflow:visible}
+.z3orn.z3back{z-index:3}.z3orn.z3front{z-index:10}
+.z3sl{inset:-70%;z-index:12;border-radius:50%;opacity:0;background:repeating-conic-gradient(from 0deg,#fff 0 .6deg,transparent .6deg 7deg);-webkit-mask:radial-gradient(circle,transparent 24%,#000 30%,#000 46%,transparent 58%);mask:radial-gradient(circle,transparent 24%,#000 30%,#000 46%,transparent 58%)}
+.z3imp{inset:-30%;z-index:15;border-radius:50%;opacity:0;mix-blend-mode:difference;background:#fff}
+.z3tag{left:50%;bottom:calc(var(--s)*-.42);transform:translateX(-50%);z-index:20;white-space:nowrap;font:900 calc(var(--s)*.13)/1 system-ui,'Noto Sans Thai';padding:calc(var(--s)*.045) calc(var(--s)*.12);letter-spacing:.05em}
+@keyframes z3kspin{to{--z3a:360deg}}@keyframes z3krot{to{transform:rotate(360deg)}}@keyframes z3krotr{to{transform:rotate(-360deg)}}
+@keyframes z3kbr{0%,100%{transform:scale(.92)}50%{transform:scale(1.06)}}
+.frw.fr-xa3 svg .z3rot{transform-box:view-box;transform-origin:100px 100px;animation:z3krot 12s linear infinite}
+.frw.fr-xa3 .frw.fr-xa3 svg .z3rotr{transform-box:view-box;transform-origin:100px 100px;animation:z3krotr 8s linear infinite}
+
+/* ================= โกโจ · อนันต์ — วงกลม + ตรา ∞ + เกล็ดม่านกั้น ================= */
+.frw.fr-v3go>:first-child{border-radius:50%}
+.frw.fr-v3go .z3bg{inset:-80%;z-index:0;border-radius:50%;background:radial-gradient(circle,rgba(90,170,255,.45),rgba(40,50,160,.3) 36%,transparent 62%);animation:z3kbr 6s ease-in-out infinite}
+.frw.fr-v3go .z3rays{inset:-75%;z-index:1;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(200,240,255,.28) 0 3deg,transparent 3deg 15deg);-webkit-mask:radial-gradient(circle,transparent 28%,#000 34%,transparent 62%);mask:radial-gradient(circle,transparent 28%,#000 34%,transparent 62%);animation:z3krot 30s linear infinite}
+.frw.fr-v3go .z3edge{inset:calc(var(--s)*-.06);border-radius:50%;z-index:9;padding:calc(var(--s)*.06);background:conic-gradient(from var(--z3a),#fff,#bfefff 12%,#3a7bff 30%,#fff 45%,#bfefff 60%,#7a4dff 80%,#fff);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:z3kspin 2.4s linear infinite;filter:drop-shadow(0 0 4px #bfefff) drop-shadow(0 0 10px #3a7bff)}
+.frw.fr-v3go .z3crest{filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 8px #5ab8ff);animation:z3kgCr 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes z3kgCr{0%,100%{opacity:.85}50%{opacity:1;transform:scale(1.08)}}
+.frw.fr-v3go .z3shard{fill:rgba(190,235,255,.18);stroke:#cff2ff;stroke-width:1.2;filter:drop-shadow(0 0 3px #7fd8ff)}
+.frw.fr-v3go .z3pin{z-index:13;top:50%;left:50%;width:24%;height:2%;margin:-1% 0 0 -12%;background:linear-gradient(90deg,transparent,#dff6ff);border-radius:2px;filter:drop-shadow(0 0 3px #7fd8ff);opacity:0;animation:z3kgPin 7s linear infinite}
+@keyframes z3kgPin{0%,10%{transform:rotate(var(--r)) translateX(calc(var(--s)*1.1)) scaleX(1);opacity:0}14%{opacity:1}34%{transform:rotate(var(--r)) translateX(calc(var(--s)*.66)) scaleX(.2);opacity:0}100%{opacity:0}}
+.frw.fr-v3go .z3ob,.frw.fr-v3go .z3or{z-index:13;top:50%;left:50%;width:34%;height:34%;margin:-17%;border-radius:50%;mix-blend-mode:screen;opacity:0}
+.frw.fr-v3go .z3ob{background:radial-gradient(circle,#fff 12%,#5ab8ff 32%,rgba(40,90,255,.7) 50%,transparent 70%);animation:z3kgOB 7s ease-in-out infinite}
+.frw.fr-v3go .z3or{background:radial-gradient(circle,#fff 12%,#ff5a6a 32%,rgba(255,20,50,.7) 50%,transparent 70%);animation:z3kgOR 7s ease-in-out infinite}
+@keyframes z3kgOB{0%,8%{opacity:0;transform:translateX(calc(var(--s)*-.7)) scale(.3)}16%{opacity:1;transform:translateX(calc(var(--s)*-.7)) scale(1)}46%{transform:translateX(calc(var(--s)*-.55)) scale(1.05)}56%{transform:translateX(0) scale(.9);opacity:1}57%,100%{opacity:0}}
+@keyframes z3kgOR{0%,22%{opacity:0;transform:translateX(calc(var(--s)*.7)) scale(.3)}30%{opacity:1;transform:translateX(calc(var(--s)*.7)) scale(1)}46%{transform:translateX(calc(var(--s)*.55)) scale(1.05)}56%{transform:translateX(0) scale(.9);opacity:1}57%,100%{opacity:0}}
+.frw.fr-v3go .z3push{z-index:4;top:50%;left:50%;width:4%;height:4%;margin:-2%;border-radius:50%;background:#ff8a96;box-shadow:0 0 5px #ff2a4a;opacity:0;animation:z3kgPush 7s ease-out infinite}
+@keyframes z3kgPush{0%,30%{opacity:0;transform:translate(calc(var(--s)*.7),0)}31%{opacity:1}50%{opacity:0;transform:translate(calc(var(--s)*.7 + var(--x)),var(--y))}100%{opacity:0}}
+.frw.fr-v3go .z3sl{animation:z3kgSl 7s steps(1) infinite}
+@keyframes z3kgSl{0%,56%{opacity:0}57%{opacity:.95}59%{opacity:.8;transform:rotate(4deg)}61%{opacity:.6;transform:rotate(-3deg)}64%,100%{opacity:0}}
+.frw.fr-v3go .z3imp{animation:z3kgImp 7s steps(1) infinite}
+@keyframes z3kgImp{0%,56%{opacity:0}57%{opacity:1}58.5%{opacity:0}59.5%{opacity:1}60.5%,100%{opacity:0}}
+.frw.fr-v3go .z3hp{z-index:13;inset:-80%;border-radius:50%;opacity:0;mix-blend-mode:screen;background:radial-gradient(circle,#fff 6%,#e4cfff 14%,#a060ff 26%,rgba(110,30,255,.75) 40%,rgba(60,0,160,.3) 52%,transparent 64%);animation:z3kgHP 7s ease-out infinite}
+@keyframes z3kgHP{0%,57%{opacity:0;transform:scale(.1)}60%{opacity:1;transform:scale(.55)}80%{opacity:.95;transform:scale(.8)}100%{opacity:0;transform:scale(1.05)}}
+.frw.fr-v3go .z3rr{z-index:13;inset:-6%;border-radius:50%;border:2px solid #e9d6ff;box-shadow:0 0 12px #a060ff;opacity:0;animation:z3kgRR 7s ease-out infinite}
+.frw.fr-v3go .z3rr.z3q2{animation-delay:.25s;border-color:#9fc0ff}
+@keyframes z3kgRR{0%,58%{opacity:0;transform:scale(.3)}61%{opacity:1}90%,100%{opacity:0;transform:scale(2.6)}}
+.frw.fr-v3go .z3tag{color:#fff;background:linear-gradient(90deg,transparent,#3a5cff 20%,#a060ff 80%,transparent);text-shadow:0 0 6px #fff,0 0 12px #7fd8ff;border-top:1px solid #dff6ff;border-bottom:1px solid #dff6ff}
+
+/* ================= สุคุนะ · ราชาคำสาป — แปดเหลี่ยม + เขาปีศาจ + พระจันทร์เลือด + วงเขี้ยว ================= */
+.frw.fr-v3su>:first-child{clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
+.frw.fr-v3su .z3bg{inset:-80%;z-index:0;border-radius:50%;background:radial-gradient(circle at 50% 55%,rgba(255,30,50,.45),rgba(90,0,10,.55) 36%,transparent 62%)}
+.frw.fr-v3su .z3moon{left:50%;top:-58%;width:110%;height:110%;margin-left:-55%;z-index:1;border-radius:50%;background:radial-gradient(circle at 42% 40%,#ff8a7a,#d01028 45%,#5a0010 72%,transparent 74%);box-shadow:0 0 30px #ff2a40;opacity:.85;animation:z3kbr 4s ease-in-out infinite}
+.frw.fr-v3su .z3fang{transform-box:view-box;transform-origin:100px 100px;animation:z3krot 18s linear infinite}
+.frw.fr-v3su .z3horn{filter:drop-shadow(0 0 3px #ff2a40)}
+.frw.fr-v3su .z3shake{position:absolute;inset:0;z-index:9;animation:z3ksSh 5s infinite}
+@keyframes z3ksSh{0%,44%,52%,100%{transform:none}45%{transform:translate(3%,-2%)}46%{transform:translate(-3%,2%)}47%{transform:translate(2%,2%)}48%{transform:translate(-2%,-1%)}}
+.frw.fr-v3su .z3oct{animation:z3ksBeat 1.3s ease-in-out infinite}
+@keyframes z3ksBeat{0%,100%{filter:drop-shadow(0 0 3px #ff2a40)}10%{filter:drop-shadow(0 0 9px #ff2a40) drop-shadow(0 0 20px #a00018)}22%{filter:drop-shadow(0 0 4px #ff2a40)}32%{filter:drop-shadow(0 0 8px #ff2a40)}}
+.frw.fr-v3su .z3fl{transform-box:fill-box;transform-origin:50% 100%;animation:z3ksFl .55s ease-in-out infinite alternate}
+.frw.fr-v3su .z3fl.z3b{animation-duration:.8s;animation-delay:-.3s}
+@keyframes z3ksFl{from{transform:scale(1,.9) skewX(-3deg)}to{transform:scale(1,1.1) skewX(3deg)}}
+.frw.fr-v3su .z3crack path{fill:none;stroke:#ff6a7a;stroke-width:2.2;stroke-linecap:round;filter:drop-shadow(0 0 3px #ff2a40);stroke-dasharray:100;stroke-dashoffset:100;animation:z3ksCr 5s infinite}
+@keyframes z3ksCr{0%,44%{stroke-dashoffset:100;opacity:1}47%{stroke-dashoffset:0}80%{opacity:1;stroke-dashoffset:0}92%,100%{opacity:0;stroke-dashoffset:0}}
+.frw.fr-v3su .z3cut{z-index:14;left:50%;top:50%;width:240%;height:2.6%;margin-left:-120%;background:linear-gradient(90deg,transparent,#fff 40%,#fff 55%,#ff2a40 70%,transparent);filter:drop-shadow(0 0 4px #ff2a40);opacity:0;animation:z3ksCutA 5s infinite}
+@keyframes z3ksCutA{0%{opacity:0;transform:rotate(var(--r)) translateY(var(--o)) scaleX(0)}1.2%{opacity:1;transform:rotate(var(--r)) translateY(var(--o)) scaleX(1)}4%{opacity:0;transform:rotate(var(--r)) translateY(var(--o)) scaleX(1.15)}100%{opacity:0}}
+.frw.fr-v3su .z3sl{background:repeating-conic-gradient(from 0deg,#ff2a40 0 .7deg,transparent .7deg 6deg);animation:z3ksSl 5s steps(1) infinite}
+@keyframes z3ksSl{0%,44%{opacity:0}45%{opacity:.9}47%{opacity:.7;transform:rotate(3deg)}50%,100%{opacity:0}}
+.frw.fr-v3su .z3imp{background:#ff1a30;mix-blend-mode:normal;animation:z3ksImp 5s steps(1) infinite}
+@keyframes z3ksImp{0%,44%{opacity:0}44.6%{opacity:.8}45.6%{opacity:0}46.4%{opacity:.55}47.2%,100%{opacity:0}}
+.frw.fr-v3su .z3em{bottom:-20%;width:4%;height:4%;z-index:16;background:#ffb08a;border-radius:50%;box-shadow:0 0 5px #ff2a40,0 0 9px #ff2a40;animation:z3ksEm 2.2s linear infinite}
+@keyframes z3ksEm{0%{transform:translate(0,0) scale(1);opacity:0}15%{opacity:1}100%{transform:translate(var(--x),calc(var(--s)*-1.5)) scale(.3);opacity:0}}
+.frw.fr-v3su .z3tag{color:#ffd0d6;background:linear-gradient(90deg,transparent,#5a0010 15%,#b0001e 50%,#5a0010 85%,transparent);text-shadow:0 0 6px #ff2a40;border-top:1px solid #ff4a5a;border-bottom:1px solid #ff4a5a}
+
+/* ================= ซิด · เงามหาอำนาจ — ข้าวหลามตัด + ปีกเงา + จันทร์เสี้ยว ================= */
+.frw.fr-v3ci>:first-child{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);transform:scale(1.26)}
+.frw.fr-v3ci .z3bg{inset:-80%;z-index:0;border-radius:50%;background:radial-gradient(circle,rgba(140,60,255,.4),rgba(30,0,70,.55) 36%,transparent 62%)}
+.frw.fr-v3ci .z3gal{inset:-62%;z-index:1;border-radius:50%;background:conic-gradient(from 0deg,transparent,rgba(150,80,255,.6) 8%,transparent 20%,transparent 50%,rgba(90,40,220,.55) 58%,transparent 70%);filter:blur(6px);animation:z3krot 6s linear infinite}
+.frw.fr-v3ci .z3wing{transform-box:fill-box;filter:drop-shadow(0 0 4px #8a3aff)}
+.frw.fr-v3ci .z3wl{transform-origin:100% 50%;animation:z3kcWl 3.4s ease-in-out infinite}.frw.fr-v3ci .z3wr{transform-origin:0 50%;animation:z3kcWr 3.4s ease-in-out infinite}
+@keyframes z3kcWl{0%,100%{transform:rotate(4deg) scaleX(.94)}50%{transform:rotate(-6deg) scaleX(1.05)}}
+@keyframes z3kcWr{0%,100%{transform:rotate(-4deg) scaleX(.94)}50%{transform:rotate(6deg) scaleX(1.05)}}
+.frw.fr-v3ci .z3dia{filter:drop-shadow(0 0 4px #8a3aff) drop-shadow(0 0 10px #4a10b0)}
+.frw.fr-v3ci .z3dr{bottom:-30%;left:50%;width:7%;margin-left:-3.5%;z-index:11;border-radius:0 0 50% 50%;background:linear-gradient(#7a3aff,#160030);box-shadow:0 0 4px #8a3aff;animation:z3kcDr 3.2s ease-in infinite}
+@keyframes z3kcDr{0%{height:0;opacity:1}60%{height:24%}100%{height:30%;opacity:0;transform:translateY(60%)}}
+.frw.fr-v3ci .z3st{width:3%;height:3%;z-index:11;background:#fff;border-radius:50%;box-shadow:0 0 4px #c9a0ff,0 0 8px #8a3aff;animation:z3kcTw 2.2s ease-in-out infinite}
+@keyframes z3kcTw{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.3)}}
+.frw.fr-v3ci .z3chg{z-index:13;top:50%;left:50%;width:3.5%;height:3.5%;margin:-1.75%;border-radius:50%;background:#e8d8ff;box-shadow:0 0 6px #b080ff;opacity:0;animation:z3kcChg 7s ease-in infinite}
+@keyframes z3kcChg{0%,30%{opacity:0;transform:rotate(var(--r)) translateX(calc(var(--s)*1.05))}34%{opacity:1}55%{opacity:1;transform:rotate(calc(var(--r) + 200deg)) translateX(0)}56%,100%{opacity:0}}
+.frw.fr-v3ci .z3dim{inset:-60%;z-index:12;border-radius:50%;background:radial-gradient(circle,rgba(0,0,0,.1) 15%,rgba(0,0,0,.85) 55%);opacity:0;animation:z3kcDim 7s infinite}
+@keyframes z3kcDim{0%,30%{opacity:0}40%,56%{opacity:1}62%,100%{opacity:0}}
+.frw.fr-v3ci .z3core{z-index:14;top:50%;left:50%;width:12%;height:12%;margin:-6%;border-radius:50%;background:#fff;box-shadow:0 0 10px #fff,0 0 24px #c090ff,0 0 40px #8a3aff;opacity:0;animation:z3kcCore 7s ease-out infinite}
+@keyframes z3kcCore{0%,40%{opacity:0;transform:scale(0)}55%{opacity:1;transform:scale(1)}57%{transform:scale(.5)}58%{opacity:1;transform:scale(6)}70%,100%{opacity:0;transform:scale(8)}}
+.frw.fr-v3ci .z3pil{z-index:14;left:50%;top:-90%;width:30%;height:280%;margin-left:-15%;background:linear-gradient(90deg,transparent,rgba(200,160,255,.8) 30%,#fff 50%,rgba(200,160,255,.8) 70%,transparent);opacity:0;animation:z3kcPil 7s ease-out infinite;filter:blur(1px)}
+@keyframes z3kcPil{0%,57%{opacity:0;transform:scaleX(0)}59%{opacity:1;transform:scaleX(1)}75%{opacity:.7;transform:scaleX(.6)}88%,100%{opacity:0;transform:scaleX(0)}}
+.frw.fr-v3ci .z3imp{animation:z3kcImp 7s steps(1) infinite}
+@keyframes z3kcImp{0%,57%{opacity:0}57.5%{opacity:1}59%{opacity:0}60%{opacity:1}61%,100%{opacity:0}}
+.frw.fr-v3ci .z3sl{background:repeating-conic-gradient(from 0deg,#e0c8ff 0 .6deg,transparent .6deg 6deg);animation:z3kcSl 7s steps(1) infinite}
+@keyframes z3kcSl{0%,57%{opacity:0}58%{opacity:.95}60%{opacity:.7;transform:rotate(-4deg)}63%,100%{opacity:0}}
+.frw.fr-v3ci .z3wv{z-index:13;inset:-4%;border-radius:50%;border:3px solid #d8b8ff;box-shadow:0 0 14px #8a3aff,inset 0 0 14px #8a3aff;opacity:0;animation:z3kcWv 7s ease-out infinite}
+.frw.fr-v3ci .z3wv.z3q2{animation-delay:.18s;border-color:#7a4dff;border-width:2px}.frw.fr-v3ci .z3wv.z3q3{animation-delay:.36s;border-color:#fff;border-width:1px}
+@keyframes z3kcWv{0%,57%{opacity:0;transform:scale(.2)}60%{opacity:1}88%,100%{opacity:0;transform:scale(2.9)}}
+.frw.fr-v3ci .z3ash{z-index:16;width:3%;height:3%;background:#cfb0ff;border-radius:1px;opacity:0;animation:z3kcAsh 7s linear infinite}
+@keyframes z3kcAsh{0%,60%{opacity:0;transform:translate(0,0) rotate(0)}64%{opacity:1}100%{opacity:0;transform:translate(var(--x),calc(var(--s)*-.8)) rotate(220deg)}}
+.frw.fr-v3ci .z3tag{color:#efe0ff;background:linear-gradient(90deg,transparent,#1a0040 15%,#5a1ad0 50%,#1a0040 85%,transparent);text-shadow:0 0 6px #b080ff;border-top:1px solid #b080ff;border-bottom:1px solid #b080ff}
+
+/* ================= Nano Machine · ปีศาจโลหิต — หกเหลี่ยม + ปีกกลจักร + ดวงตาแกนกลาง ================= */
+.frw.fr-v3na>:first-child{clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.frw.fr-v3na .z3bg{inset:-80%;z-index:0;border-radius:50%;background:radial-gradient(circle,rgba(255,26,60,.45),rgba(120,20,180,.32) 38%,transparent 62%);animation:z3kbr 1.8s ease-in-out infinite}
+.frw.fr-v3na .z3spk{inset:-55%;z-index:1;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(255,40,70,.85) 0 2deg,transparent 2deg 14deg,rgba(180,60,255,.7) 14deg 15deg,transparent 15deg 26deg);-webkit-mask:radial-gradient(circle,transparent 40%,#000 44%,transparent 66%);mask:radial-gradient(circle,transparent 40%,#000 44%,transparent 66%);animation:z3krot 10s linear infinite,z3knSp .5s steps(2) infinite}
+@keyframes z3knSp{50%{filter:brightness(1.7)}}
+.frw.fr-v3na .z3blade{transform-box:fill-box;filter:drop-shadow(0 0 3px #ff1a3c)}
+.frw.fr-v3na .z3bl{transform-origin:100% 50%;animation:z3knBl 4s ease-in-out infinite}.frw.fr-v3na .z3br{transform-origin:0 50%;animation:z3knBr 4s ease-in-out infinite}
+@keyframes z3knBl{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}24%{transform:rotate(2deg)}}
+@keyframes z3knBr{0%,100%{transform:rotate(0)}20%{transform:rotate(8deg)}24%{transform:rotate(-2deg)}}
+.frw.fr-v3na .z3hex{filter:drop-shadow(0 0 4px #ff1a3c) drop-shadow(0 0 10px #8a1aff)}
+.frw.fr-v3na .z3ck{fill:none;stroke:#ff6a8a;stroke-width:2;stroke-dasharray:10 90;animation:z3knRun 2s linear infinite;filter:drop-shadow(0 0 2px #ff1a3c)}
+.frw.fr-v3na .z3ck.z3k2{stroke:#d08aff;stroke-dasharray:6 94;animation-duration:2.8s;animation-direction:reverse}
+@keyframes z3knRun{to{stroke-dashoffset:-100}}
+.frw.fr-v3na .z3scan{inset:0;z-index:9;overflow:hidden;clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.frw.fr-v3na .z3scan:before{content:'';position:absolute;left:0;right:0;height:20%;background:linear-gradient(transparent,rgba(255,40,80,.5),transparent);animation:z3knScan 2.4s linear infinite}
+@keyframes z3knScan{from{top:-25%}to{top:110%}}
+.frw.fr-v3na .z3bolt{fill:none;stroke:#fff;stroke-width:1.6;filter:drop-shadow(0 0 2px #ff1a3c) drop-shadow(0 0 5px #ff1a3c);opacity:0;animation-duration:3.3s;animation-iteration-count:infinite;animation-timing-function:steps(1)}
+.frw.fr-v3na .z3bolt.z3p{filter:drop-shadow(0 0 2px #b03aff) drop-shadow(0 0 5px #b03aff)}
+.frw.fr-v3na .z3eye{left:50%;top:-44%;width:30%;height:30%;margin-left:-15%;z-index:14;border-radius:50%;background:radial-gradient(circle,#fff 8%,#ff1a3c 28%,rgba(255,26,60,.35) 46%,transparent 66%);animation:z3knEye 2.2s ease-in-out infinite}
+.frw.fr-v3na .z3flr{left:-80%;top:-30%;width:260%;height:2.4%;z-index:14;background:linear-gradient(90deg,transparent,#ff6a8a 38%,#fff 50%,#ff6a8a 62%,transparent);animation:z3knEye 2.2s ease-in-out infinite}
+@keyframes z3knEye{0%,100%{transform:scale(.7);opacity:.7}50%{transform:scale(1.15);opacity:1}}
+.frw.fr-v3na .z3rn{width:1.6%;height:24%;z-index:15;background:linear-gradient(transparent,#ff3a5a,#b03aff);border-radius:2px;animation:z3knRn 1.2s linear infinite}
+@keyframes z3knRn{from{transform:translateY(calc(var(--s)*-.8)) rotate(14deg);opacity:0}20%{opacity:.9}to{transform:translateY(calc(var(--s)*1.4)) rotate(14deg);opacity:0}}
+.frw.fr-v3na .z3gl{inset:-20%;z-index:17;background:linear-gradient(transparent 38%,rgba(255,40,80,.7) 39%,transparent 43%,transparent 68%,rgba(180,60,255,.6) 69%,transparent 72%);opacity:0;animation:z3knGl 3.3s steps(1) infinite}
+@keyframes z3knGl{0%,88%,100%{opacity:0;transform:none}89%{opacity:1;transform:translateX(5%)}91%{opacity:1;transform:translateX(-6%)}93%{opacity:0}}
+.frw.fr-v3na .z3tag{color:#fff;font-family:ui-monospace,monospace;background:linear-gradient(90deg,transparent,#3a0010 15%,#ff1a3c 50%,#5a10a0 85%,transparent);text-shadow:0 0 6px #ff6a8a;border-top:1px solid #ff8aa0;border-bottom:1px solid #ff8aa0}
+.frw.fr-xa3:not(.z3big) .z3tag{display:none}
+.frw.fr-v3go>:first-child{border-radius:50%!important}
+
+${KF.join('\n')}`;document.head.appendChild(st);
+const fit=()=>{try{document.querySelectorAll('.frw.fr-xa3').forEach(e=>{const w=e.offsetWidth;if(!w||e._z3w===w)return;e._z3w=w;e.style.setProperty('--s',w+'px');e.classList.toggle('z3big',w>=64)})}catch(x){}};
+try{new MutationObserver(()=>{clearTimeout(fit._t);fit._t=setTimeout(fit,60)}).observe(document.body,{childList:true,subtree:true})}catch(x){}
+addEventListener('resize',()=>{document.querySelectorAll('.frw.fr-xa3').forEach(e=>e._z3w=0);fit()});setTimeout(fit,500)}
