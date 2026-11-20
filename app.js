@@ -18403,7 +18403,7 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'⚡',t:'ปุ่มทะลวงขั
 function glWatch(){try{if(!S||!S.alive||!S.xian||!S.xt)return;const p=S.pcap==null?-1:S.pcap;if(S._glP==null){S._glP=p;S._glV=godLife();return}if(p!==S._glP){const v=godLife(),d=v-(S._glV||v);S._glP=p;S._glV=v;if(d>0)log(`⏳ ทะลวงขั้นสำเร็จ — อายุขัยเพิ่มขึ้น <b>+${fmt(d)} ปี</b> (อายุขัยตามขั้น ${fmt(lifeMax())} ปี)`,'myth')}}catch(e){}}
 setInterval(glWatch,1500);
 {const _chQ=choice,nc=function(title,text,opts){try{if(choice._cur&&!auto&&S&&S.alive){if(choice._cur.title===title)return;if(!choice._q)choice._q=[];if(choice._q.length<6){choice._q.push([title,text,opts,S]);return}}}catch(e){}return _chQ.apply(this,arguments)};for(const k in _chQ)nc[k]=_chQ[k];nc._q=[];choice=nc}
-function chDeq(){try{if(choice._cur||!choice._q||!choice._q.length)return;const q=choice._q.shift();if(q[3]!==S||!S||!S.alive){return chDeq()}setTimeout(()=>{if(choice._cur){choice._q.unshift(q);return}if(q[3]===S&&S&&S.alive)choice(q[0],q[1],q[2])},250)}catch(e){}}
+function chDeq(){try{if(choice._cur||!choice._q||!choice._q.length)return;const q=choice._q.shift();if(q[3]!==S||!S||!S.alive){return chDeq()}setTimeout(()=>{if(choice._cur){choice._q.unshift(q);return}if(q[3]===S&&S&&S.alive)choice(q[0],q[1],q[2])},(typeof rdGap==='function'?rdGap():250))}catch(e){}}
 {const _crQ=choiceRun;choiceRun=function(){const r=_crQ.apply(this,arguments);try{chDeq()}catch(e){}return r}}
 // ===================== v17.1c feedback: สำนักรับเชิญ · ตั้งค่าความรัก · รายได้ข้ามเวลา · ชื่ออาวุธ · ขีดอายุมนุษย์ · แชทโชว์วิชาย่อได้ =====================
 // 1) ฝากตัวเรียน: ผูกปุ่มด้วยข้อมูลจริง (ชื่อในโลกเซียนถูกแปลงจึงหาไม่เจอ) + ข้อความตรงสาเหตุ
@@ -22898,7 +22898,7 @@ function ckShow(){let e;while((e=revealQ.shift())&&!e.isConnected){}if(e){e.styl
 function ckBar(p,instant){const b=$('ybar');if(!b)return;b.style.transition=instant?'none':'width .1s linear';b.style.width=Math.max(0,Math.min(100,p*100))+'%'}
 startTimer=function(){clearInterval(timer);timer=setInterval(()=>{try{
  if(!S||!S.alive)return;
- const blocked=paused||modalOpen||choice._cur||document.hidden||speed>=32;
+ const blocked=paused||modalOpen||choice._cur||document.hidden||speed>=32||Date.now()<(window._rdU||0);
  // ถูกหยุด (มีหน้าต่าง/ตัวเลือก/พัก): ข้อความที่ค้างอยู่ทยอยขึ้นให้ครบ ไม่ต้องรอแถบ
  if(blocked){if(revealQ.length&&++CK.fb>=2){CK.fb=0;if(auto||speed>=4)flushReveal();else ckShow()}return}
  if(CK.hold){if(Date.now()<CK.hold)return;if(revealQ.length){if(auto||speed>=4||speed===0)flushReveal();else{ckShow();return}}CK.hold=0;acc=0;ckBar(0,true);CK.yShown=0;CK.yN=0;passYear();CK.yN=revealQ.length;return}
@@ -34697,7 +34697,7 @@ window.supJoin=async function(off){const n=($('shlN')||{}).value||'',dmE=documen
 
 // 🔁 ผู้ย้อนกาล: เควสช่วยเพื่อนร่วมชะตาห้ามถูกข้าม — (1) โหมดออโต้หยุดรอ และดวลจริงไม่ถูกตัดสินอัตโนมัติ (2) ถ้ามีเหตุการณ์อื่นเด้งซ้อน ให้ต่อคิวรอ ไม่ให้ชะตาเลือกแทนตัวเลือกที่ค้างอยู่
 {const _chK=choice;choice=function(t,x,o){try{const cur=choice._cur;if(cur&&cur.keep){(choice._q=choice._q||[]).push([t,x,o,S]);return}}catch(e){}const r=_chK.apply(this,arguments);try{if(choice._cur&&/^🔁/.test(String(t)))choice._cur.keep=1}catch(e){}return r}}
-{const _crK=choiceRun;choiceRun=function(i){let rg=false;try{const c=choice._cur;rg=!!(c&&c.keep)}catch(e){}if(rg&&auto){auto=false;try{render()}catch(e){}try{toast('โหมดอัตโนมัติหยุดรอ — เรื่องของเพื่อนร่วมชะตา')}catch(e){}}const r=_crK.apply(this,arguments);try{if(!choice._cur&&choice._q&&choice._q.length){const a=choice._q.shift();if(a[3]===S)setTimeout(()=>{if(!choice._cur&&S===a[3]&&S.alive)choice.call(null,a[0],a[1],a[2]);else if(S===a[3])choice._q.unshift(a)},400)}}catch(e){}return r}}
+{const _crK=choiceRun;choiceRun=function(i){let rg=false;try{const c=choice._cur;rg=!!(c&&c.keep)}catch(e){}if(rg&&auto){auto=false;try{render()}catch(e){}try{toast('โหมดอัตโนมัติหยุดรอ — เรื่องของเพื่อนร่วมชะตา')}catch(e){}}const r=_crK.apply(this,arguments);try{if(!choice._cur&&choice._q&&choice._q.length){const a=choice._q.shift();if(a[3]===S)setTimeout(()=>{if(!choice._cur&&S===a[3]&&S.alive)choice.call(null,a[0],a[1],a[2]);else if(S===a[3])choice._q.unshift(a)},(typeof rdGap==='function'?Math.max(400,rdGap()):400))}}catch(e){}return r}}
 
 // 🏯💛 หมวดผู้ก่อตั้ง: แท็บสลับ หอผู้ก่อตั้ง / หอผู้สนับสนุน ในหน้าเดียวกัน
 (()=>{const st=document.createElement('style');st.textContent='.hlTabs{display:flex;gap:6px;margin:0 0 10px}.hlTabs button{flex:1;border:2px solid #c9a24a;background:#2a2016;color:#f1e3c2;border-radius:12px;padding:8px 6px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 3px 0 #000}.hlTabs button.on{background:linear-gradient(#ffe29a,#e8b54a);color:#3a2a08}';document.head.appendChild(st)})();
@@ -48139,3 +48139,23 @@ let MOV=null;window._mOv=(k,ms)=>{MOV={k,t:Date.now()+(ms||7000)}};
 {const _l=log;log=function(t){try{if(S&&!S.mw&&/ทัณฑ์สวรรค์|ฝ่าทัณฑ์|เมฆทัณฑ์/.test(String(t||'')))MOV={k:'trib',t:Date.now()+7000}}catch(e){}return _l.apply(this,arguments)}}
 window._sc86={abyss,soulHunt,academy,trib,birthRoom,sports,grad2,rooftop,lostSoi,mwDeath,cave,jail,ritual,horde,zroad,tInside,patrol,bunker,weather};
 })()}catch(e){console.error('block86',e)}
+
+// ===================== แก้จากกระดาน: เวลาอ่าน · เควสสายเรื่อง/หมื่นปีในบันทึกเควส · เควสศรัทธานับทุกแหล่ง =====================
+// 1) หลังเลือกตัวเลือก ให้เวลาอ่านผลก่อนปีถัดไป/ตัวเลือกถัดไป (ไม่ใช้ในโหมดอัตโนมัติและความเร็วสูง)
+function rdGap(){try{if(auto)return 250;if(speed>=8)return 500;if(speed>=4)return 900;return 1500}catch(e){return 250}}
+{const _crRd=choiceRun;choiceRun=function(){const n0=(typeof revealQ!=='undefined'&&revealQ)?revealQ.length:0;const r=_crRd.apply(this,arguments);try{if(S&&S.alive&&!auto&&speed<8){const n=Math.max(0,((typeof revealQ!=='undefined'&&revealQ)?revealQ.length:0)-n0);window._rdU=Date.now()+Math.min(5000,(speed>=4?700:1500)+n*(speed>=4?250:500))}}catch(e){}return r}}
+{const _slRd=startLife;startLife=function(){window._rdU=0;return _slRd.apply(this,arguments)}}
+// 2) บันทึกเควส: เควสสายเรื่อง 4 ขั้นของระบบ และเควสหมื่นปี ต้องเห็นรายละเอียด
+{const _qlSq=questList;questList=function(){const L=_qlSq.apply(this,arguments);try{const s=S&&S.sys;if(!s)return L;
+ const q=s.qc;if(q&&!L.some(x=>x.k==='sqc')){let C=null;try{C=sqC()}catch(e){}const nm=C?C.n:'ภารกิจสายเรื่อง';
+  const st=q.st===1||q.st===3?`${q.n} · ${fmtG(+qProg(q).toFixed(1))}/${fmtG(q.g)} · เหลือ ${Math.max(0,q.dl-S.age)} ปี`:'รอเลือกทางแยกในเหตุการณ์ของระบบ';
+  L.unshift({k:'sqc',ic:'🟪',n:`ภารกิจสายเรื่อง: ${nm} · ขั้น ${q.st||1}/4`,p:st,d:`ขั้น 1 ทำเป้าหมายแรก → ขั้น 2 เลือกทางแยก → ขั้น 3 ทำเป้าหมายที่สอง → ขั้น 4 รับตอนจบ · ล้มเหลว (หมดเวลา) โดนลงโทษหนักกว่าเควสปกติ${C&&C.i?'<br>'+C.i:''}`})}
+ const x=s.x,lq=x&&x.lq;if(lq&&!L.some(y=>y.k==='slq')){const pr={live:()=>S.age-lq.b,fame:()=>S.fame||0,pow:()=>S.power||0,qst:()=>(s.done||0)-lq.b,art:()=>(S.arts||[]).length}[lq.k];const v=pr?Math.max(0,pr()):0;
+  L.unshift({k:'slq',ic:'🏛️',n:'เควสหมื่นปี: '+lq.nm,p:`${fmt(Math.min(v,lq.g))}/${fmt(lq.g)} · เหลือ ${fmt(Math.max(0,lq.dl-S.age))} ปี`,d:'เควสระยะยาวของระบบ — สำเร็จได้ SP พลังพุ่ง และความสามารถถาวร · หมดเวลา ระบบผิดหวัง (ความเชื่อใจลด)'})}}catch(e){console.error(e)}return L}}
+// 3) เควส "ให้ผู้คนศรัทธาคุณเพิ่ม": นับศรัทธาที่เพิ่มจากทุกแหล่งในแดนเทพ/กัลป์ (เหตุการณ์แดนเทพ · เทวสภาดูแลแคว้น · ผู้ศรัทธาในโลกเทพ)
+{const fNow=()=>({a:+S.fa||0,b:(S.hv&&+S.hv.fa)||0});
+ const fTrack=()=>{try{if(!S||!S.alive||typeof heH!=='function')return;const h=heH(),c=fNow();if(h._fl){let d=0;for(const k in c){const v=c[k]-(h._fl[k]||0);if(v>0)d+=v}if(d>0)h.fx=(h.fx||0)+d}h._fl=c}catch(e){}};
+ try{const _q=QV.h_faith;if(_q)QV.h_faith=()=>{fTrack();return _q()+((heH().fx)||0)}}catch(e){}
+ {const _cr=choiceRun;choiceRun=function(){fTrack();const r=_cr.apply(this,arguments);fTrack();return r}}
+ {const _py=passYear;passYear=function(){fTrack();const r=_py.apply(this,arguments);fTrack();return r}}
+ try{const _gb=gdBel;gdBel=function(v){const r=_gb.apply(this,arguments);try{if(S&&+r>0&&typeof heH==='function'){const h=heH();h.fx=(h.fx||0)+1}}catch(e){}return r}}catch(e){}}
