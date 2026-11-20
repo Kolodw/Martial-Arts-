@@ -43048,7 +43048,7 @@ const HWN=[['mn','📣','งานด่วนค่าจ้างสามเ�
  ['fm','📱','คลิปที่คุณโพสต์เมื่อวานยอดวิวกำลังพุ่ง',['mwnet'],m=>{const g=Math.round(3000*m);try{mwFx({fame:g})}catch(e){}return`ผู้ติดตาม +${fmt(g)}`}],
  ['jy','🎫','บัตรคอนเสิร์ตวงที่ชอบหลุดมาราคาพิเศษ',['mwlow'],m=>{joy(Math.round(6*m));return`ความสุข +${Math.round(6*m)}`}]];
 const natHW=()=>!!(S&&S.mw&&S.mw.native&&!(S.mw.qi>=3));
-function hwOpen(){const X=IX(),h=ch(natHW()?HWN:HW);let done=0;X.hw=S.age+R(3,6);const fit=h[3].includes(S.focus);
+function hwOpen(){const X=IX();if(natHW()&&S.mw.Z&&S.mw.wx&&S.mw.wx.on&&S.mw.wx.id==='zombie'){X.hw=S.age+R(3,6);return}const h=ch(natHW()?HWN:HW);let done=0;X.hw=S.age+R(3,6);const fit=h[3].includes(S.focus);
  const grab=()=>{if(done||!ok())return;done=1;const m=fit?2:1;const g=h[4](m);log(`${h[1]} <b>${natHW()?'คว้าโอกาสไว้ได้!':'คว้าจังหวะฟ้าได้!'}</b> ${h[2]} — ${g}${fit?' · <b>โฟกัสตรงจังหวะ ×2</b>':''}`,fit?'epic':'good');try{sfx('rare')}catch(e){}};
  try{let el=$('hwCard');if(el)el.remove();el=document.createElement('div');el.id='hwCard';el.innerHTML=`<div class="hwI">${h[1]}</div><div class="hwT"><small>⚡ ${natHW()?'โอกาสมาถึง':'จังหวะฟ้าเปิด'}${fit?' · ตรงโฟกัส ×2!':''}</small><b>${h[2]}</b><i class="hwBar"></i></div><button>✋ คว้า!</button>`;document.body.appendChild(el);const go=()=>{grab();el.classList.add('hwOk');setTimeout(()=>el.remove(),600)};el.querySelector('button').onclick=go;el.querySelector('.hwT').onclick=go;setTimeout(()=>{if(el.isConnected){el.classList.add('hwGone');setTimeout(()=>el.remove(),400)}},5000)}catch(e){}
  setTimeout(()=>{if(!done&&ok()){done=1;addFeed('ev',`${h[1]} ${h[2]} — แต่คุณไม่ทันสังเกต ${natHW()?'โอกาสผ่านไปแล้ว':'จังหวะผ่านไปแล้ว'}`,'sum')}},5600)}
@@ -47661,3 +47661,310 @@ const st=document.createElement('style');st.textContent=`#modal .opt{position:re
 .akS{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #8882}.akS>div{flex:1}.akS b{display:block;font-weight:600}.akS small{font-size:12px;opacity:.75}.akS .pbtn{white-space:nowrap}.akS .pbtn[disabled]{opacity:.5}`;document.head.appendChild(st);
 window._AK={AK,find,big,nz,load};
 })()}catch(e){console.error('block84',e)}
+// ============================================================
+// BLOCK 85: 🖼️ ฉาก pixel ยุคปัจจุบัน · โลกพิเศษ · จิตวิญญาณยุทธ์ (สไตล์เดียวกับยุทธภพ 160×56 · รายละเอียด ×3) — ฉากเปลี่ยนตามเนื้อเรื่อง
+// ============================================================
+try{(()=>{
+const A=(a,f)=>{const o=g.globalAlpha;g.globalAlpha=o*a;try{f()}finally{g.globalAlpha=o}};
+const grad=(c0,c1,h)=>{for(let y=0;y<h*3;y++)Q(0,y,SW*3,1,mixC(c0,c1,Math.pow(y/(h*3),1.1)))};
+const glow=(cx,cy,r,col,a,fy)=>{fy=fy||.7;for(let L=4;L>=1;L--){const rr=r*L/4;A(a*.22,()=>{for(let dy=-rr*fy;dy<=rr*fy;dy+=3){const hw=Math.sqrt(Math.max(0,rr*rr-(dy/fy)*(dy/fy)));Q(Math.round((cx-hw)/3)*3,Math.round((cy+dy)/3)*3,Math.round(hw*2/3)*3,3,col)}})}};
+const stars=n=>{for(let i=0;i<n;i++){if((frame+i*13)%60<45)Q(srand(i)*480,srand(i+7)*80,1+(i%6===0),1+(i%6===0),'#fff')}};
+// ชุดคนยุคปัจจุบัน: เสื้อยืด/ฮู้ด + ยีนส์ (ไม่มีคอเสื้อไขว้)
+function modern(me,o){o=o||{};const c=o.top||'#3a4a6a';return Object.assign({},me,{robe:c,trim:c,belt:shd(c,-.12),pant:'#34507a',sash:c,skirt:o.pant||'#34507a',noSkirt:true,hs:me.g==='หญิง'?3:4,flower:'#2a2a2a',coat:null,aura:null,sword:null,staff:null,hat:null,fur:0,jade:0,emblem:0,stripe:0,patch:0,arm:0,basket:0,float:0},o)}
+const npc=(x,y,seed,gn,top,pose,age,extra)=>{const c=avatarCols(seed,gn);person(x,y,modern({age:age||30,g:gn,skin:c.skin,hair:c.hair,seed},Object.assign({top},extra||{})),pose||'stand')};
+// ---------- ตัวหนังสือ pixel 3×5 ----------
+const FONT={A:'010101111101101',B:'110101110101110',C:'011100100100011',D:'110101101101110',E:'111100110100111',F:'111100110100100',I:'111010010010111',L:'100100100100111',N:'110101101101101',O:'010101101101010',Q:'010101101011001',S:'011100010001110',T:'111010010010010',U:'101101101101111',V:'101101101101010',Y:'101101010010010',R:'110101110101101',K:'101101110101101',M:'101111111101101',P:'110101110100100',G:'011100101101011',H:'101101111101101',W:'101101111111101',X:'101101010101101',Z:'111001010100111',' ':'000000000000000','!':'010010010000010','0':'111101101101111','1':'010110010010111','2':'110001010100111','3':'110001010001110','4':'101101111001001','5':'111100110001110','6':'011100111101111','7':'111001010010010','8':'111101111101111','9':'111101111001110'};
+function pText(x,y,s,c){String(s).toUpperCase().split('').forEach((ch,i)=>{const f=FONT[ch];if(!f)return;for(let k=0;k<15;k++)if(f[k]==='1')Q(x+i*8+(k%3)*2,y+Math.floor(k/3)*2,2,2,c)})}
+function badge(x,y,w,txt,col){A(.85,()=>Q(x,y,w,16,'#0a0a1a'));Q(x,y,w,1,col);Q(x,y+15,w,1,col);pText(x+4,y+3,txt,col)}
+// ---------- ของประกอบฉากเมืองไทย ----------
+function shophouses(base,n,dark){for(let i=0;i<n;i++){const x=i*54-10,w=52,h=96+(i%3)*10,c=dark?['#4a4250','#3e3848','#463e4c'][i%3]:['#e8d2b0','#d8c8a8','#e0c8c0','#c8d0c0'][i%4];Q(x,base-h,w,h,c);Q(x,base-h,w,4,shd(c,-.2));
+  for(let f=1;f<3;f++){Q(x+6,base-h+f*28-16,16,14,dark?'#2a2430':'#6a8aa8');Q(x+28,base-h+f*28-16,16,14,dark?((frame+i*7)%90<70&&i%2?'#ffd070':'#2a2430'):'#6a8aa8');Q(x+4,base-h+f*28-2,44,2,shd(c,-.25))}
+  Q(x+4,base-34,44,34,dark?'#2a2430':'#8a8a8a');for(let k=0;k<11;k++)Q(x+5+k*4,base-34,1,34,dark?'#3a3440':'#9a9a9a');
+  Q(x+2,base-44,48,8,['#d83a3a','#3a6aba','#e0a020','#3a9a5a'][i%4]);Q(x+6,base-42,30,4,'#ffffff')}}
+function wires(y){for(let x=0;x<480;x+=2)Q(x,y+Math.round(Math.sin(x*.025)*4),2,1,'#2a2a2a');for(let x=0;x<480;x+=2)Q(x,y+6+Math.round(Math.sin(x*.025+1)*4),2,1,'#2a2a2a');Q(100,y-6,4,96,'#8a8a8a');Q(92,y-4,20,3,'#7a7a7a');Q(380,y-6,4,96,'#8a8a8a');Q(372,y-4,20,3,'#7a7a7a')}
+function moto(x,y,col){const X=Math.round(x),Y=Math.round(y),b=Math.round(Math.sin(frame*.4)*.5);Q(X,Y-6,8,8,'#1a1a1a');Q(X+2,Y-4,4,4,'#6a6a6a');Q(X+30,Y-6,8,8,'#1a1a1a');Q(X+32,Y-4,4,4,'#6a6a6a');Q(X+6,Y-14+b,28,8,col);Q(X+8,Y-18+b,14,4,'#2a2a2a');Q(X+30,Y-22+b,3,10,'#3a3a3a');Q(X+28,Y-24+b,8,3,'#3a3a3a');Q(X+34,Y-16+b,4,3,'#ffe9a0')}
+function walkers(){for(let i=0;i<2;i++){const sp=.25+i*.1,dir=i?-1:1,x=dir>0?((frame*sp+i*90)%200)-20:180-((frame*sp+i*90)%200);npc(x,47,1200+i*7,i?'หญิง':'ชาย',i?'#e8a0b8':'#7aa86a','walk',i?24:45)}}
+function road(y,col){P(0,y,SW,SH-y,col||'#5a5a62');for(let x=0;x<480;x+=36)Q(x,y*3+14,18,2,'#e8e0a0');Q(0,y*3,480,2,'#9a9aa0')}
+function cityDay(){for(let i=0;i<12;i++){const x=i*42-8,w=30+srand(i*3)*12,h=30+srand(i*7)*40;Q(x,120-h,w,h+10,'#a8b8c8');for(let wy=124-h;wy<120;wy+=6)for(let wx=x+3;wx<x+w-3;wx+=5)Q(wx,wy,2,3,'#d8e4f0')}}
+function templeHall(bx,by,bw,day){Q(bx,by-6,bw,10,day?'#d8d0c0':'#8a8278');Q(bx+10,by-50,bw-20,44,day?'#f4ece0':'#c8c0b0');
+ if(!day)for(let i=0;i<14;i++)Q(bx+12+srand(i+60)*(bw-26),by-48+srand(i+70)*40,6+srand(i)*10,2,'#9a9284');
+ for(let k=0;k<4;k++){Q(bx+26+k*30,by-40,10,28,day?'#7a2a1a':'#3a2a24');Q(bx+26+k*30,by-40,10,2,'#c8a040')}
+ const roof=(y,w,c)=>{for(let r=0;r<16;r++){const ww=w-r*4;Q(bx+bw/2-ww/2,y-r,ww,1,r%3===0?shd(c,-.2):c)}Q(bx+bw/2-w/2-6,y,8,3,c);Q(bx+bw/2+w/2-2,y,8,3,c)};
+ roof(by-50,bw+10,day?'#c84a2a':'#8a3a2a');roof(by-70,bw-40,day?'#2e8a5a':'#2e6a4a');
+ Q(bx+bw/2-1,by-104,3,20,'#e0b040');Q(bx+bw/2-5,by-106,6,3,'#e0b040');Q(bx+bw/2,by-108,4,3,'#e0b040');
+ for(const s of[-1,1]){const ex=bx+bw/2+s*(bw/2+4);Q(ex-1,by-58,3,10,'#e0b040');Q(ex+s*2,by-62,3,5,'#e0b040')}
+ if(!day)for(let i=0;i<12;i++)Q(bx+bw/2-60+srand(i+80)*120,by-66+srand(i+90)*14,4,2,'#1a1a24')}
+function chedi(cx,day){const c=day?'#e8e0d0':'#8a8a90',d=shd(c,-.12);Q(cx-26,96,52,30,shd(c,-.1));Q(cx-20,74,40,24,c);for(let i=0;i<10;i++){const w=8+i*2.6;Q(cx-w/2,40+i*3.6,w,4,i%3?c:d)}Q(cx-5,34,10,6,c);Q(cx-1,20,2,16,day?'#e0b040':'#9a9aa0');
+ if(!day)for(let i=0;i<8;i++)Q(cx-24+srand(i+40)*44,80+srand(i+50)*40,3,2,'#4a5a4a')}
+
+// ================= 🏙️ ยุคปัจจุบัน (โลกปกติ) =================
+function soi(me,v){v=v||{};const night=!!(v.night||v.alley);if(night)sky(0,'night');else sky(1);
+ shophouses(132,10,night);wires(40);road(44,night?'#3a3a42':'#6a6a72');
+ if(!night&&!v.flood)walkers();
+ if(v.stall){Q(36,104,64,30,'#c8c8c8');Q(36,104,64,3,'#e8e8e8');Q(30,96,76,8,'#3a8a3a');for(let k=0;k<8;k++)Q(32+k*9,96,5,8,'#ffffff');Q(44,112,10,10,'#7a5a3a');Q(56,108,18,6,'#e86a3a');Q(60,106,10,3,'#4ab04a');Q(78,110,12,10,'#d8d8d8');for(let i=0;i<3;i++){const k=(frame*.4+i*12)%36;A(.35-k/110,()=>Q(80+Math.sin(k*.3)*3,104-k,4,4,'#f0f0f0'))}
+  person(14,47,modern(me,{top:'#e86a8a'}),'stand');npc(110,47,4121,'ชาย','#5a7aba','stand',40)}
+ else if(v.rider){for(let i=0;i<3;i++){moto(300+i*44,150,['#3a6aba','#2a2a2a','#e0a020'][i]);Q(300+i*44+12,128,12,10,'#e86a1a')}moto(160,150,'#d83a3a');person(54,44,modern(me,{top:'#e86a1a'}),'sit')}
+ else if(v.alley){A(.6,()=>Q(0,0,480,168,'#0a0a1a'));glow(110,40,40,'#ffe9a0',.5);Q(108,30,6,4,'#ffe9a0');
+  person(70,47,modern(me,{top:'#2a2a34'}),'stand');npc(112,47,77,'ชาย','#1a1a1a','stand',30);npc(124,47,78,'ชาย','#3a1a1a','stand',30);npc(136,47,79,'หญิง','#d8a8c8','stand',24);
+  if(frame%50<25)Q(352,110,8,2,'#e8e8f0');Q(470,4,6,6,frame%30<15?'#ff3030':'#401010')}
+ else{person(70,47,modern(me,v.kid?{top:'#f0f0f0',pant:'#1a2a5a'}:{top:'#4a6a9a'}),v.walk?'walk':'stand');if(v.kid){npc(90,47,321,'หญิง','#f0f0f0','walk',9);Q(330,118,10,10,'#e83a3a')}else npc(100,47,555,'หญิง','#d8a040','walk',50)}
+ if(v.flood){const lv=v.flood;A(.75,()=>{Q(0,168-lv,480,lv,'#6a8aa0');for(let x=0;x<480;x+=12)Q(x+((frame*.5)%12),168-lv,6,1,'#c8e0f0')})}
+ if(v.fire){glow(260,60,70,'#ff7030',.6);for(let i=0;i<6;i++){const h=20+Math.abs(Math.sin(frame*.5+i))*16;Q(230+i*10,54-h,8,h,i%2?'#ff7a20':'#ffc030')}for(let i=0;i<6;i++){const k=(frame*.5+i*10)%60;A(.5-k/130,()=>Q(240+Math.sin(k*.1+i)*8,30-k*.6,14,10,'#3a3a40'))}}}
+function kidHome(me){const age=S.age;P(0,0,SW,46,'#e8d8b8');for(let x=0;x<480;x+=30)Q(x,0,1,138,'#d8c8a8');P(0,46,SW,10,'#b88a5a');for(let x=0;x<480;x+=24)Q(x,138,1,30,'#9a6a40');
+ Q(40,26,78,52,'#5a3a22');Q(45,31,68,42,'#9fd3ff');Q(45,56,68,17,'#8ad08a');Q(78,31,2,42,'#5a3a22');
+ Q(330,70,60,40,'#2a2a2a');Q(334,74,52,32,frame%40<20?'#4a8ac8':'#5a9ad8');Q(350,110,20,6,'#3a3a3a');Q(320,116,80,22,'#8a5a3a');
+ const fa=frame*.6;Q(250,8,2,14,'#d8d8d8');Q(240,22,22,4,'#e8e8e8');A(.6,()=>{Q(251+Math.cos(fa)*14,24,6,2,'#c8c8c8');Q(251-Math.cos(fa)*14,24,6,2,'#c8c8c8')});
+ Q(150,140,120,16,'#d8b860');for(let x=150;x<270;x+=6)Q(x,140,1,16,'#c8a850');
+ Q(420,40,26,30,'#f4ecd8');Q(424,44,18,22,'#c8a8a8');Q(425,45,16,10,'#e8d0d0');
+ const gw=(S.mw&&S.mw.kid&&S.mw.kid.bg)==='orphan'?'ชาย':'หญิง';
+ if(age<3){Q(196,118,40,22,'#f0c0d0');Q(194,114,44,6,'#ffffff');person(66,46,Object.assign({},me,{robe:'#ffe0a0',trim:'#ffe0a0'}),'lie');npc(110,47,4242,'หญิง','#c86a8a','sit',gw==='หญิง'?30:60)}
+ else{person(66,47,modern(me,{top:'#ffe060',pant:'#3a6ac8'}),'sit');npc(100,47,4242,'หญิง','#c86a8a','sit',gw==='หญิง'?34:62)}}
+function classroom(me,teacher){P(0,0,SW,46,'#f0ead8');P(0,46,SW,10,'#b8a080');for(let x=0;x<480;x+=30)Q(x,138,1,30,'#a89070');
+ Q(120,14,240,60,'#2a5a3a');Q(116,10,248,4,'#8a6a4a');Q(116,74,248,4,'#8a6a4a');
+ for(let i=0;i<6;i++)Q(140+i*30,26+(i%2)*14,20,2,'#e8e8e0');Q(150,52,60,2,'#e8e8e0');Q(260,30,40,24,'#e8e8e0');Q(262,32,36,20,'#2a5a3a');Q(276,36,8,8,'#e8e8e0');
+ Q(16,24,60,40,'#9fd3ff');Q(16,24,60,3,'#8a6a4a');Q(44,24,3,40,'#8a6a4a');Q(392,20,70,14,'#e0b040');for(let k=0;k<5;k++)Q(398+k*12,24,8,6,['#d83a3a','#3a6aba','#ffffff','#3a6aba','#d83a3a'][k]);
+ const desk=(x,y)=>{Q(x,y,36,4,'#c89a5a');Q(x+2,y+4,2,12,'#8a6a4a');Q(x+32,y+4,2,12,'#8a6a4a')};
+ if(teacher){person(30,47,modern(me,{top:'#e8d8f0',pant:'#2a2a3a'}),'stand');Q(144,60,22,2,'#c89a5a');for(let i=0;i<3;i++){const x=[250,330,410][i];npc(x/3-6,47,700+i,i%2?'หญิง':'ชาย','#f4f4f4','sit',11);desk(x-14,138)}}
+ else{desk(180,128);person(64,47,modern(me,{top:'#f4f4f4',pant:'#1a2a5a'}),'sit');for(let i=0;i<3;i++){const x=[20,330,420][i];desk(x,128);npc(x/3-2,47,800+i,i%2?'หญิง':'ชาย','#f4f4f4','sit',12)}npc(118,47,9001,'หญิง','#c86a8a','stand',45)}}
+function office(me){P(0,0,SW,46,'#d8dce4');for(let i=0;i<4;i++){const x=10+i*118;Q(x,10,104,70,'#9ac8e8');Q(x,10,104,3,'#7a8a9a');Q(x+50,10,3,70,'#7a8a9a');
+  for(let k=0;k<5;k++){const bx=x+4+k*20,h=20+srand(i*9+k)*36;Q(bx,80-h,16,h,'#7a98b8');for(let wy=82-h;wy<80;wy+=5)Q(bx+3,wy,3,2,'#c8dcf0')}}
+ P(0,46,SW,10,'#8a8a96');for(let x=0;x<480;x+=40)Q(x,138,1,30,'#7a7a86');
+ const cub=x=>{Q(x,106,90,4,'#e8e8ec');Q(x,90,4,40,'#a8a8b4');Q(x+20,82,40,26,'#2a2a34');Q(x+22,84,36,20,frame%60<50?'#5a9ad8':'#7ab8f0');Q(x+36,108,8,6,'#3a3a44');Q(x+64,98,10,8,'#f4f4f4');Q(x+66,96,6,2,'#8a5a3a')};
+ cub(150);cub(330);person(66,47,modern(me,{top:'#e8f0ff',pant:'#2a2a3a',belt:'#1a1a1a'}),'sit');npc(124,47,1301,'หญิง','#c8a0d8','sit',30);
+ Q(20,100,30,40,'#5a8a4a');Q(26,90,18,14,'#6ab05a');Q(28,140,14,8,'#8a5a3a')}
+function hospital(me){P(0,0,SW,46,'#e8f0ec');for(let x=0;x<480;x+=60)Q(x,0,2,138,'#d0dcd6');P(0,46,SW,10,'#b8c8c0');
+ Q(200,6,80,16,'#2a6a4a');Q(210,10,60,8,'#e8f0ec');Q(232,8,4,12,'#d83a3a');Q(228,12,12,4,'#d83a3a');
+ const bed=(x,y,who)=>{Q(x,y,70,10,'#f4f4f4');Q(x,y+10,70,4,'#9aa8b0');Q(x+2,y+14,3,12,'#7a8890');Q(x+65,y+14,3,12,'#7a8890');Q(x+4,y-4,14,6,'#ffffff');if(who){Q(x+6,y-6,10,8,who);Q(x+18,y-2,48,6,'#a8c8e8')}};
+ bed(20,112,'#f1c27d');bed(380,112,'#c8a07a');bed(290,138,'#e0b090');
+ Q(110,50,2,62,'#9aa8b0');Q(104,50,14,2,'#9aa8b0');Q(106,52,10,16,'#cfefff');const dr=(frame*.7)%30;Q(110,70+dr,2,2,'#9fd3ff');
+ Q(150,96,26,40,'#7a8890');Q(152,98,22,14,'#1a2a2a');for(let x=0;x<22;x+=2)Q(152+x,104+Math.round(Math.sin((x+frame*.8)*.6)*(x%10<2?5:1)),2,1,'#3aff7a');
+ person(66,47,modern(me,{top:'#f8f8ff',pant:'#f8f8ff',belt:'#e0e0ff'}),'stand')}
+function site(me){sky(1);cityDay();
+ Q(330,10,4,120,'#e0a020');for(let y=10;y<130;y+=8)Q(330,y,14,2,'#e0a020');Q(344,10,4,120,'#e0a020');Q(260,8,170,6,'#e0a020');for(let x=260;x<430;x+=8)Q(x,14,2,6,'#c88a10');const sw=Math.sin(frame*.05)*6;Q(290,14,1,40+sw,'#2a2a2a');Q(284,54+sw,14,8,'#8a8a8a');
+ Q(30,60,170,72,'#a8a098');for(let fy=0;fy<4;fy++){Q(30,60+fy*18,170,3,'#8a8278');for(let x=30;x<200;x+=28)Q(x,60,3,72,'#8a8278')}for(let x=26;x<206;x+=10)Q(x,58,2,76,'#6a6a6a');
+ ground(0,46,'#b8a07a');Q(220,126,40,10,'#c8c0b0');Q(226,118,30,8,'#d8d0c0');
+ person(66,47,modern(me,{top:'#e86a1a',pant:'#3a3a48',hat:null}),'walk');npc(104,47,4400,'ชาย','#3a6aba','stand',40)}
+function paddy(me){sky(1);mountains('#7a9ab0',40,10,2);P(0,40,SW,16,'#8ac85a');
+ for(let r=0;r<6;r++){const y=124+r*7;Q(0,y,480,1,'#6aa84a');for(let x=(r%2)*6;x<480;x+=12){const sw=Math.round(Math.sin(frame*.1+x*.05+r));Q(x+sw,y-4,2,4,'#4a9a3a');Q(x+3+sw,y-3,1,3,'#7ac85a')}}
+ Q(380,90,60,34,'#a07a4a');Q(374,82,72,10,'#7a5a3a');for(let k=0;k<4;k++)Q(384+k*16,124,3,12,'#6a4a2a');
+ Q(250,86,2,30,'#7a5a3a');Q(240,92,22,2,'#7a5a3a');Q(246,80,10,8,'#e0c080');Q(244,94,14,12,'#c84a3a');
+ const bx=((frame*.2)%600)-60;Q(bx+40,110,40,16,'#4a4a52');Q(bx+76,104,14,12,'#4a4a52');Q(bx+80,102,3,3,'#e8e8e8');Q(bx+44,126,4,8,'#3a3a42');Q(bx+70,126,4,8,'#3a3a42');
+ person(66,47,modern(me,{top:'#3a6aba',pant:'#2a2a3a'}),'walk')}
+function room(me,v){v=v||{};const night=!!v.night;P(0,0,SW,46,night?'#3a3448':'#e0d8e8');for(let x=0;x<480;x+=40)Q(x,0,1,138,night?'#2e2a3c':'#d0c8d8');P(0,46,SW,10,night?'#5a4a40':'#a88a6a');
+ Q(330,18,110,64,'#5a4a3a');Q(336,24,98,52,night?'#1a1440':'#9fd3ff');if(night){for(let i=0;i<8;i++){const x=340+srand(i)*86,h=10+srand(i+3)*30;Q(x,76-h,10,h,'#2a2450');if((frame+i*5)%40<30)Q(x+3,76-h+4,2,2,'#ffd070')}}else{Q(340,56,90,20,'#b0c4d8');Q(350,46,20,30,'#c8d4e0')}
+ Q(20,110,120,24,'#e8e8f0');Q(20,104,30,10,'#ffffff');Q(20,134,120,4,'#8a6a4a');
+ const fa=frame*.7;Q(270,62,2,40,'#d8d8d8');Q(262,102,18,4,'#d8d8d8');Q(258,52,30,16,'#e8e8e8');A(.5,()=>{Q(271+Math.cos(fa)*12,58,4,4,'#c8c8c8')});
+ Q(150,112,80,4,'#8a6a4a');Q(156,116,3,22,'#6a4a2a');Q(222,116,3,22,'#6a4a2a');Q(168,94,40,18,'#2a2a34');Q(170,96,36,14,night?'#5aa0ff':'#7ab8f0');Q(164,110,48,2,'#4a4a54');glow(188,100,30,'#7ab8ff',night?.5:.15);
+ if(v.live){Q(200,90,4,4,frame%30<15?'#ff3030':'#601010');Q(216,80,2,32,'#3a3a3a');Q(210,76,14,6,'#e8e8e8')}
+ person(56,47,modern(me,{top:night?'#5a4a6a':'#8a6aaa'}),'sit');Q(400,116,20,22,'#c8a060');Q(402,112,16,4,'#e0c080')}
+function rural(me){sky(2);mountains('#8aa0b0',40,9,1);ground(0,46,'#7ab858');
+ const hx=250;for(let k=0;k<5;k++)Q(hx+k*36,92,4,44,'#6a4a2a');Q(hx-6,70,160,24,'#a07040');for(let x=hx-6;x<hx+154;x+=8)Q(x,70,2,24,'#8a5a30');for(let r=0;r<14;r++){const w=180-r*8;Q(hx+77-w/2,56-r*2,w,2,r%2?'#7a3a2a':'#8a4a32')}Q(hx+30,76,22,18,'#3a2a1a');Q(hx+90,76,20,14,'#ffe9a0');
+ Q(hx+40,94,4,40,'#8a6a4a');Q(hx+70,94,4,40,'#8a6a4a');const sw=Math.round(Math.sin(frame*.07)*3);for(let x=0;x<30;x++)Q(hx+42+x,110+sw+Math.round(Math.sin(x/30*Math.PI)*6),1,2,'#d84a4a');
+ Q(118,82,20,40,'#5a3a22');for(let i=0;i<5;i++)Q(96+i*14,50+i%2*6,30,26,'#3a8a3a');for(let i=0;i<6;i++)Q(100+srand(i)*60,64+srand(i+3)*24,4,6,'#e8c040');
+ person(56,47,Object.assign(modern(me,{top:'#e8e8e0',pant:'#4a3a2a'}),{old:true}),'sit');
+ for(let i=0;i<3;i++){const cx=((frame*.3+i*80)%480);Q(cx,150,6,4,'#f4f4f4');Q(cx+5,148,3,3,'#d83a3a');Q(cx+1,154,1,2,'#e0a020')}}
+function templeDay(me,v){v=v||{};sky(1);templeHall(170,130,150,true);chedi(410,true);ground(1,46,'#c8b898');for(let x=0;x<480;x+=20)Q(x,138,10,1,'#b8a888');
+ if(v.ordain){person(66,47,Object.assign({},me,{robe:'#e8781a',trim:'#e8781a',belt:'#d8681a',pant:'#e8781a',hat:'bald',noSkirt:true,sword:null,staff:null,aura:null,coat:null,skirt:'#e8781a'}),'stand');npc(96,47,5151,'หญิง','#ffffff','stand',55);npc(108,47,5152,'ชาย','#ffffff','stand',58)}
+ else if(v.funeral){Q(220,96,60,30,'#f4f4f4');Q(216,92,68,6,'#e0b040');Q(240,80,20,14,'#2a2a2a');for(let i=0;i<5;i++)Q(206+i*20,126,8,10,['#f4f4f4','#e8e0ff'][i%2]);person(66,47,modern(me,{top:'#1a1a1a',pant:'#1a1a1a'}),'stand');npc(110,47,6161,'หญิง','#1a1a1a','stand',40);npc(122,47,6162,'ชาย','#1a1a1a','stand',60)}
+ else if(v.wed){for(let i=0;i<8;i++)Q(150+i*24,40,10,8,['#ffc0d8','#ffffff'][i%2]);person(66,47,modern(me,{top:'#f4ecd8',pant:'#f4ecd8'}),'stand');npc(80,47,7171,me.g==='หญิง'?'ชาย':'หญิง','#ffe8f0','stand',me.age||30);for(let i=0;i<4;i++){const k=(frame*.6+i*15)%60;Q(220+srand(i)*60,40+k*1.4,2,2,'#ffc0d8')}}
+ else if(v.draft){for(let i=0;i<5;i++)npc(86+i*12,47,9700+i,'ชาย',i===2?'#4a5a3a':'#f4f4f4','stand',21);Q(330,112,30,22,'#c8a060');Q(334,106,22,6,'#8a6a4a');person(66,47,modern(me,{top:'#f4f4f4',pant:'#2a2a3a'}),'stand')}
+ else{person(66,47,modern(me,{top:'#ffffff'}),'stand');npc(100,47,5250,'หญิง','#ffffff','stand',60);Q(320,120,20,10,'#e0b040');for(let i=0;i<3;i++){const k=(frame*.4+i*12)%36;A(.4-k/90,()=>Q(326+i*4+Math.sin(k*.3)*3,118-k,2,4,'#d8d8e8'))}}}
+
+// ---------------- 🧟 โลกซอมบี้: เมืองร้างตอนพลบค่ำ กองไฟ ----------------
+function zombie(me,M){
+ grad('#2a2230','#d0784a',46);
+ // ดวงอาทิตย์แดงหม่นหลังควัน
+ A(.5,()=>{Q(372,70,30,30,'#ff9a5a');Q(366,76,42,18,'#ff9a5a')});A(.25,()=>Q(350,58,74,54,'#ffb070'));
+ // ตึกไกล พัง ไม่มีไฟ
+ for(let i=0;i<13;i++){const x=i*38-6,w=26+srand(i*3)*14,h=40+srand(i*7)*50,top=126-h,c=i%2?'#3a3040':'#2e2836';Q(x,top,w,h+12,c);
+  // ยอดหัก
+  for(let k=0;k<w;k+=3){const d=Math.floor(srand(i*11+k)*7);Q(x+k,top,3,d,mixC('#2a2230','#d0784a',top/138))}
+  for(let wy=top+8;wy<126;wy+=7)for(let wx=x+3;wx<x+w-4;wx+=6){const r=srand(i*31+wx*3+wy);Q(wx,wy,3,4,r>.92?'#ff8a3a':r>.55?'#1a141e':'#4a3e52')}}
+ // ควันไฟจากตึก
+ for(let s=0;s<2;s++){const bx=s?96:330;for(let i=0;i<7;i++){const k=(frame*.35+i*9+s*20)%63;A(Math.max(0,.45-k/150),()=>Q(bx+Math.sin(k*.12+i)*6-k*.3,100-k*1.4,10+k*.35,8+k*.25,'#4a4250'))}}
+ // ถนนแตก
+ P(0,44,SW,12,'#4a4448');for(let i=0;i<40;i++)Q(srand(i+70)*480,134+srand(i+90)*30,4+srand(i)*8,1,'#3a3438');
+ for(let x=0;x<480;x+=40)Q(x+((frame*0)|0),150,20,2,'#8a8270');Q(0,132,480,2,'#00000033');
+ for(let i=0;i<6;i++){const cx=srand(i+200)*480,cy=140+srand(i+210)*24;Q(cx,cy,12,1,'#2e2a2c');Q(cx+10,cy+1,1,4,'#2e2a2c')}
+ // รถคว่ำ + สนิม
+ Q(330,112,70,18,'#7a4a32');Q(336,104,52,10,'#6a3e2a');Q(342,106,16,6,'#2a3a48');Q(362,106,18,6,'#2a3a48');Q(330,112,70,2,'#9a6040');Q(340,128,12,6,'#1e1a1c');Q(380,128,12,6,'#1e1a1c');
+ for(let i=0;i<10;i++)Q(332+srand(i+300)*64,113+srand(i+310)*14,3,2,'#5a3020');
+ // แนวกั้นไม้ + ยาง
+ for(let i=0;i<5;i++){Q(40+i*14,108-(i%2)*3,4,24,'#6a4a30');Q(41+i*14,108-(i%2)*3,1,24,'#8a6440')}Q(34,114,76,4,'#7a5434');Q(34,124,76,4,'#7a5434');
+ Q(116,120,16,12,'#1c1a1e');Q(119,123,10,6,'#3a363c');Q(132,124,14,8,'#1c1a1e');Q(135,126,8,4,'#3a363c');
+ // ซอมบี้ไกลๆ เดินโซเซเข้ามาจากขวา
+ for(let i=0;i<3;i++){const sp=.12+i*.03,x=((520-frame*sp+i*70)%300+300)%300+260,y=128-i*2,sw=Math.sin(frame*.09+i*2),lim=Math.round(sw*2);
+  const sk=['#7a8a6a','#8a8a72','#6a7a62'][i],cl=['#4a4a5a','#5a3a3a','#3a4a3a'][i];
+  A(1,()=>{Q(x+2,y-30,8,9,sk);Q(x+3,y-27,2,2,'#2a0a0a');Q(x+7,y-27,2,2,'#2a0a0a');Q(x,y-21,12,14,cl);Q(x+2,y-17,3,4,shd(cl,-.3));
+   Q(x-8,y-19+lim,9,3,cl);Q(x-10,y-19+lim,3,3,sk);Q(x-8,y-14-lim,9,3,shd(cl,-.2));Q(x-10,y-14-lim,3,3,sk);Q(x+1,y-7,4,7+lim,'#2a2a30');Q(x+7,y-7,4,7-lim,'#24242a')})}
+ // กองไฟ
+ const fx=168,fy=140;glow(fx,fy-14,60,'#ff9040',.55);
+ Q(fx-16,fy,32,4,'#4a3424');Q(fx-12,fy-3,24,4,'#6a4a2e');
+ for(let i=0;i<9;i++){const fl=Math.sin(frame*.5+i*1.7),h=10+Math.abs(fl)*10+(i%3)*4,w=5;Q(fx-14+i*3,fy-h,w,h,i%2?'#ff7a20':'#ffb030');Q(fx-13+i*3,fy-h*.6,w-2,h*.6,'#ffe070')}
+ for(let i=0;i<8;i++){const k=(frame*.7+i*13)%60;A(1-k/60,()=>Q(fx-8+Math.sin(k*.2+i)*10,fy-20-k,2,2,'#ffcf60'))}
+ // คนนั่งข้างกองไฟ (ฮู้ด)
+ person(66,47,modern(me,{top:'#5a5a48',coat:'#3e4a3a'}),'sit');
+ {const n=M&&M.Z&&M.Z.com?Math.min(3,M.Z.com.length):0;for(let i=0;i<n;i++)npc([32,96,108][i],47,9800+i,i%2?'หญิง':'ชาย',['#6a5a4a','#4a5a6a','#7a4a4a'][i],'sit',[30,24,50][i])}
+ // เป้ + ขวดน้ำ
+ Q(242,128,14,12,'#4a5a3a');Q(244,126,10,3,'#3a4a2e');Q(260,130,4,10,'#9ad0e0')
+ A(.18,()=>Q(0,0,480,168,'#ff7030'))}
+
+// ---------------- 👻 ผีไทย: วัดร้างกลางดึก ต้นตะเคียน ----------------
+function ghost(me,M){
+ sky(0,'night');
+ // หมอกบนฟ้า
+ for(let i=0;i<3;i++){const x=((i*170+frame*.15)%640)-120;A(.12,()=>Q(x,40+i*12,140,8,'#c8d0ff'))}
+ // เจดีย์ร้าง (ขวาหลัง)
+ const cx=410;Q(cx-26,96,52,30,'#7a7a80');Q(cx-20,74,40,24,'#86868c');for(let i=0;i<10;i++){const w=8+i*2.6;Q(cx-w/2,40+i*3.6,w,4,i%3?'#8a8a90':'#7a7a82')}Q(cx-5,34,10,6,'#8a8a90');Q(cx-1,20,2,22,'#9a9aa0');
+ Q(cx-26,96,52,2,'#9a9aa2');for(let i=0;i<8;i++)Q(cx-24+srand(i+40)*44,80+srand(i+50)*40,3,2,'#4a5a4a');Q(cx+10,60,4,20,'#5a5a60');
+ // โบสถ์ร้าง
+ const bx=170,bw=150,by=130;Q(bx,by-6,bw,10,'#8a8278');
+ Q(bx+10,by-50,bw-20,44,'#c8c0b0');for(let i=0;i<14;i++)Q(bx+12+srand(i+60)*(bw-26),by-48+srand(i+70)*40,6+srand(i)*10,2,'#9a9284');
+ for(let k=0;k<4;k++)Q(bx+26+k*30,by-40,10,28,'#3a2a24');Q(bx+26,by-40,10,2,'#c8a040');Q(bx+56,by-40,10,2,'#c8a040');
+ // หลังคาซ้อนสองชั้น + ช่อฟ้า
+ const roof=(y,w,c)=>{for(let r=0;r<16;r++){const ww=w-r*4;Q(bx+bw/2-ww/2,y-r,ww,1,r%3===0?shd(c,-.2):c)}Q(bx+bw/2-w/2-6,y,8,3,c);Q(bx+bw/2+w/2-2,y,8,3,c)};
+ roof(by-50,bw+10,'#8a3a2a');roof(by-70,bw-40,'#2e6a4a');
+ Q(bx+bw/2-1,by-104,3,20,'#c8a040');Q(bx+bw/2-5,by-106,6,3,'#c8a040');Q(bx+bw/2,by-108,4,3,'#c8a040');
+ for(const s of[-1,1]){const ex=bx+bw/2+s*(bw/2+4);Q(ex-1,by-58,3,10,'#c8a040');Q(ex+s*2,by-62,3,5,'#c8a040')}
+ for(let i=0;i<12;i++)Q(bx+bw/2-60+srand(i+80)*120,by-66+srand(i+90)*14,4,2,'#1a1a24');
+ // พื้น + หญ้ารก
+ ground(1,46,'#2a3a2a');for(let x=0;x<480;x+=4){const h=3+srand(x)*6,sw=Math.round(Math.sin(frame*.08+x*.05));Q(x+sw,138-h,1,h,'#3a5a3a')}
+ // ศาลพระภูมิเก่า
+ {const sx=346;Q(sx+10,104,3,34,'#6a5a4a');Q(sx,96,24,10,'#b8a888');Q(sx-2,92,28,4,'#8a3a2a');Q(sx+8,98,8,6,'#3a2a24');for(let i=0;i<3;i++){const k=(frame*.4+i*12)%36;A(.4-k/90,()=>Q(sx+12+Math.sin(k*.3)*3,92-k,2,4,'#d8d8e8'))}Q(sx+4,110,4,6,'#e8c040');Q(sx+16,110,4,6,'#d83a4a')}
+ // ต้นตะเคียน + ผ้าแพรสามสี
+ const tx=30;Q(tx,30,30,108,'#3a2a22');Q(tx+4,30,6,108,'#4e3a2c');Q(tx-6,120,42,18,'#3a2a22');Q(tx-14,132,20,6,'#3a2a22');Q(tx+26,130,22,8,'#3a2a22');
+ for(let i=0;i<5;i++){Q(tx-30+i*16,-4+i*7,56,24,i%2?'#1e3a26':'#24442c')}for(let i=0;i<30;i++)Q(srand(i+120)*130-20,srand(i+130)*50,4,3,'#2e5236');
+ [['#d83a4a',84],['#e8c040',90],['#3aa05a',96],['#d83a4a',102]].forEach(([c,y])=>{Q(tx-1,y,32,4,c);Q(tx-1,y+3,32,1,shd(c,-.3))});
+ const tl=Math.round(Math.sin(frame*.1)*2);Q(tx+30,96,3,14+tl,'#d83a4a');Q(tx+33,96,3,12-tl,'#e8c040');
+ // นางตะเคียน: ลอย โปร่งใส ผมยาวปิดหน้า
+ const gx=86,gy=78+Math.round(Math.sin(frame*.08)*3),ga=.55+.25*Math.sin(frame*.13);
+ glow(gx+11,gy+28,34,'#bfe8ff',ga*.9,1.3);
+ A(ga,()=>{Q(gx+4,gy,14,14,'#e8e4dc');Q(gx+2,gy-2,18,8,'#121218');Q(gx+1,gy+4,4,26,'#121218');Q(gx+17,gy+4,4,24,'#121218');Q(gx+7,gy+6,8,8,'#121218');Q(gx+8,gy+9,2,2,'#ff3a3a');
+  Q(gx+1,gy+14,20,26,'#f0eee6');for(let r=0;r<16;r++){const w=20+r;Q(gx+11-w/2,gy+40+r,w,1,'#f0eee6')}Q(gx+3,gy+20,2,10,'#e0dcd2');Q(gx-4,gy+18,6,3,'#e8e4dc');Q(gx+20,gy+18,6,3,'#e8e4dc')});
+ for(let r=0;r<10;r++)A(ga*(1-r/10),()=>Q(gx-4+r,gy+56+r,30-r*2,1,'#f0eee6'));
+ if(M&&M.G&&(M.G.bad||0)>=50){const sx=440,sy=96+Math.round(Math.sin(frame*.06)*2);A(.7,()=>{Q(sx,sy,16,40,'#0a0a10');Q(sx+2,sy-10,12,12,'#0a0a10')});Q(sx+4,sy-6,2,2,'#ff2020');Q(sx+10,sy-6,2,2,'#ff2020')}
+ // ดวงไฟผีลอย
+ for(let i=0;i<5;i++){const x=200+Math.sin(frame*.03+i*1.9)*150,y=70+Math.sin(frame*.05+i)*30;glow(x,y,10,'#7affc8',.6);Q(x-1,y-1,3,3,'#c8ffe8')}
+ // คุณถือไฟฉาย ส่องไปทางผี
+ const lx=196,ly=118,fl=frame%37<35?1:.2;A(.18*fl,()=>{for(let i=0;i<70;i++){const w=4+i*.9;Q(lx-i*1.4,ly-w/2-i*.35,2,w,'#fff6c0')}});
+ person(64,47,modern(me,{top:'#2a2a34'}),'stand');Q(lx-2,ly-2,6,4,'#d8d8d8');
+ // หมอกพื้น
+ for(let i=0;i<5;i++){const x=((i*120+frame*.3)%640)-120;A(.16,()=>Q(x,132+i%2*6,150,10,'#c8d4e8'))}
+ A(.12,()=>Q(0,0,480,168,'#203060'))}
+
+
+
+// ================= 🌀 โลกพิเศษอื่นๆ =================
+function hunter(me,M){sky(0,'dusk');for(let i=0;i<12;i++){const x=i*42-8,w=30+srand(i*3)*12,h=36+srand(i*7)*44;Q(x,124-h,w,h+10,'#4a4060');for(let wy=128-h;wy<124;wy+=6)for(let wx=x+3;wx<x+w-3;wx+=5)if(srand(wx+wy)>.5)Q(wx,wy,2,3,'#ffd070')}
+ const H=(M&&M.H)||{},br=/เกตแตก|สัตว์ประหลาด|มอนสเตอร์/.test(ctxTxt()),gx=300,gy=60,R0=32+Math.sin(frame*.1)*2,col=br?'#ff3a5a':'#4ad0ff';
+ glow(gx,gy,90,col,.6,1);for(let k=0;k<5;k++){const r=R0-k*6,a=frame*.06*(k%2?1:-1)+k;for(let s=0;s<40;s++){const t=s/40*Math.PI*2+a;Q(gx+Math.cos(t)*r,gy+Math.sin(t)*r*1.1,3,3,k%2?shd(col,.3):col)}}Q(gx-12,gy-12,24,26,'#0a0a1a');
+ for(let i=0;i<6;i++){const k=(frame*.8+i*12)%70;A(1-k/70,()=>Q(gx+Math.cos(i)*k,gy+Math.sin(i*2)*k*.6,2,2,'#c8f8ff'))}
+ road(44,'#4a4a56');for(let x=150;x<470;x+=16){Q(x,132,8,3,'#ffd020');Q(x+8,132,8,3,'#1a1a1a')}Q(150,132,2,16,'#9a9a9a');Q(468,132,2,16,'#9a9a9a');
+ if(br)for(let i=0;i<3;i++){const x=260+i*50+Math.sin(frame*.2+i)*6;Q(x,112,26,20,'#5a2a6a');Q(x+4,108,6,6,'#5a2a6a');Q(x+16,108,6,6,'#5a2a6a');Q(x+6,114,4,3,'#ffea3a');Q(x+16,114,4,3,'#ffea3a')}
+ const aw=H.aw&&H.aw!=='none';person(56,47,modern(me,{top:aw?'#2a3a5a':'#5a6a7a',pant:'#1a1a2a'}),'stand');if(aw){Q(204,96,3,30,'#c8e8ff');Q(202,124,7,3,'#6a4a2a')}
+ npc(108,47,9100,'ชาย','#1a2a4a','stand',35);
+ if(H.r!=null&&!H.hide)badge(16,8,58,'RANK '+(['E','D','C','B','A','S'][H.r]||'E'),'#ffd040')}
+function under(me,M){sky(0,'night');shophouses(132,10,true);road(44,'#2a2a30');A(.5,()=>Q(0,0,480,168,'#0a0614'));
+ const U=(M&&M.U)||{},heat=U.heat||0;
+ Q(170,66,140,66,'#1a1420');Q(176,72,128,54,'#2a1a20');glow(240,96,60,'#ff3a8a',.5);Q(190,40,100,20,'#2a0a1a');const on=Math.sin(frame*.4)>-.5;Q(194,44,92,12,on?'#ff3aa8':'#4a1a2a');pText(204,47,'CASINO',on?'#ffe0f0':'#7a3a5a');
+ Q(200,110,60,4,'#2a5a2a');Q(204,104,8,6,'#f4f4f4');Q(216,104,8,6,'#f4f4f4');Q(232,106,10,4,'#e0b040');
+ npc(104,47,9200,'ชาย','#1a1a1a','stand',35);npc(116,47,9201,'ชาย','#3a1a1a','stand',40);for(let i=0;i<4;i++){const k=(frame*.3+i*10)%40;A(.4-k/100,()=>Q(338+Math.sin(k*.2)*3,96-k,3,3,'#c8c8c8'))}
+ person(56,47,modern(me,{top:'#1a1a1a',pant:'#2a2a2a',belt:'#c8a040'}),'stand');
+ if(heat>=40){const bl=frame%20<10;glow(450,130,40,bl?'#ff2a2a':'#2a4aff',.5);Q(420,120,50,16,'#e8e8e8');Q(424,112,30,10,'#e8e8e8');Q(430,114,8,4,bl?'#ff2a2a':'#2a4aff')}}
+function loop(me,M){const L=(M&&M.LP)||{},t=(frame*.004)%1;grad(mixC('#7ab8f0','#f08a5a',t),mixC('#e0f2ff','#3a2a6a',t),46);cityDay();
+ const cx=240;Q(cx-22,24,44,110,'#c8b8a0');Q(cx-26,20,52,6,'#a8987e');for(let r=0;r<10;r++)Q(cx-16+r*1.6,4+r*2,32-r*3.2,2,'#8a5a3a');Q(cx-16,34,32,32,'#f4ecd8');Q(cx-14,36,28,28,'#fffaf0');
+ const a1=-frame*.08,a2=-frame*.008;for(let k=0;k<11;k++)Q(cx+Math.cos(a1-Math.PI/2)*k-1,50+Math.sin(a1-Math.PI/2)*k-1,2,2,'#1a1a1a');for(let k=0;k<7;k++)Q(cx+Math.cos(a2-Math.PI/2)*k-1,50+Math.sin(a2-Math.PI/2)*k-1,3,3,'#1a1a1a');
+ for(let h=0;h<12;h++)Q(cx+Math.cos(h/12*Math.PI*2)*12,50+Math.sin(h/12*Math.PI*2)*12,1,1,'#3a3a3a');
+ road(44,'#7a7a82');const n=Math.min(4,1+Math.floor((L.mem||0)/25));
+ for(let i=n;i>=1;i--)A(.18+.06*(n-i),()=>person(56-i*9,47,modern(me,{top:'#4a6a9a'}),'walk'));
+ person(56,47,modern(me,{top:'#4a6a9a'}),'walk')}
+function tower(me,M){const TW=(M&&M.TW)||{};sky(1);cityDay();
+ const cx=300;for(let y=0;y<132;y+=2){const w=46-y*.06;Q(cx-w/2,y,w,2,y%12<2?'#e8ecf4':'#f8faff')}Q(cx+14,0,8,132,'#dfe4ee');
+ for(let i=0;i<3;i++){const x=((i*170+frame*.25)%640)-120;A(.9,()=>{Q(x,30+i*10,90,10,'#ffffff');Q(x+14,24+i*10,50,8,'#ffffff')})}
+ for(let y=10;y<130;y+=18)Q(cx-6,y,12,6,'#5a6a8a');glow(cx,4,30,'#fff8c0',.5);
+ road(44,'#7a7a82');Q(cx-30,120,60,14,'#e8e0d0');
+ Q(cx+30,40,1,90,'#8a6a4a');const cy=60+Math.sin(frame*.03)*30;npc((cx+24)/3,cy/3+8,9300,'หญิง','#e86a1a','stand',28);
+ person(56,47,modern(me,{top:'#3a8a5a',pant:'#3a3a4a'}),'stand');Q(166,96,8,20,'#c84a2a');
+ badge(16,8,48,'F '+(TW.fl||0),'#ffffff')}
+function game(me,M){const G=(M&&M.GM)||{};sky(1);cityDay();road(44,'#6a6a72');
+ const sx=((frame*.3)%200)+260,sy=128-Math.abs(Math.sin(frame*.15))*6;Q(sx,sy,28,18,'#4ad06a');Q(sx+4,sy-4,20,4,'#4ad06a');Q(sx+6,sy+4,4,4,'#1a1a1a');Q(sx+18,sy+4,4,4,'#1a1a1a');Q(sx+2,sy-2,6,2,'#a8ffb8');
+ Q(sx-2,sy-14,32,4,'#1a1a1a');Q(sx-1,sy-13,22,2,'#ff3a3a');
+ person(56,47,modern(me,{top:'#3a4a8a'}),'stand');const px=160;
+ A(.85,()=>{Q(px-8,40,64,40,'#0a1a3a')});Q(px-8,40,64,2,'#4ab8ff');Q(px-8,78,64,2,'#4ab8ff');Q(px-8,40,2,40,'#4ab8ff');Q(px+54,40,2,40,'#4ab8ff');
+ pText(px-4,44,'LV '+(G.lv||1),'#ffffff');Q(px-4,56,56,4,'#3a1a1a');Q(px-4,56,50,4,'#ff3a5a');Q(px-4,64,56,4,'#1a1a3a');Q(px-4,64,36,4,'#3a8aff');Q(px-4,72,56,3,'#2a2a1a');Q(px-4,72,(frame*.3)%56,3,'#ffd040');
+ if(frame%90<45)badge(330,30,66,'QUEST!','#ffd040');
+ for(let i=0;i<5;i++){const k=(frame*.6+i*14)%70;A(1-k/70,()=>Q(px+srand(i)*30,120-k,2,2,'#7ad8ff'))}}
+function gatewon(me,M){const R0=(M&&M.GW)||{},wall=R0.wall==null?60:R0.wall;grad('#1a1430','#5a3a4a',46);stars(20);
+ Q(0,96,480,20,'#2a1e28');for(let i=0;i<30;i++)Q(srand(i+40)*480,98+srand(i+41)*14,6,1,'#3a2a34');for(let i=0;i<14;i++){const x=((i*40-frame*.2)%560+560)%560-40,y=96+srand(i)*12;Q(x,y,18,12,'#1a0a14');Q(x+3,y+3,3,2,'#ff3a3a');Q(x+10,y+3,3,2,'#ff3a3a')}
+ for(const s of[0,1]){const a=Math.sin(frame*.02+s*2)*.5;A(.22,()=>{for(let k=0;k<80;k++)Q(150+s*200+Math.sin(a)*k*1.8,56-k*.6,3+k*.25,3,'#fff6c0')})}
+ Q(0,112,480,56,'#6a6a72');Q(0,108,480,6,'#8a8a92');for(let x=0;x<480;x+=20)Q(x,100,12,8,'#8a8a92');for(let x=0;x<480;x+=40)Q(x,114,1,54,'#5a5a62');
+ const cr=Math.floor((100-wall)/12);for(let i=0;i<cr;i++){const x=srand(i+70)*460,y=124+srand(i+80)*30;for(let k=0;k<10;k++)Q(x+k*2,y+Math.round(Math.sin(k*1.7+i)*3),2,1,'#2a2a30')}
+ Q(140,54,20,54,'#5a5a62');Q(134,48,32,8,'#4a4a52');Q(340,54,20,54,'#5a5a62');Q(334,48,32,8,'#4a4a52');Q(146,44,8,6,'#fff6c0');Q(346,44,8,6,'#fff6c0');
+ person(60,36,modern(me,{top:'#4a5a3a',pant:'#3a4a2a'}),'stand');Q(212,76,3,22,'#3a3a3a');npc(96,36,9500,'ชาย','#4a5a3a','stand',30);
+ A(.85,()=>Q(16,8,76,16,'#0a0a1a'));Q(20,14,68,4,'#3a1a1a');Q(20,14,68*wall/100,4,wall>50?'#4ad06a':wall>25?'#e0b020':'#e03a3a')}
+function doom(me,M){const D=(M&&M.DM)||{},tot=D.tot||12,left=D.left==null?tot:D.left,p=Math.max(0,Math.min(1,1-left/Math.max(1,tot)));
+ grad(mixC('#4a6aa0','#3a0a14',p),mixC('#f0c890','#ff5a2a',p),46);stars(Math.round(20*(1-p)));
+ const mx=360-p*80,my=34+p*10,mr=4+p*26;glow(mx,my,mr*3.2,'#ff8a3a',.55+.3*p,1);for(let i=0;i<14;i++){const k=i*3;A(.6-i*.04,()=>Q(mx+k*2.2,my-k*1.4,Math.max(1,mr*.9-i*.5),Math.max(1,mr*.6-i*.4),i%2?'#ff9a4a':'#ffd070'))}
+ Q(mx-mr,my-mr,mr*2,mr*2,'#4a3a3a');Q(mx-mr+2,my-mr+2,mr*.8,mr*.8,'#6a5a5a');Q(mx+mr*.2,my,mr*.5,mr*.4,'#2a1e1e');
+ for(let i=0;i<12;i++){const x=i*42-8,w=30+srand(i*3)*12,h=30+srand(i*7)*40;Q(x,124-h,w,h+10,mixC('#3a4050','#1a0a10',p));for(let wy=128-h;wy<124;wy+=6)for(let wx=x+3;wx<x+w-3;wx+=5)if(srand(wx+wy)>.6)Q(wx,wy,2,3,'#ffd070')}
+ road(44,'#4a4048');for(let i=0;i<4;i++)npc(84+i*14,47,9600+i,i%2?'หญิง':'ชาย',['#c8a050','#5a7aba','#a84a4a','#e8e8e8'][i],'stand',20+i*14);
+ person(56,47,modern(me,{top:'#5a5a6a'}),'stand');if(p>.75)A(.25+.15*Math.sin(frame*.2),()=>Q(0,0,480,168,'#ff3a1a'));
+ badge(16,8,82,(left|0)+'Y LEFT','#ffd070')}
+
+// ================= ⭕ จิตวิญญาณยุทธ์ =================
+const RC=['#e8e8e8','#f2c94c','#a66bff','#3a3a3a','#e03a3a','#ffd84a','#6ad8ff','#ffffff','#ff7ae0'];
+const HEAD={wolf:['#..............#','##............##','###..........###','####........####','################','################','.##############.','.###oo####oo###.','..############..','...##########...','....###nn###....','.....######.....','......####......','.......##.......'],
+ bird:['......####......','.....######.....','....##o##o##....','....########....','.....##nn##.....','#.....####.....#','##....####....##','###..######..###','################','.##############.','..############..','....########....','......####......','.......##.......'],
+ snake:['....########....','...##########...','..####o##o####..','..############..','...##########...','....###nn###....','.....######.....','......####......','.....####.......','....####........','.....####.......','......####......','.......####.....','........##......']};
+function headOf(sv){try{const s=sv.sp[0]||{},n=String(s.n||'')+String(s.id||'');if(/นก|เหยี่ยว|อินทรี|หงส์|กระเรียน|นกฮูก|ค้างคาว|ผีเสื้อ/.test(n))return'bird';if(/งู|มังกร|ตะขาบ|ปลา|วาฬ|จระเข้/.test(n))return'snake'}catch(e){}return'wolf'}
+function soul(me,sv){const rings=(sv&&sv.rings&&sv.rings.length)?sv.rings.map(r=>Math.max(0,Math.min(8,r.t|0))):[0];
+ grad('#120a2a','#5a2a6a',46);stars(30);mountains('#2a1e44',44,16,1);mountains('#1e1634',47,9,3);
+ P(0,47,SW,9,'#2a2238');Q(150,136,180,12,'#4a4060');Q(150,136,180,2,'#6a6086');Q(156,148,168,5,'#342c48');for(let i=0;i<9;i++)Q(162+i*18,138,1,10,'#3a3254');
+ const top=RC[rings[rings.length-1]];glow(240,138,80,top,.45,.35);
+ {const a=.24+.08*Math.sin(frame*.07),Mp=HEAD[headOf(sv)],z=7,ox=240-56,oy=4+Math.round(Math.sin(frame*.05)*3);
+  Mp.forEach((r,y)=>[...r].forEach((ch,x)=>{if(ch==='.')return;const c=ch==='o'?mixC('#3a2a5a','#ffffff',Math.min(1,a*3)):ch==='n'?'#241a3e':mixC('#2a1e4a','#9ab8ff',a*1.4);Q(ox+x*z,oy+y*z,z,z,c)}));
+  for(let i=0;i<10;i++){const k=(frame*.5+i*9)%50;A(a*(1-k/50),()=>Q(ox+srand(i)*110,oy+100-k*2,5,5,'#9ab8ff'))}}
+ const cx=80,cy=36,N=rings.length;
+ const ring=(i,front)=>{const c=RC[rings[i]]||'#fff',ry=2,rx=10+i*.8,yy=cy+10-i*(N>6?1.6:1.9)+Math.round(Math.sin(frame*.06+i*.8)*.7*3)/3;
+  const pts=150;for(let k=0;k<pts;k++){const a=k/pts*Math.PI*2,s=Math.sin(a);if((s>0)!==front)continue;const x=Math.round((cx+Math.cos(a)*rx)*3),y=Math.round((yy+s*ry)*3),sh=(k+Math.floor(frame*.8)*(i%2?1:-1)+pts)%pts;
+   A(front?1:.5,()=>{Q(x,y,2,2,sh%25<3?'#ffffff':c);if(c==='#3a3a3a')Q(x,y-1,2,1,'#b49aff')})}};
+ for(let i=0;i<N;i++)ring(i,false);
+ person(cx-4,47,Object.assign({},me,{aura:null,stance:'ready'}),'stand');
+ for(let i=0;i<N;i++)ring(i,true);
+ for(let i=0;i<14;i++){const k=(frame*.6+i*11)%70;A(1-k/70,()=>Q(150+srand(i+500)*180,150-k*1.6,2,2,RC[rings[i%N]]))}}
+
+// ================= เลือกฉากตามเนื้อเรื่อง =================
+let OV=null;
+function ctxTxt(){try{const c=choice._cur;return c?String(c.title||'')+' '+String(c.text||c.d||c.desc||''):''}catch(e){return''}}
+const KW=[[/ไฟไหม้|เพลิงไหม้/,'soi',{fire:1}],[/น้ำท่วม|น้ำเข้าซอย|น้ำเริ่มเข้า|น้ำในซอย/,'soi',{flood:30}],[/ซอยเปลี่ยว|ถือมีด/,'soi',{alley:1}],
+ [/เกณฑ์ทหาร|ใบดำ|ใบแดง/,'templeDay',{draft:1}],[/บวช|ห่มเหลือง|ผ้าเหลือง/,'templeDay',{ordain:1}],[/งานศพ|สวดเจ็ดคืน|จากไปอย่างสงบ|เมรุ/,'templeDay',{funeral:1}],[/งานแต่ง|ซองงานแต่ง/,'templeDay',{wed:1}],[/ทำบุญ|ปฏิบัติธรรม/,'templeDay',{}],
+ [/โรงพยาบาล|คนไข้|ผ่าตัด|ไข้เลือดออก|ป่วยหนัก|เวรดึก|พยาบาล/,'hospital',{}],[/ห้องเรียน|นักเรียน|โรงเรียน|O-NET|ครูประจำ/,'classroom',{}],[/ออฟฟิศ|หัวหน้า|ประชุม|บริษัท|โอที|เพื่อนร่วมงาน/,'office',{}],
+ [/ทุ่งนา|ชาวนา|ราคาผลผลิต|เกี่ยวข้าว/,'paddy',{}],[/ไลฟ์|ทำคอนเทนต์|คลิปของคุณ|ไวรัล/,'room',{live:1,night:1}]];
+const wOf2=M=>{const w=!M?'normal':M.hw>0?'hunter':(M.wx&&M.wx.on?M.wx.id:'normal');return w==='hunterhi'?'hunter':w};
+function pickModern(M){const c=ctxTxt(),w=wOf2(M);
+ if(OV&&Date.now()<OV.t)return[OV.k,OV.v];
+ if(M.kid){if(c)for(const k of KW)if(k[0].test(c)&&['hospital','classroom','templeDay','soi'].includes(k[1]))return[k[1],k[2]];const a=S.age;if(a<6)return['kidHome',{}];if(S.focus==='mwk_play'||a<7)return['soi',{kid:1,walk:1}];return['classroom',{}]}
+ if(w!=='normal')return[w,{}];
+ if(c)for(const k of KW)if(k[0].test(c))return[k[1],k[2]];
+ const f=S.focus,j=M.job&&M.job.id;
+ if(!M.native&&(f==='mwqi'||(!j&&f!=='mwlow')))return null;
+ if(f==='mwnet')return['room',{live:1,night:1}];if(f==='mwlearn')return['room',{night:1}];if(f==='mwlow')return S.age>=60?['rural',{}]:['room',{}];
+ if(S.age>=60&&(M.retired||!j))return['rural',{}];
+ if(!j)return['site',{}];if(/office|dev|gov|freelance/.test(j))return['office',{}];if(/nurse|heal/.test(j))return['hospital',{}];if(/teacher|coach/.test(j))return['classroom',{teach:1}];
+ if(/rider|driver/.test(j))return['soi',{rider:1}];if(j==='shop')return['soi',{stall:1}];if(j==='farmer')return['paddy',{}];if(/build|factory|craft|guard/.test(j))return['site',{}];return['soi',{}]}
+const SC={soi,kidHome,classroom:(me,v)=>classroom(me,v&&v.teach),office,hospital,site,paddy,room,rural,templeDay,
+ hunter:(me,v,M)=>hunter(me,M),under:(me,v,M)=>under(me,M),ghost:(me,v,M)=>ghost(me,M),loop:(me,v,M)=>loop(me,M),zombie:(me,v,M)=>zombie(me,M),tower:(me,v,M)=>tower(me,M),game:(me,v,M)=>game(me,M),gatewon:(me,v,M)=>gatewon(me,M),doom:(me,v,M)=>doom(me,M)};
+const CAP={soi:v=>v.stall?'🍲 ร้านส้มตำหน้าปากซอย':v.rider?'🛵 ถนนในเมือง · วิ่งงาน':v.alley?'🌙 ซอยเปลี่ยวตอนตีสอง':v.flood?'🌊 น้ำท่วมซอย':v.fire?'🔥 ไฟไหม้ในซอย':v.kid?'🏘️ ซอยหน้าบ้าน':'🏘️ ซอยบ้าน',kidHome:()=>'🏠 บ้าน',classroom:v=>v.teach?'🧑‍🏫 ห้องเรียน · สอนหนังสือ':'🏫 ห้องเรียน',office:()=>'💻 ออฟฟิศชั้นสิบเจ็ด',hospital:()=>'🏥 โรงพยาบาลรัฐ',site:()=>'🏗️ ไซต์งาน · รับจ้าง',paddy:()=>'🌾 ทุ่งนา',room:v=>v.live?'📱 ห้องเช่า · ทำคอนเทนต์':'🛏️ ห้องเช่า',rural:()=>'🏡 บ้านต่างจังหวัด',templeDay:v=>v.ordain?'🛕 วัด · บวช':v.funeral?'🕯️ วัด · งานศพ':v.wed?'💒 งานแต่ง':v.draft?'🎫 วันเกณฑ์ทหาร':'🛕 วัดใกล้บ้าน',
+ hunter:(v,M)=>`🌀 เกตกลางเมือง${M.H&&M.H.r!=null&&!M.H.hide?' · แรงก์ '+(['E','D','C','B','A','S'][M.H.r]||'E'):''}`,under:(v,M)=>`🌃 ซอยบ่อน${(M.U&&M.U.heat||0)>=40?' · ตำรวจจับตา':''}`,ghost:(v,M)=>`👻 วัดร้างกลางดึก${M.G&&(M.G.bad||0)>=50?' · ผีร้ายตามมา':''}`,loop:(v,M)=>`🔁 วันที่ไม่ยอมจบ${M.LP&&M.LP.mem?' · ความจำ '+M.LP.mem:''}`,zombie:(v,M)=>`🧟 เมืองร้าง${M.Z&&M.Z.com?' · ที่พัก '+(M.Z.com.length+1)+' คน':''}`,
+ tower:(v,M)=>`🗼 หอคอยกลางเมือง · ชั้น ${(M.TW&&M.TW.fl)||0}`,game:(v,M)=>`🎮 โลกระบบเกม · เลเวล ${(M.GM&&M.GM.lv)||1}`,gatewon:(v,M)=>`💀 กำแพงเมือง · ความมั่นคง ${(M.GW&&M.GW.wall)!=null?M.GW.wall:60}/100`,doom:(v,M)=>`☄️ อีก ${(M.DM&&M.DM.left)!=null?M.DM.left:'?'} ปี อุกกาบาตอรุณจะชนโลก`};
+window._sc84={SC,pickModern,CAP,soul,modern,pText,setOv:(k,v,ms)=>{OV={k,v:v||{},t:Date.now()+(ms||6000)}}};
+// ---------- ต่อเข้ากับ drawScene / คำบรรยายฉาก ----------
+{const _ds=drawScene;drawScene=function(ctx,type){try{
+ const sv=S&&!S.mw&&S.ch==='soul'&&S.sv&&S.sv.aw===1&&S.sv.rings&&S.sv.rings.length?S.sv:null;
+ if(sv&&type!=='death'&&(/^(aura|peak|yard|waterfall|master)$/.test(type)||/วงแหวน|ดวงจิต|จิตวิญญาณ/.test(ctxTxt()))){g=ctx;PS=ctx.canvas.width/SW;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;const me=meLook();curMe=me;soul(me,sv);window._scK=['soul'];return}
+ const M=S&&S.mw;if(M&&type!=='death'&&!(S.beastMode&&!S.beastMode.human)){const pk=pickModern(M);if(pk&&SC[pk[0]]){g=ctx;PS=ctx.canvas.width/SW;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;const me=meLook();curMe=me;SC[pk[0]](me,pk[1]||{},M);window._scK=pk;return}}
+ window._scK=null}catch(e){console.error('sc84',e)}return _ds.apply(this,arguments)}}
+{const _sc=sceneCap;sceneCap=function(t){try{const k=window._scK,M=S&&S.mw;if(k&&t!=='death'){if(k[0]==='soul')return`⭕ วงแหวนวิญญาณ ${S.sv.rings.length} วง`;if(M&&CAP[k[0]])return CAP[k[0]](k[1]||{},M)}}catch(e){}return _sc.apply(this,arguments)}}
+// เหตุการณ์ในเรื่อง → ฉากค้างไว้สักพักหลังเลือก
+{const _ch=choice;choice=function(title,text){try{if(S&&S.mw){const c=String(title||'')+' '+String(text||'');for(const k of KW)if(k[0].test(c)){OV={k:k[1],v:k[2],t:Date.now()+9000};break}}}catch(e){}return _ch.apply(this,arguments)}}
+})()}catch(e){console.error("block85",e)}
