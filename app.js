@@ -47340,3 +47340,66 @@ const st=document.createElement('style');st.textContent=`.zrv .zr-flapL{transfor
 @keyframes zrFlap{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}@keyframes zrFlick{0%,100%{transform:scale(1,1)}50%{transform:scale(.85,1.25)}}@keyframes zrBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
 .evlite #chatBox .zrv .zr-flick{display:none}`;document.head.appendChild(st);
 })()}catch(e){console.error('block81',e)}
+
+// ============================================================
+// BLOCK 82: 🧭 เข้าใจง่ายขึ้น — ผู้เล่นใหม่ (ปลดล็อกระบบทีละขั้น · ปุ่มเริ่มเล่นเลย · แถบ "ตอนนี้ควรทำอะไร" · ไม่มีป๊อปอัปโปรโมตตอนเริ่ม)
+//  และคนขี้เกียจ (ให้ชะตาเล่นแทนทั้งหมด · รับทั้งหมด · เกิดใหม่แบบเดิม · สรุปทุก 10 ปี · สวมกรอบใหม่ให้เอง) — ผู้เล่นเก่าเห็นทุกอย่างเหมือนเดิม
+// ============================================================
+try{(()=>{
+const lives=()=>{try{return(LS.get('murim_stats',{})||{}).lives|0}catch(e){return 0}};
+const showAll=()=>!!LS.get('murim_uiall',0);
+const isNew=()=>!showAll()&&lives()<1;
+const css=document.createElement('style');css.textContent=`
+body.uiNew #aqCb,body.uiNew .hSp,body.uiNew #dkAqC,body.uiNew #watchBadge{display:none!important}
+#hintBar{display:flex;align-items:center;gap:8px;margin:6px 0;padding:7px 10px;border-radius:12px;background:linear-gradient(90deg,#2a2240,#1a1830);border:1px solid #e8c86a55;color:#ffe9a8;font-size:13px;line-height:1.45}
+#hintBar b{color:#fff}#hintBar .hx{margin-left:auto;flex:none;background:none;border:0;color:#cbbde6;font:inherit;cursor:pointer;font-size:13px;padding:2px 6px}
+#hintBar .hi{flex:none;font-size:18px}
+.qStart{display:block;width:min(420px,92%);margin:10px auto 6px;padding:14px 16px;border-radius:16px;border:2px solid #ffe08a;background:linear-gradient(180deg,#ffd36e,#e0a020);color:#2a1a04;font:inherit;font-weight:900;font-size:20px;cursor:pointer;box-shadow:0 6px 24px #e0a02066;animation:qsP 2.2s ease-in-out infinite}
+.qStart small{display:block;font-size:12.5px;font-weight:700;opacity:.8;margin-top:2px}@keyframes qsP{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+.endSame{margin-top:8px!important}
+.faRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.faRow button{flex:1 1 140px}
+`;document.head.appendChild(css);
+// ---------- 1) ชั้นของผู้เล่น (ใหม่ = ยังไม่จบชีวิตแรก) ----------
+let wasNew=null;
+setInterval(()=>{try{const n=isNew();document.body.classList.toggle('uiNew',n);if(wasNew===true&&!n&&!showAll()){try{island({big:1,pri:1,ic:'🔓',h:'ปลดล็อกระบบใหม่',t:'ภารกิจวัน · คัมภีร์ฤดูกาล · บอสโลก — ดูได้ที่เมนูแล้ว',kind:'gold'})}catch(e){}}wasNew=n}catch(e){}},1500);
+// ป๊อปอัปโปรโมต/เช็คอินไม่เด้งใส่คนที่ยังไม่จบชีวิตแรก (เรื่องในชีวิตยังเด้งตามปกติ)
+{const _is=island;island=function(n){try{if(isNew()&&n&&!n.pri&&(n.key==='dailyI'||/เช็คอิน|ภารกิจวัน|บอสโลก|ฤดูกาล|คัมภีร์|ทำเนียบ|โปร|ส่วนลด|VIP|ร้าน/.test(String(n.h||'')+String(n.t||''))))return}catch(e){}return _is.apply(this,arguments)}}
+// ---------- 2) หน้าแรก: ปุ่มเริ่มเล่นเกิดทันที (ผู้เล่นที่ยังเล่นไม่ถึง 3 ชีวิต) ----------
+window.qStart=function(){try{closeM()}catch(e){}try{if(CFG.mw){mwBRand();mwBStart();return}crForce=null;goBirth();doRoll(true);startLife()}catch(e){console.error(e);try{goBirthPick()}catch(x){}}};
+// ปุ่ม "▶ เริ่มเล่น" เดิมบนหน้าแรก: คนที่ยังเล่นไม่ถึง 3 ชีวิต กดแล้วเกิดทันทีในโลกที่เลือกอยู่ (ไม่ต้องผ่านหน้าเลือกวิธีเกิด)
+setInterval(()=>{try{const t=$('title');if(!t||!t.classList.contains('on'))return;const b=$('tStartIn');if(!b)return;const q=!showAll()&&lives()<3;
+ if(q&&!b._q){b._q=1;b._o=b.onclick;b.onclick=function(){qStart()}}else if(!q&&b._q){b._q=0;b.onclick=b._o||function(){goBirthPick()}}
+ if(q){const s=b.querySelector('small');const w=CFG.mw?'ยุคปัจจุบัน':CFG.xian?'โลกเทพเซียน':'ยุทธภพ';const tx='สุ่มเกิดทันทีใน'+w+' · ไม่ต้องตั้งค่าอะไร';if(s&&s.textContent!==tx)s.textContent=tx}}catch(e){}},700);
+// ---------- 3) แถบ "ตอนนี้ควรทำอะไร" (3 ชีวิตแรก) ----------
+const HN=[[a=>a<6,'👶','วัยเด็ก — ยังไม่ต้องทำอะไร ปล่อยให้ปีผ่านไป หรือกด <b>ความเร็ว</b> ให้เร็วขึ้น'],[()=>1,'🎯','มีเหตุการณ์ขึ้นมา <b>เลือกตามใจได้เลย</b> — ไม่มีทางถูกทางเดียว'],[()=>1,'🎒','ของที่ได้อยู่ใน <b>🎒 กระเป๋า</b> · แตะของเพื่อดูว่าใช้ทำอะไร'],[()=>1,'☰','<b>☰ เมนู</b> รวมทุกอย่าง — วิชา ครอบครัว ร้าน แผนที่'],[()=>1,'🤖','ขี้เกียจกด? เปิด <b>🤖 ออโต้</b> ให้ระบบเล่นให้ ปิดเมื่อไรก็ได้'],[a=>a>=12,'📈','อยากแกร่งขึ้น? เลือกฝึกฝนบ่อยๆ และหาวิชาเพิ่มใน <b>☰ เมนู</b>'],[()=>1,'💡','งงตรงไหน แตะปุ่ม <b>💡 ระบบนี้คืออะไร</b> ในหน้านั้นได้']];
+const HMW=[[a=>a<6,'👶','วัยเด็ก — ปล่อยให้ปีผ่านไป เหตุการณ์จะขึ้นเองตามวัย'],[()=>1,'📅','โตแล้วตั้ง <b>📅 แผนปี</b> ว่าจะใช้ 12 เดือนกับอะไร'],[a=>a>=18,'💼','หางานได้ที่ <b>💼 งาน</b> · เงินพอใช้ค่อยดูบ้านและการลงทุน'],[()=>1,'🤖','ขี้เกียจกด? เปิด <b>🤖 ออโต้</b> ให้ระบบเล่นให้']];
+let hI=0,hT=0;
+function hintTick(){try{const g=$('game');let h=$('hintBar');const want=S&&S.alive&&g&&g.classList.contains('on')&&lives()<3&&!showAll()&&!LS.get('murim_hintoff',0)&&!(S.beastMode&&!S.beastMode.human);if(!want){if(h)h.remove();return}
+ if(!h){const c=g.querySelector('.ctrl');if(!c)return;c.insertAdjacentHTML('beforebegin','<div id="hintBar"><span class="hi"></span><span class="ht"></span><button class="hx" onclick="hintOff()">ซ่อน ✕</button></div>');h=$('hintBar')}
+ if(Date.now()-hT<14000&&h.dataset.a==String(S.age))return;hT=Date.now();h.dataset.a=S.age;const L=(S.mw?HMW:HN).filter(x=>{try{return x[0](S.age|0)}catch(e){return false}});if(!L.length)return;const x=L[hI++%L.length];h.querySelector('.hi').textContent=x[1];h.querySelector('.ht').innerHTML=x[2]}catch(e){}}
+window.hintOff=function(){LS.set('murim_hintoff',1);const h=$('hintBar');if(h)h.remove();toast('ซ่อนคำแนะนำแล้ว — เปิดใหม่ได้ที่ ☰ เมนู')};
+setInterval(hintTick,1200);
+// ---------- 4) ให้ชะตาเล่นแทนทั้งหมด (ออโต้ไม่หยุดรอ + ข้ามมินิเกม) ----------
+const fa=()=>!!LS.get('murim_fa',0);
+{const _ab=afBig;afBig=function(c){try{if(fa()&&auto&&!(c&&c.keep))return false}catch(e){}return _ab.apply(this,arguments)}}
+setInterval(()=>{try{if(!fa()||!auto||!S||!S.alive)return;const m=$('modal');if(!m||!modalOpen)return;const b=[...m.querySelectorAll('button')].find(x=>x.offsetParent&&/ข้ามเกมนี้|ให้ระบบเล่นแทน/.test(x.textContent));if(b)b.click()}catch(e){}},900);
+window.faSet=function(v){LS.set('murim_fa',v?1:0);try{closeM()}catch(e){}if(!auto)try{toggleAuto()}catch(e){}toast(v?'🎲 ให้ชะตาเล่นแทนทั้งหมด — ไม่หยุดรอ ข้ามมินิเกมให้':'🤖 ออโต้แบบปกติ — หยุดรอเรื่องสำคัญ');render()};
+{const _ta=toggleAuto;toggleAuto=function(){const was=auto;if(!was&&LS.get('murim_fa',null)===null&&S&&S.alive){LS.set('murim_fa',0);modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🤖 อยากให้ออโต้เล่นแบบไหน</h3><p class="tag2">เปลี่ยนทีหลังได้ที่ ☰ เมนู</p><div class="faRow"><button class="gbtn" onclick="faSet(0)">✋ หยุดรอเรื่องสำคัญ<br><small>แต่งงาน ข้ามโลก ทัณฑ์ ฯลฯ ให้เลือกเอง</small></button><button class="pbtn" onclick="faSet(1)">🎲 ให้ชะตาเล่นแทนทั้งหมด<br><small>ไม่หยุดเลย · ข้ามมินิเกม · เลือกทางปลอดภัย</small></button></div>`,'faask');return}return _ta.apply(this,arguments)}}
+// ---------- 5) รับทั้งหมด ----------
+window.claimAll=async function(){const got=[];try{if(typeof dailyClaim==='function'){const b=(LS.get('murim_dly',{})||{}).d;dailyClaim();if((LS.get('murim_dly',{})||{}).d!==b)got.push('🎁 เช็คอินรายวัน')}}catch(e){}
+ try{closeM()}catch(e){}
+ if(typeof spClAll==='function'&&typeof onlineOK!=='undefined'&&onlineOK){toast(got.length?got.join(' · ')+' · กำลังรับรางวัลคัมภีร์…':'กำลังรับรางวัลคัมภีร์ฤดูกาล…');try{await spClAll()}catch(e){}}else toast(got.length?'✅ รับแล้ว: '+got.join(' · '):'ไม่มีรางวัลค้างรับ (บางอย่างต้องออนไลน์)')};
+// ---------- 6) เมนู: ปุ่มทางลัด ----------
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='menu'&&!m.querySelector('.uxRow')){const h=m.querySelector('h3');const row=`<div class="uxRow faRow" style="margin:6px 0 10px"><button class="pbtn" onclick="closeM();claimAll()">🎁 รับทั้งหมด</button><button class="gbtn" onclick="faSet(${fa()?0:1})">${fa()?'✋ ออโต้: หยุดรอเรื่องสำคัญ':'🎲 ให้ชะตาเล่นแทนทั้งหมด'}</button><button class="gbtn" onclick="LS.set('murim_uiall',${showAll()?0:1});LS.set('murim_hintoff',${showAll()?0:1});closeM();toast('${showAll()?'กลับไปแบบเรียบง่าย':'แสดงทุกระบบแล้ว'}')">${showAll()?'🧭 โหมดเรียบง่าย':'🧩 แสดงทุกระบบ'}</button>${LS.get('murim_hintoff',0)?'<button class="gbtn" onclick="LS.set(\'murim_hintoff\',0);closeM()">💡 เปิดคำแนะนำ</button>':''}</div>`;if(h)h.insertAdjacentHTML('afterend',row)}}catch(e){}return r}}
+// ---------- 7) หน้าจบชีวิต: เกิดใหม่แบบเดิม ----------
+let lastW=null;setInterval(()=>{try{if(S&&S.alive)lastW={mw:!!S.mw,beast:!!(S.beastMode&&!S.beastMode.human),xian:!!CFG.xian,chm:CFG.chm|0}}catch(e){}},2000);
+window.rebirthSame=function(){const w=lastW||{};try{toTitle()}catch(e){}setTimeout(()=>{try{if(w.beast){goBeastLife();return}if(w.mw){CFG.mw=1;mwBRand();mwBStart();return}CFG.mw=0;crForce=null;goBirth();doRoll(true);startLife()}catch(e){console.error(e)}},350)};
+setInterval(()=>{try{const e=$('end');if(!e||!e.classList.contains('on')||e.querySelector('.endSame'))return;const b=[...e.querySelectorAll('button')].find(x=>/เกิดใหม่/.test(x.textContent));if(!b)return;b.parentElement.insertAdjacentHTML('afterend','<div class="brow endSame"><button class="pbtn" style="width:100%" onclick="rebirthSame()">⚡ เกิดใหม่แบบเดิมเลย<br><small style="font-weight:400">โลกและโหมดเดิม · สุ่มชาติกำเนิดใหม่ · ข้ามหน้าเลือกทั้งหมด</small></button></div>')}catch(e){}},800);
+// ---------- 8) สรุปทุก 10 ปี ----------
+{const _py=passYear;passYear=function(){const me=S;const r=_py.apply(this,arguments);try{if(!S||S!==me||!S.alive||S.age%10!==0)return r;const d=S._dec;const now={a:S.age,m:S.money||0,p:(()=>{try{return total()}catch(e){return 0}})(),f:S.fame||0,h:S.happy||0};S._dec=now;if(!d||typeof addFeed!=='function')return r;
+ const df=(x,y)=>{const v=Math.round(x-y);return(v>=0?'+':'')+(typeof fmtM==='function'?fmtM(v):v)};
+ addFeed('ev',`📅 <b>สรุป ${d.a}–${S.age-1} ปี</b> — เงิน ${df(now.m,d.m)}${S.mw?'':' · พลัง '+df(now.p,d.p)} · ชื่อเสียง ${df(now.f,d.f)} · ความสุข ${Math.round(now.h)}/100`,'sum')}catch(e){}return r}}
+setInterval(()=>{try{if(S&&S.alive&&!S._dec)S._dec={a:S.age,m:S.money||0,p:(()=>{try{return total()}catch(e){return 0}})(),f:S.fame||0,h:S.happy||0}}catch(e){}},3000);
+// ---------- 9) ได้กรอบใหม่ตอนยังไม่ได้สวมกรอบ → สวมให้เลย ----------
+setInterval(()=>{try{const d=frGet();const seen=LS.get('murim_frseen',null);if(seen===null){LS.set('murim_frseen',d.own.slice());return}const nw=d.own.filter(x=>!seen.includes(x));if(!nw.length)return;LS.set('murim_frseen',d.own.slice());if(!d.eq&&frOf(nw[nw.length-1])){frEquip(nw[nw.length-1]);toast('🖼️ สวมกรอบใหม่ให้แล้ว — เปลี่ยนได้ที่โปรไฟล์')}}catch(e){}},5000);
+})()}catch(e){console.error('block82',e)}
