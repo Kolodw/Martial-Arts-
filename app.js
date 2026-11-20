@@ -27443,7 +27443,8 @@ window.birthBack=function(){try{if(!$('birth')||!$('birth').classList.contains('
 {const _sl=startLife;startLife=function(){hSet(null);window._bMem=null;return _sl.apply(this,arguments)}}
 // ปุ่มบนหน้ากำเนิด
 function addBtn(){const B=$('birth');if(!B||B.querySelector('#bBack'))return;B.insertAdjacentHTML('afterbegin','<button id="bBack" class="sysb" onclick="birthBack()" title="กลับหน้าแรก (จำนวนสุ่มที่เหลือยังอยู่)">⬅️ หน้าแรก</button>')}
-addBtn();{const _gb2=goBirth;goBirth=function(){const r=_gb2.apply(this,arguments);addBtn();return r}}
+// ถอดปุ่มออก: กลับหน้าแรกแล้วเข้าใหม่ทำให้รีจำนวนสุ่มได้
+{const _gb2=goBirth;goBirth=function(){const r=_gb2.apply(this,arguments);try{const b=$('bBack');if(b)b.remove()}catch(e){}return r}}
 try{const st=document.createElement('style');st.textContent='#bBack{display:inline-block;margin:calc(env(safe-area-inset-top) + 6px) 0 2px 4px;font-size:12px;padding:3px 10px}';document.head.appendChild(st)}catch(e){}
 })()}catch(e){console.error(e)}
 
@@ -30980,7 +30981,7 @@ window.mwBorn=function(look,pick){window._mwPick=pick?1:0;closeM();if(look){try{
 {const _c=crStart;crStart=function(){const ml=C&&C.lookOnly&&window._mwLookFlow;if(ml){const gb=window.goBirth;window.goBirth=function(){window.goBirth=gb;window._mwLookFlow=0;return mwRandNative()}}return _c.apply(this,arguments)}}
 // ---------- หน้า "ผลการเกิด" ยุคปัจจุบัน: การ์ดสุ่ม · ล็อก · สุ่มใหม่ 3 ครั้ง · แต่งตัว · เลือกจังหวัด/พื้นเพ ----------
 const MWB={F:['มายด์','ฝน','แพรว','มิว','ปุยฝ้าย','น้ำใส','ใบบุญ','ข้าวหอม','ฟ้าใส','พิมพ์','ขวัญ','เกด','แอม','นุ่น','ต้นกล้า','ใบเฟิร์น'],M:['ต้น','เจมส์','โอ๊ต','ภูผา','ตะวัน','ก้อง','ปอนด์','บอส','ฟุต','เอ็ม','กฤต','ธีร์','นนท์','ไนท์','ภพ','เติ้ล'],SN:['ใจดี','รักไทย','สุขสวัสดิ์','แก้วมณี','ศรีสุข','พรหมมา','บุญมี','ทองดี','วงษ์ไทย','สายทอง','อินทร์แก้ว','มั่นคง','ดวงจันทร์','ชัยมงคล'],PW:{bkk:8,non:5,ayt:2,cnx:3,cri:2,phk:1,kkn:3,nrt:4,udn:2,ubn:2,cbi:4,ryg:2,hkt:1,sgk:2,sti:2}};
-let MB=null;
+let MB=null;window._mbGet=()=>MB;window._mbSet=v=>{MB=v};
 const mbPv=()=>{let t=Object.values(MWB.PW).reduce((a,b)=>a+b,0)*Math.random();for(const k in MWB.PW){t-=MWB.PW[k];if(t<=0)return k}return'bkk'};
 const mbName=g=>ch(g?MWB.F:MWB.M)+' '+ch(MWB.SN);
 function mbCs(g){const n=a=>R(0,a.length-1),c={g,hs:n(CR_HS),hc:n(CR_HC),sk:n(CR_SK),eye:n(LK_EYE),brow:n(LK_BROW),mark:Math.random()<.6?0:n(LK_MARK),fh:g===0&&Math.random()<.2?n(LK_FH):0,sty:0,rb:0,tr:0,bt:0,pt:0,hw:0,acc:0,es:0,mo:0,tab:'base',pose:'stand'};
@@ -30995,7 +30996,7 @@ function mbRoll(first){const L=MB.lock||{};if(!first){if(MB.rr<=0)return;MB.rr--
  MB.tr=lRndTr();MB.age=R(18,24);MB.gift=Math.random()<.08;mbDraw(!first)}
 const mbTrAll=()=>{const b=BG[MB.bg],a=MB.tr.slice();if(b.tr&&!a.includes(b.tr)&&a.length<3)a.push(b.tr);return a};
 function mbTile(k,ic,t,v,s,extra){const lk=(MB.lock||{})[k];return`<div class="mbT mbT_${k}"><div class="mbTh"><span>${ic} ${t}</span><button class="mbLk${lk?' on':''}" title="ล็อกไว้ ไม่ให้สุ่มใหม่ทับ" onclick="mwBLock('${k}')">${lk?'🔒':'🔓'}</button></div><div class="mbTv">${v}</div><div class="mbTs">${s}</div>${extra||''}</div>`}
-function mbDraw(anim){let o=$('mwB');if(!o){o=document.createElement('div');o.id='mwB';document.body.appendChild(o)}
+function mbDraw(anim){try{window._mbHook&&window._mbHook(MB)}catch(e){}let o=$('mwB');if(!o){o=document.createElement('div');o.id='mwB';document.body.appendChild(o)}
  const P=PV[MB.pv],b=BG[MB.bg],tr=mbTrAll(),mn=mbMoney(),debt=b.debt||0,gn=GENDER[MB.g].n,tags=P.tag.map(t=>PVIC[t]).join(' ');
  o.style.display='';o.className=anim?'mbPop':'';
  o.innerHTML=`<div class="mbBg"><i></i><i></i><i></i></div><div class="mbWrap">
@@ -48568,3 +48569,25 @@ try{SYS_GUIDE.push({s:'base',nw:1,ic:'🌠',t:'โลกใหม่: ทะล�
 {const _gbp=goBirthPick;goBirthPick=function(){if(window._skySel){window._skySel=0;return skyStart()}return _gbp.apply(this,arguments)}}
 window._sky={SK,RK,EV,queue,skyYear,newK};window._skyQ=()=>QU.slice();
 })()}catch(e){console.error('sky block',e)}
+
+// ============================================================
+// BLOCK 87: 🎲 ปิดช่องรีตั๋วสุ่มเกิด — เอาปุ่มย้อนกลับ/ปิดออกจากหน้าสุ่มกำเนิด (คน · สัตว์ · ยุคปัจจุบัน) และจำจำนวนสุ่มที่เหลือไว้ แม้ออกไปแล้วกลับเข้ามาใหม่
+// ============================================================
+try{(()=>{
+const HT=6*3600e3,get=k=>{try{const h=LS.get(k,null);return h&&Date.now()-(h.t||0)<HT?h:null}catch(e){return null}},set=(k,v)=>{try{if(v)LS.set(k,Object.assign({t:Date.now()},v));else LS.del(k)}catch(e){}};
+const cfgK=()=>(CFG.xian?1:0)+':'+(CFG.chm|0)+':'+(CFG.daily||'');
+// ---- 🐾 สัตว์ ----
+const BK='murim_brhold';
+{const _bs=brShow;brShow=function(){const r=_bs.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='broll'){const x=m.querySelector(':scope > .xbtn');if(x)x.remove();m.querySelectorAll('button[onclick*="beastBirth2"]').forEach(b=>{const o=b.getAttribute('onclick');if(!/_brOk/.test(o))b.setAttribute('onclick','window._brOk=1;'+o)})}
+ if(brRoll)set(BK,{rr:brRR,roll:brRoll,c:cfgK()})}catch(e){}return r}}
+{const _g=goBeastLife;goBeastLife=function(){const h=get(BK);const r=_g.apply(this,arguments);try{if(h&&h.c===cfgK()&&h.roll){brRR=Math.min(brRR,h.rr|0);brRoll=h.roll;brShow(false)}}catch(e){}return r}}
+{const _b2=beastBirth2;beastBirth2=function(){set(BK,null);window._brOk=0;return _b2.apply(this,arguments)}}
+{const _cm=closeM;closeM=function(){try{const m=$('modal');if(modalOpen&&m&&m.dataset.k==='broll'&&!window._brOk)return}catch(e){}return _cm.apply(this,arguments)}}
+// ---- 🏙️ ยุคปัจจุบัน ----
+const MK='murim_mbhold';
+{const _p=window.mwBornPage;window.mwBornPage=function(fresh){const h=get(MK);if(fresh&&h&&h.mb){try{window._mbSet(h.mb);return _p.call(this,false)}catch(e){}}return _p.apply(this,arguments)}}
+{const _r=window.mwBRand;if(_r)window.mwBRand=function(){const h=get(MK);const r=_r.apply(this,arguments);try{const M=window._mbGet();if(h&&h.mb&&M){M.rr=Math.min(M.rr,h.mb.rr|0);set(MK,{mb:M})}}catch(e){}return r}}
+window._mbHook=M=>{if(M)set(MK,{mb:M});setTimeout(()=>{try{const b=document.querySelector('#mwB .mbTop button[onclick="mwBClose()"]');if(b)b.style.visibility='hidden'}catch(e){}},0)};
+{const _s=window.mwBStart;window.mwBStart=function(){set(MK,null);return _s.apply(this,arguments)}}
+// ---- 🧑 คน: ปุ่ม ⬅️ หน้าแรกถูกถอดแล้ว (BLOCK v17.39) — ล้างค่าที่เคยจำไว้เมื่อเริ่มชีวิต ----
+})()}catch(e){console.error('block87',e)}
