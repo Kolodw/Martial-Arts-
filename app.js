@@ -52110,3 +52110,26 @@ try{if(LS.get('murim_sigv',0)!==1){for(let n=1;n<=24;n++)for(const k of [slotKey
 {const _rs=readSave,VC=new Map(),told=new Set();readSave=function(n){const d=_rs.apply(this,arguments);if(!d)return d;let ok=null;{ok=vOK(d);if(!ok&&!d.sg&&Date.now()<Date.UTC(2026,10,27,17)){try{LS.set(slotKey(n||1),d)}catch(e){}ok=true}}if(!ok){if(!told.has(n||1)){told.add(n||1);try{toast('⛔ เซฟช่อง '+(n||1)+' ถูกแก้ไขนอกเกม — โหลดไม่ได้')}catch(e){}}return null}return d};window.readSave=readSave}
 {const _lc=loadCode;loadCode=function(c){let d=null;try{d=JSON.parse(decodeURIComponent(escape(atob(String(c).trim()))))}catch(e){}if(d&&d.S&&!vOK(d)&&(d.sg||Date.now()>=Date.UTC(2026,10,27,17))){try{toast('⛔ รหัสเซฟนี้ถูกแก้ไข หรือเป็นรุ่นเก่า — ให้สร้างรหัสใหม่จากเครื่องเดิม')}catch(e){}return false}return _lc.apply(this,arguments)};window.loadCode=loadCode}
 })()}catch(e){console.error('block96',e)}
+
+// ============================================================
+// BLOCK 97: 🌠 ทะลุฟ้าดารา — แผงข้อมูลย่อ/ปิด/ขยายได้ (จำค่าไว้)
+// ============================================================
+try{(()=>{
+const ST=()=>{try{return LS.get('murim_skyhud',0)|0}catch(e){return 0}};
+window.skyHudSet=function(v){try{LS.set('murim_skyhud',v)}catch(e){}try{render()}catch(e){}};
+const css=document.createElement('style');css.textContent=`
+#mwHud.sky .skHB{display:inline-flex;gap:4px;margin-left:auto}#mwHud.sky .skT{align-items:center;gap:8px}
+#mwHud.sky .skHB button{background:#16222c;border:1px solid #2a3c4c;color:#cfe2ee;font:700 11px 'Chakra Petch',sans-serif;padding:3px 8px;border-radius:6px;letter-spacing:0;cursor:pointer}
+#mwHud.sky .skHB button.on{background:#ff8a3d;color:#1a0e06;border-color:#ff8a3d}
+#mwHud.sky .skMn{display:none;font:600 12px 'Chakra Petch',sans-serif;color:#cfe2ee;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#mwHud.sky.skMin>:not(.skT):not(.skR):not(.skBar):not(.skMn){display:none!important}#mwHud.sky.skMin .skMn{display:block}
+#mwHud.sky.skCl>:not(.skT){display:none!important}#mwHud.sky.skCl{padding-top:6px;padding-bottom:6px}
+#mwHud.sky.skCl .skT>span:nth-child(2){display:none}`;document.head.appendChild(css);
+const _rn=render;render=function(){const r=_rn.apply(this,arguments);try{const h=$('mwHud');if(!h||!h.classList.contains('sky')||!document.body.classList.contains('skyW'))return r;
+ const v=ST();h.classList.toggle('skMin',v===1);h.classList.toggle('skCl',v===2);
+ const T=h.querySelector('.skT');if(T&&!T.querySelector('.skHB')){const b=document.createElement('span');b.className='skHB';
+  b.innerHTML=`<button class="${v===0?'on':''}" onclick="skyHudSet(0)" title="ขยาย">▣ เต็ม</button><button class="${v===1?'on':''}" onclick="skyHudSet(1)" title="ย่อ">▭ ย่อ</button><button class="${v===2?'on':''}" onclick="skyHudSet(2)" title="ปิด">✕ ซ่อน</button>`;T.appendChild(b)}
+ if(v===1&&!h.querySelector('.skMn')){const g=[...h.querySelectorAll('.skG div')].map(d=>{const s=d.querySelector('small'),b=d.querySelector('b');return s&&b?`${s.textContent.split(' ')[0]} ${b.textContent}`:''}).filter(Boolean).join(' · ');
+  const m=document.createElement('div');m.className='skMn';m.textContent=g;h.appendChild(m)}
+ if(v===2){const T2=h.querySelector('.skT span');if(T2&&!/▸/.test(T2.textContent))T2.textContent='🌠 '+T2.textContent+' ▸'}}catch(e){console.error('sky hud',e)}return r};
+})()}catch(e){console.error('block97',e)}
