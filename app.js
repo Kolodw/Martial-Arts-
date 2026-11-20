@@ -53359,17 +53359,21 @@ window._owb={OW,autoId,wear,decorate,wk,canWear,SEL:()=>SEL,owSync,thumb};
 // ============================================================
 try{(()=>{
 const css=document.createElement('style');css.textContent=`
-.cmh .ttStk{order:9;display:inline-grid;grid-template-columns:minmax(0,1fr);gap:5px;width:max-content;max-width:100%;vertical-align:middle;margin:3px 0;flex-basis:auto}
-.cmh .ttStk>*{width:100%!important;max-width:none!important;box-sizing:border-box;margin:0!important;justify-content:center;text-align:center}
-.cmh .ttStk>.tchip,.cmh .ttStk>.rkchip,.cmh .ttStk>.ttl,.cmh .ttStk>[class^="rt"],.cmh .ttStk>.ptt,.cmh .ttStk>.skt,.cmh .ttStk>.evt,.cmh .ttStk>.ptm{display:flex!important}
+.cmh .ttStk{order:9;display:inline-flex;flex-direction:column;align-items:center;gap:3px;width:max-content;max-width:100%;vertical-align:middle;margin:3px 0;flex-basis:auto}
+.cmh .ttStk>*{margin:0!important;max-width:100%}
+.cmh .ttSub{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;max-width:100%}
+.cmh .ttSub>*{width:auto!important;max-width:100%!important;margin:0!important;font-size:.8em!important;transform:none}
+.cmh .ttSub>.tchip,.cmh .ttSub>.rkchip{padding-top:1px!important;padding-bottom:1px!important}
 .cmh .ttBr{order:8;flex-basis:100%;width:100%;height:0}`;document.head.appendChild(css);
 const isChip=e=>e.nodeType===1&&e.tagName!=='B'&&e.tagName!=='BUTTON'&&!e.classList.contains('ct')&&!e.classList.contains('ttStk')&&!e.classList.contains('ttBr')&&!e.classList.contains('rep')&&(e.textContent||'').trim().length>0;
-function fix(root){try{(root||document).querySelectorAll('.cmh').forEach(h=>{const ch=[...h.children].filter(isChip);const st=h.querySelector(':scope>.ttStk');
- if(st){ch.forEach(c=>st.appendChild(c));return}
- if(ch.length<2)return;const s=document.createElement('span');s.className='ttStk';ch[0].before(s);if(!h.querySelector(':scope>.ttBr')){const br=document.createElement('i');br.className='ttBr';s.before(br)}ch.forEach(c=>s.appendChild(c));
- // ไม่ให้ช่องว่างข้อความค้างระหว่างฉายา
- [...h.childNodes].forEach(n=>{if(n.nodeType===3&&!n.textContent.trim()&&n.previousSibling===s)n.textContent=' '})})}catch(e){}}
-window._ttFix=fix;
+function fix(root){try{(root||document).querySelectorAll('.cmh').forEach(h=>{let st=h.querySelector(':scope>.ttStk');const ch=[...h.children].filter(isChip);
+ const all=st?[...st.querySelectorAll(':scope>*:not(.ttSub),:scope>.ttSub>*')].concat(ch):ch;if(all.length<2){if(!st)return}
+ const rank=e=>{const c=e.className||'';return /\bptt|\bskt|\bevt|\bptm|^rt/.test(c)?3:/rkchip|ttl/.test(c)?2:1};
+ const prime=all.slice().sort((x,y)=>rank(y)-rank(x))[0],rest=all.filter(e=>e!==prime);
+ if(!st){st=document.createElement('span');st.className='ttStk';all[0].before(st);if(!h.querySelector(':scope>.ttBr')){const br=document.createElement('i');br.className='ttBr';st.before(br)}}
+ let sub=st.querySelector(':scope>.ttSub');if(!sub){sub=document.createElement('span');sub.className='ttSub'}
+ if(st.firstElementChild!==prime)st.prepend(prime);rest.forEach(e=>{if(e.parentNode!==sub)sub.appendChild(e)});if(rest.length&&sub.parentNode!==st)st.appendChild(sub);if(!rest.length&&sub.parentNode)sub.remove();
+ [...h.childNodes].forEach(n=>{if(n.nodeType===3&&!n.textContent.trim()&&n.previousSibling===st)n.textContent=' '})})}catch(e){}} window._ttFix=fix;
 if(typeof chatRender==='function'){const _cr=chatRender;chatRender=function(){const r=_cr.apply(this,arguments);fix($('chatBox'));setTimeout(()=>fix($('chatBox')),60);return r}}
 let tq=0;const mo=new MutationObserver(()=>{if(tq)return;tq=setTimeout(()=>{tq=0;const b=document.getElementById('chatBox');if(b)fix(b)},80)});
 const hook=()=>{const b=document.getElementById('chatBox');if(b&&!b._ttMo){b._ttMo=1;mo.observe(b,{childList:true,subtree:true})}};setInterval(hook,1500);
