@@ -32494,6 +32494,12 @@ COSP.call={n:'ครบทุกชุด (8 ชุด · 24 ชิ้น)',p:39
 const AVM=[['a_f1','จอบทำนา',0,0,'ชาวนาผู้ถ่อมตน'],['a_f2','เทียนไข',0,0,'แสงเล็กๆ ในคืนมืด'],['a_f3','แมวจร',1,0,'เจ้าของถนนยามราตรี'],['a_f4','ดาบราตรี',2,0,'คมกริบใต้แสงจันทร์'],['a_p1','จิ้งจอกเก้าหาง',3,9,'เก้าหางพลิ้วไหว · ไฟลอยขึ้น · กะพริบตา'],['a_p2','ปักษาตะวัน',3,9,'ปีกกระพือ · รัศมีหมุนรอบตัว'],['a_p3','ต้นไม้โลก',2,15,'รากเรืองแสง · ใบไม้ร่วงพริ้ว'],['a_p4','ความว่างเปล่า',3,15,'วงแหวนเต้นเป็นจังหวะ · แสงโคจร'],['a_p5','ผลึกน้ำแข็งนิรันดร์',1,19,'หกแฉกส่องประกาย · หิมะโปรย'],['a_p6','ค่ายกลปราณ',1,19,'ลายแปดทิศ · หยินหยางหมุน'],['a_p7','เปลวไฟนิรันดร์',2,25,'แดง ส้ม เหลือง แกนน้ำเงิน'],['a_p8','ดาบบินทองคำ',2,25,'ปราณหมุนรอบ · ประกายพุ่ง'],['a_p9','สายฟ้าสวรรค์',3,29,'ฟ้าผ่ากลางพายุ · วาบทั้งภาพ'],['a_p10','วงแหวนวิญญาณ 9 ชั้น',3,29,'ขาว เหลือง ม่วง ดำ แดง หมุนซ้อนกัน']];
 window.AVT=AVM.map((x,i)=>({id:x[0],n:x[1],r:x[2],free:!x[3],p:x[3],d:x[4],pk:x[3]?'pa'+(i-3):'',i,hi:/^a_p([5-9]|10)$/.test(x[0])}));
 AVT.filter(a=>!a.free).forEach(a=>{COSP[a.pk]={n:'รูปโปรไฟล์ '+a.n+' (ขยับได้)',p:a.p}});
+// 📦 แพ็กรูปโปรไฟล์ (ราคาจริงคิดที่เซิร์ฟเวอร์)
+const PA_ALL=[...Array(10).keys()].map(i=>'a_p'+(i+1)),PA_LEG=['a_p1','a_p2','a_p4','a_p9','a_p10'];
+COSP.pall={n:'แพ็กรูปโปรไฟล์ขยับได้ครบ 10 แบบ',p:149};COSP.pleg={n:'แพ็กรูปโปรไฟล์ระดับตำนาน 5 แบบ',p:69};COSP.prest={n:'รูปโปรไฟล์ขยับได้ที่ยังไม่มีทั้งหมด',p:149};
+const paOne=id=>{const a=AVT.find(z=>z.id===id);return a?a.p|0:0};
+const paRest=hv=>{const left=PA_ALL.filter(x=>!hv(x));const sum=left.reduce((a,x)=>a+paOne(x),0);return{left,sum,amt:!left.length?0:left.length===1?sum:Math.min(149,Math.max(9,Math.round(sum*.77/10)*10-1))}};
+window._paRest=paRest;
 
 const st2=document.createElement('style');st2.textContent=`
 
@@ -32666,7 +32672,7 @@ function cosPurge(){if(isA()||!SV)return;const PAID=/^f_(p|e|s|m|w)\d+$/,d=frGet
  if(ch)frSet(d);if(push)try{profPush()}catch(e){}}
 setTimeout(()=>{try{if(typeof onlineOK==='undefined'||onlineOK!==false)sync()}catch(e){}},1800);
 // ซื้อ
-window.cosBuy=function(pk){const P=COSP[pk];if(!P)return;const p=price(pk);
+window.cosBuy=function(pk){if(pk==='prest'&&!(Date.now()-(window._pdOk||0)<4000)){if(window._pdBusy)return;window._pdBusy=1;(async()=>{try{const j=await Promise.race([api('cosdyn'),new Promise(r=>setTimeout(()=>r(null),4000))]);if(j&&j.ok){if(!j.left||!j.left.length){toast('มีครบทุกแบบแล้ว');return}COSP.prest.p=j.amt;COSP.prest.n=`รูปโปรไฟล์ขยับได้ที่ยังไม่มี ${j.left.length} แบบ`}else COSP.prest.p=paRest(has).amt}catch(e){try{COSP.prest.p=paRest(has).amt}catch(x){}}finally{window._pdBusy=0}window._pdOk=Date.now();window.cosBuy('prest')})();return}const P=COSP[pk];if(!P)return;const p=price(pk);
  modal(`<button class="xbtn" onclick="cosMenu()">✕</button><h3>🎨 ${P.n}</h3>
  <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#c98d22">${p} บาท${featPk()===pk?` <s style="font-size:14px;opacity:.5">${P.p}</s> <small style="color:#c81e3a">ลด 20% วันนี้</small>`:''}</div>
  <img loading="lazy" src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">
@@ -32713,7 +32719,11 @@ window.cosMenu=function(tab,focus){tab=window._cosTab=tab||window._cosTab||'set'
  if(tab==='t'){b=`<div class="starter"><b>🌱 เริ่มต้นแค่ 9 บาท</b> — ฉายาแบบเรียบ 3 แบบ ลองซื้อชิ้นแรกได้เลย</div><div class="grid">${[9,10,11].map(cardT).join('')}${[1,2,3,4,5,6,7,8].map(cardT).join('')}</div>`}
  if(tab==='c'){b='<div class="grid">'+[1,2,3,4,5,6,7,8].map(cardC).join('')+'</div>'}
  if(tab==='a'){const RC=['#888780','#378ADD','#7F77DD','#BA7517'],RN=['ธรรมดา','หายาก','ล้ำค่า','ตำนาน'],dd=frGet();
-  b=`<div class="starter"><b>🧑 รูปโปรไฟล์</b> — แบบนิ่งใส่ฟรีทุกคน · แบบขยับได้ 9–29 บาท (ในแชทแสดงเป็นภาพนิ่ง)</div><div class="grid">${AVT.filter(a=>a.free||(a.pk&&COSP[a.pk])||has(a.id)).map(a=>{const o=a.free||has(a.id),eq=dd.pf===a.id;return `<div class="card" id="cs-a${a.i}" style="--ac:${RC[a.r]}"><span class="rib">${a.free?'ฟรี · ':'✨ ขยับได้ · '}${RN[a.r]}</span><div class="pv">${avtHtml(a.id,a.hi?120:84)}</div><b class="nm">${a.n}</b><div class="sub">${a.d}</div>${o?'':priceH(a.pk)}<div class="acts">${o?(eq?`<button class="g" onclick="avtOff()">ถอด</button><span class="own-b">✅ ใช้อยู่</span>`:`<button onclick="avtEquip('${a.id}')">ใช้เป็นรูปโปรไฟล์</button>`):`<button onclick="cosBuy('${a.pk}')">ซื้อ ${price(a.pk)}฿</button>`}</div></div>`}).join('')}</div>`}
+  b=`<div class="starter"><b>🧑 รูปโปรไฟล์</b> — แบบนิ่งใส่ฟรีทุกคน · แบบขยับได้ 9–29 บาท (ในแชทแสดงเป็นภาพนิ่ง)</div>${(()=>{const R=paRest(has),nOwn=10-R.left.length,legOwn=PA_LEG.filter(has).length,legSum=PA_LEG.reduce((a,x)=>a+paOne(x),0);if(!R.left.length)return'<div class="starter" style="text-align:center">✅ มีรูปโปรไฟล์ขยับได้ครบทั้ง 10 แบบแล้ว</div>';
+ const card=(ic,t,sub,pr,full,pk,ids,tag,hue)=>`<div class="paB" style="--h:${hue}"><span class="paTag">${tag}</span><div class="paTop"><span class="paIc">${ic}</span><div style="min-width:0"><b class="paT">${t}</b><small class="paS">${sub}</small></div></div><div class="paFan">${ids.map((id,i)=>`<span class="paTh" style="--i:${i}">${avtHtml(id,34)}</span>`).join('')}</div><div class="paRow"><div><b class="paP">${pr}<i>฿</i></b>${full>pr?`<s>${full}฿</s>`:''}${full>pr?`<span class="paSave">ประหยัด ${full-pr}฿</span>`:''}</div><button class="paGo" onclick="cosBuy('${pk}')">ซื้อเลย ›</button></div></div>`;
+ let h='';if(!nOwn)h+=card('📦','แพ็กครบทุกแบบ · 10 รูป','โอนครั้งเดียว ได้รูปขยับได้ทั้งหมด',149,R.sum,'pall',PA_ALL,'🔥 คุ้มสุด −'+Math.round((1-149/R.sum)*100)+'%',38);else if(R.left.length>=2)h+=card('🧩',`เติมให้ครบ · ${R.left.length} รูปที่ยังไม่มี`,`มีแล้ว ${nOwn} รูป ไม่จ่ายซ้ำ`,R.amt,R.sum,'prest',R.left,'✨ ราคาเฉพาะคุณ',200);
+ if(!legOwn)h+=card('👑','แพ็กตำนาน · 5 รูป','จิ้งจอก · ปักษา · ความว่างเปล่า · สายฟ้า · วงแหวน',69,legSum,'pleg',PA_LEG,'👑 ระดับตำนาน −'+Math.round((1-69/legSum)*100)+'%',275);
+ return h?`<div class="paWrap">${h}</div>`:''})()}<div class="grid">${AVT.filter(a=>a.free||(a.pk&&COSP[a.pk])||has(a.id)).map(a=>{const o=a.free||has(a.id),eq=dd.pf===a.id;return `<div class="card" id="cs-a${a.i}" style="--ac:${RC[a.r]}"><span class="rib">${a.free?'ฟรี · ':'✨ ขยับได้ · '}${RN[a.r]}</span><div class="pv">${avtHtml(a.id,a.hi?120:84)}</div><b class="nm">${a.n}</b><div class="sub">${a.d}</div>${o?'':priceH(a.pk)}<div class="acts">${o?(eq?`<button class="g" onclick="avtOff()">ถอด</button><span class="own-b">✅ ใช้อยู่</span>`:`<button onclick="avtEquip('${a.id}')">ใช้เป็นรูปโปรไฟล์</button>`):`<button onclick="cosBuy('${a.pk}')">ซื้อ ${price(a.pk)}฿</button>`}</div></div>`}).join('')}</div>`}
  const hero=`<div class="hero"><span class="own">สะสมแล้ว ${owned()}/24</span><i class="sp" style="left:12%;top:20%"></i><i class="sp" style="left:60%;top:70%;animation-delay:-1s"></i><i class="sp" style="left:88%;top:40%;animation-delay:-.5s"></i><h4>🎨 ร้านตกแต่ง</h4><p>กรอบรูปทรงพิเศษที่ขยับได้ · ฉายาเรืองแสง · ธีมแชท<br>ของแต่งล้วนๆ ซื้อครั้งเดียวถาวร ไม่มีผลต่อพลังหรืออันดับ</p></div>`;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="cxs">${hero}<div class="tabs">${tabs.map(t=>`<button class="${tab===t[0]?'on':''}" onclick="cosMenu('${t[0]}')">${t[1]}</button>`).join('')}</div>${fh}${b}<p class="tag2" style="margin-top:10px">เล่นฟรีก็ได้กรอบและฉายาจากในเกมเหมือนเดิม · ผูกกับบัญชี ไม่หายเวลาเปลี่ยนเครื่อง</p></div>`,'cosshop');
  try{document.querySelectorAll('.cxs .card,.cxs .feat').forEach((e,i)=>{if(i>1)e.classList.add('cxoff');cxWatch(e)})}catch(e){}try{avtMount($('modal'))}catch(e){}
@@ -53277,3 +53287,29 @@ if(typeof chatRender==='function'){const _cr=chatRender;chatRender=function(){co
 let tq=0;const mo=new MutationObserver(()=>{if(tq)return;tq=setTimeout(()=>{tq=0;const b=document.getElementById('chatBox');if(b)fix(b)},80)});
 const hook=()=>{const b=document.getElementById('chatBox');if(b&&!b._ttMo){b._ttMo=1;mo.observe(b,{childList:true,subtree:true})}};setInterval(hook,1500);
 })()}catch(e){console.error('block107',e)}
+
+// ============================================================
+// BLOCK 108: 📦 สไตล์การ์ดแพ็กรูปโปรไฟล์
+// ============================================================
+try{(()=>{const c=document.createElement('style');c.textContent=`
+.paWrap{display:flex;flex-direction:column;gap:10px;margin:10px 0 14px}
+.paB{position:relative;overflow:hidden;border-radius:16px;padding:14px 14px 12px;background:radial-gradient(120% 90% at 0% 0%,hsl(var(--h) 70% 22%),hsl(var(--h) 40% 8%) 70%);border:1.5px solid hsl(var(--h) 85% 55% / .7);box-shadow:0 0 0 1px #0006 inset,0 6px 22px hsl(var(--h) 90% 45% / .28);isolation:isolate}
+.paB::before{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,hsl(var(--h) 100% 80% / .16) 45%,transparent 60%);background-size:250% 100%;animation:paSh 3.6s linear infinite;z-index:-1;pointer-events:none}
+@keyframes paSh{from{background-position:150% 0}to{background-position:-100% 0}}
+.paTag{position:absolute;top:0;right:0;padding:4px 10px 5px 14px;border-bottom-left-radius:12px;font:800 11px 'Chakra Petch','Sarabun',sans-serif;letter-spacing:.3px;color:#1a0e04;background:linear-gradient(90deg,hsl(var(--h) 95% 62%),hsl(calc(var(--h) + 20) 100% 72%));box-shadow:0 2px 10px hsl(var(--h) 90% 50% / .5)}
+.paTop{display:flex;gap:10px;align-items:center;padding-right:96px}
+.paIc{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:hsl(var(--h) 60% 50% / .18);border:1px solid hsl(var(--h) 80% 60% / .45)}
+.paT{display:block;font:800 15px 'Chakra Petch','Sarabun',sans-serif;color:hsl(var(--h) 100% 86%);line-height:1.25}
+.paS{display:block;font-size:11.5px;color:#e8dcc8cc;margin-top:2px;line-height:1.3}
+.paFan{display:flex;overflow:hidden;padding:10px 0 4px 4px;min-height:44px}
+.paTh{width:36px;height:36px;margin-left:-9px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#0b0b10;border:2px solid hsl(var(--h) 85% 62%);box-shadow:0 2px 8px #000a;transform:rotate(calc((var(--i) - 4) * 2deg));animation:paUp .5s cubic-bezier(.2,.9,.3,1.3) both;animation-delay:calc(var(--i) * 45ms)}
+.paTh:first-child{margin-left:0}.paTh .avtph,.paTh canvas,.paTh img{width:32px!important;height:32px!important;border-radius:50%}
+@keyframes paUp{from{opacity:0;transform:translateY(8px) scale(.7)}}
+.paRow{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-top:6px}
+.paP{font:900 28px/1 'Chakra Petch',sans-serif;color:#fff3c4;text-shadow:0 0 14px hsl(var(--h) 100% 60% / .7)}.paP i{font-style:normal;font-size:16px;margin-left:2px}
+.paRow s{margin-left:6px;opacity:.55;font-size:13px}
+.paSave{display:inline-block;margin-left:6px;padding:2px 7px;border-radius:999px;font:700 11px 'Sarabun',sans-serif;color:#0e2a14;background:#7fe08a}
+.paGo{flex:none;white-space:nowrap;border:0!important;border-radius:12px!important;padding:10px 14px!important;font:800 14px 'Chakra Petch','Sarabun',sans-serif!important;color:#1a0e04!important;background:linear-gradient(180deg,hsl(var(--h) 100% 72%),hsl(var(--h) 90% 52%))!important;box-shadow:0 4px 0 hsl(var(--h) 80% 30%),0 0 18px hsl(var(--h) 100% 55% / .45)!important;cursor:pointer}
+.paGo:active{transform:translateY(3px);box-shadow:0 1px 0 hsl(var(--h) 80% 30%)!important}
+@media(max-width:360px){.paTop{padding-right:0;margin-top:16px}.paP{font-size:24px}}
+`;document.head.appendChild(c)})()}catch(e){console.error('block108',e)}
