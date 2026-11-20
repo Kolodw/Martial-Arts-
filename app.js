@@ -16150,7 +16150,7 @@ const MW_NM={th:[['มายด์','ฝน','แพรว','ต้น','เจ�
  kr:[['จียอน','ซูบิน','มินซอ','จุนโฮ','ฮยอนอู','ยุนา','แทมิน','ซอฮยอน'],['ซออา','โดยุน','ฮายุน','ชีอู','อึนอู','จีอัน']],
  tw:[['อี้ถิง','เพ่ยซวน','จวิ้นเจี๋ย','เจียฮ่าว','ซินอี๋','อวี่ซวน','จื่อเหวย','หยาถิง'],['หยูเอิน','ป๋อเหยียน','อีนั่ว','ปิ่นเยี่ยน','เฉินซี','อวี่เฉิน']]};
 const mwNm=(M,k)=>ch((MW_NM[M.cc||'th']||MW_NM.th)[k]);
-const MW_MEET=['เพื่อนร่วมงานที่ชวนคุณกินข้าวเที่ยงทุกวัน','คนที่ยืนรอรถเมล์ป้ายเดียวกันทุกเช้ามาสามปี','คนที่แอปหาคู่จับคู่ให้ (หลินสมัครให้โดยไม่บอก)','ลูกค้าประจำที่มาทุกวันพฤหัสฯ','เพื่อนบ้านห้องตรงข้ามที่ฝากรับพัสดุบ่อยๆ'];
+const MW_MEET=['เพื่อนร่วมงานที่ชวนคุณกินข้าวเที่ยงทุกวัน','คนที่ยืนรอรถเมล์ป้ายเดียวกันทุกเช้ามาสามปี','คนที่แอปหาคู่จับคู่ให้ (เพื่อนสมัครให้โดยไม่บอก)','ลูกค้าประจำที่มาทุกวันพฤหัสฯ','เพื่อนบ้านห้องตรงข้ามที่ฝากรับพัสดุบ่อยๆ'];
 MW_R.push(
  {id:'love1',w:6,cd:6,c:M=>M.y>=3&&!M.sp&&!M.dt&&mwLeft(M)>15&&S.age<85,go(M){const n=mwNm(M,0),how=ch(MW_MEET);choice('💞 ใครบางคน',`<b>${esc(n)}</b> — ${how} วันหนึ่งเขาถามว่า "เสาร์นี้ว่างไหม ไปดูหนังกัน"`,[
   mwC('ตกลง',()=>{M.dt={n,y:M.y};mwSay(`🎬 คุณดูหนังกับ${esc(n)} เรื่องกำลังภายใน คุณวิจารณ์ทุกฉากต่อสู้จนเขาหัวเราะทั้งเรื่อง — นั่นคือเดตแรกในรอบหลายร้อยปี`,'good',{joy:10,adapt:3})}),
@@ -31678,7 +31678,8 @@ function kRun(M,e){const K=M.kid;if(!K)return;const d=sub(typeof e.d==='function
  const os=(e.o||[]).filter(o=>{try{return!o.c||o.c(K,M)}catch(x){return false}});if(!os.length)return;
  choice(sub(e.t,K),d,os.map(o=>({t:sub(o.t,K),s:o.s||'',f(){kDo(S.mw,S.mw&&S.mw.kid,e,o.rows,0)}})))}
 let _kq=0;
-function kFire(e){const me=S,go=()=>{if(S!==me||!S||!S.alive||!S.mw||!S.mw.kid)return;if(choice._cur||modalOpen)return setTimeout(go,900);try{setScene('mw')}catch(x){}try{kRun(S.mw,e)}catch(x){console.error(x)}};setTimeout(go,1100+(_kq++%4)*1000)}
+function kFire(e){const me=S,a0=S.age;window._kPend=(window._kPend|0)+1;window._kPendT=Date.now();const done=()=>{window._kPend=Math.max(0,(window._kPend|0)-1)};
+ const go=()=>{if(S!==me||!S||!S.alive||!S.mw||!S.mw.kid)return done();if(choice._cur||modalOpen)return setTimeout(go,700);done();if(S.age>Math.max(a0,e.a[1])+1)return;try{setScene('mw')}catch(x){}try{kRun(S.mw,e)}catch(x){console.error(x)}};setTimeout(go,500+(_kq++%3)*350)}
 function kDraw(M){const K=M.kid,a=S.age,calY=MW_Y0-18+a,out=[],ok=e=>{try{return(!e.c||e.c(K,M))}catch(x){return false}};
  const fx=KE.filter(e=>!K.seen[e.id]&&(e.ms===a||(e.yr&&e.yr===calY&&a>=e.a[0]&&a<=e.a[1]))&&ok(e));fx.forEach(e=>out.push(e));
  let n=a<3?(Math.random()<.45?1:0):out.length?(Math.random()<.45?1:0):(Math.random()<.8?1:0)+(Math.random()<.22?1:0);
@@ -33166,7 +33167,7 @@ let lastPY=0;
   const d=cats(M).find(c=>c[0]===pl.d);addFeed('ev',`📅 <b>สรุปแผนปี</b> — เรื่องหลัก: ${d?d[1]+' '+d[2]+' '+a[pl.d]+' เดือน':'-'}${parts.length?' · '+parts.join(' · '):''}`,'sum');
   // เหตุการณ์กลางปีตามเดือนที่ลง
   const pool=[];Object.keys(a).forEach(k=>{if(a[k]>=2)for(let i=0;i<a[k];i++)pool.push(k)});const n=Math.random()<.75?(Math.random()<.3?2:1):0;const used={};
-  for(let i=0;i<n&&pool.length;i++){const k=ch(pool);if(used[k])continue;used[k]=1;const L=PME.filter(e=>e.k===k&&(!e.w||e.w===w)&&(!e.c||e.c(M))&&!((M.pms||{})[e.id]>M.y-6));if(!L.length)continue;const e=ch(L);M.pms=M.pms||{};M.pms[e.id]=M.y;e.mo=R(1,12);fire(e.id)}
+  for(let i=0;i<n&&pool.length;i++){const k=ch(pool);if(used[k])continue;used[k]=1;const L=PME.filter(e=>e.k===k&&(!e.w||e.w===w)&&!(k==='work'&&S.age>=60)&&(!e.c||e.c(M))&&!((M.pms||{})[e.id]>M.y-6));if(!L.length)continue;const e=ch(L);M.pms=M.pms||{};M.pms[e.id]=M.y;e.mo=R(1,12);fire(e.id)}
   M.pl=null}}catch(e){console.error(e)}return r}}
 // แถบแผนบนหน้าหลัก
 {const _r=render;render=function(){const r=_r.apply(this,arguments);try{const M=S&&S.mw;if(M&&M.native&&!M.kid&&S.alive){const h=$('mwHud');if(h&&!h.querySelector('.plChip')){const a=fit(M,M.plLast||def(M)),d=dom(M,a);h.insertAdjacentHTML('afterbegin',`<div class="mwJob plChip" style="border:none;margin:0 0 6px;padding:0;cursor:pointer" onclick="plOpen(true)">📅 แผนปี: ${d[1]} ${d[2]} ${a[d[0]]} เดือน${M.plAsk===0?' · ใช้แผนเดิมอัตโนมัติ':''} <span class="tag2">แตะเพื่อแก้</span></div>`)}}}catch(e){}return r}}
@@ -38180,9 +38181,9 @@ function arc(prefix,DEF,getS){Object.keys(DEF).forEach(k=>{DEF[k].ev.forEach((e,
  return(M,out,p)=>{const st=getS(M);if(!st||!st.k||!DEF[st.k])return;const A=DEF[st.k],dn=st.dn||{},n=Object.keys(dn).length,last=A.ev.length-1;
   const pool=A.ev.map((e,i)=>i).filter(i=>!dn[i]&&i<last);
   if(pool.length&&Math.random()<p)out.push({id:`${prefix}_${st.k}_${ch(pool)}`,p:2.8});
-  if(!dn[last]&&n>=(A.need||2)&&Math.random()<p*.8)out.push({id:`${prefix}_${st.k}_${last}`,p:4})}}
+  if(!dn[last]&&n>=(A.need||2)&&(st.y0==null||S.age-st.y0>=12)&&Math.random()<p*.8)out.push({id:`${prefix}_${st.k}_${last}`,p:4})}}
 function pick(prefix,DEF,getS,title,desc){EV(prefix+'_pick',M=>{const st=getS(M);const ks=Object.keys(DEF).sort(()=>Math.random()-.5).slice(0,3);
- choice(title,desc,ks.map(k=>O(`${DEF[k].ic} ${DEF[k].n}`,()=>{st.k=k;say(`${DEF[k].ic} ${DEF[k].d}`,'epic')},DEF[k].s)))})}
+ choice(title,desc,ks.map(k=>O(`${DEF[k].ic} ${DEF[k].n}`,()=>{st.k=k;st.y0=S.age;say(`${DEF[k].ic} ${DEF[k].d}`,'epic')},DEF[k].s)))})}
 
 // ================= 🌃 เส้นทางอาชญากรรม =================
 const uQ=M=>{const U=M.U;U.Q=U.Q||{k:null};return U.Q};
@@ -43128,7 +43129,7 @@ const css=document.createElement('style');css.textContent=`.ixSpot{animation:ixS
   if(S.age-X.fpY>=6){X.fpY=S.age;fpAdd(1,'ฟ้าบันทึกชีวิตอีกหกปีของคุณ')}
   if(snap&&S.hp<snap.hp*.5&&S.hp<S.maxHp*.35)fpAdd(1,'ฟ้าเห็นใจคนที่ล้มแล้วยังลุก');
   // กรรมย้อนคืน (1 เรื่อง/ปี)
-  const due=X.sd.findIndex(s=>S.age>=s.d);if(due>=0){const s=X.sd.splice(due,1)[0];try{seedPay(s)}catch(e){console.error(e)}}
+  const due=S.mw?-1:X.sd.findIndex(s=>S.age>=s.d);if(due>=0){const s=X.sd.splice(due,1)[0];try{seedPay(s)}catch(e){console.error(e)}}
   if(!X.rv&&S.age>=10&&!X.rvDone){X.rvDone=1;rvNew()}rvTick(pt);betTick();
   if(free()&&!auto&&(X.hwF||!S.mw||(window.ixBudget&&ixBudget(1)))){if(X.hwF||(S.age>=X.hw&&S.age>=12&&Math.random()<.12)){X.hwF=0;hwOpen()}
    else if(S.age>=X.mg&&S.age>=12&&Math.random()<.08)setTimeout(()=>{if(ok()&&free()&&!auto)mgOpen()},400);
@@ -43552,6 +43553,7 @@ const _pk=window.mg2Pick;
 window.mg2Pick=function(){try{const M=S&&S.alive&&S.mw;if(!M||(S.beastMode&&!S.beastMode.human))return _pk.apply(this,arguments);
  const MP=window.mg2Map&&window.mg2Map.mw,C=(MP?(MP[S.focus]||MP._):['stock','rider','typing']).slice();let w=null;if(M.wx&&M.wx.on&&WG[M.wx.id])w=WG[M.wx.id];else if(M.hw>0)w=WG.hunter;if(w)C.push(...w,...w);
  const j=M.job&&JG[M.job.id];if(j)C.push(...j,...j);
+ if(M.native){for(let i=C.length-1;i>=0;i--)if(/^(rescue|cctv|breath|jgCctv|jfRing|jsJump|jcMoves)$/.test(C[i]))C.splice(i,1);if(S.age<6)return;if(S.age<18){const KID=['mathq','phone','bargain','chicken'];C.length=0;C.push(...KID)}if(!C.length)C.push('phone','bargain')}
  let L=C.filter(k=>G[k]&&k!==S.mgLast);if(!L.length)L=C.filter(k=>G[k]);const k=L[Math.floor(Math.random()*L.length)];S.mgLast=k;S.mgA=S.age;return(window._mg2Y||yearly)(k)}catch(e){console.error('mwPick',e);return _pk.apply(this,arguments)}};
 })()}catch(e){console.error('mwmg',e)}
 
@@ -43683,7 +43685,7 @@ const JOB={stunt:{n:'สตันท์แมนกองถ่าย',ic:'🎬'
  taichi:{n:'ครูไทเก็กออนไลน์',ic:'☯️',L:['สอนป้าๆ ในสวน','คลาสออนไลน์เล็กๆ','คอร์สขายดี','สำนักออนไลน์'],pay:[1500,7000,22000,60000]}};
 window.openMwJob=function(){const x=X(),j=x.job;modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>💼 อาชีพเสริม</h3><p class="tag2">ทำควบคู่กับโฟกัสหลักได้ · ได้เงินทุกปี · เลื่อนขั้นผ่านเหตุการณ์และมินิเกม</p>${Object.entries(JOB).map(([k,J])=>`<div class="item" style="${j&&j.k===k?'outline:2px solid #c9a24a':''}"><b>${J.ic} ${J.n}</b>${j&&j.k===k?` · <b>${J.L[j.lv]}</b> (${j.xp}/${3+j.lv*2})`:''}<p class="tag2">${J.L.join(' → ')}</p>${j&&j.k===k?'<span class="tag2">กำลังทำอยู่</span>':`<button class="sysb" onclick="mwJobPick('${k}')">${j?'เปลี่ยนมาทำ (เริ่มใหม่)':'เริ่มทำ'}</button>`}</div>`).join('')}`,'mwjob')};
 window.mwJobPick=function(k){X().job={k,lv:0,xp:0};say(`${JOB[k].ic} คุณเริ่มงานใหม่: <b>${JOB[k].n}</b> — ตำแหน่งแรก ${JOB[k].L[0]}`,'good');closeM();render()};
-function jobYear(){const x=X(),j=x.job;if(!j)return;const J=JOB[j.k],pay=Math.round(J.pay[j.lv]*(C().rate||1)*12/12);fx({mon:pay});j.xp++;if(j.lv<3&&j.xp>=3+j.lv*2&&!choice._cur&&x.juY!==M().y&&window.ixBudget&&ixBudget()){x.juY=M().y;jobUp()}}
+function jobYear(){const x=X(),j=x.job;if(!j)return;const J=JOB[j.k],pay=Math.round(J.pay[j.lv]*(C().rate||1)*12/12);fx({mon:pay});j.xp++;if(j.lv<3&&j.xp>=3+j.lv*2&&!choice._cur&&(x.juY==null||M().y-x.juY>=2)&&window.ixBudget&&ixBudget()){x.juY=M().y;jobUp()}}
 function up(){const x=X(),j=x.job,J=JOB[j.k];j.lv++;j.xp=0;say(`${J.ic} <b>เลื่อนขั้น: ${J.L[j.lv]}</b>`,'epic',null,true);post({stunt:'ใครเห็นคิวบู๊ในหนังใหม่บ้าง คนแสดงแทนคนนี้ต้องเป็นนักกีฬาระดับชาติแน่ๆ',guard:'การ์ดของเศรษฐีเมื่อวานจับมือคนร้ายได้ก่อนที่มีดจะออกจากกระเป๋า เร็วจนกล้องจับไม่ทัน',taichi:'คอร์สไทเก็กออนไลน์ของลุงคนนี้เต็มอีกแล้ว ใครได้ที่นั่งบ้าง'}[j.k],{ic:J.ic})}
 function jobUp(){const x=X(),j=x.job,J=JOB[j.k],lv=j.lv+1;const T={
  stunt:[['🎬 ฉากตกจากตึกห้าชั้น','ผู้กำกับอยากได้ฉากตกจริง ไม่ใช้สลิง — "ทำได้ไหม"','rescue','ทำแบบคนธรรมดาที่ฝึกมา (ระวังเร็วเกิน)'],['🎬 พระเอกเจ็บ ต้องแสดงแทนฉากบู๊','ฉากต่อสู้ยาวสามนาที ต้องรับคิวให้ทัน','dummy','รับคิวบู๊'],['🎬 ผู้กำกับต่างชาติขอดูฝีมือ','เขาขอดูท่าเดียว — ถ้าชอบ คุณจะได้เป็นครูฝึกคิวบู๊','beastread','โชว์ท่าที่ไม่เคยมีใครเห็น']],
@@ -43735,7 +43737,7 @@ function rescueEv(){choice('🦸 เหตุการณ์ตรงหน้�
 // ================= รายปี =================
 {const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(!on()||S.age===a0)return r;const x=X(),m=M();
  feedYear();jobYear();locYear();
- if(!choice._cur||Math.random()<.5){const q=[];if(m.y>=3&&m.y>=x.ar&&(m.fl.others||m.y>=5))q.push(arena);if(m.linMet&&m.y>=(x.lin||0)&&m.y>=2)q.push(linAct);if(m.adapt<75&&Math.random()<.35)q.push(shock);if(Math.random()<.12)q.push(rescueEv);if(!x.job&&m.y>=2&&!x.jobAsk){q.push(()=>(x.jobAsk=1,choice('💼 งานเสริม',m.native&&!m.linMet?'เพื่อนส่งประกาศรับสมัครงานพาร์ตไทม์มาให้สามที่ "ลองดูไหม รายได้เสริมดีนะ"':`${LIN()}ส่งประกาศรับสมัครงานมาให้สามที่ "ปู่ลองดูไหม"`,Object.entries(JOB).map(([k,J])=>({t:`${J.ic} ${J.n}`,s:J.L.join(' → '),f(){mwJobPick(k)}})).concat([{t:'🙅 ยังไม่สนใจ',skip:true,f(){}}]))))}
+ if(!choice._cur||Math.random()<.5){const q=[];if(!m.native&&m.y>=3&&m.y>=x.ar&&(m.fl.others||m.y>=5))q.push(arena);if(m.linMet&&m.y>=(x.lin||0)&&m.y>=2)q.push(linAct);if(m.adapt<75&&Math.random()<.35)q.push(shock);if(!m.native&&Math.random()<.12)q.push(rescueEv);if(!x.job&&m.y>=2&&!x.jobAsk){q.push(()=>(x.jobAsk=1,choice('💼 งานเสริม',m.native&&!m.linMet?'เพื่อนส่งประกาศรับสมัครงานพาร์ตไทม์มาให้สามที่ "ลองดูไหม รายได้เสริมดีนะ"':`${LIN()}ส่งประกาศรับสมัครงานมาให้สามที่ "ปู่ลองดูไหม"`,Object.entries(JOB).map(([k,J])=>({t:`${J.ic} ${J.n}`,s:J.L.join(' → '),f(){mwJobPick(k)}})).concat([{t:'🙅 ยังไม่สนใจ',skip:true,f(){}}]))))}
   if(q.length&&Math.random()<.6&&window.ixBudget&&ixBudget())ch(q)()}
  }catch(e){console.error('blk58',e)}return r}}
 // ================= ปุ่มในแถบยุคปัจจุบัน =================
@@ -45901,7 +45903,7 @@ function vDep(pc){const c=Math.round(W()*pc);if(c<10||!pay(c))return;const r=vR(
 {const _py=passYear;passYear=function(){const a0=S&&S.age,me=S;const r=_py.apply(this,arguments);try{if(!ok()||S!==me||S.age===a0)return r;const w=st();
  if(w.est>0){const l=w.est,k=Math.sqrt(l);S.fame+=Math.round(2*l);S.qi=+((S.qi||0)+.05*k).toFixed(2);S.power+=Math.round(pctPow(.003*k));joy(Math.min(3,l*.5))}
  const rich=W()/wB();if(rich>=150&&!w.dzP&&Math.random()<Math.min(.12,.03+Math.log10(rich/150+1)*.05)&&S.age-(w.dz||-9)>=3){w.dz=S.age;w.dzP=1}}catch(e){}return r}}
-setInterval(()=>{try{if(ok()&&S.wl&&S.wl.dzP&&!choice._cur&&!modalOpen&&!(typeof DU!=='undefined'&&DU)&&!(window._mgBusy&&window._mgBusy())){S.wl.dzP=0;danger()}}catch(e){}},1500);
+setInterval(()=>{try{if(ok()&&!S.mw&&S.wl&&S.wl.dzP&&!choice._cur&&!modalOpen&&!(typeof DU!=='undefined'&&DU)&&!(window._mgBusy&&window._mgBusy())){S.wl.dzP=0;danger()}}catch(e){}},1500);
 function danger(){const c=p=>Math.round(W()*p),k=R(0,2);
  if(k===0)choice('🦹 โจรหมายตาทรัพย์สมบัติ','ข่าวความร่ำรวยของคุณลือไปไกล คืนนี้มีเงาดำนับสิบปีนข้ามกำแพงเข้ามา',[
   {t:`🛡️ จ้างคุ้มกันเต็มอัตรา (${M(c(.05))})`,s:'ปลอดภัยแน่นอน',f(){S.money-=c(.05);log('🛡️ ยามที่จ้างมาจับโจรได้ทั้งแก๊ง ส่งทางการแลกรางวัลนิดหน่อย','good')}},
@@ -47100,3 +47102,56 @@ body.desk #deskC #feed{min-height:30vh!important}
 @media (max-height:820px){body.desk #deskC #sceneBox{max-height:20vh;overflow:hidden}body.desk #deskC #qTrk .how{display:none}}
 `;document.head.appendChild(st);
 })()}catch(e){console.error('block79',e)}
+// ============================================================
+// BLOCK 78: 🏙️ ยุคปัจจุบัน (คนเกิดในยุคนี้) — ตัดของคนหลงยุคออก · เหตุการณ์วัยเด็กไม่ขึ้นช้ากว่าวัย · หน้าคอมแสดงสถานะคนยุคใหม่
+// ============================================================
+try{(()=>{
+const nat=()=>{try{return !!(S&&S.alive&&S.mw&&S.mw.native)}catch(e){return false}};
+// 1) ถือปีไว้ระหว่างที่เหตุการณ์วัยเด็กยังรอขึ้น (กันกรอเร็วแล้วเรื่องอนุบาลไปโผล่ตอน 12 ขวบ)
+{const _py=passYear;passYear=function(){try{if(S&&S.mw&&S.mw.kid&&(window._kPend|0)>0){if(Date.now()-(window._kPendT||0)<20000)return;window._kPend=0}}catch(e){}return _py.apply(this,arguments)}}
+// 1b) เหตุการณ์ที่ถูกนัดให้ขึ้นภายหลัง (หน่วง 0.3–2.5 วิ) ระหว่างผ่านปี — รอให้ขึ้นก่อนค่อยผ่านปีถัดไป (กันกรอเร็วแล้วเรื่องไปกองโผล่ทีเดียวหลายปีหลัง)
+{let inPY=0,pend=0,pendT=0;const _st=window.setTimeout;
+ window.setTimeout=function(fn,ms){if(inPY&&typeof fn==='function'&&ms>=250&&ms<=2500&&/choice\(|\.go\(|kRun\(|fire\(|Open\(\)/.test(String(fn))){pend++;pendT=Date.now();const f=fn;let done=0;const w=function(){if(!done){done=1;pend=Math.max(0,pend-1)}return f.apply(this,arguments)};arguments[0]=w}return _st.apply(this,arguments)};
+ const _py2=passYear;passYear=function(){try{if(S&&S.mw&&S.alive){if(pend>0&&Date.now()-pendT<6000)return;pend=0}}catch(e){}inPY=S&&S.mw?1:0;try{return _py2.apply(this,arguments)}finally{inPY=0}}}
+// 2) เหตุการณ์ที่เขียนไว้ให้ "ยอดฝีมือหลงยุค" — คนที่เกิดในยุคนี้ไม่เจอ
+try{const OLD2=/กำลังภายใน|ชีพจรสี่สิบ|รำมวย|ยกตู้เย็นด้วยมือ|กระโดดจากชั้นห้า|หลินส่ง|ปู่ลองดู|ไม่ต้องใช้สลิง|หลงยุคมาเหมือนคุณ/;
+ MW_R.forEach(e=>{try{if(e._old)return;const src=String(e.go)+'';if(OLD2.test(src)||['stunt','doctor','kid','love2','fr3'].includes(e.id)){e._old=true;if(!e._natW){e._natW=1;const c0=e.c;e.c=function(M,p){if(M&&M.native)return false;return c0.apply(this,arguments)}}}}catch(x){}})}catch(e){}
+// 3) สถานะบนหน้าเกม: เป้าหมายตั้งตัวในยุคใหม่/ความลับ/ปราณ/เอกสาร/หลิน เป็นของคนหลงยุค
+const NG=['live','job','adapt','lin','fame','side'];
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{
+ document.body.classList.toggle('mwOn',!!(S&&S.mw));document.body.classList.toggle('mwNat',nat());
+ if(!nat())return r;const M=S.mw;
+ if(S.goal){S.goal=null}
+ M.gd=M.gd||{};NG.forEach(k=>{M.gd[k]=1});
+ const h=$('mwHud');if(h){
+  const t=h.querySelector('.mwhT');if(t&&/ในยุคนี้/.test(t.innerHTML))t.innerHTML=t.innerHTML.replace(/ปีที่\s*\d+\s*ในยุคนี้/,`อายุ ${S.age} ปี`);
+  h.querySelectorAll('.mwh1').forEach(e=>{const s=(e.querySelector('span')||{}).textContent||'';if(/ความลับ|ความคุ้นเคย|ปราณ|หลิน/.test(s))e.remove()});
+  h.querySelectorAll('.mwGoalR').forEach(e=>{e.innerHTML=e.innerHTML.replace(/\s*·\s*🪪[^<·]*/,'')});
+  [...h.querySelectorAll('div')].forEach(e=>{if(e.childElementCount===0&&/^🎯\s*🧒\s*รู้จักหลิน/.test((e.textContent||'').trim()))e.remove()})}
+ const gm=$('gMini');if(gm&&/พเนจร/.test(gm.innerHTML))gm.innerHTML=gm.innerHTML.replace('พเนจร',esc(natStatus(M)))
+}catch(e){}return r}}
+function natStatus(M){try{if(M.kid){const a=S.age;return a<3?'👶 วัยเตาะแตะ':a<6?'🧸 วัยอนุบาล':a<12?'🎒 นักเรียนประถม':a<15?'📘 นักเรียน ม.ต้น':'📗 นักเรียน ม.ปลาย'}
+ const J=mwJobOf(M);if(J){const p=mwJP(J,M);return J.ic+' '+p[0]}const l=M.L||{};if(l.prog)return'🎓 กำลังเรียน';return S.age>=60?'🌿 เกษียณ':'💼 ยังไม่มีงานประจำ'}catch(e){return'ยุคปัจจุบัน'}}
+window.mwNatStatus=natStatus;
+// 4) หน้าคอม: แผงซ้ายแบบคนยุคใหม่ (แทนลมปราณ/กรรม/วิชาเด่น/ระดับยุทธ์)
+{const _dl=dkLeft;dkLeft=function(){if(!(S&&S.mw)||(S.beastMode&&!S.beastMode.human))return _dl.apply(this,arguments);try{
+ const M=S.mw,l=M.L||{},lm=(typeof lifeMax==='function'?lifeMax():S.lifespan)||1,cur=(MW_CC[M.cc||'th']||{}).cur||'บาท';
+ const tile=(ic,lb,v,c)=>`<div class="dkt"><span class="dkt-i">${ic}</span><span class="dkt-l">${lb}</span><b class="dkt-v"${c?` style="color:${c}"`:''}>${v}</b></div>`;
+ const trs=(S.traits||[]).map(t=>(TRAITS.find(x=>x.id===t)||{}).n).filter(Boolean);
+ let pv='',yr='';try{const t=$('mwHud')&&$('mwHud').querySelector('.mwhT');if(t){const tx=t.textContent||'';pv=tx.split('·')[0].replace(/^\s*\S+\s*/,'').trim();const m=/ค\.ศ\.\s*(\d+)/.exec(tx);if(m)yr=m[1]}}catch(e){}
+ if(M.kid)yr=String(MW_Y0-18+S.age);const st=l.st!=null?Math.round(l.st):null,fit=l.fit!=null?Math.round(l.fit):null,sk=l.sk!=null?Math.round(l.sk):null,debt=Math.round(l.debt||0);
+ let ava='<canvas id="dkAva" width="168" height="186"></canvas>';try{ava=frWrap(ava,frGet().eq,'border-radius:10px')}catch(e){}
+ return `<div class="dk-hero">${ava}<div class="dk-id"><div class="dk-age px">${S.age}<small> ปี</small></div><div class="dk-name">${esc(S.name)}</div><div class="dk-realm">${esc(natStatus(M))}</div><div class="dk-sub">${pv?'📍 '+esc(pv):''}${yr?(pv?' · ':'')+'ค.ศ. '+yr:''}</div></div></div>
+ ${dkBar('❤️ สุขภาพ',S.hp,S.maxHp,'linear-gradient(90deg,#ff5a6a,#ff8a7a)',`${fmtH(Math.max(0,S.hp))}/${fmtH(S.maxHp)}`)}
+ ${dkBar('😊 ความสุข',S.happy,100,'linear-gradient(90deg,#ffb83a,#ffe08a)',`${Math.round(S.happy)} / 100`)}
+ ${dkBar('⏳ อายุขัย',S.age,lm,'linear-gradient(90deg,#6ab0ff,#a8d4ff)',`${S.age} / ~${Math.round(lm)} ปี`)}
+ <div class="dk-grid">${tile('💵','เงิน',fmtM(S.money)+' <small>'+esc(cur)+'</small>')}${tile('📜','ปัญญา',fmt(S.int))}${tile('🌸','เสน่ห์',fmt(S.cha))}${tile('📈','ผู้ติดตาม',fmt(M.fame||0))}${st!=null?tile('🧠','ความเครียด',st+'/100',st>=70?'#ff6a6a':''):''}${fit!=null?tile('💪','ร่างกาย',fit+'/100'):''}${sk!=null?tile('🛠️','ทักษะงาน',sk+'/100'):''}${tile('💳','หนี้',debt>0?fmtM(debt):'ไม่มี',debt>0?'#ff8a7a':'')}</div>
+ ${trs.length?`<div class="dk-sec"><h5>✨ จุดเด่นติดตัว</h5><div class="dk-chips">${trs.map(t=>`<span>${esc(xT(t))}</span>`).join('')}</div></div>`:''}`}catch(e){console.error('dkMW',e);return _dl.apply(this,arguments)}}}
+// 4b) แผงขวาหน้าคอม: ยุคปัจจุบันไม่มีหมวด ฝึกฝน / ทรัพย์สิน / ผู้คน แบบยุทธภพ (มีของยุคใหม่ในแท็บ ยุคปัจจุบัน แล้ว)
+{const _dr=dkRight;dkRight=function(){const h=_dr.apply(this,arguments);try{if(!(S&&S.mw)||(S.beastMode&&!S.beastMode.human))return h;const t=document.createElement('div');t.innerHTML=h;
+ t.querySelectorAll(':scope>.dk-grp').forEach(g=>{const n=((g.querySelector('h5')||{}).textContent||'');if(/ฝึกฝน|ทรัพย์สิน|ผู้คน/.test(n))g.remove()});
+ t.querySelectorAll('.dk-btn').forEach(b=>{if(/openMap\(/.test(b.getAttribute('onclick')||''))b.remove()});return t.innerHTML}catch(e){return h}}}
+// 5) โค้ชสอนเล่นไม่บังหน้าต่างเลือกเหตุการณ์
+const cs=document.createElement('style');cs.textContent=`body.mwOn #deskL .dk-more{display:none}body.coachHide #coach{opacity:0!important;pointer-events:none!important}`;document.head.appendChild(cs);
+setInterval(()=>{try{document.body.classList.toggle('coachHide',!!(choice._cur&&modalOpen))}catch(e){}},300);
+})()}catch(e){console.error('block78',e)}
