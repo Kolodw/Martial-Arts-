@@ -16259,7 +16259,7 @@ function mwS(v){return Math.round(v*mwWage())}
   mwC(`ย้ายไป${C.rent0}`,()=>{A.h=1;mwSay(`📦 ${esc(C.rent0)} แพงขึ้น แต่สบายขึ้น`,'',{joy:3})}),
   mwC(`ซื้อ${C.home[0]} (ดาวน์ 20%)`,()=>{const b=mwToB(hp*.2,M);if((S.money||0)<b){A.h=0;mwSay('🏦 เงินดาวน์ไม่พอ ธนาคารปฏิเสธ คุณย้ายไปห้องเช่าถูกๆ แทน','bad',{joy:-4});return}S.money-=b;A.h=2;A.mort=Math.round(hp*.8*1.45/25);A.mortY=25;mwSay(`🔑 คุณซื้อ${esc(C.home[0])} ผ่อน 25 ปี — ถูกไล่ที่ครั้งนี้ จะเป็นครั้งสุดท้าย`,'epic',{joy:12},true)},{s:`ดาวน์ ${mwLocal(hp*.2,M)}`})])}}
 // เงินเหลือมาก: ใช้ตามฐานะ (เที่ยว ทำบุญ ช่วยคนรอบตัว) — ได้ความสุขแทนเงินกองไว้เฉยๆ
-{const _plF=mwPayLife;mwPayLife=function(M){const r=_plF.apply(this,arguments);try{if(S.age>=18){const yc=mwToB(mwYearCost(M).yr,M),ex=(S.money||0)-yc*8;if(ex>0){const sp=Math.round(ex*.15);S.money-=sp;joy(3);addFeed('ev',`✈️ ใช้จ่ายตามฐานะ ${mwLocal(sp*mwCC().rate,M)} <span class="tag2">(${ch(['เที่ยวต่างประเทศ','ทำบุญ/บริจาค','ช่วยค่ารักษาเพื่อนบ้าน','ซื้อของขวัญให้คนรอบตัว','กินร้านดีๆ ทุกสัปดาห์'])})</span>`,'sum')}}}catch(e){}return r}}
+{const _plF=mwPayLife;mwPayLife=function(M){const r=_plF.apply(this,arguments);try{if(S.age>=18){const yc=mwToB(mwYearCost(M).yr,M),ex=(S.money||0)-yc*8;if(ex>0){const sp=Math.round(ex*.15);S.money-=sp;joy(3);addFeed('ev',`✈️ ใช้จ่ายตามฐานะ ${mwLocal(sp*mwCC().rate,M)} <span class="tag2">(${ch(['เที่ยวต่างประเทศ','ทำบุญ/บริจาค','ช่วยค่ารักษาเพื่อนบ้าน','ซื้อของขวัญให้คนรอบตัว','กินร้านดีๆ ทุกสัปดาห์'].filter(x=>x!=='เที่ยวต่างประเทศ'||!(M.wx&&M.wx.on&&['gatewon','zombie'].includes(M.wx.id))))})</span>`,'sum')}}}catch(e){}return r}}
 // ---------- ความลับรั่ว: มีผลตามระดับ ----------
 MW_R.push(
  {id:'sx1',w:9,cd:0,c:M=>M.sec>=40&&!M.fl.public,go(M){choice('📸 มีคนตามถ่าย',`ช่วงนี้มีคนแปลกหน้ายืนถือกล้องอยู่หน้าตึกทุกเช้า โพสต์ในกระทู้ "ลุงคนนี้คือใคร" มีคนตอบสามพันความเห็น`,[
@@ -16515,7 +16515,7 @@ MW_CHAIN.push('fr2','fr3','fr4','fr5','hc2','id1');
 // ---------- ตัวเลือกเสริมตามสถานการณ์ (ให้ตัวเลือกหลากหลายขึ้น) ----------
 const MW_XO=[
  [M=>(M.qi||0)>=3,'🌀','ใช้ปราณช่วย',M=>({qi:-1,joy:3}),'ปราณ −1 · ทำได้ดีขึ้น'],
- [M=>(S.money||0)>=mwToB(MW_MIN[M.cc||'th']*3,M),'💵','ใช้เงินแก้ปัญหา',M=>({mon:-mwToB(MW_MIN[M.cc||'th']*.8,M),sec:-3}),'เสียเงิน · เรื่องเงียบกว่า'],
+ [M=>!(M.Z&&M.wx&&M.wx.on&&M.wx.id==='zombie')&&(S.money||0)>=mwToB(MW_MIN[M.cc||'th']*3,M),'💵','ใช้เงินแก้ปัญหา',M=>({mon:-mwToB(MW_MIN[M.cc||'th']*.8,M),sec:-3}),'เสียเงิน · เรื่องเงียบกว่า'],
  [M=>M.linMet&&M.lin>=40,'📱','ปรึกษาหลินก่อน',M=>({sec:-3,lin:2}),'ความลับรั่วน้อยลง'],
  [M=>(M.id||0)===3,'🪪','อ้างบัตรหน่วยลับ',M=>({sec:-5}),'ไม่มีใครกล้าถามต่อ'],
  [M=>M.bf&&!M.bf.d&&!M.bf.cold,'🤝','ชวนเพื่อนสนิทไปด้วย',M=>({joy:4}),'สนุกขึ้น'],
@@ -16569,7 +16569,7 @@ MW_R.push(
  {id:'gd3',w:99,cd:0,c:M=>M.hw===2&&M.y>=(M.hwSince-MW_Y0)+2&&!M.H.aw,go(M){hwAwaken(M)}},
  {id:'gd4',w:99,cd:0,c:M=>M.hw>0&&M.H&&M.H.r<0&&!M.H.no&&M.H.aw!=='none'&&((M.H.aw&&M.H.aw!=='none')||(!M.native&&((M.qi||0)>=2||(S.power||0)>=150)))&&S.age>=16&&(M.hw===1||M.y>=(M.hwSince-MW_Y0)+2),go(M){const r=hRank(hStr(M));choice('🏛️ สมาคมฮันเตอร์',`สมาคมฮันเตอร์เปิดให้ผู้มีพลังลงทะเบียน วัดพลังด้วยเครื่องตรวจวัดค่าเวทมนตร์ — ถ้าคุณลงทะเบียน ผลน่าจะออกมาราว <b>แรงก์ ${HR[r]}</b>`,[
   mwC('ลงทะเบียนเป็นฮันเตอร์',()=>{M.H.r=r;mwSay(`🪪 เครื่องวัดค่าพลังร้องเตือนเสียงดัง — <b>แรงก์ ${HR[r]}</b> ${r>=4?'เจ้าหน้าที่ทั้งชั้นหันมามอง ภายในชั่วโมงเดียว กิลด์ใหญ่สามแห่งโทรมาหาคุณ':'คุณได้บัตรฮันเตอร์พร้อมรูปถ่ายหน้าตึง'}`,'epic',{sec:r>=4?20:6,joy:6},true);keyAdd('ลงทะเบียนเป็นฮันเตอร์แรงก์ '+HR[r]);if((M.id||0)<1){M.id=2;addFeed('ev','🪪 สมาคมฮันเตอร์ออกบัตรประจำตัวให้ — ตัวตนของคุณถูกต้องตามกฎหมายแล้ว','sum')}if(!focusOK(S.focus))S.focus='mwgate'}),
-  mwC('ปิดพลัง ลงทะเบียนเป็นแรงก์ E',()=>{M.H.r=0;M.H.hide=1;mwSay('🤫 คุณกดปราณให้เงียบที่สุดตอนวัด เครื่องขึ้นแรงก์ E เจ้าหน้าที่บอกว่า "แรงก์ E ส่วนใหญ่ทำงานขนของในเกตนะครับ"','',{sec:-6})},{s:'ซ่อนพลังจริง'}),
+  mwC('ปิดพลัง ลงทะเบียนเป็นแรงก์ E',()=>{M.H.r=0;M.H.hide=1;mwSay('🤫 คุณกดพลังให้เงียบที่สุดตอนวัด เครื่องขึ้นแรงก์ E เจ้าหน้าที่บอกว่า "แรงก์ E ส่วนใหญ่ทำงานขนของในเกตนะครับ"','',{sec:-6})},{s:'ซ่อนพลังจริง'}),
   mwC('ไม่ลงทะเบียน ใช้ชีวิตแบบพลเรือน',()=>{M.H.no=1;mwSay('🏠 คุณเลือกเป็นพลเรือน ในโลกที่ฮันเตอร์คือฮีโร่ และพลเรือนคือคนที่ต้องหนีเมื่อเกตแตก','',{joy:-2})})])}},
  {id:'hw0',w:99,cd:0,c:M=>M.hw===1&&M.y>=1&&!M.fl.hw0,go(M){M.fl.hw0=1;if(!M.native&&M.H&&!M.H.aw)M.H.aw='cult';mwSay(`🌀 ${M.native?'คุณเกิดมาในโลกที่มีเกต':'คุณเพิ่งรู้ว่ายุคนี้ไม่ได้มีแค่ตึกสูงกับรถไฟฟ้า'} — ทุกเช้าข่าวรายงาน "พยากรณ์เกต" เหมือนพยากรณ์อากาศ ทุกเมืองมีหลุมหลบภัย เด็กๆ ฝันอยากเป็นฮันเตอร์แรงก์ S${M.native?'':' · ปราณที่ไหลออกจากเกตทำให้อากาศในยุคนี้ไม่เบาบางอย่างที่คิด'}`,'myth',M.native?null:{qi:1.5},true)}});
 MW_FORCE.unshift([0,'gd1'],[0,'gd2'],[0,'gd3'],[0,'hw0'],[0,'gd4']);
@@ -31099,7 +31099,7 @@ try{document.head.insertAdjacentHTML('beforeend',`<style>
 </style>`)}catch(e){}
 // ---------- ผลกระทบรายปี ----------
 function lWorld(M,l){const y=MW_Y0+M.y,w=LW[y];if(!w)return;l.hist.push(y);
- if(w.nm)addFeed('ev',`🌏 ปี ${y}: <b>${w.nm}</b> — ${w.tx}`,'sum');
+ if(w.nm&&!(M.Z&&M.wx&&M.wx.on&&M.wx.id==='zombie'))addFeed('ev',`🌏 ปี ${y}: <b>${w.nm}</b> — ${w.tx}`,'sum');
  if(w.st)l.st=cl(l.st+w.st,0,100);
  if(w.hp&&(l.fit<50||S.age>=60||w.hp<-5)){S.hp=cl(S.hp+w.hp,10,S.maxHp)}
  if(w.flood&&mwAst(M).h>0&&Math.random()<.1+(pvOf(M).hz.flood||0)*.8){const c=Math.round((mwAst(M).h===2?65000:18000)*l.cpi);lfx(M,l,{mon:-c});addFeed('ev',`🌊 น้ำท่วมเข้าบ้านคุณ ค่าซ่อมและของเสียหาย ${fmt(c)} บาท`,'sum')}
@@ -31133,7 +31133,7 @@ function lLife(M,l){for(let i=l.kids.length-1;i>=0;i--){const a=l.kids[i]++;if(a
  if(l.fl.rent){if(mwAst(M).h===2){const r=Math.round(LB.rentInc*l.cpi);S.money=(S.money||0)+r;addFeed('ev',`🔑 ค่าเช่าห้องว่างทั้งปี ${fmt(r)} บาท`,'sum')}else l.fl.rent=0}
  if(l.fl.hob){const hc=Math.round(LB.hobCost*l.cpi);if((S.money||0)>=hc*3){S.money-=hc;joy(Math.random()<.5?2:1);l.cnt.hobY=(l.cnt.hobY||0)+1;if(l.st>40)l.st=cl(l.st-2,0,100)}}
  if(jobId(M)==='farmer'){const ag=(l.wy&&l.wy.ag)||1,pay=mwJP(MW_JOBS.farmer,M)[1];const d=Math.round(pay*12*(ag-1)*.9*l.cpi);if(d)lfx(M,l,{mon:d});if(Math.abs(ag-1)>.1)addFeed('ev',`🌾 ราคาผลผลิตปีนี้${ag>1?'ดีกว่า':'ต่ำกว่า'}ปกติ (${d>0?'+':''}${fmt(d)} บาท)`,'sum')}
- const yc=mwToB(mwYearCost(M).yr,M),keep=yc*1.5,ex=(S.money||0)-keep;if(ex>0){const sp=Math.round(ex*(tr(M,'ประหยัด')?LB.spareThrift:LB.spare));S.money-=sp;addFeed('ev',`🛍️ ใช้ชีวิตตามฐานะ ช่วยครอบครัว ซื้อของ เที่ยว ${fmt(sp)} บาท`,'sum')}}
+ const yc=mwToB(mwYearCost(M).yr,M),keep=yc*1.5,ex=(S.money||0)-keep;if(ex>0&&!(M.Z&&M.wx&&M.wx.on&&M.wx.id==='zombie')){const sp=Math.round(ex*(tr(M,'ประหยัด')?LB.spareThrift:LB.spare));S.money-=sp;addFeed('ev',`🛍️ ใช้ชีวิตตามฐานะ ช่วยครอบครัว ซื้อของ เที่ยว ${fmt(sp)} บาท`,'sum')}}
 function lPension(M,l){if(S.age>=60){const mo=600+(l.ss>=15?3000+(l.ss-15)*200:0),yr=Math.round(mo*12*Math.pow(l.cpi,.6));S.money=(S.money||0)+yr;if(!l.fl.pensSeen){l.fl.pensSeen=1;addFeed('ev',`🧓 อายุครบ 60: เริ่มได้เบี้ยยังชีพ${l.ss>=15?'และบำนาญประกันสังคม':''} ราว ${fmt(mo)} บาท/เดือน`,'sum')}}}
 function lDraw(M,l){const out=[];if(M.q.length)return out;const y=M.y,ok=e=>{if(l.cd[e.id]!=null&&y-l.cd[e.id]<e.cd)return false;try{return e.c(M,l)}catch(x){return false}};
  for(const e of LS){if(ok(e)){const p=typeof e.p==='function'?e.p(M,l):e.p;if(Math.random()<p){out.push(e);l.cd[e.id]=y}}}
@@ -33193,7 +33193,7 @@ P('n2','net',0,'💬 ทัวร์ลงคอมเมนต์','คุณ�
 P('n3','net',0,'🎁 สปอนเซอร์ชวนรีวิว','แบรนด์ครีมจากโรงงานที่ไม่มีใครรู้จักเสนอเงินก้อนให้รีวิวว่า "ใช้แล้วขาวในเจ็ดวัน"',[['รับงาน',M=>{mwFx({mon:money(M,3)});if(Math.random()<.4){mwFx({fame:-2000});say('⚠️ สามเดือนต่อมามีข่าวครีมนั้นผสมสารอันตราย ชื่อคุณติดอยู่ในข่าวด้วย','bad',{joy:-6})}else say('💰 ได้เงินโดยไม่มีอะไรเกิดขึ้น — ครั้งนี้','')},'เสี่ยงชื่อเสียง'],['ปฏิเสธ',M=>say('🙅 คนดูเห็นคุณปฏิเสธในไลฟ์ ความน่าเชื่อถือเพิ่มขึ้น','good',{fame:500})]]);
 // ----- เรียนรู้ -----
 P('l1','learn',0,'💻 คอร์สออนไลน์ตอนดึก','คุณสมัครคอร์สออนไลน์สิบสองสัปดาห์ ผ่านไปสามสัปดาห์เริ่มง่วงตั้งแต่บทนำ',[['ฝืนเรียนจนจบ',M=>{mwFx({adapt:5});S.int=(S.int||0)+3;say('🎓 ได้ใบประกาศหนึ่งใบ และทักษะที่ใช้ได้จริง','good')}],['ทิ้งไว้ก่อน',M=>say('📂 คอร์สยังรออยู่ในอีเมล เหมือนอีกสิบคอร์สก่อนหน้า','')]]);
-P('l2','learn',0,'📝 สอบใบประกาศวิชาชีพ','ใบประกาศที่ทำให้เงินเดือนขึ้นได้ทันที แต่อัตราสอบผ่านแค่หนึ่งในสาม',[['ลงสอบ',M=>{if(Math.random()<.4+(S.int||0)/600){mwFx({mon:money(M,2),adapt:3});if(M.job)M.job.perf=cl((M.job.perf||50)+10,0,100);say('🏅 สอบผ่าน! ชื่อคุณขึ้นบอร์ดบริษัท','epic')}else say('📉 ขาดไปสามคะแนน ปีหน้าค่อยว่ากัน','',{joy:-3})},'ยาก'],['รอให้พร้อมกว่านี้',M=>say('📚 คุณอ่านหนังสือต่ออีกหนึ่งปี','')]]);
+P('l2','learn',0,'📝 สอบใบประกาศวิชาชีพ','ใบประกาศที่ทำให้เงินเดือนขึ้นได้ทันที แต่อัตราสอบผ่านแค่หนึ่งในสาม',[['ลงสอบ',M=>{if(Math.random()<.4+(S.int||0)/600){mwFx({mon:money(M,2),adapt:3});if(M.job)M.job.perf=cl((M.job.perf||50)+10,0,100);say(M.job?'🏅 สอบผ่าน! ชื่อคุณขึ้นบอร์ดที่ทำงาน':'🏅 สอบผ่าน! ใบประกาศใบนี้ทำให้เรซูเม่คุณดูดีขึ้นทันที','epic')}else say('📉 ขาดไปสามคะแนน ปีหน้าค่อยว่ากัน','',{joy:-3})},'ยาก'],['รอให้พร้อมกว่านี้',M=>say('📚 คุณอ่านหนังสือต่ออีกหนึ่งปี','')]]);
 P('l3','learn',0,'🗣️ ภาษาที่สอง','เพื่อนชาวต่างชาติชวนแลกภาษากันทุกเย็นวันพุธที่ร้านกาแฟ',[['ไปทุกครั้ง',M=>{mwFx({adapt:3});joy(3);say('☕ หกเดือนผ่านไป คุณสั่งอาหารเป็นภาษาใหม่ได้โดยไม่ติดขัด','good')}],['ไปบ้างไม่ไปบ้าง',M=>say('🙂 ได้เพื่อนใหม่หนึ่งคน ได้ภาษาแค่คำทักทาย','')]]);
 P('l4','learn',0,'📖 หนังสือที่เปลี่ยนความคิด','หนังสือเล่มหนาที่ทุกคนพูดถึงวางอยู่ข้างเตียงมาครึ่งปี',[['อ่านจนจบ',M=>{S.int=(S.int||0)+4;joy(3);say('💡 ประโยคหนึ่งในเล่มติดอยู่ในหัวคุณไปทั้งปี','good')}],['ฟังสรุปจากยูทูบแทน',M=>say('🎧 ได้ใจความครึ่งหนึ่ง ใช้เวลาสิบห้านาที','')]]);
 // ----- ครอบครัว -----
@@ -34773,8 +34773,8 @@ function qYear(M,foc){const G=qI(M);if(G.free)return;
  if(foc==='wxq'){const cap=G.fin?99:60,u=R(2,4)+(G.cls==='war'?1:0),b=G.lv;G.lv=Math.min(cap,G.lv+u);const d=HP(R(2,6));feed(`⚔️ ล่ามอนสเตอร์ทำเควสทั้งปี · เลเวล ${b} → <b>${G.lv}</b>${G.lv>=60&&!G.fin?' · <b>เลเวลตัน — บอสโลกรออยู่</b>':''} · พลังชีวิต −${d}`);mwFx({mon:money(M,.2+G.lv/60)});
   if(G.lv>=99&&!M.fl.gm_99){M.fl.gm_99=1;log('🏆 <b>เลเวล 99</b> — หน้าต่างสถานะเปลี่ยนเป็นสีทอง','epic',true)}}
  else if(foc==='wxqp'){const m=money(M,(.6+G.lv/25)*(G.cls==='craft'?1.7:1));mwFx({mon:m});feed(`💼 ใช้สกิลจากระบบหาเงินทั้งปี (เลเวล ${G.lv})`)}}
-EV('wi_game',M=>{const G=qI(M);choice('🎮 หน้าต่างสีฟ้า','เช้าวันเกิดอายุสิบแปด มีหน้าต่างโปร่งแสงลอยอยู่หน้าตา ‘ยินดีต้อนรับ ผู้เล่น’ ทุกคนบนโลกได้รับมันตอนอายุเท่านี้ ประเทศทั้งประเทศหมุนรอบเลเวลมาสิบปีแล้ว ระบบให้เลือกคลาสได้ครั้งเดียว',
- Object.keys(GCL).map(k=>O(`${GCL[k][0]} ${GCL[k][1]}`,()=>{G.cls=k;say(`✨ <b>คลาส ${GCL[k][1]}</b> ถูกบันทึกลงในหน้าต่างสถานะของคุณตลอดไป`,'good',{joy:4})},GCL[k][2])))});
+EV('wi_game',M=>{const G=qI(M);if(G.cls)return;choice('🎮 หน้าต่างสีฟ้า','เช้าวันเกิดอายุสิบแปด มีหน้าต่างโปร่งแสงลอยอยู่หน้าตา ‘ยินดีต้อนรับ ผู้เล่น’ ทุกคนบนโลกได้รับมันตอนอายุเท่านี้ ประเทศทั้งประเทศหมุนรอบเลเวลมาสิบปีแล้ว ระบบให้เลือกคลาสได้ครั้งเดียว',
+Object.keys(GCL).map(k=>O(`${GCL[k][0]} ${GCL[k][1]}`,()=>{if(G.cls)return;G.cls=k;say(`✨ <b>คลาส ${GCL[k][1]}</b> ถูกบันทึกลงในหน้าต่างสถานะของคุณตลอดไป`,'good',{joy:4})},GCL[k][2])))});
 EV('g_pk',M=>{const G=qI(M),p=G.cls==='rogue'?.8:.5;choice('🩸 ผู้เล่นสาย PK','ในดันเจี้ยนชั้นล่าง กลุ่มผู้เล่นสามคนดักทางออก ‘ของทั้งหมดในกระเป๋า หรือเลเวลของแกจะลดลงสิบ’',[
  O('สู้',()=>{if(Math.random()<p){G.lv=Math.min(G.fin?99:60,G.lv+2);say('⚔️ คุณเหลือคนสุดท้ายที่ยืนอยู่ — ระบบมอบค่าประสบการณ์โบนัส','good',{fame:800})}else{G.lv=Math.max(1,G.lv-5);say(`💀 เลเวลลดลง 5 · พลังชีวิต −${HP(15)}`,'bad')}},'ลุ้น'+pct(p)),
  O('ยอมให้ของไป',()=>say('🎒 กระเป๋าว่างเปล่า แต่คุณยังเดินออกมาได้','bad',{mon:-money(M,1)}),'เสียเงิน'),
@@ -43110,7 +43110,7 @@ function mgHerb(){const EL=[['🔥','ไฟ'],['💧','น้ำ'],['🌿','ไ�
 function mgOpen(){if(window.mg2Pick&&mg2Pick())return;const k=MGK[S.focus]||ch(['br','st','hb']);IX().mg=S.age+R(4,7);if(k==='br')mgBreath();else if(k==='st')mgStrike();else mgHerb()}
 window._mgOpen=mgOpen;
 // =============== 🔮 6) ทายชะตา ===============
-function betOffer(){const X=IX();if((X.bt||[]).length>=2||S.money<60)return false;const st=Math.max(50,Math.round(S.money*.1));const T=[];
+function betOffer(){const X=IX();if(S.mw||(X.bt||[]).length>=2||S.money<60)return false;const st=Math.max(50,Math.round(S.money*.1));const T=[];
  try{const F=FACTIONS.filter(f=>!S.faction||f.n!==S.faction.n);if(F.length>=2)T.push('sect')}catch(e){}
  const kid=(S.children||[]).find(c=>c.alive!==false&&c.age!=null&&c.age<16);if(kid)T.push('kid');if(X.rv&&realmIdx()<7&&X.rv.ri<7)T.push('rv');if(!T.length)return false;const t=ch(T);
  const mk=(q,txt,A,B,x1,x2,res,due)=>choice(`🔮 ทายชะตา`,`${txt}<br><span class="tag2">วางเดิมพัน ${fmt(st)} (10% ของเงิน) · ผลจะรู้ในอีกไม่กี่ปี</span>`,[
@@ -43999,7 +43999,7 @@ setInterval(card,1200);setTimeout(card,300);
 // ================= ⏸️ 3) ปิดแผนประจำปีเป็นค่าเริ่มต้น =================
 {const _py=passYear;passYear=function(){try{if(S&&S.mw&&S.mw.plAsk==null)S.mw.plAsk=0}catch(e){}return _py.apply(this,arguments)}}
 // ================= 🌱 4) 3 ปีแรก = ช่วงตั้งตัว + เป้าหมายทีละข้อ =================
-if(typeof mwPayLife==='function'){const _pl=mwPayLife;mwPayLife=function(M){try{if(M&&M.y<=3&&!M.kid){addFeed('ev',`🧾 ช่วงตั้งตัว (ปีที่ ${M.y}/3) — ${M.y<=1?'เจ้าของห้องเช่าใจดียังไม่เก็บค่าเช่า':'ป้าแดงฝากข้าวไว้ให้ทุกเย็น'} · ยังไม่ต้องจ่ายค่าครองชีพ`,'sum');return}}catch(e){}return _pl.apply(this,arguments)}}
+if(typeof mwPayLife==='function'){const _pl=mwPayLife;mwPayLife=function(M){try{if(M&&M.y<=3&&!M.kid&&!(M.Z&&M.wx&&M.wx.on&&M.wx.id==='zombie')){addFeed('ev',`🧾 ช่วงตั้งตัว (ปีที่ ${M.y}/3) — ${M.y<=1?'เจ้าของห้องเช่าใจดียังไม่เก็บค่าเช่า':'ป้าแดงฝากข้าวไว้ให้ทุกเย็น'} · ยังไม่ต้องจ่ายค่าครองชีพ`,'sum');return}}catch(e){}return _pl.apply(this,arguments)}}
 const ON=()=>!!(S&&S.alive&&S.mw);
 const GOALS=[['live','🏠 ใช้ชีวิตให้รอดปีแรก',M=>M.y>=1,{mon:3000}],['job','💼 หางานแรก — ตั้งโฟกัส "ทำงาน" ให้ครบ 1 ปี',M=>(M.tj||0)>=1,{mon:5000,adapt:4}],['adapt','📱 คุ้นเคยกับยุคนี้ถึง 25',M=>M.adapt>=25,{qi:.3}],['lin','🧒 รู้จักหลิน',M=>!!M.linMet,{joy:6}],['fame','📈 มีผู้ติดตามครบ 1,000',M=>M.fame>=1000,{mon:4000}],['side','🗺️ ปลดล็อกย่านใหม่ หรือเริ่มงานเสริม',M=>!!(M.x&&(M.x.job||(M.x.locs||[]).length>1)),{adapt:5}]];
 function goalNow(M){M.gd=M.gd||{};return GOALS.find(g=>!M.gd[g[0]])}
@@ -44009,7 +44009,7 @@ function goalNow(M){M.gd=M.gd||{};return GOALS.find(g=>!M.gd[g[0]])}
 // ================= 🏙️ 5) ขั้นในยุคใหม่ =================
 const MR=[[0,'👤','คนแปลกหน้า','ไม่มีใครรู้จักคุณ'],[30,'🏘️','คนในซอย','พี่วินกับป้าแดงรู้จักชื่อคุณ'],[52,'🗣️','คนที่ย่านรู้จัก','เด็กในย่านเล่าเรื่องคุณให้กันฟัง'],[72,'🌃','ตำนานเมือง','ทั้งเมืองมีเรื่องเล่าเกี่ยวกับคุณ'],[90,'🛡️','ผู้พิทักษ์เมือง','เมืองนี้ปลอดภัยขึ้นเพราะคุณอยู่']];
 const MRB=[null,{qi:.3,mon:3000},{qi:.5,fame:1500},{qi:1,fame:5000,mon:15000},{qi:2,fame:15000,mon:40000}];
-const MRN=[[0,'👤','คนธรรมดา','ชีวิตเรียบง่ายเหมือนคนทั่วไป'],[30,'🏘️','คนที่ซอยรู้จัก','ป้าร้านข้าวกับพี่วินจำชื่อคุณได้'],[52,'🗣️','คนเก่งของย่าน','เพื่อนบ้านเริ่มมาขอคำปรึกษา'],[72,'📰','คนดังของเมือง','ชื่อคุณเคยขึ้นข่าวท้องถิ่น'],[90,'🏆','ความภูมิใจของบ้านเกิด','คนบ้านเกิดพูดถึงคุณด้วยความภูมิใจ']],MRBN=[null,{mon:3000},{fame:1500,mon:5000},{fame:5000,mon:15000},{fame:15000,mon:40000}],MRo=M=>M&&M.native?MRN:MR,MLB=M=>M&&M.native?'ก้าวในชีวิต':'ขั้นในยุคใหม่';
+const MRN=[[0,'👤','คนธรรมดา','ชีวิตเรียบง่ายเหมือนคนทั่วไป'],[30,'🏘️','คนที่ซอยรู้จัก','คนรอบตัวเริ่มจำชื่อคุณได้'],[52,'🗣️','คนเก่งของย่าน','เพื่อนบ้านเริ่มมาขอคำปรึกษา'],[72,'📰','คนดังของเมือง','ชื่อคุณเคยขึ้นข่าวท้องถิ่น'],[90,'🏆','ความภูมิใจของบ้านเกิด','คนบ้านเกิดพูดถึงคุณด้วยความภูมิใจ']],MRBN=[null,{mon:3000},{fame:1500,mon:5000},{fame:5000,mon:15000},{fame:15000,mon:40000}],MRo=M=>M&&M.native?MRN:MR,MLB=M=>M&&M.native?'ก้าวในชีวิต':'ขั้นในยุคใหม่';
 function mScore(M){const x=M.x||{};let s=(M.adapt||0)*(M.native?.12:.35)+Math.log10((M.fame||0)+1)*7+(M.linMet?4:0)+(x.job?x.job.lv*6:0)+(x.arW||0)*3+((x.locs||[]).length-1)*2+Object.keys(M.gd||{}).length*2+Math.min(10,(M.y||0)*.5);return Math.round(s)}
 const rOf=s=>{let r=0;MR.forEach((m,i)=>{if(s>=m[0])r=i});return r};
 function rankTick(M){if(M&&M.kid)return;const s=mScore(M),r=rOf(s);M.mr=M.mr||0;if(r>M.mr){for(let i=M.mr+1;i<=r;i++){const m=MRo(M)[i],lb=MLB(M);mwSay(`${m[1]} <b>${lb}: ${m[2]}</b> — ${m[3]}`,'myth',(M.native?MRBN:MRB)[i],true);try{island({big:1,pri:1,ic:m[1],h:lb,t:m[2],kind:'gold'})}catch(e){}try{keyAdd(lb+': '+m[2])}catch(e){}}M.mr=r}}
@@ -47443,7 +47443,7 @@ const Lx=M=>{try{return T().Ls(M)}catch(e){return M.L||{fl:{},mem:{},cnt:{}}}};
 const pw=M=>{try{return !!((M.qi||0)>=3||(M.H&&M.H.aw&&M.H.aw!=='none'))}catch(e){return false}};
 // ---------- 1) ตอนเกิด: ไม่แสดงบทเปิดแบบยุทธภพ (ชาติกำเนิด/พ่อแม่ชื่อจีน/ทารกอีกสี่คน/ปณิธาน/ชะตาร้าย/ยุคยอดฝีมือ) ----------
 let mute=0;window._natMuteOn=()=>!!(mute&&Date.now()<mute);
-{const _l=log;log=function(t){if(mute){const s=String(t||'');if(/คุณเกิดเป็นคน/.test(s))mute=0;else if(Date.now()<mute)return;else mute=0}return _l.apply(this,arguments)}}
+{const _l=log;log=function(t){if(mute){const s=String(t||'');if(/คุณเกิดเป็นคน/.test(s)){mute=0;setTimeout(()=>{try{natFix()}catch(e){}},0)}else if(Date.now()<mute)return;else mute=0}return _l.apply(this,arguments)}}
 {const _a=addFeed;addFeed=function(){if(mute&&Date.now()<mute)return;return _a.apply(this,arguments)}}
 const THF=['สมชาย','ประเสริฐ','วิชัย','สุรชัย','ธนากร','บุญมี','สมศักดิ์','อนันต์','ชาญวิทย์','ไพโรจน์','สมพงษ์','เกรียงไกร'],THM=['สมศรี','มาลี','บุญเรือน','วันเพ็ญ','สุดา','อรุณี','ละเอียด','พรทิพย์','จันทร์เพ็ญ','นงลักษณ์','รัตนา','กาญจนา'],THK=['ต้น','แนน','บอล','ปลา','กอล์ฟ','ฝ้าย','เบียร์','มิ้นท์','ตูน','แบงค์'];
 function natFix(){const M=S&&S.mw;if(!M||!nat(M)||M._nfx)return;M._nfx=1;
@@ -47452,8 +47452,8 @@ function natFix(){const M=S&&S.mw;if(!M||!nat(M)||M._nfx)return;M._nfx=1;
   const nm=(L)=>ch(L)+(sur?' '+sur:'');
   if(bg==='orphan'){S.parents=[];S.sibs=[];S.flags=S.flags||{};S.flags.lostParents=1;l.fl.par='none'}
   else{const P=S.parents||[];P.forEach(p=>{p.n=nm(p.g==='หญิง'?THM:THF)});if(bg==='single'){S.parents=P.filter(p=>p.role!=='พ่อ');l.fl.par='mom'}else l.fl.par='both';(S.sibs||[]).forEach(b=>{b.n=nm(THK)})}
-  if(M.kid&&!M.TRT&&window._rollTRT)window._rollTRT(M)}catch(e){console.error('natFix',e)}}
-{const _r=mwRandNative;mwRandNative=function(){mute=Date.now()+5000;const r=_r.apply(this,arguments);let n=0;const t=setInterval(()=>{n++;try{const M=S&&S.mw;if(M&&nat(M)&&n>=5){clearInterval(t);natFix()}else if(n>14)clearInterval(t)}catch(e){clearInterval(t)}},500);return r}}
+  }catch(e){console.error('natFix',e)}}
+{const _r=mwRandNative;mwRandNative=function(){mute=Date.now()+5000;const r=_r.apply(this,arguments);let n=0;const t=setInterval(()=>{n++;try{const M=S&&S.mw;if(M&&nat(M)&&n>=5){clearInterval(t);natFix();try{if(M.kid&&!M.TRT&&window._rollTRT)window._rollTRT(M)}catch(e){}}else if(n>14)clearInterval(t)}catch(e){clearInterval(t)}},500);return r}}
 // ---------- 2) 🔪 ซอยเปลี่ยว: คนธรรมดาไม่หักมีดด้วยมือ ----------
 try{const e=MW_R.find(x=>x.id==='rob');if(e){const g0=e.go;e.go=function(M){if(!nat(M)||pw(M))return g0.apply(this,arguments);const l=Lx(M),fit=l.fit||45;
  choice('🔪 ซอยเปลี่ยวตอนตีสอง','ชายสองคนถือมีดล้อมหญิงสาวคนหนึ่งไว้ในซอยหลังตลาด ไม่มีใครอยู่แถวนั้นนอกจากคุณ… และกล้องวงจรปิดที่หัวมุม',[
@@ -47539,13 +47539,27 @@ try{MW_JEV.office=MW_JEV.office||[];MW_JEV.office.push(
 {const _je=mwJobEv;mwJobEv=function(M,J){const id=M&&M.job&&M.job.id,orig=id&&MW_JEV[id];if(!orig)return _je.apply(this,arguments);const keepPw=nat(M)&&pw(M);
  MW_JEV[id]=orig.filter(e=>nat(M)?(keepPw||!BADRE.test(String(e.go))):!e.nat);try{return _je.apply(this,arguments)}finally{MW_JEV[id]=orig}}}
 // ---------- 10) เหตุการณ์กลางปีหมวดงาน: ตรงกับอาชีพจริง ----------
-try{const JT={w1:['office','dev','freelance','gov','factory','craft'],w2:['office','dev','gov','factory','teacher','nurse','heal','guard',''],w3:['office','dev','gov','factory','teacher','nurse','guard','heal','craft'],w4:['shop','rider','driver','heal','guard','craft','nurse',''],w5:['office','dev','factory','gov'],w6:['office','dev','factory','freelance','gov']};
+try{const JT={w1:['office','dev','freelance','gov','factory','craft'],w2:['office','dev','gov','factory','teacher','nurse','heal','guard'],w3:['office','dev','gov','factory','teacher','nurse','guard','heal','craft'],w4:['shop','rider','driver','heal','guard','craft','nurse',''],w5:['office','dev','factory','gov'],w6:['office','dev','factory','freelance','gov']};
  ((window._wld5&&window._wld5.PME)||[]).forEach(e=>{const k=String(e.id).replace('pm_','');if(!JT[k])return;const c0=e.c;e.c=function(M){if(nat(M)){const j=(M.job&&M.job.id)||'';if(!JT[k].includes(j))return false}return c0?c0.apply(this,arguments):true}})}catch(e){}
 // ---------- 11) เหตุการณ์เกี่ยวกับพ่อแม่: ไม่ขึ้นถ้าไม่มี/เสียไปแล้ว ----------
 try{const noPar=M=>{if(!nat(M))return false;const l=Lx(M);return l.fl.par==='none'||!!l.fl.pDead2},noDad=M=>{if(!nat(M))return false;const l=Lx(M);return l.fl.par!=='both'||!!l.fl.pDead2};
  const r1=(T().LE||[]).find(e=>e.id==='r1');if(r1){const c0=r1.c;r1.c=function(M,l){return !noPar(M)&&c0.apply(this,arguments)}}
  const f1=((window._wld5&&window._wld5.PME)||[]).find(e=>e.id==='pm_f1');if(f1){const c0=f1.c;f1.c=function(M){return !noPar(M)&&(!c0||c0.apply(this,arguments))}}
  [window._wld31,window._wld32,window._wld33].forEach(W=>{if(!W||!W.DEF)return;Object.values(W.DEF).forEach(a=>a.forEach(e=>{if(e.id==='e32_nm_dad'||e.id==='e32_nm_mom'){const c0=e.cond;e.cond=function(M){return !(e.id==='e32_nm_dad'?noDad(M):noPar(M))&&c0.apply(this,arguments)}}}))})}catch(e){console.error('b83 par',e)}
+// ---------- 12) พ่อแม่จากไป: ครั้งเดียว (ใช้เรื่องที่ผูกกับการดูแล) ----------
+try{const pf=(T().LE||[]).find(e=>e.id==='parentf');if(pf){const c0=pf.c;pf.c=function(M,l){if(nat(M))return false;return c0.apply(this,arguments)}}}catch(e){}
+// ---------- 13) 🧟 โลกซอมบี้หลังเกิดเหตุ: ไม่มีชีวิตเมืองปกติ (ร้านอาหาร บัตรเครดิต งานออฟฟิศ พลุปีใหม่ ป้าขายผลไม้) ----------
+const zCol=M=>!!(M&&!M.kid&&M.Z&&wOf(M)==='zombie');
+const ZOK=/^(h(5|9|10)|r(3|4|5)|kplan|kteen|sep)$/;
+try{(T().LE||[]).forEach(e=>{const c0=e.c;e.c=function(M,l){if(zCol(M)&&!ZOK.test(e.id))return false;return c0?c0.apply(this,arguments):true}})}catch(e){}
+try{((window._wld5&&window._wld5.PME)||[]).forEach(e=>{if(!['work','learn','net'].includes(e.k))return;const c0=e.c;e.c=function(M){if(zCol(M))return false;return c0?c0.apply(this,arguments):true}})}catch(e){}
+try{MW_R.forEach(e=>{if(/^pm_/.test(e.id))return;const c0=e.c;if(typeof c0!=='function')return;e.c=function(M){if(zCol(M))return false;return c0.apply(this,arguments)}})}catch(e){}
+const ZFILL=['🕯️ คืนนี้ไฟดับทั้งเมืองเหมือนทุกคืน คุณนับดาวที่ไม่เคยเห็นตอนเมืองยังมีไฟ','📻 วิทยุเก่าจับสัญญาณได้สามวินาที แล้วเงียบไปอีกครั้ง','🥫 คุณเจอบะหมี่กึ่งสำเร็จรูปซองสุดท้ายใต้ชั้นวางในร้านที่ถูกรื้อไปแล้ว','🐕 หมาจรตัวหนึ่งเดินตามคุณกลับที่พักทุกวันโดยไม่เห่าสักครั้ง','🌧️ ฝนตกทั้งคืน ทุกคนรองน้ำฝนใส่ถังจนเต็ม','🪴 ผักบุ้งที่ปลูกในกะละมังบนดาดฟ้าออกยอดแรก','🧸 คุณเห็นตุ๊กตาหมีวางอยู่กลางถนนว่าง แล้วรีบเดินผ่านไป','🔥 ทุกคืนมีคนผลัดกันนั่งเฝ้ากองไฟ คืนนี้ถึงตาคุณ'];
+{const _y=mwYear;mwYear=function(){const M=S&&S.mw;if(!zCol(M))return _y.apply(this,arguments);const keep=MW_FILL.nat;MW_FILL.nat=ZFILL;try{return _y.apply(this,arguments)}finally{MW_FILL.nat=keep}}}
+// ---------- 14) 💀 เมืองหลังกำแพง / 🧟 ซอมบี้: ไม่มีเที่ยวต่างประเทศ/นักท่องเที่ยว/ย้ายถิ่นข้ามจังหวัด ----------
+try{const GWB=/^(x2|x4|pv_t1|pv_mig|pv_c1|pv_u1)$/;(T().LE||[]).forEach(e=>{if(!GWB.test(e.id))return;const c0=e.c;e.c=function(M,l){const w=wOf(M);if(w==='gatewon'||w==='zombie')return false;return c0?c0.apply(this,arguments):true}})}catch(e){}
+try{if(typeof MWQ_T!=='undefined')MWQ_T.forEach(q=>{if(!['save','job','promo','fame','trv','home'].includes(q[0]))return;const c0=q[1];q[1]=function(M){if(zCol(M))return false;return c0.apply(this,arguments)}})}catch(e){}
+{const _jy=mwJobYear;mwJobYear=function(M){if(zCol(M))return;return _jy.apply(this,arguments)}}
 window._b83={natFix,ARC2JOB};
 })()}catch(e){console.error('block83',e)}
 
