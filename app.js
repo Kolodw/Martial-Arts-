@@ -45456,6 +45456,8 @@ const W=[
  {k:'beast',ic:'🐾',n:'เกิดเป็นสัตว์',d:'เริ่มจากลูกสัตว์ในป่า บำเพ็ญจนเป็นอสูร แล้วเลือกแปลงกายหรือครองป่า',tg:['อายุยืนมาก'],bd:'#6ad08a',bg:'radial-gradient(120% 120% at 100% 0%,#2a8a4a,#103a1e 60%,#081e10)',beast:1,tk:'beast'},
  {k:'sky',ic:'🌠',n:'ทะลุฟ้าดารา',d:'โลกพังหลังมหันตภัยดาวตก · นครกำแพง ยีนอสูร ไต่ 36 ขั้นสู่ดวงดาว',tg:['โลกใหม่','มินิเกม'],bd:'#ff8a3d',bg:'radial-gradient(120% 120% at 100% 0%,#c8501a,#3a1a0c 55%,#0a1016)',sky:1,tk:'sky'}];
 const CHAL=[[0,'🙂','ปกติ'],[1,'🔥','นรก'],[2,'⏳','ชีวิตสั้น'],[3,'🗑️','รากขยะ']];
+const abU=()=>{try{return(+LS.get('murim_hlbest',0)||0)>=100||(+LS.get('murim_abbest',0)||0)>0||!!LS.get('murim_abunl',0)}catch(e){return false}};
+const abSet=v=>{try{LS.set('murim_abyss',v?1:0);if(typeof abPaint==='function')abPaint();updateHints()}catch(e){}};
 const SPD=[[2500,'⚡ เร็ว'],[5000,'🍵 ปกติ'],[9000,'🐢 ช้า']];
 const mwOk=()=>{try{return mwAllowed()}catch(e){return false}};
 const list=()=>W.filter(w=>!w.mw||mwOk());
@@ -45470,20 +45472,21 @@ function go(k){const w=W.find(x=>x.k===k);if(!w)return;apply(w);try{LS.set('muri
  if(w.sky){try{skyStart()}catch(e){console.error(e)}return}if(w.beast){try{goBeastLife()}catch(e){}return}try{goBirthPick()}catch(e){try{goBirth()}catch(x){}}}
 window.wpGo=go;
 window.wpSel=function(k){const w=W.find(x=>x.k===k);if(!w)return;apply(w);paint();try{const c=document.querySelector(`#wPick .wc[data-k="${k}"]`);if(c)c.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}catch(e){}};
-window.wpChal=function(v){const w=W.find(x=>x.k===(SEL||cur()));if(!w||!w.ch)return toast('ความท้าทายใช้ได้กับยุทธภพและโลกเทพเซียน');click('chm',v);paint()};
+window.wpChal=function(v){const w=W.find(x=>x.k===(SEL||cur()));if(!w||!w.ch)return toast('ความท้าทายใช้ได้กับยุทธภพและโลกเทพเซียน');if(v==='ab'){if(!abU())return toast('🕳️ ผ่านนรกให้ถึงชั้น 100 ก่อน ถึงจะเปิดอเวจีได้');click('chm',1);abSet(1);paint();return toast('🕳️ เปิดโหมดอเวจี 1000 ชั้น')}if(v===1)abSet(0);click('chm',v);paint()};
+{let ht=null,fired=0;const end=()=>{clearTimeout(ht);ht=null};document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('#wPick .wpC button[data-c="1"]');if(!b)return;fired=0;ht=setTimeout(()=>{fired=1;try{navigator.vibrate&&navigator.vibrate(30)}catch(x){}wpChal('ab')},600)},true);['pointerup','pointercancel','pointerleave'].forEach(t=>document.addEventListener(t,end,true));document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#wPick .wpC button[data-c="1"]');if(b&&fired){fired=0;e.stopImmediatePropagation();e.preventDefault()}},true);document.addEventListener('contextmenu',e=>{if(e.target.closest&&e.target.closest('#wPick .wpC button'))e.preventDefault()},true)}
 window.wpSpd=function(){const i=SPD.findIndex(s=>s[0]===CFG.len),n=SPD[(i+1)%SPD.length];click('len',n[0]);paint()};
 window.wpRand=function(){const L=list().filter(w=>w.k!==(SEL||cur()));const w=L[Math.floor(Math.random()*L.length)];wpSel(w.k);toast(`🎲 ฟ้าเลือกให้: ${w.ic} ${w.n}`)};
 function card(w){const T=tried(),nw=w.tk&&!T[w.tk];return`<div class="wc" data-k="${w.k}" style="--bd:${w.bd};--bg:${w.bg}" onclick="wpSel('${w.k}')"><span class="bg">${w.ic}</span><span class="ic">${w.ic}</span><b>${w.n}</b><small>${w.d}</small><span class="tg">${nw?'<span class="nw">🆕 ยังไม่เคยลอง</span>':''}${w.tg.map(t=>`<span>${t}</span>`).join('')}</span><button class="go" onclick="event.stopPropagation();wpGo('${w.k}')">▶ เกิดในโลกนี้</button></div>`}
 function build(){const L=list(),last=LS.get('murim_wlast',null);
  return`<div class="wpH"><b>🌏 เลือกโลกที่จะไปเกิด</b><span class="sp"></span><button onclick="wpRand()">🎲 สุ่มโลก</button></div>
  <div class="wpS">${L.map(card).join('')}</div><div class="wDots">${L.map(()=>'<i></i>').join('')}</div>
- <div class="wpC"><span>🔥 ความท้าทาย</span>${CHAL.map(c=>`<button data-c="${c[0]}" onclick="wpChal(${c[0]})">${c[1]} ${c[2]}</button>`).join('')}<span style="margin-left:6px">⏱️</span><button class="spd" onclick="wpSpd()"></button></div>
+ <div class="wpC"><span>🔥 ความท้าทาย</span>${CHAL.map(c=>`<button data-c="${c[0]}" onclick="wpChal(${c[0]})">${c[1]} ${c[2]}</button>`+(c[0]===1?`<button data-c="ab" class="wpAb" onclick="wpChal('ab')" style="${abU()?'':'opacity:.55'}">🕳️ อเวจี${abU()?'':' 🔒'}</button>`:'')).join('')}<span style="margin-left:6px">⏱️</span><button class="spd" onclick="wpSpd()"></button></div>
  <div class="wpNote"></div>`}
 function paint(){const P=$$('wPick');if(!P)return;const k=SEL||cur(),w=W.find(x=>x.k===k)||W[0];
  P.querySelectorAll('.wc').forEach(c=>c.classList.toggle('on',c.dataset.k===k));
- P.querySelectorAll('.wpC button[data-c]').forEach(b=>{b.disabled=!w.ch;b.classList.toggle('on',!!w.ch&&+b.dataset.c===(CFG.chm|0))});
+ {const abN=(CFG.chm|0)===1&&+LS.get('murim_abyss',0)===1;P.querySelectorAll('.wpC button[data-c]').forEach(b=>{b.disabled=!w.ch;const on=b.dataset.c==='ab'?abN:(+b.dataset.c===(CFG.chm|0)&&!(b.dataset.c==='1'&&abN));b.classList.toggle('on',!!w.ch&&on);if(b.dataset.c==='ab'){b.style.opacity=abU()?'':'.55';b.textContent='🕳️ อเวจี'+(abU()?'':' 🔒')}})}
  const sb=P.querySelector('.wpC .spd');if(sb){const s=SPD.find(x=>x[0]===CFG.len)||SPD[1];sb.textContent=s[1]+' ▾'}
- const n=P.querySelector('.wpNote');if(n){const ch=CHAL.find(c=>c[0]===(CFG.chm|0));n.textContent=w.ch?`เลือกแล้ว: ${w.ic} ${w.n}${ch&&ch[0]?` · ${ch[1]} ${ch[2]}`:''} — กดปุ่มเริ่มเล่นหรือ ▶ บนการ์ดได้เลย`:`เลือกแล้ว: ${w.ic} ${w.n} — โลกนี้มีความท้าทายในตัวอยู่แล้ว`}}
+ const n=P.querySelector('.wpNote');if(n){const ch=(CFG.chm|0)===1&&+LS.get('murim_abyss',0)===1?[1,'🕳️','อเวจี 1000 ชั้น']:CHAL.find(c=>c[0]===(CFG.chm|0));n.textContent=w.ch?`เลือกแล้ว: ${w.ic} ${w.n}${ch&&ch[0]?` · ${ch[1]} ${ch[2]}`:''} — กดปุ่มเริ่มเล่นหรือ ▶ บนการ์ดได้เลย`:`เลือกแล้ว: ${w.ic} ${w.n} — โลกนี้มีความท้าทายในตัวอยู่แล้ว`}}
 function dots(){const P=$$('wPick');if(!P)return;const S0=P.querySelector('.wpS'),cs=[...P.querySelectorAll('.wc')],ds=[...P.querySelectorAll('.wDots i')];if(!S0||!cs.length)return;const mid=S0.scrollLeft+S0.clientWidth/2;let bi=0,bd=1e9;cs.forEach((c,i)=>{const d=Math.abs(c.offsetLeft+c.offsetWidth/2-mid);if(d<bd){bd=d;bi=i}});ds.forEach((d,i)=>d.classList.toggle('on',i===bi))}
 function mount(){try{const T=$$('title');if(!T||!T.classList.contains('on'))return;let P=$$('wPick');const box=T.querySelector('.box.opts'),st=$$('tStartIn');
  const boxVis=!!(box&&getComputedStyle(box).display!=='none'),stVis=!!(st&&st.offsetParent);
