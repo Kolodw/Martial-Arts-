@@ -19234,7 +19234,7 @@ try{FRAMES.push(
  {id:'f_rgm3',n:'กรอบร้อยชาติ',side:'r',c:0,ty:'spin halo orbit corner badge',c1:'#70c0a0',c2:'#e0ffb0',c3:'#0a2018',pc:'#f0fff0',bd:'📜',d:'อันดับ 3 ทำเนียบผู้ย้อนกาลรายเดือน'})}catch(e){}
 {const _rkcR=rkChip;rkChip=function(t,tr){const o=RKC_OF(String(t||''));if(o&&o.p.length===2&&o.p[1]==='r'){const r=o.r,p=o.p[0];return`<span class="rkchip rkr rkr${p} rr${r}"><i>${p==='m'?'♾️':p==='w'?'🌀':'⏳'}${['','①','②','③'][r]}</i>${esc(String(t).slice(0,40))}</span>`}return _rkcR.apply(this,arguments)}}
 {const _bdcO2=BD_FRP;bdClaim=async function(){try{if(!onlineOK)return;const j=await api('bdrw');try{rkSync(j&&j.rk)}catch(e){}const L=(j&&j.l)||[];if(!L.length)return;const d=frGet(),kb=kbGet();let w=LS.get('murim_bdw',0)||0;const lines=[];
- for(const x of L){if(x.c==='al'){try{lines.push(arLgReward(x,d))}catch(e){}continue}if(/^c[hsj]$/.test(x.c)&&typeof chmReward==='function'){try{lines.push(chmReward(x,d,kb));w++}catch(e){}continue}const r=Math.max(1,Math.min(3,+x.r||3)),pp=_bdcO2[x.p]?x.p:'d',isC=x.c==='c',isA=x.c==='a',isR=x.c==='r',fid=isR?'f_rg'+pp+r:isA?'f_ar'+r:isC?'f_ch'+r:_bdcO2[pp]+r,kv=BD_KBP[pp][r];if(!d.own.includes(fid))d.own.push(fid);kb.g+=kv;w++;if(r===1)LS.set('murim_bd1',(LS.get('murim_bd1',0)||0)+1);if(isC)LS.set('murim_bdC',(LS.get('murim_bdC',0)||0)+1);else if(isR)LS.set('murim_bdR',(LS.get('murim_bdR',0)||0)+1);else if(pp!=='d'){const kk=pp==='w'?'murim_bdW':'murim_bdM';LS.set(kk,(LS.get(kk,0)||0)+1)}
+ for(const x of L){if(x.c==='al'){try{lines.push(arLgReward(x,d))}catch(e){}continue}if(/^c[hsjlk]$/.test(x.c)&&typeof chmReward==='function'){try{lines.push(chmReward(x,d,kb));w++}catch(e){}continue}const r=Math.max(1,Math.min(3,+x.r||3)),pp=_bdcO2[x.p]?x.p:'d',isC=x.c==='c',isA=x.c==='a',isR=x.c==='r',fid=isR?'f_rg'+pp+r:isA?'f_ar'+r:isC?'f_ch'+r:_bdcO2[pp]+r,kv=BD_KBP[pp][r];if(!d.own.includes(fid))d.own.push(fid);kb.g+=kv;w++;if(r===1)LS.set('murim_bd1',(LS.get('murim_bd1',0)||0)+1);if(isC)LS.set('murim_bdC',(LS.get('murim_bdC',0)||0)+1);else if(isR)LS.set('murim_bdR',(LS.get('murim_bdR',0)||0)+1);else if(pp!=='d'){const kk=pp==='w'?'murim_bdW':'murim_bdM';LS.set(kk,(LS.get(kk,0)||0)+1)}
   lines.push(`${['','🥇','🥈','🥉'][r]} อันดับ ${r} ${isR?'🔁 ทำเนียบผู้ย้อนกาล'+BD_PN[pp]:isA?'🏟️ ลานประลองหมื่นเงา ซีซั่น':isC?'🔥 ทำเนียบท้าทาย'+RKC_PN[pp]:'ทำเนียบ'+BD_PN[pp]+' '+(BD_CN[x.c]||'')} (${esc(x.d)}) — ${esc(x.n)}${x.ch&&!isR?' '+chBadge(x.ch):''}${isR&&x.rl?` (${x.rl} รอบ)`:` (${fmt(x.s)} คะแนน)`} · ได้ <b>${frOf(fid).n}</b>${x.tt?' + ฉายา「'+esc(x.tt)+'」':''} + ☯️ ${fmt(kv)}`)}
  frSet(d);kbSet(kb);LS.set('murim_bdw',w);profPush();const html=`<button class="xbtn" onclick="closeM()">✕</button><h3>🏆 รางวัลทำเนียบ</h3><p>${lines.join('<br>')}</p><p class="tag2">กรอบรางวัลอยู่ใน 👤 โปรไฟล์ และ 🖼️ ร้านแลกกรอบ · คลังกรรมดีเข้าคลังแล้ว</p><button class="pbtn" style="width:100%" onclick="openProfile()">👤 ไปสวมกรอบ</button>`;if(!modalOpen)modal(html,'bdrw');else toast('🏆 ได้รางวัลทำเนียบ! ดูกรอบได้ที่โปรไฟล์')}catch(e){}}}
 // หน้าทำเนียบ: แท็บ รายวัน/สัปดาห์/เดือน/ตลอดกาล + อันดับสมัยก่อน + บอกรางวัล
@@ -24385,7 +24385,7 @@ chBoardHead=function(bp){const m=chmSel(),N=CHM_N[m],T=CHM_T[m][bp]||CHM_T[m].d,
 {const _brdM=brdRestyle;brdRestyle=function(){const m=chmSel(),keep={};try{if(openOnline._bw===4)for(const p of ['d','w','m']){keep[p]=RKC[p+'c'];RKC[p+'c']=CHM_T[m][p]}}catch(e){}try{return _brdM.apply(this,arguments)}finally{for(const p in keep)RKC[p+'c']=keep[p]}}}
 // รางวัล: โหมดท้าทายแยก (ch/cs/cj) — ฉายา + คลังกรรม · กรอบเฉพาะรายเดือน (เรียกจาก bdClaim)
 function chmReward(x,d,kb){const r=Math.max(1,Math.min(3,+x.r||3)),pp=['d','w','m'].includes(x.p)?x.p:'d',mk=x.c.slice(1),N=CHM_N[mk],kv=BD_KBP[pp][r];let fr='';
- if(pp==='m'){const fid=(mk==='l'?'f_cl':'f_ch')+r;if(!d.own.includes(fid))d.own.push(fid);fr=frOf(fid).n+' + '}kb.g+=kv;LS.set('murim_bdC',(LS.get('murim_bdC',0)||0)+1);if(r===1)LS.set('murim_bd1',(LS.get('murim_bd1',0)||0)+1);
+ if(pp==='m'){const fid=(mk==='l'?'f_cl':mk==='k'?'f_sk':'f_ch')+r;if(!d.own.includes(fid))d.own.push(fid);fr=frOf(fid).n+' + '}kb.g+=kv;LS.set('murim_bdC',(LS.get('murim_bdC',0)||0)+1);if(r===1)LS.set('murim_bd1',(LS.get('murim_bd1',0)||0)+1);
  return`${['','🥇','🥈','🥉'][r]} อันดับ ${r} ${N[0]} ทำเนียบ${N[1]}${BD_PN[pp]} (${esc(x.d)}) — ${esc(x.n)} · ได้ ${fr}${x.tt?'ฉายา「'+esc(x.tt)+'」 + ':''}☯️ ${fmt(kv)}`}
 // ผู้ย้อนกาลที่ยังไม่หลุดพ้น: แสดงต่อท้ายคนที่หลุดพ้นแล้ว
 {const _orbN=openRgBoard;openRgBoard=async function(p){const r=await _orbN.apply(this,arguments);try{const box=document.querySelector('.rgbbox'),L=(window._rgbLast&&window._rgbLast.top)||[];if(!box)return r;
@@ -26837,7 +26837,7 @@ const RKG = (() => {
   const CORE1 = [null, ['จักรพรรดิ', 'ราชัน', 'อธิราช', 'มหาเทพ', 'จ้าว', 'ปฐมกษัตริย์'], ['ขุนศึก', 'ยอดยุทธ์', 'อัครเซียน', 'แม่ทัพ', 'ผู้พิชิต', 'จอมดาบ'], ['ดาวรุ่ง', 'ยอดฝีมือ', 'ผู้กล้า', 'นักดาบ', 'ผู้ท้าทาย', 'ศิษย์เอก']];
   const SUF1 = ['แห่งวสันต์', 'เหนือเมฆา', 'ไร้พ่าย', 'แห่งบูรพา', 'แห่งทะเลเหนือ', 'ใต้แสงจันทร์', 'ผู้ทลายฟ้า', 'ผู้ฝ่าพายุ', 'แห่งยุคใหม่', 'ผู้ลิขิตตำนาน', 'แห่งหมื่นศึก', 'ผู้ไม่หลับใหล'];
   function title1(p, c, k, r) {
-    const R = RNG(H('t|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE1[r] || CORE1[3]), pre = R() < .55 ? pk(R, TH1[c] || TH1.m) : pk(R, PRE1);
+    const R = RNG(H('t|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE1[r] || CORE1[3]), pre = (R() < .55 || c === 'k') ? pk(R, TH1[c] || TH1.m) : pk(R, PRE1);
     const of = R() < .35 && !/^(ผู้|แห่ง|ไร้)/.test(pre) ? 'แห่ง' : '', suf = pk(R, SUF1);
     let t = p === 'm' ? core + (/^แห่ง/.test(suf) ? '' : of) + pre + suf : core + of + pre;
     if ([...t].length > 28) t = core + of + pre;
@@ -26862,9 +26862,10 @@ const RKG = (() => {
     CORE1[2].concat(['เจ้าสำนัก', 'ผู้พิทักษ์', 'ยอดขุนพล', 'ราชครู', 'จอมยุทธ์', 'นายพล', 'มหาเซียน', 'ผู้คุมกฎ']),
     CORE1[3].concat(['ดาวดวงใหม่', 'อัจฉริยะ', 'ผู้ตื่นรู้', 'ศิษย์รัก', 'ผู้แสวงหา', 'ผู้มาใหม่', 'จอมยุทธ์น้อย', 'ผู้ไต่ฟ้า'])];
   const SUF = SUF1.concat(['ผู้ยืนบนยอดเขา', 'ผู้ไร้ผู้ต่อกร', 'แห่งแปดทิศ', 'ผู้ข้ามทะเลดาว', 'ผู้เดียวในใต้หล้า', 'ใต้ฟ้าเดียวกัน', 'ผู้ไม่หันหลัง', 'แห่งพันปี', 'ผู้ปลุกตำนาน', 'แห่งรุ่งอรุณ', 'ผู้กลืนดวงดาว', 'แห่งสายลม', 'ผู้ตัดสายฟ้า', 'ผู้ยิ้มรับลิขิต']);
+  TH.k = ['ดาราเหล็ก', 'นครกำแพง', 'ยีนอสูร', 'อุกกาบาต', 'ไซเบอร์', 'ห้วงดารา', 'นิวเคลียส', 'สัญญาณดาว', 'เซลล์ดารา', 'ควอนตัม', 'โคจร', 'กาแล็กซี', 'เนบิวลา', 'ดาวเทียม', 'นาโน', 'พลาสมา']; TH1.k = TH.k.slice(0, 6);
   function title(p, c, k, r) {
     if (!/v/.test(String(k))) return title1(p, c, k, r);
-    const R = RNG(H('t2|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE[r] || CORE[3]), pre = R() < .6 ? pk(R, TH[c] || TH.m) : pk(R, PRE);
+    const R = RNG(H('t2|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE[r] || CORE[3]), pre = (R() < .6 || c === 'k') ? pk(R, TH[c] || TH.m) : pk(R, PRE);
     const of = R() < .35 && !/^(ผู้|แห่ง|ไร้)/.test(pre) ? 'แห่ง' : '', suf = pk(R, SUF);
     let t = p === 'm' ? core + (/^แห่ง/.test(suf) ? '' : of) + pre + suf : p === 'w' && R() < .3 ? core + pre + suf : core + of + pre;
     if ([...t].length > 28) t = core + of + pre;
@@ -26872,16 +26873,16 @@ const RKG = (() => {
   }
   // ---------- กรอบ ----------
   const PALS = [['#ffd040', '#fff4b0', '#ff9a20'], ['#ff70e0', '#ffffff', '#ffd040'], ['#6ad0ff', '#e8f8ff', '#3a6ad8'], ['#ff5d73', '#ffd0d8', '#8a1a2a'], ['#7ae07a', '#e8ffe0', '#2a8a4a'], ['#b070ff', '#f0e0ff', '#5a2aa8'], ['#ffb050', '#fff0d0', '#c85a1a'], ['#d8e0f0', '#ffffff', '#7a8aa8'], ['#40e0d0', '#e0fffa', '#1a7a8a'], ['#ff8a40', '#ffe0a0', '#a02a1a'], ['#e0c080', '#fff8e0', '#8a6a2a'], ['#ff4ab0', '#ffe0f0', '#6a1a5a']];
-  const SH1 = { m: ['sword', 'laurel', 'crown', 'dbl'], x: ['cloud', 'ringh', 'leaf', 'pearl'], g: ['ray', 'ringh', 'star4', 'lotus'], b: ['horn', 'scale', 'thorn', 'wing'], r: ['clock', 'moon', 'star4'], c: ['flame', 'thorn', 'chain'], h: ['flame', 'horn', 'drip', 'gate'], s: ['flame', 'star4', 'butterfly'], j: ['knob', 'chain', 'fade', 'leaf'], l: ['ringh', 'star4', 'lotus', 'ray', 'gem'] };
+  const SH1 = { m: ['sword', 'laurel', 'crown', 'dbl'], x: ['cloud', 'ringh', 'leaf', 'pearl'], g: ['ray', 'ringh', 'star4', 'lotus'], b: ['horn', 'scale', 'thorn', 'wing'], r: ['clock', 'moon', 'star4'], c: ['flame', 'thorn', 'chain'], h: ['flame', 'horn', 'drip', 'gate'], s: ['flame', 'star4', 'butterfly'], j: ['knob', 'chain', 'fade', 'leaf'], l: ['ringh', 'star4', 'lotus', 'ray', 'gem'], k: ['star4', 'lightning', 'gem', 'ringh'] };
   const TY1 = [null, 'spin halo orbit ring2 aura2 sparkle star ember corner badge rk1', 'spin orbit ring2 snow corner badge rk2', 'corner badge rk3'];
   const PN = { d: 'ประจำวัน', w: 'ประจำสัปดาห์', m: 'ประจำเดือน' }, BD = { d: ['', '🌅', '🥈', '🥉'], w: ['', '⚔️', '🥈', '🥉'], m: ['', '🌟', '🥈', '🥉'] };
-  const RE = /^f_g([dwm])([mxgbrchsjl])([0-9a-z]+)_([123])$/;
+  const RE = /^f_g([dwm])([mxgbrchsjlk])([0-9a-z]+)_([123])$/;
   // ชุดที่ 2: สีจากวงล้อสี (โทนคู่ตรงข้าม/ข้างเคียง) · ลายประดับตามหมวด + ลายสุ่ม · แสงสุ่มชุดใหม่ทุกรอบ · ตราตามหมวด
   const hsl = (h, s, l) => { h = ((h % 360) + 360) % 360; s /= 100; l /= 100; const a = s * Math.min(l, 1 - l), f = n => { const k = (n + h / 30) % 12, c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); return Math.round(255 * c).toString(16).padStart(2, '0') }; return '#' + f(0) + f(8) + f(4) };
-  const SH = { m: ['sword', 'laurel', 'crown', 'dbl', 'gem'], x: ['cloud', 'ringh', 'leaf', 'pearl', 'gate'], g: ['ray', 'ringh', 'star4', 'lotus', 'crown'], b: ['horn', 'scale', 'thorn', 'wing', 'eye'], r: ['clock', 'moon', 'star4', 'ringh'], c: ['flame', 'thorn', 'chain', 'eye'], h: ['flame', 'horn', 'drip', 'gate', 'skull'], s: ['flame', 'star4', 'butterfly', 'petal'], j: ['knob', 'chain', 'fade', 'leaf'], l: ['ringh', 'star4', 'lotus', 'ray', 'gem'] };
+  const SH = { m: ['sword', 'laurel', 'crown', 'dbl', 'gem'], x: ['cloud', 'ringh', 'leaf', 'pearl', 'gate'], g: ['ray', 'ringh', 'star4', 'lotus', 'crown'], b: ['horn', 'scale', 'thorn', 'wing', 'eye'], r: ['clock', 'moon', 'star4', 'ringh'], c: ['flame', 'thorn', 'chain', 'eye'], h: ['flame', 'horn', 'drip', 'gate', 'skull'], s: ['flame', 'star4', 'butterfly', 'petal'], j: ['knob', 'chain', 'fade', 'leaf'], l: ['ringh', 'star4', 'lotus', 'ray', 'gem'], k: ['star4', 'lightning', 'gem', 'ringh', 'ray'] };
   const ANY = ['star4', 'gem', 'petal', 'snow', 'moon', 'ray', 'lightning', 'pearl', 'leaf', 'cloud', 'wing'];
   const FX = { 1: ['halo', 'orbit', 'ring2', 'aura2', 'sparkle', 'star', 'ember', 'snow', 'petal', 'rainbow', 'flow', 'glow'], 2: ['orbit', 'ring2', 'sparkle', 'snow', 'ember', 'petal', 'shift', 'glow', 'star'], 3: ['snow', 'ember', 'star', 'glow'] };
-  const MARK = { m: ['⚔️', '🗡️', '🏯'], x: ['☁️', '🌀', '🍑'], g: ['✨', '🌞', '🪷'], b: ['🐾', '🐉', '🐯'], r: ['⏳', '🕰️', '🌀'], c: ['🔥', '⛓️', '☄️'], h: ['💀', '🔥', '👹'], s: ['☄️', '🕯️', '🎆'], j: ['🦴', '🍂', '🪨'], l: ['⭕', '🔮', '🌌'] };
+  const MARK = { m: ['⚔️', '🗡️', '🏯'], x: ['☁️', '🌀', '🍑'], g: ['✨', '🌞', '🪷'], b: ['🐾', '🐉', '🐯'], r: ['⏳', '🕰️', '🌀'], c: ['🔥', '⛓️', '☄️'], h: ['💀', '🔥', '👹'], s: ['☄️', '🕯️', '🎆'], j: ['🦴', '🍂', '🪨'], l: ['⭕', '🔮', '🌌'], k: ['🌠', '🛰️', '🧬'] };
   function frame(id) {
     const m = RE.exec(id); if (!m) return null; const [, p, c, k, rs] = m, r = +rs;
     const dt = String(k).replace(/[sv].*/, ''), dl = dt.length >= 8 ? dt.slice(6, 8) + '/' + dt.slice(4, 6) + '/' + dt.slice(0, 4) : dt.slice(4, 6) + '/' + dt.slice(0, 4);
@@ -26900,7 +26901,7 @@ const RKG = (() => {
   const fid = (p, c, k, r) => 'f_g' + p + c + k + '_' + r;
   const ALLC = [null, ...[1, 2, 3].map(r => CORE[r])];
   const rank = t => { t = String(t || ''); let best = 0, bl = 0; for (let r = 1; r <= 3; r++) for (const w of ALLC[r]) if (t.startsWith(w) && w.length > bl) { bl = w.length; best = r } return best };
-  const cat = t => { t = String(t || ''); for (const k of ['l', 'h', 's', 'j', 'r', 'b', 'x', 'g', 'c']) if (TH[k].some(w => t.includes(w))) return k; return 'm' };
+  const cat = t => { t = String(t || ''); for (const k of ['k', 'l', 'h', 's', 'j', 'r', 'b', 'x', 'g', 'c']) if (TH[k].some(w => t.includes(w))) return k; return 'm' };
   return { title, frame, fid, RE, H, rank, cat };
 })();
 
@@ -52346,7 +52347,7 @@ function applyFx(K,b,txt){if(!b)return'';const t=[];
  return fx2txt(b)}
 function ogTal(K){const o=K.og;if(!o||!o.tal)return;const add=o.tal-(o.talD||0);if(add<=0)return;K.tal*=1+add;o.talD=o.tal}
 function ogGenes(K){const o=K.og;if(!o||!o.genes||K.rk<0)return;for(const g of o.genes){if(K.genes.length>=3)break;if(!K.genes.includes(g)){K.genes.push(g);try{log(`🧬 ยีนแต่กำเนิดตื่นขึ้น: <b>${GN[g]||g}</b>`,'epic')}catch(e){}}}o.genes=[]}
-function applyOrg(P,g){const K=SKY()&&SKY().SK();if(!K||!S)return;S.gender=g;try{S.name=(g==='หญิง'?pick(['ไอริน','ชลธิชา','พิมพ์ดาว','มินตรา','ปลายฟ้า','นภัส','ดารินทร์','ลลิน']):pick(['ธราดล','ภูผา','กวิน','ศรุต','เตชิน','อชิระ','ธันวา','คีริน']))+' '+S.name.split(' ').slice(1).join(' ')}catch(e){}
+function applyOrg(P,g){const K=SKY()&&SKY().SK();if(!K||!S)return;S.gender=g;S.custom=false;try{S.name=(g==='หญิง'?pick(['ไอริน','ชลธิชา','พิมพ์ดาว','มินตรา','ปลายฟ้า','นภัส','ดารินทร์','ลลิน']):pick(['ธราดล','ภูผา','กวิน','ศรุต','เตชิน','อชิระ','ธันวา','คีริน']))+' '+S.name.split(' ').slice(1).join(' ')}catch(e){}
  const pl=info('place',P.place),C=CITY[P.place[1]];K.city=C.n;K.wall=C.wall;K.waveIn=Math.max(3,K.waveIn+C.wave);
  K.og={ids:CATS.map(c=>P[c.k][0]),y:{},genes:[],tal:0,talD:0,ev:[]};
  const L=[];
@@ -52394,3 +52395,103 @@ const st=document.createElement('style');st.textContent=`
 @keyframes sgIn{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}@keyframes sgSp{to{transform:rotate(1turn)}}`;document.head.appendChild(st);
 window._skyOrg={CATS,COMBO,LATER,applyOrg,ST};
 })()}catch(e){console.error('block98',e)}
+
+// ============================================================
+// BLOCK 99: 🌠 ทำเนียบทะลุฟ้าดารา — รายวัน/สัปดาห์/เดือน อันดับ 1–3 · กรอบ+ฉายาสายเทคโนโลยี (นีออน วงโคจร สแกนไลน์ HUD)
+//   ขึ้นทำเนียบเฉพาะโหมดทะลุฟ้าดารา เรียงตาม ขั้น → ชั้นย่อย → คะแนนเฉลี่ย · หมวดสุ่มของแอดมิน = 'k' (สุ่มใหม่ได้ทุกรอบ)
+// ============================================================
+try{(()=>{
+const skyOn=()=>{try{return !!(S&&S.mw&&S.mw.sky)}catch(e){return false}};
+// ---------- หัวทำเนียบ/ฉายาประจำ ----------
+try{CHM_T.k={d:['','ผู้ทะลวงกำแพงเหล็ก','สัญญาณดาวดวงใหม่','เซลล์ดาราตื่น'],w:['','จ้าวห้วงดารา','ผู้พิทักษ์นครกำแพง','นักล่าดาวเทียม'],m:['','จักรพรรดิแห่งกาแล็กซี','ราชันเนบิวลา','ผู้เดินบนวงโคจร']};
+ CHM_N.k=['🌠','ทะลุฟ้าดารา','#2fd4c4','ขั้นที่ไต่ได้สูงสุดก่อน — ขั้นเท่ากันดูชั้นย่อย แล้วค่อยเทียบคะแนนเฉลี่ยทุกด้าน'];
+ for(const p of ['d','w','m']){RKC[p+'k']=CHM_T.k[p];RKC_TR[p+'k']=RKC_TR[p+'c']||RKC_TR[p];RKC_PN[p+'k']='ทะลุฟ้าดารา'+(p==='d'?'รายวัน':p==='w'?'รายสัปดาห์':'รายเดือน')}
+ BD_CN.ck='🌠 ทำเนียบทะลุฟ้าดารา'}catch(e){console.error('b99 tables',e)}
+// แท็บโหมดในหน้าทำเนียบท้าทาย
+{const _h=chBoardHead;chBoardHead=function(bp){let h=_h.apply(this,arguments);try{if(!/openOnline._cm='k'/.test(h)){const m=chmSel(),on=m==='k',N=CHM_N.k;h=h.replace(/(<div class="tabs chmTabs">[\s\S]*?)(<\/div>)/,`$1<button class="tabb ${on?'on':''}" style="${on?`background:${N[2]};color:#041418;border-color:${N[2]}`:''}" onclick="openOnline._cm='k';openOnline._bw=4;openOnline('board')">${N[0]} ${N[1]}</button>$2`)}}catch(e){}return h}}
+{const _cs=chmSel;chmSel=function(){const v=openOnline._cm;if(v==='k')return'k';if(!v&&skyOn())return'k';return _cs.apply(this,arguments)}}
+{const _oo=openOnline;openOnline=function(tab){try{if(tab==='board'&&openOnline._bw==null&&skyOn()){openOnline._bw=4;openOnline._cm='k'}}catch(e){}return _oo.apply(this,arguments)};for(const k in _oo)try{openOnline[k]=_oo[k]}catch(e){}window.openOnline=openOnline}
+// ส่งชีวิตขึ้นทำเนียบของโหมด
+{const _api=api;api=async function(a,body){try{if(a==='life'&&body&&skyOn()){const K=S.mw.sky;body.ch='sky';body.skr=K.rk;body.sks=K.sub|0;body.cu=0}}catch(e){}return _api.apply(this,arguments)}}
+// ชีวิตทะลุฟ้าดาราที่เริ่มจากหน้าสุ่มกำเนิด = สุ่มจริง ขึ้นทำเนียบได้
+{const O=window._skyOrg;if(O&&O.applyOrg){const _ao=O.applyOrg;O.applyOrg=function(){const r=_ao.apply(this,arguments);try{S.custom=false}catch(e){}return r}}}
+// ---------- กรอบประจำ 3 อันดับ ----------
+try{FRAMES.push(
+ {id:'f_sk1',n:'กรอบวงโคจรกาแล็กซี',side:'r',c:0,ty:'static',c1:'#5cf2ff',c2:'#ffffff',c3:'#ff4ad8',pc:'#e8ffff',bd:'',d:'อันดับ 1 ทำเนียบทะลุฟ้าดารารายเดือน — วงโคจรสามชั้น ดาวเทียมหมุนรอบ สแกนไลน์'},
+ {id:'f_sk2',n:'กรอบสัญญาณเนบิวลา',side:'r',c:0,ty:'static',c1:'#8a7aff',c2:'#e8f4ff',c3:'#5cd2ff',pc:'#e8f0ff',bd:'',d:'อันดับ 2 ทำเนียบทะลุฟ้าดารารายเดือน'},
+ {id:'f_sk3',n:'กรอบนครกำแพงเหล็ก',side:'r',c:0,ty:'static',c1:'#ff8a3d',c2:'#ffe0c0',c3:'#2fd4c4',pc:'#fff0e0',bd:'',d:'อันดับ 3 ทำเนียบทะลุฟ้าดารารายเดือน'})}catch(e){}
+// ---------- ตัววาดกรอบเทคโนโลยี ----------
+const H=s=>{let h=2166136261;for(const c of String(s)){h^=c.codePointAt(0);h=Math.imul(h,16777619)}return h>>>0};
+const RNG=seed=>{let q=seed>>>0||1;return()=>{q=(q+0x6D2B79F5)>>>0;let t=q;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}};
+const hsl=(h,s,l)=>{h=((h%360)+360)%360;s/=100;l/=100;const a=s*Math.min(l,1-l),f=n=>{const k=(n+h/30)%12,c=l-a*Math.max(-1,Math.min(k-3,9-k,1));return Math.round(255*c).toString(16).padStart(2,'0')};return'#'+f(0)+f(8)+f(4)};
+const f1=n=>Math.round(n*10)/10;
+const PAL={1:['#ffd76a','#5cf2ff','#ff4ad8','#06121e'],2:['#e8f4ff','#5cd2ff','#8a7aff','#070d1e'],3:['#ffb27a','#2fd4c4','#ff8a3d','#0a1210']};
+const PL={d:'DAILY',w:'WEEKLY',m:'MONTHLY'},PLT={d:'วัน',w:'สัปดาห์',m:'เดือน'};
+const oct=(r,c=50)=>{const P=[];for(let i=0;i<8;i++){const a=(i/8)*Math.PI*2+Math.PI/8;P.push(f1(c+Math.cos(a)*r)+' '+f1(c+Math.sin(a)*r))}return'M'+P.join('L')+'Z'};
+const arc=(r,a0,a1)=>{const A=a0*Math.PI/180,B=a1*Math.PI/180;return`M${f1(50+Math.cos(A)*r)} ${f1(50+Math.sin(A)*r)}A${r} ${r} 0 ${a1-a0>180?1:0} 1 ${f1(50+Math.cos(B)*r)} ${f1(50+Math.sin(B)*r)}`};
+let gid=0;
+function skySvg(p,r,seed){const R=seed?RNG(H('sk|'+seed+'|'+p+r)):RNG(H('skfix'+p+r));let [c1,c2,c3,bg]=PAL[r]||PAL[3];
+ if(seed){const h0=Math.floor(R()*360);c2=hsl(h0,90,62);c3=hsl(h0+150+Math.floor(R()*60),85,60)}
+ const g='skg'+(++gid),big=p==='m',mid=p==='w';let o=`<defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c2}"/><stop offset=".5" stop-color="${c1}"/><stop offset="1" stop-color="${c3}"/></linearGradient>
+ <linearGradient id="${g}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c2}" stop-opacity="0"/><stop offset=".85" stop-color="${c2}" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity=".9"/></linearGradient>
+ <clipPath id="${g}c"><path d="${oct(47)}"/></clipPath><filter id="${g}f" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
+ // กริดหกเหลี่ยมจาง (เดือน/อันดับ 1)
+ if(big||r===1){let hx='';for(let i=0;i<12;i++){const a=i*30*Math.PI/180;hx+=`<path d="M50 50L${f1(50+Math.cos(a)*78)} ${f1(50+Math.sin(a)*78)}" stroke="${c2}" stroke-width=".5" opacity=".18"/>`}o+=`<g class="sk-spinS">${hx}<path d="${oct(74)}" fill="none" stroke="${c2}" stroke-width=".6" stroke-dasharray="2 6" opacity=".45"/></g>`}
+ // สแกนไลน์ในรูป
+ o+=`<g clip-path="url(#${g}c)"><rect class="sk-scan" x="0" y="-30" width="100" height="26" fill="url(#${g}s)"/></g>`;
+ // กรอบแปดเหลี่ยมนีออน + แสงวิ่ง
+ o+=`<path d="${oct(52)}" fill="none" stroke="${bg}" stroke-width="8"/><path d="${oct(52)}" fill="none" stroke="url(#${g})" stroke-width="3.2" filter="url(#${g}f)"/><path class="sk-run" d="${oct(52)}" fill="none" stroke="#fff" stroke-width="2.2" stroke-dasharray="14 ${r===1?46:r===2?70:110}" stroke-linecap="round" filter="url(#${g}f)"/>`;
+ o+=`<path d="${oct(47.5)}" fill="none" stroke="${c2}" stroke-width=".8" opacity=".55"/>`;
+ // วงแหวนเป็นท่อน หมุนสวน
+ o+=`<g class="sk-spinR"><path d="${arc(60,-80,-10)}" fill="none" stroke="${c2}" stroke-width="2.2" stroke-linecap="round"/><path d="${arc(60,100,170)}" fill="none" stroke="${c3}" stroke-width="2.2" stroke-linecap="round"/><path d="${arc(60,10,40)}" fill="none" stroke="${c1}" stroke-width="1.2" stroke-dasharray="1 3"/></g>`;
+ if(r<=2||mid||big)o+=`<g class="sk-spinF"><path d="${arc(65,200,330)}" fill="none" stroke="${c1}" stroke-width="1" stroke-dasharray="4 3" opacity=".8"/></g>`;
+ // วงโคจร + ดาวเทียม
+ const orbits=r===1?3:r===2?2:big?2:1;for(let i=0;i<orbits;i++){const rx=70-i*4,ry=22+i*9,rot=[-20,35,80][i],dur=[7,10,13][i];
+  o+=`<g transform="rotate(${rot} 50 50)"><ellipse cx="50" cy="50" rx="${rx}" ry="${ry}" fill="none" stroke="${i%2?c3:c2}" stroke-width=".7" opacity=".55"/><g><path d="M${50+rx} 46L${54+rx} 50L${50+rx} 54L${46+rx} 50Z" fill="#fff" filter="url(#${g}f)"><animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="${dur}s" repeatCount="indefinite"/></path></g></g>`}
+ // มุม HUD
+ for(const [x,y,sx,sy] of [[-6,-6,1,1],[106,-6,-1,1],[-6,106,1,-1],[106,106,-1,-1]])o+=`<path class="sk-hud" d="M${x} ${y+12*sy}V${y}H${x+12*sx}" fill="none" stroke="${c2}" stroke-width="2.2" stroke-linecap="square"/>`;
+ // บิตข้อมูลลอยขึ้น
+ const nb=big?8:mid?6:4;for(let i=0;i<nb;i++){const x=f1(-8+R()*116),d=(R()*3).toFixed(2);o+=`<text class="sk-bit" x="${x}" y="112" font-size="6" font-family="monospace" fill="${i%2?c2:c3}" style="animation-delay:-${d}s">${R()<.5?'1':'0'}${R()<.5?'1':'0'}</text>`}
+ // ป้ายบน: ตรา
+ const em=r===1?'🌠':r===2?'🛰️':'🧬';
+ o+=`<g class="sk-float"><path d="M34 -14H66L72 -6L66 2H34L28 -6Z" fill="${bg}" stroke="url(#${g})" stroke-width="1.6"/><text x="50" y="-2.5" text-anchor="middle" font-size="9.5">${em}</text>${r===1?`<path d="M50 -30L52.5 -21L50 -18L47.5 -21Z" fill="${c1}" filter="url(#${g}f)"/>`:''}</g>`;
+ // ป้ายล่าง
+ const lab=r===1?`NO.1 · ${PL[p]}`:`#${r} · ${PL[p]}`;
+ o+=`<g><path d="M18 104H82L88 111L82 118H18L12 111Z" fill="${bg}" stroke="url(#${g})" stroke-width="1.4"/><text class="sk-glitch" x="50" y="113.6" text-anchor="middle" font-size="${r===1?7.4:7}" font-weight="700" letter-spacing=".6" fill="${c2}" font-family="'Chakra Petch',monospace">${lab}</text></g>`;
+ return`<svg x="8" y="8" width="84" height="84" viewBox="-20 -20 140 140" overflow="visible" class="skv">${o}</svg>`}
+window.skySvg=skySvg;
+// จับคู่ id → (รอบ อันดับ ตัวสุ่ม)
+function skSpec(id){id=String(id||'');let m=/^f_sk([123])$/.exec(id);if(m)return{p:'m',r:+m[1],s:''};try{m=window.RKG&&RKG.RE.exec(id);if(m&&m[2]==='k')return{p:m[1],r:+m[4],s:m[3]}}catch(e){}return null}
+const MINE=new Set(),CLIP='polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)';
+{const _fw=frWrap;frWrap=function(inner,id){const q=id&&skSpec(id);if(!q)return _fw.apply(this,arguments);
+ try{const M=window.FRSH_M,T=window.FRSH_T;if(M&&T&&!MINE.has(id)){try{_fw.apply(this,arguments)}catch(e){}const key='sk4_'+id,html=skySvg(q.p,q.r,q.s);M[key]=()=>html;T[id]=key;MINE.add(id)}}catch(e){}
+ let h=_fw.apply(this,arguments);try{h=h.replace(/--clip:[^;"]*;?/,'--clip:'+CLIP+';');if(!/ fsh /.test(h))h=h.replace(/class="frw /,'class="frw fsh skf ').replace(/style="/,'style="--clip:'+CLIP+';');else h=h.replace(/class="frw /,'class="frw skf ')}catch(e){}return h}}
+// ---------- ฉายา: ป้ายนีออนโฮโลแกรม ----------
+function skInfo(t,tr){t=String(t||'');try{const o=RKC_OF(t);if(o&&/k$/.test(o.p)&&o.p.length===2)return{p:o.p[0],r:o.r}}catch(e){}
+ try{const g=window._rkGEN&&window._rkGEN.get(t);if(g&&g.c==='k')return{p:g.p,r:g.r}}catch(e){}
+ try{if(window.RKG&&RKG.cat(t)==='k'){const r=RKG.rank(t);if(r)return{p:tr===9?'m':tr===8?'w':'d',r}}}catch(e){}return null}
+{const _rc=rkChip;rkChip=function(t,tr){try{const q=skInfo(t,tr);if(q){const [c1,c2,c3]=PAL[q.r]||PAL[3];return`<span class="skt skt${q.r} skp${q.p}" style="--a:${c2};--b:${c3};--c:${c1}"><i class="skb"></i><i class="sks"></i><span class="ic">${q.r===1?'🌠':q.r===2?'🛰️':'🧬'}</span><span class="tx">${esc(String(t).slice(0,40))}</span><small>#${q.r}·${PLT[q.p]}</small></span>`}}catch(e){}return _rc.apply(this,arguments)}}
+// ---------- ผู้ดูแล: เพิ่มหมวดในหน้าดูฉายาสุ่ม ----------
+{const _oa=window.openRkAdmin;if(typeof _oa==='function'){window.openRkAdmin=async function(p,roll){const r=await _oa.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='rkadm'||m.querySelector('.skAdm'))return r;const p0=p||_oa._p||'d';
+  const j=await (await fetch(API+'?a=rkprev&fmt=json&key='+encodeURIComponent(admK()))).json(),k=j.keys[p0||'d'];
+  const row=`<div class="item skAdm"><b>🌠 ทะลุฟ้าดารา</b>${[1,2,3].map(r=>{const id=RKG.fid(p0,'k',k,r),f=rkgReg(id),t=RKG.title(p0,'k',k,r);try{window._rkGEN&&window._rkGEN.set(t,{p:p0,r,c:'k'})}catch(e){}return`<div style="display:flex;align-items:center;gap:14px;margin-top:10px"><div style="flex:0 0 64px;text-align:center">${frWrap('<span class="frph sm">🙂</span>',id)}</div><div style="min-width:0;flex:1">${rkChip(t,{d:7,w:8,m:9}[p0])}<div class="tag2" style="margin-top:3px">${f?esc(f.n):''}</div></div></div>`}).join('')}</div>`;
+  const items=m.querySelectorAll('.item');const last=items[items.length-1];if(last)last.insertAdjacentHTML('afterend',row)}catch(e){console.error('skAdm',e)}return r};window.openRkAdmin._p=_oa._p}}
+// ---------- สไตล์ ----------
+const st=document.createElement('style');st.textContent=`
+.skv .sk-spinS{transform-origin:50px 50px;animation:skSpin 30s linear infinite}.skv .sk-spinR{transform-origin:50px 50px;animation:skSpin 8s linear infinite reverse}.skv .sk-spinF{transform-origin:50px 50px;animation:skSpin 5s linear infinite}
+.skv .sk-run{animation:skRun 2.4s linear infinite}.skv .sk-scan{animation:skScan 2.8s cubic-bezier(.4,0,.6,1) infinite}
+.skv .sk-hud{animation:skHud 1.8s ease-in-out infinite}.skv .sk-float{animation:skFloat 2.6s ease-in-out infinite}.skv .sk-bit{animation:skBit 3s linear infinite;opacity:0}
+.skv .sk-glitch{animation:skGl 3.4s steps(1) infinite}
+@keyframes skSpin{to{transform:rotate(360deg)}}@keyframes skRun{to{stroke-dashoffset:-120}}@keyframes skScan{0%{transform:translateY(0)}100%{transform:translateY(130px)}}
+@keyframes skHud{0%,100%{opacity:.45}50%{opacity:1}}@keyframes skFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes skBit{0%{transform:translateY(0);opacity:0}15%{opacity:.9}100%{transform:translateY(-120px);opacity:0}}
+@keyframes skGl{0%,92%,100%{transform:none;opacity:1}93%{transform:translateX(1.5px);opacity:.6}95%{transform:translateX(-1.5px)}97%{opacity:.8}}
+.skt{position:relative;display:inline-flex;align-items:center;gap:5px;padding:3px 10px 3px 7px;border-radius:4px;background:linear-gradient(180deg,#0b1a24,#06101a);color:#e8fbff;font:700 12.5px 'Chakra Petch','Sarabun',sans-serif;letter-spacing:.3px;overflow:hidden;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);max-width:100%;vertical-align:middle}
+.skt .skb{position:absolute;inset:0;padding:1.5px;background:linear-gradient(90deg,var(--a),var(--b),var(--c),var(--a));background-size:300% 100%;animation:skBd 3s linear infinite;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.skt .sks{position:absolute;top:0;bottom:0;width:40%;left:-40%;background:linear-gradient(100deg,transparent,#ffffff40,transparent);animation:skSh 2.6s ease-in-out infinite;pointer-events:none}
+.skt .ic{position:relative;filter:drop-shadow(0 0 4px var(--a))}.skt .tx{position:relative;text-shadow:0 0 6px var(--a);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.skt small{position:relative;font:600 9.5px 'Chakra Petch',monospace;color:var(--a);opacity:.9;margin-left:2px}
+.skt1{box-shadow:0 0 12px var(--a)}.skt1 .tx{color:#fff;text-shadow:0 0 8px var(--a),0 0 2px #fff}.sktp.skpm{font-size:13.5px}
+@keyframes skBd{to{background-position:300% 0}}@keyframes skSh{0%{left:-40%}60%,100%{left:120%}}
+@media(prefers-reduced-motion:reduce){.skv [class^=sk-],.skt i{animation:none!important}}`;document.head.appendChild(st);
+})()}catch(e){console.error('block99',e)}
