@@ -33169,13 +33169,14 @@ window.plAdj=function(k,d){if(!PD)return;const t=Object.values(PD).reduce((a,b)=
 const modalEdit=()=>{try{return/บันทึกแผน/.test($('modal').innerText)}catch(e){return false}};
 window.plPre=function(p){const M=S.mw;const L=cats(M);PD={};L.forEach(c=>PD[c[0]]=0);const has=L.some(c=>c[0]==='wa');if(!has&&(p==='world'||p==='safe'))p='bal';
  if(p==='work'){PD.work=8;PD.learn=2;PD.rest=1;PD.fam=1}else if(p==='world'){PD.wa=7;PD.wb=2;PD.work=2;PD.rest=1}else if(p==='safe'){PD.wb=5;PD.work=3;PD.rest=2;PD.fam=2}else{if(has){PD.work=4;PD.wa=3;PD.wb=2;PD.fam=2;PD.rest=1}else{PD.work=5;PD.learn=2;PD.net=2;PD.fam=2;PD.rest=1}}plDraw(modalEdit())};
-window.plGo=function(edit){const M=S.mw;M.plLast=Object.assign({},PD);if(edit){closeM();render();saveGame();return}M.pl={y:M.y,a:Object.assign({},PD)};closeM();passYear()};
+{const _sfM=setFocus;setFocus=function(f){try{const M=S&&S.mw;if(M&&M.native&&!M.kid&&typeof f==='string'&&/^(mw|wx)/.test(f)){M.manF=f;const c=cats(M).find(x=>x[3]===f);if(c){const a=fit(M,M.plLast||def(M)),k=c[0],mx=Math.max(...Object.values(a));if(a[k]<mx||cats(M).some(x=>x[0]!==k&&a[x[0]]===mx)){const need=mx+1-a[k];let left=need;Object.keys(a).sort((x,y)=>a[y]-a[x]).forEach(z=>{if(z===k||left<=0)return;const t=Math.min(left,Math.max(0,a[z]-(z==='rest'?1:0)));a[z]-=t;left-=t});a[k]+=need-left}M.plLast=fit(M,a);if(M.pl&&M.pl.y===M.y)M.pl.a=Object.assign({},M.plLast)}}}catch(e){console.error(e)}return _sfM.apply(this,arguments)}}
+window.plGo=function(edit){const M=S.mw;M.plLast=Object.assign({},PD);M.manF=null;if(edit){closeM();render();saveGame();return}M.pl={y:M.y,a:Object.assign({},PD)};closeM();passYear()};
 // ดักการผ่านปี
 let lastPY=0;
 {const _py=passYear;passYear=function(){try{const M=S&&S.mw;if(M&&M.native&&S.alive&&!M.kid&&!window._noPlan&&!choice._cur&&!(M.pl&&M.pl.y===M.y)){const quick=Date.now()-lastPY<600;lastPY=Date.now();
  if(auto||M.plAsk===0||quick&&M.plLast||(typeof coSeen==='function'&&!coSeen('mw_start'))){M.pl={y:M.y,a:fit(M,M.plLast||def(M))}}else{if(modalOpen&&$('modal').dataset.k==='plan')return;plOpen(false);return}}lastPY=Date.now()}catch(e){console.error(e)}return _py.apply(this,arguments)}}
 // ตั้งโฟกัสหลักก่อนประมวลปี แล้วให้ผลส่วนที่เหลือตามสัดส่วน
-{const _y=mwYear;mwYear=function(){const M=S&&S.mw;let pl=null;try{if(M&&M.native&&!M.kid&&M.pl&&M.pl.y===M.y){pl=M.pl;M.pl.a=fit(M,M.pl.a);const d=dom(M,pl.a);const f=focusOK(d[3])?d[3]:'mwjob';S.focus=f;pl.d=d[0]}}catch(e){console.error(e)}
+{const _y=mwYear;mwYear=function(){const M=S&&S.mw;let pl=null;try{if(M&&M.native&&!M.kid&&M.pl&&M.pl.y===M.y){pl=M.pl;M.pl.a=fit(M,M.pl.a);const d=dom(M,pl.a);let f=focusOK(d[3])?d[3]:'mwjob';try{if(M.manF&&M.manF!==f&&focusOK(M.manF)&&!(M.job==null&&M.manF==='mwjob'&&false))f=M.manF}catch(e){}S.focus=f;pl.d=d[0]}}catch(e){console.error(e)}
  const r=_y.apply(this,arguments);try{if(pl&&S.alive&&!M.kid){const a=pl.a,w=wOf(M),parts=[];
   Object.keys(a).forEach(k=>{const m=a[k];if(!m||k===pl.d)return;const f=m/12;
    if(k==='rest'){const h=heal(m*2.5);joy(Math.round(m*.6));parts.push(`🌿 พัก ${m} เดือน (พลังชีวิต +${h})`)}
