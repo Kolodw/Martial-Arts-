@@ -49715,3 +49715,6 @@ const _oss=openSpecSet;openSpecSet=function(){if(!_isA())return;return _oss.appl
 specAsk=function(){};
 const _md=modal;modal=function(){const r=_md.apply(this,arguments);try{if(!_isA())$('modal').querySelectorAll('[onclick*="openLiveList"],[onclick*="openSpectate"]').forEach(b=>b.remove())}catch(e){}return r};
 }
+
+// ลานประลอง: ส่งอายุไปช่วยจับคู่คนพลัง/อายุใกล้กัน
+{const _asAg=arSnap;arSnap=function(){const o=_asAg.apply(this,arguments);try{o.ag=Math.floor(S.age||0)}catch(e){}return o}}
