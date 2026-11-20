@@ -48171,7 +48171,7 @@ function rdGap(){try{if(auto)return 250;if(speed>=8)return 500;if(speed>=4)retur
 // สร้างบนฐานยุคปัจจุบัน (S.mw) เพื่อให้ระบบยุทธภพทั้งหมดไม่โผล่ แต่ปีของโลกนี้เดินด้วย skyYear() ของตัวเองทั้งหมด
 // =====================================================================
 try{(()=>{
-const SK=()=>S&&S.mw&&S.mw.sky;
+const SK=()=>{const K=S&&S.mw&&S.mw.sky;if(K&&!K._avp)try{avProp(K)}catch(e){}return K};
 const on=()=>!!(S&&S.alive&&SK());
 const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
 const rnd=Math.random;
@@ -48493,11 +48493,8 @@ window.skyStart=function(bg){try{closeM()}catch(e){}
 {const _af=autoFocus;autoFocus=function(){if(on()){const K=SK(),L=fList(K);if(K.rk<0)S.focus=pick(['sk_study','sk_play','sk_study']);else if(K.beast)S.focus=S.hp<S.maxHp*.4?'sk_hide':'sk_feed';else if(S.hp<S.maxHp*.35)S.focus='sk_work';else if(K.wall<35&&age()>=16)S.focus='sk_wall';else S.focus=pick(L.map(f=>f[0]).concat(K.lic?['sk_hunt','sk_body']:['sk_body']));return}return _af.apply(this,arguments)}}
 {const _lm=lifeMax;lifeMax=function(){if(on())return S.mw.end;return _lm.apply(this,arguments)}}
 // ชิงร่าง: ตายในการต่อสู้ มีโอกาสยึดร่างอสูร (ครั้งเดียวต่อชีวิต)
-{const _cd=checkDeath;checkDeath=function(){try{const K=SK();if(K&&S&&S.alive&&K.dieF&&S.deathCause&&!K.swap&&K.rk>=1){const p=cl(.05+K.mind/400,.05,.4);K.dieF=0;if(rnd()<p){K.swap=1;const bn=pick(['หมาป่าเกราะหนาม','ค้างคาวกรีดเสียง','หมูป่าเขาเหล็ก','งูหินลายดาว']);const dc=S.deathCause;S.deathCause=null;S.hp=Math.round(S.maxHp*.6);
-  setTimeout(()=>{try{C('👻 ชิงร่าง',`ระหว่างที่ร่างคุณสิ้นลม จิตของคุณพุ่งเข้าใส่${bn}ที่อยู่ตรงหน้า — สองจิตต่อสู้กันในความมืด <span class="tag2">(${esc(dc)})</span>`,[
-   O('บุกกลืนจิตมัน',()=>{if(rnd()<.6+K.mind/500){K.beast={n:bn,from:'swap'};S.deathCause=null;say(`👻 <b>คุณลืมตาในร่าง${bn}</b> — ความทรงจำยังอยู่ครบ วิชาจิตยังใช้ได้ แต่มือของคุณกลายเป็นกรงเล็บ`,'myth',true);try{keyAdd('ชิงร่างอสูรหลังตายในศึก')}catch(e){}sync();render()}else{die(['ถูกกลืนจิตระหว่างพยายามชิงร่างอสูร'],'👻 จิตของคุณแตกสลายในความมืด')}},'เสี่ยง'),
-   O('อยู่ร่วมร่างกับมัน',()=>{K.beast={n:bn,from:'share'};S.deathCause=null;say(`🤝 คุณกับ${bn}แบ่งร่างกันอยู่ — บางคืนมันคุม บางคืนคุณคุม`,'epic',true);sync();render()},'ปลอดภัยกว่า'),
-   O('ปล่อยวาง',()=>{S.deathCause=dc;setTimeout(()=>{try{_cd()}catch(e){}},200)},'ตายตามปกติ')])}catch(e){console.error(e)}},300);return false}}}catch(e){console.error(e)}return _cd.apply(this,arguments)}}
+{const _cd=checkDeath;checkDeath=function(){try{const K=SK();if(K&&S&&S.alive&&K.dieF&&S.deathCause&&K.rk>=1){K.dieF=0;const n=K.swapN!=null?K.swapN:(K.swap?1:0),dc=S.deathCause,hum=/มือสังหาร|อีกาดำ|ราชัน|ทหาร|พราน|นักล่า|รัฐประหาร|ศิษย์|ดวล|ซ้อม/.test(dc),canEsc=!K.beast&&K.avs&&K.avs.length>0&&!K.f.avEsc,p=cl(.05+(K.mind||0)/400+(hum?0:.1),.05,.4)*(n?.5:1),opp=n<2&&rnd()<p;
+  if(canEsc||opp){S.deathCause=null;S.hp=Math.round(S.maxHp*.5);setTimeout(()=>{try{soulMenu(K,dc,hum,n,canEsc,opp,_cd)}catch(e){console.error(e)}},300);return false}}}catch(e){console.error(e)}return _cd.apply(this,arguments)}}
 
 // ---------- ชุด 1: ตลาดนคร (ที่ใช้เครดิต) + มินิเกมใหม่ 4 แบบ ----------
 // อุปกรณ์จากแก่นอสูร · เซรั่มยีน · ที่อยู่ · ห้องแรงโน้มถ่วง · ข่าวกรอง
@@ -49396,7 +49393,7 @@ const KINGS={
 function allyB(K){const a=A(K);let b=0,L=[];const add=(v,t)=>{b+=v;L.push(t)};
  if(K.f.team)add(.06,'🛡️ ทีมล่า');if(a.kid&&a.kid.end==='team')add(.03,'🧒 '+a.kid.n);if(a.dis&&a.dis.end)add(.03,'🙇 ศิษย์ '+a.dis.n);if(K.f.pack)add(.05,'🐺 ฝูงหมาป่า');
  if(a.sv&&a.sv.st===2)add(.06,'🦌 เขาเงิน');if(a.el&&a.el.warn&&!a.el.burn)add(.05,'🦴 นักรบนิคม');if(K.f.howl)add(.03,'🐺 ภาษาหอน');
- (K.comp||[]).forEach(c=>add(.08,c.ic+' '+c.n));if(K.av)add(.03*(K.av.lv+1),'🐉 ร่างอสูร');if(K.rule)add(Math.min(.12,(K.rule.army|0)*.02),'🪖 กองทัพนคร');if((K.allies|0)>0)add(.04*K.allies,'🤝 นครพันธมิตร');
+ (K.comp||[]).forEach(c=>add(.08,c.ic+' '+c.n));if(K.avs&&K.avs.length)add(Math.min(.2,K.avs.reduce((a,v)=>a+.03*(v.lv+1),0)),'🐉 ร่างแยก ×'+K.avs.length);if(K.rule)add(Math.min(.12,(K.rule.army|0)*.02),'🪖 กองทัพนคร');if((K.allies|0)>0)add(.04*K.allies,'🤝 นครพันธมิตร');
  return{b:Math.min(.45,b),L}}
 function bossFight(K,id,done){if(K.bfOn&&Date.now()-K.bfOn<90000)return;const B=KINGS[id],al=allyB(K),gap=xRank(K)-B.rk;
  C(`${B.ic} ${B.n}`,`${B.d}<br><br><b>ฝ่ายคุณ:</b> ${al.L.length?al.L.join(' · '):'มาคนเดียว'}<br><b>ช่องว่างพลัง:</b> ${gap>=1?'เหนือกว่า':gap>=0?'สูสี':'ต่ำกว่ามาก'} · ศึกนี้มี ${B.ph.length} ช่วง`,[
@@ -49437,7 +49434,7 @@ window.skyAv=function(a,b){const K=SK();if(!K||!K.av)return;const v=K.av;
 // ---------- ปกครองนคร ----------
 const BLD={clinic:['🏥','โรงพยาบาลสลัม',6000,'ความสุข +ทุกปี · คนตายน้อยลง'],acad:['🏫','โรงเรียนนักล่า',9000,'กองทัพ +1 ทุกสองปี'],farm:['🌾','โรงเรือนใหญ่',7000,'ประชากรโต · ความสุข +'],port:['⚓','ท่าเรือข้ามทะเล',12000,'รายได้ +40% · ค้ากับทวีปอสูร'],wall:['🧱','กำแพงชั้นที่สาม',15000,'กำแพงสูงสุด +20 · คลื่นอสูรเบาลง']};
 const TAXN=['ต่ำ','กลาง','สูง'];
-function ruleYear(K){const r=K.rule;if(!r||K.beast)return;r.y=(r.y|0)+1;const b=r.bld||(r.bld={});const inc=Math.round(r.pop*[3,5,8][r.tax]*(b.port?1.4:1));r.tr+=inc;r.hap=cl(r.hap+[3,0,-5][r.tax]+(b.clinic?2:0)+(b.farm?1:0)-(K.wall<40?3:0),0,100);r.pop=Math.round(r.pop*(1+(b.farm?.03:.01)+(r.hap>60?.01:r.hap<30?-.02:0)));
+function ruleYear(K){const r=K.rule;if(!r)return;r.y=(r.y|0)+1;const b=r.bld||(r.bld={});const inc=Math.round(r.pop*[3,5,8][r.tax]*(b.port?1.4:1));r.tr+=inc;r.hap=cl(r.hap+[3,0,-5][r.tax]+(b.clinic?2:0)+(b.farm?1:0)-(K.wall<40?3:0),0,100);r.pop=Math.round(r.pop*(1+(b.farm?.03:.01)+(r.hap>60?.01:r.hap<30?-.02:0)));
  if(b.acad&&r.y%2===0)r.army=(r.army|0)+1;if(b.wall)K.wall=Math.min(100,K.wall+3);const up=Math.min(r.tr,600+r.pop*.5);r.tr-=up;
  feed(`🏛️ ${r.c}: ภาษี${TAXN[r.tax]} · รายได้ +${fmt(inc)} · คลังนคร ${fmt(Math.round(r.tr))} · ความสุข ${Math.round(r.hap)} · ประชากร ${fmt(r.pop*100)}`);
  if(r.hap<20&&rnd()<.4)queue('e2_riot');}
@@ -49449,7 +49446,7 @@ window.skyRule=function(a,b){const K=SK();if(!K||!K.rule)return;const r=K.rule;r
  <div class="skSec">อัตราภาษี</div><div class="skTabs">${TAXN.map((t,i)=>`<button class="${r.tax===i?'on':''}" onclick="skyRule('tax',${i})">${t}</button>`).join('')}</div>
  <div class="skSec">สิ่งก่อสร้าง</div><div class="skList">${Object.keys(BLD).map(k=>{const B=BLD[k],d=r.bld[k];return`<div class="skIt${d?' cur':''}"><div class="skIc">${B[0]}</div><div class="skIx"><b>${B[1]}${d?' <i>มีแล้ว</i>':''}</b><small>${B[3]}</small>${d?'':`<small>${fmt(B[2])} จากคลังนคร</small>`}</div>${d?'':`<button class="skBuy" ${r.tr>=B[2]?'':'disabled'} onclick="skyRule('build','${k}')">สร้าง</button>`}</div>`}).join('')}</div>
  <div class="skSec">เงินส่วนตัว ${fmt(S.money||0)}</div><div class="skZb"><button class="skBuy alt" onclick="skyRule('give',5000)">บริจาค 5,000</button><button class="skBuy alt" onclick="skyRule('give',20000)">บริจาค 20,000</button></div></div>`,'skyrule')};
-function e2Year(K){if(K.beast)return;try{ruleYear(K)}catch(e){console.error(e)}try{avYear(K)}catch(e){console.error(e)}if((K.comp||[]).length&&K.waveIn<=1)wallA(3*K.comp.length);
+function e2Year(K){try{ruleYear(K)}catch(e){console.error(e)}if(K.beast)return;try{hostYear(K)}catch(e){console.error(e)}try{avYear(K)}catch(e){console.error(e)}if((K.comp||[]).length&&K.waveIn<=1)wallA(3*K.comp.length);
  if(e2(K)&&!K.f.e2sig&&K.rk>=8&&rnd()<.15){K.f.e2sig=1;queue('e2_hint')}}
 
 // ---------- แผนที่ทวีปอสูร ----------
@@ -49488,6 +49485,7 @@ def('e2_kk',{c:()=>false,w:0,go(K){if(!ok(K))return;const left=['tiger','whale',
 ['tiger','whale','dragon','shade'].forEach(k=>def('e2_tame_'+k,{c:()=>false,w:0,go(K){const B=KINGS[k],p=cl(.2+(K.mind||0)/400+(K.f.howl?.15:0)+(K.av&&K.av.t===B.tr?.2:0),.1,.9);C(`${B.ic} ${B.n}ล้มลง`,`${B.n}นอนหอบอยู่ตรงหน้าคุณ ตาของมันไม่มีความเกลียด มีแต่ความเหนื่อย — ถ้าจิตคุณแข็งพอ มันอาจยอมรับคุณเป็นจ่าฝูง`,[
  O('ฆ่า เอาแก่น',()=>{K.cores+=12;K.gp+=2;say(`🔶 แก่นราชาเต้นอยู่ในมือคุณ · แก่นอสูร +12 · แต้มยีน +2`,'epic');if(K.av){const s=avGain(K,10);if(s)say(s.replace(/^ · /,''),'epic')}}),
  O('ยื่นมือให้ (ใช้พลังจิต)',()=>{if(rnd()<p){K.comp=K.comp||[];K.comp.push({k,n:B.n,ic:B.ic});say(`🤝 <b>${B.ic} ${B.n}ก้มหัวลงแตะมือคุณ</b> — ราชาอสูรตนแรกที่ยอมอยู่ข้างมนุษย์`,'myth',true);try{keyAdd(`${S.age} ปี — ${B.n}ยอมเป็นสัตว์คู่ใจ`)}catch(e){}}else{const d=hp(.25);say(`💢 มันสะบัดหัวแล้วหนีหายเข้าไปในเขตของมัน · พลังชีวิต −${d}`,'bad')}},'จิต'+pc(p)),
+ O(`กลืนแก่น ปลุกร่าง${B.tr}`,()=>{say(avNew(K,B.tr),'myth',true);try{keyAdd(`${S.age} ปี — ปลุกร่าง${B.tr}`)}catch(e){}},'ร่างแยกเพิ่ม · กินความจุจิต'),
  O('ปล่อยไป',()=>{S.karma+=6;say(`🌿 ${B.n}ลุกขึ้นช้าๆ มองคุณครั้งเดียวแล้วเดินจากไป — อสูรในเขตนั้นไม่เคยโจมตีคนของคุณอีก`,'good')})])}}));
 def('e2_unify',{c:()=>false,w:0,go(K){if(!ok(K)||K.f.unify)return;const al=K.allies|0;C('🌐 สภาสี่นคร',`คลื่นใต้ทะเลรุนแรงขึ้นทุกปี หน่วยสอดแนมทุกนครเห็นตรงกัน — มีบางอย่างใต้ร่องลึกกำลังตื่น ผู้นำสี่นครมาประชุมกันครั้งแรกในรอบสามสิบปี และทุกคนรอฟังผู้ปราบราชาอสูร (นครพันธมิตรตอนนี้: ${al}/3)`,[
  O('เจรจาทีละนคร',()=>{const p=cl(.3+(S.fame||0)/40000+S.karma/300+(K.comp||[]).length*.08,.15,.9);if(rnd()<p){K.allies=Math.min(3,al+1);say(`🤝 อีกหนึ่งนครลงนามในสัญญาร่วม (${K.allies}/3)`,'epic')}else say('🙅 ผู้นำนครนั้นยังไม่ไว้ใจ — ขอดูผลงานอีกสักปี','')},'ลุ้น'+pc(cl(.3+(S.fame||0)/40000+S.karma/300+(K.comp||[]).length*.08,.15,.9))),
@@ -49561,6 +49559,70 @@ def('z_ruin_mirror',{z:'ruin',c:()=>true,cd:5,w:0,go(K){C('🪞 เงาที�
  O('สู้กับตัวเอง',()=>skyMG('seq','🪞 ดวลกับเงา','อ่านท่าของตัวเองให้ออก',sc=>{if(sc>=.55){tqUse(K,['กาย','จิต'],3);say(`🌑 เงาแตกสลายเป็นฝุ่น — คุณรู้จุดอ่อนของตัวเองเพิ่มสามข้อ${xp(80)}`,'epic')}else zL(K,.35,'🌑 เงาเก่งกว่าคุณในวันนี้')}),'มินิเกม'),
  O('ไม่สู้ นั่งลง',()=>{mindA(12);say('🧘 เงานั่งลงตาม แล้วค่อยๆ กลับเข้ามาใต้เท้าคุณ','myth')})])}});
 Object.assign(BST,{k_mount:['⛰️','ราชาภูผาหายใจ','iron','ราชาอสูรแห่งชายฝั่งตะวันออก หายใจทีหนึ่งคลื่นอสูรก่อตัว'],k_tiger:['⚡','ราชาพยัคฆ์อสนี','wind','เสือสายฟ้ายาวสามสิบเมตร ฟ้าผ่าตามเหมือนองครักษ์'],k_whale:['🐋','ราชาวาฬดารา','water','วาฬยาวหนึ่งกิโลเมตร ร้องเพลงเปลี่ยนทิศคลื่น'],k_dragon:['🐉','ราชามังกรเกล็ดเพลิง','fire','อาบลาวาแทนน้ำ เกล็ดหลอมเหล็กได้'],k_shade:['🌑','ราชาอสูรเงา','shadow','ไม่มีใครเคยเห็นตัวมันเต็มๆ'],k_ocean:['🌊','จักรพรรดิมหาสมุทร','water','ทุกคลื่นอสูรเริ่มจากการที่มันพลิกตัว']});
+// =================== ร่างแยกหลายร่าง · หนีตายเข้าร่างแยก · ชิงร่างคน ===================
+function avProp(K){const own=Object.getOwnPropertyDescriptor(K,'av');let old=null;if(own&&'value' in own){old=own.value;delete K.av}
+ if(!Array.isArray(K.avs))K.avs=[];if(old&&!K.avs.length)K.avs.push(old);
+ Object.defineProperty(K,'av',{configurable:true,enumerable:false,get(){return this.avs[this.avm|0]||this.avs[0]||null},set(v){if(!v){const i=this.avm|0;if(this.avs[i])this.avs.splice(i,1);this.avm=0}else{let i=this.avs.indexOf(v);if(i<0){this.avs.push(v);i=this.avs.length-1}this.avm=i}}});
+ Object.defineProperty(K,'_avp',{value:1,enumerable:false,configurable:true})}
+const avUse=K=>(K.avs||[]).reduce((a,v)=>a+v.lv+1,0);
+avB=function(K){if(!K||K.beast||!K.avs||!K.avs.length)return 0;return Math.min(1,K.avs.reduce((a,v)=>a+.12*(v.lv+1),0))};
+const _avYear1=avYear;
+avYear=function(K){if(!K.avs||!K.avs.length||K.beast)return;const over=avUse(K)>avCap(K),keep=K.avm|0;
+ for(let i=0;i<K.avs.length;i++){const v=K.avs[i];K.avm=i;if(over&&rnd()<.25){v.rog=(v.rog|0)+1;feed(`⚠️ ร่าง${v.t}ไม่ฟังคำสั่งทั้งปี — ร่างแยกทั้งหมดกินความจุจิตเกิน (${avUse(K)}/${avCap(K)})`);if(v.rog>=3&&rnd()<.4&&!QU.includes('e2_avrogue')){queue('e2_avrogue');continue}continue}
+  const j=v.job||'hunt';if(j==='hunt'){const c=(400+v.lv*600)*(v.t==='พยัคฆ์อสนี'?1.4:1);let t=`🐉 ร่าง${v.t}ออกล่า · ${cr(c)}`;if(rnd()<.4+v.lv*.1){K.cores++;t+=' · แก่น +1'}feed(t+avGain(K,2))}
+  else if(j==='guard'){wallA(2+v.lv);if(v.t==='วาฬดารา')K.waveIn+=1;feed(`🐉 ร่าง${v.t}เฝ้ากำแพง · กำแพง +${2+v.lv}`+avGain(K,1))}
+  else if(j==='scout'){K.intel=Math.min(5,(K.intel|0)+(v.t==='อสูรเงา'?2:1));feed(`🐉 ร่าง${v.t}สอดแนม · ข่าวกรอง +`+avGain(K,1))}
+  else feed(`🐉 ร่าง${v.t}พักฟื้น`+avGain(K,1))}
+ K.avm=QU.includes('e2_avrogue')?K.avm:Math.min(keep,K.avs.length-1)};
+window.skyAv=function(a,b){const K=SK();if(!K||!K.avs||!K.avs.length)return;if(a==='sel'){K.avm=b;a=null}const v=K.av;
+ if(a==='job'){v.job=b}else if(a==='feed'){if(K.cores<1)return toast('ไม่มีแก่นอสูร');const n=Math.min(K.cores,b||1);K.cores-=n;const s=avGain(K,n*(v.t==='มังกรเกล็ดเพลิง'?1.3:1));toast(`🔶 ป้อนแก่น ${n} ก้อน${s?' · วิวัฒน์!':''}`);if(s)say(s.replace(/^ · /,''),'epic')}
+ const cap=avCap(K),use=avUse(K),T=[['hunt','🗡️ ออกล่า'],['guard','🧱 เฝ้านคร'],['scout','👁️ สอดแนม'],['rest','💤 พัก']];
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="skShop"><div class="skShH"><b>ร่างแยก</b><span>ความจุจิต ${use}/${cap}</span></div>
+ <div class="skCap"><i style="width:${Math.min(100,use/cap*100)}%" class="${use>cap?'over':''}"></i></div>
+ ${K.avs.length>1?`<div class="skTabs">${K.avs.map((x,i)=>`<button class="${(K.avm|0)===i?'on':''}" onclick="skyAv('sel',${i})">${AVT[x.t][0]} ${AVS[x.lv]}</button>`).join('')}</div>`:''}
+ <div class="skAvC"><div class="skAvI">${AVT[v.t][0]}</div><div><b>${v.t} · ${AVS[v.lv]}</b><small>${AVT[v.t][1]} · กินความจุ ${v.lv+1}</small><div class="skTb"><i style="width:${v.lv>=AVMAX?100:Math.round(v.xp/avNeed(K)*100)}%"></i></div><small>${v.lv>=AVMAX?'ขั้นถัดไป “อสูรเดินฟ้า” ต้องรอยุคทะเลดารา':`วิวัฒน์ครั้งถัดไป: ${Math.round(v.xp)}/${avNeed(K)}`}</small>${use>cap?'<small class="warn">⚠ ร่างแยกรวมกันเกินความจุจิต — อาจไม่ฟังคำสั่งหรือคลั่ง ฝึกจิตเพิ่มหรือปล่อยร่างบางร่าง</small>':''}</div></div>
+ <small class="tag2" style="display:block;margin-top:6px">พลังรวมจากร่างแยกทั้งหมด +${Math.round(avB(K)*100)}% (ไม่เกินพลังร่างหลัก) · ${K.f.avEsc?'ใช้สิทธิ์หนีตายเข้าร่างแยกไปแล้ว':'ร่างหลักใกล้ตายในศึก ย้ายจิตเข้าร่างแยกได้ 1 ครั้ง'}</small>
+ <div class="skSec">งานประจำปีของร่างนี้</div><div class="skTabs">${T.map(x=>`<button class="${(v.job||'hunt')===x[0]?'on':''}" onclick="skyAv('job','${x[0]}')">${x[1]}</button>`).join('')}</div>
+ <div class="skSec">ป้อนแก่นอสูร (มี ${K.cores})</div><div class="skZb"><button class="skBuy" ${K.cores?'':'disabled'} onclick="skyAv('feed',1)">ป้อน 1</button><button class="skBuy" ${K.cores>=5?'':'disabled'} onclick="skyAv('feed',5)">ป้อน 5</button><button class="skBuy alt" onclick="skyAvFree()">ปล่อยร่างนี้</button></div>
+ ${(K.comp||[]).length?`<div class="skSec">สัตว์คู่ใจระดับราชา</div>`+K.comp.map(c=>`<div class="skIt"><div class="skIc">${c.ic}</div><div class="skIx"><b>${c.n}</b><small>ช่วยในศึกใหญ่และกันคลื่นอสูร</small></div></div>`).join(''):''}</div>`,'skyav')};
+window.skyAvFree=function(){const K=SK();if(!K||!K.av)return;const v=K.av;closeM();C(`🌲 ปล่อยร่าง${v.t}`,`ร่าง${v.t}ระดับ${AVS[v.lv]}จะกลายเป็นอสูรอิสระ จิตของคุณที่อยู่ในนั้นจะค่อยๆ จางไป — ความจุจิตคืนมา ${v.lv+1}`,[
+ O('ปล่อยไป',()=>{K.av=null;mindA(4);say(`🌲 ร่าง${v.t}หันมามองคุณครั้งสุดท้ายแล้ววิ่งเข้าป่า`,'');sync();render()}),O('ไม่ปล่อย',()=>{})])};
+function avNew(K,t){K.avs=K.avs||[];K.avs.push({t,lv:0,xp:0,job:'hunt'});K.avm=K.avs.length-1;sync();return`🐉 <b>ร่างแยกใหม่ถือกำเนิด — ${AVT[t][0]} ${t}</b> (ตอนนี้มี ${K.avs.length} ร่าง · ความจุ ${avUse(K)}/${avCap(K)})`}
+
+// ---------- ร่างที่ชิงมา: คน ----------
+const HROLE=[[/มือสังหาร/,'มือสังหารของสภา'],[/อีกาดำ/,'อีกาดำ นักล่าทรยศ'],[/ราชัน/,'ราชันคู่แข่ง'],[/ทหาร|รัฐประหาร/,'นายทหารนคร'],[/ศิษย์/,'ศิษย์ที่หันหลังให้คุณ'],[/./,'นักล่าตลาดมืด']];
+function takeHuman(K,dc,share){const role=HROLE.find(x=>x[0].test(dc))[1],n=pick(FN.filter(x=>x!==S.name)),old=K.rk;K.beast=null;
+ K.host={n,role,old:S.name,share:!!share,y:S.age,from:dc};K.rk=cl(K.rk+pick([-1,0,0]),1,RK.length-1);K.sub=R(1,8);K.xp=0;K.genes=Object.keys(GENE).sort(()=>rnd()-.5).slice(0,R(1,2));K.mut=[];K.gear={w:R(1,3),a:R(1,3)};const t=pick(TAL.slice(2,6));K.talK=t[0];K.tal=t[1];
+ if(K.tq)for(const id in K.tq)if(TQ[id][0]!=='จิต')delete K.tq[id];K.genes.forEach(g=>learnTq(K,'g_'+g,1));cr(R(3000,12000)*(1+K.rk*.5));S.power=0;S.maxHp=0;sync();S.hp=Math.round(S.maxHp*.6);
+ say(`👤 <b>คุณลืมตาในร่างของ${n}</b> — ${role} คนที่เพิ่งฆ่าคุณ ขั้น${RK[K.rk].n} มียีน ${K.genes.map(g=>GENE[g][0]).join('·')} · วิชาจิตยังอยู่ วิชากายต้องเริ่มใหม่${share?' · เจ้าของร่างยังไม่หายไปไหน':''}`,'myth',true);
+ try{keyAdd(`${S.age} ปี — ชิงร่าง${n} (${role})`)}catch(e){}later(K,'h_suspect',1);later(K,'h_enemy',2);later(K,'h_home',3);render()}
+function takeBeast(K,bn,share){K.beast={n:bn,from:share?'share':'swap'};say(share?`🤝 คุณกับ${bn}แบ่งร่างกันอยู่ — บางคืนมันคุม บางคืนคุณคุม`:`👻 <b>คุณลืมตาในร่าง${bn}</b> — ความทรงจำยังอยู่ครบ วิชาจิตยังใช้ได้ แต่มือของคุณกลายเป็นกรงเล็บ`,'myth',true);try{keyAdd('ชิงร่างอสูรหลังตายในศึก')}catch(e){}sync();render()}
+function escClone(K){const v=K.avs.slice().sort((a,b)=>b.lv-a.lv)[0];K.avs.splice(K.avs.indexOf(v),1);K.avm=0;K.f.avEsc=1;K.beast={n:'ร่าง'+v.t,from:'clone',t:v.t,lv:v.lv};K.sub=Math.max(1,K.sub-3);S.power=0;S.maxHp=0;sync();S.hp=Math.round(S.maxHp*.7);
+ say(`🐉 <b>จิตของคุณพุ่งข้ามระยะทางเข้าสู่ร่าง${v.t}</b> — ร่างหลักล้มลงในสนามรบ แต่คุณลืมตาในร่างที่คุณเลี้ยงมาเอง มันจำคุณได้ เพราะมันคือคุณ`,'myth',true);try{keyAdd(`${S.age} ปี — หนีตายเข้าร่าง${v.t}`)}catch(e){}render()}
+function soulMenu(K,dc,hum,n,canEsc,opp,_cd){const bn=pick(['หมาป่าเกราะหนาม','ค้างคาวกรีดเสียง','หมูป่าเขาเหล็ก','งูหินลายดาว']),tgt=hum?'ร่างศัตรูที่ฆ่าคุณ':`ร่าง${bn}ตรงหน้า`,pw=cl(.6+K.mind/500-(hum?.15:0)-(n?.1:0),.2,.92),L=[];
+ if(canEsc){const v=K.avs.slice().sort((a,b)=>b.lv-a.lv)[0];L.push(O(`🐉 ย้ายจิตเข้าร่าง${v.t}`,()=>escClone(K),'ปลอดภัย · ครั้งเดียวต่อชีวิต'))}
+ if(opp){K.swapN=n+1;K.swap=1;
+  L.push(O(`👻 กลืนจิต${hum?'เจ้าของร่าง':'อสูร'}`,()=>{if(rnd()<pw){hum?takeHuman(K,dc,0):takeBeast(K,bn,0)}else die(['ถูกกลืนจิต'],'👻 จิตของคุณแตกสลายในความมืด — ถูกกลืนจิต')},'เสี่ยง'+pc(pw)));
+  L.push(O('🤝 อยู่ร่วมร่าง',()=>{hum?takeHuman(K,dc,1):takeBeast(K,bn,1)},'ปลอดภัยกว่า · บางปีเขาแย่งคุม'))}
+ L.push(O('🕊️ ปล่อยวาง',()=>{S.deathCause=dc;setTimeout(()=>{try{_cd()}catch(e){}},200)},'ตายตามปกติ'));
+ C(opp&&!canEsc?'👻 ชิงร่าง':'👻 ศึกในจิต',`ระหว่างที่ร่างคุณสิ้นลม${opp?` จิตของคุณพุ่งเข้าใส่${tgt} — สองจิตต่อสู้กันในความมืด`:''}${canEsc?`${opp?' และ':' '}ไกลออกไป คุณรู้สึกถึงร่างแยกที่รอคุณอยู่`:''} <span class="tag2">(${esc(dc)}${opp&&n?' · ชิงร่างครั้งที่สอง โอกาสครึ่งเดียว':''})</span>`,L)}
+
+def('h_suspect',{c:()=>false,w:0,go(K){const h=K.host;if(!h||K.beast)return;C(`👁️ คนรอบตัว${h.n}`,`ภรรยาของ${h.n}มองคุณนานผิดปกติที่โต๊ะอาหาร “เธอไม่เคยกินผักชี… ตั้งแต่เมื่อไหร่ที่เธอเรียกฉันว่า ‘คุณ’”`,[
+ O('บอกความจริง',()=>{if(rnd()<.4){S.karma+=6;say(`😢 เธอร้องไห้ทั้งคืน แล้วบอกว่า ${h.n}ที่เธอรู้จักตายไปนานแล้ว ตั้งแต่เขาเริ่มรับงานฆ่าคน — เธอยอมให้คุณอยู่ต่อ`,'myth')}else{fameA(-800);say('📣 เธอวิ่งไปแจ้งสมาคม ข่าวลือเรื่อง “ผีในร่างคน” แพร่ไปทั้งนคร','bad')}},'ลุ้น'),
+ O('แกล้งทำเป็นเขาต่อไป',()=>{if(rnd()<.5)say(`🎭 คุณเรียนรู้นิสัย${h.n}จากสมุดบันทึกของเขา — สามเดือนต่อมาไม่มีใครสงสัยอีก`,'');else{mindA(-5);say('🎭 ทุกคืนคุณฝันเห็นชีวิตของเขา จนเริ่มแยกไม่ออกว่าความทรงจำไหนเป็นของใคร','bad')}}),
+ O('ทิ้งชีวิตของเขา ออกจากบ้าน',()=>{say(`🚪 คุณทิ้งบ้านของ${h.n}ไว้พร้อมเงินทั้งหมดในลิ้นชัก — ร่างนี้เป็นของคุณ แต่ชีวิตนี้ไม่ใช่`,'');S.karma+=3})])}});
+def('h_enemy',{c:()=>false,w:0,go(K){const h=K.host;if(!h||K.beast)return;C(`🗡️ ศัตรูของ${h.n}`,`กลุ่มชายสวมหน้ากากดักคุณในซอย “${h.n} แกฆ่าน้องชายข้าเมื่อสามปีก่อน” — คุณจำเหตุการณ์นั้นไม่ได้ แต่ร่างนี้จำได้`,[
+ O('สู้',()=>skyMG('seq','🗡️ สู้ด้วยร่างใหม่','ร่างนี้ยังไม่คุ้นมือ — อ่านจังหวะให้ทัน',sc=>{if(sc>=.5){say(`⚔️ คุณชนะ — กล้ามเนื้อร่างนี้จำท่าได้ก่อนคุณจะคิด${xp(40)}`,'epic')}else zL(K,.35,'🩸 ร่างใหม่ยังไม่ฟังคุณเต็มที่')}),'มินิเกม'),
+ O('บอกว่าคนที่พวกเขาตามหาตายแล้ว',()=>{if(rnd()<.45){S.karma+=5;say('🫥 ชายคนนั้นมองตาคุณนาน — แล้วลดมีดลง “…ตาเจ้าไม่ใช่ตามัน”','myth')}else zL(K,.3,'🔪 ไม่มีใครเชื่อ')}),
+ O(`จ่ายค่าเลือด (${crT(8000)})`,()=>{if(S.money<8000)return say('💸 เงินไม่พอ','');cr(-8000);S.karma+=2;say('💳 พวกเขารับเงินไป — หนี้เลือดของคนอื่นที่คุณต้องจ่ายแทน','')})])}});
+def('h_home',{c:()=>false,w:0,go(K){const h=K.host;if(!h||K.beast)return;C('🏠 บ้านเก่าในร่างคนแปลกหน้า',`คุณยืนหน้าบ้านเก่าของตัวเองในร่างของ${h.n} ${S.spouse?S.spouse+'กำลังรดน้ำต้นไม้ ':''}บนกำแพงบ้านมีรูปถ่ายงานศพของ${h.old}ติดอยู่`,[
+ O('เคาะประตู',()=>{if(rnd()<.5+(K.mind||0)/600){S.karma+=6;mindA(10);say(`🫂 ${S.spouse||'แม่'}มองคุณนิ่ง แล้วพูดชื่อจริงของคุณออกมาเบาๆ — บางคนจำกันได้ด้วยตา ไม่ใช่ด้วยหน้า`,'myth')}else say('🚪 “ขอโทษนะคะ หาใครคะ” — คุณตอบไม่ได้','bad')},'ลุ้น'),
+ O('ทิ้งของขวัญไว้หน้าประตูแล้วเดินจากไป',()=>{cr(-2000);mindA(6);say('🎁 คุณทิ้งซองเงินกับดอกไม้ไว้ ไม่มีชื่อผู้ส่ง','')})])}});
+def('h_share',{c:K=>K.host&&K.host.share&&!K.beast,cd:3,w:6,go(K){const h=K.host;C(`🌗 ${h.n}ตื่นขึ้นในร่าง`,`คืนนี้${h.n}เจ้าของร่างแย่งคุมได้อีกครั้ง คุณดูผ่านตาตัวเองขณะที่เขาเดินไปตลาดมืด — เขาอยากได้ชีวิตคืน`,[
+ O('ต่อสู้ในจิตให้จบ',()=>skyMG('mind','🌗 ศึกในจิต','กดค้างให้เข็มจิตอยู่ในแถบ — จิตไหนแรงกว่าได้ร่างไป',sc=>{if(sc>=.55){h.share=0;mindA(15);say(`👤 เสียงของ${h.n}เงียบไปตลอดกาล ร่างนี้เป็นของคุณคนเดียวแล้ว`,'myth')}else{const d=hp(.3);K.xp=Math.max(0,K.xp-need(K)*.4);say(`🌑 ${h.n}คุมร่างไปสามวัน คุณตื่นมาในที่ที่ไม่รู้จัก · พลังชีวิต −${d}`,'bad')}}),'มินิเกม'),
+ O('เจรจา แบ่งเวลากัน',()=>{S.karma+=3;say(`🤝 กลางวันเป็นของคุณ กลางคืนเป็นของ${h.n} — แปลก แต่ใช้ได้`,'')}),
+ O('คืนร่างให้เขา ปล่อยวาง',()=>{S.deathCause='คืนร่างให้เจ้าของเดิม แล้วจิตก็จางหายไปอย่างสงบ';say(`🕊️ คุณถอยออกมา ให้${h.n}ได้ชีวิตคืน`,'myth',true);setTimeout(()=>{try{checkDeath()}catch(e){}},400)})])}});
+function hostYear(K){const h=K.host;if(!h||K.beast||!h.share)return;if(rnd()<.25){K.xp=Math.max(0,K.xp-need(K)*.25);feed(`🌗 ${h.n}แย่งคุมร่างหลายเดือนในปีนี้ — คุณจำอะไรไม่ได้เลยช่วงนั้น`)}}
 // ---------- หน้าจอ ----------
 {const _rn=render;render=function(){const r=_rn.apply(this,arguments);try{document.body.classList.toggle('skyW',on());if(!on()){const gb=$('goalBox');if(gb&&gb.dataset.skyHid){gb.style.removeProperty('display');delete gb.dataset.skyHid}return r}const K=SK(),fe=$('focus');
  if(fe){fe.innerHTML=fList(K).map(f=>`<button class="fc ${S.focus===f[0]?'on':''}" onclick="setFocus('${f[0]}')">${f[1]} ${f[2]}</button>`).join('');
@@ -49570,10 +49632,10 @@ Object.assign(BST,{k_mount:['⛰️','ราชาภูผาหายใจ','
   const rk=K.rk<0?'ยังไม่ปลุกยีน (สอบวัดยีนตอนอายุ 12)':`ขั้น ${K.rk+1} · ${RK[K.rk].n} <span>${subN(K.sub)}</span>`,pr=K.rk<0?0:cl(K.xp/need(K)*100,0,100);
   const lic=['ยังไม่มี','E','D','C','B','A','S'][K.lic]||'E';
   h.innerHTML=`<div class="skT"><span>ทะลุฟ้าดารา · ${eraN()}</span><span>${esc(K.city)} · ปี ${K.yr}</span></div>
-  ${ttlNow(K)?`<div class="skTt">「${esc(ttlNow(K))}」</div>`:''}<div class="skR">${rk}${K.beast?` <em>👻 ร่าง${esc(K.beast.n)}</em>`:''}</div><div class="skBar"><i style="width:${pr}%"></i></div>
+  ${ttlNow(K)?`<div class="skTt">「${esc(ttlNow(K))}」</div>`:''}<div class="skR">${rk}${K.beast?` <em>👻 ร่าง${esc(K.beast.n)}</em>`:''}${K.host&&!K.beast?` <em>👤 ร่างของ${esc(K.host.n)}</em>`:''}</div><div class="skBar"><i style="width:${pr}%"></i></div>
   <div class="skG"><div><small>กาย</small><b>${fmt(S.power)}</b></div><div><small>จิต${K.mindT?' ✦':''}</small><b class="c">${fmt(Math.round(K.mind))}</b></div><div><small>ยีน ${K.genes.length}/3${K.gp?` · แต้ม ${K.gp}`:''}</small><b class="g">${K.genes.length?K.genes.map(g=>GENE[g][0]).join('·'):'—'}</b></div></div>
   <div class="skG s"><div><small>เครดิต</small><b>${fmt(S.money||0)}</b></div><div><small>ใบอนุญาต</small><b>${lic}</b></div><div><small>กำแพง</small><b class="${K.wall<35?'w':''}">${K.wall}/100</b></div><div><small>แก่น</small><b>${K.cores}</b></div></div>
-  ${K.waveIn<=3&&age()>=6?`<div class="skW">⚠ ระบบนคร: คลื่นอสูรอีก ${Math.max(0,K.waveIn)} ปี</div>`:''}${K.rk>=0&&K.sub>=10&&K.rk<RK.length-1&&!RK[K.rk].g(K)?`<div class="skH">🔒 ข้ามขั้นต้อง: ${RK[K.rk].gate}</div>`:''}${K.mut.length?`<div class="skH">🧪 ${K.mut.map(m=>m[0]).join(' · ')}</div>`:''}${!K.beast&&age()>=10?`<div class="skShB"><button onclick="skyShop()">🏪 ตลาด</button><button class="bk" onclick="skyBook()" aria-label="สารานุกรม">📖</button>${K.av?`<button class="bk" onclick="skyAv()" aria-label="ร่างอสูร">${AVT[K.av.t][0]}</button>`:''}${K.rule?`<button class="bk" onclick="skyRule()" aria-label="นคร">🏛️</button>`:''}${mapOn(K)?`<button class="mp" onclick="skyMap()">🗺️ นอกกำแพง</button>`:''}<span>${HOMEN[K.home|0][0]} ${HOMEN[K.home|0][1]}${K.gear&&(K.gear.w||K.gear.a)?` · 🗡️+${K.gear.w} 🛡️+${K.gear.a}`:''}${K.grav?` · 🏋️ ${K.grav} ปี`:''}${K.intel?` · 📜 ${K.intel}`:''}</span></div>`:''}`}
+  ${K.waveIn<=3&&age()>=6?`<div class="skW">⚠ ระบบนคร: คลื่นอสูรอีก ${Math.max(0,K.waveIn)} ปี</div>`:''}${K.rk>=0&&K.sub>=10&&K.rk<RK.length-1&&!RK[K.rk].g(K)?`<div class="skH">🔒 ข้ามขั้นต้อง: ${RK[K.rk].gate}</div>`:''}${K.mut.length?`<div class="skH">🧪 ${K.mut.map(m=>m[0]).join(' · ')}</div>`:''}${!K.beast&&age()>=10?`<div class="skShB"><button onclick="skyShop()">🏪 ตลาด</button><button class="bk" onclick="skyBook()" aria-label="สารานุกรม">📖</button>${K.avs&&K.avs.length?`<button class="bk" onclick="skyAv()" aria-label="ร่างแยก">${AVT[K.avs[0].t][0]}${K.avs.length>1?'×'+K.avs.length:''}</button>`:''}${K.rule?`<button class="bk" onclick="skyRule()" aria-label="นคร">🏛️</button>`:''}${mapOn(K)?`<button class="mp" onclick="skyMap()">🗺️ นอกกำแพง</button>`:''}<span>${HOMEN[K.home|0][0]} ${HOMEN[K.home|0][1]}${K.gear&&(K.gear.w||K.gear.a)?` · 🗡️+${K.gear.w} 🛡️+${K.gear.a}`:''}${K.grav?` · 🏋️ ${K.grav} ปี`:''}${K.intel?` · 📜 ${K.intel}`:''}</span></div>`:''}`}
  const gb=$('goalBox');if(gb){gb.style.setProperty('display','none','important');gb.dataset.skyHid=1}const gr=$('gRealm');if(gr)gr.textContent=K.rk<0?'เด็กหลังมหันตภัย':`${RK[K.rk].n} ${subN(K.sub)}`}catch(e){console.error('sky render',e)}return r}}
 // แต้มยีน: กดใช้จากหน้าจอ
 window.skyGP=function(){const K=SK();if(!K||!K.gp)return;K.gp--;K.xp+=need(K)*.5;sync();advance();render();toast('🧬 ใช้แต้มยีน · เซลล์ +50% ของชั้นนี้')};
@@ -49651,6 +49713,7 @@ body.skyW #feed,body.skyW .skMg .tag2,body.skyW .skIx small,body.skyW .skZd p,bo
 .skMap.r2{background:radial-gradient(circle at 30% 24%,rgba(255,90,77,.25),transparent 30%),radial-gradient(circle at 86% 24%,rgba(47,212,196,.2),transparent 30%),radial-gradient(circle at 50% 100%,rgba(255,138,61,.25),transparent 40%),repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,transparent 1px 20px),#0d1014}.skZn.d6 b{border-color:#ff2d55;box-shadow:0 0 0 3px #0b1218,0 0 12px #ff2d55}
 .skAvC{display:flex;gap:12px;align-items:center;background:#121c25;border:1px solid #263b4c;padding:10px;margin-top:8px}.skAvI{font-size:44px;width:60px;text-align:center}.skAvC b{display:block;font-size:15px}.skAvC small{display:block;font-size:11.5px;color:#9db3c4;margin-top:3px}.skAvC small.warn{color:#ff8a3d}.skAvC>div:last-child{flex:1;min-width:0}
 .skG.rl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:8px}.skG.rl div{background:#121c25;border:1px solid #263b4c;padding:4px 7px}.skG.rl small{display:block;font-size:10px;color:#9db3c4}.skG.rl b{font-size:14px}.skG.rl b.w{color:#ff8a3d}
+.skCap{height:6px;background:#1d2b37;margin-top:6px}.skCap i{display:block;height:6px;background:#5cd2ff}.skCap i.over{background:#ff4d6a}
 #mwHud.sky .skW{margin-top:8px;background:#2a1608;border:1px solid #ff8a3d;color:#ffc9a3;padding:5px 8px;font-size:12px}#mwHud.sky .skH{margin-top:6px;font-size:12px;color:#9db3c4}
 body.skyW #goalBox{display:none!important}
 body.skyW #modal h3{font-family:'Chakra Petch',inherit}
