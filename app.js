@@ -12930,8 +12930,8 @@ function pxPlay(o){return new Promise(done0=>{const wasP=typeof paused!=='undefi
    if(!st.nh&&k>=T.name){st.nh=1;$m.className='pxmid'}
    if(k>=T.atk&&k<T.hit+.08){try{pxAtkX(c,o,Math.min(1,(k-T.atk)/.9),col,sc,sp,RP.x,RP.y-2,tx,ty)}catch(e){}c.globalAlpha=1;if(o.fxk==='roar'||o.fxk==='tail'||o.fxk==='palm')shx=(Math.random()-.5)*2}
    if(k>=T.flash&&k<T.blast+.6){const a=1-(k-T.flash)/.65;c.fillStyle='#ffffff';c.globalAlpha=Math.max(0,a);c.fillRect(0,0,PXW,PXH);c.globalAlpha=1;$m.className='pxmid'}
-   if(!st.boom&&k>=T.blast+.25){st.boom=1;if(sc<=1)sp(tx,ty-22,.12,.1,170,'#6ab04a',2);const n=30+sc*14;for(let i=0;i<n;i++){const a=Math.random()*6.283,v=.4+Math.random()*(1+sc*.35);sp(tx,ty,Math.cos(a)*v,Math.sin(a)*v*.6-.4,30+Math.random()*40,Math.random()<.4?col[1]:Math.random()<.5?col[0]:'#8a6a4a',1+(Math.random()<.2?1:0))}try{sfx(sc>=6?'realm':'hit')}catch(e){}}
-   if(k>=T.blast+.25&&k<T.after){const a=Math.max(0,1-(k-T.blast-.25)/1.4),R0=Math.min(60,5+sc*5)*(1-a*.6);shx=(Math.random()-.5)*a*(2+sc*.6);shy=(Math.random()-.5)*a*(1+sc*.3);c.globalAlpha=a*.85;pxDisc(c,tx,ty,Math.round(R0),col[1]);c.globalAlpha=a*.5;pxDisc(c,tx,ty,Math.round(R0*1.3),col[0]);c.globalAlpha=1}
+   if(!st.boom&&k>=T.blast+.25){st.boom=1;if(!(window.PFXON&&PFXON())){if(sc<=1)sp(tx,ty-22,.12,.1,170,'#6ab04a',2);const n=30+sc*14;for(let i=0;i<n;i++){const a=Math.random()*6.283,v=.4+Math.random()*(1+sc*.35);sp(tx,ty,Math.cos(a)*v,Math.sin(a)*v*.6-.4,30+Math.random()*40,Math.random()<.4?col[1]:Math.random()<.5?col[0]:'#8a6a4a',1+(Math.random()<.2?1:0))}}try{sfx(sc>=6?'realm':'hit')}catch(e){}}
+   if(k>=T.blast+.25&&k<T.after){const a=Math.max(0,1-(k-T.blast-.25)/1.4),R0=Math.min(60,5+sc*5)*(1-a*.6);shx=(Math.random()-.5)*a*(2+sc*.6);shy=(Math.random()-.5)*a*(1+sc*.3);if(!(window.PFXON&&PFXON())){c.globalAlpha=a*.85;pxDisc(c,tx,ty,Math.round(R0),col[1]);c.globalAlpha=a*.5;pxDisc(c,tx,ty,Math.round(R0*1.3),col[0]);c.globalAlpha=1}}
    if(k>=T.blast+.6&&Math.random()<.5)sp(tx-20+Math.random()*40,ty,(Math.random()-.5)*.2,-.15-Math.random()*.3,90,Math.random()<.5?'#5a5a5a':'#8a8a8a',2);
    if(!st.after&&k>=T.after){st.after=1;$m.className='pxmid';show($t,`<div class="pxg" style="--c:${o.gradeC}"><b>${o.grade}</b><span>${o.gradeN}</span></div>`,'');
     (o.crowd||[]).forEach((q,i)=>setTimeout(()=>{if(!alive)return;const e=document.createElement('div');e.className='pxq';e.style.left=(8+((i*37)%70))+'%';e.style.top=(52+(i%2)*14)+'%';e.textContent=q;$bub.appendChild(e)},350+i*650));
@@ -13457,8 +13457,8 @@ function rlvFrame(st,now){const cv=st.cv,c=cv.getContext('2d'),o=st.o,z=3,col=st
   c.globalAlpha=.25+.25*Math.sin(k*18);pxDisc(c,cx,cy-8,Math.round(6+a*6),col[0]);c.globalAlpha=1}
  if(k>=2&&k<2.98){try{pxAtkX(c,{spec:o.spec,fxk:o.fx},Math.min(1,(k-2)/.9),col,sc,sp,cx,cy,tx,ty)}catch(e){o.spec=null;o.fx='fist'}c.globalAlpha=1}
  if(k>=2.9&&k<3.55){c.fillStyle='#ffffff';c.globalAlpha=Math.max(0,1-(k-2.9)/.65);c.fillRect(0,0,PXW,PXH);c.globalAlpha=1}
- if(!st.boom&&k>=3.2&&k<4){st.boom=1;const n=24+sc*8;for(let i=0;i<n;i++){const a=Math.random()*6.283,v=.6+Math.random()*(1.4+sc*.5);sp(tx,ty,Math.cos(a)*v,Math.sin(a)*v*.6-.6,20+Math.random()*28,Math.random()<.4?col[1]:Math.random()<.5?col[0]:'#8a6a4a',1+(Math.random()<.2?1:0))}}
- if(k>=3.2&&k<4.7){const a=Math.max(0,1-(k-3.2)/1.4),R0=Math.min(60,5+sc*5)*(1-a*.6);shx=(Math.random()-.5)*a*(2+sc*.6);shy=(Math.random()-.5)*a*(1+sc*.3);c.globalAlpha=a*.85;pxDisc(c,tx,ty,Math.round(R0),col[1]);c.globalAlpha=a*.5;pxDisc(c,tx,ty,Math.round(R0*1.3),col[0]);c.globalAlpha=1}
+ if(!st.boom&&k>=3.2&&k<4){st.boom=1;const n=!(window.PFXON&&PFXON())?24+sc*8:0;for(let i=0;i<n;i++){const a=Math.random()*6.283,v=.6+Math.random()*(1.4+sc*.5);sp(tx,ty,Math.cos(a)*v,Math.sin(a)*v*.6-.6,20+Math.random()*28,Math.random()<.4?col[1]:Math.random()<.5?col[0]:'#8a6a4a',1+(Math.random()<.2?1:0))}}
+ if(k>=3.2&&k<4.7){const a=Math.max(0,1-(k-3.2)/1.4),R0=Math.min(60,5+sc*5)*(1-a*.6);shx=(Math.random()-.5)*a*(2+sc*.6);shy=(Math.random()-.5)*a*(1+sc*.3);if(!(window.PFXON&&PFXON())){c.globalAlpha=a*.85;pxDisc(c,tx,ty,Math.round(R0),col[1]);c.globalAlpha=a*.5;pxDisc(c,tx,ty,Math.round(R0*1.3),col[0]);c.globalAlpha=1}}
  if(k>=3.6&&k<6.4&&Math.random()<.4)sp(tx-20+Math.random()*40,ty,(Math.random()-.5)*.3,-.25-Math.random()*.4,50,Math.random()<.5?'#5a5a5a':'#8a8a8a',2);
  const inSp=SPC&&k>=3.5&&k<3.5+SPC;
  if(inSp){if(!st.spc){st.spc=1;st.P=[]}try{pxSpace(c,(k-3.5)/SPC,col,sc,o.w)}catch(e){}}
@@ -29800,7 +29800,7 @@ function scarDraw(ctx,type){if(!S||!Array.isArray(S.scar)||!S.scar.length)return
  VXA=act;const t0=performance.now();let r;try{r=_ds.apply(this,arguments)}finally{VXA=null}
  try{if(isS){ctx.save();ctx.setTransform(PS,0,0,PS,0,0);scarDraw(ctx,type);ctx.restore()}}catch(e){}
  if(act){try{ctx.save();ctx.setTransform(PS,0,0,PS,0,0);VXC=act.C;
-   if(act.type==='fight')VFX.draw(ctx,act.st,act.T,act.p,performance.now()/1000,act.mx||62,102,VQ<2);
+   if(act.type==='fight'){if(!(window.PFXH&&PFXH.scene(ctx,act)))VFX.draw(ctx,act.st,act.T,act.p,performance.now()/1000,act.mx||62,102,VQ<2)}
    else vxBreak(ctx,act);
    ctx.restore();VXC=null}catch(e){try{ctx.restore()}catch(e2){}}
   const dt=performance.now()-t0;vxN++;vxSlow=vxSlow*.9+dt*.1;if(vxN>20&&vxSlow>26&&VQ===2){VQ=1;if(!vxWarned){vxWarned=1;try{toast('⚔️ เครื่องช้า — สลับเอฟเฟกต์ท่าเป็นโหมดประหยัดชั่วคราว')}catch(e){}}}}
@@ -51129,3 +51129,49 @@ window._b92={C,load,MSG};
 .anBt{position:relative;height:150px;display:grid;place-items:center;margin:8px 0}.anBtT{position:absolute;width:70px;height:70px;border-radius:50%;border:3px solid #ffd23a;box-shadow:0 0 12px #ffd23a}.anBtR{position:absolute;width:90px;height:90px;border-radius:50%;border:3px solid #9fe4ff}
 .anLkT{text-align:center;margin:8px 0;font-size:18px}.anLkT b{letter-spacing:8px;color:#ffd23a}.anLkR{display:flex;gap:12px;justify-content:center;margin:10px 0}.anLkB{width:72px;height:72px;border-radius:50%;border:3px solid #5a6a9a;background:radial-gradient(#2a3050,#101420);color:#cfe0ff;font-size:30px}.anLkB.ok{border-color:#7fffb0;color:#7fffb0;box-shadow:0 0 12px #7fffb088}
 `;document.head.appendChild(st)})();
+
+
+// ============================================================
+// BLOCK 93: ⚔️ เอฟเฟกต์ต่อสู้ pixelfx — ทุกฉากพิกเซลที่มีการต่อสู้ (ปลดปล่อยพลัง · ภาพที่แชร์ในแชท · เวทีดวล · ท่าบนฉากหลัก)
+//   สีตามวิชา (สีธาตุของท่า) · ความโหดตามระดับพลัง (6 ขั้น) · โหลดไฟล์ pfx.js เมื่อจำเป็น · ปิดได้ที่ ☰
+//   pixelfx: MIT, Copyright (c) 2026 Patch · Copyright (c) 2026 Hugo Duprez — https://github.com/patch-gg/pixelfx
+// ============================================================
+try{(()=>{
+let st=0;const PV='1';
+const want=()=>{try{return LS.get('murim_pfx',1)!==0}catch(e){return true}};
+const vq=()=>{try{return typeof vfxQ==='function'?vfxQ():1}catch(e){return 1}};
+function load(){if(st||!want())return;st=1;const s=document.createElement('script');s.src='/pfx.js?v='+PV;s.async=true;s.onload=()=>{st=window.PFX?2:0;sync()};s.onerror=()=>{st=0};document.head.appendChild(s)}
+function sync(){try{if(window.PFX)PFX.setQ(want()?Math.max(0,vq()):0)}catch(e){}}
+const on=()=>{if(st!==2){load();return false}if(!want()||vq()<=0)return false;return true};
+window.PFXON=()=>on();
+// โหลดล่วงหน้าตอนเครื่องว่าง
+setTimeout(()=>{try{(window.requestIdleCallback||setTimeout)(()=>load(),{timeout:4000})}catch(e){load()}},6000);
+const tierOf=sc=>{sc=+sc||0;return sc<=1?0:sc<=3?1:sc<=5?2:sc<=7?3:sc<=9?4:5};
+const kOf=s=>{try{return s&&s.k&&s.k.length?s.k[s.k.length>1?1:0]:null}catch(e){return null}};
+function hostOf(c){try{const cv=c&&c.canvas;if(!cv)return[null,0];if(typeof DUS!=='undefined'&&cv===DUS.fx)return[$('duStage'),1];return[cv.isConnected?cv:null,0]}catch(e){return[null,0]}}
+function go(c,kind,a,col,sc,cx,cy,tx,ty){const[h,mir]=hostOf(c);if(!h)return false;const z=h.width/(PXW*3);const X=x=>mir?PXW-x:x;
+ return PFX.atk(h,mir?'e':'m',{a,kind:kind||'beam',tier:tierOf(sc),col,x0:X(cx),y0:cy,x1:X(tx),y1:ty,z})}
+// ---------- 1) ท่าโจมตี (ปลดปล่อย · แชร์ในแชท · เวทีดวล) ----------
+{const _px=pxAtkX;pxAtkX=function(c,o,a,col,sc,sp,cx,cy,tx,ty){try{if(on()&&go(c,kOf(o&&o.spec)||(o&&o.fxk),a,col,sc,cx,cy,tx,ty))return}catch(e){console.error('pfx atk',e)}return _px.apply(this,arguments)}}
+{const _mv=mvDraw;mvDraw=function(c,m,a,sc,sp,cx,cy,tx,ty){try{if(on()&&m&&go(c,m.el,a,m.col,sc,cx,cy,tx,ty))return}catch(e){console.error('pfx mv',e)}return _mv.apply(this,arguments)}}
+// ---------- 2) แรงระเบิดเดิมของเกม ปิดเมื่อ pixelfx ทำงาน (กันซ้อน) ----------
+{const _sh=pxShock;pxShock=function(){if(on())return;return _sh.apply(this,arguments)}}
+{const _db=dusBoom;dusBoom=function(x,y,col,n){if(on()){try{const h=$('duStage');if(h&&n<=16&&col&&col[0]==='#9ad0ff')PFX.hit(h,{x,y:y+6,col,block:1,flip:x<80})}catch(e){}return}return _db.apply(this,arguments)}}
+// ---------- 3) ชาร์จพลังในฉากปลดปล่อย ----------
+{const _pp=pxPlay;pxPlay=function(o){const r=_pp.apply(this,arguments);try{if(o&&o.mode==='rel'&&on()){const sc=o.sc|0,lo=sc<=2,intro=lo?.5:1.1,chg=lo?1.5:2.7,L=[...document.querySelectorAll('.pxs canvas')],h=L[L.length-1];
+ const kd=kOf(o.spec)||o.fxk||'beam';if(h)setTimeout(()=>{try{if(h.isConnected)PFX.charge(h,{x:30,y:76,col:(o.spec&&o.spec.c)||o.col,kind:kd,d:chg-intro,z:h.width/(PXW*3)})}catch(e){}},intro*1000)}}catch(e){}return r}}
+// ตัดไปมุมมองจากอวกาศ: ล้างเอฟเฟกต์ที่ค้างบนฉากเดิม
+{const _spc=pxSpace;pxSpace=function(c){try{if(window.PFX&&c&&c.canvas)PFX.clear(c.canvas)}catch(e){}return _spc.apply(this,arguments)}}
+// ---------- 4) ท่าบนฉากหลักตอนสู้ (เดิมวาดด้วย VFX) ----------
+const STK={sword:'sword',palm:'palm',fist:'fist',thunder:'thunder',fire:'fire',ice:'ice',demon:'dark',buddha:'light'};
+const SC=new WeakMap();
+window.PFXH={scene(ctx,act){try{if(!on())return false;const h=ctx&&ctx.canvas;if(!h)return false;if(act.p<.18)return true;const a=Math.max(0,Math.min(1,(act.p-.18)/.55));
+ const z=(typeof PS!=='undefined'&&PS>0?PS:3)/3,x0=(typeof meX!=='undefined'?meX:62)+3,y0=(typeof meY!=='undefined'?meY:47),x1=x0+40,kd=STK[act.st]||'beam';
+ if(!SC.get(act)){SC.set(act,1);try{PFX.charge(h,{x:x0,y:y0,col:act.C,kind:kd,d:.4,z})}catch(e){}}
+ return PFX.atk(h,'s',{a,kind:kd,tier:Math.max(0,Math.min(5,(act.T|0)+((act.T|0)>=3?1:0))),col:act.C,x0,y0,x1,y1:y0,z})}catch(e){console.error('pfx scene',e);return false}}};
+// ---------- ตั้งค่า + เครดิต ----------
+{const _sv=window.setVfx;if(typeof _sv==='function')window.setVfx=function(){const r=_sv.apply(this,arguments);sync();return r}}
+window.pfxTog=function(){LS.set('murim_pfx',want()?0:1);sync();if(want())load();toast(want()?'⚔️ เปิดเอฟเฟกต์ต่อสู้ pixelfx':'⚔️ ปิดเอฟเฟกต์ pixelfx — กลับไปใช้แบบเดิม');try{closeM();openMenu()}catch(e){}};
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='menu'&&!m.querySelector('.pfxOpt')){const hs=[...m.querySelectorAll('.mch15')].find(x=>/ตั้งค่า/.test(x.textContent)),g=(hs&&hs.nextElementSibling&&hs.nextElementSibling.classList.contains('mgrid'))?hs.nextElementSibling:m.querySelector('.mgrid');if(g)g.insertAdjacentHTML('beforeend',`<button class="opt pfxOpt" onclick="pfxTog()">⚔️ เอฟเฟกต์ต่อสู้ pixelfx<small>${want()?'เปิดอยู่ · แตะเพื่อปิด (ประหยัดเครื่อง)':'ปิดอยู่ · แตะเพื่อเปิด'}</small></button>`)}}catch(e){}return r}}
+try{SYS_GUIDE.push({s:'world',nw:1,ic:'⚔️',t:'เอฟเฟกต์ต่อสู้ pixelfx',d:'ท่าในฉากปลดปล่อยพลัง เวทีดวล ภาพที่แชร์ในแชท และฉากหลักตอนสู้ ใช้เอฟเฟกต์พิกเซลชุดใหม่ สีตามธาตุของวิชา ยิ่งพลังสูงยิ่งโหด (6 ขั้น) · ปิดได้ที่ ☰ → ⚔️ เอฟเฟกต์ต่อสู้ pixelfx · สร้างจาก pixelfx (MIT) โดย Patch และ Hugo Duprez'})}catch(e){}
+})()}catch(e){console.error('block93',e)}
