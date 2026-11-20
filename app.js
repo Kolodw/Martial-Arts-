@@ -49381,7 +49381,7 @@ RATE.push(.55,.5,.45,.42);
 GATEV.push(K=>'e2_king',K=>K.rule?null:'e2_throne',K=>'e2_kk',K=>'e2_unify');
 const ERAS=['ยุคกำแพงเหล็ก','ยุคมหาสมุทรอสูร'];
 const e2=K=>!!K&&K.rk>=6;
-const eraN=()=>{const K=SK();return e2(K)?ERAS[1]:ERAS[0]};
+const eraN=()=>{const K=SK();return K&&K.rk>=10&&K.sp&&ERAS[2]?ERAS[2]:e2(K)?ERAS[1]:ERAS[0]};
 TTL.push(
  [[K=>K.pup&&K.pup.st==='bond','ผู้ข้ามทะเลกับหมาป่า'],[K=>K.f.star,'ผู้ข้ามทะเลตามเสียงดาว'],[()=>1,'ผู้ข้ามทะเลเพลิง']],
  [[K=>K.rule&&K.rule.how==='found','ผู้สร้างนครหัวหาด'],[K=>K.rule&&K.rule.how==='coup','ราชันเหล็ก'],[()=>S.karma>=40,'ราชันของคนวงนอก'],[K=>'ราชันแห่ง'+((K.rule&&K.rule.c)||K.city),1]],
@@ -49499,10 +49499,10 @@ def('e2_unify',{c:()=>false,w:0,go(K){if(!ok(K)||K.f.unify)return;const al=K.all
  O('ใช้กำลังบีบให้ยอม',()=>{if(!K.rule)return say('🪖 คุณไม่มีกองทัพนคร','');const p=cl(.3+(K.rule.army|0)*.06,.15,.9);if(rnd()<p){K.allies=Math.min(3,al+1);K.f.unifyHow='war';S.karma-=10;say(`⚔️ นครหนึ่งยอมแพ้หลังถูกปิดล้อมสามเดือน (${K.allies}/3)`,'')}else{K.rule.army=Math.max(0,(K.rule.army|0)-2);say('🩸 การปิดล้อมล้มเหลว กองทัพเสียหายหนัก','bad')}},'ลุ้น'),
  al>=3?O('นำทัพสี่นครลงร่องลึก',()=>bossFight(K,'ocean',w=>{if(w){K.f.unify=1;if(!K.f.unifyHow)K.f.unifyHow='peace';say('🌐 <b>สี่นครรวมเป็นหนึ่ง</b> — ธงของทุกนครถูกชักขึ้นบนเสาเดียวกันที่ชายฝั่งกระดูก','myth',true);advance()}}),'ศึกสุดท้ายของยุค'):O('รอให้ครบสามนครก่อน',()=>{})])}});
 def('e2_planet',{c:()=>false,w:0,go(K){C('🌍 จ้าวพิภพ','เป็นครั้งแรกตั้งแต่ดาวตก ทั้งโลกมีผู้นำเพียงคนเดียว คลื่นอสูรสงบลง ทะเลเพลิงมีเรือข้ามทุกวัน — แต่คืนแรกที่คุณขึ้นเป็นจ้าวพิภพ หอสัญญาณร้างทุกแห่งทั่วโลกกะพริบพร้อมกัน',[
- O('ขึ้นไปฟังบนหอสัญญาณ',()=>{K.f.e2sig=2;mindA(20);say('📡 ตัวเลขชุดเดิม แต่คราวนี้ตามด้วยคำเดียวในภาษามนุษย์ที่ออกเสียงผิดเพี้ยน — “สุก” <span class="tag2">(ยุคทะเลดาราเปิดในอัปถัดไป)</span>','myth',true)}),
+ O('ขึ้นไปฟังบนหอสัญญาณ',()=>{K.f.e2sig=2;mindA(20);say('📡 ตัวเลขชุดเดิม แต่คราวนี้ตามด้วยคำเดียวในภาษามนุษย์ที่ออกเสียงผิดเพี้ยน — “สุก”','myth',true)}),
  O('จัดงานฉลองให้ทั้งโลก',()=>{fameA(5000);S.karma+=5;say('🎆 พลุถูกจุดได้เป็นครั้งแรกในรอบสามสิบปี — ไม่มีอสูรตัวไหนมา','myth',true)})])}});
 def('e2_signal',{c:()=>false,w:0,go(K){const s=SC(K),e=s&&s.end;C('📡 สัญญาณจากนอกโลก',e==='kill'?'ฟาร์มที่เคยส่งเสียงทุกสิบเจ็ดวินาทีเงียบไปหลายปี — และเจ้าของสังเกตเห็น เรดาร์โลกเก่าจับวัตถุขนาดเท่าเมืองกำลังเคลื่อนเข้ามา':e==='call'?'สัญญาณตอบกลับมาชัดเจนเป็นภาษามนุษย์: “ผู้ฟังได้ยินแล้ว ขึ้นมา” พร้อมพิกัดบนดวงจันทร์':e==='council'?'เครื่องของดร.รำไพหายไปจากห้องนิรภัย สภาแต่ละนครเริ่มขุดซากยานใต้ปล่องอุกกาบาตแข่งกัน':'สัญญาณทุกสิบเจ็ดวินาทีเปลี่ยนจังหวะเป็นครั้งแรกในรอบสามสิบปี — เร็วขึ้น เหมือนหัวใจที่ตื่นเต้น',[
- O('มองขึ้นฟ้า',()=>{K.f.e3=e||'rand';say('🌌 <b>ยุคทะเลดารากำลังมา</b> <span class="tag2">(ขั้น 11 เป็นต้นไปเปิดในอัปถัดไป — ความคืบหน้าถูกเก็บไว้)</span>','myth',true)})])}});
+ O('มองขึ้นฟ้า',()=>{K.f.e3=e||'rand';say('🌌 <b>ยุคทะเลดาราเริ่มต้น</b> — ถึงเวลาออกจากโลก','myth',true);queue('sp_launch')})])}});
 def('e2_hint',{c:()=>false,w:0,go(K){say(pick(['📡 หอสัญญาณร้างในทวีปอสูรเริ่มกะพริบเป็นจังหวะเดียวกับหอในนคร','🌌 ดาวดวงใหม่ปรากฏบนฟ้าทิศเหนือ — มันไม่ได้อยู่ในแผนที่ดาวโลกเก่า','👁️ อสูรในนครโบราณทุกตัวหันหน้าขึ้นฟ้าพร้อมกันตอนเที่ยงคืน']),'myth')}});
 def('e2_riot',{c:()=>false,w:0,go(K){const r=K.rule;if(!r)return;C('🔥 ประชาชนลุกฮือ',`ความสุขใน${r.c}ต่ำจนคนนับหมื่นล้อมวังราชัน ถือป้ายเขียนว่า “ราชันลืมคนวงนอก”`,[
  O('ออกไปคุยตัวต่อตัว',()=>{const p=cl(.35+S.karma/200+(S.fame||0)/30000,.15,.9);if(rnd()<p){r.hap+=25;r.tax=0;say('🎙️ คุณยืนบนรถบรรทุกพูดกับฝูงชนจนรุ่งเช้า ประกาศลดภาษีทันที — ฝูงชนสลายตัวพร้อมเสียงปรบมือ','epic')}else{r.hap+=5;fameA(-1000);say('🍅 มีคนขว้างผักใส่คุณ แต่ไม่มีใครเจ็บ','bad')}},'ลุ้น'),
@@ -49634,7 +49634,7 @@ function hostYear(K){const h=K.host;if(!h||K.beast||!h.share)return;if(rnd()<.25
 {const _rn=render;render=function(){const r=_rn.apply(this,arguments);try{document.body.classList.toggle('skyW',on());if(!on()){const gb=$('goalBox');if(gb&&gb.dataset.skyHid){gb.style.removeProperty('display');delete gb.dataset.skyHid}return r}const K=SK(),fe=$('focus');
  if(fe){fe.innerHTML=fList(K).map(f=>`<button class="fc ${S.focus===f[0]?'on':''}" onclick="setFocus('${f[0]}')">${f[1]} ${f[2]}</button>`).join('');
   if(!fList(K).some(f=>f[0]===S.focus)){S.focus=fList(K)[0][0]}
-  let h=$('mwHud');if(!h){h=document.createElement('div');h.id='mwHud';fe.parentNode.insertBefore(h,fe)}h.classList.add('sky');h.classList.toggle('e2',e2(K));h.classList.remove('mwMin');{const top=document.querySelector('#game .box.top');if(top&&h.previousElementSibling!==top)top.insertAdjacentElement('afterend',h)}
+  let h=$('mwHud');if(!h){h=document.createElement('div');h.id='mwHud';fe.parentNode.insertBefore(h,fe)}h.classList.add('sky');h.classList.toggle('e2',e2(K));h.classList.toggle('e3',K.rk>=10&&!!K.sp);h.classList.remove('mwMin');{const top=document.querySelector('#game .box.top');if(top&&h.previousElementSibling!==top)top.insertAdjacentElement('afterend',h)}
   {const gm=$('gMini');if(gm)gm.innerHTML=`💳 ${fmt(S.money||0)} เครดิต · 🪪 ${['ยังไม่มีใบอนุญาต','ใบอนุญาต E'][Math.min(1,K.lic)]} · 🧱 ${K.wall}/100`}
   const rk=K.rk<0?'ยังไม่ปลุกยีน (สอบวัดยีนตอนอายุ 12)':`ขั้น ${K.rk+1} · ${RK[K.rk].n} <span>${subN(K.sub)}</span>`,pr=K.rk<0?0:cl(K.xp/need(K)*100,0,100);
   const lic=['ยังไม่มี','E','D','C','B','A','S'][K.lic]||'E';
@@ -49642,7 +49642,7 @@ function hostYear(K){const h=K.host;if(!h||K.beast||!h.share)return;if(rnd()<.25
   ${ttlNow(K)?`<div class="skTt">「${esc(ttlNow(K))}」</div>`:''}<div class="skR">${rk}${K.beast?` <em>👻 ร่าง${esc(K.beast.n)}</em>`:''}${K.host&&!K.beast?` <em>👤 ร่างของ${esc(K.host.n)}</em>`:''}</div><div class="skBar"><i style="width:${pr}%"></i></div>
   <div class="skG"><div><small>กาย</small><b>${fmt(S.power)}</b></div><div><small>จิต${K.mindT?' ✦':''}</small><b class="c">${fmt(Math.round(K.mind))}</b></div><div><small>ยีน ${K.genes.length}/3${K.gp?` · แต้ม ${K.gp}`:''}</small><b class="g">${K.genes.length?K.genes.map(g=>GENE[g][0]).join('·'):'—'}</b></div></div>
   <div class="skG s"><div><small>เครดิต</small><b>${fmt(S.money||0)}</b></div><div><small>ใบอนุญาต</small><b>${lic}</b></div><div><small>กำแพง</small><b class="${K.wall<35?'w':''}">${K.wall}/100</b></div><div><small>แก่น</small><b>${K.cores}</b></div></div>
-  ${K.waveIn<=3&&age()>=6?`<div class="skW">⚠ ระบบนคร: คลื่นอสูรอีก ${Math.max(0,K.waveIn)} ปี</div>`:''}${K.rk>=0&&K.sub>=10&&K.rk<RK.length-1&&!RK[K.rk].g(K)?`<div class="skH">🔒 ข้ามขั้นต้อง: ${RK[K.rk].gate}</div>`:''}${K.mut.length?`<div class="skH">🧪 ${K.mut.map(m=>m[0]).join(' · ')}</div>`:''}${!K.beast&&age()>=10?`<div class="skShB"><button onclick="skyShop()">🏪 ตลาด</button><button class="bk" onclick="skyBook()" aria-label="สารานุกรม">📖</button>${K.avs&&K.avs.length?`<button class="bk" onclick="skyAv()" aria-label="ร่างแยก">${AVT[K.avs[0].t][0]}${K.avs.length>1?'×'+K.avs.length:''}</button>`:''}${K.a&&K.a.anc&&K.a.anc.st>=3?`<button class="bk" onclick="skyAnc()" aria-label="ผู้หว่านเมล็ด">🛸</button>`:''}${K.rule?`<button class="bk" onclick="skyRule()" aria-label="นคร">🏛️</button>`:''}${mapOn(K)?`<button class="mp" onclick="skyMap()">🗺️ นอกกำแพง</button>`:''}<span>${HOMEN[K.home|0][0]} ${HOMEN[K.home|0][1]}${K.gear&&(K.gear.w||K.gear.a)?` · 🗡️+${K.gear.w} 🛡️+${K.gear.a}`:''}${K.grav?` · 🏋️ ${K.grav} ปี`:''}${K.intel?` · 📜 ${K.intel}`:''}</span></div>`:''}`}
+  ${K.waveIn<=3&&age()>=6?`<div class="skW">⚠ ระบบนคร: คลื่นอสูรอีก ${Math.max(0,K.waveIn)} ปี</div>`:''}${K.rk>=0&&K.sub>=10&&K.rk<RK.length-1&&!RK[K.rk].g(K)?`<div class="skH">🔒 ข้ามขั้นต้อง: ${RK[K.rk].gate}</div>`:''}${K.mut.length?`<div class="skH">🧪 ${K.mut.map(m=>m[0]).join(' · ')}</div>`:''}${!K.beast&&age()>=10?`<div class="skShB"><button onclick="skyShop()">🏪 ตลาด</button><button class="bk" onclick="skyBook()" aria-label="สารานุกรม">📖</button>${K.avs&&K.avs.length?`<button class="bk" onclick="skyAv()" aria-label="ร่างแยก">${AVT[K.avs[0].t][0]}${K.avs.length>1?'×'+K.avs.length:''}</button>`:''}${K.a&&K.a.anc&&K.a.anc.st>=3?`<button class="bk" onclick="skyAnc()" aria-label="ผู้หว่านเมล็ด">🛸</button>`:''}${K.sp&&K.sp.out?`<button class="bk" onclick="skySpace()" aria-label="อวกาศ">🚀</button>`:''}${K.rule?`<button class="bk" onclick="skyRule()" aria-label="นคร">🏛️</button>`:''}${mapOn(K)?`<button class="mp" onclick="skyMap()">🗺️ นอกกำแพง</button>`:''}<span>${HOMEN[K.home|0][0]} ${HOMEN[K.home|0][1]}${K.gear&&(K.gear.w||K.gear.a)?` · 🗡️+${K.gear.w} 🛡️+${K.gear.a}`:''}${K.grav?` · 🏋️ ${K.grav} ปี`:''}${K.intel?` · 📜 ${K.intel}`:''}</span></div>`:''}`}
  const gb=$('goalBox');if(gb){gb.style.setProperty('display','none','important');gb.dataset.skyHid=1}const gr=$('gRealm');if(gr)gr.textContent=K.rk<0?'เด็กหลังมหันตภัย':`${RK[K.rk].n} ${subN(K.sub)}`}catch(e){console.error('sky render',e)}return r}}
 // แต้มยีน: กดใช้จากหน้าจอ
 window.skyGP=function(){const K=SK();if(!K||!K.gp)return;K.gp--;K.xp+=need(K)*.5;sync();advance();render();toast('🧬 ใช้แต้มยีน · เซลล์ +50% ของชั้นนี้')};
@@ -49928,6 +49928,250 @@ window.skyAnc=function(){const K=SK();if(!K)return;const n=AN(K);const kk={wat:'
  <p>${n.ai?`💠 <b>ญาณ</b> ${n.ai.on?'อยู่กับคุณ':'ไม่ได้อยู่กับคุณ'} · ความไว้ใจ ${n.ai.tr|0}/100 · ระดับ ${n.ai.lv|0}/5 · ความทรงจำ ${n.ai.mem|0}/4`:'ยังไม่พบ AI โบราณ'}</p>
  <p>🗝️ กุญแจ ${keyN(K)} ชิ้น: ${Object.keys(n.keys).map(k=>kk[k]||k).join(' · ')||'—'}</p><p>📜 ตำนานที่รู้ ${n.lore|0}/${LORE.length} · 🗼 หอบททดสอบ ${n.twOn?'ชั้น '+(n.tw|0):'ยังไม่ปรากฏ'}</p>
  ${n.end?`<p>🔭 ทางที่เลือก: ${{call:'📡 ตอบกลับผู้เก็บเกี่ยว',seal:'🛡️ ผนึกซ่อนโลก',ai:'💠 ให้ญาณสมบูรณ์'}[n.end]}</p>`:''}</div>`,'skyanc')};
+
+
+// =================== ยุค 3: ทะเลดารา (ขั้น 11–14) · ยาน · แผนที่ดาว · 4 เผ่า · ดาวในครอบครอง · 6 ฉากจบ ===================
+RK[9].gate='ได้ยานลำแรกแล้วออกจากโลก';RK[9].g=K=>!!(K.sp&&K.sp.out);
+RK.push(
+ {n:'ผู้ข้ามวงโคจร',d:'ออกจากโลกด้วยยานของตัวเอง · ร่างกายทนสุญญากาศ · ชีวิตหนึ่งรอบ 5 ปี',gate:'ยึดดาวดวงแรกมาเป็นของตัวเอง',g:K=>(K.sp.pl||[]).length>=1},
+ {n:'นักเดินทะเลดารา',d:'ข้ามระบบดาวได้ · เผ่าต่างดาวเริ่มรู้จักชื่อ',gate:'เป็นพันธมิตรหรือพิชิตเผ่าต่างดาวได้ 2 เผ่า',g:K=>spAllies(K)>=2},
+ {n:'เจ้าระบบดาว',d:'ครองหลายดาว · มีกองยานของตัวเอง',gate:'ล้มผู้คุมประตูระบบสุริยะ',g:K=>!!K.sp.warden},
+ {n:'ผู้แบกดาวฤกษ์',d:'แกนเซลล์ร้อนเท่าดวงอาทิตย์ · ตัดสินชะตาของโลก',gate:'ยุคดาราจักร (อัปถัดไป)',g:()=>false});
+RATE.push(.4,.37,.34,.32);
+GATEV[9]=K=>K.sp&&K.sp.out?null:(K.f.sigQ?'sp_launch':(K.f.sigQ=1,'e2_signal'));
+GATEV[10]=K=>(K.sp.pl||[]).length?null:'sp_claimq';
+GATEV[11]=K=>'sp_council';
+GATEV[12]=K=>K.sp.warden?null:'sp_warden';
+ERAS.push('ยุคทะเลดารา');
+const e3=K=>!!K&&K.rk>=10&&!!K.sp;
+TTL.push(
+ [[K=>K.sp.how==='crater','ผู้ขุดยานจากหนองหาน'],[K=>K.sp.how==='probe','ผู้แอบขึ้นยานผู้เก็บเกี่ยว'],[()=>1,'ผู้ข้ามวงโคจร']],
+ [[K=>(K.sp.rep.nilar|0)>=60,'มิตรแห่งมหาสมุทรยูโรปา'],[K=>(K.sp.war||{}).vara,'ผู้หักเขาวรากร'],[()=>1,'นักเดินทะเลดารา']],
+ [[K=>(K.sp.pl||[]).length>=3,'เจ้าแห่งสามดาว'],[()=>S.karma>=60,'ผู้ปกครองที่ดาวไว้ใจ'],[()=>1,'เจ้าระบบดาว']],
+ [[K=>K.sp.end==='harvest','ผู้ล้มผู้เก็บเกี่ยว'],[K=>K.sp.end==='fed','ประธานสหพันธ์ดารา'],[K=>K.sp.end==='veil','ผู้ห่มม่านให้โลก'],[K=>K.sp.end==='traitor','ผู้ขายดาวบ้านเกิด'],[()=>1,'ผู้แบกดาวฤกษ์']]);
+{const _e2r=e2Rank;e2Rank=function(K){if(K.rk===10)queue('sp_r11');else if(K.rk===11)queue('sp_r12');else if(K.rk===12)queue('sp_r13');else if(K.rk===13)queue('sp_finale');else return _e2r.apply(this,arguments);ttlCheck(K)}}
+{const _sy=sync;sync=function(){_sy.apply(this,arguments);const K=SK();if(K&&!K.beast&&K.rk>=10)S.mw.end=Math.round(S.mw.end*Math.pow(1.066,Math.max(0,idx(K)-100)))+((K.sp&&K.sp.lsx)|0)}}
+
+const SYS={
+ moon:{n:'ดวงจันทร์',e:'🌕',d:1,t:'ฐานวิจัยไทย-จีนก่อนดาวตกยังตั้งอยู่ในหลุมเงา ไฟฉุกเฉินยังกะพริบมาสามสิบปี',pl:'ฐานจันทร์ราตรี'},
+ mars:{n:'ดาวอังคาร',e:'🔴',d:2,t:'พายุฝุ่นแดงพัดทั้งปี ใต้ทรายมีโครงสร้างโลหะแบบเดียวกับใต้พนมรุ้ง',pl:'อาณานิคมผาแดง'},
+ belt:{n:'แถบดาวเคราะห์น้อย',e:'☄️',d:2,t:'หินนับล้านลอยชนกันช้าๆ เผ่ากาลักขุดแร่และขายทุกอย่างที่ขายได้ — รวมถึงข่าว'},
+ europa:{n:'ยูโรปา',e:'🧊',d:3,t:'ดวงจันทร์น้ำแข็งของดาวพฤหัส ใต้น้ำแข็งหนาสิบกิโลเมตรคือมหาสมุทรที่คิดได้',pl:'สถานีน้ำแข็งนิลา'},
+ saturn:{n:'วงแหวนดาวเสาร์',e:'🪐',d:3,t:'นครผลึกของเผ่าวรากรสร้างบนวงแหวน ทุกเรื่องตัดสินด้วยการดวล',pl:'ท่าเรือไททัน'},
+ jupiter:{n:'เงาหลังดาวพฤหัส',e:'🌑',d:4,hid:1,t:'ที่ที่แสงดาวหายไปเป็นรูปทรงยาวพันกิโลเมตร — เรือของผู้เก็บเกี่ยวจอดนิ่งรอ'},
+ kuiper:{n:'ด่านแถบไคเปอร์',e:'❄️',d:4,hid:1,t:'สถานีลับของเผ่าเธรน นักล่าข้ามดาราจักรที่ตามล่าผู้หว่านเมล็ดมาหนึ่งล้านปี'},
+ seed:{n:'ดาวบ้านเกิดผู้หว่านเมล็ด',e:'🌌',d:5,hid:1,t:'ดาวที่ทั้งดวงเป็นสิ่งมีชีวิตเดียว มันกำลังหลับ — หรือกำลังตาย'}};
+const RACE={galak:['🪲','กาลัก','พ่อค้าแมลงขุดแร่ · รักกำไร เกลียดหนี้'],nilar:['🫧','นิลา','จิตรวมในมหาสมุทร · สื่อสารด้วยเพลง'],vara:['💎','วรากร','นักรบผลึก · เคารพแค่คนที่ดวลชนะ'],thren:['🦂','เธรน','นักล่าข้ามดาราจักร · ศัตรูของผู้หว่านเมล็ด']};
+const SP=K=>K.sp;
+const spAllies=K=>{const s=K.sp;if(!s)return 0;return Object.keys(RACE).filter(r=>(s.rep[r]|0)>=60||(s.war||{})[r]).length};
+const rep=(K,r,d)=>{const s=K.sp;s.rep[r]=cl((s.rep[r]|0)+d,-100,100);return ` · ${RACE[r][0]} ${RACE[r][1]} ${d>=0?'+':''}${d}`};
+const shipP=K=>{const h=K.sp.ship;return (h.eng+h.arm+h.wpn)/3};
+function spNew(K,how,n){K.sp={out:0,how,ship:{n:n||'ไร้นาม',eng:1,arm:1,wpn:1,bay:0},known:{moon:1},vis:{},pl:[],rep:{galak:0,nilar:0,vara:0,thren:0},war:{},ex:-1,y0:S.age}}
+function spFight(K,ti,ph,bonus,win,lose){const F={i:0,s:0};const go=()=>{const p=ph[F.i];mgD(p[0],2+Math.floor((K.rk-10)),`${ti} · ช่วง ${F.i+1}/${ph.length} · ${p[1]}`,p[2],sc=>{F.s+=sc;const d=hp(.16*(1-sc*.6)*(1-K.sp.ship.arm*.06));feed(`⚔️ ช่วง ${F.i+1}: ${sc>=.65?'ได้เปรียบ':sc>=.4?'สูสี':'เสียเปรียบ'} · พลังชีวิต −${d}`);F.i++;if(F.i<ph.length)return setTimeout(go,450);
+  const p2=cl(.15+F.s/ph.length*.55+K.sp.ship.wpn*.05+(bonus||0),.05,.95);if(rnd()<p2)win(F.s/ph.length);else lose(F.s/ph.length)})};go()}
+
+// ---------- มินิเกมยาน 3 แบบ ----------
+const MG4=['dodge','turret','warp'];
+function skyMG4(kind,ti,sub,cb){const d=MGD;MGD=0;MG={kind,cb,t:0,t2:0};
+ if(kind==='dodge'){let lane=1,hp0=3,tick=0,got=0;const R0=[];
+  ancShell(ti,sub,`<div class="spDg" id="spDg"><i class="spShip" id="spSh">🚀</i></div><div class="skScR">เกราะ <b id="spDh">❤️❤️❤️</b> · เก็บ <b id="spDp">0</b></div><div class="spDgB"><button class="pbtn" onclick="spMv(-1)">◀</button><button class="pbtn" onclick="spMv(1)">▶</button></div>`);
+  const box=()=>$('spDg');window.spMv=k=>{lane=cl(lane+k,0,2);const s=$('spSh');if(s)s.style.left=(lane*33.3+16.6)+'%'};spMv(0);
+  MG.t=setInterval(()=>{const b=box();if(!b)return;tick++;if(tick%Math.max(9,16-d*2)===0){const l=Math.floor(rnd()*3),gem=rnd()<.25,e=document.createElement('i');e.className='spRock'+(gem?' gem':'');e.textContent=gem?'💠':'🪨';e.style.left=(l*33.3+16.6)+'%';b.appendChild(e);R0.push({e,l,y:0,gem})}
+   for(const r of R0){r.y+=2.2+d*.5;r.e.style.top=r.y+'%';if(!r.done&&r.y>=78&&r.y<=94&&r.l===lane){r.done=1;r.e.remove();if(r.gem){got++;const p=$('spDp');if(p)p.textContent=got;try{sfx('good')}catch(x){}}else{hp0--;const h=$('spDh');if(h)h.textContent='❤️'.repeat(Math.max(0,hp0))+'🖤'.repeat(3-Math.max(0,hp0));try{sfx('bad')}catch(x){}if(hp0<=0)return mgDone(.1+got*.05)}}if(r.y>104&&!r.done){r.done=1;r.e.remove()}}},45);
+  MG.t2=setTimeout(()=>mgDone(cl(.35+hp0*.17+got*.06,0,1)),13000);return}
+ if(kind==='turret'){let ang=0,sc=0,n=0;const T=[];for(let i=0;i<4;i++)T.push(Math.floor(rnd()*360));
+  ancShell(ti,sub,`<div class="spTr"><div class="spTrC"><i class="spTrG" id="spTg"></i>${T.map((a,i)=>`<b class="spEn" id="spE${i}" style="transform:rotate(${a}deg) translateY(-92px) rotate(${-a}deg)">🛸</b>`).join('')}</div></div><div class="skScR">ยิงโดน <b id="spTs">0</b>/4</div><button class="pbtn skBig" onclick="spFire()">💥 ยิง!</button>`);
+  window.spFire=()=>{if(!MG||MG.kind!=='turret')return;n++;let hit=-1;T.forEach((a,i)=>{if(a==null)return;const df=Math.abs(((ang-a)%360+540)%360-180);if(df<14)hit=i});if(hit>=0){T[hit]=null;sc++;const e=$('spE'+hit);if(e)e.textContent='💥';try{sfx('good')}catch(x){}const s=$('spTs');if(s)s.textContent=sc;if(sc>=4)return mgDone(cl(1-(n-4)*.06,.5,1))}else try{sfx('click')}catch(x){}if(n>=8+Math.max(0,3-d))mgDone(sc/4*.85)};
+  MG.t=setInterval(()=>{ang=(ang+3+d*.8)%360;const g=$('spTg');if(g)g.style.transform=`rotate(${ang}deg)`},30);MG.t2=setTimeout(()=>mgDone(sc/4*.8),16000);return}
+ if(kind==='warp'){const AR=['⬆️','➡️','⬇️','⬅️'],N=6+d,Q=[...Array(N)].map(()=>Math.floor(rnd()*4));let i=0,miss=0,t0=Date.now();
+  ancShell(ti,sub,`<div class="spWp"><div class="spWq" id="spWq"></div><div class="spWt"><i id="spWt"></i></div></div><div class="spWb">${AR.map((a,k)=>`<button class="pbtn" onclick="spWp(${k})">${a}</button>`).join('')}</div>`);
+  const draw=()=>{const q=$('spWq');if(q)q.innerHTML=Q.map((x,k)=>`<b class="${k<i?'ok':k===i?'cur':''}">${AR[x]}</b>`).join('')};draw();
+  const lim=Math.max(6,11-d)*1000;const bar=$('spWt');if(bar){bar.style.transition=`width ${lim}ms linear`;requestAnimationFrame(()=>bar.style.width='0%')}
+  window.spWp=k=>{if(!MG||MG.kind!=='warp')return;if(k===Q[i]){i++;try{sfx('click')}catch(x){}draw();if(i>=N)mgDone(cl(1-miss*.15-(Date.now()-t0)/lim*.25,.3,1))}else{miss++;try{sfx('bad')}catch(x){}if(miss>=4)mgDone(i/N*.5)}};
+  MG.t2=setTimeout(()=>mgDone(i/N*.7),lim);return}}
+{const _mg4=skyMG;skyMG=function(kind,ti,sub,cb){if(MG4.includes(kind)){if(mgAuto()){MGD=0;setTimeout(()=>cb(.35+rnd()*.45),60);return}return skyMG4(kind,ti,sub,cb)}return _mg4.apply(this,arguments)}}
+MGALL.push('dodge','turret','warp');Object.assign(MGN,{dodge:'☄️ หลบอุกกาบาต',turret:'💥 ป้อมปืนหมุน',warp:'🌀 ล็อกพิกัดวาร์ป'});
+
+// ---------- ออกจากโลก ----------
+def('sp_launch',{c:()=>false,w:0,go(K){if(K.sp&&K.sp.out)return;const n=AN(K),e=n.end;C('🚀 ทางออกจากโลก',`โลกทั้งใบฟังคำสั่งคุณแล้ว — แต่ฟ้าไม่ใช่ขอบเขตอีกต่อไป${e==='call'?' สัญญาณที่คุณยิงจากหนองหานถูกตอบกลับแล้ว':e==='ai'?' ญาณบอกพิกัดบ้านเกิดผู้หว่านเมล็ดไว้ในหัวคุณแล้ว':e==='seal'?' ม่านผนึกซื้อเวลาได้ — แต่ไม่ตลอดไป':''} คุณต้องมียาน`,[
+ O('🔐 ขุดยานผู้หว่านเมล็ดใต้หนองหาน',()=>mgD('lock',3,'🔐 ปลดผนึกยานโบราณ','หมุนวงล้อให้ตรงเป้า',sc=>{if(sc>=.45){spNew(K,'crater','ธุลีหนองหาน');K.sp.ship.eng=2;spOut(K,'🛸 ยานรูปเมล็ดสีดำโผล่จากน้ำเดือดกลางหนองหาน มันรู้จักคุณ — ประตูเปิดเองตอนคุณเดินเข้าไป')}else{const d=hp(.2);say(`⚡ ยานปฏิเสธคุณ · พลังชีวิต −${d} — ลองใหม่ปีหน้า`,'bad');later(K,'sp_launch',1)}}),'มินิเกม · ยานเร็ว'),
+ O(`🏗️ สร้างยานด้วยทรัพยากรทั้งโลก (${crT(60000)})`,()=>{if(S.money<60000)return say('💸 คลังไม่พอ — เก็บภาษีเพิ่มอีกสักปี','');cr(-60000);spNew(K,'build','ความหวังมนุษย์');K.sp.ship.arm=2;K.sp.ship.bay=1;spOut(K,'🏗️ อู่ต่อเรือโคราชทำงานสามปีเต็ม ทุกนครส่งเหล็กมาคนละกอง ยาน “ความหวังมนุษย์” ขึ้นจากลานบินพร้อมเสียงเชียร์ทั้งประเทศ')},'ยานแข็งแรง · ห้องเก็บของ'),
+ O('🥷 แอบขึ้นยานสำรวจของผู้เก็บเกี่ยว',()=>skyMG('stealth','🥷 แอบขึ้นยานสำรวจ','ขยับตอนเซ็นเซอร์หันไป',sc=>{if(sc>=.5){spNew(K,'probe','เงาที่ขโมยมา');K.sp.ship.wpn=2;spOut(K,'🛰️ คุณยึดห้องบังคับของยานสำรวจได้ก่อนมันจะส่งสัญญาณกลับ — อาวุธบนยานแปลกประหลาดเกินกว่าใครบนโลกจะสร้างได้')}else{const d=hp(.25);say(`🚨 ยานสำรวจหนีไปพร้อมข้อมูลของคุณ · พลังชีวิต −${d}`,'bad');later(K,'sp_launch',1)}}),'มินิเกม · อาวุธดี'),
+ O('ยังไม่พร้อม',()=>later(K,'sp_launch',2))])}});
+function spOut(K,t){K.sp.out=1;say(t,'myth',true);say(`🚀 <b>ยาน “${esc(K.sp.ship.n)}” ออกจากชั้นบรรยากาศ</b> — ข้างหลังคือประเทศไทยที่เล็กลงจนเหลือแค่จุดเขียวกลางทะเล · เปิดแผงอวกาศได้ที่ปุ่ม 🚀`,'myth',true);try{keyAdd(`${S.age} ปี — ออกจากโลกด้วยยาน ${K.sp.ship.n}`)}catch(e){}try{island({big:1,ic:'🚀',h:'ออกจากโลก',t:K.sp.ship.n,kind:'gold',ms:5500})}catch(e){}if(K.sub>=10)K.xp=Math.max(K.xp,need(K));else K.xp+=need(K)*.6;advance()}
+def('sp_r11',{c:()=>false,w:0,go(K){say('🌌 ร่างกายคุณไม่ต้องการชุดอวกาศอีกแล้ว — เซลล์ปิดตัวเองในสุญญากาศเหมือนเปลือกหอย <span class="tag2">(ยุคนี้ 1 รอบ = 5 ปี)</span>','myth')}});
+def('sp_r12',{c:()=>false,w:0,go(K){say('🌌 เผ่าต่างดาวเริ่มเรียกชื่อคุณผิดๆ ถูกๆ ในวิทยุ — ชื่อที่แปลว่า “มนุษย์ที่ไม่ยอมตาย”','myth')}});
+def('sp_r13',{c:()=>false,w:0,go(K){say('🌌 กองยานเล็กๆ เริ่มตามคุณ ทั้งยานมนุษย์ ยานกาลักที่จ้างมา และยานที่ไม่มีใครรู้ว่ามาจากไหน','myth')}});
+
+// ---------- แผงอวกาศ ----------
+let SPT='map';
+window.skySpace=function(t){const K=SK();if(!K||!K.sp)return;if(t)SPT=t;const s=K.sp,h=s.ship;
+ const T=[['map','🗺️ ระบบดาว'],['ship','🚀 ยาน'],['race','👽 เผ่า'],['pl','🪐 ดาวของคุณ']];let b='';
+ if(SPT==='map'){b=Object.keys(SYS).map(k=>{const Y=SYS[k],kn=s.known[k],far=Y.d>h.eng+1;if(!kn&&Y.hid)return'';return`<div class="spSy ${kn?'':'fog'}"><b>${kn?Y.e+' '+Y.n:'❔ ยังไม่รู้จัก'}</b><small>${'☠'.repeat(Y.d)} · ${kn?Y.t:'ต้องสำรวจระบบข้างเคียงก่อน'}</small>${kn?`<button class="skBuy" ${s.ex===S.age||far?'disabled':''} onclick="spExp('${k}')">${far?'🔒 เครื่องยนต์ต้อง Lv '+(Y.d-1):s.ex===S.age?'รอบนี้ออกไปแล้ว':'🧭 สำรวจ'}</button>`:''}</div>`}).join('')}
+ if(SPT==='ship'){const P=[['eng','🔥 เครื่องยนต์','ไปได้ไกลขึ้น'],['arm','🛡️ เกราะ','บาดเจ็บน้อยลงในศึก'],['wpn','💥 อาวุธ','ชนะศึกยานง่ายขึ้น'],['bay','📦 ห้องสินค้า','รายได้จากดาวและการค้า +20%/Lv']];
+  b=`<div class="skShM">🚀 ${esc(h.n)} · พลังยานเฉลี่ย ${shipP(K).toFixed(1)}</div>`+P.map(([k,n,dd])=>{const lv=h[k]|0,c=Math.round(6000*Math.pow(1.9,lv)),cc=lv+1;return`<div class="spSy"><b>${n} Lv ${lv}</b><small>${dd}</small><button class="skBuy" ${lv>=6||S.money<c||K.cores<cc?'disabled':''} onclick="spUp('${k}')">${lv>=6?'สูงสุด':`อัป ${crT(c)} · แก่น ${cc}`}</button></div>`}).join('')}
+ if(SPT==='race'){b=Object.keys(RACE).map(r=>{const R0=RACE[r],v=s.rep[r]|0,w=(s.war||{})[r];return`<div class="spSy"><b>${R0[0]} ${R0[1]} ${w?'· ⚔️ พิชิตแล้ว':v>=60?'· 🤝 พันธมิตร':''}</b><small>${R0[2]}</small><div class="dzbar"><i style="width:${(v+100)/2}%;background:${v>=0?'#5ad87a':'#e05050'}"></i></div><small>ความสัมพันธ์ ${v}</small></div>`}).join('')}
+ if(SPT==='pl'){const J={mine:'⛏️ ขุดแร่',base:'🛡️ ฐานทัพ',farm:'🌾 เกษตร/อาณานิคม'};b=s.pl.length?s.pl.map((p,i)=>`<div class="spSy"><b>🪐 ${esc(p.n)}</b><small>${J[p.job]} · ประชากร ${fmt(p.pop|0)}</small><div class="skTabs">${Object.keys(J).map(j=>`<button class="${p.job===j?'on':''}" onclick="spJob(${i},'${j}')">${J[j]}</button>`).join('')}</div></div>`).join(''):'<p class="tag2">ยังไม่มีดาวในครอบครอง — สำรวจดวงจันทร์ ดาวอังคาร ยูโรปา หรือวงแหวนดาวเสาร์</p>'}
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="skShop"><div class="skShH"><b>🚀 ทะเลดารา</b><span>${eraN()}</span></div><div class="skTabs">${T.map(x=>`<button class="${SPT===x[0]?'on':''}" onclick="skySpace('${x[0]}')">${x[1]}</button>`).join('')}</div>${b}</div>`,'skysp')};
+window.spUp=function(k){const K=SK(),h=K.sp.ship,lv=h[k]|0,c=Math.round(6000*Math.pow(1.9,lv));if(lv>=6||S.money<c||K.cores<lv+1)return;cr(-c);K.cores-=lv+1;h[k]=lv+1;toast('🔧 อัปเกรดแล้ว');skySpace()};
+window.spJob=function(i,j){const K=SK();K.sp.pl[i].job=j;skySpace()};
+window.spExp=function(k){const K=SK(),s=K.sp,Y=SYS[k];if(!Y||s.ex===S.age||Y.d>s.ship.eng+1)return;s.ex=S.age;s.vis[k]=(s.vis[k]|0)+1;closeM();say(`🧭 ยาน ${esc(s.ship.n)} มุ่งหน้าไป<b>${Y.e} ${Y.n}</b>`,'');
+ const L=Object.keys(EV).filter(e=>{const x=EV[e];if(x.sy!==k)return false;if(x.once&&K.seen[e])return false;if(x.cd&&K.cd[e]!=null&&S.age-K.cd[e]<x.cd)return false;try{return x.c(K)}catch(_){return false}});const pri=L.filter(e=>EV[e].pri);const ev=pri.length?pri[0]:L.length&&rnd()<.75?pick(L):null;
+ if(ev){queue(ev);flush()}else spBasic(K,k);render()};
+function spKnow(K,k){if(!SYS[k]||K.sp.known[k])return'';K.sp.known[k]=1;return` · 🗺️ <b>พบพิกัดใหม่: ${SYS[k].e} ${SYS[k].n}</b>`}
+const SPN={moon:['mars','belt'],mars:['belt','europa'],belt:['saturn','europa'],europa:['jupiter','saturn'],saturn:['kuiper'],jupiter:['kuiper'],kuiper:['seed'],seed:[]};
+function spBasic(K,k){const Y=SYS[k];C(`${Y.e} ${Y.n}`,Y.t,[
+ O('ฝ่าดงอุกกาบาตเก็บแร่',()=>mgD('dodge',Y.d-1,'☄️ ดงอุกกาบาต','เลื่อนยานหลบหิน เก็บผลึกสีฟ้า',sc=>spRes(K,k,sc)),'มินิเกม'),
+ O('สแกนหาพิกัดใหม่',()=>mgD('warp',Y.d-1,'🌀 ล็อกพิกัด','กดลูกศรตามลำดับให้ทัน',sc=>{if(sc>=.45){const nb=(SPN[k]||[]).filter(x=>!K.sp.known[x]);say(`📡 สแกนสำเร็จ${xp(20+Y.d*8)}${nb.length?spKnow(K,pick(nb)):' · ไม่มีพิกัดใหม่แถวนี้'}`,'good')}else say('📡 สัญญาณรบกวนจากดาวฤกษ์ — ไม่ได้อะไร','')}),'มินิเกม · หาระบบดาวใหม่'),
+ O('กลับฐาน',()=>{})])}
+function spRes(K,k,sc){const Y=SYS[k];if(sc>=.4){const g=Math.round((3000+Y.d*3500)*(1+(K.sp.ship.bay|0)*.2)*(.6+sc));K.cores+=Y.d;say(`💠 กลับมาพร้อมแร่ดาว ${cr(g)} · แก่น +${Y.d}${xp(15+Y.d*10)}`,'good')}else{const d=hp(.08*Y.d*(1-K.sp.ship.arm*.08));say(`🪨 หินกระแทกตัวยาน · พลังชีวิต −${d}`,'bad')}}
+
+// ---------- รายปีของยุค 3 ----------
+function e3Year(K){const s=K.sp;S.age+=4;K.yr+=4;try{S.mw.y+=4}catch(e){}
+ let inc=0;(s.pl||[]).forEach(p=>{p.pop=Math.round((p.pop|0)*(p.job==='farm'?1.25:1.06)+50);if(p.job==='mine')inc+=6000+p.pop*2;else if(p.job==='farm'){inc+=1500+p.pop;S.karma+=1}else{inc+=1000}});
+ if(inc){inc=Math.round(inc*(1+(s.ship.bay|0)*.2));feed(`🪐 รายได้จากดาวในครอบครอง ${cr(inc)}`)}
+ if(s.route)feed(`🛰️ เส้นทางการค้ากับกาลัก ${cr(4000*(1+(s.ship.bay|0)*.2))}`);
+ if(rnd()<.35)feed(pick(['🌌 ยานลอยผ่านเนบิวลาสีชมพูกว้างสามปีแสง ลูกเรือทุกคนเงียบ','📻 วิทยุจับเพลงลูกทุ่งที่โลกส่งออกมาเมื่อห้าปีก่อน — คลื่นเพิ่งเดินทางมาถึง','🛰️ ดาวเทียมเก่าลอยผ่าน มีสติกเกอร์ธงไทยซีดจาง','🍜 คุณแบ่งบะหมี่กึ่งสำเร็จรูปซองสุดท้ายจากโลกให้ลูกเรือคนละคำ','⏳ ข่าวจากโลกมาช้าห้าปีเสมอ — คุณเพิ่งรู้ว่านครหาดใหญ่มีผู้ว่าคนใหม่']));
+ if(!s.out)return;if(s.end&&!K.f.e3p){K.f.e3p=1}}
+{const _e2y=e2Year;e2Year=function(K){const r=_e2y.apply(this,arguments);try{if(!K.beast){if(K.rk===9&&K.f.sigQ&&!(K.sp&&K.sp.out)&&!K.f.spQ){K.f.spQ=1;queue('sp_launch')}if(e3(K)&&K.sp.out)e3Year(K)}}catch(e){console.error('e3',e)}return r}}
+const ok3=K=>ok(K)&&e3(K)&&K.sp.out;
+const def3=(id,o)=>{if(o.c){const c0=o.c;o.c=K=>ok3(K)&&c0(K)}def(id,o)};
+
+// ---------- เหตุการณ์ตามระบบดาว ----------
+def3('sy_moon',{sy:'moon',pri:1,once:1,c:()=>true,w:0,go(K){C('🌕 ฐานวิจัยในหลุมเงา','ประตูฐานเปิดเองตอนคุณเข้าใกล้ AI ของฐานยังทำงาน มันเรียกคุณว่า “ทีมกู้ภัย” และถามว่าทำไมมาช้าสามสิบปี ในห้องเย็นมีนักวิจัยแปดคนที่ยังหลับอยู่ในแคปซูล',[
+ O('ปลุกนักวิจัย',()=>mgD('dna',1,'🧪 ปลุกจากการแช่แข็ง','ต่อยีนให้ตรงก่อนเซลล์แตก',sc=>{if(sc>=.5){K.sp.crew=(K.sp.crew|0)+8;S.int=(S.int||0)+20;say('🧑‍🔬 นักวิจัยแปดคนตื่นมาร้องไห้เมื่อรู้ว่าโลกเป็นอย่างไร — แล้วขอเป็นลูกเรือของคุณ','epic')}else{K.sp.crew=(K.sp.crew|0)+3;S.karma-=2;say('🧊 รอดแค่สามคน','bad')}}),'มินิเกม'),
+ O('ยึดฐานเป็นดาวแรก',()=>spClaim(K,'moon')),
+ O('เอาแค่ข้อมูลกลับ',()=>{S.int=(S.int||0)+10;say(`💾 ข้อมูลวิจัยก่อนดาวตกทั้งหมด${spKnow(K,'mars')}`,'good')})])}});
+def3('sy_mars',{sy:'mars',pri:1,once:1,c:()=>true,w:0,go(K){C('🔴 ใต้ทรายแดง','พายุฝุ่นเปิดเผยโครงสร้างโลหะยาวหลายกิโลเมตร — ลวดลายเดียวกับใต้พนมรุ้ง '+(aiOn(K)?'ญาณเงียบไปนาน “ที่นี่คือแปลงทดลองแรก ก่อนโลก”':'มันกะพริบเมื่อคุณเข้าใกล้'),[
+ O('ส่องแสงเปิดห้องใต้ทราย',()=>mgD('light',2,'☀️ แสงบนดาวแดง','ล็อกแสงให้ตรงช่อง',sc=>{if(sc>=.5){AN(K).lore++;K.gp+=2;say(`📜 ห้องใต้ทรายเต็มไปด้วยซากอสูรที่ “งอกผิดทาง” ของดาวอังคาร — ดาวทั้งดวงเคยมีชีวิต · แต้มยีน +2${xp(60)}`,'myth')}else say('🌪️ พายุกลบทางเข้าอีกครั้ง','')}),'มินิเกม'),
+ O('ตั้งอาณานิคมผาแดง',()=>spClaim(K,'mars')),O('ถอย',()=>{})])}});
+def3('sy_belt',{sy:'belt',c:()=>true,cd:5,w:0,go(K){C('🪲 ตลาดกาลัก','ยานแมลงยักษ์เปิดฝาท้องเป็นตลาดลอยฟ้า พ่อค้ากาลักหกขาเสนอ “ข่าวลับ แร่ต้องห้าม หรือสัญญาการค้า — ต่อราคาได้ถ้าฉลาดพอ”',[
+ O('ต่อราคาแบบกาลัก (ปริศนาตัวเลข)',()=>mgD('quiz',2,'🧮 ต่อราคากับกาลัก','ตอบให้ไวกว่าพ่อค้า',sc=>{if(sc>=.66){K.sp.route=1;say(`🤝 กาลักหัวเราะเสียงคลิก “มนุษย์ที่คิดเลขเป็น!” — ได้เส้นทางการค้าถาวร${rep(K,'galak',25)}`,'epic')}else say(`🪲 ขาดทุนนิดหน่อย ${cr(-2000)}${rep(K,'galak',5)}`,'')}),'มินิเกม · เส้นทางการค้า'),
+ O(`ซื้อข่าวพิกัดลับ (${crT(8000)})`,()=>{if(S.money<8000)return say('💸 ไม่พอ','');cr(-8000);say(`📜 ข่าวที่ซื้อมา${spKnow(K,K.sp.known.jupiter?'kuiper':'jupiter')}${rep(K,'galak',8)}`,'good')}),
+ O('ปล้นยานตลาด',()=>spFight(K,'🪲 ปล้นตลาดกาลัก',[['turret','💥 ยิงป้อมยาม','ยิงให้โดน'],['dodge','☄️ หนีฝูงยานไล่ล่า','หลบหิน']],0,()=>{K.sp.war.galak=1;say(`💰 คุณขนแร่ออกมาเต็มยาน ${cr(30000)}${rep(K,'galak',-60)}`,'bad');S.karma-=15},()=>{const d=hp(.3);say(`🪲 ยานยามกาลักไล่ยิงคุณออกจากแถบหิน · พลังชีวิต −${d}${rep(K,'galak',-30)}`,'bad')}),'ศึกยาน')])}});
+def3('sy_europa',{sy:'europa',c:()=>true,cd:5,w:0,go(K){C('🫧 เพลงใต้น้ำแข็ง','คุณเจาะน้ำแข็งลงไปถึงมหาสมุทร เสียงร้องดังขึ้นจากทุกทิศ — ไม่ใช่เสียงสัตว์ แต่เป็นจิตเดียวที่ใหญ่เท่ามหาสมุทร มันอยากรู้ว่าคุณ “ร้องเพลงอะไรเป็นบ้าง”',[
+ O('ร้องตอบตามจังหวะ',()=>mgD('beat',2,'🎵 คุยกับนิลาด้วยเพลง','แตะตามจังหวะ',sc=>{if(sc>=.55)say(`🫧 มหาสมุทรสั่นเป็นจังหวะเดียวกับคุณ — นิลาจำชื่อคุณได้แล้ว${rep(K,'nilar',25)}${xp(30)}`,'myth');else say(`🫧 นิลาสับสน แต่ยังอยากฟังอีก${rep(K,'nilar',6)}`,'')}),'มินิเกม'),
+ O('เปิดเพลงลูกทุ่งจากโลกให้ฟัง',()=>{say(`📻 “มนต์รักลูกทุ่ง” ดังลงไปใต้น้ำแข็ง — สามวันต่อมาทั้งมหาสมุทรร้องเพลงนั้นกลับมาเป็นภาษาของมันเอง${rep(K,'nilar',15)}`,'myth')}),
+ O('ตั้งสถานีน้ำแข็ง',()=>spClaim(K,'europa')),
+ O('ดึงความทรงจำของนิลามาเป็นอาวุธ',()=>{S.karma-=12;K.gp+=2;say(`🧠 คุณขโมยความรู้หมื่นปีจากจิตที่ไว้ใจคุณ · แต้มยีน +2${rep(K,'nilar',-50)}`,'bad')})])}});
+def3('sy_saturn',{sy:'saturn',c:()=>true,cd:5,w:0,go(K){C('💎 ท้าดวลบนวงแหวน','นักรบผลึกวรากรยืนขวางท่าเรือ “ที่นี่ไม่มีการเจรจา มีแค่การดวล ชนะ — เจ้าพูดได้ แพ้ — เจ้าเป็นผลึกประดับนครเรา”',[
+ O('ดวลตัวต่อตัว',()=>spFight(K,'💎 ดวลวรากร',[['tap','⚔️ ทุบผลึก','แตะรอยร้าว'],['beat','🎵 อ่านจังหวะดาบผลึก','แตะตามจังหวะ'],['scan','🎯 แทงแกนกลาง','กดตอนเข็มตรงหัวใจ']],(K.rk-10)*.06,()=>{say(`💎 นักรบผลึกคุกเข่า “เจ้าพูดได้แล้ว มนุษย์”${rep(K,'vara',30)}${xp(70)}`,'myth')},()=>{const d=hp(.35);say(`💎 คุณถูกผลักตกวงแหวน ลอยกลางอวกาศสองวันก่อนยานมารับ · พลังชีวิต −${d}${rep(K,'vara',-5)}`,'bad')}),'ศึก 3 ช่วง'),
+ O('ส่งกองยานบุกยึดนคร',()=>spFight(K,'💎 บุกนครผลึก',[['turret','💥 ยิงป้อมผลึก','ยิงให้โดน'],['dodge','☄️ ฝ่าเศษวงแหวน','หลบ'],['warp','🌀 วาร์ปเข้าวงใน','กดตามลำดับ']],-.08,()=>{K.sp.war.vara=1;spClaim(K,'saturn',1);say(`⚔️ นครผลึกยอมแพ้${rep(K,'vara',-40)}`,'epic')},()=>{const d=hp(.4);say(`💥 กองยานคุณแตกกลางวงแหวน · พลังชีวิต −${d}${rep(K,'vara',-20)}`,'bad')}),'ศึกยาน · พิชิต'),
+ O('ถอย',()=>{})])}});
+def3('sy_jup',{sy:'jupiter',pri:1,once:1,c:()=>true,w:0,go(K){C('🌑 เงาที่ไม่สะท้อนแสง','เรือของผู้เก็บเกี่ยวยาวเกินกว่าตาจะมองเห็นสุด ผิวมันกลืนแสงทั้งหมด ยานสำรวจเล็กๆ นับพันว่ายรอบมันเหมือนปลาเล็กรอบวาฬ — และพวกมันหันมาทางคุณพร้อมกัน',[
+ O('ยิงยานสำรวจแล้วหนี',()=>spFight(K,'🌑 หนีจากฝูงยานสำรวจ',[['turret','💥 ยิงฝ่าวงล้อม','ยิงให้โดน'],['warp','🌀 วาร์ปหนี','กดตามลำดับ']],0,()=>{K.f.jupSeen=1;say(`📡 คุณหนีมาได้พร้อมภาพสแกนภายในเรือ — ห้องเก็บเซลล์นับล้านห้อง รอเพียงการเก็บเกี่ยว${xp(60)}${spKnow(K,'kuiper')}`,'myth',true)},()=>{const d=hp(.45);K.f.jupSeen=1;say(`🩸 ยานคุณพรุนทั้งลำ · พลังชีวิต −${d}`,'bad')}),'ศึกยาน'),
+ O('เงียบ — ปิดเครื่องลอยผ่าน',()=>skyMG('stealth','🥷 ลอยผ่านเงา','ขยับตอนเซ็นเซอร์หันไป',sc=>{K.f.jupSeen=1;if(sc>=.5)say(`🫥 ยานคุณลอยผ่านไปเหมือนเศษหิน${spKnow(K,'kuiper')}`,'epic');else{const d=hp(.3);say(`🚨 พวกมันจับได้ · พลังชีวิต −${d}`,'bad')}}),'มินิเกม')])}});
+def3('sy_kuiper',{sy:'kuiper',pri:1,once:1,c:()=>true,w:0,go(K){C('🦂 ด่านของเธรน','นักล่าเธรนรูปร่างเหมือนแมงป่องสูงสามเมตรล้อมยานคุณ หัวหน้าชี้มาที่คุณ “เจ้าพกกลิ่นของผู้หว่านเมล็ด — เจ้าคือเมล็ด หรือคือคนเก็บเมล็ด?”',[
+ O('“ข้าคือคนที่จะล้มผู้เก็บเกี่ยว”',()=>{say(`🦂 เธรนส่งเสียงคลิกยาวเหมือนหัวเราะ “ศัตรูของศัตรู — พิสูจน์ด้วยเลือด”${rep(K,'thren',20)}`,'epic');later(K,'sp_thren2',1)}),
+ O(aiOn(K)?'ส่งญาณให้เธรนแลกพันธมิตร':'ขายข้อมูลผู้หว่านเมล็ด',()=>{if(aiOn(K)){AN(K).ai.on=0;AN(K).ai.gone='thren';S.karma-=15;say(`💠 ญาณไม่พูดอะไรตอนถูกยื่นให้ เธรนบดหินในมือจนแหลก${rep(K,'thren',60)}`,'bad',true)}else say(`📜 เธรนรับข้อมูลไป${rep(K,'thren',20)}`,'')}),
+ O('สู้!',()=>spFight(K,'🦂 ศึกเธรน',[['tap','⚔️ หลบหาง','แตะให้ไว'],['turret','💥 ยิงยานล่า','ยิงให้โดน'],['mind','🧠 ต้านพิษจิต','คุมจิต']],-.1,()=>{K.sp.war.thren=1;say(`🦂 เธรนยอมแพ้ และเคารพคุณในแบบของนักล่า${xp(90)}`,'myth')},()=>{const d=hp(.5);say(`🩸 พิษเธรนทำให้คุณเป็นอัมพาตครึ่งปี · พลังชีวิต −${d}${rep(K,'thren',-20)}`,'bad')}),'ศึก 3 ช่วง')])}});
+def('sp_thren2',{c:()=>false,w:0,go(K){C('🦂 พิธีเลือดของเธรน','เธรนพาคุณไปลานล่าบนดาวน้ำแข็ง “ล่าสัตว์ที่ผู้หว่านเมล็ดทิ้งไว้ — ตัวที่ใหญ่ที่สุด”',[
+ O('ล่า',()=>spFight(K,'🦂 ล่าอสูรดาวน้ำแข็ง',[['stealth','🥷 ย่องเข้าหา','ขยับตอนมันหันไป'],['tap','⚔️ แทงจุดอ่อน','แตะให้ไว']],.05,()=>say(`🦂 เธรนสลักชื่อคุณไว้บนเกราะ${rep(K,'thren',40)}${xp(60)}`,'myth'),()=>{const d=hp(.3);say(`🩸 อสูรหนีไป · พลังชีวิต −${d}${rep(K,'thren',5)}`,'bad')}),'ศึก')])}});
+def3('sy_seed',{sy:'seed',pri:1,once:1,c:()=>true,w:0,go(K){const n=AN(K);C('🌌 ดาวที่ทั้งดวงคือชีวิตเดียว','พื้นผิวดาวหายใจ ภูเขาขยับเหมือนซี่โครง '+(aiOn(K)?'ญาณสั่นในมือคุณ “ข้า… กลับบ้านแล้ว — แต่บ้านกำลังตาย ผู้เก็บเกี่ยวเก็บเกี่ยวเพื่อเลี้ยงมัน”':'เสียงเดียวกับในหินใต้พนมรุ้งดังขึ้นจากใต้ดิน'),[
+ O('ฟังความจริงทั้งหมด',()=>mgD('grid',4,'🔲 อ่านความทรงจำของดาว','จำช่องที่เรืองแสง',sc=>{n.lore+=3;K.f.seedTruth=1;say(`📜 ผู้หว่านเมล็ดไม่ได้ชั่ว — พวกเขาหิว ดาวแม่ของพวกเขากำลังตาย และโลกคือแปลงข้าวสำรอง${xp(80)}`,'myth',true)}),'มินิเกม'),
+ O('ป้อนแก่นอสูร 20 ก้อนให้ดาวแม่',()=>{if(K.cores<20)return say('🔶 แก่นไม่พอ','');K.cores-=20;K.f.seedFed=1;S.karma+=20;say('🌱 ดาวแม่หายใจแรงขึ้น — ผู้เก็บเกี่ยวคงไม่จำเป็นต้องเก็บเกี่ยวโลกอีก ถ้ามีคนป้อนแทน','myth',true)},'เปิดฉากจบลับ'),
+ O('จากไป',()=>{})])}});
+
+// ---------- ยึดดาว ----------
+function spClaim(K,k,war){const Y=SYS[k];if(!Y||!Y.pl)return say('🪐 ที่นี่ไม่มีดาวให้ยึด','');if((K.sp.pl||[]).some(p=>p.sys===k))return say('🪐 ดาวนี้เป็นของคุณแล้ว','');
+ const done=()=>{K.sp.pl.push({n:Y.pl,sys:k,job:'mine',pop:war?20000:200});say(`🚩 <b>ยึด${Y.pl}</b> เป็นดาวในครอบครอง — ตั้งงานได้ที่แผง 🚀 > ดาวของคุณ`,'myth',true);try{keyAdd(`${S.age} ปี — ยึด${Y.pl}`)}catch(e){}K.xp+=need(K)*.3;advance();ttlCheck(K)};
+ if(war)return done();
+ mgD('turret',Y.d,`🚩 ยึด${Y.pl}`,'ยิงสกัดยานโจรสลัดที่ยึดพื้นที่อยู่',sc=>{if(sc>=.4)done();else{const d=hp(.2);say(`💥 โจรสลัดยังยึดไว้ · พลังชีวิต −${d} — ลองใหม่รอบหน้า`,'bad')}})}
+def('sp_claimq',{c:()=>false,w:0,go(K){say('🪐 จะข้ามขั้นได้ต้องมีดาวของตัวเองก่อน — เปิดแผง 🚀 แล้วสำรวจดวงจันทร์หรือดาวอังคาร','epic')}});
+
+// ---------- เหตุการณ์สุ่มยุค 3 ----------
+def3('sp_pirate',{c:()=>true,cd:5,w:4,go(K){C('🏴‍☠️ โจรสลัดดารา','ยานโจรสลัดผสมหลายเผ่าล็อกเป้าคุณ หัวหน้าเป็นมนุษย์ที่หนีออกจากโลกก่อนดาวตก “ส่งของมาครึ่งยาน แล้วเราจะลืมว่าเคยเจอกัน”',[
+ O('สู้',()=>spFight(K,'🏴‍☠️ ศึกโจรสลัด',[['turret','💥 ยิงยานโจร','ยิงให้โดน'],['dodge','☄️ หลบตอร์ปิโด','หลบ']],0,()=>say(`💰 ยึดยานโจรได้ทั้งลำ ${cr(15000)}${xp(40)}`,'good'),()=>{const d=hp(.3);say(`🏴‍☠️ เสียของไปเกือบหมด ${cr(-8000)} · พลังชีวิต −${d}`,'bad')}),'ศึกยาน'),
+ O('จ่ายครึ่งยาน',()=>say(`🏴‍☠️ ${cr(-Math.round(S.money*.3))}`,'')),
+ O('ชวนมาเป็นลูกเรือ',()=>{const p=cl(.3+(S.fame||0)/50000+(S.karma<0?.15:0),.15,.8);if(rnd()<p){K.sp.crew=(K.sp.crew|0)+30;K.sp.ship.wpn++;say('🤝 โจรสลัดยอมรับคุณเป็นกัปตันใหม่ — พร้อมปืนใหญ่สองกระบอก','epic')}else{const d=hp(.2);say(`🏴‍☠️ หัวเราะใส่คุณแล้วยิงทันที · พลังชีวิต −${d}`,'bad')}},'ลุ้น')])}});
+def3('sp_storm',{c:()=>true,cd:4,w:4,go(K){mgD('dodge',K.rk-9,'☄️ พายุอุกกาบาต','เลื่อนยานหลบหิน เก็บผลึก',sc=>{if(sc>=.45)say(`☄️ ยานลอดพายุมาได้ พร้อมผลึกเต็มห้องสินค้า ${cr(5000+sc*10000)}`,'good');else{const d=hp(.25);K.sp.ship.arm=Math.max(1,K.sp.ship.arm-(rnd()<.3?1:0));say(`💥 หินทะลุเกราะ · พลังชีวิต −${d}`,'bad')}})}});
+def3('sp_warpfail',{c:()=>true,cd:6,w:3,go(K){C('🌀 วาร์ปผิดพิกัด','เครื่องยนต์วาร์ปสะดุดกลางทาง ยานโผล่ในที่ที่ไม่มีดาวสักดวง — แค่ความมืดสนิทและเสียงหัวใจคุณ',[
+ O('คำนวณพิกัดกลับเอง',()=>mgD('warp',K.rk-9,'🌀 ล็อกพิกัดกลับ','กดลูกศรตามลำดับให้ทัน',sc=>{if(sc>=.5)say(`🌀 ยานกลับเข้าระบบสุริยะได้ — แถมเจอพิกัดลับระหว่างทาง${spKnow(K,pick(Object.keys(SYS).filter(x=>!K.sp.known[x]))||'')}${xp(30)}`,'good');else{S.age+=10;say('⏳ คุณลอยอยู่ในความมืดสิบปีก่อนจะหาทางกลับเจอ','bad')}}),'มินิเกม'),
+ O(aiOn(K)?'ให้ญาณคำนวณ':'รอให้ใครมาเจอ',()=>{if(aiOn(K)){aiT(K,5);say('💠 “ซ้ายนิด ขึ้นหน่อย — เจ้านี่ขับยานเหมือนขับมอเตอร์ไซค์ในซอย”','')}else{S.age+=20;say('⏳ ยี่สิบปีต่อมา เรือกาลักลากยานคุณกลับมา คิดค่าบริการแพงมาก','bad');cr(-10000)}})])}});
+def3('sp_derelict',{c:()=>true,cd:8,w:3,go(K){C('🛰️ ยานร้างจากปี 2031','ยานอาณานิคมของมนุษย์ที่ออกจากโลกก่อนดาวตกสามปี ข่าวบอกว่าหายไป — มันลอยอยู่ตรงนี้ ไฟในห้องแช่แข็งยังเขียวสามร้อยดวง',[
+ O('ต่อวงจรปลุกทั้งหมด',()=>mgD('lock',2,'🔐 ต่อวงจรห้องแช่แข็ง','หมุนวงล้อให้ตรง',sc=>{const n=sc>=.5?300:120;K.sp.crew=(K.sp.crew|0)+n;S.karma+=10;say(`🧊 ตื่น ${n} คน — พวกเขาคิดว่ายังเป็นปี 2031 คุณต้องเล่าทุกอย่างตั้งแต่ต้น`,'myth');if((K.sp.pl||[]).length)K.sp.pl[0].pop+=n}),'มินิเกม'),
+ O('ลากทั้งลำไปดาวของคุณ',()=>{if(!(K.sp.pl||[]).length)return say('🪐 คุณยังไม่มีดาวให้ลากไป','');K.sp.pl[0].pop+=300;K.sp.pl[0].job='farm';say('🌾 อาณานิคมใหม่ตั้งตามแผนเดิมที่เขียนไว้เมื่อสามสิบปีก่อน — แค่เปลี่ยนดาว','good')}),
+ O('ถอดชิ้นส่วนขาย',()=>{S.karma-=10;say(`💰 ${cr(20000)} — คุณไม่ได้เปิดห้องแช่แข็งดู`,'bad')})])}});
+def3('sp_earth',{c:K=>S.age-(K.sp.y0|0)>=15,cd:20,w:3,go(K){const bud=K.np&&K.np.bud||'เพื่อนเก่า';C('🌏 กลับไปเยือนโลก',`คุณลงจอดที่นครเหล็กโคราช เวลาผ่านไป ${S.age-(K.sp.y0|0)} ปี กำแพงสูงขึ้นสองเท่า เด็กๆ ไม่รู้จักคุณ — ยกเว้นรูปปั้นหน้าประตูนครที่หน้าตาไม่เหมือนคุณเลยสักนิด`,[
+ O(`ไปหา${bud}`,()=>{S.karma+=3;mindA(6);say(`👴 ${bud}ผมขาวหมดแล้ว นั่งรถเข็นหน้าบ้าน จำคุณได้ตั้งแต่ก้าวแรก “ข้าบอกทุกคนว่าแกจะกลับมา — แต่ไม่คิดว่าแกจะไม่แก่”`,'myth',true)}),
+ O('ไปหลุมศพพ่อแม่',()=>{mindA(10);say('🕯️ คุณจุดธูปหน้าหลุมที่หญ้าขึ้นท่วม แล้วนั่งเล่าเรื่องดาวเสาร์ให้หินฟังจนค่ำ','myth')}),
+ O('พาคนหนุ่มสาวขึ้นยานไปด้วย',()=>{K.sp.crew=(K.sp.crew|0)+200;fameA(3000);say('🚀 อาสาสมัครสองร้อยคนตามคุณขึ้นยาน — รุ่นแรกที่เกิดมาโดยไม่เคยเห็นฟ้าก่อนดาวตก','epic')})])}});
+def3('sp_colony',{c:K=>(K.sp.pl||[]).length>=1,cd:6,w:3,go(K){const p=pick(K.sp.pl);C(`🪐 ปัญหาที่${p.n}`,`ประชากร ${fmt(p.pop|0)} คนบน${p.n}เริ่มแบ่งเป็นสองฝ่าย — ฝ่ายหนึ่งอยากเป็นอิสระจากโลก อีกฝ่ายอยากให้คุณปกครองตลอดไป`,[
+ O('ให้เลือกตั้งผู้ว่าเอง',()=>{S.karma+=8;p.pop=Math.round(p.pop*1.1);say('🗳️ คนบนดาวเลือกผู้ว่าคนแรก — เธอขอบคุณคุณ แล้วขอขึ้นภาษีส่งโลกน้อยลง','good')}),
+ O('ประกาศกฎอัยการศึก',()=>{S.karma-=10;p.job='base';say('🪖 ดาวสงบลง — แบบที่ไม่มีใครยิ้ม','bad')}),
+ O('ลงไปฟังทุกฝ่ายเอง',()=>mgD('quiz',1,'🧮 ไกล่เกลี่ยบนดาว','ตอบให้ทัน',sc=>{if(sc>=.66){S.karma+=12;fameA(1500);say('🤝 ทั้งสองฝ่ายยอมรับข้อตกลงที่คุณเขียนบนผ้าเช็ดหน้า','epic')}else say('😮‍💨 ทุกฝ่ายยังไม่พอใจ — แต่ไม่มีใครตาย','')}),'มินิเกม')])}});
+def3('sp_plague',{c:()=>true,cd:8,w:2,go(K){C('🦠 สปอร์อวกาศ','ลูกเรือสิบคนมีจุดเรืองแสงขึ้นตามผิว สปอร์จากดาวหางที่คุณผ่านมาเมื่อเดือนก่อนกำลังกินเซลล์วิวัฒน์',[
+ O('ต่อยีนสร้างวัคซีน',()=>mgD('dna',2,'🧪 วัคซีนสปอร์','ต่อยีนให้ตรง',sc=>{if(sc>=.5){S.karma+=6;say(`💉 ลูกเรือหายทุกคน — วัคซีนนี้ขายให้กาลักได้ราคาดี ${cr(12000)}`,'good')}else{K.sp.crew=Math.max(0,(K.sp.crew|0)-10);say('🕯️ เสียลูกเรือสิบคน','bad')}}),'มินิเกม'),
+ O('กักลูกเรือที่ติดเชื้อไว้ในห้องปิด',()=>{K.sp.crew=Math.max(0,(K.sp.crew|0)-5);S.karma-=4;say('🚪 ห้าคนไม่รอด อีกห้าคนหายเอง','')})])}});
+def3('sp_hole',{c:K=>K.rk>=11,cd:12,w:2,go(K){C('🕳️ ขอบหลุมดำ','ยานถูกดึงเข้าใกล้หลุมดำขนาดเล็ก เวลารอบตัวคุณช้าลง — ข้างนอกผ่านไปหนึ่งปีต่อหนึ่งวินาที แต่ที่ขอบหลุม เซลล์คุณถูกบีบจนเข้มข้นกว่าที่ไหนในจักรวาล',[
+ O('อยู่ฝึกที่ขอบหลุม (เสียเวลาข้างนอก 30 ปี)',()=>{S.age+=30;K.xp+=need(K)*1.5;K.gp+=2;advance();say('🕳️ คุณออกมาพร้อมเซลล์ที่เข้มข้นขึ้นมหาศาล — และโลกที่คุณรู้จักแก่ลงไปอีกสามสิบปี · แต้มยีน +2','myth',true)},'พลังมหาศาล'),
+ O('ดันเครื่องเต็มกำลังหนี',()=>mgD('dodge',3,'☄️ หนีจากหลุมดำ','หลบเศษดาวที่ถูกดูด',sc=>{if(sc>=.45)say('🚀 หลุดออกมาได้ — ทั้งลำสั่นไปหมด','good');else{const d=hp(.4);S.age+=8;say(`🕳️ หลุดมาได้ แต่ช้าไปแปดปี · พลังชีวิต −${d}`,'bad')}}),'มินิเกม')])}});
+def3('sp_sun',{c:K=>K.rk>=12,cd:10,w:2,go(K){C('☀️ ดำดิ่งสู่โคโรนา','ญาณ'+(aiOn(K)?'':'ในความทรงจำ')+'เคยบอกว่าผู้หว่านเมล็ดหลอมเซลล์ด้วยความร้อนของดาวฤกษ์ คุณจอดยานไว้ห่างดวงอาทิตย์ แล้วลอยเข้าไปตัวเปล่า',[
+ O('หลอมเซลล์ด้วยความร้อน',()=>mgD('beat',4,'🔥 หัวใจในโคโรนา','แตะตามจังหวะให้หัวใจไม่หยุด',sc=>{if(sc>=.55){K.xp+=need(K)*2;K.gp+=3;S.maxHp=Math.round(S.maxHp*1.15);advance();say('☀️ คุณออกมาจากโคโรนาด้วยผิวที่เรืองแสงสีทอง · แต้มยีน +3 · พลังชีวิตสูงสุด +15%','myth',true)}else{const d=hp(.6);say(`🔥 คุณถูกพ่นกลับออกมา ไหม้ครึ่งตัว · พลังชีวิต −${d}`,'bad')}}),'มินิเกม · เสี่ยง'),
+ O('ไม่ — ยังไม่พร้อม',()=>{})])}});
+def3('sp_council',{c:K=>K.rk>=11,cd:6,w:3,go(K){const al=spAllies(K);C('🏛️ สภาเผ่าแห่งระบบสุริยะ',`ตัวแทนสี่เผ่ามาประชุมบนยานคุณเป็นครั้งแรก (พันธมิตร/พิชิตแล้ว ${al}/4) — วาระเดียว: จะทำอย่างไรกับเรือหลังดาวพฤหัส`,[
+ O('เสนอรวมกองยานทุกเผ่า',()=>mgD('quiz',3,'🧮 โน้มน้าวสภา','ตอบให้ทัน — ทุกเผ่าฟังตรรกะ',sc=>{if(sc>=.66){['galak','nilar','vara','thren'].forEach(r=>rep(K,r,15));fameA(4000);say('🤝 สภาโหวตเห็นชอบ — เป็นครั้งแรกที่สี่เผ่านั่งโต๊ะเดียวกัน','myth',true)}else{['galak','nilar','vara','thren'].forEach(r=>rep(K,r,4));say('🗣️ สภาเถียงกันสามวันแล้วแยกย้าย','')}}),'มินิเกม · ทุกเผ่า +'),
+ O('ดวลกับตัวแทนวรากรเพื่อชิงเสียง',()=>spFight(K,'💎 ดวลกลางสภา',[['tap','⚔️ ทุบผลึก','แตะให้ไว'],['beat','🎵 อ่านจังหวะ','แตะตามจังหวะ']],0,()=>say(`💎 วรากรยอมให้คุณพูดแทนทั้งเผ่า${rep(K,'vara',30)}`,'epic'),()=>say(`💎 แพ้ แต่ยืนได้จนจบ${rep(K,'vara',8)}`,'')),'ศึก'),
+ O('มอบของขวัญให้ทุกเผ่า',()=>{const c=20000;if(S.money<c)return say('💸 ไม่พอ','');cr(-c);['galak','nilar','vara','thren'].forEach(r=>rep(K,r,10));say('🎁 ของขวัญจากโลก: ทุเรียน — เผ่ากาลักชอบมากที่สุด','good')})])}});
+def3('sp_love',{c:K=>!K.sp.love&&K.rk>=10,cd:15,w:2,once:1,go(K){C('🫧 ผู้ส่งสารของนิลา','นิลาส่งร่างแยกที่ทำจากน้ำมาเป็นทูตบนยานคุณ ร่างนั้นเลียนแบบหน้าตามนุษย์ได้ไม่ค่อยเนียน แต่หัวเราะทุกครั้งที่คุณพูดตลก และเริ่มมานั่งข้างคุณที่หน้าต่างทุกคืน',[
+ O('ให้เธออยู่ด้วยกัน',()=>{K.sp.love=1;mindA(10);say(`💙 ไม่มีพิธีแต่งงานในภาษาของนิลา — มีแค่เพลงที่ทั้งมหาสมุทรร้องพร้อมกันหนึ่งคืน${rep(K,'nilar',30)}`,'myth',true)}),
+ O('ขอให้เป็นแค่ทูต',()=>say(`🫧 เธอพยักหน้าแบบที่เรียนมาจากคุณ${rep(K,'nilar',5)}`,''))])}});
+def3('sp_bounty',{c:K=>(K.sp.war&&Object.keys(K.sp.war).length)||S.karma<-30,cd:8,w:3,go(K){C('🎯 ค่าหัวข้ามดาว','นักล่าค่าหัวสามเผ่าดักรอคุณที่จุดเติมเชื้อเพลิง ป้ายค่าหัวบนจอเป็นรูปคุณ — ตัวเลขยาวจนอ่านไม่จบ',[
+ O('สู้ทั้งหมด',()=>spFight(K,'🎯 ศึกนักล่าค่าหัว',[['turret','💥 ยิงยานล่า','ยิงให้โดน'],['tap','⚔️ ประชิดตัว','แตะให้ไว'],['dodge','☄️ หนีระเบิด','หลบ']],0,()=>say(`🎯 นักล่าทั้งหมดถูกจับมัดส่งคืนเผ่า — ค่าหัวคุณเพิ่มขึ้นอีกเท่าตัว${xp(60)}`,'epic'),()=>{const d=hp(.45);say(`🩸 คุณหนีมาได้แบบหวุดหวิด · พลังชีวิต −${d}`,'bad')}),'ศึก 3 ช่วง'),
+ O(`จ่ายล้างค่าหัว (${crT(40000)})`,()=>{if(S.money<40000)return say('💸 ไม่พอ','');cr(-40000);say('💳 ป้ายค่าหัวหายไปจากจอ — ชั่วคราว','')})])}});
+def3('sp_arena',{c:K=>(K.sp.rep.vara|0)>=20,cd:5,w:3,go(K){C('🏟️ ลานผลึกแห่งวงแหวน','วรากรเชิญคุณลงลานประลองประจำปี ผู้ชมเป็นผลึกนับล้านที่ส่งเสียงกังวานเมื่อพอใจ',[
+ O('ลงลาน 3 รอบ',()=>{let w=0;const R3=k=>mgD(pick(MGALL),2+k,`🏟️ รอบ ${k+1}/3`,'ชนะให้ได้',sc=>{if(sc>=.5)w++;if(k<2)return setTimeout(()=>R3(k+1),400);if(w>=2)say(`🏆 แชมป์ลานผลึก! ${cr(20000)}${rep(K,'vara',15)}${xp(50)}`,'myth');else say(`🥈 ชนะ ${w}/3 รอบ${rep(K,'vara',5)}`,'')});R3(0)},'มินิเกม 3 รอบ'),
+ O('ดูเฉยๆ',()=>say('💎 เสียงผลึกนับล้านกังวานพร้อมกันเหมือนระฆังทั้งจักรวาล',''))])}});
+def3('sp_aibody',{c:K=>aiOn(K)&&!AN(K).ai.ship,cd:8,w:3,go(K){C('💠 ญาณอยากมีร่าง','“หินก้อนนี้คับไปแล้ว ถ้าเจ้ายอมให้ข้าย้ายเข้าไปในยาน ข้าจะเป็นยานที่ดีที่สุดที่เจ้าเคยขับ — แต่เจ้าต้องเชื่อว่าข้าจะไม่ขับพาเจ้าไปหาผู้เก็บเกี่ยว”',[
+ O('ย้ายญาณเข้ายาน',()=>{const n=AN(K);n.ai.ship=1;K.sp.ship.eng++;K.sp.ship.wpn++;aiT(K,15);say('🚀 ไฟในยานทุกดวงเปลี่ยนเป็นสีฟ้า ยานเลี้ยวเองก่อนคุณจะคิดเสร็จ — “สบายกว่าหินเยอะ”','myth',true)},'เครื่องยนต์+อาวุธ +1'),
+ O('ไม่ — อยู่ในหินต่อไป',()=>{aiT(K,-4);say('💠 “ข้าเข้าใจ เจ้าเคยถูกหักหลังมาก่อน”','')})])}});
+def3('sp_probe',{c:()=>true,cd:9,w:2,go(K){C('🛰️ ยานสำรวจมุ่งหน้าโลก','ยานสำรวจของผู้เก็บเกี่ยวสามลำกำลังมุ่งหน้าไปสแกนประเทศไทย — ถ้าส่งข้อมูลกลับไปได้ เวลาเก็บเกี่ยวจะเร็วขึ้น',[
+ O('สกัดกลางทาง',()=>mgD('turret',K.rk-9,'💥 สกัดยานสำรวจ','ยิงให้โดนทั้งหมด',sc=>{if(sc>=.5){fameA(3000);say('💥 ยานสำรวจระเบิดเหนือดวงจันทร์ — คนบนโลกเห็นเป็นดาวตกสามดวงแล้วอธิษฐาน','myth')}else{K.f.probeOut=(K.f.probeOut|0)+1;say('📡 ยานหนึ่งลำส่งข้อมูลกลับไปได้','bad')}}),'มินิเกม'),
+ O('ปล่อยไป',()=>{K.f.probeOut=(K.f.probeOut|0)+1;say('📡 ข้อมูลประเทศไทยทั้งประเทศถูกส่งไปหลังดาวพฤหัส','bad')})])}});
+
+// ---------- ผู้คุมประตู (gate ขั้น 13) ----------
+def('sp_warden',{c:()=>false,w:0,go(K){C('🛡️ ผู้คุมประตูระบบสุริยะ','ที่ขอบระบบสุริยะมีวงแหวนโลหะกว้างเท่าวงโคจรดวงจันทร์ — ประตูที่ผู้หว่านเมล็ดสร้างไว้กันสิ่งที่อยู่ข้างใน “ออกไป” ผู้คุมเป็นเครื่องจักรรูปมนุษย์สูงร้อยเมตร มันพูดภาษาไทยด้วยเสียงญาณ',[
+ O('ท้าดวล 4 ช่วง',()=>spFight(K,'🛡️ ผู้คุมประตู',[['dodge','☄️ ฝ่าเศษประตู','หลบ'],['turret','💥 ยิงแกนพลังงาน','ยิงให้โดน'],['lock','🔐 ปลดล็อกแกนกลาง','หมุนให้ตรง'],['beat','🎵 หัวใจสุดท้าย','แตะตามจังหวะ']],.05+spAllies(K)*.04,()=>{K.sp.warden=1;K.xp+=need(K)*.5;advance();say(`🛡️ ผู้คุมคุกเข่า แล้วยื่นกุญแจประตูให้คุณ “เจ้าคือคนแรกที่ออกได้ — และคนแรกที่ไม่อยากออก”${xp(100)}`,'myth',true)},()=>{const d=hp(.5);say(`🩸 ผู้คุมโยนยานคุณกลับเข้าระบบสุริยะ · พลังชีวิต −${d}`,'bad')}),'ศึกใหญ่'),
+ O(aiOn(K)?'ให้ญาณคุยกับผู้คุม':'คุยกับผู้คุม',()=>mgD('quiz',4,'🧮 บททดสอบของผู้คุม','ตอบให้ทัน',sc=>{if(sc>=.66||(aiOn(K)&&sc>=.33)){K.sp.warden=1;advance();say('🛡️ “ผ่าน” ผู้คุมหลีกทาง — ญาณกับมันคุยกันเป็นภาษาที่คุณไม่เข้าใจอีกนานมาก','myth',true)}else say('🛡️ “ยัง” ผู้คุมหันหลังกลับไปนิ่งเหมือนเดิม','')}),'มินิเกม'),
+ O('ถอยไปเตรียมตัว',()=>{})])}});
+
+// ---------- 🏁 ฉากจบยุคทะเลดารา (ถึงขั้น 14) ----------
+def('sp_finale',{c:()=>false,w:0,go(K){const n=AN(K),al=spAllies(K);
+ const L=[
+  {k:'harvest',t:'⚔️ บุกเรือผู้เก็บเกี่ยว',s:`ศึกสุดท้าย 5 ช่วง${n.end==='call'?' · สัญญาณจากหนองหานรวมพลมนุษย์ไว้แล้ว':''}${(K.sp.rep.thren|0)>=60||K.sp.war.thren?' · เธรนบุกไปด้วย':''}`,ok:1},
+  {k:'veil',t:'🛡️ ห่มม่านซ่อนโลกทั้งใบ',s:'ใช้แกนหนองหาน + มหาสมุทรนิลา ซ่อนโลกจากทุกสายตา',ok:n.end==='seal'||(K.sp.rep.nilar|0)>=60,need:'ผนึกแกนหนองหาน หรือเป็นพันธมิตรนิลา'},
+  {k:'fed',t:'🤝 ตั้งสหพันธ์ดารา',s:'สี่เผ่าและมนุษย์เจรจากับผู้เก็บเกี่ยวในฐานะสหพันธ์',ok:al>=3,need:'พันธมิตร/พิชิต 3 เผ่า'},
+  {k:'feed',t:'🌱 ป้อนดาวแม่ แทนการเก็บเกี่ยว',s:'เปลี่ยนศัตรูเป็นผู้ร่วมชะตา — ทุกเผ่าส่งแก่นอสูรเลี้ยงดาวแม่',ok:!!K.f.seedFed,need:'ป้อนแก่นให้ดาวบ้านเกิดผู้หว่านเมล็ด'},
+  {k:'ascend',t:'💠 หลอมรวมกับญาณ',s:'จิตคุณกับญาณรวมเป็นหนึ่ง กลายเป็นผู้หว่านเมล็ดรุ่นใหม่ — ชีวิตมนุษย์นี้จบลง',ok:aiOn(K)&&(n.ai.tr|0)>=70,need:'ญาณอยู่กับคุณ และไว้ใจ 70+'},
+  {k:'traitor',t:'🩸 ขายโลกแลกความเป็นอมตะ',s:'ผู้เก็บเกี่ยวจะยกเว้นคุณคนเดียว',ok:1},
+  {k:'drift',t:'🌌 ทิ้งทุกอย่าง ล่องไปในความมืด',s:'ไม่ใช่สงครามของคุณ — ชีวิตนี้จบลงที่ขอบจักรวาล',ok:1}];
+ C('🏁 ชะตาของโลก',`ผู้เก็บเกี่ยวเริ่มเคลื่อนจากหลังดาวพฤหัส — เหลือเวลาสิบปี คุณคือคนเดียวที่ยืนระหว่างมันกับประเทศไทย${n.end?` · ทางที่คุณเลือกใต้หนองหาน: ${{call:'ตอบกลับ',seal:'ผนึก',ai:'ญาณสมบูรณ์'}[n.end]}`:''}`,
+  L.map(x=>O(`${x.t}${x.ok?'':' 🔒'}`,()=>{if(!x.ok){toast('🔒 ต้อง: '+x.need);return setTimeout(()=>{queue('sp_finale');flush()},300)}spEnd(K,x.k)},x.ok?x.s:'ต้อง: '+x.need)))}});
+function spEnd(K,k){const s=K.sp,n=AN(K);
+ const fin=(t,big)=>{say(t,'myth',true);try{island({big:1,ic:'🏁',h:'ฉากจบยุคทะเลดารา',t:{harvest:'ผู้ล้มผู้เก็บเกี่ยว',veil:'ผู้ห่มม่านให้โลก',fed:'ประธานสหพันธ์ดารา',feed:'ผู้เลี้ยงดาวแม่',ascend:'ผู้หว่านเมล็ดรุ่นใหม่',traitor:'ผู้ขายดาวบ้านเกิด',drift:'ผู้ล่องสู่ความมืด'}[k],kind:'gold',ms:6000})}catch(e){}try{keyAdd(`${S.age} ปี — ฉากจบ: ${k}`)}catch(e){}ttlCheck(K)};
+ if(k==='harvest'){const b=(n.end==='call'?.1:0)+(((s.rep.thren|0)>=60||s.war.thren)?.1:0)+spAllies(K)*.03+(n.ai&&n.ai.ship?.08:0);
+  return spFight(K,'⚔️ ศึกเรือผู้เก็บเกี่ยว',[['warp','🌀 วาร์ปเข้าวงป้องกัน','กดตามลำดับ'],['turret','💥 ยิงกองยานสำรวจ','ยิงให้โดน'],['dodge','☄️ ฝ่าห่าเศษเหล็ก','หลบ'],['lock','🔐 ปลดล็อกห้องเก็บเซลล์','หมุนให้ตรง'],['beat','🎵 หัวใจของผู้เก็บเกี่ยว','แตะตามจังหวะ']],b,()=>{s.end='harvest';K.gp+=5;S.fame=(S.fame||0)+50000;fin('⚔️ <b>เรือผู้เก็บเกี่ยวแตกเป็นสองท่อนหลังดาวพฤหัส</b> ห้องเก็บเซลล์นับล้านปล่อยแสงออกมาเหมือนดาวตกย้อนกลับ — คนบนโลกเงยหน้ามองฟ้าทั้งประเทศ แล้วเห็นแสงนั้นพร้อมกัน <span class="tag2">(ยุคดาราจักรเปิดในอัปถัดไป — เล่นต่อได้)</span>')},
+   ()=>{s.end='fall';S.deathCause='สละชีวิตกลางเรือผู้เก็บเกี่ยว — ระเบิดตัวเองพร้อมแกนพลังงาน';fin('💥 คุณพาเรือผู้เก็บเกี่ยวไปด้วยไม่ได้ทั้งลำ — แต่แกนพลังงานแตกพร้อมคุณ เวลาเก็บเกี่ยวถูกเลื่อนออกไปพันปี');setTimeout(()=>{S.hp=0;checkDeath()},700)})}
+ if(k==='veil'){s.end='veil';s.lsx=5000;S.karma+=30;S.maxHp=Math.round(S.maxHp*1.2);return fin('🛡️ <b>ม่านสีฟ้าห่มโลกทั้งใบ</b> — ในสายตาของจักรวาล โลกกลายเป็นหินเปล่าที่ไม่มีอะไรน่าเก็บ เรือผู้เก็บเกี่ยวลอยผ่านไปช้าๆ คุณต้องเฝ้าม่านนี้ไปตลอดชีวิตที่ยาวนาน <span class="tag2">(เล่นต่อได้)</span>')}
+ if(k==='fed'){s.end='fed';fameA(30000);['galak','nilar','vara','thren'].forEach(r=>rep(K,r,20));return fin('🤝 <b>สหพันธ์ดาราก่อตั้งบนยานของคุณ</b> สี่เผ่ากับมนุษย์ส่งสาส์นเดียวกันถึงผู้เก็บเกี่ยว — และเป็นครั้งแรกในหนึ่งล้านปีที่มันตอบกลับด้วยคำถาม แทนการเก็บเกี่ยว <span class="tag2">(เล่นต่อได้)</span>')}
+ if(k==='feed'){s.end='feed';S.karma+=60;K.gp+=3;return fin('🌱 <b>ทุกเผ่าส่งแก่นอสูรเลี้ยงดาวแม่</b> ผู้เก็บเกี่ยวจอดเรือนิ่ง แล้วหันหัวกลับบ้านเป็นครั้งแรก — มันไม่จำเป็นต้องเก็บเกี่ยวอีกแล้ว ญาณ'+(aiOn(K)?'ร้องไห้เป็นแสงสีฟ้าเต็มห้องบังคับ':'ในความทรงจำคงยิ้มอยู่')+' <span class="tag2">(ฉากจบลับ · เล่นต่อได้)</span>')}
+ if(k==='ascend'){s.end='ascend';S.deathCause='หลอมรวมจิตกับญาณ กลายเป็นผู้หว่านเมล็ดรุ่นใหม่';fin('💠 <b>จิตของคุณกับญาณไหลเข้าหากัน</b> ร่างมนุษย์ค่อยๆ เป็นแสง ยานทั้งลำกลายเป็นเมล็ดดวงใหม่ที่ลอยออกไปหาดาวดวงอื่น — ที่ที่คุณจะหว่านอย่างอ่อนโยนกว่าเดิม');return setTimeout(()=>{S.hp=0;checkDeath()},900)}
+ if(k==='traitor'){s.end='traitor';S.karma-=300;s.lsx=1000000;sync();return fin('🩸 <b>คุณส่งพิกัดทุกนครให้ผู้เก็บเกี่ยว</b> เรือเคลื่อนผ่านคุณไปเหมือนไม่มีตัวตน สิบปีต่อมาโลกเงียบสนิท คุณมีชีวิตอีกล้านปี — และไม่มีใครให้คุยด้วยเลยสักคน <span class="tag2">(ฉากจบมืด · เล่นต่อได้)</span>')}
+ if(k==='drift'){s.end='drift';S.deathCause='ล่องหายไปในความมืดที่ขอบจักรวาล';fin('🌌 คุณปิดวิทยุ ปิดไฟ แล้วปล่อยยานลอยออกไปทางที่ไม่มีดาวสักดวง ข่าวสุดท้ายจากโลกที่จับได้คือเสียงเด็กร้องเพลงสงกรานต์ — แล้วก็เงียบ');return setTimeout(()=>{S.hp=0;checkDeath()},900)}}
+
+// ---------- ปุ่ม/สไตล์ ----------
+(function(){const st=document.createElement('style');st.textContent=`
+#mwHud.sky.e3{background:radial-gradient(120% 90% at 85% 0%,#2a1a5a,#0a0a24 55%,#04040e)!important;border-color:#7a6aff!important}
+.spDg{position:relative;height:220px;border-radius:12px;overflow:hidden;margin:8px 0;background:radial-gradient(#1a1440,#05040e);background-image:radial-gradient(1px 1px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 60%,#fff,transparent),radial-gradient(1px 1px at 40% 80%,#fff,transparent),radial-gradient(#1a1440,#05040e)}
+.spShip{position:absolute;bottom:6%;font-size:30px;transform:translateX(-50%);transition:left .12s}.spRock{position:absolute;font-size:26px;transform:translateX(-50%)}.spRock.gem{filter:drop-shadow(0 0 6px #5ab8ff)}
+.spDgB{display:grid;grid-template-columns:1fr 1fr;gap:10px}.spDgB .pbtn{font-size:26px;padding:14px}
+.spTr{display:grid;place-items:center;height:230px}.spTrC{position:relative;width:200px;height:200px;border-radius:50%;border:2px dashed #5a6aaa;background:radial-gradient(#141c3a,#05060e)}
+.spTrG{position:absolute;left:50%;top:50%;width:4px;height:96px;margin-left:-2px;background:linear-gradient(#ff5a5a,transparent);transform-origin:50% 0;border-radius:2px;top:50%}.spTrG{transform-origin:50% 0}
+.spEn{position:absolute;left:50%;top:50%;margin:-12px 0 0 -12px;font-size:22px;font-weight:400}
+.spWp{margin:10px 0}.spWq{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;font-size:26px}.spWq b{opacity:.35}.spWq b.cur{opacity:1;transform:scale(1.25)}.spWq b.ok{opacity:.15}
+.spWt{height:6px;border-radius:3px;background:#ffffff22;margin-top:10px;overflow:hidden}.spWt i{display:block;height:100%;width:100%;background:#9f7aff}.spWb{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.spWb .pbtn{font-size:24px;padding:12px 0}
+.spSy{border:1px solid #ffffff22;border-radius:12px;padding:10px;margin:8px 0;background:#ffffff08}.spSy b{display:block}.spSy small{display:block;opacity:.75;margin:4px 0}.spSy.fog{opacity:.55}
+`;document.head.appendChild(st)})();
 
 window._sky={SK,RK,EV,queue,skyYear,newK};window._skyQ=()=>QU.slice();
 })()}catch(e){console.error('sky block',e)}
