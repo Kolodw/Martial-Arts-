@@ -49694,3 +49694,24 @@ window._mbHook=M=>{if(M)set(MK,{mb:M});setTimeout(()=>{try{const b=document.quer
 {const _s=window.mwBStart;window.mwBStart=function(){set(MK,null);return _s.apply(this,arguments)}}
 // ---- 🧑 คน: ปุ่ม ⬅️ หน้าแรกถูกถอดแล้ว (BLOCK v17.39) — ล้างค่าที่เคยจำไว้เมื่อเริ่มชีวิต ----
 })()}catch(e){console.error('block87',e)}
+
+// ดูคนอื่นเล่น: เปิดเฉพาะแอดมิน — ผู้เล่นส่งข้อมูลห่าง ๆ (2.5 นาที) จะส่งถี่ก็ต่อเมื่อแอดมินกำลังดูอยู่ · พับจอแล้วหยุดส่ง
+{const _isA=()=>{try{return !!admK()}catch(e){return false}};
+specAllowed=()=>0;
+try{if(!_isA())LS.set('murim_follow',[])}catch(e){}
+const HB=150000;
+const _ls=liveSend;liveSend=async function(){
+ await _ls.apply(this,arguments);
+ if(!onlineOK||Date.now()<_quotaUntil)return;
+ liveSend._hb=Date.now();clearTimeout(liveT);
+ const t=liveSend._f?(((typeof choice!=='undefined'&&choice._cur)||(S&&S._lvHot))?3000:5000):(document.hidden?0:(idleMs()>300000?300000:HB));
+ if(t)liveT=setTimeout(liveSend,t)};
+document.addEventListener('visibilitychange',()=>{try{if(document.hidden||liveSend._f)return;clearTimeout(liveT);const g=Date.now()-(liveSend._hb||0);liveT=setTimeout(liveSend,Math.max(1000,HB-g))}catch(e){}});
+const _lb=liveBadge;liveBadge=function(){const r=_lb.apply(this,arguments);try{const e=$('watchBadge');if(e&&!_isA())e.style.display='none'}catch(e){}return r};
+const off=()=>{toast('👁 หน้าดูคนอื่นเล่นปิดแล้ว')};
+const _oll=openLiveList;openLiveList=function(){if(!_isA()){off();return openOnline('chat')}return _oll.apply(this,arguments)};
+const _osp=openSpectate;openSpectate=function(){if(!_isA()){off();return}return _osp.apply(this,arguments)};
+const _oss=openSpecSet;openSpecSet=function(){if(!_isA())return;return _oss.apply(this,arguments)};
+specAsk=function(){};
+const _md=modal;modal=function(){const r=_md.apply(this,arguments);try{if(!_isA())$('modal').querySelectorAll('[onclick*="openLiveList"],[onclick*="openSpectate"]').forEach(b=>b.remove())}catch(e){}return r};
+}
