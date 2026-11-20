@@ -1916,6 +1916,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         return W0 };
       // ========== ภารกิจบัญชี ==========
       if (a === 'aq') {
+        // นาฬิกาเครื่องเพี้ยน/ส่งช้าข้ามเที่ยงคืน: รับรอบของเครื่องที่ห่างจากเซิร์ฟเวอร์ไม่เกิน 1 รอบ แล้วนับในรอบของเซิร์ฟเวอร์ (เดิมตอบ period แล้วเครื่องถือว่าส่งแล้ว → กดรับรวมไม่ได้)
+        const pOk = (pc, ps, k) => { pc = String(pc || ''); if (pc === ps) return true; const a1 = Date.parse(pc + 'T00:00:00Z'), a2 = Date.parse(ps + 'T00:00:00Z'); return isFinite(a1) && Math.abs(a1 - a2) <= (k === 'w' ? 7 : 1) * 864e5 };
         if (!okId(id)) return res.json({ err: 'id' });
         if (o === 'get') { const [bp, dn, wn, da, wa, lg, sc, fr] = await pipe([['HGET', 'aqb:' + id, MON], ['GET', 'aqn:' + id + ':' + DAY], ['GET', 'aqn:' + id + ':' + W], ['GET', 'aqa:' + id + ':' + DAY], ['GET', 'aqa:' + id + ':' + W], ['HKEYS', 'aql:' + id], ['HKEYS', 'aqs:' + id], ['SMEMBERS', 'gfr:' + id]]);
           const bt = (await cmd('SMEMBERS', 'aqbt:' + id + ':' + MON)) || [];
@@ -1924,7 +1926,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (!(await rl('aqr:' + id, 40, 600))) return res.status(429).json({ err: 'rate' });
         if (o === 'pt') { // ทำภารกิจ 1 ข้อสำเร็จ → แต้มสมุด (รายวันสูงสุด 3 ข้อ/วัน · รายสัปดาห์ 3 ข้อ/สัปดาห์)
           const k = b.k === 'w' ? 'w' : 'd', p = k === 'w' ? W : DAY, q = String(b.q || '').replace(/[^a-z0-9_]/gi, '').slice(0, 16);
-          if (String(b.p || '') !== p || !q) return res.json({ err: 'period' });
+          if (!pOk(b.p, p, k) || !q) return res.json({ err: 'period' });
           if ((await cmd('SET', 'aqp:' + id + ':' + p + ':' + q, 1, 'NX', 'EX', 86400 * 9)) !== 'OK') return res.json({ ok: 0, dup: 1 });
           const n = +(await cmd('INCR', 'aqn:' + id + ':' + p)) || 1; await cmd('EXPIRE', 'aqn:' + id + ':' + p, 86400 * 9);
           if (n > 3) { if (k === 'd' && n === 4 && vipTier(jp(await cmd('GET', 'vip:' + id))) >= 1) { await give(id, 1, 0); return res.json({ ok: 1, n, t4: 1, f: 1 }) } return res.json({ ok: 0, cap: 1 }) }
@@ -1932,7 +1934,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
           let sp = 0; try { sp = await spAdd(id, k === 'w' ? 150 : 30) } catch {}
           return res.json({ ok: 1, n, bp, sp }) }
         if (o === 'all') { // ครบ 3 ข้อ: รายวัน → ตั๋วธรรมดา 1 + แต้มสมุด 1 · รายสัปดาห์ → ตั๋วทอง 1
-          const k = b.k === 'w' ? 'w' : 'd', p = k === 'w' ? W : DAY; if (String(b.p || '') !== p) return res.json({ err: 'period' });
+          const k = b.k === 'w' ? 'w' : 'd', p = k === 'w' ? W : DAY; if (!pOk(b.p, p, k)) return res.json({ err: 'period' });
           if ((+(await cmd('GET', 'aqn:' + id + ':' + p)) || 0) < 3) return res.json({ ok: 0, err: 'notyet' });
           if ((await cmd('SET', 'aqa:' + id + ':' + p, 1, 'NX', 'EX', 86400 * 9)) !== 'OK') return res.json({ ok: 0, dup: 1 });
           if (k === 'd') { await give(id, 1, 0); await cmd('HINCRBY', 'aqb:' + id, MON, 1); await swAdd(id, 1) } else await give(id, 0, 1);
