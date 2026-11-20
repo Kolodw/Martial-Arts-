@@ -47162,3 +47162,95 @@ try{(()=>{const mwSel=()=>{try{return !!(CFG&&CFG.mw)}catch(e){return false}};co
  ['goBeastLife','beastBirth','beastBirth2'].forEach(n=>{try{const f=window[n];if(typeof f!=='function')return;const w=function(){if(mwSel()){no();return}return f.apply(this,arguments)};window[n]=w;if(n==='goBeastLife')goBeastLife=w;else if(n==='beastBirth')beastBirth=w;else beastBirth2=w}catch(e){}});
  setInterval(()=>{try{if(!mwSel())return;document.querySelectorAll('#modal button[onclick*="goBeastLife"],#modal button[onclick*="beastBirth"]').forEach(b=>b.style.display='none')}catch(e){}},300);
 })()}catch(e){console.error('mwNoBeast',e)}
+
+// ============================================================
+// BLOCK 80: 🏆 กรอบ + ฉายาอันดับแบบใหม่ทุกโหมด — สีโลหะ = อันดับ (ทอง/เงิน/ทองแดง) · ทรงกรอบ = รอบ (วัน/สัปดาห์/เดือน) · ตรา+สีเอฟเฟกต์ = โหมด
+//  ใช้กับกรอบอันดับเดิม (f_rk/wk/mo/ch/rg/cl/ar) และกรอบที่แอดมินสุ่มแต่ละรอบ (f_g…) — สุ่มรอบใหม่ = สี/ตรา/ช่อประดับ/ละออง เปลี่ยนตาม
+// ============================================================
+try{(()=>{
+const M=window.FRSH_M,T=window.FRSH_T;if(!M||!T)return;
+const MET={1:['#fff3c4','#ffd36e','#b8860b','#5a3a00'],2:['#ffffff','#dfe6f2','#8a98b0','#2a3040'],3:['#ffe0c8','#e8a070','#9a5a2a','#3a1a08']};
+const MODE={m:['sw','#e8b54a','⚔️'],x:['cl','#8ad8ff','☁️'],g:['sn','#ffe08a','🌟'],b:['cw','#6ad08a','🐾'],r:['ck','#8aa8ff','🕰️'],c:['ch','#ff7a3a','⛓️'],h:['fl','#ff4a2a','🔥'],s:['hg','#3ab0ff','⏳'],j:['sp','#8ac04a','🌱'],l:['rg','#b070ff','⭕'],a:['dg','#7a8cc0','🗡️']};
+const ALT={m:['sw','dg'],x:['cl','sn'],g:['sn','cl'],b:['cw','fl'],r:['ck','hg'],c:['ch','fl'],h:['fl','ch'],s:['hg','fl'],j:['sp','cw'],l:['rg','sn'],a:['dg','sw']};
+const PL={d:'วัน',w:'สัปดาห์',m:'เดือน'};
+const H=s=>{let h=2166136261;for(const c of String(s)){h^=c.codePointAt(0);h=Math.imul(h,16777619)}return h>>>0};
+const RNG=seed=>{let q=seed>>>0||1;return()=>{q=(q+0x6D2B79F5)>>>0;let t=q;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}};
+const hx=(c,dh)=>{if(!dh)return c;try{let r=parseInt(c.slice(1,3),16)/255,g=parseInt(c.slice(3,5),16)/255,b=parseInt(c.slice(5,7),16)/255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;let h=0,s=0;if(mx!==mn){const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;h*=60}h=(h+dh+360)%360;const a=s*Math.min(l,1-l),f=n=>{const k=(n+h/30)%12;return Math.round(255*(l-a*Math.max(-1,Math.min(k-3,9-k,1)))).toString(16).padStart(2,'0')};return'#'+f(0)+f(8)+f(4)}catch(e){return c}};
+const f1=n=>Math.round(n*10)/10;
+const poly=(n,inner,r=51)=>{const P=[];for(let i=0;i<2*n;i++){const a=i/(2*n)*Math.PI*2-Math.PI/2,rr=i%2?r*inner:r;P.push(f1(50+Math.cos(a)*rr)+' '+f1(50+Math.sin(a)*rr))}return'M'+P.join('L')+'Z'};
+const circ=(r=51)=>`M50 ${50-r}A${r} ${r} 0 1 1 49.9 ${50-r}Z`;
+const star=(x,y,r,f)=>`<path d="M${x} ${y-r}L${f1(x+r*.28)} ${f1(y-r*.28)}L${x+r} ${y}L${f1(x+r*.28)} ${f1(y+r*.28)}L${x} ${y+r}L${f1(x-r*.28)} ${f1(y+r*.28)}L${x-r} ${y}L${f1(x-r*.28)} ${f1(y-r*.28)}Z" fill="${f}"/>`;
+function emb(k,col,x,y,s){let g;
+ if(k==='sw')g=`<path d="M-11 -11L9 9M11 -11L-9 9" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/><path d="M-11 -11L9 9M11 -11L-9 9" stroke="${col}" stroke-width="1.6" stroke-linecap="round"/><path d="M4 5L9 0M-4 5L-9 0" stroke="#3a2a10" stroke-width="2.4" stroke-linecap="round"/>`;
+ else if(k==='ch')g=`<ellipse cx="-5" cy="0" rx="7" ry="4.5" fill="none" stroke="#fff" stroke-width="2.6"/><ellipse cx="5" cy="0" rx="7" ry="4.5" fill="none" stroke="${col}" stroke-width="2.6"/>`;
+ else if(k==='fl')g=`<path d="M0 -13C6 -6 9 -2 7 4C5 9 -5 9 -7 4C-9 -1 -4 -4 -3 -9C-1 -5 1 -5 0 -13Z" fill="${col}" stroke="#fff3c4" stroke-width="1"/><path d="M0 -4C3 0 3 4 0 6C-3 4 -3 0 0 -4Z" fill="#ffe08a"/>`;
+ else if(k==='hg')g=`<path d="M-8 -11H8M-8 11H8M-7 -11L0 0L-7 11M7 -11L0 0L7 11" fill="none" stroke="#fff" stroke-width="2"/><path d="M-5 -8H5L0 -1Z" fill="${col}"/><path d="M-5 9H5L0 3Z" fill="${col}"/>`;
+ else if(k==='sp')g=`<path d="M-10 9L-3 3L1 6L10 -2" fill="none" stroke="#5a4a3a" stroke-width="2"/><path d="M0 8V-6" stroke="#6ad04a" stroke-width="2.2"/><path d="M0 -2C-7 -3 -9 -9 -8 -11C-3 -10 0 -7 0 -2ZM0 -5C6 -6 9 -12 8 -13C3 -12 0 -10 0 -5Z" fill="${col}" stroke="#fff" stroke-width=".7"/>`;
+ else if(k==='ck')g=`<circle r="11" fill="#1a2040" stroke="${col}" stroke-width="2.4"/><circle r="11" fill="none" stroke="#fff" stroke-width=".8" stroke-dasharray="1 4.76"/><g class="zr-hand"><path d="M0 0V-8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></g><path d="M0 0H5" stroke="${col}" stroke-width="1.8" stroke-linecap="round"/>`;
+ else if(k==='rg')g=`<g class="zr-spinE"><ellipse rx="12" ry="4.5" fill="none" stroke="#ffd36e" stroke-width="1.6"/><ellipse rx="12" ry="4.5" fill="none" stroke="${col}" stroke-width="1.6" transform="rotate(60)"/><ellipse rx="12" ry="4.5" fill="none" stroke="#ff4a6a" stroke-width="1.6" transform="rotate(120)"/></g><circle r="3" fill="#fff"/>`;
+ else if(k==='cl')g=`<path d="M-11 5C-14 5 -14 -1 -10 -1C-10 -6 -3 -8 0 -4C2 -8 9 -7 9 -2C14 -2 14 5 10 5Z" fill="#fff" stroke="${col}" stroke-width="1.6"/><path d="M-6 9C-2 7 2 7 6 9" stroke="${col}" stroke-width="1.4" fill="none"/>`;
+ else if(k==='sn')g=`<g class="zr-spinE">${star(0,0,12,col)}</g><circle r="4.5" fill="#fff"/>`;
+ else if(k==='cw')g=`<path d="M-7 -11L-3 9M0 -12L2 9M7 -11L6 9" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M-7 -11L-3 9M0 -12L2 9M7 -11L6 9" stroke="${col}" stroke-width="1.6" stroke-linecap="round"/>`;
+ else g=`<path d="M0 -13L3 2L0 6L-3 2Z" fill="#e8eef8" stroke="${col}" stroke-width="1"/><path d="M-7 4H7" stroke="${col}" stroke-width="2.2" stroke-linecap="round"/><path d="M0 6V12" stroke="#3a2a40" stroke-width="2.4"/>`;
+ return`<g transform="translate(${x} ${y}) scale(${s})">${g}</g>`}
+function wreath(kind,c1,c2){let o='';for(const side of[1,-1]){let L='';for(let i=0;i<7;i++){const a=(side===1?200-i*14:-20+i*14)*Math.PI/180,x=f1(50+Math.cos(a)*58),y=f1(50-Math.sin(a)*58),rot=Math.round(a*180/Math.PI+(side===1?90:-90));
+  L+=kind==='f'?`<path d="M${x} ${y-7}Q${x+3} ${y} ${x} ${y+7}Q${x-3} ${y} ${x} ${y-7}Z" fill="${i%2?c2:c1}" opacity=".95" transform="rotate(${rot} ${x} ${y})"/>`:`<ellipse cx="${x}" cy="${y}" rx="2.6" ry="6" fill="${i%2?c2:c1}" stroke="${c1}" stroke-width=".5" transform="rotate(${rot} ${x} ${y})"/>`}
+ o+=`<g class="zr-sway">${L}</g>`}return o}
+const crown=(c1,c2,c3,gem)=>`<g class="zr-breath"><path d="M30 2L26 -18L37 -8L43 -26L50 -10L57 -26L63 -8L74 -18L70 2Z" fill="${c2}" stroke="${c3}" stroke-width="1.4" stroke-linejoin="round"/><circle cx="50" cy="-6" r="3.4" fill="${gem}" stroke="#fff" stroke-width=".8"/><circle cx="38" cy="-3" r="2" fill="#4ad0ff"/><circle cx="62" cy="-3" r="2" fill="#4ad0ff"/>${star(50,-32,6,'#fff')}</g>`;
+const PART={fl:['zr-rise','<path d="M0 -4C2 -1 2 2 0 3C-2 2 -2 -1 0 -4Z" fill="C"/>'],hg:['zr-fall','<circle r="1.4" fill="C"/>'],rg:['zr-rise','<circle r="1.6" fill="C"/>'],sp:['zr-rise','<ellipse rx="1.3" ry="2.4" fill="C"/>'],ck:['zr-twk','<circle r="1.3" fill="#fff"/>'],sw:['zr-twk','<path d="M0 -3L.8 -.8L3 0L.8 .8L0 3L-.8 .8L-3 0L-.8 -.8Z" fill="C"/>'],ch:['zr-rise','<rect x="-1.2" y="-1.2" width="2.4" height="2.4" fill="C"/>'],dg:['zr-twk','<path d="M0 -3L.8 -.8L3 0L.8 .8L0 3L-.8 .8L-3 0L-.8 -.8Z" fill="C"/>'],cl:['zr-fall','<circle r="1.5" fill="#fff"/>'],sn:['zr-twk','<path d="M0 -3L.8 -.8L3 0L.8 .8L0 3L-.8 .8L-3 0L-.8 -.8Z" fill="C"/>'],cw:['zr-rise','<ellipse rx="1" ry="2.6" fill="C"/>']};
+let gidN=0;
+// p: d|w|m · c: โหมด · r: 1-3 · seed: ตัวสุ่มของรอบ (ว่าง = แบบมาตรฐาน)
+function rkSvg(p,c,r,seed){const md=MODE[c]||MODE.m,R=seed?RNG(H('rk3|'+seed+'|'+p+c+r)):null,pick=a=>R?a[Math.floor(R()*a.length)]:a[0];
+ const ek=pick(ALT[c]||[md[0]]),ac=hx(md[1],R?Math.round((R()-.5)*50):0),[c1,c2,c3,c4]=MET[r]||MET[3],g='rkg'+(++gidN);
+ const shape=p==='d'?circ():p==='w'?poly(16,.93):poly(24,.9),wk=R?pick(['l','l','f']):'l',gem=R?pick(['#ff4a6a','#4ad0ff','#7affc8','#c08aff']):'#ff4a6a';
+ let o=`<defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset=".5" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></linearGradient><linearGradient id="${g}a" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${ac}"/><stop offset=".5" stop-color="${c2}"/><stop offset="1" stop-color="${ac}"/></linearGradient></defs>`;
+ if(p==='m'){let ry='';for(let a=0;a<360;a+=30){const A=(a-3)*Math.PI/180,B=(a+3)*Math.PI/180;ry+=`<path d="M50 50L${f1(50+Math.cos(A)*80)} ${f1(50+Math.sin(A)*80)}L${f1(50+Math.cos(B)*80)} ${f1(50+Math.sin(B)*80)}Z" fill="${c2}" opacity=".09"/>`}o+=`<g class="zr-spinS">${ry}</g>`}
+ o+=`<path d="${shape}" fill="none" stroke="${ac}" stroke-width="14" opacity=".14"/><path d="${shape}" fill="none" stroke="${c4}" stroke-width="7"/><path d="${shape}" fill="none" stroke="url(#${g})" stroke-width="4"/><path d="${circ(46)}" fill="none" stroke="url(#${g}a)" stroke-width="1.4" stroke-dasharray="3 5" class="zr-dash"/>`;
+ if(p!=='d')o+=wreath(wk,c3,c2);
+ if(p==='m'||r===1)o+=`<g class="zr-spinR"><circle cx="50" cy="50" r="66" fill="none" stroke="${c2}" stroke-width="1" stroke-dasharray="1 7" opacity=".9"/></g>`;
+ if(r<=2)o+=`<g class="zr-orbit">${star(118,50,r===1?5:4,c1)}${star(-18,50,4,ac)}<circle cx="50" cy="50" r="68" fill="none" stroke="none"/></g>`;
+ if(r===1&&p!=='d')o+=crown(c1,c2,c3,gem)+emb(ek,ac,50,104,.8);
+ else o+=`<g class="zr-breath"><circle cx="50" cy="-6" r="14" fill="${c4}" stroke="url(#${g})" stroke-width="2.6"/>${emb(ek,ac,50,-6,.85)}</g>`;
+ const pt=PART[R?pick([ek,md[0]]):ek]||PART.sw,n=p==='d'?3:p==='w'?5:7,pos=[[-12,70],[112,66],[-6,30],[108,26],[20,112],[80,112],[50,118]];
+ for(let i=0;i<n;i++)o+=`<g class="${pt[0]}" style="animation-delay:-${(i*.45).toFixed(2)}s"><g transform="translate(${pos[i][0]} ${pos[i][1]})">${pt[1].replace(/C/g,i%2?ac:c1)}</g></g>`;
+ if(r===1&&p!=='d')o+=`<g><path d="M8 113Q50 100 92 113L96 123Q50 111 4 123Z" fill="${c4}" stroke="url(#${g})" stroke-width="1.4"/><text x="50" y="119" text-anchor="middle" font-size="7" font-weight="900" fill="${c1}" font-family="Itim,sans-serif">อันดับ 1 · ประจำ${PL[p]}</text></g>`;
+ else{const w=p==='d'?34:44;o+=`<g><path d="M${50-w/2} 103H${50+w/2}L${50+w/2+5} 110L${50+w/2} 117H${50-w/2}L${50-w/2-5} 110Z" fill="${c4}" stroke="url(#${g})" stroke-width="1.6"/><text x="50" y="113.4" text-anchor="middle" font-size="9" font-weight="900" fill="${c1}" font-family="Itim,sans-serif">#${r} · ${PL[p]}</text></g>`}
+ return`<svg x="8" y="8" width="84" height="84" viewBox="-20 -20 140 140" overflow="visible" class="zrv">${o}</svg>`}
+window.rkSvg=rkSvg;
+// ---------- จับคู่ id กรอบ → (รอบ, โหมด, อันดับ, ตัวสุ่ม) ----------
+const FIX={rk:['d','m'],wk:['w','m'],mo:['m','m'],ch:['w','c'],rgd:['d','r'],rgw:['w','r'],rgm:['m','r'],cl:['m','l'],ar:['w','a']};
+function spec(id){id=String(id||'');let m=/^f_(rk|wk|mo|ch|rgd|rgw|rgm|cl|ar)([123])$/.exec(id);if(m)return{p:FIX[m[1]][0],c:FIX[m[1]][1],r:+m[2],s:''};
+ try{m=window.RKG&&RKG.RE.exec(id);if(m)return{p:m[1],c:m[2],r:+m[4],s:m[3]}}catch(e){}return null}
+const done=new Set();
+function apply(id){if(done.has(id))return true;const q=spec(id);if(!q)return false;const f=FRAMES.find(x=>x.id===id);if(!f)return false;
+ const key='rk3_'+id;if(!M[key]){const html=rkSvg(q.p,q.c,q.r,q.s);M[key]=()=>html}T[id]=key;const mt=MET[q.r];f.c1=mt[1];f.c2=mt[0];f.c3=mt[2];f.pc=mt[0];f.ty='static';f.bd='';done.add(id);return true}
+FRAMES.forEach(f=>{try{apply(f.id)}catch(e){}});
+{const _fw=frWrap;frWrap=function(inner,id){try{if(id&&!done.has(id)){if(!FRAMES.find(x=>x.id===id)&&window.rkgReg)rkgReg(id);apply(id)}}catch(e){}let h=_fw.apply(this,arguments);try{if(done.has(id)&&typeof h==='string'&&!/ fsh /.test(h))h=h.replace(/class="frw /,'class="frw fsh ').replace(/style="/,'style="--clip:circle(47% at 50% 50%);')}catch(e){}return h}}
+// ---------- ฉายาอันดับ: ป้ายโลหะตามอันดับ + แถบสีโหมด ----------
+const PN2={m:'d',w:'w',d:'d'};
+function chip(t,p,c,r,seed){const md=MODE[c]||MODE.m,R=seed?RNG(H('rkt|'+seed+'|'+p+c+r)):null,ac=hx(md[1],R?Math.round((R()-.5)*50):0),[c1,c2,c3,c4]=MET[r]||MET[3];
+ const bg=r===1&&p!=='d'?`linear-gradient(180deg,#fffbe8,${c2} 50%,${c3})`:`linear-gradient(180deg,${c1},${c2} 55%,${c3})`,glow=r===1?`filter:drop-shadow(0 0 ${p==='m'?7:4}px ${c2});`:'';
+ return`<span class="rt3" style="background:${bg};color:${c4};${glow}"><i class="x"></i><i class="y" style="background:linear-gradient(90deg,${ac},${c1},${ac},${c1},${ac})"></i><span class="ic">${r===1?'👑':''}${md[2]}</span><span class="tx">${esc(String(t).slice(0,40))}</span><small>#${r}·${PL[p]}</small><span class="sp" style="color:${ac}">✦</span></span>`}
+window.rkChip3=chip;
+const MODEOF={'':'m',c:'c',a:'a',r:'r',h:'h',s:'s',j:'j',l:'l'};
+function info(t,tr){t=String(t||'');try{const g=window._rkGEN&&window._rkGEN.get(t);if(g)return{p:g.p,c:g.c||'m',r:g.r,s:g.k||t}}catch(e){}
+ try{const o=RKC_OF(t);if(o){const p=o.p[0],sub=o.p.slice(1);return{p:/[dwm]/.test(p)?p:'d',c:MODEOF[sub]||'m',r:o.r,s:''}}}catch(e){}
+ try{if(window.RKG){const r=RKG.rank(t);if(r)return{p:tr===9?'m':tr===8?'w':'d',c:RKG.cat(t),r,s:t}}}catch(e){}return null}
+{const _rc=rkChip;rkChip=function(t,tr){try{const q=info(t,tr);if(q)return chip(t,q.p,q.c,q.r,q.s)}catch(e){}return _rc.apply(this,arguments)}}
+const st=document.createElement('style');st.textContent=`
+.zrv .zr-spinS{transform-origin:50px 50px;animation:zrSpin 24s linear infinite}.zrv .zr-spinR{transform-origin:50px 50px;animation:zrSpin 14s linear infinite reverse}.zrv .zr-orbit{transform-origin:50px 50px;animation:zrSpin 9s linear infinite}
+.zrv .zr-breath{transform-box:fill-box;transform-origin:50% 100%;animation:zrBreath 2.6s ease-in-out infinite}.zrv .zr-sway{transform-origin:50px 50px;animation:zrSway 3.2s ease-in-out infinite}
+.zrv .zr-dash{animation:zrDash 3s linear infinite}.zrv .zr-rise{animation:zrRise 3s ease-out infinite}.zrv .zr-fall{animation:zrFall 3.2s linear infinite}.zrv .zr-twk{transform-box:fill-box;transform-origin:center;animation:zrTwk 2s ease-in-out infinite}
+.zrv .zr-hand{animation:zrSpin 4s linear infinite;transform-origin:0 0}.zrv .zr-spinE{animation:zrSpin 6s linear infinite;transform-origin:0 0}
+@keyframes zrSpin{to{transform:rotate(360deg)}}@keyframes zrBreath{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-2px) scale(1.04)}}
+@keyframes zrRise{0%{transform:translateY(6px);opacity:0}25%{opacity:1}100%{transform:translateY(-34px);opacity:0}}@keyframes zrFall{0%{transform:translateY(-14px);opacity:0}15%{opacity:1}100%{transform:translateY(40px);opacity:0}}
+@keyframes zrSway{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}@keyframes zrDash{to{stroke-dashoffset:-32}}@keyframes zrTwk{0%,100%{opacity:.15;transform:scale(.5)}50%{opacity:1;transform:scale(1.2)}}
+@media(prefers-reduced-motion:reduce){.zrv [class^=zr-]{animation:none!important}}
+.evlite #chatBox .zrv .zr-rise,.evlite #chatBox .zrv .zr-fall,.evlite #chatBox .zrv .zr-twk,.evlite #chatBox .zrv .zr-spinS{display:none}
+.rt3{display:inline-flex;align-items:center;gap:4px;padding:2px 18px;font-weight:800;font-size:.92em;white-space:nowrap;line-height:1.5;position:relative;overflow:hidden;isolation:isolate;vertical-align:middle;max-width:100%;clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,9px 100%,0 50%)}
+.rt3>*{position:relative;z-index:1}.rt3 i{position:absolute!important;z-index:0!important;top:0;left:0;height:100%;pointer-events:none}
+.rt3 .x{width:300%;left:-100%!important;background:linear-gradient(110deg,transparent 40%,#ffffffcc 48%,transparent 56%);animation:lxSweep 2.8s linear infinite}
+.rt3 .y{width:200%;top:auto!important;bottom:0;height:3px!important;animation:lxFlow 2.2s linear infinite}
+.rt3 .tx{overflow:hidden;text-overflow:ellipsis}.rt3 .ic{animation:pBob 2.2s ease-in-out infinite alternate}.rt3 .sp{animation:pTw 1.6s infinite}.rt3 small{font-size:.72em;font-weight:700;opacity:.8;margin-left:3px}
+`;document.head.appendChild(st);
+})()}catch(e){console.error('block80',e)}
