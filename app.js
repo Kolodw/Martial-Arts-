@@ -22124,7 +22124,7 @@ const CO={id:null,i:0,was:false,clk:null,tw:null};
 const coSeen=id=>!!(LS.get('murim_coach',{})||{})[id];
 function coMark(id){const d=LS.get('murim_coach',{})||{};d[id]=1;LS.set('murim_coach',d)}
 function coVis(el){if(!el)return false;const r=el.getBoundingClientRect();return r.width>0&&r.height>0&&getComputedStyle(el).visibility!=='hidden'}
-function coCan(){return S&&S.alive&&!CO.id&&!(typeof tutI!=='undefined'&&tutI>=0)&&!auto&&!document.getElementById('awayBar')}
+function coCan(){return S&&S.alive&&!CO.id&&!modalOpen&&!choice._cur&&!(typeof tutI!=='undefined'&&tutI>=0)&&!auto&&!document.getElementById('awayBar')}
 function coStart(id,force){const L=LESSON[id];if(!L)return;if(!force&&(coSeen(id)||!coCan()))return;if(CO.id)coEnd(true);CO.id=id;CO.i=0;CO.was=paused;paused=true;coMark(id);
  let o=document.getElementById('coach');if(!o){o=document.createElement('div');o.id='coach';document.body.appendChild(o)}
  o.innerHTML='<div class="cblk"></div><div class="cblk"></div><div class="cblk"></div><div class="cblk"></div><div class="chole" style="left:50%;top:50%;width:0;height:0"></div><div class="chand" style="display:none">👆</div><div class="cbox"><canvas class="cgd" width="16" height="16"></canvas><div class="cbub"></div></div>';cgDraw(o.querySelector('.cgd'));coStep(0)}
@@ -22144,6 +22144,7 @@ function coStep(i){const L=LESSON[CO.id];if(!L)return;if(i>=L.s.length)return co
   bub.innerHTML=`<b class="ct">${s.t}</b><div class="ctx"></div><div class="cnav"><span class="cdots">${dots}</span><button class="gbtn" onclick="coEnd()">ข้าม</button>${s.btn?`<button class="pbtn" onclick="coEnd();${s.btn[1]}">${s.btn[0]}</button>`:''}${s.act?'<span class="ctry">👆 แตะที่ไฟส่อง</span>':`<button class="pbtn" onclick="coNext()">${last?'เข้าใจแล้ว!':'ถัดไป ▶'}</button>`}</div>`;
   coType(bub.querySelector('.ctx'),s.d);
   document.removeEventListener('click',CO.clk,true);if(s.act&&el){CO.clk=e=>{if(el.contains(e.target)){document.removeEventListener('click',CO.clk,true);setTimeout(()=>coNext(),450)}};document.addEventListener('click',CO.clk,true)}})}
+window._CO=CO;window._LESSON=LESSON;window.coStepRe=function(){try{if(CO.id)coStep(CO.i)}catch(e){}};
 function coNext(){const L=LESSON[CO.id];if(!L)return;const s=L.s[CO.i];if(s&&s.end)try{s.end()}catch(e){}coStep(CO.i+1)}
 function coEnd(silent){const id=CO.id,L=LESSON[id];document.removeEventListener('click',CO.clk,true);clearInterval(CO.tw);const o=document.getElementById('coach');if(o)o.remove();CO.id=null;if(typeof paused!=='undefined')paused=CO.was;
  if(!silent&&L&&L.rw&&S&&S.alive){const d=LS.get('murim_coachrw',{})||{};if(!d[id]){d[id]=1;LS.set('murim_coachrw',d);const g=Math.round(L.rw*W15s());S.money+=g;log(`🎓 เรียนจบบท「${L.t}」 — ครูผู้เฒ่าให้ค่าขนม ${typeof ftMf==='function'?ftMf(g):fmt(g)}`,'good')}}try{render()}catch(e){}}
@@ -45141,6 +45142,7 @@ window.openAQ=async function(tab){if(tab)TAB=tab;const d=roll(st());sv(d);let h=
 window.aqReroll=function(k,i){const d=roll(st()),P=d[k];if((P.rr|0)>=rrMax(k)||!P.q[i]||P.q[i].ok)return;const di=DIX(),wi=Math.floor((di-((TH(Date.now()).getUTCDay()+6)%7))/7),prev=(k==='d'?dayQ(di-1):wkQ(wi-1)).map(q=>q.id),hasW=P.q.some((q,j)=>j!==i&&(defOf(k,q.id)||{}).g);
  const nw=pick((k==='d'?DQ:WQ).filter(q=>!(hasW&&q.g)),1,'r'+P.p+Date.now(),P.q.map(q=>q.id).concat(prev,P.q.map(q=>(defOf(k,q.id)||{}).x).filter(Boolean)))[0];if(!nw)return;P.q[i]=Object.assign({id:nw.id,v:0},P.q[i].x4?{x4:1}:{});P.rr=(P.rr|0)+1;sv(d);openAQ()};
 window.aqResend=async function(k){if(!on())return toast('ต้องออนไลน์ก่อนนะ');const d=st(),P=d[k]||d.d;P.rs=0;P.q.forEach(q=>{if(q.ok)q.sy=0});sv(d);toast('🔄 กำลังส่งรับรางวัล…');await sync();setTimeout(()=>{try{if($('modal').dataset.k==='aq')openAQ(k)}catch(e){}},600)};
+window.aqClaimAll=async function(){if(!on())return 0;let n=0;try{const d=roll(st());if(['d','w'].some(k=>d[k].q.some(q=>q.ok&&!q.sy))){['d','w'].forEach(k=>{d[k].q.forEach(q=>{if(q.ok)q.sy=0})});sv(d);await sync();n++}const bp=(d.bp&&d.bp.m===MO())?d.bp.v:0,got=(d.bk[MO()]||[]);for(let t=1;t<=30;t++)if(bp>=t*4&&!got.includes(t)){try{const j=await api('aq',{o:'bk',t});if(j&&(j.ok||j.dup)){const d2=st(),m=MO();d2.bk[m]=d2.bk[m]||[];if(!d2.bk[m].includes(t))d2.bk[m].push(t);sv(d2);n++}}catch(e){break}}dot()}catch(e){}return n};
 window.aqBk=async function(t){if(!on())return toast('ต้องออนไลน์');try{const j=await api('aq',{o:'bk',t});const d=st(),m=MO();if(j&&(j.ok||j.dup)){d.bk[m]=d.bk[m]||[];if(!d.bk[m].includes(t))d.bk[m].push(t);sv(d)}
  if(j&&j.ok){const r=[];if(t===30){if(frGive('f_aqb_'+m.replace('-','')))r.push('🖼️ กรอบประจำเดือน')}if(t%5===0&&t%10)kAdd(25),r.push('☯️ กรรม 25');else if(t%10)kAdd(10),r.push('☯️ กรรม 10');if(j.f||j.g)r.push(tkTx(j.f,j.g));toast('📖 ขั้น '+t+': '+r.join(' + '))}else if(j&&j.err==='notyet')toast('แต้มยังไม่ถึง')}catch(e){toast('รับไม่สำเร็จ')}openAQ('b');dot()};
 function hqHtml(){const H=HQS;if(!H||!H.ok)return'<p class="tag2">โหลดประกาศิตฟ้าไม่ได้ (ต้องออนไลน์)</p>';const Q=HQ[H.q]||HQ[0],now=Date.now(),off=(H.now||now)-now;
@@ -47155,7 +47157,10 @@ window.mwNatStatus=natStatus;
  t.querySelectorAll('.dk-btn').forEach(b=>{if(/openMap\(/.test(b.getAttribute('onclick')||''))b.remove()});return t.innerHTML}catch(e){return h}}}
 // 5) โค้ชสอนเล่นไม่บังหน้าต่างเลือกเหตุการณ์
 const cs=document.createElement('style');cs.textContent=`body.mwOn #deskL .dk-more{display:none}body.coachHide #coach{opacity:0!important;pointer-events:none!important}`;document.head.appendChild(cs);
-setInterval(()=>{try{document.body.classList.toggle('coachHide',!!(choice._cur&&modalOpen))}catch(e){}},300);
+let chW=0;setInterval(()=>{try{const C=window._CO,o=document.getElementById('coach');let hide=false;
+ if(o&&C&&C.id&&modalOpen){const L=(window._LESSON||{})[C.id],st=L&&L.s[C.i],m=$('modal');const tgt=st&&st.sel?[...document.querySelectorAll(st.sel)].find(e=>e.getBoundingClientRect().width>0):null;hide=!(tgt&&m&&m.contains(tgt))}
+ else if(o&&choice._cur&&modalOpen)hide=true;
+ document.body.classList.toggle('coachHide',hide);if(chW&&!hide&&o)try{coStepRe()}catch(e){}chW=hide}catch(e){}},300);
 })()}catch(e){console.error('block78',e)}
 
 // ===== 🏙️ ยุคปัจจุบันเกิดเป็นสัตว์อสูรไม่ได้ (เลือกยุคปัจจุบันอยู่ → ซ่อน/กันปุ่มเกิดเป็นสัตว์) =====
@@ -47388,6 +47393,7 @@ window.faSet=function(v){LS.set('murim_fa',v?1:0);try{closeM()}catch(e){}if(!aut
 // ---------- 5) รับทั้งหมด ----------
 window.claimAll=async function(){const got=[];try{if(typeof dailyClaim==='function'){const b=(LS.get('murim_dly',{})||{}).d;dailyClaim();if((LS.get('murim_dly',{})||{}).d!==b)got.push('🎁 เช็คอินรายวัน')}}catch(e){}
  try{closeM()}catch(e){}
+ try{if(typeof aqClaimAll==='function'&&typeof onlineOK!=='undefined'&&onlineOK){const n=await aqClaimAll();if(n)got.push('📜 ภารกิจ/สมุดภารกิจ')}}catch(e){}
  if(typeof spClAll==='function'&&typeof onlineOK!=='undefined'&&onlineOK){toast(got.length?got.join(' · ')+' · กำลังรับรางวัลคัมภีร์…':'กำลังรับรางวัลคัมภีร์ฤดูกาล…');try{await spClAll()}catch(e){}}else toast(got.length?'✅ รับแล้ว: '+got.join(' · '):'ไม่มีรางวัลค้างรับ (บางอย่างต้องออนไลน์)')};
 // ---------- 6) เมนู: ปุ่มทางลัด ----------
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='menu'&&!m.querySelector('.uxRow')){const h=m.querySelector('h3');const row=`<div class="uxRow faRow" style="margin:6px 0 10px"><button class="pbtn" onclick="closeM();claimAll()">🎁 รับทั้งหมด</button><button class="gbtn" onclick="faSet(${fa()?0:1})">${fa()?'✋ ออโต้: หยุดรอเรื่องสำคัญ':'🎲 ให้ชะตาเล่นแทนทั้งหมด'}</button><button class="gbtn" onclick="LS.set('murim_uiall',${showAll()?0:1});LS.set('murim_hintoff',${showAll()?0:1});closeM();toast('${showAll()?'กลับไปแบบเรียบง่าย':'แสดงทุกระบบแล้ว'}')">${showAll()?'🧭 โหมดเรียบง่าย':'🧩 แสดงทุกระบบ'}</button>${LS.get('murim_hintoff',0)?'<button class="gbtn" onclick="LS.set(\'murim_hintoff\',0);closeM()">💡 เปิดคำแนะนำ</button>':''}</div>`;if(h)h.insertAdjacentHTML('afterend',row)}}catch(e){}return r}}
@@ -47403,3 +47409,19 @@ setInterval(()=>{try{if(S&&S.alive&&!S._dec)S._dec={a:S.age,m:S.money||0,p:(()=>
 // ---------- 9) ได้กรอบใหม่ตอนยังไม่ได้สวมกรอบ → สวมให้เลย ----------
 setInterval(()=>{try{const d=frGet();const seen=LS.get('murim_frseen',null);if(seen===null){LS.set('murim_frseen',d.own.slice());return}const nw=d.own.filter(x=>!seen.includes(x));if(!nw.length)return;LS.set('murim_frseen',d.own.slice());if(!d.eq&&frOf(nw[nw.length-1])){frEquip(nw[nw.length-1]);toast('🖼️ สวมกรอบใหม่ให้แล้ว — เปลี่ยนได้ที่โปรไฟล์')}}catch(e){}},5000);
 })()}catch(e){console.error('block82',e)}
+
+// ===== 📖 แตะคำศัพท์แล้วขึ้นคำอธิบาย (ผู้เล่นที่ยังเล่นไม่ถึง 5 ชีวิต · ปิดได้ในเมนู) =====
+try{(()=>{
+const G={'ลมปราณ':'พลังภายในจากการฝึก ยิ่งมากยิ่งทะลวงขั้นง่าย','พลังรวม':'ความแข็งแกร่งรวมทุกด้าน ใช้ตัดสินการต่อสู้และขั้นพลัง','กรรม':'บุญ (+) หรือบาป (−) จากสิ่งที่ทำ ส่งผลต่อเหตุการณ์และชาติหน้า','ชื่อเสียง':'คนรู้จักคุณแค่ไหน — เปิดทางเหตุการณ์และตำแหน่งใหม่','ปัญญา':'ความฉลาด ช่วยเรียนวิชา สอบ และทำงาน','เสน่ห์':'ความน่าดึงดูด ช่วยเรื่องคู่ครองและการเข้าหาผู้คน',
+ 'สำนัก':'กลุ่มผู้ฝึกยุทธ์ — เข้าแล้วได้เรียนวิชาและเลื่อนตำแหน่ง','อธรรม':'ฝ่ายทางเถื่อนในยุทธภพ ได้ไวแต่เสี่ยง','ธรรมะ':'ฝ่ายทางดีในยุทธภพ','ทะลวง':'ข้ามไปขั้นพลังถัดไป มีโอกาสล้มเหลว','ปิดด่าน':'เก็บตัวฝึกหลายปี ได้พลังมากแต่ห่างผู้คน','ปณิธาน':'เป้าหมายของชีวิตนี้ ทำสำเร็จได้รางวัลตอนจบ',
+ 'ตำลึง':'เงินในยุทธภพ','หินวิญญาณ':'เงินในโลกเซียน','รากวิญญาณ':'พรสวรรค์การบำเพ็ญของโลกเซียน','ทัณฑ์สวรรค์':'ฟ้าผ่าทดสอบตอนทะลวงขั้นสูง พลาดอาจถึงตาย','อายุขัย':'อายุสูงสุดที่ร่างกายอยู่ได้ — เพิ่มได้ด้วยพลังและยา','ทำเนียบ':'อันดับผู้เล่นทั้งเว็บ','กระดูก':'พื้นฐานร่างกายแต่กำเนิด ยิ่งดียิ่งฝึกไว',
+ 'ความเครียด':'สูงเกินไปสุขภาพแย่ลง ลดได้ด้วยการพักและอยู่กับคนรอบตัว','แผนปี':'แบ่ง 12 เดือนของปีว่าจะทำอะไร มีผลต่อเงิน สุขภาพ และเหตุการณ์','ค่าครองชีพ':'เงินที่ต้องจ่ายทุกเดือนตามจังหวัดที่อยู่'};
+const KEYS=Object.keys(G).sort((a,b)=>b.length-a.length),RE=new RegExp('('+KEYS.join('|')+')');
+const on=()=>{try{return !LS.get('murim_glossoff',0)&&((LS.get('murim_stats',{})||{}).lives|0)<5}catch(e){return false}};
+const st=document.createElement('style');st.textContent='.gl{border-bottom:1.5px dotted #ffd36e;cursor:help}.gl:hover{color:#ffe9a8}#glTip{position:fixed;z-index:100000;max-width:260px;padding:8px 11px;border-radius:12px;background:#1a1530;border:1.5px solid #ffd36e;color:#f4ecff;font-size:13px;line-height:1.5;box-shadow:0 8px 24px #0009;pointer-events:none}#glTip b{color:#ffd36e}';document.head.appendChild(st);
+function gl(el){if(!el||el.dataset.gl)return;el.dataset.gl=1;const used=new Set();const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement&&!n.parentElement.closest('button,a,.gl,input,textarea,script,style')?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT});const L=[];while(w.nextNode())L.push(w.currentNode);
+ L.forEach(t=>{let m=RE.exec(t.nodeValue);if(!m||used.has(m[1]))return;used.add(m[1]);const a=t.splitText(m.index);a.splitText(m[1].length);const sp=document.createElement('span');sp.className='gl';sp.dataset.g=m[1];sp.textContent=m[1];a.replaceWith(sp)})}
+setInterval(()=>{try{if(!on())return;const f=$('feed');if(f)[...f.children].slice(-12).forEach(gl);const m=$('modal');if(m&&modalOpen&&m.dataset.k==='choice')m.querySelectorAll('p,.tag2,div:not(:has(*))').forEach(x=>{if(!x.closest('button'))gl(x)})}catch(e){}},900);
+let tip=null,tt=0;document.addEventListener('click',e=>{const g=e.target.closest&&e.target.closest('.gl');if(!g){if(tip){tip.remove();tip=null}return}e.stopPropagation();e.preventDefault();if(tip)tip.remove();tip=document.createElement('div');tip.id='glTip';tip.innerHTML='<b>'+g.dataset.g+'</b> — '+G[g.dataset.g];document.body.appendChild(tip);const r=g.getBoundingClientRect(),tw=Math.min(260,innerWidth-16);tip.style.left=Math.max(8,Math.min(innerWidth-tw-8,r.left))+'px';tip.style.top=(r.bottom+8+tip.offsetHeight>innerHeight?r.top-tip.offsetHeight-8:r.bottom+8)+'px';clearTimeout(tt);tt=setTimeout(()=>{if(tip){tip.remove();tip=null}},4500)},true);
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const row=$('modal').querySelector('.uxRow');if(row&&!row.querySelector('.glT'))row.insertAdjacentHTML('beforeend',`<button class="gbtn glT" onclick="LS.set('murim_glossoff',${LS.get('murim_glossoff',0)?0:1});closeM();toast('${LS.get('murim_glossoff',0)?'เปิด':'ปิด'}คำอธิบายศัพท์แล้ว')">📖 ${LS.get('murim_glossoff',0)?'เปิด':'ปิด'}คำอธิบายศัพท์</button>`)}catch(e){}return r}}
+})()}catch(e){console.error('gloss',e)}
