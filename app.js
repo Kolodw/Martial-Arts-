@@ -25402,7 +25402,7 @@ function frgItems(k){const d=frGet();return FRAMES.filter(f=>frOwnQ(d,f.id)&&frC
 function frgChunk(k){const L=frgItems(k),box=$('frg_'+k);if(!box)return;const s=window._frg.sh[k]||0,e=Math.min(L.length,s+FRN),d=frGet(),au=frAvU();
  box.insertAdjacentHTML('beforeend',L.slice(s,e).map(f=>frPk(f,d,au)).join(''));window._frg.sh[k]=e;let b=box.nextElementSibling;const rest=L.length-e;
  if(rest>0){if(!b||!b.classList.contains('frmore')){box.insertAdjacentHTML('afterend',`<button class="frmore" onclick="frgChunk('${k}')"></button>`);b=box.nextElementSibling}b.textContent=`แสดงอีก ${Math.min(FRN,rest)} (เหลือ ${rest})`}else if(b&&b.classList.contains('frmore'))b.remove()}
-function frgTog(k,force){const h=$('frgh_'+k),box=$('frg_'+k);if(!h||!box)return;const op=force==null?!h.classList.contains('open'):!!force;window._frg.open[k]=op;h.classList.toggle('open',op);box.style.display=op?'':'none';
+function frgTog(k,force){const h=$('frgh_'+k),box=$('frg_'+k);if(!h||!box)return;if((k==='vip'||k==='sp')&&!frgItems(k).length){const op0=force==null?!h.classList.contains('open'):!!force;h.classList.toggle('open',op0);box.style.display=op0?'':'none';box.innerHTML=k==='vip'?'<div class="tag2" style="padding:8px 4px">ยังไม่มีกรอบ VIP — สมัคร ⭐ ผู้สนับสนุน / ⭐⭐ ผู้สนับสนุนพิเศษ / 👑 ผู้ก่อตั้ง แล้วกรอบจะเข้ามาที่หมวดนี้ <a href="#" onclick="closeM();vipMenu();return false">ดูสิทธิ์ ›</a></div>':'<div class="tag2" style="padding:8px 4px">ยังไม่มีกรอบซีซันพาส — ได้จาก ❄ คัมภีร์ฤดูกาล (เส้นฟรีขั้น 20 · คัมภีร์ทอง · ฉบับจารึก) <a href="#" onclick="closeM();openSP(\'tr\');return false">เปิดคัมภีร์ ›</a></div>';return}const op=force==null?!h.classList.contains('open'):!!force;window._frg.open[k]=op;h.classList.toggle('open',op);box.style.display=op?'':'none';
  const b=box.nextElementSibling;if(b&&b.classList.contains('frmore'))b.style.display=op?'':'none';if(op&&!(window._frg.sh[k]>0))frgChunk(k)}
 function frgSearch(){const q=String(window._frg.q||'').trim().toLowerCase(),res=$('frRes'),main=$('frMain');if(!res||!main)return;
  if(!q){res.style.display='none';res.innerHTML='';main.style.display='';return}
@@ -25414,7 +25414,7 @@ function frgSearch(){const q=String(window._frg.q||'').trim().toLowerCase(),res=
  const eq=d.eq?frOf(d.eq):null,rc=(LS.get('murim_frrc',[])||[]).filter(x=>x!==d.eq&&frOwnQ(d,x)&&frOf(x)).slice(0,3).map(frOf);
  const none=`<button class="frpick ${!d.eq?'on':''}" onclick="frEquip(null)">${frWrap('<span class="frph">✕</span>',null)}<small>ไม่ใช้กรอบ</small></button>`;
  const top=`<div class="frsub">ใส่อยู่ตอนนี้</div><div class="frlist">${eq&&frOwnQ(d,eq.id)?frPk(eq,d,au):''}${none}</div>`+(rc.length?`<div class="frsub">ใช้ล่าสุด</div><div class="frlist frcalm">${rc.map(f=>frPk(f,d,au)).join('')}</div>`:'');
- const groups=FRG.filter(([k])=>frgItems(k).length).map(([k,t])=>`<div class="frgh" id="frgh_${k}" onclick="frgTog('${k}')"><span>${t}</span><span class="c">${frgItems(k).length}</span><span class="ar">▸</span></div><div class="frlist frcalm" id="frg_${k}" style="display:none"></div>`).join('');
+ const groups=FRG.filter(([k])=>frgItems(k).length||k==='vip'||k==='sp').map(([k,t])=>`<div class="frgh" id="frgh_${k}" onclick="frgTog('${k}')"><span>${t}</span><span class="c">${frgItems(k).length}</span><span class="ar">▸</span></div><div class="frlist frcalm" id="frg_${k}" style="display:none"></div>`).join('');
  const host=document.createElement('div');host.dataset.done='1';host.innerHTML=`<input class="frqi" id="frQ" type="search" placeholder="🔍 ค้นหากรอบ…" value="${esc(window._frg.q||'')}"><div id="frMain">${top}${groups}</div><div id="frRes" style="display:none"></div>`;
  fl.replaceWith(host);const qi=$('frQ');qi.oninput=function(){window._frg.q=this.value;clearTimeout(window._frT);window._frT=setTimeout(frgSearch,160)};
  Object.keys(window._frg.open).forEach(k=>{if(window._frg.open[k]){window._frg.sh[k]=0;frgTog(k,true)}});if(window._frg.q)frgSearch()
@@ -36514,10 +36514,10 @@ try{(function(){
 // ---- หมวดกรอบในโปรไฟล์ ----
 const EVL=[['loy','🏮 อีเวนต์ลอยกระทง',/^f_e\d+$/],['hw','🎃 อีเวนต์ฮาโลวีน',/^f_hw\d+$/],['sk','💦 อีเวนต์สงกรานต์',/^f_sk\d+$/],['ny','🎆 อีเวนต์ปีใหม่',/^f_ny\d+$/]];
 const SHG=[['cs','🎨 ร้านตกแต่ง · ยุทธภพ',/^f_p\d+$/],['cm','🏙️ ร้านตกแต่ง · ยุคปัจจุบัน',/^f_m\d+$/],['cw','🌍 ร้านตกแต่ง · ชุดตามโลก',/^f_w\d+$/]];
-const grpOf=f=>{if(!f)return'';if(f.ev)return'ev'+f.ev;for(const [k,,re] of EVL)if(re.test(f.id))return'ev'+k;for(const [k,,re] of SHG)if(re.test(f.id))return k;return f.side};
+const grpOf=f=>{if(!f)return'';if(/^f_s\d+$/.test(f.id))return'sp';if(/^f_v(ip)?\d$/.test(f.id))return'vip';if(f.ev)return'ev'+f.ev;for(const [k,,re] of EVL)if(re.test(f.id))return'ev'+k;for(const [k,,re] of SHG)if(re.test(f.id))return k;return f.side};
 if(typeof FRG!=='undefined'&&Array.isArray(FRG)&&typeof frgItems==='function'){
  FRG.unshift(...EVL.map(([k,t])=>['ev'+k,t]),...SHG.map(([k,t])=>[k,t]));
- frgItems=function(k){const d=frGet();return FRAMES.filter(f=>d.own.includes(f.id)&&grpOf(f)===k)};
+ frgItems=function(k){const d=frGet();return FRAMES.filter(f=>frOwnQ(d,f.id)&&grpOf(f)===k)};
  window.frGrpOf=grpOf}
 // ---- ฉายาตกแต่งในโปรไฟล์ (แท็บ 🎖️ ฉายา) ----
 const TG=[['🏮 อีเวนต์ลอยกระทง',/^t_e\d+$/],['🎃 อีเวนต์ฮาโลวีน',/^t_hw\d+$/],['💦 อีเวนต์สงกรานต์',/^t_sk\d+$/],['🎆 อีเวนต์ปีใหม่',/^t_ny\d+$/],['🎨 ร้านตกแต่ง · ยุทธภพ',/^t_p\d+$/],['🏙️ ร้านตกแต่ง · ยุคปัจจุบัน',/^t_[mn]\d+$/],['🌍 ร้านตกแต่ง · ชุดตามโลก',/^t_w\d+$/]];
