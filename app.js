@@ -47156,3 +47156,9 @@ window.mwNatStatus=natStatus;
 const cs=document.createElement('style');cs.textContent=`body.mwOn #deskL .dk-more{display:none}body.coachHide #coach{opacity:0!important;pointer-events:none!important}`;document.head.appendChild(cs);
 setInterval(()=>{try{document.body.classList.toggle('coachHide',!!(choice._cur&&modalOpen))}catch(e){}},300);
 })()}catch(e){console.error('block78',e)}
+
+// ===== 🏙️ ยุคปัจจุบันเกิดเป็นสัตว์อสูรไม่ได้ (เลือกยุคปัจจุบันอยู่ → ซ่อน/กันปุ่มเกิดเป็นสัตว์) =====
+try{(()=>{const mwSel=()=>{try{return !!(CFG&&CFG.mw)}catch(e){return false}};const no=()=>{try{toast('🏙️ ยุคปัจจุบันเกิดเป็นสัตว์อสูรไม่ได้ — อยากเป็นสัตว์ให้เลือกโลก 🐾 เกิดเป็นสัตว์ ที่หน้าแรก')}catch(e){}};
+ ['goBeastLife','beastBirth','beastBirth2'].forEach(n=>{try{const f=window[n];if(typeof f!=='function')return;const w=function(){if(mwSel()){no();return}return f.apply(this,arguments)};window[n]=w;if(n==='goBeastLife')goBeastLife=w;else if(n==='beastBirth')beastBirth=w;else beastBirth2=w}catch(e){}});
+ setInterval(()=>{try{if(!mwSel())return;document.querySelectorAll('#modal button[onclick*="goBeastLife"],#modal button[onclick*="beastBirth"]').forEach(b=>b.style.display='none')}catch(e){}},300);
+})()}catch(e){console.error('mwNoBeast',e)}
