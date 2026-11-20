@@ -208,6 +208,7 @@ async function pay(request, env) {
   let P = null, worldId = null;
   try { const r = await env.PAY_DB.prepare("SELECT kind,scope,world_id,tier,days,n,price_baht FROM products WHERE sku=? AND active=1").bind(pk).first(); if (r) { P = { kind: r.kind, amt: r.price_baht, tier: r.tier, days: r.days || 0, n: r.n }; worldId = r.scope === 'world' ? r.world_id : null } } catch (e) {}
   if (!P) P = h.payPack && h.payPack(pk);
+  try { if (P && (P.kind === 'ak' || P.kind === 'akt') && h.akPrice && /^[a-z0-9]{6,24}$/.test(uid)) { const q = () => h.akPrice(uid, P); P = h.vkRun ? await h.vkRun(q) : await q() } } catch (e) { P = null }
   // ผู้สนับสนุน (เคยซื้อ/สนับสนุนจริง) ลด 20% สินค้าอีเวนต์ · ฝั่งเกมแสดงราคาเดียวกัน (ceil)
   try { if (P && P.ev && h.cmd && /^[a-z0-9]{6,24}$/.test(uid)) { const q = () => h.cmd('SISMEMBER', 'supok', uid); const v = h.vkRun ? await h.vkRun(q) : await q(); if (+v) P = Object.assign({}, P, { amt: Math.ceil(P.amt * 0.8) }) } } catch (e) {}
   const DON = pk === 'donate'; if (DON) P = { kind: 'donate', amt: 0, tier: 0, days: 0, n: 0 }; // โหมดสนับสนุน: ตรวจว่าสลิปจริง/ไม่ซ้ำ/เข้าบัญชีเรา แต่ไม่ให้สิทธิ์ใดๆ
@@ -283,7 +284,7 @@ async function pay(request, env) {
     const run = h.vkRun ? h.vkRun(() => h.payGrant(uid, P, name, b.an ? 1 : 0)) : h.payGrant(uid, P, name, b.an ? 1 : 0); await run;
     try { h.vkReset && h.vkReset() } catch (e) {}
   } catch (e) { console.error('PAY_GRANT', String(e && e.message || e)); await db.prepare("UPDATE orders SET status='paid_nogrant',note=? WHERE id=?").bind(String(e && e.message || e).slice(0, 150), oid).run().catch(() => {}); return jr({ ok: 0, st: 'grant', order: oid }) }
-  try { await db.prepare("INSERT INTO entitlements(uid,kind,starts_at,ends_at,order_id,source,created_at,world_id) VALUES(?,?,?,?,?,?,?,?)").bind(uid, P.kind === 'vip' ? 'vip' + P.tier : P.kind === 'sp' ? 'sp' + P.tier + ':' + (P.sea || '') : P.kind === 'nv' ? 'nv' : P.kind === 'cos' ? 'cos:' + (P.key || '') : P.kind === 'lk' ? 'lk' + P.n : 'rr' + P.n, now, P.days ? now + P.days * 86400e3 : null, oid, 'order', now, worldId).run() } catch (e) {}
+  try { await db.prepare("INSERT INTO entitlements(uid,kind,starts_at,ends_at,order_id,source,created_at,world_id) VALUES(?,?,?,?,?,?,?,?)").bind(uid, P.kind === 'vip' ? 'vip' + P.tier : P.kind === 'sp' ? 'sp' + P.tier + ':' + (P.sea || '') : P.kind === 'nv' ? 'nv' : P.kind === 'cos' ? 'cos:' + (P.key || '') : P.kind === 'lk' ? 'lk' + P.n : P.kind === 'ak' || P.kind === 'akt' ? P.kind + P.n : 'rr' + P.n, now, P.days ? now + P.days * 86400e3 : null, oid, 'order', now, worldId).run() } catch (e) {}
   await db.prepare("UPDATE orders SET status='done' WHERE id=?").bind(oid).run().catch(() => {});
   return jr({ ok: 1, order: oid });
 }

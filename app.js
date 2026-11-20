@@ -47548,3 +47548,102 @@ try{const noPar=M=>{if(!nat(M))return false;const l=Lx(M);return l.fl.par==='non
  [window._wld31,window._wld32,window._wld33].forEach(W=>{if(!W||!W.DEF)return;Object.values(W.DEF).forEach(a=>a.forEach(e=>{if(e.id==='e32_nm_dad'||e.id==='e32_nm_mom'){const c0=e.cond;e.cond=function(M){return !(e.id==='e32_nm_dad'?noDad(M):noPar(M))&&c0.apply(this,arguments)}}}))})}catch(e){console.error('b83 par',e)}
 window._b83={natFix,ARC2JOB};
 })()}catch(e){console.error('block83',e)}
+
+// ===================== BLOCK 84 🔒 ล็อกคำตอบ (VIP + ซื้อช่องเพิ่ม) — จำคำตอบต่อเหตุการณ์ ชะตา/ออโต้เลือกให้เอง · เรื่องสำคัญล็อกไม่ได้ =====================
+try{(()=>{
+const AK=Object.assign({l:[],n:0,f:0,v:0,p:0,t:0,nx:29,tp:19,adm:0},(()=>{try{return LS.get('murim_ak',null)||{}}catch(e){return {}}})());
+const FREE=[0,5,10,20],MAXS=50;
+const plain=s=>String(s==null?'':s).replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+const nz=s=>plain(s).replace(/[\d๐-๙][\d๐-๙,.]*|[%+−×]/g,'#').replace(/\s+/g,' ').slice(0,60);
+const offT=()=>!!LS.get('murim_akoff',0),askU=()=>!!LS.get('murim_akask',0);
+const keep=()=>{try{LS.set('murim_ak',AK)}catch(e){}};
+const act=()=>AK.l.slice(0,AK.n);
+const big=c=>{try{if(!c)return true;const t=plain(c.title);if(c.keep||/^🔁/.test(t))return true;if((c.opts||[]).some(o=>o&&o.noFate))return true;return (typeof AF_BIG!=='undefined'&&AF_BIG.test(t))||/ตาย|จบชีวิต|เกิดใหม่|ทะลวง|ขั้นใหม่/.test(t)}catch(e){return true}};
+const lkOf=c=>{if(!c)return null;const k=nz(c.title);return act().find(e=>e.k===k)||null};
+const find=c=>{if(offT()||!c||big(c))return null;const e=lkOf(c);if(!e)return null;const i=(c.opts||[]).findIndex(o=>o&&nz(o.t)===e.o);return i>=0?{i,e}:null};
+const setLim=j=>{if(!j||typeof j.n!=='number')return;['n','f','v','p','t','nx','tp','adm'].forEach(k=>{if(j[k]!=null)AK[k]=j[k]});if(Array.isArray(j.l))AK.l=j.l;keep()};
+let ldT=0;const load=async(force)=>{if(!force&&Date.now()-ldT<60000)return;ldT=Date.now();try{setLim(await api('akget'))}catch(e){}};
+let svT=null;const save=()=>{keep();clearTimeout(svT);svT=setTimeout(async()=>{try{setLim(await api('akput',{l:AK.l}))}catch(e){toast('บันทึกคำตอบที่ล็อกไม่สำเร็จ ลองใหม่อีกครั้ง')}},600)};
+setTimeout(()=>load(1),2500);setInterval(()=>load(),600000);
+// --- สลับล็อกจากหน้าเหตุการณ์ ---
+const toggle=i=>{const c=choice._cur;if(!c||big(c))return;const o=c.opts[i];if(!o)return;
+ if(!AK.n){akMenu();return}
+ const k=nz(c.title),ov=nz(o.t),x=AK.l.findIndex(e=>e.k===k);
+ if(x>=0&&AK.l[x].o===ov){AK.l.splice(x,1);toast('🔓 ปลดล็อกแล้ว')}
+ else if(x>=0){Object.assign(AK.l[x],{o:ov,ot:plain(o.t).slice(0,60)});toast('🔒 เปลี่ยนคำตอบที่ล็อกแล้ว')}
+ else{if(AK.l.length>=AK.n){toast(`ช่องล็อกเต็ม (${AK.n}) — ปลดอันเก่า หรือซื้อช่องเพิ่มใน ☰ → 🔒 ล็อกคำตอบ`);return}
+  AK.l.unshift({k,o:ov,t:plain(c.title).slice(0,60),ot:plain(o.t).slice(0,60),oo:c.opts.filter(z=>z&&!z.skip).slice(0,5).map(z=>plain(z.t).slice(0,60))});toast('🔒 จำคำตอบแล้ว — ครั้งหน้าชะตาจะเลือกข้อนี้ให้')}
+ save();paint();try{if(find(c))soon(c)}catch(e){}};
+const paint=()=>{try{const m=$('modal');if(!m||m.dataset.k!=='choice')return;const c=choice._cur;if(!c)return;
+ m.querySelectorAll('.akB').forEach(b=>b.remove());m.querySelectorAll('.opt.akL').forEach(b=>b.classList.remove('akL'));const nt=m.querySelector('.akNt');if(nt)nt.remove();
+ if(!(AK.n||AK.l.length)||offT())return;
+ const bg=big(c),cur=lkOf(c),hit=find(c);
+ if(bg){const h=m.querySelector('h3');if(h&&AK.n)h.insertAdjacentHTML('afterend','<div class="akNt tag2">✋ เรื่องสำคัญ — ล็อกคำตอบไม่ได้ ต้องเลือกเอง</div>');return}
+ m.querySelectorAll('.opt[data-i]').forEach(b=>{const i=+b.dataset.i,o=c.opts[i];if(!o||o.skip)return;const on=!!(hit&&hit.i===i);if(on)b.classList.add('akL');
+  b.insertAdjacentHTML('beforeend',`<span class="akB${on?' on':''}" title="${on?'ปลดล็อก':'ล็อกคำตอบนี้'}">${on?'🔒':'🔓'}</span>`);const s=b.querySelector('.akB');s.onclick=e=>{e.stopPropagation();e.preventDefault();toggle(i)}});
+ if(hit){const h=m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',`<div class="akNt tag2">🔒 ล็อกไว้: ชะตาจะเลือก “${esc(hit.e.ot||'')}” ให้</div>`)}
+ else if(cur){const h=m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend','<div class="akNt tag2">🔒 เคยล็อกเหตุการณ์นี้ไว้ แต่ครั้งนี้ไม่มีตัวเลือกเดิม — เลือกเองนะ</div>')}}catch(e){console.error('akPaint',e)}};
+// --- ชะตา/ออโต้: ใช้คำตอบที่ล็อกก่อน ---
+{const _fc=fateChoice;fateChoice=function(silent){const c=choice._cur;try{if(c){const h=find(c);
+  if(h){clearTimeout(choice._t);clearInterval(choice._cd);addFeed('ev',`🔒 ล็อกคำตอบ — <b>${esc(plain(c.title))}</b>: ${esc(plain(c.opts[h.i].t))}`,'sum');return choiceRun(h.i)}
+  if(auto&&askU()&&AK.n&&!offT()&&!big(c)&&!fateChoice._force&&!lkOf(c)){c._akh=1;const e=$('chCd');if(e)e.textContent='⏸ เหตุการณ์ที่ยังไม่ล็อก — หยุดรอให้คุณเลือก (กด 🔓 เพื่อจำไว้)';
+   try{if(choice._min){choice._min=false;pendBar();choiceShow()}}catch(x){}return}}}catch(e){console.error('akFate',e)}return _fc.apply(this,arguments)}}
+// ตอนเล่นเอง: เหตุการณ์ที่ล็อกไว้ เลือกให้หลังโชว์แป๊บเดียว (กดเลือกเองก่อนได้)
+const soon=c=>{if(!find(c))return;clearTimeout(choice._akT);choice._akT=setTimeout(()=>{try{if(choice._cur===c&&find(c)&&!(modalOpen&&$('modal').dataset.k!=='choice'))fateChoice()}catch(e){}},auto?300:1400)};
+{const _cs=choiceShow;choiceShow=function(){const r=_cs.apply(this,arguments);try{paint();const c=choice._cur;if(c&&find(c)){if(!auto)soon(c);const e=$('chCd');if(e)e.textContent='🔒 ใช้คำตอบที่ล็อกไว้…'}}catch(e){}return r}}
+{const _ch=choice;choice=function(){const r=_ch.apply(this,arguments);try{const c=choice._cur;if(c&&choice._min&&!auto&&find(c))soon(c)}catch(e){}return r};for(const k in _ch)try{choice[k]=_ch[k]}catch(e){}}
+// --- หน้าจัดการ ---
+const shopH=()=>{const full=!AK.nx||!AK.v,trial=AK.t;
+ return `<h4 class="akH">🛒 ซื้อช่องเพิ่ม</h4>
+ <div class="akS"><div><b>🔐 แพ็ก +5 ช่อง</b><small>ถาวร · ใช้ได้ขณะมี VIP · ยิ่งซื้อยิ่งแพงขึ้น · รวมไม่เกิน ${MAXS} ช่อง${AK.p?` · ซื้อแล้ว ${AK.p} แพ็ก`:''}</small></div><button class="pbtn" ${full?'disabled':''} onclick="akBuy('akp')">${!AK.v?'ต้องมี VIP':!AK.nx?'เต็มแล้ว':AK.nx+' บาท'}</button></div>
+ <div class="akS"><div><b>🎟️ แพ็กทดลอง 3 ช่อง</b><small>ซื้อได้ครั้งเดียว · ถาวร · ใช้ได้แม้ไม่มี VIP</small></div><button class="pbtn" ${trial?'disabled':''} onclick="akBuy('akt')">${trial?'มีแล้ว':AK.tp+' บาท'}</button></div>
+ <p class="tag2">ราคาแพ็ก +5: ครั้งที่ 1–2 = 29 · 3–4 = 49 · 5–6 = 69 · 7–9 = 99 บาท${AK.v&&AK.nx?` · แพ็กถัดไปของคุณ <b>${AK.nx} บาท</b>`:''}</p>`};
+window.akMenu=async function(noLoad){
+ const draw=()=>{const L=AK.l,n=AK.n,used=Math.min(L.length,n);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🔒 ล็อกคำตอบ</h3>
+ <p class="tag2">กด 🔓 ข้างตัวเลือกในหน้าเหตุการณ์เพื่อจำคำตอบ ครั้งหน้าเจอเหตุการณ์เดิม ชะตา/โหมดอัตโนมัติจะเลือกข้อนั้นให้เอง · เรื่องสำคัญ (เข้าสำนัก แต่งงาน ทะลวงขั้น ความตาย ฯลฯ) ล็อกไม่ได้ ต้องเลือกเอง</p>
+ ${n?`<div class="akC">ใช้ไป <b>${used} / ${n}</b> ช่อง <small>${(x=>x?'('+x+')':'')(AK.adm?'แอดมิน':(AK.v?'VIP '+AK.v+' ฟรี '+AK.f:'')+(AK.v&&AK.p?' + ซื้อ '+AK.p*5:'')+(AK.t?(AK.v?' + ':'')+'ทดลอง 3':''))}</small></div><div class="akM"><i style="width:${n?used/n*100:0}%"></i></div>`
+  :`<div class="akC" style="color:#c81e3a">${L.length?'VIP หมดอายุ — คำตอบที่ล็อกยังเก็บไว้ ต่อ VIP แล้วใช้ต่อได้':'ใช้ได้เมื่อมี VIP หรือแพ็กทดลอง'}</div>`}
+ <div class="akLs">${L.length?L.map((e,i)=>`<div class="akR${i<n?'':' off'}"><div><b>${esc(e.t)}${i<n?'':' <em>· พักไว้</em>'}</b>${(e.oo&&e.oo.length>1)?`<select onchange="akSet(${i},this.value)">${e.oo.map(o=>`<option ${nz(o)===e.o?'selected':''}>${esc(o)}</option>`).join('')}</select>`:`<span>→ ${esc(e.ot)}</span>`}</div><button class="gbtn" onclick="akDel(${i})">ปลด</button></div>`).join(''):'<p class="tag2" style="text-align:center">ยังไม่มีคำตอบที่ล็อก</p>'}</div>
+ <h4 class="akH">⚙️ ตั้งค่า</h4>
+ <label class="akO"><span>หยุดถามเมื่อเจอเหตุการณ์ใหม่ที่ยังไม่ล็อก (ตอนโหมดอัตโนมัติ)</span><input type="checkbox" ${askU()?'checked':''} onchange="LS.set('murim_akask',this.checked?1:0)"></label>
+ <label class="akO"><span>ปิดล็อกชั่วคราว (เล่นเองทั้งหมด)</span><input type="checkbox" ${offT()?'checked':''} onchange="LS.set('murim_akoff',this.checked?1:0)"></label>
+ <h4 class="akH">💎 ช่องฟรีตามระดับ VIP</h4>
+ <div class="akT">${[1,2,3].map(v=>`<div class="${AK.v===v?'on':''}">VIP ${v}<b>${FREE[v]}</b>ช่อง</div>`).join('')}</div>
+ ${AK.v?'':'<button class="gbtn" style="width:100%;margin-top:6px" onclick="vipMenu()">🏮 ดูแพ็ก VIP</button>'}
+ ${shopH()}
+ <p class="tag2">VIP หมดอายุ ช่องที่ซื้อไม่หาย แค่พักไว้ · ล็อกเก็บไว้กับบัญชี ใช้ได้ทุกเครื่อง</p>`,'akm')};
+ draw();if(!noLoad){await load(1);if($('modal').dataset.k==='akm')draw()}};
+window.akSet=function(i,v){const e=AK.l[i];if(!e)return;e.o=nz(v);e.ot=plain(v).slice(0,60);save();toast('แก้คำตอบแล้ว')};
+window.akDel=function(i){AK.l.splice(i,1);save();akMenu(1)};
+// --- ซื้อ (ตรวจสลิปอัตโนมัติผ่าน /api/pay) ---
+const shrink=f=>new Promise(res=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);let q=.88,d=cv.toDataURL('image/jpeg',q);while(d.length>2.8e6&&q>.4){q-=.1;d=cv.toDataURL('image/jpeg',q)}res(d)};im.onerror=()=>res('');im.src=fr.result};fr.onerror=()=>res('');fr.readAsDataURL(f)});
+const MSG={noslip:'อ่านสลิปไม่ได้ ลองแคปให้เห็นทั้งใบ (ต้องเห็น QR) แล้วลองใหม่',dup:'สลิปนี้เคยถูกใช้แล้ว',acct:'สลิปนี้ไม่ได้โอนเข้าบัญชีของเกม',amount:'ยอดในสลิปไม่ตรงกับราคา',old:'สลิปเก่าเกินไป (รับเฉพาะที่โอนภายใน 3 ชั่วโมง)',pending:'ธนาคารยังไม่ยืนยันรายการ รอสักครู่แล้วลองใหม่',rate:'ส่งถี่เกินไป รอสักครู่',bad:'ซื้อแพ็กนี้ไม่ได้แล้ว (ช่องเต็ม / ไม่มี VIP / เคยซื้อแล้ว)',grant:'ตรวจสลิปผ่านแต่ให้ของไม่สำเร็จ — แจ้งผู้พัฒนาพร้อมสลิป'};
+window.akBuy=async function(pk){await load(1);const tr=pk==='akt',p=tr?AK.tp:AK.nx;if(tr?AK.t:(!AK.v||!AK.nx)){toast(MSG.bad);return akMenu(1)}
+ modal(`<button class="xbtn" onclick="akMenu()">✕</button><h3>${tr?'🎟️ ล็อกคำตอบ · ทดลอง 3 ช่อง':'🔐 ล็อกคำตอบ · +5 ช่อง'}</h3>
+ <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#c98d22">${p} บาท</div>
+ <img loading="lazy" src="donate-qr.jpg" alt="QR พร้อมเพย์" style="max-width:100%;max-height:34vh;border-radius:10px;background:#fff;margin-top:6px" draggable="false">
+ <p style="margin:8px 0 2px">1) สแกนโอน <b>${p} บาท</b> ตรงยอดเป๊ะ</p><p class="tag2">2) แนบสลิปแล้วกดส่ง · ระบบตรวจอัตโนมัติ ช่องเข้าทันที</p>
+ <a class="gbtn" href="donate-qr.jpg" download="qr-1inanovel.jpg">⬇️ บันทึกรูป QR</a></div>
+ <label class="supl">🧾 แนบสลิป<input id="supImg" type="file" accept="image/*"></label>
+ <button class="pbtn" style="width:100%;margin-top:8px" onclick="akPaid(this,'${pk}')">📨 ส่งสลิป</button>
+ <p class="tag2">${tr?'ซื้อได้ครั้งเดียว ถาวร':'ถาวร ใช้ได้ขณะมี VIP · แพ็กถัดไปราคาจะสูงขึ้น'} · ผูกกับบัญชี</p>`,'akbuy')};
+window.akPaid=async function(btn,pk){const f=$('supImg')&&$('supImg').files&&$('supImg').files[0];if(!f)return toast('แนบสลิปก่อนนะ');
+ btn.disabled=true;btn.textContent='⏳ กำลังตรวจสลิป…';let j=null;
+ try{const img=await shrink(f);if(!img)throw 0;const r=await fetch('/api/pay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:pid,pk,n:pname(),img})});j=await r.json().catch(()=>null)}catch(e){j=null}
+ if(j&&j.ok){await load(1);btn.textContent='✅ ตรวจผ่านแล้ว ช่องเข้าแล้ว!';toast('✅ ได้ช่องล็อกเพิ่มแล้ว ขอบคุณที่สนับสนุนครับ 💛');try{sfx('good')}catch(e){}setTimeout(()=>akMenu(1),1200);return}
+ btn.disabled=false;btn.textContent='📨 ส่งสลิป';toast(j&&j.st==='amount'&&j.need?'ยอดในสลิปไม่ตรง ต้องโอน '+j.need+' บาทพอดี แล้วส่งสลิปใบใหม่':j&&MSG[j.st]?MSG[j.st]:'ตรวจสลิปไม่สำเร็จ ลองใหม่อีกครั้ง หรือแจ้งผู้พัฒนาพร้อมสลิป')};
+// เมนู ☰: ปุ่มเข้า
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const row=$('modal').querySelector('.uxRow');if(row&&!row.querySelector('.akMb'))row.insertAdjacentHTML('beforeend','<button class="gbtn akMb" onclick="akMenu()">🔒 ล็อกคำตอบ</button>')}catch(e){}return r}}
+// ปุ่มในหน้า VIP
+{const _vm=window.vipMenu;if(typeof _vm==='function')window.vipMenu=function(){const r=_vm.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.akVb')){const b=m.querySelector('.vcard')||m.querySelector('h3');if(b)b.insertAdjacentHTML('beforebegin','<button class="gbtn akVb" style="width:100%;margin:4px 0" onclick="akMenu()">🔒 ล็อกคำตอบ — VIP 1/2/3 ได้ฟรี 5/10/20 ช่อง</button>')}}catch(e){}return r}}
+const st=document.createElement('style');st.textContent=`#modal .opt{position:relative}#modal .opt:has(.akB){padding-right:44px}
+.akB{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:9px;border:1.5px dashed #9a8a6a66;font-size:15px;opacity:.75;cursor:pointer;background:#ffffff10}
+.akB.on{border:1.5px solid #e9b949;background:#e9b94930;opacity:1}#modal .opt.akL{border-color:#e9b949!important;box-shadow:0 0 0 2px #e9b94955 inset}
+.akNt{margin:-2px 0 6px;color:#b98a1c}.akC{margin:6px 0 2px;font-size:14px}.akC small{opacity:.7}.akM{height:8px;border-radius:9px;background:#8882;overflow:hidden;margin-bottom:8px}.akM i{display:block;height:100%;background:linear-gradient(90deg,#e9b949,#ffd77a)}
+.akLs{max-height:34vh;overflow:auto;border:1px solid #8883;border-radius:10px;padding:2px 8px}.akR{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #8882}.akR:last-child{border:0}.akR>div{flex:1;min-width:0}.akR b{display:block;font-weight:600;font-size:14px}.akR em{color:#c81e3a;font-style:normal;font-size:12px}.akR span{font-size:13px;color:#b98a1c}#modal .akR select{font:inherit;font-size:13px;max-width:100%;margin-top:3px;border-radius:8px;padding:3px 6px;color:inherit;background:#8881;border:1px solid #e9b94966;-webkit-text-fill-color:currentColor!important;color:#f1e8d4!important;background:#1a1f33!important}#modal .akR option{color:#111;-webkit-text-fill-color:#111;background:#fff}.akR.off{opacity:.5}
+.akH{margin:12px 0 4px;font-size:15px}.akO{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13.5px;padding:5px 0}.akO input{width:18px;height:18px;flex:none}
+.akT{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.akT>div{text-align:center;border:1px solid #8884;border-radius:10px;padding:6px;font-size:12.5px}.akT b{display:block;font-size:17px;color:#c98d22}.akT .on{border-color:#e9b949;background:#e9b94922}
+.akS{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #8882}.akS>div{flex:1}.akS b{display:block;font-weight:600}.akS small{font-size:12px;opacity:.75}.akS .pbtn{white-space:nowrap}.akS .pbtn[disabled]{opacity:.5}`;document.head.appendChild(st);
+window._AK={AK,find,big,nz,load};
+})()}catch(e){console.error('block84',e)}
