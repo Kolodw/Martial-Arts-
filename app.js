@@ -52133,3 +52133,264 @@ const _rn=render;render=function(){const r=_rn.apply(this,arguments);try{const h
   const m=document.createElement('div');m.className='skMn';m.textContent=g;h.appendChild(m)}
  if(v===2){const T2=h.querySelector('.skT span');if(T2&&!/▸/.test(T2.textContent))T2.textContent='🌠 '+T2.textContent+' ▸'}}catch(e){console.error('sky hud',e)}return r};
 })()}catch(e){console.error('block97',e)}
+
+// ============================================================
+// BLOCK 98: 🌠 ทะลุฟ้าดารา — หน้าสุ่มกำเนิด 2054
+//   การ์ด 6 ใบ: ถิ่นเกิด (4 นคร × 5 เขต = 20) · ภูมิหลัง 20 · ร่างแต่กำเนิด 8 · รอยดาวตก/รูปลักษณ์ 20 · ชะตา 20 · ความลับ 20 (คว่ำหน้า)
+//   เลือกเพศเองได้ · สุ่มใหม่ 3 ครั้ง · ล็อกการ์ดได้ · ระดับ ธรรมดา/หายาก/ตำนาน · คอมโบลับ 8 ชุด · สมุดสะสม
+//   ทุกใบมีผลจริง (ค่าเริ่ม/รายปี/ยีน/พรสวรรค์) และเกือบทุกใบมีเหตุการณ์ของตัวเองระหว่างชีวิต
+// ============================================================
+try{(()=>{
+const SKY=()=>window._sky;
+const pick=a=>a[Math.floor(Math.random()*a.length)],R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+// ---------- ข้อมูลการ์ด ----------
+// r: 0 ธรรมดา · 1 หายาก · 2 ตำนาน · b: ค่าเริ่ม · y: ต่อปี · g: ยีนที่ได้แน่ตอนปลุก · t: พรสวรรค์ ×(1+t) หลังปลุก · e: เหตุการณ์ [อายุต่ำ,สูง,หัว,เรื่อง,[[ปุ่ม,ผล,คำอธิบาย],…]]
+const CITY={
+ korat:{n:'นครเหล็กโคราช',ic:'⚙️',wall:68,wave:0,d:'นครโรงงาน กำแพงสมดุล งานหาง่าย',y:{mon:40}},
+ udon:{n:'นครหินแดงอุดร',ic:'🧱',wall:80,wave:2,d:'กำแพงหนาที่สุด เจ้าเมืองเข้ม ใบอนุญาตแพง',y:{karma:1}},
+ hatyai:{n:'นครกำแพงหาดใหญ่',ic:'🌊',wall:55,wave:-1,d:'ติดทะเล อสูรมาจากน้ำ แก่นอสูรทะเลราคาดี',y:{mon:70}},
+ cm:{n:'นครกระจกเชียงใหม่',ic:'🔭',wall:62,wave:-2,d:'เมืองนักวิจัย ฝึกจิตได้ดี คลื่นอสูรถี่',y:{mind:1}}};
+const PLACE=[
+ ['p_kr1','korat','เขตโรงงานกระสุน',0,'เสียงเครื่องจักรกล่อมนอนทุกคืน',{pow:2},{mon:20},null],
+ ['p_kr2','korat','ตลาดเหล็กใต้สะพาน',0,'ตลาดมืดขายชิ้นส่วนอสูร',{mon:120},{},['ป้าขายแก่นอสูรเถื่อน','ป้าแผงข้างบ้านยื่นแก่นอสูรเม็ดเล็กให้ "เก็บไว้ อย่าบอกใคร"',[['เก็บไว้',{cores:1,karma:-1},'แก่น +1'],['คืนป้าไป',{karma:2},'กรรม +']]]],
+ ['p_kr3','korat','หอบังคับการกำแพงเหนือ',1,'พ่อเป็นช่างซ่อมกำแพง',{wall:6},{wall:1},null],
+ ['p_kr4','korat','ชุมชนรางรถไฟเก่า',0,'บ้านสร้างในตู้รถไฟร้าง',{hp:6},{},null],
+ ['p_kr5','korat','ย่านปราสาทหินพิมาย',2,'ซากปราสาทที่ดาวตกไม่แตะ',{mind:6},{mind:1},['ปราสาทที่เรืองแสง','คืนเดือนดับ หินทรายในปราสาทเรืองแสงเป็นลายดาว',[['นั่งสมาธิกลางลาน',{mind:15},'จิต +'],['แกะหินชิ้นเล็กกลับบ้าน',{cores:2,karma:-2},'แก่น +2']]]],
+ ['p_ud1','udon','ค่ายทหารหนองประจักษ์',1,'โตมากับเสียงแตรปลุก',{pow:3,hp:6},{},null],
+ ['p_ud2','udon','ทุ่งบัวแดงกลายพันธุ์',1,'บัวแดงสูงท่วมหัว กินเนื้อได้',{int:4},{},['ดอกบัวที่อ้าปาก','ดอกบัวแดงยักษ์งับเท้าเพื่อนคุณ',[['ดึงเพื่อนออก',{hp:-8,fame:20},'เจ็บนิดหน่อย'],['วิ่งไปตามผู้ใหญ่',{karma:1},'ปลอดภัย']]]],
+ ['p_ud3','udon','เขตราชการชั้นใน',0,'บ้านเลขที่ดี เพื่อนบ้านมีเส้น',{mon:200},{},null],
+ ['p_ud4','udon','บ้านเชียงขุดใหม่',2,'แหล่งโบราณคดีที่เจอกระดูกอสูรยุคก่อน',{int:6},{},['ไหลายเกลียวที่เต้นตุบ','ไหดินเผาโบราณมีเสียงหัวใจเต้นอยู่ข้างใน',[['เปิดดู',{gene:'heart',mind:5},'ได้ยีนหัวใจสองห้องตอนปลุก'],['ส่งให้นักวิจัย',{mon:800,fame:30},'เครดิต +800']]]],
+ ['p_ud5','udon','สลัมกำแพงตะวันออก',0,'ตรงที่อสูรชนบ่อยที่สุด',{pow:3,mon:-30},{},null],
+ ['p_hy1','hatyai','ท่าเรือแก่นอสูรทะเล',0,'กลิ่นคาวทะเลกับเกล็ดเรืองแสง',{cores:1},{mon:30},null],
+ ['p_hy2','hatyai','ตลาดกิมหยงใต้น้ำ',1,'ตลาดเก่าจมครึ่งชั้น พายเรือซื้อของ',{mon:150},{},['ตะกร้าลอยน้ำ','ตะกร้าลอยมาติดหน้าบ้าน ข้างในมีไข่เรืองแสง',[['ฟักเอง',{later:'og_egg',mind:3},'จะเกิดอะไรขึ้น'],['ขายให้ตลาด',{mon:600},'เครดิต +600']]]],
+ ['p_hy3','hatyai','หอประภาคารกำแพงทะเล',1,'แม่เป็นคนเฝ้าไฟ',{wall:4,mind:3},{},null],
+ ['p_hy4','hatyai','ทะเลสาบสงขลาที่ไม่เคยนิ่ง',2,'น้ำในทะเลสาบหมุนวนตลอดยี่สิบปี',{mind:5,int:3},{},['ตาของทะเลสาบ','น้ำวนในทะเลสาบหยุดหมุนครั้งแรก มีบางอย่างลืมตาอยู่ใต้น้ำ',[['ดำลงไปดู',{gene:'echo',hp:-10},'ได้ยีนคลื่นเสียงตอนปลุก'],['รีบหนี',{},'ไม่เสี่ยง']]]],
+ ['p_hy5','hatyai','ค่ายผู้อพยพชายแดน',0,'คนสามภาษาอยู่ในเต็นท์เดียวกัน',{int:3,mon:-20},{},null],
+ ['p_cm1','cm','สถาบันวิจัยยีนดอยสุเทพ',1,'โตในห้องแล็บ',{int:6},{int:1},null],
+ ['p_cm2','cm','ตลาดวโรรสกระจก',0,'โดมกระจกคลุมทั้งตลาด',{mon:80},{},null],
+ ['p_cm3','cm','หมู่บ้านดอยกลายพันธุ์',1,'ชาวดอยที่อยู่กับอสูรมาสามรุ่น',{pow:2,mind:4},{},['ข้อตกลงกับอสูรภูเขา','ผู้เฒ่าพาคุณไปทำพิธีกับอสูรภูเขา',[['ทำพิธี',{gene:'wing',karma:2},'ได้ยีนพังผืดร่อนลมตอนปลุก'],['ไม่ไป',{},'']]]],
+ ['p_cm4','cm','หอดูดาวที่ทำนายมหันตภัย',2,'หอดูดาวที่เตือนเรื่องดาวตกก่อนใคร แต่ไม่มีใครเชื่อ',{mind:8},{mind:1},['บันทึกของนักดาราศาสตร์','ในลิ้นชักหอดูดาวมีบันทึกเขียนว่า "ดวงที่สองจะมาในปี 2070"',[['จดจำไว้',{int:5,flag:'second'},'ปมใหม่'],['เผาทิ้ง',{mind:4},'']]]],
+ ['p_cm5','cm','คูเมืองเก่าเรืองแสง',0,'น้ำในคูเมืองเรืองแสงทุกคืน',{hp:4},{},null]];
+const BG=[
+ ['b_fac',0,'🏭','ลูกคนงานโรงงานกระสุน','city','พ่อแม่ทำงานกะดึก',{mon:60,pow:1},{},null],
+ ['b_slum',0,'🏚️','เด็กสลัมนอกกำแพง','slum','ทุกคืนได้ยินเสียงหอนใกล้กว่าคนอื่น',{pow:3,mon:-50,hp:6},{},null],
+ ['b_hunt',1,'🗡️','ลูกนักล่าอสูร','hunter','พ่อเป็นนักล่าใบอนุญาต C',{pow:3,cores:1},{},['มีดเก่าของพ่อ','พ่อยื่นมีดสั้นที่ด้ามสึกให้ "วันหนึ่งเอ็งจะต้องใช้"',[['รับไว้',{pow:4},'กาย +'],['ขอให้พ่อสอนแทน',{mind:4,int:2},'']]]],
+ ['b_ref',0,'🎒','ลูกผู้ลี้ภัยจากกรุงเทพ','refugee','ครอบครัวหนีน้ำมาตอนคุณยังแบเบาะ',{int:2,karma:2},{},null],
+ ['b_gene',2,'🧪','ลูกตระกูลวิจัยยีน','city','แม่เป็นหัวหน้าแล็บ',{int:8,mon:300},{},['ห้องแล็บของแม่','แม่ให้คุณเลือกตัวอย่างยีนหนึ่งหลอดก่อนวันสอบ',[['เกล็ดเหล็ก',{gene:'iron'},''],['ตาราตรี',{gene:'night'},''],['เลือดเย็น',{gene:'cold'},'']]]],
+ ['b_heir',2,'🎖️','ทายาทนักล่าระดับ S ที่ตายในคลื่นอสูร','hunter','ชื่อพ่อสลักบนกำแพง',{fame:120,pow:2},{},['ศัตรูของพ่อ','ชายแขนกลมาถามหาลูกของคนที่ฆ่าน้องชายเขา',[['บอกว่าคือข้าเอง',{fame:40,hp:-15,later:'og_heir2'},'เขาจะกลับมา'],['โกหกว่าไม่รู้จัก',{karma:-2},'']]]],
+ ['b_train',1,'🚂','เด็กที่เกิดบนรถไฟอพยพ','refugee','ไม่มีสัญชาตินคร',{pow:2,karma:1,mon:-40},{},['บัตรนคร','เจ้าหน้าที่สั่งให้ครอบครัวไร้สัญชาติออกนอกกำแพง',[['สอบสัญชาติ',{int:4},'ผ่านได้ถ้าเก่ง'],['จ่ายใต้โต๊ะ',{mon:-200,karma:-2},'']]]],
+ ['b_cult',1,'☄️','ลูกลัทธิบูชาดาวตก','city','ครอบครัวสวดมนต์ให้ดาวทุกคืน',{mind:6},{mind:1},['พิธีรับดาว','ลัทธิจะ "ถวาย" เด็กหนึ่งคนให้ดาว และเลือกคุณ',[['หนีออกจากพิธี',{karma:2,later:'og_cult2'},'ลัทธิจะตามหา'],['ยอมเข้าพิธี',{mind:15,mut:['เสียงในหัว','ฝึกจิตยากขึ้น']},'จิตพุ่งแต่มีเสียงในหัว']]]],
+ ['b_merc',0,'💰','ลูกพ่อค้าแก่นอสูร','city','บ้านมีตู้เซฟเต็มแก่น',{mon:400},{mon:30},null],
+ ['b_orph',0,'🧸','เด็กกำพร้าในบ้านพักนคร','slum','ไม่รู้ว่าพ่อแม่เป็นใคร',{hp:6,karma:2},{},['จดหมายไม่มีชื่อ','วันเกิดอายุ 10 มีจดหมายไม่ระบุผู้ส่งพร้อมเครดิตก้อนหนึ่ง',[['เก็บเงินไว้',{mon:500},''],['ตามหาผู้ส่ง',{later:'og_orph2',int:2},'ปมใหม่']]]],
+ ['b_wall',0,'🧱','ลูกช่างกำแพง','city','รู้จุดอ่อนกำแพงทุกจุด',{wall:5,pow:1},{wall:1},null],
+ ['b_med',1,'🩺','ลูกหมอสนาม','city','บ้านเป็นคลินิกรักษาคนโดนอสูรกัด',{hp:10,int:3},{},null],
+ ['b_mon',1,'🛕','เด็กวัดกลางกำแพง','refugee','หลวงพ่อเลี้ยงมาแต่เล็ก',{mind:8,karma:4},{karma:1},null],
+ ['b_gang',0,'🔪','ลูกแก๊งตลาดมืด','slum','ค่าคุ้มครองคือภาษาแรกที่เรียน',{mon:150,karma:-4,pow:2},{},['งานแรกของแก๊ง','หัวหน้าแก๊งสั่งให้ไปทวงหนี้ร้านป้าข้างบ้าน',[['ไปทวง',{mon:300,karma:-4},''],['เตือนป้าให้หนี',{karma:4,hp:-10},'โดนลงโทษ']]]],
+ ['b_pilot',1,'🛩️','ลูกนักบินลาดตระเวน','city','พ่อบินเหนือป่าอสูรทุกสัปดาห์',{int:3,mind:3},{},['เครื่องบินที่ไม่กลับมา','เครื่องของพ่อหายไปเหนือป่าตะวันตก',[['รอข่าว',{mind:4,later:'og_pilot2'},'อาจมีข่าว'],['ปีนกำแพงไปหาเอง',{pow:4,hp:-20,fame:30},'บ้าบิ่น']]]],
+ ['b_net',1,'📡','ลูกนักข่าววิทยุใต้ดิน','city','สถานีวิทยุเถื่อนในห้องใต้หลังคา',{int:5},{fame:5},null],
+ ['b_farm',0,'🌾','ลูกชาวนาในโดมเกษตร','refugee','ข้าวกลายพันธุ์สูงสองเมตร',{hp:8,pow:2},{mon:20},null],
+ ['b_noble',2,'🏛️','ลูกสภานคร','city','ชื่อนามสกุลเปิดประตูทุกบาน',{mon:900,fame:60},{mon:60},['ทางลัดของลูกสภา','พ่อเสนอให้ "ปรับ" ผลสอบวัดยีนให้สวยขึ้น',[['ยอมรับ',{tal:.15,karma:-6},'พรสวรรค์ +15%'],['ปฏิเสธ',{karma:4,mind:4},'']]]],
+ ['b_lost',2,'❓','เด็กที่ถูกพบในหลุมอุกกาบาต','refugee','ไม่มีใครรู้ว่ามาจากไหน',{mind:10,pow:3},{},['หลุมที่เรียกชื่อ','ทุกคืนคุณฝันถึงหลุมอุกกาบาตเดิม และมีเสียงเรียกชื่อจริงของคุณ',[['กลับไปที่หลุม',{gene:'quill',later:'og_lost2'},'ได้ยีนขนหนามตอนปลุก'],['ไม่สนใจ',{mind:3},'']]]],
+ ['b_twin',1,'👥','แฝดที่รอดคนเดียว','refugee','แฝดอีกคนหายไปตอนอพยพ',{mind:4,hp:4},{},['ใบหน้าเดียวกันในฝูงชน','ข้างตลาดมีเด็กหน้าเหมือนคุณทุกอย่าง แล้วก็หายไป',[['วิ่งตาม',{later:'og_twin2'},'ปมใหม่'],['คิดว่าตาฝาด',{},'']]]]];
+const BODY=[
+ ['d_norm',0,'ร่างธรรมดา','ไม่มีอะไรพิเศษ แต่สอบวัดยีนผ่านง่ายขึ้น',{},{},{t:.05}],
+ ['d_pale',1,'ผิวซีดแพ้แสง','กลางวันอ่อนแรง แต่ได้ยีนตาราตรีแน่นอน',{hp:-6},{},{g:'night'}],
+ ['d_pre',0,'เกิดก่อนกำหนด','พลังชีวิตน้อย แต่จิตไว',{hp:-15,mind:10},{},{}],
+ ['d_burn',1,'แผลไฟไหม้คืนดาวตก','คนกลัว แต่ทนไฟและเจ็บ',{hp:12,fame:-10},{},{}],
+ ['d_heart',1,'หัวใจเต้นสองจังหวะ','หมอบอกว่าแปลก แต่ฟื้นตัวเร็ว',{hp:8},{},{g:'heart'}],
+ ['d_big',0,'ตัวใหญ่ตั้งแต่เกิด','แรงเยอะ กินเยอะ',{pow:5,mon:-30},{},{}],
+ ['d_cold',1,'ตัวเย็นตลอดเวลา','อุณหภูมิกาย 33 องศา จิตนิ่งผิดเด็ก',{mind:6},{},{g:'cold'}],
+ ['d_star',2,'เซลล์ส่องแสงใต้ผิว','ในความมืดผิวคุณมีจุดแสงเหมือนดาว',{mind:8,pow:3},{},{t:.15}]];
+const LOOK=[
+ ['l_glowB',1,'ตาเรืองแสงฟ้า','ม่านตาสีฟ้าเรืองในที่มืด',{eyeG:'#5cd2ff'},{mind:3}],
+ ['l_glowR',1,'ตาแดงอำพัน','ตาแดงเหมือนอสูร คนในนครเหลียวมอง',{eyeG:'#ff5a3a'},{pow:2,fame:-10}],
+ ['l_white',0,'ผมขาวบางปอย','ผมขาวขึ้นตั้งแต่สามขวบ',{hair:'#e8ecf0'},{mind:2}],
+ ['l_silver',1,'ผมเงินทั้งหัว','ผมสีเงินแวววาวเหมือนเหล็ก',{hair:'#b8c4d0'},{pow:2}],
+ ['l_ash',0,'ผมสีเถ้าถ่าน','ผมเทาหม่นเหมือนฝุ่นดาวตก',{hair:'#6a6a72'},{}],
+ ['l_red',0,'ผมแดงเพลิง','ผมแดงสดเหมือนไฟ',{hair:'#c8382a'},{fame:10}],
+ ['l_teal',1,'ผมเขียวน้ำทะเล','สีผมเปลี่ยนตามความชื้น',{hair:'#2fa89a'},{}],
+ ['l_violet',2,'ผมม่วงดาราศาสตร์','ผมม่วงมีจุดแสงระยิบ',{hair:'#7a4ad8',eyeG:'#c8a8ff'},{mind:5}],
+ ['l_star',1,'ปานรูปดาวบนหน้าผาก','ลัทธิดาวตกเชื่อว่าเป็นผู้ถูกเลือก',{},{mind:2,flag:'starmark'}],
+ ['l_scar',0,'รอยไหม้ที่แขน','รอยไหม้จากคืนที่ดาวตกครั้งแรก',{},{hp:4}],
+ ['l_tall',0,'ตัวสูงกว่าเพื่อน','สูงกว่าเด็กรุ่นเดียวกันหัวหนึ่ง',{},{pow:2}],
+ ['l_small',0,'ตัวเล็กปราดเปรียว','เล็กแต่เร็ว',{},{int:2}],
+ ['l_dark',0,'ผิวคล้ำแดด','โตกลางแดดนอกโดม',{skin:'#a8724a'},{hp:4}],
+ ['l_porc',0,'ผิวขาวซีดเหมือนกระเบื้อง','แทบไม่เคยโดนแดด',{skin:'#f4e0d0'},{int:2}],
+ ['l_gold',2,'ตาสีทองดาวตก','ตาสีทองเหมือนแสงดาวตกคืนนั้น',{eyeG:'#ffd24a'},{mind:6,fame:20}],
+ ['l_hetero',1,'ตาสองสี','ข้างหนึ่งดำ ข้างหนึ่งฟ้าซีด',{eye:'#9ad8ff'},{mind:3}],
+ ['l_freck',0,'กระเต็มแก้ม','กระเป็นจุดเหมือนแผนที่ดาว',{},{karma:1}],
+ ['l_vein',1,'เส้นเลือดเรืองใต้ผิว','ยามโกรธเส้นเลือดเรืองสีส้ม',{eyeG:'#ff8a3d'},{pow:3,mind:-2}],
+ ['l_black',0,'ผมดำสนิทสั้นเกรียน','แบบเด็กนครทั่วไป',{hair:'#141418'},{}],
+ ['l_mask',1,'ครึ่งหน้าแผลเป็น','แผลเป็นที่ทำให้หน้าดูดุ',{},{fame:-5,pow:2,karma:-1}]];
+const FATE=[
+ ['f_siren',0,'เกิดคืนที่สัญญาณเตือนพัง','คลื่นอสูรครั้งแรกมาเร็วกว่าคนอื่น',{wave:-4,pow:2},['คืนไซเรนเงียบ','ไซเรนพังอีกครั้ง คุณเป็นคนแรกที่ได้ยินเสียงอสูรปีนกำแพง',[['ตะโกนปลุกทั้งตึก',{fame:40,wall:3},'ฮีโร่ประจำซอย'],['พาครอบครัวหนี',{hp:-5,karma:1},'']],[8,12]]],
+ ['f_star',2,'ดาวเหนือหัวไม่ยอมดับ','มีดาวดวงหนึ่งอยู่เหนือหัวคุณทุกคืน',{mind:5},['ดาวที่มองคุณกลับ','ดาวดวงนั้นกะพริบเป็นรหัส คุณถอดได้ว่า "ยังไม่ถึงเวลา"',[['ตอบกลับด้วยไฟฉาย',{mind:12,later:'og_star2'},'ดาวจะตอบ'],['เลิกมองฟ้า',{int:3},'']],[13,18]]],
+ ['f_twin',1,'มีพี่ฝาแฝดที่หายไปตอนอพยพ','วันหนึ่งจะได้เจอกัน',{},['แฝดกลับมา','พี่แฝดยืนอยู่หน้าประตู ตาเป็นสีอสูร',[['กอดเขา',{karma:3,mind:5,hp:-10},'เขากัดแต่ไม่ทำร้าย'],['เรียกนักล่า',{fame:30,karma:-4},'']],[18,24]]],
+ ['f_name',1,'ชื่อคุณอยู่ในบันทึกนักล่าที่ตายไปแล้ว','ทุกคนในนครจำผิดคน',{fame:20},['คนที่ตายแทน','คุณพบหลุมศพที่สลักชื่อและวันเกิดตรงกับคุณ',[['ขุดดู',{mind:6,karma:-2,later:'og_name2'},'ในโลงว่าง'],['วางดอกไม้',{karma:3},'']],[15,20]]],
+ ['f_rain',0,'ฝนดาวตกตอนคลอด','หมอตำแยบอกว่าโชคดี',{mon:100},null],
+ ['f_debt',0,'เกิดมาพร้อมหนี้ของปู่','ปู่ติดหนี้สภานครไว้',{mon:-150},['เจ้าหนี้ปู่','คนของสภามาทวงหนี้ปู่ที่ตายไปสามสิบปี',[['ใช้หนี้',{mon:-400,karma:2},''],['ทำงานแลก',{pow:3,hp:-8},'']],[16,20]]],
+ ['f_mentor',1,'นักล่าชราสัญญาว่าจะสอน','ตอนคุณโตเขาจะมา',{},['ครูที่สัญญาไว้','ชายชราแขนเดียวมาเคาะประตู "ถึงเวลาแล้ว"',[['ฝึกกับเขา',{pow:6,mind:6,tal:.05},'พรสวรรค์ +5%'],['ไม่ไป',{},'']],[13,16]]],
+ ['f_wolf',1,'อสูรหมาป่าเคยไว้ชีวิตคุณ','ตอนเด็กมันมองแล้วเดินจากไป',{},['ตาคู่เดิม','กลางการล่า อสูรหมาป่าตัวเดิมขวางทางคุณ แผลเป็นเดิมที่หู',[['ไว้ชีวิตมันบ้าง',{karma:5,later:'og_wolf2'},'มันจะกลับมาช่วย'],['ล่ามัน',{cores:3,karma:-3},'แก่น +3']],[18,26]]],
+ ['f_oracle',0,'หมอดูบอกว่าจะได้เป็นใหญ่','แม่เชื่อสนิทใจ',{fame:10},null],
+ ['f_curse',1,'คำสาปของลัทธิ','ลัทธิดาวตกสาปตระกูลคุณ',{karma:-2},['คำสาปทำงาน','ทุกคนที่รักคุณป่วยพร้อมกันในปีเดียว',[['ไปขอขมาลัทธิ',{mon:-300,karma:2},''],['ทำลายแท่นบูชา',{fame:30,hp:-15},'']],[20,26]]],
+ ['f_war',0,'เกิดปีที่นครสองแห่งรบกัน','พ่อไปรบไม่กลับ',{pow:2,mind:2},null],
+ ['f_lucky',1,'รอดจากตึกถล่มตอนทารก','คนเรียกว่าเด็กไม่ตาย',{hp:10},null],
+ ['f_seed',2,'แม่กลืนเศษดาวตกตอนท้อง','คุณเกิดมาพร้อมบางอย่างในเลือด',{mind:6,pow:3},['เลือดที่เรืองแสง','หมอเจาะเลือดตรวจประจำปี แล้วหลอดเลือดเรืองแสงทั้งห้อง',[['หนีออกจากโรงพยาบาล',{later:'og_seed2'},'มีคนตามหา'],['ยอมให้วิจัย',{mon:1500,mut:['เซลล์เร่ง','ฝึกได้เร็วขึ้น 15%']},'เครดิต +1,500']],[14,18]]],
+ ['f_debtL',0,'ครอบครัวเป็นหนี้แก๊ง','ทุกเดือนคนแปลกหน้ามาเคาะประตู',{mon:-80},null],
+ ['f_river',0,'เกิดริมแม่น้ำที่เปลี่ยนสี','น้ำเปลี่ยนสีทุกปีที่คุณเกิด',{mind:2},null],
+ ['f_hero',1,'นักล่าระดับ A อุ้มคุณออกจากซากตึก','เธอจำหน้าคุณได้',{fame:15},['ผู้ช่วยชีวิต','นักล่าหญิงที่อุ้มคุณตอนเด็กจำคุณได้ในงานรับใบอนุญาต',[['ขอเข้าทีมเธอ',{fame:40,pow:4},''],['ขอบคุณแล้วไปทางตัวเอง',{mind:4},'']],[16,22]]],
+ ['f_dream',0,'ฝันเห็นอนาคตบางคืน','ฝันมักเป็นจริงครึ่งหนึ่ง',{int:3},null],
+ ['f_ghost',1,'บ้านเกิดมีผีนักล่า','ผีนักล่าคุยกับคุณตอนกลางคืน',{mind:4},['คำขอของผี','ผีนักล่าขอให้ไปเอาป้ายชื่อเขาคืนจากรังอสูร',[['ไป',{fame:30,hp:-12,mind:6},''],['ไม่ไป',{karma:-1},'']],[17,22]]],
+ ['f_quiet',0,'ชีวิตเงียบสงบ','ไม่มีลางอะไรเลย',{mon:80,hp:4},null],
+ ['f_crown',2,'ราชาอสูรรู้ชื่อคุณ','ตั้งแต่เกิด มีอสูรมาเฝ้ามองบ้านคุณ',{pow:4,mind:4},['ทูตของราชาอสูร','อสูรพูดภาษาคนได้มาส่งสาร "ราชาเชิญเจ้าไปพบ"',[['ไปพบ',{later:'og_crown2',karma:-2,mind:8},'เส้นเรื่องลับ'],['ฆ่าทูต',{fame:60,cores:2},'']],[20,28]]]];
+const SECRET=[
+ ['s_none',0,'ไม่มีความลับ','ชีวิตคุณตรงไปตรงมา',{},null],
+ ['s_beast',2,'จริงๆ คุณไม่ใช่คน','คุณคือลูกอสูรที่ถูกสลับตัวตอนเกิด',{pow:4},['ความจริงในกระจก','คืนวันเกิดอายุ 16 เงาในกระจกเป็นอสูร',[['ยอมรับตัวเอง',{gene:'claw',pow:6,karma:-2},'ได้ยีนกรงเล็บพิษ'],['ซ่อนไว้',{mind:6},'']],[16,16]]],
+ ['s_seeder',2,'เซลล์คุณมาจากดาวตก','คุณคือเมล็ดที่ผู้หว่านทิ้งไว้',{mind:4},['เสียงจากฟ้า','เสียงในหัวพูดว่า "เจ้าคือเมล็ดที่ 7 ของเรา"',[['ฟังต่อ',{mind:20,mut:['เสียงในหัว','ฝึกจิตยากขึ้น']},'จิต +20'],['ปิดหู',{int:4},'']],[18,22]]],
+ ['s_adopt',0,'คุณเป็นลูกบุญธรรม','พ่อแม่ไม่เคยบอก',{},['ทะเบียนที่ไม่ตรง','ในทะเบียนนคร คุณเกิดก่อนพ่อแม่ย้ายมาสองปี',[['ถามแม่',{karma:2,mind:3},'แม่ร้องไห้'],['เงียบไว้',{},'']],[14,18]]],
+ ['s_rich',1,'ปู่ฝังแก่นอสูรไว้ใต้บ้าน','ไม่มีใครรู้',{},['หีบใต้พื้น','พื้นบ้านทรุดเผยหีบเหล็กเต็มไปด้วยแก่นอสูร',[['เก็บไว้เอง',{cores:6,mon:500},'แก่น +6'],['แบ่งให้ชุมชน',{karma:6,fame:50,cores:2},'']],[12,18]]],
+ ['s_spy',1,'พ่อคุณเป็นสายลับของนครอื่น','',{},['รหัสในวิทยุ','วิทยุเก่าของพ่อส่งรหัสลับทุกคืน',[['ถอดรหัส',{int:6,later:'og_spy2'},''],['ทุบวิทยุทิ้ง',{karma:1},'']],[15,19]]],
+ ['s_clone',2,'คุณคือร่างโคลนที่ 3','อีกสองร่างยังมีชีวิต',{int:4},['ใบหน้าเดียวกัน','คุณเจอคนหน้าเหมือนคุณในห้องแล็บใต้ดิน ข้อมือมีเลข 2',[['ช่วยเขาออกมา',{karma:5,later:'og_clone2'},''],['หนีไป',{mind:4},'']],[17,22]]],
+ ['s_heir',1,'คุณคือทายาทเจ้าเมืองคนก่อน','ถูกซ่อนไว้ตอนรัฐประหาร',{},['ตราประทับ','สร้อยที่แม่ให้เป็นตราประทับเจ้าเมืองคนก่อน',[['ทวงสิทธิ์',{fame:80,karma:-2,mon:1000},''],['เก็บเป็นความลับ',{mind:5},'']],[18,24]]],
+ ['s_debt',0,'แม่ขายวิญญาณให้ลัทธิเพื่อให้คุณรอด','',{},['ใบสัญญา','ลัทธิมาทวงสัญญาที่แม่เซ็นไว้',[['ทำงานให้ลัทธิ 1 ปี',{mind:8,karma:-3},''],['ฉีกสัญญา',{hp:-15,fame:20},'']],[16,20]]],
+ ['s_old',1,'คุณเคยมีชีวิตก่อนดาวตก','ความทรงจำปี 2030 โผล่มาเป็นระยะ',{int:6},['ชาติก่อน','คุณจำได้ว่าเคยเป็นวิศวกรกรุงเทพ',[['ใช้ความรู้ชาติก่อน',{int:10,mon:400},''],['ปล่อยวาง',{mind:6},'']],[14,20]]],
+ ['s_curse',0,'มีอสูรเกาะเงาคุณ','เงาคุณบางวันขยับเอง',{},['เงาที่ลุก','เงาของคุณลุกขึ้นมาสู้แทนตอนโดนรุม',[['ทำสัญญากับมัน',{pow:6,karma:-3},''],['ไล่มันออก',{mind:6,hp:-10},'']],[13,19]]],
+ ['s_key',1,'คุณถือกุญแจกำแพงชั้นใน','ฝังอยู่ในกระดูกตั้งแต่เกิด',{wall:3},['กุญแจในกระดูก','สแกนเนอร์กำแพงเปิดประตูเองเมื่อคุณเดินผ่าน',[['เปิดเข้าไปดู',{int:5,later:'og_key2'},''],['รายงานทางการ',{fame:30},'']],[16,22]]],
+ ['s_rival',0,'คู่แข่งของคุณคือพี่น้องต่างแม่','',{},['สายเลือดเดียวกัน','คู่แข่งตลอดกาลมีตำหนิแบบเดียวกับคุณ',[['บอกเขา',{karma:3,mind:3},''],['ใช้เป็นจุดอ่อน',{karma:-3,fame:20},'']],[18,24]]],
+ ['s_ai',1,'มีชิป AI ฝังในหัวตั้งแต่ทารก','ทำงานตอนอายุ 12',{int:4},['เสียงชิป','“ระบบช่วยเหลือ v0.3 เริ่มทำงาน”',[['ให้ช่วยฝึก',{tal:.08,int:4},'พรสวรรค์ +8%'],['ปิดระบบ',{mind:4},'']],[12,12]]],
+ ['s_god',2,'คุณคือ “ดวงที่สอง”','ดาวตกดวงที่สองไม่ใช่หิน — คือคุณ',{mind:10,pow:4},['ความจำของดาว','คุณจำได้ว่าเคยลอยอยู่ในอวกาศ ก่อนจะเลือกตกลงที่นี่',[['ยอมรับพลัง',{tal:.2,mind:15},'พรสวรรค์ +20%'],['เลือกเป็นคน',{karma:6,hp:15},'']],[20,24]]],
+ ['s_lover',0,'คู่หมั้นตั้งแต่เกิด','ทั้งสองตระกูลตกลงกันไว้',{},['คนที่ถูกหมั้นไว้','คู่หมั้นที่ไม่เคยเจอมาหาที่บ้าน',[['ทำความรู้จัก',{karma:2,mon:300},''],['ปฏิเสธ',{fame:-10,mind:3},'']],[18,22]]],
+ ['s_map',1,'ปู่ทิ้งแผนที่รังอสูรไว้','',{},['แผนที่ของปู่','แผนที่บอกทางลับไปรังอสูรที่ไม่มีใครรู้',[['ไปล่า',{cores:4,hp:-15,fame:30},''],['ขายแผนที่',{mon:900},'']],[17,23]]],
+ ['s_sick',0,'คุณมีโรคยีนแฝง','จะแสดงตอนอายุ 20',{},['โรคยีนตื่น','ไข้ยีนกำเริบหนัก',[['รักษาด้วยเงิน',{mon:-600,hp:10},''],['สู้ด้วยใจ',{mind:8,mut:['ไข้ยีนเรื้อรัง','พลังชีวิตฟื้นช้าลง']},'']],[20,20]]],
+ ['s_kid',1,'คุณช่วยเด็กคนหนึ่งไว้ตอนอายุ 6','เด็กคนนั้นโตมาเป็นคนสำคัญ',{karma:2},['เด็กคนนั้น','เจ้าหน้าที่สภาคนใหม่คือเด็กที่คุณเคยช่วย',[['ขอความช่วยเหลือ',{mon:800,fame:30},''],['ไม่ขออะไร',{karma:5},'']],[24,30]]],
+ ['s_last',2,'คุณคือมนุษย์คนสุดท้ายที่ไม่มียีนอสูร','',{mind:6},['ยีนบริสุทธิ์','นักวิจัยพบว่ายีนคุณสะอาดจากอสูร 100% ทั้งนครต้องการตัวคุณ',[['ให้เลือดเพื่อทำวัคซีน',{karma:8,fame:100,hp:-10},''],['หนีไปนอกกำแพง',{pow:6,later:'og_last2'},'']],[18,24]]]];
+// ---------- คอมโบลับ ----------
+const COMBO=[
+ [['b_cult','l_star','p_cm4'],'☄️ ศาสดาดาวตก','ลัทธิทั้งนครคุกเข่าให้คุณ',{mind:20,fame:150}],
+ [['b_lost','s_seeder'],'🌱 เมล็ดที่ตกผิดที่','คุณกับผู้หว่านมีสายสัมพันธ์ที่ตัดไม่ขาด',{mind:15,tal:.1}],
+ [['b_heir','f_hero'],'🎖️ สายเลือดนักล่า','นักล่ารุ่นพ่อทั้งรุ่นยอมรับคุณ',{fame:120,pow:5}],
+ [['f_twin','b_twin'],'👥 ฝาแฝดสองชะตา','แฝดของคุณจะกลับมาแน่นอน',{mind:8,hp:10}],
+ [['s_beast','f_wolf'],'🐺 ลูกหมาป่า','ฝูงหมาป่าจำกลิ่นคุณได้',{pow:8,gene:'claw'}],
+ [['s_god','f_star'],'🌠 ดาวสองดวง','ดาวเหนือหัวคือพี่น้องของคุณ',{mind:25,tal:.1}],
+ [['b_noble','s_heir'],'👑 เจ้าเมืองที่ถูกลืม','คุณมีสิทธิ์สองชั้นในบัลลังก์',{mon:2000,fame:100}],
+ [['d_star','l_violet'],'✨ ร่างดารา','ทั้งร่างคุณเรืองแสงเหมือนท้องฟ้า',{mind:12,pow:4}]];
+// ---------- เหตุการณ์ต่อเนื่อง (later) ----------
+const LATER={
+ og_egg:['ไข่ฟักแล้ว','ไข่ที่คุณเลี้ยงฟักเป็นปลาไหลเรืองแสงตัวเล็ก มันติดตามคุณทุกที่',[['เลี้ยงไว้',{mind:6,karma:2},''],['ปล่อยลงทะเล',{karma:3},'']]],
+ og_heir2:['ชายแขนกลกลับมา','ชายแขนกลกลับมาท้าดวลตามที่สัญญา',[['สู้',{pow:5,fame:80,hp:-20},''],['ขอเจรจา',{mind:6,karma:2},'']]],
+ og_cult2:['ลัทธิตามหา','สาวกลัทธิตามหาคุณเจอ',[['สู้',{fame:40,hp:-15},''],['ย้ายเขต',{mon:-300},'']]],
+ og_orph2:['ผู้ส่งจดหมาย','ผู้ส่งคือแม่แท้ๆ ที่เป็นนักล่าระดับ A',[['ให้อภัย',{karma:5,pow:4},''],['หันหลังให้',{mind:6},'']]],
+ og_pilot2:['สัญญาณจากป่า','วิทยุจับสัญญาณจากเครื่องของพ่อ ยังมีคนส่งอยู่',[['ออกตามหา',{fame:60,hp:-15,mind:6},''],['แจ้งทางการ',{fame:20},'']]],
+ og_lost2:['ก้นหลุมอุกกาบาต','ก้นหลุมมีแคปซูลเปิดอยู่ ข้างในว่างเปล่า ขนาดพอดีตัวทารก',[['สัมผัสแคปซูล',{mind:15},''],['ปิดฝาแล้วจากไป',{int:4},'']]],
+ og_twin2:['แฝดที่ตามหา','เด็กหน้าเหมือนคุณทิ้งรอยเท้าไว้ไปทางนอกกำแพง',[['ตามไป',{hp:-10,mind:8},''],['ปล่อยไว้',{},'']]],
+ og_star2:['ดาวตอบ','ดาวตอบกลับด้วยแสงสามครั้ง แล้วร่างคุณร้อนวูบ',[['รับพลัง',{tal:.1,mind:10},'พรสวรรค์ +10%'],['ปฏิเสธ',{karma:3},'']]],
+ og_name2:['โลงว่าง','ในโลงไม่มีศพ มีแต่บัตรประชาชนของคุณ อายุ 30',[['เก็บไว้',{mind:8},''],['เผาทิ้ง',{karma:2},'']]],
+ og_wolf2:['หมาป่าตอบแทน','หมาป่าตัวเดิมพาฝูงมาช่วยคุณตอนโดนรุม',[['ขอบใจมัน',{karma:4,pow:4},'']]],
+ og_seed2:['ผู้ตามล่าเลือด','หน่วยวิจัยลับตามหาคนเลือดเรืองแสง',[['ซ่อนตัว',{mind:6},''],['สู้',{fame:50,hp:-20},'']]],
+ og_crown2:['บัลลังก์อสูร','ราชาอสูรเสนอให้คุณเป็นทายาท',[['รับ',{pow:12,karma:-8,fame:-50},''],['ปฏิเสธ',{fame:80,karma:4,hp:-15},'']]],
+ og_spy2:['ข้อความสุดท้ายของพ่อ','รหัสบอกตำแหน่งเซฟเฮาส์ที่เก็บแก่นอสูรไว้',[['ไปเอา',{cores:5,mon:600},''],['ส่งให้ทางการ',{fame:40,karma:3},'']]],
+ og_clone2:['ร่างที่ 1','ร่างที่ 1 ยังอยู่ และเป็นหัวหน้าแล็บ',[['เผชิญหน้า',{pow:6,mind:8,hp:-15},''],['ทำลายข้อมูล',{int:6,karma:2},'']]],
+ og_key2:['ห้องหลังกำแพง','หลังประตูมีห้องควบคุมกำแพงทั้งนคร',[['ซ่อมระบบ',{wall:15,fame:60},'กำแพง +15'],['ขโมยข้อมูล',{mon:1500,karma:-5},'']]],
+ og_last2:['คนนอกกำแพง','ชุมชนลับนอกกำแพงต้อนรับคุณเป็นผู้นำ',[['อยู่ด้วย',{karma:6,mind:8},''],['กลับนคร',{fame:30},'']]]};
+const CATS=[
+ {k:'place',n:'ถิ่นเกิด',ic:'📍',L:PLACE},{k:'bg',n:'ภูมิหลัง',ic:'👪',L:BG},{k:'body',n:'ร่างกาย',ic:'🧬',L:BODY},
+ {k:'look',n:'รูปลักษณ์',ic:'👁️',L:LOOK},{k:'fate',n:'ชะตา',ic:'⭐',L:FATE},{k:'sec',n:'ความลับ',ic:'🎴',L:SECRET,hid:1}];
+const RW=[70,25,5],RN=['ธรรมดา','หายาก','ตำนาน'],RC=['#9db3c4','#5cd2ff','#ffb23d'];
+const rOf=c=>{const k=c.k;if(k==='place')return c.x[3];return c.x[1]};
+function roll(cat){const L=cat.L,tot=L.reduce((s,x)=>s+RW[rOf({k:cat.k,x})],0);let r=Math.random()*tot;for(const x of L){r-=RW[rOf({k:cat.k,x})];if(r<=0)return x}return L[0]}
+function odds(cat,x){const tot=cat.L.reduce((s,y)=>s+RW[rOf({k:cat.k,x:y})],0);return RW[rOf({k:cat.k,x})]/tot}
+const info=(k,x)=>{switch(k){
+ case'place':{const C=CITY[x[1]];return{ic:C.ic,t:x[2],s:C.n,d:x[4]+' · '+C.d,b:x[5],y:Object.assign({},C.y,x[6]),e:x[7]}}
+ case'bg':return{ic:x[2],t:x[3],s:'',d:x[5],b:x[6],y:x[7],e:x[8]};
+ case'body':return{ic:'🧬',t:x[2],s:'',d:x[3],b:x[4],y:x[5],z:x[6]};
+ case'look':return{ic:'👁️',t:x[2],s:'',d:x[3],lk:x[4],b:x[5]};
+ case'fate':return{ic:'⭐',t:x[2],s:'',d:x[3],b:x[4],e:x[5]};
+ case'sec':return{ic:'🎴',t:x[2],s:'',d:x[3],b:x[4],e:x[5]}}};
+// ---------- สถานะหน้าสุ่ม ----------
+const ST={cards:{},lock:{},left:3,g:null};
+function rollAll(first){for(const c of CATS){if(!first&&ST.lock[c.k])continue;ST.cards[c.k]=roll(c)}}
+function comboOf(cards){const ids=new Set(Object.values(cards).map(x=>x[0]));return COMBO.filter(c=>c[0].every(i=>ids.has(i)))}
+const seenGet=()=>{try{return LS.get('murim_skyorg',{})||{}}catch(e){return{}}};
+const fx2txt=b=>{const N={pow:'กาย',hp:'พลังชีวิต',int:'ปัญญา',mind:'จิต',mon:'เครดิต',karma:'กรรม',fame:'ชื่อเสียง',wall:'กำแพง',cores:'แก่นอสูร',wave:'คลื่นอสูรมาอีก(ปี)'};const out=[];for(const k in b||{}){if(N[k]&&b[k])out.push(`${N[k]} ${b[k]>0?'+':''}${b[k]}`)}return out.join(' · ')};
+const GN={iron:'เกล็ดเหล็ก',night:'ตาราตรี',claw:'กรงเล็บพิษ',cold:'เลือดเย็น',heart:'หัวใจสองห้อง',wing:'พังผืดร่อนลม',echo:'คลื่นเสียงไร้แสง',quill:'ขนหนามเหล็ก'};
+function card(c){const x=ST.cards[c.k],I=info(c.k,x),r=rOf({k:c.k,x}),lk=ST.lock[c.k],hid=c.hid,p=odds(c,x);
+ const extra=[];const bt=fx2txt(I.b);if(bt)extra.push(bt);const yt=fx2txt(I.y);if(yt)extra.push('ทุกปี: '+yt);if(I.z&&I.z.g)extra.push('ยีน'+GN[I.z.g]+'แน่นอนตอนปลุก');if(I.z&&I.z.t)extra.push('พรสวรรค์ +'+Math.round(I.z.t*100)+'%');{const lp=I.lk?[I.lk.hair?'สีผม':'',I.lk.eyeG||I.lk.eye?'ดวงตา':'',I.lk.skin?'สีผิว':''].filter(Boolean):[];if(lp.length)extra.push('🎨 '+lp.join(' · ')+'เปลี่ยนบนตัวละคร')}if(I.e)extra.push('📖 มีเหตุการณ์ของตัวเอง');
+ return`<div class="sgC r${r}${lk?' lk':''}${hid?' hid':''}" style="--rc:${RC[r]}"><div class="sgH"><span>${c.ic} ${c.n}</span><em>${RN[r]} · ${p<.01?'<1':Math.round(p*100)}%</em></div>
+  ${hid?`<div class="sgB"><b class="sgQ">?</b><p>ความลับคว่ำหน้าไว้ — จะเปิดเผยเองระหว่างชีวิต</p></div>`:`<div class="sgB"><b>${I.ic} ${esc(I.t)}</b>${I.s?`<small>${esc(I.s)}</small>`:''}<p>${esc(I.d)}</p>${extra.length?`<div class="sgX">${extra.map(esc).join('<br>')}</div>`:''}</div>`}
+  <button class="sgL" onclick="skyOrgLock('${c.k}')">${lk?'🔒 ล็อกแล้ว':'🔓 ล็อก'}</button></div>`}
+function ui(){const seen=seenGet(),tot=CATS.reduce((s,c)=>s+c.L.length,0),got=Object.keys(seen).length,cb=comboOf(ST.cards);
+ modal(`<div class="sgW"><button class="xbtn" onclick="closeM()">✕</button>
+ <div class="sgTop"><span>ทะลุฟ้าดารา · ปี 2054</span><span>สมุดกำเนิด ${got}/${tot}</span></div><h3 class="sgT">🎲 สุ่มกำเนิด</h3>
+ <p class="sgSub">ยี่สิบปีหลังดาวตกถล่มประเทศไทย คุณจะเกิดเป็นใคร ที่ไหน และแบกอะไรมาด้วย</p>
+ <div class="sgGd"><span>เพศ</span>${[['ชาย','♂ ชาย'],['หญิง','♀ หญิง'],[null,'🎲 สุ่ม']].map(([v,l])=>`<button class="${ST.g===v?'on':''}" onclick="skyOrgG(${v?`'${v}'`:'null'})">${l}</button>`).join('')}</div>
+ <div class="sgGrid">${CATS.map(card).join('')}</div>
+ ${cb.length?`<div class="sgCombo">${cb.map(c=>`<b>✦ คอมโบ ${esc(c[1])}</b> — ${esc(c[2])}`).join('<br>')}</div>`:''}
+ <div class="sgAct"><button class="sgRe" ${ST.left<=0?'disabled':''} onclick="skyOrgRe()">🎲 สุ่มใหม่ (เหลือ ${ST.left})</button><button class="sgGo" onclick="skyOrgGo()">🌠 เกิด!</button></div>
+ <p class="sgHint">ล็อกการ์ดที่ชอบไว้ แล้วสุ่มใหม่เฉพาะใบที่เหลือ · โอกาส: ธรรมดา 70 · หายาก 25 · ตำนาน 5 (สัดส่วน)</p></div>`,'skyorg')}
+window.skyOrgLock=k=>{ST.lock[k]=!ST.lock[k];ui()};
+window.skyOrgG=v=>{ST.g=v;ui()};
+window.skyOrgRe=()=>{if(ST.left<=0)return;ST.left--;rollAll(false);try{sfx('click')}catch(e){}ui()};
+window.skyOrgGo=()=>{const pickd=Object.assign({},ST.cards),g=ST.g||pick(['ชาย','หญิง']);try{closeM()}catch(e){}
+ const base=pickd.bg[4];window._skyOrgRun=1;try{_ss(base)}finally{window._skyOrgRun=0}
+ setTimeout(()=>{try{applyOrg(pickd,g)}catch(e){console.error('skyorg apply',e)}},900)};
+// ---------- นำผลไปใช้ ----------
+function applyFx(K,b,txt){if(!b)return'';const t=[];
+ if(b.pow){S.power=Math.max(1,(S.power||0)+b.pow);t.push('กาย')}if(b.hp){S.maxHp=Math.max(20,S.maxHp+b.hp);S.hp=Math.min(S.maxHp,Math.max(1,S.hp+b.hp))}
+ if(b.int)S.int=(S.int||0)+b.int;if(b.mind)K.mind=Math.max(0,(K.mind||0)+b.mind);if(b.mon)S.money=Math.max(0,(S.money||0)+b.mon);if(b.karma)S.karma=(S.karma||0)+b.karma;if(b.fame)S.fame=Math.max(0,(S.fame||0)+b.fame);
+ if(b.wall)K.wall=Math.max(0,Math.min(100,K.wall+b.wall));if(b.wave)K.waveIn=Math.max(2,K.waveIn+b.wave);if(b.cores)K.cores=(K.cores||0)+b.cores;
+ if(b.gene){K.og=K.og||{};K.og.genes=K.og.genes||[];if(!K.og.genes.includes(b.gene))K.og.genes.push(b.gene)}
+ if(b.tal){K.og=K.og||{};K.og.tal=(K.og.tal||0)+b.tal;if(K.rk>=0)ogTal(K)}
+ if(b.mut){K.mut=K.mut||[];if(!K.mut.some(m=>m[0]===b.mut[0]))K.mut.push(b.mut)}
+ if(b.flag){K.f=K.f||{};K.f[b.flag]=1}
+ if(b.later){K.later=K.later||[];K.later.push([S.age+R(2,5),b.later])}
+ return fx2txt(b)}
+function ogTal(K){const o=K.og;if(!o||!o.tal)return;const add=o.tal-(o.talD||0);if(add<=0)return;K.tal*=1+add;o.talD=o.tal}
+function ogGenes(K){const o=K.og;if(!o||!o.genes||K.rk<0)return;for(const g of o.genes){if(K.genes.length>=3)break;if(!K.genes.includes(g)){K.genes.push(g);try{log(`🧬 ยีนแต่กำเนิดตื่นขึ้น: <b>${GN[g]||g}</b>`,'epic')}catch(e){}}}o.genes=[]}
+function applyOrg(P,g){const K=SKY()&&SKY().SK();if(!K||!S)return;S.gender=g;try{S.name=(g==='หญิง'?pick(['ไอริน','ชลธิชา','พิมพ์ดาว','มินตรา','ปลายฟ้า','นภัส','ดารินทร์','ลลิน']):pick(['ธราดล','ภูผา','กวิน','ศรุต','เตชิน','อชิระ','ธันวา','คีริน']))+' '+S.name.split(' ').slice(1).join(' ')}catch(e){}
+ const pl=info('place',P.place),C=CITY[P.place[1]];K.city=C.n;K.wall=C.wall;K.waveIn=Math.max(3,K.waveIn+C.wave);
+ K.og={ids:CATS.map(c=>P[c.k][0]),y:{},genes:[],tal:0,talD:0,ev:[]};
+ const L=[];
+ for(const c of CATS){const I=info(c.k,P[c.k]);applyFx(K,I.b);if(I.y)for(const k in I.y)K.og.y[k]=(K.og.y[k]||0)+I.y[k];if(I.z){if(I.z.g)applyFx(K,{gene:I.z.g});if(I.z.t)K.og.tal+=I.z.t}
+  if(I.lk){S.look=Object.assign({},S.look||{});if(I.lk.hair)S.look.hair=I.lk.hair;if(I.lk.skin)S.look.skin=I.lk.skin;K.og.lk=Object.assign({},K.og.lk||{},I.lk)}
+  if(I.e){const rng=I.e[3]||[8,20],a=Math.max(S.age+1,R(rng[0],rng[1]));const id='og_'+P[c.k][0];LATER[id]=I.e;K.later=K.later||[];K.later.push([a,id])}
+  if(!c.hid)L.push(`${c.ic} ${I.t}`)}
+ for(const cb of comboOf(P)){applyFx(K,cb[3]);K.og.combo=(K.og.combo||[]).concat(cb[1]);L.push('✦ '+cb[1]);try{log(`✦ <b>คอมโบกำเนิด: ${esc(cb[1])}</b> — ${esc(cb[2])}`,'myth',true)}catch(e){}}
+ try{const sn=seenGet();for(const c of CATS)sn[P[c.k][0]]=1;LS.set('murim_skyorg',sn)}catch(e){}
+ try{log(`🎲 <b>กำเนิด</b> — ${esc(pl.t)} · ${esc(C.n)} · ${L.slice(1).join(' · ')}`,'epic')}catch(e){}
+ try{addFeed('ev',`📍 ${esc(pl.t)}, ${esc(C.n)} · ${g==='หญิง'?'♀':'♂'} ${esc(S.name)}`,'sum')}catch(e){}
+ try{render();saveGame()}catch(e){}}
+// เหตุการณ์ของการ์ด: ลงทะเบียนเข้าระบบเหตุการณ์เดิม (ผ่าน K.later)
+function evReg(){const A=SKY();if(!A||!A.EV)return false;
+ const go=id=>({c:()=>true,w:0,go(K){const e=LATER[id]||(()=>{const all=[].concat(PLACE.map(x=>[x[0],x[7]]),BG.map(x=>[x[0],x[8]]),FATE.map(x=>[x[0],x[5]]),SECRET.map(x=>[x[0],x[5]]));const f=all.find(z=>'og_'+z[0]===id);return f&&f[1]})();if(!e){return}
+  choice('🌠 '+e[0],e[1],e[2].map(o=>({t:o[0],s:o[2]||fx2txt(o[1]),f(){const K2=SKY().SK();const tx=applyFx(K2,o[1]);try{log(`🌠 ${esc(e[0])} — ${esc(o[0])}${tx?` <span class="tag2">(${esc(tx)})</span>`:''}`,'')}catch(x){}try{ogGenes(K2);ogTal(K2);render()}catch(x){}}})))}});
+ const ids=new Set(Object.keys(LATER));for(const x of PLACE.concat(BG,FATE,SECRET))ids.add('og_'+x[0]);for(const id of ids)if(!A.EV[id])A.EV[id]=go(id);return true}
+// ต่อปี: ค่ารายปีจากการ์ด + ยีน/พรสวรรค์หลังปลุก
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{const K=SKY()&&SKY().SK();if(K&&K.og&&S&&S.alive){const y=K.og.y||{};applyFx(K,{mon:y.mon|0,mind:y.mind|0,int:y.int|0,karma:y.karma|0,fame:y.fame|0,wall:y.wall|0,hp:0});ogGenes(K);ogTal(K)}}catch(e){console.error('skyorg year',e)}return r}}
+// รูปลักษณ์
+{const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{const K=S&&S.mw&&S.mw.sky;if(K&&K.og&&K.og.lk&&o&&!o.beast){const l=K.og.lk;if(l.hair)o.hair=l.hair;if(l.skin)o.skin=l.skin;if(l.eyeG)o.eyeG=l.eyeG;if(l.eye)o.eye=l.eye}}catch(e){}return o}}
+// เปิดหน้าสุ่มก่อนเริ่มชีวิต
+let _ss=null;
+function hook(){if(_ss||typeof window.skyStart!=='function')return;_ss=window.skyStart;window.skyStart=function(bg){if(bg||window._skyOrgRun||window._skyOrgSkip)return _ss.apply(this,arguments);try{evReg()}catch(e){}ST.lock={};ST.left=3;ST.g=null;rollAll(true);ui()}}
+hook();setTimeout(hook,0);setTimeout(()=>{hook();evReg()},1500);
+// สไตล์
+const st=document.createElement('style');st.textContent=`
+#modal[data-k="skyorg"] .mbox,#modal[data-k="skyorg"]>div{background:linear-gradient(180deg,#0d1820,#081014)!important;border:1px solid #263b4c!important;color:#e6f1f8}
+.sgW{font-family:'Chakra Petch','Sarabun',sans-serif}.sgTop{display:flex;justify-content:space-between;padding-right:40px;font:700 11px 'Chakra Petch',sans-serif;letter-spacing:1.5px;color:#ff8a3d;text-transform:uppercase}.sgTop span+span{color:#9db3c4;font-weight:400}
+.sgT{margin:6px 0 2px;font:700 22px 'Chakra Petch',sans-serif;color:#fff;letter-spacing:.5px;text-shadow:0 0 18px #ff8a3d66}.sgSub{color:#9db3c4;font-size:13px;margin:0 0 10px}
+.sgGd{display:flex;gap:6px;align-items:center;margin-bottom:10px;font:600 12px 'Chakra Petch',sans-serif;color:#9db3c4}.sgGd button{background:#121c25;border:1px solid #263b4c;color:#cfe2ee;border-radius:8px;padding:6px 12px;font:600 13px 'Chakra Petch',sans-serif}.sgGd button.on{background:#ff8a3d;border-color:#ff8a3d;color:#1a0e06}
+.sgGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}@media(min-width:620px){.sgGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.sgC{position:relative;background:linear-gradient(160deg,#132430,#0b151c);border:1px solid #263b4c;border-top:3px solid var(--rc);border-radius:10px;padding:8px 9px 34px;min-height:150px;overflow:hidden;animation:sgIn .35s ease both}
+.sgC.r1{box-shadow:0 0 0 1px #5cd2ff33,0 0 14px #5cd2ff22}.sgC.r2{box-shadow:0 0 0 1px #ffb23d55,0 0 22px #ffb23d44;background:linear-gradient(160deg,#2a1e10,#0b151c 70%)}
+.sgC.r2::after{content:'';position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent 0 80%,#ffd27a33 88%,transparent 96%);animation:sgSp 4s linear infinite;pointer-events:none}
+.sgC.lk{outline:2px solid #ff8a3d;outline-offset:-2px}.sgC.hid{background:repeating-linear-gradient(135deg,#101c26 0 8px,#0c161e 8px 16px)}
+.sgH{display:flex;justify-content:space-between;gap:4px;font:700 10.5px 'Chakra Petch',sans-serif;letter-spacing:.8px;color:#9db3c4;text-transform:uppercase}.sgH em{font-style:normal;color:var(--rc);white-space:nowrap}
+.sgB{margin-top:6px}.sgB b{display:block;font:700 14.5px 'Chakra Petch','Sarabun',sans-serif;color:#fff;line-height:1.25}.sgB small{display:block;color:#ff8a3d;font-size:11.5px;margin-top:1px}.sgB p{margin:4px 0 0;font-size:12px;color:#b8c8d4;line-height:1.35}
+.sgX{margin-top:5px;font-size:11px;color:#7fe0c8;line-height:1.4}.sgQ{font-size:42px!important;text-align:center;color:var(--rc)!important;text-shadow:0 0 16px var(--rc);margin:6px 0}
+.sgL{position:absolute;left:8px;right:8px;bottom:6px;background:#0e1820;border:1px solid #263b4c;color:#9db3c4;border-radius:6px;font:600 11px 'Chakra Petch',sans-serif;padding:4px}.sgC.lk .sgL{background:#ff8a3d22;color:#ffb27a;border-color:#ff8a3d}
+.sgCombo{margin-top:10px;padding:8px 10px;border-radius:8px;background:linear-gradient(90deg,#3a2410,#1a1208);border:1px solid #ffb23d66;font-size:13px;color:#ffe0b0}
+.sgAct{display:flex;gap:8px;margin-top:12px}.sgAct button{flex:1;border-radius:10px;padding:12px;font:700 15px 'Chakra Petch','Sarabun',sans-serif;border:0}
+.sgRe{background:#1a2a36;color:#cfe2ee;border:1px solid #2a3c4c!important}.sgRe:disabled{opacity:.4}.sgGo{background:linear-gradient(90deg,#ff8a3d,#ffb23d);color:#1a0e06;box-shadow:0 0 18px #ff8a3d66}
+.sgHint{font-size:11px;color:#6a8090;margin:8px 0 0;text-align:center}
+@keyframes sgIn{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}@keyframes sgSp{to{transform:rotate(1turn)}}`;document.head.appendChild(st);
+window._skyOrg={CATS,COMBO,LATER,applyOrg,ST};
+})()}catch(e){console.error('block98',e)}
