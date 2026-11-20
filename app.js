@@ -49981,3 +49981,6 @@ ${KF.join('\n')}`;document.head.appendChild(st);
 const fit=()=>{try{document.querySelectorAll('.frw.fr-xa3').forEach(e=>{const w=e.offsetWidth;if(!w||e._z3w===w)return;e._z3w=w;e.style.setProperty('--s',w+'px');e.classList.toggle('z3big',w>=64)})}catch(x){}};
 try{new MutationObserver(()=>{clearTimeout(fit._t);fit._t=setTimeout(fit,60)}).observe(document.body,{childList:true,subtree:true})}catch(x){}
 addEventListener('resize',()=>{document.querySelectorAll('.frw.fr-xa3').forEach(e=>e._z3w=0);fit()});setTimeout(fit,500)}
+
+// ร้านฉายาลาน: มือถือฉายายาวล้นกรอบ → จอแคบเรียง 1 คอลัมน์ และย่อฉายาไม่ให้เกินการ์ด
+(function(){const st=document.createElement('style');st.textContent=`.arshop{grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))!important}.arshop>.arsi{min-width:0;overflow:hidden}.arshop .arttl{max-width:100%;display:flex;justify-content:center}.arshop .arttl>*{max-width:100%}.arshop .arttl .tx{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}`;document.head.appendChild(st)})();
