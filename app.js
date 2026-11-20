@@ -10849,11 +10849,11 @@ try{const g=GD2.find(x=>x.t==='เควส'),i=g?GD2.indexOf(g)+1:GD2.length;GD
 
 // ===================== v15.4 สรุปก่อนตัดสินใจ (สำหรับคนขี้เกียจอ่าน · เปิด/ปิดได้) =====================
 const CS_ON=()=>LS.get('murim_chsum',1)!==0;
-window._csL=[];
-{const _lg=log;log=function(t,c){try{if(S&&S.alive&&['epic','myth','bad','good','sys','up'].includes(c||'')){window._csL.push({t:String(t),c:c||'',a:S.age});if(window._csL.length>40)window._csL.shift()}}catch(e){}return _lg.apply(this,arguments)}}
+window._csL=[];window._csW=()=>{try{return S.mw?(S.mw.sky?'k':'m'):(S.ch==='soul'?'s':S.xt?'g':S.xian?'x':'w')}catch(e){return''}};
+{const _lg=log;log=function(t,c){try{if(S&&S.alive&&['epic','myth','bad','good','sys','up'].includes(c||'')){window._csL.push({t:String(t),c:c||'',a:S.age,o:S,w:window._csW()});if(window._csL.length>40)window._csL.shift()}}catch(e){}return _lg.apply(this,arguments)}}
 function csSnap(){if(!S)return null;return{a:S.age,p:Math.round(total()),q:+S.qi||0,m:+S.money||0,f:+S.fame||0,h:Math.round(S.hp),i:+S.int||0,k:+S.karma||0,o:S}}
 function csDelta(){const s0=window._cs0;if(!s0||s0.o!==S)return null;const d=(a,b)=>b-a;return{y:S.age-s0.a,p:d(s0.p,Math.round(total())),q:+(d(s0.q,+S.qi||0)).toFixed(1),m:d(s0.m,+S.money||0),f:d(s0.f,+S.fame||0),h:d(s0.h,Math.round(S.hp)),i:d(s0.i,+S.int||0),k:d(s0.k,+S.karma||0)}}
-function csHtml(){if(!S||!S.alive)return'';const D=csDelta(),L=window._csL.slice(-30);
+function csHtml(){if(!S||!S.alive)return'';const D=csDelta(),cw=window._csW(),L=window._csL.filter(x=>(!x.o||x.o===S)&&(!x.w||x.w===cw)).slice(-30);
  const pick=[...L.filter(x=>x.c==='myth'),...L.filter(x=>x.c==='epic'),...L.filter(x=>x.c==='bad'),...L.filter(x=>x.c==='good'||x.c==='up')].slice(0,4).sort((a,b)=>a.a-b.a);
  const short=t=>{let s=String(t).replace(/<br\s*\/?>/g,' ').replace(/<(?!\/?b>)[^>]+>/g,'');const plain=s.replace(/<[^>]+>/g,'');if(plain.length>70){s=plain.slice(0,68)+'…'}return s};
  const sg=v=>v>0?'+'+fmt(v):fmt(v),ch=[];
@@ -51844,7 +51844,7 @@ window._b92={C,load,MSG};
 //   pixelfx: MIT, Copyright (c) 2026 Patch · Copyright (c) 2026 Hugo Duprez — https://github.com/patch-gg/pixelfx
 // ============================================================
 try{(()=>{
-let st=0;const PV='5';
+let st=0;const PV='6';
 const want=()=>{try{return LS.get('murim_pfx',1)!==0}catch(e){return true}};
 const vq=()=>{try{return typeof vfxQ==='function'?vfxQ():1}catch(e){return 1}};
 function load(){if(st||!want())return;st=1;const s=document.createElement('script');s.src='/pfx.js?v='+PV;s.async=true;s.onload=()=>{st=window.PFX?2:0;sync()};s.onerror=()=>{st=0};document.head.appendChild(s)}
@@ -52491,7 +52491,8 @@ const st=document.createElement('style');st.textContent=`
 .sgC.r1{box-shadow:0 0 0 1px #5cd2ff33,0 0 14px #5cd2ff22}.sgC.r2{box-shadow:0 0 0 1px #ffb23d55,0 0 22px #ffb23d44;background:linear-gradient(160deg,#2a1e10,#0b151c 70%)}
 .sgC.r2::after{content:'';position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent 0 80%,#ffd27a33 88%,transparent 96%);animation:sgSp 4s linear infinite;pointer-events:none}
 .sgC.lk{outline:2px solid #ff8a3d;outline-offset:-2px}.sgC.hid{background:repeating-linear-gradient(135deg,#101c26 0 8px,#0c161e 8px 16px)}
-.sgH{display:flex;justify-content:space-between;gap:4px;font:700 10.5px 'Chakra Petch',sans-serif;letter-spacing:.8px;color:#9db3c4;text-transform:uppercase}.sgH em{font-style:normal;color:var(--rc);white-space:nowrap}
+#modal[data-k="skyorg"]>.sgW{background:none!important;border:0!important;box-shadow:none!important}
+.sgH{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:1px 6px;font:700 10.5px 'Chakra Petch',sans-serif;letter-spacing:.4px;color:#9db3c4;text-transform:uppercase}.sgH em{font-style:normal;color:var(--rc);white-space:nowrap}.sgH>:first-child{white-space:nowrap}@media(max-width:400px){.sgH{font-size:10px;letter-spacing:.2px}.sgC{padding:8px 7px 34px}.sgB b{font-size:14px}}
 .sgB{margin-top:6px}.sgB b{display:block;font:700 14.5px 'Chakra Petch','Sarabun',sans-serif;color:#fff;line-height:1.25}.sgB small{display:block;color:#ff8a3d;font-size:11.5px;margin-top:1px}.sgB p{margin:4px 0 0;font-size:12px;color:#b8c8d4;line-height:1.35}
 .sgX{margin-top:5px;font-size:11px;color:#7fe0c8;line-height:1.4}.sgQ{font-size:42px!important;text-align:center;color:var(--rc)!important;text-shadow:0 0 16px var(--rc);margin:6px 0}
 .sgL{position:absolute;left:8px;right:8px;bottom:6px;background:#0e1820;border:1px solid #263b4c;color:#9db3c4;border-radius:6px;font:600 11px 'Chakra Petch',sans-serif;padding:4px}.sgC.lk .sgL{background:#ff8a3d22;color:#ffb27a;border-color:#ff8a3d}
