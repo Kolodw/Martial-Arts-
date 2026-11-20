@@ -8132,17 +8132,19 @@ const PROF_SKIP=/^murim_(admk|pid|vid|migin|migempty|migpress|migrated|prebak|cl
 function profKeys(){const o={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&/^murim_/.test(k)&&!PROF_SKIP.test(k))o[k]=localStorage.getItem(k)}}catch(e){}return o}
 async function pzip(str){if(typeof CompressionStream==='undefined')return'P0.'+btoa(unescape(encodeURIComponent(str)));const b=await new Response(new Blob([str]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer(),u=new Uint8Array(b);let x='';for(let i=0;i<u.length;i+=32768)x+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return'P1.'+btoa(x)}
 async function punzip(d){if(d.startsWith('P0.'))return decodeURIComponent(escape(atob(d.slice(3))));const bin=atob(d.slice(3)),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text()}
-cloudPut=async function(){try{try{if(S)saveGame()}catch(e){}const ks=profKeys();if(!Object.keys(ks).length)return toast('เครื่องนี้ยังไม่มีข้อมูลให้ย้าย');let d=await pzip(JSON.stringify({v:1,t:Date.now(),k:ks}));
+cloudPut=async function(){try{try{if(S)saveGame()}catch(e){}const ks=profKeys();if(!Object.keys(ks).length)return toast('เครื่องนี้ยังไม่มีข้อมูลให้ย้าย');let d=await pzip(pfPack(ks));
  if(d.length>880000){if(!S)return toast('ข้อมูลใหญ่เกินไป — เข้าชีวิตก่อนแล้วใช้รหัสยาวแทน');d=saveCode();toast('ข้อมูลทั้งโปรไฟล์ใหญ่เกิน → ฝากเฉพาะชีวิตนี้แทน')}
  const j=await api('save',{d});modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☁️ ฝากแล้ว</h3><p>รหัสของคุณ</p><div class="px" style="font-size:30px;text-align:center;letter-spacing:4px;user-select:all">${j.code}</div><p class="tag2">${/^P[01]\./.test(d)?'ย้ายทั้งโปรไฟล์':'ย้ายเฉพาะชีวิตนี้'} · ใช้ได้ 30 วัน · เครื่องใหม่: 👤 โปรไฟล์ → 💾 ส่งออก / นำเข้าเซฟ → ใส่รหัสนี้</p>`)}
  catch(e){toast(e.message==='rate'?'เพิ่งฝากไป รอ 30 วินาทีแล้วลองใหม่':'ฝากไม่สำเร็จ')}};
 cloudGet=async function(c){try{const j=await api('load&code='+encodeURIComponent(c.toUpperCase()));if(!j.d)throw 0;if(/^P[01]\./.test(j.d))return profImportAsk(j.d);loadCode(j.d);closeM()}catch(e){toast('ไม่พบรหัสนี้ (หรือหมดอายุแล้ว)')}};
-async function profImportAsk(d){let o;try{o=JSON.parse(await punzip(d))}catch(e){return toast('รหัสเสียหาย')}const n=Object.keys(o.k||{}).length;window._profImp=o;
+function pfPack(k){const t=Date.now();return JSON.stringify({v:1,t,k,sg:window._zq9?_zq9('pf'+t,JSON.stringify(k)):''})}
+function pfOk(o){try{return !!(o&&o.k&&o.sg&&window._zq9&&_zq9('pf'+o.t,JSON.stringify(o.k))===o.sg)}catch(e){return false}}
+async function profImportAsk(d){let o;try{o=JSON.parse(await punzip(d))}catch(e){return toast('รหัสเสียหาย')}if(!pfOk(o))return modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>⛔ รหัสโปรไฟล์นี้ใช้ไม่ได้</h3><p>รหัสเป็นรุ่นเก่า หรือถูกแก้ไขหลังจากสร้าง — เกมรับเฉพาะรหัสที่ไม่ถูกดัดแปลง</p><p class="tag2">ไปที่เครื่องเดิมแล้วสร้างรหัสโปรไฟล์ใหม่อีกครั้ง</p>`,'imp');const n=Object.keys(o.k||{}).length;window._profImp=o;
  modal(`<h3>📥 นำเข้าทั้งโปรไฟล์</h3><p>ข้อมูล ${n} รายการ (เซฟทุกช่อง สมุดตำนาน ความสำเร็จ ฯลฯ) จากวันที่ ${new Date(o.t||Date.now()).toLocaleString('th-TH')}</p><p class="tag2">⚠️ ข้อมูลเกมในเครื่องนี้จะถูกแทนที่ — แต่ระบบสำรองของเดิมไว้ให้ กู้คืนได้ที่หน้านี้</p><div style="display:flex;gap:8px"><button class="gbtn" style="flex:1" onclick="closeM()">ยกเลิก</button><button class="pbtn" style="flex:1" onclick="profImportGo()">นำเข้าเลย</button></div>`,'profimp')}
-async function profImportGo(){const o=window._profImp;if(!o||!o.k)return;try{const cur=profKeys();if(Object.keys(cur).length)try{localStorage.setItem('murim_prebak',await pzip(JSON.stringify({v:1,t:Date.now(),k:cur})))}catch(e){}
+async function profImportGo(){const o=window._profImp;if(!o||!o.k)return;try{const cur=profKeys();if(Object.keys(cur).length)try{localStorage.setItem('murim_prebak',await pzip(pfPack(cur)))}catch(e){}
  for(const k of Object.keys(cur))if(!(k in o.k))try{localStorage.removeItem(k)}catch(e){}
  for(const k in o.k)if(/^murim_/.test(k)&&!PROF_SKIP.test(k))localStorage.setItem(k,o.k[k]);try{S=null}catch(e){}toast('นำเข้าแล้ว กำลังโหลดใหม่…');setTimeout(()=>location.reload(),600)}catch(e){toast('นำเข้าไม่สำเร็จ: พื้นที่เครื่องไม่พอ?')}}
-async function profUndo(){try{const v=localStorage.getItem('murim_prebak');if(!v)return;const o=JSON.parse(await punzip(v));const cur=profKeys();for(const k of Object.keys(cur))if(!(k in o.k))localStorage.removeItem(k);for(const k in o.k)localStorage.setItem(k,o.k[k]);localStorage.removeItem('murim_prebak');toast('กู้ข้อมูลเดิมแล้ว กำลังโหลดใหม่…');setTimeout(()=>location.reload(),600)}catch(e){toast('กู้ไม่สำเร็จ')}}
+async function profUndo(){try{const v=localStorage.getItem('murim_prebak');if(!v)return;const o=JSON.parse(await punzip(v));if(!pfOk(o)){localStorage.removeItem('murim_prebak');return toast('ข้อมูลสำรองเสียหาย กู้คืนไม่ได้')}const cur=profKeys();for(const k of Object.keys(cur))if(!(k in o.k))localStorage.removeItem(k);for(const k in o.k)localStorage.setItem(k,o.k[k]);localStorage.removeItem('murim_prebak');toast('กู้ข้อมูลเดิมแล้ว กำลังโหลดใหม่…');setTimeout(()=>location.reload(),600)}catch(e){toast('กู้ไม่สำเร็จ')}}
 {const _osc2=openSaveCode;openSaveCode=function(){const r=_osc2.apply(this,arguments);try{if(localStorage.getItem('murim_prebak')){const m=$('modal');m.insertAdjacentHTML('beforeend','<button class="gbtn" style="width:100%;margin-top:8px" onclick="if(confirm(\'กู้ข้อมูลเครื่องนี้กลับเป็นก่อนนำเข้าโปรไฟล์?\'))profUndo()">↩️ กู้ข้อมูลเดิมก่อนนำเข้า</button>')}}catch(e){}return r}}
 
 // ---- อัปโหลดรูปจากเครื่อง: ปิดไว้สำหรับผู้เล่นทั่วไป (เฉพาะแอดมิน) — รูปตัวละครยังใช้ได้ปกติ ----
@@ -31377,8 +31379,8 @@ async function sync(force){
   const loc=local();let j;
   try{j=await api('psget',{tk:ctok})}catch(e){const m=String(e&&e.message);if(m==='nolink'||m==='token'){PS.linked=false;PS.retry=Date.now()+3600e3}return false}
   PS.linked=true;let rawR='',rem=null;
-  if(j&&j.d){try{rawR=await ungz(j.d,j.z);const o=JSON.parse(rawR);rem=o&&o.k?o.k:null}catch(e){rem=null;rawR=''}}
-  const merged=fit(rem?mergeB(loc,rem):loc),str=JSON.stringify({v:1,k:merged});
+  if(j&&j.d){try{rawR=await ungz(j.d,j.z);const o=JSON.parse(rawR);rem=o&&o.k?o.k:null;if(rem&&window._zq9&&(o.sg?o.sg!==_zq9('ps',JSON.stringify(o.k)):Date.now()>Date.UTC(2026,11,15)))rem=null}catch(e){rem=null;rawR=''}}
+  const merged=fit(rem?mergeB(loc,rem):loc),str=JSON.stringify({v:1,k:merged,sg:window._zq9?_zq9('ps',JSON.stringify(merged)):''});
   const chg=Object.keys(merged).filter(k=>loc[k]!==merged[k]);
   if(!rem||str!==rawR){const z=await gz(str);await api('psput',{tk:ctok,d:z.d,z:z.z,n:Object.keys(merged).length})}
   if(chg.length){if(safeNow()){chg.forEach(k=>{try{localStorage.setItem(k,merged[k])}catch(e){}});PS.need=0;
