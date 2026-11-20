@@ -51844,7 +51844,7 @@ window._b92={C,load,MSG};
 //   pixelfx: MIT, Copyright (c) 2026 Patch · Copyright (c) 2026 Hugo Duprez — https://github.com/patch-gg/pixelfx
 // ============================================================
 try{(()=>{
-let st=0;const PV='4';
+let st=0;const PV='5';
 const want=()=>{try{return LS.get('murim_pfx',1)!==0}catch(e){return true}};
 const vq=()=>{try{return typeof vfxQ==='function'?vfxQ():1}catch(e){return 1}};
 function load(){if(st||!want())return;st=1;const s=document.createElement('script');s.src='/pfx.js?v='+PV;s.async=true;s.onload=()=>{st=window.PFX?2:0;sync()};s.onerror=()=>{st=0};document.head.appendChild(s)}
@@ -52080,7 +52080,7 @@ function wxAttach(host,name,seed){if(!host||!name)return;if(!pfx()){if(!window.P
  const spec=[{k:'w',n:name,o:{x:W/2,y:SKYFX.has(name)?170:H-10,seed:(seed|0)%9+1}}];
  const loop=now=>{if(!host.isConnected||!on()){ov.remove();host._wx=null;P.clear();return}
   if(!host.offsetWidth){requestAnimationFrame(loop);return}const st=ov.style;st.left=host.offsetLeft+'px';st.top=host.offsetTop+'px';st.width=host.offsetWidth+'px';st.height=host.offsetHeight+'px';
-  P.tick(spec,now,0);g2.clearRect(0,0,W,H);P.put(g2,0,0,.85);requestAnimationFrame(loop)};requestAnimationFrame(loop)}
+  P.tick(spec,now,0,.4);g2.clearRect(0,0,W,H);P.put(g2,0,0,.85);requestAnimationFrame(loop)};requestAnimationFrame(loop)}
 window._wxAttach=wxAttach;
 {const _pp=window.pxPlay;if(typeof _pp==='function'){pxPlay=function(o){const r=_pp.apply(this,arguments);try{const L=document.querySelectorAll('.pxs .pxbox canvas'),h=L[L.length-1];if(h&&o)wxAttach(h,wxOf(o.type,o.w,o.seed),o.seed)}catch(e){}return r};window.pxPlay=pxPlay}}
 
@@ -52159,7 +52159,7 @@ pxHero=function(c,x,y,lk,pz,fx,col,tm){
  if(!isMe&&!isEn)return _ph.apply(this,arguments);
  try{const now=performance.now(),side=isMe?'m':'e';
   // ชั้นหลัง: ออร่าปราณ วาดครั้งเดียวต่อเฟรม ก่อนตัวแรก
-  if(isMe&&AU.fr!==DUS.lt){AU.fr=DUS.lt;if(pfx()){if(!AU.bp){AU.bp=PFX.pane(PXW,PXH);AU.fp=PFX.pane(PXW,PXH);AU.wp=PFX.pane(320,180)}const [b,f,w]=auraSpecs(now),frz=!!(DUS.frz&&now<DUS.frz);AU.bp.tick(b,now,frz);AU.fp.tick(f,now,frz);AU.wp.tick(w,now,frz);
+  if(isMe&&AU.fr!==DUS.lt){AU.fr=DUS.lt;if(pfx()){if(!AU.bp){AU.bp=PFX.pane(PXW,PXH);AU.fp=PFX.pane(PXW,PXH);AU.wp=PFX.pane(320,180)}const [b,f,w]=auraSpecs(now),frz=!!(DUS.frz&&now<DUS.frz);AU.bp.tick(b,now,frz);AU.fp.tick(f,now,frz);AU.wp.tick(w,now,frz,.4);
     c.save();c.setTransform(3,0,0,3,0,0);c.globalAlpha=1;AU.bp.put(c,0,0,.9);c.restore()}}
   // สัตว์อสูร: วาดเป็นตัวสัตว์จริง
   if(lk&&lk.beast){const b=lk.beast,s=b.f&&b.f.big?1.6:b.t>=4?1.4:1.25,lunge=pz&&pz.st==='atk'?6:0,bob=Math.round(Math.sin(now/300)*.6);c.save();c.setTransform(3,0,0,3,0,0);
@@ -52741,7 +52741,7 @@ function ovSet(host,name){if(!window.PFX||!PFX.pane||!(window.PFXON&&PFXON())){o
  if(OV.name!==name){OV.name=name;OV.spec=name?[{k:'w',n:name,o:{x:160,y:name==='wStars'||name==='wAurora'?170:OV.H-6,seed:3}}]:[]}}
 function ovKill(){try{OV.cv&&OV.cv.remove()}catch(e){}try{OV.pane&&OV.pane.clear()}catch(e){}OV.host=null;OV.cv=null;OV.pane=null;OV.name=null}
 function ovDraw(){const h=OV.host;if(!h||!OV.cv)return;if(!h.isConnected){ovKill();return}const st=OV.cv.style;st.left=h.offsetLeft+'px';st.top=h.offsetTop+'px';st.width=h.offsetWidth+'px';st.height=h.offsetHeight+'px';
- const now=performance.now();OV.pane.tick(OV.spec,now,0);const g2=OV.cv.getContext('2d');g2.clearRect(0,0,OV.cv.width,OV.cv.height);if(OV.name){g2.globalAlpha=OV.name==='wFog'?.4:OV.name==='wStorm'?.45:OV.name==='wAurora'?.5:OV.name==='wRain'?.7:.85;OV.pane.put(g2,0,0,.85);g2.globalAlpha=1}}
+ const now=performance.now();OV.pane.tick(OV.spec,now,0,.4);const g2=OV.cv.getContext('2d');g2.clearRect(0,0,OV.cv.width,OV.cv.height);if(OV.name){g2.globalAlpha=OV.name==='wFog'?.4:OV.name==='wStorm'?.45:OV.name==='wAurora'?.5:OV.name==='wRain'?.7:.85;OV.pane.put(g2,0,0,.85);g2.globalAlpha=1}}
 // เอฟเฟกต์เป็นระยะ (พิกัดพิกเซลจริงของแคนวาสฉาก)
 function burst(e,sub,host){const now=performance.now();if(now-OV.lastFx<(e===6||e===5?6000:3500))return;OV.lastFx=now;const W=host.width,H=host.height,k=W/480,fx=(n,x,y,o)=>{try{PFX.fxAt(host,n,Object.assign({x:x*k,y:y*k,seed:(now|0)%97},o||{}),{life:o&&o.life||2.6,extra:1})}catch(x){}};
  if(e===1&&sub==='siren')fx('lightningStrike',300+Math.random()*150,140,{palette:PFX.ramp(['#ff4a2a','#ffd0a0'])});
@@ -52780,7 +52780,7 @@ const OUT={2:{coat:'#2a3a4a',coatL:'#4a6a7a',trim:'#c8a040'},3:{coat:'#1e2a3e',c
  const b=document.createElement('canvas');b.width=PXW;b.height=PXH;try{pxScene(b.getContext('2d'),'sky_e'+e+(sub?'_'+sub:''),'m',h%50,-1)}catch(x){}DUS.bg=b;DUS.bgK=k;DUS.bgT='sky';DUS.bgW='m';DUS.bgS=h%50;DUS.scars=0;return b};window.dusBg=dusBg}
 // ปลดปล่อยพลังในโหมดนี้ → ใช้ฉากยุคปัจจุบัน
 {const _pp=window.pxPlay;if(typeof _pp==='function'){pxPlay=function(o){try{const K=SK();if(K&&o&&!K.beast&&!/^sky_e/.test(String(o.type||''))){const e=era(K);o=Object.assign({},o,{type:'sky_e'+e+({3:'_battle',4:'_war'}[e]||'')})}}catch(x){}return _pp.call(this,o)};window.pxPlay=pxPlay}}
-window._skyScene={era,still,subOf,P};
+window._skyScene={era,still,subOf,P,Buf,rng,mixC,dth};
 })()}catch(e){console.error('block100',e)}
 
 // ============================================================
@@ -52824,3 +52824,151 @@ setTimeout(()=>scan(document.body,5000),1500);
 // หน้าต่างที่เปิดอยู่: ตรวจซ้ำเบาๆ (กรณีสลับคลาส/สีโดยไม่เพิ่มโหนด)
 setInterval(()=>{try{const m=document.getElementById('modal');if(m&&m.offsetParent!==null)scan(m,800);const c=document.getElementById('choice');if(c&&c.offsetParent!==null)scan(c,300)}catch(e){}},1500);
 })()}catch(e){console.error('block102',e)}
+
+// ============================================================
+// BLOCK 103: ⭕ วิญญาณยุทธ์ — ฉาก pixel ใหม่ทั้งโหมด (สไตล์ pixelfx)
+//   อัปเกรด: วงแหวนวิญญาณ · ป่าล่าสัตว์ · สถาบัน · ทัณฑ์สวรรค์
+//   ใหม่: พิธีปลุกดวงจิต · ร่างเดิมตื่น · ดูดซับวงแหวน · ศาลไต่สวน · ดินแดนเทพ · รังสัตว์วิญญาณ (เส้นเกิดเป็นสัตว์)
+//   ภาพนิ่งแคชไว้ + ส่วนขยับทุกเฟรม + ชั้น pixelfx (อากาศ/เอฟเฟกต์เป็นระยะ) · ใช้เป็นฉากเวทีดวล/ปลดปล่อยพลังของโหมด
+// ============================================================
+try{(()=>{
+const X=window._skyScene;if(!X||!X.Buf)return;const {Buf,rng,mixC,dth}=X;
+const on=()=>{try{return !!(S&&S.alive!==false&&!S.mw&&S.ch==='soul'&&S.sv)}catch(e){return false}};
+const RC=['#e8e8e8','#f2d84a','#a66bff','#2a2a34','#e03a3a','#ffd76a','#ff8af0','#6ad8ff','#ffffff'];
+const RN=['สิบปี','ร้อยปี','พันปี','หมื่นปี','แสนปี','ล้านปี','สิบล้านปี','ร้อยล้านปี','ปฐมกาล'];
+const isGod=()=>{const g=S&&S.sv;return!!(g&&(g.god||(g.x&&(g.x.god||(g.x.done||[]).includes('god')))))};
+function spInfo(){try{const s=S.sv.sp&&S.sv.sp[0];if(!s)return null;const SP=window._blk34&&window._blk34.SP,p=SP&&SP.find(x=>x[0]===s.id);if(!p)return null;const tf=s.rev&&p[6];return{ic:tf?p[6][0]:p[1],n:tf?p[6][1]:p[2],tf:!!tf,r:p[5]|0}}catch(e){return null}}
+const rings=()=>{try{return(S.sv.rings||[]).map(r=>Math.max(0,Math.min(8,r.t|0)))}catch(e){return[]}};
+// ---------- ภาพนิ่ง ----------
+const P={};
+P.rings=(B,R)=>{B.vg(0,140,['#0a0618','#1a0e34','#3a1a5a','#6a2a7a']);B.stars(R,160,110,['#ffffff','#e8d0ff','#a8c8ff']);B.glow(240,70,140,'#a66bff',.18);
+ B.ridge(R,104,22,'#22163a',1.4);B.ridge(R,120,14,'#170f28',1.1);
+ // แท่นหินแปดเหลี่ยม
+ B.poly([[150,134],[330,134],[350,146],[130,146]],'#4a4060');B.rect(150,134,180,2,'#8a80b0');B.poly([[130,146],[350,146],[336,154],[144,154]],'#2e2644');for(let i=0;i<9;i++)B.rect(162+i*18,136,1,10,'#3a3254');
+ B.vg(146,168,['#1a1430','#0a0814'])};
+P.awaken=(B,R)=>{B.vg(0,168,['#05040c','#120a24','#24123a']);B.stars(R,120,100,['#ffffff','#c8b0ff']);
+ // วงหินแปดทิศ
+ for(let i=0;i<8;i++){const a=i/8*Math.PI*2,x=240+Math.cos(a)*170,y=132+Math.sin(a)*24;const h=26+(i%2)*10;B.rect(x-6,y-h,12,h,'#3a3450');B.rect(x-6,y-h,3,h,'#5a5274');B.rect(x-3,y-h+6,6,4,'#c8a8ff');B.glow(x,y-h+8,10,'#c8a8ff',.5)}
+ for(let a=0;a<360;a+=1.5){const A=a*Math.PI/180;B.rect(240+Math.cos(A)*120,140+Math.sin(A)*16,2,1,'#a66bff',.8)}for(let a=0;a<360;a+=3){const A=a*Math.PI/180;B.rect(240+Math.cos(A)*70,140+Math.sin(A)*9,2,1,'#ffd76a',.8)}
+ B.vg(140,168,['#1a1028','#0a0612'])};
+P.hunt=(B,R)=>{B.vg(0,140,['#06120c','#0e2418','#1a3a24','#2a4a2a']);B.glow(380,30,60,'#e8ffd0',.12);
+ const layer=(n,base,h0,hv,col,lc)=>{for(let i=0;i<n;i++){const x=R()*480,h=h0+R()*hv;B.rect(x+6,base-h,5,h,mixC(col,'#000000',.3));for(let k=0;k<4;k++)B.poly([[x+8,base-h-12+k*9],[x+8+18-k*3,base-h+6+k*9],[x+8-18+k*3,base-h+6+k*9]],k%2?col:lc)}};
+ layer(20,110,40,20,'#1a3a2a','#22442e');for(let y=100;y<114;y++)for(let x=0;x<480;x++)if(dth(x,y)<.13-(y-100)*.008)B.rect(x,y,1,1,'#6a8a7a');layer(12,140,60,30,'#14301e','#1a3a24');
+ B.vg(138,168,['#1a2a14','#0e1a0a']);for(let i=0;i<40;i++){const x=R()*480,y=142+R()*24;B.rect(x,y-3,1,3,'#3a6a2a');B.rect(x+1,y-2,1,2,'#3a6a2a')}
+ for(let i=0;i<6;i++){const x=20+R()*440,y=146+R()*16;B.rect(x,y,2,3,'#d8d0c0');B.glow(x+1,y,6,'#8affd8',.5)}};
+P.absorb=(B,R)=>{P.hunt(B,R);B.rect(0,0,480,168,'#0a0418',.45);B.glow(200,110,120,'#a66bff',.25)};
+P.academy=(B,R)=>{B.vg(0,110,['#3a5a8a','#7a9ac8','#e8c8a8','#ffd8a0']);B.ball(400,34,14,['#ffd890','#fff0c0','#ffffff']);B.glow(400,34,60,'#ffe0a0',.25);
+ B.ridge(R,82,18,'#6a7aa0',1.3);B.ridge(R,96,10,'#4a5a7a',1);
+ // หอสถาบัน
+ const hall=(x,w,y,h,roof)=>{B.rect(x,y,w,h,'#e8dcc0');B.rect(x,y,w,2,'#fff4dc');for(let i=x+6;i<x+w-6;i+=10){B.rect(i,y+6,5,h-10,'#5a3a2a');B.rect(i,y+6,1,h-10,'#8a5a3a')}B.poly([[x-10,y],[x+w+10,y],[x+w-4,y-roof],[x+4,y-roof]],'#2a3a5a');B.rect(x-10,y-1,w+20,2,'#4a5a7a');B.poly([[x-14,y+1],[x-6,y-4],[x-4,y+1]],'#2a3a5a');B.poly([[x+w+14,y+1],[x+w+6,y-4],[x+w+4,y+1]],'#2a3a5a')};
+ hall(170,140,92,40,14);hall(200,80,64,28,12);hall(222,36,44,20,10);B.rect(232,30,16,6,'#ffd76a');
+ // ธงห้าสาย
+ const FL=['#a66bff','#f2c94c','#e03a3a','#6ad8ff','#3a3a3a'];FL.forEach((c,i)=>{const x=40+i*32+(i>2?260:0)-(i>2?96:0);B.rect(x,70,2,64,'#4a3a2a');B.rect(x+2,72,14,20,c);B.rect(x+2,90,14,2,mixC(c,'#000000',.35))});
+ B.vg(132,168,['#b0a898','#8a8274']);for(let y=134;y<168;y+=6)B.rect(0,y,480,1,'#9a9284');for(let y=134;y<168;y+=6)for(let x=(y%12?0:12);x<480;x+=24)B.rect(x,y,1,6,'#9a9284')};
+P.trib=(B,R)=>{B.vg(0,168,['#05050c','#0e0e1e','#1e1a34','#2a2440']);
+ for(let k=0;k<5;k++){const cy=10+k*8;for(let i=0;i<14;i++){const cx=R()*480;B.disc(cx,cy,16+R()*12,mixC('#1a1a2e','#3a3456',k/5))}}
+ for(let a=0;a<720;a+=2){const A=a*Math.PI/180,r=10+a*.12;B.rect(240+Math.cos(A)*r*1.8,28+Math.sin(A)*r*.35,3,2,'#4a4470',.6)}B.glow(240,28,50,'#c8b8ff',.2);
+ B.ridge(R,128,20,'#141220',1.6);B.vg(140,168,['#1a1622','#08060c']);B.poly([[200,140],[280,140],[270,124],[210,124]],'#2a2638');B.rect(210,124,60,2,'#5a5474')};
+P.court=(B,R)=>{B.vg(0,168,['#0c0a10','#1a1620','#24202c']);for(let x=20;x<480;x+=80){B.rect(x,0,22,140,'#2e2a38');B.rect(x,0,4,140,'#46405a');B.rect(x-4,0,30,8,'#3a3448')}
+ for(let i=0;i<5;i++){const x=110+i*66,y=54-(i===2?10:0);B.rect(x-18,y,36,34,'#3a2e24');B.rect(x-18,y,36,3,'#8a6a3a');B.rect(x-6,y-12,12,12,'#4a3a2a');B.glow(x,y-14,14,'#ffd76a',.35);B.rect(x-2,y-18,4,4,'#ffd76a')}
+ B.rect(0,96,480,4,'#5a4a32');B.vg(100,168,['#2a2620','#14120e']);for(let y=104;y<168;y+=8)B.rect(0,y,480,1,'#1e1c18');
+ // โซ่เรืองแสง
+ for(const s of [-1,1]){for(let i=0;i<14;i++){const x=240+s*(30+i*9),y=130-i*5;B.rect(x,y,5,3,'#6ad8ff',.85);B.glow(x+2,y+1,4,'#6ad8ff',.4)}}};
+P.god=(B,R)=>{B.vg(0,120,['#fff6e0','#ffe0b0','#ffc8a0','#e8a8c8']);for(let i=0;i<8;i++){const x=40+i*60;for(let y=0;y<120;y++)B.rect(x+y*.3,y,14-y*.08,1,'#ffffff',.08)}
+ for(let k=0;k<3;k++)for(let i=0;i<18;i++)B.disc(R()*480,96+k*14+R()*6,12+R()*10,['#ffffff','#fff0f4','#f4e0ec'][k]);
+ // เกาะลอย + บัลลังก์
+ B.poly([[130,130],[350,130],[310,156],[250,166],[190,156]],'#c8b090');B.rect(130,126,220,6,'#e8d8b8');B.rect(130,126,220,2,'#fff8e8');
+ B.rect(224,84,32,42,'#f4e8c8');B.rect(220,80,40,6,'#ffd76a');B.rect(228,92,24,30,'#e03a3a',.85);B.glow(240,84,40,'#ffd76a',.45);for(const x of [150,330]){B.rect(x-4,92,8,34,'#f4ecd8');B.rect(x-6,88,12,4,'#ffd76a')}
+ B.vg(150,168,['#f4e0ec','#e8c8d8'])};
+P.den=(B,R)=>{B.vg(0,168,['#0e0a06','#1e140c','#2a1c10']);for(let i=0;i<9;i++){const x=R()*480;B.poly([[x,0],[x+20+R()*20,0],[x+10,20+R()*30]],'#3a2a1a')}
+ B.poly([[0,40],[60,20],[140,36],[200,18],[300,30],[380,14],[480,34],[480,0],[0,0]],'#140e08');B.glow(320,120,100,'#ffb040',.18);
+ B.vg(128,168,['#3a2a18','#1a120a']);for(let i=0;i<30;i++)B.rect(R()*480,130+R()*36,4+R()*6,2,'#4a3620');for(let i=0;i<8;i++){const x=R()*480,y=136+R()*20;B.rect(x,y,10,3,'#e8dcc0');B.rect(x+8,y-1,3,5,'#e8dcc0')}
+ for(let a=0;a<360;a+=4){const A=a*Math.PI/180;B.rect(80+Math.cos(A)*46,146+Math.sin(A)*8,4,3,a%8?'#5a4022':'#7a5a30')}B.vg(140,152,['#2a1c10','#3a2814'],40,120);
+ for(let i=0;i<7;i++){const x=180+R()*280,y=60+R()*60;B.poly([[x,y],[x+4,y-14],[x+8,y]],'#5ad8c8');B.rect(x+3,y-12,1,10,'#c8fff4');B.glow(x+4,y-6,14,'#5ad8c8',.35)}
+ for(let i=0;i<3;i++){const x=300+i*50,y=100+(i%2)*10;B.rect(x,y,3,2,'#ffd030');B.rect(x+8,y,3,2,'#ffd030');B.glow(x+5,y+1,10,'#ffd030',.3)}};
+const CACHE=new Map();
+function still(k,W,H,seed){const key=k+'|'+W+'|'+H+'|'+(seed||0);let c=CACHE.get(key);if(c)return c;const B=Buf(W,H);try{P[k](B,rng(31+(seed||0)+k.length*977))}catch(e){console.error('soul still',k,e)}c=B.done();if(CACHE.size>30)CACHE.clear();CACHE.set(key,c);return c}
+// ---------- ดวงจิตแบบพิกเซล (วาด emoji ลงตาราง 16px แล้วขยายแบบ nearest) ----------
+const EMO=new Map();
+function emoPx(ic,n){const k=ic+'|'+n;let c=EMO.get(k);if(c)return c;c=document.createElement('canvas');c.width=c.height=n;const x=c.getContext('2d');x.font=`${Math.round(n*.86)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText(ic,n/2,n/2+1);EMO.set(k,c);return c}
+function spirit(cx,cy,sz,a,glowC){const s=spInfo();if(!s)return;const im=emoPx(s.ic,16);const f=typeof frame!=='undefined'?frame:0,bob=Math.sin(f*.05)*1.2;
+ // แสงรอบดวงจิต
+ const r=sz*.9;for(let i=0;i<10;i++){const A=f*.03+i*.628;Q(cx*3+Math.cos(A)*r*3,(cy+bob)*3+Math.sin(A)*r*1.4,3,3,glowC)}
+ g.save();g.globalAlpha=a;g.imageSmoothingEnabled=false;g.drawImage(im,cx-sz/2,cy-sz/2+bob,sz,sz);g.restore()}
+// ---------- ส่วนขยับ ----------
+const fz=()=>typeof frame!=='undefined'?frame:0;
+function ringsDyn(px,py,big){const L=rings();if(!L.length)return;const f=fz();
+ L.forEach((t,i)=>{const col=RC[t],y=py*3-6-i*(big?9:8)*1,rx=34+i*3,ry=7,n=28,sp=(i%2?-1:1)*(.02+i*.003);for(let k=0;k<n;k++){const A=f*sp+k/n*6.283,front=Math.sin(A)>0;if(front)continue;Q(px*3+Math.cos(A)*rx,y+Math.sin(A)*ry,3,2,col)}});
+ return L}
+function ringsFront(px,py,big){const L=rings();const f=fz();L.forEach((t,i)=>{const col=RC[t],y=py*3-6-i*(big?9:8),rx=34+i*3,ry=7,n=28,sp=(i%2?-1:1)*(.02+i*.003);for(let k=0;k<n;k++){const A=f*sp+k/n*6.283;if(Math.sin(A)<=0)continue;Q(px*3+Math.cos(A)*rx,y+Math.sin(A)*ry,3,2,col)}if(t>=4&&(f+i*7)%12<6)Q(px*3+Math.cos(f*.1+i)*rx,y-4,2,2,'#ffffff')})}
+// ---------- ฉากย่อยจากเหตุการณ์ ----------
+function pick(type,txt){const sv=S.sv,c=txt||'';
+ if(sv.bst&&sv.bst.sp&&/ร่างเดิม|รัง|สัตว์วิญญาณ|ป่าใหญ่|สงสัย|แปลงร่าง/.test(c))return'den';
+ if(/ทัณฑ์สวรรค์|เมฆทัณฑ์|ฝ่าทัณฑ์/.test(c))return'trib';
+ if(/ดินแดนเทพ|ขึ้นสู่เทพ|บัลลังก์เทพ|เทพผู้/.test(c)||(isGod()&&!c))return'god';
+ if(/ศาล|ไต่สวน|ตุลาการ|พิพากษา|ผู้ตัดสิน/.test(c))return'court';
+ if(/พิธีปลุก|ปลุกดวงจิต|ร่างเดิมตื่น/.test(c))return/ร่างเดิมตื่น/.test(c)?'trueform':'awaken';
+ if(sv.aw!==1)return null;
+ if(/ดูดซับวงแหวน|วงแหวนใหม่|หลอมวงแหวน/.test(c))return'absorb';
+ if(/ล่าสัตว์|สัตว์วิญญาณ|ออกล่า|ป่าล่า|นักล่า/.test(c))return'hunt';
+ if(/สถาบัน|ศิษย์ร่วมรุ่น|อาจารย์จิต|ลานฝึก|สอบเลื่อน/.test(c))return'academy';
+ if(/^(aura|peak|yard|waterfall|master)$/.test(type)||/วงแหวน|ดวงจิต|จิตวิญญาณ/.test(c))return'rings';
+ return null}
+const CAP={rings:()=>`⭕ วงแหวนวิญญาณ ${rings().length} วง${(()=>{const s=spInfo();return s?` · ${s.ic} ${s.n}`:''})()}`,awaken:()=>'🔮 พิธีปลุกดวงจิต · วงหินแปดทิศ',trueform:()=>{const s=spInfo();return`✨ ร่างเดิมตื่น${s?` · ${s.ic} ${s.n}`:''}`},
+ hunt:()=>'🌲 ป่าล่าสัตว์วิญญาณ',absorb:()=>'🌀 ดูดซับวงแหวน',academy:()=>'🏛️ สถาบันวิญญาณยุทธ์',trib:()=>'⚡ ทัณฑ์สวรรค์',court:()=>'⚖️ ศาลไต่สวนดวงจิต',god:()=>'🌟 ดินแดนเทพ',den:()=>{const b=S.sv.bst;return`🐾 รังของ${b&&b.nm?esc(b.nm):'สัตว์วิญญาณ'} · ร่างเดิม`}};
+// ---------- ชั้น pixelfx ----------
+const WX={rings:'wStars',awaken:'wStars',trueform:'wAurora',hunt:'wFlies',absorb:'wFlies',academy:'wSakura',trib:'wStorm',court:null,god:'wRays',den:'wFog'};
+const OV={host:null,cv:null,pane:null,name:null,spec:[],last:0};
+function ovSet(host,name){if(!window.PFX||!PFX.pane||!(window.PFXON&&PFXON())){ovKill();return}
+ if(OV.host!==host){ovKill();OV.host=host;const W=320,H=Math.round(320*host.height/host.width);OV.pane=PFX.pane(W,H);OV.cv=document.createElement('canvas');OV.cv.width=W;OV.cv.height=H;OV.cv.className='pfxL soulOv';OV.cv.style.cssText='position:absolute;pointer-events:none;image-rendering:pixelated;margin:0';host.insertAdjacentElement('afterend',OV.cv);OV.H=H}
+ if(OV.name!==name){OV.name=name;OV.spec=name?[{k:'w',n:name,o:{x:160,y:/wStars|wAurora|wRays/.test(name)?170:OV.H-6,seed:5}}]:[]}}
+function ovKill(){try{OV.cv&&OV.cv.remove()}catch(e){}try{OV.pane&&OV.pane.clear()}catch(e){}OV.host=null;OV.cv=null;OV.pane=null;OV.name=null}
+function ovDraw(){const h=OV.host;if(!h||!OV.cv)return;if(!h.isConnected){ovKill();return}const st=OV.cv.style;st.left=h.offsetLeft+'px';st.top=h.offsetTop+'px';st.width=h.offsetWidth+'px';st.height=h.offsetHeight+'px';
+ OV.pane.tick(OV.spec,performance.now(),0,.4);const g2=OV.cv.getContext('2d');g2.clearRect(0,0,OV.cv.width,OV.cv.height);if(OV.name){g2.globalAlpha=OV.name==='wFog'?.4:OV.name==='wStorm'?.45:OV.name==='wAurora'?.5:OV.name==='wRays'?.3:.85;OV.pane.put(g2,0,0,.85);g2.globalAlpha=1}}
+function burst(k,host,px){const now=performance.now(),gap={trib:2600,absorb:3200,awaken:4200,trueform:4200,god:6000,court:5000,rings:7000}[k];if(!gap||now-OV.last<gap)return;OV.last=now;
+ const W=host.width,s=W/480,fx=(n,x,y,o)=>{try{PFX.fxAt(host,n,Object.assign({x:x*s,y:y*s,seed:(now|0)%97},o||{}),{life:(o&&o.life)||2.8,extra:1})}catch(e){}},L=rings(),top=L.length?RC[L[L.length-1]]:'#a66bff';
+ if(k==='trib')fx('lightningStrike',px*3+(Math.random()-.5)*60,140,{palette:PFX.ramp(['#c8b8ff','#ffffff'])});
+ else if(k==='absorb')fx('runeCircle',px*3,150,{palette:PFX.ramp([top,'#ffffff']),life:3});
+ else if(k==='awaken')fx('holyPillar',240,150,{palette:PFX.ramp(['#c8a8ff','#ffffff']),life:3});
+ else if(k==='trueform')fx('magicCircle',px*3,152,{palette:PFX.ramp([top,'#fff4c0']),life:4});
+ else if(k==='god')fx('sunburst',240,84,{life:4});
+ else if(k==='court')fx('runeCircle',240,150,{palette:PFX.ramp(['#6ad8ff','#e8fbff']),life:4});
+ else if(k==='rings'&&L.length>=4)fx('sparkArc',px*3,120,{palette:PFX.ramp([top,'#ffffff'])})}
+// ---------- แทนฉากหลัก ----------
+{const _ds=drawScene;drawScene=function(ctx,type){if(!on()||type==='death'||!ctx||!ctx.canvas||ctx.canvas.id!=='scene'||(S.beastMode&&!S.beastMode.human))return _ds.apply(this,arguments);
+ try{const c=(choice._cur?String(choice._cur.title||'')+String(choice._cur.text||''):'');let k=pick(type,c);if(!k){if(OV.host)ovKill();return _ds.apply(this,arguments)}
+  g=ctx;PS=ctx.canvas.width/SW;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;const me=meLook();curMe=me;const f=fz();
+  const base=k==='trueform'?'awaken':k;ctx.drawImage(still(base,480,168),0,0,SW,SH);
+  let px=80,py=47;const L=rings(),top=L.length?RC[L[L.length-1]]:'#a66bff';
+  if(k==='rings'||k==='trueform'||k==='awaken'){px=80;py=k==='rings'?45:47}
+  if(k==='academy'){try{const npc=window._sc84.h.npc;npc(110,47,8600,'ชาย','#f4ecd8','stand',70,{beard:'#e8e8e8',old:true});for(let i=0;i<3;i++)npc(124+i*8,47,8610+i,i%2?'หญิง':'ชาย','#5a4a8a','stand',14)}catch(e){}}
+  if(k==='court'){px=80;for(let i=0;i<5;i++){const x=110+i*66;Q(x-6,42-(i===2?10:0),12,12,(f+i*13)%60<30?'#ffd76a':'#c8a040')}}
+  if(k==='god'){px=80;py=42}
+  // สัตว์ที่ล่า
+  if(k==='hunt'||k==='absorb'){const bx=330,by=96+Math.round(Math.sin(f*.12)*2),cl=k==='absorb'?'#3a2a5a':'#5a6a8a';Q(bx,by,60,26,cl);Q(bx+50,by-12,24,20,cl);Q(bx+56,by-18,6,8,cl);Q(bx+64,by-18,6,8,cl);Q(bx+60,by-6,4,3,'#ffea3a');Q(bx+4,by+26,6,12,cl);Q(bx+46,by+26,6,12,cl);
+   if(k==='absorb'){const t=(f%90)/90;for(let i=0;i<8;i++){const A=i*.785+f*.06,r=40*(1-t)+6;Q(bx+30+Math.cos(A)*r*(1-t)-(bx+30-px*3)*t,by+12+Math.sin(A)*r*.4*(1-t)-(by+12-py*3+20)*t,3,3,top)}}}
+  // ไฟวงหิน/พิธี
+  if(k==='awaken'||k==='trueform'){for(let i=0;i<14;i++){const yy=(f*1.2+i*12)%140;Q(240+Math.sin(i*1.7+f*.02)*30,150-yy,3,3,i%2?'#c8a8ff':'#ffffff')}}
+  // ฟ้าทัณฑ์: เมฆหมุน
+  if(k==='trib'){const a=f*.015;for(let i=0;i<40;i++){const A=a+i*.157,r=20+i*2.2;Q(240+Math.cos(A)*r*1.8,28+Math.sin(A)*r*.32,4,2,'#6a62a0')}if((f%70)<3)Q(0,0,480,168,'#ffffff')}
+  if(k==='rings'||k==='trueform')ringsDyn(px,py,k==='trueform');
+  // ดวงจิตด้านหลัง
+  if(k==='rings'||k==='awaken'||k==='trueform'){const sz=k==='trueform'?30:k==='awaken'?16:22;spirit(px+(k==='awaken'?0:22),py-30-(k==='trueform'?4:0),sz,k==='awaken'?.55+.25*Math.sin(f*.08):.9,top)}
+  // ตัวละคร (เส้นสัตว์ในรัง = วาดเป็นสัตว์)
+  if(k==='den'){try{const b=S.sv.bst,bs=beasts&&beasts().find(x=>x.n&&b.nm&&String(b.nm).includes(x.n));if(bs){drawBeast(g,bs,px-18,py-28,1.4,f)}else person(px,py,me,'stand')}catch(e){person(px,py,me,'stand')}}
+  else person(px,py,me,'stand');
+  if(k==='rings'||k==='trueform')ringsFront(px,py,k==='trueform');
+  if(k==='god')for(let i=0;i<10;i++){const kk=(f*.4+i*29)%140;Q(40+i*44,150-kk,2,2,'#ffffff')}
+  window._scK=['soulX',k];
+  try{const h=ctx.canvas;ovSet(h,WX[k]||null);ovDraw();if(window.PFX&&window.PFXON&&PFXON())burst(k,h,px)}catch(e){}
+  return}catch(e){console.error('soul scene',e)}return _ds.apply(this,arguments)}}
+{const _sc=sceneCap;sceneCap=function(t){try{const k=window._scK;if(on()&&k&&k[0]==='soulX'&&CAP[k[1]])return CAP[k[1]]()}catch(e){}return _sc.apply(this,arguments)}}
+setInterval(()=>{try{if(!on()&&OV.host)ovKill()}catch(e){}},3000);
+// ---------- เวทีดวล/ปลดปล่อยพลังของโหมด ----------
+{const _ps=pxScene;pxScene=function(c,type,w,seed,dmg){const m=/^soul_(\w+)$/.exec(String(type||''));if(!m||!P[m[1]])return _ps.apply(this,arguments);
+ try{c.clearRect(0,0,PXW,PXH);c.drawImage(still(m[1],PXW,PXH,seed|0),0,0);const D=dmg|0;if(D>=4)try{pxCrater(c,112,78,Math.min(40,4+D*3),D>=5)}catch(x){}}catch(x){return _ps.call(this,c,'field',w,seed,dmg)}};window.pxScene=pxScene}
+{const _db=dusBg;dusBg=function(){if(!on())return _db.apply(this,arguments);const h=[...String(DU&&DU.name||'')].reduce((a,q)=>a*31+q.charCodeAt(0)>>>0,11),L=isGod()?['god','court']:['academy','hunt','rings','trib'],k0=L[h%L.length],key='soulX:'+k0+':'+(DU&&DU.name);if(DUS.bg&&DUS.bgK===key)return DUS.bg;
+ const b=document.createElement('canvas');b.width=PXW;b.height=PXH;try{pxScene(b.getContext('2d'),'soul_'+k0,'m',h%50,-1)}catch(e){}DUS.bg=b;DUS.bgK=key;DUS.bgT=k0==='hunt'?'forest':k0==='academy'?'yard':'sky';DUS.bgW='m';DUS.bgS=h%50;DUS.scars=0;return b};window.dusBg=dusBg}
+{const _pp=window.pxPlay;if(typeof _pp==='function'){pxPlay=function(o){try{if(on()&&o&&!/^soul_/.test(String(o.type||''))){o=Object.assign({},o,{type:isGod()?'soul_god':S.sv.aw===1?(Math.random()<.5?'soul_rings':'soul_trib'):'soul_academy'})}}catch(e){}return _pp.call(this,o)};window.pxPlay=pxPlay}}
+window._soulScene={still,pick,P};
+})()}catch(e){console.error('block103',e)}
