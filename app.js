@@ -50951,7 +50951,7 @@ document.addEventListener('visibilitychange',()=>{try{if(document.hidden||liveSe
 const _lb=liveBadge;liveBadge=function(){const r=_lb.apply(this,arguments);try{const e=$('watchBadge');if(e&&!_isA())e.style.display='none'}catch(e){}return r};
 const off=()=>{toast('👁 หน้าดูคนอื่นเล่นปิดแล้ว')};
 const _oll=openLiveList;openLiveList=function(){if(!_isA()){off();return openOnline('chat')}return _oll.apply(this,arguments)};
-const _osp=openSpectate;openSpectate=function(){if(!_isA()){off();return}return _osp.apply(this,arguments)};
+const _osp=openSpectate;openSpectate=function(k){if(!_isA()&&k!=='@me'){off();return}return _osp.apply(this,arguments)};
 const _oss=openSpecSet;openSpecSet=function(){if(!_isA())return;return _oss.apply(this,arguments)};
 specAsk=function(){};
 const _md=modal;modal=function(){const r=_md.apply(this,arguments);try{if(!_isA())$('modal').querySelectorAll('[onclick*="openLiveList"],[onclick*="openSpectate"]').forEach(b=>b.remove())}catch(e){}return r};
