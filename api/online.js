@@ -529,7 +529,7 @@ const annPoll = async (ann, id) => {
   } catch { return ann }
 };
 const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
-const SENS_A = new Set(['lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
+const SENS_A = new Set(['lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
 
 function uaMeta(req, now) {
   const ua = String(req.headers['user-agent'] || '');
@@ -3323,6 +3323,31 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const H = {}; if (Array.isArray(bh)) for (let i = 0; i < bh.length; i += 2) H[bh[i]] = bh[i + 1]; else Object.assign(H, bh || {});
       const V = {}; if (Array.isArray(vh)) for (let i = 0; i < vh.length; i += 2) V[vh[i]] = +vh[i + 1]; else for (const k in (vh || {})) V[k] = +vh[k];
       return res.json({ ok: 1, now, cur: { sid, phase: cur.phase, next: cur.next || 0, li: cur.li, ls: cur.ls || 0, end: +endV || cur.end || 0, nb: cur.nbEnd || 0, lots: cur.lots, votes: V }, bid: { hi: +H.hi || 0, bn: H.bn || '', me: H.by === id ? 1 : 0, ext: +H.ext || 0, pn: cur.phase === 'open' && !(+H.hi) ? paPrice(cur, cur.lots[cur.li], now) : 0 }, cons: cons ? 1 : 0, q: (cur.phase === 'open' && cur.lots[cur.li]) ? { wd: +wdq || 0, ws: +wsq || 0, why: b.w ? paElig(cur.lots[cur.li], ['m', 'x', 'g'].includes(b.w) ? b.w : 'm', Math.max(0, Math.min(9, Math.floor(+b.ri || 0)))) : '' } : null, consOk, vw: +vw || 0, chat: (ch0 || []).map(jp).filter(Boolean).reverse(), myv: myv == null ? -1 : +myv, wins: (wins || []) });
+    }
+    // ---- 🌐 ร่องรอยผู้เล่นจริงประจำโลก (ข้อความสำเร็จรูปเท่านั้น) + 🤝 ภารกิจร่วมรายวันของแต่ละโลก ----
+    if (a === 'wtr' || a === 'wpool') {
+      if (!okId(id)) return res.json({ ok: 0 });
+      const WLD = ['normal', 'hunter', 'under', 'ghost', 'loop', 'zombie', 'tower', 'game', 'gatewon', 'doom', 'soul'];
+      const w = WLD.includes(b.w) ? b.w : null; if (!w) return res.json({ ok: 0 });
+      if (a === 'wtr') {
+        if (b.put) {
+          if (await isBanned()) return res.json({ ok: 0, err: 'ban' });
+          const m = Math.floor(+b.m); if (!(m >= 0 && m < 12)) return res.json({ ok: 0 });
+          if ((await cmd('SET', 'wtrl:' + w + ':' + id, 1, 'NX', 'EX', 600)) !== 'OK') return res.json({ ok: 0, err: 'rate' });
+          await pipeSoft([['LPUSH', 'wtr:' + w, JSON.stringify({ n: noAdm(clean(b.n, 20)) || 'นิรนาม', m, t: now })], ['LTRIM', 'wtr:' + w, 0, 39], ['EXPIRE', 'wtr:' + w, 86400 * 30]]);
+        }
+        const L = await cmd('LRANGE', 'wtr:' + w, 0, 14);
+        return res.json({ ok: 1, l: (L || []).map(jp).filter(Boolean) });
+      }
+      const day = PA_DAY(now), pk = 'wpl:' + w + ':' + day;
+      if (b.g) {
+        if (await isBanned()) return res.json({ ok: 0, err: 'ban' });
+        const uk = 'wplu:' + w + ':' + day + ':' + id, mine = +(await cmd('GET', uk)) || 0;
+        if (mine >= 5) return res.json({ ok: 0, err: 'cap', mine });
+        await pipeSoft([['INCR', pk], ['EXPIRE', pk, 172800], ['INCR', uk], ['EXPIRE', uk, 172800]]);
+      }
+      const [tot, mine] = await pipe([['GET', pk], ['GET', 'wplu:' + w + ':' + day + ':' + id]]);
+      return res.json({ ok: 1, day, tot: +tot || 0, mine: +mine || 0 });
     }
     // ---- สุสานผู้เล่นจริง: ป้ายหลุมศพ + คำอำลาของผู้เล่นคนอื่น ----
     if (a === 'grave') {
