@@ -5181,9 +5181,14 @@ try{renderLegends()}catch(e){}
 
 // ============ v10.6 ระบบเซฟปลอดภัย: คลังสำรอง · สำเนาต่อช่อง · กู้จากเซิร์ฟเวอร์ ============
 const ARC_MAX=8;
-function arcList(){const L=LS.get('murim_arc',[]);return Array.isArray(L)?L:[]}
+function arcList(){let L=LS.get('murim_arc',[]);const was=Array.isArray(L);if(!was)L=[];{const sn=new Set();L=L.filter(x=>x&&x.id&&!sn.has(x.id)&&sn.add(x.id))}
+ // 🩹 กู้ดัชนีคลังสำรอง: ดัชนีเคยถูกทับด้วยเหรียญอารีนา (คีย์ซ้ำ) — สแกนหาเซฟสำรองที่ยังอยู่แล้วใส่กลับ
+ try{const have=new Set(L.map(x=>x&&x.id)),ks=new Set();for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&/^murim_arc_[a-z0-9]+$/.test(k))ks.add(k)}try{ID.ov.forEach((v,k)=>{if(/^murim_arc_[a-z0-9]+$/.test(k))ks.add(k)})}catch(e){}
+  let add=0;ks.forEach(k=>{const id=k.slice(10);if(have.has(id))return;const d=LS.get(k,null);if(!d||!d.S)return;const t=parseInt(id.slice(0,8),36);L.push({id,n:d.S.name,age:d.S.age,x:!!d.S.xian,t:isFinite(t)&&t>1.5e12?t:(d.t||0),why:'กู้คืน'});add++});
+  if(add||!was){L.sort((a,b)=>(b.t||0)-(a.t||0));LS.set('murim_arc',L)}}catch(e){}
+ return L}
 function arcPut(d,why){try{if(!d||!d.S)return false;const id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);const c=Object.assign({},d,{feed:''});
-  if(!LS.set('murim_arc_'+id,c))return false;const L=arcList();L.unshift({id,n:d.S.name,age:d.S.age,x:!!d.S.xian,t:Date.now(),why:why||''});
+  if(!LS.set('murim_arc_'+id,c))return false;const L=arcList().filter(x=>x.id!==id);L.unshift({id,n:d.S.name,age:d.S.age,x:!!d.S.xian,t:Date.now(),why:why||''});
   while(L.length>ARC_MAX){const o=L.pop();LS.del('murim_arc_'+o.id)}LS.set('murim_arc',L);return true}catch(e){return false}}
 function arcRestore(id){const L=arcList(),i=L.findIndex(x=>x.id===id);if(i<0)return;const d=LS.get('murim_arc_'+id,null);if(!d||!d.S){toast('ข้อมูลสำรองเสียหาย');return}
  const n=freeSlot();d.t=Date.now();if(!LS.set(slotKey(n),d)){toast('พื้นที่เก็บข้อมูลเต็ม กู้คืนไม่ได้');return}
@@ -12195,7 +12200,7 @@ const AR_LG=[['🥉','ทองแดง','#c8885a',0],['🥈','เงิน','#
 const AR_ST={atk:['🗡️','บุกดุดัน','บุกและท่าหนักบ่อย'],def:['🛡️','ตั้งรับสวนกลับ','ตั้งการ์ดรอจังหวะ'],trick:['🌀','หลอกล่อ','ท่าหลอกและรวมพลัง'],all:['⚡','ทุ่มสุดตัว','ท่าหนักแรงแต่เปิดช่อง']};
 const AR_BEAT={fire:['ice','life'],ice:['wind'],wind:['earth'],earth:['thunder'],thunder:['sword','ice'],sword:['life','blood'],life:['earth'],light:['dark'],dark:['light'],star:['void'],void:['star'],blood:['fire']};
 const AR_SB={atk:'trick',trick:'def',def:'atk'};
-const AR_CB={c:+(LS.get('murim_arc',0)||0),own:null,ok:0},arC=()=>AR_CB.c,arCAdd=n=>{AR_CB.c=Math.max(0,AR_CB.c+n)};
+const AR_CB={c:(()=>{const a=LS.get('murim_arcoin',null);if(a!=null)return +a||0;const o=LS.get('murim_arc',0);return typeof o==='number'?o:0})(),own:null,ok:0},arC=()=>AR_CB.c,arCAdd=n=>{AR_CB.c=Math.max(0,AR_CB.c+n)};
 const arSt=()=>{const v=LS.get('murim_arst','atk');return AR_ST[v]?v:'atk'};
 function arEl(){try{return S.rlm&&S.rlm.el||''}catch(e){return''}}
 function arElN(el){const e=(typeof RLM_EL!=='undefined'?RLM_EL:[]).find(x=>x[0]===el);return e?e[1]+' '+e[2]:''}
@@ -13154,10 +13159,10 @@ try{TTL_SP.unshift(['rel11',()=>(S.flags.relMax||-1)>=11,'ผู้ทำลา�
 
 // ===================== v15.8 เหรียญลานเก็บที่เซิร์ฟเวอร์ =====================
 function arWalApply(w){if(!w)return;AR_CB.c=+w.c||0;AR_CB.own=w.own||{tt:[],au:[],qt:0,fr:[]};AR_CB.q=w.q||null;AR_CB.stk=w.stk|0;AR_CB.ok=1;
- try{LS.set('murim_arc',AR_CB.c);LS.set('murim_arstk',AR_CB.stk);LS.set('murim_arpity',w.pity|0);LS.set('murim_arown',Object.assign({},AR_CB.own))}catch(e){}
+ try{LS.set('murim_arcoin',AR_CB.c);LS.set('murim_arstk',AR_CB.stk);LS.set('murim_arpity',w.pity|0);LS.set('murim_arown',Object.assign({},AR_CB.own))}catch(e){}
  try{const d=frGet();let ch0=0;(AR_CB.own.fr||[]).forEach(f=>{if(!d.own.includes(f)){d.own.push(f);ch0=1}});if(ch0)frSet(d)}catch(e){}}
 async function arSync(){if(!onlineOK)return null;try{const o=LS.get('murim_arown',null)||{},d=frGet();
- const mig={c:+(LS.get('murim_arc',0)||0),tt:o.tt||[],au:o.au||[],qt:o.qt?1:0,fr:(d.own||[]).filter(x=>/^f_(arc|box|lg)\d/.test(x)),pity:LS.get('murim_arpity',0)||0};
+ const mig={c:+(LS.get('murim_arcoin',0)||0),tt:o.tt||[],au:o.au||[],qt:o.qt?1:0,fr:(d.own||[]).filter(x=>/^f_(arc|box|lg)\d/.test(x)),pity:LS.get('murim_arpity',0)||0};
  const j=await api('arcoin',{mig});if(j&&j.wal)arWalApply(j.wal);return j}catch(e){return null}}
 arOwn=function(){const o=AR_CB.ok&&AR_CB.own?JSON.parse(JSON.stringify(AR_CB.own)):(LS.get('murim_arown',null)||{});o.tt=o.tt||[];o.au=o.au||[];return o};
 arOwnSet=function(o){};
