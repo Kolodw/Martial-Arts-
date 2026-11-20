@@ -27632,9 +27632,9 @@ window.rrMenu=function(){const RR=window._RR||{pk:{},used:0,cap:10,kday:5,kc:100
 // ---------- หน้า VIP ----------
 const F=(ic,x)=>`<li>${ico(ic)}<span>${x}</span></li>`;
 function card(k){const n=PK[k][1],t=T(),v=vget(),have=t===n,low=t===3&&n<3;
- const L={1:[F('dice','สุ่มเกิดได้ <b>30 ครั้ง</b>ต่อชีวิต'),F('dice','🔒 ตั๋วล็อกชะตา <b>2 ใบ</b> ทุกรอบ 30 วัน'),F('stamp','ตราประทับชาด <b>เส้นเดี่ยว</b>'),F('frame','กรอบอวตารเส้นเดี่ยวสีชาด'),F('lantern','ป้ายโคมหน้าชื่อในแชท'),F('tag','ฉายา เลือกจากชุดสำเร็จรูป 6 ชื่อ')],
-  2:[F('dice','สุ่มเกิดได้ <b>60 ครั้ง</b>ต่อชีวิต'),F('dice','🔒 ตั๋วล็อกชะตา <b>6 ใบ</b> ทุกรอบ 30 วัน'),F('stamp','ตราประทับชาด <b>เส้นคู่</b>'),F('frame','กรอบอวตารเส้นคู่'),F('yin','แลกกรรมสุ่มได้วันละ <b>8 ครั้ง</b> (ปกติ 5)'),F('bolt','ปุ่ม <b>สุ่มรัว</b> ตั้งเงื่อนไขแล้วระบบสุ่มให้เอง'),F('tag','ฉายาเลือกจากชุดสำเร็จรูป')],
-  3:[F('dice','สุ่มเกิดได้ <b>100 ครั้ง</b>ต่อชีวิต ตลอดไป'),F('dice','🔒 ตั๋วล็อกชะตา <b>10 ใบ</b>ทันที + <b>เดือนละ 5</b> ตลอดไป'),F('stamp','ตราทองแกะลาย พร้อม <b>เลขลำดับ</b> ซื้อซ้ำไม่ได้'),F('frame','กรอบขอบทองเส้นคู่ ประดับมุม'),F('plaque','ป้ายชื่อในหอผู้ก่อตั้ง · คำจารึก · จุดธูป'),F('tag','ฉายา <b>ตั้งเองได้</b> (20 ตัวอักษร)'),F('bolt','ทุกอย่างของผู้อาวุโส ตลอดไป')]}[n];
+ const L={1:[F('dice','สุ่มเกิดได้ <b>30 ครั้ง</b>ต่อชีวิต'),F('dice','🔒 ตั๋วล็อกชะตา <b>2 ใบ</b> ทุกรอบ 30 วัน'),F('dice','🔒 ล็อกคำตอบ <b>5 ช่อง</b> ให้ชะตาเลือกคำตอบเดิมให้'),F('stamp','ตราประทับชาด <b>เส้นเดี่ยว</b>'),F('frame','กรอบอวตารเส้นเดี่ยวสีชาด'),F('lantern','ป้ายโคมหน้าชื่อในแชท'),F('tag','ฉายา เลือกจากชุดสำเร็จรูป 6 ชื่อ')],
+  2:[F('dice','สุ่มเกิดได้ <b>60 ครั้ง</b>ต่อชีวิต'),F('dice','🔒 ตั๋วล็อกชะตา <b>6 ใบ</b> ทุกรอบ 30 วัน'),F('dice','🔒 ล็อกคำตอบ <b>10 ช่อง</b> ให้ชะตาเลือกคำตอบเดิมให้'),F('stamp','ตราประทับชาด <b>เส้นคู่</b>'),F('frame','กรอบอวตารเส้นคู่'),F('yin','แลกกรรมสุ่มได้วันละ <b>8 ครั้ง</b> (ปกติ 5)'),F('bolt','ปุ่ม <b>สุ่มรัว</b> ตั้งเงื่อนไขแล้วระบบสุ่มให้เอง'),F('tag','ฉายาเลือกจากชุดสำเร็จรูป')],
+  3:[F('dice','สุ่มเกิดได้ <b>100 ครั้ง</b>ต่อชีวิต ตลอดไป'),F('dice','🔒 ตั๋วล็อกชะตา <b>10 ใบ</b>ทันที + <b>เดือนละ 5</b> ตลอดไป'),F('dice','🔒 ล็อกคำตอบ <b>20 ช่อง</b> ให้ชะตาเลือกคำตอบเดิมให้'),F('stamp','ตราทองแกะลาย พร้อม <b>เลขลำดับ</b> ซื้อซ้ำไม่ได้'),F('frame','กรอบขอบทองเส้นคู่ ประดับมุม'),F('plaque','ป้ายชื่อในหอผู้ก่อตั้ง · คำจารึก · จุดธูป'),F('tag','ฉายา <b>ตั้งเองได้</b> (20 ตัวอักษร)'),F('bolt','ทุกอย่างของผู้อาวุโส ตลอดไป')]}[n];
  const price=n===3?'ครั้งเดียว ตลอดไป':'/ 30 วัน',lbl=have&&n<3?`ต่ออายุ ${PK[k][0]} บาท · 30 วัน`:n===3?`ซื้อตลอดไป ${PK[k][0]} บาท`:`สมัคร ${PK[k][0]} บาท · 30 วัน`;
  const cmp=n===3?`<div class="vx-cmp"><div><span>30 วัน 99 × 6</span><i style="width:99%"></i><b>594</b></div><div><span>ตลอดไป</span><i style="width:100%" class="g"></i><b>599</b></div><p>จ่ายครั้งเดียว คุ้มตั้งแต่เดือนที่ 7 · ไม่ต้องต่ออายุอีก</p></div>`:'';
  const dis=(n===3&&t===3)||low;
@@ -29971,10 +29971,10 @@ try{(()=>{
 const KEY='murim_shop',gs=()=>{try{const v=LS.get(KEY,null);return v==='seal'||v==='classic'?v:'clean'}catch(e){return'clean'}},ss=v=>{try{LS.set(KEY,v)}catch(e){}};
 const oldVip=window.vipMenu,oldRr=window.rrMenu;
 const TIER=[null,
- {k:'v1',n:'ผู้สนับสนุน',p:39,per:'30 วัน',chips:['สุ่ม 30 ครั้ง/ชีวิต','ตั๋วล็อก 2 ใบ/30 วัน','ตราประทับเส้นเดี่ยว','กรอบสนับสนุน','ป้ายหน้าชื่อในแชท','ฉายา 6 ชื่อ']},
- {k:'v2',n:'ผู้สนับสนุนพิเศษ',p:99,per:'30 วัน',chips:['สุ่ม 60 ครั้ง/ชีวิต','ตั๋วล็อก 6 ใบ/30 วัน','ตราประทับเส้นคู่','กรอบพิเศษ','แลกกรรมวันละ 8','ปุ่มสุ่มรัว','ฉายา']},
- {k:'v3',n:'ผู้ก่อตั้ง',p:599,per:'ตลอดไป',chips:['สุ่ม 100 ครั้ง/ชีวิต','ตั๋วล็อก 10 ใบ + เดือนละ 5','ตราทองมีเลขลำดับ','กรอบขอบทอง','ป้ายในหอผู้ก่อตั้ง + คำจารึก','ฉายาตั้งเอง','ทุกอย่างของระดับพิเศษ']}];
-const ROWS=[['สุ่มชีวิตใหม่ต่อชีวิต',30,60,100],['🔒 ตั๋วล็อกชะตา','2/30 วัน','6/30 วัน','10+5/ด.'],['ตราประทับ','เดี่ยว','คู่','ทอง'],['กรอบอวตาร','✓','✓','✓'],['แลกกรรมต่อวัน',5,8,8],['สุ่มรัว','–','✓','✓'],['ฉายา','เลือก','เลือก','ตั้งเอง'],['ป้ายหอผู้ก่อตั้ง','–','–','✓']];
+ {k:'v1',n:'ผู้สนับสนุน',p:39,per:'30 วัน',chips:['สุ่ม 30 ครั้ง/ชีวิต','ตั๋วล็อก 2 ใบ/30 วัน','ล็อกคำตอบ 5 ช่อง','ตราประทับเส้นเดี่ยว','กรอบสนับสนุน','ป้ายหน้าชื่อในแชท','ฉายา 6 ชื่อ']},
+ {k:'v2',n:'ผู้สนับสนุนพิเศษ',p:99,per:'30 วัน',chips:['สุ่ม 60 ครั้ง/ชีวิต','ตั๋วล็อก 6 ใบ/30 วัน','ล็อกคำตอบ 10 ช่อง','ตราประทับเส้นคู่','กรอบพิเศษ','แลกกรรมวันละ 8','ปุ่มสุ่มรัว','ฉายา']},
+ {k:'v3',n:'ผู้ก่อตั้ง',p:599,per:'ตลอดไป',chips:['สุ่ม 100 ครั้ง/ชีวิต','ตั๋วล็อก 10 ใบ + เดือนละ 5','ล็อกคำตอบ 20 ช่อง','ตราทองมีเลขลำดับ','กรอบขอบทอง','ป้ายในหอผู้ก่อตั้ง + คำจารึก','ฉายาตั้งเอง','ทุกอย่างของระดับพิเศษ']}];
+const ROWS=[['สุ่มชีวิตใหม่ต่อชีวิต',30,60,100],['🔒 ตั๋วล็อกชะตา','2/30 วัน','6/30 วัน','10+5/ด.'],['🔒 ล็อกคำตอบ','5 ช่อง','10 ช่อง','20 ช่อง'],['ตราประทับ','เดี่ยว','คู่','ทอง'],['กรอบอวตาร','✓','✓','✓'],['แลกกรรมต่อวัน',5,8,8],['สุ่มรัว','–','✓','✓'],['ฉายา','เลือก','เลือก','ตั้งเอง'],['ป้ายหอผู้ก่อตั้ง','–','–','✓']];
 const vget=()=>{try{return LS.get('murim_vip',null)}catch(e){return null}};
 const tierNow=()=>{const v=vget();return !v?0:v.u?3:(v.e2||0)>Date.now()?2:(v.e1||0)>Date.now()?1:0};
 const endOf=(v,t)=>t===2?v.e2:v.e1,left=(v,t)=>Math.max(0,Math.ceil((endOf(v,t)-Date.now())/864e5));
@@ -47650,7 +47650,7 @@ window.akPaid=async function(btn,pk){const f=$('supImg')&&$('supImg').files&&$('
 // เมนู ☰: ปุ่มเข้า
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const row=$('modal').querySelector('.uxRow');if(row&&!row.querySelector('.akMb'))row.insertAdjacentHTML('beforeend','<button class="gbtn akMb" onclick="akMenu()">🔒 ล็อกคำตอบ</button>')}catch(e){}return r}}
 // ปุ่มในหน้า VIP
-{const _vm=window.vipMenu;if(typeof _vm==='function')window.vipMenu=function(){const r=_vm.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.akVb')){const b=m.querySelector('.vcard')||m.querySelector('h3');if(b)b.insertAdjacentHTML('beforebegin','<button class="gbtn akVb" style="width:100%;margin:4px 0" onclick="akMenu()">🔒 ล็อกคำตอบ — VIP 1/2/3 ได้ฟรี 5/10/20 ช่อง</button>')}}catch(e){}return r}}
+{const _vm=window.vipMenu;if(typeof _vm==='function')window.vipMenu=function(){const r=_vm.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.akVb')){const tb=m.querySelector('table'),b=tb||m.querySelector('.vcard')||m.querySelector('h3');if(b)b.insertAdjacentHTML(tb?'afterend':'beforebegin','<button class="gbtn akVb" style="width:100%;margin:4px 0" onclick="akMenu()">🔒 ล็อกคำตอบ — VIP 1/2/3 ได้ฟรี 5/10/20 ช่อง</button>')}}catch(e){}return r}}
 const st=document.createElement('style');st.textContent=`#modal .opt{position:relative}#modal .opt:has(.akB){padding-right:44px}
 .akB{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:9px;border:1.5px dashed #9a8a6a66;font-size:15px;opacity:.75;cursor:pointer;background:#ffffff10}
 .akB.on{border:1.5px solid #e9b949;background:#e9b94930;opacity:1}#modal .opt.akL{border-color:#e9b949!important;box-shadow:0 0 0 2px #e9b94955 inset}
