@@ -49782,7 +49782,7 @@ function skyMG3(kind,ti,sub,cb){const d=MGD;MGD=0;MG={kind,cb,t:0,t2:0};
   window.ancQz=v=>{if(!MG||MG.kind!=='quiz')return;if(v===Q[k].an){sc++;try{sfx('good')}catch(e){}}else try{sfx('bad')}catch(e){}k++;if(k>=3)return mgDone(sc/3);draw()};draw();return}
  if(kind==='beat'){const N=6;let i=0,sc=0,t0=0,dur=Math.max(650,1150-d*120);
   ancShell(ti,sub,`<div class="anBt"><i class="anBtT"></i><i class="anBtR" id="anBr"></i></div><div class="skScR">จังหวะ <b id="anBn">1</b>/${N}</div><button class="pbtn skBig" onclick="ancBt()">🎵 แตะ!</button>`);
-  const go=()=>{t0=Date.now();const r=$('anBr');if(r){r.style.transition='none';r.style.transform='scale(2.6)';r.style.opacity='1';requestAnimationFrame(()=>{r.style.transition=`transform ${dur}ms linear`;r.style.transform='scale(.4)'})}clearTimeout(MG.t2);MG.t2=setTimeout(()=>ancBt(true),dur*1.15)};
+  const go=()=>{if(!MG||MG.kind!=='beat')return;t0=Date.now();const r=$('anBr');if(r){r.style.transition='none';r.style.transform='scale(2.6)';r.style.opacity='1';requestAnimationFrame(()=>{r.style.transition=`transform ${dur}ms linear`;r.style.transform='scale(.4)'})}clearTimeout(MG.t2);MG.t2=setTimeout(()=>ancBt(true),dur*1.15)};
   window.ancBt=miss=>{if(!MG||MG.kind!=='beat')return;const p=(Date.now()-t0)/dur,df=Math.abs(p-.77);if(!miss)sc+=df<.06?1:df<.13?.6:df<.22?.25:0;try{sfx(!miss&&df<.08?'good':'click')}catch(e){}i++;if(i>=N)return mgDone(sc/N);const e=$('anBn');if(e)e.textContent=i+1;setTimeout(go,260)};go();return}
  if(kind==='lock'){const cur=[0,0,0],k=4+Math.min(3,d);const tg=[0,0,0];const press=(v,j)=>{v[j]=(v[j]+1)%6;if(j>0)v[j-1]=(v[j-1]+1)%6};for(let i=0;i<k;i++)press(tg,Math.floor(rnd()*3));if(tg.join()==='0,0,0')press(tg,2);
   let mv=0,lim=k+4;const paint=()=>{[0,1,2].forEach(j=>{const e=$('anLk'+j);if(e){e.textContent=GL[cur[j]];e.classList.toggle('ok',cur[j]===tg[j])}});const m=$('anLm');if(m)m.textContent=lim-mv};
@@ -50366,8 +50366,8 @@ const MG5=['core','constel'];
 function skyMG5(kind,ti,sub,cb){const d=MGD;MGD=0;MG={kind,cb,t:0,t2:0};
  if(kind==='core'){let h=0,hold=0,r=0,sc=0;const B=[];for(let i=0;i<3;i++){const a=.45+rnd()*.35;B.push([a,a+Math.max(.06,.13-d*.015)])}
   ancShell(ti,sub,`<div class="gxCore"><div class="gxHeat"><i class="gxBand" id="gxB"></i><i class="gxFill" id="gxF"></i></div></div><div class="skScR">หลอมรอบ <b id="gxR">1</b>/3 · กดค้างให้ความร้อนขึ้น ปล่อยในแถบทอง</div><button class="pbtn skBig" id="gxH">🔥 กดค้าง</button>`);
-  const paint=()=>{const f=$('gxF'),b=$('gxB');if(f)f.style.height=(h*100)+'%';if(b){b.style.bottom=(B[r][0]*100)+'%';b.style.height=((B[r][1]-B[r][0])*100)+'%'}};
-  const rel=()=>{if(!hold)return;hold=0;const [a,b]=B[r];sc+=h>=a&&h<=b?1:Math.abs(h-(a+b)/2)<.15?.4:0;try{sfx(h>=a&&h<=b?'good':'bad')}catch(x){}h=0;r++;if(r>=3)return mgDone(sc/3);const e=$('gxR');if(e)e.textContent=r+1;paint()};
+  const paint=()=>{if(r>=3)return;const f=$('gxF'),b=$('gxB');if(f)f.style.height=(h*100)+'%';if(b){b.style.bottom=(B[r][0]*100)+'%';b.style.height=((B[r][1]-B[r][0])*100)+'%'}};
+  const rel=()=>{if(!hold||r>=3||!MG||MG.kind!=='core')return;hold=0;const [a,b]=B[r];sc+=h>=a&&h<=b?1:Math.abs(h-(a+b)/2)<.15?.4:0;try{sfx(h>=a&&h<=b?'good':'bad')}catch(x){}h=0;r++;if(r>=3)return mgDone(sc/3);const e=$('gxR');if(e)e.textContent=r+1;paint()};
   setTimeout(()=>{const bt=$('gxH');if(!bt)return;const dn=e=>{e.preventDefault();hold=1},up=e=>{e.preventDefault();rel()};bt.addEventListener('pointerdown',dn);bt.addEventListener('pointerup',up);bt.addEventListener('pointerleave',up)},50);
   window.gxHold=v=>{if(v)hold=1;else rel()};
   MG.t=setInterval(()=>{if(hold){h+=.012+d*.003;if(h>=1){h=1;rel()}}paint()},30);paint();MG.t2=setTimeout(()=>mgDone(sc/3),20000);return}
@@ -50773,6 +50773,8 @@ defU('u_yan',{c:K=>aiOn(K),cd:50000,w:3,go(K){C('💠 ญาณถามคำ�
 .uSw{position:relative;height:250px;border-radius:50%;margin:8px auto;max-width:250px;background:radial-gradient(#1a2a4a,#05060e 70%)}.uSwB{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:30px;font-style:normal}.uSq{position:absolute;transform:translate(-50%,-50%);font-size:24px;background:none;border:none;padding:4px}
 `;document.head.appendChild(st)})();
 
+{const _cmMG=closeM;closeM=function(){const k=$('modal').dataset.k;const r=_cmMG.apply(this,arguments);try{if(k==='skymg'&&MG)setTimeout(()=>{if(MG)mgDone(.35)},0)}catch(e){}return r}}
+window._skyMG=(k,cb,d)=>{MGD=d|0;skyMG(k,'ทดสอบ','',cb||(()=>{}))};
 window._sky={SK,RK,EV,queue,skyYear,newK};window._skyQ=()=>QU.slice();
 })()}catch(e){console.error('sky block',e)}
 
