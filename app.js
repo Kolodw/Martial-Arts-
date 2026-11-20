@@ -52789,3 +52789,38 @@ window._skyScene={era,still,subOf,P};
 // ============================================================
 try{(()=>{const _bc=window.bdClaim;if(typeof _bc!=='function')return;
  bdClaim=async function(){window._kbSrvGrant=1;try{return await _bc.apply(this,arguments)}finally{window._kbSrvGrant=0;try{window.kbSync&&kbSync()}catch(e){}}};window.bdClaim=bdClaim})()}catch(e){console.error('block101',e)}
+
+// ============================================================
+// BLOCK 102: 🔤 กันตัวหนังสือกลืนพื้น — ทุกธีม
+//   ตรวจความต่างระหว่างสีตัวอักษรกับสีพื้นจริง (ไล่ขึ้นหาพื้นทึบ/ไล่สี) ถ้าต่ำกว่าเกณฑ์อ่านออก เปลี่ยนเป็นเข้มหรือสว่างอัตโนมัติ
+//   ทำงานกับของที่โผล่ใหม่ (หน้าต่าง มินิเกม ตัวเลือก ฟีด) และตอนเปลี่ยนธีม
+// ============================================================
+try{(()=>{
+const P=s=>{s=s||'';let m=/color\(srgb ([^)]+)\)/.exec(s);if(m){const v=m[1].split(/[ ,\/]+/).filter(Boolean).map(Number);return[v[0]*255,v[1]*255,v[2]*255,v.length>3?v[3]:1]}m=/rgba?\(([^)]+)\)/.exec(s);if(!m)return null;const v=m[1].split(/[ ,\/]+/).filter(Boolean).map(Number);return[v[0],v[1],v[2],v.length>3?v[3]:1]};
+const L=c=>{const f=x=>{x/=255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)};return .2126*f(c[0])+.7152*f(c[1])+.0722*f(c[2])};
+const CR=(a,b)=>{const x=L(a),y=L(b);return(Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+const over=(t,b)=>[t[0]*t[3]+b[0]*(1-t[3]),t[1]*t[3]+b[1]*(1-t[3]),t[2]*t[3]+b[2]*(1-t[3]),1];
+function bgOf(el){const stack=[];let e=el;while(e&&e.nodeType===1){const cs=getComputedStyle(e);
+  if(cs.backgroundImage&&cs.backgroundImage!=='none'&&/gradient/.test(cs.backgroundImage)){const cols=(cs.backgroundImage.match(/(rgba?|color)\([^)]+\)/g)||[]).map(P).filter(Boolean);if(cols.length){const avg=[0,1,2].map(i=>cols.reduce((s,c)=>s+c[i],0)/cols.length),al=cols.reduce((s,c)=>s+c[3],0)/cols.length;stack.push([...avg,al]);if(al>.85)break}}
+  const c=P(cs.backgroundColor);if(c&&c[3]>.02){stack.push(c);if(c[3]>.85)break}
+  if(cs.backgroundImage&&/url\(/.test(cs.backgroundImage))return null;e=e.parentElement}
+ let base=document.body.classList.contains('dark')||/mono|jade|ember|gold|royal/.test(document.body.className)?[20,18,26,1]:[250,246,238,1];
+ for(let i=stack.length-1;i>=0;i--)base=over(stack[i],base);return base}
+const SKIP=/^(SCRIPT|STYLE|CANVAS|SVG|IMG|VIDEO|INPUT|TEXTAREA|SELECT|OPTION|BR)$/;
+function fix(el){if(!el||el.nodeType!==1||SKIP.test(el.tagName)||el.closest('svg'))return;let txt=false;for(const n of el.childNodes)if(n.nodeType===3&&n.nodeValue.trim()){txt=true;break}if(!txt)return;
+ const cs=getComputedStyle(el);if(cs.visibility==='hidden'||cs.display==='none'||+cs.opacity<.15)return;const fg=P(cs.color);if(!fg||fg[3]<.15)return;if(/text/.test(cs.webkitBackgroundClip||cs.backgroundClip||''))return;
+ const bg=bgOf(el);if(!bg)return;const f=over(fg,bg),r=CR(f,bg),big=parseFloat(cs.fontSize)>=18||(parseFloat(cs.fontSize)>=14&&+cs.fontWeight>=700),need=big?3:4.2;
+ if(r>=need)return;const light=L(bg)>.4;el.style.setProperty('color',light?'#1c1408':'#f6efe2','important');el.style.setProperty('-webkit-text-fill-color',light?'#1c1408':'#f6efe2','important');el.dataset.cfix=light?'d':'l'}
+function unfix(root){for(const e of (root||document).querySelectorAll('[data-cfix]')){e.style.removeProperty('color');e.style.removeProperty('-webkit-text-fill-color');delete e.dataset.cfix}}
+function scan(root,max){if(!root||root.nodeType!==1)return;const all=[root,...root.querySelectorAll('*')];let n=0;for(const e of all){if(++n>(max||1500))break;try{fix(e)}catch(x){}}}
+window.cfixScan=scan;
+// ของใหม่ในหน้า
+const Q=new Set();let tm=0;
+const run=()=>{tm=0;const L2=[...Q];Q.clear();for(const r of L2)if(r.isConnected)scan(r,600)};
+new MutationObserver(ms=>{for(const m of ms){if(m.type==='childList'){for(const n of m.addedNodes){if(n.nodeType===1)Q.add(n);else if(n.nodeType===3&&n.parentElement)Q.add(n.parentElement)}}else if(m.type==='characterData'&&m.target.parentElement)Q.add(m.target.parentElement)}if(Q.size>300){Q.clear();Q.add(document.body)}if(!tm)tm=setTimeout(run,120)}).observe(document.body,{childList:true,subtree:true,characterData:true});
+// เปลี่ยนธีม → ล้างแล้วตรวจใหม่ทั้งหน้า
+{const _at=applyTheme;applyTheme=function(){const r=_at.apply(this,arguments);try{unfix(document);setTimeout(()=>scan(document.body,5000),60)}catch(e){}return r};window.applyTheme=applyTheme}
+setTimeout(()=>scan(document.body,5000),1500);
+// หน้าต่างที่เปิดอยู่: ตรวจซ้ำเบาๆ (กรณีสลับคลาส/สีโดยไม่เพิ่มโหนด)
+setInterval(()=>{try{const m=document.getElementById('modal');if(m&&m.offsetParent!==null)scan(m,800);const c=document.getElementById('choice');if(c&&c.offsetParent!==null)scan(c,300)}catch(e){}},1500);
+})()}catch(e){console.error('block102',e)}
