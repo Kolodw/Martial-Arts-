@@ -53333,3 +53333,79 @@ try{(()=>{const c=document.createElement('style');c.textContent=`
 .paGo:active{transform:translateY(3px);box-shadow:0 1px 0 hsl(var(--h) 80% 30%)!important}
 @media(max-width:360px){.paTop{padding-right:0;margin-top:16px}.paP{font-size:24px}}
 `;document.head.appendChild(c)})()}catch(e){console.error('block108',e)}
+
+// ============================================================
+// BLOCK 109: 🧭 นำทางผู้เล่น — เป้าหมายถัดไปที่ถูกต้องในทุกโลก · แถบ 💡 คำใบ้ที่กดไปทำได้ทันที · บทนำทะลุฟ้าดาราครั้งแรก
+// ============================================================
+try{(()=>{
+const fnOk=n=>typeof window[n]==='function';
+const wk=()=>{try{if(!S)return'';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.mw&&S.mw.sky)return'sky';if(S.mw)return'mw';if(S.ch==='soul'&&S.sv)return'soul';return'murim'}catch(e){return''}};
+const P=(ic,l,c,n,h)=>({ic,l,c:+c||0,n:+n||0,h});
+// ---------- 1) เป้าหมายถัดไปตามโลก ----------
+if(typeof goalInfo==='function'){const _gi=goalInfo;goalInfo=function(){try{if(!S||!S.alive)return _gi.apply(this,arguments);const w=wk();
+ if(w==='soul'){const g=S.sv;
+  if(g.aw!==1)return{t:'ปลุกดวงจิต',note:S.age<6?'อายุ 6 ขวบจะมีพิธีปลุกดวงจิตให้เอง — ระหว่างนี้ใช้ชีวิตตามปกติ':'พิธีปลุกดวงจิตกำลังจะมา',L:S.age<6?[P('⏳','อายุ',S.age,6,'')]:[]};
+  const lv=Math.floor(g.lv||0),rn=(g.rings||[]).length,cap=Math.min(100,(Math.floor(lv/10)+1)*10),needR=Math.floor(lv/10);
+  if(lv>=100)return{t:'ถึงระดับสูงสุดแล้ว',note:'ล่าวงแหวนอายุสูงขึ้น · ช่วยทีม · ทำเนื้อเรื่องหลักให้จบ',L:[]};
+  if(lv>=10&&lv%10===0&&rn<lv/10)return{t:`ทะลวงคอขวดระดับ ${lv}`,note:'⛓️ ติดคอขวดอยู่ — ต้องหลอมวงแหวนวงใหม่ก่อน · รอเหตุการณ์ <b>🏹 ล่าสัตว์วิญญาณ</b> (มาเองเกือบทุกปี) แล้วเลือกสัตว์ที่อายุไม่เกินขีดปลอดภัย',L:[P('💍','วงแหวน',rn,lv/10,'ล่าสัตว์วิญญาณ')]};
+  return{t:`สู่ระดับจิต ${cap}`,note:cap%10===0?`ถึงระดับ ${cap} จะติดคอขวด ต้องมีวงแหวนวงที่ ${cap/10}`:'',L:[P('📈','ระดับจิต',lv,cap,'ฝึกทุกปี · มินิเกมซับพลังวงแหวน'),P('💍','วงแหวน',rn,Math.max(rn,needR),'')]}}
+ if(w==='sky'){const K=S.mw.sky,X=window._sky,RK=X&&X.RK||[];const rk=K.rk|0,sub=K.sub|0;
+  if(rk<0||!RK[rk])return{t:'สอบวัดยีน',note:S.age<12?'อายุ 12 จะได้สอบวัดยีน — ระหว่างนี้ฝึกร่างกายและเรียนรอไว้':'การสอบวัดยีนจะมาเร็วๆ นี้',L:S.age<12?[P('⏳','อายุ',S.age,12,'')]:[]};
+  const R=RK[rk],nx=RK[rk+1];
+  if(sub>=10)return{t:nx?`ทะลวงสู่ ${nx.n}`:'ถึงขั้นสูงสุดของยุคนี้',note:R.gate?`🚪 ขั้นสมบูรณ์แล้ว — เงื่อนไขทะลวง: <b>${R.gate}</b>`:'',L:[]};
+  const nd=Math.round(30*Math.pow(1.12,rk*10+sub));return{t:`${R.n} · ชั้น ${sub+1}`,note:'ฝึก กาย · จิต · ยีน ให้ครบ — ชั้น 10 คือขั้นสมบูรณ์ แล้วต้องทำเงื่อนไขทะลวง',L:[P('🧬','พลังเซลล์',Math.min(K.xp||0,nd),nd,'ฝึก/ล่า/เซรั่มยีน')]}}
+ if(w==='mw'){const M=S.mw;if(M.kid&&S.age<6)return{t:'เติบโต',note:'วัยเด็ก — เลือกอยู่กับครอบครัวหรือเรียน',L:[]};
+  const G=(M.goals||[]),d=G.filter(x=>x.d).length;if(G.length){const nx=G.find(x=>!x.d),Gd=nx&&(MW_GOALS||[]).find(x=>x[0]===nx.id);return{t:Gd?Gd[1]:'ทำเป้าหมายครบแล้ว',note:Gd?'เป้าหมายของชีวิตนี้ 3 ข้อ — แตะ <b>เมนู › 🎯 เป้าหมาย</b> เพื่อดูทั้งหมด':'ล่าความสำเร็จยุคปัจจุบันต่อได้',L:[P('🎯','เป้าหมายสำเร็จ',d,G.length,'')]}}
+  return{t:'ใช้ชีวิตให้คุ้ม',note:'จัด <b>📅 แผนปี</b> แบ่ง 12 เดือนให้งาน เรียน ครอบครัว',L:[]}}
+ }catch(e){}return _gi.apply(this,arguments)}}
+// ---------- 2) คำใบ้ที่กดไปทำได้ ----------
+// [id, โลก, เงื่อนไข, ข้อความ, ปุ่ม, ทำอะไร, คูลดาวน์(ปี)]
+const H=[
+ ['hp','*',()=>S.hp<S.maxHp*.3&&!(S.beastMode&&!S.beastMode.human),()=>'❤️ พลังชีวิตต่ำ — พักก่อนจะตายง่าย','พักผ่อน',()=>{const b=[...document.querySelectorAll('#focus .fc')].find(x=>/rest|mwlow|พัก/.test((x.getAttribute('onclick')||'')+x.innerText));if(b)b.click();else openAdvice()},3],
+ ['m_sect','murim',()=>!S.faction&&!S.ownSect&&S.age>=8&&S.age<=40&&S.joinTry!==S.age,()=>'🏯 ยังไม่มีสำนัก — สมัครเข้าสำนักได้ปีละครั้ง จะได้อาจารย์ วิชา และพลังโตเร็วขึ้น','ดูสำนัก',()=>openFaction(),6],
+ ['m_q','murim',()=>S.age>=10&&fnOk('questList')&&questList().length>0,()=>'📋 มีเควสค้างอยู่ — ทำแล้วได้ของและพลัง กดดูว่าต้องทำอะไร','ดูเควส',()=>openQuests(),8],
+ ['m_town','murim',()=>S.age>=10&&fnOk('openTown'),()=>'🏘️ ในเมืองมีร้าน งานรับจ้าง และภารกิจ — แวะดูหน่อย','ไปในเมือง',()=>openTown(),15],
+ ['m_love','murim',()=>S.age>=20&&!S.spouse&&fnOk('openPeople'),()=>'💕 ยังไม่มีคู่ครอง — ผูกสัมพันธ์กับคนรู้จักในหน้าผู้คน หรือเลือกโฟกัส 🌸 ครอบครัว','ดูผู้คน',()=>openPeople(),12],
+ ['m_arts','murim',()=>S.age>=12&&(S.arts||[]).length>0&&fnOk('openArts'),()=>'📜 วิชาที่มีอยู่อัปเกรดได้ — ดูว่าใช้วิชาไหนเก่งสุด','ดูวิชา',()=>openArts(),20],
+ ['s_page','soul',()=>S.sv.aw===1&&fnOk('openSoul'),()=>'⭕ ดวงจิตตื่นแล้ว — ดูดวงจิต วงแหวน และถุงวิญญาณของคุณ','ดูดวงจิต',()=>openSoul(),30],
+ ['s_cap','soul',()=>{const g=S.sv,lv=Math.floor(g.lv||0);return g.aw===1&&lv>=10&&lv%10===0&&(g.rings||[]).length<lv/10},()=>`⛓️ ติดคอขวดระดับ ${Math.floor(S.sv.lv)} — ต้องได้วงแหวนใหม่จากเหตุการณ์ 🏹 ล่าสัตว์วิญญาณ (เลือกตัวที่อายุไม่เกินขีดปลอดภัย)`,'อ่านวิธี',()=>openSvGuide(),4],
+ ['s_guide','soul',()=>fnOk('openSvGuide'),()=>'📖 งงว่าโหมดนี้เล่นยังไง? คู่มือบอกระดับ วงแหวน ของ และเหตุการณ์ใหญ่ทั้งหมด','เปิดคู่มือ',()=>openSvGuide(),40],
+ ['k_gate','sky',()=>{const K=S.mw.sky;return (K.sub|0)>=10&&window._sky&&window._sky.RK[K.rk|0]&&window._sky.RK[K.rk|0].gate},()=>{const K=S.mw.sky;return`🚪 ถึงขั้นสมบูรณ์แล้ว — ทะลวงต้อง: ${window._sky.RK[K.rk|0].gate}`},'',null,5],
+ ['k_map','sky',()=>(S.mw.sky.lic|0)>=1&&fnOk('skyMap'),()=>'🗺️ มีใบอนุญาตนักล่าแล้ว — เปิดแผนที่นอกกำแพงเลือกเขตล่า ยิ่งลึกยิ่งได้มาก','แผนที่',()=>skyMap(),20],
+ ['k_shop','sky',()=>S.age>=12&&fnOk('skyShop'),()=>'🏪 ตลาดแก่นอสูร — ตีอาวุธ/เกราะจากแก่นอสูร ซื้อเซรั่มยีน เช่าห้องแรงโน้มถ่วง','ไปตลาด',()=>skyShop(),20],
+ ['k_hud','sky',()=>true,()=>'📊 แผงสถานะบนจอ กดสลับ เต็ม · ย่อ · ซ่อน ได้ถ้าบังเหตุการณ์','',null,999],
+ ['w_plan','mw',()=>S.age>=16&&!S.mw.kid&&fnOk('plOpen'),()=>'📅 จัดแผนปีได้ — แบ่ง 12 เดือนให้งาน เรียน ครอบครัว พักผ่อน ส่วนที่ลงมากสุดคือโฟกัสหลัก','จัดแผน',()=>plOpen(true),15],
+ ['w_job','mw',()=>S.age>=18&&!S.mw.job&&fnOk('openJobs'),()=>'💼 ยังไม่มีงานประจำ — เลือกงานเพื่อมีเงินเดือน','หางาน',()=>openJobs(),5],
+ ['w_goal','mw',()=>(S.mw.goals||[]).some(g=>!g.d)&&fnOk('openGoals'),()=>'🎯 ชีวิตนี้มีเป้าหมาย 3 ข้อ — ทำครบได้รางวัลและความสำเร็จ','ดูเป้าหมาย',()=>openGoals(),20],
+ ['all_adv','*',()=>fnOk('openAdvice'),()=>'💡 ไม่รู้จะทำอะไรต่อ? กดดูคำแนะนำทั้งหมดตามสถานการณ์ตอนนี้','ทำอะไรดี?',()=>openAdvice(),60]];
+const hx=()=>{S._hx=S._hx||{};return S._hx};
+const live=()=>{const w=wk();if(!w||w==='beast')return[];return H.filter(h=>{if(h[1]!=='*'&&h[1]!==w)return false;const t=hx()[h[0]];if(t!=null&&S.age-t<h[6])return false;try{return !!h[2]()}catch(e){return false}})};
+window._hints=()=>live().map(h=>h[0]);
+window.hintGo=function(id){const h=H.find(x=>x[0]===id);if(!h)return;hx()[id]=S.age;try{h[5]&&h[5]()}catch(e){console.error(e)}try{render()}catch(e){}};
+window.hintX=function(id,ev){if(ev)ev.stopPropagation();hx()[id]=S.age;try{render()}catch(e){}};
+const css=document.createElement('style');css.textContent=`
+#hintBox{display:flex;align-items:center;gap:8px;margin:4px 0 6px;padding:7px 8px 7px 10px;border-radius:12px;background:linear-gradient(100deg,rgba(255,200,80,.16),rgba(255,140,60,.06));border:1px solid rgba(255,190,80,.55);box-shadow:0 0 12px rgba(255,180,60,.15);font-size:12.5px;line-height:1.4;animation:hbIn .35s ease both;cursor:pointer}
+@keyframes hbIn{from{opacity:0;transform:translateY(-4px)}}
+#hintBox .hbI{font-size:18px;flex:none;animation:hbP 2.4s ease-in-out infinite}@keyframes hbP{50%{transform:scale(1.15)}}
+#hintBox .hbT{flex:1;min-width:0}
+#hintBox .hbGo{flex:none;border:0;border-radius:9px;padding:6px 10px;font-weight:800;font-size:12px;color:#1d1405;background:linear-gradient(180deg,#ffe29a,#e8b54a);box-shadow:0 2px 0 #9a6a10;cursor:pointer;white-space:nowrap}
+#hintBox .hbX{flex:none;border:0;background:none;color:inherit;opacity:.55;font-size:14px;padding:2px 4px;cursor:pointer}
+#hintBox .hbN{display:block;font-size:10.5px;opacity:.6;margin-top:1px}`;document.head.appendChild(css);
+if(typeof render==='function'){const _r=render;render=function(){const r=_r.apply(this,arguments);try{const gb=$('goalBox');let hb=$('hintBox');
+ if(!gb||!S||!S.alive||LS.get('murim_hintoff',0)){if(hb)hb.remove();return r}
+ const L=live();if(!L.length){if(hb)hb.remove();return r}const h=L[0];let txt='';try{txt=h[3]()}catch(e){}
+ const html=`<span class="hbI">💡</span><span class="hbT">${txt}<span class="hbN">แตะเพื่อดูคำแนะนำทั้งหมด${L.length>1?` · มีอีก ${L.length-1} ข้อ`:''}</span></span>${h[4]&&h[5]?`<button class="hbGo" onclick="event.stopPropagation();hintGo('${h[0]}')">${h[4]} ›</button>`:''}<button class="hbX" title="ซ่อนคำใบ้นี้" onclick="hintX('${h[0]}',event)">✕</button>`;
+ if(!hb){hb=document.createElement('div');hb.id='hintBox';hb.onclick=()=>{try{openAdvice()}catch(e){}};gb.after(hb)}else if(hb.previousElementSibling!==gb)gb.after(hb);
+ if(hb._h!==html){hb.innerHTML=html;hb._h=html}}catch(e){}return r}}
+// รวมคำใบ้ของโลกนี้ไว้ในหน้า "ทำอะไรดี?" ด้วย พร้อมปุ่มไปทำ
+if(typeof adviceList==='function'){const _al=adviceList;adviceList=function(){const A=_al.apply(this,arguments)||[];try{const w=wk();if(w&&w!=='murim'){for(let i=A.length-1;i>=0;i--)if(/สู่ ขั้น|ฝึกยุทธ์ · 🌀 ลมปราณ/.test(A[i])&&w!=='beast')A.splice(i,1)}
+ H.filter(h=>h[0]!=='all_adv'&&(h[1]==='*'||h[1]===w)).forEach(h=>{try{if(!h[2]())return;const t=h[3]();if(A.some(x=>x.includes(t.slice(2,16))))return;A.push(t+(h[4]&&h[5]?` <button class="gbtn" style="padding:2px 9px;margin-left:4px" onclick="closeM();hintGo('${h[0]}')">${h[4]} ›</button>`:''))}catch(e){}})}catch(e){}return A}}
+// ---------- 3) บทนำทะลุฟ้าดาราครั้งแรก ----------
+const SKT=[['🌠','ทะลุฟ้าดารา คืออะไร','ประเทศไทยปี 2054 — ดาวตกถล่มเมื่อยี่สิบปีก่อน คนรอดอยู่ใน<b>นครกำแพง</b> นอกกำแพงคือแดนอสูร<br>เป้าหมาย: <b>ไต่ขั้นพลัง</b> จากเด็กในนครกำแพง ไปจนถึงขอบจักรวาล (8 ยุค 36 ขั้น)'],
+ ['🧬','โตยังไง','อายุ <b>12</b> จะได้<b>สอบวัดยีน</b> · ฝึก 3 สาย <b>กาย · จิต · ยีน</b> ด้วยปุ่มโฟกัสด้านล่าง<br>แต่ละขั้นมี 10 ชั้น — ถึง<b>ขั้นสมบูรณ์</b>แล้วต้องทำ<b>เงื่อนไขทะลวง</b> (ดูในกล่อง 🎯 เป้าหมายถัดไป)'],
+ ['🗺️','ไปทำอะไรที่ไหน','<b>🏪 ตลาดแก่นอสูร</b> ตีอาวุธ ซื้อเซรั่ม · <b>🗺️ แผนที่นอกกำแพง</b> เลือกเขตล่า (ต้องมีใบอนุญาตนักล่า)<br>เหตุการณ์สำคัญจะเด้งให้เลือกเอง — <b>เลือกอะไรก็ได้ ไม่มีผิด</b>'],
+ ['💡','ติดตรงไหนดูตรงนี้','แถบ <b>💡 คำใบ้</b> ใต้เป้าหมายจะบอกสิ่งที่ควรทำต่อ พร้อมปุ่มพาไปเลย<br>แตะแถบเพื่อดู <b>ทำอะไรดี?</b> ทั้งหมด']];
+window.skyTut=function(i){i=i||0;const p=SKT[i];if(!p){LS.set('murim_skytut',1);return closeM()}
+ modal(`<div class="nbWel"><div class="ic">${p[0]}</div><h3>${p[1]}</h3><p style="font-size:14.5px">${p[2]}</p><div class="nbDots">${SKT.map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div><button class="go" onclick="skyTut(${i+1})">${i===SKT.length-1?'▶ เริ่มเล่น':'ต่อไป ›'}</button><button class="sk" onclick="LS.set('murim_skytut',1);closeM()">ข้าม</button></div>`,'skytut')};
+setInterval(()=>{try{if(!S||!S.alive||wk()!=='sky'||LS.get('murim_skytut',0)||modalOpen||choice._cur||window._skyOrgRun)return;skyTut(0)}catch(e){}},3000);
+})()}catch(e){console.error('block109',e)}
