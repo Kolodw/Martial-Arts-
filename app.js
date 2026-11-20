@@ -43201,13 +43201,14 @@ function grid(st){const nw=st.n<7||(st.n===7&&st.r===0&&st.cy===0&&st.today&&st.
  if(nw){const done=st.n,now=st.today?0:done+1;return{nw:1,h:Array.from({length:7},(_,j)=>{const i=j+1,R=NEW[i],c=i<=done?'got':i===now?'now':'';return`<div class="lgD ${c} ${i===7?'big':''}" style="--i:${j}">วัน ${i}<i>${R[0]}</i><small>${R[1]}</small></div>`}).join('')}}
  const done=st.r===0&&st.today&&st.cy>0?14:st.r,now=st.today?0:done+1;return{nw:0,h:Array.from({length:14},(_,j)=>{const i=j+1,R=REG(i),c=i<=done?'got':i===now?'now':'';return`<div class="lgD ${c}" style="--i:${j}">วัน ${i}<i>${R[0]}</i><small>${R[1].replace(' · ฉายาผู้ภักดี','')}</small></div>`}).join('')}}
 function draw(msg){const st=ST,G=grid(st),line=msg||(st.today?'วันนี้รับไปแล้ว พรุ่งนี้มาใหม่นะ ศิษย์พี่จะห่อของรอไว้':LINES[new Date().getDate()%LINES.length]);
- const m=$('modal');m.innerHTML=xT(`<div class="lgW"><button class="xbtn" onclick="closeM()" style="z-index:4">✕</button><div class="lgHead">${GUIDE}<div class="lgBub">${line}${st.today?'':`<br><b>วันนี้: ${(G.nw?NEW[st.n+1]:REG(st.r+1))[1]}</b>`}</div></div>
+ const m=$('modal');if(m.dataset.k!=='lgin')return;m.innerHTML=lgHtml(msg)}
+function lgHtml(msg){const st=ST,G=grid(st),line=msg||(st.today?'วันนี้รับไปแล้ว พรุ่งนี้มาใหม่นะ ศิษย์พี่จะห่อของรอไว้':LINES[new Date().getDate()%LINES.length]);return xT(`<div class="lgW"><button class="xbtn" onclick="closeM()" style="z-index:4">✕</button><div class="lgHead">${GUIDE}<div class="lgBub">${line}${st.today?'':`<br><b>วันนี้: ${(G.nw?NEW[st.n+1]:REG(st.r+1))[1]}</b>`}</div></div>
  <div class="lgTabs"><span class="${G.nw?'on':''}">🏮 ผู้มาใหม่ 7 วัน</span><span class="${G.nw?'':'on'}">🌸 ประจำ 14 วัน${st.cy?` · ครบ ${st.cy} รอบ`:''}</span></div>
  <div class="lgG ${G.nw?'':'r14'}">${G.h}</div>
  <button class="lgBtn" ${st.today?'disabled':''} onclick="lgClaim(this)">${st.today?'รับของวันนี้แล้ว':'🎁 รับของวันนี้'}</button>
  <div class="lgNote">ขาดวันไหนไม่รีเซ็ต รับต่อจากเดิมได้ · 🎟️ ตั๋วทองใช้ที่ 🎲 สุ่มเพิ่มตอนเกิด การันตีชะตาดี</div><div class="lgFx"></div></div>`)}
 async function load(){try{ST=await api('lgget',{});return ST&&!ST.err}catch(e){return false}}
-window.lgOpen=async function(){if(!onlineOK)return toast('ต้องออนไลน์เพื่อรับของล็อกอิน');if(!(await load()))return toast('โหลดของล็อกอินไม่ได้ ลองใหม่อีกครั้ง');modal('','lgin');draw();lgDot()};
+window.lgOpen=async function(){if(!onlineOK)return toast('ต้องออนไลน์เพื่อรับของล็อกอิน');if(!(await load()))return toast('โหลดของล็อกอินไม่ได้ ลองใหม่อีกครั้ง');modal(lgHtml(),'lgin');lgDot()};
 function burst(){const fx=$('modal').querySelector('.lgFx');if(!fx)return;const I=['✨','🌸','⭐','🏮','💫','🎉'];for(let i=0;i<22;i++){const b=document.createElement('b');const a=Math.random()*Math.PI*2,d=80+Math.random()*120;b.textContent=I[i%I.length];b.style.cssText=`left:50%;top:55%;--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d}px;--r:${Math.random()*360}deg`;fx.appendChild(b)}setTimeout(()=>fx.innerHTML='',1200)}
 window.lgClaim=async function(btn){if(!ST||ST.today)return;btn.disabled=true;let j;try{j=await api('lgclaim',{})}catch(e){btn.disabled=false;return toast('รับไม่สำเร็จ ลองใหม่อีกครั้ง')}
  if(!j||j.err){if(j&&j.err==='done'){ST=Object.assign(ST,j);draw();return}btn.disabled=false;return toast('รับไม่สำเร็จ ลองใหม่อีกครั้ง')}
