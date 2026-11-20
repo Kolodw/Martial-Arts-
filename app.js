@@ -52205,7 +52205,7 @@ window.kbGet=kbGet;window.kbSet=kbSet;window.kbSync=kbSync;
 // ล้างตัวเลขเก่าในเครื่องทิ้งครั้งเดียว
 try{if(LS.get('murim_kbwipe',0)!==2){LS.set('murim_kbank',{g:0,e:0});LS.set('murim_kbwipe',2)}}catch(e){}
 // ซิงก์เมื่อออนไลน์
-let tries=0;const iv=setInterval(()=>{if(onlineOK){kbSync();if(KBS.ok||++tries>40)clearInterval(iv)}},3000);
+let tries=0;const iv=setInterval(()=>{if(onlineOK){kbSync();if(KBS.ok||++tries>5)clearInterval(iv)}},6000);
 setInterval(()=>{if(onlineOK)kbSync()},120000);
 
 // ---------- เซฟลงลายเซ็น ----------
@@ -52972,3 +52972,19 @@ setInterval(()=>{try{if(!on()&&OV.host)ovKill()}catch(e){}},3000);
 {const _pp=window.pxPlay;if(typeof _pp==='function'){pxPlay=function(o){try{if(on()&&o&&!/^soul_/.test(String(o.type||''))){o=Object.assign({},o,{type:isGod()?'soul_god':S.sv.aw===1?(Math.random()<.5?'soul_rings':'soul_trib'):'soul_academy'})}}catch(e){}return _pp.call(this,o)};window.pxPlay=pxPlay}}
 window._soulScene={still,pick,P};
 })()}catch(e){console.error('block103',e)}
+
+// ============================================================
+// BLOCK 104: 🌐 ออฟไลน์ — บอกสาเหตุ + แตะป้ายเพื่อเชื่อมต่อใหม่
+// ============================================================
+try{(()=>{
+let why='',errAt=0;
+{const _a=api;api=async function(a,body){try{const r=await _a.apply(this,arguments);if(/^ping/.test(String(a)))why='';return r}catch(e){if(/^ping/.test(String(a))){errAt=Date.now();why=e.down?'down':e.q?'quota':e.message==='timeout'?'timeout':e.http===403?(String(e.message)==='banned'?'banned':String(e.message)==='auth'?'auth':'403'):e.http===429?'rate':e.http>=500?'server':!e.http?'net':String(e.message||'')}throw e}}}
+const TXT={down:'เชื่อมต่อล้มเหลวหลายครั้ง ระบบพักการเชื่อมต่อชั่วคราว',quota:'ระบบออนไลน์ปิดชั่วคราว (โควตาเซิร์ฟเวอร์)',timeout:'เซิร์ฟเวอร์ตอบช้าเกินไป — สัญญาณเน็ตอาจอ่อน',banned:'IP ของเครือข่ายนี้ถูกจำกัดชั่วคราว (อาจเพราะคนอื่นที่ใช้เน็ตเดียวกัน) — ลองสลับ Wi-Fi/4G',auth:'ยืนยันตัวตนไม่ผ่าน — เข้าสู่ระบบ Google ใหม่',rate:'ส่งคำขอถี่เกิน รอสักครู่',server:'เซิร์ฟเวอร์ขัดข้องชั่วคราว',net:'ต่ออินเทอร์เน็ตไม่ได้ หรือเครือข่ายบล็อกเว็บนี้'};
+window.onlineRetry=async function(){try{_downUntil=0;_downN=0;_quotaUntil=0}catch(e){}try{onlinePing._f=0;onlinePing._e=0}catch(e){}toast('🌐 กำลังเชื่อมต่อใหม่…');try{await onlinePing()}catch(e){}setTimeout(()=>{toast(onlineOK?'✅ ออนไลน์แล้ว':'⚠️ ยังออฟไลน์ — '+(TXT[why]||why||'ไม่ทราบสาเหตุ'))},400)};
+window.onlineWhy=()=>why;
+// แตะป้ายออฟไลน์ → เชื่อมต่อใหม่ + บอกสาเหตุ
+document.addEventListener('click',e=>{try{if(onlineOK)return;const t=e.target.closest('#onPill,.onpill,#onlineBadge');if(!t)return;e.preventDefault();e.stopPropagation();onlineRetry()}catch(x){}},true);
+// ออฟไลน์นานเกิน 40 วิ: บอกสาเหตุหนึ่งครั้ง + ลองใหม่อัตโนมัติทุก 45 วิ
+let told=0;setInterval(()=>{try{if(onlineOK){told=0;return}if(!errAt||Date.now()-errAt>600000)return;if(!told&&Date.now()-errAt>40000){told=1;toast('🌐 ออฟไลน์: '+(TXT[why]||why||'ไม่ทราบสาเหตุ')+' · แตะป้าย “ออฟไลน์” เพื่อลองใหม่')}if(!document.hidden&&why!=='banned'&&why!=='auth'){_downUntil=0;onlinePing()}}catch(e){}},45000);
+// คลังกรรม: อย่าเรียกซ้ำถี่ตอนเซิร์ฟเวอร์มีปัญหา (กันพาเข้าโหมดพักการเชื่อมต่อ)
+})()}catch(e){console.error('block104',e)}

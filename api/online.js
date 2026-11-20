@@ -1189,7 +1189,8 @@ module.exports = async (req, res) => {
     if (!admReq && ip !== 'x') {
       const mk = Math.floor(now / 60000), WR = IP_WRITE.has(a);
       const [bn, rc, wc] = (await pipeSoft([['GET', 'ban:' + ip], ['INCR', 'ipr:' + ip + ':' + mk], WR ? ['INCR', 'ipw:' + ip + ':' + mk] : ['GET', 'ipw:' + ip + ':' + mk], ['EXPIRE', 'ipr:' + ip + ':' + mk, 90], ...(WR ? [['EXPIRE', 'ipw:' + ip + ':' + mk, 90]] : [])])) || [0, 0, 0];
-      if (bn) return res.status(403).json({ err: 'banned' });
+      // แบนตาม IP (เน็ตมือถือใช้ IP ร่วมกัน): ผู้เล่นที่เคยเล่นมาก่อนผ่านได้ ยกเว้นแบนโดยแอดมิน
+      if (bn && !(String(bn) !== 'admin' && okId(id) && +(await cmd('EXISTS', 'seen:' + id)))) return res.status(403).json({ err: 'banned', why: String(bn) === 'admin' ? 'admin' : 'ip' });
       if (+rc > IP_HARD) { await pipe([['SET', 'ban:' + ip, 'flood', 'EX', 1800], ['ZADD', 'trap:ips', now, ip], ['HSET', 'trap:info', ip, JSON.stringify({ n: +rc, p: ['(ยิง API ถี่เกิน ' + rc + ' ครั้ง/นาที)'], f: now, l: now, ua: String(req.headers['user-agent'] || '').slice(0, 140), fl: 1 })]]); return res.status(429).json({ err: 'rate' }) }
       if (+rc > IP_SOFT) return res.status(429).json({ err: 'rate' });
       if (WR && +wc > IP_WMAX) return res.status(429).json({ err: 'rate' });
@@ -1269,6 +1270,7 @@ module.exports = async (req, res) => {
     }
     if (a === 'ping') {
       if (okId(id)) {
+        try { await cmd('SET', 'seen:' + id, 1, 'EX', 86400 * 30) } catch {}
         const ua = String(req.headers['user-agent'] || '');
         const org = String(req.headers['origin'] || req.headers['referer'] || '').replace(/^https?:\/\//, '').split('/')[0].slice(0, 60);
         const meta = { d: /Mobi|Android|iPhone|iPad/i.test(ua) ? 'มือถือ' : 'คอม', b: /bot|crawl|spider|headless|preview|facebookexternalhit/i.test(ua) ? 'บอท' : /Line\//.test(ua) ? 'LINE' : /FBAN|FBAV/.test(ua) ? 'Facebook' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'อื่นๆ', o: org || 'ไม่ระบุ', v: String(qOf(req).v || '').slice(0, 8), c: String(req.headers['cf-ipcountry'] || req.headers['x-vercel-ip-country'] || '?').slice(0, 3), t: now };
