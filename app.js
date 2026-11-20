@@ -45452,7 +45452,8 @@ const W=[
  {k:'mw',ic:'🏙️',n:'ยุคปัจจุบัน',d:'เกิดเป็นคนยุค 2026 · อาจสุ่มได้โลกฮันเตอร์ ซอมบี้ หมอผี วันซ้ำ',tg:['มินิเกมเยอะ','ไม่ต้องรู้ระบบยุทธ์'],bd:'#7ad0ff',bg:'radial-gradient(120% 120% at 100% 0%,#1a6ab8,#0e2a5a 60%,#08142e)',mw:1},
  {k:'soul',ic:'⭕',n:'จิตวิญญาณยุทธ์',d:'อายุ 6 ขวบปลุกวิญญาณยุทธ์ · ล่าวงแหวนวิญญาณ ไต่ระดับจิต',tg:['ทีม · ดูโอ · โซโล่'],bd:'#3ad0b0',bg:'radial-gradient(120% 120% at 100% 0%,#0f8a7a,#0a3a36 60%,#06201e)',x:0,c:5,tk:'soul'},
  {k:'loop',ic:'🔁',n:'ผู้ย้อนกาล',d:'ตายแล้วย้อนไปอายุ 15 · ใช้ความรู้จากรอบก่อนช่วยเพื่อนร่วมชะตา',tg:['เล่าเรื่องต่อเนื่อง'],bd:'#8aa8ff',bg:'radial-gradient(120% 120% at 100% 0%,#3a5ad0,#18245a 60%,#0c1230)',x:0,c:4,tk:'regress'},
- {k:'beast',ic:'🐾',n:'เกิดเป็นสัตว์',d:'เริ่มจากลูกสัตว์ในป่า บำเพ็ญจนเป็นอสูร แล้วเลือกแปลงกายหรือครองป่า',tg:['อายุยืนมาก'],bd:'#6ad08a',bg:'radial-gradient(120% 120% at 100% 0%,#2a8a4a,#103a1e 60%,#081e10)',beast:1,tk:'beast'}];
+ {k:'beast',ic:'🐾',n:'เกิดเป็นสัตว์',d:'เริ่มจากลูกสัตว์ในป่า บำเพ็ญจนเป็นอสูร แล้วเลือกแปลงกายหรือครองป่า',tg:['อายุยืนมาก'],bd:'#6ad08a',bg:'radial-gradient(120% 120% at 100% 0%,#2a8a4a,#103a1e 60%,#081e10)',beast:1,tk:'beast'},
+ {k:'sky',ic:'🌠',n:'ทะลุฟ้าดารา',d:'โลกพังหลังมหันตภัยดาวตก · นครกำแพง ยีนอสูร ไต่ 36 ขั้นสู่ดวงดาว',tg:['โลกใหม่','มินิเกม'],bd:'#ff8a3d',bg:'radial-gradient(120% 120% at 100% 0%,#c8501a,#3a1a0c 55%,#0a1016)',sky:1,tk:'sky'}];
 const CHAL=[[0,'🙂','ปกติ'],[1,'🔥','นรก'],[2,'⏳','ชีวิตสั้น'],[3,'🗑️','รากขยะ']];
 const SPD=[[2500,'⚡ เร็ว'],[5000,'🍵 ปกติ'],[9000,'🐢 ช้า']];
 const mwOk=()=>{try{return mwAllowed()}catch(e){return false}};
@@ -45461,11 +45462,11 @@ const segBtn=(k,v)=>document.querySelector(`#title .seg[data-k="${k}"] button[da
 const click=(k,v)=>{const b=segBtn(k,v);if(b&&!b.classList.contains('on'))b.click();return !!b};
 function cur(){try{if(CFG.mw)return'mw';if(CFG.chm===5)return'soul';if(CFG.chm===4)return'loop';return CFG.xian?'xian':'murim'}catch(e){return'murim'}}
 let SEL=null;
-function apply(w){try{if(w.beast){SEL='beast';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}
+function apply(w){try{window._skySel=!!w.sky;if(w.sky){SEL='sky';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}if(w.beast){SEL='beast';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}
  if(w.mw){const b=document.querySelector('#title .seg[data-k="xian"] .mwopt');if(b){if(!b.classList.contains('on'))b.click()}else CFG.mw=1;SEL='mw';return}
  click('xian',w.x);CFG.mw=0;if(w.c)click('chm',w.c);else if(CFG.chm>=4)click('chm',0);SEL=w.k}catch(e){console.error('wp',e)}}
 function go(k){const w=W.find(x=>x.k===k);if(!w)return;apply(w);try{LS.set('murim_wlast',{k,c:CFG.chm|0})}catch(e){}
- if(w.beast){try{goBeastLife()}catch(e){}return}try{goBirthPick()}catch(e){try{goBirth()}catch(x){}}}
+ if(w.sky){try{skyStart()}catch(e){console.error(e)}return}if(w.beast){try{goBeastLife()}catch(e){}return}try{goBirthPick()}catch(e){try{goBirth()}catch(x){}}}
 window.wpGo=go;
 window.wpSel=function(k){const w=W.find(x=>x.k===k);if(!w)return;apply(w);paint();try{const c=document.querySelector(`#wPick .wc[data-k="${k}"]`);if(c)c.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}catch(e){}};
 window.wpChal=function(v){const w=W.find(x=>x.k===(SEL||cur()));if(!w||!w.ch)return toast('ความท้าทายใช้ได้กับยุทธภพและโลกเทพเซียน');click('chm',v);paint()};
@@ -45492,7 +45493,7 @@ function mount(){try{const T=$$('title');if(!T||!T.classList.contains('on'))retu
  paint()}catch(e){console.error('wpick',e)}}
 setInterval(mount,1200);setTimeout(mount,300);
 // เปิดหน้าแรกใหม่ → ล้างการเลือกชั่วคราว (ใช้ค่าจริงจาก CFG)
-{const _sh=show;show=function(id){if(id==='title')SEL=null;return _sh.apply(this,arguments)}}
+{const _sh=show;show=function(id){if(id==='title'){SEL=null;window._skySel=0}return _sh.apply(this,arguments)}}
 })()}catch(e){console.error('block67',e)}
 
 // ============================================================
@@ -48160,3 +48161,410 @@ function rdGap(){try{if(auto)return 250;if(speed>=8)return 500;if(speed>=4)retur
  {const _cr=choiceRun;choiceRun=function(){fTrack();const r=_cr.apply(this,arguments);fTrack();return r}}
  {const _py=passYear;passYear=function(){fTrack();const r=_py.apply(this,arguments);fTrack();return r}}
  try{const _gb=gdBel;gdBel=function(v){const r=_gb.apply(this,arguments);try{if(S&&+r>0&&typeof heH==='function'){const h=heH();h.fx=(h.fx||0)+1}}catch(e){}return r}}catch(e){}}
+
+// =====================================================================
+// 🌠 ทะลุฟ้าดารา — โลกใหม่ อัป 1: ยุคกำแพงเหล็ก (วัยเด็ก · ขั้น 1–6 · ใบอนุญาตนักล่า · ตลาดซาก · กลายพันธุ์ · คลื่นอสูร · ชิงร่าง · มินิเกม)
+// สร้างบนฐานยุคปัจจุบัน (S.mw) เพื่อให้ระบบยุทธภพทั้งหมดไม่โผล่ แต่ปีของโลกนี้เดินด้วย skyYear() ของตัวเองทั้งหมด
+// =====================================================================
+try{(()=>{
+const SK=()=>S&&S.mw&&S.mw.sky;
+const on=()=>!!(S&&S.alive&&SK());
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rnd=Math.random;
+const pick=a=>a[Math.floor(rnd()*a.length)];
+const pc=p=>` <span class="tag2">(~${Math.round(cl(p,0,1)*100)}%)</span>`;
+
+// ---------- ระดับ (ยุค 1) ----------
+const RK=[
+ {n:'ผู้ตื่นยีน',d:'เซลล์เริ่มวิวัฒน์ · เห็นค่าเซลล์ของตัวเอง',gate:'ฝากตัวเป็นศิษย์นักล่าหรือเข้าโรงฝึกนคร',g:K=>!!K.f.app},
+ {n:'ศิษย์นักล่า',d:'รับภารกิจนอกกำแพงขั้นต่ำได้',gate:'สอบใบอนุญาตนักล่าให้ผ่าน',g:K=>K.lic>=1},
+ {n:'นักรบกำแพง',d:'ใบอนุญาตนักล่า · ขายซากในตลาดได้',gate:'รอดจากการล่ากลางคืน และมียีนอย่างน้อย 1 สาย',g:K=>!!K.f.night&&K.genes.length>=1},
+ {n:'พรานรัตติกาล',d:'ล่าตอนกลางคืน · ยีนสายแรก',gate:'มีทีมล่า หรือเคยป้องกันคลื่นอสูรสำเร็จ',g:K=>!!K.f.team||(K.waveW|0)>=1},
+ {n:'ขุนศึกป้อมปราการ',d:'ตั้งทีมล่า 3–5 คน · กันคลื่นอสูร',gate:'ล้มอสูรระดับภูผาให้ได้',g:K=>!!K.f.mount},
+ {n:'ผู้ทลายภูผา',d:'ฉายาระดับนคร · นครอื่นมาดึงตัว',gate:'ราชาอสูรประจำภูมิภาค (ยุคถัดไปเปิดเร็วๆ นี้)',g:K=>false}];
+const ERA='ยุคกำแพงเหล็ก';
+const subN=s=>s>=10?'ขั้นสมบูรณ์':'ชั้น '+s+'/9';
+const idx=K=>K.rk*10+K.sub;
+const need=K=>Math.round(30*Math.pow(1.12,idx(K)));
+const RATE=[3,1.5,1.05,.85,.7,.6];
+const TAL=[['F',.7],['E',.85],['D',1],['C',1.15],['B',1.3],['A',1.5],['S',1.8]];
+const GENE={
+ iron:['เกล็ดเหล็ก','หนังแข็ง ทนแผล · พลังชีวิตสูงสุด +20%'],night:['ตาราตรี','มองเห็นในมืด · ล่ากลางคืนได้มากขึ้น'],claw:['กรงเล็บพิษ','ล่าได้ซากมากขึ้น · ศัตรูบาดเจ็บเร็ว'],
+ cold:['เลือดเย็น','จิตนิ่ง · ฝึกจิตได้มากขึ้น · เสี่ยงคลั่งน้อยลง'],heart:['หัวใจสองห้อง','ฟื้นตัวเร็ว · พลังชีวิตฟื้นทุกปีมากขึ้น'],wing:['พังผืดร่อนลม','หนีเก่ง · รอดจากเหตุร้ายง่ายขึ้น'],
+ echo:['คลื่นเสียงไร้แสง','ได้วิชายีน “คลื่นเสียง” · เห็นศัตรูซุ่มก่อน'],quill:['ขนหนามเหล็ก','สวนกลับเมื่อโดนรุม · กันคลื่นอสูรเก่งขึ้น']};
+const MUT={good:[['เซลล์เร่ง','ฝึกได้เร็วขึ้น 15%'],['ผิวหินจาง','บาดเจ็บน้อยลง'],['กระดูกยืด','ตัวสูงขึ้นสิบเซนต์ · แรงขึ้น']],
+ bad:[['ไข้ยีนเรื้อรัง','พลังชีวิตฟื้นช้าลง'],['เสียงในหัว','ฝึกจิตยากขึ้น'],['ตาเรืองแสง','คนในนครหวาดระแวงคุณ']]};
+const has=(K,g)=>K.genes.includes(g);
+const mutHas=(K,n)=>(K.mut||[]).some(m=>m[0]===n);
+
+// ---------- สถานะ ----------
+const FN=['ธราดล','ภูผา','ชลธิชา','ไอริน','กวิน','นภัส','ศรุต','พิมพ์ดาว','เตชิน','มินตรา','อชิระ','ปลายฟ้า','ธันวา','รินลดา','คีตะ','วายุ'];
+const LN=['วงศ์เหล็ก','ศิลาแกร่ง','ดาราเพลิง','ฟ้าคราม','กำแพงทอง','สายลม','เงาจันทร์','ธุลีดาว'];
+const CITY=['นครเหล็กที่ 7','นครหินแดง','นครริมกำแพงใต้','นครกระจกเหนือ'];
+const BG={city:['🏙️','เด็กในนคร','บ้านเล็กๆ ในเขตชั้นใน พ่อแม่ทำงานโรงงานกระสุน'],slum:['🏚️','เด็กสลัมนอกกำแพง','เพิงสังกะสีระหว่างกำแพงชั้นในกับชั้นนอก ทุกคืนได้ยินเสียงหอนใกล้กว่าคนอื่น'],
+ hunter:['🗡️','ลูกนักล่า','พ่อเป็นนักล่าใบอนุญาตระดับ C ที่ออกนอกกำแพงทุกเดือน'],refugee:['🔥','ผู้รอดจากนครแตก','นครบ้านเกิดแตกตอนคุณสามขวบ ครอบครัวเดินเท้ามาถึงที่นี่ครึ่งหนึ่ง']};
+function newK(bg){return{v:1,bg,city:pick(CITY),wall:68,waveIn:R(9,14),waveW:0,waveL:0,rk:-1,sub:0,xp:0,tal:1,talK:'D',mind:0,mindT:0,genes:[],gp:0,mut:[],cores:0,lic:0,
+ np:{bud:pick(FN.filter(x=>x!==S.name)),rv:pick(FN),mt:pick(['ครูฝึกกาเหว่า','ป้าแขนกล','ลุงเกราะดำ'])},f:{},cd:{},seen:{},pup:null,par:bg==='hunter'?{st:'ok'}:null,beast:null,swap:0,fac:null,team:0,trust:50,yr:2054}}
+
+// ---------- ค่าที่ได้ ----------
+function powCalc(K){if(K.rk<0)return Math.max(5,Math.round(6+S.age*.8));const m=(1+K.genes.length*.08)*(mutHas(K,'กระดูกยืด')?1.08:1)*(K.beast?1.5:1);return Math.round(12*Math.pow(1.25,idx(K))*m*K.tal)}
+function sync(){const K=SK();if(!K)return;const p=powCalc(K);if(S.power<p)S.power=p;const mh=Math.round((60+Math.max(0,K.rk)*35+Math.max(0,K.sub)*3)*(has(K,'iron')?1.2:1));if(S.maxHp<mh)S.maxHp=mh;S.mw.end=Math.round(78+Math.max(0,K.rk)*14+Math.max(0,K.sub)*1.2+(K.beast?30:0))}
+const say=(t,c,big)=>log(t,c||'',big);
+const feed=t=>addFeed('ev',t,'sum');
+const hp=p=>{const d=Math.round(S.maxHp*p);S.hp=Math.max(1,S.hp-d);return d};
+const heal=p=>{S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*p))};
+const cr=n=>{n=Math.round(n);S.money=Math.max(0,(S.money||0)+n);return(n>=0?'+':'')+fmt(n)+' เครดิต'};
+const crT=n=>fmt(Math.round(n))+' เครดิต';
+function xp(n){const K=SK();if(!K||K.rk<0)return'';const pct=n*K.tal*(mutHas(K,'เซลล์เร่ง')?1.15:1);K.xp+=need(K)*pct/100;return' · เซลล์ +'+Math.round(pct)+'%'}
+function fameA(n){S.fame=Math.max(0,(S.fame||0)+n);return` · ชื่อเสียง ${n>=0?'+':''}${fmt(n)}`}
+function mindA(n){const K=SK();K.mind=Math.max(0,K.mind+n*(has(K,'cold')?1.25:1)*(mutHas(K,'เสียงในหัว')?.7:1));return` · จิต +${fmt(Math.round(n))}`}
+function wallA(n){const K=SK();K.wall=cl(K.wall+n,0,100);return` · กำแพง ${n>=0?'+':''}${n}`}
+function die(c,t){const K=SK();if(K)K.dieF=1;S.deathCause=pick(c);if(t)say(t,'bad',true);setTimeout(()=>{try{checkDeath()}catch(e){}},350)}
+
+// ---------- เลื่อนขั้น ----------
+function advance(){const K=SK();if(!K||K.rk<0)return;let guard=0;
+ while(K.xp>=need(K)&&guard++<12){
+  if(K.sub===9){if(!K.f.neck){K.f.neck=1;queue('neck')}return}
+  if(K.sub>=10){if(RK[K.rk].g(K)&&K.rk<RK.length-1){K.xp-=need(K);K.rk++;K.sub=1;sync();rankUp()}else{K.xp=Math.min(K.xp,need(K));gateQ(K);if(K.rk===RK.length-1&&!K.f.kingQ){K.f.kingQ=1;queue('king')}return}continue}
+  K.xp-=need(K);K.sub++;if(K.sub===3||K.sub===6){K.gp++;feed(`🧬 ถึง${subN(K.sub)} · ได้แต้มยีน +1 (มี ${K.gp})`)}else feed(`⬆️ เซลล์วิวัฒน์ขึ้น · <b>${RK[K.rk].n} ${subN(K.sub)}</b>`);
+  if(K.sub===10)say(`🌟 <b>${RK[K.rk].n} ขั้นสมบูรณ์</b> — ${K.rk<RK.length-1?'จะข้ามขั้นได้ต้อง: '+RK[K.rk].gate:'ถึงขีดสุดของยุคกำแพงเหล็กแล้ว'}`,'epic')}
+ sync()}
+const GATEV=[K=>K.f.app?null:'k_app2',K=>age()>=16?'a_lic':null,K=>!K.f.night?'a_night':(K.genes.length?null:(K.stash?(K.pend=K.stash,K.stash=null,'gene'):(K.lic?'a_gene1':null))),K=>'a_team',K=>'a_mount'];
+function gateQ(K){if(K.rk>=RK.length-1)return;if(K.gq!=null&&S.age-K.gq<1)return;const f=GATEV[K.rk],id=f&&f(K);if(id&&EV[id]){K.gq=S.age;queue(id)}}
+function rankUp(){const K=SK(),r=RK[K.rk];try{sfx('ach')}catch(e){}
+ const o=`<div class="skBt"><div class="skBtS">สแกนยีนเสร็จสมบูรณ์</div><div class="skBtR"><span>ขั้น</span><b>${K.rk+1}</b><span>จาก 36</span></div><div class="skBtN">${esc(r.n)}</div><div class="skBtE">${ERA} · ชั้น 1/9</div><p>${esc(r.d)}</p></div>`;
+ say(`🌠 <b>ทะลวงขั้น! ขั้น ${K.rk+1} · ${r.n}</b> — ${r.d}`,'myth',true);try{keyAdd(`${S.age} ปี — ถึงขั้น ${r.n}`)}catch(e){}
+ try{island({big:1,pri:1,ic:'🌠',h:'ทะลวงขั้น',t:`ขั้น ${K.rk+1} · ${r.n}`,d:r.d,kind:'gold',ms:6000})}catch(e){}
+ if(!auto&&speed<8&&!choice._cur)setTimeout(()=>{try{if(!modalOpen&&!choice._cur)modal(`${o}<button class="pbtn" style="width:100%;margin-top:10px" onclick="closeM()">รับพลัง</button>`,'skybt')}catch(e){}},400)}
+
+// ---------- มินิเกม ----------
+let MG=null;
+function mgAuto(){return auto||speed>=8||!!LS.get('murim_fa',0)}
+function mgDone(sc){if(!MG)return;const m=MG;MG=null;clearInterval(m.t);clearTimeout(m.t2);if($('modal').dataset.k==='skymg')closeM();setTimeout(()=>{try{m.cb(cl(sc,0,1))}catch(e){console.error(e)}},120)}
+window.skyMgDone=mgDone;
+function skyMG(kind,ti,sub,cb){if(mgAuto()){setTimeout(()=>cb(.35+rnd()*.45),60);return}
+ MG={kind,cb,t:0,t2:0,hit:0,n:0};
+ const shell=b=>modal(`<div class="skMg"><div class="skMgH">${ti}</div><p class="tag2">${sub}</p>${b}<button class="gbtn" style="width:100%;margin-top:10px" onclick="skyMgDone(.45)">⏭ ข้าม (ผลกลางๆ)</button></div>`,'skymg');
+ if(kind==='scan'){let pos=0,dir=1,round=0,sc=0;const z=[];for(let i=0;i<3;i++)z.push(.2+rnd()*.55);
+  shell(`<div class="skScan"><i class="skZ"></i><i class="skN"></i></div><div class="skScR">รอบ <b id="skR">1</b>/3</div><button class="pbtn skBig" onclick="skyScanTap()">สแกน!</button>`);
+  const paint=()=>{const n=document.querySelector('.skN'),zz=document.querySelector('.skZ');if(!n)return;n.style.left=(pos*100)+'%';if(zz){zz.style.left=(z[round]*100)+'%';zz.style.width='14%'}};
+  window.skyScanTap=()=>{const d=Math.abs(pos-(z[round]+.07));sc+=d<.07?1:d<.14?.55:.1;round++;try{sfx(d<.07?'good':'click')}catch(e){}if(round>=3)return mgDone(sc/3);const r=$('skR');if(r)r.textContent=round+1};
+  MG.t=setInterval(()=>{pos+=dir*(.018+round*.006);if(pos>=1){pos=1;dir=-1}if(pos<=0){pos=0;dir=1}paint()},30);paint();MG.t2=setTimeout(()=>mgDone(sc/3),16000);return}
+ if(kind==='tap'){let left=9,hit=0,tot=0,cur=-1;
+  shell(`<div class="skTapT">⏱ <b id="skTL">9</b> วิ · โดน <b id="skTH">0</b></div><div class="skGrid">${[0,1,2,3,4,5,6,7,8].map(i=>`<button class="skCell" data-i="${i}" onclick="skyTapHit(${i})" aria-label="ช่อง ${i+1}"></button>`).join('')}</div>`);
+  const spawn=()=>{document.querySelectorAll('.skCell').forEach(c=>c.classList.remove('on'));cur=Math.floor(rnd()*9);tot++;const c=document.querySelector(`.skCell[data-i="${cur}"]`);if(c)c.classList.add('on')};
+  window.skyTapHit=i=>{if(i===cur){hit++;cur=-1;try{sfx('good')}catch(e){}const h=$('skTH');if(h)h.textContent=hit;document.querySelectorAll('.skCell').forEach(c=>c.classList.remove('on'));setTimeout(spawn,120)}};
+  spawn();let k=0;MG.t=setInterval(()=>{k++;if(k%9===0){left--;const e=$('skTL');if(e)e.textContent=left;if(left<=0)return mgDone(Math.min(1,hit/Math.max(8,tot*.8)))}if(k%7===0&&cur>=0)spawn()},110);return}
+ if(kind==='seq'){const SY=['▲','▼','◀','▶'],L=4+Math.floor(rnd()*2),seq=[];for(let i=0;i<L;i++)seq.push(Math.floor(rnd()*4));let inp=[],show=true;
+  shell(`<div class="skSeq" id="skSq">จำลำดับคลื่นยีน…</div><div class="skSeqB">${SY.map((s,i)=>`<button class="skSb" onclick="skySeqIn(${i})">${s}</button>`).join('')}</div>`);
+  let i=0;MG.t=setInterval(()=>{const e=$('skSq');if(!e)return;if(i<seq.length){e.innerHTML=`<b class="skSq1">${SY[seq[i]]}</b><span>${i+1}/${seq.length}</span>`;i++}else{clearInterval(MG.t);show=false;e.innerHTML='กดตามลำดับ'}},650);
+  MG.t2=setTimeout(()=>mgDone(.3),25000);window.skySeqIn=k=>{if(show)return;inp.push(k);const e=$('skSq');if(e)e.innerHTML=inp.map(x=>SY[x]).join(' ');if(inp[inp.length-1]!==seq[inp.length-1]){try{sfx('bad')}catch(e){}return mgDone(Math.max(0,(inp.length-1)/seq.length*.7))}if(inp.length===seq.length){try{sfx('good')}catch(e){}mgDone(1)}};return}
+ cb(.5)}
+window._skyMG=skyMG;
+
+// ---------- เหตุการณ์ ----------
+const QU=[];function queue(id){const K=SK();if(K&&!QU.includes(id))QU.push(id)}
+const O=(t,f,s)=>({t,s,f,_x:1});
+const C=(t,x,o)=>choice(t,x,o);
+const EV={};const def=(id,o)=>{EV[id]=o};
+const age=()=>S.age;
+
+// ===== วัยเด็ก =====
+def('k_siren',{c:K=>age()>=3&&age()<=7,once:1,w:3,go(K){C('🚨 ไซเรนคืนแรกที่จำได้',`ไซเรนดังกลาง${K.city} คนทั้งตึกวิ่งลงหลุมหลบภัย แม่กอดคุณไว้แน่น นอกกำแพงมีเสียงบางอย่างกระแทกเหล็กเป็นจังหวะ`,[
+ O('ปิดหูแล้วหลับตา',()=>say('😶 คุณนับหนึ่งถึงพันจนเสียงหยุด รุ่งเช้าทุกอย่างเหมือนเดิม — ยกเว้นคุณที่ไม่ชอบความมืดอีกเลย','')),
+ O('แอบมองผ่านช่องระบายอากาศ',()=>{K.f.peek=1;say('👁️ คุณเห็นแสงไฟฉายของนักล่าบนกำแพง และเงาที่ใหญ่กว่ารถบัสถอยกลับเข้าป่า คืนนั้นคุณรู้ว่าอยากเป็นอะไร','good')},'อยากรู้อยากเห็น'),
+ O('ร้องเพลงให้เด็กข้างๆ',()=>{S.karma+=3;say('🎵 เด็กหญิงตัวเล็กหยุดร้องไห้ เธอชื่อ'+K.np.bud+' — คุณไม่รู้ว่าอีกสิบปีชื่อนี้จะสำคัญแค่ไหน','good')})])}});
+def('k_pup',{c:K=>age()>=5&&age()<=11&&!K.pup,once:1,w:3,go(K){C('🐕 ลูกหมาตาสีเหลือง','ใต้กองขยะหลังตลาด มีลูกหมาผอมโซตาเรืองสีเหลืองอำพัน ขาหลังมีเกล็ดบางๆ — มันคือลูกอสูรที่หลุดเข้ามาทางท่อระบายน้ำ',[
+ O('แอบเอากลับไปเลี้ยง',()=>{K.pup={n:'ถ่าน',lv:1,st:'hide'};say('🐕 คุณตั้งชื่อให้มันว่า “ถ่าน” ซ่อนไว้ในห้องเก็บของ มันกินทุกอย่างยกเว้นผัก','good')},'เสี่ยงโดนจับ'),
+ O('แจ้งทหารยาม',()=>{S.karma-=2;cr(50);say('🪖 ทหารให้ขนมหนึ่งห่อ คุณได้ยินเสียงปืนหนึ่งนัดจากหลังตลาด','')}),
+ O('ป้อนอาหารแล้วปล่อยไป',()=>{K.f.pupFree=1;say('🌙 คืนนั้นมันหายเข้าท่อไป คุณหวังว่ามันจะรอด','')})])}});
+def('k_pup2',{c:K=>K.pup&&K.pup.st==='hide'&&age()>=9,once:1,w:5,go(K){const P=K.pup;C(`🐕 ${P.n}โตเกินซ่อน`,`${P.n}สูงเท่าเข่าผู้ใหญ่แล้ว เกล็ดขึ้นเต็มหลัง เพื่อนบ้านเริ่มได้ยินเสียงขู่ตอนกลางคืน วันนี้มีเจ้าหน้าที่มาเคาะประตูห้องข้างๆ`,[
+ O('พามันหนีออกช่องกำแพง',()=>{P.st='wild';K.f.pupWild=1;say(`🌒 คุณพา${P.n}ไปถึงช่องโหว่ใต้กำแพง มันเลียมือคุณครั้งเดียวแล้ววิ่งเข้าป่า — สัญญาว่าจะกลับมา`,'epic')},'มันจะจำคุณได้'),
+ O('ยอมมอบให้ศูนย์วิจัย',()=>{P.st='lab';cr(400);K.f.pupLab=1;say(`🧪 นักวิจัยชมว่ามันฉลาดผิดปกติ และสัญญาว่าจะดูแลอย่างดี คุณเชื่อครึ่งเดียว`,'')}),
+ O('ซ่อนต่อ ย้ายไปไว้ใต้ดิน',()=>{if(rnd()<.5){P.st='bond';K.f.pupBond=1;say(`🕳️ ห้องใต้ดินร้างกลายเป็นบ้านของ${P.n} มันเริ่มฟังคำสั่งคุณได้ทุกคำ`,'good')}else{P.st='lost';S.money=Math.round(S.money*.6);say(`🚔 ถูกจับได้ ครอบครัวโดนปรับหนัก ${P.n}ถูกพาตัวไป`,'bad')}},'เสี่ยง 50%')])}});
+def('k_hole',{c:K=>age()>=8&&age()<=14,once:1,w:3,go(K){C('🕳️ ช่องโหว่ใต้กำแพง',`${K.np.bud}กระซิบว่าเจอช่องใต้กำแพงชั้นนอกที่กว้างพอให้เด็กลอดออกไปได้ “ข้างนอกมีต้นไม้ที่ออกผลเรืองแสงนะ ไปดูกันไหม”`,[
+ O('ลอดออกไปด้วยกัน',()=>{K.f.hole=1;if(rnd()<.7){K.cores+=1;S.int+=3;say('🌿 ป่าข้างนอกสวยและน่ากลัวกว่าที่คิด คุณเก็บผลไม้เรืองแสงกับแก่นอสูรเล็กๆ ที่ตกอยู่กลับมา','good')}else{hp(.25);say(`🐺 มีบางอย่างไล่ตามจนต้องวิ่งกลับ ขาคุณเป็นแผลยาว · พลังชีวิต −25%`,'bad')}},'อันตราย'),
+ O('แจ้งครูฝ่ายปกครอง',()=>{K.f.holeRep=1;cr(150);K.trust-=15;say(`📋 ช่องถูกเทปูนปิด ${K.np.bud}โดนทำโทษและไม่คุยกับคุณอีกหลายเดือน`,'')}),
+ O('เก็บเป็นความลับของสองคน',()=>{K.f.holeSec=1;K.trust+=10;say('🤫 คุณสองคนสาบานด้วยนิ้วก้อย ความลับนี้จะกลับมาหาคุณอีกครั้ง','')})])}});
+def('k_slum',{c:K=>K.bg==='slum'&&age()>=7&&age()<=13,once:1,w:5,go(K){C('🍚 คิวแจกอาหาร','รถเสบียงมาช้าไปสามวัน คิวแจกอาหารในสลัมยาวจนสุดซอย มีคนเริ่มผลักกัน ทหารยกปืนขึ้น',[
+ O('พาน้องๆ ออกจากคิว',()=>{S.karma+=5;S.hp=Math.max(1,S.hp-5);say('🧒 คุณพาเด็กสามคนหลบเข้าซอก ไม่กี่นาทีต่อมาเสียงปืนดังขึ้น — คุณไม่ได้ข้าวในวันนั้น แต่ทุกคนยังอยู่','good')}),
+ O('มุดลอดขาผู้ใหญ่ไปเอาข้าว',()=>{if(rnd()<.6){S.money+=40;say('🥫 คุณได้กระป๋องมาสองกระป๋อง ตัวเล็กมีประโยชน์แบบนี้','')}else{hp(.3);say('🦶 คุณโดนเหยียบจนซี่โครงร้าว · พลังชีวิต −30%','bad')}}),
+ O('ปีนขึ้นหลังคาดูต้นเหตุ',()=>{K.f.slumTruth=1;S.int+=4;say('👀 จากหลังคาคุณเห็นรถเสบียงจอดอยู่ในเขตชั้นใน — มีคนกักอาหารไว้ คุณจำหน้าเขาไว้','epic')},'ความจริงบางอย่าง')])}});
+def('k_par',{c:K=>K.bg==='hunter'&&K.par&&K.par.st==='ok'&&age()>=9&&age()<=14,once:1,w:6,go(K){K.par.st='miss';C('📻 วิทยุเงียบ','หน่วยล่าของพ่อขาดการติดต่อตั้งแต่สองวันก่อน สมาคมนักล่าประกาศว่า “สูญหายระหว่างปฏิบัติการ” แม่เอาแต่นั่งข้างวิทยุ',[
+ O('สัญญากับตัวเองว่าจะออกไปตามหา',()=>{K.f.parVow=1;say('🗡️ คุณเก็บป้ายชื่อสำรองของพ่อไว้ในกระเป๋า วันหนึ่งคุณจะออกไปเอง','epic')}),
+ O('ช่วยแม่ทำงานหาเงินเลี้ยงบ้าน',()=>{cr(300);S.karma+=4;say('🏭 คุณทำงานล้างปลอกกระสุนหลังเลิกเรียน แม่ยิ้มได้ครั้งแรกในรอบเดือน','good')})])}});
+def('k_ref',{c:K=>K.bg==='refugee'&&age()>=6&&age()<=12,once:1,w:5,go(K){C('🔥 ฝันซ้ำ','คุณฝันถึงคืนที่นครบ้านเกิดแตกอีกแล้ว ในฝันมีเสียงผู้หญิงคนหนึ่งเรียกชื่อคุณจากในควัน — เสียงที่คุณไม่รู้จัก',[
+ O('จดทุกอย่างที่จำได้',()=>{K.f.refNote=1;S.int+=3;say('📓 สมุดเล่มเล็กเต็มไปด้วยรายละเอียดที่ไม่ควรจำได้ตอนสามขวบ — เช่นตราบนชุดของคนที่เปิดประตูนคร','')},'ปมในอดีต'),
+ O('ไปหาหมอจิตใจของนคร',()=>{heal(.2);say('🩺 หมอให้ยานอนหลับ ฝันหายไปครึ่งหนึ่ง','')})])}});
+def('k_bully',{c:K=>age()>=8&&age()<=14,cd:5,w:2,go(K){C('😠 เด็กตัวใหญ่ประจำห้อง',`${K.np.rv}กับพวกล้อมคุณหลังโรงเรียน “ได้ยินว่าแกเห็นอสูรเหรอ ไอ้ขี้โม้”`,[
+ O('สู้',()=>{if(rnd()<.45+S.age*.02){S.fame+=20;say(`👊 คุณชนะแบบหน้าบวม ${K.np.rv}เริ่มมองคุณใหม่`,'good');K.f.rvRes=1}else{hp(.15);say('🤕 คุณแพ้ แต่ไม่ร้องไห้ · พลังชีวิต −15%','')}}),
+ O('เล่าเรื่องที่เห็นให้ทุกคนฟัง',()=>{S.cha=(S.cha||0)+3;say('🗣️ เด็กครึ่งห้องนั่งฟังจนลืมว่ามาเพื่อแกล้งคุณ','good')}),
+ O('วิ่งหนี',()=>say('🏃 คุณวิ่งเร็วกว่าที่คิด — เก็บไว้ใช้ตอนโต',''))])}});
+def('k_test',{c:K=>age()>=12&&K.rk<0,once:1,w:99,go(K){C('🧬 วันสอบวัดยีน','เด็กอายุ 12 ทุกคนในนครต้องเข้าเครื่องสแกนยีน ผลจะกำหนดว่าใครได้ฝึกเป็นนักล่า ใครต้องไปโรงงาน แถวยาวจนล้นลานจัตุรัส',[
+ O('เข้าเครื่องสแกน',()=>skyMG('scan','🧬 สแกนยีน','แตะ “สแกน!” ตอนเข็มอยู่ในแถบเรืองแสง 3 รอบ',sc=>testRes(K,sc)),'มินิเกม'),
+ O('ทำใจให้นิ่งแล้วปล่อยให้เครื่องอ่าน',()=>testRes(K,.25+rnd()*.5))])}});
+function testRes(K,sc){const base=sc*.65+rnd()*.35+(K.bg==='hunter'?.06:0);const ti=cl(Math.floor(base*7),0,6);K.talK=TAL[ti][0];K.tal=TAL[ti][1];K.rk=0;K.sub=1;K.xp=0;
+ const mt=rnd()<(.02+sc*.08+(K.f.peek?.03:0));if(mt){K.mindT=1;K.mind=10}sync();
+ say(`🧬 ผลสแกน: ยีนระดับ <b>${K.talK}</b>${mt?' · <b>ตรวจพบพลังจิต!</b> (1 ใน 50 คน)':''} — คุณกลายเป็น <b>ผู้ตื่นยีน ชั้น 1/9</b>`,ti>=4||mt?'myth':'epic',true);
+ try{island({big:1,ic:'🧬',h:'ผลสแกนยีน',t:`ระดับ ${K.talK}${mt?' · พลังจิต':''}`,kind:'gold',ms:5000})}catch(e){}
+ if(ti<=1)feed('🏭 ยีนระดับต่ำ ครูแนะนำให้ไปเรียนสายช่าง — แต่ไม่มีกฎห้ามฝึกเอง');render()}
+def('k_app',{c:K=>K.rk>=0&&!K.f.app&&age()>=13,once:1,w:6,go(K){C('🗡️ ทางเข้าสู่การเป็นนักล่า','โรงฝึกนครเปิดรับเด็กยีนระดับ C ขึ้นไปฟรี ส่วนนักล่าอิสระบางคนรับศิษย์ถ้าจ่ายไหว',[
+ O(K.tal>=1.15?'เข้าโรงฝึกนคร (ผ่านเกณฑ์)':'สอบเข้าโรงฝึกนคร',()=>{if(K.tal>=1.15||rnd()<.35){K.f.app='city';say('🏛️ คุณได้ชุดฝึกสีเทากับบัตรนักเรียนนักล่า','good')}else{say('📄 ไม่ผ่าน — ยีนไม่ถึงเกณฑ์ ปีหน้าค่อยหาทางใหม่','bad');K.cd.k_app2=0;queueLater(K,'k_app2',1)}}),
+ O(`ฝากตัวกับ${K.np.mt} (${crT(600)})`,()=>{if(S.money<600){say('💸 เงินไม่พอ',''); queueLater(K,'k_app2',1);return}cr(-600);K.f.app='mt';K.xp+=20;say(`🧓 ${K.np.mt}มองคุณจากหัวจรดเท้า “ข้าสอนแค่คนที่ไม่กลัวตาย” — แล้วเริ่มสอนตั้งแต่วันนั้น`,'good')},'สอนเข้มกว่า'),
+ O('ฝึกเองจากคลิปเก่าในห้องสมุด',()=>{if(rnd()<.5){K.f.app='self';say('📼 คุณฝึกตามเทปเก่าของนักล่าที่ตายไปแล้ว ท่าแปลกแต่ได้ผล','good')}else{hp(.2);say('🤕 ฝึกผิดท่าจนข้อมือพลิก ต้องพักหลายเดือน','bad');queueLater(K,'k_app2',2)}},'เสี่ยงบาดเจ็บ')])}});
+def('k_app2',{c:K=>!K.f.app,w:0,go(K){C('🗡️ โอกาสอีกครั้ง',`${K.np.mt}ผ่านมาเห็นคุณฝึกคนเดียวจนเลือดซึม “พรุ่งนี้ตีห้า มาที่ลานหลังโรงงาน ไม่ต้องจ่าย”`,[
+ O('ไป',()=>{K.f.app='mt';say('🌅 ตีห้าตรง คุณยืนรออยู่ก่อนเขาสิบนาที','good')})])}});
+function queueLater(K,id,y){K.later=K.later||[];K.later.push([S.age+y,id])}
+
+// ===== ผู้ใหญ่ · บนกำแพง/นอกกำแพง =====
+def('a_lic',{c:K=>K.rk>=1&&K.lic<1&&age()>=16,cd:2,w:8,go(K){C('🪪 สอบใบอนุญาตนักล่า',`สนามสอบเป็นเขตป่าที่ล้อมรั้วไฟฟ้าไว้ ผู้สอบต้องล่าอสูรขั้นต่ำให้ได้ภายในเวลาที่กำหนด ข้างๆ คุณคือ${K.np.bud}ที่มาสอบรอบเดียวกัน`,[
+ O('ลงสนาม',()=>skyMG('tap','🎯 สนามสอบล่า','แตะตาอสูรที่โผล่ขึ้นมาให้มากที่สุดใน 9 วินาที',sc=>{const p=cl(sc*.8+K.tal*.12+(K.sub/40),.1,.95);if(rnd()<p){K.lic=1;K.f.team=K.f.team||0;say(`🪪 <b>สอบผ่าน!</b> ใบอนุญาตนักล่าระดับ E · ${cr(500)}`,'epic',true);if(sc>.6){K.f.budMet=1;say(`🤝 ${K.np.bud}สอบผ่านพร้อมคุณ “ล่าคู่กันไหม แบ่งซากครึ่งๆ”`,'good')}}else{hp(.2);say('📋 ไม่ผ่าน รอบหน้าค่อยว่ากันใหม่ · พลังชีวิต −20%','bad')}}),'มินิเกม'),
+ O('ซื้อข้อสอบจากนายหน้า',()=>{if(S.money<1500)return say('💸 เงินไม่พอ — นายหน้าหัวเราะ','');cr(-1500);if(rnd()<.6){K.lic=1;K.f.fake=1;S.karma-=6;say('🪪 ได้ใบอนุญาตมาแบบไม่ต้องลงสนาม แต่คนในสมาคมบางคนรู้','')}else say('🕴️ นายหน้าหายไปพร้อมเงิน','bad')},'โกง')])}});
+def('a_bud',{c:K=>K.f.budMet&&!K.f.team&&K.lic>=1,once:1,w:6,go(K){C(`🤝 ${K.np.bud}ชวนตั้งทีม`,`${K.np.bud}กางแผนที่บนโต๊ะโรงเตี๊ยม “ข้าดูทาง เจ้าลงมือ อีกสองคนข้าหาไว้แล้ว — ทีมเล็กเคลื่อนเร็ว แบ่งเท่ากัน”`,[
+ O('ตกลงตั้งทีม',()=>{K.f.team=1;K.team=4;say('🛡️ ทีมสี่คนได้ชื่อว่า “ธุลีเหล็ก” ตามป้ายร้านที่นั่งอยู่','good')}),
+ O('ข้าชอบล่าคนเดียว',()=>{K.f.solo=1;K.xp+=40;say('🐺 คุณยังล่าคนเดียว ช้ากว่า แต่ไม่ต้องแบ่งใคร','')})])}});
+def('a_night',{c:K=>K.rk>=2&&!K.f.night,cd:2,w:7,go(K){C('🌑 ล่ากลางคืน','สมาคมให้ค่าหัวสามเท่าสำหรับอสูรที่ออกล่าเฉพาะกลางคืน แต่ทุกปีมีนักล่าหายไปในความมืดหลายสิบคน',[
+ O('ออกล่าคืนนี้',()=>skyMG('tap','🌑 ล่าในความมืด','ตาอสูรเรืองในความมืด — แตะให้ทัน',sc=>{const p=cl(.25+sc*.6+(has(K,'night')?.2:0)+(K.f.team?.1:0),.1,.95);if(rnd()<p){K.f.night=1;K.cores+=2;say(`🌒 คุณกลับมาตอนรุ่งสางพร้อมหัวอสูรราตรี · ${cr(1800)}${xp(80)}`,'epic')}else{const d=hp(.45);say(`🩸 ถูกซุ่มโจมตีในความมืด · พลังชีวิต −${d}`,'bad');if(S.hp<S.maxHp*.12&&rnd()<.3)die(['ถูกอสูรราตรีลากเข้าไปในความมืด'],'🌑 วิทยุของคุณเงียบลงตอนตีสาม')}}),'มินิเกม · อันตราย'),
+ O('รอให้พร้อมกว่านี้',()=>say('⏳ คืนนี้คุณนอนบนกำแพงฟังเสียงหอน',''))])}});
+def('a_hunt',{c:K=>K.lic>=1&&!K.beast,cd:1,w:6,go(K){const B=pick([['หมาป่าเกราะหนาม','ฝูงห้าตัว'],['หมูป่าเขาเหล็ก','ตัวเดียวแต่ชาร์จแรงเท่ารถบรรทุก'],['ค้างคาวกรีดเสียง','ทำให้หูอื้อจนยืนไม่อยู่'],['งูหินลายดาว','พิษทำให้ร่างกลายเป็นหิน'],['ตั๊กแตนใบมีด','ฝูงใหญ่ฟันทุกอย่างที่ขวาง']]);const g=pick(Object.keys(GENE).filter(x=>!has(K,x)));
+ C(`🗡️ เป้าหมาย: ${B[0]}`,`กระดานภารกิจของสมาคมมีค่าหัว${B[0]} — ${B[1]} · ถ้าล่าได้ แก่นยีนของมันอาจให้สาย “${GENE[g][0]}”`,[
+  O('ล่าตรงๆ',()=>skyMG('tap','🗡️ ล่า'+B[0],'แตะเป้าให้ได้มากที่สุด',sc=>huntRes(K,B,g,sc,0)),'มินิเกม'),
+  O('วางกับดักแล้วรอ',()=>huntRes(K,B,g,.35+S.int/400+rnd()*.3,1),'ปลอดภัยกว่า ได้น้อยกว่า'),
+  O('ส่งข้อมูลให้ทีมอื่น เอาค่านายหน้า',()=>say(`📡 ทีมอื่นจ่ายค่าข้อมูลให้ · ${cr(250)}`,''))])}});
+function huntRes(K,B,g,sc,safe){const p=cl(.3+sc*.55+(K.f.team?.1:0)+(K.pup&&K.pup.st==='bond'?.1:0)+(has(K,'claw')?.08:0),.1,.95);
+ if(rnd()<p){const c=(safe?600:1200)*(1+K.rk*.6);K.cores+=safe?1:2;let t=`🦴 ล่า${B[0]}สำเร็จ · ${cr(c)}${xp(safe?40:70)}${fameA(40)}`;
+  if(!safe&&(K.genes.length===0||rnd()<.45)){t+=` · ได้<b>แก่นยีน</b>ที่ให้สาย “${GENE[g][0]}”`;K.pend=g;queue('gene')}say(t,'good')}
+ else{const d=hp(safe?.15:.35);say(`🩸 ${B[0]}แรงกว่าที่คิด · พลังชีวิต −${d}`,'bad');if(!safe&&S.hp<S.maxHp*.1&&rnd()<.35)die([`ถูก${B[0]}ฆ่าระหว่างล่านอกกำแพง`],'🗡️ ทีมเก็บกู้พบแค่ใบอนุญาตของคุณ')}}
+def('gene',{c:()=>false,w:0,go(K){const g=K.pend;K.pend=null;if(!g)return;const full=K.genes.length>=3;
+ C('🧬 แก่นยีนในมือ',`แก่นยีนของอสูรเต้นตุบๆ ในมือคุณ ถ้ากลืนเข้าไปจะได้สาย “${GENE[g][0]}” — ${GENE[g][1]}${full?'<br><b>ยีนเต็ม 3 สายแล้ว ต้องทิ้งสายเก่าหนึ่งสาย</b>':''}`,
+ (full?K.genes.map(x=>O(`กลืน · ทิ้ง “${GENE[x][0]}”`,()=>{K.genes=K.genes.filter(y=>y!==x);gainGene(K,g)})):[O('กลืนเลย',()=>gainGene(K,g),'เสี่ยงกลายพันธุ์')]).concat([Object.assign(O(`ขายในตลาดมืด (${crT(1500+K.rk*800)})`,()=>say(`🏪 ${cr(1500+K.rk*800)}`,'')),{skip:true}),Object.assign(O('เก็บไว้ก่อน',()=>{K.stash=g;say('🧊 แก่นยีนถูกแช่ไว้ในตู้เย็นเก่า — กลับมากลืนทีหลังได้','')}),{skip:true})]))}});
+function gainGene(K,g){K.genes.push(g);if(g==='iron')S.maxHp=Math.round(S.maxHp*1.2);mutRoll(K,.22);say(`🧬 <b>ได้ยีนสาย “${GENE[g][0]}”</b> — ${GENE[g][1]}`,'myth');sync()}
+function mutRoll(K,p){if(rnd()>=p*(has(K,'cold')?.6:1))return;const r=rnd();if(r<.05){K.mut.push(['เสียสติ','']);return queue('mad')}const L=r<.7?MUT.good:MUT.bad;const m=pick(L.filter(x=>!mutHas(K,x[0]))||L);if(!m)return;K.mut.push(m);say(`🧪 <b>กลายพันธุ์: ${m[0]}</b> — ${m[1]}`,r<.7?'good':'bad');sync()}
+def('mad',{c:()=>false,w:0,go(K){C('🩸 เสียงที่ไม่ใช่ของคุณ','ยีนอสูรในตัวเริ่มคุมร่าง คืนนี้คุณตื่นขึ้นมาบนหลังคาโดยไม่รู้ว่าขึ้นมายังไง มือเปื้อนเลือดที่ไม่ใช่ของคุณ',[
+ O('มัดตัวเองแล้วให้หมอผ่าตัดยีนออก',()=>{K.mut=K.mut.filter(m=>m[0]!=='เสียสติ');if(K.genes.length)K.genes.pop();hp(.4);say('🩺 การผ่าตัดเอายีนสายล่าสุดออก คุณรอด แต่อ่อนแรงไปหลายเดือน','')}),
+ O('ฝึกจิตสะกดมันไว้',()=>{const p=cl(.3+K.mind/200,.2,.85);if(rnd()<p){K.mut=K.mut.filter(m=>m[0]!=='เสียสติ');mindA(15);say('🧘 เสียงนั้นเงียบลง และยังอยู่ — แต่ตอนนี้มันเชื่อฟังคุณ','epic')}else die(['ยีนอสูรกลืนกินสติจนกลายเป็นอสูรเต็มตัว'],'🩸 นักล่าเพื่อนร่วมทีมต้องเป็นคนลั่นไก')},'เสี่ยง'+pc(cl(.3+K.mind/200,.2,.85))),
+ O('หนีออกนอกกำแพง ปล่อยให้มันเป็นไป',()=>{K.beast={n:'อสูรร่างมนุษย์',from:'mad'};S.deathCause=null;say('🌲 คุณหายเข้าป่าไปทั้งที่ยังมีสติครึ่งหนึ่ง ชาวนครเชื่อว่าคุณตายแล้ว','myth',true);sync()},'กลายเป็นอสูร')])}});
+def('a_market',{c:K=>K.lic>=1&&K.cores>=1,cd:2,w:5,go(K){const v=600+K.rk*500;C('🏪 ตลาดซากอสูร',`พ่อค้าแขนกลรับซื้อแก่นอสูรราคาดีวันนี้ คุณมีแก่นเก็บไว้ ${K.cores} ก้อน`,[
+ O(`ขายหมด (${crT(v*K.cores)})`,()=>{say(`🏪 ขายแก่น ${K.cores} ก้อน · ${cr(v*K.cores)}`,'');K.cores=0}),
+ O('กินเองหนึ่งก้อน',()=>{K.cores--;const t=xp(120);say('🧪 แก่นอสูรร้อนผ่าวลงคอ'+t,'');mutRoll(K,.3)},'เซลล์ + · เสี่ยงกลายพันธุ์'),
+ O('ต่อราคา',()=>{if(rnd()<.5+S.int/300){say(`🤝 ได้ราคาเพิ่มครึ่งหนึ่ง · ${cr(v*1.5*K.cores)}`,'good');K.cores=0}else say('😤 พ่อค้าไม่ซื้อวันนี้','')})])}});
+def('a_dealer',{c:K=>K.rk>=1&&age()>=17,cd:6,w:3,go(K){C('💉 ยาเร่งยีนจากตลาดมืด','ชายสวมหน้ากากกันฝุ่นเปิดกระเป๋าให้ดูหลอดสีม่วงสามหลอด “ของจากห้องแล็บโลกเก่า ฉีดทีเดียวข้ามได้หลายชั้น — หรือไม่ก็ตาย”',[
+ O(`ซื้อ 1 หลอด (${crT(2000)})`,()=>{if(S.money<2000)return say('💸 เงินไม่พอ','');cr(-2000);const r=rnd();if(r<.55){K.xp+=need(K)*1.6;say('💜 ร่างกายร้อนเหมือนถูกเผาทั้งคืน ตื่นมาเซลล์พุ่งขึ้นหลายชั้น','epic')}else if(r<.9){mutRoll(K,1);hp(.3)}else die(['ยาเร่งยีนเถื่อนทำให้เซลล์แตกสลาย'],'💜 หลอดยาเปล่ากลิ้งอยู่ข้างร่างคุณ')},'เสี่ยงตาย ~10%'),
+ O('แจ้งสมาคม',()=>{S.karma+=6;say(`📣 ตำรวจนครจับเขาได้ · ค่าแจ้งเบาะแส ${cr(600)}`,'good');K.f.dealerFoe=1}),
+ O('ไม่สนใจ',()=>{})])}});
+def('a_rival',{c:K=>K.lic>=1&&!K.f.rvEnd,cd:4,w:4,go(K){const n=K.np.rv;C(`🦊 ${n}ขโมยซาก`,`${n}คนเดิมจากสมัยเด็ก ตอนนี้เป็นนักล่าเหมือนคุณ เขาเพิ่งขโมยหัวอสูรที่คุณล่าไว้ไปส่งสมาคมในชื่อตัวเอง`,[
+ O('ท้าดวลต่อหน้าสมาคม',()=>{const p=cl(.45+(K.rk*.05)+(K.f.rvRes?.1:0),.2,.85);if(rnd()<p){K.f.rvEnd='win';say(`⚔️ คุณชนะ ${n}ยอมคืนซากและขอโทษต่อหน้าทุกคน${fameA(300)}`,'epic')}else{hp(.3);say(`🤕 ${n}เร็วกว่าที่คิด · พลังชีวิต −30%`,'bad')}},'ลุ้น'+pc(cl(.45+(K.rk*.05)+(K.f.rvRes?.1:0),.2,.85))),
+ O('ชวนเขามาร่วมทีม',()=>{if(rnd()<.5){K.f.rvEnd='ally';K.f.team=1;K.team=Math.max(K.team,3);say(`🤝 ${n}หัวเราะ “เจ้ามันบ้า” แล้วยื่นมือมา — คู่แข่งกลายเป็นคนที่คุมหลังให้คุณ`,'good')}else say(`🙄 ${n}เดินจากไปพร้อมรอยยิ้มเยาะ`,'')},'50%'),
+ O('ปล่อยไป ไม่คุ้ม',()=>say('🍃 ซากหนึ่งหัวไม่คุ้มกับศัตรูหนึ่งคน',''))])}});
+def('a_lab',{c:K=>K.rk>=2&&!K.f.lab,once:1,w:4,go(K){C('🏚️ แล็บโลกเก่า','หน่วยสำรวจพบประตูเหล็กใต้ซากห้างที่ยังมีไฟเลี้ยงอยู่ ป้ายจางๆ เขียนว่า “โครงการวิวัฒน์มนุษย์ ระยะที่ 3” ข้างในมีเสียงเครื่องจักรทำงาน',[
+ O('ลงไปสำรวจ',()=>{K.f.lab=1;const r=rnd();if(r<.4){K.gp+=2;say('🧪 คุณพบตู้แช่ยาเสริมยีนที่ยังใช้ได้ · แต้มยีน +2','epic')}else if(r<.75){K.f.ai=1;say('🖥️ จอเก่าติดขึ้นเอง เสียงสังเคราะห์พูดว่า “ตรวจพบผู้วิวัฒน์ — สัญญาณจากนอกโลกถูกบันทึกไว้ 20 ปีก่อน ต้องการฟังไหม” แล้วไฟก็ดับ','myth')}else{hp(.35);say('🤖 หุ่นยามเก่ายังทำงาน คุณหนีออกมาได้หวุดหวิด · พลังชีวิต −35%','bad')}},'ลุ้น'),
+ O('รายงานสมาคมแล้วให้หน่วยใหญ่ลงไป',()=>{K.f.lab=1;say(`📋 รางวัลผู้ค้นพบ · ${cr(2500)}${fameA(200)}`,'good')}),
+ O('ขายพิกัดให้ตลาดมืด',()=>{K.f.lab=1;S.karma-=5;say(`🕶️ ${cr(4000)} — สามวันต่อมามีข่าวทีมเถื่อนหายไปใต้ห้างทั้งทีม`,'')})])}});
+def('a_cult',{c:K=>K.rk>=2&&!K.f.cult,once:1,w:3,go(K){C('☄️ ลูกหลานแห่งดาวตก','กลุ่มคนสวมผ้าคลุมเทาเทศน์ที่ลานตลาด “ดาวตกไม่ใช่ภัยพิบัติ แต่เป็นจดหมาย อสูรคือผู้ส่งสาร มนุษย์ต่างหากที่ปิดหูตัวเอง”',[
+ O('แฝงตัวเข้าไปฟังให้รู้เรื่อง',()=>{K.f.cult='spy';S.int+=5;say('🕯️ ในห้องใต้ดิน พวกเขาเปิดเทปเสียงที่อ้างว่ารับมาจากท้องฟ้า มันฟังเหมือนตัวเลขเรียงกัน — และคุณจำได้ว่าเคยได้ยินมันในฝัน','myth')},'เนื้อเรื่อง'),
+ O('แจ้งทหารนคร',()=>{K.f.cult='rep';fameA(150);say('🪖 ลัทธิถูกกวาดล้างในคืนเดียว — แต่ผู้นำหนีไปได้','')}),
+ O('เดินผ่านไป',()=>{K.f.cult='skip'})])}});
+def('a_radio',{c:K=>(K.f.ai||K.f.cult==='spy')&&K.rk>=3&&!K.f.radio,once:1,w:6,go(K){K.f.radio=1;C('📡 สัญญาณจากฟ้า','วิทยุเก่าในห้องคุณจับคลื่นแปลกได้ตอนตีสาม เป็นเสียงเรียงตัวเลขแบบเดียวกับที่เคยได้ยิน แล้วตามด้วยคำเดียวที่ชัดเจน: “ผู้วิวัฒน์ — มาหาเรา”',[
+ O('ส่งสัญญาณตอบกลับ',()=>{K.f.reply=1;say('📡 คุณตอบกลับด้วยรหัสเดียวกัน ไฟทั้งตึกดับไปสามวินาที — มีบางอย่างนอกโลกรู้แล้วว่าคุณอยู่ที่นี่ <span class="tag2">(เรื่องนี้ต่อในยุคถัดไป)</span>','myth',true)}),
+ O('ถอดปลั๊ก ลืมมันซะ',()=>say('🔌 คุณถอดปลั๊ก แต่คืนต่อมาวิทยุก็ดังขึ้นเองอีก',''))])}});
+def('a_parfind',{c:K=>K.par&&K.par.st==='miss'&&K.lic>=1&&age()>=18,once:1,w:7,go(K){C('📻 ป้ายชื่อของพ่อ','ในรังอสูรที่หน่วยคุณบุก มีป้ายชื่อนักล่าแขวนอยู่บนกิ่งไม้เหมือนเครื่องราง หนึ่งในนั้นคือชื่อพ่อ — ลึกเข้าไปมีเงาคนเดินสองขาอยู่ท่ามกลางอสูร',[
+ O('ตามเงานั้นเข้าไป',()=>{const r=rnd();if(r<.4){K.par.st='found';K.gp++;say('🧔 ชายผมยาวที่มีเกล็ดครึ่งหน้าคือพ่อ เขากลายพันธุ์จนกลับนครไม่ได้ และอยู่กับฝูงอสูรมาตลอด “โตแล้วสินะ” — เขาสอนวิธีคุมยีนให้คุณหนึ่งคืนก่อนหายไป','myth',true)}else if(r<.75){K.par.st='dead';say('🪦 เงานั้นคืออสูรที่สวมชุดนักล่าเก่า คุณฝังป้ายชื่อพ่อไว้ใต้ต้นไม้นอกกำแพง','epic')}else{K.par.st='traitor';say('🕶️ พ่อยังมีชีวิต และเป็นคนของลูกหลานแห่งดาวตก “ข้าไม่ได้หายไป ข้าเลือกไป” — แล้วเขาก็หันหลังให้คุณ','myth')}},'ปมเรื่องพ่อ'),
+ O('เก็บป้ายชื่อแล้วกลับ',()=>{K.par.st='dead';say('🏷️ คุณเอาป้ายชื่อกลับไปให้แม่','')})])}});
+def('a_pup3',{c:K=>K.pup&&K.pup.st==='wild'&&K.lic>=1,once:1,w:8,go(K){const P=K.pup;C(`🐺 ${P.n}กลับมา`,`ระหว่างล่า ฝูงหมาป่าเกราะล้อมทีมคุณ แล้วจ่าฝูงตัวสูงเท่าม้าก็หยุดตรงหน้าคุณ — ตาสีเหลืองอำพันคู่นั้น คุณจำได้`,[
+ O(`เรียกชื่อ “${P.n}”`,()=>{P.st='bond';K.f.pupBond=1;say(`🐺 ${P.n}เลียหน้าคุณจนเปียก ฝูงทั้งฝูงถอยกลับเข้าป่า — นับจากนี้มันจะมาเมื่อคุณเรียก`,'myth',true)}),
+ O('ยกปืนขึ้น (ทีมกำลังมอง)',()=>{P.st='dead';S.karma-=10;K.cores+=4;say(`💔 ${P.n}ไม่หลบ มันแค่มองคุณจนวินาทีสุดท้าย`,'bad')})])}});
+def('a_fac',{c:K=>K.rk>=3&&!K.fac,once:1,w:5,go(K){C('🏛️ สองสภาแห่งนคร','สภาทหารต้องการให้ทุกนักล่าขึ้นตรงกับกองทัพ ส่วนสภาพลเมืองอยากให้นักล่าเป็นอิสระและแบ่งซากให้สลัม ทั้งสองฝ่ายส่งคนมาหาคุณในคืนเดียวกัน',[
+ O('อยู่กับสภาทหาร',()=>{K.fac='mil';cr(3000);wallA(8);say('🪖 คุณได้ยศและอุปกรณ์ แต่ต้องรับคำสั่ง','')}),
+ O('อยู่กับสภาพลเมือง',()=>{K.fac='civ';S.karma+=8;fameA(400);say('🧑‍🤝‍🧑 สลัมรู้ชื่อคุณ เด็กๆ วาดรูปคุณบนกำแพง','good')}),
+ O('ไม่เลือกข้าง',()=>{K.fac='none';say('⚖️ ทั้งสองฝ่ายเริ่มมองคุณด้วยสายตาไม่ไว้ใจ','')})])}});
+def('a_coup',{c:K=>K.fac&&K.fac!=='none'&&K.rk>=4&&!K.f.coup,once:1,w:5,go(K){K.f.coup=1;const mil=K.fac==='mil';C('🔥 คืนแห่งการยึดอำนาจ',mil?'นายพลสั่งให้นักล่าทุกคนล้อมสภาพลเมืองและจับแกนนำ — รวมถึงเด็กหนุ่มที่เคยวาดรูปคุณบนกำแพง':'สภาพลเมืองวางแผนเปิดคลังเสบียงที่ทหารกักไว้ และต้องการคนเปิดประตูคลัง — คุณ',[
+ O(mil?'ทำตามคำสั่ง':'เปิดประตูคลัง',()=>{if(mil){K.f.ruler='mil';S.karma-=12;cr(8000);say('🪖 นครสงบลงในเช้าวันถัดมา ภายใต้กฎอัยการศึก คุณได้ยศนายพันนักล่า','')}else{K.f.ruler='civ';S.karma+=12;wallA(-8);say('🍚 ข้าวสารไหลออกจากคลังเหมือนน้ำ คนทั้งสลัมได้กินอิ่มครั้งแรกในรอบสิบปี — กองทัพอ่อนแอลงไปช่วงหนึ่ง','epic')}}),
+ O(mil?'แอบเตือนสภาพลเมือง':'เปลี่ยนใจ แจ้งกองทัพ',()=>{K.f.ruler='mid';S.karma+=4;say('⚖️ แผนของทั้งสองฝ่ายพังลงพร้อมกัน ไม่มีใครชนะ ไม่มีใครตาย — และไม่มีใครไว้ใจคุณอีก','')}),
+ O('ออกไปล่านอกกำแพงคืนนั้น',()=>say('🌲 คุณกลับมาพบนครที่เปลี่ยนเจ้าของไปแล้ว',''))])}});
+def('a_mount',{c:K=>K.rk>=4&&!K.f.mount,cd:3,w:6,go(K){C('⛰️ อสูรระดับภูผา','สัตว์ร่างหินสูงเท่าตึกสิบชั้นเดินออกจากเทือกเขาตรงมาทางนคร ทุกก้าวทำให้กระจกในเขตชั้นนอกแตก สมาคมประกาศค่าหัวสูงสุดในรอบสิบปี',[
+ O('นำทีมเข้าตี',()=>skyMG('seq','⛰️ หาจุดอ่อนภูผา','จำลำดับรอยแตกบนเกราะหิน แล้วกดตาม',sc=>{const p=cl(.25+sc*.55+(K.f.team?.12:0)+(K.pup&&K.pup.st==='bond'?.1:0),.1,.92);if(rnd()<p){K.f.mount=1;K.cores+=6;say(`⛰️ <b>ภูผาล้มลง!</b> แสงแดดส่องผ่านฝุ่นที่ฟุ้งเต็มฟ้า · ${cr(25000)}${fameA(3000)}${xp(400)}`,'myth',true)}else{const d=hp(.5);say(`🪨 เกราะหินแข็งกว่าที่คิด ทีมต้องถอย · พลังชีวิต −${d}`,'bad');if(S.hp<S.maxHp*.08&&rnd()<.35)die(['ถูกอสูรภูผาเหยียบ'],'⛰️ ร่างของคุณถูกพบใต้ซากหิน')}}),'มินิเกม'),
+ O('ตามรอยไปหาจุดอ่อนก่อน',()=>{S.int+=4;say('🧭 คุณสังเกตว่ามันพักทุกเที่ยงคืนที่ลำธารเดิม — ครั้งหน้าจะง่ายขึ้น','');K.f.mountIntel=1})])}});
+def('neck',{c:()=>false,w:0,go(K){K.f.neck=0;const pills=1500+K.rk*1200;C('🧱 คอขวด · ชั้นที่ 9',`เซลล์ของคุณอัดแน่นจนขยับต่อไม่ได้ ต้องฝ่ากำแพงยีนชั้นที่ 9 เพื่อไปถึงขั้นสมบูรณ์ของ${RK[K.rk].n}`,[
+ O('ฝ่าด้วยตัวเอง',()=>skyMG('seq','🧱 ฝ่าคอขวด','จำลำดับคลื่นยีน แล้วกดตามให้ถูก',sc=>neckRes(K,.3+sc*.6)),'มินิเกม'),
+ O(`ใช้ยาเสริมยีน (${crT(pills)})`,()=>{if(S.money<pills){say('💸 เงินไม่พอ — ต้องฝ่าเอง','');return neckRes(K,.45)}cr(-pills);neckRes(K,.85)},'โอกาส ~85%'),
+ O('สะสมต่ออีกปี',()=>{K.xp=need(K)*.8;say('⏳ คุณรอให้ร่างพร้อมกว่านี้','')})])}});
+function neckRes(K,p){if(rnd()<cl(p,.1,.95)){K.xp-=need(K);K.sub=10;say(`🌟 <b>ทะลวงคอขวด!</b> ${RK[K.rk].n} ขั้นสมบูรณ์${K.rk<RK.length-1?' — ข้ามขั้นได้ต้อง: '+RK[K.rk].gate:''}`,'epic',true);sync();advance()}else{K.xp=need(K)*.5;const d=hp(.25);say(`💥 ฝ่าไม่ผ่าน เซลล์ปั่นป่วน · พลังชีวิต −${d}`,'bad')}}
+def('wave',{c:()=>false,w:0,go(K){K.waveIn=R(10,18);const big=K.wall<40;C('🌊 คลื่นอสูร!',`ไซเรนดังทั้งนคร อสูรนับพันพุ่งเข้าชนกำแพง${big?' ที่ทรุดโทรมอยู่แล้ว':''} · ความแข็งแรงกำแพง ${K.wall}/100`,[
+ O(K.rk>=0&&age()>=16?'ขึ้นกำแพงแนวหน้า':'ช่วยขนกระสุนขึ้นกำแพง',()=>skyMG('tap','🌊 กันกำแพง','แตะอสูรที่ปีนขึ้นมาให้มากที่สุด',sc=>waveRes(K,sc,1)),'มินิเกม'),
+ O(K.pup&&K.pup.st==='bond'?`เรียก${K.pup.n}กับฝูงมาช่วย`:'คุ้มกันผู้อพยพในเขตใน',()=>waveRes(K,K.pup&&K.pup.st==='bond'?.85:.4,0)),
+ O('หลบในบังเกอร์',()=>waveRes(K,.15,-1))])}});
+function waveRes(K,sc,front){const w0=K.wall,p=cl(.2+sc*.6+K.wall/250+(has(K,'quill')?.1:0)+(K.fac==='mil'?.05:0),.05,.95),ok=rnd()<p;
+ if(ok){K.waveW++;wallA(-R(3,8));say(`🛡️ <b>กำแพงยืนหยัด!</b> คลื่นอสูรถอยกลับเข้าป่า${front>0?fameA(800)+xp(120)+' · '+cr(3000):''}`,'epic',true)}
+ else{K.waveL++;wallA(-R(18,30));if(front>0){const d=hp(.4);say(`🩸 กำแพงบางส่วนพัง คุณสู้จนลมหายใจรวยริน · พลังชีวิต −${d}`,'bad')}else say('🩸 ช่องกำแพงถูกทลาย เขตชั้นนอกไฟไหม้ทั้งคืน','bad');if(front>0&&S.hp<S.maxHp*.1&&rnd()<.3)die(['สิ้นใจบนกำแพงระหว่างคลื่นอสูร'],'🧱 ชื่อของคุณถูกสลักบนกำแพงชั้นนอก')}
+ if(K.wall<=0&&S.alive)queue('fall')}
+def('fall',{c:()=>false,w:0,go(K){C('🔥 นครแตก',`กำแพงของ${K.city}พังทั้งแนว ผู้คนแตกตื่น คุณต้องตัดสินใจเดี๋ยวนี้`,[
+ O('นำผู้อพยพเดินทางไปนครอื่น',()=>{const o=K.city;K.city=pick(CITY.filter(x=>x!==o));K.wall=60;S.karma+=10;fameA(2000);say(`🚶 สิบวันกลางป่า คุณพาคนสามร้อยคนไปถึง${K.city} — บ้านใหม่ แต่ทุกคนยังหายใจ`,'myth',true)}),
+ O('อยู่สู้จนวินาทีสุดท้าย',()=>{if(rnd()<.5)die([`ยืนสู้ที่ประตู${K.city}จนนาทีสุดท้าย`],'🔥 นครแตก แต่ประตูที่คุณยืนเฝ้าเป็นประตูสุดท้ายที่ผ่านไม่ได้');else{K.wall=25;fameA(5000);say('🔥 รุ่งเช้ากองหนุนจากนครข้างเคียงมาถึง ช่องโหว่ถูกอุดด้วยซากรถบัส คุณยังยืนอยู่','myth',true)}},'เสี่ยงตาย 50%')])}});
+def('king',{c:()=>false,w:0,go(K){C('👑 ราชาอสูรแห่งภูมิภาค','ข่าวจากหน่วยสอดแนม: ราชาอสูรที่ครองทวีปตะวันออกตื่นขึ้นแล้ว ต้องล้มมันถึงจะข้ามไปยุคถัดไปได้ — ยุคมหาสมุทรอสูร',[
+ O('รับรู้ (ยุคถัดไปเปิดเร็วๆ นี้)',()=>{K.f.kingSeen=1;say('🌊 คุณยืนบนกำแพงมองไปทางทิศตะวันออก มีบางอย่างกำลังรอ <span class="tag2">(ยุคมหาสมุทรอสูรจะมาในอัปถัดไป — ความคืบหน้าจะถูกเก็บไว้)</span>','myth',true)})])}});
+def('a_gene1',{c:K=>K.lic>=1&&!K.genes.length&&K.rk>=2,cd:2,w:3,go(K){const g=pick(Object.keys(GENE));C('🧬 ยีนสายแรก',`พรานรัตติกาลทุกคนต้องมียีนอสูรอย่างน้อยหนึ่งสาย สมาคมแนะนำอสูรที่ให้สาย “${GENE[g][0]}” — ${GENE[g][1]}`,[
+ O('ออกล่าเอาแก่นเอง',()=>skyMG('tap','🧬 ล่าเอาแก่นยีน','แตะตาอสูรให้ได้มากที่สุด',sc=>{if(rnd()<cl(.45+sc*.5,.2,.95)){K.pend=g;say('🦴 ได้แก่นยีนมาแล้ว ยังอุ่นอยู่ในมือ','good');queue('gene');flush()}else{hp(.25);say('🩸 พลาด อสูรหนีไปพร้อมแผลที่ขาคุณ','bad')}}),'มินิเกม'),
+ O(`ซื้อแก่นจากตลาด (${crT(3000+K.rk*1500)})`,()=>{const c=3000+K.rk*1500;if(S.money<c)return say('💸 เงินไม่พอ','');cr(-c);K.pend=g;queue('gene');flush()})])}});
+def('a_team',{c:K=>K.rk>=3&&!K.f.team,cd:3,w:4,go(K){C('🛡️ ตั้งทีมล่า','ขุนศึกป้อมปราการต้องมีทีมของตัวเอง สมาคมมีทั้งนักล่าอิสระรับจ้าง และเด็กหนุ่มสาวที่เพิ่งได้ใบอนุญาตอยากหาหัวหน้า',[
+ O(`จ้างนักล่ามืออาชีพ (${crT(5000)})`,()=>{if(S.money<5000)return say('💸 เงินไม่พอ — ไม่มีใครยอมตามหัวหน้าที่จ่ายไม่ไหว','');cr(-5000);K.f.team=1;K.team=4;say('🛡️ ทีมสี่คนพร้อมออกล่า มืออาชีพ เงียบ และแพง','good')}),
+ O('รับมือใหม่มาฝึกเอง',()=>{K.f.team=1;K.team=5;S.karma+=4;say('🧑‍🤝‍🧑 ห้าคนที่ยังจับดาบไม่ค่อยเป็น แต่ทุกคนยอมตายแทนคุณ','good')},'ช้าแต่ภักดี'),
+ O(`ไปขอ${K.np.rv}มาร่วม`,()=>{if(rnd()<.5){K.f.team=1;K.team=3;say(`🤝 ${K.np.rv}ตอบตกลงพร้อมลูกทีมของเขา`,'good')}else say(`🙄 ${K.np.rv}ปฏิเสธ`,'')},'50%')])}});
+def('a_kid',{c:K=>K.rk>=3&&age()>=25,cd:8,w:2,go(K){C('🧒 เด็กสลัมขอเป็นศิษย์','เด็กผอมแห้งยืนรอหน้าบ้านคุณมาสามวันแล้ว “ผมยีนระดับ F แต่ผมไม่กลัวตาย สอนผมได้ไหม”',[
+ O('รับเป็นศิษย์',()=>{K.f.disc=(K.f.disc|0)+1;S.karma+=6;say('🧒 คุณเห็นตัวเองเมื่อยี่สิบปีก่อนในแววตาเด็กคนนั้น','good')}),
+ O('ให้เงินแล้วส่งไปโรงฝึก',()=>say(`💳 ${cr(-500)} — ปีต่อมาเด็กคนนั้นสอบผ่านโรงฝึก`,'good')),
+ O('ไล่กลับไป',()=>say('🚪 ประตูปิดลง เด็กยังยืนอยู่ตรงนั้นจนมืด',''))])}});
+def('a_storm',{c:K=>age()>=16,cd:6,w:2,go(K){C('🌪️ พายุฝุ่นแดง','พายุฝุ่นจากเขตอุกกาบาตพัดมาสามวันสามคืน ฝุ่นมีสปอร์ยีนปน ใครสูดเข้าไปมากอาจกลายพันธุ์',[
+ O('ออกไปเก็บพืชที่กลายพันธุ์จากฝุ่น',()=>{cr(1200+K.rk*500);mutRoll(K,.35);say('🌾 พืชเรืองแสงขายได้ราคาดีในเขตชั้นใน','')},'เงิน · เสี่ยงกลายพันธุ์'),
+ O('ช่วยปิดหน้าต่างให้คนแก่ในตึก',()=>{S.karma+=4;say('🪟 คุณวิ่งขึ้นลงบันไดสิบชั้นทั้งคืน','good')}),
+ O('อยู่ในห้อง',()=>{})])}});
+def('a_bud2',{c:K=>K.f.team&&!K.f.budEnd&&K.rk>=3,once:1,w:4,go(K){const b=K.np.bud;C(`💔 ${b}กับความลับ`,`คุณเห็น${b}แอบส่งแผนที่เส้นทางล่าของทีมให้ชายแปลกหน้าที่ลานจอดรถ`,[
+ O('เผชิญหน้าตรงๆ',()=>{if(rnd()<.6){K.f.budEnd='truth';K.trust+=10;say(`🤲 ${b}ร้องไห้ — ครอบครัวเขาติดหนี้ตลาดมืด และนั่นคือข้อแลกเปลี่ยน คุณช่วยใช้หนี้ ทีมยังอยู่ครบ · ${cr(-3000)}`,'epic')}else{K.f.budEnd='gone';K.f.team=0;say(`🚪 ${b}หายไปพร้อมเงินกองกลางของทีม`,'bad')}}),
+ O('ตามชายคนนั้นไปก่อน',()=>{K.f.budEnd='dealer';K.f.dealerFoe=1;say(`🕵️ เขาเป็นคนของพ่อค้ายาเร่งยีน คุณทำลายแผนที่ทุกฉบับก่อนถึงมือเขา ${b}ไม่เคยรู้ว่าคุณรู้`,'good')}),
+ O('แกล้งไม่เห็น',()=>{K.f.budEnd='ignore';K.trust-=20;say('🙈 สองเดือนต่อมา ทีมโดนซุ่มที่เส้นทางเดิม','bad');hp(.2)})])}});
+def('a_love',{c:K=>age()>=20&&age()<=40&&!K.f.love,once:1,w:3,go(K){const n=pick(FN.filter(x=>x!==K.np.bud&&x!==K.np.rv));C('💞 หมอประจำหน่วย',`${n}หมอสนามที่เย็บแผลให้คุณมาแล้วสิบสองครั้ง วันนี้ไม่ยอมให้คุณออกไปล่า “ถ้าครั้งหน้ากลับมาแบบนี้อีก ฉันจะไม่เย็บแล้วนะ”`,[
+ O('ชวนกินข้าวหลังกะดึก',()=>{K.f.love=n;S.spouse=n;S.karma+=3;heal(.3);say(`💞 ร้านบะหมี่หลังโรงพยาบาลนครกลายเป็นที่ประจำของคุณกับ${n}`,'good')}),
+ O('สัญญาว่าจะระวังตัว',()=>{K.f.love='no';say('🩹 คุณผิดสัญญาในเดือนถัดมา','')})])}});
+def('a_beastlife',{c:K=>!!K.beast,cd:3,w:9,go(K){C('🌲 ชีวิตในร่างอสูร',`ร่าง${K.beast.n}ของคุณแข็งแกร่งกว่าร่างมนุษย์มาก แต่ทุกครั้งที่หิว สติคุณจางลง วันนี้คุณยืนอยู่บนเนินมองแสงไฟของ${K.city}`,[
+ O('แอบเข้าไปหาคนรู้จัก',()=>{if(rnd()<.5){say(`🏚️ ${K.np.bud}จำคุณได้จากแววตา เขาซ่อนคุณไว้ในโกดังและหาอาหารให้ทุกคืน`,'epic');K.f.hideCity=1}else{hp(.3);say('🔫 ทหารยามยิงใส่ทันทีที่เห็น','bad')}}),
+ O('ตามหาวิธีกลับเป็นมนุษย์ที่แล็บโลกเก่า',()=>{if(rnd()<.35+(K.f.lab?.2:0)){K.beast=null;S.deathCause=null;say('🧪 เครื่องจักรเก่าในแล็บถอดยีนอสูรออกจากจิตคุณ — คุณลืมตาในร่างมนุษย์ที่อ่อนแอกว่าเดิม แต่เป็นของคุณ','myth',true);sync()}else say('🖥️ เครื่องไม่ตอบสนอง — ยังต้องหาชิ้นส่วนเพิ่ม','')},'ลุ้น'),
+ O('ยอมรับร่างนี้ ครองป่า',()=>{K.f.beastKing=1;K.xp+=need(K);fameA(500);say('🐺 ฝูงอสูรรอบเทือกเขาเริ่มก้มหัวให้คุณ','myth')})])}});
+// เรื่องเล็กเติมฟีด (ไม่มีตัวเลือก)
+const FILL={kid:['🧃 คุณแลกการ์ดนักล่าแรงก์ S กับเพื่อนในห้อง ใบนี้ภาพยับไปครึ่งใบแต่ก็หวง','📺 ทีวีนครฉายภาพนักล่าแบกหัวอสูรเข้าประตูเมือง เด็กทั้งห้องปรบมือ','🌧️ ฝนกรดตก โรงเรียนหยุดสามวัน','🧱 คุณกับเพื่อนเขียนชื่อตัวเองบนกำแพงชั้นใน สักวันจะไปเขียนบนกำแพงชั้นนอก','🍞 ขนมปังวันนี้มีกลิ่นยีสต์ฟ้า แม่บอกว่าดีกว่าไม่มี'],
+ ad:['📻 ข่าวเช้า: นครหินแดงขาดการติดต่อสองวัน','🍜 ร้านบะหมี่ริมกำแพงขึ้นราคาอีกแล้ว','🛠️ คุณลับมีดจนดึก เสียงหินลับมีดคือเพลงกล่อมนอนของนักล่า','🌅 พระอาทิตย์ขึ้นสีแดงเพราะฝุ่นดาวตก คนแก่บอกว่าก่อนมหันตภัยฟ้าเป็นสีฟ้า','🪖 ทหารใหม่ร้อยคนขึ้นกำแพงวันนี้ อายุน้อยกว่าคุณตอนสอบใบอนุญาต','🧒 เด็กๆ ในสลัมเล่นเป็นนักล่า หนึ่งในนั้นเลียนท่าเดินของคุณ']};
+
+function evPick(K){const L=Object.keys(EV).filter(id=>{const e=EV[id];if(!e.w)return false;if(e.once&&K.seen[id])return false;if(e.cd&&K.cd[id]!=null&&S.age-K.cd[id]<e.cd)return false;try{return e.c(K)}catch(x){return false}});if(!L.length)return null;
+ let s=L.reduce((a,id)=>a+EV[id].w,0),r=rnd()*s;for(const id of L){r-=EV[id].w;if(r<=0)return id}return L[0]}
+function run(id){const K=SK(),e=EV[id];if(!K||!e)return;K.seen[id]=1;K.cd[id]=S.age;try{e.go(K)}catch(x){console.error('sky ev',id,x)}}
+function flush(){const K=SK();if(!K||!QU.length)return;const go=()=>{if(!on()){QU.length=0;return}if(choice._cur||modalOpen)return setTimeout(go,700);const id=QU.shift();if(id)run(id);if(QU.length)setTimeout(go,900)};setTimeout(go,300)}
+
+// ---------- ทิศทางรายปี ----------
+const FOK=[['sk_study','📚','เรียนในนคร',K=>K.rk<0],['sk_play','🏃','วิ่งเล่น·ฝึกเอง',K=>K.rk<0],['sk_home','🏠','ช่วยงานบ้าน',K=>K.rk<0],
+ ['sk_body','🏋️','ฝึกกาย',K=>K.rk>=0&&!K.beast],['sk_mind','🧠','ฝึกจิต',K=>K.rk>=0&&!K.beast],['sk_hunt','🗡️','ออกล่า',K=>K.lic>=1&&!K.beast],['sk_wall','🧱','เฝ้ากำแพง',K=>K.rk>=0&&age()>=16&&!K.beast],['sk_work','🏭','ทำงานในนคร',K=>K.rk>=0&&!K.beast],
+ ['sk_feed','🍖','ล่ากิน',K=>!!K.beast],['sk_hide','🌲','ซ่อนตัว',K=>!!K.beast]];
+const fList=K=>FOK.filter(f=>f[3](K));
+function skyYear(){const K=SK(),M=S.mw;try{if(auto)autoFocus()}catch(e){}S.age++;M.y++;K.yr++;const f=S.focus;
+ if(K.rk<0){if(f==='sk_study'){S.int+=R(2,4);feed('📚 เรียนหนังสือในนครทั้งปี · ปัญญา +')}else if(f==='sk_home'){cr(R(30,80));S.karma+=1;feed('🏠 ช่วยพ่อแม่ทำงาน')}else{S.hp=Math.min(S.maxHp,S.hp+5);feed('🏃 วิ่งเล่นตามซอกตึกและฝึกท่าที่เห็นในทีวี')}
+  if(rnd()<.35)feed(pick(FILL.kid))}
+ else if(K.beast){if(f==='sk_hide'){heal(.3);feed('🌲 ซ่อนตัวในถ้ำทั้งปี บาดแผลหายดี')}else{K.cores++;feed(`🍖 ล่ากินในป่า${xp(RATE[Math.max(0,K.rk)]*R(80,120))}`);if(rnd()<.06)queue('mad')}}
+ else{const base=RATE[K.rk]*100/2.3;
+  if(f==='sk_body')feed(`🏋️ ฝึกกายทั้งปี${xp(base*R(18,28)/10)}`);
+  else if(f==='sk_mind'){const g=(K.mindT?R(5,9):R(1,3))*(1+K.rk*.3);feed(`🧠 นั่งสมาธิและฝึกคุมคลื่นยีน${mindA(g)}${xp(base*R(5,9)/10)}`)}
+  else if(f==='sk_hunt'){const c=(500+K.rk*700)*(.6+rnd()*.8);let t=`🗡️ ล่าอสูรนอกกำแพงทั้งปี · ${cr(c)}${xp(base*R(12,20)/10)}`;if(rnd()<.5){K.cores++;t+=' · แก่นอสูร +1'}const d=hp(rnd()*.18);feed(t+` · พลังชีวิต −${d}`)}
+  else if(f==='sk_wall'){feed(`🧱 เฝ้ากำแพงทั้งปี${wallA(R(4,9))}${fameA(60)}${xp(base*.6)}`)}
+  else{feed(`🏭 ทำงานในนคร · ${cr(400+K.rk*350)}${xp(base*.4)}`)}
+  if(rnd()<.25)feed(pick(FILL.ad))}
+ // กำแพงทรุดเองทุกปี · คลื่นอสูร
+ K.wall=cl(K.wall-R(1,3),0,100);K.waveIn--;
+ if(K.waveIn<=0&&age()>=6)queue('wave');
+ // เรื่องที่นัดไว้
+ if(K.later&&K.later.length){const due=K.later.filter(x=>x[0]<=S.age);K.later=K.later.filter(x=>x[0]>S.age);due.forEach(x=>queue(x[1]))}
+ if(K.rk<0&&age()>=12&&!K.seen.k_test)queue('k_test');
+ // เหตุการณ์สุ่ม
+ if(!QU.length&&rnd()<(K.rk<0?.5:.62)){const id=evPick(K);if(id)queue(id)}
+ advance();
+ S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*(has(K,'heart')?.12:.06)*(mutHas(K,'ไข้ยีนเรื้อรัง')?.5:1)));
+ sync();if(S.age>=S.mw.end&&!S.deathCause)S.deathCause=K.beast?pick(['สิ้นอายุขัยในร่างอสูรกลางป่าลึก','หลับไปตลอดกาลในถ้ำที่ฝูงอสูรเฝ้าอยู่']):pick([`จากไปอย่างสงบด้วยวัยชราใน${K.city}`,'หลับไปตลอดกาลบนเก้าอี้ริมกำแพงชั้นนอก ที่ที่เฝ้ามาทั้งชีวิต','จากไปด้วยวัยชรา ท่ามกลางศิษย์และลูกหลานในนครกำแพง']);render();checkDeath();saveGame();flush()}
+
+// ---------- เริ่มชีวิต ----------
+window.skyStart=function(bg){try{closeM()}catch(e){}
+ const BGK=bg||pick(['city','city','slum','hunter','refugee']);
+ try{CFG.xian=0;CFG.mw=0;if((CFG.chm|0)>=2)CFG.chm=0;goBirth();doRoll(true);startLife()}catch(e){console.error(e);return}
+ setTimeout(()=>{try{if(choice._cur)choice._cur=null;if(modalOpen)closeM();
+  S.name=pick(FN)+' '+pick(LN);S.age=0;S.power=5;S.qi=0;S.money=50;S.maxHp=60;S.hp=60;S.xian=false;S.xt=0;S.faction=null;S.ownSect=null;S.custom=true;S.arts=[];S.sys=null;
+  S.mw={y:0,sec:0,fame:0,adapt:100,qi:0,lin:0,linMet:0,native:1,rnd:1,cc:'th',uni:0,qlv:0,past:{n:S.name,realm:'',yr:2054,how:'native',pow0:5},seen:{e1:1,e2:1,e3:1,e4:1,e5:1,e6:1,e7:1,e8:1,e9:1,e10:1,e11:1,e12:1,e13:1,e14:1,e15:1},q:[],fl:{},end:80,clk:0,hum:1,mon0:0,par:null,ast:{h:0,bike:0,car:0,ins:0,mort:0,mortY:0,save:0},lives:[]};
+  S.mw.sky=newK(BGK);S.focus='sk_study';const B=BG[BGK];try{const fd=$('feed');if(fd)fd.innerHTML=''}catch(e){}
+  try{const T=LS.get('murim_mtried',{})||{};if(!T.sky){T.sky=1;LS.set('murim_mtried',T)}}catch(e){}
+  log(`🌠 <b>ทะลุฟ้าดารา</b> — ปี 2054 · ยี่สิบปีหลังมหันตภัยดาวตก ${B[0]} คุณเกิดเป็น<b>${B[1]}</b>ใน${S.mw.sky.city} — ${B[2]}`,'myth',true);
+  addFeed('ev',`🌠 ${esc(S.name)} · ${B[1]} · ${S.mw.sky.city}`,'sum');
+  sync();render();saveGame()}catch(e){console.error('skyStart',e)}},700)};
+
+// ---------- เชื่อมกับเกม (ครอบชั้นนอกสุด) ----------
+{const _py=passYear;passYear=function(){if(on()){try{skyYear()}catch(e){console.error('skyYear',e);S.age++;saveGame()}return}return _py.apply(this,arguments)}}
+{const _fo=focusOK;focusOK=function(k){if(on())return fList(SK()).some(f=>f[0]===k);if(/^sk_/.test(String(k)))return false;return _fo.apply(this,arguments)}}
+{const _af=autoFocus;autoFocus=function(){if(on()){const K=SK(),L=fList(K);if(K.rk<0)S.focus=pick(['sk_study','sk_play','sk_study']);else if(K.beast)S.focus=S.hp<S.maxHp*.4?'sk_hide':'sk_feed';else if(S.hp<S.maxHp*.35)S.focus='sk_work';else if(K.wall<35&&age()>=16)S.focus='sk_wall';else S.focus=pick(L.map(f=>f[0]).concat(K.lic?['sk_hunt','sk_body']:['sk_body']));return}return _af.apply(this,arguments)}}
+{const _lm=lifeMax;lifeMax=function(){if(on())return S.mw.end;return _lm.apply(this,arguments)}}
+// ชิงร่าง: ตายในการต่อสู้ มีโอกาสยึดร่างอสูร (ครั้งเดียวต่อชีวิต)
+{const _cd=checkDeath;checkDeath=function(){try{const K=SK();if(K&&S&&S.alive&&K.dieF&&S.deathCause&&!K.swap&&K.rk>=1){const p=cl(.05+K.mind/400,.05,.4);K.dieF=0;if(rnd()<p){K.swap=1;const bn=pick(['หมาป่าเกราะหนาม','ค้างคาวกรีดเสียง','หมูป่าเขาเหล็ก','งูหินลายดาว']);const dc=S.deathCause;S.deathCause=null;S.hp=Math.round(S.maxHp*.6);
+  setTimeout(()=>{try{C('👻 ชิงร่าง',`ระหว่างที่ร่างคุณสิ้นลม จิตของคุณพุ่งเข้าใส่${bn}ที่อยู่ตรงหน้า — สองจิตต่อสู้กันในความมืด <span class="tag2">(${esc(dc)})</span>`,[
+   O('บุกกลืนจิตมัน',()=>{if(rnd()<.6+K.mind/500){K.beast={n:bn,from:'swap'};S.deathCause=null;say(`👻 <b>คุณลืมตาในร่าง${bn}</b> — ความทรงจำยังอยู่ครบ วิชาจิตยังใช้ได้ แต่มือของคุณกลายเป็นกรงเล็บ`,'myth',true);try{keyAdd('ชิงร่างอสูรหลังตายในศึก')}catch(e){}sync();render()}else{die(['ถูกกลืนจิตระหว่างพยายามชิงร่างอสูร'],'👻 จิตของคุณแตกสลายในความมืด')}},'เสี่ยง'),
+   O('อยู่ร่วมร่างกับมัน',()=>{K.beast={n:bn,from:'share'};S.deathCause=null;say(`🤝 คุณกับ${bn}แบ่งร่างกันอยู่ — บางคืนมันคุม บางคืนคุณคุม`,'epic',true);sync();render()},'ปลอดภัยกว่า'),
+   O('ปล่อยวาง',()=>{S.deathCause=dc;setTimeout(()=>{try{_cd()}catch(e){}},200)},'ตายตามปกติ')])}catch(e){console.error(e)}},300);return false}}}catch(e){console.error(e)}return _cd.apply(this,arguments)}}
+
+// ---------- หน้าจอ ----------
+{const _rn=render;render=function(){const r=_rn.apply(this,arguments);try{document.body.classList.toggle('skyW',on());if(!on()){const gb=$('goalBox');if(gb&&gb.dataset.skyHid){gb.style.removeProperty('display');delete gb.dataset.skyHid}return r}const K=SK(),fe=$('focus');
+ if(fe){fe.innerHTML=fList(K).map(f=>`<button class="fc ${S.focus===f[0]?'on':''}" onclick="setFocus('${f[0]}')">${f[1]} ${f[2]}</button>`).join('');
+  if(!fList(K).some(f=>f[0]===S.focus)){S.focus=fList(K)[0][0]}
+  let h=$('mwHud');if(!h){h=document.createElement('div');h.id='mwHud';fe.parentNode.insertBefore(h,fe)}h.classList.add('sky');h.classList.remove('mwMin');{const top=document.querySelector('#game .box.top');if(top&&h.previousElementSibling!==top)top.insertAdjacentElement('afterend',h)}
+  {const gm=$('gMini');if(gm)gm.innerHTML=`💳 ${fmt(S.money||0)} เครดิต · 🪪 ${['ยังไม่มีใบอนุญาต','ใบอนุญาต E'][Math.min(1,K.lic)]} · 🧱 ${K.wall}/100`}
+  const rk=K.rk<0?'ยังไม่ปลุกยีน (สอบวัดยีนตอนอายุ 12)':`ขั้น ${K.rk+1} · ${RK[K.rk].n} <span>${subN(K.sub)}</span>`,pr=K.rk<0?0:cl(K.xp/need(K)*100,0,100);
+  const lic=['ยังไม่มี','E','D','C','B','A','S'][K.lic]||'E';
+  h.innerHTML=`<div class="skT"><span>ทะลุฟ้าดารา · ${ERA}</span><span>${esc(K.city)} · ปี ${K.yr}</span></div>
+  <div class="skR">${rk}${K.beast?` <em>👻 ร่าง${esc(K.beast.n)}</em>`:''}</div><div class="skBar"><i style="width:${pr}%"></i></div>
+  <div class="skG"><div><small>กาย</small><b>${fmt(S.power)}</b></div><div><small>จิต${K.mindT?' ✦':''}</small><b class="c">${fmt(Math.round(K.mind))}</b></div><div><small>ยีน ${K.genes.length}/3${K.gp?` · แต้ม ${K.gp}`:''}</small><b class="g">${K.genes.length?K.genes.map(g=>GENE[g][0]).join('·'):'—'}</b></div></div>
+  <div class="skG s"><div><small>เครดิต</small><b>${fmt(S.money||0)}</b></div><div><small>ใบอนุญาต</small><b>${lic}</b></div><div><small>กำแพง</small><b class="${K.wall<35?'w':''}">${K.wall}/100</b></div><div><small>แก่น</small><b>${K.cores}</b></div></div>
+  ${K.waveIn<=3&&age()>=6?`<div class="skW">⚠ ระบบนคร: คลื่นอสูรอีก ${Math.max(0,K.waveIn)} ปี</div>`:''}${K.rk>=0&&K.sub>=10&&K.rk<RK.length-1&&!RK[K.rk].g(K)?`<div class="skH">🔒 ข้ามขั้นต้อง: ${RK[K.rk].gate}</div>`:''}${K.mut.length?`<div class="skH">🧪 ${K.mut.map(m=>m[0]).join(' · ')}</div>`:''}`}
+ const gb=$('goalBox');if(gb){gb.style.setProperty('display','none','important');gb.dataset.skyHid=1}const gr=$('gRealm');if(gr)gr.textContent=K.rk<0?'เด็กหลังมหันตภัย':`${RK[K.rk].n} ${subN(K.sub)}`}catch(e){console.error('sky render',e)}return r}}
+// แต้มยีน: กดใช้จากหน้าจอ
+window.skyGP=function(){const K=SK();if(!K||!K.gp)return;K.gp--;K.xp+=need(K)*.5;sync();advance();render();toast('🧬 ใช้แต้มยีน · เซลล์ +50% ของชั้นนี้')};
+
+// ---------- ฉาก pixel ----------
+const H=()=>(window._sc84&&window._sc84.h)||{};
+function scWall(me,K,night){const {grad,glow}=H();if(!grad)return false;
+ night?grad('#060a14','#1a2440',46):grad('#2a1a12','#5a2a14',46);
+ for(let i=0;i<14;i++)Q(i*36,92-((i*37)%23),30,60,night?'#0e1420':'#3a2a22');
+ Q(0,104,480,40,'#2b2f33');Q(0,104,480,4,'#4a5157');for(let i=0;i<8;i++)Q(20+i*60,92,22,14,'#3a3f44');
+ const w=K.wall;if(w<50)for(let i=0;i<Math.round((50-w)/10);i++)Q(60+i*90,110,14,30,'#15100c');
+ Q(156,86,10,6,(frame%40)<20?'#ff8a3d':'#a04a1a');glow&&glow(161,89,26,'#ff8a3d',.25);
+ Q(0,144,480,24,'#15100c');
+ for(let i=0;i<3;i++){const x=(i*170+frame*.4)%520-20;Q(x,150,22,10,'#3a1a10');Q(x+4,152,3,3,'#ff4d2e');Q(x+12,152,3,3,'#ff4d2e')}
+ person(70,47,Object.assign({},me,{aura:K.rk>=3?'#5cd2ff':null}),'stand');
+ if(K.pup&&K.pup.st==='bond'){Q(120,138,26,14,'#2a2a2a');Q(140,132,10,10,'#2a2a2a');Q(144,135,3,2,'#ffc83d')}
+ if(K.waveIn<=1)A2(.12+.06*Math.sin(frame*.3),()=>Q(0,0,480,168,'#ff2a00'));return true}
+function scWild(me,K){const {grad,glow}=H();if(!grad)return false;grad('#0e1a10','#2a3a1a',46);
+ for(let i=0;i<12;i++){const x=i*44,h=60+((i*53)%40);Q(x,140-h,16,h,'#16241a');Q(x-12,140-h,40,26,'#1e3a22')}
+ for(let i=0;i<10;i++){const k=(frame*.4+i*13)%80;A2(.6-k/140,()=>Q(30+i*44,120-k,3,3,'#7de38a'))}
+ Q(0,140,480,28,'#101a0e');person(80,47,me,'stand');
+ for(let i=0;i<2;i++){const x=300+i*80,b=Math.round(Math.sin(frame*.1+i)*2);Q(x,120+b,34,20,'#2a1a10');Q(x+26,112+b,14,12,'#2a1a10');Q(x+30,115+b,3,2,'#ff3a2a')}return true}
+function scBeast(me,K){const {grad}=H();if(!grad)return false;grad('#140a1a','#3a1a2a',46);Q(0,140,480,28,'#120810');
+ const b=Math.round(Math.sin(frame*.08)*2);Q(180,96+b,90,40,'#2a1a20');Q(250,80+b,40,30,'#2a1a20');Q(262,88+b,6,4,'#ffc83d');Q(276,88+b,6,4,'#ffc83d');for(let i=0;i<5;i++)Q(190+i*16,136,8,8,'#2a1a20');
+ Q(380,60,60,4,'#ffd84a');for(let i=0;i<8;i++)Q(370+i*10,64,4,40,'#3a3f44');return true}
+const A2=(a,f)=>{try{const h=H();if(h.A)h.A(a,f);else f()}catch(e){}};
+let OVK=null;
+{const _ds=drawScene;drawScene=function(ctx,type){try{if(on()&&type!=='death'){g=ctx;PS=ctx.canvas.width/SW;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;const me=meLook();curMe=me;const K=SK();
+  const c=(choice._cur?String(choice._cur.title||'')+String(choice._cur.text||''):'');let k='wall';
+  if(K.beast)k='beast';else if(/ล่า|ป่า|รัง|ภูผา|นอกกำแพง|สนามสอบ/.test(c))k='wild';else if(/กลางคืน|มืด|ไซเรน/.test(c))k='night';else if(S.focus==='sk_hunt'&&!c)k='wild';
+  const ok=k==='wild'?scWild(me,K):k==='beast'?scBeast(me,K):scWall(me,K,k==='night');if(ok){window._scK=['sky',k];return}}}catch(e){console.error('sky scene',e)}return _ds.apply(this,arguments)}}
+{const _sc=sceneCap;sceneCap=function(t){try{const k=window._scK;if(on()&&k&&k[0]==='sky'){const K=SK();return k[1]==='wild'?'🌲 นอกกำแพง · เขตล่าอสูร':k[1]==='beast'?`👻 ป่าลึก · ในร่าง${K.beast.n}`:k[1]==='night'?`🌑 ${K.city} · กลางคืน`:`🧱 ${K.city} · กำแพงชั้นนอก ${K.wall}/100`}}catch(e){}return _sc.apply(this,arguments)}}
+
+// ---------- การ์ดโลก: เริ่มเล่น ----------
+// ---------- สไตล์ ----------
+{const L=document.createElement('link');L.rel='stylesheet';L.href='https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&display=swap';document.head.appendChild(L);
+ const st=document.createElement('style');st.textContent=`
+#mwHud.sky{background:linear-gradient(180deg,#141d26,#0e151c);border:1px solid #263b4c;border-bottom:2px solid #ff8a3d;border-radius:4px;padding:10px 12px;margin:6px 0;color:#e6f1f8;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+#mwHud.sky .skT{display:flex;justify-content:space-between;font:700 11px 'Chakra Petch',sans-serif;letter-spacing:1.5px;color:#ff8a3d}#mwHud.sky .skT span+span{color:#9db3c4;font-weight:400;letter-spacing:0}
+#mwHud.sky .skR{font:700 15px 'Chakra Petch',sans-serif;color:#ff8a3d;margin:6px 0 4px}#mwHud.sky .skR span{color:#9db3c4;font-weight:400;font-size:13px}#mwHud.sky .skR em{font-style:normal;color:#d59bff;font-size:12px}
+#mwHud.sky .skBar{height:6px;background:#1d2b37}#mwHud.sky .skBar i{display:block;height:6px;background:#ff8a3d}
+#mwHud.sky .skG{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px;font-family:'Chakra Petch',sans-serif}#mwHud.sky .skG.s{grid-template-columns:repeat(4,minmax(0,1fr))}
+#mwHud.sky .skG div{background:#121c25;border:1px solid #263b4c;padding:4px 7px;min-width:0}#mwHud.sky .skG small{display:block;font-size:10px;color:#9db3c4}#mwHud.sky .skG b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+#mwHud.sky .skG b.c{color:#5cd2ff}#mwHud.sky .skG b.g{color:#7de38a;font-size:12px}#mwHud.sky .skG b.w{color:#ff8a3d}
+#mwHud.sky .skW{margin-top:8px;background:#2a1608;border:1px solid #ff8a3d;color:#ffc9a3;padding:5px 8px;font-size:12px}#mwHud.sky .skH{margin-top:6px;font-size:12px;color:#9db3c4}
+body.skyW #goalBox{display:none!important}
+body.skyW #modal h3{font-family:'Chakra Petch',inherit}
+body.skyW #modal[data-k="choice"] h3{color:#ffb27a}
+.skMg{text-align:center}.skMgH{font:700 20px 'Chakra Petch',sans-serif;color:#ff8a3d;margin-bottom:4px}
+.skScan{position:relative;height:40px;background:#0e1a24;border:2px solid #2a4a60;margin:14px 0 8px;overflow:hidden}.skZ{position:absolute;top:0;bottom:0;background:#5cd2ff55;border-left:2px solid #5cd2ff;border-right:2px solid #5cd2ff}.skN{position:absolute;top:-2px;bottom:-2px;width:4px;margin-left:-2px;background:#ff8a3d;box-shadow:0 0 8px #ff8a3d}
+.skScR{font:12px 'Chakra Petch',sans-serif;color:#9db3c4;margin-bottom:8px}.skBig{width:100%;height:56px;font-size:18px}
+.skTapT{font:13px 'Chakra Petch',sans-serif;margin:8px 0}.skGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;max-width:300px;margin:0 auto}
+.skCell{aspect-ratio:1;background:#101a14;border:2px solid #2e5a30;border-radius:4px;cursor:pointer;position:relative}.skCell.on{background:#2a0e0a;border-color:#ff4d2e}.skCell.on::before,.skCell.on::after{content:'';position:absolute;top:42%;width:14%;height:10%;background:#ff4d2e;box-shadow:0 0 8px #ff4d2e}.skCell.on::before{left:28%}.skCell.on::after{right:28%}
+.skSeq{min-height:70px;display:flex;align-items:center;justify-content:center;gap:10px;font:700 18px 'Chakra Petch',sans-serif;background:#0e1a24;border:1px solid #2a4a60;margin:12px 0}.skSq1{font-size:40px;color:#5cd2ff}.skSeq span{font-size:12px;color:#9db3c4}
+.skSeqB{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.skSb{height:56px;font-size:24px;background:#142230;color:#e6f1f8;border:1px solid #2a4a60;border-radius:4px}
+.skBt{text-align:center;padding:10px 0;background:radial-gradient(circle at 50% 30%,#12324a,transparent 70%)}.skBtS{font:12px 'Chakra Petch',sans-serif;letter-spacing:3px;color:#5cd2ff}
+.skBtR{width:150px;height:150px;margin:14px auto;border:2px solid #5cd2ff;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Chakra Petch',sans-serif;box-shadow:inset 0 0 0 10px #0e1a24,inset 0 0 0 14px #5cd2ff55}.skBtR b{font-size:46px;line-height:1}.skBtR span{font-size:11px;color:#9db3c4}
+.skBtN{font:700 26px 'Chakra Petch',sans-serif;color:#ff8a3d}.skBtE{font:12px 'Chakra Petch',sans-serif;color:#9db3c4}`;document.head.appendChild(st)}
+
+// ---------- คู่มือ ----------
+try{SYS_GUIDE.push({s:'base',nw:1,ic:'🌠',t:'โลกใหม่: ทะลุฟ้าดารา',d:'โลกพังหลังมหันตภัยดาวตก มนุษย์อยู่ในนครกำแพง · <b>วัยเด็ก</b> สอบวัดยีนตอนอายุ 12 (มินิเกมสแกน) ได้ระดับยีน F–S และอาจมี<b>พลังจิต</b> · พลัง 3 เส้น <b>กาย จิต ยีน</b> · ไต่ขั้น ผู้ตื่นยีน → ศิษย์นักล่า → นักรบกำแพง → พรานรัตติกาล → ขุนศึกป้อมปราการ → ผู้ทลายภูผา (ขั้นละ 9 ชั้น + ขั้นสมบูรณ์ ชั้น 9 มีคอขวด) · ข้ามขั้นต้องทำเงื่อนไข เช่น สอบใบอนุญาตนักล่า ล่ากลางคืน ล้มอสูรภูผา · กลืนแก่นยีนอสูรได้สูงสุด 3 สาย เสี่ยง<b>กลายพันธุ์</b> · <b>คลื่นอสูร</b>ทุก 10–18 ปี กำแพงพังได้จริง · ตายในศึกมีโอกาส<b>ชิงร่างอสูร</b> · มินิเกม สแกนยีน / ล่า / ฝ่าคอขวด',
+ te:'New world: Sky-Piercing Stars',de:'Post-meteor wall cities. Gene test at 12, three power lines (body, mind, gene), six ranks of the Iron Wall era with sub-stages and bottlenecks, gene absorption and mutation, monster waves, body-snatching on death, and minigames.'})}catch(e){}
+{const _gbp=goBirthPick;goBirthPick=function(){if(window._skySel){window._skySel=0;return skyStart()}return _gbp.apply(this,arguments)}}
+window._sky={SK,RK,EV,queue,skyYear,newK};window._skyQ=()=>QU.slice();
+})()}catch(e){console.error('sky block',e)}
