@@ -18789,7 +18789,7 @@ dusLoop=function(now){const cv=$('duStage');if(!cv||!cv.isConnected){DUS.run=0;D
  if(!DUS.bgL){try{const d=dusBg().getContext('2d').getImageData(0,0,PXW,PXH).data;let su=0;for(let i=0;i<d.length;i+=16)su+=Math.max(d[i],d[i+1],d[i+2]);DUS.bgL=su/(d.length/16)}catch(e){DUS.bgL=120}}
  if(Q&&k<2.2){const strong=sec||(Q.emv&&Q.e==='heavy'),dq=Math.min(1,k/.3)*(k<1.8?1:Math.max(0,1-(k-1.8)/.4));c.globalAlpha=(strong?.62:(DUS.bgL>140?.38:.25))*dq;c.fillStyle='#05030f';c.fillRect(0,0,PXW,PXH);c.globalAlpha=1;FX2.k=(DUS.bgL>140?.45:.7)*(strong?1.25:1)}else FX2.k=DUS.bgL>140?.45:.7;
  const meLk=(()=>{try{return meLook()}catch(e){return{}}})(),enLk=dusFoeLook(),myC=(Q&&Q.mv?Q.mv.col:dusMy().col),enC=(Q&&Q.emv?Q.emv.col:dusEn().col);
- let mx=cx,ex=tx;if(Q){if(Q.myAtk&&!Q.mv&&k<.9)mx=cx+Math.sin(Math.min(1,k/.5)*3.14)*10;if(Q.mv&&Q.mv.pt==='phantom'&&k>s0&&k<s0+dur)mx=cx+(tx-cx-16)*Math.sin((k-s0)/dur*3.14);if(Q.dodge&&k<.8)mx=cx-Math.sin(k/.8*3.14)*12;if(Q.enAtk&&!Q.emv){const st=Q.myAtk?(sec?1.6:.6):.1;if(k>st&&k<st+.8)ex=tx-Math.sin(Math.min(1,(k-st)/.5)*3.14)*10}}
+ let mx=cx,ex=tx;if(Q){if(Q.myAtk&&!Q.mv&&k<.9)mx=cx+Math.sin(Math.min(1,k/.5)*3.14)*10;if(Q.mv&&Q.mv.pt==='phantom'&&k>s0&&k<s0+dur)mx=cx+(tx-cx-16)*Math.sin((k-s0)/dur*3.14);if(Q.dodge&&k<.8)mx=cx-Math.sin(k/.8*3.14)*12;if(Q.enAtk&&!Q.emv){const st=Q.myAtk?(sec?1.6:.6):.1;if(k>st&&k<st+.8)ex=tx-Math.sin(Math.min(1,(k-st)/.5)*3.14)*10}}if(window.PFXKB){mx-=PFXKB('m');ex+=PFXKB('e')}
  // ท่าทาง
  const ens=Q&&Q.enAtk?(Q.myAtk?hitAt+.25:.1):99,eDur=Q&&Q.emv?(Q.e==='heavy'?.95:.7):.55,eHit=ens+eDur*.92;
  const myPz=Q&&Q.myAtk&&k<hitAt+1?heroPoseAt(k,0,s0,hitAt,hitAt+.6,Q.myPose||'beam'):heroPoseAt(-1,0,1,2,3,'beam');
@@ -29801,7 +29801,7 @@ function scarDraw(ctx,type){if(!S||!Array.isArray(S.scar)||!S.scar.length)return
  try{if(isS){ctx.save();ctx.setTransform(PS,0,0,PS,0,0);scarDraw(ctx,type);ctx.restore()}}catch(e){}
  if(act){try{ctx.save();ctx.setTransform(PS,0,0,PS,0,0);VXC=act.C;
    if(act.type==='fight'){if(!(window.PFXH&&PFXH.scene(ctx,act)))VFX.draw(ctx,act.st,act.T,act.p,performance.now()/1000,act.mx||62,102,VQ<2)}
-   else vxBreak(ctx,act);
+   else{if(!(window.PFXH&&PFXH.aura&&PFXH.aura(ctx,act)))vxBreak(ctx,act)}
    ctx.restore();VXC=null}catch(e){try{ctx.restore()}catch(e2){}}
   const dt=performance.now()-t0;vxN++;vxSlow=vxSlow*.9+dt*.1;if(vxN>20&&vxSlow>26&&VQ===2){VQ=1;if(!vxWarned){vxWarned=1;try{toast('⚔️ เครื่องช้า — สลับเอฟเฟกต์ท่าเป็นโหมดประหยัดชั่วคราว')}catch(e){}}}}
  return r}}
@@ -51137,7 +51137,7 @@ window._b92={C,load,MSG};
 //   pixelfx: MIT, Copyright (c) 2026 Patch · Copyright (c) 2026 Hugo Duprez — https://github.com/patch-gg/pixelfx
 // ============================================================
 try{(()=>{
-let st=0;const PV='1';
+let st=0;const PV='2';
 const want=()=>{try{return LS.get('murim_pfx',1)!==0}catch(e){return true}};
 const vq=()=>{try{return typeof vfxQ==='function'?vfxQ():1}catch(e){return 1}};
 function load(){if(st||!want())return;st=1;const s=document.createElement('script');s.src='/pfx.js?v='+PV;s.async=true;s.onload=()=>{st=window.PFX?2:0;sync()};s.onerror=()=>{st=0};document.head.appendChild(s)}
@@ -51150,7 +51150,7 @@ const tierOf=sc=>{sc=+sc||0;return sc<=1?0:sc<=3?1:sc<=5?2:sc<=7?3:sc<=9?4:5};
 const kOf=s=>{try{return s&&s.k&&s.k.length?s.k[s.k.length>1?1:0]:null}catch(e){return null}};
 function hostOf(c){try{const cv=c&&c.canvas;if(!cv)return[null,0];if(typeof DUS!=='undefined'&&cv===DUS.fx)return[$('duStage'),1];return[cv.isConnected?cv:null,0]}catch(e){return[null,0]}}
 function go(c,kind,a,col,sc,cx,cy,tx,ty){const[h,mir]=hostOf(c);if(!h)return false;const z=h.width/(PXW*3);const X=x=>mir?PXW-x:x;
- return PFX.atk(h,mir?'e':'m',{a,kind:kind||'beam',tier:tierOf(sc),col,x0:X(cx),y0:cy,x1:X(tx),y1:ty,z})}
+ const side=mir?'m':'e',tr=tierOf(sc);return PFX.atk(h,mir?'e':'m',{a,kind:kind||'beam',tier:tr,col,x0:X(cx),y0:cy,x1:X(tx),y1:ty,z,onHit:()=>{try{if(h.id==='duStage'&&window.PFXKBset)PFXKBset(side,tr)}catch(e){}}})}
 // ---------- 1) ท่าโจมตี (ปลดปล่อย · แชร์ในแชท · เวทีดวล) ----------
 {const _px=pxAtkX;pxAtkX=function(c,o,a,col,sc,sp,cx,cy,tx,ty){try{if(on()&&go(c,kOf(o&&o.spec)||(o&&o.fxk),a,col,sc,cx,cy,tx,ty))return}catch(e){console.error('pfx atk',e)}return _px.apply(this,arguments)}}
 {const _mv=mvDraw;mvDraw=function(c,m,a,sc,sp,cx,cy,tx,ty){try{if(on()&&m&&go(c,m.el,a,m.col,sc,cx,cy,tx,ty))return}catch(e){console.error('pfx mv',e)}return _mv.apply(this,arguments)}}
@@ -51165,13 +51165,54 @@ function go(c,kind,a,col,sc,cx,cy,tx,ty){const[h,mir]=hostOf(c);if(!h)return fal
 // ---------- 4) ท่าบนฉากหลักตอนสู้ (เดิมวาดด้วย VFX) ----------
 const STK={sword:'sword',palm:'palm',fist:'fist',thunder:'thunder',fire:'fire',ice:'ice',demon:'dark',buddha:'light'};
 const SC=new WeakMap();
-window.PFXH={scene(ctx,act){try{if(!on())return false;const h=ctx&&ctx.canvas;if(!h)return false;if(act.p<.18)return true;const a=Math.max(0,Math.min(1,(act.p-.18)/.55));
+window.PFXH=Object.assign(window.PFXH||{},{scene(ctx,act){try{if(!on())return false;const h=ctx&&ctx.canvas;if(!h)return false;if(act.p<.18)return true;const a=Math.max(0,Math.min(1,(act.p-.18)/.55));
  const z=(typeof PS!=='undefined'&&PS>0?PS:3)/3,x0=(typeof meX!=='undefined'?meX:62)+3,y0=(typeof meY!=='undefined'?meY:47),x1=x0+40,kd=STK[act.st]||'beam';
  if(!SC.get(act)){SC.set(act,1);try{PFX.charge(h,{x:x0,y:y0,col:act.C,kind:kd,d:.4,z})}catch(e){}}
- return PFX.atk(h,'s',{a,kind:kd,tier:Math.max(0,Math.min(5,(act.T|0)+((act.T|0)>=3?1:0))),col:act.C,x0,y0,x1,y1:y0,z})}catch(e){console.error('pfx scene',e);return false}}};
+ return PFX.atk(h,'s',{a,kind:kd,tier:Math.max(0,Math.min(5,(act.T|0)+((act.T|0)>=3?1:0))),col:act.C,x0,y0,x1,y1:y0,z})}catch(e){console.error('pfx scene',e);return false}}});
 // ---------- ตั้งค่า + เครดิต ----------
 {const _sv=window.setVfx;if(typeof _sv==='function')window.setVfx=function(){const r=_sv.apply(this,arguments);sync();return r}}
 window.pfxTog=function(){LS.set('murim_pfx',want()?0:1);sync();if(want())load();toast(want()?'⚔️ เปิดเอฟเฟกต์ต่อสู้ pixelfx':'⚔️ ปิดเอฟเฟกต์ pixelfx — กลับไปใช้แบบเดิม');try{closeM();openMenu()}catch(e){}};
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='menu'&&!m.querySelector('.pfxOpt')){const hs=[...m.querySelectorAll('.mch15')].find(x=>/ตั้งค่า/.test(x.textContent)),g=(hs&&hs.nextElementSibling&&hs.nextElementSibling.classList.contains('mgrid'))?hs.nextElementSibling:m.querySelector('.mgrid');if(g)g.insertAdjacentHTML('beforeend',`<button class="opt pfxOpt" onclick="pfxTog()">⚔️ เอฟเฟกต์ต่อสู้ pixelfx<small>${want()?'เปิดอยู่ · แตะเพื่อปิด (ประหยัดเครื่อง)':'ปิดอยู่ · แตะเพื่อเปิด'}</small></button>`)}}catch(e){}return r}}
 try{SYS_GUIDE.push({s:'world',nw:1,ic:'⚔️',t:'เอฟเฟกต์ต่อสู้ pixelfx',d:'ท่าในฉากปลดปล่อยพลัง เวทีดวล ภาพที่แชร์ในแชท และฉากหลักตอนสู้ ใช้เอฟเฟกต์พิกเซลชุดใหม่ สีตามธาตุของวิชา ยิ่งพลังสูงยิ่งโหด (6 ขั้น) · ปิดได้ที่ ☰ → ⚔️ เอฟเฟกต์ต่อสู้ pixelfx · สร้างจาก pixelfx (MIT) โดย Patch และ Hugo Duprez'})}catch(e){}
 })()}catch(e){console.error('block93',e)}
+
+
+// ============================================================
+// BLOCK 94: ⚔️ pixelfx รอบ 2 — ตัวที่โดนตีกระเด็นถอย (เวทีดวล) · ทะลวงขั้น/ทัณฑ์สวรรค์บนฉากหลัก · ฉากทำลายล้าง 5 ระดับ
+// ============================================================
+try{(()=>{
+const on=()=>!!(window.PFXON&&PFXON()&&window.PFX);
+// ---------- 1) กระเด็นถอยเมื่อโดน ----------
+const KB={m:null,e:null};
+window.PFXKB=side=>{const k=KB[side];if(!k)return 0;const a=(performance.now()-k.t)/420;if(a>=1){KB[side]=null;return 0}return k.amp*Math.sin(Math.min(1,a*2.2)*1.5708)*(1-a)};
+window.PFXKBset=(side,tier)=>{KB[side]={t:performance.now(),amp:2+tier*1.6}};
+// ---------- 2) ทะลวงขั้น · ทัณฑ์สวรรค์ (ฉากหลัก type 'aura') ----------
+const AU=new WeakMap();
+const elKind=c=>{try{const h=String(c&&c[1]||'');const n=parseInt(h.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return r>200&&g<140?'fire':b>200&&r<170?'ice':r>200&&g>200&&b<140?'light':r>150&&b>150&&g<120?'dark':'arcane'}catch(e){return'arcane'}};
+window.PFXH=window.PFXH||{};
+window.PFXH.aura=function(ctx,act){try{if(!on())return false;const h=ctx&&ctx.canvas;if(!h)return false;if(AU.get(act))return true;AU.set(act,1);
+ const k=(typeof PS!=='undefined'&&PS>0?PS:3),x=((typeof meX!=='undefined'?meX:70)+6)*k,y=(typeof meY!=='undefined'?meY:47)*k,C=act.C||['#ffffff','#ffd84a','#c89a20'],pal=PFX.ramp([C[1],C[0]]),T=act.T|0,D=Math.max(.9,(act.dur||1500)/1000);
+ PFX.fxAt(h,'spellCharge',{palette:pal,x,y,seed:4},{life:D*.45});
+ PFX.fxAt(h,'magicCircle',{palette:pal,x,y,seed:6},{delay:.05});
+ if(T>=2)PFX.fxAt(h,'holyPillar',{palette:pal,x,y,seed:8},{delay:D*.28});
+ if(T>=3){const V=PFX.ramp(['#c8b0ff','#ffffff']);[.36,.52,.68].slice(0,T-1).forEach((d,i)=>{PFX.fxAt(h,'lightningStrike',{palette:V,x:x+(i%2?-8:8)*(i),y,seed:20+i},{delay:D*d});setTimeout(()=>{try{PFX.fxShake(h,3+T,.35);PFX.fxDim(h,.35,.6)}catch(e){}},D*d*1000+150)})}
+ if(T>=4)PFX.fxAt(h,'thunderclap',{palette:pal,x,y,seed:9},{delay:D*.8});
+ return true}catch(e){console.error('pfx aura',e);return false}};
+// ---------- 3) ฉากทำลายล้าง (dsPlay) ----------
+const VST={sword:['#e8f4ff','#8ac8ff'],palm:['#fff4c8','#ffd060'],fist:['#ffe8d8','#ff9a50'],thunder:['#ffffff','#c8b0ff'],fire:['#fff0a0','#ff8a30'],ice:['#ffffff','#a8ecff'],demon:['#ff9aa8','#d0203a'],buddha:['#fffbe0','#ffd84a']};
+// [เวลา(วิ), ชื่อเอฟเฟกต์, x, y, ตัวเลือกเพิ่ม, {life,extra}] · พิกัดในแคนวาส 384×216
+const HERO={1:[48,185],2:[142,185],3:[129,173],4:[129,173],5:[152,173]},REL={1:2.45,2:2.7,3:3.0,4:3.6,5:3.6};
+const DS={
+ 1:[[2.85,'critHit',292,120],[2.9,'doubleSlash',292,128],[3.0,'dirtExplosion',300,190,{}],[3.05,'groundSlam',310,190,{reach:90,stone:'#6a6a7a'}],['S',3.0,6,.8]],
+ 2:[[4.4,'critHit',205,96],['C',4.45],[4.7,'dirtExplosion',228,214,{}],[4.8,'groundSlam',236,214,{reach:120,stone:'#5a5068'}],['S',4.5,9,1.2]],
+ 3:[[3.8,'smallExplosion',330,212,{size:1.1}],[4.1,'smallExplosion',250,212,{size:1}],[4.4,'smallExplosion',170,212,{size:1.2}],[4.7,'smallExplosion',90,212,{size:.9}],[5.0,'flamePillar',210,214,{}],[5.3,'flamePillar',300,214,{}],[6.7,'bigExplosion',294,214,{}],['S',6.7,12,1.6]],
+ 4:[[3.75,'skyCleave',0,0,{x0:150,y0:150,x1:384,y1:40,w:9}],['S',3.8,10,1]],
+ 5:[[7.6,'plasmaExplosion',192,120,{}],[8.15,'implosion',192,120,{}],['S',8.2,10,1.2]]};
+{const _dp=window.dsPlay;if(typeof _dp==='function')window.dsPlay=function(k,o){const r=_dp.apply(this,arguments);try{if(!on())return r;const ov=$('dsOv'),h=ov&&ov.querySelector('canvas');if(!h)return r;o=o||{};
+ let st='sword';try{st=o.st||(window._vxTest&&_vxTest.vxStyle(o.art||''))||'sword'}catch(e){}const C=VST[st]||VST.sword,pal=PFX.ramp([C[1],C[0]]),H0=HERO[k]||[150,175],at=(t,f)=>setTimeout(()=>{try{if(h.isConnected)f()}catch(e){}},t*1000);
+ // เปิดฉากเหมือนกันทุกระดับ: ชาร์จพลังตอนยกกระบี่ แล้วฟัน
+ at(1.15,()=>PFX.fxAt(h,st==='thunder'?'chargeUp':'spellCharge',{palette:pal,x:H0[0],y:H0[1],seed:4},{life:Math.max(.6,REL[k]-1.25)}));
+ at(REL[k]-.05,()=>{PFX.fxAt(h,'swordSlash',{palette:pal,x:H0[0]+8,y:H0[1],seed:3});PFX.fxShake(h,2,.25)});
+ for(const e of DS[k]||[]){if(e[0]==='S'){at(e[1],()=>{PFX.fxShake(h,e[2],e[3]);PFX.fxDim(h,.3,.7)});continue}if(e[0]==='C'){at(e[1],()=>PFX.fxAt(h,'skyCleave',{palette:pal,x:0,y:0,x0:176,y0:0,x1:252,y1:216,w:8,seed:2}));continue}
+  const [t,nm,x,y,op,opt]=e;const nat=/dirtExplosion|groundSlam|smallExplosion|bigExplosion|flamePillar/.test(nm);at(t,()=>PFX.fxAt(h,nm,Object.assign(nat?{}:{palette:pal},{x,y,seed:5},op||{}),opt||{}))}}catch(e){console.error('pfx ds',e)}return r}}
+})()}catch(e){console.error('block94',e)}
