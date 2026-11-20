@@ -47975,3 +47975,34 @@ window._sc84={SC,pickModern,CAP,soul,modern,pText,setOv:(k,v,ms)=>{OV={k,v:v||{}
 // เหตุการณ์ในเรื่อง → ฉากค้างไว้สักพักหลังเลือก
 {const _ch=choice;choice=function(title,text){try{if(S&&S.mw){const c=String(title||'')+' '+String(text||'');for(const k of KW)if(k[0].test(c)){OV={k:k[1],v:k[2],t:Date.now()+9000};break}}}catch(e){}return _ch.apply(this,arguments)}}
 })()}catch(e){console.error("block85",e)}
+
+// ===================== BLOCK 85 📘 คู่มือหลอมวิชา — อธิบาย 2 แบบ (หลอมรวม / หลอมเข้าวิชาหลัก) + พรีวิวผลก่อนกด =====================
+try{(()=>{
+const fmPrev=(sel)=>{const main=sel[0],food=sel.slice(1);if(!main||!food.length)return null;
+ const xp=food.reduce((s,a)=>s+(a.b||0)*(typeof artM==='function'?artM(a):1)*(a.sect?.6:.4),0);
+ let lv=main.lv|0,st=main.star|0,f=(main.fxp||0)+Math.round(xp);const need=()=>Math.round((main.b||20)*(.6+.3*(lv+st)));const ups=[];
+ while(f>=need()){f-=need();if(lv<3){lv++;ups.push(AMN[lv])}else if(st<5){st++;ups.push('★'+st)}else{f=0;break}}
+ return {xp:Math.round(xp),ups,f,nd:need(),max:lv>=3&&st>=5}};
+{const _of=openFuse;openFuse=function(){const r=_of.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='fuse')return r;
+ const cap=typeof artCap==='function'?artCap():0,n=(S.arts||[]).filter(Boolean).length;
+ if(!m.querySelector('.fuGuide')){const h=m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',`<details class="item fuGuide"${LS.get('murim_fug',0)?'':' open'} ontoggle="if(!this.open)LS.set('murim_fug',1)"><summary><b>📘 วิธีหลอมวิชา — มี 2 แบบ เลือกให้ถูก</b></summary>
+ <div class="fuG2"><div><b>🔮 หลอมรวม</b> <small>(ปุ่มสีทอง)</small><ul>
+ <li>เลือก 2–3 วิชาที่ฝึกถึง<b>ระดับกลาง</b>ขึ้นไป (วิชาประจำสำนักไม่ต้องรอ)</li>
+ <li>ได้<b>วิชาใหม่ 1 วิชา</b> พลังรวมของทุกวิชา +5% · ระดับความหายาก = สูงสุดในกลุ่ม มีลุ้น 30% ขึ้นอีกขั้น · ผลพิเศษติดไปด้วย</li>
+ <li>⚠️ <b>มีโอกาสล้มเหลว</b> (ดู % บนปุ่ม) ล้มเหลวแล้ววิชาไม่หาย แต่อาจโดนธาตุไฟเข้าแทรก · ขั้นวิชาเริ่มนับใหม่ · ทำได้ทุก 3 ปี</li>
+ <li>โอกาสสูงขึ้นเมื่อ: ปัญญาสูง พรสวรรค์ดี วิชาฝึกมาสูง เลือกแค่ 2 วิชา หรือเป็นวิชาประจำสำนัก</li></ul></div>
+ <div><b>📈 หลอมเข้าวิชาหลัก</b> <small>(ปุ่มเทา)</small><ul>
+ <li><b>วิชาที่แตะเลือกเป็นอันแรก = วิชาหลัก</b> (มีป้าย 👑) ที่เหลือจะถูกย่อยเป็น EXP ให้วิชาหลัก · เลือกได้เฉพาะวิชาระดับกลางขึ้นไปเหมือนกัน</li>
+ <li><b>ไม่มีล้มเหลว</b> · วิชาหลักไต่ขั้น ต่ำ → กลาง → สูง → สุดยอด แล้วต่อด้วยดาว ★1–★5 (ดาวละ +8% พลัง)</li>
+ <li>วิชาที่พลังสูงให้ EXP มาก · วิชาประจำสำนักให้ EXP มากกว่าปกติ · ทำได้ปีละครั้ง</li></ul></div></div>
+ <p class="tag2">💡 <b>ควรใช้แบบไหน:</b> มีวิชาโปรดอยู่แล้วอยากให้แรงขึ้นแบบชัวร์ → <b>หลอมเข้าวิชาหลัก</b> · มีวิชาดีๆ หลายอันอยากรวมเป็นวิชาเดียวที่แรงกว่าเดิม (และตั้งชื่อเองได้) → <b>หลอมรวม</b><br>
+ 📦 ทั้งสองแบบ<b>คืนช่องความจำวิชา</b> (ตอนนี้ใช้ ${n}/${cap} ช่อง · ช่องเพิ่มตามปัญญา ทุก 60 ปัญญา = +1 ช่อง สูงสุด 20)</p></details>`)}
+ const sel=(FU_SEL||[]).map(i=>S.arts[i]).filter(Boolean),mb=m.querySelector('.fuMain'),old=m.querySelector('.fuPv');if(old)old.remove();
+ if(mb&&sel.length>=2){const p=fmPrev(sel);if(p)mb.insertAdjacentHTML('afterend',`<div class="item fuPv tag2">📈 ถ้าหลอมเข้า《${esc(sel[0].n)}》: ได้ EXP <b>+${fmt(p.xp)}</b> · ${p.max?'ถึงขั้นสูงสุดแล้ว (★5)':p.ups.length?'ขึ้นเป็น <b>'+p.ups.join(' → ')+'</b>':`ยังไม่ขึ้นขั้น (${fmt(p.f)}/${fmt(p.nd)})`} · วิชาที่หายไป: ${sel.slice(1).map(a=>'《'+esc(a.n)+'》').join(' ')}</div>`)}
+ else if(mb&&sel.length===1){mb.insertAdjacentHTML('afterend',`<div class="item fuPv tag2">《${esc(sel[0].n)}》 จะเป็น<b>วิชาหลัก</b> — แตะเลือกวิชาที่จะหลอมเข้าไปอีก 1–2 วิชา</div>`)}
+ try{m.querySelectorAll('.fuit').forEach(el=>{const i=(FU_SEL||[]).indexOf(+String(el.getAttribute('onclick')||'').replace(/\D/g,''));const t=el.querySelector('b');if(i===0&&t&&!t.querySelector('.fuMn'))t.insertAdjacentHTML('beforeend',' <span class="fuMn">👑 หลัก</span>')})}catch(e){}
+}catch(e){console.error('fuGuide',e)}return r}}
+const st=document.createElement('style');st.textContent=`.fuGuide summary{cursor:pointer;list-style:none}.fuGuide summary::-webkit-details-marker{display:none}.fuGuide summary::after{content:' ▾';opacity:.6}.fuGuide[open] summary::after{content:' ▴'}
+.fuG2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 6px}@media(max-width:560px){.fuG2{grid-template-columns:1fr}}.fuG2>div{border:1px solid var(--line,#8884);border-radius:10px;padding:8px 10px}.fuG2 ul{margin:4px 0 0;padding-left:18px;font-size:13px;line-height:1.55}.fuG2 small{opacity:.65}
+.fuMn{font-size:11px;padding:1px 6px;border-radius:999px;background:#e9b94933;color:#c98d22;margin-left:4px}.fuPv{margin-top:6px}`;document.head.appendChild(st);
+})()}catch(e){console.error('block85',e)}
