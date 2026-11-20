@@ -47262,3 +47262,80 @@ const st=document.createElement('style');st.textContent=`
 .rt3 .tx{overflow:hidden;text-overflow:ellipsis}.rt3 .ic{animation:pBob 2.2s ease-in-out infinite alternate}.rt3 .sp{animation:pTw 1.6s infinite}.rt3 small{font-size:.72em;font-weight:700;opacity:.8;margin-left:3px}
 `;document.head.appendChild(st);
 })()}catch(e){console.error('block80',e)}
+
+// ============================================================
+// BLOCK 81: 🗡️ ลานประลอง · 🕳️ อเวจี/นรก · 🏅 ผลงานพิเศษ — กรอบ + ฉายาแบบใหม่ (ตามร่าง)
+// ============================================================
+try{(()=>{
+const M=window.FRSH_M,T=window.FRSH_T;if(!M||!T)return;
+const f1=n=>Math.round(n*10)/10;
+const P={silver:['#ffffff','#dfe6f2','#8a98b0','#2a3040'],gold:['#fff3c4','#ffd36e','#b8860b','#3a2400'],bronze:['#ffe0c8','#e8a070','#9a5a2a','#3a1a08'],diamond:['#f0ffff','#9ff0ff','#3ab0d0','#06222e'],ruby:['#ffe0e8','#ff5a7a','#a01a3a','#2a0010'],obsidian:['#e8dcff','#9a7ae8','#3a1a6a','#0a0418'],imperial:['#fff3c4','#d8b0ff','#7a3ab0','#1a0a30'],celestial:['#ffffff','#bfe6ff','#6a8aff','#0a1440'],rainbow:['#ffffff','#ffe08a','#b070ff','#140a24'],steel:['#e8eef8','#a8b4c8','#5a6680','#10141e'],violet:['#f0e0ff','#b48aff','#5a2aa8','#12082a'],storm:['#e8f6ff','#8ad0ff','#2a6ab0','#06142a'],moon:['#ffffff','#d8e4ff','#7a8ac8','#0e1430'],emerald:['#e8fff0','#4ae08a','#1a8a4a','#042a14'],abyss:['#f0e0ff','#a05aff','#4a1a9a','#08000f'],hell:['#ffe8c8','#ff6a2a','#a01a0a','#1a0400'],void:['#d0a0ff','#6a2aff','#20002a','#000000']};
+const star=(x,y,r,f)=>`<path d="M${x} ${y-r}L${f1(x+r*.28)} ${f1(y-r*.28)}L${x+r} ${y}L${f1(x+r*.28)} ${f1(y+r*.28)}L${x} ${y+r}L${f1(x-r*.28)} ${f1(y+r*.28)}L${x-r} ${y}L${f1(x-r*.28)} ${f1(y-r*.28)}Z" fill="${f}"/>`;
+const poly=(n,inner,r=51)=>'M'+Array.from({length:2*n},(_,i)=>{const a=i/(2*n)*Math.PI*2-Math.PI/2,rr=i%2?r*inner:r;return f1(50+Math.cos(a)*rr)+' '+f1(50+Math.sin(a)*rr)}).join('L')+'Z';
+const circ=(r=51)=>`M50 ${50-r}A${r} ${r} 0 1 1 49.9 ${50-r}Z`;
+const jag=()=>'M'+Array.from({length:48},(_,i)=>{const a=i/48*Math.PI*2-Math.PI/2,r=i%2===0?51:(i%4===1?45:47);return f1(50+Math.cos(a)*r)+' '+f1(50+Math.sin(a)*r)}).join('L')+'Z';
+const SH={circ:circ(),p16:poly(16,.93),p24:poly(24,.9),shield:'M50 -2L96 14L100 58Q94 92 50 106Q6 92 0 58L4 14Z',gem:'M30 -1H70L101 30V70L70 101H30L-1 70V30Z',jag:jag()};
+const CLIP={circ:'circle(47% at 50% 50%)',p16:'circle(47% at 50% 50%)',p24:'circle(47% at 50% 50%)',shield:'polygon(50% 0,96% 14%,98% 56%,50% 100%,2% 56%,4% 14%)',gem:'polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)',jag:'circle(45% at 50% 50%)'};
+function wreath(c1,c2,kind){let o='';for(const side of[1,-1]){let L='';for(let i=0;i<7;i++){const a=(side===1?200-i*14:-20+i*14)*Math.PI/180,x=f1(50+Math.cos(a)*58),y=f1(50-Math.sin(a)*58),rot=Math.round(a*180/Math.PI+(side===1?90:-90));
+ L+=kind==='f'?`<path d="M${x} ${f1(y-7)}Q${f1(x+3)} ${y} ${x} ${f1(y+7)}Q${f1(x-3)} ${y} ${x} ${f1(y-7)}Z" fill="${i%2?c2:c1}" transform="rotate(${rot} ${x} ${y})"/>`:`<ellipse cx="${x}" cy="${y}" rx="2.6" ry="6" fill="${i%2?c2:c1}" stroke="${c1}" stroke-width=".5" transform="rotate(${rot} ${x} ${y})"/>`}o+=`<g class="zr-sway">${L}</g>`}return o}
+function wings(c1,c2){const w=[0,1,2,3].map(i=>`<path d="M${2-i*3} ${38+i*9}L${-24-i*2} ${26+i*12}L${-6-i*2} ${48+i*9}Z" fill="${i%2?c2:c1}" stroke="#fff" stroke-width=".6"/>`).join('');return`<g class="zr-flapL">${w}</g><g transform="translate(100 0) scale(-1 1)"><g class="zr-flapL">${w}</g></g>`}
+const crown=(c1,c2,c3)=>`<g class="zr-breath"><path d="M30 2L26 -18L37 -8L43 -26L50 -10L57 -26L63 -8L74 -18L70 2Z" fill="${c2}" stroke="${c3}" stroke-width="1.4" stroke-linejoin="round"/><circle cx="50" cy="-6" r="3.4" fill="#ff4a6a" stroke="#fff" stroke-width=".8"/>${star(50,-32,6,'#fff')}</g>`;
+function flames(col,n){let o='';for(let i=0;i<n;i++){const a=i/n*Math.PI*2,x=f1(50+Math.cos(a)*56),y=f1(50+Math.sin(a)*56);o+=`<g class="zr-flick" style="animation-delay:-${(i*.23).toFixed(2)}s"><path transform="translate(${x} ${y}) rotate(${Math.round(a*180/Math.PI+90)})" d="M0 -9C4 -4 6 -1 4 3C3 6 -3 6 -4 3C-6 -1 -3 -3 -2 -6C-1 -3 1 -3 0 -9Z" fill="${col}" opacity=".9"/></g>`}return o}
+function E(k,col,x=50,y=-6){let g;
+ if(k==='sword')g=`<path d="M0 -13L3 3L0 7L-3 3Z" fill="#e8eef8" stroke="${col}" stroke-width="1"/><path d="M-8 4H8" stroke="${col}" stroke-width="2.4" stroke-linecap="round"/><path d="M0 7V13" stroke="#3a2a40" stroke-width="2.6"/>`;
+ else if(k==='swords')g=`<path d="M-11 -11L9 9M11 -11L-9 9" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/><path d="M-11 -11L9 9M11 -11L-9 9" stroke="${col}" stroke-width="1.6" stroke-linecap="round"/>`;
+ else if(k==='moon')g=`<path d="M4 -11A11 11 0 1 0 4 11A8 8 0 1 1 4 -11Z" fill="${col}" stroke="#fff" stroke-width=".8"/>`;
+ else if(k==='gem')g=`<path d="M-9 -4L-4 -10H4L9 -4L0 10Z" fill="${col}" stroke="#fff" stroke-width="1"/><path d="M-9 -4H9M-4 -10L0 10L4 -10" stroke="#fff" stroke-width=".6" opacity=".7" fill="none"/>`;
+ else if(k==='maw')g=`<circle r="10" fill="#000" stroke="${col}" stroke-width="2"/><g class="zr-spinE"><path d="M0 -7A7 7 0 0 1 7 0M0 7A7 7 0 0 1 -7 0" stroke="${col}" stroke-width="1.6" fill="none"/></g>`;
+ else if(k==='chain')g=`<ellipse cx="-5" rx="7" ry="4.5" fill="none" stroke="#fff" stroke-width="2.6"/><ellipse cx="5" rx="7" ry="4.5" fill="none" stroke="${col}" stroke-width="2.6"/>`;
+ else if(k==='gate')g=`<path d="M-9 11V-4A9 9 0 0 1 9 -4V11Z" fill="#000" stroke="${col}" stroke-width="2"/><path d="M-5 11V-3M0 11V-6M5 11V-3" stroke="${col}" stroke-width="1.2"/>`;
+ else if(k==='shadow')g=`<path d="M-10 10C-10 -2 -6 -11 0 -11C6 -11 10 -2 10 10L6 6L3 10L0 6L-3 10L-6 6Z" fill="#0a0418" stroke="${col}" stroke-width="1.6"/><circle cx="-3" cy="-3" r="1.6" fill="${col}"/><circle cx="3" cy="-3" r="1.6" fill="${col}"/>`;
+ else if(k==='flame')g=`<path d="M0 -13C6 -6 9 -2 7 4C5 9 -5 9 -7 4C-9 -1 -4 -4 -3 -9C-1 -5 1 -5 0 -13Z" fill="${col}" stroke="#fff3c4" stroke-width="1"/>`;
+ else if(k==='horn')g=`<path d="M-9 8C-12 -2 -10 -9 -4 -12C-7 -6 -6 0 -3 4ZM9 8C12 -2 10 -9 4 -12C7 -6 6 0 3 4Z" fill="${col}" stroke="#fff" stroke-width=".8"/><circle r="4" cy="4" fill="#ff4a2a"/>`;
+ else g=`<text y="5" text-anchor="middle" font-size="15">${k}</text>`;
+ return`<g transform="translate(${x} ${y}) scale(.85)">${g}</g>`}
+let gn=0;
+function build(pal,shape,emb,lv,ac,ex){ex=ex||[];const[c1,c2,c3,c4]=P[pal];ac=ac||c2;const g='zg'+(++gn),S=SH[shape];
+ let o=`<defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset=".5" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></linearGradient><linearGradient id="${g}r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7a9a"/><stop offset=".25" stop-color="#ffd36e"/><stop offset=".5" stop-color="#7affc8"/><stop offset=".75" stop-color="#7ab8ff"/><stop offset="1" stop-color="#c08aff"/></linearGradient></defs>`;
+ if(lv>=4){let ry='';for(let a=0;a<360;a+=30){const A=(a-3)*Math.PI/180,B=(a+3)*Math.PI/180;ry+=`<path d="M50 50L${f1(50+Math.cos(A)*82)} ${f1(50+Math.sin(A)*82)}L${f1(50+Math.cos(B)*82)} ${f1(50+Math.sin(B)*82)}Z" fill="${c2}" opacity=".1"/>`}o+=`<g class="zr-spinS">${ry}</g>`}
+ if(ex.includes('flames'))o+=flames(ac,lv>=4?10:7);
+ if(lv>=5)o+=wings(c1,c2);
+ const rb=ex.includes('rainbow')?'r':'';
+ o+=`<path d="${S}" fill="none" stroke="${ac}" stroke-width="14" opacity=".16"/><path d="${S}" fill="none" stroke="${c4}" stroke-width="7" stroke-linejoin="round"/><path d="${S}" fill="none" stroke="url(#${g}${rb})" stroke-width="4" stroke-linejoin="round"/><path d="${circ(45)}" fill="none" stroke="${ac}" stroke-width="1.3" stroke-dasharray="3 5" class="zr-dash"/>`;
+ if(ex.includes('chains'))for(let a=0;a<360;a+=20){const x=f1(50+Math.cos(a*Math.PI/180)*51),y=f1(50+Math.sin(a*Math.PI/180)*51);o+=`<ellipse cx="${x}" cy="${y}" rx="4" ry="2.4" fill="none" stroke="#c8b8e8" stroke-width="1.4" transform="rotate(${a+90} ${x} ${y})"/>`}
+ if(lv>=3&&!ex.includes('nowreath'))o+=wreath(c3,c2,shape==='shield'||shape==='jag'?'f':'l');
+ if(lv>=7||rb)o+=`<g class="zr-spinR"><circle cx="50" cy="50" r="68" fill="none" stroke="url(#${g}r)" stroke-width="2.2" stroke-dasharray="20 6 4 6"/></g>`;
+ else if(lv>=2)o+=`<g class="zr-spinR"><circle cx="50" cy="50" r="66" fill="none" stroke="${c2}" stroke-width="1" stroke-dasharray="1 7"/></g>`;
+ if(lv>=2)o+=`<g class="zr-orbit">${star(118,50,5,c1)}${star(-18,50,4,ac)}<circle cx="50" cy="50" r="68" fill="none"/></g>`;
+ if(ex.includes('eye'))o+=`<g class="zr-blink"><ellipse cx="50" cy="106" rx="12" ry="6" fill="#0a0010" stroke="${ac}" stroke-width="1.6"/><circle cx="50" cy="106" r="3.6" fill="${ac}"/></g>`;
+ if(lv>=6){o+=crown(c1,c2,c3);if(!ex.includes('eye'))o+=`<g><circle cx="50" cy="106" r="11" fill="${c4}" stroke="url(#${g})" stroke-width="2"/>${E(emb[0],emb[1],50,106)}</g>`}
+ else o+=`<g class="zr-breath"><circle cx="50" cy="-6" r="14" fill="${c4}" stroke="url(#${g})" stroke-width="2.6"/>${E(emb[0],emb[1])}</g>`;
+ const up=ex.includes('flames')||ex.includes('up'),pos=[[-12,70],[112,66],[-6,30],[108,26],[20,112],[80,112],[50,118],[0,0],[100,0]];
+ for(let i=0;i<Math.min(9,2+lv);i++)o+=`<g class="${up?'zr-rise':'zr-twk'}" style="animation-delay:-${(i*.4).toFixed(1)}s"><g transform="translate(${pos[i][0]} ${pos[i][1]})">${up?`<circle r="1.7" fill="${i%2?ac:c1}"/>`:star(0,0,2.6,i%2?ac:c1)}</g></g>`;
+ return`<svg x="8" y="8" width="84" height="84" viewBox="-20 -20 140 140" overflow="visible" class="zrv">${o}</svg>`}
+const AC='#8a7aff',SP={};
+[['silver',1],['gold',2],['diamond',3],['ruby',4],['obsidian',5],['imperial',6],['celestial',7],['rainbow',8]].forEach(([pal,lv],i)=>SP['f_lg'+(i+1)]=[pal,'shield',[lv>=4?'swords':'sword',AC],lv,AC,lv===8?['rainbow']:[]]);
+[['steel',1,'shadow','p16'],['violet',2,'shadow','p16'],['storm',3,'sword','p16'],['moon',4,'moon','p24'],['imperial',6,'swords','p24']].forEach(([pal,lv,e,sh],i)=>SP['f_arc'+(i+1)]=[pal,sh,[e,AC],lv,AC,[]]);
+[['emerald',3],['ruby',4],['obsidian',5]].forEach(([pal,lv],i)=>SP['f_box'+(i+1)]=[pal,'gem',['gem',P[pal][1]],lv,P[pal][1],['nowreath']]);
+const AB=['#c08aff','#a05aff'];
+SP.f_ab100=['abyss','jag',['maw',AB[0]],2,AB[1],[]];SP.f_ab300=['abyss','jag',['chain',AB[0]],3,AB[1],['chains']];SP.f_ab500=['abyss','jag',['gate',AB[0]],4,AB[1],['flames']];
+SP.f_ab800=['obsidian','jag',['shadow',AB[0]],5,AB[1],['flames','up']];SP.f_ab1000=['imperial','jag',['maw',AB[0]],6,AB[1],['flames','eye']];SP.f_abyss=['void','jag',['maw',AB[0]],4,AB[1],['flames']];
+SP.f_hell=['hell','jag',['flame','#ffb04a'],3,'#ff6a2a',['flames']];SP.f_hell2=['hell','jag',['horn','#ffb04a'],4,'#ff6a2a',['flames','chains']];
+[['f_hq1','gold',5,'📜'],['f_hq2','silver',3,'📜'],['f_wb1','ruby',5,'🐉'],['f_wb2','bronze',3,'🐉'],['f_aq_multi','celestial',4,'🌌'],['f_aq_l50','bronze',2,'🕯️'],['f_aq_l100','gold',4,'🪷'],['f_aq_mgm','diamond',3,'🎵'],['f_aq_seed','emerald',2,'🌱'],['f_aq_boss','ruby',3,'🗡️'],['f_aq_sec','obsidian',4,'👁️'],['f_sw0','gold',3,'☀️'],['f_sw1','moon',3,'🌙'],['f_sw2','celestial',3,'⭐'],['f_lgnew','steel',1,'🚪'],['f_lgloy','ruby',3,'💛']].forEach(([id,pal,lv,e])=>SP[id]=[pal,lv<3?'circ':lv<5?'p16':'p24',[e,P[pal][1]],lv,P[pal][1],[]]);
+const specOf=id=>SP[id]||(/^f_aqb_/.test(id)?['violet','p16',['📖','#b48aff'],3,'#b48aff',[]]:null);
+const done=new Set();
+function apply(id){if(done.has(id))return;const q=specOf(id);if(!q)return;const f=FRAMES.find(x=>x.id===id);if(!f)return;const key='z81_'+id;if(!M[key]){const h=build(...q);M[key]=()=>h}T[id]=key;const p=P[q[0]];f.c1=p[1];f.c2=p[0];f.c3=p[2];f.pc=p[0];f.ty='static';f.bd='';done.add(id)}
+FRAMES.forEach(f=>{try{apply(f.id)}catch(e){}});
+{const _fw=frWrap;frWrap=function(inner,id){try{if(id&&!done.has(id))apply(id)}catch(e){}let h=_fw.apply(this,arguments);try{if(done.has(id)&&typeof h==='string'&&!/ fsh /.test(h))h=h.replace(/class="frw /,'class="frw fsh ').replace(/style="/,'style="--clip:'+(CLIP[specOf(id)[1]]||CLIP.circ)+';')}catch(e){}return h}}
+// ---------- ฉายา ----------
+const TT={};
+['นักล่าเงา','ผู้ไม่เคยถอย','ตำนานแห่งลาน','ราชันเงาอสูร','เทพสงครามแห่งลาน','ผู้ยืนหนึ่งเหนือพันศึก','จักรพรรดิแห่งเงา'].forEach((t,i)=>TT[t]=[['steel','violet','diamond','ruby','obsidian','imperial','rainbow'][i],i<5?'🗡️':'👑🗡️',i+1,i<4?'linear-gradient(180deg,#22264a,#10122a)':null]);
+['ผู้ไต่ลานทองคำ','เพชรแห่งลานเงา','จ้าวลานประลอง','ปรมาจารย์ผู้ไร้เงา','ราชันหมื่นเงา','เทพยุทธ์แห่งยุค'].forEach((t,i)=>TT[t]=[['gold','diamond','ruby','obsidian','imperial','celestial'][i],i<4?'🛡️':'👑',i+2,null]);
+['ผู้ข้ามปากอเวจี','วิญญาณไร้ที่พึ่ง','ผู้ร่วงไม่สิ้นสุด','ผู้ไม่เคยพัก','ราชันอเวจี'].forEach((t,i)=>TT[t]=[i<4?'abyss':'imperial',i<4?'🕳️':'👑🕳️',i+2,i<4?'linear-gradient(180deg,#2a0a4a,#0a0014)':null]);
+function chip(t){const q=TT[t];const[pal,ic,tier,base]=q,[c1,c2,c3,c4]=P[pal];const bg=base||`linear-gradient(180deg,${c1},${c2} 55%,${c3})`,fg=base?c1:c4,glow=tier>=4?`filter:drop-shadow(0 0 ${Math.min(8,tier)}px ${c2});`:'';
+ return`<span class="rt3" style="background:${bg};color:${fg};${glow}"><i class="x"></i><i class="y" style="background:linear-gradient(90deg,${c2},${c1},${c2},${c1},${c2})"></i><span class="ic">${ic}</span><span class="tx">${esc(t)}</span><span class="sp" style="color:${c2}">✦</span></span>`}
+{const _tc=tchipH;tchipH=function(t,r){const k=String(t||'').trim();if(TT[k])return chip(k);return _tc.apply(this,arguments)}}
+const st=document.createElement('style');st.textContent=`.zrv .zr-flapL{transform-origin:0px 48px;animation:zrFlap 1.7s ease-in-out infinite}.zrv .zr-flick{transform-box:fill-box;transform-origin:50% 100%;animation:zrFlick 1.4s ease-in-out infinite}.zrv .zr-blink{transform-box:fill-box;transform-origin:center;animation:zrBlink 4s infinite}
+@keyframes zrFlap{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}@keyframes zrFlick{0%,100%{transform:scale(1,1)}50%{transform:scale(.85,1.25)}}@keyframes zrBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.evlite #chatBox .zrv .zr-flick{display:none}`;document.head.appendChild(st);
+})()}catch(e){console.error('block81',e)}
