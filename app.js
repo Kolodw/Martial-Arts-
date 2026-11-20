@@ -49978,9 +49978,9 @@ const st=document.createElement('style');st.textContent=`@property --z3a{syntax:
 .frw.fr-v3go>:first-child{border-radius:50%!important}
 
 ${KF.join('\n')}`;document.head.appendChild(st);
-const fit=()=>{try{document.querySelectorAll('.frw.fr-xa3').forEach(e=>{const w=e.offsetWidth;if(!w||e._z3w===w)return;e._z3w=w;e.style.setProperty('--s',w+'px');e.classList.toggle('z3big',w>=64)})}catch(x){}};
+const fit=()=>{try{document.querySelectorAll('.frw.fr-xa3').forEach(e=>{const w=e.offsetWidth;if(!w||e._z3w===w)return;e._z3w=w;e.style.setProperty('--s',w+'px');e.classList.toggle('z3big',w>=64);let q=e.parentElement;for(let k=0;q&&k<5&&q!==document.body&&q.id!=='modal';k++,q=q.parentElement){const c=getComputedStyle(q);if(/hidden|clip/.test(c.overflow+c.overflowX+c.overflowY)){q.style.overflow='visible';q.style.overflowX='visible';q.style.overflowY='visible'}if(/hidden|clip/.test(c.contain||''))q.style.contain='none'}})}catch(x){}};
 try{new MutationObserver(()=>{clearTimeout(fit._t);fit._t=setTimeout(fit,60)}).observe(document.body,{childList:true,subtree:true})}catch(x){}
-addEventListener('resize',()=>{document.querySelectorAll('.frw.fr-xa3').forEach(e=>e._z3w=0);fit()});setTimeout(fit,500)}
+addEventListener('resize',()=>{document.querySelectorAll('.frw.fr-xa3').forEach(e=>e._z3w=0);fit()});setTimeout(fit,500);setInterval(()=>{if(!document.hidden)fit()},1500)}
 
 // ร้านฉายาลาน: มือถือฉายายาวล้นกรอบ → จอแคบเรียง 1 คอลัมน์ และย่อฉายาไม่ให้เกินการ์ด
 (function(){const st=document.createElement('style');st.textContent=`.arshop{grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))!important}.arshop>.arsi{min-width:0;overflow:hidden}.arshop .arttl{max-width:100%;display:flex;justify-content:center}.arshop .arttl>*{max-width:100%}.arshop .arttl .tx{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}`;document.head.appendChild(st)})();
@@ -49991,3 +49991,5 @@ const _rf=rushFx;rushFx=function(){const r=_rf.apply(this,arguments);try{const o
  const vol=Math.min(1,((typeof VOL!=='undefined'&&VOL.b)||.7)*.9);const hadBgm=typeof bgmOn!=='undefined'&&bgmOn;try{if(hadBgm)stopBgm()}catch(e){}
  if(!RA){RA=new Audio('rush.mp3');RA.loop=true;RA.preload='auto'}RA.currentTime=0;RA.volume=0;RA.play().then(()=>fade(RA,vol,900)).catch(()=>{});
  const close=o.onclick;o.onclick=function(){fade(RA,0,500,()=>{RA.pause()});try{if(hadBgm)setTimeout(()=>{try{startBgm()}catch(e){}},550)}catch(e){}return close&&close.apply(this,arguments)}}catch(e){}return r}}
+(function(){const st=document.createElement('style');st.textContent='.frw.fr-xa3{z-index:6}*:has(>.frw.fr-xa3){overflow:visible!important}.frpick:has(.fr-xa3),.cav:has(.fr-xa3),.frprev:has(.fr-xa3),.frbig:has(.fr-xa3){position:relative;z-index:6;overflow:visible!important}';document.head.appendChild(st)})();
+(function(){const st=document.createElement('style');st.textContent='.frw.fr-xa3 .z3tag{display:none!important}';document.head.appendChild(st)})();
