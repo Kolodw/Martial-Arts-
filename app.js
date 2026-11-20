@@ -32691,7 +32691,7 @@ const frPrev=i=>`<div class="frprev">${frWrap(`<span class="frph">${av()}</span>
 const OVL='<i class="zqc"><i class="zql"></i><i class="zqm"></i></i><i class="zqg"></i>';
 window.cosBubHtml=(i,nm,tx)=>`<div class="cmb ccxT${i}">${OVL}<div class="cmh"><b>${esc(nm)}</b></div>${tx}</div>`;
 const bub=(i,nm)=>`<div class="bubp">${cosBubHtml(i,nm||pname(),'ข้อความตัวอย่างธีม'+NMC[i-1])}</div>`;
-const priceH=pk=>{const P=COSP[pk],p=price(pk);return `<span class="pr"><b>${p}฿</b>${p<P.p?`<s>${P.p}฿</s>`:''}</span>`};
+const priceH=pk=>{const P=COSP[pk],p=price(pk);if(!P)return'';return `<span class="pr"><b>${p}฿</b>${p<P.p?`<s>${P.p}฿</s>`:''}</span>`};
 const eqState=(kind,id,cur)=>cur===id?`<button class="g" onclick="cosEq('${kind}',null)">ถอด</button><span class="own-b">✅ ใช้อยู่</span>`:`<button onclick="cosEq('${kind}','${id}')">สวมใส่</button>`;
 const acts=(kind,id,pk,own,cur,tryk)=>`<div class="acts">${own?eqState(kind,id,cur):`<button class="g" onclick="cosTry('${tryk}')">👁️ ลองใส่</button><button onclick="cosBuy('${pk}')">ซื้อ ${price(pk)}฿</button>`}</div>`;
 const cdText=()=>{if(!CS.feat)return'';const ms=Math.max(0,CS.feat.exp-Date.now()),h=Math.floor(ms/3600e3),m=Math.floor(ms%3600e3/60e3);return `เหลือ ${h} ชม. ${m} นาที`};
@@ -32713,7 +32713,7 @@ window.cosMenu=function(tab,focus){tab=window._cosTab=tab||window._cosTab||'set'
  if(tab==='t'){b=`<div class="starter"><b>🌱 เริ่มต้นแค่ 9 บาท</b> — ฉายาแบบเรียบ 3 แบบ ลองซื้อชิ้นแรกได้เลย</div><div class="grid">${[9,10,11].map(cardT).join('')}${[1,2,3,4,5,6,7,8].map(cardT).join('')}</div>`}
  if(tab==='c'){b='<div class="grid">'+[1,2,3,4,5,6,7,8].map(cardC).join('')+'</div>'}
  if(tab==='a'){const RC=['#888780','#378ADD','#7F77DD','#BA7517'],RN=['ธรรมดา','หายาก','ล้ำค่า','ตำนาน'],dd=frGet();
-  b=`<div class="starter"><b>🧑 รูปโปรไฟล์</b> — แบบนิ่งใส่ฟรีทุกคน · แบบขยับได้ 9–29 บาท (ในแชทแสดงเป็นภาพนิ่ง)</div><div class="grid">${AVT.map(a=>{const o=a.free||has(a.id),eq=dd.pf===a.id;return `<div class="card" id="cs-a${a.i}" style="--ac:${RC[a.r]}"><span class="rib">${a.free?'ฟรี · ':'✨ ขยับได้ · '}${RN[a.r]}</span><div class="pv">${avtHtml(a.id,a.hi?120:84)}</div><b class="nm">${a.n}</b><div class="sub">${a.d}</div>${o?'':priceH(a.pk)}<div class="acts">${o?(eq?`<button class="g" onclick="avtOff()">ถอด</button><span class="own-b">✅ ใช้อยู่</span>`:`<button onclick="avtEquip('${a.id}')">ใช้เป็นรูปโปรไฟล์</button>`):`<button onclick="cosBuy('${a.pk}')">ซื้อ ${price(a.pk)}฿</button>`}</div></div>`}).join('')}</div>`}
+  b=`<div class="starter"><b>🧑 รูปโปรไฟล์</b> — แบบนิ่งใส่ฟรีทุกคน · แบบขยับได้ 9–29 บาท (ในแชทแสดงเป็นภาพนิ่ง)</div><div class="grid">${AVT.filter(a=>a.free||(a.pk&&COSP[a.pk])||has(a.id)).map(a=>{const o=a.free||has(a.id),eq=dd.pf===a.id;return `<div class="card" id="cs-a${a.i}" style="--ac:${RC[a.r]}"><span class="rib">${a.free?'ฟรี · ':'✨ ขยับได้ · '}${RN[a.r]}</span><div class="pv">${avtHtml(a.id,a.hi?120:84)}</div><b class="nm">${a.n}</b><div class="sub">${a.d}</div>${o?'':priceH(a.pk)}<div class="acts">${o?(eq?`<button class="g" onclick="avtOff()">ถอด</button><span class="own-b">✅ ใช้อยู่</span>`:`<button onclick="avtEquip('${a.id}')">ใช้เป็นรูปโปรไฟล์</button>`):`<button onclick="cosBuy('${a.pk}')">ซื้อ ${price(a.pk)}฿</button>`}</div></div>`}).join('')}</div>`}
  const hero=`<div class="hero"><span class="own">สะสมแล้ว ${owned()}/24</span><i class="sp" style="left:12%;top:20%"></i><i class="sp" style="left:60%;top:70%;animation-delay:-1s"></i><i class="sp" style="left:88%;top:40%;animation-delay:-.5s"></i><h4>🎨 ร้านตกแต่ง</h4><p>กรอบรูปทรงพิเศษที่ขยับได้ · ฉายาเรืองแสง · ธีมแชท<br>ของแต่งล้วนๆ ซื้อครั้งเดียวถาวร ไม่มีผลต่อพลังหรืออันดับ</p></div>`;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="cxs">${hero}<div class="tabs">${tabs.map(t=>`<button class="${tab===t[0]?'on':''}" onclick="cosMenu('${t[0]}')">${t[1]}</button>`).join('')}</div>${fh}${b}<p class="tag2" style="margin-top:10px">เล่นฟรีก็ได้กรอบและฉายาจากในเกมเหมือนเดิม · ผูกกับบัญชี ไม่หายเวลาเปลี่ยนเครื่อง</p></div>`,'cosshop');
  try{document.querySelectorAll('.cxs .card,.cxs .feat').forEach((e,i)=>{if(i>1)e.classList.add('cxoff');cxWatch(e)})}catch(e){}try{avtMount($('modal'))}catch(e){}
@@ -53063,3 +53063,215 @@ window._soulDyn2=(k,f,px,py)=>{
  if(k==='spiritwood'){for(let i=0;i<12;i++){const t=(f*.5+i*37)%160;Q(30+i*38+Math.sin(f*.04+i)*8,150-t,3,3,i%3?'#8affd8':'#ffffff')}}
  if(k==='reg_isle'){for(let y=106;y<138;y+=6){const o=(f*.6+y*5)%50;for(let x=-50;x<480;x+=50)Q(x+o,y,16,1,'#bfe8ff')}}};
 })()}catch(e){console.error('block105',e)}
+
+// ============================================================
+// BLOCK 106: 👘 ชุดตามโลก + ตู้เสื้อผ้า
+//   วิญญาณยุทธ์: ชุดแคว้นบ้านเกิด · ชุดสถาบัน · ชุดสงคราม · ชุดเทพ · ขอบเรืองตามวงแหวน
+//   โลกปัจจุบัน: ชุดนักเรียนตามประเทศ/วัย · ชุดหน้าหนาว   ทะลุฟ้าดารา: ชุดตามการ์ดภูมิหลัง (ยุคแรก)
+//   ชุดหายากแลกกรรม (หักที่เซิร์ฟเวอร์ owbuy/owget) · ตู้เสื้อผ้าเลือก อัตโนมัติ / ชุดที่ออกแบบเอง / ชุดที่ปลดล็อก
+// ============================================================
+try{(()=>{
+const RCs=['#e8e8e8','#f2c94c','#a66bff','#3a3a3a','#e03a3a','#ffd84a','#6ad8ff','#ffffff','#ff7ae0'];
+const WK={murim:['⚔️','ยุทธภพ'],xian:['☁️','โลกเซียน'],god:['🌟','โลกเทพ'],soul:['⭕','วิญญาณยุทธ์'],mw:['🏙️','โลกปัจจุบัน'],sky:['🚀','ทะลุฟ้าดารา']};
+const wk=()=>{try{if(!S)return'murim';if(S.mw&&S.mw.sky)return'sky';if(S.mw)return'mw';if(S.ch==='soul'&&S.sv)return'soul';if(S.xt)return'god';if(S.xian)return'xian'}catch(e){}return'murim'};
+// ---------- แคตตาล็อก: id → [โลก, ไอคอน, ชื่อ, ลุค, ชิ้นส่วน, วิธีได้, ราคา] ----------
+// ชิ้นส่วน (o.ow): fur turban leaf circ crown halo visor goggle phones helmet mask band | wave vest pauld plate sashD scarf collar tie ribbon badge btn pack cape sparkle plaid ring
+const OW={};const D=(id,w,ic,n,L,pt,how,p)=>{OW[id]={id,w,ic,n,L,pt:pt||{},how:how||'',p:p||null}};
+// ⭕ วิญญาณยุทธ์ · แคว้น
+D('s_north','soul','❄️','ชุดขนสัตว์แคว้นหมอกเหนือ',{robe:'#5a6a7c',trim:'#e8f0f8',belt:'#2a3a4a',pant:'#3a4450',coat:'#cfd6de',coatL:'#f4f8fc'},{fur:'#eef2f6',scarf:'#e8eef4'},'เกิดในแคว้นหมอกเหนือ');
+D('s_gold','soul','🌾','ชุดผ้าโพกที่ราบตะวันทอง',{robe:'#d8b070',trim:'#8a3a1a',belt:'#8a3a1a',pant:'#9a7a4a'},{turban:'#f0e0b8',vest:'#8a5a2a'},'เกิดในที่ราบตะวันทอง');
+D('s_isle','soul','🌊','ชุดชาวเกาะคลื่นคราม',{robe:'#2a6aa8',trim:'#bfe8ff',belt:'#e8d8a8',pant:'#e8e0c8'},{wave:'#123e72',band:'#e8d8a8'},'เกิดในหมู่เกาะคลื่นคราม');
+D('s_wood','soul','🌳','ชุดใบไม้ป่าพันพฤกษ์',{robe:'#4a6a3a',trim:'#a8c870',belt:'#5a3a1a',pant:'#3a4a2a'},{leaf:'#3a6a2a',cape:'#2a4a22'},'เกิดในป่าต้องห้ามพันพฤกษ์');
+D('s_jade','soul','🏯','ชุดหยกขาวนครหลวง',{robe:'#eef2f0',trim:'#5aa890',belt:'#5aa890',pant:'#c8d8d0',jade:1},{circ:'#e8f0f0',sashD:'#9ad0c0'},'เกิดในนครหลวงหยกขาว');
+// ⭕ สถานะ
+const ACC={north:'#9ac8f0',gold:'#ffc040',isle:'#40c8e8',wood:'#7ad070',jade:'#e8f0f0'};
+for(const k in ACC)D('s_ac_'+k,'soul','🏫','เครื่องแบบ'+(({north:'สถาบันหิมะเงิน',gold:'สถาบันตะวันทองหลวง',isle:'สถาบันคลื่นสมุทร',wood:'สถาบันพันพฤกษ์',jade:'สถาบันหยกขาว'})[k]),{robe:'#232c48',trim:ACC[k],belt:ACC[k],pant:'#1a2036',skirt:'#232c48'},{badge:ACC[k],cape:'#1a2036',collar:ACC[k]},'เข้าเรียนสถาบัน');
+D('s_war','soul','🛡️','ชุดเกราะประจำกำแพง',{robe:'#5a4a3a',trim:'#a88a5a',belt:'#3a2a1a',pant:'#3a3028',arm:'#8a8a96'},{plate:'#7a7a86',cape:'#8a2a1a'},'ออกศึกป้องกันกำแพง');
+D('s_god','soul','✨','อาภรณ์เทพ',{robe:'#f8f4e8',trim:'#ffd76a',belt:'#ffd76a',pant:'#efe6cc'},{halo:'#ffe8a0',cape:'#fff2c8',sparkle:['#ffe8a0','#ffffff']},'ขึ้นเป็นเทพ');
+// ⭕ หายาก
+D('r_soulgod','soul','🌈','ชุดวงแหวนเจ็ดสี',{robe:'#f4f4fa',trim:'#ff7ae0',belt:'#6ad8ff',pant:'#e0e0ea'},{halo:'#ffffff',cape:'#e8e0ff',sparkle:RCs.slice(1)},'แลกด้วยกรรมดี',[3500,'g']);
+D('r_abyss','soul','🕳️','ชุดราชันอเวจี',{robe:'#120a1a',trim:'#a66bff',belt:'#a66bff',pant:'#0a0610',arm:'#3a2050',eyeG:'#c08aff'},{cape:'#2a0a3a',sparkle:['#a66bff','#3a1a5a']},'แลกด้วยกรรมชั่ว',[3000,'e']);
+D('r_prince','soul','👑','ชุดราชสำนักหยก',{robe:'#a8201a',trim:'#ffd76a',belt:'#ffd76a',pant:'#6a1410',jade:1},{crown:'#ffd76a',cape:'#ffd76a',btn:'#ffd76a'},'แลกด้วยกรรมดี',[2000,'g']);
+// 🏙️ โลกปัจจุบัน · ชุดนักเรียน
+D('m_th','mw','🇹🇭','ชุดนักเรียนไทย',{robe:'#f6f6f6',trim:'#f6f6f6',belt:'#1a1a1a',pant:'#26345e',skirt:'#26345e'},{tieF:'#26345e',badge:'#2a4ab8',pack:'#3a3a48'},'วัยเรียนในไทย');
+D('m_jp','mw','🇯🇵','ชุดนักเรียนญี่ปุ่น',{robe:'#1a1d2c',trim:'#c8a040',belt:'#1a1d2c',pant:'#1a1d2c',skirt:'#1a2a5a'},{btn:'#e0c060',sailor:['#f4f4f4','#1a2a5a','#c8283a'],pack:'#a01818'},'วัยเรียนในญี่ปุ่น');
+D('m_kr','mw','🇰🇷','ชุดนักเรียนเกาหลี',{robe:'#f4f4f4',trim:'#2a2a4a',belt:'#2a2a4a',pant:'#4a4a5a',skirt:'#4a4a5a',coat:'#2a2a4a',coatL:'#4a4a7a'},{tie:'#8a1a2a',plaid:'#8a1a2a',badge:'#c8a040'},'วัยเรียนในเกาหลีใต้');
+D('m_cn','mw','🇨🇳','ชุดวอร์มนักเรียนจีน',{robe:'#2a4ab8',trim:'#ffffff',belt:'#2a4ab8',pant:'#2a4ab8',noSkirt:1,stripe:1},{scarf:'#d81a1a'},'วัยเรียนในจีน');
+D('m_tw','mw','🇹🇼','ชุดนักเรียนไต้หวัน',{robe:'#e8e0c4',trim:'#1a2a4a',belt:'#1a1a1a',pant:'#1a2a4a',skirt:'#1a2a4a'},{badge:'#c8283a',tie:'#1a2a4a'},'วัยเรียนในไต้หวัน');
+D('m_us','mw','🇺🇸','ฮู้ดดี้ไฮสคูล',{robe:'#8a2a3a',trim:'#f4f4f4',belt:'#8a2a3a',pant:'#34507a',noSkirt:1},{badge:'#f4f4f4',pack:'#2a4a6a'},'วัยเรียนในอเมริกา');
+D('m_win','mw','🧥','โค้ทหน้าหนาว',{coat:'#3a3a48',coatL:'#6a6a7a'},{scarf:'#c8283a'},'ฤดูหนาวในประเทศเมืองหนาว',null);
+D('m_hunt','mw','🌀','ชุดฮันเตอร์',{robe:'#22222e',trim:'#9a7aff',belt:'#c8a040',pant:'#1a1a24',arm:'#3a3a4a',noSkirt:1},{plate:'#2e2e3c',visor:'#9a7aff'},'ลงเกตในโลกฮันเตอร์');
+D('m_zom','mw','🧟','ชุดเอาตัวรอด',{robe:'#4a5a3a',trim:'#c8a040',belt:'#3a2a1a',pant:'#3a3a2a',noSkirt:1},{plate:'#3a4a2a',pack:'#5a4a2a',band:'#8a2a1a'},'ใช้ชีวิตในโลกซอมบี้');
+D('r_suit','mw','🕶️','สูทดำเอเจนต์',{robe:'#f4f4f4',trim:'#1a1a1a',belt:'#1a1a1a',pant:'#141414',coat:'#151515',coatL:'#2a2a2a',noSkirt:1},{tie:'#141414',shades:1},'แลกด้วยกรรมชั่ว',[1200,'e']);
+D('r_hunterS','mw','💠','ชุดฮันเตอร์แรงก์ S',{robe:'#14142a',trim:'#9a7aff',belt:'#9a7aff',pant:'#0e0e1e',coat:'#22224a',coatL:'#5a4aa8',arm:'#3a3a60',noSkirt:1},{visor:'#c8a8ff',sparkle:['#9a7aff','#ffffff']},'แลกด้วยกรรมดี',[2500,'g']);
+D('r_idol','mw','🎤','ชุดไอดอลเวที',{robe:'#ff8ab0',trim:'#ffffff',belt:'#ffffff',pant:'#ff8ab0',skirt:'#ffffff'},{ribbon:'#ffffff',sparkle:['#ffd0e8','#ffffff','#ffe08a'],circ:'#ffe08a'},'แลกด้วยกรรมดี',[1500,'g']);
+// 🚀 ทะลุฟ้าดารา · ภูมิหลัง (ยุคแรก)
+const BGO={b_fac:['🏭','ชุดหมีลูกคนงาน',{robe:'#5a6a7a',trim:'#c8a040',belt:'#c8a040',pant:'#4a5a6a'},{goggle:1,badge:'#e86a1a'}],
+ b_slum:['🏚️','ชุดปะชุนเด็กสลัม',{robe:'#6a5a4a',trim:'#4a3a2a',belt:'#3a2a1a',pant:'#4a4038',patch:1},{band:'#8a3a2a'}],
+ b_hunt:['🗡️','แจ็กเก็ตหนังนักล่า',{robe:'#3a3a2a',trim:'#a8803a',belt:'#2a1a0a',pant:'#2a2a20',coat:'#5a4028',coatL:'#7a5a38'},{pauldL:'#5a4a3a',scarf:'#8a6a3a'}],
+ b_ref:['🎒','ชุดผู้ลี้ภัย',{robe:'#7a6a5a',trim:'#a89a7a',belt:'#4a3a2a',pant:'#5a5048'},{pack:'#6a5a3a',scarf:'#a89a7a'}],
+ b_gene:['🧪','เสื้อกาวน์แล็บยีน',{robe:'#4a6a8a',trim:'#5cd2ff',belt:'#2a3a4a',pant:'#2a3444',coat:'#eef0f6',coatL:'#ffffff'},{visor:'#5cd2ff'}],
+ b_heir:['🎖️','ชุดทายาทนักล่า S',{robe:'#1a1a24',trim:'#ffd76a',belt:'#ffd76a',pant:'#121218',coat:'#2a2a36',coatL:'#4a4a5a'},{badge:'#ffd76a',btn:'#ffd76a'}],
+ b_train:['🚂','ชุดเด็กรถไฟอพยพ',{robe:'#5a5a6a',trim:'#8a8a9a',belt:'#3a3a48',pant:'#3a3a48'},{pack:'#5a4a3a',scarf:'#8a4a3a',cap:'#3a3a48'}],
+ b_cult:['☄️','ชุดคลุมลัทธิดาวตก',{robe:'#3a1a4a',trim:'#ff8a3a',belt:'#ff8a3a',pant:'#2a1238',hat:'hood',hoodC:'#2a1038'},{sparkle:['#ff8a3a']}],
+ b_merc:['💰','ชุดพ่อค้าแก่นอสูร',{robe:'#6a4a2a',trim:'#ffd76a',belt:'#ffd76a',pant:'#4a3420'},{badge:'#ffd76a',vest:'#3a2a1a'}],
+ b_orph:['🧸','ชุดบ้านพักเด็ก',{robe:'#8a8a7a',trim:'#c8c8b8',belt:'#5a5a4a',pant:'#5a5a50',patch:1},{scarf:'#c85a5a'}],
+ b_wall:['🧱','ชุดช่างกำแพง',{robe:'#e07a2a',trim:'#ffe060',belt:'#5a4020',pant:'#3a3a48'},{helmet:'#ffd020',plate:'#c86a1a'}],
+ b_med:['🩺','ชุดหมอสนาม',{robe:'#f4f4f4',trim:'#2ad080',belt:'#888888',pant:'#3a4a5a'},{badge:'#e83a3a',pack:'#e8e8e8'}],
+ b_mon:['🛕','จีวรเด็กวัด',{robe:'#e08a20',trim:'#c86a10',belt:'#c86a10',pant:'#c8781a'},{sashD:'#b85a08'}],
+ b_gang:['🔪','ชุดแก๊งตลาดมืด',{robe:'#1a1a1a',trim:'#c8283a',belt:'#2a2a2a',pant:'#141414',coat:'#2a2a2a',coatL:'#4a4a4a'},{mask:'#3a3a3a'}],
+ b_pilot:['🛩️','แจ็กเก็ตนักบิน',{robe:'#5a6a4a',trim:'#e8d8a8',belt:'#3a2a1a',pant:'#3a4030',coat:'#6a4a2a',coatL:'#a8885a'},{goggle:1,scarf:'#f4f4f4'}],
+ b_net:['📡','ชุดนักข่าววิทยุใต้ดิน',{robe:'#3a4a5a',trim:'#e8c040',belt:'#2a2a2a',pant:'#2a3040'},{phones:1,badge:'#e8c040'}],
+ b_farm:['🌾','ชุดชาวนาโดมเกษตร',{robe:'#7a8a4a',trim:'#c8b878',belt:'#5a4a2a',pant:'#4a5030',hat:'straw'},{}],
+ b_noble:['🏛️','ชุดลูกสภานคร',{robe:'#e8e0d0',trim:'#ffd76a',belt:'#ffd76a',pant:'#2a2a40',coat:'#2a2a40',coatL:'#4a4a6a'},{badge:'#ffd76a',tie:'#8a1a2a'}],
+ b_lost:['❓','ชุดเด็กจากหลุมอุกกาบาต',{robe:'#2a2a3a',trim:'#c8a8ff',belt:'#c8a8ff',pant:'#1a1a2a'},{visor:'#c8a8ff',sparkle:['#c8a8ff']}],
+ b_twin:['👥','ชุดแฝด',{robe:'#4a5a6a',trim:'#c8c8d8',belt:'#2a3a4a',pant:'#2a3440'},{scarf:'#c8c8d8',half:'#c8c8d8'}]};
+for(const k in BGO){const b=BGO[k];D('k_'+k,'sky',b[0],b[1],b[2],b[3],'ภูมิหลัง: '+b[1].replace(/^ชุด|^เสื้อ/,''))}
+D('r_astro','sky','👨‍🚀','ชุดนักบินอวกาศ',{robe:'#e8e8f0',trim:'#ff8a2a',belt:'#a8a8b8',pant:'#d8d8e0',noSkirt:1},{helmetG:'#bfe8ff',pack:'#f4f4f8',badge:'#2a4ab8'},'แลกด้วยกรรมดี',[2000,'g']);
+D('r_cyber','sky','🥷','ชุดไซเบอร์นินจา',{robe:'#202028',trim:'#ff4ad8',belt:'#ff4ad8',pant:'#141418',noSkirt:1},{mask:'#2a2a34',visor:'#ff4ad8',sparkle:['#ff4ad8','#5cd2ff']},'แลกด้วยกรรมชั่ว',[2500,'e']);
+D('r_galemp','sky','🌌','ชุดจักรพรรดิดาราจักร',{robe:'#f4ecd8',trim:'#2a2030',belt:'#c8a8ff',pant:'#2a2030'},{crown:'#c8a8ff',cape:'#1a1430',capeStar:1,halo:'#c8a8ff',sparkle:['#c8a8ff','#ffffff']},'แลกด้วยกรรมดี',[5000,'g']);
+// ⚔️ ยุทธภพ · โลกเซียน · โลกเทพ (หายากอย่างเดียว ชุดปกติใช้ระบบเดิม)
+D('r_dragon','murim','🐉','ชุดจักรพรรดิมังกรทอง',{robe:'#d8a820',trim:'#c8183a',belt:'#c8183a',pant:'#8a1010'},{crown:'#ffe070',cape:'#a01020',btn:'#ffe070',sparkle:['#ffe070']},'แลกด้วยกรรมดี',[3000,'g']);
+D('r_moon','murim','🌙','ชุดนักฆ่าเงาจันทร์',{robe:'#14141e',trim:'#c8c8e8',belt:'#c8c8e8',pant:'#0e0e16',hat:'mask',maskC:'#1a1a24'},{cape:'#1a1a2a'},'แลกด้วยกรรมชั่ว',[2000,'e']);
+D('r_blood','murim','🩸','ชุดจอมมารโลหิต',{robe:'#2a0810',trim:'#e01030',belt:'#e01030',pant:'#1a0408',arm:'#3a0a14',eyeG:'#ff2a3a'},{cape:'#5a0a18',sparkle:['#ff2a3a','#5a0a18']},'แลกด้วยกรรมชั่ว',[3500,'e']);
+D('r_cloud','murim','☁️','ชุดนักพรตเมฆขาว',{robe:'#f4f6fa',trim:'#7ab0e8',belt:'#7ab0e8',pant:'#d8e0ea',hat:'taoist'},{sashD:'#7ab0e8',sparkle:['#ffffff']},'แลกด้วยกรรมดี',[1500,'g']);
+D('r_star','xian','✴️','ชุดเซียนดาราจักร',{robe:'#1a1a40',trim:'#c8d8ff',belt:'#c8d8ff',pant:'#10102a'},{cape:'#2a2a60',capeStar:1,halo:'#c8d8ff',sparkle:['#c8d8ff','#ffffff']},'แลกด้วยกรรมดี',[4000,'g']);
+D('r_phoenix','xian','🔥','ชุดเซียนหงส์เพลิง',{robe:'#e85a1a',trim:'#ffd040',belt:'#ffd040',pant:'#8a2a0a'},{cape:'#ff8a2a',circ:'#ffd040',sparkle:['#ffd040','#ff6a1a']},'แลกด้วยกรรมดี',[3000,'g']);
+D('r_heaven','god','🌟','อาภรณ์จักรพรรดิสวรรค์',{robe:'#fffaf0',trim:'#ffd040',belt:'#ffd040',pant:'#f0e4c0'},{halo:'#ffe8a0',crown:'#ffd040',cape:'#fff0c0',sparkle:['#ffe8a0','#ffffff']},'แลกด้วยกรรมดี',[5000,'g']);
+D('r_asura','god','👹','อาภรณ์อสูรเทพ',{robe:'#1a0a0a',trim:'#ff5a1a',belt:'#ff5a1a',pant:'#0e0606',arm:'#4a1a10',eyeG:'#ff5a1a'},{cape:'#3a0a06',horn:'#e8e0d0',sparkle:['#ff5a1a']},'แลกด้วยกรรมชั่ว',[4000,'e']);
+window._OW=OW;
+// ---------- ที่เก็บ: เลือกใส่ (เครื่อง) · ปลดล็อกอัตโนมัติ (เครื่อง) · ซื้อแล้ว (เซิร์ฟเวอร์) ----------
+const LJ=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k)||'null');return v==null?d:v}catch(e){return d}};
+const SJ=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let SEL=LJ('murim_owd',{}),SEEN=new Set(LJ('murim_owu',[])),OWN=new Set(LJ('murim_owo',[])),ADM=false;
+const seen=id=>{if(id&&!SEEN.has(id)){SEEN.add(id);SJ('murim_owu',[...SEEN])}};
+async function owSync(){try{const j=await api('owget');if(j&&Array.isArray(j.own)){OWN=new Set(j.own.filter(x=>OW[x]));ADM=!!j.adm;SJ('murim_owo',[...OWN])}}catch(e){}}
+setTimeout(owSync,4000);
+const canWear=id=>{const d=OW[id];if(!d)return false;return d.p?(OWN.has(id)||ADM):SEEN.has(id)};
+// ---------- ชุดอัตโนมัติของโลก ----------
+function autoId(w){try{
+ if(w==='soul'){const g=S.sv;if(g.god||(g.x&&g.x.god))return's_god';if(g.war!=null&&S.age-g.war<=3&&S.age>=14)return's_war';
+  if((g.acad||(g.ac&&!g.ac.done))&&S.age>=8&&S.age<=22){const k=g.ac&&ACC[g.ac.id]?g.ac.id:(ACC[g.reg]?g.reg:'gold');return's_ac_'+k}
+  return's_'+(ACC[g.reg]?g.reg:'gold')}
+ if(w==='mw'){const M=S.mw,wo=(()=>{try{return W&&W.wOf?W.wOf(M):''}catch(e){return''}})();
+  if(S.age>=6&&S.age<=17&&!(M.job&&S.focus==='mwjob')){const cc=M.cc||'th';return'm_'+({th:'th',cm:'th',jp:'jp',kr:'kr',cn:'cn',tw:'tw',us:'us'}[cc]||'th')}
+  if(wo==='hunter'&&S.focus==='mwgate')return'm_hunt';if(wo==='zombie')return'm_zom';
+  const sea=((typeof MW_Y0!=='undefined'?MW_Y0:2026)+(M.y|0))%4;if(sea===3&&['jp','kr','cn','us'].includes(M.cc)&&S.age>=18)return'm_win';return null}
+ if(w==='sky'){const K=S.mw.sky;let e=1;try{e=window._skyScene.era(K)}catch(x){}if(e>1||!K.og)return null;const b=(K.og.ids||[]).find(x=>/^b_/.test(x));return b&&OW['k_'+b]?'k_'+b:null}
+}catch(e){}return null}
+// ---------- ใส่ชุด ----------
+const CLR=['coat','coatL','skirt','sash','stripe','emblem','patch','fur','arm','jade','hat','hoodC','maskC','eyeG','bandC','noSkirt'];
+function wear(o,d){if(!o||!d)return o;const kid=o.age<12;CLR.forEach(k=>{if(!(k in d.L)&&!(k==='hat'&&o.hat==='straw'&&false))delete o[k]});
+ Object.assign(o,d.L);if(kid){delete o.coat;delete o.arm}if(o.g==='ชาย'||S&&o===S&&S.gender==='ชาย')o.noSkirt=1;
+ o.ow=Object.assign({},d.pt);o.owId=d.id;o.ck=Object.assign({},o.ck||{},{sty:0,kx:0,acc:0,hw2:null,mof:0});return o}
+function ringOver(o){try{if(wk()!=='soul'||!S.sv.aw||!S.sv.rings||!S.sv.rings.length||o.age<12)return o;const t=Math.max(...S.sv.rings.map(r=>r.t|0));const c=RCs[Math.min(8,t)];
+ o.ow=Object.assign({},o.ow||{},{ring:t===3?'#4a2a5a':c,ringN:Math.min(9,S.sv.rings.length)});if(t>=6&&!o.eyeG)o.eyeG=c}catch(e){}return o}
+function decorate(o,w){if(!o||o.beast)return o;try{const s=SEL[w]||'auto';
+ if(s==='mine'){}else if(s!=='auto'&&OW[s]&&OW[s].w===w&&canWear(s))wear(o,OW[s]);
+ else{const a=autoId(w);if(a&&OW[a]){seen(a);wear(o,OW[a])}}
+ if(w==='soul')ringOver(o)}catch(e){console.error('ow',e)}return o}
+window._owDecor=decorate;
+{const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{if(o&&!o.beast&&S&&!S.beastMode){const w=wk();if(w!=='mw'&&(w!=='murim'||(SEL.murim&&SEL.murim!=='auto'))&&!((w==='xian'||w==='god')&&(!SEL[w]||SEL[w]==='auto')))decorate(o,w)}}catch(e){}return o}}
+if(typeof mwLookMe==='function'){const _mlm=mwLookMe;mwLookMe=function(){const o=_mlm.apply(this,arguments);try{decorate(o,wk())}catch(e){}return o}}
+// ---------- วาดชิ้นส่วน ----------
+const geo=(x,y,o,pose)=>{const child=o.age<12,sit=pose==='sit',walk=pose==='walk';const X=Math.round(x*3),Y=Math.round(y*3),T=frame*.15,sd=(o.seed||((o.robe||'').length*7+(o.hair||'').length))%10;
+ const H=child?33:48,hw=child?11:12,hh=child?11:12,tw=child?11:16,th=child?11:18;const bob=walk?(child?(Math.sin(T*8)>0?-1:0):(Math.abs(Math.sin(T*3.2))>.7?-1:0)):Math.round(Math.sin(T*1.6+sd)*.6);
+ const top=Y-H+(sit?9:0)+(o.old?2:0)+bob,cx=X+12,hx=cx-Math.floor(hw/2),ty=top+hh+1,ly=ty+th,bY=ty+(child?6:9),ey=top+Math.floor(hh*.5);
+ return{child,sit,walk,X,Y,T,sd,H,hw,hh,tw,th,top,cx,hx,ty,ly,bY,ey,fl:Math.round(Math.sin(T*3+sd)*1),fl2:Math.round(Math.sin(T*2.2+sd+1)*1.2)}};
+const back=(G,p)=>{const {cx,ty,Y,tw,fl,fl2,child,sit,hx,hw,top}=G;
+ if(p.cape&&!child&&!sit){const c=p.cape,cd=shd(c,-.3);for(let yy=ty;yy<Y-2;yy++){const k=(yy-ty)/(Y-ty),w=tw+4+Math.round(k*8),sw=Math.round((yy>Y-12?fl:0)+(yy>Y-6?fl2:0));Q(cx-Math.floor(w/2)+sw,yy,w,1,c);Q(cx-Math.floor(w/2)+sw+w-2,yy,2,1,cd)}
+  if(p.capeStar)for(let i=0;i<7;i++){const yy=ty+3+((i*7+Math.floor(frame/12))%Math.max(4,Y-ty-6)),xx=cx-8+((i*5)%16);Q(xx,yy,1,1,i%2?'#ffffff':'#c8d8ff')}}
+ if(p.pack){const w=child?7:5,h=child?8:11;Q(cx-Math.floor(tw/2)-w+2,ty+2,w,h,p.pack);Q(cx-Math.floor(tw/2)-w+2,ty+2,w,1,shd(p.pack,.25));Q(cx-Math.floor(tw/2)-w+3,ty+5,w-2,1,shd(p.pack,-.3))}
+ if(p.halo){const c=p.halo,y0=top-7-Math.round(Math.sin(frame*.08)*1);Q(hx+1,y0,hw-2,1,c);Q(hx,y0+1,1,1,c);Q(hx+hw-1,y0+1,1,1,c);Q(hx+1,y0+2,hw-2,1,shd(c,-.25))}};
+const front=(G,p,o)=>{const {cx,ty,Y,tw,th,top,hx,hw,hh,ey,bY,ly,child,sit,fl,fl2}=G,L=cx-Math.floor(tw/2),face=o.hat!=='mask';
+ // ลำตัว
+ if(p.vest&&!child){Q(L,ty,4,th-3,p.vest);Q(L+tw-4,ty,4,th-3,shd(p.vest,-.2));Q(L+3,ty,1,th-3,shd(p.vest,.3))}
+ if(p.plate&&!child){Q(cx-6,ty+2,12,7,p.plate);Q(cx-6,ty+2,12,1,shd(p.plate,.35));Q(cx-1,ty+3,2,5,shd(p.plate,-.25));Q(cx-5,ty+8,10,1,shd(p.plate,-.35))}
+ if(p.sashD){for(let i=0;i<tw;i++)Q(L+i,ty+Math.floor(i*(th-4)/tw),2,2,i%4?p.sashD:shd(p.sashD,.25))}
+ if(p.collar&&!child){Q(cx-5,ty,3,4,p.collar);Q(cx+2,ty,3,4,shd(p.collar,-.15))}
+ if(p.sailor){const [w0,c0,r0]=p.sailor;if(o.g==='หญิง'||o.robe!=='#1a1d2c'){Q(cx-Math.floor(tw/2),ty,tw,child?3:4,c0);Q(cx-Math.floor(tw/2),ty+(child?2:3),tw,1,w0);Q(cx-2,ty+(child?3:4),4,2,r0);Q(cx-1,ty+(child?5:6),2,2,r0)}}
+ if(p.tie){Q(cx-2,ty,1,2,'#ffffff');Q(cx+1,ty,1,2,'#ffffff');Q(cx-1,ty+1,2,1,shd(p.tie,.2));Q(cx-1,ty+2,2,child?5:8,p.tie);Q(cx-1,ty+(child?7:10),2,1,shd(p.tie,-.3))}
+ if(p.tieF){if(o.g==='หญิง'){Q(cx-3,ty+1,2,2,p.tieF);Q(cx+1,ty+1,2,2,p.tieF);Q(cx-1,ty+1,2,2,shd(p.tieF,.25));Q(cx-2,ty+3,1,3,p.tieF);Q(cx+1,ty+3,1,3,p.tieF)}else{Q(cx-2,ty,1,2,'#ffffff');Q(cx+1,ty,1,2,'#ffffff')}}
+ if(p.ribbon){Q(cx-3,ty+1,2,2,p.ribbon);Q(cx+1,ty+1,2,2,p.ribbon);Q(cx-1,ty+1,2,2,shd(p.ribbon,-.2))}
+ if(p.btn){for(let i=0;i<(child?3:4);i++)Q(cx-1,ty+2+i*(child?3:4),1,1,p.btn)}
+ if(p.badge){Q(cx+(child?1:3),ty+(child?2:3),2,2,p.badge);Q(cx+(child?1:3),ty+(child?2:3),1,1,shd(p.badge,.4))}
+ if(p.half&&!child){for(let yy=ty;yy<ly;yy+=2)Q(cx,yy,1,1,p.half)}
+ if(p.wave){Q(L,bY,tw,3,p.wave);for(let i=0;i<tw;i++)Q(L+i,bY+((i>>1)%2),1,1,'#bfe8ff');Q(cx+4,bY+3,2,6+fl,p.wave);Q(cx+5,bY+3,1,5+fl,'#bfe8ff')}
+ if(p.plaid&&o.g==='หญิง'&&!sit){for(const dy of [2,5])Q(L-1,ly+dy,tw+2,1,p.plaid);for(let i=0;i<tw;i+=4)Q(L+i,ly+1,1,6,shd(p.plaid,.2))}
+ if(p.scarf){const c=p.scarf;Q(cx-(child?5:7),ty-1,child?10:14,3,c);Q(cx-(child?5:7),ty,child?10:14,1,shd(c,-.25));Q(cx+2,ty+2,3,(child?4:7)+fl,c);Q(cx+2,ty+4,3,1,shd(c,.3))}
+ if(p.pauldL&&!child){Q(L-3,ty-1,6,4,p.pauldL);Q(L-3,ty-1,6,1,shd(p.pauldL,.3))}
+ // ขอบเรืองตามวงแหวน
+ if(p.ring&&!child){const c=p.ring;Q(L,bY,tw,1,c);Q(L,ty,1,th-2,c);Q(L+tw-1,ty,1,th-2,shd(c,-.2));const n=p.ringN|0;for(let i=0;i<n;i++){const a=frame*.05+i*Math.PI*2/n,rx=Math.cos(a)*15,ry=Math.sin(a)*4;if(ry>0||true)Q(Math.round(cx+rx),Math.round(bY+2+ry),2,1,c)}}
+ // หัว
+ if(p.fur){const c=p.fur,cd=shd(c,-.18);Q(hx-1,top-3,hw+2,5,c);Q(hx-1,top+1,hw+2,1,cd);Q(hx-2,top+1,2,child?5:7,c);Q(hx+hw,top+1,2,child?5:7,cd);for(let i=0;i<hw;i+=3)Q(hx+i,top-4,2,1,c)}
+ if(p.turban){const c=p.turban,cd=shd(c,-.22);Q(hx-1,top-3,hw+2,5,c);for(let i=0;i<3;i++)Q(hx-1,top-2+i*2,hw+2,1,cd);Q(cx+2,top-5,4,3,c);Q(hx+hw,top+1,2,(child?5:8)+fl,c);Q(cx+3,top-4,1,1,'#c8283a')}
+ if(p.leaf){const c=p.leaf,cl=shd(c,.3);Q(hx-1,top-3,hw+2,4,c);Q(hx-2,top,2,hh-3,c);Q(hx+hw,top,2,hh-3,shd(c,-.2));[[1,-5,2,2],[4,-6,2,3],[7,-6,2,3],[10,-5,2,2]].forEach(([a,b,w2,h2])=>Q(hx+a,top+b,w2,h2,a%2?cl:c));Q(hx+2,top-3,3,1,cl)}
+ if(p.band){Q(hx,top+2,hw,2,p.band);Q(hx+hw,top+3,2,4+fl,p.band)}
+ if(p.circ){Q(hx,top+1,hw,1,p.circ);Q(cx-1,top,2,2,p.circ==='#e8f0f0'?'#5ad0b0':'#ff4a6a')}
+ if(p.crown){const c=p.crown;Q(hx+1,top-3,hw-2,3,c);for(let i=0;i<4;i++)Q(hx+1+i*3,top-5,2,2,c);Q(cx-1,top-2,2,1,'#c8183a')}
+ if(p.horn){Q(hx,top-4,2,4,p.horn);Q(hx-1,top-6,2,2,p.horn);Q(hx+hw-2,top-4,2,4,p.horn);Q(hx+hw-1,top-6,2,2,p.horn)}
+ if(p.helmet){Q(hx-1,top-3,hw+2,5,p.helmet);Q(hx-2,top+1,hw+4,1,shd(p.helmet,-.25));Q(hx+2,top-3,3,1,shd(p.helmet,.4))}
+ if(p.helmetG){Q(hx-2,top-3,hw+4,hh+4,'#e8e8f0');Q(hx,top-1,hw,hh,p.helmetG);Q(hx+1,top,3,2,'#ffffff');Q(hx-2,top+hh,hw+4,2,'#a8a8b8')}
+ if(p.cap){Q(hx-1,top-2,hw+2,4,p.cap);Q(hx+hw-2,top+1,5,1,shd(p.cap,-.2))}
+ if(face&&!p.helmetG){
+  if(p.visor){Q(hx,ey-1,hw,3,p.visor);Q(hx+1,ey-1,3,1,'#ffffff')}
+  if(p.goggle){Q(hx,top+1,hw,2,'#5a3a1a');Q(hx+2,top,3,3,'#8ad0ff');Q(hx+hw-5,top,3,3,'#8ad0ff')}
+  if(p.shades){Q(hx+1,ey-1,hw-2,2,'#0e0e12');Q(hx+2,ey-1,2,1,'#5a5a6a')}
+  if(p.mask){Q(hx,ey+3,hw,hh-(ey-top)-3,p.mask);Q(hx,ey+3,hw,1,shd(p.mask,.25))}
+  if(p.phones){Q(hx,top-2,hw,1,'#222');Q(hx-2,top+4,2,4,'#222');Q(hx+hw,top+4,2,4,'#222');Q(hx-2,top+5,1,2,'#e8c040')}}
+ // ประกาย
+ if(p.sparkle){const C=p.sparkle;for(let i=0;i<5;i++){const ph=(frame*.6+i*29)%60;if(ph>40)continue;const xx=cx-14+((i*37+Math.floor(frame/60)*13)%28),yy=Y-4-ph;Q(xx,yy,1,1,C[i%C.length]);if(ph<8)Q(xx-1,yy,3,1,C[i%C.length])}}};
+{const _p=person0;person0=function(x,y,o,pose){const p=o&&o.ow;if(!p||pose==='lie'||o.beast)return _p.apply(this,arguments);let G=null;try{G=geo(x,y,o,pose);back(G,p)}catch(e){}const r=_p.apply(this,arguments);try{if(G)front(G,p,o)}catch(e){}return r}}
+// ---------- ตู้เสื้อผ้า ----------
+const baseMe=()=>{let o=null;try{o=Object.assign({},meLook())}catch(e){}if(!o||o.beast)o={age:20,g:(S&&S.gender)||'ชาย',skin:'#f1c27d',hair:'#1a1a1a',robe:'#888'};if(o.age<16)o.age=16;delete o.beast;o.ow=null;o.owId=null;return o};
+const raw=()=>{const sv=SEL;SEL={};let o;try{o=baseMe()}finally{SEL=sv}return o};
+function thumb(cv,d,lock){const ctx=cv.getContext('2d'),sg=g,sp=PS,sf=frame;try{let o=raw();if(d)wear(o,d);if(lock){o=Object.assign({},o,{robe:'#2a2a34',trim:'#2a2a34',belt:'#2a2a34',pant:'#2a2a34',skin:'#3a3a44',hair:'#2a2a34',coat:o.coat?'#2a2a34':null,coatL:null,eyeG:null});o.ow=null}
+  frame=0;g=ctx;const VW=17,ox=7.5,oy=1.4;PS=cv.width/VW;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);ctx.setTransform(PS,0,0,PS,-ox*PS,-oy*PS);ctx.imageSmoothingEnabled=false;
+  const bg={soul:['#2a2448','#3a3260'],mw:['#2a3444','#3a4a5e'],sky:['#141a30','#22304a'],murim:['#34304a','#484262'],xian:['#2a3a4a','#3e5468'],god:['#3a3020','#5a4a2a']}[d?d.w:wk()]||['#34304a','#484262'];
+  P(ox,oy,VW,40,bg[0]);P(ox,26,VW,10,bg[1]);person(10,30,o,'stand')}catch(e){console.error(e)}finally{g=sg;PS=sp;frame=sf}}
+let TAB=null;
+window.owOpen=function(t){TAB=t||TAB||wk();const w=TAB,cur=SEL[w]||'auto',L=Object.values(OW).filter(d=>d.w===w),live=wk()===w;
+ const tabs=Object.keys(WK).map(k=>`<button class="tag2 owT${k===w?' on':''}" onclick="owOpen('${k}')" style="cursor:pointer;${k===w?'outline:2px solid var(--gold,#c8a040)':''}">${WK[k][0]} ${WK[k][1]}</button>`).join(' ');
+ const card=(id,ic,n,sub,st,act)=>`<div class="owC" style="display:inline-flex;flex-direction:column;align-items:center;width:31%;min-width:96px;margin:1%;padding:6px 4px;border-radius:10px;background:rgba(127,127,127,.12);${cur===id?'box-shadow:0 0 0 2px #ffd76a inset':''}">
+  <canvas data-ow="${id}" width="68" height="102" style="width:68px;height:102px;image-rendering:pixelated;border-radius:6px"></canvas><b style="font-size:12px;text-align:center;margin-top:3px">${ic} ${n}</b><small style="opacity:.75;text-align:center;font-size:10.5px">${sub}</small>${act}</div>`;
+ let h=`<button class="xbtn" onclick="closeM()">✕</button><h3>👘 ตู้เสื้อผ้า</h3><div style="margin:4px 0 8px;display:flex;flex-wrap:wrap;gap:4px">${tabs}</div>`;
+ if(!live)h+=`<div class="tag2" style="display:block;margin-bottom:6px">ชุดของ${WK[w][1]}จะใส่ได้ตอนเล่นโลกนั้น · เลือกไว้ล่วงหน้าได้</div>`;
+ h+=`<div>`;
+ h+=card('auto','🔄','อัตโนมัติ',w==='murim'||w==='xian'||w==='god'?'ตามสำนัก/ตระกูลเหมือนเดิม':'เปลี่ยนตามชีวิตเอง',0,cur==='auto'?'<small style="color:#ffd76a">✓ ใช้อยู่</small>':`<button class="opt" style="padding:2px 8px;font-size:11px;margin-top:3px" onclick="owSel('${w}','auto')">ใช้</button>`);
+ h+=card('mine','🎨','ชุดที่ออกแบบเอง','จากหน้าออกแบบรูปลักษณ์',0,cur==='mine'?'<small style="color:#ffd76a">✓ ใช้อยู่</small>':`<button class="opt" style="padding:2px 8px;font-size:11px;margin-top:3px" onclick="owSel('${w}','mine')">ใช้</button>`);
+ L.forEach(d=>{const ok=canWear(d.id);let act;
+  if(cur===d.id)act='<small style="color:#ffd76a">✓ ใช้อยู่</small>';
+  else if(ok)act=`<button class="opt" style="padding:2px 8px;font-size:11px;margin-top:3px" onclick="owSel('${w}','${d.id}')">ใส่</button>`;
+  else if(d.p)act=`<button class="opt" style="padding:2px 8px;font-size:11px;margin-top:3px" onclick="owBuy('${d.id}')">${d.p[1]==='g'?'😇':'😈'} ${fmt(d.p[0])}</button>`;
+  else act='<small style="opacity:.6">🔒 ยังไม่ปลดล็อก</small>';
+  h+=card(d.id,d.ic,ok||d.p?d.n:'???',d.p&&!ok?(d.p[1]==='g'?'กรรมดี ':'กรรมชั่ว ')+fmt(d.p[0]):d.how,0,act)});
+ h+=`</div><small style="opacity:.7;display:block;margin-top:6px">ชุดอัตโนมัติจะปลดล็อกเมื่อได้ใส่ครั้งแรกระหว่างเล่น · ชุดหายากแลกด้วยกรรมในคลัง (หักที่เซิร์ฟเวอร์)</small>`;
+ modal(h,'owd');setTimeout(()=>{document.querySelectorAll('canvas[data-ow]').forEach(cv=>{const id=cv.dataset.ow;if(id==='auto'){const a=w===wk()?autoId(w):null;thumb(cv,a?OW[a]:null,false)}else if(id==='mine')thumb(cv,null,false);else thumb(cv,OW[id],!canWear(id)&&!OW[id].p)})},30)};
+window.owSel=function(w,id){SEL[w]=id;SJ('murim_owd',SEL);try{sfx('click')}catch(e){}try{toast('👘 เปลี่ยนชุดแล้ว')}catch(e){}owOpen(w);try{if(typeof render==='function')render()}catch(e){}};
+window.owBuy=async function(id){const d=OW[id];if(!d||!d.p)return;if(!confirm(`แลก "${d.n}" ด้วย${d.p[1]==='g'?'กรรมดี':'กรรมชั่ว'} ${fmt(d.p[0])} ?`))return;let j=null;try{j=await api('owbuy',{i:id})}catch(e){}
+ if(j&&j.ok){OWN.add(id);SJ('murim_owo',[...OWN]);try{if(typeof kbSync==='function')kbSync()}catch(e){}try{toast('✨ ได้รับ '+d.n)}catch(e){}SEL[d.w]=id;SJ('murim_owd',SEL);owOpen(d.w)}
+ else{try{toast(j&&j.err==='karma'?'กรรมในคลังไม่พอ':'แลกไม่สำเร็จ ลองใหม่อีกครั้ง')}catch(e){}}};
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='menu'&&!m.querySelector('.owMB')&&S){const gd=m.querySelector('.mgrid');const w=wk();if(gd)gd.insertAdjacentHTML('afterbegin',`<button class="opt owMB" onclick="owSync();owOpen()">👘 ตู้เสื้อผ้า<small>${WK[w][0]} ชุดของ${WK[w][1]}</small></button>`)}}catch(e){}return r}}
+window._owb={OW,autoId,wear,decorate,wk,canWear,SEL:()=>SEL,owSync,thumb};
+})()}catch(e){console.error('block106',e)}
+
+// ============================================================
+// BLOCK 107: แชท — ฉายาตั้งแต่ 2 อันขึ้นไป เรียงซ้อนกว้างเท่ากัน
+// ============================================================
+try{(()=>{
+const css=document.createElement('style');css.textContent=`
+.cmh .ttStk{order:9;display:inline-grid;grid-template-columns:minmax(0,1fr);gap:5px;width:max-content;max-width:100%;vertical-align:middle;margin:3px 0;flex-basis:auto}
+.cmh .ttStk>*{width:100%!important;max-width:none!important;box-sizing:border-box;margin:0!important;justify-content:center;text-align:center}
+.cmh .ttStk>.tchip,.cmh .ttStk>.rkchip,.cmh .ttStk>.ttl,.cmh .ttStk>[class^="rt"],.cmh .ttStk>.ptt,.cmh .ttStk>.skt,.cmh .ttStk>.evt,.cmh .ttStk>.ptm{display:flex!important}
+.cmh .ttBr{order:8;flex-basis:100%;width:100%;height:0}`;document.head.appendChild(css);
+const isChip=e=>e.nodeType===1&&e.tagName!=='B'&&e.tagName!=='BUTTON'&&!e.classList.contains('ct')&&!e.classList.contains('ttStk')&&!e.classList.contains('ttBr')&&!e.classList.contains('rep')&&(e.textContent||'').trim().length>0;
+function fix(root){try{(root||document).querySelectorAll('.cmh').forEach(h=>{const ch=[...h.children].filter(isChip);const st=h.querySelector(':scope>.ttStk');
+ if(st){ch.forEach(c=>st.appendChild(c));return}
+ if(ch.length<2)return;const s=document.createElement('span');s.className='ttStk';ch[0].before(s);if(!h.querySelector(':scope>.ttBr')){const br=document.createElement('i');br.className='ttBr';s.before(br)}ch.forEach(c=>s.appendChild(c));
+ // ไม่ให้ช่องว่างข้อความค้างระหว่างฉายา
+ [...h.childNodes].forEach(n=>{if(n.nodeType===3&&!n.textContent.trim()&&n.previousSibling===s)n.textContent=' '})})}catch(e){}}
+window._ttFix=fix;
+if(typeof chatRender==='function'){const _cr=chatRender;chatRender=function(){const r=_cr.apply(this,arguments);fix($('chatBox'));setTimeout(()=>fix($('chatBox')),60);return r}}
+let tq=0;const mo=new MutationObserver(()=>{if(tq)return;tq=setTimeout(()=>{tq=0;const b=document.getElementById('chatBox');if(b)fix(b)},80)});
+const hook=()=>{const b=document.getElementById('chatBox');if(b&&!b._ttMo){b._ttMo=1;mo.observe(b,{childList:true,subtree:true})}};setInterval(hook,1500);
+})()}catch(e){console.error('block107',e)}

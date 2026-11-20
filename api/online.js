@@ -532,7 +532,8 @@ const annPoll = async (ann, id) => {
   } catch { return ann }
 };
 const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
-const SENS_A = new Set(['kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
+const OWP = { r_soulgod: [3500, 'g'], r_abyss: [3000, 'e'], r_prince: [2000, 'g'], r_suit: [1200, 'e'], r_hunterS: [2500, 'g'], r_idol: [1500, 'g'], r_astro: [2000, 'g'], r_cyber: [2500, 'e'], r_galemp: [5000, 'g'], r_dragon: [3000, 'g'], r_moon: [2000, 'e'], r_blood: [3500, 'e'], r_cloud: [1500, 'g'], r_star: [4000, 'g'], r_phoenix: [3000, 'g'], r_heaven: [5000, 'g'], r_asura: [4000, 'e'] }; // 👘 ชุดหายากตามโลก (ต้องตรงกับ BLOCK 106 ใน app.js)
+const SENS_A = new Set(['owbuy', 'owget', 'kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
 
 function uaMeta(req, now) {
   const ua = String(req.headers['user-agent'] || '');
@@ -882,6 +883,16 @@ module.exports = async (req, res) => {
       const dk = 'kbd:' + id + ':' + Math.floor((now + 7 * 3600e3) / 864e5), used = await cmd('INCRBY', dk, Math.abs(k)); await cmd('EXPIRE', dk, 172800);
       const over = Math.max(0, +used - EV_DAY_MAX), amt = Math.abs(k) - over; if (amt <= 0) return res.json({ ok: 0, err: 'day' });
       await cmd('HINCRBY', 'kb:' + id, k > 0 ? 'g' : 'e', amt); const r2 = await kbFix(id); return res.json({ ok: 1, g: r2.g, e: r2.e });
+    }
+    if (a === 'owget') { if (!okId(id)) return res.status(400).json({ err: 'id' }); const own = (await cmd('SMEMBERS', 'ow:' + id)) || []; const adm = !!(+(await cmd('SISMEMBER', 'admids', id))); return res.json({ own, adm }) }
+    if (a === 'owbuy') { // แลกชุดหายากด้วยกรรม: หักที่เซิร์ฟเวอร์ ครั้งเดียวต่อชุด
+      if (!okId(id)) return res.status(400).json({ err: 'id' });
+      const it = String(b.i || ''), K = OWP[it]; if (!K) return res.status(400).json({ err: 'i' });
+      if (+(await cmd('SISMEMBER', 'ow:' + id, it))) { const r = await kbFix(id); return res.json({ ok: 1, dup: 1, g: r.g, e: r.e }) }
+      await kbFix(id); const left = +(await cmd('HINCRBY', 'kb:' + id, K[1], -K[0]));
+      if (left < 0) { await cmd('HINCRBY', 'kb:' + id, K[1], K[0]); const r = await kbFix(id); return res.json({ ok: 0, err: 'karma', g: r.g, e: r.e }) }
+      await pipe([['SADD', 'ow:' + id, it], ['LPUSH', 'evlog', JSON.stringify({ t: Date.now(), u: id, i: it, m: 'outfit', c: K[0], s: K[1], left })], ['LTRIM', 'evlog', 0, 299]]);
+      const r = await kbFix(id); return res.json({ ok: 1, g: r.g, e: r.e });
     }
     if (a === 'cosclaim') { // แลกของอีเวนต์ด้วยกรรม (หักยอดฝั่งเซิร์ฟเวอร์ ครั้งเดียวต่อรายการ)
       if (!okId(id)) return res.status(400).json({ err: 'id' });
