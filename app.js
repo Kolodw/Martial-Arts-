@@ -47199,10 +47199,18 @@ function wreath(kind,c1,c2){let o='';for(const side of[1,-1]){let L='';for(let i
 const crown=(c1,c2,c3,gem)=>`<g class="zr-breath"><path d="M30 2L26 -18L37 -8L43 -26L50 -10L57 -26L63 -8L74 -18L70 2Z" fill="${c2}" stroke="${c3}" stroke-width="1.4" stroke-linejoin="round"/><circle cx="50" cy="-6" r="3.4" fill="${gem}" stroke="#fff" stroke-width=".8"/><circle cx="38" cy="-3" r="2" fill="#4ad0ff"/><circle cx="62" cy="-3" r="2" fill="#4ad0ff"/>${star(50,-32,6,'#fff')}</g>`;
 const PART={fl:['zr-rise','<path d="M0 -4C2 -1 2 2 0 3C-2 2 -2 -1 0 -4Z" fill="C"/>'],hg:['zr-fall','<circle r="1.4" fill="C"/>'],rg:['zr-rise','<circle r="1.6" fill="C"/>'],sp:['zr-rise','<ellipse rx="1.3" ry="2.4" fill="C"/>'],ck:['zr-twk','<circle r="1.3" fill="#fff"/>'],sw:['zr-twk','<path d="M0 -3L.8 -.8L3 0L.8 .8L0 3L-.8 .8L-3 0L-.8 -.8Z" fill="C"/>'],ch:['zr-rise','<rect x="-1.2" y="-1.2" width="2.4" height="2.4" fill="C"/>'],dg:['zr-twk','<path d="M0 -3L.8 -.8L3 0L.8 .8L0 3L-.8 .8L-3 0L-.8 -.8Z" fill="C"/>'],cl:['zr-fall','<circle r="1.5" fill="#fff"/>'],sn:['zr-twk','<path d="M0 -3L.8 -.8L3 0L.8 .8L0 3L-.8 .8L-3 0L-.8 -.8Z" fill="C"/>'],cw:['zr-rise','<ellipse rx="1" ry="2.6" fill="C"/>']};
 let gidN=0;
+// ทรงกรอบ: แบบมาตรฐานตามรอบ · กรอบที่สุ่มแต่ละรอบสุ่มทรงด้วย (12 ทรง) — คืน [ชื่อ, path, clip ของรูปโปรไฟล์]
+const rr=(x0,y0,x1,y1,r)=>`M${x0+r} ${y0}H${x1-r}Q${x1} ${y0} ${x1} ${y0+r}V${y1-r}Q${x1} ${y1} ${x1-r} ${y1}H${x0+r}Q${x0} ${y1} ${x0} ${y1-r}V${y0+r}Q${x0} ${y0} ${x0+r} ${y0}Z`;
+const ngon=(n,r,rot)=>'M'+Array.from({length:n},(_,i)=>f1(50+r*Math.cos((rot+360*i/n)*Math.PI/180))+' '+f1(50+r*Math.sin((rot+360*i/n)*Math.PI/180))).join('L')+'Z';
+const SHP={circle:()=>circ(),p16:()=>poly(16,.93),p24:()=>poly(24,.9),square:()=>rr(-2,-2,102,102,14),sharp:()=>'M10 -2H90L102 10V90L90 102H10L-2 90V10Z',ruyi:()=>'M14 -2H86A10 10 0 0 0 102 14V86A10 10 0 0 0 86 102H14A10 10 0 0 0 -2 86V14A10 10 0 0 0 14 -2Z',
+ diamond:()=>'M50 -18L118 50L50 118L-18 50Z',hex:()=>ngon(6,56,-90),oct:()=>ngon(8,55,-112.5),arch:()=>'M-2 102V40A52 52 0 0 1 102 40V102Z',shield:()=>'M50 -4L98 12L102 56Q96 94 50 108Q4 94 -2 56L2 12Z',star:()=>poly(8,.8,60),heart:()=>'M50 104C8 74 -10 44 6 18C20 -4 44 2 50 20C56 2 80 -4 94 18C110 44 92 74 50 104Z'};
+const CLIP={circle:'circle(47% at 50% 50%)',p16:'circle(47% at 50% 50%)',p24:'circle(47% at 50% 50%)',square:'inset(0 round 14%)',sharp:'polygon(10% 0,90% 0,100% 10%,100% 90%,90% 100%,10% 100%,0 90%,0 10%)',ruyi:'polygon(8% 0,92% 0,100% 8%,100% 92%,92% 100%,8% 100%,0 92%,0 8%)',diamond:'polygon(50% 0,100% 50%,50% 100%,0 50%)',hex:'polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)',oct:'polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)',arch:'inset(0 round 50% 50% 0 0)',shield:'polygon(50% 0,96% 14%,98% 56%,50% 100%,2% 56%,4% 14%)',star:'circle(44% at 50% 50%)',heart:'circle(40% at 50% 46%)'};
+const SPOOL=['ruyi','square','sharp','hex','oct','arch','shield','diamond','star','heart','circle','PER','PER'];
+function rkShape(p,seed,R){let k=p==='d'?'circle':p==='w'?'p16':'p24';if(seed&&R){const q=SPOOL[Math.floor(RNG(H('shp|'+seed+'|'+p))()*SPOOL.length)];if(q!=='PER')k=q}return[k,SHP[k](),CLIP[k]]}
 // p: d|w|m · c: โหมด · r: 1-3 · seed: ตัวสุ่มของรอบ (ว่าง = แบบมาตรฐาน)
 function rkSvg(p,c,r,seed){const md=MODE[c]||MODE.m,R=seed?RNG(H('rk3|'+seed+'|'+p+c+r)):null,pick=a=>R?a[Math.floor(R()*a.length)]:a[0];
  const ek=pick(ALT[c]||[md[0]]),ac=hx(md[1],R?Math.round((R()-.5)*50):0),[c1,c2,c3,c4]=MET[r]||MET[3],g='rkg'+(++gidN);
- const shape=p==='d'?circ():p==='w'?poly(16,.93):poly(24,.9),wk=R?pick(['l','l','f']):'l',gem=R?pick(['#ff4a6a','#4ad0ff','#7affc8','#c08aff']):'#ff4a6a';
+ const shp=rkShape(p,seed,R),shape=shp[1],wk=R?pick(['l','l','f']):'l',gem=R?pick(['#ff4a6a','#4ad0ff','#7affc8','#c08aff']):'#ff4a6a';
  let o=`<defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset=".5" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></linearGradient><linearGradient id="${g}a" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${ac}"/><stop offset=".5" stop-color="${c2}"/><stop offset="1" stop-color="${ac}"/></linearGradient></defs>`;
  if(p==='m'){let ry='';for(let a=0;a<360;a+=30){const A=(a-3)*Math.PI/180,B=(a+3)*Math.PI/180;ry+=`<path d="M50 50L${f1(50+Math.cos(A)*80)} ${f1(50+Math.sin(A)*80)}L${f1(50+Math.cos(B)*80)} ${f1(50+Math.sin(B)*80)}Z" fill="${c2}" opacity=".09"/>`}o+=`<g class="zr-spinS">${ry}</g>`}
  o+=`<path d="${shape}" fill="none" stroke="${ac}" stroke-width="14" opacity=".14"/><path d="${shape}" fill="none" stroke="${c4}" stroke-width="7"/><path d="${shape}" fill="none" stroke="url(#${g})" stroke-width="4"/><path d="${circ(46)}" fill="none" stroke="url(#${g}a)" stroke-width="1.4" stroke-dasharray="3 5" class="zr-dash"/>`;
@@ -47221,11 +47229,11 @@ window.rkSvg=rkSvg;
 const FIX={rk:['d','m'],wk:['w','m'],mo:['m','m'],ch:['w','c'],rgd:['d','r'],rgw:['w','r'],rgm:['m','r'],cl:['m','l'],ar:['w','a']};
 function spec(id){id=String(id||'');let m=/^f_(rk|wk|mo|ch|rgd|rgw|rgm|cl|ar)([123])$/.exec(id);if(m)return{p:FIX[m[1]][0],c:FIX[m[1]][1],r:+m[2],s:''};
  try{m=window.RKG&&RKG.RE.exec(id);if(m)return{p:m[1],c:m[2],r:+m[4],s:m[3]}}catch(e){}return null}
-const done=new Set();
+const done=new Set(),CLIPOF={};
 function apply(id){if(done.has(id))return true;const q=spec(id);if(!q)return false;const f=FRAMES.find(x=>x.id===id);if(!f)return false;
- const key='rk3_'+id;if(!M[key]){const html=rkSvg(q.p,q.c,q.r,q.s);M[key]=()=>html}T[id]=key;const mt=MET[q.r];f.c1=mt[1];f.c2=mt[0];f.c3=mt[2];f.pc=mt[0];f.ty='static';f.bd='';done.add(id);return true}
+ const key='rk3_'+id;if(!M[key]){const html=rkSvg(q.p,q.c,q.r,q.s);M[key]=()=>html}try{CLIPOF[id]=rkShape(q.p,q.s,q.s?1:null)[2]}catch(e){}T[id]=key;const mt=MET[q.r];f.c1=mt[1];f.c2=mt[0];f.c3=mt[2];f.pc=mt[0];f.ty='static';f.bd='';done.add(id);return true}
 FRAMES.forEach(f=>{try{apply(f.id)}catch(e){}});
-{const _fw=frWrap;frWrap=function(inner,id){try{if(id&&!done.has(id)){if(!FRAMES.find(x=>x.id===id)&&window.rkgReg)rkgReg(id);apply(id)}}catch(e){}let h=_fw.apply(this,arguments);try{if(done.has(id)&&typeof h==='string'&&!/ fsh /.test(h))h=h.replace(/class="frw /,'class="frw fsh ').replace(/style="/,'style="--clip:circle(47% at 50% 50%);')}catch(e){}return h}}
+{const _fw=frWrap;frWrap=function(inner,id){try{if(id&&!done.has(id)){if(!FRAMES.find(x=>x.id===id)&&window.rkgReg)rkgReg(id);apply(id)}}catch(e){}let h=_fw.apply(this,arguments);try{if(done.has(id)&&typeof h==='string'&&!/ fsh /.test(h))h=h.replace(/class="frw /,'class="frw fsh ').replace(/style="/,'style="--clip:'+(CLIPOF[id]||'circle(47% at 50% 50%)')+';')}catch(e){}return h}}
 // ---------- ฉายาอันดับ: ป้ายโลหะตามอันดับ + แถบสีโหมด ----------
 const PN2={m:'d',w:'w',d:'d'};
 function chip(t,p,c,r,seed){const md=MODE[c]||MODE.m,R=seed?RNG(H('rkt|'+seed+'|'+p+c+r)):null,ac=hx(md[1],R?Math.round((R()-.5)*50):0),[c1,c2,c3,c4]=MET[r]||MET[3];
