@@ -29959,7 +29959,7 @@ try{(()=>{
 const quant=(url,mask)=>new Promise(res=>{const im=new Image();im.onload=()=>{try{const c=document.createElement('canvas');c.width=56;c.height=62;const x=c.getContext('2d');x.drawImage(im,0,0,56,62);const id=x.getImageData(0,0,56,62),D=id.data;for(let i=0;i<D.length;i+=4){D[i]&=mask;D[i+1]&=mask;D[i+2]&=mask;D[i+3]=D[i+3]>127?255:0}x.putImageData(id,0,0);res(c.toDataURL('image/png'))}catch(e){res('')}};im.onerror=()=>res('');im.src=url});
 const shrink=async url=>{for(const m of [0xF8,0xF0,0xE0,0xC0]){const q=await quant(url,m);if(q&&q.length<=7800)return q}return''};
 profPush=async function(){if(!onlineOK)return;let d=frGet();
- const body=(av,alt)=>({av,fr:d.eq||'',up:d.avUp?1:0,alt,n:pname(),key:(typeof ADM!=='undefined'&&ADM.ok)?admK():''});
+ const body=(av,alt)=>({av,fr:d.eq||'',pf:d.pf||'',up:d.avUp?1:0,alt,n:pname(),key:(typeof ADM!=='undefined'&&ADM.ok)?admK():''});
  try{let j=await api('profile',body(d.av||'',d.snap||''));
   if(j&&j.img===0&&!d.avUp){const q=await shrink(d.snap||d.av||'');if(q){d=frGet();d.snap=q;d.av=q;frSet(d);j=await api('profile',body(q,q))}}
   if(j&&j.st){d=frGet();d.avSt=j.st;frSet(d)}}
@@ -32639,14 +32639,21 @@ const st2=document.createElement('style');st2.textContent=`
 let CS={own:[],eq:{},feat:null};try{const o=JSON.parse(localStorage.getItem('murim_cos')||'null');if(o&&Array.isArray(o.own))CS=Object.assign(CS,o)}catch(e){}
 const save=()=>{try{localStorage.setItem('murim_cos',JSON.stringify(CS))}catch(e){}};
 const isA=()=>{try{return !!(typeof admK==='function'&&admK())}catch(e){return false}};
-const has=x=>isA()||CS.own.includes(x);
+let SV=null;const has=x=>isA()||!!(SV&&SV.has(x)); // 🛡️ เช็กของที่ซื้อจากรายการที่เซิร์ฟเวอร์ส่งมาเท่านั้น (แก้ Local Storage ไม่มีผล)
 const tid=x=>+String(x||'').replace(/\D/g,'')||0;
 const featPk=()=>CS.feat&&CS.feat.exp>Date.now()?CS.feat.pk:'';
 const price=pk=>{const P=COSP[pk];if(!P)return 0;return featPk()===pk?CS.feat.p:P.p};
 window.cosTitleHtml=function(t){const n=tid(t);return /^t_p/.test(t||'')&&n>=1&&n<=11?`<span class="ptt ptt${n}" data-cs="t${n}"><i class="zqx"></i><i class="zqy"></i><span class="zqt">${NMT[n-1]}</span></span>`:''};
-async function sync(){try{const j=await api('cosget');if(!j)return;CS.own=Array.isArray(j.own)?j.own:[];CS.eq=j.eq||{};if(j.feat)CS.feat=j.feat;save();
+async function sync(){try{const j=await api('cosget');if(!j)return;CS.own=Array.isArray(j.own)?j.own:[];CS.eq=j.eq||{};if(j.feat)CS.feat=j.feat;save();SV=new Set(CS.own);try{cosPurge()}catch(e){console.error(e)}
  const d=frGet();let ch=0;CS.own.forEach(x=>{if(/^f_p[1-8]$/.test(x)&&!d.own.includes(x)){d.own.push(x);ch=1}});if(ch)frSet(d)}catch(e){}}
 window.cosSync=sync;
+// ถอดของที่เครื่องบอกว่ามี แต่เซิร์ฟเวอร์ไม่มีบันทึก (กรอบ/รูปโปรไฟล์ร้านค้า อีเวนต์ ซีซัน)
+function cosPurge(){if(isA()||!SV)return;const PAID=/^f_(p|e|s|m|w)\d+$/,d=frGet();let ch=0,push=0;
+ const o=d.own.length;d.own=d.own.filter(x=>!PAID.test(x)||SV.has(x));if(d.own.length!==o)ch=1;
+ if(d.eq&&PAID.test(d.eq)&&!SV.has(d.eq)){d.eq='';ch=1;push=1}
+ if(d.pf&&/^a_/.test(d.pf)&&!(window.AVT||[]).some(a=>a.id===d.pf&&a.free)&&!SV.has(d.pf)){d.pf='';try{const u=(typeof S!=='undefined'&&S&&typeof snapAvatar==='function')?snapAvatar():'';d.av=u;d.snap=u}catch(e){d.av='';d.snap=''}d.avUp=0;ch=1;push=1}
+ if(ch)frSet(d);if(push)try{profPush()}catch(e){}}
+setTimeout(()=>{try{if(typeof onlineOK==='undefined'||onlineOK!==false)sync()}catch(e){}},1800);
 // ซื้อ
 window.cosBuy=function(pk){const P=COSP[pk];if(!P)return;const p=price(pk);
  modal(`<button class="xbtn" onclick="cosMenu()">✕</button><h3>🎨 ${P.n}</h3>

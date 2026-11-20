@@ -392,6 +392,17 @@ const cosFeat = () => { const th = Date.now() + 7 * 3600e3, day = Math.floor(th 
 const cosPrice = pk => { const b = COS_BASE[pk]; if (!b) return 0; if (cosFeat().pk === pk) return Math.round(b[0] * 0.8); const d = mDeal(); if (d.s === pk) return Math.round(b[0] * 0.7); if (d.t.includes(pk)) return Math.round(b[0] * 0.75); return b[0] };
 const COS_P = new Proxy({}, { get: (_, pk) => COS_BASE[pk] ? [cosPrice(pk), COS_BASE[pk][1]] : undefined, has: (_, pk) => !!COS_BASE[pk] });
 const cosOwn = async id => { try { return (await cmd('SMEMBERS', 'cos:' + id)) || [] } catch { return [] } };
+// 🛡️ ตรวจกรอบ/รูปโปรไฟล์ที่ผู้เล่นจะโชว์ให้คนอื่นเห็น (กันแก้ Local Storage แล้วใส่ของที่ยังไม่มี) · คืน '' ถ้าไม่มีสิทธิ์
+const frSrv = async (id, fr, keyOk) => { fr = String(fr || ''); if (!fr) return '';
+  if (!/^f_[a-z0-9_]{1,20}$/.test(fr)) return '';
+  const adm = keyOk || !!(+(await cmd('SISMEMBER', 'admids', id))); if (adm) return fr;
+  if (/^f_adm/.test(fr)) return '';
+  const vn = vipCosN(fr); if (vn) return vipTier(jp(await cmd('GET', 'vip:' + id))) >= vn ? fr : '';
+  if (COS_ALL.has(fr) || /^f_(p|e|s|m|w)\d+$/.test(fr)) return +(await cmd('SISMEMBER', 'cos:' + id, fr)) ? fr : '';
+  if (/^f_(hq|wb|sw)\d/.test(fr)) return +(await cmd('SISMEMBER', 'gfr:' + id, fr)) ? fr : '';
+  if (/^f_(arc|box|lg)\d/.test(fr)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.fr || []).includes(fr)) return '' }
+  return fr };
+const avSrv = async (id, pf, keyOk) => { pf = String(pf || ''); if (!pf || !COS_ALL.has(pf)) return true; if (keyOk || +(await cmd('SISMEMBER', 'admids', id))) return true; return !!(+(await cmd('SISMEMBER', 'cos:' + id, pf))) };
 
 const VIP_NM = { 1: 'ผู้อุปถัมภ์สำนัก', 2: 'ผู้อาวุโสอุปถัมภ์', 3: 'บรรพชนผู้อุปถัมภ์' };
 const VIP_GIFT_UNTIL = Date.parse('2026-12-01T00:00:00+07:00'); // ผู้สนับสนุนเดิมที่เข้าเกมก่อนวันนี้ รับ VIP ฟรี 1 เดือน
@@ -966,7 +977,7 @@ module.exports = async (req, res) => {
       if (!ok) return res.status(429).json({ err: 'rate' });
       let hh = 0; for (let q = 0; q < x.length; q++) hh = (hh * 31 + x.charCodeAt(q)) | 0;
       if (!(await cmd('SET', 'dup:rp:' + id + ':' + (hh >>> 0).toString(36), 1, 'NX', 'PX', b.k === 'qa' ? 15000 : 45000))) return res.status(429).json({ err: 'dup' });
-      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, sc, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), x, a: act, pu: id.slice(0, 12), rl: clean(b.rl, 24), fn: clean(b.fn, 24), fr: /^f_[a-z0-9_]{1,16}$/.test(String(b.fr || '')) ? String(b.fr) : '' };
+      const m = { i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, sc, n: noAdm(clean(b.n, 20)) || 'นิรนาม', ti: noAdm(clean(b.ti, 24)), x, a: act, pu: id.slice(0, 12), rl: clean(b.rl, 24), fn: clean(b.fn, 24), fr: await frSrv(id, /^f_[a-z0-9_]{1,16}$/.test(String(b.fr || '')) ? String(b.fr) : '', isAdmKey(b.key)) };
       try { const vj = jp(await cmd('GET', 'vip:' + id)), vt = vipTier(vj); if (vt) { m.vp = vt; if (vj.tt && (vt === 3 || VIP_TT.includes(vj.tt))) m.vq = String(vj.tt).slice(0, 20) } } catch {}
       try { const cq = jp(await cmd('GET', 'cosq:' + id)); if (cq) { if (cq.t) m.ct = cq.t; if (cq.c) m.cc = cq.c; if (cq.n && /^t_e/.test(cq.t || '')) m.cn = cq.n } } catch {}
       if (vipCosN(m.ct) > (m.vp | 0)) delete m.ct; if (vipCosN(m.fr) > (m.vp | 0)) m.fr = '';
@@ -2550,10 +2561,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     if (a === 'profile') {
       // รูปตัวละครจากเกม (PNG 56×62) ขึ้นได้ทันที · รูปที่อัปโหลดเอง (JPEG/WebP) ต้องรอแอดมินตรวจก่อนคนอื่นจะเห็น
       let av = String(b.av || ''), alt = String(b.alt || ''); const up = b.up ? 1 : 0, pu = id.slice(0, 12); let fr = String(b.fr || '').replace(/[^a-z0-9_]/g, '').slice(0, 20);
-      if (/^f_adm/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id)))) fr = ''; // กรอบแอดมิน: ใส่ได้เฉพาะแอดมิน
-      if (vipCosN(fr) && vipTier(jp(await cmd('GET', 'vip:' + id))) < vipCosN(fr) && !(+(await cmd('SISMEMBER', 'admids', id)))) fr = ''; // กรอบ VIP: ต้องมีสิทธิ์ระดับนั้นอยู่
-      if (/^f_(p[1-8]|e[1-5]|s[1-5])$/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id))) && !(+(await cmd('SISMEMBER', 'cos:' + id, fr)))) fr = ''; // กรอบร้านค้า: ต้องซื้อแล้ว
-      if (/^f_(arc|box|lg)\d/.test(fr) && !isAdmKey(b.key) && !(+(await cmd('SISMEMBER', 'admids', id)))) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.fr || []).includes(fr)) fr = '' } // กรอบลาน: ต้องมีในกระเป๋าเซิร์ฟเวอร์
+      fr = await frSrv(id, fr, isAdmKey(b.key)); // กรอบ: ต้องมีสิทธิ์จริงฝั่งเซิร์ฟเวอร์ (แอดมิน/VIP/ร้านค้า/อีเวนต์/ซีซัน/ภารกิจ/ลาน)
+      const pfBad = !(await avSrv(id, b.pf, isAdmKey(b.key))); // รูปโปรไฟล์ร้านค้า/ซีซันที่ยังไม่ได้ซื้อ → ไม่เผยแพร่รูป
       const isUp = /^data:image\/(jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(av);
       if (isUp && !isAdmKey(b.key)) return res.status(403).json({ err: 'noup' }); // อัปโหลดรูปเองปิดไว้ — เฉพาะแอดมิน
       let imgBad = 0; // รูปตัวละครใหญ่เกินเกณฑ์ (ตัวละครลายละเอียดมาก) → ไม่ปฏิเสธทั้งคำขอ เก็บกรอบให้ก่อน แล้วบอกหน้าเว็บให้ย่อรูปส่งใหม่
@@ -2567,7 +2576,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         await cmd('HSET', 'avq', pu, JSON.stringify({ av, t: now, n: noAdm(clean(b.n, 20)) || 'นิรนาม', id }));
         pend = 1;
       } else await cmd('HDEL', 'avq', pu);
-      let pub = avSnapOk(av) ? av : (alt || '');
+      let pub = pfBad ? '' : avSnapOk(av) ? av : (alt || '');
       if (imgBad && !pub) { const cur0 = jp(await cmd('HGET', 'prof', pu)); pub = (cur0 && cur0.av) || '' }
       await cmd('HSET', 'prof', pu, JSON.stringify({ av: pub, fr, pend }));
       return res.json({ ok: 1, st: pend ? 'pend' : 'ok', img: imgBad ? 0 : 1 });
