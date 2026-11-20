@@ -385,7 +385,8 @@ const EVB = { evb1: [79, ['evf1', 'evt1', 'evc1']], evb2: [109, ['evf4', 'evt4',
 const EV_MI = Object.values(EVM).map(x => x[1]);
 [...EV_MI, ...Object.values(EVK).map(x => x[0])].forEach(x => COS_ALL.add(x));
 const evOpen = () => Date.now() < EV_END;
-const EV_IMP_CAP = 40000, EV_DEP_MAX = 3000, EV_DAY_MAX = 12000; // กันโกง: นำเข้าครั้งเดียวไม่เกินนี้ · ฝากต่อครั้ง · ฝากต่อวัน
+const EV_IMP_CAP = 0, EV_DEP_MAX = 200, EV_DAY_MAX = 600, KB_V = 2; // คลังกรรมอยู่ที่เซิร์ฟเวอร์อย่างเดียว · KB_V เปลี่ยน = ล้างคลังทุกคน (ล้างตอนอ่านครั้งแรก) // กันโกง: นำเข้าครั้งเดียวไม่เกินนี้ · ฝากต่อครั้ง · ฝากต่อวัน
+async function kbFix(id) { const r = await cmd('HMGET', 'kb:' + id, 'v', 'g', 'e'); if (+(r && r[0]) === KB_V) return { g: +(r[1]) || 0, e: +(r[2]) || 0 }; await pipe([['HSET', 'kb:' + id, 'g', 0, 'e', 0, 'v', KB_V], ['HDEL', 'kb:' + id, 'imp'], ['LPUSH', 'evlog', JSON.stringify({ t: Date.now(), u: id, m: 'wipe', g: +(r && r[1]) || 0, e: +(r && r[2]) || 0 })], ['LTRIM', 'evlog', 0, 299]]); return { g: 0, e: 0 } }
 // ของแนะนำประจำวัน (เวลาไทย): ลด 20% ทั้งวัน — กรอบเดี่ยวหรือเซ็ต
 const COS_FEAT = [...Array(8).keys()].flatMap(i => ['cf' + (i + 1), 'cs' + (i + 1)]);
 const cosFeat = () => { const th = Date.now() + 7 * 3600e3, day = Math.floor(th / 864e5), pk = COS_FEAT[day % COS_FEAT.length]; return { pk, exp: (day + 1) * 864e5 - 7 * 3600e3 } };
@@ -529,7 +530,7 @@ const annPoll = async (ann, id) => {
   } catch { return ann }
 };
 const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
-const SENS_A = new Set(['lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
+const SENS_A = new Set(['kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
 
 function uaMeta(req, now) {
   const ua = String(req.headers['user-agent'] || '');
@@ -842,6 +843,7 @@ module.exports = async (req, res) => {
     if (a === 'buyann') { const l = ((await cmd('LRANGE', 'buyann', 0, 11)) || []).map(jp).filter(Boolean); return res.json({ l }) }
     if (a === 'cosget') {
       if (!okId(id)) { const ft0 = cosFeat(); return res.json({ own: [], eq: {}, mdeal: mDeal(), feat: { pk: ft0.pk, p: cosPrice(ft0.pk), full: COS_BASE[ft0.pk][0], exp: ft0.exp } }) }
+      await kbFix(id);
       const [own, q, ...evr] = await pipe([['SMEMBERS', 'cos:' + id], ['GET', 'cosq:' + id], ...Object.keys(EVM).map(k => ['GET', 'evn:' + k]), ['HMGET', 'evs:' + id, ...EV_MI], ['HGETALL', 'kb:' + id], ['SISMEMBER', 'supok', id]]);
       const ft = cosFeat(), EK = Object.keys(EVM), sn = evr[EK.length] || [], kbr = evr[EK.length + 1], kbo = {}; if (Array.isArray(kbr)) for (let i = 0; i + 1 < kbr.length; i += 2) kbo[kbr[i]] = kbr[i + 1]; else if (kbr && typeof kbr === 'object') Object.assign(kbo, kbr);
       const ev = { end: EV_END, sup: +evr[EK.length + 2] ? 1 : 0, left: {}, sn: {}, kb: { g: +kbo.g || 0, e: +kbo.e || 0, imp: kbo.imp ? 1 : 0 } }; EK.forEach((k, i) => { ev.left[k] = Math.max(0, EVM[k][2] - (+evr[i] || 0)) }); EV_MI.forEach((x, i) => { if (sn[i]) ev.sn[x] = +sn[i] });
@@ -857,26 +859,34 @@ module.exports = async (req, res) => {
       return res.json({ ok: 1, eq: q });
     }
     // 🏮 กรรมของอีเวนต์: เก็บและหักที่เซิร์ฟเวอร์ ไม่เชื่อตัวเลขในเครื่อง
-    if (a === 'kbimp') { // นำเข้าคลังกรรมเดิมในเครื่อง ครั้งเดียวต่อบัญชี (จำกัดเพดาน)
+    if (a === 'kbimp') { // ปิดแล้ว: ไม่รับยอดจากเครื่อง (แก้ค่าได้)
       if (!okId(id)) return res.status(400).json({ err: 'id' });
-      const g0 = Math.max(0, Math.min(EV_IMP_CAP, Math.floor(+b.g || 0))), e0 = Math.max(0, Math.min(EV_IMP_CAP, Math.floor(+b.e || 0)));
-      const first = await cmd('HSETNX', 'kb:' + id, 'imp', Date.now()); if (+first === 1 || first === true) { await pipe([['HINCRBY', 'kb:' + id, 'g', g0], ['HINCRBY', 'kb:' + id, 'e', e0], ['LPUSH', 'evlog', JSON.stringify({ t: Date.now(), u: id, m: 'imp', g: g0, e: e0, rg: Math.floor(+b.g || 0), re: Math.floor(+b.e || 0) })], ['LTRIM', 'evlog', 0, 299]]) }
-      const r = await cmd('HMGET', 'kb:' + id, 'g', 'e'); return res.json({ ok: 1, g: +(r && r[0]) || 0, e: +(r && r[1]) || 0 });
+      const r = await kbFix(id); return res.json({ ok: 1, g: r.g, e: r.e });
+    }
+    if (a === 'kbget') { if (!okId(id)) return res.status(400).json({ err: 'id' }); const r = await kbFix(id); return res.json({ ok: 1, g: r.g, e: r.e }) }
+    if (a === 'kbspend') { // ใช้คลังกรรม: หักที่เซิร์ฟเวอร์เท่านั้น
+      if (!okId(id)) return res.status(400).json({ err: 'id' });
+      const sd = b.s === 'e' ? 'e' : 'g', n = Math.floor(+b.n || 0); if (!(n > 0 && n <= 1e7)) return res.status(400).json({ err: 'n' });
+      await kbFix(id); const left = +(await cmd('HINCRBY', 'kb:' + id, sd, -n));
+      if (left < 0) { await cmd('HINCRBY', 'kb:' + id, sd, n); const r = await kbFix(id); return res.json({ ok: 0, err: 'karma', g: r.g, e: r.e }) }
+      await pipe([['LPUSH', 'evlog', JSON.stringify({ t: Date.now(), u: id, m: 'spend', s: sd, c: n, w: String(b.w || '').slice(0, 24), left })], ['LTRIM', 'evlog', 0, 299]]);
+      const r = await kbFix(id); return res.json({ ok: 1, g: r.g, e: r.e });
     }
     if (a === 'kbdep') { // ฝากกรรมตอนจบชีวิต: จำกัดต่อครั้ง/ความถี่/ต่อวัน
       if (!okId(id)) return res.status(400).json({ err: 'id' });
       const k = Math.max(-EV_DEP_MAX, Math.min(EV_DEP_MAX, Math.round(+b.k || 0))); if (!k) return res.json({ ok: 1 });
-      if ((await cmd('SET', 'kbt:' + id, '1', 'NX', 'EX', 60)) !== 'OK') return res.json({ ok: 0, err: 'fast' });
+      await kbFix(id);
+      if ((await cmd('SET', 'kbt:' + id, '1', 'NX', 'EX', 20)) !== 'OK') return res.json({ ok: 0, err: 'fast' });
       const dk = 'kbd:' + id + ':' + Math.floor((now + 7 * 3600e3) / 864e5), used = await cmd('INCRBY', dk, Math.abs(k)); await cmd('EXPIRE', dk, 172800);
-      if (+used > EV_DAY_MAX) return res.json({ ok: 0, err: 'day' });
-      await cmd('HINCRBY', 'kb:' + id, k > 0 ? 'g' : 'e', Math.abs(k)); return res.json({ ok: 1 });
+      const over = Math.max(0, +used - EV_DAY_MAX), amt = Math.abs(k) - over; if (amt <= 0) return res.json({ ok: 0, err: 'day' });
+      await cmd('HINCRBY', 'kb:' + id, k > 0 ? 'g' : 'e', amt); const r2 = await kbFix(id); return res.json({ ok: 1, g: r2.g, e: r2.e });
     }
     if (a === 'cosclaim') { // แลกของอีเวนต์ด้วยกรรม (หักยอดฝั่งเซิร์ฟเวอร์ ครั้งเดียวต่อรายการ)
       if (!okId(id)) return res.status(400).json({ err: 'id' });
       const pk = String(b.pk || ''), K = EVK[pk]; if (!K) return res.status(400).json({ err: 'pk' });
       if (!evOpen()) return res.json({ ok: 0, err: 'closed' });
       if (+(await cmd('SISMEMBER', 'cos:' + id, K[0]))) return res.json({ ok: 1, dup: 1 });
-      const bal = +(await cmd('HGET', 'kb:' + id, K[2])) || 0; if (bal < K[1]) return res.json({ ok: 0, err: 'karma', have: bal, need: K[1] });
+      await kbFix(id); const bal = +(await cmd('HGET', 'kb:' + id, K[2])) || 0; if (bal < K[1]) return res.json({ ok: 0, err: 'karma', have: bal, need: K[1] });
       const left = +(await cmd('HINCRBY', 'kb:' + id, K[2], -K[1])); if (left < 0) { await cmd('HINCRBY', 'kb:' + id, K[2], K[1]); return res.json({ ok: 0, err: 'karma' }) }
       await pipe([['SADD', 'cos:' + id, K[0]], ['LPUSH', 'evlog', JSON.stringify({ t: Date.now(), u: id, k: pk, i: K[0], m: 'karma', c: K[1], s: K[2], left })], ['LTRIM', 'evlog', 0, 299]]);
       return res.json({ ok: 1, left });

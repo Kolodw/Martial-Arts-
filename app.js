@@ -52073,3 +52073,40 @@ window._b95={poseFix,AU,FOE,todOf,wxOf};window.dusBg=dusBg;window.dusFoeLook=dus
 {const _dsp=window.dsPlay;if(typeof _dsp==='function'){window.dsPlay=function(k,o){const had=!!$('dsOv');const r=_dsp.apply(this,arguments);try{if(!had&&on()){const cv=document.querySelector('#dsOv canvas');if(cv){const sm=mkC(cv.width>>1,cv.height>>1),sx=sm.getContext('2d'),dx=cv.getContext('2d');
   const loop=()=>{if(!cv.isConnected)return;sx.imageSmoothingEnabled=true;sx.clearRect(0,0,sm.width,sm.height);sx.drawImage(cv,0,0,sm.width,sm.height);dx.save();dx.setTransform(1,0,0,1,0,0);dx.imageSmoothingEnabled=false;dx.drawImage(sm,0,0,cv.width,cv.height);dx.restore();requestAnimationFrame(loop)};requestAnimationFrame(loop)}}}catch(e){}return r}}}
 })()}catch(e){console.error('block95',e)}
+
+// ============================================================
+// BLOCK 96: 🔒 คลังกรรมอยู่ที่เซิร์ฟเวอร์ + ล้างคลังทุกคน + หายากขึ้น · เซฟลงลายเซ็น แก้ไฟล์/รหัสเซฟแล้วใช้ไม่ได้
+//   คลังกรรม: ยอดจริงอยู่ที่เซิร์ฟเวอร์ (ผูกบัญชี) เครื่องเก็บแค่ตัวเลขชั่วคราวในหน่วยความจำ แก้ localStorage ไม่มีผล
+//   ได้กรรมเข้าคลัง = √(กรรม)×2 (เช่น 100 → 20 · 3000 → 110) · เซิร์ฟเวอร์จำกัด 200/ครั้ง · 600/วัน
+// ============================================================
+try{(()=>{
+const KBS={g:0,e:0,ok:0},PEND={g:0,e:0};let busy=0,tmr=null;
+const rare=n=>n>0?Math.max(1,Math.round(Math.sqrt(n)*2)):0;
+const put=j=>{if(j&&j.g!=null){KBS.g=Math.max(0,+j.g||0);KBS.e=Math.max(0,+j.e||0);KBS.ok=1;try{if(window.EV&&EV.ev&&EV.ev.kb){EV.ev.kb.g=KBS.g;EV.ev.kb.e=KBS.e}}catch(e){}}};
+async function kbSync(){try{if(!onlineOK)return;put(await api('kbget',{}))}catch(e){}}
+async function flush(){if(busy||!onlineOK)return;busy=1;try{for(const sd of ['g','e']){const n=PEND[sd];if(!n)continue;const j=await api('kbdep',{k:sd==='g'?n:-n});if(j&&j.ok){PEND[sd]=0;put(j)}else if(j&&j.err==='day'){PEND[sd]=0;try{toast('🏦 คลังกรรมวันนี้เต็มแล้ว (600/วัน)')}catch(e){}}else{retry(21000);break}}}catch(e){retry(30000)}finally{busy=0}}
+function retry(ms){clearTimeout(tmr);tmr=setTimeout(flush,ms)}
+async function spend(sd,n,w){try{const j=await api('kbspend',{s:sd,n,w});put(j);if(!(j&&j.ok)){try{toast('⛔ คลังกรรมที่เซิร์ฟเวอร์ไม่พอ — รายการนี้ไม่ถูกบันทึก')}catch(e){}return 0}return 1}catch(e){kbSync();return 0}}
+// อ่าน: ยอดจากเซิร์ฟเวอร์เท่านั้น (ยังไม่ซิงก์/ออฟไลน์ = 0 ใช้ไม่ได้)
+kbGet=function(){return{g:KBS.ok?KBS.g:0,e:KBS.ok?KBS.e:0}};
+// เขียน: เทียบกับยอดเดิม — เพิ่ม = ฝาก (ปรับให้หายาก) · ลด = หักที่เซิร์ฟเวอร์
+kbSet=function(d){try{for(const sd of ['g','e']){const nv=Math.max(0,Math.floor(+(d&&d[sd])||0)),df=nv-KBS[sd];
+  if(df>0){const r=rare(df);PEND[sd]+=r;KBS[sd]+=r}else if(df<0&&KBS.ok){KBS[sd]=nv;spend(sd,-df,(window._kbW||'').slice(0,24))}}
+  if(PEND.g||PEND.e){if(!onlineOK){try{toast('🏦 ต้องออนไลน์และล็อกอินเพื่อเก็บกรรมเข้าคลัง')}catch(e){}}flush()}}catch(e){}};
+window.kbGet=kbGet;window.kbSet=kbSet;window.kbSync=kbSync;
+// ล้างตัวเลขเก่าในเครื่องทิ้งครั้งเดียว
+try{if(LS.get('murim_kbwipe',0)!==2){LS.set('murim_kbank',{g:0,e:0});LS.set('murim_kbwipe',2)}}catch(e){}
+// ซิงก์เมื่อออนไลน์
+let tries=0;const iv=setInterval(()=>{if(onlineOK){kbSync();if(KBS.ok||++tries>40)clearInterval(iv)}},3000);
+setInterval(()=>{if(onlineOK)kbSync()},120000);
+
+// ---------- เซฟลงลายเซ็น ----------
+const SLOT=/^murim_(save(_\d+)?|bak_\d+)$/;
+const sig=d=>{try{return window._zq9?_zq9('sv',JSON.stringify(d.S)+'|'+JSON.stringify(d.peers||[])):''}catch(e){return''}};
+const vOK=d=>!!(d&&d.S&&d.sg&&d.sg===sig(d));
+{const _set=LS.set;LS.set=function(k,v){if(!(SLOT.test(k)&&v&&typeof v==='object'&&v.S))return _set.apply(LS,arguments);try{v.sg=sig(v);const r=_set.call(LS,k,v);if(!r)return r;const b=LS.get(k,null);if(b&&b.S&&b.sg!==sig(b)){b.sg=sig(b);_set.call(LS,k,b);v.sg=b.sg}return r}catch(e){return _set.apply(LS,arguments)}}}
+// เซฟเดิมที่มีก่อนอัปเดต: ลงลายเซ็นให้ครั้งเดียว
+try{if(LS.get('murim_sigv',0)!==1){for(let n=1;n<=24;n++)for(const k of [slotKey(n),bakKey(n)]){const d=LS.get(k,null);if(d&&d.S&&!d.sg)LS.set(k,d)}LS.set('murim_sigv',1)}}catch(e){}
+{const _rs=readSave,VC=new Map(),told=new Set();readSave=function(n){const d=_rs.apply(this,arguments);if(!d)return d;let ok=null;{ok=vOK(d);if(!ok&&!d.sg&&Date.now()<Date.UTC(2026,10,27,17)){try{LS.set(slotKey(n||1),d)}catch(e){}ok=true}}if(!ok){if(!told.has(n||1)){told.add(n||1);try{toast('⛔ เซฟช่อง '+(n||1)+' ถูกแก้ไขนอกเกม — โหลดไม่ได้')}catch(e){}}return null}return d};window.readSave=readSave}
+{const _lc=loadCode;loadCode=function(c){let d=null;try{d=JSON.parse(decodeURIComponent(escape(atob(String(c).trim()))))}catch(e){}if(d&&d.S&&!vOK(d)&&(d.sg||Date.now()>=Date.UTC(2026,10,27,17))){try{toast('⛔ รหัสเซฟนี้ถูกแก้ไข หรือเป็นรุ่นเก่า — ให้สร้างรหัสใหม่จากเครื่องเดิม')}catch(e){}return false}return _lc.apply(this,arguments)};window.loadCode=loadCode}
+})()}catch(e){console.error('block96',e)}
