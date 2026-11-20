@@ -48208,11 +48208,11 @@ function newK(bg){return{v:1,bg,city:pick(CITY),wall:68,waveIn:R(9,14),waveW:0,w
  np:{bud:pick(FN.filter(x=>x!==S.name)),rv:pick(FN),mt:pick(['ครูฝึกกาเหว่า','ป้าแขนกล','ลุงเกราะดำ'])},f:{},cd:{},seen:{},pup:null,par:bg==='hunter'?{st:'ok'}:null,beast:null,swap:0,fac:null,team:0,trust:50,yr:2054}}
 
 // ---------- ค่าที่ได้ ----------
-function powCalc(K){if(K.rk<0)return Math.max(5,Math.round(6+S.age*.8));const m=(1+K.genes.length*.08)*(mutHas(K,'กระดูกยืด')?1.08:1)*(K.beast?1.5:1);return Math.round(12*Math.pow(1.25,idx(K))*m*K.tal)}
-function sync(){const K=SK();if(!K)return;const p=powCalc(K);if(S.power<p)S.power=p;const mh=Math.round((60+Math.max(0,K.rk)*35+Math.max(0,K.sub)*3)*(has(K,'iron')?1.2:1));if(S.maxHp<mh)S.maxHp=mh;S.mw.end=Math.round(80*Math.pow(1.023,K.rk<0?0:idx(K))+(K.beast?30:0))}
+function powCalc(K){if(K.rk<0)return Math.max(5,Math.round(6+S.age*.8));const m=(1+K.genes.length*.08)*(mutHas(K,'กระดูกยืด')?1.08:1)*(K.beast?1.5:1)*(K.beast?1:1+((K.gear&&K.gear.w)|0)*.08);return Math.round(12*Math.pow(1.25,idx(K))*m*K.tal)}
+function sync(){const K=SK();if(!K)return;const p=powCalc(K);if(S.power<p)S.power=p;const mh=Math.round((60+Math.max(0,K.rk)*35+Math.max(0,K.sub)*3)*(has(K,'iron')?1.2:1)*(K.beast?1:1+((K.gear&&K.gear.a)|0)*.05));if(S.maxHp<mh)S.maxHp=mh;S.mw.end=Math.round(80*Math.pow(1.023,K.rk<0?0:idx(K))+(K.beast?30:0))}
 const say=(t,c,big)=>log(t,c||'',big);
 const feed=t=>addFeed('ev',t,'sum');
-const hp=p=>{const d=Math.round(S.maxHp*p);S.hp=Math.max(1,S.hp-d);return d};
+const hp=p=>{const _K=SK(),_a=_K&&!_K.beast&&_K.gear?_K.gear.a|0:0;const d=Math.round(S.maxHp*p*(1-_a*.07));S.hp=Math.max(1,S.hp-d);return d};
 const heal=p=>{S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*p))};
 const cr=n=>{n=Math.round(n);S.money=Math.max(0,(S.money||0)+n);return(n>=0?'+':'')+fmt(n)+' เครดิต'};
 const crT=n=>fmt(Math.round(n))+' เครดิต';
@@ -48243,7 +48243,7 @@ let MG=null;
 function mgAuto(){return auto||speed>=8||!!LS.get('murim_fa',0)}
 function mgDone(sc){if(!MG)return;const m=MG;MG=null;clearInterval(m.t);clearTimeout(m.t2);if($('modal').dataset.k==='skymg')closeM();setTimeout(()=>{try{m.cb(cl(sc,0,1))}catch(e){console.error(e)}},120)}
 window.skyMgDone=mgDone;
-function skyMG(kind,ti,sub,cb){if(mgAuto()){setTimeout(()=>cb(.35+rnd()*.45),60);return}
+function skyMG(kind,ti,sub,cb){if(mgAuto()){setTimeout(()=>cb(.35+rnd()*.45),60);return}if(MG2.includes(kind))return skyMG2(kind,ti,sub,cb);
  MG={kind,cb,t:0,t2:0,hit:0,n:0};
  const shell=b=>modal(`<div class="skMg"><div class="skMgH">${ti}</div><p class="tag2">${sub}</p>${b}<button class="gbtn" style="width:100%;margin-top:10px" onclick="skyMgDone(.45)">⏭ ข้าม (ผลกลางๆ)</button></div>`,'skymg');
  if(kind==='scan'){let pos=0,dir=1,round=0,sc=0;const z=[];for(let i=0;i<3;i++)z.push(.2+rnd()*.55);
@@ -48325,25 +48325,26 @@ def('a_bud',{c:K=>K.f.budMet&&!K.f.team&&K.lic>=1,once:1,w:6,go(K){C(`🤝 ${K.n
  O('ตกลงตั้งทีม',()=>{K.f.team=1;K.team=4;say('🛡️ ทีมสี่คนได้ชื่อว่า “ธุลีเหล็ก” ตามป้ายร้านที่นั่งอยู่','good')}),
  O('ข้าชอบล่าคนเดียว',()=>{K.f.solo=1;K.xp+=40;say('🐺 คุณยังล่าคนเดียว ช้ากว่า แต่ไม่ต้องแบ่งใคร','')})])}});
 def('a_night',{c:K=>K.rk>=2&&!K.f.night,cd:2,w:7,go(K){C('🌑 ล่ากลางคืน','สมาคมให้ค่าหัวสามเท่าสำหรับอสูรที่ออกล่าเฉพาะกลางคืน แต่ทุกปีมีนักล่าหายไปในความมืดหลายสิบคน',[
- O('ออกล่าคืนนี้',()=>skyMG('tap','🌑 ล่าในความมืด','ตาอสูรเรืองในความมืด — แตะให้ทัน',sc=>{const p=cl(.25+sc*.6+(has(K,'night')?.2:0)+(K.f.team?.1:0),.1,.95);if(rnd()<p){K.f.night=1;K.cores+=2;say(`🌒 คุณกลับมาตอนรุ่งสางพร้อมหัวอสูรราตรี · ${cr(1800)}${xp(80)}`,'epic')}else{const d=hp(.45);say(`🩸 ถูกซุ่มโจมตีในความมืด · พลังชีวิต −${d}`,'bad');if(S.hp<S.maxHp*.12&&rnd()<.3)die(['ถูกอสูรราตรีลากเข้าไปในความมืด'],'🌑 วิทยุของคุณเงียบลงตอนตีสาม')}}),'มินิเกม · อันตราย'),
+ O('ออกล่าคืนนี้',()=>skyMG('stealth','🌑 ย่องในความมืด','อสูรราตรีหลับตาเป็นพักๆ — ขยับเฉพาะตอนมันหลับตา',sc=>{const p=cl(.25+sc*.6+(has(K,'night')?.2:0)+(K.f.team?.1:0)+intelUse(K),.1,.95);if(rnd()<p){K.f.night=1;K.cores+=2;say(`🌒 คุณกลับมาตอนรุ่งสางพร้อมหัวอสูรราตรี · ${cr(1800)}${xp(80)}`,'epic')}else{const d=hp(.45);say(`🩸 ถูกซุ่มโจมตีในความมืด · พลังชีวิต −${d}`,'bad');if(S.hp<S.maxHp*.12&&rnd()<.3)die(['ถูกอสูรราตรีลากเข้าไปในความมืด'],'🌑 วิทยุของคุณเงียบลงตอนตีสาม')}}),'มินิเกม · อันตราย'),
  O('รอให้พร้อมกว่านี้',()=>say('⏳ คืนนี้คุณนอนบนกำแพงฟังเสียงหอน',''))])}});
 def('a_hunt',{c:K=>K.lic>=1&&!K.beast,cd:1,w:6,go(K){const B=pick([['หมาป่าเกราะหนาม','ฝูงห้าตัว'],['หมูป่าเขาเหล็ก','ตัวเดียวแต่ชาร์จแรงเท่ารถบรรทุก'],['ค้างคาวกรีดเสียง','ทำให้หูอื้อจนยืนไม่อยู่'],['งูหินลายดาว','พิษทำให้ร่างกลายเป็นหิน'],['ตั๊กแตนใบมีด','ฝูงใหญ่ฟันทุกอย่างที่ขวาง']]);const g=pick(Object.keys(GENE).filter(x=>!has(K,x)));
  C(`🗡️ เป้าหมาย: ${B[0]}`,`กระดานภารกิจของสมาคมมีค่าหัว${B[0]} — ${B[1]} · ถ้าล่าได้ แก่นยีนของมันอาจให้สาย “${GENE[g][0]}”`,[
   O('ล่าตรงๆ',()=>skyMG('tap','🗡️ ล่า'+B[0],'แตะเป้าให้ได้มากที่สุด',sc=>huntRes(K,B,g,sc,0)),'มินิเกม'),
   O('วางกับดักแล้วรอ',()=>huntRes(K,B,g,.35+S.int/400+rnd()*.3,1),'ปลอดภัยกว่า ได้น้อยกว่า'),
   O('ส่งข้อมูลให้ทีมอื่น เอาค่านายหน้า',()=>say(`📡 ทีมอื่นจ่ายค่าข้อมูลให้ · ${cr(250)}`,''))])}});
-function huntRes(K,B,g,sc,safe){const p=cl(.3+sc*.55+(K.f.team?.1:0)+(K.pup&&K.pup.st==='bond'?.1:0)+(has(K,'claw')?.08:0),.1,.95);
+function huntRes(K,B,g,sc,safe){const p=cl(.3+sc*.55+intelUse(K)+((K.gear&&K.gear.w)|0)*.03+(K.f.team?.1:0)+(K.pup&&K.pup.st==='bond'?.1:0)+(has(K,'claw')?.08:0),.1,.95);
  if(rnd()<p){const c=(safe?600:1200)*(1+K.rk*.6);K.cores+=safe?1:2;let t=`🦴 ล่า${B[0]}สำเร็จ · ${cr(c)}${xp(safe?40:70)}${fameA(40)}`;
   if(!safe&&(K.genes.length===0||rnd()<.45)){t+=` · ได้<b>แก่นยีน</b>ที่ให้สาย “${GENE[g][0]}”`;K.pend=g;queue('gene')}say(t,'good')}
  else{const d=hp(safe?.15:.35);say(`🩸 ${B[0]}แรงกว่าที่คิด · พลังชีวิต −${d}`,'bad');if(!safe&&S.hp<S.maxHp*.1&&rnd()<.35)die([`ถูก${B[0]}ฆ่าระหว่างล่านอกกำแพง`],'🗡️ ทีมเก็บกู้พบแค่ใบอนุญาตของคุณ')}}
 def('gene',{c:()=>false,w:0,go(K){const g=K.pend;K.pend=null;if(!g)return;const full=K.genes.length>=3;
  C('🧬 แก่นยีนในมือ',`แก่นยีนของอสูรเต้นตุบๆ ในมือคุณ ถ้ากลืนเข้าไปจะได้สาย “${GENE[g][0]}” — ${GENE[g][1]}${full?'<br><b>ยีนเต็ม 3 สายแล้ว ต้องทิ้งสายเก่าหนึ่งสาย</b>':''}`,
- (full?K.genes.map(x=>O(`กลืน · ทิ้ง “${GENE[x][0]}”`,()=>{K.genes=K.genes.filter(y=>y!==x);gainGene(K,g)})):[O('กลืนเลย',()=>gainGene(K,g),'เสี่ยงกลายพันธุ์')]).concat([Object.assign(O(`ขายในตลาดมืด (${crT(1500+K.rk*800)})`,()=>say(`🏪 ${cr(1500+K.rk*800)}`,'')),{skip:true}),Object.assign(O('เก็บไว้ก่อน',()=>{K.stash=g;say('🧊 แก่นยีนถูกแช่ไว้ในตู้เย็นเก่า — กลับมากลืนทีหลังได้','')}),{skip:true})]))}});
-function gainGene(K,g){K.genes.push(g);if(g==='iron')S.maxHp=Math.round(S.maxHp*1.2);mutRoll(K,.22);say(`🧬 <b>ได้ยีนสาย “${GENE[g][0]}”</b> — ${GENE[g][1]}`,'myth');sync()}
+ (full?K.genes.map(x=>O(`กลืน · ทิ้ง “${GENE[x][0]}”`,()=>{K.genes=K.genes.filter(y=>y!==x);splice(K,g)})):[O('กลืนเลย',()=>splice(K,g),'มินิเกม · เสี่ยงกลายพันธุ์')]).concat([Object.assign(O(`ขายในตลาดมืด (${crT(1500+K.rk*800)})`,()=>say(`🏪 ${cr(1500+K.rk*800)}`,'')),{skip:true}),Object.assign(O('เก็บไว้ก่อน',()=>{K.stash=g;say('🧊 แก่นยีนถูกแช่ไว้ในตู้เย็นเก่า — กลับมากลืนทีหลังได้','')}),{skip:true})]))}});
+function gainGene(K,g,mp){K.genes.push(g);if(g==='iron')S.maxHp=Math.round(S.maxHp*1.2);mutRoll(K,mp==null?.22:mp);say(`🧬 <b>ได้ยีนสาย “${GENE[g][0]}”</b> — ${GENE[g][1]}`,'myth');sync()}
+function splice(K,g){skyMG('dna','🧬 ต่อสายยีน','ยีนอสูรต้องเกาะกับเกลียว DNA ของคุณ — A คู่ T · C คู่ G ให้ทันเวลา',sc=>{gainGene(K,g,.05+.4*(1-sc));if(sc>=.85)say('🧬 สายยีนเกาะสนิท ไม่มีรอยเพี้ยน','good')})}
 function mutRoll(K,p){if(rnd()>=p*(has(K,'cold')?.6:1))return;const r=rnd();if(r<.05){K.mut.push(['เสียสติ','']);return queue('mad')}const L=r<.7?MUT.good:MUT.bad;const m=pick(L.filter(x=>!mutHas(K,x[0]))||L);if(!m)return;K.mut.push(m);say(`🧪 <b>กลายพันธุ์: ${m[0]}</b> — ${m[1]}`,r<.7?'good':'bad');sync()}
 def('mad',{c:()=>false,w:0,go(K){C('🩸 เสียงที่ไม่ใช่ของคุณ','ยีนอสูรในตัวเริ่มคุมร่าง คืนนี้คุณตื่นขึ้นมาบนหลังคาโดยไม่รู้ว่าขึ้นมายังไง มือเปื้อนเลือดที่ไม่ใช่ของคุณ',[
  O('มัดตัวเองแล้วให้หมอผ่าตัดยีนออก',()=>{K.mut=K.mut.filter(m=>m[0]!=='เสียสติ');if(K.genes.length)K.genes.pop();hp(.4);say('🩺 การผ่าตัดเอายีนสายล่าสุดออก คุณรอด แต่อ่อนแรงไปหลายเดือน','')}),
- O('ฝึกจิตสะกดมันไว้',()=>{const p=cl(.3+K.mind/200,.2,.85);if(rnd()<p){K.mut=K.mut.filter(m=>m[0]!=='เสียสติ');mindA(15);say('🧘 เสียงนั้นเงียบลง และยังอยู่ — แต่ตอนนี้มันเชื่อฟังคุณ','epic')}else die(['ยีนอสูรกลืนกินสติจนกลายเป็นอสูรเต็มตัว'],'🩸 นักล่าเพื่อนร่วมทีมต้องเป็นคนลั่นไก')},'เสี่ยง'+pc(cl(.3+K.mind/200,.2,.85))),
+ O('ฝึกจิตสะกดมันไว้',()=>skyMG('mind','🩸 สะกดเสียงนั้น','กดค้างให้เข็มจิตอยู่ในแถบ — อย่าให้เสียงอสูรดึงไป',sc=>{const p=cl(.15+K.mind/250+sc*.5,.15,.92);if(rnd()<p){K.mut=K.mut.filter(m=>m[0]!=='เสียสติ');mindA(15);say('🧘 เสียงนั้นเงียบลง และยังอยู่ — แต่ตอนนี้มันเชื่อฟังคุณ','epic')}else die(['ยีนอสูรกลืนกินสติจนกลายเป็นอสูรเต็มตัว'],'🩸 นักล่าเพื่อนร่วมทีมต้องเป็นคนลั่นไก')}),'มินิเกม · เสี่ยง'+pc(cl(.15+K.mind/250+.25,.15,.92))),
  O('หนีออกนอกกำแพง ปล่อยให้มันเป็นไป',()=>{K.beast={n:'อสูรร่างมนุษย์',from:'mad'};S.deathCause=null;say('🌲 คุณหายเข้าป่าไปทั้งที่ยังมีสติครึ่งหนึ่ง ชาวนครเชื่อว่าคุณตายแล้ว','myth',true);sync()},'กลายเป็นอสูร')])}});
 def('a_market',{c:K=>K.lic>=1&&K.cores>=1,cd:2,w:5,go(K){const v=600+K.rk*500;C('🏪 ตลาดซากอสูร',`พ่อค้าแขนกลรับซื้อแก่นอสูรราคาดีวันนี้ คุณมีแก่นเก็บไว้ ${K.cores} ก้อน`,[
  O(`ขายหมด (${crT(v*K.cores)})`,()=>{say(`🏪 ขายแก่น ${K.cores} ก้อน · ${cr(v*K.cores)}`,'');K.cores=0}),
@@ -48386,15 +48387,15 @@ def('a_mount',{c:K=>K.rk>=4&&!K.f.mount,cd:3,w:6,go(K){C('⛰️ อสูรร
  O('นำทีมเข้าตี',()=>skyMG('seq','⛰️ หาจุดอ่อนภูผา','จำลำดับรอยแตกบนเกราะหิน แล้วกดตาม',sc=>{const p=cl(.25+sc*.55+(K.f.team?.12:0)+(K.pup&&K.pup.st==='bond'?.1:0),.1,.92);if(rnd()<p){K.f.mount=1;K.cores+=6;say(`⛰️ <b>ภูผาล้มลง!</b> แสงแดดส่องผ่านฝุ่นที่ฟุ้งเต็มฟ้า · ${cr(25000)}${fameA(3000)}${xp(400)}`,'myth',true)}else{const d=hp(.5);say(`🪨 เกราะหินแข็งกว่าที่คิด ทีมต้องถอย · พลังชีวิต −${d}`,'bad');if(S.hp<S.maxHp*.08&&rnd()<.35)die(['ถูกอสูรภูผาเหยียบ'],'⛰️ ร่างของคุณถูกพบใต้ซากหิน')}}),'มินิเกม'),
  O('ตามรอยไปหาจุดอ่อนก่อน',()=>{S.int+=4;say('🧭 คุณสังเกตว่ามันพักทุกเที่ยงคืนที่ลำธารเดิม — ครั้งหน้าจะง่ายขึ้น','');K.f.mountIntel=1})])}});
 def('neck',{c:()=>false,w:0,go(K){K.f.neck=0;const pills=1500+K.rk*1200;C('🧱 คอขวด · ชั้นที่ 9',`เซลล์ของคุณอัดแน่นจนขยับต่อไม่ได้ ต้องฝ่ากำแพงยีนชั้นที่ 9 เพื่อไปถึงขั้นสมบูรณ์ของ${RK[K.rk].n}`,[
- O('ฝ่าด้วยตัวเอง',()=>skyMG('seq','🧱 ฝ่าคอขวด','จำลำดับคลื่นยีน แล้วกดตามให้ถูก',sc=>neckRes(K,.3+sc*.6)),'มินิเกม'),
+ O('ฝ่าด้วยตัวเอง',()=>skyMG('mind','🧱 ฝ่าคอขวด','เซลล์อัดแน่นจนจิตแกว่ง — กดค้างให้เข็มอยู่ในแถบนานที่สุด',sc=>neckRes(K,.3+sc*.6)),'มินิเกม'),
  O(`ใช้ยาเสริมยีน (${crT(pills)})`,()=>{if(S.money<pills){say('💸 เงินไม่พอ — ต้องฝ่าเอง','');return neckRes(K,.45)}cr(-pills);neckRes(K,.85)},'โอกาส ~85%'),
  O('สะสมต่ออีกปี',()=>{K.xp=need(K)*.8;say('⏳ คุณรอให้ร่างพร้อมกว่านี้','')})])}});
 function neckRes(K,p){if(rnd()<cl(p,.1,.95)){K.xp-=need(K);K.sub=10;say(`🌟 <b>ทะลวงคอขวด!</b> ${RK[K.rk].n} ขั้นสมบูรณ์${K.rk<RK.length-1?' — ข้ามขั้นได้ต้อง: '+RK[K.rk].gate:''}`,'epic',true);sync();advance()}else{K.xp=need(K)*.5;const d=hp(.25);say(`💥 ฝ่าไม่ผ่าน เซลล์ปั่นป่วน · พลังชีวิต −${d}`,'bad')}}
 def('wave',{c:()=>false,w:0,go(K){K.waveIn=R(10,18);const big=K.wall<40;C('🌊 คลื่นอสูร!',`ไซเรนดังทั้งนคร อสูรนับพันพุ่งเข้าชนกำแพง${big?' ที่ทรุดโทรมอยู่แล้ว':''} · ความแข็งแรงกำแพง ${K.wall}/100`,[
- O(K.rk>=0&&age()>=16?'ขึ้นกำแพงแนวหน้า':'ช่วยขนกระสุนขึ้นกำแพง',()=>skyMG('tap','🌊 กันกำแพง','แตะอสูรที่ปีนขึ้นมาให้มากที่สุด',sc=>waveRes(K,sc,1)),'มินิเกม'),
+ O(K.rk>=0&&age()>=16?'ขึ้นกำแพงแนวหน้า':'ช่วยขนกระสุนขึ้นกำแพง',()=>skyMG('wall','🌊 ป้องกำแพง','อสูรวิ่งเข้ามา 3 เลน — แตะเลนเพื่อยิงตัวที่ใกล้กำแพงที่สุด (🦏 ต้องยิง 2 นัด) · ปล่อยทะลุ 5 ตัว = แตก',sc=>waveRes(K,sc,1)),'มินิเกม'),
  O(K.pup&&K.pup.st==='bond'?`เรียก${K.pup.n}กับฝูงมาช่วย`:'คุ้มกันผู้อพยพในเขตใน',()=>waveRes(K,K.pup&&K.pup.st==='bond'?.85:.4,0)),
  O('หลบในบังเกอร์',()=>waveRes(K,.15,-1))])}});
-function waveRes(K,sc,front){const w0=K.wall,p=cl(.2+sc*.6+K.wall/250+(has(K,'quill')?.1:0)+(K.fac==='mil'?.05:0),.05,.95),ok=rnd()<p;
+function waveRes(K,sc,front){const w0=K.wall,p=cl(.2+sc*.6+K.wall/250+(has(K,'quill')?.1:0)+(K.fac==='mil'?.05:0)+intelUse(K),.05,.95),ok=rnd()<p;
  if(ok){K.waveW++;wallA(-R(3,8));say(`🛡️ <b>กำแพงยืนหยัด!</b> คลื่นอสูรถอยกลับเข้าป่า${front>0?fameA(800)+xp(120)+' · '+cr(3000):''}`,'epic',true)}
  else{K.waveL++;wallA(-R(18,30));if(front>0){const d=hp(.4);say(`🩸 กำแพงบางส่วนพัง คุณสู้จนลมหายใจรวยริน · พลังชีวิต −${d}`,'bad')}else say('🩸 ช่องกำแพงถูกทลาย เขตชั้นนอกไฟไหม้ทั้งคืน','bad');if(front>0&&S.hp<S.maxHp*.1&&rnd()<.3)die(['สิ้นใจบนกำแพงระหว่างคลื่นอสูร'],'🧱 ชื่อของคุณถูกสลักบนกำแพงชั้นนอก')}
  if(K.wall<=0&&S.alive)queue('fall')}
@@ -48454,6 +48455,7 @@ function skyYear(){const K=SK(),M=S.mw;try{if(auto)autoFocus()}catch(e){}S.age++
   else if(f==='sk_wall'){feed(`🧱 เฝ้ากำแพงทั้งปี${wallA(R(4,9))}${fameA(60)}${xp(base*.6)}`)}
   else{feed(`🏭 ทำงานในนคร · ${cr(400+K.rk*350)}${xp(base*.4)}`)}
   if(rnd()<.25)feed(pick(FILL.ad))}
+ try{shopYear(K)}catch(e){console.error(e)}
  // กำแพงทรุดเองทุกปี · คลื่นอสูร
  K.wall=cl(K.wall-R(1,3),0,100);K.waveIn--;
  if(K.waveIn<=0&&age()>=6)queue('wave');
@@ -48491,6 +48493,74 @@ window.skyStart=function(bg){try{closeM()}catch(e){}
    O('อยู่ร่วมร่างกับมัน',()=>{K.beast={n:bn,from:'share'};S.deathCause=null;say(`🤝 คุณกับ${bn}แบ่งร่างกันอยู่ — บางคืนมันคุม บางคืนคุณคุม`,'epic',true);sync();render()},'ปลอดภัยกว่า'),
    O('ปล่อยวาง',()=>{S.deathCause=dc;setTimeout(()=>{try{_cd()}catch(e){}},200)},'ตายตามปกติ')])}catch(e){console.error(e)}},300);return false}}}catch(e){console.error(e)}return _cd.apply(this,arguments)}}
 
+// ---------- ชุด 1: ตลาดนคร (ที่ใช้เครดิต) + มินิเกมใหม่ 4 แบบ ----------
+// อุปกรณ์จากแก่นอสูร · เซรั่มยีน · ที่อยู่ · ห้องแรงโน้มถ่วง · ข่าวกรอง
+const GEARN={w:['มือเปล่า','มีดเหล็กกล้า','ดาบเกราะหนาม','ใบมีดสั่นสะเทือน','ดาบแก่นภูผา','ใบมีดดาวตก'],a:['เสื้อผ้าธรรมดา','เสื้อหนังอสูร','เกราะเกล็ดเหล็ก','เกราะเซรามิกโลกเก่า','เกราะกระดองภูผา','ชุดเกราะดาวตก']};
+const HOMEN=[['🏚️','เพิงนอกกำแพง','ไม่มีอะไรกันเสียงหอน'],['🏢','ห้องเช่าเขตกลาง','นอนหลับได้ · ฟื้นตัว +3%/ปี · จิต +1/ปี'],['🏡','บ้านเขตชั้นใน','ปลอดภัยที่สุดในนคร · ฟื้นตัว +7%/ปี · จิต +3/ปี · ชื่อเสียง +40/ปี']];
+const HOMEC=[0,12000,90000];
+const gearOf=K=>K.gear||(K.gear={w:0,a:0});
+const gearCost=(L,K)=>({c:Math.round(900*Math.pow(L+1,1.7)*(1+Math.max(0,K.rk)*.5)/10)*10,k:L+1});
+const serumC=K=>Math.round(1800*(1+Math.max(0,K.rk)*.9)/10)*10,gravC=K=>Math.round(1200*(1+Math.max(0,K.rk)*.7)/10)*10,intelC=K=>Math.round(400*(1+Math.max(0,K.rk)*.6)/10)*10;
+function shopTab(K,t){const G=gearOf(K),m=S.money||0,btn=(on,lab,f)=>`<button class="skBuy" ${on?'':'disabled'} onclick="${f}">${lab}</button>`;
+ if(t==='gear')return['w','a'].map(k=>{const L=G[k],N=GEARN[k],max=L>=N.length-1,c=gearCost(L,K);return`<div class="skIt"><div class="skIc">${k==='w'?'🗡️':'🛡️'}</div><div class="skIx"><b>${N[L]}${L?` <i>+${L}</i>`:''}</b><small>${k==='w'?`กาย +${L*8}% · ล่าสำเร็จง่ายขึ้น +${L*3}%`:`โดนตีเบาลง ${L*7}% · พลังชีวิตสูงสุด +${L*5}%`}</small>${max?'<small class="ok">✦ ระดับสูงสุดของยุคนี้</small>':`<small>ถัดไป: <b>${N[L+1]}</b> · ${fmt(c.c)} เครดิต + 🔶 แก่น ${c.k} (มี ${K.cores})</small>`}</div>${max?'':btn(m>=c.c&&K.cores>=c.k,'หลอม',`skyBuy('${k}')`)}</div>`}).join('');
+ if(t==='serum'){const c=serumC(K),left=2-((K.srY===S.age)?(K.srN|0):0);return`<div class="skIt"><div class="skIc">💉</div><div class="skIx"><b>เซรั่มยีนของสมาคม</b><small>เซลล์ +60% ของชั้นนี้ · ต้องต่อสายยีนให้ตรง ไม่งั้นเสี่ยงกลายพันธุ์ · ซื้อได้ปีละ 2 หลอด (เหลือ ${Math.max(0,left)})</small><small>${fmt(c)} เครดิต</small></div>${btn(K.rk>=0&&m>=c&&left>0&&!K.beast,'ฉีด','skyBuy(\'serum\')')}</div>`}
+ if(t==='home')return HOMEN.map((h,i)=>{const cur=(K.home|0)===i;return`<div class="skIt${cur?' cur':''}"><div class="skIc">${h[0]}</div><div class="skIx"><b>${h[1]}${cur?' <i>อยู่ที่นี่</i>':''}</b><small>${h[2]}</small>${i>(K.home|0)?`<small>${fmt(HOMEC[i])} เครดิต</small>`:''}</div>${i>(K.home|0)?btn(m>=HOMEC[i]&&!K.beast,'ซื้อ',`skyBuy('h${i}')`):''}</div>`}).join('');
+ if(t==='grav'){const c=gravC(K);return`<div class="skIt"><div class="skIc">🏋️</div><div class="skIx"><b>ห้องแรงโน้มถ่วง ×3</b><small>เช่าทีละปี · ปีที่ตั้งโฟกัส “ฝึกกาย” ได้เซลล์เพิ่ม +50% · เหลือสิทธิ์ ${K.grav|0} ปี</small><small>${fmt(c)} เครดิต / ปี</small></div>${btn(K.rk>=0&&m>=c&&!K.beast,'เช่า 1 ปี','skyBuy(\'grav\')')}</div>`}
+ if(t==='intel'){const c=intelC(K);return`<div class="skIt"><div class="skIc">📜</div><div class="skIx"><b>ข่าวกรองนอกกำแพง</b><small>รู้เส้นทางฝูงอสูรล่วงหน้า · การล่า ล่ากลางคืน และกันคลื่นอสูรครั้งถัดไป สำเร็จง่ายขึ้น +12% (ใช้แล้วหมด) · มีอยู่ ${K.intel|0}</small><small>${fmt(c)} เครดิต</small></div>${btn(m>=c&&(K.intel|0)<3&&!K.beast,'ซื้อ','skyBuy(\'intel\')')}</div>`}
+ return''}
+let SHT='gear';
+window.skyShop=function(t){const K=SK();if(!K)return;if(t)SHT=t;const T=[['gear','🗡️ อุปกรณ์'],['serum','💉 เซรั่ม'],['home','🏠 ที่อยู่'],['grav','🏋️ ห้องฝึก'],['intel','📜 ข่าวกรอง']];
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="skShop"><div class="skShH"><b>ตลาดนคร</b><span>${esc(K.city)}</span></div><div class="skShM">💳 ${fmt(S.money||0)} เครดิต · 🔶 แก่นอสูร ${K.cores}</div>
+ <div class="skTabs">${T.map(x=>`<button class="${SHT===x[0]?'on':''}" onclick="skyShop('${x[0]}')">${x[1]}</button>`).join('')}</div><div class="skList">${shopTab(K,SHT)}</div></div>`,'skyshop')};
+window.skyBuy=function(k){const K=SK();if(!K||K.beast)return;const G=gearOf(K);
+ if(k==='w'||k==='a'){const L=G[k];if(L>=GEARN[k].length-1)return;const c=gearCost(L,K);if(S.money<c.c||K.cores<c.k)return toast('เครดิตหรือแก่นอสูรไม่พอ');S.money-=c.c;K.cores-=c.k;G[k]++;if(k==='a')S.maxHp=Math.round(S.maxHp*1.05);sync();try{sfx('ach')}catch(e){}say(`🔨 ช่างหลอมในตลาดตีแก่นอสูร ${c.k} ก้อนเข้ากับเหล็ก — ได้ <b>${GEARN[k][G[k]]}</b>`,'good');render();return skyShop()}
+ if(k==='serum'){const c=serumC(K);if(K.srY!==S.age){K.srY=S.age;K.srN=0}if(S.money<c||K.srN>=2)return;S.money-=c;K.srN++;closeM();
+  return skyMG('dna','💉 ต่อสายยีน','เซรั่มจะยึดเกาะได้ถ้าคู่เบสตรงกัน — A คู่ T · C คู่ G',sc=>{K.xp+=need(K)*.6*(.5+sc*.5);const risk=.35*(1-sc);say(`💉 เซรั่มซึมเข้าเซลล์${sc>=.8?' อย่างสมบูรณ์':''} · เซลล์ +${Math.round(60*(.5+sc*.5))}%`,'good');if(rnd()<risk)mutRoll(K,1);advance();sync();render()})}
+ if(/^h\d/.test(k)){const i=+k[1];if(i<=(K.home|0)||S.money<HOMEC[i])return;S.money-=HOMEC[i];K.home=i;say(`${HOMEN[i][0]} คุณย้ายเข้า<b>${HOMEN[i][1]}</b> — ${i===2?'คืนแรกเงียบจนนอนไม่หลับ ไม่มีเสียงหอนเลยสักครั้ง':'กุญแจห้องแรกที่เป็นของคุณเอง'}`,'epic');try{keyAdd(`${S.age} ปี — ย้ายเข้า${HOMEN[i][1]}`)}catch(e){}render();return skyShop()}
+ if(k==='grav'){const c=gravC(K);if(S.money<c)return;S.money-=c;K.grav=(K.grav|0)+1;say(`🏋️ เช่าห้องแรงโน้มถ่วงอีก 1 ปี (เหลือ ${K.grav} ปี)`,'');render();return skyShop()}
+ if(k==='intel'){const c=intelC(K);if(S.money<c||(K.intel|0)>=3)return;S.money-=c;K.intel=(K.intel|0)+1;say(`📜 ข่าวกรองจากหน่วยลาดตระเวน: ${pick(['ฝูงหมาป่าเกราะหนามย้ายลงใต้','รังค้างคาวกรีดเสียงอยู่ใต้สะพานพัง','อสูรภูผาหลับยาวช่วงหน้าแล้ง','ทางน้ำเก่าใช้หลบฝูงได้'])}`,'');render();return skyShop()}};
+const intelUse=K=>{if((K.intel|0)>0){K.intel--;return .12}return 0};
+// ผลของที่ซื้อทุกปี
+function shopYear(K){if(K.beast)return;const h=K.home|0;if(h){heal(h===2?.07:.03);K.mind+=h===2?3:1;if(h===2)S.fame=(S.fame||0)+40}
+ if((K.grav|0)>0&&S.focus==='sk_body'&&K.rk>=0){K.grav--;const t=xp(RATE[K.rk]*100/2.3*1.15);feed(`🏋️ ฝึกในห้องแรงโน้มถ่วง ×3${t} (เหลือสิทธิ์ ${K.grav} ปี)`)}}
+
+// ---------- มินิเกมใหม่ ----------
+const MG2=['wall','dna','stealth','mind'];
+function skyMG2(kind,ti,sub,cb){MG={kind,cb,t:0,t2:0};const shell=b=>modal(`<div class="skMg"><div class="skMgH">${ti}</div><p class="tag2">${sub}</p>${b}<button class="gbtn" style="width:100%;margin-top:10px" onclick="skyMgDone(.45)">⏭ ข้าม (ผลกลางๆ)</button></div>`,'skymg');
+ if(kind==='wall'){const M=[];let kill=0,leak=0,tick=0,sp=0;shell(`<div class="skWh">🎯 ยิงได้ <b id="skWk">0</b> · ทะลุ <b id="skWl">0</b>/5</div><div class="skWl">${[0,1,2].map(i=>`<button class="skLane" data-l="${i}" onclick="skyWallShot(${i})" aria-label="เลน ${i+1}"></button>`).join('')}</div><div class="skWb">▀▀▀ กำแพง ▀▀▀</div>`);
+  const draw=()=>{document.querySelectorAll('.skLane').forEach(L=>{const l=+L.dataset.l;L.innerHTML=M.filter(m=>m.l===l).map(m=>`<i style="top:${m.y}%">${m.e}</i>`).join('')});const a=$('skWk'),b=$('skWl');if(a)a.textContent=kill;if(b)b.textContent=leak};
+  window.skyWallShot=l=>{const L=M.filter(m=>m.l===l).sort((a,b)=>b.y-a.y)[0];if(!L){try{sfx('click')}catch(e){}return}L.hp--;if(L.hp<=0){M.splice(M.indexOf(L),1);kill++;try{sfx('good')}catch(e){}}draw()};
+  MG.t=setInterval(()=>{tick++;if(tick%Math.max(7,16-Math.floor(tick/40))===0&&sp<22){sp++;const big=rnd()<.18;M.push({l:Math.floor(rnd()*3),y:0,v:big?.7:1.1+rnd()*.7,hp:big?2:1,e:big?'🦏':pick(['🐺','🦇','🐗','🦂'])})}
+   for(const m of M.slice())m.y+=m.v;for(const m of M.slice())if(m.y>=92){M.splice(M.indexOf(m),1);leak++;try{sfx('bad')}catch(e){}}draw();
+   if(leak>=5||(sp>=22&&!M.length))mgDone(kill/Math.max(1,kill+leak*1.6))},60);MG.t2=setTimeout(()=>mgDone(kill/Math.max(1,kill+leak*1.6+M.length)),26000);return}
+ if(kind==='dna'){const B=['A','T','C','G'],P={A:'T',T:'A',C:'G',G:'C'},s=[];for(let i=0;i<6;i++)s.push(pick(B));let i=0,bad=0,left=12;
+  const paint=()=>{const e=$('skDn');if(e)e.innerHTML=s.map((b,j)=>`<div class="skBp${j<i?' ok':j===i?' cur':''}"><b>${b}</b><span>${j<i?P[b]:j===i?'?':''}</span></div>`).join('');const t=$('skDt');if(t)t.textContent=left};
+  shell(`<div class="skWh">⏱ <b id="skDt">12</b> วิ · พลาดแล้วยีนเพี้ยน</div><div class="skDna" id="skDn"></div><div class="skDb">${B.map(b=>`<button class="skDk b${b}" onclick="skyDnaIn('${b}')">${b}</button>`).join('')}</div>`);paint();
+  window.skyDnaIn=b=>{if(i>=s.length)return;if(P[s[i]]===b){i++;try{sfx('good')}catch(e){}}else{bad++;try{sfx('bad')}catch(e){}const e=$('skDn');if(e){e.classList.remove('shk');void e.offsetWidth;e.classList.add('shk')}}paint();if(i>=s.length)mgDone(cl(1-bad*.18+left*.01,0,1))};
+  MG.t=setInterval(()=>{left--;paint();if(left<=0)mgDone(cl(i/s.length-bad*.18,0,1))},1000);return}
+ if(kind==='stealth'){let pr=0,open=false,hold=false,nx=Date.now()+1400,caught=0;
+  shell(`<div class="skEye" id="skEy">😑</div><div class="skSt"><i id="skSp" style="width:0%"></i><span>🐾</span></div><p class="tag2" id="skSm">กดค้างเพื่อย่อง · ปล่อยมือเมื่ออสูรลืมตา</p><button class="pbtn skBig" id="skHold">🤫 กดค้างเพื่อย่อง</button>`);
+  const hb=$('skHold'),on=e=>{e.preventDefault();hold=true},off=()=>{hold=false};if(hb){hb.addEventListener('pointerdown',on);hb.addEventListener('pointerup',off);hb.addEventListener('pointerleave',off);hb.addEventListener('pointercancel',off)}
+  MG.t=setInterval(()=>{const now=Date.now();if(now>=nx){open=!open;nx=now+(open?700+rnd()*900:900+rnd()*1500);const e=$('skEy');if(e){e.textContent=open?'👁️':'😑';e.classList.toggle('op',open)}}
+   if(hold){if(open){caught++;hold=false;try{sfx('bad')}catch(e){}const m=$('skSm');if(m)m.textContent=`⚠ มันเห็นคุณ! (${caught}/3)`;pr=Math.max(0,pr-18);if(caught>=3)return mgDone(cl(pr/100*.4,0,.4))}else pr+=1.4}
+   const p=$('skSp');if(p)p.style.width=Math.min(100,pr)+'%';if(pr>=100)mgDone(cl(1-caught*.2,0,1))},50);MG.t2=setTimeout(()=>mgDone(cl(pr/100-caught*.15,0,1)),30000);return}
+ if(kind==='mind'){let v=50,vel=0,hold=false,inZ=0,tot=0,z=40,zw=24;
+  shell(`<div class="skMd"><div class="skMz" id="skMz"></div><i id="skMn"></i></div><div class="skWh">ในโซน <b id="skMp">0</b>%</div><button class="pbtn skBig" id="skMh">🧠 กดค้างเพื่อดึงจิตขึ้น</button>`);
+  const hb=$('skMh'),on=e=>{e.preventDefault();hold=true},off=()=>{hold=false};if(hb){hb.addEventListener('pointerdown',on);hb.addEventListener('pointerup',off);hb.addEventListener('pointerleave',off);hb.addEventListener('pointercancel',off)}
+  MG.t=setInterval(()=>{tot++;z=cl(z+Math.sin(tot*.05)*.6+(rnd()-.5)*1.2,8,92-zw);vel+=(hold?.55:-.45)+(rnd()-.5)*.5;vel*=.9;v=cl(v+vel,0,100);if(v>=z&&v<=z+zw)inZ++;
+   const n=$('skMn'),zz=$('skMz'),p=$('skMp');if(n)n.style.bottom=v+'%';if(zz){zz.style.bottom=z+'%';zz.style.height=zw+'%'}if(p)p.textContent=Math.round(inZ/tot*100);if(tot>=200)mgDone(cl(inZ/tot*1.15,0,1))},50);return}
+ cb(.5)}
+// ---------- เหตุการณ์ที่ผูกกับร้าน/มินิเกม ----------
+def('m_wave',{c:K=>K.rk>=0&&!K.beast&&S.focus==='sk_mind',cd:2,w:6,go(K){C('🧠 คลื่นจิตปั่นป่วน','กลางสมาธิคืนหนึ่ง คลื่นยีนในตัวเริ่มแกว่งเหมือนเข็มวิทยุหาคลื่นไม่เจอ ถ้าคุมให้นิ่งได้ จิตจะก้าวกระโดด',[
+ O('ประคองคลื่นไว้',()=>skyMG('mind','🧠 คุมคลื่นจิต','กดค้างให้เข็มอยู่ในแถบสีฟ้า — ปล่อยให้มันตกเอง',sc=>{if(sc>=.5){say(`🌀 คลื่นจิตนิ่งสนิท${mindA(Math.round(6+sc*14))}${xp(30*sc)}`,'good')}else{const d=hp(.12);say(`💢 คลื่นจิตตีกลับ ปวดหัวจนอาเจียน · พลังชีวิต −${d}`,'bad')}}),'มินิเกม'),
+ O('ลืมตา พักก่อน',()=>say('😮‍💨 คุณลืมตาขึ้นมาในห้องมืด หัวใจเต้นแรง',''))])}});
+def('h_inner',{c:K=>(K.home|0)===2&&!K.beast,cd:5,w:4,go(K){const n=pick(['ภรรยานายพลกำแพง','ลูกชายประธานสมาคม','หมอยีนเกษียณ','นักวิจัยแล็บนคร']);C('🏡 เพื่อนบ้านเขตชั้นใน',`${n}ที่อยู่บ้านติดกันชวนไปงานเลี้ยงสวนหลังบ้าน — ที่นั่นไม่มีใครพูดเรื่องคลื่นอสูรเลย ราวกับกำแพงชั้นนอกไม่มีอยู่จริง`,[
+ O('ไปร่วมงาน ผูกสัมพันธ์',()=>{const t=fameA(150);if(rnd()<.5){K.intel=(K.intel|0)+1;say(`🥂 ${n}กระซิบข่าววงในให้ฟัง · ข่าวกรอง +1${t}`,'good')}else say(`🥂 คืนนั้นคุณได้รู้จักคนใหญ่คนโตหลายคน${t}`,'')}),
+ O('พูดเรื่องคนชั้นนอกกลางงาน',()=>{S.karma+=5;if(rnd()<.5){cr(4000);say(`📣 แขกบางคนฟังจริง — มีคนบริจาคเงินซ่อมกำแพงผ่านคุณ${wallA(6)}`,'good')}else say('🙄 บรรยากาศเงียบกริบ คุณไม่ได้รับเชิญอีกเลย','')}),
+ O('ปฏิเสธ ฝึกต่อ',()=>say(`🏋️ คืนนั้นคุณฝึกในสวนหลังบ้านคนเดียว${xp(25)}`,''))])}});
+def('h_mid',{c:K=>(K.home|0)===1&&!K.beast,cd:5,w:3,go(K){C('🏢 ห้องข้างๆ',pick(['เด็กห้องข้างๆ เคาะประตูถามว่านักล่าตัวจริงเป็นยังไง','คุณป้าห้องข้างๆ ทำซุปมาให้ทุกครั้งที่คุณกลับจากนอกกำแพง']),[
+ O('ให้เวลาเขา',()=>{S.karma+=4;heal(.1);say('🍲 ห้องเช่าเล็กๆ นี้เริ่มรู้สึกเหมือนบ้าน','good')}),
+ O('ปิดประตู',()=>say('🚪 คุณต้องการเวลาเงียบๆ',''))])}});
 // ---------- หน้าจอ ----------
 {const _rn=render;render=function(){const r=_rn.apply(this,arguments);try{document.body.classList.toggle('skyW',on());if(!on()){const gb=$('goalBox');if(gb&&gb.dataset.skyHid){gb.style.removeProperty('display');delete gb.dataset.skyHid}return r}const K=SK(),fe=$('focus');
  if(fe){fe.innerHTML=fList(K).map(f=>`<button class="fc ${S.focus===f[0]?'on':''}" onclick="setFocus('${f[0]}')">${f[1]} ${f[2]}</button>`).join('');
@@ -48503,7 +48573,7 @@ window.skyStart=function(bg){try{closeM()}catch(e){}
   <div class="skR">${rk}${K.beast?` <em>👻 ร่าง${esc(K.beast.n)}</em>`:''}</div><div class="skBar"><i style="width:${pr}%"></i></div>
   <div class="skG"><div><small>กาย</small><b>${fmt(S.power)}</b></div><div><small>จิต${K.mindT?' ✦':''}</small><b class="c">${fmt(Math.round(K.mind))}</b></div><div><small>ยีน ${K.genes.length}/3${K.gp?` · แต้ม ${K.gp}`:''}</small><b class="g">${K.genes.length?K.genes.map(g=>GENE[g][0]).join('·'):'—'}</b></div></div>
   <div class="skG s"><div><small>เครดิต</small><b>${fmt(S.money||0)}</b></div><div><small>ใบอนุญาต</small><b>${lic}</b></div><div><small>กำแพง</small><b class="${K.wall<35?'w':''}">${K.wall}/100</b></div><div><small>แก่น</small><b>${K.cores}</b></div></div>
-  ${K.waveIn<=3&&age()>=6?`<div class="skW">⚠ ระบบนคร: คลื่นอสูรอีก ${Math.max(0,K.waveIn)} ปี</div>`:''}${K.rk>=0&&K.sub>=10&&K.rk<RK.length-1&&!RK[K.rk].g(K)?`<div class="skH">🔒 ข้ามขั้นต้อง: ${RK[K.rk].gate}</div>`:''}${K.mut.length?`<div class="skH">🧪 ${K.mut.map(m=>m[0]).join(' · ')}</div>`:''}`}
+  ${K.waveIn<=3&&age()>=6?`<div class="skW">⚠ ระบบนคร: คลื่นอสูรอีก ${Math.max(0,K.waveIn)} ปี</div>`:''}${K.rk>=0&&K.sub>=10&&K.rk<RK.length-1&&!RK[K.rk].g(K)?`<div class="skH">🔒 ข้ามขั้นต้อง: ${RK[K.rk].gate}</div>`:''}${K.mut.length?`<div class="skH">🧪 ${K.mut.map(m=>m[0]).join(' · ')}</div>`:''}${!K.beast&&age()>=10?`<div class="skShB"><button onclick="skyShop()">🏪 ตลาดนคร</button><span>${HOMEN[K.home|0][0]} ${HOMEN[K.home|0][1]}${K.gear&&(K.gear.w||K.gear.a)?` · 🗡️+${K.gear.w} 🛡️+${K.gear.a}`:''}${K.grav?` · 🏋️ ${K.grav} ปี`:''}${K.intel?` · 📜 ${K.intel}`:''}</span></div>`:''}`}
  const gb=$('goalBox');if(gb){gb.style.setProperty('display','none','important');gb.dataset.skyHid=1}const gr=$('gRealm');if(gr)gr.textContent=K.rk<0?'เด็กหลังมหันตภัย':`${RK[K.rk].n} ${subN(K.sub)}`}catch(e){console.error('sky render',e)}return r}}
 // แต้มยีน: กดใช้จากหน้าจอ
 window.skyGP=function(){const K=SK();if(!K||!K.gp)return;K.gp--;K.xp+=need(K)*.5;sync();advance();render();toast('🧬 ใช้แต้มยีน · เซลล์ +50% ของชั้นนี้')};
@@ -48548,6 +48618,22 @@ let OVK=null;
 #mwHud.sky .skG{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px;font-family:'Chakra Petch',sans-serif}#mwHud.sky .skG.s{grid-template-columns:repeat(4,minmax(0,1fr))}
 #mwHud.sky .skG div{background:#121c25;border:1px solid #263b4c;padding:4px 7px;min-width:0}#mwHud.sky .skG small{display:block;font-size:10px;color:#9db3c4}#mwHud.sky .skG b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
 #mwHud.sky .skG b.c{color:#5cd2ff}#mwHud.sky .skG b.g{color:#7de38a;font-size:12px}#mwHud.sky .skG b.w{color:#ff8a3d}
+#mwHud.sky .skShB{display:flex;align-items:center;gap:8px;margin-top:8px;font:12px 'Chakra Petch',sans-serif;color:#9db3c4}#mwHud.sky .skShB span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#mwHud.sky .skShB button{flex:none;background:#ff8a3d;color:#141d26;border:0;font:700 13px 'Chakra Petch',sans-serif;padding:6px 12px;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);cursor:pointer}
+.skShop{font-family:'Chakra Petch',sans-serif;color:#e6f1f8}.skShH{display:flex;justify-content:space-between;align-items:baseline;padding-right:40px;border-bottom:2px solid #ff8a3d;padding-bottom:6px}.skShH b{font-size:18px;color:#ff8a3d;letter-spacing:1px}.skShH span{font-size:12px;color:#9db3c4}
+.skShM{margin:8px 0;font-size:13px;color:#5cd2ff}.skTabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:4px}.skTabs button{flex:none;background:#121c25;border:1px solid #263b4c;color:#9db3c4;font:600 12px 'Chakra Petch',sans-serif;padding:6px 9px;cursor:pointer}.skTabs button.on{background:#ff8a3d;color:#141d26;border-color:#ff8a3d}
+.skList{margin-top:8px;display:flex;flex-direction:column;gap:6px}.skIt{display:flex;align-items:center;gap:10px;background:#121c25;border:1px solid #263b4c;padding:8px}.skIt.cur{border-color:#7de38a}.skIc{font-size:24px;width:32px;text-align:center;flex:none}.skIx{flex:1;min-width:0}.skIx b{font-size:14px;display:block}.skIx b i{font-style:normal;color:#ff8a3d}.skIx small{display:block;font-size:11.5px;color:#9db3c4;margin-top:2px;line-height:1.35}.skIx small.ok{color:#7de38a}.skIx small b{display:inline;font-size:12px;color:#e6f1f8}
+.skBuy{flex:none;background:#5cd2ff;color:#0e151c;border:0;font:700 13px 'Chakra Petch',sans-serif;padding:8px 12px;cursor:pointer}.skBuy:disabled{background:#26323d;color:#5d6f7d;cursor:default}
+.skWh{text-align:center;font:13px 'Chakra Petch',sans-serif;color:#9db3c4;margin:6px 0}.skWh b{color:#ff8a3d}
+.skWl{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;height:230px;background:linear-gradient(180deg,#0b1a12,#1a2a1c);border:1px solid #263b4c;padding:4px}.skLane{position:relative;background:rgba(255,255,255,.03);border:1px dashed #263b4c;overflow:hidden;cursor:crosshair;touch-action:manipulation}.skLane:active{background:rgba(255,138,61,.15)}.skLane i{position:absolute;left:50%;transform:translate(-50%,0);font-style:normal;font-size:24px;line-height:1}
+.skWb{background:#3a4652;color:#c9d6e0;text-align:center;font:700 11px 'Chakra Petch',sans-serif;letter-spacing:2px;padding:3px;border-top:2px solid #ff8a3d}
+.skDna{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin:10px 0}.skBp{background:#121c25;border:1px solid #263b4c;text-align:center;padding:6px 0;font:700 16px 'Chakra Petch',sans-serif}.skBp b,.skBp span{display:block}.skBp span{color:#7de38a;min-height:20px;border-top:1px dashed #263b4c;margin-top:4px;padding-top:2px}.skBp.cur{border-color:#ff8a3d;box-shadow:0 0 0 1px #ff8a3d inset}.skBp.cur span{color:#ff8a3d}.skBp.ok{border-color:#7de38a}
+.skDna.shk{animation:skShk .3s}@keyframes skShk{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.skDb{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.skDk{font:700 22px 'Chakra Petch',sans-serif;padding:12px 0;border:0;color:#0e151c;cursor:pointer;touch-action:manipulation}.skDk.bA{background:#ff8a3d}.skDk.bT{background:#5cd2ff}.skDk.bC{background:#7de38a}.skDk.bG{background:#d59bff}
+.skEye{text-align:center;font-size:58px;margin:6px 0;transition:transform .15s}.skEye.op{transform:scale(1.15);filter:drop-shadow(0 0 10px #ff3d3d)}
+.skSt{position:relative;height:16px;background:#121c25;border:1px solid #263b4c;margin:6px 0}.skSt i{display:block;height:100%;background:linear-gradient(90deg,#263b4c,#5cd2ff)}.skSt span{position:absolute;right:-4px;top:-6px;font-size:16px}
+.skMd{position:relative;height:200px;width:70px;margin:8px auto;background:#121c25;border:1px solid #263b4c}.skMz{position:absolute;left:0;right:0;background:rgba(92,210,255,.25);border-top:2px solid #5cd2ff;border-bottom:2px solid #5cd2ff}.skMd i{position:absolute;left:-8px;right:-8px;height:4px;background:#ff8a3d;transform:translateY(50%);box-shadow:0 0 8px #ff8a3d}
+.skBig{user-select:none;-webkit-user-select:none;touch-action:none}
 #mwHud.sky .skW{margin-top:8px;background:#2a1608;border:1px solid #ff8a3d;color:#ffc9a3;padding:5px 8px;font-size:12px}#mwHud.sky .skH{margin-top:6px;font-size:12px;color:#9db3c4}
 body.skyW #goalBox{display:none!important}
 body.skyW #modal h3{font-family:'Chakra Petch',inherit}
