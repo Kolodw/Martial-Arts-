@@ -26315,6 +26315,7 @@ function past(){const L=(S.mem||[]).filter(m=>S.age-m.a>=5&&m.v!==0);if(!L.lengt
  for(const k of ['pp','sect','court','dem']){if(Math.abs(R0[k])>=55&&S.age-(S['_rg'+k]||0)>=12&&Math.random()<.15){S['_rg'+k]=S.age;
   if(R0[k]>0)Ev(`${RG[k]} ตอบแทน`,`${RG[k].split(' ')[1]}ทั่วแผ่นดินรู้ว่าคุณอยู่ข้างพวกเขา`,[{t:'🎁 รับ',s:'เงิน + · พลังชีวิตเต็ม',f(){S.money+=Math.round(S.money*.15)+400;S.hp=S.maxHp;log(`🎁 ${RG[k]}ส่งของขวัญมาเต็มเกวียน`,'good')}}]);
   else Ev(`🗡️ ${RG[k]} ส่งคนมาเก็บ`,`${RG[k].split(' ')[1]}ตัดสินใจว่าคุณอยู่ไม่ได้อีกต่อไป`,[{t:'⚔️ สู้',s:'แรงกว่า 20%',f(){if(!fight('มือสังหารของ'+RG[k].split(' ')[1],ep(1.2)))injure&&injure('มือสังหาร')}},{t:'🏃 หนีไปแคว้นอื่น',s:'เงิน -30%',f(){lose(.3);rep()[k]=clamp(rep()[k]+20,-100,100)}}]);return r}}
+ if(S.age<16)return r;
  if(S.lg&&GEV[S.lg]&&S.age-(S._gA||0)>=7&&Math.random()<.25){S._gA=S.age;GEV[S.lg]();return r}
  if(S.wander&&Math.random()<.12){fresh(WAN,'w')&&0;return r}
  if(Math.random()<.06&&past())return r;
