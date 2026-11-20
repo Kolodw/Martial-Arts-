@@ -26,12 +26,12 @@ function sign(k,v){var M=rd()||{};M[k]=H(k,v);wr(M)}
 P.setItem=function(k,v){var r=sI.apply(this,arguments);try{if(this===L){k=String(k);if(SEN.test(k)){sign(k,String(v));if(!busy)sh(k,String(v))}}}catch(e){}return r};
 P.removeItem=function(k){var r=rI.apply(this,arguments);try{if(this===L&&SEN.test(String(k))){var M=rd();if(M&&k in M){delete M[k];wr(M)}sh(String(k),null)}}catch(e){}return r};
 P.clear=function(){var r=cI.apply(this,arguments);try{if(this===L){cR=null;cM=null;ck(0)}}catch(e){}return r};
-P.getItem=function(k){var v=gI.apply(this,arguments);try{if(this===L&&v!=null&&SEN.test(String(k))){var M=rd();if(M&&M[k]!==H(String(k),v)){bad(String(k));return null}}}catch(e){}return v};
+P.getItem=function(k){var v=gI.apply(this,arguments);try{if(this===L&&v!=null&&SEN.test(String(k))){var M=rd();if(M&&M[k]!==H(String(k),v)){if(BIG.test(String(k))){sign(String(k),v);return v}bad(String(k));return null}}}catch(e){}return v};
 // ตรวจตอนเปิดเกม: ครั้งแรกหลังอัปเดต → ลงลายเซ็นของที่มีอยู่ · ครั้งต่อไป → ค่าที่ลายเซ็นไม่ตรง/ไม่มีลายเซ็น = ถูกแก้จากภายนอก
 var M=rd(),ks=[],i,k;try{for(i=0;i<L.length;i++){k=kI.call(L,i);if(k&&SEN.test(k))ks.push(k)}}catch(e){}
-if(!M){if(hasCk()&&ks.length){ks.forEach(bad)}else{M={};ks.forEach(function(k){try{var v=gI.call(L,k);if(v!=null){M[k]=H(k,v);sh(k,v)}}catch(e){}});wr(M);try{sI.call(L,'murim_sgver','2')}catch(e){}}}
+if(!M){if(hasCk()&&ks.length){M={};ks.forEach(function(k){try{if(BIG.test(k)){var v=gI.call(L,k);if(v!=null)M[k]=H(k,v)}}catch(e){}});wr(M);ks.forEach(function(k){if(!BIG.test(k))bad(k)})}else{M={};ks.forEach(function(k){try{var v=gI.call(L,k);if(v!=null){M[k]=H(k,v);sh(k,v)}}catch(e){}});wr(M);try{sI.call(L,'murim_sgver','2')}catch(e){}}}
 else{var SV='murim_sgver',sv=null;try{sv=gI.call(L,SV)}catch(e){}if(sv!=='2'){ks.forEach(function(k){try{if(!(k in M)){var v=gI.call(L,k);if(v!=null){M[k]=H(k,v);sh(k,v)}}}catch(e){}});wr(M);try{sI.call(L,SV,'2')}catch(e){}}
- ks.forEach(function(k){try{var v=gI.call(L,k);if(v!=null&&M[k]!==H(k,v))bad(k)}catch(e){}});for(k in M){try{if(gI.call(L,k)==null){if(BAD.indexOf(k)<0)BAD.push(k)}}catch(e){}}if(BAD.length)fix()}
+ var rs=0;ks.forEach(function(k){try{var v=gI.call(L,k);if(v!=null&&M[k]!==H(k,v)){if(BIG.test(k)){M[k]=H(k,v);rs=1}else bad(k)}}catch(e){}});if(rs){var M2=rd()||{};ks.forEach(function(k){if(BIG.test(k)&&M[k])M2[k]=M[k]});wr(M2)}for(k in M){try{if(gI.call(L,k)==null){if(BAD.indexOf(k)<0)BAD.push(k)}}catch(e){}}if(BAD.length)fix()}
 }catch(e){}})();
 </script>
 <script>
