@@ -28927,7 +28927,7 @@ const ABX={refuge:['⛓️','ผู้เฝ้าประตู','ชีวิ
  ward:['🔒','ผู้คุมคุกตลอดกาล','ชีวิตหน้าได้ อายุขัย +100 และกายแกร่ง',()=>{S.lifespan+=100;S.maxHp+=100;S.hp=S.maxHp}],
  tilt:['⚖️','ผู้ออกแบบโลกใหม่','ชีวิตหน้าเกิดในโลกที่คุณจัดสมดุลไว้เอง',()=>{const M=LS.get('murim_abtilt',{});LS.del('murim_abtilt');if(M.time)S.lifespan+=60;if(M.god)S.int+=40;if(M.mirror)S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.1).toFixed(2)});if(M.page)S.int+=60;if(M.dragon)S.power+=yrPow0()*40}],
  self:['❔','ผู้ขังตัวเอง','ไม่มีใครรู้ว่าชีวิตหน้าจะเป็นอย่างไร',()=>{const r=Math.random();if(r<.5){S.talent=Object.assign({},S.talent,{m:+(S.talent.m*1.4).toFixed(2)})}else{S.lifespan+=200;S.karma=(S.karma||0)+100}}]};
-function dzEnd(k,cause){LS.set('murim_abx',k);try{keyAdd(cause)}catch(e){}setTimeout(()=>{for(let n=0;n<5&&S&&S.alive;n++){try{if(S.sys)S.sys.revive=0;S.eqSv=0;if(S.flags)S.flags.kidShield=0}catch(e){}S.deathCause=cause;S.hp=0;checkDeath()}},500)}
+function dzEnd(k,cause){LS.set('murim_abx',k);try{keyAdd(cause)}catch(e){}try{const X=ABX[k];if(X)log(`${X[0]} ฉากจบ <b>${X[1]}</b> — ชีวิตนี้จบลง · โบนัสชีวิตหน้า: ${X[2]}`,'myth',true)}catch(e){}setTimeout(()=>{for(let n=0;n<5&&S&&S.alive;n++){try{if(S.sys)S.sys.revive=0;S.eqSv=0;if(S.flags)S.flags.kidShield=0}catch(e){}S.deathCause=cause;S.hp=0;checkDeath()}},500)}
 const apX=()=>{try{const X=LS.get('murim_abx',null);if(X&&ABX[X]&&S){LS.del('murim_abx');ABX[X][3]();log(`${ABX[X][0]} <b>${ABX[X][1]}</b> — ${ABX[X][2]}`,'myth',true)}}catch(e){}};
 {const _s=startLife;startLife=function(){const r=_s.apply(this,arguments);setTimeout(apX,140);return r}}{const _i=inherit;inherit=function(){const r=_i.apply(this,arguments);setTimeout(apX,140);return r}}
 const ahPtX=v=>{try{if(S.ah)S.ah.pt+=v}catch(e){}};
@@ -29037,7 +29037,7 @@ function dzGates(dy){if(S.beastMode||(!S.xian&&!S.xt))return;const H=S.ah||{},G=
 const RM={time:['⏳','มารกินกาลเวลา','มันกินปีของทุกสิ่งที่เข้าใกล้'],mirror:['🪞','เงาของคุณจากทุกชาติ','ทุกชาติที่คุณเคยเป็น ยืนเรียงกันในกระจก'],god:['👼','เทพองค์แรกที่สวรรค์ทรยศ','ปีกของเขาถูกตอกตะปูไว้กับผนังมาตั้งแต่ก่อนสวรรค์มีชื่อ'],
  dragon:['🐉','มังกรที่กลืนจักรวาลก่อนหน้า','มันหลับอยู่ ลมหายใจแต่ละครั้งยาวพันปี'],page:['📖','หน้ากระดาษที่ถูกฉีกจากนวนิยาย','บนกระดาษมีชื่อคุณเขียนอยู่'],warden:['👁️','ผู้คุมคุกคนก่อน','ชายชราที่ไม่มีเงาและไม่มีชื่อ'],empty:['❔','ห้องว่าง','ไม่มีอะไรถูกขังไว้… ยังไม่มี']};
 const RK=Object.keys(RM);
-window.dzDeep=function(){const A=AB();if(A.seals<3)return toast('ต้องมีเศษผนึก 3 ชิ้น');closeM();choice('🌑 ประตูแดนต้องห้าม','เศษผนึกสามชิ้นต่อกันเป็นกุญแจ — ประตูข้างหน้าไม่มีใครเคยเดินออกมา<br><span class="tag2">เข้าไปแล้วออกไม่ได้ จนกว่าจะตัดสินใจครบทุกห้อง หรือตาย</span>',[
+window.dzDeep=function(){const A=AB();if(A.seals<3)return toast('ต้องมีเศษผนึก 3 ชิ้น');closeM();choice('🌑 ประตูแดนต้องห้าม','เศษผนึกสามชิ้นต่อกันเป็นกุญแจ — ประตูข้างหน้าไม่มีใครเคยเดินออกมา<br><span class="tag2">เข้าไปแล้วออกไม่ได้ จนกว่าจะปิดบท หรือตาย<br>⚠️ <b>แดนต้องห้ามคือฉากจบ</b> — ปิดบทเมื่อไหร่ <b>ชีวิตนี้จะจบทันที</b> แล้วได้โบนัสติดตัวไปชีวิตหน้าตามตอนจบที่ได้</span>',[
  {t:'🌑 เข้าไป',s:'',f(){A.fr={on:1,y0:S.age,r:{},mem:0};log('🌑 <b>แดนต้องห้าม</b> — คุก 7 ห้อง แต่ละห้องขังสิ่งที่มีมาก่อนจักรวาล · เลือกห้องไหนก่อนก็ได้','myth',true);try{keyAdd('เข้าสู่แดนต้องห้าม')}catch(e){}setTimeout(openFz,500)}},{t:'↩️ ยังก่อน',s:'',skip:1,f(){openDz()}}])};
 const frDone=()=>Object.keys(AB().fr.r).length;
 const rmM=k=>{const r=AB().fr.r;let m={time:1.35,mirror:1+((S.lineage||[]).length*.04)+Math.abs(S.karma||0)/3000,god:1.55,dragon:1.9,page:1,warden:1.3,empty:1}[k];if(k==='dragon'&&r.god==='free')m+=.4;if(k==='dragon'&&r.time==='kill')m-=.25;if(k==='god'&&r.mirror==='free')m-=.2;if(k==='warden'&&r.page==='deal')m-=.2;return +m.toFixed(2)};
@@ -29045,7 +29045,7 @@ window.openFz=function(){const A=AB(),F=A.fr,emptyOpen=F.r.warden==='kill'||frDo
  const st={kill:'⚔️ สังหาร/ผนึก',free:'🔓 ปล่อย',deal:'🤝 ข้อตกลง',self:'❔ ขังตัวเอง',ward:'🔒 รับเป็นผู้คุม'};
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="dzhd fr"><h3>🌑 แดนต้องห้าม</h3><p>ตัดสินใจแล้ว ${frDone()}/7 ห้อง · ทุกห้องเกี่ยวโยงกัน: สิ่งที่ทำกับห้องหนึ่ง เปลี่ยนอีกห้อง</p></div>
  <div class="dzmap fr">${RK.map(k=>{const v=RM[k],d=F.r[k],lock=k==='empty'&&!emptyOpen;return`<button class="dzc ${d?'own':''}" onclick="${lock?"toast('🔒 ห้องนี้ยังไม่เปิด')":`fzRoom('${k}')`}"><span class="ic">${lock?'🔒':v[0]}</span><b>${v[1]}</b><small>${d?st[d]:lock?'ยังไม่เปิด':'แรง ×'+rmM(k)}</small></button>`}).join('')}</div>
- ${frDone()>=6||F.r.warden==='ward'||F.r.empty==='self'?'<button class="pbtn" style="width:100%" onclick="fzEnd()">📜 ปิดบทแดนต้องห้าม (ตอนจบตามผลรวม)</button>':'<p class="tag2">ตัดสินใจครบ 6 ห้องจึงปิดบทได้ · รับเป็นผู้คุม หรือขังตัวเองในห้องว่าง ปิดบททันที</p>'}`,'frbd')};
+ ${frDone()>=6||F.r.warden==='ward'||F.r.empty==='self'?'<button class="pbtn" style="width:100%" onclick="fzAsk()">📜 ปิดบทแดนต้องห้าม · จบชีวิตนี้</button><p class="tag2">ถ้าปิดตอนนี้: '+fzPv()+'</p>':'<p class="tag2">ตัดสินใจครบ 6 ห้องจึงปิดบทได้ · รับเป็นผู้คุม หรือขังตัวเองในห้องว่าง ปิดบททันที · <b>ปิดบทแล้วชีวิตนี้จบ</b> (ได้โบนัสไปชีวิตหน้า)</p>'}`,'frbd')};
 window.fzRoom=function(k){const F=AB().fr;if(F.r[k])return toast('ตัดสินใจห้องนี้ไปแล้ว');closeM();const v=RM[k],m=rmM(k),set=s=>{F.r[k]=s;setTimeout(openFz,700)};const K2=(who,cb)=>fightThen(who,m,w=>{if(w){cb();set('kill')}else{S.hp=Math.max(1,Math.round(S.hp*.25));log(`🩸 ${v[1]}เหวี่ยงคุณกระเด็นออกมาจากห้อง`,'bad');setTimeout(openFz,700)}});
  const O={
  time:[{t:'⚔️ สังหารมัน',s:`ดวล ×${m} · มังกรจะอ่อนลง`,f(){K2(v[1],()=>{const g=pw(.1);log(`⏳ เวลาหยุดไหลในห้องนั้นตลอดกาล · พลังยุทธ์ +${fmt(g)}`,'myth',true)})}},
@@ -29064,11 +29064,17 @@ window.fzRoom=function(k){const F=AB().fr;if(F.r[k])return toast('ตัดส�
   {t:'🔓 ปล่อยหน้ากระดาษออกสู่โลก',s:'ชีวิตหน้าเกิดมาพร้อมความรู้',f(){S.int+=50;log('🔓 หน้ากระดาษปลิวออกไป ทุกคนในโลกฝันเห็นประโยคเดียวกันคืนนั้น','myth');set('free')}},
   {t:'📖 อ่านจนจบ',s:'รู้ความจริงของโลกนี้ · ผู้คุมจะอ่อนลง',f(){S.int+=30;log('📖 <b>"ทุกคนในเรื่องนี้รู้ตัวว่าอยู่ในนวนิยาย ยกเว้นคนที่อ่านอยู่"</b> — คุณเงยหน้าขึ้นมองคนที่ถือหน้าจอนี้อยู่','myth',true);try{keyAdd('อ่านหน้ากระดาษที่ถูกฉีกจากนวนิยาย')}catch(e){}set('deal')}}],
  warden:[{t:'⚔️ ฆ่าผู้คุม',s:`ดวล ×${m} · ห้องว่างจะเปิด`,f(){K2(v[1],()=>{log('👁️ กุญแจทุกดอกตกลงในมือคุณ — ห้องสุดท้ายเปิดออกเอง','myth',true)})}},
-  {t:'🔒 รับเป็นผู้คุมแทนเขา',s:'ปิดบททันที — ผู้คุมคุกตลอดกาล',f(){F.r[k]='ward';fzEnd()}},
+  {t:'🔒 รับเป็นผู้คุมแทนเขา',s:'⚠️ ปิดบททันที · จบชีวิตนี้ — ผู้คุมคุกตลอดกาล',f(){fzAsk('ward')}},
   {t:'🤝 ให้เขาไปพัก แล้วรับกุญแจ',s:'ปิดบทแบบสมดุลได้ง่ายขึ้น',f(){F.keys=1;log('🤝 ชายชราเดินออกไปพร้อมรอยยิ้มแรกในรอบหมื่นปี','good');set('deal')}}],
- empty:[{t:'❔ ขังตัวเองไว้ในห้องนี้',s:'ตอนจบลับ',f(){F.r[k]='self';fzEnd()}},{t:'🚪 ปิดห้องไว้ว่างๆ',s:'',f(){set('kill')}}]};
+ empty:[{t:'❔ ขังตัวเองไว้ในห้องนี้',s:'⚠️ ตอนจบลับ · จบชีวิตนี้ทันที',f(){fzAsk('self')}},{t:'🚪 ปิดห้องไว้ว่างๆ',s:'',f(){set('kill')}}]};
  choice(`${v[0]} ${v[1]}`,`${v[2]}`,O[k].concat([{t:'↩️ ยังก่อน',s:'',skip:1,f(){openFz()}}]))};
 const lsAddX=v=>{try{if(S.xt)S.glExtra=(S.glExtra||0)+v;else lsAdd(v)}catch(e){S.lifespan+=v}};
+const fzK=(r)=>{const free=Object.values(r).filter(x=>x==='free').length;return r.empty==='self'?'self':r.warden==='ward'?'ward':(free>=4||r.dragon==='free')?'end':'tilt'};
+window.fzPv=function(){try{const X=ABX[fzK(AB().fr.r)];return X?`${X[0]} <b>${X[1]}</b> — ${X[2]}`:''}catch(e){return''}};
+window.fzAsk=function(pre){const F=AB().fr,r=Object.assign({},F.r);if(pre==='ward')r.warden='ward';if(pre==='self')r.empty='self';const X=ABX[fzK(r)]||['📜','ตอนจบ',''];closeM();
+ choice('⚠️ ปิดบทแดนต้องห้าม',`<b>ชีวิตนี้จะจบทันที</b> และย้อนกลับไม่ได้<br><br>ตอนจบที่จะได้: ${X[0]} <b>${X[1]}</b><br><span class="tag2">โบนัสชีวิตหน้า: ${X[2]}</span>`,[
+  {t:'📜 ปิดบท · จบชีวิตนี้',s:'',noFate:1,f(){if(pre==='ward')F.r.warden='ward';if(pre==='self')F.r.empty='self';fzEnd()}},
+  {t:'↩️ ยังก่อน',s:'กลับไปดูห้องอื่น',skip:1,f(){setTimeout(openFz,200)}}])};
 window.fzEnd=function(){const F=AB().fr,r=F.r,v=Object.values(r),free=v.filter(x=>x==='free').length;closeM();
  let k,c;if(r.empty==='self'){k='self';c='ขังตัวเองไว้ในห้องว่างของแดนต้องห้าม'}else if(r.warden==='ward'){k='ward';c='รับเป็นผู้คุมคุกแดนต้องห้ามตลอดกาล'}else if(free>=4||r.dragon==='free'){k='end';c='ปลดผนึกแดนต้องห้าม — จักรวาลนี้จบลงด้วยมือของคุณ'}else{k='tilt';c='ปิดคุกแดนต้องห้ามแบบไม่สมดุล — โลกหน้าเป็นไปตามที่คุณจัดวาง';const M={};RK.forEach(x=>{if(r[x]==='free'||r[x]==='deal')M[x]=1});LS.set('murim_abtilt',M)}
  const sum=RK.map(x=>`${RM[x][0]} ${r[x]?{kill:'ผนึก',free:'ปล่อย',deal:'ตกลง',self:'ขังตัวเอง',ward:'ผู้คุม'}[r[x]]:'—'}`).join(' · ');
