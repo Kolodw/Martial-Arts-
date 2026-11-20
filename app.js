@@ -48208,7 +48208,7 @@ function newK(bg){return{v:1,bg,city:pick(CITY),wall:68,waveIn:R(9,14),waveW:0,w
 
 // ---------- ค่าที่ได้ ----------
 function powCalc(K){if(K.rk<0)return Math.max(5,Math.round(6+S.age*.8));const m=(1+K.genes.length*.08)*(mutHas(K,'กระดูกยืด')?1.08:1)*(K.beast?1.5:1);return Math.round(12*Math.pow(1.25,idx(K))*m*K.tal)}
-function sync(){const K=SK();if(!K)return;const p=powCalc(K);if(S.power<p)S.power=p;const mh=Math.round((60+Math.max(0,K.rk)*35+Math.max(0,K.sub)*3)*(has(K,'iron')?1.2:1));if(S.maxHp<mh)S.maxHp=mh;S.mw.end=Math.round(78+Math.max(0,K.rk)*14+Math.max(0,K.sub)*1.2+(K.beast?30:0))}
+function sync(){const K=SK();if(!K)return;const p=powCalc(K);if(S.power<p)S.power=p;const mh=Math.round((60+Math.max(0,K.rk)*35+Math.max(0,K.sub)*3)*(has(K,'iron')?1.2:1));if(S.maxHp<mh)S.maxHp=mh;S.mw.end=Math.round(80*Math.pow(1.023,K.rk<0?0:idx(K))+(K.beast?30:0))}
 const say=(t,c,big)=>log(t,c||'',big);
 const feed=t=>addFeed('ev',t,'sum');
 const hp=p=>{const d=Math.round(S.maxHp*p);S.hp=Math.max(1,S.hp-d);return d};
