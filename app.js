@@ -15447,7 +15447,7 @@ function mwYear(){const M=S.mw;yearSum&&0;S.age++;M.y++;ensureHeader();const f=S
  if(f==='mwjob'){mwJobYear(M)}
  else if(f==='mwqi'){const q=M.fl.temple?R(10,20)/10:R(1,3)/10;mwFx({qi:q});S.power+=Math.round(q*20);addFeed('ev',`🧘 นั่งสมาธิ${M.fl.temple?'ที่วัดบนดอย':'บนดาดฟ้า'} · ปราณ +${q}`,'sum')}
  else if(f==='mwnet'){const g=Math.round((4000+M.fame*.06)*(M.fl.ch==='tale'?.5:1)*(.7+Math.random()*.6)),sec=M.fl.ch==='tale'?R(0,2):R(4,9);mwFx({fame:g,sec,mon:Math.round(g*.4)});addFeed('ev',`📱 ทำคอนเทนต์ทั้งปี · ผู้ติดตาม +${fmt(g)} · ความลับรั่ว +${sec}`,'sum')}
- else if(f==='mwlearn'){const a=R(6,10);mwFx({adapt:a});S.int+=R(2,5);addFeed('ev',`📚 เรียนรู้ยุคใหม่ · ความคุ้นเคย +${a}`,'sum')}
+ else if(f==='mwlearn'){if(M.native){const g=R(2,5);S.int+=g;try{const l=M.L;if(l)l.sk=Math.min(100,(l.sk||0)+R(1,3))}catch(e){}addFeed('ev',`📚 ลงคอร์ส/อ่านหนังสือหลังเลิกงาน · ปัญญา +${g}`,'sum')}else{const a=R(6,10);mwFx({adapt:a});S.int+=R(2,5);addFeed('ev',`📚 เรียนรู้ยุคใหม่ · ความคุ้นเคย +${a}`,'sum')}}
  else if(f==='mwlow'){const d=R(5,9);mwFx({sec:-d,joy:3});S.hp=Math.min(S.maxHp,S.hp+20);addFeed('ev',`🍵 ใช้ชีวิตเงียบๆ ไม่มีใครสนใจคุณ · ความลับรั่ว −${d}`,'sum')}
  else if(f==='mwlin'&&lt){mwFx({lin:R(6,10),adapt:3});addFeed('ev','🧒 ใช้เวลากับหลิน — '+ch(['ช่วยเขาทำการบ้านเลข ที่คุณเองก็ไม่เข้าใจ','กินหมูกระทะด้วยกันครั้งแรก','ฟังเขาบ่นเรื่องสอบเข้ามหาลัย','ไปดูหนังโรงด้วยกัน คุณสะดุ้งทุกครั้งที่เสียงดัง']),'sum')}
  // ผลค้างจากปีก่อน
@@ -16520,7 +16520,7 @@ const MW_XO=[
  [M=>(M.id||0)===3,'🪪','อ้างบัตรหน่วยลับ',M=>({sec:-5}),'ไม่มีใครกล้าถามต่อ'],
  [M=>M.bf&&!M.bf.d&&!M.bf.cold,'🤝','ชวนเพื่อนสนิทไปด้วย',M=>({joy:4}),'สนุกขึ้น'],
  [M=>M.sp&&!M.sp.d,'💍','ปรึกษาคู่ชีวิตก่อน',M=>({joy:3,sec:-2}),'ใจเย็นลง'],
- [M=>M.adapt>=70,'🧠','ใช้ความรู้ยุคใหม่',M=>({adapt:2,sec:-2}),'ทำแบบคนยุคนี้'],
+ [M=>!M.native&&M.adapt>=70,'🧠','ใช้ความรู้ยุคใหม่',M=>({adapt:2,sec:-2}),'ทำแบบคนยุคนี้'],
  [M=>(M.fame||0)>=300000,'📣','ใช้ชื่อเสียงช่วย',M=>({fame:20000,sec:2}),'คนรู้จักคุณ']];
 {const _chXO=choice;choice=function(title,text,opts){try{if(mwOn()&&Array.isArray(opts)&&opts.length>=2&&opts.length<=4&&!opts.some(o=>o&&o._xo)&&Math.random()<.5){const M=S.mw,main=opts.find(o=>o&&!o.skip&&typeof o.f==='function');const L=MW_XO.filter(x=>{try{return x[0](M)}catch(e){return false}});
  if(main&&L.length){const x=ch(L),mt=mwTxt(main.t).replace(/^[^\wก-๙"]+/,'').slice(0,28);opts=opts.concat([{_xo:1,t:`${x[1]} ${x[2]}: "${mt}"`,s:x[4],f(){main.f();setTimeout(()=>{if(S&&S.mw){const fx=x[3](S.mw);mwFx(fx);addFeed('ev',`${x[1]} ${x[2]} — ผลดีขึ้นกว่าปกติ`,'sum')}},60)}}])}}}catch(e){console.error(e)}return _chXO.call(this,title,text,opts)};for(const k of Object.keys(_chXO))try{choice[k]=_chXO[k]}catch(e){}}
@@ -16902,7 +16902,7 @@ function mwRandNative(pre){closeM();const ks=Object.keys(MW_CC),cc=ch(ks),F0=crF
   const M0={cc};S.name=F0||mwNm(M0,0);S.age=pre?pre.age:R(18,24);S.power=R(20,60);S.qi=gift?1:0;S.custom=true;S.mwTest=1;S.xian=false;S.xt=0;S.faction=null;S.ownSect=null;
   S.mw={y:0,sec:0,fame:0,adapt:100,qi:S.qi,lin:0,linMet:0,native:1,rnd:1,cc,uni:Math.random()<.15?1:0,qlv:0,past:{n:S.name,realm:'',yr:MW_Y0-S.age,how:'native',pow0:S.power},seen:{e1:1,e2:1,e3:1,e4:1,e5:1,e6:1,e7:1,e8:1,e9:1,e10:1,e11:1,e12:1,e13:1,e14:1,e15:1},q:[],fl:{},end:S.age+R(72,92),clk:0,hum:1,mon0:0,
    par:null,ast:{h:rich?2:0,bike:0,car:rich?1:0,ins:0,mort:0,mortY:0,save:0},lives:[]};
-  S.money=mwToB(MW_MIN[cc]*(rich?12:poor?.3:1.5),S.mw);S.focus='mwlearn';if(pre)window.mwPreApply(pre);
+  S.money=mwToB(MW_MIN[cc]*(rich?12:poor?.3:1.5),S.mw);S.focus='mwjob';if(pre)window.mwPreApply(pre);
   const C=mwCC();
   log(`🎲 คุณเกิดเป็นคน${C.n}ธรรมดาคนหนึ่งใน${C.city} — ${pre?'พื้นเพ'+window._lifeTbl.BG[pre.bg].n:rich?'ครอบครัวมีฐานะ บ้านหลังใหญ่และรถหนึ่งคัน':poor?'ครอบครัวหาเช้ากินค่ำ ต้องดิ้นรนตั้งแต่เด็ก':'ครอบครัวชนชั้นกลางทั่วไป'} · ${S.age?'ตอนนี้อายุ '+S.age+' ปี':'เพิ่งลืมตาดูโลก'}${gift?' · บางคืนคุณรู้สึกถึงไออุ่นแปลกๆ ไหลเวียนในตัว…':''}`,'myth',true);
   addFeed('ev',`${C.f} ${esc(S.name)} — คน${C.n}แท้ๆ เกิดใน${C.city}`,'sum');try{mwAcHold(3000)}catch(e){}render();saveGame()}catch(e){console.error(e)}},700)}
@@ -31106,6 +31106,7 @@ function lWorld(M,l){const y=MW_Y0+M.y,w=LW[y];if(!w)return;l.hist.push(y);
  l.cpi*=1+w.inf;l.wy=w;l.hpi=(l.hpi||1)*(1+LB.hpGrow+(w.s<=-.25?LB.hpCrash:w.s>=.25?LB.hpBoom:0)+(w.inf||0)*.3)}
 function lInvest(M,l){const w=l.wy;if(!w)return;const t=l.inv.f+l.inv.s+l.inv.c;if(t<=0)return;
  const big=t>3e6?.96:1,nf=Math.round(l.inv.f*(1+w.f-.012)*big),ns=Math.round(l.inv.s*(1+w.s-.006)*big),nc=Math.round(l.inv.c*(1+w.c)*big),n=nf+ns+nc,d=n-t;l.inv.f=nf;l.inv.s=ns;l.inv.c=nc;
+ if(n<1000){S.money=(S.money||0)+Math.max(0,n);l.inv.f=l.inv.s=l.inv.c=0;addFeed('ev',`📉 พอร์ตลงทุนเหลือ ${fmt(Math.max(0,n))} บาท — คุณขายทิ้งทั้งหมดแล้วลบแอปลงทุนออกจากมือถือ`,'sum');return}
  addFeed('ev',`📈 พอร์ตลงทุนปีนี้ ${d>=0?'+':''}${fmt(d)} บาท (${(d/t*100).toFixed(1)}%) → รวม ${fmt(n)} บาท <span class="tag2">(กองทุน ${(w.f*100).toFixed(0)}% · หุ้น ${(w.s*100).toFixed(0)}% · คริปโต ${(w.c*100).toFixed(0)}%)</span>`,'sum')}
 function lDebt(M,l){if(l.debt>2500000){addFeed('ev',`⚖️ <b>ศาลพิทักษ์ทรัพย์/ปรับโครงสร้างหนี้</b> — หนี้ท่วมเกินกว่าจะจ่ายไหว เจ้าหนี้ยอมตัดหนี้ส่วนใหญ่ แต่ประวัติเครดิตพังและคุณเสียขวัญไปมาก`,'sum');l.debt=400000;l.st=cl(l.st+12,0,100);l.fl.bad=1;l.cnt.bankrupt=(l.cnt.bankrupt||0)+1;joy(-5)}
  if(l.debt>0){const i=Math.round(l.debt*.16);l.debt+=i;const yc=mwToB(mwYearCost(M).yr,M),av=(S.money||0)-yc*.25;if(av>0){const p=Math.min(l.debt,Math.round(av));S.money-=p;l.debt-=p}
@@ -31688,7 +31689,7 @@ function kDraw(M){const K=M.kid,a=S.age,calY=MW_Y0-18+a,out=[],ok=e=>{try{return
  for(let i=0;i<n;i++){const L=KE.filter(e=>!e.ms&&!e.yr&&a>=e.a[0]&&a<=e.a[1]&&K.seen[e.id]==null&&!out.includes(e)&&ok(e));if(!L.length)break;
   const W=e=>typeof e.w==='function'?e.w(K,M):e.w;let t=L.reduce((s,e)=>s+W(e),0)*Math.random(),e=L[0];for(const x of L){t-=W(x);if(t<=0){e=x;break}}out.push(e);K.seen[e.id]=a}
  return out}
-function kAmb(M){const K=M.kid,a=S.age,pool=a<3?AMB.a:a<6?AMB.b:a<12?AMB.c:AMB.d;let t=ch(pool);if(Math.random()<.3&&BGA[K.bg])t=BGA[K.bg];addFeed('ev',t,'sum')}
+function kAmb(M){const K=M.kid,a=S.age,pool=a<3?AMB.a:a<6?AMB.b:a<12?AMB.c:AMB.d;K.au=K.au||[];let t=null;if(a>=7&&a<=17&&BGA[K.bg]&&!K.bga&&Math.random()<.3){t=BGA[K.bg];K.bga=1}else{const L=pool.filter(x=>!K.au.includes(x));if(!L.length)return;t=ch(L);K.au.push(t)}addFeed('ev',t,'sum')}
 function kYear(M){const K=M.kid;S.age++;M.y++;try{ensureHeader()}catch(e){}const a=S.age;
  if(a>=3){const F=KFOC.find(x=>x[0]===S.focus&&a>=x[3]);if(F){const tg=kfx(M,K,Object.assign({},KFX[F[0]]),1);addFeed('ev',`${F[1]} ปีนี้ ${F[2]} · ${Object.keys(KFX[F[0]]).filter(k=>KN[k]).map(k=>KN[k]+(KFX[F[0]][k]>0?'+':'')+KFX[F[0]][k]).join(' ')}`,'sum')}else{K.f=kc(K.f+1,0,100)}}
  K.p=kc(K.p+R(-1,2),0,100);K.s=kc(K.s+(a>=6?R(0,1):0),0,100);S.hp=Math.min(S.maxHp,S.hp+R(3,8));
@@ -38030,7 +38031,7 @@ function arc(prefix,DEF,getS){Object.keys(DEF).forEach(k=>{DEF[k].ev.forEach((e,
   const pool=A.ev.map((e,i)=>i).filter(i=>!dn[i]&&i<last);
   if(pool.length&&Math.random()<p)out.push({id:`${prefix}_${st.k}_${ch(pool)}`,p:2.8});
   if(!dn[last]&&n>=(A.need||2)&&Math.random()<p*.8)out.push({id:`${prefix}_${st.k}_${last}`,p:4})}}
-function pick(prefix,DEF,getS,title,desc){EV(prefix+'_pick',M=>{const st=getS(M);const ks=Object.keys(DEF).sort(()=>Math.random()-.5).slice(0,3);
+function pick(prefix,DEF,getS,title,desc){EV(prefix+'_pick',M=>{const st=getS(M);if(!st||st.k)return;if(window._arcAuto){const a=window._arcAuto(prefix,M,DEF);if(a==='__skip')return;if(a&&DEF[a]){st.k=a;st.y0=S.age;return}}const ks=Object.keys(DEF).sort(()=>Math.random()-.5).slice(0,3);
  choice(title,desc,ks.map(k=>O(`${DEF[k].ic} ${DEF[k].n}`,()=>{st.k=k;say(`${DEF[k].ic} ${DEF[k].d}`,'epic')},DEF[k].s)))})}
 function rollPick(prefix,DEF,getS){EV(prefix+'_pick',M=>{const st=getS(M);st.k=ch(Object.keys(DEF));const A=DEF[st.k];say(`${A.ic} <b>${A.n}</b> — ${A.d}`,'myth')})}
 
@@ -38184,8 +38185,8 @@ function arc(prefix,DEF,getS){Object.keys(DEF).forEach(k=>{DEF[k].ev.forEach((e,
   const pool=A.ev.map((e,i)=>i).filter(i=>!dn[i]&&i<last);
   if(pool.length&&Math.random()<p)out.push({id:`${prefix}_${st.k}_${ch(pool)}`,p:2.8});
   if(!dn[last]&&n>=(A.need||2)&&(st.y0==null||S.age-st.y0>=12)&&Math.random()<p*.8)out.push({id:`${prefix}_${st.k}_${last}`,p:4})}}
-function pick(prefix,DEF,getS,title,desc){EV(prefix+'_pick',M=>{const st=getS(M);const ks=Object.keys(DEF).sort(()=>Math.random()-.5).slice(0,3);
- choice(title,desc,ks.map(k=>O(`${DEF[k].ic} ${DEF[k].n}`,()=>{st.k=k;st.y0=S.age;say(`${DEF[k].ic} ${DEF[k].d}`,'epic')},DEF[k].s)))})}
+function pick(prefix,DEF,getS,title,desc){EV(prefix+'_pick',M=>{const st=getS(M);if(!st||st.k)return;if(window._arcAuto){const a=window._arcAuto(prefix,M,DEF);if(a==='__skip')return;if(a&&DEF[a]){st.k=a;st.y0=S.age;return}}const ks=Object.keys(DEF).sort(()=>Math.random()-.5).slice(0,3);
+ choice(title,desc,ks.map(k=>O(`${DEF[k].ic} ${DEF[k].n}`,()=>{if(st.k)return;st.k=k;st.y0=S.age;say(`${DEF[k].ic} ${DEF[k].d}`,'epic');try{window._arcPicked&&window._arcPicked(prefix,k,S.mw)}catch(e){}},DEF[k].s)))})}
 
 // ================= 🌃 เส้นทางอาชญากรรม =================
 const uQ=M=>{const U=M.U;U.Q=U.Q||{k:null};return U.Q};
@@ -38350,7 +38351,7 @@ function arc(prefix,DEF,getS){Object.keys(DEF).forEach(k=>{DEF[k].ev.forEach((e,
   const pool=A.ev.map((e,i)=>i).filter(i=>!dn[i]&&i<last);
   if(pool.length&&Math.random()<p)out.push({id:`${prefix}_${st.k}_${ch(pool)}`,p:2.8});
   if(!dn[last]&&n>=(A.need||2)&&Math.random()<p*.8)out.push({id:`${prefix}_${st.k}_${last}`,p:4})}}
-function pick(prefix,DEF,getS,title,desc){EV(prefix+'_pick',M=>{const st=getS(M);const ks=Object.keys(DEF).sort(()=>Math.random()-.5).slice(0,3);
+function pick(prefix,DEF,getS,title,desc){EV(prefix+'_pick',M=>{const st=getS(M);if(!st||st.k)return;if(window._arcAuto){const a=window._arcAuto(prefix,M,DEF);if(a==='__skip')return;if(a&&DEF[a]){st.k=a;st.y0=S.age;return}}const ks=Object.keys(DEF).sort(()=>Math.random()-.5).slice(0,3);
  choice(title,desc,ks.map(k=>O(`${DEF[k].ic} ${DEF[k].n}`,()=>{st.k=k;say(`${DEF[k].ic} ${DEF[k].d}`,'epic')},DEF[k].s)))})}
 
 // ================= 🗼 บทบาทนักปีน =================
@@ -38537,9 +38538,9 @@ const TEV={
   ['📞 โทรศัพท์ตอนตีสาม','พ่อโทรมาตอนตีสาม เสียงสั่น ไม่ได้พูดอะไร แค่บอกว่า "เหงา"',[['🚗 ขับรถไปหาเดี๋ยวนี้',M=>say('🚗 คุณนั่งดูทีวีกับพ่อจนเช้า — เขาหลับคาไหล่คุณ','good',{joy:10})],['📞 คุยจนเขาหลับ',M=>say('📞 สองชั่วโมงในสายเรื่องข่าวกีฬา','',{joy:4})]]]],
  orph:[['🧺 จดหมายจากสถานสงเคราะห์','สถานสงเคราะห์ที่คุณโตมาส่งจดหมายมา — มีคนอ้างว่าเป็นแม่แท้ๆ ของคุณ',[['🤝 ไปพบ',M=>{if(Math.random()<.5){fl(M,'tr_orph');say('🤝 เธอเล่าทุกอย่างโดยไม่ขอให้คุณให้อภัย — คุณให้อภัยเอง','myth',{joy:15})}else say('🤝 เธอมาขอเงิน','bad',{joy:-12})}],['🚪 ไม่ไป',M=>say('🚪 คุณเก็บจดหมายไว้ในลิ้นชัก — บางคืนก็หยิบมาอ่าน','')]]],
   ['🏠 ครอบครัวที่เลือกเอง','เพื่อนสามคนที่โตมาด้วยกันในสถานสงเคราะห์ ชวนเช่าบ้านอยู่ด้วยกัน',[['🏠 ไป',M=>say('🏠 ห้องนั่งเล่นรกตลอดเวลา — มันคือบ้านหลังแรกในชีวิต','good',{joy:12})],['🙅 อยู่คนเดียว',M=>say('🙅 คุณยังเจอพวกเขาทุกวันเกิด','')]]]]};
-function rollTraits(M){if(M.TRT)return;const ks=Object.keys(TRT);const n=Math.random()<.35?2:1;const pick=[];while(pick.length<n){const k=ch(ks);if(!pick.includes(k)&&!(k==='poor'&&pick.includes('rich'))&&!(k==='rich'&&pick.includes('poor'))&&!(k==='orph'&&pick.includes('care'))&&!(k==='care'&&pick.includes('orph')))pick.push(k)}
- M.TRT={k:pick,d:{}};pick.forEach(k=>{try{TRT[k][3](M)}catch(e){}});feed(`🎲 ลักษณะชีวิตนี้: ${pick.map(k=>`<b>${TRT[k][0]} ${TRT[k][1]}</b>`).join(' · ')}`)}
-Object.keys(TEV).forEach(k=>TEV[k].forEach((e,i)=>EV(`tt_${k}_${i}`,M=>{M.TRT.d[k+i]=1;choice(e[0],e[1],e[2].map(o=>O(o[0],()=>o[1](M))))})));
+function rollTraits(M){if(M.TRT)return;const bg=M.native?((M.L&&M.L.bg)||(M.kid&&M.kid.bg)||''):'';const NO={orphan:['rich','star','care','poor'],farm:['rich','star'],single:['rich','star','twin','care'],mig2:['rich','star'],rich:['poor'],gov:['poor'],shop:[],mid:[]}[bg]||[];let ks=Object.keys(TRT).filter(k=>!NO.includes(k)&&(!M.native||k!=='orph'||bg==='orphan'));const n=bg==='orphan'?(Math.random()<.35?2:1):Math.random()<.35?2:1;const pick=bg==='orphan'?['orph']:[];let g=0;while(pick.length<n&&g++<60){const k=ch(ks);if(!pick.includes(k)&&!(k==='poor'&&pick.includes('rich'))&&!(k==='rich'&&pick.includes('poor'))&&!(k==='orph'&&pick.includes('care'))&&!(k==='care'&&pick.includes('orph')))pick.push(k)}
+ M.TRT={k:pick,d:{}};pick.forEach(k=>{try{TRT[k][3](M)}catch(e){}});feed(`🎲 ${M.kid?'ชีวิตนี้เริ่มต้นแบบ':'ลักษณะชีวิตนี้'}: ${pick.map(k=>`<b>${TRT[k][0]} ${TRT[k][1]}</b>`).join(' · ')}`)}
+window._rollTRT=rollTraits;Object.keys(TEV).forEach(k=>TEV[k].forEach((e,i)=>EV(`tt_${k}_${i}`,M=>{M.TRT.d[k+i]=1;choice(e[0],e[1],e[2].map(o=>O(o[0],()=>o[1](M))))})));
 
 // ================= 2) 🧥 คนแปลกหน้าที่โผล่ทุกชีวิต =================
 const GUISE={normal:'คนขับแท็กซี่ที่ไม่เปิดมิเตอร์',hunter:'ฮันเตอร์แรงก์ F ที่ไม่มีใครรู้ว่าลงเกตไปทำอะไร',under:'ชายแก่ที่นั่งดื่มชาหน้าบ่อนทุกคืน',ghost:'วิญญาณที่ไม่ยอมบอกว่าตายเมื่อไหร่',loop:'คนเดียวในเมืองที่ใส่เสื้อคนละตัวทุกรอบ',zombie:'ผู้รอดชีวิตที่ซอมบี้เดินผ่านเหมือนมองไม่เห็น',tower:'ลูกหาบที่แบกของขึ้นลงหอคอยมานานกว่าหอคอยมีอยู่',game:'NPC ที่พูดนอกบท',gatewon:'พ่อค้าที่เดินเข้าออกกำแพงได้โดยไม่มีใครเห็น',doom:'คนเดียวในเมืองที่ไม่กลัวอรุณ'};
@@ -43042,10 +43043,15 @@ const HW=[['qi','🌌','ปราณฟ้าดินหนาแน่นผ�
  ['tr','☄️','ดาวตกกลางวัน — ท่ามือผุดขึ้นในหัว',['train','body','adv','hunt','roam'],m=>{const g=Math.round(Math.max(6+realmIdx()*25,total()*.05)*m);S.power+=g;return`พลังยุทธ์ +${fmt(g)}`}],
  ['mn','🐫','คาราวานของหายากผ่านเมือง',['work','mission','travel'],m=>{const g=Math.round(scale()*1.2*m);S.money+=g;return`เงิน +${fmt(g)}`}],
  ['st','📚','ผู้เฒ่าลืมตำราไว้ใต้ต้นไม้',['study','mwlearn'],m=>{S.int+=Math.round(4*m);let t=`ปัญญา +${Math.round(4*m)}`;if(m>1)t+=' · '+aAdd(1);return t}]];
-function hwOpen(){const X=IX(),h=ch(HW);let done=0;X.hw=S.age+R(3,6);const fit=h[3].includes(S.focus);
- const grab=()=>{if(done||!ok())return;done=1;const m=fit?2:1;const g=h[4](m);log(`${h[1]} <b>คว้าจังหวะฟ้าได้!</b> ${h[2]} — ${g}${fit?' · <b>โฟกัสตรงจังหวะ ×2</b>':''}`,fit?'epic':'good');try{sfx('rare')}catch(e){}};
- try{let el=$('hwCard');if(el)el.remove();el=document.createElement('div');el.id='hwCard';el.innerHTML=`<div class="hwI">${h[1]}</div><div class="hwT"><small>⚡ จังหวะฟ้าเปิด${fit?' · ตรงโฟกัส ×2!':''}</small><b>${h[2]}</b><i class="hwBar"></i></div><button>✋ คว้า!</button>`;document.body.appendChild(el);const go=()=>{grab();el.classList.add('hwOk');setTimeout(()=>el.remove(),600)};el.querySelector('button').onclick=go;el.querySelector('.hwT').onclick=go;setTimeout(()=>{if(el.isConnected){el.classList.add('hwGone');setTimeout(()=>el.remove(),400)}},5000)}catch(e){}
- setTimeout(()=>{if(!done&&ok()){done=1;addFeed('ev',`${h[1]} ${h[2]} — แต่คุณไม่ทันสังเกต จังหวะผ่านไปแล้ว`,'sum')}},5600)}
+const HWN=[['mn','📣','งานด่วนค่าจ้างสามเท่าประกาศในกลุ่มไลน์',['mwjob'],m=>{const g=Math.round(mwToB(MW_MIN[S.mw.cc||'th']*.8,S.mw)*m);S.money+=g;return`เงิน +${fmt(g)}`}],
+ ['st','📚','คอร์สออนไลน์ดังเปิดให้เรียนฟรีแค่วันนี้',['mwlearn'],m=>{S.int+=Math.round(4*m);return`ปัญญา +${Math.round(4*m)}`}],
+ ['fm','📱','คลิปที่คุณโพสต์เมื่อวานยอดวิวกำลังพุ่ง',['mwnet'],m=>{const g=Math.round(3000*m);try{mwFx({fame:g})}catch(e){}return`ผู้ติดตาม +${fmt(g)}`}],
+ ['jy','🎫','บัตรคอนเสิร์ตวงที่ชอบหลุดมาราคาพิเศษ',['mwlow'],m=>{joy(Math.round(6*m));return`ความสุข +${Math.round(6*m)}`}]];
+const natHW=()=>!!(S&&S.mw&&S.mw.native&&!(S.mw.qi>=3));
+function hwOpen(){const X=IX(),h=ch(natHW()?HWN:HW);let done=0;X.hw=S.age+R(3,6);const fit=h[3].includes(S.focus);
+ const grab=()=>{if(done||!ok())return;done=1;const m=fit?2:1;const g=h[4](m);log(`${h[1]} <b>${natHW()?'คว้าโอกาสไว้ได้!':'คว้าจังหวะฟ้าได้!'}</b> ${h[2]} — ${g}${fit?' · <b>โฟกัสตรงจังหวะ ×2</b>':''}`,fit?'epic':'good');try{sfx('rare')}catch(e){}};
+ try{let el=$('hwCard');if(el)el.remove();el=document.createElement('div');el.id='hwCard';el.innerHTML=`<div class="hwI">${h[1]}</div><div class="hwT"><small>⚡ ${natHW()?'โอกาสมาถึง':'จังหวะฟ้าเปิด'}${fit?' · ตรงโฟกัส ×2!':''}</small><b>${h[2]}</b><i class="hwBar"></i></div><button>✋ คว้า!</button>`;document.body.appendChild(el);const go=()=>{grab();el.classList.add('hwOk');setTimeout(()=>el.remove(),600)};el.querySelector('button').onclick=go;el.querySelector('.hwT').onclick=go;setTimeout(()=>{if(el.isConnected){el.classList.add('hwGone');setTimeout(()=>el.remove(),400)}},5000)}catch(e){}
+ setTimeout(()=>{if(!done&&ok()){done=1;addFeed('ev',`${h[1]} ${h[2]} — แต่คุณไม่ทันสังเกต ${natHW()?'โอกาสผ่านไปแล้ว':'จังหวะผ่านไปแล้ว'}`,'sum')}},5600)}
 // =============== 🎯 3) คู่ปรับ ===============
 function rvNew(){const g=ch(['ชาย','หญิง']);IX().rv={n:anyName(g),g:+(0.97+Math.random()*.1).toFixed(3),p:Math.max(3,total()*(.9+Math.random()*.2)),y:S.age,mt:S.age+R(8,12),w:0,l:0,ri:0,ld:null,w0:S.xt?2:S.xian?1:0,die:S.age+R(60,110)*(S.xian?4:1),fr:0};
  const r=IX().rv;r.ri=riOf(r.p);r.ld=r.p>total();log(`🎯 <b>${r.n}</b> — ${S.mw?'เด็กจากซอยข้างๆ ที่เรียนห้องเดียวกันมาตั้งแต่อนุบาล ญาติทุกคนเอาคุณสองคนไปเทียบกันทุกงานรวมญาติ':'เด็กจากหมู่บ้านข้างๆ ที่เกิดปีเดียวกับคุณ ทุกคนเอาคุณสองคนไปเทียบกันตั้งแต่จำความได้'} <span class="tag2">(คู่ปรับคู่ชีวิต · ดูได้ที่แถบใต้เป้าหมาย)</span>`,'epic',true)}
@@ -43556,7 +43562,7 @@ const _pk=window.mg2Pick;
 window.mg2Pick=function(){try{const M=S&&S.alive&&S.mw;if(!M||(S.beastMode&&!S.beastMode.human))return _pk.apply(this,arguments);
  const MP=window.mg2Map&&window.mg2Map.mw,C=(MP?(MP[S.focus]||MP._):['stock','rider','typing']).slice();let w=null;if(M.wx&&M.wx.on&&WG[M.wx.id])w=WG[M.wx.id];else if(M.hw>0)w=WG.hunter;if(w)C.push(...w,...w);
  const j=M.job&&JG[M.job.id];if(j)C.push(...j,...j);
- if(M.native){for(let i=C.length-1;i>=0;i--)if(/^(rescue|cctv|breath|jgCctv|jfRing|jsJump|jcMoves)$/.test(C[i]))C.splice(i,1);if(S.age<6)return;if(S.age<18){const KID=['mathq','phone','bargain','chicken'];C.length=0;C.push(...KID)}if(!C.length)C.push('phone','bargain')}
+ if(M.native){for(let i=C.length-1;i>=0;i--)if(/^(rescue|cctv|breath|jgCctv|jfRing|jsJump|jcMoves)$/.test(C[i]))C.splice(i,1);if(S.age<6)return;if(S.age<18){const KID=['mathq','phone','bargain','chicken'];C.length=0;C.push(...KID)}else{const st=!!(M.L&&M.L.prog);for(let i=C.length-1;i>=0;i--)if(C[i]==='phone'||(C[i]==='mathq'&&!st))C.splice(i,1)}if(!C.length)C.push('typing','bargain','interview')}
  let L=C.filter(k=>G[k]&&k!==S.mgLast);if(!L.length)L=C.filter(k=>G[k]);const k=L[Math.floor(Math.random()*L.length)];S.mgLast=k;S.mgA=S.age;return(window._mg2Y||yearly)(k)}catch(e){console.error('mwPick',e);return _pk.apply(this,arguments)}};
 })()}catch(e){console.error('mwmg',e)}
 
@@ -43739,13 +43745,13 @@ function rescueEv(){choice('🦸 เหตุการณ์ตรงหน้�
  {t:'🙈 ทำเป็นไม่เห็น',s:'ความลับปลอดภัย',f(){say('🙈 คุณหันหน้าหนี — เสียงข้างหลังทำให้คุณนอนไม่หลับไปหลายคืน','bad',{joy:-8})}}])}
 // ================= รายปี =================
 {const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(!on()||S.age===a0)return r;const x=X(),m=M();
- feedYear();jobYear();locYear();
- if(!choice._cur||Math.random()<.5){const q=[];if(!m.native&&m.y>=3&&m.y>=x.ar&&(m.fl.others||m.y>=5))q.push(arena);if(m.linMet&&m.y>=(x.lin||0)&&m.y>=2)q.push(linAct);if(m.adapt<75&&Math.random()<.35)q.push(shock);if(!m.native&&Math.random()<.12)q.push(rescueEv);if(!x.job&&m.y>=2&&!x.jobAsk){q.push(()=>(x.jobAsk=1,choice('💼 งานเสริม',m.native&&!m.linMet?'เพื่อนส่งประกาศรับสมัครงานพาร์ตไทม์มาให้สามที่ "ลองดูไหม รายได้เสริมดีนะ"':`${LIN()}ส่งประกาศรับสมัครงานมาให้สามที่ "ปู่ลองดูไหม"`,Object.entries(JOB).map(([k,J])=>({t:`${J.ic} ${J.n}`,s:J.L.join(' → '),f(){mwJobPick(k)}})).concat([{t:'🙅 ยังไม่สนใจ',skip:true,f(){}}]))))}
+ feedYear();jobYear();if(!m.native)locYear();
+ if(!choice._cur||Math.random()<.5){const q=[];if(!m.native&&m.y>=3&&m.y>=x.ar&&(m.fl.others||m.y>=5))q.push(arena);if(m.linMet&&m.y>=(x.lin||0)&&m.y>=2)q.push(linAct);if(m.adapt<75&&Math.random()<.35)q.push(shock);if(!m.native&&Math.random()<.12)q.push(rescueEv);if(!m.native&&!x.job&&m.y>=2&&!x.jobAsk){q.push(()=>(x.jobAsk=1,choice('💼 งานเสริม',m.native&&!m.linMet?'เพื่อนส่งประกาศรับสมัครงานพาร์ตไทม์มาให้สามที่ "ลองดูไหม รายได้เสริมดีนะ"':`${LIN()}ส่งประกาศรับสมัครงานมาให้สามที่ "ปู่ลองดูไหม"`,Object.entries(JOB).map(([k,J])=>({t:`${J.ic} ${J.n}`,s:J.L.join(' → '),f(){mwJobPick(k)}})).concat([{t:'🙅 ยังไม่สนใจ',skip:true,f(){}}]))))}
   if(q.length&&Math.random()<.6&&window.ixBudget&&ixBudget())ch(q)()}
  }catch(e){console.error('blk58',e)}return r}}
 // ================= ปุ่มในแถบยุคปัจจุบัน =================
-{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{if(!on())return r;const h=$('mwHud');if(!h||h.querySelector('.mwX'))return r;const x=X();h.insertAdjacentHTML('beforeend',`<div class="mwX" style="display:flex;gap:6px;margin-top:6px"><button class="sysb" style="flex:1" onclick="openMwFeed()">📱 ฟีด${x.nw?` <b style="color:#ff6b8a">●${x.nw}</b>`:''}</button><button class="sysb" style="flex:1" onclick="openMwJob()">${x.job?JOB[x.job.k].ic+' '+JOB[x.job.k].L[x.job.lv]:'💼 งานเสริม'}</button><button class="sysb" style="flex:1" onclick="openMwMap()">${LOC()[x.loc][0]} ${LOC()[x.loc][1]}</button></div>`)}catch(e){}return r}}
-{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(on()){const g=$('modal').querySelector('.mgrid'),x=X();if(g&&!g.querySelector('.mwXB'))g.insertAdjacentHTML('afterbegin',`<button class="opt mwXB" onclick="closeM();openMwFeed()">📱 ฟีดโซเชียล<small>${x.nw?x.nw+' โพสต์ใหม่':'โลกพูดถึงคุณ'}</small></button><button class="opt mwXB" onclick="closeM();openMwJob()">💼 งานเสริม<small>${x.job?JOB[x.job.k].L[x.job.lv]:'ยังไม่มี'}</small></button><button class="opt mwXB" onclick="closeM();openMwMap()">🗺️ ย่านในเมือง<small>${LOC()[x.loc][1]}</small></button>`)}}catch(e){}return r}}
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{if(!on())return r;const h=$('mwHud');if(!h||h.querySelector('.mwX'))return r;const x=X();if(M().native&&!x.job)return r;h.insertAdjacentHTML('beforeend',`<div class="mwX" style="display:flex;gap:6px;margin-top:6px"><button class="sysb" style="flex:1" onclick="openMwFeed()">📱 ฟีด${x.nw?` <b style="color:#ff6b8a">●${x.nw}</b>`:''}</button><button class="sysb" style="flex:1" onclick="openMwJob()">${x.job?JOB[x.job.k].ic+' '+JOB[x.job.k].L[x.job.lv]:'💼 งานเสริม'}</button><button class="sysb" style="flex:1" onclick="openMwMap()">${LOC()[x.loc][0]} ${LOC()[x.loc][1]}</button></div>`)}catch(e){}return r}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(on()){const g=$('modal').querySelector('.mgrid'),x=X();if(g&&!g.querySelector('.mwXB')&&!(M().native&&!x.job))g.insertAdjacentHTML('afterbegin',`<button class="opt mwXB" onclick="closeM();openMwFeed()">📱 ฟีดโซเชียล<small>${x.nw?x.nw+' โพสต์ใหม่':'โลกพูดถึงคุณ'}</small></button><button class="opt mwXB" onclick="closeM();openMwJob()">💼 งานเสริม<small>${x.job?JOB[x.job.k].L[x.job.lv]:'ยังไม่มี'}</small></button><button class="opt mwXB" onclick="closeM();openMwMap()">🗺️ ย่านในเมือง<small>${LOC()[x.loc][1]}</small></button>`)}}catch(e){}return r}}
 window._b58={feedYear,arena,shock,linAct,rescueEv,jobUp,X,post};
 })()}catch(e){console.error('block58',e)}
 
@@ -44003,12 +44009,13 @@ function goalNow(M){M.gd=M.gd||{};return GOALS.find(g=>!M.gd[g[0]])}
 // ================= 🏙️ 5) ขั้นในยุคใหม่ =================
 const MR=[[0,'👤','คนแปลกหน้า','ไม่มีใครรู้จักคุณ'],[30,'🏘️','คนในซอย','พี่วินกับป้าแดงรู้จักชื่อคุณ'],[52,'🗣️','คนที่ย่านรู้จัก','เด็กในย่านเล่าเรื่องคุณให้กันฟัง'],[72,'🌃','ตำนานเมือง','ทั้งเมืองมีเรื่องเล่าเกี่ยวกับคุณ'],[90,'🛡️','ผู้พิทักษ์เมือง','เมืองนี้ปลอดภัยขึ้นเพราะคุณอยู่']];
 const MRB=[null,{qi:.3,mon:3000},{qi:.5,fame:1500},{qi:1,fame:5000,mon:15000},{qi:2,fame:15000,mon:40000}];
+const MRN=[[0,'👤','คนธรรมดา','ชีวิตเรียบง่ายเหมือนคนทั่วไป'],[30,'🏘️','คนที่ซอยรู้จัก','ป้าร้านข้าวกับพี่วินจำชื่อคุณได้'],[52,'🗣️','คนเก่งของย่าน','เพื่อนบ้านเริ่มมาขอคำปรึกษา'],[72,'📰','คนดังของเมือง','ชื่อคุณเคยขึ้นข่าวท้องถิ่น'],[90,'🏆','ความภูมิใจของบ้านเกิด','คนบ้านเกิดพูดถึงคุณด้วยความภูมิใจ']],MRBN=[null,{mon:3000},{fame:1500,mon:5000},{fame:5000,mon:15000},{fame:15000,mon:40000}],MRo=M=>M&&M.native?MRN:MR,MLB=M=>M&&M.native?'ก้าวในชีวิต':'ขั้นในยุคใหม่';
 function mScore(M){const x=M.x||{};let s=(M.adapt||0)*(M.native?.12:.35)+Math.log10((M.fame||0)+1)*7+(M.linMet?4:0)+(x.job?x.job.lv*6:0)+(x.arW||0)*3+((x.locs||[]).length-1)*2+Object.keys(M.gd||{}).length*2+Math.min(10,(M.y||0)*.5);return Math.round(s)}
 const rOf=s=>{let r=0;MR.forEach((m,i)=>{if(s>=m[0])r=i});return r};
-function rankTick(M){const s=mScore(M),r=rOf(s);M.mr=M.mr||0;if(r>M.mr){for(let i=M.mr+1;i<=r;i++){const m=MR[i];mwSay(`${m[1]} <b>ขั้นในยุคใหม่: ${m[2]}</b> — ${m[3]}`,'myth',MRB[i],true);try{island({big:1,pri:1,ic:m[1],h:'ขั้นในยุคใหม่',t:m[2],kind:'gold'})}catch(e){}try{keyAdd('ขั้นในยุคใหม่: '+m[2])}catch(e){}}M.mr=r}}
-window.mwRankInfo=function(){const M=S.mw;if(!M)return;const s=mScore(M),r=rOf(s),nx=MR[r+1];modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>${MR[r][1]} ${MR[r][2]}</h3><p class="tag2">${MR[r][3]}</p><div class="item">คะแนนยุคใหม่ <b>${s}</b>${nx?` · ขั้นถัดไป <b>${nx[1]} ${nx[2]}</b> ที่ ${nx[0]}`:' · ขั้นสูงสุดแล้ว'}<div style="height:8px;background:#0002;border-radius:5px;margin:6px 0;overflow:hidden"><div style="height:100%;width:${nx?Math.min(100,(s-MR[r][0])/(nx[0]-MR[r][0])*100):100}%;background:#8a5ae0"></div></div><span class="tag2">ได้จาก: ความคุ้นเคย · ผู้ติดตาม · หลิน · งานเสริม · ชนะลานใต้ดิน · ย่านที่ปลดล็อก · เป้าหมาย · ปีที่อยู่ในยุคนี้</span></div>${MR.map((m,i)=>`<div class="tag2" style="${i===r?'font-weight:800;color:#8a5ae0':i<r?'':'opacity:.5'}">${m[1]} ${m[2]} (${m[0]})</div>`).join('')}`,'mwrank')};
+function rankTick(M){if(M&&M.kid)return;const s=mScore(M),r=rOf(s);M.mr=M.mr||0;if(r>M.mr){for(let i=M.mr+1;i<=r;i++){const m=MRo(M)[i],lb=MLB(M);mwSay(`${m[1]} <b>${lb}: ${m[2]}</b> — ${m[3]}`,'myth',(M.native?MRBN:MRB)[i],true);try{island({big:1,pri:1,ic:m[1],h:lb,t:m[2],kind:'gold'})}catch(e){}try{keyAdd(lb+': '+m[2])}catch(e){}}M.mr=r}}
+window.mwRankInfo=function(){const M=S.mw;if(!M)return;const s=mScore(M),r=rOf(s),nx=MRo(M)[r+1];modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>${MRo(M)[r][1]} ${MRo(M)[r][2]}</h3><p class="tag2">${MRo(M)[r][3]}</p><div class="item">คะแนนยุคใหม่ <b>${s}</b>${nx?` · ขั้นถัดไป <b>${nx[1]} ${nx[2]}</b> ที่ ${nx[0]}`:' · ขั้นสูงสุดแล้ว'}<div style="height:8px;background:#0002;border-radius:5px;margin:6px 0;overflow:hidden"><div style="height:100%;width:${nx?Math.min(100,(s-MRo(M)[r][0])/(nx[0]-MRo(M)[r][0])*100):100}%;background:#8a5ae0"></div></div><span class="tag2">ได้จาก: ${M.native?'ผู้ติดตาม · เป้าหมายที่ทำสำเร็จ · ปีที่ผ่านไป':'ความคุ้นเคย · ผู้ติดตาม · หลิน · งานเสริม · ชนะลานใต้ดิน · ย่านที่ปลดล็อก · เป้าหมาย'} · ปีที่อยู่ในยุคนี้</span></div>${MR.map((m,i)=>`<div class="tag2" style="${i===r?'font-weight:800;color:#8a5ae0':i<r?'':'opacity:.5'}">${m[1]} ${m[2]} (${m[0]})</div>`).join('')}`,'mwrank')};
 // แถบด้านบน: โชว์ขั้น + เป้าหมาย · 3 ปีแรกซ่อนค่าที่ยังไม่จำเป็น
-{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{if(!ON())return r;const M=S.mw,h=$('mwHud');const rk=MR[rOf(mScore(M))];const gr=$('gRealm');if(gr)gr.textContent=`${rk[1]} ${rk[2]} · ยุคปัจจุบัน`;
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{if(!ON())return r;const M=S.mw,h=$('mwHud');const rk=MRo(M)[rOf(mScore(M))];const gr=$('gRealm');if(gr)gr.textContent=`${rk[1]} ${rk[2]} · ยุคปัจจุบัน`;
   if(h&&!h.querySelector('.mwGoal')){const g=goalNow(M);h.insertAdjacentHTML('afterbegin',`<div class="mwGoal" style="display:flex;gap:6px;align-items:center;margin-bottom:5px;font-size:12px"><button class="sysb" style="padding:3px 8px" onclick="mwRankInfo()">${rk[1]} ${rk[2]}</button>${g?`<span style="flex:1;min-width:0">🎯 ${g[1]}</span>`:''}</div>`);
    if(M.y<3&&!M.kid)h.querySelectorAll('.mwh1').forEach(e=>{if(/ผู้ติดตาม|ปราณ/.test(e.textContent))e.style.display='none'})}}catch(e){}return r}}
 window._b60={modeKey,mScore,rankTick,goalNow,card};
@@ -47402,7 +47409,7 @@ let lastW=null;setInterval(()=>{try{if(S&&S.alive)lastW={mw:!!S.mw,beast:!!(S.be
 window.rebirthSame=function(){const w=lastW||{};try{toTitle()}catch(e){}setTimeout(()=>{try{if(w.beast){goBeastLife();return}if(w.mw){CFG.mw=1;mwBRand();mwBStart();return}CFG.mw=0;crForce=null;goBirth();doRoll(true);startLife()}catch(e){console.error(e)}},350)};
 setInterval(()=>{try{const e=$('end');if(!e||!e.classList.contains('on')||e.querySelector('.endSame'))return;const b=[...e.querySelectorAll('button')].find(x=>/เกิดใหม่/.test(x.textContent));if(!b)return;b.parentElement.insertAdjacentHTML('afterend','<div class="brow endSame"><button class="pbtn" style="width:100%" onclick="rebirthSame()">⚡ เกิดใหม่แบบเดิมเลย<br><small style="font-weight:400">โลกและโหมดเดิม · สุ่มชาติกำเนิดใหม่ · ข้ามหน้าเลือกทั้งหมด</small></button></div>')}catch(e){}},800);
 // ---------- 8) สรุปทุก 10 ปี ----------
-{const _py=passYear;passYear=function(){const me=S;const r=_py.apply(this,arguments);try{if(!S||S!==me||!S.alive||S.age%10!==0)return r;const d=S._dec;const now={a:S.age,m:S.money||0,p:(()=>{try{return total()}catch(e){return 0}})(),f:S.fame||0,h:S.happy||0};S._dec=now;if(!d||typeof addFeed!=='function')return r;
+{const _py=passYear;passYear=function(){const me=S,a0=S&&S.age;const r=_py.apply(this,arguments);try{if(!S||S!==me||!S.alive||S.age===a0||S.age%10!==0)return r;const d=S._dec;const now={a:S.age,m:S.money||0,p:(()=>{try{return total()}catch(e){return 0}})(),f:S.fame||0,h:S.happy||0};S._dec=now;if(!d||typeof addFeed!=='function')return r;
  const df=(x,y)=>{const v=Math.round(x-y);return(v>=0?'+':'')+(typeof fmtM==='function'?fmtM(v):v)};
  addFeed('ev',`📅 <b>สรุป ${d.a}–${S.age-1} ปี</b> — เงิน ${df(now.m,d.m)}${S.mw?'':' · พลัง '+df(now.p,d.p)} · ชื่อเสียง ${df(now.f,d.f)} · ความสุข ${Math.round(now.h)}/100`,'sum')}catch(e){}return r}}
 setInterval(()=>{try{if(S&&S.alive&&!S._dec)S._dec={a:S.age,m:S.money||0,p:(()=>{try{return total()}catch(e){return 0}})(),f:S.fame||0,h:S.happy||0}}catch(e){}},3000);
@@ -47425,3 +47432,119 @@ setInterval(()=>{try{if(!on())return;const f=$('feed');if(f)[...f.children].slic
 let tip=null,tt=0;document.addEventListener('click',e=>{const g=e.target.closest&&e.target.closest('.gl');if(!g){if(tip){tip.remove();tip=null}return}e.stopPropagation();e.preventDefault();if(tip)tip.remove();tip=document.createElement('div');tip.id='glTip';tip.innerHTML='<b>'+g.dataset.g+'</b> — '+G[g.dataset.g];document.body.appendChild(tip);const r=g.getBoundingClientRect(),tw=Math.min(260,innerWidth-16);tip.style.left=Math.max(8,Math.min(innerWidth-tw-8,r.left))+'px';tip.style.top=(r.bottom+8+tip.offsetHeight>innerHeight?r.top-tip.offsetHeight-8:r.bottom+8)+'px';clearTimeout(tt);tt=setTimeout(()=>{if(tip){tip.remove();tip=null}},4500)},true);
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const row=$('modal').querySelector('.uxRow');if(row&&!row.querySelector('.glT'))row.insertAdjacentHTML('beforeend',`<button class="gbtn glT" onclick="LS.set('murim_glossoff',${LS.get('murim_glossoff',0)?0:1});closeM();toast('${LS.get('murim_glossoff',0)?'เปิด':'ปิด'}คำอธิบายศัพท์แล้ว')">📖 ${LS.get('murim_glossoff',0)?'เปิด':'ปิด'}คำอธิบายศัพท์</button>`)}catch(e){}return r}}
 })()}catch(e){console.error('gloss',e)}
+// ============================================================
+// BLOCK 83: 🏙️ ยุคปัจจุบัน (คนเกิดยุคนี้) ให้สมเหตุสมผล — ตัดบทเปิดแบบยุทธภพ · พ่อแม่คนไทย · ช่วยคนแบบคนธรรมดา · เงินไม่พอแบบคนไทย · อาชีพในเรื่องตรงกับงานจริง · เส้นชีวิตไทย (เกณฑ์ทหาร บวช รถคันแรก บ้าน ดูแลพ่อแม่ เกษียณ)
+// ============================================================
+try{(()=>{
+const T=()=>window._lifeTbl||{};
+const nat=M=>!!(M&&M.native);
+const wOf=M=>!M?'normal':M.hw>0?'hunter':(M.wx&&M.wx.on?M.wx.id:'normal');
+const Lx=M=>{try{return T().Ls(M)}catch(e){return M.L||{fl:{},mem:{},cnt:{}}}};
+const pw=M=>{try{return !!((M.qi||0)>=3||(M.H&&M.H.aw&&M.H.aw!=='none'))}catch(e){return false}};
+// ---------- 1) ตอนเกิด: ไม่แสดงบทเปิดแบบยุทธภพ (ชาติกำเนิด/พ่อแม่ชื่อจีน/ทารกอีกสี่คน/ปณิธาน/ชะตาร้าย/ยุคยอดฝีมือ) ----------
+let mute=0;window._natMuteOn=()=>!!(mute&&Date.now()<mute);
+{const _l=log;log=function(t){if(mute){const s=String(t||'');if(/คุณเกิดเป็นคน/.test(s))mute=0;else if(Date.now()<mute)return;else mute=0}return _l.apply(this,arguments)}}
+{const _a=addFeed;addFeed=function(){if(mute&&Date.now()<mute)return;return _a.apply(this,arguments)}}
+const THF=['สมชาย','ประเสริฐ','วิชัย','สุรชัย','ธนากร','บุญมี','สมศักดิ์','อนันต์','ชาญวิทย์','ไพโรจน์','สมพงษ์','เกรียงไกร'],THM=['สมศรี','มาลี','บุญเรือน','วันเพ็ญ','สุดา','อรุณี','ละเอียด','พรทิพย์','จันทร์เพ็ญ','นงลักษณ์','รัตนา','กาญจนา'],THK=['ต้น','แนน','บอล','ปลา','กอล์ฟ','ฝ้าย','เบียร์','มิ้นท์','ตูน','แบงค์'];
+function natFix(){const M=S&&S.mw;if(!M||!nat(M)||M._nfx)return;M._nfx=1;
+ try{S.goal=null;S.lg='none';delete S.rx;S.ws={i:1,x:0};S.seeds=[]}catch(e){}
+ try{const l=Lx(M),bg=l.bg||(M.kid&&M.kid.bg)||'mid',sur=(String(S.name||'').split(' ')[1])||'';
+  const nm=(L)=>ch(L)+(sur?' '+sur:'');
+  if(bg==='orphan'){S.parents=[];S.sibs=[];S.flags=S.flags||{};S.flags.lostParents=1;l.fl.par='none'}
+  else{const P=S.parents||[];P.forEach(p=>{p.n=nm(p.g==='หญิง'?THM:THF)});if(bg==='single'){S.parents=P.filter(p=>p.role!=='พ่อ');l.fl.par='mom'}else l.fl.par='both';(S.sibs||[]).forEach(b=>{b.n=nm(THK)})}
+  if(M.kid&&!M.TRT&&window._rollTRT)window._rollTRT(M)}catch(e){console.error('natFix',e)}}
+{const _r=mwRandNative;mwRandNative=function(){mute=Date.now()+5000;const r=_r.apply(this,arguments);let n=0;const t=setInterval(()=>{n++;try{const M=S&&S.mw;if(M&&nat(M)&&n>=5){clearInterval(t);natFix()}else if(n>14)clearInterval(t)}catch(e){clearInterval(t)}},500);return r}}
+// ---------- 2) 🔪 ซอยเปลี่ยว: คนธรรมดาไม่หักมีดด้วยมือ ----------
+try{const e=MW_R.find(x=>x.id==='rob');if(e){const g0=e.go;e.go=function(M){if(!nat(M)||pw(M))return g0.apply(this,arguments);const l=Lx(M),fit=l.fit||45;
+ choice('🔪 ซอยเปลี่ยวตอนตีสอง','ชายสองคนถือมีดล้อมหญิงสาวคนหนึ่งไว้ในซอยหลังตลาด ไม่มีใครอยู่แถวนั้นนอกจากคุณ… และกล้องวงจรปิดที่หัวมุม',[
+  mwC('📣 ตะโกนเรียกคน เปิดไฟฉายมือถือส่องหน้า',()=>{if(Math.random()<.7)mwSay('📣 ไฟในบ้านแถวนั้นเปิดทีละหลัง ชายสองคนหันมามองคุณแล้ววิ่งหนี หญิงสาวทรุดลงร้องไห้ คุณยืนเป็นเพื่อนจนตำรวจมา','good',{joy:5,fame:300});else mwSay('📣 คนหนึ่งเดินเข้ามาหาคุณ คุณวิ่งสุดชีวิตจนถึงร้านสะดวกซื้อ — พนักงานโทรแจ้งตำรวจให้ หญิงสาวหนีออกมาได้ระหว่างนั้น','',{joy:-2,hp:-4})},{s:'ปลอดภัยพอสมควร'}),
+  mwC('📹 ถ่ายคลิปจากมุมมืด แล้วโทร 191',()=>{if(Math.random()<.55)mwSay('🚓 ตำรวจมาถึงในสิบห้านาที คลิปของคุณใช้ระบุตัวคนร้ายได้ทั้งคู่ — หญิงสาวเสียกระเป๋าแต่ไม่บาดเจ็บ','good',{joy:3});else mwSay('🚓 ตำรวจมาถึงช้าไป หญิงสาวบาดเจ็บ แต่คลิปของคุณทำให้จับคนร้ายได้ในสามวัน คืนนั้นคุณนอนไม่หลับ','',{joy:-5})},{s:'ได้หลักฐาน · อาจช้า'}),
+  mwC('🏃 เข้าไปขวางด้วยตัวเอง',()=>{const p=Math.min(.75,.2+fit/180);if(Math.random()<p)mwSay('🏃 คุณคว้าไม้กวาดหน้าร้านเข้าไปยืนขวาง ตะโกนเสียงดังที่สุดในชีวิต — ชายสองคนลังเลแล้ววิ่งหนี มือคุณสั่นไปอีกชั่วโมง','good',{joy:6,fame:1500});else{mwSay('🩸 มีดเฉี่ยวแขนคุณเป็นแผลยาว คนแถวนั้นออกมาช่วยทัน หญิงสาวปลอดภัย — คุณได้แผลเป็นและเย็บเจ็ดเข็ม','bad',{hp:-22,joy:-2,fame:800})}},{s:`เสี่ยงบาดเจ็บ · ร่างกาย ${Math.round(fit)}`}),
+  mwC('🚶 รีบเดินเลี่ยงไปอีกทาง',()=>mwSay('🚶 คุณเดินเลี่ยงไปโดยไม่หันกลับ เช้ามามีข่าวในกลุ่มไลน์หมู่บ้าน — คุณอ่านแล้วปิดจอ','bad',{joy:-7}),{s:'ไม่เสี่ยง'})])}}}catch(e){console.error(e)}
+// ---------- 3) 🎉 สงกรานต์/เทศกาล: ตัดบรรทัดของคนหลงยุค ----------
+try{const e=MW_R.find(x=>x.id==='songkran');if(e){const g0=e.go;e.go=function(M){if(!nat(M))return g0.apply(this,arguments);mwSay(ch(['💦 สงกรานต์ เด็กในซอยตั้งโต๊ะปืนฉีดน้ำหน้าบ้าน คุณเปียกตั้งแต่ก้าวแรกที่ออกจากประตู','🪔 ลอยกระทง คุณพับกระทงใบตองเป็นรูปดอกบัวแบบที่แม่เคยสอน แล้วปล่อยลงคลองเงียบๆ','🧧 ตรุษจีนที่เยาวราช กลิ่นธูปกับเสียงประทัดทำให้คุณยืนนิ่งกลางฝูงคนอยู่นาน','🎆 คืนข้ามปี พลุทั่วเมือง คุณนับถอยหลังกับคนแปลกหน้าที่ยืนข้างๆ','🙏 สงกรานต์ คุณกลับบ้านไปรดน้ำดำหัวผู้ใหญ่ ยายให้พรยาวจนน้ำในขันอุ่น']),'',{joy:5})}}}catch(e){}
+// ---------- 4) ตัวเลือกเสริมสำหรับคนเกิดยุคนี้ ----------
+try{MW_XO.push([M=>nat(M)&&S.age>=16&&Math.random()<.3,'🔎','หาข้อมูลก่อนตัดสินใจ',M=>({joy:1}),'รอบคอบขึ้น'])}catch(e){}
+// ---------- 5) 💸 เงินไม่พอ: ทางเลือกแบบคนไทยธรรมดา ----------
+{const _b=mwBroke;mwBroke=function(M,short){if(!nat(M))return _b.apply(this,arguments);try{const A=mwAst(M),l=Lx(M),opts=[],par=l.fl.par!=='none'&&!l.fl.pDead2,L=v=>mwLocal(v*mwCC().rate,M);
+ if(A.h===2)opts.push(mwC('ขายบ้าน กลับไปเช่าห้อง',()=>{const C=mwCO(M),v=mwToB(C.home[1]*(A.mort?.35:.9),M);A.h=0;A.mort=0;A.mortY=0;S.money+=v;mwSay(`🏠 คุณขายบ้านได้ ${L(v)} แล้วย้ายกลับไปอยู่ห้องเช่าเล็กๆ`,'',{joy:-8})}));
+ if(A.h===1)opts.push(mwC('ย้ายไปห้องเช่าถูกกว่า',()=>{A.h=0;mwSay('📦 คุณย้ายของทั้งหมดใส่รถกระบะคันเดียว ห้องใหม่เล็กลงครึ่งหนึ่ง','',{joy:-3})}));
+ if(par&&!(M._famY>M.y-5))opts.push(mwC('โทรขอยืมเงินที่บ้าน',()=>{M._famY=M.y;S.money+=short;mwSay(ch(['📞 แม่โอนให้ทันที พร้อมข้อความ "ไม่ต้องรีบคืน กินข้าวให้ครบมื้อนะลูก" — คุณนั่งมองข้อความนั้นนาน','📞 พ่อเงียบไปพักหนึ่ง แล้วบอกว่า "เดี๋ยวพ่อจัดการ" สองวันต่อมาเงินเข้าบัญชี — คุณรู้ทีหลังว่าเขาขายวัวไปหนึ่งตัว']),'',{joy:-3})}));
+ if(A.save>0)opts.push(mwC('ถอนเงินออมก่อนกำหนด',()=>{const w=Math.min(A.save,short*1.2);A.save-=w;S.money+=w;mwSay('🐷 คุณถอนเงินออมออกมาใช้ก่อน เสียค่าปรับไปส่วนหนึ่ง','',{joy:-2})}));
+ opts.push(mwC('กดเงินสดจากบัตร/สินเชื่อในแอป',()=>{S.money+=short;l.debt=(l.debt||0)+Math.round(short*1.25);mwSay('💳 เงินเข้าภายในห้านาที ดอกเบี้ยปีละยี่สิบห้าเปอร์เซ็นต์ — ข้อความเตือนชำระขั้นต่ำเริ่มเด้งทุกต้นเดือน','',{joy:-3})}));
+ opts.push(mwC('กู้เงินนอกระบบ',()=>{S.money+=short;M.loan=(M.loan||0)+Math.round(short*1.6);mwSay('💀 เจ้าหนี้หน้าโหดนับเงินให้คุณพร้อมรอยยิ้ม ดอกเบี้ยเดือนละยี่สิบเปอร์เซ็นต์ — เขาจดเบอร์พ่อแม่คุณไว้ด้วย','bad',{joy:-4})}));
+ if(par)opts.push(mwC('ย้ายกลับไปอยู่บ้านเกิดชั่วคราว',()=>{A.h=0;S.money+=Math.round(short*.6);mwSay('🏡 คุณขนของกลับบ้านเกิด แม่ทำกับข้าวรอทุกมื้อ ค่าใช้จ่ายลดลงครึ่งหนึ่ง แต่เพื่อนบ้านถามทุกวันว่า "กลับมาทำไม"','',{joy:-2})}));
+ else opts.push(mwC('ขอพักกับเพื่อนไปก่อน',()=>{A.h=0;S.money+=Math.round(short*.5);mwSay('🛋️ เพื่อนให้คุณนอนโซฟาสามเดือน คุณล้างจานทุกมื้อเป็นค่าเช่า','',{joy:-3})}));
+ const pr=[0,1,2,3].map(i=>opts[i]).filter(Boolean);const last=opts[opts.length-1];if(!pr.includes(last))pr[pr.length-1]=last;
+ choice('💸 เงินไม่พอจ่ายค่าครองชีพ',`ค่าเช่า ค่ากิน ค่าเดินทางไม่เคยหยุดเดิน — ปีนี้คุณขาดเงินอยู่ราว ${L(short)}`,pr)}catch(e){console.error(e);return _b.apply(this,arguments)}}}
+// ---------- 6) 🏙️ "คุณทำงานอะไร" ผูกกับงานจริง ----------
+const ARC2JOB={nurse:'nurse',teach:'teacher',win:'driver',food:'shop',office:'office'};
+const JOB2ARC={nurse:'nurse',heal:'nurse',teacher:'teach',driver:'win',rider:'win',shop:'food',office:'office',dev:'office'};
+window._arcAuto=function(prefix,M,DEF){if(prefix!=='jb'||!nat(M))return null;const id=M.job&&M.job.id;if(!id)return null;const a=JOB2ARC[id];if(a&&DEF[a]){setTimeout(()=>{try{mwSay(`${DEF[a].ic} ${DEF[a].d}`,'')}catch(e){}},50);return a}return'__skip'};
+window._arcPicked=function(prefix,k,M){if(prefix!=='jb'||!nat(M))return;const id=ARC2JOB[k];if(!id||!MW_JOBS[id]||(M.job&&M.job.id===id))return;const l=Lx(M);
+ if(id==='nurse'||id==='teacher'){if((l.edu||0)<3){l.edu=3;M.fl.edu=1}}if(id==='driver')l.fl.lic=1;
+ M.job={id,lv:0,y:0,perf:55};S.focus='mwjob';const J=MW_JOBS[id];try{addFeed('ev',`💼 งานประจำตอนนี้: <b>${J.ic} ${esc(mwTxt(mwJP(J,M)[0]))}</b> · เงินเดือน ${mwLocal(mwJP(J,M)[1],M)}`,'sum')}catch(e){}try{render()}catch(e){}};
+// ---------- 7) 🇹🇭 เส้นชีวิตไทย ----------
+const add=(id,w,c,t,d,o,cd)=>{try{T().LE.push({id,w,c,t,d,o,cd:cd==null?99:cd})}catch(e){}};
+const Ao=(p,tx,fx,cls)=>[p,tx||'',fx||{},cls||''],Oo=(t,s,rows,c)=>({t,s,r:rows,c});
+const male=()=>/ชาย/.test(S.gender||'')&&!/หญิง/.test(S.gender||'');
+const soc=M=>['normal','under','ghost','loop'].includes(wOf(M));
+const parAlive=l=>l.fl.par&&l.fl.par!=='none'&&!l.fl.pDead2;
+// เกณฑ์ทหาร (ชาย 21)
+add('th_draft',30,(M,l)=>nat(M)&&male()&&S.age>=21&&S.age<=23&&!l.fl.draft&&soc(M)&&!(M.H&&M.H.drf),'🎫 วันเกณฑ์ทหาร','อายุยี่สิบเอ็ดปี ใบหมายเรียกมาถึงบ้าน — เช้าวันจับใบดำใบแดง หน้าหอประชุมอำเภอเต็มไปด้วยผู้ชายวัยเดียวกันกับแม่ที่มายืนลุ้น',[
+ Oo('🎴 ไปจับตามนัด','ลุ้นใบดำ/ใบแดง',[Ao(.55,'⬛ ใบดำ! คุณชูใบขึ้นเหนือหัว แม่ที่ยืนข้างหลังร้องไห้ดีใจกว่าตอนคุณสอบติด',{joy:8,set:{draft:'black'}},'good'),Ao(.45,'🟥 ใบแดง — สองปีถัดจากนี้คุณจะตื่นตีห้า วิ่งรอบค่าย และได้เพื่อนที่จำชื่อกันได้จนแก่',{fit:14,st:5,joy:-4,perf:-10,set:{draft:'red',soldier:1}},'')]),
+ Oo('🪖 สมัครเป็นทหารเอง','รับใช้ 1 ปี · ไม่ต้องลุ้น',[Ao(1,'🪖 คุณยื่นใบสมัครก่อนวันจับ ได้รับใช้แค่ปีเดียว — ปีนั้นคุณผอมลง ดำขึ้น และยืนตรงได้นานกว่าเดิม',{fit:10,st:2,set:{draft:'vol',soldier:1}})]),
+ Oo('📄 ยื่นผ่อนผันเพราะยังเรียนอยู่','',[Ao(1,'📄 เจ้าหน้าที่ประทับตราผ่อนผัน — คุณจะได้เรียนจนจบก่อน',{set:{draft:'defer'}})],(M,l)=>!!l.prog)],99);
+// บวชทดแทนคุณพ่อแม่
+add('th_ordain',8,(M,l)=>nat(M)&&male()&&S.age>=20&&S.age<=32&&!l.fl.ordain&&parAlive(l)&&soc(M)&&!M.sp,'🙏 บวชทดแทนคุณ','แม่พูดขึ้นมาระหว่างกินข้าวว่า "ก่อนแม่ตาย อยากเห็นลูกห่มเหลืองสักครั้ง"',[
+ Oo('🟠 บวชสิบห้าวัน','ลางาน · ค่างาน',[Ao(1,'🟠 วันโกนผมแม่ร้องไห้ตั้งแต่เช้า สิบห้าวันในวัด คุณตื่นตีสี่ เดินบิณฑบาตเท้าเปล่า — และนอนหลับสนิทที่สุดในรอบหลายปี',{joy:10,st:-8,mon:-15000,mem:{merit:1},set:{ordain:1}},'good')]),
+ Oo('🛕 บวชหนึ่งพรรษา','สามเดือน · ใจสงบมาก แต่งานสะดุด',[Ao(1,'🛕 สามเดือนในผ้าเหลือง คุณได้ยินเสียงความคิดตัวเองชัดขึ้นทุกวัน วันลาสิกขาแม่ยิ้มทั้งวัน',{joy:14,st:-14,mon:-25000,perf:-8,mem:{merit:1},set:{ordain:2}},'epic')]),
+ Oo('🙇 บอกแม่ว่ายังไม่พร้อม','',[Ao(1,'🙇 แม่บอกว่า "ไม่เป็นไรลูก" แต่คืนนั้นเธอเงียบกว่าปกติ',{joy:-3,set:{ordain:-1}})])],99);
+add('th_retreat',3,(M,l)=>nat(M)&&!male()&&S.age>=25&&S.age<=65&&!l.fl.retreat&&soc(M)&&(l.st||0)>=55,'🤍 ปฏิบัติธรรมเจ็ดวัน','เพื่อนชวนไปปฏิบัติธรรมที่วัดในป่า เจ็ดวัน ไม่มีมือถือ ไม่พูดคุย',[
+ Oo('🤍 ไป','',[Ao(1,'🤍 วันที่สามคุณร้องไห้โดยไม่รู้สาเหตุ วันที่เจ็ดคุณกลับบ้านพร้อมหัวที่เงียบลง',{st:-15,joy:8,mem:{merit:1},set:{retreat:1}},'good')]),
+ Oo('📱 ไม่ไหว ขาดมือถือไม่ได้','',[Ao(1,'📱 คุณกดดูรูปที่เพื่อนส่งมาจากวัด ทะเลหมอกตอนเช้าสวยจนอิจฉา',{set:{retreat:-1}})])],99);
+// รถคันแรก
+add('th_car',6,(M,l)=>nat(M)&&S.age>=24&&S.age<=45&&!mwAst(M).car&&!l.fl.car1&&!!M.job&&(S.money||0)>=60000&&soc(M),'🚗 รถคันแรก','ทุกเช้าคุณยืนรอรถเมล์ท่ามกลางแดด — พนักงานขายโชว์รูมบอกว่า "ดาวน์ต่ำ ผ่อนสบาย เดือนละไม่ถึงหมื่น"',[
+ Oo('🚗 ออกรถใหม่ ผ่อนห้าปี','ดาวน์ 60,000 · ผ่อนรายปี',[Ao(1,'🚗 กลิ่นรถใหม่ทำให้คุณยิ้มทุกเช้า ส่วนใบแจ้งผ่อนทำให้คุณหยุดยิ้มทุกต้นเดือน',(M,l)=>{mwAst(M).car=1;return{mon:-60000,debt:300000,joy:8,set:{car1:1}}},'good')]),
+ Oo('🚙 ซื้อมือสองจ่ายสด','ถูกกว่า · มีลุ้นของเสีย',[Ao(.7,'🚙 รถเก่าสิบปีแต่เครื่องยังดี คุณขับกลับบ้านต่างจังหวัดได้เองครั้งแรก',(M,l)=>{mwAst(M).car=1;return{mon:-Math.min(S.money||0,180000),joy:6,set:{car1:1}}}),Ao(.3,'🔧 ขับได้สามเดือนเกียร์พัง ค่าซ่อมเท่ากับเงินเดือนหนึ่งเดือน',(M,l)=>{mwAst(M).car=1;return{mon:-Math.min(S.money||0,200000),joy:-2,set:{car1:1}}},'bad')]),
+ Oo('🚌 ยังไม่ซื้อ เก็บเงินไว้ก่อน','',[Ao(1,'🚌 คุณยังยืนรอรถเมล์ต่อไป — แต่เงินเก็บในบัญชีโตขึ้นทุกเดือน',{set:{car1:-1}})])],99);
+// บ้านหลังแรก (ผ่อน 25 ปี)
+add('th_home',5,(M,l)=>nat(M)&&S.age>=27&&S.age<=48&&mwAst(M).h===0&&!l.fl.home1&&!!M.job&&(S.money||0)>=mwToB(mwCO(M).home[1]*.12,M)&&soc(M),'🏘️ บ้านจัดสรรเปิดจอง','หมู่บ้านใหม่ชานเมืองเปิดจอง บ้านตัวอย่างมีสวนหน้าบ้านเล็กๆ — เซลล์บอกว่า "ผ่อนบ้านถูกกว่าค่าเช่าอีกนะคะ"',[
+ Oo('✍️ จองเลย ผ่อนยี่สิบห้าปี','ดาวน์ 20% · ผ่อนรายปี',[Ao(.85,'🏡 วันรับกุญแจคุณยืนอยู่หน้าบ้านนาน — บ้านหลังแรกที่เป็นของคุณ (และของธนาคารอีกยี่สิบห้าปี)',(M,l)=>{const A=mwAst(M),C=mwCO(M),dn=mwToB(C.home[1]*.2,M);A.h=2;A.mort=Math.round(C.home[1]*.8*1.45/25);A.mortY=25;return{mon:-dn,joy:12,st:4,set:{home1:1}}},'epic'),Ao(.15,'📄 ธนาคารไม่อนุมัติสินเชื่อ เพราะประวัติรายได้ยังไม่ถึงเกณฑ์ เงินจองหายไปห้าพัน',{mon:-5000,joy:-5,set:{home1:-1}},'bad')]),
+ Oo('🏢 เช่าต่อไปก่อน','',[Ao(1,'🏢 คุณตัดสินใจเช่าต่อ ไม่มีภาระยี่สิบห้าปีบนบ่า — แต่เจ้าของห้องขึ้นค่าเช่าทุกสองปี',{set:{home1:-1}})])],99);
+// พ่อแม่แก่ลง
+add('th_pcare',7,(M,l)=>nat(M)&&S.age>=38&&S.age<=62&&parAlive(l)&&!l.fl.pcare&&!(M.TRT&&M.TRT.k.includes('care')),'📞 โทรศัพท์จากบ้าน',()=>`${l0().fl.par==='mom'?'แม่':'พ่อ'}ล้มในห้องน้ำ สะโพกร้าว หมอบอกว่าต่อจากนี้ต้องมีคนดูแลใกล้ชิด`,[
+ Oo('🏡 ย้ายกลับไปดูแลเอง','ใกล้ชิด · รายได้ลด',[Ao(1,'🏡 คุณลาออกมาหางานใกล้บ้าน รายได้ลดลงครึ่งหนึ่ง — แต่ทุกเย็นได้กินข้าววงเดียวกับคนที่เลี้ยงคุณมา',{job:0,joy:6,st:5,set:{pcare:'home'},mem:{filial:1}},'good')]),
+ Oo('🏠 รับมาอยู่ด้วยกัน','ภาระเพิ่ม · อบอุ่น',[Ao(1,'🏠 ห้องนอนเล็กกลายเป็นห้องผู้ป่วย คุณตื่นกลางดึกบ่อยขึ้น แต่ได้ยินเสียงหัวเราะในบ้านมากขึ้นด้วย',{st:8,joy:4,mon:-20000,set:{pcare:'live'},mem:{filial:1}})]),
+ Oo('💵 จ้างคนดูแล ส่งเงินทุกเดือน','เงินหาย · ใจไม่สบาย',[Ao(1,'💵 คุณโอนเงินทุกเดือนและวิดีโอคอลทุกคืน — คนดูแลเก่งกว่าคุณ แต่แม่ถามหาคุณทุกวัน',{mon:-90000,joy:-3,set:{pcare:'pay'}})])],99);
+add('th_pdie',6,(M,l)=>nat(M)&&S.age>=48&&S.age<=78&&parAlive(l)&&!l.fl.pDead2&&(l.fl.pcare||S.age>=58),'🕯️ วันที่ต้องมาถึง',()=>`${l0().fl.par==='mom'?'แม่':'พ่อแม่'}จากไปอย่างสงบ${l0().fl.pcare==='home'||l0().fl.pcare==='live'?' ในบ้านหลังเดิม มีคุณนั่งอยู่ข้างเตียง':' — คุณขับรถกลับบ้านทั้งคืนแต่ไปไม่ทัน'}`,[
+ Oo('🕯️ จัดงานสวดเจ็ดคืน','',[Ao(1,'🕯️ ญาติที่ไม่เคยเจอมากันครบ คืนสุดท้ายคุณนั่งพับเหรียญโปรยทานจนเช้า — พินัยกรรมยกที่ดินผืนเล็กให้คุณ',(M,l)=>({mon:-60000+Math.round(mwToB(MW_MIN[M.cc||'th']*R(10,40),M)),joy:l.fl.pcare==='home'||l.fl.pcare==='live'?-8:-16,set:{pDead2:1}}),'')])],99);
+const l0=()=>Lx(S.mw);
+// เกษียณอายุ 60
+const FORM=['gov','teacher','nurse','office','factory','dev','guard','heal'];
+add('th_retire',40,(M,l)=>nat(M)&&S.age>=60&&!!M.job&&FORM.includes(M.job.id)&&!M.retired&&!(l.fl.retY>S.age),'🎂 งานเลี้ยงเกษียณ',(M,l)=>`อายุครบหกสิบ ที่ทำงานจัดงานเลี้ยงเล็กๆ ในห้องประชุม — ${M.job.id==='gov'||M.job.id==='teacher'?'ราชการไม่มีต่ออายุ':'บริษัทเสนอสัญญาจ้างต่อปีต่อปี'}`,[
+ Oo('🌿 เกษียณ พักผ่อน','รับบำนาญ/ประกันสังคม',[Ao(1,'🌿 คุณเก็บของบนโต๊ะใส่กล่องเดียว — เช้าวันจันทร์แรกที่ไม่ต้องตั้งนาฬิกาปลุก คุณตื่นตีห้าเหมือนเดิม',(M,l)=>{M.retired=1;M.wy=Math.max(M.wy||0,10);return{job:0,joy:10,st:-12,set:{ret:1}}},'good')]),
+ Oo('💼 ต่อสัญญาอีกห้าปี','รายได้ต่อ · เหนื่อย',[Ao(1,'💼 คุณเซ็นสัญญาต่อ — คนรุ่นใหม่เรียกคุณว่า "พี่ใหญ่" และมาถามเรื่องที่ไม่มีในคู่มือ',(M,l)=>({st:3,set:{retY:S.age+5}}))],(M,l)=>!['gov','teacher'].includes(M.job&&M.job.id))],2);
+// ---------- 8) ข้อความระบบเล็กๆ ----------
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const M=S&&S.mw;if(!nat(M))return r;const fe=$('focus');if(fe){const b=fe.querySelector('button[onclick="setFocus(\'mwlearn\')"]');if(b&&/ยุคใหม่/.test(b.textContent))b.innerHTML='📚 เรียน/อัปสกิล';const q=fe.querySelector('button[onclick="setFocus(\'mwqi\')"]');if(q&&!(M.qi>=1))q.style.display='none';const ln=fe.querySelector('button[onclick="setFocus(\'mwlin\')"]');if(ln&&!M.linMet)ln.style.display='none'}}catch(e){}return r}}
+// ---------- 9) เหตุการณ์ในที่ทำงาน: คนธรรมดาไม่ใช้ปราณ ----------
+const BADRE=/ปราณ|ไม่สอดคล้องกับมนุษย์|ไม่เหนื่อยเลยแม้แต่น้อย|วิชาจริง|ชาติก่อน|หลงยุค|ร้อยปี|ของจริงสักครั้ง|กระบี่/;
+try{MW_JEV.office=MW_JEV.office||[];MW_JEV.office.push(
+ {id:'on1',nat:1,go(M){choice('🕙 โอทีทั้งเดือน','โปรเจกต์ด่วน หัวหน้าขอให้ทุกคนอยู่ถึงสี่ทุ่มทุกวันจนจบเดือน ไม่มีใครกล้ากลับก่อน',[
+  mwC('อยู่โอทีจนจบโปรเจกต์',()=>mwSay('🖥️ คุณอยู่ถึงสี่ทุ่มทุกคืนจนตาแห้ง กินมาม่าที่โต๊ะสามสัปดาห์ — โปรเจกต์เสร็จทันกำหนด หัวหน้าจดชื่อคุณไว้','good',{joy:-5,hp:-4})),
+  mwC('กลับบ้านตรงเวลา',()=>mwSay('🚶 คุณกลับบ้านหกโมงเย็นทุกวัน หัวหน้าไม่พูดอะไร แต่การประเมินปลายปีบอกทุกอย่าง','',{joy:5}))])}},
+ {id:'on2',nat:1,go(M){choice('🍻 งานเลี้ยงหลังเลิกงาน','หัวหน้าชวนไปเลี้ยงหลังเลิกงาน ธรรมเนียมคือต้องดื่มทุกแก้วที่หัวหน้ารินให้',[
+  mwC('ดื่มทุกแก้ว',()=>mwSay('🍻 คุณจำทางกลับบ้านไม่ได้ ตื่นมาบนโซฟาเพื่อนร่วมงาน — หัวหน้าจำชื่อคุณได้ตั้งแต่วันนั้น','',{joy:2,hp:-3})),
+  mwC('ขอดื่มน้ำอัดลมแทน',()=>mwSay('🥤 หัวหน้าหัวเราะแล้วรินโค้กให้ — ไม่มีใครว่าอะไร และคุณเป็นคนเดียวที่ขับรถกลับบ้านได้','',{joy:3}))])}})}catch(e){}
+{const _je=mwJobEv;mwJobEv=function(M,J){const id=M&&M.job&&M.job.id,orig=id&&MW_JEV[id];if(!orig)return _je.apply(this,arguments);const keepPw=nat(M)&&pw(M);
+ MW_JEV[id]=orig.filter(e=>nat(M)?(keepPw||!BADRE.test(String(e.go))):!e.nat);try{return _je.apply(this,arguments)}finally{MW_JEV[id]=orig}}}
+// ---------- 10) เหตุการณ์กลางปีหมวดงาน: ตรงกับอาชีพจริง ----------
+try{const JT={w1:['office','dev','freelance','gov','factory','craft'],w2:['office','dev','gov','factory','teacher','nurse','heal','guard',''],w3:['office','dev','gov','factory','teacher','nurse','guard','heal','craft'],w4:['shop','rider','driver','heal','guard','craft','nurse',''],w5:['office','dev','factory','gov'],w6:['office','dev','factory','freelance','gov']};
+ ((window._wld5&&window._wld5.PME)||[]).forEach(e=>{const k=String(e.id).replace('pm_','');if(!JT[k])return;const c0=e.c;e.c=function(M){if(nat(M)){const j=(M.job&&M.job.id)||'';if(!JT[k].includes(j))return false}return c0?c0.apply(this,arguments):true}})}catch(e){}
+// ---------- 11) เหตุการณ์เกี่ยวกับพ่อแม่: ไม่ขึ้นถ้าไม่มี/เสียไปแล้ว ----------
+try{const noPar=M=>{if(!nat(M))return false;const l=Lx(M);return l.fl.par==='none'||!!l.fl.pDead2},noDad=M=>{if(!nat(M))return false;const l=Lx(M);return l.fl.par!=='both'||!!l.fl.pDead2};
+ const r1=(T().LE||[]).find(e=>e.id==='r1');if(r1){const c0=r1.c;r1.c=function(M,l){return !noPar(M)&&c0.apply(this,arguments)}}
+ const f1=((window._wld5&&window._wld5.PME)||[]).find(e=>e.id==='pm_f1');if(f1){const c0=f1.c;f1.c=function(M){return !noPar(M)&&(!c0||c0.apply(this,arguments))}}
+ [window._wld31,window._wld32,window._wld33].forEach(W=>{if(!W||!W.DEF)return;Object.values(W.DEF).forEach(a=>a.forEach(e=>{if(e.id==='e32_nm_dad'||e.id==='e32_nm_mom'){const c0=e.cond;e.cond=function(M){return !(e.id==='e32_nm_dad'?noDad(M):noPar(M))&&c0.apply(this,arguments)}}}))})}catch(e){console.error('b83 par',e)}
+window._b83={natFix,ARC2JOB};
+})()}catch(e){console.error('block83',e)}
