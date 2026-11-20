@@ -2203,7 +2203,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     const findLive = async (k2, adm) => { const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 90e3, '+inf']]); const f1 = (pub || []).find(x => x.slice(0, 6) + x.slice(-4) === k2); if (f1) return f1; if (adm) return (prv || []).find(x => x.slice(0, 6) + x.slice(-4) === k2) || null; return null };
     const RPC = [[120, 350, 800, 2200, 5500, 12000, 24000, 24000], [250, 900, 2500, 7000, 18000, 42000, 90000, 90000]];
     const powOk = (p, ri, x, age) => { ri = Math.max(0, Math.min(7, +ri || 0)); if (!(p >= 0) || !isFinite(p) || p > 1e16) return false; if (ri < 7 && p > RPC[x ? 1 : 0][ri] * 8 + 1000) return false; if (age != null && +age < 1000 && p > (x ? 60000 : 25000) * (1 + (+age || 1) / 8) + 300000) return false; return true };
-    const isBanned = async () => { const [c0, f0, h0] = await pipe([['SISMEMBER', 'cheaters', id], ['GET', 'acf:' + id], ['GET', 'acfh:' + id]]); return !!(+c0 || h0 || (f0 && !/^(srv-jump|srv-cap|jump|pow-age|stat|cap|console|save|csm|hsm|hlc)/.test(String(f0)))) };
+    // v20: แบนเฉพาะที่แอดมินกดแบนเอง (cheaters) — ธงอัตโนมัติทุกแบบเป็นแค่ 'ข้อมูลให้แอดมินตรวจ' ไม่ตัดชีวิต/ไม่แบน (ค่าแปลกจากการเล่นจริงต้องไม่โดนลงโทษ)
+    const isBanned = async () => !!+(await cmd('SISMEMBER', 'cheaters', id));
     const isAdmQ = k => !!ADM_KEY && String(k || '') === ADM_KEY;
     if (a === 'logget') {
       const k2 = String(qOf(req).t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -2450,7 +2451,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const fresh = await cmd('SET', 'acsr:' + id + ':' + why, 1, 'NX', 'EX', 3600); if (!fresh) return res.json({ ok: 1 });
       const st = b.st || {}, hard = /^console/.test(why) && !/^console-(hell|maxHp)/.test(why) ? +(await cmd('INCR', 'acfn:' + id)) >= 4 : false; if (/^console/.test(why)) await cmd('EXPIRE', 'acfn:' + id, 86400 * 14);
       const L = [['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(b.n || ''), 24), age: +b.age || 0, why, st: { pow: +st.pow || 0, fame: +st.fame || 0, money: +st.money || 0 }, t: now })], ['LTRIM', 'acsus', 0, 199]];
-      if (hard) L.push(['SET', 'acf:' + id, why, 'EX', 86400 * 60], ['SET', 'acfh:' + id, why, 'EX', 86400 * 60]);
+      // ธงแรง (console ซ้ำหลายครั้ง) เป็นข้อมูลให้แอดมินตรวจเท่านั้น — ไม่แบนอัตโนมัติ
+      if (hard) L[0][2] = JSON.stringify(Object.assign(JSON.parse(L[0][2]), { hard: 1 }));
       await pipe(L); return res.json({ ok: 1 });
     }
     if (a === 'rgp') {
@@ -2465,7 +2467,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       try { const z = JSON.parse(String(b.s || 'null')); if (z && z.st && okId(id)) { const CAP = v => { v = +v || 0; return isFinite(v) ? Math.max(-1e30, Math.min(1e30, v)) : 0 }, p = CAP(z.st.pow), fm = CAP(z.st.fame), mn = CAP(z.st.money), ag = +z.age || 0; let why = '';
         const pv = jp(await cmd('GET', 'acp:' + id));
         const L = [['SET', 'acp:' + id, JSON.stringify({ n: z.n, a: ag, p }), 'EX', 86400 * 7]];
-        if (why && !(await cmd('GET', 'acf:' + id))) { if (why === 'srv-cap') L.push(['SET', 'acf:' + id, why, 'EX', 86400 * 60]); L.push(['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(z.n || ''), 24), age: ag, why, st: { pow: p, fame: fm, money: mn }, prev: pv, t: now })], ['LTRIM', 'acsus', 0, 199]); if (why === 'srv-cap') b.spec = 0 }
+        if (why && !(await cmd('GET', 'acf:' + id))) { L.push(['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(z.n || ''), 24), age: ag, why, st: { pow: p, fame: fm, money: mn }, prev: pv, t: now })], ['LTRIM', 'acsus', 0, 199]); }
         await pipe(L) } } catch {}
       if (okId(id)) { try { const lm = uaMeta(req, now); lm.u = String(req.headers['user-agent'] || '').slice(0, 160); await cmd('HSET', 'lm', id, JSON.stringify(lm)) } catch {} }
       if (!b.spec) {
@@ -2697,7 +2699,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       // ---- anti-cheat: ตรวจความสมเหตุสมผลของคะแนนและค่าสถานะ ----
       let bad = '';
       try {
-        if (b.tp) bad = 'tamper:' + clean(String(b.tp), 40);
+        let tpInfo = b.tp ? 'tamper:' + clean(String(b.tp), 40) : '';
         if (!bad && parseFloat(b.ver) >= 9.5 && !det) bad = 'nodet';
         if (!bad && det) {
           const D = JSON.parse(det), st = D.st || {}, kids = (D.kids || []).length, dis = +((String(D.sect || '').match(/ศิษย์\s*([0-9]+)/) || [])[1] || 0);
@@ -2710,6 +2712,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         }
         if (!bad && !det) bad = 'nodet';
         if (!bad && await isBanned()) bad = 'banned';
+        if (!bad && tpInfo) { try { await pipe([['LPUSH', 'cheatlog', JSON.stringify({ id: id.slice(0, 10), fid: id, n: e.n, s: e.s, age: e.age, why: tpInfo, info: 1, t: now })], ['LTRIM', 'cheatlog', 0, 99]]) } catch {} }
       } catch { bad = bad || 'parse' }
       if (bad) { await pipe([['INCR', 'lives'], ['LPUSH', 'cheatlog', JSON.stringify({ id: id.slice(0, 10), fid: id, n: e.n, s: e.s, age: e.age, why: bad, t: now })], ['LTRIM', 'cheatlog', 0, 99]]); return res.json({ ok: 1, skip: 1, flag: 1, why: /^tamper/.test(bad) ? 'edit' : bad === 'banned' ? 'ban' : bad === 'stat' ? 'stat' : bad === 'nodet' ? 'old' : 'parse' }) }
       try { const ip0 = cip(req); if (ip0 && okId(id)) L.push(['SET', 'idip:' + id, String(ip0).slice(0, 45), 'EX', 86400 * 40]) } catch {}
