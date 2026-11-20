@@ -49985,11 +49985,11 @@ addEventListener('resize',()=>{document.querySelectorAll('.frw.fr-xa3').forEach(
 // ร้านฉายาลาน: มือถือฉายายาวล้นกรอบ → จอแคบเรียง 1 คอลัมน์ และย่อฉายาไม่ให้เกินการ์ด
 (function(){const st=document.createElement('style');st.textContent=`.arshop{grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))!important}.arshop>.arsi{min-width:0;overflow:hidden}.arshop .arttl{max-width:100%;display:flex;justify-content:center}.arshop .arttl>*{max-width:100%}.arshop .arttl .tx{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}`;document.head.appendChild(st)})();
 
-// ขารีบ: เปิดเพลงประจำฉากตอนอนิเมชั่นขึ้น · แตะจอ → เพลงค่อย ๆ เบาลงหายไปพร้อมอนิเมชั่นปิด · พักเพลงพื้นหลังระหว่างนั้น
+// ขาโก่ง: เปิดเพลงประจำฉากตอนอนิเมชั่นขึ้น · แตะจอ → เพลงค่อย ๆ เบาลงหายไปพร้อมอนิเมชั่นปิด · พักเพลงพื้นหลังระหว่างนั้น
 {let RA=null,fT=null;const fade=(a,to,ms,done)=>{clearInterval(fT);const v0=a.volume,t0=Date.now();fT=setInterval(()=>{const k=Math.min(1,(Date.now()-t0)/ms);a.volume=Math.max(0,Math.min(1,v0+(to-v0)*k));if(k>=1){clearInterval(fT);done&&done()}},40)};
-const _rf=rushFx;rushFx=function(){const r=_rf.apply(this,arguments);try{const o=$('ruOv');if(!o)return r;const on=(typeof bgmOn==='undefined'||bgmOn)||(typeof sfxOn!=='undefined'&&sfxOn);if(!on)return r;
+const _rf=bowFx;bowFx=function(){const r=_rf.apply(this,arguments);try{const o=$('bwOv');if(!o)return r;const on=(typeof bgmOn==='undefined'||bgmOn)||(typeof sfxOn!=='undefined'&&sfxOn);if(!on)return r;
  const vol=Math.min(1,((typeof VOL!=='undefined'&&VOL.b)||.7)*.9);const hadBgm=typeof bgmOn!=='undefined'&&bgmOn;try{if(hadBgm)stopBgm()}catch(e){}
- if(!RA){RA=new Audio('rush.mp3');RA.loop=true;RA.preload='auto'}RA.currentTime=0;RA.volume=0;RA.play().then(()=>fade(RA,vol,900)).catch(()=>{});
+ if(!RA){RA=new Audio('bowleg.mp3');RA.loop=true;RA.preload='auto'}RA.currentTime=0;RA.volume=0;RA.play().then(()=>fade(RA,vol,900)).catch(()=>{});
  const close=o.onclick;o.onclick=function(){fade(RA,0,500,()=>{RA.pause()});try{if(hadBgm)setTimeout(()=>{try{startBgm()}catch(e){}},550)}catch(e){}return close&&close.apply(this,arguments)}}catch(e){}return r}}
 (function(){const st=document.createElement('style');st.textContent='.frw.fr-xa3{z-index:6}*:has(>.frw.fr-xa3){overflow:visible!important}.frpick:has(.fr-xa3),.cav:has(.fr-xa3),.frprev:has(.fr-xa3),.frbig:has(.fr-xa3){position:relative;z-index:6;overflow:visible!important}';document.head.appendChild(st)})();
 (function(){const st=document.createElement('style');st.textContent='.frw.fr-xa3 .z3tag{display:none!important}';document.head.appendChild(st)})();
