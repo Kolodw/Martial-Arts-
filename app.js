@@ -6278,7 +6278,8 @@ setInterval(()=>{try{acCheck()}catch(e){}},1500);
   try{if(lb&&Date.now()-lb.t<600&&WR.test(act)&&lb.el&&lb.el.isConnected&&lb.el.tagName==='BUTTON'&&!lb.el.classList.contains('busy')){const el=lb.el;window._lastBtn=null;const t0=setTimeout(()=>el.classList.add('busy'),120);
    const done=ok=>{clearTimeout(t0);el.classList.remove('busy');if(!el.isConnected)return;const c=ok?'okf':'errf';el.classList.remove('okf','errf');void el.offsetWidth;el.classList.add(c);setTimeout(()=>el.classList.remove(c),650)};
    Promise.resolve(p).then(j=>done(!(j&&j.err)),()=>done(false))}}catch(e){}return p}}
-try{['acCheck','acFlag','acTp','acSnap','sendLife','api','acSus','acW','acTrap','acCaller'].forEach(k=>{try{Object.defineProperty(window,k,{writable:false,configurable:false})}catch(e){}})}catch(e){}
+// ล็อกฟังก์ชันสำคัญหลังโหลดสคริปต์ทั้งไฟล์เสร็จ (เดิมล็อกตรงนี้เลย ทำให้ตัวห่อ api/sendLife ที่อยู่ท้ายไฟล์ไม่ทำงาน เช่น ทำเนียบทะลุฟ้าดารา)
+setTimeout(()=>{try{['acCheck','acFlag','acTp','acSnap','sendLife','api','acSus','acW','acTrap','acCaller'].forEach(k=>{try{Object.defineProperty(window,k,{writable:false,configurable:false})}catch(e){}})}catch(e){}},0);
 
 // ---------- v10.0 spectate beast portrait
 {const _ls=liveSnap;liveSnap=function(){const r=_ls.apply(this,arguments);try{if(r&&S&&S.beastMode&&!S.beastMode.human){r.look=r.look||{};r.look.beast=blMe()}}catch(e){}return r};
