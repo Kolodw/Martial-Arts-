@@ -14718,7 +14718,7 @@ body.dkcap #tDock{padding-bottom:calc(10px + env(safe-area-inset-bottom))}
 #modal .tmh::after{content:'';flex:1;height:1px;background:color-mix(in srgb,var(--pink) 35%,transparent)}
 #modal .tmsec .tmgrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}#modal .tmsec .tmgrid .cb{min-height:56px;padding:6px 2px;font-size:10.5px;white-space:normal;line-height:1.2}#modal .tmsec .tmgrid .cb i{font-size:18px}
 `;document.head.appendChild(st)})();
-{const SEC=[['rec','📚 บันทึกและความรู้','Records & guides',/openBook|openGraves|openCodex|openBestiary|openStats|openGuide|openUpdate/],
+{const SEC=[['rec','📚 บันทึกและความรู้','Records & guides',/openBook|openGraves|openNovels|openCodex|openBestiary|openStats|openGuide|openUpdate/],
   ['acc','👤 บัญชีและเซฟ','Account & saves',/openProfile|openSaveCode|frmenu2/],
   ['set','⚙️ ตั้งค่า','Settings',/toggleLang|cycleTheme|openSound|cycleFs|openGfx|openUiZ|dockToggle/],
   ['con','💬 ติดต่อและสนับสนุน','Contact & support',/openSupport|openReport|openFeedback/],
