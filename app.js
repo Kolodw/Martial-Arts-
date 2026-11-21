@@ -43937,3 +43937,132 @@ const st=document.createElement('style');st.textContent=`.sv120r{display:grid;gr
 .sv120s{margin-top:5px;font-size:13px}.sv120s.ok b{color:#ffd84a}.sv120st{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;margin-top:6px;font-size:12.5px}.sv120st .ok{color:#ffd84a;font-weight:700}`;document.head.appendChild(st);
 window._sv120={grow,STARS,SETS,sumY,fmtY,Q};
 })()}catch(e){console.error('block120',e)}
+
+// ============================================================
+// BLOCK 121: ⭕ จิตวิญญาณยุทธ์ — ดวงจิตมีเสียงของตัวเอง · ป่ามีความจำ · ท่าประสานวิญญาณ · เพื่อนร่วมทีมจากทำเนียบจริง
+// ============================================================
+try{(()=>{
+const B=window._blk34,T40=window._blk40;if(!B||typeof EVENTS==='undefined')return;
+const {SP,BEAST,TIER,spNow}=B;
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const on=()=>!!(S&&S.alive&&S.ch==='soul'&&S.sv&&S.sv.aw===1);
+const A1=s=>!!(s&&s.alive&&s.ch==='soul'&&s.sv&&s.sv.aw===1&&!s.sv.retired);
+const O=(t,s,f)=>({t,s,f});
+const ev=(w,c,f)=>EVENTS.push({w,cd:0,once:0,c:s=>{try{return!!c(s)}catch(e){return false}},f(){try{f()}catch(e){console.error('b121 ev',e)}}});
+const G=()=>{const g=S.sv;if(g.bond==null)g.bond=50;g.eco=g.eco||{k:{},ld:{},cub:[],cy:-9};g.cb=g.cb||[];return g};
+const main=()=>{const g=S.sv;return g&&g.sp&&g.sp.length?spNow(g.sp[0]):null};
+const nm=()=>{const p=main();return p?p.n:'ดวงจิต'};const ic=()=>{const p=main();return p?p.ic:'⭕'};
+const ty=()=>{const p=main();return p?p.t:'atk'};
+
+// ---------- 1) ดวงจิตมีเสียงของตัวเอง ----------
+// เสียงประจำปี แยกตามสาย × ใจของดวงจิต (สนิท / เฉยๆ / ห่างเหิน)
+const VO={
+ atk:[['"วันนี้ไม่มีใครให้ตีเลยเหรอ… น่าเบื่อจัง"','"เจ้าเหวี่ยงแขนช้าลงนะ ข้ารู้สึกได้"','"ตัวที่แล้วเกือบได้แล้ว ปีนี้ต้องเอาให้ได้"'],['"ข้าจะเป็นคมให้เจ้า ตราบที่เจ้ายังไม่หันหลังหนี"','"ศัตรูของเจ้า คือศัตรูของข้า"'],['"…"','"เจ้าเรียกข้าออกมาแค่ตอนจะใช้งานนะ รู้ตัวไหม"']],
+ def:[['"หลังคาบ้านรั่วนะ ซ่อมก่อนหน้าฝน"','"คืนนี้ข้าเฝ้าเอง นอนเถอะ"','"แผลเก่าที่ไหล่ยังไม่หายดี อย่าเพิ่งฝืน"'],['"ตราบใดที่ข้ายังอยู่ จะไม่มีอะไรแตะเจ้าได้"','"ข้าจำทุกแผลที่ข้ากันไว้ให้เจ้าได้"'],['"ข้ากันได้ แต่ข้าเหนื่อยนะ"','"เจ้าไม่เคยถามเลยว่าข้าเจ็บไหม"']],
+ sup:[['"กินข้าวหรือยัง"','"ดอกไม้ริมทางบานแล้ว ไปดูกันไหม"','"เด็กบ้านข้างๆ ไอทั้งคืน…"'],['"ข้าจะรักษาทุกแผลของเจ้า แม้แต่แผลที่มองไม่เห็น"','"เจ้าเปลี่ยนไปเยอะนะ ในทางที่ดี"'],['"ข้ารักษาตัวเจ้าได้ แต่ใจเจ้าข้ารักษาไม่ได้"','"เจ้าเก็บข้าไว้ใช้ตอนจะตายเท่านั้นสินะ"']],
+ ctrl:[['"คนที่ยิ้มให้เจ้าเมื่อวาน ข้าไม่ไว้ใจ"','"ข้ารู้ว่าพ่อค้าคนนั้นซ่อนอะไรไว้ใต้เคาน์เตอร์"','"เดินอ้อมทางนั้นไป ข้าเห็นรอยเท้าแปลกๆ"'],['"ทั้งกระดานนี้ ข้าจะจัดให้เจ้าชนะ"','"เจ้าเป็นคนเดียวที่ข้าไม่เคยคิดจะหลอก"'],['"เจ้าคิดว่าข้าจะทำตามไปตลอดเหรอ"','"วันหนึ่งข้าอาจหาเจ้าของที่ฉลาดกว่านี้"']],
+ agi:[['"เบื่อ! ไปไหนกันสักที่สิ"','"ลมวันนี้ดีนะ วิ่งแข่งกันไหม"','"เมื่อคืนข้าแอบไปดูทะเลมา"'],['"ไม่ว่าเจ้าจะวิ่งไปไหน ข้าจะไปถึงก่อนรอเจ้า"','"ข้าเร็วขึ้นเพราะอยากตามเจ้าให้ทัน"'],['"ข้าวิ่งหนีได้นะ ถ้าข้าอยาก"','"ทำไมข้าต้องอยู่กับคนที่ไม่เคยพาไปไหน"']]};
+// เสียงเฉพาะดวงจิตบางดวง (ใช้แทนเสียงทั่วไปเป็นครั้งคราว)
+const SIG={hoe:'"พ่อเจ้าเคยฟาดข้าลงดินวันละพันครั้ง เจ้ายังไม่ถึงครึ่ง"',candle:'"ลมแรงแค่ไหนข้าก็ไม่ดับ เจ้าก็อย่าดับ"',cat:'"เมี้ยว… (มันนอนทับหนังสือที่คุณกำลังอ่าน)"',broom:'"ลานวัดสะอาดแล้ว ใจเจ้ายังไม่สะอาด"',
+ shadow:'"เจ้าก้าวช้ากว่าข้าครึ่งจังหวะเสมอ… ใครกันแน่ที่เป็นเงา"',crow:'"ข้าจำหน้าคนที่ทำร้ายเจ้าได้ทุกคน ทุกคน"',needle:'"แม่เจ้าเคยใช้ข้าปะเสื้อตัวนี้ ระวังอย่าให้ขาดอีก"',ladle:'"ข้าวต้มของยายเจ้าอร่อยกว่านี้"',
+ mirror:'"เจ้ามองข้าทีไร ข้าก็เห็นตัวเจ้าชัดกว่าที่เจ้าเห็นตัวเอง"',glass:'"เวลาของเจ้าเหลือเท่าไหร่ ข้ารู้ แต่ข้าจะไม่บอก"',void:'"…ข้าไม่ได้หิว ข้าแค่ว่างเปล่า"',moon:'"คืนนี้เพ็ญ อย่าหลับ"',dbone:'"เมื่อก่อนข้าบินอยู่เหนือเมฆ ตอนนี้อยู่ในตัวมนุษย์ตัวเล็กๆ… ก็ดีเหมือนกัน"',wtree:'"รากข้าได้ยินเสียงร้องไห้ใต้ดิน ไกลออกไปทางตะวันออก"',frog:'"เจ้ากระโดดได้ไกลกว่าที่คิด ลองดูสิ"',rope:'"ข้าเคยผูกควายตัวที่เจ้าขี่ตอนห้าขวบ มันชื่อดำ"'};
+const SEC={atk:['💥','คมสุดท้ายที่ไม่เคยใช้'],def:['🏯','กำแพงที่ไม่มีวันพัง'],sup:['🌸','ลมหายใจที่สอง'],ctrl:['🕸️','กระดานที่ล้มทั้งกระดาน'],agi:['⚡','ก้าวที่ไม่มีใครเห็น']};
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(on()&&!S.sv.retired&&S.age>=8){const g=G();const id=g.sp[0]&&g.sp[0].id,b=g.bond;
+  if(Math.random()<.32){const L=VO[ty()]||VO.atk,set=b>=70?L[1]:b<=25?L[2]:L[0];const line=SIG[id]&&Math.random()<.35?SIG[id]:set[Math.floor(Math.random()*set.length)];
+   log(`${ic()} <i>${nm()}:</i> ${line} <span class="tag2">ใจ ${Math.round(b)}</span>`,b>=70?'good':b<=25?'bad':'')}
+  if(b>=90&&!g.secK){g.secK=1;const s=SEC[ty()];log(`${s[0]} <b>${nm()}สอนท่าลับให้คุณ「${s[1]}」</b> — ท่าที่มันไม่เคยให้ใครเห็น ใช้ได้ทุกสามปีในยามคับขัน`,'myth',true)}
+  if(b<20&&!g.defW){g.defW=1;log(`${ic()} ${nm()}เริ่มไม่ฟังคุณ ใจที่ห่างกันมากเกินไป ทำให้บางครั้งมันไม่ยอมออกแรงในศึก`,'bad',true)}else if(b>=35)g.defW=0}}catch(e){console.error('b121 voice',e)}return r}}
+// ในศึก: ใจห่าง = ดวงจิตดื้อ · ใจสนิทสุด = ท่าลับ · ท่าประสานวิญญาณ
+{const _d=duel;duel=function(n,ep,cb){try{if(on()&&!S.sv.retired&&isFinite(ep)){const g=G();
+  if(g.bond<20&&Math.random()<.3){ep=ep*1.3;log(`${ic()} <b>${nm()}ไม่ยอมออกแรง</b> "เรียกข้าทำไม ตอนอื่นไม่เห็นสน" — ศึกนี้หนักขึ้น`,'bad')}
+  else if(g.secK&&g.bond>=90&&S.age-(g.secY==null?-9:g.secY)>=3&&ep>total()*.7){g.secY=S.age;const s=SEC[ty()];ep=ep*.6;log(`${s[0]} <b>${nm()}ปล่อยท่าลับ「${s[1]}」</b> ศัตรูชะงักไปครึ่งลมหายใจ`,'myth')}
+  else if(g.cb.length&&Math.random()<.22){const c=g.cb[Math.floor(Math.random()*g.cb.length)];if(c&&partnerOk(c)){ep=ep*.82;c.u=(c.u||0)+1;log(`🔗 <b>ท่าประสาน「${c.n}」</b> — ${esc(c.w)}ส่งพลังเข้ามาพร้อมกับคุณ`,'epic')}}}}catch(e){}return _d.call(this,n,ep,cb)}}
+
+// ---------- 2) ป่าล่าวงแหวนมีความจำ ----------
+const lead=n=>'จ่าฝูง'+n.replace(/^(ราชสีห์|พญา)/,'');
+{const _w=window._svWin;window._svWin=function(t,b,go){const go2=()=>{try{if(on()){const g=G(),k=b[0];g.eco.k[k]=(g.eco.k[k]||0)+1;if(t>=1&&S.age-g.eco.cy>=2&&Math.random()<.4)g.eco.cubQ={n:k,t,a:S.age}}}catch(e){}return go()};
+ return _w?_w.call(this,t,b,go2):go2()}}
+{const _hx=window._svHuntX;window._svHuntX=function(g0,i,safe,opts){if(_hx)_hx.apply(this,arguments);try{if(!opts||!S.sv)return;const g=G();
+  opts.forEach(o=>{if(!o||!o.t)return;const k=Object.keys(g.eco.k).find(n=>g.eco.k[n]>=3&&o.t.indexOf(n)>=0);if(!k)return;o.s=(o.s?o.s+' · ':'')+`🍂 ${k}แถบนี้เหลือน้อย ต้องเข้าป่าลึก (เจ็บตัวก่อนเจอ)`;const f=o.f;o.f=function(){S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.08));log(`🍂 ${k}ที่เคยชุกชุมหายไปจากชายป่า คุณต้องเดินลึกเข้าไปอีกสองวันกว่าจะเจอรอย`,'');return f.apply(this,arguments)}})}catch(e){console.error('b121 hx',e)}}}
+// ลูกสัตว์ที่กำพร้า
+ev(9,s=>A1(s)&&!!(s.sv.eco&&s.sv.eco.cubQ),()=>{const g=G(),q=g.eco.cubQ;g.eco.cubQ=null;g.eco.cy=S.age;
+ choice(`🐾 ลูกของ${q.n}`,`ขากลับจากป่า คุณได้ยินเสียงร้องเล็กๆ ในโพรงไม้ใกล้ที่${q.n}ล้มลง ลูกมันสองตัวตัวสั่น ยังไม่ลืมตาเต็มที่ ไม่มีแม่แล้ว`,[
+  O('🌲 พาไปปล่อยในป่าลึก','กรรม + · ป่าจะจำคุณ',()=>{S.karma+=7;g.eco.cub.push({n:q.n,t:q.t,a:S.age});if(g.eco.k[q.n])g.eco.k[q.n]=Math.max(0,g.eco.k[q.n]-1);log(`🌲 คุณเดินเข้าป่าลึกครึ่งวัน วางลูก${q.n}ไว้ใกล้ฝูงอื่น หันกลับมาอีกทีพวกมันหายไปแล้ว`,'good',true)}),
+  ...(!g.pet?[O('🏡 เลี้ยงไว้เอง','ได้สัตว์คู่ใจ · ใจของดวงจิต +',()=>{g.pet={n:'ลูก'+q.n,t:Math.max(0,q.t-1),y:0};g.bond=cl(g.bond+5,0,100);log(`🏡 ลูก${q.n}ตัวเล็กนอนขดบนตักคุณ ${nm()}ทำเป็นไม่สนใจ แต่แอบมองทั้งคืน`,'good',true)})]:[]),
+  O('💰 ขายให้ตลาดมืด',`ได้เงินก้อน · กรรม −`,()=>{const m=[150,800,3500,12000][q.t]||150;S.money+=m;S.karma-=8;g.eco.k[q.n]=(g.eco.k[q.n]||0)+1;g.bond=cl(g.bond-6,0,100);log(`💰 พ่อค้าจ่าย ${fmt(m)} ตำลึงโดยไม่ถามอะไร ${nm()}เงียบไปหลายวัน`,'bad',true)})])});
+// ลูกที่ปล่อยไป โตแล้วกลับมา
+ev(7,s=>A1(s)&&!!(s.sv.eco&&s.sv.eco.cub.some(c=>!c.back&&s.age-c.a>=6)),()=>{const g=G(),c=g.eco.cub.find(x=>!x.back&&S.age-x.a>=6);c.back=1;
+ const rs=(g.rings||[]).filter(r=>r.y!=null&&!r.cr).sort((a,b)=>(a.y||0)-(b.y||0)),r=rs[0];
+ choice(`🌲 ${c.n}ตัวเต็มวัยยืนขวางทาง`,`${c.n}ตัวใหญ่ยืนนิ่งกลางทางเดินป่า มันไม่คำราม ไม่ถอย แค่จ้องคุณ แผลเป็นเล็กๆ ที่หูทำให้คุณจำได้ — ลูกตัวที่คุณเคยพามาปล่อยเมื่อ ${S.age-c.a} ปีก่อน`,[
+  O('🤲 ยื่นมือออกไป','ให้มันตัดสินใจเอง',()=>{S.karma+=5;S.fame+=20*(c.t+1);if(r){const y0=r.y;r.y=Math.round(r.y*2.2+3e2*(c.t+1));log(`✨ ${c.n}ก้มหัวแตะฝ่ามือคุณ พลังป่าไหลเข้าวงแหวน<b>${esc(r.b||'')}</b> วงแหวนแก่ขึ้นจาก ${fmt(Math.round(y0))} เป็น <b>${fmt(r.y)} ปี</b> (จะเปลี่ยนสีเมื่อถึงเกณฑ์)`,'myth',true)}else{S.power+=pctPow(.04);log(`✨ ${c.n}ก้มหัวแตะฝ่ามือคุณ แล้วหันหลังกลับเข้าป่า คุณรู้สึกถึงพลังอุ่นๆ ที่ฝ่ามือ`,'myth',true)}
+   try{const L=LS.get('murim_svcub',0)||0;LS.set('murim_svcub',L+1)}catch(e){}}),
+  O('🙇 ก้มหัวให้แล้วถอยไป','กรรม +',()=>{S.karma+=3;log(`🙇 คุณก้มหัวแล้วถอยไปทางอื่น ${c.n}มองตามจนลับตา`,'good')})])});
+// จ่าฝูงตามล่ากลับ
+ev(8,s=>{if(!A1(s)||s.age<12)return false;const e=s.sv.eco;return!!(e&&Object.keys(e.k).some(n=>e.k[n]>=3&&!e.ld[n]))},()=>{const g=G(),n=Object.keys(g.eco.k).find(x=>g.eco.k[x]>=3&&!g.eco.ld[x]),cnt=g.eco.k[n];g.eco.ld[n]=1;
+ const t0=Math.max(0,BEAST.findIndex(L=>L.some(b=>b[0]===n))),L=lead(n),ep=Math.round(total()*(.9+.12*cnt+t0*.08));
+ const win=w=>{if(w){g.eco.ld[n]=2;S.fame+=40*(t0+1)*cnt;S.power+=pctPow(.03*(t0+1));log(`🏹 <b>${L}ล้มลง</b> หลังศึกยาวจนพระจันทร์เคลื่อนไปครึ่งฟ้า ทั้งแคว้นพูดถึงคนที่ล้มจ่าฝูงได้ด้วยตัวคนเดียว`,'myth',true)}
+  else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.35));g.bond=cl(g.bond-4,0,100);log(`🩸 ${L}ฝากรอยเขี้ยวไว้ที่ไหล่คุณ แล้วหายกลับเข้าความมืด มันจะจำคุณไปจนตาย`,'bad',true)}};
+ choice(`🐺 ${L}ตามรอยคุณมา`,`คุณล่า${n}ไปแล้ว ${cnt} ตัว คืนนี้มีบางอย่างเดินวนรอบที่พักอยู่สามรอบ ตัวใหญ่กว่า${n}ที่เคยเห็นเกือบเท่าตัว ตามันสะท้อนแสงไฟ — <b>${L}</b>`,[
+  O('⚔️ ออกไปเผชิญหน้า',`ศึกหนัก · ชนะ = ชื่อเสียงมาก`,()=>duel(L,ep,win)),
+  O('🔥 จุดไฟล้อมที่พักทั้งคืน','ไม่สู้ · เสียเวลาฝึก',()=>{g.lv=Math.max(1,g.lv-1);g.eco.ld[n]=3;log(`🔥 คุณนั่งเฝ้ากองไฟจนเช้า ${L}หายไปตอนฟ้าสาง ทิ้งรอยเท้าลึกไว้รอบที่พัก`,'')}),
+  O(`🕊️ ปล่อยวง ย้ายไปล่าที่อื่น`,`${n}ในป่าจะกลับมา · กรรม +`,()=>{g.eco.k[n]=0;S.karma+=4;g.eco.ld[n]=0;log(`🕊️ คุณย้ายที่พักไปอีกฝั่งเขา ตั้งใจว่าจะไม่ล่า${n}อีกสักพัก`,'good')})])});
+
+// ---------- 3) ท่าประสานวิญญาณ (กับคู่ชีวิต / เพื่อนในทีม) ----------
+const W1={atk:['คม','ค้อน','เขี้ยว','หอก'],def:['ภูผา','กำแพง','กระดอง','โล่'],sup:['บัว','น้ำค้าง','รากไม้','แสงเทียน'],ctrl:['ตาข่าย','วังวน','โซ่','หมอก'],agi:['ลม','เงา','สายฟ้า','ปีก']};
+const W2={atk:['ผ่าฟ้า','ทะลวงใจ','สังหาร','ล้างแผ่นดิน'],def:['ค้ำโลก','พันชั้น','ไม่แตก','คุ้มภัย'],sup:['คืนชีพ','ชำระแผล','ฟื้นป่า','อุ่นใจ'],ctrl:['ตรึงวิญญาณ','กลืนแสง','ล่ามมังกร','หยุดกาล'],agi:['พันเงา','ไร้รอย','ข้ามฟ้า','ทะยานลม']};
+const tyOfSp=n=>{const x=SP.find(p=>p[2]===n||(p[6]&&p[6][1]===n));return x?x[3]:'atk'};
+function partners(){const L=[];try{if(S.spouse&&S.spouse.n){if(!S.spouse.svp){const p=SP[Math.floor(Math.random()*SP.length)];S.spouse.svp=p[2];S.spouse.svi=p[1]}L.push({k:'sp',w:'คู่ชีวิต '+S.spouse.n,sp:S.spouse.svp,ic:S.spouse.svi||'💞'})}}catch(e){}
+ try{if(T40)T40.alive().filter(m=>m.bd>=55).forEach(m=>L.push({k:'m:'+m.n,w:m.n,sp:m.sp,ic:m.ic,real:m.real}))}catch(e){}return L}
+function partnerOk(c){return partners().some(p=>p.k===c.k)}
+function comboName(a,b){const t1=tyOfSp(a),t2=tyOfSp(b),h=[...(a+b)].reduce((x,y)=>x+y.charCodeAt(0),0);return W1[t1][h%4]+W2[t2][(h>>2)%4]}
+ev(6,s=>{if(!A1(s)||s.age<14||s.sv.lv<20)return false;const g=s.sv;if(s.age-(g.cbY==null?-9:g.cbY)<5)return false;return partners().some(p=>!(g.cb||[]).some(c=>c.k===p.k))},()=>{const g=G();g.cbY=S.age;
+ const P=partners().filter(p=>!g.cb.some(c=>c.k===p.k)),p=P[Math.floor(Math.random()*P.length)],my=nm(),n=comboName(my,p.sp),pr=cl(.45+g.bond/300+(p.k==='sp'?.08:0),.3,.85);
+ choice(`🔗 ${p.ic} ${esc(p.w)} อยากลองประสานดวงจิต`,`ระหว่างฝึกด้วยกัน ${esc(p.w)} (${esc(p.sp)}) สังเกตว่าพลังของ${my}กับของเขาสั่นจังหวะเดียวกัน ถ้าปล่อยออกพร้อมกันได้ อาจเกิดท่าที่ไม่มีในตำรา<br><span class="tag2">สำเร็จราว ${Math.round(pr*100)}% · ท่าประสานลดพลังศัตรูในศึก (เมื่อคนคู่ยังอยู่ข้างคุณ)</span>`,[
+  O('🔥 ฝึกจนกว่าจะได้','เจ็บตัว · ได้ท่าใหม่ถ้าสำเร็จ',()=>{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.1));if(Math.random()<pr){g.cb.push({k:p.k,w:p.w,a:my,b:p.sp,n,y:S.age,u:0});
+    try{const C=LS.get('murim_svcombo',{})||{};if(!C[n])C[n]={a:my,b:p.sp,w:p.k==='sp'?'คู่ชีวิต':p.real?'ผู้เล่นจริง':'เพื่อนร่วมทีม',t:Date.now()};LS.set('murim_svcombo',C)}catch(e){}
+    S.fame+=30;log(`🔗 <b>ท่าประสานวิญญาณ「${n}」</b> — ${my} × ${esc(p.sp)} พลังสองสายบิดเป็นเกลียวเดียว ต้นไม้หลังสนามฝึกล้มไปสามต้น <span class="tag2">บันทึกลงตำราท่าประสานแล้ว</span>`,'myth',true)}
+   else log(`💫 พลังสองสายชนกันกลางอากาศแล้วแตกกระจาย ทั้งคู่ล้มลงหัวเราะ ไว้ลองใหม่ในอีกไม่กี่ปี`,'')}),
+  O('🙅 ไว้ก่อน','',()=>{g.cbY=S.age-2})])});
+window.openSvCombo=function(){const C=LS.get('murim_svcombo',{})||{},K=Object.keys(C),g=S&&S.sv,mine=(g&&g.cb)||[];
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🔗 ตำราท่าประสานวิญญาณ</h3><p class="tag2">ท่าที่เกิดจากดวงจิตสองดวงปล่อยพลังพร้อมกัน ทุกคู่ได้ท่าไม่ซ้ำกัน ค้นพบแล้ว ${K.length} ท่า</p>
+ ${mine.length?`<h4>ชีวิตนี้</h4>${mine.map(c=>`<div class="item"><b>🔗 ${esc(c.n)}</b> <span class="tag2">${esc(c.a)} × ${esc(c.b)} · กับ${esc(c.w)} · ใช้ในศึก ${c.u||0} ครั้ง${partnerOk(c)?'':' · ⚠️ คู่ไม่อยู่แล้ว ใช้ไม่ได้'}</span></div>`).join('')}`:''}
+ <h4>ทุกชีวิต</h4>${K.length?K.map(n=>`<div class="item">🔗 <b>${esc(n)}</b> <span class="tag2">${esc(C[n].a)} × ${esc(C[n].b)} · ${esc(C[n].w)}</span></div>`).join(''):'<p class="tag2">ยังไม่มี — มีคู่ชีวิต หรือเพื่อนในทีมที่ผูกพันสูง แล้วระดับจิต 20 ขึ้นไป จะมีโอกาสได้ลอง</p>'}`,'svcombo')};
+
+// ---------- 4) เพื่อนร่วมทีมจากทำเนียบผู้เล่นจริง ----------
+let RP=null;const RPK='murim_svreal';
+function realLoad(){try{const c=LS.get(RPK,null);if(c&&Date.now()-c.t<3*3600e3){RP=c.l;return Promise.resolve(RP)}}catch(e){}
+ return api('board',{p:'w',cm:'l'}).then(j=>{const me=(()=>{try{return pname()}catch(e){return''}})();const L=[].concat(j&&j.ctop||[],j&&j.cprev||[]).filter(x=>x&&x.n&&x.n!==me).slice(0,30).map(x=>({n:String(x.n).replace(/[<>]/g,'').slice(0,20),lv:+x.sl||0,sr:x.sr==null?-1:+x.sr,a:+x.age||0}));
+  RP=L;try{LS.set(RPK,{t:Date.now(),l:L})}catch(e){}return L}).catch(()=>RP||[])}
+setTimeout(()=>{try{if(S&&S.ch==='soul')realLoad()}catch(e){}},5000);
+{const _cs=chStart;chStart=function(){const r=_cs.apply(this,arguments);try{if(S&&S.ch==='soul')setTimeout(()=>{realLoad()},2500)}catch(e){}return r}}
+const used=()=>{const t=T40&&T40.T();return new Set(((t&&t.m)||[]).filter(m=>m.real).map(m=>m.n))};
+ev(5,s=>{if(!A1(s)||!T40||s.age<12||s.sv.lv<10||!RP||!RP.length)return false;const t=T40.T(),al=T40.alive();return al.length<6&&!al.some(m=>m.real)&&s.age-(s.sv.rpY==null?-9:s.sv.rpY)>=6},()=>{const g=G();g.rpY=S.age;const u=used(),L=RP.filter(x=>!u.has(x.n));if(!L.length)return;
+ const x=L[Math.floor(Math.random()*Math.min(L.length,12))],m=T40.mkMember();m.n=x.n;m.real=1;m.bd=cl(m.bd+10,0,100);m.q=`ดวงวิญญาณจากทำเนียบทวีป — ชีวิตจริงของผู้เล่นคนหนึ่งที่เคยไปถึงระดับจิต ${x.lv||'?'}${x.sr>=0?` วงแหวนสูงสุด${TIER[Math.min(TIER.length-1,x.sr)][0]}`:''}`;
+ if(x.sr>=0)m.ic=TIER[Math.min(TIER.length-1,x.sr)][1];const t=T40.T();
+ choice(`🌐 ${m.ic} เงาของ ${esc(m.n)} จากทำเนียบ`,`ที่ศาลจารึกนามกลางเมือง หินสลักชื่อ <b>${esc(m.n)}</b> เรืองแสงขึ้นตอนคุณเดินผ่าน เงาของผู้ฝึกจิตคนนั้นก้าวออกมา ${esc(m.q)}<br>"ทวีปนี้ยังมีเรื่องที่ข้าค้างไว้ ให้ข้าเดินไปกับเจ้าสักช่วงได้ไหม"<br><span class="tag2">ชื่อนี้มาจากผู้เล่นจริงในทำเนียบทวีปจิตวิญญาณยุทธ์</span>`,[
+  O('🤝 รับเข้าทีม',`ถือ ${esc(m.sp)} · ช่วยล่า/ประลอง/ประสานท่าได้`,()=>{t.m.push(m);log(`🌐 <b>${esc(m.n)}</b> (ผู้เล่นจริงจากทำเนียบ) เข้าร่วมทีม ${m.ic} ${esc(m.sp)}`,'epic',true)}),
+  O('🙏 คารวะแล้วเดินต่อ','',()=>{S.karma+=1;log(`🙏 คุณคารวะหินสลักชื่อ${esc(m.n)} เงานั้นพยักหน้าแล้วจางหายไป`)})])});
+// ล่าวงแหวนกับผู้เล่นจริงจากทำเนียบ (แม้ไม่มีในทีม)
+{const _hx=window._svHuntX;window._svHuntX=function(g0,i,safe,opts){if(_hx)_hx.apply(this,arguments);try{if(!opts||!RP||!RP.length||S.age<10)return;const g=G();if(S.age-(g.rhY==null?-9:g.rhY)<3)return;
+  const x=RP[Math.floor(Math.random()*Math.min(RP.length,15))],t=Math.min(3,safe),b=BEAST[t][Math.floor(Math.random()*BEAST[t].length)];
+  opts.splice(Math.max(0,opts.length-1),0,O(`🌐 ชวนเงาของ ${x.n} (ทำเนียบ) ล่า${b[0]}`,`ผู้เล่นจริง ระดับจิต ${x.lv||'?'} · ศัตรูอ่อนลงมาก · เขาขอส่วนแบ่งชื่อเสียง`,()=>{g.rhY=S.age;const ep=Math.max(5,Math.round(total()*[.35,.65,.95,1.25][t]*.7));
+   log(`🌐 เงาของ<b>${esc(x.n)}</b>จากทำเนียบเดินนำเข้าป่า เขารู้ทางเหมือนเคยมาที่นี่มาแล้วหลายชาติ`,'epic');
+   duel(b[0],ep,w=>{if(w){S.fame=Math.max(0,S.fame-10);const go=()=>B.absorb(t,b);if(window._svWin)window._svWin(t,b,go);else go()}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.12));log(`🩸 ${b[0]}หนีไปได้ เงาของ${esc(x.n)}ส่ายหน้าแล้วจางหายไป`,'bad')}})}))}catch(e){console.error('b121 rh',e)}}}
+// ปุ่มในหน้าดวงจิต
+{const _os=window.openSoul;const put=()=>{try{if(S&&S.ch==='soul'&&S.sv){const m=$('modal'),g=G();if(m&&m.querySelector('.gbtn')&&!m.querySelector('.sv121')){const e=g.eco,hk=Object.keys(e.k).filter(n=>e.k[n]>0);
+  const h=`<div class="item sv121"><b>${ic()} ใจของ${esc(nm())} ${Math.round(g.bond)}/100</b> <span class="tag2">${g.bond>=90?'สนิทที่สุด · '+(g.secK?'สอนท่าลับแล้ว':'ใกล้สอนท่าลับ'):g.bond<20?'ห่างเหิน · อาจไม่ยอมออกแรงในศึก':g.bond>=70?'สนิทกัน':'ปกติ'}</span>
+  ${hk.length?`<br><span class="tag2">🌲 ป่าจำคุณได้: ${hk.map(n=>`${esc(n)} ×${e.k[n]}${e.ld[n]===2?' (ล้มจ่าฝูงแล้ว)':e.k[n]>=3?' ⚠️':''}`).join(' · ')}${e.cub.length?` · ปล่อยลูกสัตว์ ${e.cub.length} ตัว`:''}</span>`:''}</div>
+  <button class="gbtn" style="width:100%;margin-top:6px" onclick="openSvCombo()">🔗 ตำราท่าประสานวิญญาณ${g.cb.length?` (${g.cb.length})`:''}</button>`;
+  const b=m.querySelector('.gbtn');if(b)b.insertAdjacentHTML('beforebegin',h);else m.insertAdjacentHTML('beforeend',h)}}}catch(e){console.error('b121 os',e)}};
+ window.openSoul=function(){const r=_os.apply(this,arguments);put();setTimeout(put,300);setTimeout(put,1200);try{if(r&&r.then)r.then(()=>setTimeout(put,30))}catch(e){}return r}}
+window._b121={partners,comboName,realLoad,G,getRP:()=>RP};
+})()}catch(e){console.error('block121',e)}
+
+// ============================================================
+// BLOCK 122: 📲 จับสัญญาณติดตั้งแอปตั้งแต่เปิดเกม + 🧭 โหลด /w/meta.js (สำนักผู้เล่น · กลับมาแล้วมีอะไรรอ · เป้าหมายทั้งเว็บ · ติดตั้งแอป · ทำอะไรต่อ · การ์ดเรื่องสั้น)
+// ============================================================
+try{(()=>{
+window._bip=null;window.addEventListener('beforeinstallprompt',e=>{try{e.preventDefault();window._bip=e;window.dispatchEvent(new Event('bipready'))}catch(x){}});
+window.addEventListener('appinstalled',()=>{try{LS.set('murim_pwa',{done:1,t:Date.now()})}catch(e){}});
+setTimeout(()=>{try{wLoad('meta').catch(()=>setTimeout(()=>wLoad('meta').catch(()=>{}),7000))}catch(e){}},1600);
+})()}catch(e){console.error('block122',e)}

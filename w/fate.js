@@ -548,6 +548,6 @@ function epilogue(){const f=S.fate||{},L=[],sp=S.spouse,kids=(S.children||[]).fi
 {const _ot=openTitleMenu;openTitleMenu=function(){const r=_ot.apply(this,arguments);try{const m=$('modal');const g=m.querySelector('.tmgrid');if(g&&!m.querySelector('.fateBtn')){const b=document.createElement('button');b.className='cb fateBtn';b.innerHTML='<i>📜</i>พงศาวดาร';b.onclick=()=>openChron();g.insertBefore(b,g.firstChild)}}catch(e){}return r}}
 const st=document.createElement('style');st.textContent=`.fateEp li{margin:3px 0}.chrL{padding-left:18px}.chrL li{margin:4px 0}.fateBox{margin-top:6px}`;document.head.appendChild(st);
 eraLoad();
-window._fate={F,tick,SEEDS,TW,epilogue,eraK,openChron};
+window._fate={F,tick,SEEDS,TW,epilogue,eraK,openChron,DEED,ERA,eraLoad,WK};
 })()}catch(e){console.error('fate.js',e)}
 try{wReady('fate')}catch(e){}

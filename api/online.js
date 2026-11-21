@@ -130,6 +130,9 @@ const pipe = USE_VK ? vkPipe : upPipe;
 // ===== ทำเนียบรายวัน (v15.3): แยก 4 หมวด · คะแนนจากค่าเฉลี่ยทุกด้าน · รางวัลอันดับ 1–3 =====
 const BD_CATS = ['m', 'x', 'g', 'b', 'c', 'r', 'ch', 'cs', 'cj', 'cl', 'ck', 'cn', 'cu', 'co', 'cp', 'cz', 'ct', 'ce', 'cq', 'cy']; // c = ทำเนียบท้าทายรวม (เลิกใช้แล้ว) · ch นรก · cs ชีวิตสั้น · cj รากขยะ · r ผู้ย้อนกาล
 const CHC = { hell: 'ch', short: 'cs', junk: 'cj', soul: 'cl', sky: 'ck' }, CHM = { h: 'ch', s: 'cs', j: 'cj', l: 'cl', k: 'ck' }, CHF = { ch: 'h', cs: 's', cj: 'j', cl: 'l', ck: 'k', cn: 'n', cu: 'u', co: 'o', cp: 'p', cz: 'z', ct: 't', ce: 'e', cq: 'q', cy: 'y' };
+// 🎯 เป้าหมายร่วมทั้งเว็บรายสัปดาห์ (หมุนโลกตามสัปดาห์)
+const CG_L = [['m_ghost', 300], ['soul', 300], ['murim', 500], ['m_zombie', 250], ['xian', 400], ['m_hunter', 300], ['sky', 200], ['rg', 250], ['m_tower', 200], ['beast', 200], ['m_game', 200], ['hell', 250]];
+const cgOf = wk => { const x = CG_L[((wk % CG_L.length) + CG_L.length) % CG_L.length]; return { w: x[0], n: x[1] } };
 const chrWk = t => Math.floor((t + 7 * 3600e3 - 4 * 86400e3) / 604800e3); // สัปดาห์เริ่มวันจันทร์ เวลาไทย
 const CH_OK = ['hell', 'short', 'junk', 'regress', 'soul', 'sky'];
 // 🏙️ ยุคปัจจุบัน: แยกทำเนียบตามโลกพิเศษ 9 แบบ (ch = 'mw_' + id) · คะแนนเฉลี่ยทุกด้านทั้งชีวิตแบบโหมดปกติ
@@ -569,7 +572,7 @@ const annPoll = async (ann, id) => {
 };
 const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
 const OWP = { r_soulgod: [3500, 'g'], r_abyss: [3000, 'e'], r_prince: [2000, 'g'], r_suit: [1200, 'e'], r_hunterS: [2500, 'g'], r_idol: [1500, 'g'], r_astro: [2000, 'g'], r_cyber: [2500, 'e'], r_galemp: [5000, 'g'], r_dragon: [3000, 'g'], r_moon: [2000, 'e'], r_blood: [3500, 'e'], r_cloud: [1500, 'g'], r_star: [4000, 'g'], r_phoenix: [3000, 'g'], r_heaven: [5000, 'g'], r_asura: [4000, 'e'] }; // 👘 ชุดหายากตามโลก (ต้องตรงกับ BLOCK 106 ใน app.js)
-const SENS_A = new Set(['owbuy', 'owget', 'kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
+const SENS_A = new Set(['gdw', 'owbuy', 'owget', 'kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
 
 function uaMeta(req, now) {
   const ua = String(req.headers['user-agent'] || '');
@@ -1604,13 +1607,55 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const prev = prevRaw.map(x => { try { return JSON.parse(x) } catch { return null } }).filter(j => j && !(j.lid && hide.has(j.lid)));
       return res.json({ ok: 1, top, prev, p: per });
     }
+    // 🏯 สำนักของผู้เล่น: gd (อ่าน) · gdw (เขียน ต้องมีรหัสเครื่อง)
+    if (a === 'gd' || a === 'gdw') {
+      const q = qOf(req), o = String((a === 'gd' ? q.o : b.o) || 'me'), pu = okId(id) ? id.slice(0, 12) : '', wk = chrWk(now), GM = 20;
+      const gGet = async g => g ? jp(await cmd('GET', 'gd:' + g)) : null;
+      const mem = async g => { const h = await cmd('HGETALL', 'gdm:' + g); const o2 = {}; if (Array.isArray(h)) for (let i = 0; i + 1 < h.length; i += 2) o2[h[i]] = jp(h[i + 1]) || {}; else if (h) for (const k in h) o2[k] = jp(h[k]) || {}; return o2 };
+      const full = async g => { const G0 = await gGet(g); if (!G0) return null; const [M0, sc, rk, cht, pts] = [await mem(g), await cmd('ZSCORE', 'gds:' + wk, g), await cmd('ZREVRANK', 'gds:' + wk, g), await cmd('LRANGE', 'gdc:' + g, 0, 39), await cmd('HGETALL', 'gdp:' + g + ':' + wk)];
+        const P = {}; if (Array.isArray(pts)) for (let i = 0; i + 1 < pts.length; i += 2) P[pts[i]] = +pts[i + 1] || 0; else if (pts) for (const k in pts) P[k] = +pts[k] || 0;
+        return Object.assign({}, G0, { m: Object.entries(M0).map(([u, v]) => ({ u, n: v.n, j: v.j, p: P[u] || 0, ld: u === G0.ld ? 1 : 0 })).sort((x, y) => y.p - x.p), sc: +sc || 0, rk: rk == null ? -1 : +rk + 1, ch: (cht || []).map(jp).filter(Boolean) }) };
+      if (a === 'gd') {
+        if (o === 'list') { const r0 = await cmd('ZREVRANGE', 'gds:' + wk, 0, 29, 'WITHSCORES'); const L0 = []; for (let i = 0; i + 1 < (r0 || []).length; i += 2) L0.push([r0[i], +r0[i + 1]]);
+          let extra = []; if (L0.length < 30) { const r1 = await cmd('ZREVRANGE', 'gdall', 0, 29); extra = (r1 || []).filter(g => !L0.some(x => x[0] === g)).slice(0, 30 - L0.length).map(g => [g, 0]) }
+          const all = L0.concat(extra), out = []; for (const [g, sc] of all) { const G0 = await gGet(g); if (!G0) continue; const n = await cmd('HLEN', 'gdm:' + g); out.push({ id: g, n: G0.n, ic: G0.ic, ds: G0.ds || '', sc, mc: +n || 0 }) } return res.json({ ok: 1, l: out, wk }) }
+        if (o === 'me') { if (!pu) return res.json({ ok: 1, g: null }); const g = await cmd('GET', 'gdu:' + pu); return res.json({ ok: 1, g: g ? await full(g) : null }) }
+        if (o === 'see') { const g = String(q.g || '').replace(/[^a-z0-9]/g, '').slice(0, 10); const F = await full(g); if (F) F.ch = []; return res.json({ ok: 1, g: F }) }
+        return res.json({ err: 'op' });
+      }
+      if (!pu) return res.json({ err: 'id' });
+      const nm = clean(b.n, 20) || 'นิรนาม', my = await cmd('GET', 'gdu:' + pu);
+      if (o === 'create') { if (my) return res.json({ err: 'in' }); const gn = clean(b.gn, 16).replace(/\s+/g, ' ').trim(); if ([...gn].length < 2) return res.json({ err: 'name' });
+        if (!(await cmd('SET', 'gdcd:' + pu, 1, 'NX', 'EX', 3600))) return res.json({ err: 'cd' });
+        const key = 'gdn:' + gn.toLowerCase(); const g = Math.random().toString(36).slice(2, 10).replace(/[^a-z0-9]/g, 'x').padEnd(8, 'x');
+        if (!(await cmd('SET', key, g, 'NX'))) return res.json({ err: 'taken' });
+        const ic = ['🏯', '⛩️', '🐉', '🦅', '🐺', '🌙', '🔥', '🌊', '⚔️', '🌸', '🪷', '☯️'].includes(b.ic) ? b.ic : '🏯';
+        await pipe([['SET', 'gd:' + g, JSON.stringify({ id: g, n: gn, ic, ld: pu, t: now, ds: clean(b.ds, 60) })], ['HSET', 'gdm:' + g, pu, JSON.stringify({ n: nm, j: now })], ['SET', 'gdu:' + pu, g], ['ZADD', 'gdall', now, g]]);
+        return res.json({ ok: 1, g: await full(g) }) }
+      if (o === 'join') { if (my) return res.json({ err: 'in' }); const g = String(b.g || '').replace(/[^a-z0-9]/g, '').slice(0, 10); const G0 = await gGet(g); if (!G0) return res.json({ err: 'nog' });
+        if ((+(await cmd('HLEN', 'gdm:' + g)) || 0) >= GM) return res.json({ err: 'full' }); if (await cmd('GET', 'gdkick:' + g + ':' + pu)) return res.json({ err: 'kicked' });
+        await pipe([['HSET', 'gdm:' + g, pu, JSON.stringify({ n: nm, j: now })], ['SET', 'gdu:' + pu, g], ['LPUSH', 'gdc:' + g, JSON.stringify({ s: 1, x: nm + ' เข้าร่วมสำนัก', t: now })], ['LTRIM', 'gdc:' + g, 0, 59]]);
+        return res.json({ ok: 1, g: await full(g) }) }
+      if (!my) return res.json({ err: 'none' });
+      const G1 = await gGet(my); if (!G1) { await cmd('DEL', 'gdu:' + pu); return res.json({ err: 'nog' }) }
+      if (o === 'leave') { const M0 = await mem(my); delete M0[pu]; const L2 = [['HDEL', 'gdm:' + my, pu], ['DEL', 'gdu:' + pu], ['LPUSH', 'gdc:' + my, JSON.stringify({ s: 1, x: nm + ' ออกจากสำนัก', t: now })], ['LTRIM', 'gdc:' + my, 0, 59]];
+        const rest = Object.keys(M0); if (!rest.length) L2.push(['DEL', 'gd:' + my], ['DEL', 'gdn:' + String(G1.n).toLowerCase()], ['ZREM', 'gdall', my], ['DEL', 'gdc:' + my]); else if (G1.ld === pu) { G1.ld = rest.sort((x, y) => (M0[x].j || 0) - (M0[y].j || 0))[0]; L2.push(['SET', 'gd:' + my, JSON.stringify(G1)]) }
+        await pipe(L2); return res.json({ ok: 1, g: null }) }
+      if (o === 'say') { const x = clean(b.x, 160); if (!x) return res.json({ err: 'empty' }); if (!(await cmd('SET', 'gdsay:' + pu, 1, 'NX', 'PX', 2500))) return res.json({ err: 'fast' });
+        await pipe([['LPUSH', 'gdc:' + my, JSON.stringify({ u: pu, n: nm, x, t: now })], ['LTRIM', 'gdc:' + my, 0, 59]]); return res.json({ ok: 1, g: await full(my) }) }
+      if (o === 'kick') { if (G1.ld !== pu) return res.json({ err: 'ld' }); const u = String(b.u || '').replace(/[^a-z0-9]/g, '').slice(0, 12); if (!u || u === pu) return res.json({ err: 'u' });
+        await pipe([['HDEL', 'gdm:' + my, u], ['DEL', 'gdu:' + u], ['SET', 'gdkick:' + my + ':' + u, 1, 'EX', 86400 * 3]]); return res.json({ ok: 1, g: await full(my) }) }
+      if (o === 'desc') { if (G1.ld !== pu) return res.json({ err: 'ld' }); G1.ds = clean(b.ds, 60); await cmd('SET', 'gd:' + my, JSON.stringify(G1)); return res.json({ ok: 1, g: await full(my) }) }
+      return res.json({ err: 'op' });
+    }
     // 📜 พงศาวดารทั้งเว็บ (สัปดาห์นี้ + สัปดาห์ที่แล้ว ซึ่งกำหนดยุคของสัปดาห์นี้)
     if (a === 'chr') {
       const wk = chrWk(now), hv = x => { const o = {}; if (Array.isArray(x)) for (let i = 0; i + 1 < x.length; i += 2) o[x[i]] = +x[i + 1] || 0; else if (x && typeof x === 'object') for (const k in x) o[k] = +x[k] || 0; return o };
       const r = await pipe([['HGETALL', 'chr:' + wk], ['HGETALL', 'chr:' + (wk - 1)], ['LRANGE', 'chrd:' + wk, 0, 19], ['LRANGE', 'chrd:' + (wk - 1), 0, 9]]);
       const g = i => r && r[i] && r[i].result !== undefined ? r[i].result : r && r[i];
       res.setHeader && res.setHeader('Cache-Control', 'public, max-age=120');
-      return res.json({ ok: 1, wk, cur: hv(g(0)), prev: hv(g(1)), d: g(2) || [], pd: g(3) || [] });
+      const [c1, c0] = await pipe([['GET', 'cg:' + wk], ['GET', 'cg:' + (wk - 1)]]); const cg = cgOf(wk), pg = cgOf(wk - 1);
+      return res.json({ ok: 1, wk, cur: hv(g(0)), prev: hv(g(1)), d: g(2) || [], pd: g(3) || [], cg: { w: cg.w, n: cg.n, c: +c1 || 0 }, pcg: { w: pg.w, n: pg.n, c: +c0 || 0, ok: (+c0 || 0) >= pg.n ? 1 : 0 } });
     }
     if (a === 'board') {
       await bdWipe(); await bdSettle();
@@ -2848,6 +2893,9 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (lid.length >= 6 && det && det.length < 40000) { try { JSON.parse(det); L.push(['SET', 'lifed:' + lid, det, 'EX', 86400 * 40], ['SET', 'lifeo:' + lid, id, 'EX', 86400 * 40], ['SET', 'lifep:' + lid, +b.pub === 2 ? '2' : b.pub ? '1' : '0', 'EX', 86400 * 40]); if (+b.pub === 1 || b.pub === true) { const sm = nvSum(lid, det, now), D0 = jp(det); if (sm && D0 && (+D0.age || 0) >= 15 && Array.isArray(D0.key) && D0.key.length >= 8) L.push(['HSET', 'nvsm', lid, sm], ['LPUSH', 'nvfree', lid], ['LTRIM', 'nvfree', 0, 149]) } } catch {} }
       if (lid.length >= 6 && await cmd('GET', 'lsent:' + lid)) return res.json({ ok: 1, dup: 1 });
       if (e.ch === 'regress' && e.rf) { try { const G = (JSON.parse(det || '{}').rg) || {}, en = ['beyond', 'breaker', 'protector', 'lonely'].includes(G.end) ? G.end : 'lonely', vr = ['normal', 'r5', 'nomem', 'lim10'].includes(G.var) ? G.var : 'normal'; const rj = JSON.stringify({ n: e.n, lid: e.lid, rl: e.rl, end: en, var: vr, age: e.age, r: e.r, t: now, x: e.x, g: e.g }); const rs = ({ beyond: 4, breaker: 3, protector: 2, lonely: 1 })[en] * 1e8 - Math.min(999, e.rl || 1) * 1e5 + ({ lim10: 3, nomem: 2, r5: 1, normal: 0 })[vr] * 1e4 - Math.min(9999, Math.floor((now % 1e9) / 1e5)); L.push(['ZADD', 'rgb:all', rs, rj], ['ZREMRANGEBYRANK', 'rgb:all', 0, -201], ['ZADD', 'rgb:w:' + week(new Date(now)), rs, rj], ['ZREMRANGEBYRANK', 'rgb:w:' + week(new Date(now)), 0, -101], ['EXPIRE', 'rgb:w:' + week(new Date(now)), 86400 * 21]) } catch {} }
+      // 🏯 สำนักของผู้เล่น: ทุกชีวิตที่จบส่งแต้มเข้าสำนัก · 🎯 เป้าหมายร่วมทั้งเว็บ: นับชีวิตในโลกของสัปดาห์
+      try { if (okId(id)) { const pu0 = id.slice(0, 12), gid = await cmd('GET', 'gdu:' + pu0); if (gid) { const wk = chrWk(now), pt = 10 + Math.min(40, Math.floor((+e.age || 0) / 3)) + (e.ch ? 5 : 0); L.push(['ZINCRBY', 'gds:' + wk, pt, gid], ['EXPIRE', 'gds:' + wk, 86400 * 30], ['HINCRBY', 'gdp:' + gid + ':' + wk, pu0, pt], ['EXPIRE', 'gdp:' + gid + ':' + wk, 86400 * 30]) } } } catch {}
+      try { const fs = b.fs && typeof b.fs === 'object' ? b.fs : null, wk = chrWk(now), cg = cgOf(wk); if (fs && String(fs.w || '') === cg.w && (+e.age || 0) >= 10) L.push(['INCR', 'cg:' + wk], ['EXPIRE', 'cg:' + wk, 86400 * 30]) } catch {}
       // 📜 พงศาวดารทั้งเว็บ: นับฝั่งที่ทั้งชีวิตเลือก (ธรรมะ/มาร) + โหวตนครกำแพง + เหตุการณ์ใหญ่ (เก็บเป็นรหัส ข้อความอยู่ฝั่งเกม)
       try { const fs = b.fs && typeof b.fs === 'object' ? b.fs : null; if (fs) { const wk = chrWk(now), hk = 'chr:' + wk;
         if (fs.sd === 'g' || fs.sd === 'e') L.push(['HINCRBY', hk, 'm' + fs.sd, 1]);
