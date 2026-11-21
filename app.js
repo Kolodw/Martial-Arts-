@@ -44444,3 +44444,19 @@ const hook=()=>{const e=document.getElementById('isl');if(!e){setTimeout(hook,15
 
 // BLOCK 127: 🖥️ UI คอม (ต่อ) — คลิปสอน/บทสอน (#ctOv) ไม่ลอยทับหน้าต่างอื่น: มีหน้าต่างเปิดอยู่ก็หลบไปก่อน ปิดหน้าต่างแล้วค่อยกลับมา
 try{(()=>{setInterval(()=>{try{const o=document.getElementById('ctOv');if(!o)return;const m=$('modal'),hide=!!(modalOpen&&m&&m.dataset.k&&m.dataset.k!=='choice');const v=hide?'none':'';if(o.style.display!==v)o.style.display=v}catch(e){}},300)})()}catch(e){console.error('block127',e)}
+
+// ============================================================
+// BLOCK 126: ⏳ ของเพิ่มอายุขัยต้องเห็นผลจริงทุกโลก — เดิมโลกเทพใช้อายุขัยตามขั้น (godLife) ของที่บวก S.lifespan ไม่มีผล · โลกเซียน/ยุทธภพที่ชนเพดานก็ไม่ขยับ
+//   โลกเทพ: แปลงเป็นอายุขัยเสริมตามขั้น (×อายุขัยตามขั้น/2000) · โลกอื่น: ถ้าชนเพดาน ดันเพดานขึ้นเท่าที่ได้
+// ============================================================
+try{(()=>{
+const god=()=>!!(S&&S.xian&&S.xt);
+function settle(d,src){if(!S||!S.alive||!(d>0))return'';try{
+ if(god()){const gl=godLife(),add=Math.round(d*Math.max(1,gl/2000));S.glExtra=(S.glExtra||0)+add;return` · ในแดนเทพมีผลตามขั้น <b>อายุขัย +${fmt(add)} ปี</b>`}
+ return''}catch(e){return''}}
+function wrap(id){const x=BAGX[id];if(!x||!x.use||x._lsW)return;const u=x.use;x.use=function(){const l0=S?S.lifespan:0,g0=S?(S.glExtra||0):0,m0=lifeMax();const r=u.apply(this,arguments);try{if(r!=null&&S){const d=S.lifespan-l0;
+  if(d>0){if(god()){if((S.glExtra||0)===g0){const t=settle(d);if(typeof r==='string')return r+t}}else if(lifeMax()<=m0){S.rvL=(S.rvL||0)+d;if(typeof r==='string')return r+` · ดันเพดานอายุขัย +${fmt(Math.round(d))} ปี`}}}}catch(e){console.error('b126',e)}return r};x._lsW=1}
+Object.keys(BAGX).forEach(wrap);setTimeout(()=>{try{Object.keys(BAGX).forEach(wrap)}catch(e){}},3000);
+// ผลไม้อายุวัฒนะที่กินอัตโนมัติ (บวกตรงๆ แล้วนับใน S.lsI) + ของรางวัลอื่นที่บวก S.lifespan ระหว่างปี
+{const _py=passYear;passYear=function(){const me=S,lsI0=S?(S.lsI||0):0,l0=S?S.lifespan:0,m0=S?lifeMax():0;const r=_py.apply(this,arguments);try{if(S===me&&S&&S.alive){const di=(S.lsI||0)-lsI0;if(di>0){if(god()){const t=settle(di);if(t)log(`⏳ ผลไม้อายุวัฒนะ${t}`,'epic')}else if(lifeMax()<=m0){S.rvL=(S.rvL||0)+di}}}}catch(e){console.error('b126y',e)}return r}}
+})()}catch(e){console.error('block126',e)}
