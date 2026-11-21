@@ -44824,3 +44824,44 @@ function r2Year(){const g=G();g.qb=g.qb||{};g.qev=g.qev||{};
 {const _py=passYear;passYear=function(){const a0=S&&S.age,me=S;const r=_py.apply(this,arguments);try{if(on()&&S===me&&S.age!==a0&&S.age>=8)r2Year()}catch(e){console.error('sv r2',e)}return r}}
 window._sv130={R2,r2Year};
 })()}catch(e){console.error('block130',e)}
+
+// BLOCK 133: 👑 วิญญาณยุทธ์ — รอบ 3: ตำนาน 5 ตัว ทั้งเซิร์ฟมีได้ทีละคน (ล็อกที่เซิร์ฟเวอร์ ?a=svlg) · ปลุกได้ต้องออนไลน์ · ผู้ถือตาย/หายไป 3 วัน ดวงจิตกลับคืนสู่ฟ้า · ประกาศในแชท
+try{(()=>{
+const B=window._blk34,Q100=window._sv100;if(!B||!Q100)return;const SP=B.SP;
+const on=()=>!!(S&&S.alive&&S.ch==='soul'&&S.sv&&S.sv.aw===1);
+const free=()=>!(choice._cur||modalOpen)&&!(typeof DU!=='undefined'&&DU);
+const LG={lg_fate:'fate',lg_zero:'zero',lg_throne:'throne',lg_other:'other',lg_last:'last'};
+const G=()=>S.sv;
+const add=(id,ic,n,t,d,tx,q)=>{if(SP.some(x=>x[0]===id))return;SP.push([id,ic,n,t,'👑 หนึ่งเดียวในแผ่นดิน · '+d+' · ⚙️ '+tx,3,null]);Q100.Q[id]=q};
+add('lg_fate','📕','สมุดชะตาเปล่า','sup','สมุดที่ทุกหน้าว่างเปล่า จนกว่าคุณจะเขียนลงไป','ดวลแรง 2 เท่า · ทุกสิบปีได้เขียนชะตาตัวเองหนึ่งบรรทัด',{m:()=>2,yr:g=>{if(S.age%10===0&&g.qfw!==S.age){g.qfw=S.age;fateWrite()}}});
+add('lg_zero','0️⃣','ศูนย์','ctrl','วงกลมว่างที่กลืนทุกอย่างให้เหลือศูนย์','ดวลแรง 2.4 เท่า · หลอมวงแหวนเกินขีดไม่เคยพลาด',{m:()=>2.4,risk:1});
+add('lg_throne','🪑','บัลลังก์ว่าง','atk','เก้าอี้หินที่ไม่เคยมีใครนั่งได้ครบหนึ่งวัน','ดวลแรง 1.8 เท่า · ทุกปีชื่อเสียง +100 และเงินงอกเงย 2%',{m:()=>1.8,yr:()=>{S.fame=(S.fame||0)+100;S.money=(S.money||0)+Math.round((S.money||0)*.02)}});
+add('lg_other','🌐','อีกโลกหนึ่ง','agi','ลูกแก้วที่ข้างในมีโลกอีกใบ และมีคุณอีกคนมองออกมา','ดวลแรง 2 เท่า · รอดจากความตายตอนหลอมวงแหวนได้แน่นอนหนึ่งครั้ง · ปัญญา +2 ทุกปี',{m:()=>2,dodge:1,yr:()=>{S.int=(S.int||0)+2}});
+add('lg_last','⌛','นาทีสุดท้ายของจักรวาล','atk','เม็ดทรายเม็ดสุดท้ายของนาฬิกาที่นับถอยหลังให้ทั้งจักรวาล','ยิ่งแก่ยิ่งแรง (1.5 ถึง 3.5 เท่า) · อายุขัย +1 ทุกปี',{m:()=>1.5+Math.min(2,S.age/100),yr:()=>{S.lifespan=(S.lifespan||60)+1}});
+function fateWrite(){let n=0;const me=S;const go=()=>{if(S!==me||!on())return;if(!free()){if(++n<40)setTimeout(go,900);return}
+ choice('📕 หน้าว่างของสมุดชะตา','สิบปีผ่านไป สมุดชะตาเปิดหน้าใหม่ให้คุณเขียนได้หนึ่งบรรทัด หมึกแห้งแล้วลบไม่ได้',[
+  {t:'⏳ "ข้าจะมีชีวิตอีกยี่สิบปี"',s:'อายุขัย +20',f(){S.lifespan=(S.lifespan||60)+20;log('📕 ตัวหนังสือซึมลงกระดาษ คุณรู้สึกว่าหัวใจเต้นช้าลงอย่างสบาย','myth',true)}},
+  {t:'⚔️ "ข้าจะแข็งแกร่งกว่านี้"',s:'พลังยุทธ์ +30%',f(){const v=Math.round(S.power*.3);S.power+=v;log(`📕 หมึกร้อนจนกระดาษไหม้เป็นรู พลังยุทธ์ +${fmt(v)}`,'myth',true)}},
+  {t:'🩹 "คนที่ข้ารักจะไม่เจ็บป่วย"',s:'ครอบครัวอายุขัย +10',f(){(S.parents||[]).concat(S.children||[]).forEach(p=>{if(p&&p.alive!==false&&p.life)p.life+=10});if(S.spouse&&S.spouse.life)S.spouse.life+=10;log('📕 คุณเขียนชื่อทุกคนลงไปจนหน้ากระดาษเต็ม','myth',true)}}])};setTimeout(go,900)}
+const has=()=>{try{return(G().sp||[]).map(s=>s.id).filter(id=>LG[id])}catch(e){return[]}};
+const swapOut=(id,why)=>{const g=G(),ix=g.sp.findIndex(s=>s.id===id);if(ix<0)return;const L=SP.filter(x=>x[5]===3&&!LG[x[0]]);const p=L[Math.floor(Math.random()*L.length)];g.sp[ix]={id:p[0],rev:0};log(`🕯️ แสงของ${SP.find(x=>x[0]===id)[2]}ดับลงกลางพิธี — ${why} · ดวงจิตที่ตื่นขึ้นแทนคือ ${p[1]} <b>${p[2]}</b>`,'epic',true)};
+let busy=0;
+async function claimChk(){if(busy||!on())return;const g=G();g.lgOk=g.lgOk||{};const L=has().filter(id=>!g.lgOk[id]);if(!L.length)return;busy=1;const me=S;
+ for(const id of L){let j=null;try{if(typeof onlineOK!=='undefined'&&!onlineOK)throw new Error('off');j=await api('svlg',{o:'claim',k:LG[id],n:S.name})}catch(e){j={ok:0,err:'off'}}
+  if(S!==me)break;
+  if(j&&j.ok){g.lgOk[id]=Date.now();const p=SP.find(x=>x[0]===id);log(`👑 <b>${p[1]} ${p[2]}</b> ยอมรับคุณเป็นเจ้าของ — ทั้งแผ่นดินมีได้คนเดียว ชื่อคุณถูกประกาศให้ทุกคนรู้`,'myth',true);try{kAdd('ได้ครองดวงจิตตำนาน《'+p[2]+'》')}catch(e){}}
+  else swapOut(id,j&&j.err==='taken'?`ดวงจิตนี้มีเจ้าของอยู่แล้ว (${esc(j.n||'ใครบางคน')})`:'ต้องเชื่อมต่อออนไลน์ ดวงจิตตำนานจึงจะยอมรับเจ้าของ')}
+ busy=0;try{render();saveGame()}catch(e){}}
+let lastBeat=0;
+async function beat(){if(!on()||Date.now()-lastBeat<10*60e3)return;const g=G();const L=has().filter(id=>g.lgOk&&g.lgOk[id]);if(!L.length)return;lastBeat=Date.now();
+ for(const id of L){try{const j=await api('svlg',{o:'beat',k:LG[id]});if(j&&!j.ok&&j.err==='taken'){delete g.lgOk[id];swapOut(id,'คุณหายไปนานเกินไป ดวงจิตตำนานไปเลือกคนอื่นแล้ว')}}catch(e){}}}
+setInterval(()=>{try{if(on()&&free())claimChk()}catch(e){}},2500);
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{beat()}catch(e){}return r}}
+// ตาย → คืนดวงจิตสู่ฟ้า
+{const _cd=checkDeath;checkDeath=function(){const me=S,L0=(()=>{try{return S&&S.sv&&S.sv.lgOk?has().filter(id=>S.sv.lgOk[id]):[]}catch(e){return[]}})(),why=(S&&S.deathCause)||'';const r=_cd.apply(this,arguments);
+ try{if(L0.length&&me&&!me.alive){L0.forEach(id=>{api('svlg',{o:'rel',k:LG[id],w:why?String(why).slice(0,50):''}).catch(()=>{})});me.sv.lgOk={}}}catch(e){}return r}}
+// สมุดดวงจิต: ใครถือดวงจิตตำนานอยู่ตอนนี้
+{const _ob=window.openSoulBook;if(_ob)window.openSoulBook=function(){const r=_ob.apply(this,arguments);try{const m=$('modal');const h=m&&m.querySelector('h3');if(h){h.insertAdjacentHTML('afterend','<div class="item" id="svLgBox"><b>👑 ดวงจิตตำนานในแผ่นดินตอนนี้</b><br><span class="tag2">กำลังโหลด…</span></div>');
+ api('svlg').then(j=>{const b=$('svLgBox');if(!b||!j||!j.L)return;const N={fate:'lg_fate',zero:'lg_zero',throne:'lg_throne',other:'lg_other',last:'lg_last'};b.innerHTML='<b>👑 ดวงจิตตำนานในแผ่นดินตอนนี้</b><br>'+j.L.map(x=>{const p=SP.find(y=>y[0]===N[x.k]);return`${p?p[1]+' '+p[2]:x.k} — ${x.n?(x.me?'<b>คุณ</b>':'<b>'+esc(x.n)+'</b>'):'<span class="tag2">ว่าง รอเจ้าของ</span>'}`}).join('<br>')+'<br><span class="tag2">ทั้งแผ่นดินมีได้ตัวละคนเดียว · ได้มาตอนปลุกดวงจิตในโหมดจิตวิญญาณยุทธ์ (ต้องออนไลน์) · ผู้ถือตายหรือหายไป 3 วัน ดวงจิตจะว่างอีกครั้ง</span>'}).catch(()=>{const b=$('svLgBox');if(b)b.innerHTML='<b>👑 ดวงจิตตำนาน</b><br><span class="tag2">ต้องออนไลน์จึงจะเห็นว่าใครครองอยู่</span>'})}}catch(e){}return r}}
+window._sv133={LG,claimChk,beat};
+})()}catch(e){console.error('block133',e)}

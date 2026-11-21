@@ -575,7 +575,7 @@ const annPoll = async (ann, id) => {
 };
 const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
 const OWP = { r_soulgod: [3500, 'g'], r_abyss: [3000, 'e'], r_prince: [2000, 'g'], r_suit: [1200, 'e'], r_hunterS: [2500, 'g'], r_idol: [1500, 'g'], r_astro: [2000, 'g'], r_cyber: [2500, 'e'], r_galemp: [5000, 'g'], r_dragon: [3000, 'g'], r_moon: [2000, 'e'], r_blood: [3500, 'e'], r_cloud: [1500, 'g'], r_star: [4000, 'g'], r_phoenix: [3000, 'g'], r_heaven: [5000, 'g'], r_asura: [4000, 'e'] }; // 👘 ชุดหายากตามโลก (ต้องตรงกับ BLOCK 106 ใน app.js)
-const SENS_A = new Set(['comp', 'gdw', 'owbuy', 'owget', 'kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
+const SENS_A = new Set(['comp', 'svlg', 'gdw', 'owbuy', 'owget', 'kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
 
 function uaMeta(req, now) {
   const ua = String(req.headers['user-agent'] || '');
@@ -1136,6 +1136,34 @@ module.exports = async (req, res) => {
       return res.json({ ok: 1, got, c });
     }
     // 🎁 ของชดเชย (รับได้ครั้งเดียวต่อบัญชี) · kr1 = กรรมในคลังหายจากการปรับสมดุล → ตั๋วทอง 10 ใบ
+    // 👑 ดวงจิตตำนาน: ทั้งเซิร์ฟมีได้ทีละคน (svlg:<k> = {id,n,t}) · ผู้ถือต้องส่ง beat ทุกปีในเกม ไม่งั้นหมดอายุ 3 วันแล้วว่างให้คนอื่น
+    if (a === 'svlg') {
+      const LG = { fate: 'สมุดชะตาเปล่า', zero: 'ศูนย์', throne: 'บัลลังก์ว่าง', other: 'อีกโลกหนึ่ง', last: 'นาทีสุดท้ายของจักรวาล' }, KS = Object.keys(LG), TTL = 3 * 86400;
+      const o = String(b.o || qOf(req).o || 'list'), k = String(b.k || qOf(req).k || '');
+      const sysMsg = x => JSON.stringify({ i: now.toString(36) + Math.random().toString(36).slice(2, 6), t: now, n: 'ดวงจิตตำนาน', k: 'law', x });
+      if (o === 'list') { const v = await cmd('MGET', ...KS.map(x => 'svlg:' + x)); return res.json({ ok: 1, L: KS.map((x, i) => { const j = jp(v[i]); return { k: x, n: j ? j.n : '', t: j ? j.t : 0, me: j && okId(id) && j.id === id ? 1 : 0 } }) }) }
+      if (!okId(id) || !LG[k]) return res.json({ ok: 0, err: 'bad' });
+      if (req.method !== 'POST') return res.status(400).json({ err: 'post' });
+      const key = 'svlg:' + k, cur = jp(await cmd('GET', key));
+      if (o === 'claim') {
+        if (cur && cur.id === id) { await cmd('EXPIRE', key, TTL); return res.json({ ok: 1, again: 1 }) }
+        if (cur) return res.json({ ok: 0, err: 'taken', n: cur.n });
+        const nm = clean(String(b.n || ''), 20) || 'ไร้นาม';
+        const r = await cmd('SET', key, JSON.stringify({ id, n: nm, t: now }), 'NX', 'EX', TTL);
+        if (r !== 'OK') { const c2 = jp(await cmd('GET', key)); return res.json({ ok: 0, err: 'taken', n: c2 ? c2.n : '' }) }
+        try { await pipe([['LPUSH', 'chat', sysMsg('👑 ดวงจิตตำนาน《' + LG[k] + '》ตื่นขึ้นในตัว ' + nm + ' — ทั้งแผ่นดินมีได้คนเดียว')], ['LTRIM', 'chat', 0, 199]]) } catch (e) {}
+        return res.json({ ok: 1 });
+      }
+      if (o === 'beat') { if (cur && cur.id === id) { await cmd('EXPIRE', key, TTL); return res.json({ ok: 1 }) } return res.json({ ok: 0, err: cur ? 'taken' : 'none' }) }
+      if (o === 'rel') {
+        if (!cur || cur.id !== id) return res.json({ ok: 0 });
+        await cmd('DEL', key);
+        const why = clean(String(b.w || ''), 60);
+        try { await pipe([['LPUSH', 'chat', sysMsg('🕯️ ดวงจิตตำนาน《' + LG[k] + '》กลับคืนสู่ฟ้า หลังจาก ' + cur.n + (why ? ' ' + why : ' จากไป') + ' — รอเจ้าของคนใหม่')], ['LTRIM', 'chat', 0, 199]]) } catch (e) {}
+        return res.json({ ok: 1 });
+      }
+      return res.json({ ok: 0, err: 'op' });
+    }
     if (a === 'comp') {
       const CP = { kr1: { g: 10, end: Date.parse('2026-12-21T00:00:00+07:00') } }, cid = 'kr1', C0 = CP[cid];
       if (!okId(id)) return res.json({ ok: 0, can: 0 });
