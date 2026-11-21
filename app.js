@@ -53480,3 +53480,56 @@ window.skyTut=function(i){i=i||0;const p=SKT[i];if(!p){LS.set('murim_skytut',1);
  modal(`<div class="nbWel"><div class="ic">${p[0]}</div><h3>${p[1]}</h3><p style="font-size:14.5px">${p[2]}</p><div class="nbDots">${SKT.map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div><button class="go" onclick="skyTut(${i+1})">${i===SKT.length-1?'▶ เริ่มเล่น':'ต่อไป ›'}</button><button class="sk" onclick="LS.set('murim_skytut',1);closeM()">ข้าม</button></div>`,'skytut')};
 setInterval(()=>{try{if(!S||!S.alive||wk()!=='sky'||LS.get('murim_skytut',0)||modalOpen||choice._cur||window._skyOrgRun)return;skyTut(0)}catch(e){}},3000);
 })()}catch(e){console.error('block109',e)}
+
+// ============================================================
+// BLOCK 110: 🌍 สมุดโลก — บอกว่ามีโลกอะไรบ้าง แบบใบ้ ไม่บอกหมด
+// ============================================================
+try{(()=>{
+const MAIN=[['murim','⚔️','ยุทธภพ','สำนักธรรมะ อธรรม และมาร · ฝึกจากไร้ระดับสู่ยอดฝีมือ','จุดเริ่มต้นของทุกตำนาน'],
+ ['xian','☁️','โลกเซียน','รากวิญญาณ ถ้ำบ่มเพาะ ทัณฑ์สวรรค์','ที่ที่อยู่เหนือยุทธภพขึ้นไปอีกชั้น'],
+ ['god','✨','แดนเทพ','ผู้ศรัทธา บัลลังก์เทพ และสงครามสวรรค์','สูงกว่าเซียน — มีแต่คนที่ทะลวงได้ถึงจะไปถึง'],
+ ['beast','🐾','เกิดเป็นสัตว์','จากลูกสัตว์ในป่า บำเพ็ญจนเป็นอสูร แปลงกายหรือครองป่า','ไม่ใช่ทุกตำนานจะเริ่มจากมนุษย์'],
+ ['soul','⭕','จิตวิญญาณยุทธ์','ปลุกดวงจิต ล่าวงแหวน ไต่ระดับจิต','ทวีปที่เด็กหกขวบทุกคนต้องปลุกบางอย่าง'],
+ ['loop','🔁','ผู้ย้อนกาล','ตายแล้วย้อนไปอายุ 15 พร้อมความทรงจำ','ความตายไม่ใช่จุดจบเสมอไป'],
+ ['sky','🌠','ทะลุฟ้าดารา','ประเทศไทยหลังดาวตก · 36 ขั้นสู่ดวงดาว','ดาวตกลงโคราช แล้วทุกอย่างก็เปลี่ยนไป'],
+ ['mw','🏙️','ยุคปัจจุบัน','เกิดเป็นคนยุค 2026 — และอาจไม่ใช่โลกธรรมดา','โลกที่ดูคุ้นตา แต่ซ่อนโลกอื่นไว้ข้างใน']];
+const SUBH={normal:'ชีวิตธรรมดาที่สุด — ที่บางครั้งก็ไม่ธรรมดา',hunter:'ประตูประหลาดเปิดกลางเมือง ใครจะเข้าไป?',hunterhi:'ที่ที่คนคนเดียวมีค่าเท่าอาวุธนิวเคลียร์',under:'ซอยแคบ ก๊ก และคนที่ตำรวจไม่กล้าแตะ',ghost:'ศาลตายาย หมอผี และสิ่งที่มองไม่เห็น',loop:'วันเดิม ซ้ำแล้วซ้ำเล่า',zombie:'โลกที่คนตายแล้วไม่ยอมนอนนิ่ง',tower:'อาคารสีขาวที่ไม่มีใครรู้ว่าสูงแค่ไหน',game:'วันเกิดอายุ 18 มีหน้าต่างลอยขึ้นมา',gatewon:'มนุษย์แพ้ไปแล้ว — เหลือแค่กำแพงสุดท้าย',doom:'นาฬิกานับถอยหลังบนท้องฟ้า'};
+const TIP={hunter:['ประตูมิติเปิดทั่วโลก ถ้าปลุกพลังได้จะกลายเป็นฮันเตอร์','แรงก์ E–S ขึ้นด้วยการเข้าเกตและล่าสัตว์ประหลาด','เกตบางบานเข้าแล้วออกไม่ได้จนกว่าจะชนะ — ดูแรงก์ก่อนเข้า'],
+ hunterhi:['พลังเฟ้อจนแรงก์ SSS เท่ากับอาวุธเดินได้','แรงก์ F–SSS · เกตแตกเมื่อไรเมืองหายได้ทั้งเมือง','ยิ่งแรงก์สูง รัฐยิ่งอยากได้ตัว — เลือกข้างให้ดี'],
+ under:['โลกของก๊ก นักเลง และผู้มีอิทธิพล','ไต่จากเด็กในซอยขึ้นเป็นเจ้าพ่อ','ทำอะไรใหญ่เกินไป ตำรวจจะเริ่มจับตา — หลบให้เป็น'],
+ ghost:['ผี หมอผี พระเครื่อง และศาลตายายมีอยู่จริง','ปราบผีและสะสมบารมี ของขลังช่วยได้','บางผีไม่ได้อยากทำร้าย แค่อยากให้ใครฟัง'],
+ loop:['วันเวลาเริ่มวนซ้ำ','จดความทรงจำไว้ รอบหน้าจะใช้ได้','ความล้าสะสมทุกรอบ — หาต้นตอให้เจอก่อนจะหมดแรง'],
+ zombie:['โรคระบาดซอมบี้ เมืองล่มสลาย','ออกหาเสบียง สร้างที่พัก รวบรวมผู้รอด','เสบียงสำคัญกว่าพลัง — อย่าออกไปไกลตอนของหมด'],
+ tower:['หอคอยสีขาว 100 ชั้นโผล่กลางเมือง','ปีนทีละชั้น มีบอสทุก 25 ชั้น','ถึงยอดได้พรหนึ่งข้อ — คิดไว้ก่อนว่าจะขออะไร'],
+ game:['อายุ 18 ทุกคนได้หน้าต่างสถานะ','เลือกคลาส เก็บเลเวล เก็บสกิล','ล้มบอสโลกให้ได้เพื่อปิดเกม'],
+ gatewon:['มนุษย์แพ้สงครามเกตไปแล้ว','รักษากำแพงเมืองและออกไปยึดดินแดนคืน','เป้าหมายสุดท้ายคือเกตแม่ — อย่ารีบไปถ้ายังไม่พร้อม'],
+ doom:['อุกกาบาตจะชนโลกในอีก 12 ปี','เตรียมหลุมหลบภัย หรือใช้เวลาที่เหลือกับคนที่รัก','ไม่มีทางเลือกไหนผิด — แต่เลือกช้าเกินไปไม่ได้']};
+const KEY='murim_atlas';const get=()=>{try{return LS.get(KEY,{})||{}}catch(e){return{}}};
+const WI0=()=>({hunterhi:['⚡','โลกฮันเตอร์พลังสูง','พลังเฟ้อจนแรงก์ SSS เปรียบเหมือนนิวเคลียร์เดินได้ เกต F–SSS ฮันเตอร์เป็นทั้งคนดังและอาวุธของรัฐ'],normal:['🏙️','โลกปกติ','ชีวิตคนยุคปัจจุบันทั่วไป ทำงาน ใช้ชีวิต ไม่มีอะไรเหนือธรรมชาติ (ยังมีโอกาสเปลี่ยนโลกกลางชีวิตได้ ~1%/ปี)'],hunter:['🌀','โลกฮันเตอร์','ประตูมิติเปิดขึ้นทั่วโลก นักล่าฮันเตอร์ระดับ E–S ปลุกพลังเพื่อสู้กับสัตว์ประหลาด'],under:['🌃','โลกใต้ดิน','โลกของก๊ก นักเลง และผู้มีอิทธิพล ไต่จากเด็กในซอยสู่เจ้าพ่อ ระวังความร้อนจากตำรวจ'],ghost:['👻','โลกผีไทย','ผี หมอผี พระเครื่อง และศาลตายายเป็นเรื่องจริง ปราบผีและสะสมบารมี'],loop:['🔁','โลกวนลูป','วันเวลาเริ่มวนซ้ำ จดความทรงจำและตามหาต้นตอของวงจรเวลา'],zombie:['🧟','โลกซอมบี้','โรคระบาดซอมบี้ ออกหาเสบียง สร้างที่พัก และเอาตัวรอดในโลกใหม่'],tower:['🏰','โลกหอคอย','หอคอยสีขาว 100 ชั้นโผล่กลางเมือง ปีนผ่านบอสทุก 25 ชั้น ถึงยอดได้พรหนึ่งข้อ'],game:['🎮','โลกระบบเกม','อายุ 18 ทุกคนได้หน้าต่างสถานะ เลือกคลาส เก็บเลเวล แล้วล้มบอสโลกเพื่อปิดเกม'],gatewon:['💀','โลกที่เกตชนะ','มนุษย์แพ้สงครามเกต รักษากำแพงเมืองและออกไปยึดโลกคืนจนถึงเกตแม่'],doom:['☄️','โลกวันสิ้นโลก','อุกกาบาตจะชนโลกในอีก 12 ปี เตรียมหลุมหลบภัยหรือใช้เวลาที่เหลือกับคนที่รัก']});
+const subOf=()=>{try{return window._wld.wOf(S.mw)||'normal'}catch(e){return'normal'}};
+function mainOf(){if(!S)return null;if(S.mw&&S.mw.sky)return'sky';if(S.beastMode)return'beast';if(S.ch==='soul'||S.sv&&S.sv.aw!=null&&S.ch==='soul')return'soul';if(S.rg)return'loop';if(S.mw)return'mw';if(S.xt)return'god';if(S.xian)return'xian';return'murim'}
+const SUBS=['normal','hunter','hunterhi','under','ghost','loop','zombie','tower','game','gatewon','doom'];
+const SUBN={normal:['🏙️','โลกปกติ'],hunter:['🌀','โลกฮันเตอร์'],hunterhi:['⚡','ฮันเตอร์ F–SSS'],under:['🌃','โลกใต้ดิน'],ghost:['👻','โลกผีไทย'],loop:['🔁','โลกวนลูป'],zombie:['🧟','โลกซอมบี้'],tower:['🏰','โลกหอคอย'],game:['🎮','โลกระบบเกม'],gatewon:['💀','โลกที่เกตชนะ'],doom:['☄️','โลกวันสิ้นโลก']};
+const mark=(k)=>{const A=get(),lid=S._lid||S.name+S.age;const o=A[k]||{n:0};if(o.l!==lid){o.n=(o.n|0)+1;o.l=lid;A[k]=o;try{LS.set(KEY,A)}catch(e){}return o.n===1}return false};
+// ผู้เล่นเก่า: ดึงประวัติที่เคยเล่นมาใส่สมุด (ครั้งเดียว)
+try{const A=get();if(!A._mig){const T=LS.get('murim_mtried',{})||{},mp={normal:'murim',hell:'murim',short:'murim',junk:'murim',soul:'soul',regress:'loop',beast:'beast',sky:'sky'};Object.keys(T).forEach(k=>{const m=mp[k];if(m&&!A['m:'+m])A['m:'+m]={n:1}});if(LS.get('murim_skytut',0)&&!A['m:sky'])A['m:sky']={n:1};A._mig=1;LS.set(KEY,A)}}catch(e){}
+// ติดตาม + การ์ดแนะนำโลกย่อยครั้งแรก
+let pend=null;setInterval(()=>{try{if(!S||!S.alive)return;const m=mainOf();if(m)mark('m:'+m);if(m==='mw'&&!S.mw.kid){const w=subOf();const first=mark('s:'+w);if(first&&TIP[w])pend=w}
+ if(pend&&!modalOpen&&!(typeof choice!=='undefined'&&choice._cur)&&!document.hidden&&!$('coach')&&!$('ctOv')){const w=pend;pend=null;const n=SUBN[w];const wasP=typeof paused!=='undefined'?paused:false;try{paused=true}catch(e){}
+  modal(`<h3>${n[0]} ${n[1]}</h3><p class="tag2">ครั้งแรกในโลกนี้ — สิ่งที่ควรรู้</p>${TIP[w].map((t,i)=>`<div class="item" style="padding:8px 10px;margin:5px 0">${['🎯','⚙️','💡'][i]} ${t}</div>`).join('')}<div style="display:flex;gap:6px;margin-top:8px"><button class="pbtn" style="flex:1" onclick="closeM();try{paused=${wasP?'true':'false'}}catch(e){}">เข้าใจแล้ว</button><button class="gbtn" onclick="closeM();setTimeout(()=>openAtlas(),60)">🌍 สมุดโลก</button></div>`,'wintro')}}catch(e){}},2500);
+// สมุดโลก
+window.openAtlas=function(){const A=get();const row=(seen,ic,n,d,h,c)=>`<div class="item" style="display:flex;gap:10px;align-items:center;padding:8px 10px;margin:5px 0;${seen?'':'opacity:.72'}"><div style="font-size:26px;width:34px;text-align:center;${seen?'':'filter:grayscale(1) brightness(.5)'}">${seen?ic:'❓'}</div><div style="flex:1;min-width:0"><b>${seen?n:'???'}</b>${seen&&c?` <small class="tag2">· เกิด ${c} ครั้ง</small>`:''}<div class="tag2" style="font-size:12px">${seen?d:'💭 '+h}</div></div></div>`;
+ const mS=MAIN.filter(x=>A['m:'+x[0]]).length,sS=SUBS.filter(x=>A['s:'+x]).length,WI=WI0()||{};
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌍 สมุดโลก</h3><p class="tag2">โลกทั้งหมดในหนึ่งนวนิยาย · ไปมาแล้ว ${mS+sS}/${MAIN.length+SUBS.length} · โลกที่ยังไม่เคยไปมีคำใบ้ให้</p>
+ <h4 style="margin:10px 0 4px">🗺️ โลกหลัก ${mS}/${MAIN.length}</h4>${MAIN.map(x=>row(A['m:'+x[0]],x[1],x[2],x[3],x[4],A['m:'+x[0]]&&A['m:'+x[0]].n)).join('')}
+ <h4 style="margin:12px 0 4px">🏙️ โลกย่อยในยุคปัจจุบัน ${sS}/${SUBS.length}</h4><p class="tag2" style="font-size:12px">เกิดในยุคปัจจุบันจะสุ่มโลก หรือเลือกเองได้ตอนสร้างตัวละคร</p>${SUBS.map(k=>row(A['s:'+k],SUBN[k][0],SUBN[k][1],(WI[k]&&WI[k][2])||'',SUBH[k],A['s:'+k]&&A['s:'+k].n)).join('')}
+ <p class="tag2" style="margin-top:8px">บางโลกไปถึงได้ด้วยการทะลวงจากโลกเดิม ไม่ใช่เลือกตอนเกิด</p>`,'atlas')};
+// ปุ่มในเมนู
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('[data-atl]')){const A=get(),n=MAIN.filter(x=>A['m:'+x[0]]).length+SUBS.filter(x=>A['s:'+x]).length;g.insertAdjacentHTML('beforeend',`<button class="opt" data-atl="1" onclick="closeM();openAtlas()">🌍 สมุดโลก<small>ไปมาแล้ว ${n}/${MAIN.length+SUBS.length} โลก</small></button>`)}}catch(e){}return r}}
+// การ์ดยุคปัจจุบันในหน้าเลือกโลก: โชว์ว่ามีโลกย่อย
+const CSS=document.createElement('style');CSS.textContent='.wc .wSubs{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 2px}.wc .wSubs span{font-size:11.5px;padding:2px 7px;border-radius:99px;background:#ffffff1c;border:1px solid #ffffff2a;white-space:nowrap}.wc .wSubs span.more{background:#7ad0ff33;border-color:#7ad0ff77}.atlEnd{margin:8px 0;padding:8px 10px;border:1px dashed #7ad0ff88;border-radius:10px;font-size:13px}';document.head.appendChild(CSS);
+setInterval(()=>{try{const c=document.querySelector('.wc[data-k="mw"]');if(!c||c.querySelector('.wSubs'))return;const A=get();const pick=['hunter','ghost','zombie'],rest=SUBS.length-1-pick.length;const tg=c.querySelector('.tg');const h=`<div class="wSubs">${pick.map(k=>`<span>${SUBN[k][0]} ${SUBN[k][1].replace('โลก','')}</span>`).join('')}<span class="more" onclick="event.stopPropagation();openAtlas()">+${rest} โลก</span></div>`;if(tg)tg.insertAdjacentHTML('beforebegin',h);else c.insertAdjacentHTML('beforeend',h)}catch(e){}},1200);
+// หน้าจบชีวิต: บอกว่ายังมีโลกที่ไม่เคยไป
+{const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);try{setTimeout(()=>{const E=$('end');if(!E||E.querySelector('.atlEnd'))return;const A=get(),left=MAIN.filter(x=>!A['m:'+x[0]]).length+SUBS.filter(x=>!A['s:'+x]).length;if(left<=0)return;const b=document.createElement('div');b.className='atlEnd';b.innerHTML=`🌍 ยังมีโลกที่คุณไม่เคยไปอีก <b>${left}</b> โลก — <a href="#" onclick="event.preventDefault();openAtlas()">ดูคำใบ้ในสมุดโลก</a>`;const bt=E.querySelector('button');if(bt&&bt.parentNode)bt.parentNode.insertBefore(b,bt);else E.appendChild(b)},400)}catch(e){}return r}}
+try{SYS_GUIDE.push({s:'base',nw:1,ic:'🌍',t:'สมุดโลก — มีโลกอะไรบ้าง',d:'เมนู → 🌍 สมุดโลก รวม 8 โลกหลักและ 11 โลกย่อยในยุคปัจจุบัน (ฮันเตอร์ ผีไทย ซอมบี้ หอคอย ฯลฯ) · โลกที่ยังไม่เคยไปจะเป็น ❓ พร้อมคำใบ้ · โลกย่อยสุ่มได้ตอนเกิดในยุคปัจจุบัน หรือเลือกเองในหน้าสร้างตัวละคร · เกิดในโลกพิเศษครั้งแรกจะมีการ์ดแนะนำสั้นๆ'})}catch(e){}
+})()}catch(e){console.error('block110',e)}
