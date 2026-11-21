@@ -44356,7 +44356,7 @@ const IT={
  aid:['🩹','ชุดปฐมพยาบาล',.03,'พลังชีวิต +40%',()=>{hpP(.4);return'🩹 ทำแผลเองได้เรียบร้อยกว่าที่คิด'}],
  vit:['🍊','วิตามินรวม 1 กระปุก',.05,'พลังชีวิตสูงสุด +2% (ปีละครั้ง)',()=>{const M=S.mw;if(M.bagVit===S.age)return null;M.bagVit=S.age;S.maxHp=Math.round(S.maxHp*1.02);return'🍊 กินวิตามินครบทั้งปี รู้สึกว่าป่วยน้อยลงจริงๆ'}],
  book:['📚','หนังสือพัฒนาตัวเอง',.03,'ปัญญา +3 · ความคุ้นเคยยุคใหม่ +2',()=>{S.int=(S.int||0)+3;try{mwFx({adapt:2})}catch(e){}return'📚 อ่านจบในสามคืน จดประโยคดีๆ ไว้ในมือถือ'}],
- gift:['🎁','ของขวัญ',.05,'ให้คนสำคัญ · ความสุข +6',()=>{const w=S.spouse&&S.spouse.alive!==false?'คู่ชีวิต':pick(['พ่อแม่','เพื่อนสนิท','คนในบ้าน']);joy(6);return`🎁 คุณให้ของขวัญกับ${w} รอยยิ้มนั้นคุ้มกว่าราคาของ`}],
+ gift:['🎁','ของขวัญ',.05,'ให้คนสำคัญ · ความสุข +6',()=>{const w=S.spouse&&S.spouse.alive!==false?'คู่ชีวิต':ch(['พ่อแม่','เพื่อนสนิท','คนในบ้าน']);joy(6);return`🎁 คุณให้ของขวัญกับ${w} รอยยิ้มนั้นคุ้มกว่าราคาของ`}],
  lotto:['🎟️','ลอตเตอรี่',.008,'ลุ้นรางวัล',()=>{const M=S.mw,mn=MW_MIN[M.cc||'th']||MW_MIN.th,r=Math.random();if(r<.001){const v=mwToB(mn*600,M);S.money+=v;joy(30);return`🎟️ <b>ถูกรางวัลใหญ่!</b> ได้ ${mwLocal(mn*600,M)} มือสั่นจนอ่านเลขซ้ำห้ารอบ`}if(r<.03){const v=mwToB(mn*.4,M);S.money+=v;joy(4);return`🎟️ ถูกเลขท้าย ได้ ${mwLocal(mn*.4,M)}`}return'🎟️ ไม่ถูกสักตัว… งวดหน้าเอาใหม่'}],
  phone:['📱','มือถือรุ่นใหม่',1.5,'ถือไว้: ความคุ้นเคยยุคใหม่ +1 ทุกปี',null,()=>{try{mwFx({adapt:1})}catch(e){}}],
  laptop:['💻','โน้ตบุ๊ก',2.2,'ถือไว้: ปัญญา +1 ทุกปี',null,()=>{S.int=(S.int||0)+1}],
@@ -44398,7 +44398,7 @@ window.mwBagSell=function(id){if(!ON())return;const M=S.mw,b=B();if(!(b.it[id]>0
 const FIND={normal:['ฝากของจากญาติต่างจังหวัด','เพื่อนร่วมงานแจกของปีใหม่','ลุ้นจับฉลากที่ห้างได้'],hunter:['เก็บได้จากซากสัตว์อสูรหลังเกตปิด','สมาคมฮันเตอร์แจกเป็นเบี้ยเลี้ยง'],under:['ลูกน้องเอามาฝาก','เก็บได้หลังเคลียร์ร้าน'],ghost:['หลวงพ่อที่วัดให้มา','ยายข้างบ้านยัดใส่มือ'],loop:['เจอในลิ้นชักที่ไม่เคยเปิดในลูปก่อน'],zombie:['ค้นได้จากร้านสะดวกซื้อร้าง','ผู้รอดชีวิตอีกกลุ่มแลกให้'],tower:['ตกจากมอนสเตอร์ชั้นล่าง','กล่องสมบัติข้างบันไดชั้น'],game:['[ระบบ] รางวัลล็อกอินรายวัน','ดรอปจากมอนสเตอร์'],gatewon:['ค้นได้จากซากเมือง','แลกมาจากตลาดมืดในหลุมหลบภัย'],doom:['ค้นได้จากซากเมือง','ศูนย์พักพิงแจกให้']};
 {const _p=passYear;passYear=function(){const me=S,a0=S&&S.age;const r=_p.apply(this,arguments);try{if(!ON()||S!==me||S.age===a0)return r;const M=S.mw,b=M.bag;
  if(b)for(const id in b.it){const x=IT[id];if(x&&x[5]&&b.it[id]>0)try{x[5]()}catch(e){}}
- if(S.age>=6&&Math.random()<.07){const w=WK(M),L=avail(M).filter(id=>IT[id][2]<=.3),sp=L.filter(id=>IT[id][6]),id=(sp.length&&Math.random()<.6)?pick(sp):pick(L);if(id){const bb=B();bb.it[id]=(bb.it[id]||0)+1;mwSay(`🎒 ${pick(FIND[w]||FIND.normal)} ได้ ${IT[id][0]} <b>${IT[id][1]}</b> เก็บเข้ากระเป๋าแล้ว`,'good')}}}catch(e){console.error('mwbag',e)}return r}}
+ if(S.age>=6&&Math.random()<.07){const w=WK(M),L=avail(M).filter(id=>IT[id][2]<=.3),sp=L.filter(id=>IT[id][6]),id=(sp.length&&Math.random()<.6)?ch(sp):ch(L);if(id){const bb=B();bb.it[id]=(bb.it[id]||0)+1;mwSay(`🎒 ${ch(FIND[w]||FIND.normal)} ได้ ${IT[id][0]} <b>${IT[id][1]}</b> เก็บเข้ากระเป๋าแล้ว`,'good')}}}catch(e){console.error('mwbag',e)}return r}}
 })()}catch(e){console.error('block122',e)}
 
 // ============================================================

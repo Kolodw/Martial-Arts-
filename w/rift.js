@@ -7,7 +7,7 @@
 // สถานะอยู่ที่ S.rift (ติดตัวข้ามเครื่องยนต์ยุทธภพ ↔ ยุคปัจจุบัน) · สมุด LS murim_rift
 // ============================================================
 (()=>{
-const RATE=()=>window._riftRate||.015;
+const RATE=k=>(window._riftRate||.015)*(k&&window._riftWk===k?4:1);
 const O=(t,s,f)=>({t,s,f});
 const pk=a=>a[Math.floor(Math.random()*a.length)],RN=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),cl=(v,a,b)=>Math.max(a,Math.min(b,v));
 const free=()=>!(choice._cur||(typeof modalOpen!=='undefined'&&modalOpen));
@@ -17,9 +17,12 @@ const RF=()=>S&&S.rift;
 const bookS=f=>{try{const b=LS.get('murim_rift',{})||{};b.p=b.p||{};b.e=b.e||{};f(b);LS.set('murim_rift',b)}catch(e){}};
 const wOfM=M=>{try{return window._wld?window._wld.wOf(M):(M.hw>0?'hunter':M.wx&&M.wx.on?M.wx.id:'normal')}catch(e){return'normal'}};
 const where=()=>{if(!S)return'';if(S.mw){if(S.mw.sky)return'sky';return'm_'+wOfM(S.mw)}if(S.beastMode&&!S.beastMode.human)return'beast';if(S.ch==='soul')return'soul';if(S.xt)return'god';if(S.xian)return'xian';return'murim'};
-const WN={murim:['⚔️','ยุทธภพ'],soul:['⭕','ทวีปจิตวิญญาณยุทธ์'],m_normal:['🏙️','ยุคปัจจุบัน'],m_zombie:['🧟','โลกซอมบี้'],m_hunter:['🌀','โลกฮันเตอร์'],sky:['🌠','ปี 2054']};
+const WN={xian:['☁️','โลกเซียน'],m_ghost:['👻','โลกผีไทย'],m_doom:['☄️','โลกวันสิ้นโลก'],m_game:['🎮','โลกระบบเกม'],murim:['⚔️','ยุทธภพ'],soul:['⭕','ทวีปจิตวิญญาณยุทธ์'],m_normal:['🏙️','ยุคปัจจุบัน'],m_zombie:['🧟','โลกซอมบี้'],m_hunter:['🌀','โลกฮันเตอร์'],sky:['🌠','ปี 2054']};
 const wn=k=>(WN[k]||['🌍','อีกโลก']).join(' ');
 const PAIR={mn_mu:{f:'m_normal',t:'murim',n:'ยุคปัจจุบัน → ยุทธภพ'},mz_mu:{f:'m_zombie',t:'murim',n:'โลกซอมบี้ → ยุทธภพ'},mh_so:{f:'m_hunter',t:'soul',n:'โลกฮันเตอร์ → ทวีปจิตวิญญาณยุทธ์'},mu_mn:{f:'murim',t:'m_normal',n:'ยุทธภพ → ยุคปัจจุบัน'}};
+PAIR.mn_mu.tr=3;PAIR.mz_mu.tr=.5;PAIR.mh_so.tr=10;PAIR.mu_mn.tr=1;
+// ⏳ อัตราเวลา: อยู่ฝั่งนี้ 1 ปี = โลกเดิมผ่านไป tr ปี
+const trTxt=k=>{const t=(PAIR[k]&&PAIR[k].tr)||1;return t===1?'เวลาสองฝั่งเดินเท่ากัน':t>1?`ที่นี่ 1 ปี = โลกเดิม ${t} ปี`:`ที่นี่ ${Math.round(1/t)} ปี = โลกเดิม 1 ปี`};
 const HOW={body:['🌀','ข้ามทั้งตัว'],soul:['👤','วิญญาณเข้าร่าง']};
 
 // ---------- มินิเกม (เครื่องยนต์ที่มีอยู่) ----------
@@ -36,15 +39,17 @@ const CONV={
  mz_mu:{pow:.8,note:'ร่างกายผู้รอดชีวิตทนกว่าคนทั่วไป (พลังชีวิตสูงสุด +15%) · อาจพาบางอย่างจากโลกซอมบี้มาด้วย',int:6,hp:.15},
  mh_so:{pow:.5,note:'หน้าต่างสถานะยังทำงาน แต่ค่าพลังถูกแปลงเหลือครึ่ง · ร่างกายนี้ไม่มีดวงจิต',int:4}};
 function snap(){const H={name:S.name,age:S.age,money:S.money,power:S.power,qi:S.qi,ch:S.ch,xian:S.xian,xt:S.xt,fac:S.faction?S.faction.n:'',gender:S.gender};
- try{H.mw=S.mw?JSON.parse(JSON.stringify(S.mw)):null}catch(e){H.mw=null}try{H.sv=S.sv?JSON.parse(JSON.stringify(S.sv)):null}catch(e){H.sv=null}return H}
+ try{H.mw=S.mw?JSON.parse(JSON.stringify(S.mw)):null}catch(e){H.mw=null}try{H.sv=S.sv?JSON.parse(JSON.stringify(S.sv)):null}catch(e){H.sv=null}
+ try{H.fam=JSON.parse(JSON.stringify({parents:S.parents||[],children:S.children||[],sibs:S.sibs||[],spouse:S.spouse||null,faction:S.faction||null,ownSect:S.ownSect||null,family:S.family||null}))}catch(e){H.fam=null}return H}
 function anchorsNow(){let a=0;try{if(S.spouse)a++;a+=(S.children||[]).filter(c=>c&&c.alive!==false).length;if(S.mw&&S.mw.kids)a+=S.mw.kids.length;if(S.mw&&S.mw.mate)a++;if((S.parents||[]).some(p=>p&&p.alive))a++}catch(e){}return Math.max(1,Math.min(6,a))}
 function clearQ(){try{if(choice._cur){choice._cur=null;choice._min=false;try{pendBar()}catch(e){}}choice._q=[]}catch(e){}try{if(typeof modalOpen!=='undefined'&&modalOpen)closeM()}catch(e){}}
 
 // ---------- ข้ามโลก ----------
-function cross(key,how){if(!S||!S.alive||S.rift)return;const P=PAIR[key],C=CONV[key],home=snap(),a=anchorsNow(),gen=S.gender||'ชาย';clearQ();
- const R=S.rift={k:key,how,f:P.f,t:P.t,y0:S.age,ys:0,shock:how==='soul'?55:80,a,b:0,ev:{},home,ly:S.age};
+function cross(key,how,o){o=o||{};if(!S||!S.alive||S.rift)return;const P=PAIR[key],C=CONV[key]||{pow:.6,note:'',int:0},home=snap(),a=anchorsNow(),gen=S.gender||'ชาย';clearQ();const T=o.t||P.t;
+ const R=S.rift={k:key,how,f:o.f||P.f,t:T,y0:S.age,ys:0,shock:how==='soul'?55:80,a,b:0,ev:{},home,ly:S.age};
  S.mw=null;S.xian=false;S.xt=0;try{CFG.xian=0}catch(e){}try{setWorld(false)}catch(e){}S.faction=null;S.ownSect=null;S.spouse=null;
- if(P.t==='soul'){S.ch='soul';S.sv={aw:2,sp:[],lv:0,rings:[],seen:{},hy:-9};R.hs=1}else S.ch='';
+ if(T==='soul'){S.ch='soul';S.sv={aw:2,sp:[],lv:0,rings:[],seen:{},hy:-9};R.hs=1}else S.ch='';
+ if(T==='xian'){S.xian=true;try{CFG.xian=1}catch(e){}try{setWorld(true)}catch(e){}}
  const pw0=Math.round((typeof total==='function'?total():S.power)||0);
  if(how==='soul'){R.orig=S.name;S.name=anyName(gen);S.age=RN(15,22);S.power=RN(20,60);S.int=Math.round((S.int||0)*.8);S.children=[];try{S.flags=S.flags||{};mkFamily()}catch(e){}}
  else{S.power=Math.max(20,Math.round((S.power||0)*C.pow));S.children=[];S.parents=[];}
@@ -54,11 +59,21 @@ function cross(key,how){if(!S||!S.alive||S.rift)return;const P=PAIR[key],C=CONV[
  kAdd(`${HOW[how][1]}: ${P.n}`);
  log(`🌀 <b>รอยแยกกลืนคุณ — ${esc(P.n)}</b> ${how==='soul'?`คุณลืมตาในร่างของ <b>${esc(S.name)}</b> อายุ ${S.age} ปี ความทรงจำของ ${esc(R.orig)} ยังอยู่ครบ แต่มือที่ยกขึ้นมาดูไม่ใช่มือของคุณ`:'ร่างกายเดิม ความทรงจำเดิม แต่ไม่มีใครในโลกนี้รู้จักคุณ'}<br><span class="tag2">⚖️ กติกากลาง: ${esc(C.note)} · เงิน ฐานะ สำนัก ครอบครัว ไม่ข้ามมาด้วย · พลังจาก ${fmt(pw0)} เหลือราว ${fmt(Math.round(S.power))} · 🧭 ความแปลกถิ่น ${R.shock} · ⚓ สมอในโลกเดิม ${a}</span>`,'myth',true);
  try{isl({big:1,pri:1,ic:'🌀',h:'ข้ามโลก',t:P.n})}catch(e){}
- try{render()}catch(e){}try{saveGame()}catch(e){}}
+ const fin2=()=>{try{if(P.init)P.init(R,o)}catch(e){console.error('rift init',e)}try{render()}catch(e){}try{saveGame()}catch(e){}};
+ if(/^m_/.test(T)){const pw1=S.power;try{wNeed('mw',()=>{try{const na=S.name,ag=S.age;mwMake(R.f==='murim'||R.f==='xian');S.name=na;S.age=ag;const M=S.mw;if(M){M.rift=1;const w=T.slice(2);if(w!=='normal'){M.wroll=1;M.hw=0;M.wx={id:w,on:1,born:1};if(w==='zombie')M.Z={surv:0,inf:5,rk:0,sup:20,com:[]}}S.power=Math.max(S.power,Math.round(pw1*.05))}}catch(e){console.error('rift mw',e)}fin2()})}catch(e){fin2()}}else fin2()}
+// สร้างสถานะยุคปัจจุบันให้คนข้ามโลก (mwEnter เดิมถูกปิดตั้งแต่ v18.4 ยุคปัจจุบันเข้าได้ทางเกิดใหม่เท่านั้น — รอยแยกใช้ตัวนี้แทน)
+function mwMake(ancient){if(!S||S.mw)return;const P=(()=>{try{return mwPast()}catch(e){return{n:S.name,age:S.age}}})();P.how='rift';try{P.pow0=Math.round(total())}catch(e){}
+ let old=null;try{old=mwOldSnap()}catch(e){}
+ const cc='th';S.mw={y:0,sec:0,fame:0,adapt:ancient?4:40,qi:0,lin:0,linMet:0,past:P,seen:{},q:[],fl:{},end:Math.max(S.age+20,RN(80,100)),clk:0,hum:1,cc,pv:'bkk',uni:0,b2:1,id:0,vis:{th:1},wroll:1,hw:0,rift:1};
+ const M=S.mw;try{M.lives=mwLives()}catch(e){}try{M.goals=mwGoalPick(M)}catch(e){M.goals=[]}try{M.lang=ancient?((typeof MW_LANG0!=='undefined'&&MW_LANG0[cc])||40):100}catch(e){M.lang=60}if(old)M.old=old;
+ M.mon0=S.money||0;try{S.money=mwToB(MW_MIN[cc]*1.2,M)}catch(e){S.money=12000}
+ S.power=Math.max(5,Math.round((S.power||0)*.01));S.qi=0;S.xian=false;S.xt=0;try{CFG.xian=0}catch(e){}try{setWorld(false)}catch(e){}
+ S.faction=null;S.ownSect=null;S.custom=true;S.mwTest=1;S.focus='mwjob';S.wev2=null;S.wPend=null;try{peers=[]}catch(e){}
+ if(ancient){try{mwQ(['e1','e2'])}catch(e){}}}
 function offer(key){const P=PAIR[key],C=CONV[key];const T={mn_mu:'คืนที่ไฟดับทั้งเขต คุณเดินผ่านซอยหลังวัด เห็นประตูไม้เก่าที่ไม่เคยมีมาก่อนเปิดแง้มอยู่ อีกฝั่งเป็นป่าไผ่ใต้แสงจันทร์ เสียงดาบกระทบกันดังมาจากที่ไกลๆ',
   mz_mu:'ในห้างร้างที่คุณเข้ามาหาเสบียง ลิฟต์ตัวหนึ่งเปิดเองทั้งที่ไฟดับมาสามปี ข้างในไม่ใช่ลิฟต์ แต่เป็นทางเดินหินที่มีกลิ่นธูปและเสียงไก่ขัน ฝูงซอมบี้กำลังขึ้นบันไดมา',
   mh_so:'เกตสีม่วงที่ไม่อยู่ในฐานข้อมูลสมาคมเปิดกลางสวนสาธารณะ หน้าต่างสถานะของคุณขึ้นตัวหนังสือที่ไม่เคยเห็น: [ปลายทาง: ทวีปที่ทุกคนมีวิญญาณ · ไม่มีทางกลับที่รับประกัน]'}[key];
- ask(`🌀 รอยแยก: ${P.n}`,`${T}<br><span class="tag2">⚖️ ถ้าข้าม: ${esc(C.note)} · เงิน ฐานะ สำนัก ครอบครัวไม่ข้ามไปด้วย · วันหนึ่งประตูอาจเปิดอีกครั้ง</span>`,[
+ ask(`🌀 รอยแยก: ${P.n}`,`${T}<br><span class="tag2">⚖️ ถ้าข้าม: ${esc(C.note)} · เงิน ฐานะ สำนัก ครอบครัวไม่ข้ามไปด้วย · ⏳ ${trTxt(key)} · วันหนึ่งประตูอาจเปิดอีกครั้ง${window._riftWk===key?' · 🌀 รอยแยกประจำสัปดาห์':''}</span>`,[
   O('🌀 ก้าวข้ามไปทั้งตัว','ร่างเดิม ความทรงจำเดิม · ไม่มีใครรู้จักคุณ',()=>cross(key,'body')),
   O('👤 ปล่อยให้วิญญาณหลุดเข้าไป','ตื่นในร่างคนอื่น อายุ 15–22 · ได้ครอบครัวและหนี้ของเจ้าของร่างมาด้วย',()=>cross(key,'soul')),
   O('🚪 ปิดประตู เดินกลับบ้าน','ไม่ข้าม · ประตูอาจไม่มาอีก',()=>{S.flags=S.flags||{};S.flags.riftNo=(S.flags.riftNo||0)+1;log('🚪 คุณปิดประตูแล้วเดินกลับบ้าน ทั้งคืนนอนไม่หลับ','')})])}
@@ -66,16 +81,28 @@ function offer(key){const P=PAIR[key],C=CONV[key];const T={mn_mu:'คืนท�
 // ---------- กลับบ้าน ----------
 function goHome(comp){const R=RF();if(!R||R.done)return;
  if(R.k==='mu_mn'){R.ret=1;R.done=1;R.comp=comp||'';try{mwBack()}catch(e){console.error(e)}return}
- const H=R.home;clearQ();
- const fin=()=>{S.mw=H.mw;S.ch=H.ch||'';if(H.mw)S.mw.y=(S.mw.y||0)+R.ys;S.xian=false;S.xt=0;try{CFG.xian=0}catch(e){}try{setWorld(false)}catch(e){}
-  if(R.how==='soul'&&R.orig)S.name=R.orig;S.money=Math.max(S.money||0,H.money||0);S.power=Math.max(H.power||0,Math.round(S.power||0));if(H.sv)S.sv=H.sv;else if(R.t==='soul')delete S.sv;S.focus=H.mw?'mwjob':'train';S.faction=null;
+ const H=R.home;clearQ();const dt=Math.max(0,Math.round(R.ys*((PAIR[R.k]&&PAIR[R.k].tr)||1)));R.dt=dt;
+ const fin=()=>{S.mw=H.mw;S.ch=H.ch||'';if(H.mw)S.mw.y=(S.mw.y||0)+dt;S.xian=!!H.xian;S.xt=H.xt||0;try{CFG.xian=H.xian?1:0}catch(e){}try{setWorld(!!H.xian)}catch(e){}const ch0=famBack(H,dt,R);
+  if(R.how==='soul'&&R.orig)S.name=R.orig;S.money=Math.max(S.money||0,H.money||0);S.power=Math.max(H.power||0,Math.round(S.power||0));if(H.sv)S.sv=H.sv;else if(R.t==='soul')delete S.sv;S.focus=H.mw?'mwjob':'train';
   R.ret=1;R.done=1;R.comp=comp||'';bookS(b=>{b.e.home=1});kAdd(`กลับจาก${PAIR[R.k].n.split('→')[1].trim()}สู่โลกเดิม${comp?' พร้อม '+comp:''}`);
-  log(`🏠 <b>ประตูพาคุณกลับบ้าน</b> ${R.ys} ปีในอีกโลกผ่านไปเหมือนฝันยาว ที่นี่ก็ผ่านไป ${R.ys} ปีเท่ากัน ${comp?`<b>${esc(comp)}</b> ยืนจับมือคุณอยู่ข้างๆ มองโลกนี้ด้วยตาเบิกกว้าง`:'ทุกอย่างคุ้นตาแต่ไม่เหมือนเดิม'}`,'myth',true);
+  log(`🏠 <b>ประตูพาคุณกลับบ้าน</b> ${R.ys} ปีในอีกโลกผ่านไปเหมือนฝันยาว ${dt===R.ys?`ที่นี่ก็ผ่านไป ${R.ys} ปีเท่ากัน`:`แต่ที่นี่ผ่านไปแล้ว <b>${dt} ปี</b>`}${ch0?'<br>'+ch0:''} ${comp?`<b>${esc(comp)}</b> ยืนจับมือคุณอยู่ข้างๆ มองโลกนี้ด้วยตาเบิกกว้าง`:'ทุกอย่างคุ้นตาแต่ไม่เหมือนเดิม'}`,'myth',true);
   try{render()}catch(e){}try{saveGame()}catch(e){}};
- if(H.mw){try{wNeed('mw',fin)}catch(e){fin()}}else fin()}
+ if(H.mw){try{wNeed('mw',()=>{if(H.mw.sky){try{wNeed('sky',fin)}catch(e){fin()}}else fin()})}catch(e){fin()}}else fin()}
+// ⏳ คืนครอบครัว/สำนักในโลกเดิม แก่ไปตามเวลาที่ผ่านไปจริงฝั่งนั้น
+function famBack(H,dt,R){const F=H.fam;if(!F||H.mw)return'';const out=[];try{
+ S.parents=(F.parents||[]).map(p=>{p=Object.assign({},p);if(p.alive!==false){p.age=(p.age||40)+dt;if(p.life&&p.age>=p.life){p.alive=false;out.push(`${p.role||'พ่อแม่'}ของคุณ (${esc(p.n||'')}) จากไปแล้วระหว่างที่คุณไม่อยู่`)}}return p});
+ S.children=(F.children||[]).map(c=>{c=Object.assign({},c);if(c.alive!==false&&dt>0){c.age=(c.age||0)+dt;if(dt>=8)out.push(`${esc(c.n||'ลูก')}โตเป็นคนอายุ ${c.age} ปี มองคุณเหมือนคนแปลกหน้า`)}return c});
+ S.sibs=(F.sibs||[]).map(x=>{x=Object.assign({},x);if(x.alive!==false)x.age=(x.age||0)+dt;return x});
+ if(F.family)S.family=F.family;
+ if(F.spouse&&!S.spouse){const sp=Object.assign({},F.spouse);if(sp.age!=null)sp.age+=dt;if(dt>=15&&Math.random()<.6){out.push(`${esc(sp.n||'คู่ชีวิต')}รอคุณไม่ไหว แต่งงานใหม่ไปแล้ว`)}else{S.spouse=sp;if(dt>=3)out.push(`${esc(sp.n||'คู่ชีวิต')}ยังรออยู่ ผมขาวขึ้นกว่าที่คุณจำได้`)}}
+ if(F.faction){if(dt>=30){S.faction=null;out.push(`สำนัก${esc(F.faction.n||'')}ล่มสลายไปแล้ว เหลือแต่ป้ายชื่อผุๆ`)}else{S.faction=F.faction;if(dt>=8)out.push(`สำนัก${esc(F.faction.n||'')}เปลี่ยนเจ้าสำนักไปแล้ว คนรุ่นใหม่ไม่มีใครรู้จักคุณ`)}}
+ if(F.ownSect&&dt<30)S.ownSect=F.ownSect;
+ }catch(e){console.error('famBack',e)}return out.length?'<span class="tag2">⏳ '+out.join(' · ')+'</span>':''}
 function door(){const R=RF();if(!R||R.done)return;R.dy=S.age;const can=R.k==='mu_mn'||!!R.home;const both=R.a>0&&R.b>0&&Math.abs(R.a-R.b)<=1;
  const pull=R.b>R.a?'ใจคุณเอียงไปทางโลกนี้':R.a>R.b?'ใจคุณยังอยู่ที่โลกเดิม':'ใจคุณแบ่งครึ่งพอดี';
- ask('🚪 ประตูเปิดอีกครั้ง',`ประตูบานเดิมโผล่ขึ้นมาอีกครั้งหลังผ่านไป ${R.ys} ปี อีกฝั่งคือ${wn(R.f)}<br>⚓ สมอในโลกเดิม <b>${R.a}</b> · สมอในโลกนี้ <b>${R.b}</b> — ${pull}`,[
+ const dtN=Math.round(R.ys*((PAIR[R.k]&&PAIR[R.k].tr)||1));let X=[];try{if(typeof window._riftDoorX==='function')X=window._riftDoorX(R)||[]}catch(e){}
+ ask('🚪 ประตูเปิดอีกครั้ง',`ประตูบานเดิมโผล่ขึ้นมาอีกครั้งหลังผ่านไป ${R.ys} ปี อีกฝั่งคือ${wn(R.f)} <span class="tag2">(⏳ ${trTxt(R.k)} · ฝั่งนั้นผ่านไปแล้วราว ${dtN} ปี)</span><br>⚓ สมอในโลกเดิม <b>${R.a}</b> · สมอในโลกนี้ <b>${R.b}</b> — ${pull}`,[
+  ...X,
   ...(can?[O('🏠 กลับบ้าน','กลับโลกเดิม · คนที่นี่จะจำคุณเป็นตำนาน',()=>goHome(''))]:[]),
   ...(can&&both&&R.bn?[O(`🤝 พา${R.bn}ข้ามไปด้วย`,'สมอสองโลกเท่ากัน · พาคนที่รักกลับไปด้วยได้หนึ่งคน',()=>goHome(R.bn))]:[]),
   O('🌱 อยู่ที่นี่ต่อ',R.b>=R.a?'ประตูจะปิดถาวร':'ประตูอาจกลับมาอีก',()=>{if(R.b>=R.a){R.stay=1;bookS(b=>{b.e.stay=1});kAdd('เลือกอยู่ในโลกใหม่ตลอดไป');log('🌱 คุณหันหลังให้ประตู มันหดเล็กลงจนเหลือแค่แสงจุดเดียว แล้วหายไปตลอดกาล','myth',true)}else{log('🌱 คุณยังไม่พร้อม ประตูค่อยๆ จางไป แต่คุณรู้ว่ามันจะกลับมา','')}})])}
@@ -193,9 +220,9 @@ function yearly(){if(lastY===S.age+':'+S.name)return;lastY=S.age+':'+S.name;
  tick();visTick();
  if(S.rift||!S.alive)return;const w=where(),M=S.mw,r=Math.random();
  if(M&&!M.kid&&S.age>=15&&!(S.flags&&S.flags.riftNo>=2)){
-  if(w==='m_normal'&&M.native&&r<RATE())return offer('mn_mu');
-  if(w==='m_zombie'&&r<RATE())return offer('mz_mu');
-  if(w==='m_hunter'&&r<RATE())return offer('mh_so');
+  if(w==='m_normal'&&M.native&&r<RATE('mn_mu'))return offer('mn_mu');
+  if(w==='m_zombie'&&r<RATE('mz_mu'))return offer('mz_mu');
+  if(w==='m_hunter'&&r<RATE('mh_so'))return offer('mh_so');
   if(w==='m_normal'&&!S.rvis&&r>1-RATE())return visit('sky')}
  if(!M&&w==='murim'&&!S.rvis&&S.age>=14&&r<RATE())return visit('mod')}
 // รอยแยกเดิม ยุทธภพ → ยุคปัจจุบัน: ติดสถานะรอยแยกให้ด้วย (เครื่องยนต์เดิมดูแลความคุ้นเคย/การกลับ)
@@ -208,10 +235,10 @@ const css=document.createElement('style');css.textContent=`.rfB .row{background:
 window.openRift=function(){const R=RF(),V=S&&S.rvis,B=LS.get('murim_rift',{})||{};const P=R&&PAIR[R.k];
  const sh=R?(R.k==='mu_mn'?(S.mw?100-(S.mw.adapt||0):null):R.shock):null;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🌀 รอยแยก</h3><div class="rfB">
- ${R?`<div class="row"><b>${esc(P.n)}</b> · ${HOW[R.how][0]} ${HOW[R.how][1]}${R.orig?` (เดิมชื่อ ${esc(R.orig)})`:''}<br><span class="tag2">ข้ามมาตอนอายุ ${R.y0} · อยู่มาแล้ว ${R.ys} ปี${R.ret?' · 🏠 กลับบ้านแล้ว':R.stay?' · 🌱 เลือกอยู่ที่นี่ตลอดไป':''}</span></div>
+ ${R?`<div class="row"><b>${esc(P.n)}</b> · ${HOW[R.how][0]} ${HOW[R.how][1]}${R.orig?` (เดิมชื่อ ${esc(R.orig)})`:''}<br><span class="tag2">ข้ามมาตอนอายุ ${R.y0} · อยู่มาแล้ว ${R.ys} ปี · ⏳ ${trTxt(R.k)}${R.ret?' · 🏠 กลับบ้านแล้ว':R.stay?' · 🌱 เลือกอยู่ที่นี่ตลอดไป':''}</span></div>
  ${sh!=null&&!R.done?`<div class="row">🧭 <b>ความแปลกถิ่น</b> ${sh}/100${R.k==='mu_mn'?' <span class="tag2">(วัดจากความคุ้นเคยกับยุคปัจจุบัน)</span>':''}<div class="bar"><i style="width:${sh}%;background:linear-gradient(90deg,#6fd8ff,#ff8a5a)"></i></div><small class="tag2">สูงกว่า 60 = ถูกโก่งราคา ความสุขลด · ลดลงตามเวลาและเรื่องที่ผ่านมา</small></div>`:''}
  <div class="row"><div class="anc"><span>⚓ โลกเดิม <b>${R.a}</b></span><span>⚖️</span><span>⚓ โลกนี้ <b>${R.b}</b></span></div><small class="tag2">สมอคือคนที่คุณรักในแต่ละโลก · ประตูเปิดอีกครั้งหลังห้าปี · ถ้าสมอสองฝั่งใกล้กัน พาคนหนึ่งข้ามไปด้วยได้${R.bn?` (${esc(R.bn)})`:''}</small></div>`
- :`<div class="row">ชีวิตนี้ยังไม่เคยข้ามโลก<br><span class="tag2">รอยแยกเปิดได้ใน ยุคปัจจุบัน (เกิดในยุคนี้) · โลกซอมบี้ · โลกฮันเตอร์ ปีละราว ${(RATE()*100).toFixed(1)}% ตั้งแต่อายุ 15 · ยุทธภพมีรอยแยกสู่ยุคปัจจุบันอยู่แล้ว</span></div>`}
+ :`<div class="row">ชีวิตนี้ยังไม่เคยข้ามโลก<br><span class="tag2">รอยแยกเปิดได้ใน ยุคปัจจุบัน (เกิดในยุคนี้) · โลกซอมบี้ · โลกฮันเตอร์ · โลกผีไทย · โลกวันสิ้นโลก · ปี 2054 · ยุทธภพ ปีละราว ${(RATE()*100).toFixed(1)}% ตั้งแต่อายุ 15 · คนยุคปัจจุบันบางคนฝันข้ามโลก</span></div>`}
  ${V?`<div class="row">🚪 <b>${esc(VIS[V.k].n)}: ${esc(V.n)}</b> <span class="tag2">${V.st>=8?'กลับบ้านแล้ว':V.st===7?'อยู่ในโลกนี้ต่อ':V.st===9?'จากไปแล้ว':'อยู่กับคุณ'}</span></div>`:''}
  <h4 style="margin:10px 0 4px">📖 สมุดรอยแยก</h4><div class="pp">${Object.keys(PAIR).map(k=>`<div class="${B.p&&B.p[k]?'':'no'}">${B.p&&B.p[k]?esc(PAIR[k].n):'❔ ???'}</div>`).join('')}<div class="${B.e&&B.e.vsky?'':'no'}">${B.e&&B.e.vsky?'🌠 ส่งคนปี 2054 กลับบ้าน':'❔ ???'}</div><div class="${B.e&&B.e.vmod?'':'no'}">${B.e&&B.e.vmod?'🏙️ ส่งคนยุคปัจจุบันกลับบ้าน':'❔ ???'}</div></div>
  <p class="tag2">ตอนจบ: ${B.e&&B.e.home?'🏠 กลับบ้าน ':''}${B.e&&B.e.stay?'🌱 อยู่ต่อจนตาย ':''}${!(B.e&&(B.e.home||B.e.stay))?'ยังไม่มี':''}</p></div>`,'rift')};
@@ -224,6 +251,8 @@ if(typeof endGame==='function'){const _eg=endGame;endGame=function(){let R=null;
   const x=R.k==='mz_mu'&&R.pl!=null?(R.pl>=4?'<br>🩺 โรคจากโลกซอมบี้ถูกหยุดได้ ตำราการแพทย์ของยุทธภพมีบทใหม่ชื่อ ‘วิชากักโรคของคนแปลกหน้า’':R.pl<=-2?'<br>🧟 ศพที่ไม่ล้มยังเดินอยู่ที่เมืองชายแดน — สิ่งที่คุณพามาจากโลกเดิม':'<br>🤒 โรคแปลกสงบลงเอง แต่หมอเทวดายังจดชื่อคุณไว้ในตำรา'):R.k==='mh_so'?(R.fused?'<br>🌑 หน้าต่างสถานะกลายเป็นดวงจิตเงา ทวีปนี้มีผู้ฝึกจิตที่มาจากเกตเป็นคนแรก':R.nf?'<br>🟦 ผู้ไร้ดวงจิตที่ไม่มีใครล้มได้ — ทวีปเล่าเรื่องคุณเป็นตำนาน':''):'';
   d.innerHTML=`<div class="row"><b>🌀 ${esc(P.n)}</b> · ${HOW[R.how][0]} ${HOW[R.how][1]}${R.orig?` · ชื่อเดิม ${esc(R.orig)}`:''}<br>${t}${x}</div>`;
   const fb=b.querySelector('.nsEnd')||b.querySelector('.fateBox')||b.querySelector('.mtNext');if(fb)fb.before(d);else b.appendChild(d)}catch(e){console.error('rift end',e)}},90)}catch(e){}return r}}
-window._rift={cross,offer,goHome,door,tick,visit,visTick,yearly,EV,PAIR,VIS,where};
+window._rift={cross,offer,goHome,door,tick,visit,visTick,yearly,EV,PAIR,VIS,where,add,ask,O,CONV,WN,HOW,bookS,shockD,mg,snap,clearQ,anchorsNow,RF,pk,RN,cl,langEv,free,kAdd,RATE,trTxt,wn,LANG};
 })();
 try{wReady('rift')}catch(e){}
+// เฟส 2 อยู่ที่ /w/rift2.js
+try{setTimeout(()=>{try{wLoad('rift2').catch(()=>setTimeout(()=>wLoad('rift2').catch(()=>{}),6000))}catch(e){}},300)}catch(e){}

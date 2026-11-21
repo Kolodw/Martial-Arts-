@@ -134,6 +134,9 @@ const CHC = { hell: 'ch', short: 'cs', junk: 'cj', soul: 'cl', sky: 'ck' }, CHM 
 const CG_L = [['m_ghost', 300], ['soul', 300], ['murim', 500], ['m_zombie', 250], ['xian', 400], ['m_hunter', 300], ['sky', 200], ['rg', 250], ['m_tower', 200], ['beast', 200], ['m_game', 200], ['hell', 250]];
 const cgOf = wk => { const x = CG_L[((wk % CG_L.length) + CG_L.length) % CG_L.length]; return { w: x[0], n: x[1] } };
 const chrWk = t => Math.floor((t + 7 * 3600e3 - 4 * 86400e3) / 604800e3); // สัปดาห์เริ่มวันจันทร์ เวลาไทย
+// 🌀 รอยแยกประจำสัปดาห์: คู่โลกที่ข้ามง่ายที่สุดของสัปดาห์ (ต้องตรงกับ RW_L/rwOf ใน /w/rift2.js)
+const RW_L = ['mn_mu', 'mz_mu', 'mh_so', 'sk_mn', 'mg_xi', 'dm_any', 'mu_gm', 'mu_vz'];
+const rwOf = wk => RW_L[((wk * 7 + 3) % RW_L.length + RW_L.length) % RW_L.length];
 const CH_OK = ['hell', 'short', 'junk', 'regress', 'soul', 'sky'];
 // 🏙️ ยุคปัจจุบัน: แยกทำเนียบตามโลกพิเศษ 9 แบบ (ch = 'mw_' + id) · คะแนนเฉลี่ยทุกด้านทั้งชีวิตแบบโหมดปกติ
 const MW_B = { hunter: 'n', under: 'u', ghost: 'o', loop: 'p', zombie: 'z', tower: 't', game: 'e', gatewon: 'q', doom: 'y' };
@@ -1667,7 +1670,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const g = i => r && r[i] && r[i].result !== undefined ? r[i].result : r && r[i];
       res.setHeader && res.setHeader('Cache-Control', 'public, max-age=120');
       const [c1, c0] = await pipe([['GET', 'cg:' + wk], ['GET', 'cg:' + (wk - 1)]]); const cg = cgOf(wk), pg = cgOf(wk - 1);
-      return res.json({ ok: 1, wk, cur: hv(g(0)), prev: hv(g(1)), d: g(2) || [], pd: g(3) || [], cg: { w: cg.w, n: cg.n, c: +c1 || 0 }, pcg: { w: pg.w, n: pg.n, c: +c0 || 0, ok: (+c0 || 0) >= pg.n ? 1 : 0 } });
+      return res.json({ ok: 1, wk, cur: hv(g(0)), prev: hv(g(1)), d: g(2) || [], pd: g(3) || [], cg: { w: cg.w, n: cg.n, c: +c1 || 0 }, pcg: { w: pg.w, n: pg.n, c: +c0 || 0, ok: (+c0 || 0) >= pg.n ? 1 : 0 }, rw: rwOf(wk) });
     }
     if (a === 'board') {
       await bdWipe(); await bdSettle();
