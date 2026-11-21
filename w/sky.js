@@ -2757,6 +2757,12 @@ window.skyEnds=function(){const L=ENREC(),A=[[4,GXE],[8,UEN]];modal(`<button cla
  setInterval(()=>{try{if(!S||!S.alive)return;const K=S.mw&&S.mw.sky;if(K&&K.rk>=0)for(let i=0;i<=K.rk;i++)cdxAdd('skyrk',''+i);const g=S.sv;if(g&&g.aw===1&&g.lv>0){const t=g.lv>=100?10:Math.min(9,Math.floor((g.lv-1)/10));for(let i=0;i<=t;i++)cdxAdd('svrk',''+i)}}catch(e){}},4000);}
 
 window._sky={SK,RK,EV,queue,skyYear,newK};window._skyQ=()=>QU.slice();
+// 🩹 กันค้างขั้น: คิวเหตุการณ์อยู่ในหน่วยความจำ (ไม่ถูกเซฟ) — ถ้าโหลดเซฟ/รีเฟรชตอนคอขวดค้างคิว ธงคอขวดจะติดค้างตลอดไป ขั้นไม่ขยับ
+function skyUnstick(){try{const K=SK();if(!K||K.rk<0||!S||!S.alive)return;
+ if(K.sub===9&&K.f.neck&&!QU.includes('neck')){K.f.neck=0;if(K.xp>=need(K)){K.f.neck=1;queue('neck')}}
+ if(K.sub>=10&&K.rk<RK.length-1){let ok=false;try{ok=RK[K.rk].g(K)}catch(e){}if(ok&&K.xp>=need(K))advance();else if(!ok){K.gq=null;gateQ(K)}}}catch(e){console.error('skyUnstick',e)}}
+{const _sy=skyYear;skyYear=function(){const r=_sy.apply(this,arguments);skyUnstick();return r};window._sky.skyYear=skyYear}
+window._skyUnstick=skyUnstick;setTimeout(skyUnstick,2500);
 })()}catch(e){console.error('sky block',e)}
 SL.impl.passYear=passYear;passYear=function(){return window.passYear.apply(this,arguments)};SL.impl.focusOK=focusOK;focusOK=function(){return window.focusOK.apply(this,arguments)};SL.impl.autoFocus=autoFocus;autoFocus=function(){return window.autoFocus.apply(this,arguments)};SL.impl.lifeMax=lifeMax;lifeMax=function(){return window.lifeMax.apply(this,arguments)};SL.impl.checkDeath=checkDeath;checkDeath=function(){return window.checkDeath.apply(this,arguments)};SL.impl.render=render;render=function(){return window.render.apply(this,arguments)};SL.impl.drawScene=drawScene;drawScene=function(){return window.drawScene.apply(this,arguments)};SL.impl.sceneCap=sceneCap;sceneCap=function(){return window.sceneCap.apply(this,arguments)};SL.impl.goBirthPick=goBirthPick;goBirthPick=function(){return window.goBirthPick.apply(this,arguments)};SL.impl.closeM=closeM;closeM=function(){return window.closeM.apply(this,arguments)};SL.impl.cxCats=cxCats;cxCats=function(){return window.cxCats.apply(this,arguments)};})();
 
