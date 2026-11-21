@@ -44432,3 +44432,12 @@ function fix(){try{const M=window._mbGet&&window._mbGet(),o=$('mwB');if(!M||!o||
 {const _h=window._mbHook;window._mbHook=function(M){const r=_h?_h.apply(this,arguments):undefined;setTimeout(fix,0);setTimeout(fix,60);return r}}
 {const _dr=doRoll;doRoll=function(first){try{if(!first&&window._mbT&&Date.now()-window._mbT<600000&&$('mwB')&&!$('birth').classList.contains('on')){window._mbT=0;const M=window._mbGet&&window._mbGet();if(M){rerolls=Math.max(0,rerolls-1);M.rr=(M.rr|0)+1;try{closeM()}catch(e){}setTimeout(()=>{try{mwBReroll()}catch(e){console.error(e)}},200);return}}}catch(e){console.error('b125',e)}return _dr.apply(this,arguments)}}
 })()}catch(e){console.error('block125',e)}
+
+// BLOCK 126: 🖥️ UI คอม — (1) จอเตี้ย (≤860px เช่น 1366×768 / 1280×720) แถบปุ่มควบคุม ▶ ☰ ถูกบีบจนหลุดใต้จอ → ไม่ให้แถบหด ซ่อนกล่องคำแนะนำ ย่อฉาก แผงโฟกัสเลื่อนในตัว · (2) ไดนามิกไอส์แลนด์ข้อความยาวล้นขอบขวาจอ → ดันกลับเข้าจอ
+try{(()=>{
+const st=document.createElement('style');st.textContent=`@media (min-width:1000px){#deskC>.ctrl{flex-shrink:0!important;overflow:visible!important}#deskC>#feed{min-height:110px}}
+@media (min-width:1000px) and (max-height:860px){#deskC>#sceneBox{max-height:96px}#deskC>#hintBox,#deskC>#hintBar{display:none!important}#deskC>.ctrl>#focus{max-height:112px;overflow-y:auto}}
+#isl .islBig{max-width:min(calc(100vw - 48px),520px)}#isl .islBig .islTx{overflow:hidden}`;document.head.appendChild(st);
+let busy=0;const fit=()=>{const e=document.getElementById('isl');if(!e||busy)return;busy=1;try{e.style.marginLeft='';const r=e.getBoundingClientRect(),W=innerWidth;if(r.width&&r.width<W-12){let d=0;if(r.right>W-6)d=W-6-r.right;else if(r.left<6)d=6-r.left;if(d)e.style.marginLeft=Math.round(d)+'px'}}catch(x){}busy=0};
+const hook=()=>{const e=document.getElementById('isl');if(!e){setTimeout(hook,1500);return}try{new ResizeObserver(()=>requestAnimationFrame(fit)).observe(e)}catch(x){}addEventListener('resize',fit)};hook();
+})()}catch(e){console.error('block126',e)}
