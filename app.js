@@ -10367,7 +10367,10 @@ function balNext(){const ri=Math.max(0,realmIdx());if(ri<REALMS.length-1)return 
 // ทุกปี: พลังที่เกินเพดานขั้นถัดไป ×1.5 ได้ผลแค่ 25% · ชื่อเสียงยิ่งสูงยิ่งเพิ่มยาก และค่อยๆ ลดลงถ้าเกินระดับที่ขั้นนี้ควรมี
 function balTick(){if(!S||!S.alive||S.custom||(S.beastMode&&!S.beastMode.human))return;
  const capP=Math.max(1000,balNext()*1.5);
- if(S._bp0!=null){const d=S.power-S._bp0;if(d>0){const t=total(),pre=t-d;if(t>capP){const ok=Math.max(0,capP-pre),over=d-ok;if(over>0)S.power-=Math.round(over*.75)}}}
+ // ถึงชั้นสุดท้ายของโลกนี้แล้ว (ไม่มีขั้นถัดไปให้ทะลวง) → ไม่ลดพลังที่ได้ ไม่ให้ตัน (สูตรใหม่ไม่ทบต้นอยู่แล้ว)
+ const topEnd=realmIdx()>=REALMS.length-1&&typeof postLv==='function'&&postLv()>=RS_MAX;
+ if(S._bp0!=null&&!topEnd){const d=S.power-S._bp0;if(d>0){const t=total(),pre=t-d;if(t>capP){const ok=Math.max(0,capP-pre),over=d-ok;if(over>0){S.power-=Math.round(over*.75);
+  if(over>50&&(S._bpN==null||S.age-S._bpN>=6)){S._bpN=S.age;log(`🧱 พลังล้นเกินขั้นปัจจุบัน — ส่วนที่เกินได้ผลแค่ 25% <span class="tag2">(ทะลวง${realmIdx()<REALMS.length-1?'ขั้นถัดไป':'ชั้นถัดไป (ผ่านทัณฑ์สวรรค์)'}ก่อน พลังจะกลับมาขึ้นเต็มที่)</span>`,'')}}}}}
  S._bp0=S.power;
  const ri=Math.max(0,realmIdx()),L=typeof postLv==='function'?Math.max(0,postLv()):0,W=({m:1,x:3,g:10})[ECO_W()]||1,F0=Math.round(400*Math.pow(1+ri,2)*W*(1+L*.15));
  if(S._bf0!=null){const d=S.fame-S._bf0;if(d>0&&S.fame>F0){const base=Math.max(S._bf0,F0),over=S.fame-base;if(over>0)S.fame=Math.round(base+over*F0/Math.max(F0,base))}}
@@ -10466,7 +10469,10 @@ function bEndYear(){const m=S.beastMode;if(m.st<7)return;if(!bFree()||(m.endCd||
 // บาลานซ์พลังสัตว์อสูร: เกินเกณฑ์ขั้นถัดไป ×1.5 ได้ผลแค่ 25% (เหมือนฝั่งคน)
 function bCapNext(){const m=S.beastMode;if(m.st<4)return 0;if(m.st<7)return BL_UP[m.st-4][2]*(S.xian?1.4:1);if(!m.heaven)return (m.pst||0)<BPS_N?bpsNeed((m.pst||0)+1):bhNeed(0);return bhNeed(Math.min(BH_ST.length,(m.hs||0)+1))}
 function bBalTick(){if(!bmOK())return;const nx=bCapNext();if(!nx){S._bp0=S.power;return}const capP=nx*1.5;
- if(S._bp0!=null){const d=S.power-S._bp0;if(d>0){const t=total(),pre=t-d;if(t>capP){const ok=Math.max(0,capP-pre),over=d-ok;if(over>0)S.power-=Math.round(over*.75)}}}S._bp0=S.power}
+ // ถึงชั้นสุดท้ายของโลกนี้แล้ว (ไม่มีขั้นถัดไปให้ทะลวง) → ไม่ลดพลังที่ได้ ไม่ให้ตัน (สูตรใหม่ไม่ทบต้นอยู่แล้ว)
+ const topEnd=realmIdx()>=REALMS.length-1&&typeof postLv==='function'&&postLv()>=RS_MAX;
+ if(S._bp0!=null&&!topEnd){const d=S.power-S._bp0;if(d>0){const t=total(),pre=t-d;if(t>capP){const ok=Math.max(0,capP-pre),over=d-ok;if(over>0){S.power-=Math.round(over*.75);
+  if(over>50&&(S._bpN==null||S.age-S._bpN>=6)){S._bpN=S.age;log(`🧱 พลังล้นเกินขั้นปัจจุบัน — ส่วนที่เกินได้ผลแค่ 25% <span class="tag2">(ทะลวง${realmIdx()<REALMS.length-1?'ขั้นถัดไป':'ชั้นถัดไป (ผ่านทัณฑ์สวรรค์)'}ก่อน พลังจะกลับมาขึ้นเต็มที่)</span>`,'')}}}}}S._bp0=S.power}
 {const _pyB=passYear;passYear=function(){const r=_pyB.apply(this,arguments);try{bBalTick()}catch(e){}return r}}
 // ชื่อขั้นที่แสดง
 {const _bst=blStageTxt;blStageTxt=function(){const m=S.beastMode;try{if(m&&m.heaven)return`${m.god||''} ${BH_ST[m.hs||0]} · ประจำ${m.dir||''}`;if(m&&m.st>=7&&m.pst)return _bst.apply(this,arguments)+` ชั้น ${m.pst}`}catch(e){}return _bst.apply(this,arguments)}}
