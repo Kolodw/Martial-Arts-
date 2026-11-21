@@ -2968,20 +2968,36 @@ function card(c){const x=ST.cards[c.k],I=info(c.k,x),r=rOf({k:c.k,x}),lk=ST.lock
  const extra=[];const bt=fx2txt(I.b);if(bt)extra.push(bt);const yt=fx2txt(I.y);if(yt)extra.push('ทุกปี: '+yt);if(I.z&&I.z.g)extra.push('ยีน'+GN[I.z.g]+'แน่นอนตอนปลุก');if(I.z&&I.z.t)extra.push('พรสวรรค์ +'+Math.round(I.z.t*100)+'%');{const lp=I.lk?[I.lk.hair?'สีผม':'',I.lk.eyeG||I.lk.eye?'ดวงตา':'',I.lk.skin?'สีผิว':''].filter(Boolean):[];if(lp.length)extra.push('🎨 '+lp.join(' · ')+'เปลี่ยนบนตัวละคร')}if(I.e)extra.push('📖 มีเหตุการณ์ของตัวเอง');
  return`<div class="sgC r${r}${lk?' lk':''}${hid?' hid':''}" style="--rc:${RC[r]}"><div class="sgH"><span>${c.ic} ${c.n}</span><em>${RN[r]} · ${p<.01?'<1':Math.round(p*100)}%</em></div>
   ${hid?`<div class="sgB"><b class="sgQ">?</b><p>ความลับคว่ำหน้าไว้ จะเปิดเผยเองระหว่างชีวิต</p></div>`:`<div class="sgB"><b>${I.ic} ${esc(I.t)}</b>${I.s?`<small>${esc(I.s)}</small>`:''}<p>${esc(I.d)}</p>${extra.length?`<div class="sgX">${extra.map(esc).join('<br>')}</div>`:''}</div>`}
-  <button class="sgL" onclick="skyOrgLock('${c.k}')">${lk?'🔒 ล็อกแล้ว':'🔓 ล็อก'}</button></div>`}
+  ${hid?`<button class="sgL" disabled>🎴 ล็อกไม่ได้</button>`:`<button class="sgL${ST.ask===c.k?' ask':''}" onclick="skyOrgLock('${c.k}')">${lk?'🔒 ล็อกแล้ว':ST.ask===c.k?'แตะอีกครั้ง · ใช้ตั๋วล็อก 1 ใบ':'🔓 ล็อก (ตั๋วล็อก 1)'}</button>`}</div>`}
 function ui(){const seen=seenGet(),tot=CATS.reduce((s,c)=>s+c.L.length,0),got=Object.keys(seen).length,cb=comboOf(ST.cards);
- modal(`<div class="sgW"><button class="xbtn" onclick="closeM()">✕</button>
+ skHold();modal(`<div class="sgW">
  <div class="sgTop"><span>ทะลุฟ้าดารา · ปี 2054</span><span>สมุดกำเนิด ${got}/${tot}</span></div><h3 class="sgT">🎲 สุ่มกำเนิด</h3>
  <p class="sgSub">ยี่สิบปีหลังดาวตกถล่มประเทศไทย คุณจะเกิดเป็นใคร ที่ไหน และแบกอะไรมาด้วย</p>
  <div class="sgGd"><span>เพศ</span>${[['ชาย','♂ ชาย'],['หญิง','♀ หญิง'],[null,'🎲 สุ่ม']].map(([v,l])=>`<button class="${ST.g===v?'on':''}" onclick="skyOrgG(${v?`'${v}'`:'null'})">${l}</button>`).join('')}</div>
  <div class="sgGrid">${CATS.map(card).join('')}</div>
  ${cb.length?`<div class="sgCombo">${cb.map(c=>`<b>✦ คอมโบ ${esc(c[1])}</b> — ${esc(c[2])}`).join('<br>')}</div>`:''}
- <div class="sgAct"><button class="sgRe" ${ST.left<=0?'disabled':''} onclick="skyOrgRe()">🎲 สุ่มใหม่ (เหลือ ${ST.left})</button><button class="sgGo" onclick="skyOrgGo()">🌠 เกิด!</button></div>
- <p class="sgHint">ล็อกการ์ดที่ชอบไว้ แล้วสุ่มใหม่เฉพาะใบที่เหลือ · โอกาส: ธรรมดา 70 · หายาก 25 · ตำนาน 5 (สัดส่วน)</p></div>`,'skyorg')}
-window.skyOrgLock=k=>{ST.lock[k]=!ST.lock[k];ui()};
+ <div class="sgAct">${ST.left<=0?`<button class="sgRe" onclick="skyRRMore()">🎟️ สุ่มเพิ่ม<br><small>ตั๋วทอง · ตั๋วฟรี · กรรม</small></button>`:`<button class="sgRe" onclick="skyOrgRe()">🎲 สุ่มใหม่ (เหลือ ${ST.left})</button>`}<button class="sgGo" onclick="skyOrgGo()">🌠 เกิด!</button></div>
+ <p class="sgHint">🔒 ล็อกได้ 2 ใบ (ใช้ตั๋วล็อกใบละ 1 · ตั๋วล็อกเหลือ ${(window._LK&&window._LK.c!=null)?window._LK.c:'…'}) ล็อกแล้วปลดไม่ได้ · สุ่มใหม่เปลี่ยนเฉพาะใบที่ไม่ล็อก · โอกาส: ธรรมดา 70 · หายาก 25 · ตำนาน 5 (สัดส่วน)</p></div>`,'skyorg')}
+const nLk=()=>Object.keys(ST.lock).filter(k=>ST.lock[k]).length;let lkBusy=0;
+window.skyOrgLock=async k=>{const c=CATS.find(x=>x.k===k);if(!c||c.hid)return;if(ST.lock[k])return toast('🔒 ล็อกแล้ว อยู่ไปจนกดเกิด');if(nLk()>=2)return toast('ล็อกได้สูงสุด 2 ใบ');
+ const L=window._LK||{};if(L.c==null){try{window.lkLoad&&window.lkLoad()}catch(e){}return toast('กำลังโหลดตั๋วล็อก… กดอีกครั้ง')}
+ if(L.c<1){skHold();return lkMenu()}
+ if(ST.ask!==k){ST.ask=k;return ui()}
+ if(lkBusy)return;lkBusy=1;ST.ask=null;
+ try{const j=await api('lkuse',{n:1});L.c=Math.max(0,+j.c||0);ST.lock[k]=true;try{sfx('good')}catch(e){}toast('🔒 ล็อก'+c.n+'แล้ว')}
+ catch(e){if(e&&e.message==='none'){L.c=0;toast('ตั๋วล็อกไม่พอ');skHold();lkMenu();return}toast('ใช้ตั๋วไม่สำเร็จ ลองใหม่อีกครั้ง')}finally{lkBusy=0}ui()};
+// จำผลสุ่มไว้ 6 ชม. (ปิดเกม/ออกไปแล้วกลับมาก็ผลเดิม) · ใช้จำนวนสุ่มเท่าโลกอื่น
+const SKH='murim_skhold',SKT=6*3600e3;
+const idxOf=()=>{const o={};for(const c of CATS)o[c.k]=c.L.indexOf(ST.cards[c.k]);return o};
+function skHold(){try{LS.set(SKH,{t:Date.now(),i:idxOf(),lock:ST.lock,left:ST.left,g:ST.g})}catch(e){}}
+function skLoad(){try{const h=LS.get(SKH,null);if(!h||Date.now()-(h.t||0)>SKT||!h.i)return false;for(const c of CATS){const x=c.L[h.i[c.k]];if(!x)return false;ST.cards[c.k]=x}ST.lock=h.lock||{};ST.left=Math.max(0,h.left|0);ST.g=h.g||null;return true}catch(e){return false}}
+const skTot=()=>{try{return Math.max(3,(window.vipTot&&window.vipTot())|0)}catch(e){return 5}};
+window.skyRRMore=function(){skHold();window._skT=Date.now();try{rrMenu()}catch(e){console.error(e);toast('เปิดเมนูสุ่มเพิ่มไม่ได้ ลองใหม่')}};
+{const _dr=doRoll;doRoll=function(first){try{if(!first&&window._skT&&Date.now()-window._skT<600000&&!$('birth').classList.contains('on')&&LS.get(SKH,null)){window._skT=0;rerolls=Math.max(0,rerolls-1);try{$('rr').textContent=rerolls}catch(e){}if(!ST.cards.bg)skLoad();ST.left=(ST.left|0)+1;setTimeout(()=>{try{window.skyOrgRe()}catch(e){console.error(e)}},200);return}}catch(e){console.error('skrr',e)}return _dr.apply(this,arguments)}}
+{const _cm=closeM;closeM=function(){try{const m=$('modal');if(modalOpen&&m&&m.dataset.k==='skyorg'&&!window._skOk)return}catch(e){}return _cm.apply(this,arguments)}}
 window.skyOrgG=v=>{ST.g=v;ui()};
-window.skyOrgRe=()=>{if(ST.left<=0)return;ST.left--;rollAll(false);try{sfx('click')}catch(e){}ui()};
-window.skyOrgGo=()=>{const pickd=Object.assign({},ST.cards),g=ST.g||pick(['ชาย','หญิง']);try{closeM()}catch(e){}
+window.skyOrgRe=()=>{if(ST.left<=0)return;ST.left--;ST.ask=null;rollAll(false);try{sfx('click')}catch(e){}ui()};
+window.skyOrgGo=()=>{const pickd=Object.assign({},ST.cards),g=ST.g||pick(['ชาย','หญิง']);try{LS.del(SKH)}catch(e){}window._skOk=1;try{closeM()}catch(e){}window._skOk=0;
  const base=pickd.bg[4];window._skyOrgRun=1;try{_ss(base)}finally{window._skyOrgRun=0}
  setTimeout(()=>{try{applyOrg(pickd,g)}catch(e){console.error('skyorg apply',e)}},900)};
 // ---------- นำผลไปใช้ ----------
@@ -3021,7 +3037,7 @@ function evReg(){const A=SKY();if(!A||!A.EV)return false;
 {const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{const K=S&&S.mw&&S.mw.sky;if(K&&K.og&&K.og.lk&&o&&!o.beast){const l=K.og.lk;if(l.hair)o.hair=l.hair;if(l.skin)o.skin=l.skin;if(l.eyeG)o.eyeG=l.eyeG;if(l.eye)o.eye=l.eye}}catch(e){}return o}}
 // เปิดหน้าสุ่มก่อนเริ่มชีวิต
 let _ss=null;
-function hook(){if(_ss||typeof window.skyStart!=='function')return;_ss=window.skyStart;window.skyStart=function(bg){if(bg||window._skyOrgRun||window._skyOrgSkip)return _ss.apply(this,arguments);try{evReg()}catch(e){}ST.lock={};ST.left=3;ST.g=null;rollAll(true);ui()}}
+function hook(){if(_ss||typeof window.skyStart!=='function')return;_ss=window.skyStart;window.skyStart=function(bg){if(bg||window._skyOrgRun||window._skyOrgSkip)return _ss.apply(this,arguments);try{evReg()}catch(e){}ST.ask=null;if(!skLoad()){ST.lock={};ST.left=skTot();ST.g=null;rollAll(true);if(window._RR)window._RR.used=0}try{if(window._LK&&window._LK.c==null&&window.lkLoad)window.lkLoad()}catch(e){}ui()}}
 hook();setTimeout(hook,0);setTimeout(()=>{hook();evReg()},1500);
 // สไตล์
 const st=document.createElement('style');st.textContent=`
