@@ -54032,3 +54032,14 @@ function drawSkyAlt(o){const{cx,W,H,T,L,ox,oy}=o,E=L.ex;if(!E||!E.alt)return;
    for(let i=0;i<3;i++){const ph=(T*1.5+i/3)%1,x0=W*(.15+i*.3),y0=M.gw-3;if(ph<.5){cx.fillStyle='#ffd23a';cx.fillRect(Math.round(x0+(mx0-x0)*ph*2),Math.round(y0-(y0-(my0-H*.12))*ph*2),1,1)}}}
  }catch(e){}}}
 })()}catch(e){console.error('block113',e)}
+
+// ============================================================
+// BLOCK 114: ⭕ ทวีปจิตวิญญาณยุทธ์ — ไม่ข้ามไปโลกเซียน/โลกเทพ (อยู่ในทวีปจนจบชีวิต)
+// ============================================================
+try{(()=>{
+const noX=()=>{try{return !!(S&&S.ch==='soul')}catch(e){return false}};
+if(typeof ascEligible==='function'){const _e=ascEligible;ascEligible=function(){if(noX())return false;return _e.apply(this,arguments)}}
+if(typeof ascendToX==='function'){const _a=ascendToX;ascendToX=function(){if(noX()){try{S.flags=S.flags||{};S.flags.ascendNo=1;log('⭕ ฟ้าของทวีปจิตวิญญาณยุทธ์ปิดตาย — เส้นทางของคุณคือ<b>ไต่ระดับจิตจนเป็นเทพ</b> ไม่ใช่เหาะไปโลกอื่น')}catch(e){}return}return _a.apply(this,arguments)}}
+if(typeof ascendGod==='function'){const _g=ascendGod;ascendGod=function(){if(noX())return;return _g.apply(this,arguments)}}
+setInterval(()=>{try{if(!noX())return;const b=document.getElementById('ascPill');if(b)b.style.display='none'}catch(e){}},1500);
+})()}catch(e){console.error('block114',e)}
