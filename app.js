@@ -54500,3 +54500,30 @@ const AM=['w0','w1','w3','w2','l','rg','k','mn'],AS=['mn','n','n','u','o','p','z
 const SN={'โลกปกติ':'mn','โลกฮันเตอร์':'n','ฮันเตอร์ F–SSS':'n','โลกใต้ดิน':'u','โลกผีไทย':'o','โลกวนลูป':'p','โลกซอมบี้':'z','โลกหอคอย':'t','โลกระบบเกม':'e','โลกที่เกตชนะ':'q','โลกวันสิ้นโลก':'y','โลกเกตชนะ':'q'};
 {const _md=modal;modal=function(h,k){const r=_md.apply(this,arguments);try{if(k==='wintro'){const m=$('modal'),t=m&&m.querySelector('h3');if(t&&!m.querySelector('.wintroBan')){const tx=t.textContent;const hit=Object.keys(SN).sort((a,b)=>b.length-a.length).find(n=>tx.includes(n));if(hit){const b=wimBan(SN[hit]);b.classList.add('wintroBan');t.after(b)}}}}catch(e){}return r};for(const x in _md)try{modal[x]=_md[x]}catch(e){}}
 })()}catch(e){console.error('block117',e)}
+
+// ============================================================
+// BLOCK 117: 🚪 ตัวโหลดโลก — ไฟล์โลกแยกอยู่ที่ /w/<ชื่อ>.js · โหลดเมื่อจะใช้ · ครั้งต่อไปใช้ของในเครื่อง (เช็คเวอร์ชันด้วย ETag)
+//   wLoad('sky').then(()=>skyStart())   ·  wNeed('sky',fn) = โหลดแล้วเรียก fn (มีหน้าจอ "กำลังเปิดประตูโลก…")
+//   โลกที่ยังอยู่ใน app.js ให้ลงทะเบียน wReady('ชื่อ') → wLoad คืนทันที ไม่โหลดซ้ำ
+//   ⚠️ กฎ: โค้ดใหม่ของโลกที่ย้ายออกไปแล้ว ให้เขียนในไฟล์ /w/ ของโลกนั้น ไม่ต่อท้าย app.js
+// ============================================================
+try{(()=>{
+const R={},P={};
+window.wReady=n=>{R[n]=1;try{(P[n]&&P[n].ok)&&P[n].ok()}catch(e){}};
+window.wIs=n=>!!R[n];
+window.wLoad=function(n){n=String(n).replace(/[^a-z0-9_-]/g,'');if(R[n])return Promise.resolve();if(P[n])return P[n].p;
+ const o={};o.p=new Promise((ok,no)=>{o.ok=ok;let tries=0;const go=()=>{const s=document.createElement('script');s.src='/w/'+n+'.js';s.charset='utf-8';s.async=true;
+  s.onload=()=>{R[n]=1;ok()};s.onerror=()=>{s.remove();if(++tries<3)setTimeout(go,800*tries);else{delete P[n];no(new Error('wload:'+n))}};document.head.appendChild(s)};go()});
+ P[n]=o;return o.p};
+window.wNeed=function(n,fn){if(R[n]){try{return fn&&fn()}catch(e){console.error(e)}return}
+ let ov=null;const t=setTimeout(()=>{ov=document.createElement('div');ov.className='wLoadOv';ov.innerHTML='<div><b>🚪 กำลังเปิดประตูโลก…</b><small>ครั้งแรกจะช้าหน่อย ครั้งต่อไปเร็วขึ้น</small><i></i></div>';document.body.appendChild(ov)},250);
+ return wLoad(n).then(()=>{clearTimeout(t);try{ov&&ov.remove()}catch(e){}try{LS.set('murim_lastw',n)}catch(e){}return fn&&fn()},e=>{clearTimeout(t);try{ov&&ov.remove()}catch(x){}toast('เปิดประตูโลกไม่สำเร็จ — เน็ตอาจหลุด ลองอีกครั้ง');console.error(e)})};
+const st=document.createElement('style');st.textContent=`.wLoadOv{position:fixed;inset:0;z-index:99990;display:flex;align-items:center;justify-content:center;background:#0008;backdrop-filter:blur(2px)}
+.wLoadOv>div{background:#1a130c;border:2px solid #e8b54a;border-radius:16px;padding:16px 22px;text-align:center;color:#f1e3c2;box-shadow:0 0 24px #e8b54a55;min-width:220px}
+.wLoadOv small{display:block;color:#bba882;font-size:12px;margin-top:4px}.wLoadOv i{display:block;height:4px;margin-top:10px;border-radius:4px;background:linear-gradient(90deg,#e8b54a 0 30%,#3a2a12 30%);background-size:200% 100%;animation:wLd 1s linear infinite}
+@keyframes wLd{from{background-position:100% 0}to{background-position:-100% 0}}`;document.head.appendChild(st);
+// ตอนว่างหลังเปิดเกม: โหลดโลกที่เล่นล่าสุดไว้ก่อน
+const idle=window.requestIdleCallback||(f=>setTimeout(f,3000));setTimeout(()=>idle(()=>{try{const n=LS.get('murim_lastw','');if(n&&!R[n])wLoad(n).catch(()=>{})}catch(e){}}),6000);
+// โลกที่ยังอยู่ในไฟล์หลัก
+['murim','xian','god','beast','soul','loop','sky','mw'].forEach(n=>R[n]=1);
+})()}catch(e){console.error('block117',e)}
