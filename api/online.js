@@ -572,7 +572,7 @@ const annPoll = async (ann, id) => {
 };
 const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
 const OWP = { r_soulgod: [3500, 'g'], r_abyss: [3000, 'e'], r_prince: [2000, 'g'], r_suit: [1200, 'e'], r_hunterS: [2500, 'g'], r_idol: [1500, 'g'], r_astro: [2000, 'g'], r_cyber: [2500, 'e'], r_galemp: [5000, 'g'], r_dragon: [3000, 'g'], r_moon: [2000, 'e'], r_blood: [3500, 'e'], r_cloud: [1500, 'g'], r_star: [4000, 'g'], r_phoenix: [3000, 'g'], r_heaven: [5000, 'g'], r_asura: [4000, 'e'] }; // 👘 ชุดหายากตามโลก (ต้องตรงกับ BLOCK 106 ใน app.js)
-const SENS_A = new Set(['gdw', 'owbuy', 'owget', 'kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
+const SENS_A = new Set(['comp', 'gdw', 'owbuy', 'owget', 'kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
 
 function uaMeta(req, now) {
   const ua = String(req.headers['user-agent'] || '');
@@ -1131,6 +1131,18 @@ module.exports = async (req, res) => {
       if (got > 0) { await cmd('INCRBY', tk, got); await cmd('EXPIRE', tk, 86400) }
       const c = Math.max(0, +(await cmd('GET', 'rrc:' + id)) || 0) + Math.max(0, +(await cmd('GET', 'rrg:' + id)) || 0);
       return res.json({ ok: 1, got, c });
+    }
+    // 🎁 ของชดเชย (รับได้ครั้งเดียวต่อบัญชี) · kr1 = กรรมในคลังหายจากการปรับสมดุล → ตั๋วทอง 10 ใบ
+    if (a === 'comp') {
+      const CP = { kr1: { g: 10, end: Date.parse('2026-12-21T00:00:00+07:00') } }, cid = 'kr1', C0 = CP[cid];
+      if (!okId(id)) return res.json({ ok: 0, can: 0 });
+      const k = 'comp:' + cid + ':' + id;
+      if (String(b.o || qOf(req).o || '') !== 'take') { const got = await cmd('GET', k); return res.json({ ok: 1, id: cid, can: !got && now < C0.end ? 1 : 0, g: C0.g }) }
+      if (req.method !== 'POST') return res.status(400).json({ err: 'post' });
+      if (now >= C0.end) return res.json({ ok: 0, err: 'ended' });
+      const set = await cmd('SET', k, now, 'NX', 'EX', 86400 * 400); if (!set) return res.json({ ok: 0, err: 'dup' });
+      await pipe([['INCRBY', 'rrg:' + id, C0.g], ['EXPIRE', 'rrg:' + id, 86400 * 365]]);
+      return res.json({ ok: 1, g: C0.g });
     }
     if (a === 'rruse') { // k=f → ตั๋วฟรีธรรมดา (จากจบชีวิต) · ปกติ → ตั๋วทองจากของล็อกอินก่อน แล้วค่อยตั๋วที่ซื้อ
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'id' });

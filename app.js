@@ -44272,3 +44272,56 @@ SVE(4,g=>S.age>=20,g=>choice('🎪 แสดงดวงจิตให้เด
 {const fire=(L,p)=>{if(Math.random()>p)return;S.evCd=S.evCd||{};const ok=L.filter(e=>{const i=EVENTS.indexOf(e),l=S.evCd[i];if(l!=null&&(e.once||S.age-l<(e.cd==null?7:e.cd)))return false;return e.c(S)});if(!ok.length)return;const e=ok[Math.floor(Math.random()*ok.length)];S.evCd[EVENTS.indexOf(e)]=S.age;e.f()};
  const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive&&!choice._cur&&!modalOpen){if(rg()&&S.age>=15)fire(RGL,.25);else if(awk())fire(SVL,.18)}}catch(e){console.error(e)}return r}}
 })()}catch(e){console.error('block119',e)}
+
+// ============================================================
+// BLOCK 120: 🎁 ของชดเชย — ตั๋วทอง 10 ใบ (กรรมในคลังหายจากการปรับสมดุล) · ขึ้นหน้าเกมให้กดรับ · รับแล้วหายไปถาวร (เซิร์ฟเวอร์จำว่ารับแล้ว)
+// ============================================================
+try{(()=>{
+const st=document.createElement('style');st.textContent=`
+#cpOv{position:fixed;inset:0;z-index:99980;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#2a1a0499,#000c 70%);backdrop-filter:blur(3px);opacity:0;transition:opacity .35s}
+#cpOv.on{opacity:1}#cpOv.out{opacity:0;pointer-events:none}
+#cpCard{position:relative;width:min(340px,88vw);padding:22px 20px 18px;border-radius:22px;text-align:center;color:#fff3d6;
+ background:linear-gradient(160deg,#3a2408,#1c1004 60%,#2c1a06);border:2px solid #f2c45a;box-shadow:0 0 0 4px #f2c45a22,0 0 40px #f2b13a66,inset 0 0 30px #f2b13a22;transform:scale(.85) translateY(20px);transition:transform .45s cubic-bezier(.2,1.4,.4,1)}
+#cpOv.on #cpCard{transform:none}
+#cpCard::before{content:'';position:absolute;inset:-60%;background:conic-gradient(from 0deg,transparent 0 20deg,#ffd66b22 30deg,transparent 40deg 80deg,#ffd66b1a 90deg,transparent 100deg 140deg,#ffd66b22 150deg,transparent 160deg);animation:cpRay 14s linear infinite;z-index:-1;border-radius:50%}
+#cpCard{overflow:hidden;isolation:isolate}
+@keyframes cpRay{to{transform:rotate(360deg)}}
+.cpTag{display:inline-block;font-size:11.5px;letter-spacing:.5px;padding:3px 10px;border-radius:99px;background:#f2c45a22;border:1px solid #f2c45a66;color:#ffe2a0}
+.cpH{font-size:22px;font-weight:900;margin:10px 0 4px;background:linear-gradient(#fff6d8,#f2c45a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cpP{font-size:13.5px;line-height:1.6;color:#e9d7b0;margin:0 4px 12px}
+.cpTk{position:relative;margin:6px auto 14px;width:170px;height:96px;border-radius:14px;background:linear-gradient(135deg,#ffe58a,#f0b53c 45%,#c98a1e);box-shadow:0 8px 24px #f0b53c55,inset 0 0 0 2px #fff4c4;display:flex;align-items:center;justify-content:center;animation:cpFl 2.6s ease-in-out infinite}
+.cpTk::before,.cpTk::after{content:'';position:absolute;top:50%;width:18px;height:18px;margin-top:-9px;border-radius:50%;background:#1c1004}
+.cpTk::before{left:-9px}.cpTk::after{right:-9px}
+.cpTk b{font-size:40px;font-weight:900;color:#5a3a06;text-shadow:0 1px 0 #fff8d0}.cpTk small{position:absolute;bottom:8px;font-size:11px;font-weight:800;color:#6a4a10}
+.cpTk i{position:absolute;inset:0;border-radius:14px;background:linear-gradient(110deg,transparent 30%,#fff9 48%,transparent 62%);background-size:250% 100%;animation:cpSh 2.2s linear infinite}
+@keyframes cpFl{50%{transform:translateY(-6px) rotate(-1.5deg)}}@keyframes cpSh{from{background-position:150% 0}to{background-position:-100% 0}}
+.cpX{position:absolute;top:-10px;right:-10px;background:#c0392b;color:#fff;font-weight:900;font-size:15px;padding:4px 9px;border-radius:99px;box-shadow:0 2px 6px #0008}
+#cpGo{width:100%;padding:13px;border:0;border-radius:14px;font:inherit;font-size:17px;font-weight:900;color:#3a2404;cursor:pointer;background:linear-gradient(#ffe590,#f0b53c);box-shadow:0 4px 0 #a8701a,0 8px 18px #f0b53c55;transition:transform .1s}
+#cpGo:active{transform:translateY(3px);box-shadow:0 1px 0 #a8701a}#cpGo:disabled{filter:grayscale(.5);opacity:.8}
+#cpLater{margin-top:10px;background:none;border:0;color:#bfa778;font:inherit;font-size:12.5px;text-decoration:underline;cursor:pointer}
+.cpPt{position:absolute;left:50%;top:42%;width:9px;height:9px;border-radius:2px;pointer-events:none;animation:cpBurst 1s ease-out forwards}
+@keyframes cpBurst{to{transform:translate(var(--x),var(--y)) rotate(540deg);opacity:0}}
+.cpDone{font-size:15px;font-weight:800;color:#ffe590;margin-top:4px}`;document.head.appendChild(st);
+let shown=0,busy=0;
+const close=()=>{const o=$('cpOv');if(!o)return;o.classList.add('out');setTimeout(()=>o.remove(),400)};
+const burst=card=>{const C=['#ffe590','#f0b53c','#fff','#ff9a3c','#ffd0f0'];for(let i=0;i<34;i++){const p=document.createElement('i');p.className='cpPt';const a=Math.random()*Math.PI*2,r=90+Math.random()*130;p.style.cssText=`--x:${Math.cos(a)*r}px;--y:${Math.sin(a)*r}px;background:${C[i%C.length]};animation-delay:${Math.random()*.15}s`;card.appendChild(p);setTimeout(()=>p.remove(),1300)}};
+function show(g){if(shown||$('cpOv'))return;shown=1;
+ const o=document.createElement('div');o.id='cpOv';o.innerHTML=`<div id="cpCard"><span class="cpTag">🎁 ของชดเชยจากทีมงาน</span>
+ <div class="cpH">ขออภัยเรื่องกรรมที่หายไป</div>
+ <p class="cpP">การปรับสมดุลรอบล่าสุดทำให้กรรมในคลังของบางคนหายไป ทีมงานขอมอบของชดเชยให้ทุกคน รับได้ครั้งเดียวต่อบัญชี</p>
+ <div class="cpTk"><i></i><b>🎫</b><small>ตั๋วทอง</small><span class="cpX">×${g}</span></div>
+ <button id="cpGo">รับของ</button><br><button id="cpLater">ไว้ทีหลัง</button></div>`;
+ document.body.appendChild(o);requestAnimationFrame(()=>o.classList.add('on'));
+ $('cpLater').onclick=close;
+ $('cpGo').onclick=async()=>{if(busy)return;busy=1;const b=$('cpGo');b.disabled=true;b.textContent='กำลังรับ…';
+  try{const j=await api('comp',{o:'take'});
+   if(j&&j.ok){const card=$('cpCard');burst(card);try{sfx('rare')}catch(e){}b.outerHTML=`<div class="cpDone">✨ ได้รับตั๋วทอง ×${j.g} แล้ว!</div><p class="tag2" style="margin:6px 0 0;color:#cdb98e">ใช้ได้ที่ 🎲 สุ่มเพิ่มตอนเกิด</p>`;const l=$('cpLater');if(l)l.remove();setTimeout(close,2200)}
+   else if(j&&j.err==='dup'){toast('รับของชดเชยไปแล้ว');close()}
+   else{busy=0;b.disabled=false;b.textContent='ลองอีกครั้ง';toast(j&&j.err==='ended'?'หมดเวลารับของชดเชยแล้ว':'รับไม่สำเร็จ ลองอีกครั้ง')}}
+  catch(e){busy=0;b.disabled=false;b.textContent='ลองอีกครั้ง';toast('เชื่อมต่อไม่ได้ ลองอีกครั้ง')}}}
+// เช็คหลังเปิดเกม รอให้หน้าต่างอื่นปิดก่อน
+let tries=0;const chk=async()=>{try{if(typeof onlineOK!=='undefined'&&!onlineOK){if(++tries<20)setTimeout(chk,6000);return}const j=await api('comp');if(!j||!j.can)return;
+ const wait=()=>{if(modalOpen||(typeof choice!=='undefined'&&choice._cur)||document.querySelector('.wLoadOv')){setTimeout(wait,1500);return}show(j.g||10)};wait()}catch(e){if(++tries<5)setTimeout(chk,8000)}};
+setTimeout(chk,4000);
+window._compTest=g=>{shown=0;show(g||10)};
+})()}catch(e){console.error('block120',e)}
