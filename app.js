@@ -44483,3 +44483,25 @@ const _cr=chatRender;chatRender=function(){const box=$('chatBox');if(!box)return
 // เปิดแท็บแชทใหม่ทุกครั้ง เริ่มที่ 30 ข้อความล่าสุด
 {const _o=openOnline;openOnline=function(tab){N=STEP;sig='';return _o.apply(this,arguments)}}
 })()}catch(e){console.error('block128',e)}
+
+// BLOCK 129: 📱 ไอแพด/แท็บเล็ตแนวนอน (จอกว้างเลยได้เลย์เอาต์คอม 3 คอลัมน์) กดปุ่มยาก — (1) แตะเร็วๆ ติดกันกลายเป็นซูมหน้าจอ (double-tap zoom) → ปิดเฉพาะการซูมแตะสองครั้ง (ยังถ่างนิ้วซูมได้) · (2) ปุ่มขยับตาม hover ของเมาส์ (ไอแพดค้างสถานะ hover หลังแตะ ปุ่มเด้งหนีนิ้ว) → ปิดบนจอสัมผัส · (3) กดค้างแล้วกลายเป็นคลุมข้อความ/เมนูคัดลอก → ปิดบนปุ่ม · (4) ปุ่มเล็กในเลย์เอาต์คอมขยายพื้นที่แตะเป็น ≥40px
+try{(()=>{
+ const touch=()=>{try{return (navigator.maxTouchPoints||0)>0||'ontouchstart' in window||matchMedia('(any-pointer:coarse)').matches}catch(e){return false}};
+ const ap=()=>{try{document.documentElement.classList.toggle('tch',touch())}catch(e){}};ap();
+ try{matchMedia('(any-pointer:coarse)').addEventListener('change',ap)}catch(e){}
+ const st=document.createElement('style');st.id='tchFix';st.textContent=`
+html.tch,html.tch body{touch-action:manipulation}
+html.tch button,html.tch .opt,html.tch .cb,html.tch .gbtn,html.tch .tabb,html.tch .dmb,html.tch .dk-btn,html.tch [onclick],html.tch a,html.tch label,html.tch select{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+html.tch button,html.tch .opt,html.tch .cb,html.tch .gbtn,html.tch .tabb,html.tch .dmb,html.tch .dk-btn{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+html.tch [onclick],html.tch .opt,html.tch .cb{cursor:pointer}
+@media (hover:none){
+ html.tch body.desk .dmb:hover,html.tch body.desk .opt:hover,html.tch body.desk .cb:hover,html.tch body.desk .gbtn:hover,html.tch body.desk .dk-btn:hover,
+ html.tch .opt:hover,html.tch .gbtn:hover,html.tch .tabb:hover,html.tch body.desk #game .focus .fc:hover,html.tch .tsB:hover,
+ html.tch #title #tSup:hover,html.tch #title #tFb:hover,html.tch #title #tCos:hover,html.tch #title #tEv:hover{transform:none;filter:none}
+}
+html.tch body.desk #sceneBox button,html.tch body.desk .onrow button,html.tch body.desk #dkTabs button{min-height:40px}
+html.tch body.desk #fdRail{width:46px}html.tch body.desk #fdRail button{min-height:34px;font-size:12px}
+html.tch body.desk .dk-keys{display:none}
+`;document.head.appendChild(st);
+ window._b129={touch,ap};
+})()}catch(e){console.error('block129',e)}
