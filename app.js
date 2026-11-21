@@ -44926,3 +44926,6 @@ if(typeof paJoin==='function'){const _pj=paJoin;paJoin=function(){if(no()){try{p
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(no())document.querySelectorAll('#modal .mgrid .opt[onclick="paJoin()"]').forEach(b=>b.remove())}catch(e){}return r}}
 setInterval(()=>{try{if(no()){const d=document.getElementById('paBan');if(d)d.remove()}}catch(e){}},1500);
 })()}catch(e){console.error('block136',e)}
+
+// BLOCK 132: 🚪 เส้นทางผู้ข้ามโลก (เฟส 1) — โหลด /w/trav.js ต่อจากรอยแยก (ใช้เครื่องข้ามโลกของ rift.js)
+try{setTimeout(()=>{try{wLoad('rift').then(()=>wLoad('trav')).catch(()=>{})}catch(e){}},2300)}catch(e){console.error('block132',e)}
