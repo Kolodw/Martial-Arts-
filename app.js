@@ -44405,3 +44405,18 @@ const FIND={normal:['ฝากของจากญาติต่างจั�
 // BLOCK 123: 🌀 ระบบรอยแยก เฟส 1 (โค้ดอยู่ที่ /w/rift.js) — โหลดหลังเปิดเกม
 // ============================================================
 try{(()=>{setTimeout(()=>{try{wLoad('rift').catch(()=>setTimeout(()=>wLoad('rift').catch(()=>{}),7000))}catch(e){}},1900)})()}catch(e){console.error('block123',e)}
+
+// ============================================================
+// BLOCK 124: ✋ โลกเทพ — สวิตช์ "รอฉันกดทะลวงเอง" · เปิดแล้วทัณฑ์สวรรค์จะไม่มาเอง จนกว่าผู้เล่นกดปุ่ม ⚡ ทะลวงขั้น (ตั้งค่าครั้งเดียวใช้ทุกชีวิต)
+// ============================================================
+try{(()=>{
+const man=()=>{try{return!!LS.get('murim_tribman',0)}catch(e){return false}};
+let go=0;
+{const _gt=godTrib;godTrib=function(){if(man()&&!go){try{if(S){S._tribQ=null;const p=brkPend();const key=p?p.join(':'):'';if(p&&S._tribAsk!==key){S._tribAsk=key;log(`✋ <b>พร้อมรับทัณฑ์สู่${tribName(p[0],p[1])}แล้ว</b> — โหมดกดทะลวงเอง: กดปุ่ม ⚡ ทะลวงขั้น เมื่อพร้อม`,'epic')}}}catch(e){}return}return _gt.apply(this,arguments)}}
+{const _bg=brkGo;brkGo=function(){go=1;try{return _bg.apply(this,arguments)}finally{go=0}}}
+window.tribManToggle=function(){const v=!man();LS.set('murim_tribman',v?1:0);toast(v?'✋ กดทะลวงเอง: ทัณฑ์จะมาเมื่อคุณกดปุ่ม ⚡ เท่านั้น':'🔁 อัตโนมัติ: ทัณฑ์มาทุกปีเมื่อพลังถึง');try{if(S)S._tribAsk=null}catch(e){}upd()};
+function upd(){try{const b=$('brkPill');let t=$('brkMode');if(!S||!S.alive||!S.xt||!b){if(t)t.style.display='none';return}
+ if(!t){b.insertAdjacentHTML('afterend','<button id="brkMode" class="ascpill" style="margin-right:6px;padding:4px 9px;font-size:12px;border-color:#9fb4c8;background:linear-gradient(180deg,#26324a,#141a28)" onclick="tribManToggle()"></button>');t=$('brkMode')}
+ const s=man()?'✋ กดทะลวงเอง':'🔁 ทะลวงอัตโนมัติ';if(t.textContent!==s)t.textContent=s;t.style.display='';t.title='สลับว่าทัณฑ์สวรรค์จะมาเองทุกปี หรือรอให้คุณกดปุ่มทะลวงขั้น'}catch(e){}}
+{const _r=render;render=function(){const r=_r.apply(this,arguments);upd();return r}}
+})()}catch(e){console.error('block124',e)}
