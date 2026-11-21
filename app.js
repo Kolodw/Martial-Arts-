@@ -44460,3 +44460,26 @@ Object.keys(BAGX).forEach(wrap);setTimeout(()=>{try{Object.keys(BAGX).forEach(wr
 // ผลไม้อายุวัฒนะที่กินอัตโนมัติ (บวกตรงๆ แล้วนับใน S.lsI) + ของรางวัลอื่นที่บวก S.lifespan ระหว่างปี
 {const _py=passYear;passYear=function(){const me=S,lsI0=S?(S.lsI||0):0,l0=S?S.lifespan:0,m0=S?lifeMax():0;const r=_py.apply(this,arguments);try{if(S===me&&S&&S.alive){const di=(S.lsI||0)-lsI0;if(di>0){if(god()){const t=settle(di);if(t)log(`⏳ ผลไม้อายุวัฒนะ${t}`,'epic')}else if(lifeMax()<=m0){S.rvL=(S.rvL||0)+di}}}}catch(e){console.error('b126y',e)}return r}}
 })()}catch(e){console.error('block126',e)}
+
+// BLOCK 128: 💬 แชทออนไลน์ลื่นขึ้น (ไม่ตัดฉายา/กรอบโปรไฟล์/ธีม) — (1) วาดแค่ 30 ข้อความล่าสุด กด "ข้อความก่อนหน้า" เพื่อดูเพิ่มทีละ 30 (เดิม 80 ข้อความ ~3,800 โหนด ~900 แอนิเมชัน) · (2) ข้อมูลไม่เปลี่ยนไม่วาดใหม่เลย (เดิมทุกรอบดึงข้อมูลยังบังคับคำนวณเลย์เอาต์ ~200ms) · (3) ข้อความที่เลื่อนพ้นจอไม่ต้องวาด/เล่นแอนิเมชัน
+try{(()=>{
+const st=document.createElement('style');st.textContent=`#chatBox>.cm{content-visibility:auto;contain-intrinsic-size:auto 96px}#chatBox .cmOff,#chatBox .cmOff *{animation-play-state:paused!important}
+#chatBox>.chMore{display:block;width:100%;margin:2px 0 8px;padding:7px;border-radius:10px;border:1px dashed rgba(255,255,255,.25);background:rgba(255,255,255,.04);color:inherit;font:inherit;font-size:12px;opacity:.85;cursor:pointer}`;document.head.appendChild(st);
+const STEP=30;let N=STEP,sig='',lastT=0,io=null,ioBox=null;
+const mkSig=L=>{let s=N+'|'+L.length+'|';try{s+=JSON.stringify(L.slice(-N))}catch(e){s+=Math.random()}
+ try{s+='#'+(chatProf?JSON.stringify(chatProf).length:0)}catch(e){}try{s+='#'+((window._chPend||[]).length)}catch(e){}try{s+='#'+(typeof myPu==='function'?myPu():'')}catch(e){}return s};
+const watch=box=>{try{if(!('IntersectionObserver' in window))return;if(ioBox!==box){if(io)io.disconnect();io=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('cmOff',!e.isIntersecting)),{root:box,rootMargin:'250px 0px'});ioBox=box}box.querySelectorAll(':scope>.cm').forEach(r=>io.observe(r))}catch(e){}};
+window.chatMore=function(){const box=$('chatBox');if(!box)return;const h0=box.scrollHeight,t0=box.scrollTop;N+=STEP;sig='';box.dataset.keep=1;chatRender();delete box.dataset.keep;try{box.scrollTop=t0+(box.scrollHeight-h0)}catch(e){}};
+const _cr=chatRender;chatRender=function(){const box=$('chatBox');if(!box)return _cr.apply(this,arguments);
+ if(!box.dataset.n2){box.dataset.n2=1;N=STEP;sig=''}
+ const full=Array.isArray(chatMsgs)?chatMsgs:[];const s=mkSig(full);
+ if(s===sig&&Date.now()-lastT<45000&&box.querySelector('.cm'))return; // ไม่มีอะไรเปลี่ยน ไม่ต้องวาดใหม่
+ sig=s;lastT=Date.now();let r;
+ if(full.length>N){const st0=box.dataset.keep?box.scrollTop:null;chatMsgs=full.slice(-N);try{r=_cr.apply(this,arguments)}finally{const cur=chatMsgs;const extra=Array.isArray(cur)?cur.filter(m=>m&&!full.includes(m)&&!(m.i&&full.some(f=>f&&f.i===m.i))):[];chatMsgs=extra.length?full.concat(extra):full}
+  try{if(!box.querySelector(':scope>.chMore')){const b=document.createElement('button');b.className='chMore';b.type='button';b.textContent=`⬆️ ข้อความก่อนหน้า (${full.length-N})`;b.onclick=e=>{e.stopPropagation();chatMore()};box.insertBefore(b,box.firstChild)}}catch(e){}
+  if(st0!=null)box.scrollTop=st0}
+ else r=_cr.apply(this,arguments);
+ watch(box);return r};
+// เปิดแท็บแชทใหม่ทุกครั้ง เริ่มที่ 30 ข้อความล่าสุด
+{const _o=openOnline;openOnline=function(tab){N=STEP;sig='';return _o.apply(this,arguments)}}
+})()}catch(e){console.error('block128',e)}
