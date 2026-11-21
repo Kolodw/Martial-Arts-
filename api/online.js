@@ -1076,7 +1076,7 @@ module.exports = async (req, res) => {
       if (a === 'akput') {
         if (req.method !== 'POST') return res.status(400).json({ err: 'm' });
         const c = (s, n) => String(s == null ? '' : s).replace(/[<>]/g, '').slice(0, n);
-        const l = (Array.isArray(b.l) ? b.l : []).slice(0, AK_MAX).map(x => x && { k: c(x.k, 60), o: c(x.o, 60), t: c(x.t, 60), ot: c(x.ot, 60), oo: (Array.isArray(x.oo) ? x.oo : []).slice(0, 5).map(y => c(y, 60)) }).filter(x => x && x.k && x.o);
+        const l = (Array.isArray(b.l) ? b.l : []).slice(0, AK_MAX).map(x => x && { k: c(x.k, 60), o: c(x.o, 60), t: c(x.t, 60), ot: c(x.ot, 60), ...(Number.isInteger(x.oi) && x.oi >= 0 && x.oi < 6 ? { oi: x.oi } : {}), oo: (Array.isArray(x.oo) ? x.oo : []).slice(0, 5).map(y => c(y, 60)) }).filter(x => x && x.k && x.o);
         await cmd('SET', 'ak:' + id, JSON.stringify(l)); return res.json(Object.assign({ ok: 1, l }, lim));
       }
       return res.json(Object.assign({ l: jp(await cmd('GET', 'ak:' + id)) || [] }, lim));
@@ -2974,10 +2974,10 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const AR_SB0 = { atk: 'trick', trick: 'def', def: 'atk' }; let w = b.w ? 1 : 0, sw = null; const au = b.au ? 1 : 0;
       // 🔒 ผลการสู้: โหมดเงาสู้แทน เซิร์ฟเวอร์ทอยผลเอง · สู้เองแล้วชนะคนที่แรงกว่าเกิน 3.3 เท่า ไม่นับ
       if (pm.mp > 0 && pm.op > 0) { const ad = Math.max(-1, Math.min(1, +b.ad || 0)), my = pm.mp * (1 + .12 * ad), sb = AR_SB0[pm.ms] === pm.os ? 1 : AR_SB0[pm.os] === pm.ms ? -1 : 0;
-        if (au) { const pr = Math.max(.02, Math.min(.98, my / (my + pm.op) + sb * .08 * Math.min(1, 2 * Math.min(my, pm.op) / Math.max(my, pm.op)))); w = Math.random() < pr ? 1 : 0; sw = w }
-        else if (w && my / pm.op < .3) { w = 0; sw = 0; try { await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, age: 0, why: 'srv-ar', st: { pow: Math.round(pm.mp), opp: Math.round(pm.op) }, t: now, info: 1 })], ['LTRIM', 'acsus', 0, 199]]) } catch {} } }
+        if (au) { const pr = Math.max(.02, Math.min(.98, my / (my + pm.op) + sb * .08 * Math.min(1, 2 * Math.min(my, pm.op) / Math.max(my, pm.op)))); if (!(w && pr >= .2)) { w = w ? (Math.random() < pr * 2 ? 1 : 0) : 0 } sw = w } // ผลที่เห็นบนจอคือผลจริง: เชื่อผลชนะเมื่อมีโอกาสชนะสมเหตุสมผล (≥20%) — ทอยใหม่เฉพาะชนะแบบเหลือเชื่อ
+        else if (w && my / pm.op < .3) { w = 0; sw = 0; pm._void = 1; try { await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, age: 0, why: 'srv-ar', st: { pow: Math.round(pm.mp), opp: Math.round(pm.op) }, t: now, info: 1 })], ['LTRIM', 'acsus', 0, 199]]) } catch {} } }
       const bot = !!pm.bot || pm.o === '~bot', ra = await arRt(id), rb = bot ? Math.max(900, ra - 30) : await arRt(pm.o), ea = 1 / (1 + Math.pow(10, (rb - ra) / 400)), K = 32 * (au ? .5 : 1) * (bot ? .7 : 1);
-      const da0 = Math.round(K * (w - ea)), da = bot && da0 > 0 ? Math.max(0, Math.min(da0, 1600 - ra)) : da0, db = -Math.round(da * .5), na = Math.max(0, ra + da), nb = Math.max(0, rb + db), nm = (await cmd('HGET', 'arn', id)) || 'นิรนาม';
+      const da0 = pm._void ? 0 : Math.round(K * (w - ea)), da = bot && da0 > 0 ? Math.max(0, Math.min(da0, 1600 - ra)) : da0, db = -Math.round(da * .5), na = Math.max(0, ra + da), nb = Math.max(0, rb + db), nm = (await cmd('HGET', 'arn', id)) || 'นิรนาม';
       const L = bot ? [['HSET', 'arr:' + W, id, na], ['EXPIRE', 'arr:' + W, 86400 * 40], ['ZADD', 'ars:' + W, na, id], ['EXPIRE', 'ars:' + W, 86400 * 40]] : [['HSET', 'arr:' + W, id, na, pm.o, nb], ['EXPIRE', 'arr:' + W, 86400 * 40], ['ZADD', 'ars:' + W, na, id, nb, pm.o], ['EXPIRE', 'ars:' + W, 86400 * 40],
         ['LPUSH', 'ardef:' + pm.o, JSON.stringify({ n: nm, w: w ? 0 : 1, d: db, t: now, a: id })], ['LTRIM', 'ardef:' + pm.o, 0, 19], ['EXPIRE', 'ardef:' + pm.o, 86400 * 14], ['HINCRBY', 'ardefn', pm.o, 1]];
       if (w) L.push(['ZINCRBY', 'arenaW:' + W, 1, nm], ['EXPIRE', 'arenaW:' + W, 86400 * 40], ['ZINCRBY', 'arwin:' + W, 1, id], ['EXPIRE', 'arwin:' + W, 86400 * 40]);

@@ -12268,7 +12268,7 @@ function arFight(o,au){if(!o)return;if(!arFight._d){arFight._d=1;setTimeout(()=>
   const A=AR_ST[arSt()],B=AR_ST[o.st]||AR_ST.atk,lines=[`${A[0]} เงาของคุณ${A[1]} — ${B[0]} เงาของ ${esc(o.n)}${B[1]}`,sb>0?'ท่าทีของคุณข่มอีกฝ่ายได้!':sb<0?'อีกฝ่ายอ่านทางเงาของคุณออก…':'ทั้งสองแลกหมัดกันอย่างดุเดือด',`《${esc((o.arts||[])[0]||'ท่าเงา')}》 ปะทะ 《${esc(((S.arts||[]).slice().sort((a,b)=>b.b-a.b)[0]||{}).n||'หมัดเปล่า')}》`];
   modal(`<h3>🤖 เงาสู้แทน</h3><div class="arauto">${lines.map((l,i)=>`<p style="animation-delay:${i*.6}s">${l}</p>`).join('')}<p class="arres" style="animation-delay:2s">⏳ รอผลจากลาน…</p></div>`,'arauto');setTimeout(()=>{if($('modal').dataset.k==='arauto')arResult(o,au,w)},3000);return}
  duel(o.train?o.n:`เงาของ ${o.n}`,ep,fin);try{DU.ar=o;DU.tech=null;setScene('fight',o.look&&o.look.beast?{beast:o.look.beast}:{en:o.look||null});drawDuel()}catch(e){}}
-async function arResult(o,au,w){let r=null;if(!o.train){try{r=await api('ar2res',{w:w?1:0,au:au?1:0,ad:(AR.cur&&AR.cur.ad)||0,cb:window._arBestL|0});window._arRes=r;if(r&&r.sw!=null){const w0=w;w=!!r.sw;if(!au&&w0&&!w)toast('⚠️ ลานไม่นับชัยชนะนี้ — อีกฝ่ายแรงกว่าเกินกว่าจะชนะได้จริง')}try{if(r&&r.wal)arWalApply(r.wal)}catch(e){}}catch(e){}}const c=o.train?0:(r&&r.ok&&r.g!=null)?r.g:0;
+async function arResult(o,au,w){let r=null;if(!o.train){try{r=await api('ar2res',{w:w?1:0,au:au?1:0,ad:(AR.cur&&AR.cur.ad)||0,cb:window._arBestL|0});window._arRes=r;if(r&&r.sw!=null){const w0=w;w=!!r.sw;if(!au&&w0&&!w)toast('⚠️ ลานไม่นับผลรอบนี้ — อีกฝ่ายแรงกว่าคุณเกิน 3 เท่า (ไม่เสียแต้ม)')}try{if(r&&r.wal)arWalApply(r.wal)}catch(e){}}catch(e){}}const c=o.train?0:(r&&r.ok&&r.g!=null)?r.g:0;
  try{if(w&&!o.train)S.flags.arW=(S.flags.arW||0)+1}catch(e){}
  log(`🏟️ ลานประลอง: ${w?'ชนะ':'แพ้'}เงาของ <b>${esc(o.n)}</b>${r&&r.ok?` · ${r.d>0?'+':''}${r.d} แต้ม (${fmt(r.rt)})`:''}${c?` · 🪙+${c}`:''}`,w?'good':'bad');
  const up=r&&r.ok&&AR.info&&r.lg>(AR.info.lg|0);
@@ -28012,7 +28012,7 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'🏛️',t:'หอบรรพกาล�
  window.afLbl=()=>{const a=auF();return a.sty==='safe'?'ข้อที่ปลอดภัยที่สุด':AF_STY[a.sty].slice(3)+' · '+AF_SIDE[a.side].slice(3)};
  const EVL=/กรรมชั่ว|อธรรม|สายมาร|ฆ่า|ปล้น|ขโมย|ทรยศ|ลอบ|กลืน|สังหาร|รีดไถ|ข่มขู่/,GD=/กรรมดี|ช่วย|ธรรมะ|เมตตา|ปล่อยตัว|ให้อภัย|บริจาค|คุ้มครอง|รักษาให้/;
  const _afOld=afSafe;
- afSafe=function(c){const a=auF();if(a.sty==='safe')return _afOld(c);const O=c.opts||[],bold=a.sty==='bold',sd=sideNow(a),low=S.hp<S.maxHp*.4;let best=-1,bs=-1e9;
+ afSafe=function(c){const a=auF();if(a.sty==='safe'&&a.side==='auto')return _afOld(c);const safe=a.sty==='safe',O=c.opts||[],bold=a.sty==='bold',sd=sideNow(a),low=S.hp<S.maxHp*.4;let best=-1,bs=-1e9;
   O.forEach((o,i)=>{if(!o||o.noFate||typeof o.f!=='function')return;const t=afTxt(o);let sc=Math.random()*.3;
    sc+=(t.match(/\+/g)||[]).length*1-(t.match(/[−]/g)||[]).length*.8;
    const ps=t.match(/ผ่าน(?:ราว)?\s*~?(\d+)%/),pd=t.match(/ตาย(?:ราว)?\s*~?(\d+)%/),pg=t.match(/~\s*(\d+)%/);
@@ -28021,7 +28021,10 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'🏛️',t:'หอบรรพกาล�
    if(AF_RISK.test(t))sc+=bold?.3:-.6;if(o.skip)sc-=bold?2.5:1.5;
    const m=t.match(/([\d,]+)\s*(?:ตำลึง|หินวิญญาณ)/);if(m&&/ใช้|จ่าย|ซื้อ|ประมูล|−/.test(t)&&S.money<+m[1].replace(/,/g,''))sc-=6;
    if(low&&/รักษา|พัก|ฟื้น|ถอย|ปลอดภัย/.test(t))sc+=2;
-   if(sd==='good'){if(GD.test(t))sc+=1.5;if(EVL.test(t))sc-=1.5}else if(sd==='evil'){if(EVL.test(t))sc+=1.5;if(GD.test(t))sc-=1}else if(sd==='anti'){if(GD.test(t))sc+=1;if(/บารมีมาร|วิธีมาร|กวาดล้าง|ล้มคน|ปิดบัญชี|คนชั่ว/.test(t))sc+=1;if(/ผู้บริสุทธิ์|คนแปลกหน้า|ปล้น|ขโมย|รีดไถ|ทรยศ|ยอมตาม|กรรมชั่ว|กรรมดิ่ง/.test(t))sc-=2.5}
+   if(safe){if(AF_RISK.test(t))sc-=1.5;if(/อาจตาย|เสี่ยงตาย/.test(t))sc-=3;if(o.skip)sc+=1.2}
+   // ฝั่งกรรม: ดูทั้งคำในตัวเลือก และป้าย "กรรม +/−" (เดิมดูแค่คำ ทำให้ตั้งมารแล้วยังทำดี เพราะข้อทำดีมีเครื่องหมาย + เยอะกว่า)
+   {const km=t.match(/กรรม(?:ดี)?\s*([+−-])\s*\d*/),kp=km?(km[1]==='+'?1:-1):0,kd=/กรรมชั่ว|กรรมดิ่ง|กรรมลด/.test(t)?-1:/กรรมดี/.test(t)?1:0,kk=kp||kd;
+    if(sd==='good'){if(GD.test(t))sc+=2;if(EVL.test(t))sc-=2.5;sc+=kk*2.5}else if(sd==='evil'){if(EVL.test(t))sc+=2.5;if(GD.test(t))sc-=2.5;sc-=kk*3}else if(sd==='mid'){sc-=Math.abs(kk)*.5}else if(sd==='anti'){if(GD.test(t))sc+=1;if(/บารมีมาร|วิธีมาร|กวาดล้าง|ล้มคน|ปิดบัญชี|คนชั่ว/.test(t))sc+=1;if(/ผู้บริสุทธิ์|คนแปลกหน้า|ปล้น|ขโมย|รีดไถ|ทรยศ|ยอมตาม|กรรมชั่ว|กรรมดิ่ง/.test(t))sc-=2.5}}
    if(sc>bs){bs=sc;best=i}});
   return best>=0?best:_afOld(c)};
  window.afSet=(k,v)=>{const a=auF();a[k]=v;openAuto()};
@@ -47677,8 +47680,13 @@ const offT=()=>!!LS.get('murim_akoff',0),askU=()=>!!LS.get('murim_akask',0);
 const keep=()=>{try{LS.set('murim_ak',AK)}catch(e){}};
 const act=()=>AK.l.slice(0,AK.n);
 const big=c=>{try{if(!c)return true;const t=plain(c.title);if(c.keep||/^🔁/.test(t))return true;if((c.opts||[]).some(o=>o&&o.noFate))return true;return (typeof AF_BIG!=='undefined'&&AF_BIG.test(t))||/ตาย|จบชีวิต|เกิดใหม่|ทะลวง|ขั้นใหม่/.test(t)}catch(e){return true}};
-const lkOf=c=>{if(!c)return null;const k=nz(c.title);return act().find(e=>e.k===k)||null};
-const find=c=>{if(offT()||!c||big(c))return null;const e=lkOf(c);if(!e)return null;const i=(c.opts||[]).findIndex(o=>o&&nz(o.t)===e.o);return i>=0?{i,e}:null};
+const bg2=s=>{s=String(s||'');const m=new Map();for(let i=0;i<s.length-1;i++){const g=s.substr(i,2);m.set(g,(m.get(g)||0)+1)}return m},dice=(a,b)=>{if(!a||!b)return 0;if(a===b)return 1;const A=bg2(a),B=bg2(b);let n=0,ta=0,tb=0;A.forEach(v=>ta+=v);B.forEach(v=>tb+=v);A.forEach((v,g)=>{n+=Math.min(v,B.get(g)||0)});return ta+tb?2*n/(ta+tb):0};
+// จับคู่แบบยืดหยุ่น: ชื่อคน/ของในหัวข้อและตัวเลือกเปลี่ยนทุกครั้ง (เดิมต้องตรงทุกตัวอักษร เลยล็อกแล้วยังถามซ้ำ)
+const lkOf=c=>{if(!c)return null;const k=nz(c.title),L=act();let e=L.find(x=>x.k===k);if(e)return e;let best=null,bs=.72;L.forEach(x=>{const d=dice(x.k,k);if(d>bs){bs=d;best=x}});return best};
+const find=c=>{if(offT()||!c||big(c))return null;const e=lkOf(c);if(!e)return null;const O=c.opts||[];let i=O.findIndex(o=>o&&nz(o.t)===e.o);
+ if(i<0){let bs=.5;O.forEach((o,j)=>{if(!o||o.skip||o.noFate)return;const d=dice(nz(o.t),e.o);if(d>bs){bs=d;i=j}})}
+ if(i<0&&e.oi!=null&&Array.isArray(e.oo)){const live=O.map((o,j)=>[o,j]).filter(([o])=>o&&!o.skip);if(live.length===e.oo.length&&live[e.oi])i=live[e.oi][1]}
+ return i>=0?{i,e}:null};
 const setLim=j=>{if(!j||typeof j.n!=='number')return;['n','f','v','p','t','nx','tp','adm'].forEach(k=>{if(j[k]!=null)AK[k]=j[k]});if(Array.isArray(j.l))AK.l=j.l;keep()};
 let ldT=0;const load=async(force)=>{if(!force&&Date.now()-ldT<60000)return;ldT=Date.now();try{setLim(await api('akget'))}catch(e){}};
 let svT=null;const save=()=>{keep();clearTimeout(svT);svT=setTimeout(async()=>{try{setLim(await api('akput',{l:AK.l}))}catch(e){toast('บันทึกคำตอบที่ล็อกไม่สำเร็จ ลองใหม่อีกครั้ง')}},600)};
@@ -47688,9 +47696,9 @@ const toggle=i=>{const c=choice._cur;if(!c||big(c))return;const o=c.opts[i];if(!
  if(!AK.n){akMenu();return}
  const k=nz(c.title),ov=nz(o.t),x=AK.l.findIndex(e=>e.k===k);
  if(x>=0&&AK.l[x].o===ov){AK.l.splice(x,1);toast('🔓 ปลดล็อกแล้ว')}
- else if(x>=0){Object.assign(AK.l[x],{o:ov,ot:plain(o.t).slice(0,60)});toast('🔒 เปลี่ยนคำตอบที่ล็อกแล้ว')}
+ else if(x>=0){Object.assign(AK.l[x],{o:ov,oi:c.opts.filter(z=>z&&!z.skip).indexOf(o),ot:plain(o.t).slice(0,60)});toast('🔒 เปลี่ยนคำตอบที่ล็อกแล้ว')}
  else{if(AK.l.length>=AK.n){toast(`ช่องล็อกเต็ม (${AK.n}) — ปลดอันเก่า หรือซื้อช่องเพิ่มใน ☰ → 🔒 ล็อกคำตอบ`);return}
-  AK.l.unshift({k,o:ov,t:plain(c.title).slice(0,60),ot:plain(o.t).slice(0,60),oo:c.opts.filter(z=>z&&!z.skip).slice(0,5).map(z=>plain(z.t).slice(0,60))});toast('🔒 จำคำตอบแล้ว — ครั้งหน้าชะตาจะเลือกข้อนี้ให้')}
+  AK.l.unshift({k,o:ov,oi:c.opts.filter(z=>z&&!z.skip).indexOf(o),t:plain(c.title).slice(0,60),ot:plain(o.t).slice(0,60),oo:c.opts.filter(z=>z&&!z.skip).slice(0,5).map(z=>plain(z.t).slice(0,60))});toast('🔒 จำคำตอบแล้ว — ครั้งหน้าชะตาจะเลือกข้อนี้ให้')}
  save();paint();try{if(find(c))soon(c)}catch(e){}};
 const paint=()=>{try{const m=$('modal');if(!m||m.dataset.k!=='choice')return;const c=choice._cur;if(!c)return;
  m.querySelectorAll('.akB').forEach(b=>b.remove());m.querySelectorAll('.opt.akL').forEach(b=>b.classList.remove('akL'));const nt=m.querySelector('.akNt');if(nt)nt.remove();
@@ -54206,3 +54214,17 @@ let mo=null,q=0;function hook(){const M=$('modal');if(!M)return;const on=MGK.has
 const endFx=sc=>{try{const x=innerWidth/2,y=innerHeight*.42;if(sc>=.9){play('perf',x,y,1);setTimeout(()=>play('perf',x-60,y+30,.6),180);setTimeout(()=>play('perf',x+60,y+20,.6),320)}else if(sc<.35)play('miss',x,y,1.4);else play('hit',x-20,y,1.6)}catch(e){}};
 window._pxEndFx=endFx;
 })()}catch(e){console.error('block114',e)}
+
+// ============================================================
+// BLOCK 115: แก้บั๊กที่ผู้เล่นแจ้ง — ออโต้/AI เลือกตามฝั่งกรรมที่ตั้งไว้ · เปิดออโต้ขณะ 🔒 ล็อกตัวเลือก ต้องบอกให้รู้
+// ============================================================
+try{(()=>{
+const sideOf=()=>{try{const a=S.au||{};return a.side&&a.side!=='auto'?a.side:null}catch(e){return null}};
+if(typeof aiPick==='function'){const _ap=aiPick;aiPick=function(c){const i0=_ap.apply(this,arguments);try{const sd=sideOf();if(!sd||!c||!c.opts)return i0;const kOf=o=>{const t=String((o.t||'')+' '+(o.s||'')).replace(/<[^>]+>/g,'');const m=t.match(/กรรม(?:ดี)?\s*([+−-])/);return m?(m[1]==='+'?1:-1):/กรรมชั่ว|ปล้น|ฆ่า|ทรยศ|ขโมย|รีดไถ/.test(t)?-1:/กรรมดี|ช่วย|เมตตา|ให้อภัย|บริจาค/.test(t)?1:0};
+ const want=sd==='good'?1:sd==='evil'?-1:0;if(!want)return i0;const k0=kOf(c.opts[i0]||{});if(k0===want||k0===0&&!c.opts.some(o=>o&&kOf(o)===want))return i0;const j=c.opts.findIndex(o=>o&&!o.skip&&!o.noFate&&typeof o.f==='function'&&kOf(o)===want);return j>=0?j:i0}catch(e){return i0}}}
+if(typeof toggleAuto==='function'){const _ta=toggleAuto;toggleAuto=function(){const r=_ta.apply(this,arguments);try{if(auto&&LS.get('murim_chlock',0))setTimeout(()=>toast('🔒 ตอนนี้เปิด “ล็อกตัวเลือก” อยู่ — ออโต้จะไม่เลือกแทน · ปิดได้ที่ปุ่ม 🔒 ในหน้าตัวเลือก หรือ ☰ → ⚙️ อัตโนมัติ'),600)}catch(e){}return r}}
+})()}catch(e){console.error('block115',e)}
+// BLOCK 115b: สมุดตำนานกันพัง — ถ้าส่วนเสริมตัวไหนพัง ยังเปิดได้เสมอ · หน้านิยายเปิดไม่ได้มีปุ่มกลับ
+try{(()=>{const _obZ=openBook;openBook=function(){try{return _obZ.apply(this,arguments)}catch(e){console.error('openBook',e);try{BKT='ach';const n=Object.keys(achGot||{}).length;modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📖 สมุดตำนาน</h3><p class="tag2">ปลดแล้ว ${n}/${ACH_ALL.length}</p>`+ACH_ALL.map(a=>`<div class="opt" style="opacity:${achGot[a.id]?1:.45}">${achGot[a.id]?'🏆':'🔒'} ${esc(a.n||a.name||a.id)}</div>`).join(''),'book')}catch(e2){toast('เปิดสมุดตำนานไม่ได้ ลองรีเฟรชหน้า')}}};window.openBook=openBook;
+const _nv=window.nvOpenBook;if(typeof _nv==='function')window.nvOpenBook=async function(){const r=await _nv.apply(this,arguments);try{const m=$('modal');if(m.dataset.k==='nv'&&/เปิดนิยายไม่ได้/.test(m.innerText)&&!m.querySelector('.nvBk'))m.insertAdjacentHTML('beforeend','<button class="gbtn nvBk" style="width:100%;margin-top:10px" onclick="openBook()">📖 ไปสมุดตำนาน</button>')}catch(e){}return r}
+})()}catch(e){console.error('block115b',e)}
