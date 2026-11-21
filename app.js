@@ -45148,3 +45148,13 @@ const st=document.createElement('style');st.textContent=`
 #birth .bstage.sg13,#birth .bstage.sg14,#birth .bstage.sg15,#birth .bstage.sg16,#birth .bstage.sg17,#birth .bstage.sg18{border-color:transparent;background:linear-gradient(90deg,#4dd8ff,#b06bff,#fff,#ff4d9d,#4dd8ff) border-box;box-shadow:0 0 30px #4dd8ffcc}
 `;document.head.appendChild(st);
 })()}catch(e){console.error('block138',e)}
+
+// BLOCK 139: 🔇 เสียงบรรยากาศ (ฝน ลม น้ำตก นก แมลง) เงียบลงทันทีตอนเปิดหน้าต่างเหตุการณ์/ตัวเลือก/ทุกหน้าต่าง แล้วค่อยกลับมาตอนปิด · ทุกโหมด ทุกโลก
+try{(()=>{
+const busy=()=>{try{return !!(modalOpen||choice._cur||(typeof DU!=='undefined'&&DU)||document.getElementById('sysPop')||document.getElementById('wsHolo'))}catch(e){return false}};
+const duck=()=>{try{if(typeof AMB!=='undefined'&&AMB&&AMB.master&&AC)AMB.master.gain.setTargetAtTime(0,AC.currentTime,.12)}catch(e){}};
+window._ambBusy=busy;
+{const _u=ambUpdate;ambUpdate=function(){if(busy()){duck();return}return _u.apply(this,arguments)}}
+{const _m=modal;modal=function(){const r=_m.apply(this,arguments);if(modalOpen)duck();return r}}
+{const _cl=closeM;closeM=function(){const r=_cl.apply(this,arguments);setTimeout(()=>{try{ambUpdate()}catch(e){}},80);return r}}
+})()}catch(e){console.error('block139',e)}
