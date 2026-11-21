@@ -43949,3 +43949,65 @@ window.dzFlee=function(){try{const A=S&&S.ab;if(!A||!A.on||(A.fr&&A.fr.on))retur
 {const _o=window.openDz;if(_o)window.openDz=function(){const r=_o.apply(this,arguments);try{const A=S&&S.ab;if(!A||!A.on||(A.fr&&A.fr.on))return r;const m=$('modal'),g=m&&m.querySelector('.dzact');if(!g||g.querySelector('.dzFl'))return r;const y=S.age-A.y0;
  g.insertAdjacentHTML('beforeend',y>=FLEE?'<button class="gbtn dzFl" onclick="dzFlee()">🪜 ปีนหนีขึ้นไป<br><small>ทางออกสำรอง · HP ครึ่ง · กรรม −20</small></button>':`<button class="gbtn dzFl" disabled style="opacity:.45">🪜 ปีนหนีขึ้นไป<br><small>ทางออกสำรอง · อีก ${FLEE-y} ปี</small></button>`)}catch(e){}return r}}
 })()}catch(e){console.error('block121',e)}
+
+// BLOCK 122: 🎒 กระเป๋ายุคปัจจุบัน — ใช้ได้ทุกประเภทโลกของยุคปัจจุบัน (ปกติ/ฮันเตอร์/ใต้ดิน/ผีไทย/วนลูป/ซอมบี้/หอคอย/ระบบเกม/เกตชนะ/วันสิ้นโลก) · ของใช้ทั่วไป + ของเฉพาะโลก · ซื้อ/ใช้/ขาย · เก็บของได้จากเรื่องราวรายปี
+try{(function(){
+const ON=()=>!!(S&&S.mw&&S.alive);
+const WK=M=>!M?'normal':M.hw>0?'hunter':(M.wx&&M.wx.on?M.wx.id:'normal');
+const WNM={normal:'',hunter:'🌀 ของโลกฮันเตอร์',under:'🌃 ของโลกใต้ดิน',ghost:'👻 ของโลกผีไทย',loop:'🔁 ของโลกวนลูป',zombie:'🧟 ของโลกซอมบี้',tower:'🏰 ของโลกหอคอย',game:'🎮 ของโลกระบบเกม',gatewon:'💀 ของโลกที่เกตชนะ',doom:'☄️ ของโลกวันสิ้นโลก'};
+const hpP=p=>{const g=Math.round(S.maxHp*p);S.hp=Math.min(S.maxHp,S.hp+g);return g};
+const pw=p=>{const g=Math.max(1,Math.round((S.power||0)*p));S.power=(S.power||0)+g;return g};
+const st=(k,f,v,lo,hi)=>{try{const o=S.mw[k];if(o&&typeof o[f]==='number'){o[f]=Math.max(lo,Math.min(hi,o[f]+v));return true}}catch(e){}return false};
+// [ไอคอน, ชื่อ, ราคา (เท่าของค่าแรงขั้นต่ำ/เดือน), คำอธิบาย, ใช้(), ถือไว้ = ผลรายปี]
+const IT={
+ mama:['🍜','บะหมี่กึ่งสำเร็จรูป',.001,'พลังชีวิต +4% · ความสุข +1',()=>{hpP(.04);joy(1);return'🍜 ต้มมาม่าใส่ไข่ตอนตีสอง อร่อยกว่าที่ควรจะเป็น'}],
+ coffee:['☕','กาแฟเย็นแก้วใหญ่',.005,'ความสุข +3',()=>{joy(3);return'☕ หวานน้อยไม่มีจริง แต่คุณก็สดชื่นขึ้น'}],
+ energy:['⚡','เครื่องดื่มชูกำลัง',.004,'พลังชีวิต +8%',()=>{hpP(.08);return'⚡ ใจสั่นนิดหน่อย แต่ลุกขึ้นทำงานต่อได้'}],
+ pain:['💊','ยาแก้ปวดลดไข้',.01,'พลังชีวิต +15%',()=>{hpP(.15);return'💊 กินยาแล้วนอนพัก ไข้ลดลงตอนเช้า'}],
+ aid:['🩹','ชุดปฐมพยาบาล',.03,'พลังชีวิต +40%',()=>{hpP(.4);return'🩹 ทำแผลเองได้เรียบร้อยกว่าที่คิด'}],
+ vit:['🍊','วิตามินรวม 1 กระปุก',.05,'พลังชีวิตสูงสุด +2% (ปีละครั้ง)',()=>{const M=S.mw;if(M.bagVit===S.age)return null;M.bagVit=S.age;S.maxHp=Math.round(S.maxHp*1.02);return'🍊 กินวิตามินครบทั้งปี รู้สึกว่าป่วยน้อยลงจริงๆ'}],
+ book:['📚','หนังสือพัฒนาตัวเอง',.03,'ปัญญา +3 · ความคุ้นเคยยุคใหม่ +2',()=>{S.int=(S.int||0)+3;try{mwFx({adapt:2})}catch(e){}return'📚 อ่านจบในสามคืน จดประโยคดีๆ ไว้ในมือถือ'}],
+ gift:['🎁','ของขวัญ',.05,'ให้คนสำคัญ · ความสุข +6',()=>{const w=S.spouse&&S.spouse.alive!==false?'คู่ชีวิต':pick(['พ่อแม่','เพื่อนสนิท','คนในบ้าน']);joy(6);return`🎁 คุณให้ของขวัญกับ${w} รอยยิ้มนั้นคุ้มกว่าราคาของ`}],
+ lotto:['🎟️','ลอตเตอรี่',.008,'ลุ้นรางวัล',()=>{const M=S.mw,mn=MW_MIN[M.cc||'th']||MW_MIN.th,r=Math.random();if(r<.001){const v=mwToB(mn*600,M);S.money+=v;joy(30);return`🎟️ <b>ถูกรางวัลใหญ่!</b> ได้ ${mwLocal(mn*600,M)} มือสั่นจนอ่านเลขซ้ำห้ารอบ`}if(r<.03){const v=mwToB(mn*.4,M);S.money+=v;joy(4);return`🎟️ ถูกเลขท้าย ได้ ${mwLocal(mn*.4,M)}`}return'🎟️ ไม่ถูกสักตัว… งวดหน้าเอาใหม่'}],
+ phone:['📱','มือถือรุ่นใหม่',1.5,'ถือไว้: ความคุ้นเคยยุคใหม่ +1 ทุกปี',null,()=>{try{mwFx({adapt:1})}catch(e){}}],
+ laptop:['💻','โน้ตบุ๊ก',2.2,'ถือไว้: ปัญญา +1 ทุกปี',null,()=>{S.int=(S.int||0)+1}],
+ // ---- ของเฉพาะโลก ----
+ potion:['🧪','โพชั่นฟื้นฟู',.08,'พลังชีวิต +60%',()=>{hpP(.6);return'🧪 ของเหลวสีฟ้าเรืองแสง แผลปิดต่อหน้าต่อตา'},null,['hunter','tower','game']],
+ crystal:['💎','คริสตัลมานาเกรดต่ำ',.3,'พลังยุทธ์ +2%',()=>{const g=pw(.02);return`💎 ดูดซับมานาในคริสตัล พลังยุทธ์ +${fmt(g)}`},null,['hunter','gatewon']],
+ expc:['📜','คูปอง EXP สองเท่า',.25,'พลังยุทธ์ +3%',()=>{const g=pw(.03);return`📜 [ระบบ] ใช้คูปองสำเร็จ พลังยุทธ์ +${fmt(g)}`},null,['game']],
+ fmap:['🧭','แผนที่ชั้นที่นักปีนคนก่อนวาดไว้',.2,'พลังยุทธ์ +2% · พลังชีวิต +10%',()=>{const g=pw(.02);hpP(.1);return`🧭 เลี่ยงกับดักได้ทั้งชั้น พลังยุทธ์ +${fmt(g)}`},null,['tower']],
+ whisky:['🍾','เหล้านอกขวดใหญ่',.15,'ของกำนัลเจ้าพ่อ · อิทธิพล +6',()=>st('U','inf',6,0,100)?'🍾 เจ้าพ่อรับขวดไปพร้อมพยักหน้าช้าๆ อิทธิพลคุณ +6':'🍾 คุณเปิดดื่มเองกับเพื่อน คืนนั้นยาวมาก',null,['under']],
+ cap:['🧢','ฮู้ดกับหมวกแก๊ป',.02,'ความร้อน −8 (ตำรวจจำหน้าได้ยากขึ้น)',()=>st('U','heat',-8,0,100)?'🧢 ใส่ฮู้ดคลุมหัว เดินผ่านด่านตรวจไปเงียบๆ ความร้อน −8':'🧢 ใส่แล้วดูเท่ขึ้นนิดหน่อย',null,['under']],
+ amulet:['🪬','พระเครื่องปลุกเสกแล้ว',.12,'บารมี +10',()=>st('G','ward',10,0,100)?'🪬 ห้อยพระไว้ที่คอ อุ่นวาบขึ้นมาตอนเดินผ่านต้นไม้ใหญ่ บารมี +10':'🪬 ห้อยไว้แล้วสบายใจขึ้น',null,['ghost']],
+ salt:['🧂','ข้าวสารเสกกับเกลือ',.01,'ผีตามหลอน −12',()=>st('G','bad',-12,0,100)?'🧂 โปรยรอบบ้านตอนเที่ยงคืน เสียงเคาะประตูหายไป ผีตามหลอน −12':'🧂 โปรยรอบบ้าน แม่บ่นว่าทำพื้นสกปรก',null,['ghost']],
+ note:['📓','สมุดจดลูป',.01,'ความทรงจำ +8',()=>st('LP','mem',8,0,100)?'📓 คุณจดทุกอย่างที่เกิดขึ้นในวันนี้ซ้ำเป็นรอบที่เท่าไหร่ไม่รู้ ความทรงจำ +8':'📓 จดบันทึกประจำวันไว้',null,['loop']],
+ sleep:['😴','ยานอนหลับ',.02,'ความล้า −15',()=>st('LP','tir',-15,0,100)?'😴 หลับลึกครั้งแรกในรอบหลายลูป ความล้า −15':'😴 หลับยาวจนเที่ยง',null,['loop']],
+ can:['🥫','อาหารกระป๋อง',.01,'พลังชีวิต +20% · ทักษะรอด +2',()=>{hpP(.2);st('Z','surv',2,0,100);return'🥫 เปิดกระป๋องด้วยมีดพับ กินเงียบๆ ในที่มืด'},null,['zombie','gatewon','doom']],
+ serum:['💉','เซรุ่มทดลอง',.4,'เสี่ยงติดเชื้อ −20',()=>st('Z','inf',-20,0,100)?'💉 ไข้ขึ้นทั้งคืนแล้วลดลงตอนเช้า เส้นเลือดดำที่แขนจางลง เสี่ยงติดเชื้อ −20':'💉 ฉีดแล้วไม่รู้สึกอะไร',null,['zombie']],
+ torch:['🔦','ไฟฉายกับถ่านสำรอง',.02,'พลังชีวิต +10% · ความสุข +2',()=>{hpP(.1);joy(2);return'🔦 คืนที่ไฟดับทั้งเมือง แสงเล็กๆ นี้ทำให้คุณหลับได้'},null,['gatewon','doom']],
+ filter:['💧','เครื่องกรองน้ำพกพา',.3,'ถือไว้: พลังชีวิต +5% ทุกปี',null,()=>{hpP(.05)},['doom','zombie']]};
+const price=(id,M)=>{const mn=MW_MIN[M.cc||'th']||MW_MIN.th;return Math.max(1,Math.round(mn*IT[id][2]))};
+const B=()=>{const M=S.mw;if(!M.bag)M.bag={it:{}};return M.bag};
+const avail=M=>{const w=WK(M);return Object.keys(IT).filter(id=>!IT[id][6]||IT[id][6].includes(w))};
+window.mwBagOpen=function(tab){if(!ON())return;const M=S.mw,b=B(),w=WK(M),my=(S.money||0)*mwCC().rate,t=tab||window._mwBagT||'bag';window._mwBagT=t;
+ const ks=Object.keys(b.it).filter(k=>IT[k]&&b.it[k]>0);
+ const row=(id,btns)=>{const x=IT[id];return`<div class="jobC"><div class="jobH">${x[0]} <b>${x[1]}</b>${b.it[id]?` <span class="tag2">×${b.it[id]}</span>`:''}</div><div class="tag2">${x[3]}</div>${btns}</div>`};
+ const Bt=(f,txt,dis)=>`<button class="gbtn jobA" ${dis?'disabled style="opacity:.5"':''} onclick="${f}">${txt}</button>`;
+ let body;
+ if(t==='bag')body=ks.length?ks.map(id=>row(id,(IT[id][4]?Bt(`mwBagUse('${id}')`,'ใช้'):'<span class="tag2">✅ ถือไว้ ได้ผลทุกปี</span> ')+Bt(`mwBagSell('${id}')`,`ขาย ${mwLocal(Math.round(price(id,M)*.4),M)}`))).join(''):'<p class="tag2" style="text-align:center;padding:14px 0">กระเป๋ายังว่าง ไปซื้อของที่แท็บ 🏪 ร้านค้า หรือเก็บของจากเรื่องราวระหว่างปี</p>';
+ else{const L=avail(M),sp=L.filter(id=>IT[id][6]),cm=L.filter(id=>!IT[id][6]);body=(sp.length?`<h4 style="margin:6px 0">${WNM[w]||'ของพิเศษ'}</h4>`+sp.map(id=>row(id,Bt(`mwBagBuy('${id}')`,`ซื้อ ${mwLocal(price(id,M),M)}`,my<price(id,M)))).join(''):'')+`<h4 style="margin:6px 0">🏪 ร้านสะดวกซื้อและห้าง</h4>`+cm.map(id=>row(id,Bt(`mwBagBuy('${id}')`,`ซื้อ ${mwLocal(price(id,M),M)}`,my<price(id,M)||((id==='phone'||id==='laptop')&&b.it[id]>0)))).join('')}
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎒 กระเป๋า</h3><p class="tag2">เงินที่มี <b>${mwLocal(my,M)}</b>${w!=='normal'&&WNM[w]?' · '+WNM[w].split(' ')[0]+' มีของเฉพาะโลกนี้ขาย':''}</p>
+ <div class="brow" style="margin:6px 0"><button class="${t==='bag'?'pbtn':'gbtn'}" style="flex:1" onclick="mwBagOpen('bag')">🎒 ของในกระเป๋า (${ks.reduce((a,k)=>a+b.it[k],0)})</button><button class="${t==='shop'?'pbtn':'gbtn'}" style="flex:1" onclick="mwBagOpen('shop')">🏪 ร้านค้า</button></div>
+ <div>${body}</div><button class="gbtn" style="width:100%;margin-top:6px" onclick="openAssets()">🏠 บ้านและทรัพย์สิน</button>`,'mwbag')};
+window.mwBagBuy=function(id){if(!ON()||!IT[id])return;const M=S.mw,b=B();if(!avail(M).includes(id))return;if((id==='phone'||id==='laptop')&&b.it[id]>0)return toast('มีแล้ว');const v=mwToB(price(id,M),M);if((S.money||0)<v)return toast('เงินไม่พอ');S.money-=v;b.it[id]=(b.it[id]||0)+1;toast(`🎒 ซื้อ ${IT[id][0]} ${IT[id][1]} แล้ว`);try{render()}catch(e){}mwBagOpen('shop')};
+window.mwBagUse=function(id){if(!ON())return;const b=B(),x=IT[id];if(!x||!x[4]||!(b.it[id]>0))return;const r=x[4]();if(r==null){toast('ปีนี้ใช้ไปแล้ว');return}b.it[id]--;if(b.it[id]<=0)delete b.it[id];mwSay(r,'good');try{render()}catch(e){}mwBagOpen('bag')};
+window.mwBagSell=function(id){if(!ON())return;const M=S.mw,b=B();if(!(b.it[id]>0))return;const v=mwToB(Math.round(price(id,M)*.4),M);S.money+=v;b.it[id]--;if(b.it[id]<=0)delete b.it[id];toast(`ขาย ${IT[id][1]} ได้ ${mwLocal(Math.round(price(id,M)*.4),M)}`);try{render()}catch(e){}mwBagOpen('bag')};
+// ปุ่มกระเป๋า: กด 🎒 ในยุคปัจจุบัน → กระเป๋ายุคปัจจุบัน · หน้าทรัพย์สินมีปุ่มไปกระเป๋า
+{const _ob=window.openBag||openBag;openBag=function(){if(ON())return mwBagOpen('bag');return _ob.apply(this,arguments)};window.openBag=openBag}
+{const _oa=openAssets;openAssets=function(){const r=_oa.apply(this,arguments);try{const m=$('modal');if(ON()&&m&&m.dataset.k==='assets'&&!m.querySelector('.mwBagB')){const h=m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend','<button class="pbtn mwBagB" style="width:100%;margin:4px 0" onclick="mwBagOpen(\'bag\')">🎒 กระเป๋า · ร้านค้า</button>')}}catch(e){}return r};window.openAssets=openAssets}
+// รายปี: ของที่ถือไว้ได้ผล · บางปีเก็บของได้จากเรื่องราว
+const FIND={normal:['ฝากของจากญาติต่างจังหวัด','เพื่อนร่วมงานแจกของปีใหม่','ลุ้นจับฉลากที่ห้างได้'],hunter:['เก็บได้จากซากสัตว์อสูรหลังเกตปิด','สมาคมฮันเตอร์แจกเป็นเบี้ยเลี้ยง'],under:['ลูกน้องเอามาฝาก','เก็บได้หลังเคลียร์ร้าน'],ghost:['หลวงพ่อที่วัดให้มา','ยายข้างบ้านยัดใส่มือ'],loop:['เจอในลิ้นชักที่ไม่เคยเปิดในลูปก่อน'],zombie:['ค้นได้จากร้านสะดวกซื้อร้าง','ผู้รอดชีวิตอีกกลุ่มแลกให้'],tower:['ตกจากมอนสเตอร์ชั้นล่าง','กล่องสมบัติข้างบันไดชั้น'],game:['[ระบบ] รางวัลล็อกอินรายวัน','ดรอปจากมอนสเตอร์'],gatewon:['ค้นได้จากซากเมือง','แลกมาจากตลาดมืดในหลุมหลบภัย'],doom:['ค้นได้จากซากเมือง','ศูนย์พักพิงแจกให้']};
+{const _p=passYear;passYear=function(){const me=S,a0=S&&S.age;const r=_p.apply(this,arguments);try{if(!ON()||S!==me||S.age===a0)return r;const M=S.mw,b=M.bag;
+ if(b)for(const id in b.it){const x=IT[id];if(x&&x[5]&&b.it[id]>0)try{x[5]()}catch(e){}}
+ if(S.age>=6&&Math.random()<.07){const w=WK(M),L=avail(M).filter(id=>IT[id][2]<=.3),sp=L.filter(id=>IT[id][6]),id=(sp.length&&Math.random()<.6)?pick(sp):pick(L);if(id){const bb=B();bb.it[id]=(bb.it[id]||0)+1;mwSay(`🎒 ${pick(FIND[w]||FIND.normal)} ได้ ${IT[id][0]} <b>${IT[id][1]}</b> เก็บเข้ากระเป๋าแล้ว`,'good')}}}catch(e){console.error('mwbag',e)}return r}}
+})()}catch(e){console.error('block122',e)}
