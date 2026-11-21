@@ -206,9 +206,12 @@ function payTry(){const f=F();for(const id in f.sd){const d=f.sd[id];if(d.done||
 // ============================================================
 // 2) ชาติก่อนตามมาทวง
 // ============================================================
+const pmKey=x=>x&&[x.n,x.c,x.a,x.k,x.ka].join('|');
+const pmDedup=L=>{const seen=new Set();return(L||[]).filter(x=>{const k=pmKey(x);if(!x||seen.has(k))return false;seen.add(k);return true})};
+try{const L0=LS.get(PMK,[])||[],L1=pmDedup(L0);if(L1.length!==L0.length)LS.set(PMK,L1)}catch(e){}
 function pastSave(){try{if(!S||S.fate&&S.fate._ps)return;const L=LS.get(PMK,[]);const kid=(S.children||[]).find(c=>c&&c.n);
  L.unshift({n:S.name,g:S.gender,w:WK(),a:S.age,c:String(S.cause||'').slice(0,60),sp:S.spouse||'',kid:kid?kid.n:'',nem:S.nem&&S.nem.n||'',nemA:S.nem&&S.nem.alive?1:0,k:+S.kills||0,ka:Math.round(+S.karma||0),t:Date.now()});
- LS.set(PMK,L.slice(0,12));F()._ps=1}catch(e){}}
+ LS.set(PMK,pmDedup(L).slice(0,12));F()._ps=1}catch(e){}}
 function pastTry(){const f=F();if(f.pm||S.age<18||S.age>55||!P(.12))return false;const L=(LS.get(PMK,[])||[]).filter(x=>x&&x.n&&x.n!==S.name);if(!L.length)return false;
  const p=L[0],opts=[];if(p.kid)opts.push('kid');if(p.sp)opts.push('sp');if(p.nem&&p.nemA)opts.push('nem');if(!opts.length)opts.push('self');f.pm=1;const t=pick(opts);
  if(t==='kid')ask(`🕯️ ผู้อาวุโสที่ชื่อ${E(p.kid)}`,`ผู้อาวุโสคนหนึ่งชื่อ <b>${E(p.kid)}</b> ชื่อเดียวกับลูกของ <b>${E(p.n)}</b> ในชาติก่อนของคุณ วินาทีที่สบตา คุณจำแววตานั้นได้ ทั้งที่ไม่เคยเจอกันในชาตินี้<br><span class="tag2">ชาติก่อน: ${E(p.n)} · ${E(p.c)} อายุ ${p.a} ปี</span>`,[
@@ -371,7 +374,7 @@ beast:{w:['beast'],a:[12,200],need:()=>!!(S.beastMode&&S.beastMode.human),steps:
   ['หนีกลางดึก','',()=>{eff({happy:-8},'ออกจากหมู่บ้านโดยไม่มีใครเห็น','');if(t.k==='betray')F().deed='beast_betray'}]]]]},
 // 🔥 นรก: ศาลยมโลก (พยานจากชาติก่อนจริงของผู้เล่น)
 hell:{w:['hell'],a:[30,200],steps:[
- (t)=>{const L=(LS.get(PMK,[])||[]).slice(0,4),ws=L.length?L.map(p=>`<li><b>${E(p.n)}</b> (ชาติก่อน · ${E(p.c)}) ${p.k>0?`ฆ่าคนไป ${p.k} ครั้ง`:'ไม่เคยฆ่าใคร'} · ${p.ka>=0?'บุญ':'บาป'} ${Math.abs(p.ka)}</li>`).join(''):'<li>ไม่มีบันทึกชาติก่อน ศาลเรียกพยานจากชาตินี้แทน</li>';
+ (t)=>{const L=pmDedup(LS.get(PMK,[])||[]).slice(0,4),ws=L.length?L.map(p=>`<li><b>${E(p.n)}</b> (ชาติก่อน · ${E(p.c)}) ${p.k>0?`ฆ่าคนไป ${p.k} ครั้ง`:'ไม่เคยฆ่าใคร'} · ${p.ka>=0?'บุญ':'บาป'} ${Math.abs(p.ka)}</li>`).join(''):'<li>ไม่มีบันทึกชาติก่อน ศาลเรียกพยานจากชาตินี้แทน</li>';
   t.sin=L.reduce((a,p)=>a+(p.ka<0?-p.ka:0)+p.k,0);return[`⚖️ ศาลยมโลกเปิดพิจารณา`,`ยมบาลเปิดสมุดกรรมของทุกชาติที่คุณเคยเป็น พยานเดินเรียงเข้ามาทีละคน:<ul>${ws}</ul>`,[
   ['สารภาพทุกชาติ','',()=>eff({karma:15,happy:6,hp:-20,deed:'hell_confess'},'ยมบาลปิดสมุดลง "คนที่ยอมรับตัวเองได้ครบทุกชาติ มีไม่ถึงหนึ่งในหมื่น"','myth')],
   ['เถียงว่าชาติก่อนไม่ใช่ตัวเรา','',()=>{if((+S.int||0)>200)eff({int:8,fame:10},'ข้อโต้แย้งของคุณทำให้ศาลเงียบไปครู่หนึ่ง ยมบาลจดชื่อคุณไว้ "ยังมีงานให้คนแบบเจ้า"');else eff({hp:-30},'"วิญญาณเดียวกัน กรรมเดียวกัน" ยมบาลตอบสั้นๆ โทษเพิ่มขึ้นเท่าตัว','bad')}],
