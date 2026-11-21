@@ -247,12 +247,12 @@ function dreamSwap(){const D=S&&S.dream;if(!D||!D.other)return;const leave=D.sid
  if(leave==='w'&&dP>0){S.maxHp=Math.round((S.maxHp||100)*1.03);S.hp=Math.min(S.maxHp,(S.hp||0)+Math.round(S.maxHp*.05));gain.push('ร่างกายจำท่ารำมวยได้ พลังชีวิตสูงสุด +3%')}
  if(leave==='w'&&S.mw)try{mwFx({adapt:1})}catch(e){}
  D.last[D.side]={int:S.int||0,power:S.power||0};
- const go=()=>{log(`🌙 คุณตื่นขึ้นในชีวิตของ <b>${esc2(S.name)}</b> (${D.side==='m'?'🏙️ ยุคปัจจุบัน':'⚔️ ยุทธภพ'})${gain.length?' · '+gain.join(' · '):''}`,'');try{render();saveGame()}catch(e){}};
+ const go=()=>{log(`🌙 คุณตื่นขึ้นในชีวิตของ <b>${esc2(S.name)}</b> (${D.side==='m'?'🏙️ ยุคปัจจุบัน':'⚔️ ยุทธภพ'})${gain.length?' · '+gain.join(' · '):''}`,'');try{render();saveGame()}catch(e){}setTimeout(()=>{try{window._scK=null;sceneEvt=null;render()}catch(e){}},80)};
  if(S.mw){try{wNeed('mw',go)}catch(e){go()}}else go()}
 // ตายในฝัน: อีกชีวิตรับฝันร้ายถาวรแล้วเล่นต่อ
 if(typeof checkDeath==='function'){const _cd=checkDeath;checkDeath=function(){const r=_cd.apply(this,arguments);try{const D=S&&S.dream;if(D&&D.other&&S&&!S.alive){const dead=S.name,dw=D.side;const NS=Object.assign({},D.other);NS.dream=null;NS.flags=NS.flags||{};NS.flags.nightmare={n:dead,w:dw,y:NS.age};NS.alive=true;
   S=NS;try{peers=D.pe||[]}catch(e){}try{CFG.xian=0;setWorld(false)}catch(e){}bookS(b=>{b.e.dreamD=1});kAdd(`${dead} ในอีกโลกตายในฝัน`);
-  const go=()=>{try{closeM()}catch(e){}try{setScene&&setScene('plain')}catch(e){}log(`😱 <b>คุณสะดุ้งตื่นกลางดึก</b> เหงื่อท่วมตัว ${esc2(dead)} ใน${dw==='m'?'ยุคปัจจุบัน':'ยุทธภพ'}ตายแล้ว คุณรู้สึกถึงความตายนั้นทั้งตัว — ฝันนั้นจะไม่หายไปอีกเลย<br><span class="tag2">😱 ฝันร้ายถาวร: ความสุขลดทุกปี แต่บางปีความทรงจำของอีกชีวิตจะช่วยคุณ</span>`,'bad',true);try{render();saveGame()}catch(e){}};
+  const go=()=>{try{closeM()}catch(e){}try{setScene&&setScene('plain')}catch(e){}log(`😱 <b>คุณสะดุ้งตื่นกลางดึก</b> เหงื่อท่วมตัว ${esc2(dead)} ใน${dw==='m'?'ยุคปัจจุบัน':'ยุทธภพ'}ตายแล้ว คุณรู้สึกถึงความตายนั้นทั้งตัว — ฝันนั้นจะไม่หายไปอีกเลย<br><span class="tag2">😱 ฝันร้ายถาวร: ความสุขลดทุกปี แต่บางปีความทรงจำของอีกชีวิตจะช่วยคุณ</span>`,'bad',true);try{render();saveGame()}catch(e){}setTimeout(()=>{try{window._scK=null;sceneEvt=null;render()}catch(e){}},80)};
   if(S.mw){try{wNeed('mw',go)}catch(e){go()}}else go();return false}}catch(e){console.error('dream death',e)}return r}}
 
 // =====================================================================
