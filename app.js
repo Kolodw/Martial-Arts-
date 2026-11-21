@@ -54044,3 +54044,100 @@ if(typeof ascendToX==='function'){const _a=ascendToX;ascendToX=function(){if(noX
 if(typeof ascendGod==='function'){const _g=ascendGod;ascendGod=function(){if(noX())return;return _g.apply(this,arguments)}}
 setInterval(()=>{try{if(!noX())return;const b=document.getElementById('ascPill');if(b)b.style.display='none'}catch(e){}},1500);
 })()}catch(e){console.error('block114',e)}
+
+// ============================================================
+// BLOCK 115: 🏆 หน้าทำเนียบใหม่ — ปุ่มเลือกทำเนียบแถวเดียว (แผ่นเลือกเด้งจากล่าง) · หน้าภาพรวม · รายการเบาลง
+//   แคชข้อมูล 1 นาที · หยุดแอนิเมชันนอกจอ · ดูทีละ 10 · แถบอันดับของฉันติดล่าง · รางวัล/กติกาย่อไว้ในปุ่ม ℹ️
+// ============================================================
+try{(()=>{
+const BL=[['g','⚔️ เส้นทางหลัก'],{id:'w0',ic:'⚔️',n:'ยุทธภพ',bw:0},{id:'w1',ic:'☁️',n:'โลกเทพเซียน',bw:1},{id:'w3',ic:'🌟',n:'โลกเทพ',bw:3},{id:'w2',ic:'🐾',n:'สัตว์อสูร',bw:2},
+ ['g','🔥 โหมดท้าทาย'],{id:'h',ic:'🔥',n:'นรก'},{id:'s',ic:'⏳',n:'ชีวิตสั้น'},{id:'j',ic:'🗑️',n:'รากขยะ'},{id:'rg',ic:'🔁',n:'ผู้ย้อนกาล'},
+ ['g','🌏 โลกใหม่'],{id:'l',ic:'⭕',n:'ทวีปจิตวิญญาณยุทธ์'},{id:'k',ic:'🌠',n:'ทะลุฟ้าดารา'}];
+const BI=BL.filter(x=>!Array.isArray(x));
+const myPu=()=>{try{return String(pid).replace(/[^a-z0-9]/g,'').slice(0,12)}catch(e){return''}};
+const wf=bw=>e=>bw===2?!!e.bm:bw===3?(!e.bm&&!!e.g):(!e.bm&&!e.g&&(e.x?1:0)===bw);
+const curId=()=>{try{const bw=openOnline._bw!=null?openOnline._bw:(S?(S.ch&&S.ch!=='normal'?4:S.beastMode?2:S.xt?3:S.xian?1:0):0);if(bw===4)return typeof chmSel==='function'?chmSel():'h';return'w'+bw}catch(e){return'w0'}};
+// ---------- แคชผลทำเนียบ 1 นาที ----------
+const CA=new Map();
+{const _a=api;api=async function(a,b){if(a==='board'){const k=JSON.stringify(b||{});const c=CA.get(k);if(c&&Date.now()-c.t<60e3){window._bdLast=JSON.parse(c.v);return JSON.parse(c.v)}const r=await _a.apply(this,arguments);try{if(r&&(r.top||r.ctop)){CA.set(k,{t:Date.now(),v:JSON.stringify(r)});window._bdLast=r}}catch(e){}return r}return _a.apply(this,arguments)}}
+window.bdRefresh=function(){CA.clear();openOnline('board')};
+// ---------- สไตล์ ----------
+const css=document.createElement('style');css.textContent=`
+.bdHide{display:none!important}
+.bdBar{display:flex;gap:6px;align-items:stretch;margin:8px 0 2px}
+.bdBar .onSeg,.bdBar .tabs{flex:1;margin:0!important;min-width:0}
+.bdPick{flex:0 1 auto;max-width:52%;display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:14px;border:2px solid var(--gold,#e8b54a);background:linear-gradient(180deg,rgba(255,215,106,.18),rgba(255,180,60,.06));color:inherit;font:inherit;font-weight:800;font-size:15px;cursor:pointer;white-space:nowrap;overflow:hidden}
+.bdPick .t{overflow:hidden;text-overflow:ellipsis}.bdPick .v{opacity:.7;font-size:12px}
+.bdIB{flex:none;width:42px;border-radius:12px;border:2px solid var(--line);background:transparent;color:inherit;font-size:17px;cursor:pointer}
+.bdInfo{margin:4px 0}
+.bdSub{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;opacity:.8;margin:2px 2px 6px}
+.bdSub button{border:0;background:none;color:inherit;opacity:.85;font-size:11.5px;cursor:pointer;text-decoration:underline}
+.bdSheetBg{position:fixed;inset:0;z-index:100050;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;animation:bdF .18s ease}
+@keyframes bdF{from{opacity:0}}
+.bdSheet{width:min(560px,100%);max-height:82vh;overflow:auto;border-radius:20px 20px 0 0;background:var(--card,#1d1a2a);border:2px solid var(--line);border-bottom:0;padding:10px 12px 18px;animation:bdU .22s cubic-bezier(.2,.9,.3,1)}
+@keyframes bdU{from{transform:translateY(40px);opacity:.4}}
+.bdSheet .hd{width:44px;height:5px;border-radius:9px;background:var(--line);margin:0 auto 8px}
+.bdSheet h4{margin:10px 2px 6px;font-size:13px;opacity:.8}
+.bdGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.bdCell{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px 8px;border-radius:13px;border:1.5px solid var(--line);background:rgba(127,127,127,.08);color:inherit;font:inherit;cursor:pointer;text-align:center;min-height:82px}
+.bdCell.on{border-color:var(--gold,#e8b54a);box-shadow:0 0 0 2px rgba(255,200,80,.35) inset;background:rgba(255,200,80,.12)}
+.bdCell .i{font-size:24px;line-height:1.1}.bdCell b{font-size:12.5px;line-height:1.2}
+.bdCell small{font-size:10.5px;opacity:.72;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bdCell .me{position:absolute;top:4px;right:5px;font-size:9.5px;font-weight:800;color:#1d1405;background:#ffd76a;border-radius:7px;padding:0 4px}
+.bdOvBtn{width:100%;margin-top:4px;padding:9px;border-radius:12px;border:1.5px dashed var(--line);background:none;color:inherit;font:inherit;font-weight:700;cursor:pointer}
+.bdOv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.bdOv .bdCell{min-height:96px;padding:10px 6px}.bdOv .bdCell .nm{font-weight:800;font-size:13px;color:#ffe08a;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bdOvH{display:flex;justify-content:space-between;align-items:center;margin:8px 2px 0;font-weight:800}
+.bdMore{width:100%;margin:6px 0;padding:10px;border-radius:12px;border:1.5px solid var(--line);background:rgba(127,127,127,.08);color:inherit;font:inherit;font-weight:700;cursor:pointer}
+.bdMe{position:sticky;bottom:-2px;z-index:5;margin:10px -4px -4px;padding:9px 12px;border-radius:14px 14px 0 0;background:linear-gradient(180deg,#3a2d10,#24190a);border:1.5px solid #e8b54a;border-bottom:0;color:#ffe9b0;font-size:13px;display:flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 -4px 14px rgba(0,0,0,.35)}
+.bdMe b{color:#ffd76a}.bdMe .r{margin-left:auto;font-weight:800}
+.brd{content-visibility:auto;contain-intrinsic-size:auto 96px}
+.bdOff,.bdOff *{animation-play-state:paused!important}
+.brd.bdMine{outline:2px solid #ffd76a;outline-offset:2px}
+.bdSk{height:64px;border-radius:12px;margin:6px 0;background:linear-gradient(90deg,rgba(127,127,127,.10),rgba(127,127,127,.22),rgba(127,127,127,.10));background-size:200% 100%;animation:bdSk 1.1s linear infinite}
+@keyframes bdSk{to{background-position:-200% 0}}`;document.head.appendChild(css);
+// ---------- ข้อมูลอันดับ 1 + อันดับของฉัน ----------
+function info(j,id){const me=myPu();if(!j)return{n:'',s:0,me:-1};if(id[0]==='w'){const L=(j.top||[]).filter(wf(+id.slice(1)));const f=L[0];return{n:f?f.n:'',s:f?f.s:0,me:L.findIndex(e=>e.pu&&e.pu===me),c:L.length}}
+ if(id==='rg')return{n:'',s:0,me:-1,c:-1};const o=(j.chov||{})[id];return o?{n:o.n,s:o.s,me:o.me,c:o.c}:{n:'',s:0,me:-1,c:-1}}
+// ---------- แผ่นเลือกทำเนียบ ----------
+window.bdSheet=function(){const j=window._bdLast,cur=curId(),bp=openOnline._bp||'d';document.querySelectorAll('.bdSheetBg').forEach(x=>x.remove());
+ const bg=document.createElement('div');bg.className='bdSheetBg';bg.onclick=e=>{if(e.target===bg)bg.remove()};
+ let h=`<div class="bdSheet"><div class="hd"></div><button class="bdOvBtn" onclick="bdGo('ov')">📊 ภาพรวมทุกทำเนียบ (${({d:'วันนี้',w:'สัปดาห์นี้',m:'เดือนนี้'})[bp]})</button>`;let open=false;
+ BL.forEach(x=>{if(Array.isArray(x)){if(open)h+='</div>';h+=`<h4>${x[1]}</h4><div class="bdGrid">`;open=true;return}const I=info(j,x.id);
+  h+=`<button class="bdCell${x.id===cur&&openOnline._bv!=='ov'?' on':''}" onclick="bdGo('${x.id}')">${I.me>=0?`<span class="me">#${I.me+1}</span>`:''}<span class="i">${x.ic}</span><b>${x.n}</b><small>${x.id==='rg'?'ทำเนียบแยก':I.n?'🥇 '+esc(I.n):'ยังว่าง'}</small></button>`});
+ h+='</div></div>';bg.innerHTML=h;document.body.appendChild(bg)};
+window.bdGo=function(id){document.querySelectorAll('.bdSheetBg').forEach(x=>x.remove());try{LS.set('murim_bdlast',id)}catch(e){}
+ if(id==='ov'){openOnline._bv='ov';return openOnline('board')}openOnline._bv='list';
+ if(id==='rg'){try{return openRgBoard()}catch(e){return}}
+ if(id[0]==='w'){openOnline._bw=+id.slice(1)}else{openOnline._bw=4;openOnline._cm=id}openOnline('board')};
+// ---------- จัดหน้าใหม่หลังวาด ----------
+let io=null;
+function restyle(){const m=$('modal');if(!m||m.dataset.k!=='online')return;const seg=m.querySelector('.onSeg');if(!seg||m.querySelector('.bdBar'))return;
+ const j=window._bdLast,cur=curId(),It=BI.find(x=>x.id===cur)||BI[0],bv=openOnline._bv;
+ m.querySelectorAll('.onStrip,.chmTabs').forEach(e=>e.classList.add('bdHide'));
+ const bar=document.createElement('div');bar.className='bdBar';bar.innerHTML=`<button class="bdPick" onclick="bdSheet()">${bv==='ov'?'📊':It.ic} <span class="t">${bv==='ov'?'ภาพรวม':It.n}</span><span class="v">▾</span></button>`;seg.before(bar);bar.appendChild(seg);
+ // รางวัล/กติกา → ปุ่ม ℹ️
+ const inf=[...m.querySelectorAll('.onRw,.onInfo')];if(inf.length){const ib=document.createElement('button');ib.className='bdIB';ib.title='รางวัลและกติกา';ib.textContent='ℹ️';bar.appendChild(ib);const box=document.createElement('div');box.className='bdInfo bdHide';inf[0].before(box);inf.forEach(x=>box.appendChild(x));ib.onclick=()=>box.classList.toggle('bdHide')}
+ const rst=m.querySelector('.onRst');{const sub=document.createElement('div');sub.className='bdSub';sub.innerHTML=`<span>${rst?rst.textContent.trim():''}</span><button onclick="bdRefresh()">🔄 โหลดใหม่</button>`;bar.after(sub);if(rst)rst.classList.add('bdHide')}
+ const rows=[...m.querySelectorAll('.item.brd')];
+ // หน้าภาพรวม
+ if(bv==='ov'){rows.forEach(r=>r.classList.add('bdHide'));m.querySelectorAll('h4').forEach(h=>{if(/สามอันดับแรก/.test(h.textContent))h.classList.add('bdHide')});m.querySelectorAll(':scope > p.tag2').forEach(p=>{if(/ยังไม่มีใคร/.test(p.textContent))p.classList.add('bdHide')});
+  const ov=document.createElement('div');ov.innerHTML=`<div class="bdOvH"><span>📊 อันดับ 1 ของทุกทำเนียบ</span><small style="opacity:.7;font-weight:400">แตะเพื่อดูทั้งหมด</small></div><div class="bdOv">${BI.map(x=>{const I=info(j,x.id);return`<button class="bdCell" onclick="bdGo('${x.id}')">${I.me>=0?`<span class="me">ฉัน #${I.me+1}</span>`:''}<span class="i">${x.ic}</span><b>${x.n}</b>${x.id==='rg'?'<small>แตะเพื่อดูทำเนียบแยก</small>':I.n?`<span class="nm">🥇 ${esc(I.n)}</span><small>${fmt(Math.round(I.s||0))} คะแนน</small>`:'<small>ยังไม่มีใครขึ้น — เป็นคนแรกสิ</small>'}</button>`}).join('')}</div>`;
+  const sub=m.querySelector('.bdSub');(sub||bar).after(ov);return}
+ // รายการ: ดูทีละ 10 · หยุดแอนิเมชันนอกจอ · แถบอันดับของฉัน
+ const main=rows.filter(r=>!/รอบก่อน/.test(r.textContent));const extra=main.slice(10);if(extra.length){extra.forEach(r=>r.classList.add('bdHide'));const b=document.createElement('button');b.className='bdMore';b.textContent=`⬇️ ดูอีก ${extra.length} อันดับ`;b.onclick=()=>{extra.forEach(r=>r.classList.remove('bdHide'));b.remove()};extra[0].before(b)}
+ try{if(io)io.disconnect();io=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('bdOff',!e.isIntersecting)),{root:null,rootMargin:'80px'});rows.forEach(r=>io.observe(r))}catch(e){}
+ const me=myPu();let mi=-1;main.forEach((r,i)=>{const p=r.querySelector('[data-pu]');if(mi<0&&p&&p.dataset.pu===me){mi=i;r.classList.add('bdMine')}});
+ const bm=document.createElement('div');bm.className='bdMe';
+ if(mi>=0){const sc=(main[mi].querySelector('.px')||{}).textContent||'';bm.innerHTML=`🏅 อันดับของฉัน <b>#${mi+1}</b><span class="r">${esc(sc)}</span>`;bm.onclick=()=>{const r=main[mi];r.classList.remove('bdHide');r.scrollIntoView({behavior:'smooth',block:'center'})}}
+ else{const last=main[main.length-1];const sc=last?(last.querySelector('.px')||{}).textContent||'':'';bm.innerHTML=main.length>=20?`🎯 ยังไม่ติด 20 อันดับ · อันดับ 20 ตอนนี้ <b>${esc(sc)}</b>`:`🎯 ยังไม่ติดอันดับ · ${main.length?`มีแค่ ${main.length} คน จบชีวิตตอนนี้ก็ติดได้เลย`:'ยังว่าง — เป็นคนแรกสิ'}`}
+ m.appendChild(bm)}
+{const _oo=openOnline;openOnline=async function(tab){const t=tab||'chat';if(t==='board'&&openOnline._bv==null){try{const l=LS.get('murim_bdlast','ov');openOnline._bv=l==='ov'?'ov':'list'}catch(e){openOnline._bv='ov'}}
+ if(t==='board'){setTimeout(()=>{try{const m=$('modal');if(m&&m.dataset.k==='online'&&/กำลังโหลด…/.test(m.textContent)&&!m.querySelector('.bdSk')){const L=[...m.querySelectorAll('.tag2')].find(x=>x.textContent.trim()==='กำลังโหลด…');if(L)L.outerHTML='<div class="bdSk"></div><div class="bdSk"></div><div class="bdSk"></div>'}}catch(e){}},0)}
+ const r=await _oo.apply(this,arguments);if(t==='board'&&!window._bdRg){try{restyle()}catch(e){console.error('bd115',e)}setTimeout(()=>{try{restyle()}catch(e){}},250)}return r}}
+// ทำเนียบผู้ย้อนกาล: ให้หน้าเดิมวาดเสร็จก่อน แล้วค่อยใส่ปุ่มเลือกทำเนียบแถวเดียว
+if(typeof openRgBoard==='function'){const _rg=openRgBoard;openRgBoard=async function(){window._bdRg=1;let r;try{r=await _rg.apply(this,arguments)}finally{window._bdRg=0}
+ try{const m=$('modal');if(m&&!m.querySelector('.bdBar')){m.querySelectorAll('.onStrip').forEach(e=>e.classList.add('bdHide'));const seg=[...m.querySelectorAll('.onSeg')].pop();const bar=document.createElement('div');bar.className='bdBar';bar.innerHTML='<button class="bdPick" onclick="bdSheet()">🔁 <span class="t">ผู้ย้อนกาล</span><span class="v">▾</span></button>';if(seg){seg.before(bar);bar.appendChild(seg)}else{const t=m.querySelector('.tabs.onNav');if(t)t.after(bar)}
+  const rw=[...m.querySelectorAll('.onRw,.onInfo')];if(rw.length){const ib=document.createElement('button');ib.className='bdIB';ib.textContent='ℹ️';bar.appendChild(ib);const box=document.createElement('div');box.className='bdInfo bdHide';rw[0].before(box);rw.forEach(x=>box.appendChild(x));ib.onclick=()=>box.classList.toggle('bdHide')}}}catch(e){console.error('bdrg',e)}return r}}
+window._bd115={restyle,info,BI};
+})()}catch(e){console.error('block115',e)}
