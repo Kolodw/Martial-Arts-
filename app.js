@@ -20838,15 +20838,15 @@ function maSnap0(sn){try{const c=sn.c.cloneNode(true);c.classList.remove('maGhos
  const xb=()=>{const m=M();return m&&[...m.querySelectorAll(':scope>.xbtn')][0]};
  const isBack=b=>b&&(/←/.test(b.textContent)||!/closeM\(\)\s*$/.test((b.getAttribute('onclick')||'').trim()));
  document.addEventListener('pointerdown',e=>{if(maOn()!==2||!modalOpen)return;const m=M();if(!m||!$('mask').classList.contains('on'))return;const inM=e.target.closest&&e.target.closest('#modal');
-  if(inM&&(e.target.closest('.maGrab')||(e.target.closest('h3')&&m.scrollTop<=0))&&!e.target.closest('button,input,textarea,a')){d={t:'down',y0:e.clientY,x0:e.clientX,id:e.pointerId,lock:MA_LOCK(m.dataset.k||'')||!xb(),t0:Date.now()};return}
-  const rc=m.getBoundingClientRect();if(e.clientX-rc.left<26&&e.clientX>=rc.left-10&&isBack(xb())&&MA.stack.length>1){d={t:'back',x0:e.clientX,y0:e.clientY,id:e.pointerId,t0:Date.now()}}},{passive:true});
+  if(inM&&e.target.closest('.maGrab')&&!e.target.closest('button,input,textarea,a')){d={t:'down',y0:e.clientY,x0:e.clientX,id:e.pointerId,lock:MA_LOCK(m.dataset.k||'')||!xb(),t0:Date.now()};return}
+  const rc=m.getBoundingClientRect();if(e.clientX-rc.left<26&&e.clientX>=rc.left-10&&((window.mbCan&&mbCan())||(isBack(xb())&&MA.stack.length>1))){d={t:'back',x0:e.clientX,y0:e.clientY,id:e.pointerId,t0:Date.now()}}},{passive:true});
  document.addEventListener('pointermove',e=>{if(!d||e.pointerId!==d.id)return;const m=M();if(!m)return;
   if(d.t==='down'){let dy=e.clientY-d.y0;if(dy<0)dy=dy*.2;if(d.lock)dy=dy>0?Math.pow(dy,.7):dy;m.style.transition='none';m.style.transform=`translateY(${dy}px)`;d.dy=dy}
   else{const dx=Math.max(0,e.clientX-d.x0);if(Math.abs(e.clientY-d.y0)>60&&dx<20){d=null;return}m.style.transition='none';m.style.transform=`translateX(${dx}px)`;m.style.opacity=String(1-Math.min(.4,dx/600));d.dx=dx}},{passive:true});
  const up=e=>{if(!d)return;const m=M(),dd=d;d=null;if(!m)return;const v=dd.t==='down'?(dd.dy||0)/Math.max(1,Date.now()-dd.t0):(dd.dx||0)/Math.max(1,Date.now()-dd.t0);
   const go=dd.t==='down'?(!dd.lock&&((dd.dy||0)>110||v>.6)):((dd.dx||0)>90||v>.6);
   m.style.transition='transform .32s cubic-bezier(.2,1.2,.4,1),opacity .25s';
-  if(go){if(dd.t==='down'){MA.mode='sheet';m.style.transform='';m.style.transition='';const b=xb();if(b)b.click();else closeM()}else{m.style.transform='';m.style.opacity='';m.style.transition='';const b=xb();if(b)b.click()}}
+  if(go){if(dd.t==='down'){MA.mode='sheet';m.style.transform='';m.style.transition='';const b=xb();if(b)b.click();else closeM()}else{m.style.transform='';m.style.opacity='';m.style.transition='';if(window.mbCan&&mbCan())mbBack();else{const b=xb();if(b)b.click()}}}
   else{m.style.transform='';m.style.opacity='';setTimeout(()=>{if(m)m.style.transition=''},340)}};
  document.addEventListener('pointerup',up,{passive:true});document.addEventListener('pointercancel',up,{passive:true})})();
 (()=>{const st=document.createElement('style');st.textContent=`
@@ -54527,3 +54527,54 @@ const idle=window.requestIdleCallback||(f=>setTimeout(f,3000));setTimeout(()=>id
 // โลกที่ยังอยู่ในไฟล์หลัก
 ['murim','xian','god','beast','soul','loop','sky','mw'].forEach(n=>R[n]=1);
 })()}catch(e){console.error('block117',e)}
+
+// ============================================================
+// BLOCK 118: ↩️ ปุ่มย้อนกลับทุกหน้าต่าง + ปุ่มย้อนกลับของมือถือ · หน้าต่างนิ่งขึ้น
+//   เปิดหน้าต่างใหม่ทับหน้าเดิม → เก็บหน้าเดิมไว้ทั้งก้อน (สถานะ/ตำแหน่งเลื่อนครบ) · กด ← กลับไปหน้าก่อน · ✕ ปิดทั้งหมด
+//   ปุ่มย้อนกลับของ Android/เบราว์เซอร์ = ย้อนหน้าต่าง (ไม่หลุดออกจากเว็บ) · วาดหน้าเดิมซ้ำไม่เด้งกลับไปบนสุด
+// ============================================================
+try{(()=>{
+const ST=[];let busyR=0;
+const NOPUSH=/^(choice|duel|mg2|qigame|bye|broll|wintro|update|tut|coach|skymg|mgres)/,ALERT=/^(delslot|svlbl|mwask|sysswap|annview|confirm|ask|del|warn|pushhelp|lifecard)/;
+const LOCK=k=>/^(choice|duel|mg2|qigame|broll|skymg)/.test(k||'');
+const M=()=>$('modal'),shown=()=>{try{return modalOpen&&$('mask').classList.contains('on')}catch(e){return false}};
+window.mbCan=()=>ST.length>0&&shown()&&!LOCK(M().dataset.k);
+function addBtn(){const m=M();if(!m)return;m.querySelectorAll(':scope>.mbBack').forEach(b=>b.remove());m.classList.remove('mbHas');if(!ST.length||!shown()||LOCK(m.dataset.k))return;
+ const x=m.querySelector(':scope>.xbtn');if(x&&/←/.test(x.textContent))return;const t=ST[ST.length-1];const b=document.createElement('button');b.className='mbBack';b.type='button';b.innerHTML='← <span>'+esc(t.title||'ย้อนกลับ')+'</span>';b.onclick=e=>{e.stopPropagation();mbBack()};m.prepend(b);m.classList.add('mbHas')}
+const titleOf=m=>{try{const h=m.querySelector('h3,h2');if(!h)return'';const c=h.cloneNode(true);c.querySelectorAll('button,small,.tag2,span.px').forEach(x=>x.remove());return c.textContent.replace(/\s+/g,' ').trim().slice(0,22)}catch(e){return''}};
+// ---------- เปิดหน้าต่าง ----------
+{const _md=modal;modal=function(html,k){const m=M();k=k||'';if(!m)return _md.apply(this,arguments);
+ const was=shown(),pk=m.dataset.k||'',sc=m.scrollTop,tabOf=()=>{try{const t=m.querySelector('.tabs .on,.tabb.on,.onNav .on');return t?t.textContent.trim():''}catch(e){return''}},tb0=tabOf();let frag=null,meta=null;
+ const push=was&&!busyR&&k!==pk&&!NOPUSH.test(k)&&!NOPUSH.test(pk)&&!ALERT.test(pk)&&m.childNodes.length;
+ const top=ST[ST.length-1],isPop=was&&top&&top.k===k&&k!==pk;
+ if(push&&!isPop){meta={k:pk,sc,title:titleOf(m),cls:m.className};m.querySelectorAll(':scope>.mbBack,:scope>.maGrab').forEach(b=>b.remove());frag=document.createDocumentFragment();while(m.firstChild)frag.appendChild(m.firstChild)}
+ const r=_md.apply(this,arguments);
+ try{if(frag){if(!m.childNodes.length){m.appendChild(frag)}else{ST.push(Object.assign(meta,{frag}));if(ST.length>10)ST.shift()}}
+  else if(isPop&&m.childNodes.length)ST.pop();
+  if(NOPUSH.test(k)&&k!==pk&&!/^(wintro|update)/.test(k))ST.length=0;
+  // วาดหน้าเดิมซ้ำ (เช่น กดซื้อ/สลับแท็บ) → คงตำแหน่งเลื่อน
+  if(was&&k&&k===pk&&sc>0&&tabOf()===tb0){m.scrollTop=sc;requestAnimationFrame(()=>{try{if(m.dataset.k===k&&m.scrollTop<sc)m.scrollTop=Math.min(sc,m.scrollHeight)}catch(e){}})}
+  addBtn();guard()}catch(e){console.error('mbOpen',e)}return r};for(const x in _md)try{modal[x]=_md[x]}catch(e){}}
+// ---------- ปิด ----------
+{const _cm=closeM;closeM=function(){if(!busyR){ST.length=0;try{M().querySelectorAll(':scope>.mbBack').forEach(b=>b.remove());M().classList.remove('mbHas')}catch(e){}}return _cm.apply(this,arguments)};for(const x in _cm)try{closeM[x]=_cm[x]}catch(e){}}
+// ---------- ย้อนกลับ ----------
+window.mbBack=function(){const m=M();if(!m)return;if(LOCK(m.dataset.k))return;const t=ST.pop();if(!t){const x=m.querySelector(':scope>.xbtn');if(x)x.click();else closeM();return}
+ busyR=1;try{m.replaceChildren(t.frag);m.dataset.k=t.k;modalOpen=true;$('mask').classList.add('on');m.scrollTop=t.sc;requestAnimationFrame(()=>{try{m.scrollTop=t.sc}catch(e){}});
+  m.classList.remove('mbIn');void m.offsetWidth;m.classList.add('mbIn');setTimeout(()=>m.classList.remove('mbIn'),320)}finally{busyR=0}addBtn()};
+// ---------- ปุ่มย้อนกลับของมือถือ/เบราว์เซอร์ ----------
+let gOn=false;function guard(){try{if(!shown()||gOn)return;history.pushState(Object.assign({},history.state||{},{mb:1}),'');gOn=true}catch(e){}}
+window.addEventListener('popstate',()=>{gOn=false;try{if(!shown())return;const m=M(),k=m.dataset.k||'';
+ if(LOCK(k)){guard();return}
+ if(ST.length)mbBack();else{const x=m.querySelector(':scope>.xbtn');if(x&&!/←/.test(x.textContent))x.click();else if(x)x.click();else closeM()}
+ if(shown())guard()}catch(e){}});
+// ---------- สไตล์: ปุ่มย้อนกลับ · หน้าต่างไม่พาหน้าหลังเลื่อนตาม ----------
+const st=document.createElement('style');st.textContent=`
+.mbBack{position:absolute;top:10px;left:10px;z-index:6;display:inline-flex;align-items:center;gap:5px;max-width:60%;padding:5px 11px 5px 9px;border-radius:999px;border:1.5px solid var(--line,#5a4a2a);background:color-mix(in srgb,var(--card,#1d1a2a) 86%,#fff 4%);color:inherit;font:inherit;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px #0005}
+.mbBack span{font-weight:600;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mbBack:active{transform:scale(.95)}
+#modal.mbHas{padding-top:48px}
+#modal.mbIn{animation:mbIn .28s cubic-bezier(.2,.9,.3,1)}@keyframes mbIn{from{transform:translateX(-22px);opacity:.4}}
+.mask,.modal,#modal{overscroll-behavior:contain}
+body:has(#mask.on){overflow:hidden}
+@media(prefers-reduced-motion:reduce){#modal.mbIn{animation:none}}`;document.head.appendChild(st);
+})()}catch(e){console.error('block118',e)}
