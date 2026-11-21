@@ -108,7 +108,7 @@ window.setInterval=function(f,t){if(typeof f==='function'&&OK.test(f.name||'')){
 <meta name="apple-mobile-web-app-title" content="1 ใน นวนิยาย">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Itim&family=Srisakdi:wght@700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Itim&family=Srisakdi:wght@700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Itim&family=Srisakdi:wght@700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{--bg:#f4eee2;--card:#fffdf8;--w:#fff;--ink:#2a2838;--mut:#8a8496;--pink:#ff6b9a;--pinkd:#d94a7a;--line:#2a2838;--grid:#0000000a;
 --good:#e6f7e9;--bad:#ffe5e8;--epic:#fff3d6;--myth:#ffe1ee;--peerb:#eef1f6;--think:#dceaff;--tb1:#dceaff;--tb2:#f5e6cc;--tb3:#ffd6de;--tb4:#ece0ff;--me:#ffe9f0;
@@ -477,6 +477,36 @@ details.item summary{cursor:pointer}
 <div class="mask" id="mask"><div class="modal" id="modal"></div></div>
 <div class="toast" id="toast"></div>
 
-<script src="/app.js" charset="utf-8"></script>
+<div id="bootL" aria-live="polite"><div class="bl-in"><div class="bl-ic">📖</div><b>1 ใน นวนิยาย</b><div class="bl-bar"><i id="bootB"></i></div><small id="bootT">กำลังเปิดเกม…</small><small class="bl-sub" id="bootS"></small><button id="bootR" onclick="location.reload()">🔄 ลองใหม่</button></div></div>
+<style>
+#bootL{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;background:rgba(15,13,22,.92);color:#f6ecd6;font-family:Itim,Sarabun,system-ui,sans-serif;transition:opacity .35s}
+#bootL.out{opacity:0;pointer-events:none}
+#bootL .bl-in{width:min(300px,80vw);text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+#bootL .bl-ic{font-size:44px;animation:blB 1.6s ease-in-out infinite}#bootL b{font-size:22px;letter-spacing:.5px;color:#ffd76a}
+#bootL .bl-bar{width:100%;height:10px;border-radius:9px;background:rgba(255,255,255,.12);overflow:hidden;border:1px solid rgba(255,215,106,.35)}
+#bootL .bl-bar i{display:block;height:100%;width:3%;border-radius:9px;background:linear-gradient(90deg,#ffb340,#ffd76a,#fff2b8);transition:width .25s}
+#bootL small{font-size:14px;opacity:.9}#bootL .bl-sub{font-size:12px;opacity:.6;min-height:1em}
+#bootR{display:none;margin-top:6px;padding:8px 16px;border-radius:12px;border:2px solid #ffd76a;background:#2a2210;color:#ffd76a;font:inherit;cursor:pointer}
+@keyframes blB{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+</style>
+<script>
+// โหลดเกมแบบเห็นความคืบหน้า: ดึง app.js ผ่าน fetch (นับไบต์) แล้วค่อยใส่ <script src> ซึ่งได้ไฟล์จากแคชทันที
+(function(){var L=document.getElementById('bootL'),B=document.getElementById('bootB'),T=document.getElementById('bootT'),S=document.getElementById('bootS'),t0=Date.now(),gone=0,SZ=14600000;
+function set(f,n){f=Math.max(.03,Math.min(.99,f));B.style.width=(f*100).toFixed(1)+'%';T.textContent='กำลังโหลดเกม '+Math.round(f*100)+'%';if(n&&Date.now()-t0>1500)S.textContent=(n/1048576).toFixed(1)+' MB · ครั้งต่อไปจะเปิดเร็วขึ้น'}
+function done(){if(gone)return;gone=1;B.style.width='100%';L.classList.add('out');setTimeout(function(){try{L.remove()}catch(e){}},400)}
+function fail(){T.textContent='โหลดไม่สำเร็จ — เน็ตอาจหลุด';S.textContent='';document.getElementById('bootR').style.display='inline-block'}
+var ran=0;function go(){if(ran)return;ran=1;T.textContent='กำลังเตรียมโลก…';var s=document.createElement('script');s.src='/app.js';s.charset='utf-8';s.async=false;s.onload=function(){setTimeout(done,60)};s.onerror=fail;document.body.appendChild(s)}
+// เก็บไฟล์เกมไว้ในเครื่อง (service worker) + บอกเมื่อมีเวอร์ชันใหม่พร้อมใช้
+try{if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){setTimeout(function(){navigator.serviceWorker.register('/sw.js').catch(function(){})},4000);
+ navigator.serviceWorker.addEventListener('message',function(e){try{if(!e.data||!e.data.upd||document.getElementById('updPill'))return;var b=document.createElement('button');b.id='updPill';b.textContent='🆕 มีอัปเดตใหม่ · แตะเพื่อโหลด';b.style.cssText='position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483001;padding:9px 16px;border-radius:999px;border:2px solid #ffd76a;background:#2a2210;color:#ffd76a;font:inherit;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.45);cursor:pointer';b.onclick=function(){try{window.saveGame&&saveGame()}catch(x){}location.reload()};document.body.appendChild(b);setTimeout(function(){try{b.remove()}catch(x){}},20000)}catch(x){}})}}catch(e){}
+setTimeout(function(){if(!gone&&!ran)S.textContent='เน็ตช้านิดหน่อย รอสักครู่นะ…'},12000);
+// เคยเปิดแล้ว (มี service worker เก็บไฟล์ไว้) → ใช้ <script src> ตรงๆ ได้ไฟล์จากเครื่องทันที + แคชโค้ดที่คอมไพล์แล้ว
+// ครั้งแรก → ดึงพร้อมนับไบต์ แล้วรันโค้ดที่ได้เลย (ไม่โหลดซ้ำสองรอบ)
+function run(buf){try{var code=new TextDecoder('utf-8').decode(buf);T.textContent='กำลังเตรียมโลก…';setTimeout(function(){try{ran=1;var s=document.createElement('script');s.text=code+'\n//# sourceURL='+location.origin+'/app.js';document.body.appendChild(s);code=null;setTimeout(done,60)}catch(e){ran=0;go()}},30)}catch(e){go()}}
+try{if(!window.fetch||!window.ReadableStream||!window.TextDecoder||(navigator.serviceWorker&&navigator.serviceWorker.controller))return go();
+ fetch('/app.js',{credentials:'same-origin'}).then(function(r){if(!r.ok||!r.body)return go();var cl=+r.headers.get('content-length')||0,enc=r.headers.get('content-encoding'),tot=(!enc&&cl>1e6)?cl:SZ,n=0,rd=r.body.getReader(),parts=[];
+  (function pump(){rd.read().then(function(x){if(x.done){set(1,n);var all=new Uint8Array(n),o=0;for(var i=0;i<parts.length;i++){all.set(parts[i],o);o+=parts[i].length}parts=null;return run(all)}parts.push(x.value);n+=x.value.length;set(n/tot,n);pump()}).catch(function(){if(!ran)go()})})()}).catch(function(){if(!ran)go()})}catch(e){go()}
+})();
+</script>
 </body>
 </html>

@@ -1,6 +1,36 @@
-// 1 ใน นวนิยาย — service worker สำหรับแจ้งเตือน (ไม่แคชไฟล์เกม เพื่อให้อัปเดตทันทีเสมอ)
+// 1 ใน นวนิยาย — service worker: แจ้งเตือน + เก็บไฟล์เกมใหญ่ (app.js / pfx.js) ไว้ในเครื่อง
+// เปิดเกมครั้งถัดไปใช้ไฟล์ในเครื่องทันที แล้วเช็คเวอร์ชันใหม่เบื้องหลัง — ถ้ามีใหม่จะเก็บไว้ใช้ครั้งหน้า และบอกหน้าเกม
+const GC = 'game-files-v1', SWR = /^\/(app|pfx)\.js$/;
 self.addEventListener('install', e => self.skipWaiting());
-self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+self.addEventListener('activate', e => e.waitUntil((async () => { try { for (const k of await caches.keys()) if (k !== GC && k.startsWith('game-files-')) await caches.delete(k) } catch (x) {} await self.clients.claim() })()));
+const tagOf = r => r ? (r.headers.get('etag') || r.headers.get('last-modified') || '') : '';
+const bg = {};
+async function refresh(path, req, hit) {
+  if (bg[path]) return bg[path];
+  return bg[path] = (async () => {
+    try {
+      const r = await fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' });
+      if (!r.ok || r.status !== 200) return null;
+      const nt = tagOf(r), ot = tagOf(hit);
+      if (!hit || !nt || nt !== ot) {
+        const c = await caches.open(GC); await c.put(path, r.clone());
+        if (hit && nt && nt !== ot && path === '/app.js') { try { for (const w of await self.clients.matchAll({ type: 'window' })) w.postMessage({ upd: 1 }) } catch (x) {} }
+      }
+      return r;
+    } catch (x) { return null } finally { delete bg[path] }
+  })();
+}
+self.addEventListener('fetch', e => {
+  const q = e.request; if (q.method !== 'GET') return;
+  let u; try { u = new URL(q.url) } catch (x) { return }
+  if (u.origin !== self.location.origin || !SWR.test(u.pathname) || u.search) return;
+  e.respondWith((async () => {
+    let hit = null; try { hit = await (await caches.open(GC)).match(u.pathname) } catch (x) {}
+    if (hit) { e.waitUntil(refresh(u.pathname, q, hit)); return hit }
+    const r = await refresh(u.pathname, q, null);
+    return r ? r.clone() : fetch(q);
+  })());
+});
 self.addEventListener('push', e => {
   let d = {};
   try { d = e.data ? e.data.json() : {} } catch (x) { d = { b: e.data ? e.data.text() : '' } }
