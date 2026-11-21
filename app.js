@@ -43679,75 +43679,98 @@ const rot=(c,deg)=>{const n=parseInt(c.slice(1),16);let r=(n>>16)/255,g=(n>>8&25
 const f1=n=>Math.round(n*10)/10;
 const PL={d:'DAILY',w:'WEEKLY',m:'MONTHLY'},PLT={d:'วัน',w:'สัปดาห์',m:'เดือน'};
 let gid=0;
-// ลายประจำโลก (วาดรอบกรอบสี่เหลี่ยมมุมมน x/y -2..102)
-function motif(l,c1,c2,c3,bg,r,R,g){let o='';
- if(l==='n'){o+=`<g class="mw-spin" style="--d:9s"><ellipse cx="50" cy="50" rx="66" ry="62" fill="none" stroke="${c1}" stroke-width="2" stroke-dasharray="18 8 4 8" opacity=".75"/></g><g class="mw-spin" style="--d:6s;animation-direction:reverse"><ellipse cx="50" cy="50" rx="61" ry="58" fill="none" stroke="${c3}" stroke-width="1.3" stroke-dasharray="3 6" opacity=".9"/></g>`;
-  const L=r===1?['S','S','S']:r===2?['S','A']:['A'];L.forEach((t,i)=>{const x=[-14,114,112][i],y=[30,22,78][i];o+=`<g class="mw-bob" style="animation-delay:-${i*.7}s"><rect x="${x-6}" y="${y-7}" width="12" height="14" rx="3" fill="${bg}" stroke="${c1}" stroke-width="1.2"/><text x="${x}" y="${y+3.6}" text-anchor="middle" font-size="10" font-weight="900" fill="${c2}" font-family="'Chakra Petch',monospace">${t}</text></g>`})}
- else if(l==='u'){o+=`<path class="mw-flk" d="M-10 18V64" stroke="${c1}" stroke-width="3" stroke-linecap="round" filter="url(#${g}f)"/><path class="mw-flk" style="animation-delay:-1.3s" d="M110 36V84" stroke="${c3}" stroke-width="3" stroke-linecap="round" filter="url(#${g}f)"/>`;
-  o+=`<g class="mw-flk" style="animation-delay:-.6s"><rect x="-17" y="74" width="18" height="11" rx="2.5" fill="${bg}" stroke="${c3}" stroke-width="1.1"/><text x="-8" y="82" text-anchor="middle" font-size="6.5" font-weight="900" fill="${c3}" font-family="monospace">24H</text></g>`;
-  if(r<=2)o+=`<g class="mw-flk" style="animation-delay:-2s"><rect x="99" y="8" width="20" height="11" rx="2.5" fill="${bg}" stroke="${c1}" stroke-width="1.1"/><text x="109" y="16" text-anchor="middle" font-size="6.5" font-weight="900" fill="${c1}" font-family="monospace">BAR</text></g>`}
- else if(l==='o'){const n=r===1?3:2;for(let i=0;i<n;i++){const x=[-8,108,-12][i],y=[-6,-4,58][i],a=[-12,10,-6][i];o+=`<g class="mw-sway" style="transform-origin:${x}px ${y}px;animation-delay:-${i*.9}s"><g transform="rotate(${a} ${x} ${y})"><rect x="${x-5}" y="${y}" width="10" height="26" rx="1" fill="#f6d36a" stroke="#a8781a" stroke-width=".6"/><path d="M${x-2.5} ${y+5}q5 3 0 6q-5 3 0 6q5 3 0 6" fill="none" stroke="#c81e2e" stroke-width="1.2"/></g></g>`}
-  for(let i=0;i<(r===1?3:2);i++){const x=f1(R()*100),d=(R()*3).toFixed(2);o+=`<circle class="mw-wisp" cx="${x}" cy="104" r="${f1(2+R()*2)}" fill="${i%2?'#9ff0ff':c1}" style="animation-delay:-${d}s" filter="url(#${g}f)"/>`}}
- else if(l==='p'){let tk='';for(let i=0;i<60;i++){const a=i*6*Math.PI/180,big=i%5===0,r0=big?59:61.5;tk+=`<path d="M${f1(50+Math.cos(a)*r0)} ${f1(50+Math.sin(a)*r0)}L${f1(50+Math.cos(a)*64)} ${f1(50+Math.sin(a)*64)}" stroke="${big?c2:c1}" stroke-width="${big?1.6:.6}"/>`}
-  o+=`<g opacity=".85">${tk}</g><g class="mw-tick"><path d="M50 -7L50 -17" stroke="${c3}" stroke-width="2" stroke-linecap="round"/><circle cx="50" cy="-17" r="2.4" fill="${c3}" filter="url(#${g}f)"/></g>`;
-  o+=`<g class="mw-spin" style="--d:5s;animation-direction:reverse"><path d="M-4 50A54 54 0 0 1 20 5" fill="none" stroke="${c2}" stroke-width="1.8" stroke-linecap="round"/><path d="M20 5l-1-6l6 3z" fill="${c2}"/></g>`}
- else if(l==='z'){const tape=(x,y,a)=>`<g transform="rotate(${a} ${x} ${y})"><rect x="${x-34}" y="${y-5}" width="68" height="10" fill="#ffd23a"/><g fill="#141414">${[0,1,2,3,4,5,6,7].map(i=>`<path d="M${x-34+i*9} ${y-5}h4.5l-5 10h-4.5z"/>`).join('')}</g></g>`;
-  o+=tape(4,4,-45);if(r<=2)o+=tape(96,96,-45);
-  for(let i=0;i<(r===1?4:2);i++){const x=f1(14+R()*72);o+=`<path class="mw-drip" style="animation-delay:-${(R()*2.4).toFixed(2)}s" d="M${x} 101q2 6 0 9q-2-3 0-9z" fill="${c1}" filter="url(#${g}f)"/>`}}
- else if(l==='t'){for(let i=0;i<5;i++){const y=96-i*20;o+=`<g class="mw-floor" style="animation-delay:${(i*.35).toFixed(2)}s"><rect x="-17" y="${y-7}" width="13" height="12" rx="1.5" fill="${bg}" stroke="${c1}" stroke-width="1"/><text x="-10.5" y="${y+1.6}" text-anchor="middle" font-size="5.6" font-weight="800" fill="${c2}" font-family="monospace">${96+i}</text></g>`}
-  o+=`<path d="M-10.5 -14L-6 -1H-15Z" fill="${c1}" filter="url(#${g}f)"/>`;if(r<=2)o+=`<path class="mw-spin" style="--d:12s" d="M118 50l-6-9h12zM118 50l-6 9h12z" fill="none" stroke="${c3}" stroke-width="1"/>`}
- else if(l==='e'){o+=`<g><rect x="-16" y="22" width="4" height="56" rx="1" fill="${bg}" stroke="${c2}" stroke-width=".6"/><rect class="mw-hp" x="-15.4" y="22.6" width="2.8" height="54.8" fill="#ff4a5a"/><rect x="-10" y="22" width="4" height="56" rx="1" fill="${bg}" stroke="${c2}" stroke-width=".6"/><rect class="mw-mp" x="-9.4" y="22.6" width="2.8" height="54.8" fill="#4aa8ff"/><text x="-11" y="86" text-anchor="middle" font-size="5" font-weight="900" fill="${c2}" font-family="monospace">HP MP</text></g>`;
-  o+=`<text x="0" y="0" transform="translate(114 50) rotate(90)" text-anchor="middle" font-size="9" font-weight="900" fill="${c3}" font-family="'Chakra Petch',monospace" class="mw-blink">LV.${r===1?'MAX':r===2?'99':'50'}</text>`;
-  const px=(x,y,sx,sy)=>`<path d="M${x} ${y+8*sy}h${3*sx}v${-5*sy}h${5*sx}v${-3*sy}h${-8*sx}z" fill="${c1}"/>`;o+=px(-8,-8,1,1)+px(108,-8,-1,1)+px(-8,108,1,-1)+px(108,108,-1,-1);
-  if(r<=2)for(let i=0;i<3;i++){const x=f1(R()<.5?-14+R()*10:104+R()*10);o+=`<text class="mw-up" x="${x}" y="100" font-size="6" font-weight="900" fill="${c3}" font-family="monospace" style="animation-delay:-${(R()*3).toFixed(2)}s">+EXP</text>`}}
- else if(l==='q'){let w='';for(let i=0;i<9;i++){const x=-14+i*14.5;w+=`<rect x="${f1(x)}" y="${i%2?99:96}" width="10" height="${i%2?13:16}" fill="#5a606e" stroke="#2a2e38" stroke-width=".6"/>`}
-  o+=`<path d="M-16 103H116V114H-16Z" fill="#454b58"/>${w}<path d="M-16 103H116" stroke="${c1}" stroke-width=".8" opacity=".7"/>`;
-  o+=`<path d="M108 -14V22" stroke="#d8dde6" stroke-width="1.3"/><path class="mw-flag" d="M108 -14q8 3 15 0v11q-7 3-15 0z" fill="${c1}"/>`;
-  if(r===1)o+=`<path d="M-8 -14V18" stroke="#d8dde6" stroke-width="1.1"/><path class="mw-flag" style="animation-delay:-.5s" d="M-8 -14q-7 3-13 0v9q6 3 13 0z" fill="${c3}"/>`}
- else if(l==='y'){o+=`<g class="mw-met"><path d="M128 -28L100 0" stroke="url(#${g}t)" stroke-width="6" stroke-linecap="round"/><circle cx="100" cy="0" r="5" fill="#fff4d0" filter="url(#${g}f)"/><circle cx="100" cy="0" r="3" fill="${c1}"/></g>`;
-  o+=`<g class="mw-blink"><rect x="-18" y="86" width="30" height="11" rx="2" fill="${bg}" stroke="${c3}" stroke-width="1"/><text x="-3" y="94" text-anchor="middle" font-size="7" font-weight="900" fill="${c3}" font-family="'Chakra Petch',monospace">${r===1?'00:00':r===2?'00:12':'12:00'}</text></g>`;
-  for(let i=0;i<(r===1?5:3);i++){const x=f1(R()*100);o+=`<circle class="mw-ash" cx="${x}" cy="-6" r="1.2" fill="${i%2?c3:c1}" style="animation-delay:-${(R()*3).toFixed(2)}s"/>`}}
- return o}
+// ลายเฉพาะโลก: แต่ละโลกมีทรงกรอบของตัวเอง (ไม่ใช้แม่แบบเดียวกัน)
+const CLIPS={n:'circle(48% at 50% 50%)',p:'circle(48% at 50% 50%)',y:'circle(48% at 50% 50%)',u:'inset(0 round 7%)',z:'inset(0)',e:'inset(0)',q:'inset(0)',o:'polygon(0 34%,12% 13%,32% 4%,50% 0,68% 4%,88% 13%,100% 34%,100% 100%,0 100%)',t:'polygon(0 30%,10% 12%,28% 3%,50% 0,72% 3%,90% 12%,100% 30%,100% 100%,0 100%)'};
+const RL=[null,'S','A','B'];
 function mwSvg(l,p,r,seed){const R=seed?RNG(H('mw|'+seed+'|'+l+p+r)):RNG(H('mwfix'+l+p+r));let [c1,c2,c3,bg]=PAL[l]||PAL.n;
- if(seed){const d=Math.round((R()-.5)*50);c1=rot(c1,d);c3=rot(c3,Math.round((R()-.5)*70))}
- const [m1,m2,m3]=RK[r]||RK[3],g='mwg'+(++gid),big=p==='m',I=INFO[l]||INFO.n;
+ if(seed){c1=rot(c1,Math.round((R()-.5)*44));c3=rot(c3,Math.round((R()-.5)*70))}
+ const [m1,m2,m3]=RK[r]||RK[3],g='mwg'+(++gid),big=p==='m',hi=r===1,I=INFO[l]||INFO.n,TL=PL[p];
  let o=`<defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c2}"/><stop offset=".45" stop-color="${c1}"/><stop offset="1" stop-color="${c3}"/></linearGradient>
  <linearGradient id="${g}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${m2}"/><stop offset=".55" stop-color="${m1}"/><stop offset="1" stop-color="${m3}"/></linearGradient>
- <linearGradient id="${g}t" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c3}" stop-opacity="0"/><stop offset="1" stop-color="${c1}"/></linearGradient>
- <linearGradient id="${g}s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
- <clipPath id="${g}c"><rect x="2" y="2" width="96" height="96" rx="24"/></clipPath><clipPath id="${g}o"><path clip-rule="evenodd" d="M-40 -40H140V140H-40ZM26 0H74A26 26 0 0 1 100 26V74A26 26 0 0 1 74 100H26A26 26 0 0 1 0 74V26A26 26 0 0 1 26 0Z"/></clipPath><filter id="${g}f" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
- // เมืองยามค่ำด้านหลัง (อันดับ 1 / รายเดือน)
- if(r===1||big){let b='';let x=-14;while(x<114){const w=6+Math.floor(R()*8),h=10+Math.floor(R()*(r===1?26:16));b+=`<rect x="${x}" y="${112-h}" width="${w}" height="${h}" fill="${bg}" stroke="${c1}" stroke-width=".4" stroke-opacity=".5"/>`;for(let wy=112-h+3;wy<108;wy+=5)for(let wx=x+1.5;wx<x+w-2;wx+=3.5)if(R()<.35)b+=`<rect class="mw-win" x="${f1(wx)}" y="${wy}" width="1.6" height="2" fill="${R()<.5?c2:c3}" style="animation-delay:-${(R()*4).toFixed(2)}s"/>`;x+=w+1}o+=`<g opacity=".95" clip-path="url(#${g}o)">${b}</g>`}
- o+=`<g clip-path="url(#${g}o)">${motif(l,c1,c2,c3,bg,r,R,g)}</g>`;
- // แสงกวาดแบบกระจกมือถือ
- o+=`<g clip-path="url(#${g}c)"><rect class="mw-glass" x="-40" y="-20" width="34" height="140" fill="url(#${g}s)" transform="rotate(20 50 50)"/></g>`;
- // กรอบสี่เหลี่ยมมุมมน + แสงวิ่ง
- o+=`<rect x="-2" y="-2" width="104" height="104" rx="27" fill="none" stroke="${bg}" stroke-width="8"/><rect x="-2" y="-2" width="104" height="104" rx="27" fill="none" stroke="url(#${g})" stroke-width="3.4" filter="url(#${g}f)"/>`;
- o+=`<rect class="mw-run" x="-2" y="-2" width="104" height="104" rx="27" fill="none" stroke="#fff" stroke-width="2.2" stroke-dasharray="16 ${r===1?54:r===2?80:130}" stroke-linecap="round" filter="url(#${g}f)"/>`;
- o+=`<rect x="2.5" y="2.5" width="95" height="95" rx="23" fill="none" stroke="${c2}" stroke-width=".7" opacity=".55"/>`;
- // ไลก์ลอยขึ้น
- const nl=r===1?(big?7:5):r===2?3:1;for(let i=0;i<nl;i++){const x=f1(R()<.5?-12+R()*14:98+R()*14),d=(R()*3.2).toFixed(2),em=i%3===2?I[2]:'❤';o+=`<text class="mw-like" x="${x}" y="96" font-size="${em==='❤'?8:7}" fill="${i%2?c3:'#ff4a7a'}" text-anchor="middle" style="animation-delay:-${d}s">${em}</text>`}
- // ป้ายแจ้งเตือนด้านบน
- const tag=r===1?'LIVE':r===2?'HOT':'UP';
- o+=`<g class="mw-pop"><rect x="27" y="-19" width="46" height="15" rx="7.5" fill="${bg}" stroke="url(#${g})" stroke-width="1.4"/><text x="38.5" y="-8.3" text-anchor="middle" font-size="8.5">${I[2]}</text>${r===1?`<circle class="mw-dot" cx="49" cy="-11.5" r="2.2" fill="#ff2d55"/>`:''}<text x="${r===1?60.5:58}" y="-8.6" text-anchor="middle" font-size="6.8" font-weight="900" letter-spacing=".5" fill="${r===1?'#ff5a7a':c2}" font-family="'Chakra Petch',monospace">${r===2?'🔥':''}${tag}${r===3?'↑':''}</text></g>`;
- // ป้ายอันดับมุมขวาบน
- o+=`<g class="mw-badge"><circle cx="95" cy="5" r="${r===1?11:9.5}" fill="url(#${g}m)" stroke="${bg}" stroke-width="2"/><text x="95" y="${r===1?9:8.6}" text-anchor="middle" font-size="${r===1?11:10}" font-weight="900" fill="#2a1a04" font-family="'Chakra Petch',sans-serif">${r}</text>${r===1?`<g transform="translate(104 -5)"><circle r="4.6" fill="#1d9bf0" stroke="#fff" stroke-width="1"/><path d="M-2.2 0l1.5 1.6l3-3.2" fill="none" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></g>`:''}</g>`;
- // ป้ายล่าง
- const lab=(r===1?'TOP 1':'#'+r)+' · '+PL[p];
- o+=`<g><rect x="${big||r===1?11:17}" y="104" width="${big||r===1?78:66}" height="13" rx="6.5" fill="${bg}" stroke="url(#${g})" stroke-width="1.3"/><text x="50" y="113.2" text-anchor="middle" font-size="${r===1?7.2:6.8}" font-weight="800" letter-spacing=".5" fill="${c2}" font-family="'Chakra Petch',monospace">${lab}</text></g>`;
+ <linearGradient id="${g}v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c2}"/><stop offset="1" stop-color="${c1}"/></linearGradient>
+ <filter id="${g}f" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
+ const F=`filter="url(#${g}f)"`,badge=(x,y)=>`<g class="mw-badge" style="transform-origin:${x}px ${y}px"><circle cx="${x}" cy="${y}" r="${hi?10.5:9}" fill="url(#${g}m)" stroke="${bg}" stroke-width="2"/><text x="${x}" y="${y+4}" text-anchor="middle" font-size="${hi?11:10}" font-weight="900" fill="#2a1a04" font-family="'Chakra Petch',sans-serif">${r}</text></g>`;
+ const plate=(txt,fill,stroke,col,font,w=60,y=104,rx=3)=>`<g><rect x="${50-w/2}" y="${y}" width="${w}" height="13" rx="${rx}" fill="${fill}" stroke="${stroke}" stroke-width="1.3"/><text x="50" y="${y+9.3}" text-anchor="middle" font-size="7" font-weight="800" letter-spacing=".5" fill="${col}" font-family="${font||"'Chakra Petch',monospace"}">${txt}</text></g>`;
+ const circ=(rr,sw,st,extra='')=>`<circle cx="50" cy="50" r="${rr}" fill="none" stroke="${st}" stroke-width="${sw}" ${extra}/>`;
+ if(l==='n'){ // 🌀 ประตูมิติ: วงแหวนเกต + ฟันประตู + ตราแรงก์
+  o+=`<g class="mw-spin" style="--d:10s"><ellipse cx="50" cy="50" rx="68" ry="64" fill="none" stroke="${c1}" stroke-width="2" stroke-dasharray="20 7 3 7" opacity=".7"/></g><g class="mw-spin" style="--d:6s;animation-direction:reverse"><ellipse cx="50" cy="50" rx="62" ry="59" fill="none" stroke="${c3}" stroke-width="1.2" stroke-dasharray="2 5"/></g>`;
+  o+=circ(52,8,bg)+circ(52,3.6,`url(#${g})`,F)+circ(47.5,1,c2,'opacity=".6"');
+  for(let i=0;i<8;i++){const a=i*45;o+=`<g transform="rotate(${a} 50 50)"><path d="M46 -5L54 -5L52 1L48 1Z" fill="${i%2?c3:c1}" stroke="${bg}" stroke-width=".8" ${F}/></g>`}
+  if(r<=2)for(const [x,y,k] of [[-10,30,0],[110,62,1]])o+=`<path class="mw-flk" style="animation-delay:-${k*1.2}s" d="M${x} ${y}l4 7l-3 0l4 9l-8-10l3 0z" fill="${c2}" ${F}/>`;
+  o+=`<g class="mw-pop"><path d="M50 -24L61 -18V-6L50 0L39 -6V-18Z" fill="${bg}" stroke="url(#${g}m)" stroke-width="2"/><text x="50" y="-7" text-anchor="middle" font-size="14" font-weight="900" fill="url(#${g}m)" font-family="'Chakra Petch',sans-serif" ${F}>${RL[r]}</text></g>`;
+  o+=badge(93,7)+plate(`RANK ${RL[r]} · ${TL}`,bg,c1,c2,0,big?72:62)}
+ else if(l==='u'){ // 🌃 ป้ายนีออนในซอย: กรอบท่อนีออนสองชั้น + ป้ายแขวน + อิฐ
+  for(const [x,y] of [[-8,-8],[96,-8],[-8,96],[96,96]])o+=`<g fill="#3a1a24" stroke="#1a0a10" stroke-width=".6"><rect x="${x}" y="${y}" width="8" height="5"/><rect x="${x+2}" y="${y+5}" width="8" height="5"/><rect x="${x}" y="${y+10}" width="8" height="2"/></g>`;
+  o+=`<rect x="-3" y="-3" width="106" height="106" rx="8" fill="none" stroke="${bg}" stroke-width="7"/><rect class="mw-flk" x="-3" y="-3" width="106" height="106" rx="8" fill="none" stroke="${c1}" stroke-width="2.6" ${F}/><rect class="mw-flk" style="animation-delay:-1.7s" x="2" y="2" width="96" height="96" rx="5" fill="none" stroke="${c3}" stroke-width="1.4" ${F}/>`;
+  const sg=r===1?'♛ BOSS':r===2?'VIP':'OPEN';o+=`<path d="M36 -26V-17M64 -26V-17" stroke="#888" stroke-width=".8" stroke-dasharray="1.5 1"/><g class="mw-sw2" style="transform-origin:50px -26px"><rect x="30" y="-18" width="40" height="15" rx="3" fill="#0c0612" stroke="${r===2?c3:c1}" stroke-width="1.6" ${F}/><text class="mw-flk" x="50" y="-7.4" text-anchor="middle" font-size="9" font-weight="900" fill="${r===2?c3:c1}" font-family="'Chakra Petch',sans-serif" ${F}>${sg}</text></g>`;
+  for(let i=0;i<(hi?7:4);i++){const x=f1(-12+R()*124);o+=`<path class="mw-rain" style="animation-delay:-${(R()*1.5).toFixed(2)}s" d="M${x} -14l-2 7" stroke="#9aa8ff" stroke-width=".7" opacity=".7"/>`}
+  o+=badge(97,4)+`<g><rect x="${big?13:19}" y="104" width="${big?74:62}" height="13" rx="6.5" fill="#0c0612" stroke="${c3}" stroke-width="1.2" ${F}/><text class="mw-flk" x="50" y="113.2" text-anchor="middle" font-size="7.2" font-weight="900" letter-spacing=".8" fill="${c1}" font-family="'Chakra Petch',monospace" ${F}>#${r} · ${TL}</text></g>`}
+ else if(l==='o'){ // 👻 ซุ้มไทย: ทรงซุ้มยอดแหลม ลายทอง + โคมแขวน + ยันต์
+  const arch='M-2 104V34Q-2 8 24 2Q42 -2 50 -18Q58 -2 76 2Q102 8 102 34V104Z';
+  o+=`<path d="${arch}" fill="none" stroke="${bg}" stroke-width="8"/><path d="${arch}" fill="none" stroke="url(#${g}m)" stroke-width="3.6" ${F}/><path d="M3 102V35Q3 12 26 6Q42 3 50 -9Q58 3 74 6Q97 12 97 35V102" fill="none" stroke="${c3}" stroke-width="1.2"/>`;
+  o+=`<path d="M50 -18Q47 -26 50 -32Q53 -26 50 -18Z" fill="url(#${g}m)" ${F}/>`;for(const s of [-1,1])o+=`<path d="M${50+s*20} 1q${s*4} -7 ${s*2} -12q${s*3} 4 ${s*2} 11z" fill="url(#${g}m)"/>`;
+  const lamp=(x,d)=>`<g class="mw-sway" style="transform-origin:${x}px -6px;animation-delay:-${d}s"><path d="M${x} -6V8" stroke="#a8781a" stroke-width=".8"/><ellipse cx="${x}" cy="14" rx="5" ry="7" fill="#e0302a" stroke="#7a1010" stroke-width=".8"/><path d="M${x-5} 14H${x+5}" stroke="#ffd060" stroke-width=".6"/><circle cx="${x}" cy="14" r="2.4" fill="#ffd060" ${F}/><path d="M${x} 21v4" stroke="#ffd060" stroke-width="1"/></g>`;
+  o+=lamp(-10,0);if(r<=2)o+=lamp(110,.9);
+  if(hi)for(let i=0;i<3;i++){const x=f1(-14+R()*14+(i===1?114:0));o+=`<circle class="mw-wisp" cx="${x}" cy="100" r="2" fill="#9ff0ff" style="animation-delay:-${(R()*3).toFixed(2)}s" ${F}/>`}
+  o+=badge(96,24)+`<g><rect x="${big?18:24}" y="103" width="${big?64:52}" height="15" rx="1" fill="#f4d870" stroke="#a8781a" stroke-width="1"/><path d="M${big?22:28} 106h6M${big?72:66} 115h6" stroke="#c81e2e" stroke-width="1"/><text x="50" y="113.4" text-anchor="middle" font-size="7.4" font-weight="900" fill="#b0141e" font-family="Itim,sans-serif">อันดับ ${r} · ${PLT[p]}</text></g>`}
+ else if(l==='p'){ // 🔁 นาฬิกาปลุก: หน้าปัด + กระดิ่ง + เข็มกวาด + ตัวเลขดิจิทัล
+  for(const s of [-1,1])o+=`<g class="mw-ring" style="transform-origin:${50+s*34}px -2px"><path d="M${50+s*44} -2A13 13 0 0 0 ${50+s*24} -16Z" fill="url(#${g}m)" stroke="${bg}" stroke-width="1.5"/></g>`;
+  o+=`<path d="M50 -10V-3" stroke="${c2}" stroke-width="2"/><circle cx="50" cy="-12" r="3" fill="url(#${g}m)"/><path d="M14 92L4 108M86 92L96 108" stroke="${c1}" stroke-width="4" stroke-linecap="round"/>`;
+  o+=circ(52,9,bg)+circ(52,4,`url(#${g})`)+circ(47.6,.8,c2,'opacity=".7"');
+  let tk='';for(let i=0;i<12;i++){const a=i*30*Math.PI/180,bigT=i%3===0;tk+=`<path d="M${f1(50+Math.sin(a)*55.5)} ${f1(50-Math.cos(a)*55.5)}L${f1(50+Math.sin(a)*(bigT?60:58))} ${f1(50-Math.cos(a)*(bigT?60:58))}" stroke="${bigT?c2:c1}" stroke-width="${bigT?2:1}"/>`}o+=tk;
+  o+=`<g class="mw-tick"><path d="M50 -8L50 -2" stroke="${c3}" stroke-width="2.4" stroke-linecap="round"/></g><g class="mw-spin" style="--d:6s"><path d="M50 -9A59 59 0 0 1 101 20" fill="none" stroke="${c3}" stroke-width="1.4" stroke-dasharray="2 3" opacity=".8"/></g>`;
+  o+=badge(96,82)+`<g><rect x="${big?20:25}" y="103" width="${big?60:50}" height="14" rx="3" fill="#0a1a14" stroke="${c1}" stroke-width="1.4"/><text class="mw-blink" x="50" y="113.4" text-anchor="middle" font-size="9" font-weight="900" fill="#5cf2c4" font-family="'Chakra Petch',monospace" ${F}>${hi?'07:00':r===2?'06:59':'06:58'}</text></g>`}
+ else if(l==='z'){ // 🧟 เขตกักกัน: กรอบเทปกั้นรอบตัว + มุมขาด + มือซอมบี้
+  o+=`<rect x="-3" y="-3" width="106" height="106" fill="none" stroke="#141414" stroke-width="9"/><rect class="mw-tape" x="-3" y="-3" width="106" height="106" fill="none" stroke="#ffd23a" stroke-width="7" stroke-dasharray="7 7"/>`;
+  for(const [x,y,a] of [[-7,-7,0],[107,107,180]])o+=`<path transform="rotate(${a} ${x} ${y})" d="M${x} ${y}h14l-5 4l3 3l-7 2l-5 -2z" fill="#0c0c0a"/>`;
+  o+=`<g class="mw-pop"><circle cx="50" cy="-10" r="10" fill="#141414" stroke="#ffd23a" stroke-width="2"/><text x="50" y="-5.2" text-anchor="middle" font-size="13" fill="#ffd23a">☣</text></g>`;
+  for(let i=0;i<(hi?4:2);i++){const x=f1(10+R()*80);o+=`<path class="mw-drip" style="animation-delay:-${(R()*2.4).toFixed(2)}s" d="M${x} 104q2.4 7 0 10q-2.4 -3 0 -10z" fill="${c1}" ${F}/>`}
+  if(r<=2)o+=`<g class="mw-claw"><path d="M108 70l6 -2l1 -6l2 6l2 -7l1 7l3 -5l-1 8l-4 6l-8 2z" fill="#6a8a4a" stroke="#2a3a1a" stroke-width=".8"/></g>`;
+  o+=badge(-4,26)+plate(hi?'SURVIVOR #1':`SURVIVOR #${r}`,'#141414','#ffd23a','#ffd23a',"'Chakra Petch',monospace",big?70:62,106,1)}
+ else if(l==='t'){ // 🗼 หอคอย: กรอบหน้าต่างโค้งยอดหอ + ยอดแหลม + เลขชั้นไล่ไฟ
+  const arch='M-2 104V30Q-2 2 26 -4Q42 -8 50 -8Q58 -8 74 -4Q102 2 102 30V104Z';
+  o+=`<path d="${arch}" fill="none" stroke="${bg}" stroke-width="8"/><path d="${arch}" fill="none" stroke="url(#${g})" stroke-width="3.6" ${F}/>`;
+  for(let y=20;y<100;y+=16)o+=`<path d="M-6 ${y}h6M100 ${y}h6" stroke="${c1}" stroke-width="2"/>`;
+  o+=`<path d="M50 -8L44 -14H56Z" fill="${c1}"/><path d="M47 -14L50 -38L53 -14Z" fill="url(#${g}m)" stroke="${bg}" stroke-width=".8"/><circle cx="50" cy="-40" r="3" fill="#fff6c0" ${F}/>`;
+  for(let i=0;i<5;i++){const y=94-i*17;o+=`<g class="mw-floor" style="animation-delay:${(i*.3).toFixed(2)}s"><rect x="-19" y="${y-6}" width="13" height="11" rx="1.5" fill="${bg}" stroke="${c1}" stroke-width="1"/><text x="-12.5" y="${y+1.8}" text-anchor="middle" font-size="5.8" font-weight="800" fill="${c2}" font-family="monospace">${96+i}</text></g>`}
+  if(hi)for(let i=0;i<4;i++){const a=i*Math.PI/2+.4;o+=`<path class="mw-tw" style="animation-delay:-${i*.5}s" d="M${f1(50+Math.cos(a)*24)} ${f1(-34+Math.sin(a)*10)}l1 -3l1 3l3 1l-3 1l-1 3l-1 -3l-3 -1z" fill="#fff6c0"/>`}
+  o+=badge(100,104)+plate(`FLOOR ${hi?100:100-r+1} · ${TL}`,bg,c1,c2,0,big?72:64)}
+ else if(l==='e'){ // 🎮 หน้าต่างเกม: กรอบพิกเซลขั้นบันได + แถบ HP/MP + ช่องไอเทม
+  const pxb=(d,c,w)=>`<path d="M${-d+6} ${-d}H${106+d-6-6}V${-d+0}H${100+d-6}V${-d+6}H${100+d}V${100+d-6}H${100+d-6}V${100+d}H${-d+6}V${100+d-6}H${-d}V${-d+6}H${-d+6}Z" fill="none" stroke="${c}" stroke-width="${w}" stroke-linejoin="miter"/>`;
+  o+=pxb(4,bg,8)+pxb(4,'#ffffff',2.6)+pxb(1,c1,2);
+  o+=`<g><rect x="-2" y="-19" width="50" height="5" fill="${bg}" stroke="#fff" stroke-width=".8"/><rect class="mw-hp" x="-1" y="-18" width="48" height="3" fill="#ff4a5a"/><rect x="-2" y="-12" width="50" height="5" fill="${bg}" stroke="#fff" stroke-width=".8"/><rect class="mw-mp" x="-1" y="-11" width="48" height="3" fill="#4aa8ff"/></g>`;
+  o+=`<g class="mw-blink"><rect x="62" y="-20" width="38" height="13" fill="${bg}" stroke="#fff" stroke-width="1"/><text x="81" y="-10.6" text-anchor="middle" font-size="8" font-weight="900" fill="${c3}" font-family="'Silkscreen','Chakra Petch',monospace">LV.${hi?'MAX':r===2?'99':'50'}</text></g>`;
+  ['⚔️','🛡️','💎'].slice(0,hi?3:r===2?2:1).forEach((em,i)=>{o+=`<g><rect x="${104}" y="${14+i*16}" width="13" height="13" fill="${bg}" stroke="#fff" stroke-width="1"/><text x="110.5" y="${24+i*16}" text-anchor="middle" font-size="8">${em}</text></g>`});
+  for(let i=0;i<(hi?3:1);i++){const x=f1(-16+R()*10);o+=`<text class="mw-up" x="${x}" y="96" font-size="6" font-weight="900" fill="${c3}" font-family="monospace" style="animation-delay:-${(R()*3).toFixed(2)}s">+EXP</text>`}
+  o+=badge(-8,96)+`<g><rect x="${big?14:20}" y="104" width="${big?72:60}" height="14" fill="${bg}" stroke="#fff" stroke-width="1.6"/><text x="${big?20:26}" y="113.6" font-size="7" fill="${c3}" font-family="monospace" class="mw-blink">▶</text><text x="53" y="113.6" text-anchor="middle" font-size="7" font-weight="900" fill="#fff" font-family="'Silkscreen','Chakra Petch',monospace">RANK ${r} ${TL}</text></g>`}
+ else if(l==='q'){ // 💀 ป้อมเมืองสุดท้าย: กำแพงหินมีใบเสมา + ธง + ตราดาบไขว้
+  o+=`<rect x="-3" y="-3" width="106" height="106" fill="none" stroke="#2a2c34" stroke-width="10"/><rect x="-3" y="-3" width="106" height="106" fill="none" stroke="#6a707e" stroke-width="5"/>`;
+  for(let y=4;y<100;y+=10)o+=`<path d="M-5.5 ${y}h5M100.5 ${y+5}h5" stroke="#3a3e48" stroke-width="1"/>`;
+  for(let i=0;i<7;i++){const x=-6+i*17.6;o+=`<rect x="${f1(x)}" y="-14" width="9" height="10" fill="#6a707e" stroke="#2a2c34" stroke-width="1"/>`}
+  o+=`<path d="M-8 -14V-36" stroke="#d8dde6" stroke-width="1.2"/><path class="mw-flag" d="M-8 -36q8 3 15 0v10q-7 3 -15 0z" fill="${c1}"/>`;if(r<=2)o+=`<path d="M108 -14V-34" stroke="#d8dde6" stroke-width="1.2"/><path class="mw-flag" style="animation-delay:-.4s" d="M108 -34q-8 3 -15 0v10q7 3 15 0z" fill="#3a8aff"/>`;
+  o+=`<g class="mw-pop"><circle cx="50" cy="-12" r="10" fill="#2a2c34" stroke="url(#${g}m)" stroke-width="2"/><path d="M43 -19L57 -5M57 -19L43 -5" stroke="#e8ecf4" stroke-width="2.2" stroke-linecap="round"/></g>`;
+  if(hi)o+=`<g opacity=".8"><circle class="mw-dot" cx="50" cy="118" r="2" fill="${c1}" ${F}/></g>`;
+  o+=badge(100,-2)+plate(`LAST CITY · #${r}`,'#2a2c34','#8a909e','#e8ecf4',"'Chakra Petch',monospace",big?70:60,106,1)}
+ else if(l==='y'){ // ☄️ วันสิ้นโลก: วงแหวนไฟร้าว + อุกกาบาต + ไซเรน + นับถอยหลัง
+  for(let i=0;i<(hi?11:7);i++){const a=(-165+i*(150/((hi?11:7)-1)))*Math.PI/180,x=50+Math.cos(a)*54,y=50+Math.sin(a)*54;o+=`<path class="mw-fire" style="transform-origin:${f1(x)}px ${f1(y)}px;animation-delay:-${(i*.17).toFixed(2)}s" transform="rotate(${f1(a*180/Math.PI+90)} ${f1(x)} ${f1(y)})" d="M${f1(x-4)} ${f1(y)}q1 -8 4 -${hi?16:12}q3 8 4 ${hi?16:12}z" fill="${i%2?c1:c3}" ${F}/>`}
+  o+=circ(52,8,bg)+circ(52,3.6,`url(#${g})`,F)+`<path d="M8 30l9 6l-3 7l8 4M92 66l-8 -3l2 -7l-7 -5" fill="none" stroke="${c3}" stroke-width="1.4" stroke-linecap="round" ${F}/>`;
+  o+=`<g class="mw-met"><path d="M132 -32L106 -6" stroke="url(#${g}v)" stroke-width="6" stroke-linecap="round" opacity=".9"/><circle cx="104" cy="-4" r="5" fill="#fff4d0" ${F}/><circle cx="104" cy="-4" r="3" fill="${c1}"/></g>`;
+  o+=`<g><path d="M44 -6V-12Q50 -20 56 -12V-6Z" fill="#ff2a3a" stroke="${bg}" stroke-width="1.2"/><circle class="mw-dot" cx="50" cy="-12" r="9" fill="#ff2a3a" opacity=".28"/></g>`;
+  o+=badge(-4,8)+`<g><rect x="${big?18:23}" y="104" width="${big?64:54}" height="14" rx="2" fill="#140404" stroke="#ff2a3a" stroke-width="1.4"/><text class="mw-blink" x="50" y="113.6" text-anchor="middle" font-size="8.4" font-weight="900" fill="#ff4a4a" font-family="'Chakra Petch',monospace" ${F}>T-${hi?'00:00':r===2?'00:12':'12:00'}</text></g>`}
  return`<svg x="8" y="8" width="84" height="84" viewBox="-20 -20 140 140" overflow="visible" class="mwv">${o}</svg>`}
 window.mwSvg=mwSvg;
 // id → (โลก รอบ อันดับ ตัวสุ่ม)
 function spec(id){id=String(id||'');let m=/^f_mw([nuopzteqy])([123])$/.exec(id);if(m)return{l:m[1],p:'m',r:+m[2],s:''};try{m=window.RKG&&RKG.RE.exec(id);if(m&&isL(m[2]))return{l:m[2],p:m[1],r:+m[4],s:m[3]}}catch(e){}return null}
-const MINE=new Set(),CLIP='inset(0 round 26%)';
+const MINE=new Set();
 {const _fw=frWrap;frWrap=function(inner,id){const q=id&&spec(id);if(!q)return _fw.apply(this,arguments);
- try{const M=window.FRSH_M,T=window.FRSH_T;if(M&&T&&!MINE.has(id)){try{_fw.apply(this,arguments)}catch(e){}const key='mw1_'+id,html=mwSvg(q.l,q.p,q.r,q.s);M[key]=()=>html;T[id]=key;MINE.add(id);try{const f=FRAMES.find(x=>x.id===id);if(f){f.ty='static';f.bd=''}}catch(e){}}}catch(e){}
- let h=_fw.apply(this,arguments);try{h=h.replace(/--clip:[^;"]*;?/,'--clip:'+CLIP+';');if(!/ fsh /.test(h))h=h.replace(/class="frw /,'class="frw fsh mwf ').replace(/style="/,'style="--clip:'+CLIP+';');else h=h.replace(/class="frw /,'class="frw mwf ')}catch(e){}return h}}
+ try{const M=window.FRSH_M,T=window.FRSH_T;if(M&&T&&!MINE.has(id)){try{_fw.apply(this,arguments)}catch(e){}const key='mw2_'+id,html=mwSvg(q.l,q.p,q.r,q.s);M[key]=()=>html;T[id]=key;MINE.add(id);try{const f=FRAMES.find(x=>x.id===id);if(f){f.ty='static';f.bd=''}}catch(e){}}}catch(e){}
+ let h=_fw.apply(this,arguments);try{h=h.replace(/--clip:[^;"]*;?/,'--clip:'+(CLIPS[q.l]||'circle(48% at 50% 50%)')+';');if(!/ fsh /.test(h))h=h.replace(/class="frw /,'class="frw fsh mwf ').replace(/style="/,'style="--clip:'+(CLIPS[q.l]||'circle(48% at 50% 50%)')+';');else h=h.replace(/class="frw /,'class="frw mwf ')}catch(e){}return h}}
 // ---------- ฉายา: ป้ายติดเทรนด์ ----------
 function tInfo(t,tr){t=String(t||'');try{const g=window._rkGEN&&window._rkGEN.get(t);if(g&&isL(g.c))return{l:g.c,p:g.p,r:g.r}}catch(e){}
  try{const o=RKC_OF(t);if(o&&o.p.length===2&&isL(o.p[1]))return{l:o.p[1],p:o.p[0],r:o.r}}catch(e){}
  try{if(window.RKG){const c=RKG.cat(t);if(isL(c)){const r=RKG.rank(t);if(r)return{l:c,p:tr===9?'m':tr===8?'w':'d',r}}}}catch(e){}return null}
-{const _rc=rkChip;rkChip=function(t,tr){try{const q=tInfo(t,tr);if(q){const [a,,b,bg]=PAL[q.l],I=INFO[q.l],[m1]=RK[q.r]||RK[3];return`<span class="mwt mwt${q.r} mwp${q.p}" style="--a:${a};--b:${b};--m:${m1};--bg:${bg}"><i class="mwb"></i><i class="mws"></i><span class="ic">${I[2]}</span><span class="tx">${esc(String(t).slice(0,40))}</span>${q.r===1?'<span class="vf">✓</span>':''}<small>${q.r===1?'🔥':''}#${q.r}·${PLT[q.p]}</small></span>`}}catch(e){}return _rc.apply(this,arguments)}}
+const CHP={n:q=>`<b class="mk">${RL[q.r]}</b>`,u:q=>`<i class="nd"></i>`,o:q=>`<b class="mk">๛</b>`,p:q=>`<b class="mk">${q.r===1?'07:00':q.r===2?'06:59':'06:58'}</b>`,z:q=>`<b class="mk">☣</b>`,t:q=>`<b class="mk">▲${101-q.r}F</b>`,e:q=>`<b class="mk">▶</b>`,q:q=>`<b class="mk">★</b>`,y:q=>`<b class="mk">⚠</b>`};
+{const _rc=rkChip;rkChip=function(t,tr){try{const q=tInfo(t,tr);if(q){const [a,,b,bg]=PAL[q.l],[m1]=RK[q.r]||RK[3];return`<span class="mwt mwt-${q.l} mwt${q.r} mwp${q.p}" style="--a:${a};--b:${b};--m:${m1};--bg:${bg}"><i class="mws"></i>${CHP[q.l](q)}<span class="tx">${esc(String(t).slice(0,40))}</span><small>#${q.r}·${PLT[q.p]}</small></span>`}}catch(e){}return _rc.apply(this,arguments)}}
 // ---------- ผู้ดูแล: ดู/สุ่มฉายา+กรอบ 9 โลก ----------
 {const _oa=window.openRkAdmin;if(typeof _oa==='function'){window.openRkAdmin=async function(p,roll){const r=await _oa.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='rkadm'||m.querySelector('.mwAdm'))return r;const p0=p||_oa._p||'d';
   const j=await (await fetch(API+'?a=rkprev&fmt=json&key='+encodeURIComponent(admK()))).json(),k=j.keys[p0||'d'];
@@ -43769,6 +43792,11 @@ const st=document.createElement('style');st.textContent=`
 .mwv .mw-blink{animation:mwDot 1.4s steps(1) infinite}.mwv .mw-up{animation:mwLike 3s ease-out infinite;opacity:0}
 .mwv .mw-flag{animation:mwFlag 1.2s ease-in-out infinite alternate}.mwv .mw-met{animation:mwMet 2.8s ease-in infinite}
 .mwv .mw-ash{animation:mwAsh 3s linear infinite;opacity:0}
+.mwv .mw-fire{animation:mwFire .5s ease-in-out infinite alternate}.mwv .mw-sw2{animation:mwSw 2.6s ease-in-out infinite}.mwv .mw-rain{animation:mwRain .9s linear infinite}
+.mwv .mw-ring{animation:mwRing .9s ease-in-out infinite}.mwv .mw-tape{animation:mwTape 2.2s linear infinite}.mwv .mw-claw{transform-origin:112px 72px;animation:mwClaw 1.6s ease-in-out infinite}.mwv .mw-tw{animation:mwDot 1.4s ease-in-out infinite}
+@keyframes mwFire{from{transform:scale(.85,.7)}to{transform:scale(1.05,1.15)}}@keyframes mwRain{from{transform:translateY(0);opacity:.8}to{transform:translateY(120px);opacity:0}}
+@keyframes mwRing{0%,60%,100%{transform:rotate(0)}70%{transform:rotate(-12deg)}80%{transform:rotate(12deg)}90%{transform:rotate(-6deg)}}@keyframes mwTape{to{stroke-dashoffset:-28}}
+@keyframes mwClaw{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(-8deg)}}
 @keyframes mwSpin{to{transform:rotate(360deg)}}@keyframes mwRun{to{stroke-dashoffset:-140}}
 @keyframes mwGl{0%{transform:rotate(20deg) translateX(0)}60%,100%{transform:rotate(20deg) translateX(170px)}}
 @keyframes mwLike{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:1;transform:translateY(-8px) scale(1)}100%{transform:translateY(-92px) scale(.8);opacity:0}}
@@ -43783,15 +43811,25 @@ const st=document.createElement('style');st.textContent=`
 @keyframes mwFlag{from{transform:skewY(-4deg)}to{transform:skewY(4deg)}}
 @keyframes mwMet{0%{transform:translate(18px,-18px);opacity:0}15%{opacity:1}70%{opacity:1}100%{transform:translate(-10px,10px);opacity:0}}
 @keyframes mwAsh{0%{transform:translateY(0);opacity:0}15%{opacity:.9}100%{transform:translateY(110px) translateX(-8px);opacity:0}}
-.mwt{position:relative;display:inline-flex;align-items:center;gap:5px;padding:3px 10px 3px 4px;border-radius:999px;background:linear-gradient(180deg,color-mix(in srgb,var(--bg) 70%,#2a2a3a),var(--bg));color:#fff;font:700 12.5px 'Sarabun','Chakra Petch',sans-serif;overflow:hidden;max-width:100%;vertical-align:middle;isolation:isolate}
-.mwt .mwb{position:absolute;inset:0;border-radius:inherit;padding:1.5px;background:linear-gradient(90deg,var(--a),var(--b),var(--m),var(--a));background-size:300% 100%;animation:mwBd 3s linear infinite;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.mwt .mws{position:absolute;top:0;bottom:0;width:35%;left:-35%;background:linear-gradient(100deg,transparent,#ffffff45,transparent);animation:mwSh 2.8s ease-in-out infinite;pointer-events:none}
-.mwt .ic{position:relative;display:inline-grid;place-items:center;width:19px;height:19px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--b));font-size:11px;flex:none;box-shadow:0 0 6px var(--a)}
-.mwt .tx{position:relative;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 6px color-mix(in srgb,var(--a) 70%,transparent)}
-.mwt .vf{position:relative;display:inline-grid;place-items:center;width:13px;height:13px;border-radius:50%;background:#1d9bf0;color:#fff;font-size:8.5px;font-weight:900;flex:none}
-.mwt small{position:relative;font:700 9.5px 'Chakra Petch',monospace;color:var(--m);opacity:.95;margin-left:1px;white-space:nowrap}
-.mwt1{box-shadow:0 0 12px color-mix(in srgb,var(--a) 70%,transparent)}.mwt1.mwpm{font-size:13.5px}
-@keyframes mwBd{to{background-position:300% 0}}@keyframes mwSh{0%{left:-35%}60%,100%{left:120%}}
+.mwt{position:relative;display:inline-flex;align-items:center;gap:5px;padding:3px 9px 3px 4px;max-width:100%;vertical-align:middle;overflow:hidden;isolation:isolate;font:700 12.5px 'Sarabun','Chakra Petch',sans-serif;line-height:1.35}
+.mwt .tx{position:relative;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mwt small{position:relative;font:700 9.5px 'Chakra Petch',monospace;white-space:nowrap;opacity:.9}
+.mwt .mk{position:relative;flex:none;display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 3px;font:900 11px 'Chakra Petch',sans-serif}
+.mwt .mws{position:absolute;top:0;bottom:0;width:35%;left:-35%;background:linear-gradient(100deg,transparent,#ffffff40,transparent);animation:mwSh 2.8s ease-in-out infinite;pointer-events:none;z-index:1}
+.mwt1{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--a) 55%,transparent))}
+.mwt-n{border-radius:4px;background:linear-gradient(135deg,#0a1636,#132a5e 60%,#0a1636);color:#e6f2ff;border:1.5px solid var(--a);box-shadow:inset 0 0 8px #3a8bff55}
+.mwt-n .mk{clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:linear-gradient(180deg,#fff6cc,var(--m));color:#2a1a04;width:20px;height:20px}.mwt-n small{color:#9fd0ff}
+.mwt-u{border-radius:6px;background:#0d0612;color:#ffd6ef;border:1.5px solid var(--b);box-shadow:0 0 8px var(--b),inset 0 0 6px var(--a)}.mwt-u .tx{color:#fff;text-shadow:0 0 4px var(--a),0 0 10px var(--a);animation:mwFlkT 3.2s steps(1) infinite}
+.mwt-u .nd{position:relative;width:8px;height:8px;border-radius:50%;background:var(--a);box-shadow:0 0 6px var(--a);flex:none;margin-left:3px}.mwt-u small{color:var(--b)}
+.mwt-o{border-radius:2px;background:linear-gradient(180deg,#f8e08a,#efcc5a);color:#a8121c;border:1px solid #a8781a;font-family:Itim,'Sarabun',sans-serif;box-shadow:0 2px 0 #a8781a}.mwt-o .mk{color:#c81e2e;font-size:12px}.mwt-o small{color:#7a3a10}
+.mwt-o::after{content:'';position:absolute;right:-10px;top:50%;width:18px;height:18px;transform:translateY(-50%);border:2px solid #c81e2e66;border-radius:50%;pointer-events:none}
+.mwt-p{border-radius:5px;background:#06140f;color:#c8fff0;border:1.5px solid var(--a);box-shadow:inset 0 0 0 2px #0a2a20}.mwt-p .mk{background:#0a2a20;color:#5cf2c4;border-radius:3px;font:700 10px 'Chakra Petch',monospace;text-shadow:0 0 5px #5cf2c4;animation:mwBlinkT 1.4s steps(1) infinite}.mwt-p small{color:#5cf2c4}
+.mwt-z{border-radius:0;background:#141414;color:#ffd23a;border:3px solid transparent;border-image:repeating-linear-gradient(45deg,#ffd23a 0 6px,#141414 6px 12px) 3;font-family:'Chakra Petch','Sarabun',sans-serif;letter-spacing:.2px}.mwt-z .mk{color:#ffd23a;font-size:13px}.mwt-z small{color:#ffd23a}
+.mwt-t{border-radius:4px;background:linear-gradient(180deg,#2a2438,#16121f);color:#fff4d0;border:1.5px solid #8a7a5a}.mwt-t .mk{background:#120e04;color:#ffb020;border-radius:3px;font:700 10px 'Chakra Petch',monospace;text-shadow:0 0 5px #ffb020}.mwt-t small{color:#ffc23a}
+.mwt-e{border-radius:0;background:#14104a;color:#fff;border:2px solid #fff;box-shadow:0 0 0 2px #14104a,0 0 0 3px var(--a);font-family:'Silkscreen','Chakra Petch','Sarabun',sans-serif;margin:3px}.mwt-e .mk{color:var(--b);animation:mwBlinkT 1s steps(1) infinite}.mwt-e small{color:var(--b)}
+.mwt-q{border-radius:2px;background:linear-gradient(180deg,#5a606e,#3a3e48);color:#e8ecf4;border:1.5px solid #20232a;font-family:'Chakra Petch','Sarabun',sans-serif;text-transform:uppercase;box-shadow:inset 0 1px 0 #8a909e}.mwt-q .mk{color:var(--m);text-shadow:0 1px 0 #000}.mwt-q small{color:#ffb0a0}
+.mwt-y{border-radius:4px;background:linear-gradient(180deg,#d01a2a,#8a0a14);color:#fff;border:1.5px solid #ff6a6a;animation:mwAlert 1.6s ease-in-out infinite}.mwt-y .mk{color:#ffe14a;font-size:13px}.mwt-y small{color:#ffd0d0}
+@keyframes mwFlkT{0%,100%{opacity:1}31%{opacity:.55}33%{opacity:1}}@keyframes mwBlinkT{0%,100%{opacity:1}50%{opacity:.35}}@keyframes mwAlert{0%,100%{box-shadow:0 0 0 #ff2a3a00}50%{box-shadow:0 0 10px #ff2a3acc}}
+@keyframes mwSh{0%{left:-35%}60%,100%{left:120%}}
 .mwEnd{display:flex;align-items:center;gap:10px;margin:0 0 8px;padding:9px 10px;border-radius:14px;border:1.5px solid var(--a);background:linear-gradient(120deg,color-mix(in srgb,var(--a) 22%,transparent),color-mix(in srgb,var(--b) 14%,transparent))}
 .mwEnd>span{font-size:26px}.mwEnd div{flex:1;min-width:0}.mwEnd b{display:block}.mwEnd small{opacity:.75;font-size:11.5px}.mwEnd .pbtn{flex:none;padding:7px 12px}
 @media(prefers-reduced-motion:reduce){.mwv [class^=mw-],.mwt i{animation:none!important}}`;document.head.appendChild(st);

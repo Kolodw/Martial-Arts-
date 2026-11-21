@@ -1,6 +1,7 @@
 // 1 ใน นวนิยาย — service worker: แจ้งเตือน + เก็บไฟล์เกมใหญ่ (app.js / pfx.js) ไว้ในเครื่อง
 // เปิดเกมครั้งถัดไปใช้ไฟล์ในเครื่องทันที แล้วเช็คเวอร์ชันใหม่เบื้องหลัง — ถ้ามีใหม่จะเก็บไว้ใช้ครั้งหน้า และบอกหน้าเกม
-const GC = 'game-files-v1', SWR = /^\/(app|pfx)\.js$/;
+// ไฟล์โลกที่แยกออก (/w/*.js) ต้องเป็นรุ่นเดียวกับ app.js เสมอ → เก็บคู่กัน และล้างทิ้งเมื่อ app.js เปลี่ยน
+const GC = 'game-files-v2', SWR = /^\/((app|pfx)\.js|w\/[a-z0-9_-]+\.js)$/;
 self.addEventListener('install', e => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil((async () => { try { for (const k of await caches.keys()) if (k !== GC && k.startsWith('game-files-')) await caches.delete(k) } catch (x) {} await self.clients.claim() })()));
 const tagOf = r => r ? (r.headers.get('etag') || r.headers.get('last-modified') || '') : '';
@@ -13,7 +14,9 @@ async function refresh(path, req, hit) {
       if (!r.ok || r.status !== 200) return null;
       const nt = tagOf(r), ot = tagOf(hit);
       if (!hit || !nt || nt !== ot) {
-        const c = await caches.open(GC); await c.put(path, r.clone());
+        const c = await caches.open(GC);
+        if (path === '/app.js' && hit) { try { for (const q of await c.keys()) { const pn = new URL(q.url).pathname; if (pn.startsWith('/w/')) await c.delete(q) } } catch (x) {} }
+        await c.put(path, r.clone());
         if (hit && nt && nt !== ot && path === '/app.js') { try { for (const w of await self.clients.matchAll({ type: 'window' })) w.postMessage({ upd: 1 }) } catch (x) {} }
       }
       return r;
