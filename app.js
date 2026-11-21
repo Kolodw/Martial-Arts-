@@ -44420,3 +44420,15 @@ function upd(){try{const b=$('brkPill');let t=$('brkMode');if(!S||!S.alive||!S.x
  const s=man()?'✋ กดทะลวงเอง':'🔁 ทะลวงอัตโนมัติ';if(t.textContent!==s)t.textContent=s;t.style.display='';t.title='สลับว่าทัณฑ์สวรรค์จะมาเองทุกปี หรือรอให้คุณกดปุ่มทะลวงขั้น'}catch(e){}}
 {const _r=render;render=function(){const r=_r.apply(this,arguments);upd();return r}}
 })()}catch(e){console.error('block124',e)}
+
+// ============================================================
+// BLOCK 125: 🏙️ ยุคปัจจุบัน — สุ่มเกิดครบ 3 ครั้งแล้วใช้ตั๋ว/กรรมสุ่มเพิ่มได้ (เหมือนคนและสัตว์) · เดิมปุ่มถูกปิดตายและถูกจำไว้ 6 ชม. ผู้เล่นเลยแจ้งว่า "กดสุ่มไม่ได้"
+// ============================================================
+try{(()=>{
+const adm=()=>{try{return typeof ADM!=='undefined'&&ADM.ok&&ADM.rr}catch(e){return false}};
+window.mwRRMore=function(){window._mbT=Date.now();try{rrMenu()}catch(e){console.error(e);toast('เปิดเมนูสุ่มเพิ่มไม่ได้ ลองใหม่')}};
+function fix(){try{const M=window._mbGet&&window._mbGet(),o=$('mwB');if(!M||!o||adm()||CFG.chm==1)return;const b=o.querySelector('.mbRoll');if(!b)return;
+ if(M.rr<=0){b.disabled=false;b.setAttribute('onclick','mwRRMore()');b.innerHTML='🎟️ สุ่มเพิ่ม<small>ใช้ตั๋วสุ่มเกิด หรือกรรม</small>'}else if(b.getAttribute('onclick')==='mwRRMore()')b.setAttribute('onclick','mwBReroll()')}catch(e){}}
+{const _h=window._mbHook;window._mbHook=function(M){const r=_h?_h.apply(this,arguments):undefined;setTimeout(fix,0);setTimeout(fix,60);return r}}
+{const _dr=doRoll;doRoll=function(first){try{if(!first&&window._mbT&&Date.now()-window._mbT<600000&&$('mwB')&&!$('birth').classList.contains('on')){window._mbT=0;const M=window._mbGet&&window._mbGet();if(M){rerolls=Math.max(0,rerolls-1);M.rr=(M.rr|0)+1;try{closeM()}catch(e){}setTimeout(()=>{try{mwBReroll()}catch(e){console.error(e)}},200);return}}}catch(e){console.error('b125',e)}return _dr.apply(this,arguments)}}
+})()}catch(e){console.error('block125',e)}
