@@ -43820,3 +43820,11 @@ const st=document.createElement('style');st.textContent=`
 body:has(#mask.on){overflow:hidden}
 @media(prefers-reduced-motion:reduce){#modal.mbIn{animation:none}}`;document.head.appendChild(st);
 })()}catch(e){console.error('block118',e)}
+
+// ============================================================
+// BLOCK 119: 🌱 ชะตาไม่เป็นเส้นตรง (โค้ดอยู่ที่ /w/fate.js) — โหลดหลังเปิดเกม · ส่งฝั่งที่เลือก/เหตุการณ์ใหญ่ขึ้นพงศาวดารทั้งเว็บตอนจบชีวิต
+// ============================================================
+try{(()=>{
+{const _api=api;api=async function(a,b){try{if(a==='life'&&b&&window._fateFs){const f=window._fateFs();if(f)b.fs=f}}catch(e){}return _api.apply(this,arguments)}}
+setTimeout(()=>{try{wLoad('fate').catch(()=>setTimeout(()=>wLoad('fate').catch(()=>{}),6000))}catch(e){}},1200);
+})()}catch(e){console.error('block119',e)}

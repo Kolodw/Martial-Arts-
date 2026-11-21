@@ -130,6 +130,7 @@ const pipe = USE_VK ? vkPipe : upPipe;
 // ===== ทำเนียบรายวัน (v15.3): แยก 4 หมวด · คะแนนจากค่าเฉลี่ยทุกด้าน · รางวัลอันดับ 1–3 =====
 const BD_CATS = ['m', 'x', 'g', 'b', 'c', 'r', 'ch', 'cs', 'cj', 'cl', 'ck', 'cn', 'cu', 'co', 'cp', 'cz', 'ct', 'ce', 'cq', 'cy']; // c = ทำเนียบท้าทายรวม (เลิกใช้แล้ว) · ch นรก · cs ชีวิตสั้น · cj รากขยะ · r ผู้ย้อนกาล
 const CHC = { hell: 'ch', short: 'cs', junk: 'cj', soul: 'cl', sky: 'ck' }, CHM = { h: 'ch', s: 'cs', j: 'cj', l: 'cl', k: 'ck' }, CHF = { ch: 'h', cs: 's', cj: 'j', cl: 'l', ck: 'k', cn: 'n', cu: 'u', co: 'o', cp: 'p', cz: 'z', ct: 't', ce: 'e', cq: 'q', cy: 'y' };
+const chrWk = t => Math.floor((t + 7 * 3600e3 - 4 * 86400e3) / 604800e3); // สัปดาห์เริ่มวันจันทร์ เวลาไทย
 const CH_OK = ['hell', 'short', 'junk', 'regress', 'soul', 'sky'];
 // 🏙️ ยุคปัจจุบัน: แยกทำเนียบตามโลกพิเศษ 9 แบบ (ch = 'mw_' + id) · คะแนนเฉลี่ยทุกด้านทั้งชีวิตแบบโหมดปกติ
 const MW_B = { hunter: 'n', under: 'u', ghost: 'o', loop: 'p', zombie: 'z', tower: 't', game: 'e', gatewon: 'q', doom: 'y' };
@@ -1603,6 +1604,14 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const prev = prevRaw.map(x => { try { return JSON.parse(x) } catch { return null } }).filter(j => j && !(j.lid && hide.has(j.lid)));
       return res.json({ ok: 1, top, prev, p: per });
     }
+    // 📜 พงศาวดารทั้งเว็บ (สัปดาห์นี้ + สัปดาห์ที่แล้ว ซึ่งกำหนดยุคของสัปดาห์นี้)
+    if (a === 'chr') {
+      const wk = chrWk(now), hv = x => { const o = {}; if (Array.isArray(x)) for (let i = 0; i + 1 < x.length; i += 2) o[x[i]] = +x[i + 1] || 0; else if (x && typeof x === 'object') for (const k in x) o[k] = +x[k] || 0; return o };
+      const r = await pipe([['HGETALL', 'chr:' + wk], ['HGETALL', 'chr:' + (wk - 1)], ['LRANGE', 'chrd:' + wk, 0, 19], ['LRANGE', 'chrd:' + (wk - 1), 0, 9]]);
+      const g = i => r && r[i] && r[i].result !== undefined ? r[i].result : r && r[i];
+      res.setHeader && res.setHeader('Cache-Control', 'public, max-age=120');
+      return res.json({ ok: 1, wk, cur: hv(g(0)), prev: hv(g(1)), d: g(2) || [], pd: g(3) || [] });
+    }
     if (a === 'board') {
       await bdWipe(); await bdSettle();
       const ar = await cmd('ZREVRANGE', 'arenaW:' + W, 0, 9, 'WITHSCORES');
@@ -2836,6 +2845,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (lid.length >= 6 && det && det.length < 40000) { try { JSON.parse(det); L.push(['SET', 'lifed:' + lid, det, 'EX', 86400 * 40], ['SET', 'lifeo:' + lid, id, 'EX', 86400 * 40], ['SET', 'lifep:' + lid, +b.pub === 2 ? '2' : b.pub ? '1' : '0', 'EX', 86400 * 40]); if (+b.pub === 1 || b.pub === true) { const sm = nvSum(lid, det, now), D0 = jp(det); if (sm && D0 && (+D0.age || 0) >= 15 && Array.isArray(D0.key) && D0.key.length >= 8) L.push(['HSET', 'nvsm', lid, sm], ['LPUSH', 'nvfree', lid], ['LTRIM', 'nvfree', 0, 149]) } } catch {} }
       if (lid.length >= 6 && await cmd('GET', 'lsent:' + lid)) return res.json({ ok: 1, dup: 1 });
       if (e.ch === 'regress' && e.rf) { try { const G = (JSON.parse(det || '{}').rg) || {}, en = ['beyond', 'breaker', 'protector', 'lonely'].includes(G.end) ? G.end : 'lonely', vr = ['normal', 'r5', 'nomem', 'lim10'].includes(G.var) ? G.var : 'normal'; const rj = JSON.stringify({ n: e.n, lid: e.lid, rl: e.rl, end: en, var: vr, age: e.age, r: e.r, t: now, x: e.x, g: e.g }); const rs = ({ beyond: 4, breaker: 3, protector: 2, lonely: 1 })[en] * 1e8 - Math.min(999, e.rl || 1) * 1e5 + ({ lim10: 3, nomem: 2, r5: 1, normal: 0 })[vr] * 1e4 - Math.min(9999, Math.floor((now % 1e9) / 1e5)); L.push(['ZADD', 'rgb:all', rs, rj], ['ZREMRANGEBYRANK', 'rgb:all', 0, -201], ['ZADD', 'rgb:w:' + week(new Date(now)), rs, rj], ['ZREMRANGEBYRANK', 'rgb:w:' + week(new Date(now)), 0, -101], ['EXPIRE', 'rgb:w:' + week(new Date(now)), 86400 * 21]) } catch {} }
+      // 📜 พงศาวดารทั้งเว็บ: นับฝั่งที่ทั้งชีวิตเลือก (ธรรมะ/มาร) + โหวตนครกำแพง + เหตุการณ์ใหญ่ (เก็บเป็นรหัส ข้อความอยู่ฝั่งเกม)
+      try { const fs = b.fs && typeof b.fs === 'object' ? b.fs : null; if (fs) { const wk = chrWk(now), hk = 'chr:' + wk;
+        if (fs.sd === 'g' || fs.sd === 'e') L.push(['HINCRBY', hk, 'm' + fs.sd, 1]);
+        if (fs.kv === 'a' || fs.kv === 'b') L.push(['HINCRBY', hk, 'k' + fs.kv, 1]);
+        L.push(['EXPIRE', hk, 86400 * 60]);
+        const dd = String(fs.d || '').replace(/[^a-z_]/g, '').slice(0, 24); if (dd.length >= 3) L.push(['LPUSH', 'chrd:' + wk, JSON.stringify({ n: e.n, d: dd, a: Math.min(1e9, Math.round(+e.age || 0)), t: now })], ['LTRIM', 'chrd:' + wk, 0, 39], ['EXPIRE', 'chrd:' + wk, 86400 * 60]) } } catch {}
       await pipe(L);
       if (lid.length >= 6) { try { await cmd('SET', 'lsent:' + lid, 1, 'EX', 86400 * 20) } catch {} }
       let rk = null; try { const r0 = await cmd('ZREVRANK', bdKey(mainC, now), mainJ); if (r0 != null) rk = +r0 + 1 } catch {}
