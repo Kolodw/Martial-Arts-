@@ -1974,7 +1974,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const WBN = [['🐉', 'มังกรเพลิงเก้าหาง'], ['🦂', 'ราชาแมงป่องทะเลทราย'], ['👹', 'อสูรร้อยตา'], ['🐢', 'เต่ายักษ์แบกภูเขา'], ['🦅', 'พญาอินทรีย์สายฟ้า'], ['🕷️', 'แม่นางแมงมุมเงา'], ['🐍', 'งูขาวพันปี'], ['🦍', 'วานรหินผา'], ['🐗', 'หมูป่าเขี้ยวเหล็ก'], ['🦑', 'ปลาหมึกยักษ์ใต้ทะเลลึก'], ['🐻', 'หมีดำกลืนจันทร์'], ['👻', 'เงาเจ้าเมืองไร้หัว'], ['🦇', 'ค้างคาวโลหิตพันปี'], ['🐊', 'จระเข้ราชาบึงดำ']];
       const wbTick = async () => {
         let W0 = jp(await cmd('GET', 'wb:s'));
-        const spawn = async () => { const r = (W0 ? W0.r : 0) + 1, pc = W0 ? (+(await cmd('ZCARD', 'wb:d:' + W0.r)) || 0) : 0, mx = Math.max(30000, Math.min(500000, Math.round(pc * 2600))), z = (() => { const L = WBN.filter(x => !W0 || x[1] !== W0.n); return L[Math.floor(Math.random() * L.length)] })();
+        const spawn = async () => { const r = (W0 ? W0.r : 0) + 1, pc = W0 ? (+(await cmd('ZCARD', 'wb:d:' + W0.r)) || 0) : 0, mx = 10000000 /* v21: บอสโลกเลือด 10 ล้าน */, z = (() => { const L = WBN.filter(x => !W0 || x[1] !== W0.n); return L[Math.floor(Math.random() * L.length)] })();
           const W1 = { r, ic: z[0], n: z[1], mx, t0: now, ph: 'on' }; await pipe([['SET', 'wb:s', JSON.stringify(W1)], ['SET', 'wb:hp', mx]]); W0 = W1; await pub(); return W1 };
         if (!W0) return await spawn();
         if ((W0.ph === 'dead' || W0.ph === 'gone') && now > W0.dt + 2 * 86400e3) return await spawn();
