@@ -30234,9 +30234,9 @@ wSlot('mw2',["mwYear","render","mwInfo"]);
 try{(()=>{
 const WL=[['rand','🎲','สุ่ม'],['normal','🏙️','ปกติ'],['hunter','🌀','ฮันเตอร์'],['hunterhi','⚡','ฮันเตอร์ F–SSS'],['under','🌃','ใต้ดิน'],['ghost','👻','ผีไทย'],['loop','🔁','วนลูป'],['zombie','🧟','ซอมบี้'],['tower','🏰','หอคอย'],['game','🎮','ระบบเกม'],['gatewon','💀','เกตชนะ'],['doom','☄️','วันสิ้นโลก']];
 window.mwBornMenu=function(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🐣 เริ่มชีวิตใหม่ <span class="tag2">ยุคปัจจุบัน</span></h3>
- <button class="opt" onclick="closeM();mwBQuick()">🎲 สุ่ม ให้ฟ้าลิขิต<small>สุ่มจังหวัด พื้นเพ นิสัย หน้าตา และโลก · ดูผลการเกิดแล้วกดเกิดใหม่ได้ 3 ครั้ง</small></button>
+ <button class="opt" onclick="closeM();mwBQuick()">🎲 สุ่ม ให้ฟ้าลิขิต<small>สุ่มจังหวัด พื้นเพ นิสัย หน้าตา และโลก · ดูผลการเกิดแล้วกดเกิดใหม่ได้ 5 ครั้ง (ผู้สนับสนุนได้มากกว่า)</small></button>
  <button class="opt" onclick="closeM();mwBorn(true)">🎨 ออกแบบหน้าตา ที่เหลือให้ฟ้าลิขิต<small>เลือกเพศ ทรงผม สีผม สีผิว และสีชุดเอง แล้วสุ่มจังหวัด พื้นเพ และโลกตามปกติ</small></button>
- <button class="opt" onclick="closeM();mwBornPage(true)">✍️ สร้างเอง<small>เลือกจังหวัด พื้นเพครอบครัว นิสัย ช่วงเริ่มชีวิต และ<b>โลก</b>ของชีวิตนี้เอง · สุ่มใหม่ได้ 3 ครั้ง<br><span style="color:#ff8a7a">⚠️ ชีวิตที่สร้างเองจะไม่ติดอันดับทำเนียบ</span></small></button>`,'mwbm')};
+ <button class="opt" onclick="closeM();mwBornPage(true)">✍️ สร้างเอง<small>เลือกจังหวัด พื้นเพครอบครัว นิสัย ช่วงเริ่มชีวิต และ<b>โลก</b>ของชีวิตนี้เอง · สุ่มใหม่ได้ 5 ครั้ง<br><span style="color:#ff8a7a">⚠️ ชีวิตที่สร้างเองจะไม่ติดอันดับทำเนียบ</span></small></button>`,'mwbm')};
 window.mwBQuick=function(){try{mwBRand()}catch(e){console.error(e);try{mwRandNative()}catch(x){}}};
 })()}catch(e){console.error(e)}
 
@@ -44648,3 +44648,44 @@ function debtAsk(){const g=G(),id=g.qdue,d=DEBT[id];if(!d){g.qdue=null;return}le
 {const _py=passYear;passYear=function(){const a0=S&&S.age,me=S;const r=_py.apply(this,arguments);try{if(on()&&S===me&&S.age!==a0)qYear()}catch(e){console.error('sv100',e)}return r}}
 window._sv100={Q,fam,mult,qYear};
 })()}catch(e){console.error('block129',e)}
+
+// BLOCK 130: 🏙️ ยุคปัจจุบัน สุ่มเกิดได้เท่ายุทธภพ — เดิมให้แค่ 3 ครั้งเสมอ ผู้สนับสนุน (30/60/100 ครั้งต่อชีวิตในยุทธภพ) เข้ามายุคปัจจุบันเหลือ 3 แล้วถูกให้ใช้ตั๋ว เลยแจ้งว่า "กดสุ่มไม่ได้" → ใช้จำนวนเดียวกับยุทธภพ (ฟรี 5 · VIP 30/60/100) · และนับ "ใช้ตั๋ว/กรรมครบ 10 ครั้งต่อชีวิต" ใหม่ทุกชีวิตยุคปัจจุบัน (เดิมไม่รีเซ็ตจนกว่าจะไปเกิดยุทธภพ ใช้สะสมครบ 10 แล้วติด "ชีวิตนี้ใช้ครบแล้ว" ตลอด)
+try{(()=>{
+const adm=()=>{try{return typeof ADM!=='undefined'&&ADM.ok&&ADM.rr}catch(e){return false}};
+const tot=()=>{try{return Math.max(3,(window.vipTot&&window.vipTot())|0)}catch(e){return 5}};
+const held=()=>{try{const h=LS.get('murim_mbhold',null);return !!(h&&h.mb&&Date.now()-(h.t||0)<6*3600e3)}catch(e){return false}};
+const bump=()=>{try{const M=window._mbGet&&window._mbGet();if(!M||adm()||CFG.chm==1)return;const T=tot();M.tot=T;if((M.rr|0)<T&&!M._b130){M.rr=T;M._b130=1}if(window._RR)window._RR.used=0;window.mwBornPage(false)}catch(e){console.error('b130',e)}};
+{const _r=window.mwBRand;if(typeof _r==='function')window.mwBRand=function(){window._b130in=1;let r;try{r=_r.apply(this,arguments)}finally{window._b130in=0}try{const M=window._mbGet&&window._mbGet();if(M)M._b130=0}catch(e){}bump();return r}}
+{const _p=window.mwBornPage;if(typeof _p==='function')window.mwBornPage=function(fresh){const h=fresh&&held();const r=_p.apply(this,arguments);if(fresh&&!h&&!window._b130in){window._b130in=1;try{bump()}finally{window._b130in=0}}return r}}
+window._b130={tot,bump};
+})()}catch(e){console.error('block130',e)}
+
+// BLOCK 131: 🔒 ล็อกชะตาในยุคปัจจุบัน (หน้า "คุณได้ถือกำเนิดขึ้นแล้ว") — เดิมซ่อนปุ่มล็อกและระบบตั๋วล็อกปิดในยุคปัจจุบัน → ใช้ตั๋วล็อก 1 ใบ/อย่าง (บ้านเกิด · พื้นเพ · พรสวรรค์ · โลก) ล็อกได้ 2 อย่าง ค้างจนเริ่มชีวิต เหมือนยุทธภพ
+try{(()=>{
+const KN={pv:['📍','บ้านเกิด'],bg:['🧬','พื้นเพครอบครัว'],tal:['✨','พรสวรรค์'],wld:['🌐','โลกที่เกิด']};
+const LK=()=>window._LK||{};
+const M=()=>{try{return window._mbGet&&window._mbGet()}catch(e){return null}};
+const nOn=m=>Object.keys(KN).filter(k=>m&&m.lock&&m.lock[k]).length;
+const val=k=>{try{const o=$('mwB'),t=o&&o.querySelector(k==='wld'?'.mbWr .mbTv':'.mbT_'+k+' .mbTv');return t?t.textContent.trim().slice(0,40):''}catch(e){return''}};
+function deco(){try{const m=M(),o=$('mwB');if(!m||!o||!m.rnd||CFG.chm==1)return;
+ o.querySelectorAll('.mbLk').forEach(b=>b.remove());
+ Object.keys(KN).forEach(k=>{const h=o.querySelector(k==='wld'?'.mbWr .mbTh':'.mbT_'+k+' .mbTh');if(!h)return;const on=!!(m.lock&&m.lock[k]);h.insertAdjacentHTML('beforeend',`<button class="mbLk paid${on?' on':''}" onclick="mwLkTap('${k}')" title="ตั๋วล็อก 1 ใบ">${on?'🔒':'🔓'}</button>`)});
+ const ro=o.querySelector('.mbRoll small');const n=nOn(m);if(ro&&n&&!/ล็อก/.test(ro.textContent))ro.textContent+=' · ล็อกไว้ '+n+' อย่าง'}catch(e){console.error('b131',e)}}
+{const _h=window._mbHook;window._mbHook=function(){const r=_h?_h.apply(this,arguments):undefined;setTimeout(deco,0);setTimeout(deco,80);return r}}
+const redraw=()=>{try{window.mwBornPage(false)}catch(e){}};
+window.mwLkTap=function(k){const m=M();if(!m||!KN[k])return;m.lock=m.lock||{};const L=LK();
+ if(m.lock[k])return toast(`🔒 ${KN[k][1]}ล็อกไว้แล้ว อยู่ไปจนเริ่มชีวิต`);if(nOn(m)>=2)return toast('ล็อกได้สูงสุด 2 อย่าง');
+ if(L.c==null){try{window.lkLoad&&window.lkLoad()}catch(e){}return toast('กำลังโหลดตั๋วล็อก… กดอีกครั้ง')}
+ if(L.c<1)return lkMenu();
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🔒 ล็อก${KN[k][1]}</h3><div class="item" style="text-align:center"><div class="tag2">${KN[k][0]} ${KN[k][1]}ตอนนี้</div><b style="font-size:18px">${esc(val(k))}</b></div>
+ <p class="tag2">ใช้ตั๋วล็อก 1 ใบ (เหลือ ${fmt(L.c)}) · ล็อกแล้วเกิดใหม่กี่ครั้งก็ได้${KN[k][1]}นี้เสมอ จนกว่าจะกดใช้ชีวิต · ปลดล็อกไม่ได้และไม่คืนตั๋ว</p>
+ <button class="pbtn" style="width:100%" onclick="mwLkDo('${k}')">🔒 ล็อกเลย (1 ใบ)</button><button class="gbtn" style="width:100%;margin-top:6px" onclick="closeM()">ยังก่อน</button>`)};
+let busy=0;
+window.mwLkDo=async function(k){closeM();const m=M();if(!m||busy)return;m.lock=m.lock||{};if(m.lock[k]||nOn(m)>=2)return;busy=1;
+ try{const j=await api('lkuse',{n:1});const L=LK();L.c=Math.max(0,+j.c||0);m.lock[k]=true;try{sfx('good')}catch(e){}toast(`🔒 ล็อก${KN[k][1]}「${val(k)}」แล้ว`);redraw()}
+ catch(e){console.warn('b131 lock',e);if(e&&e.message==='none'){LK().c=0;toast('ตั๋วล็อกไม่พอ');lkMenu()}else toast('ใช้ตั๋วไม่สำเร็จ ลองใหม่อีกครั้ง')}finally{busy=0}};
+// โลกที่ล็อกไว้ต้องไม่เปลี่ยนตอนเกิดใหม่
+{const _r=window.mwBReroll;if(typeof _r==='function')window.mwBReroll=function(){const m=M(),w=m&&m.rnd&&m.lock&&m.lock.wld?m.wld:null;const r=_r.apply(this,arguments);try{const m2=M();if(w&&m2&&m2.wld!==w){m2.wld=w;redraw()}}catch(e){}return r}}
+try{document.head.insertAdjacentHTML('beforeend','<style>#mwB.mbRnd .mbLk.paid{display:inline-block!important;font-size:15px;opacity:.8}#mwB.mbRnd .mbLk.paid.on{opacity:1}#mwB .mbWr .mbTh{display:flex;justify-content:space-between;align-items:center}</style>')}catch(e){}
+try{setTimeout(()=>{try{if(LK().c==null&&window.lkLoad&&typeof onlineOK!=='undefined'&&onlineOK)window.lkLoad()}catch(e){}},4000)}catch(e){}
+})()}catch(e){console.error('block131',e)}

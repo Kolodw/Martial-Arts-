@@ -901,7 +901,7 @@ function mbDraw(anim){try{window._mbHook&&window._mbHook(MB)}catch(e){}let o=$('
  const P=PV[MB.pv],b=BG[MB.bg],tr=mbTrAll(),mn=mbMoney(),debt=b.debt||0,gn=GENDER[MB.g].n,tags=P.tag.map(t=>PVIC[t]).join(' ');
  o.style.display='';o.className=anim?'mbPop':'';
  o.innerHTML=`<div class="mbBg"><i></i><i></i><i></i></div><div class="mbWrap">
- <header class="mbTop"><button class="mbIc" onclick="mwBClose()" aria-label="กลับ">←</button><div class="mbTi">ผลการเกิด<small>🇹🇭 ประเทศไทย · ค.ศ. ${MW_Y0}</small></div><div class="mbRr" title="จำนวนครั้งที่สุ่มใหม่ได้">🎲 <b>${MB.rr}</b>/3</div></header>
+ <header class="mbTop"><button class="mbIc" onclick="mwBClose()" aria-label="กลับ">←</button><div class="mbTi">ผลการเกิด<small>🇹🇭 ประเทศไทย · ค.ศ. ${MW_Y0}</small></div><div class="mbRr" title="จำนวนครั้งที่สุ่มใหม่ได้">🎲 <b>${MB.rr}</b>/${MB.tot||3}</div></header>
  <section class="mbHero"><div class="mbStage"><canvas id="mbCv" width="170" height="260"></canvas><div class="mbSh"></div></div>
   <input class="mbIn" id="mbNm" style="color:#fff!important;-webkit-text-fill-color:#fff!important;caret-color:#7cf0c9" value="${esc(MB.name)}" maxlength="24" aria-label="ชื่อ" onchange="mwBSetName(this.value)">
   <div class="mbSub">${gn==='หญิง'?'♀':'♂'} ${gn} · อายุ ${MB.age} ปี${MB.gift?' · <span class="mbGl">✨ มีไออุ่นแปลกๆ ในร่างกาย</span>':''}</div>
@@ -952,16 +952,16 @@ window.mwBWld=function(k){if(!MB)return;MB.wld=k;mbDraw(false)};
 const WP=[['normal',.42],['hunter',.06],['hunterhi',.04],['under',.10],['ghost',.10],['loop',.06],['zombie',.06],['tower',.04],['game',.04],['gatewon',.04],['doom',.04]];
 const WI={hunterhi:['⚡','โลกฮันเตอร์พลังสูง','พลังเฟ้อจนแรงก์ SSS เปรียบเหมือนนิวเคลียร์เดินได้ เกต F–SSS ฮันเตอร์เป็นทั้งคนดังและอาวุธของรัฐ'],normal:['🏙️','โลกปกติ','ชีวิตคนยุคปัจจุบันทั่วไป ทำงาน ใช้ชีวิต ไม่มีอะไรเหนือธรรมชาติ (ยังมีโอกาสเปลี่ยนโลกกลางชีวิตได้ ~1%/ปี)'],hunter:['🌀','โลกฮันเตอร์','ประตูมิติเปิดขึ้นทั่วโลก นักล่าฮันเตอร์ระดับ E–S ปลุกพลังเพื่อสู้กับสัตว์ประหลาด'],under:['🌃','โลกใต้ดิน','โลกของก๊ก นักเลง และผู้มีอิทธิพล ไต่จากเด็กในซอยสู่เจ้าพ่อ ระวังความร้อนจากตำรวจ'],ghost:['👻','โลกผีไทย','ผี หมอผี พระเครื่อง และศาลตายายเป็นเรื่องจริง ปราบผีและสะสมบารมี'],loop:['🔁','โลกวนลูป','วันเวลาเริ่มวนซ้ำ จดความทรงจำและตามหาต้นตอของวงจรเวลา'],zombie:['🧟','โลกซอมบี้','โรคระบาดซอมบี้ ออกหาเสบียง สร้างที่พัก และเอาตัวรอดในโลกใหม่'],tower:['🏰','โลกหอคอย','หอคอยสีขาว 100 ชั้นโผล่กลางเมือง ปีนผ่านบอสทุก 25 ชั้น ถึงยอดได้พรหนึ่งข้อ'],game:['🎮','โลกระบบเกม','อายุ 18 ทุกคนได้หน้าต่างสถานะ เลือกคลาส เก็บเลเวล แล้วล้มบอสโลกเพื่อปิดเกม'],gatewon:['💀','โลกที่เกตชนะ','มนุษย์แพ้สงครามเกต รักษากำแพงเมืองและออกไปยึดโลกคืนจนถึงเกตแม่'],doom:['☄️','โลกวันสิ้นโลก','อุกกาบาตจะชนโลกในอีก 12 ปี เตรียมหลุมหลบภัยหรือใช้เวลาที่เหลือกับคนที่รัก']};
 const wRollK=()=>{let r=Math.random();for(const w of WP){r-=w[1];if(r<=0)return w[0]}return'normal'};
-window.mwBRand=function(){mwBornPage(true);if(!MB)return;MB.rnd=1;MB.rr=3;MB.start='birth';MB.wld=wRollK();mbDraw(false)};
+window.mwBRand=function(){mwBornPage(true);if(!MB)return;MB.rnd=1;MB.rr=3;try{if(CFG.chm!=1){MB.rr=Math.max(3,(window.vipTot&&window.vipTot())|0);if(window._RR)window._RR.used=0}}catch(e){}MB.tot=MB.rr;MB.start='birth';MB.wld=wRollK();mbDraw(false)};
 const admRR=()=>{try{return typeof ADM!=='undefined'&&ADM.ok&&ADM.rr}catch(e){return false}};
-{const _rr=window.mwBReroll;window.mwBReroll=function(){const n=MB&&MB.rr,adm=admRR();if(MB&&MB.rnd&&adm)MB.rr=Math.max(MB.rr,1);_rr.apply(this,arguments);if(MB&&MB.rnd&&MB.rr<n||(MB&&MB.rnd&&adm)){if(adm)MB.rr=Math.max(MB.rr,1);MB.wld=wRollK();mbDraw(false)}}}
+{const _rr=window.mwBReroll;window.mwBReroll=function(){const n=MB&&MB.rr,adm=admRR();if(MB&&MB.rnd&&adm)MB.rr=Math.max(MB.rr,1);_rr.apply(this,arguments);if(MB&&MB.rnd&&MB.rr<n||(MB&&MB.rnd&&adm)){if(adm)MB.rr=Math.max(MB.rr,1);if(!(MB.lock&&MB.lock.wld))MB.wld=wRollK();mbDraw(false)}}}
 {const _d2=mbDraw;mbDraw=function(anim){_d2.apply(this,arguments);try{const o=$('mwB');if(!o||!MB||!MB.rnd)return;o.classList.add('mbRnd');
  const w=WI[MB.wld]||WI.normal,pc=Math.round((WP.find(x=>x[0]===MB.wld)||[0,.4])[1]*100);
  const wd=o.querySelector('.mbWd');if(wd)wd.outerHTML=`<div class="mbT mbWide mbWr"><div class="mbTh"><span>🌐 โลกที่เกิด</span><span style="font-size:11px;opacity:.7">โอกาส ~${pc}%</span></div><div class="mbTv">${w[0]} ${w[1]}</div><div class="mbTs">${w[2]}</div></div>`;
  const g=o.querySelector('.mbGrid'),wr=o.querySelector('.mbWr');if(g&&wr)g.insertBefore(wr,g.firstChild);
  const st=o.querySelector('.mbSt');if(st)st.remove();
  const ti=o.querySelector('.mbTi');if(ti)ti.innerHTML=ti.innerHTML.replace('ผลการเกิด','คุณได้ถือกำเนิดขึ้นแล้ว');
- const adm=admRR(),rb=o.querySelector('.mbRr');if(rb)rb.innerHTML=adm?'🎲 <b>∞</b>':`🎲 <b>${MB.rr}</b>/3`;
+ const adm=admRR(),rb=o.querySelector('.mbRr');if(rb)rb.innerHTML=adm?'🎲 <b>∞</b>':`🎲 <b>${MB.rr}</b>/${MB.tot||3}`;
  const ro=o.querySelector('.mbRoll');if(ro){ro.innerHTML=`🔄 เกิดใหม่ (${adm?'∞':MB.rr})<small>สุ่มทุกอย่างใหม่ รวมทั้งโลก</small>`;ro.disabled=!adm&&MB.rr<=0}
  const go=o.querySelector('.mbGo');if(go)go.innerHTML='ใช้ชีวิต<span>▶</span>'}catch(e){console.error(e)}}}
 try{document.head.insertAdjacentHTML('beforeend','<style>#mwB.mbRnd .mbLk,#mwB.mbRnd .mbCh,#mwB.mbRnd .mbBtns{display:none!important}#mwB .mbWr .mbTv{font-size:20px}</style>')}catch(e){}
