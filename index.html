@@ -108,7 +108,7 @@ window.setInterval=function(f,t){if(typeof f==='function'&&OK.test(f.name||'')){
 <meta name="apple-mobile-web-app-title" content="1 ใน นวนิยาย">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Itim&family=Srisakdi:wght@700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Itim&family=Srisakdi:wght@700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<link href="https://fonts.googleapis.com/css2?family=Itim&family=Srisakdi:wght@700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript></noscript>
 <style>
 :root{--bg:#f4eee2;--card:#fffdf8;--w:#fff;--ink:#2a2838;--mut:#8a8496;--pink:#ff6b9a;--pinkd:#d94a7a;--line:#2a2838;--grid:#0000000a;
 --good:#e6f7e9;--bad:#ffe5e8;--epic:#fff3d6;--myth:#ffe1ee;--peerb:#eef1f6;--think:#dceaff;--tb1:#dceaff;--tb2:#f5e6cc;--tb3:#ffd6de;--tb4:#ece0ff;--me:#ffe9f0;
@@ -505,7 +505,7 @@ setTimeout(function(){if(!gone&&!ran)S.textContent='เน็ตช้านิ�
 function run(buf){try{var code=new TextDecoder('utf-8').decode(buf);T.textContent='กำลังเตรียมโลก…';setTimeout(function(){try{ran=1;var s=document.createElement('script');s.text=code+'\n//# sourceURL='+location.origin+'/app.js';document.body.appendChild(s);code=null;setTimeout(done,60)}catch(e){ran=0;go()}},30)}catch(e){go()}}
 try{if(!window.fetch||!window.ReadableStream||!window.TextDecoder||(navigator.serviceWorker&&navigator.serviceWorker.controller))return go();
  fetch('/app.js',{credentials:'same-origin'}).then(function(r){if(!r.ok||!r.body)return go();var cl=+r.headers.get('content-length')||0,enc=r.headers.get('content-encoding'),tot=(!enc&&cl>1e6)?cl:SZ,n=0,rd=r.body.getReader(),parts=[];
-  (function pump(){rd.read().then(function(x){if(x.done){set(1,n);var all=new Uint8Array(n),o=0;for(var i=0;i<parts.length;i++){all.set(parts[i],o);o+=parts[i].length}parts=null;return run(all)}parts.push(x.value);n+=x.value.length;set(n/tot,n);pump()}).catch(function(){if(!ran)go()})})()}).catch(function(){if(!ran)go()})}catch(e){go()}
+  (function pump(){rd.read().then(function(x){if(x.done){set(1,n);var all=new Uint8Array(n),o=0;for(var i=0;i<parts.length;i++){all.set(parts[i],o);o+=parts[i].length}parts=null;all=null;return go()}parts.push(x.value);n+=x.value.length;set(n/tot,n);pump()}).catch(function(){if(!ran)go()})})()}).catch(function(){if(!ran)go()})}catch(e){go()}
 })();
 </script>
 </body>
