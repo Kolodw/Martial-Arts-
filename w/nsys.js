@@ -50,7 +50,7 @@ const later=f=>setTimeout(()=>{try{f()}catch(e){console.error('nsys',e)}},380);
 function nsNew(M,id){const sys=byId(id);M.NS={on:1,id,lv:1,xp:0,path:'',qd:{},tw:{},sh:{},dark:0,kind:0,fail:0,y0:S.age,qy:-9,ey:-9,pk:'',og:pk(['self','lab','god']),clue:0,quit:0,lost:0,runs:0,wins:0};
  bookS(id,b=>{b.n=(b.n||0)+1});return M.NS}
 const PERK={fast:['⚡ เร่งค่าประสบการณ์','ค่าประสบการณ์จากเควส ×1.35'],cash:['💵 รายได้ประจำ','ทุกปีได้เงินเพิ่มตามระดับ'],safe:['🛡️ ประกันความพลาด','พลาดเควส/สอบตก เสียน้อยลงครึ่งหนึ่ง']};
-function gainXP(M,N,v){if(v<=0)return'';if(N.pk==='fast')v=Math.round(v*1.35);const cap=CAP[lvT(N.lv)];let up=0;N.xp+=v;
+function gainXP(M,N,v){if(v<=0||N.lock>0)return'';if(N.pk==='fast')v=Math.round(v*1.35);const cap=CAP[lvT(N.lv)];let up=0;N.xp+=v;
  while(N.xp>=XPL&&N.lv<cap){N.xp-=XPL;N.lv++;up++}
  if(N.lv>=cap&&N.lv<10)N.xp=Math.min(N.xp,XPL);
  if(up){const sys=byId(N.id);log(`📱 <span class="px">[${esc(sys.app)}] เลเวลอัป → Lv.${N.lv}</span>${N.lv===cap&&N.lv<10?' · <b>ถึงขีดสุดของขั้น'+TN[lvT(N.lv)]+'</b> ต้องสอบเลื่อนขั้น':''}`,'epic')}
@@ -73,13 +73,26 @@ const pen=N=>N.pk==='safe'?.5:1;
 // ชนิด: g0/g1/g2 = มินิเกม · r = เสี่ยง · s = ชัวร์ · d = ทางลัด (กรรม −) · k = ใจดี (เงิน −) · f:คีย์ = เลือกเส้นทาง
 const HINT={g:'🎮 มินิเกม · ได้ตามฝีมือ',r:'🎲 เสี่ยง ได้มาก',s:'🛡️ ชัวร์ ได้น้อย',d:'😈 ทางลัด · กรรม −',k:'🤍 ใจดี · เสียเงิน',f:'🧭 เลือกเส้นทาง (เปลี่ยนไม่ได้)'};
 const RW={g:[22,1,1],r:[26,1.5,1.2],s:[10,.4,.5],d:[28,1.6,1.3],k:[15,-.3,.7]};
-function res(M,sys,o,t,win,kind,sc){const N=NSo(M);if(!N)return;const ex=o[4]||{},[xp,mo,sk]=RW[kind]||RW.s;let fx=[];
+// ---------- แถบที่สอง (เฉพาะบางระบบ): 😳 ความอาย (เบียว) · 🌍 ความแตกตื่นของโลก (ประตูหน้ากระดาษ) ----------
+function meter(M,N,sys,d){const MT=sys.meter;if(!MT||!d)return'';const o=N.m||0;N.m=cl(Math.round(o+d),0,MT.max||100);
+ (MT.th||[]).forEach((th,i)=>{N.mt=N.mt||{};if(o<th[0]&&N.m>=th[0]&&!N.mt[i]){N.mt[i]=1;setTimeout(()=>{try{thEv(M,sys,th)}catch(e){console.error('nsys th',e)}},1300)}});
+ if(N.m>=(MT.max||100)&&o<(MT.max||100))setTimeout(()=>{try{full(M,N,sys)}catch(e){console.error('nsys full',e)}},1600);
+ return`${MT.ic} ${MT.n} ${d>0?'+':''}${d} → ${N.m}`}
+function thEv(M,sys,th){const N=NSo(M);if(!N)return;const go=()=>{if(choice._cur||(typeof modalOpen!=='undefined'&&modalOpen))return setTimeout(go,900);
+ choice(th[1],head(sys,N)+th[2],th[3].map(o=>mwC(o[0],()=>{const f=o[1]||{};if(f.m)meter(M,N,sys,f.m);if(f.mon){const v=Math.round(unit(M,lvT(N.lv),Math.abs(f.mon)));S.money=Math.max(0,S.money+(f.mon>0?v:-v))}if(f.joy)joy(f.joy);if(f.karma)S.karma=(S.karma||0)+f.karma;if(f.dark)N.dark+=f.dark;if(f.kind)N.kind+=f.kind;if(f.xp)gainXP(M,N,f.xp);if(f.endk)N.endk=f.endk;if(f.st)stat(M,lvT(N.lv),sys,f.st);
+  say(`${sys.meter.ic} ${o[2]}`,f.dark?'bad':'');if(f.m)log(`<span class="tag2">${sys.meter.ic} ${sys.meter.n} → ${N.m}</span>`,'')},{s:o[3]||''})))};go()}
+function full(M,N,sys){const MT=sys.meter;if(!NSo(M))return;
+ if(MT.full==='awake'){N.lock=2;N.m=35;joy(-6);log(`😳 <b>ความอายเต็มหลอด — ตื่นจากฝัน</b> คุณเห็นตัวเองในกระจกพันผ้าพันแผลที่มือซ้าย แล้วอยากหายไปจากโลก ระบบหยุดให้ค่าประสบการณ์สองปี`,'bad',true);kAdd('ตื่นจากฝันเบียวครั้งใหญ่')}
+ else if(MT.full==='world'){N.wc=1;try{if(typeof hwInit==='function'&&!(M.hw>0))hwInit(M,true)}catch(e){}try{W.wFoc()}catch(e){}bookS(sys.id,b=>{b.e.W=1});kAdd('ประตูหน้ากระดาษเปิดทั่วประเทศ โลกเปลี่ยนไปตลอดกาล');
+  log(`🌍 <b>ประตูหน้ากระดาษเปิดทั่วประเทศ</b> หนังสือทุกเล่มในห้องสมุดเรืองแสงพร้อมกันตอนเที่ยงคืน เช้าวันรุ่งขึ้นคนแรกที่ตื่นพลังขึ้นข่าวทุกช่อง — <b>โลกปกติกลายเป็นโลกฮันเตอร์แล้ว</b> และลูกหลานของคุณจะเกิดในโลกใหม่นี้`,'myth',true);
+  try{isl&&isl({big:1,pri:1,ic:'🌍',h:'โลกเปลี่ยนไป',t:'ประตูหน้ากระดาษเปิดทั่วประเทศ'})}catch(e){}}}
+function res(M,sys,o,t,win,kind,sc){const N=NSo(M);if(!N)return;const ex=o[4]||{},[xp,mo,sk]=RW[kind]||RW.s;let fx=[];const mt=sys.meter?meter(M,N,sys,(ex.m!=null?ex.m:(sys.meter.def||{})[kind]||0)*(win?1:(sys.meter.lose||1))):'';if(mt)fx.push(mt);
  if(win){N.fail=0;N.wins++;let m=kind==='g'?.6+(sc||.6):1;fx.push(stat(M,t,sys,sk*m));
   if(mo&&(sys.st||'').indexOf('mon')<0){const v=Math.round(unit(M,t,mo*.5*m));if(v<0&&S.money<-v){}else{S.money=Math.max(0,(S.money||0)+v);fx.push(`💵 ${v>0?'+':''}${fmt(v)}`)}}
   else if(mo<0){const v=Math.round(unit(M,t,mo*.5));S.money=Math.max(0,(S.money||0)+v);fx.push(`💵 ${fmt(v)}`)}
   if(kind==='d'){N.dark++;S.karma=(S.karma||0)-6;fx.push('กรรม −6');prA(M,3)}
   if(kind==='k'){N.kind++;S.karma=(S.karma||0)+5;joy(3);fx.push('กรรมดี +5')}
-  if(ex.f)N.qd['f_'+ex.f]=1;if(ex.end){try{M.end=Math.max(S.age+2,(M.end||80)+ex.end)}catch(e){}}
+  if(ex.f)N.qd['f_'+ex.f]=1;if(ex.endk)N.endk=ex.endk;if(ex.end){try{M.end=Math.max(S.age+2,(M.end||80)+ex.end)}catch(e){}}
   fx.push(gainXP(M,N,Math.round(xp*(kind==='g'?.6+(sc||.6)*.7:1))).replace(/^ · /,''));
   say(`${sys.ic} ${o[2]||o[0]+' สำเร็จ'}`,kind==='d'?'':'good',null);log(`<span class="tag2">${fx.filter(Boolean).join(' · ')}</span>`,'')}
  else{N.fail++;let fx2=[];const p=pen(N);
@@ -87,14 +100,14 @@ function res(M,sys,o,t,win,kind,sc){const N=NSo(M);if(!N)return;const ex=o[4]||{
   if(kind==='d'){N.dark++;S.karma=(S.karma||0)-8;try{M.sec=cl((M.sec||0)+Math.round(8*p),0,100)}catch(e){}fx2.push('กรรม −8 · ความลับรั่ว +'+Math.round(8*p))}
   if(kind==='g'){prA(M,Math.round(4*p));fx2.push('แรงกดดัน +'+Math.round(4*p))}
   const g=gainXP(M,N,kind==='g'?6:3);if(g)fx2.push(g.replace(/^ · /,''));
-  say(`${sys.ic} ${o[3]||o[0]+' ไม่สำเร็จ'}`,'bad');if(fx2.length)log(`<span class="tag2">${fx2.join(' · ')}</span>`,'');
+  if(mt)fx2.push(mt);say(`${sys.ic} ${o[3]||o[0]+' ไม่สำเร็จ'}`,'bad');if(fx2.length)log(`<span class="tag2">${fx2.join(' · ')}</span>`,'');
   if(N.fail>=3){N.fail=0;punish(M,N,sys)}}}
 function punish(M,N,sys){const t=lvT(N.lv),v=Math.round(unit(M,t,.8*pen(N)));S.money=Math.max(0,(S.money||0)-v);joy(-6);N.xp=Math.max(0,N.xp-15);
  say(`📱 <span class="px">[${esc(sys.app)}] ⚠️ บทลงโทษ: พลาดภารกิจติดกัน 3 ครั้ง</span> ระบบหักเงิน ${fmt(v)} และค่าประสบการณ์ 15 · หน้าจอมือถือกะพริบแดงทั้งคืน`,'bad')}
 function doOpt(M,sys,o,t,title){const N=NSo(M);if(!N)return;const k=o[1]||'s';
  if(k[0]==='f'){N.path=k.slice(2);const P=sys.P.find(p=>p[0]===N.path);say(`🧭 <b>เส้นทาง: ${esc(P?P[1]:N.path)}</b> — ${esc(o[2]||'')}`,'epic');gainXP(M,N,12);kAdd(`${sys.n}: เลือกเส้นทาง${P?P[1]:''}`);return}
  if(k[0]==='g'){const i=+k[1]||0;later(()=>mg(sys,i,t,title,(sc,skip)=>res(M,sys,o,t,sc>=.55,'g',sc)));return}
- const bonus=(S.int||0)>200?.04:0,p=({r:.48,s:.9,d:.84,k:.93}[k]||.8)+bonus;res(M,sys,o,t,Math.random()<p,k)}
+ const bonus=((S.int||0)>200?.04:0)-(sys.meter&&sys.meter.full==='awake'&&(N.m||0)>=70?.15:0),p=({r:.48,s:.9,d:.84,k:.93}[k]||.8)+bonus;res(M,sys,o,t,Math.random()<p,k)}
 const opt=(M,sys,o,t,title)=>mwC(o[0],()=>doOpt(M,sys,o,t,title),{s:HINT[(o[1]||'s')[0]]||''});
 
 // ---------- เควสของระบบ ----------
@@ -102,6 +115,7 @@ const head=(sys,N)=>`<div class="tag2" style="margin-bottom:4px">📱 ${esc(sys.
 function pool(N,sys){const t=lvT(N.lv);return sys.Q.map((q,i)=>({q,i})).filter(({q,i})=>!N.qd[i]&&q[0]<=t&&q[0]>=t-1&&(!q[1]||q[1]===N.path)&&!(q[0]===3&&N.lv<10))}
 function quest(M){const N=NSo(M);if(!N)return;const sys=byId(N.id);if(!sys)return;const t=lvT(N.lv);N.qy=S.age;
  if(t>=1&&!N.path)return fork(M);
+ if(sys.dyn&&Math.random()<(sys.dynP||.3)){try{const q=sys.dyn(M,N,{lvT,unit,stat,meter,gainXP,say,kAdd,pk,esc});if(q){return choice(`${sys.ic} ${q[0]}`,head(sys,N)+q[1],q[2].map(o=>opt(M,sys,o,t,q[0].replace(/^\S+\s/,''))))}}catch(e){console.error('nsys dyn',e)}}
  const L=pool(N,sys);if(!L.length||Math.random()<.18)return grind(M);
  const x=L.find(e=>e.q[0]===3)||pk(L);N.qd[x.i]=1;const q=x.q;
  choice(`${sys.ic} ${q[2]}`,head(sys,N)+q[3],q[4].map(o=>opt(M,sys,o,t,q[2].replace(/^\S+\s/,''))))}
@@ -127,7 +141,7 @@ function twist(M){const N=NSo(M),sys=byId(N.id),t=lvT(N.lv);const L=(sys.W||[]).
   if(f.joy){joy(f.joy);fx.push(`😊 ${f.joy>0?'+':''}${f.joy}`)}if(f.karma){S.karma=(S.karma||0)+f.karma;fx.push(`กรรม ${f.karma>0?'+':''}${f.karma}`)}
   if(f.pr){prA(M,f.pr);fx.push(`แรงกดดัน ${f.pr>0?'+':''}${f.pr}`)}if(f.dark)N.dark+=f.dark;if(f.kind)N.kind+=f.kind;
   if(f.st)fx.push(stat(M,t,sys,f.st));if(f.end){M.end=Math.max(S.age+2,(M.end||80)+f.end);fx.push(`⏳ อายุขัย ${f.end>0?'+':''}${f.end} ปี`)}
-  if(f.xp){const g=gainXP(M,N,f.xp);if(g)fx.push(g.replace(/^ · /,''))}if(f.lv){N.lv=Math.max(1,N.lv+f.lv);fx.push(`Lv ${f.lv>0?'+':''}${f.lv}`)}
+  if(f.m){fx.push(meter(M,N,sys,f.m))}if(f.endk)N.endk=f.endk;if(f.xp){const g=gainXP(M,N,f.xp);if(g)fx.push(g.replace(/^ · /,''))}if(f.lv){N.lv=Math.max(1,N.lv+f.lv);fx.push(`Lv ${f.lv>0?'+':''}${f.lv}`)}
   say(`${sys.ic} ${o[2]}`,f.dark?'bad':f.karma>0||f.joy>0?'good':'');if(fx.length)log(`<span class="tag2">${fx.join(' · ')}</span>`,'')},{s:o[3]||''})))}
 
 // ---------- เหตุการณ์ร่วมทุกระบบ (ใส่ชื่อแอป/ฉายาของแต่ละระบบ) ----------
@@ -135,7 +149,7 @@ const OG={self:['ข้อความในแอปใช้คำติดป
  lab:['ทุกครั้งที่ขึ้นเลเวล มีอีเมลรายงานส่งไปที่โดเมนแปลกๆ','รถตู้คันเดิมจอดหน้าบ้านทุกครั้งที่คุณสอบเลื่อนขั้น','เจอคนอีกสามคนที่ได้แอปวันเดียวกับคุณ ทั้งสามคนเกิดโรงพยาบาลเดียวกัน','ผู้สร้างระบบคือ <b>บริษัทเทคที่ทดลองว่ามนุษย์จะเป็นอย่างไรถ้าได้โกงชีวิต</b> คุณคือผู้ถูกทดลองหมายเลข 07'],
  god:['แอปทำงานได้แม้มือถือแบตหมด','ระบบรู้เรื่องที่คุณไม่เคยบอกใคร แม้แต่คิดในใจ','ทุกคืนวันพระ ไอคอนแอปเปลี่ยนเป็นดอกบัว','ผู้สร้างระบบคือ <b>เทวดาที่เบื่อการดูชีวิตมนุษย์ซ้ำๆ</b> แอปนี้คือการพนันของเขากับเทวดาอีกองค์ ว่าคุณจะเลือกทางไหน']};
 const SH=['rival','patch','leak','lost','price','clue','box','burn','ally'];
-function shared(M,force){const N=NSo(M),sys=byId(N.id),t=lvT(N.lv);if(force==='clue'&&N.clue>=4)force='box';let L=SH.filter(k=>!(k==='patch'&&N.sh['patch'+t])&&!(k==='clue'&&N.clue>=4)&&!(k==='lost'&&N.sh.lost)&&!(k==='price'&&N.lv>=CAP[t]));const k=force||pk(L);N.sh[k]=(N.sh[k]||0)+1;const H=head(sys,N),app=esc(sys.app);
+function shared(M,force){const N=NSo(M),sys=byId(N.id),t=lvT(N.lv);if(sys.OG)OG['sys_'+sys.id]=sys.OG,N.og=N.og&&N.og.indexOf('sys_')===0?N.og:(sys.OGa?'sys_'+sys.id:N.og);if(force==='clue'&&N.clue>=4)force='box';let L=SH.filter(k=>!(k==='patch'&&N.sh['patch'+t])&&!(k==='clue'&&N.clue>=4)&&!(k==='lost'&&N.sh.lost)&&!(k==='price'&&N.lv>=CAP[t]));const k=force||pk(L);N.sh[k]=(N.sh[k]||0)+1;const H=head(sys,N),app=esc(sys.app);
  const C=(a,b,c)=>mwC(a,b,{s:c||''});
  if(k==='rival'){const rn=anyName(Math.random()<.5?'ชาย':'หญิง');
   return choice(`⚔️ ผู้ถือ${esc(sys.n)}อีกคน`,H+`${esc(rn)} เปิดมือถือให้ดูในร้านกาแฟ — ไอคอนแอปเดียวกับของคุณ เลเวลสูงกว่าคุณหนึ่งขั้น ‘ระบบบอกว่าถ้าชนะคนถือแอปเดียวกัน จะได้ค่าประสบการณ์ของอีกฝ่ายไปครึ่งหนึ่ง’`,[
@@ -178,7 +192,7 @@ function shared(M,force){const N=NSo(M),sys=byId(N.id),t=lvT(N.lv);if(force==='c
 // ---------- ได้รับระบบ ----------
 function offer(M){M.fl=M.fl||{};M.fl.nsAsk=(M.fl.nsAsk||0)+1;if(!SYS.length)return;const b=bookG();
  const L=SYS.slice().sort(()=>Math.random()-.5).sort((a,c)=>((b[a.id]&&b[a.id].n)||0)-((b[c.id]&&b[c.id].n)||0)).slice(0,3);
- const why=pk(['คืนนั้นฝนตกหนัก มือถือที่ชาร์จไว้หัวเตียงสั่นสามครั้ง','หลังล้มหัวฟาดขอบฟุตปาทแล้วตื่นขึ้นมาในโรงพยาบาล','มือถือมือสองที่ซื้อจากตลาดนัดมีแอปติดมาสามแอป','ตอนตีสามสามนาที จอมือถือสว่างขึ้นเองทั้งที่ปิดเครื่องอยู่']);
+ const why=S.age<12?pk(['แท็บเล็ตเก่าของพ่อที่คุณแอบเล่นเกมเปิดขึ้นเองกลางดึก','หน้าจอนาฬิกาเด็กที่แม่ซื้อให้กะพริบเป็นตัวหนังสือที่คุณยังอ่านไม่คล่อง','ทีวีในห้องนั่งเล่นเปลี่ยนช่องเองแล้วขึ้นข้อความหาคุณคนเดียว']):pk(['คืนนั้นฝนตกหนัก มือถือที่ชาร์จไว้หัวเตียงสั่นสามครั้ง','หลังล้มหัวฟาดขอบฟุตปาทแล้วตื่นขึ้นมาในโรงพยาบาล','มือถือมือสองที่ซื้อจากตลาดนัดมีแอปติดมาสามแอป','ตอนตีสามสามนาที จอมือถือสว่างขึ้นเองทั้งที่ปิดเครื่องอยู่']);
  choice('📱 แอปที่ลบไม่ได้',`${why} — บนหน้าจอมีไอคอนแอปใหม่ที่คุณไม่เคยโหลด ตัวหนังสือขึ้นมาว่า<br><b class="px">[ยินดีด้วย คุณได้รับเลือก · เลือกระบบได้ 1 ระบบ · เลือกแล้วเปลี่ยนไม่ได้]</b>`,
   L.map(s=>mwC(`${s.ic} ${s.app}`,()=>{nsNew(M,s.id);log(`📱 <b>ติดตั้ง ${esc(s.app)} แล้ว</b> — ${esc(s.d)} <span class="tag2">ขั้น${TN[0]} 「${esc(s.T[0])}」 · เปิดดูได้ที่ ☰ เมนู → 📱 ระบบ</span>`,'myth',true);kAdd(`ได้รับ${s.app}`)},{s:s.d}))
   .concat(M.fl.nsAsk<2?[mwC('🗑️ กดปิด ไม่เอา',()=>say('🗑️ คุณกดปิดแอป มันหายไปจากหน้าจอ… แต่คุณรู้สึกว่ามันยังรออยู่','') ,{s:'อาจกลับมาถามอีกครั้ง'})]:[]))}
@@ -186,8 +200,8 @@ function offer(M){M.fl=M.fl||{};M.fl.nsAsk=(M.fl.nsAsk||0)+1;if(!SYS.length)retu
 // ---------- รายปี ----------
 {const c0=CAND.normal;CAND.normal=(M,foc,out)=>{if(c0)c0(M,foc,out);try{if(!isN(M))return;const r=Math.random;M.fl=M.fl||{};
  const N=M.NS;
- if(!N){if(S.age>=16&&S.age<=34&&(M.fl.nsAsk||0)<2&&r()<(M.fl.nsAsk?.12:.28))out.push({id:'ns_get',p:4.7});return}
- if(!N.on)return;if(N.lost>0)return;
+ if(!N)return;
+ if(!N.on)return;if(N.lost>0||N.wc)return;
  if(ready(N)&&S.age-N.ey>=1)out.push({id:'ns_ex',p:4.6});
  else if(lvT(N.lv)>=1&&!N.path)out.push({id:'ns_fork',p:4.5});
  else if(N.lv>=10&&!N.fin&&pool(N,byId(N.id)).some(x=>x.q[0]===3))out.push({id:'ns_q'+(M.y%3),p:4.4});
@@ -199,7 +213,14 @@ const EV=(id,go)=>MW_R.push({id,w:0,cd:0,c:()=>false,go});
 EV('ns_get',M=>offer(M));EV('ns_ex',M=>exam(M));EV('ns_fork',M=>fork(M));
 [0,1,2].forEach(i=>{EV('ns_q'+i,M=>quest(M));EV('ns_sh'+i,M=>shared(M))});[0,1].forEach(i=>{EV('ns_tw'+i,M=>twist(M));EV('ns_clue'+i,M=>shared(M,'clue'))});
 // ผลประจำปี
-{const _y=mwYear;mwYear=function(){const r=_y.apply(this,arguments);try{const M=S&&S.mw,N=NSo(M);if(!N||!isN(M))return r;const sys=byId(N.id);if(!sys)return r;
+{const _y=mwYear;mwYear=function(){const r=_y.apply(this,arguments);try{const M=S&&S.mw;if(!M||!S.alive)return r;M.fl=M.fl||{};
+ // ได้ระบบได้ทุกช่วงอายุ (ตั้งแต่ 5 ขวบ) ปีละราว 2% · กดปิดได้ 1 ครั้ง ระบบอาจกลับมาถามอีก
+ {const ih=LS.get('murim_nsinh',null);if(ih&&!M.NS&&wOf(M)==='normal'&&S.age>=12&&byId(ih.id)){LS.set('murim_nsinh',null);const sy=byId(ih.id);setTimeout(()=>{const go=()=>{if(choice._cur||(typeof modalOpen!=='undefined'&&modalOpen))return setTimeout(go,900);if(M.NS)return;choice(`${sy.ic} ของเก่าในกล่องใต้เตียง`,`คุณรื้อกล่องเก่าในห้องเก็บของ เจอ${esc(sy.inhT||'สมุดเล่มหนึ่ง')}ที่มีชื่อ <b>${esc(ih.n)}</b> เขียนไว้หน้าแรก — คนที่ใช้ชีวิตก่อนหน้าคุณ ทันทีที่เปิด มือถือคุณสั่น`,[mwC('เปิดอ่านต่อ',()=>{const N=nsNew(M,sy.id);N.lv=Math.min(3,1+Math.floor((ih.lv||1)/4));log(`${sy.ic} <b>รับมรดก ${esc(sy.app)}</b> จาก ${esc(ih.n)} · เริ่มที่ Lv.${N.lv}`,'myth',true);kAdd(`รับมรดก${sy.app}`)},{s:'ได้ระบบนี้ทันที เริ่มเลเวลสูงขึ้น'}),mwC('ปิดกล่อง',()=>say('📦 คุณวางกล่องไว้ที่เดิม แต่รู้ว่ามันยังรออยู่',''))])};go()},1500);return r}}
+ if(!M.NS&&wOf(M)==='normal'&&S.age>=5&&(M.fl.nsAsk||0)<2&&Math.random()<(window._nsRate||.02)){fire('ns_get');return r}
+ const N=NSo(M);if(!N||wOf(M)!=='normal'||N.wc)return r;const sys=byId(N.id);if(!sys)return r;
+ if(N.lock>0){N.lock--;if(!N.lock)say(`${sys.ic} ระบบกลับมาทำงาน ‘ยินดีต้อนรับกลับ ท่านผู้ถูกเลือก’`,'')}
+ if(sys.meter&&sys.meter.dec&&N.m>0)N.m=Math.max(0,N.m-sys.meter.dec);
+ if(M.kid){if(ready(N))fire('ns_ex');else if(Math.random()<.35)fire('ns_q'+(M.y%3));}
  if(N.lost>0){N.lost--;if(!N.lost)say(`📱 เช้าวันหนึ่งมือถือสั่น ${esc(sys.app)} กลับมาแล้ว ‘ยินดีต้อนรับกลับ’`,'');return r}
  const t=lvT(N.lv);gainXP(M,N,6+t*2);const tx=stat(M,t,sys,.35);
  if(N.pk==='cash'){const v=Math.round(unit(M,t,.5));S.money=(S.money||0)+v}
@@ -220,6 +241,7 @@ window.nsOpen=function(){const M=S&&S.mw,N=M&&M.NS;if(!N||!N.on){if(M&&M.NS&&M.N
  <div class="hd"><span class="ic">${sys.ic}</span><div><div class="nm px">${esc(sys.app)}</div><div class="tt">${esc(sys.d)}</div></div></div>
  <div class="tiers">${[0,1,2,3].map(i=>`<div class="${i===t?'on':''}" style="color:${TC[i]}">${TI[i]} ${TN[i]}<br><small>${esc(sys.T[i])}</small></div>`).join('')}</div>
  <div><b>Lv.${N.lv}</b>/10 · ค่าประสบการณ์ ${N.xp}/${XPL}${N.lv>=10?' · 👑 สูงสุดแล้ว':''}<div class="bar"><i style="width:${N.lv>=10?100:N.xp/XPL*100}%"></i></div></div>
+ ${sys.meter?`<div class="row">${sys.meter.ic} <b>${esc(sys.meter.n)}</b> ${N.m||0}/${sys.meter.max||100}<div class="bar"><i style="width:${(N.m||0)/(sys.meter.max||100)*100}%;background:${sys.meter.col||'linear-gradient(90deg,#ff8a5a,#ff3a6a)'}"></i></div><small>${esc(sys.meter.d||'')}</small></div>`:''}${N.sk&&N.sk.length?`<div class="row">🌀 <b>สกิล</b><br>${N.sk.map(x=>`「${esc(x[0])}」 <small>→ ${esc(x[1])}</small>`).join('<br>')}</div>`:''}${N.lock>0?`<div class="row">😳 ระบบหยุดให้ค่าประสบการณ์อีก ${N.lock} ปี</div>`:''}${N.wc?'<div class="row">🌍 โลกเปลี่ยนเป็นโลกฮันเตอร์แล้ว ระบบนี้ทำงานเสร็จสิ้น</div>':''}
  ${ready(N)?`<div class="row">🎓 <b>พร้อมสอบเลื่อนขั้น: ${esc(sys.X[t])}</b> — มินิเกมยากขึ้นหนึ่งขั้น ต้องได้ 60%</div>`:''}
  ${P?`<div class="row">🧭 เส้นทาง <b>${esc(P[1])}</b> — ${esc(P[2])}</div>`:t>=1?'<div class="row">🧭 ยังไม่ได้เลือกเส้นทาง (ทางแยกจะมาในปีนี้)</div>':'<div class="row">🧭 ทางแยกของระบบจะมาถึงตอนขึ้นขั้นกลาง</div>'}
  <div class="row">${N.pk?PERK[N.pk][0]+' · '+PERK[N.pk][1]:'🔄 ยังไม่มีความสามารถเสริม (ได้จากการอัปเดตระบบ)'}<br>🔎 เบาะแสผู้สร้าง ${Math.min(4,N.clue)}/4 · 😈 ทางลัด ${N.dark} · 🤍 ใจดี ${N.kind} · ✅ สำเร็จ ${N.wins}${N.ally?' · 🤝 '+esc(N.ally):''}</div>
@@ -229,22 +251,22 @@ window.nsDo=k=>{const M=S&&S.mw,N=NSo(M);if(!N||choice._cur)return;if(k==='ex'){
 window.nsQuit=function(){const M=S&&S.mw,N=NSo(M);if(!N)return;const sys=byId(N.id);if(!confirm(`ถอนการติดตั้ง ${sys.app}? ค่าที่ได้มาแล้วยังอยู่ แต่ระบบจะไม่กลับมาอีกตลอดชีวิตนี้`))return;closeM();
  N.on=0;N.quit=1;joy(8);prA(M,-15);bookS(sys.id,b=>{b.e.B=1});kAdd(`ถอนการติดตั้ง${sys.app}`);log(`🗑️ <b>คุณกดถอนการติดตั้ง ${esc(sys.app)}</b> ไอคอนสั่นอยู่สามวินาที แล้วหายไป ชีวิตที่เหลือเป็นของคุณเองทั้งหมด`,'myth',true)};
 window.nsBook=function(){const b=bookG();const got=SYS.filter(s=>b[s.id]).length;
- modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📖 สมุดระบบ</h3><p class="tag2">ระบบที่เคยได้ ${got}/${SYS.length} · เกิดในยุคปัจจุบัน (โลกปกติ) มีโอกาสได้แอประบบช่วงอายุ 16–34 · ตอนจบ: 👑 สุดทาง · 🗑️ ถอดระบบ · 😈 ด้านมืด · 🗝️ ความลับ</p>
- <div class="nsBk">${SYS.map(s=>{const x=b[s.id];return x?`<div title="${esc(s.app)}"><b>${s.ic}</b>${esc(s.n)}<br><span style="color:${TC[x.t||0]}">${TN[x.t||0]}</span><br>${['A','B','C','S'].map(k=>x.e&&x.e[k]?['👑','🗑️','😈','🗝️'][['A','B','C','S'].indexOf(k)]:'').join('')}</div>`:`<div class="no"><b>❔</b>???</div>`}).join('')}</div>`,'nsbook')};
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📖 สมุดระบบ</h3><p class="tag2">ระบบที่เคยได้ ${got}/${SYS.length} · เกิดในยุคปัจจุบัน (โลกปกติ) มีโอกาสได้แอประบบทุกช่วงอายุ ตั้งแต่ 5 ขวบ ปีละราว 2% · ตอนจบ: 👑 สุดทาง · 🗑️ ถอดระบบ · 😈 ด้านมืด · 🗝️ ความลับ</p>
+ <div class="nsBk">${SYS.map(s=>{const x=b[s.id];return x?`<div title="${esc(s.app)}"><b>${s.ic}</b>${esc(s.n)}<br><span style="color:${TC[x.t||0]}">${TN[x.t||0]}</span><br>${['A','B','C','S','W'].map(k=>x.e&&x.e[k]?['👑','🗑️','😈','🗝️','🌍'][['A','B','C','S','W'].indexOf(k)]:'').join('')}</div>`:`<div class="no"><b>❔</b>???</div>`}).join('')}</div>`,'nsbook')};
 // เมนู
 if(typeof openMenu==='function'){const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const M=S&&S.mw;if(M&&M.NS&&isN(M)){const g=$('modal').querySelector('.mgrid'),N=M.NS,sys=byId(N.id);if(g&&sys&&!g.querySelector('.nsM'))g.insertAdjacentHTML('afterbegin',`<button class="opt nsM" onclick="closeM();nsOpen()">${sys.ic} ระบบ: ${esc(sys.n)}<small>${N.on?`${TN[lvT(N.lv)]} · Lv.${N.lv}${ready(N)?' · 🎓 พร้อมสอบ':''}`:'ถอนการติดตั้งแล้ว'}</small></button>`)}}catch(e){}return r}}
 
 // ---------- ตอนจบ ----------
-function ending(N){const sys=byId(N.id);if(!sys)return null;const E=sys.E||[];
- if(N.quit)return['B','🗑️ ถอดระบบ',E[1]];if(N.dark>=4&&N.dark>N.kind)return['C','😈 ด้านมืด',E[2]];if(N.lv>=10)return['A','👑 สุดทาง',E[0]];
+function ending(N){const sys=byId(N.id);if(!sys)return null;const E=sys.E||[];if(N.wc&&E[3])return['W','🌍 ผู้ทำให้โลกเปลี่ยน',E[3]];if(N.endk&&sys.EX&&sys.EX[N.endk])return['C',sys.EX[N.endk][0],sys.EX[N.endk][1]];
+ if(N.quit)return['B','🗑️ ถอดระบบ',E[1]];if(N.dark>=4&&N.dark>N.kind)return['C','😈 ด้านมืด',E[2]];if(N.lv>=10)return['A','👑 สุดทาง',E[0]&&typeof E[0]==='object'?(E[0][N.path]||E[0]._):E[0]];
  return['',`${TI[lvT(N.lv)]} ขั้น${TN[lvT(N.lv)]}`,`จากไปตอนเป็น「${sys.T[lvT(N.lv)]}」 ระบบยังมีภารกิจค้างในแอป อีก ${10-N.lv} เลเวลถึงขั้นเทพ`]}
 let LASTN=null;
-if(typeof endGame==='function'){const _eg=endGame;endGame=function(){try{const M=S&&S.mw;LASTN=M&&M.NS?JSON.parse(JSON.stringify(M.NS)):null;if(LASTN){const e=ending(LASTN);if(e&&e[0])bookS(LASTN.id,b=>{b.e[e[0]]=1;b.t=Math.max(b.t||0,lvT(LASTN.lv))})}}catch(e){}const r=_eg.apply(this,arguments);
+if(typeof endGame==='function'){const _eg=endGame;endGame=function(){try{const M=S&&S.mw;LASTN=M&&M.NS?JSON.parse(JSON.stringify(M.NS)):null;if(LASTN){const e=ending(LASTN);if(e&&e[0])bookS(LASTN.id,b=>{b.e[e[0]]=1;b.t=Math.max(b.t||0,lvT(LASTN.lv))});const sy=byId(LASTN.id);if(sy&&sy.inh&&!LASTN.quit&&Math.random()<sy.inh)LS.set('murim_nsinh',{id:sy.id,n:S.name,lv:LASTN.lv})}}catch(e){}const r=_eg.apply(this,arguments);
  try{if(LASTN)setTimeout(()=>{try{const b=$('end')&&$('end').querySelector('.box.rec');if(!b||b.querySelector('.nsEnd'))return;const sys=byId(LASTN.id),e=ending(LASTN);if(!sys||!e)return;
-  const d=document.createElement('div');d.className='nsEnd nsApp';d.style.margin='12px 0';d.innerHTML=`<div class="hd"><span class="ic">${sys.ic}</span><div><div class="nm px">${esc(sys.app)}</div><div class="tt">ตอนจบ: <b>${e[1]}</b> · Lv.${LASTN.lv} 「${esc(sys.T[lvT(LASTN.lv)])}」</div></div></div><div class="row" style="margin-top:8px">${esc(e[2]||'')}</div>${LASTN.og2===1?`<div class="row">🗝️ ${OG[LASTN.og][3]}</div>`:''}`;
+  const d=document.createElement('div');d.className='nsEnd nsApp';d.style.margin='12px 0';d.innerHTML=`<div class="hd"><span class="ic">${sys.ic}</span><div><div class="nm px">${esc(sys.app)}</div><div class="tt">ตอนจบ: <b>${e[1]}</b> · Lv.${LASTN.lv} 「${esc(sys.T[lvT(LASTN.lv)])}」</div></div></div><div class="row" style="margin-top:8px">${esc(e[2]||'')}</div>${LASTN.og2===1?`<div class="row">🗝️ ${(OG[LASTN.og]||sys.OG||OG.self)[3]}</div>`:''}`;
   const fb=b.querySelector('.fateBox')||b.querySelector('.mtNext');if(fb)fb.before(d);else b.appendChild(d)}catch(e){console.error('nsys end',e)}},80)}catch(e){}return r}}
-window._nsys={SYS,offer,quest,exam,fork,twist,shared,grind,nsNew,ending,lvT,ready,DIFF,mg};
+window._nsys={SYS,offer,quest,exam,fork,twist,shared,grind,nsNew,ending,lvT,ready,DIFF,mg,meter,full,byId};
 // ข้อมูลระบบ 4 ไฟล์
-['nsys1','nsys2','nsys3','nsys4'].forEach(n=>{try{wLoad(n).catch(()=>setTimeout(()=>wLoad(n).catch(()=>{}),5000))}catch(e){}});
+['nsys1','nsys2','nsys3','nsys4','nsys5'].forEach(n=>{try{wLoad(n).catch(()=>setTimeout(()=>wLoad(n).catch(()=>{}),5000))}catch(e){}});
 })();
 try{wReady('nsys')}catch(e){}
