@@ -45158,3 +45158,21 @@ window._ambBusy=busy;
 {const _m=modal;modal=function(){const r=_m.apply(this,arguments);if(modalOpen)duck();return r}}
 {const _cl=closeM;closeM=function(){const r=_cl.apply(this,arguments);setTimeout(()=>{try{ambUpdate()}catch(e){}},80);return r}}
 })()}catch(e){console.error('block139',e)}
+
+// BLOCK 140: 🧯 กันค้าง (ทุกโหมด ทุกโลก)
+// 1) ถ้าปีนั้นพังกลางทาง (error ก่อนอายุขึ้น) ซ้ำ 2 ครั้งที่อายุเดิม → ข้ามปีนั้นไปเลย ไม่ให้อายุค้างตลอดไป (เดิมออกเข้าใหม่ก็ค้างที่จุดเดิม)
+// 2) หน้าต่างล่องหน: modalOpen ค้างแต่ไม่มีหน้าต่างให้เห็น → ปิดให้ · ตัวเลือกค้างแต่ไม่แสดง → แสดงใหม่
+// 3) ตายแล้ว → ล้างจุด "เล่นต่อ" ทิ้ง กันเด้งกลับไปชีวิตที่ตายแล้ว
+try{(()=>{
+let errAge=null,errN=0;
+{const _p=passYear;passYear=function(){const me=S,a0=S&&S.age;try{const r=_p.apply(this,arguments);errN=0;return r}catch(e){console.error('passYear',e);try{jsErrSend('passYear: '+(e&&e.message),e&&e.stack,0,0)}catch(x){}
+  try{if(S&&S===me&&S.alive&&S.age===a0){if(errAge===a0)errN++;else{errAge=a0;errN=1}
+   if(errN>=2){errN=0;S.age++;try{closeM()}catch(x){}choice._cur=null;choice._min=false;try{pendBar()}catch(x){}try{checkDeath()}catch(x){}try{render()}catch(x){}try{saveGame()}catch(x){}try{toast('⚠️ ปีนี้มีปัญหา ข้ามไปปีถัดไปให้แล้ว')}catch(x){}}}}catch(x){}}}}
+let inv=0,chs=0;
+setInterval(()=>{try{if(!S||!S.alive||document.hidden||!$('game').classList.contains('on')){inv=chs=0;return}
+ const mask=$('mask'),vis=mask&&mask.classList.contains('on');
+ if(modalOpen&&!vis&&!(typeof pendModal!=='undefined'&&pendModal)&&!(typeof DU!=='undefined'&&DU)){if(++inv>=4){inv=0;console.warn('ghost modal closed',$('modal').dataset.k);closeM()}}else inv=0;
+ if(choice._cur&&!modalOpen&&!choice._min&&!(typeof DU!=='undefined'&&DU)&&!(typeof pendModal!=='undefined'&&pendModal)){if(++chs>=4){chs=0;try{choiceShow()}catch(e){try{fateChoice(true)}catch(x){choice._cur=null}}}}else chs=0;
+}catch(e){}},1000);
+{const _cs=clearSave;clearSave=function(){const r=_cs.apply(this,arguments);try{if(S&&!S.alive)resumeClear()}catch(e){}return r}}
+})()}catch(e){console.error('block140',e)}
