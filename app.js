@@ -14322,7 +14322,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
   const[sk,sx]=mk(W,H);skyGrad(sx,W,H,pal,H*.46);
   if(night)for(let i=0;i<Math.round(W*H/180);i++){const y=Math.round(sr(i*3.1)*H*.5),xx=Math.round(sr(i*5.7)*W);sx.fillStyle=sr(i)>.85?'#fff8e0':'#c8c8f0';sx.fillRect(xx,y,1,1)}
   const sunY=Math.round(H*(td==='day'?.12:td==='dusk'?.3:td==='dawn'?.28:.13)),sunX=Math.round(W*(wd==='x'?.72:.7));
-  if(wd!=='loop'&&wd!=='beast')disc(sx,sunX,sunY,Math.round(W*(night?.075:.09)),night?'#f4ecd0':td==='dusk'?'#ffd27a':'#fff4d0',night?'#c8d0ff':'#fff0c0');
+  if(wd!=='loop'&&wd!=='beast')disc(sx,sunX,sunY,Math.round(Math.min(W,['soul','sky'].includes(wd)?H*.6:W)*(night?.075:.09)),night?'#f4ecd0':td==='dusk'?'#ffd27a':'#fff4d0',night?'#c8d0ff':'#fff0c0');
   if(night){sx.fillStyle='#e0d8b8';sx.fillRect(sunX-3,sunY-2,3,2);sx.fillRect(sunX+2,sunY+3,2,2)}
   L.sky=sk;
   // ชั้นไกล/กลาง/ใกล้
@@ -53549,19 +53549,19 @@ setInterval(()=>{try{const K=S&&S.mw&&S.mw.sky;if(K&&K.rk>=0){const m=+LS.get('m
 const R=(x,a,b,w,h,c)=>{x.fillStyle=c;x.fillRect(Math.round(a),Math.round(b),Math.max(1,Math.round(w)),Math.max(1,Math.round(h)))};
 const ell=(x,cx,cy,rx,ry,c,fill)=>{x.fillStyle=c;for(let a=0;a<360;a+=fill?1:2){const t=a*Math.PI/180,px=Math.round(cx+Math.cos(t)*rx),py=Math.round(cy+Math.sin(t)*ry);x.fillRect(px,py,1,1)}};
 const blob=(x,disc,cx,cy,r,c,n,sr,seed)=>{for(let i=0;i<n;i++){const a=sr(seed+i)*6.28,d=sr(seed+i*3)*r*.8;disc(x,Math.round(cx+Math.cos(a)*d),Math.round(cy+Math.sin(a)*d*.7),Math.round(r*(.35+sr(seed+i*7)*.35)),c)}};
-window.tbExtraBuild=function(o){const{wd,sx,fx,mx,nx,W,H,td,pal,night,L,mix,sr,disc,mist,ridge,pine}=o;const dusk=td==='dusk',dawn=td==='dawn';
+window.tbExtraBuild=function(o){const{wd,sx,fx,mx,nx,W,H,td,pal,night,L,mix,sr,disc,mist,ridge,pine}=o;const dusk=td==='dusk',dawn=td==='dawn',U=Math.min(W,Math.round(H*.6));L.U=U;
  const far=mix(pal[2],'#3a3a6a',.45),mid=mix(pal[1],'#1a1830',.55),nr=mix(pal[0],'#0a0814',.72),hz=pal[3];L.ex={};
  if(night)for(let i=0;i<Math.round(W*H/260);i++){const y=Math.round(sr(i*9.3)*H*.45),xx=Math.round(sr(i*4.1)*W);sx.fillStyle=sr(i*2)>.8?'#ffffff':'#a8b0e0';sx.fillRect(xx,y,1,1)}
  // ---------------- 🔁 ผู้ย้อนกาล: หอนาฬิกาบนเนิน ----------------
- if(wd==='loop'){const cX=Math.round(W*.5),cY=Math.round(H*.2),cr=Math.round(Math.min(W*.3,H*.15));L.ex.clock=[cX,cY,cr];
-  if(night){for(let k=1;k<9;k++){const rr=cr+k*Math.round(W*.06);for(let a=0;a<360;a+=1.5){if(sr(k*31+Math.floor(a/9))<.55)continue;const t=a*Math.PI/180;sx.globalAlpha=.35+.4*sr(k+a);sx.fillStyle=k%3?'#c8c8ff':'#fff0d0';sx.fillRect(Math.round(cX+Math.cos(t)*rr),Math.round(cY+Math.sin(t)*rr),1,1)}}sx.globalAlpha=1}
+ if(wd==='loop'){const cX=Math.round(W*.5),cY=Math.round(H*.2),cr=Math.round(Math.min(U*.3,H*.15));L.ex.clock=[cX,cY,cr];
+  if(night){for(let k=1;k<9;k++){const rr=cr+k*Math.round(U*.06);for(let a=0;a<360;a+=1.5){if(sr(k*31+Math.floor(a/9))<.55)continue;const t=a*Math.PI/180;sx.globalAlpha=.35+.4*sr(k+a);sx.fillStyle=k%3?'#c8c8ff':'#fff0d0';sx.fillRect(Math.round(cX+Math.cos(t)*rr),Math.round(cY+Math.sin(t)*rr),1,1)}}sx.globalAlpha=1}
   // หน้าปัดนาฬิกาบนฟ้า (โปร่ง)
   const fc=night?'#e8dcff':dusk?'#ffe0b0':'#ffffff';sx.globalAlpha=night?.55:.42;ell(sx,cX,cY,cr,cr,fc,1);ell(sx,cX,cY,cr-2,cr-2,fc,1);sx.globalAlpha=night?.12:.08;sx.fillStyle=fc;for(let yy=-cr+3;yy<=cr-3;yy++){const ww=Math.floor(Math.sqrt((cr-3)**2-yy*yy));sx.fillRect(cX-ww,cY+yy,ww*2+1,1)}sx.globalAlpha=night?.8:.6;
   for(let i=0;i<12;i++){const t=i/12*6.28-1.57,l=i%3?2:4;for(let k=0;k<l;k++)R(sx,cX+Math.cos(t)*(cr-4-k),cY+Math.sin(t)*(cr-4-k),1,1,fc)}sx.globalAlpha=1;
   ridge(fx,W,H,Math.round(H*.46),Math.round(H*.08),2.4,far,mix(far,'#ffffff',.15),1.2);mist(fx,W,Math.round(H*.44),Math.round(H*.06),hz,.45);
   // เนินกลาง + หอระฆัง
   const ys=ridge(mx,W,H,Math.round(H*.56),Math.round(H*.07),5.1,mid,mix(mid,'#ffffff',.1),.6);const tX=Math.round(W*.3);let ty=H;for(let k=-5;k<=5;k++)ty=Math.min(ty,ys[Math.max(0,Math.min(W-1,tX+k))]);
-  const s=Math.max(1,Math.min(2.2,W/90)),tw=Math.round(9*s),th=Math.round(34*s),wall=mix(mid,'#000000',.35),wl=mix(mid,'#ffffff',.18);R(mx,tX-tw/2-2,ty,tw+4,H-ty,mid);
+  const s=Math.max(1,Math.min(2.2,U/90)),tw=Math.round(9*s),th=Math.round(34*s),wall=mix(mid,'#000000',.35),wl=mix(mid,'#ffffff',.18);R(mx,tX-tw/2-2,ty,tw+4,H-ty,mid);
   R(mx,tX-tw/2,ty-th,tw,th,wall);R(mx,tX-tw/2,ty-th,1,th,wl);for(let i=0;i<3;i++){const ry=ty-th+Math.round(th*i/3);R(mx,tX-tw/2-2,ry,tw+4,Math.round(2*s),mix(wall,'#5a2028',.5))}
   R(mx,tX-tw/2-3,ty-th-Math.round(3*s),tw+6,Math.round(3*s),'#6a1f28');R(mx,tX-tw/2-1,ty-th-Math.round(6*s),tw+2,Math.round(3*s),'#8a2a30');R(mx,tX-1,ty-th-Math.round(10*s),2,Math.round(4*s),'#c8a040');
   const fcY=ty-Math.round(th*.72),fr=Math.round(3*s);disc(mx,tX,fcY,fr,night||dusk?'#ffe6a0':'#f0ead8');L.ex.tower=[tX,fcY,fr];
@@ -53569,16 +53569,16 @@ window.tbExtraBuild=function(o){const{wd,sx,fx,mx,nx,W,H,td,pal,night,L,mix,sr,d
   R(mx,tX-Math.round(2*s),ty-Math.round(6*s),Math.round(4*s),Math.round(6*s),'#2a1a1a');
   // ใกล้: พื้น + ต้นไม้ใหญ่
   R(nx,0,Math.round(H*.66),W,H,nr);for(let xx=0;xx<W;xx++)R(nx,xx,Math.round(H*.66-Math.abs(Math.sin(xx*.07))*3),1,4,nr);
-  const bx=Math.round(W*.84),by=Math.round(H*.67);R(nx,bx-2,by-Math.round(H*.2),4,Math.round(H*.2),mix(nr,'#3a2418',.4));for(let i=0;i<4;i++)R(nx,bx-2-i*3,by-Math.round(H*.15)-i*4,3,1,mix(nr,'#3a2418',.4));
-  const lc=dusk?'#c8582a':dawn?'#d0708a':night?'#2a2440':'#c8902a';blob(nx,disc,bx-4,by-Math.round(H*.24),Math.round(W*.14),mix(lc,nr,.35),14,sr,9);blob(nx,disc,bx-6,by-Math.round(H*.26),Math.round(W*.1),lc,10,sr,19);L.ex.leafC=lc;L.ex.leafO=[bx-4,by-Math.round(H*.24)];L.ex.dusk=dusk}
+  const bx=Math.round(W*.84),by=Math.round(H*.67);R(nx,bx-2,by-Math.round(U*.45),4,Math.round(U*.45),mix(nr,'#3a2418',.4));for(let i=0;i<4;i++)R(nx,bx-2-i*3,by-Math.round(H*.15)-i*4,3,1,mix(nr,'#3a2418',.4));
+  const lc=dusk?'#c8582a':dawn?'#d0708a':night?'#2a2440':'#c8902a';blob(nx,disc,bx-4,by-Math.round(U*.52),Math.round(U*.14),mix(lc,nr,.35),14,sr,9);blob(nx,disc,bx-6,by-Math.round(U*.56),Math.round(U*.1),lc,10,sr,19);L.ex.leafC=lc;L.ex.leafO=[bx-4,by-Math.round(U*.52)];L.ex.dusk=dusk}
  // ---------------- ⭕ จิตวิญญาณยุทธ์: ป่าวิญญาณ ----------------
  else if(wd==='soul'){const gl=night?'#7affd8':dusk?'#ffd08a':'#b8ffd8';
   for(let i=0;i<Math.ceil(W/6)+2;i++){const xx=i*6-3,yy=Math.round(H*.42+sr(i*3)*H*.05);disc(fx,xx,yy,Math.round(5+sr(i)*6),far)}R(fx,0,Math.round(H*.45),W,H,far);mist(fx,W,Math.round(H*.42),Math.round(H*.07),hz,.5);
   // ต้นไม้วิญญาณยักษ์
-  const tX=Math.round(W*.5),tB=Math.round(H*.64),trunk=mix(mid,'#2a1a2a',.4),tw=Math.max(5,Math.round(W*.07));
+  const tX=Math.round(W*.5),tB=Math.round(H*.64),trunk=mix(mid,'#2a1a2a',.4),tw=Math.max(5,Math.round(U*.07));
   for(let y=0;y<Math.round(H*.26);y++){const ww=Math.round(tw*(1+Math.max(0,(y-H*.2)/(H*.06))*1.2));R(mx,tX-ww/2,tB-y,ww,1,trunk)}
-  for(let i=0;i<5;i++){const a=-2.6+i*.55,len=Math.round(W*(.12+sr(i)*.1));for(let k=0;k<len;k++)R(mx,tX+Math.cos(a)*k,tB-Math.round(H*.24)+Math.sin(a)*k*.6,2,2,trunk)}
-  const cr=Math.round(Math.min(W*.42,H*.17)),cy=tB-Math.round(H*.31);blob(mx,disc,tX,cy,cr,mix(mid,'#0a2a2a',.3),22,sr,3);blob(mx,disc,tX,cy-3,Math.round(cr*.85),mix(mid,gl,.18),18,sr,13);blob(mx,disc,tX-3,cy-6,Math.round(cr*.55),mix(mid,gl,.3),10,sr,23);
+  for(let i=0;i<5;i++){const a=-2.6+i*.55,len=Math.round(U*(.12+sr(i)*.1));for(let k=0;k<len;k++)R(mx,tX+Math.cos(a)*k,tB-Math.round(H*.24)+Math.sin(a)*k*.6,2,2,trunk)}
+  const cr=Math.round(Math.min(U*.42,H*.17)),cy=tB-Math.round(H*.31);blob(mx,disc,tX,cy,cr,mix(mid,'#0a2a2a',.3),22,sr,3);blob(mx,disc,tX,cy-3,Math.round(cr*.85),mix(mid,gl,.18),18,sr,13);blob(mx,disc,tX-3,cy-6,Math.round(cr*.55),mix(mid,gl,.3),10,sr,23);
   L.ex.glow=[];for(let i=0;i<26;i++){const a=sr(i*5)*6.28,d=sr(i*7)*cr*.95;L.ex.glow.push([Math.round(tX+Math.cos(a)*d),Math.round(cy+Math.sin(a)*d*.6),sr(i)*6])}L.ex.tree=[tX,tB,cr,cy];L.ex.gl=gl;
   for(let i=0;i<7;i++){const rx=tX-tw*2+Math.round(sr(i)*tw*4);R(mx,rx,tB-1,Math.round(2+sr(i+3)*5),2,trunk)}
   R(mx,0,tB,W,H,mix(mid,'#06120e',.5));
@@ -53593,7 +53593,7 @@ window.tbExtraBuild=function(o){const{wd,sx,fx,mx,nx,W,H,td,pal,night,L,mix,sr,d
   let cxp=Math.round(W*.62),cyp=0;const crk=night?'#9ad8ff':dusk?'#ffd08a':'#fff4d0';sx.globalAlpha=night?.85:.55;for(let i=0;i<Math.round(H*.3);i++){cxp+=Math.round((sr(i*3.3)-.5)*3);cyp++;R(sx,cxp,cyp,1,1,crk);if(sr(i*7)>.9){let bx=cxp,by=cyp;for(let k=0;k<8;k++){bx+=sr(i+k)>.5?1:-1;by++;R(sx,bx,by,1,1,crk)}}}sx.globalAlpha=1;
   ridge(fx,W,H,Math.round(H*.45),Math.round(H*.05),3.7,far,mix(far,'#ffd0a0',.15),.7);
   // หลุมอุกกาบาตไกลๆ
-  const kx=Math.round(W*.78),ky=Math.round(H*.44);for(let r=0;r<Math.round(W*.15);r++)R(fx,kx-r,ky+Math.round(r*.15),r*2,1,mix(far,'#000000',.15));disc(fx,kx,ky-2,3,night?'#7ad8ff':'#ffb060',night?'#5aa8ff':'#ff8a3a');
+  const kx=Math.round(W*.78),ky=Math.round(H*.44);for(let r=0;r<Math.round(U*.15);r++)R(fx,kx-r,ky+Math.round(r*.15),r*2,1,mix(far,'#000000',.15));disc(fx,kx,ky-2,3,night?'#7ad8ff':'#ffb060',night?'#5aa8ff':'#ff8a3a');
   mist(fx,W,Math.round(H*.42),Math.round(H*.07),hz,dawn||td==='day'?.6:.4);
   // เมืองหลังกำแพง
   const wy=Math.round(H*.58);for(let i=0;i<Math.ceil(W/7);i++){const bw=4+Math.round(sr(i)*5),bh=Math.round(H*(.05+sr(i*3)*.12)),bx=i*7-2;R(mx,bx,wy-bh,bw,bh,mix(mid,'#000000',.2));if(night||dusk)for(let yy=wy-bh+2;yy<wy;yy+=3)for(let xx=bx+1;xx<bx+bw-1;xx+=2)if(sr(i*31+yy*7+xx)>.55)R(mx,xx,yy,1,1,sr(xx+yy)>.7?'#ff5ac8':sr(xx)>.5?'#5ad8ff':'#ffd890')}
@@ -53605,15 +53605,15 @@ window.tbExtraBuild=function(o){const{wd,sx,fx,mx,nx,W,H,td,pal,night,L,mix,sr,d
   for(let k=0;k<Math.round(H*.2);k++)R(nx,Math.round(W*.08)+Math.round(k*.35),Math.round(H*.66)-k,3,1,mix(nr,'#6a3a2a',.35));
   L.ex.dusk=dusk;L.ex.night=night}
  // ---------------- 🐾 เกิดเป็นสัตว์: ป่าลึกกับดวงจันทร์ ----------------
- else if(wd==='beast'){const mX=Math.round(W*.62),mY=Math.round(H*.2),mr=Math.round(Math.min(W*.22,H*.11));
+ else if(wd==='beast'){const mX=Math.round(W*.62),mY=Math.round(H*.2),mr=Math.round(Math.min(U*.22,H*.11));
   if(night||dusk){disc(sx,mX,mY,mr,night?'#f4ecd0':'#ffd8a0',night?'#a8b8ff':'#ffb080');if(night){sx.fillStyle='#d8d0b0';sx.fillRect(mX-Math.round(mr*.3),mY-2,3,2);sx.fillRect(mX+Math.round(mr*.2),mY+Math.round(mr*.3),2,2);sx.fillRect(mX-2,mY+Math.round(mr*.5),2,1)}}
-  else disc(sx,Math.round(W*.72),Math.round(H*(dawn?.28:.12)),Math.round(W*.08),'#fff4d0','#fff0c0');
+  else disc(sx,Math.round(W*.72),Math.round(H*(dawn?.28:.12)),Math.round(U*.08),'#fff4d0','#fff0c0');
   ridge(fx,W,H,Math.round(H*.42),Math.round(H*.12),1.9,far,mix(far,'#ffffff',.15),1);mist(fx,W,Math.round(H*.42),Math.round(H*.06),hz,.45);
   // ผาซ้าย (หมาป่าดึก)
   const cl=mix(mid,'#000000',.2),cX=Math.round(W*.2),cTop=Math.round(H*.36);for(let y=cTop;y<H*.62;y++){const k=(y-cTop)/(H*.26),ww=Math.round(cX+k*W*.12+Math.sin(y*.45)*2+(sr(Math.floor(y/3))-.5)*4);R(mx,0,y,ww,1,cl);if(y%5===0)R(mx,ww-3,y,3,1,mix(cl,'#ffffff',.12))}R(mx,0,cTop-1,cX+3,2,cl);L.ex.cliff=[cX-2,cTop];
   for(let i=0;i<Math.ceil(W/8);i++)pine(mx,i*8+Math.round(sr(i)*4),Math.round(H*.6),Math.round(H*(.1+sr(i*3)*.08)),mid);
   // ลำธาร + หินบำเพ็ญ
-  const sy=Math.round(H*.64);R(mx,0,sy,W,Math.round(H*.05),mix(pal[2],'#1a2a4a',.45));L.ex.stream=sy;const rX=Math.round(W*.5);{const rw=Math.round(W*.09);for(let r=0;r<6;r++)R(mx,rX-rw+Math.abs(r-2),sy-4+r,(rw-Math.abs(r-2))*2,1,r<2?mix(mid,'#9a9aaa',.45):mix(mid,'#5a5a6a',.4));R(mx,rX-rw+3,sy-4,5,1,mix(mid,'#5a8a5a',.5))}L.ex.rock=[rX,sy-2];
+  const sy=Math.round(H*.64);R(mx,0,sy,W,Math.round(H*.05),mix(pal[2],'#1a2a4a',.45));L.ex.stream=sy;const rX=Math.round(W*.5);{const rw=Math.round(U*.09);for(let r=0;r<6;r++)R(mx,rX-rw+Math.abs(r-2),sy-4+r,(rw-Math.abs(r-2))*2,1,r<2?mix(mid,'#9a9aaa',.45):mix(mid,'#5a5a6a',.4));R(mx,rX-rw+3,sy-4,5,1,mix(mid,'#5a8a5a',.5))}L.ex.rock=[rX,sy-2];
   R(nx,0,Math.round(H*.7),W,H,nr);for(let xx=0;xx<W;xx+=2)R(nx,xx,Math.round(H*.7)-Math.round(sr(xx*1.3)*5),1,6,nr);
   for(let i=0;i<5;i++){const fx0=Math.round(sr(i*7)*W);for(let k=0;k<6;k++)R(nx,fx0+k-3,Math.round(H*.69)-Math.abs(k-3)*2,1,Math.abs(k-3)*2+1,mix(nr,'#1a3a1a',.3))}
   L.ex.night=night;L.ex.day=!night&&!dusk}};
@@ -53627,7 +53627,7 @@ window.tbExtraDraw=function(o){const{cx,W,H,T,L,ox,oy,disc,mix}=o,E=L.ex||{};
  else if(L.wd==='soul'&&E.tree){const[tX,tB,cr,cy]=E.tree;
   E.glow.forEach(([gx,gy,p])=>{const a=.4+.6*Math.max(0,Math.sin(T*1.5+p));cx.globalAlpha=a;cx.fillStyle=E.gl;cx.fillRect(gx+ox(.5),gy+oy(.3),1,1);cx.globalAlpha=a*.3;cx.fillRect(gx+ox(.5)-1,gy+oy(.3),3,1);cx.fillRect(gx+ox(.5),gy+oy(.3)-1,1,3)});cx.globalAlpha=1;
   // วงแหวนวิญญาณลอยขึ้น
-  for(let i=0;i<5;i++){const ph=(T*.06+i/5)%1,ry=tB+oy(.3)-ph*H*.55,rr=Math.round(W*.16+ph*W*.12),c=RCOL[(i*2+Math.floor(T*.06))%RCOL.length];cx.globalAlpha=Math.sin(ph*3.14)*.75;cx.fillStyle=c;for(let a=0;a<360;a+=3){const t=a*Math.PI/180;cx.fillRect(Math.round(tX+ox(.5)+Math.cos(t)*rr),Math.round(ry+Math.sin(t)*rr*.22),a%9?1:2,1)}}cx.globalAlpha=1;
+  for(let i=0;i<5;i++){const ph=(T*.06+i/5)%1,ry=tB+oy(.3)-ph*H*.55,rr=Math.round((L.U||W)*.16+ph*(L.U||W)*.12),c=RCOL[(i*2+Math.floor(T*.06))%RCOL.length];cx.globalAlpha=Math.sin(ph*3.14)*.75;cx.fillStyle=c;for(let a=0;a<360;a+=3){const t=a*Math.PI/180;cx.fillRect(Math.round(tX+ox(.5)+Math.cos(t)*rr),Math.round(ry+Math.sin(t)*rr*.22),a%9?1:2,1)}}cx.globalAlpha=1;
   // ตาสัตว์วิญญาณกะพริบ
   E.eyes.forEach(([ex,ey,p,c])=>{const v=Math.sin(T*.5+p);if(v<.55)return;cx.globalAlpha=Math.min(1,(v-.55)*4);cx.fillStyle=c;cx.fillRect(ex+ox(.9),ey+oy(.5),1,1);cx.fillRect(ex+ox(.9)+3,ey+oy(.5),1,1)});cx.globalAlpha=1;
   for(let i=0;i<18;i++){const xx=(Math.sin(T*.3+i*1.7)*.5+.5)*W,yy=H*.35+(Math.cos(T*.4+i*2.1)*.5+.5)*H*.35;cx.globalAlpha=.4+.6*Math.max(0,Math.sin(T*2+i));cx.fillStyle='#e8ff9a';cx.fillRect(Math.round(xx),Math.round(yy),1,1)}cx.globalAlpha=1}
