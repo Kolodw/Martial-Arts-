@@ -24,6 +24,6 @@ for (const st of ast.body) {
   });
   const text = src.slice(st.start, st.end), w = {};
   for (const [name, re] of Object.entries(WORLD)) { const m = text.match(re); if (m) w[name] = m.length }
-  out.push({ i: k++, line: src.slice(0, st.start).split('\n').length, len: Buffer.byteLength(text), decl: [...decl], win: [...wset].filter(x => !x.startsWith('=')), reassign: [...wset].filter(x => x.startsWith('=')).map(x => x.slice(1)), refs: [...refs].filter(r => r.length > 1).slice(0, 4000), w, head: text.slice(0, 90).replace(/\s+/g, ' ') });
+  out.push({ i: k++, start: st.start, end: st.end, line: src.slice(0, st.start).split('\n').length, len: Buffer.byteLength(text), decl: [...decl], win: [...wset].filter(x => !x.startsWith('=')), reassign: [...wset].filter(x => x.startsWith('=')).map(x => x.slice(1)), refs: [...refs].filter(r => r.length > 1).slice(0, 4000), w, head: text.slice(0, 90).replace(/\s+/g, ' ') });
 }
 process.stdout.write(JSON.stringify({ file, bytes: B.length, n: out.length, st: out }));

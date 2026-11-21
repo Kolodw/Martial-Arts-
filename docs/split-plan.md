@@ -20,6 +20,17 @@
 
 ลำดับ
 1. ✅ ขั้น 0 เครื่องมือทำแผนที่ · ✅ ขั้น 1 ตัวโหลดโลก (BLOCK 117: wLoad / wNeed / wReady)
-2. ขั้น 2 ย้าย sky → /w/sky.js · ทางเข้า: skyStart, โหลดเซฟที่มี S.mw.sky, skyMap/skyShop, ดูคนอื่นเล่นในโลก sky
+2. ✅ ขั้น 2 ย้าย sky → /w/sky.js (0.97 MB · 3 ท่อน) · ทางเข้า: skyStart (stub), loadGame ของเซฟที่มี S.mw.sky, openBook/openGuide/openCodex · โหลดล่วงหน้าตอนว่าง 8 วิหลังเปิดเกม
+   - ที่ยังอยู่ app.js: ฉากพิกเซล (_skyScene/pxScene เพราะวิญญาณยุทธ์ใช้ร่วม), หน้าอันดับ (openOnline/openRkAdmin), เควสรายวันของโลกนี้
 3. ขั้น 3 soul → loop → beast → mw (แยกโลกย่อยของ mw ทีละตัว)
 4. ขั้น 4 บันทึกอัปเดต · ภาษาอังกฤษ · ร้านกรอบ
+
+## วิธีย้ายท่อน (ใช้ซ้ำได้ทุกโลก)
+```
+npm i acorn acorn-walk   # ครั้งแรก (อย่า commit node_modules)
+node tools/split-map.mjs > /tmp/map.json && node tools/split-report.mjs /tmp/map.json
+node tools/split-out.mjs <ชื่อโลก> <บรรทัดเริ่มท่อน1> <บรรทัดเริ่มท่อน2> ...
+```
+- ตำแหน่งเดิมของแต่ละท่อนใน app.js จะเหลือ `wSlot('<id>',[ชื่อฟังก์ชันที่ห่อ])` → ลำดับการห่อเหมือนเดิมเป๊ะ
+- ต้องเพิ่มทางเข้าเอง (stub ของฟังก์ชันเริ่มโลก + loadGame + หน้าที่แสดงข้อมูลโลกนั้น) ใน BLOCK 117
+- ห้ามย้ายท่อนที่ท่อนอื่นใน app.js อ่านค่าตอนโหลด (เช็คด้วย split-report: คอลัมน์ usedOutside)
