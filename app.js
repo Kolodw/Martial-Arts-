@@ -44066,3 +44066,16 @@ window._bip=null;window.addEventListener('beforeinstallprompt',e=>{try{e.prevent
 window.addEventListener('appinstalled',()=>{try{LS.set('murim_pwa',{done:1,t:Date.now()})}catch(e){}});
 setTimeout(()=>{try{wLoad('meta').catch(()=>setTimeout(()=>wLoad('meta').catch(()=>{}),7000))}catch(e){}},1600);
 })()}catch(e){console.error('block122',e)}
+
+// ============================================================
+// BLOCK 118: คำจากยุทธภพหลุดเข้าโลกเซียน/แดนเทพ — แปลงคำตอนแสดงผล (บันทึก · ตัวเลือก · แจ้งเตือน)
+//   ตำลึง → หินวิญญาณ ทุกที่ · "ยุทธภพ" → แดนเซียน/แดนเทพ เฉพาะประโยคทั่วไป (ประโยคที่ตั้งใจพูดถึงโลกล่าง/การเหาะขึ้นมา ไม่แตะ)
+// ============================================================
+try{(()=>{
+const KEEP=/โลกเซียน|แดนเซียน|เทพเซียน|โลกเทพ|แดนเทพ|เบื้องล่าง|โลกล่าง|แดนล่าง|ชาติก่อน|เหาะ|ชื่อเก่า|สามโลก|แคว้น|ข้ามโลก|ทุกโลก/;
+const fx=t=>{try{if(typeof t!=='string'||!S||!S.xian||S.mw)return t;let r=t.replace(/ตำลึง/g,'หินวิญญาณ');if(/ยุทธภพ/.test(r)&&!KEEP.test(r.replace(/หินวิญญาณ/g,'')))r=r.replace(/ยุทธภพ/g,S.xt?'แดนเทพ':'แดนเซียน');return r}catch(e){return t}};
+window._xWord=fx;
+{const _af=addFeed;addFeed=function(k,t){return _af.apply(this,[k,fx(t),...[].slice.call(arguments,2)])}}
+{const _ch=choice;choice=function(t,x,o){try{if(S&&S.xian&&!S.mw){t=fx(t);x=fx(x);if(Array.isArray(o))o.forEach(z=>{if(z){if(typeof z.t==='string')z.t=fx(z.t);if(typeof z.s==='string')z.s=fx(z.s)}})}}catch(e){}return _ch.apply(this,[t,x,o,...[].slice.call(arguments,3)])}}
+{const _to=toast;toast=function(t){return _to.apply(this,[fx(t),...[].slice.call(arguments,1)])}}
+})()}catch(e){console.error('block118',e)}
