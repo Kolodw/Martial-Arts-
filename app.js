@@ -30249,8 +30249,8 @@ wSlot('mw2',["mwYear","render","mwInfo"]);
 try{(()=>{
 const WL=[['rand','🎲','สุ่ม'],['normal','🏙️','ปกติ'],['hunter','🌀','ฮันเตอร์'],['hunterhi','⚡','ฮันเตอร์ F–SSS'],['under','🌃','ใต้ดิน'],['ghost','👻','ผีไทย'],['loop','🔁','วนลูป'],['zombie','🧟','ซอมบี้'],['tower','🏰','หอคอย'],['game','🎮','ระบบเกม'],['gatewon','💀','เกตชนะ'],['doom','☄️','วันสิ้นโลก']];
 window.mwBornMenu=function(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🐣 เริ่มชีวิตใหม่ <span class="tag2">ยุคปัจจุบัน</span></h3>
- <button class="opt" onclick="closeM();mwBQuick()">🎲 สุ่ม ให้ฟ้าลิขิต<small>สุ่มจังหวัด พื้นเพ นิสัย หน้าตา และโลก · ดูผลการเกิดแล้วกดเกิดใหม่ได้ 5 ครั้ง (ผู้สนับสนุนได้มากกว่า)</small></button>
- <button class="opt" onclick="closeM();mwBorn(true)">🎨 ออกแบบหน้าตา ที่เหลือให้ฟ้าลิขิต<small>เลือกเพศ ทรงผม สีผม สีผิว และสีชุดเอง แล้วสุ่มจังหวัด พื้นเพ และโลกตามปกติ</small></button>
+ <button class="opt" onclick="closeM();mwBQuick()">🎲 สุ่ม ให้ฟ้าลิขิต<small>สุ่มจังหวัด พื้นเพ นิสัย หน้าตา และโลก · ดูผลการเกิดแล้วกดเกิดใหม่ได้ 5 ครั้ง (ผู้สนับสนุนได้มากกว่า) · ล็อกชะตาได้</small></button>
+ <button class="opt" onclick="closeM();mwBorn(true)">🎨 ออกแบบหน้าตา ที่เหลือให้ฟ้าลิขิต<small>เลือกเพศ ทรงผม สีผม สีผิว สีชุด และชื่อเอง แล้วไปหน้าสุ่มกำเนิด สุ่มใหม่/ล็อกชะตาได้ ติดทำเนียบ</small></button>
  <button class="opt" onclick="closeM();mwBornPage(true)">✍️ สร้างเอง<small>เลือกจังหวัด พื้นเพครอบครัว นิสัย ช่วงเริ่มชีวิต และ<b>โลก</b>ของชีวิตนี้เอง · สุ่มใหม่ได้ 5 ครั้ง<br><span style="color:#ff8a7a">⚠️ ชีวิตที่สร้างเองจะไม่ติดอันดับทำเนียบ</span></small></button>`,'mwbm')};
 window.mwBQuick=function(){try{mwBRand()}catch(e){console.error(e);try{mwRandNative()}catch(x){}}};
 })()}catch(e){console.error(e)}
@@ -44690,7 +44690,7 @@ function deco(){try{const m=M(),o=$('mwB');if(!m||!o||!m.rnd||CFG.chm==1)return;
 const redraw=()=>{try{window.mwBornPage(false)}catch(e){}};
 window.mwLkTap=function(k){const m=M();if(!m||!KN[k])return;m.lock=m.lock||{};const L=LK();
  if(m.lock[k])return toast(`🔒 ${KN[k][1]}ล็อกไว้แล้ว อยู่ไปจนเริ่มชีวิต`);if(nOn(m)>=2)return toast('ล็อกได้สูงสุด 2 อย่าง');
- if(L.c==null){try{window.lkLoad&&window.lkLoad()}catch(e){}return toast('กำลังโหลดตั๋วล็อก… กดอีกครั้ง')}
+ if(L.c==null){toast('กำลังโหลดตั๋วล็อก…');try{Promise.resolve(window.lkLoad&&window.lkLoad()).then(()=>{if(LK().c!=null)window.mwLkTap(k);else toast('โหลดตั๋วล็อกไม่สำเร็จ ต้องเชื่อมต่อออนไลน์ก่อน')})}catch(e){}return}
  if(L.c<1)return lkMenu();
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🔒 ล็อก${KN[k][1]}</h3><div class="item" style="text-align:center"><div class="tag2">${KN[k][0]} ${KN[k][1]}ตอนนี้</div><b style="font-size:18px">${esc(val(k))}</b></div>
  <p class="tag2">ใช้ตั๋วล็อก 1 ใบ (เหลือ ${fmt(L.c)}) · ล็อกแล้วเกิดใหม่กี่ครั้งก็ได้${KN[k][1]}นี้เสมอ จนกว่าจะกดใช้ชีวิต · ปลดล็อกไม่ได้และไม่คืนตั๋ว</p>
@@ -44929,3 +44929,42 @@ setInterval(()=>{try{if(no()){const d=document.getElementById('paBan');if(d)d.re
 
 // BLOCK 132: 🚪 เส้นทางผู้ข้ามโลก (เฟส 1) — โหลด /w/trav.js ต่อจากรอยแยก (ใช้เครื่องข้ามโลกของ rift.js)
 try{setTimeout(()=>{try{wLoad('rift').then(()=>wLoad('trav')).catch(()=>{})}catch(e){}},2300)}catch(e){console.error('block132',e)}
+
+// BLOCK 133: 🏙️ หน้าสุ่มกำเนิดยุคปัจจุบันสไตล์เดียวกับยุทธภพ/เซียน/จิตวิญญาณยุทธ์ + แก้ "กดล็อก/สุ่มเพิ่มไม่ได้"
+// สาเหตุบั๊ก: หน้า #mwB อยู่ชั้น z-index 9000 แต่หน้าต่าง (ยืนยันล็อก · ร้านตั๋ว) อยู่ชั้น 50 → เปิดแล้วถูกบังมองไม่เห็น → ยกหน้าต่าง/แจ้งเตือนขึ้นเหนือ #mwB ขณะหน้านี้เปิดอยู่
+try{(()=>{
+const on=()=>{try{const m=document.getElementById('mwB');return !!(m&&m.isConnected&&getComputedStyle(m).display!=='none')}catch(e){return false}};
+const tick=()=>{try{document.body.classList.toggle('mwBOn',on())}catch(e){}};setInterval(tick,300);
+{const _m=modal;modal=function(){tick();return _m.apply(this,arguments)}}
+// ปุ่มที่สาม 🎲 สุ่มเพิ่ม (เหมือนหน้าสุ่มยุทธภพ)
+function bar(){try{const M=window._mbGet&&window._mbGet(),o=document.getElementById('mwB');if(!M||!o||!M.rnd)return;const b=o.querySelector('.mbBar');if(!b)return;if(!b.querySelector('.mbMore'))b.insertAdjacentHTML('beforeend','<button class="mbMore" onclick="mwRRMore()">🎲 สุ่มเพิ่ม<small>ตั๋ว · กรรม</small></button>');b.classList.add('b3')}catch(e){}}
+{const _h=window._mbHook;window._mbHook=function(){const r=_h?_h.apply(this,arguments):undefined;setTimeout(bar,0);setTimeout(bar,90);return r}}
+const st=document.createElement('style');st.textContent=`
+body.mwBOn #mask{z-index:9600!important}body.mwBOn #toast{z-index:9700!important}body.mwBOn #nsPush{z-index:9800!important}
+#mwB{background:radial-gradient(ellipse at 50% 0%,#2a2040,#120e18 60%)!important;color:#f1e8d4!important;font-family:Itim,'Sarabun',sans-serif!important}
+#mwB .mbBg{display:none!important}
+#mwB .mbWrap{max-width:560px;margin:0 auto}
+#mwB .mbTop{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;position:relative;padding-top:14px}
+#mwB .mbTop .mbIc{position:absolute;left:8px;top:12px}
+#mwB .mbTi{font-size:26px!important;font-weight:700;color:#f1e8d4!important;text-align:center;line-height:1.25}
+#mwB .mbTi small{display:table;margin:7px auto 0;background:#1b1828;border:2px solid #a8873e;border-radius:20px;padding:2px 10px;font-size:12px!important;opacity:1!important;color:#f1e8d4}
+#mwB .mbRr{background:#1b1828!important;border:2px solid #a8873e!important;border-radius:20px!important;color:#f1e8d4!important;padding:2px 10px!important;font-size:12px!important;backdrop-filter:none!important}
+#mwB .mbHero{background:#1b1828!important;border:2px solid #a8873e!important;border-radius:6px!important;box-shadow:3px 3px 0 #a8873e!important;padding:14px!important;margin:12px 0 10px!important;display:grid!important;grid-template-columns:128px 1fr;column-gap:12px;align-items:center;text-align:left!important;backdrop-filter:none!important}
+#mwB .mbStage{grid-row:1 / span 3;width:128px!important;height:156px!important;border:2px solid #a8873e;border-radius:10px;background:linear-gradient(#26314f,#3a2a2a)!important;overflow:hidden;margin:0!important;display:flex;align-items:flex-end;justify-content:center}
+#mwB #mbCv{width:auto!important;height:100%!important;max-width:100%}#mwB .mbSh{display:none}
+#mwB .mbIn{text-align:left!important;font-size:22px!important;background:transparent!important;border:0!important;border-bottom:1px dashed #a8873e66!important;border-radius:0!important;padding:2px 0!important;color:#f1e8d4!important;-webkit-text-fill-color:#f1e8d4!important;width:100%}
+#mwB .mbSub{text-align:left!important;color:#b9ad94!important;font-size:12.5px}
+#mwB .mbBtns{justify-content:flex-start!important;flex-wrap:wrap;gap:6px!important;margin-top:6px}#mwB .mbGh{background:linear-gradient(160deg,#ffffff14,#ffffff06)!important;border:1px solid #e8b54a66!important;color:#f1e8d4!important;border-radius:12px!important;font-size:12px!important;padding:5px 9px!important}
+#mwB .mbGrid{gap:6px!important}
+#mwB .mbT{background:#20223a!important;border:0!important;border-left:5px solid #a8aeb6!important;border-radius:10px!important;padding:7px 10px!important;box-shadow:none!important;backdrop-filter:none!important}
+#mwB .mbWr{border-left-color:#6aa8ff!important}#mwB .mbT_tal{border-left-color:#e8b54a!important}#mwB .mbT_sys.nsOn{border-left-color:#b98cff!important}#mwB .mbT_bg{border-left-color:#6ad08a!important}
+#mwB .mbTh{color:#b9ad94!important;font-size:12px!important;opacity:1!important}#mwB .mbTv{color:#f1e8d4!important;font-size:17px!important}#mwB .mbTs{color:#b9ad94!important;font-size:11px!important;opacity:1!important}
+#mwB .mbMon b{color:#ffe08a!important}#mwB .mbTc{background:#ffffff08!important;border-radius:8px}
+#mwB .mbLk{display:inline-flex!important;align-items:center;gap:2px;border:1px solid #a8873e!important;border-radius:12px!important;padding:1px 8px!important;font-size:12px!important;opacity:1!important;background:#1b1828!important;color:#f1e8d4!important;min-height:26px;cursor:pointer}#mwB .mbLk.on{background:#c9a24a!important;color:#1a1200!important}
+#mwB .mbLk:after{content:' ล็อก';font-size:11px}#mwB .mbLk.on:after{content:' ล็อกแล้ว'}
+#mwB .mbBar{background:linear-gradient(transparent,#120e18 32%)!important;backdrop-filter:none!important;gap:8px!important}
+#mwB .mbBar.b3{display:grid!important;grid-template-columns:1fr 1.3fr 1fr}
+#mwB .mbRoll,#mwB .mbMore{background:linear-gradient(160deg,#ffffff14,#ffffff06)!important;color:#f1e8d4!important;border:1px solid #e8b54a66!important;border-radius:12px!important;backdrop-filter:none!important;font-size:14.5px!important;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:58px;font-family:inherit}
+#mwB .mbRoll small,#mwB .mbMore small{font-size:10px;opacity:.7}
+#mwB .mbGo{background:linear-gradient(#ffe9a8,#e8b54a 55%,#c98d22)!important;color:#2a1a04!important;border:2px solid #b8801e!important;border-radius:14px!important;box-shadow:0 4px 0 #b8801e,0 0 14px #e8b54a59!important;font-family:inherit;min-height:58px}`;document.head.appendChild(st);
+})()}catch(e){console.error('block133',e)}

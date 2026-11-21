@@ -2964,20 +2964,45 @@ function comboOf(cards){const ids=new Set(Object.values(cards).map(x=>x[0]));ret
 const seenGet=()=>{try{return LS.get('murim_skyorg',{})||{}}catch(e){return{}}};
 const fx2txt=b=>{const N={pow:'กาย',hp:'พลังชีวิต',int:'ปัญญา',mind:'จิต',mon:'เครดิต',karma:'กรรม',fame:'ชื่อเสียง',wall:'กำแพง',cores:'แก่นอสูร',wave:'คลื่นอสูรมาอีก(ปี)'};const out=[];for(const k in b||{}){if(N[k]&&b[k])out.push(`${N[k]} ${b[k]>0?'+':''}${b[k]}`)}return out.join(' · ')};
 const GN={iron:'เกล็ดเหล็ก',night:'ตาราตรี',claw:'กรงเล็บพิษ',cold:'เลือดเย็น',heart:'หัวใจสองห้อง',wing:'พังผืดร่อนลม',echo:'คลื่นเสียงไร้แสง',quill:'ขนหนามเหล็ก'};
-function card(c){const x=ST.cards[c.k],I=info(c.k,x),r=rOf({k:c.k,x}),lk=ST.lock[c.k],hid=c.hid,p=odds(c,x);
+const TRC=[0,2,4];
+function card(c){const x=ST.cards[c.k],I=info(c.k,x),r=rOf({k:c.k,x}),lk=ST.lock[c.k],hid=c.hid,p=odds(c,x),N=Math.max(1,Math.round(1/Math.max(p,.0001))),t=TRC[r]||0;
  const extra=[];const bt=fx2txt(I.b);if(bt)extra.push(bt);const yt=fx2txt(I.y);if(yt)extra.push('ทุกปี: '+yt);if(I.z&&I.z.g)extra.push('ยีน'+GN[I.z.g]+'แน่นอนตอนปลุก');if(I.z&&I.z.t)extra.push('พรสวรรค์ +'+Math.round(I.z.t*100)+'%');{const lp=I.lk?[I.lk.hair?'สีผม':'',I.lk.eyeG||I.lk.eye?'ดวงตา':'',I.lk.skin?'สีผิว':''].filter(Boolean):[];if(lp.length)extra.push('🎨 '+lp.join(' · ')+'เปลี่ยนบนตัวละคร')}if(I.e)extra.push('📖 มีเหตุการณ์ของตัวเอง');
- return`<div class="sgC r${r}${lk?' lk':''}${hid?' hid':''}" style="--rc:${RC[r]}"><div class="sgH"><span>${c.ic} ${c.n}</span><em>${RN[r]} · ${p<.01?'<1':Math.round(p*100)}%</em></div>
-  ${hid?`<div class="sgB"><b class="sgQ">?</b><p>ความลับคว่ำหน้าไว้ จะเปิดเผยเองระหว่างชีวิต</p></div>`:`<div class="sgB"><b>${I.ic} ${esc(I.t)}</b>${I.s?`<small>${esc(I.s)}</small>`:''}<p>${esc(I.d)}</p>${extra.length?`<div class="sgX">${extra.map(esc).join('<br>')}</div>`:''}</div>`}
-  ${hid?`<button class="sgL" disabled>🎴 ล็อกไม่ได้</button>`:`<button class="sgL${ST.ask===c.k?' ask':''}" onclick="skyOrgLock('${c.k}')">${lk?'🔒 ล็อกแล้ว':ST.ask===c.k?'แตะอีกครั้ง · ใช้ตั๋วล็อก 1 ใบ':'🔓 ล็อก (ตั๋วล็อก 1)'}</button>`}</div>`}
-function ui(){const seen=seenGet(),tot=CATS.reduce((s,c)=>s+c.L.length,0),got=Object.keys(seen).length,cb=comboOf(ST.cards);
- skHold();modal(`<div class="sgW">
- <div class="sgTop"><span>ทะลุฟ้าดารา · ปี 2054</span><span>สมุดกำเนิด ${got}/${tot}</span></div><h3 class="sgT">🎲 สุ่มกำเนิด</h3>
- <p class="sgSub">ยี่สิบปีหลังดาวตกถล่มประเทศไทย คุณจะเกิดเป็นใคร ที่ไหน และแบกอะไรมาด้วย</p>
- <div class="sgGd"><span>เพศ</span>${[['ชาย','♂ ชาย'],['หญิง','♀ หญิง'],[null,'🎲 สุ่ม']].map(([v,l])=>`<button class="${ST.g===v?'on':''}" onclick="skyOrgG(${v?`'${v}'`:'null'})">${l}</button>`).join('')}</div>
- <div class="sgGrid">${CATS.map(card).join('')}</div>
- ${cb.length?`<div class="sgCombo">${cb.map(c=>`<b>✦ คอมโบ ${esc(c[1])}</b> — ${esc(c[2])}`).join('<br>')}</div>`:''}
- <div class="sgAct">${ST.left<=0?`<button class="sgRe" onclick="skyRRMore()">🎟️ สุ่มเพิ่ม<br><small>ตั๋วทอง · ตั๋วฟรี · กรรม</small></button>`:`<button class="sgRe" onclick="skyOrgRe()">🎲 สุ่มใหม่ (เหลือ ${ST.left})</button>`}<button class="sgGo" onclick="skyOrgGo()">🌠 เกิด!</button></div>
- <p class="sgHint">🔒 ล็อกได้ 2 ใบ (ใช้ตั๋วล็อกใบละ 1 · ตั๋วล็อกเหลือ ${(window._LK&&window._LK.c!=null)?window._LK.c:'…'}) ล็อกแล้วปลดไม่ได้ · สุ่มใหม่เปลี่ยนเฉพาะใบที่ไม่ล็อก · โอกาส: ธรรมดา 70 · หายาก 25 · ตำนาน 5 (สัดส่วน)</p></div>`,'skyorg')}
+ return hid?`<div class="trait r0 show"><div><div class="k">${c.ic} ${c.n}</div><div class="v t0">❓ คว่ำหน้าไว้</div><div class="d">ความลับจะเปิดเผยเองระหว่างชีวิต · ระดับ${RN[r]}</div></div><span class="o t${t}">1 ใน ${fmt(N)}</span></div>`
+ :`<div class="trait r${t} show${lk?' skL':''}"><div><div class="k">${c.ic} ${c.n}${lk?' 🔒':''}</div><div class="v t${t}">${I.ic} ${esc(I.t)}</div><div class="d">${I.s?esc(I.s)+' · ':''}${esc(I.d)}${extra.length?'<br>'+extra.map(esc).join(' · '):''}</div></div><span class="o t${t}">1 ใน ${fmt(N)}</span></div>`}
+function skCss(){if(document.getElementById('skBcss'))return;let out='';const walk=(L,pre,post)=>{for(const r of L){try{if(r.cssRules&&r.media){walk(r.cssRules,'@media '+r.media.mediaText+'{','}');continue}if(r.selectorText&&r.selectorText.indexOf('#birth')>=0){out+=pre+r.cssText.replace(/#birth/g,'#skB')+post+'\n'}}catch(e){}}};
+ for(const sh of document.styleSheets){let L=null;try{L=sh.cssRules}catch(e){continue}if(L)walk(L,'','')}
+ out+=`#skB.on{display:block!important;width:min(760px,100%)!important;max-width:760px!important;box-sizing:border-box;margin:0 auto!important;grid-template-columns:none!important;padding-bottom:96px}#skB.on>*{grid-column:auto!important;grid-row:auto!important;width:auto!important;max-width:none!important}#skB .bwld{justify-content:center}@media (min-width:700px){#skB #skTr{display:grid;grid-template-columns:1fr 1fr;gap:6px}#skB #skTr .trait{margin:0!important}}#skB .bstage canvas{image-rendering:pixelated}#skB .skG{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}#skB .skG button{padding:4px 11px;border-radius:14px;border:1px solid var(--line);background:transparent;color:inherit;font:inherit;font-size:12.5px}#skB .skG button.on{background:var(--pink,#e8b54a);color:#1a1200;border-color:transparent;font-weight:700}
+#skB .skEd{margin-top:8px;width:100%;font-size:13px;padding:7px}#skB .trait.skL{box-shadow:inset 0 0 0 2px #c9a24a}
+#skB .skLk{margin:10px 0 4px;padding:9px;border:2px solid #c9a24a;border-radius:12px;background:linear-gradient(180deg,#fff7e0,#ffeec4);color:#3a2a00;text-align:center}#skB .skLk .h{font-size:12.5px;margin-bottom:6px}#skB .skLk .h a{color:#7a4a00}
+#skB .skLk button{display:inline-flex;flex-direction:column;align-items:center;margin:3px;padding:5px 9px;border-radius:10px;border:1px solid #c9a24a;background:#fff;color:#3a2a00;font:inherit;font-size:12.5px;min-width:30%;cursor:pointer}#skB .skLk button small{font-size:10.5px;opacity:.75;max-width:12em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#skB .skLk button.on{background:#c9a24a;color:#fff}#skB .skLk button.ask{background:#ffdf8a;font-weight:700}
+#skB .skCb{margin:8px 0;padding:9px 11px;border-radius:12px;border:1.5px dashed #c9a24a;font-size:13px;line-height:1.6}
+#skB .skBar{position:sticky;bottom:0;z-index:5;display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:8px;padding:10px 0 calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg,#120e18) 30%)}#skB .skBar button{min-height:56px;font-size:15px;border-radius:16px}#skB .skBar .pbtn{font-size:17px}`;
+ const st=document.createElement('style');st.id='skBcss';st.textContent=out;document.head.appendChild(st)}
+function skEl(){let el=$('skB');if(!el){el=document.createElement('div');el.id='skB';el.className='screen';const b=$('birth');if(b&&b.parentNode)b.parentNode.insertBefore(el,b.nextSibling);else document.body.appendChild(el)}skCss();return el}
+function skLook(){const pl=ST.cards.place&&info('place',ST.cards.place),lk=ST.cards.look&&info('look',ST.cards.look);if(!ST.pg)ST.pg=pick(['ชาย','หญิง']);
+ const L={robe:'#3a5a7a',trim:null,belt:'#00000055',hat:null,hs:1,mood:'happy',seed:ST.seed||(ST.seed=R(1,99999)),age:18,g:ST.g||ST.pg,skin:'#e0ac69',hair:'#1f2b4a',old:false,beard:null,sword:null,glow:false,aura:null};
+ if(lk&&lk.lk&&!ST.look){if(lk.lk.hair)L.hair=lk.lk.hair;if(lk.lk.skin)L.skin=lk.lk.skin}if(ST.look)Object.assign(L,ST.look);L.g=ST.g||ST.pg;return L}
+function skDraw(){try{const cv=$('skAva');if(!cv)return;const ctx=cv.getContext('2d');const sg=g,sp=PS;g=ctx;PS=cv.width/28;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);
+ const gr=ctx.createLinearGradient(0,0,0,cv.height);gr.addColorStop(0,'#1b2a4a');gr.addColorStop(.6,'#ff8a3d');gr.addColorStop(1,'#3a2418');ctx.fillStyle=gr;ctx.fillRect(0,0,cv.width,cv.height);
+ ctx.fillStyle='#0e1420';for(let i=0;i<9;i++){const w=10+((i*37)%14),h=30+((i*53)%50);ctx.fillRect(i*16,cv.height-h-18,w,h)}ctx.fillStyle='#ffd98a';ctx.beginPath();ctx.arc(cv.width*.78,cv.height*.22,9,0,7);ctx.fill();
+ ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;try{person(10,30,skLook(),'stand')}catch(e){}g=sg;PS=sp}catch(e){}}
+function ui(){const el=skEl(),seen=seenGet(),tot=CATS.reduce((s,c)=>s+c.L.length,0),got=Object.keys(seen).length,cb=comboOf(ST.cards);const pl=info('place',ST.cards.place);const LKc=window._LK&&window._LK.c;
+ el.innerHTML=`<h2>คุณได้ถือกำเนิดขึ้นแล้ว</h2><div class="bwld"><span class="bchip">🌠 ทะลุฟ้าดารา</span><span class="bchip">📅 ปี 2054</span><span class="bchip">📖 สมุดกำเนิด ${got}/${tot}</span></div>
+ <div class="box hcard"><div class="row1"><div class="bstage"><canvas id="skAva" width="136" height="150"></canvas><div class="bcap">${pl.ic} ${esc(pl.t)}</div></div>
+  <div class="bname" style="flex:1;min-width:0"><div class="tag2">ชื่อ</div><div id="skName" style="font-size:20px;line-height:1.2">${ST.name?esc(ST.name):'<span style="opacity:.6">สุ่มตอนเกิด</span>'}</div>
+  <div class="skG">${[['ชาย','♂ ชาย'],['หญิง','♀ หญิง'],[null,'🎲 สุ่ม']].map(([v,l])=>`<button class="${ST.g===v?'on':''}" onclick="skyOrgG(${v?`'${v}'`:'null'})">${l}</button>`).join('')}</div>
+  <button class="gbtn skEd" onclick="skyOrgEdit()">👗 ${ST.look?'แก้ตัวละคร':'สร้างตัวละคร'}<br><small>หน้าตา · ชื่อ · เพศ (ที่เหลือสุ่ม)</small></button></div></div>
+  <div id="skTr" style="margin-top:8px">${CATS.map(card).join('')}</div></div>
+ ${cb.length?`<div class="skCb">${cb.map(c=>`<b>✦ คอมโบ ${esc(c[1])}</b> — ${esc(c[2])}`).join('<br>')}</div>`:''}
+ <div class="skLk"><div class="h">🔒 <b>ล็อกชะตา</b> ล็อกแล้วอยู่ไปจนเริ่มชีวิต สุ่มใหม่กี่ครั้งก็ไม่เปลี่ยน · ล็อกได้ 2 อย่าง<br>ตั๋วล็อก <b>${LKc==null?'…':fmt(LKc)}</b> ใบ · <a href="#" onclick="skHoldNow();lkMenu();return false">ซื้อเพิ่ม</a></div>
+  ${CATS.filter(c=>!c.hid).map(c=>{const on=!!ST.lock[c.k],I=info(c.k,ST.cards[c.k]);return`<button class="${on?'on':''}${ST.ask===c.k?' ask':''}" onclick="skyOrgLock('${c.k}')">${on?'🔒':c.ic} ${ST.ask===c.k?'แตะอีกครั้ง (1 ใบ)':c.n}<small>${esc(I.t)}</small></button>`}).join('')}</div>
+ <p class="tag2" style="text-align:center;margin:6px 0">โอกาส: ธรรมดา 70 · หายาก 25 · ตำนาน 5 (สัดส่วน) · สุ่มใหม่เปลี่ยนเฉพาะใบที่ไม่ล็อก</p>
+ <div class="skBar"><button class="gbtn" ${ST.left<=0?'disabled':''} onclick="skyOrgRe()">🔄 เกิดใหม่ (${ST.left})</button><button class="pbtn" onclick="skyOrgGo()">ใช้ชีวิต ▶</button><button class="gbtn" onclick="skyRRMore()">🎲 สุ่มเพิ่ม</button></div>`;
+ skHold();if(!el.classList.contains('on'))show('skB');skDraw()}
+window.skHoldNow=()=>skHold();
+window.skyOrgEdit=function(){skHold();window._skyLookFlow=1;try{goCreate(true);if(ST.C){Object.assign(C,JSON.parse(JSON.stringify(ST.C)),{lookOnly:true});crStep=0;crDraw()}}catch(e){console.error(e);window._skyLookFlow=0;ui()}};
+{const _c=crStart;crStart=function(){if(window._skyLookFlow&&typeof C!=='undefined'&&C&&C.lookOnly){window._skyLookFlow=0;try{ST.C=JSON.parse(JSON.stringify(C));ST.look=lkFromC();ST.g=typeof C.g==='number'?['ชาย','หญิง'][C.g]:(C.g||null);ST.name=(C.name||'').trim()}catch(e){console.error(e)}ui();return}return _c.apply(this,arguments)}}
+{const _t=toTitle;toTitle=function(){if(window._skyLookFlow){window._skyLookFlow=0;ui();return}return _t.apply(this,arguments)}}
 const nLk=()=>Object.keys(ST.lock).filter(k=>ST.lock[k]).length;let lkBusy=0;
 window.skyOrgLock=async k=>{const c=CATS.find(x=>x.k===k);if(!c||c.hid)return;if(ST.lock[k])return toast('🔒 ล็อกแล้ว อยู่ไปจนกดเกิด');if(nLk()>=2)return toast('ล็อกได้สูงสุด 2 ใบ');
  const L=window._LK||{};if(L.c==null){try{window.lkLoad&&window.lkLoad()}catch(e){}return toast('กำลังโหลดตั๋วล็อก… กดอีกครั้ง')}
@@ -2989,8 +3014,8 @@ window.skyOrgLock=async k=>{const c=CATS.find(x=>x.k===k);if(!c||c.hid)return;if
 // จำผลสุ่มไว้ 6 ชม. (ปิดเกม/ออกไปแล้วกลับมาก็ผลเดิม) · ใช้จำนวนสุ่มเท่าโลกอื่น
 const SKH='murim_skhold',SKT=6*3600e3;
 const idxOf=()=>{const o={};for(const c of CATS)o[c.k]=c.L.indexOf(ST.cards[c.k]);return o};
-function skHold(){try{LS.set(SKH,{t:Date.now(),i:idxOf(),lock:ST.lock,left:ST.left,g:ST.g})}catch(e){}}
-function skLoad(){try{const h=LS.get(SKH,null);if(!h||Date.now()-(h.t||0)>SKT||!h.i)return false;for(const c of CATS){const x=c.L[h.i[c.k]];if(!x)return false;ST.cards[c.k]=x}ST.lock=h.lock||{};ST.left=Math.max(0,h.left|0);ST.g=h.g||null;return true}catch(e){return false}}
+function skHold(){try{LS.set(SKH,{t:Date.now(),i:idxOf(),lock:ST.lock,left:ST.left,g:ST.g,look:ST.look||null,name:ST.name||'',C:ST.C||null,pg:ST.pg||null,seed:ST.seed||0})}catch(e){}}
+function skLoad(){try{const h=LS.get(SKH,null);if(!h||Date.now()-(h.t||0)>SKT||!h.i)return false;for(const c of CATS){const x=c.L[h.i[c.k]];if(!x)return false;ST.cards[c.k]=x}ST.lock=h.lock||{};ST.left=Math.max(0,h.left|0);ST.g=h.g||null;ST.look=h.look||null;ST.name=h.name||'';ST.C=h.C||null;ST.pg=h.pg||null;ST.seed=h.seed||0;return true}catch(e){return false}}
 const skTot=()=>{try{return Math.max(3,(window.vipTot&&window.vipTot())|0)}catch(e){return 5}};
 window.skyRRMore=function(){skHold();window._skT=Date.now();try{rrMenu()}catch(e){console.error(e);toast('เปิดเมนูสุ่มเพิ่มไม่ได้ ลองใหม่')}};
 {const _dr=doRoll;doRoll=function(first){try{if(!first&&window._skT&&Date.now()-window._skT<600000&&!$('birth').classList.contains('on')&&LS.get(SKH,null)){window._skT=0;rerolls=Math.max(0,rerolls-1);try{$('rr').textContent=rerolls}catch(e){}if(!ST.cards.bg)skLoad();ST.left=(ST.left|0)+1;setTimeout(()=>{try{window.skyOrgRe()}catch(e){console.error(e)}},200);return}}catch(e){console.error('skrr',e)}return _dr.apply(this,arguments)}}
@@ -2999,7 +3024,7 @@ window.skyOrgG=v=>{ST.g=v;ui()};
 window.skyOrgRe=()=>{if(ST.left<=0)return;ST.left--;ST.ask=null;rollAll(false);try{sfx('click')}catch(e){}ui()};
 window.skyOrgGo=()=>{if(window._skyBornAt&&Date.now()-window._skyBornAt<3000)return;window._skyBornAt=Date.now();window._skySel=0;const pickd=Object.assign({},ST.cards),g=ST.g||pick(['ชาย','หญิง']);try{LS.del(SKH)}catch(e){}window._skOk=1;try{closeM()}catch(e){}window._skOk=0;
  const base=pickd.bg[4];window._skyOrgRun=1;try{_ss(base)}finally{window._skyOrgRun=0}
- setTimeout(()=>{try{applyOrg(pickd,g)}catch(e){console.error('skyorg apply',e)}},900)};
+ const cLook=ST.look?Object.assign({},ST.look):null,cName=ST.name||'';setTimeout(()=>{try{applyOrg(pickd,g)}catch(e){console.error('skyorg apply',e)}try{if(cLook){S.look=Object.assign({},S.look||{},cLook);const K=SKY()&&SKY().SK();if(K&&K.og)K.og.lk=null}if(cName)S.name=cName;render()}catch(e){}},900)};
 // ---------- นำผลไปใช้ ----------
 function applyFx(K,b,txt){if(!b)return'';const t=[];
  if(b.pow){S.power=Math.max(1,(S.power||0)+b.pow);t.push('กาย')}if(b.hp){S.maxHp=Math.max(20,S.maxHp+b.hp);S.hp=Math.min(S.maxHp,Math.max(1,S.hp+b.hp))}
@@ -3037,7 +3062,7 @@ function evReg(){const A=SKY();if(!A||!A.EV)return false;
 {const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{const K=S&&S.mw&&S.mw.sky;if(K&&K.og&&K.og.lk&&o&&!o.beast){const l=K.og.lk;if(l.hair)o.hair=l.hair;if(l.skin)o.skin=l.skin;if(l.eyeG)o.eyeG=l.eyeG;if(l.eye)o.eye=l.eye}}catch(e){}return o}}
 // เปิดหน้าสุ่มก่อนเริ่มชีวิต
 let _ss=null;
-function hook(){if(_ss||typeof window.skyStart!=='function')return;_ss=window.skyStart;window.skyStart=function(bg){if(bg||window._skyOrgRun||window._skyOrgSkip)return _ss.apply(this,arguments);try{if(window._skyBornAt&&Date.now()-window._skyBornAt<20000&&S&&S.alive&&S.mw&&S.mw.sky){window._skySel=0;return}}catch(e){}try{evReg()}catch(e){}ST.ask=null;if(!skLoad()){ST.lock={};ST.left=skTot();ST.g=null;rollAll(true);if(window._RR)window._RR.used=0}try{if(window._LK&&window._LK.c==null&&window.lkLoad)window.lkLoad()}catch(e){}ui()}}
+function hook(){if(_ss||typeof window.skyStart!=='function')return;_ss=window.skyStart;window.skyStart=function(bg){if(bg||window._skyOrgRun||window._skyOrgSkip)return _ss.apply(this,arguments);try{if(window._skyBornAt&&Date.now()-window._skyBornAt<20000&&S&&S.alive&&S.mw&&S.mw.sky){window._skySel=0;return}}catch(e){}try{evReg()}catch(e){}ST.ask=null;if(!skLoad()){ST.lock={};ST.left=skTot();ST.g=null;ST.look=null;ST.name='';ST.C=null;ST.pg=null;ST.seed=0;rollAll(true);if(window._RR)window._RR.used=0}try{if(window._LK&&window._LK.c==null&&window.lkLoad)window.lkLoad()}catch(e){}ui()}}
 hook();setTimeout(hook,0);setTimeout(()=>{hook();evReg()},1500);
 // สไตล์
 const st=document.createElement('style');st.textContent=`

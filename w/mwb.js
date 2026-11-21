@@ -879,7 +879,7 @@ try{document.head.insertAdjacentHTML('beforeend','<style>.lchips{display:flex;fl
 // ---------- เมนูเกิดยุคปัจจุบัน: สุ่ม / เลือกจังหวัด / ออกแบบหน้าตา+แต่งตัว ----------
 window.mwBorn=function(look,pick){window._mwPick=pick?1:0;closeM();if(look){try{goCreate(true);window._mwLookFlow=1}catch(e){console.error(e);mwRandNative();return}}else mwRandNative()};
 {const _tt=toTitle;toTitle=function(){window._mwLookFlow=0;window._mwPick=null;return _tt.apply(this,arguments)}}
-{const _c=crStart;crStart=function(){const ml=C&&C.lookOnly&&window._mwLookFlow;if(ml){const gb=window.goBirth;window.goBirth=function(){window.goBirth=gb;window._mwLookFlow=0;return mwRandNative()}}return _c.apply(this,arguments)}}
+{const _c=crStart;crStart=function(){const ml=C&&C.lookOnly&&window._mwLookFlow;if(ml){/* ออกแบบหน้าตาเสร็จ → ไปหน้าสุ่มกำเนิด (สุ่มใหม่/ล็อกได้ ติดทำเนียบ) โดยล็อกหน้าตา·เพศ·ชื่อที่ออกแบบไว้ */window._mwLookFlow=0;let cs=null;try{cs=JSON.parse(JSON.stringify(C))}catch(e){}try{window.mwBRand()}catch(e){console.error(e);return mwRandNative()}try{if(MB&&cs){MB.cs=cs;MB.g=cs.g;MB.lock=MB.lock||{};MB.lock.look=1;if(cs.name&&cs.name.trim()){MB.name=cs.name.trim();MB.lock.name=1}mbDraw(false)}}catch(e){console.error(e)}return}return _c.apply(this,arguments)}}
 // ---------- หน้า "ผลการเกิด" ยุคปัจจุบัน: การ์ดสุ่ม · ล็อก · สุ่มใหม่ 3 ครั้ง · แต่งตัว · เลือกจังหวัด/พื้นเพ ----------
 const MWB={F:['มายด์','ฝน','แพรว','มิว','ปุยฝ้าย','น้ำใส','ใบบุญ','ข้าวหอม','ฟ้าใส','พิมพ์','ขวัญ','เกด','แอม','นุ่น','ต้นกล้า','ใบเฟิร์น'],M:['ต้น','เจมส์','โอ๊ต','ภูผา','ตะวัน','ก้อง','ปอนด์','บอส','ฟุต','เอ็ม','กฤต','ธีร์','นนท์','ไนท์','ภพ','เติ้ล'],SN:['ใจดี','รักไทย','สุขสวัสดิ์','แก้วมณี','ศรีสุข','พรหมมา','บุญมี','ทองดี','วงษ์ไทย','สายทอง','อินทร์แก้ว','มั่นคง','ดวงจันทร์','ชัยมงคล'],PW:{bkk:8,non:5,ayt:2,cnx:3,cri:2,phk:1,kkn:3,nrt:4,udn:2,ubn:2,cbi:4,ryg:2,hkt:1,sgk:2,sti:2}};
 let MB=null;window._mbGet=()=>MB;window._mbSet=v=>{MB=v};
@@ -964,7 +964,7 @@ const admRR=()=>{try{return typeof ADM!=='undefined'&&ADM.ok&&ADM.rr}catch(e){re
  const adm=admRR(),rb=o.querySelector('.mbRr');if(rb)rb.innerHTML=adm?'🎲 <b>∞</b>':`🎲 <b>${MB.rr}</b>/${MB.tot||3}`;
  const ro=o.querySelector('.mbRoll');if(ro){ro.innerHTML=`🔄 เกิดใหม่ (${adm?'∞':MB.rr})<small>สุ่มทุกอย่างใหม่ รวมทั้งโลก</small>`;ro.disabled=!adm&&MB.rr<=0}
  const go=o.querySelector('.mbGo');if(go)go.innerHTML='ใช้ชีวิต<span>▶</span>'}catch(e){console.error(e)}}}
-try{document.head.insertAdjacentHTML('beforeend','<style>#mwB.mbRnd .mbLk,#mwB.mbRnd .mbCh,#mwB.mbRnd .mbBtns{display:none!important}#mwB .mbWr .mbTv{font-size:20px}</style>')}catch(e){}
+try{document.head.insertAdjacentHTML('beforeend','<style>#mwB.mbRnd .mbLk,#mwB.mbRnd .mbCh{display:none!important}#mwB .mbWr .mbTv{font-size:20px}</style>')}catch(e){}
 
 {const _s=window.mwBStart;window.mwBStart=function(){const k=MB&&MB.start;if(MB&&k&&k!=='adult')MB.age=ST[k][2];window._mwKid=k&&k!=='adult'?k:null;return _s.apply(this,arguments)}}
 })()}catch(e){console.error(e)}
