@@ -267,6 +267,6 @@ if(typeof endGame==='function'){const _eg=endGame;endGame=function(){try{const M
   const fb=b.querySelector('.fateBox')||b.querySelector('.mtNext');if(fb)fb.before(d);else b.appendChild(d)}catch(e){console.error('nsys end',e)}},80)}catch(e){}return r}}
 window._nsys={SYS,offer,quest,exam,fork,twist,shared,grind,nsNew,ending,lvT,ready,DIFF,mg,meter,full,byId};
 // ข้อมูลระบบ 4 ไฟล์
-['nsys1','nsys2','nsys3','nsys4','nsys5'].forEach(n=>{try{wLoad(n).catch(()=>setTimeout(()=>wLoad(n).catch(()=>{}),5000))}catch(e){}});
+['nsys1','nsys2','nsys3','nsys4','nsys5','nsys6'].forEach(n=>{try{wLoad(n).catch(()=>setTimeout(()=>wLoad(n).catch(()=>{}),5000))}catch(e){}});
 })();
 try{wReady('nsys')}catch(e){}
