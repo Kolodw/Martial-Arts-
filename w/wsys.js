@@ -10,7 +10,7 @@ const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 const pk=a=>a[Math.floor(Math.random()*a.length)];
 const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc2=t=>{try{return esc(t)}catch(e){return String(t)}};
-const free=()=>!(choice._cur||modalOpen)&&!(typeof DU!=='undefined'&&DU)&&!document.getElementById('wsHolo');
+const free=()=>!(choice._cur||modalOpen)&&!(typeof DU!=='undefined'&&DU)&&!document.getElementById('wsHolo')&&!document.getElementById('sysPop');
 const wOfM=M=>!M?'normal':M.hw>0?'hunter':(M.wx&&M.wx.on?M.wx.id:'normal');
 const where=()=>{if(!S)return'';if(S.mw){if(S.mw.sky)return'sky';return'm_'+wOfM(S.mw)}if(S.beastMode&&!S.beastMode.human)return'beast';if(S.ch==='soul')return'soul';if(S.xt)return'god';if(S.xian)return'xian';return'murim'};
 const cash=v=>Math.round(v*(S&&S.mw?400:1));
@@ -49,29 +49,10 @@ const css=`
 .wsMem{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}.wsMem span{font-size:12px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,.08)}.wsMem s{opacity:.45}
 .wsX{position:absolute;top:8px;right:10px;background:none;border:0;color:#fff;opacity:.6;font-size:16px;cursor:pointer;z-index:2}
 
-#wsHolo{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;pointer-events:auto;background:radial-gradient(ellipse at 50% 60%,color-mix(in srgb,var(--a) 22%,transparent),rgba(0,0,0,.82) 70%);animation:whF 2.9s ease forwards;overflow:hidden}
-@keyframes whF{0%{opacity:0}8%{opacity:1}86%{opacity:1}100%{opacity:0}}
-#wsHolo .hg{position:absolute;inset:-50%;background-image:linear-gradient(color-mix(in srgb,var(--a) 30%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--a) 30%,transparent) 1px,transparent 1px);background-size:34px 34px;transform:perspective(500px) rotateX(62deg) translateY(30%);animation:whG 2.9s linear;opacity:.55;mask-image:radial-gradient(circle,#000 30%,transparent 65%);-webkit-mask-image:radial-gradient(circle,#000 30%,transparent 65%)}
-@keyframes whG{to{background-position:0 136px}}
-#wsHolo .hb{position:absolute;left:0;right:0;height:3px;background:var(--c);box-shadow:0 0 18px 6px var(--a),0 0 50px 14px var(--b);animation:whB 1.1s cubic-bezier(.6,0,.4,1) 2 alternate}
-@keyframes whB{from{top:-4%}to{top:104%}}
-#wsHolo .hc{position:relative;display:grid;place-items:center;width:230px;height:230px}
-#wsHolo .hr{position:absolute;inset:0;border-radius:50%;border:2px dashed var(--a);box-shadow:0 0 18px var(--a),inset 0 0 18px var(--b);animation:whR 3s linear infinite}
-#wsHolo .hr.r2{inset:22px;border-style:solid;border-color:transparent var(--b) transparent var(--c);animation-duration:1.6s;animation-direction:reverse}
-#wsHolo .hr.r3{inset:46px;border:1px dotted var(--c);animation-duration:5s}
-@keyframes whR{to{transform:rotate(360deg)}}
-#wsHolo .hi{font-size:64px;filter:drop-shadow(0 0 14px var(--a)) drop-shadow(0 0 30px var(--b));animation:whI 2.9s steps(1) forwards,whFl .18s infinite}
-@keyframes whI{0%{opacity:0;transform:scale(.3)}12%{opacity:1;transform:scale(1.25) skewX(18deg)}16%{transform:scale(1) skewX(-12deg)}20%{transform:none}55%{transform:translateX(4px)}57%{transform:none}}
-@keyframes whFl{50%{opacity:.82}}
-#wsHolo .ht{position:absolute;top:calc(50% + 132px);left:0;right:0;text-align:center;font-family:ui-monospace,monospace;color:var(--c);text-shadow:0 0 8px var(--a),2px 0 #f0f,-2px 0 #0ff;letter-spacing:2px}
-#wsHolo .ht b{display:block;font-size:20px;font-family:inherit;letter-spacing:1px;animation:wsGl 1s infinite steps(1)}
-#wsHolo .ht i{display:block;font-style:normal;font-size:12px;opacity:.85;margin-top:6px}
-#wsHolo .hp{width:200px;height:6px;margin:8px auto 0;border:1px solid var(--a);border-radius:6px;overflow:hidden}#wsHolo .hp>u{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b));animation:whP 2.2s cubic-bezier(.3,.1,.2,1) forwards}
-@keyframes whP{0%{width:0}40%{width:38%}55%{width:41%}100%{width:100%}}
-#wsHolo .hx{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3px);animation:whX .12s steps(2) infinite;pointer-events:none}
-@keyframes whX{50%{transform:translateY(1px)}}
-#wsHolo.glitch{animation:whF 2.9s ease forwards,whSh .25s steps(2) 3}
-@keyframes whSh{0%{clip-path:inset(10% 0 60% 0);transform:translateX(-6px)}50%{clip-path:inset(55% 0 10% 0);transform:translateX(6px)}100%{clip-path:none;transform:none}}
+#sysPop.wsGP .spw{animation:spOpen .55s cubic-bezier(.2,.9,.3,1.2) forwards,wsGB 3.2s .6s infinite steps(1)}
+@keyframes wsGB{0%,88%,100%{transform:none;filter:none}89%{transform:translateX(-4px) skewX(6deg);filter:hue-rotate(40deg)}91%{transform:translateX(5px);filter:none}93%{transform:translateX(-2px) skewX(-4deg)}95%{transform:none}}
+#sysPop.wsGP .wsGl2{animation:spLine .3s forwards,wsGl 1.4s infinite steps(1)}
+#sysPop.wsGP .sphd.wsGl2{animation:wsGl 1.4s infinite steps(1)}
 `;
 try{const st=document.createElement('style');st.textContent=css;document.head.appendChild(st)}catch(e){}
 const TH={story:['#ffcf5a','#ff6a3d','#fff3c4'],star:['#ffe066','#ff7ad9','#fff'],shop:['#7cff6b','#ffb02e','#eaffd0'],ghost:['#9b8cff','#40e0d0','#e7e3ff'],spon:['#ff4d6d','#4dd2ff','#ffe1ea'],ai:['#00f0ff','#b14dff','#e0fbff'],rival:['#ff3b3b','#ffd23b','#fff'],trap:['#ff00c8','#00ffd5','#fff']};
@@ -234,12 +215,19 @@ window.openWsys=function(){const w=W();if(!w){return toast('ยังไม่�
 
 // ---------------------------------------------------------------- ติดตั้ง / รายปี
 
-function holo(id,done){const D=SYS[id],t=TH[D.th];try{document.getElementById('wsHolo')?.remove()}catch(e){}
- const el=document.createElement('div');el.id='wsHolo';el.className='glitch';el.style.cssText=`--a:${t[0]};--b:${t[1]};--c:${t[2]}`;
- el.innerHTML=`<div class="hg"></div><div class="hb"></div><div class="hc"><div class="hr"></div><div class="hr r2"></div><div class="hr r3"></div><div class="hi">${D.ic}</div></div><div class="ht"><b>${D.n}</b><i class="hm">SYNCING HOST…</i><div class="hp"><u></u></div></div><div class="hx"></div>`;
- document.body.appendChild(el);const M=['SYNCING HOST…','WRITING SOUL SECTOR 0x7F…','BYPASSING FATE LOCK…','INSTALL COMPLETE ✓'];let k=0;const iv=setInterval(()=>{k++;const m=el.querySelector('.hm');if(m&&M[k])m.textContent=M[k];if(k>=3)clearInterval(iv)},650);
- try{navigator.vibrate&&navigator.vibrate([30,60,30,60,90])}catch(e){}
- let fin=0;const end=()=>{if(fin)return;fin=1;clearInterval(iv);el.remove();if(done)try{done()}catch(e){console.error(e)}};el.onclick=()=>{if(k>=1)end()};setTimeout(end,2900)}
+// ตอนยอมรับ: กรอบสี่เหลี่ยมโฮโลแกรมแบบเดียวกับระบบของยุทธภพ (#sysPop) + กลิตช์ · ใช้สีของระบบนั้น
+const WN={murim:'ยุทธภพ',sky:'ทะลุฟ้าดารา',m_normal:'ยุคปัจจุบัน',m_zombie:'วันสิ้นโลกซอมบี้',m_doom:'วันสิ้นโลก',m_ghost:'โลกผีไทย',m_hunter:'โลกฮันเตอร์'};
+function holo(id,done){const D=SYS[id],t=TH[D.th];try{document.getElementById('sysPop')?.remove()}catch(e){}
+ const el=document.createElement('div');el.id='sysPop';el.className='wsGP';
+ el.style.cssText=`--syA:${t[0]};--syA6:${t[0]}66;--syA8:${t[0]}88;--syAc:${t[0]}cc;--syB:${t[1]};--syW:#fff;--syT:${t[2]};--syBg:#0b0f1f;--syK:#05060d`;
+ const Ln=(x,d)=>`<div class="spln" style="animation-delay:${d}s">${x}</div>`;
+ el.innerHTML=`<div class="spw"><span class="spcn" style="left:4px;top:4px;border-width:2px 0 0 2px"></span><span class="spcn" style="right:4px;top:4px;border-width:2px 2px 0 0"></span><span class="spcn" style="left:4px;bottom:4px;border-width:0 0 2px 2px"></span><span class="spcn" style="right:4px;bottom:4px;border-width:0 2px 2px 0"></span>
+  <div class="sphd wsGl2">[ SYSTEM ]</div>`+Ln('⚠ ตรวจพบโฮสต์ที่มีคุณสมบัติ...',.45)+`<div class="spnm spln wsGl2" style="animation-delay:.85s">${D.ic} ${D.n}</div>`+
+  Ln(`โลกที่ผูก : <b style="color:${t[0]}">${WN[where()]||'—'}</b>`,1.15)+Ln(`สีระบบ : <b style="color:${t[0]}">■</b> <b style="color:${t[1]}">■</b>`,1.4)+Ln(`การผูกมัด <b style="color:#fff">สำเร็จ</b> ขอต้อนรับ โฮสต์`,1.7)+Ln(`<span style="opacity:.6;font-size:11px">// คำสั่งบางข้ออาจไม่ใช่ความจริง</span>`,2.1)+`</div>`;
+ document.body.appendChild(el);try{sfx('rare')}catch(e){}try{vib(60)}catch(e){}
+ let fin=0;const end=()=>{if(fin)return;fin=1;if(done)try{done()}catch(e){console.error(e)}};
+ setTimeout(end,600);setTimeout(()=>el.classList.add('out'),3800);setTimeout(()=>el.remove(),4800)}
+
 function offer(id){const D=SYS[id];pop(D.th,{ic:D.ic,t:D.n,s:'SYSTEM · INSTALL REQUEST',b:D.intro,opts:[
  {t:'✅ ยอมรับระบบ',s:'ระบบจะอยู่กับคุณ (และอาจโกหกคุณ)',c:TH[D.th][0],f:()=>{S.wsy={id,lv:1,pts:2,y0:S.age,mood:0};D.init(S.wsy);try{kAdd(`ได้รับ${D.n}`)}catch(e){}holo(id,()=>L(`📟 <b>${D.n}</b> ติดตั้งสำเร็จ · เปิดดูได้ที่เมนู ☰ → 📟 ระบบ`,'myth',true))}},
  {t:'❌ ปฏิเสธ',s:'อาจไม่มีโอกาสอีก',c:'#ff6b6b',f:()=>{S.flags=S.flags||{};S.flags.wsNo=(S.flags.wsNo||0)+1;L(`📟 หน้าต่างระบบค่อยๆ จางหาย เหลือเสียงสุดท้าย "เสียดายนะ"`,'')}}]})}
