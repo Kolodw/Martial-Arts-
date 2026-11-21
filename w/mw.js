@@ -6390,3 +6390,4 @@ window._b92={C,load,MSG};
 __done=1;SL.impl.openSoul=openSoul;openSoul=function(){return globalThis.openSoul.apply(this,arguments)};SL.impl.openMenu=openMenu;openMenu=function(){return globalThis.openMenu.apply(this,arguments)};SL.impl.mwYear=mwYear;mwYear=function(){return globalThis.mwYear.apply(this,arguments)};SL.impl.passYear=passYear;passYear=function(){return globalThis.passYear.apply(this,arguments)};})();
 
 wReady('mw');
+try{setTimeout(()=>{try{wLoad('nsys').catch(()=>{})}catch(e){}},50)}catch(e){}
