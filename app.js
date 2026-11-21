@@ -44968,3 +44968,131 @@ body.mwBOn #mask{z-index:9600!important}body.mwBOn #toast{z-index:9700!important
 #mwB .mbRoll small,#mwB .mbMore small{font-size:10px;opacity:.7}
 #mwB .mbGo{background:linear-gradient(#ffe9a8,#e8b54a 55%,#c98d22)!important;color:#2a1a04!important;border:2px solid #b8801e!important;border-radius:14px!important;box-shadow:0 4px 0 #b8801e,0 0 14px #e8b54a59!important;font-family:inherit;min-height:58px}`;document.head.appendChild(st);
 })()}catch(e){console.error('block133',e)}
+
+// BLOCK 134: 💻 หน้าสุ่มกำเนิด/สุ่มสัตว์อสูร/สร้างตัวละคร/สร้างเอง บนคอม (≥1100px) ใช้โครงเดียวกัน 3 คอลัมน์ — ซ้าย ตัวละคร · กลาง การ์ด/ตัวเลือก · ขวา สรุป+ปุ่ม · พื้นหลังเป็นฉากของโลกนั้นแบบเบลอ (มือถือไม่เปลี่ยน)
+try{(()=>{
+const DK=()=>innerWidth>=1100;
+const ORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y'];
+const yp=id=>{const i=ORD.indexOf(id);return i<0?null:(i/(ORD.length-1)*100).toFixed(4)+'%'};
+const onS=id=>{const e=document.getElementById(id);return !!(e&&e.classList.contains('on'))};
+function which(){try{const m=document.getElementById('modal');
+ const bb=document.getElementById('brB');if(bb&&bb.offsetParent!==null)return['w2','beast'];
+ const mb=document.getElementById('mwB');if(mb&&getComputedStyle(mb).display!=='none')return['mn','mw'];
+ if(onS('skB'))return['k','sky'];
+ if(onS('create'))return[window._skyLookFlow?'k':window._mwLookFlow?'mn':(CFG.xian?'w1':'w0'),'create'];
+ if(onS('birth'))return[CFG.xian?'w1':(CFG.chm==='soul'||(window.CFG&&CFG.soul))?'l':'w0','birth'];}catch(e){}return null}
+let bg=null;
+function tick(){try{const w=DK()?which():null;document.body.classList.toggle('bdOn',!!w);document.body.dataset.bdw=w?w[1]:'';
+ if(!bg){bg=document.createElement('div');bg.id='bdBg';document.body.appendChild(bg)}
+ if(w){const y=yp(w[0]);if(bg._y!==y){bg._y=y;bg.style.setProperty('--y',y)}}
+ if(w&&w[1]==='mw')side()}catch(e){}}
+setInterval(tick,350);addEventListener('resize',tick);
+
+// ---------- 🏙️ ยุคปัจจุบัน: แผงขวา ----------
+const WPC={normal:42,hunter:6,hunterhi:4,under:10,ghost:10,loop:6,zombie:6,tower:4,game:4,gatewon:4,doom:4};
+function side(){try{const M=window._mbGet&&window._mbGet(),o=document.getElementById('mwB');if(!M||!o)return;const W=o.querySelector('.mbWrap');if(!W)return;
+ let s=W.querySelector('.mbSide');const tv=t=>{const e=o.querySelector(t+' .mbTv');return e?e.textContent.trim():''};
+ const lk=Object.keys(M.lock||{}).filter(k=>['pv','bg','tal','wld','sys'].includes(k)&&M.lock[k]).length,LKc=window._LK&&window._LK.c;
+ const pc=M.rnd?(WPC[M.wld]||0):0,ns=M.nsys?1:0;const odds=pc?Math.max(1,Math.round(100/pc*(ns?20:1))):0;
+ const h=`<div class="box sdOdds sdF">${window.fateBoxH&&window.mwFateParts?fateBoxH(mwFateParts(M)):""}</div>
+ <div class="box sdLk"><b>🔒 ล็อกชะตา ${lk}/2</b><div class="tag2">ตั๋วล็อก ${LKc==null?'…':fmt(LKc)} ใบ · กด 🔓 ล็อก บนการ์ด · <a href="#" onclick="lkMenu();return false">ซื้อเพิ่ม</a></div></div>
+ <div class="sdAct"><button class="pbtn" onclick="mwBStart()">ใช้ชีวิต ▶</button><div class="sd2"><button class="gbtn" ${M.rr>0?'':'disabled'} onclick="mwBReroll()">🔄 เกิดใหม่ (${M.rr|0})</button><button class="gbtn" onclick="mwRRMore()">🎲 สุ่มเพิ่ม</button></div></div>`;
+ if(!s){s=document.createElement('div');s.className='mbSide';W.appendChild(s)}if(s._h!==h){s._h=h;s.innerHTML=h}}catch(e){}}
+
+// ---------- 🧑‍🎨 สร้างตัวละคร/สร้างเอง: แผงสรุป + แสดงตัวเลือกทุกหมวดพร้อมกัน ----------
+if(typeof lkBody==='function'){const _lb=lkBody;lkBody=function(){if(!DK())return _lb.apply(this,arguments);const t0=C.tab;let out='';try{LK_TABS.forEach(([k,ic,t])=>{C.tab=k;const h=_lb.apply(this,arguments).replace(/^<div class="lktabs">[\s\S]*?<\/div>/,'');if(h.trim())out+=`<div class="lkSec"><div class="lkSh">${ic} ${t}</div>${h}</div>`})}catch(e){console.error(e)}finally{C.tab=t0}return out||_lb.apply(this,arguments)}}
+function crSide(){try{const c=document.getElementById('create');if(!c)return;let s=document.getElementById('crSide');if(!DK()){if(s)s.remove();return}
+ if(!s){s=document.createElement('div');s.id='crSide';s.className='box';c.appendChild(s)}let L={};try{L=lkFromC()}catch(e){}
+ const sw=(n,v)=>v?`<div class="crSw"><i style="background:${v}"></i>${n}</div>`:'';const st=(document.getElementById('crStep')||{}).textContent||'',ti=(document.getElementById('crTitle')||{}).textContent||'';
+ s.innerHTML=`<div class="tag2">สรุปตัวละคร</div><div class="crNm">${esc((C.name||'').trim()||'(ยังไม่ตั้งชื่อ)')}</div><div class="tag2">${C.g===1?'♀ หญิง':'♂ ชาย'}</div>
+  <div class="crSws">${sw('ผิว',L.skin)}${sw('ผม',L.hair)}${sw('ชุด',L.robe)}${sw('ขอบชุด',L.trim)}${sw('ดวงตา',L.eye)}</div>
+  <div class="crSt"><b>${esc(st)}</b> ${esc(ti)}</div><div class="tag2">${esc((document.getElementById('crSum')||{}).textContent||'')}</div><div class="crPt">${(document.getElementById('crPts')||{}).outerHTML||''}</div>`}catch(e){}}
+if(typeof crDraw==='function'){const _cd=crDraw;crDraw=function(){const r=_cd.apply(this,arguments);try{crSide()}catch(e){}return r}}
+addEventListener('resize',()=>{try{if(onS('create'))crDraw()}catch(e){}});
+
+const st=document.createElement('style');st.textContent=`
+#bdBg{display:none}
+@media (min-width:1100px){
+body.bdOn #bdBg{display:block;position:fixed;inset:-60px;z-index:-1;background:url(/worlds.png?v=1) 0 var(--y,0%)/200% 2000% no-repeat;image-rendering:pixelated;filter:blur(7px) brightness(.32) saturate(1.25);pointer-events:none}
+body.bdOn #bdBg:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,transparent 30%,#0b0910cc 85%)}
+/* ยุทธภพ/เซียน/จิตวิญญาณยุทธ์ */
+#birth.bdk{max-width:1320px;margin:0 auto}
+#birth.bdk #traits{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))!important;gap:8px!important;align-items:stretch}
+#birth.bdk #traits .trait{margin:0!important;height:100%;box-sizing:border-box}#birth.bdk #traits .trait.wide{grid-column:span 2}#birth.bdk #traits>.tag2{grid-column:1/-1}
+#birth.bdk #bdR{position:sticky;top:10px;align-self:start}
+/* ยุคปัจจุบัน */
+#mwB .mbWrap{max-width:1320px!important;display:grid!important;grid-template-columns:300px minmax(0,1fr) 320px;grid-template-areas:"top top top" "hero grid side";column-gap:16px;align-items:start;padding:0 18px 20px}
+#mwB .mbTop{grid-area:top}#mwB .mbHero{grid-area:hero;display:flex!important;flex-direction:column;align-items:stretch;position:sticky;top:10px;margin:0!important}
+#mwB .mbStage{width:100%!important;height:300px!important;grid-row:auto}#mwB .mbIn{text-align:center!important;margin-top:10px}#mwB .mbSub{text-align:center!important}#mwB .mbBtns{justify-content:center!important}
+#mwB .mbGrid{grid-area:grid;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;align-content:start}#mwB .mbGrid .mbWide{grid-column:1/-1}
+#mwB .mbSide{grid-area:side;position:sticky;top:10px;display:flex;flex-direction:column;gap:10px}
+#mwB .mbBar,#mwB .mbBar.b3{display:none!important}
+#mwB .mbSide .box{background:#1b1828;border:2px solid #a8873e;border-radius:6px;box-shadow:3px 3px 0 #a8873e;padding:12px;margin:0}
+#mwB .sdOdds .n{font-size:30px;color:#ffe08a;margin:4px 0}#mwB .sdOdds .od{font-size:13px;line-height:1.7;color:#d8ccb0}
+#mwB .sdLk{font-size:13px}#mwB .sdLk a{color:#ffd98a}
+#mwB .sdAct{display:flex;flex-direction:column;gap:8px}#mwB .sdAct .pbtn{min-height:60px;font-size:20px;border-radius:14px;background:linear-gradient(#ffe9a8,#e8b54a 55%,#c98d22);color:#2a1a04;border:2px solid #b8801e;box-shadow:0 4px 0 #b8801e;font-family:inherit}
+#mwB .sd2{display:grid;grid-template-columns:1fr 1fr;gap:8px}#mwB .sd2 .gbtn{min-height:48px;border-radius:12px;background:linear-gradient(160deg,#ffffff14,#ffffff06);color:#f1e8d4;border:1px solid #e8b54a66;font-family:inherit}
+/* สัตว์อสูร: หน้าต่างกลายเป็นเต็มจอ 3 คอลัมน์ */
+body.bdOn[data-bdw="beast"] #modal{width:min(1320px,96vw)!important;max-width:none!important;max-height:94vh!important}
+body.bdOn[data-bdw="beast"] #brB{display:grid;grid-template-columns:340px minmax(0,1fr) 330px;grid-template-areas:"h h h" "p p p" "st tr od" "hd tr gl" "x tr act";column-gap:16px;row-gap:10px;align-items:start}
+#brB>h3{grid-area:h}#brB>p.tag2{grid-area:p}
+body.bdOn[data-bdw="beast"] #brB>.brst{grid-area:st;margin:0}body.bdOn[data-bdw="beast"] #brB>.brhd{grid-area:hd}
+body.bdOn[data-bdw="beast"] #brB>.brtr{grid-area:tr;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}body.bdOn[data-bdw="beast"] #brB>.brtr .trait{margin:0}body.bdOn[data-bdw="beast"] #brB>.brtr .trait.wide{grid-column:1/-1}
+body.bdOn[data-bdw="beast"] #brB>#brOdds{grid-area:od;margin:0}body.bdOn[data-bdw="beast"] #brB>#brGoal{grid-area:gl;margin:0}body.bdOn[data-bdw="beast"] #brB>.brAct{grid-area:act;position:static!important;display:flex;gap:8px}
+/* สร้างตัวละคร/สร้างเอง */
+body.bdOn #create.on{display:grid!important;width:auto!important;max-width:1320px!important;margin:0 auto!important;grid-template-columns:320px minmax(0,1fr) 300px!important;grid-template-rows:auto 1fr!important;column-gap:16px!important;align-items:start;padding:14px 18px}
+body.bdOn #create .crhead{grid-column:1!important;grid-row:1 / 3!important;position:sticky;top:10px;margin:0}body.bdOn #create .crbox{grid-column:2!important;grid-row:1 / 3!important;margin:0;max-height:calc(100vh - 40px);overflow-y:auto}body.bdOn #create #crSide{grid-column:3!important;grid-row:1!important;margin:0}body.bdOn #create>.brow{grid-column:3!important;grid-row:2!important;position:static!important;display:flex!important;flex-direction:column;gap:8px;margin:10px 0 0!important;width:auto!important}#create>.brow button{width:100%;min-height:52px}
+#create .lkSec{border-top:1px dashed #a8873e55;padding-top:10px;margin-top:10px}#create .lkSec:first-child{border-top:0;margin-top:0;padding-top:0}#create .lkSh{font-size:15px;font-weight:700;color:#ffe08a;margin-bottom:6px}
+#create .lksw{width:34px!important;height:34px!important}
+#crSide .crNm{font-size:22px;margin:4px 0}#crSide .crSws{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0}#crSide .crSw{display:flex;align-items:center;gap:6px;font-size:12.5px}#crSide .crSw i{width:18px;height:18px;border-radius:50%;border:1px solid #ffffff44;flex:none}#crSide .crSt{margin:8px 0 4px;font-size:13px}
+}`;document.head.appendChild(st);
+window._b134={tick,side,crSide};
+})()}catch(e){console.error('block134',e)}
+
+// BLOCK 135: 🎲 กล่อง "ความหายากของชีวิตนี้" แบบยุทธภพ (ระดับชะตา 13 ขั้น · ⟪ ชั้น ⟫ · ความแกร่งของชะตา · ฝั่งดี/ชะตาร้าย · ปัจจัยทีละอย่าง) ใช้ได้ทุกโลก — ยุคปัจจุบันและทะลุฟ้าดาราใช้ตัวนี้
+try{(()=>{
+const grade=sc=>sc<0?'D':sc<.7?'C':sc<1.6?'B':sc<2.6?'A':sc<3.8?'S':sc<5?'S+':'SS';
+const GD={D:'ชะตาฝืน ของร้ายหนักกว่าของดี',C:'กลางๆ ต้องพึ่งความพยายาม',B:'กลางค่อนบน ความขยันตัดสิน',A:'ได้เปรียบชัดเจน',S:'ฟ้าเข้าข้าง',['S+']:'ชะตาผู้ครองยุค',SS:'ชะตาที่ฟ้าเขียนด้วยมือตัวเอง'};
+window._fbOpen=window._fbOpen||0;
+window.fateBoxH=function(parts){parts=(parts||[]).filter(x=>x&&x.p>0&&x.p<=1);
+ const N=Math.max(1,1/parts.reduce((a,x)=>a*Math.max(x.p,1e-15),1));const f=fateOf(N),F=FATE[f];
+ const good=parts.filter(x=>!x.bad&&x.p<.5),bad=parts.filter(x=>x.bad);const gN=good.length?1/good.reduce((a,x)=>a*x.p,1):1,bN=bad.length?1/bad.reduce((a,x)=>a*x.p,1):1;
+ const G=grade(Math.log10(gN)-Math.log10(bN)*1.2);const r=v=>fmt(Math.max(1,Math.round(v)));
+ return`<div class="fateB fb${f}"><div class="tag2">ความหายากของชีวิตนี้</div><div class="n px fx${f}">1 ใน ${r(N)}</div>
+ <div class="ot">${F[2]} <span class="fx${f}">ระดับชะตา: ${F[1]}</span></div><div class="od">${F[3]}</div><div class="fgrade fx${f}">⟪ ${FGRADE[f]} ⟫</div>
+ <details ${window._fbOpen?'open':''} ontoggle="window._fbOpen=this.open?1:0"><summary>ดูรายละเอียด</summary><div class="fbx">
+ 💪 ความแกร่งของชะตา <b class="gr g${G.replace('+','p')}">${G}</b> <i>${GD[G]}</i><br>
+ ✨ ฝั่งดี: <b>1 ใน ${r(gN)}</b>${good.length?` (${good.map(x=>x.n).join(', ')})`:' (ไม่มีอะไรโดดเด่น)'}<br>
+ ☠️ ชะตาร้าย: ${bad.length?`<b>1 ใน ${r(bN)}</b> (${bad.map(x=>x.n).join(', ')})`:'ไม่มี'}
+ <div class="fl">${parts.map(x=>`<div class="${x.bad?'bd':''}"><span>${x.ic||'•'} ${x.n}</span><b>1 ใน ${r(1/x.p)}</b></div>`).join('')}</div>
+ <p>ความหายากรวมด้านบนนับทั้งของดีและร้าย · ดูเกรดความแกร่งเพื่อรู้ว่าชะตานี้ "เก่ง" แค่ไหน</p></div></details></div>`};
+// ---------- 🏙️ ยุคปัจจุบัน ----------
+const WP={normal:.42,hunter:.06,hunterhi:.04,under:.10,ghost:.10,loop:.06,zombie:.06,tower:.04,game:.04,gatewon:.04,doom:.04};
+const WNM={normal:'🏙️ โลกปกติ',hunter:'🌀 โลกฮันเตอร์',hunterhi:'⚡ ฮันเตอร์ F–SSS',under:'🌃 โลกใต้ดิน',ghost:'👻 โลกผีไทย',loop:'🔁 โลกวนลูป',zombie:'🧟 โลกซอมบี้',tower:'🏰 โลกหอคอย',game:'🎮 โลกระบบเกม',gatewon:'💀 โลกที่เกตชนะ',doom:'☄️ โลกวันสิ้นโลก'};
+const HARD={orphan:1,single:1,mig2:1};
+window.mwFateParts=function(M){const P=[];if(!M)return P;try{
+ if(M.rnd&&WP[M.wld])P.push({ic:'',n:WNM[M.wld],p:WP[M.wld]});
+ if(M.nsys){const sy=window._nsys&&window._nsys.byId(M.nsys);P.push({ic:'📱',n:sy?sy.app:'ระบบ',p:.05/22})}
+ const o=document.getElementById('mwB');const tv=t=>{const e=o&&o.querySelector(t+' .mbTv');return e?e.textContent.trim():''};
+ if(M.pv)P.push({ic:'📍',n:tv('.mbT_pv')||'บ้านเกิด',p:1/77});
+ if(M.bg)P.push({ic:'🧬',n:tv('.mbT_bg')||'พื้นเพ',p:1/8,bad:!!HARD[M.bg]});
+ const TB=window._mwTAL,TT=window._mwTT,TL=window._mwTALL;(M.tal||[]).forEach(id=>{const x=TB&&TB[id];if(!x||!TT||!TL)return;const cnt=TL.filter(y=>y.t===x.t).length||1;const tp=x.t==='n'?.15:(TT[x.t][2]/100);P.push({ic:x.ic,n:x.n+' ('+TT[x.t][0]+')',p:Math.min(.9,tp/cnt*1.6),bad:x.t==='n'})});
+ }catch(e){console.error('mwFate',e)}return P};
+function mwFate(){try{const M=window._mbGet&&window._mbGet(),o=document.getElementById('mwB');if(!M||!o)return;const hero=o.querySelector('.mbHero');if(!hero)return;
+ const h=fateBoxH(mwFateParts(M));let b=o.querySelector('.mbFate');if(!b){b=document.createElement('div');b.className='mbFate';hero.after(b)}if(b._h!==h){b._h=h;b.innerHTML=h}
+ }catch(e){console.error(e)}}
+{const _h=window._mbHook;window._mbHook=function(){const r=_h?_h.apply(this,arguments):undefined;setTimeout(mwFate,60);setTimeout(mwFate,200);return r}}
+setInterval(()=>{try{if(document.getElementById('mwB'))mwFate()}catch(e){}},1200);
+const st=document.createElement('style');st.textContent=`
+.fateB{--fc:#8a8a96;text-align:center;line-height:1.5}.fateB .n{font-size:30px;margin:2px 0}.fateB .ot{font-size:15px;margin-top:2px}.fateB .od{font-size:12px;color:#b9ad94;margin-top:2px}.fateB .fgrade{display:inline-block;margin-top:6px;font-weight:800;font-size:15px}
+.fateB.fb0{--fc:#6a6a76}.fateB.fb1{--fc:#8a9a7a}.fateB.fb2{--fc:#3ab04a}.fateB.fb3{--fc:#2ab0b0}.fateB.fb4{--fc:#4a8aff}.fateB.fb5{--fc:#a86aff}.fateB.fb6{--fc:#ff8a2a}.fateB.fb7{--fc:#ffc030}.fateB.fb8{--fc:#ff3a5a}.fateB.fb9,.fateB.fb10,.fateB.fb11,.fateB.fb12{--fc:#ff5ad8}
+.fateB .n.fx0{color:#9a9aa6}.fateB .n.fx1{color:#b0c0a0}.fateB .n.fx2{color:#5ad06a}.fateB .n.fx3{color:#3ad0d0}.fateB .n.fx4{color:#5a96ff}.fateB .n.fx5{color:#b07aff}.fateB .n.fx6{color:#ff9a3a}
+.fateB details{text-align:left;margin-top:8px}.fateB summary{cursor:pointer;text-align:right;font-size:12px;color:#b9ad94;list-style:none}.fateB summary::-webkit-details-marker{display:none}.fateB summary:before{content:'▾ '}
+.fateB .fbx{margin-top:6px;background:#00000030;border-radius:10px;padding:9px 10px;font-size:12.5px;line-height:1.7;color:#e8dcc0}.fateB .fbx i{font-style:italic;opacity:.85}
+.fateB .gr{display:inline-block;min-width:26px;text-align:center;border-radius:8px;padding:0 6px;background:#8aa0ff;color:#0b0f2a}.fateB .gr.gA{background:#5ad06a}.fateB .gr.gS,.fateB .gr.gSp,.fateB .gr.gSS{background:linear-gradient(90deg,#ffd040,#ff8ad8);color:#2a0a20}.fateB .gr.gD{background:#ff6a6a}.fateB .gr.gC{background:#c0b090}
+.fateB .fl{margin:6px 0;border-top:1px dashed #ffffff22;padding-top:6px}.fateB .fl div{display:flex;justify-content:space-between;gap:8px}.fateB .fl div.bd span{color:#ff8a8a}.fateB .fl b{white-space:nowrap}
+.fateB p{margin:6px 0 0;font-size:11.5px;color:#b9ad94}
+#mwB .mbFate{margin:0 0 10px;background:#1b1828;border:2px solid var(--fc,#a8873e);border-radius:6px;padding:12px}#mwB .mbFate .fateB{--x:0}
+#mwB .mbFate{border-color:#a8873e}
+@media (min-width:1100px){#mwB .mbFate{display:none}}`;document.head.appendChild(st);
+})()}catch(e){console.error('block135',e)}

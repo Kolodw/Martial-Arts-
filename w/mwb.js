@@ -937,8 +937,8 @@ window.mwPreApply=function(pre){const M=S.mw;M.pv=pre.pv;M.home=pre.pv;const l=L
 try{(()=>{
 // 🕰️ เลือกเริ่มตอนไหน (ตั้งแต่เกิด / วัยมัธยม / วัยทำงาน) — อยู่ในขอบเขตเดียวกับหน้าเกิด
 const ST={birth:['🍼 ตั้งแต่เกิด','เล่นวัยเด็กทีละปี มีเหตุการณ์โรงเรียน เพื่อน ครอบครัว ที่แตกแขนงต่างกันทุกชีวิต · เงินตั้งต้นของพื้นเพจะได้รับตอนอายุ 18',0],teen:['🎒 วัยมัธยม','เริ่มที่ 13 ปี เหลือแต่ช่วง ม.ต้น–ม.ปลาย และเรื่องใหญ่ก่อนเข้ามหาวิทยาลัย',13],adult:['💼 วัยทำงาน','เริ่มที่ 18–24 ปี เหมือนเดิม ไม่มีช่วงวัยเด็ก',null]};
-{const _d=mbDraw;mbDraw=function(anim){const k=MB&&MB.start,keep=MB&&MB.age;if(MB&&k&&k!=='adult')MB.age=ST[k][2];try{_d.apply(this,arguments)}finally{if(MB&&keep!=null)MB.age=keep}
- try{const o=$('mwB');if(!o||!MB)return;const g=o.querySelector('.mbGrid');if(!g||g.querySelector('.mbSt'))return;const cur=MB.start||'adult';
+{const _d=mbDraw;mbDraw=function(anim){if(MB)MB.start='birth';/* ยุคปัจจุบันเริ่มตั้งแต่ทารกเสมอเหมือนโลกอื่น (เอาตัวเลือกวัยมัธยม/วัยทำงานออก) */const k=MB&&MB.start,keep=MB&&MB.age;if(MB&&k&&k!=='adult')MB.age=ST[k][2];try{_d.apply(this,arguments)}finally{if(MB&&keep!=null)MB.age=keep}
+ try{const o=$('mwB');if(!o||!MB)return;return;const g=o.querySelector('.mbGrid');if(!g||g.querySelector('.mbSt'))return;const cur=MB.start||'adult';
   g.insertAdjacentHTML('afterbegin',`<div class="mbT mbWide mbSt"><div class="mbTh"><span>🕰️ เริ่มชีวิตตอนไหน</span></div><div class="mbStB">${Object.keys(ST).map(x=>`<button class="${x===cur?'on':''}" onclick="mwBStartAt('${x}')">${ST[x][0]}</button>`).join('')}</div><div class="mbTs">${ST[cur][1]}</div></div>`)}catch(e){console.error(e)}}}
 window.mwBStartAt=function(k){if(!MB||!ST[k])return;MB.start=k;mbDraw(false)};
 const WL=[['rand','🎲','สุ่ม'],['normal','🏙️','ปกติ'],['hunter','🌀','ฮันเตอร์'],['hunterhi','⚡','ฮันเตอร์ F–SSS'],['under','🌃','ใต้ดิน'],['ghost','👻','ผีไทย'],['loop','🔁','วนลูป'],['zombie','🧟','ซอมบี้'],['tower','🏰','หอคอย'],['game','🎮','ระบบเกม'],['gatewon','💀','เกตชนะ'],['doom','☄️','วันสิ้นโลก']];
@@ -966,7 +966,7 @@ const admRR=()=>{try{return typeof ADM!=='undefined'&&ADM.ok&&ADM.rr}catch(e){re
  const go=o.querySelector('.mbGo');if(go)go.innerHTML='ใช้ชีวิต<span>▶</span>'}catch(e){console.error(e)}}}
 try{document.head.insertAdjacentHTML('beforeend','<style>#mwB.mbRnd .mbLk,#mwB.mbRnd .mbCh{display:none!important}#mwB .mbWr .mbTv{font-size:20px}</style>')}catch(e){}
 
-{const _s=window.mwBStart;window.mwBStart=function(){const k=MB&&MB.start;if(MB&&k&&k!=='adult')MB.age=ST[k][2];window._mwKid=k&&k!=='adult'?k:null;return _s.apply(this,arguments)}}
+{const _s=window.mwBStart;window.mwBStart=function(){if(MB)MB.start='birth';const k=MB&&MB.start;if(MB&&k&&k!=='adult')MB.age=ST[k][2];window._mwKid=k&&k!=='adult'?k:null;return _s.apply(this,arguments)}}
 })()}catch(e){console.error(e)}
 try{document.head.insertAdjacentHTML('beforeend',`<style>
 #mwB{position:fixed;inset:0;z-index:9000;overflow-y:auto;overflow-x:hidden;background:#0d1024;color:#eef0ff;font-family:'Sarabun','Noto Sans Thai',system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-overflow-scrolling:touch}
@@ -1236,7 +1236,7 @@ T('n09','🍔','กินไม่เลือก','n',{fit:-8,yfit:-1}),T('n10'
 T('n13','🪫','ร่างกายบอบบาง','n',{fit:-10,kid:{p:-8}}),T('n14','🎰','ชอบเสี่ยงโชค','n',{luck:.04,sav:-.08}),T('n15','📵','ติดโทรศัพท์','n',{kid:{s:-4},yst:1}),T('n16','🥶','เย็นชา','n',{kid:{f:-8},cha:-4}),
 T('n17','🧟','โชคร้ายกับผี','n',{w:{ghost:{yhp:-5}}}),T('n18','🐢','เรียนช้า','n',{kid:{s:-8},yint:-1}),T('n19','🗯️','พูดไม่คิด','n',{cha:-5,inc:-.03}),T('n20','🫥','จืดจาง','n',{yfame:-.15,cha:-3}),
 ];
-const TB={};TAL.forEach(x=>TB[x.id]=x);window._mwTAL=TB;
+const TB={};TAL.forEach(x=>TB[x.id]=x);window._mwTAL=TB;window._mwTT=TT;window._mwTALL=TAL;
 const WN={normal:'ปกติ',hunter:'ฮันเตอร์',hunterhi:'ฮันเตอร์ F–SSS',under:'ใต้ดิน',ghost:'ผีไทย',loop:'วนลูป',zombie:'ซอมบี้',tower:'หอคอย',game:'ระบบเกม',gatewon:'เกตชนะ',doom:'วันสิ้นโลก'};
 const KN={s:'การเรียน',f:'เพื่อน',p:'ร่างกาย',t:'พรสวรรค์',h:'บ้านอบอุ่น'};
 const sg=v=>(v>0?'+':'')+v,pc=v=>(v>0?'+':'')+Math.round(v*100)+'%';
