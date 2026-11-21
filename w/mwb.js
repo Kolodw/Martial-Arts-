@@ -1186,6 +1186,136 @@ Object.defineProperty(MW_CC.th,'city',{get(){const M=S&&S.mw;return M&&PV[M.pv]?
 {const _jr2=mwJobReq;mwJobReq=function(J,M){const w=_jr2.apply(this,arguments);if(w)return w;if(!lOn(M))return'';const id=Object.keys(MW_JOBS).find(k=>MW_JOBS[k]===J);if(PVJ[id]&&!PVJ[id].includes(M.pv||'bkk'))return`ใน${pvOf(M).n}ยังไม่มีตำแหน่งนี้ · ย้ายจังหวัดที่ 🧭 ชีวิต`;return''}}
 {const _me3=mwEnter;mwEnter=function(){const r=_me3.apply(this,arguments);try{if(S.mw&&!S.mw.pv)S.mw.pv='bkk'}catch(e){}return r}}
 {const _rn=mwRandNative;mwRandNative=function(){const r=_rn.apply(this,arguments);setTimeout(()=>{try{if(S&&S.mw&&S.mw.native&&!S.mw.pv){if(window._mwPick===0){window._mwAuto=1;pvSet('',0)}else pvPick(0);window._mwPick=null}}catch(e){}},1600);return r}}
+
+// ============================================================
+// ✨ พรสวรรค์ยุคปัจจุบัน — 100 แบบ (5 ระดับ) + ด้านลบ 20 แบบ · สุ่มในหน้าเกิด (ล็อก 🔒 ได้) · ทายาทมีโอกาส 30% ได้ของพ่อแม่
+//   ผลทั้งหมดเขียนเป็นตัวเลขในตาราง TAL → ข้อความอธิบายสร้างจากตัวเลขเอง (ตรงกับผลจริงเสมอ)
+//   st=เครียด fit=ร่างกาย sk=ทักษะงาน eng=อังกฤษ int=ปัญญา cha=เสน่ห์ pow=พลัง hp=พลังชีวิตสูงสุด fame=ผู้ติดตาม karma=กรรม happy=ความสุข end=อายุขัย(ปี) qi=ไออุ่นแปลกๆ
+//   kid={s เรียน f เพื่อน p ร่างกาย t พรสวรรค์ h บ้าน} · y*=ต่อปี · inc=เงินที่ได้ต่อปีเพิ่ม (สัดส่วน) · sav=รายจ่ายต่อปีลดลง · luck=โอกาส/ปีได้เงินก้อนเล็ก · w={โลก:{ผลต่อปีในโลกนั้น}}
+// ============================================================
+try{(()=>{
+const TT={c:['ธรรมดา','#d8d8d8',60],r:['หายาก','#4ab0ff',27],e:['หายากมาก','#c04cff',10],l:['ตำนาน','#ffc83a',2.7],s:['ลับ','#ff7ad9',.3],n:['ด้านลบ','#ff6a6a',0]};
+const T=(id,ic,n,t,e)=>({id,ic,n,t,e});
+const TAL=[
+// ⚪ ธรรมดา 40
+T('t01','🧠','หัวไว','c',{kid:{s:6},ysk:1}),T('t02','📸','ความจำดี','c',{kid:{s:5},yint:1}),T('t03','💪','ขยัน','c',{inc:.05,ysk:1}),T('t04','🤝','เข้ากับคนง่าย','c',{kid:{f:8},ycha:1}),
+T('t05','😊','ยิ้มเก่ง','c',{cha:4,kid:{f:4}}),T('t06','😴','นอนหลับง่าย','c',{yst:-2}),T('t07','🍚','กินเก่งไม่อ้วน','c',{fit:6,kid:{p:4}}),T('t08','🛡️','ภูมิดี','c',{hp:10,yhp:3}),
+T('t09','🐷','ประหยัดเก่ง','c',{sav:.08}),T('t10','🍳','ทำอาหารเก่ง','c',{inc:.03,yhappy:1}),T('t11','✍️','ลายมือสวย','c',{kid:{s:4},sk:4}),T('t12','🎤','เสียงดี','c',{kid:{t:6},yfame:.05}),
+T('t13','🎨','วาดรูปเก่ง','c',{kid:{t:8}}),T('t14','🔧','มือไว','c',{sk:6,ysk:1}),T('t15','🛵','ขี่รถเก่ง','c',{fit:3,inc:.02}),T('t16','🎮','เล่นเกมเก่ง','c',{kid:{t:4,f:3},w:{game:{ypow:2}}}),
+T('t17','🗣️','พูดเก่ง','c',{cha:5,sav:.03}),T('t18','🧘','ใจเย็น','c',{yst:-1,ykarma:1}),T('t19','⏰','ตรงเวลา','c',{inc:.04}),T('t20','📖','ชอบอ่าน','c',{kid:{s:3,t:3},yint:1}),
+T('t21','👁️','ตาดี','c',{luck:.04,kid:{p:2}}),T('t22','👂','หูดี','c',{luck:.03,yint:1}),T('t23','🏊','ว่ายน้ำเป็น','c',{fit:5,hp:5}),T('t24','🏋️','แข็งแรง','c',{fit:8,kid:{p:6}}),
+T('t25','☀️','ทนร้อน','c',{yfit:1,yst:-1}),T('t26','🌅','ตื่นเช้า','c',{inc:.03,yfit:1}),T('t27','🐶','รักสัตว์','c',{yhappy:1,ykarma:1}),T('t28','🌱','ปลูกต้นไม้ขึ้น','c',{sav:.04,yhappy:1}),
+T('t29','🧮','คิดเลขเร็ว','c',{kid:{s:4},inc:.03}),T('t30','🌐','ภาษาดี','c',{eng:10,yeng:1}),T('t31','👕','แต่งตัวเป็น','c',{cha:6}),T('t32','🤡','ตลก','c',{kid:{f:6},yhappy:1}),
+T('t33','🤞','ซื่อสัตย์','c',{karma:5,ykarma:1}),T('t34','🪨','อดทน','c',{yst:-1,yfit:1}),T('t35','🕵️','ช่างสังเกตคน','c',{yint:1,luck:.02}),T('t36','🚚','ขับรถทางไกลไหว','c',{fit:4,inc:.03}),
+T('t37','🪛','ซ่อมของเป็น','c',{sav:.06}),T('t38','🌈','ร่าเริง','c',{st:-8,happy:8}),T('t39','🏠','รักครอบครัว','c',{kid:{h:8},yhappy:1}),T('t40','🍀','ดวงเล็กๆ','c',{luck:.06}),
+// 🔵 หายาก 30
+T('t41','✨','หน้าตาดีมาก','r',{cha:12,kid:{f:6},yfame:.1}),T('t42','💼','หัวการค้า','r',{inc:.15}),T('t43','🏅','นักเรียนดีเด่น','r',{kid:{s:12},yint:2}),T('t44','⚽','นักกีฬาโดยกำเนิด','r',{fit:15,kid:{p:12},hp:10}),
+T('t45','👑','ผู้นำ','r',{cha:8,inc:.08}),T('t46','🤑','นักเจรจา','r',{inc:.1,sav:.05}),T('t47','💻','โปรแกรมเมอร์ตัวน้อย','r',{sk:12,ysk:2,kid:{s:5}}),T('t48','🎭','นักแสดงโดยกำเนิด','r',{cha:8,kid:{t:8},yfame:.15}),
+T('t49','📱','ครีเอเตอร์','r',{yfame:.25,kid:{t:5}}),T('t50','📈','ตาเซียนหุ้น','r',{inc:.08,luck:.05}),T('t51','📷','ความจำภาพถ่าย','r',{kid:{s:14},yint:2}),T('t52','🎵','หูเพลง','r',{kid:{t:12},yfame:.08}),
+T('t53','🩺','มือหมอ','r',{kid:{s:8},hp:10,yhp:4}),T('t54','👊','นักสู้ข้างถนน','r',{pow:15,fit:8,w:{under:{ypow:4,yst:-2}}}),T('t55','👻','เซนส์ผี','r',{w:{ghost:{ypow:4,ykarma:2}},yint:1}),T('t56','🏃','รอดเก่ง','r',{hp:15,w:{zombie:{yhp:8,ypow:3}}}),
+T('t57','🙏','เด็กวัด','r',{karma:10,ykarma:2,yst:-1}),T('t58','👴','เสน่ห์ผู้ใหญ่','r',{cha:6,inc:.06}),T('t59','🏙️','คนเมืองคนกรุง','r',{inc:.08,eng:5}),T('t60','🌾','ลูกทุ่งใจสู้','r',{fit:10,yst:-2,sav:.05}),
+T('t61','📅','นักวางแผน','r',{inc:.07,sav:.07}),T('t62','🎯','สมาธิดี','r',{ysk:2,yint:1}),T('t63','💚','ไม่เคยป่วยหนัก','r',{hp:20,yhp:5}),T('t64','🧳','นักเดินทาง','r',{yst:-3,eng:8}),
+T('t65','📹','ช่างภาพ','r',{kid:{t:8},yfame:.1,inc:.04}),T('t66','🖋️','นักเขียน','r',{kid:{t:6,s:4},yint:1,yfame:.06}),T('t67','🧁','มือเย็น','r',{inc:.09,yhappy:1}),T('t68','🧑‍💼','ดวงเจ้านาย','r',{inc:.06,yst:-1}),
+T('t69','🔥','ใจถึง','r',{pow:8,luck:.05}),T('t70','🔮','อ่านใจคนเก่ง','r',{cha:6,yint:2}),
+// 🟣 หายากมาก 18
+T('t71','🧬','อัจฉริยะ','e',{kid:{s:22},int:15,yint:3}),T('t72','🌟','ดาวรุ่ง','e',{fame:30000,yfame:.3,cha:8}),T('t73','🏦','มือทองธุรกิจ','e',{inc:.3}),T('t74','🦾','ร่างเหล็ก','e',{fit:25,hp:30,yhp:6,kid:{p:15}}),
+T('t75','💬','ปากศักดิ์สิทธิ์','e',{luck:.12,cha:6}),T('t76','🎟️','ดวงลอตเตอรี่','e',{luck:.15}),T('t77','💡','นักประดิษฐ์','e',{sk:18,ysk:3,inc:.1}),T('t78','🔗','เส้นใหญ่','e',{inc:.15,sav:.05}),
+T('t79','🗺️','คนสองภาษาตั้งแต่เกิด','e',{eng:40,yeng:2,inc:.06}),T('t80','🌀','ผู้ปลุกพลังเร็ว','e',{pow:20,w:{hunter:{ypow:8},hunterhi:{ypow:10}}}),T('t81','🕯️','สายเลือดหมอผี','e',{karma:8,w:{ghost:{ypow:8,ykarma:3}}}),T('t82','🧪','ภูมิคุ้มกันพิเศษ','e',{hp:20,w:{zombie:{yhp:15,ypow:5}}}),
+T('t83','🎮','ผู้เล่นตัวจริง','e',{kid:{t:6},w:{game:{ypow:10}}}),T('t84','🏰','นักปีนหอ','e',{fit:10,w:{tower:{ypow:10}}}),T('t85','🔁','ความจำวนลูป','e',{yint:2,w:{loop:{yint:4,ypow:5}}}),T('t86','🕶️','หัวหน้าแก๊งโดยกำเนิด','e',{pow:12,cha:8,w:{under:{ypow:7,inc:.1}}}),
+T('t87','😇','หัวใจนักบุญ','e',{karma:20,ykarma:4,yhappy:2}),T('t88','👶','หน้าเด็ก','e',{end:10,cha:6}),
+// 🟡 ตำนาน 9
+T('t89','💎','ลูกเศรษฐีที่ไม่รู้ตัว','l',{mon:3000000}),T('t90','⭐','ผู้ถูกเลือก','l',{pow:25,w:{hunter:{ypow:6},hunterhi:{ypow:6},ghost:{ypow:6},zombie:{ypow:6},game:{ypow:6},tower:{ypow:6},under:{ypow:6},loop:{ypow:6},gatewon:{ypow:6},doom:{ypow:6}}}),
+T('t91','🪽','ชีวิตที่สอง','l',{end:15,hp:40,yhp:8}),T('t92','👁️‍🗨️','สัมผัสที่หก','l',{luck:.15,yint:3,yst:-2}),T('t93','👑','ราชาเงินตรา','l',{inc:.4,sav:.1}),T('t94','🔥','ร่างพลังแฝง','l',{qi:1,pow:30,ypow:3}),
+T('t95','📺','เสน่ห์ทะลุจอ','l',{cha:20,fame:100000,yfame:.4}),T('t96','🌳','อายุยืนร้อยปี','l',{end:25,hp:20}),T('t97','🏛️','ผู้นำยุค','l',{cha:18,inc:.2,ykarma:2}),
+// 🌈 ลับ 3
+T('t98','☄️','เกิดคืนดาวตก','s',{qi:1,pow:20,luck:.2}),T('t99','⚔️','วิญญาณจากยุทธภพ','s',{qi:1,pow:60,ypow:6,fit:20}),T('t100','🌌','คนที่โลกนี้จำไม่ได้','s',{end:20,luck:.2,w:{hunter:{ypow:8},hunterhi:{ypow:8},ghost:{ypow:8},zombie:{ypow:8},game:{ypow:8},tower:{ypow:8},under:{ypow:8},loop:{ypow:8},gatewon:{ypow:8},doom:{ypow:8},normal:{inc:.15}}}),
+// 🔻 ด้านลบ 20
+T('n01','🤒','ขี้โรค','n',{hp:-15,yhp:-2}),T('n02','🦥','ขี้เกียจ','n',{inc:-.06,yst:-1}),T('n03','🌧️','ดวงซวย','n',{luck:-.06}),T('n04','😰','ขี้กังวล','n',{st:10,yst:2}),
+T('n05','💸','มือเติบ','n',{sav:-.1}),T('n06','🙈','ขี้อาย','n',{cha:-6,kid:{f:-6}}),T('n07','🌀','สมาธิสั้น','n',{kid:{s:-6},ysk:-1}),T('n08','😤','ใจร้อน','n',{ykarma:-1,yst:1}),
+T('n09','🍔','กินไม่เลือก','n',{fit:-8,yfit:-1}),T('n10','🛌','นอนดึก','n',{yhp:-2,yst:1}),T('n11','🤥','ปากไม่ตรงกับใจ','n',{karma:-5,ykarma:-1}),T('n12','🙄','หัวดื้อ','n',{kid:{s:-4,h:-4}}),
+T('n13','🪫','ร่างกายบอบบาง','n',{fit:-10,kid:{p:-8}}),T('n14','🎰','ชอบเสี่ยงโชค','n',{luck:.04,sav:-.08}),T('n15','📵','ติดโทรศัพท์','n',{kid:{s:-4},yst:1}),T('n16','🥶','เย็นชา','n',{kid:{f:-8},cha:-4}),
+T('n17','🧟','โชคร้ายกับผี','n',{w:{ghost:{yhp:-5}}}),T('n18','🐢','เรียนช้า','n',{kid:{s:-8},yint:-1}),T('n19','🗯️','พูดไม่คิด','n',{cha:-5,inc:-.03}),T('n20','🫥','จืดจาง','n',{yfame:-.15,cha:-3}),
+];
+const TB={};TAL.forEach(x=>TB[x.id]=x);window._mwTAL=TB;
+const WN={normal:'ปกติ',hunter:'ฮันเตอร์',hunterhi:'ฮันเตอร์ F–SSS',under:'ใต้ดิน',ghost:'ผีไทย',loop:'วนลูป',zombie:'ซอมบี้',tower:'หอคอย',game:'ระบบเกม',gatewon:'เกตชนะ',doom:'วันสิ้นโลก'};
+const KN={s:'การเรียน',f:'เพื่อน',p:'ร่างกาย',t:'พรสวรรค์',h:'บ้านอบอุ่น'};
+const sg=v=>(v>0?'+':'')+v,pc=v=>(v>0?'+':'')+Math.round(v*100)+'%';
+const fx1=(e,per)=>{const o=[],p=per?'/ปี':'';const add=(k,lab,f)=>{if(e[k]!=null&&e[k]!==0)o.push(lab+' '+(f?f(e[k]):sg(e[k]))+(k[0]==='y'||k==='inc'||k==='sav'||k==='luck'?'':''))};
+ if(e.kid)Object.keys(e.kid).forEach(k=>o.push('🧒 '+KN[k]+' '+sg(e.kid[k])+' (วัยเด็ก)'));
+ add('mon','💵 เงิน',v=>sg(fmt(v))+' บาท (ได้เมื่ออายุ 18+)');add('st','😓 เครียด');add('fit','💪 ร่างกาย');add('sk','🛠️ ทักษะงาน');add('eng','🌐 อังกฤษ');add('int','🧠 ปัญญา');add('cha','💖 เสน่ห์');add('pow','⚡ พลัง');add('hp','❤️ พลังชีวิตสูงสุด');add('fame','📈 ผู้ติดตาม',v=>sg(fmt(v)));add('karma','☯️ กรรม');add('happy','😊 ความสุข');add('end','⏳ อายุขัย',v=>sg(v)+' ปี');
+ if(e.qi)o.push('🔥 มี "ไออุ่นแปลกๆ" แน่นอน');
+ add('inc','💰 รายได้ต่อปี',pc);add('sav','🧾 รายจ่ายต่อปี',v=>pc(-v));if(e.luck>0)o.push('🍀 โอกาสได้โชคก้อนเล็ก '+Math.round(e.luck*100)+'% ต่อปี');if(e.luck<0)o.push('🌧️ โอกาสซวยเสียเงิน '+Math.round(-e.luck*100)+'% ต่อปี');
+ add('yst','😓 เครียด',v=>sg(v)+'/ปี');add('yfit','💪 ร่างกาย',v=>sg(v)+'/ปี');add('ysk','🛠️ ทักษะงาน',v=>sg(v)+'/ปี');add('yeng','🌐 อังกฤษ',v=>sg(v)+'/ปี');add('yint','🧠 ปัญญา',v=>sg(v)+'/ปี');add('ycha','💖 เสน่ห์',v=>sg(v)+'/ปี');add('ypow','⚡ พลัง',v=>sg(v)+'/ปี');add('yhp','❤️ ฟื้นพลังชีวิต',v=>sg(v)+'/ปี');add('ykarma','☯️ กรรม',v=>sg(v)+'/ปี');add('yhappy','😊 ความสุข',v=>sg(v)+'/ปี');add('yfame','📈 ผู้ติดตามที่ได้',v=>pc(v));
+ if(e.ykid)Object.keys(e.ykid).forEach(k=>o.push('🧒 '+KN[k]+' '+sg(e.ykid[k])+'/ปี'));
+ return o};
+const fxText=x=>{const e=x.e,o=fx1(e);if(e.w){const ws=Object.keys(e.w);if(ws.length>=8)o.push('🌍 ทุกโลกพิเศษ: '+fx1(e.w[ws[0]]).join(' · '));else ws.forEach(w=>o.push('🌍 ในโลก'+(WN[w]||w)+': '+fx1(e.w[w]).join(' · ')))}return o.join(' · ')};
+window._mwTalTxt=id=>{const x=TB[id];return x?fxText(x):''};
+// ---- สุ่ม ----
+const pickT=()=>{let r=Math.random()*100;for(const t of['c','r','e','l','s']){r-=TT[t][2];if(r<=0)return t}return'c'};
+const rollTal=(par)=>{const n=(r=>r<.35?0:r<.75?1:r<.95?2:3)(Math.random()),out=[];
+ (par||[]).forEach(id=>{if(TB[id]&&TB[id].t!=='n'&&out.length<3&&Math.random()<.3)out.push(id)});
+ let g=0;while(out.length<n&&g++<50){const t=pickT(),L=TAL.filter(x=>x.t===t&&!out.includes(x.id));if(L.length)out.push(ch(L).id)}
+ if(Math.random()<.15){const L=TAL.filter(x=>x.t==='n'&&!out.includes(x.id));out.push(ch(L).id)}
+ return out};
+window._mwTalRoll=rollTal;
+const chip=id=>{const x=TB[id];if(!x)return'';const c=TT[x.t][1];return`<span class="mtc" style="--c:${c}" onclick="event.stopPropagation();mwTalInfo('${id}')">${x.ic} ${esc(x.n)}</span>`};
+window.mwTalInfo=function(id){const x=TB[id];if(!x)return;toast(`${x.ic} ${x.n} (${TT[x.t][0]}) — ${fxText(x)}`)};
+const css=document.createElement('style');css.textContent=`.mtc{display:inline-block;margin:2px 3px 2px 0;padding:3px 8px;border-radius:999px;border:1px solid var(--c);color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.mtTal .mbTv{line-height:1.9}.mtTal .mbTs{font-size:11px}.mtLs .mtr{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed #ffffff22}.mtLs .mtr small{display:block;color:#bba882;font-size:11.5px;line-height:1.45}`;document.head.appendChild(css);
+// ---- หน้าเกิด: แผ่น "✨ พรสวรรค์" (ล็อกได้เหมือนช่องอื่น) ----
+{const _r=mbRoll;mbRoll=function(first){const keep=MB&&MB.lock&&MB.lock.tal?MB.tal:null,rr0=MB?MB.rr:0,old=MB?MB.tal:null;if(MB&&!first&&!keep)MB.tal=rollTal(window._mwTalPar||null);const r=_r.apply(this,arguments);try{if(MB){if(keep)MB.tal=keep;else if(first)MB.tal=rollTal(window._mwTalPar||null);else if(!(MB.rr<rr0)&&old)MB.tal=old}}catch(e){console.error(e)}return r}}
+{const _d=mbDraw;mbDraw=function(anim){const r=_d.apply(this,arguments);try{const o=$('mwB');if(!o||!MB)return r;const g=o.querySelector('.mbGrid');if(!g||g.querySelector('.mtTal'))return r;if(!MB.tal)MB.tal=rollTal(window._mwTalPar||null);
+  const L=MB.tal,v=L.length?L.map(chip).join(''):'<span class="tag2">ไม่มีพรสวรรค์ติดตัว — ชีวิตธรรมดาก็มีทางของมัน</span>';
+  const html=mbTile('tal','✨','พรสวรรค์',v,L.length?'แตะชื่อเพื่อดูผล · ที่ล็อก 🔒 ไว้จะไม่เปลี่ยนตอนสุ่มใหม่':'สุ่มใหม่อาจได้ 0–3 อย่าง',null);
+  g.insertAdjacentHTML('beforeend',html);const t=g.lastElementChild;if(t)t.classList.add('mtTal','mbWide')}catch(e){console.error(e)}return r}}
+{const _s=window.mwBStart;window.mwBStart=function(){try{window._mwTalPend=MB&&MB.tal?MB.tal.slice():null}catch(e){}return _s.apply(this,arguments)}}
+// ---- เริ่มชีวิต: ใส่พรสวรรค์และผลครั้งแรก ----
+const kidAdd=(K,o)=>{if(!K||!o)return;for(const k in o)K[k]=Math.max(5,Math.min(95,(K[k]||0)+o[k]))};
+const startFx=(M,ids)=>{const l=Ls(M);let gift=0;ids.forEach(id=>{const e=(TB[id]||{}).e;if(!e)return;
+  if(e.mon){if(S.age>=18)S.money=(S.money||0)+e.mon;else M.talMon=(M.talMon||0)+e.mon}
+  if(e.st)l.st=cl(l.st+e.st,0,100);if(e.fit)l.fit=cl(l.fit+e.fit,0,100);if(e.sk)l.sk=cl(l.sk+e.sk,0,100);if(e.eng)l.eng=cl(l.eng+e.eng,0,100);
+  if(e.int)S.int=(S.int||0)+e.int;if(e.cha)S.cha=Math.max(0,(S.cha||0)+e.cha);if(e.pow)S.power=Math.max(1,(S.power||0)+e.pow);
+  if(e.hp){S.maxHp=Math.max(30,(S.maxHp||100)+e.hp);S.hp=Math.min(S.maxHp,Math.max(1,(S.hp||100)+e.hp))}
+  if(e.fame)M.fame=Math.max(0,(M.fame||0)+e.fame);if(e.karma)S.karma=(S.karma||0)+e.karma;if(e.happy)S.happy=cl((S.happy||60)+e.happy,0,100);if(e.end)M.end=(M.end||S.age+70)+e.end;if(e.qi)gift=1});
+ if(gift&&!(M.qi>0)){M.qi=1;S.qi=1}};
+const announce=ids=>{if(!ids.length){log('✨ ชีวิตนี้ไม่มีพรสวรรค์ติดตัว — ทุกอย่างต้องสร้างเอง','');return}
+ const pos=ids.filter(i=>TB[i]&&TB[i].t!=='n'),neg=ids.filter(i=>TB[i]&&TB[i].t==='n');
+ log(`✨ <b>พรสวรรค์ติดตัว:</b> ${pos.map(chip).join('')||'—'}${neg.length?`<br>🔻 <b>จุดอ่อน:</b> ${neg.map(chip).join('')}`:''}`,ids.some(i=>['l','s'].includes((TB[i]||{}).t))?'myth':'good',true);
+ ids.forEach(i=>{try{cdxAdd('mwtal',i)}catch(e){}});
+ try{const best=ids.map(i=>TB[i]).filter(Boolean).sort((a,b)=>'slerc'.indexOf(a.t)-'slerc'.indexOf(b.t))[0];if(best&&['l','s'].includes(best.t))toast(`${best.ic} พรสวรรค์${TT[best.t][0]}: ${best.n}!`)}catch(e){}};
+const give=(M,ids)=>{M.tal=ids.slice(0,4);startFx(M,M.tal);announce(M.tal);try{LS.set('murim_mwtal_last',M.tal)}catch(e){}};
+{const _p=window.mwPreApply;window.mwPreApply=function(pre){const r=_p.apply(this,arguments);try{const M=S&&S.mw;if(M&&!M.tal){const ids=window._mwTalPend||rollTal(null);window._mwTalPend=null;give(M,ids)}}catch(e){console.error(e)}return r}}
+// ---- ต่อปี (ห่อนอกสุด → นับเงินทั้งปีหลังทุกระบบ) ----
+const wOf=M=>{try{return window._wld&&window._wld.wOf?window._wld.wOf(M)||'normal':'normal'}catch(e){return'normal'}};
+const sum=(ids,M)=>{const a={};const w=wOf(M);const all=ids.includes('t100');ids.forEach(id=>{const e=(TB[id]||{}).e;if(!e)return;const src=[e];if(e.w){if(e.w[w])src.push(e.w[w]);else if(all&&e.w.hunter&&w!=='normal')src.push(e.w.hunter)}
+  src.forEach(x=>{for(const k in x){if(k==='w'||k==='kid')continue;if(k==='ykid'){a.ykid=a.ykid||{};for(const q in x.ykid)a.ykid[q]=(a.ykid[q]||0)+x.ykid[q]}else if(typeof x[k]==='number')a[k]=(a[k]||0)+x[k]}})});return a};
+{const _my=globalThis.mwYear;globalThis.mwYear=function(){const M=S&&S.mw;const m0=S?S.money||0:0,f0=M?M.fame||0:0;const r=_my.apply(this,arguments);
+ try{if(!S||!S.alive||!M||S.mw!==M)return r;
+  if(!M.tal&&M.native){let par=null;try{if((S.gen|0)>1)par=LS.get('murim_mwtal_last',null)}catch(e){}give(M,rollTal(par))}
+  const ids=M.tal||[];if(!ids.length)return r;const a=sum(ids,M),l=Ls(M),out=[];
+  if(M.kid&&!M.kid._tal){M.kid._tal=1;ids.forEach(id=>{const e=(TB[id]||{}).e;if(e&&e.kid)kidAdd(M.kid,e.kid)})}
+  if(M.kid&&a.ykid)kidAdd(M.kid,a.ykid);
+  if(M.talMon&&S.age>=18){S.money=(S.money||0)+M.talMon;out.push('💎 มรดกที่ไม่เคยรู้ +'+fmt(M.talMon)+' บาท');log(`💎 <b>ทนายความโทรมาในวันเกิดอายุ 18</b> — มีคนทิ้งมรดกไว้ให้คุณ <b>${fmt(M.talMon)} บาท</b>`,'myth',true);M.talMon=0}
+  const d=(S.money||0)-m0;
+  if(d>0&&a.inc){const b=Math.round(d*Math.max(-.5,Math.min(.8,a.inc)));if(b){S.money=Math.max(0,(S.money||0)+b);out.push(`💰 ${b>0?'+':''}${fmt(b)}`)}}
+  if(d<0&&a.sav){const b=Math.round(-d*Math.max(-.5,Math.min(.5,a.sav)));if(b){S.money=Math.max(0,(S.money||0)+b);out.push(`🧾 ${b>0?'+':''}${fmt(b)}`)}}
+  if(a.luck>0&&Math.random()<Math.min(.4,a.luck)){const g=R(2,12)*1000*(S.age>=18?1:.2);S.money=(S.money||0)+Math.round(g);out.push('🍀 โชคก้อนเล็ก +'+fmt(Math.round(g)))}
+  if(a.luck<0&&Math.random()<-a.luck){const g=Math.min(S.money||0,R(2,10)*1000);if(g>0){S.money-=g;out.push('🌧️ ซวย −'+fmt(g))}}
+  const df=(M.fame||0)-f0;if(df>0&&a.yfame)M.fame=Math.max(0,Math.round((M.fame||0)+df*a.yfame));
+  if(a.yst)l.st=cl(l.st+a.yst,0,100);if(a.yfit)l.fit=cl(l.fit+a.yfit,0,100);if(a.ysk)l.sk=cl(l.sk+a.ysk,0,100);if(a.yeng)l.eng=cl(l.eng+a.yeng,0,100);
+  if(a.yint)S.int=Math.max(0,(S.int||0)+a.yint);if(a.ycha)S.cha=Math.max(0,(S.cha||0)+a.ycha);if(a.ypow)S.power=Math.max(1,(S.power||0)+a.ypow);
+  if(a.yhp)S.hp=Math.max(1,Math.min(S.maxHp||100,(S.hp||0)+a.yhp));if(a.ykarma)S.karma=(S.karma||0)+a.ykarma;if(a.yhappy)S.happy=cl((S.happy||60)+a.yhappy,0,100);
+  if(out.length)addFeed('ev','✨ พรสวรรค์: '+out.join(' · '),'sum')}catch(e){console.error('mwtal',e)}return r}}
+// ---- สมุด: สารานุกรม + คู่มือ + ดูของตัวเอง ----
+{const _cc=globalThis.cxCats;globalThis.cxCats=function(){const L=_cc.apply(this,arguments);try{if(!L.some(c=>c&&c.cat==='mwtal'))L.push({g:'other',ic:'✨',t:'พรสวรรค์ยุคปัจจุบัน',te:'Modern-era talents',cat:'mwtal',L:TAL.map(x=>[x.id,`${x.ic} ${x.n}`,['l','s'].includes(x.t)])})}catch(e){}return L}}
+window.mwTalList=function(){const M=S&&S.mw,ids=(M&&M.tal)||[];
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>✨ พรสวรรค์ของชีวิตนี้</h3><div class="mtLs">${ids.length?ids.map(id=>{const x=TB[id];return x?`<div class="mtr"><span style="font-size:22px">${x.ic}</span><div><b style="color:${TT[x.t][1]}">${esc(x.n)}</b> <span class="tag2">${TT[x.t][0]}</span><small>${fxText(x)}</small></div></div>`:''}).join(''):'<p class="tag2">ชีวิตนี้ไม่มีพรสวรรค์ติดตัว</p>'}</div>
+ <p class="tag2" style="margin-top:8px">มีทั้งหมด 100 แบบ + จุดอ่อน 20 แบบ · ดูที่เคยเจอได้ใน 📚 สารานุกรม → ต่างโลก</p>`,'mwtal')};
+try{SYS_GUIDE.push({s:'world',nw:1,ic:'✨',t:'พรสวรรค์ยุคปัจจุบัน',go:'mwTalList',d:'ชีวิตยุคปัจจุบันเกิดมาพร้อมพรสวรรค์ 0–3 อย่าง (100 แบบ 5 ระดับ: ธรรมดา · หายาก · หายากมาก · ตำนาน · ลับ) และบางครั้งมีจุดอ่อนติดมาด้วย · หน้าสุ่มกำเนิดกด 🔒 ล็อกไว้ได้ตอนสุ่มใหม่ · ทายาทมีโอกาส 30% ได้พรสวรรค์ของพ่อแม่ · ผลมีทั้งตอนเริ่มและทุกปี บางแบบแรงขึ้นเมื่ออยู่ในโลกพิเศษที่เข้ากัน · ระดับลับไม่บอกว่าได้ยังไง'})}catch(e){}
+// ปุ่มดูพรสวรรค์ในเมนูระหว่างเล่น
+{const _om=globalThis.openMenu;if(typeof _om==='function')globalThis.openMenu=function(){const r=_om.apply(this,arguments);try{const M=S&&S.mw;if(M&&M.tal&&modalOpen){const m=$('modal');if(m&&!m.querySelector('.mtMenu')){const h=m.querySelector('.mnSearch')||m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',`<button class="opt mtMenu" onclick="mwTalList()">✨ พรสวรรค์ของชีวิตนี้<small>${M.tal.length?M.tal.map(i=>TB[i]?TB[i].ic+' '+TB[i].n:'').join(' · '):'ไม่มี'}</small></button>`)}}}catch(e){}return r}}
+})()}catch(e){console.error('mwtal',e)}
+
 window._lifeTbl={PV,LE,LS,LW,LJ,LEDU,Ls,lOn,lRunE,lifeYear,BG,TR,ACH,bgApply,lAch,LB};
 })();
 __done=1;SL.impl.toTitle=toTitle;toTitle=function(){return globalThis.toTitle.apply(this,arguments)};SL.impl.goBirth=goBirth;goBirth=function(){return globalThis.goBirth.apply(this,arguments)};SL.impl.crStart=crStart;crStart=function(){return globalThis.crStart.apply(this,arguments)};SL.impl.mwYear=mwYear;mwYear=function(){return globalThis.mwYear.apply(this,arguments)};SL.impl.mwJobReq=mwJobReq;mwJobReq=function(){return globalThis.mwJobReq.apply(this,arguments)};SL.impl.mwApply=mwApply;mwApply=function(){return globalThis.mwApply.apply(this,arguments)};SL.impl.mwJobYear=mwJobYear;mwJobYear=function(){return globalThis.mwJobYear.apply(this,arguments)};SL.impl.mwYearCost=mwYearCost;mwYearCost=function(){return globalThis.mwYearCost.apply(this,arguments)};SL.impl.render=render;render=function(){return globalThis.render.apply(this,arguments)};SL.impl.mwMove=mwMove;mwMove=function(){return globalThis.mwMove.apply(this,arguments)};SL.impl.mwEnter=mwEnter;mwEnter=function(){return globalThis.mwEnter.apply(this,arguments)};SL.impl.mwRandNative=mwRandNative;mwRandNative=function(){return globalThis.mwRandNative.apply(this,arguments)};SL.impl.mwBornPage=mwBornPage;mwBornPage=function(){return globalThis.mwBornPage.apply(this,arguments)};SL.impl.mwBStart=mwBStart;mwBStart=function(){return globalThis.mwBStart.apply(this,arguments)};SL.impl.mwBRand=mwBRand;mwBRand=function(){return globalThis.mwBRand.apply(this,arguments)};SL.impl.mwBornMenu=mwBornMenu;mwBornMenu=function(){return globalThis.mwBornMenu.apply(this,arguments)};})();
