@@ -2997,7 +2997,7 @@ window.skyRRMore=function(){skHold();window._skT=Date.now();try{rrMenu()}catch(e
 {const _cm=closeM;closeM=function(){try{const m=$('modal');if(modalOpen&&m&&m.dataset.k==='skyorg'&&!window._skOk)return}catch(e){}return _cm.apply(this,arguments)}}
 window.skyOrgG=v=>{ST.g=v;ui()};
 window.skyOrgRe=()=>{if(ST.left<=0)return;ST.left--;ST.ask=null;rollAll(false);try{sfx('click')}catch(e){}ui()};
-window.skyOrgGo=()=>{const pickd=Object.assign({},ST.cards),g=ST.g||pick(['ชาย','หญิง']);try{LS.del(SKH)}catch(e){}window._skOk=1;try{closeM()}catch(e){}window._skOk=0;
+window.skyOrgGo=()=>{if(window._skyBornAt&&Date.now()-window._skyBornAt<3000)return;window._skyBornAt=Date.now();window._skySel=0;const pickd=Object.assign({},ST.cards),g=ST.g||pick(['ชาย','หญิง']);try{LS.del(SKH)}catch(e){}window._skOk=1;try{closeM()}catch(e){}window._skOk=0;
  const base=pickd.bg[4];window._skyOrgRun=1;try{_ss(base)}finally{window._skyOrgRun=0}
  setTimeout(()=>{try{applyOrg(pickd,g)}catch(e){console.error('skyorg apply',e)}},900)};
 // ---------- นำผลไปใช้ ----------
@@ -3037,7 +3037,7 @@ function evReg(){const A=SKY();if(!A||!A.EV)return false;
 {const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{const K=S&&S.mw&&S.mw.sky;if(K&&K.og&&K.og.lk&&o&&!o.beast){const l=K.og.lk;if(l.hair)o.hair=l.hair;if(l.skin)o.skin=l.skin;if(l.eyeG)o.eyeG=l.eyeG;if(l.eye)o.eye=l.eye}}catch(e){}return o}}
 // เปิดหน้าสุ่มก่อนเริ่มชีวิต
 let _ss=null;
-function hook(){if(_ss||typeof window.skyStart!=='function')return;_ss=window.skyStart;window.skyStart=function(bg){if(bg||window._skyOrgRun||window._skyOrgSkip)return _ss.apply(this,arguments);try{evReg()}catch(e){}ST.ask=null;if(!skLoad()){ST.lock={};ST.left=skTot();ST.g=null;rollAll(true);if(window._RR)window._RR.used=0}try{if(window._LK&&window._LK.c==null&&window.lkLoad)window.lkLoad()}catch(e){}ui()}}
+function hook(){if(_ss||typeof window.skyStart!=='function')return;_ss=window.skyStart;window.skyStart=function(bg){if(bg||window._skyOrgRun||window._skyOrgSkip)return _ss.apply(this,arguments);try{if(window._skyBornAt&&Date.now()-window._skyBornAt<20000&&S&&S.alive&&S.mw&&S.mw.sky){window._skySel=0;return}}catch(e){}try{evReg()}catch(e){}ST.ask=null;if(!skLoad()){ST.lock={};ST.left=skTot();ST.g=null;rollAll(true);if(window._RR)window._RR.used=0}try{if(window._LK&&window._LK.c==null&&window.lkLoad)window.lkLoad()}catch(e){}ui()}}
 hook();setTimeout(hook,0);setTimeout(()=>{hook();evReg()},1500);
 // สไตล์
 const st=document.createElement('style');st.textContent=`

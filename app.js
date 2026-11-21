@@ -44902,3 +44902,12 @@ if(typeof openCodex==='function'){const _oc=openCodex;openCodex=function(){try{c
 
 // BLOCK 135: หน้าสุ่มกำเนิดทะลุฟ้าดารา (modal skyorg) ไม่ต้องมีปุ่ม ✕ ลอย — ต้องกด "เกิด!" เท่านั้น
 try{document.head.insertAdjacentHTML('beforeend','<style>#mask.on #modal[data-k="skyorg"]~#mFloat,body:has(#modal[data-k="skyorg"]) #mFloat{display:none!important}</style>')}catch(e){console.error('block135',e)}
+
+// BLOCK 136: 🏛️ ประมูลทั่วยุทธภพ ไม่ขึ้นในยุคปัจจุบันทุกประเภทโลก (รวมทะลุฟ้าดารา) และทวีปจิตวิญญาณยุทธ์
+try{(()=>{const no=()=>{try{return !!(S&&(S.mw||S.ch==='soul'))}catch(e){return false}};
+if(typeof paCanSee==='function'){const _pc=paCanSee;paCanSee=function(){if(no())return false;return _pc.apply(this,arguments)}}
+if(typeof paBanner==='function'){const _pb=paBanner;paBanner=function(){if(no())return;return _pb.apply(this,arguments)}}
+if(typeof paJoin==='function'){const _pj=paJoin;paJoin=function(){if(no()){try{paBanX()}catch(e){}return toast('โลกนี้ไม่มีงานประมูลทั่วยุทธภพ')}return _pj.apply(this,arguments)}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(no())document.querySelectorAll('#modal .mgrid .opt[onclick="paJoin()"]').forEach(b=>b.remove())}catch(e){}return r}}
+setInterval(()=>{try{if(no()){const d=document.getElementById('paBan');if(d)d.remove()}}catch(e){}},1500);
+})()}catch(e){console.error('block136',e)}
