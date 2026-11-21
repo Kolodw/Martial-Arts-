@@ -44899,3 +44899,6 @@ if(typeof cxCats==='function'){const _cc=cxCats;cxCats=function(){const L=_cc.ap
  if(!L.some(c=>c&&c.cat==='riftend'))L.push({g:'other',ic:'🚪',t:'ตอนจบรอยแยก',te:'Rift endings',cat:'riftend',L:RIFT_END.map(x=>[x[0],x[1],['bridge','close','truth'].includes(x[0])])})}catch(e){console.error('cx134',e)}return L}}
 if(typeof openCodex==='function'){const _oc=openCodex;openCodex=function(){try{const SB=LS.get('murim_svbook',{})||{};Object.keys(SB).forEach(id=>cdxAdd('svsp',id));const RB=LS.get('murim_rift',{})||{};Object.keys(RB.p||{}).forEach(k=>cdxAdd('riftp',k));Object.keys(RB.e||{}).forEach(k=>cdxAdd('riftend',k));if(S&&S.rift&&S.rift.k)cdxAdd('riftp',S.rift.k)}catch(e){}return _oc.apply(this,arguments)}}
 })()}catch(e){console.error('block134',e)}
+
+// BLOCK 135: หน้าสุ่มกำเนิดทะลุฟ้าดารา (modal skyorg) ไม่ต้องมีปุ่ม ✕ ลอย — ต้องกด "เกิด!" เท่านั้น
+try{document.head.insertAdjacentHTML('beforeend','<style>#mask.on #modal[data-k="skyorg"]~#mFloat,body:has(#modal[data-k="skyorg"]) #mFloat{display:none!important}</style>')}catch(e){console.error('block135',e)}
