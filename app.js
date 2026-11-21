@@ -19104,7 +19104,7 @@ try{FRAMES.push(
  {id:'f_rgm3',n:'กรอบร้อยชาติ',side:'r',c:0,ty:'spin halo orbit corner badge',c1:'#70c0a0',c2:'#e0ffb0',c3:'#0a2018',pc:'#f0fff0',bd:'📜',d:'อันดับ 3 ทำเนียบผู้ย้อนกาลรายเดือน'})}catch(e){}
 {const _rkcR=rkChip;rkChip=function(t,tr){const o=RKC_OF(String(t||''));if(o&&o.p.length===2&&o.p[1]==='r'){const r=o.r,p=o.p[0];return`<span class="rkchip rkr rkr${p} rr${r}"><i>${p==='m'?'♾️':p==='w'?'🌀':'⏳'}${['','①','②','③'][r]}</i>${esc(String(t).slice(0,40))}</span>`}return _rkcR.apply(this,arguments)}}
 {const _bdcO2=BD_FRP;bdClaim=async function(){try{if(!onlineOK)return;const j=await api('bdrw');try{rkSync(j&&j.rk)}catch(e){}const L=(j&&j.l)||[];if(!L.length)return;const d=frGet(),kb=kbGet();let w=LS.get('murim_bdw',0)||0;const lines=[];
- for(const x of L){if(x.c==='al'){try{lines.push(arLgReward(x,d))}catch(e){}continue}if(/^c[hsjlknuopzteqy]$/.test(x.c)&&typeof chmReward==='function'){try{lines.push(chmReward(x,d,kb));w++}catch(e){}continue}const r=Math.max(1,Math.min(3,+x.r||3)),pp=_bdcO2[x.p]?x.p:'d',isC=x.c==='c',isA=x.c==='a',isR=x.c==='r',fid=isR?'f_rg'+pp+r:isA?'f_ar'+r:isC?'f_ch'+r:_bdcO2[pp]+r,kv=BD_KBP[pp][r];if(!d.own.includes(fid))d.own.push(fid);kb.g+=kv;w++;if(r===1)LS.set('murim_bd1',(LS.get('murim_bd1',0)||0)+1);if(isC)LS.set('murim_bdC',(LS.get('murim_bdC',0)||0)+1);else if(isR)LS.set('murim_bdR',(LS.get('murim_bdR',0)||0)+1);else if(pp!=='d'){const kk=pp==='w'?'murim_bdW':'murim_bdM';LS.set(kk,(LS.get(kk,0)||0)+1)}
+ for(const x of L){if(x.c==='al'){try{lines.push(arLgReward(x,d))}catch(e){}continue}if(/^c[hsjlknuopzteqyv]$/.test(x.c)&&typeof chmReward==='function'){try{lines.push(chmReward(x,d,kb));w++}catch(e){}continue}const r=Math.max(1,Math.min(3,+x.r||3)),pp=_bdcO2[x.p]?x.p:'d',isC=x.c==='c',isA=x.c==='a',isR=x.c==='r',fid=isR?'f_rg'+pp+r:isA?'f_ar'+r:isC?'f_ch'+r:_bdcO2[pp]+r,kv=BD_KBP[pp][r];if(!d.own.includes(fid))d.own.push(fid);kb.g+=kv;w++;if(r===1)LS.set('murim_bd1',(LS.get('murim_bd1',0)||0)+1);if(isC)LS.set('murim_bdC',(LS.get('murim_bdC',0)||0)+1);else if(isR)LS.set('murim_bdR',(LS.get('murim_bdR',0)||0)+1);else if(pp!=='d'){const kk=pp==='w'?'murim_bdW':'murim_bdM';LS.set(kk,(LS.get(kk,0)||0)+1)}
   lines.push(`${['','🥇','🥈','🥉'][r]} อันดับ ${r} ${isR?'🔁 ทำเนียบผู้ย้อนกาล'+BD_PN[pp]:isA?'🏟️ ลานประลองหมื่นเงา ซีซั่น':isC?'🔥 ทำเนียบท้าทาย'+RKC_PN[pp]:'ทำเนียบ'+BD_PN[pp]+' '+(BD_CN[x.c]||'')} (${esc(x.d)}) — ${esc(x.n)}${x.ch&&!isR?' '+chBadge(x.ch):''}${isR&&x.rl?` (${x.rl} รอบ)`:` (${fmt(x.s)} คะแนน)`} · ได้ <b>${frOf(fid).n}</b>${x.tt?' + ฉายา「'+esc(x.tt)+'」':''} + ☯️ ${fmt(kv)}`)}
  frSet(d);kbSet(kb);LS.set('murim_bdw',w);profPush();const html=`<button class="xbtn" onclick="closeM()">✕</button><h3>🏆 รางวัลทำเนียบ</h3><p>${lines.join('<br>')}</p><p class="tag2">กรอบรางวัลอยู่ใน 👤 โปรไฟล์ และ 🖼️ ร้านแลกกรอบ · คลังกรรมดีเข้าคลังแล้ว</p><button class="pbtn" style="width:100%" onclick="openProfile()">👤 ไปสวมกรอบ</button>`;if(!modalOpen)modal(html,'bdrw');else toast('🏆 ได้รางวัลทำเนียบ! ดูกรอบได้ที่โปรไฟล์')}catch(e){}}}
 // หน้าทำเนียบ: แท็บ รายวัน/สัปดาห์/เดือน/ตลอดกาล + อันดับสมัยก่อน + บอกรางวัล
@@ -24250,12 +24250,12 @@ function chmSel(){const v=openOnline._cm;if(v&&CHM_N[v])return v;const c=S&&S.ch
 chBoardHead=function(bp){const m=chmSel(),N=CHM_N[m],T=CHM_T[m][bp]||CHM_T[m].d,pk=bp+m,kb=BD_KBP[bp]||BD_KBP.d;
  const sub=`<div class="tabs chmTabs">${['h','s','j','l'].map(k=>`<button class="tabb ${k===m?'on':''}" style="${k===m?`background:${CHM_N[k][2]};color:#fff;border-color:${CHM_N[k][2]}`:''}" onclick="openOnline._cm='${k}';openOnline._bw=4;openOnline('board')">${CHM_N[k][0]} ${CHM_N[k][1]}</button>`).join('')}</div>`;
  return sub+`<div class="chhead" style="border-color:${N[2]}"><div class="chfl"></div><b>${N[0]} ทำเนียบ${N[1]}</b><p>แข่งเฉพาะคนที่เล่นโหมด${N[1]}เท่านั้น · จัดอันดับด้วย <b>${N[3]}</b> · ${bp==='d'?'รีเซ็ตทุกเที่ยงคืน · รางวัลรายวันแจกเมื่อวันนั้นมีอย่างน้อย 5 ชีวิต':bp==='w'?'รีเซ็ตทุกวันจันทร์':'รีเซ็ตทุกวันที่ 1 · อันดับ 1–3 ได้กรอบพิเศษ'}</p>
- <div class="chrw">${[1,2,3].map(r=>`<div><i>${['','🥇','🥈','🥉'][r]}</i>${rkChip(T[r],RKC_TR[pk])}<small>${bp==='m'?frOf((m==='l'?'f_cl':m==='k'?'f_sk':/^[nuopzteqy]$/.test(m)?'f_mw'+m:'f_ch')+r).n+' · ':''}☯️ ${fmt(kb[r])}</small></div>`).join('')}</div></div>`};
+ <div class="chrw">${[1,2,3].map(r=>`<div><i>${['','🥇','🥈','🥉'][r]}</i>${rkChip(T[r],RKC_TR[pk])}<small>${bp==='m'?frOf((m==='l'?'f_cl':m==='k'?'f_sk':/^[nuopzteqyv]$/.test(m)?'f_mw'+m:'f_ch')+r).n+' · ':''}☯️ ${fmt(kb[r])}</small></div>`).join('')}</div></div>`};
 // การ์ดอันดับในแท็บท้าทาย: ใช้ฉายาของโหมดที่เลือก
 {const _brdM=brdRestyle;brdRestyle=function(){const m=chmSel(),keep={};try{if(openOnline._bw===4)for(const p of ['d','w','m']){keep[p]=RKC[p+'c'];RKC[p+'c']=CHM_T[m][p]}}catch(e){}try{return _brdM.apply(this,arguments)}finally{for(const p in keep)RKC[p+'c']=keep[p]}}}
 // รางวัล: โหมดท้าทายแยก (ch/cs/cj) — ฉายา + คลังกรรม · กรอบเฉพาะรายเดือน (เรียกจาก bdClaim)
 function chmReward(x,d,kb){const r=Math.max(1,Math.min(3,+x.r||3)),pp=['d','w','m'].includes(x.p)?x.p:'d',mk=x.c.slice(1),N=CHM_N[mk],kv=BD_KBP[pp][r];let fr='';
- if(pp==='m'){const fid=(mk==='l'?'f_cl':mk==='k'?'f_sk':/^[nuopzteqy]$/.test(mk)?'f_mw'+mk:'f_ch')+r;if(!d.own.includes(fid))d.own.push(fid);fr=frOf(fid).n+' + '}kb.g+=kv;LS.set('murim_bdC',(LS.get('murim_bdC',0)||0)+1);if(r===1)LS.set('murim_bd1',(LS.get('murim_bd1',0)||0)+1);
+ if(pp==='m'){const fid=(mk==='l'?'f_cl':mk==='k'?'f_sk':/^[nuopzteqyv]$/.test(mk)?'f_mw'+mk:'f_ch')+r;if(!d.own.includes(fid))d.own.push(fid);fr=frOf(fid).n+' + '}kb.g+=kv;LS.set('murim_bdC',(LS.get('murim_bdC',0)||0)+1);if(r===1)LS.set('murim_bd1',(LS.get('murim_bd1',0)||0)+1);
  return`${['','🥇','🥈','🥉'][r]} อันดับ ${r} ${N[0]} ทำเนียบ${N[1]}${BD_PN[pp]} (${esc(x.d)}) — ${esc(x.n)} · ได้ ${fr}${x.tt?'ฉายา「'+esc(x.tt)+'」 + ':''}☯️ ${fmt(kv)}`}
 // ผู้ย้อนกาลที่ยังไม่หลุดพ้น: แสดงต่อท้ายคนที่หลุดพ้นแล้ว
 {const _orbN=openRgBoard;openRgBoard=async function(p){const r=await _orbN.apply(this,arguments);try{const box=document.querySelector('.rgbbox'),L=(window._rgbLast&&window._rgbLast.top)||[];if(!box)return r;
@@ -26735,7 +26735,7 @@ const RKG = (() => {
   const SUF = SUF1.concat(['ผู้ยืนบนยอดเขา', 'ผู้ไร้ผู้ต่อกร', 'แห่งแปดทิศ', 'ผู้ข้ามทะเลดาว', 'ผู้เดียวในใต้หล้า', 'ใต้ฟ้าเดียวกัน', 'ผู้ไม่หันหลัง', 'แห่งพันปี', 'ผู้ปลุกตำนาน', 'แห่งรุ่งอรุณ', 'ผู้กลืนดวงดาว', 'แห่งสายลม', 'ผู้ตัดสายฟ้า', 'ผู้ยิ้มรับลิขิต']);
   TH.k = ['ดาราเหล็ก', 'นครกำแพง', 'ยีนอสูร', 'อุกกาบาต', 'ไซเบอร์', 'ห้วงดารา', 'นิวเคลียส', 'สัญญาณดาว', 'เซลล์ดารา', 'ควอนตัม', 'โคจร', 'กาแล็กซี', 'เนบิวลา', 'ดาวเทียม', 'นาโน', 'พลาสมา']; TH1.k = TH.k.slice(0, 6);
   // 🏙️ ยุคปัจจุบัน 9 โลก: n ฮันเตอร์ · u ใต้ดิน · o ผีไทย · p วนลูป · z ซอมบี้ · t หอคอย · e ระบบเกม · q เกตชนะ · y วันสิ้นโลก
-  const MWL = ['n', 'u', 'o', 'p', 'z', 't', 'e', 'q', 'y'];
+  const MWL = ['n', 'u', 'o', 'p', 'z', 't', 'e', 'q', 'y', 'v'];
   Object.assign(TH, {
     n: ['เกตมิติ', 'แรงก์เอส', 'สมาคมฮันเตอร์', 'ดันเจี้ยน', 'ผู้ตื่นพลัง', 'ลูทแรร์', 'บอสเกต', 'คริสตัลมานา', 'ใบอนุญาตฮันเตอร์', 'เกตแดง', 'ประตูมิติฟ้า', 'นักล่าเงา'],
     u: ['โลกใต้ดิน', 'ตลาดมืด', 'แก๊งมาเฟีย', 'ซอยเปลี่ยว', 'ไฟนีออน', 'บ่อนลับ', 'เจ้าพ่อ', 'รถสปอร์ตดำ', 'ดีลใต้โต๊ะ', 'เขตเถื่อน', 'ไนต์คลับ', 'ถนนสายมืด'],
@@ -26745,13 +26745,13 @@ const RKG = (() => {
     t: ['หอคอย', 'ชั้นบนสุด', 'บันไดเวียน', 'ชั้นที่ร้อย', 'ผู้ไต่หอ', 'ประตูชั้น', 'บอสประจำชั้น', 'ยอดหอคอย', 'ลิฟต์แก้ว', 'ห้องลับชั้นซ่อน', 'ยอดยอดตึก', 'ชั้นไร้นาม'],
     e: ['ระบบเกม', 'เลเวลอัป', 'หน้าต่างสถานะ', 'เควสลับ', 'สกิลแรร์', 'ค่าประสบการณ์', 'กาชา', 'อีเวนต์พิเศษ', 'คอมโบ', 'ไอเทมตำนาน', 'แต้มสเตตัส', 'โหมดฮาร์ดคอร์'],
     q: ['กำแพงเมือง', 'เมืองสุดท้าย', 'เกตแม่', 'แนวป้องกัน', 'ยึดโลกคืน', 'ปราการเหล็ก', 'ฐานทัพมนุษย์', 'ดินแดนรกร้าง', 'ธงมนุษย์', 'ป้อมปืนใหญ่', 'ประตูเมือง', 'สนามเพลาะ'],
-    y: ['วันสิ้นโลก', 'นับถอยหลัง', 'หลุมหลบภัย', 'อุกกาบาตล้างโลก', 'ฟ้าแดง', 'สิบสองปีสุดท้าย', 'จรวดอพยพ', 'วันสุดท้าย', 'เสบียงสุดท้าย', 'ดาวหางมรณะ', 'เสียงไซเรน', 'คืนก่อนโลกแตก']
+    y: ['วันสิ้นโลก', 'นับถอยหลัง', 'หลุมหลบภัย', 'อุกกาบาตล้างโลก', 'ฟ้าแดง', 'สิบสองปีสุดท้าย', 'จรวดอพยพ', 'วันสุดท้าย', 'เสบียงสุดท้าย', 'ดาวหางมรณะ', 'เสียงไซเรน', 'คืนก่อนโลกแตก'], v: ['ประตูสุดโลก', 'สองภพ', 'เจ็ดโลก', 'รอยแยกมิติ', 'หน้ากระดาษ', 'ต่างภพ', 'ผู้ไร้บ้านเกิด', 'เศษพลังข้ามโลก', 'บาดแผลมิติ', 'ห้องของนักเขียน', 'พันชาติ', 'ทุกจักรวาล']
   });
   MWL.forEach(c => { TH1[c] = TH[c].slice(0, 6) });
   const CORE_MW = [null, ['ราชา', 'ราชินี', 'ไอคอน', 'เบอร์หนึ่ง', 'แชมป์', 'ซูเปอร์สตาร์', 'บอสใหญ่', 'ตัวจริง'], ['ดาวเด่น', 'ตัวท็อป', 'ไอดอล', 'ฮีโร่', 'รองแชมป์', 'มือโปร'], ['ดาวรุ่ง', 'ตัวตึง', 'ผู้มาแรง', 'นิวคัมเมอร์', 'สายแข็ง', 'มือใหม่ไฟแรง']];
   const SUF_MW = ['แห่งนครหลวง', 'กลางเมืองใหญ่', 'ไลฟ์สดทั้งคืน', 'ยอดวิวทะลุล้าน', 'ใต้แสงนีออน', 'ติดเทรนด์อันดับหนึ่ง', 'บนตึกระฟ้า', 'ตลอดกาล', 'ที่ทั้งประเทศพูดถึง', 'แห่งยุคดิจิทัล', 'ผู้ไม่เคยออฟไลน์', 'เหนือฟีดทุกฟีด'];
   function titleMW(p, c, k, r) {
-    const R = RNG(H('tm|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE_MW[r] || CORE_MW[3]), pre = pk(R, TH[c]), of = R() < .4 && !/^(ผู้|แห่ง)/.test(pre) ? 'แห่ง' : '', suf = pk(R, SUF_MW);
+    const R = RNG(H('tm|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE_MW[r] || CORE_MW[3]), pre = pk(R, TH[c]), of = R() < .4 && !/^(ผู้|แห่ง)/.test(pre) ? 'แห่ง' : '', suf = pk(R, c === 'v' ? ['ผู้ข้ามทุกภพ', 'ที่ไม่มีโลกไหนขังได้', 'เหนือหน้ากระดาษ', 'แห่งประตูสุดท้าย', 'ผู้เดินผ่านทุกจักรวาล', 'ตลอดกาล'] : SUF_MW);
     let t = p === 'm' ? core + (/^แห่ง/.test(suf) ? '' : of) + pre + suf : p === 'w' && R() < .35 ? core + pre + suf : core + of + pre;
     if ([...t].length > 28) t = core + of + pre;
     return t;
@@ -26770,14 +26770,14 @@ const RKG = (() => {
   const SH1 = { m: ['sword', 'laurel', 'crown', 'dbl'], x: ['cloud', 'ringh', 'leaf', 'pearl'], g: ['ray', 'ringh', 'star4', 'lotus'], b: ['horn', 'scale', 'thorn', 'wing'], r: ['clock', 'moon', 'star4'], c: ['flame', 'thorn', 'chain'], h: ['flame', 'horn', 'drip', 'gate'], s: ['flame', 'star4', 'butterfly'], j: ['knob', 'chain', 'fade', 'leaf'], l: ['ringh', 'star4', 'lotus', 'ray', 'gem'], k: ['star4', 'lightning', 'gem', 'ringh'] };
   const TY1 = [null, 'spin halo orbit ring2 aura2 sparkle star ember corner badge rk1', 'spin orbit ring2 snow corner badge rk2', 'corner badge rk3'];
   const PN = { d: 'ประจำวัน', w: 'ประจำสัปดาห์', m: 'ประจำเดือน' }, BD = { d: ['', '🌅', '🥈', '🥉'], w: ['', '⚔️', '🥈', '🥉'], m: ['', '🌟', '🥈', '🥉'] };
-  const RE = /^f_g([dwm])([mxgbrchsjlknuopzteqy])([0-9a-z]+)_([123])$/;
+  const RE = /^f_g([dwm])([mxgbrchsjlknuopzteqyv])([0-9a-z]+)_([123])$/;
   // ชุดที่ 2: สีจากวงล้อสี (โทนคู่ตรงข้าม/ข้างเคียง) · ลายประดับตามหมวด + ลายสุ่ม · แสงสุ่มชุดใหม่ทุกรอบ · ตราตามหมวด
   const hsl = (h, s, l) => { h = ((h % 360) + 360) % 360; s /= 100; l /= 100; const a = s * Math.min(l, 1 - l), f = n => { const k = (n + h / 30) % 12, c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); return Math.round(255 * c).toString(16).padStart(2, '0') }; return '#' + f(0) + f(8) + f(4) };
   const SH = { m: ['sword', 'laurel', 'crown', 'dbl', 'gem'], x: ['cloud', 'ringh', 'leaf', 'pearl', 'gate'], g: ['ray', 'ringh', 'star4', 'lotus', 'crown'], b: ['horn', 'scale', 'thorn', 'wing', 'eye'], r: ['clock', 'moon', 'star4', 'ringh'], c: ['flame', 'thorn', 'chain', 'eye'], h: ['flame', 'horn', 'drip', 'gate', 'skull'], s: ['flame', 'star4', 'butterfly', 'petal'], j: ['knob', 'chain', 'fade', 'leaf'], l: ['ringh', 'star4', 'lotus', 'ray', 'gem'], k: ['star4', 'lightning', 'gem', 'ringh', 'ray'] };
   const ANY = ['star4', 'gem', 'petal', 'snow', 'moon', 'ray', 'lightning', 'pearl', 'leaf', 'cloud', 'wing'];
   const FX = { 1: ['halo', 'orbit', 'ring2', 'aura2', 'sparkle', 'star', 'ember', 'snow', 'petal', 'rainbow', 'flow', 'glow'], 2: ['orbit', 'ring2', 'sparkle', 'snow', 'ember', 'petal', 'shift', 'glow', 'star'], 3: ['snow', 'ember', 'star', 'glow'] };
   const MARK = { m: ['⚔️', '🗡️', '🏯'], x: ['☁️', '🌀', '🍑'], g: ['✨', '🌞', '🪷'], b: ['🐾', '🐉', '🐯'], r: ['⏳', '🕰️', '🌀'], c: ['🔥', '⛓️', '☄️'], h: ['💀', '🔥', '👹'], s: ['☄️', '🕯️', '🎆'], j: ['🦴', '🍂', '🪨'], l: ['⭕', '🔮', '🌌'], k: ['🌠', '🛰️', '🧬'] };
-  Object.assign(MARK, { n: ['🌀', '🗡️', '💎'], u: ['🌃', '🎰', '🕶️'], o: ['👻', '🏮', '📿'], p: ['🔁', '⏰', '📅'], z: ['🧟', '☣️', '🔦'], t: ['🗼', '🪜', '🚪'], e: ['🎮', '🕹️', '💠'], q: ['💀', '🧱', '🚩'], y: ['☄️', '⏳', '🚀'] });
+  Object.assign(MARK, { n: ['🌀', '🗡️', '💎'], u: ['🌃', '🎰', '🕶️'], o: ['👻', '🏮', '📿'], p: ['🔁', '⏰', '📅'], z: ['🧟', '☣️', '🔦'], t: ['🗼', '🪜', '🚪'], e: ['🎮', '🕹️', '💠'], q: ['💀', '🧱', '🚩'], y: ['☄️', '⏳', '🚀'], v: ['🚪', '🌀', '📖'] });
   MWL.forEach(c => { SH1[c] = ['star4', 'gem', 'ray']; SH[c] = ['star4', 'gem', 'ray', 'lightning'] });
   function frame(id) {
     const m = RE.exec(id); if (!m) return null; const [, p, c, k, rs] = m, r = +rs;
@@ -43293,7 +43293,7 @@ try{(()=>{
 const BL=[['g','⚔️ เส้นทางหลัก'],{id:'w0',ic:'⚔️',n:'ยุทธภพ',bw:0},{id:'w1',ic:'☁️',n:'โลกเทพเซียน',bw:1},{id:'w3',ic:'🌟',n:'โลกเทพ',bw:3},{id:'w2',ic:'🐾',n:'สัตว์อสูร',bw:2},
  ['g','🔥 โหมดท้าทาย'],{id:'h',ic:'🔥',n:'นรก'},{id:'s',ic:'⏳',n:'ชีวิตสั้น'},{id:'j',ic:'🗑️',n:'รากขยะ'},{id:'rg',ic:'🔁',n:'ผู้ย้อนกาล'},
  ['g','🌏 โลกใหม่'],{id:'l',ic:'⭕',n:'ทวีปจิตวิญญาณยุทธ์'},{id:'k',ic:'🌠',n:'ทะลุฟ้าดารา'},
- ['g','🏙️ ยุคปัจจุบัน'],{id:'n',ic:'🌀',n:'ฮันเตอร์'},{id:'u',ic:'🌃',n:'ใต้ดิน'},{id:'o',ic:'👻',n:'ผีไทย'},{id:'p',ic:'🔁',n:'วนลูป'},{id:'z',ic:'🧟',n:'ซอมบี้'},{id:'t',ic:'🗼',n:'หอคอย'},{id:'e',ic:'🎮',n:'ระบบเกม'},{id:'q',ic:'💀',n:'เกตชนะ'},{id:'y',ic:'☄️',n:'วันสิ้นโลก'}];
+ ['g','🏙️ ยุคปัจจุบัน'],{id:'n',ic:'🌀',n:'ฮันเตอร์'},{id:'u',ic:'🌃',n:'ใต้ดิน'},{id:'o',ic:'👻',n:'ผีไทย'},{id:'p',ic:'🔁',n:'วนลูป'},{id:'z',ic:'🧟',n:'ซอมบี้'},{id:'t',ic:'🗼',n:'หอคอย'},{id:'e',ic:'🎮',n:'ระบบเกม'},{id:'q',ic:'💀',n:'เกตชนะ'},{id:'y',ic:'☄️',n:'วันสิ้นโลก'},['g','🚪 เส้นทางพิเศษ'],{id:'v',ic:'🚪',n:'ผู้ข้ามโลก'}];
 const BI=BL.filter(x=>!Array.isArray(x));
 const myPu=()=>{try{return String(pid).replace(/[^a-z0-9]/g,'').slice(0,12)}catch(e){return''}};
 const wf=bw=>e=>bw===2?!!e.bm:bw===3?(!e.bm&&!!e.g):(!e.bm&&!e.g&&(e.x?1:0)===bw);
@@ -43468,16 +43468,16 @@ const _nv=window.nvOpenBook;if(typeof _nv==='function')window.nvOpenBook=async f
 //   แอดมินสุ่มฉายา/กรอบใหม่ได้ทุกรอบ (หมวด n u o p z t e q y ของ RKG)
 // ============================================================
 try{(()=>{
-const MW=[['n','hunter','🌀','ฮันเตอร์','โลกฮันเตอร์'],['u','under','🌃','ใต้ดิน','โลกใต้ดิน'],['o','ghost','👻','ผีไทย','โลกผีไทย'],['p','loop','🔁','วนลูป','โลกวนลูป'],['z','zombie','🧟','ซอมบี้','โลกซอมบี้'],['t','tower','🗼','หอคอย','โลกหอคอย'],['e','game','🎮','ระบบเกม','โลกระบบเกม'],['q','gatewon','💀','เกตชนะ','โลกที่เกตชนะ'],['y','doom','☄️','วันสิ้นโลก','โลกวันสิ้นโลก']];
+const MW=[['n','hunter','🌀','ฮันเตอร์','โลกฮันเตอร์'],['u','under','🌃','ใต้ดิน','โลกใต้ดิน'],['o','ghost','👻','ผีไทย','โลกผีไทย'],['p','loop','🔁','วนลูป','โลกวนลูป'],['z','zombie','🧟','ซอมบี้','โลกซอมบี้'],['t','tower','🗼','หอคอย','โลกหอคอย'],['e','game','🎮','ระบบเกม','โลกระบบเกม'],['q','gatewon','💀','เกตชนะ','โลกที่เกตชนะ'],['y','doom','☄️','วันสิ้นโลก','โลกวันสิ้นโลก'],['v','trav','🚪','ผู้ข้ามโลก','ผู้ข้ามโลก']];
 const L2W={},W2L={},INFO={};MW.forEach(x=>{L2W[x[0]]=x[1];W2L[x[1]]=x[0];INFO[x[0]]=x});const isL=l=>!!INFO[l];
 // สี: หลัก · สว่าง · ตัดกัน · พื้นมืด
-const PAL={n:['#3a8bff','#d6ebff','#9a5bff','#060c1e'],u:['#ff3fa4','#ffd6ef','#30e0ff','#12061a'],o:['#ffb340','#fff0c8','#e0304a','#140a06'],p:['#3fd8c8','#e0fffb','#ffcf4a','#04141a'],z:['#7bd34a','#e8ffd8','#ffd23a','#0a1406'],t:['#ffc23a','#fff4d0','#7a6cff','#120e04'],e:['#a66bff','#f0e4ff','#3affb0','#0c0618'],q:['#ff5a4a','#ffe2da','#b8c0d0','#160606'],y:['#ff7a1a','#ffe8cc','#ff2a5a','#180a04']};
+const PAL={v:['#e8b54a','#fff2c8','#8a5cff','#0e0818'],n:['#3a8bff','#d6ebff','#9a5bff','#060c1e'],u:['#ff3fa4','#ffd6ef','#30e0ff','#12061a'],o:['#ffb340','#fff0c8','#e0304a','#140a06'],p:['#3fd8c8','#e0fffb','#ffcf4a','#04141a'],z:['#7bd34a','#e8ffd8','#ffd23a','#0a1406'],t:['#ffc23a','#fff4d0','#7a6cff','#120e04'],e:['#a66bff','#f0e4ff','#3affb0','#0c0618'],q:['#ff5a4a','#ffe2da','#b8c0d0','#160606'],y:['#ff7a1a','#ffe8cc','#ff2a5a','#180a04']};
 const RK=[null,['#ffd76a','#fff6cc','#c8901a'],['#e6eef8','#ffffff','#8a9ab0'],['#ffb27a','#ffe2cc','#a8582a']];
 // โลกที่กำลังเล่น (ยกเว้นทะลุฟ้าดารา) → ตัวอักษรทำเนียบ
 const mwLet=()=>{try{const M=S&&S.mw;if(!M||M.sky)return'';let w=M.hw>0?'hunter':(M.wx&&M.wx.id?M.wx.id:'normal');if(w==='hunterhi')w='hunter';return W2L[w]||''}catch(e){return''}};
 window._mwBid=mwLet;
 // ---------- ฉายาประจำ (สำรอง · ชุดจริงสุ่มจาก RKG) ----------
-const FIX={n:{d:['','ฮันเตอร์ดาวรุ่งแห่งวัน','ผู้ปิดเกตไวที่สุด','นักล่าลูทแรร์'],w:['','ราชาแห่งเกตมิติ','ฮันเตอร์แรงก์เอสแห่งสัปดาห์','ผู้คุมดันเจี้ยน'],m:['','จักรพรรดิฮันเตอร์','ผู้ตื่นพลังเหนือแรงก์','ตำนานสมาคมฮันเตอร์']},
+const FIX={v:{d:['','ผู้เปิดประตูแห่งวัน','นักเดินทางสองภพ','ผู้หลงทางที่ไม่หลง'],w:['','จ้าวแห่งประตูสุดโลก','ผู้ข้ามเจ็ดภพ','นักสะสมเศษพลัง'],m:['','ผู้เขียนตอนจบของทุกโลก','จักรพรรดิเหนือหน้ากระดาษ','ตำนานผู้ไม่มีบ้านเกิด']},n:{d:['','ฮันเตอร์ดาวรุ่งแห่งวัน','ผู้ปิดเกตไวที่สุด','นักล่าลูทแรร์'],w:['','ราชาแห่งเกตมิติ','ฮันเตอร์แรงก์เอสแห่งสัปดาห์','ผู้คุมดันเจี้ยน'],m:['','จักรพรรดิฮันเตอร์','ผู้ตื่นพลังเหนือแรงก์','ตำนานสมาคมฮันเตอร์']},
  u:{d:['','เจ้าถิ่นราตรีนี้','ดาวเด่นตลาดมืด','ตัวตึงซอยเปลี่ยว'],w:['','เบอร์หนึ่งโลกใต้ดิน','ผู้คุมเขตเถื่อน','มือดีลใต้โต๊ะ'],m:['','เจ้าพ่อแห่งนครใต้ดิน','ราชาไฟนีออน','ตำนานตลาดมืด']},
  o:{d:['','หมอผีดาวรุ่ง','ผู้ไม่กลัวป่าช้า','มือปราบผีคืนนี้'],w:['','ปรมาจารย์ยันต์แดง','เจ้าของเครื่องรางร้อยองค์','ผู้คุมตะเกียงวิญญาณ'],m:['','จ้าวแห่งคาถาอาคม','ราชาหมอผีแห่งสยาม','ตำนานบ้านผีสิง']},
  p:{d:['','ผู้ตื่นเจ็ดโมงเช้า','นักจำวันเดิม','ผู้รอดวันซ้ำ'],w:['','ราชาลูปเวลา','ผู้หักเข็มวินาที','นักสืบเดจาวู'],m:['','จ้าวแห่งวันพรุ่งนี้','ผู้ทลายลูปเวลา','ตำนานความจำข้ามวัน']},
@@ -43486,7 +43486,7 @@ const FIX={n:{d:['','ฮันเตอร์ดาวรุ่งแห่ง�
  e:{d:['','ผู้เลเวลอัปไวที่สุด','นักล่าเควสลับ','สายฟาร์มแห่งวัน'],w:['','ราชาหน้าต่างสถานะ','เจ้าของสกิลแรร์','ผู้เคลียร์อีเวนต์พิเศษ'],m:['','เพลเยอร์เบอร์หนึ่งของระบบ','ผู้ทะลุเลเวลสูงสุด','ตำนานกาชาเกลือ']},
  q:{d:['','ผู้เฝ้ากำแพงคืนนี้','มือปืนแนวป้องกัน','ดาวรุ่งฐานทัพมนุษย์'],w:['','ผู้บัญชาการกำแพงเมือง','ผู้ยึดโลกคืน','ธงมนุษย์ผืนสุดท้าย'],m:['','ผู้ปิดเกตแม่','จักรพรรดิเมืองสุดท้าย','ตำนานปราการเหล็ก']},
  y:{d:['','ผู้นับถอยหลังอย่างกล้าหาญ','เจ้าของหลุมหลบภัย','ผู้ยิ้มใต้ฟ้าแดง'],w:['','ผู้นำจรวดอพยพ','ราชาเสบียงสุดท้าย','ผู้รักจนวันสุดท้าย'],m:['','ผู้กอบกู้วันสิ้นโลก','ผู้หยุดอุกกาบาตล้างโลก','ตำนานสิบสองปีสุดท้าย']}};
-const FRN={n:['ประตูมิติ','เกตแรงก์ S','เกตแรงก์ A'],u:['ป้ายนีออนราชาราตรี','นีออนตลาดมืด','ไฟซอยเปลี่ยว'],o:['ยันต์ทองตะเกียงวิญญาณ','ยันต์แดงป่าช้า','สายสิญจน์'],p:['นาฬิกาทลายลูป','เข็มวินาทีวนซ้ำ','นาฬิกาปลุกเจ็ดโมง'],z:['เขตกักกันผู้รอดชีวิต','เทปกั้นเซฟโซน','ไฟฉายเมืองร้าง'],t:['ยอดหอคอยชั้นร้อย','บันไดเวียนชั้นทอง','ประตูชั้นลับ'],e:['หน้าต่างสถานะ LV.MAX','สกิลแรร์คอมโบ','เควสลับมือใหม่'],q:['ปราการเมืองสุดท้าย','ธงแนวป้องกัน','กำแพงเหล็ก'],y:['อุกกาบาตนับถอยหลัง','ฟ้าแดงวันสุดท้าย','ไซเรนหลุมหลบภัย']};
+const FRN={v:['ประตูสุดโลกทองคำ','ประตูสองภพ','ประตูไม้เก่า'],n:['ประตูมิติ','เกตแรงก์ S','เกตแรงก์ A'],u:['ป้ายนีออนราชาราตรี','นีออนตลาดมืด','ไฟซอยเปลี่ยว'],o:['ยันต์ทองตะเกียงวิญญาณ','ยันต์แดงป่าช้า','สายสิญจน์'],p:['นาฬิกาทลายลูป','เข็มวินาทีวนซ้ำ','นาฬิกาปลุกเจ็ดโมง'],z:['เขตกักกันผู้รอดชีวิต','เทปกั้นเซฟโซน','ไฟฉายเมืองร้าง'],t:['ยอดหอคอยชั้นร้อย','บันไดเวียนชั้นทอง','ประตูชั้นลับ'],e:['หน้าต่างสถานะ LV.MAX','สกิลแรร์คอมโบ','เควสลับมือใหม่'],q:['ปราการเมืองสุดท้าย','ธงแนวป้องกัน','กำแพงเหล็ก'],y:['อุกกาบาตนับถอยหลัง','ฟ้าแดงวันสุดท้าย','ไซเรนหลุมหลบภัย']};
 try{const PNT={d:'รายวัน',w:'รายสัปดาห์',m:'รายเดือน'};
  MW.forEach(([l,,ic,,nm])=>{CHM_T[l]=FIX[l];CHM_N[l]=[ic,nm,PAL[l][0],'คะแนนเฉลี่ยทุกด้านของทั้งชีวิต แบบเดียวกับโหมดปกติ · เฉพาะชีวิตที่อยู่'+nm];
   for(const p of ['d','w','m']){RKC[p+l]=FIX[l][p];RKC_TR[p+l]=RKC_TR[p+'c']||RKC_TR[p];RKC_PN[p+l]=nm+PNT[p]}BD_CN['c'+l]=ic+' ทำเนียบ'+nm;
@@ -43510,7 +43510,7 @@ const f1=n=>Math.round(n*10)/10;
 const PL={d:'DAILY',w:'WEEKLY',m:'MONTHLY'},PLT={d:'วัน',w:'สัปดาห์',m:'เดือน'};
 let gid=0;
 // ลายเฉพาะโลก: แต่ละโลกมีทรงกรอบของตัวเอง (ไม่ใช้แม่แบบเดียวกัน)
-const CLIPS={n:'circle(48% at 50% 50%)',p:'circle(48% at 50% 50%)',y:'circle(48% at 50% 50%)',u:'inset(0 round 7%)',z:'inset(0)',e:'inset(0)',q:'inset(0)',o:'polygon(0 34%,12% 13%,32% 4%,50% 0,68% 4%,88% 13%,100% 34%,100% 100%,0 100%)',t:'polygon(0 30%,10% 12%,28% 3%,50% 0,72% 3%,90% 12%,100% 30%,100% 100%,0 100%)'};
+const CLIPS={v:'polygon(0 32%,8% 13%,25% 3%,50% 0,75% 3%,92% 13%,100% 32%,100% 100%,0 100%)',n:'circle(48% at 50% 50%)',p:'circle(48% at 50% 50%)',y:'circle(48% at 50% 50%)',u:'inset(0 round 7%)',z:'inset(0)',e:'inset(0)',q:'inset(0)',o:'polygon(0 34%,12% 13%,32% 4%,50% 0,68% 4%,88% 13%,100% 34%,100% 100%,0 100%)',t:'polygon(0 30%,10% 12%,28% 3%,50% 0,72% 3%,90% 12%,100% 30%,100% 100%,0 100%)'};
 const RL=[null,'S','A','B'];
 function mwSvg(l,p,r,seed){const R=seed?RNG(H('mw|'+seed+'|'+l+p+r)):RNG(H('mwfix'+l+p+r));let [c1,c2,c3,bg]=PAL[l]||PAL.n;
  if(seed){c1=rot(c1,Math.round((R()-.5)*44));c3=rot(c3,Math.round((R()-.5)*70))}
@@ -43581,6 +43581,13 @@ function mwSvg(l,p,r,seed){const R=seed?RNG(H('mw|'+seed+'|'+l+p+r)):RNG(H('mwfi
   o+=`<g class="mw-pop"><circle cx="50" cy="-12" r="10" fill="#2a2c34" stroke="url(#${g}m)" stroke-width="2"/><path d="M43 -19L57 -5M57 -19L43 -5" stroke="#e8ecf4" stroke-width="2.2" stroke-linecap="round"/></g>`;
   if(hi)o+=`<g opacity=".8"><circle class="mw-dot" cx="50" cy="118" r="2" fill="${c1}" ${F}/></g>`;
   o+=badge(100,-2)+plate(`LAST CITY · #${r}`,'#2a2c34','#8a909e','#e8ecf4',"'Chakra Petch',monospace",big?70:60,106,1)}
+ else if(l==='v'){ // 🚪 ผู้ข้ามโลก: ซุ้มประตูทอง + วงรูนหมุน + แสงประตู + ไอคอนโลกโคจร
+  o+=`<g class="mw-spin" style="--d:14s"><circle cx="50" cy="50" r="66" fill="none" stroke="${c3}" stroke-width="1.4" stroke-dasharray="3 6 12 6" opacity=".75"/></g>`;
+  o+=`<path d="M-4 112V30Q-4 -8 50 -12Q104 -8 104 30V112" fill="none" stroke="${bg}" stroke-width="9"/><path d="M-4 112V30Q-4 -8 50 -12Q104 -8 104 30V112" fill="none" stroke="url(#${g})" stroke-width="4" ${F}/><path d="M3 112V32Q3 -2 50 -5Q97 -2 97 32V112" fill="none" stroke="${c2}" stroke-width="1" opacity=".6"/>`;
+  o+=`<g class="mw-dot"><path d="M50 -24L56 -14L50 -4L44 -14Z" fill="url(#${g}m)" stroke="${bg}" stroke-width="1.2" ${F}/></g>`;
+  const W=['⚔️','🏙️','🌠','⭕','☁️','🧟'];const n=hi?6:4;for(let i=0;i<n;i++){o+=`<g class="mw-spin" style="--d:${9+i}s;animation-delay:-${i*1.6}s"><text x="50" y="-26" text-anchor="middle" font-size="${hi?9:8}">${W[i]}</text></g>`}
+  if(r===1)o+=`<g class="mw-wisp"><circle cx="20" cy="96" r="2" fill="${c2}"/></g><g class="mw-wisp" style="animation-delay:-1.2s"><circle cx="82" cy="98" r="2" fill="${c3}"/></g>`;
+  o+=badge(100,4)+plate(big?'WORLD WALKER':'TRAVELER',bg,`url(#${g}m)`,c2,null,big?66:56)}
  else if(l==='y'){ // ☄️ วันสิ้นโลก: วงแหวนไฟร้าว + อุกกาบาต + ไซเรน + นับถอยหลัง
   for(let i=0;i<(hi?11:7);i++){const a=(-165+i*(150/((hi?11:7)-1)))*Math.PI/180,x=50+Math.cos(a)*54,y=50+Math.sin(a)*54;o+=`<path class="mw-fire" style="transform-origin:${f1(x)}px ${f1(y)}px;animation-delay:-${(i*.17).toFixed(2)}s" transform="rotate(${f1(a*180/Math.PI+90)} ${f1(x)} ${f1(y)})" d="M${f1(x-4)} ${f1(y)}q1 -8 4 -${hi?16:12}q3 8 4 ${hi?16:12}z" fill="${i%2?c1:c3}" ${F}/>`}
   o+=circ(52,8,bg)+circ(52,3.6,`url(#${g})`,F)+`<path d="M8 30l9 6l-3 7l8 4M92 66l-8 -3l2 -7l-7 -5" fill="none" stroke="${c3}" stroke-width="1.4" stroke-linecap="round" ${F}/>`;
@@ -43590,7 +43597,7 @@ function mwSvg(l,p,r,seed){const R=seed?RNG(H('mw|'+seed+'|'+l+p+r)):RNG(H('mwfi
  return`<svg x="8" y="8" width="84" height="84" viewBox="-20 -20 140 140" overflow="visible" class="mwv">${o}</svg>`}
 window.mwSvg=mwSvg;
 // id → (โลก รอบ อันดับ ตัวสุ่ม)
-function spec(id){id=String(id||'');let m=/^f_mw([nuopzteqy])([123])$/.exec(id);if(m)return{l:m[1],p:'m',r:+m[2],s:''};try{m=window.RKG&&RKG.RE.exec(id);if(m&&isL(m[2]))return{l:m[2],p:m[1],r:+m[4],s:m[3]}}catch(e){}return null}
+function spec(id){id=String(id||'');let m=/^f_mw([nuopzteqyv])([123])$/.exec(id);if(m)return{l:m[1],p:'m',r:+m[2],s:''};try{m=window.RKG&&RKG.RE.exec(id);if(m&&isL(m[2]))return{l:m[2],p:m[1],r:+m[4],s:m[3]}}catch(e){}return null}
 const MINE=new Set();
 {const _fw=frWrap;frWrap=function(inner,id){const q=id&&spec(id);if(!q)return _fw.apply(this,arguments);
  try{const M=window.FRSH_M,T=window.FRSH_T;if(M&&T&&!MINE.has(id)){try{_fw.apply(this,arguments)}catch(e){}const key='mw2_'+id,html=mwSvg(q.l,q.p,q.r,q.s);M[key]=()=>html;T[id]=key;MINE.add(id);try{const f=FRAMES.find(x=>x.id===id);if(f){f.ty='static';f.bd=''}}catch(e){}}}catch(e){}
@@ -43599,7 +43606,7 @@ const MINE=new Set();
 function tInfo(t,tr){t=String(t||'');try{const g=window._rkGEN&&window._rkGEN.get(t);if(g&&isL(g.c))return{l:g.c,p:g.p,r:g.r}}catch(e){}
  try{const o=RKC_OF(t);if(o&&o.p.length===2&&isL(o.p[1]))return{l:o.p[1],p:o.p[0],r:o.r}}catch(e){}
  try{if(window.RKG){const c=RKG.cat(t);if(isL(c)){const r=RKG.rank(t);if(r)return{l:c,p:tr===9?'m':tr===8?'w':'d',r}}}}catch(e){}return null}
-const CHP={n:q=>`<b class="mk">${RL[q.r]}</b>`,u:q=>`<i class="nd"></i>`,o:q=>`<b class="mk">๛</b>`,p:q=>`<b class="mk">${q.r===1?'07:00':q.r===2?'06:59':'06:58'}</b>`,z:q=>`<b class="mk">☣</b>`,t:q=>`<b class="mk">▲${101-q.r}F</b>`,e:q=>`<b class="mk">▶</b>`,q:q=>`<b class="mk">★</b>`,y:q=>`<b class="mk">⚠</b>`};
+const CHP={v:q=>`<b class="mk">🚪</b>`,n:q=>`<b class="mk">${RL[q.r]}</b>`,u:q=>`<i class="nd"></i>`,o:q=>`<b class="mk">๛</b>`,p:q=>`<b class="mk">${q.r===1?'07:00':q.r===2?'06:59':'06:58'}</b>`,z:q=>`<b class="mk">☣</b>`,t:q=>`<b class="mk">▲${101-q.r}F</b>`,e:q=>`<b class="mk">▶</b>`,q:q=>`<b class="mk">★</b>`,y:q=>`<b class="mk">⚠</b>`};
 {const _rc=rkChip;rkChip=function(t,tr){try{const q=tInfo(t,tr);if(q){const [a,,b,bg]=PAL[q.l],[m1]=RK[q.r]||RK[3];return`<span class="mwt mwt-${q.l} mwt${q.r} mwp${q.p}" style="--a:${a};--b:${b};--m:${m1};--bg:${bg}"><i class="mws"></i>${CHP[q.l](q)}<span class="tx">${esc(String(t).slice(0,40))}</span><small>#${q.r}·${PLT[q.p]}</small></span>`}}catch(e){}return _rc.apply(this,arguments)}}
 // ---------- ผู้ดูแล: ดู/สุ่มฉายา+กรอบ 9 โลก ----------
 {const _oa=window.openRkAdmin;if(typeof _oa==='function'){window.openRkAdmin=async function(p,roll){const r=await _oa.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='rkadm'||m.querySelector('.mwAdm'))return r;const p0=p||_oa._p||'d';
@@ -45096,3 +45103,11 @@ const st=document.createElement('style');st.textContent=`
 #mwB .mbFate{border-color:#a8873e}
 @media (min-width:1100px){#mwB .mbFate{display:none}}`;document.head.appendChild(st);
 })()}catch(e){console.error('block135',e)}
+
+// BLOCK 136: 🚪 ทำเนียบผู้ข้ามโลก — ชีวิตที่เคยข้ามโลกผ่านประตูสุดโลก ขึ้นทำเนียบของตัวเอง (ch=mw_trav · อักษร v) คะแนนเฉลี่ยทุกด้านทั้งชีวิตแบบโหมดปกติ · อันดับ 1–3 ได้ฉายา + กรอบประตูสุดโลก (รายวัน/สัปดาห์/เดือน)
+try{(()=>{
+{const _api=api;api=async function(a,body){try{if(a==='life'&&body&&S&&S.trv&&S.trv.n>0){body.ch='mw_trav';body.cu=0;try{S._mwB='v'}catch(e){}}}catch(e){}return _api.apply(this,arguments)}}
+// เลือกทำเนียบผู้ข้ามโลกอัตโนมัติเมื่อเปิดทำเนียบระหว่างเป็นผู้ข้ามโลก
+{const _cs=chmSel;chmSel=function(){try{const v=openOnline._cm;if(!v&&S&&S.trv&&S.trv.n>0)return'v'}catch(e){}return _cs.apply(this,arguments)}}
+try{if(typeof GD2!=='undefined'&&!GD2.some(x=>x.t==='ทำเนียบผู้ข้ามโลก'))GD2.push({s:'net',ic:'🚪',t:'ทำเนียบผู้ข้ามโลก',nw:1,d:'ชีวิตที่เคยข้ามโลกผ่าน <b>🚪 ประตูสุดโลก</b> ขึ้นทำเนียบแยกของตัวเอง ไม่ปนกับทำเนียบโลกเดียว · คะแนนเฉลี่ยทุกด้านทั้งชีวิตแบบโหมดปกติ · อันดับ 1–3 รายวัน/สัปดาห์/เดือนได้ฉายาและ<b>กรอบประตูสุดโลก</b>'})}catch(e){}
+})()}catch(e){console.error('block136',e)}

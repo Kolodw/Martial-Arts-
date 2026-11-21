@@ -90,7 +90,7 @@ function after(R,T,how,rk,from,pw0,age0,name0){try{R.done=1;R.trv=1;const V=TV()
  const r=REL[rk];if(r){if(r[4])try{r[4]()}catch(e){}V.rel.push(rk)}
  const sk=scarRoll(),s=SCAR[sk];if(s[3])try{s[3]()}catch(e){}V.scar.push(sk);
  V.n++;V.path.push(from);V.last=T;V.y=S.age;
- S.custom=true;S.trvL=1;
+ S.custom=false;S.trvL=1;
  book(b=>{b.n=Math.max(b.n||0,V.n);b.w=b.w||{};b.w[T]=1;b.w[from]=1;b.r=b.r||{};b.r[rk]=1});
  kAdd(`🚪 ข้ามโลกครั้งที่ ${V.n}: ${(WN[from]||['',''])[1]} → ${(WN[T]||['',''])[1]}${how==='soul'?' (สิงร่าง)':''}`);
  log(`🚪 <b>ผู้ข้ามโลก ครั้งที่ ${V.n}</b> — ${how==='soul'?`คุณตื่นในร่างของ <b>${E(S.name)}</b> อายุ ${S.age} ปี ความทรงจำของ ${E(name0)} ยังอยู่ครบ`:`ร่างเดิม ชื่อเดิม แต่ประตูปรับร่างให้เป็นวัย ${S.age} ปีตามกฎของโลกนี้`}
