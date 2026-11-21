@@ -2004,13 +2004,14 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const nOk = L.map(jp).filter(x => x && x.st === 'ok').length; if (nOk <= 5) { await give(u, 2, 0); await gfr(u, 'f_hq2'); try { await spAdd(u, 50) } catch {} } return 'run' }
       // ---------- 🐉 บอสโลก ----------
       const WBN = [['🐉', 'มังกรเพลิงเก้าหาง'], ['🦂', 'ราชาแมงป่องทะเลทราย'], ['👹', 'อสูรร้อยตา'], ['🐢', 'เต่ายักษ์แบกภูเขา'], ['🦅', 'พญาอินทรีย์สายฟ้า'], ['🕷️', 'แม่นางแมงมุมเงา'], ['🐍', 'งูขาวพันปี'], ['🦍', 'วานรหินผา'], ['🐗', 'หมูป่าเขี้ยวเหล็ก'], ['🦑', 'ปลาหมึกยักษ์ใต้ทะเลลึก'], ['🐻', 'หมีดำกลืนจันทร์'], ['👻', 'เงาเจ้าเมืองไร้หัว'], ['🦇', 'ค้างคาวโลหิตพันปี'], ['🐊', 'จระเข้ราชาบึงดำ']];
+      const WB_HM = 5, wbWk = W => W && W.ph === 'on' ? Math.min(5, 1 + 0.5 * Math.max(0, Math.floor((now - W.t0) / 86400e3) - 2)) : 1; // ตีได้วันละ 5 · ตั้งแต่วันที่ 4 บอสอ่อนแรง ×1.5 ×2 … สูงสุด ×5
       const wbTick = async () => {
         let W0 = jp(await cmd('GET', 'wb:s'));
         const spawn = async () => { const r = (W0 ? W0.r : 0) + 1, pc = W0 ? (+(await cmd('ZCARD', 'wb:d:' + W0.r)) || 0) : 0, mx = 10000000 /* v21: บอสโลกเลือด 10 ล้าน */, z = (() => { const L = WBN.filter(x => !W0 || x[1] !== W0.n); return L[Math.floor(Math.random() * L.length)] })();
           const W1 = { r, ic: z[0], n: z[1], mx, t0: now, ph: 'on' }; await pipe([['SET', 'wb:s', JSON.stringify(W1)], ['SET', 'wb:hp', mx]]); W0 = W1; await pub(); return W1 };
         if (!W0) return await spawn();
         if ((W0.ph === 'dead' || W0.ph === 'gone') && now > W0.dt + 2 * 86400e3) return await spawn();
-        if (W0.ph === 'on' && now > W0.t0 + 4 * 86400e3) { W0.ph = 'gone'; W0.dt = now; await cmd('SET', 'wb:s', JSON.stringify(W0)); await pub() }
+        // v21: บอสไม่หนีจนกว่าจะล้ม (เดิมหนีหลัง 4 วัน)
         return W0 };
       // ========== ภารกิจบัญชี ==========
       if (a === 'aq') {
@@ -2081,17 +2082,17 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
           const ids = [], sc = []; for (let i = 0; i < (top || []).length; i += 2) { ids.push(top[i]); sc.push(+top[i + 1]) }
           const nms = ids.length ? ((await cmd('HMGET', 'wb:n:' + W0.r, ...ids)) || []) : [];
           const hits = okId(id) ? +(await cmd('GET', 'wbh:' + id + ':' + DAY)) || 0 : 0;
-          return res.json({ ok: 1, r: W0.r, ic: W0.ic, n: W0.n, mx: W0.mx, hp, ph: W0.ph, t0: W0.t0, dt: W0.dt || 0, now, kn: W0.kn || '', np: +nn || 0, my: +my || 0, hits, cl: cl ? 1 : 0, top: ids.map((x, i) => ({ n: nms[i] || '?', d: sc[i], me: x === id ? 1 : 0 })) }) }
+          return res.json({ ok: 1, r: W0.r, ic: W0.ic, n: W0.n, mx: W0.mx, hp, ph: W0.ph, t0: W0.t0, dt: W0.dt || 0, now, kn: W0.kn || '', np: +nn || 0, my: +my || 0, hits, hm: WB_HM, wk: wbWk(W0), cl: cl ? 1 : 0, top: ids.map((x, i) => ({ n: nms[i] || '?', d: sc[i], me: x === id ? 1 : 0 })) }) }
         if (o === 'hit') {
           if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
           if (W0.ph !== 'on' || hp <= 0) return res.json({ ok: 0, err: 'dead' });
           if ((await cmd('SET', 'wbt:' + id, 1, 'NX', 'EX', 20)) !== 'OK') return res.json({ ok: 0, err: 'fast' });
-          const hk = 'wbh:' + id + ':' + DAY, hn = +(await cmd('INCR', hk)) || 1; if (hn === 1) await cmd('EXPIRE', hk, 172800); if (hn > 3) return res.json({ ok: 0, err: 'day' });
-          const s = Math.max(0, Math.min(1, +b.s || 0)), dmg = Math.round(300 + 1700 * s * s);
+          const hk = 'wbh:' + id + ':' + DAY, hn = +(await cmd('INCR', hk)) || 1; if (hn === 1) await cmd('EXPIRE', hk, 172800); if (hn > WB_HM) return res.json({ ok: 0, err: 'day', hm: WB_HM });
+          const s = Math.max(0, Math.min(1, +b.s || 0)), wk = wbWk(W0), dmg = Math.round((3000 + 17000 * s * s) * wk);
           const [left] = await pipe([['DECRBY', 'wb:hp', dmg], ['ZINCRBY', 'wb:d:' + W0.r, dmg, id], ['HSET', 'wb:n:' + W0.r, id, nm], ['EXPIRE', 'wb:d:' + W0.r, 86400 * 20], ['EXPIRE', 'wb:n:' + W0.r, 86400 * 20]]);
           await swAdd(id, 1); let sp = 0; try { sp = await spAdd(id, 10) } catch {}
           let kill = 0; if (+left <= 0 && (await cmd('SET', 'wbk:' + W0.r, id, 'NX', 'EX', 86400 * 20)) === 'OK') { kill = 1; W0.ph = 'dead'; W0.dt = now; W0.kn = nm; W0.ku = id; await cmd('SET', 'wb:s', JSON.stringify(W0)); await gfr(id, 'f_wb1') }
-          await pub(); return res.json({ ok: 1, dmg, hp: Math.max(0, +left), kill, hits: hn, sp }) }
+          await pub(); return res.json({ ok: 1, dmg, wk, hp: Math.max(0, +left), kill, hits: hn, hm: WB_HM, sp }) }
         if (o === 'claim') {
           if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
           const r = +b.r || W0.r; const Wr = r === W0.r ? W0 : null; if (!Wr || Wr.ph !== 'dead') return res.json({ ok: 0, err: 'alive' });
