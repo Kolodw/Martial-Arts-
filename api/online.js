@@ -127,9 +127,12 @@ const cmd = USE_VK ? vkCmd : upCmd;
 const pipe = USE_VK ? vkPipe : upPipe;
 
 // ===== ทำเนียบรายวัน (v15.3): แยก 4 หมวด · คะแนนจากค่าเฉลี่ยทุกด้าน · รางวัลอันดับ 1–3 =====
-const BD_CATS = ['m', 'x', 'g', 'b', 'c', 'r', 'ch', 'cs', 'cj', 'cl', 'ck']; // c = ทำเนียบท้าทายรวม (เลิกใช้แล้ว) · ch นรก · cs ชีวิตสั้น · cj รากขยะ · r ผู้ย้อนกาล
-const CHC = { hell: 'ch', short: 'cs', junk: 'cj', soul: 'cl', sky: 'ck' }, CHM = { h: 'ch', s: 'cs', j: 'cj', l: 'cl', k: 'ck' }, CHF = { ch: 'h', cs: 's', cj: 'j', cl: 'l', ck: 'k' };
+const BD_CATS = ['m', 'x', 'g', 'b', 'c', 'r', 'ch', 'cs', 'cj', 'cl', 'ck', 'cn', 'cu', 'co', 'cp', 'cz', 'ct', 'ce', 'cq', 'cy']; // c = ทำเนียบท้าทายรวม (เลิกใช้แล้ว) · ch นรก · cs ชีวิตสั้น · cj รากขยะ · r ผู้ย้อนกาล
+const CHC = { hell: 'ch', short: 'cs', junk: 'cj', soul: 'cl', sky: 'ck' }, CHM = { h: 'ch', s: 'cs', j: 'cj', l: 'cl', k: 'ck' }, CHF = { ch: 'h', cs: 's', cj: 'j', cl: 'l', ck: 'k', cn: 'n', cu: 'u', co: 'o', cp: 'p', cz: 'z', ct: 't', ce: 'e', cq: 'q', cy: 'y' };
 const CH_OK = ['hell', 'short', 'junk', 'regress', 'soul', 'sky'];
+// 🏙️ ยุคปัจจุบัน: แยกทำเนียบตามโลกพิเศษ 9 แบบ (ch = 'mw_' + id) · คะแนนเฉลี่ยทุกด้านทั้งชีวิตแบบโหมดปกติ
+const MW_B = { hunter: 'n', under: 'u', ghost: 'o', loop: 'p', zombie: 'z', tower: 't', game: 'e', gatewon: 'q', doom: 'y' };
+for (const [w, l] of Object.entries(MW_B)) { CHC['mw_' + w] = 'c' + l; CHM[l] = 'c' + l; CHF['c' + l] = l; CH_OK.push('mw_' + w) }
 // ฉายาทำเนียบ (ชั่วคราว): รายวัน/สัปดาห์/เดือน · อันดับ 1–3
 const RKT = { d: ['', 'ตะวันเจิดจ้า', 'จันทร์เหนือเมฆ', 'ดาวประกาย'], w: ['', 'จ้าวยุทธภพ', 'ขุนศึกไร้พ่าย', 'ยอดฝีมือผงาด'], m: ['', 'จักรพรรดิเหนือฟ้า', 'มหาเทพบัญชาสวรรค์', 'ตำนานผู้ถูกจารึก'] };
 const RKT_C = { d: ['', 'ผู้ฝ่าขุมนรก', 'วิญญาณไม่ดับ', 'ผู้ท้าลิขิต'], w: ['', 'ราชันย์ไร้พรสวรรค์', 'จ้าวแห่งเปลวนรก', 'ผู้ทวนชะตา'], m: ['', 'จักรพรรดิผู้ลบลิขิต', 'มารฟ้าทลายกรรม', 'ตำนานจากธุลี'] };
@@ -141,8 +144,9 @@ const RKT_S = { d: ['', 'ดาวตกสามสิบปี', 'ผู้เ
 const RKT_J = { d: ['', 'ผู้ท้าลิขิต', 'ขยะผู้ไม่ยอมแพ้', 'ธุลีที่ลุกขึ้น'], w: ['', 'ราชันย์ไร้พรสวรรค์', 'ผู้ทวนชะตา', 'กระดูกขยะทะลวงฟ้า'], m: ['', 'จักรพรรดิผู้ลบลิขิต', 'ตำนานจากธุลี', 'ผู้ทำลายคำพยากรณ์'] };
 const RKT_L = { d: ['', 'ผู้ปลุกดวงจิตแห่งวัน', 'วงแหวนพันปีดวงแรก', 'ประกายจิตยุทธ์'], w: ['', 'ราชันจิตวิญญาณ', 'จ้าวแห่งวงแหวนเก้าดวง', 'ผู้สืบทอดจิตเทพ'], m: ['', 'จักรพรรดิจิตยุทธ์เหนือทวีป', 'เทพผู้ครองดวงจิต', 'ตำนานแห่งวงแหวนหมื่นปี'] };
 const RKT_K = { d: ['', 'ผู้ทะลวงกำแพงเหล็ก', 'สัญญาณดาวดวงใหม่', 'เซลล์ดาราตื่น'], w: ['', 'จ้าวห้วงดารา', 'ผู้พิทักษ์นครกำแพง', 'นักล่าดาวเทียม'], m: ['', 'จักรพรรดิแห่งกาแล็กซี', 'ราชันเนบิวลา', 'ผู้เดินบนวงโคจร'] };
-const RKT_M = { ch: RKT_H, cs: RKT_S, cj: RKT_J, cl: RKT_L, ck: RKT_K };
-const RKT_ALL = new Map(); [RKT, RKT_C, RKT_A, RKT_R, RKT_H, RKT_S, RKT_J, RKT_L, RKT_K].forEach(TT => Object.entries(TT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) })));
+const RKT_MW = { n: { d: ['', 'ฮันเตอร์ดาวรุ่งแห่งวัน', 'ผู้ปิดเกตไวที่สุด', 'นักล่าลูทแรร์'], w: ['', 'ราชาแห่งเกตมิติ', 'ฮันเตอร์แรงก์เอสแห่งสัปดาห์', 'ผู้คุมดันเจี้ยน'], m: ['', 'จักรพรรดิฮันเตอร์', 'ผู้ตื่นพลังเหนือแรงก์', 'ตำนานสมาคมฮันเตอร์'] }, u: { d: ['', 'เจ้าถิ่นราตรีนี้', 'ดาวเด่นตลาดมืด', 'ตัวตึงซอยเปลี่ยว'], w: ['', 'เบอร์หนึ่งโลกใต้ดิน', 'ผู้คุมเขตเถื่อน', 'มือดีลใต้โต๊ะ'], m: ['', 'เจ้าพ่อแห่งนครใต้ดิน', 'ราชาไฟนีออน', 'ตำนานตลาดมืด'] }, o: { d: ['', 'หมอผีดาวรุ่ง', 'ผู้ไม่กลัวป่าช้า', 'มือปราบผีคืนนี้'], w: ['', 'ปรมาจารย์ยันต์แดง', 'เจ้าของเครื่องรางร้อยองค์', 'ผู้คุมตะเกียงวิญญาณ'], m: ['', 'จ้าวแห่งคาถาอาคม', 'ราชาหมอผีแห่งสยาม', 'ตำนานบ้านผีสิง'] }, p: { d: ['', 'ผู้ตื่นเจ็ดโมงเช้า', 'นักจำวันเดิม', 'ผู้รอดวันซ้ำ'], w: ['', 'ราชาลูปเวลา', 'ผู้หักเข็มวินาที', 'นักสืบเดจาวู'], m: ['', 'จ้าวแห่งวันพรุ่งนี้', 'ผู้ทลายลูปเวลา', 'ตำนานความจำข้ามวัน'] }, z: { d: ['', 'ผู้รอดชีวิตแห่งวัน', 'มือกระสุนนัดสุดท้าย', 'ดาวรุ่งเซฟโซน'], w: ['', 'ราชาแห่งเมืองร้าง', 'ผู้นำเซฟโซน', 'นักล่าคลื่นศพ'], m: ['', 'ผู้ค้นพบวัคซีน', 'จักรพรรดิแห่งเขตกักกัน', 'ตำนานผู้รอดชีวิต'] }, t: { d: ['', 'ผู้ไต่หอแห่งวัน', 'นักทะลวงประตูชั้น', 'ดาวรุ่งบันไดเวียน'], w: ['', 'ผู้พิชิตชั้นที่ร้อย', 'ราชาบอสประจำชั้น', 'นักไต่ไร้พัก'], m: ['', 'ผู้ยืนบนยอดหอคอย', 'จักรพรรดิหอคอย', 'ตำนานชั้นบนสุด'] }, e: { d: ['', 'ผู้เลเวลอัปไวที่สุด', 'นักล่าเควสลับ', 'สายฟาร์มแห่งวัน'], w: ['', 'ราชาหน้าต่างสถานะ', 'เจ้าของสกิลแรร์', 'ผู้เคลียร์อีเวนต์พิเศษ'], m: ['', 'เพลเยอร์เบอร์หนึ่งของระบบ', 'ผู้ทะลุเลเวลสูงสุด', 'ตำนานกาชาเกลือ'] }, q: { d: ['', 'ผู้เฝ้ากำแพงคืนนี้', 'มือปืนแนวป้องกัน', 'ดาวรุ่งฐานทัพมนุษย์'], w: ['', 'ผู้บัญชาการกำแพงเมือง', 'ผู้ยึดโลกคืน', 'ธงมนุษย์ผืนสุดท้าย'], m: ['', 'ผู้ปิดเกตแม่', 'จักรพรรดิเมืองสุดท้าย', 'ตำนานปราการเหล็ก'] }, y: { d: ['', 'ผู้นับถอยหลังอย่างกล้าหาญ', 'เจ้าของหลุมหลบภัย', 'ผู้ยิ้มใต้ฟ้าแดง'], w: ['', 'ผู้นำจรวดอพยพ', 'ราชาเสบียงสุดท้าย', 'ผู้รักจนวันสุดท้าย'], m: ['', 'ผู้กอบกู้วันสิ้นโลก', 'ผู้หยุดอุกกาบาตล้างโลก', 'ตำนานสิบสองปีสุดท้าย'] } };
+const RKT_M = { ch: RKT_H, cs: RKT_S, cj: RKT_J, cl: RKT_L, ck: RKT_K }; for (const l in RKT_MW) RKT_M['c' + l] = RKT_MW[l];
+const RKT_ALL = new Map(); [RKT, RKT_C, RKT_A, RKT_R, RKT_H, RKT_S, RKT_J, RKT_L, RKT_K, ...Object.values(RKT_MW)].forEach(TT => Object.entries(TT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) })));
 // ===== ฉายา/กรอบทำเนียบแบบสุ่มจากคลังคำ (ไม่ใช้ AI) · ผลเหมือนกันทุกเครื่องจากรหัสรอบ =====
 // รหัสรอบที่มี "v" = ชุดที่ 2 (คลังคำใหญ่ + กรอบประกอบชิ้นส่วน) · ไม่มี "v" = ชุดแรก (คงไว้ให้ของที่แจกไปแล้วหน้าตาไม่เปลี่ยน)
 const RKG = (() => {
@@ -181,7 +185,30 @@ const RKG = (() => {
     CORE1[3].concat(['ดาวดวงใหม่', 'อัจฉริยะ', 'ผู้ตื่นรู้', 'ศิษย์รัก', 'ผู้แสวงหา', 'ผู้มาใหม่', 'จอมยุทธ์น้อย', 'ผู้ไต่ฟ้า'])];
   const SUF = SUF1.concat(['ผู้ยืนบนยอดเขา', 'ผู้ไร้ผู้ต่อกร', 'แห่งแปดทิศ', 'ผู้ข้ามทะเลดาว', 'ผู้เดียวในใต้หล้า', 'ใต้ฟ้าเดียวกัน', 'ผู้ไม่หันหลัง', 'แห่งพันปี', 'ผู้ปลุกตำนาน', 'แห่งรุ่งอรุณ', 'ผู้กลืนดวงดาว', 'แห่งสายลม', 'ผู้ตัดสายฟ้า', 'ผู้ยิ้มรับลิขิต']);
   TH.k = ['ดาราเหล็ก', 'นครกำแพง', 'ยีนอสูร', 'อุกกาบาต', 'ไซเบอร์', 'ห้วงดารา', 'นิวเคลียส', 'สัญญาณดาว', 'เซลล์ดารา', 'ควอนตัม', 'โคจร', 'กาแล็กซี', 'เนบิวลา', 'ดาวเทียม', 'นาโน', 'พลาสมา']; TH1.k = TH.k.slice(0, 6);
+  // 🏙️ ยุคปัจจุบัน 9 โลก: n ฮันเตอร์ · u ใต้ดิน · o ผีไทย · p วนลูป · z ซอมบี้ · t หอคอย · e ระบบเกม · q เกตชนะ · y วันสิ้นโลก
+  const MWL = ['n', 'u', 'o', 'p', 'z', 't', 'e', 'q', 'y'];
+  Object.assign(TH, {
+    n: ['เกตมิติ', 'แรงก์เอส', 'สมาคมฮันเตอร์', 'ดันเจี้ยน', 'ผู้ตื่นพลัง', 'ลูทแรร์', 'บอสเกต', 'คริสตัลมานา', 'ใบอนุญาตฮันเตอร์', 'เกตแดง', 'ประตูมิติฟ้า', 'นักล่าเงา'],
+    u: ['โลกใต้ดิน', 'ตลาดมืด', 'แก๊งมาเฟีย', 'ซอยเปลี่ยว', 'ไฟนีออน', 'บ่อนลับ', 'เจ้าพ่อ', 'รถสปอร์ตดำ', 'ดีลใต้โต๊ะ', 'เขตเถื่อน', 'ไนต์คลับ', 'ถนนสายมืด'],
+    o: ['ผีไทย', 'เครื่องราง', 'ยันต์แดง', 'ศาลพระภูมิ', 'บ้านผีสิง', 'คาถาอาคม', 'ตะเกียงวิญญาณ', 'หมอผี', 'กุมารทอง', 'ป่าช้า', 'ต้นตะเคียน', 'สายสิญจน์'],
+    p: ['วันซ้ำ', 'ลูปเวลา', 'นาฬิกาปลุก', 'เจ็ดโมงเช้า', 'รีเซ็ตวัน', 'วันพรุ่งนี้', 'เดจาวู', 'เข็มวินาที', 'วันเดิม', 'ความจำข้ามวัน', 'ปฏิทินค้าง', 'วินาทีสุดท้าย'],
+    z: ['ซอมบี้', 'ไวรัสคลั่ง', 'เมืองร้าง', 'วัคซีน', 'ผู้รอดชีวิต', 'เซฟโซน', 'กระสุนนัดสุดท้าย', 'รถถังเก่า', 'คลื่นศพ', 'เขตกักกัน', 'ไฟฉายดวงเดียว', 'ห้างร้าง'],
+    t: ['หอคอย', 'ชั้นบนสุด', 'บันไดเวียน', 'ชั้นที่ร้อย', 'ผู้ไต่หอ', 'ประตูชั้น', 'บอสประจำชั้น', 'ยอดหอคอย', 'ลิฟต์แก้ว', 'ห้องลับชั้นซ่อน', 'ยอดยอดตึก', 'ชั้นไร้นาม'],
+    e: ['ระบบเกม', 'เลเวลอัป', 'หน้าต่างสถานะ', 'เควสลับ', 'สกิลแรร์', 'ค่าประสบการณ์', 'กาชา', 'อีเวนต์พิเศษ', 'คอมโบ', 'ไอเทมตำนาน', 'แต้มสเตตัส', 'โหมดฮาร์ดคอร์'],
+    q: ['กำแพงเมือง', 'เมืองสุดท้าย', 'เกตแม่', 'แนวป้องกัน', 'ยึดโลกคืน', 'ปราการเหล็ก', 'ฐานทัพมนุษย์', 'ดินแดนรกร้าง', 'ธงมนุษย์', 'ป้อมปืนใหญ่', 'ประตูเมือง', 'สนามเพลาะ'],
+    y: ['วันสิ้นโลก', 'นับถอยหลัง', 'หลุมหลบภัย', 'อุกกาบาตล้างโลก', 'ฟ้าแดง', 'สิบสองปีสุดท้าย', 'จรวดอพยพ', 'วันสุดท้าย', 'เสบียงสุดท้าย', 'ดาวหางมรณะ', 'เสียงไซเรน', 'คืนก่อนโลกแตก']
+  });
+  MWL.forEach(c => { TH1[c] = TH[c].slice(0, 6) });
+  const CORE_MW = [null, ['ราชา', 'ราชินี', 'ไอคอน', 'เบอร์หนึ่ง', 'แชมป์', 'ซูเปอร์สตาร์', 'บอสใหญ่', 'ตัวจริง'], ['ดาวเด่น', 'ตัวท็อป', 'ไอดอล', 'ฮีโร่', 'รองแชมป์', 'มือโปร'], ['ดาวรุ่ง', 'ตัวตึง', 'ผู้มาแรง', 'นิวคัมเมอร์', 'สายแข็ง', 'มือใหม่ไฟแรง']];
+  const SUF_MW = ['แห่งนครหลวง', 'กลางเมืองใหญ่', 'ไลฟ์สดทั้งคืน', 'ยอดวิวทะลุล้าน', 'ใต้แสงนีออน', 'ติดเทรนด์อันดับหนึ่ง', 'บนตึกระฟ้า', 'ตลอดกาล', 'ที่ทั้งประเทศพูดถึง', 'แห่งยุคดิจิทัล', 'ผู้ไม่เคยออฟไลน์', 'เหนือฟีดทุกฟีด'];
+  function titleMW(p, c, k, r) {
+    const R = RNG(H('tm|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE_MW[r] || CORE_MW[3]), pre = pk(R, TH[c]), of = R() < .4 && !/^(ผู้|แห่ง)/.test(pre) ? 'แห่ง' : '', suf = pk(R, SUF_MW);
+    let t = p === 'm' ? core + (/^แห่ง/.test(suf) ? '' : of) + pre + suf : p === 'w' && R() < .35 ? core + pre + suf : core + of + pre;
+    if ([...t].length > 28) t = core + of + pre;
+    return t;
+  }
   function title(p, c, k, r) {
+    if (MWL.includes(c)) return titleMW(p, c, k, r);
     if (!/v/.test(String(k))) return title1(p, c, k, r);
     const R = RNG(H('t2|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE[r] || CORE[3]), pre = (R() < .6 || c === 'k') ? pk(R, TH[c] || TH.m) : pk(R, PRE);
     const of = R() < .35 && !/^(ผู้|แห่ง|ไร้)/.test(pre) ? 'แห่ง' : '', suf = pk(R, SUF);
@@ -194,13 +221,15 @@ const RKG = (() => {
   const SH1 = { m: ['sword', 'laurel', 'crown', 'dbl'], x: ['cloud', 'ringh', 'leaf', 'pearl'], g: ['ray', 'ringh', 'star4', 'lotus'], b: ['horn', 'scale', 'thorn', 'wing'], r: ['clock', 'moon', 'star4'], c: ['flame', 'thorn', 'chain'], h: ['flame', 'horn', 'drip', 'gate'], s: ['flame', 'star4', 'butterfly'], j: ['knob', 'chain', 'fade', 'leaf'], l: ['ringh', 'star4', 'lotus', 'ray', 'gem'], k: ['star4', 'lightning', 'gem', 'ringh'] };
   const TY1 = [null, 'spin halo orbit ring2 aura2 sparkle star ember corner badge rk1', 'spin orbit ring2 snow corner badge rk2', 'corner badge rk3'];
   const PN = { d: 'ประจำวัน', w: 'ประจำสัปดาห์', m: 'ประจำเดือน' }, BD = { d: ['', '🌅', '🥈', '🥉'], w: ['', '⚔️', '🥈', '🥉'], m: ['', '🌟', '🥈', '🥉'] };
-  const RE = /^f_g([dwm])([mxgbrchsjlk])([0-9a-z]+)_([123])$/;
+  const RE = /^f_g([dwm])([mxgbrchsjlknuopzteqy])([0-9a-z]+)_([123])$/;
   // ชุดที่ 2: สีจากวงล้อสี (โทนคู่ตรงข้าม/ข้างเคียง) · ลายประดับตามหมวด + ลายสุ่ม · แสงสุ่มชุดใหม่ทุกรอบ · ตราตามหมวด
   const hsl = (h, s, l) => { h = ((h % 360) + 360) % 360; s /= 100; l /= 100; const a = s * Math.min(l, 1 - l), f = n => { const k = (n + h / 30) % 12, c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); return Math.round(255 * c).toString(16).padStart(2, '0') }; return '#' + f(0) + f(8) + f(4) };
   const SH = { m: ['sword', 'laurel', 'crown', 'dbl', 'gem'], x: ['cloud', 'ringh', 'leaf', 'pearl', 'gate'], g: ['ray', 'ringh', 'star4', 'lotus', 'crown'], b: ['horn', 'scale', 'thorn', 'wing', 'eye'], r: ['clock', 'moon', 'star4', 'ringh'], c: ['flame', 'thorn', 'chain', 'eye'], h: ['flame', 'horn', 'drip', 'gate', 'skull'], s: ['flame', 'star4', 'butterfly', 'petal'], j: ['knob', 'chain', 'fade', 'leaf'], l: ['ringh', 'star4', 'lotus', 'ray', 'gem'], k: ['star4', 'lightning', 'gem', 'ringh', 'ray'] };
   const ANY = ['star4', 'gem', 'petal', 'snow', 'moon', 'ray', 'lightning', 'pearl', 'leaf', 'cloud', 'wing'];
   const FX = { 1: ['halo', 'orbit', 'ring2', 'aura2', 'sparkle', 'star', 'ember', 'snow', 'petal', 'rainbow', 'flow', 'glow'], 2: ['orbit', 'ring2', 'sparkle', 'snow', 'ember', 'petal', 'shift', 'glow', 'star'], 3: ['snow', 'ember', 'star', 'glow'] };
   const MARK = { m: ['⚔️', '🗡️', '🏯'], x: ['☁️', '🌀', '🍑'], g: ['✨', '🌞', '🪷'], b: ['🐾', '🐉', '🐯'], r: ['⏳', '🕰️', '🌀'], c: ['🔥', '⛓️', '☄️'], h: ['💀', '🔥', '👹'], s: ['☄️', '🕯️', '🎆'], j: ['🦴', '🍂', '🪨'], l: ['⭕', '🔮', '🌌'], k: ['🌠', '🛰️', '🧬'] };
+  Object.assign(MARK, { n: ['🌀', '🗡️', '💎'], u: ['🌃', '🎰', '🕶️'], o: ['👻', '🏮', '📿'], p: ['🔁', '⏰', '📅'], z: ['🧟', '☣️', '🔦'], t: ['🗼', '🪜', '🚪'], e: ['🎮', '🕹️', '💠'], q: ['💀', '🧱', '🚩'], y: ['☄️', '⏳', '🚀'] });
+  MWL.forEach(c => { SH1[c] = ['star4', 'gem', 'ray']; SH[c] = ['star4', 'gem', 'ray', 'lightning'] });
   function frame(id) {
     const m = RE.exec(id); if (!m) return null; const [, p, c, k, rs] = m, r = +rs;
     const dt = String(k).replace(/[sv].*/, ''), dl = dt.length >= 8 ? dt.slice(6, 8) + '/' + dt.slice(4, 6) + '/' + dt.slice(0, 4) : dt.slice(4, 6) + '/' + dt.slice(0, 4);
@@ -217,10 +246,10 @@ const RKG = (() => {
     return Object.assign(base, { ty, c1, c2, c3, pc: c2, bd, sh: [...new Set(sh)].join('|') });
   }
   const fid = (p, c, k, r) => 'f_g' + p + c + k + '_' + r;
-  const ALLC = [null, ...[1, 2, 3].map(r => CORE[r])];
+  const ALLC = [null, ...[1, 2, 3].map(r => CORE[r].concat(CORE_MW[r]))];
   const rank = t => { t = String(t || ''); let best = 0, bl = 0; for (let r = 1; r <= 3; r++) for (const w of ALLC[r]) if (t.startsWith(w) && w.length > bl) { bl = w.length; best = r } return best };
-  const cat = t => { t = String(t || ''); for (const k of ['k', 'l', 'h', 's', 'j', 'r', 'b', 'x', 'g', 'c']) if (TH[k].some(w => t.includes(w))) return k; return 'm' };
-  return { title, frame, fid, RE, H, rank, cat };
+  const cat = t => { t = String(t || ''); for (const k of [...MWL, 'k', 'l', 'h', 's', 'j', 'r', 'b', 'x', 'g', 'c']) if (TH[k].some(w => t.includes(w))) return k; return 'm' };
+  return { title, frame, fid, RE, H, rank, cat, MWL };
 })();
 const RKG_C = { m: 'm', x: 'x', g: 'g', b: 'b', r: 'r', c: 'c', ch: 'h', cs: 's', cj: 'j', cl: 'l', ck: 'k' };
 const rkKey = (lab, salt) => String(lab || '').replace(/[^0-9]/g, '') + 'v' + (salt || ''); // v = ชุดที่ 2
@@ -1737,7 +1766,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const q = qOf(req); if (!isAdmKey(q.key)) return res.status(403).json({ err: 'admin' });
       const nx = { d: new Date(now + 7 * 3600e3).toISOString().slice(0, 10), w: week(new Date(now)), m: bdMon(now) }; // รอบที่กำลังแข่งอยู่ = ชุดที่จะแจกตอนจบรอบ
       if (/^[dwm]$/.test(q.roll || '')) { const sk = 'rksalt:' + q.roll + ':' + rkKey(nx[q.roll]), old = await cmd('GET', sk); let v; do { v = Math.random().toString(36).slice(2, 5).replace(/[^a-z0-9]/g, '') } while (!v || v === old); await cmd('SET', sk, v, 'EX', 86400 * 40) }
-      const CN = { m: '⚔️ ยุทธภพ', x: '☁️ เซียน', g: '🌟 เทพ', b: '🐾 อสูร', r: '🔁 ย้อนกาล', h: '🔥 นรก', s: '⏳ ชีวิตสั้น', j: '🦴 รากขยะ', l: '⭕ จิตวิญญาณยุทธ์', k: '🌠 ทะลุฟ้าดารา' };
+      const CN = { m: '⚔️ ยุทธภพ', x: '☁️ เซียน', g: '🌟 เทพ', b: '🐾 อสูร', r: '🔁 ย้อนกาล', h: '🔥 นรก', s: '⏳ ชีวิตสั้น', j: '🦴 รากขยะ', l: '⭕ จิตวิญญาณยุทธ์', k: '🌠 ทะลุฟ้าดารา', n: '🌀 ฮันเตอร์', u: '🌃 ใต้ดิน', o: '👻 ผีไทย', p: '🔁 วนลูป', z: '🧟 ซอมบี้', t: '🗼 หอคอย', e: '🎮 ระบบเกม', q: '💀 เกตชนะ', y: '☄️ วันสิ้นโลก' };
       if (q.fmt === 'json') { const keys = {}; for (const p of ['d', 'w', 'm']) keys[p] = rkKey(nx[p], await cmd('GET', 'rksalt:' + p + ':' + rkKey(nx[p]))); return res.json({ nx, keys }) }
       let html = '<meta name="viewport" content="width=device-width"><style>body{font-family:sans-serif;background:#1a1420;color:#eee;padding:10px}td{padding:3px 6px;border-bottom:1px solid #333}a{color:#ffd040}</style><h3>🏆 ฉายาที่จะแจกรอบนี้</h3>';
       for (const p of ['d', 'w', 'm']) { const k = rkKey(nx[p], await cmd('GET', 'rksalt:' + p + ':' + rkKey(nx[p])));
@@ -2755,6 +2784,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (e.ch === 'soul') { try { const lv = Math.max(0, Math.min(100, Math.floor(+b.sl || 0))), ag = +e.age || 0, hs = Math.max(0, Math.min(999999, Math.round(+e.s || 0))); e.sl = Math.max(0, Math.min(lv, ag - 6)); const sr0 = Math.floor(+b.sr); e.sr = isFinite(sr0) ? Math.max(-1, Math.min(8, sr0)) : -1; if (e.sr >= 5 && ag < 6) e.sr = 4; ejC = JSON.stringify(Object.assign({}, e, { s: hs, hs, hd: 3 })) } catch {} }
       if (e.ch === 'short') { try { ejC = JSON.stringify(Object.assign({}, e, { s: e.s })) } catch {} }
       if (e.ch === 'sky') { try { const ag = +e.age || 0, hs = Math.max(0, Math.min(999999, Math.round(+e.s || 0))); let rk = Math.floor(+b.skr); rk = isFinite(rk) ? Math.max(-1, Math.min(35, rk)) : -1; if (ag < 12) rk = -1; const sb = Math.max(0, Math.min(10, Math.floor(+b.sks || 0))); e.skr = rk; e.sks = rk >= 0 ? sb : 0; ejC = JSON.stringify(Object.assign({}, e, { s: hs, hs })) } catch {} }
+      if (/^mw_/.test(e.ch || '')) { try { e.mw = e.ch.slice(3); const hs = Math.max(0, Math.round(+e.s || 0)); ejC = JSON.stringify(Object.assign({}, e, { s: hs, hs })) } catch {} }
       if (e.ch === 'regress') { try { const D0 = JSON.parse(String(b.det || '{}')), G = D0.rg || {}, rl = Math.max(1, Math.min(999, Math.floor(+G.loop || 1))), rf = G.free && (+e.age || 0) >= 15 ? 1 : 0; e.rl = rl; e.rf = rf; const vn = { r5: ' ⏪', nomem: ' 🧠', lim10: ' 🔟' }[String(G.var || '')] || ''; e.c = (rf ? '🔁 หลุดพ้นวงจรใน ' + rl + ' รอบ' : '🔁 ย้อนกาล ' + rl + ' รอบ') + vn + (e.c ? ' · ' + e.c : ''); e.c = e.c.slice(0, 80); ejC = JSON.stringify(Object.assign({}, e, { s: (rf ? 5e8 - rl * 1e6 : 0) + Math.min(4e8, bdScore(D0, e)), rg: 1 })) } catch {} }
       const cat = bdCat(e), ej = JSON.stringify(e), L = [['INCR', 'lives']];
       let rjB = null; if (e.ch === 'regress' && e.rf) { try { const G0 = (JSON.parse(String(b.det || '{}')).rg) || {}, en0 = ['breaker', 'protector', 'lonely'].includes(G0.end) ? G0.end : 'lonely', vr0 = ['normal', 'r5', 'nomem', 'lim10'].includes(G0.var) ? G0.var : 'normal'; rjB = Object.assign({}, e, { end: en0, var: vr0, s: ({ breaker: 3, protector: 2, lonely: 1 })[en0] * 1e8 - Math.min(999, e.rl || 1) * 1e5 + ({ lim10: 3, nomem: 2, r5: 1, normal: 0 })[vr0] * 1e4 }) } catch {} }
