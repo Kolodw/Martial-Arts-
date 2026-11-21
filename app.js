@@ -45115,3 +45115,36 @@ try{if(typeof GD2!=='undefined'&&!GD2.some(x=>x.t==='ทำเนียบผู
 // BLOCK 137: 📟 ระบบประจำโลก (/w/wsys.js) — ระบบเล่าเรื่อง · รีวิวดาว · ร้านค้าวันสิ้นโลก · เจ้ากรรมนายเวร · สปอนเซอร์ · AI รุ่นทดลอง + ระบบโกหกได้ + คู่แข่ง
 setTimeout(()=>{try{wLoad('wsys').catch(()=>setTimeout(()=>wLoad('wsys').catch(()=>{}),6000))}catch(e){}},2000);
 try{const g={s:'world',ic:'📟',t:'ระบบประจำโลก',nw:1,need:()=>!!(S&&S.wsy),go:'openWsys',life:1,d:'อายุ 12 ขึ้นไป มีโอกาสที่ <b>ระบบ</b> ของโลกนั้นจะเด้งมาขอติดตั้ง (รับหรือปฏิเสธก็ได้ ปฏิเสธ 2 ครั้งจะไม่มาอีก)<br>📖 ยุทธภพ: <b>ระบบเล่าเรื่อง</b> ต้องทำให้ชีวิตสนุก ไม่งั้นคนเล่าจะเขียนหักมุมใส่<br>⭐ ยุคปัจจุบัน: <b>ระบบรีวิวดาว</b> ดาวสูงได้เงินและชื่อเสียง แต่ความเป็นตัวเองลด<br>🛒 ซอมบี้/วันสิ้นโลก: <b>ร้านค้าวันสิ้นโลก</b> จ่ายด้วยความทรงจำ<br>👻 ผีไทย: <b>เจ้ากรรมนายเวร</b> ชดใช้หนี้กรรม 5 ข้อ แล้วเลือกส่งไปเกิดหรือให้อยู่ต่อ<br>📺 ฮันเตอร์: <b>ระบบสปอนเซอร์</b> ไลฟ์ลงเกต ยิ่งเสี่ยงยิ่งคนดู<br>🤖 ทะลุฟ้าดารา: <b>AI รุ่นทดลอง</b> อัปเดตบุคลิกได้ ระวังบริษัทตามมาเอาคืน<br>🕳️ <b>ระบบโกหกได้</b> บางคำสั่งเป็นกับดัก หน้าต่างที่กระตุกคือสัญญาณ ใช้แต้มตรวจสอบได้<br>⚔️ อยู่นานพอจะเจอ <b>ผู้ถือระบบคนอื่น</b> ร่วมมือ กลืนกิน หรือปล่อยไว้ก็ได้<br>เปิดดูระบบ/ร้านแต้มที่เมนู ☰ → 📟 ระบบ'};if(typeof GD2!=='undefined'&&!GD2.some(x=>x.t===g.t))GD2.push(g);if(typeof SYS_GUIDE!=='undefined'&&!SYS_GUIDE.some(x=>x.t===g.t))SYS_GUIDE.push(g)}catch(e){console.error('block137',e)}
+
+// BLOCK 138: ระดับชะตาเพิ่ม 6 ขั้นเหนือ ♾️ อนันตชะตา (1e13–1e18+) + ชื่อชุดยุคปัจจุบัน 19 ขั้น
+try{(()=>{
+FATE.push([1e13,'ผู้ทลายสวรรค์','🌌','ฟ้าสร้างโซ่ไว้ล่าม แต่คุณเกิดมาพร้อมดาบ'],[1e14,'ผู้ถือพู่กันลิขิต','⚖️','ไม่ได้ถูกชะตาเขียน คุณคือคนเขียนชะตา'],[1e15,'ชะตาที่ถูกลบ','🕳️','สมุดสวรรค์ไม่มีหน้าของคุณ ฟ้ามองไม่เห็นคุณ'],[1e16,'บรรพกาลคืนชีพ','🐉','วิญญาณจากก่อนฟ้าดินแยกกลับมาเกิด'],[1e17,'ผู้อยู่ก่อนฟ้า','🌑','ตอนสวรรค์ถือกำเนิด คุณรออยู่ตรงนั้นแล้ว'],[1e18,'「無」 ไร้ชะตา','⬛','ไม่มีตัวเลขไหนนับได้']);
+FGRADE.push('ชั้นทลายฟ้า','ชั้นพู่กัน','ชั้นไร้นาม','ชั้นบรรพกาล','ชั้นก่อนฟ้า','ชั้นไร้');
+const FM=[['NPC ตัวประกอบ','🚶','เดินผ่านฉากโดยไม่มีใครจำหน้าได้'],['คนทั่วไป','🧍','ชีวิตปกติแบบคนส่วนใหญ่'],['โชคดีนิดหน่อย','🍀','ดวงพอใช้ ไม่ขาดไม่เกิน'],['หัวกะทิ','📈','เกิดมาเหนือค่าเฉลี่ยชัดเจน'],['Top 1%','🎯','หนึ่งในร้อยของคนทั้งประเทศ'],
+ ['ดาวรุ่งระดับชาติ','🌟','ข่าวภาคค่ำรอสัมภาษณ์คุณอยู่'],['ไวรัลข้ามโลก','🔥','ชื่อคุณติดเทรนด์ทุกภาษา'],['ตำนานยุคใหม่','👑','หนังสือเรียนรุ่นหลังต้องมีบทของคุณ'],['Main Character','☀️','โลกหมุนรอบคุณจริงๆ'],['ผิดปกติระดับ S','💠','หน่วยงานลับเปิดแฟ้มของคุณแล้ว'],
+ ['ข้อผิดพลาดของสถิติ','🌈','นักคณิตศาสตร์บอกว่าคุณไม่ควรมีอยู่'],['โลกต้องเขียนกฎใหม่','✨','ฟิสิกส์ต้องแก้ตำราเพราะคุณ'],['ค่าไม่สิ้นสุด (∞)','♾️','ตัวเลขของคุณล้นจอ'],['ERROR 404: ชะตาไม่พบ','⚠️','ระบบค้นหาชะตาของคุณไม่เจอ'],['ผู้ดูแลเซิร์ฟเวอร์โลก','🛰️','คุณถือสิทธิ์แอดมินของความจริง'],
+ ['Patch Zero','🧬','ผู้เขียนโค้ดบรรทัดแรกของโลกใบนี้'],['Null','🕳️','อยู่นอกฐานข้อมูลของจักรวาล'],['Root Access','🌑','คำสั่งของคุณคือกฎ'],['[ข้อมูลถูกลบ]','⬛','█████ ███ ██████']];
+window._FATE_M=FM;
+const GM=['ระดับ F','ระดับ E','ระดับ D','ระดับ C','ระดับ B','ระดับ A','ระดับ S','ระดับ SS','ระดับ SSS','ระดับ EX','ระดับ EX+','ระดับ Ω','ระดับ ∞','ระดับ ERR','ระดับ ADMIN','ระดับ ZERO','ระดับ NULL','ระดับ ROOT','ระดับ ████'];
+try{const _fo=fateOf;fateOf=function(n){return _fo((+n||0)*(1+1e-9))}}catch(e){}
+// ยุคปัจจุบัน: ติดป้ายที่ parts แล้วเปลี่ยนชื่อในกล่อง
+{const _p=window.mwFateParts;if(_p)window.mwFateParts=function(){const P=_p.apply(this,arguments);try{P._mod=1}catch(e){}return P}}
+{const _h=window.fateBoxH;if(_h)window.fateBoxH=function(parts){let h=_h.apply(this,arguments);try{if(parts&&parts._mod){const m=h.match(/fateB fb(\d+)/),f=m?+m[1]:0,F=FATE[f],M=FM[f];if(F&&M){h=h.replace(`${F[2]} <span class="fx${f}">ระดับชะตา: ${F[1]}</span>`,`${M[1]} <span class="fx${f}${f>=13?' fxG':''}">ระดับชะตา: ${M[0]}</span>`).replace(`<div class="od">${F[3]}</div>`,`<div class="od">${M[2]}</div>`).replace(`⟪ ${FGRADE[f]} ⟫`,`⟪ ${GM[f]} ⟫`)}}}catch(e){console.error('block138',e)}return h}}
+const st=document.createElement('style');st.textContent=`
+.fx13,.fx14,.fx15,.fx16,.fx17,.fx18{-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.fx13{background-image:linear-gradient(90deg,#4dd8ff,#b06bff,#fff,#ff4d9d,#4dd8ff);background-size:300% 100%;animation:fxSh 1.3s linear infinite;filter:drop-shadow(0 0 6px #4dd8ffcc)}
+.fx14{background-image:linear-gradient(90deg,#ffe9a0,#fff,#ffd040,#fff6d8,#ffe9a0);background-size:300% 100%;animation:fxSh 1.6s linear infinite;filter:drop-shadow(0 0 7px #ffd040)}
+.fx15{background-image:linear-gradient(90deg,#c8d0ff,#fff,#9aa6e0,#ffffff,#c8d0ff);background-size:300% 100%;animation:fxSh 1.2s linear infinite;filter:drop-shadow(0 0 6px #c8d0ff)}
+.fx16{background-image:linear-gradient(90deg,#3dffb0,#e0fff0,#1aa070,#ffd84d,#3dffb0);background-size:300% 100%;animation:fxSh 1.4s linear infinite;filter:drop-shadow(0 0 8px #3dffb0cc)}
+.fx17{background-image:linear-gradient(90deg,#fff,#c0c8ff,#fff,#8a90b0,#fff);background-size:300% 100%;animation:fxSh 1s linear infinite;filter:drop-shadow(0 0 4px #c0c8ff)}
+.fx18{background-image:linear-gradient(90deg,#111,#fff,#222,#b06bff,#000,#fff,#111);background-size:400% 100%;animation:fxSh .9s linear infinite;filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 10px #b06bff)}
+.fxG{animation:fxSh 1.2s linear infinite,fxGl 2.2s infinite steps(1)!important}
+@keyframes fxGl{0%,88%,100%{transform:none}90%{transform:translateX(2px) skewX(8deg);filter:drop-shadow(2px 0 #f0f) drop-shadow(-2px 0 #0ff)}93%{transform:translateX(-2px)}96%{transform:none}}
+.fateB.fb13{--fc:#4dd8ff}.fateB.fb14{--fc:#ffd040}.fateB.fb15{--fc:#c8d0ff}.fateB.fb16{--fc:#3dffb0}.fateB.fb17{--fc:#ffffff}.fateB.fb18{--fc:#b06bff}
+#birth .oddsbig.fb13,#birth .oddsbig.fb14,#birth .oddsbig.fb15,#birth .oddsbig.fb16,#birth .oddsbig.fb17,#birth .oddsbig.fb18{border-color:transparent;background:radial-gradient(circle at 30% 20%,#13203a,#05060d 70%) padding-box,linear-gradient(90deg,#4dd8ff,#b06bff,#fff,#ff4d9d,#ffd040,#4dd8ff) border-box;background-size:100% 100%,400% 100%;animation:fbR 2.2s linear infinite;box-shadow:0 0 34px #4dd8ffaa}
+#birth .oddsbig.fb14{box-shadow:0 0 36px #ffd040cc}#birth .oddsbig.fb16{box-shadow:0 0 38px #3dffb0cc}
+#birth .oddsbig.fb17{background:radial-gradient(circle at 50% 30%,#2a2e44,#05060d 70%) padding-box,linear-gradient(90deg,#fff,#8a90b0,#fff,#c0c8ff,#fff) border-box;background-size:100% 100%,400% 100%;box-shadow:0 0 42px #ffffffaa}
+#birth .oddsbig.fb18{background:#000 padding-box,linear-gradient(90deg,#000,#fff,#b06bff,#000,#4dd8ff,#000) border-box;background-size:100% 100%,400% 100%;box-shadow:0 0 50px #b06bffdd,inset 0 0 30px #b06bff55}
+#birth .bstage.sg13,#birth .bstage.sg14,#birth .bstage.sg15,#birth .bstage.sg16,#birth .bstage.sg17,#birth .bstage.sg18{border-color:transparent;background:linear-gradient(90deg,#4dd8ff,#b06bff,#fff,#ff4d9d,#4dd8ff) border-box;box-shadow:0 0 30px #4dd8ffcc}
+`;document.head.appendChild(st);
+})()}catch(e){console.error('block138',e)}
