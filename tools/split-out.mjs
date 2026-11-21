@@ -1,5 +1,6 @@
 // ✂️ ย้ายท่อนโค้ดระดับบนสุดออกจาก app.js ไปเป็นไฟล์โลก /w/<ชื่อ>.js โดยลำดับการห่อฟังก์ชันกลางเหมือนเดิมทุกอย่าง
-// ใช้: node tools/split-out.mjs <ชื่อโลก> <บรรทัดเริ่มของท่อน> [บรรทัดเริ่มของท่อนถัดไป ...]
+// ใช้: node tools/split-out.mjs <ชื่อโลก> <บรรทัดเริ่มของท่อน>[+ชื่อ1,ชื่อ2] ...
+//   +ชื่อ = บังคับใส่ช่องให้ชื่อนั้น (ใช้กับ window[ตัวแปร]=… ที่เครื่องมือมองไม่เห็น หรือชื่อที่ท่อนนี้สร้างแล้วท่อนหลังใน app.js ห่อต่อตอนโหลด)
 // วิธีรักษาลำดับ: ตรงตำแหน่งเดิมของแต่ละท่อน ใส่ "ช่อง" (wSlot) ที่จับฟังก์ชันกลางที่ท่อนนั้นห่อไว้ แล้วส่งต่อไปตัวห่อจริงเมื่อไฟล์โลกโหลดแล้ว
 //   ในไฟล์โลก ท่อนนั้นจะเห็นชื่อฟังก์ชันกลางเป็นตัวแปรเงา = ฟังก์ชัน ณ ตำแหน่งเดิม → ห่อเสร็จแล้วส่งตัวห่อกลับเข้าช่อง
 import fs from 'fs'; import * as acorn from 'acorn'; import * as walk from 'acorn-walk';
@@ -8,7 +9,7 @@ const src = fs.readFileSync('app.js', 'utf8');
 const ast = acorn.parse(src, { ecmaVersion: 'latest', sourceType: 'script' });
 const lineOf = p => { let n = 1; for (let i = src.indexOf('\n'); i >= 0 && i < p; i = src.indexOf('\n', i + 1)) n++; return n };
 const top = ast.body.map(st => ({ st, line: null }));
-const want = lines.map(Number), pick = [];
+const want = lines.map(x => +String(x).split('+')[0]), extra = lines.map(x => (String(x).split('+')[1] || '').split(',').filter(Boolean)), pick = [];
 // หาบรรทัดของแต่ละท่อนแบบเร็ว
 const nl = [0]; for (let i = 0; i < src.length; i++) if (src.charCodeAt(i) === 10) nl.push(i + 1);
 const ln = p => { let lo = 0, hi = nl.length - 1; while (lo < hi) { const m = (lo + hi + 1) >> 1; if (nl[m] <= p) lo = m; else hi = m - 1 } return lo + 1 };
@@ -25,6 +26,7 @@ const slots = pick.map((st, k) => {
   walk.full(st, n => { if (n.type !== 'AssignmentExpression' || n.operator !== '=') return; const r = n.right; if (!r || !/Function/.test(r.type)) return;
     if (n.left.type === 'Identifier') { const nm = n.left.name; if (G.has(nm) && !own.has(nm)) W.add(nm) }
     else if (n.left.type === 'MemberExpression' && n.left.object.name === 'window' && !n.left.computed) { const nm = n.left.property.name; if ((G.has(nm) || (outW.has(nm) && outW.get(nm) < st.start)) && !own.has(nm)) { W.add(nm); WW.add(nm) } } });
+  extra[k].forEach(n => { W.add(n); WW.add(n) });
   return { id: world + (k + 1), names: [...W], win: WW.size > 0, st };
 });
 // เขียนไฟล์โลก
