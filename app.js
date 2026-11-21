@@ -54421,3 +54421,31 @@ const st=document.createElement('style');st.textContent=`
 })()}catch(e){console.error('block116',e)}
 // BLOCK 115c: ทางเข้า 📕 นิยายปกแข็ง ในหน้าสุสาน
 try{if(typeof openGraves==='function'){const _og=openGraves;openGraves=function(){const r=_og.apply(this,arguments);const add=()=>{try{const m=$('modal');if(m.dataset.k&&/grave/i.test(m.dataset.k)&&!m.querySelector('.nvEnt')){const h=m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend','<button class="gbtn nvEnt" style="width:100%;margin:6px 0" onclick="openNovels()">📕 นิยายปกแข็งของฉัน — อ่าน/ทำเล่มใหม่</button>')}}catch(e){}};add();setTimeout(add,400);return r};window.openGraves=openGraves}}catch(e){console.error('block115c',e)}
+// ============================================================
+// BLOCK 116: 📚 ห้องสมุดนิยาย — อ่านชีวิตของคนอื่น แยกหมวด 📕 ปกแข็ง / 📄 ฉบับฟรี · ล่าสุด/ยอดนิยม · ❤️ ถูกใจ · 👁 ยอดอ่าน
+// ============================================================
+try{(()=>{
+const st=document.createElement('style');st.textContent=`
+.nlT{display:flex;gap:6px;margin:8px 0 6px}.nlT button{flex:1;border-radius:12px;padding:9px 4px;font:inherit;font-weight:800;font-size:13.5px;border:1px solid #6a5232;background:#1e150c;color:#d9c49a}
+.nlT button.on{background:linear-gradient(#ffe29a,#e8b54a);color:#3a2a08;border-color:#e8b54a;box-shadow:0 0 10px #e8b54a55}
+.nlS{display:flex;gap:6px;justify-content:center;margin-bottom:6px}.nlS button{border-radius:20px;padding:5px 12px;font:inherit;font-size:12.5px;border:1px solid #5a4a32;background:#140e08;color:#bba882}.nlS button.on{border-color:#e8b54a;color:#ffe29a}
+.nlR .nst{display:flex;gap:8px;font-size:11.5px;color:#bba882;margin-top:2px}.nlR .lk{background:none!important;border:1px solid #5a4a32!important;color:#f1e3c2!important;padding:6px 8px!important}.nlR .lk.on{border-color:#ff7a9a!important;color:#ff9ab2!important}
+.nlNote{font-size:11.5px;color:#bba882;text-align:center;margin:2px 0 6px}`;document.head.appendChild(st);
+let K='h',SRT='new';
+const row=x=>`<div class="lr nlR"><span style="font-size:22px">${K==='h'?'📕':'📄'}</span><div class="m"><b>${esc(x.n)}</b><small>${esc(x.e||'')}${x.e?' · ':''}${x.x?'โลกเทพเซียน':'ยุทธภพ'} · ${fmt(x.a||0)} ปี</small><div class="nst"><span>👁 ${fmt(x.r||0)}</span><span>❤️ ${fmt(x.lk||0)}</span>${x.v?`<span>📜 ${x.v} เหตุการณ์</span>`:''}</div></div><button class="lk ${x.me?'on':''}" onclick="event.stopPropagation();nvLike('${x.l}',this)">${x.me?'❤️':'🤍'}</button><button onclick="nvLibOpen('${x.l}')">อ่าน</button></div>`;
+window.openNvLib=async function(k,s){if(k)K=k;if(s)SRT=s;
+ const head=`<button class="xbtn" onclick="openNovels()">✕</button><div class="npv"><h3 style="text-align:center;margin:0">📚 ห้องสมุดนิยาย</h3><p class="tag2" style="text-align:center;margin:2px 0 0">อ่านชีวิตของจอมยุทธ์คนอื่น</p>
+ <div class="nlT"><button class="${K==='h'?'on':''}" onclick="openNvLib('h')">📕 ปกแข็ง</button><button class="${K==='f'?'on':''}" onclick="openNvLib('f')">📄 ฉบับฟรี</button></div>
+ <div class="nlNote">${K==='h'?'เล่มที่เจ้าของทำเป็นปกแข็ง · ครบทุกบท เก็บถาวร':'ชีวิตที่เปิดสาธารณะ · ฉบับสรุป อยู่ได้ 40 วัน'}</div>
+ <div class="nlS"><button class="${SRT==='new'?'on':''}" onclick="openNvLib(0,'new')">🆕 ล่าสุด</button><button class="${SRT==='top'?'on':''}" onclick="openNvLib(0,'top')">🔥 ยอดนิยม</button></div>`;
+ modal(head+`<p class="tag2" style="text-align:center">กำลังเปิดชั้นหนังสือ…</p></div>`,'nvlib');
+ let L=[];try{if(typeof onlineOK!=='undefined'&&!onlineOK){modal(head+`<p class="tag2" style="text-align:center">ต้องออนไลน์ก่อนถึงจะเข้าห้องสมุดได้</p></div>`,'nvlib');return}const j=await api('nv&o=lib&k='+K+'&s='+SRT);L=(j&&j.L)||[]}catch(e){}
+ if($('modal').dataset.k!=='nvlib')return;
+ modal(head+(L.length?L.map(row).join(''):`<p class="tag2" style="text-align:center">${K==='h'?'ยังไม่มีเล่มปกแข็งที่เปิดให้อ่าน — เป็นคนแรกเลยไหม?':'ยังไม่มีชีวิตที่เปิดสาธารณะในช่วงนี้'}</p>`)+`<button class="go" style="margin-top:10px" onclick="openNovels()">📕 กลับไปนิยายของฉัน<i class="foil"></i></button></div>`,'nvlib')};
+window.nvLibOpen=function(l){window._nvLibBack=1;if(K==='h')nvOpenBook(l,'lib');else if(typeof openLifeView==='function')openLifeView(l);else nvOpenBook(l,'lib')};
+window.nvLike=async function(l,b){try{b.disabled=true;const j=await api('nv',{o:'like',lid:l});b.disabled=false;if(j&&j.ok){b.classList.toggle('on',!!j.me);b.textContent=j.me?'❤️':'🤍';const s=b.parentElement.querySelector('.nst span:nth-child(2)');if(s)s.textContent='❤️ '+fmt(j.lk)}else toast(j&&j.err==='self'?'ถูกใจเล่มของตัวเองไม่ได้':'ถูกใจไม่สำเร็จ')}catch(e){b.disabled=false;toast('ถูกใจไม่สำเร็จ')}};
+// ปุ่มเข้าห้องสมุดในหน้านิยายของฉัน + ปุ่มกลับจากเล่มที่เปิดจากห้องสมุด
+const _on=window.openNovels;if(typeof _on==='function')window.openNovels=async function(){window._nvLibBack=0;const r=await _on.apply(this,arguments);try{const m=$('modal');if(m.dataset.k==='nv'&&!m.querySelector('.nlEnt')){const h=m.querySelector('.npv .tag2');if(h)h.insertAdjacentHTML('afterend','<button class="go nlEnt" style="margin:2px 0 10px" onclick="openNvLib()">📚 ห้องสมุด — อ่านนิยายของคนอื่น<i class="foil"></i></button>')}}catch(e){}return r};
+const _nb=window.nvOpenBook;if(typeof _nb==='function')window.nvOpenBook=async function(l,from){const r=await _nb.apply(this,arguments);try{if(from==='lib'){const m=$('modal'),x=m.querySelector('.xbtn');if(x)x.setAttribute('onclick','openNvLib()');if(!m.querySelector('.nlBk'))(m.querySelector('.npv')||m).insertAdjacentHTML('beforeend','<button class="gbtn nlBk" style="width:100%;margin-top:10px" onclick="openNvLib()">📚 กลับห้องสมุด</button>')}}catch(e){}return r};
+if(typeof openLifeView==='function'){const _lv=openLifeView;openLifeView=async function(){const r=await _lv.apply(this,arguments);try{if(window._nvLibBack){window._nvLibBack=0;const m=$('modal');if(m.dataset.k==='lifeview'&&!m.querySelector('.nlBk'))m.insertAdjacentHTML('beforeend','<button class="gbtn nlBk" style="width:100%;margin-top:10px" onclick="openNvLib()">📚 กลับห้องสมุด</button>')}}catch(e){}return r};window.openLifeView=openLifeView}
+})()}catch(e){console.error('block116',e)}
