@@ -53875,7 +53875,9 @@ function roll(){if(!live())return;const w=wid();if(!w||w==='murim')return;if(S.m
  let tot=L.reduce((a,e)=>a+e[3],0),r=Math.random()*tot,e=L[0];for(const x of L){r-=x[3];if(r<=0){e=x;break}}h[e[0]]=S.age;try{e[5]()}catch(x){console.error('ev110',e[0],x)}}
 window._n10Roll=roll;window._n10E=E.map(e=>e[0]);window._n10Run=id=>{const e=E.find(x=>x[0]===id);if(e)e[5]()};window._n10Fest=w=>festTry(w);window._n10Daily=w=>dailyTry(w);
 {const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(S&&S.alive&&S.age!==a0){let n=0;const t=setInterval(()=>{if(++n>40||!live()){clearInterval(t);return}if(choice._cur||modalOpen)return;clearInterval(t);roll()},150)}}catch(e){}return r}}
+})()}catch(e){console.error('block112',e)}
 
+// ============================================================
 // BLOCK 113: 🎬 ฉากหน้าแรกมีชีวิตขึ้น — ลม หมอก อากาศสุ่ม ของประกอบเคลื่อนไหวทุกโลก
 //            + ยุคปัจจุบันสุ่มโลกย่อย 10 แบบ + ทะลุฟ้าดาราสุ่ม บนโลก/อวกาศ/ดาราจักร/จักรวาล
 // ============================================================
@@ -54037,4 +54039,4 @@ function drawSkyAlt(o){const{cx,W,H,T,L,ox,oy}=o,E=L.ex;if(!E||!E.alt)return;
   if(sub==='gatewon'&&M.gw){const c=(T%16)/16,k=c,mx0=Math.round(W*(1.1-k*1.3)),my0=Math.round(hz);A(cx,.55);cx.fillStyle='#0a0408';cx.fillRect(mx0-10,my0-Math.round(H*.18),20,Math.round(H*.18));cx.fillRect(mx0-14,my0-Math.round(H*.16),4,10);cx.fillRect(mx0+10,my0-Math.round(H*.16),4,10);cx.fillRect(mx0-5,my0-Math.round(H*.22),10,Math.round(H*.05));A(cx,1);cx.fillStyle='#ff3a2a';cx.fillRect(mx0-3,my0-Math.round(H*.2),2,1);cx.fillRect(mx0+2,my0-Math.round(H*.2),2,1);
    for(let i=0;i<3;i++){const ph=(T*1.5+i/3)%1,x0=W*(.15+i*.3),y0=M.gw-3;if(ph<.5){cx.fillStyle='#ffd23a';cx.fillRect(Math.round(x0+(mx0-x0)*ph*2),Math.round(y0-(y0-(my0-H*.12))*ph*2),1,1)}}}
  }catch(e){}}}
-})()}catch(e){console.error('block112',e)}
+})()}catch(e){console.error('block113',e)}
