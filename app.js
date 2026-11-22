@@ -1,3 +1,11 @@
+// ⚡ BLOCK 0 (ตัวจัดคิวงานเบื้องหลัง): ตัวเฝ้าเช็คที่วนทุก 0.25–2 วิ (~45 ตัว) วิ่งผ่านตัวจัดคิวเดียว — หยุดเมื่อซ่อนแท็บ · รวมงานต่อเฟรมไม่เกิน ~4ms (ที่เหลือเลื่อนไปเฟรมถัดไป) · ตัวที่กินแรงต่อเนื่องเช็คห่างขึ้น (ไม่ช้ากว่าราว 1 วิ)
+//   งานจับเวลาของเกม (100ms) และงานที่ห่างกว่า 2 วิ ใช้ตัวจับเวลาปกติเหมือนเดิม
+(()=>{try{const NI=window.setInterval.bind(window),NC=window.clearInterval.bind(window),J=new Map();let seq=1e7;const now=()=>performance.now();
+ window.setInterval=function(f,ms,...a){const m=+ms||0;if(typeof f!=='function'||m<250||m>2000)return NI(f,ms,...a);const id=++seq;J.set(id,{f,a,ms:m,next:now()+m,c:0,mul:1});return id};
+ window.clearInterval=function(id){if(J.delete(id))return;return NC(id)};
+ const cap=j=>Math.max(1,1000/j.ms);
+ const run=()=>{requestAnimationFrame(run);const t0=now();for(const j of J.values()){const t=now();if(t<j.next)continue;if(t-t0>4)break;try{j.f.apply(window,j.a)}catch(e){console.error(e)}const d=now()-t;j.c=j.c*.8+d*.2;j.mul=j.c>6?Math.min(cap(j),j.mul+.5):j.c<2?Math.max(1,j.mul-.25):j.mul;j.next=now()+j.ms*j.mul}};
+ requestAnimationFrame(run);window.__jobs=()=>[...J.values()].map(j=>[j.ms,+j.c.toFixed(2),j.mul])}catch(e){console.error('block0',e)}})();
 // ✂️ ช่องรักษาลำดับการห่อฟังก์ชัน สำหรับโค้ดที่ย้ายไปไฟล์โลก /w/*.js (ดู tools/split-out.mjs · BLOCK 117)
 window.__wSlots={};function wSlot(id,names){const SL=window.__wSlots[id]={base:{},impl:{}};names.forEach(n=>{const b=window[n],has=typeof b==='function';if(has)SL.base[n]=b;window[n]=function(){const f=SL.impl[n]||(has?b:null);if(f)return f.apply(this,arguments);const a=arguments,t=this;return wNeed(id.replace(/\d+$/,''),()=>{const g=SL.impl[n];return g&&g.apply(t,a)})}})}
 
@@ -14531,7 +14539,7 @@ ${M} .focus .fc small.fch{display:none}
   if(g)g.classList.toggle('noscn',b.style.display==='none');
   if(MQ()&&f){const d=f.scrollHeight-f.scrollTop-f.clientHeight;if(!mini&&d>90)mini=true;else if(mini&&d<24)mini=false}else mini=false;
   const s=mini?'mini':pref;b.classList.toggle('scn-mid',s==='mid');b.classList.toggle('scn-mini',s==='mini');b.classList.toggle('scn-full',s==='full')};
- const q=()=>{if(!raf)raf=requestAnimationFrame(apply)};window.scnApply=q;
+ let qT=0;const q=()=>{if(raf)return;const w=Math.max(0,200-(Date.now()-qT));raf=setTimeout(()=>{qT=Date.now();requestAnimationFrame(apply)},w)};window.scnApply=q;
  const init=()=>{const f=$('feed'),b=$('sceneBox');if(!f||!b||b._scn)return;b._scn=1;f.addEventListener('scroll',q,{passive:true});addEventListener('resize',q);
   b.addEventListener('click',()=>{if(!MQ())return;if(mini){f.scrollTop=f.scrollHeight;mini=false}else{pref=pref==='full'?'mid':'full';LS.set('murim_scn',pref);try{toast(pref==='full'?'🖼️ ฉากขนาดเต็ม':'🖼️ ฉากขนาดเล็ก')}catch(e){}}apply()});
   try{new MutationObserver(q).observe(b,{attributes:true,attributeFilter:['style']})}catch(e){}
@@ -19781,7 +19789,7 @@ new MutationObserver(ms=>{ms.forEach(m=>m.addedNodes.forEach(x=>{if(x.classList&
 // ---------- กิจกรรมค้าง (Live Activity) → บินไปเกาะข้างชื่อ ----------
 const ISLD={on:{},t:0};
 function islDockEl(){const n=$('gName');if(!n)return null;const info=n.parentElement;let d=document.getElementById('islDock');if(!d){d=document.createElement('span');d.id='islDock';info.style.position=info.style.position||'relative';info.appendChild(d)}else if(d.parentElement!==info){info.appendChild(d)}
- try{const r=document.createRange();r.selectNodeContents(n);const rb=r.getBoundingClientRect(),ib=info.getBoundingClientRect(),zs=(ib.width/(info.offsetWidth||1))||1;d.style.left=((rb.right-ib.left)/zs+6)+'px';d.style.top=((rb.top-ib.top)/zs+(rb.height/zs-18)/2)+'px'}catch(e){}return d}
+ if(d._k!==n.textContent||Date.now()-(d._t||0)>1500||!d.style.left){d._k=n.textContent;d._t=Date.now();try{const r=document.createRange();r.selectNodeContents(n);const rb=r.getBoundingClientRect(),ib=info.getBoundingClientRect(),zs=(ib.width/(info.offsetWidth||1))||1;d.style.left=((rb.right-ib.left)/zs+6)+'px';d.style.top=((rb.top-ib.top)/zs+(rb.height/zs-18)/2)+'px'}catch(e){}}return d}
 function islChip(k,a){const d=islDockEl();if(!d)return null;let c=d.querySelector(`[data-k="${k}"]`);if(!c){c=document.createElement('span');c.className='islChip';c.dataset.k=k;c.innerHTML=`<i>${a.ic}</i><b></b>`;c.onclick=ev=>{ev.stopPropagation();islUndock(k)};d.appendChild(c)}return c}
 function islFly(fromEl,toEl,done){try{if(islLite()||!fromEl||!toEl||!fromEl.getBoundingClientRect().width){done();return}const a=fromEl.getBoundingClientRect(),b=toEl.getBoundingClientRect();const g=document.createElement('div');g.className='islGhost '+(document.getElementById('isl').className||'');g.innerHTML=`<span>${toEl.querySelector('i').innerHTML}</span>`;
   Object.assign(g.style,{left:a.left+'px',top:a.top+'px',width:a.width+'px',height:a.height+'px'});document.body.appendChild(g);
@@ -42164,7 +42172,7 @@ function fix(el){if(!el||el.nodeType!==1||SKIP.test(el.tagName)||el.closest('svg
  if(r>=need)return;const light=L(bg)>.4;el.style.setProperty('color',light?'#1c1408':'#f6efe2','important');el.style.setProperty('-webkit-text-fill-color',light?'#1c1408':'#f6efe2','important');el.dataset.cfix=light?'d':'l'}
 function unfix(root){for(const e of (root||document).querySelectorAll('[data-cfix]')){e.style.removeProperty('color');e.style.removeProperty('-webkit-text-fill-color');delete e.dataset.cfix}}
 // แคช: ตรวจแล้วจำไว้ต่อองค์ประกอบ (คลาส+สไตล์+คลาสของพ่อ) ตรวจซ้ำเฉพาะเมื่อเปลี่ยน — เดิมเรียก getComputedStyle ไล่ทั้งสายทุกครั้งที่ข้อความเปลี่ยน
-let FCK=new WeakMap();const fsig=e=>{const p=e.parentElement;return(e.getAttribute('class')||'')+'|'+(e.getAttribute('style')||'')+'|'+(p?(p.getAttribute('class')||''):'')+'|'+document.body.className};
+let FCK=new WeakMap();const fsig=e=>{const p=e.parentElement;return(e.getAttribute('class')||'')+'|'+(e.getAttribute('style')||'')+'|'+(p?(p.getAttribute('class')||''):'')};
 function scan(root,max){if(!root||root.nodeType!==1)return;const all=[root,...root.querySelectorAll('*')];let n=0;for(const e of all){if(++n>(max||1500))break;try{if(FCK.get(e)===fsig(e))continue;fix(e);FCK.set(e,fsig(e))}catch(x){}}}
 window.cfixScan=scan;
 // ของใหม่ในหน้า
@@ -43475,8 +43483,8 @@ window._pxPass=pass;
 // ถ้าค่าที่เขียนเหมือนเดิมทุกตัวอักษร และกล่องยังไม่ถูกแก้ตั้งแต่เราใส่ไอคอน → ข้าม (หน้าตาเหมือนเดิมทุกพิกเซล) · ใช้กับกล่องเล็กที่ไม่มีช่องกรอกเท่านั้น
 {const dH=Object.getOwnPropertyDescriptor(Element.prototype,'innerHTML'),dT=Object.getOwnPropertyDescriptor(Node.prototype,'textContent');
  if(dH&&dH.set&&dT&&dT.set){
-  Object.defineProperty(Element.prototype,'innerHTML',{configurable:true,enumerable:dH.enumerable,get(){return dH.get.call(this)},set(v){try{if(this.__pxOut!==undefined){if(v===this.__pxSrc&&dH.get.call(this)===this.__pxOut)return;this.__pxOut=undefined}this.__pxSrc=v}catch(e){}dH.set.call(this,v)}});
-  Object.defineProperty(Node.prototype,'textContent',{configurable:true,enumerable:dT.enumerable,get(){return dT.get.call(this)},set(v){try{if(this.__pxOut!==undefined&&this.nodeType===1){if(String(v)===dT.get.call(this)&&dH.get.call(this)===this.__pxOut)return;this.__pxOut=undefined}}catch(e){}dT.set.call(this,v)}});
+  Object.defineProperty(Element.prototype,'innerHTML',{configurable:true,enumerable:dH.enumerable,get(){return dH.get.call(this)},set(v){try{if(this.__pxOut!==undefined){if(v===this.__pxSrc&&dH.get.call(this)===this.__pxOut)return;this.__pxOut=undefined}else if(typeof v==='string'&&v.length<1500&&this.__hS===v&&this.isConnected&&dH.get.call(this)===this.__hG)return;this.__pxSrc=v}catch(e){}dH.set.call(this,v);try{if(typeof v==='string'&&v.length<1500){this.__hS=v;this.__hG=dH.get.call(this)}}catch(e){}}});
+  Object.defineProperty(Node.prototype,'textContent',{configurable:true,enumerable:dT.enumerable,get(){return dT.get.call(this)},set(v){try{if(this.__pxOut!==undefined&&this.nodeType===1){if(String(v)===dT.get.call(this)&&dH.get.call(this)===this.__pxOut)return;this.__pxOut=undefined}else if(this.nodeType===1&&this.childNodes.length===1&&this.firstChild.nodeType===3&&this.firstChild.data===String(v))return}catch(e){}dT.set.call(this,v)}});
  }}
 const pxMark=t=>{try{if(t&&t.nodeType===1&&t!==document.body&&t.id!=='modal'&&t.id!=='feed'&&!t.querySelector('input,textarea,select')){const h=t.innerHTML;if(h.length<1500)t.__pxOut=h}}catch(e){}};
 {const Q=new Set(),TG=new Set();let qr=0,gmo=null;const run=()=>{qr=0;const L=[...Q];Q.clear();for(const n of L){if(!n.isConnected)continue;if(n.nodeType===3){if(n.parentNode&&!(n.parentNode.classList&&n.parentNode.classList.contains('pxi')))wrapText(n)}else if(n.nodeType===1&&!n.classList.contains('pxi'))pass(n)}TG.forEach(pxMark);TG.clear();if(gmo)gmo.takeRecords()};
