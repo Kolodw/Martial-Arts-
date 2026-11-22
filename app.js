@@ -46861,7 +46861,7 @@ const st=document.createElement('style');st.textContent=`
 #modal[data-k="krt"]{padding:0!important;overflow:hidden!important;max-width:560px!important;width:min(560px,96vw)!important;background:#0a0f24!important}
 .kT{display:flex;gap:6px;padding:10px 10px 6px;background:linear-gradient(#0a0f24,#0d1430)}.kT button{flex:1;border:1.5px solid #3a4a8a;background:#121a3a;color:#cfe0ff;border-radius:999px;padding:7px 4px;font:inherit;font-size:13px;font-weight:700}.kT button.on{background:linear-gradient(#ffe08a,#e8b54a);color:#2a1a00;border-color:#ffe08a}
 .kHead{padding:12px 14px 4px;color:#fff3cf}.kHead h3{margin:0;font-size:19px;text-shadow:0 0 12px #ffd36e88}.kHead p{margin:2px 0 0;font-size:12px;color:#b8c8f0}
-.kRiver{position:relative;height:430px;overflow:hidden;background:linear-gradient(180deg,#050818 0%,#0c1640 34%,#122860 52%,#0a1a44 53%,#061030 100%)}
+.kRiver{position:relative;height:480px;}@keyframes kCardIn{from{transform:translateY(24px);opacity:0}}.kRiver{overflow:hidden;background:#050a22}.kCv{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 .kStar{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:kTw 2.4s ease-in-out infinite}@keyframes kTw{50%{opacity:.2}}
 .kMoon{position:absolute;right:38px;top:26px;width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 40% 38%,#fffbe8,#ffe9a8 60%,#e8c870);box-shadow:0 0 40px 12px #ffe9a855,0 0 120px 40px #ffe9a822}
 .kMoonR{position:absolute;right:50px;top:232px;width:40px;height:150px;background:linear-gradient(180deg,#ffe9a866,transparent);animation:kRf 3s ease-in-out infinite}@keyframes kRf{50%{transform:scaleX(1.4);opacity:.6}}
@@ -46869,15 +46869,22 @@ const st=document.createElement('style');st.textContent=`
 .kTemple{position:absolute;left:14px;top:118px;width:120px;height:72px}
 .kLan{position:absolute;width:14px;height:18px;border-radius:4px 4px 6px 6px;background:radial-gradient(circle at 50% 70%,#fff3b0,#ffb84a 60%,#c86a1a);box-shadow:0 0 14px 4px #ffb84a88;animation:kUp linear infinite}@keyframes kUp{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:1}100%{transform:translateY(-260px) translateX(30px);opacity:0}}
 .kWave{position:absolute;left:-10%;right:-10%;height:2px;background:repeating-linear-gradient(90deg,transparent 0 18px,#7ab8ff55 18px 40px);animation:kWv linear infinite}@keyframes kWv{to{transform:translateX(40px)}}
-.kBoat{position:absolute;display:flex;flex-direction:column;align-items:center;cursor:pointer;animation:kFlow linear infinite}.kBoat .kIn{animation:kBob 2.6s ease-in-out infinite}
-@keyframes kFlow{from{transform:translateX(-140px)}to{transform:translateX(620px)}}@keyframes kBob{50%{transform:translateY(-4px) rotate(2deg)}}
-.kTag{margin-top:-4px;padding:2px 8px;border-radius:999px;background:#000a;border:1px solid #ffd36e88;color:#ffe9b0;font-size:10.5px;font-weight:700;white-space:nowrap}
+.kBoat{position:absolute;display:flex;flex-direction:column;align-items:center;cursor:pointer;animation:kFlow linear infinite;will-change:transform;-webkit-tap-highlight-color:transparent}.kBoat .kIn{position:relative;animation:kBob 3.2s ease-in-out infinite;transform-origin:50% 85%}
+.kRef{position:absolute;top:72%;left:50%;height:14px;margin-left:0;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse at 50% 30%,#ffd27a55,#ffb84a22 45%,transparent 70%);pointer-events:none;animation:kRefA 3.2s ease-in-out infinite}
+.kRef::before,.kRef::after{content:'';position:absolute;left:50%;top:40%;width:100%;height:100%;border:1px solid #bfe0ff66;border-radius:50%;transform:translate(-50%,-50%) scale(.5);animation:kRip 2.8s ease-out infinite}.kRef::after{animation-delay:-1.4s}
+@keyframes kRip{0%{transform:translate(-50%,-50%) scale(.45);opacity:.9}100%{transform:translate(-50%,-50%) scale(1.35);opacity:0}}@keyframes kRefA{50%{transform:translateX(-50%) scaleX(1.15);opacity:.75}}
+.kSelB .kIn{filter:drop-shadow(0 0 8px #ffe08a) drop-shadow(0 0 16px #ffb84a);animation:kBob 3.2s ease-in-out infinite,kSelP 1.6s ease-in-out infinite}@keyframes kSelP{50%{filter:drop-shadow(0 0 3px #ffe08a) drop-shadow(0 0 22px #ffd36e)}}
+.kSelB .kTag{border-color:#ffe08a;background:#2a1c00e6;box-shadow:0 0 10px #ffd36e88}
+.kBoat:active .kIn{transform:scale(.94)}
+.kNew .kIn{animation:kDrop 1.3s cubic-bezier(.3,1.4,.5,1) both,kBob 3.2s ease-in-out 1.3s infinite}@keyframes kDrop{0%{transform:translateY(-70px) scale(.6);opacity:0}55%{transform:translateY(4px) scale(1.05);opacity:1}100%{transform:none}}
+@keyframes kFlow{from{transform:translateX(-140px)}to{transform:translateX(620px)}}@keyframes kBob{0%,100%{transform:translateY(0) rotate(-2deg)}25%{transform:translateY(-3px) rotate(1deg)}50%{transform:translateY(-1px) rotate(2.5deg)}75%{transform:translateY(-4px) rotate(-.5deg)}}
+.kTag{position:relative;margin-top:-6px;padding:1px 7px;border-radius:999px;background:#05081ccc;border:1px solid #ffd36e66;color:#ffe9b0;font-size:10px;line-height:13px;font-weight:700;white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis}
 .kTag i{font-style:normal;color:#ff9ac0}
 .kSvg .kFlame{transform-origin:60px 31px;animation:kFl .5s ease-in-out infinite alternate}.kSvg .kFlameG{animation:kFlG 1s ease-in-out infinite alternate}@keyframes kFl{to{transform:scale(.85,1.12) skewX(4deg)}}@keyframes kFlG{to{opacity:.6}}
 .kSvg .kGlow{animation:kFlG 1.6s ease-in-out infinite alternate}.kSvg .kGhost{animation:kBob 2s ease-in-out infinite}.kSvg .kRing{transform-origin:60px 62px;animation:kRot 6s linear infinite}@keyframes kRot{to{transform:rotate(360deg)}}
 .kSvg .kEmber{animation:kTw 1s ease-in-out infinite}
 .kRefl{position:absolute;opacity:.25;transform:scaleY(-1);filter:blur(1.5px)}
-.kCard{position:absolute;left:12px;right:12px;bottom:12px;padding:12px;border-radius:16px;background:linear-gradient(160deg,#1c2350f2,#0f1430f2);border:1.5px solid #ffd36e99;box-shadow:0 10px 30px #000a;color:#f0f0ff;display:flex;gap:12px;align-items:center}
+.kCard{position:absolute;z-index:40;animation:kCardIn .28s cubic-bezier(.2,.9,.3,1.2) both;left:12px;right:12px;bottom:12px;padding:12px;border-radius:16px;background:linear-gradient(160deg,#1c2350f2,#0f1430f2);border:1.5px solid #ffd36e99;box-shadow:0 10px 30px #000a;color:#f0f0ff;display:flex;gap:12px;align-items:center}
 .kCard .kW{font-size:13px;color:#ffe9b0;margin:4px 0;font-style:italic}.kCard small{color:#b8c8f0}.kCard .kB{display:flex;gap:6px;margin-top:8px}.kCard .kB button{flex:1;border-radius:10px;border:1.5px solid #ffd36e;background:#2a2410;color:#ffe08a;font:inherit;font-weight:800;padding:7px}
 .kBar{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#0d1430;color:#cfe0ff;font-size:12px}.kBar b{color:#ffe08a}
 .kMk{padding:12px 14px;color:#eef}.kMk h4{margin:10px 0 6px;color:#ffe08a;font-size:14px}
@@ -46912,11 +46919,11 @@ const st=document.createElement('style');st.textContent=`
 
 .k2v .k2fxIn{transform-origin:50px 50px;animation:k2Spin 26s linear infinite reverse}
 #modal[data-k="krt"] .kStateBox{padding:10px 14px;color:#cfe0ff;font-size:12.5px}
-.kEmpty{position:absolute;left:0;right:0;top:300px;text-align:center;color:#cfe0ff;font-size:13px;opacity:.85}
+.kEmpty{position:absolute;left:0;right:0;top:330px;z-index:5;text-shadow:0 1px 4px #000;text-align:center;color:#cfe0ff;font-size:13px;opacity:.85}
 .kProg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.kProg div{border-radius:12px;padding:10px;background:#141c40;border:1.5px solid #2a3a7a;color:#e8ecff;font-size:12px;text-align:center}.kProg div.got{border-color:#ffd36e;background:linear-gradient(160deg,#3a2c0a,#141c40)}
 .kProg .bar{height:6px;border-radius:9px;background:#ffffff18;overflow:hidden;margin-top:5px}.kProg .bar i{display:block;height:100%;background:linear-gradient(90deg,#ffd36e,#ff9ac0)}
 .kEnt{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 8px;padding:10px 12px;border-radius:14px;border:2px solid #ffd36e;background:linear-gradient(135deg,#0c1640,#1c2a5a 60%,#3a2c0a);color:#fff3cf;font:inherit;font-weight:800;cursor:pointer;box-shadow:0 0 14px #ffd36e55}.kEnt small{display:block;font-weight:600;color:#cfe0ff;font-size:11.5px}
-@media (prefers-reduced-motion:reduce){.kBoat,.kBoat .kIn,.kLan,.kWave,.k2v *,.k2t,.k2t *{animation:none!important}}`;document.head.appendChild(st);
+@media (prefers-reduced-motion:reduce){.kBoat,.kBoat .kIn,.kRef,.kRef::before,.kRef::after,.kLan,.kWave,.k2v *,.k2t,.k2t *{animation:none!important}}`;document.head.appendChild(st);
 // ---------- ข้อมูล ----------
 const K={j:null,t:0,sel:null,tab:'river',lifeI:0,style:null,wish:''};
 const graves=()=>{try{return (LS.get('murim_graves',[])||[]).filter(g=>g&&g.n).slice(0,40)}catch(e){return[]}};
@@ -46928,14 +46935,121 @@ function sync(j){try{const m=j.mine;if(!m)return;const d=frGet();let ch=0;(m.fr|
  if(m.fc>=5){const T=LS.get('murim_ttl',{});if(!T[KTTL]){T[KTTL]={n:S&&S.name||'',t:Date.now(),c:1};LS.set('murim_ttl',T);toast('🏷️ ได้ฉายา「'+KTTL+'」!')}}}catch(e){}}
 // ---------- หน้าจอ ----------
 const wid=w=>W[w]?w:'w0';
-function river(j){const L=(j&&j.L||[]).slice(0,12);let h=`<div class="kRiver">`;
- for(let i=0;i<40;i++)h+=`<i class="kStar" style="left:${(i*37)%100}%;top:${(i*53)%46}%;animation-delay:-${(i%7)*.4}s;opacity:${.4+(i%5)/8}"></i>`;
- h+=`<div class="kMoon"></div><div class="kMoonR"></div><svg class="kTemple" viewBox="0 0 120 72"><path d="M10 72V44H110V72Z" fill="#0a0f24"/><path d="M4 46L60 18L116 46Z" fill="#101838"/><path d="M60 0L64 18H56Z" fill="#101838"/><rect x="28" y="50" width="10" height="14" fill="#ffb84a" opacity=".7"/><rect x="82" y="50" width="10" height="14" fill="#ffb84a" opacity=".7"/><rect x="54" y="50" width="12" height="22" fill="#ffd36e" opacity=".5"/></svg>`;
- for(let i=0;i<6;i++)h+=`<i class="kLan" style="left:${8+i*15}%;top:${150+(i%3)*14}px;animation-duration:${9+i*1.3}s;animation-delay:-${i*1.7}s"></i>`;
- for(let i=0;i<8;i++)h+=`<i class="kWave" style="top:${238+i*24}px;animation-duration:${2.4+i*.3}s;opacity:${.25+i*.05}"></i>`;
+// ---------- 🌊 ฉากสายน้ำแบบพิกเซลเคลื่อนไหว (แคนวาสเดียว ความละเอียดครึ่ง → ภาพพิกเซล · หยุดเมื่อซ่อนแท็บ/ปิดหน้าต่าง · เครื่องอ่อนลดของเอง) ----------
+const KS={raf:0,t0:performance.now(),lite:(()=>{try{return(navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=3||matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){return false}})(),seed:null,fx:[]};
+const KH=480,HZ=118; // ความสูงฉาก (px จอ) · เส้นขอบฟ้า (พิกเซลฉาก = จอ/2)
+function ksSeed(w){const r=(a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296})(2569);
+ const S={w,stars:[],lan:[],ff:[],mist:[],smoke:[],shoot:null,nextShoot:3};
+ for(let i=0;i<(KS.lite?45:80);i++)S.stars.push({x:r()*w,y:r()*(HZ-22),p:r()*6.28,s:r()<.12?2:1,sp:.6+r()*1.8});
+ const LC=[['#ffcf6a','#ff8a2a'],['#ff9a7a','#e0402a'],['#ffd0e0','#ff6aa0'],['#fff0b0','#ffb030'],['#ffc0a0','#ff6a3a']];
+ for(let i=0;i<(KS.lite?6:12);i++){const z=.45+r()*.9;S.lan.push({x:r()*w,y:HZ-10-r()*HZ,z,v:2.2+z*3.2,ph:r()*6.28,c:LC[i%LC.length]})}
+ for(let i=0;i<(KS.lite?7:16);i++)S.ff.push({x:r()*w*.45,y:HZ-24+r()*20,ph:r()*6.28,sp:.4+r()*.8,bl:r()*6.28});
+ for(let i=0;i<4;i++)S.mist.push({x:r()*w,y:HZ-4+r()*10,rw:40+r()*50,v:2+r()*3});
+ return S}
+// บ้านทรงไทยริมน้ำ + ท่าน้ำ + กอบัว + ต้นไม้ วาดด้วยสี่เหลี่ยมพิกเซล
+function ksHouse(g,t,x0){const P=(x,y,w,h,c)=>{g.fillStyle=c;g.fillRect(x0+x|0,y|0,w,h)};const b=HZ;
+ // เสาใต้ถุน
+ for(const x of[4,14,24,34,44])P(x,b-14,2,14,'#0a0c1c');
+ // พื้นเรือน
+ P(0,b-16,50,3,'#141a34');
+ // ฝาเรือน
+ P(3,b-33,44,17,'#161d3c');P(3,b-33,44,1,'#1f2a52');
+ // หน้าต่าง/ประตู ไฟเทียนกะพริบ
+ const fl=k=>{const v=.72+.18*Math.sin(t*7.3+k*2.1)+.1*Math.sin(t*13.1+k);return`rgba(255,${180+40*v|0},${80+40*v|0},${.55+.4*v})`};
+ P(8,b-29,6,8,fl(1));P(36,b-29,6,8,fl(2));P(22,b-30,6,14,fl(3));
+ P(8,b-25,6,1,'#161d3c');P(36,b-25,6,1,'#161d3c');P(11,b-29,1,8,'#161d3c');P(39,b-29,1,8,'#161d3c');
+ // หลังคาทรงสูงซ้อนสองชั้น
+ for(let i=0;i<20;i++){P(1+i*.6,b-34-i,48-i*1.2,1,i<3?'#1d2650':'#121836')}
+ for(let i=0;i<8;i++)P(-3+i,b-34+ -i*0+0,1,1,'#121836');
+ P(-4,b-35,4,1,'#1d2650');P(50,b-35,4,1,'#1d2650');
+ // ช่อฟ้า ปลายจั่วงอน
+ P(24,b-56,2,3,'#2a3566');P(26,b-58,1,2,'#2a3566');P(-5,b-37,1,2,'#2a3566');P(53,b-37,1,2,'#2a3566');
+ // ป้านลมสะท้อนแสงจันทร์
+ for(let i=0;i<20;i++){P(25+i*.6|0,b-54+i,1,1,'#34427a')}
+ // ท่าน้ำไม้
+ P(46,b-14,30,2,'#2a2018');for(const x of[50,60,70])P(x,b-12,2,16,'#1a140f');
+ // เสาโคมแขวนโยก
+ P(74,b-30,1,18,'#1a140f');P(74,b-30,6,1,'#1a140f');const sw=Math.sin(t*1.6)*1.4;
+ g.save();g.globalCompositeOperation='lighter';const lx=x0+79+sw,ly=b-25;const gr=g.createRadialGradient(lx,ly,0,lx,ly,14);gr.addColorStop(0,'rgba(255,190,90,.55)');gr.addColorStop(1,'rgba(255,140,40,0)');g.fillStyle=gr;g.fillRect(lx-14,ly-14,28,28);g.restore();
+ P(79+sw,b-29,1,2,'#3a2a1a');P(78+sw,b-27,3,4,'#ff9a3a');P(78+sw,b-27,3,1,'#ffd27a');
+ // เถาไม้เลื้อย/กระถาง
+ P(-2,b-17,3,3,'#16301e');P(47,b-17,3,3,'#16301e')}
+function ksTrees(g,w){const b=HZ,P=(x,y,ww,h,c)=>{g.fillStyle=c;g.fillRect(x|0,y|0,ww,h)};
+ // ทิวเขาไกลสองชั้น
+ g.fillStyle='#0f1838';g.beginPath();g.moveTo(0,b);for(let x=0;x<=w;x+=6)g.lineTo(x,b-10-6*Math.sin(x*.035)-4*Math.sin(x*.11+1));g.lineTo(w,b);g.fill();
+ g.fillStyle='#0b1230';g.beginPath();g.moveTo(0,b);for(let x=0;x<=w;x+=4)g.lineTo(x,b-4-4*Math.sin(x*.05+2)-2*Math.sin(x*.17));g.lineTo(w,b);g.fill();
+ // ต้นมะพร้าวฝั่งขวา
+ const palm=(x,h)=>{for(let i=0;i<h;i++)P(x+Math.sin(i*.12)*2,b-i,2,1,'#080d20');const tx=x+Math.sin(h*.12)*2,ty=b-h;for(let a=0;a<7;a++){const an=-2.6+a*.75;for(let k=1;k<10;k++)P(tx+Math.cos(an)*k,ty+Math.sin(an)*k*.6+k*k*.04,1,1,'#080d20')}};
+ palm(w-34,34);palm(w-20,26);palm(w*.62,22);
+ // พุ่มไม้ฝั่ง
+ for(let x=0;x<w;x+=3){const h=2+((x*7)%5);P(x,b-h,3,h,'#070b1c')}}
+function ksLotus(g,t,x,y,s){const P=(a,b,w,h,c)=>{g.fillStyle=c;g.fillRect(a|0,b|0,w,h)};const bob=Math.sin(t*1.3+x)*.6;
+ P(x-4*s,y+bob,8*s,2,'#1f5a34');P(x-3*s,y-1+bob,6*s,1,'#2f7a48');P(x+6*s,y+1+bob,5*s,1,'#1f5a34');
+ P(x,y-5+bob,2,4,'#2a6a3a');P(x-1,y-8+bob,4,3,'#ff8ab8');P(x,y-9+bob,2,1,'#ffd0e4');P(x-2,y-7+bob,1,2,'#e8609a');P(x+3,y-7+bob,1,2,'#e8609a')}
+function ksFrame(cv,now){const g=cv.getContext('2d');const w=cv.width,h=cv.height,t=(now-KS.t0)/1000;
+ if(!KS.seed||KS.seed.w!==w)KS.seed=ksSeed(w);const S=KS.seed;g.imageSmoothingEnabled=false;
+ // ฟ้าไล่สีแบบเป็นแถบพิกเซล
+ const SKY=['#03061a','#050a22','#07102c','#0a1638','#0d1c44','#11234f','#152a5a','#1a3264'];
+ for(let i=0;i<8;i++){g.fillStyle=SKY[i];g.fillRect(0,i*HZ/8|0,w,Math.ceil(HZ/8)+1)}
+ // ดาวกะพริบ
+ for(const s of S.stars){const a=.35+.65*Math.max(0,Math.sin(t*s.sp+s.p));g.fillStyle=`rgba(255,255,${220+s.s*15},${a})`;g.fillRect(s.x|0,s.y|0,1,1);if(s.s>1&&a>.8){g.fillStyle=`rgba(255,255,255,${(a-.8)*2.5})`;g.fillRect((s.x|0)-1,s.y|0,3,1);g.fillRect(s.x|0,(s.y|0)-1,1,3)}}
+ // ดาวตก
+ if(!S.shoot&&t>S.nextShoot){S.shoot={x:w*(.2+Math.random()*.6),y:4+Math.random()*30,t:t,vx:-(70+Math.random()*50),vy:28+Math.random()*16}}
+ if(S.shoot){const d=t-S.shoot.t,L=.7;if(d>L){S.shoot=null;S.nextShoot=t+5+Math.random()*9}else{const k=Math.sin(d/L*Math.PI);for(let i=0;i<14;i++){const q=i/14;g.fillStyle=`rgba(255,250,220,${k*(1-q)})`;g.fillRect(S.shoot.x+S.shoot.vx*(d-q*.12)|0,S.shoot.y+S.shoot.vy*(d-q*.12)|0,1,1)}}}
+ // พระจันทร์ + รัศมี
+ const mx=w-34,my=30,mr=13;g.save();g.globalCompositeOperation='lighter';let gr=g.createRadialGradient(mx,my,mr*.6,mx,my,mr*4.2);gr.addColorStop(0,'rgba(255,236,170,.32)');gr.addColorStop(1,'rgba(255,236,170,0)');g.fillStyle=gr;g.fillRect(mx-mr*4.2,my-mr*4.2,mr*8.4,mr*8.4);g.restore();
+ for(let y=-mr;y<=mr;y++){const hw=Math.round(Math.sqrt(mr*mr-y*y));g.fillStyle=y<-mr*.4?'#fffbe6':y<mr*.4?'#fff1c0':'#f2d890';g.fillRect(mx-hw,my+y,hw*2,1)}
+ g.fillStyle='rgba(214,186,120,.55)';g.fillRect(mx-5,my-3,3,3);g.fillRect(mx+3,my+2,4,3);g.fillRect(mx-1,my+6,2,2);g.fillRect(mx+5,my-7,2,2);
+ // ทิวไม้ บ้าน กอบัว
+ ksTrees(g,w);ksHouse(g,t,8);
+ // ควันจากครัวลอยช้า
+ if(!KS.lite||Math.random()<.5){if(S.smoke.length<14&&Math.random()<.18)S.smoke.push({x:16+Math.random()*2,y:HZ-56,a:t,dr:Math.random()*.6})}
+ S.smoke=S.smoke.filter(p=>{const d=t-p.a;if(d>6)return false;const a=.22*(1-d/6);g.fillStyle=`rgba(170,182,214,${a})`;const r=1+d*.9|0;g.fillRect(p.x+d*(3+p.dr*4)+Math.sin(d*1.7)*2|0,p.y-d*6|0,r,r);return true});
+ // โคมลอยหลายสี ไกล-ใกล้
+ for(const L of S.lan){L.y-=L.v*(1/60)*(KS.lite?2:1);if(L.y<-12){L.y=HZ-6;L.x=Math.random()*w}const x=L.x+Math.sin(t*.6+L.ph)*4*L.z,y=L.y,s=Math.max(1,Math.round(2*L.z));
+  const f=.8+.2*Math.sin(t*9+L.ph);g.save();g.globalCompositeOperation='lighter';const r=6*L.z+3;const lg=g.createRadialGradient(x,y,0,x,y,r);lg.addColorStop(0,`rgba(255,180,90,${.35*f})`);lg.addColorStop(1,'rgba(255,140,60,0)');g.fillStyle=lg;g.fillRect(x-r,y-r,r*2,r*2);g.restore();
+  g.fillStyle=L.c[1];g.fillRect(x-s|0,y-s|0,s*2,s*2+1);g.fillStyle=L.c[0];g.fillRect(x-s+1|0,y|0,Math.max(1,s*2-2),s);g.fillStyle='#fff6d0';g.fillRect(x|0,y+s|0,1,1)}
+ // ===== น้ำ: เงาสะท้อนบ้าน/ฟ้า แบบระลอก =====
+ const wh=h-HZ;const deep=['#0a1a44','#09173e','#081438','#071232','#06102c','#050e28'];for(let i=0;i<6;i++){g.fillStyle=deep[i];g.fillRect(0,HZ+i*wh/6|0,w,Math.ceil(wh/6)+1)}
+ const refH=Math.min(70,wh);g.save();for(let r=0;r<refH;r+=1){const sy=HZ-1-r*.8,off=Math.sin(r*.35-t*1.6)*(.6+r*.05)+Math.sin(r*.9+t*2.3)*.5;g.globalAlpha=.26*(1-r/refH);g.drawImage(cv,0,sy|0,w,1,Math.round(off),HZ+r,w,1)}g.restore();
+ // แสงจันทร์ระยิบบนน้ำ แตกเป็นเส้นตามคลื่น
+ g.save();g.globalCompositeOperation='lighter';for(let r=2;r<wh;r+=2){const z=r/wh,spread=4+z*26,n=2+(z*5|0);for(let k=0;k<n;k++){const ph=Math.sin(r*1.7+k*3.1+t*(1.4+k*.3));if(ph<.15)continue;const x=mx+Math.sin(r*.9+k*2+t*1.1)*spread,len=1+(ph*4*(1-z*.4)|0);g.fillStyle=`rgba(255,232,160,${.55*ph*(1-z*.55)})`;g.fillRect(x|0,HZ+r,len,1)}}g.restore();
+ // คลื่นหลายชั้น วิ่งคนละความเร็ว/ทิศ (ไกลเล็ก ใกล้ใหญ่)
+ const rows=KS.lite?10:18;for(let i=0;i<rows;i++){const z=(i+1)/rows,y=HZ+3+Math.pow(z,1.35)*(wh-6)|0,gap=10+z*26,len=2+z*9|0,sp=(i%2?-1:1)*(4+z*10),a=.08+z*.2;g.fillStyle=`rgba(140,190,255,${a})`;const o=((t*sp)%gap+gap)%gap;for(let x=-gap+o+(i*7%gap);x<w;x+=gap){const yy=y+Math.round(Math.sin(x*.08+t*1.5+i)*.6);g.fillRect(x|0,yy,len,1);g.fillStyle=`rgba(200,230,255,${a*.6})`;g.fillRect(x+1|0,yy-1,Math.max(1,len-3),1);g.fillStyle=`rgba(140,190,255,${a})`}}
+ // หมอกบางเหนือผิวน้ำ
+ for(const m of S.mist){m.x+=m.v/60;if(m.x-m.rw>w)m.x=-m.rw;const mg=g.createRadialGradient(m.x,m.y,0,m.x,m.y,m.rw);mg.addColorStop(0,'rgba(170,190,240,.10)');mg.addColorStop(1,'rgba(170,190,240,0)');g.fillStyle=mg;g.fillRect(m.x-m.rw,m.y-m.rw*.25,m.rw*2,m.rw*.5)}
+ // กอบัวริมฝั่ง
+ ksLotus(g,t,6,HZ+8,1);ksLotus(g,t,w*.5,HZ+6,1);ksLotus(g,t,w-14,HZ+9,1);if(!KS.lite){ksLotus(g,t,w*.3,HZ+12,1);ksLotus(g,t,w*.78,HZ+11,1)}
+ // หิ่งห้อยริมฝั่งซ้าย
+ g.save();g.globalCompositeOperation='lighter';for(const f of S.ff){const x=f.x+Math.sin(t*f.sp+f.ph)*8,y=f.y+Math.cos(t*f.sp*1.3+f.ph)*4,b=Math.max(0,Math.sin(t*2.2+f.bl));if(b<.1)continue;g.fillStyle=`rgba(200,255,120,${.25*b})`;g.fillRect(x-1|0,y-1|0,3,3);g.fillStyle=`rgba(240,255,170,${b})`;g.fillRect(x|0,y|0,1,1)}g.restore();
+ // เอฟเฟกต์แตะ/อธิษฐาน/ลอย (พิกัดฉาก)
+ KS.fx=KS.fx.filter(e=>{const d=t-e.t;if(d>e.L)return false;const k=d/e.L;g.save();g.globalCompositeOperation='lighter';
+  if(e.k==='ring'){for(let i=0;i<3;i++){const kk=k-i*.18;if(kk<0||kk>1)continue;const rx=4+kk*26,ry=rx*.32;g.strokeStyle=`rgba(255,230,160,${.7*(1-kk)})`;g.lineWidth=1;g.beginPath();g.ellipse(e.x,e.y,rx,ry,0,0,6.283);g.stroke()}}
+  else if(e.k==='spark'){for(const p of e.p){const x=e.x+p.vx*d,y=e.y+p.vy*d+18*d*d*(p.g||0)-12*d;g.fillStyle=`rgba(${p.c},${1-k})`;g.fillRect(x|0,y|0,p.s,p.s)}}
+  else if(e.k==='splash'){for(const p of e.p){const x=e.x+p.vx*d,y=e.y+p.vy*d+60*d*d;if(y>e.y+2)continue;g.fillStyle=`rgba(190,225,255,${1-k})`;g.fillRect(x|0,y|0,1,1)}for(let i=0;i<2;i++){const kk=k-i*.25;if(kk<0)continue;g.strokeStyle=`rgba(190,225,255,${.6*(1-kk)})`;g.beginPath();g.ellipse(e.x,e.y+2,6+kk*30,(6+kk*30)*.3,0,0,6.283);g.stroke()}}
+  g.restore();return true})}
+function ksLoop(now){KS.raf=0;const cv=document.querySelector('#modal .kCv');if(!cv||!modalOpen||document.hidden)return;
+ const W2=Math.max(120,cv.clientWidth/2|0),H2=KH/2;if(cv.width!==W2||cv.height!==H2){cv.width=W2;cv.height=H2}
+ if(KS.lite&&KS.last&&now-KS.last<31){KS.raf=requestAnimationFrame(ksLoop);return}KS.last=now;
+ try{ksFrame(cv,now)}catch(e){console.error('kscene',e);return}KS.raf=requestAnimationFrame(ksLoop)}
+function ksStart(){if(!KS.raf)KS.raf=requestAnimationFrame(ksLoop)}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)ksStart()});
+// พิกัดจอ → พิกัดฉาก สำหรับเอฟเฟกต์ที่ตำแหน่งกระทง
+function ksAt(el,kind){try{const cv=document.querySelector('#modal .kCv');if(!cv||!el)return;const a=cv.getBoundingClientRect(),b=el.getBoundingClientRect();const x=(b.left+b.width/2-a.left)/2,y=(b.top+b.height*.82-a.top)/2,t=(performance.now()-KS.t0)/1000;
+ if(kind==='ring')KS.fx.push({k:'ring',x,y,t,L:1.4});
+ if(kind==='spark'){const p=[];for(let i=0;i<(KS.lite?14:26);i++)p.push({vx:(Math.random()-.5)*26,vy:-14-Math.random()*26,s:Math.random()<.3?2:1,c:['255,220,140','255,170,210','255,255,230'][i%3]});KS.fx.push({k:'spark',x,y:y-14,t,L:1.6,p})}
+ if(kind==='splash'){const p=[];for(let i=0;i<20;i++)p.push({vx:(Math.random()-.5)*40,vy:-20-Math.random()*30});KS.fx.push({k:'splash',x,y,t,L:1.2,p})}}catch(e){}}
+// เสียงน้ำเบาๆ (สร้างเอง ไม่ต้องโหลดไฟล์)
+function ksWater(){try{if(typeof sfxOn!=='undefined'&&!sfxOn)return;const A=ac();if(!A)return;const n=A.sampleRate*.7|0,bf=A.createBuffer(1,n,A.sampleRate),d=bf.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.2);
+ const s=A.createBufferSource();s.buffer=bf;const f=A.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(900,A.currentTime);f.frequency.exponentialRampToValueAtTime(260,A.currentTime+.6);f.Q.value=1.4;const v=A.createGain();v.gain.value=.22;s.connect(f);f.connect(v);v.connect(A.destination);s.start();
+ [0,.12,.27].forEach((dt,i)=>{const o=A.createOscillator(),gg=A.createGain();o.type='sine';o.frequency.setValueAtTime(700+i*260,A.currentTime+dt);o.frequency.exponentialRampToValueAtTime(320+i*90,A.currentTime+dt+.12);gg.gain.setValueAtTime(.0001,A.currentTime+dt);gg.gain.exponentialRampToValueAtTime(.08,A.currentTime+dt+.01);gg.gain.exponentialRampToValueAtTime(.0001,A.currentTime+dt+.16);o.connect(gg);gg.connect(A.destination);o.start(A.currentTime+dt);o.stop(A.currentTime+dt+.2)})}catch(e){}}
+function river(j){const L=(j&&j.L||[]).slice(0,12);let h=`<div class="kRiver"><canvas class="kCv"></canvas>`;
  if(!L.length)h+=`<div class="kEmpty">ยังไม่มีกระทงบนสายน้ำ · เป็นคนแรกที่ลอยเลย 🪷</div>`;
- L.forEach((x,i)=>{const lane=[250,300,350,280,330,385,265,315,365,295,345,395][i],sz=[70,64,78,60,72,66,62,74,68,70,64,72][i],dur=30+(i%6)*5,dl=i*5.3;
-  h+=`<div class="kBoat" style="top:${lane-sz*.6}px;animation-duration:${dur}s;animation-delay:-${dl}s" onclick="krtSel(${i})"><div class="kIn">${kSvg(wid(x.st),sz,x.p>=10||x.mine)}</div><div class="kTag">${esc(x.n)} · ${fmt(x.a)} ปี <i>🙏${x.p||0}</i>${x.mine?' ⭐':''}</div></div>`});
+ // 4 เลนตามระยะ (ไกลเล็ก ใกล้ใหญ่) · เลนละ 3 ใบ ความเร็วเท่ากันในเลน + เว้นระยะเท่ากัน → ไม่ชนกันเอง · ป้ายสั้นไม่ทับกระทงเลนอื่น
+ const LN=[[250,44,58],[308,50,52],[372,56,47],[440,62,42]];
+ const newest=K.newK;
+ L.forEach((x,i)=>{const ln=LN[i%4],k=Math.floor(i/4),[top,sz,dur]=ln,dl=(dur/3)*k+(i%4)*3.1;const nm=String(x.n||'');const nmS=nm.length>12?nm.slice(0,11)+'…':nm;
+  h+=`<div class="kBoat${K.sel===i?' kSelB':''}${newest&&x.k===newest?' kNew':''}" data-i="${i}" style="top:${top-sz*.62}px;z-index:${10+(i%4)};animation-duration:${dur}s;animation-delay:-${dl.toFixed(2)}s" onclick="krtSel(${i})"><i class="kRef" style="width:${sz*1.2|0}px"></i><div class="kIn" style="animation-delay:-${(i*.37).toFixed(2)}s">${kSvg(wid(x.st),sz,x.p>=10||x.mine)}</div><div class="kTag">${esc(nmS)} <i>🙏${x.p||0}</i>${x.mine?' ⭐':''}</div></div>`});
  if(K.sel!=null&&L[K.sel]){const x=L[K.sel];h+=`<div class="kCard"><div>${kSvg(wid(x.st),74,1)}</div><div style="min-width:0;flex:1"><b style="font-size:15px">${esc(x.n)}</b>${x.e?` <small>「${esc(x.e)}」</small>`:''}<br><small>${(W[wid(x.w)]||W.w0).ic} อายุ ${fmt(x.a)} ปี${x.c?' · 🪦 '+esc(x.c):''}${x.pn?' · ลอยโดย '+esc(x.pn):''}</small>${x.x?`<div class="kW">“${esc(x.x)}”</div>`:''}<div class="kB">${x.mine?`<button disabled>⭐ กระทงของคุณ · 🙏${x.p||0}</button>`:`<button ${x.me||!live()?'disabled':''} onclick="krtPray('${x.k}')">🙏 ${x.me?'อธิษฐานแล้ว':'อธิษฐานร่วม'} (${x.p||0})</button>`}${x.lid?`<button onclick="openLifeView('${x.lid}')">📖 ดูชีวิตนี้</button>`:''}<button onclick="krtSel(-1)">✕</button></div></div></div>`}
  const m=j&&j.mine;return h+`</div><div class="kBar"><span>🌕 ${live()?'ลอยกระทง 2569 · ถึง 30 พ.ย.':'งานจบแล้ว · ขอบคุณที่มาลอยกระทง'} · บนน้ำ <b>${fmt(j&&j.tot||0)}</b> ใบ</span><span>${m?`วันนี้ <b>${Math.min(3,m.used)}/3</b>`:''}</span></div>`}
 function make(){if(!live())return`<div class="kStateBox">งานลอยกระทงปีนี้จบแล้ว 🌕 ดูกระทงบนสายน้ำและกระทงแห่งปีได้</div>`;const G=graves(),m=K.j&&K.j.mine;
@@ -46957,14 +47071,14 @@ function top(j){const T=j&&j.top||[],m=j&&j.mine;const own=frGet().own;const pr=
  <p class="tag2" style="color:#9fb0e0;margin-top:8px">ได้กรอบแล้วใส่ได้ที่ 🖼️ กรอบโปรไฟล์ · ฉายาเลือกโชว์ได้ที่ 🎖️ ฉายา</p></div>`}
 function draw(){const j=K.j,tab=K.tab;const sc=modalOpen&&$('modal').dataset.k==='krt'?$('modal').scrollTop:0;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="kHead"><h3>🪷 ลอยกระทงข้ามภพ</h3><p>ส่งชีวิตที่เคยเล่นลงสายน้ำ · กระทงของทุกคนลอยผ่านที่นี่</p></div>
- <div class="kT">${[['river','🌊 สายน้ำ'],['make','🪷 ลอยกระทง'],['top','🏆 กระทงแห่งปี']].map(([k,t])=>`<button class="${k===tab?'on':''}" onclick="krtTab('${k}')">${t}</button>`).join('')}</div>${!j&&tab!=='make'?'<div class="kStateBox">กำลังโหลดสายน้ำ… (ต้องออนไลน์)</div>':tab==='river'?river(j):tab==='make'?make():top(j)}`,'krt');try{$('modal').scrollTop=sc}catch(e){}}
+ <div class="kT">${[['river','🌊 สายน้ำ'],['make','🪷 ลอยกระทง'],['top','🏆 กระทงแห่งปี']].map(([k,t])=>`<button class="${k===tab?'on':''}" onclick="krtTab('${k}')">${t}</button>`).join('')}</div>${!j&&tab!=='make'?'<div class="kStateBox">กำลังโหลดสายน้ำ… (ต้องออนไลน์)</div>':tab==='river'?river(j):tab==='make'?make():top(j)}`,'krt');try{$('modal').scrollTop=sc}catch(e){}if(tab==='river'&&j)ksStart()}
 window.openKrt=async function(tab){K.tab=tab||'river';K.sel=null;draw();await load(true);if(modalOpen&&$('modal').dataset.k==='krt')draw()};
-window.krtTab=t=>{K.tab=t;K.sel=null;draw()};window.krtSel=i=>{K.sel=i<0?null:i;draw()};
+window.krtTab=t=>{K.tab=t;K.sel=null;draw()};window.krtSel=i=>{K.sel=i<0?null:i;draw();if(i>=0)requestAnimationFrame(()=>{ksAt(document.querySelector(`#modal .kBoat[data-i="${i}"] .kIn`),'ring');try{sfx('click')}catch(e){}})};
 window.krtLife=i=>{K.lifeI=i;K.style=null;K.wish=window._kW||K.wish;draw()};window.krtStyle=k=>{K.style=k;K.wish=window._kW||K.wish;draw()};
 let busy=0;window.krtFloat=async function(){if(busy)return;const G=graves();const g=G[Math.min(K.lifeI,G.length-1)];if(!g)return;const x=(($('kWish')||{}).value||'').trim();busy=1;
  try{const d={n:g.n,e:g.e||'',a:g.a||0,c:g.c||'',w:gw(g),st:K.style||gw(g),x,lid:g.lid||''};const r=await api('krt',{d:JSON.stringify(d),pn:pname()});
-  if(r&&r.ok){try{sfx('rare')}catch(e){}toast('🪷 ลอยกระทงแล้ว ขอให้สมหวังนะ');K.wish='';window._kW='';K.tab='river';await load(true);draw()}else toast(r&&r.err==='day'?'วันนี้ลอยครบ 3 ใบแล้ว พรุ่งนี้มาใหม่นะ':r&&r.err==='ended'?'งานลอยกระทงจบแล้ว':'ลอยไม่สำเร็จ ลองใหม่อีกครั้ง')}catch(e){toast(e&&e.message==='muted'?'บัญชีนี้ถูกปิดการพิมพ์':'ต้องออนไลน์ก่อนนะ')}finally{busy=0}};
-window.krtPray=async function(kid){try{const r=await api('krtp',{kid});const L=K.j&&K.j.L||[];const x=L.find(y=>y.k===kid);if(r&&r.ok){if(x){x.p=r.n;x.me=1}if(K.j.mine)K.j.mine.pc=r.pc;toast('🙏 อธิษฐานร่วมแล้ว');try{sfx('good')}catch(e){}if(r.pc>=20)load(true)}else{if(x&&r&&r.err==='dup')x.me=1;toast(r&&r.err==='self'?'กระทงของตัวเอง':r&&r.err==='dup'?'อธิษฐานกระทงนี้แล้ว':'ไม่สำเร็จ')}draw()}catch(e){toast('ต้องออนไลน์ก่อนนะ')}};
+  if(r&&r.ok){try{sfx('rare')}catch(e){}toast('🪷 ลอยกระทงแล้ว ขอให้สมหวังนะ');K.wish='';window._kW='';K.tab='river';await load(true);try{const M=(K.j&&K.j.L||[]).filter(y=>y.mine);K.newK=r.k||(M[0]&&M[0].k)||null}catch(e){}draw();const nk=K.newK;setTimeout(()=>{try{const L=K.j&&K.j.L||[],ix=L.findIndex(y=>y.k===nk);const el=document.querySelector(`#modal .kBoat[data-i="${ix}"] .kIn`);ksAt(el,'splash');ksAt(el,'spark');ksWater()}catch(e){}},700);setTimeout(()=>{if(K.newK===nk)K.newK=null},4000)}else toast(r&&r.err==='day'?'วันนี้ลอยครบ 3 ใบแล้ว พรุ่งนี้มาใหม่นะ':r&&r.err==='ended'?'งานลอยกระทงจบแล้ว':'ลอยไม่สำเร็จ ลองใหม่อีกครั้ง')}catch(e){toast(e&&e.message==='muted'?'บัญชีนี้ถูกปิดการพิมพ์':'ต้องออนไลน์ก่อนนะ')}finally{busy=0}};
+window.krtPray=async function(kid){try{const r=await api('krtp',{kid});const L=K.j&&K.j.L||[];const x=L.find(y=>y.k===kid);if(r&&r.ok){if(x){x.p=r.n;x.me=1}if(K.j.mine)K.j.mine.pc=r.pc;toast('🙏 อธิษฐานร่วมแล้ว');try{sfx('good')}catch(e){}if(r.pc>=20)load(true);K.spark=L.indexOf(x)}else{if(x&&r&&r.err==='dup')x.me=1;toast(r&&r.err==='self'?'กระทงของตัวเอง':r&&r.err==='dup'?'อธิษฐานกระทงนี้แล้ว':'ไม่สำเร็จ')}draw();if(K.spark!=null&&K.spark>=0){const si=K.spark;K.spark=null;requestAnimationFrame(()=>{const el=document.querySelector(`#modal .kBoat[data-i="${si}"] .kIn`);ksAt(el,'spark');ksAt(el,'ring')})}}catch(e){toast('ต้องออนไลน์ก่อนนะ')}};
 // ---------- ทางเข้า: ปุ่มบนสุดในเมนู · ปุ่มหน้าแรก · แจ้งเตือนวันละครั้ง ----------
 const ent=()=>`<button class="kEnt" onclick="openKrt()"><span style="font-size:26px">🪷</span><span>ลอยกระทงข้ามภพ 2569<small>${live()?'ลอยชีวิตเก่าลงสายน้ำ · ถึง 30 พ.ย. · มีกรอบและฉายาจำกัดเวลา':'งานจบแล้ว · ดูกระทงแห่งปี'}</small></span></button>`;
 const showEnt=()=>Date.now()<KEND+7*86400e3;
