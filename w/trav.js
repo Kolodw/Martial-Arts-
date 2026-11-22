@@ -60,9 +60,18 @@ function scarRoll(){const have=TV().scar||[];const L=Object.keys(SCAR).filter(k=
 // ---------- ปลายทาง ----------
 const DEST=['murim','xian','soul','m_normal','m_hunter','m_zombie'];
 const DNOTE={murim:'พลังถูกแปลงเป็นลมปราณ เริ่มที่ราวขั้นกลางของยุทธภพ',xian:'พลังถูกแปลงเป็นปราณเซียน เริ่มที่ราวขั้นกลางของโลกเซียน',soul:'ร่างนี้ปลุกวิญญาณยุทธ์ได้ทันที เริ่มที่ระดับวิญญาณ 30',m_normal:'ไม่มีลมปราณ แต่ร่างกายแข็งแรงผิดมนุษย์ แก่ช้า ความรู้ติดตัวมาเต็ม',m_hunter:'ปลุกพลังเป็นฮันเตอร์ได้ทันที',m_zombie:'ร่างทนกว่าคนทั่วไป เชื้อซอมบี้ไม่ค่อยติด'};
+// ⭕ ผู้ข้ามโลกเข้าทวีปจิตวิญญาณยุทธ์: ตาม DNOTE ต้อง "ปลุกวิญญาณยุทธ์ได้ทันที" แต่ cross() ของ rift.js ตั้ง aw:2 (ไร้ดวงจิต)
+//   และเหตุการณ์ผสานของ rift ผูกกับคู่ mh_so เท่านั้น → ผู้ข้ามผ่านประตูสุดโลกไม่ได้ดวงจิตเลย (ผู้เล่นแจ้ง) · ตอนนี้ปลุกดวงจิตให้ทันที (สุ่มตามโอกาสปกติ)
+function svRoll(){try{const SP=window._blk34.SP,r=Math.random(),rr=r<.02?3:r<.12?2:r<.4?1:0;const L=SP.filter(x=>x[5]===rr);return(L[Math.floor(Math.random()*L.length)]||SP[0])[0]}catch(e){return null}}
+function svWake(why){try{const G=S.sv;if(!G||G.aw===1)return;const id=svRoll();if(!id)return;G.aw=1;G.sp=[{id,rev:0}];G.rings=G.rings||[];G.seen=G.seen||{};G.lv=Math.max(G.lv|0,10);
+ try{const B=LS.get('murim_svbook',{})||{};B[id]=1;LS.set('murim_svbook',B)}catch(e){}
+ let t=id;try{const p=window._blk34.spNow(G.sp[0]);t=`${p.ic} <b>${p.n}</b>`}catch(e){}
+ setTimeout(()=>{try{log(`⭕ <b>ลูกแก้วปลุกจิตเรืองแสงทันทีที่คุณแตะ</b> — วิญญาณจากโลกเดิมหลอมเป็นดวงจิต ${t} · ระดับจิต ${G.lv}${why==='late'?' <span class="tag2">(แก้บั๊ก: ผู้ข้ามโลกผ่านประตูสุดโลกเคยไม่ได้ดวงจิต)</span>':''}`,'myth',true)}catch(e){}},why==='late'?300:900)}catch(e){console.error('trav svWake',e)}}
+// เซฟเก่าที่ข้ามมาแล้วติดสถานะไร้ดวงจิต: ปลุกให้ครั้งเดียว (ยกเว้นคนที่เลือก "ไม่ผสาน" ในรอยแยกเอง)
+setInterval(()=>{try{if(!S||!S.alive||S.ch!=='soul'||!S.sv||S.sv.aw!==2)return;const V=S.trv;if(!V||V.last!=='soul'||!(S.rift&&S.rift.trv)||(S.rift&&S.rift.nf))return;if(typeof choice!=='undefined'&&choice._cur)return;svWake('late');try{render()}catch(e){}}catch(e){}},2000);
 function convert(T,how){const f=how==='soul'?.3:.45;
  if(T==='murim'||T==='xian'){try{const i=Math.max(1,Math.min(REALMS.length-2,Math.floor(REALMS.length*f)));S.power=Math.max(S.power||0,Math.round(REALMS[i].p*1.05));S.rcap=Math.max(S.rcap==null?0:S.rcap,i)}catch(e){}}
- else if(T==='soul'){try{S.sv=S.sv||{aw:2,sp:[],lv:0,rings:[],seen:{},hy:-9};S.sv.lv=Math.max(S.sv.lv|0,how==='soul'?15:30);const i=Math.floor(REALMS.length*f);S.power=Math.max(S.power||0,Math.round(REALMS[i].p*1.05));S.rcap=Math.max(S.rcap==null?0:S.rcap,i)}catch(e){}}
+ else if(T==='soul'){try{S.sv=S.sv||{aw:2,sp:[],lv:0,rings:[],seen:{},hy:-9};S.sv.lv=Math.max(S.sv.lv|0,how==='soul'?15:30);svWake('gate');const i=Math.floor(REALMS.length*f);S.power=Math.max(S.power||0,Math.round(REALMS[i].p*1.05));S.rcap=Math.max(S.rcap==null?0:S.rcap,i)}catch(e){}}
  else{S.maxHp=Math.round((S.maxHp||100)*1.2);S.hp=S.maxHp;S.int=(S.int||0)+8;if(S.mw)S.mw.end=Math.max(S.mw.end||80,S.age+60)}}
 
 // ---------- 🚪 ประตูสุดโลก ----------
