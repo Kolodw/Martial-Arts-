@@ -2,6 +2,8 @@
 window.__wSlots={};function wSlot(id,names){const SL=window.__wSlots[id]={base:{},impl:{}};names.forEach(n=>{const b=window[n],has=typeof b==='function';if(has)SL.base[n]=b;window[n]=function(){const f=SL.impl[n]||(has?b:null);if(f)return f.apply(this,arguments);const a=arguments,t=this;return wNeed(id.replace(/\d+$/,''),()=>{const g=SL.impl[n];return g&&g.apply(t,a)})}})}
 
 // ============ UTIL ============
+// 🧷 กันการ์ดหน้าแรกแย่งตำแหน่งกัน (ย้ายสลับทุก ~1 วิ → iPad กดไม่ติด/เด้ง): ย้ายเฉพาะเมื่อ el ยังไม่อยู่ 'หลัง' anchor ใน parent เดียวกัน
+window.__after=function(el,a){return !!(el&&a&&el.parentNode&&el.parentNode===a.parentNode&&(a.compareDocumentPosition(el)&4))};
 const JADE=4000,JADE_N='หยกดาราเทพ',JADE_X=.1;
 const R=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const ch=a=>a[Math.floor(Math.random()*a.length)];
@@ -36917,7 +36919,7 @@ const css=document.createElement('style');css.textContent=`#tMwCard{display:flex
 window.mwQuickStart=function(){try{const b=document.querySelector('#title .mwopt');if(b)b.click();else{CFG.mw=1;CFG.xian=0}}catch(e){}try{closeM()}catch(e){}setTimeout(()=>{try{goBirthPick()}catch(e){console.error(e)}},60)};
 function card(){try{const t=$('title'),s=$('tStartIn');if(!t||!s||!t.offsetParent||!mwAllowed()){const c=$('tMwCard');if(c)c.remove();return}let c=$('tMwCard');if(CFG.mw){if(c)c.remove();return}
  if(!c){c=document.createElement('button');c.id='tMwCard';c.type='button';c.onclick=mwQuickStart;c.innerHTML=`<span class="i">🏙️</span><span><b>ลองยุคปัจจุบัน</b><small>เกิดเป็นคนยุค ${MW_Y0} ชีวิตธรรมดา หรือสุ่มได้โลกฮันเตอร์ ซอมบี้ หมอผี วันซ้ำ… มีมินิเกมเฉพาะทุกโลก</small></span><span class="go">เล่นเลย ▶</span>`}
- if(c.previousElementSibling!==s)s.insertAdjacentElement('afterend',c)}catch(e){}}
+ if(!__after(c,s))s.insertAdjacentElement('afterend',c)}catch(e){}}
 setInterval(card,1200);setTimeout(card,300);
 // ================= ⏸️ 3) ปิดแผนประจำปีเป็นค่าเริ่มต้น =================
 {const _py=passYear;passYear=function(){try{if(S&&S.mw&&S.mw.plAsk==null)S.mw.plAsk=0}catch(e){}return _py.apply(this,arguments)}}
@@ -38161,7 +38163,7 @@ window.swClaim=async()=>{try{const j=await api('sw',{o:'claim'});if(j&&j.ok){if(
 // ---------- ทางเข้า: เมนู · หน้าแรก ----------
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.aqB'))g.insertAdjacentHTML('afterbegin','<button class="opt aqB" style="position:relative" onclick="closeM();openAQ()">📜 ภารกิจ<small>รายวัน · ประกาศิตฟ้า · บอสโลก</small><i class="aqDot" style="display:none"></i></button>');dot()}catch(e){}return r}}
 function tBtn(){try{const t=$('title'),s=$('tStartIn');if(!t||!s||!t.offsetParent)return;let b=$('tAqBtn');if(!b){b=document.createElement('button');b.id='tAqBtn';b.type='button';b.onclick=()=>openAQ();b.innerHTML='<span class="i">📜</span><span><b>ภารกิจ · ประกาศิตฟ้า · บอสโลก</b><small id="tAqSub">ทำภารกิจรายวันรับตั๋ว · ทั้งเว็บชิงประกาศิตได้คนเดียว</small></span><span class="go">เปิด ›</span><i class="aqDot" style="display:none"></i>'}
- const anchor=$('tMwCard')||s;if(b.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',b);
+ const anchor=$('tMwCard')||s;if(!__after(b,anchor))anchor.insertAdjacentElement('afterend',b);
  const sub=$('tAqSub');if(sub&&HQS&&HQS.ok){const tx=HQS.ph==='cd'?`⚡ ${HQS.wn} พิชิตประกาศิตแล้ว · ${WB&&WB.ph==='on'?'🐉 บอสโลกรออยู่':'ทำภารกิจรายวันรับตั๋ว'}`:HQS.ph==='chk'?`⚡ มีคนอ้างว่าพิชิตแล้ว รอตรวจ!`:`⚡ ประกาศิตฟ้า「${(HQ[HQS.q]||{}).n}」ยังไม่มีใครพิชิต`;if(sub.textContent!==tx)sub.textContent=tx}}catch(e){}}
 setInterval(tBtn,1500);setTimeout(tBtn,400);
 // ---------- เริ่มต้น / รอบซิงก์ ----------
@@ -38302,7 +38304,7 @@ window.openStore=function(t){t=t||'r';CUR=t;try{if(t==='m')return vipMenu();if(t
 // ================= 🏠 หน้าแรก: การ์ด 2×2 =================
 function tGrid(){try{const T=$$('title'),s=$$('tStartIn');if(!T||!s||!T.classList.contains('on')||!s.offsetParent)return;let g=$$('tGrid');
  if(!g){g=document.createElement('div');g.id='tGrid';g.innerHTML=`<button class="gMw" id="tgMw"><i>🏙️</i><b>ยุคปัจจุบัน</b><small></small></button><button class="gAq" onclick="openAQ()"><i>📜</i><b>ภารกิจ</b><small></small><i class="aqDot" style="display:none"></i></button><button class="gSt" onclick="openStore()"><i>💎</i><b>ร้านค้า</b><small></small></button><button class="gOn" onclick="openOnline()"><i>🌐</i><b>ออนไลน์</b><small></small></button>`}
- if(g.previousElementSibling!==s)s.insertAdjacentElement('afterend',g);
+ if(!__after(g,s))s.insertAdjacentElement('afterend',g);
  const mw=$$('tgMw'),mwOk=(()=>{try{return mwAllowed()}catch(e){return false}})();
  if(mwOk){mw.onclick=()=>mwQuickStart();mw.querySelector('i').textContent='🏙️';mw.querySelector('b').textContent='ยุคปัจจุบัน';mw.querySelector('small').textContent=`เกิดเป็นคนยุค ${typeof MW_Y0!=='undefined'?MW_Y0:2026} · สุ่มโลกฮันเตอร์ ซอมบี้ ผี`}
  else{mw.onclick=()=>goDaily();mw.querySelector('i').textContent='📅';mw.querySelector('b').textContent='ชะตาวันนี้';mw.querySelector('small').textContent='ชีวิตเดียวกันทั้งเว็บ วันละรอบ'}
@@ -38449,8 +38451,8 @@ function dots(){const P=$$('wPick');if(!P)return;const S0=P.querySelector('.wpS'
 function mount(){try{const T=$$('title');if(!T||!T.classList.contains('on'))return;let P=$$('wPick');const box=T.querySelector('.box.opts'),st=$$('tStartIn');
  const boxVis=!!(box&&getComputedStyle(box).display!=='none'),stVis=!!(st&&st.offsetParent);
  if(!P){P=document.createElement('div');P.id='wPick';P.innerHTML=build();P.querySelector('.wpS').addEventListener('scroll',dots,{passive:true});P._new=1}
- if(stVis&&!boxVis){if(box)box.classList.remove('wpOn');if(P.previousElementSibling!==st)st.insertAdjacentElement('afterend',P)}
- else if(box){box.classList.add('wpOn');if(P.parentNode!==box||box.firstElementChild!==P)box.prepend(P)}else return;
+ if(stVis&&!boxVis){if(box)box.classList.remove('wpOn');const anc=$$('tGrid')||st;if(!__after(P,anc))anc.insertAdjacentElement('afterend',P)}
+ else if(box){box.classList.add('wpOn');if(P.parentNode!==box)box.prepend(P)}else return;
  if(P._new){P._new=0;setTimeout(()=>{try{const k=SEL||cur(),c=P.querySelector(`.wc[data-k="${k}"]`),sc=P.querySelector('.wpS');if(c&&sc)sc.scrollLeft=c.offsetLeft-(sc.clientWidth-c.offsetWidth)/2;dots()}catch(e){}},80)}
  paint()}catch(e){console.error('wpick',e)}}
 setInterval(mount,1200);setTimeout(mount,300);
@@ -39720,7 +39722,7 @@ window.spPick=function(n,k){const s=stGet();if(s[n-1])return;s[n-1]=k;stSet(s);s
 function tSea(){try{const t=$('title'),g=$('tGrid')||$('tAqBtn');if(!t||!g||!t.classList.contains('on')||!g.offsetParent){return}
  let b=$('tSea');const c=cache()||{},open=seaOpen();if(!open&&!(c.can>0)){if(b)b.remove();return}
  if(!b){b=document.createElement('button');b.id='tSea';b.type='button';b.onclick=()=>openSP('tr');b.innerHTML='<i class="au"></i><i class="sn"></i><span class="i">❄</span><span class="m"><b></b><small></small><span class="g"><i></i></span></span><span class="go">เปิด ›</span><i class="dot" style="display:none"></i>'}
- if(b.previousElementSibling!==g)g.insertAdjacentElement('afterend',b);
+ if(!__after(b,g))g.insertAdjacentElement('afterend',b);
  const lv=c.lv|0,tx=`คัมภีร์ฤดูกาล · ขั้น ${lv}/60 · ${open?'เหลือ '+cdTx(SEA.b-Date.now()):'รับรางวัลที่ค้าง'}`;
  const bb=b.querySelector('b'),sm=b.querySelector('small'),gi=b.querySelector('.g i'),dt=b.querySelector('.dot');
  if(bb.textContent!=='❄ '+SEA.n)bb.textContent='❄ '+SEA.n;if(sm.textContent!==tx)sm.textContent=tx;gi.style.width=Math.min(100,lv/60*100)+'%';dt.style.display=c.can>0?'':'none'}catch(e){}}
