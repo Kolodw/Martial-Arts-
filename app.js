@@ -45528,3 +45528,22 @@ addEventListener('resize',()=>{apply()});
 setInterval(()=>{try{const r=document.querySelector('#game .ctrl .onrow');if(r)r.classList.toggle('mE',![...r.children].some(c=>c.offsetWidth>0&&getComputedStyle(c).display!=='none'&&!/^(ctlTog|onPill)$/.test(c.id)))}catch(e){}apply();mount();focLbl();bell();feedPass();bumps();idle();if(B.classList.contains('mImm'))mDockUp()},450);
 window._mUI={apply,feedPass,restore,MD};
 })()}catch(e){console.error('block147',e)}
+
+// BLOCK 147: ⏳ อายุขัยจากของที่ใช้/ซื้อระหว่างปี — เดิมกดใช้แล้วเห็นอายุขัยพุ่ง (เช่น 600+) แต่พอข้ามปีกฎ "ของซ้อน" หักทิ้งเงียบๆ เหลือ ~120 (เห็นชัดสุดในทวีปจิตวิญญาณยุทธ์ที่อายุขัยฐานต่ำ)
+// แก้: หักตามกฎทันทีตอนได้ แล้วบอกผู้เล่นว่าได้จริงเท่าไหร่ (ไม่หักซ้ำตอนข้ามปี) · ทวีปวิญญาณยุทธ์ใช้ฐานกฎเท่ากับโลกยุทธภพ (เดิมฐานต่ำ ของชิ้นที่สองแทบไม่ได้อะไร)
+try{(()=>{
+let me=null,ls=0,ex=0,inPY=0;
+const ok=()=>S&&S.alive&&!S.xt&&!S.mw&&!(S.beastMode&&!S.beastMode.human);
+const sync=()=>{me=S;ls=S?S.lifespan||0:0;ex=S?S._lsEx||0:0};
+{const _py=passYear;passYear=function(){check();inPY++;try{return _py.apply(this,arguments)}finally{inPY--;try{sync()}catch(e){}}}}
+function check(){try{if(inPY||!S)return;if(S!==me){sync();return}if(!ok()){sync();return}
+ const inc=(S.lifespan||0)-ls,pend=Math.max(0,(S._lsEx||0)-ex),dl=inc-pend;
+ if(dl>0.5){if(S.ch==='soul'&&(!S.lsBase||S.lsBase<80))S.lsBase=80;const L0=Math.max(30,S.lsBase||(S.lsBase=Math.max(30,ls)));const g0=S.lsGain||0,kept=dl/(1+g0/L0);
+  S.lifespan=ls+pend+kept;S.lsGain=g0+kept;S._lsEx=(S._lsEx||0)+kept;
+  if(dl-kept>=1)try{log(`⏳ อายุขัยจากของที่ใช้ได้จริง <b>+${fmt(Math.round(kept))} ปี</b> (จาก +${fmt(Math.round(dl))} · ยิ่งกินของต่ออายุมาก ยิ่งได้ผลน้อยลง) · ตอนนี้ราว ${fmt(Math.round(lifeMax()))} ปี`,'')}catch(e){}}
+ sync()}catch(e){console.error('block147',e)}}
+setInterval(check,400);
+})()}catch(e){console.error('block147',e)}
+
+// BLOCK 148: ปุ่มเมนูของคลังอาวุธ/ชุด (owMB) เรียก owSync() ซึ่งอยู่ในวงปิด → ReferenceError กดแล้วไม่เปิด
+try{if(typeof window.owSync!=='function'&&window._owb&&window._owb.owSync)window.owSync=window._owb.owSync}catch(e){console.error('block148',e)}
