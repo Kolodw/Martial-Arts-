@@ -445,8 +445,17 @@ const frSrv = async (id, fr, keyOk) => { fr = String(fr || ''); if (!fr) return 
   const vn = vipCosN(fr); if (vn) return vipTier(jp(await cmd('GET', 'vip:' + id))) >= vn ? fr : '';
   if (COS_ALL.has(fr) || /^f_(p|e|s|m|w)\d+$/.test(fr)) return +(await cmd('SISMEMBER', 'cos:' + id, fr)) ? fr : '';
   if (/^f_(hq|wb|sw)\d/.test(fr)) return +(await cmd('SISMEMBER', 'gfr:' + id, fr)) ? fr : '';
+  if (/^f_kt[a-z0-9]*$/.test(fr)) return +(await cmd('SISMEMBER', 'krtfr:' + id, fr)) ? fr : '';
   if (/^f_(arc|box|lg)\d/.test(fr)) { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own && !(wv.own.fr || []).includes(fr)) return '' }
   return fr };
+
+// 🪷 อีเวนต์ลอยกระทง 2569 — แม่น้ำรวม · ลอยชีวิตเก่า (วันละ 3) · อธิษฐานร่วม 🙏 · กระทงแห่งปี · กรอบรางวัลตรวจที่เซิร์ฟเวอร์
+const KRT_END = Date.UTC(2026, 10, 30, 17, 0, 0); // 1 ธ.ค. 2569 00:00 เวลาไทย
+const KRT_W = ['w0', 'w1', 'w3', 'w2', 'h', 's', 'j', 'rg', 'l', 'k', 'mn', 'n', 'u', 'o', 'p', 'z', 't', 'e', 'q', 'y', 'v'];
+async function krtGrant(owner, fr) { if (!okId(owner)) return; await cmd('SADD', 'krtfr:' + owner, fr); const n = await cmd('SMEMBERS', 'krtfr:' + owner) || []; if (['f_kt1', 'f_ktl', 'f_kty'].every(x => n.includes(x))) await cmd('SADD', 'krtfr:' + owner, 'f_kta') }
+async function krtFinal(now) { if (now < KRT_END || await cmd('GET', 'krt:fin')) return; if (!(await cmd('SET', 'krt:fin', '1', 'NX', 'EX', 86400 * 400))) return;
+  const top = await cmd('ZREVRANGE', 'krt:top', 0, 2) || []; for (const kid of top) { const own = await cmd('HGET', 'krt:own', kid); if (own) await krtGrant(own, 'f_kt1') } }
+
 const avSrv = async (id, pf, keyOk) => { pf = String(pf || ''); if (!pf || !COS_ALL.has(pf)) return true; if (keyOk || +(await cmd('SISMEMBER', 'admids', id))) return true; return !!(+(await cmd('SISMEMBER', 'cos:' + id, pf))) };
 
 const VIP_NM = { 1: 'ผู้อุปถัมภ์สำนัก', 2: 'ผู้อาวุโสอุปถัมภ์', 3: 'บรรพชนผู้อุปถัมภ์' };
@@ -1950,6 +1959,20 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       try { const smp = big.filter((_, i) => i % Math.max(1, Math.floor(big.length / 300)) === 0).slice(0, 300); const mu = await pipe(smp.map(k => ['MEMORY', 'USAGE', k])); const by = {}; smp.forEach((k, i) => { const pf = String(k).split(':')[0]; by[pf] = (by[pf] || 0) + (+mu[i] || 0) }); out.sampleBytesByPrefix = Object.entries(by).sort((x, y) => y[1] - x[1]).slice(0, 20); out.sampled = smp.length } catch (x) { out.memErr = String(x && x.message || x) }
       return res.json(out);
     }
+    if (a === 'krtl') {
+      await krtFinal(now);
+      const q = qOf(req), me = okId(q.id) ? String(q.id) : '';
+      const raw = await cmd('LRANGE', 'krt:all', 0, 59) || [], L = []; for (const x of raw) { try { L.push(JSON.parse(x)) } catch {} }
+      const tk = await cmd('ZREVRANGE', 'krt:top', 0, 9, 'WITHSCORES') || [], topIds = []; for (let i = 0; i < tk.length; i += 2) topIds.push([tk[i], +tk[i + 1]]);
+      const all = await cmd('LRANGE', 'krt:all', 0, 1999) || [], byK = {}; for (const x of all) { try { const o = JSON.parse(x); if (topIds.some(t => t[0] === o.k)) byK[o.k] = o } catch {} }
+      const top = topIds.filter(t => byK[t[0]]).map(t => Object.assign({}, byK[t[0]], { p: t[1] }));
+      const ks = L.map(x => x.k), ns = ks.length ? await cmd('HMGET', 'krt:n', ...ks) || [] : [];
+      L.forEach((x, i) => { x.p = +ns[i] || 0 });
+      let mine = null; if (me) { const dk = new Date(now + 7 * 3600e3).toISOString().slice(0, 10); const [u, f, pc, fr] = await pipe([['GET', 'krtd:' + me + ':' + dk], ['GET', 'krtf:' + me], ['GET', 'krtpu:' + me], ['SMEMBERS', 'krtfr:' + me]]); mine = { used: +u || 0, fc: +f || 0, pc: +pc || 0, fr: fr || [] };
+        if (ks.length) { const pp = await pipe(ks.map(k => ['SISMEMBER', 'krtp:' + k, me])), ow = await cmd('HMGET', 'krt:own', ...ks) || []; L.forEach((x, i) => { x.me = +pp[i] ? 1 : 0; x.mine = ow[i] === me ? 1 : 0 }) } }
+      const tot = await cmd('LLEN', 'krt:all');
+      return res.json({ ok: 1, L, top, mine, tot: +tot || 0, end: KRT_END, now });
+    }
     if (a === 'perfsum') {
       // ผู้ดูแล: รายงานความลื่นจากเครื่องผู้เล่น (ย้อนหลัง d วัน สูงสุด 7)
       const q = qOf(req); if (!isAdmKey(q.key)) return res.status(403).json({ err: 'admin' });
@@ -2972,6 +2995,28 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const dk = 'perf:' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
       await pipe([['LPUSH', dk, JSON.stringify(e)], ['LTRIM', dk, 0, 2999], ['EXPIRE', dk, 86400 * 15]]);
       return res.json({ ok: 1 });
+    }
+    if (a === 'krt' || a === 'krtp') {
+      if (!okId(id)) return res.status(400).json({ err: 'id' });
+      if (now >= KRT_END) return res.json({ ok: 0, err: 'ended' });
+      const dk = new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
+      if (a === 'krtp') {
+        const kid = String(b.kid || '').replace(/[^a-z0-9]/g, '').slice(0, 14); if (!kid) return res.json({ ok: 0 });
+        const own = await cmd('HGET', 'krt:own', kid); if (!own) return res.json({ ok: 0, err: 'gone' }); if (own === String(id)) return res.json({ ok: 0, err: 'self' });
+        if (!+(await cmd('SADD', 'krtp:' + kid, id))) return res.json({ ok: 0, err: 'dup' });
+        const [n, , pc] = await pipe([['HINCRBY', 'krt:n', kid, 1], ['ZINCRBY', 'krt:top', 1, kid], ['INCR', 'krtpu:' + id], ['EXPIRE', 'krtp:' + kid, 86400 * 60]]);
+        if (+pc >= 20) await krtGrant(id, 'f_ktl');
+        return res.json({ ok: 1, n: +n, pc: +pc });
+      }
+      const [mu, used] = await pipe([['GET', 'mute:' + id], ['INCR', 'krtd:' + id + ':' + dk], ['EXPIRE', 'krtd:' + id + ':' + dk, 86400 * 2]]);
+      if (+used > 3) return res.json({ ok: 0, err: 'day' });
+      let d = null; try { d = JSON.parse(String(b.d || '').slice(0, 1500)) } catch {}
+      if (!d || typeof d !== 'object') return res.json({ ok: 0 });
+      const kid = now.toString(36) + Math.random().toString(36).slice(2, 6);
+      const e = { k: kid, t: now, n: clean(d.n, 24) || 'นิรนาม', e: clean(d.e, 30), a: Math.max(0, Math.min(1e12, Math.floor(+d.a || 0))), c: clean(d.c, 40), w: KRT_W.includes(d.w) ? d.w : 'w0', st: KRT_W.includes(d.st) ? d.st : 'w0', x: mu ? '' : clean(d.x, 60), lid: String(d.lid || '').replace(/[^a-z0-9]/g, '').slice(0, 16), pn: clean(b.pn, 20), du: d.du ? 1 : 0 };
+      const [, , , fc] = await pipe([['LPUSH', 'krt:all', JSON.stringify(e)], ['LTRIM', 'krt:all', 0, 1999], ['HSET', 'krt:own', kid, String(id)], ['INCR', 'krtf:' + id], ['ZADD', 'krt:top', 0, kid]]);
+      if (+fc >= 10) await krtGrant(id, 'f_kty');
+      return res.json({ ok: 1, k: kid, fc: +fc, left: Math.max(0, 3 - used) });
     }
     if (a === 'report') {
       const mid = String(b.mid || '').slice(0, 20);
