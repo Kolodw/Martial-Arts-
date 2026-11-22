@@ -45646,3 +45646,15 @@ function tips(){try{const h=$$('hintBar');if(!h)return;const t=h.textContent||''
 
 setInterval(()=>{tray();tops();chTb();tips()},300);
 })()}catch(e){console.error('block151',e)}
+
+// BLOCK 150: 👁 เอาระบบ "ดูคนอื่นเล่น" ออกทั้งหมด (แอดมินด้วย) — หน้า "คนดูการเล่นของคุณ" · ป้าย 👁 · แท็บดูสด · หยุดส่งสถานะเกมขึ้นเซิร์ฟเวอร์ทุก 2.5 นาที (ประหยัดโควต้า)
+try{(()=>{
+try{clearTimeout(liveT)}catch(e){}
+liveSend=async function(){try{clearTimeout(liveT)}catch(e){}};
+openSpecSet=function(){};specAsk=function(){};
+openLiveList=function(){try{return openOnline('chat')}catch(e){}};
+openSpectate=function(){toast('👁 ระบบดูคนอื่นเล่นถูกนำออกแล้ว')};
+try{window.spList=function(){toast('👁 ระบบดูคนอื่นเล่นถูกนำออกแล้ว')}}catch(e){}
+try{delete ONL_NAV.live}catch(e){}
+const st=document.createElement('style');st.textContent=`#watchBadge{display:none!important}#modal [onclick*="openLiveList"],#modal [onclick*="openSpectate"],#modal [onclick*="spList"],#modal [onclick*="openSpecSet"],#modal [data-t="live"],#modal [onclick*="'live'"]{display:none!important}`;document.head.appendChild(st);
+})()}catch(e){console.error('block150',e)}
