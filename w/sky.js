@@ -336,7 +336,7 @@ function skyYear(){const K=SK(),M=S.mw;try{if(auto)autoFocus()}catch(e){}S.age++
  sync();if(S.age>=S.mw.end&&!S.deathCause)S.deathCause=K.beast?pick(['สิ้นอายุขัยในร่างอสูรกลางป่าลึก','หลับไปตลอดกาลในถ้ำที่ฝูงอสูรเฝ้าอยู่']):pick([`จากไปอย่างสงบด้วยวัยชราใน${K.city}`,'หลับไปตลอดกาลบนเก้าอี้ริมกำแพงชั้นนอก ที่ที่เฝ้ามาทั้งชีวิต','จากไปด้วยวัยชรา ท่ามกลางศิษย์และลูกหลานในนครกำแพง']);render();checkDeath();saveGame();flush()}
 
 // ---------- เริ่มชีวิต ----------
-window.skyStart=function(bg){try{closeM()}catch(e){}
+window.skyStart=function(bg){window._frS=1;try{closeM()}catch(e){}
  const BGK=bg||pick(['city','city','slum','hunter','refugee']);
  try{CFG.xian=0;CFG.mw=0;if((CFG.chm|0)>=2)CFG.chm=0;goBirth();doRoll(true);startLife()}catch(e){console.error(e);return}
  setTimeout(()=>{try{if(choice._cur)choice._cur=null;if(modalOpen)closeM();
@@ -2994,7 +2994,7 @@ function ui(){const el=skEl(),seen=seenGet(),tot=CATS.reduce((s,c)=>s+c.L.length
   <button class="gbtn skEd" onclick="skyOrgEdit()">👗 ${ST.look?'แก้ตัวละคร':'สร้างตัวละคร'}<br><small>หน้าตา · ชื่อ · เพศ (ที่เหลือสุ่ม)</small></button></div></div>
   </div><div class="skC"><div id="skTr" style="margin-top:8px">${CATS.map(card).join('')}</div>
  ${cb.length?`<div class="skCb">${cb.map(c=>`<b>✦ คอมโบ ${esc(c[1])}</b> — ${esc(c[2])}`).join('<br>')}</div>`:''}
- <p class="tag2" style="text-align:center;margin:6px 0">โอกาส: ธรรมดา 70 · หายาก 25 · ตำนาน 5 (สัดส่วน) · สุ่มใหม่เปลี่ยนเฉพาะใบที่ไม่ล็อก</p></div><div class="skR"><div class="box skOdds">${window.fateBoxH?fateBoxH(CATS.map(c=>{const x=ST.cards[c.k],I=info(c.k,x);return{ic:c.ic,n:c.hid?'ความลับ (คว่ำหน้า)':I.t,p:odds(c,x)}})):''}</div>
+ <p class="tag2" style="text-align:center;margin:6px 0">โอกาส: ธรรมดา 70 · หายาก 25 · ตำนาน 5 (สัดส่วน) · สุ่มใหม่เปลี่ยนเฉพาะใบที่ไม่ล็อก</p></div><div class="skR"><div class="box skOdds">${window.fateBoxH?fateBoxH(CATS.map(c=>{const x=ST.cards[c.k],I=info(c.k,x);const t=rOf({k:c.k,x});return{ic:c.ic,n:c.hid?'ความลับ (คว่ำหน้า)':I.t,p:t?RW[t]/100:1}})):''}</div>
  <div class="skLk"><div class="h">🔒 <b>ล็อกชะตา</b> ล็อกแล้วอยู่ไปจนเริ่มชีวิต สุ่มใหม่กี่ครั้งก็ไม่เปลี่ยน · ล็อกได้ 2 อย่าง<br>ตั๋วล็อก <b>${LKc==null?'…':fmt(LKc)}</b> ใบ · <a href="#" onclick="skHoldNow();lkMenu();return false">ซื้อเพิ่ม</a></div>
   ${CATS.filter(c=>!c.hid).map(c=>{const on=!!ST.lock[c.k],I=info(c.k,ST.cards[c.k]);return`<button class="${on?'on':''}${ST.ask===c.k?' ask':''}" onclick="skyOrgLock('${c.k}')">${on?'🔒':c.ic} ${ST.ask===c.k?'แตะอีกครั้ง (1 ใบ)':c.n}<small>${esc(I.t)}</small></button>`}).join('')}</div>
  <div class="sdAct"><button class="pbtn" onclick="skyOrgGo()">ใช้ชีวิต ▶</button><div class="sd2"><button class="gbtn" ${ST.left<=0?'disabled':''} onclick="skyOrgRe()">🔄 เกิดใหม่ (${ST.left})</button><button class="gbtn" onclick="skyRRMore()">🎲 สุ่มเพิ่ม</button></div></div></div></div>
@@ -3022,7 +3022,7 @@ window.skyRRMore=function(){skHold();window._skT=Date.now();try{rrMenu()}catch(e
 {const _dr=doRoll;doRoll=function(first){try{if(!first&&window._skT&&Date.now()-window._skT<600000&&!$('birth').classList.contains('on')&&LS.get(SKH,null)){window._skT=0;rerolls=Math.max(0,rerolls-1);try{$('rr').textContent=rerolls}catch(e){}if(!ST.cards.bg)skLoad();ST.left=(ST.left|0)+1;setTimeout(()=>{try{window.skyOrgRe()}catch(e){console.error(e)}},200);return}}catch(e){console.error('skrr',e)}return _dr.apply(this,arguments)}}
 {const _cm=closeM;closeM=function(){try{const m=$('modal');if(modalOpen&&m&&m.dataset.k==='skyorg'&&!window._skOk)return}catch(e){}return _cm.apply(this,arguments)}}
 window.skyOrgG=v=>{ST.g=v;ui()};
-window.skyOrgRe=()=>{if(ST.left<=0)return;ST.left--;ST.ask=null;rollAll(false);try{sfx('click')}catch(e){}ui()};
+window.skyOrgRe=()=>{if(ST.left<=0)return;ST.left--;window._frS=(window._frS||1)+1;ST.ask=null;rollAll(false);try{sfx('click')}catch(e){}ui()};
 window.skyOrgGo=()=>{if(window._skyBornAt&&Date.now()-window._skyBornAt<3000)return;window._skyBornAt=Date.now();window._skySel=0;const pickd=Object.assign({},ST.cards),g=ST.g||pick(['ชาย','หญิง']);try{LS.del(SKH)}catch(e){}window._skOk=1;try{closeM()}catch(e){}window._skOk=0;
  const base=pickd.bg[4];window._skyOrgRun=1;try{_ss(base)}finally{window._skyOrgRun=0}
  const cLook=ST.look?Object.assign({},ST.look):null,cName=ST.name||'';setTimeout(()=>{try{applyOrg(pickd,g)}catch(e){console.error('skyorg apply',e)}try{if(cLook){S.look=Object.assign({},S.look||{},cLook);const K=SKY()&&SKY().SK();if(K&&K.og)K.og.lk=null}if(cName)S.name=cName;render()}catch(e){}},900)};

@@ -45193,3 +45193,56 @@ const idAsk=()=>{try{const M=S&&S.mw;if(!M||(M.id||0)>0||M.idP||choice._cur)retu
 {const _j=mwJobReq;mwJobReq=function(J,M){fixId();const w=_j.apply(this,arguments);if(w&&/บัตรประชาชน|เอกสาร/.test(w)&&M&&!M.idP)return w+' · ยื่นเรื่องได้ที่ 💰 ทรัพย์สิน';return w}}
 {const _w=wpWait;wpWait=function(fn){if(S&&(S.mw||S.ch==='soul')){try{if(S.wp)S.wp.busy=0}catch(e){}return}return _w.apply(this,arguments)}}
 })()}catch(e){console.error('block142',e)}
+
+// BLOCK 143: ⚖️ ความหายากของชีวิต (ยุคปัจจุบัน / ทะลุฟ้าดารา / ยุทธภพ) — แก้ตัวเลขพุ่งเกินจริง
+// 1) นับความหายากของ "ขั้น" ไม่ใช่ตัวตน (ตัดจังหวัด/พื้นเพธรรมดา · พรสวรรค์คิดตามโอกาสของขั้น · ทะลุฟ้าดาราคิดตามขั้นการ์ด)
+// 2) ชะตาร้ายไม่บวกความหายาก  3) หารด้วยจำนวนครั้งที่สุ่ม  4) เกิน 1e12 โตช้าลง  5) ขั้น 1e13+ ต้องเกรด S ขึ้นไป
+try{(()=>{
+const HARD={orphan:1,single:1,mig2:1};
+const WP={hunter:.06,hunterhi:.04,under:.10,ghost:.10,loop:.06,zombie:.06,tower:.04,game:.04,gatewon:.04,doom:.04};
+const WNM={hunter:'🌀 โลกฮันเตอร์',hunterhi:'⚡ ฮันเตอร์ F–SSS',under:'🌃 โลกใต้ดิน',ghost:'👻 โลกผีไทย',loop:'🔁 โลกวนลูป',zombie:'🧟 โลกซอมบี้',tower:'🏰 โลกหอคอย',game:'🎮 โลกระบบเกม',gatewon:'💀 โลกที่เกตชนะ',doom:'☄️ โลกวันสิ้นโลก'};
+window.mwFateParts=function(M){const P=[];P._mod=1;if(!M)return P;P._rnd=!!M.rnd;try{
+ if(M.rnd&&WP[M.wld])P.push({ic:'',n:WNM[M.wld],p:WP[M.wld]});
+ if(M.nsys){const sy=window._nsys&&window._nsys.byId(M.nsys);P.push({ic:'📱',n:sy?sy.app:'ระบบ',p:.05})}
+ if(M.bg&&HARD[M.bg]){const o=document.getElementById('mwB'),e=o&&o.querySelector('.mbT_bg .mbTv');P.push({ic:'🧬',n:e?e.textContent.trim():'พื้นเพลำบาก',p:.15,bad:true})}
+ const TB=window._mwTAL,TT=window._mwTT;(M.tal||[]).forEach(id=>{const x=TB&&TB[id];if(!x||!TT||!TT[x.t])return;if(x.t==='n')return P.push({ic:x.ic,n:x.n+' (ด้านลบ)',p:.15,bad:true});const tp=TT[x.t][2]/100;if(tp<=.1)P.push({ic:x.ic,n:x.n+' ('+TT[x.t][0]+')',p:tp})});
+}catch(e){console.error('block143 parts',e)}return P};
+// นับจำนวนครั้งที่สุ่ม
+window._frM=1;{const _d=doRoll;doRoll=function(first){window._frM=first?1:(window._frM||1)+1;return _d.apply(this,arguments)}}
+window._frB=1;
+const hookMB=()=>{if(window._frHooked||!window.mwBReroll||!window.mwBornPage)return;window._frHooked=1;
+ {const _r=window.mwBReroll;window.mwBReroll=function(){const MB=window._mbGet&&window._mbGet(),n=MB&&MB.rr;const r=_r.apply(this,arguments);try{const M2=window._mbGet&&window._mbGet();if(M2&&(M2.rr!==n||(typeof ADM!=='undefined'&&ADM.ok&&ADM.rr)))window._frB=(window._frB||1)+1}catch(e){}return r}}
+ {const _b=window.mwBornPage;window.mwBornPage=function(fresh){if(fresh)window._frB=1;return _b.apply(this,arguments)}}};
+setInterval(hookMB,1500);
+// ยุทธภพ: หารเศษส่วนด้วยจำนวนครั้งที่สุ่ม แล้วคิดขั้นใหม่
+{const _rc=rareCalc;rareCalc=function(T,key){const r=_rc.apply(this,arguments);try{const k=Math.max(1,window._frM|0);if(r&&k>1&&r.k){r.N=Math.max(1,r.N/k);r.fr=Math.min(1,r.fr*k);r.f=rareTier(r.fr);r.rr=k}}catch(e){}return r}}
+const GM=['ระดับ F','ระดับ E','ระดับ D','ระดับ C','ระดับ B','ระดับ A','ระดับ S','ระดับ SS','ระดับ SSS','ระดับ EX','ระดับ EX+','ระดับ Ω','ระดับ ∞','ระดับ ERR','ระดับ ADMIN','ระดับ ZERO','ระดับ NULL','ระดับ ROOT','ระดับ ████'];
+const grade=sc=>sc<0?'D':sc<.7?'C':sc<1.6?'B':sc<2.6?'A':sc<3.8?'S':sc<5?'S+':'SS';
+const GD={D:'ชะตาฝืน ของร้ายหนักกว่าของดี',C:'กลางๆ ต้องพึ่งความพยายาม',B:'กลางค่อนบน ความขยันตัดสิน',A:'ได้เปรียบชัดเจน',S:'ฟ้าลิขิตให้เหนือคน','S+':'ชะตาที่คนทั้งยุคอิจฉา',SS:'ชะตาที่ไม่ควรมีอยู่จริง'};
+RARE_TOP.push(.000002,.0000004,.00000008,.000000016,.000000003,.0000000006);
+const DIST={};
+const sampMW=(rnd)=>{const TT=window._mwTT,tl=Object.values(window._mwTAL||{});const ps=[];const r=Math.random();let acc=0;const W=rnd?Object.assign({normal:.42},WP):{normal:1};for(const k in W){acc+=W[k];if(r<acc){if(WP[k])ps.push(WP[k]);break}}
+ if(Math.random()<.05)ps.push(.05);if(TT)for(let i=0;i<4;i++){let x=Math.random()*100,a=0;for(const t of ['c','r','e','l','s']){a+=TT[t][2];if(x<a){const tp=TT[t][2]/100;if(tp<=.1)ps.push(tp);break}}}return ps};
+const sampSKY=()=>{const ps=[];for(let i=0;i<6;i++){if(Math.random()<.05)ps.push(.05)}return ps};
+const distOf=key=>{if(DIST[key])return DIST[key];const A=[];for(let i=0;i<4000;i++){const ps=key==='mw'?sampMW(0):key==='mwr'?sampMW(1):sampSKY();A.push(Math.log10(1/ps.reduce((a,p)=>a*p,1)))}A.sort((a,b)=>a-b);if(key==='sky'||window._mwTT)DIST[key]=A;return A};
+const fracOf=(N,key)=>{const A=distOf(key),x=Math.log10(N),n=A.length;let lo=0,hi=n;while(lo<hi){const m=(lo+hi)>>1;if(A[m]<x-1e-9)lo=m+1;else hi=m}const ge=(n-lo)/n;const q=A[Math.floor(n*.99)];if(ge<.01&&x>q)return Math.min(.01,.01*Math.pow(10,q-x));return Math.max(ge,1/n/4)};
+window._fateDist={distOf,fracOf,sampMW};const frTxt=fr=>fr>=.01?(fr*100).toFixed(fr>=.1?0:1)+'%':'1 ใน '+fmt(Math.round(1/fr))+' ชีวิต';
+window.fateBoxH=function(parts){const mod=!!(parts&&parts._mod),dk=mod?(parts._rnd?'mwr':'mw'):'sky';parts=(parts||[]).filter(x=>x&&x.p>0&&x.p<=1);
+ const good=parts.filter(x=>!x.bad&&x.p<=.12),bad=parts.filter(x=>x.bad);
+ const gN=good.length?1/good.reduce((a,x)=>a*Math.max(x.p,1e-6),1):1,bN=bad.length?1/bad.reduce((a,x)=>a*x.p,1):1;
+ const k=Math.max(1,(mod?window._frB:window._frS)|0);let N=Math.max(1,gN/k);
+ const lg=Math.log10(N);if(lg>12)N=Math.pow(10,12+(lg-12)*.5);
+ const G=grade(Math.log10(gN)-Math.log10(bN)*1.2);
+ const fr=Math.min(1,(good.length?fracOf(gN,dk):1)*k);let f=good.length?rareTier(fr):0;if(f>=13&&!['S','S+','SS'].includes(G))f=12;const F=FATE[f],FM=window._FATE_M;
+ const nm=mod&&FM&&FM[f]?{ic:FM[f][1],n:FM[f][0],d:FM[f][2],g:GM[f]}:{ic:F[2],n:F[1],d:F[3],g:FGRADE[f]};
+ const r=v=>fmt(Math.max(1,Math.round(v)));
+ return`<div class="fateB fb${f}"><div class="tag2">ความหายากของชีวิตนี้</div><div class="n px fx${f}">1 ใน ${r(N)}</div>
+ <div class="ot">${nm.ic} <span class="fx${f}${mod&&f>=13?' fxG':''}">ระดับชะตา: ${nm.n}</span></div><div class="od">${nm.d}</div><div class="fgrade fx${f}">⟪ ${nm.g} ⟫</div>
+ <div class="od" style="opacity:.8">อยู่กลุ่มบนสุด <b>${frTxt(fr)}</b> ของทุกชีวิต${k>1?` · 🎲 หักจากการสุ่ม ${k} ครั้ง`:''}</div>
+ <details ${window._fbOpen?'open':''} ontoggle="window._fbOpen=this.open?1:0"><summary>ดูรายละเอียด</summary><div class="fbx">
+ 💪 ความแกร่งของชะตา <b class="gr g${G.replace('+','p')}">${G}</b> <i>${GD[G]}</i><br>
+ ✨ ของหายาก: <b>1 ใน ${r(gN)}</b>${good.length?` (${good.map(x=>x.n).join(', ')})`:' (ไม่มีอะไรหายาก ชีวิตแบบคนส่วนใหญ่)'}<br>
+ ☠️ ชะตาร้าย: ${bad.length?`${bad.map(x=>x.n).join(', ')} <i>(ไม่นับเป็นความหายาก)</i>`:'ไม่มี'}
+ <div class="fl">${parts.filter(x=>x.p<=.12||x.bad).map(x=>`<div class="${x.bad?'bd':''}"><span>${x.ic||'•'} ${x.n}</span><b>${x.bad?'—':'1 ใน '+r(1/x.p)}</b></div>`).join('')}</div>
+ <p>นับเฉพาะสิ่งที่หายากจริง (โอกาสไม่เกิน ~10%) · ของร้ายไม่ทำให้หายากขึ้น · ยิ่งสุ่มหลายครั้ง ความหายากจริงยิ่งลดลง${f>=12&&!['S','S+','SS'].includes(G)?' · ขั้นเหนือกว่านี้ต้องเกรด S ขึ้นไป':''}</p></div></details></div>`};
+})()}catch(e){console.error('block143',e)}
