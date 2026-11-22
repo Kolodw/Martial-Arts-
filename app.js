@@ -35920,7 +35920,7 @@ function wnBtn(){try{const hr=document.querySelector('#game .hudr');if(!hr||$('w
 {const _r=render;render=function(){const r=_r.apply(this,arguments);wnBtn();return r}}
 // 3) เมนูเรียบง่ายสำหรับชีวิตแรก (ผู้เล่นใหม่เท่านั้น · กดแสดงทั้งหมดได้)
 const CORE=/openMe\(|openArts\(|openFaction\(|openMarket\(|openFamily\(|openSys\(|openTown\(|openMap\(|openQuests\(|openItems\(|openPortal\(/;
-{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(!isNew()||LS.get('murim_fullmenu',0)||!S||S.mw||S.xian||S.beastMode||(S.ch&&S.ch!=='normal'))return r;const G=[...$('modal').querySelectorAll('.mgrid')];if(!G.length)return r;let n=0;const g=G[G.length-1];
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(1||!isNew()||LS.get('murim_fullmenu',0)||!S||S.mw||S.xian||S.beastMode||(S.ch&&S.ch!=='normal'))return r;const G=[...$('modal').querySelectorAll('.mgrid')];if(!G.length)return r;let n=0;const g=G[G.length-1];
  G.forEach(gr=>{let vis=0;[...gr.children].forEach(b=>{if(b.tagName==='BUTTON'&&!CORE.test(b.getAttribute('onclick')||'')){b.style.display='none';b.classList.add('smHid');n++}else vis++});if(!vis){gr.style.display='none';gr.classList.add('smHid');const h=gr.previousElementSibling;if(h&&h.classList.contains('mch15')){h.style.display='none';h.classList.add('smHid')}}});
  if(n){fn('simple',1);g.insertAdjacentHTML('afterend',`<button class="gbtn" style="width:100%;margin-top:6px" onclick="LS.set('murim_fullmenu',1);document.querySelectorAll('#modal .smHid').forEach(x=>{x.style.display=''});this.remove()">🌱 ชีวิตแรกแสดงเฉพาะเมนูหลัก แสดงอีก ${n} เมนู</button>`)}}catch(e){}return r}}
 // 4) ทุก 5 ปี (16–80) ถามแนวทางช่วงนี้บนเกาะ — ไม่หยุดเกม
