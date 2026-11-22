@@ -29,6 +29,11 @@ const CH={
  beast:{r:['วิ่งสี่ขาเต็มกำลัง','กระโจนข้ามเหวด้วยแรงสัตว์อสูร','ดมกลิ่นหาทางลัด'],g:['หมอบนิ่ง ฟังเสียงรอบตัว','ห่มเกราะเกล็ดรับแรงกระแทก','ปีนที่สูงดูสถานการณ์'],s:['คำรามขู่ให้คู่แข่งชะงัก','ข่วนดินถล่มทับทาง','ส่งฝูงไปขวางคู่แข่ง'],h:['คาบคู่แข่งข้ามจุดอันตราย','แบ่งเหยื่อให้มีแรง','นำทางด้วยสัญชาตญาณป่า']},
  sky:{r:['เปิดบูสเตอร์ชุดเกราะพุ่งตรง','ขี่โดรนบรรทุกบินข้าม','โอเวอร์คล็อกยีนอสูรเร่งร่างกาย'],g:['สแกนพื้นที่ด้วยดาวเทียม','กางโล่พลังงานรอบตัว','ให้ AI คำนวณเส้นทางปลอดภัย'],s:['แฮ็กดาวเทียมปิดแผนที่คู่แข่ง','ส่งโดรนกวนสัญญาณ','วางทุ่นระเบิด EMP ดักทาง'],h:['แชร์สัญญาณนำทางให้คู่แข่ง','ส่งโดรนพยาบาลไปช่วย','เชื่อมโล่พลังงานคลุมสองคน']}};
 // ด่าน
+const SETS={
+ res:[[['เขื่อนเหนือหุบเขาแตก น้ำทะลักลงมา','ชาวบ้าน 60 คนติดอยู่บนหลังคา'],['กระแสน้ำพัดบ้านทั้งหลังลอยไป','มีแม่ลูกเกาะขอนไม้อยู่กลางน้ำ'],['น้ำระลอกใหญ่สุดกำลังมา','เหลือคนสุดท้ายบนยอดหอระฆัง']],[['เมืองทั้งเมืองลุกเป็นไฟกลางดึก','เสียงคนร้องจากหอสมุดชั้นบน'],['ควันดำปกคลุมจนมองไม่เห็นทาง','มีคนชราเป็นลมอยู่ในตรอก'],['หลังคาหอสมุดกำลังถล่ม','เด็กกอดคัมภีร์โบราณไม่ยอมทิ้ง']]],
+ tre:[[['เรือผีโผล่กลางหมอกทะเล','สมบัติอยู่ในห้องกัปตันใต้ท้องเรือ'],['ลูกเรือโครงกระดูกตื่นขึ้นมา','ทางเดินไม้ผุพังทีละแผ่น'],['เรือกำลังจม หีบสมบัติลอยห่างออกไป','ใครคว้าได้ก่อนคือผู้ชนะ']],[['ตลาดมืดใต้ดินเปิดประมูลของต้องห้าม','ของชิ้นเอกจะขายให้คนแรกที่ถึงโต๊ะ'],['ยามตลาดมืดเริ่มไล่จับคนแปลกหน้า','ทางลับมีให้ผ่านแค่คนเดียว'],['ไฟดับทั้งตลาด','มือของใครจะถึงของก่อน']]],
+ duel:[[['ลานประลองบนหลังมังกรหินที่ลอยอยู่','ลมแรงจนยืนแทบไม่อยู่'],['มังกรหินพลิกตัว พื้นเอียง','ทั้งคู่ต้องหาจังหวะยืนให้มั่น'],['มังกรหินดิ่งลงทะเลเมฆ','จังหวะสุดท้ายก่อนตกถึงพื้น']],[['สนามประลองในกระจกพันบาน','เงาสะท้อนเลียนแบบท่าของทั้งคู่'],['กระจกแตก เศษคมลอยว่อน','มองไม่ออกว่าตัวจริงอยู่ตรงไหน'],['กระจกบานสุดท้าย','ใครหาตัวจริงเจอก่อนได้ฟันก่อน']]],
+ maze:[[['เขาวงกตในห้องสมุดที่ชั้นหนังสือเดินได้','ป้ายบอกทางเขียนด้วยภาษาที่ไม่มีใครอ่านออก'],['หนังสือบินโจมตีคนที่ส่งเสียงดัง','มีทางลัดผ่านห้องเก็บคัมภีร์ต้องห้าม'],['ประตูทางออกถามปริศนา','ตอบผิดจะถูกส่งกลับจุดเริ่ม']],[['เขาวงกตใต้ทะเลสาบน้ำแข็ง','อากาศหายใจเหลือไม่มาก'],['น้ำแข็งเริ่มร้าวใต้เท้า','ได้ยินเสียงคู่แข่งเคาะผนังอีกฝั่ง'],['เห็นแสงทะลุน้ำแข็งด้านบน','ทุบออกได้แค่ช่องเดียว']]]};
 const STG=[
  {k:'res',ic:'🌋',n:'กู้ภัย',rule:'ใครช่วยคนได้มากกว่าชนะ · ช่วยกันได้ แต่ระวังโดนแย่งผลงาน',ax:['p','c'],unit:'คนที่รอด',
   beats:[['ภูเขาไฟปะทุ ลาวาไหลลงหมู่บ้านเชิงเขา','มีคนติดอยู่ในบ้าน 40 คน'],['สะพานข้ามลำธารลาวากำลังพัง','ฝั่งตรงข้ามมีเด็กร้องให้ช่วย'],['ปากปล่องระเบิดซ้ำ ฝนหินตกลงมา','เหลือเวลาอีกนิดเดียวก่อนหมู่บ้านจมทั้งหมด']]},
@@ -115,7 +120,7 @@ let G=null,T=null,AT=null;
 function root(){let s=$$('uaS');if(!s){s=document.createElement('div');s.id='uaS';s.innerHTML='<div class="uw" id="uaMain"></div>';document.body.appendChild(s);chatMount()}return s}
 function scr(h,noX){const s=root();const m=$$('uaMain');m.innerHTML=`${noX?'':'<button class="uaX" onclick="uaClose()">✕</button>'}${h}`;s.scrollTop=0;try{chatMode()}catch(e){}return s}
 function stopT(){clearInterval(T);T=null;clearTimeout(AT);AT=null}
-window.uaClose=function(){if(G&&G.phase==='play'&&G.cur&&(G.ps[G.cur.a].me||G.ps[G.cur.b].me)&&!confirm('ออกตอนนี้ = ยอมแพ้ (เบต้า: ชีวิตจริงไม่ถูกลบ) ออกเลยไหม?'))return;stopT();G=null;CHT.list=[];clearTimeout(CHT.t);const s=$$('uaS');if(s)s.remove();const c=$$('uaShat');if(c)c.remove()};
+window.uaClose=function(){if(G&&G.phase==='play'&&G.cur&&(G.ps[G.cur.a].me||G.ps[G.cur.b].me)&&!confirm('ออกตอนนี้ = ยอมแพ้ (เบต้า: ชีวิตจริงไม่ถูกลบ) ออกเลยไหม?'))return;try{if(G&&G.ps&&!G.sent)statSend(0)}catch(e){}stopT();G=null;CHT.list=[];clearTimeout(CHT.t);const s=$$('uaS');if(s)s.remove();const c=$$('uaShat');if(c)c.remove()};
 const wdot=w=>`<span style="color:${WD[w].c}">${WD[w].ic}</span>`;
 const who=(p,extra)=>`<div class="who" style="--c:${WD[p.w].c}"><span class="ic">${WD[p.w].ic}</span><div style="flex:1;min-width:0"><b>${E(p.name)}</b><small>${WD[p.w].n} · อายุ ${p.age} ปี${p.ghost?' · 👻 เงาจักรวาล':''}${p.test?' · ตัวทดลอง':''}</small>${extra||''}</div></div>`;
 const axH=p=>`<div class="ax"><span>💪 กาย<b>${p.b}</b></span><span>🧠 ปัญญา<b>${p.p}</b></span><span>👑 บารมี<b>${p.c}</b></span></div>`;
@@ -130,6 +135,7 @@ window.uaOpen=function(){stopT();G=null;R=Math.random;const me=fromS();
   <div class="stp"><i>3</i><div>ทุกจังหวะเลือกภายใน <b>12 วินาที</b> ตัวเลือกมาจากโลกของคุณเอง ไม่ทันกด = ตัวละครเลือกเองตามนิสัย</div></div>
   <div class="stp"><i>4</i><div>ทุกตัวเลือกมี<b>ท่าที</b> ซ่อนอยู่ ท่าทีตีกันแบบเป่ายิ้งฉุบ ค่าตัวละครช่วยแค่นิดหน่อย <b>อ่านใจคู่ต่อสู้สำคัญกว่า</b></div></div>
   <div class="mxg"><div>⚡ <b>เร่ง</b> ชนะ 🛡️ ระวัง<br><small>ระวังจนช้าเกินไป</small></div><div>🛡️ <b>ระวัง</b> ชนะ 🗡️ ขัดขวาง<br><small>กับดักไม่โดน</small></div><div>🗡️ <b>ขัดขวาง</b> ชนะ ⚡ เร่ง<br><small>วิ่งเข้ากับดักพอดี</small></div><div>🤝 <b>ช่วย</b> ได้ทั้งคู่<br><small>แต่ถ้าโดน 🗡️ = เสียหนัก</small></div></div>
+  <div class="stp"><i>✴️</i><div><b>ท่าไม้ตายประจำโลก</b> ใช้ได้ครั้งเดียวต่อคู่ เปิดก่อนกดตัวเลือก · ชนะจังหวะนั้น = แต้ม <b>×2</b> · แพ้จังหวะ = <b>−2</b> · เลือกจังหวะใช้ให้ดี</div></div>
   <div class="stp"><i>5</i><div>ชนะ 2 คู่ = แชมป์ <b>"ผู้ข้ามพ้นสากลภพ"</b> · แพ้ = จอแตกเป็นพิกเซล <b>จักรวาลถูกลบ</b></div></div>
  </div>
  <div class="card" style="border-color:#ff6a8a66;background:#ff3a6a12"><b>🧪 ช่วงเบต้า</b><div style="font-size:12.5px;line-height:1.55;margin-top:4px">เล่นกับเงาจักรวาลในเครื่องคุณ ยังไม่มีผู้เล่นจริง · <b>แพ้แล้วชีวิตจริงยังไม่ถูกลบ</b> · ยังไม่ขึ้นทำเนียบและไม่มีรางวัล · เล่นได้ไม่จำกัด</div></div>
@@ -155,7 +161,7 @@ function lobby(P){const seed=(Date.now()^Math.floor(Math.random()*1e9))>>>0;R=rn
  const ws=Object.keys(WD).filter(w=>w!==P.w);const lv=(P.b+P.p+P.c)/3;const ps=[Object.assign({},P,{me:1})];
  for(let i=0;i<3;i++){const w=ws.splice(Math.floor(R()*ws.length),1)[0];ps.push(ghost(w,clamp(lv-6+R()*10,20,85)))}
  for(let i=ps.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[ps[i],ps[j]]=[ps[j],ps[i]]}
- G={seed,ps,phase:'lobby',m:[[0,1],[2,3]],win:[],hist:[]};CHT.list=[];CHT.view=14+Math.floor(Math.random()*20);{const l=$$('uaCl');if(l)l.innerHTML=''}
+ G={seed,ps,phase:'lobby',m:[[0,1],[2,3]],win:[],hist:[],st:{to:0,s_:{},sw_:{}}};CHT.list=[];CHT.view=14+Math.floor(Math.random()*20);{const l=$$('uaCl');if(l)l.innerHTML=''}
  const WAIT=30;const t0=Date.now();const at=ps.map(p=>p.me?400:3000+Math.random()*17000);
  scr(`<h2>🕳️ ห้องสากลภพ</h2><div class="sub">รหัสทัวร์ #${(seed%100000).toString().padStart(5,'0')} · รอจักรวาลอื่นเข้าห้อง · คุยกับคนดูได้ที่แชทด้านล่าง</div>
  <div class="room" id="uaRoom">${ps.map((_,i)=>`<div class="slot" id="uaSl${i}">⏳ รอจักรวาล…</div>`).join('')}</div>
@@ -175,7 +181,8 @@ function brk(){const ps=G.ps;const cell=(i,r)=>{const lost=G.hist.some(h=>h.l===
 // ---------- 4) ผู้ประกาศ ----------
 function nextMatch(){stopT();let a,b,r;if(G.win.length<2){const i=G.hist.filter(h=>h.r===0).length;[a,b]=G.m[i];r=0}else{[a,b]=G.win;r=1}
  const st=STG[Math.floor(R()*STG.length)];const A=G.ps[a],B=G.ps[b];const mine=A.me||B.me;
- G.cur={a,b,r,st,beat:0,sc:[0,0],log:[]};G.phase='ann';
+ const sets=[st.beats].concat(SETS[st.k]||[]);const bs=sets[Math.floor(R()*sets.length)];
+ G.cur={a,b,r,st,bs,beat:0,sc:[0,0],log:[],ult:[0,0]};if(mine){G.st.s_[st.k]=(G.st.s_[st.k]||0)+1}G.phase='ann';
  const meDead=G.hist.some(h=>G.ps[h.l].me);
  scr(`<div class="ann"><div class="eye">👁️</div><div class="q">ผู้จดบันทึกสากลภพ ประกาศ</div>
   <div style="margin-top:6px;font-size:13px">${r?'🏆 รอบชิงแชมป์':'⚔️ คู่ที่ '+(G.hist.filter(h=>h.r===0).length+1)}</div>
@@ -198,28 +205,32 @@ function aiPick(p,opts,foe,hist){const has=s=>opts.find(o=>o.s===s);let w={r:1,g
  let tot=0;const c=opts.map(o=>{const v=w[o.s];tot+=v;return v});let x=R()*tot;for(let i=0;i<opts.length;i++){x-=c[i];if(x<=0)return opts[i]}return opts[0]}
 function beat(){stopT();const C=G.cur,A=G.ps[C.a],B=G.ps[C.b],st=C.st,bi=C.beat;const meSide=A.me?0:B.me?1:-1;
  const oa=optsFor(A,bi),ob=optsFor(B,bi);C.opt=[oa,ob];C.pk=[null,null];C.buf=[0,0];const evH=npcEvent(C,A,B,meSide);
- const [l1,l2]=st.beats[bi];
- const myO=meSide<0?null:(meSide?ob:oa);
+ const [l1,l2]=(C.bs||st.beats)[bi];
+ const myO=meSide<0?null:(meSide?ob:oa);const me=meSide<0?null:(meSide?B:A);const canU=me&&!C.ult[meSide];C.uOn=0;
  scr(`${scoreH()}<div class="beat">${st.ic} ด่าน${st.n} · จังหวะ ${bi+1}/3</div><div class="sit">${l1}<small>${l2}</small></div>
   ${evH}<div class="tm"><i id="uaTm" style="width:100%"></i></div><div class="tmT" id="uaTmT">12 วิ</div>
-  <div id="uaOp">${myO?myO.map((o,i)=>`<button class="opt2" style="--d:${i}" data-i="${i}"><span class="s">${ST[o.s].ic}</span><span>${E(o.t)}<small>${ST[o.s].n}</small></span></button>`).join(''):`<div class="card" style="text-align:center;font-size:13px">👀 ทั้งคู่กำลังเลือก… ตัวเลือกจะเปิดเผยหลังจบจังหวะ</div>`}</div>
+  ${canU?`<button class="ultB" id="uaUlt" type="button"><span>✴️</span><span><b>ท่าไม้ตาย: ${E(ULT[me.w])}</b><small>ใช้ได้ครั้งเดียวต่อคู่ · ชนะจังหวะนี้ = แต้ม ×2 · ถ้าแพ้จังหวะ = −2</small></span><i>ปิด</i></button>`:me?`<div class="ultU">✴️ ใช้ท่าไม้ตายไปแล้วในคู่นี้</div>`:''}<div id="uaOp">${myO?myO.map((o,i)=>`<button class="opt2" style="--d:${i}" data-i="${i}"><span class="s">${ST[o.s].ic}</span><span>${E(o.t)}<small>${ST[o.s].n}</small></span></button>`).join(''):`<div class="card" style="text-align:center;font-size:13px">👀 ทั้งคู่กำลังเลือก… ตัวเลือกจะเปิดเผยหลังจบจังหวะ</div>`}</div>
   <div class="mx">⚡>🛡️ · 🛡️>🗡️ · 🗡️>⚡ · 🤝 ได้ทั้งคู่ แต่แพ้ 🗡️</div>`,meSide>=0);
  const hist=C.log.map(l=>[l.a.s,l.b.s]);
  // AI ฝั่งที่ไม่ใช่เรา เลือกไว้ (ตัดสินพร้อมกัน)
  if(meSide!==0)C.pk[0]=aiPick(A,oa,1,hist);if(meSide!==1)C.pk[1]=aiPick(B,ob,0,hist);
- if(myO)document.querySelectorAll('#uaOp .opt2').forEach(b=>b.onclick=()=>{if(C.pk[meSide])return;C.pk[meSide]=myO[+b.dataset.i];b.classList.add('pk');document.querySelectorAll('#uaOp .opt2').forEach(x=>x.disabled=true);vb(12);$$('uaTmT').textContent='✔ เลือกแล้ว · รอเปิดเผย…';setTimeout(()=>{if(G&&G.cur===C&&C.beat===bi)reveal()},700)});
+ {const u=$$('uaUlt');if(u)u.onclick=()=>{if(C.pk[meSide])return;C.uOn=!C.uOn;u.classList.toggle('on',!!C.uOn);u.querySelector('i').textContent=C.uOn?'เปิด':'ปิด';vb(15)}}
+ // เงาใช้ท่าไม้ตาย: จังหวะสุดท้ายถ้าตามหลัง หรือสุ่ม 20%
+ [0,1].forEach(sd=>{if(sd===meSide||C.ult[sd])return;const behind=C.sc[sd]<C.sc[1-sd];if((bi===2&&behind)||R()<.2){C.ult[sd]=1;C.uNow=C.uNow||[0,0];C.uNow[sd]=1}});
+ if(myO)document.querySelectorAll('#uaOp .opt2').forEach(b=>b.onclick=()=>{if(C.pk[meSide])return;C.pk[meSide]=myO[+b.dataset.i];if(C.uOn){C.ult[meSide]=1;C.uNow=C.uNow||[0,0];C.uNow[meSide]=1}const uB=$$('uaUlt');if(uB)uB.disabled=true;b.classList.add('pk');document.querySelectorAll('#uaOp .opt2').forEach(x=>x.disabled=true);vb(12);$$('uaTmT').textContent='✔ เลือกแล้ว · รอเปิดเผย…';setTimeout(()=>{if(G&&G.cur===C&&C.beat===bi)reveal()},700)});
  const dur=meSide>=0?12000:3200,t0=Date.now();
  T=setInterval(()=>{const left=Math.max(0,dur-(Date.now()-t0));const i=$$('uaTm');if(i)i.style.width=(left/dur*100)+'%';const tt=$$('uaTmT');if(tt&&!(meSide>=0&&C.pk[meSide])){tt.textContent=Math.ceil(left/1000)+' วิ';tt.classList.toggle('hot',left<4000&&meSide>=0)}
-  if(left<=0){clearInterval(T);T=null;if(meSide>=0&&!C.pk[meSide]){const me=meSide?B:A;C.pk[meSide]=aiPick(Object.assign({},me,{hab:me.hab||'g'}),myO,1-meSide,hist);C.auto=1;toast('⏳ ไม่ทันกด — ตัวละครเลือกเองตามนิสัย')}reveal()}},150)}
+  if(left<=0){clearInterval(T);T=null;if(meSide>=0&&!C.pk[meSide]){const me=meSide?B:A;C.pk[meSide]=aiPick(Object.assign({},me,{hab:me.hab||'g'}),myO,1-meSide,hist);C.auto=1;G.st.to++;if(C.uOn){C.ult[meSide]=1;C.uNow=C.uNow||[0,0];C.uNow[meSide]=1}toast('⏳ ไม่ทันกด — ตัวละครเลือกเองตามนิสัย')}reveal()}},150)}
 function roll(p,o,st,buf){const bonus=clamp((statOf(p,st)-50)*.3,-15,15);const ch=clamp(60+bonus+(buf||0),20,95);return{ok:R()*100<ch,ch:Math.round(ch)}}
 function reveal(){stopT();const C=G.cur,A=G.ps[C.a],B=G.ps[C.b],st=C.st;const pa=C.pk[0],pb=C.pk[1];if(!pa||!pb)return;
  let xa=MX[pa.s][pb.s],xb=MX[pb.s][pa.s];const bf=C.buf||[0,0];const ra=roll(A,pa,st,bf[0]),rb=roll(B,pb,st,bf[1]);
  if(!ra.ok)xa=Math.floor(xa/2)-(pa.s==='s'?1:0);if(!rb.ok)xb=Math.floor(xb/2)-(pb.s==='s'?1:0);
+ const uN=C.uNow||[0,0];const cl=[xa-xb,xb-xa];if(uN[0])xa=cl[0]>0?xa*2:xa-2;if(uN[1])xb=cl[1]>0?xb*2:xb-2;C.uNow=[0,0];
  C.sc[0]+=xa;C.sc[1]+=xb;const why=(WHY[pa.s]&&WHY[pa.s][pb.s])||(WHY[pb.s]&&WHY[pb.s][pa.s])||'ท่าทีเหมือนกัน วัดกันที่ฝีมือ';
- C.log.push({a:pa,b:pb,xa,xb,ra,rb,auto:C.auto});C.auto=0;vb(25);try{reactReveal(A,B,pa,pb,ra,rb,xa,xb)}catch(e){}
- const side=(p,o,x,r)=>`<div style="border:1.5px solid ${WD[p.w].c}66"><div class="tg">${ST[o.s].ic}</div><b>${E(p.name)}</b><br>${E(o.t)}<br><span class="${r.ok?'ok':'ng'}">${r.ok?'✓ สำเร็จ':'✗ พลาด'}</span> <small style="opacity:.6">(${r.ch}%)</small><div class="pt ${x<0?'neg':''}">${x>=0?'+':''}${x}</div></div>`;
+ C.log.push({a:pa,b:pb,xa,xb,ra,rb,auto:C.auto,ua:uN[0],ub:uN[1]});statBeat(C,A,B,pa,pb,cl,uN);C.auto=0;vb(25);try{reactReveal(A,B,pa,pb,ra,rb,xa,xb)}catch(e){}
+ const side=(p,o,x,r,u)=>`<div style="border:1.5px solid ${WD[p.w].c}66${u?';box-shadow:0 0 16px #ffd86a88':''}"><div class="tg">${ST[o.s].ic}${u?' ✴️':''}</div><b>${E(p.name)}</b><br>${u?`<b style="color:#ffd86a">✴️ ${E(ULT[p.w])}</b><br>`:''}${E(o.t)}<br><span class="${r.ok?'ok':'ng'}">${r.ok?'✓ สำเร็จ':'✗ พลาด'}</span> <small style="opacity:.6">(${r.ch}%)</small><div class="pt ${x<0?'neg':''}">${x>=0?'+':''}${x}</div></div>`;
  const last=C.beat>=2;const meIn=A.me||B.me;
- scr(`${scoreH()}<div class="beat">${st.ic} จังหวะ ${C.beat+1}/3 · เปิดเผย!</div><div class="rv">${side(A,pa,xa,ra)}${side(B,pb,xb,rb)}</div><div class="why">${ST[pa.s].ic} vs ${ST[pb.s].ic} — ${why}</div>
+ scr(`${scoreH()}<div class="beat">${st.ic} จังหวะ ${C.beat+1}/3 · เปิดเผย!</div><div class="rv">${side(A,pa,xa,ra,uN[0])}${side(B,pb,xb,rb,uN[1])}</div><div class="why">${ST[pa.s].ic} vs ${ST[pb.s].ic} — ${why}</div>
   <button class="btn ${last?'red':''}" id="uaNx" style="margin-top:14px">${last?'⚖️ ตัดสินผล':'จังหวะถัดไป ›'}</button>`,meIn);
  const go=()=>{if(!G||G.cur!==C||C.adv===C.beat)return;C.adv=C.beat;if(last)judge();else{C.beat++;beat()}};$$('uaNx').onclick=go;if(!meIn)AT=setTimeout(go,2600)}
 function scoreH(){const C=G.cur,A=G.ps[C.a],B=G.ps[C.b];const m=Math.max(6,C.sc[0],C.sc[1]);
@@ -228,7 +239,7 @@ function scoreH(){const C=G.cur,A=G.ps[C.a],B=G.ps[C.b];const m=Math.max(6,C.sc[
 // ---------- 6) ตัดสิน ----------
 function judge(){stopT();const C=G.cur;if(!C||C.done)return;C.done=1;const A=G.ps[C.a],B=G.ps[C.b];let w=C.sc[0]>C.sc[1]?0:C.sc[1]>C.sc[0]?1:(statOf(A,C.st)>=statOf(B,C.st)?0:1);const tie=C.sc[0]===C.sc[1];
  const wi=w?C.b:C.a,li=w?C.a:C.b;G.hist.push({w:wi,l:li,r:C.r,st:C.st,sc:C.sc.slice(),log:C.log,tie});if(C.r===0)G.win.push(wi);
- const W=G.ps[wi],L=G.ps[li];try{reactEnd(W,L)}catch(e){}
+ const W=G.ps[wi],L=G.ps[li];try{reactEnd(W,L)}catch(e){}if(W.me)G.st.sw_[C.st.k]=(G.st.sw_[C.st.k]||0)+1;if(L.me){G.st[C.r?'out2':'out1']=1}
  if(L.me)return erased(W,L,C,tie);
  if(W.me&&C.r===1)return champion(W,L);
  // คนอื่นแพ้ หรือเราชนะรอบแรก
@@ -240,15 +251,15 @@ function judge(){stopT();const C=G.cur;if(!C||C.done)return;C.done=1;const A=G.p
  $$('uaNm').onclick=()=>nextMatch();vb(W.me?40:15)}
 function mistake(C,side){let worst=null,wi=-1;C.log.forEach((l,i)=>{const mine=side?l.xb:l.xa,his=side?l.xa:l.xb;const d=mine-his;if(worst===null||d<worst){worst=d;wi=i}});const l=C.log[wi];if(!l)return'';const mo=side?l.b:l.a,ho=side?l.a:l.b,r=side?l.rb:l.ra;
  const why=!r.ok?`เลือก ${ST[mo.s].ic} ถูกทาง แต่ทำพลาด (โอกาส ${r.ch}%)`:(WHY[mo.s]&&WHY[mo.s][ho.s])||'อีกฝ่ายอ่านทางออก';return`จังหวะ ${wi+1}: คุณ ${ST[mo.s].ic} ${E(mo.t)} · อีกฝ่าย ${ST[ho.s].ic} ${E(ho.t)} — ${why}${l.auto?' (ไม่ทันกด)':''}`}
-function erased(W,L,C,tie){const side=C.a===G.ps.indexOf(L)?0:1;G.phase='dead';
+function erased(W,L,C,tie){const side=C.a===G.ps.indexOf(L)?0:1;G.phase='dead';statSend(1);
  const g=LSg('murim_uagrave',[]);g.unshift({n:L.name,w:L.w,by:W.name,bw:W.w,st:C.st.n,t:Date.now(),beta:1});LSs('murim_uagrave',g.slice(0,30));
  shatter(WD[L.w].c,()=>{scr(`<div class="big"><div class="e">🕳️</div><h3>จักรวาล${WD[L.w].n}ของ ${E(L.name)}<br>ถูกลบออกจากสากลภพ</h3></div>
   <div class="card" style="font-size:13px;line-height:1.65"><b>📜 สรุป</b><br>แพ้ ${wdot(W.w)} <b>${E(W.name)}</b>${W.ghost?' (เงาจักรวาล)':''} · ${C.st.ic} ด่าน${C.st.n} · ${C.sc[side]} : ${C.sc[1-side]}${tie?' (เสมอ ตัดสินด้วยค่าตัว)':''}<br>❌ จุดพลาด: ${mistake(C,side)}</div>
   <div class="card" style="font-size:12.5px;line-height:1.6">ถ้าเป็นของจริง: ชีวิตนี้จบ สาเหตุ "ถูกลบในสากลภพ" · ชื่อจารึกใน 🕳️ สุสานจักรวาล · ชีวิตต่อไปได้ของปลอบใจเล็กน้อย<br><b style="color:#9affc8">🧪 เบต้า: ชีวิตจริงของคุณยังอยู่ครบ</b></div>
   <button class="btn" id="uaW">👀 ดูคู่ที่เหลือต่อ</button><button class="btn gh" onclick="uaOpen()">🔁 เล่นอีกรอบ</button><button class="btn gh" onclick="uaClose()">ออก</button>`);
   $$('uaW').onclick=()=>nextMatch()})}
-function final(){const h=G.hist.find(x=>x.r===1);const W=G.ps[h.w];scr(`<div class="big"><div class="e">👑</div><h3>${E(W.name)}</h3><div>ผู้ข้ามพ้นสากลภพ คนใหม่</div></div><div class="card"><b>🏆 สายการแข่ง</b>${brk()}</div><button class="btn" onclick="uaOpen()">🔁 เล่นอีกรอบ</button><button class="btn gh" onclick="uaClose()">ออก</button>`)}
-function champion(W,L){G.phase='end';const n=(LSg('murim_uawins',0)|0)+1;LSs('murim_uawins',n);
+function final(){statSend(1);const h=G.hist.find(x=>x.r===1);const W=G.ps[h.w];scr(`<div class="big"><div class="e">👑</div><h3>${E(W.name)}</h3><div>ผู้ข้ามพ้นสากลภพ คนใหม่</div></div><div class="card"><b>🏆 สายการแข่ง</b>${brk()}</div><button class="btn" onclick="uaOpen()">🔁 เล่นอีกรอบ</button><button class="btn gh" onclick="uaClose()">ออก</button>`)}
+function champion(W,L){G.phase='end';G.st.champ=1;statSend(1);const n=(LSg('murim_uawins',0)|0)+1;LSs('murim_uawins',n);
  scr(`<div class="big"><div class="e">👑</div><h3>ผู้ข้ามพ้นสากลภพ</h3><div style="font-size:14px">${wdot(W.w)} <b>${E(W.name)}</b> กลืนกิน 2 จักรวาล</div></div>
  <div class="card" style="font-size:12.5px;line-height:1.65">ถ้าเป็นของจริง: ได้ฉายา <b>"ผู้ข้ามพ้นสากลภพ"</b> + กรอบโปรไฟล์ + ชื่อขึ้นป้ายบนสุดของทุกโลกจนกว่าจะมีแชมป์ใหม่ · สถิติ "ลบจักรวาลไปแล้ว N จักรวาล"<br><small style="opacity:.7">🧪 เบต้า: ชนะในเครื่องนี้แล้ว ${n} ครั้ง (ยังไม่ขึ้นทำเนียบ)</small></div>
  <div class="card"><b>🏆 สายการแข่ง</b>${brk()}</div><button class="btn" onclick="uaOpen()">🔁 เล่นอีกรอบ</button><button class="btn gh" onclick="uaClose()">ออก</button>`);vb(80);confetti()}
@@ -270,6 +281,20 @@ window.uaGrave=function(){const g=LSg('murim_uagrave',[]);scr(`<h2>🕳️ ส�
 
 // พับจอระหว่างเล่น = ระบบเลือกแทนตามกติกา (ไม่หยุดเวลา)
 
+
+// ---------- ✴️ ท่าไม้ตายประจำโลก ----------
+const ULT={murim:'เคล็ดวิชาลับสุดท้าย',xian:'กระบี่หมื่นเล่มคืนสู่หนึ่ง',mw:'โทรหาเส้นสายระดับประเทศ',soul:'ปลดปล่อยวงแหวนทั้งหมด',beast:'คืนร่างอสูรดึกดำบรรพ์',sky:'โอเวอร์ไดรฟ์ยีนอสูร 300%'};
+const ucss=document.createElement('style');ucss.textContent=`#uaS .ultB{display:flex;align-items:center;gap:10px;width:100%;text-align:left;margin:8px 0 2px;padding:9px 12px;border-radius:14px;border:1.5px dashed #ffd86a88;background:#ffd86a0d;color:inherit;font:inherit;cursor:pointer;transition:all .2s}
+#uaS .ultB>span:first-child{font-size:22px}#uaS .ultB b{font-size:13px;display:block}#uaS .ultB small{font-size:10.5px;opacity:.75}#uaS .ultB i{margin-left:auto;font-style:normal;font-size:11px;font-weight:900;padding:3px 9px;border-radius:999px;background:#0005}
+#uaS .ultB.on{border-style:solid;border-color:#ffd86a;background:linear-gradient(90deg,#ffd86a33,#ff8a3d22);box-shadow:0 0 18px #ffd86a66;animation:uaUl 1s infinite}#uaS .ultB.on i{background:#ffd86a;color:#2a1a04}#uaS .ultB:disabled{opacity:.6}
+#uaS .ultU{font-size:11.5px;opacity:.6;text-align:center;margin:6px 0}@keyframes uaUl{50%{box-shadow:0 0 28px #ffd86aaa}}`;document.head.appendChild(ucss);
+// ---------- 📊 สถิติเบต้า (ส่ง 1 ครั้งต่อทัวร์ ไม่เก็บตัวตน) ----------
+function statBeat(C,A,B,pa,pb,cl,uN){const ms=A.me?0:B.me?1:-1;if(ms<0)return;const o=ms?pb:pa,S2=G.st;S2.beats=(S2.beats||0)+1;S2['p_'+o.s]=(S2['p_'+o.s]||0)+1;if(cl[ms]>0)S2['w_'+o.s]=(S2['w_'+o.s]||0)+1;else if(cl[ms]<0)S2['l_'+o.s]=(S2['l_'+o.s]||0)+1;
+ if(uN[ms]){S2.uu=(S2.uu||0)+1;if(cl[ms]>0)S2.uw=(S2.uw||0)+1;else S2.ul=(S2.ul||0)+1}const f=ms?A:B;if(f.prom&&!S2._pr){S2._pr=1;S2.pr=1}if(f.prom==='s'&&o.s==='h'&&(ms?pa:pb).s==='s')S2.pb=1}
+function statSend(fin){try{if(!G||G.sent)return;G.sent=1;const me=G.ps.find(p=>p.me);const s2=G.st,c={t:1};if(fin)c.fin=1;else c.quit=1;
+ ['champ','out1','out2','to','beats','uu','uw','ul','pr','pb'].forEach(k=>{if(s2[k])c[k]=s2[k]});['r','g','s','h'].forEach(k=>['p_','w_','l_'].forEach(q=>{if(s2[q+k])c[q+k]=s2[q+k]}));
+ for(const k in s2.s_)c['s_'+k]=s2.s_[k];for(const k in s2.sw_)c['sw_'+k]=s2.sw_[k];if(me){c['pw_'+me.w]=1;if(s2.champ)c['pc_'+me.w]=1;c[me.test?'test':'real']=1}
+ Promise.resolve().then(()=>api('ua',{c})).catch(()=>{})}catch(e){}}
 // ============================================================
 // 💬 แชทห้องรอ + 👀 คนดูจากโลกต่างๆ (NPC) + เหตุการณ์จากอัฒจันทร์
 //  เบต้า: แชทอยู่ในเครื่อง คนดูเป็น NPC ตอบตามที่คุณพิมพ์ · พิมพ์ชวนคู่แข่ง "ช่วยกันนะ" ได้ แต่เงาอาจโกหก

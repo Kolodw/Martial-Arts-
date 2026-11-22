@@ -1315,6 +1315,28 @@ module.exports = async (req, res) => {
       try { await pipe([['HINCRBY', dk, k, 1], ['EXPIRE', dk, 86400 * 60]]) } catch (e) {}
       return res.json({ ok: 1 });
     }
+    if (a === 'ua') { // 🕳️ สถิติสากลภพ (เบต้า) · 1 ครั้งต่อทัวร์ · นับรวมต่อวัน ไม่เก็บตัวตน
+      const ua = String(req.headers['user-agent'] || ''); if (/bot|crawl|spider|headless|preview/i.test(ua)) return res.json({ ok: 0 });
+      const c = b.c && typeof b.c === 'object' ? b.c : null; if (!c) return res.json({ ok: 0 });
+      const RX = /^(t|fin|champ|out1|out2|quit|to|beats|uu|uw|ul|pr|pb|ev|p_[rgsh]|w_[rgsh]|l_[rgsh]|s_(res|tre|duel|maze)|sw_(res|tre|duel|maze)|pw_(murim|xian|mw|soul|beast|sky)|pc_(murim|xian|mw|soul|beast|sky)|real|test)$/;
+      const ops = [], dk = 'ua:' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
+      for (const k of Object.keys(c).slice(0, 60)) { const v = Math.floor(+c[k]); if (RX.test(k) && v > 0 && v <= 30) ops.push(['HINCRBY', dk, k, v]) }
+      if (!ops.length) return res.json({ ok: 0 });
+      ops.push(['EXPIRE', dk, 86400 * 60]); try { await pipe(ops) } catch (e) {}
+      return res.json({ ok: 1 });
+    }
+    if (a === 'uastat') {
+      if (!isAdmKey(qOf(req).key || b.key)) return res.status(403).json({ err: 'admin' });
+      const n = Math.min(30, Math.max(1, +(qOf(req).d || 7) | 0)); const days = []; for (let i = 0; i < n; i++) days.push(new Date(now + 7 * 3600e3 - i * 86400e3).toISOString().slice(0, 10));
+      const rs = await pipe(days.map(d => ['HGETALL', 'ua:' + d])); const T = {};
+      const per = days.map((d, i) => { const r = rs[i], o = {}; if (Array.isArray(r)) for (let j = 0; j + 1 < r.length; j += 2) o[r[j]] = +r[j + 1]; else for (const k in (r || {})) o[k] = +r[k]; for (const k in o) T[k] = (T[k] || 0) + o[k]; return { d, ...o } });
+      const pc = (x, y) => y ? Math.round(x / y * 1000) / 10 + '%' : '-';
+      const sum = { 'ทัวร์ที่เริ่ม': T.t || 0, 'เล่นจบทัวร์': pc(T.fin || 0, T.t), 'ได้แชมป์': pc(T.champ || 0, T.t), 'ตกรอบแรก': pc(T.out1 || 0, T.t), 'ออกกลางคัน': pc(T.quit || 0, T.t), 'กดไม่ทัน 12 วิ (ต่อจังหวะ)': pc(T.to || 0, T.beats), 'ใช้ท่าไม้ตาย (ต่อทัวร์)': pc(T.uu || 0, T.t), 'ท่าไม้ตายสำเร็จ': pc(T.uw || 0, T.uu), 'ชวนคู่แข่งร่วมมือ': T.pr || 0, 'โดนหักหลังหลังสัญญา': T.pb || 0 };
+      const st = {}; ['r', 'g', 's', 'h'].forEach(k => { st[{ r: '⚡เร่ง', g: '🛡️ระวัง', s: '🗡️ขัดขวาง', h: '🤝ช่วย' }[k]] = { เลือก: T['p_' + k] || 0, ชนะจังหวะ: pc(T['w_' + k] || 0, T['p_' + k]), แพ้จังหวะ: pc(T['l_' + k] || 0, T['p_' + k]) } });
+      const sg = {}; ['res', 'tre', 'duel', 'maze'].forEach(k => { sg[k] = { เล่น: T['s_' + k] || 0, ผู้เล่นชนะ: pc(T['sw_' + k] || 0, T['s_' + k]) } });
+      const wd = {}; ['murim', 'xian', 'mw', 'soul', 'beast', 'sky'].forEach(k => { if (T['pw_' + k]) wd[k] = { เล่น: T['pw_' + k], แชมป์: pc(T['pc_' + k] || 0, T['pw_' + k]) } });
+      return res.json({ สรุป: sum, ท่าที: st, ด่าน: sg, โลก: wd, รายวัน: per });
+    }
     if (a === 'fnstat') {
       if (!isAdmKey(qOf(req).key || b.key)) return res.status(403).json({ err: 'admin' });
       const days = []; for (let i = 0; i < 14; i++) days.push(new Date(now + 7 * 3600e3 - i * 86400e3).toISOString().slice(0, 10));
