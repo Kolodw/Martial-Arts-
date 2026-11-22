@@ -46439,7 +46439,7 @@ body.desk #evBack{left:var(--ebL,20px);transform:none;top:var(--ebT,14px);bottom
 // ============================================================
 try{(()=>{
 // 1) คลิกฉากหลัง (นอกหน้าต่าง) = ปิด เฉพาะหน้าต่างที่มีปุ่ม ✕ อยู่แล้ว · เหตุการณ์/ดวล/มินิเกม/จบชีวิต ไม่ปิด
-const KEEP=/^(choice|duel|mg|mg2|bye|death|end|lifeview|born|tut|guide|draft)$/;let dn=null;let opT=0;{const _m=modal;modal=function(){opT=Date.now();return _m.apply(this,arguments)};for(const k in _m)try{modal[k]=_m[k]}catch(e){}}
+const KEEP=/^(choice|duel|mg|mg2|bye|death|end|lifeview|born|tut|guide|draft|dungeon)$/;let dn=null;let opT=0;{const _m=modal;modal=function(){opT=Date.now();return _m.apply(this,arguments)};for(const k in _m)try{modal[k]=_m[k]}catch(e){}}
 document.addEventListener('pointerdown',e=>{dn=e.target===$('mask')?{x:e.clientX,y:e.clientY,t:Date.now()}:null},true);
 document.addEventListener('click',e=>{try{const m=$('mask');if(e.target!==m||!dn||!modalOpen||!m.classList.contains('on'))return;const md=$('modal'),k=md.dataset.k||'';
  if(KEEP.test(k)||Date.now()-opT<450||Math.hypot(e.clientX-dn.x,e.clientY-dn.y)>12||Date.now()-dn.t>800)return;const x=md.querySelector('.xbtn');if(!x)return;e.stopPropagation();x.click()}catch(er){}},true);
@@ -46710,3 +46710,41 @@ window.openPerfAdm=async function(days){days=days||3;modal('<button class="xbtn"
  <h4 style="margin:12px 0 4px">🧭 หน้าที่ค้างบ่อย (ครั้งที่ค้าง >0.2 วิ ต่อ 10 นาที)</h4><div class="tag2">${pgRows.map(([k,r])=>`<div style="display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid #ffffff12"><span>${esc(k)}</span><span>${(r.l2/Math.max(1,r.s)*600).toFixed(1)} · fps ${Math.round(r.fs/Math.max(1,r.s))}</span></div>`).join('')}</div>`,'perfadm')};
 {const _o=openAdmTools;openAdmTools=function(){const r=_o.apply(this,arguments);try{const m=$('modal');const h=m.querySelector('h3');if(h&&/เครื่องมือแอดมิน/.test(h.textContent)&&!m.querySelector('.perfAdmB'))h.insertAdjacentHTML('afterend','<button class="gbtn perfAdmB" style="width:100%;margin:4px 0 8px" onclick="openPerfAdm(3)">📈 ความลื่นของผู้เล่น (วัดจากเครื่องจริง)</button>')}catch(e){}return r};window.openAdmTools=openAdmTools}
 })()}catch(e){console.error('block170',e)}
+
+// ============================================================
+// BLOCK 171: 🏰 ดันเจี้ยน (ยุทธภพ/เซียน/ทุกโลกที่ใช้ระบบนี้) — บอกชัดว่าต้องกดอะไร
+//  - หัว: ความยากเทียบพลังเรา (โอกาสชนะห้องถัดไป/บอส) · คำอธิบายห้องสั้นๆ · ของที่เก็บได้ตอนนี้ · เตือนเมื่อเลือดต่ำ
+//  - ปุ่ม ⏩ เดินอัตโนมัติ: เดินทีละห้องเอง หยุดก่อนห้องบอส หรือเมื่อพลังชีวิตต่ำกว่า 35%
+//  - ปิดด้วย ✕ / Esc / แตะฉากหลัง = ถอยออกพร้อมของ (เดิมปิดแล้วดันเจี้ยนค้าง ของไม่เข้า)
+// ============================================================
+try{(()=>{
+const st=document.createElement('style');st.textContent=`
+.dgInfo{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}.dgInfo span{font-size:12px;padding:3px 9px;border-radius:999px;background:#ffffff12;border:1px solid #ffffff22;white-space:nowrap}
+.dgInfo .ok{border-color:#6fd08a;color:#a8f0bc}.dgInfo .mid{border-color:#e8b54a;color:#ffe08a}.dgInfo .bad{border-color:#e0503c;color:#ff9a8a}
+.dgHelp{font-size:12px;opacity:.85;margin:4px 0 6px;line-height:1.5}.dgHelp summary{cursor:pointer;font-weight:700}
+.dgLoot{margin:8px 0 2px;padding:7px 10px;border-radius:10px;background:#00000026;border:1px dashed #e8b54a77;font-size:12.5px}.dgLoot b{color:#ffe08a}
+.dgWarn{margin:6px 0;padding:6px 10px;border-radius:10px;background:#5a141433;border:1px solid #e0503c;color:#ffb0a0;font-size:12.5px;font-weight:700}
+.dgAutoB{width:100%;margin-top:8px}
+#modal[data-k="dungeon"] .brow .pbtn{font-size:15px}`;document.head.appendChild(st);
+const chance=(ep)=>{try{const P=myPow();let w=0;for(let i=0;i<300;i++){if(P*(.75+Math.random()*.5)>=ep*(.75+Math.random()*.5))w++}return Math.round(w/3)}catch(e){return null}};
+const tag=c=>c==null?'':c>=80?'ok':c>=45?'mid':'bad';
+let autoRun=0;
+window.dgAutoWalk=function(){if(!DG||DG.over)return;autoRun=1;const go=()=>{if(!autoRun||!DG||DG.over||!modalOpen||$('modal').dataset.k!=='dungeon'){autoRun=0;return}
+ if(S.hp<S.maxHp*.35){autoRun=0;dgDraw();toast('⚠️ พลังชีวิตต่ำ หยุดเดินอัตโนมัติแล้ว');return}if(DG.room>=5){autoRun=0;dgDraw();toast('👑 ถึงหน้าห้องบอสแล้ว ตัดสินใจเองว่าจะสู้หรือถอย');return}
+ dgStep();setTimeout(go,520)};go()};
+{const _d=dgDraw;dgDraw=function(){const r=_d.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='dungeon'||!DG)return r;const d=DG.d,last=DG.room>=5;
+ const cMob=chance(d.ep*(.7+(DG.room+1)*.08)),cBoss=chance(d.ep*1.8),hp=S.hp/Math.max(1,S.maxHp);
+ const h3=m.querySelector('h3');if(h3&&!m.querySelector('.xbtn'))h3.insertAdjacentHTML('beforebegin','<button class="xbtn" title="ถอยออกพร้อมของ" onclick="dgEnd()">✕</button>');
+ const bar=m.querySelector('.dgbar');if(bar){bar.insertAdjacentHTML('afterend',`<div class="dgInfo">${DG.over||last?'':`<span class="${tag(cMob)}">⚔️ ห้องถัดไปชนะราว ${cMob}%</span>`}<span class="${tag(cBoss)}">👑 บอส ${esc(d.boss)} ชนะราว ${cBoss}%</span><span>🚪 ห้อง ${Math.min(6,DG.room)}/6</span></div>
+  ${DG.room===0?`<details class="dgHelp" open><summary>❓ ดันเจี้ยนเล่นยังไง</summary>กด <b>เดินต่อ</b> ทีละห้อง แต่ละห้องสุ่มเจอ: ⚔️ ศัตรู (สู้ให้อัตโนมัติ) · 📦 หีบของ · 🕳️ กับดัก · 💧 ตาน้ำฟื้นเลือด · 📖 ตำรับ · ห้องที่ 6 คือ 👑 บอส ชนะได้ของดี · <b>ถอยออก</b> ได้ทุกเมื่อ ของที่เก็บแล้วติดตัวกลับ · พลังชีวิตหมด = สลบ ได้ของที่เก็บไว้กลับมา</details>`:''}`)}
+ if(!DG.over&&hp<.4)(m.querySelector('.dglog')||bar).insertAdjacentHTML('afterend',`<div class="dgWarn">⚠️ พลังชีวิตเหลือ ${Math.round(hp*100)}% — ควรถอยออก หรือใช้ยาก่อนเดินต่อ</div>`);
+ const L=[];for(const k in DG.loot){const b=BAGIT[k];if(b)L.push(b.ic+b.n+'×'+DG.loot[k])}DG.eq.forEach(e=>{const it=EQI[e];if(it)L.push(it.ic+it.n)});if(DG.rc.length)L.push('📖 ตำรับ ×'+DG.rc.length);
+ const lg=m.querySelector('.dglog');if(lg)lg.insertAdjacentHTML('afterend',`<div class="dgLoot">🎒 เก็บได้แล้ว: ${L.length?'<b>'+L.join(' · ')+'</b>':'ยังไม่มี'}</div>`);
+ const row=m.querySelector('.brow');if(row&&!DG.over&&!last)row.insertAdjacentHTML('afterend',`<button class="gbtn dgAutoB" onclick="dgAutoWalk()">⏩ เดินอัตโนมัติ <small>(หยุดก่อนห้องบอส หรือเมื่อเลือดต่ำกว่า 35%)</small></button>`);
+ const pb=row&&row.querySelector('.pbtn');if(pb&&last)pb.innerHTML=`👑 สู้บอส <small>(ชนะราว ${cBoss}%)</small>`;
+ if(last&&!DG.over&&cBoss!=null&&cBoss<30&&row)row.insertAdjacentHTML('beforebegin',`<div class="dgWarn">👑 บอสแข็งกว่าเรามาก (ชนะราว ${cBoss}%) — แนะนำ <b>ถอยออก</b> พร้อมของที่เก็บได้ แล้วกลับมาเมื่อแกร่งขึ้น</div>`);
+ const L2=m.querySelector('.dglog');if(L2)L2.scrollTop=L2.scrollHeight}catch(e){console.error('dg171',e)}return r}}
+// ปิดดันเจี้ยนทางไหนก็ตาม = ถอยออกพร้อมของ
+let ending=0;{const _e=dgEnd;dgEnd=function(){if(ending)return;ending=1;autoRun=0;try{return _e.apply(this,arguments)}finally{ending=0}};for(const x in _e)try{dgEnd[x]=_e[x]}catch(e){}}
+{const _c=closeM;closeM=function(){try{if(!ending&&DG&&modalOpen&&$('modal').dataset.k==='dungeon'){dgEnd();return}}catch(e){}return _c.apply(this,arguments)};for(const x in _c)try{closeM[x]=_c[x]}catch(e){}}
+})()}catch(e){console.error('block171',e)}
