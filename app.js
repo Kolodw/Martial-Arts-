@@ -12379,7 +12379,7 @@ function bkFilter(){const q=String(window._bkQ||'').trim().toLowerCase(),f=windo
 .bkfl button.on{background:var(--pink);color:#fff;border-color:var(--pink)}.bkj{font-size:11.5px;opacity:.9}
 .bkhc{cursor:pointer;user-select:none;position:relative;padding-right:22px!important}.bkhc:after{content:'▾';position:absolute;right:4px;top:50%;transform:translateY(-50%);transition:transform .2s;opacity:.7}
 .bkhc.shut:after{transform:translateY(-50%) rotate(-90deg)}.bkhc.shut:not(.qopen)+.bkgrid{display:none!important}
-#mask.on #modal[data-k="book"]~#mFloat,body:has(#modal[data-k="book"] .bksearch) #mFloat{display:none!important}
+#mask.on #modal[data-k="book"]~#mFloat,body.hzBkS #mFloat{display:none!important}
 .bkrow{display:flex;gap:6px;align-items:center}.bkrow input{flex:1;min-width:0}.bkrow button{flex:0 0 auto;width:38px;height:38px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);font-size:16px;font-weight:800;cursor:pointer}.bkrow .bkx{background:var(--pink);color:#fff}
 .bkgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:10px}
 @media(min-width:720px){.bkgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
@@ -38237,7 +38237,7 @@ const css=document.createElement('style');css.textContent=`
 #tGrid .gSt:after,#tGrid .gAq:after{content:'';position:absolute;top:0;bottom:0;width:35%;left:-45%;background:linear-gradient(100deg,transparent,#fff3,transparent);animation:mwShine 3.4s ease-in-out infinite}
 #tGrid .gOn{--bd:#3ad0b0;--bg:radial-gradient(120% 120% at 100% 0%,#127a6a,#0a3a34 60%,#062420)}
 #tGrid .gOn .ld{display:inline-block;width:7px;height:7px;border-radius:50%;background:#3aff8a;box-shadow:0 0 6px #3aff8a;margin-right:4px;animation:stLd 1.6s infinite}@keyframes stLd{50%{opacity:.35}}
-body:has(#tGrid) #tMwCard,body:has(#tGrid) #tAqBtn{display:none!important}
+body.hzTGrid #tMwCard,body.hzTGrid #tAqBtn{display:none!important}
 /* ---------- มือถือในเกม ---------- */
 @media (max-width:699px){
  body #game .crow{display:flex!important;flex-wrap:wrap!important;gap:5px!important;align-items:center}
@@ -38254,9 +38254,9 @@ body:has(#tGrid) #tMwCard,body:has(#tGrid) #tAqBtn{display:none!important}
  body #game .crow #pauseBtn .cbL{opacity:.9!important;font-weight:800!important}
  body #game.pz .crow #pauseBtn{animation:stPz 1.3s ease-in-out infinite}@keyframes stPz{50%{box-shadow:0 3px 0 #7a5512,0 0 26px #ffd86a!important}}
  body #game .crow #aqCb .aqDot{top:3px;right:6px}
- #game>#goalBox:has(+#rvBar){align-self:flex-start;width:calc(50% - 3px)!important;height:30px!important;max-height:30px!important;overflow:hidden;font-size:11.5px!important;box-sizing:border-box;margin-top:4px!important;margin-bottom:0!important;white-space:nowrap;text-overflow:ellipsis;display:flex!important;align-items:center}
- #game>#goalBox:has(+#rvBar)+#rvBar{align-self:flex-end;width:calc(50% - 3px)!important;height:30px!important;margin:-30px 0 2px 0!important;font-size:11px!important;box-sizing:border-box;display:flex!important}
- #game>#goalBox:has(+#rvBar)+#rvBar>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 6px!important}
+ #game>body.hzRvA #goalBox{align-self:flex-start;width:calc(50% - 3px)!important;height:30px!important;max-height:30px!important;overflow:hidden;font-size:11.5px!important;box-sizing:border-box;margin-top:4px!important;margin-bottom:0!important;white-space:nowrap;text-overflow:ellipsis;display:flex!important;align-items:center}
+ #game>body.hzRvA #goalBox+#rvBar{align-self:flex-end;width:calc(50% - 3px)!important;height:30px!important;margin:-30px 0 2px 0!important;font-size:11px!important;box-sizing:border-box;display:flex!important}
+ #game>body.hzRvA #goalBox+#rvBar>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 6px!important}
 }
 /* ---------- เมนู ---------- */
 .mnHero{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:7px;margin:4px 0 8px}
@@ -38413,7 +38413,7 @@ body.royal #game .crow #autoBtn.on{background:linear-gradient(170deg,#3a8a5a,#1f
 #wPick .wpC button.on{background:linear-gradient(160deg,#ffe48a,#e0a020);color:#2a1a04;border-color:#ffd86a}#wPick .wpC button:disabled{opacity:.35}
 #wPick .wpNote{font-size:11px;color:#b9ad94;margin:6px 2px 0;min-height:15px}
 #title .box.opts.wpOn>:not(#wPick){display:none!important}#title .box.opts.wpOn{padding:12px 10px!important}
-body:has(#wPick) #tGrid{grid-template-columns:repeat(3,1fr)}body:has(#wPick) #tGrid #tgMw{display:none}body:has(#wPick) #tGrid button{min-height:78px;padding:9px}body:has(#wPick) #tGrid button small{-webkit-line-clamp:3}
+body.hzWPick #tGrid{grid-template-columns:repeat(3,1fr)}body.hzWPick #tGrid #tgMw{display:none}body.hzWPick #tGrid button{min-height:78px;padding:9px}body.hzWPick #tGrid button small{-webkit-line-clamp:3}
 `;document.head.appendChild(css);
 const $$=id=>document.getElementById(id);
 const tried=()=>{try{return LS.get('murim_mtried',{})||{}}catch(e){return{}}};
@@ -38617,7 +38617,7 @@ const css=document.createElement('style');css.textContent=`
 @keyframes pbP2{50%{filter:brightness(1.15);box-shadow:0 0 0 2px #e8b54a66,0 4px 18px #e8b54a44}}
 #pendBar.pbBot{position:fixed!important;left:0!important;right:0!important;margin:0 auto!important;transform:none!important;width:min(94vw,440px)!important;bottom:var(--pbB,calc(env(safe-area-inset-bottom) + 140px))!important;z-index:45!important}
 #pendBar.pbTop{position:fixed!important;left:0!important;right:0!important;margin:0 auto!important;width:min(94vw,440px)!important;top:var(--pbT,120px)!important;z-index:45!important;box-shadow:0 6px 20px #0008}
-body:has(#mask.on) #pendBar.pbBot,body:has(#mask.on) #pendBar.pbTop{visibility:hidden}
+body.hzMask #pendBar.pbBot,body.hzMask #pendBar.pbTop{visibility:hidden}
 #pendBar .pbPos{float:right}`;document.head.appendChild(css);
 let last=-1;
 let lastT=-1;
@@ -43899,7 +43899,7 @@ const st=document.createElement('style');st.textContent=`
 #modal.mbHas{padding-top:48px}
 #modal.mbIn{animation:mbIn .28s cubic-bezier(.2,.9,.3,1)}@keyframes mbIn{from{transform:translateX(-22px);opacity:.4}}
 .mask,.modal,#modal{overscroll-behavior:contain}
-body:has(#mask.on){overflow:hidden}
+body.hzMask{overflow:hidden}
 @media(prefers-reduced-motion:reduce){#modal.mbIn{animation:none}}`;document.head.appendChild(st);
 })()}catch(e){console.error('block118',e)}
 
@@ -45388,10 +45388,10 @@ body.mUI:not(.mF):not(.mExp) #game>.box.top #cloudTag{display:none}
 body.mUI:not(.mF):not(.mExp) #onMini{min-height:30px;padding:0 8px}
 body.mUI:not(.mF):not(.mExp) #onMini b{display:none}body.mUI:not(.mF):not(.mExp) #onMini{min-width:30px!important;padding:0 6px!important}
 body.mUI #game>#hintBox{display:none!important}
-body.mUI #game>#goalBox:has(~#rvBar){align-self:flex-start;width:calc(50% - 3px)!important;height:30px!important;max-height:30px!important;overflow:hidden;font-size:11.5px!important;box-sizing:border-box;margin-top:4px!important;margin-bottom:0!important;white-space:nowrap;text-overflow:ellipsis;display:flex!important;align-items:center}
-body.mUI #game>#goalBox:has(~#rvBar)~#rvBar{align-self:flex-end;width:calc(50% - 3px)!important;height:30px!important;margin:-30px 0 2px 0!important;font-size:11px!important;box-sizing:border-box;display:flex!important}
-body.mUI #game>#goalBox:has(~#rvBar)~#rvBar>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 6px!important}
-body.mUI.mLand #game.on>#goalBox:has(~#rvBar)~#rvBar{margin:4px 0!important;align-self:auto;width:auto!important}body.mUI.mLand #game.on>#goalBox{width:auto!important;align-self:auto}
+body.mUI #game>body.hzRv #goalBox{align-self:flex-start;width:calc(50% - 3px)!important;height:30px!important;max-height:30px!important;overflow:hidden;font-size:11.5px!important;box-sizing:border-box;margin-top:4px!important;margin-bottom:0!important;white-space:nowrap;text-overflow:ellipsis;display:flex!important;align-items:center}
+body.mUI #game>body.hzRv #goalBox~#rvBar{align-self:flex-end;width:calc(50% - 3px)!important;height:30px!important;margin:-30px 0 2px 0!important;font-size:11px!important;box-sizing:border-box;display:flex!important}
+body.mUI #game>body.hzRv #goalBox~#rvBar>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 6px!important}
+body.mUI.mLand #game.on>body.hzRv #goalBox~#rvBar{margin:4px 0!important;align-self:auto;width:auto!important}body.mUI.mLand #game.on>#goalBox{width:auto!important;align-self:auto}
 body.mUI:not(.mF):not(.tuOn) #game>#hintBar{display:none!important}
 #mBell{position:relative;min-width:34px;min-height:30px;border-radius:999px;border:1px solid #ffffff2a;background:#0004;color:#ffe9a8;font:inherit;font-size:15px;cursor:pointer;padding:0 7px;line-height:1}
 #mBell b{position:absolute;top:-5px;right:-5px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#e0483a;color:#fff;font-size:10.5px;line-height:17px;box-shadow:0 0 0 2px #17141f;display:none}
@@ -46605,3 +46605,32 @@ setTimeout(()=>watch(document.body),800);
 // แท็บถูกซ่อน: หยุดอนิเมชันทั้งหน้า
 document.addEventListener('visibilitychange',()=>document.documentElement.classList.toggle('tabHid',document.hidden));
 })()}catch(e){console.error('block167',e)}
+
+
+// ============================================================
+// BLOCK 168: ⚡ แทนตัวเลือก CSS :has() ที่ผูกกับ body/#goalBox ด้วยคลาสความหมายเดียวกัน — เดิมทุกครั้งที่มีของเพิ่ม/ลบบนจอ เบราว์เซอร์ต้องเช็คทั้งหน้าใหม่
+//   body.hzMask = มีหน้าต่างเปิด (#mask.on) · hzWPick/hzTGrid = มีหน้าเลือกโลก/ตารางหน้าแรก · hzBkS = สมุดเปิดช่องค้นหา · hzRv/hzRvA = มีแถบ #rvBar ต่อจาก #goalBox
+// ============================================================
+try{(()=>{const B=document.body;
+ const sync=()=>{try{const m=document.getElementById('mask'),g=document.getElementById('goalBox'),rv=document.getElementById('rvBar');
+  B.classList.toggle('hzMask',!!(m&&m.classList.contains('on')));B.classList.toggle('hzWPick',!!document.getElementById('wPick'));B.classList.toggle('hzTGrid',!!document.getElementById('tGrid'));
+  const md=document.getElementById('modal');B.classList.toggle('hzBkS',!!(md&&md.dataset.k==='book'&&md.querySelector('.bksearch')));
+  let after=false,next=false;if(g&&rv&&g.parentNode===rv.parentNode){after=!!(g.compareDocumentPosition(rv)&Node.DOCUMENT_POSITION_FOLLOWING);next=g.nextElementSibling===rv}
+  B.classList.toggle('hzRv',after);B.classList.toggle('hzRvA',next)}catch(e){}};
+ let q=0;const kick=()=>{if(!q)q=requestAnimationFrame(()=>{q=0;sync()})};
+ new MutationObserver(kick).observe(B,{childList:true,subtree:true});sync();
+ {const _m=modal;modal=function(){const r=_m.apply(this,arguments);sync();return r};for(const x in _m)try{modal[x]=_m[x]}catch(e){}}
+ {const _c=closeM;closeM=function(){const r=_c.apply(this,arguments);sync();return r};for(const x in _c)try{closeM[x]=_c[x]}catch(e){}}
+})()}catch(e){console.error('block168',e)}
+
+// ============================================================
+// BLOCK 169: ⚡ ขึ้นปีใหม่ไม่กระตุก — ระหว่างคำนวณปี (passYear) การวาดหน้าจอ (render) รวมไว้วาดครั้งเดียวในเฟรมถัดไป
+//   ตรรกะเกม เซฟ เหตุการณ์ และหน้าต่าง ทำงานเหมือนเดิมทุกอย่าง เปลี่ยนแค่จังหวะวาดจอ (ช้าลงไม่เกิน 1 เฟรม)
+// ============================================================
+try{(()=>{let inPY=0,pend=false,raf=0;
+ const flush=()=>{raf=0;if(!pend)return;pend=false;try{render()}catch(e){console.error(e)}};
+ {const _r=render;render=function(){if(inPY>0){pend=true;return}return _r.apply(this,arguments)};for(const x in _r)try{render[x]=_r[x]}catch(e){}}
+ {const _p=passYear;passYear=function(){inPY++;try{return _p.apply(this,arguments)}finally{inPY--;if(!inPY&&pend&&!raf)raf=requestAnimationFrame(flush)}};for(const x in _p)try{passYear[x]=_p[x]}catch(e){}}
+ // หน้าต่างที่เปิดขึ้นระหว่างปี/ซ่อนแท็บ: วาดค้างให้ทันที
+ document.addEventListener('visibilitychange',()=>{if(pend&&!inPY){cancelAnimationFrame(raf);flush()}});
+})()}catch(e){console.error('block169',e)}
