@@ -20,6 +20,7 @@ const css=document.createElement('style');css.textContent=`
 .gdB .gdCh{max-height:220px;overflow:auto;background:#0003;border-radius:10px;padding:6px 8px;margin:6px 0;display:flex;flex-direction:column-reverse}.gdB .gdCh div{margin:2px 0;line-height:1.45;word-break:break-word}.gdB .gdCh .s{opacity:.6;font-size:12px;text-align:center}
 .gdB input,.gdB textarea{width:100%;box-sizing:border-box;padding:8px;border-radius:8px;border:1px solid #fff3;background:#0004;color:inherit;font:inherit}
 .gdB .gdRow{display:flex;gap:6px}.gdB .gdRow>*{flex:1}.gdB .gdIcs{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}.gdB .gdIcs button{font-size:20px;width:38px;height:38px;border-radius:9px;border:1px solid #fff2;background:#0003;cursor:pointer}.gdB .gdIcs button.on{border-color:#e8b54a;background:#e8b54a33}
+.gdB .gdThs{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:4px 0 8px}.gdB .gdThs button{text-align:left;padding:7px 9px;border-radius:10px;border:1px solid #fff2;background:#0003;color:inherit;font:inherit;cursor:pointer}.gdB .gdThs button.on{border-color:#e8b54a;background:#e8b54a2a}.gdB .gdThs small{display:block;opacity:.7;font-size:11.5px;line-height:1.35}.gdB .gdThB{font-size:11px;padding:0 6px;border-radius:6px;background:#ffffff14}
 .gdB .gdTb{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:6px 0 10px}.gdB .gdTb button{min-width:0;padding:6px 3px;line-height:1.3;border-radius:10px;border:1px solid #fff2;background:#0003;color:inherit;font:inherit;font-size:12px;cursor:pointer;white-space:normal}.gdB .gdTb button.on{background:#e8b54a33;border-color:#e8b54a;font-weight:800}
 .gdB .gdLvB{font-size:12px;padding:1px 7px;border-radius:999px;background:#e8b54a;color:#2a1a00;vertical-align:middle}.gdB .gdLv{background:#0003;border-radius:12px;padding:8px 10px;margin:4px 0}.gdB .gdLv>div:first-child{display:flex;justify-content:space-between;align-items:baseline;gap:6px}.gdB .gdLv small{opacity:.75}
 .gdB .gdBar{height:8px;border-radius:99px;background:#0005;overflow:hidden;margin:5px 0}.gdB .gdBar i{display:block;height:100%;background:linear-gradient(90deg,#6ab0ff,#9fd8ff);border-radius:99px;transition:width .5s}.gdB .gdBar.gold i{background:linear-gradient(90deg,#e8b54a,#ffe08a)}.gdB .gdBar.red i{background:linear-gradient(90deg,#c8303a,#ff7a5a)}
@@ -44,7 +45,7 @@ const css=document.createElement('style');css.textContent=`
 // 🏯 สำนักของผู้เล่นจริง
 // ============================================================
 const GIC=['🏯','⛩️','🐉','🦅','🐺','🌙','🔥','🌊','⚔️','🌸','🪷','☯️'];
-const GER={in:'คุณอยู่ในสำนักอื่นอยู่แล้ว',name:'ชื่อสำนักต้องยาว 2 ตัวอักษรขึ้นไป',cd:'สร้างสำนักได้ชั่วโมงละครั้ง',taken:'ชื่อนี้มีคนใช้แล้ว',full:'สำนักนี้เต็มแล้ว',lv:'สำนักเลเวลยังไม่ถึง',elmax:'ผู้อาวุโสได้สูงสุด 3 คน',tpcd:'เปลี่ยนสายวิชาได้สัปดาห์ละครั้ง',prd:'วันนี้อธิษฐานที่หอตำนานแล้ว',bsd:'วันนี้ส่งพรไปแล้ว',self:'อธิษฐานให้ชีวิตของตัวเองไม่ได้',el:'ทำได้เฉพาะเจ้าสำนักหรือผู้อาวุโส',u:'ไม่พบศิษย์คนนี้',op:'ทำไม่ได้',kicked:'คุณเพิ่งถูกเชิญออกจากสำนักนี้ รอ 3 วัน',fast:'พิมพ์เร็วไป รอสักครู่',ld:'ทำได้เฉพาะเจ้าสำนัก',nog:'ไม่พบสำนักนี้แล้ว',empty:'ยังไม่ได้พิมพ์อะไร',id:'เครื่องนี้ยังไม่มีรหัสผู้เล่น ลองเล่นจบสักชีวิตก่อน',none:'คุณยังไม่ได้อยู่ในสำนัก'};
+const GER={in:'คุณอยู่ในกลุ่มอื่นอยู่แล้ว',name:'ชื่อกลุ่มต้องยาว 2 ตัวอักษรขึ้นไป',cd:'สร้างกลุ่มได้ชั่วโมงละครั้ง',taken:'ชื่อนี้มีคนใช้แล้ว',full:'กลุ่มนี้เต็มแล้ว',lv:'กลุ่มเลเวลยังไม่ถึง',elmax:'ผู้อาวุโสได้สูงสุด 3 คน',tpcd:'เปลี่ยนสายวิชาได้สัปดาห์ละครั้ง',prd:'วันนี้อธิษฐานที่หอตำนานแล้ว',thcd:'เปลี่ยนแนวกลุ่มได้สัปดาห์ละครั้ง',bsd:'วันนี้ส่งพรไปแล้ว',self:'อธิษฐานให้ชีวิตของตัวเองไม่ได้',el:'ทำได้เฉพาะเจ้ากลุ่มหรือผู้อาวุโส',u:'ไม่พบศิษย์คนนี้',op:'ทำไม่ได้',kicked:'คุณเพิ่งถูกเชิญออกจากกลุ่มนี้ รอ 3 วัน',fast:'พิมพ์เร็วไป รอสักครู่',ld:'ทำได้เฉพาะเจ้ากลุ่ม',nog:'ไม่พบกลุ่มนี้แล้ว',empty:'ยังไม่ได้พิมพ์อะไร',id:'เครื่องนี้ยังไม่มีรหัสผู้เล่น ลองเล่นจบสักชีวิตก่อน',none:'คุณยังไม่ได้อยู่ในกลุ่ม'};
 let GD=null,gdIc='🏯',gdPoll=null;
 const myPu=()=>{try{return String(pid).replace(/[^a-z0-9]/g,'').slice(0,12)}catch(e){return''}};
 const nmMe=()=>{try{return pname()}catch(e){return'นิรนาม'}};
@@ -52,97 +53,116 @@ const tagSave=g=>{try{LS.set('murim_gdtag',g?{n:g.n,ic:g.ic,id:g.id}:null)}catch
 async function gdW(o,x){try{const j=await api('gdw',Object.assign({o,n:nmMe()},x||{}));if(j&&j.err){toast('🏯 '+(GER[j.err]||j.err));return null}if(j&&'g' in j){GD=j.g;window.__gdTag(GD)}return j}catch(e){toast(e&&e.message==='auth'?'🔐 เครื่องนี้ยืนยันตัวตนไม่ผ่าน':'🏯 เชื่อมต่อไม่ได้ ลองใหม่');return null}}
 function chatH(g){const L=(g.ch||[]);if(!L.length)return'<div class="s">ยังไม่มีใครพูดอะไร เริ่มก่อนเลย</div>';
  return L.map(c=>c.s?`<div class="s">${E(c.x)}</div>`:`<div><b>${E(c.n)}</b>${c.u===g.ld?' 👑':''}: ${E(c.x)}</div>`).join('')}
+// ---- 🛡️ แนวกลุ่ม: ทุกคำเปลี่ยนตามแนว (ข้อมูลเหมือนกันทุกแนว) ----
+const GTH={murim:{n:'ยุทธภพ',ic:'🏯',g:'สำนัก',ld:'เจ้าสำนัก',el:'ผู้อาวุโส',m:'ศิษย์',art:'วิชาลับ',hall:'หอตำนาน',p:{sword:['🗡️','สายกระบี่'],mind:['🧠','สายจิต'],body:['🫀','สายกาย']}},
+ xian:{n:'เทพเซียน',ic:'☁️',g:'นิกาย',ld:'ประมุข',el:'ผู้พิทักษ์',m:'ศิษย์',art:'คัมภีร์นิกาย',hall:'หอบรรพจารย์',p:{sword:['⚡','สายกระบี่เซียน'],mind:['☯️','สายจิตเต๋า'],body:['🌟','สายกายทอง']}},
+ modern:{n:'ยุคปัจจุบัน',ic:'🏙️',g:'กิลด์',ld:'หัวหน้ากิลด์',el:'รองหัวหน้า',m:'สมาชิก',art:'ทักษะลับ',hall:'กำแพงเกียรติยศ',p:{sword:['🥊','สายต่อสู้'],mind:['💡','สายสมอง'],body:['💪','สายร่างกาย']}},
+ zombie:{n:'ซอมบี้',ic:'🧟',g:'ค่ายผู้รอดชีวิต',ld:'ผู้นำค่าย',el:'หน่วยลาดตระเวน',m:'ผู้รอดชีวิต',art:'ตำราเอาตัวรอด',hall:'กำแพงผู้รอด',p:{sword:['🪓','สายอาวุธ'],mind:['🗺️','สายวางแผน'],body:['🫀','สายอึดถึกทน']}},
+ hunter:{n:'ฮันเตอร์',ic:'🌀',g:'กิลด์ฮันเตอร์',ld:'กิลด์มาสเตอร์',el:'ฮันเตอร์แรงก์ S',m:'ฮันเตอร์',art:'สกิลกิลด์',hall:'หอแรงก์',p:{sword:['⚔️','สายโจมตี'],mind:['🔮','สายเวท'],body:['🛡️','สายแทงก์']}},
+ ghost:{n:'ผีไทย',ic:'👻',g:'สำนักไสยเวท',ld:'อาจารย์ใหญ่',el:'หมอผี',m:'ลูกศิษย์',art:'คาถาประจำสำนัก',hall:'หิ้งบูชาครู',p:{sword:['📿','สายอาคม'],mind:['🕯️','สายสมาธิ'],body:['🪬','สายของขลัง']}}};
+let Z=GTH.murim;const thOf=g=>GTH[g&&g.th]||GTH.murim;
+const GICT=['🛡️','🏙️','🧟','🌀','👻','☁️','🏹','🔮'];
+// โลกที่เกิด → แนว (ใช้แปลชื่อพลังติดตัวให้เข้ากับโลกนั้น) และชื่อโลก
+const wTh=w=>/^m_zombie|m_doom/.test(w)?'zombie':/^m_hunter|m_tower|m_gatewon|m_game/.test(w)?'hunter':w==='m_ghost'?'ghost':/^m_/.test(w)?'modern':/^(xian|god|soul|sky)$/.test(w)?'xian':'murim';
+const wNm=w=>(WN[w]||[w])[0],wIc=w=>(WN[w]||['','',''])[2]||'🌍';
 // ---- 🏯 เลเวลสำนักและของที่ปลดล็อก ----
-const GUN=[[1,'💬','แชท · คะแนนรายสัปดาห์'],[2,'📜','ภารกิจสำนักรายสัปดาห์'],[3,'🎖️','ตำแหน่ง เจ้าสำนัก/ผู้อาวุโส · ประกาศสำนัก'],[4,'⚔️','บอสบุกประจำสัปดาห์'],[5,'📖','วิชาลับประจำสำนัก (ขั้น 1–3)'],[6,'🏛️','หอตำนาน · อธิษฐานรับพร'],[7,'🙏','ส่งพรให้ศิษย์ร่วมสำนัก'],[8,'💀','บอสร่างคลั่ง · วิชาลับขั้น 4–5'],[9,'🚩','สงครามสำนักรายสัปดาห์'],[10,'👑','ตราสำนัก · ฉายาศิษย์ · ไอคอนพิเศษ']];
+const GUN=()=>[[1,'💬','แชท · คะแนนรายสัปดาห์'],[2,'📜',`ภารกิจ${Z.g}รายสัปดาห์`],[3,'🎖️',`ตำแหน่ง ${Z.ld}/${Z.el} · ประกาศ${Z.g}`],[4,'⚔️','บอสบุกประจำสัปดาห์'],[5,'📖',`${Z.art}ประจำ${Z.g} (ขั้น 1–3)`],[6,'🏛️',`${Z.hall} · อธิษฐานรับพร`],[7,'🙏',`ส่งพรให้${Z.m}ร่วม${Z.g}`],[8,'💀',`บอสร่างคลั่ง · ${Z.art}ขั้น 4–5`],[9,'🚩',`สงคราม${Z.g}รายสัปดาห์`],[10,'👑',`ตรา${Z.g} · ฉายา${Z.m} · ไอคอนพิเศษ`]];
 const GCAP=[20,25,30,35,40,45,50,55,60,70];
-const GQN={n:['🔁','จบชีวิตรวมกัน'],o:['🧓','ชีวิตที่อยู่ถึง 60 ปี'],c:['🔥','ชีวิตในโหมดท้าทาย'],w:['🌍','เล่นให้ครบหลายโลก'],m:['👥','ศิษย์ที่ร่วมเล่นสัปดาห์นี้'],x:['💯','ชีวิตที่อยู่ถึง 100 ปี']};
-const GTP={sword:['🗡️','สายกระบี่','พลังโจมตีตั้งแต่เกิด'],mind:['🧠','สายจิต','สติปัญญาตั้งแต่เกิด'],body:['🫀','สายกาย','อายุขัยยืนขึ้น']};
+const GQN={n:['🔁','จบชีวิตรวมกัน'],o:['🧓','ชีวิตที่อยู่ถึง 60 ปี'],c:['🔥','ชีวิตในโหมดท้าทาย'],w:['🌍','เล่นให้ครบหลายโลก'],m:['👥','คนในกลุ่มที่ร่วมเล่นสัปดาห์นี้'],f:['🎯','จบชีวิตในโลกประจำสัปดาห์'],x:['💯','ชีวิตที่อยู่ถึง 100 ปี']};
+const GTP=()=>({sword:[...Z.p.sword,'พลังโจมตีตั้งแต่เกิด'],mind:[...Z.p.mind,'สติปัญญาตั้งแต่เกิด'],body:[...Z.p.body,'อายุขัยยืนขึ้น']});
 const GIC10=['🐲','🦚','👑','🌟','🗡️','🏔️'];
 let gdTab='home';
-const lock=(lv,need)=>lv>=need?'':`<div class="gdLk">🔒 ปลดล็อกเมื่อสำนักถึงเลเวล ${need}</div>`;
+const lock=(lv,need)=>lv>=need?'':`<div class="gdLk">🔒 ปลดล็อกเมื่อ${Z.g}ถึงเลเวล ${need}</div>`;
 const bar=(c,t,cl)=>`<div class="gdBar${cl?' '+cl:''}"><i style="width:${t>0?Math.min(100,c/t*100):100}%"></i></div>`;
 const roleOf=(g,u)=>u===g.ld?' 👑':(g.el||[]).includes(u)?' 🎖️':'';
 function gdHome(g){const me=myPu(),ld=g.ld===me,amEl=(g.el||[]).includes(me),lv=g.lv||1,tot=g.m.reduce((a,m)=>a+m.p,0);
- return`<div class="gdLv"><div><b>เลเวล ${lv}</b>${lv>=10?' <span class="gdEmb">ตราสำนัก</span>':''}<small>${g.nx?`${N(g.xp)} / ${N(g.nx)} แต้มสำนัก`:`${N(g.xp)} แต้มสำนัก · เลเวลสูงสุด`}</small></div>${bar(g.xp-(g.cx||0),g.nx?g.nx-(g.cx||0):0,'gold')}
- <small class="tag2">วันนี้คุณช่วยสำนักแล้ว ${N(Math.min(g.mxd||0,g.xpd||300))}/${N(g.xpd||300)} แต้ม (เกินนี้ยังนับคะแนนสัปดาห์ แต่ไม่นับเลเวล)</small></div>
+ return`<div class="gdLv"><div><b>เลเวล ${lv}</b>${lv>=10?' <span class="gdEmb">ตรา'+Z.g+'</span>':''}<small>${g.nx?`${N(g.xp)} / ${N(g.nx)} แต้ม${Z.g}`:`${N(g.xp)} แต้ม${Z.g} · เลเวลสูงสุด`}</small></div>${bar(g.xp-(g.cx||0),g.nx?g.nx-(g.cx||0):0,'gold')}
+ <small class="tag2">วันนี้คุณช่วย${Z.g}แล้ว ${N(Math.min(g.mxd||0,g.xpd||300))}/${N(g.xpd||300)} แต้ม (เกินนี้ยังนับคะแนนสัปดาห์ แต่ไม่นับเลเวล)</small></div>
  ${g.ann?`<div class="gdAnn">📢 ${E(g.ann)}</div>`:''}
- <div class="gdSt"><div><b>${g.rk>0?'#'+g.rk:'—'}</b><small>อันดับสัปดาห์</small></div><div><b>${N(g.sc)}</b><small>แต้มสัปดาห์</small></div><div><b>${g.m.length}/${g.cap||20}</b><small>ศิษย์</small></div></div>
+ <div class="gdSt"><div><b>${g.rk>0?'#'+g.rk:'—'}</b><small>อันดับสัปดาห์</small></div><div><b>${N(g.sc)}</b><small>แต้มสัปดาห์</small></div><div><b>${g.m.length}/${g.cap||20}</b><small>${Z.m}</small></div></div>
  ${g.bl?`<div class="gdAnn">🙏 มีพรรออยู่ ${g.bl} อย่าง จะติดตัวในชีวิตถัดไป</div>`:''}
- <h4 style="margin:8px 0 4px">💬 ห้องประชุมสำนัก</h4><div class="gdCh" id="gdCh">${chatH(g)}</div>
- <div class="gdRow"><input id="gdSay" maxlength="160" placeholder="พูดกับศิษย์ร่วมสำนัก…" onkeydown="if(event.key==='Enter')gdSay()"><button class="pbtn" style="flex:0 0 auto" onclick="gdSay()">ส่ง</button></div>
- <h4 style="margin:10px 0 4px">👥 ศิษย์ (แต้มสัปดาห์นี้)</h4>${g.m.map((m,i)=>{const mel=(g.el||[]).includes(m.u),canK=m.u!==me&&!m.ld&&(ld||(amEl&&lv>=3&&!mel));
-  const bt=[];if(ld&&lv>=3&&m.u!==me){bt.push(mel?`<button class="gbtn gdS" onclick="gdRank('${E(m.u)}','mb')">ถอดตำแหน่ง</button>`:`<button class="gbtn gdS" onclick="gdRank('${E(m.u)}','el')">ตั้งผู้อาวุโส</button>`);bt.push(`<button class="gbtn gdS" onclick="gdRank('${E(m.u)}','ld','${E(m.n).replace(/'/g,'')}')">มอบเจ้าสำนัก</button>`)}
+ <h4 style="margin:8px 0 4px">💬 ห้องประชุม${Z.g}</h4><div class="gdCh" id="gdCh">${chatH(g)}</div>
+ <div class="gdRow"><input id="gdSay" maxlength="160" placeholder="พูดกับ${Z.m}ร่วม${Z.g}…" onkeydown="if(event.key==='Enter')gdSay()"><button class="pbtn" style="flex:0 0 auto" onclick="gdSay()">ส่ง</button></div>
+ <h4 style="margin:10px 0 4px">👥 ${Z.m} (แต้มสัปดาห์นี้)</h4>${g.m.map((m,i)=>{const mel=(g.el||[]).includes(m.u),canK=m.u!==me&&!m.ld&&(ld||(amEl&&lv>=3&&!mel));
+  const bt=[];if(ld&&lv>=3&&m.u!==me){bt.push(mel?`<button class="gbtn gdS" onclick="gdRank('${E(m.u)}','mb')">ถอดตำแหน่ง</button>`:`<button class="gbtn gdS" onclick="gdRank('${E(m.u)}','el')">ตั้ง${Z.el}</button>`);bt.push(`<button class="gbtn gdS" onclick="gdRank('${E(m.u)}','ld','${E(m.n).replace(/'/g,'')}')">มอบ${Z.ld}</button>`)}
   if(lv>=7&&m.u!==me&&!g.bsd)bt.push(`<button class="gbtn gdS" onclick="gdBless('${E(m.u)}','${E(m.n).replace(/'/g,'')}')">🙏 ส่งพร</button>`);
   if(canK)bt.push(`<button class="gbtn gdS" onclick="gdKick('${E(m.u)}','${E(m.n).replace(/'/g,'')}')">เชิญออก</button>`);
   return`<div class="gdM"><span>${i<3&&m.p?['🥇','🥈','🥉'][i]:'·'} <b>${E(m.n)}</b>${roleOf(g,m.u)}${m.u===me?' <small>(คุณ)</small>':''}</span><span><b>${N(m.p)}</b></span>${bt.length?`<div class="gdMb">${bt.join('')}</div>`:''}</div>`}).join('')}
  <p class="tag2">รวม ${N(tot)} แต้ม · รหัสเชิญ <b style="user-select:all">${E(g.id)}</b>${lv>=7&&g.bsd?' · วันนี้ส่งพรไปแล้ว':''}</p>
- <div class="gdRow" style="margin-top:8px;flex-wrap:wrap">${ld?`<button class="gbtn" onclick="gdDesc()">✏️ แก้คำขวัญ</button>`:''}${(ld||amEl)&&lv>=3?`<button class="gbtn" onclick="gdAnn()">📢 ประกาศ</button>`:''}${ld&&lv>=10?`<button class="gbtn" onclick="gdIcon()">🎨 เปลี่ยนตรา</button>`:''}<button class="gbtn" onclick="gdBoard()">🏆 กระดานสำนัก</button><button class="gbtn" onclick="gdLeave()">🚪 ออก</button></div>
- <h4 style="margin:12px 0 4px">🗝️ ของที่ปลดล็อกตามเลเวล</h4><div class="gdUn">${GUN.map(([l,i,t])=>`<div class="${lv>=l?'on':''}"><b>${lv>=l?i:'🔒'} เลเวล ${l}</b><small>${t} · ${GCAP[l-1]} คน</small></div>`).join('')}</div>`}
-function gdQuest(g){const lv=g.lv||1;let h=`<h4 style="margin:4px 0">📜 ภารกิจสำนักสัปดาห์นี้</h4>`;
- if(lv<2)h+=lock(lv,2);else{h+=`<p class="tag2">ทุกชีวิตที่ศิษย์เล่นจบช่วยนับ · สำเร็จอย่างละ +150 แต้มสำนัก · ครบ 3 อย่างรับเพิ่ม +300 · เปลี่ยนภารกิจทุกวันจันทร์</p>`+(g.q||[]).map(q=>{const[i,t]=GQN[q.k]||['❔',q.k];return`<div class="gdQ${q.d?' ok':''}"><b>${q.d?'✅':i} ${t}</b><span>${N(Math.min(q.c,q.t))}/${N(q.t)}${q.k==='w'?' โลก':q.k==='m'?' คน':' ชีวิต'}</span>${bar(q.c,q.t)}</div>`}).join('')+(g.qa?'<div class="gdAnn">🎁 ครบทั้ง 3 ภารกิจแล้วสัปดาห์นี้!</div>':'')}
+ <div class="gdRow" style="margin-top:8px;flex-wrap:wrap">${ld?`<button class="gbtn" onclick="gdDesc()">✏️ แก้คำขวัญ</button>`:''}${(ld||amEl)&&lv>=3?`<button class="gbtn" onclick="gdAnn()">📢 ประกาศ</button>`:''}${ld?`<button class="gbtn" onclick="gdTheme()">🎨 แนวกลุ่ม</button>`:''}${ld&&lv>=10?`<button class="gbtn" onclick="gdIcon()">🏵️ เปลี่ยนตรา</button>`:''}<button class="gbtn" onclick="gdBoard()">🏆 กระดาน${Z.g}</button><button class="gbtn" onclick="gdLeave()">🚪 ออก</button></div>
+ <h4 style="margin:12px 0 4px">🗝️ ของที่ปลดล็อกตามเลเวล</h4><div class="gdUn">${GUN().map(([l,i,t])=>`<div class="${lv>=l?'on':''}"><b>${lv>=l?i:'🔒'} เลเวล ${l}</b><small>${t} · ${GCAP[l-1]} คน</small></div>`).join('')}</div>`}
+function gdQuest(g){const lv=g.lv||1;let h=`<h4 style="margin:4px 0">📜 ภารกิจ${Z.g}สัปดาห์นี้</h4>`;
+ if(lv<2)h+=lock(lv,2);else{h+=`<p class="tag2">ทุกชีวิตที่${Z.m}เล่นจบช่วยนับ · สำเร็จอย่างละ +150 แต้ม${Z.g} · ครบ 3 อย่างรับเพิ่ม +300 · เปลี่ยนภารกิจทุกวันจันทร์</p>`+(g.q||[]).map(q=>{const[i,t]=GQN[q.k]||['❔',q.k];return`<div class="gdQ${q.d?' ok':''}"><b>${q.d?'✅':i} ${t}</b><span>${N(Math.min(q.c,q.t))}/${N(q.t)}${q.k==='w'?' โลก':q.k==='m'?' คน':' ชีวิต'}</span>${q.k==='f'&&g.cgw?`<small style="grid-column:1/-1;opacity:.75">โลกประจำสัปดาห์นี้: ${wIc(g.cgw)} ${E(wNm(g.cgw))}</small>`:''}${bar(q.c,q.t)}</div>`}).join('')+(g.qa?'<div class="gdAnn">🎁 ครบทั้ง 3 ภารกิจแล้วสัปดาห์นี้!</div>':'')}
  h+=`<h4 style="margin:14px 0 4px">⚔️ บอสบุกประจำสัปดาห์</h4>`;
  if(lv<4)return h+lock(lv,4);const B=g.boss;if(!B)return h;
  const hard=B.w1&&B.hp2,hp=hard?B.hp2:B.hp,dmg=hard?Math.max(0,B.d-B.hp):B.d,left=Math.max(0,hp-dmg),dead=hard?B.w2:B.w1;
- h+=`<div class="gdBoss${dead?' dead':''}${hard?' hard':''}"><div class="bi">${dead?'💀':hard?'👹':'🐲'}</div><div style="flex:1;min-width:0"><b>${E(B.n)}${hard?' · ร่างคลั่ง':''}</b><small>${dead?'ถูกล้มแล้ว!':'เลือดเหลือ '+N(left)+' / '+N(hp)}</small>${bar(dead?0:left,hp,'red')}</div></div>
- <p class="tag2">ทุกชีวิตที่จบโจมตีบอสอัตโนมัติ ยิ่งอยู่นานยิ่งแรง โหมดท้าทายแรงขึ้นอีก (คนละไม่เกิน 600 ต่อวัน) · ล้มได้ +400 แต้มสำนัก และศิษย์ทุกคนได้<b>ตราพิชิตบอส</b> พลังเพิ่มตั้งแต่เกิดตลอดสัปดาห์${lv>=8?' · เลเวล 8 ขึ้นไป ล้มแล้วบอสจะคืนร่างคลั่ง ล้มซ้ำได้ +600 และตราขั้นสูง':''}</p>
+ h+=`<div class="gdBoss${dead?' dead':''}${hard?' hard':''}"><div class="bi">${dead?'💀':hard?'👹':B.w?wIc(B.w):'🐲'}</div><div style="flex:1;min-width:0"><b>${E(B.n)}${hard?' · ร่างคลั่ง':''}</b>${B.w?`<small>บอสจาก${E(wNm(B.w))} · ชีวิตที่จบใน${E(wNm(B.w))}ตีแรง ×2</small>`:''}<small>${dead?'ถูกล้มแล้ว!':'เลือดเหลือ '+N(left)+' / '+N(hp)}</small>${bar(dead?0:left,hp,'red')}</div></div>
+ <p class="tag2">ทุกชีวิตที่จบโจมตีบอสอัตโนมัติ ยิ่งอยู่นานยิ่งแรง โหมดท้าทายแรงขึ้นอีก (คนละไม่เกิน 600 ต่อวัน) · ล้มได้ +400 แต้ม${Z.g} และ${Z.m}ทุกคนได้<b>ตราพิชิตบอส</b> พลังเพิ่มตั้งแต่เกิดตลอดสัปดาห์${lv>=8?' · เลเวล 8 ขึ้นไป ล้มแล้วบอสจะคืนร่างคลั่ง ล้มซ้ำได้ +600 และตราขั้นสูง':''}</p>
  <div class="gdSm">คุณโจมตีไปแล้ว <b>${N(B.me)}</b>${(B.top||[]).length?` · ตัวท็อป: ${B.top.map(x=>E(x.n)+' '+N(x.v)).join(' · ')}`:''}</div>`;
  return h}
-function gdArt(g){const me=myPu(),ld=g.ld===me,lv=g.lv||1;let h=`<h4 style="margin:4px 0">📖 วิชาลับประจำสำนัก</h4>`;
- if(lv<5)h+=lock(lv,5);else{const T=g.tech,P=GTP[T.path]||GTP.sword;h+=`<div class="gdArt"><div class="ai">${P[0]}</div><div style="flex:1"><b>${P[1]} ขั้น ${T.lv}/${T.mx}</b><small>${P[2]} · ศิษย์ทุกคนได้ติดตัวตั้งแต่เกิด</small>${T.nx?bar(T.p,T.nx,'gold')+`<small>${N(T.p)}/${N(T.nx)} แต้มวิชา</small>`:'<small>ถึงขั้นสูงสุดแล้ว'+(T.mx<5?' (เลเวล 8 ขยายได้ถึงขั้น 5)':'')+'</small>'}</div></div>
-  <p class="tag2">แต้มสำนักที่ศิษย์หาได้ทุกแต้มจะไหลเข้าวิชาลับด้วย${ld?' · เจ้าสำนักเลือกสายได้ (เปลี่ยนได้สัปดาห์ละครั้ง)':''}</p>${ld?`<div class="gdRow">${Object.entries(GTP).map(([k,v])=>`<button class="gbtn${k===T.path?' on':''}" onclick="gdPath('${k}')">${v[0]} ${v[1]}</button>`).join('')}</div>`:''}`}
- h+=`<h4 style="margin:14px 0 4px">🏛️ หอตำนาน</h4>`;
- if(lv<6)h+=lock(lv,6);else{h+=`<p class="tag2">ชีวิตที่ยืนยาวที่สุด 10 อันดับของสำนัก · อธิษฐานวันละครั้ง รับพรจากตำนาน (ปัญญาและเสน่ห์) ติดตัวในชีวิตถัดไป${g.prd?' · <b>วันนี้อธิษฐานแล้ว</b>':''}</p>`+((g.hall||[]).length?g.hall.map((x,i)=>`<div class="gdL"><span class="r">${['🥇','🥈','🥉'][i]||i+1}</span><span class="t"><b>${E(x.n)}</b><small>อายุ ${N(x.age)} ปี${x.r?' · '+E(x.r):''} · 🙏${N(x.pr)}</small></span>${!g.prd&&x.u!==me?`<button class="gbtn gdS" onclick="gdPray('${E(x.lid||x.n)}')">🙏 อธิษฐาน</button>`:''}</div>`).join(''):'<p class="tag2">ยังไม่มีตำนาน เล่นให้อยู่ถึง 20 ปีขึ้นไปจะถูกจารึกไว้</p>')}
- h+=`<h4 style="margin:14px 0 4px">🙏 ส่งพรให้ศิษย์ร่วมสำนัก</h4>`+(lv<7?lock(lv,7):`<p class="tag2">วันละครั้ง กดปุ่ม 🙏 ส่งพร ข้างชื่อศิษย์ในหน้าหลัก ผู้รับจะได้พลังและอายุขัยเพิ่มในชีวิตถัดไป${g.bsd?' · <b>วันนี้ส่งไปแล้ว</b>':''}</p>`);
+function gdArt(g){const me=myPu(),ld=g.ld===me,lv=g.lv||1;let h=`<h4 style="margin:4px 0">📖 ${Z.art}ประจำ${Z.g}</h4>`;
+ if(lv<5)h+=lock(lv,5);else{const T=g.tech,P=GTP()[T.path]||GTP().sword;h+=`<div class="gdArt"><div class="ai">${P[0]}</div><div style="flex:1"><b>${P[1]} ขั้น ${T.lv}/${T.mx}</b><small>${P[2]} · ${Z.m}ทุกคนได้ติดตัวตั้งแต่เกิด</small>${T.nx?bar(T.p,T.nx,'gold')+`<small>${N(T.p)}/${N(T.nx)} แต้มวิชา</small>`:'<small>ถึงขั้นสูงสุดแล้ว'+(T.mx<5?' (เลเวล 8 ขยายได้ถึงขั้น 5)':'')+'</small>'}</div></div>
+  <p class="tag2">แต้ม${Z.g}ที่${Z.m}หาได้ทุกแต้มจะไหลเข้า${Z.art}ด้วย${ld?' · '+Z.ld+'เลือกสายได้ (เปลี่ยนได้สัปดาห์ละครั้ง)':''}</p>${ld?`<div class="gdRow">${Object.entries(GTP()).map(([k,v])=>`<button class="gbtn${k===T.path?' on':''}" onclick="gdPath('${k}')">${v[0]} ${v[1]}</button>`).join('')}</div>`:''}`}
+ h+=`<h4 style="margin:14px 0 4px">🏛️ ${Z.hall}</h4>`;
+ if(lv<6)h+=lock(lv,6);else{h+=`<p class="tag2">ชีวิตที่ยืนยาวที่สุด 10 อันดับของ${Z.g} · อธิษฐานวันละครั้ง รับพรจากตำนาน (ปัญญาและเสน่ห์) ติดตัวในชีวิตถัดไป${g.prd?' · <b>วันนี้อธิษฐานแล้ว</b>':''}</p>`+((g.hall||[]).length?g.hall.map((x,i)=>`<div class="gdL"><span class="r">${['🥇','🥈','🥉'][i]||i+1}</span><span class="t"><b>${E(x.n)}</b><small>อายุ ${N(x.age)} ปี${x.r?' · '+E(x.r):''} · 🙏${N(x.pr)}</small></span>${!g.prd&&x.u!==me?`<button class="gbtn gdS" onclick="gdPray('${E(x.lid||x.n)}')">🙏 อธิษฐาน</button>`:''}</div>`).join(''):'<p class="tag2">ยังไม่มีตำนาน เล่นให้อยู่ถึง 20 ปีขึ้นไปจะถูกจารึกไว้</p>')+((g.hw||[]).length?`<h4 style="margin:10px 0 4px">🌍 ตำนานประจำแต่ละโลก</h4><p class="tag2">ชีวิตที่อยู่ยาวที่สุดของแต่ละโลก วัดกันในโลกเดียวกัน</p>`+g.hw.map(x=>`<div class="gdL"><span class="i">${wIc(x.w)}</span><span class="t"><b>${E(x.n)}</b><small>${E(wNm(x.w))} · อายุ ${N(x.age)} ปี · 🙏${N(x.pr)}</small></span>${!g.prd&&x.u!==myPu()?`<button class="gbtn gdS" onclick="gdPray('${E(x.lid||x.n)}')">🙏 อธิษฐาน</button>`:''}</div>`).join(''):'')}
+ h+=`<h4 style="margin:14px 0 4px">🙏 ส่งพรให้${Z.m}ร่วม${Z.g}</h4>`+(lv<7?lock(lv,7):`<p class="tag2">วันละครั้ง กดปุ่ม 🙏 ส่งพร ข้างชื่อ${Z.m}ในหน้าหลัก ผู้รับจะได้พลังและอายุขัยเพิ่มในชีวิตถัดไป${g.bsd?' · <b>วันนี้ส่งไปแล้ว</b>':''}</p>`);
  return h}
-function gdWarV(g){const lv=g.lv||1;let h=`<h4 style="margin:4px 0">🚩 สงครามสำนัก</h4>`;if(lv<9)return h+lock(lv,9)+`<p class="tag2">สำนักเลเวล 9 ขึ้นไปจะถูกจับคู่กันทุกสัปดาห์ ฝั่งที่ได้แต้มสัปดาห์มากกว่าชนะ ยึดดินแดนเพิ่ม 1 แห่ง ได้ +500 แต้มสำนัก และศิษย์ได้พรผู้ชนะทั้งสัปดาห์ถัดไป</p>`;
- const W=g.war||{};h+=`<div class="gdSm">ดินแดนที่ยึดได้ทั้งหมด <b>${N(g.ter||0)}</b> แห่ง${W.won?' · 🏆 ชนะสงครามสัปดาห์ก่อน ศิษย์ได้พรผู้ชนะ':''}</div>`;
- if(!W.op)return h+`<p class="tag2">สัปดาห์นี้ยังไม่มีคู่ต่อสู้ (ต้องมีสำนักเลเวล 9 อีกอย่างน้อยหนึ่งสำนัก)</p>`;
- const a=W.me||0,b=W.op.sc||0;return h+`<div class="gdWar"><div><span>${E(g.ic)}</span><b>${E(g.n)}</b><big>${N(a)}</big></div><i>VS</i><div><span>${E(W.op.ic)}</span><b>${E(W.op.n)}</b><big>${N(b)}</big></div></div>${bar(a,a+b||1,'gold')}<p class="tag2">ตัดสินตอนจบสัปดาห์ (คืนวันอาทิตย์) จากแต้มสัปดาห์ของทั้งสองสำนัก</p>`}
-function gdView(g){const T=[['home','🏯 สำนัก'],['quest','📜 ภารกิจ บอส'],['art','📖 วิชา ตำนาน'],['war','🚩 สงคราม']];
- return`<div class="gdB"><div class="gdHd"><span class="gdIc">${E(g.ic)}</span><div><div class="gdNm">${E(g.n)} <small class="gdLvB">Lv.${g.lv||1}</small></div><small class="tag2">${E(g.ds||'สำนักของผู้เล่นจริง')}</small></div></div>
+function gdWarV(g){const lv=g.lv||1;let h=`<h4 style="margin:4px 0">🚩 สงคราม${Z.g}</h4>`;if(lv<9)return h+lock(lv,9)+`<p class="tag2">${Z.g}เลเวล 9 ขึ้นไปจะถูกจับคู่กันทุกสัปดาห์ ฝั่งที่ได้แต้มสัปดาห์มากกว่าชนะ ยึดดินแดนเพิ่ม 1 แห่ง ได้ +500 แต้ม${Z.g} และ${Z.m}ได้พรผู้ชนะทั้งสัปดาห์ถัดไป</p>`;
+ const W=g.war||{};h+=`<div class="gdSm">ดินแดนที่ยึดได้ทั้งหมด <b>${N(g.ter||0)}</b> แห่ง${W.won?' · 🏆 ชนะสงครามสัปดาห์ก่อน '+Z.m+'ได้พรผู้ชนะ':''}</div>`;
+ if(!W.op)return h+`<p class="tag2">สัปดาห์นี้ยังไม่มีคู่ต่อสู้ (ต้องมี${Z.g}เลเวล 9 อีกอย่างน้อยหนึ่ง${Z.g})</p>`;
+ const a=W.me||0,b=W.op.sc||0;return h+`<div class="gdWar"><div><span>${E(g.ic)}</span><b>${E(g.n)}</b><big>${N(a)}</big></div><i>VS</i><div><span>${E(W.op.ic)}</span><b>${E(W.op.n)}</b><big>${N(b)}</big></div></div>${bar(a,a+b||1,'gold')}<p class="tag2">ตัดสินตอนจบสัปดาห์ (คืนวันอาทิตย์) จากแต้มสัปดาห์ของทั้งสอง${Z.g}</p>`}
+function gdView(g){Z=thOf(g);const T=[['home',Z.ic+' '+Z.g],['quest','📜 ภารกิจ บอส'],['art','📖 วิชา ตำนาน'],['war','🚩 สงคราม']];
+ return`<div class="gdB"><div class="gdHd"><span class="gdIc">${E(g.ic)}</span><div><div class="gdNm">${E(g.n)} <small class="gdLvB">Lv.${g.lv||1}</small></div><small class="tag2">${E(g.ds||Z.g+'ของผู้เล่นจริง')} · <span class="gdThB">${Z.ic} แนว${Z.n}</span></small></div></div>
  <div class="gdTb">${T.map(([k,t])=>`<button class="${k===gdTab?'on':''}" onclick="gdGo('${k}')">${t}</button>`).join('')}</div>
  ${gdTab==='quest'?gdQuest(g):gdTab==='art'?gdArt(g):gdTab==='war'?gdWarV(g):gdHome(g)}</div>`}
 window.gdGo=k=>{gdTab=k;redraw()};
-window.gdRank=async(u,r,n)=>{if(r==='ld'&&!confirm(`มอบตำแหน่งเจ้าสำนักให้ ${n}? คุณจะเป็นผู้อาวุโสแทน`))return;const j=await gdW('rank',{u,r});if(j&&j.ok)redraw()};
-window.gdAnn=async()=>{const d=prompt('ประกาศสำนัก (ไม่เกิน 120 ตัว · เว้นว่างเพื่อลบ)',GD&&GD.ann||'');if(d==null)return;const j=await gdW('ann',{x:d});if(j&&j.ok)redraw()};
+window.gdRank=async(u,r,n)=>{if(r==='ld'&&!confirm(`มอบตำแหน่ง${Z.ld}ให้ ${n}? คุณจะเป็น${Z.el}แทน`))return;const j=await gdW('rank',{u,r});if(j&&j.ok)redraw()};
+window.gdAnn=async()=>{const d=prompt('ประกาศ'+Z.g+' (ไม่เกิน 120 ตัว · เว้นว่างเพื่อลบ)',GD&&GD.ann||'');if(d==null)return;const j=await gdW('ann',{x:d});if(j&&j.ok)redraw()};
 window.gdPath=async tp=>{const j=await gdW('path',{tp});if(j&&j.ok){toast('📖 เลือกสายวิชาแล้ว');redraw()}};
 window.gdPray=async k=>{const j=await gdW('pray',{k});if(j&&j.ok){toast('🙏 อธิษฐานแล้ว รับพรจากตำนานในชีวิตถัดไป');redraw()}};
 window.gdBless=async(u,n)=>{const j=await gdW('bless',{u});if(j&&j.ok){toast(`🙏 ส่งพรให้ ${n} แล้ว`);redraw()}};
-window.gdIcon=()=>{const b=$('gdBody');if(!b)return;b.innerHTML=`<div class="gdB"><p>เลือกตราสำนัก (ไอคอนพิเศษสำหรับเลเวล 10)</p><div class="gdIcs">${GIC.concat(GIC10).map(i=>`<button onclick="gdIconSet('${i}')">${i}</button>`).join('')}</div><button class="gbtn" style="width:100%" onclick="redraw2()">↩️ กลับ</button></div>`};
+window.gdIcon=()=>{const b=$('gdBody');if(!b)return;b.innerHTML=`<div class="gdB"><p>เลือกตรา${Z.g} (ไอคอนพิเศษสำหรับเลเวล 10)</p><div class="gdIcs">${GIC.concat(GICT,GIC10).map(i=>`<button onclick="gdIconSet('${i}')">${i}</button>`).join('')}</div><button class="gbtn" style="width:100%" onclick="redraw2()">↩️ กลับ</button></div>`};
 window.gdIconSet=async ic=>{const j=await gdW('icon',{ic});if(j&&j.ok)redraw()};window.redraw2=()=>redraw();
 // ---- พรสำนักติดตัวตอนเกิด (วิชาลับ · ตราพิชิตบอส · พรผู้ชนะสงคราม · พรจากตำนาน/เพื่อน) ----
 const GBK='murim_gdbuf';const cwk=()=>Math.floor((Date.now()+7*3600e3-4*86400e3)/604800e3);
-function bufSave(g){try{if(!g){LS.set(GBK,null);return}LS.set(GBK,{n:g.n,lv:g.lv||1,tl:g.tech?g.tech.lv:0,tp:g.tech?g.tech.path:'',bw:g.bw||0,ww:g.war&&g.war.won?1:0,wk:cwk(),t:Date.now()});
- if((g.lv||1)>=10){const T=LS.get('murim_ttl',{})||{},k='ศิษย์สำนัก'+g.n;if(!T[k]){T[k]={n:(()=>{try{return S&&S.name||''}catch(e){return''}})(),t:Date.now(),c:1};LS.set('murim_ttl',T);toast('🏷️ ได้ฉายา「'+k+'」!')}}}catch(e){}}
+function bufSave(g){try{if(!g){LS.set(GBK,null);return}LS.set(GBK,{n:g.n,th:g.th||'murim',lv:g.lv||1,tl:g.tech?g.tech.lv:0,tp:g.tech?g.tech.path:'',bw:g.bw||0,ww:g.war&&g.war.won?1:0,wk:cwk(),t:Date.now()});
+ if((g.lv||1)>=10){const T=LS.get('murim_ttl',{})||{},k=thOf(g).m+thOf(g).g+g.n;if(!T[k]){T[k]={n:(()=>{try{return S&&S.name||''}catch(e){return''}})(),t:Date.now(),c:1};LS.set('murim_ttl',T);toast('🏷️ ได้ฉายา「'+k+'」!')}}}catch(e){}}
 {const _ts=tagSave;window.__gdTag=g=>{_ts(g);bufSave(g)}}
 function gdBorn(){try{if(typeof S==='undefined'||!S||S.beastMode||S.age>0)return;const B=LS.get(GBK,null);if(!B||!LS.get('murim_gdtag',null))return;const L=[];const xi=S.xian?3:1;
- if(B.tl>0){const k=B.tl;if(B.tp==='mind'){S.int+=3*k;L.push(`🧠 วิชาลับสายจิต ขั้น ${k} (ปัญญา +${3*k})`)}else if(B.tp==='body'){S.lifespan+=2*k;L.push(`🫀 วิชาลับสายกาย ขั้น ${k} (อายุขัย +${2*k})`)}else{S.power+=15*k*xi;L.push(`🗡️ วิชาลับสายกระบี่ ขั้น ${k} (พลัง +${15*k*xi})`)}}
- if(B.wk===cwk()&&B.bw){const p=(B.bw>1?50:20)*xi;S.power+=p;if(B.bw>1)S.lifespan+=3;L.push(`${B.bw>1?'💀':'⚔️'} ตราพิชิตบอส${B.bw>1?'ขั้นสูง':''} (พลัง +${p}${B.bw>1?' · อายุขัย +3':''})`)}
- if(B.wk===cwk()&&B.ww){S.power+=30*xi;L.push(`🚩 พรผู้ชนะสงครามสำนัก (พลัง +${30*xi})`)}
- if(L.length)setTimeout(()=>{try{if(S&&S.alive)log(`🏯 <b>สำนัก ${E(B.n)}</b> ส่งพลังติดตัวมาตั้งแต่เกิด: ${L.join(' · ')}`,'epic',true)}catch(e){}},700);
- api('gdw',{o:'claim',n:nmMe()}).then(j=>{const l=j&&j.l||[];if(!l.length||!S||!S.alive)return;const M=[];l.forEach(x=>{if(x.k==='lg'){S.int+=2;S.cha+=2;M.push(`🏛️ พรจากตำนาน ${E(x.n)} (ปัญญา +2 · เสน่ห์ +2)`)}else{S.power+=15*xi;S.lifespan+=2;M.push(`🙏 พรจาก ${E(x.n)} (พลัง +${15*xi} · อายุขัย +2)`)}});log(`✨ ${M.join(' · ')}`,'epic',true);try{render()}catch(e){}}).catch(()=>{})}catch(e){}}
+ // ชื่อพลังเปลี่ยนตามโลกที่ไปเกิด (เกิดโลกซอมบี้ = ตำราเอาตัวรอด · เกิดยุคปัจจุบัน = ทักษะลับ …) ส่วนชื่อกลุ่มเป็นตามแนวกลุ่ม
+ const w=(()=>{try{return wk()||''}catch(e){return''}})(),WT=GTH[wTh(w)]||GTH.murim,GT=GTH[B.th]||GTH.murim,body=WT===GTH.zombie?'พลังชีวิต':'อายุขัย';
+ if(B.tl>0){const k=B.tl,pn=(WT.p[B.tp]||WT.p.sword);if(B.tp==='mind'){S.int+=3*k;L.push(`${pn[0]} ${WT.art}${pn[1]} ขั้น ${k} (ปัญญา +${3*k})`)}else if(B.tp==='body'){S.lifespan+=2*k;L.push(`${pn[0]} ${WT.art}${pn[1]} ขั้น ${k} (${body} +${2*k})`)}else{S.power+=15*k*xi;L.push(`${pn[0]} ${WT.art}${pn[1]} ขั้น ${k} (พลัง +${15*k*xi})`)}}
+ if(B.wk===cwk()&&B.bw){const p=(B.bw>1?50:20)*xi;S.power+=p;if(B.bw>1)S.lifespan+=3;L.push(`${B.bw>1?'💀':'⚔️'} ตราพิชิตบอส${B.bw>1?'ขั้นสูง':''} (พลัง +${p}${B.bw>1?' · '+body+' +3':''})`)}
+ if(B.wk===cwk()&&B.ww){S.power+=30*xi;L.push(`🚩 พรผู้ชนะสงคราม (พลัง +${30*xi})`)}
+ if(L.length)setTimeout(()=>{try{if(S&&S.alive)log(`${GT.ic} <b>${GT.g} ${E(B.n)}</b> ส่งพลังติดตัวมาตั้งแต่เกิด: ${L.join(' · ')}`,'epic',true)}catch(e){}},700);
+ api('gdw',{o:'claim',n:nmMe()}).then(j=>{const l=j&&j.l||[];if(!l.length||!S||!S.alive)return;const M=[];l.forEach(x=>{if(x.k==='lg'){S.int+=2;S.cha+=2;M.push(`🏛️ พรจากตำนาน ${E(x.n)} (ปัญญา +2 · เสน่ห์ +2)`)}else{S.power+=15*xi;S.lifespan+=2;M.push(`🙏 พรจาก ${E(x.n)} (พลัง +${15*xi} · ${body} +2)`)}});log(`✨ ${M.join(' · ')}`,'epic',true);try{render()}catch(e){}}).catch(()=>{})}catch(e){}}
 try{const _bl=beginLife;beginLife=function(){const r=_bl.apply(this,arguments);gdBorn();return r}}catch(e){}
-function gdNew(){return`<div class="gdB"><p>ยังไม่มีสำนัก — ตั้งสำนักเองหรือขอเข้าสำนักของคนอื่น ทุกชีวิตที่จบ (ทุกโลก) ส่งแต้มเข้าสำนัก แข่งกันทุกสัปดาห์</p>
- <h4 style="margin:8px 0 4px">🏗️ ตั้งสำนักใหม่</h4><input id="gdNmI" maxlength="16" placeholder="ชื่อสำนัก (2–16 ตัว)"><div class="gdIcs">${GIC.map(i=>`<button class="${i===gdIc?'on':''}" onclick="gdPick('${i}',this)">${i}</button>`).join('')}</div>
- <input id="gdDsI" maxlength="60" placeholder="คำขวัญ (ไม่ใส่ก็ได้)" style="margin-bottom:6px"><button class="pbtn" style="width:100%" onclick="gdMake()">ตั้งสำนัก</button>
- <h4 style="margin:12px 0 4px">🔑 มีรหัสเชิญ</h4><div class="gdRow"><input id="gdJI" maxlength="10" placeholder="รหัสสำนัก 8 ตัว"><button class="gbtn" style="flex:0 0 auto" onclick="gdJoin(($('gdJI')||{}).value)">เข้าร่วม</button></div>
- <h4 style="margin:12px 0 4px">🏆 สำนักที่รับศิษย์</h4><div id="gdLst"><p class="tag2">กำลังโหลด…</p></div></div>`}
-function lstH(l,join){if(!l||!l.length)return'<p class="tag2">ยังไม่มีสำนัก เป็นคนแรกเลย</p>';
- return l.map((x,i)=>`<div class="gdL"><span class="r">${x.sc?i+1:'·'}</span><span class="i">${E(x.ic)}</span><span class="t"><b>${E(x.n)}</b><small>Lv.${x.lv||1} · ${x.mc}/${x.cap||20} คน${x.ter?' · 🚩'+x.ter:''}${x.ds?' · '+E(x.ds):''}</small></span><b>${N(x.sc)}</b>${join&&x.mc<(x.cap||20)?`<button class="gbtn" style="padding:4px 10px" onclick="gdJoin('${E(x.id)}')">ขอเข้า</button>`:''}</div>`).join('')}
-window.openGuild=async function(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🏯 สำนักของผู้เล่น</h3><div id="gdBody"><p class="tag2">กำลังโหลด…</p></div>`,'guild');
+let gdTh='murim';
+function gdNew(){Z=GTH[gdTh];return`<div class="gdB"><p>ยังไม่มีกลุ่ม — ตั้งกลุ่มเองหรือขอเข้ากลุ่มของคนอื่น ทุกชีวิตที่จบ (ทุกโลก) ส่งแต้มเข้ากลุ่ม แข่งกันทุกสัปดาห์</p>
+ <h4 style="margin:8px 0 4px">🎨 เลือกแนวกลุ่ม</h4><div class="gdThs">${Object.entries(GTH).map(([k,v])=>`<button class="${k===gdTh?'on':''}" onclick="gdThPick('${k}')"><b>${v.ic} ${v.g}</b><small>แนว${v.n} · ${v.ld} · ${v.m}</small></button>`).join('')}</div>
+ <h4 style="margin:8px 0 4px">🏗️ ตั้ง${Z.g}ใหม่</h4><input id="gdNmI" maxlength="16" placeholder="ชื่อ${Z.g} (2–16 ตัว)"><div class="gdIcs">${[Z.ic,...GIC,...GICT].filter((x,i,a)=>a.indexOf(x)===i).map(i=>`<button class="${i===gdIc?'on':''}" onclick="gdPick('${i}',this)">${i}</button>`).join('')}</div>
+ <input id="gdDsI" maxlength="60" placeholder="คำขวัญ (ไม่ใส่ก็ได้)" style="margin-bottom:6px"><button class="pbtn" style="width:100%" onclick="gdMake()">ตั้ง${Z.g}</button>
+ <h4 style="margin:12px 0 4px">🔑 มีรหัสเชิญ</h4><div class="gdRow"><input id="gdJI" maxlength="10" placeholder="รหัสกลุ่ม 8 ตัว"><button class="gbtn" style="flex:0 0 auto" onclick="gdJoin(($('gdJI')||{}).value)">เข้าร่วม</button></div>
+ <h4 style="margin:12px 0 4px">🏆 กลุ่มที่รับสมาชิก</h4><div id="gdLst"><p class="tag2">กำลังโหลด…</p></div></div>`}
+window.gdThPick=k=>{const n=($('gdNmI')||{}).value,d=($('gdDsI')||{}).value;gdTh=k;gdIc=GTH[k].ic;const b=$('gdBody');if(!b)return;const lst=$('gdLst')&&$('gdLst').innerHTML;b.innerHTML=gdNew();if(n)$('gdNmI').value=n;if(d)$('gdDsI').value=d;if(lst&&$('gdLst'))$('gdLst').innerHTML=lst};
+window.gdTheme=()=>{const b=$('gdBody');if(!b||!GD)return;b.innerHTML=`<div class="gdB"><p>เปลี่ยนแนวกลุ่ม (เปลี่ยนแค่คำเรียก ข้อมูลทุกอย่างอยู่ครบ · สัปดาห์ละครั้ง)</p><div class="gdThs">${Object.entries(GTH).map(([k,v])=>`<button class="${k===(GD.th||'murim')?'on':''}" onclick="gdThSet('${k}')"><b>${v.ic} ${v.g}</b><small>แนว${v.n} · ${v.ld} · ${v.m}</small></button>`).join('')}</div><button class="gbtn" style="width:100%;margin-top:8px" onclick="redraw2()">↩️ กลับ</button></div>`};
+window.gdThSet=async th=>{const j=await gdW('theme',{th});if(j&&j.ok){toast('🎨 เปลี่ยนแนวเป็น'+GTH[th].g+'แล้ว');redraw()}};
+function lstH(l,join){if(!l||!l.length)return'<p class="tag2">ยังไม่มีกลุ่ม เป็นคนแรกเลย</p>';
+ return l.map((x,i)=>`<div class="gdL"><span class="r">${x.sc?i+1:'·'}</span><span class="i">${E(x.ic)}</span><span class="t"><b>${E(x.n)}</b><small>${(GTH[x.th]||GTH.murim).g} · Lv.${x.lv||1} · ${x.mc}/${x.cap||20} คน${x.ter?' · 🚩'+x.ter:''}${x.ds?' · '+E(x.ds):''}</small></span><b>${N(x.sc)}</b>${join&&x.mc<(x.cap||20)?`<button class="gbtn" style="padding:4px 10px" onclick="gdJoin('${E(x.id)}')">ขอเข้า</button>`:''}</div>`).join('')}
+window.openGuild=async function(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🛡️ กลุ่มผู้เล่น</h3><div id="gdBody"><p class="tag2">กำลังโหลด…</p></div>`,'guild');
  let j=null;try{j=await api('gd&o=me')}catch(e){}const b=$('gdBody');if(!b)return;
  if(!j){b.innerHTML='<p class="tag2">เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง</p>';return}
  GD=j.g||null;window.__gdTag(GD);if(GD){b.innerHTML=gdView(GD);gdLive()}else{b.innerHTML=gdNew();try{const l=await api('gd&o=list');const d=$('gdLst');if(d)d.innerHTML=lstH(l&&l.l,1)}catch(e){}}};
 function gdLive(){clearInterval(gdPoll);gdPoll=setInterval(async()=>{const c=$('gdCh');if(!c||!GD){clearInterval(gdPoll);return}if(document.hidden)return;try{const j=await api('gd&o=me');if(j&&j.g&&$('gdCh')){GD=j.g;window.__gdTag(GD);$('gdCh').innerHTML=chatH(GD)}}catch(e){}},9000)}
 const redraw=()=>{const b=$('gdBody');if(!b)return openGuild();if(GD){b.innerHTML=gdView(GD);gdLive()}else openGuild()};
 window.gdPick=(i,el)=>{gdIc=i;try{el.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===el))}catch(e){}};
-window.gdMake=async()=>{const n=(($('gdNmI')||{}).value||'').trim();if([...n].length<2)return toast('🏯 ชื่อสำนักสั้นไป');const j=await gdW('create',{gn:n,ic:gdIc,ds:(($('gdDsI')||{}).value||'').trim()});if(j&&j.ok){toast(`🏯 ตั้งสำนัก ${n} แล้ว`);redraw()}};
-window.gdJoin=async id=>{id=String(id||'').trim().toLowerCase();if(!id)return toast('🏯 ใส่รหัสสำนักก่อน');const j=await gdW('join',{g:id});if(j&&j.ok){toast(`🏯 เข้าร่วม ${GD?GD.n:''} แล้ว`);redraw()}};
+window.gdMake=async()=>{const n=(($('gdNmI')||{}).value||'').trim();if([...n].length<2)return toast('🛡️ ชื่อกลุ่มสั้นไป');const j=await gdW('create',{gn:n,ic:gdIc,th:gdTh,ds:(($('gdDsI')||{}).value||'').trim()});if(j&&j.ok){toast(`${GTH[gdTh].ic} ตั้ง${GTH[gdTh].g} ${n} แล้ว`);redraw()}};
+window.gdJoin=async id=>{id=String(id||'').trim().toLowerCase();if(!id)return toast('🛡️ ใส่รหัสกลุ่มก่อน');const j=await gdW('join',{g:id});if(j&&j.ok){toast(`🏯 เข้าร่วม ${GD?GD.n:''} แล้ว`);redraw()}};
 window.gdSay=async()=>{const i=$('gdSay');const x=(i&&i.value||'').trim();if(!x)return;i.value='';const j=await gdW('say',{x});if(j&&j.ok&&$('gdCh'))$('gdCh').innerHTML=chatH(GD)};
-window.gdLeave=async()=>{if(!confirm('ออกจากสำนักนี้? แต้มที่คุณส่งไปแล้วยังอยู่กับสำนัก'))return;const j=await gdW('leave');if(j&&j.ok){toast('🚪 ออกจากสำนักแล้ว');openGuild()}};
-window.gdKick=async(u,n)=>{if(!confirm(`เชิญ ${n} ออกจากสำนัก? (เข้าใหม่ได้หลัง 3 วัน)`))return;const j=await gdW('kick',{u});if(j&&j.ok)redraw()};
-window.gdDesc=async()=>{const d=prompt('คำขวัญสำนัก (ไม่เกิน 60 ตัว)',GD&&GD.ds||'');if(d==null)return;const j=await gdW('desc',{ds:d});if(j&&j.ok)redraw()};
-window.gdBoard=async()=>{const b=$('gdBody');if(!b)return;b.innerHTML='<p class="tag2">กำลังโหลด…</p>';try{const l=await api('gd&o=list');b.innerHTML=(`<div class="gdB"><p class="tag2">อันดับสำนักสัปดาห์นี้ (รีเซ็ตทุกวันจันทร์)</p>${lstH(l&&l.l,0)}<button class="gbtn" style="width:100%;margin-top:8px" onclick="openGuild()">↩️ กลับสำนัก</button></div>`)}catch(e){b.innerHTML='<p class="tag2">โหลดไม่ได้</p>'}};
+window.gdLeave=async()=>{if(!confirm('ออกจาก'+Z.g+'นี้? แต้มที่คุณส่งไปแล้วยังอยู่กับ'+Z.g))return;const j=await gdW('leave');if(j&&j.ok){toast('🚪 ออกจากสำนักแล้ว');openGuild()}};
+window.gdKick=async(u,n)=>{if(!confirm(`เชิญ ${n} ออกจาก${Z.g}? (เข้าใหม่ได้หลัง 3 วัน)`))return;const j=await gdW('kick',{u});if(j&&j.ok)redraw()};
+window.gdDesc=async()=>{const d=prompt('คำขวัญ'+Z.g+' (ไม่เกิน 60 ตัว)',GD&&GD.ds||'');if(d==null)return;const j=await gdW('desc',{ds:d});if(j&&j.ok)redraw()};
+window.gdBoard=async()=>{const b=$('gdBody');if(!b)return;b.innerHTML='<p class="tag2">กำลังโหลด…</p>';try{const l=await api('gd&o=list');b.innerHTML=(`<div class="gdB"><p class="tag2">อันดับ${Z.g}สัปดาห์นี้ (รีเซ็ตทุกวันจันทร์)</p>${lstH(l&&l.l,0)}<button class="gbtn" style="width:100%;margin-top:8px" onclick="openGuild()">↩️ กลับ${Z.g}</button></div>`)}catch(e){b.innerHTML='<p class="tag2">โหลดไม่ได้</p>'}};
 
 // ============================================================
 // 🎯 เป้าหมายร่วมทั้งเว็บ (นับฝั่งเซิร์ฟเวอร์จากชีวิตที่จบในโลกของสัปดาห์ · อายุ 10 ปีขึ้นไป)
@@ -182,7 +202,7 @@ async function welcome(){const d=Math.floor(away/864e5);
  ${er?`<h4>📜 ยุคของสัปดาห์นี้</h4><div class="it"><b>${E(er[0])}</b><br><small>${E(er[1])}</small></div>`:''}
  ${dd.length?`<h4>🗞️ ข่าวจากผู้เล่นคนอื่น</h4>${dd.map(x=>`<div class="it"><b>${E(x.n)}</b> ${E(f.DEED[x.d])} <small>(อายุ ${N(x.a)})</small></div>`).join('')}`:''}
  ${wb&&wb.mx?`<h4>👹 บอสโลก</h4><div class="it"><b>${E(wb.ic||'👹')} ${E(wb.n||'บอสโลก')}</b> ${wb.ph==='on'&&wb.hp>0?`ยังยืนอยู่ เลือดเหลือ ${N(wb.hp)} / ${N(wb.mx)}`:wb.kn?`ถูกล้มแล้ว โดย ${E(wb.kn)}`:'พักฟื้น รอรอบใหม่'}<div class="bar"><i style="width:${Math.max(0,Math.min(100,(wb.hp||0)/wb.mx*100))}%;background:linear-gradient(90deg,#d84a4a,#ff8a5a)"></i></div></div>`:''}
- ${gm&&gm.g?`<h4>🏯 สำนัก ${E(gm.g.n)}</h4><div class="it">อันดับสัปดาห์ ${gm.g.rk>0?'#'+gm.g.rk:'—'} · ${N(gm.g.sc)} แต้ม · ศิษย์ ${gm.g.m.length} คน${gm.g.ch&&gm.g.ch[0]&&!gm.g.ch[0].s?`<br><small>ข้อความล่าสุด: <b>${E(gm.g.ch[0].n)}</b> ${E(gm.g.ch[0].x)}</small>`:''}</div>`:''}
+ ${gm&&gm.g?`<h4>${thOf(gm.g).ic} ${thOf(gm.g).g} ${E(gm.g.n)}</h4><div class="it">อันดับสัปดาห์ ${gm.g.rk>0?'#'+gm.g.rk:'—'} · ${N(gm.g.sc)} แต้ม · ${thOf(gm.g).m} ${gm.g.m.length} คน${gm.g.ch&&gm.g.ch[0]&&!gm.g.ch[0].s?`<br><small>ข้อความล่าสุด: <b>${E(gm.g.ch[0].n)}</b> ${E(gm.g.ch[0].x)}</small>`:''}</div>`:''}
  <h4>🎯 เป้าหมายร่วมทั้งเว็บ</h4>${cgHtml(j)}
  <div class="it gift">🎁 <b>ของขวัญต้อนรับกลับ</b> — ${gift.n} ชีวิตถัดไปเริ่มด้วยเงินตั้งตัวก้อนพิเศษ</div>
  <button class="pbtn" style="width:100%;margin-top:10px" onclick="closeM()">กลับเข้ายุทธภพ</button></div>`;
@@ -210,9 +230,9 @@ if(typeof openTitleMenu==='function'){const _ot=openTitleMenu;openTitleMenu=func
   const add=(cls,ic,t,fn)=>{const b=document.createElement('button');b.className='cb '+cls;b.innerHTML=`<i>${ic}</i>${t}`;b.onclick=fn;g.insertBefore(b,g.firstChild)};
   if(canInstall())add('mtIn','📲','ติดตั้งแอป',()=>{closeM();pwaInstall()});
   add('mtCgB','🎯','เป้าหมายทั้งเว็บ',()=>openCG());
-  add('mtGd',tg&&tg.ic?E(tg.ic):'🏯',tg&&tg.n?E(tg.n):'สำนักผู้เล่น',()=>openGuild())}}catch(e){}return r}}
+  add('mtGd',tg&&tg.ic?E(tg.ic):'🛡️',tg&&tg.n?E(tg.n):'กลุ่มผู้เล่น',()=>openGuild())}}catch(e){}return r}}
 if(typeof openMenu==='function'){const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.mtGd')){const tg=LS.get('murim_gdtag',null),c=CHR&&CHR.cg;
-  g.insertAdjacentHTML('beforeend',`<button class="opt mtGd" onclick="openGuild()">${tg&&tg.ic?E(tg.ic):'🏯'} สำนักผู้เล่น<small>${tg&&tg.n?E(tg.n):'ตั้ง/เข้าสำนักกับผู้เล่นจริง'}</small></button><button class="opt mtCgB" onclick="openCG()">🎯 เป้าหมายทั้งเว็บ<small>${c?`${wName(c.w)[0]} ${N(c.c)}/${N(c.n)}`:'ช่วยกันทั้งเว็บ'}</small></button>`)}}catch(e){}return r}}
+  g.insertAdjacentHTML('beforeend',`<button class="opt mtGd" onclick="openGuild()">${tg&&tg.ic?E(tg.ic):'🛡️'} กลุ่มผู้เล่น<small>${tg&&tg.n?E(tg.n):'ตั้ง/เข้ากลุ่มกับผู้เล่นจริง'}</small></button><button class="opt mtCgB" onclick="openCG()">🎯 เป้าหมายทั้งเว็บ<small>${c?`${wName(c.w)[0]} ${N(c.c)}/${N(c.n)}`:'ช่วยกันทั้งเว็บ'}</small></button>`)}}catch(e){}return r}}
 
 // ============================================================
 // 🧭 ชีวิตหน้าลองอะไรดี + 🖼️ การ์ดเรื่องสั้น (หน้าสรุปชีวิต)
@@ -239,11 +259,11 @@ function nextIdeas(L){const out=[];const S0=L.SEEDS||[];
  if(L.soul){if(!L.soul.cb)out.push([7,'🔗','ยังไม่เคยได้ท่าประสานวิญญาณ','มีคู่ชีวิตหรือเพื่อนในทีมที่ผูกพันสูง แล้วฝึกจนระดับจิต 20 จะมีโอกาสคิดท่าใหม่ที่ไม่มีในตำรา'])
   else if(L.soul.r<9)out.push([5,'⭕',`วงแหวน ${L.soul.r} วง ยังไปได้อีก`,'ไว้ชีวิตสัตว์บ้าง ปล่อยลูกสัตว์คืนป่า วันหนึ่งมันอาจกลับมาทำให้วงแหวนของคุณแก่ขึ้น'])}
  if(canInstall()){const P=LS.get('murim_pwa',{})||{};if(!P.done)out.push([2,'📲','ติดตั้งเกมเป็นแอป','เปิดเต็มจอ โหลดเร็วกว่า ไม่หลงแท็บ'])}
- try{if(!LS.get('murim_gdtag',null))out.push([3,'🏯','ยังไม่มีสำนัก','ชีวิตที่เพิ่งจบนี้จะได้แต้มเข้าสำนักทันทีถ้าอยู่ในสำนักแล้ว ตั้งสำนักกับเพื่อน หรือขอเข้าสำนักของคนอื่น'])}catch(e){}
+ try{if(!LS.get('murim_gdtag',null))out.push([3,'🛡️','ยังไม่มีกลุ่ม','ชีวิตที่เพิ่งจบนี้จะได้แต้มเข้ากลุ่มทันทีถ้าอยู่ในสำนักแล้ว ตั้งสำนักกับเพื่อน หรือขอเข้าสำนักของคนอื่น'])}catch(e){}
  return out.sort((a,b)=>b[0]-a[0]).slice(0,3)}
 if(typeof endGame==='function'){const _eg=endGame;endGame=function(){try{if(S)snap()}catch(e){}const r=_eg.apply(this,arguments);try{setTimeout(()=>{try{const box=$('end'),b=box&&box.querySelector('.box.rec');if(!b||!LAST||b.querySelector('.mtNext'))return;const L=nextIdeas(LAST);
   const d=document.createElement('div');d.className='mtNext';d.innerHTML=(`<h5>🧭 ชีวิตหน้าลองอะไรดี</h5>${L.map(x=>`<div class="nx"><i>${x[1]}</i><div><b>${E(x[2])}</b><small>${E(x[3])}</small></div></div>`).join('')}
-  <div class="nxB"><button class="pbtn" onclick="storyCard()">🖼️ การ์ดเรื่องสั้น</button>${LS.get('murim_gdtag',null)?'':'<button class="gbtn" onclick="openGuild()">🏯 สำนัก</button>'}</div>`);
+  <div class="nxB"><button class="pbtn" onclick="storyCard()">🖼️ การ์ดเรื่องสั้น</button>${LS.get('murim_gdtag',null)?'':'<button class="gbtn" onclick="openGuild()">🛡️ กลุ่มผู้เล่น</button>'}</div>`);
   const fb=b.querySelector('.fateBox');if(fb)fb.after(d);else{const h=[...b.querySelectorAll('h5')].find(x=>/กราฟชีวิต/.test(x.textContent));if(h)b.insertBefore(d,h);else b.appendChild(d)}
   setTimeout(nudge,4000)}catch(e){console.error('meta next',e)}},60)}catch(e){}return r}}
 

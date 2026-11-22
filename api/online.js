@@ -831,17 +831,30 @@ const GD_LVX = [0, 300, 900, 2200, 4500, 8000, 13000, 20000, 30000, 45000];
 const GD_CAP = [20, 25, 30, 35, 40, 45, 50, 55, 60, 70];
 const GD_UN = { q: 2, rk: 3, boss: 4, tech: 5, hall: 6, bless: 7, hard: 8, war: 9, emb: 10 };
 const GD_IC0 = ['🏯', '⛩️', '🐉', '🦅', '🐺', '🌙', '🔥', '🌊', '⚔️', '🌸', '🪷', '☯️'], GD_IC10 = ['🐲', '🦚', '👑', '🌟', '🗡️', '🏔️'];
+const GD_ICT = ['🛡️', '🏙️', '🧟', '🌀', '👻', '☁️', '🏹', '🔮'];
 const GD_XPD = 300, GD_DMGD = 600, GD_TPT = [0, 500, 1500, 3500, 7000];
 const gdLv = x => { let l = 1; for (let i = 1; i < GD_LVX.length; i++) if (x >= GD_LVX[i]) l = i + 1; return l };
 const gdDay = t => Math.floor((t + 7 * 3600e3) / 86400e3);
 const gdHv = x => { const o = {}; if (Array.isArray(x)) for (let i = 0; i + 1 < x.length; i += 2) o[x[i]] = x[i + 1]; else if (x && typeof x === 'object') Object.assign(o, x); return o };
 const gdHash = s => { let h = 2166136261; for (const c of String(s)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 };
 // ภารกิจประจำสัปดาห์: สุ่มจากรหัสสำนัก+สัปดาห์ (ทุกคนในสำนักเห็นตรงกัน) · เป้าหมายปรับตามจำนวนศิษย์
-const GD_QP = ['n', 'o', 'c', 'w', 'm', 'x'];
-const gdQT = (k, m) => ({ n: Math.min(120, Math.max(10, 3 * m)), o: Math.min(40, Math.max(5, m)), c: Math.min(25, Math.max(3, Math.ceil(m / 2))), w: Math.min(6, 3 + Math.floor(m / 5)), m: Math.max(1, Math.min(m, Math.ceil(m * .6))), x: Math.min(20, Math.max(2, Math.ceil(m / 3))) })[k];
+const GD_QP = ['n', 'o', 'c', 'w', 'm', 'x', 'f'];
+const gdQT = (k, m) => ({ n: Math.min(120, Math.max(10, 3 * m)), o: Math.min(40, Math.max(5, m)), c: Math.min(25, Math.max(3, Math.ceil(m / 2))), w: Math.min(6, 3 + Math.floor(m / 5)), m: Math.max(1, Math.min(m, Math.ceil(m * .6))), x: Math.min(20, Math.max(2, Math.ceil(m / 3))), f: Math.min(15, Math.max(3, Math.ceil(m / 2))) })[k];
 const gdQs = (g, wk) => { const P = GD_QP.slice(), o = []; let h = gdHash(g + ':' + wk); while (o.length < 3) { const i = h % P.length; o.push(P.splice(i, 1)[0]); h = Math.imul(h ^ (h >>> 13), 2654435761) >>> 0 } return o };
-const GD_BN = ['ราชันย์อสูรเก้าหาง', 'มังกรดำแห่งบึงเหม็น', 'เจ้าป่าตาเดียว', 'จอมมารเงาจันทร์', 'ปีศาจกระดูกพันปี', 'นกเพลิงคลั่ง', 'ยักษ์ศิลาแห่งหุบเขา', 'อสรพิษสามเศียร'];
-const gdBoss = (g, wk, lv, m) => { const hp = 600 * Math.max(3, m) + 800 * lv; return { n: GD_BN[gdHash(g + 'b' + wk) % GD_BN.length], hp, hp2: Math.round(hp * 2.5) } };
+// แนวกลุ่ม: เปลี่ยนแค่คำเรียก (ข้อมูลเหมือนกันทุกแนว)
+const GD_TH = {
+  murim: { g: 'สำนัก', ld: 'เจ้าสำนัก', el: 'ผู้อาวุโส', m: 'ศิษย์', art: 'วิชาลับ' },
+  xian: { g: 'นิกาย', ld: 'ประมุข', el: 'ผู้พิทักษ์', m: 'ศิษย์', art: 'คัมภีร์นิกาย' },
+  modern: { g: 'กิลด์', ld: 'หัวหน้ากิลด์', el: 'รองหัวหน้า', m: 'สมาชิก', art: 'ทักษะลับ' },
+  zombie: { g: 'ค่ายผู้รอดชีวิต', ld: 'ผู้นำค่าย', el: 'หน่วยลาดตระเวน', m: 'ผู้รอดชีวิต', art: 'ตำราเอาตัวรอด' },
+  hunter: { g: 'กิลด์ฮันเตอร์', ld: 'กิลด์มาสเตอร์', el: 'ฮันเตอร์แรงก์ S', m: 'ฮันเตอร์', art: 'สกิลกิลด์' },
+  ghost: { g: 'สำนักไสยเวท', ld: 'อาจารย์ใหญ่', el: 'หมอผี', m: 'ลูกศิษย์', art: 'คาถาประจำสำนัก' } };
+const gdT = G => GD_TH[G && G.th] || GD_TH.murim;
+// โลกของแต่ละแนว + บอสประจำโลก (บอสแต่ละสัปดาห์มาจากโลกต่างกัน · ชีวิตในโลกเดียวกับบอสตีแรง ×2)
+const GD_WTH = w => /^m_zombie|m_doom/.test(w) ? 'zombie' : /^m_hunter|m_tower|m_gatewon|m_game/.test(w) ? 'hunter' : w === 'm_ghost' ? 'ghost' : /^m_/.test(w) ? 'modern' : /^(xian|god|soul|sky)$/.test(w) ? 'xian' : 'murim';
+const GD_BW = ['murim', 'xian', 'm_zombie', 'm_hunter', 'm_ghost', 'm_normal', 'soul', 'sky', 'god', 'beast'];
+const GD_BN = { murim: ['ราชันย์อสูรเก้าหาง', 'มังกรดำแห่งบึงเหม็น', 'จอมมารเงาจันทร์', 'ปีศาจกระดูกพันปี'], xian: ['กิเลนคลั่งพันปี', 'หงส์เพลิงนิรันดร์', 'มังกรน้ำแข็งเก้าสวรรค์', 'จอมมารนอกพิภพ'], modern: ['เจ้าพ่อตลาดมืด', 'บอสแก๊งมอเตอร์ไซค์', 'ซีอีโอจอมโกง', 'เจ้าหนี้นอกระบบ'], zombie: ['ซอมบี้ยักษ์กลายพันธุ์', 'ราชินีซอมบี้', 'ฝูงซอมบี้ห้างร้าง', 'ซอมบี้หุ้มเกราะ'], hunter: ['ราชาก็อบลินเกตแดง', 'อัศวินมรณะชั้น 99', 'มังกรเกตดำ', 'ราชินีแมงมุมดันเจี้ยน'], ghost: ['ผีตายโหงทางสามแพร่ง', 'กระสือเจ้าแม่', 'ปอบพันปีหมู่บ้านร้าง', 'กองกอยเงาดำ'] };
+const gdBoss = (g, wk, lv, m) => { const hp = 600 * Math.max(3, m) + 800 * lv, w = GD_BW[gdHash(g + 'w' + wk) % GD_BW.length], L = GD_BN[GD_WTH(w)]; return { n: L[gdHash(g + 'b' + wk) % L.length], w, hp, hp2: Math.round(hp * 2.5) } };
 const gdTech = p => { let l = 1; for (let i = 1; i < GD_TPT.length; i++) if (p >= GD_TPT[i]) l = i + 1; return l };
 // สงคราม: จับคู่สำนักเลเวล 9+ ตามแต้มสัปดาห์ก่อน · ตัดสินสัปดาห์ก่อนแบบขี้เกียจ (ครั้งแรกที่มีคนเปิดดูในสัปดาห์ใหม่)
 async function gdWar(wk) {
@@ -860,41 +873,41 @@ async function gdWar(wk) {
 // ทุกชีวิตที่จบของศิษย์ (ผ่านกันโกงแล้ว) → แต้มเลเวล ภารกิจ บอส วิชาลับ หอตำนาน
 async function gdLife(gid, pu, e, b, now) {
   const wk = chrWk(now), d = gdDay(now), age = +e.age || 0, pt = 10 + Math.min(40, Math.floor(age / 3)) + (e.ch ? 5 : 0);
-  const [xp0, m0, td] = await pipe([['GET', 'gdx:' + gid], ['HLEN', 'gdm:' + gid], ['HINCRBY', 'gdxd:' + gid + ':' + d, pu, pt]]);
+  const [xp0, m0, td, gj] = await pipe([['GET', 'gdx:' + gid], ['HLEN', 'gdm:' + gid], ['HINCRBY', 'gdxd:' + gid + ':' + d, pu, pt], ['GET', 'gd:' + gid]]); const T = gdT(jp(gj)), wd = String((b.fs && b.fs.w) || '').replace(/[^a-z0-9_]/g, '').slice(0, 12) || (e.g ? 'god' : e.x ? 'xian' : 'murim');
   const lv = gdLv(+xp0 || 0), m = +m0 || 1, prev = (+td || 0) - pt, add = Math.max(0, Math.min(pt, GD_XPD - prev)); let bonus = 0;
   const L = [['EXPIRE', 'gdxd:' + gid + ':' + d, 86400 * 2]];
   // หอตำนาน: เก็บชีวิตยืนยาวที่สุดของสำนัก 10 อันดับ (เก็บตั้งแต่เลเวลแรก พอปลดล็อกก็มีของโชว์)
-  if (age >= 20) L.push(['ZADD', 'gdh:' + gid, age, JSON.stringify({ n: clean(e.n, 20), age, u: pu, lid: e.lid || '', r: clean(e.r, 30), t: now })], ['ZREMRANGEBYRANK', 'gdh:' + gid, 0, -11]);
+  if (age >= 20) { const hj = { n: clean(e.n, 20), age, u: pu, lid: e.lid || '', r: clean(e.r, 30), w: wd, t: now }; L.push(['ZADD', 'gdh:' + gid, age, JSON.stringify(hj)], ['ZREMRANGEBYRANK', 'gdh:' + gid, 0, -11]); try { const o0 = jp(await cmd('HGET', 'gdhw:' + gid, wd)); if (!o0 || age > (+o0.age || 0)) L.push(['HSET', 'gdhw:' + gid, wd, JSON.stringify(hj)]) } catch {} }
   if (add > 0) {
     // ภารกิจ
-    if (lv >= GD_UN.q) { const qk = 'gdq:' + gid + ':' + wk; const wd = String((b.fs && b.fs.w) || '').replace(/[^a-z0-9_]/g, '').slice(0, 12);
-      const r = await pipe([['HINCRBY', qk, 'n', 1], ['HINCRBY', qk, 'o', age >= 60 ? 1 : 0], ['HINCRBY', qk, 'c', e.ch ? 1 : 0], ['HINCRBY', qk, 'x', age >= 100 ? 1 : 0], ['SADD', qk + ':w', wd || (e.g ? 'g' : e.x ? 'x' : 'm')], ['SADD', qk + ':m', pu], ['SCARD', qk + ':w'], ['SCARD', qk + ':m'], ['HGETALL', qk], ['EXPIRE', qk, 86400 * 21], ['EXPIRE', qk + ':w', 86400 * 21], ['EXPIRE', qk + ':m', 86400 * 21]]);
-      const H = gdHv(r[8]), cur = { n: +H.n || 0, o: +H.o || 0, c: +H.c || 0, x: +H.x || 0, w: +r[6] || 0, m: +r[7] || 0 }, Q = gdQs(gid, wk); let nd = 0;
-      for (let i = 0; i < 3; i++) { const k = Q[i]; if (!H['d' + i] && cur[k] >= gdQT(k, m)) { if (await cmd('HSETNX', qk, 'd' + i, now)) { bonus += 150; nd++; L.push(['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: '📜 ภารกิจสำนักสำเร็จ! +150 แต้มสำนัก', t: now })]) } } }
-      if (nd) { const H2 = gdHv(await cmd('HGETALL', qk)); if (H2.d0 && H2.d1 && H2.d2 && await cmd('HSETNX', qk, 'all', now)) { bonus += 300; L.push(['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: '🎁 ภารกิจครบทั้ง 3 อย่าง! +300 แต้มสำนัก', t: now })]) } } }
+    if (lv >= GD_UN.q) { const qk = 'gdq:' + gid + ':' + wk;
+      const r = await pipe([['HINCRBY', qk, 'f', wd === cgOf(wk).w ? 1 : 0], ['HINCRBY', qk, 'n', 1], ['HINCRBY', qk, 'o', age >= 60 ? 1 : 0], ['HINCRBY', qk, 'c', e.ch ? 1 : 0], ['HINCRBY', qk, 'x', age >= 100 ? 1 : 0], ['SADD', qk + ':w', wd], ['SADD', qk + ':m', pu], ['SCARD', qk + ':w'], ['SCARD', qk + ':m'], ['HGETALL', qk], ['EXPIRE', qk, 86400 * 21], ['EXPIRE', qk + ':w', 86400 * 21], ['EXPIRE', qk + ':m', 86400 * 21]]);
+      const H = gdHv(r[9]), cur = { n: +H.n || 0, o: +H.o || 0, c: +H.c || 0, x: +H.x || 0, f: +H.f || 0, w: +r[7] || 0, m: +r[8] || 0 }, Q = gdQs(gid, wk); let nd = 0;
+      for (let i = 0; i < 3; i++) { const k = Q[i]; if (!H['d' + i] && cur[k] >= gdQT(k, m)) { if (await cmd('HSETNX', qk, 'd' + i, now)) { bonus += 150; nd++; L.push(['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: `📜 ภารกิจ${T.g}สำเร็จ! +150 แต้ม${T.g}`, t: now })]) } } }
+      if (nd) { const H2 = gdHv(await cmd('HGETALL', qk)); if (H2.d0 && H2.d1 && H2.d2 && await cmd('HSETNX', qk, 'all', now)) { bonus += 300; L.push(['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: `🎁 ภารกิจครบทั้ง 3 อย่าง! +300 แต้ม${T.g}`, t: now })]) } } }
     // บอสบุก
-    if (lv >= GD_UN.boss) { const bk = 'gdb:' + gid + ':' + wk, B = gdBoss(gid, wk, lv, m), dmg0 = 30 + Math.min(120, Math.floor(age / 2)) + (e.ch ? 40 : 0);
+    if (lv >= GD_UN.boss) { const bk = 'gdb:' + gid + ':' + wk, B = gdBoss(gid, wk, lv, m), dmg0 = (30 + Math.min(120, Math.floor(age / 2)) + (e.ch ? 40 : 0)) * (wd === B.w ? 2 : 1);
       const [dd] = await pipe([['HINCRBY', 'gdbd:' + gid + ':' + d, pu, dmg0], ['EXPIRE', 'gdbd:' + gid + ':' + d, 86400 * 2]]); const dmg = Math.max(0, Math.min(dmg0, GD_DMGD - ((+dd || 0) - dmg0)));
       if (dmg > 0) { const r = await pipe([['HINCRBY', bk, 'd', dmg], ['HINCRBY', bk, 'u:' + pu, dmg], ['EXPIRE', bk, 86400 * 21]]); const tot = +r[0] || 0;
-        if (tot >= B.hp && await cmd('HSETNX', bk, 'w1', now)) { bonus += 400; L.push(['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: `⚔️ ล้ม ${B.n} สำเร็จ! +400 แต้มสำนัก · ศิษย์ทุกคนได้ตราพิชิตบอสสัปดาห์นี้`, t: now })]) }
-        if (lv >= GD_UN.hard && tot >= B.hp + B.hp2 && await cmd('HSETNX', bk, 'w2', now)) { bonus += 600; L.push(['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: `💀 ล้ม ${B.n} ร่างคลั่งสำเร็จ! +600 แต้มสำนัก · ตราพิชิตบอสขั้นสูง`, t: now })]) } } }
+        if (tot >= B.hp && await cmd('HSETNX', bk, 'w1', now)) { bonus += 400; L.push(['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: `⚔️ ล้ม ${B.n} สำเร็จ! +400 แต้ม${T.g} · ${T.m}ทุกคนได้ตราพิชิตบอสสัปดาห์นี้`, t: now })]) }
+        if (lv >= GD_UN.hard && tot >= B.hp + B.hp2 && await cmd('HSETNX', bk, 'w2', now)) { bonus += 600; L.push(['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: `💀 ล้ม ${B.n} ร่างคลั่งสำเร็จ! +600 แต้ม${T.g} · ตราพิชิตบอสขั้นสูง`, t: now })]) } } }
     // วิชาลับประจำสำนัก
     if (lv >= GD_UN.tech) L.push(['HINCRBY', 'gdt:' + gid, 'p', add]);
   }
   if (add + bonus > 0) L.push(['INCRBY', 'gdx:' + gid, add + bonus]);
-  const nl = gdLv((+xp0 || 0) + add + bonus); if (nl > lv) L.push(['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: `🎉 สำนักขึ้นเลเวล ${nl}! รับศิษย์ได้ ${GD_CAP[nl - 1]} คน`, t: now })]);
+  const nl = gdLv((+xp0 || 0) + add + bonus); if (nl > lv) L.push(['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: `🎉 ${T.g}ขึ้นเลเวล ${nl}! รับ${T.m}ได้ ${GD_CAP[nl - 1]} คน`, t: now })]);
   L.push(['LTRIM', 'gdc:' + gid, 0, 59]); await pipe(L)
 }
 // ข้อมูลส่วนขยายของสำนัก (แนบไปกับข้อมูลเดิม)
 async function gdExt(g, G0, M0, pu, now) {
   const wk = chrWk(now), d = gdDay(now), m = Math.max(1, Object.keys(M0).length), qk = 'gdq:' + g + ':' + wk, bk = 'gdb:' + g + ':' + wk;
-  const r = await pipe([['GET', 'gdx:' + g], ['HGETALL', qk], ['SCARD', qk + ':w'], ['SCARD', qk + ':m'], ['HGETALL', bk], ['HGETALL', 'gdt:' + g], ['ZREVRANGE', 'gdh:' + g, 0, 9], ['HGETALL', 'gdhp:' + g], ['GET', 'gdpr:' + pu + ':' + d], ['GET', 'gdbs:' + pu + ':' + d], ['HGET', 'gdter', g], ['GET', 'gdwon:' + g + ':' + wk], ['HGET', 'gdxd:' + g + ':' + d, pu], ['LLEN', 'gdbl:' + pu]]);
-  const xp = +r[0] || 0, lv = gdLv(xp), H = gdHv(r[1]), cur = { n: +H.n || 0, o: +H.o || 0, c: +H.c || 0, x: +H.x || 0, w: +r[2] || 0, m: +r[3] || 0 };
-  const o = { xp, lv, cap: GD_CAP[lv - 1], nx: GD_LVX[lv] || 0, cx: GD_LVX[lv - 1], el: Array.isArray(G0.el) ? G0.el : [], ann: G0.ann || '', mxd: +r[12] || 0, xpd: GD_XPD, bl: +r[13] || 0, ter: +r[10] || 0 };
+  const r = await pipe([['GET', 'gdx:' + g], ['HGETALL', qk], ['SCARD', qk + ':w'], ['SCARD', qk + ':m'], ['HGETALL', bk], ['HGETALL', 'gdt:' + g], ['ZREVRANGE', 'gdh:' + g, 0, 9], ['HGETALL', 'gdhp:' + g], ['GET', 'gdpr:' + pu + ':' + d], ['GET', 'gdbs:' + pu + ':' + d], ['HGET', 'gdter', g], ['GET', 'gdwon:' + g + ':' + wk], ['HGET', 'gdxd:' + g + ':' + d, pu], ['LLEN', 'gdbl:' + pu], ['HGETALL', 'gdhw:' + g]]);
+  const xp = +r[0] || 0, lv = gdLv(xp), H = gdHv(r[1]), cur = { n: +H.n || 0, o: +H.o || 0, c: +H.c || 0, x: +H.x || 0, f: +H.f || 0, w: +r[2] || 0, m: +r[3] || 0 };
+  const o = { th: GD_TH[G0.th] ? G0.th : 'murim', cgw: cgOf(wk).w, xp, lv, cap: GD_CAP[lv - 1], nx: GD_LVX[lv] || 0, cx: GD_LVX[lv - 1], el: Array.isArray(G0.el) ? G0.el : [], ann: G0.ann || '', mxd: +r[12] || 0, xpd: GD_XPD, bl: +r[13] || 0, ter: +r[10] || 0 };
   if (lv >= GD_UN.q) o.q = gdQs(g, wk).map((k, i) => ({ k, c: cur[k], t: gdQT(k, m), d: H['d' + i] ? 1 : 0 })), o.qa = H.all ? 1 : 0;
-  if (lv >= GD_UN.boss) { const B = gdBoss(g, wk, lv, m), BH = gdHv(r[4]), dm = {}; for (const k in BH) if (k.startsWith('u:')) dm[k.slice(2)] = +BH[k] || 0; o.boss = { n: B.n, hp: B.hp, hp2: lv >= GD_UN.hard ? B.hp2 : 0, d: +BH.d || 0, w1: BH.w1 ? 1 : 0, w2: BH.w2 ? 1 : 0, me: dm[pu] || 0, top: Object.entries(dm).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([u, v]) => ({ n: (M0[u] && M0[u].n) || '?', v })) } }
+  if (lv >= GD_UN.boss) { const B = gdBoss(g, wk, lv, m), BH = gdHv(r[4]), dm = {}; for (const k in BH) if (k.startsWith('u:')) dm[k.slice(2)] = +BH[k] || 0; o.boss = { n: B.n, w: B.w, hp: B.hp, hp2: lv >= GD_UN.hard ? B.hp2 : 0, d: +BH.d || 0, w1: BH.w1 ? 1 : 0, w2: BH.w2 ? 1 : 0, me: dm[pu] || 0, top: Object.entries(dm).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([u, v]) => ({ n: (M0[u] && M0[u].n) || '?', v })) } }
   if (lv >= GD_UN.tech) { const T = gdHv(r[5]), p = +T.p || 0, mx = lv >= GD_UN.hard ? 5 : 3, tl = Math.min(mx, gdTech(p)); o.tech = { p, lv: tl, mx, nx: tl < mx ? GD_TPT[tl] : 0, path: ['sword', 'mind', 'body'].includes(G0.tp) ? G0.tp : 'sword' } }
-  if (lv >= GD_UN.hall) { const HP = gdHv(r[7]); o.hall = (r[6] || []).map(jp).filter(Boolean).map(x => ({ n: x.n, age: x.age, u: x.u, lid: x.lid, r: x.r, pr: +HP[x.lid || x.n] || 0 })); o.prd = r[8] ? 1 : 0 }
+  if (lv >= GD_UN.hall) { const HP = gdHv(r[7]); o.hall = (r[6] || []).map(jp).filter(Boolean).map(x => ({ n: x.n, age: x.age, u: x.u, lid: x.lid, r: x.r, pr: +HP[x.lid || x.n] || 0 })); o.prd = r[8] ? 1 : 0; const HW = gdHv(r[14]); o.hw = Object.entries(HW).map(([w, v]) => { const x = jp(v); return x ? { w, n: x.n, age: x.age, u: x.u, lid: x.lid, r: x.r, pr: +HP[x.lid || x.n] || 0 } : null }).filter(Boolean).sort((a, b) => b.age - a.age) }
   if (lv >= GD_UN.bless) o.bsd = r[9] ? 1 : 0;
   if (lv >= GD_UN.war) { try { const W0 = await gdWar(wk), op = W0[g]; o.war = { op: null, me: 0, won: r[11] ? 1 : 0 }; const ms = await cmd('ZSCORE', 'gds:' + wk, g); o.war.me = +ms || 0; if (op && op !== '-') { const [OG, os] = await pipe([['GET', 'gd:' + op], ['ZSCORE', 'gds:' + wk, op]]); const J = jp(OG); if (J) o.war.op = { n: J.n, ic: J.ic, sc: +os || 0, ter: 0 } } } catch {} }
   else if (r[11]) o.war = { won: 1 };
@@ -1848,7 +1861,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (a === 'gd') {
         if (o === 'list') { const r0 = await cmd('ZREVRANGE', 'gds:' + wk, 0, 29, 'WITHSCORES'); const L0 = []; for (let i = 0; i + 1 < (r0 || []).length; i += 2) L0.push([r0[i], +r0[i + 1]]);
           let extra = []; if (L0.length < 30) { const r1 = await cmd('ZREVRANGE', 'gdall', 0, 29); extra = (r1 || []).filter(g => !L0.some(x => x[0] === g)).slice(0, 30 - L0.length).map(g => [g, 0]) }
-          const all = L0.concat(extra), out = []; for (const [g, sc] of all) { const G0 = await gGet(g); if (!G0) continue; const [n, x0, t0] = await pipe([['HLEN', 'gdm:' + g], ['GET', 'gdx:' + g], ['HGET', 'gdter', g]]); const lv = gdLv(+x0 || 0); out.push({ id: g, n: G0.n, ic: G0.ic, ds: G0.ds || '', sc, mc: +n || 0, lv, cap: GD_CAP[lv - 1], ter: +t0 || 0 }) } return res.json({ ok: 1, l: out, wk }) }
+          const all = L0.concat(extra), out = []; for (const [g, sc] of all) { const G0 = await gGet(g); if (!G0) continue; const [n, x0, t0] = await pipe([['HLEN', 'gdm:' + g], ['GET', 'gdx:' + g], ['HGET', 'gdter', g]]); const lv = gdLv(+x0 || 0); out.push({ id: g, n: G0.n, ic: G0.ic, ds: G0.ds || '', sc, mc: +n || 0, lv, cap: GD_CAP[lv - 1], ter: +t0 || 0, th: GD_TH[G0.th] ? G0.th : 'murim' }) } return res.json({ ok: 1, l: out, wk }) }
         if (o === 'me') { if (!pu) return res.json({ ok: 1, g: null }); const g = await cmd('GET', 'gdu:' + pu); return res.json({ ok: 1, g: g ? await full(g) : null }) }
         if (o === 'see') { const g = String(q.g || '').replace(/[^a-z0-9]/g, '').slice(0, 10); const F = await full(g); if (F) F.ch = []; return res.json({ ok: 1, g: F }) }
         return res.json({ err: 'op' });
@@ -1859,17 +1872,18 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (!(await cmd('SET', 'gdcd:' + pu, 1, 'NX', 'EX', 3600))) return res.json({ err: 'cd' });
         const key = 'gdn:' + gn.toLowerCase(); const g = Math.random().toString(36).slice(2, 10).replace(/[^a-z0-9]/g, 'x').padEnd(8, 'x');
         if (!(await cmd('SET', key, g, 'NX'))) return res.json({ err: 'taken' });
-        const ic = ['🏯', '⛩️', '🐉', '🦅', '🐺', '🌙', '🔥', '🌊', '⚔️', '🌸', '🪷', '☯️'].includes(b.ic) ? b.ic : '🏯';
-        await pipe([['SET', 'gd:' + g, JSON.stringify({ id: g, n: gn, ic, ld: pu, t: now, ds: clean(b.ds, 60) })], ['HSET', 'gdm:' + g, pu, JSON.stringify({ n: nm, j: now })], ['SET', 'gdu:' + pu, g], ['ZADD', 'gdall', now, g]]);
+        const ic = [...GD_IC0, ...GD_ICT].includes(b.ic) ? b.ic : '🏯';
+        const th = GD_TH[b.th] ? String(b.th) : 'murim';
+        await pipe([['SET', 'gd:' + g, JSON.stringify({ id: g, n: gn, ic, ld: pu, t: now, ds: clean(b.ds, 60), th })], ['HSET', 'gdm:' + g, pu, JSON.stringify({ n: nm, j: now })], ['SET', 'gdu:' + pu, g], ['ZADD', 'gdall', now, g]]);
         return res.json({ ok: 1, g: await full(g) }) }
       if (o === 'join') { if (my) return res.json({ err: 'in' }); const g = String(b.g || '').replace(/[^a-z0-9]/g, '').slice(0, 10); const G0 = await gGet(g); if (!G0) return res.json({ err: 'nog' });
         { const [hl, x0] = await pipe([['HLEN', 'gdm:' + g], ['GET', 'gdx:' + g]]); if ((+hl || 0) >= GD_CAP[gdLv(+x0 || 0) - 1]) return res.json({ err: 'full' }) } if (await cmd('GET', 'gdkick:' + g + ':' + pu)) return res.json({ err: 'kicked' });
-        await pipe([['HSET', 'gdm:' + g, pu, JSON.stringify({ n: nm, j: now })], ['SET', 'gdu:' + pu, g], ['LPUSH', 'gdc:' + g, JSON.stringify({ s: 1, x: nm + ' เข้าร่วมสำนัก', t: now })], ['LTRIM', 'gdc:' + g, 0, 59]]);
+        await pipe([['HSET', 'gdm:' + g, pu, JSON.stringify({ n: nm, j: now })], ['SET', 'gdu:' + pu, g], ['LPUSH', 'gdc:' + g, JSON.stringify({ s: 1, x: nm + ' เข้าร่วม' + gdT(G0).g, t: now })], ['LTRIM', 'gdc:' + g, 0, 59]]);
         return res.json({ ok: 1, g: await full(g) }) }
       if (o === 'claim') { const [l] = await pipe([['LRANGE', 'gdbl:' + pu, 0, 4], ['DEL', 'gdbl:' + pu]]); return res.json({ ok: 1, l: (l || []).map(jp).filter(Boolean) }) }
       if (!my) return res.json({ err: 'none' });
       const G1 = await gGet(my); if (!G1) { await cmd('DEL', 'gdu:' + pu); return res.json({ err: 'nog' }) }
-      if (o === 'leave') { const M0 = await mem(my); delete M0[pu]; const L2 = [['HDEL', 'gdm:' + my, pu], ['DEL', 'gdu:' + pu], ['LPUSH', 'gdc:' + my, JSON.stringify({ s: 1, x: nm + ' ออกจากสำนัก', t: now })], ['LTRIM', 'gdc:' + my, 0, 59]];
+      if (o === 'leave') { const M0 = await mem(my); delete M0[pu]; const L2 = [['HDEL', 'gdm:' + my, pu], ['DEL', 'gdu:' + pu], ['LPUSH', 'gdc:' + my, JSON.stringify({ s: 1, x: nm + ' ออกจาก' + gdT(G1).g, t: now })], ['LTRIM', 'gdc:' + my, 0, 59]];
         if (Array.isArray(G1.el) && G1.el.includes(pu)) { G1.el = G1.el.filter(x => x !== pu); L2.push(['SET', 'gd:' + my, JSON.stringify(G1)]) }
         const rest = Object.keys(M0); if (!rest.length) L2.push(['DEL', 'gd:' + my], ['DEL', 'gdn:' + String(G1.n).toLowerCase()], ['ZREM', 'gdall', my], ['DEL', 'gdc:' + my]); else if (G1.ld === pu) { G1.ld = rest.sort((x, y) => (M0[x].j || 0) - (M0[y].j || 0))[0]; L2.push(['SET', 'gd:' + my, JSON.stringify(G1)]) }
         await pipe(L2); return res.json({ ok: 1, g: null }) }
@@ -1880,20 +1894,21 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (o === 'desc') { if (G1.ld !== pu) return res.json({ err: 'ld' }); G1.ds = clean(b.ds, 60); await cmd('SET', 'gd:' + my, JSON.stringify(G1)); return res.json({ ok: 1, g: await full(my) }) }
       // ---- ของใหม่ตามเลเวลสำนัก ----
       const lvG = gdLv(+(await cmd('GET', 'gdx:' + my)) || 0), M1 = await mem(my), EL1 = Array.isArray(G1.el) ? G1.el : [], d0 = gdDay(now);
-      const sys = x => ['LPUSH', 'gdc:' + my, JSON.stringify({ s: 1, x, t: now })];
+      const sys = x => ['LPUSH', 'gdc:' + my, JSON.stringify({ s: 1, x, t: now })], TT = gdT(G1);
       if (o === 'rank') { if (lvG < GD_UN.rk) return res.json({ err: 'lv' }); if (G1.ld !== pu) return res.json({ err: 'ld' }); const u = String(b.u || '').replace(/[^a-z0-9]/g, '').slice(0, 12); if (!u || u === pu || !M1[u]) return res.json({ err: 'u' }); const r = String(b.r || '');
-        if (r === 'el') { if (EL1.includes(u)) return res.json({ ok: 1, g: await full(my) }); if (EL1.length >= 3) return res.json({ err: 'elmax' }); G1.el = EL1.concat(u); await pipe([['SET', 'gd:' + my, JSON.stringify(G1)], sys(`🎖️ ${M1[u].n} ได้รับแต่งตั้งเป็นผู้อาวุโส`), ['LTRIM', 'gdc:' + my, 0, 59]]) }
+        if (r === 'el') { if (EL1.includes(u)) return res.json({ ok: 1, g: await full(my) }); if (EL1.length >= 3) return res.json({ err: 'elmax' }); G1.el = EL1.concat(u); await pipe([['SET', 'gd:' + my, JSON.stringify(G1)], sys(`🎖️ ${M1[u].n} ได้รับแต่งตั้งเป็น${TT.el}`), ['LTRIM', 'gdc:' + my, 0, 59]]) }
         else if (r === 'mb') { G1.el = EL1.filter(x => x !== u); await cmd('SET', 'gd:' + my, JSON.stringify(G1)) }
-        else if (r === 'ld') { G1.el = EL1.filter(x => x !== u).concat(pu).slice(-3); G1.ld = u; await pipe([['SET', 'gd:' + my, JSON.stringify(G1)], sys(`👑 ${M1[u].n} เป็นเจ้าสำนักคนใหม่`), ['LTRIM', 'gdc:' + my, 0, 59]]) }
+        else if (r === 'ld') { G1.el = EL1.filter(x => x !== u).concat(pu).slice(-3); G1.ld = u; await pipe([['SET', 'gd:' + my, JSON.stringify(G1)], sys(`👑 ${M1[u].n} เป็น${TT.ld}คนใหม่`), ['LTRIM', 'gdc:' + my, 0, 59]]) }
         else return res.json({ err: 'op' }); return res.json({ ok: 1, g: await full(my) }) }
       if (o === 'ann') { if (lvG < GD_UN.rk) return res.json({ err: 'lv' }); if (G1.ld !== pu && !EL1.includes(pu)) return res.json({ err: 'el' }); G1.ann = clean(b.x, 120); await cmd('SET', 'gd:' + my, JSON.stringify(G1)); return res.json({ ok: 1, g: await full(my) }) }
       if (o === 'path') { if (lvG < GD_UN.tech) return res.json({ err: 'lv' }); if (G1.ld !== pu) return res.json({ err: 'ld' }); const tp = String(b.tp || ''); if (!['sword', 'mind', 'body'].includes(tp)) return res.json({ err: 'op' }); if (G1.tp === tp) return res.json({ ok: 1, g: await full(my) }); if (G1.tp && !(await cmd('SET', 'gdtpcd:' + my, 1, 'NX', 'EX', 86400 * 7))) return res.json({ err: 'tpcd' }); if (!G1.tp) await cmd('SET', 'gdtpcd:' + my, 1, 'EX', 86400 * 7);
-        G1.tp = tp; await pipe([['SET', 'gd:' + my, JSON.stringify(G1)], sys('📖 เจ้าสำนักเลือกสายวิชาลับ: ' + ({ sword: 'สายกระบี่ (พลังโจมตี)', mind: 'สายจิต (สติปัญญา)', body: 'สายกาย (อายุขัย)' })[tp]), ['LTRIM', 'gdc:' + my, 0, 59]]); return res.json({ ok: 1, g: await full(my) }) }
-      if (o === 'pray') { if (lvG < GD_UN.hall) return res.json({ err: 'lv' }); const k = String(b.k || '').slice(0, 40); const H = ((await cmd('ZREVRANGE', 'gdh:' + my, 0, 9)) || []).map(jp).filter(Boolean); const x = H.find(y => (y.lid || y.n) === k); if (!x) return res.json({ err: 'u' }); if (x.u === pu) return res.json({ err: 'self' });
+        G1.tp = tp; await pipe([['SET', 'gd:' + my, JSON.stringify(G1)], sys(`📖 ${TT.ld}เลือกสาย${TT.art}: ` + ({ sword: 'สายพลัง (พลังโจมตี)', mind: 'สายปัญญา (สติปัญญา)', body: 'สายกาย (อายุขัย)' })[tp]), ['LTRIM', 'gdc:' + my, 0, 59]]); return res.json({ ok: 1, g: await full(my) }) }
+      if (o === 'pray') { if (lvG < GD_UN.hall) return res.json({ err: 'lv' }); const k = String(b.k || '').slice(0, 40); const H = ((await cmd('ZREVRANGE', 'gdh:' + my, 0, 9)) || []).map(jp).filter(Boolean).concat(Object.values(gdHv(await cmd('HGETALL', 'gdhw:' + my))).map(jp).filter(Boolean)); const x = H.find(y => (y.lid || y.n) === k); if (!x) return res.json({ err: 'u' }); if (x.u === pu) return res.json({ err: 'self' });
         if (!(await cmd('SET', 'gdpr:' + pu + ':' + d0, 1, 'NX', 'EX', 86400 * 2))) return res.json({ err: 'prd' }); await pipe([['HINCRBY', 'gdhp:' + my, k, 1], ['RPUSH', 'gdbl:' + pu, JSON.stringify({ k: 'lg', n: x.n, t: now })], ['LTRIM', 'gdbl:' + pu, -5, -1], ['EXPIRE', 'gdbl:' + pu, 86400 * 30]]); return res.json({ ok: 1, g: await full(my) }) }
       if (o === 'bless') { if (lvG < GD_UN.bless) return res.json({ err: 'lv' }); const u = String(b.u || '').replace(/[^a-z0-9]/g, '').slice(0, 12); if (!u || u === pu || !M1[u]) return res.json({ err: 'u' });
         if (!(await cmd('SET', 'gdbs:' + pu + ':' + d0, 1, 'NX', 'EX', 86400 * 2))) return res.json({ err: 'bsd' }); await pipe([['RPUSH', 'gdbl:' + u, JSON.stringify({ k: 'mb', n: nm, t: now })], ['LTRIM', 'gdbl:' + u, -5, -1], ['EXPIRE', 'gdbl:' + u, 86400 * 30], sys(`🙏 ${nm} ส่งพรให้ ${M1[u].n}`), ['LTRIM', 'gdc:' + my, 0, 59]]); return res.json({ ok: 1, g: await full(my) }) }
-      if (o === 'icon') { if (lvG < GD_UN.emb) return res.json({ err: 'lv' }); if (G1.ld !== pu) return res.json({ err: 'ld' }); const ic = String(b.ic || ''); if (![...GD_IC0, ...GD_IC10].includes(ic)) return res.json({ err: 'op' }); G1.ic = ic; await cmd('SET', 'gd:' + my, JSON.stringify(G1)); return res.json({ ok: 1, g: await full(my) }) }
+      if (o === 'icon') { if (lvG < GD_UN.emb) return res.json({ err: 'lv' }); if (G1.ld !== pu) return res.json({ err: 'ld' }); const ic = String(b.ic || ''); if (![...GD_IC0, ...GD_ICT, ...GD_IC10].includes(ic)) return res.json({ err: 'op' }); G1.ic = ic; await cmd('SET', 'gd:' + my, JSON.stringify(G1)); return res.json({ ok: 1, g: await full(my) }) }
+      if (o === 'theme') { if (G1.ld !== pu) return res.json({ err: 'ld' }); const th = String(b.th || ''); if (!GD_TH[th]) return res.json({ err: 'op' }); if (G1.th === th) return res.json({ ok: 1, g: await full(my) }); if (G1.th && !(await cmd('SET', 'gdthcd:' + my, 1, 'NX', 'EX', 86400 * 7))) return res.json({ err: 'thcd' }); G1.th = th; await pipe([['SET', 'gd:' + my, JSON.stringify(G1)], sys(`🎨 เปลี่ยนแนวเป็น${GD_TH[th].g}`), ['LTRIM', 'gdc:' + my, 0, 59]]); return res.json({ ok: 1, g: await full(my) }) }
       return res.json({ err: 'op' });
     }
     // 📜 พงศาวดารทั้งเว็บ (สัปดาห์นี้ + สัปดาห์ที่แล้ว ซึ่งกำหนดยุคของสัปดาห์นี้)
