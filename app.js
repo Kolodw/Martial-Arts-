@@ -45662,3 +45662,49 @@ try{window.spList=function(){toast('👁 ระบบดูคนอื่นเ
 try{delete ONL_NAV.live}catch(e){}
 const st=document.createElement('style');st.textContent=`#watchBadge{display:none!important}#modal [onclick*="openLiveList"],#modal [onclick*="openSpectate"],#modal [onclick*="spList"],#modal [onclick*="openSpecSet"],#modal [data-t="live"],#modal [onclick*="'live'"]{display:none!important}`;document.head.appendChild(st);
 })()}catch(e){console.error('block150',e)}
+
+// ============================================================
+// BLOCK 152: 🕳️ ทางเข้า "สากลภพ" (เบต้า) — การ์ดภาพพิกเซลใต้แถวความท้าทายในหน้าเลือกโลก · ตัวเกมอยู่ที่ /w/ua.js
+// ============================================================
+try{(()=>{
+// ภาพพิกเซล 96×64 · 2 เฟรม: สองจักรวาลปะทะกันเหนือลานประลอง จักรวาลขวาแตกเป็นเศษพิกเซล
+window.uaArt=function(cv,f){try{const W=96,H=64,x=cv.getContext('2d');cv.width=W;cv.height=H;x.imageSmoothingEnabled=false;const P=(a,b,c)=>{x.fillStyle=c;x.fillRect(a,b,1,1)};const R=(a,b,w,h,c)=>{x.fillStyle=c;x.fillRect(a,b,w,h)};
+ const bg=['#07041a','#0b0624','#10082e','#160b3a','#1c0e44','#22104c'];for(let y=0;y<H;y++){const i=Math.min(5,Math.floor(y/9));for(let a=0;a<W;a++){const d=(y%9===8&&(a+y)%2===0)?Math.min(5,i+1):i;P(a,y,bg[d])}}
+ let s=7;const rn=()=>(s=(s*16807)%2147483647)/2147483647;for(let i=0;i<46;i++){const a=Math.floor(rn()*W),b=Math.floor(rn()*40),t=rn();if((t>.5)===(f%2===0)||t>.85)P(a,b,t>.9?'#ffffff':t>.6?'#c9b4ff':'#6a5aa0')}
+ // เนบิวลา
+ for(let i=0;i<70;i++){const a=Math.floor(rn()*W),b=Math.floor(6+rn()*26);if((a+b)%2)P(a,b,'#2a1458')}
+ // ลานประลอง
+ const cx=48,cy=50;for(let y=40;y<64;y++)for(let a=0;a<W;a++){const e=((a-cx)/38)**2+((y-cy)/9)**2;if(e<=1){P(a,y,e>.82?(y<cy?'#ffd86a':'#c98d22'):e>.7?'#7a5512':((a+y)%2?'#2a1850':'#231445'))}}
+ for(let a=14;a<83;a+=6){const e=((a-cx)/38)**2;const yy=Math.round(cy+9*Math.sqrt(Math.max(0,1-e)));R(a,yy,2,Math.max(0,64-yy),'#3a2208')}
+ // จักรวาล
+ const orb=(ox,oy,r,c1,c2,c3,hl,broken)=>{for(let y=-r;y<=r;y++)for(let a=-r;a<=r;a++){const d=Math.sqrt(a*a+y*y);if(d>r+.3)continue;if(broken&&a<-r*.25&&((a*7+y*13+f*5)%5===0))continue;let c=c2;if(d>r-1.2)c=c3;else if(a+y<-r*.6)c=c1;else if(((a*3+y*5)%11===0)&&d<r-2)c=hl;P(ox+a,oy+y,c)}};
+ const lb=f%2?1:0;orb(26,25+lb,11,'#8aa8ff','#3a5ad0','#18245a','#9affc8',false);orb(70,25-lb,11,'#ffb070','#c8501a','#5a1c08','#ffe08a',true);
+ // วงโคจร
+ for(let t=0;t<60;t++){const q=t/60*Math.PI*2+(f?0.05:0);const a=Math.round(26+15*Math.cos(q)),b=Math.round(25+lb+4*Math.sin(q));if(t%3===0)P(a,b,'#c9b4ff')}
+ // สายฟ้าตรงกลาง
+ const zz=f%2?[[44,14],[47,19],[45,23],[49,27],[46,32],[50,36]]:[[46,13],[44,18],[48,22],[45,27],[49,31],[47,36]];for(let i=0;i<zz.length-1;i++){const [a1,b1]=zz[i],[a2,b2]=zz[i+1];const n=Math.max(Math.abs(a2-a1),Math.abs(b2-b1));for(let k=0;k<=n;k++){const a=Math.round(a1+(a2-a1)*k/n),b=Math.round(b1+(b2-b1)*k/n);P(a,b,'#ffffff');P(a+1,b,'#ffd86a')}}
+ R(45,22,6,4,'#fff4c0');P(44,23,'#ffd86a');P(51,24,'#ffd86a');
+ // เศษพิกเซลแตกจากจักรวาลขวา
+ for(let i=0;i<14;i++){const a=58-((i*5+f*3)%14),b=16+((i*7+f*4)%22);P(a,b,i%3?'#ff8a3d':'#ffe08a');if(i%4===0)P(a-1,b+1,'#c8501a')}
+ // ผู้ประกาศ (ลูกตาเหนือฟ้า)
+ R(44,3,8,4,'#e8dcc0');R(46,4,4,2,'#22104c');P(47,4,f%2?'#ff3a3a':'#ffd86a');P(43,4,'#c9b4ff');P(52,4,'#c9b4ff');
+ // นักรบสองฝั่งบนลาน
+ const man=(a,b,c,d)=>{R(a,b,3,3,'#f0c8a0');R(a-1,b+3,5,5,c);R(a,b+8,1,3,d);R(a+2,b+8,1,3,d)};man(34,42,'#3a5ad0','#18245a');man(60,42,'#c8501a','#5a1c08');
+}catch(e){}};
+const css=document.createElement('style');css.textContent=`
+#uaEnt{position:relative;margin:12px 0 2px;border-radius:18px;overflow:hidden;cursor:pointer;min-height:168px;border:2px solid #b49aff;box-shadow:0 0 0 1px #0008,0 6px 22px #5a2ab866;display:flex;flex-direction:column;justify-content:flex-end;padding:12px 13px;color:#fff;-webkit-tap-highlight-color:transparent}
+#uaEnt canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated;z-index:0}
+#uaEnt:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0000 35%,#0007 62%,#000d);z-index:0}
+#uaEnt>*:not(canvas){position:relative;z-index:1}
+#uaEnt .uaT{display:flex;align-items:center;gap:7px}#uaEnt b{font-size:18px;text-shadow:0 2px 4px #000}
+#uaEnt .bt{font-size:10px;font-weight:900;letter-spacing:.6px;padding:2px 7px;border-radius:999px;background:linear-gradient(180deg,#ff6a8a,#c8204a);box-shadow:0 0 10px #ff3a6a88}
+#uaEnt small{display:block;font-size:11.5px;opacity:.9;margin-top:2px;text-shadow:0 1px 3px #000}
+#uaEnt .go{margin-top:9px;align-self:stretch;border:0;border-radius:12px;padding:10px;font:inherit;font-weight:900;font-size:14.5px;color:#1a0a30;background:linear-gradient(180deg,#e8dcff,#b49aff 55%,#7a5ad0);box-shadow:0 3px 0 #3a2470;cursor:pointer}
+#uaEnt:active{transform:scale(.985)}`;document.head.appendChild(css);
+window.uaGo=function(){try{wNeed('ua',()=>uaOpen())}catch(e){console.error(e);toast('เปิดสากลภพไม่สำเร็จ ลองใหม่อีกครั้ง')}};
+let fr=0;
+function mount(){try{const P=document.getElementById('wPick');if(!P)return;let e=document.getElementById('uaEnt');const anchor=P.querySelector('.wpNote')||P.querySelector('.wpC');if(!anchor)return;
+ if(!e){e=document.createElement('div');e.id='uaEnt';e.onclick=uaGo;e.innerHTML=`<canvas width="96" height="64"></canvas><div class="uaT"><b>🕳️ สากลภพ</b><span class="bt">BETA</span></div><small>ทัวร์นาเมนต์ข้ามโลก · ส่งตัวละครจากโลกไหนก็ได้ไปปะทะ · แพ้ = จักรวาลถูกลบ</small><button class="go" type="button">⚔️ เข้าสากลภพ · ดูวิธีเล่น</button>`;anchor.insertAdjacentElement('afterend',e);uaArt(e.querySelector('canvas'),0)}
+ else if(e.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',e)}catch(x){}}
+setInterval(()=>{mount();const c=document.querySelector('#uaEnt canvas');if(c&&c.offsetParent&&!document.body.classList.contains('mRM')){fr^=1;uaArt(c,fr)}},700);
+})()}catch(e){console.error('block152',e)}
