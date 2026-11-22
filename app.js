@@ -46894,7 +46894,7 @@ const st=document.createElement('style');st.textContent=`
 .kTag i{font-style:normal;color:#ff9ac0}
 .kSvg .kFlame{transform-origin:60px 31px;animation:kFl .5s ease-in-out infinite alternate}.kSvg .kFlameG{animation:kFlG 1s ease-in-out infinite alternate}@keyframes kFl{to{transform:scale(.85,1.12) skewX(4deg)}}@keyframes kFlG{to{opacity:.6}}
 .kSvg .kGlow{animation:kFlG 1.6s ease-in-out infinite alternate}.kSvg .kGhost{animation:kBob 2s ease-in-out infinite}.kSvg .kRing{transform-origin:60px 62px;animation:kRot 6s linear infinite}@keyframes kRot{to{transform:rotate(360deg)}}
-.kSvg .kEmber{animation:kTw 1s ease-in-out infinite}
+.kSvg .kEmber{animation:kTw 1s ease-in-out infinite}.kSvL{position:relative;display:block}.kSvL>.kLy{position:absolute;max-width:none;pointer-events:none;user-select:none;-webkit-user-drag:none}.kSvL>.kLfl{transform-origin:50% 34.2%;animation:kFl .5s ease-in-out infinite alternate}.kSvL>.kLfg{animation:kFlG 1s ease-in-out infinite alternate}.kSvL>.kLgl{animation:kFlG 1.6s ease-in-out infinite alternate}.kSvL>.kLgh{transform-origin:7.1% 8.3%;animation:kBob 2s ease-in-out infinite}.kSvL>.kLrg{transform-origin:50% 60%;animation:kRot 6s linear infinite}.kSvL>.kLem{animation:kTw 1s ease-in-out infinite}.kBoat .kIn{will-change:transform}.kSelB .kIn,.kSelB .kIn:not(#_){filter:none;animation:kBob 3.2s ease-in-out infinite}.kSelB .kIn::before{content:"";position:absolute;left:-35%;right:-35%;top:-45%;bottom:-25%;background:radial-gradient(closest-side,#ffe08acc,#ffb84a66 45%,#ffb84a00);animation:kFlG .8s ease-in-out infinite alternate;pointer-events:none}
 .kRefl{position:absolute;opacity:.25;transform:scaleY(-1);filter:blur(1.5px)}
 .kCard{position:absolute;z-index:40;animation:kCardIn .28s cubic-bezier(.2,.9,.3,1.2) both;left:12px;right:12px;bottom:12px;padding:12px;border-radius:16px;background:linear-gradient(160deg,#1c2350f2,#0f1430f2);border:1.5px solid #ffd36e99;box-shadow:0 10px 30px #000a;color:#f0f0ff;display:flex;gap:12px;align-items:center}
 .kCard .kW{font-size:13px;color:#ffe9b0;margin:4px 0;font-style:italic}.kCard small{color:#b8c8f0}.kCard .kB{display:flex;gap:6px;margin-top:8px}.kCard .kB button{flex:1;border-radius:10px;border:1.5px solid #ffd36e;background:#2a2410;color:#ffe08a;font:inherit;font-weight:800;padding:7px}
@@ -46935,7 +46935,7 @@ const st=document.createElement('style');st.textContent=`
 .kProg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.kProg div{border-radius:12px;padding:10px;background:#141c40;border:1.5px solid #2a3a7a;color:#e8ecff;font-size:12px;text-align:center}.kProg div.got{border-color:#ffd36e;background:linear-gradient(160deg,#3a2c0a,#141c40)}
 .kProg .bar{height:6px;border-radius:9px;background:#ffffff18;overflow:hidden;margin-top:5px}.kProg .bar i{display:block;height:100%;background:linear-gradient(90deg,#ffd36e,#ff9ac0)}
 .kEnt{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 8px;padding:10px 12px;border-radius:14px;border:2px solid #ffd36e;background:linear-gradient(135deg,#0c1640,#1c2a5a 60%,#3a2c0a);color:#fff3cf;font:inherit;font-weight:800;cursor:pointer;box-shadow:0 0 14px #ffd36e55}.kEnt small{display:block;font-weight:600;color:#cfe0ff;font-size:11.5px}
-@media (prefers-reduced-motion:reduce){.kBoat,.kBoat .kIn,.kRef,.kRef::before,.kRef::after,.kLan,.kWave,.k2v *,.k2t,.k2t *{animation:none!important}}`;document.head.appendChild(st);
+@media (prefers-reduced-motion:reduce){.kSvL>*,.kSelB .kIn::before,.kBoat,.kBoat .kIn,.kRef,.kRef::before,.kRef::after,.kLan,.kWave,.k2v *,.k2t,.k2t *{animation:none!important}}`;document.head.appendChild(st);
 // ---------- ข้อมูล ----------
 const K={j:null,t:0,sel:null,tab:'river',lifeI:0,style:null,wish:''};
 const graves=()=>{try{return (LS.get('murim_graves',[])||[]).filter(g=>g&&g.n).slice(0,40)}catch(e){return[]}};
@@ -46948,7 +46948,7 @@ function sync(j){try{const m=j.mine;if(!m)return;const d=frGet();let ch=0;(m.fr|
 // ---------- หน้าจอ ----------
 const wid=w=>W[w]?w:'w0';
 // ---------- 🌊 ฉากสายน้ำแบบพิกเซลเคลื่อนไหว (แคนวาสเดียว ความละเอียดครึ่ง → ภาพพิกเซล · หยุดเมื่อซ่อนแท็บ/ปิดหน้าต่าง · เครื่องอ่อนลดของเอง) ----------
-const KS={raf:0,t0:performance.now(),lite:(()=>{try{return(navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=3||matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){return false}})(),seed:null,fx:[]};
+const KS={raf:0,t0:performance.now(),lite:false,seed:null,bg:null,cv:null,n:0,pt:0,fx:[]};
 const KH=480,HZ=118; // ความสูงฉาก (px จอ) · เส้นขอบฟ้า (พิกเซลฉาก = จอ/2)
 function ksSeed(w){const r=(a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296})(2569);
  const S={w,stars:[],lan:[],ff:[],mist:[],smoke:[],shoot:null,nextShoot:3};
@@ -46958,92 +46958,125 @@ function ksSeed(w){const r=(a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>
  for(let i=0;i<(KS.lite?7:16);i++)S.ff.push({x:r()*w*.45,y:HZ-24+r()*20,ph:r()*6.28,sp:.4+r()*.8,bl:r()*6.28});
  for(let i=0;i<4;i++)S.mist.push({x:r()*w,y:HZ-4+r()*10,rw:40+r()*50,v:2+r()*3});
  return S}
-// บ้านทรงไทยริมน้ำ + ท่าน้ำ + กอบัว + ต้นไม้ วาดด้วยสี่เหลี่ยมพิกเซล
-function ksHouse(g,t,x0){const P=(x,y,w,h,c)=>{g.fillStyle=c;g.fillRect(x0+x|0,y|0,w,h)};const b=HZ;
- // เสาใต้ถุน
+// บ้านทรงไทยริมน้ำ + ท่าน้ำ + ต้นไม้ (ส่วนนิ่ง วาดครั้งเดียวเก็บไว้)
+function ksHouseS(g,x0){const P=(x,y,w,h,c)=>{g.fillStyle=c;g.fillRect(x0+x|0,y|0,w,h)};const b=HZ;
  for(const x of[4,14,24,34,44])P(x,b-14,2,14,'#0a0c1c');
- // พื้นเรือน
  P(0,b-16,50,3,'#141a34');
- // ฝาเรือน
  P(3,b-33,44,17,'#161d3c');P(3,b-33,44,1,'#1f2a52');
- // หน้าต่าง/ประตู ไฟเทียนกะพริบ
- const fl=k=>{const v=.72+.18*Math.sin(t*7.3+k*2.1)+.1*Math.sin(t*13.1+k);return`rgba(255,${180+40*v|0},${80+40*v|0},${.55+.4*v})`};
- P(8,b-29,6,8,fl(1));P(36,b-29,6,8,fl(2));P(22,b-30,6,14,fl(3));
- P(8,b-25,6,1,'#161d3c');P(36,b-25,6,1,'#161d3c');P(11,b-29,1,8,'#161d3c');P(39,b-29,1,8,'#161d3c');
- // หลังคาทรงสูงซ้อนสองชั้น
  for(let i=0;i<20;i++){P(1+i*.6,b-34-i,48-i*1.2,1,i<3?'#1d2650':'#121836')}
- for(let i=0;i<8;i++)P(-3+i,b-34+ -i*0+0,1,1,'#121836');
+ for(let i=0;i<8;i++)P(-3+i,b-34,1,1,'#121836');
  P(-4,b-35,4,1,'#1d2650');P(50,b-35,4,1,'#1d2650');
- // ช่อฟ้า ปลายจั่วงอน
  P(24,b-56,2,3,'#2a3566');P(26,b-58,1,2,'#2a3566');P(-5,b-37,1,2,'#2a3566');P(53,b-37,1,2,'#2a3566');
- // ป้านลมสะท้อนแสงจันทร์
  for(let i=0;i<20;i++){P(25+i*.6|0,b-54+i,1,1,'#34427a')}
- // ท่าน้ำไม้
  P(46,b-14,30,2,'#2a2018');for(const x of[50,60,70])P(x,b-12,2,16,'#1a140f');
- // เสาโคมแขวนโยก
- P(74,b-30,1,18,'#1a140f');P(74,b-30,6,1,'#1a140f');const sw=Math.sin(t*1.6)*1.4;
- g.save();g.globalCompositeOperation='lighter';const lx=x0+79+sw,ly=b-25;const gr=g.createRadialGradient(lx,ly,0,lx,ly,14);gr.addColorStop(0,'rgba(255,190,90,.55)');gr.addColorStop(1,'rgba(255,140,40,0)');g.fillStyle=gr;g.fillRect(lx-14,ly-14,28,28);g.restore();
- P(79+sw,b-29,1,2,'#3a2a1a');P(78+sw,b-27,3,4,'#ff9a3a');P(78+sw,b-27,3,1,'#ffd27a');
- // เถาไม้เลื้อย/กระถาง
+ P(74,b-30,1,18,'#1a140f');P(74,b-30,6,1,'#1a140f');
  P(-2,b-17,3,3,'#16301e');P(47,b-17,3,3,'#16301e')}
+// ไฟเทียนในหน้าต่าง (k=ค่าแสง 0..1)
+function ksWin(g,x0,v1,v2,v3){const b=HZ,P=(x,y,w,h,c)=>{g.fillStyle=c;g.fillRect(x0+x|0,y|0,w,h)};const c=v=>`rgba(255,${180+40*v|0},${80+40*v|0},${.55+.4*v})`;
+ P(8,b-29,6,8,c(v1));P(36,b-29,6,8,c(v2));P(22,b-30,6,14,c(v3));
+ P(8,b-25,6,1,'#161d3c');P(36,b-25,6,1,'#161d3c');P(11,b-29,1,8,'#161d3c');P(39,b-29,1,8,'#161d3c')}
 function ksTrees(g,w){const b=HZ,P=(x,y,ww,h,c)=>{g.fillStyle=c;g.fillRect(x|0,y|0,ww,h)};
- // ทิวเขาไกลสองชั้น
  g.fillStyle='#0f1838';g.beginPath();g.moveTo(0,b);for(let x=0;x<=w;x+=6)g.lineTo(x,b-10-6*Math.sin(x*.035)-4*Math.sin(x*.11+1));g.lineTo(w,b);g.fill();
  g.fillStyle='#0b1230';g.beginPath();g.moveTo(0,b);for(let x=0;x<=w;x+=4)g.lineTo(x,b-4-4*Math.sin(x*.05+2)-2*Math.sin(x*.17));g.lineTo(w,b);g.fill();
- // ต้นมะพร้าวฝั่งขวา
  const palm=(x,h)=>{for(let i=0;i<h;i++)P(x+Math.sin(i*.12)*2,b-i,2,1,'#080d20');const tx=x+Math.sin(h*.12)*2,ty=b-h;for(let a=0;a<7;a++){const an=-2.6+a*.75;for(let k=1;k<10;k++)P(tx+Math.cos(an)*k,ty+Math.sin(an)*k*.6+k*k*.04,1,1,'#080d20')}};
  palm(w-34,34);palm(w-20,26);palm(w*.62,22);
- // พุ่มไม้ฝั่ง
  for(let x=0;x<w;x+=3){const h=2+((x*7)%5);P(x,b-h,3,h,'#070b1c')}}
 function ksLotus(g,t,x,y,s){const P=(a,b,w,h,c)=>{g.fillStyle=c;g.fillRect(a|0,b|0,w,h)};const bob=Math.sin(t*1.3+x)*.6;
  P(x-4*s,y+bob,8*s,2,'#1f5a34');P(x-3*s,y-1+bob,6*s,1,'#2f7a48');P(x+6*s,y+1+bob,5*s,1,'#1f5a34');
  P(x,y-5+bob,2,4,'#2a6a3a');P(x-1,y-8+bob,4,3,'#ff8ab8');P(x,y-9+bob,2,1,'#ffd0e4');P(x-2,y-7+bob,1,2,'#e8609a');P(x+3,y-7+bob,1,2,'#e8609a')}
-function ksFrame(cv,now){const g=cv.getContext('2d');const w=cv.width,h=cv.height,t=(now-KS.t0)/1000;
- if(!KS.seed||KS.seed.w!==w)KS.seed=ksSeed(w);const S=KS.seed;g.imageSmoothingEnabled=false;
- // ฟ้าไล่สีแบบเป็นแถบพิกเซล
+// ภาพเตรียมล่วงหน้า: แสงเรือง (วาดครั้งเดียว ใช้ซ้ำทุกเฟรม แทนการสร้างไล่สีใหม่ทุกเฟรม)
+function ksOff(w,h){const c=document.createElement('canvas');c.width=Math.max(1,w);c.height=Math.max(1,h);return c}
+function ksGlow(r,rgb,a0){const c=ksOff(r*2,r*2),g=c.getContext('2d'),gr=g.createRadialGradient(r,r,0,r,r,r);gr.addColorStop(0,`rgba(${rgb},${a0})`);gr.addColorStop(1,`rgba(${rgb},0)`);g.fillStyle=gr;g.fillRect(0,0,r*2,r*2);return c}
+const KG={};function ksG(){if(!KG.lan){KG.lan=ksGlow(24,'255,170,80',1);KG.lamp=ksGlow(14,'255,175,75',.55);KG.mist=ksGlow(48,'170,190,240',.10);KG.ff=ksGlow(4,'200,255,120',.5)}return KG}
+// ฉากนิ่งทั้งหมด (ฟ้า พระจันทร์ เขา ต้นไม้ บ้าน พื้นน้ำ) + เงาสะท้อน → สร้างครั้งเดียวต่อความกว้าง
+const MX=w=>w-34,MY=30,MR=13;
+function ksBuild(w,h){const st=ksOff(w,h),g=st.getContext('2d');g.imageSmoothingEnabled=false;
  const SKY=['#03061a','#050a22','#07102c','#0a1638','#0d1c44','#11234f','#152a5a','#1a3264'];
  for(let i=0;i<8;i++){g.fillStyle=SKY[i];g.fillRect(0,i*HZ/8|0,w,Math.ceil(HZ/8)+1)}
- // ดาวกะพริบ
- for(const s of S.stars){const a=.35+.65*Math.max(0,Math.sin(t*s.sp+s.p));g.fillStyle=`rgba(255,255,${220+s.s*15},${a})`;g.fillRect(s.x|0,s.y|0,1,1);if(s.s>1&&a>.8){g.fillStyle=`rgba(255,255,255,${(a-.8)*2.5})`;g.fillRect((s.x|0)-1,s.y|0,3,1);g.fillRect(s.x|0,(s.y|0)-1,1,3)}}
- // ดาวตก
- if(!S.shoot&&t>S.nextShoot){S.shoot={x:w*(.2+Math.random()*.6),y:4+Math.random()*30,t:t,vx:-(70+Math.random()*50),vy:28+Math.random()*16}}
- if(S.shoot){const d=t-S.shoot.t,L=.7;if(d>L){S.shoot=null;S.nextShoot=t+5+Math.random()*9}else{const k=Math.sin(d/L*Math.PI);for(let i=0;i<14;i++){const q=i/14;g.fillStyle=`rgba(255,250,220,${k*(1-q)})`;g.fillRect(S.shoot.x+S.shoot.vx*(d-q*.12)|0,S.shoot.y+S.shoot.vy*(d-q*.12)|0,1,1)}}}
- // พระจันทร์ + รัศมี
- const mx=w-34,my=30,mr=13;g.save();g.globalCompositeOperation='lighter';let gr=g.createRadialGradient(mx,my,mr*.6,mx,my,mr*4.2);gr.addColorStop(0,'rgba(255,236,170,.32)');gr.addColorStop(1,'rgba(255,236,170,0)');g.fillStyle=gr;g.fillRect(mx-mr*4.2,my-mr*4.2,mr*8.4,mr*8.4);g.restore();
+ const mx=MX(w),my=MY,mr=MR;g.save();g.globalCompositeOperation='lighter';const gr=g.createRadialGradient(mx,my,mr*.6,mx,my,mr*4.2);gr.addColorStop(0,'rgba(255,236,170,.32)');gr.addColorStop(1,'rgba(255,236,170,0)');g.fillStyle=gr;g.fillRect(mx-mr*4.2,my-mr*4.2,mr*8.4,mr*8.4);g.restore();
+ const sky=g.getImageData(0,0,w,HZ).data; // จำสีฟ้าไว้ เพื่อรู้ว่าดาวดวงไหนถูกบ้าน/ต้นไม้บัง
  for(let y=-mr;y<=mr;y++){const hw=Math.round(Math.sqrt(mr*mr-y*y));g.fillStyle=y<-mr*.4?'#fffbe6':y<mr*.4?'#fff1c0':'#f2d890';g.fillRect(mx-hw,my+y,hw*2,1)}
  g.fillStyle='rgba(214,186,120,.55)';g.fillRect(mx-5,my-3,3,3);g.fillRect(mx+3,my+2,4,3);g.fillRect(mx-1,my+6,2,2);g.fillRect(mx+5,my-7,2,2);
- // ทิวไม้ บ้าน กอบัว
- ksTrees(g,w);ksHouse(g,t,8);
- // ควันจากครัวลอยช้า
- if(!KS.lite||Math.random()<.5){if(S.smoke.length<14&&Math.random()<.18)S.smoke.push({x:16+Math.random()*2,y:HZ-56,a:t,dr:Math.random()*.6})}
- S.smoke=S.smoke.filter(p=>{const d=t-p.a;if(d>6)return false;const a=.22*(1-d/6);g.fillStyle=`rgba(170,182,214,${a})`;const r=1+d*.9|0;g.fillRect(p.x+d*(3+p.dr*4)+Math.sin(d*1.7)*2|0,p.y-d*6|0,r,r);return true});
- // โคมลอยหลายสี ไกล-ใกล้
- for(const L of S.lan){L.y-=L.v*(1/60)*(KS.lite?2:1);if(L.y<-12){L.y=HZ-6;L.x=Math.random()*w}const x=L.x+Math.sin(t*.6+L.ph)*4*L.z,y=L.y,s=Math.max(1,Math.round(2*L.z));
-  const f=.8+.2*Math.sin(t*9+L.ph);g.save();g.globalCompositeOperation='lighter';const r=6*L.z+3;const lg=g.createRadialGradient(x,y,0,x,y,r);lg.addColorStop(0,`rgba(255,180,90,${.35*f})`);lg.addColorStop(1,'rgba(255,140,60,0)');g.fillStyle=lg;g.fillRect(x-r,y-r,r*2,r*2);g.restore();
+ ksTrees(g,w);ksHouseS(g,8);
+ const fin=g.getImageData(0,0,w,HZ).data;
+ const wh=h-HZ,deep=['#0a1a44','#09173e','#081438','#071232','#06102c','#050e28'];for(let i=0;i<6;i++){g.fillStyle=deep[i];g.fillRect(0,HZ+i*wh/6|0,w,Math.ceil(wh/6)+1)}
+ // เงาสะท้อน: กลับหัว จางลงตามระยะ (ใส่แสงหน้าต่างค่ากลางไว้ด้วย)
+ const refH=Math.min(70,wh),src=ksOff(w,HZ),sg=src.getContext('2d');sg.drawImage(st,0,0,w,HZ,0,0,w,HZ);ksWin(sg,8,.72,.72,.72);
+ const rf=ksOff(w,refH),rg=rf.getContext('2d');rg.imageSmoothingEnabled=false;for(let r=0;r<refH;r++){rg.globalAlpha=.26*(1-r/refH);rg.drawImage(src,0,HZ-1-r*.8|0,w,1,0,r,w,1)}
+ return{w,h,st,rf,refH,sky,fin}}
+function ksFrame(cv,now){const g=cv.getContext('2d');const w=cv.width,h=cv.height,t=(now-KS.t0)/1000,G=ksG();
+ if(!KS.seed||KS.seed.w!==w)KS.seed=ksSeed(w);const S=KS.seed;
+ if(!KS.bg||KS.bg.w!==w||KS.bg.h!==h){KS.bg=ksBuild(w,h);const B=KS.bg;S.stars=S.stars.filter(s=>{const i=((s.y|0)*w+(s.x|0))*4;return Math.abs(B.sky[i]-B.fin[i])+Math.abs(B.sky[i+1]-B.fin[i+1])+Math.abs(B.sky[i+2]-B.fin[i+2])<6})}
+ const B=KS.bg;g.imageSmoothingEnabled=false;g.globalAlpha=1;g.globalCompositeOperation='source-over';
+ g.drawImage(B.st,0,0);
+ // ดาวกะพริบ (เฉพาะดวงที่ไม่ถูกบัง)
+ g.fillStyle='#ffffeb';for(const s of S.stars){const a=.35+.65*Math.max(0,Math.sin(t*s.sp+s.p));g.globalAlpha=a;g.fillRect(s.x|0,s.y|0,1,1);if(s.s>1&&a>.8){g.globalAlpha=(a-.8)*2.5;g.fillRect((s.x|0)-1,s.y|0,3,1);g.fillRect(s.x|0,(s.y|0)-1,1,3)}}
+ g.globalAlpha=1;
+ // ดาวตก
+ if(!S.shoot&&t>S.nextShoot){S.shoot={x:w*(.2+Math.random()*.6),y:4+Math.random()*30,t:t,vx:-(70+Math.random()*50),vy:28+Math.random()*16}}
+ if(S.shoot){const d=t-S.shoot.t,L=.7;if(d>L){S.shoot=null;S.nextShoot=t+5+Math.random()*9}else{const k=Math.sin(d/L*Math.PI);g.fillStyle='#fffadc';for(let i=0;i<14;i++){const q=i/14;g.globalAlpha=k*(1-q);g.fillRect(S.shoot.x+S.shoot.vx*(d-q*.12)|0,S.shoot.y+S.shoot.vy*(d-q*.12)|0,1,1)}g.globalAlpha=1}}
+ // ไฟเทียนในบ้าน + โคมท่าน้ำแกว่ง
+ const fv=k=>.72+.18*Math.sin(t*7.3+k*2.1)+.1*Math.sin(t*13.1+k);ksWin(g,8,fv(1),fv(2),fv(3));
+ const sw=Math.sin(t*1.6)*1.4,lx=8+79+sw,ly=HZ-25;g.globalCompositeOperation='lighter';g.drawImage(G.lamp,lx-14,ly-14);g.globalCompositeOperation='source-over';
+ g.fillStyle='#3a2a1a';g.fillRect(8+79+sw|0,HZ-29,1,2);g.fillStyle='#ff9a3a';g.fillRect(8+78+sw|0,HZ-27,3,4);g.fillStyle='#ffd27a';g.fillRect(8+78+sw|0,HZ-27,3,1);
+ // ควันจากครัว
+ if(S.smoke.length<14&&Math.random()<.18)S.smoke.push({x:16+Math.random()*2,y:HZ-56,a:t,dr:Math.random()*.6});
+ g.fillStyle='#aab6d6';S.smoke=S.smoke.filter(p=>{const d=t-p.a;if(d>6)return false;g.globalAlpha=.22*(1-d/6);const r=1+d*.9|0;g.fillRect(p.x+d*(3+p.dr*4)+Math.sin(d*1.7)*2|0,p.y-d*6|0,r,r);return true});g.globalAlpha=1;
+ // โคมลอยหลายสี ไกล-ใกล้ (คำนวณตำแหน่งตามเวลาจริง ไม่ขึ้นกับเฟรมเรต)
+ const dt=Math.min(.1,KS.pt?t-KS.pt:0);KS.pt=t;const LP=[];
+ for(const L of S.lan){L.y-=L.v*dt;if(L.y<-12){L.y=HZ-6;L.x=Math.random()*w}const x=L.x+Math.sin(t*.6+L.ph)*4*L.z,y=L.y,s=Math.max(1,Math.round(2*L.z)),f=.8+.2*Math.sin(t*9+L.ph),r=6*L.z+3;LP.push([x,y,r,f]);
+  g.globalCompositeOperation='lighter';g.globalAlpha=.35*f;g.drawImage(G.lan,x-r,y-r,r*2,r*2);g.globalAlpha=1;g.globalCompositeOperation='source-over';
   g.fillStyle=L.c[1];g.fillRect(x-s|0,y-s|0,s*2,s*2+1);g.fillStyle=L.c[0];g.fillRect(x-s+1|0,y|0,Math.max(1,s*2-2),s);g.fillStyle='#fff6d0';g.fillRect(x|0,y+s|0,1,1)}
- // ===== น้ำ: เงาสะท้อนบ้าน/ฟ้า แบบระลอก =====
- const wh=h-HZ;const deep=['#0a1a44','#09173e','#081438','#071232','#06102c','#050e28'];for(let i=0;i<6;i++){g.fillStyle=deep[i];g.fillRect(0,HZ+i*wh/6|0,w,Math.ceil(wh/6)+1)}
- const refH=Math.min(70,wh);g.save();for(let r=0;r<refH;r+=1){const sy=HZ-1-r*.8,off=Math.sin(r*.35-t*1.6)*(.6+r*.05)+Math.sin(r*.9+t*2.3)*.5;g.globalAlpha=.26*(1-r/refH);g.drawImage(cv,0,sy|0,w,1,Math.round(off),HZ+r,w,1)}g.restore();
- // แสงจันทร์ระยิบบนน้ำ แตกเป็นเส้นตามคลื่น
- g.save();g.globalCompositeOperation='lighter';for(let r=2;r<wh;r+=2){const z=r/wh,spread=4+z*26,n=2+(z*5|0);for(let k=0;k<n;k++){const ph=Math.sin(r*1.7+k*3.1+t*(1.4+k*.3));if(ph<.15)continue;const x=mx+Math.sin(r*.9+k*2+t*1.1)*spread,len=1+(ph*4*(1-z*.4)|0);g.fillStyle=`rgba(255,232,160,${.55*ph*(1-z*.55)})`;g.fillRect(x|0,HZ+r,len,1)}}g.restore();
- // คลื่นหลายชั้น วิ่งคนละความเร็ว/ทิศ (ไกลเล็ก ใกล้ใหญ่)
- const rows=KS.lite?10:18;for(let i=0;i<rows;i++){const z=(i+1)/rows,y=HZ+3+Math.pow(z,1.35)*(wh-6)|0,gap=10+z*26,len=2+z*9|0,sp=(i%2?-1:1)*(4+z*10),a=.08+z*.2;g.fillStyle=`rgba(140,190,255,${a})`;const o=((t*sp)%gap+gap)%gap;for(let x=-gap+o+(i*7%gap);x<w;x+=gap){const yy=y+Math.round(Math.sin(x*.08+t*1.5+i)*.6);g.fillRect(x|0,yy,len,1);g.fillStyle=`rgba(200,230,255,${a*.6})`;g.fillRect(x+1|0,yy-1,Math.max(1,len-3),1);g.fillStyle=`rgba(140,190,255,${a})`}}
+ // ===== น้ำ: เงาสะท้อนเป็นระลอก =====
+ const wh=h-HZ,refH=B.refH;for(let r=0;r<refH;r++){const off=Math.sin(r*.35-t*1.6)*(.6+r*.05)+Math.sin(r*.9+t*2.3)*.5;g.drawImage(B.rf,0,r,w,1,Math.round(off),HZ+r,w,1)}
+ // เงาโคมลอยบนน้ำ
+ g.globalCompositeOperation='lighter';for(const[x,y,r,f]of LP){const ry=(HZ-y)/.8;if(ry>=refH||ry<0)continue;const a=.26*(1-ry/refH)*.9*f;g.globalAlpha=a;const ox=Math.sin(ry*.35-t*1.6)*(.6+ry*.05);g.drawImage(G.lan,x+ox-r,HZ+ry-r*.6,r*2,r*1.2)}
+ // แสงจันทร์ระยิบบนน้ำ
+ const mx=MX(w);g.fillStyle='#ffe8a0';for(let r=2;r<wh;r+=2){const z=r/wh,spread=4+z*26,n=2+(z*5|0);for(let k=0;k<n;k++){const ph=Math.sin(r*1.7+k*3.1+t*(1.4+k*.3));if(ph<.15)continue;const x=mx+Math.sin(r*.9+k*2+t*1.1)*spread,len=1+(ph*4*(1-z*.4)|0);g.globalAlpha=.55*ph*(1-z*.55);g.fillRect(x|0,HZ+r,len,1)}}
+ g.globalAlpha=1;g.globalCompositeOperation='source-over';
+ // คลื่นหลายชั้น (สองรอบ: เส้นหลัก แล้วไฮไลต์ → เปลี่ยนสีแค่ 2 ครั้งต่อแถว)
+ const rows=18;for(let i=0;i<rows;i++){const z=(i+1)/rows,y=HZ+3+Math.pow(z,1.35)*(wh-6)|0,gap=10+z*26,len=2+z*9|0,sp=(i%2?-1:1)*(4+z*10),a=.08+z*.2,o=((t*sp)%gap+gap)%gap,x0=-gap+o+(i*7%gap);
+  g.fillStyle='#8cbeff';g.globalAlpha=a;for(let x=x0;x<w;x+=gap)g.fillRect(x|0,y+Math.round(Math.sin(x*.08+t*1.5+i)*.6),len,1);
+  g.fillStyle='#c8e6ff';g.globalAlpha=a*.6;const l2=Math.max(1,len-3);for(let x=x0;x<w;x+=gap)g.fillRect(x+1|0,y+Math.round(Math.sin(x*.08+t*1.5+i)*.6)-1,l2,1)}
+ g.globalAlpha=1;
  // หมอกบางเหนือผิวน้ำ
- for(const m of S.mist){m.x+=m.v/60;if(m.x-m.rw>w)m.x=-m.rw;const mg=g.createRadialGradient(m.x,m.y,0,m.x,m.y,m.rw);mg.addColorStop(0,'rgba(170,190,240,.10)');mg.addColorStop(1,'rgba(170,190,240,0)');g.fillStyle=mg;g.fillRect(m.x-m.rw,m.y-m.rw*.25,m.rw*2,m.rw*.5)}
+ for(const m of S.mist){m.x+=m.v*dt;if(m.x-m.rw>w)m.x=-m.rw;g.drawImage(G.mist,24,24,48,48,m.x-m.rw,m.y-m.rw*.25,m.rw*2,m.rw*.5)}
  // กอบัวริมฝั่ง
- ksLotus(g,t,6,HZ+8,1);ksLotus(g,t,w*.5,HZ+6,1);ksLotus(g,t,w-14,HZ+9,1);if(!KS.lite){ksLotus(g,t,w*.3,HZ+12,1);ksLotus(g,t,w*.78,HZ+11,1)}
+ ksLotus(g,t,6,HZ+8,1);ksLotus(g,t,w*.5,HZ+6,1);ksLotus(g,t,w-14,HZ+9,1);ksLotus(g,t,w*.3,HZ+12,1);ksLotus(g,t,w*.78,HZ+11,1);
  // หิ่งห้อยริมฝั่งซ้าย
- g.save();g.globalCompositeOperation='lighter';for(const f of S.ff){const x=f.x+Math.sin(t*f.sp+f.ph)*8,y=f.y+Math.cos(t*f.sp*1.3+f.ph)*4,b=Math.max(0,Math.sin(t*2.2+f.bl));if(b<.1)continue;g.fillStyle=`rgba(200,255,120,${.25*b})`;g.fillRect(x-1|0,y-1|0,3,3);g.fillStyle=`rgba(240,255,170,${b})`;g.fillRect(x|0,y|0,1,1)}g.restore();
+ g.globalCompositeOperation='lighter';for(const f of S.ff){const x=f.x+Math.sin(t*f.sp+f.ph)*8,y=f.y+Math.cos(t*f.sp*1.3+f.ph)*4,b=Math.max(0,Math.sin(t*2.2+f.bl));if(b<.1)continue;g.globalAlpha=.25*b;g.fillStyle='#c8ff78';g.fillRect(x-1|0,y-1|0,3,3);g.globalAlpha=b;g.fillStyle='#f0ffaa';g.fillRect(x|0,y|0,1,1)}
+ g.globalAlpha=1;
  // เอฟเฟกต์แตะ/อธิษฐาน/ลอย (พิกัดฉาก)
- KS.fx=KS.fx.filter(e=>{const d=t-e.t;if(d>e.L)return false;const k=d/e.L;g.save();g.globalCompositeOperation='lighter';
-  if(e.k==='ring'){for(let i=0;i<3;i++){const kk=k-i*.18;if(kk<0||kk>1)continue;const rx=4+kk*26,ry=rx*.32;g.strokeStyle=`rgba(255,230,160,${.7*(1-kk)})`;g.lineWidth=1;g.beginPath();g.ellipse(e.x,e.y,rx,ry,0,0,6.283);g.stroke()}}
-  else if(e.k==='spark'){for(const p of e.p){const x=e.x+p.vx*d,y=e.y+p.vy*d+18*d*d*(p.g||0)-12*d;g.fillStyle=`rgba(${p.c},${1-k})`;g.fillRect(x|0,y|0,p.s,p.s)}}
-  else if(e.k==='splash'){for(const p of e.p){const x=e.x+p.vx*d,y=e.y+p.vy*d+60*d*d;if(y>e.y+2)continue;g.fillStyle=`rgba(190,225,255,${1-k})`;g.fillRect(x|0,y|0,1,1)}for(let i=0;i<2;i++){const kk=k-i*.25;if(kk<0)continue;g.strokeStyle=`rgba(190,225,255,${.6*(1-kk)})`;g.beginPath();g.ellipse(e.x,e.y+2,6+kk*30,(6+kk*30)*.3,0,0,6.283);g.stroke()}}
-  g.restore();return true})}
+ KS.fx=KS.fx.filter(e=>{const d=t-e.t;if(d>e.L)return false;const k=d/e.L;g.lineWidth=1;
+  if(e.k==='ring'){g.strokeStyle='#ffe6a0';for(let i=0;i<3;i++){const kk=k-i*.18;if(kk<0||kk>1)continue;const rx=4+kk*26;g.globalAlpha=.7*(1-kk);g.beginPath();g.ellipse(e.x,e.y,rx,rx*.32,0,0,6.283);g.stroke()}}
+  else if(e.k==='spark'){g.globalAlpha=1-k;for(const p of e.p){const x=e.x+p.vx*d,y=e.y+p.vy*d+18*d*d*(p.g||0)-12*d;g.fillStyle=`rgb(${p.c})`;g.fillRect(x|0,y|0,p.s,p.s)}}
+  else if(e.k==='splash'){g.fillStyle='#bee1ff';g.globalAlpha=1-k;for(const p of e.p){const x=e.x+p.vx*d,y=e.y+p.vy*d+60*d*d;if(y>e.y+2)continue;g.fillRect(x|0,y|0,1,1)}g.strokeStyle='#bee1ff';for(let i=0;i<2;i++){const kk=k-i*.25;if(kk<0)continue;g.globalAlpha=.6*(1-kk);g.beginPath();g.ellipse(e.x,e.y+2,6+kk*30,(6+kk*30)*.3,0,0,6.283);g.stroke()}}
+  g.globalAlpha=1;return true});
+ g.globalCompositeOperation='source-over';g.globalAlpha=1}
 function ksLoop(now){KS.raf=0;const cv=document.querySelector('#modal .kCv');if(!cv||!modalOpen||document.hidden)return;
- const W2=Math.max(120,cv.clientWidth/2|0),H2=KH/2;if(cv.width!==W2||cv.height!==H2){cv.width=W2;cv.height=H2}
- if(KS.lite&&KS.last&&now-KS.last<31){KS.raf=requestAnimationFrame(ksLoop);return}KS.last=now;
+ if(cv!==KS.cv||!(KS.n++%30)){KS.cv=cv;const W2=Math.max(120,cv.clientWidth/2|0),H2=KH/2;if(cv.width!==W2||cv.height!==H2){cv.width=W2;cv.height=H2}}
  try{ksFrame(cv,now)}catch(e){console.error('kscene',e);return}KS.raf=requestAnimationFrame(ksLoop)}
+// ===== 🪷 กระทงบนสายน้ำ วาดบนแคนวาสความละเอียดเต็ม (ภาพคมเท่าเดิม แต่วาดรวดเดียวต่อเฟรม แทนให้เบราว์เซอร์วาดกระทง 12 ใบซ้ำทุกเฟรม) =====
+function kParts(k,glow){const c=W[k]||W.w0,S=1.45,vb='-10 -10 140 120',wrap=b=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" width="${140*S|0}" height="${120*S|0}">${b}</svg>`;
+ const d=`<defs><radialGradient id="f"><stop offset="0" stop-color="#fff8d0"/><stop offset=".4" stop-color="${c.fl}"/><stop offset="1" stop-color="${c.fl}" stop-opacity="0"/></radialGradient><linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.b2}"/><stop offset="1" stop-color="${c.base}"/></linearGradient></defs>`;
+ let x=d+`<ellipse cx="60" cy="86" rx="50" ry="8" fill="#000" opacity=".25"/>`;
+ if(k==='k')x+=`<path d="M8 70Q60 98 112 70L104 80Q60 100 16 80Z" fill="url(#b)" stroke="#c8b0ff" stroke-width="1.2"/><path d="M60 30V70" stroke="#ffe08a" stroke-width="2"/><path d="M60 30L88 62H60Z" fill="#ffffffcc"/>`;
+ else{x+=`<path d="M10 70Q60 92 110 70Q104 84 60 88Q16 84 10 70Z" fill="${c.base}"/>`;
+  for(let i=0;i<9;i++){const a=-70+i*17.5,r=a*Math.PI/180;x+=`<path d="M60 72L${60+Math.sin(r)*48} ${72-Math.cos(r)*24}L${60+Math.sin(r+.2)*44} ${72-Math.cos(r+.2)*30}Z" fill="url(#b)" stroke="${c.base}" stroke-width=".8"/>`}
+  for(let i=0;i<7;i++){const a=-60+i*20,r=a*Math.PI/180,cx=60+Math.sin(r)*26,cy=58-Math.cos(r)*12;x+=`<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="6" ry="10" fill="${c.pet}" stroke="#ffffff88" stroke-width=".6" transform="rotate(${a} ${cx.toFixed(1)} ${cy.toFixed(1)})"/>`}}
+ if(k==='l')x+=`<ellipse cx="60" cy="62" rx="40" ry="10" fill="none" stroke="#ff8a5a" stroke-width="1.2" opacity=".7"/>`;
+ if(k==='mn')x+=`<circle cx="44" cy="66" r="3" fill="#8a5a2a"/><circle cx="76" cy="64" r="2.6" fill="#8a5a2a"/><circle cx="60" cy="70" r="2.4" fill="#8a5a2a"/>`;
+ const top=`<rect x="56" y="34" width="8" height="24" rx="2" fill="#fff6e0"/><path d="M60 34V30" stroke="#333" stroke-width="1"/><path d="M70 58L74 26M48 58L46 28" stroke="#8a5a2a" stroke-width="1.4"/>`;
+ const P={body:wrap(x),top:wrap(top),fl:wrap(`<path d="M60 18C64 24 64 28 60 31C56 28 56 24 60 18Z" fill="${c.fl}"/>`),fg:wrap(d+`<circle cx="60" cy="27" r="9" fill="url(#f)"/>`),em:wrap(`<circle cx="74" cy="25" r="1.4" fill="#ff6a2a"/><circle cx="46" cy="27" r="1.4" fill="#ff6a2a"/>`)};
+ if(glow)P.gl=wrap(d+`<ellipse cx="60" cy="40" rx="52" ry="40" fill="url(#f)" opacity=".35"/>`);
+ if(k==='l')P.rg=wrap(`<ellipse cx="60" cy="62" rx="34" ry="8" fill="none" stroke="#ffd36e" stroke-width="2"/>`);
+ if(k==='o')P.gh=wrap(`<path d="M92 56Q92 40 102 40Q112 40 112 56L110 66L106 62L102 66L98 62L94 66Z" fill="#e8fff4" opacity=".85"/><circle cx="99" cy="50" r="1.6" fill="#123"/><circle cx="105" cy="50" r="1.6" fill="#123"/>`);
+ return P}
+// กระทงบนสายน้ำ: แต่ละส่วนที่ขยับเป็นภาพของตัวเอง ให้การ์ดจอขยับ (ไม่ต้องวาดกระทงใหม่ทุกเฟรม · ลื่นแม้เครื่องกำลังทำงานอื่น)
+const KBU={};function kbUrl(k,glow){const key=k+'|'+(glow?1:0);if(KBU[key])return KBU[key];const P=kParts(k,glow),o={};for(const n in P)o[n]='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(P[n]);return KBU[key]=o}
+function kSvgL(k,sz,glow){const U=kbUrl(k,glow),u=sz/120,st=`left:${(-10*u).toFixed(1)}px;top:${(-10*u).toFixed(1)}px;width:${(140*u).toFixed(1)}px;height:${(120*u).toFixed(1)}px`;
+ const I=(n,c)=>U[n]?`<img class="kLy${c?' '+c:''}" src="${U[n]}" style="${st}" alt="" draggable="false">`:'';
+ return`<span class="kSvL" style="width:${sz}px;height:${(sz*100/120).toFixed(1)}px">${I('gl','kLgl')}${I('body')}${I('rg','kLrg')}${I('gh','kLgh')}${I('top')}${I('fl','kLfl')}${I('fg','kLfg')}${I('em','kLem')}</span>`}
 function ksStart(){if(!KS.raf)KS.raf=requestAnimationFrame(ksLoop)}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)ksStart()});
 // พิกัดจอ → พิกัดฉาก สำหรับเอฟเฟกต์ที่ตำแหน่งกระทง
@@ -47061,7 +47094,7 @@ function river(j){const L=(j&&j.L||[]).slice(0,12);let h=`<div class="kRiver"><c
  const LN=[[250,44,58],[308,50,52],[372,56,47],[440,62,42]];
  const newest=K.newK;
  L.forEach((x,i)=>{const ln=LN[i%4],k=Math.floor(i/4),[top,sz,dur]=ln,dl=(dur/3)*k+(i%4)*3.1;const nm=String(x.n||'');const nmS=nm.length>12?nm.slice(0,11)+'…':nm;
-  h+=`<div class="kBoat${K.sel===i?' kSelB':''}${newest&&x.k===newest?' kNew':''}" data-i="${i}" style="top:${top-sz*.62}px;z-index:${10+(i%4)};animation-duration:${dur}s;animation-delay:-${dl.toFixed(2)}s" onclick="krtSel(${i})"><i class="kRef" style="width:${sz*1.2|0}px"></i><div class="kIn" style="animation-delay:-${(i*.37).toFixed(2)}s">${kSvg(wid(x.st),sz,x.p>=10||x.mine)}</div><div class="kTag">${esc(nmS)} <i>🙏${x.p||0}</i>${x.mine?' ⭐':''}</div></div>`});
+  h+=`<div class="kBoat${K.sel===i?' kSelB':''}${newest&&x.k===newest?' kNew':''}" data-i="${i}" style="top:${top-sz*.62}px;z-index:${10+(i%4)};animation-duration:${dur}s;animation-delay:-${dl.toFixed(2)}s" onclick="krtSel(${i})"><i class="kRef" style="width:${sz*1.2|0}px"></i><div class="kIn" style="animation-delay:-${(i*.37).toFixed(2)}s">${kSvgL(wid(x.st),sz,x.p>=10||x.mine)}</div><div class="kTag">${esc(nmS)} <i>🙏${x.p||0}</i>${x.mine?' ⭐':''}</div></div>`});
  if(K.sel!=null&&L[K.sel]){const x=L[K.sel];h+=`<div class="kCard"><div>${kSvg(wid(x.st),74,1)}</div><div style="min-width:0;flex:1"><b style="font-size:15px">${esc(x.n)}</b>${x.e?` <small>「${esc(x.e)}」</small>`:''}<br><small>${(W[wid(x.w)]||W.w0).ic} อายุ ${fmt(x.a)} ปี${x.c?' · 🪦 '+esc(x.c):''}${x.pn?' · ลอยโดย '+esc(x.pn):''}</small>${x.x?`<div class="kW">“${esc(x.x)}”</div>`:''}<div class="kB">${x.mine?`<button disabled>⭐ กระทงของคุณ · 🙏${x.p||0}</button>`:`<button ${x.me||!live()?'disabled':''} onclick="krtPray('${x.k}')">🙏 ${x.me?'อธิษฐานแล้ว':'อธิษฐานร่วม'} (${x.p||0})</button>`}${x.lid?`<button onclick="openLifeView('${x.lid}')">📖 ดูชีวิตนี้</button>`:''}<button onclick="krtSel(-1)">✕</button></div></div></div>`}
  const m=j&&j.mine;return h+`</div><div class="kBar"><span>🌕 ${live()?'ลอยกระทง 2569 · ถึง 30 พ.ย.':'งานจบแล้ว · ขอบคุณที่มาลอยกระทง'} · บนน้ำ <b>${fmt(j&&j.tot||0)}</b> ใบ</span><span>${m?`วันนี้ <b>${Math.min(3,m.used)}/3</b>`:''}</span></div>`}
 function make(){if(!live())return`<div class="kStateBox">งานลอยกระทงปีนี้จบแล้ว 🌕 ดูกระทงบนสายน้ำและกระทงแห่งปีได้</div>`;const G=graves(),m=K.j&&K.j.mine;
