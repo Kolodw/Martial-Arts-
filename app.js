@@ -46585,7 +46585,9 @@ try{(()=>{
 const st=document.createElement('style');st.textContent=`
 #feed>.bub,#feed>.yr,#feed>.quiet{content-visibility:auto;contain-intrinsic-size:auto 44px}
 .frw.offv *,.frw.offv,.dch4.offv,.dch4.offv *,.rt3.offv,.rt3.offv *,.mwt.offv,.mwt.offv *{animation-play-state:paused!important}
-html.tabHid *{animation-play-state:paused!important}`;document.head.appendChild(st);
+html.tabHid *{animation-play-state:paused!important}
+.au{will-change:transform;filter:none!important}
+#mask,.mask{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}#mask.on{background-color:rgba(5,4,10,.84)}`;document.head.appendChild(st);
 // ชิ้นที่มีอนิเมชันหนัก: หยุดเมื่อพ้นจอ
 let io=null;try{io=new IntersectionObserver(es=>{for(const e of es)e.target.classList.toggle('offv',!e.isIntersecting)},{rootMargin:'120px'})}catch(e){}
 const SEL='.frw,.dch4,.rt3,.mwt';const seen=new WeakSet();
