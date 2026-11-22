@@ -469,7 +469,7 @@ const ZFL={car:['ลมพัดผ่านซากรถจนเสียง
  crat:['อากาศที่ขอบปล่องสั่นเป็นจังหวะเดียวกับหัวใจคุณ','หินทุกก้อนตรงนี้อุ่นเหมือนมีชีวิต'],
  set:['เด็กๆ ในนิคมวิ่งตามคุณมาถามว่าในนครมีไอศกรีมจริงไหม'],spring:['น้ำเงินเรืองไหลผ่านเท้าคุณ เย็นจนแผลเก่าหายปวด']};
 window.skyExp=function(id){const K=SK();if(!K||!ok(K)||!ZN[id])return;if(K.zY===S.age)return toast('ปีนี้ออกสำรวจไปแล้ว รอปีหน้า');const Z=ZN[id],z=zK(K);K.zY=S.age;z.v[id]=(z.v[id]|0)+1;closeM();
- const L=zEv(K,id),pri=L.filter(e=>EV[e].pri);const ev=pri.length?pri[0]:L.length&&rnd()<.7?pick(L):null;
+ const L=zEv(K,id),pri=L.filter(e=>EV[e].pri);const ev=pri.length?pri[0]:L.length&&rnd()<.4?pick(L):null;
  say(`🧭 คุณออกจากประตูนครมุ่งหน้าไป<b>${Z.e} ${Z.n}</b>`,'');if(ev){queue(ev);flush()}else expBasic(K,id);render()};
 function expBasic(K,id){const Z=ZN[id];C(`${Z.e} ${Z.n}`,pick(ZFL[id]||[Z.t]),[
  O('ลุยหาแก่นอสูร',()=>skyMG(pick(['tap','scan','stealth']),`${Z.e} ${Z.n}`,'หาเป้าแล้วจัดการให้ไว',sc=>expRes(K,id,sc,0)),'มินิเกม'),
@@ -2858,18 +2858,18 @@ const p1FK=K=>K.rk+':'+(K.sub+1);
   const ex=K.xp-need(K),s0=K.sub,r0=K.rk;K.xp=need(K);_adv();K.xp+=ex;if(K.sub===s0&&K.rk===r0)break}}catch(e){console.error('p1 adv',e)}return _adv.apply(this,arguments)}}
 function p1FtPass(K,t){K.ft=K.ft||{};K.ft[p1FK(K)]=1;K.xp=need(K);say(`🧗 <b>ทะลวงสู่${RK[K.rk].n} ชั้น ${K.sub+1}</b> ${t}`,'epic');advance();sync();render()}
 function p1FtFail(K,t){K.xp=need(K)*.55;const d=hp(.1);say(`🧱 ${t} · พลังชีวิต −${d} · ต้องสะสมเซลล์ใหม่แล้วลองอีกครั้ง`,'bad')}
-def('p1_ft',{c:()=>false,w:0,go(K){if(K.sub!==2&&K.sub!==5)return;const n=K.sub+1,cost=Math.round((700+K.rk*900)*(K.f.coEnemy?1.6:1)),core=1+Math.floor(K.rk/2),me=p1Me(K),r=rvAlive(K).filter(x=>x.i>=me-1).sort((a,b)=>a.i-b.i)[0];
- C(`🧗 ด่านทะลวงชั้น ${n}`,`เซลล์คุณเต็มแล้ว แต่กำแพงยีนชั้น ${n} ไม่เปิดเอง ทุกคนในหอนักรบผ่านด่านนี้ด้วยวิธีต่างกัน และทุกวิธีมีราคา`,[
+def('p1_ft',{c:()=>false,w:0,go(K){if(K.sub!==2&&K.sub!==5)return;const n=K.sub+1,cost=Math.round((700+K.rk*900)*(K.f.coEnemy?1.6:1)*(1-((window._fcB&&_fcB('co'))||0))),core=1+Math.floor(K.rk/2),me=p1Me(K),r=rvAlive(K).filter(x=>x.i>=me-1).sort((a,b)=>a.i-b.i)[0]||{n:'ผู้คุมชั้น'+pick(FN),i:me+.5,p:'hon',st:'ok',rel:0,o:0,tmp:1};
+ C(`🧗 ด่านทะลวงชั้น ${n}`,`เซลล์คุณเต็มแล้ว แต่กำแพงยีนชั้น ${n} ไม่เปิดเอง ทุกคนในหอนักรบผ่านด่านนี้ด้วยวิธีต่างกัน และทุกวิธีมีราคา${(S.money||0)<cost||K.cores<core?`<br><span class="tag2">${(S.money||0)<cost?`💉 เซรั่มต้องมี ${crT(cost)} · `:''}${K.cores<core?`🔶 กลืนแก่นต้องมีแก่น ${core} ลูก (ล่าค่าหัว/สำรวจลึก)`:''}</span>`:''}`,[
   ...(r?[O(`⚔️ ท้าดวลผู้คุมชั้น · ${esc(r.n)}`,()=>{if(rnd()<.22){C('💰 ซองใต้ประตู',`คืนก่อนดวล มีซองเงินสอดใต้ประตูห้องคุณ ข้างในมี 2,000 เครดิตกับโน้ต “${esc(r.n)}จะแพ้ ไม่ต้องขอบใจ”`,[
     O('รับชัยชนะที่จัดไว้ให้',()=>{cr(2000);S.karma-=6;K.f.fixed=1;queueLater(K,'p1_fixed',R(2,4));p1FtPass(K,'· ชัยชนะที่ไม่มีใครถามว่ามาจากไหน')}),
     O('คืนซอง ขอสู้จริง',()=>rvDuel(K,r,w=>{if(w){fameA(500);p1FtPass(K,'· ชัยชนะที่สะอาดที่สุดของปี')}else p1FtFail(K,'คุณแพ้อย่างสมศักดิ์ศรี')}),'มินิเกม · ชนะได้ชื่อมาก')])}
    else rvDuel(K,r,w=>w?p1FtPass(K,'· ผ่านด้วยหมัดของตัวเอง'):p1FtFail(K,'ผู้คุมชั้นยังเหนือกว่า'))},'มินิเกม · ได้ชื่อเสียง')]:[]),
-  O(`💉 ฉีดเซรั่มเร่งยีน (${crT(cost)})`,()=>{if((S.money||0)<cost)return say('💸 เครดิตไม่พอ','');cr(-cost);const mr=K.f.serumWise?.08:.2;
+  ...((S.money||0)>=cost?[O(`💉 ฉีดเซรั่มเร่งยีน (${crT(cost)})`,()=>{cr(-cost);const mr=K.f.serumWise?.08:.2;
    if(rnd()<mr){const g=rnd()<.5?pick(MUT.good):pick(MUT.bad);if(!mutHas(K,g[0]))K.mut.push(g);say(`🧪 เซรั่มทำให้เซลล์กลายพันธุ์: <b>${g[0]}</b> — ${g[1]}`,MUT.good.includes(g)?'good':'bad')}
    if(rnd()<.15&&!K.f.serumLot){K.f.serumLot=1;queueLater(K,'p1_serum',R(1,3))}
-   rnd()<.88?p1FtPass(K,'· เข็มเดียว เจ็บเหมือนกระดูกถูกบิด'):p1FtFail(K,'ร่างปฏิเสธเซรั่ม')},'เกือบแน่นอน · เสี่ยงกลายพันธุ์'),
-  O(`🔶 กลืนแก่นอสูร (${core} ลูก)`,()=>{if(K.cores<core)return say(`🔶 แก่นไม่พอ ต้องมี ${core} ลูก (ล่าจากกระดานค่าหัวหรือออกสำรวจ)`,'');K.cores-=core;const p=cl(.45+K.mind/(60+K.rk*80)*.4,.35,.92);
-   if(rnd()<p){if(rnd()<.28&&!K.f.voice){K.f.voice=1;queueLater(K,'p1_voice',R(1,3))}p1FtPass(K,`· พลังของอสูรละลายเข้าเซลล์${xp(10)}`)}else p1FtFail(K,'จิตคุมพลังอสูรไม่อยู่ อาเจียนเป็นเลือด')},'ใช้จิต · ได้เซลล์เพิ่ม'),
+   rnd()<.88?p1FtPass(K,'· เข็มเดียว เจ็บเหมือนกระดูกถูกบิด'):p1FtFail(K,'ร่างปฏิเสธเซรั่ม')},'เกือบแน่นอน · เสี่ยงกลายพันธุ์')]:[]),
+  ...(K.cores>=core?[O(`🔶 กลืนแก่นอสูร (${core} ลูก)`,()=>{K.cores-=core;const p=cl(.45+K.mind/(60+K.rk*80)*.4,.35,.92);
+   if(rnd()<p){if(rnd()<.28&&!K.f.voice){K.f.voice=1;queueLater(K,'p1_voice',R(1,3))}p1FtPass(K,`· พลังของอสูรละลายเข้าเซลล์${xp(10)}`)}else p1FtFail(K,'จิตคุมพลังอสูรไม่อยู่ อาเจียนเป็นเลือด')},'ใช้จิต · ได้เซลล์เพิ่ม')]:[]),
   O('⏳ รอให้ร่างพร้อมเอง (1–2 ปี)',()=>{K.xp=need(K)*.7;say('⏳ คุณฝึกต่อแบบธรรมดา บางคนบอกว่าทางช้าที่สุดคือทางที่ปลอดภัยที่สุด','')})])}});
 def('p1_fixed',{c:()=>false,w:0,go(K){C('📨 ใบแจ้งหนี้',`คนที่ส่งซองเงินคืนนั้นมาหาคุณ เขาเป็นคนของตลาดมืด “ถึงเวลาจ่ายคืนแล้ว แค่เปิดประตูกำแพงทิศใต้ตอนตีสองคืนพรุ่งนี้”`,[
  O('เปิดประตู',()=>{K.wall=Math.max(0,K.wall-15);cr(5000);S.karma-=12;say('🚪 รถบรรทุกไม่มีป้ายสามคันออกไปนอกกำแพง เช้ามากำแพงทิศใต้มีรอยร้าว · กำแพง −15','bad')}),
@@ -2955,7 +2955,7 @@ function bbYear(K){if(!ok(K))return;const B=bbGet(K);if(B.y===S.age)return;B.y=S
  // ราชาอสูรย้ายที่และแย่งถิ่น
  bbKings(K).forEach(k=>{const s=B.kn[k]||(B.kn[k]={int:0,po:0,str:0});if(rnd()<.2){s.str++;if(s.int>0)feed(`👑 ข่าวลือ: ${KINGS[k].ic} ${KINGS[k].n}ชนะศึกแย่งถิ่น แข็งแกร่งขึ้นอีก`)}})}
 const bbTL=()=>{const K=SK();return K?p1TLeft(K):0};
-window.skyBB=function(sel){const K=SK();if(!K)return;if(!ok(K))return toast('ต้องปลุกยีนก่อนถึงจะรับค่าหัวได้');const B=bbGet(K),me=xRank(K),bmH=K.f.bmLink?.5:1;
+window.skyBB=function(sel){const K=SK();if(!K)return;if(!ok(K))return toast('ต้องปลุกยีนก่อนถึงจะรับค่าหัวได้');const B=bbGet(K),me=xRank(K),bmH=(K.f.bmLink||(window._fcB&&_fcB('bm')))?.5:1;
  const sk=d=>{const g=d-me;return g>=2?'<b class="p1r">☠ อันตรายมาก</b>':g>=1?'<b class="p1o">☠ เหนือกว่าคุณ</b>':g>=0?'<b class="p1y">สูสี</b>':'<b class="p1g">ต่ำกว่าคุณ</b>'};
  const card=t=>{const Z=ZN[t.z],zk=t.int>=1;return`<div class="p1Bc"><div class="p1Bh"><span class="p1Bi">${t.ic}</span><div><b>${esc(t.n)}</b><small>ธาตุ${ELN[t.el]||'-'} · ${sk(t.d)} · ค่าหัว <b class="p1c">${crT(t.pay)}</b></small></div></div>
   <div class="p1Bm">📍 ${zk?`${Z.e} ${Z.n}${t.mv?' <i>(ย้ายมาใหม่)</i>':''}`:'เห็นครั้งล่าสุด: ไม่ทราบ'} · 🔎 ข่าว ${'★'.repeat(t.int)}${'☆'.repeat(3-t.int)}${t.int>=2?` · จุดอ่อน: ${ELW[t.el]}`:''}${t.int>=3?' · รู้เวลาออกหากิน':''}${t.po?' · 🧪 มียาพิษตรงธาตุ':''}</div>
@@ -2969,7 +2969,7 @@ window.skyBB=function(sel){const K=SK();if(!K)return;if(!ok(K))return toast('ต
   ${KL.length?`<div class="p1Bs">👑 ราชาอสูร</div>${KL.map(kc).join('')}`:''}<div class="p1Bs">🎯 ค่าหัวประจำปี</div>${B.L.map(card).join('')}
   <div class="p1Bf">ล่าสำเร็จแล้ว ${B.n|0} ตัว${K.f.bmLink?' · 🕳️ ราคาข่าวลดครึ่ง (เส้นตลาดมืด)':''}</div></div>`,'skybb')};
 const bbT=id=>{const K=SK();return K&&K.bb&&K.bb.L.find(t=>t.id===id)};
-window.skyBBi=function(id,buy){const K=SK(),t=bbT(id);if(!t||t.int>=3)return;if(buy){const c=Math.round(250*t.d*(K.f.bmLink?.5:1));if((S.money||0)<c)return toast('เครดิตไม่พอ');cr(-c);t.int=Math.min(3,t.int+1);toast('🔎 ได้ข่าวเพิ่ม')}
+window.skyBBi=function(id,buy){const K=SK(),t=bbT(id);if(!t||t.int>=3)return;if(buy){const c=Math.round(250*t.d*((K.f.bmLink||(window._fcB&&_fcB('bm')))?.5:1));if((S.money||0)<c)return toast('เครดิตไม่พอ');cr(-c);t.int=Math.min(3,t.int+1);toast('🔎 ได้ข่าวเพิ่ม')}
  else{if(p1TLeft(K)<=0)return toast('ปีนี้ออกนอกกำแพงครบแล้ว');p1Trip(K);const g=rnd()<.7+tqHunt(K,t.el)?2:1;t.int=Math.min(3,t.int+g);zKnow(K,t.z);toast(g>1?'🐾 เจอรอยชัด ข่าว +2':'🐾 เจอรอยจางๆ ข่าว +1');if(rnd()<.15){const d=hp(.08);toast('มีอะไรตามคุณกลับมา · พลังชีวิต −'+d)}}skyBB()};
 window.skyBBp=function(id){const K=SK(),t=bbT(id);if(!t||t.po)return;const c=400*t.d;if((S.money||0)<c)return toast('เครดิตไม่พอ');cr(-c);t.po=1;toast('🧪 เตรียมยาพิษตรงธาตุแล้ว');skyBB()};
 window.skyBBh=function(id){const K=SK(),t=bbT(id);if(!t||t.int<1)return;if(p1TLeft(K)<=0)return toast('ปีนี้ออกนอกกำแพงครบแล้ว');closeM();p1Trip(K);const Z=ZN[t.z];
@@ -2980,7 +2980,7 @@ window.skyBBh=function(id){const K=SK(),t=bbT(id);if(!t||t.int<1)return;if(p1TLe
 function bbTwist(K,t){const L=['mom','lab','collar'];if(rvAlive(K).length)L.push('rival');if(K.rk>=3&&!K.f.kingKill&&!K.f.kingEye)L.push('king');return rnd()<.35?pick(L):''}
 function bbFight(K,t,plan,mg){const tw=bbTwist(K,t);const r=tw==='rival'?pick(rvAlive(K)):null;
  const res=(sc,bon,mult)=>{const p=cl(.3+sc*.45+(xRank(K)-t.d)*.12+t.int*.04+(t.po?.1:0)+plan+(bon||0)+tqHunt(K,t.el)+(K.f.team?.06:0),.06,.95);
-  if(rnd()<p){const B=K.bb;B.L=B.L.filter(x=>x!==t);B.n=(B.n|0)+1;const pay=Math.round(t.pay*(mult||1));K.cores+=1+Math.floor(t.d/3);say(`🎯 <b>${t.ic} ${t.n}ล้มลงแล้ว</b> · ค่าหัว ${cr(pay)}${fameA(80*t.d)}${xp(18+t.d*6)} · แก่น +${1+Math.floor(t.d/3)}`,'epic');if(Z0(t)&&rnd()<.06*t.d&&!has(K,Z0(t))&&K.genes.length<3){K.pend=Z0(t);queue('gene');flush()}}
+  if(rnd()<p){const B=K.bb;B.L=B.L.filter(x=>x!==t);B.n=(B.n|0)+1;const pay=Math.round(t.pay*(mult||1)*(1+((window._fcB&&_fcB('gld'))||0)));K.cores+=1+Math.floor(t.d/3);say(`🎯 <b>${t.ic} ${t.n}ล้มลงแล้ว</b> · ค่าหัว ${cr(pay)}${fameA(80*t.d)}${xp(18+t.d*6)} · แก่น +${1+Math.floor(t.d/3)}`,'epic');if(Z0(t)&&rnd()<.06*t.d&&!has(K,Z0(t))&&K.genes.length<3){K.pend=Z0(t);queue('gene');flush()}}
   else{const d=hp(.08*Math.max(1,t.d-xRank(K)+1));t.int=Math.max(0,t.int-1);say(`🩸 ${t.n}หนีไปได้ · พลังชีวิต −${d} <span class="tag2">(โอกาส ~${Math.round(p*100)}%)</span>`,'bad');if(S.hp<S.maxHp*.08&&t.d>xRank(K)+1&&rnd()<.3)die([`ถูก${t.n}ฆ่าในเขตนอกกำแพง`],`🩸 ${t.n}ลากร่างคุณเข้าไปในความมืด`)}};
  const fight=(bon,mult)=>skyMG(mg,`${t.ic} ${t.n}`,'จังหวะเดียวที่มันเปิดช่อง',sc=>res(sc,bon,mult));
  if(tw==='mom')return C('🍼 แม่ที่ปกป้องลูก',`${t.n}ไม่ได้ออกล่า มันยืนขวางโพรงที่มีลูกตัวเล็กสามตัว ค่าหัวบอกว่ามันกินคน แต่รอบโพรงมีแต่กระดูกอสูร`,[
@@ -3007,7 +3007,7 @@ def('p1_spare',{c:()=>false,w:0,go(K){C('🌿 กลับมาตอบแท�
  O('เดินลงไปรับ',()=>{const g=Object.keys(GENE).filter(x=>!has(K,x));if(g.length&&K.genes.length<3&&rnd()<.6){K.pend=pick(g);queue('gene');flush();say('🦴 มันคาบแก่นอสูรสดมาให้ ยีนยังเต้นอยู่','myth',true)}else{K.cores+=5;say('🔶 แก่นอสูรห้าลูกวางเรียงกันบนหญ้า · แก่น +5','good')}K.wall=Math.min(100,K.wall+5)})])}});
 window.skyBBk=function(k,a){const K=SK();if(!K||!ok(K)||!KINGS[k])return;const B=bbGet(K),s=B.kn[k]||(B.kn[k]={int:0,po:0,str:0}),Kg=KINGS[k];
  if(a===0){if(p1TLeft(K)<=0)return toast('ปีนี้ออกนอกกำแพงครบแล้ว');p1Trip(K);if(rnd()<.75){s.int=Math.min(3,s.int+1);toast('🔭 ได้ข่าวราชาเพิ่ม')}else{const d=hp(.15);toast('🔭 หน่วยสอดแนมถูกพบ · พลังชีวิต −'+d)}if(Kg.z)zKnow(K,Kg.z);return skyBB()}
- if(a===1){const c=Math.round(3000*(K.f.bmLink?.5:1)*(Kg.rk-3));if((S.money||0)<c)return toast('เครดิตไม่พอ');cr(-c);s.int=Math.min(3,s.int+1);toast('💰 ได้ข่าวราชาเพิ่ม');return skyBB()}
+ if(a===1){const c=Math.round(3000*((K.f.bmLink||(window._fcB&&_fcB('bm')))?.5:1)*(Kg.rk-3));if((S.money||0)<c)return toast('เครดิตไม่พอ');cr(-c);s.int=Math.min(3,s.int+1);toast('💰 ได้ข่าวราชาเพิ่ม');return skyBB()}
  if(a===2){const c=6000*(Kg.rk-3);if((S.money||0)<c)return toast('เครดิตไม่พอ');cr(-c);s.po=1;toast('🧪 เตรียมยาพิษราชาแล้ว');return skyBB()}
  closeM();const bon=cl(s.int*.05+(s.po?.08:0)-s.str*.03+(K.f.slowAlly?.05:0),-.15,.3);
  const done=k==='mount'?(w=>{if(w){K.f.kingKill=1;K.waveIn+=6;queue('e2_core');flush();advance()}}):(w=>{if(!w)return;K.kk=K.kk||[];K.kk.push(k);queue('e2_tame_'+k);flush();advance()});
@@ -3020,15 +3020,15 @@ window.skyBBk=function(k,a){const K=SK();if(!K||!ok(K)||!KINGS[k])return;const B
 // ---------- แถบปุ่มหลัก (เห็นชัด) ----------
 {const _rn=render;render=function(){const r=_rn.apply(this,arguments);try{if(!on())return r;const K=SK(),h=$('mwHud');if(!h||K.beast||age()<10)return r;let a=h.querySelector('.p1Act');if(!a){a=document.createElement('div');a.className='p1Act';h.appendChild(a)}
  const mo=mapOn(K),tl=p1TLeft(K),pos=K.rv&&K.rk>=0?rvPos(K):0,nb=K.bb?K.bb.L.length+bbKings(K).length:0;
- const html=`<button class="map" onclick="${mo?'skyMap()':'skySneak()'}"><b>${mo?'🗺️ ออกนอกกำแพง':'🚪 แอบออกนอกกำแพง'}</b><small>${mo?`เหลือ ${tl}/${p1TMax(K)} เที่ยวปีนี้`:K.snY===S.age?'ปีนี้ออกไปแล้ว':'ยังไม่มีใบอนุญาต · เสี่ยง'}</small></button>${ok(K)?`<button class="bb" onclick="skyBB()"><b>📋 ค่าหัว</b><small>${nb?nb+' เป้าหมาย':'ดูกระดาน'}</small></button><button class="tw" onclick="skyTower()"><b>🏯 หอนักรบ</b><small>${pos?`อันดับ ${pos}/${rvBoard(K).length}`:'ดูอันดับ'}</small></button>`:''}`;
- if(a._h!==html){a._h=html;a.innerHTML=html;a.classList.toggle('one',!ok(K))}}catch(e){console.error('p1 hud',e)}return r}}
+ const html=`<button class="map" onclick="${mo?'skyMap()':'skySneak()'}"><b>${mo?'🗺️ ออกนอกกำแพง':'🚪 แอบออกนอกกำแพง'}</b><small>${mo?`เหลือ ${tl}/${p1TMax(K)} เที่ยวปีนี้`:K.snY===S.age?'ปีนี้ออกไปแล้ว':'ยังไม่มีใบอนุญาต · เสี่ยง'}</small></button>${ok(K)?`<button class="bb" onclick="skyBB()"><b>📋 ค่าหัว</b><small>${nb?nb+' เป้าหมาย':'ดูกระดาน'}</small></button><button class="tw" onclick="skyTower()"><b>🏯 หอนักรบ</b><small>${pos?`อันดับ ${pos}/${rvBoard(K).length}`:'ดูอันดับ'}</small></button>`:''}${age()>=12&&window.skyFac?`<button class="fc" onclick="skyFac()"><b>🏛️ ฝ่าย</b><small>${(()=>{try{const g=K.og,c=g&&g.cur&&FC[g.cur];return c?c.ic+' '+c.rk[fcRk(K,g.cur)]:'ยังไม่สังกัด'}catch(e){return'ดูฝ่าย'}})()}</small></button>`:''}`;
+ if(a._h!==html){a._h=html;a.innerHTML=html;a.classList.toggle('one',a.children.length<2)}}catch(e){console.error('p1 hud',e)}return r}}
 window.skyTower=function(){const K=SK();if(!K||K.rk<0)return toast('ต้องปลุกยีนก่อน');rvInit(K);const B=rvBoard(K),me=p1Me(K),dead=(K.rv||[]).filter(x=>x.st!=='ok');
  const row=(x,i)=>{const t=x.me?null:RVT[x.p];const can=!x.me&&Math.abs(x.i-me)<=3&&(K.rvDy==null||S.age-K.rvDy>=1);return`<div class="p1Tr${x.me?' me':''}"><span class="n">${i+1}</span><div><b>${esc(x.n)}${x.me?' (คุณ)':''}</b><small>${x.me?`${RK[K.rk].n} ${subN(K.sub)}`:`${t[0]} ${t[1]} · ${p1F(x.i)}${x.rel>=30?' · 💛 สนิท':x.rel<=-25?' · 💢 เป็นศัตรู':''}`}</small></div>${can?`<button onclick="skyRvD(${K.rv.indexOf(x)})">⚔️ ท้า</button>`:''}</div>`};
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="skShop p1Tw"><div class="skShH"><b>🏯 หอนักรบ${esc(K.city.replace('นคร',''))}</b><span>รุ่นเดียวกับคุณ</span></div><p class="tag2" style="margin:4px 0 8px">คนรุ่นเดียวกันไต่ขั้นไปพร้อมคุณ บางคนจะเป็นเพื่อน บางคนจะหักหลัง บางคนจะไม่ได้กลับมา · ท้าดวลคนที่อันดับใกล้กันได้ปีละครั้ง</p>${B.map(row).join('')}
   ${dead.length?`<div class="p1Bs">ที่หายไปจากหอ</div>${dead.map(x=>`<div class="p1Tr gone"><span class="n">${x.st==='dead'?'🕯️':x.st==='beast'?'👁️':x.st==='fallen'?'🚫':'❓'}</span><div><b>${esc(x.n)}</b><small>${x.st==='dead'?'เสียชีวิต':x.st==='beast'?'ถูกบางอย่างยึดร่าง':x.st==='fallen'?'ถูกขับออก':'สูญหาย'}</small></div></div>`).join('')}`:''}</div>`,'skytw')};
 window.skyRvD=function(i){const K=SK(),r=K&&K.rv&&K.rv[i];if(!r||r.st!=='ok')return;K.rvDy=S.age;closeM();rvDuel(K,r,w=>{if(r.p==='hon')r.rel+=w?15:8;else r.rel+=w?-8:4;try{skyTower()}catch(e){}})};
 {const st=document.createElement('style');st.textContent=`
-#mwHud.sky .p1Act{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:6px;margin-top:8px}#mwHud.sky .p1Act.one{grid-template-columns:1fr}
+#mwHud.sky .p1Act{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}#mwHud.sky .p1Act.one{grid-template-columns:1fr}
 #mwHud.sky .p1Act button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0;padding:8px 10px;border:1.5px solid #5cd2ff55;background:linear-gradient(160deg,#173041,#0f1d29);color:#e6f3ff;font:700 13px 'Chakra Petch',sans-serif;cursor:pointer;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);text-align:left}
 #mwHud.sky .p1Act button b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}#mwHud.sky .p1Act button small{font-weight:500;font-size:11px;color:#9db3c4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 #mwHud.sky .p1Act button.map{border-color:#ff8a3d;background:linear-gradient(160deg,#3a2415,#1a1410)}#mwHud.sky .p1Act button.map small{color:#ffc08a}
@@ -3042,8 +3042,228 @@ window.skyRvD=function(i){const K=SK(),r=K&&K.rv&&K.rv[i];if(!r||r.st!=='ok')ret
 .p1r{color:#ff6b6b}.p1o{color:#ffb84a}.p1y{color:#ffe08a}.p1g{color:#7be3a0}.p1c{color:#ffd36e}.p1Bf{text-align:center;color:#9db3c4;font-size:12px;margin-top:6px}
 .p1Tr{display:flex;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid #1f3444}.p1Tr .n{width:26px;text-align:center;font:800 15px 'Chakra Petch',sans-serif;color:#ffc08a}.p1Tr>div{flex:1;min-width:0}.p1Tr>div>b{display:block;color:#e6f3ff;font-size:14px}.p1Tr small{display:block}.p1Tr small{color:#9db3c4;font-size:12px}
 .p1Tr.me{background:linear-gradient(90deg,#ff8a3d33,transparent);border-left:3px solid #ff8a3d}.p1Tr.gone{opacity:.6}.p1Tr button{background:#ff8a3d;color:#141d26;border:0;font:700 12px 'Chakra Petch',sans-serif;padding:6px 10px;cursor:pointer}
-@media (max-width:380px){#mwHud.sky .p1Act{grid-template-columns:1fr 1fr}#mwHud.sky .p1Act button.map{grid-column:1/-1}}`;document.head.appendChild(st)}
+`;document.head.appendChild(st)}
 try{SYS_GUIDE.push({s:'base',nw:1,ic:'🏯',t:'ทะลุฟ้าดารา: หอนักรบ · ค่าหัว · ด่านทะลวง',d:'<b>🏯 หอนักรบ</b> คู่แข่งรุ่นเดียวกัน 6 คนไต่ขั้นไปพร้อมคุณ แซงกันได้ ท้าดวลได้ บางคนเป็นเพื่อน บางคนหักหลัง บางคนหายไปนอกกำแพง · <b>📋 กระดานค่าหัว</b> ตามรอย/ซื้อข่าว → เตรียมยาพิษ → เลือกแผนล่า · ไม่ล่าอสูรจะย้ายที่ โตขึ้น และอาจบุกกำแพง · ราชาอสูรล่าได้จากกระดานเมื่อพร้อม · <b>🧗 ชั้น 3 และ 6</b> ต้องฝ่าด่าน (ดวล · เซรั่ม · กลืนแก่น · รอ) · ติดด่านข้ามขั้นนานจะมี<b>ทางอื่น</b> · ออกนอกกำแพงได้ปีละ 3 เที่ยว · เด็กอายุ 10 ขึ้นไปแอบออกได้'})}catch(e){}
+
+// =================== 🧭 เฟส 2: สำรวจหลายห้อง (ใจกลางเขต) · 🏛️ หกฝ่ายในนคร (งาน 3 ขั้น หักหลัง สายลับ วิกฤต) · มินิเกมใหม่ 2 แบบ ===================
+// ---------- มินิเกมใหม่: 🔓 หมุนรหัสตู้นิรภัย · 🏃 หลบสิ่งกีดขวาง ----------
+function xcMG(kind,ti,sub,cb){if(mgAuto()){setTimeout(()=>cb(.35+rnd()*.45),60);return}MG={kind,cb,t:0,t2:0};
+ const shell=b=>modal(`<div class="skMg"><div class="skMgH">${ti}</div><p class="tag2">${sub}</p>${b}<button class="gbtn" style="width:100%;margin-top:10px" onclick="skyMgDone(.45)">⏭ ข้าม (ผลกลางๆ)</button></div>`,'skymg');
+ if(kind==='lock'){let rd=0,sc=0,cur=0;const tg=[R(0,9),R(0,9),R(0,9)];
+  shell(`<div class="xcLock"><div class="xcTg">${tg.map((d,i)=>`<i id="xcT${i}">${d}</i>`).join('')}</div><div class="xcDial" id="xcD">0</div></div><button class="pbtn skBig" onclick="xcLockTap()">🔓 หยุด!</button>`);
+  const paint=()=>{const e=$('xcD');if(e)e.textContent=cur;for(let i=0;i<3;i++){const t=$('xcT'+i);if(t)t.className=i<rd?'ok':i===rd?'on':''}};
+  const run=()=>{clearInterval(MG&&MG.t);if(MG)MG.t=setInterval(()=>{cur=(cur+1)%10;paint()},Math.max(70,150-rd*35))};
+  window.xcLockTap=()=>{const d=Math.min(Math.abs(cur-tg[rd]),10-Math.abs(cur-tg[rd]));sc+=d===0?1:d===1?.5:0;try{sfx(d===0?'good':d===1?'click':'bad')}catch(e){}rd++;if(rd>=3)return mgDone(sc/3);paint();run()};
+  paint();run();MG.t2=setTimeout(()=>mgDone(sc/3),15000);return}
+ if(kind==='dodge'){let lane=1,lives=3,tick=0;const T=26,rows=5,ob=[];
+  shell(`<div class="xcDg"><div class="xcHp" id="xcHp">❤️❤️❤️</div><div class="xcG" id="xcG"></div><div class="xcB"><button onclick="xcMv(-1)" aria-label="ซ้าย">◀</button><button onclick="xcMv(1)" aria-label="ขวา">▶</button></div></div>`);
+  const draw=()=>{const g=$('xcG');if(!g)return;let h='';for(let r=0;r<rows;r++)for(let c=0;c<3;c++){const o=ob.some(x=>x.r===r&&x.c===c),me=r===rows-1&&c===lane;h+=`<i class="${me?'me':''}${o?' ob':''}">${me?'🏃':o?'🪨':''}</i>`}g.innerHTML=h;const hp_=$('xcHp');if(hp_)hp_.textContent='❤️'.repeat(lives)+'🖤'.repeat(3-lives)};
+  window.xcMv=d=>{lane=cl(lane+d,0,2);draw()};
+  MG.t=setInterval(()=>{tick++;ob.forEach(o=>o.r++);for(let i=ob.length-1;i>=0;i--){const o=ob[i];if(o.r===rows-1&&o.c===lane){lives--;ob.splice(i,1);try{sfx('bad')}catch(e){}}else if(o.r>=rows)ob.splice(i,1)}
+   if(lives<=0)return mgDone(tick/T*.3);if(tick>=T)return mgDone(.3+lives/3*.7);if(tick%2===0){const c=R(0,2);ob.push({r:0,c});if(tick>10&&rnd()<.35)ob.push({r:0,c:(c+R(1,2))%3})}draw()},Math.max(240,380));
+  draw();return}
+ cb(.5)}
+
+// ---------- 🧭 สำรวจหลายห้อง ----------
+const XR={
+ amb:{h:['👣 รอยเท้าใหม่เต็มพื้น','🔇 เงียบผิดปกติ']},wreck:{h:['🚗 ซากรถเรียงกัน','📦 กล่องเหล็กโผล่จากดิน']},surv:{h:['🔥 ควันไฟเล็กๆ','📻 เสียงวิทยุซ่า']},
+ nest:{h:['🥚 กลิ่นคาวแรงมาก','🦴 กระดูกกองสูง']},storm:{h:['🌫️ หมอกเหลืองหนา','⚡ ฟ้าแลบในหุบ']},vault:{h:['🏛️ ประตูเหล็กก่อนดาวตก','✨ แสงวาบใต้ดิน']},
+ trader:{h:['🛺 รถเข็นมีกระดิ่ง','🎶 เสียงคนผิวปาก']},camp:{h:['⛺ ถ้ำแห้งพอนอนได้','🌙 เนินที่มองเห็นรอบด้าน']}};
+const XW={amb:22,wreck:18,surv:12,nest:10,storm:10,vault:8,trader:8,camp:10};
+function xcRoll(){let s=0;for(const k in XW)s+=XW[k];let r=rnd()*s;for(const k in XW){r-=XW[k];if(r<=0)return k}return'amb'}
+function xcHint(t){const real=pick(XR[t].h);if(rnd()<.18){const o=pick(Object.keys(XR).filter(k=>k!==t));return pick(XR[o].h)}return real}
+const xcDg=K=>{const W=K.cw;return ZN[W.z].d+W.dp*.5-xRank(K)};
+function xcStart(K,id){K.cw={z:id,dp:0,mx:R(3,4)+Math.ceil(ZN[id].d/2),c:0,co:0,g:null,x:[]};say(`🧭 <b>สำรวจลึก: ${ZN[id].e} ${ZN[id].n}</b> · ยิ่งลึกยิ่งได้ของดี กลับนครได้ทุกห้อง`,'');xcNext(K)}
+function xcLoot(K){const W=K.cw;return`💳 ${fmt(W.c)} · 🔶 ${W.co}${W.x.length?' · '+W.x.join(' · '):''}`}
+function xcNext(K){const W=K.cw;if(!W)return;if(S.hp<S.maxHp*.15)return xcEnd(K,'flee');if(W.dp>=W.mx)return xcCore(K);const Z=ZN[W.z],a=xcRoll(),b=xcRoll(),pct=Math.round(S.hp/S.maxHp*100);
+ C(`${Z.e} ${Z.n} · ห้อง ${W.dp+1}/${W.mx}`,`${pick(ZFL[W.z]||[Z.t])}<br><br>❤️ ${pct}% · ของที่เก็บได้: ${xcLoot(K)}<br><span class="tag2">ทางแยกสองทาง · สัญญาณข้างหน้าอาจหลอกตา</span>`,[
+  O(`ซ้าย: ${xcHint(a)}`,()=>xcRoom(K,a)),O(`ขวา: ${xcHint(b)}`,()=>xcRoom(K,b)),O('🏠 กลับนครพร้อมของ',()=>xcEnd(K,'back'),'ปลอดภัย')])}
+function xcGo(K){K.cw.dp++;setTimeout(()=>xcNext(K),500)}
+function xcHit(K,p){return hp(p*(1+Math.max(0,xcDg(K))*.35))}
+function xcRoom(K,t){const W=K.cw,Z=ZN[W.z],dg=xcDg(K),pw=cl(.55-dg*.12+tqHunt(K,ZEL[W.z])+(K.f.team?.08:0),.12,.92);
+ if(t==='amb')return C('👹 ซุ่มโจมตี!',`อสูรสามตัวกระโจนออกจากเงา${dg>1?' ตัวใหญ่กว่าที่ควรเจอในเขตนี้':''}`,[
+  O('สู้!',()=>skyMG('tap','👹 ฝ่าวงล้อม','แตะตาอสูรให้ไว',sc=>{if(rnd()<pw+sc*.25){const n=1+(dg>0?1:0);W.co+=n;say(`⚔️ ล้มได้ทั้งฝูง · แก่น +${n}${xp(6+W.dp*3)}`,'good')}else{const d=xcHit(K,.12);say(`🩸 ถูกกัด · พลังชีวิต −${d}`,'bad')}xcGo(K)}),'มินิเกม'),
+  O('หนีหลบ',()=>xcMG('dodge','🏃 วิ่งหนีผ่านซาก','กด ◀ ▶ หลบหิน 3 เลน',sc=>{if(sc<.5){const d=xcHit(K,.08);say(`🩸 หลบไม่พ้น · พลังชีวิต −${d}`,'bad')}else say('💨 หลุดรอดมาได้แบบหายใจไม่ทัน','');xcGo(K)}),'มินิเกมใหม่')]);
+ if(t==='wreck')return C('🚗 ซากก่อนดาวตก','รถตู้ตกค้างกับตู้เซฟเล็กๆ ที่ยังล็อกอยู่ ข้างนอกเงียบเกินไป',[
+  O('คว้าของที่เห็นแล้วไป',()=>{const c=Math.round((120+ZN[W.z].d*80)*(1+W.dp*.3));W.c+=c;say(`🎒 ได้ของติดมือ +${fmt(c)} เครดิต`,'');xcGo(K)}),
+  O('งัดตู้เซฟ',()=>xcMG('lock','🔓 หมุนรหัสตู้เซฟ','กดหยุดตอนเลขตรงกับรหัส 3 หลัก',sc=>{if(sc>=.5){const c=Math.round((500+ZN[W.z].d*350)*(1+W.dp*.4)*sc);W.c+=c;say(`💰 ตู้เปิด! +${fmt(c)} เครดิต`,'good');if(rnd()<.2){W.x.push('🗺️ แผนที่เก่า');const h=Object.keys(ZN).filter(z=>ZN[z].hid&&!zHas(K,z)&&(ZN[z].r||1)===(ZN[W.z].r||1));if(h.length)say('🗺️ ในตู้มีแผนที่ก่อนดาวตก'+zKnow(K,pick(h)),'epic')}}else if(rnd()<.4){const d=xcHit(K,.1);say(`💥 กลไกกันขโมยระเบิด · พลังชีวิต −${d}`,'bad')}else say('🔒 รหัสผิดสามครั้ง ตู้ล็อกตาย','');xcGo(K)}),'มินิเกมใหม่')]);
+ if(t==='surv'){const lost=(K.rv||[]).find(r=>r.p==='fr'&&r.st==='gone');if(lost&&rnd()<.4)return C('📻 เสียงที่คุ้นหู',`ในอาคารพังมีคนนั่งพิงผนัง ผอมจนจำแทบไม่ได้… ${esc(lost.n)}! เพื่อนที่สมาคมประกาศว่าสูญหาย`,[
+   O('แบกเขากลับ',()=>{lost.st='ok';lost.rel+=40;lost.i=Math.max(lost.i,p1Me(K)-3);W.dp=W.mx;S.karma+=8;say(`🫂 <b>${esc(lost.n)}ยังมีชีวิต</b> คุณแบกเขากลับนครทั้งคืน ของที่เก็บมาต้องทิ้งไปครึ่ง`,'myth',true);W.c=Math.round(W.c/2);xcEnd(K,'back')})]);
+  return C('🔥 ผู้รอดชีวิต',`ชายคนหนึ่งขาเจ็บนั่งข้างกองไฟ “ช่วยด้วย ทีมผมตายหมดแล้ว”${rnd()<.5?' ข้างหลังเขามีเป้ใบใหญ่เกินกว่าจะเป็นของคนเดียว':''}`,[
+   O('ช่วยพยุงเขา',()=>{if(rnd()<.3){const d=xcHit(K,.15);W.c=Math.round(W.c*.6);say(`🔪 <b>มันคือเหยื่อล่อ</b> โจรสามคนโผล่จากหลังซาก ฉกของไปส่วนหนึ่ง · พลังชีวิต −${d}`,'bad',true);if(!K.f.raidRing){K.f.raidRing=1;W.x.push('🔖 รอยสักโจร')}}else{S.karma+=4;const h=Object.keys(ZN).filter(z=>!zHas(K,z)&&(ZN[z].r||1)===(ZN[W.z].r||1));say('🤝 เขาเป็นคนจริง ระหว่างทางเขาเล่าถึงทางลับที่ทีมเขาเคยใช้'+(h.length?zKnow(K,pick(h)):''),'good')}xcGo(K)},'กรรมดี · อาจเป็นกับดัก'),
+   O('ให้น้ำแล้วเดินต่อ',()=>{xcGo(K)}),O('ค้นเป้เขา',()=>{S.karma-=5;W.c+=600;say('🎒 คุณเอาของไปก่อนเขาจะพูดจบ +600 เครดิต','');xcGo(K)},'กรรมไม่ดี')])}
+ if(t==='nest')return C('🥚 รังอสูร','รังขนาดเท่าห้องนอน มีแก่นอสูรของเหยื่อเก่ากองอยู่ แม่ของรังไม่อยู่… ตอนนี้',[
+  O('ย่องเข้าไปเก็บแก่น',()=>skyMG('stealth','🥚 ย่องในรัง','ขยับตอนมันหลับตา',sc=>{if(rnd()<.3+sc*.6){const n=2+Math.floor(ZN[W.z].d/2);W.co+=n;say(`🔶 แก่นอสูร +${n}`,'good')}else{const d=xcHit(K,.2);say(`🩸 แม่ของรังกลับมาพอดี · พลังชีวิต −${d}`,'bad')}xcGo(K)}),'มินิเกม'),
+  O('เผารัง',()=>{S.karma-=3;K.wall=Math.min(100,K.wall+2);say('🔥 รังลุกไหม้ อสูรรุ่นหน้าในเขตนี้จะน้อยลง · กำแพง +2','');xcGo(K)}),O('เลี่ยงไป',()=>xcGo(K))]);
+ if(t==='storm'){const tw=rnd()<.3;return C('🌫️ พายุกำมะถัน','ลมพัดควันเหลืองเข้ามาจนมองไม่เห็นมือตัวเอง หน้ากากกรองเริ่มร้อน'+(tw?' ในหมอกคุณเห็นเงาของบางอย่างสูงเท่าตึก ยืนนิ่งอยู่ไกลๆ':''),[
+  O('ฝ่าไปเลย',()=>{const d=xcHit(K,.1);say(`😷 แสบปอด · พลังชีวิต −${d}`,'bad');if(tw){W.x.push('👁️ เงาในหมอก');const s=bbGet(K).kn.mount;if(s&&!K.f.kingKill){s.int=Math.min(3,s.int+1);say('👁️ เงานั้นคือราชาภูผา · ข่าวราชา +1','epic')}}xcGo(K)}),
+  O('หลบในซากรอให้ผ่าน',()=>{W.mx=Math.max(W.dp+1,W.mx-1);say('⏳ พายุกินเวลาครึ่งวัน เส้นทางที่เหลือสั้นลง','');xcGo(K)})])}
+ if(t==='vault')return C('🏛️ ห้องนิรภัยก่อนดาวตก','ประตูเหล็กหนาครึ่งเมตร ตราหน่วยงานรัฐเก่าที่ไม่มีแล้ว แผงรหัสยังมีไฟ',[
+  O('ถอดรหัส',()=>xcMG('lock','🏛️ ถอดรหัสห้องนิรภัย','กดหยุดตอนเลขตรง',sc=>{if(sc>=.67){const r=pick(['gear','gp','tape','tape']);
+   if(r==='gear'){const G=gearOf(K),k=pick(['w','a']);if(G[k]<GEARN[k].length-1){G[k]++;W.x.push(k==='w'?'🗡️ อาวุธยุคเก่า':'🛡️ เกราะยุคเก่า');say(`🛡️ <b>ชุดยุทธภัณฑ์ทหารก่อนดาวตก</b> · ${k==='w'?'อาวุธ':'เกราะ'} +1`,'epic');sync()}else{W.c+=3000;say('💰 ทองแท่งเล็กๆ +3,000 เครดิต','good')}}
+   else if(r==='gp'){K.gp=(K.gp|0)+1;W.x.push('🧬 ยีนต้นแบบ');say('🧬 <b>หลอดยีนต้นแบบในตู้เย็นที่ยังทำงาน</b> · แต้มยีน +1','epic')}
+   else{W.x.push('📼 เทปลับ');K.f.tape=1;queueLater(K,'xc_tape',1);say('📼 ในห้องมีเทปบันทึกเสียงม้วนเดียว ติดป้าย “ลับที่สุด · 3 วันก่อนดาวตก”','epic')}}
+   else{const d=xcHit(K,.06);say(`🚨 ระบบป้องกันยิงเข็มยาสลบ · พลังชีวิต −${d}`,'bad')}xcGo(K)}),'มินิเกมใหม่'),O('ปล่อยไว้',()=>xcGo(K))]);
+ if(t==='trader')return C('🛺 พ่อค้าเร่จากนิคม',`ชายแก่ลากรถเข็นติดกระดิ่ง “ของดีนอกกำแพง ไม่มีภาษี”${K.og&&K.og.cur==='bm'?' เขาเห็นรอยสักตลาดมืดของคุณแล้วยิ้ม “คนกันเอง ลดครึ่ง”':''}`,[
+  O(`ยาสมานแผล (${K.og&&K.og.cur==='bm'?1:2} แก่น)`,()=>{const c=K.og&&K.og.cur==='bm'?1:2;if(W.co+K.cores<c)return say('🔶 แก่นไม่พอ',''),xcGo(K);if(W.co>=c)W.co-=c;else{K.cores-=c-W.co;W.co=0}heal(.35);say('🩹 แผลหายเกือบหมด','good');xcGo(K)}),
+  O('ซื้อข่าว (400 เครดิต)',()=>{if((S.money||0)<400)return say('💸 เงินไม่พอ',''),xcGo(K);cr(-400);K.intel=(K.intel|0)+1;say('📜 ข่าวกรอง +1 (ใช้เพิ่มโอกาสล่า)','');xcGo(K)}),O('ไม่ซื้อ',()=>xcGo(K))]);
+ // camp
+ return C('⛺ จุดพัก','ถ้ำแห้งที่มองเห็นทางเข้าได้ทางเดียว',[
+  O('นอนพัก',()=>{if(rnd()<.3){const d=xcHit(K,.1);say(`🌙 ตื่นมาเจอเงาที่ปากถ้ำ · พลังชีวิต −${d}`,'bad')}else{heal(.22);say('😴 หลับได้สามชั่วโมงเต็ม','good')}xcGo(K)}),
+  O('ไม่พัก เดินต่อ',()=>xcGo(K))])}
+function xcCore(K){const W=K.cw,Z=ZN[W.z];C(`💠 ใจกลาง${Z.n}`,`ลึกที่สุดของเขต อสูรเฝ้าถิ่นตัวใหญ่ที่สุดในแถบนี้นอนขดอยู่บนกองแก่นของเหยื่อนับร้อย`,[
+ O('ท้าสู้เจ้าถิ่น',()=>skyMG('seq',`💠 เจ้าถิ่น${Z.n}`,'จำจังหวะมันแล้วกดตาม',sc=>{const p=cl(.3+sc*.5-xcDg(K)*.1+tqHunt(K,ZEL[W.z])+(K.f.team?.08:0),.08,.92);
+  if(rnd()<p){const n=3+Z.d;W.co+=n;W.c+=1500*Z.d;W.x.push('💠 แก่นเจ้าถิ่น');fameA(200*Z.d);say(`💠 <b>เจ้าถิ่นล้มลง!</b> แก่น +${n} · +${fmt(1500*Z.d)} เครดิต`,'myth',true);if(Z.g&&!has(K,Z.g)&&K.genes.length<3&&rnd()<.35){K.pend=Z.g;queue('gene')}xcEnd(K,'back')}
+  else{const d=xcHit(K,.25);say(`🩸 เจ้าถิ่นเหนือกว่า · พลังชีวิต −${d}`,'bad');if(S.hp<S.maxHp*.06&&xcDg(K)>1&&rnd()<.3)return die([`ถูกเจ้าถิ่น${Z.n}ฆ่า`],`💠 ไม่มีใครเห็นคุณออกมาจากใจกลาง${Z.n}`);xcEnd(K,'flee')}}),'มินิเกม'),
+ O('เก็บของรอบนอกแล้วถอย',()=>{W.co+=1;xcEnd(K,'back')})])}
+function xcEnd(K,how){const W=K.cw;if(!W)return;K.cw=null;const f=how==='flee'?.5:1,c=Math.round(W.c*f),co=Math.round(W.co*f);cr(c);K.cores+=co;
+ say(`${how==='flee'?'🩸 <b>ถอยหนีกลับนคร</b> ของหล่นหายครึ่งหนึ่ง':'🏠 <b>กลับถึงนคร</b>'} · ได้ ${fmt(c)} เครดิต · แก่น ${co}${W.x.length?' · '+W.x.join(' · '):''}${xp(8+W.dp*6)}`,how==='flee'?'bad':'good');K.xcN=(K.xcN|0)+1;try{flush()}catch(e){}render()}
+// แทนการสำรวจแบบเดิม (ลุย/สำรวจ/กลับ) ด้วยการสำรวจหลายห้อง
+expBasic=function(K,id){xcStart(K,id)};window._skyXc=id=>{const K=SK();if(K&&ok(K)&&ZN[id])xcStart(K,id)};
+def('xc_tape',{c:()=>false,w:0,go(K){C('📼 เทปสามวันก่อนดาวตก',`เสียงผู้ชายในเทปพูดกับใครบางคน “วงโคจรยืนยันแล้ว ประชาชนไม่ต้องรู้ บริษัทศิลาฟ้าจะได้ที่นั่งในหลุมหลบภัยร้อยที่ ที่เหลือ…” เทปขาดตรงนั้น บริษัทศิลาฟ้าคือบริษัทยีนที่คุมนครทุกวันนี้`,[
+ O('ปล่อยเทปให้ทั้งนครฟัง',()=>{fameA(5000);K.f.coEnemy=1;fcRep(K,'co',-40);fcRep(K,'slum',30);fcRep(K,'cult',15);K.wall=Math.max(0,K.wall-5);say('📢 <b>ทั้งนครได้ยินเทป</b> คนสลัมลงถนนสามวัน ผู้บริหารบริษัทสองคนหายตัว · กำแพง −5 ระหว่างจลาจล','myth',true)}),
+ O('ขายเทปให้บริษัทยีน',()=>{cr(30000);fcRep(K,'co',25);S.karma-=12;say('💼 ชายในสูทขาวจ่าย 30,000 เครดิตแลกเทป และให้นามบัตรสีดำ','')}),
+ O('เก็บไว้',()=>{K.f.tapeKeep=1;say('🗄️ คุณซ่อนเทปไว้ใต้พื้นห้อง สักวันอาจต้องใช้','')})])}});
+
+// ---------- 🏛️ หกฝ่ายในนคร ----------
+const FC={
+ mil:{ic:'🪖',n:'กองทัพกำแพง',rk:['พลทหาร','สิบเอกกำแพง','ร้อยตรีป้อม','พันเอกกำแพง','แม่ทัพกำแพง'],en:['bm','cult'],req:K=>age()>=16,rq:'อายุ 16 ขึ้นไป',d:'คนเฝ้ากำแพง เงินเดือนน้อย ตายบ่อย แต่ทั้งนครยังอยู่เพราะพวกเขา',pk:r=>`กำแพง +${r} ต่อปี`},
+ gld:{ic:'🗡️',n:'สมาคมนักล่า',rk:['สมาชิกใหม่','นักล่าประจำ','หัวหน้าหน่วย','กรรมการสมาคม','ประธานสมาคม'],en:['bm'],req:K=>K.lic>=1,rq:'มีใบอนุญาตนักล่า',d:'คุมใบอนุญาต ค่าหัว และตลาดซากอสูร สมาคมเก่าแก่ที่ทุกคนต้องผ่าน',pk:r=>`ค่าหัว +${r*8}%`},
+ co:{ic:'🧬',n:'บริษัทยีนศิลาฟ้า',rk:['อาสาสมัคร','พนักงานสนาม','หัวหน้าโครงการ','ผู้อำนวยการ','บอร์ดบริหาร'],en:['slum','cult'],req:K=>K.rk>=0&&!K.f.coEnemy,rq:'ปลุกยีนแล้ว และไม่เป็นศัตรูบริษัท',d:'ผลิตเซรั่มทุกขวดในนคร คนรวยที่สุดในนครทำงานที่นี่ ไม่มีใครรู้ว่าชั้นใต้ดินมีกี่ชั้น',pk:r=>`เซรั่มถูกลง ${r*10}%`},
+ bm:{ic:'🕳️',n:'ตลาดมืดใต้สะพาน',rk:['เด็กส่งของ','คนขน','นายหน้า','เจ้าถิ่น','ราชาใต้สะพาน'],en:['mil','gld'],req:K=>age()>=14,rq:'อายุ 14 ขึ้นไป',d:'ทุกอย่างที่นครห้าม มีขายใต้สะพานรถไฟเก่า ราคาถูกกว่า แต่จ่ายด้วยอย่างอื่นด้วย',pk:r=>`ข่าวถูกลง · เครดิต +${r*300}/ปี`},
+ cult:{ic:'☄️',n:'ลัทธิบุตรแห่งดาว',rk:['ผู้ฟัง','ผู้จุดเทียน','ผู้อ่านดาว','นักบวชอุกกาบาต','ศาสดา'],en:['co','mil'],req:K=>age()>=14,rq:'อายุ 14 ขึ้นไป',d:'เชื่อว่าดาวตกไม่ใช่ภัย แต่เป็นการเรียก อสูรคือ “บุตรแห่งดาว” และมนุษย์ต้องฟังให้ทัน',pk:r=>`จิต +${r*4} ต่อปี`},
+ slum:{ic:'🏚️',n:'ขบวนการคนนอกกำแพง',rk:['คนในซอย','อาสาซอย','แกนนำซอย','เสียงของสลัม','ผู้นำขบวนการ'],en:['co'],req:K=>age()>=12,rq:'อายุ 12 ขึ้นไป',d:'คนสามแสนที่อยู่ระหว่างกำแพงชั้นนอกกับชั้นใน ไม่มีสิทธิ์เลือกตั้ง ไม่มีที่ในหลุมหลบภัย',pk:r=>`กรรม +1/ปี · กันคลื่นดีขึ้น`}};
+const FCR=[0,15,40,70,110];
+function fcG(K){return K.og||(K.og={cur:null,rep:{},st:{},y:-9,spy:null,cx:null})}
+const fcRk=(K,id)=>{const v=fcG(K).rep[id]|0;let r=0;FCR.forEach((t,i)=>{if(v>=t)r=i});return r};
+function fcRep(K,id,n){const g=fcG(K);g.rep[id]=(g.rep[id]|0)+n;return g.rep[id]}
+const fcCur=K=>{const g=fcG(K);return g.cur&&FC[g.cur]?g.cur:null};
+function fcJoin(K,id){const g=fcG(K),F=FC[id];if(g.cur===id)return;const old=g.cur;if(old){fcRep(K,old,-25);if(fcRk(K,old)>=2||(g.st[old]|0)>=2)queueLater(K,'fc_rev',R(2,4));g.revF=old}g.cur=id;g.rep[id]=Math.max(g.rep[id]|0,5);F.en.forEach(e=>fcRep(K,e,-10));if(id==='mil')K.fac='mil';
+ say(`${F.ic} <b>เข้าร่วม${F.n}</b>${old?` · ทิ้ง${FC[old].n}ไว้ข้างหลัง`:''} — ${F.d}`,'epic',true)}
+window.skyFac=function(sel){const K=SK();if(!K)return;const g=fcG(K),cur=fcCur(K);
+ const card=id=>{const F=FC[id],r=fcRk(K,id),v=g.rep[id]|0,on=cur===id,st=g.st[id]|0,can=F.req(K),nx=FCR[r+1],en=cur&&FC[cur].en.includes(id);
+  return`<div class="fcC${on?' on':''}${en?' en':''}"><div class="fcH"><span>${F.ic}</span><div><b>${F.n}</b><small>${on?`✅ สังกัดอยู่ · ${F.rk[r]}`:v<0?'💢 ไม่ไว้ใจคุณ':v>0?`รู้จักคุณ · ${F.rk[r]}`:'ยังไม่รู้จักคุณ'}${en?' · ⚔️ เป็นศัตรูกับฝ่ายคุณ':''}</small></div></div>
+  <p>${F.d}</p><div class="fcM"><span>ชื่อเสียงในฝ่าย ${v}${nx!=null?`/${nx}`:' (สูงสุด)'}</span><span>ผลประโยชน์: ${F.pk(Math.max(1,r))}</span><span>งานของฝ่าย ${st}/3</span></div>
+  <div class="fcB">${on?`<button class="go" ${g.y===S.age||st>=3?'disabled':''} onclick="skyFcQ()">${st>=3?'🏆 งานครบแล้ว':g.y===S.age?'งานปีนี้ทำแล้ว':`📜 รับงานขั้น ${st+1}`}</button>`:`<button ${can&&v>-30?'':'disabled'} onclick="skyFcJ('${id}')">${cur?'🔀 ย้ายมาฝ่ายนี้':'✋ เข้าร่วม'}</button>${!can?`<small>ต้อง: ${F.rq}</small>`:v<=-30?'<small>ฝ่ายนี้ไม่รับคุณแล้ว</small>':''}`}</div></div>`};
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="skShop fcP"><div class="skShH"><b>🏛️ ฝ่ายใน${esc(K.city)}</b><span>${cur?FC[cur].ic+' '+FC[cur].n:'ยังไม่สังกัด'}</span></div>
+ <p class="tag2" style="margin:4px 0 8px">สังกัดได้ทีละฝ่าย · ทำงานของฝ่ายปีละ 1 งาน (3 ขั้น ทุกขั้นมีทางแยก) · ฝ่ายที่เป็นศัตรูกันจะไม่พอใจ · ย้ายฝ่ายได้ แต่ฝ่ายเก่าจำ${g.spy?`<br>🕵️ <b>คุณเป็นสายลับให้${FC[g.spy].n}</b>`:''}</p>
+ ${Object.keys(FC).sort((a,b)=>(b===cur)-(a===cur)).map(card).join('')}</div>`,'skyfc')};
+window.skyFcJ=function(id){const K=SK();if(!K||!FC[id])return;const F=FC[id],g=fcG(K);if(!F.req(K))return toast('ยังไม่ผ่านเงื่อนไข: '+F.rq);if((g.rep[id]|0)<=-30)return toast('ฝ่ายนี้ไม่รับคุณแล้ว');closeM();
+ const cur=fcCur(K);C(`${F.ic} ${F.n}`,`${F.d}${cur?`<br><br>⚠️ ถ้าย้าย ${FC[cur].ic} ${FC[cur].n}จะไม่พอใจ${fcRk(K,cur)>=2||(g.st[cur]|0)>=2?' และคุณรู้ความลับของพวกเขามากเกินไป':''}`:''}${F.en.length?`<br><span class="tag2">ศัตรูของฝ่ายนี้: ${F.en.map(e=>FC[e].ic+' '+FC[e].n).join(' · ')}</span>`:''}`,[
+  O(cur?'ย้ายฝ่าย':'เข้าร่วม',()=>{fcJoin(K,id);render()}),...(cur&&!g.spy?[O(`🕵️ เข้าไปเป็นสายลับให้${FC[cur].n}`,()=>{g.spy=cur;g.spyY=S.age;fcJoin(K,id);g.rep[cur]=(g.rep[cur]|0)+25;say(`🕵️ ${FC[cur].n}ยังจ่ายคุณอยู่ลับๆ ทุกปี — ถ้าถูกจับได้ จะไม่มีใครช่วย`,'');render()},'ได้เงินสองทาง · เสี่ยงถูกเปิดโปง')]:[]),O('ยังก่อน',()=>{})])};
+window.skyFcQ=function(){const K=SK(),id=fcCur(K);if(!id)return;const g=fcG(K),st=g.st[id]|0;if(st>=3||g.y===S.age)return;const need=[0,1,2][st];if(fcRk(K,id)<need)return toast(`ต้องเป็น ${FC[id].rk[need]} ขึ้นไปก่อน (ชื่อเสียงในฝ่าย ${FCR[need]})`);closeM();g.y=S.age;FQ[id][st](K,(ok_,rep)=>{if(ok_){g.st[id]=st+1;fcRep(K,id,rep||[15,22,35][st]);fcRkUp(K,id)}else fcRep(K,id,-5);render()})};
+function fcRkUp(K,id){const g=fcG(K),r=fcRk(K,id);g.rk=g.rk||{};if(r>(g.rk[id]|0)){g.rk[id]=r;say(`${FC[id].ic} <b>เลื่อนตำแหน่ง: ${FC[id].rk[r]}</b> แห่ง${FC[id].n}`,'epic');try{island({big:1,ic:FC[id].ic,h:'เลื่อนตำแหน่ง',t:FC[id].rk[r],kind:'gold',ms:4000})}catch(e){}}}
+// งาน 3 ขั้นของแต่ละฝ่าย (ทุกขั้นมีทางแยก ขั้น 2–3 หักมุม)
+const FQ={
+ mil:[
+  (K,dn)=>C('🪖 งานขั้น 1 · คืนพายุบนกำแพง','ไฟส่องกำแพงทิศเหนือดับทั้งแนวในคืนพายุ คุณต้องเฝ้าช่องว่างสองกิโลเมตรจนกว่าไฟจะกลับมา',[
+   O('เฝ้าช่องว่าง',()=>xcMG('dodge','🧱 วิ่งอุดช่องบนกำแพง','กด ◀ ▶ หลบเศษหินที่ร่วงลงมา',sc=>{if(sc>=.45){K.wall=Math.min(100,K.wall+4);say('🧱 ไฟกลับมาตอนตีสี่ ไม่มีอสูรผ่านช่องว่างสักตัว · กำแพง +4','good');dn(1)}else{const d=hp(.15);say(`🩸 อสูรตัวหนึ่งปีนขึ้นมาได้ คุณลากมันตกลงไปด้วยกัน · พลังชีวิต −${d}`,'bad');dn(1,8)}}),'มินิเกมใหม่')]),
+  (K,dn)=>C('🪖 งานขั้น 2 · กระสุนหาย',`คุณคุมคลังกระสุนและพบว่ายอดในบัญชีกับของจริงต่างกันสามพันนัด ลายเซ็นในใบเบิกเป็นของผู้พันที่เลื่อนตำแหน่งให้คุณเอง`,[
+   O('รายงานตรงถึงแม่ทัพ',()=>{if(rnd()<.6){say('⚖️ <b>ผู้พันถูกปลด</b> ตำแหน่งว่างตกเป็นของคุณ ทหารบางคนไม่มองหน้าคุณอีก','epic');fcRep(K,'bm',-15);dn(1,30)}else{say('📁 รายงานหายไประหว่างทาง สามวันต่อมาคุณถูกย้ายไปเฝ้าป้อมที่ไกลที่สุด… และรู้ว่าแม่ทัพก็มีส่วน','bad');K.f.milRot=1;dn(0)}}),
+   O('ขอส่วนแบ่ง',()=>{cr(5000);S.karma-=8;fcRep(K,'bm',15);K.f.milDirt=1;say('💼 ผู้พันยิ้ม “รู้งานนี่” ซองแรก 5,000 เครดิต','');dn(1)}),
+   O('แอบตามไปดูว่าขายให้ใคร',()=>skyMG('stealth','🌙 ตามรถขนกระสุน','ขยับตอนไฟฉายหันไป',sc=>{if(rnd()<.35+sc*.55){say('👁️ กระสุนไม่ได้ไปตลาดมืด มันไปที่<b>นิคมกระดูกวาฬ</b> ผู้พันส่งอาวุธให้คนที่นครไม่รับ เพื่อให้พวกเขารอดจากคลื่นอสูร','myth',true);K.f.milSecret=1;fcRep(K,'slum',10);dn(1,25)}else{const d=hp(.2);say(`🩸 ถูกจับได้กลางทาง · พลังชีวิต −${d}`,'bad');dn(0)}}),'มินิเกม · ความจริงอาจไม่ใช่อย่างที่คิด')]),
+  (K,dn)=>C('🪖 งานขั้น 3 · คำสั่งเผานิคม',`กองบัญชาการสั่งเผานิคมกระดูกวาฬ “แหล่งซ่องสุมอสูรและผู้ลี้ภัยผิดกฎหมาย” คุณเป็นคนนำกำลัง${K.f.milSecret?' และคุณรู้ว่าคนที่นั่นรอดมาได้เพราะกระสุนจากผู้พัน':''}`,[
+   O('ทำตามคำสั่ง',()=>{K.wall=Math.min(100,K.wall+10);S.karma-=20;fcRep(K,'slum',-40);K.f.burnSet=1;say('🔥 นิคมลุกเป็นไฟทั้งคืน คุณได้เหรียญกล้าหาญ และฝันถึงเสียงเด็กทุกคืน · กำแพง +10','bad',true);dn(1,40)}),
+   O('แอบเตือนนิคมก่อน แล้วเผาบ้านเปล่า',()=>skyMG('stealth','🌙 วิ่งไปเตือนนิคมก่อนรุ่งสาง','ขยับตอนหน่วยลาดตระเวนหลับตา',sc=>{if(rnd()<.35+sc*.55){S.karma+=15;fcRep(K,'slum',30);zKnow(K,'set');say('🌅 <b>นิคมอพยพทันก่อนกองทัพมาถึง</b> ไฟเผาแต่บ้านเปล่า ในรายงานคุณเขียนว่า “ภารกิจสำเร็จ”','myth',true);dn(1,40)}else{fcRep(K,'mil',-30);say('🚨 มีคนเห็นคุณออกจากค่ายตอนตีสาม คุณถูกขังสองปี','bad');dn(0)}}),'มินิเกม'),
+   O('ปฏิเสธต่อหน้าทุกคน',()=>{S.karma+=10;fcRep(K,'mil',-35);fcRep(K,'slum',40);K.f.milRefuse=1;say('✊ คุณถอดยศวางบนโต๊ะ ทหารยี่สิบคนถอดตาม คำสั่งถูกยกเลิก แต่คุณไม่ใช่ทหารอีกแล้ว','myth',true);fcG(K).cur=null;dn(0)})])],
+ gld:[
+  (K,dn)=>C('🗡️ งานขั้น 1 · สอบเลื่อนใบอนุญาต','ใบอนุญาตระดับสูงขึ้นหมายถึงเขตล่าที่ลึกขึ้น ค่าหัวที่แพงขึ้น และชื่อบนบอร์ดสมาคม',[
+   O('ลงสนามสอบ',()=>skyMG('tap','🎯 สนามสอบระดับ','แตะเป้าให้ไว',sc=>{if(rnd()<.35+sc*.55){K.lic=Math.min(6,K.lic+1);say(`🪪 <b>ใบอนุญาตระดับ ${['','E','D','C','B','A','S'][K.lic]}</b>`,'epic');dn(1)}else{say('📋 ไม่ผ่าน ปีหน้าลองใหม่','');dn(0)}}),'มินิเกม')]),
+  (K,dn)=>C('🗡️ งานขั้น 2 · คุ้มกันนักวิจัย',`สมาคมให้คุณคุ้มกันนักวิจัยหญิงออกไปเก็บตัวอย่างที่ป่าเถาเหล็ก กลางทางคุณเห็นว่าเป้ของเธอมีไข่อสูรเรืองแสงอยู่ในกล่องเย็น`,[
+   O('ถามตรงๆ',()=>{say('🥚 “ไข่ราชา” เธอบอก “ใครฟักได้ คุมฝูงได้ทั้งภูมิภาค บริษัทยีนกับลัทธิแย่งกันซื้อ สมาคมรับค่าคุ้มกันจากทั้งสองฝ่าย”','');C('🥚 ไข่ราชา','จะทำอะไรกับมัน',[
+    O('ส่งคืนสมาคมตามสัญญา',()=>{cr(4000);say('📦 สมาคมจ่ายค่าคุ้มกัน 4,000 เครดิต และขายไข่ต่อให้ผู้เสนอสูงสุด','');dn(1)}),
+    O('ทุบมันทิ้ง',()=>{S.karma+=6;fcRep(K,'co',-10);fcRep(K,'cult',-10);say('💥 ไข่แตก ข้างในเป็นแค่ของเหลวเรืองแสง ไม่มีใครได้คุมฝูง','');dn(1,18)}),
+    O('ปล่อยคืนรังในป่า',()=>{S.karma+=10;K.f.eggBack=1;queueLater(K,'p1_spare',R(4,7));say('🌿 คุณวางไข่คืนในรังที่ว่างเปล่า นักวิจัยมองคุณเหมือนคนบ้า','good');dn(1,10)})])}),
+   O('ทำเป็นไม่เห็น',()=>{cr(4000);dn(1)})]),
+  (K,dn)=>{const r=rvOf(K,'rut')||rvOf(K,'ch');C('🗡️ งานขั้น 3 · เลือกตั้งประธานสมาคม',`ประธานสมาคมคนเก่าเกษียณ ผู้สมัครคนหนึ่งคือ${r?esc(r.n)+' จากหอนักรบรุ่นเดียวกับคุณ':'นายทุนจากบริษัทยีน'} อีกคนคือหัวหน้าหน่วยแก่ๆ ที่ไม่มีใครเลือก${fcRk(K,'gld')>=2?' และมีคนเสนอชื่อคุณ':''}`,[
+   O(`สนับสนุน${r?esc(r.n):'นายทุน'}`,()=>{cr(8000);fcRep(K,'co',10);say('🗳️ ฝ่ายคุณชนะ ค่าธรรมเนียมใบอนุญาตขึ้นสองเท่าในปีแรก คุณได้ตำแหน่งที่ปรึกษา','');dn(1,30)}),
+   O('สนับสนุนหัวหน้าหน่วยแก่',()=>{if(rnd()<.45){S.karma+=6;say('🗳️ <b>ชนะแบบพลิกล็อก</b> เขาประกาศลดค่าใบอนุญาตให้เด็กสลัม','epic');fcRep(K,'slum',15);dn(1,30)}else{say('🗳️ แพ้ขาดลอย ผู้ชนะจำชื่อคนที่ไม่ได้เลือกเขา','bad');dn(0)}}),
+   ...(fcRk(K,'gld')>=2?[O('ลงสมัครเอง',()=>xcMG('lock','🎤 ดีเบตกลางสมาคม','กดหยุดตอนคำตอบตรงใจคนฟัง',sc=>{if(rnd()<.25+sc*.5+(S.fame||0)/40000){K.f.gldPres=1;fcRep(K,'gld',60);say('🏆 <b>คุณเป็นประธานสมาคมนักล่าที่อายุน้อยที่สุด</b>','myth',true);dn(1,40)}else{say('🗳️ แพ้ไม่กี่เสียง','');dn(1,10)}}),'มินิเกมใหม่')]:[])])}],
+ co:[
+  (K,dn)=>C('🧬 งานขั้น 1 · อาสาทดสอบยีน','ห้องสีขาว เตียงเหล็ก และเข็มหนึ่งเข็ม ค่าตอบแทนสูงกว่าเงินเดือนทหารสามเดือน',[
+   O('ลงทะเบียนทดสอบ',()=>skyMG('dna','🧬 จับคู่สายยีนให้เสถียร','เรียงคู่เบสให้ตรงกัน',sc=>{cr(3000);if(sc>=.5){K.xp+=need(K)*.3;say('🧬 ร่างรับยีนทดลองได้ดี · เครดิต +3,000 · เซลล์เติบโต','good')}else{K.mut.push(pick(MUT.bad));say('🧪 ผลข้างเคียงยีน แต่เงินยังได้','bad')}dn(1)}),'มินิเกม')]),
+  (K,dn)=>C('🧬 งานขั้น 2 · โครงการชั้นใต้ดิน B7',`คุณได้บัตรเข้าชั้น B7 ห้องกระจกเรียงยาว ข้างในคือเด็กจากสลัม ผิวมีเกล็ดขึ้นเป็นหย่อม หัวหน้าโครงการบอกว่า “พวกเขาสมัครใจ ครอบครัวได้เงิน”`,[
+   O('ทำงานต่อ',()=>{S.karma-=12;cr(6000);K.f.b7=1;say('💼 คุณเซ็นเอกสารรักษาความลับ เงินเดือนขึ้นสองเท่า','');dn(1,25)}),
+   O('แอบขโมยข้อมูลออกมา',()=>xcMG('lock','💾 เจาะระบบฐานข้อมูล B7','หยุดตัวเลขให้ตรงรหัสผ่าน',sc=>{if(sc>=.5){K.f.b7Data=1;say('💾 <b>ได้ไฟล์โครงการทั้งหมด</b> รายชื่อเด็ก 214 คน และชื่อผู้อนุมัติ… ผู้ว่าการนคร','myth',true);dn(1,10)}else{K.f.coEnemy=1;fcRep(K,'co',-50);say('🚨 ระบบจับได้ คุณถูกไล่ออกและขึ้นบัญชีดำ','bad');fcG(K).cur=null;dn(0)}}),'มินิเกมใหม่'),
+   O('พาเด็กหนีคืนนี้',()=>xcMG('dodge','🏃 วิ่งพาเด็กออกจาก B7','หลบหน่วยรักษาความปลอดภัย',sc=>{if(sc>=.5){S.karma+=20;fcRep(K,'slum',40);fcRep(K,'co',-60);K.f.coEnemy=1;fcG(K).cur=null;say('🌙 <b>เด็กสิบเจ็ดคนออกมาถึงสลัม</b> ที่เหลือคุณกลับไปช่วยไม่ทัน บริษัทตั้งค่าหัวคุณ','myth',true);dn(0)}else{const d=hp(.3);fcRep(K,'co',-40);say(`🩸 ถูกยิงด้วยปืนยาสลบ ตื่นมาในห้องกระจก… สามวันต่อมาพวกเขาปล่อยคุณ แต่ไม่ได้บอกว่าฉีดอะไรเข้าไป · พลังชีวิต −${d}`,'bad');K.mut.push(pick([...MUT.good,...MUT.bad]));dn(0)}}),'มินิเกมใหม่ · หักหลังบริษัท')]),
+  (K,dn)=>C('🧬 งานขั้น 3 · เก้าอี้ในห้องประชุมชั้นบนสุด',`ประธานบริษัทป่วยหนัก บอร์ดแตกเป็นสองฝ่าย ฝ่ายหนึ่งอยากขยายโครงการ B7 ไปทุกนคร อีกฝ่ายอยากปิด${K.f.b7Data?' และคุณถือไฟล์ที่ทำลายได้ทั้งบอร์ด':''}`,[
+   O('ช่วยฝ่ายขยาย',()=>{cr(20000);S.karma-=15;K.f.coBoard=1;say('🏢 <b>คุณได้ที่นั่งในบอร์ด</b> B7 เปิดสาขาในสามนคร คุณรวยกว่าที่เคยฝัน','myth',true);dn(1,40)}),
+   O('ช่วยฝ่ายปิดโครงการ',()=>{S.karma+=8;fcRep(K,'slum',20);say('🏢 B7 ปิด เด็กที่เหลือได้กลับบ้าน บริษัทเสียเงินมหาศาล และเริ่มหาว่าใครเป็นคนพลิกเสียง','good');dn(1,30)}),
+   ...(K.f.b7Data?[O('ปล่อยไฟล์ให้สื่อ (ทำลายทั้งบอร์ด)',()=>{fameA(8000);fcRep(K,'co',-80);fcRep(K,'slum',50);K.f.coEnemy=1;fcG(K).cur=null;say('📰 <b>ผู้ว่าการลาออกในสามวัน บอร์ดบริษัทยีนถูกจับเกือบทั้งหมด</b> นครเงียบไปหนึ่งสัปดาห์ แล้วเริ่มเลือกตั้งใหม่','myth',true);dn(0)})]:[])])],
+ bm:[
+  (K,dn)=>C('🕳️ งานขั้น 1 · ขนของข้ามกำแพง','กล่องไม้สามใบ ห้ามเปิด ห้ามถาม ส่งที่ประตูทิศใต้ตีสอง',[
+   O('ขนตามสั่ง',()=>skyMG('stealth','📦 ลอดสายตาทหาร','ขยับตอนไฟส่องหันไป',sc=>{if(rnd()<.35+sc*.55){cr(2500);say('📦 ส่งถึงมือ · +2,500 เครดิต','good');dn(1)}else{cr(-1000);say('🚨 ทิ้งกล่องแล้ววิ่ง ถูกปรับค่าเสียของ 1,000','bad');dn(0)}}),'มินิเกม'),
+   O('แอบเปิดดูก่อน',()=>{const x=pick(['ยา','ยีน','ไข่']);say(x==='ยา'?'💊 ยาปฏิชีวนะ ของที่โรงพยาบาลในสลัมขาดมาสามเดือน':x==='ยีน'?'🧪 เซรั่มยีนที่ประทับตราบริษัทศิลาฟ้า… ของที่ “ถูกขโมย” จากโรงงาน':'🥚 ไข่อสูรเล็กๆ ยังอุ่นอยู่','');cr(2500);if(x==='ยีน')K.f.coLeak=1;dn(1)})]),
+  (K,dn)=>C('🕳️ งานขั้น 2 · ปล้นคลังแก่นสมาคม',`งานใหญ่: คลังแก่นอสูรของสมาคมนักล่า ทีมห้าคน แบ่งเท่ากัน นายหน้าพูดเร็วเกินไปตอนอธิบายทางหนี`,[
+   O('ลงมือตามแผน',()=>{if(rnd()<.5){say('🔫 <b>แผนคือให้คุณเป็นแพะ</b> พอเปิดคลังได้ ทีมที่เหลือล็อกประตูขังคุณไว้ข้างใน','bad',true);C('🔒 ติดอยู่ในคลัง','สัญญาณเตือนดังทั่วอาคาร',[
+     O('พังกำแพงหลังคลังออกไป',()=>xcMG('dodge','🏃 หนีออกจากคลัง','หลบเศษกำแพง',sc=>{if(sc>=.5){K.cores+=8;fcRep(K,'gld',-20);say('🧱 คุณทะลุออกมาพร้อมแก่นแปดลูก นายหน้าคนนั้นจะไม่ได้นอนหลับอีกนาน','epic');K.f.bmRev=1;dn(1,30)}else{fcRep(K,'gld',-40);cr(-Math.min(S.money||0,5000));say('⛓️ ถูกจับคาที่ จ่ายค่าปรับทั้งหมดที่มี','bad');dn(0)}}),'มินิเกมใหม่'),
+     O('มอบตัวแล้วซัดทอดทั้งแก๊ง',()=>{fcRep(K,'gld',15);fcRep(K,'bm',-60);fcG(K).cur=null;say('🗣️ คุณบอกทุกชื่อ ทั้งแก๊งถูกจับ ตลาดมืดใต้สะพานมีชื่อคุณบนกำแพงแล้ว','');queueLater(K,'fc_rev',R(2,4));fcG(K).revF='bm';dn(0)})])}else{K.cores+=6;cr(4000);say('🔶 ปล้นสำเร็จ · แก่น +6 · +4,000 เครดิต','good');dn(1)}}),
+   O('ไปเตือนสมาคมล่วงหน้า',()=>{fcRep(K,'gld',25);fcRep(K,'bm',-30);say('📞 สมาคมซุ่มรอ แก๊งถูกจับยกชุด คุณได้รางวัลนำจับ… และศัตรูใหม่','');cr(3000);dn(0)},'หักหลังตลาดมืด')]),
+  (K,dn)=>C('🕳️ งานขั้น 3 · บัลลังก์ใต้สะพาน',`ราชาใต้สะพานคนเก่าตายในห้องอบไอน้ำ ทุกคนรู้ว่าไม่ใช่อุบัติเหตุ เจ้าถิ่นสามคนเตรียมแย่งที่ และคุณมีคนอยู่ข้างหลังพอจะเป็นคนที่สี่`,[
+   O('ยึดตลาดมืด',()=>skyMG('seq','👑 คืนแห่งการแย่งชิง','จำลำดับแล้วกดตาม',sc=>{if(rnd()<.3+sc*.55){K.f.bmKing=1;fcRep(K,'bm',60);S.karma-=10;say('👑 <b>คุณคือราชาใต้สะพาน</b> ทุกของผิดกฎหมายในนครผ่านมือคุณ','myth',true);dn(1,40)}else{const d=hp(.4);say(`🔪 เจ้าถิ่นอีกคนเร็วกว่า · พลังชีวิต −${d}`,'bad');dn(0)}}),'มินิเกม'),
+   O('เผาตลาดมืดทิ้งทั้งหมด',()=>{S.karma+=8;fcRep(K,'mil',30);fcRep(K,'bm',-80);fcG(K).cur=null;say('🔥 ใต้สะพานไหม้สองวัน ยาในสลัมแพงขึ้นสามเท่าในเดือนถัดมา คุณไม่แน่ใจว่าทำถูก','');dn(0)}),
+   O('ทำให้ตลาดมืดถูกกฎหมาย',()=>{if((S.fame||0)>8000||K.rule){fcRep(K,'slum',25);say('📜 <b>ตลาดใต้สะพานกลายเป็นตลาดเสรีมีใบอนุญาต</b> ยาถูกลง ภาษีเข้านคร เจ้าถิ่นสองคนเกลียดคุณ','myth',true);dn(1,40)}else{say('📜 สภาไม่ฟังคนไม่มีชื่อเสียง (ต้องชื่อเสียง 8,000 หรือครองนคร)','');dn(0)}})])],
+ cult:[
+  (K,dn)=>C('☄️ งานขั้น 1 · พิธีฟังดาว','ร้อยคนนั่งล้อมหลุมอุกกาบาตจำลอง หลับตา ฟังเสียงที่นักบวชบอกว่ามาจากฟ้า',[
+   O('ฟังจริงๆ',()=>skyMG('mind','☄️ ฟังเสียงดาว','กดค้างให้เข็มอยู่ในแถบ',sc=>{mindA(20+sc*40);if(sc>=.6){K.f.starHear=1;say('🌌 คุณได้ยินจริงๆ เสียงต่ำมากๆ เป็นจังหวะ เหมือนนับถอยหลัง','myth')}else say('🕯️ คุณได้ยินแต่เสียงลมกับเสียงคนข้างๆ กรน','');dn(1)}),'มินิเกม')]),
+  (K,dn)=>C('☄️ งานขั้น 2 · คำทำนายดวงที่สอง',`ศาสดาประกาศว่าดาวตกดวงที่สองกำลังมา คนในลัทธิขายบ้านเตรียมรับ “การเรียกครั้งสุดท้าย” คุณได้เห็นเอกสารที่เขาใช้คำนวณ${K.f.starHear?' และมันตรงกับจังหวะเสียงที่คุณได้ยิน':''}`,[
+   O('เอาข้อมูลไปให้นักดาราศาสตร์ตรวจ',()=>{if(rnd()<.5||K.f.starHear){K.f.star2=1;say('🔭 <b>ดาวดวงที่สองมีจริง</b> แต่จะผ่านโลกไปในระยะใกล้ ไม่ชน คำทำนายถูกครึ่งเดียว และครึ่งที่ผิดคือส่วนที่ศาสดาขายบ้านคนอื่น','myth',true);dn(1,25)}else{say('🔭 ตัวเลขทั้งหมดถูกแต่งขึ้น ไม่มีดาวดวงที่สอง','');K.f.cultFake=1;dn(1,15)}}),
+   O('ช่วยเผยแพร่คำทำนาย',()=>{cr(3000);fcRep(K,'mil',-10);say('📢 คนเข้าลัทธิเพิ่มสามเท่า เงินบริจาคไหลเข้า คุณได้ส่วนแบ่ง','');dn(1,20)})]),
+  (K,dn)=>C('☄️ งานขั้น 3 · เปิดประตูให้บุตรแห่งดาว',`ศาสดาวางแผนเปิดประตูกำแพงทิศตะวันออกคืนดาวผ่าน “ให้บุตรแห่งดาวกลับบ้าน” นอกกำแพงมีอสูรรออยู่หลายพันตัว คุณเป็นคนเดียวที่มีกุญแจห้องควบคุม`,[
+   O('หยุดพิธีจากข้างใน',()=>xcMG('lock','🔐 ล็อกระบบประตูก่อนเที่ยงคืน','หยุดให้ตรงรหัส',sc=>{if(sc>=.5){K.wall=Math.min(100,K.wall+5);fcRep(K,'mil',30);fameA(3000);fcG(K).cur=null;say('🔐 <b>ประตูไม่เปิด</b> ศาสดาถูกจับ ลัทธิแตก คนในลัทธิครึ่งหนึ่งไม่ให้อภัยคุณ','myth',true);dn(0)}else{K.wall=Math.max(0,K.wall-25);K.waveIn=1;say('🌊 ประตูเปิดสิบนาที ก่อนคุณจะปิดได้ · กำแพง −25 · คลื่นอสูรมาถึงปีหน้า','bad',true);dn(0)}}),'มินิเกมใหม่'),
+   O('ปล่อยให้เปิด แล้วดูว่าเกิดอะไร',()=>{if(K.f.starHear&&rnd()<.6){K.f.starKin=1;fcRep(K,'cult',60);say('🌌 <b>อสูรนับพันเดินผ่านประตูมา… แล้วนั่งลงรอบหลุมอุกกาบาต</b> พวกมันเงยหน้ามองดาวที่กำลังผ่าน ไม่มีใครถูกทำร้าย พอฟ้าสาง พวกมันเดินกลับออกไป คุณได้ยินเสียงนั้นชัดที่สุดในชีวิต','myth',true);mindA(200);dn(1,50)}else{K.wall=Math.max(0,K.wall-30);S.karma-=15;say('🩸 ไม่มีปาฏิหาริย์ อสูรเข้าเขตชั้นนอก คนตายหลายร้อย · กำแพง −30','bad',true);dn(0)}},'เดิมพันกับความเชื่อ'),
+   O('พาคนในลัทธิหนีก่อน',()=>{S.karma+=10;fcRep(K,'slum',15);say('🚶 คุณพาครอบครัวสามร้อยคนออกจากหลุมก่อนพิธี ประตูเปิดได้แค่ครึ่ง ทหารปิดทัน ศาสดามองคุณด้วยตาที่ไม่โกรธ','good');dn(1,30)})])],
+ slum:[
+  (K,dn)=>C('🏚️ งานขั้น 1 · แจกยาในซอย','ไข้ยีนระบาดในสลัม ยาในคลังของขบวนการพอสำหรับครึ่งเดียว คุณเป็นคนแจก',[
+   O('แจกตามคิว',()=>{S.karma+=4;say('💊 คนที่มาก่อนได้ก่อน คนที่ป่วยหนักสุดอยู่ท้ายคิว','');dn(1)}),
+   O('แจกให้คนป่วยหนักก่อน',()=>xcMG('lock','💊 จัดลำดับคนป่วย','หยุดตรงหมายเลขคนป่วยหนัก',sc=>{S.karma+=sc*8;say(sc>=.5?'💊 คุณช่วยคนที่ใกล้ตายได้เกือบหมด':'💊 คุณสับสนตัวเลข บางคนไม่ทัน','good');dn(1)}),'มินิเกมใหม่'),
+   O('ไปปล้นคลังยาบริษัทเพิ่ม',()=>skyMG('stealth','🌙 ย่องเข้าคลังยา','ขยับตอนกล้องหันไป',sc=>{if(rnd()<.35+sc*.55){S.karma+=10;fcRep(K,'co',-15);say('💊 ยาพอสำหรับทั้งสลัม ไม่มีใครถามว่ามาจากไหน','good');dn(1,22)}else{const d=hp(.2);say(`🩸 ยามยิงไล่ · พลังชีวิต −${d}`,'bad');dn(0)}}),'มินิเกม')]),
+  (K,dn)=>C('🏚️ งานขั้น 2 · ประท้วงหน้าสภา',`ห้าหมื่นคนเดินจากสลัมไปหน้าสภา เรียกร้องที่ในหลุมหลบภัย กลางฝูงชน คุณเห็นชายใส่เสื้อขบวนการแต่รองเท้าเป็นของหน่วยรักษาความปลอดภัยบริษัท เขาถือขวดน้ำมัน`,[
+   O('ตามจับเขาก่อนเขาขว้าง',()=>skyMG('scan','🔍 หาเขาในฝูงชน','หยุดตรงคนที่ใส่รองเท้าคู่นั้น',sc=>{if(rnd()<.35+sc*.55){fcRep(K,'co',-15);fameA(2000);say('🧯 <b>คุณกระชากขวดออกจากมือเขาก่อนจุดไฟ</b> กล้องข่าวจับภาพบัตรพนักงานบริษัทในกระเป๋าเขา การประท้วงจบอย่างสงบ สภายอมเจรจา','myth',true);dn(1,30)}else{K.wall=Math.max(0,K.wall-5);say('🔥 ขวดแตกกลางฝูงชน การประท้วงกลายเป็นจลาจล ทหารยิงแก๊ส ข่าวบอกว่า “คนสลัมก่อความรุนแรง”','bad',true);dn(0)}}),'มินิเกม'),
+   O('ปล่อยไป ดูว่าใครส่งมา',()=>{say('🔥 จลาจลเกิดตามแผน แต่คุณตามเขากลับไปถึงตึกบริษัทยีน และได้รูปถ่ายเขาจับมือกับรองผู้ว่าการ','');K.f.provPic=1;dn(1,18)})]),
+  (K,dn)=>C('🏚️ งานขั้น 3 · กำแพงของเราเอง',`สภาปฏิเสธอีกครั้ง ขบวนการต้องตัดสินใจ: สร้างกำแพงชั้นที่สามรอบสลัมด้วยมือตัวเอง หรือย้ายคนทั้งหมดไปตั้งนครใหม่ที่นิคมกระดูกวาฬ`,[
+   O('สร้างกำแพงเอง',()=>xcMG('dodge','🧱 สร้างกำแพงกลางคลื่นอสูร','หลบเศษหินระหว่างก่ออิฐ',sc=>{K.wall=Math.min(100,K.wall+(sc>=.5?18:8));fcRep(K,'mil',10);say(`🧱 <b>กำแพงคนสลัมสูงสามเมตร ยาวสิบกิโลเมตร</b> สร้างในสองปีด้วยมือคนสามแสน · กำแพง +${sc>=.5?18:8}`,'myth',true);dn(1,45)}),'มินิเกมใหม่'),
+   O('อพยพไปนิคม',()=>{zKnow(K,'set');fcRep(K,'co',-20);K.f.exodus=1;S.karma+=10;say('🚶 <b>ขบวนคนแสนคนเดินออกจากประตูนคร</b> มุ่งหน้านิคมกระดูกวาฬ คุณเดินหน้าสุด','myth',true);dn(1,45)}),
+   ...(K.f.provPic?[O('ใช้รูปถ่ายบีบสภา',()=>{fcRep(K,'co',-30);fameA(4000);say('📸 รองผู้ว่าการลาออก สภายอมให้คนสลัมเข้าหลุมหลบภัยหนึ่งในสาม ไม่ใช่ทั้งหมด แต่ดีกว่าศูนย์','myth',true);dn(1,45)})]:[])])]};
+// ผลประโยชน์รายปี · สายลับ · ฝ่ายเก่าแก้แค้น · วิกฤตระหว่างฝ่าย
+function fcYear(K){const id=fcCur(K),g=fcG(K);if(id){const r=fcRk(K,id),sal=Math.round((250+r*350)*(1+Math.max(0,K.rk)*.25));cr(sal);
+  if(id==='mil')K.wall=Math.min(100,K.wall+Math.max(1,r));if(id==='cult')mindA(4*Math.max(1,r));if(id==='slum')S.karma+=1;if(id==='bm')cr(r*300);fcRep(K,id,2)}
+ if(g.spy&&FC[g.spy]){cr(800+fcRk(K,g.spy)*400);if(S.age-(g.spyY|0)>=1&&rnd()<.18)queue('fc_burn')}
+ if(id&&!g.spy&&fcRk(K,id)>=1&&!K.f.spyAsk&&rnd()<.08){K.f.spyAsk=1;queue('fc_spy')}
+ if(id&&age()>=16&&(g.cx==null||S.age-g.cx>=6)&&rnd()<.25){g.cx=S.age;queue('fc_cx')}}
+def('fc_spy',{c:()=>false,w:0,go(K){const g=fcG(K),id=fcCur(K);if(!id)return;const e=pick(FC[id].en);C(`🕵️ ชายในเสื้อคลุมจาก${FC[e].n}`,`“เราไม่ขอให้เจ้าทรยศ ${FC[id].n}” เขาวางซองบนโต๊ะ “แค่เล่าว่าพวกเขาทำอะไร ปีละครั้ง”`,[
+ O('รับซอง',()=>{g.spy=e;g.spyY=S.age;cr(1500);fcRep(K,e,15);say(`🕵️ คุณเป็นสายลับให้${FC[e].n}แล้ว · เงินเข้าทุกปี ถ้าถูกจับได้…`,'')}),
+ O('รายงานฝ่ายตัวเอง',()=>{fcRep(K,id,15);fcRep(K,e,-15);say(`🗣️ ${FC[id].n}ซุ่มจับชายคนนั้นได้ คุณได้รับคำชม`,'good')}),
+ O('ปฏิเสธเงียบๆ',()=>say('🚪 เขาเก็บซองแล้วออกไป ไม่พูดอะไรอีก',''))])}});
+def('fc_burn',{c:()=>false,w:0,go(K){const g=fcG(K),id=fcCur(K),sp=g.spy;if(!sp||!FC[sp])return;C('🔥 ถูกเปิดโปง',`${id?FC[id].n:'ฝ่ายของคุณ'}รู้แล้วว่าคุณเป็นสายลับให้${FC[sp].n} ห้องคุณถูกค้น เพื่อนในฝ่ายมองคุณเหมือนคนแปลกหน้า`,[
+ O(`หนีไปอยู่${FC[sp].n}เต็มตัว`,()=>{if(id)fcRep(K,id,-60);g.spy=null;g.cur=sp;fcRep(K,sp,20);say(`🏃 คุณข้ามฝั่งกลางดึก ${FC[sp].n}รับคุณ แต่ไม่ไว้ใจเต็มร้อย`,'bad')}),
+ O(`หักหลัง${FC[sp].n}กลับ (เป็นสายลับซ้อน)`,()=>skyMG('scan','🎭 เล่นละครสายลับซ้อน','หยุดตรงจังหวะที่คำโกหกฟังจริงที่สุด',sc=>{g.spy=null;if(rnd()<.35+sc*.55){if(id)fcRep(K,id,35);fcRep(K,sp,-50);say(`🎭 <b>คุณส่งข่าวปลอมให้${FC[sp].n}จนพวกเขาพลาดครั้งใหญ่</b> ${id?FC[id].n:''}ยอมรับว่าคุณเป็น “สายลับสองหน้าที่หันหน้าถูกทาง”`,'myth',true)}else{if(id)fcRep(K,id,-50);fcRep(K,sp,-50);g.cur=null;say('🩸 ไม่มีฝ่ายไหนเชื่อคุณอีก','bad')}}),'มินิเกม'),
+ O('สารภาพและขอโทษ',()=>{if(id)fcRep(K,id,-30);g.spy=null;S.karma+=3;say('🙇 คุณถูกลดตำแหน่ง แต่ยังอยู่ในฝ่าย','')})])}});
+def('fc_rev',{c:()=>false,w:0,go(K){const f=fcG(K).revF;if(!f||!FC[f])return;C(`🗡️ ${FC[f].n}ยังจำ`,`คนของ${FC[f].n}ที่คุณทิ้งมา รอคุณอยู่ในซอยเปลี่ยวหลังตลาด สามคน มือถือของไม่น่าไว้ใจ`,[
+ O('สู้',()=>skyMG('tap','🗡️ ซอยเปลี่ยว','แตะให้ไว',sc=>{if(rnd()<.35+sc*.55)say('🩹 คุณยืนอยู่คนเดียวตอนจบ ส่งข้อความชัดเจนกลับไป','good');else{const d=hp(.3);say(`🩸 พลังชีวิต −${d} · พวกเขาเอาเงินไปส่วนหนึ่ง`,'bad');cr(-Math.min(S.money||0,2000))}}),'มินิเกม'),
+ O('จ่ายค่าไถ่ชีวิต',()=>{cr(-Math.min(S.money||0,4000));say('💸 คุณจ่าย พวกเขาหายไป และจะไม่กลับมาอีก','')}),
+ O('หนีทางหลังคา',()=>xcMG('dodge','🏃 วิ่งบนหลังคา','หลบสิ่งกีดขวาง',sc=>{if(sc<.5){const d=hp(.2);say(`🩸 ตกจากหลังคา · พลังชีวิต −${d}`,'bad')}else say('💨 หายไปในความมืดของสลัม','')}),'มินิเกมใหม่')])}});
+const FCX=[['mil','bm','ทหารบุกค้นใต้สะพาน กระสุนที่ยึดได้มีตราคลังกองทัพ'],['co','slum','บริษัทยีนจะรื้อซอยสามซอยสร้างโรงงานเซรั่มแห่งใหม่'],['cult','co','ลัทธิยึดโรงงานเซรั่ม ประกาศว่ายีนคือ “ของขวัญจากดาว” ที่บริษัทขโมยไป'],['gld','bm','สมาคมขึ้นค่าธรรมเนียมซากสามเท่า นักล่ารายย่อยหันไปขายใต้สะพาน'],['mil','cult','ทหารห้ามชุมนุมรอบหลุมอุกกาบาต ผู้ศรัทธานั่งประท้วงเงียบนับพัน']];
+def('fc_cx',{c:()=>false,w:0,go(K){const id=fcCur(K);const L=FCX.filter(x=>x.includes(id));const x=pick(L.length?L:FCX),a=x[0],b=x[1],third=pick(Object.keys(FC).filter(k=>k!==a&&k!==b));
+ C(`⚡ ${FC[a].ic} ปะทะ ${FC[b].ic}`,`${x[2]} ทั้งนครกำลังดูว่าคนอย่างคุณจะยืนข้างไหน`,[
+  O(`ยืนข้าง${FC[a].n}`,()=>{fcRep(K,a,15);fcRep(K,b,-20);xcTwist(K,a,b,third)}),O(`ยืนข้าง${FC[b].n}`,()=>{fcRep(K,b,15);fcRep(K,a,-20);xcTwist(K,b,a,third)}),
+  O('เป็นคนกลางเจรจา',()=>skyMG('scan','🤝 โต๊ะเจรจา','หยุดตรงจังหวะที่ทั้งสองฝ่ายยอมฟัง',sc=>{if(rnd()<.3+sc*.55+(S.fame||0)/50000){fcRep(K,a,8);fcRep(K,b,8);fameA(1500);say('🤝 <b>ข้อตกลงหน้าสภา</b> ทั้งสองฝ่ายยอมถอยคนละก้าว ชื่อคุณอยู่ในเอกสารนั้น','myth')}else{fcRep(K,a,-8);fcRep(K,b,-8);say('🤝 การเจรจาล้ม ทั้งสองฝ่ายโทษคุณ','bad')}}),'มินิเกม')])}});
+function xcTwist(K,w,l,third){if(rnd()<.4){fcRep(K,third,10);say(`🎭 <b>หักมุม:</b> ระหว่างที่${FC[w].n}กับ${FC[l].n}ตีกัน ${FC[third].ic} ${FC[third].n}เก็บเกี่ยวผลประโยชน์ไปเงียบๆ ทั้งหมด`,'epic',true)}else say(`${FC[w].ic} ${FC[w].n}ชนะศึกครั้งนี้ ${FC[l].n}จะจำ`,'')}
+
+// ---------- เชื่อมระบบเดิม ----------
+{const _sy=skyYear;skyYear=function(){const r=_sy.apply(this,arguments);try{const K=SK();if(K&&S.alive&&!K.beast&&age()>=12){fcYear(K);if(QU.length)flush()}}catch(e){console.error('p2 year',e)}return r}}
+// ผลประโยชน์ฝ่าย: ค่าหัว (สมาคม) · ราคาเซรั่ม (บริษัท) · ราคาข่าว (ตลาดมืด)
+window._skyFc={FQ,fcG,FC};window._fcB=k=>{const K=SK();if(!K)return 0;const id=fcCur(K),r=id?fcRk(K,id):0;return k==='gld'&&id==='gld'?r*.08:k==='co'&&id==='co'?r*.1:k==='bm'&&id==='bm'&&r>=1?1:0};
+{const st=document.createElement('style');st.textContent=`
+.xcLock{text-align:center;margin:10px 0}.xcTg{display:flex;justify-content:center;gap:10px;margin-bottom:10px}.xcTg i{font:800 22px 'Chakra Petch',monospace;font-style:normal;width:40px;padding:6px 0;border:2px solid #2e4a5e;background:#0f1d29;color:#9db3c4}.xcTg i.on{border-color:#ff8a3d;color:#fff}.xcTg i.ok{border-color:#7be3a0;color:#7be3a0}
+.xcDial{font:900 64px 'Chakra Petch',monospace;color:#5cd2ff;text-shadow:0 0 18px #5cd2ff88;line-height:1.1}
+.xcDg{text-align:center}.xcHp{font-size:18px;margin-bottom:6px}.xcG{display:grid;grid-template-columns:repeat(3,64px);grid-auto-rows:46px;gap:4px;justify-content:center;background:#0b151e;padding:6px;border:1.5px solid #2e4a5e}.xcG i{display:flex;align-items:center;justify-content:center;font-style:normal;font-size:24px;background:#13232f}.xcG i.me{background:#ff8a3d33;outline:2px solid #ff8a3d}
+.xcB{display:flex;gap:10px;justify-content:center;margin-top:8px}.xcB button{width:90px;height:52px;font-size:24px;background:#1c3445;color:#fff;border:1.5px solid #5cd2ff;cursor:pointer;touch-action:manipulation}.xcB button:active{background:#5cd2ff44}
+.fcC{border:1.5px solid #2e4a5e;background:#0f1d29;padding:10px;margin-bottom:8px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}.fcC.on{border-color:#ff8a3d;background:linear-gradient(160deg,#2a1a10,#0f1d29)}.fcC.en{border-color:#ff6b6b66}
+.fcH{display:flex;gap:10px;align-items:center}.fcH>span{font-size:28px;flex:none}.fcH>div{min-width:0}.fcH>div>b{display:block;color:#fff;font-size:14.5px}.fcH small{display:block;color:#9db3c4;font-size:12px}
+.fcC p{margin:6px 0;font-size:12.5px;color:#cfe6f5;line-height:1.5}.fcM{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11.5px;color:#ffc08a;margin-bottom:6px}
+.fcB{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.fcB button{min-height:36px;padding:6px 12px;background:#1c3445;color:#e6f3ff;border:1px solid #2e4a5e;font:700 12.5px 'Chakra Petch',sans-serif;cursor:pointer}.fcB button.go{background:#ff8a3d;color:#141d26;border:0}.fcB button:disabled{opacity:.4;cursor:default}.fcB small{color:#9db3c4;font-size:11.5px}`;document.head.appendChild(st)}
+try{SYS_GUIDE.push({s:'base',nw:1,ic:'🏛️',t:'ทะลุฟ้าดารา: ฝ่ายในนคร · สำรวจลึก',d:'<b>🏛️ หกฝ่าย</b> ทหารกำแพง · สมาคมนักล่า · บริษัทยีน · ตลาดมืด · ลัทธิบุตรแห่งดาว · ขบวนการคนนอกกำแพง · สังกัดได้ทีละฝ่าย มีตำแหน่ง 5 ขั้น เงินเดือน และผลประโยชน์ · งานของฝ่ายปีละ 1 งาน 3 ขั้น ทุกขั้นแยกทาง · ย้ายฝ่ายได้แต่ฝ่ายเก่าแก้แค้น · รับเป็นสายลับได้ · มีวิกฤตระหว่างฝ่ายให้เลือกข้าง · <b>🧭 สำรวจลึก</b> ออกนอกกำแพงแล้วเลือกทางแยกห้องต่อห้อง (ซุ่มโจมตี ซากรถ ผู้รอดชีวิต รัง พายุ ห้องนิรภัย พ่อค้า จุดพัก) ไปถึงใจกลางเขตเจอเจ้าถิ่น กลับได้ทุกห้อง หนีกลับของหายครึ่ง · มินิเกมใหม่: 🔓 หมุนรหัส · 🏃 หลบสิ่งกีดขวาง'})}catch(e){}
 
 window._sky={SK,RK,EV,queue,skyYear,newK};window._skyQ=()=>QU.slice();
 // 🩹 กันค้างขั้น: คิวเหตุการณ์อยู่ในหน่วยความจำ (ไม่ถูกเซฟ) — ถ้าโหลดเซฟ/รีเฟรชตอนคอขวดค้างคิว ธงคอขวดจะติดค้างตลอดไป ขั้นไม่ขยับ
