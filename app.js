@@ -46444,3 +46444,19 @@ const st=document.createElement('style');st.textContent=`
 html body #mask #modal,html body.mUI #mask.on:not(.mSh) #modal{animation-duration:.22s!important}html body #mask.on{animation-duration:.22s!important}
 @media (prefers-reduced-motion:reduce){html body #mask,html body #mask #modal,html body.mUI #mask.on:not(.mSh) #modal,#modal *,#isl,#isl *,#toast,#evBack,#coach *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}`;document.head.appendChild(st);
 })()}catch(e){console.error('block162',e)}
+
+// ============================================================
+// BLOCK 163: 🧬 หน้า "ตัวละครของฉัน" — ป้ายชื่อเกม 1 ใน นวนิยาย · 1inanovel.com (แคปอวดได้) · มือถือแสดงเป็นการ์ดกลางจอแทนแผ่นชิดล่าง
+// ============================================================
+try{(()=>{
+const st=document.createElement('style');st.textContent=`
+#mask.on.meSh{align-items:center!important;justify-content:center!important;padding:14px 12px!important}
+#mask.meSh #modal{max-width:520px!important;max-height:88vh!important;max-height:88dvh!important;border-radius:20px!important;padding-bottom:18px!important;margin:auto!important}
+#modal[data-k="me"] .meBrand{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.2px;color:#ffe9b0;background:linear-gradient(90deg,#e8b83a33,#e8b83a14);border:1px solid #e8b83a77;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+#modal[data-k="me"] .meBrand small{font-weight:700;opacity:.8;font-size:11px}
+#modal[data-k="me"] .meFoot{margin:14px 0 2px;text-align:center;font-size:11.5px;opacity:.7}`;document.head.appendChild(st);
+const brand=()=>{try{const m=$('modal');if(!m||m.dataset.k!=='me')return;const id=m.querySelector('.meId');if(id&&!id.querySelector('.meBrand'))id.insertAdjacentHTML('beforeend','<div class="meBrand">📖 1 ใน นวนิยาย <small>· 1inanovel.com</small></div>');
+ if(!m.querySelector('.meFoot'))m.insertAdjacentHTML('beforeend','<div class="meFoot">จำลองชีวิตใน 1 ใน นวนิยาย · 1inanovel.com</div>')}catch(e){}};
+{const _m=modal;modal=function(h,k){const r=_m.apply(this,arguments);if(k==='me')brand();return r};for(const x in _m)try{modal[x]=_m[x]}catch(e){}}
+setInterval(()=>{try{if(modalOpen&&$('modal').dataset.k==='me')brand()}catch(e){}},800);
+})()}catch(e){console.error('block163',e)}
