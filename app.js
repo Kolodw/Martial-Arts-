@@ -45978,3 +45978,43 @@ const fresh=(P,why)=>{try{if(!S||S===P||!S.sys)return;const s=S.sys;const had=(s
 if(typeof inherit==='function'){const _i=inherit;inherit=function(){const P=S;const r=_i.apply(this,arguments);fresh(P,'inherit');return r}}
 if(typeof bHeir==='function'){const _b=bHeir;bHeir=function(){const P=S;const r=_b.apply(this,arguments);fresh(P,'bHeir');return r}}
 })()}catch(e){console.error('block157',e)}
+
+// ============================================================
+// BLOCK 158: ❓ อธิบายการปลุกดวงจิต (ทวีปจิตวิญญาณยุทธ์) — คนเล่นใหม่ไม่รู้ว่าต้องทำอะไร
+//   หน้าอธิบาย svHelp() · เปิดให้ครั้งแรกที่เริ่มชีวิตในทวีป · ปุ่มในหน้า ⭕ ดวงจิต และเมนู (ก่อนปลุกก็เห็น)
+//   · หลังพิธีปลุก บอกขั้นต่อไป · ป้ายนับถอยหลังก่อนถึงวัยปลุก · คู่มือ 💡
+// ============================================================
+try{(()=>{
+const B=window._blk34;if(!B)return;const $$=id=>document.getElementById(id);
+const inSoul=()=>!!(S&&S.alive&&S.ch==='soul');
+const SAFE=[1,1,2,2,2,3,3,3,3,4];
+function html(){const G=S&&S.sv||{},T=B.TIER,aw=G.aw,age=S?S.age:0;
+ const now=!S||S.ch!=='soul'?'':aw===1?`<div class="svHn">📍 ตอนนี้: ปลุกแล้ว · ระดับจิต <b>${G.lv}</b> · วงแหวน ${(G.rings||[]).length}/9${G.lv>=B.capOf(G)&&B.capOf(G)<100?' · <b>ถึงคอขวดแล้ว ต้องหลอมวงแหวน</b>':''}</div>`
+  :aw===2?`<div class="svHn">📍 ตอนนี้: <b>ไร้ดวงจิต</b> — ลูกแก้วไม่เรืองแสง เลือกเส้นทางของคนไร้ดวงจิตแทนได้</div>`
+  :`<div class="svHn">📍 ตอนนี้: อายุ ${age} ปี · ${age<6?`อีก <b>${6-age} ปี</b> ถึงพิธีปลุกดวงจิต`:'พิธีปลุกดวงจิตจะขึ้นมาเร็วๆ นี้'}</div>`;
+ const ring=i=>`วงที่ ${i+1} ปลอดภัยถึง ${T[SAFE[i]][1]} ${T[SAFE[i]][0]}`;
+ return`<button class="xbtn" onclick="closeM()">✕</button><h3>⭕ ปลุกดวงจิตยังไง</h3>${now}
+ <div class="svHs"><b>1 · อายุ 6 ขวบ ปลุกเองอัตโนมัติ</b><span>ไม่ต้องกดอะไร ปล่อยให้เวลาเดินไป พอครบ 6 ขวบ พิธีปลุกดวงจิตจะเด้งขึ้นมาเอง แล้วเลือกว่าจะ <b>✊ ตั้งใจเป็นผู้ฝึกจิต</b> (ฝึกเร็ว) หรือ <b>🏡 ใช้ชีวิตธรรมดาไปก่อน</b> (ฝึกช้าลง 4 ปีแรก)</span></div>
+ <div class="svHs"><b>2 · ได้ดวงจิตแบบสุ่ม</b><span>ส่วนใหญ่ได้ 1 ดวง (5% ได้ดวงจิตคู่) · ความหายาก ธรรมดา → หายาก → ล้ำค่า → ตำนาน · มี 5 สาย ⚔️ โจมตี · 🛡️ ป้องกัน · 🌿 สนับสนุน · 🌀 ควบคุม · 💨 ว่องไว · ดวงจิตที่ดูไร้ค่าบางดวงมีร่างแท้ซ่อนอยู่ · บางคนลูกแก้วไม่เรืองแสงเลย (ไร้ดวงจิต)</span></div>
+ <div class="svHs"><b>3 · ระดับจิตขึ้นเองทุกปี</b><span>เริ่มที่ระดับ 1–10 ตามความหายาก · พรสวรรค์ดีขึ้นเร็วกว่า · ดูได้ที่ปุ่ม ⭕ ใต้แถบสถานะ หรือ ☰ เมนู → ⭕ ดวงจิตและวงแหวน</span></div>
+ <div class="svHs"><b>4 · ทุก 10 ระดับคือคอขวด ต้องหลอมวงแหวน</b><span>ตั้งแต่อายุ 8 ปี เมื่อถึงคอขวด เกมจะชวน <b>🏹 ออกล่าวงแหวน</b> เอง (หรือกดในหน้า ⭕ ดวงจิต) · ชนะสัตว์อสูรแล้วได้วงแหวนและท่าใหม่ · ${ring(0)} · ${ring(2)} · ${ring(5)} · วงแหวนแก่เกินขีด แรงกว่าแต่เสี่ยงบาดเจ็บหนักหรือตาย</span></div>
+ <div class="svHs"><b>5 · ครบ 9 วง ระดับ 100</b><span>ไต่จาก ${B.RANK[0]} ไปจนถึง ${B.RANK[B.RANK.length-1]}</span></div>
+ <p class="tag2" style="margin:8px 2px 0">💡 ผู้ข้ามโลกที่มาถึงทวีปนี้ได้ดวงจิตทันทีตอนแตะลูกแก้ว ไม่ต้องรอ 6 ขวบ</p>
+ <button class="pbtn" style="width:100%;margin-top:10px" onclick="closeM()">เข้าใจแล้ว</button>`}
+const css=document.createElement('style');css.textContent=`.svHn{margin:2px 0 10px;padding:8px 10px;border-radius:10px;background:#b47bff22;border:1px solid #b47bff66;font-size:13px;line-height:1.5}
+.svHs{display:block;margin:0 0 8px;padding:9px 11px;border-radius:12px;background:#0002;border:1px solid #ffffff14;line-height:1.55}.svHs>b{display:block;font-size:14px;margin-bottom:2px}.svHs span{font-size:12.5px;opacity:.92}
+#svCd{margin-right:6px;border-color:#b47bff!important;background:linear-gradient(180deg,#2a1a4a,#4a2a7a)!important}`;document.head.appendChild(css);
+window.svHelp=function(){modal(html(),'svhelp')};
+// ครั้งแรกที่เริ่มชีวิตในทวีป
+{const _cs=chStart;chStart=function(){const r=_cs.apply(this,arguments);try{if(S&&S.ch==='soul'){setTimeout(()=>{try{log('❓ <b>เพิ่งมาทวีปนี้?</b> <button class="sysb" onclick="svHelp()">ดูวิธีปลุกดวงจิต</button>','sum')}catch(e){}},1400);if(!LS.get('murim_svhelp',0)){LS.set('murim_svhelp',1);let n=0;const t=setInterval(()=>{n++;if(n>40)return clearInterval(t);if(!inSoul()||modalOpen||choice._cur)return;clearInterval(t);svHelp()},700)}}}catch(e){}return r}}
+// หลังพิธีปลุก: บอกขั้นต่อไป
+let lastAw=null;setInterval(()=>{try{if(!inSoul()||!S.sv)return;const a=S.sv.aw;if(lastAw===null){lastAw=a;return}if(a!==lastAw){const prev=lastAw;lastAw=a;if(a===1&&!prev&&!S.sv.helpN){S.sv.helpN=1;setTimeout(()=>{try{log(`⭕ <b>ต่อจากนี้:</b> ระดับจิตขึ้นเองทุกปี · ถึงคอขวดทุก 10 ระดับ (ระดับตอนนี้ ${S.sv.lv}) ตั้งแต่อายุ 8 เกมจะชวนออกล่าวงแหวน · ดูทุกอย่างที่ปุ่ม ⭕ <button class="sysb" onclick="svHelp()">อ่านวิธีฝึก</button>`,'sum')}catch(e){}},1500)}}}catch(e){}},800);
+// ป้ายนับถอยหลังก่อนถึงวัยปลุก (ใช้ที่เดียวกับปุ่ม ⭕ หลังปลุก)
+setInterval(()=>{try{let b=$$('svCd');const show=inSoul()&&S.sv&&!S.sv.aw&&$$('game').classList.contains('on');if(!show){if(b)b.style.display='none';return}
+ if(!b){const a=$$('svPill')||$$('brkPill')||$$('ascPill');if(!a)return;a.insertAdjacentHTML('afterend','<button id="svCd" class="ascpill" onclick="svHelp()"></button>');b=$$('svCd')}
+ const t=S.age<6?`⭕ ปลุกดวงจิตอีก ${6-S.age} ปี · ❓`:'⭕ ใกล้ถึงพิธีปลุกดวงจิต · ❓';if(b.textContent!==t)b.textContent=t;b.style.display=''}catch(e){}},1000);
+// ปุ่มในหน้าดวงจิต + เมนู (เห็นตั้งแต่ก่อนปลุก)
+{const _os=window.openSoul;window.openSoul=function(){const r=_os.apply(this,arguments);try{const m=$$('modal');if(m&&!m.querySelector('.svHB')&&S&&S.ch==='soul')m.insertAdjacentHTML('beforeend','<button class="gbtn svHB" style="width:100%;margin-top:6px" onclick="svHelp()">❓ ปลุกดวงจิตและฝึกยังไง</button>')}catch(e){}return r};try{openSoul=window.openSoul}catch(e){}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(inSoul()){const g=$$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.svM')&&!g.querySelector('.svMH'))g.insertAdjacentHTML('afterbegin','<button class="opt svMH" onclick="closeM();openSoul()">⭕ ดวงจิตและวงแหวน<small>ยังไม่ปลุก · ❓ วิธีปลุกดวงจิต</small></button>')}}catch(e){}return r}}
+try{SYS_GUIDE.push({s:'world',ic:'⭕',t:'ปลุกดวงจิต (ทวีปจิตวิญญาณยุทธ์)',d:'อายุ 6 ขวบ พิธีปลุกดวงจิตขึ้นเองอัตโนมัติ · ได้ดวงจิตสุ่ม 5 สาย 4 ความหายาก · ระดับจิตขึ้นเองทุกปี · ทุก 10 ระดับต้องหลอมวงแหวน (เกมชวนออกล่าเองตั้งแต่อายุ 8) · วงแหวนแก่เกินขีดเสี่ยงตาย · ผู้ข้ามโลกได้ดวงจิตทันที',go:'svHelp',nw:1})}catch(e){}
+})()}catch(e){console.error('block158',e)}
