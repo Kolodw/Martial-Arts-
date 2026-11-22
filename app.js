@@ -577,6 +577,7 @@ function openPeer(i){const p=peers[i];
 // ============ TIME ============
 function startTimer(){clearInterval(timer);timer=setInterval(()=>{
  if(!S||!S.alive||paused||modalOpen||choice._cur||document.hidden)return;
+ if(window._offGame&&window._offGame())return;
  const eff=speed||((Date.now()-lastNotable<1800)?1:8);acc+=100*eff;$('ybar').style.width=Math.min(100,acc/CFG.len*100)+'%';
  {const ym=$('ymon');if(ym)ym.textContent=MON_N[curMon()]}
  if(acc>=CFG.len){acc=0;passYear()}
@@ -45247,6 +45248,7 @@ window.fateBoxH=function(parts){const mod=!!(parts&&parts._mod),dk=mod?(parts._r
  <p>นับเฉพาะสิ่งที่หายากจริง (โอกาสไม่เกิน ~10%) · ของร้ายไม่ทำให้หายากขึ้น · ยิ่งสุ่มหลายครั้ง ความหายากจริงยิ่งลดลง${f>=12&&!['S','S+','SS'].includes(G)?' · ขั้นเหนือกว่านี้ต้องเกรด S ขึ้นไป':''}</p></div></details></div>`};
 })()}catch(e){console.error('block143',e)}
 
+<<<<<<< Updated upstream
 // BLOCK 144: 📱 มือถือ: ตั้งชื่อตอนสร้างตัวละครแล้วแป้นพิมพ์ไม่ขึ้น — เปิดแป้นพิมพ์ = จอ resize → หน้าสร้างตัวละครวาดใหม่ทั้งหน้า ช่องชื่อถูกแทนที่ แป้นพิมพ์ปิดทันที
 // แก้: ช่วงที่กำลังพิมพ์ในหน้าสร้างตัวละคร ไม่วาดใหม่จาก resize (วาดแค่แผงสรุปถ้ามี)
 try{(()=>{
@@ -45255,3 +45257,16 @@ const typing=()=>{const a=document.activeElement;return !!(a&&(a.tagName==='INPU
 let lw=innerWidth,lh=innerHeight;
 {const _cd=crDraw;crDraw=function(){const kb=innerWidth===lw&&innerHeight!==lh;if(typing()&&(kb||Date.now()-rz<400)){lh=innerHeight;return}lw=innerWidth;lh=innerHeight;return _cd.apply(this,arguments)}}
 })()}catch(e){console.error('block144',e)}
+=======
+// BLOCK 137: 🧊 กันค้าง/กันกดไม่ได้
+// (1) เวลาในเกมไม่เดินขณะอยู่หน้าเมนู/สุ่มกำเนิด/สร้างตัวละคร (เดิมชีวิตที่โหลดค้างไว้ยังเดินอยู่ข้างหลัง เหตุการณ์เด้งทับหน้าสร้างตัวละคร/สุ่มกำเนิด)
+// (2) ครูผู้เฒ่า (บทเรียนนำทาง): ระหว่างรอหาปุ่มเป้าหมาย กล่องพูดว่างและม่านบังทั้งจอ ~2.6 วิ เหมือนเกมค้าง → ซ่อนกล่อง/ม่านจนกว่าจะเจอเป้าหมาย และถ้าค้างเกิน 6 วิ ปิดบทเรียนเอง
+try{(()=>{
+const on=id=>{const e=document.getElementById(id);return !!(e&&e.classList.contains('on'))};
+window._offGame=()=>{try{if(on('game'))return !!document.getElementById('mwB')&&getComputedStyle(document.getElementById('mwB')).display!=='none';return on('title')||on('create')||on('birth')||on('skB')}catch(e){return false}};
+const st=document.createElement('style');st.textContent='#coach.cwait .cbox,#coach.cwait .cblk{visibility:hidden!important;pointer-events:none!important}';document.head.appendChild(st);
+let lastSig='',since=0;
+setInterval(()=>{try{const o=document.getElementById('coach');if(!o){lastSig='';return}const bub=o.querySelector('.cbub');const empty=!bub||!bub.textContent.trim();o.classList.toggle('cwait',empty);
+ const sig=(window._CO&&window._CO.id)+':'+(window._CO&&window._CO.i)+':'+(empty?0:1);if(sig!==lastSig){lastSig=sig;since=Date.now()}else if(empty&&Date.now()-since>6000){try{coEnd(true)}catch(e){o.remove()}}}catch(e){}},250);
+})()}catch(e){console.error('block137',e)}
+>>>>>>> Stashed changes
