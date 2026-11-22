@@ -46018,3 +46018,21 @@ setInterval(()=>{try{let b=$$('svCd');const show=inSoul()&&S.sv&&!S.sv.aw&&$$('g
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(inSoul()){const g=$$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.svM')&&!g.querySelector('.svMH'))g.insertAdjacentHTML('afterbegin','<button class="opt svMH" onclick="closeM();openSoul()">⭕ ดวงจิตและวงแหวน<small>ยังไม่ปลุก · ❓ วิธีปลุกดวงจิต</small></button>')}}catch(e){}return r}}
 try{SYS_GUIDE.push({s:'world',ic:'⭕',t:'ปลุกดวงจิต (ทวีปจิตวิญญาณยุทธ์)',d:'อายุ 6 ขวบ พิธีปลุกดวงจิตขึ้นเองอัตโนมัติ · ได้ดวงจิตสุ่ม 5 สาย 4 ความหายาก · ระดับจิตขึ้นเองทุกปี · ทุก 10 ระดับต้องหลอมวงแหวน (เกมชวนออกล่าเองตั้งแต่อายุ 8) · วงแหวนแก่เกินขีดเสี่ยงตาย · ผู้ข้ามโลกได้ดวงจิตทันที',go:'svHelp',nw:1})}catch(e){}
 })()}catch(e){console.error('block158',e)}
+
+// ============================================================
+// BLOCK 159: 🟦 ระบบหาย (ผู้เล่นแจ้ง) — เข้ายุคปัจจุบันแล้ว mwNoWux() ย้ายระบบ/AI/เงา/สัตว์วิญญาณไปเก็บใน S.mw.stash
+//   แต่ไม่มีโค้ดคืน · พอข้ามโลกออก (รอยแยก/ประตูสุดโลก/กลับบ้าน) S.mw ถูกล้าง → ของที่เก็บไว้หายถาวร
+//   แก้: ผูกที่เก็บไว้กับตัวละคร (S._mwStash) · ออกจากยุคปัจจุบันเมื่อไหร่ คืนให้ทันที · ตอนเก็บ บอกผู้เล่นว่าไม่ได้หาย
+// ============================================================
+try{(()=>{
+const K=['sys','ai','shadow','pet'];
+const N={sys:'🟦 ระบบ',ai:'🤖 AI คู่หู',shadow:'👤 เงา',pet:'🐾 สัตว์วิญญาณ'};
+function link(){try{if(!S||!S.mw||!mwOn())return;const st=S.mw.stash;if(!st)return;const has=K.filter(k=>st[k]);if(!has.length)return;
+ if(S._mwStash!==st){S._mwStash=st}
+ if(!S._mwStN){S._mwStN=1;setTimeout(()=>{try{log(`<span class="px">[ระบบ]</span> 📴 ในยุคปัจจุบัน ${has.map(k=>N[k]).join(' · ')} จากโลกเดิมเงียบลงชั่วคราว — <b>ไม่ได้หาย</b> จะกลับมาเองเมื่อคุณข้ามออกจากยุคปัจจุบัน`,'sys')}catch(e){}},600)}}catch(e){}}
+function back(){try{if(!S||!S._mwStash)return;if(S.mw&&(typeof mwOn!=='function'||mwOn()))return;const st=S._mwStash,got=[];
+ K.forEach(k=>{if(st[k]&&!S[k]){S[k]=st[k];got.push(N[k])}});delete S._mwStash;S._mwStN=0;
+ if(got.length){setTimeout(()=>{try{log(`<span class="px">[ระบบ]</span> 🔁 ${got.join(' · ')} กลับมาทำงานอีกครั้งหลังออกจากยุคปัจจุบัน`,'myth',true);render()}catch(e){}},500)}}catch(e){console.error('mwStashBack',e)}}
+{const _r=render;render=function(){link();back();return _r.apply(this,arguments)}}
+setInterval(()=>{link();back()},1500);
+})()}catch(e){console.error('block159',e)}
