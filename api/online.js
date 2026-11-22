@@ -780,6 +780,8 @@ function vapidAuth(aud) {
   const v = `vapid t=${h}.${p}.${sig}, k=${VAPID_PUB}`; _jwtC[aud] = { h: v, e: n + 12 * 3600 }; return v;
 }
 const hmac = (k, d) => crypto.createHmac('sha256', k).update(d).digest();
+// 🛡️ กระดานที่คะแนนมาจากเครื่อง: คะแนนเกิน 3 เท่าของอันดับ 1 → ส่งให้แอดมินตรวจ (ไม่ตัดสิทธิ์อัตโนมัติ)
+async function boardSus(zk, sc, id, n, why) { try { const t = await cmd('ZREVRANGE', zk, 0, 0, 'WITHSCORES'); const top = t && t.length > 1 ? +t[1] : 0; if (top >= 100 && sc > top * 3 && t[0] !== id && (await cmd('SET', 'bsus:' + why + ':' + id, 1, 'NX', 'EX', 86400)) === 'OK') await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(n || ''), 24), age: 0, why, s: sc, top, info: 1, t: Date.now() })], ['LTRIM', 'acsus', 0, 199]]) } catch { } }
 function pushEnc(sub, payload) {
   const ua = b64u(sub.k.p256dh), auth = b64u(sub.k.auth);
   const e = crypto.createECDH('prime256v1'); e.generateKeys(); const as = e.getPublicKey(), sh = e.computeSecret(ua);
@@ -1508,6 +1510,8 @@ module.exports = async (req, res) => {
       if (a === 'wkcsub') {
         if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'id' });
         const sc = Math.max(0, Math.min(1e7, Math.round(+b.s || 0))); if (!sc) return res.json({ ok: 0 });
+        if (b.tp || isAdmKey(b.key) || +(await cmd('SISMEMBER', 'cheaters', id))) return res.json({ ok: 0 });
+        await boardSus(zk, sc, id, b.n, 'srv-wkc');
         await pipe([['ZADD', zk, 'GT', sc, id], ['HSET', nk, id, clean(String(b.n || ''), 24) || 'นิรนาม'], ['EXPIRE', zk, 86400 * 30], ['EXPIRE', nk, 86400 * 30], ['ZREMRANGEBYRANK', zk, 0, -201]]);
       }
       const top = await cmd('ZREVRANGE', zk, 0, 19, 'WITHSCORES'), ids = []; for (let i = 0; i < (top || []).length; i += 2) ids.push(top[i]);
@@ -1637,7 +1641,7 @@ module.exports = async (req, res) => {
 <script>async function ipB(ip,on,b){if(on==='1'&&!confirm('บล็อก '+ip+' จากระบบออนไลน์ 30 วัน?'))return;b.disabled=true;try{const r=await fetch('?a=ipban&key=${K}&ip='+encodeURIComponent(ip)+'&on='+on);const j=await r.json();if(j.ok){b.textContent=on==='1'?'บล็อกแล้ว':on==='del'?'ลบแล้ว':'ปลดแล้ว';if(on==='del')b.closest('.pl').style.opacity=.35}else b.textContent='ไม่สำเร็จ'}catch(x){b.textContent='ไม่สำเร็จ';b.disabled=false}}</script>`;
       const [acL0, clL0, chS] = await pipe([['LRANGE', 'acsus', 0, 79], ['LRANGE', 'cheatlog', 0, 59], ['SMEMBERS', 'cheaters']]);
       const chSet = new Set(chS || []);
-      const AC_WHY = w => { w = String(w || '').replace(/^tamper:/, ''); return /^console/.test(w) ? '🔴 แก้ค่าผ่านคอนโซล (' + w.slice(8) + ')' : w === 'save-edit' ? '🔴 แก้ไฟล์เซฟ' : w === 'srv-cap' ? '🔴 ค่าเกินขีดที่เป็นไปได้ (เซิร์ฟเวอร์)' : w === 'srv-jump' ? '🟠 พลังกระโดดเกิน ×1000 ใน 3 ปี (เซิร์ฟเวอร์)' : /^cap/.test(w) ? '🟠 ค่าเกินเพดาน (' + w + ')' : /^jump/.test(w) ? '🟡 ค่ากระโดดเร็ว (' + w.slice(5) + ')' : w === 'banned' ? '🚫 ถูกแบน' : w === 'pow-age' ? '🟡 พลังสูงเกินอายุ' : w === 'stat' ? '🟠 ค่าเกินขีด' : w === 'score' ? '🟠 คะแนนเกินค่าสถานะ' : '⚪ ' + w };
+      const AC_WHY = w => { w = String(w || '').replace(/^tamper:/, ''); return w === 'srv-dl' ? '🟠 คะแนนชะตาประจำวันสูงผิดปกติ (เกิน 3 เท่าอันดับ 1)' : w === 'srv-wkc' ? '🟠 คะแนนความท้าทายสัปดาห์สูงผิดปกติ (เกิน 3 เท่าอันดับ 1)' : /^console/.test(w) ? '🔴 แก้ค่าผ่านคอนโซล (' + w.slice(8) + ')' : w === 'save-edit' ? '🔴 แก้ไฟล์เซฟ' : w === 'srv-cap' ? '🔴 ค่าเกินขีดที่เป็นไปได้ (เซิร์ฟเวอร์)' : w === 'srv-jump' ? '🟠 พลังกระโดดเกิน ×1000 ใน 3 ปี (เซิร์ฟเวอร์)' : /^cap/.test(w) ? '🟠 ค่าเกินเพดาน (' + w + ')' : /^jump/.test(w) ? '🟡 ค่ากระโดดเร็ว (' + w.slice(5) + ')' : w === 'banned' ? '🚫 ถูกแบน' : w === 'pow-age' ? '🟡 พลังสูงเกินอายุ' : w === 'stat' ? '🟠 ค่าเกินขีด' : w === 'score' ? '🟠 คะแนนเกินค่าสถานะ' : '⚪ ' + w };
       const acRow = (x, src) => { const f = x.fid || x.id || '', pre = f.slice(0, 10); return `<div class="pl"><div class="plh"><b>${e(x.n || '-')}</b><small>${tAgo(x.t || now)} ที่แล้ว · ${src}</small></div>${AC_WHY(x.why)} · อายุ ${(+x.age || 0).toLocaleString('th-TH')}${x.st ? ` · ⚔️ ${(+x.st.pow || 0).toLocaleString('en-US')} · ⭐ ${(+x.st.fame || 0).toLocaleString('en-US')}` : x.s ? ` · คะแนน ${(+x.s || 0).toLocaleString('en-US')}` : ''} · <small>${e(pre)}${chSet.has(f) ? ' · 🚫 แบนแล้ว' : ''}</small><br><a class="cpb" style="text-decoration:none" target="_blank" href="?a=acinv&key=${K}&p=${e(pre.slice(0, 8))}&h=1">🔍 ดูประวัติ</a> <button class="cpb" onclick="acB('${e(pre)}','1',this)">🚫 แบน</button> <button class="cpb" onclick="acB('${e(pre)}','0',this)">✅ ล้างธง/ปลดแบน</button></div>` };
       const acL = (acL0 || []).map(jp).filter(x => x && !/^(jump|cap|pow-age|srv-jump|score|stat)/.test(String(x.why || '').replace(/^tamper:/, ''))), clL = (clL0 || []).map(jp).filter(Boolean);
       const spD = [0, 1, 2, 3, 4, 5, 6].map(k => thDay(now, k));
@@ -2195,6 +2199,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const d = String(b.d || ''); if (d !== today && d !== yd) return res.json({ err: 'day' });
         const c = +(await cmd('INCR', 'dlr:' + id)) || 1; if (c === 1) await cmd('EXPIRE', 'dlr:' + id, 3600); if (c > 12) return res.status(429).json({ err: 'rate' });
         const sc = Math.max(0, Math.min(1e12, Math.round(+b.s || 0)));
+        if (b.tp || isAdmKey(b.key) || +(await cmd('SISMEMBER', 'cheaters', id))) return res.json({ ok: 1, first: 0, rank: null, n: 0 });
+        await boardSus('dl:' + d, sc, id, b.n, 'srv-dl');
         const rec = JSON.stringify({ n: clean(String(b.n || ''), 24) || 'ไร้นาม', t: clean(String(b.t || ''), 70), st: Math.max(0, Math.min(999, +b.st | 0)), at: now });
         const added = +(await cmd('ZADD', 'dl:' + d, 'NX', sc, id)) === 1;
         if (added) await pipe([['HSET', 'dlm:' + d, id, rec], ['EXPIRE', 'dl:' + d, 5 * 86400], ['EXPIRE', 'dlm:' + d, 5 * 86400]]);
@@ -3437,7 +3443,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       return res.json({ o });
     }
     if (a === 'arenaRes') {
-      if (b.w) await pipe([['ZINCRBY', 'arenaW:' + W, 1, clean(b.n, 20) || 'นิรนาม'], ['EXPIRE', 'arenaW:' + W, 86400 * 40]]);
+      // 🛡️ เดิมเพิ่มแต้มชนะตามที่เครื่องบอกได้ไม่จำกัด → ทำเนียบลานประลองนับเฉพาะผลที่เซิร์ฟเวอร์ตัดสิน (ar2res)
       return res.json({ ok: 1 });
     }
     if (a === 'save') {
