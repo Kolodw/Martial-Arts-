@@ -45734,3 +45734,120 @@ document.addEventListener('pointerdown',e=>{try{const m=$('modal');const b=e.tar
 //  อายุรับศิษย์ยุทธภพเลื่อนตาม S._ro (สุ่ม −1..+2 ต่อชีวิตใน story.js)
 // ============================================================
 try{setTimeout(()=>{try{wLoad('story').catch(()=>setTimeout(()=>wLoad('story').catch(()=>{}),6000))}catch(e){}},2600)}catch(e){console.error('block153',e)}
+
+// ============================================================
+// BLOCK 154: 🧭 เล่นครั้งแรกบนมือถือแล้วรู้ว่าต้องทำอะไรต่อ
+//  หน้าเริ่ม: ① เลือกโลก → ② เลือกโหมด → 🐣 เกิด (ปุ่มเดียว) · การ์ดที่เลือกมี "✓ เลือกแล้ว" ไม่พึ่งสี · ความเร็วชีวิตย่อเป็นบรรทัดเล็ก
+//            · ซ่อนปุ่ม "▶ เกิดในโลกนี้" บนการ์ด (ใช้ wpGo เดิม) · ปุ่ม tStartIn เหลือเป็นหมุดตำแหน่งให้ BLOCK 67 · ปุ่มเกิดใน tDock ไปโลกที่เลือก (ทะลุฟ้าดารา/สัตว์ด้วย)
+//  ระหว่างเล่น: ป้ายชื่อใต้ปุ่มไอคอนบนหัว (🧭 🔔 ออนไลน์ 👁 🎲) · ปุ่มความเร็วย้ายมาติดปุ่มหยุด/เล่นต่อ · ไฮไลต์เหตุการณ์ล่าสุด · เว้นท้ายบันทึกไม่ให้บรรทัดสุดท้ายชิดแถบ
+//  ปณิธาน: แต่ละข้อบอก "เป้าหมาย" + "ผลตอบแทน" สั้นๆ · กด "▾ ดูรางวัล 3 ขั้น" ได้ก่อนยืนยัน (ตัวเลขจาก gTick/goalFinMul ในบล็อกปณิธาน 2.0)
+//  ไม่แตะ: สุ่มเกิด บาลานซ์ เซฟ และฟังก์ชันของปุ่มเดิม
+// ============================================================
+try{(()=>{
+const $$=id=>document.getElementById(id);const B=document.body;
+const en=()=>{try{return LANG==='en'}catch(e){return false}};
+const SUB='ชีวิตนี้ เจ้าจะถือกำเนิดในโลกไหน?';
+const SPD=[[2500,'⚡ เร็ว'],[5000,'🍵 ปกติ'],[9000,'🐢 ช้า']];
+const css=document.createElement('style');css.id='uxCss';css.textContent=`
+/* ---------- หน้าเริ่ม ---------- */
+#title #tStartIn{visibility:hidden!important;height:0!important;min-height:0!important;padding:0!important;margin:0!important;border:0!important;overflow:hidden!important;box-shadow:none!important;animation:none!important}
+#wPick .wc .go,#wPick .wpNote,#wPick .wpC>span:not(:first-child),#wPick .wpC .spd{display:none!important}
+#wPick .wpH b{text-align:left;line-height:1.25}#wPick .wpH b,#wPick .wpC>span:first-child{text-shadow:0 1px 2px #000,0 0 10px #000,0 0 4px #000}#wPick .wpC button:not(.on){background:#16121ed9!important;color:#f0e4c6!important}#wPick .wpH b small{display:block;font-size:11px;font-weight:600;color:#c9bfa8;margin-top:1px}
+#wPick .wc{transition:transform .2s,opacity .2s,box-shadow .2s}
+#wPick .wc:not(.on){opacity:.7;transform:scale(.95)}
+#wPick .wc.on{border-width:3px;box-shadow:0 0 0 2px #ffd86a,0 0 22px #e8b54a77;opacity:1}
+#wPick .wc .uxTick{display:none}#wPick .wc.on .uxTick{display:block;position:absolute!important;top:10px;right:10px;z-index:3;padding:3px 10px;border-radius:999px;background:#fff3c8;color:#2a1a04;border:2px solid #2a1a04;font-size:12px;font-weight:900;box-shadow:0 2px 6px #0008}
+#wPick .wpC{flex-wrap:wrap!important;overflow:visible!important;row-gap:7px;margin-top:4px}
+#wPick .wpC>span:first-child{flex:0 0 100%!important;font-size:14px!important;color:#ffe7a8!important;font-weight:800;margin:2px 2px 0}
+#wPick .wpC button{min-height:38px}
+#wPick .wpC button.on{font-weight:900;border-width:2px}
+#wPick .wpC button.on::before{content:'✓ '}
+#uxModeN{font-size:11.5px;color:#c9bfa8;margin:6px 2px 0;display:none}#uxModeN.on{display:block}
+#uxGo{margin:12px 0 2px;display:flex;flex-direction:column;align-items:stretch;gap:6px}
+#uxGo .uxBorn{font:inherit;font-weight:900;font-size:22px;color:#1d1405;background:linear-gradient(180deg,#ffe29a,#e8b54a 55%,#c98d22);border:3px solid #7a5410;border-radius:18px;padding:12px 10px 10px;box-shadow:0 4px 0 #7a5410,0 8px 18px #0006;cursor:pointer;line-height:1.15}
+#uxGo .uxBorn small{display:block;font-size:12.5px;font-weight:700;opacity:.85;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#uxGo .uxBorn:active{transform:translateY(3px);box-shadow:0 1px 0 #7a5410}
+body.ttl:not(.nbOn) #uxGo .uxBorn{display:none}
+#uxGo .uxSpd{align-self:center;font:inherit;font-size:12px;font-weight:700;color:#d9ceb2;background:none;border:1px dashed #ffffff33;border-radius:999px;padding:5px 12px;min-height:32px;cursor:pointer}
+#uxGo .uxSpd b{color:#ffe7a8}
+#tDock #tGo small{display:block;font-size:11px;font-weight:700;opacity:.85;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* ---------- ระหว่างเล่น (มือถือ) ---------- */
+body.mUI:not(.uxEn) #game .hudr :is(#wnBtn,#mBell,#onMini){display:inline-flex!important;flex-direction:column!important;align-items:center;justify-content:center;gap:1px!important;min-height:38px!important;min-width:0!important;padding:2px 3px!important;line-height:1!important;border-radius:11px!important}
+body.mUI:not(.uxEn) #game .hudr :is(#wnBtn,#mBell,#onMini)::after{display:block;font-size:8.5px;font-weight:700;line-height:1.1;opacity:.85;white-space:nowrap;color:#f3e6c6;letter-spacing:-.2px}
+body.mUI:not(.uxEn) #wnBtn::after{content:'ทำอะไรดี'}body.mUI:not(.uxEn) #mBell::after{content:'แจ้งเตือน'}body.mUI:not(.uxEn) #onMini::after{content:'ออนไลน์'}
+body.mUI:not(.uxEn) #mBell b{top:-4px!important;right:-2px!important}
+body.mUI:not(.uxEn) #mEye{width:auto!important;min-width:40px;height:auto!important;padding:3px 6px!important;border-radius:12px!important;line-height:1.1!important;display:flex;flex-direction:column;align-items:center}
+body.mUI:not(.uxEn) #mEye::after{content:'ซ่อนแถบ';font-size:8.5px;font-weight:700;opacity:.9}
+body.mUI:not(.uxEn) #sceneBox .scap{left:52px!important}
+body:not(.uxEn) #rvBar .fpB::before{content:'แต้มชะตา ';font-size:10.5px;opacity:.8}
+body.mUI #game .crow #spdBtn{order:8!important;flex:.85 1 0!important;min-height:48px!important;height:auto!important;flex-direction:column!important;justify-content:center;gap:1px!important;border-radius:15px!important;font-size:15px!important;padding:0 2px!important;display:flex!important}
+body.mUI #game .crow #spdBtn .cbL{display:block!important;font-size:9.5px!important;margin:2px 0 0!important}
+body.mUI #game .crow #pauseBtn{order:8!important}
+#feed{scroll-padding-bottom:14px}#feed>:last-child{margin-bottom:12px!important}
+#feed>.bub.uxNew{box-shadow:0 0 0 2px #ffd86acc,0 0 14px #e8b54a55!important;position:relative}#feed>.uxNew:not(.bub){border-left:3px solid #ffd86a!important;padding-left:8px!important;opacity:1!important}
+/* หน้าต่างตัวเลือก: ป้ายชื่อปุ่มไอคอน */
+body.mUI:not(.uxEn) #modal .chtop.mTb :is(.ciB,.clB) .mLb{display:none!important}
+body.mUI:not(.uxEn) #modal .chtop.mTb .ciB::after{content:'ข้อมูล';font-size:11.5px}body.mUI:not(.uxEn) #modal .chtop.mTb .clB::after{content:'ล็อก';font-size:11.5px}body.mUI:not(.uxEn) #modal .chtop.mTb>.mGear::after{content:' ตั้งค่า';font-size:11.5px}
+#modal[data-k="choice"] .csbox.uxLow{margin:12px 0 0!important;opacity:.85}
+/* ---------- ปณิธาน ---------- */
+:is(#goalOpts,#brGoal) .opt small[data-ux]{margin-top:3px}
+:is(#goalOpts,#brGoal) .uxL{display:inline-block;font-size:10.5px;font-weight:800;padding:0 6px;margin-right:4px;border-radius:6px;background:#0003;border:1px solid currentColor;opacity:.85}
+:is(#goalOpts,#brGoal) .uxRw{display:block;font-size:12px;line-height:1.45;margin-top:4px}
+:is(#goalOpts,#brGoal) .uxDt{display:inline-block;margin-top:6px;padding:4px 10px;min-height:28px;line-height:20px;border-radius:999px;border:1px dashed currentColor;font-size:12px;font-weight:800;cursor:pointer;opacity:.9}
+:is(#goalOpts,#brGoal) .uxTier{display:block;margin-top:6px;padding:8px 10px;border-radius:10px;background:#0003;font-size:12px;line-height:1.5;text-align:left}
+:is(#goalOpts,#brGoal) .uxTier>span{display:block;padding:4px 0;border-bottom:1px dashed #ffffff22}
+:is(#goalOpts,#brGoal) .uxTier>small{display:block;margin-top:6px;opacity:.8;font-size:11px}
+`;document.head.appendChild(css);
+
+// ---------- หน้าเริ่ม ----------
+const card=()=>{const P=$$('wPick');return P&&(P.querySelector('.wc.on')||null)};
+function sel(){const c=card();if(!c)return null;const t=s=>((c.querySelector(s)||{}).textContent||'').trim();return{k:c.dataset.k,ic:t('.ic'),n:t('b')}}
+function mode(){const P=$$('wPick');if(!P)return null;const L=[...P.querySelectorAll('.wpC button[data-c]')];if(L.length&&L.every(b=>b.disabled))return 0;const b=L.find(x=>x.classList.contains('on'));return b?b.textContent.trim():null}
+function sub(){const s=sel(),m=mode();if(!s)return'';return`ใน ${s.ic} ${s.n}`+(m?` · ${m}`:m===0?' · ความท้าทายในตัว':'')}
+window.uxBorn=function(){const s=sel();try{vib&&vib(20)}catch(e){}if(s&&typeof wpGo==='function')return wpGo(s.k);goBirthPick()};
+function title(){try{const T=$$('title');if(!T||!T.classList.contains('on'))return;
+ if(!en()){const a=$$('titleSub');if(a&&a.textContent!==SUB)a.textContent=SUB}
+ const P=$$('wPick');if(!P)return;
+ const h=P.querySelector('.wpH b');if(h&&!h.dataset.ux){h.dataset.ux=1;h.innerHTML='① เลือกโลกที่จะไปเกิด<small>ปัดการ์ดเพื่อดูโลกอื่น · แตะเพื่อเลือก</small>'}
+ const c0=P.querySelector('.wpC>span:first-child');if(c0&&!c0.dataset.ux){c0.dataset.ux=1;c0.textContent='② เลือกโหมด'}
+ P.querySelectorAll('.wc').forEach(c=>{if(!c.querySelector(':scope>.uxTick'))c.insertAdjacentHTML('beforeend','<span class="uxTick">✓ เลือกแล้ว</span>')});
+ const wc=P.querySelector('.wpC');let g=$$('uxGo'),mn0=$$('uxModeN');if(wc&&(!g||!mn0||wc.nextElementSibling!==mn0||mn0.nextElementSibling!==g)){if(g)g.remove();if(mn0)mn0.remove();wc.insertAdjacentHTML('afterend','<div id="uxModeN">โลกนี้มีความท้าทายในตัวอยู่แล้ว ไม่ต้องเลือกโหมด</div><div id="uxGo"><button type="button" class="uxBorn" onclick="uxBorn()">🐣 เกิด<small id="uxGoS"></small></button><button type="button" class="uxSpd" onclick="wpSpd()">⏱️ ความเร็วชีวิต: <b id="uxSpdT"></b> ▾</button></div>');g=$$('uxGo')}
+ const s=sub(),gs=$$('uxGoS');if(gs&&gs.textContent!==s)gs.textContent=s;
+ const sp=(SPD.find(x=>x[0]===CFG.len)||SPD[1])[1],st=$$('uxSpdT');if(st&&st.textContent!==sp)st.textContent=sp;
+ const mn=$$('uxModeN');if(mn)mn.classList.toggle('on',mode()===0);
+ const d=$$('tGo');if(d){const want=`<i>🐣</i> เกิด<small>${s}</small>`;if(d.innerHTML!==want)d.innerHTML=want;
+}
+}catch(e){console.error('ux title',e)}}
+let qmT=0;
+// ปุ่มเกิดใน tDock: ถ้าเลือก 🌠/🐾 ไว้ ให้ไปโลกนั้น (เดิมจะไป goBirthPick ของยุทธภพ) · เมนูกดค้าง (qmGo) ยังทำงานแบบเดิม
+window.addEventListener('click',e=>{try{const d=e.target&&e.target.closest&&e.target.closest('#tGo');if(!d)return;const c=sel();if(!c||(c.k!=='sky'&&c.k!=='beast')||Date.now()-qmT<1500)return;e.preventDefault();e.stopImmediatePropagation();d.classList.remove('dspin');void d.offsetWidth;d.classList.add('dspin');setTimeout(()=>{d.classList.remove('dspin');uxBorn()},520)}catch(x){}},true);try{const _qg=qmGo;qmGo=function(){qmT=Date.now();return _qg.apply(this,arguments)}}catch(e){}
+{const _tm=titleMode;titleMode=function(){const r=_tm.apply(this,arguments);try{if(!en()){const a=$$('titleSub');if(a)a.textContent=SUB}}catch(e){}return r}}
+document.addEventListener('click',e=>{try{if(e.target.closest&&e.target.closest('#wPick'))setTimeout(title,30)}catch(x){}},true);
+{const _s=show;show=function(id){const r=_s.apply(this,arguments);if(id==='title'){setTimeout(title,120);setTimeout(title,700)}return r}}
+
+// ---------- ระหว่างเล่น ----------
+// จอกว้าง (≥700) เดิมไม่มีป้ายใต้ปุ่มล่าง — ใส่ป้ายแบบเดียวกับมือถือ (เคารพตั้งค่าแถบปุ่มย่อ ctlMin)
+const LBD={pauseBtn:()=>paused?'เล่นต่อ':'หยุด',spdBtn:'ความเร็ว',bagBtn:'กระเป๋า',questBtn:'เควส',sysBtn:'ระบบ',autoBtn:'ออโต้',skipBtn:'แสดงหมด',logBtn:'บันทึก',menuBtn:'เมนู'};
+function deskLbl(){try{if(innerWidth<700||en()||!$$('game').classList.contains('on'))return;for(const id in LBD){const b=$$(id);if(!b)continue;const t=typeof LBD[id]==='function'?LBD[id]():LBD[id];let l=b.querySelector('.cbL');if(!l){l=document.createElement('small');l.className='cbL';b.appendChild(l)}if(l.textContent!==t)l.textContent=t}}catch(e){}}
+function feedNew(){try{const f=$$('feed');if(!f||!$$('game').classList.contains('on'))return;const L=[...f.children].filter(c=>!c.classList.contains('yr')&&(c.textContent||'').trim());let last=null;for(let i=L.length-1;i>=0;i--){if(L[i].offsetParent){last=L[i];break}}
+ const o=f.querySelector(':scope>.uxNew');if(o!==last){if(o)o.classList.remove('uxNew');if(last)last.classList.add('uxNew')}}catch(e){}}
+
+// สรุปหลายปีที่ผ่านมา ย้ายไปไว้ใต้ตัวเลือก ให้หัวเรื่องกับตัวเลือกขึ้นก่อน
+function chLow(){try{const m=$$('modal');if(!m||m.dataset.k!=='choice')return;const c=m.querySelector('.csbox:not(.uxLow)');if(!c)return;const o=[...m.querySelectorAll(':scope>.opt')].pop();if(!o)return;c.classList.add('uxLow');o.insertAdjacentElement('afterend',c)}catch(e){}}
+{const _md=modal;modal=function(h,k){const r=_md.apply(this,arguments);if(k==='choice')chLow();return r}}
+
+// ---------- ปณิธาน ----------
+const OPEN=new Set();
+const fx=v=>(+v).toFixed(2).replace(/\.?0+$/,'');
+function gid(b){const m=/(?:roll|brRoll)\.goal='([^']+)'/.exec(b.getAttribute('onclick')||'');return m?m[1]:b.dataset.g||null}
+function gOne(b){const id=gid(b);if(!id)return;let g=null;try{g=goalOf(id)}catch(e){}if(!g)return;const m=goalMul(g),op=OPEN.has(id);
+ const sm=b.querySelector(':scope>small');if(sm&&!sm.dataset.ux){sm.dataset.ux=1;sm.insertAdjacentHTML('afterbegin','<b class="uxL">เป้าหมาย</b>')}
+ const tier=op?`<span class="uxTier"><span><b>🥉 ทองแดง</b> — ทำได้ 40% ของเป้า<br>ชื่อเสียง +20 · ความสุข +8 · คะแนนชีวิต ×1.1</span><span><b>🥈 เงิน</b> — ทำได้ 70% ของเป้า<br>ชื่อเสียง +40 · ความสุข +10 · คะแนนชีวิต ×${fx(1+(m-1)*.5)}<br>ชีวิตหน้าเริ่มด้วย ปัญญา +8 · ลมปราณ +1 · ชื่อเสียง +10</span><span style="border:0"><b>🥇 ทอง</b> — ทำสำเร็จ<br>ชื่อเสียง +50 · ความสุข +20 · คะแนนชีวิต ×${fx(m)} · บันทึกลง 📕 สมุดปณิธาน</span><small>ผ่านขั้นไหนได้รางวัลขั้นนั้นทันที · คะแนนชีวิตใช้ตัวคูณของขั้นสูงสุดที่ได้ · ชะตาเกรด B / C / D เป้าเบาลง 10 / 20 / 40% · ชะตาเกรด S ได้ส่วนเพิ่มจากตัวคูณ 85%</small></span>`:'';
+ b.insertAdjacentHTML('beforeend',`<span class="uxRw"><b class="uxL">ผลตอบแทน</b>🥇 คะแนนชีวิต ×${fx(m)} · 🥈 มรดกชีวิตหน้า · 🥉 ชื่อเสียง +20</span><span class="uxDt" role="button" tabindex="0" aria-expanded="${op}" data-g="${id}">${op?'▴ ซ่อนรางวัล 3 ขั้น':'▾ ดูรางวัล 3 ขั้น'}</span>${tier}`)}
+function gDecor(){try{if(en())return;document.querySelectorAll('#goalOpts .opt,#brGoal .opt').forEach(b=>{if(!b.querySelector(':scope>.uxRw'))gOne(b)})}catch(e){console.error('ux goal',e)}}
+window.addEventListener('click',e=>{const t=e.target&&e.target.closest&&e.target.closest('.uxDt');if(!t)return;e.preventDefault();e.stopImmediatePropagation();const id=t.dataset.g;if(OPEN.has(id))OPEN.delete(id);else OPEN.add(id);const b=t.closest('.opt');if(!b)return;b.querySelectorAll(':scope>.uxRw,:scope>.uxDt,:scope>.uxTier').forEach(x=>x.remove());gOne(b)},true);
+window.addEventListener('keydown',e=>{const t=e.target&&e.target.closest&&e.target.closest('.uxDt');if(t&&(e.key==='Enter'||e.key===' ')){e.preventDefault();e.stopImmediatePropagation();t.click()}},true);
+{const _rg=renderGoalPick;renderGoalPick=function(){const r=_rg.apply(this,arguments);gDecor();return r}}
+
+setInterval(()=>{B.classList.toggle('uxEn',en());title();feedNew();gDecor();chLow();deskLbl()},400);setTimeout(title,300);
+})()}catch(e){console.error('block154',e)}
