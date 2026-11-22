@@ -574,6 +574,31 @@ const annPoll = async (ann, id) => {
   } catch { return ann }
 };
 const okId = id => typeof id === 'string' && /^[a-z0-9]{6,24}$/.test(id);
+// 👻 สากลภพ: บันทึกเงาของผู้เล่น (1 ตนต่อคน · gid สุ่ม ไม่เปิดเผย id) + แจ้งผลให้เจ้าของเงา + สุสานทั้งเว็บ
+const UA_W = ['murim', 'xian', 'mw', 'soul', 'beast', 'sky'];
+const uaNm = v => String(v || '').replace(/[<>&"'`\\\n\r\t]/g, '').trim().slice(0, 30);
+async function uaGhostEnd(id, b, now) {
+  const ops = []; let gid = await cmd('GET', 'uag:my:' + id);
+  const g = b.g && typeof b.g === 'object' ? b.g : null;
+  if (g && UA_W.includes(g.w) && uaNm(g.n)) {
+    if (!gid) { gid = Math.random().toString(36).slice(2, 12); ops.push(['SET', 'uag:my:' + id, gid, 'EX', 86400 * 60], ['SET', 'uag:own:' + gid, id, 'EX', 86400 * 60]) }
+    const n2 = x => Math.max(0, Math.min(100, Math.round(+x || 0)));
+    const mx = {}; ['r', 'g', 's', 'h'].forEach(k => mx[k] = Math.max(0, Math.min(30, Math.round(+(g.mx && g.mx[k]) || 0))));
+    const o = { n: uaNm(g.n), w: g.w, age: Math.max(18, Math.min(99999, Math.round(+g.age || 18))), b: n2(g.b), p: n2(g.p), c: n2(g.c), mx, ul: [0, 1, 2].includes(+g.ul) ? +g.ul : -1, t: now };
+    ops.push(['HSET', 'uag:g', gid, JSON.stringify(o)], ['ZADD', 'uag:z', now, gid], ['ZREMRANGEBYRANK', 'uag:z', 0, -301]);
+  }
+  const ev = Array.isArray(b.ev) ? b.ev.slice(0, 6) : [];
+  for (const e of ev) {
+    const eg = String(e && e.gid || '').replace(/[^a-z0-9]/g, '').slice(0, 12); if (!eg) continue;
+    const it = { won: e.won ? 1 : 0, vs: uaNm(e.vs), vw: UA_W.includes(e.vw) ? e.vw : '', st: uaNm(e.st), ch: e.ch ? 1 : 0, t: now };
+    ops.push(['LPUSH', 'uag:n:' + eg, JSON.stringify(it)], ['LTRIM', 'uag:n:' + eg, 0, 19], ['EXPIRE', 'uag:n:' + eg, 86400 * 30]);
+    if (!it.won && e.n && UA_W.includes(e.w)) ops.push(['LPUSH', 'uag:grave', JSON.stringify({ n: uaNm(e.n), w: e.w, by: it.vs, bw: it.vw, st: it.st, gh: 1, t: now })]);
+  }
+  const L = b.lost && typeof b.lost === 'object' ? b.lost : null;
+  if (L && g && UA_W.includes(g.w)) ops.push(['LPUSH', 'uag:grave', JSON.stringify({ n: uaNm(g.n), w: g.w, by: uaNm(L.by), bw: UA_W.includes(L.bw) ? L.bw : '', st: uaNm(L.st), t: now })]);
+  if (ops.some(x => x[1] === 'uag:grave')) ops.push(['LTRIM', 'uag:grave', 0, 99]);
+  if (ops.length) await pipe(ops);
+}
 const OWP = { r_soulgod: [3500, 'g'], r_abyss: [3000, 'e'], r_prince: [2000, 'g'], r_suit: [1200, 'e'], r_hunterS: [2500, 'g'], r_idol: [1500, 'g'], r_astro: [2000, 'g'], r_cyber: [2500, 'e'], r_galemp: [5000, 'g'], r_dragon: [3000, 'g'], r_moon: [2000, 'e'], r_blood: [3500, 'e'], r_cloud: [1500, 'g'], r_star: [4000, 'g'], r_phoenix: [3000, 'g'], r_heaven: [5000, 'g'], r_asura: [4000, 'e'] }; // 👘 ชุดหายากตามโลก (ต้องตรงกับ BLOCK 106 ใน app.js)
 const SENS_A = new Set(['comp', 'svlg', 'gdw', 'owbuy', 'owget', 'kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
 
@@ -1323,7 +1348,19 @@ module.exports = async (req, res) => {
       for (const k of Object.keys(c).slice(0, 60)) { const v = Math.floor(+c[k]); if (RX.test(k) && v > 0 && v <= 30) ops.push(['HINCRBY', dk, k, v]) }
       if (!ops.length) return res.json({ ok: 0 });
       ops.push(['EXPIRE', dk, 86400 * 60]); try { await pipe(ops) } catch (e) {}
+      // 👻 เงาจักรวาลจากผู้เล่นจริง · ผลของเงา · สุสานทั้งเว็บ (รวมไว้ในคำขอเดียวต่อทัวร์)
+      try { if (okId(id)) await uaGhostEnd(id, b, now) } catch (e) {}
       return res.json({ ok: 1 });
+    }
+    if (a === 'uagget') { // ดึงเงา 12 ตน + แจ้งเตือนของเงาเรา + สุสาน
+      if (!okId(id)) return res.json({ g: [], n: [], gr: [] });
+      const mine = await cmd('GET', 'uag:my:' + id);
+      const ids = (await cmd('ZREVRANGE', 'uag:z', 0, 199)) || [];
+      const pool = ids.filter(x => x !== mine); for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]] }
+      const pk = pool.slice(0, 12); const rs = await pipe([pk.length ? ['HMGET', 'uag:g', ...pk] : ['ECHO', '[]'], ['LRANGE', 'uag:n:' + (mine || 'x'), 0, 19], ['LRANGE', 'uag:grave', 0, 59]]);
+      const P = v => { try { return JSON.parse(v) } catch { return null } };
+      const g = pk.length ? (rs[0] || []).map((v, i) => { const o = P(v); if (o) o.gid = pk[i]; return o }).filter(Boolean) : [];
+      return res.json({ g, n: (rs[1] || []).map(P).filter(Boolean), gr: (rs[2] || []).map(P).filter(Boolean), me: !!mine });
     }
     if (a === 'uastat') {
       if (!isAdmKey(qOf(req).key || b.key)) return res.status(403).json({ err: 'admin' });

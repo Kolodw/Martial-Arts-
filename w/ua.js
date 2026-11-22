@@ -52,7 +52,7 @@ function worldOf(s){try{if(s.beast)return'beast';if(typeof skyOn==='function'&&s
 function pctOf(v,mid){v=Math.max(0,+v||0);return clamp(Math.round(100*(1-1/(1+Math.pow(v/Math.max(1,mid),.6)))),8,97)}
 function fromS(){try{if(typeof S==='undefined'||!S||!S.alive)return null;const w=worldOf(S);let pw=0;try{pw=typeof total==='function'?total():(S.power||0)}catch(e){pw=S.power||0}
   const b=pctOf(pw,w==='mw'?60:w==='xian'?3000:300),p=clamp(Math.round(20+(+S.int||0)*.7),10,95),c=pctOf(S.fame||(S.mw&&S.mw.fame)||0,200);
-  return{me:1,name:S.name||'ไร้นาม',w,age:S.age|0,b,p,c,hab:'g',real:1,adult:(S.age|0)>=18}}catch(e){return null}}
+  return{me:1,name:S.name||'ไร้นาม',w,age:S.age|0,b,p,c,hab:'g',adult:(S.age|0)>=18}}catch(e){return null}}
 const NM={murim:['หลี่ เทียนหยาง','จาง หลิงเฟิง','หมี เสวี่ยฮวา','ซ่ง ไป๋อวิ๋น'],xian:['เซียวเฉิน','ฮั่วหลิงเอ๋อร์','มู่ชิงอวิ๋น','เย่ฟาน'],mw:['ธนกร ใจกล้า','พิมพ์ชนก แสงทอง','กิตติ วงศ์ดี','ณัฐ ศรีสุข'],soul:['ถังซาน','เสี่ยวอู่','ไต้มู่ไป๋','หนิงหรงหรง'],beast:['เขี้ยวเงิน','ปีกพายุ','เกล็ดนิล','อัสนีขาว'],sky:['ไอริน ฟ้าคราม','ภพ เหล็กกล้า','นภา ดาวตก','ยศ เกราะทอง']};
 const HAB=['r','g','s','h'],HABN={r:'ใจร้อน ชอบบุก',g:'รอบคอบ',s:'เจ้าเล่ห์',h:'ใจดี ชอบช่วย'};
 function ghost(w,lv){const n=pick(NM[w]);const base=lv==null?40+R()*35:lv;return{name:n,w,age:18+Math.floor(R()*300),b:clamp(Math.round(base+R()*16-8),10,92),p:clamp(Math.round(base+R()*20-10),10,92),c:clamp(Math.round(base+R()*20-10),10,92),hab:pick(HAB),ghost:1}}
@@ -159,7 +159,9 @@ function confirmBet(P){scr(`<h2>⚠️ ยืนยันการเดิม�
 // ---------- 3) ห้อง ----------
 function lobby(P){const seed=(Date.now()^Math.floor(Math.random()*1e9))>>>0;R=rngOf(seed);
  const ws=Object.keys(WD).filter(w=>w!==P.w);const lv=(P.b+P.p+P.c)/3;const ps=[Object.assign({},P,{me:1})];
- for(let i=0;i<3;i++){const w=ws.splice(Math.floor(R()*ws.length),1)[0];ps.push(ghost(w,clamp(lv-6+R()*10,20,85)))}
+ const pool=(UAP.g||[]).filter(g=>g&&WD[g.w]).slice();for(let i=pool.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+ const used=new Set([P.w]);for(const g of pool){if(ps.length>=4)break;if(used.has(g.w)&&pool.some(x=>!used.has(x.w)))continue;used.add(g.w);const mx=g.mx||{};const hab=['r','g','s','h'].sort((a,b)=>(mx[b]||0)-(mx[a]||0))[0];ps.push({name:g.n,w:g.w,age:g.age||18,b:g.b,p:g.p,c:g.c,mx,ul:g.ul,hab,ghost:1,real:1,gid:g.gid})}
+ const ws2=Object.keys(WD).filter(w=>!used.has(w));while(ps.length<4){const w=ws2.length?ws2.splice(Math.floor(R()*ws2.length),1)[0]:pick(Object.keys(WD));ps.push(ghost(w,clamp(lv-6+R()*10,20,85)))}
  for(let i=ps.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[ps[i],ps[j]]=[ps[j],ps[i]]}
  G={seed,ps,phase:'lobby',m:[[0,1],[2,3]],win:[],hist:[],st:{to:0,s_:{},sw_:{}}};CHT.list=[];CHT.view=14+Math.floor(Math.random()*20);{const l=$$('uaCl');if(l)l.innerHTML=''}
  const WAIT=30;const t0=Date.now();const at=ps.map(p=>p.me?400:3000+Math.random()*17000);
@@ -170,7 +172,7 @@ function lobby(P){const seed=(Date.now()^Math.floor(Math.random()*1e9))>>>0;R=rn
  chatSys(`🕳️ เปิดห้องสากลภพ #${(seed%100000).toString().padStart(5,'0')} · ${CHT.view} คนกำลังดู`);
  const shown=ps.map(()=>0);let iv=null;const start=()=>{clearInterval(iv);if(G&&G.phase==='lobby')nextMatch()};
  iv=setInterval(()=>{if(!G||G.phase!=='lobby'||!$$('uaRoom')){clearInterval(iv);return}const el=Date.now()-t0;
-  ps.forEach((p,i)=>{if(!shown[i]&&el>=at[i]){shown[i]=1;const e=$$('uaSl'+i);e.className='slot on'+(p.me?' me':'');e.style.setProperty('--c',WD[p.w].c);e.innerHTML=`<span class="ic">${WD[p.w].ic}</span><div><b>${E(p.name)}${p.me?' (คุณ)':''}</b>${WD[p.w].n}${p.ghost?' · 👻':''}<br><small style="opacity:.7">${p.ghost?'นิสัย: '+HABN[p.hab]:''}</small></div>`;vb(8);if(!p.me){chatSys(`${WD[p.w].ic} ${p.name} เข้าห้องแล้ว`);setTimeout(()=>ghostSay(p,'join'),900+Math.random()*1500)}}});
+  ps.forEach((p,i)=>{if(!shown[i]&&el>=at[i]){shown[i]=1;const e=$$('uaSl'+i);e.className='slot on'+(p.me?' me':'');e.style.setProperty('--c',WD[p.w].c);e.innerHTML=`<span class="ic">${WD[p.w].ic}</span><div><b>${E(p.name)}${p.me?' (คุณ)':''}</b>${WD[p.w].n}${p.real?' · 👤':p.ghost?' · 👻':''}<br><small style="opacity:.7">${p.real?'👤 เงาผู้เล่นจริง':p.ghost?'NPC · นิสัย: '+HABN[p.hab]:''}</small></div>`;vb(8);if(!p.me){chatSys(`${WD[p.w].ic} ${p.name} เข้าห้องแล้ว${p.real?' (👤 เงาผู้เล่นจริง)':''}`);setTimeout(()=>ghostSay(p,'join'),900+Math.random()*1500)}}});
   const all=shown.every(Boolean);const left=Math.max(0,WAIT-Math.floor(el/1000));const tt=$$('uaLbT'),bb=$$('uaLbB');if(tt)tt.textContent=all?`ครบ 4 จักรวาลแล้ว · เริ่มใน ${left} วิ`:`รอจักรวาลอื่น… เริ่มใน ${left} วิ`;if(bb)bb.style.width=(left/WAIT*100)+'%';
   const bk=$$('uaBk'),b1=$$('uaB1');if(all&&bk&&bk.style.display==='none'){bk.style.display='';bk.innerHTML=`<b>🏆 สายการแข่ง</b>${brk()}`;b1.disabled=false;b1.textContent='⚡ พร้อมแล้ว เริ่มเลย';b1.onclick=start;chatSys('🏆 จับคู่เรียบร้อย · ทายกันหน่อยใครจะรอด?')}
   if(el>=WAIT*1000&&all)start()},250)}
@@ -191,7 +193,7 @@ function nextMatch(){stopT();let a,b,r;if(G.win.length<2){const i=G.hist.filter(
   <div class="card" style="font-size:12.5px;line-height:1.55">${annLine(A,B)}</div>
   ${mine?`<button class="btn red" id="uaGo2">ลงสนาม ›</button>`:`<button class="btn" id="uaGo2">👀 ${meDead?'ดูต่อ':'นั่งดูคู่นี้'}</button>`}${!mine&&meDead?'<button class="btn gh" onclick="uaClose()">ออกจากสากลภพ</button>':''}`,mine);
  $$('uaGo2').onclick=()=>{G.phase='play';beat()};vb(20)}
-function annLine(A,B){const L=[];const g=[A,B].find(p=>p.ghost);if(g)L.push(`👻 ${E(g.name)} คือเงาของจักรวาล${WD[g.w].n}ที่เคยถูกลบ นิสัย<b>${HABN[g.hab]}</b>`);
+function annLine(A,B){const L=[];[A,B].filter(p=>p.ghost).forEach(g=>L.push(g.real?`👤 ${E(g.name)} คือ<b>เงาของผู้เล่นจริง</b> เลียนแบบการเลือกของเจ้าของ: ${mixTxt(g.mx)}`:`👻 ${E(g.name)} คือเงาจักรวาล (NPC) นิสัย<b>${HABN[g.hab]}</b>`));
  const ax=G.cur.st.ax;const nm={b:'💪 กาย',p:'🧠 ปัญญา',c:'👑 บารมี'};L.push(`ด่านนี้วัด <b>${[...new Set(ax)].map(x=>nm[x]).join(' + ')}</b>`);
  const sa=(A[ax[0]]+A[ax[1]])/2,sb=(B[ax[0]]+B[ax[1]])/2;L.push(Math.abs(sa-sb)<6?'สองฝั่งสูสีกันมาก':`ค่าตัวเปรียบ ${E((sa>sb?A:B).name)} ได้เปรียบเล็กน้อย แต่จังหวะสำคัญกว่า`);return L.join('<br>')}
 
@@ -199,7 +201,7 @@ function annLine(A,B){const L=[];const g=[A,B].find(p=>p.ghost);if(g)L.push(`�
 const statOf=(p,st)=>(p[st.ax[0]]+p[st.ax[1]])/2;
 function optsFor(p,bi){const all=HAB.slice();for(let i=all.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[all[i],all[j]]=[all[j],all[i]]}const sel=all.slice(0,3);
  return sel.map(s=>({s,t:pick(CH[p.w][s])}))}
-function aiPick(p,opts,foe,hist){const has=s=>opts.find(o=>o.s===s);let w={r:1,g:1,s:1,h:1};w[p.hab]+=2;if(p.ghost&&p.prom){if(p.prom==='h')w.h+=4;else w.s+=4}
+function aiPick(p,opts,foe,hist){const has=s=>opts.find(o=>o.s===s);let w={r:1,g:1,s:1,h:1};if(p.mx){['r','g','s','h'].forEach(k=>w[k]=1+(p.mx[k]||0)*1.6)}else w[p.hab]+=2;if(p.ghost&&p.prom){if(p.prom==='h')w.h+=4;else w.s+=4}
  // อ่านจังหวะก่อนของคู่: ถ้าคู่ชอบเร่ง → ขัดขวาง
  const last=hist.length?hist[hist.length-1]:null;if(last){const fs=last[foe];const ctr={r:'s',g:'r',s:'g',h:'s'}[fs];w[ctr]+=1.2}
  let tot=0;const c=opts.map(o=>{const v=w[o.s];tot+=v;return v});let x=R()*tot;for(let i=0;i<opts.length;i++){x-=c[i];if(x<=0)return opts[i]}return opts[0]}
@@ -216,7 +218,7 @@ function beat(){stopT();const C=G.cur,A=G.ps[C.a],B=G.ps[C.b],st=C.st,bi=C.beat;
  if(meSide!==0)C.pk[0]=aiPick(A,oa,1,hist);if(meSide!==1)C.pk[1]=aiPick(B,ob,0,hist);
  {const u=$$('uaUlt');if(u)u.onclick=()=>{if(C.pk[meSide])return;C.uOn=!C.uOn;u.classList.toggle('on',!!C.uOn);u.querySelector('i').textContent=C.uOn?'เปิด':'ปิด';vb(15)}}
  // เงาใช้ท่าไม้ตาย: จังหวะสุดท้ายถ้าตามหลัง หรือสุ่ม 20%
- [0,1].forEach(sd=>{if(sd===meSide||C.ult[sd])return;const behind=C.sc[sd]<C.sc[1-sd];if((bi===2&&behind)||R()<.2){C.ult[sd]=1;C.uNow=C.uNow||[0,0];C.uNow[sd]=1}});
+ [0,1].forEach(sd=>{if(sd===meSide||C.ult[sd])return;const behind=C.sc[sd]<C.sc[1-sd];const gp=sd?B:A;if(gp.real?(gp.ul===bi||(bi===2&&behind&&gp.ul<0)):((bi===2&&behind)||R()<.2)){C.ult[sd]=1;C.uNow=C.uNow||[0,0];C.uNow[sd]=1}});
  if(myO)document.querySelectorAll('#uaOp .opt2').forEach(b=>b.onclick=()=>{if(C.pk[meSide])return;C.pk[meSide]=myO[+b.dataset.i];if(C.uOn){C.ult[meSide]=1;C.uNow=C.uNow||[0,0];C.uNow[meSide]=1}const uB=$$('uaUlt');if(uB)uB.disabled=true;b.classList.add('pk');document.querySelectorAll('#uaOp .opt2').forEach(x=>x.disabled=true);vb(12);$$('uaTmT').textContent='✔ เลือกแล้ว · รอเปิดเผย…';setTimeout(()=>{if(G&&G.cur===C&&C.beat===bi)reveal()},700)});
  const dur=meSide>=0?12000:3200,t0=Date.now();
  T=setInterval(()=>{const left=Math.max(0,dur-(Date.now()-t0));const i=$$('uaTm');if(i)i.style.width=(left/dur*100)+'%';const tt=$$('uaTmT');if(tt&&!(meSide>=0&&C.pk[meSide])){tt.textContent=Math.ceil(left/1000)+' วิ';tt.classList.toggle('hot',left<4000&&meSide>=0)}
@@ -239,7 +241,7 @@ function scoreH(){const C=G.cur,A=G.ps[C.a],B=G.ps[C.b];const m=Math.max(6,C.sc[
 // ---------- 6) ตัดสิน ----------
 function judge(){stopT();const C=G.cur;if(!C||C.done)return;C.done=1;const A=G.ps[C.a],B=G.ps[C.b];let w=C.sc[0]>C.sc[1]?0:C.sc[1]>C.sc[0]?1:(statOf(A,C.st)>=statOf(B,C.st)?0:1);const tie=C.sc[0]===C.sc[1];
  const wi=w?C.b:C.a,li=w?C.a:C.b;G.hist.push({w:wi,l:li,r:C.r,st:C.st,sc:C.sc.slice(),log:C.log,tie});if(C.r===0)G.win.push(wi);
- const W=G.ps[wi],L=G.ps[li];try{reactEnd(W,L)}catch(e){}if(W.me)G.st.sw_[C.st.k]=(G.st.sw_[C.st.k]||0)+1;if(L.me){G.st[C.r?'out2':'out1']=1}
+ const W=G.ps[wi],L=G.ps[li];try{reactEnd(W,L)}catch(e){}if(W.me)G.st.sw_[C.st.k]=(G.st.sw_[C.st.k]||0)+1;[[W,L,1],[L,W,0]].forEach(([g,o,won])=>{if(g.real&&g.gid)(G.ev=G.ev||[]).push({gid:g.gid,won,vs:o.name,vw:o.w,st:C.st.n,n:g.name,w:g.w,ch:won&&C.r===1?1:0})});if(L.me)G.lost={by:W.name,bw:W.w,st:C.st.n};if(L.me){G.st[C.r?'out2':'out1']=1}
  if(L.me)return erased(W,L,C,tie);
  if(W.me&&C.r===1)return champion(W,L);
  // คนอื่นแพ้ หรือเราชนะรอบแรก
@@ -275,9 +277,11 @@ function shatter(col,done){try{if(document.body.classList.contains('mRM'))return
 function confetti(){try{if(document.body.classList.contains('mRM'))return;for(let i=0;i<40;i++){const d=document.createElement('div');d.textContent=pick(['✨','⭐','🌀','💫']);d.style.cssText=`position:fixed;z-index:9700;left:${Math.random()*100}%;top:-20px;font-size:${14+Math.random()*14}px;pointer-events:none;transition:transform ${1.5+Math.random()*1.5}s cubic-bezier(.3,.6,.6,1),opacity 3s`;document.body.appendChild(d);requestAnimationFrame(()=>{d.style.transform=`translate(${(Math.random()-.5)*120}px,${innerHeight+40}px) rotate(${Math.random()*720}deg)`;d.style.opacity='.2'});setTimeout(()=>d.remove(),3200)}}catch(e){}}
 
 // ---------- สุสาน ----------
-window.uaGrave=function(){const g=LSg('murim_uagrave',[]);scr(`<h2>🕳️ สุสานจักรวาล</h2><div class="sub">จักรวาลที่ถูกลบในเครื่องนี้ (เบต้า) · ของจริงจะเห็นของทุกคนทั้งเว็บ</div>
- ${g.length?g.map(x=>`<div class="gv"><i>${WD[x.w]?WD[x.w].ic:'❔'}</i><div style="flex:1;min-width:0"><b>${E(x.n)}</b> · ${WD[x.w]?WD[x.w].n:''}<br><small style="opacity:.7">ถูกลบโดย ${E(x.by)} · ด่าน${E(x.st)} · ${new Date(x.t).toLocaleDateString('th-TH')}</small></div></div>`).join(''):'<div class="card" style="text-align:center;opacity:.75">ยังว่างเปล่า… ขอให้เป็นแบบนี้ตลอดไป</div>'}
- <button class="btn gh" onclick="uaOpen()">‹ กลับ</button>`)};
+window.uaGrave=function(){const loc=LSg('murim_uagrave',[]);const row=x=>`<div class="gv"><i>${WD[x.w]?WD[x.w].ic:'❔'}</i><div style="flex:1;min-width:0"><b>${E(x.n)}</b> · ${WD[x.w]?WD[x.w].n:''}${x.gh?' <small style="opacity:.6">(เงา)</small>':''}<br><small style="opacity:.7">ถูกลบโดย ${E(x.by||'?')}${x.bw&&WD[x.bw]?' '+WD[x.bw].ic:''} · ด่าน${E(x.st||'')} · ${new Date(x.t).toLocaleDateString('th-TH')}</small></div></div>`;
+ const draw=()=>{const gr=UAP.gr||[];scr(`<h2>🕳️ สุสานจักรวาล</h2><div class="sub">จักรวาลที่ถูกลบในสากลภพ · เบต้ายังไม่ลบเซฟจริง</div>
+ <div class="card"><b>🌐 ทั้งเว็บ</b>${UAP.ok?(gr.length?gr.slice(0,40).map(row).join(''):'<div class="note">ยังไม่มีใครถูกลบ… ยังไม่มี</div>'):'<div class="note">กำลังโหลด…</div>'}</div>
+ <div class="card"><b>📱 ของคุณในเครื่องนี้</b>${loc.length?loc.map(row).join(''):'<div class="note">ยังว่างเปล่า… ขอให้เป็นแบบนี้ตลอดไป</div>'}</div>
+ <button class="btn gh" onclick="uaOpen()">‹ กลับ</button>`)};draw();uaFetch(true).then(()=>{if(document.querySelector('#uaMain h2')&&/สุสาน/.test(document.querySelector('#uaMain h2').textContent))draw()})};
 
 // พับจอระหว่างเล่น = ระบบเลือกแทนตามกติกา (ไม่หยุดเวลา)
 
@@ -290,11 +294,23 @@ const ucss=document.createElement('style');ucss.textContent=`#uaS .ultB{display:
 #uaS .ultU{font-size:11.5px;opacity:.6;text-align:center;margin:6px 0}@keyframes uaUl{50%{box-shadow:0 0 28px #ffd86aaa}}`;document.head.appendChild(ucss);
 // ---------- 📊 สถิติเบต้า (ส่ง 1 ครั้งต่อทัวร์ ไม่เก็บตัวตน) ----------
 function statBeat(C,A,B,pa,pb,cl,uN){const ms=A.me?0:B.me?1:-1;if(ms<0)return;const o=ms?pb:pa,S2=G.st;S2.beats=(S2.beats||0)+1;S2['p_'+o.s]=(S2['p_'+o.s]||0)+1;if(cl[ms]>0)S2['w_'+o.s]=(S2['w_'+o.s]||0)+1;else if(cl[ms]<0)S2['l_'+o.s]=(S2['l_'+o.s]||0)+1;
- if(uN[ms]){S2.uu=(S2.uu||0)+1;if(cl[ms]>0)S2.uw=(S2.uw||0)+1;else S2.ul=(S2.ul||0)+1}const f=ms?A:B;if(f.prom&&!S2._pr){S2._pr=1;S2.pr=1}if(f.prom==='s'&&o.s==='h'&&(ms?pa:pb).s==='s')S2.pb=1}
+ if(uN[ms]){S2.ub=C.beat;S2.uu=(S2.uu||0)+1;if(cl[ms]>0)S2.uw=(S2.uw||0)+1;else S2.ul=(S2.ul||0)+1}const f=ms?A:B;if(f.prom&&!S2._pr){S2._pr=1;S2.pr=1}if(f.prom==='s'&&o.s==='h'&&(ms?pa:pb).s==='s')S2.pb=1}
 function statSend(fin){try{if(!G||G.sent)return;G.sent=1;const me=G.ps.find(p=>p.me);const s2=G.st,c={t:1};if(fin)c.fin=1;else c.quit=1;
  ['champ','out1','out2','to','beats','uu','uw','ul','pr','pb'].forEach(k=>{if(s2[k])c[k]=s2[k]});['r','g','s','h'].forEach(k=>['p_','w_','l_'].forEach(q=>{if(s2[q+k])c[q+k]=s2[q+k]}));
  for(const k in s2.s_)c['s_'+k]=s2.s_[k];for(const k in s2.sw_)c['sw_'+k]=s2.sw_[k];if(me){c['pw_'+me.w]=1;if(s2.champ)c['pc_'+me.w]=1;c[me.test?'test':'real']=1}
- Promise.resolve().then(()=>api('ua',{c})).catch(()=>{})}catch(e){}}
+ const body={c};if(me&&!me.test&&(s2.beats||0)>=3){const mx={};['r','g','s','h'].forEach(k=>mx[k]=s2['p_'+k]||0);body.g={n:me.name,w:me.w,age:me.age,b:me.b,p:me.p,c:me.c,mx,ul:s2.ub!=null?s2.ub:-1};if(G.lost)body.lost=G.lost}
+ if(G.ev&&G.ev.length)body.ev=G.ev.slice(0,6);
+ Promise.resolve().then(()=>api('ua',body)).then(()=>{if(body.g)LSs('murim_uaghost',1)}).catch(()=>{})}catch(e){}}
+
+// ---------- 👤 เงาจากผู้เล่นจริง (ดึง 1 ครั้งตอนเปิดหน้าแรกของสากลภพ) ----------
+const UAP={g:[],n:[],gr:[],ok:0,at:0};
+function uaFetch(force){if(!force&&UAP.ok&&Date.now()-UAP.at<60000)return Promise.resolve(UAP);return Promise.resolve().then(()=>api('uagget')).then(r=>{if(r){UAP.g=r.g||[];UAP.n=r.n||[];UAP.gr=r.gr||[];UAP.ok=1;UAP.at=Date.now()}return UAP}).catch(()=>UAP)}
+function mixTxt(mx){mx=mx||{};const t=['r','g','s','h'].reduce((a,k)=>a+(mx[k]||0),0);if(!t)return'ยังไม่มีข้อมูล';return['r','g','s','h'].filter(k=>mx[k]).sort((a,b)=>mx[b]-mx[a]).slice(0,2).map(k=>`${ST[k].ic} ${Math.round(mx[k]/t*100)}%`).join(' · ')}
+function newsH(){const n=UAP.n||[];if(!n.length)return'';const seen=+LSg('murim_uanseen',0)||0;const fresh=n.filter(x=>x.t>seen).length;
+ return`<div class="card" style="border-color:#ffd86a66"><b>📬 ข่าวจากเงาของคุณ</b>${fresh?` <span style="font-size:11px;background:#e0483a;padding:1px 7px;border-radius:999px">${fresh} ใหม่</span>`:''}<div style="margin-top:6px">${n.slice(0,6).map(x=>`<div class="gv" style="${x.t>seen?'box-shadow:0 0 0 1.5px #ffd86a88':''}"><i>${x.ch?'👑':x.won?'🏆':'🕳️'}</i><div style="flex:1;min-width:0">${x.ch?'เงาของคุณ<b>ได้แชมป์</b>สากลภพ!':x.won?`เงาของคุณ<b>ลบจักรวาล</b>ของ ${E(x.vs)}`:`เงาของคุณ<b>ถูกลบ</b>โดย ${E(x.vs)}`}${x.vw&&WD[x.vw]?' '+WD[x.vw].ic:''}<br><small style="opacity:.7">ด่าน${E(x.st||'')} · ${new Date(x.t).toLocaleString('th-TH',{dateStyle:'short',timeStyle:'short'})}</small></div></div>`).join('')}</div></div>`}
+{const _o=window.uaOpen;window.uaOpen=function(){const r=_o.apply(this,arguments);const put=()=>{try{const m=$$('uaMain');if(!m||!/สากลภพ/.test((m.querySelector('h2')||{}).textContent||''))return;let el=$$('uaNews');if(!el){el=document.createElement('div');el.id='uaNews';const ban=$$('uaBan');if(ban)ban.insertAdjacentElement('afterend',el)}el.innerHTML=newsH();
+  let gi=$$('uaGInfo');if(!gi){gi=document.createElement('div');gi.id='uaGInfo';gi.className='note';const w=$$('uaWho');if(w)w.parentNode.appendChild(gi)}gi.innerHTML=`👤 ตอนนี้มีเงาผู้เล่นจริงรอในสากลภพ ${UAP.g.length>=12?'12+':UAP.g.length} ตน${LSg('murim_uaghost',0)?' · เงาของคุณก็อยู่ในนั้นด้วย':' · เล่นจบ 1 ทัวร์ เงาของคุณจะไปอยู่ในห้องของคนอื่น'}`;
+  if((UAP.n||[]).length)setTimeout(()=>LSs('murim_uanseen',Math.max(...UAP.n.map(x=>x.t))),4000)}catch(e){}};put();uaFetch().then(put);return r}}
 // ============================================================
 // 💬 แชทห้องรอ + 👀 คนดูจากโลกต่างๆ (NPC) + เหตุการณ์จากอัฒจันทร์
 //  เบต้า: แชทอยู่ในเครื่อง คนดูเป็น NPC ตอบตามที่คุณพิมพ์ · พิมพ์ชวนคู่แข่ง "ช่วยกันนะ" ได้ แต่เงาอาจโกหก
@@ -377,5 +393,6 @@ function reactReveal(A,B,pa,pb,ra,rb,xa,xb){let k=null,X='';if(pa.s==='s'&&pb.s=
  const g=[A,B].find(p=>p.ghost&&p.prom);if(g&&k==='betray'&&X===g.name)lat(()=>ghostSay(g,'',rp(['ข้าเคยบอกว่าจะช่วยเหรอ? 😏','สัญญาในสากลภพ… ไม่มีค่าหรอก','ขอโทษนะ แต่จักรวาลข้าสำคัญกว่า'])),1500,2600)}
 function reactEnd(W,L){CHT.view+=3;lat(()=>npcSay(fill(rp(LN.win),{W:W.name,L:L.name,LW:WD[L.w].n})),400,1200);lat(()=>npcSay(fill(rp(LN.rip),{L:L.name})),1500,2600);if(W.ghost)lat(()=>ghostSay(W,'',rp(['อีกหนึ่งจักรวาล','ขอบคุณสำหรับพลัง','ข้าจะจดชื่อเจ้าไว้'])),2000,3200);if(L.me)lat(()=>chatSys('🕳️ ชื่อของคุณถูกจารึกในสุสานจักรวาล'),2600,3400)}
 {const _n=nextMatch;nextMatch=function(){const r=_n.apply(this,arguments);try{const C=G&&G.cur;if(C&&G.phase==='ann'){const A=G.ps[C.a],B=G.ps[C.b];chatSys(`📢 ${A.name} VS ${B.name} · ด่าน${C.st.n}`);[A,B].forEach((p,i)=>{if(p.ghost)lat(()=>ghostSay(p,'start'),800+i*900,1600+i*900)})}}catch(e){}return r}}
+window._uaG=()=>G;window._uaP=UAP;
 try{wReady('ua')}catch(e){}
 })();
