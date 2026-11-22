@@ -2487,8 +2487,22 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const wk = Math.floor((now + 7 * 3600e3 - 4 * 86400e3) / (7 * 86400e3)), K = 'mpw:' + wk, N = 'mpn:' + wk;
       if (a === 'mpput') { if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' }); if (+(await cmd('SISMEMBER', 'cheaters', id))) return res.json({ ok: 0 }); if ((await cmd('SET', 'mprl:' + id, 1, 'NX', 'EX', 60)) !== 'OK') return res.json({ ok: 0 });
         const mp = Math.max(0, Math.min(1e7, Math.round(+b.mp || 0))); const prev = +(await cmd('ZSCORE', K, id)) || 0; if (mp > prev) await pipe([['ZADD', K, mp, id], ['HSET', N, id, JSON.stringify({ n: noAdm(clean(b.n, 20)) || 'มารนิรนาม', r: clean(b.r, 16), w: ['m', 'x', 'g'].includes(b.w) ? b.w : 'm' })], ['EXPIRE', K, 86400 * 15], ['EXPIRE', N, 86400 * 15]]); return res.json({ ok: 1 }) }
-      const z = (await cmd('ZREVRANGE', K, 0, 19, 'WITHSCORES')) || []; const ids = []; for (let i = 0; i < z.length; i += 2) ids.push([z[i], +z[i + 1]]);
-      const nm = ids.length ? await cmd('HMGET', N, ...ids.map(x => x[0])) : []; return res.json({ l: ids.map((x, i) => Object.assign({ mp: x[1] }, jp(nm[i]) || { n: 'มารนิรนาม' })) });
+      // แอดมิน: ลบคนออกจากทำเนียบมารสัปดาห์นี้ (n=ชื่อ หรือ id=รหัส) · ban=1 แบนด้วย กันกลับมาขึ้นใหม่ · ชื่อซ้ำหลายคนจะลบทั้งหมดที่ชื่อตรง
+      if (a === 'mpboard' && (qOf(req).del || b.del)) {
+        const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
+        const nmq = String(q.n || b.n || '').trim(), tid = String(q.id || b.id || ''), ban = (q.ban || b.ban) ? 1 : 0, hit = [];
+        const all = (await cmd('HGETALL', N)) || []; const rows = []; if (Array.isArray(all)) for (let i = 0; i + 1 < all.length; i += 2) rows.push([all[i], jp(all[i + 1])]); else for (const k in all) rows.push([k, jp(all[k])]);
+        for (const [rid, o] of rows) if ((tid && rid === tid) || (nmq && o && o.n === nmq)) hit.push(rid);
+        if (tid && !hit.includes(tid)) hit.push(tid);
+        const L = []; for (const rid of hit) { L.push(['ZREM', K, rid], ['HDEL', N, rid]); if (ban) L.push(['SADD', 'cheaters', rid]) }
+        if (L.length) await pipe(L); return res.json({ ok: 1, removed: hit.length, banned: ban });
+      }
+      const z = (await cmd('ZREVRANGE', K, 0, 29, 'WITHSCORES')) || []; let ids = []; for (let i = 0; i < z.length; i += 2) ids.push([z[i], +z[i + 1]]);
+      // ตัดคนที่ถูกแบนออกจากทำเนียบเสมอ + กันคะแนนตันเพดาน (10,000,000) ที่ชื่อ "โดม" ซึ่งเจ้าของสั่งลบ
+      if (ids.length) { const bn = await pipe(ids.map(x => ['SISMEMBER', 'cheaters', x[0]])); ids = ids.filter((x, i) => !+bn[i]) }
+      ids = ids.slice(0, 20);
+      const nm = ids.length ? await cmd('HMGET', N, ...ids.map(x => x[0])) : []; const out = ids.map((x, i) => Object.assign({ mp: x[1] }, jp(nm[i]) || { n: 'มารนิรนาม' })).filter(e => !(e.n === 'โดม' && e.mp >= 1e7));
+      return res.json({ l: out });
     }
     if (a === 'yvote') {
       if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' });
