@@ -1362,18 +1362,6 @@ module.exports = async (req, res) => {
       const r0 = await withCap(pushHashes(await cmd('HKEYS', 'push'), { t, b: x, u: '/?go=chat', g: 'ann' + now }), 25000);
       return res.json(Object.assign({ ok: 1, n }, r0));
     }
-    // 💓 หัวใจเต้น: เบาๆ ทุก ~60 วิ ตอนเปิดหน้าเว็บ → นับคนออนไลน์แบบเรียลไทม์ (3 นาทีล่าสุด) · แอดมินได้ตัวเลขละเอียด
-    if (a === 'hb') {
-      const day = new Date(now + 7 * 3600e3).toISOString().slice(0, 10).replace(/-/g, '');
-      const cmds = [['ZCOUNT', 'online', now - 180e3, '+inf'], ['ZCOUNT', 'online', now - 600e3, '+inf']];
-      if (okId(id)) cmds.unshift(['ZADD', 'online', now, id], ['PFADD', 'dau:' + day, id], ['EXPIRE', 'dau:' + day, 86400 * 8]);
-      const isA = isAdmKey(qOf(req).key);
-      if (isA) cmds.push(['PFCOUNT', 'dau:' + day], ['ZCOUNT', 'online', now - 60e3, '+inf'], ['ZCOUNT', 'online', now - 3600e3, '+inf']);
-      const r = await pipe(cmds); const o = okId(id) ? 3 : 0;
-      const out = { n: +r[o] || 0, n10: +r[o + 1] || 0 };
-      if (isA) { out.dau = +r[o + 2] || 0; out.n1 = +r[o + 3] || 0; out.n60 = +r[o + 4] || 0 }
-      return res.json(out);
-    }
     if (a === 'ping') {
       if (okId(id)) {
         try { await cmd('SET', 'seen:' + id, 1, 'EX', 86400 * 30) } catch {}
