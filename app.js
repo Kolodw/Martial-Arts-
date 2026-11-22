@@ -25649,13 +25649,13 @@ M.abking=()=>{const w1='M-2 44L-26 20L-20 46L-34 60L-14 62L-26 76L0 66Z',w2='M-2
  <circle cx="50" cy="50" r="62" style="fill:none;${S2};stroke-width:1.2;stroke-dasharray:1 5;stroke-linecap:round"/><circle cx="50" cy="50" r="56" style="fill:none;${S1};stroke-width:1.6;opacity:.7"/>
  <path style="${C1};${S2};stroke-width:2" d="M20 6L15 -26L32 -12L50 -34L68 -12L85 -26L80 6Z"/><rect x="20" y="2" width="60" height="7" rx="2" style="${C2};${S1};stroke-width:1.4"/>
  <circle cx="50" cy="-30" r="3.6" style="${PC}"/><circle cx="15" cy="-24" r="3" style="${PC}"/><circle cx="85" cy="-24" r="3" style="${PC}"/><circle cx="50" cy="5.5" r="2.4" style="${C3}"/>`};
-for(const k of ['abmaw','abchain','abgate','abspike','abking']){const f=M[k];M[k]=()=>`<g transform="translate(20 20) scale(.6)">${f()}</g>`}
+for(const k of ['abmaw','abchain','abgate','abspike','abking']){const f=M[k];M[k]=()=>`<g transform="translate(10 10) scale(.8)">${f()}</g>`}
 const mk=(id,n,c1,c2,c3,pc,bd,ty,sh,d)=>{try{const f={id,n,side:'h',c:0,ty,c1,c2,c3,pc,bd,d};const i=FRAMES.findIndex(x=>x.id===id);if(i>=0)FRAMES[i]=f;else FRAMES.push(f);T[id]=sh}catch(e){}};
-mk('f_ab100','กรอบปากอเวจี','#6a2aff','#f4eaff','#0a0014','#c8a0ff','🕳️','spin halo orbit sparkle corner badge','rnd|abmaw','ผ่านอเวจีวงแรก (ชั้น 100)');
-mk('f_ab300','กรอบโซ่เถ้าวิญญาณ','#9aa4b4','#ff8a2a','#22242c','#ffd09a','⛓️','orbit sparkle corner badge','abchain','ผ่านอเวจีวงที่ 3 (ชั้น 300)');
-mk('f_ab500','กรอบประตูไร้ป้าย','#8a4aff','#e8d4ff','#160830','#c8a0ff','🚪','halo orbit star corner badge','abgate|star4','ผ่านอเวจีครึ่งทาง (ชั้น 500)');
-mk('f_ab800','กรอบเงาไร้ที่พัก','#e0182e','#ffd6da','#14000a','#ff8a98','🩸','spin halo sparkle corner badge','abspike','ผ่านอเวจีวงที่ 8 (ชั้น 800)');
-mk('f_ab1000','กรอบราชันอเวจี','#ffc830','#fff3b0','#1a0a2a','#ffffff','👑','spin halo orbit aura2 sparkle star corner badge','abking','ราชันอเวจี ลงถึงชั้น 1000');
+mk('f_ab100','กรอบปากอเวจี','#6a2aff','#f4eaff','#0a0014','#c8a0ff','🕳️','spin halo orbit aura2 sparkle flow corner badge','rnd|abmaw','ผ่านอเวจีวงแรก (ชั้น 100)');
+mk('f_ab300','กรอบโซ่เถ้าวิญญาณ','#9aa4b4','#ff8a2a','#22242c','#ffd09a','⛓️','spin halo orbit sparkle flow star corner badge','abchain','ผ่านอเวจีวงที่ 3 (ชั้น 300)');
+mk('f_ab500','กรอบประตูไร้ป้าย','#8a4aff','#e8d4ff','#160830','#c8a0ff','🚪','spin halo orbit aura2 star sparkle corner badge','abgate|star4','ผ่านอเวจีครึ่งทาง (ชั้น 500)');
+mk('f_ab800','กรอบเงาไร้ที่พัก','#e0182e','#ffd6da','#14000a','#ff8a98','🩸','spin halo orbit aura2 sparkle flow corner badge','abspike','ผ่านอเวจีวงที่ 8 (ชั้น 800)');
+mk('f_ab1000','กรอบราชันอเวจี','#ffc830','#fff3b0','#1a0a2a','#ffffff','👑','spin halo orbit aura2 sparkle star flow snow corner badge','abking','ราชันอเวจี ลงถึงชั้น 1000');
 })();
 
 try{const AB_FR=[[100,'f_ab100'],[300,'f_ab300'],[500,'f_ab500'],[800,'f_ab800'],[1000,'f_ab1000']];
@@ -26911,15 +26911,16 @@ const _br=brdRestyle;brdRestyle=function(){const keep={},kc={};try{for(const p o
 // ---- v17.26 แอดมิน: ดูฉายา+กรอบที่จะแจกรอบนี้ (ภาพจริง) · สุ่มใหม่ทีละรอบ ----
 try{(()=>{
 const CN=[['m','⚔️ ยุทธภพ'],['x','☁️ เซียน'],['g','🌟 เทพ'],['b','🐾 อสูร'],['r','🔁 ย้อนกาล'],['h','🔥 นรก'],['s','⏳ ชีวิตสั้น'],['j','🗑️ รากขยะ'],['l','⭕ จิตวิญญาณยุทธ์']];
+window.rkCat=(c,b)=>{openRkAdmin._c=c;const m=$('modal');if(!m)return;m.querySelectorAll('.rkCat').forEach(x=>x.classList.toggle('on',x.dataset.c===c));m.querySelectorAll('.rkCats button').forEach(x=>x.classList.toggle('on',x===b))};
 window.openRkAdmin=async function(p,roll){p=p||openRkAdmin._p||'d';openRkAdmin._p=p;if(!admK())return toast('เฉพาะแอดมิน');
  modal('<button class="xbtn" onclick="closeM()">✕</button><h3>🎲 ฉายาและกรอบรอบนี้</h3><p class="tag2">กำลังโหลด…</p>','rkadm');
- let j;try{const r=await fetch(API+'?a=rkprev&fmt=json&key='+encodeURIComponent(admK())+(roll?'&roll='+roll:''));j=await r.json();if(!j.keys)throw 0}catch(e){return modal('<button class="xbtn" onclick="closeM()">✕</button><h3>🎲 ฉายาและกรอบ</h3><p>โหลดไม่ได้ (คีย์แอดมินถูกไหม?)</p>','rkadm')}
+ let j;try{const r=await fetch(API+'?a=rkprev&fmt=json&key='+encodeURIComponent(admK())+(roll?'&roll='+roll:'')+'&_='+Date.now(),{cache:'no-store'});j=await r.json();if(!j.keys)throw 0}catch(e){return modal('<button class="xbtn" onclick="closeM()">✕</button><h3>🎲 ฉายาและกรอบ</h3><p>โหลดไม่ได้ (คีย์แอดมินถูกไหม?)</p>','rkadm')}
  const k=j.keys[p],PN={d:'รายวัน',w:'รายสัปดาห์',m:'รายเดือน'};
- const rows=CN.map(([c,lab])=>`<div class="item"><b>${lab}</b>${[1,2,3].map(r=>{const id=RKG.fid(p,c,k,r),f=rkgReg(id),t=RKG.title(p,c,k,r);try{window._rkGEN&&window._rkGEN.set(t,{p,r,c})}catch(e){}return`<div style="display:flex;align-items:center;gap:14px;margin-top:10px"><div style="flex:0 0 64px;text-align:center">${frWrap('<span class="frph sm">🙂</span>',id)}</div><div style="min-width:0;flex:1">${rkChip(t,{d:7,w:8,m:9}[p])}<div class="tag2" style="margin-top:3px">${f?esc(f.n):''}</div></div></div>`}).join('')}</div>`).join('');
+ const cs=openRkAdmin._c||'m';const rows=`<div class="rkCats">${CN.map(([c,lab])=>`<button class="${c===cs?'on':''}" onclick="rkCat('${c}',this)">${lab}</button>`).join('')}</div>`+CN.map(([c,lab])=>`<div class="item rkCat${c===cs?' on':''}" data-c="${c}"><b>${lab}</b>${[1,2,3].map(r=>{const id=RKG.fid(p,c,k,r),f=rkgReg(id),t=RKG.title(p,c,k,r);try{window._rkGEN&&window._rkGEN.set(t,{p,r,c})}catch(e){}return`<div style="display:flex;align-items:center;gap:14px;margin-top:10px"><div style="flex:0 0 64px;text-align:center">${frWrap('<span class="frph sm">🙂</span>',id)}</div><div style="min-width:0;flex:1">${rkChip(t,{d:7,w:8,m:9}[p])}<div class="tag2" style="margin-top:3px">${f?esc(f.n):''}</div></div></div>`}).join('')}</div>`).join('');
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎲 ฉายาและกรอบรอบนี้</h3>
  <div class="tabs">${['d','w','m'].map(x=>`<button class="tabb ${x===p?'on':''}" onclick="openRkAdmin('${x}')">${PN[x]}</button>`).join('')}</div>
  <p class="tag2">ชุดที่จะแจกตอนจบรอบ ${esc(j.nx[p])} · ไม่ชอบกดสุ่มใหม่ได้จนกว่าจะถึงเวลาแจก (ผู้เล่นเห็นในหน้าทำเนียบทันที)</p>
- <button class="pbtn" style="width:100%" onclick="openRkAdmin('${p}','${p}')">🎲 สุ่มชุด${PN[p]}ใหม่</button>${rows}`,'rkadm')};
+ <button class="pbtn" style="width:100%" onclick="this.disabled=true;this.innerHTML='🎲 กำลังสุ่ม…';openRkAdmin('${p}','${p}')">🎲 สุ่มชุด${PN[p]}ใหม่</button><div class="${roll?'rkRolled':''}">${rows}</div>`,'rkadm');if(roll){try{sfx('rare')}catch(e){}toast('🎲 สุ่มชุด'+PN[p]+'ใหม่แล้ว · ฉายาและกรอบเปลี่ยนทั้งหมด')}};
 const _oat=openAdmTools;openAdmTools=function(){const r=_oat.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='admtool'&&!m.querySelector('.rkAdmB')){const h='<button class="pbtn rkAdmB" style="width:100%;margin-top:6px" onclick="openRkAdmin()">🎲 ฉายาและกรอบทำเนียบรอบนี้</button>';const t=m.querySelector('h3');if(t)t.insertAdjacentHTML('afterend',h);else m.insertAdjacentHTML('beforeend',h)}}catch(e){}return r};
 })()}catch(e){console.error(e)}
 
@@ -30303,11 +30304,44 @@ setInterval(tick,60000);setTimeout(tick,4000);
 // ===== 🎲 หน้า "ฉายาและกรอบรอบนี้" (แอดมิน): เพิ่มหมวด 🕳️ อเวจี — โชว์กรอบ+ฉายาอเวจีของจริง + ปุ่มสุ่ม/สุ่มรายสัปดาห์ =====
 try{(()=>{const AB_P=[['f_ab100','ผู้ข้ามปากอเวจี','ชั้น 100'],['f_ab300','วิญญาณไร้ที่พึ่ง','ชั้น 300'],['f_ab500','ผู้ร่วงไม่สิ้นสุด','ชั้น 500'],['f_ab800','ผู้ไม่เคยพัก','ชั้น 800'],['f_ab1000','ราชันอเวจี','ชั้น 1000']];
 const blk=()=>{const o=LS.get('murim_adm_abr',null)||{},f=o.fr&&frOf(o.fr);
- return`<div class="item admAbP"><b>🕳️ อเวจี</b><p class="tag2" style="margin:2px 0 6px">กรอบ+ฉายาตามชั้น (ถาวร แยกจากอันดับ) · แอดมินสุ่มสวมได้ ไม่ซ้ำอันเดิม · ${o.fr?'ตอนนี้ <b>'+esc(f?f.n:o.fr)+'</b> · ฉายา <b>'+esc(o.tt||'')+'</b>':'ยังไม่เคยสุ่ม'}</p>
- <div class="adg"><button class="pbtn" onclick="admAbRoll();openRkAdmin()">🎲 สุ่มกรอบ/ฉายาอเวจี</button></div>
+ return`<div class="item admAbP"><b>🕳️ อเวจี</b><p class="tag2" style="margin:2px 0 6px">กรอบ+ฉายาตามชั้น (ถาวร แยกจากอันดับ) · แอดมินสุ่มสวมได้ ไม่ซ้ำอันเดิม</p>
+ <div class="abStage" id="abStage">${o.fr?`<div class="abBig">${frWrap('<span class="frph big">🙂</span>',o.fr)}</div><div class="abRes"><small>สวมอยู่ตอนนี้</small><b>${esc(f?f.n:o.fr)}</b><span class="abChip">「${esc(o.tt||'')}」</span></div>`:'<div class="abRes"><b>ยังไม่เคยสุ่ม</b><small>กดปุ่มด้านล่างเพื่อสุ่มกรอบและฉายาอเวจี</small></div>'}</div>
+ <div class="adg"><button class="pbtn abRollB" style="width:100%" onclick="admAbFx()">🎲 สุ่มกรอบ/ฉายาอเวจี</button></div>
  <label style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" ${o.on?'checked':''} onchange="admAbWeekly(this.checked)"> 🗓️ สุ่มใหม่เองทุกสัปดาห์ (ไม่ซ้ำสัปดาห์ก่อน)</label>
- ${AB_P.map(p=>`<div style="display:flex;align-items:center;gap:14px;margin-top:10px"><div style="flex:0 0 64px;text-align:center">${frWrap('<span class="frph sm">🙂</span>',p[0])}</div><div style="min-width:0;flex:1"><b>${esc(p[1])}</b><div class="tag2" style="margin-top:3px">${esc((frOf(p[0])||{}).n||'')} · ${p[2]}</div></div></div>`).join('')}</div>`};
+ ${AB_P.map(p=>`<div class="abRow${p[0]===o.fr?' on':''}" data-id="${p[0]}"><div style="flex:0 0 64px;text-align:center">${frWrap('<span class="frph sm">🙂</span>',p[0])}</div><div style="min-width:0;flex:1"><b>${esc(p[1])}</b><div class="tag2" style="margin-top:3px">${esc((frOf(p[0])||{}).n||'')} · ${p[2]}</div></div>${p[0]===o.fr?'<span class="abOn">✓ สวมอยู่</span>':''}</div>`).join('')}</div>`};
+// สุ่มแบบมีลุ้น: กรอบหมุนสลับเร็วแล้วช้าลง → หยุด → แสงระเบิด
+window.admAbFx=function(){const st=document.getElementById('abStage'),bt=document.querySelector('#modal .abRollB');if(!st){admAbRoll();return openRkAdmin()}if(bt){bt.disabled=true;bt.textContent='🎲 กำลังสุ่ม…'}
+ const ids=AB_P.map(p=>p[0]);let i=0,d=60;const spin=()=>{const id=ids[i++%ids.length];st.innerHTML=`<div class="abBig abSpin">${frWrap('<span class="frph big">🙂</span>',id)}</div><div class="abRes"><small>กำลังสุ่ม…</small><b>${esc((frOf(id)||{}).n||'')}</b></div>`;try{sfx('click')}catch(e){}d*=1.16;if(d<420)setTimeout(spin,d);else done()};
+ const done=()=>{admAbRoll();const o=LS.get('murim_adm_abr',null)||{},f=frOf(o.fr);st.innerHTML=`<div class="abBig abLand">${frWrap('<span class="frph big">🙂</span>',o.fr)}<i class="abBurst"></i></div><div class="abRes abLandT"><small>ได้แล้ว!</small><b>${esc(f?f.n:o.fr)}</b><span class="abChip">「${esc(o.tt||'')}」</span></div>`;try{sfx('rare')}catch(e){}
+  setTimeout(()=>{const m=$('modal'),P=m&&m.querySelector('.admAbP');if(P){P.querySelectorAll('.abRow').forEach(r=>{const on=r.dataset.id===o.fr;r.classList.toggle('on',on);const x=r.querySelector('.abOn');if(on&&!x)r.insertAdjacentHTML('beforeend','<span class="abOn">✓ สวมอยู่</span>');if(!on&&x)x.remove()})}if(bt){bt.disabled=false;bt.textContent='🎲 สุ่มกรอบ/ฉายาอเวจี'}},700)};spin()};
+{const cs=document.createElement('style');cs.textContent=`.admAbP .abStage{display:flex;align-items:center;gap:16px;min-height:132px;margin:6px 0 10px;padding:12px;border-radius:14px;background:radial-gradient(ellipse at 30% 50%,#6a2aff33,#0000 70%),#0004;border:1px solid #c8a0ff33;overflow:hidden}
+.admAbP .abBig{position:relative;flex:0 0 auto;width:110px;display:flex;justify-content:center}.admAbP .abBig .frph.big{width:84px;height:84px;font-size:40px}
+.admAbP .abRes{min-width:0;flex:1}.admAbP .abRes small{display:block;opacity:.7}.admAbP .abRes b{display:block;font-size:17px;margin:2px 0 6px}
+.admAbP .abChip{display:inline-block;padding:4px 12px;border-radius:999px;background:linear-gradient(90deg,#3a1a6a,#6a2aff,#3a1a6a);background-size:200% 100%;color:#f4eaff;font-weight:800;box-shadow:0 0 12px #8a4aff88;animation:abChipA 3s linear infinite}@keyframes abChipA{to{background-position:200% 0}}
+.admAbP .abSpin{animation:abSp .12s ease-out}@keyframes abSp{from{transform:translateY(-14px) scale(.9);opacity:.4;filter:blur(2px)}}
+.admAbP .abLand{animation:abLd .7s cubic-bezier(.2,1.6,.4,1)}@keyframes abLd{0%{transform:scale(.4) rotate(-20deg);opacity:0}60%{transform:scale(1.15) rotate(4deg);opacity:1}100%{transform:none}}
+.admAbP .abLandT{animation:abLt .6s ease-out .2s both}@keyframes abLt{from{transform:translateX(20px);opacity:0}}
+.admAbP .abBurst{position:absolute;left:50%;top:50%;width:160px;height:160px;margin:-80px 0 0 -80px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fff6 0,#c8a0ff88 25%,#6a2aff00 62%);animation:abBu .9s ease-out forwards}@keyframes abBu{from{transform:scale(.2);opacity:1}to{transform:scale(1.6);opacity:0}}
+.admAbP .abRow{display:flex;align-items:center;gap:14px;margin-top:8px;padding:6px 8px;border-radius:12px;border:1px solid transparent;transition:background .3s,border-color .3s}.admAbP .abRow.on{background:#6a2aff22;border-color:#c8a0ff88;box-shadow:0 0 12px #8a4aff44}
+.admAbP .abOn{flex:0 0 auto;font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:99px;background:#c8a0ff;color:#1a0a2a}
+.rkRolled .item{animation:rkRl .8s ease-out both}.rkRolled .item:nth-child(2){animation-delay:.06s}.rkRolled .item:nth-child(3){animation-delay:.12s}.rkRolled .item:nth-child(4){animation-delay:.18s}.rkRolled .item:nth-child(n+5){animation-delay:.24s}@keyframes rkRl{0%{transform:translateY(14px) scale(.97);opacity:0;box-shadow:0 0 0 #ffd36e00}50%{opacity:1;box-shadow:0 0 22px #ffd36e88}100%{transform:none;box-shadow:0 0 0 #ffd36e00}}`;document.head.appendChild(cs)}
 const _oR=window.openRkAdmin;if(typeof _oR==='function')window.openRkAdmin=async function(){const r=await _oR.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='rkadm'&&!m.querySelector('.admAbP')){const b=[...m.querySelectorAll('button.pbtn')].find(x=>/สุ่มชุด/.test(x.textContent));if(b)b.insertAdjacentHTML('afterend',blk())}}catch(e){console.error(e)}return r}})()}catch(e){console.error(e)}
+// ===== ⚡ หน้าแอดมินสุ่มกรอบ: หมวดโลกอื่นๆ (ยุคปัจจุบัน ฯลฯ) พับเก็บ เปิดดูทีละหมวด → หน้าเบา ไม่แล็ค =====
+try{(()=>{function acc(){const m=$('modal');if(!m||m.dataset.k!=='rkadm')return;
+  m.querySelectorAll('.item:not(.rkCat):not(.admAbP)').forEach(it=>{if(it._acc||it.querySelectorAll('.frw').length<2)return;const h=it.querySelector(':scope>b');if(!h)return;it._acc=1;it.classList.add('rkAcc');
+   const n=it.querySelectorAll('.frw').length;h.insertAdjacentHTML('beforeend',`<span class="rkAccN">${n} กรอบ ▾</span>`);h.style.cursor='pointer';
+   h.onclick=()=>{const op=!it.classList.contains('open');m.querySelectorAll('.rkAcc.open').forEach(x=>x.classList.remove('open'));if(op){it.classList.add('open');setTimeout(()=>{try{it.scrollIntoView({block:'nearest',behavior:'smooth'})}catch(e){}},30)}}})}
+ const _o=window.openRkAdmin;if(typeof _o==='function')window.openRkAdmin=async function(){const r=await _o.apply(this,arguments);try{acc();setTimeout(acc,80);setTimeout(acc,400)}catch(e){}return r};
+ const cs=document.createElement('style');cs.textContent=`#modal .rkAcc:not(.open)>:not(b){display:none!important}#modal .rkAcc>b{display:flex;align-items:center;justify-content:space-between;gap:8px}#modal .rkAccN{font-size:12px;font-weight:700;opacity:.75;padding:2px 9px;border-radius:99px;border:1px solid #e8b54a55}#modal .rkAcc.open .rkAccN{background:#e8b54a;color:#2a1a00;opacity:1}`;document.head.appendChild(cs)})()}catch(e){console.error(e)}
+// ===== ⚡ ทุกหน้าที่มีกรอบ/ฉายาเยอะ (ทำเนียบ · แลกของ · ร้านกรอบ · แอดมินสุ่มกรอบ ฯลฯ): ขยับเฉพาะอันที่อยู่บนจอ =====
+// กรอบหนึ่งอันมีชิ้นส่วนขยับหลายสิบชิ้น · หน้าเดียวมีหลายสิบอัน = อนิเมชั่นนับพันพร้อมกัน → ปิดของที่อยู่นอกจอ (เปิดกลับทันทีเมื่อเลื่อนมาเห็น)
+try{(()=>{const SEL='.frw,.rkchip,.k2t,.rkc,.ttlchip';let io=null,root=null,tm=0;
+ function scan(){tm=0;const m=$('modal');if(!m||!modalOpen)return;const L=m.querySelectorAll(SEL);if(L.length<8){if(io&&root===m){io.disconnect();io=null;m.querySelectorAll('.aOff').forEach(x=>x.classList.remove('aOff'))}return}
+  if(!io||root!==m){if(io)io.disconnect();root=m;io=new IntersectionObserver(es=>{for(const e of es)e.target.classList.toggle('aOff',!e.isIntersecting)},{root:m,rootMargin:'-8% 0px'})}
+  L.forEach(x=>{if(!x._aio){x._aio=1;x.classList.add('aOff');io.observe(x)}})}
+ const mo=new MutationObserver(()=>{if(!tm)tm=setTimeout(scan,120)});
+ const go=()=>{const m=$('modal');if(m)mo.observe(m,{childList:true,subtree:true});else setTimeout(go,500)};go();
+ const cs=document.createElement('style');cs.textContent=`.aOff,.aOff *,.aOff::before,.aOff::after,.aOff *::before,.aOff *::after{animation:none!important}#modal[data-k="rkadm"] .item{content-visibility:auto;contain-intrinsic-size:auto 260px}#modal .item.frshop,#modal .item.arsi,#modal .item.ttlshop{content-visibility:auto;contain-intrinsic-size:auto 96px}#modal .rkCat:not(.on){display:none}#modal .rkCats{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0 4px}#modal .rkCats button{padding:5px 10px;border-radius:999px;border:1px solid #e8b54a55;background:#0003;color:inherit;font:inherit;font-size:12.5px;cursor:pointer}#modal .rkCats button.on{background:#e8b54a;color:#2a1a00;font-weight:800}`;document.head.appendChild(cs)})()}catch(e){console.error(e)}
 // ===== 🎲 แอดมิน: สุ่มกรอบ+ฉายาจิตวิญญาณยุทธ์ แยก รายวัน/รายสัปดาห์/รายเดือน (ชุดเดียวกับที่แจกจริง) · เปิดให้สุ่มใหม่เองเมื่อขึ้นรอบใหม่ =====
 try{(()=>{
 const PNm={d:'รายวัน',w:'รายสัปดาห์',m:'รายเดือน'},KEY='murim_adm_slr';
@@ -40331,8 +40365,9 @@ const AC='#8a7aff',SP={};
 [['steel',1,'shadow','p16'],['violet',2,'shadow','p16'],['storm',3,'sword','p16'],['moon',4,'moon','p24'],['imperial',6,'swords','p24']].forEach(([pal,lv,e,sh],i)=>SP['f_arc'+(i+1)]=[pal,sh,[e,AC],lv,AC,[]]);
 [['emerald',3],['ruby',4],['obsidian',5]].forEach(([pal,lv],i)=>SP['f_box'+(i+1)]=[pal,'gem',['gem',P[pal][1]],lv,P[pal][1],['nowreath']]);
 const AB=['#c08aff','#a05aff'];
-SP.f_ab100=['abyss','jag',['maw',AB[0]],2,AB[1],[]];SP.f_ab300=['abyss','jag',['chain',AB[0]],3,AB[1],['chains']];SP.f_ab500=['abyss','jag',['gate',AB[0]],4,AB[1],['flames']];
-SP.f_ab800=['obsidian','jag',['shadow',AB[0]],5,AB[1],['flames','up']];SP.f_ab1000=['imperial','jag',['maw',AB[0]],6,AB[1],['flames','eye']];SP.f_abyss=['void','jag',['maw',AB[0]],4,AB[1],['flames']];
+// อเวจีแต่ละชั้นหน้าตาต่างกันชัด (สี รูปทรง เอฟเฟค) ยิ่งลึกยิ่งอลังการ
+SP.f_ab100=['abyss','jag',['maw','#c08aff'],4,'#a05aff',['flames']];SP.f_ab300=['steel','p16',['chain','#ff8a2a'],5,'#ff8a2a',['chains','flames']];SP.f_ab500=['violet','gem',['gate','#e8d4ff'],6,'#c8a0ff',['eye','up']];
+SP.f_ab800=['ruby','jag',['shadow','#ff5a7a'],7,'#ff3a5a',['flames','chains']];SP.f_ab1000=['imperial','p24',['maw','#ffd36e'],8,'#ffd36e',['flames','eye','rainbow']];SP.f_abyss=['void','jag',['maw',AB[0]],4,AB[1],['flames']];
 SP.f_hell=['hell','jag',['flame','#ffb04a'],3,'#ff6a2a',['flames']];SP.f_hell2=['hell','jag',['horn','#ffb04a'],4,'#ff6a2a',['flames','chains']];
 [['f_hq1','gold',5,'📜'],['f_hq2','silver',3,'📜'],['f_wb1','ruby',5,'🐉'],['f_wb2','bronze',3,'🐉'],['f_aq_multi','celestial',4,'🌌'],['f_aq_l50','bronze',2,'🕯️'],['f_aq_l100','gold',4,'🪷'],['f_aq_mgm','diamond',3,'🎵'],['f_aq_seed','emerald',2,'🌱'],['f_aq_boss','ruby',3,'🗡️'],['f_aq_sec','obsidian',4,'👁️'],['f_sw0','gold',3,'☀️'],['f_sw1','moon',3,'🌙'],['f_sw2','celestial',3,'⭐'],['f_lgnew','steel',1,'🚪'],['f_lgloy','ruby',3,'💛']].forEach(([id,pal,lv,e])=>SP[id]=[pal,lv<3?'circ':lv<5?'p16':'p24',[e,P[pal][1]],lv,P[pal][1],[]]);
 const specOf=id=>SP[id]||(/^f_aqb_/.test(id)?['violet','p16',['📖','#b48aff'],3,'#b48aff',[]]:null);
