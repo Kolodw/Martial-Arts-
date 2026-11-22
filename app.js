@@ -45708,3 +45708,24 @@ function mount(){try{const P=document.getElementById('wPick');if(!P)return;let e
  else if(e.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',e)}catch(x){}}
 setInterval(()=>{mount();const c=document.querySelector('#uaEnt canvas');if(c&&c.offsetParent&&!document.body.classList.contains('mRM')){fr^=1;uaArt(c,fr)}},700);
 })()}catch(e){console.error('block152',e)}
+
+// BLOCK 151: 👆 กดปุ่มในหน้าต่างแล้วหน้าต่างเด้งกลับขึ้นบนสุด (ระบบ · สู้ · ร้าน · กระเป๋า ฯลฯ) — กดรัวๆ ไม่ได้ ต้องเลื่อนกลับมากดใหม่
+// สาเหตุ: กดปุ่มแล้วหน้าต่างวาดใหม่ทั้งหน้า (modal เดิม key เดิม) ตำแหน่งเลื่อนรีเซ็ตเป็น 0 + แอนิเมชันเปิดหน้าต่างเล่นซ้ำ
+// แก้: วาดใหม่ในหน้าต่างเดิม → คงตำแหน่งเลื่อน (ทั้งหน้าต่างและกล่องเลื่อนข้างใน) · ไม่เล่นแอนิเมชันเปิดซ้ำ
+try{(()=>{
+const st=document.createElement('style');st.textContent=`#modal.mRe,#modal.mRe *{animation:none!important;transition:none!important}`;document.head.appendChild(st);
+const SKIP={choice:1,'':1};
+const inner=m=>{const o=[];m.querySelectorAll('*').forEach(e=>{if(e.scrollTop>0&&e.scrollHeight>e.clientHeight+4){const cl=e.className&&e.className.baseVal==null?String(e.className):'';const sel=e.tagName+(cl?'.'+cl.trim().split(/\s+/).map(c=>CSS.escape(c)).join('.'):'');o.push([e.id||'',sel,[...m.querySelectorAll(sel)].indexOf(e),e.scrollTop,e.scrollLeft,e.scrollTop+e.clientHeight>=e.scrollHeight-8])}});return o.slice(0,6)};
+let rt=0,anc=null,lastC=null;
+const findA=(m,A)=>{const L=[...m.querySelectorAll('[onclick]')];const T=x=>(x.innerText||'').trim().slice(0,40);let c=L.filter(x=>x.getAttribute('onclick')===A.oc&&T(x)===A.tx);if(c.length)return c[Math.max(0,A.i)]||c[0];c=L.filter(x=>x.getAttribute('onclick')===A.oc);if(c.length===A.n)return c[A.j]||null;if(c.length===1&&A.n===1)return c[0];c=L.filter(x=>A.tx&&T(x)===A.tx);return c.length===1?c[0]:null};
+{const _cm=closeM;closeM=function(){try{const m=$('modal');if(modalOpen&&$('mask').classList.contains('on'))lastC={k:m.dataset.k||'',t:Date.now(),st:m.scrollTop,in:inner(m)}}catch(e){}return _cm.apply(this,arguments)}}
+// จำปุ่มที่เพิ่งกด (ตำแหน่งบนจอ) ไว้ใช้เป็นหมุด หลังวาดใหม่เลื่อนให้ปุ่มเดิมอยู่ตำแหน่งเดิมบนจอ
+document.addEventListener('pointerdown',e=>{try{const m=$('modal');const b=e.target&&e.target.closest&&e.target.closest('#modal [onclick]');if(!b||!m.contains(b)){anc=null;return}const oc=b.getAttribute('onclick');const L=[...m.querySelectorAll('[onclick]')].filter(x=>x.getAttribute('onclick')===oc);const tx=(b.innerText||'').trim().slice(0,40);anc={oc,tx,i:L.filter(x=>(x.innerText||'').trim().slice(0,40)===tx).indexOf(b),j:L.indexOf(b),n:L.length,top:b.getBoundingClientRect().top,t:Date.now()}}catch(x){anc=null}},true);
+{const _md=modal;modal=function(html,k){const m=$('modal');let keep=null;try{const k0=m.dataset.k||'';if(modalOpen&&!SKIP[k0]&&k0===(k||'')&&$('mask').classList.contains('on'))keep={t:m.scrollTop,l:m.scrollLeft,in:inner(m)};else if(!modalOpen&&lastC&&!SKIP[lastC.k]&&lastC.k===(k||'')&&Date.now()-lastC.t<500)keep={t:lastC.st,l:0,in:lastC.in}}catch(e){}
+ const r=_md.apply(this,arguments);
+ if(keep){try{m.classList.add('mRe');clearTimeout(rt);rt=setTimeout(()=>m.classList.remove('mRe'),450);
+  const A=anc&&Date.now()-anc.t<4000?anc:null;const put=()=>{try{if((m.dataset.k||'')!==(k||''))return;if(keep.t)m.scrollTop=keep.t;if(A){const b=findA(m,A);if(b){const d=b.getBoundingClientRect().top-A.top;if(Math.abs(d)>1)m.scrollTop+=d}}const all=m.querySelectorAll('*');keep.in.forEach(([id,sel,i,t,l,bt])=>{let e=id?m.querySelector('#'+CSS.escape(id)):null;if(!e){try{e=m.querySelectorAll(sel)[i]}catch(x){}}if(e){e.scrollTop=bt?e.scrollHeight:t;e.scrollLeft=l}})}catch(e){}};
+  put();requestAnimationFrame(put);
+  if(A){const fix=()=>{try{if((m.dataset.k||'')!==(k||''))return;const b=findA(m,A);if(!b)return;let p=b.parentElement;while(p&&p!==m){const cs=getComputedStyle(p);if(/(auto|scroll)/.test(cs.overflowY)&&p.scrollHeight>p.clientHeight+4)return;p=p.parentElement}const d=b.getBoundingClientRect().top-A.top;if(Math.abs(d)>1)m.scrollTop+=d}catch(e){}};setTimeout(fix,90);setTimeout(fix,260)}}catch(e){}}
+ return r}}
+})()}catch(e){console.error('block151',e)}
