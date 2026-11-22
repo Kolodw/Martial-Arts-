@@ -46476,3 +46476,35 @@ const brand=()=>{try{const m=$('modal');if(!m||m.dataset.k!=='me')return;const i
 {const _m=modal;modal=function(h,k){const r=_m.apply(this,arguments);if(k==='me')brand();return r};for(const x in _m)try{modal[x]=_m[x]}catch(e){}}
 setInterval(()=>{try{if(modalOpen&&$('modal').dataset.k==='me')brand()}catch(e){}},800);
 })()}catch(e){console.error('block163',e)}
+
+// ============================================================
+// BLOCK 164: 📬 คิวหน้าต่างแจ้งเตือน/รางวัล — หนึ่งกล่องต่อเหตุการณ์ · ไม่เด้งซ้อนกัน · เข้าเกมใหม่ที่มีของค้างหลายรายการก็ขึ้นทีละอัน
+//  - หน้าต่างแจ้งเตือนที่ระบบเปิดเอง (ชนะประมูล ข้อความถึงคุณ รางวัลรายวัน ฯลฯ) ถ้ามีหน้าต่างอื่นเปิดอยู่/เหตุการณ์รอตอบ → เข้าคิว ขึ้นต่อเมื่อปิดอันเดิม
+//  - เหตุการณ์ใหม่ที่เข้ามาตอนหน้าต่างแจ้งเตือนเปิดอยู่ → ไม่ทับ ย่อไว้ (ปุ่ม 📜 กลับไปตอบ) แล้วเปิดให้เองเมื่อคิวแจ้งเตือนหมด
+//  - ประกาศงานประมูล: จำรอบที่ประกาศแล้ว (ข้ามการโหลดใหม่) · ข้อความถึงคุณไม่ขึ้นซ้ำทั้งแถบลอยและหน้าต่าง
+// ============================================================
+try{(()=>{
+const NOTE=/^(pawin|ntbox|daily|nbwel|rkgot|rkwin|reward|gift)$/,NOREPL=/^(duel|bye|mg|mg2|death|end)$/;
+let NQ=[],lastIn=0,lastClose=0,_raw=null;
+['pointerdown','keydown','touchstart'].forEach(e=>document.addEventListener(e,()=>{lastIn=Date.now()},true));
+const user=()=>Date.now()-lastIn<1500;
+const sig=(h,k)=>k+':'+String(h).replace(/\s+/g,'').slice(0,400);
+function enq(h,k){const s=sig(h,k);if(!NQ.some(x=>x.s===s)){NQ.push({h,k,s});if(NQ.length>12)NQ.shift()}}
+{const _m=modal;_raw=_m;modal=function(h,k){k=k||'';try{const cur=modalOpen?($('modal').dataset.k||''):null;
+ if(!user()){
+  if(NOTE.test(k)&&((modalOpen&&cur!==k)||(choice._cur&&!choice._min)||Date.now()-lastClose<350)){enq(h,k);return}
+  if(k==='choice'&&modalOpen&&cur&&NOTE.test(cur)&&choice._cur){choice._min=true;choice._autoMin=1;try{clearInterval(choice._cd)}catch(e){}pendBar();return}
+  if(modalOpen&&cur&&NOTE.test(cur)&&cur!==k&&!NOREPL.test(k)){enq(h,k);return}}}catch(e){}return _m.apply(this,arguments)};for(const x in _m)try{modal[x]=_m[x]}catch(e){}}
+{const _c=closeM;closeM=function(){lastClose=Date.now();return _c.apply(this,arguments)};for(const x in _c)try{closeM[x]=_c[x]}catch(e){}}
+setInterval(()=>{try{if(modalOpen||Date.now()-lastClose<450||document.getElementById('coach'))return;
+ if(NQ.length){if(choice._cur&&!choice._min)return;const n=NQ.shift();_raw(n.h,n.k);return}
+ if(choice._cur&&choice._min&&choice._autoMin){choice._autoMin=0;openPend()}}catch(e){}},400);
+window._noteQ=()=>NQ.map(x=>x.k);
+// ประกาศงานประมูล: หนึ่งกล่องต่อรอบ แม้โหลดเกมใหม่ระหว่างงาน
+try{const K='murim_paSeen',ld=()=>{try{return JSON.parse(localStorage.getItem(K)||'{}')}catch(e){return{}}};const sv=o=>{try{const ks=Object.keys(o).slice(-30),n={};ks.forEach(x=>n[x]=o[x]);localStorage.setItem(K,JSON.stringify(n))}catch(e){}};
+ Object.assign(PA.seen,ld());const _pb=paBanner;paBanner=function(p){try{if(p&&p.sid){const o=ld();if(o[p.sid]&&document.getElementById('paBan'))return;o[p.sid]=Date.now();sv(o);PA.seen[p.sid]=1}if(ISL&&ISL.cur&&ISL.cur.key==='pa')return}catch(e){}return _pb.apply(this,arguments)};
+ const _pj=paJoin;paJoin=function(){try{if(ISL.cur&&ISL.cur.key==='pa')islNext(true);ISL.q=ISL.q.filter(x=>x.key!=='pa');paBanX()}catch(e){}return _pj.apply(this,arguments)};for(const x in _pj)try{paJoin[x]=_pj[x]}catch(e){}}catch(e){}
+// ข้อความถึงคุณ: เดิมขึ้นทั้งแถบลอย (ทีละข้อความ) และหน้าต่างรวม → เหลือหน้าต่างรวมอันเดียว
+try{let mute=null;const _t=toast;toast=function(t){try{if(mute&&Date.now()<mute.u&&mute.L.some(p=>String(t).indexOf(p)===0))return}catch(e){}return _t.apply(this,arguments)};for(const x in _t)try{toast[x]=_t[x]}catch(e){}
+ const _n=ntShow;ntShow=function(L){try{if(Array.isArray(L)&&L.length)mute={u:Date.now()+L.length*1800+3000,L:L.slice(-3).map(m=>`${m.t||'📬 ข้อความถึงคุณ'} — `)}}catch(e){}return _n.apply(this,arguments)}}catch(e){}
+})()}catch(e){console.error('block164',e)}
