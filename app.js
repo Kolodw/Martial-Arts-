@@ -45279,3 +45279,25 @@ if(typeof mgOpen==='function'){const _o=mgOpen;mgOpen=function(){if(off()){try{I
 window.mgyToggle=function(){const v=!off();try{LS.set('murim_mgyOff',v?1:0)}catch(e){}toast(v?'🎮 ปิดมินิเกมสุ่มประจำปีแล้ว (มินิเกมจากตัวเลือกที่กดเองยังมีตามปกติ)':'🎮 เปิดมินิเกมสุ่มประจำปีแล้ว');try{closeM();openMenu()}catch(e){}};
 if(typeof openMenu==='function'){const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const g=document.querySelector('#modal .mgrid');if(g&&!g.querySelector('.mgyT'))g.insertAdjacentHTML('beforeend',`<button class="opt mgyT" onclick="mgyToggle()">🎮 มินิเกมสุ่มประจำปี: ${off()?'ปิดอยู่':'เปิดอยู่'}<small>${off()?'แตะเพื่อเปิด':'มินิเกมที่เด้งขึ้นเองบางปี · แตะเพื่อปิด'}</small></button>`)}catch(e){}return r}}
 })()}catch(e){console.error('block146',e)}
+
+// BLOCK 145: ☁️ ขึ้นโลกเทพ — บางคน "ครบเงื่อนไขแต่ขึ้นไม่ได้"
+// สาเหตุ: มีตัวกั้นที่ไม่เคยบอกผู้เล่น (รากฐาน 150 ปีนับจากวันเหาะขึ้นโลกเซียน · คูลดาวน์หลังทัณฑ์ล้มเหลว · ขั้นพลังยังไม่ทะลวงตามพลังจริง · ตัวเลือกค้างอยู่ทำให้กดปุ่มไม่ได้)
+// แก้: (1) เงื่อนไขเวลาของโลกเทพ (800 ปี/อายุ 1000) ครบแล้ว ไม่ต้องรอรากฐาน 150 ปีซ้ำ (2) ปุ่ม 🔒 โลกเทพ แสดงเช็คลิสต์ทุกเงื่อนไข ✅/❌ (3) กดปุ่มทัณฑ์ตอนมีตัวเลือกค้าง → เปิดตัวเลือกนั้นให้
+try{(()=>{
+{const _w=ascWait;ascWait=function(){try{if(S&&S.xian&&!S.xt&&typeof godReady==='function'&&godReady().tOK)return 0}catch(e){}return _w.apply(this,arguments)}}
+{const _a=ascAsk;ascAsk=function(){try{if(choice._cur&&ascEligible()){toast('มีเรื่องรอตัดสินใจอยู่ เปิดให้ก่อน');choice._min=false;choiceShow();return}}catch(e){}return _a.apply(this,arguments)}}
+const show=()=>{try{return !!(S&&S.alive&&S.xian&&!S.xt&&!(S.beastMode&&!S.beastMode.human)&&S.ch!=='soul'&&rawRealm()>=7&&!ascEligible())}catch(e){return false}};
+window.godCheck=function(){if(!S)return;const g=godReady(),ri=realmIdx(),raw=rawRealm(),cd=(S.ascCd||0)-S.age,w=ascWait();const Y=(ok,t,h)=>`<div class="item" style="margin:4px 0">${ok?'✅':'❌'} <b>${t}</b>${h&&!ok?`<br><span class="tag2">${h}</span>`:''}</div>`;
+ const pl=postLv();
+ modal(`<h3>☁️ เงื่อนไขขึ้นโลกเทพ</h3>`+
+  Y(ri>=7,`ขั้นพลังถึงขั้นสูงสุดของโลกเซียน`,raw>=7?`พลังถึงแล้ว แต่ขั้นยังไม่ทะลวงตาม (ตอนนี้ ${REALMS[ri]?REALMS[ri].n:ri}) — ข้ามปีไปเรื่อยๆ จะมีโอกาสทะลวงขั้นเอง`:'พลังยังไม่พอ')+
+  Y(g.pOK,`ผ่านเหนือขีดจำกัดของโลกเซียนครบขั้น 9`,`ตอนนี้ ${pl<0?'ยังไม่เริ่ม':'ขั้น '+(Math.min(pl,8)+1)+'/9'}${postRaw()>Math.max(pl,-1)?' · พลังถึงขั้นถัดไปแล้ว รอทะลวง':''}`)+
+  Y(g.tOK,`อยู่โลกเซียนครบ ${g.n.y} ปี หรืออายุ ${g.n.a} ปี`,`อีกราว ${Math.ceil(g.left)} ปี`)+
+  Y(cd<=0,`ฟื้นตัวจากทัณฑ์ครั้งก่อน`,`ทัณฑ์ครั้งก่อนล้มเหลว ต้องพักอีก ${cd} ปี`)+
+  Y(w<=0,`รากฐานในโลกเซียนมั่นคง`,`อีก ${w} ปี`)+
+  Y(!choice._cur,`ไม่มีเรื่องรอตัดสินใจ`,`มีตัวเลือกค้างอยู่ แตะแถบด้านล่างเพื่อตัดสิน`)+
+  `<p class="tag2">ครบทุกข้อ ปุ่ม ⚡ ขึ้นสู่โลกเทพ จะขึ้นเหนือแถบเวลาเอง</p><button class="gbtn" style="width:100%" onclick="closeM()">ปิด</button>`,'godchk')};
+const upd=()=>{try{let b=$('godChkP');const a=$('ascPill');if(!a)return;if(!b){a.insertAdjacentHTML('afterend','<button id="godChkP" class="ascpill" style="display:none;margin-right:6px;border-color:#888;background:linear-gradient(180deg,#2a2a3a,#141420);animation:none" onclick="godCheck()">🔒 โลกเทพ</button>');b=$('godChkP')}const s=show();b.style.display=s?'':'none'}catch(e){}};
+setInterval(upd,1500);
+try{const g={s:'world',ic:'☁️',t:'ขึ้นโลกเทพ (เงื่อนไข)',nw:1,d:'อยู่โลกเซียน ต้องครบทุกข้อ: ① ขั้นพลังทะลวงถึงขั้นสูงสุดของโลกเซียน ② เหนือขีดจำกัดครบขั้น 9 ③ อยู่โลกเซียนครบ 800 ปี หรืออายุ 1000 ปี (โหมดสั้น 300/400 · นรก 500/700) ④ ไม่อยู่ในช่วงพักหลังทัณฑ์ล้มเหลว · ครบแล้วกดปุ่ม ⚡ ขึ้นสู่โลกเทพ เหนือแถบเวลา · ยังไม่ครบ แตะปุ่ม 🔒 โลกเทพ ดูว่าขาดข้อไหน'};if(typeof GD2!=='undefined'&&!GD2.some(x=>x.t===g.t))GD2.push(g);if(typeof SYS_GUIDE!=='undefined'&&!SYS_GUIDE.some(x=>x.t===g.t))SYS_GUIDE.push(g)}catch(e){}
+})()}catch(e){console.error('block145',e)}
