@@ -8222,7 +8222,7 @@ setInterval(async()=>{try{if(!onlineOK||!S||!S.alive||modalOpen||choice._cur||do
  const t=setInterval(()=>{if(!modalOpen){clearInterval(t);paused=was}},500)}catch(e){}},60e3);
 // กล่องข้อความจากผู้ดูแล (มาทาง tick)
 function ntShow(L){if(!Array.isArray(L)||!L.length)return;const it=L.slice(-5);try{sfx('block')}catch(e){}
- const show=()=>{if(modalOpen||choice._cur)return setTimeout(show,1500);
+ const show=()=>{if(window._noteFree?!_noteFree():(modalOpen||choice._cur))return setTimeout(show,1500);
   modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📬 ข้อความถึงคุณ</h3>${it.map(m=>`<div class="item"><div class="h"><b>${esc(m.t||'ข้อความ')}</b><span class="tag2">${m.at?new Date(m.at).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}</span></div><p>${esc(m.b||'')}</p>${m.u&&m.u!=='/'?`<button class="gbtn" onclick="closeM();goOpen('${esc(String(new URLSearchParams((m.u.split('?')[1])||'').get('go')||''))}')">เปิดดู ›</button>`:''}</div>`).join('')}
   <button class="pbtn" style="width:100%;margin-top:6px" onclick="closeM()">รับทราบ</button>`,'ntbox')};show()}
 function goOpen(g){try{if(!g)return;if(g==='sup'){if(admK())window.open('/api/online?a=admin&key='+encodeURIComponent(admK()),'_blank');return}if(g==='chat')openOnline('chat');else if(g==='bugs')openReport();else if(g==='fb')openFeedback()}catch(e){}}
@@ -30056,7 +30056,7 @@ const Q=[];let cur=null;
 const clean=t=>String(t||'').replace(/ <i[\s\S]*$/,'');
 const esc2=x=>String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function pending(){return (S&&S.vault||[]).filter(v=>v&&v.pa)}
-function show(){if(cur||!Q.length||!S||!S.alive)return;if(modalOpen||choice._cur||paused&&false)return;
+function show(){if(cur||!Q.length||!S||!S.alive)return;if(window._noteFree?!_noteFree():(modalOpen||choice._cur))return;
  const w=Q[0],i=(S.vault||[]).findIndex(v=>v.uid===w.uid);if(i<0){Q.shift();return show()}
  Q.shift();cur=w;const v=S.vault[i],it=paItem(v.r,v.k);let d='';try{d=clean(paEff(it).d)}catch(e){}
  let rc={c:'#f0c860'};try{rc=rarC(it.r)||rc}catch(e){}const col=rc.c&&/^#/.test(rc.c)?rc.c:'#f0c860';
@@ -46403,7 +46403,7 @@ wrapAll();setInterval(wrapAll,1500);
  document.addEventListener('pointerdown',ev=>{try{const b=ev.target.closest&&ev.target.closest('#isl .islBtn');P=b&&ISL.cur&&ISL.cur.btns?{i:+b.dataset.b,c:ISL.cur,t:Date.now(),done:false}:null}catch(e){P=null}},true);
  document.addEventListener('click',ev=>{try{if(P&&ev.target.closest&&ev.target.closest('#isl'))P.done=true}catch(e){}},true);
  document.addEventListener('pointerup',ev=>{try{const p=P;if(!p||!(ev.target.closest&&ev.target.closest('#isl'))||Date.now()-p.t>900)return;
-  setTimeout(()=>{if(p.done||P!==p)return;p.done=true;const f=p.c.btns[p.i];if(!f||ISL.cur!==p.c)return;try{islNext(true)}catch(e){}try{f.f()}catch(e){console.error(e)}},60)}catch(e){}},true)}
+  setTimeout(()=>{if(p.done||P!==p)return;p.done=true;choice._uo=Date.now();const f=p.c.btns[p.i];if(!f||ISL.cur!==p.c)return;try{islNext(true)}catch(e){}try{f.f()}catch(e){console.error(e)}},60)}catch(e){}},true)}
 // 📜 ปุ่มกลับไปตอบเหตุการณ์ที่ย่อไว้ — ลอยบนสุดเสมอ (มือถือ: เหนือแถบปุ่มล่าง · คอม: มุมบนคอลัมน์ซ้าย) ผู้เล่นรายงานว่าย่อแล้วไม่มีปุ่มกดกลับ
 {const cs=document.createElement('style');cs.textContent=`#evBack{position:fixed;z-index:99995;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 96px);display:none;align-items:center;gap:8px;max-width:min(92vw,440px);padding:10px 16px;border-radius:999px;border:2px solid #e8b83a;background:linear-gradient(180deg,#3a2a0e,#1e1606);color:#fff3c4;font:700 14px/1.3 inherit;box-shadow:0 6px 22px rgba(0,0,0,.55),0 0 0 3px #e8b83a33;cursor:pointer;animation:evBk .25s ease-out}
 #evBack.on{display:flex}#evBack span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}#evBack b{flex:none;background:#e8b83a;color:#2a1a00;border-radius:999px;padding:3px 10px;font-size:12.5px}
@@ -46411,7 +46411,7 @@ wrapAll();setInterval(wrapAll,1500);
 body.desk #evBack{left:var(--ebL,20px);transform:none;top:var(--ebT,14px);bottom:auto;width:var(--ebW,420px);max-width:var(--ebW,420px);justify-content:center}body.desk #evBack:active{transform:scale(.96)}
 @keyframes evBk{from{opacity:0;translate:0 8px}to{opacity:1;translate:0 0}}@media (prefers-reduced-motion:reduce){#evBack{animation:none}}`;document.head.appendChild(cs);
  const el=document.createElement('button');el.id='evBack';el.type='button';el.setAttribute('aria-label','กลับไปตอบเหตุการณ์ที่ย่อไว้');document.body.appendChild(el);
- el.addEventListener('click',e=>{e.stopPropagation();try{openPend()}catch(x){}upd()});
+ el.addEventListener('click',e=>{e.stopPropagation();choice._uo=Date.now();try{openPend()}catch(x){}upd()});
  function upd(){try{const on=!!(S&&S.alive&&choice._cur&&choice._min&&!(modalOpen&&$('mask').classList.contains('on')));el.classList.toggle('on',on);if(!on)return;
   const t=String(choice._cur.title||'').replace(/<[^>]+>/g,'').slice(0,50);const h=`📜 <span>${esc(t)}</span><b>กลับไปตอบ</b>`;if(el._h!==h){el.innerHTML=h;el._h=h}
   const C=document.getElementById('deskC');if(document.body.classList.contains('desk')&&C){// คอม: กลางคอลัมน์กลาง เหนือแถบควบคุมด้านล่าง
@@ -46488,18 +46488,27 @@ const NOTE=/^(pawin|ntbox|daily|nbwel|rkgot|rkwin|reward|gift)$/,NOREPL=/^(duel|
 let NQ=[],lastIn=0,lastClose=0,_raw=null;
 ['pointerdown','keydown','touchstart'].forEach(e=>document.addEventListener(e,()=>{lastIn=Date.now()},true));
 const user=()=>Date.now()-lastIn<1500;
+// เหตุการณ์ที่เพิ่งขึ้น (<3 วิ) และผู้เล่นยังไม่ได้แตะ → ให้รางวัล/แจ้งเตือนขึ้นก่อน แล้วค่อยกลับมาที่เหตุการณ์
+const pre=()=>{try{return !!(choice._cur&&!choice._min&&modalOpen&&$('modal').dataset.k==='choice'&&Date.now()-(choice._shownAt||0)<3000&&lastIn<(choice._shownAt||0))}catch(e){return false}};
+window._noteFree=()=>{try{if(Date.now()-lastClose<350)return false;if(!modalOpen)return !(choice._cur&&!choice._min);return pre()}catch(e){return false}};
+{const _cs=choiceShow;choiceShow=function(){choice._shownAt=Date.now();return _cs.apply(this,arguments)};for(const x in _cs)try{choiceShow[x]=_cs[x]}catch(e){}}
 const sig=(h,k)=>k+':'+String(h).replace(/\s+/g,'').slice(0,400);
 function enq(h,k){const s=sig(h,k);if(!NQ.some(x=>x.s===s)){NQ.push({h,k,s});if(NQ.length>12)NQ.shift()}}
-{const _m=modal;_raw=_m;modal=function(h,k){k=k||'';try{const cur=modalOpen?($('modal').dataset.k||''):null;
+{const _m=modal;_raw=_m;modal=function(h,k){k=k||'';try{const cur=modalOpen?($('modal').dataset.k||''):null;if(k==='pawin'&&pawN>0)pawN--;if(k==='choice'&&choice._cur&&Date.now()-(choice._uo||0)>1500&&((window._pawPend&&_pawPend())||(!user()&&NQ.length))){choice._min=true;choice._autoMin=1;try{clearInterval(choice._cd)}catch(e){}pendBar();return}
  if(!user()){
+  if(NOTE.test(k)&&cur==='choice'&&pre()){choice._min=true;choice._autoMin=1;try{clearInterval(choice._cd)}catch(e){}pendBar();return _m.apply(this,arguments)}
   if(NOTE.test(k)&&((modalOpen&&cur!==k)||(choice._cur&&!choice._min)||Date.now()-lastClose<350)){enq(h,k);return}
   if(k==='choice'&&modalOpen&&cur&&NOTE.test(cur)&&choice._cur){choice._min=true;choice._autoMin=1;try{clearInterval(choice._cd)}catch(e){}pendBar();return}
   if(modalOpen&&cur&&NOTE.test(cur)&&cur!==k&&!NOREPL.test(k)){enq(h,k);return}}}catch(e){}return _m.apply(this,arguments)};for(const x in _m)try{modal[x]=_m[x]}catch(e){}}
 {const _c=closeM;closeM=function(){lastClose=Date.now();return _c.apply(this,arguments)};for(const x in _c)try{closeM[x]=_c[x]}catch(e){}}
 setInterval(()=>{try{if(modalOpen||Date.now()-lastClose<450||document.getElementById('coach'))return;
  if(NQ.length){if(choice._cur&&!choice._min)return;const n=NQ.shift();_raw(n.h,n.k);return}
- if(choice._cur&&choice._min&&choice._autoMin){choice._autoMin=0;openPend()}}catch(e){}},400);
+ if(choice._cur&&choice._min&&choice._autoMin&&Date.now()-lastClose>1200&&!(window._pawPend&&_pawPend())){choice._autoMin=0;openPend()}}catch(e){}},400);
 window._noteQ=()=>NQ.map(x=>x.k);
+// รางวัลประมูลที่ยังรอขึ้น → เหตุการณ์ที่ระบบเปิดเองรอก่อน (รางวัลขึ้นก่อน แล้วค่อยกลับมาที่เหตุการณ์)
+let pawN=0,pawT=0;const pawPend=()=>pawN>0&&Date.now()-pawT<20000;
+{const _pw=paWins;paWins=function(){const b=(S&&S.vault||[]).length;const r=_pw.apply(this,arguments);try{const n=(S&&S.vault||[]).slice(b).filter(v=>v&&v.pa).length;if(n){pawN+=n;pawT=Date.now()}}catch(e){}return r};for(const x in _pw)try{paWins[x]=_pw[x]}catch(e){}}
+window._pawPend=pawPend;
 // ประกาศงานประมูล: หนึ่งกล่องต่อรอบ แม้โหลดเกมใหม่ระหว่างงาน
 try{const K='murim_paSeen',ld=()=>{try{return JSON.parse(localStorage.getItem(K)||'{}')}catch(e){return{}}};const sv=o=>{try{const ks=Object.keys(o).slice(-30),n={};ks.forEach(x=>n[x]=o[x]);localStorage.setItem(K,JSON.stringify(n))}catch(e){}};
  Object.assign(PA.seen,ld());const _pb=paBanner;paBanner=function(p){try{if(p&&p.sid){const o=ld();if(o[p.sid]&&document.getElementById('paBan'))return;o[p.sid]=Date.now();sv(o);PA.seen[p.sid]=1}if(ISL&&ISL.cur&&ISL.cur.key==='pa')return}catch(e){}return _pb.apply(this,arguments)};
@@ -46556,10 +46565,10 @@ function wgOf(d){if(Array.isArray(d.wg)&&d.wg.length)return d.wg;const g=[];
  else if(d.rg){g.push(['🔁','รอบย้อนกาล',(d.rg.loop|0)+' รอบ']);if(d.rg.free)g.push(['🕊️','หลุดพ้นวงวน','สำเร็จ'])}
  else if(d.hlg){g.push(['🔥','บันทึกขุมนรก',d.hlg.length+' เรื่อง']);if(d.hcs!=null)g.push(['⛓️','ทัณฑ์ที่ผ่าน',d.hcs|0])}
  else if(d.wk==='c'&&d.r)g.push(['🏅','แรงก์/สถานะ',d.r]);return g}
-const st=document.createElement('style');st.textContent=`.lvWG{margin:8px 0 6px;padding:8px;border-radius:12px;background:linear-gradient(135deg,#ffffff10,#ffffff04);border:1px solid #e8b84a55}.lvWG h4{margin:0 0 6px;font-size:13px}.lvWG .specgrid{margin:0}`;document.head.appendChild(st);
+const st=document.createElement('style');st.textContent=`.lvWG{margin:8px 0 6px;padding:8px;border-radius:12px;background:linear-gradient(135deg,#ffffff10,#ffffff04);border:1px solid #e8b84a55}.lvWG .lvWGh{margin:0 0 6px;font-size:13px;font-weight:800;color:#ffe08a}.lvWG .specgrid{margin:0}`;document.head.appendChild(st);
 {const _d=lvDraw;lvDraw=function(tab){const r=_d.apply(this,arguments);try{if(tab!=='sum')return r;const c=LVC[LV.lid],m=$('modal');if(!c||!m||m.dataset.k!=='lifeview'||m.querySelector('.lvWG'))return r;const d=c.j.d,g=wgOf(d);if(!g.length)return r;
- const w=m.querySelector('.lvW span'),grid=m.querySelector('.lvB .specgrid');if(!grid)return r;
- grid.insertAdjacentHTML('beforebegin',`<div class="lvWG"><h4>${w?esc(w.textContent):'🌍 ค่าประจำโลก'}</h4><div class="specgrid">${g.map(x=>`<div>${esc(String(x[0]))} ${esc(String(x[1]))} <b>${esc(String(x[2]))}</b></div>`).join('')}</div></div>`);
+ const w=m.querySelector('.lvW > span:last-child'),grid=m.querySelector('.lvB .specgrid');if(!grid)return r;
+ grid.insertAdjacentHTML('beforebegin',`<div class="lvWG"><div class="lvWGh">${w?esc(w.textContent.trim()):'🌍'} · ค่าประจำโลก</div><div class="specgrid">${g.map(x=>`<div>${esc(String(x[0]))} ${esc(String(x[1]))} <b>${esc(String(x[2]))}</b></div>`).join('')}</div></div>`);
  // ยุคปัจจุบัน/ทะลุฟ้า/ดวงจิต: ซ่อนช่องแบบยุทธภพที่ไม่มีความหมาย (ชนะศึกเป็น 0)
  grid.querySelectorAll('div').forEach(x=>{if(/ชนะศึก/.test(x.textContent)&&/\b0\b/.test(x.querySelector('b')?x.querySelector('b').textContent:''))x.remove()})}catch(e){console.error('lvWG',e)}return r}}
 })()}catch(e){console.error('block166',e)}
