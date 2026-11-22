@@ -768,7 +768,7 @@ function yearEnd(){
  if(diseaseTick()){render();checkDeath();return}
  if(S.age<6){if(Math.random()<.5)childEvent();render();checkDeath();return}
  if([20,30,40,50].includes(S.age)){if(!decTick())crossroad();return}
- if(!S.faction&&!S.ownSect&&S.path!=='hermit'&&[8,11,14,17,21].includes(S.age))return recruitEvent();
+ if(!S.faction&&!S.ownSect&&S.path!=='hermit'&&[8,11,14,17,21].map(a=>a+(S._ro|0)).includes(S.age))return recruitEvent();
  if(heirTick()){render();checkDeath();return}
  if(S.promoReady&&S.faction&&S.age>=8){S.promoReady=false;promoExam();return}
  if(smTick()){render();checkDeath();return}
@@ -45729,3 +45729,8 @@ document.addEventListener('pointerdown',e=>{try{const m=$('modal');const b=e.tar
   if(A){const fix=()=>{try{if((m.dataset.k||'')!==(k||''))return;const b=findA(m,A);if(!b)return;let p=b.parentElement;while(p&&p!==m){const cs=getComputedStyle(p);if(/(auto|scroll)/.test(cs.overflowY)&&p.scrollHeight>p.clientHeight+4)return;p=p.parentElement}const d=b.getBoundingClientRect().top-A.top;if(Math.abs(d)>1)m.scrollTop+=d}catch(e){}};setTimeout(fix,90);setTimeout(fix,260)}}catch(e){}}
  return r}}
 })()}catch(e){console.error('block151',e)}
+// ============================================================
+// BLOCK 153: 🧵 โหลด /w/story.js — เส้นเรื่องหลักชีวิตละ 2 เส้น · เหตุการณ์ซ้ำกลายเป็นภาคต่อ · ปิดผลบางเรื่อง+ผลย้อนหลัง · ลดบรรทัดกิจวัตรซ้ำ (ทุกโลก)
+//  อายุรับศิษย์ยุทธภพเลื่อนตาม S._ro (สุ่ม −1..+2 ต่อชีวิตใน story.js)
+// ============================================================
+try{setTimeout(()=>{try{wLoad('story').catch(()=>setTimeout(()=>wLoad('story').catch(()=>{}),6000))}catch(e){}},2600)}catch(e){console.error('block153',e)}

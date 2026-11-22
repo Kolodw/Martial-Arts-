@@ -52,7 +52,7 @@ const MX={r:{r:2,g:3,s:0,h:3},g:{r:1,g:1,s:3,h:2},s:{r:3,g:0,s:1,h:4},h:{r:1,g:2
 const WHY={r:{g:'เร่งตัดหน้าตอนอีกฝ่ายยังระวังอยู่',s:'เร่งเข้าไปเจอกับดักพอดี'},g:{s:'ระวังไว้ก่อน กับดักไม่โดน',r:'ระวังจนช้าเกินไป'},s:{r:'ดักคนที่วิ่งเข้ามาพอดี',g:'อีกฝ่ายระวังอยู่ กับดักเสียเปล่า',h:'หักหลังคนที่ยื่นมือมาช่วย'},h:{s:'ยื่นมือช่วย แต่โดนหักหลัง',h:'ช่วยกันทั้งคู่ ได้ผลดีทั้งสองฝั่ง'}};
 
 // ---------- ตัวละคร ----------
-function worldOf(s){try{if(s.beast)return'beast';if(typeof skyOn==='function'&&skyOn())return'sky';if(s.sky||s.ch==='sky')return'sky';if(s.mw)return'mw';if(s.ch==='soul')return'soul';if(s.xian)return'xian'}catch(e){}return'murim'}
+function worldOf(s){try{if(s.beast)return'beast';if(s.mw&&s.mw.sky)return'sky';if(s.mw)return'mw';if(s.ch==='soul')return'soul';if(s.xian)return'xian'}catch(e){}return'murim'}
 function pctOf(v,mid){v=Math.max(0,+v||0);return clamp(Math.round(100*(1-1/(1+Math.pow(v/Math.max(1,mid),.6)))),8,97)}
 function fromS(){try{if(typeof S==='undefined'||!S||!S.alive)return null;const w=worldOf(S);let pw=0;try{pw=typeof total==='function'?total():(S.power||0)}catch(e){pw=S.power||0}
   const b=pctOf(pw,w==='mw'?60:w==='xian'?3000:300),p=clamp(Math.round(20+(+S.int||0)*.7),10,95),c=pctOf(S.fame||(S.mw&&S.mw.fame)||0,200);
