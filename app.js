@@ -45301,3 +45301,226 @@ const upd=()=>{try{let b=$('godChkP');const a=$('ascPill');if(!a)return;if(!b){a
 setInterval(upd,1500);
 try{const g={s:'world',ic:'☁️',t:'ขึ้นโลกเทพ (เงื่อนไข)',nw:1,d:'อยู่โลกเซียน ต้องครบทุกข้อ: ① ขั้นพลังทะลวงถึงขั้นสูงสุดของโลกเซียน ② เหนือขีดจำกัดครบขั้น 9 ③ อยู่โลกเซียนครบ 800 ปี หรืออายุ 1000 ปี (โหมดสั้น 300/400 · นรก 500/700) ④ ไม่อยู่ในช่วงพักหลังทัณฑ์ล้มเหลว · ครบแล้วกดปุ่ม ⚡ ขึ้นสู่โลกเทพ เหนือแถบเวลา · ยังไม่ครบ แตะปุ่ม 🔒 โลกเทพ ดูว่าขาดข้อไหน'};if(typeof GD2!=='undefined'&&!GD2.some(x=>x.t===g.t))GD2.push(g);if(typeof SYS_GUIDE!=='undefined'&&!SYS_GUIDE.some(x=>x.t===g.t))SYS_GUIDE.push(g)}catch(e){}
 })()}catch(e){console.error('block145',e)}
+// ============================================================
+// BLOCK 147: 📱 มือถือโฉมใหม่ — หัวย่อ · โหมดซ่อน UI (👁) · แถบล่างแถวเดียว+แผงฝึก · หน้าต่างเลื่อนจากล่าง (ปัดลงปิด) · กระดิ่งรวมคำแนะนำ
+//            · บันทึกแบ่งตามปี (หัวปีติดบน/พับปีเก่า/รวมบรรทัดซ้ำ ×N) · แอนิเมชันสปริง+สั่นเบาๆ · ลดแอนิเมชัน · แนวนอน 2 คอลัมน์ · ตั้งค่า "หน้าจอ: เต็ม/ย่อ/ซ่อน"
+// ============================================================
+try{(()=>{
+const $$=id=>document.getElementById(id);const B=document.body;
+const LG=(k,d)=>{try{return LS.get(k,d)}catch(e){return d}},LSt=(k,v)=>{try{LS.set(k,v)}catch(e){}};
+const MD=()=>{const v=LG('murim_mui','c');return v==='f'||v==='h'?v:'c'};
+const gOn=()=>{const g=$$('game');return!!(g&&g.classList.contains('on'))};
+const isUI=()=>!B.classList.contains('desk');
+const css=document.createElement('style');css.id='mUIcss';css.textContent=`
+/* ---------- โหมด / หัว ---------- */
+body.mUI #game{padding-top:calc(6px + env(safe-area-inset-top))}
+body.mUI:not(.mF):not(.mExp) #game>.box.top{padding:6px 10px!important;min-height:0!important;gap:8px!important;align-items:center!important;border-radius:16px!important;transition:padding .25s}
+body.mUI:not(.mF):not(.mExp) #game>.box.top .ag{font-size:21px!important;min-width:30px!important;display:flex;align-items:baseline;gap:1px}
+body.mUI:not(.mF):not(.mExp) #game>.box.top .ag small{font-size:10px}
+body.mUI:not(.mF):not(.mExp) #game>.box.top .lsp,body.mUI:not(.mF):not(.mExp) #game>.box.top #chev{display:none!important}
+body.mUI:not(.mF):not(.mExp) #mobAva{width:28px!important;height:31px!important}
+body.mUI:not(.mF):not(.mExp) #game>.box.top .info{min-width:0;flex:1 1 auto}
+body.mUI:not(.mF):not(.mExp) #game>.box.top .nm{font-size:14px!important;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.mUI:not(.mF):not(.mExp) #game>.box.top .realm{font-size:11.5px!important;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.mUI:not(.mF):not(.mExp) #game>.box.top .hpbar{height:4px!important;margin:3px 0 2px!important}
+body.mUI:not(.mF):not(.mExp) #game>.box.top #gMini{font-size:11px!important;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.mUI:not(.mF):not(.mExp) #game>.box.top .hudr{flex-direction:row!important;align-items:center!important;gap:5px!important}
+body.mUI:not(.mF):not(.mExp) #game>.box.top #cloudTag{display:none}
+body.mUI:not(.mF):not(.mExp) #onMini{min-height:30px;padding:0 8px}
+body.mUI:not(.mF):not(.mExp) #onMini b{display:none}body.mUI:not(.mF):not(.mExp) #onMini{min-width:30px!important;padding:0 6px!important}
+body.mUI #game>#hintBox{display:none!important}
+body.mUI #game>#goalBox:has(~#rvBar){align-self:flex-start;width:calc(50% - 3px)!important;height:30px!important;max-height:30px!important;overflow:hidden;font-size:11.5px!important;box-sizing:border-box;margin-top:4px!important;margin-bottom:0!important;white-space:nowrap;text-overflow:ellipsis;display:flex!important;align-items:center}
+body.mUI #game>#goalBox:has(~#rvBar)~#rvBar{align-self:flex-end;width:calc(50% - 3px)!important;height:30px!important;margin:-30px 0 2px 0!important;font-size:11px!important;box-sizing:border-box;display:flex!important}
+body.mUI #game>#goalBox:has(~#rvBar)~#rvBar>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 6px!important}
+body.mUI.mLand #game.on>#goalBox:has(~#rvBar)~#rvBar{margin:4px 0!important;align-self:auto;width:auto!important}body.mUI.mLand #game.on>#goalBox{width:auto!important;align-self:auto}
+body.mUI:not(.mF):not(.tuOn) #game>#hintBar{display:none!important}
+#mBell{position:relative;min-width:34px;min-height:30px;border-radius:999px;border:1px solid #ffffff2a;background:#0004;color:#ffe9a8;font:inherit;font-size:15px;cursor:pointer;padding:0 7px;line-height:1}
+#mBell b{position:absolute;top:-5px;right:-5px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#e0483a;color:#fff;font-size:10.5px;line-height:17px;box-shadow:0 0 0 2px #17141f;display:none}
+#mBell.has b{display:block}#mBell.nw{animation:mBellR 1s ease-in-out 2}
+@keyframes mBellR{0%,100%{transform:rotate(0)}15%{transform:rotate(16deg)}30%{transform:rotate(-14deg)}45%{transform:rotate(9deg)}60%{transform:rotate(-6deg)}}
+body:not(.mUI) #mBell{display:none}
+/* ---------- ฉาก / ปุ่ม 👁 ---------- */
+#mEye{position:absolute;left:6px;top:6px;z-index:4;width:32px;height:32px;border-radius:50%;border:1px solid #ffffff55;background:#0008;color:#fff;font-size:15px;line-height:30px;text-align:center;cursor:pointer;padding:0;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+body:not(.mUI) #mEye{display:none}
+body.mUI #sceneBox .scap{left:44px!important}
+/* ---------- แถบล่าง ---------- */
+body.mUI #game .ctrl{position:relative;padding-bottom:calc(6px + env(safe-area-inset-bottom))!important}
+body.mUI:not(.mF) #game .ctrl .onrow{position:absolute;left:0;right:0;bottom:100%;margin:0!important;padding:0 0 6px!important;justify-content:center;pointer-events:none;min-height:0;z-index:5;flex-wrap:wrap}
+body.mUI:not(.mF) #game .ctrl .onrow>*{pointer-events:auto;box-shadow:0 4px 14px #000a}
+body.mUI:not(.mF) #ctlTog,body.mUI #onPill{display:none!important}
+body.mUI:not(.mF) #game #focus{display:none!important}
+body.mUI #game .crow{display:flex!important;flex-wrap:wrap!important;gap:6px!important;align-items:center}
+body.mUI #game .crow .ybar{order:2!important;flex:1 1 0!important;min-width:60px;height:26px!important;border-radius:999px!important}
+body.mUI #game .crow .ybar #ymon{line-height:22px!important;font-size:11.5px}
+body.mUI #game .crow .crBr{order:5;flex:0 0 100%;height:0}
+body.mUI #game .crow :is(#spdBtn,#autoBtn,#skipBtn){order:1;flex:0 0 auto!important;min-height:26px!important;height:26px;padding:0 10px!important;flex-direction:row!important;gap:3px;border-radius:999px!important;font-size:12px!important}
+body.mUI #game .crow #skipBtn{order:3;display:none!important}body.mUI #game .crow.rvq #skipBtn{display:flex!important}
+body.mUI #game .crow #autoBtn{order:4}
+body.mUI #game .crow :is(#spdBtn,#autoBtn,#skipBtn) .cbL{display:inline!important;margin:0!important;font-size:10.5px!important}
+body.mUI #game .crow #logBtn,body.mUI.uiNew #game .crow #aqCb{display:none!important}
+body.mUI #game .crow #bagBtn{order:6}body.mUI #game .crow #questBtn{order:7}body.mUI #game .crow #pauseBtn{order:8}body.mUI #game .crow #mFoc{order:9}body.mUI #game .crow #aqCb{order:10}body.mUI #game .crow #sysBtn{order:10}body.mUI #game .crow #menuBtn{order:11}
+body.mUI #game .crow :is(#bagBtn,#questBtn,#aqCb,#sysBtn,#menuBtn,#mFoc){flex:1 1 0!important;min-height:48px!important;border-radius:15px!important;font-size:18px!important;position:relative}
+body.mUI #game .crow #pauseBtn{flex:1.3 1 0!important;min-height:52px!important;font-size:22px!important;border-radius:18px!important;color:#2a1a04!important;background:linear-gradient(180deg,#ffe9a8,#e8b54a 55%,#c98d22)!important;border:2px solid #7a5512!important;box-shadow:0 3px 0 #7a5512,0 0 14px #e8b54a55!important}
+body.mUI #game .crow #pauseBtn .cbL{opacity:.9!important;font-weight:800!important}
+body.mUI.mF #mFoc{display:none!important}
+#mFoc{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
+#mFoc .cbL{display:block;font-size:9.5px;margin-top:2px;opacity:.75;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.mUI #game .crow .cb:active{transform:scale(.94)}
+body.mUI #game .crow .cb{transition:transform .18s cubic-bezier(.3,1.6,.5,1)}
+/* ---------- โหมดซ่อน UI ---------- */
+body.mUI.mImm #game>:not(#sceneBox):not(#feed):not(#pendBar){display:none!important}
+body.mUI:has(#mask.on.mSh) :is(#isl,#islDots,#tipCard){opacity:0!important;pointer-events:none!important}
+body.mUI.mImm #game{padding-bottom:0}
+body.mUI.mImm #isl,body.mUI.mImm #islDots{opacity:.0;pointer-events:none}
+body.mUI.mImm #sceneBox{margin-top:4px}
+#mDock{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translate(-50%,140%);z-index:60;display:flex;align-items:center;gap:10px;padding:7px 9px;border-radius:999px;background:#120f1ccc;border:1px solid #e8b54a66;box-shadow:0 10px 30px #000c,0 0 0 1px #0006;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .38s cubic-bezier(.2,1.3,.4,1),opacity .25s;opacity:0;pointer-events:none}
+body.mUI.mImm #mDock{transform:translate(-50%,0);opacity:1;pointer-events:auto}
+#mDock button{border:0;font:inherit;cursor:pointer;border-radius:999px;color:#ffe9a8;background:#ffffff14;min-width:42px;height:42px;font-size:17px;padding:0 10px;display:flex;align-items:center;gap:4px}
+#mDock .dP{min-width:60px;height:50px;font-size:22px;color:#2a1a04;background:linear-gradient(180deg,#ffe9a8,#e8b54a 55%,#c98d22);box-shadow:0 3px 0 #7a5512}
+#mDock .dA.on{background:#3aa86a55;color:#c8ffd8}
+#mDock small{font-size:10.5px;font-weight:800}
+#mAgeC{position:fixed;right:12px;top:calc(10px + env(safe-area-inset-top));z-index:60;padding:4px 11px;border-radius:999px;background:#120f1ccc;border:1px solid #e8b54a55;color:#ffe9a8;font-size:12px;font-weight:800;opacity:0;transform:translateY(-140%);transition:all .35s cubic-bezier(.2,1.3,.4,1);pointer-events:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+body.mUI.mImm #mAgeC{opacity:1;transform:none}
+#mSwp{position:fixed;left:0;right:0;bottom:0;height:22px;z-index:59;display:none}
+body.mUI.mImm #mSwp{display:block}
+#mSwp:after{content:'';position:absolute;left:50%;bottom:6px;width:46px;height:5px;margin-left:-23px;border-radius:3px;background:#ffffff40}
+/* ---------- หน้าต่างเลื่อนจากล่าง ---------- */
+body.mUI #mask.on.mSh{align-items:flex-end!important;padding:0!important;animation:mFade .22s ease-out}
+body.mUI #mask.mSh #modal{width:100%!important;max-width:620px!important;margin:0 auto!important;border-radius:24px 24px 0 0!important;max-height:90vh;max-height:90dvh;padding-top:24px!important;padding-bottom:calc(18px + env(safe-area-inset-bottom))!important;animation:mShUp .34s cubic-bezier(.2,.95,.3,1.06)!important;border-bottom:0!important;overscroll-behavior:contain;will-change:transform}
+body.mUI #mask.mSh #modal.mDrag{animation:none!important;transition:none!important}
+body.mUI #mask.mSh #modal.mBack{transition:transform .3s cubic-bezier(.2,1.3,.4,1)!important}
+body.mUI #mask.mSh #modal.mOut{transition:transform .22s ease-in!important;transform:translateY(105%)!important}
+.mGrab{position:absolute;left:50%;top:9px;width:44px;height:5px;margin-left:-22px;border-radius:3px;background:currentColor;opacity:.28;pointer-events:none}
+@keyframes mShUp{from{transform:translateY(100%)}to{transform:none}}
+@keyframes mFade{from{background:#0000}}
+.mShT{font-weight:800;font-size:16px;margin:0 0 10px;display:flex;align-items:center;gap:8px}.mShT small{font-weight:normal;opacity:.65;font-size:11.5px}
+#mFocBody .focus{display:flex!important;flex-wrap:wrap!important;gap:8px!important;overflow:visible!important;-webkit-mask:none!important;mask:none!important;margin:0!important}
+#mFocBody .focus .fc{flex:1 1 calc(50% - 8px)!important;min-height:54px!important;white-space:normal!important;font-size:13.5px!important;border-radius:14px!important}
+#mBellBody>*{display:block!important;margin:0 0 10px!important}
+#mBellBody #hintBar{display:flex!important}
+.mEmpty{text-align:center;opacity:.65;padding:18px 6px;font-size:13px}
+/* ---------- บันทึกแบ่งตามปี ---------- */
+body.mUI #feed .yr{position:sticky;top:0;z-index:3;margin:8px 0 5px!important;cursor:pointer;pointer-events:none}
+body.mUI #feed .yr>span{pointer-events:auto;display:inline-block;padding:2px 12px;border-radius:999px;background:#17141fe6;border:1px solid #a8873e88;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 3px 10px #0007}
+body.mUI #feed .yr.mFd>span:after{content:' ▸ ' attr(data-n) ' เรื่อง';font-size:10.5px;opacity:.75}
+body.mUI #feed .yr.mFd{position:static}
+body.mUI #feed .mFo,body.mUI #feed .mDup{display:none!important}
+body.mUI #feed .bub[data-x]:after{content:'×' attr(data-x);display:inline-block;margin-left:6px;padding:0 7px;border-radius:999px;background:#e8b54a33;color:#ffd86a;font-size:11px;font-weight:800;vertical-align:1px}
+body.mUI #feed .popin{animation:mIn .34s cubic-bezier(.2,.9,.3,1.12) both!important}
+@keyframes mIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+.mBump{animation:mBp .45s cubic-bezier(.3,1.7,.5,1)}@keyframes mBp{40%{transform:scale(1.18);filter:brightness(1.5)}}
+/* ---------- ลดแอนิเมชัน ---------- */
+body.mRM *,body.mRM *:before,body.mRM *:after{animation-duration:.001s!important;animation-iteration-count:1!important;animation-delay:0s!important;transition-duration:.001s!important}
+/* ---------- แนวนอน 2 คอลัมน์ ---------- */
+body.mUI.mLand #game.on{display:grid!important;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);grid-template-rows:auto auto auto auto auto auto minmax(0,1fr) auto auto;column-gap:10px;padding:6px 10px 0!important;max-width:none!important}
+body.mUI.mLand #game.on>*{grid-column:1;min-width:0}
+body.mUI.mLand #game.on>.box.top{grid-row:1}body.mUI.mLand #game.on>#detail{grid-row:2}body.mUI.mLand #game.on>#goalBox{grid-row:3;width:auto!important}body.mUI.mLand #game.on>#rvBar{grid-row:4;width:auto!important;margin:4px 0!important}body.mUI.mLand #game.on>#qTrack{grid-row:5}body.mUI.mLand #game.on>#nsHud{grid-row:6}
+body.mUI.mLand #game.on>#sceneBox{grid-row:7;height:auto!important;max-height:none!important;min-height:60px;align-self:stretch}
+body.mUI.mLand #game.on>#sceneBox canvas{width:100%;height:100%;object-fit:cover}
+body.mUI.mLand #game.on>#pendBar{grid-row:8}body.mUI.mLand #game.on>#hintBar{grid-row:9}
+body.mUI.mLand #game.on>#feed{grid-column:2;grid-row:1/8;min-height:0}
+body.mUI.mLand #game.on>.ctrl{grid-column:2;grid-row:8/10;align-self:end}
+body.mUI.mLand #mask.mSh #modal{max-height:94dvh}
+body.mUI.mLand.mImm #game.on{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+`;document.head.appendChild(css);
+
+// ---------- สถานะโหมด ----------
+let tmpImm=false,peekT=0;
+function apply(){try{const ui=isUI();B.classList.toggle('mUI',ui);const m=MD();B.classList.toggle('mF',m==='f');B.classList.toggle('mC',m==='c');B.classList.toggle('mH',m==='h');
+ B.classList.toggle('mImm',ui&&gOn()&&(m==='h'&&Date.now()>peekT||tmpImm));
+ B.classList.toggle('mLand',ui&&innerWidth>innerHeight&&innerWidth>=600&&innerHeight<=820);
+ let rm=!!LG('murim_mrm',0);try{if(LG('murim_mrm',null)===null&&matchMedia('(prefers-reduced-motion: reduce)').matches)rm=true}catch(e){}B.classList.toggle('mRM',rm)}catch(e){}}
+window.mUISet=function(k,v){if(k==='mode'){LSt('murim_mui',v);tmpImm=false;peekT=0}else if(k==='rm'){LSt('murim_mrm',v?1:0)}else if(k==='ah'){LSt('murim_mah',v?1:0)}apply();mount();try{if(typeof islPos==='function')islPos()}catch(e){}
+ try{const f=$$('feed');if(f)f.scrollTop=f.scrollHeight}catch(e){}try{const mm=document.querySelector('#modal[data-k="menu"] #mUIset');if(mm)mm.outerHTML=setHtml()}catch(e){}};
+window.mImmTog=function(on){const m=MD();if(on===undefined)on=!B.classList.contains('mImm');if(m==='h'){peekT=on?0:Date.now()+6000}else tmpImm=on?'m':false;if(!on)idleAt=Date.now();apply();try{vib(10)}catch(e){}if(!on)setTimeout(()=>{try{const f=$$('feed');f.scrollTop=f.scrollHeight}catch(e){}},50)};
+
+// ---------- ติดตั้งชิ้นส่วน ----------
+function mount(){try{
+ const hd=document.querySelector('#game>.box.top .hudr');if(hd&&!$$('mBell')){const b=document.createElement('button');b.id='mBell';b.type='button';b.innerHTML='🔔<b></b>';b.onclick=e=>{e.stopPropagation();openBell()};hd.insertBefore(b,hd.firstChild)}
+ const sb=$$('sceneBox');if(sb&&!$$('mEye')){sb.insertAdjacentHTML('beforeend','<button id="mEye" type="button" aria-label="ซ่อนหน้าจอ">👁</button>');$$('mEye').onclick=e=>{e.stopPropagation();mImmTog()}}
+ const cr=document.querySelector('#game .crow');if(cr&&!$$('mFoc')){const b=document.createElement('button');b.className='cb';b.id='mFoc';b.type='button';b.innerHTML='🥋<small class="cbL">ฝึก</small>';b.onclick=()=>openFoc();const mb=$$('menuBtn');cr.insertBefore(b,mb||null)}
+ if(!$$('mDock')){const d=document.createElement('div');d.id='mDock';d.innerHTML='<button class="dA" type="button" onclick="toggleAuto();mDockUp()">🤖<small>ออโต้</small></button><button class="dP" type="button" onclick="togglePause();mDockUp()">⏸</button><button type="button" onclick="mImmTog(false)">👁‍🗨<small>แสดง</small></button>';document.body.appendChild(d);
+  const a=document.createElement('div');a.id='mAgeC';document.body.appendChild(a);const s=document.createElement('div');s.id='mSwp';document.body.appendChild(s);swipeUp(s)}
+}catch(e){}}
+window.mDockUp=function(){try{const d=$$('mDock');if(!d)return;const p=d.querySelector('.dP'),a=d.querySelector('.dA');const t=paused?'▶':'⏸';if(p.textContent!==t)p.textContent=t;a.classList.toggle('on',!!auto);const c=$$('mAgeC');if(c&&S){const t2=`อายุ ${S.age} ปี${S.name?' · '+S.name:''}`;if(c.textContent!==t2)c.textContent=t2}}catch(e){}};
+function swipeUp(el){let y0=null;el.addEventListener('touchstart',e=>{y0=e.touches[0].clientY},{passive:true});el.addEventListener('touchmove',e=>{if(y0!==null&&y0-e.touches[0].clientY>24){y0=null;mImmTog(false)}},{passive:true});el.addEventListener('click',()=>mImmTog(false))}
+
+// ---------- ป้ายปุ่มฝึก ----------
+function focLbl(){try{const b=$$('mFoc');if(!b)return;const on=document.querySelector('#focus .fc.on');let ic='🥋',tx='ฝึก';if(on){const s=(on.innerText||'').trim();const m=s.match(/^(\p{Extended_Pictographic}️?(‍\p{Extended_Pictographic}️?)*)/u);if(m)ic=m[1];const w=s.replace(m?m[1]:'','').trim().split(/[\s·(]/)[0];if(w&&!on.disabled)tx=w}
+ const h=`${ic}<small class="cbL">${tx}</small>`;if(b.innerHTML!==h)b.innerHTML=h;b.style.display=document.querySelector('#focus .fc')?'':'none'}catch(e){}}
+
+// ---------- แผ่นจากล่าง: ย้ายของเข้าไปชั่วคราว ----------
+let moved=[];
+function restore(){if(!moved.length)return;for(const [n,ph] of moved){try{if(ph.parentNode)ph.parentNode.replaceChild(n,ph);else n.remove()}catch(e){}}moved=[];try{focLbl()}catch(e){}}
+function moveIn(host,ids){for(const id of ids){const n=$$(id);if(!n)continue;const ph=document.createElement('i');ph.style.display='none';ph.className='mPh';n.parentNode.insertBefore(ph,n);host.appendChild(n);moved.push([n,ph])}}
+function openFoc(){try{if(typeof modalOpen!=='undefined'&&modalOpen&&choice&&choice._cur)return;modal(`<div class="mShT">🥋 เลือกสิ่งที่จะทุ่มเทปีนี้ <small>แตะเพื่อเปลี่ยน · มีผลปีถัดไป</small></div><div id="mFocBody"></div><button class="pbtn" style="width:100%;margin-top:12px" onclick="closeM()">เสร็จแล้ว</button>`,'mfoc');const h=$$('mFocBody');moveIn(h,['focus']);
+ h.addEventListener('click',e=>{const f=e.target.closest('.fc');if(f&&!f.disabled){try{vib(10)}catch(x){}setTimeout(()=>{if($$('modal').dataset.k==='mfoc')closeM()},260)}})}catch(e){console.error(e)}}
+function bellItems(){const a=[];const hb=$$('hintBox');if(hb&&hb.style.display!=='none'&&hb.textContent.trim())a.push('hintBox');const hr=$$('hintBar');if(hr&&hr.style.display!=='none'&&hr.textContent.trim()&&!(B.classList.contains('tuOn')))a.push('hintBar');return a}
+function openBell(){try{const it=bellItems();modal(`<div class="mShT">🔔 คำแนะนำ & แจ้งเตือน</div><div id="mBellBody"></div>${it.length?'':'<div class="mEmpty">ตอนนี้ยังไม่มีอะไรใหม่ ✨<br><small>คำแนะนำ เป้าหมาย และเรื่องที่ควรรู้ จะมารวมไว้ที่นี่</small></div>'}<button class="gbtn" style="width:100%;margin-top:4px" onclick="closeM();try{openNow&&openNow()}catch(e){}">🧭 ตอนนี้ควรทำอะไร?</button>`,'mbell');moveIn($$('mBellBody'),it);bellSeen=it.join('|')+bellSig();bell()}catch(e){console.error(e)}}
+let bellSeen='',bellLast='';
+function bellSig(){try{const hb=$$('hintBox');return hb?(hb.textContent||'').slice(0,80):''}catch(e){return''}}
+function bell(){try{const b=$$('mBell');if(!b)return;const it=bellItems();const sig=it.join('|')+bellSig();const n=it.length&&sig!==bellSeen?it.length:0;b.classList.toggle('has',n>0);const bb=b.querySelector('b');if(bb.textContent!==String(n))bb.textContent=n;if(n&&sig!==bellLast){bellLast=sig;b.classList.remove('nw');void b.offsetWidth;b.classList.add('nw')}}catch(e){}}
+// ไม่ให้ปุ่ม 🧭 หาย: ถ้าไม่มีฟังก์ชัน openNow ใช้ปุ่ม wnBtn
+window.openNow=window.openNow||function(){const w=$$('wnBtn');if(w)w.click()};
+
+// ---------- modal → แผ่นจากล่าง ----------
+const NOSH=/^(mg|mg2|mgd|qigame|skymg|bye|fx|gfx|ttlfx|lgin|naming|krcreate|pwa|ai|update)$/;
+function shOk(k){if(!B.classList.contains('mUI'))return false;if(NOSH.test(k||''))return false;const m=$$('modal');if(m&&m.querySelector('canvas:not(#mobAva)')){const c=m.querySelector('canvas');if(c&&c.width>200)return false}return true}
+function decorate(k){try{const mk=$$('mask'),m=$$('modal');const on=shOk(k);mk.classList.toggle('mSh',on);m.classList.remove('mDrag','mBack','mOut');m.style.transform='';if(on&&!m.querySelector(':scope>.mGrab'))m.insertAdjacentHTML('afterbegin','<i class="mGrab"></i>')}catch(e){}}
+{const _m=modal;modal=function(html,k){restore();const r=_m.apply(this,arguments);decorate(k);return r}}
+{const _c=closeM;closeM=function(){restore();const r=_c.apply(this,arguments);try{$$('mask').classList.remove('mSh')}catch(e){}return r}}
+// ปัดลงเพื่อปิด/ย่อ
+(function(){const m=$$('modal');if(!m)return;let y0=null,dy=0,ok=false;
+ m.addEventListener('touchstart',e=>{if(!$$('mask').classList.contains('mSh'))return;const t=e.touches[0];const top=m.getBoundingClientRect().top;ok=(m.scrollTop<=0)&&(t.clientY-top<120||m.scrollTop<=0);y0=ok?t.clientY:null;dy=0},{passive:true});
+ m.addEventListener('touchmove',e=>{if(y0===null)return;dy=e.touches[0].clientY-y0;if(m.scrollTop>0&&dy<=0){y0=null;return}if(dy>6){m.classList.add('mDrag');m.style.transform=`translateY(${Math.max(0,dy*.85)}px)`}},{passive:true});
+ m.addEventListener('touchend',()=>{if(y0===null)return;y0=null;m.classList.remove('mDrag');if(dy>110){const act=dismissAct();if(act){m.classList.add('mOut');setTimeout(()=>{m.classList.remove('mOut');m.style.transform='';act()},200);return}}m.classList.add('mBack');m.style.transform='';setTimeout(()=>m.classList.remove('mBack'),320)},{passive:true});
+})();
+function dismissAct(){const m=$$('modal');const vis=x=>x&&x.offsetParent!==null;const mn=m.querySelector('.minb');if(vis(mn))return()=>mn.click();const x=m.querySelector('.xbtn');if(vis(x))return()=>x.click();const b=[...m.querySelectorAll('button')].find(b=>vis(b)&&/^\s*(✕|×|ปิด|เสร็จแล้ว|ปิดหน้าต่าง)\s*$/.test(b.textContent));if(b)return()=>b.click();if(/^(mfoc|mbell|menu|bag|quests)$/.test(m.dataset.k||''))return()=>closeM();return null}
+
+// ---------- บันทึก: พับปีเก่า · รวมซ้ำ ----------
+const opened=new WeakSet();let fSig='';
+function feedPass(){try{if(!B.classList.contains('mUI'))return;const f=$$('feed');if(!f)return;const n=f.children.length,lc=f.lastElementChild;const sig=n+':'+(lc?lc.textContent.length:0)+':'+f.dataset.mv;if(sig===fSig)return;fSig=sig;
+ const atB=f.scrollHeight-f.scrollTop-f.clientHeight<40;const yrs=[...f.children].filter(e=>e.classList.contains('yr'));const keep=3;
+ yrs.forEach((y,i)=>{let fold=y.classList.contains('mFd');if(!y.dataset.mi){y.dataset.mi=1;if(i<yrs.length-keep&&atB&&!opened.has(y))fold=true}else if(atB&&i<yrs.length-keep&&!opened.has(y)&&!y.dataset.mo)fold=true;
+  let c=0,e=y.nextElementSibling,prev=null;while(e&&!e.classList.contains('yr')){c++;e.classList.toggle('mFo',fold);
+   if(!fold&&e.classList.contains('bub')){const t=e.textContent.trim();if(prev&&prev.t===t&&t.length<120&&e.style.display!=='none'){e.classList.add('mDup');prev.n++;prev.e.dataset.x=prev.n}else{e.classList.remove('mDup');if(e.dataset.x&&(!prev||prev.e!==e))delete e.dataset.x;prev={t,e,n:1}}}else if(!fold)prev=null;
+   e=e.nextElementSibling}
+  y.classList.toggle('mFd',fold);const sp=y.firstElementChild;if(sp)sp.dataset.n=c});
+ if(atB)f.scrollTop=f.scrollHeight}catch(e){}}
+document.addEventListener('click',e=>{try{const sp=e.target.closest&&e.target.closest('#feed .yr>span');if(!sp||!B.classList.contains('mUI'))return;const y=sp.parentNode;const f=$$('feed');const fold=!y.classList.contains('mFd');if(fold){opened.delete(y);y.dataset.mo=''}else{opened.add(y);y.dataset.mo=1}
+ y.classList.toggle('mFd',fold);let e2=y.nextElementSibling;while(e2&&!e2.classList.contains('yr')){e2.classList.toggle('mFo',fold);e2=e2.nextElementSibling}f.dataset.mv=(+f.dataset.mv||0)+1;try{vib(8)}catch(x){}}catch(x){}},true);
+
+// ---------- ตัวเลขเด้ง · สั่น ----------
+let lastAge=null,lastMini='';
+function bumps(){try{const a=$$('gAge'),mi=$$('gMini');if(a&&S){if(lastAge!==null&&S.age!==lastAge){a.classList.remove('mBump');void a.offsetWidth;a.classList.add('mBump')}lastAge=S.age}
+ if(mi){const t=(mi.textContent.match(/💰\s*[\d,.]+\S*/)||[''])[0];if(lastMini&&t&&t!==lastMini){mi.classList.remove('mBump');void mi.offsetWidth;mi.classList.add('mBump')}lastMini=t}}catch(e){}}
+document.addEventListener('click',e=>{try{if(!B.classList.contains('mUI')||B.classList.contains('mRM'))return;const t=e.target.closest&&e.target.closest('#modal .opt,#game .cb,.fc,#mDock button');if(t)vib(8)}catch(x){}},true);
+
+// ---------- ซ่อนเองตอนออโต้ ----------
+let idleAt=Date.now();
+['touchstart','mousedown','keydown','wheel'].forEach(ev=>document.addEventListener(ev,e=>{idleAt=Date.now();if(tmpImm==='a'&&MD()==='c'&&!(e.target&&e.target.closest&&e.target.closest('#mDock,#mask'))){tmpImm=false;apply()}},{passive:true,capture:true}));
+function idle(){try{if(MD()!=='c'||!B.classList.contains('mUI')||!gOn()||!LG('murim_mah',1))return;if(!tmpImm&&auto&&!paused&&!modalOpen&&!(choice&&choice._cur)&&!B.classList.contains('tuOn')&&!B.classList.contains('coOn')&&Date.now()-idleAt>4000){tmpImm='a';apply()}if(tmpImm==='a'&&(!auto||modalOpen)){tmpImm=false;apply()}}catch(e){}}
+
+// ---------- แตะสองครั้งที่ฉาก ----------
+(function(){let t0=0;document.addEventListener('touchend',e=>{try{const s=e.target.closest&&e.target.closest('#sceneBox');if(!s||e.target.closest('#mEye')||!B.classList.contains('mUI'))return;const n=Date.now();if(n-t0<320){t0=0;mImmTog()}else t0=n}catch(x){}},{passive:true})})();
+// แตะหัวในโหมดย่อ → ขยายชั่วคราว (แทนการเปิดรายละเอียดเต็ม ครั้งแรก)
+document.addEventListener('click',e=>{try{if(!B.classList.contains('mUI')||B.classList.contains('mF'))return;const h=e.target.closest&&e.target.closest('#game>.box.top');if(!h||e.target.closest('button,.hudr,#gRealm'))return;if(!B.classList.contains('mExp')){e.stopPropagation();e.preventDefault();B.classList.add('mExp');clearTimeout(window._mExpT);window._mExpT=setTimeout(()=>B.classList.remove('mExp'),9000)}}catch(x){}},true);
+document.addEventListener('click',e=>{try{if(B.classList.contains('mExp')&&!(e.target.closest&&e.target.closest('#game>.box.top,#detail,#mask')))B.classList.remove('mExp')}catch(x){}});
+
+// ---------- เมนู: ตั้งค่าหน้าจอ ----------
+const setCss=document.createElement('style');setCss.textContent=`#mUIset{margin:2px 0 10px;padding:10px 11px;border-radius:14px;border:1px solid #a8873e66;background:linear-gradient(160deg,#ffffff0d,#ffffff05)}
+#mUIset .r1{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;margin-bottom:8px}#mUIset .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:3px;border-radius:12px;background:#0004}
+#mUIset .seg button{border:0;border-radius:9px;padding:7px 2px;font:inherit;font-size:12.5px;font-weight:700;background:transparent;color:inherit;opacity:.7;cursor:pointer;line-height:1.2}#mUIset .seg button small{display:block;font-size:9.5px;font-weight:normal;opacity:.8}
+#mUIset .seg button.on{background:linear-gradient(180deg,#ffe9a8,#e8b54a);color:#2a1a04;opacity:1;box-shadow:0 2px 0 #7a5512}
+#mUIset .tg{display:flex;gap:6px;margin-top:8px}#mUIset .tg button{flex:1;border:1px solid #ffffff22;border-radius:10px;padding:6px 4px;font:inherit;font-size:11.5px;background:#0003;color:inherit;cursor:pointer}#mUIset .tg button.on{border-color:#3aa86a;background:#3aa86a33}
+body:not(.mUI) #mUIset{display:none}`;document.head.appendChild(setCss);
+function setHtml(){const m=MD(),rm=!!LG('murim_mrm',0)||B.classList.contains('mRM'),ah=!!LG('murim_mah',1);return `<div id="mUIset"><div class="r1">📱 รูปแบบหน้าจอ</div><div class="seg"><button class="${m==='f'?'on':''}" onclick="mUISet('mode','f')">เต็ม<small>แสดงครบทุกแถบ</small></button><button class="${m==='c'?'on':''}" onclick="mUISet('mode','c')">ย่อ<small>หัวเล็ก อ่านได้เยอะ</small></button><button class="${m==='h'?'on':''}" onclick="mUISet('mode','h')">ซ่อน<small>เหลือฉาก+เรื่อง</small></button></div>
+<div class="tg"><button class="${ah?'on':''}" onclick="mUISet('ah',${ah?0:1})">${ah?'✅':'⬜'} ซ่อนเองตอนออโต้</button><button class="${rm?'on':''}" onclick="mUISet('rm',${rm?0:1})">${rm?'✅':'⬜'} ลดแอนิเมชัน</button></div></div>`}
+{const _o=openMenu;openMenu=function(){const r=_o.apply(this,arguments);try{const m=$$('modal');if(B.classList.contains('mUI')&&m&&m.dataset.k==='menu'&&!$$('mUIset')){const g=m.querySelector('.mnHero,.mgrid');if(g)g.insertAdjacentHTML('beforebegin',setHtml());else m.insertAdjacentHTML('beforeend',setHtml())}}catch(e){}return r}}
+
+// ---------- รอบเดิน ----------
+apply();mount();
+addEventListener('resize',()=>{apply()});
+setInterval(()=>{apply();mount();focLbl();bell();feedPass();bumps();idle();if(B.classList.contains('mImm'))mDockUp()},450);
+window._mUI={apply,feedPass,restore,MD};
+})()}catch(e){console.error('block147',e)}
