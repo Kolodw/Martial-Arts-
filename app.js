@@ -742,6 +742,8 @@ function arcTick(){
 }
 
 // ============ YEAR END ============
+// 🎴 ทางแยกชีวิต: เดิมอายุ 20/30/40/50 ตายตัว → สุ่มเลื่อน ±3 ปีต่อชีวิต (เดาไม่ได้แต่ยังห่างกันพอ)
+function dirCross(){try{if(!S._cx){const b=[20,30,40,50],o=[];b.forEach((x,i)=>{let v=x+Math.floor(Math.random()*7)-3;if(i&&v-o[i-1]<6)v=o[i-1]+6;o.push(v)});S._cx=o}return S._cx.includes(S.age|0)}catch(e){return[20,30,40,50].includes(S.age)}}
 function yearEnd(){
  seasonTick();cdxTick();bagTick();rebornTick();daoTick();petTick();S.gachaY=0;S.mkY=0;if(tr('dragon'))S.fame+=3;investTick();{const h=gearOf('house');if(h&&h.inc){S.money+=inc(h.inc);S.fame+=h.inc>500?3:1}}
  if(has('system')){S.power+=8;S.qi+=.3;S.int+=2;S.cha+=1;if(Math.random()<.25)log('[ระบบ] ภารกิจประจำปีสำเร็จ ได้รับค่าสถานะ','epic')}
@@ -769,7 +771,7 @@ function yearEnd(){
  yearExtras();
  if(diseaseTick()){render();checkDeath();return}
  if(S.age<6){if(Math.random()<.5)childEvent();render();checkDeath();return}
- if([20,30,40,50].includes(S.age)){if(!decTick())crossroad();return}
+ if(dirCross()){if(!decTick())crossroad();return}
  if(!S.faction&&!S.ownSect&&S.path!=='hermit'&&[8,11,14,17,21].map(a=>a+(S._ro|0)).includes(S.age))return recruitEvent();
  if(heirTick()){render();checkDeath();return}
  if(S.promoReady&&S.faction&&S.age>=8){S.promoReady=false;promoExam();return}
@@ -45781,6 +45783,11 @@ document.addEventListener('pointerdown',e=>{try{const m=$('modal');const b=e.tar
 //  อายุรับศิษย์ยุทธภพเลื่อนตาม S._ro (สุ่ม −1..+2 ต่อชีวิตใน story.js)
 // ============================================================
 try{setTimeout(()=>{try{wLoad('story').catch(()=>setTimeout(()=>wLoad('story').catch(()=>{}),6000))}catch(e){}},2600)}catch(e){console.error('block153',e)}
+
+// ============================================================
+// BLOCK 153b: 🎴 โหลด /w/dir.js — ผู้ลิขิต คุมจังหวะทั้งชีวิต · ปูลางก่อนหักมุม · บทสุดท้าย · เลือกผู้เล่าเรื่อง · มินิเกมกดง่าย (ทุกโลก)
+// ============================================================
+try{setTimeout(()=>{try{wLoad('dir').catch(()=>setTimeout(()=>wLoad('dir').catch(()=>{}),6000))}catch(e){}},3300)}catch(e){console.error('block153b',e)}
 
 // ============================================================
 // BLOCK 154: 🧭 เล่นครั้งแรกบนมือถือแล้วรู้ว่าต้องทำอะไรต่อ

@@ -15,6 +15,15 @@ const rkOf=(T,v)=>{let r=0;T.forEach((t,i)=>{if(v>=t[0])r=i});return r};
 const CREWS=['ก๊กมังกรดำ','แก๊งเสือเหนือ','ก๊กหงส์แดง','พวกซอยสิบสอง','ก๊กตะวันออก','แก๊งหัวสะพาน'];
 const isl=o=>{try{if(typeof islOn==='function'&&islOn())island(o)}catch(e){}};
 // ---------- สุ่มโลกตอนเกิด / เปลี่ยนโลกกลางชีวิต ----------
+// 🔮 ลางก่อนโลกย่อยเผยตัว (แผ่ว → ชัด)
+const WOM={under:['🔮 ร้านข้างคอนโดปิดกะทันหัน หน้าร้านมีรอยกระสุนสองรู','🔮 มีคนแต่งดำยืนสูบบุหรี่หน้าซอยทุกคืน ไม่เคยซื้ออะไร','🔮 ตำรวจในละแวกบ้านถูกย้ายพร้อมกันทั้งโรงพัก'],
+ ghost:['🔮 ตีสามตรง มีเสียงเคาะประตูสามครั้ง เปิดไปไม่มีใคร','🔮 ยายข้างบ้านจุดธูปหน้าบ้านทุกคืน "ช่วงนี้เขาออกมาเยอะ"','🔮 กล้องหน้าบ้านจับภาพคนยืนอยู่ในสวน… แต่ไม่มีเงา'],
+ loop:['🔮 เพลงในร้านกาแฟเล่นซ้ำท่อนเดิมสองรอบ ทุกคนเงียบไปพร้อมกัน','🔮 คุณตื่นมาด้วยความรู้สึกว่าเคยใช้วันนี้มาแล้ว','🔮 ข่าวเช้าวันนี้… เหมือนเมื่อวานทุกคำ'],
+ zombie:['🔮 ข่าวเล็ก ๆ ท้ายรายการ: คนไข้โรคแปลกในต่างจังหวัดกัดพยาบาล','🔮 ซูเปอร์ใกล้บ้านมีคนกักตุนน้ำดื่มจนชั้นว่าง','🔮 เสียงไซเรนดังทั้งคืน โรงพยาบาลปิดรับคนไข้ใหม่'],
+ tower:['🔮 ทั้งเมืองฝันเห็นบันไดสีขาวเหมือนกันในคืนเดียว','🔮 นกบินวนเป็นวงกลมเหนือกลางเมืองไม่ยอมลง','🔮 พื้นสั่นเบา ๆ ทุกเที่ยงคืน นักธรณีบอกว่าไม่ใช่แผ่นดินไหว'],
+ game:['🔮 ตัวหนังสือโปร่งแสงวูบขึ้นตรงหน้าแวบหนึ่งแล้วหายไป','🔮 คุณได้ยินเสียง "ติ๊ง" ทุกครั้งที่ทำอะไรสำเร็จ ไม่มีใครได้ยินด้วย','🔮 เด็กข้างบ้านบอกว่า "พี่มีเลเวลอยู่บนหัว"'],
+ gatewon:['🔮 ข่าวต่างประเทศ: เกตในยุโรปเปิดค้างนานผิดปกติ','🔮 สมาคมฮันเตอร์ประกาศเรียกทุกระดับกลับประจำการ','🔮 ท้องฟ้าทั้งโลกมีรอยแยกสีม่วงเป็นเส้นบาง ๆ'],
+ doom:['🔮 นักดาราศาสตร์สมัครเล่นโพสต์ภาพจุดแสงที่ไม่ควรมี แล้วลบโพสต์','🔮 คนรวยหลายคนขายบ้านพร้อมกันแล้วย้ายไปอยู่ใต้ดิน','🔮 ดาวดวงใหม่สว่างขึ้นทุกคืน ทั้งที่ไม่มีในแผนที่ดาว']};
 function wInit(M,id){if(id==='under')M.U=M.U||{inf:0,heat:5,rk:0,crew:null,rec:0};if(id==='ghost')M.G=M.G||{ward:0,bad:0,rk:0,amu:0};if(id==='loop')M.LP=M.LP||{mem:0,tir:5,rk:0};if(id==='zombie')M.Z=M.Z||{surv:0,inf:5,rk:0}}
 function wRoll(M,skip){if(!M||M.wroll)return;M.wroll=1;M.wsp=SH_LO+Math.random()*(SH_HI-SH_LO);const fw=window._wForce;if(fw&&!(M.hw>0)){window._wForce=null;M.fl=M.fl||{};if(fw==='hunter'||fw==='hunterhi'){hwInit(M,true);M.hv=fw==='hunterhi'?'high':'norm'}else if(fw==='normal')M.hw=0;else{M.wx={id:fw,on:0,born:1};M.hw=M.hw||0}return}
 if(skip||M.hw>0||M.wx)return;
@@ -46,7 +55,10 @@ function gYear(M,foc){const G=M.G;if(!G)return;G.bad=Math.max(0,G.bad-2);const r
  else if(G.bad>=60&&Math.random()<.35){const d=Math.round(S.maxHp*.1);S.hp=Math.max(1,S.hp-d);joy(-5);addFeed('ev',`🕯️ คืนนี้มีเสียงเดินในห้องอีกแล้ว คุณนอนไม่หลับทั้งปี พลังชีวิต −${d}`,'sum')}
  G.rk=rkOf(GR,G.ward);if(G.rk>r0){log(`📿 <b>ชาวบ้านเรียกคุณว่า "${GR[G.rk][1]}"</b> คนมีตาเริ่มรู้จักชื่อคุณ`,'epic',true);keyAdd('ได้ชื่อว่า'+GR[G.rk][1])}}
 function wYear(M,foc){if(M.wroll==null)wRoll(M,!(M.native&&M.y<=1));
- if(M.wx&&!M.wx.on&&S.age>=18){M.wx.on=1;M.wx.since=M.y;wInit(M,M.wx.id);wFoc();wFire('wi_'+M.wx.id)}
+ if(M.wx&&!M.wx.on){if(M.wx.at==null){const t=(window.drTeller&&drTeller())||'c';M.wx.at=t==='x'?18+Math.floor(Math.random()*20):t==='s'?26+Math.floor(Math.random()*16):22+Math.floor(Math.random()*15)}
+  // 🔮 ลางก่อนโลกเปลี่ยน (5 / 3 / 1 ปีก่อน) — ผู้เล่นไม่รู้ว่าโลกนี้ไม่ธรรมดาจนกว่าจะถึงวันนั้น
+  {const d=M.wx.at-(S.age|0),OM=WOM[M.wx.id];if(OM&&(d===5||d===3||d===1)){const i=d===5?0:d===3?1:2;try{ensureHeader();addFeed('ev',OM[i],'omen')}catch(x){}}}
+  if(S.age>=M.wx.at){M.wx.on=1;M.wx.since=M.y;wInit(M,M.wx.id);wFoc();wFire('wi_'+M.wx.id)}}
  if(wOf(M)==='normal'&&!M.wx&&!M.wshift&&S.age>=18&&M.y>=1&&Math.random()<(M.wsp||.0095)){M.wshift=1;const k=ch(['hunter','under','ghost','loop','zombie','tower','game','gatewon','doom']);
   if(k==='hunter'){M.hw=M.hw||0;M.gateY=M.y}else wOn(M,k,1)}
  const w=wOf(M);if(w==='under')uYear(M,foc);else if(w==='ghost')gYear(M,foc);wFoc();

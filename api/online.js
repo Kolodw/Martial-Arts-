@@ -1352,6 +1352,27 @@ module.exports = async (req, res) => {
       try { if (okId(id)) await uaGhostEnd(id, b, now) } catch (e) {}
       return res.json({ ok: 1 });
     }
+    if (a === 'drs') { // 🎴 สถิติผู้ลิขิต · 1 ครั้งต่อชีวิต · นับรวมต่อวัน ไม่เก็บตัวตน
+      const ua = String(req.headers['user-agent'] || ''); if (/bot|crawl|spider|headless|preview/i.test(ua)) return res.json({ ok: 0 });
+      const c = b.c && typeof b.c === 'object' ? b.c : null; if (!c) return res.json({ ok: 0 });
+      const RX = /^(st|pk|om|tq|mw|ml|wn|ls|[qd][0-9]|pkL|omL|ffL|lsL|s_[csx]|w_(murim|xian|mw|soul|loop|beast|sky)|tw_[a-z0-9]{1,12})$/;
+      const ops = [], dk = 'drs:' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
+      for (const k of Object.keys(c).slice(0, 60)) { const v = Math.floor(+c[k]); if (RX.test(k) && v > 0 && v <= 30) ops.push(['HINCRBY', dk, k, v]) }
+      if (!ops.length) return res.json({ ok: 0 });
+      ops.push(['EXPIRE', dk, 86400 * 60]); try { await pipe(ops) } catch (e) {}
+      return res.json({ ok: 1 });
+    }
+    if (a === 'drstat') {
+      if (!isAdmKey(qOf(req).key || b.key)) return res.status(403).json({ err: 'admin' });
+      const n = Math.min(30, Math.max(1, +(qOf(req).d || 7) | 0)); const days = []; for (let i = 0; i < n; i++) days.push(new Date(now + 7 * 3600e3 - i * 86400e3).toISOString().slice(0, 10));
+      const rs = await pipe(days.map(d => ['HGETALL', 'drs:' + d])); const T = {};
+      days.forEach((d, i) => { const r = rs[i]; if (Array.isArray(r)) for (let j = 0; j + 1 < r.length; j += 2) T[r[j]] = (T[r[j]] || 0) + (+r[j + 1]); else for (const k in (r || {})) T[k] = (T[k] || 0) + (+r[k]) });
+      const pc = (x, y) => y ? Math.round(x / y * 1000) / 10 + '%' : '-';
+      const lives = Object.keys(T).filter(k => /^[qd][0-9]$/.test(k)).reduce((a2, k) => a2 + T[k], 0);
+      const quit = {}, died = {}; for (let i = 0; i < 10; i++) { quit[(i * 10) + '–' + (i * 10 + 9) + '% ของอายุขัย'] = T['q' + i] || 0; died[(i * 10) + '–' + (i * 10 + 9) + '%'] = T['d' + i] || 0 }
+      const tw = {}; Object.keys(T).filter(k => k.startsWith('tw_')).sort((x, y) => T[y] - T[x]).forEach(k => tw[k.slice(3)] = T[k]);
+      return res.json({ สรุป: { 'ชีวิตที่จบ/เลิก': lives, 'เลิกกลางชีวิต': pc(Object.keys(quit).reduce((a2, k) => a2 + quit[k], 0), lives), 'จุดพีคเฉลี่ยต่อชีวิต': lives ? Math.round((T.pkL || 0) / lives * 10) / 10 : '-', 'ลางเฉลี่ยต่อชีวิต': lives ? Math.round((T.omL || 0) / lives * 10) / 10 : '-', 'ข้ามปีเฉลี่ยต่อชีวิต': lives ? Math.round((T.ffL || 0) / lives * 10) / 10 : '-', 'ชนะมินิเกมพีค': pc(T.mw || 0, (T.mw || 0) + (T.ml || 0)), 'จบแบบสูญเสีย': pc(T.ls || 0, (T.ls || 0) + (T.wn || 0)), 'ผู้เล่าเรื่อง': { ฟ้าลิขิต: T.s_c || 0, ลมสงบ: T.s_s || 0, เทพเสียสติ: T.s_x || 0 } }, เลิกเล่นตอน: quit, ตายตอน: died, เรื่องที่เกิด: tw, ดิบ: T });
+    }
     if (a === 'uagget') { // ดึงเงา 12 ตน + แจ้งเตือนของเงาเรา + สุสาน
       if (!okId(id)) return res.json({ g: [], n: [], gr: [] });
       const mine = await cmd('GET', 'uag:my:' + id);
