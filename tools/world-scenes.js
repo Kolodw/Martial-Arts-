@@ -154,5 +154,52 @@ S.y=(g,f)=>{g.sky(['#2a0408','#7a1010','#e04a1a','#ffb04a']);
  g.rect(70,34,6,22,'#e8e8f0');g.roof(71,30,4,'#c83a3a',4);g.rect(68,50,10,6,'#a0a0b0');if(f)g.rect(71,56,4,3,'#ffd040');
  g.rect(32,56,30,4,'#0a0a0a');g.rect(33,57,28,2,'#ff2a2a');g.px(40,57,'#ffffff');g.px(48,57,'#ffffff');g.px(56,57,'#ffffff');
  g.person(46,62,'#2a2a3a','#1a1a1a');g.person(50,62,'#6a2a4a','#3a2010')};
-window.WSCN={W,H,S,P,order:['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y']};
+
+// ---------- เส้นทางพิเศษ ----------
+// 🚪 ผู้ข้ามโลก: ซ้ายยุทธภพยามเย็น ขวาเมืองนีออนใต้ดวงดาว · กลางเป็นประตูหินโบราณที่วังวนมิติหมุนอยู่ · ผู้ข้ามโลกคลุมผ้าพร้อมกระบี่เดินเข้าแสง
+S.v=(g,f)=>{const {ctx}=g;
+ // ฝั่งซ้าย: ยุทธภพยามเย็น
+ ctx.save();ctx.beginPath();ctx.rect(0,0,48,H);ctx.clip();
+ g.sky(['#3a1e4a','#9a4a5a','#f08a5a','#ffd08a'],0,44);g.glow(20,20,12,'#ffd890',.35);g.circ(20,20,5,'#ffe8b0');
+ g.ridge(38,6,.09,'#6a3a5a',1);g.peak(6,26,1,'#4a2a48',null,'#3e2240');g.ridge(46,4,.14,'#3a2038',4);
+ g.rect(5,38,8,2,'#7a2a2a');g.rect(6,40,6,5,'#4a1a1e');g.roof(5,35,8,'#241418',3);g.px(8,42,'#ffd060');g.px(10,42,'#ffd060');g.rect(9,32,1,3,'#241418');
+ for(let i=0;i<4;i++)g.pine(3+i*11,52,7+(i%2)*3,'#2a1428','#1e0e1e');
+ for(let i=0;i<3;i++){const bx=30+i*5,by=8+(i%2)*3+(f?1:0);g.px(bx,by,'#2a1420');g.px(bx-1,by-1,'#2a1420');g.px(bx+1,by-1,'#2a1420')}
+ ctx.restore();
+ // ฝั่งขวา: เมืองนีออนใต้ดวงดาว
+ ctx.save();ctx.beginPath();ctx.rect(48,0,48,H);ctx.clip();
+ g.sky(['#040616','#0c1238','#1e1a5a','#4a2a7a'],0,48);g.twinkle(14,'#ffffff',30,f);g.stars(16,['#9fe8ff','#ffffff','#c8a8ff'],34);
+ g.circ(84,10,4,'#d8f0ff');g.circ(86,9,3,'#0c1238');
+ const nc=()=>{const r=g.R();return r<.4?'#5cf2ff':r<.7?'#ff5ad0':'#ffd86a'};
+ g.bld(52,7,26,'#141632','#5cf2ff',.35,52,'#2a2e5a');g.bld(60,9,34,'#10122a',nc,.4,52,'#262a52');g.bld(70,6,22,'#181a3a','#ff5ad0',.35,52);g.bld(77,10,30,'#121430',nc,.4,52,'#2a2e5a');g.bld(88,8,24,'#16183a','#5cf2ff',.35,52);
+ g.rect(62,16,2,3,'#ff5ad0');g.rect(80,20,5,1,f?'#5cf2ff':'#2a8aa8');g.px(66,17,'#ffffff');
+ ctx.restore();
+ // พื้นต่อกันตรงกลาง
+ g.rect(0,52,W,12,'#120c1c');g.dith(0,52,48,3,'#3a2038',.5);g.dith(48,52,48,3,'#1a2a5a',.5);
+ for(let x=0;x<W;x+=6)g.px(x+(x%12?2:0),56+(x%3),'#241a30');
+ // ประตูหินโบราณ
+ const cx=48,top=14,bw=13;
+ g.rect(cx-bw-4,top-2,bw*2+8,3,'#5a4a5a');g.rect(cx-bw-6,top-4,bw*2+12,2,'#7a6a78');g.px(cx-bw-7,top-5,'#7a6a78');g.px(cx+bw+6,top-5,'#7a6a78');
+ g.rect(cx-bw-3,top+1,4,52-top-1,'#4a3c4c');g.rect(cx+bw,top+1,4,52-top-1,'#3a2e3e');g.rect(cx-bw-3,top+1,1,52-top-1,'#6a5a6a');
+ for(let y=top+4;y<50;y+=6){g.px(cx-bw-2,y,'#ffd060');g.px(cx+bw+1,y+3,'#5cf2ff')}
+ g.rect(cx-2,top-4,4,3,'#ffd060');g.px(cx,top-5,'#fff4c0');
+ // วังวนมิติ
+ const ph=f?1:0;g.rect(cx-bw+1,top+1,bw*2-1,52-top-1,'#1a0a3a');
+ const ring=[['#2a1a6a',12],['#4a2aa0',10],['#7a4ad0',8],['#5cc8ff',6],['#bfefff',4],['#fff8e0',2]];
+ ring.forEach(([c,r],i)=>{g.ell(cx,33,Math.min(bw-1,r+2),Math.round((r+2)*1.6),c)});
+ for(let i=0;i<22;i++){const a=i/22*Math.PI*2+ph*.4,rr=6+(i%4)*2;g.px(Math.round(cx+Math.cos(a)*rr*.8),Math.round(33+Math.sin(a)*rr*1.4),i%3?'#9fe8ff':'#ffd86a')}
+ g.glow(cx,33,14,'#9fe0ff',.28);g.dith(cx-bw+1,44,bw*2-1,8,'#5cc8ff',.18);
+ // แสงสาดลงพื้น
+ g.alpha(.35,()=>{for(let j=0;j<10;j++){const w=bw+j*2;g.rect(cx-w,52+j,w*2,1,j<4?'#9fe0ff':'#5a8ac0')}});
+ // ผู้ข้ามโลกคลุมผ้า กระบี่หลัง ผ้าพันคอปลิว
+ const px=27,py=52;
+ g.alpha(.45,()=>g.rect(px-8,py+1,9,1,'#000000'));
+ g.rect(px-2,py-11,7,10,'#4a3a5e');g.rect(px-3,py-5,9,4,'#4a3a5e');g.rect(px-1,py-10,5,8,'#1a1424');g.rect(px-2,py-4,7,3,'#1a1424');g.rect(px-1,py-2,2,2,'#120e1a');g.rect(px+2,py-2,2,2,'#120e1a');
+ g.rect(px,py-13,4,3,'#1a1424');g.px(px+3,py-12,'#ffd8a8');g.rect(px-1,py-14,6,1,'#2a2034');
+ g.line(px-1,py-13,px+5,py-6,'#c8c8d8');g.px(px-2,py-14,'#ffd060');
+ const sf=f?1:0;g.rect(px-3,py-11+sf,3,1,'#c83a3a');g.rect(px-5,py-10,2,1,'#c83a3a');g.px(px-6,py-11+sf,'#e85a4a');
+ g.rect(px+4,py-10,1,8,'#5cc8ff');g.px(px+4,py-12,'#bfefff');g.px(px+4,py-13,'#bfefff');g.rect(px+3,py-2,1,2,'#5cc8ff');g.alpha(.3,()=>g.rect(px+5,py-12,10,1,'#9fe0ff'))
+ // เศษมิติลอยข้ามฝั่ง
+ const sh=[[20,40],[30,22],[58,26],[70,40],[44,8],[86,46],[12,46]];sh.forEach(([x,y],i)=>{const dx=f?(i%2?1:-1):0,c=i%2?'#ffd86a':'#9fe8ff';g.px(x+dx,y,c);if(i%3===0){g.px(x+dx+1,y,c+'99');g.px(x+dx,y-1,c+'99')}})};
+window.WSCN={W,H,S,P,order:['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v']};
 })();

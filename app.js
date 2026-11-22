@@ -43704,11 +43704,11 @@ if(typeof openLifeView==='function'){const _lv=openLifeView;openLifeView=async f
 })()}catch(e){console.error('block116',e)}
 
 // ============================================================
-// BLOCK 117: 🖼️ ภาพพิกเซลประจำโลก — 20 ฉาก (96×64 · 2 เฟรม) จาก /worlds.png
+// BLOCK 117: 🖼️ ภาพพิกเซลประจำโลก — 21 ฉาก (v = 🚪 ผู้ข้ามโลก) (96×64 · 2 เฟรม) จาก /worlds.png
 //   การ์ดเลือกโลกหน้าแรก · ปุ่มเลือกทำเนียบ · แบนเนอร์ทำเนียบ · สมุดโลก · หน้าต่างแนะนำโลกครั้งแรก · กล่องจบชีวิต
 // ============================================================
 try{(()=>{
-const ORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y'],N=ORD.length,URL0='/worlds.png?v=1';
+const ORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v'],N=ORD.length,URL0='/worlds.png?v=2';
 const yp=id=>{const i=ORD.indexOf(id);return i<0?null:(i/(N-1)*100).toFixed(4)+'%'};
 // ภาพย่อเต็มเฟรม (3:2)
 window.wimTh=function(id,cls){const y=yp(id);if(y==null)return'';return`<span class="wim ${cls||''}" style="--y:${y}" role="img"></span>`};
@@ -44980,7 +44980,7 @@ body.mwBOn #mask{z-index:9600!important}body.mwBOn #toast{z-index:9700!important
 // BLOCK 134: 💻 หน้าสุ่มกำเนิด/สุ่มสัตว์อสูร/สร้างตัวละคร/สร้างเอง บนคอม (≥1100px) ใช้โครงเดียวกัน 3 คอลัมน์ — ซ้าย ตัวละคร · กลาง การ์ด/ตัวเลือก · ขวา สรุป+ปุ่ม · พื้นหลังเป็นฉากของโลกนั้นแบบเบลอ (มือถือไม่เปลี่ยน)
 try{(()=>{
 const DK=()=>innerWidth>=1100;
-const ORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y'];
+const ORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v'];
 const yp=id=>{const i=ORD.indexOf(id);return i<0?null:(i/(ORD.length-1)*100).toFixed(4)+'%'};
 const onS=id=>{const e=document.getElementById(id);return !!(e&&e.classList.contains('on'))};
 function which(){try{const m=document.getElementById('modal');
@@ -45021,7 +45021,7 @@ addEventListener('resize',()=>{try{if(onS('create'))crDraw()}catch(e){}});
 const st=document.createElement('style');st.textContent=`
 #bdBg{display:none}
 @media (min-width:1100px){
-body.bdOn #bdBg{display:block;position:fixed;inset:-60px;z-index:-1;background:url(/worlds.png?v=1) 0 var(--y,0%)/200% 2000% no-repeat;image-rendering:pixelated;filter:blur(7px) brightness(.32) saturate(1.25);pointer-events:none}
+body.bdOn #bdBg{display:block;position:fixed;inset:-60px;z-index:-1;background:url(/worlds.png?v=2) 0 var(--y,0%)/200% 2100% no-repeat;image-rendering:pixelated;filter:blur(7px) brightness(.32) saturate(1.25);pointer-events:none}
 body.bdOn #bdBg:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,transparent 30%,#0b0910cc 85%)}
 /* ยุทธภพ/เซียน/จิตวิญญาณยุทธ์ */
 #birth.bdk{max-width:1320px;margin:0 auto}
