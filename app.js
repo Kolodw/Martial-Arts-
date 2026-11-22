@@ -45967,3 +45967,14 @@ try{(()=>{const st=document.createElement('style');st.textContent=`
 #modal:is([data-k="mg"],[data-k="mg2"],[data-k="mgd"],[data-k="qigame"],[data-k="skymg"]) :is(button,[onclick]){touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 @media (pointer:coarse){#modal:is([data-k="mg"],[data-k="mg2"],[data-k="mgd"],[data-k="qigame"],[data-k="skymg"]) :is(.pbtn,.gbtn){min-height:44px}}
 `;document.head.appendChild(st)})()}catch(e){console.error('block156',e)}
+
+// ============================================================
+// BLOCK 157: 🧬 ทายาทรับระบบต่อ → ล้างของ "ชาติละครั้ง" ในร้านระบบ (ผู้เล่นแจ้ง: เล่นทายาทแล้วร้านค้าใช้ครั้งเดียวไม่รีเซ็ต)
+//   เดิม inherit()/bHeir() คัดลอก S.sys ทั้งก้อน รวม ob (ของหายากชาติละครั้งที่ซื้อแล้ว) และ pb (ราคายาเพิ่ม % ที่ขึ้นตามจำนวนครั้ง)
+//   ทายาทเป็นชีวิตใหม่ → ล้างสองค่านี้ · ส่วนอัปเกรดของตัวระบบ (upgrades เช่น เตาหลอมเทพ) ยังติดระบบไปตามเดิม
+// ============================================================
+try{(()=>{
+const fresh=(P,why)=>{try{if(!S||S===P||!S.sys)return;const s=S.sys;const had=(s.ob&&s.ob.length)||(s.pb&&Object.keys(s.pb).length);s.ob=[];s.pb={};if(had)setTimeout(()=>{try{log(`<span class="px">[ระบบ]</span> 🔄 ร้านค้าระบบรีเซ็ตสำหรับทายาท — ของหายาก (ชาติละครั้ง) ซื้อได้อีกครั้ง · ราคายาเพิ่ม % กลับเป็นราคาเริ่มต้น`,'sys')}catch(e){}},1200)}catch(e){console.error('heirShop',why,e)}};
+if(typeof inherit==='function'){const _i=inherit;inherit=function(){const P=S;const r=_i.apply(this,arguments);fresh(P,'inherit');return r}}
+if(typeof bHeir==='function'){const _b=bHeir;bHeir=function(){const P=S;const r=_b.apply(this,arguments);fresh(P,'bHeir');return r}}
+})()}catch(e){console.error('block157',e)}
