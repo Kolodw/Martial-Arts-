@@ -45246,3 +45246,12 @@ window.fateBoxH=function(parts){const mod=!!(parts&&parts._mod),dk=mod?(parts._r
  <div class="fl">${parts.filter(x=>x.p<=.12||x.bad).map(x=>`<div class="${x.bad?'bd':''}"><span>${x.ic||'•'} ${x.n}</span><b>${x.bad?'—':'1 ใน '+r(1/x.p)}</b></div>`).join('')}</div>
  <p>นับเฉพาะสิ่งที่หายากจริง (โอกาสไม่เกิน ~10%) · ของร้ายไม่ทำให้หายากขึ้น · ยิ่งสุ่มหลายครั้ง ความหายากจริงยิ่งลดลง${f>=12&&!['S','S+','SS'].includes(G)?' · ขั้นเหนือกว่านี้ต้องเกรด S ขึ้นไป':''}</p></div></details></div>`};
 })()}catch(e){console.error('block143',e)}
+
+// BLOCK 144: 📱 มือถือ: ตั้งชื่อตอนสร้างตัวละครแล้วแป้นพิมพ์ไม่ขึ้น — เปิดแป้นพิมพ์ = จอ resize → หน้าสร้างตัวละครวาดใหม่ทั้งหน้า ช่องชื่อถูกแทนที่ แป้นพิมพ์ปิดทันที
+// แก้: ช่วงที่กำลังพิมพ์ในหน้าสร้างตัวละคร ไม่วาดใหม่จาก resize (วาดแค่แผงสรุปถ้ามี)
+try{(()=>{
+let rz=0;addEventListener('resize',()=>{rz=Date.now()},true);
+const typing=()=>{const a=document.activeElement;return !!(a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA')&&a.closest&&a.closest('#create'))};
+let lw=innerWidth,lh=innerHeight;
+{const _cd=crDraw;crDraw=function(){const kb=innerWidth===lw&&innerHeight!==lh;if(typing()&&(kb||Date.now()-rz<400)){lh=innerHeight;return}lw=innerWidth;lh=innerHeight;return _cd.apply(this,arguments)}}
+})()}catch(e){console.error('block144',e)}
