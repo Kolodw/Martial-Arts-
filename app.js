@@ -45268,3 +45268,14 @@ let lastSig='',since=0;
 setInterval(()=>{try{const o=document.getElementById('coach');if(!o){lastSig='';return}const bub=o.querySelector('.cbub');const empty=!bub||!bub.textContent.trim();o.classList.toggle('cwait',empty);
  const sig=(window._CO&&window._CO.id)+':'+(window._CO&&window._CO.i)+':'+(empty?0:1);if(sig!==lastSig){lastSig=sig;since=Date.now()}else if(empty&&Date.now()-since>6000){try{coEnd(true)}catch(e){o.remove()}}}catch(e){}},250);
 })()}catch(e){console.error('block145',e)}
+
+// BLOCK 146: 🎮 มินิเกมสุ่มประจำปี (ที่เด้งขึ้นเองโดยไม่ได้เลือก) — บอกให้ชัดว่าเป็นมินิเกมสุ่มประจำปี ข้ามได้ไม่เสียอะไร + สวิตช์ปิดใน ☰ เมนู
+try{(()=>{
+const off=()=>{try{return !!LS.get('murim_mgyOff',0)}catch(e){return false}};
+const note=()=>setTimeout(()=>{try{const m=document.getElementById('modal');if(m&&m.dataset.k==='mg2'&&!m.querySelector('.mgyN')){m.insertAdjacentHTML('beforeend','<div class="mgyN tag2" style="text-align:center;margin-top:8px">🎲 มินิเกมสุ่มประจำปี (ขึ้นเองตามดวง) · ไม่อยากเล่นกด “ข้ามเกมนี้” ได้เลย ไม่เสียอะไร · ปิดถาวรได้ที่ ☰ เมนู</div>')}}catch(e){}},60);
+let inPick=0;
+{const _p=window.mg2Pick;if(typeof _p==='function')window.mg2Pick=function(){if(off())return true;inPick=1;try{const r=_p.apply(this,arguments);if(r)note();return r}finally{inPick=0}}}
+if(typeof mgOpen==='function'){const _o=mgOpen;mgOpen=function(){if(off()){try{IX().mg=S.age+R(4,7)}catch(e){}return}return _o.apply(this,arguments)}}
+window.mgyToggle=function(){const v=!off();try{LS.set('murim_mgyOff',v?1:0)}catch(e){}toast(v?'🎮 ปิดมินิเกมสุ่มประจำปีแล้ว (มินิเกมจากตัวเลือกที่กดเองยังมีตามปกติ)':'🎮 เปิดมินิเกมสุ่มประจำปีแล้ว');try{closeM();openMenu()}catch(e){}};
+if(typeof openMenu==='function'){const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const g=document.querySelector('#modal .mgrid');if(g&&!g.querySelector('.mgyT'))g.insertAdjacentHTML('beforeend',`<button class="opt mgyT" onclick="mgyToggle()">🎮 มินิเกมสุ่มประจำปี: ${off()?'ปิดอยู่':'เปิดอยู่'}<small>${off()?'แตะเพื่อเปิด':'มินิเกมที่เด้งขึ้นเองบางปี · แตะเพื่อปิด'}</small></button>`)}catch(e){}return r}}
+})()}catch(e){console.error('block146',e)}
