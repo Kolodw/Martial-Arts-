@@ -36188,15 +36188,15 @@ const mLv=id=>Math.min(4,Math.floor((MS()[id]||0)/5));
 function mAdd(id,g){const m=MS();m[id]=(m[id]||0)+1;try{LS.set('murim_mg2',m)}catch(e){}if(m[id]===20&&g.mt)log(`🏅 เล่น「${g.n}」ครบ 20 ครั้ง ได้ฉายาย่อย <b>「${g.mt}」</b> (โซนสำเร็จกว้างขึ้นถาวร)`,'epic',true);else if(m[id]%5===0&&m[id]<=20)addFeed('ev',`🏅 ความชำนาญ「${g.n}」เพิ่มเป็น ${'★'.repeat(Math.min(4,m[id]/5))} ง่ายขึ้นและรางวัลเพิ่ม`,'sum')}
 // ---------- เครื่องยนต์ ----------
 let CUR=null;
-function play(id,o,cb){const g=G[id];if(!g)return false;o=o||{};const lv=o.daily?0:mLv(id),ez=(1+lv*.12)*(o.ez||1),T=Math.max(3,Math.round(o.t||g.t||10));
+function play(id,o,cb){const g=G[id];if(!g)return false;o=o||{};const lv=o.daily?0:mLv(id),ez=(1+lv*.12)*(o.ez||1)*1.15,T=Math.max(3,Math.round((o.t||g.t||10)*1.25));
  if(CUR)try{CUR.fin(0,1)}catch(e){}
  modal(`<h3>${g.ic} ${o.title||g.n}${lv?` <small class="tag2">${'★'.repeat(lv)}</small>`:''}</h3>${o.tag?`<div class="mgMod">${o.tag}</div>`:''}<p class="tag2">${o.sub||g.how} · <b id="m2T">${T}</b> วิ</p><div id="m2B" style="user-select:none;-webkit-user-select:none;touch-action:manipulation"></div>`,'mg2');
- const st={done:0,t0:performance.now()};const B=$('m2B');let inst=null,n=T,iv=null;
+ const st={done:0,t0:performance.now()};let B=$('m2B');let inst=null,n=T,iv=null;
  const fin=(sc,skip)=>{if(st.done)return;st.done=1;clearInterval(iv);try{inst&&inst.stop&&inst.stop()}catch(e){}CUR=null;if($('modal').dataset.k==='mg2')closeM();sc=Math.max(0,Math.min(1,+sc||0));if(!skip&&!o.daily)mAdd(id,g);if(!skip)try{window._pxEndFx&&window._pxEndFx(sc)}catch(e){}try{cb&&cb(sc,skip,inst)}catch(e){console.error('mg2cb',e)}};
  CUR={fin};const api={live:()=>!st.done&&$('modal').dataset.k==='mg2',end:sc=>setTimeout(()=>fin(sc!=null?sc:inst.sc(),0),280),ez,lv,o};
  // ด่านเริ่ม: เกมยังไม่เดิน เวลายังไม่นับ จนกว่าผู้เล่นจะแตะ "เริ่ม" (เดิมเกมเริ่มเองทันทีที่เปิด จนดูเหมือนระบบเล่นเอง)
- const go=()=>{if(st.done||inst)return;clearInterval(iv);document.removeEventListener('keydown',kd,true);B.innerHTML='';st.t0=performance.now();
-  try{inst=g.init(B,api)}catch(e){console.error('mg2 init',id,e);fin(.5,1);return}
+ const go2=()=>{B=$('m2B')||B;go()};const go=()=>{if(st.done||inst)return;clearInterval(iv);document.removeEventListener('keydown',kd,true);B.innerHTML='';st.t0=performance.now();
+  try{inst=g.init(B,api)}catch(e){console.error('mg2 init',id,e);try{toast('⚠️ มินิเกมนี้เปิดไม่สำเร็จ ให้ผลผ่านแทน (ไม่ใช่ความผิดคุณ)')}catch(x){}fin(.6,0);return}
   try{o.after&&o.after(B,api)}catch(e){}
   const sk=$('m2S');if(sk)sk.onclick=()=>fin(.45,1);
   iv=setInterval(()=>{if(st.done)return;if($('modal').dataset.k!=='mg2'){fin(inst.sc(),0);return}n--;const e=$('m2T');if(e)e.textContent=Math.max(0,n);if(n<=0)fin(inst.sc(),0)},1000)};
@@ -36204,7 +36204,7 @@ function play(id,o,cb){const g=G[id];if(!g)return false;o=o||{};const lv=o.daily
  if(!B){fin(.45,1);return true}
  if(o.now)go();else{B.innerHTML=`<div class="m2Rdy"><div class="m2RdyI">${g.ic}</div><div class="m2RdyH">${o.sub||g.how}</div><button class="pbtn m2Go" type="button">▶ แตะเพื่อเริ่ม</button><div class="tag2" style="margin-top:6px">มี ${T} วินาที · เวลาเริ่มนับเมื่อกดเริ่ม</div><button class="gbtn m2Sk" type="button" style="margin-top:8px;font-size:12px;padding:5px 12px">ข้ามเกมนี้</button></div>`;
   B.querySelector('.m2Go').onclick=e=>{e.stopPropagation();go()};B.querySelector('.m2Sk').onclick=e=>{e.stopPropagation();fin(.45,1)};document.addEventListener('keydown',kd,true);
-  iv=setInterval(()=>{if(st.done)return;if(!inst&&$('modal').dataset.k!=='mg2'){fin(.45,1)}},500)}
+  const html0=$('modal').innerHTML;let gone=0,rep=0;iv=setInterval(()=>{if(st.done||inst)return;if($('modal').dataset.k!=='mg2'){gone++;if(modalOpen)rep=1;else if(!rep){return fin(.45,1)}if(rep&&!modalOpen&&!(typeof choice!=='undefined'&&choice._cur&&!choice._min)){rep=0;modal(html0,'mg2');const B2=$('m2B');if(!B2)return fin(.45,1);B2.querySelector('.m2Go').onclick=e=>{e.stopPropagation();go2()};B2.querySelector('.m2Sk').onclick=e=>{e.stopPropagation();fin(.45,1)}}else if(gone>600)fin(.45,1)}},500)}
  return true}
 window.mg2Play=play;window._mgBusy=()=>!!CUR&&$('modal').dataset.k==='mg2';window._mg2Y=(id,o)=>yearly(id,o);window._mg2E={simon,lanes,hold,beat,track};
 // คอมโบ + รางวัลจากมินิเกมรายปี
@@ -45958,3 +45958,12 @@ window.addEventListener('click',tap,true);window.addEventListener('keydown',tap,
 function mark(){try{['mobAvaW','gName','dkAva'].forEach(id=>{const el=$$(id);if(!el||el.dataset.me)return;el.dataset.me=1;el.classList.add('meTap');el.setAttribute('role','button');el.setAttribute('tabindex','0');el.setAttribute('aria-label','ดูตัวละครของฉัน');el.title='ดูตัวละครของฉัน'});const dn=document.querySelector('.dk-name');if(dn&&!dn.dataset.me){dn.dataset.me=1;dn.classList.add('meTap');dn.setAttribute('role','button');dn.setAttribute('tabindex','0');dn.setAttribute('aria-label','ดูตัวละครของฉัน')}}catch(e){}}
 setInterval(mark,600);setTimeout(mark,300);
 })()}catch(e){console.error('block155',e)}
+
+// ============================================================
+// BLOCK 156: 📱 มินิเกมทุกแบบกดง่ายบนมือถือ — ไม่ซูมเมื่อแตะรัว · ไม่เลือกข้อความ/ไม่เด้งเมนูกดค้าง · ปุ่มสูงอย่างน้อย 44px
+// ============================================================
+try{(()=>{const st=document.createElement('style');st.textContent=`
+#modal:is([data-k="mg"],[data-k="mg2"],[data-k="mgd"],[data-k="qigame"],[data-k="skymg"],[data-k="mgres"]){touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#modal:is([data-k="mg"],[data-k="mg2"],[data-k="mgd"],[data-k="qigame"],[data-k="skymg"]) :is(button,[onclick]){touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+@media (pointer:coarse){#modal:is([data-k="mg"],[data-k="mg2"],[data-k="mgd"],[data-k="qigame"],[data-k="skymg"]) :is(.pbtn,.gbtn){min-height:44px}}
+`;document.head.appendChild(st)})()}catch(e){console.error('block156',e)}

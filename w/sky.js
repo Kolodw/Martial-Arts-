@@ -2649,6 +2649,8 @@ defU('u_yan',{c:K=>aiOn(K),cd:50000,w:3,go(K){C('💠 ญาณถามคำ�
 
 {const _cmMG=closeM;closeM=function(){const k=$('modal').dataset.k;const r=_cmMG.apply(this,arguments);try{if(k==='skymg'&&MG)setTimeout(()=>{if(MG)mgDone(.35)},0)}catch(e){}return r}}
 window._skyMG=(k,cb,d)=>{MGD=d|0;skyMG(k,'ทดสอบ','',cb||(()=>{}))};
+// ง่ายขึ้นทุกมินิเกมของทะลุฟ้าดารา: ลดระดับความยากลง 40% (ระดับ 5 → 3) · คะแนนท้ายเกมได้แต้มต่อ 10%
+{const _ezS=skyMG;skyMG=function(k,ti,sub,cb){MGD=Math.max(0,Math.round((MGD|0)*.6));const cb2=typeof cb==='function'?(sc=>cb(Math.min(1,(+sc||0)*1.1))):cb;return _ezS.call(this,k,ti,sub,cb2)}}
 
 // =================== เกลาลึก: พลังมีผลในศึก · คนจากอดีตกลับมา · ร้านยุคหลัง · ฉากอวกาศ · ความสำเร็จ · เหตุการณ์เพิ่ม ===================
 // ---- พลังจริงมีผลในศึกยุคหลัง ----

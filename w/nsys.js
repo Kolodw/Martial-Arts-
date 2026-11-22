@@ -22,20 +22,21 @@ const bookG=()=>LS.get('murim_nsbook',{})||{};
 const bookS=(id,f)=>{try{const b=bookG();b[id]=b[id]||{t:0,e:{}};f(b[id]);LS.set('murim_nsbook',b)}catch(e){}};
 
 // ---------- มินิเกม: ใช้เครื่องยนต์ที่มีอยู่ (การ์ด เข็ม เขาวงกต จับคู่ เสี่ยงดวง ตั้งรับ ไขรหัส ต่อตึก จำลำดับ หลบเลน กดค้าง จังหวะ เลื่อนตาม) ----------
+// ปรับง่ายขึ้น (มือถือ): โซนกว้างขึ้น ช้าลง ลองได้มากขึ้น ลำดับสั้นลง
 const DIFF={
- match:(p,t)=>({icons:p.icons,n:[4,5,6,8][t]}),
- needle:(p,t)=>({ic:p.ic,label:p.label,n:[3,4,5,6][t],z0:[.34,.28,.24,.2][t],z1:[.16,.12,.1,.08][t],sp:[1,1.15,1.3,1.5][t]}),
- maze:(p,t)=>({me:p.me,goal:p.goal,haz:p.haz,wall:p.wall||'🧱',sz:[5,6,7,8][t]}),
- pairs:(p,t)=>({head:p.head,list:p.list,n:Math.min(p.list.length,[3,4,5,6][t])}),
- luck:(p,t)=>({good:p.good,bust:p.bust,head:p.head,target:[12,18,26,34][t]}),
- defend:(p,t)=>({foe:p.foe,ally:p.ally,shot:p.shot,N:[8,11,14,18][t],spd:[.8,1,1.2,1.45][t]}),
- lock:(p,t)=>({syms:p.syms,len:[3,3,4,4][t],tries:[8,6,7,6][t],hint:p.hint}),
- stack:(p,t)=>({ic:p.ic,label:p.label,n:[5,6,8,10][t]}),
- simon:(p,t)=>({syms:p.syms,cols:Math.min(4,p.syms.length),len:[4,5,6,7][t],show:[540,470,410,350][t],title:p.title||'จำลำดับให้ถูก'}),
- lanes:(p,t)=>({me:p.me,ob:p.ob,bg:p.bg||'linear-gradient(#22304a,#0e1626)',speed:[.9,1.1,1.3,1.55][t]}),
- hold:(p,t)=>({ic:p.ic,label:p.label,n:[2,3,3,4][t],lo:[.6,.64,.68,.72][t],hi:[.88,.85,.83,.8][t],ms:1400}),
- beat:(p,t)=>({ic:p.ic,label:p.label,n:[6,8,10,12][t],iv0:[820,720,640,570][t],iv1:[720,600,520,440][t]}),
- track:(p,t)=>({ic:p.ic,tg:p.tg,label:p.label||'เลื่อนแถบให้อยู่ในโซน',ms:[950,800,680,560][t]})};
+ match:(p,t)=>({icons:p.icons,n:[4,4,5,6][t]}),
+ needle:(p,t)=>({ic:p.ic,label:p.label,n:[3,3,4,5][t],z0:[.42,.36,.32,.28][t],z1:[.22,.18,.15,.12][t],sp:[.85,.95,1.05,1.2][t]}),
+ maze:(p,t)=>({me:p.me,goal:p.goal,haz:p.haz,wall:p.wall||'🧱',sz:[5,5,6,7][t]}),
+ pairs:(p,t)=>({head:p.head,list:p.list,n:Math.min(p.list.length,[3,4,4,5][t])}),
+ luck:(p,t)=>({good:p.good,bust:p.bust,head:p.head,target:[10,14,20,26][t]}),
+ defend:(p,t)=>({foe:p.foe,ally:p.ally,shot:p.shot,N:[7,9,11,14][t],spd:[.7,.85,1,1.2][t]}),
+ lock:(p,t)=>({syms:p.syms,len:3,tries:[10,9,9,8][t],hint:p.hint}),
+ stack:(p,t)=>({ic:p.ic,label:p.label,n:[4,5,6,8][t]}),
+ simon:(p,t)=>({syms:p.syms,cols:Math.min(4,p.syms.length),len:[3,4,5,6][t],show:[650,580,520,460][t],title:p.title||'จำลำดับให้ถูก'}),
+ lanes:(p,t)=>({me:p.me,ob:p.ob,bg:p.bg||'linear-gradient(#22304a,#0e1626)',speed:[.75,.9,1.05,1.25][t]}),
+ hold:(p,t)=>({ic:p.ic,label:p.label,n:[2,2,3,3][t],lo:[.55,.58,.62,.66][t],hi:[.9,.88,.86,.84][t],ms:1400}),
+ beat:(p,t)=>({ic:p.ic,label:p.label,n:[5,6,8,10][t],iv0:[900,800,720,640][t],iv1:[820,700,620,540][t]}),
+ track:(p,t)=>({ic:p.ic,tg:p.tg,label:p.label||'เลื่อนแถบให้อยู่ในโซน',ms:[1150,1000,860,720][t]})};
 const ENG=k=>E9[k]||(E2&&E2[k]);
 const TSEC=[24,22,20,18];
 function mg(sys,i,t,title,cb){let sp=sys.mg[i%sys.mg.length];if(!ENG(sp[0])||!DIFF[sp[0]])sp=sys.mg.find(x=>ENG(x[0])&&DIFF[x[0]])||null;
@@ -106,7 +107,7 @@ function punish(M,N,sys){const t=lvT(N.lv),v=Math.round(unit(M,t,.8*pen(N)));S.m
  say(`📱 <span class="px">[${esc(sys.app)}] ⚠️ บทลงโทษ: พลาดภารกิจติดกัน 3 ครั้ง</span> ระบบหักเงิน ${fmt(v)} และค่าประสบการณ์ 15 · หน้าจอมือถือกะพริบแดงทั้งคืน`,'bad')}
 function doOpt(M,sys,o,t,title){const N=NSo(M);if(!N)return;const k=o[1]||'s';
  if(k[0]==='f'){N.path=k.slice(2);const P=sys.P.find(p=>p[0]===N.path);say(`🧭 <b>เส้นทาง: ${esc(P?P[1]:N.path)}</b> — ${esc(o[2]||'')}`,'epic');gainXP(M,N,12);kAdd(`${sys.n}: เลือกเส้นทาง${P?P[1]:''}`);return}
- if(k[0]==='g'){const i=+k[1]||0;later(()=>mg(sys,i,t,title,(sc,skip)=>res(M,sys,o,t,sc>=.55,'g',sc)));return}
+ if(k[0]==='g'){const i=+k[1]||0;later(()=>mg(sys,i,t,title,(sc,skip)=>res(M,sys,o,t,sc>=.5,'g',sc)));return}
  const bonus=((S.int||0)>200?.04:0)-(sys.meter&&sys.meter.full==='awake'&&(N.m||0)>=70?.15:0),p=({r:.48,s:.9,d:.84,k:.93}[k]||.8)+bonus;res(M,sys,o,t,Math.random()<p,k)}
 const opt=(M,sys,o,t,title)=>mwC(o[0],()=>doOpt(M,sys,o,t,title),{s:HINT[(o[1]||'s')[0]]||''});
 
@@ -168,7 +169,7 @@ function shared(M,force){const N=NSo(M),sys=byId(N.id),t=lvT(N.lv);if(sys.OG)OG[
    C('เล่าความจริงทั้งหมด',()=>{if(Math.random()<.5){S.fame=(S.fame||0)+5;try{M.fame=(M.fame||0)+2000}catch(e){}joy(5);say('📣 เขาเชื่อ และกลายเป็นคนเดียวในโลกที่รู้ความลับของคุณ ทุกปีเขาถามว่า ‘วันนี้ระบบสั่งอะไร’','good')}else{try{M.sec=cl((M.sec||0)+20,0,100)}catch(e){}say('📸 เขาถ่ายรูปหน้าจอลงโซเชียล คนแชร์ไปหลักพัน ระบบส่งคำเตือนสีแดง','bad')}},'เสี่ยง'),
    C('ปิดจอแล้วเปลี่ยนเรื่อง',()=>say('📴 คุณกดล็อกจอ แล้วถามเรื่องงานด่วนที่ไม่มีจริง',''))]);
  if(k==='lost'){N.sh.lost=1;return choice(`📱 มือถือโดนกระชาก!`,H+`มอเตอร์ไซค์ซิ่งผ่านแล้วกระชากมือถือคุณไป ${app} อยู่ในเครื่องนั้น`,[
-   C('วิ่งไล่ (มินิเกม)',()=>later(()=>{const f=(sc)=>{if(sc>=.55){gainXP(M,N,10);say('🏃 คุณกระโดดข้ามแผงลอยสามแผง ทันตอนมันติดไฟแดง มือถือกลับมาครบ ระบบเด้ง ‘ภารกิจลับ: ทวงคืน สำเร็จ’','epic')}else{N.lv=Math.max(1,N.lv-1);N.xp=0;say('📉 มันหายไปในซอย มือถือเครื่องใหม่โหลดแอปกลับมาได้ แต่ข้อมูลหายไปหนึ่งเลเวล','bad')}};
+   C('วิ่งไล่ (มินิเกม)',()=>later(()=>{const f=(sc)=>{if(sc>=.5){gainXP(M,N,10);say('🏃 คุณกระโดดข้ามแผงลอยสามแผง ทันตอนมันติดไฟแดง มือถือกลับมาครบ ระบบเด้ง ‘ภารกิจลับ: ทวงคืน สำเร็จ’','epic')}else{N.lv=Math.max(1,N.lv-1);N.xp=0;say('📉 มันหายไปในซอย มือถือเครื่องใหม่โหลดแอปกลับมาได้ แต่ข้อมูลหายไปหนึ่งเลเวล','bad')}};
     if(typeof window.mg2Play==='function'&&E2&&E2.lanes){G.ns_chase={n:'ไล่จับโจรกระชาก',ic:'🏃',mt:'นักวิ่งตามโจร',how:'หลบสิ่งกีดขวาง',t:18,rw:()=>'',init:(Bx,a)=>E2.lanes(Bx,a,DIFF.lanes({me:'🏃',ob:'🛺'},t))};window.mg2Play('ns_chase',{title:'🏃 ไล่ตามโจร'},(sc,sk)=>f(sk?.45:sc))}else f(Math.random())}),'🎮 หลบเลน'),
    C('ซื้อเครื่องใหม่ แจ้งความ',()=>{S.money=Math.max(0,S.money-unit(M,t,.3));N.xp=Math.max(0,N.xp-15);say('📲 เครื่องใหม่โหลดแอปกลับมาเองโดยไม่ต้องติดตั้ง ข้อมูลหายไปนิดหน่อย','')}),
    C('ปล่อยไป แอปอาจไม่ตามมา',()=>{N.lost=2;say('🕊️ สองปีถัดมามือถือคุณเงียบสนิท ไม่มีภารกิจ ไม่มีเสียงเตือน คุณเพิ่งรู้ว่าเคยหายใจไม่ทั่วท้องมานานแค่ไหน','good',{joy:6})},'ระบบหยุด 2 ปี')])}
