@@ -46764,6 +46764,18 @@ window.dgAutoWalk=function(){if(!DG||DG.over)return;autoRun=1;const go=()=>{if(!
 // ปิดดันเจี้ยนทางไหนก็ตาม = ถอยออกพร้อมของ
 let ending=0;{const _e=dgEnd;dgEnd=function(){if(ending)return;ending=1;autoRun=0;try{return _e.apply(this,arguments)}finally{ending=0}};for(const x in _e)try{dgEnd[x]=_e[x]}catch(e){}}
 {const _c=closeM;closeM=function(){try{if(!ending&&DG&&modalOpen&&$('modal').dataset.k==='dungeon'){dgEnd();return}}catch(e){}return _c.apply(this,arguments)};for(const x in _c)try{closeM[x]=_c[x]}catch(e){}}
+// 🩹 ดันเจี้ยนค้าง (กดเดินต่อแล้วห้องไม่ขยับ) — เกิดตอนมีเหตุการณ์ให้เลือกแทรกเข้ามาระหว่างอยู่ในดันเจี้ยน:
+//  หน้าต่างดันเจี้ยนเก่าถูกคืนกลับมาหลังตอบเหตุการณ์ แต่สถานะดันเจี้ยนจบ/เปลี่ยนไปแล้ว ปุ่มเลยกดไม่ติด หรือการวาดใหม่ถูกคิวทิ้งไว้
+//  → ปุ่มทุกปุ่มในหน้าดันเจี้ยนเช็คสถานะจริงก่อน · กดแล้วถ้าจอไม่อัปเดตจะวาดใหม่ทันที · ตอบเหตุการณ์เสร็จแล้วพากลับเข้าดันเจี้ยนต่อ
+const dgShown=()=>{try{return modalOpen&&$('modal').dataset.k==='dungeon'}catch(e){return false}};
+const dgRoomShown=()=>{try{return document.querySelectorAll('#modal .dgbar i.on').length}catch(e){return -1}};
+{const _st=dgStep;dgStep=function(){if(!DG){if(dgShown()){try{ending=1;closeM()}finally{ending=0}toast('ดันเจี้ยนนี้จบไปแล้ว')}return}
+ if(choice._cur&&!choice._min){try{choice._min=true;clearInterval(choice._cd);pendBar()}catch(e){}}
+ const r=_st.apply(this,arguments);
+ try{if(DG&&(!dgShown()||dgRoomShown()!==Math.min(6,DG.room)))setTimeout(()=>{try{if(DG&&(!dgShown()||dgRoomShown()!==Math.min(6,DG.room))){window._dgForce=1;try{dgDraw()}finally{window._dgForce=0}}}catch(e){}},60)}catch(e){}return r}}
+{const _en=dgEnd;dgEnd=function(){if(!DG){if(dgShown()){try{ending=1;closeM()}finally{ending=0}}return}return _en.apply(this,arguments)};for(const x in _en)try{dgEnd[x]=_en[x]}catch(e){}}
+// ตอบเหตุการณ์/ปิดหน้าต่างอื่นแล้ว ถ้ายังอยู่กลางดันเจี้ยน → กลับเข้าหน้าดันเจี้ยน (เดิมดันเจี้ยนหายไปเฉยๆ ของค้างไม่เข้ากระเป๋า)
+setInterval(()=>{try{if(!DG||!S||!S.alive||modalOpen||(choice._cur&&!choice._min)||(typeof DU!=='undefined'&&DU))return;dgDraw()}catch(e){}},700);
 })()}catch(e){console.error('block171',e)}
 
 
