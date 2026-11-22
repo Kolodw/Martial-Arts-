@@ -43395,9 +43395,9 @@ const KEYS="⌛|⌨|⏪|⏭|⏱|⏳|⏸|☄|☕|☠|☯|⚒|⚔|⚖|⚗|⚠|⚡|
 const MGK=new Set(['mg2','skymg','mg','mgd']);
 const css=document.createElement('style');css.textContent=`
 span.pxi,.pxi{display:inline-block!important;flex:none!important;width:var(--pxs,1.18em)!important;height:var(--pxs,1.18em)!important;min-width:0!important;max-width:none!important;min-height:0!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;outline:0!important;opacity:1;filter:none;transform:none;position:static!important;float:none!important;vertical-align:-.2em!important;color:transparent!important;-webkit-text-fill-color:transparent!important;background-color:transparent!important;background-image:url(px-icons.png?v=${VER})!important;background-repeat:no-repeat!important;background-size:${COLS*100}% ${ROWS*100}%!important;background-clip:border-box!important;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden!important;white-space:nowrap!important;line-height:1!important;letter-spacing:0!important;text-indent:0!important;text-shadow:none!important;font-size:inherit;pointer-events:none!important;animation:none!important;transition:none!important}
-span.pxi.pxa,.pxi.pxa{background-image:url(px-anim.png?v=${VER})!important;background-size:${ANF*100}% ${ANR*100}%!important;animation:pxaF var(--d,1.2s) step-end infinite!important}
-@keyframes pxaF{${Array.from({length:ANF},(_,k)=>`${(k*100/ANF).toFixed(3)}%{background-position-x:${(k*100/(ANF-1)).toFixed(4)}%}`).join('')}100%{background-position-x:100%}}
-body.mRM span.pxi.pxa{animation:none!important}@media (prefers-reduced-motion:reduce){span.pxi.pxa{animation:none!important}}
+span.pxi.pxa,.pxi.pxa{position:relative!important;background-image:none!important;contain:paint}span.pxi.pxa>px-f{position:absolute;left:0;top:0;width:${ANF*100}%;height:100%;background-image:url(px-anim.png?v=${VER});background-repeat:no-repeat;background-size:100% ${ANR*100}%;image-rendering:pixelated;image-rendering:crisp-edges;will-change:transform;pointer-events:none;display:block}
+/* ไอคอนเคลื่อนไหว: ใช้นาฬิกากลางตัวเดียว (ดูด้านล่าง) ไม่ใช้ CSS animation ต่อชิ้น → ไม่ต้องคำนวณสไตล์ทั้งหน้าทุกเฟรม */
+
 .mgx,.mgx button,.mgx input{font-family:'Itim',sans-serif!important}
 .mgx .pxn,.mgx #m2T{font-family:'Silkscreen','Itim',monospace!important;letter-spacing:0}
 .mgx h3{font-family:'Itim',sans-serif!important;display:flex;align-items:center;gap:6px;justify-content:center}
@@ -43422,8 +43422,17 @@ body.mRM span.pxi.pxa{animation:none!important}@media (prefers-reduced-motion:re
 const RE=/(?:[\u{1F1E6}-\u{1F1FF}]{2}|[\u{1F000}-\u{1FAFF}☀-➿⬀-⯿←-⇿⌀-⏿\u2139\u203C\u2049\u3030\u303D\u3297\u3299]️?[\u{1F3FB}-\u{1F3FF}]?(?:‍[\u{1F000}-\u{1FAFF}☀-➿]️?[\u{1F3FB}-\u{1F3FF}]?)*)/gu;
 const pos=i=>`${-(i%COLS)*100/(COLS-1)}% ${-Math.floor(i/COLS)*100/Math.max(1,ROWS-1)}%`;
 function posOf(i){const x=(i%COLS),y=Math.floor(i/COLS);return `${COLS>1?x*100/(COLS-1):0}% ${ROWS>1?y*100/(ROWS-1):0}%`}
+// ⚡ ตำแหน่งไอคอนเป็นคลาส (สร้างกฎตามที่ใช้จริง) แทน style ต่อชิ้น → ไอคอนเหมือนกันใช้สไตล์ร่วมกันได้ คำนวณเร็วขึ้นมาก
+const PXC=new Set(),pxSheet=(()=>{const st=document.createElement('style');st.id='pxPos';document.head.appendChild(st);return st.sheet})();
+function pxCls(c,decl){if(PXC.has(c))return;PXC.add(c);try{pxSheet.insertRule((c[1]==='a'?`span.pxi>px-f.${c}`:`span.pxi.${c}`)+`{${decl}}`,pxSheet.cssRules.length)}catch(e){}}
+// ⏱️ นาฬิกากลางของไอคอนเคลื่อนไหว: 12 เฟรม/วิ · ขยับเฉพาะชิ้นที่อยู่บนจอ · หยุดเมื่อแท็บซ่อนหรือเปิดลดการเคลื่อนไหว
+const PXV=new Set();let pxIO=null,pxT=0;
+function pxAnimAdd(el){try{if(!pxIO)pxIO=new IntersectionObserver(es=>{for(const e of es){if(e.isIntersecting)PXV.add(e.target);else PXV.delete(e.target)}if(PXV.size&&!pxT)pxT=setInterval(pxTick,83)});pxIO.observe(el)}catch(e){}}
+function pxTick(){if(!PXV.size){clearInterval(pxT);pxT=0;return}if(document.hidden||window._pxNoAnim)return;try{if(document.body.classList.contains('mRM'))return}catch(e){}
+ const now=performance.now()/1000;for(const el of PXV){if(!el.isConnected){PXV.delete(el);try{pxIO.unobserve(el)}catch(e){}continue}const f=Math.floor(now/((el._d||1.2)/ANF))%ANF;if(f!==el._f){el._f=f;const c=el.firstElementChild;if(c)c.style.transform=`translateX(${(-f*100/ANF).toFixed(3)}%)`}}}
+try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)window._pxNoAnim=1}catch(e){}
 function wrapText(n){const t=n.nodeValue;if(!t||!RE.test(t))return;RE.lastIndex=0;const p=n.parentNode;if(!p||p.classList&&p.classList.contains('pxi'))return;if(p.closest&&p.closest('canvas,svg,textarea,input,select,option,script,style,title,[contenteditable],.noPx'))return;
- let last=0,m,frag=document.createDocumentFragment(),hit=false;while((m=RE.exec(t))){let k=m[0].replace(/️/g,''),i=IDX.get(k);if(i==null){k=k.replace(/[\u{1F3FB}-\u{1F3FF}]/gu,'');i=IDX.get(k);if(i==null){k=k.split('‍')[0];i=IDX.get(k)}}if(i==null)continue;hit=true;if(m.index>last)frag.appendChild(document.createTextNode(t.slice(last,m.index)));const s=document.createElement('span');s.className='pxi';s.textContent=m[0];const a=AN[k];if(a){s.classList.add('pxa');s.style.setProperty('background-position-y',`${ANR>1?a[0]*100/(ANR-1):0}%`,'important');s.style.setProperty('--d',a[1]+'s')}else s.style.setProperty('background-position',posOf(i),'important');frag.appendChild(s);last=m.index+m[0].length}
+ let last=0,m,frag=document.createDocumentFragment(),hit=false;while((m=RE.exec(t))){let k=m[0].replace(/️/g,''),i=IDX.get(k);if(i==null){k=k.replace(/[\u{1F3FB}-\u{1F3FF}]/gu,'');i=IDX.get(k);if(i==null){k=k.split('‍')[0];i=IDX.get(k)}}if(i==null)continue;hit=true;if(m.index>last)frag.appendChild(document.createTextNode(t.slice(last,m.index)));const s=document.createElement('span');s.className='pxi';s.textContent=m[0];const a=AN[k];if(a){s.classList.add('pxa');const f=document.createElement('px-f');f.className='pa'+a[0];pxCls('pa'+a[0],`background-position:0 ${ANR>1?a[0]*100/(ANR-1):0}%`);s.appendChild(f);s._d=a[1];pxAnimAdd(s)}else{s.classList.add('pi'+i);pxCls('pi'+i,`background-position:${posOf(i)}!important`)}frag.appendChild(s);last=m.index+m[0].length}
  if(!hit)return;if(last<t.length)frag.appendChild(document.createTextNode(t.slice(last)));p.replaceChild(frag,n)}
 const NUM=/^\s*[+\-−×x]?[\d.,:%/]+\s*(วิ|%|x)?\s*$/;
 function pass(root){try{const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null);const L=[];let n;while((n=w.nextNode()))L.push(n);L.forEach(t=>{wrapText(t);const p=t.parentNode;if(p&&p.nodeType===1&&!p.classList.contains('pxn')&&p.childNodes.length===1&&NUM.test(t.nodeValue||'')&&p.tagName!=='BUTTON')p.classList.add('pxn')})}catch(e){}}
@@ -43431,8 +43440,11 @@ function pass(root){try{const w=document.createTreeWalker(root,NodeFilter.SHOW_T
 const FX={hit:{w:136,h:80,n:16,c:8,fps:34,px:44,py:64,s:1.3},miss:{w:112,h:92,n:30,c:8,fps:46,px:56,py:58,s:.9},perf:{w:112,h:108,n:32,c:8,fps:30,px:56,py:60,s:2.2}};
 ['hit','miss','perf'].forEach(k=>{const im=new Image();im.src='px-'+k+'.png?v='+VER});
 Object.assign(FX,{"spark":{"w":122,"h":71,"n":16,"c":16,"fps":30.0,"px":58,"py":32,"s":1.2,"src":"px-fx-spark.png"},"fw":{"w":197,"h":233,"n":30,"c":10,"fps":12.5,"px":99,"py":120,"s":1.1,"src":"px-fx-fw.png"},"burst":{"w":77,"h":87,"n":28,"c":26,"fps":20.0,"px":36,"py":41,"s":1.5,"src":"px-fx-burst.png"},"confetti":{"w":197,"h":93,"n":34,"c":10,"fps":13,"px":98,"py":24,"s":1.6,"src":"px-fx-confetti.png"},"mana":{"w":176,"h":147,"n":30,"c":11,"fps":16.36,"px":88,"py":73,"s":1.1,"src":"px-fx-mana.png"},"poof":{"w":89,"h":76,"n":24,"c":23,"fps":14.69,"px":43,"py":31,"s":1.4,"src":"px-fx-poof.png"}});
-let fxN=0;function play(k,x,y,sc){if(fxN>10||!FX[k])return;const F=FX[k],src=(F.src||('px-'+k+'.png'))+'?v='+VER,s=(sc||1)*F.s*Math.max(1,Math.min(2,innerWidth/420));const d=document.createElement('div');d.className='pxfx';d.style.cssText+=`width:${F.w*s}px;height:${F.h*s}px;left:${x-F.px*s}px;top:${y-F.py*s}px;background-image:url(${src});background-size:${F.c*F.w*s}px ${Math.ceil(F.n/F.c)*F.h*s}px`;document.body.appendChild(d);fxN++;
- let f=0;const t0=performance.now();const step=()=>{f=Math.floor((performance.now()-t0)/1000*F.fps);if(f>=F.n){d.remove();fxN--;return}d.style.backgroundPosition=`${-(f%F.c)*F.w*s}px ${-Math.floor(f/F.c)*F.h*s}px`;requestAnimationFrame(step)};step()}
+let fxN=0;const FXI={};function fxImg(src){let im=FXI[src];if(!im){im=new Image();im.src=src;FXI[src]=im;try{im.decode&&im.decode().catch(()=>{})}catch(e){}}return im}
+// ⚡ วาดเอฟเฟกต์ลงแคนวาสขนาดเฟรมจริง แล้วขยายด้วย CSS (ไม่เบลอ) · วาดใหม่เฉพาะตอนเปลี่ยนเฟรม · เลื่อนด้วย transform
+function play(k,x,y,sc){if(fxN>10||!FX[k])return;const F=FX[k],src=(F.src||('px-'+k+'.png'))+'?v='+VER,s=(sc||1)*F.s*Math.max(1,Math.min(2,innerWidth/420));const im=fxImg(src);
+ const cv=document.createElement('canvas');cv.width=F.w;cv.height=F.h;cv.className='pxfx';cv.style.cssText+=`width:${F.w*s}px;height:${F.h*s}px;left:0;top:0;transform:translate(${Math.round(x-F.px*s)}px,${Math.round(y-F.py*s)}px);background:none`;const cx=cv.getContext('2d');cx.imageSmoothingEnabled=false;document.body.appendChild(cv);fxN++;
+ let f=-1;const t0=performance.now();const step=()=>{const nf=Math.floor((performance.now()-t0)/1000*F.fps);if(nf>=F.n){cv.remove();fxN--;return}if(nf!==f&&im.complete&&im.naturalWidth){f=nf;cx.clearRect(0,0,F.w,F.h);cx.drawImage(im,(f%F.c)*F.w,Math.floor(f/F.c)*F.h,F.w,F.h,0,0,F.w,F.h)}requestAnimationFrame(step)};step()}
 window.pxFx=play;
 // กดในมินิเกม: ดูว่าเกมตอบว่าถูกหรือผิด แล้วเล่นเอฟเฟกต์ตรงจุดที่กด
 const BADT=/[✕❌💢✗×]/,GOODT=/[✨✓✔⭐🌟💥]/;
@@ -43455,12 +43467,20 @@ const endFx=sc=>{try{const x=innerWidth/2,y=innerHeight*.42;if(sc>=.9){play('per
 window._pxEndFx=endFx;
 // ---------- 🧩 ทั้งเว็บ: เปลี่ยนอิโมจิทุกที่เป็นไอคอนพิกเซล (คงตัวอักษรเดิมไว้ใน span → textContent/การค้นหา/คัดลอกยังเหมือนเดิม) ----------
 window._pxPass=pass;
-{const Q=new Set();let qr=0,gmo=null;const run=()=>{qr=0;const L=[...Q];Q.clear();for(const n of L){if(!n.isConnected)continue;if(n.nodeType===3){if(n.parentNode&&!(n.parentNode.classList&&n.parentNode.classList.contains('pxi')))wrapText(n)}else if(n.nodeType===1&&!n.classList.contains('pxi'))pass(n)}if(gmo)gmo.takeRecords()};
- const want=n=>n&&(n.nodeType===3?RE.test(n.nodeValue||'')&&!(RE.lastIndex=0):n.nodeType===1&&!(n.classList&&n.classList.contains('pxi')));
- const start=()=>{try{pass(document.body);gmo=new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData'){if(want(m.target))Q.add(m.target)}else for(const n of m.addedNodes)if(want(n))Q.add(n)}if(Q.size&&!qr)qr=requestAnimationFrame(run)});gmo.observe(document.body,{childList:true,subtree:true,characterData:true})}catch(e){console.error('pxAll',e)}};
+// ⚡ กันเขียนซ้ำ: หลายป้ายเขียน innerHTML/textContent เดิมซ้ำทุก 0.4–1.5 วิ → ไอคอนถูกสร้างใหม่ทุกครั้ง → ทั้งหน้าต้องคำนวณสไตล์ใหม่ (เพราะกฎ body:has(...))
+// ถ้าค่าที่เขียนเหมือนเดิมทุกตัวอักษร และกล่องยังไม่ถูกแก้ตั้งแต่เราใส่ไอคอน → ข้าม (หน้าตาเหมือนเดิมทุกพิกเซล) · ใช้กับกล่องเล็กที่ไม่มีช่องกรอกเท่านั้น
+{const dH=Object.getOwnPropertyDescriptor(Element.prototype,'innerHTML'),dT=Object.getOwnPropertyDescriptor(Node.prototype,'textContent');
+ if(dH&&dH.set&&dT&&dT.set){
+  Object.defineProperty(Element.prototype,'innerHTML',{configurable:true,enumerable:dH.enumerable,get(){return dH.get.call(this)},set(v){try{if(this.__pxOut!==undefined){if(v===this.__pxSrc&&dH.get.call(this)===this.__pxOut)return;this.__pxOut=undefined}this.__pxSrc=v}catch(e){}dH.set.call(this,v)}});
+  Object.defineProperty(Node.prototype,'textContent',{configurable:true,enumerable:dT.enumerable,get(){return dT.get.call(this)},set(v){try{if(this.__pxOut!==undefined&&this.nodeType===1){if(String(v)===dT.get.call(this)&&dH.get.call(this)===this.__pxOut)return;this.__pxOut=undefined}}catch(e){}dT.set.call(this,v)}});
+ }}
+const pxMark=t=>{try{if(t&&t.nodeType===1&&t!==document.body&&t.id!=='modal'&&t.id!=='feed'&&!t.querySelector('input,textarea,select')){const h=t.innerHTML;if(h.length<1500)t.__pxOut=h}}catch(e){}};
+{const Q=new Set(),TG=new Set();let qr=0,gmo=null;const run=()=>{qr=0;const L=[...Q];Q.clear();for(const n of L){if(!n.isConnected)continue;if(n.nodeType===3){if(n.parentNode&&!(n.parentNode.classList&&n.parentNode.classList.contains('pxi')))wrapText(n)}else if(n.nodeType===1&&!n.classList.contains('pxi'))pass(n)}TG.forEach(pxMark);TG.clear();if(gmo)gmo.takeRecords()};
+ const hasE=t=>{const r=RE.test(t||'');RE.lastIndex=0;return r};const want=n=>n&&(n.nodeType===3?hasE(n.nodeValue):n.nodeType===1&&n.localName!=='px-f'&&!(n.classList&&n.classList.contains('pxi'))&&hasE(n.textContent));
+ const start=()=>{try{pass(document.body);gmo=new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData'){if(want(m.target)){Q.add(m.target);TG.add(m.target.parentNode)}}else{let w=0;for(const n of m.addedNodes)if(want(n)){Q.add(n);w=1}if(w)TG.add(m.target)}}if(Q.size&&!qr)qr=requestAnimationFrame(run)});gmo.observe(document.body,{childList:true,subtree:true,characterData:true})}catch(e){console.error('pxAll',e)}};
  if(document.body)start();else addEventListener('DOMContentLoaded',start)}
 // ---------- ✨ เอฟเฟกต์ pixelfx ตอนกดปุ่มทั้งเว็บ (นอกมินิเกม) ----------
-{const pre=()=>{['spark','fw','burst','confetti','mana','poof'].forEach(k=>{const im=new Image();im.src=FX[k].src+'?v='+VER})};setTimeout(pre,4000);
+{const pre=()=>{['spark','fw','burst','confetti','mana','poof'].forEach(k=>fxImg(FX[k].src+'?v='+VER))};setTimeout(pre,4000);
  const calm=()=>{try{return document.body.classList.contains('mRM')||matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}};
  const BIRTH='#uxGo .uxBorn,#tStartIn,#tGo,#wPick .wc .go,#bornBtn';
  document.addEventListener('click',e=>{try{if(calm())return;const M=$('modal');if(M&&MGK.has(M.dataset.k)&&M.contains(e.target))return;
