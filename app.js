@@ -43395,8 +43395,8 @@ const KEYS="⌛|⌨|⏪|⏭|⏱|⏳|⏸|☄|☕|☠|☯|⚒|⚔|⚖|⚗|⚠|⚡|
 const MGK=new Set(['mg2','skymg','mg','mgd']);
 const css=document.createElement('style');css.textContent=`
 span.pxi,.pxi{display:inline-block!important;flex:none!important;width:var(--pxs,1.18em)!important;height:var(--pxs,1.18em)!important;min-width:0!important;max-width:none!important;min-height:0!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;outline:0!important;opacity:1;filter:none;transform:none;position:static!important;float:none!important;vertical-align:-.2em!important;color:transparent!important;-webkit-text-fill-color:transparent!important;background-color:transparent!important;background-image:url(px-icons.png?v=${VER})!important;background-repeat:no-repeat!important;background-size:${COLS*100}% ${ROWS*100}%!important;background-clip:border-box!important;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden!important;white-space:nowrap!important;line-height:1!important;letter-spacing:0!important;text-indent:0!important;text-shadow:none!important;font-size:inherit;pointer-events:none!important;animation:none!important;transition:none!important}
-span.pxi.pxa,.pxi.pxa{background-image:url(px-anim.png?v=${VER})!important;background-size:${ANF*100}% ${ANR*100}%!important;animation:pxaF var(--d,1.2s) steps(${ANF-1},jump-none) infinite!important}
-@keyframes pxaF{from{background-position-x:0%}to{background-position-x:100%}}
+span.pxi.pxa,.pxi.pxa{background-image:url(px-anim.png?v=${VER})!important;background-size:${ANF*100}% ${ANR*100}%!important;animation:pxaF var(--d,1.2s) step-end infinite!important}
+@keyframes pxaF{${Array.from({length:ANF},(_,k)=>`${(k*100/ANF).toFixed(3)}%{background-position-x:${(k*100/(ANF-1)).toFixed(4)}%}`).join('')}100%{background-position-x:100%}}
 body.mRM span.pxi.pxa{animation:none!important}@media (prefers-reduced-motion:reduce){span.pxi.pxa{animation:none!important}}
 .mgx,.mgx button,.mgx input{font-family:'Itim',sans-serif!important}
 .mgx .pxn,.mgx #m2T{font-family:'Silkscreen','Itim',monospace!important;letter-spacing:0}
