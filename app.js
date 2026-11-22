@@ -46181,26 +46181,34 @@ const EMB={n:'🌀',u:'🌃',o:'🏮',p:'⏰',z:'☣️',t:'🗼',e:'🎮',q:'�
 const HS=t=>{let h=2166136261;for(const c of String(t)){h^=c.codePointAt(0);h=Math.imul(h,16777619)}return h>>>0};
 const HROT=(c,deg)=>{if(!deg)return c;const n=parseInt(c.slice(1),16);let r=(n>>16)/255,g=(n>>8&255)/255,b=(n&255)/255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b);let h=0,s=0,l=(mx+mn)/2;if(mx!==mn){const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;h*=60}
  h=(h+deg+360)%360;const q=s*Math.min(l,1-l),F=k0=>{const k=(k0+h/30)%12;return Math.round(255*(l-q*Math.max(-1,Math.min(k-3,9-k,1)))).toString(16).padStart(2,'0')};return'#'+F(0)+F(8)+F(4)};
-// ทรงสำรองต่อโลก — กรอบที่แอดมินสุ่มแต่ละรอบสลับทรงได้ (ยังคงสไตล์โลกเดิม)
-const SH2={
- n:[ngon(8,55,-112.5),'polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)'],
- u:['M12 -2H88Q102 -2 102 12V88Q102 102 88 102H12Q-2 102 -2 88V12Q-2 -2 12 -2Z','inset(0 round 14%)'],
- o:['M-2 104V34Q-2 8 24 2Q42 -2 50 -18Q58 -2 76 2Q102 8 102 34V104Z','polygon(0 34%,12% 13%,32% 4%,50% 0,68% 4%,88% 13%,100% 34%,100% 100%,0 100%)'],
- p:[poly(24,.93),'circle(47% at 50% 50%)'],
- z:['M-2 -2L20 4L40 -4L60 4L80 -2L102 -2L96 30L102 60L96 102L50 96L4 102L-2 60L4 30Z','inset(4%)'],
- t:['M-2 104V30Q-2 2 26 -4Q42 -8 50 -8Q58 -8 74 -4Q102 2 102 30V104Z','polygon(0 30%,10% 12%,28% 3%,50% 0,72% 3%,90% 12%,100% 30%,100% 100%,0 100%)'],
- e:['M24 -2H76V4H88V10H96V18H102V82H96V90H88V96H76V102H24V96H12V90H4V82H-2V18H4V10H12V4H24Z','polygon(20% 0,80% 0,100% 18%,100% 82%,80% 100%,20% 100%,0 82%,0 18%)'],
- q:['M-2 8H8V-2H20V8H32V-2H44V8H56V-2H68V8H80V-2H92V8H102V102H-2Z','inset(6% 0 0 0)'],
- y:[poly(10,.8,54),'circle(44% at 50% 50%)'],
- v:['M50 -1A51 51 0 1 1 49.9 -1Z','circle(47% at 50% 50%)']};
-// ตัวสุ่มของรอบ → [เลื่อนสี, ใช้ทรงสำรอง] (อันดับ 1–3 ของรอบเดียวกันได้ชุดเดียวกัน)
-const VAR=(bd,p,sd)=>{if(!sd)return[0,0];const h=HS('mw4|'+sd+'|'+bd+'|'+p);return[(h%9-4)*16,(h>>>5)%2]};
+// ทรงกรอบต่อโลก 4 แบบ (แบบแรก = ทรงประจำ) — กรอบที่สุ่มแต่ละรอบสุ่มทรงจากชุดนี้ (ยังคงสไตล์โลกเดิม)
+const rrp=r=>`M${r-2} -2H${102-r}Q102 -2 102 ${r-2}V${102-r}Q102 102 ${102-r} 102H${r-2}Q-2 102 -2 ${102-r}V${r-2}Q-2 -2 ${r-2} -2Z`;
+const OCTC='polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)',HEXC='polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)';
+const SHV={
+ n:[SH.n,[ngon(8,55,-112.5),OCTC],['M20 -2H80L102 20V80L80 102H20L-2 80V20Z','polygon(18% 0,82% 0,100% 18%,100% 82%,82% 100%,18% 100%,0 82%,0 18%)'],['M50 -14L106 22V78L50 114L-6 78V22Z','polygon(50% 0,100% 28%,100% 72%,50% 100%,0 72%,0 28%)']],
+ u:[SH.u,[rrp(14),'inset(0 round 14%)'],['M18 -2H82L104 50L82 102H18L-4 50Z','polygon(18% 0,82% 0,100% 50%,82% 100%,18% 100%,0 50%)'],[rrp(28),'inset(0 round 26%)']],
+ o:[SH.o,['M-2 104V34Q-2 8 24 2Q42 -2 50 -18Q58 -2 76 2Q102 8 102 34V104Z','polygon(0 34%,12% 13%,32% 4%,50% 0,68% 4%,88% 13%,100% 34%,100% 100%,0 100%)'],['M-2 102V50Q-2 14 50 -14Q102 14 102 50V102Z','polygon(0 48%,12% 22%,50% 0,88% 22%,100% 48%,100% 100%,0 100%)'],['M50 -1A51 51 0 1 1 49.9 -1Z','circle(47% at 50% 50%)']],
+ p:[SH.p,[poly(24,.93),'circle(47% at 50% 50%)'],[ngon(12,55,-90),'circle(46% at 50% 50%)'],[rrp(30),'inset(0 round 28%)']],
+ z:[SH.z,['M-2 -2L20 4L40 -4L60 4L80 -2L102 -2L96 30L102 60L96 102L50 96L4 102L-2 60L4 30Z','inset(4%)'],['M50 -6L104 22V78L50 106L-4 78V22Z',HEXC],['M6 -4H94L104 40L94 104H6L-4 60Z','inset(3%)']],
+ t:[SH.t,['M-2 104V30Q-2 2 26 -4Q42 -8 50 -8Q58 -8 74 -4Q102 2 102 30V104Z','polygon(0 30%,10% 12%,28% 3%,50% 0,72% 3%,90% 12%,100% 30%,100% 100%,0 100%)'],['M50 -18L102 30V102H-2V30Z','polygon(50% 0,100% 30%,100% 100%,0 100%)'],['M30 -10H70V0H90V10H102V102H-2V10H10V0H30Z','inset(0)']],
+ e:[SH.e,['M24 -2H76V4H88V10H96V18H102V82H96V90H88V96H76V102H24V96H12V90H4V82H-2V18H4V10H12V4H24Z','polygon(20% 0,80% 0,100% 18%,100% 82%,80% 100%,20% 100%,0 82%,0 18%)'],['M30 -2H70V4H82V10H90V18H96V30H102V70H96V82H90V90H82V96H70V102H30V96H18V90H10V82H4V70H-2V30H4V18H10V10H18V4H30Z','circle(48% at 50% 50%)'],['M-2 -2H102V102H-2Z','inset(0)']],
+ q:[SH.q,['M-2 8H8V-2H20V8H32V-2H44V8H56V-2H68V8H80V-2H92V8H102V102H-2Z','inset(6% 0 0 0)'],['M-2 8H10V-2H22V8H34V-2H46V8H54V-2H66V8H78V-2H90V8H102V80L50 108L-2 80Z','polygon(0 6%,100% 6%,100% 76%,50% 100%,0 76%)'],[ngon(8,55,-112.5),OCTC]],
+ y:[SH.y,[poly(10,.8,54),'circle(44% at 50% 50%)'],[poly(18,.9,54),'circle(46% at 50% 50%)'],[poly(7,.74,57),'circle(40% at 50% 52%)']],
+ v:[SH.v,['M50 -1A51 51 0 1 1 49.9 -1Z','circle(47% at 50% 50%)'],[ngon(6,56,0),'polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%)'],['M-2 104V40A52 52 0 0 1 102 40V104Z','inset(0 round 50% 50% 0 0)']]};
+// ตัวสุ่มของรอบ → {สี, ทรง, ของประดับเสริม, ป้ายล่าง, ลายฉายา} (อันดับ 1–3 ของรอบเดียวกันได้ชุดเดียวกัน)
+const VAR=(bd,p,sd)=>{if(!sd)return{dh:0,sh:0,ex:0,pl:0};const h=HS('mw4|'+sd+'|'+bd+'|'+p),h2=HS('mw4b|'+sd+'|'+bd+'|'+p);return{dh:((h%13)-6)*16,sh:(h>>>4)%4,ex:1+(h>>>8)%4,pl:(h2>>>3)%3}};
+// ของประดับเสริม (สีตามโลก) — สุ่มรอบละ 1 แบบ
+const EXF=(k,p,a,b,M)=>{if(!k)return['',''];const big=p==='m';
+ if(k===1)return[twk(Array.from({length:big?10:7},(_,i)=>pt(i*360/(big?10:7)-90,big?92:84)),b,2.2),''];
+ if(k===2)return[`<g ${A('d4spin',18,0,ORG(50,50))}><circle cx="50" cy="50" r="${big?90:82}" fill="none" stroke="${a}" stroke-width="1.6" stroke-dasharray="1 5" stroke-linecap="round"/></g><g ${A('d4spinR',26,0,ORG(50,50))}><circle cx="50" cy="50" r="${big?96:88}" fill="none" stroke="${b}" stroke-width=".8" stroke-dasharray="10 8" opacity=".7"/></g>`,''];
+ if(k===3)return['',rise(big?8:5,[-18,118],118,a,1.5,3)];
+ return['',[[-14,-14],[114,-14],[-14,114],[114,114]].map(([x,y],i)=>`<g ${A('d4bob',2.4,i*.6)}><path d="M${x} ${y-6}L${x+4} ${y}L${x} ${y+6}L${x-4} ${y}Z" fill="${i%2?a:b}" stroke="${M[0]}" stroke-width=".8"/></g>`).join('')]};
 let gid=0;
-function svg(p,bd,r,sd){const [dh,alt]=VAR(bd,p,sd),M=MET[r],a=HROT(ACC[bd],dh),b=bd==='v'?AC2[bd]:HROT(AC2[bd],dh),g='d4g'+(++gid),S=(alt?SH2:SH)[bd][0];seed=bd.charCodeAt(0)*97+r*13+(p==='m'?7:p==='w'?3:1);
+function svg(p,bd,r,sd){const V=VAR(bd,p,sd),dh=V.dh,M=MET[r],a=HROT(ACC[bd],dh),b=bd==='v'?AC2[bd]:HROT(AC2[bd],dh),g='d4g'+(++gid),S=SHV[bd][V.sh][0],EX=EXF(V.ex,p,a,b,M);seed=bd.charCodeAt(0)*97+r*13+(p==='m'?7:p==='w'?3:1);
  let o=`<defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${M[0]}"/><stop offset=".5" stop-color="${M[1]}"/><stop offset="1" stop-color="${M[2]}"/></linearGradient>
  <linearGradient id="${g}s" x1="0" y1="0" x2="1" y2="0"><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset=".65" stop-color="#fff" stop-opacity="0"/><animateTransform attributeName="gradientTransform" type="translate" values="-1 0;1 0;1 0" keyTimes="0;.6;1" dur="${r===1?2.4:3.4}s" repeatCount="indefinite"/></linearGradient>
  <linearGradient id="${g}b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="${b}" stop-opacity=".6"/><stop offset="1" stop-color="${b}" stop-opacity="0"/></linearGradient></defs>`;
- const [B,F]=K[bd](p,M,a,b,g,S);
+ let [B,F]=K[bd](p,M,a,b,g,S);B=EX[0]+B;F+=EX[1];
  o+=`<mask id="${g}m" maskUnits="userSpaceOnUse" x="-200" y="-200" width="500" height="500"><rect x="-200" y="-200" width="500" height="500" fill="#fff"/><path d="${S}" fill="#000"/></mask><g mask="url(#${g}m)">${B}</g>`;
  o+=`<path d="${S}" fill="none" stroke="${a}" stroke-width="${p==='m'?18:p==='w'?13:9}" opacity=".18" ${A('d4glow',2.6)}/><path d="${S}" fill="none" stroke="${M[3]}" stroke-width="7.5"/><path d="${S}" fill="none" stroke="url(#${g})" stroke-width="4.4"/><path d="${S}" fill="none" stroke="url(#${g}s)" stroke-width="4.4"/>`;
  o+=`<path d="${S}" pathLength="100" fill="none" stroke="${b}" stroke-width="1.6" stroke-dasharray="${p==='d'?'4 46':'7 18'}" stroke-linecap="round" transform="translate(50 50) scale(.92) translate(-50 -50)" ${A('d4run',p==='m'?3:5)} style="filter:drop-shadow(0 0 2px ${a})"/>`;
@@ -46210,11 +46218,11 @@ function svg(p,bd,r,sd){const [dh,alt]=VAR(bd,p,sd),M=MET[r],a=HROT(ACC[bd],dh),
  else o+=`<g ${A('d4bob',3,r*.4)}><circle cx="50" cy="${ty}" r="13" fill="${M[3]}" stroke="url(#${g})" stroke-width="2.6"/><circle cx="50" cy="${ty}" r="13" fill="none" stroke="url(#${g}s)" stroke-width="2.6"/><text x="50" y="${ty+5}" text-anchor="middle" font-size="13">${EMB[bd]}</text></g>`;
  const y=bd==='v'?114:bd==='q'||bd==='z'?108:104,w=r===1&&p!=='d'?60:p==='d'?34:44;
  const lab=r===1&&p!=='d'?`อันดับ 1 · ${PL[p]}`:`#${r} · ${PL[p]}`;
- o+=`<g><path d="M${50-w/2} ${y}H${50+w/2}L${50+w/2+6} ${y+7.5}L${50+w/2} ${y+15}H${50-w/2}L${50-w/2-6} ${y+7.5}Z" fill="${M[3]}" stroke="url(#${g})" stroke-width="1.8"/><path d="M${50-w/2} ${y}H${50+w/2}L${50+w/2+6} ${y+7.5}L${50+w/2} ${y+15}H${50-w/2}L${50-w/2-6} ${y+7.5}Z" fill="url(#${g}s)" opacity=".35"/><text x="50" y="${y+11}" text-anchor="middle" font-size="${r===1&&p!=='d'?8.6:9}" font-weight="900" fill="${M[0]}" font-family="Itim,sans-serif">${lab}</text></g>`;
+ const PP=V.pl===1?`M${50-w/2} ${y}H${50+w/2}A7.5 7.5 0 0 1 ${50+w/2} ${y+15}H${50-w/2}A7.5 7.5 0 0 1 ${50-w/2} ${y}Z`:V.pl===2?`M${50-w/2-10} ${y+2}H${50+w/2+10}L${50+w/2+5} ${y+8}L${50+w/2+10} ${y+14}H${50-w/2-10}L${50-w/2-5} ${y+8}Z`:`M${50-w/2} ${y}H${50+w/2}L${50+w/2+6} ${y+7.5}L${50+w/2} ${y+15}H${50-w/2}L${50-w/2-6} ${y+7.5}Z`;o+=`<g><path d="${PP}" fill="${M[3]}" stroke="url(#${g})" stroke-width="1.8"/><path d="${PP}" fill="url(#${g}s)" opacity=".35"/><text x="50" y="${y+11}" text-anchor="middle" font-size="${r===1&&p!=='d'?8.6:9}" font-weight="900" fill="${M[0]}" font-family="Itim,sans-serif">${lab}</text></g>`;
  return`<svg x="8" y="8" width="84" height="84" viewBox="-20 -20 140 140" overflow="visible" class="d4v" aria-hidden="true">${o}</svg>`}
 // ---------- ฉายา ----------
-function chip(t,p,bd,r,sd){const M=MET[r],dh=sd?(HS('mw4t|'+sd+'|'+bd+'|'+p)%9-4)*16:0;const s=`--m0:${M[0]};--m1:${M[1]};--m2:${M[2]};--m3:${M[3]};--ac:${HROT(ACC[bd],dh)};--a2:${bd==='v'?AC2[bd]:HROT(AC2[bd],dh)}`;const ic={n:'🌀',u:'🌃',o:'🏮',p:'⏰',z:'☣️',t:'🗼',e:'🎮',q:'🚩',y:'☄️',v:'🚪'}[bd];
- return`<span class="dch4 c4-${bd} dp-${p} dr-${r}" style="${s}"><span class="ic">${ic}</span>${r===1?'<span class="cr">👑</span>':''}<span class="tx">${esc(String(t).slice(0,40))}</span><small>#${r}·${PL[p]}</small></span>`}
+function chip(t,p,bd,r,sd){const M=MET[r],hh=sd?HS('mw4t|'+sd+'|'+bd+'|'+p):0,dh=sd?((hh%13)-6)*16:0,cv=sd?(hh>>>6)%4:0;const s=`--m0:${M[0]};--m1:${M[1]};--m2:${M[2]};--m3:${M[3]};--ac:${HROT(ACC[bd],dh)};--a2:${bd==='v'?AC2[bd]:HROT(AC2[bd],dh)}`;const ic={n:'🌀',u:'🌃',o:'🏮',p:'⏰',z:'☣️',t:'🗼',e:'🎮',q:'🚩',y:'☄️',v:'🚪'}[bd];
+ return`<span class="dch4 c4-${bd} dp-${p} dr-${r} cv${cv}" style="${s}">${cv?'<i class="cvp"></i>':''}<span class="ic">${ic}</span>${r===1?'<span class="cr">👑</span>':''}<span class="tx">${esc(String(t).slice(0,40))}</span><small>#${r}·${PL[p]}</small></span>`}
 const st=document.createElement('style');st.textContent=`
 .d4v [class^=d4]{transform-box:view-box}
 .d4v .d4spin{animation:d4spin 20s linear infinite}.d4v .d4spinR{animation:d4spin 20s linear infinite reverse}
@@ -46259,6 +46267,11 @@ const st=document.createElement('style');st.textContent=`
 .dch4.dr-1 .cr{animation:c4cr 1.6s ease-in-out infinite;display:inline-block}@keyframes c4cr{50%{transform:translateY(-2px) rotate(-8deg)}}
 .dch4.dr-1.dp-m .tx{background:linear-gradient(90deg,var(--m0),#fff,var(--a2),#fff,var(--m0));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;animation:c4flow 3s linear infinite;text-shadow:none!important;filter:drop-shadow(0 1px 1px #000c)}
 @keyframes c4flow{to{background-position:300% 0}}
+/* ลายเสริมของฉายาที่สุ่มแต่ละรอบ */
+.dch4 .cvp{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.55}
+.dch4.cv1 .cvp{background:radial-gradient(circle,var(--a2) 0 .9px,transparent 1.4px) 0 0/12px 8px;animation:c4drift 8s linear infinite}
+.dch4.cv2 .cvp{background:repeating-linear-gradient(-60deg,transparent 0 7px,color-mix(in srgb,var(--ac) 35%,transparent) 7px 9px);animation:c4drift 5s linear infinite}
+.dch4.cv3 .cvp{background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--ac) 45%,transparent),transparent) 0 0/200% 100%;animation:c4flow 4s linear infinite}
 /* ฮันเตอร์ — แผ่นระบบเกต มีเส้นสแกนวิ่ง */
 .c4-n{color:var(--m0);background:linear-gradient(90deg,#04102a,#0c2a6a 55%,#04102a);clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,9px 100%,0 50%);padding:4px 18px;text-shadow:0 0 6px var(--ac)}
 .c4-n::before{inset:0;z-index:-1;background:repeating-linear-gradient(0deg,transparent 0 3px,#9fe8ff14 3px 4px),linear-gradient(90deg,transparent,var(--a2),transparent) 0 100%/60% 2px no-repeat;animation:c4scan 2.4s linear infinite}
@@ -46316,7 +46329,7 @@ const st=document.createElement('style');st.textContent=`
 document.head.appendChild(st);
 
 window.mw4Svg=(l,p,r,sd)=>svg(/^[dwm]$/.test(p)?p:'m',SH[l]?l:'n',[1,2,3].includes(+r)?+r:3,sd||'');
-window.mw4ClipOf=(l,p,sd)=>{l=SH[l]?l:'n';return(VAR(l,/^[dwm]$/.test(p)?p:'m',sd||'')[1]?SH2:SH)[l][1]};
+window.mw4ClipOf=(l,p,sd)=>{l=SH[l]?l:'n';return SHV[l][VAR(l,/^[dwm]$/.test(p)?p:'m',sd||'').sh][1]};
 window.mw4Chip=(t,p,l,r,sd)=>chip(t,/^[dwm]$/.test(p)?p:'m',SH[l]?l:'n',[1,2,3].includes(+r)?+r:3,sd||'');
 
 try{const s2=document.createElement('style');s2.textContent='@media (prefers-reduced-motion:reduce){.d4v *,.dch4,.dch4 *,.dch4::before,.dch4::after{animation:none!important}}';document.head.appendChild(s2)}catch(e){}
