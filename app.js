@@ -460,7 +460,7 @@ function addFeed(type,html,cls=''){html=xT(html);
  else{e.className='bub '+(type==='peer'?'peer':type==='think'?'think':cls);e.innerHTML=html}
  f.appendChild(e);while(f.children.length>260)f.removeChild(f.firstChild);
  if(revealQ.length||S&&S.alive&&!document.hidden)revealPush(e);
- f.scrollTop=f.scrollHeight;
+ if(!addFeed._sc){addFeed._sc=1;requestAnimationFrame(()=>{addFeed._sc=0;const g=$('feed');if(g)g.scrollTop=g.scrollHeight})}
 }
 function ensureHeader(){if(headerAge!==S.age){const gap=headerAge>0?S.age-headerAge:0;headerAge=S.age;addFeed('year',`อายุ ${S.age>=10000?fmt(S.age):S.age} ปี${S.xian&&gap>1&&S.age>=1000?` <small style="opacity:.7">(+${fmt(gap)} ปี)</small>`:''}`)}quiet=null}
 function log(t,c='',key){if(S&&S.xian)t=t.replace(/ตำลึง/g,'หินวิญญาณ');try{fxFromLog(t,c)}catch(e){}if(c==='myth'){vib(80);albumSnap(t)}if(S.key&&S.key.length>400)S.key.splice(1,1);ensureHeader();addFeed('ev',t,c);lastNotable=Date.now();sfx(c==='myth'?'rare':c==='epic'?'good':c==='bad'?'bad':'');if(key||c==='myth'||c==='epic')S.key.push(`${S.age} ปี — ${t.replace(/<[^>]+>/g,'')}`)}
@@ -19297,7 +19297,7 @@ function fcPill(){const r=$('focus');if(!r)return;if(!tuOn()){r.classList.remove
  const T=[...r.querySelectorAll(':scope>.fc:not(.fcx):not(.fctr)')];T.forEach(b=>b.classList.add('tuSel'));const on=T.find(b=>b.classList.contains('on'));
  if(!on||T.length<2){const p=r.querySelector(':scope>.tuPill');if(p)p.remove();r.classList.remove('tuRow','tuFc');return}
  r.classList.add('tuRow','tuFc');tuPillIn(r,on,'focus');tuDrag(r,()=>[...r.querySelectorAll(':scope>.fc.tuSel')].filter(b=>!b.disabled),true)}
-{const _rnF=render;render=function(){const x=_rnF.apply(this,arguments);try{fcPill()}catch(e){}return x}}
+{const _rnF=render;let fq=0;render=function(){const x=_rnF.apply(this,arguments);if(!fq)fq=requestAnimationFrame(()=>{fq=0;try{fcPill()}catch(e){}});return x}}
 // ---- ตัวเลือกหน้าแรก (ความเร็ว · โลก · โหมดท้าทาย) ----
 function segPills(){if(!tuOn())return;document.querySelectorAll('#title .seg').forEach(r=>{if(!r.offsetParent)return;const T=[...r.querySelectorAll(':scope>button:not(.mwseg)')];T.forEach(b=>b.classList.add('tuSel'));const on=T.find(b=>b.classList.contains('on'));if(!on)return;
  r.classList.add('tuRow','tuTs');tuPillIn(r,on,'seg:'+(r.dataset.k||''));
@@ -34134,7 +34134,7 @@ const $$=id=>document.getElementById(id);
 const gOn=()=>{const g=$$('game');return!!(g&&g.classList.contains('on'))};
 // --- ป้ายชื่อใต้ปุ่มล่าง ---
 const LB={pauseBtn:()=>paused?'เล่นต่อ':'หยุด',spdBtn:'ความเร็ว',bagBtn:'กระเป๋า',questBtn:'เควส',sysBtn:'ระบบ',autoBtn:'ออโต้',skipBtn:'แสดงหมด',logBtn:'บันทึก',menuBtn:'เมนู'};
-function labels(){if(innerWidth>=700)return;for(const id in LB){const b=$$(id);if(!b)continue;const t=typeof LB[id]==='function'?LB[id]():LB[id];let l=b.querySelector('.cbL');if(!l){l=document.createElement('small');l.className='cbL';b.appendChild(l)}if(l.textContent!==t)l.textContent=t}}
+function labels(){if(innerWidth>=700)return;if(Date.now()-(labels._t||0)<1200)return;labels._t=Date.now();for(const id in LB){const b=$$(id);if(!b)continue;const t=typeof LB[id]==='function'?LB[id]():LB[id];let l=b.querySelector('.cbL');if(!l){l=document.createElement('small');l.className='cbL';b.appendChild(l)}if(l.textContent!==t)l.textContent=t}}
 // --- ตำแหน่งเกาะ: เหนือแถวปุ่ม/แถบรอเลือก ---
 function islPos(){try{let v=24;if(gOn()){const c=document.querySelector('#game .ctrl'),pb=$$('pendBar');let top=c?c.getBoundingClientRect().top:innerHeight-118;if(pb&&pb.offsetHeight)top=Math.min(top,pb.getBoundingClientRect().top);v=Math.max(24,Math.round(innerHeight-top+8))}document.documentElement.style.setProperty('--islB',v+'px')}catch(e){}}
 // --- แถวฝึก: บอกว่าเลื่อนได้ ---
@@ -34151,7 +34151,7 @@ function titleMid(){try{const t=$$('title');if(!t||!t.classList.contains('on')||
  const want=Math.max(0,Math.min(innerHeight*.3,Math.round((innerHeight-h)/2-top)));if(Math.abs(want-cur)>6){t._pm=want;t.style.paddingTop=want+'px'}}catch(e){}}
 function tick(){if(document.hidden)return;if(gOn()){labels();fcHint()}islPos();coWatch();titleMid()}
 setInterval(tick,400);addEventListener('resize',tick);
-{const _r=render;render=function(){const r=_r.apply(this,arguments);try{labels();fcHint()}catch(e){}return r}}
+{const _r=render;let lq=0;render=function(){const r=_r.apply(this,arguments);if(!lq)lq=requestAnimationFrame(()=>{lq=0;try{labels();fcHint()}catch(e){}});return r}}
 setTimeout(tick,300);
 })()}catch(e){console.error('block43',e)}
 // ============================================================
@@ -42163,14 +42163,16 @@ function fix(el){if(!el||el.nodeType!==1||SKIP.test(el.tagName)||el.closest('svg
  const bg=bgOf(el);if(!bg)return;const f=over(fg,bg),r=CR(f,bg),big=parseFloat(cs.fontSize)>=18||(parseFloat(cs.fontSize)>=14&&+cs.fontWeight>=700),need=big?3:4.2;
  if(r>=need)return;const light=L(bg)>.4;el.style.setProperty('color',light?'#1c1408':'#f6efe2','important');el.style.setProperty('-webkit-text-fill-color',light?'#1c1408':'#f6efe2','important');el.dataset.cfix=light?'d':'l'}
 function unfix(root){for(const e of (root||document).querySelectorAll('[data-cfix]')){e.style.removeProperty('color');e.style.removeProperty('-webkit-text-fill-color');delete e.dataset.cfix}}
-function scan(root,max){if(!root||root.nodeType!==1)return;const all=[root,...root.querySelectorAll('*')];let n=0;for(const e of all){if(++n>(max||1500))break;try{fix(e)}catch(x){}}}
+// แคช: ตรวจแล้วจำไว้ต่อองค์ประกอบ (คลาส+สไตล์+คลาสของพ่อ) ตรวจซ้ำเฉพาะเมื่อเปลี่ยน — เดิมเรียก getComputedStyle ไล่ทั้งสายทุกครั้งที่ข้อความเปลี่ยน
+let FCK=new WeakMap();const fsig=e=>{const p=e.parentElement;return(e.getAttribute('class')||'')+'|'+(e.getAttribute('style')||'')+'|'+(p?(p.getAttribute('class')||''):'')+'|'+document.body.className};
+function scan(root,max){if(!root||root.nodeType!==1)return;const all=[root,...root.querySelectorAll('*')];let n=0;for(const e of all){if(++n>(max||1500))break;try{if(FCK.get(e)===fsig(e))continue;fix(e);FCK.set(e,fsig(e))}catch(x){}}}
 window.cfixScan=scan;
 // ของใหม่ในหน้า
 const Q=new Set();let tm=0;
 const run=()=>{tm=0;const L2=[...Q];Q.clear();for(const r of L2)if(r.isConnected)scan(r,600)};
 new MutationObserver(ms=>{for(const m of ms){if(m.type==='childList'){for(const n of m.addedNodes){if(n.nodeType===1)Q.add(n);else if(n.nodeType===3&&n.parentElement)Q.add(n.parentElement)}}else if(m.type==='characterData'&&m.target.parentElement)Q.add(m.target.parentElement)}if(Q.size>300){Q.clear();Q.add(document.body)}if(!tm)tm=setTimeout(run,120)}).observe(document.body,{childList:true,subtree:true,characterData:true});
 // เปลี่ยนธีม → ล้างแล้วตรวจใหม่ทั้งหน้า
-{const _at=applyTheme;applyTheme=function(){const r=_at.apply(this,arguments);try{unfix(document);setTimeout(()=>scan(document.body,5000),60)}catch(e){}return r};window.applyTheme=applyTheme}
+{const _at=applyTheme;applyTheme=function(){const r=_at.apply(this,arguments);try{FCK=new WeakMap();unfix(document);setTimeout(()=>scan(document.body,5000),60)}catch(e){}return r};window.applyTheme=applyTheme}
 setTimeout(()=>scan(document.body,5000),1500);
 // หน้าต่างที่เปิดอยู่: ตรวจซ้ำเบาๆ (กรณีสลับคลาส/สีโดยไม่เพิ่มโหนด)
 setInterval(()=>{try{const m=document.getElementById('modal');if(m&&m.offsetParent!==null)scan(m,800);const c=document.getElementById('choice');if(c&&c.offsetParent!==null)scan(c,300)}catch(e){}},1500);
@@ -46572,3 +46574,24 @@ const st=document.createElement('style');st.textContent=`.lvWG{margin:8px 0 6px;
  // ยุคปัจจุบัน/ทะลุฟ้า/ดวงจิต: ซ่อนช่องแบบยุทธภพที่ไม่มีความหมาย (ชนะศึกเป็น 0)
  grid.querySelectorAll('div').forEach(x=>{if(/ชนะศึก/.test(x.textContent)&&/\b0\b/.test(x.querySelector('b')?x.querySelector('b').textContent:''))x.remove()})}catch(e){console.error('lvWG',e)}return r}}
 })()}catch(e){console.error('block166',e)}
+
+// ============================================================
+// BLOCK 167: ⚡ ลื่นขึ้นทั้งเว็บ (ภาพ กรอบ ฉายา เหมือนเดิม) — ผู้เล่นแจ้งว่าหน่วง
+//  - บันทึกชีวิต: ข้อความที่อยู่นอกจอไม่ต้องจัดวาง/วาดใหม่ทุกครั้ง (content-visibility) · เลื่อนลงล่างรวมเป็นครั้งเดียวต่อเฟรม
+//  - กรอบ/ฉายาที่มีอนิเมชัน: หยุดเฉพาะตอนอยู่นอกจอหรือแท็บถูกซ่อน กลับมาเห็นก็ขยับต่อ
+//  - งานเบื้องหลังที่วนทุก ≤1 วิ: ข้ามตอนแท็บถูกซ่อน (ประหยัดแบต · กลับมาไม่กระตุก)
+// ============================================================
+try{(()=>{
+const st=document.createElement('style');st.textContent=`
+#feed>.bub,#feed>.yr,#feed>.quiet{content-visibility:auto;contain-intrinsic-size:auto 44px}
+.frw.offv *,.frw.offv,.dch4.offv,.dch4.offv *,.rt3.offv,.rt3.offv *,.mwt.offv,.mwt.offv *{animation-play-state:paused!important}
+html.tabHid *{animation-play-state:paused!important}`;document.head.appendChild(st);
+// ชิ้นที่มีอนิเมชันหนัก: หยุดเมื่อพ้นจอ
+let io=null;try{io=new IntersectionObserver(es=>{for(const e of es)e.target.classList.toggle('offv',!e.isIntersecting)},{rootMargin:'120px'})}catch(e){}
+const SEL='.frw,.dch4,.rt3,.mwt';const seen=new WeakSet();
+const watch=root=>{if(!io)return;try{(root.matches&&root.matches(SEL)?[root]:[]).concat([...(root.querySelectorAll?root.querySelectorAll(SEL):[])]).forEach(e=>{if(!seen.has(e)){seen.add(e);io.observe(e)}})}catch(e){}};
+let q=[],tm=0;new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1)q.push(n);if(!tm)tm=requestAnimationFrame(()=>{tm=0;const L=q;q=[];L.forEach(watch)})}).observe(document.body,{childList:true,subtree:true});
+setTimeout(()=>watch(document.body),800);
+// แท็บถูกซ่อน: หยุดอนิเมชันทั้งหน้า
+document.addEventListener('visibilitychange',()=>document.documentElement.classList.toggle('tabHid',document.hidden));
+})()}catch(e){console.error('block167',e)}
