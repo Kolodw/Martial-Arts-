@@ -43430,7 +43430,8 @@ function pass(root){try{const w=document.createTreeWalker(root,NodeFilter.SHOW_T
 // ---------- เอฟเฟกต์ ----------
 const FX={hit:{w:136,h:80,n:16,c:8,fps:34,px:44,py:64,s:1.3},miss:{w:112,h:92,n:30,c:8,fps:46,px:56,py:58,s:.9},perf:{w:112,h:108,n:32,c:8,fps:30,px:56,py:60,s:2.2}};
 ['hit','miss','perf'].forEach(k=>{const im=new Image();im.src='px-'+k+'.png?v='+VER});
-let fxN=0;function play(k,x,y,sc){if(fxN>10)return;const F=FX[k],s=(sc||1)*F.s*Math.max(1,Math.min(2,innerWidth/420));const d=document.createElement('div');d.className='pxfx';d.style.cssText+=`width:${F.w*s}px;height:${F.h*s}px;left:${x-F.px*s}px;top:${y-F.py*s}px;background-image:url(px-${k}.png?v=${VER});background-size:${F.c*F.w*s}px ${Math.ceil(F.n/F.c)*F.h*s}px`;document.body.appendChild(d);fxN++;
+Object.assign(FX,{"spark":{"w":122,"h":71,"n":16,"c":16,"fps":30.0,"px":58,"py":32,"s":1.2,"src":"px-fx-spark.png"},"fw":{"w":197,"h":233,"n":30,"c":10,"fps":12.5,"px":99,"py":120,"s":1.1,"src":"px-fx-fw.png"},"burst":{"w":77,"h":87,"n":28,"c":26,"fps":20.0,"px":36,"py":41,"s":1.5,"src":"px-fx-burst.png"},"confetti":{"w":197,"h":93,"n":34,"c":10,"fps":13,"px":98,"py":24,"s":1.6,"src":"px-fx-confetti.png"},"mana":{"w":176,"h":147,"n":30,"c":11,"fps":16.36,"px":88,"py":73,"s":1.1,"src":"px-fx-mana.png"},"poof":{"w":89,"h":76,"n":24,"c":23,"fps":14.69,"px":43,"py":31,"s":1.4,"src":"px-fx-poof.png"}});
+let fxN=0;function play(k,x,y,sc){if(fxN>10||!FX[k])return;const F=FX[k],src=(F.src||('px-'+k+'.png'))+'?v='+VER,s=(sc||1)*F.s*Math.max(1,Math.min(2,innerWidth/420));const d=document.createElement('div');d.className='pxfx';d.style.cssText+=`width:${F.w*s}px;height:${F.h*s}px;left:${x-F.px*s}px;top:${y-F.py*s}px;background-image:url(${src});background-size:${F.c*F.w*s}px ${Math.ceil(F.n/F.c)*F.h*s}px`;document.body.appendChild(d);fxN++;
  let f=0;const t0=performance.now();const step=()=>{f=Math.floor((performance.now()-t0)/1000*F.fps);if(f>=F.n){d.remove();fxN--;return}d.style.backgroundPosition=`${-(f%F.c)*F.w*s}px ${-Math.floor(f/F.c)*F.h*s}px`;requestAnimationFrame(step)};step()}
 window.pxFx=play;
 // กดในมินิเกม: ดูว่าเกมตอบว่าถูกหรือผิด แล้วเล่นเอฟเฟกต์ตรงจุดที่กด
@@ -43458,6 +43459,19 @@ window._pxPass=pass;
  const want=n=>n&&(n.nodeType===3?RE.test(n.nodeValue||'')&&!(RE.lastIndex=0):n.nodeType===1&&!(n.classList&&n.classList.contains('pxi')));
  const start=()=>{try{pass(document.body);gmo=new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData'){if(want(m.target))Q.add(m.target)}else for(const n of m.addedNodes)if(want(n))Q.add(n)}if(Q.size&&!qr)qr=requestAnimationFrame(run)});gmo.observe(document.body,{childList:true,subtree:true,characterData:true})}catch(e){console.error('pxAll',e)}};
  if(document.body)start();else addEventListener('DOMContentLoaded',start)}
+// ---------- ✨ เอฟเฟกต์ pixelfx ตอนกดปุ่มทั้งเว็บ (นอกมินิเกม) ----------
+{const pre=()=>{['spark','fw','burst','confetti','mana','poof'].forEach(k=>{const im=new Image();im.src=FX[k].src+'?v='+VER})};setTimeout(pre,4000);
+ const calm=()=>{try{return document.body.classList.contains('mRM')||matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}};
+ const BIRTH='#uxGo .uxBorn,#tStartIn,#tGo,#wPick .wc .go,#bornBtn';
+ document.addEventListener('click',e=>{try{if(calm())return;const M=$('modal');if(M&&MGK.has(M.dataset.k)&&M.contains(e.target))return;
+  const b=e.target.closest&&e.target.closest('button,a,.opt,.cb,.wc,.tabb,[onclick]');if(!b||b.disabled||b.closest('.xbtn,.mnX,.bkx,.mbBack,input,select,textarea'))return;
+  const r=b.getBoundingClientRect();let x=e.clientX,y=e.clientY;if(!x&&!y){x=r.left+r.width/2;y=r.top+r.height/2}
+  const tx=(b.textContent||'').replace(/\s+/g,' ').slice(0,60);
+  if(b.matches(BIRTH)||(M&&M.contains(b)&&/^\s*(🐣\s*)?เริ่มชีวิตใหม่/.test((M.querySelector('h3')||{}).textContent||'')&&b.classList.contains('opt'))){const cx=r.left+r.width/2,cy=r.top+r.height/2;play('fw',cx,cy-20,1);setTimeout(()=>play('confetti',cx,r.top,1),120);setTimeout(()=>play('fw',cx-90,cy-60,.6),260);setTimeout(()=>play('fw',cx+90,cy-50,.6),420);return}
+  if(/🗑|ลบ|ทิ้ง/.test(tx)){play('poof',x,y,.8);return}
+  if(/รับ(รางวัล|ของ|ตั๋ว|ทั้งหมด)?|เก็บรางวัล|ปลดล็อก/.test(tx)&&!/ไม่รับ|ยังรับ/.test(tx)){play('burst',x,y,1);setTimeout(()=>play('spark',x,y,.7),80);return}
+  if(M&&M.contains(b)&&/สุ่ม|กาชา|เปิดกล่อง|เปิดหีบ|ซื้อ/.test(tx)){play('mana',x,y,.9);return}
+  play('spark',x,y,.45)}catch(err){}},true)}
 // ไอคอนลงแคนวาส (ดวงจิตพิกเซล ฯลฯ)
 {const im=new Image();im.src='px-icons.png?v='+VER;window.pxIconDraw=function(x,ic,dx,dy,n){try{const k=String(ic).replace(/️/g,''),i=IDX.get(k);if(i==null||!im.complete||!im.naturalWidth)return false;x.imageSmoothingEnabled=false;x.drawImage(im,(i%COLS)*N,Math.floor(i/COLS)*N,N,N,dx,dy,n,n);return true}catch(e){return false}}}
 })()}catch(e){console.error('block114',e)}
