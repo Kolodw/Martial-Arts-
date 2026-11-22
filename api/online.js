@@ -135,6 +135,7 @@ const CG_L = [['m_ghost', 300], ['soul', 300], ['murim', 500], ['m_zombie', 250]
 const cgOf = wk => { const x = CG_L[((wk % CG_L.length) + CG_L.length) % CG_L.length]; return { w: x[0], n: x[1] } };
 const chrWk = t => Math.floor((t + 7 * 3600e3 - 4 * 86400e3) / 604800e3); // สัปดาห์เริ่มวันจันทร์ เวลาไทย
 // 🌀 รอยแยกประจำสัปดาห์: คู่โลกที่ข้ามง่ายที่สุดของสัปดาห์ (ต้องตรงกับ RW_L/rwOf ใน /w/rift2.js)
+const MP_MAX = 1000000; // บารมีมารสูงสุดที่เป็นไปได้จริง (ผู้เล่นจริงสูงสุดราว 2 แสน)
 const RW_L = ['mn_mu', 'mz_mu', 'mh_so', 'sk_mn', 'mg_xi', 'dm_any', 'mu_gm', 'mu_vz'];
 const rwOf = wk => RW_L[((wk * 7 + 3) % RW_L.length + RW_L.length) % RW_L.length];
 const CH_OK = ['hell', 'short', 'junk', 'regress', 'soul', 'sky'];
@@ -2486,7 +2487,10 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     if (a === 'mpput' || a === 'mpboard') {
       const wk = Math.floor((now + 7 * 3600e3 - 4 * 86400e3) / (7 * 86400e3)), K = 'mpw:' + wk, N = 'mpn:' + wk;
       if (a === 'mpput') { if (req.method !== 'POST' || !okId(id)) return res.status(400).json({ err: 'bad' }); if (+(await cmd('SISMEMBER', 'cheaters', id))) return res.json({ ok: 0 }); if ((await cmd('SET', 'mprl:' + id, 1, 'NX', 'EX', 60)) !== 'OK') return res.json({ ok: 0 });
-        const mp = Math.max(0, Math.min(1e7, Math.round(+b.mp || 0))); const prev = +(await cmd('ZSCORE', K, id)) || 0; if (mp > prev) await pipe([['ZADD', K, mp, id], ['HSET', N, id, JSON.stringify({ n: noAdm(clean(b.n, 20)) || 'มารนิรนาม', r: clean(b.r, 16), w: ['m', 'x', 'g'].includes(b.w) ? b.w : 'm' })], ['EXPIRE', K, 86400 * 15], ['EXPIRE', N, 86400 * 15]]); return res.json({ ok: 1 }) }
+        const mp = Math.max(0, Math.min(1e7, Math.round(+b.mp || 0)));
+        // 🛡️ กันโกง: คนจริงสูงสุดราวสองแสน · ค่าที่เกินเพดานความเป็นไปได้ (หรือตันเพดานระบบ) ไม่รับเข้าทำเนียบ + บันทึกให้แอดมินตรวจในรายการน่าสงสัย
+        if (mp > MP_MAX) { try { if ((await cmd('SET', 'mpsus:' + id, 1, 'NX', 'EX', 86400)) === 'OK') await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(b.n || ''), 24), age: 0, why: 'mp-cap ' + mp, st: { pow: 0, fame: 0, money: 0 }, t: now })], ['LTRIM', 'acsus', 0, 199]]) } catch {} return res.json({ ok: 0 }) }
+        const prev = +(await cmd('ZSCORE', K, id)) || 0; if (mp > prev) await pipe([['ZADD', K, mp, id], ['HSET', N, id, JSON.stringify({ n: noAdm(clean(b.n, 20)) || 'มารนิรนาม', r: clean(b.r, 16), w: ['m', 'x', 'g'].includes(b.w) ? b.w : 'm' })], ['EXPIRE', K, 86400 * 15], ['EXPIRE', N, 86400 * 15]]); return res.json({ ok: 1 }) }
       // แอดมิน: ลบคนออกจากทำเนียบมารสัปดาห์นี้ (n=ชื่อ หรือ id=รหัส) · ban=1 แบนด้วย กันกลับมาขึ้นใหม่ · ชื่อซ้ำหลายคนจะลบทั้งหมดที่ชื่อตรง
       if (a === 'mpboard' && (qOf(req).del || b.del)) {
         const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
@@ -2498,10 +2502,10 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (L.length) await pipe(L); return res.json({ ok: 1, removed: hit.length, banned: ban });
       }
       const z = (await cmd('ZREVRANGE', K, 0, 29, 'WITHSCORES')) || []; let ids = []; for (let i = 0; i < z.length; i += 2) ids.push([z[i], +z[i + 1]]);
-      // ตัดคนที่ถูกแบนออกจากทำเนียบเสมอ + กันคะแนนตันเพดาน (10,000,000) ที่ชื่อ "โดม" ซึ่งเจ้าของสั่งลบ
+      // ตัดคนที่ถูกแบนออกจากทำเนียบเสมอ + ซ่อนคะแนนที่เกินเพดานความเป็นไปได้ (MP_MAX) ที่ค้างอยู่เดิม
       if (ids.length) { const bn = await pipe(ids.map(x => ['SISMEMBER', 'cheaters', x[0]])); ids = ids.filter((x, i) => !+bn[i]) }
       ids = ids.slice(0, 20);
-      const nm = ids.length ? await cmd('HMGET', N, ...ids.map(x => x[0])) : []; const out = ids.map((x, i) => Object.assign({ mp: x[1] }, jp(nm[i]) || { n: 'มารนิรนาม' })).filter(e => !(e.n === 'โดม' && e.mp >= 1e7));
+      const nm = ids.length ? await cmd('HMGET', N, ...ids.map(x => x[0])) : []; const out = ids.map((x, i) => Object.assign({ mp: x[1] }, jp(nm[i]) || { n: 'มารนิรนาม' })).filter(e => e.mp <= MP_MAX);
       return res.json({ l: out });
     }
     if (a === 'yvote') {
