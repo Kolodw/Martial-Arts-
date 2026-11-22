@@ -45180,3 +45180,16 @@ setInterval(()=>{try{if(!S||!S.alive||document.hidden||!$('game').classList.cont
 // BLOCK 141: 🌸 สมุดคนงาม / 💘 ชีวิตรัก (/w/love.js) — เลือกคนจีบเอง · ดวงตาระบบดูสถานะ 3 ชั้น · อวดรวย · คู่แข่งหัวใจ · บริหารตำหนักใน · ยุคปัจจุบัน: แอปหาคู่ + คืนนี้ไปไหน
 setTimeout(()=>{try{wLoad('love').catch(()=>setTimeout(()=>wLoad('love').catch(()=>{}),6000))}catch(e){}},2300);
 try{const g={s:'grow',ic:'🌸',t:'สมุดคนงาม / ชีวิตรัก',nw:1,go:'openLove',life:1,need:()=>!!(S&&S.age>=18),d:'อายุ 18+ เปิดที่เมนู ☰ → 🌸 สมุดคนงาม (ยุคปัจจุบันชื่อ 💘 ชีวิตรัก)<br>• ในเมืองมีคน 5 คนให้เลือกจีบเอง แต่ละคนมี <b>นิสัย · วิธีชนะใจ · สิ่งที่รับไม่ได้ · ความลับ</b> ต่างกัน<br>• 👁️ <b>ดูสถานะ</b> ทีละชั้น (มีระบบ = ใช้แต้มระบบ ไม่มี = จ้างคนสืบ) · บางคนปลอมหน้าต่างสถานะได้ ถ้าตัวหนังสือกระตุกแปลว่าโดนหลอก<br>• จีบได้ 2 ครั้งต่อปี (มีระบบได้เพิ่ม) · 💬 เลือกวิธีให้ตรงใจ · 🎁 ของขวัญ · 💰 อวดรวย (บางคนชอบ บางคนเกลียด อวดบ่อยโดนปล้น) · 💍 สารภาพเมื่อความชอบถึง 70<br>• 🥊 คนหายากมักมีคู่แข่งมาขวาง ดวล ประมูล หรือขุดความลับมาแฉ<br>• 🏯 ตำหนักใน: มอบหน้าที่ (คลัง องครักษ์ หมอ สายข่าว คู่ฝึก) · ต้องไปหาบ้าง ไม่งั้นเขาจะไป · ระวังสายลับและความหึง<br>• 🏙️ ยุคปัจจุบัน: 💘 แอปหาคู่ (ระวังแก๊งหลอกรัก) · 🌃 คืนนี้ไปผับ ซื้อบริการ หรืออยู่บ้าน แต่ละทางมีผลไม่เหมือนกัน<br>• 📟 มีระบบ = ได้เควสรักรายปีและแต้มระบบ'};if(typeof GD2!=='undefined'&&!GD2.some(x=>x.t===g.t))GD2.push(g);if(typeof SYS_GUIDE!=='undefined'&&!SYS_GUIDE.some(x=>x.t===g.t))SYS_GUIDE.push(g)}catch(e){console.error('block141',e)}
+
+// BLOCK 142: ยุคปัจจุบัน — (1) คนที่เกิดในโลกนี้มีบัตรประชาชนตั้งแต่แรก (เดิม id=0 ซื้อทรัพย์สิน/สมัครงานไม่ได้)
+// (2) ข้ามมาจากโลกอื่นแล้วโดนบล็อกเพราะไม่มีเอกสาร → เปิดทางเลือกยื่นเรื่อง/ซื้อเอกสารให้เลย ไม่ใช่แค่ขึ้นข้อความ
+// (3) เหตุการณ์ยุทธภพ (มาร/ศาลสวรรค์/ศิษย์มาร/แดนมาร ที่ผ่าน wpWait) ไม่โผล่ในยุคปัจจุบัน/ทะลุฟ้าดารา/จิตวิญญาณ
+try{(()=>{
+const fixId=()=>{try{const M=S&&S.mw;if(M&&!M.sky&&(M.native||M.par||(S.rift&&S.rift.how==='soul'))&&(M.id||0)<2){M.id=2;M.idP=0}}catch(e){}};
+{const _y=mwYear;mwYear=function(){fixId();return _y.apply(this,arguments)}}
+setInterval(fixId,3000);
+const idAsk=()=>{try{const M=S&&S.mw;if(!M||(M.id||0)>0||M.idP||choice._cur)return false;const e=MW_R.find(x=>x.id==='id1');if(e){closeM();setTimeout(()=>e.go(M),120);return true}}catch(e){}return false};
+{const _a=mwAs;mwAs=function(k){fixId();const M=S&&S.mw;if(M&&(M.id||0)<1&&['cash','car','ins','mort'].includes(k)&&!M.idP){if(idAsk())return}if(M&&M.idP&&(M.id||0)<1&&['cash','car','ins','mort'].includes(k))return toast(`🪪 กำลังรอบัตรประชาชน อีกราว ${Math.max(1,M.idP-M.y)} ปี`);return _a.apply(this,arguments)}}
+{const _j=mwJobReq;mwJobReq=function(J,M){fixId();const w=_j.apply(this,arguments);if(w&&/บัตรประชาชน|เอกสาร/.test(w)&&M&&!M.idP)return w+' · ยื่นเรื่องได้ที่ 💰 ทรัพย์สิน';return w}}
+{const _w=wpWait;wpWait=function(fn){if(S&&(S.mw||S.ch==='soul')){try{if(S.wp)S.wp.busy=0}catch(e){}return}return _w.apply(this,arguments)}}
+})()}catch(e){console.error('block142',e)}
