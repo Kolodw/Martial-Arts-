@@ -45373,7 +45373,7 @@ body.mUI #game .crow .cb:active{transform:scale(.94)}
 body.mUI #game .crow .cb{transition:transform .18s cubic-bezier(.3,1.6,.5,1)}
 /* ---------- โหมดซ่อน UI ---------- */
 body.mUI.mImm #game>:not(#sceneBox):not(#feed):not(#pendBar){display:none!important}
-body.mUI:has(#mask.on.mSh) :is(#isl,#islDots,#tipCard){opacity:0!important;pointer-events:none!important}
+body.mUI:has(#mask.on) :is(#isl,#islDots,#tipCard){opacity:0!important;pointer-events:none!important}
 body.mUI.mImm #game{padding-bottom:0}
 body.mUI.mImm #isl,body.mUI.mImm #islDots{opacity:.0;pointer-events:none}
 body.mUI.mImm #sceneBox{margin-top:4px}
@@ -45403,6 +45403,10 @@ body.mUI #mask.mSh #modal.mOut{transition:transform .22s ease-in!important;trans
 #mBellBody>*{display:block!important;margin:0 0 10px!important}
 #mBellBody #hintBar{display:flex!important}
 .mEmpty{text-align:center;opacity:.65;padding:18px 6px;font-size:13px}
+/* ---------- หน้าต่างลอย (ค่าเริ่มต้น) ---------- */
+body.mUI #mask.on:not(.mSh){backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+body.mUI #mask.on:not(.mSh) #modal{border-radius:20px!important;box-shadow:0 18px 50px #000c,0 0 0 1px #ffffff14!important;animation:mPop .3s cubic-bezier(.2,1.25,.4,1)!important}
+@keyframes mPop{from{opacity:0;transform:translateY(14px) scale(.94)}to{opacity:1;transform:none}}
 /* ---------- บันทึกแบ่งตามปี ---------- */
 body.mUI #feed .yr{position:sticky;top:0;z-index:3;margin:8px 0 5px!important;cursor:pointer;pointer-events:none}
 body.mUI #feed .yr>span{pointer-events:auto;display:inline-block;padding:2px 12px;border-radius:999px;background:#17141fe6;border:1px solid #a8873e88;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 3px 10px #0007}
@@ -45434,7 +45438,7 @@ function apply(){try{const ui=isUI();B.classList.toggle('mUI',ui);const m=MD();B
  B.classList.toggle('mImm',ui&&gOn()&&(m==='h'&&Date.now()>peekT||tmpImm));
  B.classList.toggle('mLand',ui&&innerWidth>innerHeight&&innerWidth>=600&&innerHeight<=820);
  let rm=!!LG('murim_mrm',0);try{if(LG('murim_mrm',null)===null&&matchMedia('(prefers-reduced-motion: reduce)').matches)rm=true}catch(e){}B.classList.toggle('mRM',rm)}catch(e){}}
-window.mUISet=function(k,v){if(k==='mode'){LSt('murim_mui',v);tmpImm=false;peekT=0}else if(k==='rm'){LSt('murim_mrm',v?1:0)}else if(k==='ah'){LSt('murim_mah',v?1:0)}apply();mount();try{if(typeof islPos==='function')islPos()}catch(e){}
+window.mUISet=function(k,v){if(k==='mode'){LSt('murim_mui',v);tmpImm=false;peekT=0}else if(k==='rm'){LSt('murim_mrm',v?1:0)}else if(k==='ah'){LSt('murim_mah',v?1:0)}else if(k==='sh'){LSt('murim_msheet',v?1:0)}apply();mount();try{if(typeof islPos==='function')islPos()}catch(e){}
  try{const f=$$('feed');if(f)f.scrollTop=f.scrollHeight}catch(e){}try{const mm=document.querySelector('#modal[data-k="menu"] #mUIset');if(mm)mm.outerHTML=setHtml()}catch(e){}};
 window.mImmTog=function(on){const m=MD();if(on===undefined)on=!B.classList.contains('mImm');if(m==='h'){peekT=on?0:Date.now()+6000}else tmpImm=on?'m':false;if(!on)idleAt=Date.now();apply();try{vib(10)}catch(e){}if(!on)setTimeout(()=>{try{const f=$$('feed');f.scrollTop=f.scrollHeight}catch(e){}},50)};
 
@@ -45469,7 +45473,7 @@ window.openNow=window.openNow||function(){const w=$$('wnBtn');if(w)w.click()};
 
 // ---------- modal → แผ่นจากล่าง ----------
 const NOSH=/^(mg|mg2|mgd|qigame|skymg|bye|fx|gfx|ttlfx|lgin|naming|krcreate|pwa|ai|update)$/;
-function shOk(k){if(!B.classList.contains('mUI'))return false;if(NOSH.test(k||''))return false;const m=$$('modal');if(m&&m.querySelector('canvas:not(#mobAva)')){const c=m.querySelector('canvas');if(c&&c.width>200)return false}return true}
+function shOk(k){if(!B.classList.contains('mUI')||!LG('murim_msheet',0))return false;if(NOSH.test(k||''))return false;const m=$$('modal');if(m&&m.querySelector('canvas:not(#mobAva)')){const c=m.querySelector('canvas');if(c&&c.width>200)return false}return true}
 function decorate(k){try{const mk=$$('mask'),m=$$('modal');const on=shOk(k);mk.classList.toggle('mSh',on);m.classList.remove('mDrag','mBack','mOut');m.style.transform='';if(on&&!m.querySelector(':scope>.mGrab'))m.insertAdjacentHTML('afterbegin','<i class="mGrab"></i>')}catch(e){}}
 {const _m=modal;modal=function(html,k){restore();const r=_m.apply(this,arguments);decorate(k);return r}}
 {const _c=closeM;closeM=function(){restore();const r=_c.apply(this,arguments);try{$$('mask').classList.remove('mSh')}catch(e){}return r}}
@@ -45518,8 +45522,8 @@ const setCss=document.createElement('style');setCss.textContent=`#mUIset{margin:
 #mUIset .seg button.on{background:linear-gradient(180deg,#ffe9a8,#e8b54a);color:#2a1a04;opacity:1;box-shadow:0 2px 0 #7a5512}
 #mUIset .tg{display:flex;gap:6px;margin-top:8px}#mUIset .tg button{flex:1;border:1px solid #ffffff22;border-radius:10px;padding:6px 4px;font:inherit;font-size:11.5px;background:#0003;color:inherit;cursor:pointer}#mUIset .tg button.on{border-color:#3aa86a;background:#3aa86a33}
 body:not(.mUI) #mUIset{display:none}`;document.head.appendChild(setCss);
-function setHtml(){const m=MD(),rm=!!LG('murim_mrm',0)||B.classList.contains('mRM'),ah=!!LG('murim_mah',1);return `<div id="mUIset"><div class="r1">📱 รูปแบบหน้าจอ</div><div class="seg"><button class="${m==='f'?'on':''}" onclick="mUISet('mode','f')">เต็ม<small>แสดงครบทุกแถบ</small></button><button class="${m==='c'?'on':''}" onclick="mUISet('mode','c')">ย่อ<small>หัวเล็ก อ่านได้เยอะ</small></button><button class="${m==='h'?'on':''}" onclick="mUISet('mode','h')">ซ่อน<small>เหลือฉาก+เรื่อง</small></button></div>
-<div class="tg"><button class="${ah?'on':''}" onclick="mUISet('ah',${ah?0:1})">${ah?'✅':'⬜'} ซ่อนเองตอนออโต้</button><button class="${rm?'on':''}" onclick="mUISet('rm',${rm?0:1})">${rm?'✅':'⬜'} ลดแอนิเมชัน</button></div></div>`}
+function setHtml(){const m=MD(),rm=!!LG('murim_mrm',0)||B.classList.contains('mRM'),ah=!!LG('murim_mah',1),sh=!!LG('murim_msheet',0);return `<div id="mUIset"><div class="r1">📱 รูปแบบหน้าจอ</div><div class="seg"><button class="${m==='f'?'on':''}" onclick="mUISet('mode','f')">เต็ม<small>แสดงครบทุกแถบ</small></button><button class="${m==='c'?'on':''}" onclick="mUISet('mode','c')">ย่อ<small>หัวเล็ก อ่านได้เยอะ</small></button><button class="${m==='h'?'on':''}" onclick="mUISet('mode','h')">ซ่อน<small>เหลือฉาก+เรื่อง</small></button></div>
+<div class="tg"><button class="${ah?'on':''}" onclick="mUISet('ah',${ah?0:1})">${ah?'✅':'⬜'} ซ่อนเองตอนออโต้</button><button class="${rm?'on':''}" onclick="mUISet('rm',${rm?0:1})">${rm?'✅':'⬜'} ลดแอนิเมชัน</button></div><div class="tg"><button class="${sh?'':'on'}" onclick="mUISet('sh',0)">${sh?'⬜':'✅'} หน้าต่างลอยกลางจอ</button><button class="${sh?'on':''}" onclick="mUISet('sh',1)">${sh?'✅':'⬜'} หน้าต่างเลื่อนจากล่าง</button></div></div>`}
 {const _o=openMenu;openMenu=function(){const r=_o.apply(this,arguments);try{const m=$$('modal');if(B.classList.contains('mUI')&&m&&m.dataset.k==='menu'&&!$$('mUIset')){const g=m.querySelector('.mnHero,.mgrid');if(g)g.insertAdjacentHTML('beforebegin',setHtml());else m.insertAdjacentHTML('beforeend',setHtml())}}catch(e){}return r}}
 
 // ---------- รอบเดิน ----------
