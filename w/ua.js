@@ -304,7 +304,7 @@ const ccss=document.createElement('style');ccss.textContent=`
 #uaS .uw{padding-bottom:calc(150px + env(safe-area-inset-bottom))!important}
 #uaChat{position:fixed;left:0;right:0;bottom:0;z-index:9550;max-width:560px;margin:0 auto;background:linear-gradient(180deg,#120a2af0,#07041af8);border-top:1.5px solid #b49aff66;border-radius:18px 18px 0 0;box-shadow:0 -10px 30px #000a;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:6px 10px calc(8px + env(safe-area-inset-bottom));transition:transform .3s cubic-bezier(.2,1.2,.4,1)}
 #uaChat .ch{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;cursor:pointer;padding:2px 2px 6px}#uaChat .ch .v{margin-left:auto;font-weight:600;opacity:.75}#uaChat .ch .tg{font-size:14px;opacity:.8}
-#uaChat .cl{overflow-y:auto;max-height:34vh;display:flex;flex-direction:column;gap:5px;padding-right:2px;scrollbar-width:none}
+#uaChat .cl{overflow-y:auto;max-height:21vh;display:flex;flex-direction:column;gap:5px;padding-right:2px;scrollbar-width:none}
 #uaChat.min .cl{max-height:44px;overflow:hidden;-webkit-mask-image:linear-gradient(180deg,transparent,#000 45%);mask-image:linear-gradient(180deg,transparent,#000 45%);justify-content:flex-end}
 #uaChat .m{font-size:12.5px;line-height:1.45;animation:uaIn .3s both;word-break:break-word}#uaChat .m b{font-weight:800;margin-right:4px}#uaChat .m .w{font-size:10.5px;opacity:.6;margin-right:3px}
 #uaChat .m.me{align-self:flex-end;background:#b49aff33;border:1px solid #b49aff66;padding:4px 10px;border-radius:12px 12px 2px 12px;max-width:85%}
