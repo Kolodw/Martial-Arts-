@@ -46508,3 +46508,31 @@ try{const K='murim_paSeen',ld=()=>{try{return JSON.parse(localStorage.getItem(K)
 try{let mute=null;const _t=toast;toast=function(t){try{if(mute&&Date.now()<mute.u&&mute.L.some(p=>String(t).indexOf(p)===0))return}catch(e){}return _t.apply(this,arguments)};for(const x in _t)try{toast[x]=_t[x]}catch(e){}
  const _n=ntShow;ntShow=function(L){try{if(Array.isArray(L)&&L.length)mute={u:Date.now()+L.length*1800+3000,L:L.slice(-3).map(m=>`${m.t||'📬 ข้อความถึงคุณ'} — `)}}catch(e){}return _n.apply(this,arguments)}}catch(e){}
 })()}catch(e){console.error('block164',e)}
+
+// ============================================================
+// BLOCK 165: 🪦 หน้าดูสรุปชีวิตคนอื่นจากทำเนียบ — บอกโลกของชีวิตนั้นจริง (เดิมขึ้น ⚔️ ยุทธภพ/☁️ โลกเทพเซียน ทุกชีวิต)
+//  - ชีวิตใหม่ส่งรหัสโลก (wid) ไปด้วย · ชีวิตเก่าเดาจากข้อมูลที่มี (ยุคปัจจุบัน ดวงจิต ย้อนกาล ขุมนรก แดนเทพ สัตว์อสูร) หรือจากทำเนียบที่เปิดมา
+//  - หัวหน้าแสดงภาพพิกเซล + ชื่อโลก · ข้อความแบบยุทธภพ (จอมยุทธ์พเนจร) ไม่ขึ้นในโลกอื่น
+// ============================================================
+try{(()=>{
+const BASE={w0:['⚔️','ยุทธภพ'],w1:['☁️','โลกเซียน'],w3:['✨','แดนเทพ'],w2:['🐾','สัตว์อสูร'],h:['🔥','ขุมนรก'],s:['⏳','ชีวิตสั้น'],j:['🦴','ชีวิตเศษเดน'],rg:['🔁','ผู้ย้อนกาล'],l:['⭕','จิตวิญญาณยุทธ์'],k:['🌠','ทะลุฟ้าดารา'],mn:['🏙️','ยุคปัจจุบัน'],
+ n:['🌀','โลกฮันเตอร์'],u:['🌃','โลกใต้ดิน'],o:['👻','โลกผีไทย'],p:['🔁','โลกวนลูป'],z:['🧟','โลกซอมบี้'],t:['🗼','โลกหอคอย'],e:['🎮','โลกระบบเกม'],q:['💀','โลกที่เกตชนะ'],y:['☄️','โลกวันสิ้นโลก'],v:['🚪','ผู้ข้ามโลก']};
+const WN=id=>{try{const c=typeof CHM_N!=='undefined'&&CHM_N[id];if(c&&c[1]&&!/^w/.test(id))return[c[0],c[1]]}catch(e){}return BASE[id]||BASE.w0};
+const MODN={'ฮันเตอร์':'n','ใต้ดิน':'u','ผีไทย':'o','วนลูป':'p','ซอมบี้':'z','หอคอย':'t','ระบบเกม':'e','เกตชนะ':'q','วันสิ้นโลก':'y','ข้ามโลก':'v','ทะลุฟ้า':'k'};
+// รหัสโลกของชีวิตที่กำลังเล่น
+function widNow(){try{if(!S)return'w0';if(S.ch==='soul'||S.sv&&S.ch==='soul')return'l';if(S.ch==='hell')return'h';if(S.ch==='short')return's';if(S.ch==='junk')return'j';if(S.ch==='regress'||S.rg)return'rg';
+ if(S.mw){if(S.mw.sky)return'k';const l=window._mwBid&&_mwBid();return l||'mn'}if(S.beastMode&&!S.beastMode.human)return'w2';if(S.xt)return'w3';if(S.xian)return'w1'}catch(e){}return'w0'}
+window._widNow=widNow;
+{const _ld=lifeDetail;lifeDetail=function(){const d=_ld.apply(this,arguments);try{if(d&&S){d.wid=widNow();if(!/^(w0|w1|w3)$/.test(d.wid)&&/จอมยุทธ์พเนจร/.test(d.f||''))d.f='ไม่สังกัดใคร'}}catch(e){}return d}}
+// รหัสโลกของชีวิตที่เปิดดู (ชีวิตเก่าไม่มี wid → เดา)
+function widOf(d,ctx){try{if(d.wid&&BASE[d.wid]||d.wid&&WN(d.wid))return d.wid;if(d.wd==='sv'||d.sv)return'l';if(d.hlg)return'h';if(d.rg)return'rg';
+ if(d.wk==='c'){const t=String(d.ow||'');for(const k in MODN)if(t.includes(k))return MODN[k];return ctx&&WN(ctx)&&!/^w/.test(ctx)?ctx:'mn'}
+ if(d.look&&d.look.beast)return'w2';if(d.xt||/แดนเทพ/.test(String(d.wd||'')))return'w3';if(d.x)return'w1';if(ctx&&/^[hsj]$/.test(ctx))return ctx}catch(e){}return'w0'}
+let CTX=null;
+{const _o=lvOpen;lvOpen=function(lid,tab){try{if(!(modalOpen&&$('modal').dataset.k==='lifeview'))CTX=openOnline._bw===4&&openOnline._cm?String(openOnline._cm):null}catch(e){}return _o.apply(this,arguments)};openLifeView=lvOpen;window.openLifeView=lvOpen}
+const st=document.createElement('style');st.textContent=`.lvW{display:inline-flex;align-items:center;gap:6px;margin:0 0 3px;padding:2px 8px 2px 2px;border-radius:999px;background:#ffffff12;border:1px solid #ffffff22;font-size:12px;font-weight:800;white-space:nowrap;max-width:100%}.lvW .wim{width:34px;border-radius:999px 6px 6px 999px}`;document.head.appendChild(st);
+{const _d=lvDraw;lvDraw=function(tab){const r=_d.apply(this,arguments);try{const c=LVC[LV.lid];const m=$('modal');if(!c||!m||m.dataset.k!=='lifeview')return r;const d=c.j.d,id=widOf(d,CTX),[ic,nm]=WN(id);
+ const h=m.querySelector('.lvH h3');if(h&&!m.querySelector('.lvW'))h.insertAdjacentHTML('beforebegin',`<div class="lvW">${window.wimTh?wimTh(id,'sm'):''}<span>${ic} ${esc(nm)}</span></div>`);
+ m.querySelectorAll('.lvH .tag2').forEach(t=>{if(/^(⚔️ ยุทธภพ|☁️ โลกเทพเซียน) · /.test(t.textContent))t.innerHTML=t.innerHTML.replace(/^(⚔️ ยุทธภพ|☁️ โลกเทพเซียน)/,`${ic} ${esc(nm)}`)});
+ if(!/^(w0|w1|w3)$/.test(id))m.querySelectorAll('.lvB .speclist li').forEach(li=>{if(/^จอมยุทธ์พเนจร$/.test(li.textContent.trim()))li.textContent='ไม่สังกัดใคร'})}catch(e){console.error('lvW',e)}return r}}
+})()}catch(e){console.error('block165',e)}
