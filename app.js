@@ -45547,3 +45547,16 @@ setInterval(check,400);
 
 // BLOCK 148: ปุ่มเมนูของคลังอาวุธ/ชุด (owMB) เรียก owSync() ซึ่งอยู่ในวงปิด → ReferenceError กดแล้วไม่เปิด
 try{if(typeof window.owSync!=='function'&&window._owb&&window._owb.owSync)window.owSync=window._owb.owSync}catch(e){console.error('block148',e)}
+
+// BLOCK 149: 🌐 หน้าต่างออนไลน์ (แท็บแชท) — กล่องแชทสูงตายตัว 460px ทำให้ช่องพิมพ์/ปุ่มส่งหล่นไปใต้จอ ต้องเลื่อนหน้าต่างลงถึงจะเห็น (ทั้งคอมและมือถือ)
+// แก้: หน้าต่างสูงพอดีจอ · กล่องแชทยืด/หดตามที่ว่าง · ช่องพิมพ์อยู่ล่างสุดเห็นตลอด
+try{(()=>{const st=document.createElement('style');st.textContent=`
+#modal[data-k="online"]:has(> #chatBox){display:flex!important;flex-direction:column;overflow:hidden!important;height:calc(100vh - 48px);height:calc(100dvh - 48px)}
+body.mUI #mask.mSh #modal[data-k="online"]:has(> #chatBox){height:90vh;height:90dvh}
+#modal[data-k="online"]:has(> #chatBox) > *{flex-shrink:0}
+#modal[data-k="online"]:has(> #chatBox) > #chatBox{flex:1 1 0!important;height:auto!important;min-height:120px;max-height:none!important}
+#modal[data-k="online"]:has(> #chatBox) > .gdTip{max-height:26vh;overflow:auto}
+#modal[data-k="online"]:has(> #chatBox) > .xbtn,#modal[data-k="online"]:has(> #chatBox) > .mGrab{flex-shrink:0}
+`;document.head.appendChild(st);
+// เลื่อนแชทขึ้นดูข้อความเก่า (นิ้วลากลง) ไม่ให้ไปลากหน้าต่างปิด
+setInterval(()=>{try{const c=document.getElementById('chatBox');if(c&&!c._b149){c._b149=1;c.addEventListener('touchstart',e=>{if(c.scrollTop>0)e.stopPropagation()},{passive:true})}}catch(e){}},700)})()}catch(e){console.error('block149',e)}
