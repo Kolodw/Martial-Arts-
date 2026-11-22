@@ -42239,7 +42239,7 @@ const CACHE=new Map();
 function still(k,W,H,seed){const key=k+'|'+W+'|'+H+'|'+(seed||0);let c=CACHE.get(key);if(c)return c;const B=Buf(W,H);try{P[k](B,rng(31+(seed||0)+k.length*977))}catch(e){console.error('soul still',k,e)}c=B.done();if(CACHE.size>30)CACHE.clear();CACHE.set(key,c);return c}
 // ---------- ดวงจิตแบบพิกเซล (วาด emoji ลงตาราง 16px แล้วขยายแบบ nearest) ----------
 const EMO=new Map();
-function emoPx(ic,n){const k=ic+'|'+n;let c=EMO.get(k);if(c)return c;c=document.createElement('canvas');c.width=c.height=n;const x=c.getContext('2d');x.font=`${Math.round(n*.86)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText(ic,n/2,n/2+1);EMO.set(k,c);return c}
+function emoPx(ic,n){const k=ic+'|'+n;let c=EMO.get(k);if(c)return c;c=document.createElement('canvas');c.width=c.height=n;const x=c.getContext('2d');if(window.pxIconDraw&&pxIconDraw(x,ic,0,0,n)){EMO.set(k,c);return c}x.font=`${Math.round(n*.86)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText(ic,n/2,n/2+1);if(!window.pxIconDraw)EMO.set(k,c);return c}
 function spirit(cx,cy,sz,a,glowC){const s=spInfo();if(!s)return;const im=emoPx(s.ic,16);const f=typeof frame!=='undefined'?frame:0,bob=Math.sin(f*.05)*1.2;
  // แสงรอบดวงจิต
  const r=sz*.9;for(let i=0;i<10;i++){const A=f*.03+i*.628;Q(cx*3+Math.cos(A)*r*3,(cy+bob)*3+Math.sin(A)*r*1.4,3,3,glowC)}
@@ -43391,15 +43391,18 @@ window._bd115={restyle,info,BI};
 //   ไอคอนแปลงจาก Noto Emoji (Apache 2.0) เป็นพิกเซล 20×20 · เอฟเฟกต์จาก pixelfx (MIT)
 // ============================================================
 try{(()=>{
-const KEYS="⌛|⌨|⏪|⏭|⏱|⏳|⏸|☄|☕|☠|☯|⚒|⚔|⚖|⚗|⚠|⚡|⚪|⛔|⛰|⛽|✅|✊|✋|✍|✔|✨|✴|❌|❔|❤|➡|⬅|⬆|⬇|⭐|⭕|🌀|🌃|🌅|🌊|🌋|🌌|🌑|🌒|🌕|🌙|🌟|🌠|🌧|🌪|🌬|🌱|🌲|🌸|🌾|🌿|🍃|🍄|🍊|🍖|🍚|🍜|🍞|🍵|🍶|🍻|🍿|🎁|🎂|🎃|🎄|🎆|🎉|🎟|🎫|🎭|🎮|🎯|🎲|🎵|🏃|🏅|🏆|🏋|🏘|🏙|🏚|🏛|🏟|🏠|🏢|🏥|🏪|🏬|🏭|🏮|🏷|🏺|🐆|🐉|🐍|🐕|🐣|🐫|🐲|🐺|🐻|🐾|👀|👁|👂|👄|👉|👊|👍|👑|👥|👦|👧|👩|👩‍🍼|👮|👵|👹|👻|💀|💉|💊|💌|💍|💎|💓|💔|💘|💜|💝|💞|💠|💢|💤|💥|💦|💧|💨|💪|💫|💬|💰|💳|💸|💼|📄|📈|📉|📋|📒|📓|📖|📚|📜|📝|📞|📡|📣|📤|📦|📰|📱|📹|📺|📻|📼|📿|🔁|🔌|🔎|🔒|🔥|🔦|🔨|🔫|🔮|🔴|🔷|🕊|🕯|🕳|🕴|🕵|🕶|🖤|🖥|🗓|🗡|🗣|🗻|😄|😊|😎|😐|😒|😠|😤|😱|😳|😴|😶|😶‍🌫|🙂|🙄|🙅|🙇|🙈|🙋|🙏|🚀|🚇|🚐|🚔|🚗|🚨|🚪|🚶|🛍|🛒|🛠|🛡|🛣|🛵|🛸|🤐|🤔|🤕|🤖|🤝|🤨|🤪|🤫|🤬|🤲|🤷|🥀|🥁|🥈|🥋|🥫|🥳|🥶|🥺|🦁|🦂|🦅|🦊|🦌|🦏|🦴|🦵|🦶|🦷|🦾|🦿|🧃|🧊|🧍|🧑|🧑‍⚖|🧑‍🤝‍🧑|🧑‍🦯|🧒|🧓|🧔|🧗|🧘|🧟|🧟‍♀|🧟‍♂|🧠|🧧|🧨|🧩|🧪|🧬|🧭|🧱|🩸|🩹|🩺|🪖|🪙|🪞|🪟|🪤|🪦|🪨|🪪|🪭|🪵|🪷|🫀|🫁".split('|'),IDX=new Map(KEYS.map((k,i)=>[k,i])),N=20,COLS=32,ROWS=Math.ceil(KEYS.length/COLS),VER='1';
+const KEYS="⌛|⌨|⏪|⏭|⏱|⏳|⏸|☄|☕|☠|☯|⚒|⚔|⚖|⚗|⚠|⚡|⚪|⛔|⛰|⛽|✅|✊|✋|✍|✔|✨|✴|❌|❔|❤|➡|⬅|⬆|⬇|⭐|⭕|🌀|🌃|🌅|🌊|🌋|🌌|🌑|🌒|🌕|🌙|🌟|🌠|🌧|🌪|🌬|🌱|🌲|🌸|🌾|🌿|🍃|🍄|🍊|🍖|🍚|🍜|🍞|🍵|🍶|🍻|🍿|🎁|🎂|🎃|🎄|🎆|🎉|🎟|🎫|🎭|🎮|🎯|🎲|🎵|🏃|🏅|🏆|🏋|🏘|🏙|🏚|🏛|🏟|🏠|🏢|🏥|🏪|🏬|🏭|🏮|🏷|🏺|🐆|🐉|🐍|🐕|🐣|🐫|🐲|🐺|🐻|🐾|👀|👁|👂|👄|👉|👊|👍|👑|👥|👦|👧|👩|👩‍🍼|👮|👵|👹|👻|💀|💉|💊|💌|💍|💎|💓|💔|💘|💜|💝|💞|💠|💢|💤|💥|💦|💧|💨|💪|💫|💬|💰|💳|💸|💼|📄|📈|📉|📋|📒|📓|📖|📚|📜|📝|📞|📡|📣|📤|📦|📰|📱|📹|📺|📻|📼|📿|🔁|🔌|🔎|🔒|🔥|🔦|🔨|🔫|🔮|🔴|🔷|🕊|🕯|🕳|🕴|🕵|🕶|🖤|🖥|🗓|🗡|🗣|🗻|😄|😊|😎|😐|😒|😠|😤|😱|😳|😴|😶|😶‍🌫|🙂|🙄|🙅|🙇|🙈|🙋|🙏|🚀|🚇|🚐|🚔|🚗|🚨|🚪|🚶|🛍|🛒|🛠|🛡|🛣|🛵|🛸|🤐|🤔|🤕|🤖|🤝|🤨|🤪|🤫|🤬|🤲|🤷|🥀|🥁|🥈|🥋|🥫|🥳|🥶|🥺|🦁|🦂|🦅|🦊|🦌|🦏|🦴|🦵|🦶|🦷|🦾|🦿|🧃|🧊|🧍|🧑|🧑‍⚖|🧑‍🤝‍🧑|🧑‍🦯|🧒|🧓|🧔|🧗|🧘|🧟|🧟‍♀|🧟‍♂|🧠|🧧|🧨|🧩|🧪|🧬|🧭|🧱|🩸|🩹|🩺|🪖|🪙|🪞|🪟|🪤|🪦|🪨|🪪|🪭|🪵|🪷|🫀|🫁|🏯|🎒|☁|🗺|🔍|📢|🌐|🟦|🌫|😈|🔓|❓|👶|🗑|🫂|💡|📕|❄|👤|✂|♾|🎓|🏡|⛓|🚫|🖼|🌍|🗝|🎨|🏹|🔄|🧵|📊|🔧|🔔|☀|💾|🏰|🥉|👴|🏔|🥇|📅|🧾|📍|🗳|🌏|🌳|🥊|📸|💵|📨|⏩|🎬|🫥|⚙|🎖|✉|🏫|🔗|🏁|🎰|🏗|🐛|👪|🔐|🏦|🔬|📌|🚓|🐢|🍑|🛕|📘|⛩|🪑|🗼|🌗|🔶|🥚|🔪|🐈|🟢|🏞|🎤|🔑|🤒|🍂|🟡|🍼|⬜|🗿|🕰|🍲|🫧|🔀|💛|🥷|⛏|🔭|🕸|🖋|💻|🌈|🎐|🛑|📂|🔇|💕|🧺|🪢|🚌|🛋|⚓|🐎|🔱|🧿|🧮|🚩|🗂|🃏|🍀|🏝|🧹|👘|👋|🐞|💚|📯|🛰|🌉|🤍|🛏|🎸|🏴|🧸|📥|✏|😂|🏳|💋|✈|🪜|🐋|🎧|🪐|🔊|💭|📮|💗|🦠|🦎|🔕|⛵|🎙|🧂|🧑‍🏫|📑|ℹ|🌡|🧳|🪡|📟|📲|📭|🏜|🌩|🦇|⬛|🧥|📵|🎥|🔢|🪔|🎣|🎪|🛶|🚑|👨‍👩‍👧|🏴‍☠|🪂|⚫|♟|🍡|🌴|🔵|⛈|😢|📷|♂|🐅|⚽|☣|🆕|🧑‍🎓|🐟|🐸|🟪|♀|💹|🍳|🦄|😅|👣|🐷|😏|⚰|🚧|🛌|🌇|🏕|🚚|🎴|😌|🐯|🔋|🌄|🟣|🟥|🦋|🫣|🌤|🎗|⏰|🎋|🪓|🎶|🟠|🐦|🐀|🧰|🍢|💃|😷|😵|🧑‍🌾|🫱|🧯|🌶|📴|🍬|😔|👫|🔯|🧑‍💼|🪶|🥤|🫶|🐝|⛺|☸|🇹🇭|😡|😮‍💨|🪽|🌼|😨|🐒|🧙|🙌|🪺|💙|🍽|🕷|🌹|🫙|🌘|🪣|👆|📐|🦯|🎽|😰|🥬|🍺|🚛|🥂|🎹|🚁|🧑‍🚀|🫡|🎈|🔲|🍙|🛤|🧶|😇|😓|🐚|🎞|👾|🀄|☝|🧏|👃|🎊|🕹|🫴|🚢|🐓|🪲|🖍|🚬|🏖|😭|🙃|🌵|💒|🍗|🤢|🐗|🥢|🪬|🦸|♨|🥣|🔟|📏|👁‍🗨|👏|🍎|🛟|🙊|🛩|🧲|🤞|🧷|😞|➕|🟤|😑|🧼|🦈|🧤|🚦|📁|🚕|👐|📔|😬|😣|🎩|🗞|🦬|👯|👨|💖|🪴|🐘|🧢|🍾|🍸|🏍|🗯|🚙|🧡|🙉|🥗|💐|🚣|🍱|🔠|👨‍👧|👛|🪁|🎎|🔹|⚱|📶|✖|🐇|📬|😜|🏊|🍷|👟|🧴|🌽|🔆|🌺|🩻|🪧|👕|🫳|🩼|🕘|🕒|🆘|🔙|🤸|💣|🅿|🌆|🐜|🥘|🖊|📩|📧|☎|🚜|🥃|🛺|🥭|🍛|🥡|🥵|🪱|👽|🍁|🤧|🥮|🪮|👝|📗|💮|✝|🎏|🦉|👼|🍫|🚂|🧋|🦚|🦔|❤‍🔥|🛂|🧐|🖐|✌|👺|🤟|🛐|🧛|🏇|🌞|🥄|🚒|🤡|👨‍🏫|🚲|👔|🦍|✒|👨‍🌾|☂|🦀|🦑|🏎|🍹|👗|🛖|🕛|🤿|🚤|🧑‍💻|🚉|🧑‍🔬|📆|🪫|🥲|🐶|🔝|🛁|🐿|💆|🕐|🍇|🏸|🇺🇸|🇨🇳|🇯🇵|🇰🇷|🇹🇼|🕙|🥱|⛪|⏹|🐔|💱|🌰|🔤|📛|🍯|⚧|♻|🫚|🤜|🥹|🛗|🧑‍🎤|🌂|⌚|🦖|😆|🌨|🧚|👜|➿|🦜|🔖|🏏|💯|🧑‍🔧|🧑‍🍳|👩‍⚕|🚰|😀|🐖|👩‍🍳|🎼|🌦|☔|🎻|⏏|🗃|🥖|🏧|🍮|⏲|🔻|🥅|👷|💴|🍌|🍰|😮|🫵|🟨|😉|🔏|☺|♥|🇬🇧|💇|👸|🔚|😖|🖨|🐱|⚜|🐼|🐂|🦺|💄|👇|🍉|🦃|🧖|🖌|🧫|🔈|🤚|👡|👞|🦽|🗨|🤗|➖|🅱|🅰|😋|🐄|👨‍👩‍👧‍👦|👨‍💼|🍋|🍦|😁|👌|🦹|🆓|🎍|🛎|👨‍🚀|🐌|🩴|🧣|🐐|🪀|🫖|🪈|🐠|👅|⛲|🧑‍🎨|🐊|🫘|🌷|🎡|🚏|🔩|🐙|🦢|⚕|🤙|🥾|🤰|🧗‍♀|🧞|🦒|♿|🤱|🎛|🧗‍♂|〰|🫠|🦟|🏀|🚭|🏨|⛑|🧽|🕌|💿|🪛|🤑|🧁|🦥|🍔|🤥|🍩|👩‍🏫|🫨|🍧|🛝|🖱|🚿|💶|💷|🪄|🍠|🥑|🥦|🥛|⚛|👨‍⚖|👩‍💻|🕺|👨‍🍳|🗒|🍈|🍆|🥥|🤘|🧑‍⚕|🌯|🐃|🥩|❗|🐕‍🦺|🪚|🦗|💑|🙀|👩‍🔬|😟|🎇|🍅|🌥|🪼|👎|📳".split('|'),IDX=new Map(KEYS.map((k,i)=>[k,i])),N=20,COLS=32,ROWS=31,VER='2',AN={"💎":[0,2.4],"🪙":[1,1.6],"💰":[2,1.6],"🕯":[3,4.0],"👻":[4,2.4],"🔮":[5,3.0],"🕳":[6,3.2],"💤":[7,2.4],"🧊":[8,3.0],"💠":[9,3.0],"🔥":[10,0.6],"✨":[11,1.6],"⭐":[12,1.6],"🌟":[13,1.6],"💫":[14,1.6],"⚡":[15,1.4],"🌀":[16,0.8],"❤":[17,1.1],"💖":[18,1.1],"💗":[19,1.1]},ANF=12,ANR=20;
 const MGK=new Set(['mg2','skymg','mg','mgd']);
 const css=document.createElement('style');css.textContent=`
-.pxi{display:inline-block;width:1.18em;height:1.18em;vertical-align:-.2em;color:transparent!important;background:url(px-icons.png?v=${VER}) no-repeat;background-size:${COLS*1.18}em ${ROWS*1.18}em;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden;line-height:1;text-shadow:none!important;font-size:inherit}
+.pxi{display:inline-block;width:1.18em;height:1.18em;vertical-align:-.2em;color:transparent!important;background:url(px-icons.png?v=${VER}) no-repeat;background-size:${COLS*100}% ${ROWS*100}%;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden;line-height:1;text-shadow:none!important;font-size:inherit;pointer-events:none}
+.pxi.pxa{background-image:url(px-anim.png?v=${VER});background-size:${ANF*100}% ${ANR*100}%;animation:pxaF var(--d,1.2s) steps(${ANF-1},jump-none) infinite}
+@keyframes pxaF{from{background-position-x:0%}to{background-position-x:100%}}
+body.mRM .pxi.pxa{animation:none}@media (prefers-reduced-motion:reduce){.pxi.pxa{animation:none}}
 .mgx,.mgx button,.mgx input{font-family:'Itim',sans-serif!important}
 .mgx .pxn,.mgx #m2T{font-family:'Silkscreen','Itim',monospace!important;letter-spacing:0}
 .mgx h3{font-family:'Itim',sans-serif!important;display:flex;align-items:center;gap:6px;justify-content:center}
-.mgx h3 .pxi{width:1.5em;height:1.5em;background-size:${COLS*1.5}em ${ROWS*1.5}em}
-.mgx .m2RdyI .pxi{width:2.6em;height:2.6em;background-size:${COLS*2.6}em ${ROWS*2.6}em}
+.mgx h3 .pxi{width:1.5em;height:1.5em}
+.mgx .m2RdyI .pxi{width:2.6em;height:2.6em}
 .mgx{position:relative}
 .mgx.mgw-m{background:linear-gradient(180deg,#f6ead0,#ead6ac)!important;border:3px solid #8a5a2a!important;box-shadow:0 0 0 3px #3a2210,0 8px 0 #2a1608,inset 0 0 0 2px #fff6dc!important;color:#3a2210}
 .mgx.mgw-x{background:linear-gradient(180deg,#f2f0ff,#dcd6f6)!important;border:3px solid #8a7ad0!important;box-shadow:0 0 0 3px #2e2460,0 8px 0 #1e1840,inset 0 0 0 2px #ffffff!important;color:#2a2050}
@@ -43416,11 +43419,11 @@ const css=document.createElement('style');css.textContent=`
 .pxfx{position:fixed;pointer-events:none;z-index:2147483000;image-rendering:pixelated;background-repeat:no-repeat}
 `;document.head.appendChild(css);
 // ---------- ไอคอน ----------
-const RE=/(?:[\u{1F1E6}-\u{1F1FF}]{2}|[\u{1F300}-\u{1FAFF}☀-➿⬀-⯿←-⇿⌀-⏿]️?(?:‍[\u{1F300}-\u{1FAFF}☀-➿]️?)*)/gu;
+const RE=/(?:[\u{1F1E6}-\u{1F1FF}]{2}|[\u{1F000}-\u{1FAFF}☀-➿⬀-⯿←-⇿⌀-⏿\u2139\u203C\u2049\u3030\u303D\u3297\u3299]️?[\u{1F3FB}-\u{1F3FF}]?(?:‍[\u{1F000}-\u{1FAFF}☀-➿]️?[\u{1F3FB}-\u{1F3FF}]?)*)/gu;
 const pos=i=>`${-(i%COLS)*100/(COLS-1)}% ${-Math.floor(i/COLS)*100/Math.max(1,ROWS-1)}%`;
 function posOf(i){const x=(i%COLS),y=Math.floor(i/COLS);return `${COLS>1?x*100/(COLS-1):0}% ${ROWS>1?y*100/(ROWS-1):0}%`}
-function wrapText(n){const t=n.nodeValue;if(!t||!RE.test(t))return;RE.lastIndex=0;const p=n.parentNode;if(!p||p.classList&&p.classList.contains('pxi'))return;if(p.closest&&p.closest('canvas,svg,textarea,input,script,style'))return;
- let last=0,m,frag=document.createDocumentFragment(),hit=false;while((m=RE.exec(t))){const k=m[0].replace(/️/g,''),i=IDX.get(k);if(i==null)continue;hit=true;if(m.index>last)frag.appendChild(document.createTextNode(t.slice(last,m.index)));const s=document.createElement('span');s.className='pxi';s.textContent=m[0];s.style.backgroundPosition=posOf(i);frag.appendChild(s);last=m.index+m[0].length}
+function wrapText(n){const t=n.nodeValue;if(!t||!RE.test(t))return;RE.lastIndex=0;const p=n.parentNode;if(!p||p.classList&&p.classList.contains('pxi'))return;if(p.closest&&p.closest('canvas,svg,textarea,input,select,option,script,style,title,[contenteditable],.noPx'))return;
+ let last=0,m,frag=document.createDocumentFragment(),hit=false;while((m=RE.exec(t))){let k=m[0].replace(/️/g,''),i=IDX.get(k);if(i==null){k=k.replace(/[\u{1F3FB}-\u{1F3FF}]/gu,'');i=IDX.get(k);if(i==null){k=k.split('‍')[0];i=IDX.get(k)}}if(i==null)continue;hit=true;if(m.index>last)frag.appendChild(document.createTextNode(t.slice(last,m.index)));const s=document.createElement('span');s.className='pxi';s.textContent=m[0];const a=AN[k];if(a){s.classList.add('pxa');s.style.backgroundPosition=`0% ${ANR>1?a[0]*100/(ANR-1):0}%`;s.style.setProperty('--d',a[1]+'s')}else s.style.backgroundPosition=posOf(i);frag.appendChild(s);last=m.index+m[0].length}
  if(!hit)return;if(last<t.length)frag.appendChild(document.createTextNode(t.slice(last)));p.replaceChild(frag,n)}
 const NUM=/^\s*[+\-−×x]?[\d.,:%/]+\s*(วิ|%|x)?\s*$/;
 function pass(root){try{const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null);const L=[];let n;while((n=w.nextNode()))L.push(n);L.forEach(t=>{wrapText(t);const p=t.parentNode;if(p&&p.nodeType===1&&!p.classList.contains('pxn')&&p.childNodes.length===1&&NUM.test(t.nodeValue||'')&&p.tagName!=='BUTTON')p.classList.add('pxn')})}catch(e){}}
@@ -43449,6 +43452,14 @@ let mo=null,q=0;function hook(){const M=$('modal');if(!M)return;const on=MGK.has
 // ---------- จบเกม: เอฟเฟกต์ตามผล ----------
 const endFx=sc=>{try{const x=innerWidth/2,y=innerHeight*.42;if(sc>=.9){play('perf',x,y,1);setTimeout(()=>play('perf',x-60,y+30,.6),180);setTimeout(()=>play('perf',x+60,y+20,.6),320)}else if(sc<.35)play('miss',x,y,1.4);else play('hit',x-20,y,1.6)}catch(e){}};
 window._pxEndFx=endFx;
+// ---------- 🧩 ทั้งเว็บ: เปลี่ยนอิโมจิทุกที่เป็นไอคอนพิกเซล (คงตัวอักษรเดิมไว้ใน span → textContent/การค้นหา/คัดลอกยังเหมือนเดิม) ----------
+window._pxPass=pass;
+{const Q=new Set();let qr=0,gmo=null;const run=()=>{qr=0;const L=[...Q];Q.clear();for(const n of L){if(!n.isConnected)continue;if(n.nodeType===3){if(n.parentNode&&!(n.parentNode.classList&&n.parentNode.classList.contains('pxi')))wrapText(n)}else if(n.nodeType===1&&!n.classList.contains('pxi'))pass(n)}if(gmo)gmo.takeRecords()};
+ const want=n=>n&&(n.nodeType===3?RE.test(n.nodeValue||'')&&!(RE.lastIndex=0):n.nodeType===1&&!(n.classList&&n.classList.contains('pxi')));
+ const start=()=>{try{pass(document.body);gmo=new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData'){if(want(m.target))Q.add(m.target)}else for(const n of m.addedNodes)if(want(n))Q.add(n)}if(Q.size&&!qr)qr=requestAnimationFrame(run)});gmo.observe(document.body,{childList:true,subtree:true,characterData:true})}catch(e){console.error('pxAll',e)}};
+ if(document.body)start();else addEventListener('DOMContentLoaded',start)}
+// ไอคอนลงแคนวาส (ดวงจิตพิกเซล ฯลฯ)
+{const im=new Image();im.src='px-icons.png?v='+VER;window.pxIconDraw=function(x,ic,dx,dy,n){try{const k=String(ic).replace(/️/g,''),i=IDX.get(k);if(i==null||!im.complete||!im.naturalWidth)return false;x.imageSmoothingEnabled=false;x.drawImage(im,(i%COLS)*N,Math.floor(i/COLS)*N,N,N,dx,dy,n,n);return true}catch(e){return false}}}
 })()}catch(e){console.error('block114',e)}
 
 // ============================================================
