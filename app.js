@@ -45851,3 +45851,110 @@ window.addEventListener('keydown',e=>{const t=e.target&&e.target.closest&&e.targ
 
 setInterval(()=>{B.classList.toggle('uxEn',en());title();feedNew();gDecor();chLow();deskLbl()},400);setTimeout(title,300);
 })()}catch(e){console.error('block154',e)}
+
+// ============================================================
+// BLOCK 155: 🧬 หน้า "ตัวละครของฉัน" ใหม่ — ภาพตัวละคร (วาดจากข้อมูลชีวิตนี้ ไม่สุ่มใหม่) · ตัวตน (ชาติกำเนิด พรสวรรค์ นิสัย ร่างกาย)
+//   · พลังและการฝึก · ทางไปชุดสวมใส่/กระเป๋า · แตะภาพ/ชื่อบนแถบสถานะเพื่อเปิด · มือถือเป็นแผงเลื่อนจากล่าง (≤70dvh)
+//   · เปิดแล้วพักเวลา ปิดแล้วคืนสถานะเดิม (รวมไปชุดสวมใส่/กระเป๋าต่อ) · คืนตำแหน่งอ่านและโฟกัส
+//   อ่านอย่างเดียว: ไม่เติม/แก้ข้อมูลในเซฟ (เซฟเก่าที่ข้อมูลไม่ครบใช้ค่าแสดงผลสำรอง)
+// ============================================================
+try{(()=>{
+const $$=id=>document.getElementById(id);const B=document.body;
+const T=(f,d)=>{try{const v=f();return v==null||v===''?d:v}catch(e){return d}};
+const mob=()=>B.classList.contains('mUI')&&!B.classList.contains('desk');
+const css=document.createElement('style');css.id='meCss';css.textContent=`
+#modal[data-k="me"] .meHead{position:sticky;top:-18px;z-index:6;margin:-18px -18px 10px;padding:16px 56px 10px 18px;background:inherit;background-color:var(--card,#1d1a2a);border-bottom:1px solid #ffffff18}
+#modal[data-k="me"] .meHead h3{margin:0;font-size:18px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#modal[data-k="me"] .meHead .xbtn{position:absolute!important;top:10px!important;right:10px!important}
+#modal[data-k="me"] .meHero{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}
+#modal[data-k="me"] .meFig{flex:0 0 auto;text-align:center}
+#modal[data-k="me"] .meFig canvas{width:96px;height:106px;image-rendering:pixelated;border:2px solid var(--line,#8a6d3b);border-radius:10px;display:block;background:#1c1a28}
+#modal[data-k="me"] .meFig small{display:block;font-size:10.5px;opacity:.75;margin-top:3px;max-width:96px;line-height:1.3}
+#modal[data-k="me"] .meId{flex:1 1 auto;min-width:0}
+#modal[data-k="me"] .meId .nm{font-size:19px;font-weight:800;line-height:1.25;word-break:break-word}
+#modal[data-k="me"] .meId .ln{font-size:13px;line-height:1.5;margin-top:2px}
+#modal[data-k="me"] .meId .ln b{font-weight:800}
+#modal[data-k="me"] .meSec{margin:12px 0 6px;font-size:13px;font-weight:800;opacity:.85;letter-spacing:.2px}
+#modal[data-k="me"] .meGrid{display:grid;grid-template-columns:1fr;gap:6px}
+#modal[data-k="me"] .meRow{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:10px;background:#0002;border:1px solid #ffffff14;font-size:13px;line-height:1.45}
+#modal[data-k="me"] .meRow .k{flex:0 0 74px;font-size:11.5px;opacity:.75;padding-top:1px}
+#modal[data-k="me"] .meRow .v{flex:1 1 auto;min-width:0;word-break:break-word}
+#modal[data-k="me"] .meRow .v small{display:block;opacity:.7;font-size:11.5px}
+#modal[data-k="me"] .meNav{display:flex;gap:8px;margin-top:12px}#modal[data-k="me"] .meNav .gbtn{flex:1;margin:0!important}
+/* แผงจากล่าง (มือถือ) */
+#mask.on.meSh{align-items:flex-end!important;justify-content:center;padding:0!important}
+#mask.meSh #modal{width:100%!important;max-width:620px!important;margin:0 auto!important;max-height:70vh!important;max-height:70dvh!important;overflow-y:auto!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:22px 22px 0 0!important;padding-bottom:calc(18px + env(safe-area-inset-bottom))!important;border-bottom:0!important;animation:meUp .3s cubic-bezier(.2,.95,.3,1.04)!important;transform:none}
+#mask.meSh #modal:not([data-k="me"])>.xbtn{position:sticky!important;top:0;float:right;z-index:6}
+@keyframes meUp{from{transform:translateY(100%)}to{transform:none}}
+@media (prefers-reduced-motion:reduce){#mask.meSh #modal{animation:none!important}}
+/* ทางลัดบนแถบสถานะ */
+.meTap{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.meTap:focus-visible{outline:2px solid #ffd86a;outline-offset:2px;border-radius:6px}
+body.mUI #mobAvaW.meTap{padding:2px;border-radius:8px}
+body.mUI #mobAvaW.meTap:active{transform:scale(.94)}
+`;document.head.appendChild(css);
+
+// ---------- ข้อมูลสำหรับแสดงผล (อ่านอย่างเดียว) ----------
+function world(){return T(()=>{if(S.beastMode&&!S.beastMode.human)return'🐾 เกิดเป็นสัตว์';if(S.mw&&S.mw.sky)return'🌠 ทะลุฟ้าดารา';if(S.mw)return'🏙️ ยุคปัจจุบัน';if(S.ch==='soul')return'⭕ จิตวิญญาณยุทธ์';if(S.ch==='regress')return'🔁 ผู้ย้อนกาล';if(S.xt)return'🌌 โลกเทพ';if(S.xian)return'☁️ โลกเทพเซียน';return'⚔️ ยุทธภพ'},'⚔️ ยุทธภพ')}
+function sex(){const g=T(()=>S.gender,'');const ba=T(()=>S.beastMode&&!S.beastMode.human,false);if(g==='ชาย')return ba?'♂ ตัวผู้':'♂ ชาย';if(g==='หญิง')return ba?'♀ ตัวเมีย':'♀ หญิง';return g?esc(g):'ไม่ระบุเพศ'}
+function realm(){const h=T(()=>($$('gRealm').textContent||'').split('·')[0].replace(/\s+/g,' ').trim(),'');if(h)return h;return T(()=>REALMS[realmIdx()].n,'')}
+function origin(){const f=T(()=>S.family,null);let n=T(()=>f.n,'');const cl=T(()=>S.clan.n,'');if(cl&&!n.includes(cl))n=n?n+' · '+cl:cl;const ht=T(()=>f.heirType,'');return n?{v:n,s:ht?`ทายาทฝ่าย${ht}`:T(()=>f.d,'')}:{v:'ไม่มีบันทึก',s:'เซฟนี้ไม่ได้เก็บชาติกำเนิดไว้'}}
+function talent(){const t=T(()=>S.talent,null);let v='',s='';if(t){v=S.xian?T(()=>S.root||rootOf(t),t.n||''):(t.n||'');if(t.m)s='ความเร็วฝึก ×'+t.m}
+ const tr=T(()=>(S.traits||[]).map(trOf).filter(Boolean),[]);if(tr.length)s=(s?s+' · ':'')+'พิเศษ: '+tr.map(x=>(x.bad?'⚠️ ':'✨ ')+x.n+(x.id==='crippled'&&S.cured?' (รักษาแล้ว)':'')).join(', ');
+ return{v:v||'ไม่มีบันทึก',s}}
+function persona(){const top=T(()=>persTop(),null);if(top)return{v:top[2]+' '+top[1],s:'นิสัยที่เห็นชัดจากการตัดสินใจตลอดชีวิตนี้'};
+ const p=T(()=>S.pers,null);if(p){let b=null,bv=0;T(()=>PERS.forEach(x=>{const v=p[x[0]]||0;if(v>bv){bv=v;b=x}}));if(b&&bv>0)return{v:b[2]+' เริ่มเอนไปทาง'+b[1],s:'ยังไม่ชัดพอจะเป็นนิสัยติดตัว ขึ้นกับการตัดสินใจต่อจากนี้'}}
+ return{v:'ยังไม่ชัด',s:S.age<6?'ยังเด็กเกินไป นิสัยจะก่อตัวจากการตัดสินใจ':'นิสัยจะก่อตัวจากการตัดสินใจในชีวิตนี้'}}
+function bodyInfo(){const b=T(()=>S.body,null),rows=[];if(!b||b.lk==null)return[{k:'รูปลักษณ์',v:'ไม่มีบันทึก',s:'เซฟเก่าที่เกิดก่อนมีระบบร่างกาย'}];
+ const L=T(()=>bodyLk(b),null);if(L)rows.push({k:'รูปลักษณ์',v:L.ic+' '+L.n,s:L.d||''});
+ const cu=T(()=>b.cured||[],[]),cs=T(()=>bodyCs(b),[]).filter(c=>!cu.includes(c.id));
+ if(cs.length)cs.forEach(c=>rows.push({k:'ร่างกาย',v:c.ic+' '+c.n,s:c.d||''}));else rows.push({k:'ร่างกาย',v:b.bt?'🩺 ร่างครบสมบูรณ์':'🩺 ครบสามสิบสองประการ',s:'ร่างกายปกติ'});
+ if(cu.length){const C=T(()=>bodyTab(b.bt),{});rows.push({k:'รักษาแล้ว',v:cu.map(k=>(C[k]&&C[k].n)||k).join(', '),s:''})}return rows}
+function look(){let o=null,ok=true;try{o=meLook()}catch(e){ok=false}
+ if(!o){ok=false;o={age:T(()=>S.age,25),g:T(()=>S.gender,'ชาย'),skin:'#f1c27d',hair:'#1a1a1a',robe:'#6a6aa8',belt:'#00000055'}}return{o,ok}}
+function cap(L){if(!L.ok)return'ภาพตัวแทน · เซฟนี้ไม่มีข้อมูลหน้าตา';const ba=T(()=>S.beastMode&&!S.beastMode.human,false);const a=T(()=>L.o.age,null);
+ if(a!=null&&Math.abs(a-S.age)>2&&S.age<14)return'รูปลักษณ์เมื่อโต';if(ba)return'ร่างตอนนี้';return`ตอนอายุ ${S.age} ปี`}
+const row=r=>`<div class="meRow"><span class="k">${r.k}</span><span class="v">${esc(r.v)}${r.s?`<small>${esc(r.s)}</small>`:''}</span></div>`;
+
+// ---------- จัดหน้าใหม่ (ห่อของเดิม ไม่แก้ฟังก์ชันอื่น) ----------
+function decorate(){const m=$$('modal');if(!m||m.dataset.k!=='me'||m.querySelector('.meHero'))return;
+ const x=m.querySelector(':scope>.xbtn'),h3=m.querySelector(':scope>h3'),it=m.querySelector(':scope>.item');
+ const nav=[...m.querySelectorAll(':scope>button.gbtn')].filter(b=>/openEquip|openBag/.test(b.getAttribute('onclick')||''));
+ const L=look(),tl=talent(),og=origin(),ps=persona(),hp=T(()=>`${Math.round(S.hp)}/${S.maxHp}`,'');
+ const head=document.createElement('div');head.className='meHead';head.innerHTML=`<h3 id="meTtl">🧬 ตัวละครของฉัน</h3>`;if(x){x.setAttribute('aria-label','ปิดหน้าตัวละคร');head.appendChild(x)}
+ const hero=document.createElement('div');hero.className='meHero';
+ hero.innerHTML=`<div class="meFig"><canvas id="meCv" width="168" height="186" role="img" aria-label="ภาพตัวละคร ${esc(S.name||'')}"></canvas><small>${cap(L)}</small></div>
+ <div class="meId"><div class="nm">${esc(S.name||'ไม่มีชื่อ')}</div><div class="ln"><b>อายุ ${S.age} ปี</b> · <span class="meSex">${sex()}</span></div><div class="ln">${world()}</div>${realm()?`<div class="ln">ระดับ: <b>${esc(realm())}</b></div>`:''}</div>`;
+ const id=document.createElement('div');id.innerHTML=`<div class="meSec">🪪 ตัวตน</div><div class="meGrid">${row({k:'ชาติกำเนิด',...og})}${row({k:'พรสวรรค์',...tl})}${row({k:'นิสัย',...ps})}${bodyInfo().map(row).join('')}</div>
+ <div class="meSec">⚔️ พลังและการฝึก</div><div class="meGrid">${row({k:'พลังรวม',v:T(()=>typeof pIdx==='function'?'⚡'+pIdx(total())+' · '+fmt(Math.round(total())):fmt(Math.round(total())),'—'),s:hp?'พลังชีวิต '+hp:''})}${T(()=>S.talent.m,0)?row({k:'ความเร็วฝึก',v:'×'+S.talent.m,s:'จากพรสวรรค์'}):''}</div>`;
+ if(h3)h3.remove();if(it)it.remove();
+ m.prepend(head);head.after(hero);hero.after(...id.childNodes);
+ // ส่วนที่เหลือ (หลอมกาย · แผงเซียน ฯลฯ) อยู่ถัดลงมาตามเดิม · ปุ่มชุดสวมใส่/กระเป๋าไปไว้ท้ายสุด
+ if(nav.length){const n=document.createElement('div');n.className='meNav';nav.forEach(b=>{b.style.width='';n.appendChild(b)});m.appendChild(n)}
+ const cv=$$('meCv');const tmp=document.createElement('canvas');tmp.width=cv.width;tmp.height=cv.height;still(()=>{try{drawPortrait(tmp,L.o,true)}catch(e){try{drawPortrait(tmp,null,true)}catch(x){}}});center(tmp,cv)}
+// จัดตัวละครให้อยู่กลางกรอบ (ตัวเด็ก/สัตว์ตัวเล็กถูกวาดชิดขวา) — พื้นหลังเป็นแถบแนวนอน ใช้คอลัมน์ซ้ายสุดเป็นพื้น
+function center(src,dst){const c=dst.getContext('2d'),W=src.width,H=src.height;c.imageSmoothingEnabled=false;let dx=0;try{const d=src.getContext('2d').getImageData(0,0,W,H).data;let l=W,r=-1;for(let y=0;y<H;y+=2){const i0=y*W*4;for(let x=1;x<W;x++){const i=i0+x*4;if(Math.abs(d[i]-d[i0])+Math.abs(d[i+1]-d[i0+1])+Math.abs(d[i+2]-d[i0+2])>24){if(x<l)l=x;if(x>r)r=x}}}if(r>=l)dx=Math.round(W/2-(l+r)/2)}catch(e){}
+ c.clearRect(0,0,W,H);c.drawImage(src,0,0,1,H,0,0,W,H);c.drawImage(src,dx,0)}
+// วาดภาพนิ่ง: ล็อกเฟรมแอนิเมชัน (หายใจ/กะพริบตา) และปิดเอฟเฟกต์ชั่วคราว เปิดกี่ครั้งภาพก็เหมือนเดิม
+function still(fn){let f0,q0,hf=0,hq=0;try{if(typeof frame!=='undefined'){f0=frame;frame=0;hf=1}}catch(e){}try{if(typeof fxQ!=='undefined'){q0=fxQ;fxQ=1;hq=1}}catch(e){}try{fn()}finally{try{if(hf)frame=f0;if(hq)fxQ=q0}catch(e){}}}
+{const _om=openMe;openMe=function(){const r=_om.apply(this,arguments);try{decorate()}catch(e){console.error('me ui',e)}return r};try{window.openMe=openMe}catch(e){}}
+
+// ---------- เวลา + แผง + ย้อนกลับ + คืนตำแหน่ง ----------
+const SES={on:false,was:false,fd:0,ws:0,op:null};
+function begin(op){if(SES.on)return;SES.on=true;SES.was=!!paused;SES.op=op||document.activeElement;const f=$$('feed');SES.fd=f?f.scrollTop:0;SES.ws=scrollY;if(!paused){paused=true;try{render()}catch(e){}}}
+function end(){if(!SES.on)return;SES.on=false;$$('mask').classList.remove('meSh');paused=SES.was;try{render()}catch(e){}
+ const f=$$('feed'),fd=SES.fd,ws=SES.ws;requestAnimationFrame(()=>{try{if(f)f.scrollTop=fd;if(Math.abs(scrollY-ws)>2)scrollTo(0,ws)}catch(e){}});
+ const op=SES.op;SES.op=null;setTimeout(()=>{try{const re=op&&!op.isConnected&&op.id?$$(op.id):null;const t=op&&op.isConnected&&op.offsetParent?op:re&&re.offsetParent?re:($$('gName')&&$$('gName').offsetParent?$$('gName'):$$('dkAva')&&$$('dkAva').offsetParent?$$('dkAva'):$$('menuBtn'));if(t&&t.focus)t.focus({preventScroll:true})}catch(e){}},30)}
+function sheet(){const mk=$$('mask'),m=$$('modal');const on=SES.on&&mob()&&modalOpen&&mk.classList.contains('on');mk.classList.toggle('meSh',on);if(on)mk.classList.remove('mSh')}
+window.openMeFrom=function(op){if(!S||!$$('game').classList.contains('on'))return;if(modalOpen&&$$('modal').dataset.k==='choice')return;begin(op);openMe();sheet();try{$$('modal').focus&&$$('modal').querySelector('.xbtn').focus({preventScroll:true})}catch(e){}};
+{const _m=modal;modal=function(h,k){const first=k==='me'&&!SES.on&&S&&$$('game').classList.contains('on');if(first)begin(document.activeElement);const r=_m.apply(this,arguments);try{if(SES.on&&/^(choice|duel)$/.test(k||''))end();sheet()}catch(e){}return r};for(const x in _m)try{modal[x]=_m[x]}catch(e){}}
+{const _c=closeM;closeM=function(){const r=_c.apply(this,arguments);try{if(SES.on){setTimeout(()=>{if(!modalOpen)end();else sheet()},0)}}catch(e){}return r};for(const x in _c)try{closeM[x]=_c[x]}catch(e){}}
+// ถ้ามีเหตุการณ์รอคำตอบเด้งขึ้นมา/เปิดตัวเลือกจากแถบรอ → ปิดเซสชันหน้าตัวละครก่อน (ตัวเลือกเดิมยังอยู่)
+setInterval(()=>{try{if(SES.on&&(!modalOpen||/^(choice|duel)$/.test($$('modal').dataset.k||'')))end();sheet()}catch(e){}},500);
+
+// ---------- ทางลัดบนแถบสถานะ ----------
+function tap(e){if(e.type==='keydown'&&e.key!=='Enter'&&e.key!==' ')return;const t=e.target.closest&&e.target.closest('#mobAvaW,#gName,#dkAva,.dk-name,#meHudBtn');if(!t)return;if(!$$('game').classList.contains('on'))return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openMeFrom(t)}
+window.addEventListener('click',tap,true);window.addEventListener('keydown',tap,true);
+function mark(){try{['mobAvaW','gName','dkAva'].forEach(id=>{const el=$$(id);if(!el||el.dataset.me)return;el.dataset.me=1;el.classList.add('meTap');el.setAttribute('role','button');el.setAttribute('tabindex','0');el.setAttribute('aria-label','ดูตัวละครของฉัน');el.title='ดูตัวละครของฉัน'});const dn=document.querySelector('.dk-name');if(dn&&!dn.dataset.me){dn.dataset.me=1;dn.classList.add('meTap');dn.setAttribute('role','button');dn.setAttribute('tabindex','0');dn.setAttribute('aria-label','ดูตัวละครของฉัน')}}catch(e){}}
+setInterval(mark,600);setTimeout(mark,300);
+})()}catch(e){console.error('block155',e)}
