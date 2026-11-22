@@ -34740,6 +34740,7 @@ function stTitle(n){let t='';MILE.forEach(m=>{if(n>=m[0])t=m[1]});return t}
 function begin(c){if(!S)return;S.dl={k:c.k,r:c.rules,g:c.goal,K:c.K,ev:c.ev,w:c.w,ch:c.ch,mx:{},f:{},pm:1,epm:1};S.daily='dl2:'+c.k;
  c.rules.forEach(id=>{const R0=RULES.find(x=>x.id===id);try{R0&&R0.go()}catch(e){}});
  const R=rec()[c.k]||{},ranked=!R.sub;S.dl.rk=ranked?1:0;
+ if(ranked&&typeof onlineOK!=='undefined'&&onlineOK){const D0=S.dl;api('dlbeg',{d:c.k,g:c.goal}).then(j=>{if(j&&j.tk)D0.tk=j.tk}).catch(()=>{})}
  const L=c.rules.map(id=>RULES.find(x=>x.id===id)).filter(Boolean);
  setTimeout(()=>{try{log(`📅 <b>ชะตาประจำวัน ${thD(c.k)}</b> — ${WN[c.w][0]} ${WN[c.w][1]} · ${MN[c.ch][0]} ${MN[c.ch][1]}<br>${L.map(x=>`${x.ic} <b>${x.n}</b> — ${x.d}`).join('<br>')}<br>🎯 เป้าหมาย: <b>${GOALS[c.goal].n(c)}</b><br><span class="tag2">${ranked?'🏆 รอบนี้นับอันดับ ชีวิตแรกที่จบวันนี้เท่านั้น':'🧪 รอบซ้อม วันนี้ส่งอันดับไปแล้ว'} · เหตุการณ์สำคัญ 5 เรื่องจะมาถึงทุกคนในช่วงอายุเดียวกัน</span>`,'myth',true);render()}catch(e){}},400)}
 const thD=k=>{try{const d=new Date(k+'T00:00:00Z');return d.toLocaleDateString('th-TH',{day:'numeric',month:'short',timeZone:'UTC'})}catch(e){return k}};
@@ -34774,7 +34775,7 @@ function finish(){try{if(!S||!S.dl||S.dl.done)return;const D=S.dl;D.done=1;track
  const first=!R.sub&&D.rk;if(first){R.sub=1;R.sc=sc;R.tx=tx;
   const s0=LS.get(ST,null)||{};let n=1;if(s0.d===D.k)n=s0.n||1;else if(s0.d===DK(new Date(D.k+'T12:00:00Z').getTime()-7*3600e3-864e5))n=(s0.n||0)+1;LS.set(ST,{d:D.k,n});
   const tl=stTitle(n),old=stTitle(s0.n||0);if(tl&&tl!==old)setTimeout(()=>{try{island({big:1,pri:1,ic:'🔥',h:`ชะตาต่อเนื่อง ${n} วัน`,t:tl,kind:'rainbow',ms:6000})}catch(e){}},1500);
-  if(typeof onlineOK!=='undefined'&&onlineOK)api('dlput',{d:D.k,s:sc,n:S.name,t:tx,st:n}).then(j=>{try{if(j&&j.rank){const A2=rec();(A2[D.k]=A2[D.k]||{}).rank=j.rank;A2[D.k].of=j.n;LS.set(LSK,A2);toast(`📅 ชะตาประจำวัน: อันดับ ${j.rank} จาก ${j.n} คน`)}}catch(e){}}).catch(()=>{})}
+  if(typeof onlineOK!=='undefined'&&onlineOK)api('dlput',{d:D.k,s:sc,n:S.name,t:tx,st:n,tk:D.tk||'',mx:D.mx,ra:D.ra,x:S.xian?1:0}).then(j=>{try{if(j&&j.rank){const A2=rec();(A2[D.k]=A2[D.k]||{}).rank=j.rank;A2[D.k].of=j.n;LS.set(LSK,A2);toast(`📅 ชะตาประจำวัน: อันดับ ${j.rank} จาก ${j.n} คน`)}}catch(e){}}).catch(()=>{})}
  const keys=Object.keys(A).sort();while(keys.length>20)delete A[keys.shift()];LS.set(LSK,A);
  setTimeout(()=>{try{log(`📅 <b>ผลชะตาประจำวัน</b> ${tx}${first?' · ส่งเข้ากระดานอันดับแล้ว':' · รอบซ้อม (ไม่นับอันดับ)'}`,'myth',true)}catch(e){}},300)}catch(e){console.error('dl fin',e)}}
 {const _sv=saveLegacy;saveLegacy=function(){try{finish()}catch(e){}return _sv.apply(this,arguments)}}

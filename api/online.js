@@ -1643,7 +1643,7 @@ module.exports = async (req, res) => {
 <script>async function ipB(ip,on,b){if(on==='1'&&!confirm('บล็อก '+ip+' จากระบบออนไลน์ 30 วัน?'))return;b.disabled=true;try{const r=await fetch('?a=ipban&key=${K}&ip='+encodeURIComponent(ip)+'&on='+on);const j=await r.json();if(j.ok){b.textContent=on==='1'?'บล็อกแล้ว':on==='del'?'ลบแล้ว':'ปลดแล้ว';if(on==='del')b.closest('.pl').style.opacity=.35}else b.textContent='ไม่สำเร็จ'}catch(x){b.textContent='ไม่สำเร็จ';b.disabled=false}}</script>`;
       const [acL0, clL0, chS] = await pipe([['LRANGE', 'acsus', 0, 79], ['LRANGE', 'cheatlog', 0, 59], ['SMEMBERS', 'cheaters']]);
       const chSet = new Set(chS || []);
-      const AC_WHY = w => { w = String(w || '').replace(/^tamper:/, ''); return w === 'srv-dl' ? '🟠 คะแนนชะตาประจำวันสูงผิดปกติ (เกิน 3 เท่าอันดับ 1)' : w === 'srv-wkc' ? '🟠 คะแนนความท้าทายสัปดาห์สูงผิดปกติ (เกิน 3 เท่าอันดับ 1)' : /^console/.test(w) ? '🔴 แก้ค่าผ่านคอนโซล (' + w.slice(8) + ')' : w === 'save-edit' ? '🔴 แก้ไฟล์เซฟ' : w === 'srv-cap' ? '🔴 ค่าเกินขีดที่เป็นไปได้ (เซิร์ฟเวอร์)' : w === 'srv-jump' ? '🟠 พลังกระโดดเกิน ×1000 ใน 3 ปี (เซิร์ฟเวอร์)' : /^cap/.test(w) ? '🟠 ค่าเกินเพดาน (' + w + ')' : /^jump/.test(w) ? '🟡 ค่ากระโดดเร็ว (' + w.slice(5) + ')' : w === 'banned' ? '🚫 ถูกแบน' : w === 'pow-age' ? '🟡 พลังสูงเกินอายุ' : w === 'stat' ? '🟠 ค่าเกินขีด' : w === 'score' ? '🟠 คะแนนเกินค่าสถานะ' : '⚪ ' + w };
+      const AC_WHY = w => { w = String(w || '').replace(/^tamper:/, ''); return w === 'srv-dl-tk' ? '🔴 ส่งคะแนนชะตาประจำวันโดยไม่ได้เริ่มเล่นจริง' : w === 'srv-dl-fast' ? '🔴 ส่งคะแนนชะตาประจำวันเร็วผิดปกติ (<10 วิ)' : w === 'srv-dl-goal' ? '🔴 ส่งคะแนนชะตาประจำวันผิดเป้าหมายของวัน' : w === 'srv-dl-imp' ? '🔴 ค่าชะตาประจำวันเป็นไปไม่ได้' : w === 'srv-dl' ? '🟠 คะแนนชะตาประจำวันสูงผิดปกติ (เกิน 3 เท่าอันดับ 1)' : w === 'srv-wkc' ? '🟠 คะแนนความท้าทายสัปดาห์สูงผิดปกติ (เกิน 3 เท่าอันดับ 1)' : /^console/.test(w) ? '🔴 แก้ค่าผ่านคอนโซล (' + w.slice(8) + ')' : w === 'save-edit' ? '🔴 แก้ไฟล์เซฟ' : w === 'srv-cap' ? '🔴 ค่าเกินขีดที่เป็นไปได้ (เซิร์ฟเวอร์)' : w === 'srv-jump' ? '🟠 พลังกระโดดเกิน ×1000 ใน 3 ปี (เซิร์ฟเวอร์)' : /^cap/.test(w) ? '🟠 ค่าเกินเพดาน (' + w + ')' : /^jump/.test(w) ? '🟡 ค่ากระโดดเร็ว (' + w.slice(5) + ')' : w === 'banned' ? '🚫 ถูกแบน' : w === 'pow-age' ? '🟡 พลังสูงเกินอายุ' : w === 'stat' ? '🟠 ค่าเกินขีด' : w === 'score' ? '🟠 คะแนนเกินค่าสถานะ' : '⚪ ' + w };
       const acRow = (x, src) => { const f = x.fid || x.id || '', pre = f.slice(0, 10); return `<div class="pl"><div class="plh"><b>${e(x.n || '-')}</b><small>${tAgo(x.t || now)} ที่แล้ว · ${src}</small></div>${AC_WHY(x.why)} · อายุ ${(+x.age || 0).toLocaleString('th-TH')}${x.st ? ` · ⚔️ ${(+x.st.pow || 0).toLocaleString('en-US')} · ⭐ ${(+x.st.fame || 0).toLocaleString('en-US')}` : x.s ? ` · คะแนน ${(+x.s || 0).toLocaleString('en-US')}` : ''} · <small>${e(pre)}${chSet.has(f) ? ' · 🚫 แบนแล้ว' : ''}</small><br><a class="cpb" style="text-decoration:none" target="_blank" href="?a=acinv&key=${K}&p=${e(pre.slice(0, 8))}&h=1">🔍 ดูประวัติ</a> <button class="cpb" onclick="acB('${e(pre)}','1',this)">🚫 แบน</button> <button class="cpb" onclick="acB('${e(pre)}','0',this)">✅ ล้างธง/ปลดแบน</button></div>` };
       const acL = (acL0 || []).map(jp).filter(x => x && !/^(jump|cap|pow-age|srv-jump|score|stat)/.test(String(x.why || '').replace(/^tamper:/, ''))), clL = (clL0 || []).map(jp).filter(Boolean);
       const spD = [0, 1, 2, 3, 4, 5, 6].map(k => thDay(now, k));
@@ -2190,17 +2190,48 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (L.length) await pipe(L);
       return res.json({ ok: 1, n: ids.size });
     }
-    if (a === 'dlput' || a === 'dlget') {
+    if (a === 'dlput' || a === 'dlget' || a === 'dlbeg') {
       // ชะตาประจำวัน v2 — กระดานอันดับรายวัน (วันตามเวลาไทย) · นับเฉพาะชีวิตแรกที่จบของวันนั้น
       const dOf = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10), today = dOf(now), yd = dOf(now - 864e5);
       const unpack = async (d, arr) => { const ids = [], sc = []; for (let i = 0; i < (arr || []).length; i += 2) { ids.push(arr[i]); sc.push(+arr[i + 1]) }
         const m = ids.length ? ((await cmd('HMGET', 'dlm:' + d, ...ids)) || []).map(jp) : [];
         return ids.map((x, i) => Object.assign({ s: sc[i], me: x === id ? 1 : 0 }, m[i] || { n: '?' })) };
+      const DLG = ['realm', 'power', 'age', 'fame', 'kills', 'money', 'follow', 'rings'];
+      if (a === 'dlbeg') { // 🛡️ เริ่มรอบนับอันดับ: ออกตั๋วรอบ (เวลาเริ่ม + เป้าหมาย) · โหวตเป้าหมายของวันจากทุกคน
+        if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
+        const d = String(b.d || ''), g = String(b.g || ''); if ((d !== today && d !== yd) || !DLG.includes(g)) return res.json({ err: 'bad' });
+        if ((await cmd('SET', 'dlbr:' + id, 1, 'NX', 'EX', 5)) !== 'OK') return res.json({ err: 'rate' });
+        const tk = crypto.randomBytes(6).toString('hex');
+        const L = [['HSET', 'dltk:' + d + ':' + id, tk, JSON.stringify({ t: now, g })], ['EXPIRE', 'dltk:' + d + ':' + id, 3 * 86400]];
+        if ((await cmd('SET', 'dlgv:' + d + ':' + id, 1, 'NX', 'EX', 3 * 86400)) === 'OK') L.push(['HINCRBY', 'dlg:' + d, g, 1], ['EXPIRE', 'dlg:' + d, 5 * 86400]);
+        await pipe(L); return res.json({ ok: 1, tk });
+      }
       if (a === 'dlput') {
         if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
         const d = String(b.d || ''); if (d !== today && d !== yd) return res.json({ err: 'day' });
         const c = +(await cmd('INCR', 'dlr:' + id)) || 1; if (c === 1) await cmd('EXPIRE', 'dlr:' + id, 3600); if (c > 12) return res.status(429).json({ err: 'rate' });
-        const sc = Math.max(0, Math.min(1e12, Math.round(+b.s || 0)));
+        let sc = Math.max(0, Math.min(1e12, Math.round(+b.s || 0)));
+        // 🛡️ ตรวจรอบ: ต้องมีตั๋วจาก dlbeg · เล่นจริงอย่างน้อย 10 วิ · เป้าหมายตรงกับของวัน · คะแนนคำนวณใหม่ที่เซิร์ฟเวอร์จากค่าสูงสุดของชีวิต · ค่าต้องเป็นไปได้
+        const DL_GRACE = Date.UTC(2026, 10, 24, 17, 0, 0); // ผ่อนผันเครื่องที่ยังใช้ไฟล์เกมรุ่นเก่า (ยังไม่มีตั๋ว) ถึง 25 พ.ย. 00:00
+        const tk = String(b.tk || '').replace(/[^a-f0-9]/g, '').slice(0, 12), T = tk ? jp(await cmd('HGET', 'dltk:' + d + ':' + id, tk)) : null;
+        const rej = async why => { try { if ((await cmd('SET', 'bsus:' + why + ':' + id, 1, 'NX', 'EX', 21600)) === 'OK') await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, n: clean(String(b.n || ''), 24), age: 0, why, s: sc, info: 1, t: now })], ['LTRIM', 'acsus', 0, 199]]) } catch { } return res.json({ ok: 0, err: 'verify', first: 0, rank: null, n: 0 }) };
+        if (!T) { if (now >= DL_GRACE) return rej('srv-dl-tk');
+          // ช่วงผ่อนผัน: ไม่มีตั๋วขึ้นอันดับ 1 ไม่ได้ ถ้าเกินอันดับ 1 เดิม
+          const t1 = await cmd('ZREVRANGE', 'dl:' + d, 0, 0, 'WITHSCORES'); const top1 = t1 && t1.length > 1 ? +t1[1] : 0; if (top1 > 0 && sc > top1) return rej('srv-dl-tk') }
+        else {
+          if (now - T.t < 10000) return rej('srv-dl-fast');
+          const gv = (await cmd('HGETALL', 'dlg:' + d)) || []; const gm = {}; if (Array.isArray(gv)) for (let i = 0; i + 1 < gv.length; i += 2) gm[gv[i]] = +gv[i + 1]; else for (const k in gv) gm[k] = +gv[k];
+          const tot = Object.values(gm).reduce((x, y) => x + y, 0), top = Object.keys(gm).sort((x, y) => gm[y] - gm[x])[0];
+          if (tot >= 8 && top && gm[top] / tot >= .6 && T.g !== top) return rej('srv-dl-goal');
+          const M = b.mx && typeof b.mx === 'object' ? b.mx : {}, nv = k => { const v = +M[k] || 0; return isFinite(v) ? Math.max(0, v) : 0 };
+          const ag = Math.floor(nv('age')), pw = nv('pow'), ri = Math.floor(nv('ri')), ra = b.ra == null ? null : Math.floor(+b.ra || 0);
+          if (ag > 2e6 || ri > 60 || (ra != null && (ra < 0 || ra > ag + 1))) return rej('srv-dl-imp');
+          const cap = ((+b.x ? 60000 : 25000) * (1 + ag / 8) + 300000) * 12 * 9;
+          if (pw > cap * 30 && ag < 1000) return rej('srv-dl-imp');
+          const g = T.g, S2 = { realm: () => ra != null ? 1e6 - Math.max(1, ra) * 1000 : ri * 1000 + Math.min(999, ag), power: () => Math.round(pw), age: () => ag, fame: () => Math.round(nv('fame')), kills: () => Math.floor(nv('kills')), money: () => Math.round(nv('money')), follow: () => Math.round(nv('fol')), rings: () => Math.floor(nv('rg')) * 1000 + Math.floor(nv('lv')) };
+          sc = Math.max(0, Math.min(1e12, Math.round(S2[g]())));
+          await cmd('HDEL', 'dltk:' + d + ':' + id, tk);
+        }
         if (b.tp || isAdmKey(b.key) || +(await cmd('SISMEMBER', 'cheaters', id))) return res.json({ ok: 1, first: 0, rank: null, n: 0 });
         await boardSus('dl:' + d, sc, id, b.n, 'srv-dl');
         const rec = JSON.stringify({ n: clean(String(b.n || ''), 24) || 'ไร้นาม', t: clean(String(b.t || ''), 70), st: Math.max(0, Math.min(999, +b.st | 0)), at: now });
