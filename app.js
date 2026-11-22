@@ -45345,8 +45345,12 @@ body:not(.mUI) #mEye{display:none}
 body.mUI #sceneBox .scap{left:44px!important}
 /* ---------- แถบล่าง ---------- */
 body.mUI #game .ctrl{position:relative;padding-bottom:calc(6px + env(safe-area-inset-bottom))!important}
-body.mUI:not(.mF) #game .ctrl .onrow{position:absolute;left:0;right:0;bottom:100%;margin:0!important;padding:0 0 6px!important;justify-content:center;pointer-events:none;min-height:0;z-index:5;flex-wrap:wrap}
-body.mUI:not(.mF) #game .ctrl .onrow>*{pointer-events:auto;box-shadow:0 4px 14px #000a}
+body.mUI:not(.mF) #game .ctrl .onrow{position:static;margin:0!important;padding:0 0 6px!important;justify-content:flex-start;min-height:0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:6px}
+body.mUI:not(.mF) #game .ctrl .onrow::-webkit-scrollbar{display:none}
+body.mUI:not(.mF) #game .ctrl .onrow.mE{display:none!important}
+body.mUI:not(.mF) #game .ctrl .onrow>*{flex:0 0 auto;margin:0!important;white-space:nowrap;min-height:34px;animation:mIn .3s cubic-bezier(.2,.9,.3,1.12) both}
+body.mUI #afPill{display:none!important}
+body.mUI #game .crow #autoBtn.on{box-shadow:0 0 0 2px #3aa86a,0 0 12px #3aa86a88!important}
 body.mUI:not(.mF) #ctlTog,body.mUI #onPill{display:none!important}
 body.mUI:not(.mF) #game #focus{display:none!important}
 body.mUI #game .crow{display:flex!important;flex-wrap:wrap!important;gap:6px!important;align-items:center}
@@ -45521,6 +45525,6 @@ function setHtml(){const m=MD(),rm=!!LG('murim_mrm',0)||B.classList.contains('mR
 // ---------- รอบเดิน ----------
 apply();mount();
 addEventListener('resize',()=>{apply()});
-setInterval(()=>{apply();mount();focLbl();bell();feedPass();bumps();idle();if(B.classList.contains('mImm'))mDockUp()},450);
+setInterval(()=>{try{const r=document.querySelector('#game .ctrl .onrow');if(r)r.classList.toggle('mE',![...r.children].some(c=>c.offsetWidth>0&&getComputedStyle(c).display!=='none'&&!/^(ctlTog|onPill)$/.test(c.id)))}catch(e){}apply();mount();focLbl();bell();feedPass();bumps();idle();if(B.classList.contains('mImm'))mDockUp()},450);
 window._mUI={apply,feedPass,restore,MD};
 })()}catch(e){console.error('block147',e)}
