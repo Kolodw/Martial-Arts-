@@ -46454,8 +46454,18 @@ const st=document.createElement('style');st.textContent=`
 #mask.meSh #modal{max-width:520px!important;max-height:88vh!important;max-height:88dvh!important;border-radius:20px!important;padding-bottom:18px!important;margin:auto!important}
 #modal[data-k="me"] .meBrand{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.2px;color:#ffe9b0;background:linear-gradient(90deg,#e8b83a33,#e8b83a14);border:1px solid #e8b83a77;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
 #modal[data-k="me"] .meBrand small{font-weight:700;opacity:.8;font-size:11px}
+#modal[data-k="me"] .meRare{margin-top:8px;padding:7px 11px;border-radius:12px;background:linear-gradient(135deg,#2a1f08,#3a2a0c);border:1px solid #e8b83a99;box-shadow:0 0 12px #e8b83a33}
+#modal[data-k="me"] .meRare small{display:block;font-size:10.5px;opacity:.75;font-weight:700}
+#modal[data-k="me"] .meRare b{display:block;font-size:19px;line-height:1.2;color:#ffd36e;text-shadow:0 0 8px #e8b83a88;word-break:break-all}
+#modal[data-k="me"] .meRare i{display:block;font-style:normal;font-size:12px;font-weight:700;opacity:.9;margin-top:1px}
 #modal[data-k="me"] .meFoot{margin:14px 0 2px;text-align:center;font-size:11.5px;opacity:.7}`;document.head.appendChild(st);
-const brand=()=>{try{const m=$('modal');if(!m||m.dataset.k!=='me')return;const id=m.querySelector('.meId');if(id&&!id.querySelector('.meBrand'))id.insertAdjacentHTML('beforeend','<div class="meBrand">📖 1 ใน นวนิยาย <small>· 1inanovel.com</small></div>');
+// ความหายากของชีวิตนี้ (ค่าเดียวกับหน้าสุ่มกำเนิด) — ยุทธภพ/เซียน/สัตว์เก็บไว้ที่ S.rareN · ยุคปัจจุบัน/ทะลุฟ้า เก็บจากกล่องชะตาตอนเกิด
+{const _f=window.fateBoxH;if(typeof _f==='function')window.fateBoxH=function(){const h=_f.apply(this,arguments);try{const n=/1 ใน ([\d,]+)<\/div>/.exec(h),t=/ระดับชะตา: ([^<]+)</.exec(h),ic=/<div class="ot">(\S+)/.exec(h);if(n)window._lastFate={n:n[1],t:t?t[1]:'',ic:ic?ic[1]:'',at:Date.now()}}catch(e){}return h}}
+setInterval(()=>{try{if(S&&S.alive&&!S.rareN&&!S._fateR&&(S.age|0)<=1&&window._lastFate&&Date.now()-window._lastFate.at<10*60e3){S._fateR=window._lastFate}}catch(e){}},1500);
+const rareTxt=()=>{try{if(S.custom)return{n:'✍️ ชีวิตที่ลิขิตเอง',t:''};if(S.rareN){const f=S.rareF|0,F=typeof FATE!=='undefined'&&FATE[f];return{n:S.rareN>1.5?'1 ใน '+fmt(Math.round(S.rareN)):'ชีวิตธรรมดา',t:F?F[2]+' '+F[1]:''}}
+ if(S._fateR)return{n:'1 ใน '+S._fateR.n,t:(S._fateR.ic?S._fateR.ic+' ':'')+S._fateR.t};if(S.odds)return{n:'1 ใน '+fmt(Math.round(1/S.odds)),t:''}}catch(e){}return null};
+const brand=()=>{try{const m=$('modal');if(!m||m.dataset.k!=='me')return;const id=m.querySelector('.meId');if(id&&!id.querySelector('.meRare')){const R=rareTxt();if(R)id.insertAdjacentHTML('beforeend',`<div class="meRare"><small>ความหายากของชีวิตนี้</small><b>${esc(R.n)}</b>${R.t?`<i>${esc(R.t)}</i>`:''}</div>`)}
+ if(id&&!id.querySelector('.meBrand'))id.insertAdjacentHTML('beforeend','<div class="meBrand">📖 1 ใน นวนิยาย <small>· 1inanovel.com</small></div>');
  if(!m.querySelector('.meFoot'))m.insertAdjacentHTML('beforeend','<div class="meFoot">จำลองชีวิตใน 1 ใน นวนิยาย · 1inanovel.com</div>')}catch(e){}};
 {const _m=modal;modal=function(h,k){const r=_m.apply(this,arguments);if(k==='me')brand();return r};for(const x in _m)try{modal[x]=_m[x]}catch(e){}}
 setInterval(()=>{try{if(modalOpen&&$('modal').dataset.k==='me')brand()}catch(e){}},800);
