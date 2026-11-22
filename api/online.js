@@ -1950,6 +1950,13 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       try { const smp = big.filter((_, i) => i % Math.max(1, Math.floor(big.length / 300)) === 0).slice(0, 300); const mu = await pipe(smp.map(k => ['MEMORY', 'USAGE', k])); const by = {}; smp.forEach((k, i) => { const pf = String(k).split(':')[0]; by[pf] = (by[pf] || 0) + (+mu[i] || 0) }); out.sampleBytesByPrefix = Object.entries(by).sort((x, y) => y[1] - x[1]).slice(0, 20); out.sampled = smp.length } catch (x) { out.memErr = String(x && x.message || x) }
       return res.json(out);
     }
+    if (a === 'perfsum') {
+      // ผู้ดูแล: รายงานความลื่นจากเครื่องผู้เล่น (ย้อนหลัง d วัน สูงสุด 7)
+      const q = qOf(req); if (!isAdmKey(q.key)) return res.status(403).json({ err: 'admin' });
+      const days = Math.max(1, Math.min(7, Math.floor(+q.d || 3))), out = [];
+      for (let i = 0; i < days; i++) { const dk = 'perf:' + new Date(now + 7 * 3600e3 - i * 86400e3).toISOString().slice(0, 10); const L = await cmd('LRANGE', dk, 0, 1999) || []; for (const x of L) { try { out.push(JSON.parse(x)) } catch {} } if (out.length > 5000) break }
+      return res.json({ ok: 1, L: out.slice(0, 5000) });
+    }
     if (a === 'rkprev') {
       // ผู้ดูแล: ดูฉายา/กรอบของรอบหน้าล่วงหน้า · &roll=d|w|m สุ่มชุดของรอบนั้นใหม่
       const q = qOf(req); if (!isAdmKey(q.key)) return res.status(403).json({ err: 'admin' });
@@ -2952,6 +2959,19 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         return res.json({ ok: 1, push: pr, m });
       }
       return res.json({ ok: 1, m });
+    }
+    if (a === 'perf') {
+      // 📈 ข้อมูลความลื่นจากเครื่องผู้เล่น (ไม่มีชื่อ/เซฟ) · 1 รายงานต่อเครื่องต่อ 2 ชม. · เก็บ 15 วัน
+      const who = okId(id) ? String(id) : 'ip:' + String(ip || '').slice(0, 40);
+      if (!(await cmd('SET', 'perfw:' + who, '1', 'NX', 'EX', 7000))) return res.json({ ok: 1, skip: 1 });
+      let d = null; try { d = JSON.parse(String(b.d || '').slice(0, 4000)) } catch {}
+      if (!d || typeof d !== 'object') return res.json({ ok: 0 });
+      const n = (v, lo, hi) => Math.max(lo, Math.min(hi, +v || 0)), sv = (v, l) => String(v == null ? '' : v).replace(/[<>"']/g, '').slice(0, l);
+      const e = { t: now, c: n(d.c, 0, 128), m: n(d.m, 0, 64), w: n(d.w, 0, 10000), h: n(d.h, 0, 10000), dpr: n(d.dpr, 0, 8), mob: d.mob ? 1 : 0, os: sv(d.os, 10), br: sv(d.br, 10), md: sv(d.md, 30), lite: d.lite ? 1 : 0, lm: sv(d.lm, 4), gfx: n(d.gfx, 0, 3), boot: n(d.boot, 0, 600000), dl: n(d.dl, 0, 600000), play: n(d.play, 0, 86400),
+        pg: (Array.isArray(d.pg) ? d.pg : []).slice(0, 10).map(p => Array.isArray(p) ? [sv(p[0], 24), n(p[1], 0, 86400), n(p[2], 0, 240), n(p[3], 0, 1e5), n(p[4], 0, 1e5), n(p[5], 0, 6e4)] : null).filter(Boolean) };
+      const dk = 'perf:' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
+      await pipe([['LPUSH', dk, JSON.stringify(e)], ['LTRIM', dk, 0, 2999], ['EXPIRE', dk, 86400 * 15]]);
+      return res.json({ ok: 1 });
     }
     if (a === 'report') {
       const mid = String(b.mid || '').slice(0, 20);

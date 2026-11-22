@@ -3,8 +3,8 @@
 (()=>{try{const NI=window.setInterval.bind(window),NC=window.clearInterval.bind(window),J=new Map();let seq=1e7;const now=()=>performance.now();
  window.setInterval=function(f,ms,...a){const m=+ms||0;if(typeof f!=='function'||m<250||m>2000)return NI(f,ms,...a);const id=++seq;J.set(id,{f,a,ms:m,next:now()+m,c:0,mul:1});return id};
  window.clearInterval=function(id){if(J.delete(id))return;return NC(id)};
- const cap=j=>Math.max(1,1000/j.ms);
- const run=()=>{requestAnimationFrame(run);const t0=now();for(const j of J.values()){const t=now();if(t<j.next)continue;if(t-t0>4)break;try{j.f.apply(window,j.a)}catch(e){console.error(e)}const d=now()-t;j.c=j.c*.8+d*.2;j.mul=j.c>6?Math.min(cap(j),j.mul+.5):j.c<2?Math.max(1,j.mul-.25):j.mul;j.next=now()+j.ms*j.mul}};
+ const cap=j=>Math.max(1,1000/j.ms)*(window.__jobMul||1);
+ const run=()=>{requestAnimationFrame(run);const t0=now();for(const j of J.values()){const t=now();if(t<j.next)continue;if(t-t0>4)break;try{j.f.apply(window,j.a)}catch(e){console.error(e)}const d=now()-t;j.c=j.c*.8+d*.2;j.mul=j.c>6?Math.min(cap(j),j.mul+.5):j.c<2?Math.max(1,j.mul-.25):j.mul;j.next=now()+j.ms*j.mul*(window.__jobMul||1)}};
  requestAnimationFrame(run);window.__jobs=()=>[...J.values()].map(j=>[j.ms,+j.c.toFixed(2),j.mul])}catch(e){console.error('block0',e)}})();
 // ✂️ ช่องรักษาลำดับการห่อฟังก์ชัน สำหรับโค้ดที่ย้ายไปไฟล์โลก /w/*.js (ดู tools/split-out.mjs · BLOCK 117)
 window.__wSlots={};function wSlot(id,names){const SL=window.__wSlots[id]={base:{},impl:{}};names.forEach(n=>{const b=window[n],has=typeof b==='function';if(has)SL.base[n]=b;window[n]=function(){const f=SL.impl[n]||(has?b:null);if(f)return f.apply(this,arguments);const a=arguments,t=this;return wNeed(id.replace(/\d+$/,''),()=>{const g=SL.impl[n];return g&&g.apply(t,a)})}})}
@@ -46638,3 +46638,75 @@ try{(()=>{let inPY=0,pend=false,raf=0;
  // หน้าต่างที่เปิดขึ้นระหว่างปี/ซ่อนแท็บ: วาดค้างให้ทันที
  document.addEventListener('visibilitychange',()=>{if(pend&&!inPY){cancelAnimationFrame(raf);flush()}});
 })()}catch(e){console.error('block169',e)}
+
+// ============================================================
+// BLOCK 170: 📈 วัดความลื่นจากเครื่องผู้เล่นจริง + ⚡ โหมดลื่น
+//  วัด: fps · จำนวนครั้งที่ค้าง (>50ms / >200ms) แยกตามหน้า · สเปกคร่าวๆ (คอร์ แรม จอ ระบบ/เบราว์เซอร์) · เวลาเปิดเว็บ
+//       ไม่เก็บชื่อ/เซฟ/ข้อความ · ส่งไม่เกินทุก 2 ชม. ต่อเครื่อง (เล่นอย่างน้อย 3 นาที) · ปิดได้ในหน้าคุณภาพภาพ
+//  โหมดลื่น: auto (เครื่องสเปกต่ำ หรือวัดได้ลื่นต่ำกว่า ~35 fps) / เปิด / ปิด — บันทึกบนจอ 120 ข้อความ · งานเบื้องหลังเช็คห่างขึ้น · ฉาก 20 fps
+//       กรอบ/ฉายายังแสดงครบ (เลือกได้ว่าจะให้ขยับ) · ไม่แตะเซฟ
+// ============================================================
+try{(()=>{
+const LSK='murim_lite',LSA='murim_liteAnim',LSP='murim_perfOff';
+const hc=navigator.hardwareConcurrency||0,dm=navigator.deviceMemory||0,mob=/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
+const lowSpec=(hc&&hc<=4)||(dm&&dm<=3);
+let measuredLow=!!LS.get('murim_liteM',0);
+const mode=()=>LS.get(LSK,'auto');
+const liteOn=()=>{const m=mode();return m==='on'||(m==='auto'&&(lowSpec||measuredLow))};
+window.liteOn=liteOn;
+function apply(){const on=liteOn();document.body.classList.toggle('lite',on);document.body.classList.toggle('liteStill',on&&LS.get(LSA,1)===0);window.__jobMul=on?1.6:1}
+apply();
+const st=document.createElement('style');st.textContent=`body.liteStill .frw *,body.liteStill .frw,body.liteStill .dch4,body.liteStill .dch4 *,body.liteStill .dch4::before,body.liteStill .dch4::after,body.liteStill .rt3 *,body.liteStill .mwt *{animation-play-state:paused!important}
+.ltRow{display:flex;gap:6px;margin-top:6px}.ltRow button{flex:1}`;document.head.appendChild(st);
+// บันทึกบนจอ: โหมดลื่นเก็บ 120 ข้อความล่าสุด (ทั้งหมดยังอยู่ในหน้าบันทึกชีวิต)
+{const _a=addFeed;addFeed=function(){const r=_a.apply(this,arguments);try{if(document.body.classList.contains('lite')){const f=$('feed');while(f&&f.children.length>120)f.removeChild(f.firstChild)}}catch(e){}return r};for(const x in _a)try{addFeed[x]=_a[x]}catch(e){}}
+// ฉาก: โหมดลื่น + ภาพสวยสุด → วาด 2 ใน 3 เฟรม (~20 fps)
+{const _t=tickScene;let k=0;tickScene=function(){if(document.body.classList.contains('lite')&&fxQ===2&&(++k%3===0))return;return _t.apply(this,arguments)}}
+// หน้าตั้งค่า: ต่อท้ายหน้า 🎨 คุณภาพภาพ
+window.setLite=v=>{LS.set(LSK,v);apply();toast(v==='on'?'⚡ เปิดโหมดลื่นแล้ว':v==='off'?'ปิดโหมดลื่นแล้ว':'⚡ โหมดลื่น: อัตโนมัติ'+(liteOn()?' (เปิดอยู่)':''));openGfx()};
+window.setLiteAnim=v=>{LS.set(LSA,v?1:0);apply();openGfx()};
+window.setPerfShare=v=>{LS.set(LSP,v?0:1);openGfx()};
+{const _g=openGfx;openGfx=function(){const r=_g.apply(this,arguments);try{const m=$('modal');if(m.dataset.k!=='gfx'||m.querySelector('.ltBox'))return r;const md=mode(),on=liteOn(),an=LS.get(LSA,1)!==0;
+ m.insertAdjacentHTML('beforeend',`<div class="ltBox"><h4 style="margin:14px 0 4px">⚡ โหมดลื่น <small class="tag2">${on?'เปิดอยู่':'ปิดอยู่'}${md==='auto'?' · อัตโนมัติ':''}</small></h4>
+ <p class="tag2" style="margin:0 0 4px">สำหรับเครื่องที่รู้สึกหน่วง: บันทึกบนจอเก็บ 120 ข้อความ · งานเบื้องหลังเช็คห่างขึ้น · ฉากวาด 20 fps · กรอบ ฉายา รูปภาพ แสดงครบเหมือนเดิม · ไม่กระทบเซฟ</p>
+ <div class="ltRow"><button class="gbtn ${md==='auto'?'on':''}" onclick="setLite('auto')">🤖 อัตโนมัติ${md==='auto'?' ✅':''}</button><button class="gbtn ${md==='on'?'on':''}" onclick="setLite('on')">⚡ เปิด${md==='on'?' ✅':''}</button><button class="gbtn ${md==='off'?'on':''}" onclick="setLite('off')">ปิด${md==='off'?' ✅':''}</button></div>
+ <div class="ltRow"><button class="gbtn" onclick="setLiteAnim(${an?0:1})">${an?'✨ กรอบ/ฉายาขยับ: เปิด':'🖼️ กรอบ/ฉายาขยับ: ปิด (นิ่ง · ลื่นกว่า)'}</button></div>
+ <div class="ltRow"><button class="gbtn" onclick="setPerfShare(${LS.get(LSP,0)?1:0})">📈 ส่งข้อมูลความลื่น (ไม่ระบุตัวตน): ${LS.get(LSP,0)?'ปิด':'เปิด'}</button></div></div>`)}catch(e){}return r};window.openGfx=openGfx}
+// ---------- วัด ----------
+const P={pg:{},t0:performance.now(),fr:0,last:0,play:0};let curPg='title';
+const pageNow=()=>{try{if(modalOpen)return 'm:'+($('modal').dataset.k||'-');const g=$('game');if(g&&g.classList.contains('on'))return paused?'game-paused':'game';if(document.getElementById('crB')||document.getElementById('cr'))return 'create';return 'title'}catch(e){return '?'}};
+const rec=k=>P.pg[k]=P.pg[k]||{s:0,f:0,l50:0,l200:0,mx:0};
+let fr=0,lastT=performance.now();
+const loop=t=>{fr++;requestAnimationFrame(loop)};requestAnimationFrame(loop);
+try{new PerformanceObserver(l=>{const r=rec(curPg);for(const e of l.getEntries()){const d=e.duration;if(d>50)r.l50++;if(d>200)r.l200++;if(d>r.mx)r.mx=Math.round(d)}}).observe({type:'longtask',buffered:false})}catch(e){}
+setInterval(()=>{const t=performance.now(),dt=(t-lastT)/1000;lastT=t;if(document.hidden||dt>10){fr=0;return}const r=rec(curPg);r.s+=dt;r.f+=fr;fr=0;if(/^game/.test(curPg))P.play+=dt;curPg=pageNow();
+ // auto: เล่นจริงแล้วลื่นต่ำ → เปิดโหมดลื่นให้ (บอกผู้เล่นครั้งเดียว)
+ try{const g=P.pg.game;if(!measuredLow&&mode()==='auto'&&g&&g.s>60&&g.f/g.s<33){measuredLow=true;LS.set('murim_liteM',1);apply();toast('⚡ เครื่องนี้หน่วงนิดหน่อย เปิดโหมดลื่นให้อัตโนมัติแล้ว · ปิดได้ที่ 🎨 คุณภาพภาพ')}}catch(e){}},2000);
+const ua=()=>{const u=navigator.userAgent;const os=/Android/.test(u)?'Android':/iPhone|iPad|iPod/.test(u)?'iOS':/Windows/.test(u)?'Windows':/Mac/.test(u)?'Mac':/Linux/.test(u)?'Linux':'?';
+ const br=/FBAN|FBAV/.test(u)?'FB-app':/Line\//.test(u)?'LINE-app':/Instagram/.test(u)?'IG-app':/EdgA?\//.test(u)?'Edge':/SamsungBrowser/.test(u)?'Samsung':/CriOS|Chrome\//.test(u)?'Chrome':/Firefox|FxiOS/.test(u)?'Firefox':/Safari/.test(u)?'Safari':'?';
+ const m=/Android [\d.]+; ([^;)]+)/.exec(u);return{os,br,md:m?String(m[1]).slice(0,30):''}};
+async function send(){try{if(LS.get(LSP,0)||P.play<180||document.hidden)return;if(Date.now()-(+LS.get('murim_perfT',0)||0)<2*3600e3)return;
+ const pg=Object.entries(P.pg).filter(([k,v])=>v.s>=5).sort((a,b)=>b[1].s-a[1].s).slice(0,10).map(([k,v])=>[k.slice(0,24),Math.round(v.s),+(v.f/Math.max(1,v.s)).toFixed(1),v.l50,v.l200,v.mx]);
+ const u=ua(),nav=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0];
+ const d={c:hc,m:dm,w:screen.width,h:screen.height,dpr:+(devicePixelRatio||1).toFixed(2),mob:mob?1:0,os:u.os,br:u.br,md:u.md,lite:liteOn()?1:0,lm:mode(),gfx:fxQ,boot:Math.round(window.__bootMs||0),dl:nav?Math.round(nav.responseEnd):0,pg,play:Math.round(P.play)};
+ LS.set('murim_perfT',Date.now());await api('perf',{d:JSON.stringify(d)})}catch(e){window.__perfErr=String(e&&e.message||e)}}
+setInterval(send,60e3);addEventListener('visibilitychange',()=>{if(document.hidden)send()});
+window.__perf=P;window.__perfSend=send;{const bt=setInterval(()=>{const b=document.getElementById('bootL');if(!b||b.classList.contains('out')){if(!window.__bootMs)window.__bootMs=performance.now();clearInterval(bt)}},100)}
+// ---------- หน้าแอดมิน ----------
+window.openPerfAdm=async function(days){days=days||3;modal('<button class="xbtn" onclick="openAdmTools()">←</button><h3>📈 ความลื่นของผู้เล่น</h3><p class="tag2">กำลังโหลด…</p>','perfadm');
+ let j;try{j=await (await fetch(API+'?a=perfsum&d='+days+'&key='+encodeURIComponent(admK()))).json()}catch(e){j=null}
+ if(!j||!j.ok){modal('<button class="xbtn" onclick="openAdmTools()">←</button><h3>📈 ความลื่นของผู้เล่น</h3><p class="tag2">โหลดไม่สำเร็จ (เซิร์ฟเวอร์ยังไม่อัปเดต หรือยังไม่มีข้อมูล)</p>','perfadm');return}
+ const L=j.L||[];const med=a=>{a=a.filter(x=>isFinite(x)).sort((x,y)=>x-y);return a.length?a[Math.floor(a.length/2)]:0};
+ const gfps=e=>{const g=(e.pg||[]).filter(p=>/^game/.test(p[0]));const s=g.reduce((a,p)=>a+p[1],0);return s?g.reduce((a,p)=>a+p[1]*p[2],0)/s:NaN};
+ const lag=e=>{const f=gfps(e);const l2=(e.pg||[]).reduce((a,p)=>a+p[4],0);return (isFinite(f)&&f<40)||l2>=5};
+ const grp=(keyf)=>{const G={};L.forEach(e=>{const k=keyf(e);const g=G[k]=G[k]||{n:0,lag:0,f:[]};g.n++;if(lag(e))g.lag++;g.f.push(gfps(e))});return Object.entries(G).sort((a,b)=>b[1].n-a[1].n).slice(0,12)};
+ const tbl=(t,rows)=>`<h4 style="margin:12px 0 4px">${t}</h4><div class="tag2">${rows.map(([k,g])=>`<div style="display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid #ffffff12"><span>${esc(k)}</span><span>${g.n} คน · แล็ก <b style="color:${g.lag/g.n>.3?'#ff8a7a':'#9fe8a0'}">${Math.round(g.lag/g.n*100)}%</b> · fps กลาง ${Math.round(med(g.f))||'-'}</span></div>`).join('')}</div>`;
+ const PG={};L.forEach(e=>(e.pg||[]).forEach(p=>{const k=p[0].replace(/^m:/,'หน้าต่าง ');const r=PG[k]=PG[k]||{s:0,fs:0,l2:0,n:0};r.s+=p[1];r.fs+=p[1]*p[2];r.l2+=p[4];r.n++}));
+ const pgRows=Object.entries(PG).sort((a,b)=>b[1].l2/Math.max(1,b[1].s)-a[1].l2/Math.max(1,a[1].s)).slice(0,14);
+ const nLag=L.filter(lag).length;
+ modal(`<button class="xbtn" onclick="openAdmTools()">←</button><h3>📈 ความลื่นของผู้เล่น</h3><p class="tag2">${days} วันล่าสุด · ${L.length} รายงาน · แล็ก (fps ตอนเล่น &lt;40 หรือค้างเกิน 0.2 วิ ≥5 ครั้ง) <b>${nLag}</b> (${L.length?Math.round(nLag/L.length*100):0}%) · fps ตอนเล่นกลาง ${Math.round(med(L.map(gfps)))||'-'} · เปิดเว็บกลาง ${(med(L.map(e=>e.boot||e.dl))/1000).toFixed(1)} วิ</p>
+ <div class="ltRow">${[1,3,7].map(d=>`<button class="gbtn ${d===days?'on':''}" onclick="openPerfAdm(${d})">${d} วัน</button>`).join('')}</div>
+ ${tbl('📱 ตามระบบ/เบราว์เซอร์',grp(e=>e.os+' · '+e.br))}${tbl('🧠 ตามสเปก (คอร์ · แรม GB)',grp(e=>(e.c||'?')+' คอร์ · '+(e.m||'?')+' GB'))}${tbl('📲 รุ่นเครื่อง (Android)',grp(e=>e.md||(e.os==='iOS'?'iPhone/iPad':e.os)))}${tbl('⚡ โหมด',grp(e=>(e.lite?'โหมดลื่น':'ปกติ')+' · ภาพ'+(e.gfx===1?'ประหยัด':'สวยสุด')))}
+ <h4 style="margin:12px 0 4px">🧭 หน้าที่ค้างบ่อย (ครั้งที่ค้าง >0.2 วิ ต่อ 10 นาที)</h4><div class="tag2">${pgRows.map(([k,r])=>`<div style="display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid #ffffff12"><span>${esc(k)}</span><span>${(r.l2/Math.max(1,r.s)*600).toFixed(1)} · fps ${Math.round(r.fs/Math.max(1,r.s))}</span></div>`).join('')}</div>`,'perfadm')};
+{const _o=openAdmTools;openAdmTools=function(){const r=_o.apply(this,arguments);try{const m=$('modal');const h=m.querySelector('h3');if(h&&/เครื่องมือแอดมิน/.test(h.textContent)&&!m.querySelector('.perfAdmB'))h.insertAdjacentHTML('afterend','<button class="gbtn perfAdmB" style="width:100%;margin:4px 0 8px" onclick="openPerfAdm(3)">📈 ความลื่นของผู้เล่น (วัดจากเครื่องจริง)</button>')}catch(e){}return r};window.openAdmTools=openAdmTools}
+})()}catch(e){console.error('block170',e)}
