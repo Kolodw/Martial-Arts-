@@ -46536,3 +46536,30 @@ const st=document.createElement('style');st.textContent=`.lvW{display:inline-fle
  m.querySelectorAll('.lvH .tag2').forEach(t=>{if(/^(⚔️ ยุทธภพ|☁️ โลกเทพเซียน) · /.test(t.textContent))t.innerHTML=t.innerHTML.replace(/^(⚔️ ยุทธภพ|☁️ โลกเทพเซียน)/,`${ic} ${esc(nm)}`)});
  if(!/^(w0|w1|w3)$/.test(id))m.querySelectorAll('.lvB .speclist li').forEach(li=>{if(/^จอมยุทธ์พเนจร$/.test(li.textContent.trim()))li.textContent='ไม่สังกัดใคร'})}catch(e){console.error('lvW',e)}return r}}
 })()}catch(e){console.error('block165',e)}
+
+// ============================================================
+// BLOCK 166: 📊 สรุปชีวิตคนอื่น — แท็บสรุปโชว์ค่าของโลกนั้น (แรงก์/ตัวตน/ค่าประจำโลกยุคปัจจุบัน · ระดับจิต/ดวงจิต/วงแหวน · ขั้นทะลุฟ้า · รอบย้อนกาล · ขุมนรก)
+// ============================================================
+try{(()=>{
+const T=x=>String(x==null?'':x).slice(0,40);
+// ฝั่งส่ง: แนบค่าประจำโลก (wg) ไปกับชีวิต
+{const _ld=lifeDetail;lifeDetail=function(){const d=_ld.apply(this,arguments);try{if(!d||!S)return d;const g=[];const id=window._widNow?_widNow():'w0';
+ if(S.mw&&window._mxOf&&!S.mw.sky){const mx=_mxOf(S.mw);if(mx.r)g.push(['🏅','แรงก์/สถานะ',T(mx.r)]);(mx.g||[]).slice(0,6).forEach(c=>g.push([c[0],T(c[1]),T(c[2])]));if(mx.ar)g.push([mx.ar[0],'ตัวตน',T(mx.ar[1])])}
+ else if(S.mw&&S.mw.sky){const K=S.mw.sky;try{g.push(['🌠','ขั้น',T(realmLabel().base)])}catch(e){}if(K.gp!=null)g.push(['🧬','แต้มยีน',fmt(K.gp|0)]);if(K.av)g.push(['👥','ร่างแยก',T(K.av.n||K.av.lv||'มี')])}
+ else if(S.ch==='soul'&&S.sv){g.push(['⭕','ระดับจิต',S.sv.lv|0]);try{g.push(['🔮','ดวงจิต',T((S.sv.sp||[]).map(s=>spNow(s).n).join(' · ')||'-')])}catch(e){}g.push(['💍','วงแหวน',(S.sv.rings||[]).length+' วง'])}
+ else if(S.rg){g.push(['🔁','รอบย้อนกาล',(S.rg.loop|0)+' รอบ']);if(S.flags&&S.flags.rgFree)g.push(['🕊️','หลุดพ้นวงวน','สำเร็จ'])}
+ else if(S.ch==='hell'&&S.hell){g.push(['🔥','ชั้นขุมนรก',S.hell.lv|0]);if(S.hell.cs!=null)g.push(['⛓️','ทัณฑ์ที่ผ่าน',S.hell.cs|0])}
+ if(g.length)d.wg=g.slice(0,9)}catch(e){}return d}}
+// ฝั่งดู: วาดตารางค่าประจำโลก (ชีวิตเก่าที่ไม่มี wg ใช้ข้อมูลเท่าที่มี)
+function wgOf(d){if(Array.isArray(d.wg)&&d.wg.length)return d.wg;const g=[];
+ if(d.sv){g.push(['⭕','ระดับจิต',d.sv.lv|0]);if(d.sv.sp&&d.sv.sp.length)g.push(['🔮','ดวงจิต',d.sv.sp.join(' · ')]);if(d.sv.rg)g.push(['💍','วงแหวน',d.sv.rg.length+' วง'])}
+ else if(d.rg){g.push(['🔁','รอบย้อนกาล',(d.rg.loop|0)+' รอบ']);if(d.rg.free)g.push(['🕊️','หลุดพ้นวงวน','สำเร็จ'])}
+ else if(d.hlg){g.push(['🔥','บันทึกขุมนรก',d.hlg.length+' เรื่อง']);if(d.hcs!=null)g.push(['⛓️','ทัณฑ์ที่ผ่าน',d.hcs|0])}
+ else if(d.wk==='c'&&d.r)g.push(['🏅','แรงก์/สถานะ',d.r]);return g}
+const st=document.createElement('style');st.textContent=`.lvWG{margin:8px 0 6px;padding:8px;border-radius:12px;background:linear-gradient(135deg,#ffffff10,#ffffff04);border:1px solid #e8b84a55}.lvWG h4{margin:0 0 6px;font-size:13px}.lvWG .specgrid{margin:0}`;document.head.appendChild(st);
+{const _d=lvDraw;lvDraw=function(tab){const r=_d.apply(this,arguments);try{if(tab!=='sum')return r;const c=LVC[LV.lid],m=$('modal');if(!c||!m||m.dataset.k!=='lifeview'||m.querySelector('.lvWG'))return r;const d=c.j.d,g=wgOf(d);if(!g.length)return r;
+ const w=m.querySelector('.lvW span'),grid=m.querySelector('.lvB .specgrid');if(!grid)return r;
+ grid.insertAdjacentHTML('beforebegin',`<div class="lvWG"><h4>${w?esc(w.textContent):'🌍 ค่าประจำโลก'}</h4><div class="specgrid">${g.map(x=>`<div>${esc(String(x[0]))} ${esc(String(x[1]))} <b>${esc(String(x[2]))}</b></div>`).join('')}</div></div>`);
+ // ยุคปัจจุบัน/ทะลุฟ้า/ดวงจิต: ซ่อนช่องแบบยุทธภพที่ไม่มีความหมาย (ชนะศึกเป็น 0)
+ grid.querySelectorAll('div').forEach(x=>{if(/ชนะศึก/.test(x.textContent)&&/\b0\b/.test(x.querySelector('b')?x.querySelector('b').textContent:''))x.remove()})}catch(e){console.error('lvWG',e)}return r}}
+})()}catch(e){console.error('block166',e)}
