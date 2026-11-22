@@ -45302,7 +45302,7 @@ setInterval(upd,1500);
 try{const g={s:'world',ic:'☁️',t:'ขึ้นโลกเทพ (เงื่อนไข)',nw:1,d:'อยู่โลกเซียน ต้องครบทุกข้อ: ① ขั้นพลังทะลวงถึงขั้นสูงสุดของโลกเซียน ② เหนือขีดจำกัดครบขั้น 9 ③ อยู่โลกเซียนครบ 800 ปี หรืออายุ 1000 ปี (โหมดสั้น 300/400 · นรก 500/700) ④ ไม่อยู่ในช่วงพักหลังทัณฑ์ล้มเหลว · ครบแล้วกดปุ่ม ⚡ ขึ้นสู่โลกเทพ เหนือแถบเวลา · ยังไม่ครบ แตะปุ่ม 🔒 โลกเทพ ดูว่าขาดข้อไหน'};if(typeof GD2!=='undefined'&&!GD2.some(x=>x.t===g.t))GD2.push(g);if(typeof SYS_GUIDE!=='undefined'&&!SYS_GUIDE.some(x=>x.t===g.t))SYS_GUIDE.push(g)}catch(e){}
 })()}catch(e){console.error('block145',e)}
 // ============================================================
-// BLOCK 147: 📱 มือถือโฉมใหม่ — หัวย่อ · โหมดซ่อน UI (👁) · แถบล่างแถวเดียว+แผงฝึก · หน้าต่างเลื่อนจากล่าง (ปัดลงปิด) · กระดิ่งรวมคำแนะนำ
+// BLOCK 150: 📱 มือถือโฉมใหม่ — หัวย่อ · โหมดซ่อน UI (👁) · แถบล่างแถวเดียว+แผงฝึก · หน้าต่างเลื่อนจากล่าง (ปัดลงปิด) · กระดิ่งรวมคำแนะนำ
 //            · บันทึกแบ่งตามปี (หัวปีติดบน/พับปีเก่า/รวมบรรทัดซ้ำ ×N) · แอนิเมชันสปริง+สั่นเบาๆ · ลดแอนิเมชัน · แนวนอน 2 คอลัมน์ · ตั้งค่า "หน้าจอ: เต็ม/ย่อ/ซ่อน"
 // ============================================================
 try{(()=>{
@@ -45463,7 +45463,7 @@ function bellItems(){const a=[];const hb=$$('hintBox');if(hb&&hb.style.display!=
 function openBell(){try{const it=bellItems();modal(`<div class="mShT">🔔 คำแนะนำ & แจ้งเตือน</div><div id="mBellBody"></div>${it.length?'':'<div class="mEmpty">ตอนนี้ยังไม่มีอะไรใหม่ ✨<br><small>คำแนะนำ เป้าหมาย และเรื่องที่ควรรู้ จะมารวมไว้ที่นี่</small></div>'}<button class="gbtn" style="width:100%;margin-top:4px" onclick="closeM();try{openNow&&openNow()}catch(e){}">🧭 ตอนนี้ควรทำอะไร?</button>`,'mbell');moveIn($$('mBellBody'),it);bellSeen=it.join('|')+bellSig();bell()}catch(e){console.error(e)}}
 let bellSeen='',bellLast='';
 function bellSig(){try{const hb=$$('hintBox');return hb?(hb.textContent||'').slice(0,80):''}catch(e){return''}}
-function bell(){try{const b=$$('mBell');if(!b)return;const it=bellItems();const sig=it.join('|')+bellSig();const n=it.length&&sig!==bellSeen?it.length:0;b.classList.toggle('has',n>0);const bb=b.querySelector('b');if(bb.textContent!==String(n))bb.textContent=n;if(n&&sig!==bellLast){bellLast=sig;b.classList.remove('nw');void b.offsetWidth;b.classList.add('nw')}}catch(e){}}
+function bell(){try{const b=$$('mBell');if(!b)return;const it=bellItems();const sig=it.join('|')+bellSig();const n=(it.length&&sig!==bellSeen?it.length:0)+(window._mUnread||0);b.classList.toggle('has',n>0);const bb=b.querySelector('b');if(bb.textContent!==String(n))bb.textContent=n;if(n&&sig!==bellLast){bellLast=sig;b.classList.remove('nw');void b.offsetWidth;b.classList.add('nw')}}catch(e){}}
 // ไม่ให้ปุ่ม 🧭 หาย: ถ้าไม่มีฟังก์ชัน openNow ใช้ปุ่ม wnBtn
 window.openNow=window.openNow||function(){const w=$$('wnBtn');if(w)w.click()};
 
@@ -45525,9 +45525,9 @@ function setHtml(){const m=MD(),rm=!!LG('murim_mrm',0)||B.classList.contains('mR
 // ---------- รอบเดิน ----------
 apply();mount();
 addEventListener('resize',()=>{apply()});
-setInterval(()=>{try{const r=document.querySelector('#game .ctrl .onrow');if(r)r.classList.toggle('mE',![...r.children].some(c=>c.offsetWidth>0&&getComputedStyle(c).display!=='none'&&!/^(ctlTog|onPill)$/.test(c.id)))}catch(e){}apply();mount();focLbl();bell();feedPass();bumps();idle();if(B.classList.contains('mImm'))mDockUp()},450);
+setInterval(()=>{try{const r=document.querySelector('#game .ctrl .onrow');if(r)0}catch(e){}apply();mount();focLbl();bell();feedPass();bumps();idle();if(B.classList.contains('mImm'))mDockUp()},450);
 window._mUI={apply,feedPass,restore,MD};
-})()}catch(e){console.error('block147',e)}
+})()}catch(e){console.error('block150',e)}
 
 // BLOCK 147: ⏳ อายุขัยจากของที่ใช้/ซื้อระหว่างปี — เดิมกดใช้แล้วเห็นอายุขัยพุ่ง (เช่น 600+) แต่พอข้ามปีกฎ "ของซ้อน" หักทิ้งเงียบๆ เหลือ ~120 (เห็นชัดสุดในทวีปจิตวิญญาณยุทธ์ที่อายุขัยฐานต่ำ)
 // แก้: หักตามกฎทันทีตอนได้ แล้วบอกผู้เล่นว่าได้จริงเท่าไหร่ (ไม่หักซ้ำตอนข้ามปี) · ทวีปวิญญาณยุทธ์ใช้ฐานกฎเท่ากับโลกยุทธภพ (เดิมฐานต่ำ ของชิ้นที่สองแทบไม่ได้อะไร)
@@ -45560,3 +45560,89 @@ body.mUI #mask.mSh #modal[data-k="online"]:has(> #chatBox){height:90vh;height:90
 `;document.head.appendChild(st);
 // เลื่อนแชทขึ้นดูข้อความเก่า (นิ้วลากลง) ไม่ให้ไปลากหน้าต่างปิด
 setInterval(()=>{try{const c=document.getElementById('chatBox');if(c&&!c._b149){c._b149=1;c.addEventListener('touchstart',e=>{if(c.scrollTop>0)e.stopPropagation()},{passive:true})}}catch(e){}},700)})()}catch(e){console.error('block149',e)}
+// ============================================================
+// BLOCK 151: 📐 จัดที่อยู่ให้ทุกปุ่ม (มือถือ) — 3 โซน
+//  โซน 1 ถาดปุ่มเหตุการณ์เหนือแถบล่าง: ⏳รอเลือก > จังหวะฟ้า > ทะลวง/เหาะ > ตามความทรงจำ · ปุ่มสำคัญสุดสีทองมีแสงวาบ
+//  โซน 2 ประกาศด้านบนทีละอัน · หายแล้วบินเข้า 🔔 และเก็บไว้ดูย้อนหลังในกระดิ่ง
+//  โซน 3 หน้าเลือกเหตุการณ์: แถวบนเป็นไอคอนแถวเดียว · ตั้งค่าย้ายเข้า ⚙️ · ตัวเลือกเรียงเข้าทีละใบ · ใบที่เลือกเด้งก่อนปิด
+//  คำแนะนำ: ไม่ชวนเปิดออโต้ตอนเปิดอยู่แล้ว · การ์ดคำแนะนำ/ป้ายอัปเดตไม่ทับแถบล่าง
+// ============================================================
+try{(()=>{
+const $$=id=>document.getElementById(id);const B=document.body;
+const UI=()=>B.classList.contains('mUI'),TRAY=()=>UI()&&!B.classList.contains('mF');
+const css=document.createElement('style');css.textContent=`
+/* ---- โซน 1 ---- */
+body.mUI:not(.mF) #game .ctrl .onrow{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:18px!important}
+body.mUI:not(.mF) .onrow>#pendBar{order:1;display:flex;align-items:center;margin:0!important;padding:0 13px!important;min-height:34px;border-radius:999px!important;font-size:12.5px!important;font-weight:800;white-space:nowrap;max-width:none;cursor:pointer}
+body.mUI:not(.mF) .onrow>#hwCard{order:2;position:static!important;transform:none!important;left:auto!important;bottom:auto!important;width:auto!important;max-width:none;min-height:34px;padding:0 12px 0 6px!important;gap:6px!important;border-radius:999px!important;box-shadow:0 0 12px #ffcf4d66!important;animation:none!important;position:relative!important;overflow:hidden}
+body.mUI:not(.mF) .onrow>#hwCard .hwI{font-size:17px!important;animation:none!important}
+body.mUI:not(.mF) .onrow>#hwCard small,body.mUI:not(.mF) .onrow>#hwCard>:not(.hwI):not(.hwT){display:none!important}
+body.mUI:not(.mF) .onrow>#hwCard .hwT{white-space:nowrap}body.mUI:not(.mF) .onrow>#hwCard .hwT b{font-size:12.5px!important}
+body.mUI:not(.mF) .onrow>#hwCard .hwBar{display:block!important;position:absolute;left:0;right:0;bottom:0;height:3px!important;margin:0!important}
+body.mUI:not(.mF) .onrow>:is(#ascPill,#brkPill){order:3}body.mUI:not(.mF) .onrow>#rgFFp{order:4}
+body.mUI:not(.mF) .onrow>.mHero{border:2px solid #ffd86a!important;background:linear-gradient(180deg,#ffe9a8,#e8b54a 60%,#c98d22)!important;color:#2a1a04!important;box-shadow:0 3px 0 #7a5512,0 0 14px #e8b54a77!important;position:relative;overflow:hidden}
+body.mUI:not(.mF) .onrow>.mHero:after{content:'';position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,#fff8,transparent);animation:mShine 4s ease-in-out infinite;pointer-events:none}
+@keyframes mShine{0%,70%{left:-60%}100%{left:130%}}
+body.mUI #game>#mwHud{margin:5px 0 0!important}body.mUI.mLand #game.on>#mwHud{grid-row:2}
+/* ---- โซน 2 ---- */
+.mQh{visibility:hidden!important}
+.mFly{position:fixed;z-index:2147483000;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;background:#2a1c05;border:2px solid #e8b54a;box-shadow:0 0 16px #ffcf4d;pointer-events:none;transition:transform .55s cubic-bezier(.5,-.2,.6,1),opacity .55s}
+#mBell.bmp{animation:mBp .45s cubic-bezier(.3,1.7,.5,1)}
+.mHist{margin-top:4px}.mHist h4{margin:6px 0 6px;font-size:12.5px;opacity:.75}
+.mHist .hi{display:flex;gap:9px;align-items:flex-start;padding:8px 10px;border-radius:12px;background:#ffffff0a;margin-bottom:6px;font-size:12.5px;line-height:1.45}
+.mHist .hi i{font-style:normal;font-size:17px;flex:none}.mHist .hi time{margin-left:auto;flex:none;font-size:10.5px;opacity:.55}
+/* ---- โซน 3 ---- */
+body.mUI #modal .chtop.mTb{display:flex!important;flex-wrap:nowrap!important;align-items:center;gap:6px;margin:0 0 10px!important}
+body.mUI #modal .chtop.mTb>.mGrp{flex:0 0 auto!important;display:flex!important;gap:6px!important;overflow:visible!important}
+body.mUI #modal .chtop.mTb>:is(span,div,small,b):not(.mGrp){flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px}
+body.mUI #modal .chtop.mTb>:is(span,div,small,b).mOpen{white-space:normal}
+body.mUI #modal .chtop.mTb>:is(span,div,small,b):empty{flex:1 1 0}
+body.mUI #modal .chtop.mTb :is(button,a).mTbB,body.mUI #modal .chtop.mTb>.mGear{flex:0 0 auto;display:inline-flex;align-items:center;gap:3px;white-space:nowrap;min-height:32px;padding:0 10px!important;border-radius:999px!important;border:1px solid #ffffff26!important;background:#ffffff0d!important;text-decoration:none!important;font-size:12px!important;line-height:1;color:inherit}
+body.mUI #modal .chtop.mTb .mLb{display:none}
+body.mUI #modal .chtop.mTb .mMin .mLb{display:inline}body.mUI #modal .chtop.mTb>.mMin{margin-left:auto}
+body.mUI #modal .chtop.mTb .mGear.on{background:#e8b54a33!important;border-color:#e8b54a!important}
+body.mUI #modal .chfoot.mSetH{display:none!important}
+body.mUI #modal .chfoot.mSetS{margin:0 0 12px!important;padding:10px;border-radius:14px;background:#0003;border:1px dashed #ffffff26;animation:mIn .25s both}
+body.mUI #modal[data-k="choice"] .opt{animation:mIn .32s cubic-bezier(.2,.9,.3,1.12) both;animation-delay:calc(var(--d,0)*45ms)}
+.mPick{position:fixed;z-index:2147482500;pointer-events:none;margin:0;transition:transform .32s cubic-bezier(.2,1.4,.4,1),opacity .32s ease-out;box-shadow:0 0 0 2px #ffd86a,0 0 26px #ffcf4d}
+/* ---- คำแนะนำ / ป้ายด้านล่าง ไม่ทับแถบล่าง ---- */
+@media (max-width:1099px){body.mUI #tipCard{bottom:calc(var(--islB,118px) + 6px)!important}body.mUI #updBar,body.mUI #modeTour{bottom:calc(var(--islB,118px) + 6px)!important}}
+body.mUI #game>#hintBar.mNo{display:none!important}
+body.mUI:has(#isl.on) #game>#hintBar{visibility:hidden}
+`;document.head.appendChild(css);
+
+// ---------- โซน 1 ----------
+function tray(){try{{const h=$$('mwHud'),tp=document.querySelector('#game>.box.top');if(h&&tp&&UI()&&h.parentNode&&h.parentNode.classList&&h.parentNode.classList.contains('ctrl'))tp.insertAdjacentElement('afterend',h)}const r=document.querySelector('#game .ctrl .onrow'),ctrl=document.querySelector('#game .ctrl');if(!r||!ctrl)return;const want=TRAY();
+ for(const id of ['pendBar','hwCard']){const n=$$(id);if(!n)continue;if(want&&n.parentNode!==r){r.insertBefore(n,r.firstChild)}else if(!want&&n.parentNode===r){if(id==='pendBar')ctrl.parentNode.insertBefore(n,ctrl);else document.body.appendChild(n)}}
+ const vis=[...r.children].filter(c=>getComputedStyle(c).display!=='none'&&!/^(ctlTog|onPill)$/.test(c.id)&&(c.textContent||'').trim()).sort((a,b)=>(+getComputedStyle(a).order||0)-(+getComputedStyle(b).order||0));
+ [...r.children].forEach(c=>c.classList.toggle('mHero',want&&c===vis[0]));r.classList.toggle('mE',want&&!vis.length)}catch(e){}}
+
+// ---------- โซน 2 ----------
+const TOP=['annBar','paBan','tagBar','nsPush','achPop'];const shown=new Map();const hist=[];let unread=0;
+const isVis=e=>{if(!e||!e.isConnected)return false;const s=getComputedStyle(e);if(s.display==='none'||s.visibility==='hidden'&&!e.classList.contains('mQh')||+s.opacity<.1)return false;const r=e.getBoundingClientRect();return r.bottom>4&&r.top<innerHeight&&r.width>40};
+function icOf(t){const m=(t||'').match(/\p{Extended_Pictographic}/u);return m?m[0]:'🔔'}
+function fly(rect,ic){try{const bl=$$('mBell');if(!bl||!bl.offsetWidth||B.classList.contains('mRM'))return;const b=bl.getBoundingClientRect();const g=document.createElement('div');g.className='mFly';g.textContent=ic;const x=rect.left+rect.width/2,y=rect.top+rect.height/2;g.style.left=x+'px';g.style.top=y+'px';document.body.appendChild(g);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{g.style.transform=`translate(${b.left+b.width/2-x}px,${b.top+b.height/2-y}px) scale(.45)`;g.style.opacity='.2'}));setTimeout(()=>{g.remove();bl.classList.remove('bmp');void bl.offsetWidth;bl.classList.add('bmp')},580)}catch(e){}}
+function tops(){try{if(!UI())return;let active=null;
+ for(const id of TOP){const e=$$(id);const v=isVis(e);const rec=shown.get(id);
+  if(v){const t=(e.innerText||'').replace(/\s+/g,' ').trim();if(!rec||rec.t!==t){shown.set(id,{t,r:e.getBoundingClientRect()});if(t&&t.length>3){hist.unshift({ic:icOf(t),t:t.slice(0,140),at:new Date()});hist.length=Math.min(hist.length,15);unread++}}else rec.r=e.getBoundingClientRect();
+   if(active&&!e.classList.contains('mQh')&&id!=='annBar')e.classList.add('mQh');else if(!active){e.classList.remove('mQh');active=e}}
+  else{if(e)e.classList.remove('mQh');if(rec){shown.delete(id);if(rec.t&&id!=='annBar')fly(rec.r,icOf(rec.t))}}}
+ window._mUnread=unread}catch(e){}}
+{const _m=modal;modal=function(html,k){const r=_m.apply(this,arguments);try{if(k==='mbell'&&$$('modal').dataset.k==='mbell'&&!$$('modal').querySelector('.mHist')){unread=0;window._mUnread=0;const m=$$('modal');const h=hist.length?`<div class="mHist"><h4>🕘 ล่าสุด</h4>${hist.map(x=>`<div class="hi"><i>${x.ic}</i><span>${esc(x.t)}</span><time>${String(x.at.getHours()).padStart(2,'0')}:${String(x.at.getMinutes()).padStart(2,'0')}</time></div>`).join('')}</div>`:'';const emp=m.querySelector('.mEmpty');if(h){if(emp)emp.remove();const btn=m.querySelector('.gbtn');if(btn)btn.insertAdjacentHTML('beforebegin',h);else m.insertAdjacentHTML('beforeend',h)}}
+ if(k==='choice')setTimeout(chTb,0)}catch(e){}return r}}
+
+// ---------- โซน 3 ----------
+function chTb(){try{if(!UI())return;const m=$$('modal');if(!m||m.dataset.k!=='choice')return;const top=m.querySelector('.chtop');if(!top)return;top.classList.add('mTb');
+ [...top.querySelectorAll('button,a')].forEach(b=>{if(b.dataset.mt||b.classList.contains('mGear'))return;b.dataset.mt=1;b.classList.add('mTbB');const t=b.textContent.trim();const mn=/minChoice/.test(b.getAttribute('onclick')||'');const mm=t.match(/^(\p{Extended_Pictographic}\uFE0F?|[▾▴⬇⬆]+)\s*(.+)$/u);if(mm){b.title=t;b.innerHTML=`<span>${mm[1]}</span><span class="mLb">${mn?'ย่อ':esc(mm[2])}</span>`;if(mn)b.classList.add('mMin')}});
+ [...top.children].forEach(c=>{if(c.dataset.mt)return;c.dataset.mt=1;if(c.querySelector('button,a'))c.classList.add('mGrp');else c.addEventListener('click',()=>c.classList.toggle('mOpen'))});
+ const f=m.querySelector('.chfoot');if(f&&!top.querySelector('.mGear')){f.classList.add('mSetH');const g=document.createElement('button');g.type='button';g.className='mGear';g.title='ตั้งค่าการเลือก';g.textContent='⚙️';g.onclick=e=>{e.stopPropagation();const on=f.classList.contains('mSetH');f.classList.toggle('mSetH',!on);f.classList.toggle('mSetS',on);g.classList.toggle('on',on);if(on)top.insertAdjacentElement('afterend',f)};const mn=[...top.children].find(c=>c.classList.contains('mMin'));top.insertBefore(g,mn||null)}
+ [...m.querySelectorAll('.opt')].forEach((o,i)=>{if(!o.style.getPropertyValue('--d'))o.style.setProperty('--d',i)})}catch(e){}}
+document.addEventListener('click',e=>{try{if(!UI()||B.classList.contains('mRM'))return;const o=e.target.closest&&e.target.closest('#modal[data-k="choice"] .opt');if(!o||o.disabled)return;const r=o.getBoundingClientRect();const g=o.cloneNode(true);g.classList.add('mPick');g.removeAttribute('id');Object.assign(g.style,{left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px',animation:'none'});document.body.appendChild(g);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{g.style.transform='scale(1.06)';setTimeout(()=>{g.style.opacity='0';g.style.transform='scale(1.1) translateY(-8px)'},150)}));setTimeout(()=>g.remove(),520)}catch(x){}},true);
+
+// ---------- คำแนะนำ ----------
+function tips(){try{const h=$$('hintBar');if(!h)return;const t=h.textContent||'';const bad=(typeof auto!=='undefined'&&auto&&/ออโต้|อัตโนมัติ/.test(t)&&/เปิด/.test(t))||!!$$('tipCard');h.classList.toggle('mNo',bad)}catch(e){}}
+
+setInterval(()=>{tray();tops();chTb();tips()},300);
+})()}catch(e){console.error('block151',e)}
