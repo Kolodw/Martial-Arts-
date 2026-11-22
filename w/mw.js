@@ -898,7 +898,7 @@ const WA={under:['🥊','งานใต้ดิน','wxu'],ghost:['👻','ร�
 const WB={under:['🤝','ซื้อใจผู้ใหญ่','wxs'],ghost:['🙏','ทำบุญผูกบารมี','wxh'],loop:['🌅','ใช้วันให้เต็ม','wxr'],zombie:['🏠','เสริมที่พัก','wxb'],hunter:['🛋️','พักฟื้นใจ','mwlow'],tower:['🩹','พักฟื้น','wxtr'],game:['💼','ใช้สกิลหาเงิน','wxqp'],gatewon:['🧱','เฝ้ากำแพง','wxwv'],doom:['🌅','อยู่กับคนที่รัก','wxdb']};
 const BASE=[['work','💼','ทำงาน','mwjob'],['net','📱','งานเสริม/คอนเทนต์','mwnet'],['learn','📚','เรียนรู้','mwlearn'],['fam','👪','ครอบครัว/คนรอบตัว','mwlow'],['rest','🌿','พักผ่อน','mwlow']];
 const cats=M=>{const w=wOf(M),L=BASE.slice();if(WA[w]&&(w!=='hunter'||(M.H&&M.H.r>=0&&!M.H.no)))L.splice(1,0,['wa',WA[w][0],WA[w][1],WA[w][2]],['wb',WB[w][0],WB[w][1],WB[w][2]]);return L};
-const def=M=>{const w=wOf(M),L=cats(M),a={};L.forEach(c=>a[c[0]]=0);if(a.wa!=null){a.work=5;a.wa=4;a.wb=1;a.rest=1;a.fam=1}else{a.work=7;a.learn=2;a.fam=2;a.rest=1}return a};
+const def=M=>{const w=wOf(M),L=cats(M),a={};L.forEach(c=>a[c[0]]=0);if(a.wa!=null&&w==='hunter'&&!M.job&&!(M.H&&M.H.hide)){a.work=2;a.wa=7;a.wb=1;a.rest=1;a.fam=1}else if(a.wa!=null){a.work=5;a.wa=4;a.wb=1;a.rest=1;a.fam=1}else{a.work=7;a.learn=2;a.fam=2;a.rest=1}return a};
 const fit=(M,a)=>{const L=cats(M),o={};L.forEach(c=>o[c[0]]=Math.max(0,a&&a[c[0]]||0));let t=Object.values(o).reduce((x,y)=>x+y,0);if(t!==12){const d=def(M);return t===0?d:(()=>{const k=L[0][0];o[k]=Math.max(0,o[k]+12-t);let t2=Object.values(o).reduce((x,y)=>x+y,0);return t2===12?o:d})()}return o};
 const dom=(M,a)=>{const L=cats(M);let b=L[0];L.forEach(c=>{if((a[c[0]]||0)>(a[b[0]]||0))b=c});return b};
 let PD=null;
@@ -6388,6 +6388,25 @@ const meet=w=>{const L=(C.l[w]||[]).filter(x=>x.n!==pname());if(!L.length)return
 window._b92={C,load,MSG};
 })()}catch(e){console.error('block92',e)}
 __done=1;SL.impl.openSoul=openSoul;openSoul=function(){return globalThis.openSoul.apply(this,arguments)};SL.impl.openMenu=openMenu;openMenu=function(){return globalThis.openMenu.apply(this,arguments)};SL.impl.mwYear=mwYear;mwYear=function(){return globalThis.mwYear.apply(this,arguments)};SL.impl.passYear=passYear;passYear=function(){return globalThis.passYear.apply(this,arguments)};})();
+
+// ============================================================
+// 🌀 ฮันเตอร์ที่ปลุกพลังแล้ว ไม่ถูกดึงไปทางโลกเรื่องหางาน (ผู้เล่นแจ้ง: แรงก์สูงแล้วยังโดนชวนไปรับจ้าง)
+//   ใช้กับ: โลกฮันเตอร์ (M.hw>0) · ปลุกพลังแล้ว (M.H.r>=0) · ไม่ได้ซ่อนพลัง (M.H.hide) · ยังไม่มีงานประจำ
+//   · ไม่ขึ้น "💼 ต้องมีงานทำ" (job0) · "📭 ว่างงาน" (car4) · "🧰 งานเล็กระยะสั้น" (car13) · "📑 งานทำที่บ้าน" (sc7)
+//   · ปีที่ตั้งโฟกัสทำงาน: รายได้เท่าเดิม แต่มาจากงานสมาคมฮันเตอร์ ไม่ใช่รับจ้างรายวัน · แถบ HUD บอกแรงก์แทน "ยังไม่มีงานประจำ"
+//   ถ้าอยากทำงานประจำก็ยังกด 💼 หางาน ได้ตามเดิม
+// ============================================================
+try{(()=>{
+const HRL=['E','D','C','B','A','S'];
+const hunt=M=>!!(M&&M.hw>0&&M.H&&M.H.r>=0&&!M.H.hide&&!M.job);
+const BLK=/^(job0|car4|car13|sc7)$/;
+try{const L=window._lifeTbl&&window._lifeTbl.LE;if(L)L.forEach(e=>{if(!BLK.test(e.id))return;const c0=e.c;e.c=function(M){if(hunt(M))return false;return c0?c0.apply(this,arguments):true}})}catch(e){console.error('hjob LE',e)}
+try{const e=MW_R.find(x=>x.id==='job0');if(e){const c0=e.c;e.c=function(M){if(hunt(M))return false;return c0.apply(this,arguments)}}}catch(e){console.error('hjob R',e)}
+try{const _jy=mwJobYear;mwJobYear=function(M){if(!hunt(M))return _jy.apply(this,arguments);
+ const loc=MW_MIN[M.cc||'th']*12*(.6+Math.random()*.25)*(M.fl&&M.fl.agency?2:1);mwFx({mon:mwToB(loc,M),adapt:2});
+ addFeed('ev',`🌀 รับงานจากสมาคมฮันเตอร์ (ลาดตระเวนรอบเกต · คุ้มกันทีมเก็บแก่น) ในฐานะ<b>ฮันเตอร์แรงก์ ${HRL[M.H.r]||'?'}</b> · ทั้งปีได้ราว ${mwLocal(loc,M)} <span class="tag2">— อยากได้แก่นและแต้มแรงก์ ตั้งโฟกัส 🌀 ลงเกต</span>`,'sum')}}catch(e){console.error('hjob Y',e)}
+try{const _r=render;render=function(){const r=_r.apply(this,arguments);try{const M=S&&S.mw;if(hunt(M)){const j=document.querySelector('#mwHud .mwJob:not(.mwGoalR)');if(j&&/ยังไม่มีงานประจำ/.test(j.textContent)){const b=j.querySelector('.mwJobB');j.innerHTML=`🌀 <b>ฮันเตอร์แรงก์ ${HRL[M.H.r]||'?'}</b>${M.H.gu?' · '+esc(M.H.gu):' · อิสระ'} `;if(b){b.textContent='งานประจำ';j.appendChild(b)}}}}catch(e){}return r}}catch(e){console.error('hjob H',e)}
+})()}catch(e){console.error('hunterNoJob',e)}
 
 wReady('mw');
 try{setTimeout(()=>{try{wLoad('nsys').catch(()=>{})}catch(e){}},50)}catch(e){}
