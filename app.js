@@ -46410,3 +46410,35 @@ body.desk #evBack{left:var(--ebL,20px);transform:none;top:var(--ebT,14px);bottom
   const L=document.getElementById('deskL');if(document.body.classList.contains('desk')&&L){const r=L.getBoundingClientRect();el.style.setProperty('--ebL',Math.round(r.left)+'px');el.style.setProperty('--ebT',Math.round(Math.max(8,r.top)+6)+'px');el.style.setProperty('--ebW',Math.round(r.width)+'px')}}catch(e){}}
  window._evBackUpd=upd;setInterval(upd,400);{const _p=pendBar;pendBar=function(){const r=_p.apply(this,arguments);upd();return r};for(const k in _p)try{pendBar[k]=_p[k]}catch(e){}}}
 })()}catch(e){console.error('block161',e)}
+
+// ============================================================
+// BLOCK 162: 🎛️ ตรวจ interaction/animation ของหน้าต่าง — ปิดด้วยฉากหลัง · บทแนะนำค้างบังจอ · แถบแจ้งเตือนปิดได้/ไม่ค้างนาน · สถานะปุ่ม · ลดการเคลื่อนไหว
+// ============================================================
+try{(()=>{
+// 1) คลิกฉากหลัง (นอกหน้าต่าง) = ปิด เฉพาะหน้าต่างที่มีปุ่ม ✕ อยู่แล้ว · เหตุการณ์/ดวล/มินิเกม/จบชีวิต ไม่ปิด
+const KEEP=/^(choice|duel|mg|mg2|bye|death|end|lifeview|born|tut|guide|draft)$/;let dn=null;let opT=0;{const _m=modal;modal=function(){opT=Date.now();return _m.apply(this,arguments)};for(const k in _m)try{modal[k]=_m[k]}catch(e){}}
+document.addEventListener('pointerdown',e=>{dn=e.target===$('mask')?{x:e.clientX,y:e.clientY,t:Date.now()}:null},true);
+document.addEventListener('click',e=>{try{const m=$('mask');if(e.target!==m||!dn||!modalOpen||!m.classList.contains('on'))return;const md=$('modal'),k=md.dataset.k||'';
+ if(KEEP.test(k)||Date.now()-opT<450||Math.hypot(e.clientX-dn.x,e.clientY-dn.y)>12||Date.now()-dn.t>800)return;const x=md.querySelector('.xbtn');if(!x)return;e.stopPropagation();x.click()}catch(er){}},true);
+// 2) บทแนะนำ (coach) ที่เริ่มตอนหน้าต่างเปิด: ปิดหน้าต่างแล้วบทแนะนำต้องจบด้วย ไม่ทิ้งชั้นบังจอไว้
+{const _s=coStart;coStart=function(){const r=_s.apply(this,arguments);try{CO._m=!!(CO.id&&modalOpen)}catch(e){}return r};for(const k in _s)try{coStart[k]=_s[k]}catch(e){}}
+{const _c=closeM;closeM=function(){const r=_c.apply(this,arguments);setTimeout(()=>{try{if(CO.id&&CO._m&&!modalOpen&&document.getElementById('coach'))coEnd(true)}catch(e){}},60);return r};for(const k in _c)try{closeM[k]=_c[k]}catch(e){}}
+// บทแนะนำที่หาเป้าหมายไม่เจอ (หน้าต่างปิดไปแล้ว) ชั้นบังจอจะคลุมทั้งจอ → จบเองหลัง ~2 วิ
+{let z=0;setInterval(()=>{try{const o=document.getElementById('coach');if(!o||!CO.id){z=0;return}const h=o.querySelector('.chole');const r=h&&h.getBoundingClientRect();if(!r||r.width<2||r.height<2)z++;else z=0;if(z>=3){z=0;coEnd(true)}}catch(e){}},700)}
+// 3) แถบแจ้งเตือนบนสุด (เกาะ): มีปุ่ม ✕ ปิดทั้งชุด · ถ้ามีคิวยาว เร่งให้แต่ละอันสั้นลง (ไม่ค้างนาน)
+{const _h=islHtml;islHtml=function(n){let h=_h.apply(this,arguments);try{if(n&&n.key!=='ch'&&!n.live)h+=`<button type="button" class="islX" aria-label="ปิดแจ้งเตือน">✕</button>`}catch(e){}return h}}
+{const _i=island;island=function(n){try{if(n&&!n.big&&!n.pri&&ISL.q.length>=2)n.ms=Math.min(n.ms||2000,1300)}catch(e){}return _i.apply(this,arguments)}}
+// ปุ่มในเกาะถูกวาดใหม่ถี่ → ใช้ pointerdown (click อาจไม่มา) · กันคลิกที่ตามมาไปโดนการ์ด
+{let sw=0;document.addEventListener('pointerdown',e=>{try{const b=e.target.closest&&e.target.closest('#isl .islX');if(!b)return;e.stopImmediatePropagation();e.preventDefault();sw=Date.now();ISL.q=ISL.q.filter(x=>x.pri||x.sticky||x.key==='ch');islNext(true)}catch(er){}},true);
+ document.addEventListener('click',e=>{if(Date.now()-sw<500&&e.target.closest&&e.target.closest('#isl')){e.stopImmediatePropagation();e.preventDefault()}},true)}
+// 4) สถานะปุ่ม: โฟกัส/กด/ปิดใช้ แยกชัด · hover เฉพาะเมาส์ · 5) ลดการเคลื่อนไหวตามตั้งค่าเครื่อง · เวลาเปิดหน้าต่างเท่ากัน
+const st=document.createElement('style');st.textContent=`
+#isl .islX{position:absolute;top:4px;right:6px;width:26px;height:26px;border:0;border-radius:50%;background:rgba(0,0,0,.35);color:#fff;font-size:13px;line-height:26px;padding:0;cursor:pointer;opacity:.85}
+#isl .islX:hover{opacity:1;background:rgba(0,0,0,.55)}#isl .islX:focus-visible{outline:2px solid #ffd36e;outline-offset:1px}
+#game button:focus-visible,#modal button:focus-visible,#modal .opt:focus-visible,#evBack:focus-visible{outline:2px solid #ffd36e!important;outline-offset:2px}
+#game button:disabled,#modal button:disabled,#modal .opt:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.5)}
+#game button:not(:disabled):active,#modal button:not(:disabled):active,#modal .opt:not(:disabled):active{filter:brightness(.88)}
+@media (hover:hover) and (pointer:fine){#game button:not(:disabled):hover,#modal button:not(:disabled):hover,#modal .opt:not(:disabled):hover{filter:brightness(1.1)}}
+html body #mask #modal,html body.mUI #mask.on:not(.mSh) #modal{animation-duration:.22s!important}html body #mask.on{animation-duration:.22s!important}
+@media (prefers-reduced-motion:reduce){html body #mask,html body #mask #modal,html body.mUI #mask.on:not(.mSh) #modal,#modal *,#isl,#isl *,#toast,#evBack,#coach *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}`;document.head.appendChild(st);
+})()}catch(e){console.error('block162',e)}
