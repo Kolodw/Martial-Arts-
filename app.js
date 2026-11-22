@@ -37654,15 +37654,15 @@ const BY={};const ADDG=g=>{if(!g||!g.go)return;const L=(BY[g.go]=BY[g.go]||[]);i
 try{(window._GDALL||[]).forEach(g=>{if(g&&g.t&&!SYS_GUIDE.some(x=>x===g||x.t===g.t))SYS_GUIDE.push(g)})}catch(e){}
 SYS_GUIDE.forEach(ADDG);try{if(typeof GD2!=='undefined')GD2.forEach(ADDG)}catch(e){}
 const txt=g=>LANG==='en'&&g.de?g.de:g.d,ttl=g=>LANG==='en'&&g.te?g.te:g.t;
-function tip(go){try{if(!modalOpen)return;const m=$('modal');if(!m||m.querySelector('.gdTip'))return;const L=BY[go];if(!L||!L.length)return;const h=m.querySelector('h3');if(!h)return;
+function tip(go,s0){try{if(!modalOpen)return;if(s0!=null&&_mSeq===s0)return;const m=$('modal');if(!m||m.querySelector('.gdTip')||/^(choice|duel)$/.test(m.dataset.k||''))return;const L=BY[go];if(!L||!L.length)return;const h=m.querySelector('h3');if(!h)return;
  const S0=seen(),first=!S0[go];const body=L.map(g=>`${L.length>1?`<b>${g.ic||''} ${ttl(g)}</b><br>`:''}${txt(g)}`).join('<hr style="border:0;border-top:1px dashed #e8b83a55;margin:6px 0">');
  h.insertAdjacentHTML('afterend',`<details class="gdTip${first?' new':''}"${first?' open':''}><summary>${first?'💡 ระบบนี้คืออะไร (ครั้งแรก)':'❓ ระบบนี้คืออะไร'}</summary><div>${body}</div></details>`);
  if(first){S0[go]=1;try{LS.set(SEEN,S0)}catch(e){}}}catch(e){}}
-let n=0;Object.keys(BY).forEach(go=>{try{const f=window[go];if(typeof f!=='function')return;const w=function(){const r=f.apply(this,arguments);try{tip(go)}catch(e){}try{if(r&&typeof r.then==='function')r.then(()=>setTimeout(()=>tip(go),50),()=>{})}catch(e){}return r};
+let n=0;Object.keys(BY).forEach(go=>{try{const f=window[go];if(typeof f!=='function')return;const w=function(){const s0=_mSeq;const r=f.apply(this,arguments);try{tip(go,s0)}catch(e){}try{if(r&&typeof r.then==='function')r.then(()=>setTimeout(()=>tip(go,s0),50),()=>{})}catch(e){}return r};
  Object.assign(w,f);window[go]=w;try{if(window[go]===w)n++}catch(e){}}catch(e){}});
 window._gdTipN=n;
 // ไฟล์โลกที่โหลดทีหลัง (/w/*.js) เรียกอันนี้เพื่อใส่กล่อง 💡 ให้หน้าของโลกนั้น
-window._gdTipApply=names=>{(names||Object.keys(BY)).forEach(go=>{try{const f=window[go];if(typeof f!=='function'||f._gdT||!BY[go])return;const w=function(){const r=f.apply(this,arguments);try{tip(go)}catch(e){}try{if(r&&typeof r.then==='function')r.then(()=>setTimeout(()=>tip(go),50),()=>{})}catch(e){}return r};Object.assign(w,f);w._gdT=1;window[go]=w}catch(e){}})};
+window._gdTipApply=names=>{(names||Object.keys(BY)).forEach(go=>{try{const f=window[go];if(typeof f!=='function'||f._gdT||!BY[go])return;const w=function(){const s0=_mSeq;const r=f.apply(this,arguments);try{tip(go,s0)}catch(e){}try{if(r&&typeof r.then==='function')r.then(()=>setTimeout(()=>tip(go,s0),50),()=>{})}catch(e){}return r};Object.assign(w,f);w._gdT=1;window[go]=w}catch(e){}})};
 })()}catch(e){console.error('gdTip',e)}
 
 // ---------- 🎓 บทเรียนระบบ/ภาคเรื่องราว: ขึ้นตอนจังหวะว่าง (เดิมเช็คแค่สิ้นปีที่ไม่มีหน้าต่าง จึงมักพลาด) ----------
@@ -39006,9 +39006,9 @@ const G=[
  ['openQuests','base','📋','เควส','เควสทุกแบบรวมไว้ที่เดียว: ✅ พร้อมส่ง · 🔥 ใกล้หมดเวลา · 📋 กำลังทำ · 📌 ติดตามเควส = เวลาของเควสนั้นเดินช้าลงครึ่งหนึ่ง เกมเตือนก่อนหมดเวลา และตัวเลือกที่ช่วยได้มีป้าย 📌 · ทำได้เกินครึ่งแต่หมดเวลาได้รางวัลครึ่งหนึ่ง · 🔓 ทางแก้ชะตาร้ายก็อยู่ที่นี่ (ทำสำเร็จแล้วชะตาร้ายกลายเป็นพลัง)']];
 const SEEN='murim_tipseen',seen=()=>{try{return LS.get(SEEN,{})||{}}catch(e){return{}}};
 const BY={};G.forEach(([go,s,ic,t,d])=>{(BY[go]=BY[go]||[]).push({ic,t,d});try{if(!SYS_GUIDE.some(x=>x.t===t&&x.go===go))SYS_GUIDE.push({s,ic,t,d,go,life:1,nw:1})}catch(e){}});
-function tip(go){try{if(!modalOpen)return;const m=$('modal');if(!m||m.querySelector('.gdTip'))return;const L=BY[go];if(!L)return;const h=m.querySelector('h3');if(!h)return;const S0=seen(),first=!S0[go];
+function tip(go,s0){try{if(!modalOpen)return;if(s0!=null&&_mSeq===s0)return;const m=$('modal');if(!m||m.querySelector('.gdTip')||/^(choice|duel)$/.test(m.dataset.k||''))return;const L=BY[go];if(!L)return;const h=m.querySelector('h3');if(!h)return;const S0=seen(),first=!S0[go];
  h.insertAdjacentHTML('afterend',`<details class="gdTip${first?' new':''}"${first?' open':''}><summary>${first?'💡 ระบบนี้คืออะไร (ครั้งแรก)':'❓ ระบบนี้คืออะไร'}</summary><div>${L.map(g=>g.d).join('<br>')}</div></details>`);if(first){S0[go]=1;try{LS.set(SEEN,S0)}catch(e){}}}catch(e){}}
-Object.keys(BY).forEach(go=>{try{const f=window[go];if(typeof f!=='function')return;const w=function(){const r=f.apply(this,arguments);try{tip(go)}catch(e){}try{if(r&&typeof r.then==='function')r.then(()=>setTimeout(()=>tip(go),60),()=>{})}catch(e){}return r};Object.assign(w,f);window[go]=w}catch(e){}});
+Object.keys(BY).forEach(go=>{try{const f=window[go];if(typeof f!=='function')return;const w=function(){const s0=_mSeq;const r=f.apply(this,arguments);try{tip(go,s0)}catch(e){}try{if(r&&typeof r.then==='function')r.then(()=>setTimeout(()=>tip(go,s0),60),()=>{})}catch(e){}return r};Object.assign(w,f);window[go]=w}catch(e){}});
 // หน้าที่เรียกตัวเองซ้ำ (เปลี่ยนแท็บ) จะเรียกผ่านชื่อในหน้าต่าง จึงยังขึ้นกล่องได้ — แต่ถ้าเปิดหน้าแล้วยังไม่มี ให้ลองอีกรอบตอนหน้าต่างเปลี่ยน
 // ---------- 2) คำใบ้ผลของตัวเลือก (อ่านจากโค้ดของปุ่มนั้น) ----------
 const RULES=[[/S\.power\s*\+=|pctPow\(|\bpw\(/,'พลัง +'],[/S\.power\s*-=/,'พลัง −'],[/S\.qi\s*\+=/,'ลมปราณ +'],[/S\.qi\s*-=/,'ลมปราณ −'],[/S\.int\s*\+=/,'ปัญญา +'],[/S\.cha\s*\+=/,'เสน่ห์ +'],
@@ -46354,3 +46354,59 @@ window.mw4Chip=(t,p,l,r,sd)=>chip(t,/^[dwm]$/.test(p)?p:'m',SH[l]?l:'n',[1,2,3].
 
 try{const s2=document.createElement('style');s2.textContent='@media (prefers-reduced-motion:reduce){.d4v *,.dch4,.dch4 *,.dch4::before,.dch4::after{animation:none!important}}';document.head.appendChild(s2)}catch(e){}
 })()}catch(e){console.error('block160',e)}
+
+// ============================================================
+// BLOCK 161: 🖥️ จอคอม — หน้าต่างเหตุการณ์ไม่บังบันทึกชีวิต/ฉาก + สัดส่วนคอลัมน์
+//  - ตัวเลือกเหตุการณ์ (choice) บนจอคอม: ลอยทับคอลัมน์ซ้าย (ค่าสถานะ) แทนกลางล่าง → บันทึก ฉาก และเมนูขวาอ่าน/กดได้ระหว่างรอตอบ
+//    พื้นหลังไม่ดักคลิก (กดเมนู กระเป๋า แผนที่ได้เลย ปิดหน้านั้นแล้วเหตุการณ์เดิมกลับมา) · ▾ ย่อไว้ก่อน / แถบรอตอบ ทำงานเหมือนเดิม
+//  - 1100–1499px: คอลัมน์ข้างยืดหดตามจอ (เดิมตายตัว 340/320) → คอลัมน์กลางกว้างขึ้น
+// ============================================================
+try{(()=>{
+const st=document.createElement('style');st.textContent=`
+@media (min-width:1100px) and (max-width:1499px){body.desk #game.on{grid-template-columns:clamp(268px,22vw,340px) minmax(0,1fr) clamp(276px,22vw,320px);gap:14px}}
+body.desk.evDock #mask.on:has(#modal[data-k="choice"]){pointer-events:none;background:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;padding:0;display:block}
+body.desk.evDock #modal[data-k="choice"]{pointer-events:auto;position:fixed!important;left:var(--evL)!important;top:var(--evT)!important;width:var(--evW)!important;max-width:none!important;max-height:var(--evH)!important;margin:0!important;overflow-y:auto!important;overscroll-behavior:contain;box-shadow:0 8px 34px rgba(0,0,0,.6),0 0 0 2px #e8b83a88!important;transform:none!important;animation:evIn .22s ease-out}
+body.desk.evDock #modal[data-k="choice"] h3{font-size:1.15em;line-height:1.35}
+body.desk.evDock #modal[data-k="choice"] .chtop{flex-wrap:wrap;gap:4px 10px}
+@keyframes evIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+`;document.head.appendChild(st);
+const B=document.body;
+function dock(){try{const L=document.getElementById('deskL'),on=B.classList.contains('desk')&&!!L&&modalOpen&&$('modal').dataset.k==='choice';
+ B.classList.toggle('evDock',on);if(!on)return;const r=L.getBoundingClientRect(),H=innerHeight;
+ const top=Math.max(8,r.top),w=Math.max(280,Math.round(r.width)+6);
+ B.style.setProperty('--evL',Math.max(6,Math.round(r.left)-3)+'px');B.style.setProperty('--evT',Math.round(top)+'px');B.style.setProperty('--evW',w+'px');B.style.setProperty('--evH',Math.round(H-top-10)+'px')}catch(e){}}
+window._evDock=dock;
+{const _cs=choiceShow;choiceShow=function(){const r=_cs.apply(this,arguments);dock();return r}}
+{const _m=modal;modal=function(){const r=_m.apply(this,arguments);dock();return r};for(const k in _m)try{modal[k]=_m[k]}catch(e){}}
+{const _c=closeM;closeM=function(){const r=_c.apply(this,arguments);dock();return r};for(const k in _c)try{closeM[k]=_c[k]}catch(e){}}
+addEventListener('resize',dock);setInterval(dock,700);
+// 🛡️ เปิดหน้าอื่นตอนเหตุการณ์รอตอบ: ถ้าหน้านั้นไม่ได้เปิดขึ้นจริง (ถูกเลื่อนไว้หลังเหตุการณ์/เปิดไม่ได้) ของที่หน้านั้นแปะเพิ่ม
+//   (กล่องระบบนี้คืออะไร · ร้านกระเป๋า ฯลฯ) จะไม่ค้างอยู่ในหน้าต่างเหตุการณ์ — วาดเหตุการณ์ใหม่ด้วยข้อความ/ตัวเลือกเดิม
+const SKIPN=/^(openPend|openM$)/;
+function guard(f){const w=function(){let ch=false;try{ch=modalOpen&&$('modal').dataset.k==='choice'&&!!choice._cur}catch(e){}if(!ch)return f.apply(this,arguments);
+ const m=$('modal'),s0=_mSeq,c0=choice._cur,n0=m.querySelectorAll('*').length;const r=f.apply(this,arguments);
+ const fix=()=>{try{if(choice._cur===c0&&modalOpen&&m.dataset.k==='choice'&&_mSeq===s0&&m.querySelectorAll('*').length!==n0){const sc=m.scrollTop;choiceShow();m.scrollTop=sc}}catch(e){}};
+ fix();try{if(r&&typeof r.then==='function')r.then(()=>setTimeout(fix,80),()=>{})}catch(e){}return r};
+ try{Object.assign(w,f)}catch(e){}w._evG=1;return w}
+function wrapAll(){try{for(const k of Object.keys(window)){if(k.length<5||k.slice(0,4)!=='open'||SKIPN.test(k))continue;let f;try{f=window[k]}catch(e){continue}if(typeof f!=='function'||f._evG)continue;try{window[k]=guard(f)}catch(e){}}}catch(e){}}
+wrapAll();setInterval(wrapAll,1500);
+// 📱 การ์ดบนสุด (เกาะ): ปุ่มถูกวาดใหม่ถี่ ๆ → นิ้วกดลงกับยกขึ้นคนละปุ่ม เบราว์เซอร์จึงไม่ส่ง click (แตะ "เปิดดู"/ตัวเลือกแล้วไม่มีอะไรเกิด)
+//   จำปุ่มตอนกดลง แล้วทำงานตอนยกนิ้วในการ์ดเดิม ถ้า click ปกติไม่มาเอง (กันกดซ้ำ)
+{let P=null;
+ document.addEventListener('pointerdown',ev=>{try{const b=ev.target.closest&&ev.target.closest('#isl .islBtn');P=b&&ISL.cur&&ISL.cur.btns?{i:+b.dataset.b,c:ISL.cur,t:Date.now(),done:false}:null}catch(e){P=null}},true);
+ document.addEventListener('click',ev=>{try{if(P&&ev.target.closest&&ev.target.closest('#isl'))P.done=true}catch(e){}},true);
+ document.addEventListener('pointerup',ev=>{try{const p=P;if(!p||!(ev.target.closest&&ev.target.closest('#isl'))||Date.now()-p.t>900)return;
+  setTimeout(()=>{if(p.done||P!==p)return;p.done=true;const f=p.c.btns[p.i];if(!f||ISL.cur!==p.c)return;try{islNext(true)}catch(e){}try{f.f()}catch(e){console.error(e)}},60)}catch(e){}},true)}
+// 📜 ปุ่มกลับไปตอบเหตุการณ์ที่ย่อไว้ — ลอยบนสุดเสมอ (มือถือ: เหนือแถบปุ่มล่าง · คอม: มุมบนคอลัมน์ซ้าย) ผู้เล่นรายงานว่าย่อแล้วไม่มีปุ่มกดกลับ
+{const cs=document.createElement('style');cs.textContent=`#evBack{position:fixed;z-index:99995;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 96px);display:none;align-items:center;gap:8px;max-width:min(92vw,440px);padding:10px 16px;border-radius:999px;border:2px solid #e8b83a;background:linear-gradient(180deg,#3a2a0e,#1e1606);color:#fff3c4;font:700 14px/1.3 inherit;box-shadow:0 6px 22px rgba(0,0,0,.55),0 0 0 3px #e8b83a33;cursor:pointer;animation:evBk .25s ease-out}
+#evBack.on{display:flex}#evBack span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}#evBack b{flex:none;background:#e8b83a;color:#2a1a00;border-radius:999px;padding:3px 10px;font-size:12.5px}
+#evBack:hover{filter:brightness(1.12)}#evBack:active{transform:translateX(-50%) scale(.96)}#evBack:focus-visible{outline:3px solid #fff;outline-offset:2px}
+body.desk #evBack{left:var(--ebL,20px);transform:none;top:var(--ebT,14px);bottom:auto;max-width:var(--ebW,320px)}body.desk #evBack:active{transform:scale(.96)}
+@keyframes evBk{from{opacity:0;translate:0 8px}to{opacity:1;translate:0 0}}@media (prefers-reduced-motion:reduce){#evBack{animation:none}}`;document.head.appendChild(cs);
+ const el=document.createElement('button');el.id='evBack';el.type='button';el.setAttribute('aria-label','กลับไปตอบเหตุการณ์ที่ย่อไว้');document.body.appendChild(el);
+ el.addEventListener('click',e=>{e.stopPropagation();try{openPend()}catch(x){}upd()});
+ function upd(){try{const on=!!(S&&S.alive&&choice._cur&&choice._min&&!(modalOpen&&$('mask').classList.contains('on')));el.classList.toggle('on',on);if(!on)return;
+  const t=String(choice._cur.title||'').replace(/<[^>]+>/g,'').slice(0,50);const h=`📜 <span>${esc(t)}</span><b>กลับไปตอบ</b>`;if(el._h!==h){el.innerHTML=h;el._h=h}
+  const L=document.getElementById('deskL');if(document.body.classList.contains('desk')&&L){const r=L.getBoundingClientRect();el.style.setProperty('--ebL',Math.round(r.left)+'px');el.style.setProperty('--ebT',Math.round(Math.max(8,r.top)+6)+'px');el.style.setProperty('--ebW',Math.round(r.width)+'px')}}catch(e){}}
+ window._evBackUpd=upd;setInterval(upd,400);{const _p=pendBar;pendBar=function(){const r=_p.apply(this,arguments);upd();return r};for(const k in _p)try{pendBar[k]=_p[k]}catch(e){}}}
+})()}catch(e){console.error('block161',e)}
