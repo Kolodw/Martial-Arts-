@@ -43628,14 +43628,14 @@ window.mwSvg=mwSvg;
 function spec(id){id=String(id||'');let m=/^f_mw([nuopzteqyv])([123])$/.exec(id);if(m)return{l:m[1],p:'m',r:+m[2],s:''};try{m=window.RKG&&RKG.RE.exec(id);if(m&&isL(m[2]))return{l:m[2],p:m[1],r:+m[4],s:m[3]}}catch(e){}return null}
 const MINE=new Set();
 {const _fw=frWrap;frWrap=function(inner,id){const q=id&&spec(id);if(!q)return _fw.apply(this,arguments);
- try{const M=window.FRSH_M,T=window.FRSH_T;if(M&&T&&!MINE.has(id)){try{_fw.apply(this,arguments)}catch(e){}const key='mw2_'+id,html=mwSvg(q.l,q.p,q.r,q.s);M[key]=()=>html;T[id]=key;MINE.add(id);try{const f=FRAMES.find(x=>x.id===id);if(f){f.ty='static';f.bd=''}}catch(e){}}}catch(e){}
- let h=_fw.apply(this,arguments);try{h=h.replace(/--clip:[^;"]*;?/,'--clip:'+(CLIPS[q.l]||'circle(48% at 50% 50%)')+';');if(!/ fsh /.test(h))h=h.replace(/class="frw /,'class="frw fsh mwf ').replace(/style="/,'style="--clip:'+(CLIPS[q.l]||'circle(48% at 50% 50%)')+';');else h=h.replace(/class="frw /,'class="frw mwf ')}catch(e){}return h}}
+ try{const M=window.FRSH_M,T=window.FRSH_T;if(M&&T&&!MINE.has(id)){try{_fw.apply(this,arguments)}catch(e){}const key='mw2_'+id,html=window.mw4Svg?mw4Svg(q.l,q.p,q.r,q.s):mwSvg(q.l,q.p,q.r,q.s);M[key]=()=>html;T[id]=key;MINE.add(id);try{const f=FRAMES.find(x=>x.id===id);if(f){f.ty='static';f.bd=''}}catch(e){}}}catch(e){}
+ let h=_fw.apply(this,arguments);try{const CL=(window.mw4ClipOf&&mw4ClipOf(q.l,q.p,q.s))||CLIPS[q.l]||'circle(48% at 50% 50%)';h=h.replace(/--clip:[^;"]*;?/,'--clip:'+CL+';');if(!/ fsh /.test(h))h=h.replace(/class="frw /,'class="frw fsh mwf ').replace(/style="/,'style="--clip:'+CL+';');else h=h.replace(/class="frw /,'class="frw mwf ')}catch(e){}return h}}
 // ---------- ฉายา: ป้ายติดเทรนด์ ----------
 function tInfo(t,tr){t=String(t||'');try{const g=window._rkGEN&&window._rkGEN.get(t);if(g&&isL(g.c))return{l:g.c,p:g.p,r:g.r}}catch(e){}
  try{const o=RKC_OF(t);if(o&&o.p.length===2&&isL(o.p[1]))return{l:o.p[1],p:o.p[0],r:o.r}}catch(e){}
  try{if(window.RKG){const c=RKG.cat(t);if(isL(c)){const r=RKG.rank(t);if(r)return{l:c,p:tr===9?'m':tr===8?'w':'d',r}}}}catch(e){}return null}
 const CHP={v:q=>`<b class="mk">🚪</b>`,n:q=>`<b class="mk">${RL[q.r]}</b>`,u:q=>`<i class="nd"></i>`,o:q=>`<b class="mk">๛</b>`,p:q=>`<b class="mk">${q.r===1?'07:00':q.r===2?'06:59':'06:58'}</b>`,z:q=>`<b class="mk">☣</b>`,t:q=>`<b class="mk">▲${101-q.r}F</b>`,e:q=>`<b class="mk">▶</b>`,q:q=>`<b class="mk">★</b>`,y:q=>`<b class="mk">⚠</b>`};
-{const _rc=rkChip;rkChip=function(t,tr){try{const q=tInfo(t,tr);if(q){const [a,,b,bg]=PAL[q.l],[m1]=RK[q.r]||RK[3];return`<span class="mwt mwt-${q.l} mwt${q.r} mwp${q.p}" style="--a:${a};--b:${b};--m:${m1};--bg:${bg}"><i class="mws"></i>${CHP[q.l](q)}<span class="tx">${esc(String(t).slice(0,40))}</span><small>#${q.r}·${PLT[q.p]}</small></span>`}}catch(e){}return _rc.apply(this,arguments)}}
+{const _rc=rkChip;rkChip=function(t,tr){try{const q=tInfo(t,tr);if(q){if(window.mw4Chip)return mw4Chip(t,q.p,q.l,q.r,(window.RKG&&RKG.rank(t)&&!RKC_OF(t))?t:'');const [a,,b,bg]=PAL[q.l],[m1]=RK[q.r]||RK[3];return`<span class="mwt mwt-${q.l} mwt${q.r} mwp${q.p}" style="--a:${a};--b:${b};--m:${m1};--bg:${bg}"><i class="mws"></i>${CHP[q.l](q)}<span class="tx">${esc(String(t).slice(0,40))}</span><small>#${q.r}·${PLT[q.p]}</small></span>`}}catch(e){}return _rc.apply(this,arguments)}}
 // ---------- ผู้ดูแล: ดู/สุ่มฉายา+กรอบ 9 โลก ----------
 {const _oa=window.openRkAdmin;if(typeof _oa==='function'){window.openRkAdmin=async function(p,roll){const r=await _oa.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='rkadm'||m.querySelector('.mwAdm'))return r;const p0=p||_oa._p||'d';
   const j=await (await fetch(API+'?a=rkprev&fmt=json&key='+encodeURIComponent(admK()))).json(),k=j.keys[p0||'d'];
@@ -46063,3 +46063,261 @@ function back(){try{if(!S||!S._mwStash)return;if(S.mw&&(typeof mwOn!=='function'
 {const _r=render;render=function(){link();back();return _r.apply(this,arguments)}}
 setInterval(()=>{link();back()},1500);
 })()}catch(e){console.error('block159',e)}
+
+// ============================================================
+// BLOCK 160: 🏙️ กรอบ + ฉายาอันดับยุคปัจจุบัน 9 โลก + ผู้ข้ามโลก ชุดใหม่ — แต่ละโลกมีทรงกรอบ ลวดลายเคลื่อนไหว ของประดับยอด และป้ายฉายาของตัวเอง
+//   สีโลหะ = อันดับ (ทอง/เงิน/ทองแดง) · วัน = ทรง+ไฟวิ่ง · สัปดาห์ = + ลวดลาย · เดือน = เต็มชุด · ใช้แทนตัววาดใน BLOCK 116 (mwSvg / ป้าย mwt)
+// ============================================================
+try{(()=>{
+const f1=n=>Math.round(n*10)/10,PL={d:'วัน',w:'สัปดาห์',m:'เดือน'};
+const MET={1:['#fff6d0','#ffd36e','#b8860b','#3a2400'],2:['#ffffff','#dfe6f2','#8a98b0','#20283a'],3:['#ffe4cc','#e8a070','#9a5a2a','#3a1a08']};
+const pt=(a,r,cx=50,cy=50)=>[f1(cx+Math.cos(a*Math.PI/180)*r),f1(cy+Math.sin(a*Math.PI/180)*r)];
+const ngon=(n,r,rot,cx=50,cy=50)=>'M'+Array.from({length:n},(_,i)=>pt(rot+360*i/n,r,cx,cy).join(' ')).join('L')+'Z';
+const poly=(n,inner,r=51)=>'M'+Array.from({length:2*n},(_,i)=>pt(i*180/n-90,i%2?r*inner:r).join(' ')).join('L')+'Z';
+const star=(x,y,r,f,c='')=>`<path class="${c}" d="M${x} ${f1(y-r)}L${f1(x+r*.28)} ${f1(y-r*.28)}L${f1(x+r)} ${y}L${f1(x+r*.28)} ${f1(y+r*.28)}L${x} ${f1(y+r)}L${f1(x-r*.28)} ${f1(y+r*.28)}L${f1(x-r)} ${y}L${f1(x-r*.28)} ${f1(y-r*.28)}Z" fill="${f}"/>`;
+const A=(c,d,dl=0,o='')=>`class="${c}" style="${d?`animation-duration:${d}s;`:''}${dl?`animation-delay:-${dl}s;`:''}${o}"`;
+const ORG=(x,y)=>`transform-origin:${x}px ${y}px;`;
+let seed=1;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const SH={
+ n:[ngon(6,56,-90),'polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)'],
+ u:['M10 -2H90L102 10V90L90 102H10L-2 90V10Z','polygon(10% 0,90% 0,100% 10%,100% 90%,90% 100%,10% 100%,0 90%,0 10%)'],
+ o:['M-2 102V40A52 52 0 0 1 102 40V102Z','inset(0 round 50% 50% 0 0)'],
+ p:['M50 -1A51 51 0 1 1 49.9 -1Z','circle(47% at 50% 50%)'],
+ z:['M50 -4L98 12L102 56Q96 94 50 108Q4 94 -2 56L2 12Z','polygon(50% 0,96% 14%,98% 56%,50% 100%,2% 56%,4% 14%)'],
+ t:['M50 -12L72 4H96V102H4V4H28Z','polygon(50% 0,72% 8%,100% 8%,100% 100%,0 100%,0 8%,28% 8%)'],
+ e:['M8 -2H92V4H98V10H102V90H98V96H92V102H8V96H2V90H-2V10H2V4H8Z','polygon(6% 0,94% 0,100% 6%,100% 94%,94% 100%,6% 100%,0 94%,0 6%)'],
+ q:['M-2 8H8V-2H20V8H32V-2H44V8H56V-2H68V8H80V-2H92V8H102V70Q102 96 50 108Q-2 96 -2 70Z','polygon(0 6%,100% 6%,100% 66%,50% 100%,0 66%)'],
+ y:[poly(14,.86,53),'circle(45% at 50% 50%)'],
+ v:['M50 -16L116 50L50 116L-16 50Z','polygon(50% 0,100% 50%,50% 100%,0 50%)']};
+const ACC={n:'#3a9aff',u:'#ff3ad0',o:'#3ad8a0',p:'#ffb84a',z:'#8aff3a',t:'#c8a0ff',e:'#3affb0',q:'#ff4a3a',y:'#ff8a2a',v:'#b070ff'};
+const AC2={n:'#9fe8ff',u:'#5cf2ff',o:'#ffd060',p:'#fff3c4',z:'#d8ff9a',t:'#ffffff',e:'#ffd83a',q:'#ffd060',y:'#ffe08a',v:'#5cc8ff'};
+// อนุภาค
+const rise=(n,xs,y0,c,sz=1.6,dur=3)=>Array.from({length:n},(_,i)=>{const x=f1(xs[0]+rnd()*(xs[1]-xs[0]));return`<circle cx="${x}" cy="${y0}" r="${f1(sz*(.6+rnd()*.7))}" fill="${c}" ${A('d4rise',f1(dur*(.7+rnd()*.6)),f1(rnd()*dur))}/>`}).join('');
+const twk=(pts,c,r=2.4)=>pts.map(([x,y],i)=>`<g ${A('d4twk',f1(1.4+rnd()*1.4),f1(rnd()*2),ORG(x,y))}>${star(x,y,r,c)}</g>`).join('');
+// ---------- ลวดลายแต่ละโลก: [หลังกรอบ, หน้ากรอบ] ----------
+const K={
+n:(p,M,a,b,g)=>{let B='',F='';
+ if(p!=='d'){B+=`<g ${A('d4spin',14,0,ORG(50,50))}><circle cx="50" cy="50" r="70" fill="none" stroke="${a}" stroke-width="2.2" stroke-dasharray="14 6 3 6" opacity=".75"/></g><g ${A('d4spinR',22,0,ORG(50,50))}><circle cx="50" cy="50" r="64" fill="none" stroke="${b}" stroke-width="1" stroke-dasharray="1 4" opacity=".9"/></g>`;
+  [-30,30,150,210].forEach((ang,i)=>{const [x,y]=pt(ang,66);F+=`<g ${A('d4bob',2.2,i*.5)}><path d="M${x} ${y-7}L${x+4} ${y}L${x} ${y+7}L${x-4} ${y}Z" fill="${b}" stroke="${a}" stroke-width="1"/><path d="M${x} ${y-7}L${x+4} ${y}H${x-4}Z" fill="#fff" opacity=".6"/></g>`})}
+ if(p==='m'){B=`<g ${A('d4spinR',30,0,ORG(50,50))}>${Array.from({length:24},(_,i)=>{const [x,y]=pt(i*15,80);return`<rect x="${x-2}" y="${y-2}" width="4" height="4" fill="${i%3?a:b}" transform="rotate(${i*15+45} ${x} ${y})" opacity=".85"/>`}).join('')}</g><circle cx="50" cy="50" r="86" fill="none" stroke="${a}" stroke-width=".8" opacity=".5"/>`+B;
+  F+=[[-24,30,1],[124,64,-1]].map(([x,y,d],i)=>`<path ${A('d4zap',1.8,i*.9)} d="M${x} ${y-14}L${x+4*d} ${y-3}L${x-2*d} ${y-1}L${x+5*d} ${y+14}" fill="none" stroke="${b}" stroke-width="1.8" stroke-linejoin="round" style="filter:drop-shadow(0 0 3px ${a})"/>`).join('')+rise(6,[-10,110],116,b,1.3,3.4)}
+ return[B,F]},
+u:(p,M,a,b,g,S)=>{let B='',F=`<path d="${S}" fill="none" stroke="${b}" stroke-width="1.4" transform="translate(50 50) scale(1.13) translate(-50 -50)" ${A('d4flk',3.2)} opacity=".9"/>`;
+ if(p!=='d'){F+=`<path d="${S}" fill="none" stroke="${a}" stroke-width="2.6" transform="translate(50 50) scale(1.24) translate(-50 -50)" style="filter:drop-shadow(0 0 4px ${a})"/><path d="${S}" pathLength="100" fill="none" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 44" transform="translate(50 50) scale(1.24) translate(-50 -50)" ${A('d4run',2.4)}/>`;
+  let sk='';[[-22,18],[-12,30],[-2,14],[102,26],[112,16],[122,32]].forEach(([x,h])=>{sk+=`<rect x="${x-5}" y="${126-h}" width="10" height="${h}" fill="#140820"/>`;for(let j=0;j<3;j++)sk+=`<rect x="${x-3+(j%2)*4}" y="${130-h+j*6}" width="2" height="2.4" fill="${j%2?b:a}" ${A('d4twk',f1(1.5+rnd()*2),f1(rnd()*2))}/>`});B+=sk}
+ if(p==='m'){B=`<g opacity=".22"><path d="M-30 130L22 -14L36 -14L2 130Z" fill="${a}" ${A('d4beam',4.4,0,ORG(27,130))}/><path d="M130 130L78 -14L64 -14L98 130Z" fill="${b}" ${A('d4beamR',4.4,0,ORG(73,130))}/></g>`+B;
+  F+=Array.from({length:10},(_,i)=>{const x=f1(-24+rnd()*148);return`<path d="M${x} -30l-2 8" stroke="${b}" stroke-width=".8" opacity=".6" ${A('d4rain',f1(.7+rnd()*.5),f1(rnd()))}/>`}).join('')+`<g ${A('d4flk',2.6,1)}><text x="-14" y="56" text-anchor="middle" font-size="13" fill="${a}" style="filter:drop-shadow(0 0 3px ${a})">◀</text><text x="114" y="56" text-anchor="middle" font-size="13" fill="${b}" style="filter:drop-shadow(0 0 3px ${b})">▶</text></g>`}
+ return[B,F]},
+o:(p,M,a,b,g)=>{let B='',F='';
+ if(p!=='d'){const n=p==='m'?5:3;F+=`<path d="M-16 -8Q50 18 116 -8" fill="none" stroke="#fff6e0" stroke-width="1.2" stroke-dasharray="3 1.4"/>`;
+  for(let i=0;i<n;i++){const t=(i+1)/(n+1),x=f1(-16+132*t),y=f1(-8+(1-Math.pow(2*t-1,2))*13);F+=`<g ${A('d4sway',f1(2.4+i*.3),i*.4,ORG(x,y))}><path d="M${x} ${y}V${y+4}" stroke="${M[1]}" stroke-width=".8"/><path d="M${x-4} ${y+4}H${x+4}Q${x+6} ${y+9} ${x+4} ${y+14}H${x-4}Q${x-6} ${y+9} ${x-4} ${y+4}Z" fill="#c8282a" stroke="${M[1]}" stroke-width=".7"/><ellipse cx="${x}" cy="${y+9}" rx="2" ry="2.8" fill="${b}" ${A('d4glow',1.6,i*.3)}/><path d="M${x} ${y+14}v4" stroke="#ffd060" stroke-width=".8"/></g>`}
+  F+=[[-14,104],[114,104]].map(([x,y],i)=>`<path d="M${x} ${y}V${y-10}" stroke="#c89a3a" stroke-width="1.4"/><circle cx="${x}" cy="${y-10}" r="1.2" fill="#ff6a2a" ${A('d4glow',1.2)}/>`+Array.from({length:3},(_,j)=>`<path d="M${x} ${y-12}c-3 -4 3 -6 0 -10s3 -6 0 -9" fill="none" stroke="#e8f0ff" stroke-width="1" opacity=".55" ${A('d4smoke',3.2,j*1.06+i*.5,ORG(x,y-12))}/>`).join('')).join('')}
+ if(p==='m'){B=`<g ${A('d4spin',40,0,ORG(50,52))}>${Array.from({length:8},(_,i)=>`<path d="M50 -22Q58 -8 50 0Q42 -8 50 -22Z" fill="none" stroke="${a}" stroke-width="1.4" transform="rotate(${i*45} 50 52)" opacity=".7"/>`).join('')}<circle cx="50" cy="52" r="80" fill="none" stroke="${b}" stroke-width="1" stroke-dasharray="2 3" opacity=".6"/></g>`;
+  F+=[[-18,60],[118,56],[-8,26],[108,24]].map(([x,y],i)=>`<g ${A('d4float',3,i*.7,ORG(x,y))}><path d="M${x} ${y-8}C${x+5} ${y-2} ${x+5} ${y+4} ${x} ${y+5}C${x-5} ${y+4} ${x-5} ${y-2} ${x} ${y-8}Z" fill="${a}" opacity=".85" style="filter:drop-shadow(0 0 4px ${a})"/><circle cx="${x}" cy="${y+1}" r="1.6" fill="#fff"/></g>`).join('')+
+  `<g transform="translate(50 121)">${[-60,-30,0,30,60].map(r=>`<path d="M0 0C-5 -6 -4 -14 0 -18C4 -14 5 -6 0 0Z" fill="#ff9ac0" stroke="#fff" stroke-width=".6" transform="rotate(${r})"/>`).join('')}</g>`}
+ return[B,F]},
+p:(p,M,a,b,g)=>{let B='',F='';
+ for(let i=0;i<12;i++){const [x1,y1]=pt(i*30-90,i%3?55:52),[x2,y2]=pt(i*30-90,i%3?59:63);F+=`<path d="M${x1} ${y1}L${x2} ${y2}" stroke="${i%3?M[1]:M[0]}" stroke-width="${i%3?1.6:3.2}" stroke-linecap="round"/>`}
+ if(p!=='d'){const gear=(r,n,t)=>'M'+Array.from({length:n*4},(_,i)=>{const k=i%4,rr=k<2?r+t:r;return pt((Math.floor(i/4)+(k===0?0:k===1?.35:k===2?.5:.85))*360/n,rr).join(' ')}).join('L')+'Z';
+  B+=`<g ${A('d4spin',24,0,ORG(50,50))}><path d="${gear(66,24,5)}" fill="${M[3]}" stroke="${M[1]}" stroke-width="1.2" opacity=".9"/><circle cx="50" cy="50" r="62" fill="none" stroke="${a}" stroke-width=".8"/></g>`;
+  F+=`<g ${A('d4spin',6,0,ORG(50,50))}><path d="M50 50V-20" stroke="${a}" stroke-width="1.6" opacity=".6"/>${star(50,-22,3.4,a)}</g><g ${A('d4spin',60,0,ORG(50,50))}><path d="M50 50H112" stroke="${M[1]}" stroke-width="1.2" opacity=".5"/><circle cx="114" cy="50" r="2.4" fill="${M[0]}"/></g>`}
+ if(p==='m'){B=`<circle cx="50" cy="50" r="82" fill="none" stroke="${a}" stroke-width="1.4" ${A('d4echo',3,0,ORG(50,50))}/><circle cx="50" cy="50" r="82" fill="none" stroke="${a}" stroke-width="1.4" ${A('d4echo',3,1.5,ORG(50,50))}/><g ${A('d4spinR',36,0,ORG(50,50))}>${Array.from({length:60},(_,i)=>{const [x1,y1]=pt(i*6,76),[x2,y2]=pt(i*6,i%5?78:82);return`<path d="M${x1} ${y1}L${x2} ${y2}" stroke="${a}" stroke-width="${i%5?.6:1.6}"/>`}).join('')}</g>`+B;
+  F+=[['XII',-90],['III',0],['VI',90],['IX',180]].map(([t,ang])=>{const [x,y]=pt(ang,90);return`<text x="${x}" y="${y+3}" text-anchor="middle" font-size="8" font-weight="900" fill="${M[0]}" font-family="serif" style="filter:drop-shadow(0 0 2px ${a})">${t}</text>`}).join('')+
+  `<g ${A('d4orbit',8,0,ORG(50,50))}><g transform="translate(-26 50)"><path d="M-4 -6H4L0 0L4 6H-4L0 0Z" fill="${b}" stroke="${M[2]}" stroke-width="1"/><path d="M-2 4H2L0 2Z" fill="${a}"/></g></g>`}
+ return[B,F]},
+z:(p,M,a,b,g,S)=>{let B='',F=`<path d="M30 4L36 14L32 22M74 96L68 86L72 80" fill="none" stroke="${M[3]}" stroke-width="1.6"/>`;
+ if(p!=='d'){let w='';for(let i=0;i<=40;i++){const [x,y]=pt(i*9,i%2?63:67);w+=(i?'L':'M')+x+' '+y}B+=`<path d="${w}" fill="none" stroke="#8a9098" stroke-width="1.1"/>`+Array.from({length:14},(_,i)=>{const [x,y]=pt(i*360/14+4,65);return`<path d="M${x-2.4} ${y-2.4}L${x+2.4} ${y+2.4}M${x+2.4} ${y-2.4}L${x-2.4} ${y+2.4}" stroke="#d8dce4" stroke-width="1.1"/>`}).join('');
+  let tp='';for(let i=0;i<12;i++)tp+=`<path d="M${i*8} 0h4l-4 8h-4z" fill="#111"/>`;F+=`<g transform="translate(-26 92) rotate(-16)"><rect x="0" y="0" width="80" height="8" fill="#ffd83a"/><g ${A('d4tape',1.2)}>${tp}</g><text x="40" y="6.4" text-anchor="middle" font-size="5" font-weight="900" fill="#111" opacity=".0">.</text></g>`+rise(6,[-16,116],110,a,2.2,3.6)}
+ if(p==='m'){B=`<circle cx="50" cy="50" r="70" fill="none" stroke="${a}" stroke-width="2" ${A('d4echo',2.6,0,ORG(50,50))}/><g ${A('d4spin',18,0,ORG(50,50))} opacity=".55">${[0,120,240].map(r=>`<path d="M50 -28C40 -24 38 -12 44 -4C48 -10 52 -10 56 -4C62 -12 60 -24 50 -28Z" fill="${a}" transform="rotate(${r} 50 50)"/>`).join('')}</g>`+B;
+  F+=[[16,104],[32,110],[68,110],[84,104],[50,112]].map(([x,y],i)=>`<path d="M${x} ${y}C${x+2.4} ${y+3} ${x+2.4} ${y+6} ${x} ${y+7}C${x-2.4} ${y+6} ${x-2.4} ${y+3} ${x} ${y}Z" fill="${a}" ${A('d4drip',2.4,i*.5)} style="filter:drop-shadow(0 0 2px ${a})"/>`).join('')}
+ return[B,F]},
+t:(p,M,a,b,g)=>{let B='',F='';const cl=(x,y,s,i)=>`<g ${A('d4drift',f1(5+i),i*.8)}><circle cx="${x}" cy="${y}" r="${7*s}" fill="#fff"/><circle cx="${x+8*s}" cy="${y+2*s}" r="${6*s}" fill="#efe6ff"/><circle cx="${x-8*s}" cy="${y+2*s}" r="${5.5*s}" fill="#efe6ff"/></g>`;
+ F+=cl(2,106,1,0)+cl(98,106,1,1)+cl(50,116,1.25,2);
+ if(p!=='d'){B+=[[-1],[1]].map(([d])=>`<g ${A('d4flap',2.4,0,ORG(d<0?8:92,30))}>${[0,1,2,3].map(j=>`<path d="M${d<0?8:92} 30Q${d<0?-20+j*3:120-j*3} ${16+j*10} ${d<0?-14+j*4:114-j*4} ${44+j*12}Q${d<0?0:100} ${40+j*6} ${d<0?8:92} ${36+j*4}Z" fill="${j%2?'#ffffff':'#eadcff'}" stroke="${M[1]}" stroke-width=".7"/>`).join('')}</g>`).join('');
+  F+=Array.from({length:6},(_,i)=>{const x=i%2?112:-12;return`<rect x="${x-6}" y="${92-i*16}" width="12" height="2.6" rx="1.2" fill="${M[1]}" stroke="${M[3]}" stroke-width=".5" ${A('d4stair',3,i*.5)}/>`}).join('')}
+ if(p==='m'){B=`<path d="M40 -10L50 -80L60 -10Z" fill="url(#${g}b)" ${A('d4glow',2.6)}/><g ${A('d4spin',20,0,ORG(50,-24))}><ellipse cx="50" cy="-24" rx="24" ry="6" fill="none" stroke="${b}" stroke-width="1.6" stroke-dasharray="4 3"/></g>`+B;
+  F+=[[-22,6,0],[122,2,1.2]].map(([x,y,dl])=>`<g ${A('d4bob',3,dl)}><path d="M${x-9} ${y}H${x+9}L${x+4} ${y+7}H${x-4}Z" fill="#8a6a4a"/><ellipse cx="${x}" cy="${y}" rx="9" ry="2.6" fill="#7ac86a"/><path d="M${x+3} ${y}v-6" stroke="#5a3a1a" stroke-width="1"/><circle cx="${x+3}" cy="${y-7}" r="3" fill="#5ab85a"/></g>`).join('')+twk([[-10,70],[110,74],[24,-36],[76,-40],[-20,-10],[120,-14]],'#fff',2.2)}
+ return[B,F]},
+e:(p,M,a,b,g)=>{let B='',F=`<path d="M4 -8H96M-8 4V96M108 4V96M4 108H96" stroke="${M[3]}" stroke-width="3" stroke-dasharray="4 2"/>`;
+ const hrt=(x,y,c,i)=>`<g ${A('d4beat',1,i*.15,ORG(x,y+3))}><path d="M${x-5} ${y}h2v-1h2v1h1v-1h2v1h2v3h-1v1h-1v1h-1v1h-1v1h-1v-1h-1v-1h-1v-1h-1v-1h-1z" fill="${c}" stroke="#fff" stroke-width=".4"/></g>`;
+ if(p!=='d'){F+=`<rect x="-14" y="-17" width="40" height="6" fill="#2a0a10" stroke="#fff" stroke-width=".8"/><rect x="-13" y="-16" height="4" fill="#ff4a5a" ${A('d4hp',3)} style="width:38px"/><rect x="74" y="-17" width="40" height="6" fill="#0a1a2a" stroke="#fff" stroke-width=".8"/><rect x="75" y="-16" height="4" fill="${a}" ${A('d4xp',2.4)} style="width:38px"/><text x="6" y="-20" font-size="5.4" font-weight="900" fill="#fff" font-family="monospace">HP</text><text x="94" y="-20" font-size="5.4" font-weight="900" fill="#fff" font-family="monospace">XP</text>`+hrt(-10,96,'#ff4a5a',0)+hrt(110,96,'#ff4a5a',1)+hrt(-10,84,'#ff4a5a',2)+hrt(110,84,'#ff4a5a',3);
+  F+=[[-16,40],[116,40]].map(([x,y],i)=>`<g ${A('d4coin',1.2,i*.6,ORG(x,y))}><rect x="${x-4}" y="${y-5}" width="8" height="10" fill="${b}" stroke="#a87a00" stroke-width="1"/><rect x="${x-1}" y="${y-3}" width="2" height="6" fill="#fff8"/></g>`).join('')}
+ if(p==='m'){B=`<g ${A('d4hue',4)} fill="none" stroke="${a}" stroke-width="3.4"><path d="M-24 0V-24H0M100 -24H124V0M124 100V124H100M0 124H-24V100"/></g>`+B;
+  F+=`<g ${A('d4blink',1)}><text x="50" y="-30" text-anchor="middle" font-size="9" font-weight="900" fill="${b}" font-family="monospace" stroke="#000" stroke-width=".6" paint-order="stroke">LEVEL UP!</text></g>`+Array.from({length:8},(_,i)=>{const [x,y]=[f1(-22+rnd()*144),f1(-20+rnd()*140)];return`<rect x="${x-1.6}" y="${y-1.6}" width="3.2" height="3.2" fill="${i%2?a:b}" ${A('d4twk',f1(1+rnd()),f1(rnd()*2))}/>`}).join('')}
+ return[B,F]},
+q:(p,M,a,b,g)=>{let B='',F='';
+ if(p!=='d'){B+=`<path d="M-16 -14L116 118M116 -14L-16 118" stroke="${M[3]}" stroke-width="7" stroke-linecap="round"/><path d="M-16 -14L116 118M116 -14L-16 118" stroke="url(#${g})" stroke-width="3.6" stroke-linecap="round"/><path d="M-8 4L4 -8M108 4L96 -8" stroke="${M[1]}" stroke-width="5" stroke-linecap="round"/><path d="M-16 -14L116 118" stroke="url(#${g}s)" stroke-width="3.6" stroke-linecap="round"/>`;
+  F+=[[-20,1],[120,-1]].map(([x,d],i)=>`<path d="M${x} -14V70" stroke="#5a3a1a" stroke-width="2.2"/><circle cx="${x}" cy="-15" r="2" fill="${M[1]}"/><g ${A('d4wave',1.8,i*.4,ORG(x,-10))}><path d="M${x} -10H${x+d*20}L${x+d*15} 2L${x+d*20} 14H${x}Z" fill="${a}" stroke="${M[1]}" stroke-width="1"/><path d="M${x+d*5} -4H${x+d*11}M${x+d*5} 2H${x+d*11}" stroke="${b}" stroke-width="1.4"/></g>`).join('')}
+ if(p==='m'){B=rise(10,[-20,120],120,'#ffb03a',1.4,2.8)+B;
+  F+=[-1,1].map(d=>`<g transform="translate(${d<0?14:86} 114) scale(${d} 1)">${[0,1,2,3,4].map(i=>`<ellipse cx="${-i*7}" cy="${-i*5}" rx="4.6" ry="2.2" fill="#6ac84a" stroke="#2a6a1a" stroke-width=".5" transform="rotate(${-30-i*12} ${-i*7} ${-i*5})"/>`).join('')}</g>`).join('')+
+  [[-8,86],[108,86]].map(([x,y])=>`<path d="M${x} ${y-10}L${x+9} ${y-7}Q${x+9} ${y+6} ${x} ${y+11}Q${x-9} ${y+6} ${x-9} ${y-7}Z" fill="${M[2]}" stroke="${M[0]}" stroke-width="1.2"/><path d="M${x} ${y-6}V${y+7}M${x-5} ${y}H${x+5}" stroke="${a}" stroke-width="1.6"/>`).join('')}
+ return[B,F]},
+y:(p,M,a,b,g)=>{let B='',F='';
+ if(p!=='d'){let f='';for(let i=0;i<18;i++){const an=i*20,[x,y]=pt(an,60),[x2,y2]=pt(an,p==='m'?78:71),[cx,cy]=pt(an+6,(60+(p==='m'?78:71))/2);f+=`<path d="M${x} ${y}Q${cx} ${cy} ${x2} ${y2}Q${pt(an-6,(60+71)/2).join(' ')} ${x} ${y}" fill="${i%2?a:b}"/>`}
+  B+=`<circle cx="50" cy="50" r="62" fill="none" stroke="${a}" stroke-width="3" ${A('d4echo',2.2,0,ORG(50,50))}/><g ${A('d4fire',.9,0,ORG(50,50))} style="filter:drop-shadow(0 0 4px ${a})">${f}</g>`;
+  F+=rise(7,[-6,106],104,b,1.4,2.6);
+  const met=(dl,s)=>`<g ${A('d4met',3,dl)}><g transform="translate(118 -26) scale(${s})"><path d="M14 -14L0 0" stroke="${b}" stroke-width="7" stroke-linecap="round" opacity=".45"/><path d="M14 -14L0 0" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle r="4.6" fill="${a}" stroke="#fff3c4" stroke-width="1"/></g></g>`;B+=met(0,1)+(p==='m'?met(1,.7)+met(2,.85):'')}
+ if(p==='m'){let ry='';for(let an=0;an<360;an+=20){const [x1,y1]=pt(an-3,104),[x2,y2]=pt(an+3,104);ry+=`<path d="M50 50L${x1} ${y1}L${x2} ${y2}Z" fill="${b}" opacity=".12"/>`}B=`<g ${A('d4spin',24,0,ORG(50,50))}>${ry}</g>`+B}
+ return[B,F]},
+v:(p,M,a,b,g)=>{let B='',F='';
+ if(p!=='d'){B+=`<g ${A('d4spin',16,0,ORG(50,50))}><path d="M50 -26A76 76 0 0 0 50 126" fill="none" stroke="#ffb84a" stroke-width="3.2" stroke-dasharray="30 6"/></g><g ${A('d4spinR',16,0,ORG(50,50))}><path d="M50 -26A76 76 0 0 1 50 126" fill="none" stroke="#5cc8ff" stroke-width="3.2" stroke-dasharray="30 6"/></g>`;
+  F+=`<g ${A('d4orbit',7,0,ORG(50,50))}><circle cx="126" cy="50" r="5" fill="#5cc8ff" stroke="#fff" stroke-width=".8"/><ellipse cx="126" cy="50" rx="8" ry="2" fill="none" stroke="#fff" stroke-width=".7"/><circle cx="-26" cy="50" r="4" fill="#ffb84a" stroke="#fff" stroke-width=".8"/></g>`}
+ if(p==='m'){B=`<g ${A('d4spin',10,0,ORG(50,50))}>${[0,1,2,3,4,5].map(i=>`<path d="M50 50Q${pt(i*60+30,60).join(' ')} ${pt(i*60+60,92).join(' ')}" fill="none" stroke="${i%2?'#ffb84a':'#5cc8ff'}" stroke-width="1.4" opacity=".6"/>`).join('')}</g><path d="M6 128V30A44 44 0 0 1 94 30V128" fill="none" stroke="${M[1]}" stroke-width="2.4" opacity=".6"/>`+B;
+  F+=twk([[-6,-6],[106,-6],[-6,106],[106,106],[50,-34],[50,134]],'#fff',2.6)+`<path d="M-6 -6L50 -34L106 -6M-6 106L50 134L106 106" fill="none" stroke="#fff" stroke-width=".5" opacity=".45"/>`}
+ return[B,F]}};
+// ---------- ตรา / ประดับยอด ----------
+const TOP={
+ n:(M,a,b,g)=>`<path d="${ngon(6,15,-90,50,-10)}" fill="${M[3]}" stroke="url(#${g})" stroke-width="2.6"/><text x="50" y="-4" text-anchor="middle" font-size="17" font-weight="900" fill="${M[0]}" font-family="Itim,sans-serif" style="filter:drop-shadow(0 0 3px ${a})">S</text>`,
+ u:(M,a,b,g)=>`<g ${A('d4flk',2.2)}><rect x="24" y="-26" width="52" height="18" rx="4" fill="#12061a" stroke="${a}" stroke-width="2" style="filter:drop-shadow(0 0 4px ${a})"/><text x="50" y="-13" text-anchor="middle" font-size="11" font-weight="900" fill="${b}" font-family="Itim,sans-serif" style="filter:drop-shadow(0 0 3px ${b})">No.1</text></g>`,
+ o:(M,a,b,g)=>`<path d="M50 -42L53 -24L58 -20L56 -6H44L42 -20L47 -24Z" fill="url(#${g})" stroke="${M[3]}" stroke-width="1"/><path d="M38 -4H62V2H38Z" fill="${M[2]}"/><circle cx="50" cy="-44" r="2.6" fill="${b}" ${A('d4glow',1.4)}/>`,
+ p:(M,a,b,g)=>`<g ${A('d4ring',.5,0,ORG(50,-14))}><circle cx="36" cy="-14" r="8" fill="url(#${g})" stroke="${M[3]}" stroke-width="1.4"/><circle cx="64" cy="-14" r="8" fill="url(#${g})" stroke="${M[3]}" stroke-width="1.4"/></g><path d="M40 -4L50 -12L60 -4" stroke="${M[3]}" stroke-width="2" fill="none"/>${star(50,-26,5,'#fff')}`,
+ z:(M,a,b,g)=>`<circle cx="50" cy="-10" r="15" fill="${M[3]}" stroke="url(#${g})" stroke-width="2.6"/><g ${A('d4spin',6,0,ORG(50,-10))}><circle cx="50" cy="-10" r="3" fill="none" stroke="${a}" stroke-width="2"/>${[0,120,240].map(r=>`<path d="M50 -14C44 -16 44 -23 50 -23C56 -23 56 -16 50 -14Z" fill="${a}" transform="rotate(${r} 50 -10)"/>`).join('')}</g>`,
+ t:(M,a,b,g)=>`<path d="M50 -46L56 -14H44Z" fill="url(#${g})" stroke="${M[3]}" stroke-width="1"/><g ${A('d4spin',5,0,ORG(50,-48))}>${star(50,-48,8,'#fff')}</g><path d="M36 -12H64" stroke="${M[1]}" stroke-width="3"/>`,
+ e:(M,a,b,g)=>`<path d="M30 0V-20H36V-14H42V-24H48V-14H52V-24H58V-14H64V-20H70V0Z" fill="url(#${g})" stroke="${M[3]}" stroke-width="1.4"/><rect x="47" y="-10" width="6" height="6" fill="${a}" ${A('d4hue',3)}/>`,
+ q:(M,a,b,g)=>`<path d="M50 -4V-42" stroke="${M[1]}" stroke-width="2"/><g ${A('d4wave',1.6,0,ORG(50,-40))}><path d="M50 -42H74L68 -33L74 -24H50Z" fill="${a}" stroke="${M[0]}" stroke-width="1"/></g><path d="M34 0L38 -14L44 -8L50 -18L56 -8L62 -14L66 0Z" fill="url(#${g})" stroke="${M[3]}" stroke-width="1.2"/>`,
+ y:(M,a,b,g)=>`<path d="M86 -42L54 -12" stroke="${b}" stroke-width="8" stroke-linecap="round" opacity=".45"/><path d="M86 -42L54 -12" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="50" cy="-8" r="11" fill="url(#${g})" stroke="${a}" stroke-width="2" style="filter:drop-shadow(0 0 5px ${a})"/>`,
+ v:(M,a,b,g)=>`<circle cx="50" cy="-22" r="8" fill="none" stroke="url(#${g})" stroke-width="3.4"/><circle cx="50" cy="-22" r="3" fill="${a}" ${A('d4glow',1.4)}/><path d="M50 -14V6M50 0H57M50 -5H55" stroke="url(#${g})" stroke-width="3" stroke-linecap="round"/>`};
+const EMB={n:'🌀',u:'🌃',o:'🏮',p:'⏰',z:'☣️',t:'🗼',e:'🎮',q:'⚔️',y:'☄️',v:'🚪'};
+const HS=t=>{let h=2166136261;for(const c of String(t)){h^=c.codePointAt(0);h=Math.imul(h,16777619)}return h>>>0};
+const HROT=(c,deg)=>{if(!deg)return c;const n=parseInt(c.slice(1),16);let r=(n>>16)/255,g=(n>>8&255)/255,b=(n&255)/255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b);let h=0,s=0,l=(mx+mn)/2;if(mx!==mn){const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;h*=60}
+ h=(h+deg+360)%360;const q=s*Math.min(l,1-l),F=k0=>{const k=(k0+h/30)%12;return Math.round(255*(l-q*Math.max(-1,Math.min(k-3,9-k,1)))).toString(16).padStart(2,'0')};return'#'+F(0)+F(8)+F(4)};
+// ทรงสำรองต่อโลก — กรอบที่แอดมินสุ่มแต่ละรอบสลับทรงได้ (ยังคงสไตล์โลกเดิม)
+const SH2={
+ n:[ngon(8,55,-112.5),'polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)'],
+ u:['M12 -2H88Q102 -2 102 12V88Q102 102 88 102H12Q-2 102 -2 88V12Q-2 -2 12 -2Z','inset(0 round 14%)'],
+ o:['M-2 104V34Q-2 8 24 2Q42 -2 50 -18Q58 -2 76 2Q102 8 102 34V104Z','polygon(0 34%,12% 13%,32% 4%,50% 0,68% 4%,88% 13%,100% 34%,100% 100%,0 100%)'],
+ p:[poly(24,.93),'circle(47% at 50% 50%)'],
+ z:['M-2 -2L20 4L40 -4L60 4L80 -2L102 -2L96 30L102 60L96 102L50 96L4 102L-2 60L4 30Z','inset(4%)'],
+ t:['M-2 104V30Q-2 2 26 -4Q42 -8 50 -8Q58 -8 74 -4Q102 2 102 30V104Z','polygon(0 30%,10% 12%,28% 3%,50% 0,72% 3%,90% 12%,100% 30%,100% 100%,0 100%)'],
+ e:['M24 -2H76V4H88V10H96V18H102V82H96V90H88V96H76V102H24V96H12V90H4V82H-2V18H4V10H12V4H24Z','polygon(20% 0,80% 0,100% 18%,100% 82%,80% 100%,20% 100%,0 82%,0 18%)'],
+ q:['M-2 8H8V-2H20V8H32V-2H44V8H56V-2H68V8H80V-2H92V8H102V102H-2Z','inset(6% 0 0 0)'],
+ y:[poly(10,.8,54),'circle(44% at 50% 50%)'],
+ v:['M50 -1A51 51 0 1 1 49.9 -1Z','circle(47% at 50% 50%)']};
+// ตัวสุ่มของรอบ → [เลื่อนสี, ใช้ทรงสำรอง] (อันดับ 1–3 ของรอบเดียวกันได้ชุดเดียวกัน)
+const VAR=(bd,p,sd)=>{if(!sd)return[0,0];const h=HS('mw4|'+sd+'|'+bd+'|'+p);return[(h%9-4)*16,(h>>>5)%2]};
+let gid=0;
+function svg(p,bd,r,sd){const [dh,alt]=VAR(bd,p,sd),M=MET[r],a=HROT(ACC[bd],dh),b=bd==='v'?AC2[bd]:HROT(AC2[bd],dh),g='d4g'+(++gid),S=(alt?SH2:SH)[bd][0];seed=bd.charCodeAt(0)*97+r*13+(p==='m'?7:p==='w'?3:1);
+ let o=`<defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${M[0]}"/><stop offset=".5" stop-color="${M[1]}"/><stop offset="1" stop-color="${M[2]}"/></linearGradient>
+ <linearGradient id="${g}s" x1="0" y1="0" x2="1" y2="0"><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset=".65" stop-color="#fff" stop-opacity="0"/><animateTransform attributeName="gradientTransform" type="translate" values="-1 0;1 0;1 0" keyTimes="0;.6;1" dur="${r===1?2.4:3.4}s" repeatCount="indefinite"/></linearGradient>
+ <linearGradient id="${g}b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="${b}" stop-opacity=".6"/><stop offset="1" stop-color="${b}" stop-opacity="0"/></linearGradient></defs>`;
+ const [B,F]=K[bd](p,M,a,b,g,S);
+ o+=`<mask id="${g}m" maskUnits="userSpaceOnUse" x="-200" y="-200" width="500" height="500"><rect x="-200" y="-200" width="500" height="500" fill="#fff"/><path d="${S}" fill="#000"/></mask><g mask="url(#${g}m)">${B}</g>`;
+ o+=`<path d="${S}" fill="none" stroke="${a}" stroke-width="${p==='m'?18:p==='w'?13:9}" opacity=".18" ${A('d4glow',2.6)}/><path d="${S}" fill="none" stroke="${M[3]}" stroke-width="7.5"/><path d="${S}" fill="none" stroke="url(#${g})" stroke-width="4.4"/><path d="${S}" fill="none" stroke="url(#${g}s)" stroke-width="4.4"/>`;
+ o+=`<path d="${S}" pathLength="100" fill="none" stroke="${b}" stroke-width="1.6" stroke-dasharray="${p==='d'?'4 46':'7 18'}" stroke-linecap="round" transform="translate(50 50) scale(.92) translate(-50 -50)" ${A('d4run',p==='m'?3:5)} style="filter:drop-shadow(0 0 2px ${a})"/>`;
+ o+=F;
+ const ty=bd==='t'?-14:bd==='v'?-18:bd==='q'?-6:-6;
+ if(r===1)o+=`<g ${A('d4bob',2.6)}>${TOP[bd](M,a,b,g)}</g>`+(p!=='d'?twk([[22,-10],[78,-10]],M[0],2.6):'');
+ else o+=`<g ${A('d4bob',3,r*.4)}><circle cx="50" cy="${ty}" r="13" fill="${M[3]}" stroke="url(#${g})" stroke-width="2.6"/><circle cx="50" cy="${ty}" r="13" fill="none" stroke="url(#${g}s)" stroke-width="2.6"/><text x="50" y="${ty+5}" text-anchor="middle" font-size="13">${EMB[bd]}</text></g>`;
+ const y=bd==='v'?114:bd==='q'||bd==='z'?108:104,w=r===1&&p!=='d'?60:p==='d'?34:44;
+ const lab=r===1&&p!=='d'?`อันดับ 1 · ${PL[p]}`:`#${r} · ${PL[p]}`;
+ o+=`<g><path d="M${50-w/2} ${y}H${50+w/2}L${50+w/2+6} ${y+7.5}L${50+w/2} ${y+15}H${50-w/2}L${50-w/2-6} ${y+7.5}Z" fill="${M[3]}" stroke="url(#${g})" stroke-width="1.8"/><path d="M${50-w/2} ${y}H${50+w/2}L${50+w/2+6} ${y+7.5}L${50+w/2} ${y+15}H${50-w/2}L${50-w/2-6} ${y+7.5}Z" fill="url(#${g}s)" opacity=".35"/><text x="50" y="${y+11}" text-anchor="middle" font-size="${r===1&&p!=='d'?8.6:9}" font-weight="900" fill="${M[0]}" font-family="Itim,sans-serif">${lab}</text></g>`;
+ return`<svg x="8" y="8" width="84" height="84" viewBox="-20 -20 140 140" overflow="visible" class="d4v" aria-hidden="true">${o}</svg>`}
+// ---------- ฉายา ----------
+function chip(t,p,bd,r,sd){const M=MET[r],dh=sd?(HS('mw4t|'+sd+'|'+bd+'|'+p)%9-4)*16:0;const s=`--m0:${M[0]};--m1:${M[1]};--m2:${M[2]};--m3:${M[3]};--ac:${HROT(ACC[bd],dh)};--a2:${bd==='v'?AC2[bd]:HROT(AC2[bd],dh)}`;const ic={n:'🌀',u:'🌃',o:'🏮',p:'⏰',z:'☣️',t:'🗼',e:'🎮',q:'🚩',y:'☄️',v:'🚪'}[bd];
+ return`<span class="dch4 c4-${bd} dp-${p} dr-${r}" style="${s}"><span class="ic">${ic}</span>${r===1?'<span class="cr">👑</span>':''}<span class="tx">${esc(String(t).slice(0,40))}</span><small>#${r}·${PL[p]}</small></span>`}
+const st=document.createElement('style');st.textContent=`
+.d4v [class^=d4]{transform-box:view-box}
+.d4v .d4spin{animation:d4spin 20s linear infinite}.d4v .d4spinR{animation:d4spin 20s linear infinite reverse}
+@keyframes d4spin{to{transform:rotate(360deg)}}
+.d4v .d4orbit{animation:d4spin 8s linear infinite}
+.d4v .d4bob{animation:d4bob 2.6s ease-in-out infinite}@keyframes d4bob{50%{transform:translateY(-2.4px)}}
+.d4v .d4float{animation:d4float 3s ease-in-out infinite}@keyframes d4float{0%,100%{transform:translate(0,0)}33%{transform:translate(2px,-4px)}66%{transform:translate(-2px,-2px)}}
+.d4v .d4sway{animation:d4sway 2.6s ease-in-out infinite}@keyframes d4sway{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(9deg)}}
+.d4v .d4wave{animation:d4wave 1.8s ease-in-out infinite}@keyframes d4wave{0%,100%{transform:skewY(0) scaleX(1)}50%{transform:skewY(7deg) scaleX(.9)}}
+.d4v .d4flap{animation:d4flap 2.4s ease-in-out infinite}@keyframes d4flap{50%{transform:rotate(var(--fl,-8deg)) scaleY(.92)}}
+.d4v .d4twk{animation:d4twk 2s ease-in-out infinite}@keyframes d4twk{0%,100%{opacity:.15;transform:scale(.5)}50%{opacity:1;transform:scale(1.15)}}
+.d4v .d4twk{transform-box:fill-box!important;transform-origin:center!important}
+.d4v .d4glow{animation:d4glow 2s ease-in-out infinite}@keyframes d4glow{50%{opacity:.45}}
+.d4v .d4rise{animation:d4rise 3s linear infinite}@keyframes d4rise{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-60px);opacity:0}}
+.d4v .d4smoke{animation:d4smoke 3.2s ease-out infinite}@keyframes d4smoke{0%{transform:translateY(0) scale(.6);opacity:0}25%{opacity:.6}100%{transform:translateY(-24px) scale(1.3) skewX(14deg);opacity:0}}
+.d4v .d4drip{animation:d4drip 2.4s ease-in infinite}@keyframes d4drip{0%{transform:translateY(-6px) scaleY(.4);opacity:0}30%{opacity:1;transform:translateY(0) scaleY(1)}100%{transform:translateY(16px);opacity:0}}
+.d4v .d4rain{animation:d4rain .9s linear infinite}@keyframes d4rain{0%{transform:translate(0,0);opacity:0}20%{opacity:.7}100%{transform:translate(-20px,160px);opacity:0}}
+.d4v .d4flk{animation:d4flk 3s steps(1) infinite}@keyframes d4flk{0%,100%{opacity:1}44%{opacity:1}46%{opacity:.2}48%{opacity:1}52%{opacity:.35}54%{opacity:1}}
+.d4v .d4run{animation:d4run 4s linear infinite}@keyframes d4run{to{stroke-dashoffset:-100}}
+.d4v .d4zap{animation:d4zap 1.8s steps(1) infinite}@keyframes d4zap{0%,100%{opacity:0}10%{opacity:1}14%{opacity:.2}18%{opacity:1}24%{opacity:0}}
+.d4v .d4beam{animation:d4beam 4.4s ease-in-out infinite}@keyframes d4beam{50%{transform:rotate(14deg)}}.d4v .d4beamR{animation:d4beamR 4.4s ease-in-out infinite}@keyframes d4beamR{50%{transform:rotate(-14deg)}}
+.d4v .d4echo{animation:d4echo 3s ease-out infinite}@keyframes d4echo{0%{transform:scale(.75);opacity:.9}100%{transform:scale(1.25);opacity:0}}
+.d4v .d4tape{animation:d4tape 1.2s linear infinite}@keyframes d4tape{to{transform:translateX(16px)}}
+.d4v .d4drift{animation:d4drift 6s ease-in-out infinite}@keyframes d4drift{50%{transform:translateX(5px)}}
+.d4v .d4stair{animation:d4stair 3s ease-in-out infinite}@keyframes d4stair{0%,100%{opacity:.3;transform:translateY(3px)}50%{opacity:1;transform:translateY(-3px)}}
+.d4v .d4beat{animation:d4beat 1s ease-in-out infinite}@keyframes d4beat{15%{transform:scale(1.3)}30%{transform:scale(1)}}
+.d4v .d4coin{animation:d4coin 1.2s linear infinite}@keyframes d4coin{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.1)}}
+.d4v .d4hp{animation:d4hp 3s ease-in-out infinite}@keyframes d4hp{0%,100%{width:38px}40%{width:18px}55%{width:38px}}
+.d4v .d4xp{animation:d4xp 2.4s linear infinite}@keyframes d4xp{0%{width:0}90%,100%{width:38px}}
+.d4v .d4hue{animation:d4hue 4s linear infinite}@keyframes d4hue{to{filter:hue-rotate(360deg)}}
+.d4v .d4blink{animation:d4blink 1s steps(1) infinite}@keyframes d4blink{50%{opacity:0}}
+.d4v .d4fire{animation:d4fire .9s ease-in-out infinite}@keyframes d4fire{50%{transform:scale(1.05);opacity:.8}}
+.d4v .d4met{animation:d4met 3s ease-in infinite}@keyframes d4met{0%{transform:translate(20px,-20px);opacity:0}10%{opacity:1}70%{transform:translate(-120px,120px);opacity:1}71%,100%{opacity:0;transform:translate(-120px,120px)}}
+.d4v .d4ring{animation:d4ring .5s linear infinite}@keyframes d4ring{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+/* ---------- ฉายา ---------- */
+.dch4{position:relative;display:inline-flex;align-items:center;gap:5px;max-width:100%;padding:4px 12px;font-weight:800;font-size:12.5px;line-height:1.45;white-space:nowrap;isolation:isolate;vertical-align:middle;overflow:hidden}
+.dch4 .tx{overflow:hidden;text-overflow:ellipsis}.dch4 small{font-size:.72em;font-weight:700;opacity:.85}.dch4 .ic,.dch4 .cr{flex:none}
+.dch4::before,.dch4::after{content:'';position:absolute;pointer-events:none}
+.dch4.dp-w .tx,.dch4.dp-m .tx{position:relative}
+.dch4.dp-w::after,.dch4.dp-m::after{top:0;bottom:0;width:28%;left:-40%;z-index:3;background:linear-gradient(100deg,transparent,#ffffffb0,transparent);animation:c4sh 3s linear infinite}
+@keyframes c4sh{0%,35%{left:-40%}100%{left:130%}}
+.dch4.dr-1 .cr{animation:c4cr 1.6s ease-in-out infinite;display:inline-block}@keyframes c4cr{50%{transform:translateY(-2px) rotate(-8deg)}}
+.dch4.dr-1.dp-m .tx{background:linear-gradient(90deg,var(--m0),#fff,var(--a2),#fff,var(--m0));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;animation:c4flow 3s linear infinite;text-shadow:none!important;filter:drop-shadow(0 1px 1px #000c)}
+@keyframes c4flow{to{background-position:300% 0}}
+/* ฮันเตอร์ — แผ่นระบบเกต มีเส้นสแกนวิ่ง */
+.c4-n{color:var(--m0);background:linear-gradient(90deg,#04102a,#0c2a6a 55%,#04102a);clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,9px 100%,0 50%);padding:4px 18px;text-shadow:0 0 6px var(--ac)}
+.c4-n::before{inset:0;z-index:-1;background:repeating-linear-gradient(0deg,transparent 0 3px,#9fe8ff14 3px 4px),linear-gradient(90deg,transparent,var(--a2),transparent) 0 100%/60% 2px no-repeat;animation:c4scan 2.4s linear infinite}
+@keyframes c4scan{0%{background-position:0 0,-60% 100%}100%{background-position:0 8px,160% 100%}}
+.c4-n .ic{animation:c4spin 3s linear infinite;display:inline-block}@keyframes c4spin{to{transform:rotate(360deg)}}
+/* ใต้ดิน — ป้ายนีออนกะพริบ ขอบไฟวิ่ง */
+.c4-u{color:#fff;background:#0a0410;border-radius:7px;padding:4px 13px;text-shadow:0 0 4px var(--ac),0 0 10px var(--ac);box-shadow:inset 0 0 0 2px var(--ac),0 0 10px var(--ac);animation:c4neon 3.4s steps(1) infinite}
+.c4-u small{color:var(--a2);text-shadow:0 0 6px var(--a2)}
+.c4-u::before{inset:-40%;z-index:-2;background:conic-gradient(from 0deg,transparent 0 70%,var(--a2) 80%,transparent 90%);animation:c4spin 2.6s linear infinite}
+.c4-u{background:linear-gradient(#0a0410,#0a0410) padding-box;border:2px solid transparent}
+@keyframes c4neon{0%,100%{filter:none}60%{filter:none}61%{filter:brightness(.55)}62%{filter:none}64%{filter:brightness(.7)}65%{filter:none}}
+/* ผีไทย — กระดาษยันต์ปลิว ตราแดงเรือง */
+.c4-o{color:#3a1a08;background:linear-gradient(180deg,#f8e8b8,#e6cc84);padding:4px 12px 4px 30px;border-top:2px solid var(--m1);border-bottom:2px solid var(--m1);animation:c4flut 3s ease-in-out infinite;transform-origin:left center}
+@keyframes c4flut{0%,100%{transform:skewX(0)}50%{transform:skewX(-3deg)}}
+.c4-o .ic{position:absolute;left:5px;top:50%;width:19px;height:19px;margin-top:-9.5px;display:grid;place-items:center;background:#c8282a;border-radius:3px;font-size:10px;transform:rotate(-8deg);animation:c4seal 2s ease-in-out infinite}
+@keyframes c4seal{50%{box-shadow:0 0 8px 2px #ff4a3a}}
+.c4-o::before{inset:0;z-index:-1;background:repeating-linear-gradient(0deg,transparent 0 5px,#8a6a2a14 5px 6px),radial-gradient(circle at 92% 50%,#3ad8a055,transparent 40%)}
+.c4-o.dr-1.dp-m .tx{background-image:linear-gradient(90deg,#4a1a08,#c8282a,#4a1a08,var(--m2),#4a1a08);filter:none}
+/* วนลูป — แคปซูลนาฬิกา เข็มเดินเป็นจังหวะ */
+.c4-p{color:var(--m3);background:linear-gradient(90deg,var(--m0),var(--m1) 60%,var(--m2));border-radius:999px;padding:4px 13px 4px 28px;border:2px solid var(--m2);box-shadow:0 0 0 1px #0006}
+.c4-p .ic{position:absolute;left:4px;width:19px;height:19px;display:grid;place-items:center;background:#fff8e8;border-radius:50%;font-size:11px;box-shadow:inset 0 0 0 1.5px var(--m2)}
+.c4-p::before{left:13px;top:50%;width:1.6px;height:7px;margin-top:-7px;z-index:2;background:#c8282a;transform-origin:50% 100%;animation:c4tick 6s steps(12) infinite}
+@keyframes c4tick{to{transform:rotate(360deg)}}
+.c4-p.dr-1.dp-m .tx{background-image:linear-gradient(90deg,var(--m3),#7a3a00,var(--m3),#c87a00,var(--m3));filter:none}
+/* ซอมบี้ — เทปอันตรายเลื่อน ตัวอักษรเรืองพิษ */
+.c4-z{color:var(--m0);background:#121a0c;padding:7px 12px;text-shadow:0 0 6px var(--ac)}
+.c4-z::before{inset:0;z-index:-1;background:repeating-linear-gradient(-45deg,#ffd83a 0 6px,#111 6px 12px) 0 0/34px 4px repeat-x,repeating-linear-gradient(-45deg,#ffd83a 0 6px,#111 6px 12px) 0 100%/34px 4px repeat-x;animation:c4tape 1s linear infinite}
+@keyframes c4tape{to{background-position:17px 0,-17px 100%}}
+.c4-z .ic{animation:c4spin 4s linear infinite;display:inline-block}
+/* หอคอย — ม้วนเมฆลอย ประกายดาว */
+.c4-t{color:#2a1a4a;background:linear-gradient(180deg,#fff,#ece2ff 60%,var(--m1));border-radius:16px 16px 16px 16px/20px 20px 10px 10px;border:2px solid var(--m2);padding:4px 14px;box-shadow:inset 0 -3px 0 #fff9,0 2px 8px #c8a0ff66;animation:c4floatc 3s ease-in-out infinite}
+@keyframes c4floatc{50%{transform:translateY(-2px)}}
+.c4-t::before{inset:0;z-index:-1;background:radial-gradient(circle,#fff 0 1.2px,transparent 1.6px) 0 0/22px 14px;opacity:.9;animation:c4drift 6s linear infinite}
+@keyframes c4drift{to{background-position:44px 0}}
+.c4-t.dr-1.dp-m .tx{background-image:linear-gradient(90deg,#2a1a4a,#9a5aff,#2a1a4a,var(--m2),#2a1a4a);filter:none}
+/* ระบบเกม — กล่องข้อความ 8 บิต เคอร์เซอร์กะพริบ */
+.c4-e{color:var(--m0);background:#0a1a24;font-family:ui-monospace,monospace;letter-spacing:-.3px;border:2px solid var(--m1);padding:4px 12px;box-shadow:3px 0 0 var(--m3),-3px 0 0 var(--m3),0 3px 0 var(--m3),0 -3px 0 var(--m3)}
+.c4-e small{color:var(--ac)}.c4-e .tx::after{content:'▮';margin-left:2px;color:var(--ac);animation:c4cur 1s steps(1) infinite}
+@keyframes c4cur{50%{opacity:0}}
+.c4-e.dp-m{animation:c4rgb 4s linear infinite}@keyframes c4rgb{0%,100%{box-shadow:3px 0 0 #ff4a5a,-3px 0 0 #3affb0,0 3px 0 #3a8aff,0 -3px 0 #ffd83a}50%{box-shadow:3px 0 0 #3affb0,-3px 0 0 #ff4a5a,0 3px 0 #ffd83a,0 -3px 0 #3a8aff}}
+/* เกตชนะ — ธงรบโบก */
+.c4-q{color:var(--m0);background:linear-gradient(180deg,#a01818,#5a0808);padding:4px 24px 4px 14px;clip-path:polygon(0 0,100% 0,calc(100% - 11px) 50%,100% 100%,0 100%);border-left:5px solid var(--m1);animation:c4wave 2s ease-in-out infinite;transform-origin:left center}
+@keyframes c4wave{0%,100%{transform:perspective(200px) rotateY(0)}50%{transform:perspective(200px) rotateY(-9deg)}}
+.c4-q::before{inset:0;z-index:-1;background:repeating-linear-gradient(90deg,transparent 0 3px,#0000001c 3px 4px),linear-gradient(var(--m1),var(--m1)) top/100% 2px no-repeat,linear-gradient(var(--m1),var(--m1)) bottom/100% 2px no-repeat}
+/* วันสิ้นโลก — แผ่นถ่านร้อน ลาวาไหล ประกายไฟลอย */
+.c4-y{color:#fff3d8;background:linear-gradient(180deg,#3a1408,#1a0804);border-radius:7px;padding:4px 13px;box-shadow:0 0 0 2px var(--m2),0 0 12px #ff6a2a99;text-shadow:0 0 6px #ff8a2a;animation:c4heat 1.6s ease-in-out infinite}
+@keyframes c4heat{50%{box-shadow:0 0 0 2px var(--m2),0 0 18px #ff6a2acc}}
+.c4-y::before{inset:0;z-index:-1;background:linear-gradient(90deg,#ff3a1a,#ffd08a,#ff3a1a,#ffd08a) 0 100%/300% 3px no-repeat,radial-gradient(circle,#ffb03a 0 1px,transparent 1.5px) 0 0/16px 12px;animation:c4lava 2.4s linear infinite}
+@keyframes c4lava{to{background-position:300% 100%,0 -24px}}
+/* ผู้ข้ามโลก — ครึ่งอุ่นครึ่งเย็น สีไหลข้ามประตู */
+.c4-v{color:#fff;background:linear-gradient(90deg,#6a3008,#3a1a5a,#0a3a6a,#3a1a5a,#6a3008) 0 0/300% 100%;border-radius:999px;padding:4px 14px;box-shadow:0 0 0 2px var(--m1),0 0 10px #b070ff66;text-shadow:0 1px 2px #000;animation:c4flow 6s linear infinite}
+.c4-v::before{inset:0;z-index:-1;border-radius:999px;background:radial-gradient(circle,#fff 0 .9px,transparent 1.3px) 0 0/14px 9px;opacity:.7}
+.c4-v .ic{animation:c4door 2.4s ease-in-out infinite;display:inline-block}@keyframes c4door{50%{transform:scaleX(.6)}}
+`;
+document.head.appendChild(st);
+
+window.mw4Svg=(l,p,r,sd)=>svg(/^[dwm]$/.test(p)?p:'m',SH[l]?l:'n',[1,2,3].includes(+r)?+r:3,sd||'');
+window.mw4ClipOf=(l,p,sd)=>{l=SH[l]?l:'n';return(VAR(l,/^[dwm]$/.test(p)?p:'m',sd||'')[1]?SH2:SH)[l][1]};
+window.mw4Chip=(t,p,l,r,sd)=>chip(t,/^[dwm]$/.test(p)?p:'m',SH[l]?l:'n',[1,2,3].includes(+r)?+r:3,sd||'');
+
+try{const s2=document.createElement('style');s2.textContent='@media (prefers-reduced-motion:reduce){.d4v *,.dch4,.dch4 *,.dch4::before,.dch4::after{animation:none!important}}';document.head.appendChild(s2)}catch(e){}
+})()}catch(e){console.error('block160',e)}
