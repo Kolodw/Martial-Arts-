@@ -46465,8 +46465,7 @@ setInterval(()=>{try{if(S&&S.alive&&!S.rareN&&!S._fateR&&(S.age|0)<=1&&window._l
 const rareTxt=()=>{try{if(S.custom)return{n:'✍️ ชีวิตที่ลิขิตเอง',t:''};if(S.rareN){const f=S.rareF|0,F=typeof FATE!=='undefined'&&FATE[f];return{n:S.rareN>1.5?'1 ใน '+fmt(Math.round(S.rareN)):'ชีวิตธรรมดา',t:F?F[2]+' '+F[1]:''}}
  if(S._fateR)return{n:'1 ใน '+S._fateR.n,t:(S._fateR.ic?S._fateR.ic+' ':'')+S._fateR.t};if(S.odds)return{n:'1 ใน '+fmt(Math.round(1/S.odds)),t:''}}catch(e){}return null};
 const brand=()=>{try{const m=$('modal');if(!m||m.dataset.k!=='me')return;const id=m.querySelector('.meId');if(id&&!id.querySelector('.meRare')){const R=rareTxt();if(R)id.insertAdjacentHTML('beforeend',`<div class="meRare"><small>ความหายากของชีวิตนี้</small><b>${esc(R.n)}</b>${R.t?`<i>${esc(R.t)}</i>`:''}</div>`)}
- if(id&&!id.querySelector('.meBrand'))id.insertAdjacentHTML('beforeend','<div class="meBrand">📖 1 ใน นวนิยาย <small>· 1inanovel.com</small></div>');
- if(!m.querySelector('.meFoot'))m.insertAdjacentHTML('beforeend','<div class="meFoot">จำลองชีวิตใน 1 ใน นวนิยาย · 1inanovel.com</div>')}catch(e){}};
+}catch(e){}};
 {const _m=modal;modal=function(h,k){const r=_m.apply(this,arguments);if(k==='me')brand();return r};for(const x in _m)try{modal[x]=_m[x]}catch(e){}}
 setInterval(()=>{try{if(modalOpen&&$('modal').dataset.k==='me')brand()}catch(e){}},800);
 })()}catch(e){console.error('block163',e)}
