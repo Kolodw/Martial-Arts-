@@ -1327,7 +1327,7 @@ function endGame(){
  <h4 style="margin:18px 0 0;text-align:center">5 ชีวิตที่เกิดในวินาทีเดียวกัน</h4>
  <div class="five"><div class="box me"><b>⭐ ${esc(S.name)} (คุณ)</b><br>${S.talent.n} · ${REALMS[ri].n}<br>${S.faction?S.faction.n:'พเนจร'} · อายุ ${S.age} ปี</div>
  ${peers.map(p=>`<div class="box"><b>${p.name}</b>${p.ow?' 🌌':''}${p.rel?'<br>'+REL[p.rel]:''}<br>${p.tal.n} · ${REALMS[p.ri].n}<br>${p.fac?p.fac.n+' — '+RANKS[p.fac.t][p.rank]:'พเนจร'}<br>${p.killed?'ถูกสังหาร':'จากไป'}ตอนอายุ ${p.age} ปี</div>`).join('')}</div>
- ${(S.children||[]).some(c=>c.alive)?`<button class="pbtn" style="width:100%;margin-top:16px" onclick="openHeirPick()">👶 เล่นต่อเป็นลูก (รุ่นที่ ${S.gen+1})</button>`:''}
+ ${((S.children||[]).some(c=>c.alive)||(window._riftKids&&window._riftKids.list().length))?`<button class="pbtn" style="width:100%;margin-top:16px" onclick="openHeirPick()">👶 เล่นต่อเป็นลูก (รุ่นที่ ${S.gen+1})</button>`:''}
  <button class="gbtn" style="width:100%;margin-top:10px" onclick="openBook()">📖 สมุดตำนาน (${Object.keys(achGot).length}/${ACH_ALL.length})</button>
  <div class="brow" style="margin-top:10px"><button class="gbtn" id="cpBtn">📋 คัดลอกไปแชร์</button><button class="${(S.children||[]).some(c=>c.alive)?'gbtn':'pbtn'}" onclick="toTitle()">🐣 เกิดใหม่</button></div>`);
  drawAvatar($('ava2'),S.seed,S.gender,S.family.demon||S.talent.m>=4);bindSpark('skP');bindSpark('skH');

@@ -45,7 +45,7 @@ function anchorsNow(){let a=0;try{if(S.spouse)a++;a+=(S.children||[]).filter(c=>
 function clearQ(){try{if(choice._cur){choice._cur=null;choice._min=false;try{pendBar()}catch(e){}}choice._q=[]}catch(e){}try{if(typeof modalOpen!=='undefined'&&modalOpen)closeM()}catch(e){}}
 
 // ---------- ข้ามโลก ----------
-function cross(key,how,o){o=o||{};if(!S||!S.alive||S.rift)return;const P=PAIR[key],C=CONV[key]||{pow:.6,note:'',int:0},home=snap(),a=anchorsNow(),gen=S.gender||'ชาย';clearQ();const T=o.t||P.t;
+function cross(key,how,o){o=o||{};if(!S||!S.alive||S.rift)return;kidStash(where());S.kids=0;const P=PAIR[key],C=CONV[key]||{pow:.6,note:'',int:0},home=snap(),a=anchorsNow(),gen=S.gender||'ชาย';clearQ();const T=o.t||P.t;
  const R=S.rift={k:key,how,f:o.f||P.f,t:T,y0:S.age,ys:0,shock:how==='soul'?55:80,a,b:0,ev:{},home,ly:S.age};
  S.mw=null;S.xian=false;S.xt=0;try{CFG.xian=0}catch(e){}try{setWorld(false)}catch(e){}S.faction=null;S.ownSect=null;S.spouse=null;
  if(T==='soul'){S.ch='soul';S.sv={aw:2,sp:[],lv:0,rings:[],seen:{},hy:-9};R.hs=1}else S.ch='';
@@ -91,7 +91,8 @@ function goHome(comp){const R=RF();if(!R||R.done)return;
 // ⏳ คืนครอบครัว/สำนักในโลกเดิม แก่ไปตามเวลาที่ผ่านไปจริงฝั่งนั้น
 function famBack(H,dt,R){const F=H.fam;if(!F||H.mw)return'';const out=[];try{
  S.parents=(F.parents||[]).map(p=>{p=Object.assign({},p);if(p.alive!==false){p.age=(p.age||40)+dt;if(p.life&&p.age>=p.life){p.alive=false;out.push(`${p.role||'พ่อแม่'}ของคุณ (${esc(p.n||'')}) จากไปแล้วระหว่างที่คุณไม่อยู่`)}}return p});
- S.children=(F.children||[]).map(c=>{c=Object.assign({},c);if(c.alive!==false&&dt>0){c.age=(c.age||0)+dt;if(dt>=8)out.push(`${esc(c.n||'ลูก')}โตเป็นคนอายุ ${c.age} ปี มองคุณเหมือนคนแปลกหน้า`)}return c});
+ kidStash(R&&R.t);S.children=(F.children||[]).map(c=>{c=Object.assign({},c);if(c.alive!==false&&dt>0){c.age=(c.age||0)+dt;if(dt>=8)out.push(`${esc(c.n||'ลูก')}โตเป็นคนอายุ ${c.age} ปี มองคุณเหมือนคนแปลกหน้า`)}return c});
+ S.kids=S.children.length;if(S.trvKids){const ks=new Set(S.children.map(kKey));S.trvKids=S.trvKids.filter(x=>!ks.has(kKey(x)))}
  S.sibs=(F.sibs||[]).map(x=>{x=Object.assign({},x);if(x.alive!==false)x.age=(x.age||0)+dt;return x});
  if(F.family)S.family=F.family;
  if(F.spouse&&!S.spouse){const sp=Object.assign({},F.spouse);if(sp.age!=null)sp.age+=dt;if(dt>=15&&Math.random()<.6){out.push(`${esc(sp.n||'คู่ชีวิต')}รอคุณไม่ไหว แต่งงานใหม่ไปแล้ว`)}else{S.spouse=sp;if(dt>=3)out.push(`${esc(sp.n||'คู่ชีวิต')}ยังรออยู่ ผมขาวขึ้นกว่าที่คุณจำได้`)}}
@@ -251,6 +252,38 @@ if(typeof endGame==='function'){const _eg=endGame;endGame=function(){let R=null;
   const x=R.k==='mz_mu'&&R.pl!=null?(R.pl>=4?'<br>🩺 โรคจากโลกซอมบี้ถูกหยุดได้ ตำราการแพทย์ของยุทธภพมีบทใหม่ชื่อ ‘วิชากักโรคของคนแปลกหน้า’':R.pl<=-2?'<br>🧟 ศพที่ไม่ล้มยังเดินอยู่ที่เมืองชายแดน — สิ่งที่คุณพามาจากโลกเดิม':'<br>🤒 โรคแปลกสงบลงเอง แต่หมอเทวดายังจดชื่อคุณไว้ในตำรา'):R.k==='mh_so'?(R.fused?'<br>🌑 หน้าต่างสถานะกลายเป็นดวงจิตเงา ทวีปนี้มีผู้ฝึกจิตที่มาจากเกตเป็นคนแรก':R.nf?'<br>🟦 ผู้ไร้ดวงจิตที่ไม่มีใครล้มได้ — ทวีปเล่าเรื่องคุณเป็นตำนาน':''):'';
   d.innerHTML=`<div class="row"><b>🌀 ${esc(P.n)}</b> · ${HOW[R.how][0]} ${HOW[R.how][1]}${R.orig?` · ชื่อเดิม ${esc(R.orig)}`:''}<br>${t}${x}</div>`;
   const fb=b.querySelector('.nsEnd')||b.querySelector('.fateBox')||b.querySelector('.mtNext');if(fb)fb.before(d);else b.appendChild(d)}catch(e){console.error('rift end',e)}},90)}catch(e){}return r}}
+// ---------- 👶 ลูกต่างโลก: ข้ามโลกแล้วลูกไม่หาย เลือกเป็นทายาทได้ 3 แบบ ----------
+// ลูกที่เกิดโลกเดียวกับที่ตาย = สืบทอดปกติ · ลูกต่างโลก = 🏠 พามาโลกนี้ (พรสวรรค์ลด 1 ขั้นตามกฎโลก) หรือ 🚪 ไปเกิดในโลกของลูก (พรสวรรค์เต็ม แต่สำนัก ตระกูล กิจการ ไม่ตามไป)
+const EK=x=>{try{return esc(x)}catch(e){return String(x==null?'':x)}};
+const KW={murim:'murim',xian:'xian',god:'xian',soul:'soul'};
+const KN={murim:'⚔️ ยุทธภพ',xian:'☁️ โลกเซียน',god:'🌟 โลกเทพ',soul:'⭕ ทวีปจิตวิญญาณยุทธ์'};
+function kKey(c){return[c&&c.n,c&&c.g,c&&c.tal&&c.tal.n].join('|')}
+function kidStash(w){try{if(!S||!KW[w])return;const L=(S.children||[]).filter(c=>c&&c.alive!==false);if(!L.length)return;const mom=(S.sp&&S.sp.n)||(typeof S.spouse==='string'?S.spouse:'');const T=S.trvKids=S.trvKids||[];
+ L.forEach(c=>{if(T.some(x=>kKey(x)===kKey(c)))return;const k=JSON.parse(JSON.stringify(c));k._w=w;if(!k._m&&mom){k._m=mom;k._mr=S.gender==='หญิง'?'พ่อ':'แม่'}T.push(k)});if(T.length>12)T.splice(0,T.length-12)}catch(e){console.error('kidStash',e)}}
+const tDown=t=>{try{const pl=TALENT.filter(x=>!x.id).slice().sort((a,b)=>a.m-b.m);return Object.assign({},pl.filter(x=>x.m<((t&&t.m)||1)-1e-9).pop()||pl[0])}catch(e){return t}};
+const hereOk=()=>{const w=where();return !!KW[w]};
+function kidsX(){if(!S||!hereOk())return[];return(S.trvKids||[]).map((c,i)=>[c,i]).filter(([c])=>c&&c.alive!==false&&KW[c._w])}
+const xA=t=>{try{t=String(t||'');for(const [a,b] of XDICT)if(t.includes(a))t=t.split(a).join(b)}catch(e){}return t};
+const tN=(c,t)=>{const n=(t||c.tal||{}).n||'';return KW[c._w]==='xian'?xA(n):n};
+const mR=c=>c._mr||'แม่';
+function heirHtml(){const L=kidsX();if(!L.length)return'';const w=where();
+ return`<div class="tag2" style="margin:14px 2px 6px">🚪 ลูกที่อยู่ต่างโลก</div>`+L.map(([c,i])=>{const same=KW[c._w]===KW[w];return`<button class="opt" onclick="trvHeir(${i})">${c.g==='หญิง'?'👧':'👦'} ${EK(c.n)}<small>${KN[c._w]||''}${c._m?' · '+mR(c)+' '+EK(c._m):''} · ${EK(tN(c))}${same?' · โลกเดียวกัน สืบทอดได้ปกติ':''}</small></button>`}).join('')}
+window.trvHeir=function(i){const c=S&&S.trvKids&&S.trvKids[i];if(!c)return;const w=where(),same=KW[c._w]===KW[w];
+ if(same)return trvHeirGo(i,'here');const dn=tDown(c.tal);
+ const H=`<button class="xbtn" onclick="closeM()">✕</button><h3>${c.g==='หญิง'?'👧':'👦'} ${EK(c.n)}</h3><p>${EK(c.n)}เติบโตอยู่ที่${KN[c._w]} อีกฟากของประตู จะให้เรื่องราวสืบต่อทางไหน</p>
+  <button class="opt" onclick="trvHeirGo(${i},'here')">🏠 พามาโลกนี้ (${KN[w]||wn(w)})<small>เล่นต่อในโลกที่คุณตาย ได้มรดก สำนัก ตระกูลครบ · แต่ร่างไม่ชินกฎโลกนี้ พรสวรรค์ลด 1 ขั้น: ${EK(tN(c))} → ${EK(KW[w]==='xian'?xA(dn&&dn.n):(dn&&dn.n||''))}</small></button>
+  <button class="opt" onclick="trvHeirGo(${i},'go')">🚪 ไปเกิดที่โลกของลูก (${KN[c._w]})<small>พรสวรรค์เต็ม ${EK(tN(c))} · ได้วิชาและของติดตัวจากพ่อแม่ · แต่สำนัก ตระกูล กิจการ และเงินส่วนใหญ่ไม่ข้ามไปด้วย</small></button>
+  <button class="opt" onclick="closeM();setTimeout(()=>{try{openHeirPick()}catch(e){}},200)">↩️ กลับไปเลือกใหม่</button>`;modal(H,'heirX');try{$('modal').innerHTML=H}catch(e){}};
+window.trvHeirGo=function(i,mode){try{const P=S,c0=P&&P.trvKids&&P.trvKids[i];if(!c0)return;const w=where(),same=KW[c0._w]===KW[w],c=JSON.parse(JSON.stringify(c0)),T=KW[c._w];
+ let dn=null;if(mode==='here'&&!same){dn=c.tal&&c.tal.n;c.tal=tDown(c.tal)}
+ if(mode==='go'){P.xian=T==='xian';P.xt=0;if(T==='soul')P.ch='soul';else if(P.ch==='soul')P.ch='normal';P.faction=null;P.rank=0;P.ownSect=null;P.clan=null;P.clanHead=false;P.heirLead=false;P.est=null;P.money=Math.round((P.money||0)*.2)}
+ P.trvKids.splice(i,1);P.children=P.children||[];P.children.push(c);const ci=P.children.length-1;try{closeM()}catch(e){}
+ inherit(ci);
+ if(mode==='go'&&S!==P){try{S.faction=null;S.ownSect=null;S.clan=null;S.clanHead=false;if(S.path==='founder')S.path=null;S.est=null;S.family=Object.assign({},S.family,{n:`ทายาทผู้ข้ามโลก ${(P.name||'').split(' ')[0]}`})}catch(e){}
+  setTimeout(()=>{try{S.est=null;S.faction=null;S.ownSect=null;log(`🚪 <b>${EK(S.name)}ลืมตาขึ้นที่${KN[c._w]}</b> — บ้านเกิดของตัวเอง ไม่ใช่โลกที่${EK(P.name)}จากไป สำนัก ตระกูล และกิจการที่โลกโน้นไม่ตามมา แต่สายเลือด${EK(tN(c))}ยังเต็มเปี่ยม`,'myth',true);render();saveGame()}catch(e){}},200)}
+ else if(dn&&S!==P)setTimeout(()=>{try{log(`🏠 <b>${EK(S.name)}ถูกพาข้ามประตูมา${KN[w]||wn(w)}</b> — ร่างที่เกิดใน${KN[c._w]}ไม่ชินกฎโลกนี้ พรสวรรค์ ${EK(KW[c._w]==='xian'?xA(dn):dn)} อ่อนลงเหลือ <b>${EK(S.talent&&S.talent.n||'')}</b>`,'epic',true);render();saveGame()}catch(e){}},200)}catch(e){console.error('trvHeirGo',e)}};
+{const _m=window.modal;if(typeof _m==='function')window.modal=function(h,tag){const r=_m.apply(this,arguments);try{if(tag==='heir'){const x=heirHtml(),M=$('modal');if(x&&M)M.insertAdjacentHTML('beforeend',x)}}catch(e){}return r}}
+window._riftKids={stash:kidStash,list:kidsX,tDown};
 window._rift={cross,offer,goHome,door,tick,visit,visTick,yearly,EV,PAIR,VIS,where,add,ask,O,CONV,WN,HOW,bookS,shockD,mg,snap,clearQ,anchorsNow,RF,pk,RN,cl,langEv,free,kAdd,RATE,trTxt,wn,LANG};
 })();
 try{wReady('rift')}catch(e){}
