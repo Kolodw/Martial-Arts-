@@ -255,7 +255,7 @@ function L(){return Math.max(30,+(S&&S.lifespan)||80)}
 function Ls(){return Math.min(L(),100)}
 function stage(){const f=(S.age|0)/Ls();return f<.15?0:f<.4?1:f<.65?2:((S.age|0)<L()*.9?3:4)}
 function stEnd(s){return Math.floor(Ls()*[.15,.4,.65,.9,9][s])}
-function init(){if(S._dr){const D=S._dr;D.f=D.f||{};if(D.ws==null)D.ws=0;return D}const k=styK();setTimeout(()=>{try{const s=STY[k];if(S&&S.alive){ensureHeader();addFeed('ev',`📖 ชีวิตนี้ผู้เล่าเรื่องคือ <b>${s.ic} ${s.n}</b> — ${s.d}`,'sum')}}catch(e){}},600);S._dr={sy:k,tn:0,lb:-99,kl:(S.key||[]).length,sp:{},pl:null,used:[],n:0,om:0,cb:0,fin:0,ff:0,y0:S.age|0,f:{},ws:0,wsl:0,par:0};try{stat('st',1);stat('s_'+k,1);stat('w_'+wk(),1)}catch(e){}return S._dr}
+function init(){if(S._dr){const D=S._dr;D.f=D.f||{};if(D.ws==null)D.ws=0;return D}const k=styK();setTimeout(()=>{try{const s=STY[k];if(S&&S.alive){ensureHeader();addFeed('ev',`📖 ชีวิตนี้ผู้เล่าเรื่องคือ <b>${s.ic} ${s.n}</b> — ${s.d}`,'sum')}}catch(e){}},600);S._dr={md:(()=>{try{return(S.ab&&S.ab.on)?'ab':S.hell?'hl':['n','hl','sh','tr'][CFG.chm|0]||'n'}catch(e){return'n'}})(),sy:k,tn:0,lb:-99,kl:(S.key||[]).length,sp:{},pl:null,used:[],n:0,om:0,cb:0,fin:0,ff:0,y0:S.age|0,f:{},ws:0,wsl:0,par:0};try{stat('st',1);stat('s_'+k,1);stat('w_'+wk(),1)}catch(e){}return S._dr}
 function pool(){const w=wk(),D=S._dr,s=stage();
  return TW.filter(t=>{if(D.used.includes(t.id)&&!t.rep)return false;if(t.comeback&&!D.cb)return false;
   if(Array.isArray(t.w)){if(!t.w.includes(w))return false}else if(t.w==='*h'&&w==='beast')return false;
@@ -285,7 +285,7 @@ function omenStep(){const D=S._dr,P=D.pl;if(!P)return;const T=TW.find(t=>t.id===
  while(P.oi<P.oa.length&&(S.age|0)>=P.oa[P.oi]){let src=T,i=P.oi;if(P.fk&&P.oi===P.oa.length-1){const F=TW.find(t=>t.id===P.fk);if(F){src=F;i=Math.min(i,F.om.length-1)}}
   const line=fill(src.om[Math.min(i,src.om.length-1)](cx(),P),P);P.sh.push({a:S.age|0,t:line});P.oi++;D.om++;
   omenLine(line,P.id);try{stat('om',1)}catch(e){}}}
-function fire(){const D=S._dr,P=D.pl;if(!P||busy())return false;const T=TW.find(t=>t.id===P.id);if(!T){D.pl=null;return false}
+function fire(){const D=S._dr,P=D.pl;if(!P||busy()||D.xv)return false;const T=TW.find(t=>t.id===P.id);if(!T){D.pl=null;return false}
  if(P.oi<P.oa.length){P.oa=P.oa.map(x=>Math.min(x,S.age|0));omenStep()}
  const c=cx(),B=T.pay(c,P),rec=P.sh.length?`<div class="drRec">🔮 <b>ย้อนดูลางที่เคยเห็น</b>${P.sh.map(o=>`<div>อายุ ${o.a} — ${strip(o.t).replace(/^🔮\s*/,'')}</div>`).join('')}${(P.rd|0)?`<div style="margin-top:4px">🔓 คุณจดจำลางไว้ ${P.rd} ครั้ง</div>`:''}</div>`:'';
  const opts=B.o.slice();
@@ -381,8 +381,8 @@ if(!reg()){let k=0;const iv=setInterval(()=>{if(reg()||++k>20)clearInterval(iv)}
 // ปุ่มเลือกผู้เล่าเรื่องถูกถอดออก (สุ่มทุกชีวิตแทน) · ลบปุ่มเก่าที่อาจค้างอยู่
 try{document.querySelectorAll('.uxTel').forEach(b=>b.remove())}catch(e){}
 
-window._dir={TW,STY,WS,PATHS,plan,fire,yearHook,finalChapter,stage,init,H:{fill,cx,wk,rp,rnd,E,newName,kidOf,SNAP_SY,others}};
+window._dir={TW,STY,WS,PATHS,plan,fire,yearHook,finalChapter,stage,init,H:{fill,cx,wk,rp,rnd,E,newName,kidOf,SNAP_SY,others,fx,mkOpt,apply,omenLine,busy,stat,strip}};
 // ส่วนขยาย: ภาคต่อ · ศัตรู · สถานะโลก · ปลายทาง · ลูก · ฝันข้ามโลก
-try{setTimeout(()=>{try{wLoad('dir2').catch(()=>setTimeout(()=>wLoad('dir2').catch(()=>{}),5000))}catch(e){}},400)}catch(e){}
+try{setTimeout(()=>{try{wLoad('dir2').then(()=>wLoad('dir3')).catch(()=>setTimeout(()=>wLoad('dir2').then(()=>wLoad('dir3')).catch(()=>{}),5000))}catch(e){}},400)}catch(e){}
 try{wReady('dir')}catch(e){}
 })();

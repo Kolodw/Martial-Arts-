@@ -1352,10 +1352,21 @@ module.exports = async (req, res) => {
       try { if (okId(id)) await uaGhostEnd(id, b, now) } catch (e) {}
       return res.json({ ok: 1 });
     }
+    if (a === 'ovv') { // 🌐 โหวตโลกทับซ้อนประจำสัปดาห์ (หลอมรวม f / แยกขาด s) · ไม่เก็บตัวตน
+      const w = String(b.w || '').replace(/[^0-9]/g, '').slice(0, 6), v = b.v === 'f' ? 'f' : b.v === 's' ? 's' : '';
+      if (!w || !v) return res.json({ ok: 0 });
+      try { await pipe([['HINCRBY', 'ov:' + w, v, 1], ['EXPIRE', 'ov:' + w, 86400 * 30]]) } catch (e) {}
+      return res.json({ ok: 1 });
+    }
+    if (a === 'ovg') {
+      const w = String((qOf(req).w || b.w) || '').replace(/[^0-9]/g, '').slice(0, 6); if (!w) return res.json({ f: 0, s: 0 });
+      const r = await cmd('HGETALL', 'ov:' + w); const o = {}; if (Array.isArray(r)) for (let j = 0; j + 1 < r.length; j += 2) o[r[j]] = +r[j + 1]; else Object.assign(o, r || {});
+      return res.json({ f: +o.f || 0, s: +o.s || 0 });
+    }
     if (a === 'drs') { // 🎴 สถิติผู้ลิขิต · 1 ครั้งต่อชีวิต · นับรวมต่อวัน ไม่เก็บตัวตน
       const ua = String(req.headers['user-agent'] || ''); if (/bot|crawl|spider|headless|preview/i.test(ua)) return res.json({ ok: 0 });
       const c = b.c && typeof b.c === 'object' ? b.c : null; if (!c) return res.json({ ok: 0 });
-      const RX = /^(st|pk|om|tq|mw|ml|wn|ls|[qd][0-9]|pkL|omL|ffL|lsL|s_[csx]|w_(murim|xian|mw|soul|loop|beast|sky)|tw_[a-z0-9]{1,12})$/;
+      const RX = /^(st|pk|om|tq|mw|ml|wn|ls|ho|bet|ido|flip|tmd|b2|npc|xv|ov|[qd][0-9]|pkL|omL|ffL|lsL|s_[csx]|w_(murim|xian|mw|soul|loop|beast|sky)|tw_[a-z0-9]{1,12})$/;
       const ops = [], dk = 'drs:' + new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
       for (const k of Object.keys(c).slice(0, 60)) { const v = Math.floor(+c[k]); if (RX.test(k) && v > 0 && v <= 30) ops.push(['HINCRBY', dk, k, v]) }
       if (!ops.length) return res.json({ ok: 0 });
