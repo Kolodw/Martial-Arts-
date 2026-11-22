@@ -45301,3 +45301,20 @@ const upd=()=>{try{let b=$('godChkP');const a=$('ascPill');if(!a)return;if(!b){a
 setInterval(upd,1500);
 try{const g={s:'world',ic:'☁️',t:'ขึ้นโลกเทพ (เงื่อนไข)',nw:1,d:'อยู่โลกเซียน ต้องครบทุกข้อ: ① ขั้นพลังทะลวงถึงขั้นสูงสุดของโลกเซียน ② เหนือขีดจำกัดครบขั้น 9 ③ อยู่โลกเซียนครบ 800 ปี หรืออายุ 1000 ปี (โหมดสั้น 300/400 · นรก 500/700) ④ ไม่อยู่ในช่วงพักหลังทัณฑ์ล้มเหลว · ครบแล้วกดปุ่ม ⚡ ขึ้นสู่โลกเทพ เหนือแถบเวลา · ยังไม่ครบ แตะปุ่ม 🔒 โลกเทพ ดูว่าขาดข้อไหน'};if(typeof GD2!=='undefined'&&!GD2.some(x=>x.t===g.t))GD2.push(g);if(typeof SYS_GUIDE!=='undefined'&&!SYS_GUIDE.some(x=>x.t===g.t))SYS_GUIDE.push(g)}catch(e){}
 })()}catch(e){console.error('block145',e)}
+
+// BLOCK 146: 🟢 คนออนไลน์แบบเรียลไทม์ — หัวใจเต้นเบาๆ ทุก 60 วิ (เฉพาะตอนเปิดหน้าเว็บอยู่) นับคนที่เปิดเว็บใน 3 นาทีล่าสุด
+// แอดมิน (มีรหัสแอดมินในเครื่อง): ป้ายลอยมุมจอ บอก 1 นาที / 3 นาที / 10 นาที / 1 ชั่วโมง / วันนี้ (คนไม่ซ้ำ) · แตะเพื่อย่อ/ขยาย
+try{(()=>{
+let busy=0,last=0;
+const paint=()=>{try{if(typeof onPillUpd==='function')onPillUpd()}catch(e){}try{const t=$('tOnN');if(t){t.textContent=onlineOK?fmt(onlineN):'';t.parentNode.classList.toggle('on',onlineOK)}}catch(e){}};
+const adm=()=>{try{return !!admK()}catch(e){return false}};
+async function hb(force){if(busy||document.hidden)return;if(!force&&Date.now()-last<55e3)return;busy=1;last=Date.now();
+ try{const k=adm()?'&key='+encodeURIComponent(admK()):'';const j=await api('hb'+k);if(j&&typeof j.n==='number'){onlineOK=true;onlineN=Math.max(1,j.n);paint();if(j.dau!=null)admBadge(j)}}catch(e){}finally{busy=0}}
+window.hbNow=()=>hb(1);
+setTimeout(()=>hb(1),4000);setInterval(()=>hb(0),60e3);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>hb(1),800)});
+{const _op=onlinePing;onlinePing=async function(){const r=await _op.apply(this,arguments);setTimeout(()=>hb(1),300);return r}}
+function admBadge(j){let b=$('admLive');if(!b){b=document.createElement('div');b.id='admLive';b.style.cssText='position:fixed;left:6px;bottom:calc(6px + env(safe-area-inset-bottom));z-index:9990;background:rgba(8,20,12,.88);border:1px solid #3ad45a;color:#c9ffd6;border-radius:12px;padding:5px 9px;font:12px/1.4 ui-monospace,monospace;box-shadow:0 0 12px #3ad45a55;cursor:pointer;user-select:none';b.onclick=()=>{LS.set('murim_admLiveMin',LS.get('murim_admLiveMin',0)?0:1);admBadge(b._j)};document.body.appendChild(b)}
+ b._j=j;const mini=LS.get('murim_admLiveMin',0);
+ b.innerHTML=mini?`🟢 <b>${fmt(j.n)}</b>`:`<b style="color:#7dff9a">🟢 ออนไลน์ตอนนี้ ${fmt(j.n)}</b> <small>(3 นาที)</small><br>⚡ 1 นาที ${fmt(j.n1)} · 10 นาที ${fmt(j.n10)} · 1 ชม. ${fmt(j.n60)}<br>📅 วันนี้ ${fmt(j.dau)} คน <small>(ไม่ซ้ำ · อัปเดตทุกนาที)</small>`}
+})()}catch(e){console.error('block146',e)}
