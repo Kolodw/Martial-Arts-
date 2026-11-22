@@ -46401,13 +46401,15 @@ wrapAll();setInterval(wrapAll,1500);
 {const cs=document.createElement('style');cs.textContent=`#evBack{position:fixed;z-index:99995;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 96px);display:none;align-items:center;gap:8px;max-width:min(92vw,440px);padding:10px 16px;border-radius:999px;border:2px solid #e8b83a;background:linear-gradient(180deg,#3a2a0e,#1e1606);color:#fff3c4;font:700 14px/1.3 inherit;box-shadow:0 6px 22px rgba(0,0,0,.55),0 0 0 3px #e8b83a33;cursor:pointer;animation:evBk .25s ease-out}
 #evBack.on{display:flex}#evBack span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}#evBack b{flex:none;background:#e8b83a;color:#2a1a00;border-radius:999px;padding:3px 10px;font-size:12.5px}
 #evBack:hover{filter:brightness(1.12)}#evBack:active{transform:translateX(-50%) scale(.96)}#evBack:focus-visible{outline:3px solid #fff;outline-offset:2px}
-body.desk #evBack{left:var(--ebL,20px);transform:none;top:var(--ebT,14px);bottom:auto;max-width:var(--ebW,320px)}body.desk #evBack:active{transform:scale(.96)}
+body.desk #evBack{left:var(--ebL,20px);transform:none;top:var(--ebT,14px);bottom:auto;width:var(--ebW,420px);max-width:var(--ebW,420px);justify-content:center}body.desk #evBack:active{transform:scale(.96)}
 @keyframes evBk{from{opacity:0;translate:0 8px}to{opacity:1;translate:0 0}}@media (prefers-reduced-motion:reduce){#evBack{animation:none}}`;document.head.appendChild(cs);
  const el=document.createElement('button');el.id='evBack';el.type='button';el.setAttribute('aria-label','กลับไปตอบเหตุการณ์ที่ย่อไว้');document.body.appendChild(el);
  el.addEventListener('click',e=>{e.stopPropagation();try{openPend()}catch(x){}upd()});
  function upd(){try{const on=!!(S&&S.alive&&choice._cur&&choice._min&&!(modalOpen&&$('mask').classList.contains('on')));el.classList.toggle('on',on);if(!on)return;
   const t=String(choice._cur.title||'').replace(/<[^>]+>/g,'').slice(0,50);const h=`📜 <span>${esc(t)}</span><b>กลับไปตอบ</b>`;if(el._h!==h){el.innerHTML=h;el._h=h}
-  const L=document.getElementById('deskL');if(document.body.classList.contains('desk')&&L){const r=L.getBoundingClientRect();el.style.setProperty('--ebL',Math.round(r.left)+'px');el.style.setProperty('--ebT',Math.round(Math.max(8,r.top)+6)+'px');el.style.setProperty('--ebW',Math.round(r.width)+'px')}}catch(e){}}
+  const C=document.getElementById('deskC');if(document.body.classList.contains('desk')&&C){// คอม: กลางคอลัมน์กลาง เหนือแถบควบคุมด้านล่าง
+   const r=C.getBoundingClientRect(),ct=C.querySelector('.ctrl'),cr=ct&&ct.getBoundingClientRect(),w=Math.min(560,Math.round(r.width-24)),h=el.offsetHeight||46;
+   const y=cr&&cr.height?cr.top-h-10:innerHeight-h-16;el.style.setProperty('--ebL',Math.round(r.left+(r.width-w)/2)+'px');el.style.setProperty('--ebT',Math.round(Math.max(8,y))+'px');el.style.setProperty('--ebW',w+'px')}else{const ct=[...document.querySelectorAll('#game .ctrl')].find(x=>x.getBoundingClientRect().height>0),cr=ct&&ct.getBoundingClientRect(),h=el.offsetHeight||46;if(cr&&cr.top>innerHeight*.5){el.style.top=Math.round(cr.top-h-10)+'px';el.style.bottom='auto'}else{el.style.top='';el.style.bottom=''}}}catch(e){}}
  window._evBackUpd=upd;setInterval(upd,400);{const _p=pendBar;pendBar=function(){const r=_p.apply(this,arguments);upd();return r};for(const k in _p)try{pendBar[k]=_p[k]}catch(e){}}}
 })()}catch(e){console.error('block161',e)}
 
