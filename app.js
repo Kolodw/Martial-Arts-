@@ -46870,7 +46870,7 @@ try{const M=window.FRSH_M,T=window.FRSH_T;for(const id in FRV){if(!FRAMES.find(f
 // ฉายาพิเศษ: ป้ายลายน้ำ + ดอกบัว + โคม
 {const _t=tchipH;tchipH=function(t){try{if(String(t)===KTTL)return chip(KTTL)}catch(e){}return _t.apply(this,arguments)};window.tchipH=tchipH}
 const st=document.createElement('style');st.textContent=`
-#modal[data-k="krt"]{padding:0!important;overflow:hidden!important;max-width:560px!important;width:min(560px,96vw)!important;background:#0a0f24!important}
+#modal[data-k="krt"]{padding:0!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;max-width:560px!important;width:min(560px,96vw)!important;background:#0a0f24!important}
 .kT{display:flex;gap:6px;padding:10px 10px 6px;background:linear-gradient(#0a0f24,#0d1430)}.kT button{flex:1;border:1.5px solid #3a4a8a;background:#121a3a;color:#cfe0ff;border-radius:999px;padding:7px 4px;font:inherit;font-size:13px;font-weight:700}.kT button.on{background:linear-gradient(#ffe08a,#e8b54a);color:#2a1a00;border-color:#ffe08a}
 .kHead{padding:12px 14px 4px;color:#fff3cf}.kHead h3{margin:0;font-size:19px;text-shadow:0 0 12px #ffd36e88}.kHead p{margin:2px 0 0;font-size:12px;color:#b8c8f0}
 .kRiver{position:relative;height:480px;}@keyframes kCardIn{from{transform:translateY(24px);opacity:0}}.kRiver{overflow:hidden;background:#050a22}.kCv{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;display:block}
