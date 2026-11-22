@@ -366,7 +366,7 @@ function doRoll(first){
  const era=pickW(ERAS);roll=genRoll(Math.min(.6,era.v.ow*(CFG.xian?2.5:1)));if(crForce){roll.g={v:GENDER[crForce.g],p:roll.g.p};roll.look=crForce.look}roll.root=rootOf(roll.t.v);roll.era=era;roll.name=(crForce&&crForce.name)||genName(roll.f.v,roll.g.v.n);roll.soul=roll.w?genSoul(roll.w.v,roll.g.v.n):null;
  $('nameOut').textContent=roll.name;$('soulOut').innerHTML=roll.soul?`🌌 วิญญาณเดิม: <b>${roll.soul.n}</b>`:'';roll.goals=goalOffer();roll.goal=roll.goals[0];$('goalBox').style.visibility='hidden';drawAvatar($('ava'),roll.seed,roll.g.v.n,roll.f.v.demon||roll.t.v.m>=4);
  $('startBtn').disabled=true;$('rerollBtn').disabled=true;$('oddsBox').style.visibility='hidden';
- const T=[['ยุคสมัย',roll.era.v.n,roll.era.v.d,roll.era.p],['เพศ',roll.g.v.n,'',roll.g.p],['ชาติกำเนิด',roll.f.v.n,roll.f.v.d+` · เสี่ยงตายวัยทารก ~${Math.round((1-INF_DECAY.reduce((a,d)=>a*(1-roll.f.v.inf*d),1))*100)}%`,roll.f.p],CFG.xian?['รากวิญญาณ',roll.root,roll.t.v.d.replace('ฝึกยุทธ์','บ่มเพาะ').replace('ยุทธภพ','โลกเซียน'),roll.t.p]:['พรสวรรค์',roll.t.v.n,roll.t.v.d,roll.t.p],
+ const T=[['ยุคสมัย',roll.era.v.n,roll.era.v.d,roll.era.p],['เพศ',roll.g.v.n,'',roll.g.p],['ชาติกำเนิด',roll.f.v.n,roll.f.v.d+` · เสี่ยงตายวัยทารก ~${Math.round((1-INF_DECAY.reduce((a,d)=>a*(1-roll.f.v.inf*d),1))*100)}%`,roll.f.p],CFG.xian?['รากวิญญาณ',roll.root+(roll.t.v.id?' · '+roll.t.v.n:''),roll.t.v.d.replace('ฝึกยุทธ์','บ่มเพาะ').replace('ยุทธภพ','โลกเซียน'),roll.t.p]:['พรสวรรค์',roll.t.v.n,roll.t.v.d,roll.t.p],
   ['วิญญาณ',roll.isOw?'ผู้ข้ามมิติ':'ชาวยุทธภพ',roll.isOw?'ความทรงจำจากอีกโลกจะตื่นขึ้นช่วงอายุ 4–8 ขวบ (ถ้ารอดถึงตอนนั้น)':'เกิดและเติบโตในยุทธภพ',roll.op]];
  {const L=roll.trs.list.map(trOf),tw=TRAITS.reduce((a,x)=>a+x.w,0);if(!L.length)T.push(['พรสวรรค์พิเศษ','ไม่มี','เกิดมาเป็นคนธรรมดา',.45]);else L.forEach(t=>T.push([t.bad?'⚠️ พรสวรรค์พิเศษ (ด้านร้าย)':'✨ พรสวรรค์พิเศษ',t.n,t.d,t.w/tw*.55]))}
  if(roll.w){T.push(['โลกเดิม',roll.w.v.n,`วิญญาณของ ${roll.soul.n} — ${roll.soul.d}`,roll.w.p]);T.push(['ของติดตัวจากโลกเดิม',roll.it.v.n,roll.it.v.d,roll.it.p])}
@@ -13775,7 +13775,7 @@ const nb=(k,i)=>` <button onclick="nameAsk('${k}',${i})" style="font-size:12px;p
    if(roll.f.v.oid||fg[0]==='UR'||fg[0]==='SSR')L.push({k:'ชาติกำเนิด',n:roll.f.v.n,d:roll.f.v.d,gr:fg,p:fp});
    if(roll.t.v.id||tg[0]==='UR'||tg[0]==='SSR')L.push({k:'พรสวรรค์',n:roll.t.v.n,d:roll.t.v.d,gr:tg,p:tp});
    L.sort((a,b)=>a.p-b.p);const ck=roll.f.v.oid&&roll.t.v.id&&COMBO[roll.f.v.oid+'+'+roll.t.v.id];if(ck)L.unshift({k:'🌟 คอมโบลับ',n:ck[0],d:ck[1],gr:['UR','#ff3df0'],p:0});
-   const n=document.querySelectorAll('#traits .trait').length;if(L.length){const rr=roll;setTimeout(()=>{const bs=$('birth');if(bs&&bs.classList.contains('on')&&roll===rr)gachaShow(L)},220*n+300)}
+   const n=document.querySelectorAll('#traits .trait').length;let sv=false;try{sv=CH_KEYS[CFG.chm]==='soul'&&!CFG.mw&&!CFG.daily}catch(e){}if(L.length&&!sv){const rr=roll;setTimeout(()=>{const bs=$('birth');if(!(bs&&bs.classList.contains('on')&&roll===rr))return;try{const R=[...document.querySelectorAll('#traits .trait')].map(e=>({k:((e.querySelector('.k')||{}).textContent||'').trim(),v:((e.querySelector('.v')||{}).textContent||'').trim(),d:((e.querySelector('.d')||{}).textContent||'').trim()}));L.forEach(x=>{const ks=x.k==='ชาติกำเนิด'?['ชาติกำเนิด']:x.k==='พรสวรรค์'?['พรสวรรค์','รากวิญญาณ']:[];const m=R.find(y=>ks.includes(y.k));if(m&&m.v){x.k=m.k;x.n=m.v;if(m.d)x.d=m.d}})}catch(e){}gachaShow(L)},220*n+300)}
    const lk=Object.keys(ULK).filter(k=>!oUnl(k));if(lk.length)$('traits').insertAdjacentHTML('beforeend',`<div class="tag2" style="margin:6px 4px;font-size:11px;opacity:.75">🔒 ชาติกำเนิดลับที่ยังไม่ปลดล็อก ${lk.length} แบบ — ${lk.map(k=>ULK[k].t).join(' · ')}</div>`)}catch(e){console.error(e)}return r}}
  // ---- ปลดล็อกชาติลับ ----
  {const _c=checkDeath;checkDeath=function(){const r=_c.apply(this,arguments);try{if(S&&!S.alive&&!S._oc){S._oc=1;const o=OUN(),b={};for(const k in ULK)b[k]=oUnl(k);if(S.beastMode||S.family&&S.family.beast)o.beast=(o.beast||0)+1;o.rmax=Math.max(o.rmax||0,S.xian||S.xt?7:realmIdx());o.amax=Math.max(o.amax||0,S.age);if(S.flags&&S.flags.rb_capital)o.cap=1;ounSet(o);
@@ -38521,7 +38521,7 @@ function famOf(fv){const n=fv.n||'';if(fv.demon)return['🌑','สายเล�
 const INN=[[.6,'พลังวิญญาณอ่อน',[1,2]],[1,'พลังวิญญาณปกติ',[2,5]],[1.4,'พลังวิญญาณดี',[4,7]],[2,'พลังวิญญาณสูง',[7,9]],[3,'พลังวิญญาณเต็มเปี่ยมแต่กำเนิด',[10,10]]];
 const innOf=m=>{let o=INN[0];INN.forEach(x=>{if((m||1)>=x[0])o=x});return o};
 // ---------- สุ่มช่องใหม่ (ล็อกได้ผ่านระบบล็อกเดิม) ----------
-{const _gr=genRoll;genRoll=function(){const r=_gr.apply(this,arguments);try{if(isSoul()&&r){const L=window._LK;if(L&&L.inRoll){if(L.undo&&L.prev&&L.prev.svO){r.svR=L.prev.svR;r.svO=L.prev.svO;r.svP=L.prev.svP}else['svR','svO','svP'].forEach(k=>{if(L.on[k])r[k]=JSON.parse(JSON.stringify(L.on[k].v))})}
+{const _gr=genRoll;genRoll=function(){let r=_gr.apply(this,arguments);try{if(isSoul()&&r){for(let i=0;i<30&&r&&((r.f&&r.f.v&&r.f.v.oid)||(r.t&&r.t.v&&r.t.v.id));i++)r=_gr.apply(this,arguments)}}catch(e){}try{if(isSoul()&&r){const L=window._LK;if(L&&L.inRoll){if(L.undo&&L.prev&&L.prev.svO){r.svR=L.prev.svR;r.svO=L.prev.svO;r.svP=L.prev.svP}else['svR','svO','svP'].forEach(k=>{if(L.on[k])r[k]=JSON.parse(JSON.stringify(L.on[k].v))})}
  if(r.svR==null)r.svR=REG[Math.floor(Math.random()*REG.length)][0];
  if(r.svO==null){const ks=Object.keys(TYN),t=ks[Math.floor(Math.random()*ks.length)],ti=OTIER.indexOf(rw(OTIER));r.svO={t,ti}}
  if(r.svP==null){const sh=famOf(r.f.v)[3].sh,a=spRoll(sh),b=spRoll(sh);r.svP=[a[0],b[0]]}
@@ -38541,11 +38541,15 @@ function cards(){const r=roll,fm=famOf(r.f.v),inn=innOf(r.t.v.m),reg=REG.find(x=
  return T}
 function soulPs(){const era=pickW(ERAS),r=genRoll(Math.min(.6,era.v.ow)),tw=TRAITS.reduce((a,x)=>a+x.w,0),bd=bodyGen(false),O=r.svO,pa=r.svP.map(spOf);
  const ps=[.2,r.g.p,r.f.svC?r.f.p*.01:r.f.p,r.t.p,.2*OTIER[O.ti].w/100,RARP[pa[0][5]]*RARP[pa[1][5]]*2,bd.lkP,bd.cP];if(r.isOw)ps.push(r.op);const L=r.trs.list.map(trOf).filter(Boolean);if(!L.length)ps.push(.45);else L.forEach(t=>ps.push(t.w/tw*.55));return ps}
+function svGacha(){try{const rr=roll;if(!rr||!rr.svO)return;const G=p=>p<.004?['UR','#ff3df0']:p<.012?['SSR','#ffcf3a']:null;const L=[];
+ cards().forEach(c=>{if(!/ครอบครัว|พลังวิญญาณแต่กำเนิด|ลางดวงจิต|ดวงจิตของพ่อแม่/.test(c[0]))return;const g=G(c[3]);if(g)L.push({k:c[0].replace(/^\S+\s/,''),n:c[1],d:c[2],gr:g,p:c[3]})});
+ if(!L.length||typeof gachaShow!=='function')return;L.sort((a,b)=>a.p-b.p);const n=document.querySelectorAll('#traits .trait').length;
+ setTimeout(()=>{const bs=$('birth');if(bs&&bs.classList.contains('on')&&roll===rr&&isSoul())gachaShow(L)},220*n+300)}catch(e){}}
 function paint(){try{if(!isSoul()||!roll||!roll.svO)return;const T=cards();try{if(typeof RARE_DIST!=='undefined'&&!RARE_DIST.h5){const A=[];for(let i=0;i<2000;i++){try{A.push(Math.log10(rareN(soulPs())))}catch(e){A.push(0)}}A.sort((x,y)=>x-y);RARE_DIST.h5=A}}catch(e){}roll.rare=rareCalc(T,'h5');
  $('traits').innerHTML=T.map(c=>{const r=rarOfP(c[3]);return`<div class="trait sv"><div><div class="k">${c[0]}</div><div class="v t${r}">${c[1]}</div>${c[2]?`<div class="d">${c[2]}</div>`:''}</div><span class="o t${r}">${oddsTxt(c[3])}</span></div>`}).join('');
  [...document.querySelectorAll('#traits .trait')].forEach((e,i)=>setTimeout(()=>e.classList.add('show'),90*i+40));
  const h=document.querySelector('#birth h2');if(h)h.innerHTML='⭕ ถือกำเนิดในทวีปวิญญาณ';$('birth').classList.add('svB')}catch(e){console.error('svPaint',e)}}
-{const _dr=doRoll;doRoll=function(){const r=_dr.apply(this,arguments);try{if(isSoul())paint();else{const b=$('birth');if(b&&b.classList.contains('svB')){b.classList.remove('svB');const h=b.querySelector('h2');if(h)h.textContent='คุณได้ถือกำเนิดขึ้นแล้ว'}}}catch(e){}return r}}
+{const _dr=doRoll;doRoll=function(){const r=_dr.apply(this,arguments);try{if(isSoul()){paint();try{heads()}catch(e){}try{fateApply()}catch(e){}queueMicrotask(()=>{try{heads()}catch(e){}});svGacha()}else{const b=$('birth');if(b&&b.classList.contains('svB')){b.classList.remove('svB');const h=b.querySelector('h2');if(h)h.textContent='คุณได้ถือกำเนิดขึ้นแล้ว'}}}catch(e){}return r}}
 // ---------- 🔒 ล็อกชะตา (ตั๋วล็อก): เพิ่มช่องของทวีป · ซ่อนยุคสมัย · ชื่อช่องเดิมเป็นแบบทวีป ----------
 const LKS={svR:['🗺️','แคว้น'],svO:['🔮','ลางดวงจิต'],svP:['🧬','ดวงจิตพ่อแม่']};
 const svVal=(k,r)=>{r=r||roll;try{if(k==='svR'){const g=REG.find(x=>x[0]===r.svR);return g?g[1]+' '+g[2]:''}if(k==='svO')return TYN[r.svO.t][0]+' '+OTIER[r.svO.ti].n;if(k==='svP')return r.svP.map(id=>(spOf(id)||[])[1]).join(' ')}catch(e){}return''};
