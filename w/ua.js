@@ -112,10 +112,10 @@ body.mRM #uaS *{animation:none!important;transition:none!important}`;document.he
 
 // ---------- สถานะ ----------
 let G=null,T=null,AT=null;
-function root(){let s=$$('uaS');if(!s){s=document.createElement('div');s.id='uaS';document.body.appendChild(s)}return s}
-function scr(h,noX){const s=root();s.innerHTML=`<div class="uw">${noX?'':'<button class="uaX" onclick="uaClose()">✕</button>'}${h}</div>`;s.scrollTop=0;return s}
+function root(){let s=$$('uaS');if(!s){s=document.createElement('div');s.id='uaS';s.innerHTML='<div class="uw" id="uaMain"></div>';document.body.appendChild(s);chatMount()}return s}
+function scr(h,noX){const s=root();const m=$$('uaMain');m.innerHTML=`${noX?'':'<button class="uaX" onclick="uaClose()">✕</button>'}${h}`;s.scrollTop=0;try{chatMode()}catch(e){}return s}
 function stopT(){clearInterval(T);T=null;clearTimeout(AT);AT=null}
-window.uaClose=function(){if(G&&G.phase==='play'&&G.cur&&(G.ps[G.cur.a].me||G.ps[G.cur.b].me)&&!confirm('ออกตอนนี้ = ยอมแพ้ (เบต้า: ชีวิตจริงไม่ถูกลบ) ออกเลยไหม?'))return;stopT();G=null;const s=$$('uaS');if(s)s.remove();const c=$$('uaShat');if(c)c.remove()};
+window.uaClose=function(){if(G&&G.phase==='play'&&G.cur&&(G.ps[G.cur.a].me||G.ps[G.cur.b].me)&&!confirm('ออกตอนนี้ = ยอมแพ้ (เบต้า: ชีวิตจริงไม่ถูกลบ) ออกเลยไหม?'))return;stopT();G=null;CHT.list=[];clearTimeout(CHT.t);const s=$$('uaS');if(s)s.remove();const c=$$('uaShat');if(c)c.remove()};
 const wdot=w=>`<span style="color:${WD[w].c}">${WD[w].ic}</span>`;
 const who=(p,extra)=>`<div class="who" style="--c:${WD[p.w].c}"><span class="ic">${WD[p.w].ic}</span><div style="flex:1;min-width:0"><b>${E(p.name)}</b><small>${WD[p.w].n} · อายุ ${p.age} ปี${p.ghost?' · 👻 เงาจักรวาล':''}${p.test?' · ตัวทดลอง':''}</small>${extra||''}</div></div>`;
 const axH=p=>`<div class="ax"><span>💪 กาย<b>${p.b}</b></span><span>🧠 ปัญญา<b>${p.p}</b></span><span>👑 บารมี<b>${p.c}</b></span></div>`;
@@ -154,14 +154,20 @@ function confirmBet(P){scr(`<h2>⚠️ ยืนยันการเดิม�
 function lobby(P){const seed=(Date.now()^Math.floor(Math.random()*1e9))>>>0;R=rngOf(seed);
  const ws=Object.keys(WD).filter(w=>w!==P.w);const lv=(P.b+P.p+P.c)/3;const ps=[Object.assign({},P,{me:1})];
  for(let i=0;i<3;i++){const w=ws.splice(Math.floor(R()*ws.length),1)[0];ps.push(ghost(w,clamp(lv-6+R()*10,20,85)))}
- // สลับที่ให้ตำแหน่งในสายสุ่ม
  for(let i=ps.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[ps[i],ps[j]]=[ps[j],ps[i]]}
- G={seed,ps,phase:'lobby',m:[[0,1],[2,3]],win:[],hist:[]};
- scr(`<h2>🕳️ ห้องสากลภพ</h2><div class="sub">รหัสทัวร์ #${(seed%100000).toString().padStart(5,'0')} · กำลังรวบรวมจักรวาล…</div>
+ G={seed,ps,phase:'lobby',m:[[0,1],[2,3]],win:[],hist:[]};CHT.list=[];CHT.view=14+Math.floor(Math.random()*20);{const l=$$('uaCl');if(l)l.innerHTML=''}
+ const WAIT=30;const t0=Date.now();const at=ps.map(p=>p.me?400:3000+Math.random()*17000);
+ scr(`<h2>🕳️ ห้องสากลภพ</h2><div class="sub">รหัสทัวร์ #${(seed%100000).toString().padStart(5,'0')} · รอจักรวาลอื่นเข้าห้อง · คุยกับคนดูได้ที่แชทด้านล่าง</div>
  <div class="room" id="uaRoom">${ps.map((_,i)=>`<div class="slot" id="uaSl${i}">⏳ รอจักรวาล…</div>`).join('')}</div>
- <div class="card" id="uaBk" style="display:none"></div>`);
- ps.forEach((p,i)=>setTimeout(()=>{const e=$$('uaSl'+i);if(!e)return;e.className='slot on'+(p.me?' me':'');e.style.setProperty('--c',WD[p.w].c);e.innerHTML=`<span class="ic">${WD[p.w].ic}</span><div><b>${E(p.name)}${p.me?' (คุณ)':''}</b>${WD[p.w].n}${p.ghost?' · 👻':''}<br><small style="opacity:.7">${HABN[p.hab]&&p.ghost?'นิสัย: '+HABN[p.hab]:''}</small></div>`;vb(8)},500+i*650));
- setTimeout(()=>{const b=$$('uaBk');if(!b)return;b.style.display='';b.innerHTML=`<b>🏆 สายการแข่ง</b>${brk()}<button class="btn" id="uaB1">📢 เริ่ม!</button>`;$$('uaB1').onclick=()=>nextMatch()},500+ps.length*650+300)}
+ <div class="lbW"><div class="lbT" id="uaLbT">เริ่มใน ${WAIT} วิ</div><div class="tm"><i id="uaLbB" style="width:100%"></i></div></div>
+ <div class="card" id="uaBk" style="display:none"></div><button class="btn" id="uaB1" disabled>⏳ รอคนครบ…</button>`);
+ chatSys(`🕳️ เปิดห้องสากลภพ #${(seed%100000).toString().padStart(5,'0')} · ${CHT.view} คนกำลังดู`);
+ const shown=ps.map(()=>0);let iv=null;const start=()=>{clearInterval(iv);if(G&&G.phase==='lobby')nextMatch()};
+ iv=setInterval(()=>{if(!G||G.phase!=='lobby'||!$$('uaRoom')){clearInterval(iv);return}const el=Date.now()-t0;
+  ps.forEach((p,i)=>{if(!shown[i]&&el>=at[i]){shown[i]=1;const e=$$('uaSl'+i);e.className='slot on'+(p.me?' me':'');e.style.setProperty('--c',WD[p.w].c);e.innerHTML=`<span class="ic">${WD[p.w].ic}</span><div><b>${E(p.name)}${p.me?' (คุณ)':''}</b>${WD[p.w].n}${p.ghost?' · 👻':''}<br><small style="opacity:.7">${p.ghost?'นิสัย: '+HABN[p.hab]:''}</small></div>`;vb(8);if(!p.me){chatSys(`${WD[p.w].ic} ${p.name} เข้าห้องแล้ว`);setTimeout(()=>ghostSay(p,'join'),900+Math.random()*1500)}}});
+  const all=shown.every(Boolean);const left=Math.max(0,WAIT-Math.floor(el/1000));const tt=$$('uaLbT'),bb=$$('uaLbB');if(tt)tt.textContent=all?`ครบ 4 จักรวาลแล้ว · เริ่มใน ${left} วิ`:`รอจักรวาลอื่น… เริ่มใน ${left} วิ`;if(bb)bb.style.width=(left/WAIT*100)+'%';
+  const bk=$$('uaBk'),b1=$$('uaB1');if(all&&bk&&bk.style.display==='none'){bk.style.display='';bk.innerHTML=`<b>🏆 สายการแข่ง</b>${brk()}`;b1.disabled=false;b1.textContent='⚡ พร้อมแล้ว เริ่มเลย';b1.onclick=start;chatSys('🏆 จับคู่เรียบร้อย · ทายกันหน่อยใครจะรอด?')}
+  if(el>=WAIT*1000&&all)start()},250)}
 function brk(){const ps=G.ps;const cell=(i,r)=>{const lost=G.hist.some(h=>h.l===i),won=G.hist.some(h=>h.w===i&&h.r===r);return`<div class="${won?'w':lost&&G.hist.find(h=>h.l===i).r===r?'l':''}">${wdot(ps[i].w)} ${E(ps[i].name)}${ps[i].me?' ⭐':''}</div>`};
  let h=`<div class="brk">${cell(0,0)}<div class="vs">VS</div>${cell(1,0)}</div><div class="brk">${cell(2,0)}<div class="vs">VS</div>${cell(3,0)}</div>`;
  if(G.win.length===2)h+=`<div style="text-align:center;font-size:11px;opacity:.7;margin-top:6px">— รอบชิง —</div><div class="brk">${cell(G.win[0],1)}<div class="vs">VS</div>${cell(G.win[1],1)}</div>`;return h}
@@ -186,16 +192,16 @@ function annLine(A,B){const L=[];const g=[A,B].find(p=>p.ghost);if(g)L.push(`�
 const statOf=(p,st)=>(p[st.ax[0]]+p[st.ax[1]])/2;
 function optsFor(p,bi){const all=HAB.slice();for(let i=all.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[all[i],all[j]]=[all[j],all[i]]}const sel=all.slice(0,3);
  return sel.map(s=>({s,t:pick(CH[p.w][s])}))}
-function aiPick(p,opts,foe,hist){const has=s=>opts.find(o=>o.s===s);let w={r:1,g:1,s:1,h:1};w[p.hab]+=2;
+function aiPick(p,opts,foe,hist){const has=s=>opts.find(o=>o.s===s);let w={r:1,g:1,s:1,h:1};w[p.hab]+=2;if(p.ghost&&p.prom){if(p.prom==='h')w.h+=4;else w.s+=4}
  // อ่านจังหวะก่อนของคู่: ถ้าคู่ชอบเร่ง → ขัดขวาง
  const last=hist.length?hist[hist.length-1]:null;if(last){const fs=last[foe];const ctr={r:'s',g:'r',s:'g',h:'s'}[fs];w[ctr]+=1.2}
  let tot=0;const c=opts.map(o=>{const v=w[o.s];tot+=v;return v});let x=R()*tot;for(let i=0;i<opts.length;i++){x-=c[i];if(x<=0)return opts[i]}return opts[0]}
 function beat(){stopT();const C=G.cur,A=G.ps[C.a],B=G.ps[C.b],st=C.st,bi=C.beat;const meSide=A.me?0:B.me?1:-1;
- const oa=optsFor(A,bi),ob=optsFor(B,bi);C.opt=[oa,ob];C.pk=[null,null];
+ const oa=optsFor(A,bi),ob=optsFor(B,bi);C.opt=[oa,ob];C.pk=[null,null];C.buf=[0,0];const evH=npcEvent(C,A,B,meSide);
  const [l1,l2]=st.beats[bi];
  const myO=meSide<0?null:(meSide?ob:oa);
  scr(`${scoreH()}<div class="beat">${st.ic} ด่าน${st.n} · จังหวะ ${bi+1}/3</div><div class="sit">${l1}<small>${l2}</small></div>
-  <div class="tm"><i id="uaTm" style="width:100%"></i></div><div class="tmT" id="uaTmT">12 วิ</div>
+  ${evH}<div class="tm"><i id="uaTm" style="width:100%"></i></div><div class="tmT" id="uaTmT">12 วิ</div>
   <div id="uaOp">${myO?myO.map((o,i)=>`<button class="opt2" style="--d:${i}" data-i="${i}"><span class="s">${ST[o.s].ic}</span><span>${E(o.t)}<small>${ST[o.s].n}</small></span></button>`).join(''):`<div class="card" style="text-align:center;font-size:13px">👀 ทั้งคู่กำลังเลือก… ตัวเลือกจะเปิดเผยหลังจบจังหวะ</div>`}</div>
   <div class="mx">⚡>🛡️ · 🛡️>🗡️ · 🗡️>⚡ · 🤝 ได้ทั้งคู่ แต่แพ้ 🗡️</div>`,meSide>=0);
  const hist=C.log.map(l=>[l.a.s,l.b.s]);
@@ -205,12 +211,12 @@ function beat(){stopT();const C=G.cur,A=G.ps[C.a],B=G.ps[C.b],st=C.st,bi=C.beat;
  const dur=meSide>=0?12000:3200,t0=Date.now();
  T=setInterval(()=>{const left=Math.max(0,dur-(Date.now()-t0));const i=$$('uaTm');if(i)i.style.width=(left/dur*100)+'%';const tt=$$('uaTmT');if(tt&&!(meSide>=0&&C.pk[meSide])){tt.textContent=Math.ceil(left/1000)+' วิ';tt.classList.toggle('hot',left<4000&&meSide>=0)}
   if(left<=0){clearInterval(T);T=null;if(meSide>=0&&!C.pk[meSide]){const me=meSide?B:A;C.pk[meSide]=aiPick(Object.assign({},me,{hab:me.hab||'g'}),myO,1-meSide,hist);C.auto=1;toast('⏳ ไม่ทันกด — ตัวละครเลือกเองตามนิสัย')}reveal()}},150)}
-function roll(p,o,st){const bonus=clamp((statOf(p,st)-50)*.3,-15,15);const ch=60+bonus;return{ok:R()*100<ch,ch:Math.round(ch)}}
+function roll(p,o,st,buf){const bonus=clamp((statOf(p,st)-50)*.3,-15,15);const ch=clamp(60+bonus+(buf||0),20,95);return{ok:R()*100<ch,ch:Math.round(ch)}}
 function reveal(){stopT();const C=G.cur,A=G.ps[C.a],B=G.ps[C.b],st=C.st;const pa=C.pk[0],pb=C.pk[1];if(!pa||!pb)return;
- let xa=MX[pa.s][pb.s],xb=MX[pb.s][pa.s];const ra=roll(A,pa,st),rb=roll(B,pb,st);
+ let xa=MX[pa.s][pb.s],xb=MX[pb.s][pa.s];const bf=C.buf||[0,0];const ra=roll(A,pa,st,bf[0]),rb=roll(B,pb,st,bf[1]);
  if(!ra.ok)xa=Math.floor(xa/2)-(pa.s==='s'?1:0);if(!rb.ok)xb=Math.floor(xb/2)-(pb.s==='s'?1:0);
  C.sc[0]+=xa;C.sc[1]+=xb;const why=(WHY[pa.s]&&WHY[pa.s][pb.s])||(WHY[pb.s]&&WHY[pb.s][pa.s])||'ท่าทีเหมือนกัน วัดกันที่ฝีมือ';
- C.log.push({a:pa,b:pb,xa,xb,ra,rb,auto:C.auto});C.auto=0;vb(25);
+ C.log.push({a:pa,b:pb,xa,xb,ra,rb,auto:C.auto});C.auto=0;vb(25);try{reactReveal(A,B,pa,pb,ra,rb,xa,xb)}catch(e){}
  const side=(p,o,x,r)=>`<div style="border:1.5px solid ${WD[p.w].c}66"><div class="tg">${ST[o.s].ic}</div><b>${E(p.name)}</b><br>${E(o.t)}<br><span class="${r.ok?'ok':'ng'}">${r.ok?'✓ สำเร็จ':'✗ พลาด'}</span> <small style="opacity:.6">(${r.ch}%)</small><div class="pt ${x<0?'neg':''}">${x>=0?'+':''}${x}</div></div>`;
  const last=C.beat>=2;const meIn=A.me||B.me;
  scr(`${scoreH()}<div class="beat">${st.ic} จังหวะ ${C.beat+1}/3 · เปิดเผย!</div><div class="rv">${side(A,pa,xa,ra)}${side(B,pb,xb,rb)}</div><div class="why">${ST[pa.s].ic} vs ${ST[pb.s].ic} — ${why}</div>
@@ -222,7 +228,7 @@ function scoreH(){const C=G.cur,A=G.ps[C.a],B=G.ps[C.b];const m=Math.max(6,C.sc[
 // ---------- 6) ตัดสิน ----------
 function judge(){stopT();const C=G.cur;if(!C||C.done)return;C.done=1;const A=G.ps[C.a],B=G.ps[C.b];let w=C.sc[0]>C.sc[1]?0:C.sc[1]>C.sc[0]?1:(statOf(A,C.st)>=statOf(B,C.st)?0:1);const tie=C.sc[0]===C.sc[1];
  const wi=w?C.b:C.a,li=w?C.a:C.b;G.hist.push({w:wi,l:li,r:C.r,st:C.st,sc:C.sc.slice(),log:C.log,tie});if(C.r===0)G.win.push(wi);
- const W=G.ps[wi],L=G.ps[li];
+ const W=G.ps[wi],L=G.ps[li];try{reactEnd(W,L)}catch(e){}
  if(L.me)return erased(W,L,C,tie);
  if(W.me&&C.r===1)return champion(W,L);
  // คนอื่นแพ้ หรือเราชนะรอบแรก
@@ -263,5 +269,88 @@ window.uaGrave=function(){const g=LSg('murim_uagrave',[]);scr(`<h2>🕳️ ส�
  <button class="btn gh" onclick="uaOpen()">‹ กลับ</button>`)};
 
 // พับจอระหว่างเล่น = ระบบเลือกแทนตามกติกา (ไม่หยุดเวลา)
+
+// ============================================================
+// 💬 แชทห้องรอ + 👀 คนดูจากโลกต่างๆ (NPC) + เหตุการณ์จากอัฒจันทร์
+//  เบต้า: แชทอยู่ในเครื่อง คนดูเป็น NPC ตอบตามที่คุณพิมพ์ · พิมพ์ชวนคู่แข่ง "ช่วยกันนะ" ได้ แต่เงาอาจโกหก
+// ============================================================
+const CHT={list:[],open:true,view:20,t:null,n:0};
+const SPN={murim:['ศิษย์สำนักภูผาขาว','จอมยุทธ์พเนจร','เถ้าแก่โรงเตี๊ยม','ขอทานพรรคกระยาจก'],xian:['ศิษย์นอกนิกาย','เซียนเร่ร่อน','นางฟ้าเฝ้าสระบัว','เด็กเลี้ยงกระเรียน'],mw:['สตรีมเมอร์ตัวตึง','นักศึกษาปี 2','พี่วินมอเตอร์ไซค์','ป้าขายส้มตำ'],soul:['ปรมาจารย์วิญญาณ','ศิษย์สถาบันซื่อไหล','พ่อค้าวงแหวนเถื่อน'],beast:['ลิงเฒ่าบนต้นไม้','หมาป่าหนุ่ม','นกฮูกพยากรณ์'],sky:['ช่างซ่อมโดรน','ทหารกำแพงชั้นนอก','AI นักพากย์ v2.1','เด็กเก็บเศษดาวตก']};
+const LN={
+ lobby:['ห้องนี้กลิ่นจักรวาลแตกชัดๆ','วันนี้จะมีจักรวาลหายไปกี่อันนะ','ข้ามาเชียร์ ไม่ได้มาลงแข่ง 555','ใครมาจากโลกไหนบ้าง แนะนำตัวหน่อย','ที่นั่งแถวหน้าว่างอยู่ จองไว้แล้วนะ','เคยเห็นจักรวาลถูกลบสดๆ ครั้งนึง ขนลุกมาก'],
+ ann:['ข้าเดิมพันฝั่ง {A}','{B} หน้าตาดูไม่ธรรมดา','ด่าน{ST}อีกแล้ว ปีนี้ออกบ่อยจัง','ระวังเงาจักรวาลนะ มันจำเจ้าของเดิมได้','คู่นี้น่าจะสูสี','ข้าว่า {B} รอด'],
+ play:['เลือกดีๆ!','อย่ารีบ อ่านใจมันก่อน','ใจเย็นๆ เหลือเวลาอีกนิด','เร่งเลย!!','ระวังกับดัก!'],
+ betray:['หักหลังกันซึ่งๆ หน้า!!','โหดเกิน ยื่นมือไปแล้วโดนแทง','ไว้ใจใครไม่ได้จริงๆ ในสากลภพ','{X} เจ้าเล่ห์มาก 😈'],
+ mutual:['ซึ้ง ช่วยกันทั้งคู่ 🥹','นี่มันมิตรภาพข้ามจักรวาล','อย่าเพิ่งไว้ใจกันนะ จังหวะหน้ายังมี'],
+ trap:['เข้ากับดักเต็มๆ!','อ่านทางขาด!','{X} วางกับดักสวยมาก'],
+ fail:['อ้าว พลาดซะงั้น','มือสั่นรึเปล่า','โชคไม่เข้าข้าง'],
+ big:['{X} เก็บแต้มเต็มๆ!','สวยยยย','นี่แหละตัวจริง'],
+ win:['{W} กลืนกินจักรวาลไปแล้ว!','จักรวาล{LW}เงียบไปตลอดกาล','ขอไว้อาลัยให้ {L} 🕯️','{W} น่ากลัวมาก'],
+ rip:['🕯️','RIP {L}','จอแตกเป็นพิกเซลเลย…','ไม่นะ!!']};
+const GH={join:{r:'อย่ามาขวางทางข้าก็แล้วกัน',g:'สวัสดีทุกคน ขอให้ทุกจักรวาลโชคดี',s:'ยินดีที่ได้รู้จัก… ก่อนจักรวาลของพวกเจ้าจะหายไป',h:'ใครอยากร่วมมือ ทักข้าได้นะ'},
+ start:{r:'เร็วเข้า ข้าไม่ชอบรอ',g:'ข้าจะดูทางเจ้าก่อน',s:'ข้าเห็นจุดอ่อนเจ้าแล้ว 😏',h:'ไม่ว่าใครชนะ ขอให้สู้กันอย่างเกียรติ'},
+ yes:['ตกลง ข้าจะเลือก 🤝 ช่วย','ได้สิ ช่วยกันรอดไปด้วยกัน','สัญญา ข้าจะไม่หักหลัง'],
+ no:['ฝันไปเถอะ','ช่วยเจ้า? แล้วใครจะช่วยข้า','ข้าไม่ทำสัญญากับคนแปลกหน้า']};
+const EVP={
+ murim:[['👴','ผู้เฒ่าสำนักภูผาขาวตะโกนบอกจังหวะให้ {X}',7],['🍶','ขี้เมาจากโรงเตี๊ยมขว้างไหเหล้าเข้ามาในลาน {X} เสียสมาธิ',-6]],
+ xian:[['🌸','เซียนเร่ร่อนโปรยกลีบดอกไม้มงคลใส่ {X}',6],['⚡','ทัณฑ์สวรรค์ลูกเล็กหลงฟ้าผ่าลงข้าง {X}',-7]],
+ mw:[['📱','สตรีมเมอร์ไลฟ์เชียร์ {X} คนดูพุ่ง 10,000',5],['📸','แฟลชกล้องมือถือรัวใส่หน้า {X}',-5]],
+ soul:[['⭕','ปรมาจารย์วิญญาณส่งพลังวิญญาณให้ {X}',6],['🐍','สัตว์วิญญาณหลุดเข้ามาพัน {X}',-6]],
+ beast:[['🐺','ฝูงหมาป่าหอนเชียร์ {X} ก้องลาน',5],['🦅','นกอินทรีโฉบแย่งของจาก {X}',-6]],
+ sky:[['🛰️','AI นักพากย์คำนวณเส้นทางให้ {X} ฟรี',6],['🚁','โดรนนักข่าวปี 2054 บินบังหน้า {X}',-5]]};
+const rp=a=>a[Math.floor(Math.random()*a.length)];
+const fill=(t,o)=>t.replace(/\{(\w+)\}/g,(m,k)=>o[k]!=null?o[k]:m);
+const ccss=document.createElement('style');ccss.textContent=`
+#uaS .uw{padding-bottom:calc(150px + env(safe-area-inset-bottom))!important}
+#uaChat{position:fixed;left:0;right:0;bottom:0;z-index:9550;max-width:560px;margin:0 auto;background:linear-gradient(180deg,#120a2af0,#07041af8);border-top:1.5px solid #b49aff66;border-radius:18px 18px 0 0;box-shadow:0 -10px 30px #000a;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:6px 10px calc(8px + env(safe-area-inset-bottom));transition:transform .3s cubic-bezier(.2,1.2,.4,1)}
+#uaChat .ch{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;cursor:pointer;padding:2px 2px 6px}#uaChat .ch .v{margin-left:auto;font-weight:600;opacity:.75}#uaChat .ch .tg{font-size:14px;opacity:.8}
+#uaChat .cl{overflow-y:auto;max-height:34vh;display:flex;flex-direction:column;gap:5px;padding-right:2px;scrollbar-width:none}
+#uaChat.min .cl{max-height:44px;overflow:hidden;-webkit-mask-image:linear-gradient(180deg,transparent,#000 45%);mask-image:linear-gradient(180deg,transparent,#000 45%);justify-content:flex-end}
+#uaChat .m{font-size:12.5px;line-height:1.45;animation:uaIn .3s both;word-break:break-word}#uaChat .m b{font-weight:800;margin-right:4px}#uaChat .m .w{font-size:10.5px;opacity:.6;margin-right:3px}
+#uaChat .m.me{align-self:flex-end;background:#b49aff33;border:1px solid #b49aff66;padding:4px 10px;border-radius:12px 12px 2px 12px;max-width:85%}
+#uaChat .m.sys{text-align:center;font-size:11px;opacity:.65}
+#uaChat .m.gh b{color:#ff9ab0}
+#uaChat .m.ev{padding:7px 10px;border-radius:12px;background:linear-gradient(90deg,#ffd86a22,#ffd86a0a);border:1px solid #ffd86a66;font-weight:700}
+#uaChat .ci{display:flex;gap:6px;margin-top:7px}#uaChat .ci input{flex:1;min-width:0;padding:9px 12px;border-radius:999px;border:1px solid #ffffff2a;background:#0006;color:#fff;font:inherit;font-size:16px}
+#uaChat .ci button{flex:none;border:0;border-radius:999px;min-width:40px;padding:0 10px;font-size:16px;background:#ffffff14;color:#fff;cursor:pointer}#uaChat .ci .sd{background:linear-gradient(180deg,#e8dcff,#b49aff);color:#1a0a30;font-weight:900;font-size:13px}
+#uaChat.min .ci,#uaChat.busy .ci{display:none}
+#uaS .lbW{margin:10px 0}#uaS .lbT{font-size:12.5px;text-align:center;opacity:.85}
+#uaS .evB{margin:8px 0 2px;padding:8px 11px;border-radius:12px;font-size:12.5px;line-height:1.45;animation:uaIn .4s both}#uaS .evB.up{background:#3aa86a26;border:1px solid #3aa86a88}#uaS .evB.dn{background:#ff3a6a1f;border:1px solid #ff6a8a77}`;document.head.appendChild(ccss);
+function chatMount(){if($$('uaChat'))return;const c=document.createElement('div');c.id='uaChat';c.innerHTML=`<div class="ch" onclick="uaChatTog()"><span>💬 แชทห้องสากลภพ</span><span class="v" id="uaView"></span><span class="tg" id="uaTg">▾</span></div><div class="cl" id="uaCl"></div>
+ <div class="ci"><button type="button" onclick="uaCheer('🔥')">🔥</button><button type="button" onclick="uaCheer('😱')">😱</button><input id="uaIn" maxlength="80" placeholder="พิมพ์คุยกับคนดู / คู่แข่ง…" enterkeyhint="send"><button class="sd" type="button" onclick="uaSend()">ส่ง</button></div>`;
+ $$('uaS').appendChild(c);const i=$$('uaIn');i.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();uaSend()}});tick()}
+function chatMode(){const c=$$('uaChat');if(!c)return;c.style.display=G?'':'none';const busy=!!document.querySelector('#uaOp .opt2');c.classList.toggle('busy',busy);c.classList.toggle('min',!CHT.open||busy);const t=$$('uaTg');if(t)t.textContent=c.classList.contains('min')?'▴':'▾';const v=$$('uaView');if(v)v.textContent=`👀 ${CHT.view} คนดู`;const l=$$('uaCl');if(l)l.scrollTop=l.scrollHeight;const m=$$('uaMain');if(m)m.style.setProperty('padding-bottom',(G&&c.offsetHeight?c.offsetHeight+18:28)+'px','important')}
+window.uaChatTog=function(){CHT.open=!CHT.open;chatMode()};
+function push(m){CHT.list.push(m);if(CHT.list.length>80)CHT.list.shift();const l=$$('uaCl');if(!l)return;const d=document.createElement('div');d.className='m '+(m.cls||'');d.innerHTML=m.h;l.appendChild(d);while(l.children.length>80)l.removeChild(l.firstChild);l.scrollTop=l.scrollHeight}
+const RC=[];function npcSay(t,w){if(RC.includes(t)&&Math.random()<.85)return;RC.push(t);if(RC.length>8)RC.shift();w=w||rp(Object.keys(WD));push({h:`<span class="w">${WD[w].ic}</span><b style="color:${WD[w].c}">${E(rp(SPN[w]))}</b>${E(t)}`})}
+function chatSys(t){push({cls:'sys',h:E(t)})}
+function ghostSay(p,k,t){if(!p||!p.ghost)return;push({cls:'gh',h:`<span class="w">👻</span><b>${E(p.name)}</b>${E(t||GH[k][p.hab]||'')}`})}
+const lat=(f,a,b)=>setTimeout(f,a+Math.random()*(b-a));
+function ctx(){const C=G&&G.cur;if(!C)return{};const A=G.ps[C.a],B=G.ps[C.b];return{A:A.name,B:B.name,ST:C.st.n}}
+function tick(){clearTimeout(CHT.t);CHT.t=setTimeout(()=>{if(!$$('uaS'))return;if(G){CHT.view=Math.max(5,CHT.view+Math.round(Math.random()*4-1.5));const ph=G.phase;const pool=ph==='lobby'?LN.lobby:ph==='ann'?LN.ann:ph==='play'?LN.play:LN.lobby;if(Math.random()<.85)npcSay(fill(rp(pool),ctx()));chatMode()}tick()},ph2ms())}
+function ph2ms(){const ph=G&&G.phase;return ph==='lobby'?2200+Math.random()*2200:ph==='play'?4200+Math.random()*3000:3200+Math.random()*2800}
+window.uaCheer=function(e){const me=G&&G.ps.find(p=>p.me);push({cls:'me',h:e});vb(8);lat(()=>npcSay(rp(['555','เชียร์ด้วยคน '+e,e+e,'ใจสู้มาก','ฝั่งนี้ครับ!'])),500,1600)};
+window.uaSend=function(){const i=$$('uaIn');if(!i)return;const t=i.value.trim();if(!t)return;i.value='';push({cls:'me',h:E(t)});vb(6);reply(t)};
+function foeOf(){if(!G)return null;const C=G.cur;let me=G.ps.findIndex(p=>p.me);if(C&&!C.done&&(C.a===me||C.b===me))return G.ps[C.a===me?C.b:C.a];
+ // ยังไม่ถึงคู่เรา → คู่แรกของเรา
+ const m=G.m.find(x=>x.includes(me));if(m&&!G.hist.some(h=>h.l===me||h.w===me))return G.ps[m[0]===me?m[1]:m[0]];return null}
+function reply(t){const f=foeOf();
+ if(/ช่วย|ร่วมมือ|พันธมิตร|สัญญา|จับมือ|ดีล/.test(t)&&f&&f.ghost){const honest=f.hab==='h'?Math.random()<.85:f.hab==='s'?Math.random()<.2:Math.random()<.5;const agree=f.hab==='h'||f.hab==='s'||Math.random()<.5;
+  f.prom=agree?(honest?'h':'s'):null;lat(()=>ghostSay(f,'',agree?rp(GH.yes):rp(GH.no)),900,2200);lat(()=>npcSay(agree?rp(['เชื่อได้ไหมนั่น 🤔','ระวังโดนหลอกนะ','เงาจักรวาลโกหกเก่งนะเพื่อน']):'โดนเทซะแล้ว 555'),2400,3800);return}
+ if(/สวัสดี|หวัดดี|ดีครับ|ดีค่ะ|hello|hi\b/i.test(t))return lat(()=>npcSay(rp(['สวัสดีนักรบ!','ยินดีต้อนรับสู่สากลภพ','หวัดดี ขอให้จักรวาลเจ้ารอด 🙏'])),700,1800);
+ if(/กลัว|เครียด|ตื่นเต้น|ไม่กล้า/.test(t))return lat(()=>npcSay(rp(['หายใจลึกๆ อ่านใจมันให้ออก','กลัวได้ แต่อย่ากดพลาดนะ','ข้าเชียร์เจ้าอยู่']),'xian'),700,1800);
+ if(/ชนะ|แชมป์|ไม่แพ้|ง่าย|สบาย/.test(t)){lat(()=>npcSay(rp(['มั่นใจจังนะ','พูดแบบนี้ทุกคนก่อนจอแตก 555','ขอดูฝีมือหน่อย'])),700,1800);if(f)lat(()=>ghostSay(f,'',rp(['เดี๋ยวก็รู้','ปากดีนักนะ','จะได้เห็นกัน'])),1800,3000);return}
+ if(/แพ้|ยอม|ตาย|ถูกลบ/.test(t))return lat(()=>npcSay(rp(['ยังไม่จบจนกว่าจอจะแตก!','สู้ๆ อย่าเพิ่งยอม','ถ้าแพ้จะจุดธูปให้ 🕯️'])),700,1800);
+ if(f&&/\?|ไง|ยังไง|เลือกอะไร|จะเลือก/.test(t)){const lie=f.hab==='s'&&Math.random()<.7;const real=f.hab;const say=lie?rp(['r','g','h'].filter(x=>x!==real)):real;return lat(()=>ghostSay(f,'',`ข้าชอบ${ST[say].ic} ${ST[say].n}… เชื่อหรือไม่ก็แล้วแต่`),1000,2400)}
+ lat(()=>npcSay(rp(['555555','จริง','+1','เห็นด้วย','ว่าแต่ใครจะรอด','พูดดี','👀'])),700,2200)}
+// เหตุการณ์จากอัฒจันทร์ (มีผลกับโอกาสสำเร็จของจังหวะนี้)
+function npcEvent(C,A,B,meSide){if(Math.random()>(meSide>=0?(C.beat?.55:.3):.35))return'';const w=rp(Object.keys(WD));const e=rp(EVP[w]);const side=Math.random()<.5?0:1;const P=side?B:A;C.buf[side]+=e[2];
+ const txt=fill(e[1],{X:P.name});push({cls:'ev',h:`${e[0]} ${E(txt)} <small style="opacity:.75">(${e[2]>0?'+':''}${e[2]}% โอกาสสำเร็จ)</small>`});lat(()=>npcSay(rp(e[2]>0?['ได้ตัวช่วยด้วย!','โกงชัดๆ 555','อัฒจันทร์เข้าข้าง '+P.name]:['เวรกรรม','ใครปล่อยของเข้ามาเนี่ย','ซวยไป '+P.name])),900,2000);
+ return`<div class="evB ${e[2]>0?'up':'dn'}">${e[0]} <b>เหตุการณ์จากอัฒจันทร์</b> · ${E(txt)} → ${P.me?'คุณ':E(P.name)} โอกาสสำเร็จ <b>${e[2]>0?'+':''}${e[2]}%</b> จังหวะนี้</div>`}
+function reactReveal(A,B,pa,pb,ra,rb,xa,xb){let k=null,X='';if(pa.s==='s'&&pb.s==='h'){k='betray';X=A.name}else if(pb.s==='s'&&pa.s==='h'){k='betray';X=B.name}else if(pa.s==='h'&&pb.s==='h')k='mutual';else if(pa.s==='s'&&pb.s==='r'){k='trap';X=A.name}else if(pb.s==='s'&&pa.s==='r'){k='trap';X=B.name}else if(!ra.ok||!rb.ok)k='fail';else{k='big';X=xa>=xb?A.name:B.name}
+ lat(()=>npcSay(fill(rp(LN[k]),{X})),300,900);if(Math.random()<.6)lat(()=>npcSay(fill(rp(LN[k]),{X})),1100,2200);
+ const g=[A,B].find(p=>p.ghost&&p.prom);if(g&&k==='betray'&&X===g.name)lat(()=>ghostSay(g,'',rp(['ข้าเคยบอกว่าจะช่วยเหรอ? 😏','สัญญาในสากลภพ… ไม่มีค่าหรอก','ขอโทษนะ แต่จักรวาลข้าสำคัญกว่า'])),1500,2600)}
+function reactEnd(W,L){CHT.view+=3;lat(()=>npcSay(fill(rp(LN.win),{W:W.name,L:L.name,LW:WD[L.w].n})),400,1200);lat(()=>npcSay(fill(rp(LN.rip),{L:L.name})),1500,2600);if(W.ghost)lat(()=>ghostSay(W,'',rp(['อีกหนึ่งจักรวาล','ขอบคุณสำหรับพลัง','ข้าจะจดชื่อเจ้าไว้'])),2000,3200);if(L.me)lat(()=>chatSys('🕳️ ชื่อของคุณถูกจารึกในสุสานจักรวาล'),2600,3400)}
+{const _n=nextMatch;nextMatch=function(){const r=_n.apply(this,arguments);try{const C=G&&G.cur;if(C&&G.phase==='ann'){const A=G.ps[C.a],B=G.ps[C.b];chatSys(`📢 ${A.name} VS ${B.name} · ด่าน${C.st.n}`);[A,B].forEach((p,i)=>{if(p.ghost)lat(()=>ghostSay(p,'start'),800+i*900,1600+i*900)})}}catch(e){}return r}}
 try{wReady('ua')}catch(e){}
 })();
