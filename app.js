@@ -44797,16 +44797,19 @@ const css=document.createElement('style');css.textContent=`
 #modal.mvOn{translate:var(--mvx,0px) var(--mvy,0px)}
 #modal.mvW{width:var(--mvw)!important;max-width:96vw!important}
 #modal.mvH{height:var(--mvh)!important;max-height:var(--mvh)!important;bottom:auto!important}
-#mvBar{position:fixed;z-index:100060;display:none;align-items:center;gap:4px;transform:translate(-50%,-62%);pointer-events:auto;user-select:none;-webkit-user-select:none}
+#mvBar{position:fixed;z-index:100060;display:none;align-items:center;gap:5px;transform:translate(-50%,-50%);pointer-events:none;user-select:none;-webkit-user-select:none}
 #mvBar.on{display:flex}
-#mvBar .mvG{touch-action:none;cursor:grab;padding:3px 12px;border-radius:999px;background:var(--w,#241a33);color:var(--ink,#f3e6c4);border:2px solid var(--line,#c9a24a);font-size:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px #0006;min-height:28px;display:flex;align-items:center;gap:4px}
-#mvBar .mvG:active{cursor:grabbing}
-#mvBar button{min-width:28px;min-height:28px;border-radius:999px;border:2px solid var(--line,#c9a24a);background:var(--w,#241a33);color:var(--ink,#f3e6c4);font-size:13px;font-weight:800;cursor:pointer;padding:0 6px;box-shadow:0 2px 8px #0006}
-#mvRz{position:fixed;z-index:100060;display:none;width:30px;height:30px;touch-action:none;cursor:nwse-resize;border-radius:8px 0 12px 0;background:linear-gradient(135deg,transparent 45%,var(--line,#c9a24a) 46% 54%,transparent 55%,transparent 62%,var(--line,#c9a24a) 63% 71%,transparent 72%);transform:translate(-80%,-80%)}
+#mvBar>*{pointer-events:auto}
+#mvBar .mvG{touch-action:none;cursor:grab;width:38px;height:22px;border-radius:999px;background:#241a33e6;color:#f3e6c4;border:1.5px solid #c9a24acc;font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 6px #0007;opacity:.88}
+#mvBar .mvG:active{cursor:grabbing;opacity:1}
+#mvBar .mvM{display:none;gap:5px}#mvBar.open .mvM{display:flex}
+#mvBar .mvM button{width:28px;height:22px;border-radius:999px;border:1.5px solid #c9a24acc;background:#241a33f2;color:#f3e6c4;font-size:12px;line-height:1;cursor:pointer;padding:0;box-shadow:0 1px 6px #0007}
+#mvRz{position:fixed;z-index:100060;display:none;width:24px;height:24px;touch-action:none;cursor:nwse-resize;opacity:.8;background:linear-gradient(135deg,transparent 45%,#c9a24a 46% 54%,transparent 55%,transparent 64%,#c9a24a 65% 73%,transparent 74%);transform:translate(-85%,-85%)}
 #mvRz.on{display:block}
-@media (pointer:coarse){#mvBar .mvG{min-height:32px;font-size:13px}#mvBar button{min-width:34px;min-height:32px}#mvRz{width:38px;height:38px}}`;
+#modal.mvAn{transition:translate .28s ease,width .28s ease,height .28s ease}
+@media (pointer:coarse){#mvBar .mvG{width:46px;height:28px;font-size:15px}#mvBar .mvM button{width:36px;height:28px;font-size:14px}#mvRz{width:32px;height:32px}}`;
 document.head.appendChild(css);
-const bar=document.createElement('div');bar.id='mvBar';bar.innerHTML='<button type="button" class="mvS" aria-label="ย่อ">➖</button><div class="mvG" title="ลากเพื่อย้าย · แตะสองครั้งเพื่อคืนค่า">✥ ลากย้าย</div><button type="button" class="mvL" aria-label="ขยาย">➕</button><button type="button" class="mvR" aria-label="คืนค่า">↺</button>';document.body.appendChild(bar);
+const bar=document.createElement('div');bar.id='mvBar';bar.innerHTML='<div class="mvG" title="ลากเพื่อย้ายหน้าต่าง · แตะเพื่อเปิดปุ่มย่อ/ขยาย · แตะสองครั้งเพื่อคืนค่า">✥</div><span class="mvM"><button type="button" class="mvS" aria-label="ย่อ">➖</button><button type="button" class="mvL" aria-label="ขยาย">➕</button><button type="button" class="mvR" aria-label="คืนค่า">↺</button></span>';document.body.appendChild(bar);
 const rz=document.createElement('div');rz.id='mvRz';rz.title='ลากเพื่อย่อ/ขยาย';document.body.appendChild(rz);
 let V=get(),lastDev=dev();
 function apply(){const m=M();if(!m)return;const on=ok();
@@ -44816,20 +44819,23 @@ function apply(){const m=M();if(!m)return;const on=ok();
  sp('width',V.w?V.w+'px':'');sp('max-width',V.w?'96vw':'');sp('min-width',V.w?'0':'');
  sp('height',V.h?V.h+'px':'');sp('max-height',V.h?V.h+'px':'');sp('bottom',V.h?'auto':'');m._mvSet=1;
  const z=zf(),r=m.getBoundingClientRect();
- bar.classList.add('on');bar.style.left=((r.left+r.width/2)/z)+'px';bar.style.top=(Math.max(18,r.top)/z)+'px';
+ bar.classList.add('on');bar.style.left=((r.left+r.width/2)/z)+'px';bar.style.top=(Math.max(14,r.top)/z)+'px';
  rz.classList.add('on');rz.style.left=(Math.min(innerWidth-4,r.right)/z)+'px';rz.style.top=(Math.min(innerHeight-4,r.bottom)/z)+'px'}
-function clampV(){const m=M();if(!m)return;const z=zf(),r=m.getBoundingClientRect(),W=innerWidth,H=innerHeight;let dx=0,dy=0;
- if(r.top<8)dy=8-r.top;else if(r.top>H-70)dy=H-70-r.top;
- if(r.right<90)dx=90-r.right;else if(r.left>W-90)dx=W-90-r.left;
- if(dx||dy){V.x+=dx/z;V.y+=dy/z;apply()}
- const r2=m.getBoundingClientRect();if(r2.bottom>H-6){const nh=Math.max(200,(H-6-r2.top)/z);if(!V.h||nh<V.h){const cen=getComputedStyle($('mask')).justifyContent==='center'&&getComputedStyle(m).position!=='fixed';const h0=V.h||r2.height/z;V.h=Math.round(nh);if(cen)V.y+=(V.h-h0)/2;apply()}}}
+function clampV(anim){const m=M();if(!m)return;const z=zf(),r=m.getBoundingClientRect(),W=innerWidth,H=innerHeight,t=6;
+ const out=r.left<-t||r.right>W+t||r.top<-t||r.bottom>H+t;if(!out)return;
+ const moved=V.x||V.y;
+ if(V.w&&V.w>W/z*.96)V.w=Math.round(W/z*.96);if(V.h&&V.h>H/z*.94)V.h=Math.round(H/z*.94);
+ V.x=0;V.y=0;
+ if(anim){m.classList.add('mvAn');setTimeout(()=>m.classList.remove('mvAn'),400)}
+ apply();put(V);
+ if(moved&&anim){try{toast('↩ หน้าต่างหลุดขอบจอ เด้งกลับกลางจอแล้ว')}catch(e){}}}
 // ลากย้าย
 let drag=null;
 const G=bar.querySelector('.mvG');
-G.addEventListener('pointerdown',e=>{if(!ok())return;e.preventDefault();drag={sx:e.clientX,sy:e.clientY,x:V.x,y:V.y,id:e.pointerId};try{G.setPointerCapture(e.pointerId)}catch(x){}});
-G.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const z=zf();V.x=drag.x+(e.clientX-drag.sx)/z;V.y=drag.y+(e.clientY-drag.sy)/z;apply()});
-const endDrag=e=>{if(!drag)return;drag=null;clampV();put(V)};G.addEventListener('pointerup',endDrag);G.addEventListener('pointercancel',endDrag);
-let lastTap=0;G.addEventListener('click',()=>{const t=Date.now();if(t-lastTap<350)reset();lastTap=t});
+G.addEventListener('pointerdown',e=>{movedPx=0;if(!ok())return;e.preventDefault();drag={sx:e.clientX,sy:e.clientY,x:V.x,y:V.y,id:e.pointerId};try{G.setPointerCapture(e.pointerId)}catch(x){}});
+G.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;movedPx=Math.max(movedPx,Math.abs(e.clientX-drag.sx)+Math.abs(e.clientY-drag.sy));const z=zf();V.x=drag.x+(e.clientX-drag.sx)/z;V.y=drag.y+(e.clientY-drag.sy)/z;apply()});
+let movedPx=0;const endDrag=e=>{if(!drag)return;drag=null;put(V);clampV(true)};G.addEventListener('pointerup',endDrag);G.addEventListener('pointercancel',endDrag);
+let lastTap=0,openT=0;G.addEventListener('click',()=>{if(movedPx>6)return;const t=Date.now();if(t-lastTap<350){reset();bar.classList.remove('open');lastTap=0;return}lastTap=t;setTimeout(()=>{if(lastTap===t){bar.classList.toggle('open');clearTimeout(openT);if(bar.classList.contains('open'))openT=setTimeout(()=>bar.classList.remove('open'),5000)}},360)});
 // ย่อขยายด้วยมุม
 let rs=null;
 rz.addEventListener('pointerdown',e=>{if(!ok())return;e.preventDefault();const m=M(),z=zf(),r=m.getBoundingClientRect();rs={sx:e.clientX,sy:e.clientY,w:r.width/z,h:r.height/z,id:e.pointerId};try{rz.setPointerCapture(e.pointerId)}catch(x){}});
@@ -44839,17 +44845,17 @@ rz.addEventListener('pointermove',e=>{if(!rs||e.pointerId!==rs.id)return;const z
  const cen=getComputedStyle($('mask')).justifyContent==='center'&&getComputedStyle(M()).position!=='fixed';
  if(cen){V.x+= ((nw-(V.w||rs.w))/2);V.y+=((nh-(V.h||rs.h))/2)}
  V.w=Math.round(nw);V.h=Math.round(nh);apply()});
-const endRs=()=>{if(!rs)return;rs=null;clampV();put(V)};rz.addEventListener('pointerup',endRs);rz.addEventListener('pointercancel',endRs);
+const endRs=()=>{if(!rs)return;rs=null;put(V);clampV(true)};rz.addEventListener('pointerup',endRs);rz.addEventListener('pointercancel',endRs);
 // ปุ่ม
 function step(f){if(!ok())return;const m=M(),z=zf(),r=m.getBoundingClientRect(),W=innerWidth/z,H=innerHeight/z;const w0=V.w||r.width/z,h0=V.h||r.height/z;
- V.w=Math.round(Math.max(240,Math.min(W*.96,w0*f)));V.h=Math.round(Math.max(200,Math.min(H*.94,h0*f)));apply();clampV();put(V)}
+ V.w=Math.round(Math.max(240,Math.min(W*.96,w0*f)));V.h=Math.round(Math.max(200,Math.min(H*.94,h0*f)));apply();put(V);clampV(true)}
 function reset(){V={x:0,y:0,w:0,h:0};put(V);apply();try{toast('↺ คืนตำแหน่งและขนาดหน้าต่างแล้ว')}catch(e){}}
 bar.querySelector('.mvS').onclick=()=>step(.85);bar.querySelector('.mvL').onclick=()=>step(1.15);bar.querySelector('.mvR').onclick=reset;
 window.mvReset=reset;
 // ติดตามทุกเฟรมแบบเบาๆ (เฉพาะตอนหน้าต่างเปิด)
-let raf=0;const loop=()=>{raf=0;try{if(dev()!==lastDev){lastDev=dev();V=get()}apply()}catch(e){}if(modalOpen||bar.classList.contains('on'))raf=requestAnimationFrame(loop)};
+let raf=0,wasOn=false;const loop=()=>{raf=0;try{if(dev()!==lastDev){lastDev=dev();V=get()}apply();const on=bar.classList.contains('on');if(on&&!wasOn)setTimeout(()=>{try{clampV(false)}catch(e){}},120);if(!on)bar.classList.remove('open');wasOn=on}catch(e){}if(modalOpen||bar.classList.contains('on'))raf=requestAnimationFrame(loop)};
 const kick=()=>{if(!raf)raf=requestAnimationFrame(loop)};
 {const _md=modal;modal=function(){const r=_md.apply(this,arguments);kick();return r}}
 {const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);kick();return r}}
-setInterval(kick,700);addEventListener('resize',()=>{kick();setTimeout(clampV,60)});
+setInterval(kick,700);addEventListener('resize',()=>{kick();setTimeout(()=>clampV(true),80)});
 })()}catch(e){console.error('block189',e)}
