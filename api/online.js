@@ -1485,6 +1485,28 @@ module.exports = async (req, res) => {
       const r = await cmd('HGETALL', 'ov:' + w); const o = {}; if (Array.isArray(r)) for (let j = 0; j + 1 < r.length; j += 2) o[r[j]] = +r[j + 1]; else Object.assign(o, r || {});
       return res.json({ f: +o.f || 0, s: +o.s || 0 });
     }
+    // ⭕ ป่าทั้งเว็บของทวีปจิตวิญญาณยุทธ์ · ไม่เก็บตัวตน (ยกเว้นชื่อตัวละครบนกระดานราชาสัตว์)
+    if (a === 'svh' || a === 'svb' || a === 'svr') {
+      const w = String(b.w || '').replace(/[^0-9]/g, '').slice(0, 6); const cl = x => String(x || '').replace(/[<>"'&\\\/\n\r]/g, '').trim().slice(0, 40);
+      if (!w) return res.json({ ok: 0 });
+      try {
+        if (a === 'svh') { const k = cl(b.k); if (k) await pipe([['HINCRBY', 'svh:' + w, k, 1], ['EXPIRE', 'svh:' + w, 86400 * 21]]) }
+        else if (a === 'svb') { const d = Math.max(1, Math.min(200, Math.floor(+b.d || 0))), nm = cl(b.nm).slice(0, 20) || '?'; await pipe([['HINCRBY', 'svbt:' + w, 't', d], ['ZINCRBY', 'svbz:' + w, d, nm], ['EXPIRE', 'svbt:' + w, 86400 * 21], ['EXPIRE', 'svbz:' + w, 86400 * 21]]) }
+        else { const k = cl(b.k), t = Math.max(0, Math.min(4, Math.floor(+b.t || 0))), r = b.r ? 1 : 0; if (k) await pipe([['LPUSH', 'svr:' + w, JSON.stringify({ k, t, r })], ['LTRIM', 'svr:' + w, 0, 39], ['EXPIRE', 'svr:' + w, 86400 * 14]]) }
+      } catch (e) {}
+      return res.json({ ok: 1 });
+    }
+    if (a === 'svg') {
+      const w = +String((qOf(req).w || b.w) || '').replace(/[^0-9]/g, '').slice(0, 6); if (!w) return res.json({});
+      try {
+        const rs = await pipe([['HGETALL', 'svh:' + w], ['HGET', 'svbt:' + w, 't'], ['ZREVRANGE', 'svbz:' + w, 0, 2, 'WITHSCORES'], ['LRANGE', 'svr:' + (w + 1), 0, 9], ['LRANGE', 'svr:' + w, 0, 5]]);
+        const h = rs[0], o = {}; if (Array.isArray(h)) for (let j = 0; j + 1 < h.length; j += 2) o[h[j]] = +h[j + 1]; else Object.assign(o, h || {});
+        const top = Object.entries(o).map(([k, v]) => [k, +v]).sort((x, y) => y[1] - x[1]).slice(0, 5);
+        const z = Array.isArray(rs[2]) ? rs[2] : [], bz = []; for (let j = 0; j + 1 < z.length; j += 2) bz.push([z[j], +z[j + 1]]);
+        const rum = [].concat(rs[3] || [], rs[4] || []).map(x => { try { return JSON.parse(x) } catch (e) { return null } }).filter(Boolean).slice(0, 12);
+        return res.json({ top, bt: +rs[1] || 0, bz, rum });
+      } catch (e) { return res.json({}) }
+    }
     if (a === 'drs') { // 🎴 สถิติผู้ลิขิต · 1 ครั้งต่อชีวิต · นับรวมต่อวัน ไม่เก็บตัวตน
       const ua = String(req.headers['user-agent'] || ''); if (/bot|crawl|spider|headless|preview/i.test(ua)) return res.json({ ok: 0 });
       const c = b.c && typeof b.c === 'object' ? b.c : null; if (!c) return res.json({ ok: 0 });
