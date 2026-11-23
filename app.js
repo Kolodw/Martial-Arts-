@@ -19588,8 +19588,8 @@ function islRender(n,morph){const e=islEl(),c=e.querySelector('.islC');const ow=
  const w=document.createElement('div');w.className='islIn';w.innerHTML=islHtml(n);c.appendChild(w);
  e.className='on k-'+(n.kind||'info')+(n.big?' big':'')+(islLite()?' lite':'');
  // วัดขนาดใหม่ แล้วยืดจากขนาดเดิมแบบสปริง
- e.style.transition='none';e.style.height='auto';w.style.position='static';w.style.height='auto';w.style.display='inline-flex';e.style.width=(innerWidth-16)+'px';const nw=Math.min(innerWidth-16,Math.max(w.scrollWidth+28,n.big?240:96));e.style.width=nw+'px';w.style.display='flex';const nh=Math.max(w.offsetHeight,34);w.style.position='';w.style.height='';w.style.display='';
- if(!was){e.style.width='36px';e.style.height='34px'}else{e.style.width=ow+'px';e.style.height=oh+'px'}void e.offsetWidth;e.style.transition='';e.style.width=nw+'px';e.style.height=nh+'px'}
+ e.classList.add('islNoT');e.style.transition='none';e.style.height='auto';w.style.position='static';w.style.height='auto';w.style.display='inline-flex';e.style.width=(innerWidth-16)+'px';const nw=Math.min(innerWidth-16,Math.max(w.scrollWidth+28,n.big?240:96));e.style.width=nw+'px';w.style.display='flex';const nh=Math.max(w.offsetHeight,34);w.style.position='';w.style.height='';w.style.display='';
+ if(!was){e.style.width='36px';e.style.height='34px'}else{e.style.width=ow+'px';e.style.height=oh+'px'}void e.offsetWidth;e.classList.remove('islNoT');e.style.transition='';e.style.width=nw+'px';e.style.height=nh+'px'}
 function island(n){if(!n||!n.t)return;n.ms=n.ms||(n.big?3800:2000);const key=n.key||(n.ic||'')+n.t;
  if(ISL.cur&&!ISL.cur.live&&(ISL.cur.key===key)){ISL.cur.n=(ISL.cur.n||1)+1;islRender(ISL.cur,true);clearTimeout(ISL.t);ISL.t=setTimeout(()=>islNext(),ISL.cur.ms);return}
  const q=ISL.q.find(x=>x.key===key);if(q){q.n=(q.n||1)+1;return}n.key=key;n.n=1;
@@ -45153,3 +45153,10 @@ const st=document.createElement('style');st.textContent=`
 try{(()=>{const st=document.createElement('style');st.textContent=`@keyframes mwShineT{0%{transform:translateX(0)}60%,100%{transform:translateX(620%)}}
 .mwseg:after,#tMwCard:after,#tAqBtn:after,#tGrid .gSt:after,#tGrid .gAq:after,.mnHero .hSt:after,#wPick .wc:after{left:-50%!important;animation-name:mwShineT!important;will-change:transform}
 @media (prefers-reduced-motion:reduce){.mwseg:after,#tMwCard:after,#tAqBtn:after,#tGrid .gSt:after,#tGrid .gAq:after,.mnHero .hSt:after,#wPick .wc:after{animation:none!important}}`;document.head.appendChild(st)})()}catch(e){console.error('block195',e)}
+
+// BLOCK 196: 🏝️ ไดนามิกไอส์แลนด์โหมดภาพปกติ (lite) — เดิมขนาดกระโดดทันทีและเนื้อหาสลับแบบตัดฉับ → ยืด/หดแบบสปริงสั้น + เนื้อหาจางเข้า (ยังเบา: ไม่มีย่อขยายทั้งก้อน)
+try{(()=>{const st=document.createElement('style');st.textContent=`#isl.lite{transition:width .26s cubic-bezier(.3,1.25,.45,1),height .26s cubic-bezier(.3,1.25,.45,1),opacity .2s ease!important}
+#isl.lite .islIn{animation:islLiteIn .18s ease-out both!important}@keyframes islLiteIn{from{opacity:0;transform:translateY(3px)}}
+#isl.islNoT,#isl.lite.islNoT{transition:none!important}
+#isl.big .islH,#isl.big .islT{padding-right:30px;box-sizing:border-box}
+@media (prefers-reduced-motion:reduce){#isl.lite{transition:opacity .2s!important}#isl.lite .islIn{animation:none!important}}`;document.head.appendChild(st)})()}catch(e){console.error('block196',e)}
