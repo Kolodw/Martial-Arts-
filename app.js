@@ -44739,3 +44739,44 @@ try{const st=document.createElement('style');st.textContent=`.bdBar .bdPick{flex
 #modal .onSeg .tabb{white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}.bdBar .onSeg .tabb{font-size:.78em;padding:6px 4px;text-overflow:clip;flex:1 1 auto!important}.bdBar .bdPick{flex-shrink:3;font-size:14px;padding:8px 10px;gap:4px}.bdBar .onSeg{flex:1 0 auto!important}`;document.head.appendChild(st)}catch(e){}
 try{const g=(typeof SYS_GUIDE!=='undefined'?SYS_GUIDE:[]).find(x=>/ฉายาทำเนียบ รายวัน/.test(x.t||''));if(g){g.t='ฉายาทำเนียบ รายสัปดาห์/รายเดือน อยู่ไหน';g.d=String(g.d||'').replace(/รายวัน\s*[\/·,]?\s*/g,'')}}catch(e){}
 })()}catch(e){console.error('block187',e)}
+
+// ============================================================
+// BLOCK 184: 🔥 ป้ายบนการ์ดเลือกโลก — 🔥 ยอดนิยม (2 โลกที่คนเริ่มชีวิตมากสุดใน 7 วัน) · ✨ มาแรง (โตเร็วสุดเทียบสัปดาห์ก่อน) · 🆕 ใหม่ (เปิดไม่เกิน 14 วัน)
+//   นับชีวิตที่เริ่มแยกโลก ?a=wpop (ครั้งเดียวต่อชีวิต · S._wpid) · สรุป ?a=wpopg ครั้งเดียวต่อการเปิดเว็บ (เก็บในเครื่อง 30 นาที) · ตัวเลขจริงโชว์บนการ์ดที่เลือกอยู่ (≥50 ชีวิต)
+//   เพิ่มโลกใหม่: ใส่ key ใน WK ของ api/online.js และวันเปิดใน NEW ด้านล่าง
+// ============================================================
+try{(()=>{
+const NEW={fog:'2026-11-23'},MIN_POP=30,MIN_ALL=100,MIN_SHOW=50;
+const keyOf=()=>{try{if(!S)return'';if(S.mw){if(S.mw.fog)return'fog';if(S.mw.sky)return'sky';return'mw'}if(S.beastMode)return'beast';if(S.ch==='soul')return'soul';if(S.ch==='regress')return'loop';if(S.xian||S.xt)return'xian';return'murim'}catch(e){return''}};
+setInterval(()=>{try{if(!S||!S.alive||S._wpid||(+S.age||0)>2)return;const k=keyOf();if(!k)return;S._wpid=Math.random().toString(36).slice(2,9);api('wpop',{k}).catch(()=>{})}catch(e){}},3000);
+let D=null;
+function badges(){if(!D||!D.w)return{};const W=D.w,ks=Object.keys(W),tot=ks.reduce((s,k)=>s+(W[k][0]||0),0),B={};
+ const now=Date.now();for(const k in NEW){const t=Date.parse(NEW[k]+'T00:00:00+07:00');if(now-t>=0&&now-t<14*864e5)B[k]='new'}
+ if(tot>=MIN_ALL){ks.filter(k=>W[k][0]>=MIN_POP).sort((a,b)=>W[b][0]-W[a][0]).slice(0,2).forEach(k=>{if(!B[k])B[k]='pop'});
+  const tr=ks.filter(k=>!B[k]&&W[k][0]>=MIN_POP&&W[k][1]>=10).map(k=>[k,W[k][0]/W[k][1]]).filter(x=>x[1]>=1.3).sort((a,b)=>b[1]-a[1])[0];if(tr)B[tr[0]]='hot'}
+ return B}
+const LBL={pop:['🔥','ยอดนิยม'],hot:['✨','มาแรง'],new:['🆕','ใหม่']};
+const fmt=n=>n>=10000?(n/1000).toFixed(n>=100000?0:1).replace(/\.0$/,'')+'k':n.toLocaleString();
+function paint(){try{const C=document.querySelectorAll('#title .wc[data-k]');if(!C.length)return;const B=badges();
+ C.forEach(c=>{const k=c.dataset.k,b=B[k];let el=c.querySelector(':scope>.wpB');
+  if(b){if(!el){el=document.createElement('span');el.className='wpB';c.appendChild(el)}const t=LBL[b];if(el.dataset.t!==b){el.dataset.t=b;el.className='wpB wpB-'+b;el.innerHTML=`<i>${t[0]}</i><em>${t[1]}</em>`;el.title=t[1]}el.classList.toggle('sm',c.classList.contains('on')&&c.clientWidth<210)}else if(el)el.remove();
+  const tg=c.querySelector('.tg'),n=D&&D.w&&D.w[k]?D.w[k][0]:0;let cn=c.querySelector('.wpN');
+  if(tg&&c.classList.contains('on')&&n>=MIN_SHOW){if(!cn){cn=document.createElement('span');cn.className='wpN';tg.appendChild(cn)}const tx=`👥 ${fmt(n)} ชีวิต/สัปดาห์`;if(cn.textContent!==tx)cn.textContent=tx}else if(cn)cn.remove()})}catch(e){}}
+let pt=0;const sched=()=>{if(pt)return;pt=setTimeout(()=>{pt=0;paint()},80)};
+function watch(){const T=document.getElementById('title');if(!T||T._wpObs)return;T._wpObs=1;try{new MutationObserver(m=>{if(m.some(x=>x.type==='attributes'?x.target.classList&&x.target.classList.contains('wc'):[...x.addedNodes].some(n=>n.nodeType===1&&(n.matches&&(n.matches('.wc,.wpS')||n.querySelector&&n.querySelector('.wc'))))))sched()}).observe(T,{subtree:true,childList:true,attributes:true,attributeFilter:['class']})}catch(e){}}
+async function load(){try{const c=LS.get('murim_wpop',null);if(c&&c.w&&Date.now()-(c.at||0)<30*60e3){D=c;sched();return}}catch(e){}
+ try{const r=await api('wpopg',{});if(r&&r.ok&&r.w){D={w:r.w,at:Date.now()};try{LS.set('murim_wpop',D)}catch(e){}sched()}}catch(e){}}
+setTimeout(()=>{watch();sched();load()},1500);setTimeout(watch,5000);
+const st=document.createElement('style');st.textContent=`
+#title .wc>.wpB{position:absolute;top:8px;left:8px;z-index:3;display:inline-flex;align-items:center;gap:3px;padding:3px 9px 3px 7px;border-radius:999px;font-size:11px;font-weight:700;line-height:1.25;letter-spacing:.2px;pointer-events:none;box-shadow:0 2px 8px #0007;white-space:nowrap}
+#title .wc>.wpB-pop{background:linear-gradient(135deg,#ff7a2e,#ffb340);color:#2a1205;border:1px solid #ffd27a}
+#title .wc>.wpB-hot{background:linear-gradient(135deg,#7b5cff,#c77dff);color:#fff;border:1px solid #d9c2ff}
+#title .wc>.wpB-new{background:linear-gradient(135deg,#1fbf8f,#6ee7c2);color:#06281d;border:1px solid #b8f5e1}
+#title .wc>.wpB-pop::after{content:'';position:absolute;inset:-2px;border-radius:999px;box-shadow:0 0 10px #ff9a3c88;animation:wpGl 2.4s ease-in-out infinite}
+@keyframes wpGl{50%{opacity:.25}}
+#title .wc>.wpB i,#title .wc>.wpB em{font-style:normal}#title .wc>.wpB.sm{padding:3px 6px}#title .wc>.wpB.sm em{display:none}
+#title .wc:has(>.wpB)>.ic{margin-top:18px}
+#title .wc .tg>.wpN{background:#00000055!important;border:1px solid #ffffff33!important;color:#fff3c4!important}
+@media (prefers-reduced-motion:reduce){#title .wc>.wpB-pop::after{animation:none}}`;document.head.appendChild(st);
+window._wpop={paint,badges,set:d=>{D=d;sched()}};
+})()}catch(e){console.error('block184',e)}

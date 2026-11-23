@@ -4008,6 +4008,26 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       await pipe([['LPUSH', 'graves', JSON.stringify(g)], ['LTRIM', 'graves', 0, 299]]);
       return res.json({ ok: 1, i: g.i });
     }
+    // 🔥 โลกยอดนิยม: wpop = นับชีวิตที่เริ่มแยกตามโลก (รายวัน เวลาไทย) · wpopg = รวม 7 วันล่าสุด / 7 วันก่อนหน้า (แคช 10 นาที)
+    if (a === 'wpop' || a === 'wpopg') {
+      const WK = ['murim', 'xian', 'mw', 'soul', 'loop', 'beast', 'sky', 'fog'];
+      const dayOf = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10).replace(/-/g, '');
+      if (a === 'wpop') {
+        const k = String(b.k || ''); if (!WK.includes(k) || !okId(id)) return res.json({ ok: 0 });
+        const d = dayOf(now), rl = 'wpopr:' + id + ':' + d, [n] = await pipe([['INCR', rl], ['EXPIRE', rl, 86400 * 2]]);
+        if (+n > 60) return res.json({ ok: 0 });
+        await pipe([['HINCRBY', 'wpop:' + d, k, 1], ['EXPIRE', 'wpop:' + d, 86400 * 20]]);
+        return res.json({ ok: 1 });
+      }
+      try { const c = await cmd('GET', 'wpopc'); if (c) return res.json(JSON.parse(c)) } catch {}
+      const days = []; for (let i = 0; i < 14; i++) days.push(dayOf(now - i * 864e5));
+      const R = await pipe(days.map(d => ['HGETALL', 'wpop:' + d]));
+      const w = {}; WK.forEach(k => w[k] = [0, 0]);
+      R.forEach((h, i) => { const o = {}; if (Array.isArray(h)) { for (let j = 0; j + 1 < h.length; j += 2) o[h[j]] = h[j + 1] } else Object.assign(o, h || {}); for (const k of WK) w[k][i < 7 ? 0 : 1] += +o[k] || 0 });
+      const out = { ok: 1, w, t: now };
+      await cmd('SET', 'wpopc', JSON.stringify(out), 'EX', 600);
+      return res.json(out);
+    }
     if (a === 'graves') {
       const [list, hidden] = await pipe([['LRANGE', 'graves', 0, 299], ['SMEMBERS', 'chat:hidden']]);
       const hs = new Set(hidden || []), L = (list || []).map(jp).filter(x => x && !hs.has(x.i));
