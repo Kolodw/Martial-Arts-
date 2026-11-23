@@ -1,10 +1,14 @@
 // ⚡ BLOCK 0 (ตัวจัดคิวงานเบื้องหลัง): ตัวเฝ้าเช็คที่วนทุก 0.25–2 วิ (~45 ตัว) วิ่งผ่านตัวจัดคิวเดียว — หยุดเมื่อซ่อนแท็บ · รวมงานต่อเฟรมไม่เกิน ~4ms (ที่เหลือเลื่อนไปเฟรมถัดไป) · ตัวที่กินแรงต่อเนื่องเช็คห่างขึ้น (ไม่ช้ากว่าราว 1 วิ)
 //   งานจับเวลาของเกม (100ms) และงานที่ห่างกว่า 2 วิ ใช้ตัวจับเวลาปกติเหมือนเดิม
 (()=>{try{const NI=window.setInterval.bind(window),NC=window.clearInterval.bind(window),J=new Map();let seq=1e7;const now=()=>performance.now();
- window.setInterval=function(f,ms,...a){const m=+ms||0;if(typeof f!=='function'||m<250||m>2000)return NI(f,ms,...a);const id=++seq;J.set(id,{f,a,ms:m,next:now()+m,c:0,mul:1});return id};
+ window.setInterval=function(f,ms,...a){const m=+ms||0;if(typeof f!=='function'||m<250||m>2000)return NI(f,ms,...a);const id=++seq;J.set(id,{id,f,a,ms:m,next:now()+m,c:0,mul:1});return id};
  window.clearInterval=function(id){if(J.delete(id))return;return NC(id)};
  const cap=j=>Math.max(1,1000/j.ms)*(window.__jobMul||1);
- const run=()=>{requestAnimationFrame(run);const t0=now();for(const j of J.values()){const t=now();if(t<j.next)continue;if(t-t0>4)break;try{j.f.apply(window,j.a)}catch(e){console.error(e)}const d=now()-t;j.c=j.c*.8+d*.2;j.mul=j.c>6?Math.min(cap(j),j.mul+.5):j.c<2?Math.max(1,j.mul-.25):j.mul;j.next=now()+j.ms*j.mul*(window.__jobMul||1)}};
+ // ยุติธรรม: งานที่ค้างนานสุดได้ก่อน · ทุกเฟรมได้อย่างน้อย 1 งาน · ถ้า rAF หยุด (Safari ประหยัดพลังงาน/เว็บวิวบางแอป) มีตัวสำรองจากตัวจับเวลาปกติ
+ let last=now();const one=j=>{const t=now();try{j.f.apply(window,j.a)}catch(e){console.error(e)}const d=now()-t;j.c=j.c*.8+d*.2;j.mul=j.c>6?Math.min(cap(j),j.mul+.5):j.c<2?Math.max(1,j.mul-.25):j.mul;j.next=now()+j.ms*j.mul*(window.__jobMul||1)};
+ const tick=budget=>{last=now();const t0=last,due=[];for(const j of J.values())if(t0>=j.next)due.push(j);if(!due.length)return;due.sort((x,y)=>x.next-y.next);for(let i=0;i<due.length;i++){if(i&&now()-t0>budget)break;if(J.get(due[i].id)===due[i])one(due[i])}};
+ const run=()=>{requestAnimationFrame(run);tick(4)};
+ NI(()=>{if(document.hidden)return;if(now()-last>700)tick(30)},500);
  requestAnimationFrame(run);window.__jobs=()=>[...J.values()].map(j=>[j.ms,+j.c.toFixed(2),j.mul])}catch(e){console.error('block0',e)}})();
 // ✂️ ช่องรักษาลำดับการห่อฟังก์ชัน สำหรับโค้ดที่ย้ายไปไฟล์โลก /w/*.js (ดู tools/split-out.mjs · BLOCK 117)
 window.__wSlots={};function wSlot(id,names){const SL=window.__wSlots[id]={base:{},impl:{}};names.forEach(n=>{const b=window[n],has=typeof b==='function';if(has)SL.base[n]=b;window[n]=function(){const f=SL.impl[n]||(has?b:null);if(f)return f.apply(this,arguments);const a=arguments,t=this;return wNeed(id.replace(/\d+$/,''),()=>{const g=SL.impl[n];return g&&g.apply(t,a)})}})}
@@ -4922,7 +4926,7 @@ function setLang(l){if(l===LANG)return;LANG=l;LS.set('murim_lang',l);
 function toggleLang(){setLang(LANG==='en'?'th':'en')}
 (function(){const b=document.createElement('button');b.id='langBtn';b.className='langbtn';b.onclick=toggleLang;b.textContent=LANG==='en'?'🌐 TH':'🌐 EN';document.body.appendChild(b);
  const st=document.createElement('style');st.textContent='.langbtn{position:fixed;left:10px;top:10px;z-index:60;background:var(--card,#fff);border:2px solid var(--line,#333);border-radius:8px;padding:4px 8px;font-size:12px;font-family:inherit;cursor:pointer;box-shadow:2px 2px 0 var(--line,#333)} body:not(.ttl) .langbtn{display:none}';document.head.appendChild(st);
- const upd=()=>document.body.classList.toggle('ttl',!!(document.getElementById('title')&&document.getElementById('title').classList.contains('on')));upd();setInterval(upd,500);
+ const upd=()=>document.body.classList.toggle('ttl',!!(document.getElementById('title')&&document.getElementById('title').classList.contains('on')));upd();setInterval(upd,500);setTimeout(upd,0);document.addEventListener('DOMContentLoaded',upd);try{const t=document.getElementById('title');if(t)new MutationObserver(upd).observe(t,{attributes:true,attributeFilter:['class']});else{const mo=new MutationObserver(()=>{const t2=document.getElementById('title');if(t2){mo.disconnect();upd();new MutationObserver(upd).observe(t2,{attributes:true,attributeFilter:['class']})}});mo.observe(document.documentElement,{childList:true,subtree:true})}}catch(e){}
  i18nStart()})();
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=document.getElementById('modal');if(m&&!m.querySelector('.langopt')){const b=document.createElement('button');b.className='gbtn langopt';b.style.cssText='width:100%;margin-top:6px';b.textContent=LANG==='en'?'🌐 ภาษาไทย':'🌐 English (เบต้า ยังแปลไม่สมบูรณ์)';b.onclick=()=>{toggleLang();closeM()};m.appendChild(b)}}catch(e){}return r}}
 {const _otm=openTitleMenu;openTitleMenu=function(){const r=_otm.apply(this,arguments);try{const m=document.getElementById('modal');if(m&&!m.querySelector('.langopt')){const b=document.createElement('button');b.className='gbtn langopt';b.style.cssText='width:100%;margin-top:6px';b.textContent=LANG==='en'?'🌐 ภาษาไทย':'🌐 English (เบต้า ยังแปลไม่สมบูรณ์)';b.onclick=()=>{toggleLang();closeM()};m.appendChild(b)}}catch(e){}return r}}
@@ -14087,6 +14091,8 @@ button.errf{box-shadow:0 0 0 2px #e04050!important}
  let nI=0,nT=null;
  function tickNews(){const el=$('tNews');if(!el||!$('title').classList.contains('on'))return;const L=NEWS();if(!L.length)return;nI=(nI+1)%L.length;el.innerHTML=`<span>${esc(L[nI])}</span>`;el.onclick=()=>{const t=L[nI]||'';if(/แชท|คนกำลัง/.test(t))openOnline();else if(/ลาน/.test(t))openOnline('arena');else if(/ประมูล/.test(t))openOnline();else if(/ชะตา/.test(t))goDaily();else if(/รอคุณ/.test(t)){const ls=lastSave();if(ls)loadGame(ls.n)}else openUpdate()}}
  function build(){const T=$('title');if(!T)return;T.classList.add('redo');
+  try{mkDock()}catch(e){console.error('tDock',e);try{jsErrSend('หน้าแรก dock: '+(e&&e.message),e&&e.stack,0,0)}catch(x){}}
+  try{
   // B: แถบบน
   if(!$('tSup'))T.insertAdjacentHTML('afterbegin','<button id="tSup" onclick="openSupport()">🙏 สนับสนุนเกม</button>');
   if(!$('tTop')){T.insertAdjacentHTML('afterbegin','<div id="tTop"><button class="tav" onclick="openProfile()"><canvas id="tTopAv" width="56" height="62"></canvas><span><b id="tTopN">ผู้ท่องยุทธภพ</b><small id="tTopS">กดเพื่อดูโปรไฟล์</small></span></button></div>')}
@@ -14097,6 +14103,9 @@ button.errf{box-shadow:0 0 0 2px #e04050!important}
   if(!$('tNews')){const big=T.querySelector('.big');if(big)big.insertAdjacentHTML('afterend','<div id="tNews"></div>');nI=-1;tickNews();clearInterval(nT);nT=setInterval(tickNews,4200)}
   // D: ตัวเลือกขั้นสูง
   const box=T.querySelector('.box.opts');if(box&&!box.querySelector('details.tadv')){const segC=box.querySelector('.seg[data-k="chm"]');if(segC){const lb=segC.previousElementSibling,hn=box.querySelector('#hint-chm');const dt=document.createElement('details');dt.className='tadv';dt.innerHTML='<summary>⚙️ ตัวเลือกการเกิด (โหมดท้าทาย) ▾</summary>';if(lb&&lb.classList.contains('lb'))dt.appendChild(lb);dt.appendChild(segC);if(hn)dt.appendChild(hn);const tip=[...box.children].find(x=>/ถูกสุ่มตอนเกิด/.test(x.textContent||''));if(tip)dt.appendChild(tip);box.appendChild(dt);try{if(+CFG.chm)dt.open=true}catch(e){}}}
+  }catch(e){console.error('tbuild',e);try{jsErrSend('หน้าแรก build: '+(e&&e.message),e&&e.stack,0,0)}catch(x){}}
+  try{mkDock()}catch(e){console.error('tDock',e);try{jsErrSend('หน้าแรก dock: '+(e&&e.message),e&&e.stack,0,0)}catch(x){}}}
+ function mkDock(){
   // A + F: แถบล่าง
   if(!$('tDock'))document.body.insertAdjacentHTML('beforeend',`<div id="tDock"><div class="row"><button class="tcont" id="tCont" style="display:none"></button><button class="tgo" id="tGo"><i>🎲</i> เกิดใหม่</button></div>
    <div class="nav"><button onclick="goDaily()"><i>📅</i>ชะตาวันนี้</button><button onclick="openBook()"><i>📖</i>สมุดตำนาน</button><button onclick="openOnline('arena')"><i>🏟️</i>ลาน</button><button onclick="openOnline()"><i>🌐</i>ออนไลน์</button><button class="navGd" onclick="window.openGuild?openGuild():toast('กำลังโหลดกลุ่มผู้เล่น… ลองอีกครั้ง')"><i>🛡️</i>กลุ่มผู้เล่น</button><button onclick="openTitleMenu()"><i>☰</i>เมนู</button></div></div>`);
@@ -38299,9 +38308,9 @@ body.hzTGrid #tMwCard,body.hzTGrid #tAqBtn{display:none!important}
  body #game .crow #pauseBtn .cbL{opacity:.9!important;font-weight:800!important}
  body #game.pz .crow #pauseBtn{animation:stPz 1.3s ease-in-out infinite}@keyframes stPz{50%{box-shadow:0 3px 0 #7a5512,0 0 26px #ffd86a!important}}
  body #game .crow #aqCb .aqDot{top:3px;right:6px}
- #game>body.hzRvA #goalBox{align-self:flex-start;width:calc(50% - 3px)!important;height:30px!important;max-height:30px!important;overflow:hidden;font-size:11.5px!important;box-sizing:border-box;margin-top:4px!important;margin-bottom:0!important;white-space:nowrap;text-overflow:ellipsis;display:flex!important;align-items:center}
- #game>body.hzRvA #goalBox+#rvBar{align-self:flex-end;width:calc(50% - 3px)!important;height:30px!important;margin:-30px 0 2px 0!important;font-size:11px!important;box-sizing:border-box;display:flex!important}
- #game>body.hzRvA #goalBox+#rvBar>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 6px!important}
+ body.hzRvA #game>#goalBox{align-self:flex-start;width:calc(50% - 3px)!important;height:30px!important;max-height:30px!important;overflow:hidden;font-size:11.5px!important;box-sizing:border-box;margin-top:4px!important;margin-bottom:0!important;white-space:nowrap;text-overflow:ellipsis;display:flex!important;align-items:center}
+ body.hzRvA #game>#goalBox+#rvBar{align-self:flex-end;width:calc(50% - 3px)!important;height:30px!important;margin:-30px 0 2px 0!important;font-size:11px!important;box-sizing:border-box;display:flex!important}
+ body.hzRvA #game>#goalBox+#rvBar>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 6px!important}
 }
 /* ---------- เมนู ---------- */
 .mnHero{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:7px;margin:4px 0 8px}
@@ -45445,10 +45454,10 @@ body.mUI:not(.mF):not(.mExp) #game>.box.top #cloudTag{display:none}
 body.mUI:not(.mF):not(.mExp) #onMini{min-height:30px;padding:0 8px}
 body.mUI:not(.mF):not(.mExp) #onMini b{display:none}body.mUI:not(.mF):not(.mExp) #onMini{min-width:30px!important;padding:0 6px!important}
 body.mUI #game>#hintBox{display:none!important}
-body.mUI #game>body.hzRv #goalBox{align-self:flex-start;width:calc(50% - 3px)!important;height:30px!important;max-height:30px!important;overflow:hidden;font-size:11.5px!important;box-sizing:border-box;margin-top:4px!important;margin-bottom:0!important;white-space:nowrap;text-overflow:ellipsis;display:flex!important;align-items:center}
-body.mUI #game>body.hzRv #goalBox~#rvBar{align-self:flex-end;width:calc(50% - 3px)!important;height:30px!important;margin:-30px 0 2px 0!important;font-size:11px!important;box-sizing:border-box;display:flex!important}
-body.mUI #game>body.hzRv #goalBox~#rvBar>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 6px!important}
-body.mUI.mLand #game.on>body.hzRv #goalBox~#rvBar{margin:4px 0!important;align-self:auto;width:auto!important}body.mUI.mLand #game.on>#goalBox{width:auto!important;align-self:auto}
+body.mUI.hzRv #game>#goalBox{align-self:flex-start;width:calc(50% - 3px)!important;height:30px!important;max-height:30px!important;overflow:hidden;font-size:11.5px!important;box-sizing:border-box;margin-top:4px!important;margin-bottom:0!important;white-space:nowrap;text-overflow:ellipsis;display:flex!important;align-items:center}
+body.mUI.hzRv #game>#goalBox~#rvBar{align-self:flex-end;width:calc(50% - 3px)!important;height:30px!important;margin:-30px 0 2px 0!important;font-size:11px!important;box-sizing:border-box;display:flex!important}
+body.mUI.hzRv #game>#goalBox~#rvBar>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 6px!important}
+body.mUI.mLand.hzRv #game.on>#goalBox~#rvBar{margin:4px 0!important;align-self:auto;width:auto!important}body.mUI.mLand #game.on>#goalBox{width:auto!important;align-self:auto}
 body.mUI:not(.mF):not(.tuOn) #game>#hintBar{display:none!important}
 #mBell{position:relative;min-width:34px;min-height:30px;border-radius:999px;border:1px solid #ffffff2a;background:#0004;color:#ffe9a8;font:inherit;font-size:15px;cursor:pointer;padding:0 7px;line-height:1}
 #mBell b{position:absolute;top:-5px;right:-5px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#e0483a;color:#fff;font-size:10.5px;line-height:17px;box-shadow:0 0 0 2px #17141f;display:none}
