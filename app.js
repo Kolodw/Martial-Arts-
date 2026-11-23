@@ -37839,7 +37839,7 @@ function finish(){try{if(!S||S.alive!==false||S._recd)return;try{endGame()}catch
 // ระหว่างเล่น: ตายแล้ว 6 วิ ยังไม่มีหน้าต่างอำลา → เปิดหน้าสรุปให้เลย
 setInterval(()=>{try{if(!S||S.alive!==false||S._recd||!S._dt||Date.now()-S._dt<6000)return;if(endGame._busy)return;const k=modalOpen&&$('modal').dataset.k;if(k==='bye')return;finish()}catch(e){}},1500);
 // เปิดเกมใหม่: มีชีวิตที่ตายแต่ยังไม่ถูกบันทึก (เช่น รีเฟรชตอนค้าง) → กู้มาสรุปให้
-setTimeout(()=>{try{const P=LS.get(PK,null);if(!P||!P.S||P.S.alive!==false)return;if(Date.now()-(P.t||0)>14*864e5){LS.del(PK);return}if(S&&S.alive)return;S=P.S;S._dt=1;try{toast('🪦 กู้ชีวิตที่จบไปแต่ยังไม่ได้สรุป '+(S.name||''))}catch(e){}setTimeout(finish,600)}catch(e){}},2500);
+setTimeout(()=>{try{const P=LS.get(PK,null);if(!P||!P.S||P.S.alive!==false)return;if(Date.now()-(P.t||0)>14*864e5){LS.del(PK);return}if(S&&S.alive)return;const prev=S;S=P.S;S._dt=1;const nm=S.name||'';try{recordLife(lifeScore(),'')}catch(e){console.error('pendEnd rec',e)}try{LS.del(PK)}catch(e){}S=prev;try{toast('🪦 บันทึกชีวิตของ '+nm+' ลงในชีวิตที่ผ่านมาแล้ว')}catch(e){}}catch(e){try{LS.del(PK)}catch(x){}}},2500);
 })()}catch(e){console.error('endGuard',e)}
 
 // ✍️ ช่องพิมพ์: ถ้าพื้นหลังช่องเข้มแต่ตัวอักษรเข้มด้วย (มองไม่เห็นตอนพิมพ์) → บังคับตัวอักษรเป็นสีขาว ทุกธีม ทุกหน้า
@@ -44781,3 +44781,75 @@ window._wpop={paint,badges,set:d=>{D=d;sched()}};
 })()}catch(e){console.error('block188',e)}
 // ===== QoL: ปุ่มเล็กบนจอสัมผัสให้กดง่ายขึ้น =====
 try{document.head.insertAdjacentHTML('beforeend','<style>@media (pointer:coarse){#autoBtn,#skipBtn{min-height:34px}#fpB{min-height:32px;display:inline-flex;align-items:center}.islX{min-width:34px!important;min-height:34px!important}#modal button.sk{display:inline-block;padding:8px 16px;min-height:34px}}</style>')}catch(e){}
+// ============================================================
+// BLOCK 189: 🪟 หน้าต่างเหตุการณ์ที่มีตัวเลือก — ลากย้ายได้ (จับแถบด้านบน) · ย่อ/ขยาย (มุมขวาล่าง หรือปุ่ม ➖ ➕) · ↺ คืนค่า
+//   ทั้งมือถือและคอม · จำตำแหน่ง/ขนาดแยกมือถือกับคอม (murim_mv) · ปุ่มจับอยู่นอกตัวหน้าต่าง (หน้าต่างวาดใหม่ทุกเหตุการณ์)
+// ============================================================
+try{(()=>{const KEY='murim_mv';
+const dev=()=>innerWidth<700?'m':'d';
+const all=()=>{try{return LS.get(KEY,{})||{}}catch(e){return{}}};
+const get=()=>Object.assign({x:0,y:0,w:0,h:0},all()[dev()]||{});
+const put=v=>{try{const a=all();a[dev()]=v;LS.set(KEY,a)}catch(e){}};
+const zf=()=>{try{if(!document.documentElement.classList.contains('uizon'))return 1;return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--uiz'))||1}catch(e){return 1}};
+const M=()=>$('modal');
+const ok=()=>{try{const m=M(),k=$('mask');if(!modalOpen||!m||!k||!k.classList.contains('on'))return false;const d=m.dataset.k||'';if(/^(duel|broll|bye|nbdeath|book|skyorg|update)$/.test(d))return false;return d==='choice'||!!m.querySelector(':scope .opt,:scope .wsO')}catch(e){return false}};
+const css=document.createElement('style');css.textContent=`
+#modal.mvOn{translate:var(--mvx,0px) var(--mvy,0px)}
+#modal.mvW{width:var(--mvw)!important;max-width:96vw!important}
+#modal.mvH{height:var(--mvh)!important;max-height:var(--mvh)!important;bottom:auto!important}
+#mvBar{position:fixed;z-index:100060;display:none;align-items:center;gap:4px;transform:translate(-50%,-62%);pointer-events:auto;user-select:none;-webkit-user-select:none}
+#mvBar.on{display:flex}
+#mvBar .mvG{touch-action:none;cursor:grab;padding:3px 12px;border-radius:999px;background:var(--w,#241a33);color:var(--ink,#f3e6c4);border:2px solid var(--line,#c9a24a);font-size:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px #0006;min-height:28px;display:flex;align-items:center;gap:4px}
+#mvBar .mvG:active{cursor:grabbing}
+#mvBar button{min-width:28px;min-height:28px;border-radius:999px;border:2px solid var(--line,#c9a24a);background:var(--w,#241a33);color:var(--ink,#f3e6c4);font-size:13px;font-weight:800;cursor:pointer;padding:0 6px;box-shadow:0 2px 8px #0006}
+#mvRz{position:fixed;z-index:100060;display:none;width:30px;height:30px;touch-action:none;cursor:nwse-resize;border-radius:8px 0 12px 0;background:linear-gradient(135deg,transparent 45%,var(--line,#c9a24a) 46% 54%,transparent 55%,transparent 62%,var(--line,#c9a24a) 63% 71%,transparent 72%);transform:translate(-80%,-80%)}
+#mvRz.on{display:block}
+@media (pointer:coarse){#mvBar .mvG{min-height:32px;font-size:13px}#mvBar button{min-width:34px;min-height:32px}#mvRz{width:38px;height:38px}}`;
+document.head.appendChild(css);
+const bar=document.createElement('div');bar.id='mvBar';bar.innerHTML='<button type="button" class="mvS" aria-label="ย่อ">➖</button><div class="mvG" title="ลากเพื่อย้าย · แตะสองครั้งเพื่อคืนค่า">✥ ลากย้าย</div><button type="button" class="mvL" aria-label="ขยาย">➕</button><button type="button" class="mvR" aria-label="คืนค่า">↺</button>';document.body.appendChild(bar);
+const rz=document.createElement('div');rz.id='mvRz';rz.title='ลากเพื่อย่อ/ขยาย';document.body.appendChild(rz);
+let V=get(),lastDev=dev();
+function apply(){const m=M();if(!m)return;const on=ok();
+ if(!on){m.classList.remove('mvOn');if(m._mvSet){['width','max-width','min-width','height','max-height','bottom'].forEach(k=>m.style.removeProperty(k));m._mvSet=0}bar.classList.remove('on');rz.classList.remove('on');return}
+ m.classList.add('mvOn');m.style.setProperty('--mvx',V.x+'px');m.style.setProperty('--mvy',V.y+'px');
+ const sp=(k,v)=>{if(v)m.style.setProperty(k,v,'important');else m.style.removeProperty(k)};
+ sp('width',V.w?V.w+'px':'');sp('max-width',V.w?'96vw':'');sp('min-width',V.w?'0':'');
+ sp('height',V.h?V.h+'px':'');sp('max-height',V.h?V.h+'px':'');sp('bottom',V.h?'auto':'');m._mvSet=1;
+ const z=zf(),r=m.getBoundingClientRect();
+ bar.classList.add('on');bar.style.left=((r.left+r.width/2)/z)+'px';bar.style.top=(Math.max(18,r.top)/z)+'px';
+ rz.classList.add('on');rz.style.left=(Math.min(innerWidth-4,r.right)/z)+'px';rz.style.top=(Math.min(innerHeight-4,r.bottom)/z)+'px'}
+function clampV(){const m=M();if(!m)return;const z=zf(),r=m.getBoundingClientRect(),W=innerWidth,H=innerHeight;let dx=0,dy=0;
+ if(r.top<8)dy=8-r.top;else if(r.top>H-70)dy=H-70-r.top;
+ if(r.right<90)dx=90-r.right;else if(r.left>W-90)dx=W-90-r.left;
+ if(dx||dy){V.x+=dx/z;V.y+=dy/z;apply()}
+ const r2=m.getBoundingClientRect();if(r2.bottom>H-6){const nh=Math.max(200,(H-6-r2.top)/z);if(!V.h||nh<V.h){const cen=getComputedStyle($('mask')).justifyContent==='center'&&getComputedStyle(m).position!=='fixed';const h0=V.h||r2.height/z;V.h=Math.round(nh);if(cen)V.y+=(V.h-h0)/2;apply()}}}
+// ลากย้าย
+let drag=null;
+const G=bar.querySelector('.mvG');
+G.addEventListener('pointerdown',e=>{if(!ok())return;e.preventDefault();drag={sx:e.clientX,sy:e.clientY,x:V.x,y:V.y,id:e.pointerId};try{G.setPointerCapture(e.pointerId)}catch(x){}});
+G.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const z=zf();V.x=drag.x+(e.clientX-drag.sx)/z;V.y=drag.y+(e.clientY-drag.sy)/z;apply()});
+const endDrag=e=>{if(!drag)return;drag=null;clampV();put(V)};G.addEventListener('pointerup',endDrag);G.addEventListener('pointercancel',endDrag);
+let lastTap=0;G.addEventListener('click',()=>{const t=Date.now();if(t-lastTap<350)reset();lastTap=t});
+// ย่อขยายด้วยมุม
+let rs=null;
+rz.addEventListener('pointerdown',e=>{if(!ok())return;e.preventDefault();const m=M(),z=zf(),r=m.getBoundingClientRect();rs={sx:e.clientX,sy:e.clientY,w:r.width/z,h:r.height/z,id:e.pointerId};try{rz.setPointerCapture(e.pointerId)}catch(x){}});
+rz.addEventListener('pointermove',e=>{if(!rs||e.pointerId!==rs.id)return;const z=zf(),W=innerWidth/z,H=innerHeight/z;
+ // หน้าต่างบนมือถือจัดกึ่งกลาง: ความกว้างเพิ่มสองข้าง จึงชดเชยตำแหน่งครึ่งหนึ่ง
+ const nw=Math.max(240,Math.min(W*.96,rs.w+(e.clientX-rs.sx)/z)),nh=Math.max(200,Math.min(H*.94,rs.h+(e.clientY-rs.sy)/z));
+ const cen=getComputedStyle($('mask')).justifyContent==='center'&&getComputedStyle(M()).position!=='fixed';
+ if(cen){V.x+= ((nw-(V.w||rs.w))/2);V.y+=((nh-(V.h||rs.h))/2)}
+ V.w=Math.round(nw);V.h=Math.round(nh);apply()});
+const endRs=()=>{if(!rs)return;rs=null;clampV();put(V)};rz.addEventListener('pointerup',endRs);rz.addEventListener('pointercancel',endRs);
+// ปุ่ม
+function step(f){if(!ok())return;const m=M(),z=zf(),r=m.getBoundingClientRect(),W=innerWidth/z,H=innerHeight/z;const w0=V.w||r.width/z,h0=V.h||r.height/z;
+ V.w=Math.round(Math.max(240,Math.min(W*.96,w0*f)));V.h=Math.round(Math.max(200,Math.min(H*.94,h0*f)));apply();clampV();put(V)}
+function reset(){V={x:0,y:0,w:0,h:0};put(V);apply();try{toast('↺ คืนตำแหน่งและขนาดหน้าต่างแล้ว')}catch(e){}}
+bar.querySelector('.mvS').onclick=()=>step(.85);bar.querySelector('.mvL').onclick=()=>step(1.15);bar.querySelector('.mvR').onclick=reset;
+window.mvReset=reset;
+// ติดตามทุกเฟรมแบบเบาๆ (เฉพาะตอนหน้าต่างเปิด)
+let raf=0;const loop=()=>{raf=0;try{if(dev()!==lastDev){lastDev=dev();V=get()}apply()}catch(e){}if(modalOpen||bar.classList.contains('on'))raf=requestAnimationFrame(loop)};
+const kick=()=>{if(!raf)raf=requestAnimationFrame(loop)};
+{const _md=modal;modal=function(){const r=_md.apply(this,arguments);kick();return r}}
+{const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);kick();return r}}
+setInterval(kick,700);addEventListener('resize',()=>{kick();setTimeout(clampV,60)});
+})()}catch(e){console.error('block189',e)}
