@@ -32360,6 +32360,13 @@ wSlot('mw32',[]);
 // ============================================================
 // BLOCK 34: ⭕ ทวีปจิตวิญญาณยุทธ์ — รอบ 1: ปลุกดวงจิต · ล่าวงแหวน · ไต่ระดับ
 // ============================================================
+// ⭕ ลงทะเบียนโหมดจิตวิญญาณยุทธ์ไว้ในไฟล์หลัก (ปุ่มเลือก/ชื่อโหมด) — ตัวระบบอยู่ /w/soul.js · ถ้าผู้เล่นเลือกโหมดนี้ก่อนไฟล์โหลดเสร็จ ทางเข้าชีวิตจะรอไฟล์ (BLOCK 117)
+try{(()=>{CH_N.soul='⭕ จิตวิญญาณยุทธ์';if(!CH_KEYS.includes('soul'))CH_KEYS.push('soul');const ix=CH_KEYS.indexOf('soul');
+ OPT_INFO.chm[ix]=()=>['⭕','ทวีปจิตวิญญาณยุทธ์','อายุหกขวบทุกคนจะได้ปลุก <b>ดวงจิต</b> ติดตัว จอบ เทียน แมว หรือมังกร ทุกสิบระดับต้องออกล่าสัตว์อสูรมาหลอม <b>วงแหวนวิญญาณ</b> ยิ่งแก่ยิ่งแรง แต่ถ้าเกินขีดร่างกายอาจแตกสลาย ไต่ให้ถึง <b>ผู้ครองดวงจิต</b>',[['ดวงจิต 40 แบบ','g'],['วงแหวน 9 วง','g'],['หลอมเกินขีด = เสี่ยงตาย','r']]];
+ const add=()=>{const sg=document.querySelector('.seg[data-k="chm"]');if(!sg||sg.querySelector('[data-v="'+ix+'"]'))return;const b=document.createElement('button');b.dataset.v=String(ix);b.textContent='⭕ จิตวิญญาณยุทธ์';sg.appendChild(b);b.onclick=()=>{sg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');CFG.chm=ix;updateHints()};sg.classList.add('seg5');if(CFG.chm===ix)b.classList.add('on')};add();setTimeout(add,1500);
+ if(typeof QM_CH!=='undefined'&&QM_CH.length===ix)QM_CH.push(['⭕','จิตวิญญาณยุทธ์']);
+ if(typeof MODE_I!=='undefined')MODE_I.soul={ic:'⭕',n:'จิตวิญญาณยุทธ์',c:'#8a5ad8',chm:ix,p:'ปลุกดวงจิตตอนหกขวบ ล่าสัตว์อสูรหลอมวงแหวน ไต่ถึงผู้ครองดวงจิต'};
+})()}catch(e){console.error('soulReg',e)}
 // ✂️ ท่อนนี้ย้ายไป /w/soul.js (soul1) — ช่องนี้รักษาลำดับการห่อ: passYear, openMenu, lifeDetail, chStart, openSoul, openSoulBook
 wSlot('soul1',["passYear","openMenu","lifeDetail","chStart","openSoul","openSoulBook"]);
 
@@ -41688,11 +41695,15 @@ const R={},P={};
 window.wReady=n=>{R[n]=1;try{(P[n]&&P[n].ok)&&P[n].ok()}catch(e){}};
 window.wIs=n=>!!R[n];
 const DEP={sky:['mw'],mw:['mwb','mwx']};
-window.wLoad=function(n){n=String(n).replace(/[^a-z0-9_-]/g,'');if(R[n])return Promise.resolve();if(P[n])return P[n].p;if(DEP[n]&&DEP[n].some(d=>!R[d])){const o={};o.p=Promise.all(DEP[n].map(d=>wLoad(d))).then(()=>{delete P[n];return wLoad(n)});P[n]=o;return o.p}
- const o={};o.p=new Promise((ok,no)=>{o.ok=ok;let tries=0;const go=()=>{const s=document.createElement('script');s.src='/w/'+n+'.js';s.charset='utf-8';s.async=true;
-  s.onload=()=>{R[n]=1;ok()};s.onerror=()=>{s.remove();if(++tries<3)setTimeout(go,800*tries);else{delete P[n];no(new Error('wload:'+n))}};document.head.appendChild(s)};go()});
+// ⚡ เน็ตช้า: ไฟล์ที่โหลดเบื้องหลังเข้าคิวทีละ 2 ไฟล์ · ไฟล์ที่ผู้เล่นรออยู่ (wNeed) แซงคิวทันที
+const U={},Q=[];let act=0,tap=0;try{addEventListener('pointerdown',()=>{tap=Date.now()},true);addEventListener('keydown',()=>{tap=Date.now()},true)}catch(e){}const pump=()=>{while(act<2&&Q.length){const g=Q.shift();if(!g.st){g.st=1;act++;g()}}};
+window.wLoad=function(n){n=String(n).replace(/[^a-z0-9_-]/g,'');if(R[n])return Promise.resolve();if(Date.now()-tap<900)U[n]=1;if(P[n]){if(U[n]&&P[n].go&&!P[n].go.st){P[n].go.st=1;act++;P[n].go()}return P[n].p}if(DEP[n]&&DEP[n].some(d=>!R[d])){if(U[n])DEP[n].forEach(d=>U[d]=1);const o={};o.p=Promise.all(DEP[n].map(d=>wLoad(d))).then(()=>{delete P[n];return wLoad(n)});P[n]=o;return o.p}
+ const o={};o.p=new Promise((ok,no)=>{o.ok=ok;let tries=0,mine=0;const go=()=>{mine=1;const s=document.createElement('script');s.src='/w/'+n+'.js';s.charset='utf-8';s.async=true;
+  s.onload=()=>{R[n]=1;if(mine){mine=0;act--;pump()}ok()};s.onerror=()=>{s.remove();if(++tries<3)setTimeout(go,800*tries);else{if(mine){mine=0;act--;pump()}delete P[n];no(new Error('wload:'+n))}};document.head.appendChild(s)};
+  o.go=go;if(U[n]){go.st=1;act++;go()}else{Q.push(go);pump()}});
  P[n]=o;return o.p};
 window.wNeed=function(n,fn,fail){if(R[n]){try{return fn&&fn()}catch(e){console.error(e)}return}
+ U[n]=1;if(DEP[n])DEP[n].forEach(d=>U[d]=1);
  let ov=null;const t=setTimeout(()=>{ov=document.createElement('div');ov.className='wLoadOv';ov.innerHTML='<div><b>🚪 กำลังเปิดประตูโลก…</b><small>ครั้งแรกจะช้าหน่อย ครั้งต่อไปเร็วขึ้น</small><i></i></div>';document.body.appendChild(ov)},250);
  return wLoad(n).then(()=>{clearTimeout(t);try{ov&&ov.remove()}catch(e){}try{LS.set('murim_lastw',n)}catch(e){}return fn&&fn()},e=>{clearTimeout(t);try{ov&&ov.remove()}catch(x){}console.error(e);if(fail)return fail(e);toast('เปิดประตูโลกไม่สำเร็จ เน็ตอาจหลุด ลองอีกครั้ง')})};
 const st=document.createElement('style');st.textContent=`.wLoadOv{position:fixed;inset:0;z-index:99990;display:flex;align-items:center;justify-content:center;background:#0008;backdrop-filter:blur(2px)}
@@ -41706,7 +41717,9 @@ const idle=window.requestIdleCallback||(f=>setTimeout(f,3000));setTimeout(()=>id
 // 🏙️ ยุคปัจจุบัน (ระบบโลกย่อย ฮันเตอร์/ซอมบี้/ผี/… · วางแผนปี · บัตรฮันเตอร์ ฯลฯ) อยู่ที่ /w/mw.js — โหลดทันทีหลังเปิดเกม (ไม่ต้องรอ) และกันไม่ให้เริ่ม/โหลดชีวิตก่อนโหลดเสร็จ
 {const MWONLY=/^(mwBornPage|mwBStart|mwQuickStart)$/;
  // โหลดไม่สำเร็จ (เน็ตหลุด) → ทางเข้าที่ไม่ใช่ยุคปัจจุบันยังเล่นต่อได้
- const gate=n=>{const f=window[n];if(typeof f!=='function')return;window[n]=function(){if(R.mw)return f.apply(this,arguments);const a=arguments,t=this;let ran=0;const run=()=>{if(ran)return;ran=1;return f.apply(t,a)};
+ // ⚡ เน็ตช้า: เริ่มชีวิตโลกที่ไม่ใช่ยุคปัจจุบันได้ทันที ไม่ต้องรอ mw.js (ไฟล์ยังโหลดต่อเบื้องหลัง)
+ const LIFE=/^(goBirth|startLife)$/,needMw=()=>{try{return !!(CFG.mw||(typeof roll!=='undefined'&&roll&&String(roll.daily||'').startsWith('dl2:')))}catch(e){return true}};
+ const gate=n=>{const f=window[n];if(typeof f!=='function')return;window[n]=function(){if(R.mw||(LIFE.test(n)&&!needMw()))return f.apply(this,arguments);const a=arguments,t=this;let ran=0;const run=()=>{if(ran)return;ran=1;return f.apply(t,a)};
   return wNeed('mw',run,()=>{if(MWONLY.test(n))toast('เปิดยุคปัจจุบันไม่สำเร็จ เน็ตอาจหลุด ลองอีกครั้ง');else run()})}};
  ['goBirth','startLife','mwBornPage','mwBStart','mwQuickStart','openSpectate','openGuide','openCodex','openBook','openAtlas','openHeirPick'].forEach(gate);
  const _lgM=loadGame;loadGame=function(n){if(R.mw)return _lgM.apply(this,arguments);const a=arguments,t=this;let isM=false;try{const d=readSave(n||1);isM=!!(d&&d.S&&d.S.mw)}catch(e){}
@@ -41716,7 +41729,8 @@ const idle=window.requestIdleCallback||(f=>setTimeout(f,3000));setTimeout(()=>id
 // ⭕ ทวีปจิตวิญญาณยุทธ์ (ระบบหลักของโลก · ดวงจิต 100+ ตัว · ล่าวงแหวน · ทีม · ตำนาน) อยู่ที่ /w/soul.js — โหลดเบื้องหลังต่อจาก mw.js
 //   ทางเข้าชีวิต/หน้าที่ต้องใช้ข้อมูลดวงจิต รอให้โหลดก่อน · โหลดไม่สำเร็จ → ชีวิตโลกอื่นเล่นต่อได้ ส่วนทวีปจิตวิญญาณยุทธ์ขึ้นแจ้งให้ลองใหม่
 {const isSv=()=>{try{return CH_KEYS[CFG.chm]==='soul'&&!CFG.mw}catch(e){return false}};
- const gate=n=>{const f=window[n];if(typeof f!=='function')return;window[n]=function(){if(R.soul)return f.apply(this,arguments);const a=arguments,t=this;let ran=0;const run=()=>{if(ran)return;ran=1;return f.apply(t,a)};
+ const LIFE=/^(goBirth|goBirthPick|startLife|qStart|rebirthSame)$/,needSv=()=>{try{return isSv()||(typeof roll!=='undefined'&&roll&&String(roll.daily||'').startsWith('dl2:'))}catch(e){return true}};
+ const gate=n=>{const f=window[n];if(typeof f!=='function')return;window[n]=function(){if(R.soul||(LIFE.test(n)&&!needSv()))return f.apply(this,arguments);const a=arguments,t=this;let ran=0;const run=()=>{if(ran)return;ran=1;return f.apply(t,a)};
   return wNeed('soul',run,()=>{if(isSv()&&/^(goBirth|goBirthPick|startLife|qStart|rebirthSame)$/.test(n))toast('เปิดทวีปจิตวิญญาณยุทธ์ไม่สำเร็จ เน็ตอาจหลุด ลองอีกครั้ง');else run()})}};
  ['goBirth','goBirthPick','startLife','qStart','rebirthSame','openSpectate','openGuide','openCodex','openBook','openAtlas','openHeirPick'].forEach(gate);
  const _lgS=loadGame;loadGame=function(n){if(R.soul)return _lgS.apply(this,arguments);const a=arguments,t=this;let isS=false;try{const d=readSave(n||1);isS=!!(d&&d.S&&d.S.ch==='soul')}catch(e){}
