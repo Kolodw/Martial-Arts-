@@ -852,12 +852,12 @@ const gdQT = (k, m) => ({ n: Math.min(120, Math.max(10, 3 * m)), o: Math.min(40,
 const gdQs = (g, wk) => { const P = GD_QP.slice(), o = []; let h = gdHash(g + ':' + wk); while (o.length < 3) { const i = h % P.length; o.push(P.splice(i, 1)[0]); h = Math.imul(h ^ (h >>> 13), 2654435761) >>> 0 } return o };
 // แนวกลุ่ม: เปลี่ยนแค่คำเรียก (ข้อมูลเหมือนกันทุกแนว)
 const GD_TH = {
-  murim: { g: 'สำนัก', ld: 'เจ้าสำนัก', el: 'ผู้อาวุโส', m: 'ศิษย์', art: 'วิชาลับ' },
-  xian: { g: 'นิกาย', ld: 'ประมุข', el: 'ผู้พิทักษ์', m: 'ศิษย์', art: 'คัมภีร์นิกาย' },
-  modern: { g: 'กิลด์', ld: 'หัวหน้ากิลด์', el: 'รองหัวหน้า', m: 'สมาชิก', art: 'ทักษะลับ' },
-  zombie: { g: 'ค่ายผู้รอดชีวิต', ld: 'ผู้นำค่าย', el: 'หน่วยลาดตระเวน', m: 'ผู้รอดชีวิต', art: 'ตำราเอาตัวรอด' },
-  hunter: { g: 'กิลด์ฮันเตอร์', ld: 'กิลด์มาสเตอร์', el: 'ฮันเตอร์แรงก์ S', m: 'ฮันเตอร์', art: 'สกิลกิลด์' },
-  ghost: { g: 'สำนักไสยเวท', ld: 'อาจารย์ใหญ่', el: 'หมอผี', m: 'ลูกศิษย์', art: 'คาถาประจำสำนัก' } };
+  murim: { g: 'สำนัก', ld: 'เจ้าสำนัก', el: 'ผู้อาวุโส', m: 'ศิษย์', pb: 'ศิษย์ฝึกหัด', art: 'วิชาลับ' },
+  xian: { g: 'นิกาย', ld: 'ประมุข', el: 'ผู้พิทักษ์', m: 'ศิษย์', pb: 'ศิษย์นอกนิกาย', art: 'คัมภีร์นิกาย' },
+  modern: { g: 'กิลด์', ld: 'หัวหน้ากิลด์', el: 'รองหัวหน้า', m: 'สมาชิก', pb: 'สมาชิกทดลองงาน', art: 'ทักษะลับ' },
+  zombie: { g: 'ค่ายผู้รอดชีวิต', ld: 'ผู้นำค่าย', el: 'หน่วยลาดตระเวน', m: 'ผู้รอดชีวิต', pb: 'ผู้รอดชีวิตหน้าใหม่', art: 'ตำราเอาตัวรอด' },
+  hunter: { g: 'กิลด์ฮันเตอร์', ld: 'กิลด์มาสเตอร์', el: 'ฮันเตอร์แรงก์ S', m: 'ฮันเตอร์', pb: 'ฮันเตอร์ฝึกหัด', art: 'สกิลกิลด์' },
+  ghost: { g: 'สำนักไสยเวท', ld: 'อาจารย์ใหญ่', el: 'หมอผี', m: 'ลูกศิษย์', pb: 'ลูกศิษย์ฝึกหัด', art: 'คาถาประจำสำนัก' } };
 const gdT = G => GD_TH[G && G.th] || GD_TH.murim;
 // โลกของแต่ละแนว + บอสประจำโลก (บอสแต่ละสัปดาห์มาจากโลกต่างกัน · ชีวิตในโลกเดียวกับบอสตีแรง ×2)
 const GD_WTH = w => /^m_zombie|m_doom/.test(w) ? 'zombie' : /^m_hunter|m_tower|m_gatewon|m_game/.test(w) ? 'hunter' : w === 'm_ghost' ? 'ghost' : /^m_/.test(w) ? 'modern' : /^(xian|god|soul|sky)$/.test(w) ? 'xian' : 'murim';
@@ -881,7 +881,7 @@ async function gdWar(wk) {
 }
 // ทุกชีวิตที่จบของศิษย์ (ผ่านกันโกงแล้ว) → แต้มเลเวล ภารกิจ บอส วิชาลับ หอตำนาน
 async function gdLife(gid, pu, e, b, now) {
-  try { const mj = jp(await cmd('HGET', 'gdm:' + gid, pu)); await cmd('HSET', 'gdla:' + gid, pu, now); if (mj && mj.pb) { const c = +(await cmd('HINCRBY', 'gdpq:' + gid, pu, 1)) || 0; if (c >= (+mj.pn || 1)) { delete mj.pb; delete mj.pn; await pipe([['HSET', 'gdm:' + gid, pu, JSON.stringify(mj)], ['HDEL', 'gdpq:' + gid, pu], ['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: `🌱 ${mj.n} ผ่านช่วงทดลอง เป็นสมาชิกเต็มตัวแล้ว`, t: now })], ['LTRIM', 'gdc:' + gid, 0, 59], ['LPUSH', 'gdlog:' + gid, JSON.stringify({ x: `🌱 ${mj.n} ผ่านช่วงทดลอง`, t: now })], ['LTRIM', 'gdlog:' + gid, 0, 49]]) } } } catch {}
+  try { const mj = jp(await cmd('HGET', 'gdm:' + gid, pu)); await cmd('HSET', 'gdla:' + gid, pu, now); if (mj && mj.pb) { const T0 = gdT(jp(await cmd('GET', 'gd:' + gid))); const c = +(await cmd('HINCRBY', 'gdpq:' + gid, pu, 1)) || 0; if (c >= (+mj.pn || 1)) { delete mj.pb; delete mj.pn; await pipe([['HSET', 'gdm:' + gid, pu, JSON.stringify(mj)], ['HDEL', 'gdpq:' + gid, pu], ['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: `🌱 ${mj.n} ผ่านช่วง${T0.pb} เป็น${T0.m}เต็มตัวแล้ว`, t: now })], ['LTRIM', 'gdc:' + gid, 0, 59], ['LPUSH', 'gdlog:' + gid, JSON.stringify({ x: `🌱 ${mj.n} ผ่านช่วง${T0.pb}`, t: now })], ['LTRIM', 'gdlog:' + gid, 0, 49]]) } } } catch {}
   const wk = chrWk(now), d = gdDay(now), age = +e.age || 0, pt = 10 + Math.min(40, Math.floor(age / 3)) + (e.ch ? 5 : 0);
   const [xp0, m0, td, gj] = await pipe([['GET', 'gdx:' + gid], ['HLEN', 'gdm:' + gid], ['HINCRBY', 'gdxd:' + gid + ':' + d, pu, pt], ['GET', 'gd:' + gid]]); const T = gdT(jp(gj)), wd = String((b.fs && b.fs.w) || '').replace(/[^a-z0-9_]/g, '').slice(0, 12) || (e.g ? 'god' : e.x ? 'xian' : 'murim');
   const lv = gdLv(+xp0 || 0), m = +m0 || 1, prev = (+td || 0) - pt, add = Math.max(0, Math.min(pt, GD_XPD - prev)); let bonus = 0, addX = add;
@@ -1885,11 +1885,11 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const gdMaint = async g => { try { if (!(await cmd('SET', 'gdmt:' + g, 1, 'NX', 'EX', 900))) return; const G0 = await gGet(g); if (!G0) return; const M0 = await mem(g), LA = gdHv(await cmd('HGETALL', 'gdla:' + g)), PQ = gdHv(await cmd('HGETALL', 'gdpq:' + g)), T = gdT(G0), L = [], gone = new Set(); let ch = 0;
         for (const u of Object.keys(M0)) if (!LA[u]) { LA[u] = now; L.push(['HSET', 'gdla:' + g, u, now]) }
         for (const [u, v] of Object.entries(M0)) { if (u === G0.ld) continue;
-          if (v.pb && now - (v.j || 0) > 7 * 86400e3 && (+PQ[u] || 0) < (+v.pn || 1)) { gone.add(u); L.push(...rmMem(g, u), ...gLog(g, `⌛ ${v.n} ไม่ผ่านช่วงทดลองภายใน 7 วัน หลุดจาก${T.g}อัตโนมัติ`)); continue }
+          if (v.pb && now - (v.j || 0) > 7 * 86400e3 && (+PQ[u] || 0) < (+v.pn || 1)) { gone.add(u); L.push(...rmMem(g, u), ...gLog(g, `⌛ ${v.n} ไม่ผ่านช่วง${T.pb}ภายใน 7 วัน หลุดจาก${T.g}อัตโนมัติ`)); continue }
           if (G0.ina > 0 && now - (+LA[u] || now) > G0.ina * 86400e3) { gone.add(u); L.push(...rmMem(g, u), ...gLog(g, `💤 ${v.n} หายไปเกิน ${G0.ina} วัน ออกจาก${T.g}อัตโนมัติ (กลับมาสมัครใหม่ได้)`)) } }
         if (gone.size && Array.isArray(G0.el)) { G0.el = G0.el.filter(x => !gone.has(x)); ch = 1 }
         const lla = +LA[G0.ld] || now; if (now - lla > 21 * 86400e3) { const act = u => now - (+LA[u] || 0) <= 21 * 86400e3; const els = (G0.el || []).filter(u => M0[u] && !gone.has(u) && act(u)).sort((a, b) => (+LA[b] || 0) - (+LA[a] || 0)); const mbs = Object.keys(M0).filter(u => u !== G0.ld && !gone.has(u) && !M0[u].pb && act(u)).sort((a, b) => (+LA[b] || 0) - (+LA[a] || 0)); const nl = els[0] || mbs[0];
-          if (nl) { const old = G0.ld; G0.ld = nl; G0.el = (G0.el || []).filter(x => x !== nl).concat(M0[old] ? [old] : []).slice(-3); ch = 1; L.push(['LPUSH', 'gdc:' + g, JSON.stringify({ s: 1, x: `👑 ${T.ld}เดิมหายไปเกิน 21 วัน ${M0[nl].n} รับตำแหน่ง${T.ld}แทนอัตโนมัติ`, t: now })], ['LTRIM', 'gdc:' + g, 0, 59], ...gLog(g, `👑 ${M0[old] ? M0[old].n : 'หัวหน้าเดิม'} หายเกิน 21 วัน → ${M0[nl].n} เป็น${T.ld}`)) } }
+          if (nl) { const old = G0.ld; G0.ld = nl; G0.el = (G0.el || []).filter(x => x !== nl).concat(M0[old] ? [old] : []).slice(-3); ch = 1; L.push(['LPUSH', 'gdc:' + g, JSON.stringify({ s: 1, x: `👑 ${T.ld}เดิมหายไปเกิน 21 วัน ${M0[nl].n} รับตำแหน่ง${T.ld}แทนอัตโนมัติ`, t: now })], ['LTRIM', 'gdc:' + g, 0, 59], ...gLog(g, `👑 ${M0[old] ? M0[old].n : T.ld + 'เดิม'} หายเกิน 21 วัน → ${M0[nl].n} เป็น${T.ld}`)) } }
         if (ch) L.push(['SET', 'gd:' + g, JSON.stringify(G0)]);
         const RQ0 = gdHv(await cmd('HGETALL', 'gdrq:' + g)); for (const k in RQ0) { const v = jp(RQ0[k]); if (!v || now - (v.t || 0) >= 3 * 86400e3) L.push(['HDEL', 'gdrq:' + g, k]) }
         if (L.length) await pipe(L) } catch {} };
@@ -1920,7 +1920,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
           if (R.lf && (+lc || 0) < R.lf) miss.push('lf'); if (R.kb && (+kbg || 0) < R.kb) miss.push('kb'); if (R.tw && !(+tw > 0)) miss.push('tw'); if (R.rc && !rc) miss.push('rc');
           if (miss.length) return res.json({ err: 'rq', miss, st: { lf: +lc || 0, kb: +kbg || 0, tw: +tw || 0, rc: rc ? 1 : 0 } }) }
         const T = gdT(G0);
-        if (inv || jm === 'open' || R.au) { const pn = gPN(G0); await pipe([['HSET', 'gdm:' + g, pu, JSON.stringify({ n: nm, j: now, ...(pn ? { pb: 1, pn } : {}) })], ['SET', 'gdu:' + pu, g], ['DEL', 'gdreqof:' + pu], ['HDEL', 'gdrq:' + g, pu], ['HSET', 'gdla:' + g, pu, now], ['HDEL', 'gdpq:' + g, pu], ['LPUSH', 'gdc:' + g, JSON.stringify({ s: 1, x: nm + ' เข้าร่วม' + T.g + (pn ? ' (ช่วงทดลอง)' : ''), t: now })], ['LTRIM', 'gdc:' + g, 0, 59], ...gLog(g, `➕ ${nm} เข้าร่วม${inv ? 'ด้วยรหัสเชิญ' : jm === 'open' ? '' : ' (ผ่านเงื่อนไข รับอัตโนมัติ)'}`)]);
+        if (inv || jm === 'open' || R.au) { const pn = gPN(G0); await pipe([['HSET', 'gdm:' + g, pu, JSON.stringify({ n: nm, j: now, ...(pn ? { pb: 1, pn } : {}) })], ['SET', 'gdu:' + pu, g], ['DEL', 'gdreqof:' + pu], ['HDEL', 'gdrq:' + g, pu], ['HSET', 'gdla:' + g, pu, now], ['HDEL', 'gdpq:' + g, pu], ['LPUSH', 'gdc:' + g, JSON.stringify({ s: 1, x: nm + ' เข้าร่วม' + T.g + (pn ? ` (เป็น${T.pb})` : ''), t: now })], ['LTRIM', 'gdc:' + g, 0, 59], ...gLog(g, `➕ ${nm} เข้าร่วม${inv ? 'ด้วยรหัสเชิญ' : jm === 'open' ? '' : ' (ผ่านเงื่อนไข รับอัตโนมัติ)'}`)]);
           return res.json({ ok: 1, g: await full(g) }) }
         const pend = await cmd('GET', 'gdreqof:' + pu); if (pend && pend !== g && await cmd('HGET', 'gdrq:' + pend, pu)) return res.json({ err: 'pend' });
         if (+(await cmd('HLEN', 'gdrq:' + g)) >= 30) return res.json({ err: 'rqfull' });
@@ -1930,26 +1930,26 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (o === 'claim') { const [l] = await pipe([['LRANGE', 'gdbl:' + pu, 0, 4], ['DEL', 'gdbl:' + pu]]); return res.json({ ok: 1, l: (l || []).map(jp).filter(Boolean) }) }
       if (!my) return res.json({ err: 'none' });
       const G1 = await gGet(my); if (!G1) { await cmd('DEL', 'gdu:' + pu); return res.json({ err: 'nog' }) }
-      if (o === 'leave') { const M0 = await mem(my); delete M0[pu]; const L2 = [['HDEL', 'gdm:' + my, pu], ['DEL', 'gdu:' + pu], ['HDEL', 'gdla:' + my, pu], ['HDEL', 'gdpq:' + my, pu], ...gLog(my, `🚪 ${nm} ออกจากกลุ่มเอง`), ['LPUSH', 'gdc:' + my, JSON.stringify({ s: 1, x: nm + ' ออกจาก' + gdT(G1).g, t: now })], ['LTRIM', 'gdc:' + my, 0, 59]];
+      if (o === 'leave') { const M0 = await mem(my); delete M0[pu]; const L2 = [['HDEL', 'gdm:' + my, pu], ['DEL', 'gdu:' + pu], ['HDEL', 'gdla:' + my, pu], ['HDEL', 'gdpq:' + my, pu], ...gLog(my, `🚪 ${nm} ออกจาก${gdT(G1).g}เอง`), ['LPUSH', 'gdc:' + my, JSON.stringify({ s: 1, x: nm + ' ออกจาก' + gdT(G1).g, t: now })], ['LTRIM', 'gdc:' + my, 0, 59]];
         if (Array.isArray(G1.el) && G1.el.includes(pu)) { G1.el = G1.el.filter(x => x !== pu); L2.push(['SET', 'gd:' + my, JSON.stringify(G1)]) }
         const rest = Object.keys(M0); if (!rest.length) L2.push(['DEL', 'gd:' + my], ['DEL', 'gdn:' + String(G1.n).toLowerCase()], ['ZREM', 'gdall', my], ['DEL', 'gdc:' + my]); else if (G1.ld === pu) { G1.ld = rest.sort((x, y) => (M0[x].j || 0) - (M0[y].j || 0))[0]; L2.push(['SET', 'gd:' + my, JSON.stringify(G1)]) }
         await pipe(L2); return res.json({ ok: 1, g: null }) }
       if (o === 'say') { const x = clean(b.x, 160); if (!x) return res.json({ err: 'empty' }); if (!(await cmd('SET', 'gdsay:' + pu, 1, 'NX', 'PX', 2500))) return res.json({ err: 'fast' });
         await pipe([['LPUSH', 'gdc:' + my, JSON.stringify({ u: pu, n: nm, x, t: now })], ['LTRIM', 'gdc:' + my, 0, 59]]); return res.json({ ok: 1, g: await full(my) }) }
       if (o === 'kick') { const EL = Array.isArray(G1.el) ? G1.el : [], amEl = EL.includes(pu); const u = String(b.u || '').replace(/[^a-z0-9]/g, '').slice(0, 12); if (!u || u === pu) return res.json({ err: 'u' }); if (G1.ld !== pu && !(amEl && u !== G1.ld && !EL.includes(u))) return res.json({ err: 'ld' }); if (EL.includes(u)) { G1.el = EL.filter(x => x !== u); await cmd('SET', 'gd:' + my, JSON.stringify(G1)) }
-        const Mk = jp(await cmd('HGET', 'gdm:' + my, u)); await pipe([...rmMem(my, u), ['SET', 'gdkick:' + my + ':' + u, 1, 'EX', 86400 * 3], ...gLog(my, `🚫 ${nm} เชิญ ${Mk ? Mk.n : 'สมาชิก'} ออก`)]); return res.json({ ok: 1, g: await full(my) }) }
+        const Mk = jp(await cmd('HGET', 'gdm:' + my, u)); await pipe([...rmMem(my, u), ['SET', 'gdkick:' + my + ':' + u, 1, 'EX', 86400 * 3], ...gLog(my, `🚫 ${nm} เชิญ ${Mk ? Mk.n : gdT(G1).m} ออกจาก${gdT(G1).g}`)]); return res.json({ ok: 1, g: await full(my) }) }
       // 📥 อนุมัติ/ปฏิเสธคำขอ (หัวหน้าหรือผู้ดูแล)
       if (o === 'acc' || o === 'rej') { const EL = Array.isArray(G1.el) ? G1.el : []; if (G1.ld !== pu && !EL.includes(pu)) return res.json({ err: 'el' }); const u = String(b.u || '').replace(/[^a-z0-9]/g, '').slice(0, 12); const rqv = jp(await cmd('HGET', 'gdrq:' + my, u)); if (!rqv) return res.json({ err: 'norq', g: await full(my) }); const T = gdT(G1);
         if (o === 'rej') { await pipe([['HDEL', 'gdrq:' + my, u], ['SET', 'gdrej:' + my + ':' + u, 1, 'EX', 86400], ...gLog(my, `✖️ ${nm} ปฏิเสธคำขอของ ${rqv.n}`)]); const og = await cmd('GET', 'gdreqof:' + u); if (og === my) await cmd('DEL', 'gdreqof:' + u); return res.json({ ok: 1, g: await full(my) }) }
         if (await cmd('GET', 'gdu:' + u)) { await cmd('HDEL', 'gdrq:' + my, u); return res.json({ err: 'uin', g: await full(my) }) }
         { const [hl, x0] = await pipe([['HLEN', 'gdm:' + my], ['GET', 'gdx:' + my]]); if ((+hl || 0) >= GD_CAP[gdLv(+x0 || 0) - 1]) return res.json({ err: 'full' }) }
-        const pn = gPN(G1); await pipe([['HSET', 'gdm:' + my, u, JSON.stringify({ n: rqv.n, j: now, ...(pn ? { pb: 1, pn } : {}) })], ['SET', 'gdu:' + u, my], ['DEL', 'gdreqof:' + u], ['HDEL', 'gdrq:' + my, u], ['HSET', 'gdla:' + my, u, now], ['HDEL', 'gdpq:' + my, u], ['LPUSH', 'gdc:' + my, JSON.stringify({ s: 1, x: `➕ ${rqv.n} เข้าร่วม${T.g}${pn ? ' (ช่วงทดลอง)' : ''}`, t: now })], ['LTRIM', 'gdc:' + my, 0, 59], ...gLog(my, `✔️ ${nm} อนุมัติ ${rqv.n} เข้า${T.g}`)]);
+        const pn = gPN(G1); await pipe([['HSET', 'gdm:' + my, u, JSON.stringify({ n: rqv.n, j: now, ...(pn ? { pb: 1, pn } : {}) })], ['SET', 'gdu:' + u, my], ['DEL', 'gdreqof:' + u], ['HDEL', 'gdrq:' + my, u], ['HSET', 'gdla:' + my, u, now], ['HDEL', 'gdpq:' + my, u], ['LPUSH', 'gdc:' + my, JSON.stringify({ s: 1, x: `➕ ${rqv.n} เข้าร่วม${T.g}${pn ? ` (เป็น${T.pb})` : ''}`, t: now })], ['LTRIM', 'gdc:' + my, 0, 59], ...gLog(my, `✔️ ${nm} อนุมัติ ${rqv.n} เข้า${T.g}`)]);
         return res.json({ ok: 1, g: await full(my) }) }
       // ⚙️ ตั้งค่าการรับสมาชิก (หัวหน้า)
       if (o === 'cfg') { if (G1.ld !== pu) return res.json({ err: 'ld' }); const jm = ['open', 'apply', 'closed'].includes(b.jm) ? b.jm : 'open', r = b.rq || {};
         G1.jm = jm; G1.rq = { lf: Math.max(0, Math.min(100, +r.lf | 0)), kb: Math.max(0, Math.min(1e6, +r.kb | 0)), tw: r.tw ? 1 : 0, rc: r.rc ? 1 : 0, au: r.au ? 1 : 0 }; G1.pn = Math.max(0, Math.min(5, +b.pn | 0)); G1.ina = [0, 30, 45, 60].includes(+b.ina) ? +b.ina : 0;
         const L = []; if (!G1.inv) { G1.inv = Math.random().toString(36).slice(2, 8).replace(/[^a-z0-9]/g, 'x').padEnd(6, 'x'); L.push(['SET', 'gdinv:' + G1.inv, my]) }
-        await pipe([['SET', 'gd:' + my, JSON.stringify(G1)], ...L, ...gLog(my, `⚙️ ${nm} ตั้งการรับสมาชิกเป็น ${({ open: 'เปิดรับทุกคน', apply: 'ต้องอนุมัติ', closed: 'รับเฉพาะรหัสเชิญ' })[jm]}`)]); return res.json({ ok: 1, g: await full(my) }) }
+        await pipe([['SET', 'gd:' + my, JSON.stringify(G1)], ...L, ...gLog(my, `⚙️ ${nm} ตั้งการรับ${gdT(G1).m}เป็น ${({ open: 'เปิดรับทุกคน', apply: 'ต้องอนุมัติ', closed: 'รับเฉพาะรหัสเชิญ' })[jm]}`)]); return res.json({ ok: 1, g: await full(my) }) }
       if (o === 'inv') { const EL = Array.isArray(G1.el) ? G1.el : []; if (G1.ld !== pu && !EL.includes(pu)) return res.json({ err: 'el' }); const L = []; if (G1.inv) L.push(['DEL', 'gdinv:' + G1.inv]); G1.inv = Math.random().toString(36).slice(2, 8).replace(/[^a-z0-9]/g, 'x').padEnd(6, 'x'); await pipe([...L, ['SET', 'gdinv:' + G1.inv, my], ['SET', 'gd:' + my, JSON.stringify(G1)], ...gLog(my, `🔑 ${nm} เปลี่ยนรหัสเชิญ`)]); return res.json({ ok: 1, g: await full(my) }) }
       if (o === 'desc') { if (G1.ld !== pu) return res.json({ err: 'ld' }); G1.ds = clean(b.ds, 60); await cmd('SET', 'gd:' + my, JSON.stringify(G1)); return res.json({ ok: 1, g: await full(my) }) }
       // ---- ของใหม่ตามเลเวลสำนัก ----
