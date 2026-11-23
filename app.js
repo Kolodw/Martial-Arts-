@@ -518,8 +518,8 @@ function render(){
  $('gTags').innerHTML=tg;
  $('gRealm').innerHTML=`⚔ <b>${REALMS[ri].n}</b> · พลังรวม <span class="px">${fmt(total())}</span>${nx?` / ${fmt(nx.p)}`:''}`;
  $('gHp').style.width=Math.max(0,S.hp/S.maxHp*100)+'%';
- const st=[['❤️ ชีวิต',`${fmtH(Math.max(0,S.hp))}`],['🌀 ลมปราณ',S.qi.toFixed(1)],['📜 ปัญญา',fmt(S.int)],['🌸 เสน่ห์',fmt(S.cha)],
-  ['🏮 ชื่อเสียง',fameTierH()],['☯ กรรม',(S.karma>0?'+':'')+Math.round(S.karma)],['💰 ตำลึง',fmtM(S.money)],[moodOf(S.happy)[0]+' สุข',Math.round(S.happy)]];
+ const st=[['❤️ ชีวิต',`${fmtH(Math.max(0,S.hp))}`],['🌀 ลมปราณ',S.qi<1e4?S.qi.toFixed(1):fmtM(S.qi)],['📜 ปัญญา',S.int>=1e7?fmtM(S.int):fmt(S.int)],['🌸 เสน่ห์',S.cha>=1e7?fmtM(S.cha):fmt(S.cha)],
+  ['🏮 ชื่อเสียง',fameTierH()],['☯ กรรม',(S.karma>0?'+':'')+(Math.abs(S.karma)>=1e7?fmtM(S.karma):Math.round(S.karma))],['💰 ตำลึง',fmtM(S.money)],[moodOf(S.happy)[0]+' สุข',Math.round(S.happy)]];
  $('stats').innerHTML=st.map(s=>`<div class="st">${s[0]}<b class="px">${s[1]}</b></div>`).join('');
  const A=S.arc,ar=[];
  if(S.sys)ar.push(`🟦 ${sysName()} Lv.${S.sys.lv} · เควส ${S.sys.quests.length} · SP ${S.sys.sp}`);
@@ -47393,5 +47393,21 @@ try{setTimeout(()=>{try{wLoad('mhw').catch(()=>setTimeout(()=>wLoad('mhw').catch
 
 // ============================================================
 // BLOCK 180: 📜 โหลด /w/mhc.js — มังฮวายุทธภพ/เซียน (ฟื้นฟูสำนัก · มารสวรรค์กลับชาติ · ลูกคนเล็กตระกูลใหญ่ · ตัวประกอบในนิยาย · หมอเทวดา · ปรมาจารย์ที่ถูกศิษย์ฆ่า) + ฉบับไทย (ลูกเจ้าสัว · ละครแก้แค้น) · ต้องโหลดหลัง mhw
+// =====================================================
 // ============================================================
 try{setTimeout(()=>{try{const go=()=>wLoad('mhw').then(()=>wLoad('mhc'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},5200)}catch(e){console.error('block180',e)}
+=======
+// BLOCK 181: ส่วนหัวโหมดเต็มจอบนมือถือไม่โล่ง/ไม่กินที่ (ผู้เล่นแจ้ง) · ช่องค่าสถานะย่อตัวเลขให้พอดีช่อง
+//  · ปุ่ม 🧭 ทำอะไรดี / 🔔 แจ้งเตือน / ออนไลน์ จากแนวตั้งด้านขวา → แถวแนวนอนด้านล่าง · ช่องข้อมูลกว้างขึ้น ขึ้นบรรทัดน้อยลง
+//  · ตัวเลขยาวเกินช่อง → ลดขนาดตัวอักษรลงทีละนิดจนพอดี (ไม่ถูกตัด)
+// ============================================================
+try{(()=>{const cs=document.createElement('style');cs.textContent=`@media (max-width:640px){
+body.mF #game .box.top{display:grid!important;grid-template-columns:auto auto minmax(0,1fr);grid-template-areas:"ag av info" "hud hud hud";align-items:center;column-gap:10px;row-gap:8px;padding-right:26px!important}
+body.mF #game .box.top>#gAge{grid-area:ag}body.mF #game .box.top>#mobAvaW{grid-area:av}body.mF #game .box.top>.info{grid-area:info;min-width:0;width:auto!important;max-width:none!important}
+body.mF #game .box.top>.hudr{grid-area:hud;display:flex!important;flex-direction:row!important;flex-wrap:nowrap;justify-content:flex-start;align-items:center;gap:8px;width:auto!important;height:auto!important;margin:0!important;position:static!important}
+body.mF #game .box.top>.hudr>button[style*="display:none"],body.mF #game .box.top>.hudr>button[style*="display: none"]{display:none!important}body.mF #game .box.top>.hudr>button:not([style*="display:none"]):not([style*="display: none"]){flex:0 1 auto;width:auto!important;min-width:0!important;height:34px!important;min-height:0!important;padding:0 12px!important;display:inline-flex!important;flex-direction:row!important;align-items:center;gap:6px;border-radius:999px!important;transform:none!important;margin:0!important}
+body.mF #game .box.top>.hudr>button::after,body.mF #game .box.top>.hudr>button::before{position:static!important;transform:none!important;margin:0!important;display:inline!important;font-size:12px!important;line-height:1!important}body.mF #game .box.top>.hudr>button>*{position:static!important;margin:0!important}body.mF #game .box.top>.hudr>#mBell>b{position:absolute!important;top:-6px;right:-6px}body.mF #game .box.top>.hudr>button{position:relative!important}
+body.mF #game .box.top>.hudr>.cloudt{margin-left:auto!important;position:static!important}
+body.mF #game .box.top>#chev{position:absolute!important;right:10px;top:12px}}`;document.head.appendChild(cs);
+ const fit=()=>{try{document.querySelectorAll('#stats .st>b').forEach(b=>{b.style.fontSize='';let f=parseFloat(getComputedStyle(b).fontSize)||16,n=0;while(b.scrollWidth>b.clientWidth+1&&f>10&&n<10){f-=1;n++;b.style.fontSize=f+'px'}});document.querySelectorAll('#stats .st').forEach(st=>{st.querySelectorAll('*').forEach(x=>{if(x.scrollWidth>x.clientWidth+1&&x.clientWidth>0&&!x.classList.contains('pxi')){x.style.fontSize='';let f=parseFloat(getComputedStyle(x).fontSize)||14,n=0;while(x.scrollWidth>x.clientWidth+1&&f>9&&n<8){f-=1;n++;x.style.fontSize=f+'px'}}})})}catch(e){}};
+ const _r=render;render=function(){const r=_r.apply(this,arguments);try{if(detailOpen)requestAnimationFrame(fit)}catch(e){}return r};addEventListener('resize',()=>{try{if(detailOpen)fit()}catch(e){}},{passive:true})})()}catch(e){console.error('block181',e)}
