@@ -125,7 +125,7 @@ fun:{n:'งานสวดคืนที่ 7',ic:'🕯️',role:'หลาน�
  (F)=>({t:'⏪ ห้ามหันหลัง',x:'ใครบางคนนั่งลงบนเก้าอี้แถวหลังทีละตัว ทีละตัว',mg:'hold'}),
  ]},
 };
-const SK=['school','hosp','cvs','fun'];
+const SK=['school','hosp','cvs','fun','condo','train','dorm','cine'];
 
 // ---------------- UI ----------------
 const css=document.createElement('style');css.textContent=`
@@ -157,7 +157,7 @@ const css=document.createElement('style');css.textContent=`
 #ghJS canvas{width:min(92vw,92vh);height:min(92vw,92vh);image-rendering:pixelated;animation:ghZ .55s ease-out forwards}
 @keyframes ghJs{0%,70%{opacity:1}100%{opacity:0}}@keyframes ghZ{from{transform:scale(.6) rotate(-3deg)}to{transform:scale(1.15) rotate(2deg)}}
 body.ghShake{animation:ghSh .35s linear}@keyframes ghSh{20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-4px,-2px)}80%{transform:translate(3px,4px)}}
-body:has(#ghr) :is(#mvBar,#mvRz,#mFloat,#islCards){display:none!important}
+body:has(#ghr) :is(#mvBar,#mvRz,#mFloat,#islCards,#islDots,#tipCard){display:none!important}body:has(#ghr):not(.ghLie) #isl{display:none!important}
 @media (prefers-reduced-motion:reduce){#ghr.flk,body.ghShake{animation:none}}`;document.head.appendChild(css);
 
 // จั้มสแกร: หน้าผีพิกเซลวาดด้วยโค้ด
@@ -205,19 +205,19 @@ const IT={
 };
 
 // ---------------- เล่นด่าน ----------------
-function start(k){const s=ST[k],g=G();const F=[rp(s.fake)];R={k,F,ink:rp(['k','b']),redF:Math.random()<.5,h:22,i:0,ev:shuf(s.ev.map((_,i)=>i)).slice(0,5),ok:0,tak:(g.it.tak|0)>0,lies:0,clue:null,skip:0,rev:0};
+function start(k){const s=ST[k],g=G();const F=[rp(s.fake)];R={k,F,fl:{},ink:rp(['k','b']),redF:Math.random()<.5,h:22,i:0,ev:shuf(s.ev.map((_,i)=>i)).slice(0,s.climax?4:5),ok:0,tak:(g.it.tak|0)>0,lies:0,clue:null,skip:0,rev:0};
  // ผีที่ชอบคุณมาก แอบบอก
  const friend=Object.keys(g.fav).find(x=>g.fav[x]>=60);
  const late=(()=>{const h=new Date().getHours();return h>=0&&h<5})();
  frame(`<h2>${s.ic} ${E(s.n)}</h2><div class="gx">คุณลืมตาขึ้นใน${E(s.place)} ในฐานะ<b>${E(s.role)}</b><br>กระดาษแผ่นหนึ่งพับอยู่ในกระเป๋าเสื้อ ลายมือที่ไม่รู้ว่าใครเขียน<br><br>ต้องอยู่ให้ถึง <b>06:00</b> โดยไม่ทำผิดกฎ${late?`<br><br><span style="color:#ff8a7a">🕒 ข้างนอกจริงๆ ตอนนี้ก็ ${new Date().getHours()}:${String(new Date().getMinutes()).padStart(2,'0')} แล้วเหมือนกัน… ทำไมยังไม่นอนล่ะ</span>`:''}</div>
  ${sheetHTML()}${friend?`<div class="gMsg cl">${GH[friend].ic} ${GH[friend].n} กระซิบข้างหู "ข้อ ${F[0]} ไม่ใช่ของพวกเรา"</div>`:''}<button class="gO" id="ghGo">▶ เริ่มคืนนี้</button>`);
  document.getElementById('ghGo').onclick=()=>next()}
-function next(){if(!R)return;if(R.i>=R.ev.length)return finish(true);R.h=22+(R.i+1)*(8/(R.ev.length+1));if(R.h>=24)R.h-=0;
- const s=ST[R.k],e=s.ev[R.ev[R.i]](R.F);R.i++;const hh=R.h%24;
+function next(){if(!R)return;const s=ST[R.k];if(R.i>=R.ev.length){if(s.climax&&!R.cl){R.cl=1;R.h=5;const c=s.climax(R.F,R);if(c)return show(c)}return finish(true)}R.h=22+(R.i+1)*(7/(R.ev.length+1));
+ let e=s.ev[R.ev[R.i]](R.F,R);R.i++;if(!e)return next();const hh=R.h%24;
  // ตีสอง: ใบกฎเปลี่ยน
  if(!R.chg&&hh>=2&&hh<10){R.chg=1;return interlude(`<div class="gMsg cl">📜 กระดาษในกระเป๋าอุ่นขึ้นมาเอง… <b>ใบกฎเปลี่ยนไป</b> มีข้อหนึ่งหายไป และมีข้อใหม่เพิ่มเข้ามา</div>${sheetHTML()}`,()=>show(e))}
  // ระบบโกหก (ไดนามิกไอส์แลนด์ปลอม) ครั้งเดียวต่อรอบ
- if(!R.lie&&R.i===2){R.lie=1;const truthy=s.rules.find(r=>!R.F.includes(r.id)&&r.id>1);try{island({ghr:1,big:1,pri:1,ic:'⚠️',h:'ระบบ',t:`อย่าเชื่อกฎข้อ ${truthy?truthy.id:2} มันถูกแก้ไขแล้ว`,kind:'bad',ms:4200})}catch(x){}}
+ if(!R.lie&&R.i===2){R.lie=1;const truthy=s.rules.find(r=>!R.F.includes(r.id)&&r.id>1);document.body.classList.add('ghLie');setTimeout(()=>document.body.classList.remove('ghLie'),4400);try{island({ghr:1,big:1,pri:1,ic:'⚠️',h:'ระบบ',t:`อย่าเชื่อกฎข้อ ${truthy?truthy.id:2} มันถูกแก้ไขแล้ว`,kind:'bad',ms:4200})}catch(x){}}
  show(e)}
 function interlude(h,go){frame(h+'<button class="gO" id="ghNx">▶ ต่อ</button>');document.getElementById('ghNx').onclick=go}
 function show(e){if(R.skip===1){R.skip=2;return interlude(`<div class="gMsg ok">🍚 ข้าวก้นบาตรในกระเป๋าร่วงหล่น… <b>${E(e.t)}</b> ผ่านไปเฉยๆ เหมือนไม่มีใครเห็นคุณ</div>`,next)}
@@ -227,7 +227,7 @@ function show(e){if(R.skip===1){R.skip=2;return interlude(`<div class="gMsg ok">
  const bind=()=>document.querySelectorAll('#ghOs .gO').forEach(b=>b.onclick=()=>pick(e,e.o[+b.dataset.i]));bind();wireFn=bind;
  // ปุ่มสลับที่เอง (ครั้งเดียวต่อรอบ)
  if(!R.swp&&e.o.length>=2&&Math.random()<.35){R.swp=1;setTimeout(()=>{const w=document.getElementById('ghOs');if(!w)return;const bs=[...w.children];if(bs.length<2)return;w.insertBefore(bs[1],bs[0]);document.getElementById('ghr').classList.add('flk');setTimeout(()=>{const o=document.getElementById('ghr');o&&o.classList.remove('flk')},1000)},1400)}}
-function pick(e,o){const g=G();if(o.fav&&e.gh)fav(e.gh,o.fav);if(o.gh&&o.fav)fav(o.gh,o.fav);if(o.clue&&!g.clue.includes(o.clue)){g.clue.push(o.clue);R.clue=o.clue}
+function pick(e,o){const g=G();if(o.fl)Object.assign(R.fl,o.fl);if(o.mate){g.mate=g.mate||{t:0};g.mate.t=(g.mate.t|0)+o.mate}if(typeof o.f==='function'){try{const r=o.f(R,g);if(r&&r.ok!=null){o=Object.assign({},o,r)}}catch(x){console.error(x)}}if(o.fav&&e.gh)fav(e.gh,o.fav);if(o.gh&&o.fav)fav(o.gh,o.fav);if(o.clue&&!g.clue.includes(o.clue)){g.clue.push(o.clue);R.clue=o.clue}
  if(o.jump)jump();
  if(o.ok){R.ok++;interlude(`<div class="gMsg ok">✅ ${E(o.why||'รอด')}</div>${o.clue&&R.clue===o.clue?`<div class="gMsg cl">🧩 <b>เบาะแส ${g.clue.length}/5</b> — ใครเป็นคนเขียนกฎ?</div>`:''}`,next);return}
  fail(o.why||'ผิดกฎ')}
@@ -236,10 +236,11 @@ function fail(why){const g=G();if(R.tak&&(g.it.tak|0)>0){g.it.tak--;R.tak=0;retu
 function finish(win,why){const g=G(),s=ST[R.k];g.runs++;let h='';
  if(win){g.win++;const rw=Math.round((18000+R.ok*6000)*(1+g.win*.08)),cn=rnd(14,24)+R.ok*2,fm=10+R.ok*3;try{S.money=(+S.money||0)+rw}catch(e){}g.coin+=cn;g.fame+=fm;try{if(S.mw)S.mw.fame=(S.mw.fame||0)+fm*40}catch(e){}
   h=`<h2>🌅 06:00</h2><div class="gx">แสงแรกลอดเข้ามา ใบกฎในมือกลายเป็นขี้เถ้าร่วงลงพื้น คุณลืมตาขึ้นบนเตียงของตัวเอง</div><div class="gPills"><span>💰 ${money(rw)}</span><span>🪙 เงินผี +${cn}</span><span>👻 ชื่อเสียงโลกผี +${fm}</span></div>`;
+  if(R.fl.mateDead)h+=`<div class="gMsg bad">🕯️ พี่โจ้ไม่ได้กลับมาด้วย…</div>`;else if(R.fl.mate)h+=`<div class="gMsg ok">🤝 พี่โจ้รอดมาด้วย · ความไว้ใจ ${MT().t}</div>`;
   say(`📜 <b>รอดจากเกมกฎผี: ${s.n}</b> ทำตามกฎถูก ${R.ok} เรื่อง · ได้ ${money(rw)} · เงินผี +${cn} · ชื่อเสียงโลกผี +${fm}`,'epic');try{sfx('good')}catch(e){}}
  else{g.scar=Math.max(g.scar,rnd(2,4));const cn=rnd(0,4);g.coin+=cn;h=`<h2>❌ ถูกไล่ออกจากด่าน</h2><div class="gMsg bad">${E(why)}</div><div class="gx">คุณสะดุ้งตื่นตอนตีห้า ใบกฎเปียกเหงื่อ ข้อที่คุณทำผิดถูกวงด้วยหมึกแดง<br>มีบางอย่างตามคุณกลับมาด้วย — <b>🩸 แผลผี ${g.scar} ปี</b> (ฝันร้าย โชคตก) จนกว่าจะล้างด้วยน้ำมนต์</div>`;
   say(`📜 <b>ตกรอบเกมกฎผี: ${s.n}</b> — ${why} · ติด 🩸 แผลผี ${g.scar} ปี`,'bad')}
- g.seen[R.k]=(g.seen[R.k]|0)+1;
+ g.seen[R.k]=(g.seen[R.k]|0)+1;if(R.fl.mateDead){g.mate=g.mate||{};g.mate.dead=(g.mate.dead|0)+1}
  const fin=g.clue.length>=5&&!g.end;
  frame(h+(fin?`<div class="gMsg cl">🧩 เบาะแสครบแล้ว… ใบกฎแผ่นใหม่ลอยมาตกตรงหน้า มีบรรทัดเดียว <b>"ห้องสุดท้าย เปิดคืนนี้"</b></div><button class="gO" id="ghEnd">🚪 ไปห้องสุดท้ายเลย</button>`:'')+`<button class="gO" id="ghX">🛏️ กลับสู่ชีวิตจริง</button>`);
  document.getElementById('ghX').onclick=()=>{R=null;close();try{render()}catch(e){}};
@@ -287,6 +288,164 @@ const MG={
   document.getElementById('c3').onclick=()=>sh?(R.ok++,interlude('<div class="gMsg ok">✅ พระสวดจบแล้วให้พร "ไปดีมาดี"</div>',next)):fail('พระรูปนั้นไม่มีเงา — ต้องกราบสี่ครั้ง');
   document.getElementById('c4').onclick=()=>!sh?(R.ok++,interlude('<div class="gMsg ok">✅ ครั้งที่สี่ คุณเงยหน้าขึ้น… ไม่มีใครอยู่บนอาสนะแล้ว</div>',next)):fail('พระมีเงา — กราบสี่ครั้งคือกราบศพ')}
 };
+
+// ---------------- ด่านเพิ่ม (ชุด 2): คอนโดชั้น 13 · รถไฟสายสุดท้าย · หอพักหญิง · โรงหนังสแตนด์อโลน ----------------
+// เพื่อนร่วมชะตา "พี่โจ้" (ผู้เล่นมนุษย์อีกคนที่ติดอยู่ในเกม) โผล่หลายด่าน · ความไว้ใจ g.mate.t ข้ามด่าน · จุดพีคท้ายด่าน (climax) เปลี่ยนตามที่เลือกระหว่างคืน
+const MT=()=>{const g=G();g.mate=g.mate||{t:0};return g.mate};
+Object.assign(GH,{yai:{n:'ยายผัน',ic:'👵',d:'ยายห้อง 1309 ที่ยืมเกลือทุกคืน ทั้งที่ห้องนั้นว่างมาตั้งแต่ไฟไหม้'},mind:{n:'มายด์',ic:'🧑‍🎓',d:'รูมเมตเสียงเบาที่ตื่นก่อนคุณทุกเช้า แต่ไม่มีใครในหอรู้จักชื่อนี้'},noi:{n:'น้องน้อย',ic:'🧒',d:'เด็กขายพวงมาลัยบนรถไฟสายสุดท้าย ผมเปียกน้ำตลอดเวลา'},chai:{n:'ลุงชัย',ic:'🎞️',d:'คนฉายหนังรุ่นแรกของโรงหนัง ยังนั่งอยู่ในห้องฉายทุกรอบเที่ยงคืน'}});
+Object.assign(ST,{
+condo:{n:'คอนโดชั้น 13',ic:'🏢',role:'ลูกบ้านใหม่ห้อง 1307 ทั้งที่ลิฟต์ตึกนี้ไม่มีปุ่มชั้น 13',place:'คอนโดเก่าย่านรัชดา ทางเดินไฟเซ็นเซอร์ที่ติดช้ากว่าที่ควร',
+ rules:[{id:1,t:'ประกาศนิติบุคคลถึงลูกบ้านชั้น 13 เขียนด้วยหมึกเดียวกับข้อนี้ หมึกอื่นไม่ใช่ประกาศของเรา'},
+  {id:2,t:'ถ้าลิฟต์พาคุณมาชั้น 13 เอง ห้ามออก ให้กดชั้นของตัวเองตามลำดับในบัตรคีย์การ์ด'},
+  {id:3,t:'ถ้ายายห้อง 1309 เคาะขอเกลือ ให้ส่งผ่านช่องประตูที่คล้องโซ่ไว้ ห้ามปลดโซ่'},
+  {id:4,t:'นิติบุคคลไม่โทรหาลูกบ้านหลังสี่ทุ่ม ถ้ามีสายจากนิติ ให้รับ แต่ห้ามพูดก่อน'},
+  {id:5,t:'ถ้าน้ำก๊อกเป็นสีแดง ให้ปิดก๊อกทันทีแล้วอย่าเปิดอีกจนเช้า'},
+  {id:6,t:'ถ้าได้ยินเสียงเด็กวิ่งบนเพดาน ให้เคาะเพดานตอบสามครั้ง'},
+  {id:7,t:'ห้ามมองผ่านตาแมวหลังตีสาม ไม่ว่าเสียงข้างนอกจะเป็นใคร'}],
+ fake:[5,6],late:{id:8,t:'(เพิ่งมี) ถ้ามีข้อความในไลน์กลุ่มลูกบ้านจากห้อง 1313 ห้ามกดอ่าน'},gone:3,
+ ev:[
+ (F)=>({t:'🛗 ลิฟต์ที่ไม่ฟัง',x:'คุณกดชั้น 12 แต่ลิฟต์ขึ้นไปเรื่อยๆ จอบอก "13" ประตูเปิดออกสู่โถงที่ไฟดับ บัตรคีย์การ์ดในมือคุณสลักตัวเลขเล็กๆ ไว้ด้านหลัง',mg:'elev'}),
+ (F,R)=>({t:'🧂 ยายห้อง 1309',x:'ก๊อก ก๊อก "หนู… ยายขอเกลือหน่อย ยายจะทำกับข้าวให้หลาน"',gh:'yai',
+  o:[{t:'🔗 ส่งเกลือผ่านช่องประตู โซ่ยังคล้องอยู่',ok:true,fav:15,fl:{salt:1},why:'มือเหี่ยวๆ รับถุงเกลือไป "ขอบใจนะลูก คืนนี้อย่าใช้ลิฟต์ตอนตีห้า"'},
+   {t:'🚪 ปลดโซ่ เปิดประตูให้ยายเข้ามา',ok:false,why:'กฎข้อ 3 — ยายไม่ได้อยากได้เกลือ'},
+   {t:'🙉 เงียบ ทำเป็นไม่อยู่',ok:true,fav:-8,why:'เสียงเคาะหยุดไปนาน แล้วมีเสียงร้องไห้ค่อยๆ ไกลออกไปตามทางเดิน'}]}),
+ (F)=>({t:'☎️ สายจากนิติบุคคล',x:'โทรศัพท์บ้านดังตอน 01:12 หน้าจอขึ้น "นิติบุคคล"',mg:'phone'}),
+ (F)=>({t:'🚰 น้ำสีแดง',x:'คุณเปิดก๊อกล้างหน้า น้ำที่ไหลออกมาสีแดงคล้ำ มีกลิ่นสนิม',
+  o:[{t:'🔒 ปิดก๊อกทันที',ok:!F.includes(5),why:F.includes(5)?'กฎข้อ 5 หมึกต่าง — น้ำที่ค้างในท่อจะไหลกลับขึ้นมาเองตอนคุณหลับ':'ห้องน้ำเงียบไปจนเช้า'},{t:'💧 ปล่อยให้ไหลจนใส',ok:F.includes(5),why:F.includes(5)?'น้ำค่อยๆ ใสขึ้น เศษผมยาวๆ ไหลลงท่อไปจนหมด':'กฎข้อ 5 ให้ปิดทันที — เสียงไหลกลายเป็นเสียงหัวเราะ'}]}),
+ (F)=>({t:'👣 เด็กวิ่งบนเพดาน',x:'ตึก ตึก ตึก เสียงเท้าเล็กๆ วิ่งไปมาบนเพดาน ทั้งที่ห้องคุณอยู่ชั้นบนสุด',
+  o:[{t:'✊ เคาะเพดานตอบสามครั้ง',ok:!F.includes(6),why:F.includes(6)?'กฎข้อ 6 หมึกต่าง — มีคนเคาะตอบกลับมาสี่ครั้ง จากใต้เตียงคุณ':'เสียงวิ่งหยุด แล้วมีเสียงหัวเราะคิกคักแบบพอใจ'},{t:'🛌 ไม่ตอบ คลุมโปง',ok:F.includes(6),why:F.includes(6)?'เด็กวิ่งไปเล่นที่อื่น':'เสียงวิ่งดังขึ้นเรื่อยๆ จนเพดานร้าว'}]}),
+ (F,R)=>({t:'🧍 พี่โจ้ห้อง 1305',x:'ผู้ชายใส่ชุดพนักงานออฟฟิศเคาะห้องคุณ มือสั่น ถือกระดาษกฎที่หน้าตาเหมือนของคุณ "น้อง… ได้ใบนี้เหมือนกันใช่ไหม พี่อ่านไม่ออกว่าข้อไหนจริง"',
+  o:[{t:'🤝 เปิดใบกฎให้ดูด้วยกัน อธิบายเรื่องหมึก',ok:true,mate:2,fl:{mate:1},why:'พี่โจ้ถอนหายใจยาว "ขอบใจนะ พี่ติดอยู่ในเกมนี้มาสามรอบแล้ว"'},
+   {t:'🔍 ขอดูใบกฎของพี่ก่อน',ok:true,mate:1,fl:{mate:1},clue:'condo',why:'ท้ายกระดาษของพี่โจ้มีบรรทัดที่ของคุณไม่มี ลายมือเด็ก: "ชั้น 13 ไฟไหม้ ปี 2541 ไม่มีใครมาช่วย"'},
+   {t:'🚪 ปิดประตูใส่ อาจเป็นของปลอม',ok:true,mate:-2,why:'คุณได้ยินเขาเดินจากไป เสียงฝีเท้าเดียว… แล้วกลายเป็นสอง'}]}),
+ ],
+ climax:(F,R)=>{const m=MT();const ok=R.fl.salt||m.t>=2;return{t:'🔥 สัญญาณเตือนไฟไหม้ 05:00',x:`กริ่งไฟไหม้ดังลั่นทั้งตึก ควันลอยมาตามช่องใต้ประตู${R.fl.mate?` พี่โจ้ตะโกนจากทางเดิน "ลงลิฟต์! เร็วกว่า!"`:''}${R.fl.salt?'<br><span class="gHint">👵 คุณจำได้ — ยายบอกว่าอย่าใช้ลิฟต์ตอนตีห้า</span>':''}`,
+  o:[{t:'🛗 วิ่งไปลิฟต์',ok:false,f:()=>({why:R.fl.mate?'ลิฟต์ลงไปชั้น 13… ที่ซึ่งไฟยังไม่เคยดับตั้งแต่ปี 2541':'ลิฟต์เปิดออกที่ชั้น 13 ประตูไม่ยอมปิด'})},
+   {t:'🪜 ลงบันไดหนีไฟ',ok:true,f:()=>{if(R.fl.mate&&m.t<2){R.fl.mateDead=1;return{why:'คุณลงบันไดมาได้ แต่พี่โจ้วิ่งเข้าลิฟต์ไปแล้ว… ตอนเช้าไม่มีใครในตึกรู้จักลูกบ้านห้อง 1305'}}return{why:R.fl.mate?'คุณดึงแขนพี่โจ้ลงบันไดมาด้วยกัน ไม่มีไฟไหม้จริง ควันหายไปตอนแสงแรกลอดเข้ามา':'ไม่มีไฟไหม้จริง ควันหายไปตอนแสงแรกลอดเข้ามา'}}},
+   {t:'🚿 เปิดน้ำราดประตู อยู่ในห้อง',ok:ok,f:()=>({why:ok?'คุณนั่งพิงประตูเปียกจนเช้า ไม่มีอะไรเข้ามาได้':'ควันไม่ใช่ควัน มันมาจากในห้องคุณ'})}]}}},
+train:{n:'รถไฟสายสุดท้าย',ic:'🚆',role:'ผู้โดยสารที่หลับเลยสถานีบนรถไฟเที่ยวสุดท้ายจากหัวลำโพง',place:'ตู้ชั้นสามที่ไฟนีออนกะพริบ ปลายทางไม่มีชื่อบนป้าย',
+ rules:[{id:1,t:'กฎสำหรับผู้โดยสารเที่ยวสุดท้าย เขียนด้วยหมึกเดียวกับข้อนี้ หมึกอื่นเป็นของคนที่ลงไม่ได้'},
+  {id:2,t:'นับผู้โดยสารในตู้ทุกครั้งที่รถจอด ถ้าจำนวนเพิ่ม ห้ามสบตาคนที่เพิ่มมา'},
+  {id:3,t:'ห้ามลงสถานีที่ไม่มีชื่อบนแผนที่ในตู้ ต่อให้ประตูเปิดค้างนานแค่ไหน'},
+  {id:4,t:'พนักงานตรวจตั๋วที่ไม่มีหน้า ให้ยื่นตั๋วขากลับ ไม่ใช่ตั๋วขาไป'},
+  {id:5,t:'ซื้อพวงมาลัยจากเด็กบนรถไฟได้ แต่ห้ามรับเงินทอน'},
+  {id:6,t:'เมื่อรถไฟเข้าอุโมงค์ ห้ามขยับตัวจนกว่าจะออกพ้น'},
+  {id:7,t:'ถ้าประกาศสถานีเป็นภาษาที่ฟังไม่ออก ให้ลงที่สถานีนั้นทันที'}],
+ fake:[5,7],late:{id:8,t:'(เพิ่งมี) ถ้ามีคนนั่งข้างคุณแล้วเอนหัวมาซบ ห้ามผลักออก ปล่อยให้เขาหลับ'},gone:2,
+ ev:[
+ (F)=>({t:'🧮 นับคนในตู้',x:'รถไฟชะลอเข้าสถานีที่ป้ายเลือนจนอ่านไม่ออก ไฟในตู้กะพริบ',mg:'seats'}),
+ (F)=>({t:'🎫 ตรวจตั๋ว',x:'พนักงานเดินมาช้าๆ หมวกต่ำจนเห็นแค่คาง… ไม่สิ ใต้หมวกไม่มีคาง ไม่มีอะไรเลย มือขาวซีดยื่นมาขอตั๋ว',
+  o:[{t:'🎟️ ยื่นตั๋วขากลับ',ok:true,why:'เขาเจาะตั๋วแล้วพยักหน้า (ทั้งที่ไม่มีหัวให้พยัก) "เดินทางปลอดภัย"'},{t:'🎟️ ยื่นตั๋วขาไป',ok:false,why:'กฎข้อ 4 — ตั๋วขาไปแปลว่าคุณยังไม่อยากกลับ'},{t:'🙈 ทำเป็นหลับ',ok:false,why:'มือนั้นค่อยๆ ล้วงกระเป๋าคุณเอง'}]}),
+ (F)=>({t:'🌼 น้องน้อยขายพวงมาลัย',x:'เด็กผู้ชายผมเปียกโชกเดินมาตามทางเดิน "พวงมาลัยไหมพี่ ห้าบาท" คุณมีแต่แบงก์ยี่สิบ',gh:'noi',
+  o:[{t:'💵 ซื้อ แล้วบอกว่าไม่ต้องทอน',ok:!F.includes(5),fav:F.includes(5)?0:15,why:F.includes(5)?'กฎข้อ 5 หมึกต่าง — พวงมาลัยจากเขาคือพวงมาลัยไหว้ศพ คนรับคือคนถัดไป':'น้องน้อยยิ้มครั้งแรก "ขอบคุณครับ แม่ผมรอที่บางซื่อ"'},
+   {t:'🙅 ไม่ซื้อ ยิ้มให้',ok:F.includes(5),fav:3,why:F.includes(5)?'คุณไม่รับของจากเขา':'เด็กเดินจากไปเงียบๆ น้ำหยดตามรอยเท้าเป็นทาง'},
+   {t:'❓ ถามว่าทำไมตัวเปียก',ok:true,fav:10,clue:'train',why:'"ผมตกจากรถไฟตอนข้ามสะพาน ปี 2541 ครับ" เขาชี้ไปที่ตั๋วเก่าในมือคุณ วันที่บนตั๋วคือวันเดียวกัน'}]}),
+ (F)=>({t:'🌑 เข้าอุโมงค์',x:'ไฟดับทั้งตู้ รถไฟเข้าอุโมงค์ยาว มีใครบางคนลุกขึ้นเดินในความมืด',mg:'still'}),
+ (F)=>({t:'📢 ประกาศสถานี',x:'ลำโพงดังขึ้น เสียงผู้หญิงพูดภาษาที่คุณไม่เคยได้ยิน เป็นจังหวะเหมือนสวดมนต์ ประตูเปิดออกสู่ชานชาลาที่มีหมอกลอย',
+  o:[{t:'🚶 ลงที่สถานีนี้',ok:F.includes(7)?false:true,why:F.includes(7)?'กฎข้อ 7 หมึกต่าง — สถานีนี้ไม่มีชื่อบนแผนที่ (กฎข้อ 3)':'ข้อ 7 กับข้อ 3 ชนกัน… แต่สถานีนี้มีชื่อบนแผนที่จริง "บางซื่อ (เก่า)" คุณลงมาแล้วขึ้นอีกขบวนที่ตรงเวลา'},
+   {t:'🪑 นั่งอยู่ที่เดิม',ok:F.includes(7),why:F.includes(7)?'คุณไม่ทำตามกฎปลอม ประตูค่อยๆ ปิด':'ประกาศดังซ้ำ… คราวนี้เรียกชื่อคุณ'}]}),
+ (F,R)=>({t:'🧍 พี่โจ้บนรถไฟ',x:'คนที่นั่งตรงข้ามเงยหน้า — พี่โจ้ หน้าซีดกว่าเดิม "อีกแล้วเหรอ… รอบนี้พี่จะลงสถานีหน้า พี่เห็นแม่ยืนรออยู่"',
+  o:[{t:'✋ ห้ามไว้ "สถานีหน้าไม่มีบนแผนที่"',ok:true,mate:2,fl:{mate:1,hold:1},why:'พี่โจ้มองแผนที่นาน แล้วนั่งลงช้าๆ'},
+   {t:'🤫 ปล่อยให้เขาตัดสินใจเอง',ok:true,mate:-1,fl:{mate:1},why:'พี่โจ้ยิ้มเศร้า "ถ้าพี่ไม่กลับมา ฝากบอกแม่ด้วย"'}]}),
+ ],
+ climax:(F,R)=>{const m=MT();return{t:'🚉 สถานีปลายทาง 05:40',x:`รถไฟจอดนิ่ง ชานชาลาด้านซ้ายมีแสงเช้า ด้านขวามืดสนิทแต่มีเสียงคนเรียกชื่อคุณเหมือนเสียงแม่${R.fl.mate&&!R.fl.hold?'<br>พี่โจ้ลุกเดินไปทางประตูขวา':''}${R.fl.mate&&R.fl.hold?'<br>พี่โจ้จับแขนคุณ "ซ้ายนะ เชื่อพี่"':''}`,
+  o:[{t:'🌅 ลงประตูซ้าย',ok:true,f:()=>{if(R.fl.mate&&!R.fl.hold){R.fl.mateDead=1;return{why:'คุณลงมาเจอแสงเช้าที่หัวลำโพง… หันกลับไป ประตูขวาปิดแล้ว พี่โจ้ยังอยู่บนนั้น'}}return{why:R.fl.mate?'คุณกับพี่โจ้ก้าวลงมาพร้อมกัน พนักงานกวาดชานชาลามองหน้าแปลกๆ "รถไฟเที่ยวนั้นยกเลิกไปตั้งแต่ปี 41 แล้วนะ"':'แสงเช้าที่หัวลำโพง ป้ายบอก 05:41'}}},
+   {t:'🌑 ลงประตูขวา ตามเสียงแม่',ok:false,why:'แม่ของคุณยังมีชีวิตอยู่ — เสียงนั้นไม่ใช่แม่'}]}}},
+dorm:{n:'หอพักหญิงรุ่นเก่า',ic:'🛏️',role:'นักศึกษาปีหนึ่งที่ย้ายเข้ามาวันแรกของเทอม',place:'หอพักไม้สี่ชั้นหลังมหาวิทยาลัย ประตูหอปิดสี่ทุ่มตรง',
+ rules:[{id:1,t:'ระเบียบหอพัก เขียนด้วยหมึกเดียวกับข้อนี้ ข้อที่หมึกต่างไม่ใช่ระเบียบของแม่หอ'},
+  {id:2,t:'เที่ยงคืนแม่หอจะเดินนับคน ให้ขานชื่อตัวเองเท่านั้น ห้ามขานแทนเพื่อน'},
+  {id:3,t:'ถ้าเพื่อนเคาะเรียกโดยไม่ได้ส่งไลน์มาก่อน ห้ามเปิดประตู'},
+  {id:4,t:'กระจกห้องน้ำรวมต้องคลุมผ้าหลังเที่ยงคืน ถ้าผ้าหล่น ห้ามเงยหน้ามอง'},
+  {id:5,t:'เตียงที่ 4 ว่างมาสิบปี ถ้ามีคนนอนอยู่ อย่าปลุก'},
+  {id:6,t:'รูมเมตของคุณชื่อมายด์ เธอเป็นคนดี ช่วยเธอทุกอย่างที่ขอ'},
+  {id:7,t:'ถ้าได้ยินเสียงหวีผมดังมาจากใต้เตียง ให้หยิบหวีของตัวเองซ่อนไว้'}],
+ fake:[6,7],late:{id:8,t:'(เพิ่งมี) ถ้าแม่หอยกมือไหว้คุณ ห้ามรับไหว้'},gone:4,
+ ev:[
+ (F)=>({t:'📋 นับคนเที่ยงคืน',x:'แม่หอถือไฟฉายเดินตามทางเดิน เรียกเลขห้อง "ห้อง 304… สาม คน?" ในห้องมีคุณ มายด์ และใครบางคนบนเตียงที่ 4',
+  o:[{t:'🙋 ขานชื่อตัวเองคนเดียว',ok:true,why:'แม่หอจดลงสมุด "สองคน" แล้วเดินผ่านไป'},{t:'🙋 ขานชื่อตัวเอง แล้วขานแทนมายด์ที่หลับอยู่',ok:false,why:'กฎข้อ 2 — แม่หอจด "สามคน" แล้วเตียงที่ 4 ลุกขึ้นนั่ง'},{t:'🤐 ไม่ขานเลย',ok:false,why:'ห้องที่ไม่มีคนขาน แม่หอจะเข้ามาตรวจเอง'}]}),
+ (F,R)=>({t:'🧑‍🎓 มายด์ขอร้อง',x:'มายด์นั่งร้องไห้บนเตียง "ช่วยไปเอาหวีของเราที่ห้องน้ำรวมให้หน่อยได้ไหม เราลืมไว้ เรากลัว"',gh:'mind',
+  o:[{t:'🚶 ไปเอาให้',ok:!F.includes(6),fav:F.includes(6)?0:15,fl:{comb:1},f:()=>F.includes(6)?{why:'กฎข้อ 6 หมึกต่าง — ห้องน้ำรวมหลังเที่ยงคืนไม่มีใครควรไป'}:null,why:'คุณเอาหวีกลับมา มายด์กอดมันไว้แน่น "เป็นหวีที่แม่ให้"'},
+   {t:'🙅 ปฏิเสธ ชวนนอนรอเช้าด้วยกัน',ok:F.includes(6),fav:F.includes(6)?8:-10,why:F.includes(6)?'มายด์เงียบไป แล้วหัวเราะเบาๆ ในความมืด':'มายด์มองคุณด้วยสายตาที่ไม่มีใครควรมองแบบนั้น'},
+   {t:'❓ ถามว่าเธอเข้าหอมาตั้งแต่เมื่อไหร่',ok:true,fav:5,clue:'dorm',why:'"ปี 2541 จ้ะ" เธอตอบทันที แล้วชี้รูปรุ่นบนผนัง ในรูปมีเด็กหญิงปกเหลืองชื่อฝ้ายยืนข้างเธอ'}]}),
+ (F)=>({t:'🪞 กระจกห้องน้ำ',x:'ผ้าคลุมกระจกหล่นลงพื้นตอนคุณล้างหน้า เงาในกระจกยังไม่ขยับตามคุณ',mg:'mirror'}),
+ (F)=>({t:'🔦 ซ่อน',x:'เสียงฝีเท้าเปียกๆ เดินขึ้นบันไดมาชั้นสาม ไฟทางเดินดับทีละดวง',mg:'hide'}),
+ (F)=>({t:'🚪 เสียงเคาะ',x:'"เปิดหน่อย เราเอง ลืมกุญแจ" เสียงเพื่อนห้องข้างๆ — แต่ไลน์ไม่มีข้อความใหม่เลย',
+  o:[{t:'🔒 ไม่เปิด พิมพ์ไลน์ไปถาม',ok:true,why:'ไลน์ขึ้นว่าเพื่อนอ่านแล้ว ตอบกลับว่า "เรานอนอยู่บ้านนะ ทำไม"'},{t:'🚪 เปิดประตู',ok:false,why:'กฎข้อ 3'}]}),
+ (F)=>({t:'🪮 เสียงหวีใต้เตียง',x:'แกรก… แกรก… เสียงหวีผมยาวดังมาจากใต้เตียงของคุณ',
+  o:[{t:'🫳 หยิบหวีตัวเองซ่อนใต้หมอน',ok:!F.includes(7),why:F.includes(7)?'กฎข้อ 7 หมึกต่าง — เธอหาหวีไม่เจอเลยเอื้อมมาหวีผมคุณแทน':'เสียงหวีหยุด เหมือนเธอยอมแพ้'},{t:'🛌 ไม่ทำอะไร นอนนิ่ง',ok:F.includes(7),why:F.includes(7)?'เธอหวีผมจนพอใจ แล้วเงียบไป':'เสียงหวีย้ายขึ้นมาบนเตียง'}]}),
+ ],
+ climax:(F,R)=>{const g=G(),fm=g.fav.mind|0;return{t:'🌄 05:30 เตียงที่ 4',x:`ผ้าห่มบนเตียงที่ 4 ขยับ มายด์ยืนอยู่ข้างเตียงนั้น "ถึงเวลาเราต้องไปแล้ว… มากับเราไหม เราจะไม่เหงาอีก"${R.fl.comb?'<br><span class="gHint">🪮 เธอยังกำหวีของแม่ไว้ในมือ</span>':''}`,
+  o:[{t:'🙏 "ไปดีนะมายด์ เราจะจำชื่อเธอไว้"',ok:true,fav:20,f:()=>({why:fm>=20||R.fl.comb?'มายด์ยิ้ม แล้วล้มตัวลงนอนบนเตียงที่ 4 ร่างค่อยๆ จางไปกับแสงเช้า บนเตียงเหลือแค่หวีอันเดียว':'มายด์พยักหน้าช้าๆ แล้วเดินผ่านประตูไปโดยไม่เปิดมัน'})},
+   {t:'🤝 จับมือเธอไว้',ok:false,why:'มือของเธอเย็นเหมือนน้ำในบึงหลังหอ — และไม่ยอมปล่อย'},
+   {t:'🏃 วิ่งออกจากห้อง',ok:fm>=10,f:()=>({why:fm>=10?'คุณวิ่งลงมาถึงประตูหอตอนมันปลดล็อกพอดี ข้างหลังมีเสียงร้องไห้':'ประตูห้องไม่ยอมเปิด มายด์พูดเบาๆ "ทำไมทุกคนทิ้งเรา"'})}]}}},
+cine:{n:'โรงหนังสแตนด์อโลน',ic:'🎞️',role:'คนฉายหนังกะดึกของโรงหนังเก่าที่กำลังจะถูกทุบ',place:'โรงหนังห้าร้อยที่นั่งย่านเก่าในตัวเมือง รอบเที่ยงคืนยังขายตั๋วหมด',
+ rules:[{id:1,t:'คู่มือคนฉาย เขียนด้วยหมึกเดียวกับข้อนี้ หมึกอื่นคือคำขอของผู้ชม'},
+  {id:2,t:'รอบเที่ยงคืนต้องฉายจนจบ ห้ามหยุดฉายไม่ว่าเกิดอะไรขึ้น'},
+  {id:3,t:'ห้ามนับจำนวนคนดูในโรง'},
+  {id:4,t:'ถ้าภาพบนจอเป็นตัวคุณเอง ให้เปลี่ยนม้วนฟิล์มทันที'},
+  {id:5,t:'ถ้าผู้ชมขอให้ฉายซ้ำ ให้ฉายซ้ำ ผู้ชมคือพระเจ้า'},
+  {id:6,t:'ลุงชัยนั่งในห้องฉายทุกรอบ ทักทายแต่ห้ามถามว่าลุงเสียเมื่อไหร่'},
+  {id:7,t:'ถ้าภาพเบลอ ให้ปรับโฟกัสด้วยมือ ห้ามเดินลงไปดูหน้าจอ'}],
+ fake:[5],late:{id:8,t:'(เพิ่งมี) ถ้าทั้งโรงปรบมือตอนหนังจบ ห้ามโค้งรับ'},gone:3,
+ ev:[
+ (F)=>({t:'🔭 ภาพเบลอ',x:'กลางเรื่อง ภาพบนจอเบลอจนจับอะไรไม่ได้ ผู้ชมเริ่มส่งเสียงเอะอะพร้อมกันเหมือนคนคนเดียว',mg:'focus'}),
+ (F)=>({t:'🎞️ ลุงชัย',x:'ชายแก่ผมขาวนั่งบนเก้าอี้ไม้ในห้องฉาย ยิ้มให้คุณ "มาใหม่เหรอ ฟิล์มม้วนสามระวังหน่อยนะ มันชอบติด"',gh:'chai',
+  o:[{t:'🙏 สวัสดีครับ/ค่ะ ลุง ขอบคุณที่เตือน',ok:true,fav:12,fl:{chai:1},why:'ลุงชัยพยักหน้าพอใจ ยื่นไขควงเล็กๆ ให้ "เผื่อใช้"'},
+   {t:'❓ "ลุงเสียไปเมื่อไหร่ครับ"',ok:false,fav:-25,why:'กฎข้อ 6 — ลุงชัยลุกขึ้นช้าๆ ใบหน้าไหม้เกรียมเหมือนคืนไฟไหม้โรงหนัง'},
+   {t:'🗂️ ถามถึงฟิล์มม้วนเก่าในตู้',ok:true,fav:6,clue:'cine',why:'ลุงชัยหยิบฟิล์มม้วนหนึ่งให้ดู ฉลากเขียน "หนังโรงเรียน ฉายปิดเทอม 2541" ในเฟรมแรกเป็นเด็กผู้ชายยืนริมน้ำ หันมามองกล้อง'}]}),
+ (F)=>({t:'🔁 ฉายซ้ำ',x:'หนังจบ ผู้ชมทั้งโรงลุกขึ้นยืนพร้อมกัน หันหน้ามาทางห้องฉาย "อีกรอบ… อีกรอบ… อีกรอบ"',
+  o:[{t:'▶️ ฉายซ้ำตามที่ขอ',ok:!F.includes(5),why:F.includes(5)?'กฎข้อ 5 หมึกต่าง — เป็นคำขอของผู้ชม ไม่ใช่คู่มือ ถ้าฉายซ้ำ รอบนี้จะไม่มีวันจบ':'ผู้ชมนั่งลงพร้อมกัน เงียบสนิท'},{t:'⏹️ ปิดเครื่อง เปิดไฟโรง',ok:F.includes(5),why:F.includes(5)?'ไฟเปิด ในโรงไม่มีใครสักคน มีแต่ฝุ่นบนเก้าอี้ห้าร้อยตัว':'กฎข้อ 2 — ห้ามหยุดฉาย'}]}),
+ (F)=>({t:'🎬 ภาพบนจอ',x:'ฉากในหนังเปลี่ยนเป็นห้องฉายแห่งนี้ มีคนยืนอยู่หน้าเครื่องฉาย… คนนั้นคือคุณ และค่อยๆ หันมาทางกล้อง',
+  o:[{t:'🔄 เปลี่ยนม้วนฟิล์มทันที',ok:true,f:(R)=>({why:R.fl.chai?'ม้วนสามติด — คุณใช้ไขควงของลุงชัยงัดออกได้ทันเวลา':'คุณเปลี่ยนม้วนทัน ก่อนเงาบนจอจะหันมาถึง'})},{t:'👀 ดูต่อว่าจะเกิดอะไร',ok:false,jump:1,why:'คุณบนจอยิ้มให้คุณ'}]}),
+ (F)=>({t:'🧍 พี่โจ้ในโรงหนัง',x:'ที่นั่งแถว M มีคนเดียวที่ไม่ได้มองจอ — พี่โจ้ เขาโบกมือให้คุณ แล้วชี้ไปที่ทางออกฉุกเฉินที่มีแสงเขียว',
+  o:[{t:'🚪 ลงไปหาพี่โจ้',ok:false,why:'กฎข้อ 7 — ห้ามเดินลงไปหน้าจอ… พี่โจ้ที่แท้จริงไม่มานั่งดูหนังรอบนี้'},{t:'📞 ส่งข้อความหาพี่โจ้',ok:true,mate:1,fl:{mate:1},f:()=>({why:MT().t>=2?'พี่โจ้ตอบทันที "พี่อยู่ห้องฉายข้างๆ น้อง! คนที่นั่งแถว M ไม่ใช่พี่"':'ข้อความขึ้นว่าอ่านแล้ว… คนในแถว M ก้มดูมือถือพร้อมกัน'})}]}),
+ ],
+ climax:(F,R)=>{const m=MT();return{t:'🔥 ฟิล์มไหม้ 05:20',x:`ฟิล์มติดเครื่องแล้วลุกเป็นไฟเหมือนคืนนั้นในอดีต ลุงชัยลุกขึ้นยืน${R.fl.chai?' "ไปเถอะ ข้าจะดูเอง"':''} ผู้ชมทั้งโรงหันมาทางห้องฉาย${R.fl.mate?'<br>พี่โจ้วิ่งเข้ามา "ทางหนีไฟหลังห้องฉาย!"':''}`,
+  o:[{t:'🧯 ดับไฟ ฉายต่อให้จบตามกฎ',ok:true,f:()=>({why:R.fl.chai?'ลุงชัยช่วยคุณดับไฟ เครื่องฉายหมุนต่อจนเครดิตขึ้น "ขอบใจ ไม่มีใครเคยฉายให้จบมาสามสิบปีแล้ว"':'คุณดับไฟด้วยมือเปล่าจนพอง หนังฉายจนจบ ผู้ชมปรบมือเงียบๆ'})},
+   {t:'🏃 หนีตามพี่โจ้',ok:!!(R.fl.mate&&m.t>=2),f:()=>(R.fl.mate&&m.t>=2)?{why:'คุณกับพี่โจ้ลงบันไดหนีไฟ ประตูเปิดออกสู่ถนนตอนรุ่งสาง ข้างหลังโรงหนังเงียบสนิท'}:{why:'กฎข้อ 2 — หนังหยุดฉาย และผู้ชมห้าร้อยคนลุกขึ้นพร้อมกัน'}},
+   {t:'🔥 ทิ้งทุกอย่าง กระโดดหน้าต่าง',ok:false,why:'หน้าต่างห้องฉายเปิดออกสู่โรงภาพยนตร์อีกโรง ที่รอบเที่ยงคืนเพิ่งเริ่ม'}]}}},
+});
+// ---------------- มินิเกมชุด 2 ----------------
+const ok_=t=>{R.ok++;interlude(`<div class="gMsg ok">✅ ${t}</div>`,next)};
+Object.assign(MG,{
+ // ลิฟต์: จำลำดับชั้นบนบัตร แล้วกดตาม (ห้ามกด 13)
+ elev(e){const L=Array.from({length:4},()=>rnd(1,12));frame(`<h2>${E(e.t)}</h2><div class="gx">${e.x}<br><b>จำลำดับบนบัตรให้ได้</b></div><div style="text-align:center;font-size:34px;font-family:monospace;letter-spacing:6px;margin:16px 0" id="ghEl">${L.join(' · ')}</div><div class="gBar"><i id="ghEb" style="transition:width 3.2s linear"></i></div>`);
+  requestAnimationFrame(()=>{const b=document.getElementById('ghEb');if(b)b.style.width='100%'});let k=0;
+  setTimeout(()=>{const el=document.getElementById('ghEl');if(!el)return;document.getElementById('ghr').classList.add('flk');el.textContent='? · ? · ? · ?';const t=document.querySelector('#ghr .gx');if(t)t.innerHTML='ไฟในลิฟต์ดับ… กดปุ่มตามลำดับ';
+   const gd=document.createElement('div');gd.className='gGrid';gd.style.gridTemplateColumns='repeat(4,1fr)';gd.innerHTML=Array.from({length:13},(_,i)=>`<button data-f="${i+1}" style="font-size:20px;aspect-ratio:1.3;${i===12?'color:#ff4a3a;border-color:#ff4a3a55':''}">${i+1}</button>`).join('');el.after(gd);
+   gd.querySelectorAll('button').forEach(b=>b.onclick=()=>{const f=+b.dataset.f;if(f===13)return fail('คุณกดชั้น 13 เอง');if(f!==L[k])return fail(`ลำดับผิด — ลิฟต์เปิดออกที่ชั้น 13 อีกครั้ง และครั้งนี้มีคนยืนรอ`);b.style.background='#2a5a3a';k++;el.textContent=L.slice(0,k).join(' · ')+' · ?'.repeat(4-k);if(k>=4)ok_('ลิฟต์สะดุดหนึ่งที แล้วลงไปชั้น 12 อย่างช้าๆ')})},3200)},
+ // โทรศัพท์: ห้ามพูดก่อน — ปุ่ม "ฮัลโหล" ล่อให้กด รอจนอีกฝ่ายพูดก่อน แล้วตัดสินใจ
+ phone(e){let dead=0,said=0;frame(`<h2>${E(e.t)}</h2><div class="gx">${e.x}<br>คุณกดรับสาย… ปลายสายเงียบ</div><div class="gWhis" id="ghPh">…ฟืด… ฟืด…</div><button class="gO" id="ghHi">🗣️ "ฮัลโหล?"</button>`);
+  const hi=document.getElementById('ghHi');hi.onclick=()=>{if(dead)return;dead=1;fail('กฎข้อ 4: ห้ามพูดก่อน — ปลายสายได้ยินเสียงคุณแล้ว')};
+  const w=document.getElementById('ghPh');setTimeout(()=>{if(dead||!w.isConnected)return;w.textContent='…ได้ยินไหม… ตอบหน่อย…'},1800);
+  setTimeout(()=>{if(dead||!w.isConnected)return;dead=1;const real=Math.random()<.5;frame(`<h2>${E(e.t)}</h2><div class="gx">ปลายสายพูดขึ้นก่อน: <i>"${real?'ขออภัยค่ะ นิติฯ แจ้งตัดน้ำชั้น 12 พรุ่งนี้เก้าโมงนะคะ':'ห้อง 1307 ใช่ไหมคะ ช่วยเปิดประตูให้เจ้าหน้าที่หน่อย เขายืนอยู่หน้าห้องแล้ว'}"</i></div><button class="gO" id="p1">✅ "รับทราบครับ/ค่ะ" แล้ววางสาย</button><button class="gO" id="p2">🚪 เดินไปเปิดประตู</button><button class="gO" id="p3">📵 วางสายทันทีโดยไม่พูด</button>`);
+   document.getElementById('p1').onclick=()=>real?ok_('สายตัดไป… เช้ามาน้ำตัดจริง คนแรกในรอบหลายปีที่นิติโทรมาแล้วเป็นนิติจริง'):fail('คุณตอบรับคำขอให้เปิดประตู — เสียงกุญแจหมุนจากข้างนอก');
+   document.getElementById('p2').onclick=()=>fail('นิติบุคคลไม่โทรหาลูกบ้านหลังสี่ทุ่ม');
+   document.getElementById('p3').onclick=()=>ok_('คุณวางสาย หน้าประตูมีเสียงถอนหายใจยาว แล้วเงียบไป')},4600)},
+ // นับผู้โดยสาร 3 สถานี (คนเพิ่ม/ลด) → ตอบจำนวน · ถ้าเพิ่ม ต้องเลือก "ไม่สบตา"
+ seats(e){let n=rnd(3,5);const L=[n];for(let i=0;i<2;i++){n+=rp([-1,0,1,1]);L.push(Math.max(2,n))}let i=0;const draw=c=>`<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;font-size:30px;min-height:90px;margin:12px 0">${Array.from({length:c},()=>rp(['🧍','🧍‍♀️','🧑‍🦳','👤'])).join('')}</div>`;
+  const stop=()=>{if(!document.getElementById('ghr'))return;frame(`<h2>${E(e.t)}</h2><div class="gx">สถานีที่ ${i+1}/3 — ไฟกะพริบ นับให้ทัน</div>${draw(L[i])}`);i++;if(i<3)setTimeout(stop,1700);else setTimeout(ask,1700)};
+  const ask=()=>{const ans=L[2],op=shuf([ans,ans+1,ans-1]);frame(`<h2>${E(e.t)}</h2><div class="gx">ไฟดับ… ตอนนี้ในตู้มีผู้โดยสารกี่คน (ไม่นับคุณ)?</div>${op.map(v=>`<button class="gO" data-v="${v}">${v} คน</button>`).join('')}`);
+   document.querySelectorAll('#ghr [data-v]').forEach(b=>b.onclick=()=>{if(+b.dataset.v!==ans)return fail(`มี ${ans} คน — คุณนับพลาดแล้วเผลอเงยหน้านับใหม่ตรงหน้าคนที่เพิ่งขึ้นมา`);
+    if(L[2]>L[0]){frame(`<h2>${E(e.t)}</h2><div class="gx">${ans} คน — เพิ่มขึ้นจากตอนแรก ${ans-L[0]} คน มีใครบางคนนั่งลงตรงข้ามคุณพอดี</div><button class="gO" id="s1">👇 มองพื้น ไม่สบตา</button><button class="gO" id="s2">👀 มองให้รู้ว่าใคร</button>`);document.getElementById('s1').onclick=()=>ok_('คนตรงข้ามลุกออกไปตอนสถานีถัดไป ทิ้งรอยเปียกไว้บนเบาะ');document.getElementById('s2').onclick=()=>{jump();fail('กฎข้อ 2: ห้ามสบตาคนที่เพิ่มมา')}}
+    else ok_('จำนวนเท่าเดิม… หรือน้อยลง ไม่มีใครเพิ่มมา')})};stop()},
+ // กระจก: รอให้เงากะพริบตาก่อน แล้วค่อยกะพริบตาม (แตะ) ภายใน 1 วิ
+ mirror(e){let st=0,dead=0;frame(`<h2>${E(e.t)}</h2><div class="gx">${e.x}<br><b>อย่ากะพริบตาก่อนเงา</b> — พอเงากะพริบ ให้แตะกระจกตามทันที</div><div id="ghMr" style="margin:14px auto;width:200px;height:240px;border-radius:12px;border:6px solid #8a7a5a;background:linear-gradient(160deg,#3a4a52,#1a2226);display:flex;align-items:center;justify-content:center;font-size:96px;cursor:pointer;user-select:none">👁️</div><div class="gWhis" id="ghMw">…</div>`);
+  const m=document.getElementById('ghMr'),w=document.getElementById('ghMw');m.onclick=()=>{if(dead)return;dead=1;if(st===1)ok_('คุณกะพริบตามทันพอดี เงาในกระจกเริ่มขยับตามคุณตามปกติ');else{jump();fail(st===0?'คุณกะพริบก่อน — เงาในกระจกยังเปิดตาค้างอยู่':'ช้าไป เงาในกระจกยิ้มที่คุณไม่ทันมัน')}};
+  setTimeout(()=>{if(dead||!m.isConnected)return;w.textContent='มันจ้องคุณไม่กะพริบ…'},1200);const t=2600+rnd(0,2400);
+  setTimeout(()=>{if(dead||!m.isConnected)return;st=1;m.textContent='😑';w.textContent='!';setTimeout(()=>{if(dead||!m.isConnected)return;st=2;m.textContent='👁️';setTimeout(()=>{if(dead)return;dead=1;fail('ช้าไป เงาในกระจกยิ้มที่คุณไม่ทันมัน')},500)},950)},t)},
+ // ซ่อน: ฟังทิศเสียงฝีเท้า 3 รอบ แล้วเลือกที่ซ่อนฝั่งตรงข้าม
+ hide(e){const sides=['ซ้าย','ขวา'],D=[];for(let i=0;i<3;i++)D.push(rp(sides));const last=D[2];let i=0;
+  frame(`<h2>${E(e.t)}</h2><div class="gx">${e.x}<br><b>ฟังว่าเสียงมาทางไหน</b></div><div class="gWhis" id="ghHd" style="font-size:22px;min-height:60px"></div>`);const w=document.getElementById('ghHd');
+  const step=()=>{if(!w.isConnected)return;if(i>=3)return ask();w.innerHTML=`${D[i]==='ซ้าย'?'👣 ตึก… <span style="opacity:.3">ตึก…</span>':'<span style="opacity:.3">…ตึก</span> …ตึก 👣'}<br><small>(${'·'.repeat(i+1)})</small>`;try{sfx('click')}catch(x){}i++;setTimeout(step,1100)};step();
+  const ask=()=>{frame(`<h2>${E(e.t)}</h2><div class="gx">เสียงหยุดอยู่หน้าห้อง… ครั้งสุดท้ายมันมาจากทางไหน? เลือกที่ซ่อน</div><button class="gO" data-h="ซ้าย">🚪 ซ่อนหลังประตูฝั่งซ้าย</button><button class="gO" data-h="ขวา">🗄️ ซ่อนในตู้เสื้อผ้าฝั่งขวา</button><button class="gO" data-h="ใต้">🛏️ ซ่อนใต้เตียง</button>`);
+   document.querySelectorAll('#ghr [data-h]').forEach(b=>b.onclick=()=>{const h=b.dataset.h;if(h==='ใต้')return fail('ใต้เตียงมีคนนอนรออยู่ก่อนแล้ว');if(h===last){jump();return fail(`เสียงมาจากฝั่ง${last} — คุณซ่อนอยู่ตรงทางที่มันเดินเข้ามา`)}ok_('ประตูเปิดออก… ฝีเท้าเปียกๆ เดินผ่านไปอีกฝั่ง แล้วออกไปเอง')})}},
+ // โฟกัส: เลื่อนแถบให้ภาพชัด (ห้ามลงไปดูหน้าจอ)
+ focus(e){const tgt=rnd(15,85);let dead=0;frame(`<h2>${E(e.t)}</h2><div class="gx">${e.x}<br>เลื่อนแหวนโฟกัสจนภาพชัด แล้วกดล็อก</div><div id="ghFc" style="margin:12px 0;height:140px;border-radius:10px;background:#111;display:flex;align-items:center;justify-content:center;font-size:60px;filter:blur(8px)">🎬</div><input type="range" min="0" max="100" value="50" id="ghFr" style="width:100%"><button class="gO" id="ghFl">🔒 ล็อกโฟกัส</button><button class="gO" id="ghFd">🚶 เดินลงไปดูหน้าจอเอง</button>`);
+  const v=document.getElementById('ghFc'),r=document.getElementById('ghFr');const upd=()=>{const d=Math.abs(+r.value-tgt);v.style.filter=`blur(${Math.min(10,d/5)}px)`;v.textContent=d<6?'👤':'🎬'};r.oninput=upd;upd();
+  document.getElementById('ghFd').onclick=()=>{if(dead)return;dead=1;fail('กฎข้อ 7: ห้ามเดินลงไปดูหน้าจอ')};
+  document.getElementById('ghFl').onclick=()=>{if(dead)return;dead=1;const d=Math.abs(+r.value-tgt);d<=6?ok_('ภาพคมชัด… คนในจอคือลุงชัยตอนหนุ่ม เขาโบกมือให้กล้อง ผู้ชมเงียบลง'):fail('ภาพยังเบลอ ผู้ชมห้าร้อยคนหันมาทางห้องฉายพร้อมกัน')}},
+});
 
 // ---------------- ห้องสุดท้าย (เบาะแสครบ 5) ----------------
 function finale(){const g=G();const fr=g.friend||(g.friend=rp(['แบงค์','ต้น','โอ๊ต','บอล','กอล์ฟ']));R={k:'school',F:[],ink:'k',h:4,i:0,ev:[],ok:0};
@@ -336,6 +495,6 @@ window.ghrBook=function(){const g=G();const sc=SK.map(k=>`<div class="item">${ST
  <h4>ผีที่รู้จัก</h4>${Object.keys(GH).map(x=>`<div class="item">${GH[x].ic} <b>${GH[x].n}</b> — ${favT(g.fav[x]|0)} (${g.fav[x]|0})<br><span class="tag2">${GH[x].d}</span></div>`).join('')}
  <h4>ด่าน</h4>${sc}<p class="tag2">จั้มสแกร: ${JS()===1?'เปิด':'ปิด'} <a href="#" onclick="try{LS.set('murim_ghrJS',${JS()===1?0:1})}catch(e){};ghrBook();return false">เปลี่ยน</a></p>`,'ghrbook')};
 {const _is=window.island;if(typeof _is==='function'){window.island=function(n){try{if(document.getElementById('ghr')&&!(n&&n.ghr)){setTimeout(()=>window.island(n),5000);return}}catch(e){}return _is.apply(this,arguments)};try{island=window.island}catch(e){}}}
-window._ghr={ST,G,start,enter,invite,jump,finale};
+window._ghr={ST,G,start,enter,invite,jump,finale,MG,show:e=>show(e),get R(){return R}};
 })()}catch(e){console.error('ghr.js',e)}
 wReady('ghr');
