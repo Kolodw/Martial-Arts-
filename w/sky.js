@@ -70,7 +70,7 @@ const GATEV=[K=>K.f.app?null:'k_app2',K=>age()>=16?'a_lic':null,K=>!K.f.night?'a
 function gateQ(K){if(K.rk>=RK.length-1)return;if(K.gq!=null&&S.age-K.gq<(K.rk>=10&&typeof spYP==='function'?spYP(K)*3:1))return;const f=GATEV[K.rk],id=f&&f(K);if(id&&EV[id]){K.gq=S.age;queue(id)}}
 function rankUp(){const K=SK(),r=RK[K.rk];try{sfx('ach')}catch(e){}
  const o=`<div class="skBt"><div class="skBtS">สแกนยีนเสร็จสมบูรณ์</div><div class="skBtR"><span>ขั้น</span><b>${K.rk+1}</b><span>จาก 36</span></div><div class="skBtN">${esc(r.n)}</div><div class="skBtE">${eraN()} · ชั้น 1/9</div><p>${esc(r.d)}</p></div>`;
- say(`🌠 <b>ทะลวงขั้น! ขั้น ${K.rk+1} · ${r.n}</b> — ${r.d}`,'myth',true);try{keyAdd(`${S.age} ปี — ถึงขั้น ${r.n}`)}catch(e){}
+ say(`🌠 <b>ทะลวงขั้น! ขั้น ${K.rk+1} · ${r.n}</b> — ${r.d} <a class="rlmLk" onclick="event.stopPropagation();skyCodex('rank')">📜 ดูคัมภีร์</a>`,'myth',true);try{keyAdd(`${S.age} ปี — ถึงขั้น ${r.n}`)}catch(e){}
  try{island({big:1,pri:1,ic:'🌠',h:'ทะลวงขั้น',t:`ขั้น ${K.rk+1} · ${r.n}`,d:r.d,kind:'gold',ms:6000})}catch(e){}
  if(!auto&&speed<8&&!choice._cur)setTimeout(()=>{try{if(!modalOpen&&!choice._cur)modal(`${o}<button class="pbtn" style="width:100%;margin-top:10px" onclick="closeM()">รับพลัง</button>`,'skybt')}catch(e){}},400)}
 

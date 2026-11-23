@@ -45835,7 +45835,9 @@ const SCR=['openMoveBook','openCodex','openGuide'],CAT='📖 ตำราแล�
 const real=m=>[...m.querySelectorAll('.mgrid>button.opt')].filter(b=>!b.classList.contains('mnFavB')&&!b.closest('.mnFav'));
 function scrFix(){try{const m=document.getElementById('modal');if(!m||m.dataset.k!=='menu'||!(S&&S.alive))return;
  const root=m.querySelector('.mcat15');if(!root)return;
- const B=real(m),realm=B.find(b=>fnOf(b)==='openRealm');
+ const B=real(m);let realm=B.find(b=>fnOf(b)==='openRealm');
+ if(!realm){const g=root.querySelector('.mgrid');if(g){const sk=S.mw&&S.mw.sky;g.insertAdjacentHTML('afterbegin',sk?'<button class="opt" data-rlm="1" onclick="openRealm()">📜 คัมภีร์ทะลุฟ้าดารา<small>ระดับขั้น · ยีน · อวกาศ</small></button>':'<button class="opt" data-rlm="1" onclick="openRealm()">📜 คัมภีร์ระดับ<small>ระดับพลัง · วิถีธาตุ</small></button>');realm=g.firstElementChild}}
+ if(realm&&S.mw&&S.mw.sky&&!realm.dataset.sk){realm.dataset.sk=1;realm.innerHTML='📜 คัมภีร์ทะลุฟ้าดารา<small>ระดับขั้น · ยีน · อวกาศ</small>'}
  if(realm){const g0=root.querySelector('.mgrid');if(g0&&g0.firstElementChild!==realm)g0.prepend(realm)}
  const mv=B.filter(b=>SCR.includes(fnOf(b))&&!b.closest('.scrCat'));
  let H=[...root.querySelectorAll('.mch15')].find(h=>h.textContent.indexOf('ตำราและคัมภีร์')>=0),G=H&&H.nextElementSibling;
@@ -45849,6 +45851,7 @@ function scrFix(){try{const m=document.getElementById('modal');if(!m||m.dataset.
  [...SCR].forEach(f=>mv.filter(b=>fnOf(b)===f).forEach(b=>{const k=f+'|'+b.textContent;if(seen.has(k)){b.remove();return}seen.add(k);G.appendChild(b)}));
  [...root.querySelectorAll('.mch15')].forEach(h=>{const g=h.nextElementSibling;if(g&&g.matches('.mgrid')&&!g.children.length){g.remove();h.remove()}});
 }catch(e){console.error(e)}}
+{const _or=openRealm;openRealm=function(t){try{if(S&&S.mw&&S.mw.sky&&typeof window.skyCodex==='function')return window.skyCodex('rank')}catch(e){console.error(e)}return _or.apply(this,arguments)}}
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);scrFix();setTimeout(scrFix,0);setTimeout(scrFix,120);setTimeout(scrFix,400);return r}}
 {const _ot=openTitleMenu;openTitleMenu=function(){const r=_ot.apply(this,arguments);try{if(!(S&&S.alive)){const m=document.getElementById('modal');m&&m.querySelectorAll('.tmgrid>button').forEach(b=>{if(/^(openCodex|openGuide)\(/.test(b.getAttribute('onclick')||''))b.remove()})}}catch(e){}return r}}
 try{const st=document.createElement('style');st.textContent='.rlmLk{font-size:.78em;opacity:.8;text-decoration:underline;cursor:pointer;white-space:nowrap;margin-left:4px}.rlmLk:active{opacity:1}';document.head.appendChild(st)}catch(e){}
