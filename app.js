@@ -44965,3 +44965,12 @@ const lite=()=>{try{return maOn()===1}catch(e){return false}};
 let lastO=0;{const _md=modal;modal=function(){clear();lastO=Date.now();return _md.apply(this,arguments)}}
 setInterval(()=>{if(G.length&&modalOpen)clear()},40);
 })()}catch(e){console.error('block192',e)}
+
+// BLOCK 193: 🌌 นำทางกัลป์ — เป้าหมายถัดไปบอก "ขอบกัลป์" (อายุที่ต้องถึง = (กัลป์ปัจจุบัน) × 1 ล้านปี) เมื่อขั้นพลังตันแล้วหรือเข้าช่วงกัลป์
+try{(()=>{if(typeof goalInfo!=='function')return;const _g=goalInfo;goalInfo=function(){const r=_g.apply(this,arguments);try{if(!S||!S.alive||!r||(S.flags&&S.flags.kEnd)||S.beastMode&&!S.beastMode.human)return r;const K=S.kalpa||{n:0};if(!(K.n>0||S.age>=5e5))return r;
+ const cap=kcap(),n=K.n|0,nx=n>=8?'ฉากจบเหนือกาลเวลา':(KAL_N[n+1]||'กัลป์ถัดไป'),left=Math.max(0,cap-S.age);
+ const note=K.pend?'♾️ ถึงขอบกัลป์แล้ว รอเลือกเส้นทางในหน้าต่างเหตุการณ์':`♾️ ${KAL_N[n]||''}จะสิ้นสุดตอนอายุ ${fmt(cap)} ปี (อีก ${fmt(left)} ปี) — ถึงแล้วจะมีบททดสอบข้ามสู่${nx}`;
+ if(/^(ฝึกต่อไป|ถึงจุดสูงสุดแล้ว)$/.test(r.t)||!r.L||!r.L.length&&!r.note)return{t:`สู่${nx}`,note,L:[{ic:'⏳',l:'อายุ',c:S.age,n:cap,h:'ใช้ชีวิตต่อไป · ปิดด่านบ่มเพาะให้เวลาไหลเร็วขึ้น'}]};
+ r.note=(r.note?r.note+' · ':'')+note}catch(e){console.error('kalGoal',e)}return r}})()}catch(e){console.error('block193',e)}
+// กันตายเพราะอายุขัยก่อนถึงขอบกัลป์ (หลังข้ามกัลป์แล้ว อายุขัยต้องถึงขอบกัลป์ถัดไปเสมอ ตามที่ kalpaWin ตั้งไว้)
+try{{const _pyK2=passYear;passYear=function(){try{const K=S&&S.alive&&S.kalpa;if(K&&K.n>0&&!(S.flags&&S.flags.kEnd)&&S.lifespan<kcap()+1)S.lifespan=kcap()+1}catch(e){}return _pyK2.apply(this,arguments)}}}catch(e){console.error('kalLife',e)}
