@@ -491,8 +491,8 @@ details.item summary{cursor:pointer}
 </style>
 <script>
 // โหลดเกมแบบเห็นความคืบหน้า: ดึง app.js ผ่าน fetch (นับไบต์) แล้วค่อยใส่ <script src> ซึ่งได้ไฟล์จากแคชทันที
-(function(){var L=document.getElementById('bootL'),B=document.getElementById('bootB'),T=document.getElementById('bootT'),S=document.getElementById('bootS'),t0=Date.now(),gone=0,SZ=14600000;
-function set(f,n){f=Math.max(.03,Math.min(.99,f));B.style.width=(f*100).toFixed(1)+'%';T.textContent='กำลังโหลดเกม '+Math.round(f*100)+'%';if(n&&Date.now()-t0>1500)S.textContent=(n/1048576).toFixed(1)+' MB · ครั้งต่อไปจะเปิดเร็วขึ้น'}
+(function(){var L=document.getElementById('bootL'),B=document.getElementById('bootB'),T=document.getElementById('bootT'),S=document.getElementById('bootS'),t0=Date.now(),ts=t0,tot0=11400000,gone=0,SZ=11400000,tries=0;
+function set(f,n){f=Math.max(.03,Math.min(.99,f));B.style.width=(f*100).toFixed(1)+'%';T.textContent='กำลังโหลดเกม '+Math.round(f*100)+'%';if(n&&Date.now()-t0>1500){var el=(Date.now()-ts)/1000,sp=el>1?(n/el):0,eta=sp>0?Math.max(0,(tot0-n)/sp):0;S.textContent=(n/1048576).toFixed(1)+' MB'+(eta>4&&f<.97?' · อีกประมาณ '+(eta>=90?Math.round(eta/60)+' นาที':Math.round(eta)+' วินาที'):'')+' · ครั้งต่อไปจะเปิดเร็วขึ้น'}}
 function done(){if(gone)return;gone=1;B.style.width='100%';L.classList.add('out');setTimeout(function(){try{L.remove()}catch(e){}},400)}
 function fail(){T.textContent='โหลดไม่สำเร็จ — เน็ตอาจหลุด';S.textContent='';document.getElementById('bootR').style.display='inline-block'}
 var ran=0;function go(){if(ran)return;ran=1;T.textContent='กำลังเตรียมโลก…';var s=document.createElement('script');s.src='/app.js';s.charset='utf-8';s.async=false;s.onload=function(){setTimeout(done,60)};s.onerror=fail;document.body.appendChild(s)}
@@ -504,8 +504,13 @@ setTimeout(function(){if(!gone&&!ran)S.textContent='เน็ตช้านิ�
 // ครั้งแรก → ดึงพร้อมนับไบต์ แล้วรันโค้ดที่ได้เลย (ไม่โหลดซ้ำสองรอบ)
 function run(buf){try{var code=new TextDecoder('utf-8').decode(buf);T.textContent='กำลังเตรียมโลก…';setTimeout(function(){try{ran=1;var s=document.createElement('script');s.text=code+'\n//# sourceURL='+location.origin+'/app.js';document.body.appendChild(s);code=null;setTimeout(done,60)}catch(e){ran=0;go()}},30)}catch(e){go()}}
 try{if(!window.fetch||!window.ReadableStream||!window.TextDecoder||(navigator.serviceWorker&&navigator.serviceWorker.controller))return go();
- fetch('/app.js',{credentials:'same-origin'}).then(function(r){if(!r.ok||!r.body)return go();var cl=+r.headers.get('content-length')||0,enc=r.headers.get('content-encoding'),tot=(!enc&&cl>1e6)?cl:SZ,n=0,rd=r.body.getReader(),parts=[];
-  (function pump(){rd.read().then(function(x){if(x.done){set(1,n);var all=new Uint8Array(n),o=0;for(var i=0;i<parts.length;i++){all.set(parts[i],o);o+=parts[i].length}parts=null;all=null;return go()}parts.push(x.value);n+=x.value.length;set(n/tot,n);pump()}).catch(function(){if(!ran)go()})})()}).catch(function(){if(!ran)go()})}catch(e){go()}
+ // เน็ตหลุด/ค้างกลางทาง → ลองใหม่เองสูงสุด 3 ครั้ง (ค้างเกิน 25 วิไม่มีข้อมูลเข้า = ถือว่าหลุด) แล้วค่อยถอยไปใช้ <script src>
+ function dl(){var ac=window.AbortController?new AbortController():null,last=Date.now(),wd=0,dead=0;ts=Date.now();
+  function retry(){if(dead||ran)return;dead=1;clearInterval(wd);try{ac&&ac.abort()}catch(e){}if(++tries<=3){T.textContent='เน็ตสะดุด กำลังลองใหม่ ('+tries+'/3)…';setTimeout(dl,1500*tries)}else go()}
+  wd=setInterval(function(){if(Date.now()-last>25000)retry()},3000);
+  fetch('/app.js',{credentials:'same-origin',signal:ac?ac.signal:undefined}).then(function(r){if(!r.ok||!r.body){clearInterval(wd);dead=1;return go()}var cl=+r.headers.get('content-length')||0,enc=r.headers.get('content-encoding'),tot=(!enc&&cl>1e6)?cl:SZ,n=0,rd=r.body.getReader(),parts=[];tot0=tot;
+  (function pump(){rd.read().then(function(x){if(dead)return;last=Date.now();if(x.done){clearInterval(wd);dead=1;set(1,n);var all=new Uint8Array(n),o=0;for(var i=0;i<parts.length;i++){all.set(parts[i],o);o+=parts[i].length}parts=null;all=null;return go()}parts.push(x.value);n+=x.value.length;set(n/tot,n);pump()}).catch(retry)})()}).catch(retry)}
+ dl()}catch(e){go()}
 })();
 </script>
 </body>
