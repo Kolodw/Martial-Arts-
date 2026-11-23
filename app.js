@@ -44741,7 +44741,7 @@ try{const g=(typeof SYS_GUIDE!=='undefined'?SYS_GUIDE:[]).find(x=>/ฉายา�
 })()}catch(e){console.error('block187',e)}
 
 // ============================================================
-// BLOCK 184: 🔥 ป้ายบนการ์ดเลือกโลก — 🔥 ยอดนิยม (2 โลกที่คนเริ่มชีวิตมากสุดใน 7 วัน) · ✨ มาแรง (โตเร็วสุดเทียบสัปดาห์ก่อน) · 🆕 ใหม่ (เปิดไม่เกิน 14 วัน)
+// BLOCK 188: 🔥 ป้ายบนการ์ดเลือกโลก — 🔥 ยอดนิยม (2 โลกที่คนเริ่มชีวิตมากสุดใน 7 วัน) · ✨ มาแรง (โตเร็วสุดเทียบสัปดาห์ก่อน) · 🆕 ใหม่ (เปิดไม่เกิน 14 วัน)
 //   นับชีวิตที่เริ่มแยกโลก ?a=wpop (ครั้งเดียวต่อชีวิต · S._wpid) · สรุป ?a=wpopg ครั้งเดียวต่อการเปิดเว็บ (เก็บในเครื่อง 30 นาที) · ตัวเลขจริงโชว์บนการ์ดที่เลือกอยู่ (≥50 ชีวิต)
 //   เพิ่มโลกใหม่: ใส่ key ใน WK ของ api/online.js และวันเปิดใน NEW ด้านล่าง
 // ============================================================
@@ -44779,4 +44779,4 @@ const st=document.createElement('style');st.textContent=`
 #title .wc .tg>.wpN{background:#00000055!important;border:1px solid #ffffff33!important;color:#fff3c4!important}
 @media (prefers-reduced-motion:reduce){#title .wc>.wpB-pop::after{animation:none}}`;document.head.appendChild(st);
 window._wpop={paint,badges,set:d=>{D=d;sched()}};
-})()}catch(e){console.error('block184',e)}
+})()}catch(e){console.error('block188',e)}
