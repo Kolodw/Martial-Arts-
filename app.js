@@ -41749,7 +41749,7 @@ try{(()=>{
 const R={},P={};
 window.wReady=n=>{R[n]=1;try{(P[n]&&P[n].ok)&&P[n].ok()}catch(e){}};
 window.wIs=n=>!!R[n];
-const DEP={sky:['mw'],mw:['mwb','mwx']};
+const DEP={sky:['mw'],mw:['mwb','mwx'],ghr:['mw']};
 // ⚡ เน็ตช้า: ไฟล์ที่โหลดเบื้องหลังเข้าคิวทีละ 2 ไฟล์ · ไฟล์ที่ผู้เล่นรออยู่ (wNeed) แซงคิวทันที
 const U={},Q=[];let act=0,tap=0;try{addEventListener('pointerdown',()=>{tap=Date.now()},true);addEventListener('keydown',()=>{tap=Date.now()},true)}catch(e){}const pump=()=>{while(act<2&&Q.length){const g=Q.shift();if(!g.st){g.st=1;act++;g()}}};
 window.wLoad=function(n){n=String(n).replace(/[^a-z0-9_-]/g,'');if(R[n])return Promise.resolve();if(Date.now()-tap<900)U[n]=1;if(P[n]){if(U[n]&&P[n].go&&!P[n].go.st){P[n].go.st=1;act++;P[n].go()}return P[n].p}if(DEP[n]&&DEP[n].some(d=>!R[d])){if(U[n])DEP[n].forEach(d=>U[d]=1);const o={};o.p=Promise.all(DEP[n].map(d=>wLoad(d))).then(()=>{delete P[n];return wLoad(n)});P[n]=o;return o.p}
@@ -45576,3 +45576,6 @@ window._dvPick=function(w){try{const f=W[w];return f?f(ctx()):null}catch(e){cons
  if(S.beastMode&&!S.beastMode.human)S.deathCause=window._dvPick('beast');else if(S.sv&&(CFG.chm===5||S.soul))S.deathCause=window._dvPick('soul')}}catch(e){}
  const r=_cd.apply(this,arguments);try{if(S&&S.alive&&S.deathCause&&/วัยชรา/.test(S.deathCause)&&S.age<lifeMax()&&!S.mw)S.deathCause=null}catch(e){}return r};window.checkDeath=checkDeath}
 })()}catch(e){console.error('block204',e)}
+
+// BLOCK 206: 📜 โหลด /w/ghr.js — เกมกฎผี (โลกผีไทย · ยุคปัจจุบัน) ต่อจาก mw.js
+try{setTimeout(()=>{try{const go=()=>wLoad('ghr');go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},6400)}catch(e){console.error('block206',e)}
