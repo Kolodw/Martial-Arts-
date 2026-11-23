@@ -3835,7 +3835,7 @@ const st=document.createElement('style');st.textContent=`
 .sgRe{background:#1a2a36;color:#cfe2ee;border:1px solid #2a3c4c!important}.sgRe:disabled{opacity:.4}.sgGo{background:linear-gradient(90deg,#ff8a3d,#ffb23d);color:#1a0e06;box-shadow:0 0 18px #ff8a3d66}
 .sgHint{font-size:11px;color:#6a8090;margin:8px 0 0;text-align:center}
 @keyframes sgIn{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}@keyframes sgSp{to{transform:rotate(1turn)}}`;document.head.appendChild(st);
-window._skyOrg={CATS,COMBO,LATER,applyOrg,ST};
+window._skyOrg={CATS,COMBO,LATER,applyOrg,ST};try{window._skyRK=RK}catch(e){}
 })()}catch(e){console.error('block98',e)}
 SL.impl.passYear=passYear;passYear=function(){return window.passYear.apply(this,arguments)};SL.impl.meLook=meLook;meLook=function(){return window.meLook.apply(this,arguments)};})();
 

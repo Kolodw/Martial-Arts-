@@ -20342,10 +20342,13 @@ function profDel(){const d=frGet();if(!d.av&&!d.snap)return toast('ยังไ�
 const SV_W=['ไร้ระดับ','ขั้นสาม','ขั้นสอง','ขั้นหนึ่ง','ขั้นสุดยอด','ฮวากยอง','ฮยอนกยอง','แซงซากยอง'];
 function svAgo(t){if(!t)return'';const s=Math.max(0,(Date.now()-t)/1000);return s<60?'เมื่อกี้':s<3600?Math.round(s/60)+' นาทีก่อน':s<86400?Math.round(s/3600)+' ชม.ก่อน':Math.round(s/86400)+' วันก่อน'}
 function svInfo(d){const S0=d.S||{},ri=Math.max(0,Math.min(7,S0.lastRealm|0));let w,wc,rl;
- if(S0.mw){w='🏙️ ยุคปัจจุบัน';wc='mw';rl=(S0.mw.imm?'⏳ ผู้อยู่ยง':S0.mw.native?'คนยุคปัจจุบัน':'ยอดฝีมือหลงยุค')}
+ if(S0.mw&&S0.mw.sky){const K=S0.mw.sky,RK=window._skyRK;w='🌠 ทะลุฟ้าดารา';wc='mw';rl=(K.rk|0)<0?'ยังไม่ตื่นยีน':(RK&&RK[K.rk]?RK[K.rk].n:'ขั้น '+((K.rk|0)+1))}
+ else if(S0.mw&&S0.mw.fog){const K=S0.mw.fog,F=window._fog;w='🌉 นครม่านหมอก';wc='mw';rl=K.path&&K.tier>0?((F&&F.PATH&&F.PATH[K.path]&&F.PATH[K.path].t[K.tier-1])||'ธรณีที่ '+K.tier):'คนธรรมดา'}
+ else if(S0.mw){w='🏙️ ยุคปัจจุบัน';wc='mw';rl=(S0.mw.imm?'⏳ ผู้อยู่ยง':S0.mw.native?'คนยุคปัจจุบัน':'ยอดฝีมือหลงยุค')}
  else if(S0.beastMode&&!S0.beastMode.human){w='🐾 สัตว์อสูร';wc='bst';rl=S0.beastMode.sp||'สัตว์อสูร'}
+ else if(S0.ch==='soul'&&S0.sv){w='⭕ จิตวิญญาณยุทธ์';wc='m';rl='ระดับวิญญาณ '+(S0.sv.lv|0)}
  else if(S0.xt){w='🌟 โลกเทพ';wc='g';rl=XGOD[ri]}else if(S0.xian){w='☁️ โลกเซียน';wc='x';rl=XREALM[ri]}else{w='🏯 ยุทธภพ';wc='m';rl=SV_W[ri]}
- const ch=S0.ch&&S0.ch!=='normal'?(S0.ch==='hell'&&S0.flags&&S0.flags.abyss?'🕳️ อเวจี':CH_N[S0.ch]||(S0.ch==='regress'?'🔁 ผู้ย้อนกาล':'')):'';return{w,wc,rl,ch}}
+ const ch=S0.ch&&S0.ch!=='normal'&&!(S0.ch==='soul'&&S0.sv)?(S0.ch==='hell'&&S0.flags&&S0.flags.abyss?'🕳️ อเวจี':CH_N[S0.ch]||(S0.ch==='regress'?'🔁 ผู้ย้อนกาล':'')):'';return{w,wc,rl,ch}}
 const svLbl=()=>LS.get('murim_slotlbl',{})||{};
 function svDraw(cv,look){try{const c=cv.getContext('2d'),sg=g,sp=PS;try{g=c;PS=cv.width/28;c.setTransform(PS,0,0,PS,0,0);c.imageSmoothingEnabled=false;c.clearRect(0,0,28,31);person(9,29,look||{robe:'#3a3448',trim:'#5a5068',skin:'#c8a88a',hair:'#1a1424',age:25,g:'ชาย',seed:3,mood:'neutral'},'stand')}finally{g=sg;PS=sp}}catch(e){}}
 function svMenu(n){const d=readSave(n);if(!d)return null;const I=svInfo(d),L=svLbl();return{ic:'💾',t:`ช่อง ${n}: ${d.S.name}`,sub:`${I.w} · ${d.S.age} ปี`,rows:[
@@ -36671,7 +36674,8 @@ const segBtn=(k,v)=>document.querySelector(`#title .seg[data-k="${k}"] button[da
 const click=(k,v)=>{const b=segBtn(k,v);if(b&&!b.classList.contains('on'))b.click();return !!b};
 function cur(){try{if(CFG.mw)return'mw';if(CFG.chm===5)return'soul';if(CFG.chm===4)return'loop';return CFG.xian?'xian':'murim'}catch(e){return'murim'}}
 let SEL=null;
-function apply(w){try{window._skySel=!!w.sky;window._fogSel=!!w.fog;if(w.fog){SEL='fog';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}if(w.sky){SEL='sky';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}if(w.beast){SEL='beast';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}
+function apply(w){try{if(!w.ch&&!w.c&&(CFG.chm|0)>0&&(CFG.chm|0)<4){window._wpChKeep=[CFG.chm|0,+LS.get('murim_abyss',0)||0];click('chm',0);LS.set('murim_abyss',0)}else if(w.ch&&(CFG.chm|0)===0&&window._wpChKeep){const k=window._wpChKeep;window._wpChKeep=null;click('chm',k[0]);if(k[1])LS.set('murim_abyss',1)}}catch(e){}
+ try{window._skySel=!!w.sky;window._fogSel=!!w.fog;if(w.fog){SEL='fog';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}if(w.sky){SEL='sky';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}if(w.beast){SEL='beast';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}
  if(w.mw){const b=document.querySelector('#title .seg[data-k="xian"] .mwopt');if(b){if(!b.classList.contains('on'))b.click()}else CFG.mw=1;SEL='mw';return}
  click('xian',w.x);CFG.mw=0;if(w.c)click('chm',w.c);else if(CFG.chm>=4)click('chm',0);SEL=w.k}catch(e){console.error('wp',e)}}
 function go(k){const w=W.find(x=>x.k===k);if(!w)return;apply(w);try{LS.set('murim_wlast',{k,c:CFG.chm|0})}catch(e){}
@@ -45755,6 +45759,13 @@ if(document.readyState==='complete')setTimeout(boot,1200);else addEventListener(
 // ถ้าเปิดค้างไว้ข้ามเที่ยงคืนโดยไม่ได้อยู่ในหน้าจอนับถอยหลัง ให้เด้งฉากเที่ยงคืนเมื่ออยู่หน้าแรก
 if(inCd()&&Q!=='cd'){const iv=setInterval(()=>{if(now()>=A){clearInterval(iv);const t=document.getElementById('title');const c=document.getElementById('loyChip');if(c)c.textContent=L('🌕 คืนลอยกระทง แตะเพื่อดูสายน้ำ','🌕 Loy Krathong night — see the river');if(!el&&t&&t.classList.contains('on'))open(true)}},1000)}
 })()}catch(e){console.error('block210',e)}
+// ===================== กันโหมดท้าทาย (นรก/อเวจี/ชีวิตสั้น/รากขยะ) หลุดเข้าโลกที่ไม่มีความท้าทาย =====================
+try{(()=>{const BAD={hell:1,short:1,junk:1};
+ const fix=()=>{try{if(!S||!S.alive||!S.mw||!BAD[S.ch])return;S.ch='normal';if(S.flags){delete S.flags.abyss;delete S.flags.chHell;delete S.flags.chShort;delete S.flags.chJunk}if(S.hell)S.hell=null}catch(e){}};
+ const _sl=startLife;startLife=function(){const r=_sl.apply(this,arguments);setTimeout(fix,0);setTimeout(fix,2500);return r};
+ const _py=passYear;passYear=function(){fix();return _py.apply(this,arguments)};
+ const _sv=saveGame;saveGame=function(){fix();return _sv.apply(this,arguments)};
+})()}catch(e){console.error('chFix',e)}
 // BLOCK 211: ✍️ สร้างเอง / 🎨 ออกแบบหน้าตา ทุกโลก — ตัวเลือกกลาง ccPick (เลือกทุกช่องเอง) · ccLook (ออกแบบหน้าตา ที่เหลือลิขิต)
 //  ชีวิตที่ "สร้างเอง" ตั้ง S.custom + S.ccOwn → ไม่ส่งขึ้นทำเนียบ (ห่อ sendLife) · ตั้งผ่าน window._ccOwnPending ก่อน startLife ของแต่ละโลก
 //  ใช้ใน: 🐾 สัตว์อสูร (หน้ากำเนิด) · 🌉 นครม่านหมอก (w/fog.js) · 🌠 ทะลุฟ้าดารา (w/sky.js) · โลกอื่นมีอยู่แล้ว (goBirthPick / ยุคปัจจุบัน)
