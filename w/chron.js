@@ -19,7 +19,7 @@ function eff(o,line,cls){o=o||{};const out=[],num=(k,v,lab)=>{if(!v)return;S[k]=
  if(o.money){const v=Math.round(o.money*(S.xian?3:1));S.money=Math.max(0,(+S.money||0)+v);out.push(`${(WT[WK()]||WT.murim).cur} ${v>0?'+':'−'}${Math.abs(v).toLocaleString()}`)}
  num('fame',o.fame,'ชื่อเสียง');num('int',o.int,'ปัญญา');num('cha',o.cha,'เสน่ห์');
  if(o.karma){S.karma=(+S.karma||0)+o.karma;out.push(o.karma>0?`บุญ +${o.karma}`:`บาป +${-o.karma}`)}
- if(o.pow){const v=Math.round(Math.max(15,tot()*Math.abs(o.pow)/100));S.power=Math.max(0,(+S.power||0)+(o.pow>0?v:-Math.min(v,(+S.power||0)*.3)));out.push(`พลัง ${o.pow>0?'+':'−'}${v.toLocaleString()}`)}
+ if(o.pow){const v=Math.round(Math.max(15,tot()*Math.abs(o.pow)/100));S.power=Math.max(0,(+S.power||0)+(o.pow>0?v:-Math.min(v,(+S.power||0)*.3)));out.push(`พลังยุทธ์ ${o.pow>0?'+':'−'}${v.toLocaleString()}`)}
  if(o.hp){const v=Math.round((+S.maxHp||100)*o.hp/100);S.hp=Math.max(1,Math.min(+S.maxHp||100,(+S.hp||0)+v));out.push(`พลังชีวิต ${v>0?'+':'−'}${Math.abs(v)}`)}
  if(o.happy){try{joy(o.happy)}catch(e){}}
  const sum=out.length?` <span class="tag2">(${out.join(' · ')})</span>`:'';if(line)try{log(line+sum,cls||'epic',true)}catch(e){}return sum}
