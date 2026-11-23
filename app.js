@@ -29481,7 +29481,7 @@ const RE_TOT=new RegExp('(พลัง(?:รวม|ยุทธ์)?)((?:\\s|:|<
 const RE_GAIN=new RegExp('(พลัง(?:รวม|ยุทธ์)?\\s*)\\+'+NUMRE+STOP,'g');
 const pMode=()=>{try{const m=LS.get('murim_pmode','idx');return m==='raw'||m==='both'?m:'idx'}catch(e){return'idx'}};window.pMode=pMode;
 function pConv(t){if(typeof t!=='string'||t.indexOf('พลัง')<0)return t;const PM=pMode();if(PM==='raw')return t;let tot=0;try{tot=Math.max(1,total())}catch(e){tot=1}
- t=t.replace(RE_GAIN,(m,a,n)=>{const v=pnum(n);if(!isFinite(v))return m;const pc=v/Math.max(1,tot-v)*100;return a+(pc<.1?'+เล็กน้อย':'+'+(pc>=10?Math.round(pc):pc.toFixed(1))+'%')+(PM==='both'?' (+'+n+')':'')});
+ t=t.replace(RE_GAIN,(m,a,n)=>{const v=pnum(n);if(!isFinite(v))return m;const pc=v/Math.max(1,tot-v)*100,xr=tot/Math.max(1,tot-v);return a.replace(/\s+$/,'')+(pc<.1?' +เล็กน้อย':pc>=200?' ×'+(xr>=10?fmt(Math.round(xr)):xr.toFixed(1)):' +'+(pc>=10?Math.round(pc):pc.toFixed(1))+'%')+(PM==='both'?' (+'+n+')':'')});
  t=t.replace(RE_TOT,(m,a,sp,n,rest,n2)=>{const v=pnum(n);if(!isFinite(v)||v<0)return m;const lab=a==='พลังรวม'?'ดัชนีพลัง':a;let s=lab+sp+'⚡'+pIdx(v)+(PM==='both'?' ('+n+')':'');if(rest){const v2=pnum(n2);if(isFinite(v2))s+=rest.replace(n2,'⚡'+pIdx(v2)+(PM==='both'?' ('+n2+')':''))}return s});return t}
 window.pConv=pConv;
 {const _lg=log;log=function(t){if(typeof t==='string')arguments[0]=pConv(t);return _lg.apply(this,arguments)}}
@@ -39699,7 +39699,7 @@ kbGet=function(){return{g:KBS.ok?KBS.g:0,e:KBS.ok?KBS.e:0}};
 // เขียน: เทียบกับยอดเดิม — เพิ่ม = ฝาก (ปรับให้หายาก) · ลด = หักที่เซิร์ฟเวอร์
 kbSet=function(d){try{for(const sd of ['g','e']){const nv=Math.max(0,Math.floor(+(d&&d[sd])||0)),df=nv-KBS[sd];
   if(df>0){if(window._kbSrvGrant)continue;const r=rare(df);PEND[sd]+=r;KBS[sd]+=r}else if(df<0&&KBS.ok){KBS[sd]=nv;spend(sd,-df,(window._kbW||'').slice(0,24))}}
-  if(PEND.g||PEND.e){if(!onlineOK&&Date.now()-(window._kbT||0)>30000){window._kbT=Date.now();try{toast('🏦 ต้องออนไลน์และล็อกอินเพื่อเก็บกรรมเข้าคลัง')}catch(e){}}flush()}}catch(e){}};
+  if(PEND.g||PEND.e){if(!onlineOK&&!window._kbT&&S&&S.age>=3){window._kbT=Date.now();try{toast('🏦 ต้องออนไลน์และล็อกอินเพื่อเก็บกรรมเข้าคลัง')}catch(e){}}flush()}}catch(e){}};
 window.kbGet=kbGet;window.kbSet=kbSet;window.kbSync=kbSync;
 // ล้างตัวเลขเก่าในเครื่องทิ้งครั้งเดียว
 try{if(LS.get('murim_kbwipe',0)!==2){LS.set('murim_kbank',{g:0,e:0});LS.set('murim_kbwipe',2)}}catch(e){}
@@ -42471,6 +42471,7 @@ if(typeof openCodex==='function'){const _oc=openCodex;openCodex=function(){try{c
 
 // BLOCK 135: หน้าสุ่มกำเนิดทะลุฟ้าดารา (modal skyorg) ไม่ต้องมีปุ่ม ✕ ลอย — ต้องกด "เกิด!" เท่านั้น
 try{document.head.insertAdjacentHTML('beforeend','<style>#mask.on #modal[data-k="skyorg"]~#mFloat,body:has(#modal[data-k="skyorg"]) #mFloat{display:none!important}</style>')}catch(e){console.error('block135',e)}
+try{document.head.insertAdjacentHTML('beforeend','<style>body:has(#mask.on #modal[data-k="broll"]) #mFloat .mfx{display:none!important}</style>')}catch(e){}
 
 // BLOCK 136: 🏛️ ประมูลทั่วยุทธภพ ไม่ขึ้นในยุคปัจจุบันทุกประเภทโลก (รวมทะลุฟ้าดารา) และทวีปจิตวิญญาณยุทธ์
 try{(()=>{const no=()=>{try{return !!(S&&(S.mw||S.ch==='soul'))}catch(e){return false}};
@@ -44778,3 +44779,5 @@ const st=document.createElement('style');st.textContent=`
 @media (prefers-reduced-motion:reduce){#title .wc>.wpB-pop::after{animation:none}}`;document.head.appendChild(st);
 window._wpop={paint,badges,set:d=>{D=d;sched()}};
 })()}catch(e){console.error('block188',e)}
+// ===== QoL: ปุ่มเล็กบนจอสัมผัสให้กดง่ายขึ้น =====
+try{document.head.insertAdjacentHTML('beforeend','<style>@media (pointer:coarse){#autoBtn,#skipBtn{min-height:34px}#fpB{min-height:32px;display:inline-flex;align-items:center}.islX{min-width:34px!important;min-height:34px!important}#modal button.sk{display:inline-block;padding:8px 16px;min-height:34px}}</style>')}catch(e){}
