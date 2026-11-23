@@ -557,7 +557,7 @@ function openMenu(){
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>☰ เมนู</h3><div class="mgrid">
   <button class="opt" onclick="openMe()" style="grid-column:1/-1">🧬 ตัวละครของฉัน<small>${S.xian?'ราก · กฎเต๋า · ถ้ำ · อาชีพ':'พรสวรรค์ · พลัง · ชุดสวมใส่'}</small></button>
   <button class="opt" onclick="openArts()">📖 วิชา<small>${S.arts.length} วิชา</small></button>
-  <button class="opt" onclick="gachaArt()" ${ok?'':'disabled style="opacity:.5"'}>🎴 สุ่มคัมภีร์<small>${ok?fmtM(gachaCost())+' ตำลึง · เหลือ '+(3-(S.gachaY||0))+' ครั้งปีนี้':'ปีนี้สุ่มครบแล้ว'}</small></button>
+  <button class="opt" onclick="gachaArt()" ${ok?'':'disabled style="opacity:.5"'}>🎴 สุ่มวิชา<small>${ok?fmtM(gachaCost())+' ตำลึง · เหลือ '+(3-(S.gachaY||0))+' ครั้งปีนี้':'ปีนี้สุ่มครบแล้ว'}</small></button>
   <button class="opt" onclick="openFaction()">🏯 สำนัก<small>${S.faction?S.faction.n:'ยังไม่มีสังกัด'}</small></button>
   <button class="opt" onclick="openMarket()">🛒 ตลาดยุทธภพ<small>💰 ${fmtM(S.money)}</small></button>
   <button class="opt" onclick="openFamily()">👪 ครอบครัว<small>${moodOf(S.happy)[0]} ความสุข ${Math.round(S.happy)}</small></button>
@@ -11066,7 +11066,7 @@ function rlmTick(){if(!S||!S.alive)return;const R0=rlmFix(),k=rlmKey();if(R0.k==
  const old=R0.k;R0.k=k;R0.n++;const c=rlmCur(),major=Math.floor(old/50)!==Math.floor(k/50)||(c.L>=0&&(c.L%9===0||Math.floor((old%50-1)/9)!==Math.floor(c.L/9)));
  const bn=rlmBonus(),E=rlmEl();
  if(!major){log(`✦ ${ch(RLM_SUBLN)}${E?` — ${E[1]} วิถี${E[2]}แผ่ซ่าน`:''}${bn?` <span class="tag2">(${bn})</span>`:''}`,'');return}
- const {e,nm}=rlmEntry();log(`${e[0]} <b>${esc(nm)}</b> — ${e[1]}: ${ch(rlmJ(e[3]))}${bn?` <span class="tag2">(${E[1]} ${bn})</span>`:''}`,'myth',true);
+ const {e,nm}=rlmEntry();log(`${e[0]} <b>${esc(nm)}</b> — ${e[1]}: ${ch(rlmJ(e[3]))}${bn?` <span class="tag2">(${E[1]} ${bn})</span>`:''} <a class="rlmLk" onclick="event.stopPropagation();openRealm()">📜 ดูคัมภีร์</a>`,'myth',true);
  if(rlmOn()&&!auto){if(!modalOpen&&!choice._cur)modal(rlmPopHtml(),'rlm');else R0.pend=1}}
 {const _pyR=passYear;passYear=function(){const r=_pyR.apply(this,arguments);try{rlmTick()}catch(e){console.error(e)}return r}}
 {const _slR=startLife;startLife=function(){const r=_slR.apply(this,arguments);try{if(S){S.rlm=null;rlmFix().k=rlmKey()}}catch(e){}return r}}
@@ -45827,3 +45827,30 @@ window.brOwn=function(){const r=brRoll;if(!r)return;const en=EN();
 try{Object.assign(I18N.d,{'สร้างเอง':'Build your own'})}catch(e){}
 })()}catch(e){console.error('block211',e)}
 
+
+// ===== คัมภีร์: จัดที่วาง (เมนูในเกม = คัมภีร์ระดับไว้บนสุด + หมวดตำราและคัมภีร์ · หน้าแรกซ่อนเมื่อยังไม่มีตัวละคร) =====
+try{(()=>{
+const fnOf=b=>((b.getAttribute('onclick')||'').match(/^\s*([A-Za-z0-9_]+)\(/)||[])[1]||'';
+const SCR=['openMoveBook','openCodex','openGuide'],CAT='📖 ตำราและคัมภีร์';
+const real=m=>[...m.querySelectorAll('.mgrid>button.opt')].filter(b=>!b.classList.contains('mnFavB')&&!b.closest('.mnFav'));
+function scrFix(){try{const m=document.getElementById('modal');if(!m||m.dataset.k!=='menu'||!(S&&S.alive))return;
+ const root=m.querySelector('.mcat15');if(!root)return;
+ const B=real(m),realm=B.find(b=>fnOf(b)==='openRealm');
+ if(realm){const g0=root.querySelector('.mgrid');if(g0&&g0.firstElementChild!==realm)g0.prepend(realm)}
+ const mv=B.filter(b=>SCR.includes(fnOf(b))&&!b.closest('.scrCat'));
+ let H=[...root.querySelectorAll('.mch15')].find(h=>h.textContent.indexOf('ตำราและคัมภีร์')>=0),G=H&&H.nextElementSibling;
+ if(!mv.length)return;
+ if(!H){const hs=[...root.querySelectorAll('.mch15')];
+  H=document.createElement('h4');H.className='mch15';H.textContent=CAT;G=document.createElement('div');G.className='mgrid scrCat';
+  const ref=hs.find(h=>/บันทึกและสะสม/.test(h.textContent));
+  if(ref&&ref.nextElementSibling)ref.nextElementSibling.after(H,G);else{const last=hs[hs.length-1];if(last)last.before(H,G);else root.append(H,G)}}
+ if(G&&!G.classList.contains('scrCat'))G.classList.add('scrCat');
+ const seen=new Set();
+ [...SCR].forEach(f=>mv.filter(b=>fnOf(b)===f).forEach(b=>{const k=f+'|'+b.textContent;if(seen.has(k)){b.remove();return}seen.add(k);G.appendChild(b)}));
+ [...root.querySelectorAll('.mch15')].forEach(h=>{const g=h.nextElementSibling;if(g&&g.matches('.mgrid')&&!g.children.length){g.remove();h.remove()}});
+}catch(e){console.error(e)}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);scrFix();setTimeout(scrFix,0);setTimeout(scrFix,120);setTimeout(scrFix,400);return r}}
+{const _ot=openTitleMenu;openTitleMenu=function(){const r=_ot.apply(this,arguments);try{if(!(S&&S.alive)){const m=document.getElementById('modal');m&&m.querySelectorAll('.tmgrid>button').forEach(b=>{if(/^(openCodex|openGuide)\(/.test(b.getAttribute('onclick')||''))b.remove()})}}catch(e){}return r}}
+try{const st=document.createElement('style');st.textContent='.rlmLk{font-size:.78em;opacity:.8;text-decoration:underline;cursor:pointer;white-space:nowrap;margin-left:4px}.rlmLk:active{opacity:1}';document.head.appendChild(st)}catch(e){}
+try{Object.assign(I18N.d,{'สุ่มวิชา':'Draw skill','ตำราและคัมภีร์':'Books & Scriptures','📖 ตำราและคัมภีร์':'📖 Books & Scriptures','ดูคัมภีร์':'View scripture','📜 ดูคัมภีร์':'📜 View scripture'})}catch(e){}
+})()}catch(e){console.error('scrPlace',e)}
