@@ -1926,6 +1926,10 @@ const RCL={c:0,r:1,l:2,x:4};
 window.fbLock=i=>{if(!FB)return;FB.tlk=FB.tlk||{};if(FB.tlk[i])FB.tlk[i]=0;else{if(Object.keys(FB.tlk).filter(k=>FB.tlk[k]).length>=2)return toast('ล็อกได้สูงสุด 2 ใบ');FB.tlk[i]=1}fgDraw()};
 window.fbVow=id=>{if(!FB)return;FB.vs=FB.vs===id?null:id;fgDraw()};
 window._fogFB=()=>FB;
+// แถบปุ่มล่างแบบเดียวกับหน้าสุ่มกำเนิดโลกอื่น: เกิดใหม่ · ใช้ชีวิต · สุ่มเพิ่ม
+window.fgRRMore=function(){window._fgT=Date.now();try{rrMenu()}catch(e){console.error(e);toast('เปิดเมนูสุ่มเพิ่มไม่ได้ ลองใหม่')}};
+{const _dr=doRoll;doRoll=function(first){try{if(!first&&window._fgT&&Date.now()-window._fgT<600000&&FB&&!$('birth').classList.contains('on')){window._fgT=0;rerolls=Math.max(0,rerolls-1);try{$('rr').textContent=rerolls}catch(e){}FB.left=(FB.left|0)+1;try{closeM()}catch(e){}setTimeout(()=>{try{window.fgReroll()}catch(e){console.error(e)}},200);return}}catch(e){console.error('fgrr',e)}return _dr.apply(this,arguments)}}
+{const _d2=fgDraw;fgDraw=function(){const r=_d2.apply(this,arguments);try{const bar=document.querySelector('#fgB .fgBar');if(bar&&!bar.querySelector('.fgMore')){bar.classList.add('fg3');const rb=bar.querySelector('.gbtn');if(rb&&FB)rb.innerHTML=`🔄 เกิดใหม่<br>(${FB.left>50?'∞':FB.left})`;bar.insertAdjacentHTML('beforeend','<button class="gbtn fgMore" onclick="fgRRMore()">🎲 สุ่มเพิ่ม</button>')}}catch(e){}return r}}
 window.fbVre=()=>{if(!FB||(FB.vre|0)<=0||FB.vs)return;FB.vre--;FB.vw=rollVow(FB.vw);fgDraw()};
 {const _b=window.fogBegin;window.fogBegin=function(RR){const K0=FG();let P=null;try{if(RR&&RR.tl){P={tl:RR.tl.slice(),vs:RR.vs||null};try{P.cv=LS.get('murim_fogvc',[])||[];LS.set('murim_fogvc',[])}catch(e){P.cv=[]}}}catch(e){}
  const r=_b.apply(this,arguments);if(P){let n=0;const wt=()=>{const K=FG();if(K&&K!==K0&&S&&S.alive){try{tlStart(K,P)}catch(e){console.error('tlStart',e)}return}if(++n<60)setTimeout(wt,100)};setTimeout(wt,750)}return r}}
@@ -1945,6 +1949,7 @@ window.fogTal=function(){const K=FG();if(!K)return;const L=(K.tl||[]).map(n=>{co
 #fgB .fbV.on{background:linear-gradient(160deg,#3a2e12,#161b22);border-color:#c9a24a;box-shadow:0 0 12px #c9a24a44}#fgB .fbV b{display:block;font-size:14px;color:#fff}#fgB .fbVc{font-size:10.5px;color:#c9a24a}
 #fgB .fbV small{display:block;font-size:12px;color:#c9d2dc;margin:2px 0}#fgB .fbV i{display:block;font-size:11px;color:#8fe0a8;font-style:normal}#fgB .fbV u{display:block;font-size:11px;color:#ff9a8a;text-decoration:none}
 #fgB .fbRe2{width:100%;margin-top:6px;background:transparent;border:1px dashed #8a96a4;color:inherit;border-radius:10px;padding:7px;font-family:inherit;font-size:12.5px}
+#fgB .fgBar.fg3{grid-template-columns:1fr 1.3fr 1fr!important}#fgB .fgBar.fg3 .gbtn{line-height:1.25;padding:6px 4px}#fgB.on>.rrxB{width:100%!important;max-width:none!important;box-sizing:border-box}
 #fgB .fbHint{font-size:11px;opacity:.6;text-align:center;margin:10px 0 0}
 .fgTl{display:flex;justify-content:space-between;gap:6px;align-items:center;margin-top:5px;padding:4px 8px;border-radius:8px;background:#ffffff0d;border:1px solid #ffffff1a;font-size:12px;cursor:pointer}.fgTl span:first-child{letter-spacing:2px}
 `;document.head.appendChild(st)}
