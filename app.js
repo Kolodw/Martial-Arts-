@@ -44804,12 +44804,15 @@ const css=document.createElement('style');css.textContent=`
 #mvBar .mvG{touch-action:none;cursor:grab;width:64px;height:22px;position:relative;font-size:0}
 #mvBar .mvG::before{content:'';position:absolute;left:50%;top:7px;width:38px;height:4px;margin-left:-19px;border-radius:4px;background:#f3e6c4;opacity:.55;box-shadow:0 0 3px #000a}
 #mvBar .mvG:active::before,#mvBar.open .mvG::before{opacity:1}
-#mvBar .mvM{display:none;position:absolute;left:50%;top:-6px;transform:translateX(-50%);gap:4px;align-items:center;white-space:nowrap;background:#1b1626f5;border:1px solid #ffffff26;border-radius:999px;padding:5px 9px;box-shadow:0 4px 16px #000a}#mvBar.open .mvM{display:flex}#mvBar.open .mvG::before{opacity:0}
-#mvBar .mvM button{width:40px;height:34px;border:0;border-radius:999px;background:#ffffff12;color:#f3e6c4;font-size:20px;line-height:1;cursor:pointer;padding:0}#mvBar .mvM button:active{background:#ffffff2e}
+#mvBar .mvM{display:flex;position:absolute;left:50%;top:-4px;transform:translateX(-50%) scale(.35,.6);transform-origin:50% 50%;opacity:0;visibility:hidden;pointer-events:none;gap:2px;align-items:center;white-space:nowrap;background:#1b1626f5;border:1px solid #ffffff26;border-radius:999px;padding:3px 5px;box-shadow:0 3px 12px #0009;transition:transform .22s cubic-bezier(.2,1.3,.4,1),opacity .16s ease,visibility 0s .22s}
+#mvBar.open .mvM{transform:translateX(-50%) scale(1,1);opacity:1;visibility:visible;pointer-events:auto;transition:transform .24s cubic-bezier(.2,1.3,.4,1),opacity .16s ease,visibility 0s}
+#mvBar .mvM button{width:30px;height:24px;border:0;border-radius:999px;background:#ffffff12;color:#f3e6c4;font-size:15px;line-height:1;cursor:pointer;padding:0;opacity:0;transform:scale(.6);transition:opacity .15s,transform .2s}
+#mvBar.open .mvM button{opacity:1;transform:none;transition-delay:.05s}#mvBar.open .mvM button:nth-child(2){transition-delay:.08s}#mvBar.open .mvM button:nth-child(3){transition-delay:.11s}#mvBar.open .mvM button:nth-child(4){transition-delay:.14s}
+#mvBar .mvM button:active{background:#ffffff2e}#mvBar.open .mvG::before{opacity:0}
 #mvRz{position:fixed;z-index:100060;display:none;width:22px;height:22px;touch-action:none;cursor:nwse-resize;opacity:.75;background:linear-gradient(135deg,transparent 52%,#c9a24a 53% 61%,transparent 62%,transparent 72%,#c9a24a 73% 81%,transparent 82%);transform:translate(-100%,-100%)}
 #mvRz.on{display:block}
 #modal.mvAn{transition:translate .28s ease,width .28s ease,height .28s ease}
-@media (pointer:coarse){#mvBar .mvG{width:84px;height:30px}#mvBar .mvG::before{top:10px}#mvBar .mvM button{width:46px;height:40px;font-size:22px}#mvRz{width:30px;height:30px}}`;
+@media (pointer:coarse){#mvBar .mvG{width:84px;height:30px}#mvBar .mvG::before{top:10px}#mvBar .mvM button{width:36px;height:30px;font-size:17px}#mvRz{width:30px;height:30px}}`;
 document.head.appendChild(css);
 const bar=document.createElement('div');bar.id='mvBar';bar.innerHTML='<div class="mvG" title="ลากเพื่อย้ายหน้าต่าง · แตะเพื่อเปิดปุ่มย่อ/ขยาย · แตะสองครั้งเพื่อคืนค่า"></div><span class="mvM"><button type="button" class="mvS" aria-label="ย่อ">−</button><button type="button" class="mvL" aria-label="ขยาย">+</button><button type="button" class="mvR" aria-label="คืนค่า">↺</button><button type="button" class="mvX" aria-label="ปิดเมนู">✕</button></span>';document.body.appendChild(bar);
 const rz=document.createElement('div');rz.id='mvRz';rz.title='ลากเพื่อย่อ/ขยาย';document.body.appendChild(rz);
