@@ -47357,3 +47357,8 @@ try{setTimeout(()=>{try{wLoad('chron3').catch(()=>setTimeout(()=>wLoad('chron3')
 // BLOCK 176: 🎭 โหลด /w/hidden.js — ศัตรูเรียนรู้ทางของคุณ · คนรอบตัวมีวาระซ่อน (มีพิรุธ บางอันหลอก สืบได้) · ความจริงหลังความตายบนหน้าสรุป
 // ============================================================
 try{setTimeout(()=>{try{wLoad('hidden').catch(()=>setTimeout(()=>wLoad('hidden').catch(()=>{}),6000))}catch(e){}},4200)}catch(e){console.error('block176',e)}
+
+// ============================================================
+// BLOCK 177: 🌀 โหลด /w/twist.js — กฎโลกพลิกกลางชีวิต · ชีวิตของผู้เล่นจริงไหลเข้ามา (จากสุสานผู้เล่นจริง) · หลับไปสิบปี
+// ============================================================
+try{setTimeout(()=>{try{wLoad('twist').catch(()=>setTimeout(()=>wLoad('twist').catch(()=>{}),6000))}catch(e){}},4600)}catch(e){console.error('block177',e)}
