@@ -435,7 +435,7 @@ function beginLife(){
  flushReveal();$('feed').innerHTML='';headerAge=-1;quiet=null;paused=false;auto=false;speed=1;acc=0;detailOpen=false;choice._cur=null;choice._min=false;if(modalOpen)closeM();
  show('game');eqInit();S.age=0;sfx('birth');
  if(S.xian&&S.age===0)log('☁️ <b>โลกเทพเซียน</b> ที่นี่ผู้ฝึกตนมีอายุนับร้อยปี ภูเขาลอยอยู่บนฟ้า และ "ระบบ" ปรากฏบ่อยกว่าโลกมนุษย์','myth',true);
- log(`ลืมตาดูโลก${S.family.orphan&&!S.family.beast?'เป็น':'ใน'}${S.family.n} ด้วย${S.talent.n}`,S.talent.m>=3?'myth':S.talent.m>=2?'epic':'',true);
+ {const _tt=(S.traits||[]).map(trOf),_tl=_tt.length?`<br>${_tt.map(t=>(t.bad?'⚠️ ':'✨ ')+'<b>'+t.n+'</b>').join(' · ')}`:'';log(`ลืมตาดูโลก${S.family.orphan&&!S.family.beast?'เป็น':'ใน'}${S.family.n} ด้วย${S.talent.n}${_tl}`,(S.talent.m>=3||_tt.some(x=>x.w<=2))?'myth':(S.talent.m>=2||_tt.length)?'epic':'',true)}
  if(S.gen>1)log(`<b>รุ่นที่ ${S.gen}</b> แห่งตระกูล — ${S.family.d}`,'epic',true);
  if(!S.parents||!S.parents.length&&!S.flags.lostParents){if(S.gen>1&&S.heirParents){S.parents=S.heirParents;S.sibs=[];delete S.heirParents}else mkFamily()}
  if(S.family.heirType&&!S.heir)initHeir();
@@ -444,9 +444,6 @@ function beginLife(){
  bagInit();
  if(S.ch==null)chStart();
  if(S.heir)log(`🩸 คุณคือ <b>${S.family.n}</b> ตั้งแต่วันแรกที่ลืมตา ทุกสายตาในสำนักจับจ้องมาที่คุณ และพี่น้องต่างมารดาสองคนก็เช่นกัน`,'myth',true);
- if(S.traits&&S.traits.length)log(`พรสวรรค์พิเศษติดตัว: ${S.traits.map(trOf).map(t=>(t.bad?'⚠️ ':'✨ ')+'<b>'+t.n+'</b>').join(' · ')}`,S.traits.some(x=>trOf(x).w<=2)?'myth':'epic',true);
- log('ในวินาทีเดียวกัน มีทารกอีก 4 คนถือกำเนิดขึ้นในยุทธภพ...');
- if(S.goal)log(`🎯 ปณิธานของชีวิตนี้: <b>${goalOf(S.goal).n}</b> — ${goalOf(S.goal).d}`);
  if(S.family.inf>=.07)log('ครอบครัวยากจน หมอตำแยบอกว่าปีแรกต้องระวังให้ดี','bad');
  render();startTimer();saveGame();achCheck();
  if(!S.goal)setTimeout(pickGoalModal,300);
@@ -36840,7 +36837,7 @@ const css=document.createElement('style');css.textContent=`.rxB{margin-top:8px;p
 // ---- 3) ฟ้าคุ้มครองชะตาดีหายากตอนเด็ก ----
 const SHS=['🛡️ แสงทองวาบขึ้นรอบร่าง ฟ้ายังไม่ยอมให้ชะตานี้ดับเร็วนัก','🛡️ นักพรตพเนจรผ่านมาพอดี กดจุดห้ามเลือดแล้วหายไปโดยไม่บอกชื่อ','🛡️ หยกประจำตัวที่แม่ผูกไว้แตกเป็นเสี่ยง… แต่คุณยังหายใจ','🛡️ ในความฝัน มีเสียงหนึ่งบอกว่า "ยังไม่ถึงเวลาของเจ้า" แล้วคุณก็ลืมตา','🛡️ สัตว์ป่าตัวหนึ่งลากคุณออกจากอันตราย แล้วนั่งเฝ้าจนชาวบ้านมาพบ','🛡️ ลมหายใจสุดท้ายถูกดึงกลับ ดวงดาวประจำตัวสว่างวาบกลางวัน'];
 {const _sl=startLife;startLife=function(){const r=roll;const o=_sl.apply(this,arguments);try{if(!S||!r||S.beastMode||S.mw)return o;const G=gradeOf(r),sh=shOf(r);S.rx={g:G.g,sh:sh?sh.to:0,shN:sh?sh.n:0,tri:[]};if(r.rare){S.rx.Ng=r.rare.g;S.rx.Nb=r.rare.b}
-  log(`💪 ความแกร่งของชะตา: <b>${G.g}</b>${G.why.length?` · จุดแข็ง: ${esc(G.why.slice(0,3).join(', '))}`:''}${G.neg.length?` · ภาระ: ${esc(G.neg.join(', '))}`:''}`,G.g[0]==='S'?'epic':'');
+  if(G.g[0]==='S')log(`💪 ความแกร่งของชะตา: <b>${G.g}</b>${G.why.length?` · จุดแข็ง: ${esc(G.why.slice(0,3).join(', '))}`:''}${G.neg.length?` · ภาระ: ${esc(G.neg.join(', '))}`:''}`,G.g[0]==='S'?'epic':'');
   if(sh)log(`🛡️ <b>ฟ้าคุ้มครอง</b> ชะตาที่หายากขนาดนี้ ฟ้าจะปกป้องจนอายุ ${sh.to} ปี (รอดตายได้ ${sh.n} ครั้ง)`,'epic');mkTrials()}catch(e){console.error('rx',e)}return o}}
 {const _cd=checkDeath;checkDeath=function(){try{const X=S&&S.alive&&S.rx;if(X&&X.shN>0&&S.age<X.sh&&S.hp<=0&&!(S.deathCause&&/อายุขัย|แก่/.test(S.deathCause))){X.shN--;S.hp=Math.max(20,Math.round(S.maxHp*.35));S.deathCause=null;log(ch(SHS)+` (เหลือ ${X.shN} ครั้ง)`,'epic',true);try{island({big:1,pri:1,ic:'🛡️',h:'ฟ้าคุ้มครอง',t:`รอดตาย · เหลือ ${X.shN} ครั้ง`,kind:'gold'})}catch(e){}return false}}catch(e){}return _cd.apply(this,arguments)}}
 {const _py=passYear;passYear=function(){const X=S&&S.rx;let F0=null;try{if(X&&X.sh&&S.age<=6&&S.family){F0=S.family;S.family=Object.assign({},F0,{inf:(F0.inf||.05)*.25})}}catch(e){}try{return _py.apply(this,arguments)}finally{try{if(F0&&S&&S.family!==F0&&S.family.inf!=null&&S.family.inf===(F0.inf||.05)*.25)S.family=F0}catch(e){}}}}
@@ -39701,7 +39698,7 @@ kbGet=function(){return{g:KBS.ok?KBS.g:0,e:KBS.ok?KBS.e:0}};
 // เขียน: เทียบกับยอดเดิม — เพิ่ม = ฝาก (ปรับให้หายาก) · ลด = หักที่เซิร์ฟเวอร์
 kbSet=function(d){try{for(const sd of ['g','e']){const nv=Math.max(0,Math.floor(+(d&&d[sd])||0)),df=nv-KBS[sd];
   if(df>0){if(window._kbSrvGrant)continue;const r=rare(df);PEND[sd]+=r;KBS[sd]+=r}else if(df<0&&KBS.ok){KBS[sd]=nv;spend(sd,-df,(window._kbW||'').slice(0,24))}}
-  if(PEND.g||PEND.e){if(!onlineOK){try{toast('🏦 ต้องออนไลน์และล็อกอินเพื่อเก็บกรรมเข้าคลัง')}catch(e){}}flush()}}catch(e){}};
+  if(PEND.g||PEND.e){if(!onlineOK&&Date.now()-(window._kbT||0)>30000){window._kbT=Date.now();try{toast('🏦 ต้องออนไลน์และล็อกอินเพื่อเก็บกรรมเข้าคลัง')}catch(e){}}flush()}}catch(e){}};
 window.kbGet=kbGet;window.kbSet=kbSet;window.kbSync=kbSync;
 // ล้างตัวเลขเก่าในเครื่องทิ้งครั้งเดียว
 try{if(LS.get('murim_kbwipe',0)!==2){LS.set('murim_kbank',{g:0,e:0});LS.set('murim_kbwipe',2)}}catch(e){}
