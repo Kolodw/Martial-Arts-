@@ -47352,3 +47352,8 @@ try{setTimeout(()=>{try{wLoad('chron2').catch(()=>setTimeout(()=>wLoad('chron2')
 // BLOCK 175: 🗺️ โหลด /w/chron3.js — แผนผังรอบ (ผู้ย้อนกาล) · 🌌 วันสิ้นกัลป์: เลือกสิ่งเดียวที่พาข้ามกัลป์ (แดนเทพ)
 // ============================================================
 try{setTimeout(()=>{try{wLoad('chron3').catch(()=>setTimeout(()=>wLoad('chron3').catch(()=>{}),6000))}catch(e){}},3800)}catch(e){console.error('block175',e)}
+
+// ============================================================
+// BLOCK 176: 🎭 โหลด /w/hidden.js — ศัตรูเรียนรู้ทางของคุณ · คนรอบตัวมีวาระซ่อน (มีพิรุธ บางอันหลอก สืบได้) · ความจริงหลังความตายบนหน้าสรุป
+// ============================================================
+try{setTimeout(()=>{try{wLoad('hidden').catch(()=>setTimeout(()=>wLoad('hidden').catch(()=>{}),6000))}catch(e){}},4200)}catch(e){console.error('block176',e)}
