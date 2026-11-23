@@ -2272,7 +2272,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const unpack = async (d, arr) => { const ids = [], sc = []; for (let i = 0; i < (arr || []).length; i += 2) { ids.push(arr[i]); sc.push(+arr[i + 1]) }
         const m = ids.length ? ((await cmd('HMGET', 'dlm:' + d, ...ids)) || []).map(jp) : [];
         return ids.map((x, i) => Object.assign({ s: sc[i], me: x === id ? 1 : 0 }, m[i] || { n: '?' })) };
-      const DLG = ['realm', 'power', 'age', 'fame', 'kills', 'money', 'follow', 'rings'];
+      const DLG = ['realm', 'power', 'age', 'fame', 'kills', 'money', 'follow', 'rings', 'cases'];
       if (a === 'dlbeg') { // 🛡️ เริ่มรอบนับอันดับ: ออกตั๋วรอบ (เวลาเริ่ม + เป้าหมาย) · โหวตเป้าหมายของวันจากทุกคน
         if (req.method !== 'POST' || !okId(id)) return res.json({ err: 'id' });
         const d = String(b.d || ''), g = String(b.g || ''); if ((d !== today && d !== yd) || !DLG.includes(g)) return res.json({ err: 'bad' });
@@ -2304,7 +2304,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
           if (ag > 2e6 || ri > 60 || (ra != null && (ra < 0 || ra > ag + 1))) return rej('srv-dl-imp');
           const cap = ((+b.x ? 60000 : 25000) * (1 + ag / 8) + 300000) * 12 * 9;
           if (pw > cap * 30 && ag < 1000) return rej('srv-dl-imp');
-          const g = T.g, S2 = { realm: () => ra != null ? 1e6 - Math.max(1, ra) * 1000 : ri * 1000 + Math.min(999, ag), power: () => Math.round(pw), age: () => ag, fame: () => Math.round(nv('fame')), kills: () => Math.floor(nv('kills')), money: () => Math.round(nv('money')), follow: () => Math.round(nv('fol')), rings: () => Math.floor(nv('rg')) * 1000 + Math.floor(nv('lv')) };
+          const g = T.g, S2 = { realm: () => ra != null ? 1e6 - Math.max(1, ra) * 1000 : ri * 1000 + Math.min(999, ag), power: () => Math.round(pw), age: () => ag, fame: () => Math.round(nv('fame')), kills: () => Math.floor(nv('kills')), money: () => Math.round(nv('money')), follow: () => Math.round(nv('fol')), rings: () => Math.floor(nv('rg')) * 1000 + Math.floor(nv('lv')), cases: () => Math.min(500, Math.floor(nv('cs'))) };
           sc = Math.max(0, Math.min(1e12, Math.round(S2[g]())));
           await cmd('HDEL', 'dltk:' + d + ':' + id, tk);
         }

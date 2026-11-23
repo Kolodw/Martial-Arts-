@@ -1926,12 +1926,17 @@ const RCL={c:0,r:1,l:2,x:4};
 window.fbLock=i=>{if(!FB)return;FB.tlk=FB.tlk||{};if(FB.tlk[i])FB.tlk[i]=0;else{if(Object.keys(FB.tlk).filter(k=>FB.tlk[k]).length>=2)return toast('ล็อกได้สูงสุด 2 ใบ');FB.tlk[i]=1}fgDraw()};
 window.fbVow=id=>{if(!FB)return;FB.vs=FB.vs===id?null:id;fgDraw()};
 window._fogFB=()=>FB;
+// 📅 ชะตาประจำวัน: กำเนิดเดียวกันทุกคน (สุ่มด้วยเมล็ดของวัน)
+window._fogDaily=function(seed){const r=mulberry(hashStr(String(seed))),pk=a=>a[Math.floor(r()*a.length)];const wp=(L,w)=>{let t=L.reduce((a,x,i)=>a+w(x,i),0)*r();for(let i=0;i<L.length;i++){t-=w(L[i],i);if(t<=0)return i}return L.length-1};
+ const ks=Object.keys(ORIG),RR={bg:ks[wp(ks,k=>OW[k])],dist:pk(DIST0),omen:wp(OMEN,o=>o.w),gi:r()<.5?0:1,name:pk(FN)+' '+pk(LN),hair:pk(HAIR),skin:pk(SKIN),daily:1,tl:[]};
+ for(let i=0;i<3;i++){const W=Object.keys(RAR);let q=r()*W.reduce((a,k)=>a+RAR[k][3],0),rr=W[0];for(const k of W){q-=RAR[k][3];if(q<=0){rr=k;break}}const L=TL.filter(t=>t[1]===rr&&RR.tl.indexOf(t[0])<0);RR.tl.push(pk(L.length?L:TL.filter(t=>RR.tl.indexOf(t[0])<0))[0])}
+ return RR};
 // แถบปุ่มล่างแบบเดียวกับหน้าสุ่มกำเนิดโลกอื่น: เกิดใหม่ · ใช้ชีวิต · สุ่มเพิ่ม
 window.fgRRMore=function(){window._fgT=Date.now();try{rrMenu()}catch(e){console.error(e);toast('เปิดเมนูสุ่มเพิ่มไม่ได้ ลองใหม่')}};
 {const _dr=doRoll;doRoll=function(first){try{if(!first&&window._fgT&&Date.now()-window._fgT<600000&&FB&&!$('birth').classList.contains('on')){window._fgT=0;rerolls=Math.max(0,rerolls-1);try{$('rr').textContent=rerolls}catch(e){}FB.left=(FB.left|0)+1;try{closeM()}catch(e){}setTimeout(()=>{try{window.fgReroll()}catch(e){console.error(e)}},200);return}}catch(e){console.error('fgrr',e)}return _dr.apply(this,arguments)}}
 {const _d2=fgDraw;fgDraw=function(){const r=_d2.apply(this,arguments);try{const bar=document.querySelector('#fgB .fgBar');if(bar&&!bar.querySelector('.fgMore')){bar.classList.add('fg3');const rb=bar.querySelector('.gbtn');if(rb&&FB)rb.innerHTML=`🔄 เกิดใหม่<br>(${FB.left>50?'∞':FB.left})`;bar.insertAdjacentHTML('beforeend','<button class="gbtn fgMore" onclick="fgRRMore()">🎲 สุ่มเพิ่ม</button>')}}catch(e){}return r}}
 window.fbVre=()=>{if(!FB||(FB.vre|0)<=0||FB.vs)return;FB.vre--;FB.vw=rollVow(FB.vw);fgDraw()};
-{const _b=window.fogBegin;window.fogBegin=function(RR){const K0=FG();let P=null;try{if(RR&&RR.tl){P={tl:RR.tl.slice(),vs:RR.vs||null};try{P.cv=LS.get('murim_fogvc',[])||[];LS.set('murim_fogvc',[])}catch(e){P.cv=[]}}}catch(e){}
+{const _b=window.fogBegin;window.fogBegin=function(RR){const K0=FG();let P=null;try{if(RR&&RR.tl){P={tl:RR.tl.slice(),vs:RR.vs||null};if(RR.daily)P.cv=[];else try{P.cv=LS.get('murim_fogvc',[])||[];LS.set('murim_fogvc',[])}catch(e){P.cv=[]}}}catch(e){}
  const r=_b.apply(this,arguments);if(P){let n=0;const wt=()=>{const K=FG();if(K&&K!==K0&&S&&S.alive){try{tlStart(K,P)}catch(e){console.error('tlStart',e)}return}if(++n<60)setTimeout(wt,100)};setTimeout(wt,750)}return r}}
 // ---------- แสดงผลระหว่างชีวิต ----------
 window.fogTal=function(){const K=FG();if(!K)return;const L=(K.tl||[]).map(n=>{const t=TLM[n],R0=RAR[t[1]];return`<div class="fgIt"><div class="ic">${t[2]}</div><div style="flex:1"><b style="color:${R0[2]}">${R0[0]} ${esc(t[3])}</b><small>${esc(t[4])}</small></div></div>`}).join('')||'<p class="tag2">ชาตินี้ไม่มีพรสวรรค์ติดตัว</p>';
