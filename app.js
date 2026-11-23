@@ -32695,7 +32695,7 @@ const BEAST=[
 const RANK=['ผู้ปลุกจิต','นักจิตยุทธ์','ปรมาจารย์จิต','จ้าวจิต','ราชันจิต','จักรพรรดิจิต','ปราชญ์จิต','มหาจิตยุทธ์','จิตอมตะ','ผู้ครองดวงจิต'];
 const SAFE=[1,1,2,2,2,3,3,3,3,4];
 const V=()=>S.sv;
-const spOf=id=>SP.find(x=>x[0]===id);
+const spOf=id=>SP.find(x=>x[0]===id);window._svSpOf=spOf;
 const spNow=s=>{const p=spOf(s.id);return s.rev&&p[6]?{ic:p[6][0],n:p[6][1],t:p[6][2],d:p[6][3],r:Math.max(2,p[5])}:{ic:p[1],n:p[2],t:p[3],d:p[4],r:p[5]}};
 const rankOf=lv=>RANK[cl(Math.floor((Math.max(1,lv)-1)/10),0,9)];
 const capOf=G=>G.rings.length>=9?100:(G.rings.length+1)*10;
@@ -44029,12 +44029,19 @@ const STARS=[
  ['s_sum','อายุวงแหวนรวมถึงพันล้านปี',g=>all(g).filter(r=>!r.cr).reduce((a,r)=>a+(r.y||0),0)>=1e9],
  ['s_trial','ผ่านด่านดาวเหนือจิต (ดวลผู้พิทักษ์ดาว)',g=>!!g.trial],
  ['s_ten','ครบทั้งเก้าดาว แล้วทะลวงดาวที่สิบ',g=>false]];
+const SHT={s_all3:'ล่าวงแหวนอายุหมื่นปีขึ้นไปให้ครบทุกวง',s_m:'ล่าสัตว์วิญญาณล้านปีขึ้นไป',s_hm:'ล่าสัตว์วิญญาณร้อยล้านปีขึ้นไป',s_true:'ดวงจิตที่มีร่างแท้ซ่อนอยู่จะปลุกเองเมื่อระดับจิตถึง 30 · ถ้าดวงจิตไม่มีร่างแท้ซ่อนอยู่ ด่าน 🪞 ทะเลสาบเงาดวงจิต จะมาหาหลังระดับ 100 (ลองใหม่ได้ทุก 3 ปี)',s_set:'หลอมวงแหวนให้เข้าชุด ดูรายชื่อชุดในหน้าดวงจิต',s_grow:'วงแหวนโตขึ้นได้เองจากการต่อสู้และเวลา',s_war:'ชนะการต่อสู้ให้ครบ 100 ครั้ง',s_sum:'อายุวงแหวนทุกวงรวมกัน (ไม่นับวงที่ร้าว)',s_trial:'ด่านผู้พิทักษ์ดาวจะมาหาเองหลังระดับ 100 แพ้แล้วรอ 5 ปี',s_ten:'ทำครบ 9 ดาวก่อน'};
 const SN=['ดาวหนึ่ง','ดาวสอง','ดาวสาม','ดาวสี่','ดาวห้า','ดาวหก','ดาวเจ็ด','ดาวแปด','ดาวเก้า','ดาวสิบ'];
 const stN=g=>Object.keys(g.st||{}).length;
 function starTick(){const g=G();if(g.lv<100||(g.rings||[]).length<9)return;g.st=g.st||{};if(!g.starOn){g.starOn=1;if(!g.endWait||g.endWait<S.age+12)g.endWait=S.age+12;log('🌌 <b>ระดับจิต 100</b> แต่ทางยังไม่สิ้นสุด เหนือขึ้นไปคือ <b>เหนือจิต 10 ดาว</b> ทะลวงด้วยผลงาน ไม่ใช่เวลา (ดูได้ที่หน้า ⭕ ดวงจิต)','myth',true)}
  for(const [id,n,f] of STARS){if(g.st[id]||id==='s_ten')continue;let ok=false;try{ok=f(g)}catch(e){}if(ok){g.st[id]=S.age;const k=stN(g);S.power+=pctPow(.15);S.fame+=1000*k;S.maxHp+=40;log(`⭐ <b>เหนือจิต${SN[k-1]}</b> · ${n}`,'myth',true);try{albumSnap('เหนือจิต'+SN[k-1])}catch(e){}return}}
  if(stN(g)>=9&&!g.st.s_ten&&!g.tenQ){g.tenQ=1;Q.push('ten')}
- if(!g.trial&&(S.age-(g.trY||-9))>=5)Q.push('trial')}
+ if(!g.trial&&(S.age-(g.trY||-9))>=5)Q.push('trial');
+ if(!(g.sp||[]).some(z=>z.rev)&&(S.age-(g.tfY||-9))>=3&&!Q.includes('tform'))Q.push('tform')}
+// 🪞 ร่างแท้สำหรับดวงจิตที่ไม่มีร่างแท้ซ่อนอยู่: เผชิญเงาของดวงจิตตัวเอง ชนะ = ปลุกร่างแท้ (ทุกดวงจิตทำดาวข้อนี้ได้)
+function tformEv(){const g=G();g.tfY=S.age;const z=(g.sp||[])[0];if(!z||z.rev)return;let p=null;try{p=window._svSpOf(z.id)}catch(e){}const nm=p?p[2]:'ดวงจิต',ic=p?p[1]:'⭕',ep=Math.round(total()*1.05);
+ choice('🪞 ทะเลสาบเงาดวงจิต',`ทะเลสาบกลางหุบเขาสะท้อนเงาของ${ic} <b>${nm}</b> แต่เงานั้นลุกขึ้นจากน้ำ มันคือร่างที่ดวงจิตของคุณ<b>อยากเป็น</b> และมันจะยอมรับคุณก็ต่อเมื่อคุณเอาชนะมันได้<br><span class="tag2">พลังเงาดวงจิต ≈ ${fmt(ep)} · ชนะ = ปลุกร่างแท้ (ดาวเหนือจิต) · แพ้แล้วรอ 3 ปี</span>`,[
+  {t:'⚔️ เผชิญเงาของตัวเอง',s:'',f(){duel('เงาแห่ง'+nm,ep,w=>{if(w){z.rev=1;S.power+=pctPow(.08);S.fame+=40;log(`🌋 เงาในทะเลสาบโค้งคำนับแล้วกลืนเข้าสู่ร่างคุณ ${ic} <b>${nm}</b> ตื่นสู่<b>ร่างแท้</b>! พลังที่ซ่อนอยู่ใต้รูปเดิมปะทุออกมา`,'myth',true);try{starTick()}catch(e){}}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.25));log('🪞 เงาดวงจิตจมกลับลงน้ำ "กลับมาใหม่ในอีกสามปี"','bad')}})}},
+  {t:'⏳ ยังไม่พร้อม',s:'กลับมาอีก 3 ปี',skip:true,f(){log('🪞 คุณถอยออกจากทะเลสาบ เงานั้นยังรออยู่','')}}])}
 function trialEv(){const g=G();g.trY=S.age;const ep=Math.round(total()*(1.15+stN(g)*.04));
  choice('🌠 ผู้พิทักษ์ดาว',`ร่างแสงดาวลงมาจากฟ้ายืนขวางคุณ "ผู้ที่จะข้ามระดับร้อยต้องผ่านข้าก่อน"<br><span class="tag2">พลังผู้พิทักษ์ ≈ ${fmt(ep)} · แพ้แล้วรอห้าปี</span>`,[
   {t:'⚔️ ดวล',s:'',f(){duel('ผู้พิทักษ์ดาว',ep,w=>{if(w){g.trial=1;log('🌠 <b>ผ่านด่านผู้พิทักษ์ดาว</b> แสงดาวซึมเข้าวงแหวนทุกวง','myth',true)}else{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*.3));log('🌠 ผู้พิทักษ์ดาวสลายไปพร้อมคำว่า "อีกห้าปี"','bad')}})}},
@@ -44060,7 +44067,7 @@ function inhEv(){const g=G(),I=LS.get(INK,null);if(!I)return;
   {t:`${RT[I.t][1]} รับไว้เป็นวงแรก`,s:'ไม่ต้องล่า · ไม่เสี่ยง',f(){if((g.rings||[]).length){toast('มีวงแหวนแล้ว');return}const r=prep({t:I.t,b:I.b,sk:I.sk,inh:I.from,y:I.y});g.rings.push(r);g.lv=Math.min(100,g.lv+1);try{S.power+=pctPow(PW[I.t]);S.fame+=FM[I.t];S.maxHp+=HPB[I.t]}catch(e){}LS.set(INK,null);log(`💍 <b>รับวงแหวนสืบทอดจาก${esc(I.from)}</b> เป็นวงแรก วงแหวนนี้จะโตต่อไปพร้อมคุณ`,'myth',true)}},
   {t:'ปล่อยให้มันไปหาคนอื่น',s:'',f(){LS.set(INK,null);log('💍 วงแหวนลอยหายไปในความมืด','')}}])}
 // ---------- คิวเหตุการณ์ (รอจนว่าง) ----------
-const Q=[];setInterval(()=>{try{if(!on()||!Q.length||choice._cur||modalOpen||(typeof DU!=='undefined'&&DU))return;const k=Q.shift();({fix:fixEv,trial:trialEv,ten:tenEv,dual:dualEv,inh:inhEv})[k]()}catch(e){console.error('sv120q',e)}},900);
+const Q=[];setInterval(()=>{try{if(!on()||!Q.length||choice._cur||modalOpen||(typeof DU!=='undefined'&&DU))return;const k=Q.shift();({fix:fixEv,trial:trialEv,ten:tenEv,dual:dualEv,inh:inhEv,tform:tformEv})[k]()}catch(e){console.error('sv120q',e)}},900);
 {const _py=passYear;passYear=function(){try{if(on()){const g=G();if((g.rings||[]).length>=9&&g.lv>=95&&!g.starOn&&(!g.endWait||g.endWait<S.age+13))g.endWait=S.age+13}}catch(e){}const r=_py.apply(this,arguments);try{if(on()){const g=G();all(g).forEach(prep);grow();crackTry();fixTick();setTick();starTick();dualTick();inhTick()}}catch(e){console.error('sv120',e)}return r}}
 // ตอนจบชีวิต: เก็บวงที่แก่ที่สุดไว้ส่งต่อ
 {const _eg=endGame;endGame=function(){try{if(S&&S.ch==='soul'&&S.sv)inhSave()}catch(e){}return _eg.apply(this,arguments)}}
@@ -44075,7 +44082,7 @@ try{if(window.CHM_N&&CHM_N.l)CHM_N.l[3]='เรียงตาม ระดั�
  const st=g.st||{},n=stN(g),sets=g.set||{};
  const h=`<div class="item sv120"><b>⭕ อายุวงแหวน</b> <span class="tag2">รวม ${fmtY(sumY(g))} · วงแหวนแก่ขึ้นทุกปี ข้ามได้สูงสุด 2 สีจากตอนหลอม</span>${(g.rings||[]).map((r,i)=>row(r,i,0)).join('')}${(g.rings2||[]).length?`<div class="tag2" style="margin-top:6px">ดวงจิตที่สอง ${(g.rings2||[]).length}/9</div>`+g.rings2.map((r,i)=>row(r,i,1)).join(''):''}</div>
  <div class="item sv120"><b>✨ ชุดวงแหวน</b>${SETS.map(([id,nn,d])=>`<div class="sv120s${sets[id]?' ok':''}">${sets[id]?'✅':'⬜'} <b>${nn}</b> <span class="tag2">${d}</span></div>`).join('')}</div>
- <div class="item sv120"><b>🌌 เหนือจิต ${n}/10 ดาว</b> <span class="tag2">${g.lv>=100&&(g.rings||[]).length>=9?'ทะลวงด้วยผลงาน ทำข้อไหนก่อนก็ได้':'เปิดเมื่อระดับจิตถึง 100 และมีวงแหวนครบ 9 วง'}</span><div class="sv120st">${STARS.map(([id,nn])=>`<div class="${st[id]?'ok':''}">${st[id]?'⭐':'☆'} ${nn}</div>`).join('')}</div></div>
+ <div class="item sv120"><b>🌌 เหนือจิต ${n}/10 ดาว</b> <span class="tag2">${g.lv>=100&&(g.rings||[]).length>=9?'ทะลวงด้วยผลงาน ทำข้อไหนก่อนก็ได้':'เปิดเมื่อระดับจิตถึง 100 และมีวงแหวนครบ 9 วง'}</span><div class="sv120st">${STARS.map(([id,nn])=>`<div class="${st[id]?'ok':''}">${st[id]?'⭐':'☆'} ${nn}${st[id]?'':`<small class="svHint">💡 ${SHT[id]||''}</small>`}</div>`).join('')}</div></div>
  ${LS.get(INK,null)?'':'<p class="tag2">💍 ตอนจบชีวิต วงแหวนที่แก่ที่สุด (ที่ไม่ร้าว) จะถูกส่งต่อให้ชีวิตถัดไปในทวีป อ่อนลงหนึ่งสี</p>'}`;
  const hs=[...m.querySelectorAll('h4')].find(x=>/วงแหวนวิญญาณ/.test(x.textContent));const box=document.createElement('div');box.innerHTML=xT(h);if(hs&&hs.parentNode){let nxt=hs.nextElementSibling;hs.parentNode.insertBefore(box,nxt?nxt.nextSibling:null)}else m.appendChild(box);
  if(n>0){const it=m.querySelector('.item b');if(it&&!/★/.test(it.textContent))it.insertAdjacentHTML('beforeend',` <span style="color:#ffd84a">★${n}</span>`)}}catch(e){console.error('sv120 ui',e)}return r};for(const k in _os)try{openSoul[k]=_os[k]}catch(e){}}
@@ -44083,7 +44090,7 @@ try{if(window.CHM_N&&CHM_N.l)CHM_N.l[3]='เรียงตาม ระดั�
 try{if(typeof GD2!=='undefined'&&!GD2.some(x=>x.t==='วงแหวนไม่ตันที่ 9 วง'))GD2.push({s:'soul',ic:'⭕',t:'วงแหวนไม่ตันที่ 9 วง',nw:1,d:'วงแหวนแก่ขึ้นทุกปี (ข้ามได้สูงสุด 2 สีจากตอนหลอม) · ระดับ 100 แล้วไปต่อที่ <b>เหนือจิต 10 ดาว</b> ทะลวงด้วยผลงาน · <b>ชุดวงแหวน</b> 4 แบบ · บาดเจ็บหนักวงอาจ <b>ร้าว</b> ต้องซ่อม · <b>ดวงจิตคู่</b> หลอมให้ดวงที่สองได้อีก 9 วง · ตอนจบชีวิตวงที่แก่ที่สุด <b>ส่งต่อ</b>ให้ชีวิตถัดไป · ทำเนียบเรียงตามระดับ (รวมดาว) → สีวงสูงสุด → อายุวงแหวนรวม'})}catch(e){}
 const st=document.createElement('style');st.textContent=`.sv120r{display:grid;grid-template-columns:22px 20px 1fr auto;gap:2px 6px;align-items:center;margin-top:6px;font-size:13px}.sv120r .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sv120r .nm i{font-style:normal;opacity:.7;font-size:11px}.sv120r .yy{font-size:12px;opacity:.85;white-space:nowrap}
 .sv120r .bar{grid-column:2/4;height:5px;border-radius:3px;background:#0005;overflow:hidden;display:block}.sv120r .bar>i{display:block;height:100%}.sv120r small{font-size:10.5px;opacity:.7}.sv120r.cr{opacity:.65}.sv120r .crk{color:#ff6a6a!important;opacity:1!important}
-.sv120s{margin-top:5px;font-size:13px}.sv120s.ok b{color:#ffd84a}.sv120st{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;margin-top:6px;font-size:12.5px}.sv120st .ok{color:#ffd84a;font-weight:700}`;document.head.appendChild(st);
+.sv120s{margin-top:5px;font-size:13px}.sv120s.ok b{color:#ffd84a}.sv120st{display:grid;grid-template-columns:1fr;gap:6px;margin-top:6px;font-size:13px}.sv120st .svHint{display:block;font-size:11.5px;opacity:.75;margin:1px 0 0 18px;line-height:1.4;font-weight:400}.sv120st .ok{color:#ffd84a;font-weight:700}`;document.head.appendChild(st);
 window._sv120={grow,STARS,SETS,sumY,fmtY,Q};
 })()}catch(e){console.error('block120',e)}
 
