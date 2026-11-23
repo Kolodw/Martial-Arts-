@@ -1358,7 +1358,7 @@ function inherit(ci){
  const heirArt=P.arts.slice().sort((x,y)=>y.b-x.b)[0];
  const heirItem=P.items.find(i=>i.passive);
  const dyn=P.heirLead&&P.heir&&P.faction&&P.faction.n===P.heir.sect,ptitle=dyn?heirTitle():undefined;
- const fam=dyn?{n:P.heir.type==='มาร'?'บุตรแห่งมารสวรรค์':P.heir.type==='ธรรมะ'?`ทายาทเจ้า${P.heir.sect}`:`ทายาทประมุข${P.heir.sect}`,d:`บุตรของ${heirTitle()} ${P.name}`,money:Math.round(P.money*.5),power:120+P.gen*20,karma:HEIR_T[P.heir.type].karma,join:.3,inf:.015,heirType:P.heir.type,heirSect:P.heir.sect,heirGen:P.heir.gen+1,demon:P.heir.type==='มาร'?1:0}:{n:`ทายาทตระกูล${sur}`,d:`บุตรของ ${P.name}「${P.epithet}」`,money:Math.round(P.money*.5),power:50+P.gen*20,karma:Math.round(P.karma*.4),join:.2+Math.min(.3,P.fame/1000)};
+ const fam=dyn?{n:P.heir.type==='มาร'?'บุตรแห่งมารสวรรค์':P.heir.type==='ธรรมะ'?`ทายาทเจ้า${P.heir.sect}`:`ทายาทประมุข${P.heir.sect}`,d:`บุตรของ${heirTitle()} ${P.name}`,money:(typeof inhCap==='function'?inhCap(P):Math.round(P.money*.5)),power:120+P.gen*20,karma:HEIR_T[P.heir.type].karma,join:.3,inf:.015,heirType:P.heir.type,heirSect:P.heir.sect,heirGen:P.heir.gen+1,demon:P.heir.type==='มาร'?1:0}:{n:`ทายาทตระกูล${sur}`,d:`บุตรของ ${P.name}「${P.epithet}」`,money:Math.round(P.money*.5),power:50+P.gen*20,karma:Math.round(P.karma*.4),join:.2+Math.min(.3,P.fame/1000)};
  S=baseState({name:kid?kid.n:genName(fam,g.v.n,sur),gender:g.v.n,family:fam,talent:t.v,ow:false,world:null,seed:R(1,99999),odds:t.p*g.p,
   power:fam.power+R(0,15),int:R(10,25)+Math.round(P.int*.1),money:fam.money,karma:fam.karma,fame:Math.round(P.fame*.3),
   gen:P.gen+1,lineage:P.lineage.concat([{n:P.name,e:P.epithet,a:P.age}])});
@@ -47439,11 +47439,13 @@ const FL={
  mw:{fire:'ไฟไหม้ร้าน/ห้องเก็บของของคุณ',gov:'สรรพากรเรียกตรวจภาษีย้อนหลัง',scam:'เพื่อนเก่าชวนลงทุนเหรียญคริปโตตัวใหม่ การันตีกำไรสองเท่า',kin:'ญาติที่ไม่ค่อยได้คุยกัน',crash:'ตลาดหุ้นร่วงหนักทั้งโลก',up:'ภาษีทรัพย์สิน ค่าส่วนกลาง ค่าคนดูแล',life:'ค่าใช้จ่ายในบ้าน',book:'คอร์สปั้นทักษะระดับโลก',pill:'โปรแกรมดูแลสุขภาพระดับพรีเมียม',biz:'แฟรนไชส์ร้านค้าของตัวเอง',don:'บริจาคสร้างโรงเรียนในชนบท',mas:'จ้างโค้ชต่อสู้มืออาชีพส่วนตัว'}};
 const fl=(w,k)=>(FL[w]||FL.m)[k];
 const sc=t=>{try{setScene(t)}catch(e){}};
+const pW=d=>Math.max(.05,Math.min(.95,(1.3-d)/.6))*(S.hp>S.maxHp*.5?1:.45);
+function addLife(v){if(S.mw&&S.mw.end){S.mw.end+=v;return}S.lifespan=(S.lifespan||0)+v}
 const can=()=>S&&S.alive&&!choice._cur&&!modalOpen&&!(window._inQmFF);
 function addMoney(v){S.money=Math.max(0,Math.round((+S.money||0)+v))}
 // ---------- ค่าดูแลทรัพย์/ค่าครองชีพ ----------
 function ecTick(st,m0){const w=ecW();if(!w)return;const E=EC(),U=ecU(w),cw=w==='z'?'mw':w;if(E.w!==cw){if(E.w){E.inc=0;E.n=0;E.debt=0;E.biz=0;E.inv=null;E.loan=null;E.qx=null;E.qnx=null}E.w=cw;return}
- if(S.age>=14){let d=((+S.money||0)-m0)/st;const cap=2.5*Math.max(U,E.inc||0);if(d>cap)d=cap;if(d>0)E.inc=E.n?E.inc*.85+d*.15:d;else E.inc*=Math.pow(.96,st);E.n++}
+ if(S.age>=14){let d=((+S.money||0)-m0)/st;if(d>0)E.earn=(E.earn||0)+d*st;const cap=2.5*Math.max(U,E.inc||0);if(d>cap)d=cap;if(d>0)E.inc=E.n?E.inc*.85+d*.15:d;else E.inc*=Math.pow(.96,st);E.n++}
  if(w==='z'||S.age<16)return;
  const A=anc(w);let sum=0;
  // หนี้ค้าง → ใช้เงินชำระก่อน
@@ -47465,33 +47467,33 @@ function ecTick(st,m0){const w=ecW();if(!w)return;const E=EC(),U=ecU(w),cw=w==='
 // ---------- ยิ่งรวยยิ่งเจอเรื่อง ----------
 function ecRisk(w,A){const M=+S.money||0,E=EC(),k=ch(M>30*A?['fire','gov','scam','kin','crash']:['fire','gov','scam','kin']);E.evY=S.age;const pc=f=>Math.round(M*f);
  if(k==='fire'){const lo=pc(.18+Math.random()*.15);sc('fight');choice('🔥 เคราะห์ร้ายมาเยือน',`${fl(w,'fire')}! ถ้าไม่ทำอะไรเลยอาจเสียราว ${mt(lo,w)}`,[
-  {t:'🏃 บุกเข้าไปกู้เอง',s:'เสียน้อยลงมาก แต่บาดเจ็บ',f(){const l=Math.round(lo*.35);addMoney(-l);S.hp-=Math.round(S.maxHp*(.15+Math.random()*.2));log(`🔥 คุณฝ่าเข้าไปกู้ทรัพย์สินออกมาได้เกือบหมด เสียไป ${mt(l,w)} แต่บาดเจ็บไม่น้อย`,'')}},
-  {t:'💰 จ้างคนช่วยเต็มที่',s:`จ่ายค่าจ้าง ${mt(pc(.06),w)} รักษาส่วนใหญ่ไว้ได้`,f(){const l=pc(.06)+Math.round(lo*.2);addMoney(-l);log(`🧯 จ้างคนมาช่วยกันจนควบคุมได้ รวมเสียไป ${mt(l,w)}`,'')}},
-  {t:'😔 ปล่อยไปตามเวรตามกรรม',s:'ไม่เจ็บตัว แต่เสียหนัก',f(){addMoney(-lo);try{joy(-6)}catch(e){}log(`💸 สูญไป ${mt(lo,w)}`,'bad')}}]);return}
+  {ai:S.hp>S.maxHp*.6?.5:.1,t:'🏃 บุกเข้าไปกู้เอง',s:'เสียน้อยลงมาก แต่บาดเจ็บ',f(){const l=Math.round(lo*.35);addMoney(-l);S.hp-=Math.round(S.maxHp*(.15+Math.random()*.2));log(`🔥 คุณฝ่าเข้าไปกู้ทรัพย์สินออกมาได้เกือบหมด เสียไป ${mt(l,w)} แต่บาดเจ็บไม่น้อย`,'')}},
+  {ai:.6,t:'💰 จ้างคนช่วยเต็มที่',s:`จ่ายค่าจ้าง ${mt(pc(.06),w)} รักษาส่วนใหญ่ไว้ได้`,f(){const l=pc(.06)+Math.round(lo*.2);addMoney(-l);log(`🧯 จ้างคนมาช่วยกันจนควบคุมได้ รวมเสียไป ${mt(l,w)}`,'')}},
+  {ai:.15,t:'😔 ปล่อยไปตามเวรตามกรรม',s:'ไม่เจ็บตัว แต่เสียหนัก',f(){addMoney(-lo);try{joy(-6)}catch(e){}log(`💸 สูญไป ${mt(lo,w)}`,'bad')}}]);return}
  if(k==='gov'){const fee=pc(.12+Math.random()*.08),br=pc(.05+Math.random()*.03),ep=total()*(1.05+Math.random()*.35);sc('hall');choice('📜 ถูกเรียกเก็บ',`${fl(w,'gov')} เรียกเงิน ${mt(fee,w)}`,[
-  {t:'💰 จ่ายตามเรียก',s:'จบเรื่อง',f(){addMoney(-fee);log(`📜 จ่ายไป ${mt(fee,w)} เรื่องจบลงอย่างสงบ`,'')}},
-  {t:'🤝 แอบติดสินบน',s:`จ่ายแค่ ${mt(br,w)} · กรรมลด · มีโอกาสถูกจับได้`,f(){addMoney(-br);S.karma-=6;if(Math.random()<.3){const x=pc(.25);addMoney(-x);S.fame=Math.round((S.fame||0)*.92);log(`🚨 สินบนถูกเปิดโปง! โดนปรับหนักอีก ${mt(x,w)} และเสียชื่อเสียง`,'bad')}else log(`🤝 ติดสินบนสำเร็จ จ่ายไปแค่ ${mt(br,w)}`,'')}},
-  {t:'⚔️ ไม่ยอมจ่าย',s:`ต้องสู้กับคนที่ส่งมา (แข็งแรงราว ${Math.round(ep/Math.max(1,total())*100)}% ของคุณ)`,f(){duel('ผู้ทวงส่วย',ep,v=>{if(v){S.fame+=fameR(12);log('⚔️ คุณขับไล่คนทวงส่วยไปได้ ผู้คนพูดถึงความกล้าของคุณ','good')}else{const x=pc(.3);addMoney(-x);log(`💸 แพ้ ถูกยึดทรัพย์ไป ${mt(x,w)}`,'bad')}})}}]);return}
+  {ai:.45,t:'💰 จ่ายตามเรียก',s:'จบเรื่อง',f(){addMoney(-fee);log(`📜 จ่ายไป ${mt(fee,w)} เรื่องจบลงอย่างสงบ`,'')}},
+  {ai:S.karma>20?.1:.3,t:'🤝 แอบติดสินบน',s:`จ่ายแค่ ${mt(br,w)} · กรรมลด · มีโอกาสถูกจับได้`,f(){addMoney(-br);S.karma-=6;if(Math.random()<.3){const x=pc(.25);addMoney(-x);S.fame=Math.round((S.fame||0)*.92);log(`🚨 สินบนถูกเปิดโปง! โดนปรับหนักอีก ${mt(x,w)} และเสียชื่อเสียง`,'bad')}else log(`🤝 ติดสินบนสำเร็จ จ่ายไปแค่ ${mt(br,w)}`,'')}},
+  {ai:pW(ep/Math.max(1,total())),t:'⚔️ ไม่ยอมจ่าย',s:`ต้องสู้กับคนที่ส่งมา (แข็งแรงราว ${Math.round(ep/Math.max(1,total())*100)}% ของคุณ)`,f(){duel('ผู้ทวงส่วย',ep,v=>{if(v){S.fame+=fameR(12);log('⚔️ คุณขับไล่คนทวงส่วยไปได้ ผู้คนพูดถึงความกล้าของคุณ','good')}else{const x=pc(.3);addMoney(-x);log(`💸 แพ้ ถูกยึดทรัพย์ไป ${mt(x,w)}`,'bad')}})}}]);return}
  if(k==='scam'){const c=pc(.25),real=Math.random()<.35,sk=(S.int||0)/((S.int||0)+180*(1+ri())),see=Math.random()<sk,who=w==='mw'?'เพื่อนเก่า':w==='g'?'เทพพ่อค้า':w==='x'?'ผู้ฝึกตนพเนจร':'พ่อค้าแปลกหน้า';
   sc('hall');choice('💼 ข้อเสนอลงทุน',`${fl(w,'scam')} ขอเงินลงขัน ${mt(c,w)}<br><span class="tag2">${see?(real?'🧠 คุณตรวจดูอย่างละเอียด — ดูเหมือนจะเป็นของจริง':'🧠 คุณจับพิรุธได้ — เอกสารและคำพูดไม่ตรงกันหลายจุด'):'คุณดูไม่ออกว่าจริงหรือหลอก (ปัญญาสูงจะช่วยจับพิรุธ)'}</span>`,[
-  {t:'💰 ลงทุน',s:'ได้คืนเกือบสองเท่าหรือสูญทั้งหมด',f(){addMoney(-c);EC().inv={c,y:S.age+R(2,4),real,who};log(`💼 ลงเงิน ${mt(c,w)} กับ${who} รอดูผลอีกไม่กี่ปี`,'')}},
-  {t:'🙅 ไม่เสี่ยง',s:'',f(){log(`🙅 ปฏิเสธข้อเสนอของ${who}${see&&!real?' — ภายหลังได้ข่าวว่าเขาหลอกคนไปทั่ว':''}`,'')}}]);return}
+  {ai:see?(real?.85:.03):.25,t:'💰 ลงทุน',s:'ได้คืนเกือบสองเท่าหรือสูญทั้งหมด',f(){addMoney(-c);EC().inv={c,y:S.age+R(2,4),real,who};log(`💼 ลงเงิน ${mt(c,w)} กับ${who} รอดูผลอีกไม่กี่ปี`,'')}},
+  {ai:see?(real?.15:.97):.6,t:'🙅 ไม่เสี่ยง',s:'',f(){log(`🙅 ปฏิเสธข้อเสนอของ${who}${see&&!real?' — ภายหลังได้ข่าวว่าเขาหลอกคนไปทั่ว':''}`,'')}}]);return}
  if(k==='kin'){const c=pc(.08+Math.random()*.07),who=fl(w,'kin');sc('home');choice('👨‍👩‍👧 มีคนมาขอยืมเงิน',`${who}ได้ข่าวว่าคุณมีฐานะ มาขอยืม ${mt(c,w)} บอกว่าเดือดร้อนจริงๆ`,[
-  {t:'🤝 ให้ยืม',s:'อาจได้คืน อาจไม่ได้',f(){addMoney(-c);S.karma+=3;EC().loan={c,y:S.age+R(2,5),who};log(`🤝 ให้${who}ยืม ${mt(c,w)}`,'')}},
-  {t:'🎁 ให้เปล่าเลย',s:'กรรมดี ชื่อเสียง ความสุข',f(){addMoney(-c);S.karma+=8;S.fame+=fameR(6);try{joy(4)}catch(e){}log(`🎁 ยกเงิน ${mt(c,w)} ให้${who}โดยไม่หวังคืน คนในย่านพูดถึงน้ำใจคุณ`,'good')}},
-  {t:'🙅 ปฏิเสธ',s:'ความสุขลด · กรรมลดเล็กน้อย',f(){S.karma-=2;try{joy(-4)}catch(e){}log(`🙅 ปฏิเสธ${who} เขาเดินจากไปพร้อมคำพูดไม่น่าฟัง`,'')}}]);return}
+  {ai:.4,t:'🤝 ให้ยืม',s:'อาจได้คืน อาจไม่ได้',f(){addMoney(-c);S.karma+=3;EC().loan={c,y:S.age+R(2,5),who};log(`🤝 ให้${who}ยืม ${mt(c,w)}`,'')}},
+  {ai:.25,t:'🎁 ให้เปล่าเลย',s:'กรรมดี ชื่อเสียง ความสุข',f(){addMoney(-c);S.karma+=8;S.fame+=fameR(6);try{joy(4)}catch(e){}log(`🎁 ยกเงิน ${mt(c,w)} ให้${who}โดยไม่หวังคืน คนในย่านพูดถึงน้ำใจคุณ`,'good')}},
+  {ai:.3,t:'🙅 ปฏิเสธ',s:'ความสุขลด · กรรมลดเล็กน้อย',f(){S.karma-=2;try{joy(-4)}catch(e){}log(`🙅 ปฏิเสธ${who} เขาเดินจากไปพร้อมคำพูดไม่น่าฟัง`,'')}}]);return}
  if(k==='crash'){sc('hall');choice('📉 วิกฤตใหญ่',`${fl(w,'crash')} ทรัพย์สินของคุณกำลังมูลค่าลดฮวบ`,[
   {t:'🏃 ขายทิ้งด่วน',s:'เสียแน่นอนราว 25%',f(){const l=pc(.25);addMoney(-l);E.biz=Math.round(E.biz*.7);log(`📉 ตัดขาดทุนไป ${mt(l,w)}`,'bad')}},
   {t:'🪨 ถือรอ',s:'ครึ่งต่อครึ่ง: ฟื้นได้กำไร หรือหายไปครึ่งหนึ่ง',f(){if(Math.random()<.5){const g=pc(.12);addMoney(g);log(`📈 อดทนถือไว้จนวิกฤตผ่านไป ได้กำไร ${mt(g,w)}`,'good')}else{const l=pc(.5);addMoney(-l);E.biz=Math.round(E.biz*.5);log(`📉 วิกฤตลากยาว ทรัพย์สินหายไปครึ่งหนึ่ง (${mt(l,w)})`,'bad',true)}}}]);return}}
 // ---------- ของใหญ่ให้ทุ่ม ----------
 function ecOpp(w){const M=+S.money||0,E=EC();E.evY=S.age;const L=[];const nonM=w!=='mw';
  L.push({ic:'📕',k:'book',f:.3,go(){if(nonM){const a=newArt(2);S.arts.push(a);return`ได้ ${artHtml(a)}`}const g=Math.max(10,Math.round((S.int||0)*.15));S.int+=g;return`ปัญญา +${fmt(g)}`},d:nonM?'วิชาระดับล้ำเลิศขึ้นไป 1 วิชา':'ปัญญา +15%'});
- L.push({ic:'💊',k:'pill',f:.35,go(){const g=nonM?R(4,9):R(2,5);S.lifespan=(S.lifespan||0)+g;return`อายุขัย +${g} ปี`},d:nonM?'อายุขัย +4~9 ปี':'อายุขัย +2~5 ปี'});
+ L.push({ic:'💊',k:'pill',f:.35,go(){const g=nonM?R(4,9):R(2,5);addLife(g);return`อายุขัย +${g} ปี`},d:nonM?'อายุขัย +4~9 ปี':'อายุขัย +2~5 ปี'});
  L.push({ic:'🏯',k:'biz',f:.3,go(c){E.biz=(E.biz||0)+Math.round(c*.07);return`ได้รายได้เพิ่มปีละราว ${mt(c*.07,w)} (เสี่ยงเจอวิกฤต)`},d:'สร้างรายได้ประจำทุกปี'});
  L.push({ic:'🙏',k:'don',f:.2,go(){const k=R(10,20);S.karma+=k;S.fame+=fameR(15);return`กรรมดี +${k} · ชื่อเสียงเพิ่ม`},d:'กรรมดีและชื่อเสียง'});
  L.push({ic:'⚔️',k:'mas',f:.25,go(){const g=pctPow(.07);S.power+=g;return`พลังยุทธ์ +${fmt(g)}`},d:'พลังเพิ่มราว 7%'});
  const pk=L.sort(()=>Math.random()-.5).slice(0,2);sc('hall');
- choice('💎 โอกาสใช้เงินก้อนใหญ่',`ฐานะของคุณดึงดูดข้อเสนอพิเศษ (เงินตอนนี้ ${mt(M,w)})<br><span class="tag2">ทุ่มตอนนี้ดีกว่าปล่อยให้ค่าดูแลทรัพย์กินไปเรื่อยๆ</span>`,pk.map(o=>{const c=Math.round(M*o.f);return{t:`${o.ic} ${fl(w,o.k)}`,s:`${mt(c,w)} → ${o.d}`,f(){if((+S.money||0)<c){log('💸 เงินไม่พอแล้ว','');return}addMoney(-c);const r=o.go(c);log(`${o.ic} ทุ่ม ${mt(c,w)} ให้${fl(w,o.k)} — ${r}`,'epic')}}}).concat([{t:'🚶 เก็บเงินไว้ก่อน',s:'',f(){}}]))}
+ choice('💎 โอกาสใช้เงินก้อนใหญ่',`ฐานะของคุณดึงดูดข้อเสนอพิเศษ (เงินตอนนี้ ${mt(M,w)})<br><span class="tag2">ทุ่มตอนนี้ดีกว่าปล่อยให้ค่าดูแลทรัพย์กินไปเรื่อยๆ</span>`,pk.map(o=>{const c=Math.round(M*o.f);return{ai:.5,t:`${o.ic} ${fl(w,o.k)}`,s:`${mt(c,w)} → ${o.d}`,f(){if((+S.money||0)<c){log('💸 เงินไม่พอแล้ว','');return}addMoney(-c);const r=o.go(c);log(`${o.ic} ทุ่ม ${mt(c,w)} ให้${fl(w,o.k)} — ${r}`,'epic')}}}).concat([{ai:.35,t:'🚶 เก็บเงินไว้ก่อน',s:'',f(){}}]))}
 // ---------- 🧭 ภารกิจทางแยก ----------
 const QW={
  m:{who:['ผู้ใหญ่บ้าน','พ่อค้าผ้าไหม','หญิงชราที่ตลาด','เจ้าสำนักเล็กๆ','ขุนนางท้องถิ่น'],beast:['เสือสมิงที่กินคนไปแล้วเจ็ดศพ','ฝูงหมาป่าตาแดง','งูยักษ์ในถ้ำหลังหมู่บ้าน'],gang:['ค่ายโจรภูเขาดำ','พรรคเงาโลหิต','กลุ่มอันธพาลท่าเรือ'],relic:['กระบี่ของปรมาจารย์ที่หายไปเมื่อร้อยปีก่อน','แผนที่สุสานจักรพรรดิ','ตำราแพทย์ของหมอเทวดา'],ill:'โรคระบาดในหมู่บ้านชายป่า',feud:['ตระกูลหลี่','ตระกูลจาง'],dirty:'ลอบสังหารพ่อค้าที่ขวางทางผู้ว่าจ้าง',pay:'จ้างนักล่าค่าหัว',wit:'วางแผนล่อเข้ากับดัก'},
@@ -47515,7 +47517,7 @@ function qxPay(q,mul){const g=q.st*q.d*(mul||1),out=[],w=q.w;
   if(r==='pow'){const v=pctPow(.035*g);S.power+=v;out.push(`พลังยุทธ์ +${fmt(v)}`)}
   else if(r==='art'){const a=newArt(Math.min(3,q.st));S.arts.push(a);out.push(`ได้ ${artHtml(a)}`)}
   else if(r==='fame'){if(S.mw&&w!=='z'){try{mwFx({fame:Math.round(1500*g+(S.mw.fame||0)*.04*g)})}catch(e){}out.push('ชื่อเสียงพุ่ง')}else{const v=fameR(Math.round(14*g));S.fame+=v;out.push(`ชื่อเสียง +${fmt(v)}`)}}
-  else if(r==='life'){const v=Math.max(1,Math.round(R(1,3)*g));S.lifespan=(S.lifespan||0)+v;out.push(`อายุขัย +${v} ปี`)}
+  else if(r==='life'){const v=Math.max(1,Math.round(R(1,3)*g));addLife(v);out.push(`อายุขัย +${v} ปี`)}
   else if(r==='item'){for(let i=0;i<q.st;i++)bagLoot(q.st);out.push('ได้ของหายากเข้ากระเป๋า')}
   else if(r==='qi'){const v=+((S.qi||0)*.04*g+R(1,3)).toFixed(1);S.qi+=v;out.push(`ลมปราณ +${typeof fmtG==="function"?fmtG(v):v}`)}
   else if(r==='int'){const v=Math.max(3,Math.round((S.int||0)*.05*g));S.int+=v;out.push(`ปัญญา +${fmt(v)}`)}
@@ -47540,21 +47542,21 @@ function qxDone(q,ok,how){const E=EC();E.qx=null;const w=q.w;
   if(q.st<q.of||(q.of===1&&q.al>=0&&Math.random()<.2&&q.st<3)){const nx=Object.assign({},q);nx.of=Math.max(q.of,q.st+1);E.qnx={q:nx,y:S.age+R(2,4)};setTimeout(()=>{if(S&&S.alive)log(`🧭 <span class="tag2">เรื่องของ${qxTitle(q)}ยังไม่จบ… อีกไม่กี่ปีคงมีความคืบหน้า</span>`,'')},0)}};
  if(q.tw==='trap'){const ep=total()*(q.d+.25);log('🗡️ หักมุม! ระหว่างทางกลับมีคนซุ่มโจมตี','bad');sc('fight');duel('มือสังหารที่ซุ่มอยู่',ep,v=>{if(v){q.rw.push(q.rw[0]);fin()}else{E.qF++;log('💥 พลาดท่าโดนซุ่มโจมตี รางวัลถูกชิงไปหมด','bad')}});return}
  if(q.tw==='liar'){sc('hall');choice('🎭 หักมุม!',`ทำงานเสร็จแล้วคุณเพิ่งรู้ความจริง: <b>${esc(q.who)}</b>คือคนที่อยู่เบื้องหลังเรื่องเลวร้ายทั้งหมด และหลอกใช้คุณกำจัดคนที่ขวางทาง`,[
-  {t:'⚔️ หันดาบใส่ผู้ว่าจ้าง',s:`สู้กับลูกน้องเขา (แข็งแรงราว ${Math.round((q.d+.3)*100)}%) · ชนะได้รางวัลเพิ่มและกรรมดี`,f(){duel(`ลูกน้องของ${q.who}`,total()*(q.d+.3),v=>{if(v){S.karma+=12;q.al=1;q.rw.push(ch(nonMoney(w)));fin()}else{E.qF++;S.hp-=Math.round(S.maxHp*.15);log('💥 สู้ไม่ไหว ต้องหนีเอาตัวรอดมือเปล่า','bad')}})}},
-  {t:'💰 รับรางวัลแล้วเงียบไว้',s:'ได้รางวัลตามตกลง แต่กรรมลด',f(){S.karma-=10;fin()}}]);return}
+  {ai:pW(q.d+.3),t:'⚔️ หันดาบใส่ผู้ว่าจ้าง',s:`สู้กับลูกน้องเขา (แข็งแรงราว ${Math.round((q.d+.3)*100)}%) · ชนะได้รางวัลเพิ่มและกรรมดี`,f(){duel(`ลูกน้องของ${q.who}`,total()*(q.d+.3),v=>{if(v){S.karma+=12;q.al=1;q.rw.push(ch(nonMoney(w)));fin()}else{E.qF++;S.hp-=Math.round(S.maxHp*.15);log('💥 สู้ไม่ไหว ต้องหนีเอาตัวรอดมือเปล่า','bad')}})}},
+  {ai:.35,t:'💰 รับรางวัลแล้วเงียบไว้',s:'ได้รางวัลตามตกลง แต่กรรมลด',f(){S.karma-=10;fin()}}]);return}
  fin()}
 function qxAsk(q){const w=q.w,W=qw(w),A=anc(w),cost=Math.round(Math.max(A*q.d*(1.6+q.st*.8),(+S.money||0)*.05*q.d*q.st)*(q.k==='dirty'?.5:1)),ep=Math.round(total()*q.d*(.95+Math.random()*.1));
  const sk=Math.min(1,((S.int||0)+(S.cha||0)*.6)/(230*(1+ri())*q.d)),pw=Math.max(.12,Math.min(.85,.22+.55*sk));
  const o=[];const last=S.age>=q.dl;
  if(q.k==='feud'){const[a,b]=W.feud;
-  o.push({t:`🗣️ ไกล่เกลี่ยให้ทั้งสองฝ่ายยอม`,s:`ใช้ปัญญา+เสน่ห์ · สำเร็จราว ${Math.round(pw*100)}%`,f(){if(Math.random()<pw){q.al=1;qxDone(q,true,'ทั้งสองฝ่ายยอมความ')}else{S.fame=Math.max(0,(S.fame||0)-fameR(5));qxDone(q,false,'ทั้งสองฝ่ายโกรธคุณ')}}});
-  o.push({t:`🛡️ เข้าข้าง${a}`,s:`ต้องสู้กับคนของ${b} (${Math.round(q.d*100)}%) · ได้รางวัลแน่ แต่${b}จะผูกใจเจ็บ`,f(){duel(`คนของ${b}`,ep,v=>v?(S.karma-=2,qxDone(q,true,`${a}ชนะ`)):qxDone(q,false,'แพ้ศึก'))}});
-  o.push({t:`🛡️ เข้าข้าง${b}`,s:`ต้องสู้กับคนของ${a} (${Math.round(q.d*100)}%)`,f(){duel(`คนของ${a}`,ep,v=>v?(S.karma-=2,qxDone(q,true,`${b}ชนะ`)):qxDone(q,false,'แพ้ศึก'))}})}
+  o.push({ai:pw,t:`🗣️ ไกล่เกลี่ยให้ทั้งสองฝ่ายยอม`,s:`ใช้ปัญญา+เสน่ห์ · สำเร็จราว ${Math.round(pw*100)}%`,f(){if(Math.random()<pw){q.al=1;qxDone(q,true,'ทั้งสองฝ่ายยอมความ')}else{S.fame=Math.max(0,(S.fame||0)-fameR(5));qxDone(q,false,'ทั้งสองฝ่ายโกรธคุณ')}}});
+  o.push({ai:pW(q.d)*.6,t:`🛡️ เข้าข้าง${a}`,s:`ต้องสู้กับคนของ${b} (${Math.round(q.d*100)}%) · ได้รางวัลแน่ แต่${b}จะผูกใจเจ็บ`,f(){duel(`คนของ${b}`,ep,v=>v?(S.karma-=2,qxDone(q,true,`${a}ชนะ`)):qxDone(q,false,'แพ้ศึก'))}});
+  o.push({ai:pW(q.d)*.6,t:`🛡️ เข้าข้าง${b}`,s:`ต้องสู้กับคนของ${a} (${Math.round(q.d*100)}%)`,f(){duel(`คนของ${a}`,ep,v=>v?(S.karma-=2,qxDone(q,true,`${b}ชนะ`)):qxDone(q,false,'แพ้ศึก'))}})}
  else{
-  o.push({t:'⚔️ บุกตรงๆ',s:`ต้องสู้ (แข็งแรงราว ${Math.round(q.d*100)}% ของคุณ) · แพ้แล้วบาดเจ็บ`,f(){sc('fight');duel(q.k==='beast'?q.tg:q.k==='ill'?'คนที่ปล่อยพิษ':q.k==='relic'?'ผู้พิทักษ์':q.k==='dirty'?'องครักษ์ของเป้าหมาย':q.tg,ep,v=>qxDone(q,v,v?'ชนะด้วยฝีมือ':'พ่ายแพ้'))}});
-  if(w!=='z'||true)o.push({t:`💰 ${W.pay}`,s:(w==='z'?'เสียเสบียงและพลังชีวิต':`จ่าย ${mt(cost,w)}`)+((+S.money||0)<cost&&w!=='z'?' · ⚠️ เงินไม่พอ':''),f(){if(w==='z'){S.hp-=Math.round(S.maxHp*.12);return qxDone(q,true,'แลกเสบียง')}if((+S.money||0)<cost){log('💸 เงินไม่พอจ้างใคร งานนี้จึงหลุดมือไป','');return qxDone(q,false,'เงินไม่พอ')}addMoney(-cost);qxDone(q,true,'ใช้เงินแก้ปัญหา')}});
-  o.push({t:`🧠 ${W.wit}`,s:`ใช้ปัญญา+เสน่ห์ · สำเร็จราว ${Math.round(pw*100)}%`,f(){if(Math.random()<pw)qxDone(q,true,'ใช้ไหวพริบ');else if(!last&&Math.random()<.5){q.d=+(q.d+.15).toFixed(2);log(`🧠 แผนไม่สำเร็จ ศัตรูรู้ตัวแล้ว งานนี้ยากขึ้น — ยังพอมีเวลาลองใหม่`,'bad');EC().qx=q;q.nx=S.age+1}else qxDone(q,false,'แผนแตก')}})}
- if(!last)o.push({t:'⏳ ขอเวลาเตรียมตัวก่อน',s:'ปีหน้าค่อยว่ากัน · ยิ่งช้ายิ่งยากขึ้น',f(){q.d=+(q.d+.12).toFixed(2);q.nx=S.age+1;EC().qx=q;log(`⏳ ผัดภารกิจ「${qxTitle(q)}」ไปก่อน`,'')}});
+  o.push({ai:pW(q.d),t:'⚔️ บุกตรงๆ',s:`ต้องสู้ (แข็งแรงราว ${Math.round(q.d*100)}% ของคุณ) · แพ้แล้วบาดเจ็บ`,f(){sc('fight');duel(q.k==='beast'?q.tg:q.k==='ill'?'คนที่ปล่อยพิษ':q.k==='relic'?'ผู้พิทักษ์':q.k==='dirty'?'องครักษ์ของเป้าหมาย':q.tg,ep,v=>qxDone(q,v,v?'ชนะด้วยฝีมือ':'พ่ายแพ้'))}});
+  o.push({ai:w==='z'?(S.hp>S.maxHp*.5?.4:.05):(+S.money||0)<cost?0:(cost<(+S.money||0)*.25?.7:.3),t:`💰 ${W.pay}`,s:(w==='z'?'เสียเสบียงและพลังชีวิต':`จ่าย ${mt(cost,w)}`)+((+S.money||0)<cost&&w!=='z'?' · ⚠️ เงินไม่พอ':''),f(){if(w==='z'){S.hp-=Math.round(S.maxHp*.12);return qxDone(q,true,'แลกเสบียง')}if((+S.money||0)<cost){log('💸 เงินไม่พอจ้างใคร งานนี้จึงหลุดมือไป','');return qxDone(q,false,'เงินไม่พอ')}addMoney(-cost);qxDone(q,true,'ใช้เงินแก้ปัญหา')}});
+  o.push({ai:pw,t:`🧠 ${W.wit}`,s:`ใช้ปัญญา+เสน่ห์ · สำเร็จราว ${Math.round(pw*100)}%`,f(){if(Math.random()<pw)qxDone(q,true,'ใช้ไหวพริบ');else if(!last&&Math.random()<.5){q.d=+(q.d+.15).toFixed(2);log(`🧠 แผนไม่สำเร็จ ศัตรูรู้ตัวแล้ว งานนี้ยากขึ้น — ยังพอมีเวลาลองใหม่`,'bad');EC().qx=q;q.nx=S.age+1}else qxDone(q,false,'แผนแตก')}})}
+ if(!last)o.push({ai:.12,t:'⏳ ขอเวลาเตรียมตัวก่อน',s:'ปีหน้าค่อยว่ากัน · ยิ่งช้ายิ่งยากขึ้น',f(){q.d=+(q.d+.12).toFixed(2);q.nx=S.age+1;EC().qx=q;log(`⏳ ผัดภารกิจ「${qxTitle(q)}」ไปก่อน`,'')}});
  o.push({t:q.k==='dirty'?'🙅 ปฏิเสธงานสกปรก':'🚶 ไม่รับงานนี้',s:q.k==='dirty'?'กรรมดี +3':(q.k==='ill'||q.k==='rescue')?'มีคนต้องเดือดร้อน · กรรม/ความสุขลด':'',skip:true,f(){EC().qx=null;if(q.k==='dirty'){S.karma+=3;log('🙅 คุณปฏิเสธงานสกปรกไปอย่างหนักแน่น','good')}else if(q.k==='ill'||q.k==='rescue'){S.karma-=4;try{joy(-4)}catch(e){}log(`😔 ไม่มีใครช่วย${q.k==='ill'?'ผู้ป่วย':'ตัวประกัน'}ทัน…`,'bad')}else log(`🚶 ปฏิเสธภารกิจ「${qxTitle(q)}」`,'')}});
  sc(q.k==='beast'||q.k==='gang'?'fight':'hall');choice(`🧭 ${qxTitle(q)}`,qxStory(q),o)}
 function qxTick(w,go){const E=EC();
@@ -47571,3 +47573,46 @@ function evFire(){if(!pend||!can())return false;const P=pend;pend=null;if(ecW()!
 {const _py=passYear;passYear=function(){if(S&&S.alive&&pend&&evFire())return;const a0=S?S.age:0,m0=S?(+S.money||0):0;const r=_py.apply(this,arguments);try{if(S&&S.alive&&S.age>a0){ecTick(S.age-a0,m0);evTick()}}catch(e){console.error('eco182',e)}return r}}
 window._ec182={evFire,pend:()=>pend,ecTick,evTick,ecRisk,ecOpp,qxTick,qxAsk,qxMake,QK,ecW,anc,ecU};
 })()}catch(e){console.error('block184',e)}
+
+// BLOCK 185: ⚖️ บาลานชุดสอง — เควสเศรษฐีนับเงินที่หาได้ · ราคาร้านสมบัติขยับตามรายได้ · ลงทุนคาราวานไม่ปั๊มเงิน · ออโต้เลือกอย่างมีเหตุผล
+//            · ผู้ท้าชิงช่วงท้ายชีวิต · กระดานเมืองยากตามขั้น · ชื่อเสียงยุคปัจจุบันมีขึ้นมีลง · มรดกเงินมีเพดาน
+try{(function(){
+const E=()=>S&&S.ec||{};
+// มรดก: ได้ครึ่งหนึ่งเหมือนเดิมถึงเพดาน (25 ปีของรายได้พ่อแม่) ส่วนเกินได้แค่ 15%
+window.inhCap=function(P){try{const b=Math.round((+P.money||0)*.5),inc=(P.ec&&P.ec.inc)||0,cap=Math.max(P.xian?30000:12000,25*inc);return b<=cap?b:Math.round(cap+(b-cap)*.15)}catch(e){return Math.round((+P.money||0)*.5)}};
+// 1) เควสระบบสายเศรษฐี: นับเงินที่หาได้รวม (หรือถือได้ถึง) แทนการต้องกอดเงินไว้
+try{const earn=()=>Math.max(+S.money||0,(E().earn||0));MAINQ.tycoon[0]=['หาเงินได้รวม 20,000 ตำลึง',()=>earn()>=20000];MAINQ.tycoon[2]=['หาเงินได้รวม 200,000 ตำลึง',()=>earn()>=200000]}catch(e){}
+// 2) ร้านสมบัติ: ของที่แพงเกิน 30 ปีของรายได้ ลดราคาตามรายได้ (ไม่ต่ำกว่า 35%)
+{const _ep=ecoPrice;ecoPrice=function(it){const p=_ep.apply(this,arguments);try{const X=window._ec182;if(!X||!S)return p;const w=X.ecW();if(!w||w==='mw'||w==='z')return p;const A=X.anc(w),lim=30*A;if(p<=lim)return p;return Math.round(p*Math.max(.35,Math.sqrt(lim/p)))}catch(e){return p}}}
+// 3) ลงทุนคาราวาน: เฉลี่ยได้คืนราวทุน+เล็กน้อย แต่ผันผวน (เดิมเฉลี่ย +40% ต่อปี ปั๊มเงินได้)
+investTick=function(){if(!S.invest||S.age<S.invest.y)return;const c=S.invest.c,r=Math.random(),f=Math.max(.3,1-(S.invN||0)*.15);S.invest=null;
+ if(r<.28){log(`💼 กองคาราวานถูกโจรปล้นกลางทะเลทราย! เงินลงทุน ${fmtM(c)} ตำลึงสูญหมด`,'bad');joy(-6)}
+ else if(r<.5){const g=Math.round(c*.8);S.money+=g;log(`💼 การค้าซบเซา ได้ทุนคืนมาแค่ ${fmtM(g)} ตำลึง`)}
+ else if(r<.9){const g=inc(Math.round(c*(1+(.2+Math.random()*.6)*f)));S.money+=g;log(`💼 กองคาราวานกลับมาพร้อมกำไร ได้ ${fmtM(g)} ตำลึง`,'good')}
+ else{const g=inc(Math.round(c*(1+2*f)));S.money+=g;S.fame+=15;log(`💼 ค้าขายครั้งประวัติศาสตร์! ได้ ${fmtM(g)} ตำลึง`,'epic')}};
+// 4) ออโต้/ชะตาเลือก: ถ้าทางเลือกมีค่าประเมิน (ai) จะเอนไปทางที่คุ้มกว่า แต่ยังสุ่มได้ · ทางที่เงินไม่พอแทบไม่เลือก
+{const _fc=fateChoice;fateChoice=function(silent){const c=choice._cur;try{if(c&&c.opts&&c.opts.some(o=>o&&(o.ai!=null||/เงินไม่พอ/.test(o.s||'')))){
+  const idx=c.opts.map((o,i)=>i).filter(i=>!c.opts[i].skip);if(idx.length){const wt=idx.map(i=>{const o=c.opts[i];let w=o.ai!=null?+o.ai||0:.4;if(/เงินไม่พอ/.test(o.s||''))w*=.03;return Math.max(.002,w*w)}),T=wt.reduce((a,b)=>a+b,0);let r=Math.random()*T,k=0;while(k<wt.length-1&&(r-=wt[k])>0)k++;const i=idx[k];
+   if(!silent&&!auto)addFeed('ev',`🎲 ปล่อยให้ชะตาเลือก <b>${String(c.title).replace(/<[^>]+>/g,'')}</b>: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');return choiceRun(i)}}}catch(e){console.error(e)}return _fc.apply(this,arguments)}}
+// 6) ช่วงท้ายชีวิตไม่ไร้ศัตรู: ผู้ท้าชิงรุ่นใหม่ที่แรงพอๆ หรือแรงกว่า
+let pend=null;
+const okW=()=>S&&S.alive&&!S.mw&&!(S.beastMode&&!S.beastMode.human)&&S.ch!=='short';
+function chal(){const ri=Math.max(0,realmIdx()),d=1+Math.random()*.35,ep=total()*d,pw=Math.max(.05,Math.min(.95,(1.3-d)/.6))*(S.hp>S.maxHp*.5?1:.45);
+ const nm=ch(S.xt?['เทพหนุ่มผู้เพิ่งขึ้นสวรรค์','บุตรแห่งเทพสงคราม','อสูรเทพที่ฝึกตนมาหมื่นปี']:S.xian?['อัจฉริยะนิกายใหม่ที่ทะลวงเร็วผิดมนุษย์','ผู้ฝึกตนมารที่ล่าผู้อาวุโส','ศิษย์เอกของศัตรูเก่า']:['ยอดฝีมือรุ่นใหม่ที่ไม่เคยแพ้','บุตรของคนที่คุณเคยล้ม','จอมยุทธ์จากแดนไกลที่ล่าชื่อเสียง']),hurt=()=>{const h=Math.round(S.maxHp*(.35+Math.random()*.3));S.hp-=h;S.fame=Math.round((S.fame||0)*.9)};
+ try{setScene('fight')}catch(e){}
+ choice('⚔️ ผู้ท้าชิง',`<b>${nm}</b>ประกาศกลางเมืองว่าจะโค่นคุณ ให้ทั้งแผ่นดินรู้ว่ายุคของคุณจบแล้ว<br><span class="tag2">แข็งแรงราว ${Math.round(d*100)}% ของคุณ · แพ้แล้วบาดเจ็บหนักและเสียชื่อเสียง</span>`,[
+  {ai:pw,t:'⚔️ รับคำท้า',s:`ชนะได้ชื่อเสียงและพลัง · โอกาสราว ${Math.round(pw*100)}%`,f(){duel(nm,ep,v=>{if(v){const g=pctPow(.04);S.power+=g;S.fame+=fameR(25+ri*5);let t='';if(Math.random()<.3){const a=newArt(2);S.arts.push(a);t=` · ยึดได้ ${artHtml(a)}`}log(`⚔️ โค่น${nm}ลงได้ต่อหน้าผู้คน — พลังยุทธ์ +${fmt(g)}${t}`,'epic')}else{hurt();log(`💥 พ่ายแพ้ต่อ${nm} บาดเจ็บสาหัส ผู้คนเริ่มพูดว่าคุณแก่แล้ว`,'bad',true)}})}},
+  {ai:.3,t:'🙏 ปฏิเสธอย่างสุภาพ',s:'ไม่เสี่ยง แต่เสียชื่อเสียง',f(){const l=Math.round((S.fame||0)*.06);S.fame-=l;log(`🙏 ปฏิเสธคำท้าของ${nm} ชื่อเสียง −${fmt(l)}`,'')}}])}
+{const _py=passYear;passYear=function(){if(pend&&S&&S.alive&&!choice._cur&&!modalOpen){const f=pend;pend=null;try{if(okW())f()}catch(e){console.error(e)}if(choice._cur)return}
+ const a0=S?S.age:0,r=_py.apply(this,arguments);
+ try{if(S&&S.alive&&S.age>a0){
+  if(okW()&&!pend&&(realmIdx()>=4||S.age>=90)&&S.age-(S._chY||-9)>=4&&Math.random()<.06){S._chY=S.age;pend=chal}
+  mwFame()}}catch(e){console.error('block185',e)}return r}}
+// 8) ชื่อเสียงยุคปัจจุบัน: เกิน 30,000 ค่อยๆ ลดลง · ยิ่งดังยิ่งเสี่ยงดราม่า
+function mwFame(){const M=S.mw;if(!M||M.sky||M.kid||!(M.fame>30000))return;const net=S.focus==='mwnet',dc=Math.round((M.fame-30000)*(net?.02:.06));M.fame-=dc;
+ if(Math.random()<Math.min(.08,.015*Math.log10(M.fame/30000+1)*4)){const l=Math.round(M.fame*(.12+Math.random()*.2));M.fame-=l;try{joy(-6)}catch(e){}log(`📉 ${ch(['คลิปเก่าถูกขุดขึ้นมาวิจารณ์','ดราม่าในโซเชียลลุกลาม','มีคนปล่อยข่าวลือเสียหาย','คนดูเบื่อคอนเทนต์ซ้ำๆ'])} — ผู้ติดตามหายไป ${fmt(l)}`,'bad')}}
+// 7) กระดานเมือง: งานส่งของ/ชนะศึก เพิ่มจำนวนตามขั้นพลัง รางวัลเพิ่มตาม
+{const _tm=tqMake;tqMake=function(kind,g,extra){const q=_tm.apply(this,arguments);try{const ri=Math.max(0,realmIdx());if(ri>0&&q&&q.v2){
+  if(q.kind==='item'){q.need=Math.round(q.need*(1+ri*.35));try{const m=BAGIT[q.m];q.d=`มี ${m.ic} ${m.n} ${q.need} ชิ้นในกระเป๋า`}catch(e){}if(q.rw&&q.rw.money)q.rw.money=Math.round(q.rw.money*(1+ri*.12))}
+  else if(q.kind==='kills'){q.need+=Math.floor(ri*.7);q.d=`ชนะการต่อสู้ ${q.need} ครั้ง ภายในเวลาที่กำหนด`;if(q.rw&&q.rw.money)q.rw.money=Math.round(q.rw.money*(1+ri*.1))}}}catch(e){}return q}}
+})()}catch(e){console.error('block185',e)}
