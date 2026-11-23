@@ -2490,7 +2490,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
           const bp = +(await cmd('HGET', 'aqb:' + id, MON)) || 0; if (bp < t * 4) return res.json({ ok: 0, err: 'notyet', bp });
           const add = await cmd('SADD', 'aqbt:' + id + ':' + MON, t); await cmd('EXPIRE', 'aqbt:' + id + ':' + MON, 86400 * 70); if (!+add) return res.json({ ok: 0, dup: 1 });
           const r = RW[t] || [0, 0]; await give(id, r[0], r[1]); return res.json({ ok: 1, f: r[0], g: r[1] }) }
-        if (o === 'lg') { const L = { multi: 2, l10: 0, l50: 1, l100: 2, mgm: 1, seed: 1, boss: 1 }, l = String(b.l || ''); if (!(l in L)) return res.json({ err: 'arg' });
+        if (o === 'lg') { const L = { multi: 2, l10: 0, l50: 1, l100: 2, mgm: 1, seed: 1, boss: 1, multi8: 2, fogdet: 1, fogend: 2, skyhun: 1, soulrg: 1, bcycle: 1, bfoe: 1 }, l = String(b.l || ''); if (!(l in L)) return res.json({ err: 'arg' });
           if (+(await cmd('HSETNX', 'aql:' + id, l, now)) !== 1) return res.json({ ok: 0, dup: 1 }); await give(id, 0, L[l]); return res.json({ ok: 1, g: L[l] }) }
         if (o === 'sec') { const s = String(b.s || '').replace(/[^a-z0-9_]/gi, '').slice(0, 12); if (!s) return res.json({ err: 'arg' }); const n = +(await cmd('HLEN', 'aqs:' + id)) || 0; if (n >= 12) return res.json({ ok: 0 });
           if (+(await cmd('HSETNX', 'aqs:' + id, s, now)) !== 1) return res.json({ ok: 0, dup: 1 }); await give(id, 1, 0); return res.json({ ok: 1, f: 1 }) }

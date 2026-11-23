@@ -36074,7 +36074,9 @@ const pop=(ic,h,t,big)=>{try{if(live()&&typeof island==='function'){island({big:
 const tkTx=(f,g)=>[g?`🎟️ ตั๋วทอง ${g} ใบ`:'',f?`🎫 ตั๋วธรรมดา ${f} ใบ`:''].filter(Boolean).join(' + ');
 // ---------- โหมดแห่งวัน (หมุนทุกวัน · ช่วยกระจายคนไปโหมดที่คนน้อย) ----------
 const MDAY=[['mw','🏙️ ยุคปัจจุบัน'],['beast','🐾 สัตว์อสูร'],['murim','⚔️ ยุทธภพ'],['mw','🏙️ ยุคปัจจุบัน'],['xian','☁️ โลกเซียน'],['beast','🐾 สัตว์อสูร'],['murim','⚔️ ยุทธภพ']];
-const mday=()=>MDAY[Math.floor((Date.now()+7*3600e3)/864e5)%MDAY.length];
+const MDAY2=[['fog','🌉 นครม่านหมอก'],['beast','🐾 สัตว์อสูร'],['murim','⚔️ ยุทธภพ'],['sky','🌠 ทะลุฟ้าดารา'],['xian','☁️ โลกเซียน'],['mw','🏙️ ยุคปัจจุบัน'],['soul','⭕ ทวีปจิตวิญญาณยุทธ์'],['beast','🐾 สัตว์อสูร'],['fog','🌉 นครม่านหมอก']];
+const mday=()=>{const di=Math.floor((Date.now()+7*3600e3)/864e5);return TD()>='2026-11-24'?MDAY2[di%MDAY2.length]:MDAY[di%MDAY.length]};
+const wk2=()=>{try{if(!S)return'';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.mw){if(S.mw.fog)return'fog';if(S.mw.sky)return'sky';return'mw'}if(S.ch==='soul'||S.sv)return'soul';if(S.xt)return'god';if(S.xian)return'xian';return'murim'}catch(e){return''}};
 // ---------- นิยามภารกิจ ----------
 const Q=(id,ic,t,n,e,k,o)=>Object.assign({id,ic,t,n,e,k},o||{});
 const DQ=[
@@ -36092,7 +36094,10 @@ const DQ=[
  Q('ymw','🏙️','ใช้ชีวิตในยุคปัจจุบัน',10,'y_mw',12,{u:'ปี',g:1}),Q('mwloc','🗺️','ย้ายไปย่านใหม่ในยุคปัจจุบัน',1,'mwloc',10,{g:1}),Q('mwjob','💼','อาชีพเสริมยุคปัจจุบันเลื่อนขั้น',1,'mwjob',12,{g:1}),
  Q('ybs','🐾','ใช้ชีวิตเป็นสัตว์อสูร',10,'y_beast',12,{u:'ปี',g:1}),Q('bevo','🦴','สัตว์อสูรวิวัฒนาการขั้นใหม่',1,'bevo',14,{g:1}),Q('yxi','☁️','ใช้ชีวิตในโลกเซียน',10,'y_xian',12,{u:'ปี',g:1}),
  Q('ygd','🌞','ใช้ชีวิตในโลกเทพ',5,'y_god',15,{u:'ปี',g:1}),Q('ysub','🧟','ใช้ชีวิตในโลกย่อยยุคปัจจุบัน (ฮันเตอร์ ซอมบี้ ผี ฯลฯ)',8,'y_mwsub',14,{u:'ปี',g:1}),
- Q('ymu','⚔️','ใช้ชีวิตในยุทธภพ',20,'y_murim',8,{u:'ปี',g:1}),Q('lbs','🐺','จบชีวิตในร่างสัตว์อสูร',1,'lw_beast',12,{g:1}),Q('lmw','🌆','จบชีวิตในยุคปัจจุบัน',1,'lw_mw',12,{g:1}),Q('mwr1','🏘️','ขึ้นถึง "คนในซอย" ในยุคปัจจุบัน',1,'mwr',12,{g:1})];
+ Q('ymu','⚔️','ใช้ชีวิตในยุทธภพ',20,'y_murim',8,{u:'ปี',g:1}),Q('lbs','🐺','จบชีวิตในร่างสัตว์อสูร',1,'lw_beast',12,{g:1}),Q('lmw','🌆','จบชีวิตในยุคปัจจุบัน',1,'lw_mw',12,{g:1}),Q('mwr1','🏘️','ขึ้นถึง "คนในซอย" ในยุคปัจจุบัน',1,'mwr',12,{g:1}),
+ Q('yfog','🌉','ใช้ชีวิตในนครม่านหมอก',10,'y_fog',12,{u:'ปี',g:1}),Q('ysky','🌠','ใช้ชีวิตในทะลุฟ้าดารา',10,'y_sky',12,{u:'ปี',g:1}),Q('ysoul','⭕','ใช้ชีวิตในทวีปจิตวิญญาณยุทธ์',10,'y_soul',12,{u:'ปี',g:1}),
+ Q('fcase','🔎','ไขคดีในนครม่านหมอกสำเร็จ',1,'fcase',14,{g:1}),Q('ftier','🗝️','ผ่านพิธีข้ามธรณีในนครม่านหมอก',1,'ftier',15,{g:1}),Q('skrk','🎖️','เลื่อนยศนักล่าในทะลุฟ้าดารา',1,'skrk',14,{g:1}),
+ Q('sring','⭕','หลอมวงแหวนวิญญาณ',1,'sring',14,{g:1}),Q('bph','🌱','ผ่านช่วงวัยใหม่ในร่างสัตว์อสูร',2,'bph',12,{g:1}),Q('bnem','😠','พบคู่ปรับตลอดชีวิตในร่างสัตว์อสูร',1,'bnem',12,{g:1})];
 const WQ=[
  Q('l3m','🌌','จบชีวิตใน 3 โหมดที่ต่างกัน',3,'lm'),Q('rvw','🎯','ชนะคู่ปรับ',2,'rvw'),Q('mgp15','🎮','ได้ "สมบูรณ์แบบ" ในมินิเกม',15,'mgp'),Q('mg40','🕹️','เล่นมินิเกมให้จบ',40,'mg'),
  Q('brk5','🌟','ทะลวงขั้น / เลื่อนขั้น',5,'brk'),Q('wb5','🐉','ร่วมตีบอสโลก',5,'wb'),Q('sd3','🌱','กรรมย้อนคืนออกผล',3,'seed'),Q('dws5','⚔️','ชนะคนที่แรงกว่าคุณ',5,'dws'),
@@ -36102,7 +36107,9 @@ const WQ=[
  Q('yr300','⏳','ใช้ชีวิตผ่านไป',300,'yr',0,{u:'ปี'}),Q('l60w','🕯️','จบชีวิตตอนอายุ 60 ขึ้นไป',3,'l60'),
  Q('mwr','🏘️','ขึ้นถึง "คนในซอย" ในยุคปัจจุบัน',1,'mwr',0,{g:1}),Q('byr','🐾','ใช้ชีวิตเป็นสัตว์อสูร',30,'y_beast',0,{u:'ปี',g:1}),Q('ymw30','🏙️','ใช้ชีวิตในยุคปัจจุบัน',30,'y_mw',0,{u:'ปี',g:1}),
  Q('yxi30','☁️','ใช้ชีวิตในโลกเซียน',30,'y_xian',0,{u:'ปี',g:1}),Q('bevo3','🦴','สัตว์อสูรวิวัฒนาการขั้นใหม่',3,'bevo',0,{g:1}),Q('mwj3','💼','อาชีพเสริมยุคปัจจุบันเลื่อนขั้น',3,'mwjob',0,{g:1}),
- Q('ysub25','🧟','ใช้ชีวิตในโลกย่อยยุคปัจจุบัน',25,'y_mwsub',0,{u:'ปี',g:1}),Q('lbs2','🐺','จบชีวิตในร่างสัตว์อสูร',2,'lw_beast',0,{g:1})];
+ Q('ysub25','🧟','ใช้ชีวิตในโลกย่อยยุคปัจจุบัน',25,'y_mwsub',0,{u:'ปี',g:1}),Q('lbs2','🐺','จบชีวิตในร่างสัตว์อสูร',2,'lw_beast',0,{g:1}),
+ Q('fcase5','🔎','ไขคดีในนครม่านหมอก',5,'fcase',0,{g:1}),Q('ftier3','🗝️','ผ่านพิธีข้ามธรณี',3,'ftier',0,{g:1}),Q('skrk3','🎖️','เลื่อนยศนักล่าในทะลุฟ้าดารา',3,'skrk',0,{g:1}),
+ Q('sring4','⭕','หลอมวงแหวนวิญญาณ',4,'sring',0,{g:1}),Q('bfull','🕯️','ใช้ชีวิตสัตว์อสูรจนถึงวัยชรา',1,'bfull',0,{g:1}),Q('yfog30','🌉','ใช้ชีวิตในนครม่านหมอก',30,'y_fog',0,{u:'ปี',g:1}),Q('ysky30','🌠','ใช้ชีวิตในทะลุฟ้าดารา',30,'y_sky',0,{u:'ปี',g:1})];
 const WK_K=50;
 const LG=[
  {id:'multi',ic:'🌌',t:'ผู้ท่องหลายจักรวาล',d:'จบชีวิตครบทั้ง 5 โลก: ยุทธภพ · เซียน · เทพ · สัตว์อสูร · ยุคปัจจุบัน',n:5,v:L=>Object.keys(L.wl||{}).filter(k=>['murim','xian','god','beast','mw'].includes(k)).length,fr:'f_aq_multi',g:2},
@@ -36111,7 +36118,14 @@ const LG=[
  {id:'l100',ic:'☠️',t:'ร้อยชีวิต',d:'จบชีวิตครบ 100 ชีวิต',n:100,v:L=>L.lives||0,fr:'f_aq_l100',g:2},
  {id:'mgm',ic:'🎮',t:'ผู้ไม่เคยพลาดจังหวะ',d:'มินิเกม 10 เกม ชำนาญถึง ★★★★ (เล่นเกมละ 20 ครั้ง)',n:10,v:()=>{try{return Object.values(LS.get('murim_mg2',{})||{}).filter(x=>x>=20).length}catch(e){return 0}},fr:'f_aq_mgm',g:1},
  {id:'seed',ic:'🌱',t:'ผู้หว่านกรรม',d:'กรรมย้อนคืนออกผลครบ 30 ครั้ง',n:30,v:L=>L.seed||0,fr:'f_aq_seed',g:1},
- {id:'boss',ic:'🐉',t:'นักล่ามังกร',d:'ตีบอสโลกครบ 30 ครั้ง',n:30,v:L=>L.wbh||0,fr:'f_aq_boss',g:1}];
+ {id:'boss',ic:'🐉',t:'นักล่ามังกร',d:'ตีบอสโลกครบ 30 ครั้ง',n:30,v:L=>L.wbh||0,fr:'f_aq_boss',g:1},
+ {id:'multi8',ic:'🌠',t:'ผู้ท่องทุกภพ',d:'จบชีวิตครบทั้ง 8 โลก: ยุทธภพ · เซียน · เทพ · สัตว์อสูร · ยุคปัจจุบัน · นครม่านหมอก · ทะลุฟ้าดารา · ทวีปจิตวิญญาณยุทธ์',n:8,v:L=>Object.keys(L.wl||{}).filter(k=>['murim','xian','god','beast','mw','fog','sky','soul'].includes(k)).length,k:100,g:2},
+ {id:'fogdet',ic:'🔎',t:'นักสืบแห่งหมอก',d:'ไขคดีในนครม่านหมอกรวม 30 คดี (นับทุกชีวิต)',n:30,v:L=>L.fcase||0,k:60,g:1},
+ {id:'fogend',ic:'🎬',t:'ผู้รู้ทุกตอนจบ',d:'ปลดตอนจบของนครม่านหมอก 10 แบบ',n:10,v:()=>{try{return Object.keys(LS.get('murim_fogend',{})||{}).length}catch(e){return 0}},k:60,g:2},
+ {id:'skyhun',ic:'🎖️',t:'นักล่าใต้ฟ้าดารา',d:'เลื่อนยศนักล่าในทะลุฟ้าดารารวม 15 ครั้ง',n:15,v:L=>L.skrk||0,k:60,g:1},
+ {id:'soulrg',ic:'⭕',t:'ผู้หลอมวงแหวน',d:'หลอมวงแหวนวิญญาณรวม 30 วง',n:30,v:L=>L.sring||0,k:60,g:1},
+ {id:'bcycle',ic:'🕯️',t:'ชีวิตเต็มวงจร',d:'ใช้ชีวิตสัตว์อสูรจนถึงวัยชรา 3 ชีวิต',n:3,v:L=>L.bfull||0,k:60,g:1},
+ {id:'bfoe',ic:'🤝',t:'ศัตรูกลายเป็นมิตร',d:'เปลี่ยนคู่ปรับตลอดชีวิตของสัตว์อสูรให้กลายเป็นเพื่อน',n:1,v:L=>L.bnemf||0,k:40,g:1}];
 const SEC=[
  {id:'cent',t:'ร้อยปีพอดี',d:'จบชีวิตตอนอายุ 100 พอดี'},
  {id:'saint',t:'นักบุญ',d:'จบชีวิตตอนอายุ 50+ โดยเลือกทางเมตตา 10 ครั้งขึ้นไปและไม่เคยโหดเลย'},
@@ -36197,7 +36211,8 @@ async function sync(){if(syncing||!on())return;syncing=1;try{const d=roll(st());
  if(ch)sv(d)}finally{syncing=0}dot()}
 // ---------- รับเหตุการณ์จากเกม ----------
 const LIFE=new Set(['dws','dw','hw','mer','cru','mgp','seed','ch']);
-function ev(e,n,extra){n=n||1;try{if(live()&&LIFE.has(e)){const L=LC();L[e]=(L[e]||0)+n}const d=roll(st());let ch=0,done=[];
+const LGK={fcase:1,skrk:1,sring:1,bfull:1,bnemf:1};
+function ev(e,n,extra){n=n||1;try{if(LGK[e])legend(L=>{L[e]=(L[e]||0)+n});if(live()&&LIFE.has(e)){const L=LC();L[e]=(L[e]||0)+n}const d=roll(st());let ch=0,done=[];
  for(const k of ['d','w'])d[k].q.forEach(q=>{if(q.ok)return;const D=defOf(k,q.id);if(!D||D.e!==e)return;
   if(e==='lm'){q.m=q.m||[];if(!extra||q.m.includes(extra))return;q.m.push(extra);q.v=q.m.length}else q.v=(q.v||0)+n;ch=1;
   if(q.v>=D.n){q.v=D.n;q.ok=1;done.push([k,D])}});
@@ -36230,17 +36245,17 @@ if(typeof window.mg2Play==='function'){const _mp=window.mg2Play;window.mg2Play=f
  if(LS.get('murim_aqbless',0)){setTimeout(()=>{try{if(!live()||S._aqB)return;S._aqB=1;LS.set('murim_aqbless',0);const m=Math.round(400+Math.random()*400);S.money=(S.money||0)+m;S.qi=+((S.qi||0)+1).toFixed(1);S.hp=S.maxHp;addFeed('ev',`📜 <b>พรแห่งภารกิจ</b> เพราะชาติก่อนทำภารกิจประจำวันครบ ชีวิตนี้เริ่มด้วย${S.xian?'หินวิญญาณ':'เงินติดตัว'} ${fmt(m)} · ปราณ +1`,'good')}catch(e){}},1800)}}catch(e){}return r}}
 const FG={train:'tr',body:'tr',hunt:'tr',qi:'qi',moon:'qi',rest:'qi',hide:'qi',mwqi:'qi',adv:'ad',roam:'ad',travel:'ad',work:'wk',mission:'wk',mwjob:'wk',study:'st',mwlearn:'st'};
 {const _py=passYear;passYear=function(){const a0=S&&S.age,me=S,f0=S&&S.focus;const r=_py.apply(this,arguments);try{if(!live()||S!==me||S.age===a0)return r;const dy=Math.max(1,(S.age|0)-(a0|0));
- ev('yr',dy);const m=mk(),w=wOf(m);if(w===mday()[0])ev('mday',dy);if(['murim','xian','god','beast','mw'].includes(w))ev('y_'+w,dy);if(/^mw_/.test(m)&&!/^mw_(normal|kid)$/.test(m))ev('y_mwsub',dy);if(FG[f0])ev('f_'+FG[f0],dy);
+ ev('yr',dy);const m=mk(),w=wk2()||wOf(m);if(w===mday()[0])ev('mday',dy);if(['murim','xian','god','beast','mw','fog','sky','soul'].includes(w))ev('y_'+w,dy);if(w==='mw'&&/^mw_/.test(m)&&!/^mw_(normal|kid)$/.test(m))ev('y_mwsub',dy);if(FG[f0])ev('f_'+FG[f0],dy);
  const h=TH(Date.now()).getUTCHours();if(h>=2&&h<5)secret('owl')}catch(e){}return r}}
 setInterval(()=>{try{if(!live())return;let r=-1;if(S.mw)r=S.mw.mr||0;else r=realmIdx();if(S._aqR==null||S._aqRS!==mk()){S._aqR=r;S._aqRS=mk();return}if(r>S._aqR){ev('brk',r-S._aqR);S._aqR=r}if(S.mw&&(S.mw.mr||0)>=1&&!S._aqMw){S._aqMw=1;ev('mwr')}snap()}catch(e){}},2500);
-function snap(){const M=S.mw,X=M&&M.x||{},n={sp:!!S.spouse,k:Math.max(+S.kids||0,(S.children||[]).length),pet:!!S.pet,job:S.job?String(S.job.t||S.job.n||''):'',fac:String(S.faction||''),ar:(S.arts||[]).length,bs:S.beastMode&&S.beastMode.st||0,mj:X.job?X.job.lv||0:0,ml:(X.locs||[]).length,ka:+S.karma||0},o=S._aqS;S._aqS=n;
+function snap(){const M=S.mw,X=M&&M.x||{},n={fc:(M&&M.fog&&M.fog.f&&M.fog.f.solved)|0,ft:(M&&M.fog&&M.fog.tier)|0,sk:(M&&M.sky&&M.sky.rk)|0,sr:(S.sv&&S.sv.rings||[]).length,sp:!!S.spouse,k:Math.max(+S.kids||0,(S.children||[]).length),pet:!!S.pet,job:S.job?String(S.job.t||S.job.n||''):'',fac:String(S.faction||''),ar:(S.arts||[]).length,bs:S.beastMode&&S.beastMode.st||0,mj:X.job?X.job.lv||0:0,ml:(X.locs||[]).length,ka:+S.karma||0},o=S._aqS;S._aqS=n;
  if(!o||o.me!==S.aqT0){n.me=S.aqT0;return}n.me=o.me;
  if(n.sp&&!o.sp)ev('wed');if(n.k>o.k)ev('kid',n.k-o.k);if(n.pet&&!o.pet)ev('pet');if(n.job&&n.job!==o.job)ev('job');if(n.fac&&n.fac!==o.fac&&!/^(none|ไม่มี)?$/i.test(n.fac))ev('fac');
- if(n.ar>o.ar)ev('art',n.ar-o.ar);if(n.bs>o.bs)ev('bevo',n.bs-o.bs);if(n.mj>o.mj)ev('mwjob',n.mj-o.mj);if(n.ml>o.ml&&o.ml>0)ev('mwloc',n.ml-o.ml);if(n.ka>o.ka)ev('kup',Math.min(50,n.ka-o.ka));
+ if(n.fc>o.fc)ev('fcase',n.fc-o.fc);if(n.ft>o.ft)ev('ftier',n.ft-o.ft);if(n.sk>o.sk)ev('skrk',n.sk-o.sk);if(n.sr>o.sr)ev('sring',n.sr-o.sr);if(n.ar>o.ar)ev('art',n.ar-o.ar);if(n.bs>o.bs)ev('bevo',n.bs-o.bs);if(n.mj>o.mj)ev('mwjob',n.mj-o.mj);if(n.ml>o.ml&&o.ml>0)ev('mwloc',n.ml-o.ml);if(n.ka>o.ka)ev('kup',Math.min(50,n.ka-o.ka));
  const hp=S.maxHp?S.hp/S.maxHp:1;if(hp<.15&&S.hp>0)S._aqLo=S.age;else if(S._aqLo!=null&&S.age>S._aqLo&&hp>.3){S._aqLo=null;ev('clutch')}
  if((S.age|0)>=80&&!S._aqA80){S._aqA80=1;ev('a80')}}
 // 5) จบชีวิต
-{const _eg=endGame;endGame=function(){try{if(S&&!S._aqE&&(S.age|0)>=1){S._aqE=1;const m=mk(),w=wOf(m),a=S.age|0,L=LC();
+{const _eg=endGame;endGame=function(){try{if(S&&!S._aqE&&(S.age|0)>=1){S._aqE=1;const m=mk(),w=wk2()||wOf(m),a=S.age|0,L=LC();
  ev('lm',1,w);if(a>=40)ev('l40');if(a>=30)ev('l30');if(a>=60)ev('l60');if(w==='beast'||w==='mw')ev('lw_'+w);
  legend(G=>{G.lives=(G.lives||0)+1;G.wl=G.wl||{};G.wl[w]=1});
  if(a===100)secret('cent');if(a>=50&&(L.mer||0)>=10&&!(L.cru||0))secret('saint');if(a>=60&&(S.money||0)<=0)secret('broke');setTimeout(sync,800)}}catch(e){}return _eg.apply(this,arguments)}}
@@ -45274,7 +45289,7 @@ const st=document.createElement('style');st.textContent=`
 // BLOCK 195: ⚡ ประสิทธิภาพอนิเมชัน — แสงวิ่งบนการ์ด/ปุ่มหน้าแรก (เดิมขยับ left ทุกเฟรม = คำนวณเลย์เอาต์ใหม่) เปลี่ยนเป็น transform (GPU) · ปุ่มเรืองแสงผู้สนับสนุนเปลี่ยนจาก box-shadow เป็น opacity
 try{(()=>{const st=document.createElement('style');st.textContent=`@keyframes mwShineT{0%{transform:translateX(0)}60%,100%{transform:translateX(620%)}}
 .mwseg:after,#tMwCard:after,#tAqBtn:after,#tGrid .gSt:after,#tGrid .gAq:after,.mnHero .hSt:after,#wPick .wc:after{left:-50%!important;animation-name:mwShineT!important;will-change:transform}
-@media (prefers-reduced-motion:reduce){.mwseg:after,#tMwCard:after,#tAqBtn:after,#tGrid .gSt:after,#tGrid .gAq:after,.mnHero .hSt:after,#wPick .wc:after{animation:none!important}}`;document.head.appendChild(st)})()}catch(e){console.error('block201',e)}
+@media (prefers-reduced-motion:reduce){.mwseg:after,#tMwCard:after,#tAqBtn:after,#tGrid .gSt:after,#tGrid .gAq:after,.mnHero .hSt:after,#wPick .wc:after{animation:none!important}}`;document.head.appendChild(st)})()}catch(e){console.error('block204',e)}
 
 // BLOCK 196: 🏝️ ไดนามิกไอส์แลนด์โหมดภาพปกติ (lite) — เดิมขนาดกระโดดทันทีและเนื้อหาสลับแบบตัดฉับ → ยืด/หดแบบสปริงสั้น + เนื้อหาจางเข้า (ยังเบา: ไม่มีย่อขยายทั้งก้อน)
 try{(()=>{const st=document.createElement('style');st.textContent=`#isl.lite{transition:width .26s cubic-bezier(.3,1.25,.45,1),height .26s cubic-bezier(.3,1.25,.45,1),opacity .2s ease!important}
@@ -45299,13 +45314,13 @@ setInterval(run,350);{const _md=modal;modal=function(){const r=_md.apply(this,ar
 try{(()=>{const I='input:not([type]),input[type=text],input[type=search],input[type=number],input[type=email],input[type=tel],input[type=url],input[type=password],textarea,select';
 const st=document.createElement('style');st.textContent=`body.dark :is(${I}){color:var(--fg,#f1e8d4)!important;-webkit-text-fill-color:var(--fg,#f1e8d4)!important;caret-color:#ffd36e!important;background-color:#15121f!important;border:1px solid color-mix(in srgb,var(--pink,#e8b54a) 45%,transparent)!important}
 body.dark select option{background:#1b1626;color:#f1e8d4}body.dark :is(input,textarea)::placeholder{color:#9a90a8!important;-webkit-text-fill-color:#9a90a8!important}
-body.dark select{color-scheme:dark}body:not(.dark) select{color-scheme:light}`;document.head.appendChild(st)})()}catch(e){console.error('block201',e)}
+body.dark select{color-scheme:dark}body:not(.dark) select{color-scheme:light}`;document.head.appendChild(st)})()}catch(e){console.error('block204',e)}
 
 // BLOCK 199: 🚀 ฟีดยาวไม่หน่วง — ข้อความในฟีดที่อยู่นอกจอไม่ต้องวาด (content-visibility) · ไม่ลบอะไรทิ้ง เลื่อนกลับไปอ่านได้ครบเหมือนเดิม
 try{(()=>{const st=document.createElement('style');st.textContent=`#feed>.bub:not(:nth-last-child(-n+12)){content-visibility:auto;contain-intrinsic-size:auto 56px}`;document.head.appendChild(st)})()}catch(e){console.error('block199',e)}
 // BLOCK 200: 📅 ชะตาประจำวันในโลกที่เดินปีเอง (นครม่านหมอก · ทะลุฟ้าดารา) — เรียกเหตุการณ์ชะตาเดียวกันหลังปีของโลกนั้น
 try{(()=>{const ins=()=>{const p=passYear;passYear=function(){const r=p.apply(this,arguments);try{if(S&&S.dl&&!S.dl.done&&S.mw&&(S.mw.fog||S.mw.sky)&&window._dlTick)window._dlTick()}catch(e){}return r}};
- const _wr=window.wReady;window.wReady=function(n){const r=_wr.apply(this,arguments);if(n==='fog'||n==='sky')try{ins()}catch(e){console.error('dl ins',e)}return r}})()}catch(e){console.error('block201',e)}
+ const _wr=window.wReady;window.wReady=function(n){const r=_wr.apply(this,arguments);if(n==='fog'||n==='sky')try{ins()}catch(e){console.error('dl ins',e)}return r}})()}catch(e){console.error('block204',e)}
 
 
 // BLOCK 201: 🎟️ ตั๋วของฉัน — รวมตั๋วทุกแบบไว้ที่เดียว: มีกี่ใบ · ใช้ทำอะไร · ได้จากไหน · ปุ่มไปที่ใช้/ที่หาได้ (เมนู ☰ และหน้าสุ่มเกิดเพิ่ม)
@@ -45340,7 +45355,7 @@ window.openTickets=function(){draw();const RR=window._RR;try{if(RR&&(RR.f==null|
 // ทางเข้า: เมนู ☰ (ต่อจากเช็คอินและภารกิจ) · หน้าสุ่มเกิดเพิ่ม
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.tkEnt')){const a=m.querySelector('.dlyB')||m.querySelector('.svStat');if(a)a.insertAdjacentHTML('afterend','<button class="gbtn tkEnt" onclick="openTickets()">🎟️ ตั๋วของฉัน <small style="opacity:.75">· ใช้ทำอะไร · ได้จากไหน</small></button>')}}catch(e){}return r};window.openMenu=openMenu}
 {const _rm=window.rrMenu;if(typeof _rm==='function'){window.rrMenu=function(){const r=_rm.apply(this,arguments);try{const m=$('modal'),h=m&&m.querySelector('h3');if(h&&!m.querySelector('.tkEnt'))h.insertAdjacentHTML('afterend','<button class="gbtn tkEnt" onclick="openTickets()">🎟️ ตั๋วของฉัน — ตั๋วแต่ละแบบใช้ทำอะไร</button>')}catch(e){}return r};try{rrMenu=window.rrMenu}catch(e){}}}
-})()}catch(e){console.error('block201',e)}
+})()}catch(e){console.error('block204',e)}
 
 // BLOCK 202: 🌌 แก้ผู้เล่นตายด้วย "วัยชรา" ตรงขอบกัลป์ — อายุขัยในช่วงกัลป์เท่ากับขอบกัลป์พอดี การเช็กตาย (ใน passYear) จึงมาก่อนการเปิดประตูกัลป์
 //   ช่วงกัลป์ (กัลป์ที่ 2 ขึ้นไป หรืออายุถึงขอบกัลป์แรก): ไม่ตายเพราะอายุ → ถึงขอบกัลป์แล้วเปิดประตู kalpaHit แทน (ตายจากบาดแผล/เหตุอื่นยังตายได้ตามปกติ)
@@ -45376,6 +45391,145 @@ function cause(){const k=+S.karma||0,sp=typeof S.spouse==='string'?S.spouse:(S.s
 window._oldCause=cause;
 })()}catch(e){console.error('block203',e)}
 
+// BLOCK 205: 🐾 สัตว์อสูร 3.0 — ช่วงวัย 6 ช่วง (ทำได้ต่างกันตามวัย) · วิถีชีวิต 4 แบบ (เปลี่ยนได้กลางทาง) · คู่ปรับตลอดชีวิต 4 บท · เหตุการณ์ตามวัย · เดินทางครั้งสุดท้าย · ตำนานบรรพบุรุษข้ามชีวิต
+try{(()=>{
+const on=()=>!!(S&&S.alive&&S.beastMode&&!S.beastMode.human);
+const V=()=>{const m=S.beastMode;return m.v3||(m.v3={ph:-1,ls:null,nem:null,f:{},tc:0})};
+const rr=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pk=a=>a[Math.floor(Math.random()*a.length)];
+const pg=p=>{try{const g=Math.max(1,Math.round(pctPow(p)||0));S.power+=g;return g}catch(e){return 0}};
+const aq=(e,n)=>{try{window._aqEv&&window._aqEv(e,n||1)}catch(x){}};
+const sp=()=>S.beastMode.sp,nm=()=>esc(S.name);
+const PH=[['🍼','วัยแรกเกิด','ตัวเล็ก ตาเพิ่งลืม โลกทั้งใบคือโพรงกับไออุ่นของแม่'],['🐾','วัยเยาว์','ซน อยากรู้ไปหมด เริ่มหัดล่าและสำรวจรอบรัง'],['🌱','วัยแรกรุ่น','เพิ่งออกจากรัง ต้องเลือกว่าจะใช้ชีวิตแบบไหน'],['🔥','วัยฉกรรจ์','แข็งแรงที่สุด ช่วงแย่งถิ่น หาคู่ และสร้างชื่อ'],['🍂','วัยแก่','ไม่ไวเท่าเดิม แต่เข้าใจป่ามากที่สุด'],['🕯️','วัยชรา','เวลาเหลือไม่มาก ทุกปีมีค่ากว่าที่เคย']];
+function phOf(){const m=S.beastMode,L=Math.max(30,S.lifespan||60),a=S.age|0,py=m.parY||3;if(a<Math.max(1,Math.round(py*.4)))return 0;if(a<py)return 1;if(a<py+Math.max(3,Math.round(L*.08)))return 2;const f=a/L;if(f<.55)return 3;if(f<.82)return 4;return 5}
+const hasPar=()=>{const m=S.beastMode;return m.par>0&&!m.parGone};
+const mates=()=>{try{return(blM().mates|0)+(S.spouse?1:0)}catch(e){return S.spouse?1:0}};
+const cubs=()=>{try{return bCubOK()}catch(e){return (S.kids|0)>0}};
+// ---------- วิถีชีวิต ----------
+const LS4={pack:['🐺','อยู่กับฝูง','ปลอดภัยกว่า มีคนช่วย แต่ต้องเล่นการเมืองในฝูง'],lone:['🌙','เดินลำพัง','แกร่งเร็ว ไม่มีใครฉุดรั้ง แต่ไม่มีใครช่วยตอนเจ็บ'],nomad:['🧭','พเนจรไกล','ได้เห็นถิ่นแปลกใหม่ เจอสัตว์หายาก แต่ไม่มีบ้าน'],edge:['🏘️','ชายขอบถิ่นมนุษย์','ฉลาดขึ้น รู้จักมนุษย์ แต่เสี่ยงนายพราน']};
+// ---------- โฟกัสตามวัย ----------
+const NF={nurse:['🍼','ซุกอกแม่'],curl:['🕳️','ขดตัวในโพรง'],play:['🤸','เล่นซน'],peek:['👀','แอบส่องโลก'],learnh:['🎯','หัดล่า'],explore:['🧭','สำรวจรอบรัง'],mark:['🪨','ประกาศอาณาเขต'],court:['💞','ตามหาคู่'],raise:['🐣','เลี้ยงลูก'],teach:['📜','สอนรุ่นหลัง'],bask:['☀️','นอนอาบแดดทบทวนชีวิต'],last:['🌄','เดินทางครั้งสุดท้าย']};
+try{for(const k in NF)if(!ALLF.some(f=>f[0]===k))ALLF.push([k,NF[k][0],NF[k][1]])}catch(e){}
+const F=k=>[k,NF[k][0],NF[k][1]];
+{const _fs=blFocusSync;blFocusSync=function(){const r=_fs.apply(this,arguments);try{if(!on())return r;const p=phOf(),base=BFOCUS.slice(),keep=k=>base.find(f=>f[0]===k);let L=[];
+ if(p===0)L=[hasPar()?F('nurse'):F('curl'),F('play'),F('peek'),keep('hide')];
+ else if(p===1)L=[F('learnh'),F('play'),F('explore'),keep('moon'),keep('hide')];
+ else if(p===2)L=base.concat([F('explore'),F('mark')]);
+ else if(p===3){L=base.concat([F('mark')]);if(!mates())L.push(F('court'));if(cubs())L.push(F('raise'))}
+ else if(p===4){L=base.filter(f=>f[0]!=='human').concat([F('teach'),F('bask')]);if(cubs())L.push(F('raise'))}
+ else{L=[keep('moon'),keep('hide'),F('teach'),F('bask')];if(!V().f.last)L.push(F('last'));const pf=base.find(f=>!BF0.some(b=>b[0]===f[0]));if(pf)L.push(pf)}
+ L=L.filter(Boolean);BFOCUS.length=0;L.forEach(f=>BFOCUS.push(f))}catch(e){console.error('b3 fs',e)}return r}}
+{const _af=autoFocus;autoFocus=function(){const r=_af.apply(this,arguments);try{if(!on())return r;blFocusSync();const p=phOf(),lo=S.hp<S.maxHp*.4,ok=k=>BFOCUS.some(f=>f[0]===k);
+ if(lo&&ok('hide')){S.focus='hide';return r}
+ const P={0:[hasPar()?'nurse':'curl','play','play','peek'],1:['learnh','learnh','play','explore'],5:['bask','teach','moon']}[p];
+ if(P)S.focus=pk(P.filter(ok))||S.focus;
+ else if(p===3&&Math.random()<.35)S.focus=pk(['mark','court','raise'].filter(ok))||S.focus;
+ else if(p===4&&Math.random()<.35)S.focus=pk(['teach','bask','raise'].filter(ok))||S.focus;
+ if(p===5&&!V().f.last&&S.age>=lifeMax()-3&&ok('last'))S.focus='last';
+ if(!ok(S.focus))S.focus=BFOCUS[0][0]}catch(e){}return r}}
+// ---------- ผลของโฟกัสใหม่ ----------
+const FXF={
+ nurse(){S.hp=S.maxHp;joy(4);const g=pg(.006);if(Math.random()<.4)return`🍼 ${(()=>{try{return BPAR_FX[rr(0,BPAR_FX.length-1)]}catch(e){return'แม่เลียขนให้จนหลับ'}})()} · พลัง +${fmt(g)}`;return''},
+ curl(){S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.15));joy(-1);if(Math.random()<.2){S.hp-=Math.round(S.maxHp*.1);return'🕳️ มีบางอย่างมาดมกลิ่นหน้าโพรงทั้งคืน คุณตัวสั่นจนหลับไม่ลง'}return Math.random()<.3?'🕳️ ฝนตกทั้งคืน คุณขดตัวฟังเสียงน้ำหยดจากหลังคาถ้ำ':''},
+ play(){const g=pg(.008);S.cha+=1;joy(5);return Math.random()<.4?pk([`🤸 ไล่งับหางตัวเองจนหัวทิ่ม · พลัง +${fmt(g)}`,`🦋 ไล่ตะครุบผีเสื้อจนตกลำธาร · พลัง +${fmt(g)}`,`🍂 กลิ้งเล่นในกองใบไม้จนขนเต็มไปด้วยเศษไม้`,`🪵 แย่งกิ่งไม้กับลูกสัตว์ตัวอื่น ชนะบ้างแพ้บ้าง`]):''},
+ peek(){S.int+=2;if(Math.random()<.35){try{const b=beastPick(true);bdexAdd(b,'see');return`👀 ส่องออกจากปากโพรง เห็น<b>${b.n}</b>เดินผ่านไปอย่างช้าๆ`}catch(e){}}return''},
+ learnh(){const g=pg(.02);const V3=V();if(!V3.f.k1&&Math.random()<.35){V3.f.k1=S.age;S.fame+=5;joy(10);return`🎯 <b>ล่าเหยื่อได้ตัวแรกในชีวิต!</b> ตัวเล็กนิดเดียว แต่ ${nm()} ภูมิใจจนคาบเดินอวดทั้งวัน · พลัง +${fmt(g)}`}if(!hasPar()&&Math.random()<.25){S.hp-=Math.round(S.maxHp*.12);return`🎯 หัดล่าเองโดยไม่มีใครสอน พลาดท่าโดนเหยื่อถีบเข้าที่หน้า · พลัง +${fmt(g)}`}return Math.random()<.4?`🎯 ${hasPar()?'ตามแม่ไปซุ่ม':'ฝึกซุ่ม'}ข้างพุ่มไม้ทั้งบ่าย · พลัง +${fmt(g)}`:''},
+ explore(){S.int+=1;const r=Math.random();if(r<.25){S.maxHp+=3;S.hp+=3;return'🧭 เจอสมุนไพรกลิ่นแปลกๆ กินแล้วรู้สึกแข็งแรงขึ้น · พลังชีวิตสูงสุด +3'}if(r<.35){S.hp-=Math.round(S.maxHp*.12);return'🧭 สำรวจไกลเกินไป ตกหลุมโคลน กว่าจะตะเกียกตะกายขึ้นมาได้ก็เจ็บไปทั้งตัว'}if(r<.55){try{const b=beastPick(true);bdexAdd(b,'see');return`🧭 เจอรอยเท้า<b>${b.n}</b>ริมลำธาร`}catch(e){}}return''},
+ mark(){const g=pg(.015);S.fame+=3;if(Math.random()<.25){const w=fight('สัตว์อสูรที่มาท้าชิงถิ่น',total()*(.7+Math.random()*.5));if(w){S.fame+=15;S.kills=(S.kills||0)+1;return`🪨 มีตัวหนึ่งเดินข้ามเส้นอาณาเขต ${nm()} ไล่มันออกไปจนลับตา · ชื่อเสียง +15`}S.hp-=Math.round(S.maxHp*.2);return'🪨 ตัวที่มาท้าชิงถิ่นแข็งแรงกว่าที่คิด คุณต้องถอยไปเลียแผล'}return Math.random()<.35?`🪨 ฝนกรงเล็บบนเปลือกไม้ทุกต้นรอบถิ่น · พลัง +${fmt(g)}`:''},
+ court(){if(mates()){joy(3);return''}if(Math.random()<.4){later(courtEv);return''}return Math.random()<.5?'💞 ร้องเรียกทั้งคืน แต่ยังไม่มีเสียงตอบกลับมา':''},
+ raise(){joy(5);S.karma+=2;S.fame+=2;return Math.random()<.45?pk(['🐣 ลูกตัวโตที่สุดล่าเหยื่อได้เองเป็นครั้งแรก','🐣 ลูกตัวเล็กหลงทาง คุณตามกลิ่นไปเจอมันนอนหลับอยู่ใต้รากไม้','🐣 สอนลูกซ่อนตัวจากเงาเหยี่ยว ทุกตัวทำได้ดี','🐣 ลูกทะเลาะกันแย่งเนื้อ คุณต้องคาบแยกทีละตัว']):''},
+ teach(){S.fame+=5;S.karma+=3;S.int+=1;const v=V();v.tc=(v.tc||0)+1;if(v.tc===5)S.fame+=30;return Math.random()<.4?pk(['📜 สัตว์หนุ่มตัวหนึ่งมาขอให้สอนวิธีหาน้ำในหน้าแล้ง','📜 คุณพาลูกสัตว์ทั้งป่าไปดูทางหนีไฟที่ไม่มีใครรู้','📜 เล่าเรื่องนายพรานที่เคยเจอให้รุ่นหลังฟัง ทุกตัวนั่งนิ่ง','📜 สอนวิธีอ่านกลิ่นฝนจากลม ลูกศิษย์ตัวหนึ่งจับทางได้เร็วมาก']):''},
+ bask(){S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.2));joy(5);S.qi+=.3;S.int+=1;if(Math.random()<.3){try{const L=blM().log||[];if(L.length){const x=pk(L);return`☀️ นอนอาบแดดแล้วนึกถึงปีที่อายุ ${x[0]} — ${esc(x[1])}`}}catch(e){}}return''},
+ last(){if(V().f.last)return'';later(lastEv);return''}};
+let qn=0;function later(fn){const go=()=>{if(!on())return;if(choice._cur||modalOpen){if(qn++<80)return setTimeout(go,700)}qn=0;try{fn()}catch(e){console.error('b3',e)}};setTimeout(go,600)}
+{const _by=beastYear;beastYear=function(){const f=S.focus,a0=S.age;const r=_by.apply(this,arguments);try{if(!on()||S.age===a0)return r;const t=FXF[f]&&FXF[f]();if(t)addFeed('ev',t,'sum');yearV3()}catch(e){console.error('b3 yr',e)}return r}}
+// ---------- เปลี่ยนช่วงวัย ----------
+function yearV3(){const v=V(),p=phOf();
+ if(p!==v.ph){const old=v.ph;v.ph=p;if(old>=0){const P=PH[p];log(`${P[0]} <b>${nm()} เข้าสู่${P[1]}</b> — ${P[2]}`,'epic',true);try{island({big:1,ic:P[0],h:'ช่วงวัยใหม่',t:P[1],kind:'gold',ms:3500})}catch(e){}aq('bph');
+   if(p===3){S.maxHp=Math.round(S.maxHp*1.1);S.hp=Math.min(S.maxHp,S.hp+20)}if(p===4){S.int+=5;S.qi+=1}if(p===5){S.maxHp=Math.round(S.maxHp*.9);S.qi+=2;aq('bfull')}
+   try{blMem('เข้าสู่'+P[1])}catch(e){}}
+  blFocusSync();if(!BFOCUS.some(x=>x[0]===S.focus))S.focus=BFOCUS[0][0]}
+ if(p===2&&!v.ls&&!v.lsAsk){v.lsAsk=1;later(lsAsk)}
+ if(v.ls)lsYear(v);
+ if(p<=2&&Math.random()<.45&&!(choice._cur||modalOpen)){const C=(()=>{try{const M=blM();return M.evC=M.evC||{}}catch(e){return{}}})();const L=PEL.filter(e=>!C[e.id]&&(()=>{try{return e.c()}catch(x){return false}})());if(L.length){const e=pk(L);C[e.id]=(C[e.id]|0)+1;try{const M=blM();(M.evL=M.evL||{})[e.id]=S.age}catch(x){}later(()=>e.f())}}
+ nemTick(v,p)}
+// ---------- วิถีชีวิต ----------
+function lsAsk(){const v=V();choice(`🌱 ถึงเวลาต้องเลือกทางเดิน`,`${nm()} โตพอจะออกจากรังแล้ว ป่ากว้างใหญ่กว่าที่เคยคิด จะใช้ชีวิตแบบไหนต่อจากนี้?<br><span class="tag2">เปลี่ยนใจได้ภายหลังถ้ามีเหตุให้ต้องเปลี่ยน</span>`,Object.keys(LS4).map(k=>({t:`${LS4[k][0]} ${LS4[k][1]}`,s:LS4[k][2],f(){setLs(k,true)}})))}
+function setLs(k,first){const v=V(),o=v.ls;v.ls=k;v.lsY=S.age;const L=LS4[k];log(`${L[0]} ${nm()} ${first?'เลือก':'เปลี่ยนมา'}<b>${L[1]}</b> — ${L[2]}`,'epic');try{blMem((first?'เลือกทาง':'เปลี่ยนเป็น')+L[1])}catch(e){}render()}
+function lsYear(v){const k=v.ls,cd=S.age-(v.lsE==null?-99:v.lsE)>=6,r=cd?Math.random():.5,lq=f=>{v.lsE=S.age;later(f)};
+ if(k==='pack'){S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.05));S.fame+=2;if(r<.16)lq(pk(PACKE))}
+ else if(k==='lone'){pg(.006);S.int+=1;if(r<.1){S.hp-=Math.round(S.maxHp*.12);addFeed('ev','🌙 ได้แผลจากการล่าคนเดียว ไม่มีใครช่วยเลีย ต้องนอนรอให้หายเอง','sum')}else if(r<.22)lq(pk(LONEE))}
+ else if(k==='nomad'){S.int+=1;if(r<.3){try{const b=beastPick(false);bdexAdd(b,'see');addFeed('ev',`🧭 ระหว่างเดินทางผ่านถิ่นใหม่ ได้เห็น<b>${b.n}</b>ที่ไม่เคยเจอมาก่อน`,'sum')}catch(e){}}if(r>.82)lq(pk(NOME))}
+ else if(k==='edge'){S.cha+=1;S.int+=1;if(r<.2)lq(pk(EDGEE))}}
+const PACKE=[
+ ()=>runE(['🐺 จ่าฝูงแก่ลง',`จ่าฝูงเดินช้าลงทุกปี สัตว์หนุ่มในฝูงเริ่มมองหาคนใหม่ และหลายตัวหันมามอง ${nm()}`,[['ท้าชิงตำแหน่งจ่าฝูง','',null,()=>{if(fight('จ่าฝูงชรา',total()*.95)){S.fame+=40;V().lead=1;log('🐺 จ่าฝูงชราก้มหัวยอมรับ ทั้งฝูงหอนรับจ่าฝูงคนใหม่','epic',true)}else{S.hp-=Math.round(S.maxHp*.25);log('🐺 จ่าฝูงยังแกร่งกว่าที่เห็น คุณถูกกัดจนต้องหมอบยอมแพ้','bad')}}],['ช่วยประคองจ่าฝูงต่อไป','k+8 f+5','จ่าฝูงจำความภักดีนี้ไว้จนวันสุดท้าย'],['แยกตัวออกจากฝูง','j-5','ฝูงนี้ไม่ใช่ที่ของเราอีกต่อไป',()=>setLs('lone')]]]),
+ ()=>runE(['🐺 ลูกฝูงหลงทาง','ลูกสัตว์ตัวเล็กที่สุดในฝูงหายไปตอนพายุเข้า ทุกตัวต้องรีบย้ายถิ่นก่อนน้ำจะท่วม',[['ย้อนกลับไปตามหา','h-10 k+10 f+10','คุณคาบลูกตัวนั้นกลับมาได้ทันตอนน้ำขึ้นถึงคอ'],['เดินตามฝูงต่อ','j-4','ทั้งฝูงเงียบไปตลอดทาง']]]),
+ ()=>runE(['🐺 สองฝูงปะทะ','ฝูงข้างเคียงบุกเข้ามาในถิ่นตอนหน้าแล้ง ต้องตัดสินใจว่าจะสู้หรือยอมแบ่งแหล่งน้ำ',[['นำหน้าออกไปสู้','',null,()=>{if(fight('ฝูงศัตรู',total()*1.05)){S.fame+=30;S.kills=(S.kills||0)+2;log('🐺 ฝูงศัตรูถอยกลับไปถิ่นเดิม ฝูงของคุณได้แหล่งน้ำทั้งหมด','epic')}else{S.hp-=Math.round(S.maxHp*.3);log('🐺 ฝูงคุณเสียหายหนัก ต้องย้ายถิ่นหนี','bad')}}],['เสนอแบ่งแหล่งน้ำ','k+10 i+3','สองฝูงอยู่ร่วมกันได้ตลอดหน้าแล้ง']]])];
+const LONEE=[
+ ()=>runE(['🌙 เงาตามหลัง','หลายคืนมานี้มีเงาสัตว์ตัวหนึ่งตามคุณอยู่ห่างๆ ไม่เข้าใกล้ ไม่จากไป',[['หันไปเผชิญหน้า','',null,()=>{if(Math.random()<.5){S.cha+=5;log('🌙 มันเป็นสัตว์โดดเดี่ยวอีกตัวที่แค่อยากมีเพื่อนเดินทาง คุณยอมให้มันตามมาอีกหลายเดือน','good')}else{S.hp-=Math.round(S.maxHp*.15);log('🌙 มันรอจังหวะคุณเผลออยู่แล้ว คุณได้แผลยาวที่หลังก่อนจะไล่มันไปได้','bad')}}],['ปล่อยไว้แบบนั้น','i+2','เงานั้นหายไปเองในคืนเดือนมืด'],['ไปเข้าฝูงที่เห็นในหุบเขา','j+5','บางทีอยู่คนเดียวนานเกินไปแล้ว',()=>setLs('pack')]]]),
+ ()=>runE(['🌙 ถ้ำลับใต้น้ำตก','เดินลำพังจนพบถ้ำที่ไม่มีสัตว์ตัวไหนรู้จัก ข้างในมีแสงเรืองจางๆ',[['เข้าไปบำเพ็ญในถ้ำ','q+2 p+'+Math.max(5,Math.round((S.power||10)*.03)),'ปราณในถ้ำหนาแน่นจนขนลุก'],['จดจำทางไว้ใช้วันหลัง','i+3','คุณกลับมาใช้ถ้ำนี้หลบภัยอีกหลายครั้ง']]])];
+const NOME=[
+ ()=>runE(['🧭 ข้ามเขตแดน','เดินทางมาถึงขอบป่าที่ไม่มีใครข้ามไป อีกฝั่งเป็นทุ่งหญ้ากว้างที่ไม่มีที่ซ่อนตัว',[['ข้ามไป','i+5 h-10','อีกฝั่งมีสัตว์ประหลาดที่ไม่เคยเห็นในตำนานไหนเลย'],['ตั้งถิ่นอยู่ตรงขอบป่า','j+6','บางทีบ้านก็คือที่ที่เหนื่อยจนอยากหยุด',()=>setLs('lone')]]]),
+ ()=>runE(['🧭 เจอฝูงพเนจรอีกกลุ่ม','สัตว์ต่างเผ่าหลายตัวเดินทางไปทางเดียวกับคุณ พวกมันชวนให้ร่วมทาง',[['ร่วมทางไปด้วยกัน','c+4 j+5','เดินทางด้วยกันจนถึงฤดูหนาว',()=>setLs('pack')],['เดินต่อลำพัง','i+2','ทางของเรายังไม่จบ']]])];
+const EDGEE=[
+ ()=>runE(['🏘️ เด็กมนุษย์กับข้าวปั้น','เด็กมนุษย์คนหนึ่งวางข้าวปั้นไว้ที่ปลายนาทุกเย็น แล้วแอบดูจากหลังต้นไม้',[['ออกไปกินต่อหน้าเด็ก','c+5 j+6','เด็กหัวเราะเสียงใส แล้ววิ่งกลับไปบอกแม่'],['คาบไปกินในป่า','i+2','ข้าวปั้นยังอุ่นอยู่เลย']]]),
+ ()=>runE(['🏘️ กับดักนายพราน','กลิ่นเหล็กกับเลือดลอยมาจากชายป่า นายพรานวางกับดักไว้ทั่ว',[['ทำลายกับดักทีละอัน','k+8 h-8','มือเจ็บแต่สัตว์อีกหลายตัวรอดชีวิต'],['ย้ายลึกเข้าป่าไปก่อน','',' ชายขอบมนุษย์ไม่ปลอดภัยแล้ว',()=>setLs('lone')],['แอบตามนายพรานกลับหมู่บ้าน','i+6','ได้รู้ว่ามนุษย์เก็บหนังสัตว์ไว้ในโรงนาหลังใหญ่']]])];
+// ---------- ตามหาคู่ ----------
+function courtEv(){if(mates())return;const n=pk(['เงาจันทร์','ขนทอง','เขี้ยวเงิน','หางไฟ','ตาอำพัน','ลมเหนือ','ใบหลิว','สายหมอก'])+(S.gender==='ชาย'?'สาว':'หนุ่ม');
+ runE(['💞 เสียงตอบกลับมาแล้ว',`คืนที่สามของการร้องเรียก มีเสียงหนึ่งตอบกลับมาจากเนินเขาฝั่งตรงข้าม — <b>${n}</b> ${sp()}ที่เดินลงมาหาอย่างระวังตัว`,[['เดินเข้าไปหาอย่างช้าๆ','j+10 c+3',`${n}ยอมเดินเคียงข้างกลับถิ่น`,()=>{S.spouse=n;S.spRel=70;try{const M=blM();M.mates=(M.mates|0)+1}catch(e){}try{blMem('ได้คู่ชื่อ '+n)}catch(e){}if(Math.random()<.6)setTimeout(()=>{if(on()){S.kids=(S.kids||0)+rr(1,3);log(`🐣 ${n}ให้กำเนิดลูกตัวน้อย ${S.kids} ตัว`,'good');blFocusSync();render()}},4000)}],['โชว์พลังก่อน ให้รู้ว่าใครแกร่ง','',null,()=>{if(Math.random()<.5){S.spouse=n;S.spRel=55;try{const M=blM();M.mates=(M.mates|0)+1}catch(e){}log(`💞 ${n}ประทับใจ ยอมอยู่ด้วยกัน แต่ขู่ฟ่อใส่ทุกครั้งที่คุณอวดเก่ง`,'good')}else log(`💞 ${n}มองแล้วหันหลังกลับขึ้นเขาไป`,'bad')}],['ยังไม่พร้อม','i+1','คุณถอยกลับเข้าป่า']]])}
+// ---------- เดินทางครั้งสุดท้าย ----------
+function lastEv(){const v=V();if(v.f.last)return;v.f.last=S.age;
+ choice('🌄 เดินทางครั้งสุดท้าย',`${nm()} รู้ตัวว่าเวลาเหลือไม่มาก ขาไม่แข็งแรงเหมือนเคย แต่ยังมีแรงพอสำหรับการเดินทางอีกครั้งเดียว จะไปที่ไหน?`,[
+  {t:'🕳️ กลับไปโพรงที่เกิด',s:'หลักใจสงบ',f(){joy(20);S.hp=S.maxHp;log(`🕳️ โพรงเดิมยังอยู่ ${nm()} ขดตัวลงตรงที่แม่เคยนอน กลิ่นดินยังเหมือนเดิมทุกอย่าง`,'myth',true);v.end='den'}},
+  {t:'🏔️ ขึ้นไปบนยอดเขาที่ใกล้ดวงจันทร์ที่สุด',s:'ปราณ + มาก',f(){S.qi+=5;log(`🏔️ บนยอดเขา แสงจันทร์ส่องลงมาตรงๆ ${nm()} หลับตาฟังเสียงลมเป็นครั้งสุดท้าย`,'myth',true);v.end='peak'}},
+  {t:'🐾 ไปนอนอยู่กลางลูกหลาน',s:'ชื่อเสียง + · ความผูกพัน',f(){S.fame+=50;S.karma+=10;log(`🐾 ลูกหลานทั้งป่ามานอนล้อมรอบ ${nm()} ไม่มีใครส่งเสียง มีแค่เสียงหายใจพร้อมกัน`,'myth',true);v.end='kin'}},
+  {t:'🌊 เดินไปให้สุดขอบโลกที่เคยฝันถึง',s:'ปัญญา + มาก',f(){S.int+=15;log(`🌊 ${nm()} เดินจนเห็นทะเลเป็นครั้งแรกในชีวิต คลื่นซัดเข้าฝั่งไม่หยุด เหมือนป่าที่ไม่เคยหลับ`,'myth',true);v.end='sea'}}]);blFocusSync();S.focus='bask';render()}
+// ---------- คู่ปรับตลอดชีวิต ----------
+function nemTick(v,p){let n=v.nem;
+ if(!n&&p>=1&&p<=3&&S.age>=2&&Math.random()<.35){let s=sp();try{const L=BL_SP.filter(x=>x[0]!==sp());s=pk(L)[0]}catch(e){}n=v.nem={sp:s,n:pk(['เขี้ยวหัก','ตาเดียว','ขนดำ','หูขาด','ลายเสือ','กรงเล็บแดง'])+s,rel:0,st:0,y:S.age};later(()=>nemEv(1))}
+ else if(n&&!n.end){const gap=S.age-n.y;if(n.st===1&&p>=3&&gap>=4&&Math.random()<.35)later(()=>nemEv(2));else if(n.st===2&&gap>=5&&Math.random()<.3)later(()=>nemEv(3));else if(n.st===3&&p>=4&&gap>=5&&Math.random()<.3)later(()=>nemEv(4))}}
+function nemEv(k){const v=V(),n=v.nem;if(!n||n.end||n.st>=k)return;n.st=k;n.y=S.age;const N=`<b>${esc(n.n)}</b>`;if(k===1)aq('bnem');
+ const rel=d=>{n.rel=Math.max(-3,Math.min(3,n.rel+d))};
+ if(k===1)return runE([`😠 คู่ปรับคนแรก`,`${N} ลูก${esc(n.sp)}รุ่นเดียวกันแย่งเหยื่อที่ ${nm()} ล่ามาได้ แล้วยืนจ้องอย่างท้าทาย`,[['กระโจนใส่แย่งคืน','',null,()=>{rel(-1);if(fight(n.n,total()*.8)){S.fame+=5;log(`😠 คุณคาบเหยื่อคืนมาได้ ${esc(n.n)}คำรามใส่ก่อนหนีไป มันจำหน้าคุณได้แล้ว`,'')}else{S.hp-=Math.round(S.maxHp*.15);log(`😠 ${esc(n.n)}ตัวโตกว่า คุณได้แผลที่หูกลับมาแทน`,'bad')}}],['ปล่อยให้มันไป','k+3',`${esc(n.n)}มองอย่างงงๆ ที่คุณไม่สู้`,()=>rel(1)],['แบ่งให้ครึ่งหนึ่ง','k+5 c+3',`${esc(n.n)}ลังเลอยู่นาน ก่อนจะงับไปครึ่งเดียว`,()=>rel(2)]]]);
+ if(k===2)return runE([`⚔️ ${esc(n.n)}กลับมาแล้ว`,`หลายปีผ่านไป ${N} โตเต็มวัยและมายืนอยู่ที่เส้นอาณาเขตของคุณ ${n.rel<0?'สายตายังเต็มไปด้วยความแค้น':n.rel>0?'คราวนี้มันไม่ได้มาหาเรื่อง แต่มาขอใช้แหล่งน้ำ':'ไม่รู้ว่ามาดีหรือมาร้าย'}`,[['สู้ให้รู้ว่าใครคือเจ้าถิ่น','',null,()=>{rel(-1);if(fight(n.n,total()*1)){S.fame+=25;S.kills=(S.kills||0)+1;log(`⚔️ ${esc(n.n)}ล้มลงแล้วถอยหนี แต่ก่อนไปมันหันมามองหน้าคุณนาน`,'epic')}else{S.hp-=Math.round(S.maxHp*.25);log(`⚔️ ${esc(n.n)}เอาชนะได้ แต่ไม่ยึดถิ่น มันแค่อยากให้คุณรู้`,'bad')}}],['เปิดทางให้ใช้แหล่งน้ำ','k+8',`${esc(n.n)}ดื่มน้ำแล้วพยักหน้าก่อนจากไป`,()=>rel(1)],['ชวนล่าด้วยกันสักครั้ง','c+5 p+'+Math.max(5,Math.round((S.power||10)*.02)),'ล่าเหยื่อตัวใหญ่ได้ที่ไม่มีใครล่าได้คนเดียว',()=>rel(2)]]]);
+ if(k===3)return runE([`🔥 วิกฤตที่ต้องเลือก`,`ไฟป่าล้อมไว้สามด้าน ${nm()} กับ ${N} ติดอยู่บนเนินเดียวกัน ทางรอดมีแค่ช่องแคบเดียวที่ผ่านได้ทีละตัว`,[['ผลักมันลงไปแล้วหนีก่อน','k-15',null,()=>{n.end='betray';log(`🔥 คุณรอด ${esc(n.n)}ไม่รอด เสียงคำรามสุดท้ายของมันตามมาในฝันอีกหลายปี`,'bad',true);joy(-12)}],['ให้มันไปก่อน','k+12',null,()=>{rel(2);S.hp-=Math.round(S.maxHp*.3);log(`🔥 ${esc(n.n)}ลอดช่องไปได้ แล้ว…หันกลับมาคาบคอคุณลากผ่านเปลวไฟออกไปด้วย`,'epic',true)}],['ช่วยกันขุดทางใหม่','',null,()=>{if(Math.random()<.5+n.rel*.1){rel(2);log(`🔥 สองตัวช่วยกันขุดจนทะลุไปถึงลำธาร ทั้งคู่นอนหอบอยู่ริมน้ำจนเช้า ไม่มีใครพูดอะไร`,'epic',true)}else{S.hp-=Math.round(S.maxHp*.35);rel(1);log('🔥 ขุดไม่ทัน ไฟลามถึงตัว ทั้งคู่วิ่งฝ่าออกมาด้วยขนไหม้ทั้งตัว','bad',true)}}]]]);
+ if(k===4){const fr=n.rel>=2,en=n.rel<=-1;n.end=fr?'friend':en?'enemy':'rival';
+  if(fr){S.karma+=15;joy(15);aq('bnemf');return runE([`🤝 เพื่อนที่เคยเป็นศัตรู`,`${N} แก่ลงมากแล้ว มันเดินกะเผลกมานอนข้างคุณใต้ต้นไม้ใหญ่ เหมือนรู้ว่าอีกไม่นานคงไม่ได้เจอกันอีก`,[['นอนอยู่ด้วยกันจนพระอาทิตย์ตก','j+15','สองเงาเคียงกันบนพื้นหญ้า เงาหนึ่งเคยไล่งับอีกเงาหนึ่งตอนยังเล็ก']]])}
+  if(en)return runE([`⚔️ ศึกสุดท้าย`,`${N} กลับมาเป็นครั้งสุดท้าย ตาฝ้าฟาง ฟันหักไปครึ่งปาก แต่ความแค้นยังเหมือนวันแรก`,[['สู้ให้จบ','',null,()=>{if(fight(n.n,total()*.9)){S.fame+=40;S.kills=(S.kills||0)+1;log(`⚔️ ${esc(n.n)}ล้มลงเป็นครั้งสุดท้าย คุณยืนอยู่นานกว่าจะเดินจากไป ไม่รู้ว่ารู้สึกชนะหรือเปล่า`,'myth',true)}else{S.hp-=Math.round(S.maxHp*.4);log(`⚔️ ${esc(n.n)}เอาชนะได้ แล้วล้มลงตายเพราะแผลเก่าตรงหน้าคุณ`,'myth',true)}}],['หันหลังเดินจากไป','k+10 j+5','ความแค้นจบลงที่คุณ ไม่ใช่ที่มัน']]])
+  return runE([`🌗 คู่ปรับตลอดกาล`,`${N} มายืนอยู่บนเนินเดิมที่เจอกันครั้งแรก ไม่ใช่เพื่อนและไม่ใช่ศัตรู แค่เป็นคนเดียวที่จำคุณได้ตั้งแต่ตัวเท่ากำปั้น`,[['ประลองกันอีกสักครั้งเพื่อความทรงจำ','p+'+Math.max(5,Math.round((S.power||10)*.03))+' f+15','ไม่มีใครชนะ ทั้งคู่ล้มลงหัวเราะ (ในแบบของสัตว์)'],['พยักหน้าทักแล้วจากกัน','j+8','บางความสัมพันธ์ไม่ต้องมีชื่อเรียก']]])}}
+// ---------- เหตุการณ์ตามวัย ----------
+const PE=(id,ph,f,o)=>Object.assign({id,mx:1,gap:2,c:()=>on()&&phOf()===ph,f},o||{});
+const PEL=[
+ PE('v3_rain',0,()=>runE(['🌧️ ฝนแรกในชีวิต',`เสียงฟ้าร้องครั้งแรกทำให้ ${nm()} สะดุ้งจนขนตั้ง น้ำฝนหยดลงจมูกเป็นครั้งแรก`,[['ซุกตัวลึกเข้าไปในโพรง','j+3 h+5','อบอุ่นและปลอดภัย'],['คลานออกไปดมน้ำฝน','i+3 c+2','ฝนมีกลิ่นของดินกับใบไม้ที่ไม่เคยได้กลิ่น']]])),
+ PE('v3_milk',0,()=>runE(['🍼 แย่งกันกิน',`พี่น้องในครอกดันกันแย่งจุดที่อุ่นที่สุด ${nm()} ตัวเล็กสุดถูกเบียดตกขอบรัง`,[['ดันกลับเข้าไปให้ได้','p+3 h-3','ได้ที่ของตัวเองคืนมา แต่โดนเหยียบหัวไปสองที'],['ร้องเรียกแม่','j+4','แม่ใช้จมูกดันคุณกลับเข้าไปกลางกอง'],['ไปนอนตรงมุมที่ไม่มีใครแย่ง','i+2','ที่ตรงนั้นเย็นกว่า แต่มองเห็นท้องฟ้า']]])),
+ PE('v3_shadow',0,()=>runE(['🦅 เงาบนท้องฟ้า',`เงาใหญ่บินวนเหนือรัง ${hasPar()?'แม่ขู่เสียงต่ำจนขนลุก':'ไม่มีใครคอยปกป้อง'}`,[['นอนนิ่งไม่ขยับ','i+3','เงานั้นวนอยู่สามรอบแล้วบินไป'],['วิ่งหาที่ซ่อน','h-6 p+2','เกือบโดนกรงเล็บเฉี่ยว แต่วิ่งทัน']]]),{c:()=>on()&&phOf()===0&&S.age>=0}),
+ PE('v3_legend',0,()=>{let L=null;try{L=LS.get('murim_bleg',null)}catch(e){}if(!L||!L.n){runE(['🌙 นิทานก่อนนอน',`${hasPar()?'แม่':'ลมหนาว'}กล่อมให้หลับด้วยเสียงที่ฟังเหมือนนิทานเก่า เรื่องสัตว์ตัวหนึ่งที่เดินไปจนสุดขอบป่า`,[['ฟังจนหลับ','j+4 i+1','คืนนั้นฝันถึงป่าที่ไม่มีวันจบ']]]);return}
+  runE(['🌙 ตำนานของบรรพบุรุษ',`${hasPar()?'แม่':'นกฮูกแก่'}เล่าเรื่อง<b>${esc(L.n)}</b> ${esc(L.sp||'')}ที่เคยมีชีวิตอยู่ในป่าแห่งนี้ ${esc(L.t||'')}`,[['ตั้งใจฟังทุกคำ','i+3 j+4',`${nm()} สัญญากับตัวเองว่าวันหนึ่งจะเป็นแบบนั้นบ้าง`,()=>{S.qi+=.5}],['ผล็อยหลับไปก่อนจบ','h+5','แต่เรื่องนั้นติดอยู่ในฝันทั้งคืน']]])}),
+ PE('v3_first_out',1,()=>runE(['🌿 ก้าวแรกนอกรัง',`${nm()} เดินออกไปไกลกว่าทุกครั้ง ไกลจนหันกลับไปไม่เห็นรังแล้ว`,[['เดินต่ออีกนิด','i+4 j+3','เจอลำธารที่มีปลาตัวเล็กว่ายเต็มไปหมด'],['รีบวิ่งกลับรัง','h+5','อุ่นที่สุดก็ยังเป็นที่เดิม']]])),
+ PE('v3_bully',1,()=>runE(['😤 พี่ใหญ่ขี้แกล้ง',`พี่ตัวโตสุดในครอกชอบกดหัว ${nm()} ลงดินทุกครั้งที่เล่นกัน`,[['สู้กลับเต็มแรง','p+4 h-5','ครั้งนี้พี่เป็นฝ่ายถอย'],['หลบไปเล่นตัวเดียว','i+3','ได้รู้จักมุมลับๆ ของรังที่ไม่มีใครรู้'],['เลียหน้าพี่','c+3 j+3','พี่หยุดแกล้ง แล้วนอนเบียดกันจนหลับ']]]),{c:()=>on()&&phOf()===1&&hasPar()}),
+ PE('v3_human_kid',1,()=>runE(['👧 เด็กมนุษย์ในป่า',`เด็กมนุษย์คนหนึ่งหลงเข้ามาในป่า ร้องไห้อยู่ใต้ต้นไม้ ${nm()} ไม่เคยเห็นมนุษย์ใกล้ขนาดนี้มาก่อน`,[['เดินนำทางไปที่ชายป่า','k+10 c+3','เด็กเดินตามหางคุณจนเห็นไฟจากหมู่บ้าน'],['แอบดูอยู่ห่างๆ','i+3','ผู้ใหญ่มาตามหาเด็กพร้อมคบเพลิง'],['หนีกลับรัง','','มนุษย์น่ากลัวกว่าที่คิด']]])),
+ PE('v3_butterfly',1,()=>runE(['🦋 ผีเสื้อสีทอง',`ผีเสื้อสีทองบินผ่านหน้า ${nm()} ไล่ตามไปโดยไม่ทันคิด`,[['ไล่ต่อไม่หยุด','',null,()=>{if(Math.random()<.5){S.qi+=1;log('🦋 ผีเสื้อพาไปถึงลานดอกไม้ที่มีปราณหนาแน่น · ปราณ +1','good')}else{S.hp-=Math.round(S.maxHp*.15);log('🦋 มัวแต่มองข้างบน ตกลงไปในหลุมพรานเก่า กว่าจะปีนขึ้นมาได้ก็ค่ำ','bad')}}],['หยุดแล้วกลับรัง','i+2','ผีเสื้อบินวนรอบหัวคุณหนึ่งรอบก่อนจากไป']]])),
+ PE('v3_leave',2,()=>runE(['🍃 คืนแรกที่ไม่มีรัง',`คืนแรกที่ต้องนอนเองข้างนอก ${nm()} หาที่ซุกตัวไม่ได้ ลมหนาวพัดผ่านทั้งคืน`,[['ขุดหลุมนอนเอง','p+3 i+2','หลุมแรกในชีวิตเบี้ยวๆ แต่กันลมได้'],['นอนใต้ต้นไม้ใหญ่','j+2','ได้ยินเสียงสัตว์กลางคืนเป็นครั้งแรก'],['ย้อนไปดูรังเก่าอีกครั้ง','j-3 c+2','รังว่างเปล่า มีแต่กลิ่นที่คุ้นเคย']]])),
+ PE('v3_first_big',2,()=>runE(['🦌 เหยื่อตัวใหญ่ครั้งแรก',`กวางตัวใหญ่กว่า ${nm()} สามเท่ายืนกินหญ้าอยู่คนเดียว`,[['ลองล่าดู','',null,()=>{if(fight('กวางเขาใหญ่',total()*.6)){S.fame+=10;pg(.02);log('🦌 ล่าเหยื่อตัวใหญ่ได้เป็นครั้งแรก กินได้เป็นสัปดาห์','epic')}else{S.hp-=Math.round(S.maxHp*.2);log('🦌 กวางสะบัดเขาใส่จนกระเด็น ได้บทเรียนราคาแพง','bad')}}],['รอให้มันเผลอแล้วค่อยลอง','i+3','รอจนมันเดินจากไป แต่ได้เรียนท่าเดินของมัน']]])),
+ PE('v3_storm_young',2,()=>runE(['⛈️ พายุลูกแรกที่ต้องเผชิญเอง','พายุพัดต้นไม้ล้มทั่วป่า ไม่มีใครบอกว่าต้องหลบที่ไหน',[['วิ่งขึ้นที่สูง','h-5 i+3','รอดน้ำป่า แต่โดนกิ่งไม้ฟาด'],['ตามสัตว์ตัวอื่นไป','c+2','ทุกตัวรู้ทางหนีดีกว่าคุณ']]])),
+ PE('v3_prime_scar',3,()=>runE(['🩸 แผลเป็นแรก',`หลังศึกแย่งถิ่น ${nm()} ได้แผลยาวที่ไหล่ ไม่มีวันหายสนิท`,[['เลียแผลแล้วลุกขึ้นสู้ต่อ','p+'+Math.max(5,Math.round((S.power||10)*.02))+' h-5','แผลนั้นกลายเป็นเครื่องหมายที่ใครเห็นก็ถอย'],['พักให้หายก่อน','h+15','บางครั้งการรอก็คือการชนะ']]])),
+ PE('v3_prime_hunter',3,()=>runE(['🏹 นายพรานหมายหัว',`ข่าวชื่อเสียงของ ${nm()} ไปถึงหมู่บ้านมนุษย์ นายพรานฝีมือดีเริ่มตามรอย`,[['ซุ่มโจมตีก่อน','',null,()=>{if(fight('นายพรานฝีมือดี',total()*.9)){S.fame+=30;S.kills=(S.kills||0)+1;log('🏹 นายพรานทิ้งธนูแล้ววิ่งหนี ตำนานของคุณในหมู่บ้านน่ากลัวขึ้นอีก','epic')}else{S.hp-=Math.round(S.maxHp*.3);log('🏹 ลูกธนูปักที่ขาหลัง คุณลากตัวหนีเข้าป่าลึก','bad')}}],['ย้ายถิ่นหนี','i+3','ทิ้งถิ่นเดิมไว้เบื้องหลัง'],['ปล่อยให้เขาตามจนหลงป่า','i+5 k+3','นายพรานหลงอยู่สามวัน ออกมาได้ก็เลิกล่าสัตว์ไปเลย']]])),
+ PE('v3_prime_feast',3,()=>runE(['🍖 ปีอุดม',`ปีนี้เหยื่อชุกชุมจน ${nm()} ล่าได้มากเกินกินคนเดียว`,[['แบ่งให้สัตว์แก่ที่ล่าไม่ไหว','k+10 f+8','สัตว์แก่ตัวหนึ่งเล่าเรื่องป่าในอดีตให้ฟังเป็นการตอบแทน'],['ฝังเก็บไว้ใช้หน้าหนาว','i+3 h+5','หน้าหนาวปีนั้นคุณไม่ต้องหิวเลย'],['กินให้หมดจนอ้วนพี','p+'+Math.max(5,Math.round((S.power||10)*.02))+' j+5','นอนอืดอยู่สามวัน']]])),
+ PE('v3_old_young',4,()=>runE(['🦴 สัตว์หนุ่มมาท้าทาย',`สัตว์หนุ่มไฟแรงตัวหนึ่งมาท้า ${nm()} ต่อหน้าทั้งป่า มันเร็วกว่า แข็งแรงกว่า แต่ยังไม่รู้อะไรอีกเยอะ`,[['สู้ด้วยประสบการณ์','',null,()=>{if(fight('สัตว์หนุ่มไฟแรง',total()*.95)){S.fame+=25;log('🦴 มันพุ่งเข้ามาตรงๆ ตามที่คิดไว้ ล้มลงในท่าเดียว ทั้งป่ารู้ว่าความแก่ไม่ได้แปลว่าอ่อน','epic')}else{S.hp-=Math.round(S.maxHp*.25);log('🦴 ขาไม่ไวเท่าใจอีกแล้ว คุณยอมรับแพ้อย่างสงบ','bad')}}],['สอนมันแทนการสู้','k+8 f+10','มันกลายเป็นลูกศิษย์ที่ภักดีที่สุด',()=>{V().tc=(V().tc||0)+1}],['เดินเลี่ยงไป','i+2','ไม่มีอะไรต้องพิสูจน์แล้ว']]])),
+ PE('v3_old_wound',4,()=>runE(['🍂 แผลเก่าปวดตอนฝนตก',`ทุกครั้งที่ฝนตก แผลเก่าที่ไหล่จะปวดขึ้นมา ${nm()} เริ่มรู้ว่าร่างกายไม่เหมือนเดิม`,[['ไปแช่น้ำพุร้อนบนเขา','h+20 q+1','น้ำอุ่นช่วยได้มากกว่าที่คิด'],['ช่างมัน เดินต่อไป','p+3 h-5','ความดื้อยังเหมือนวัยหนุ่ม']]])),
+ PE('v3_old_cubs',4,()=>runE(['🐣 ลูกของลูก',`ลูกที่เคยเลี้ยงพาลูกตัวน้อยของมันมาหา ${nm()} ลูกตัวเล็กงับหางคุณเล่นไม่ยอมปล่อย`,[['ปล่อยให้งับเล่น','j+12 k+3','ลูกตัวน้อยหลับคาหางคุณไปเลย'],['สอนวิธีล่าครั้งแรกให้','f+8 k+5','มันจำท่านั้นไปจนโต']]]),{c:()=>on()&&phOf()===4&&cubs()}),
+ PE('v3_elder_last_moon',5,()=>runE(['🌕 จันทร์ที่สวยที่สุด',`คืนนี้จันทร์เต็มดวงสวยกว่าทุกปีที่จำได้ ${nm()} นอนมองอยู่นานจนลืมเวลา`,[['หอนรับแสงจันทร์อีกครั้ง','q+2 j+8','ทั้งป่าหอนตามเป็นเสียงเดียวกัน'],['นอนเงียบๆ จนรุ่งสาง','h+15 j+5','บางความสวยงามไม่ต้องส่งเสียง']]])),
+ PE('v3_elder_teach',5,()=>runE(['📜 คำสอนสุดท้าย',`สัตว์รุ่นหลังมารวมตัวกันหน้าถ้ำ รอฟังเรื่องเล่าจาก ${nm()} สัตว์ที่อายุมากที่สุดในป่า`,[['เล่าเรื่องคู่ปรับในวัยเยาว์','f+15 j+6','ลูกสัตว์ทุกตัวหัวเราะตอนเล่าถึงตอนโดนแย่งเหยื่อ'],['สอนทางหนีภัยที่รู้คนเดียว','k+10 f+10','ความรู้นั้นจะอยู่ต่อไปอีกหลายรุ่น'],['บอกแค่ว่า "จงใช้ชีวิตให้คุ้ม"','j+10','บางทีคำสั้นๆ ก็จำง่ายที่สุด']]]))];
+BLX.push(...PEL.filter(e=>!/^v3_(rain|milk|shadow|legend)$/.test(e.id)));
+// ---------- เก็บตำนานไว้ให้ชีวิตหน้า ----------
+{const _eg=endGame;endGame=function(){try{if(S&&S.beastMode&&!S.beastMode.human&&!S._b3E){S._b3E=1;const v=V(),L=LS4[v.ls]||null,E={den:'จากไปอย่างสงบในโพรงที่เกิด',peak:'หลับตาครั้งสุดท้ายบนยอดเขาใต้แสงจันทร์',kin:'จากไปท่ามกลางลูกหลานนับร้อย',sea:'เดินไปจนเห็นทะเลก่อนจากไป'}[v.end]||'';
+ const t=[L?`ใช้ชีวิตแบบ${L[1]}`:'',v.nem&&v.nem.end==='friend'?`เปลี่ยนศัตรูอย่าง${v.nem.n}ให้เป็นเพื่อน`:v.nem&&v.nem.end==='enemy'?`สู้กับ${v.nem.n}จนวันสุดท้าย`:'',E,`อายุ ${S.age} ปี`].filter(Boolean).join(' · ');
+ LS.set('murim_bleg',{n:S.name,sp:S.beastMode.sp,t})}}catch(e){}return _eg.apply(this,arguments)}}
+// ---------- แถบบอกช่วงวัย ----------
+{const _rn=render;render=function(){const r=_rn.apply(this,arguments);try{let h=document.getElementById('b3Hud');if(!on()){if(h)h.remove();return r}const fe=$('focus');if(!fe)return r;if(!h){h=document.createElement('div');h.id='b3Hud';fe.parentNode.insertBefore(h,fe)}const v=V(),p=phOf(),P=PH[p],L=LS4[v.ls],n=v.nem;
+ const t=`<span title="${esc(P[2])}">${P[0]} ${P[1]}</span>${L?`<span>${L[0]} ${L[1]}</span>`:''}${n&&!n.end?`<span>😠 คู่ปรับ: ${esc(n.n)} ${n.rel>=2?'(เริ่มเป็นมิตร)':n.rel<=-1?'(แค้นฝังใจ)':''}</span>`:n&&n.end?`<span>${n.end==='friend'?'🤝':n.end==='betray'?'🔥':'🌗'} ${esc(n.n)}</span>`:''}`;if(h.innerHTML!==t)h.innerHTML=t}catch(e){}return r}}
+const st=document.createElement('style');st.textContent=`#b3Hud{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}#b3Hud span{font-size:12px;padding:3px 9px;border-radius:999px;background:var(--card,#fff);border:1.5px solid var(--line,#ccc);font-weight:700}`;document.head.appendChild(st);
+window._b3={phOf,V,lsAsk,nemEv,lastEv};
+})()}catch(e){console.error('block205',e)}
 // BLOCK 204: 🪦 การตายตามชีวิต ทุกโลก — ยุคปัจจุบัน · ทะลุฟ้าดารา · นครม่านหมอก · สัตว์อสูร · จิตวิญญาณยุทธ์ (ยุทธภพ/เซียนอยู่ BLOCK 203)
 //   window._dvPick(w) คืนข้อความการตายเมื่อสิ้นอายุขัย (มีคำว่า "วัยชรา" เสมอ) · w/sky.js w/fog.js w/mwx.js เรียกใช้ตอนสิ้นอายุ
 try{(()=>{const pk=a=>a[Math.floor(Math.random()*a.length)];
