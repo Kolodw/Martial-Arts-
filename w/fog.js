@@ -274,7 +274,7 @@ function fogYear(){const K=FG();ensure(K);try{if(auto)autoFocus()}catch(e){}S.ag
  else if(!QU.length&&rnd()<.4){const e=evPick(K);if(e)queue(e)}
  if(K.anc<30&&rnd()<.35)queue(()=>evLow(K));
  heal(K.path==='dream'&&t>=3?.03:.08);sync();
- if(S.age>=S.mw.end&&!S.deathCause)S.deathCause=pick(['หลับไปอย่างสงบในคืนที่หมอกบางที่สุดของปี','สิ้นใจข้างหน้าต่างที่มองเห็นหอนาฬิกา','จากไปพร้อมเสียงระฆังที่มีแค่คุณได้ยิน']);
+ if(S.age>=S.mw.end&&!S.deathCause)S.deathCause=(window._dvPick&&window._dvPick('fog'))||pick(['หลับไปอย่างสงบในคืนที่หมอกบางที่สุดของปี','สิ้นใจข้างหน้าต่างที่มองเห็นหอนาฬิกา','จากไปพร้อมเสียงระฆังที่มีแค่คุณได้ยิน']);
  render();checkDeath();saveGame();if(QU.length)flush()}
 function heal(f){S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*f))}
 // ผลประจำปี: วัตถุ จุดอ่อนของสาย องค์กร บ้าน

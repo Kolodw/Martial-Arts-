@@ -333,7 +333,7 @@ function skyYear(){const K=SK(),M=S.mw;try{if(auto)autoFocus()}catch(e){}S.age++
  if(!QU.length&&rnd()<(K.rk<0?.5:.62)){const id=evPick(K);if(id)queue(id)}
  advance();
  S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*(has(K,'heart')?.12:.06)*(mutHas(K,'ไข้ยีนเรื้อรัง')?.5:1)));
- sync();if(S.age>=S.mw.end&&!S.deathCause)S.deathCause=K.beast?pick(['สิ้นอายุขัยในร่างอสูรกลางป่าลึก','หลับไปตลอดกาลในถ้ำที่ฝูงอสูรเฝ้าอยู่']):pick([`จากไปอย่างสงบด้วยวัยชราใน${K.city}`,'หลับไปตลอดกาลบนเก้าอี้ริมกำแพงชั้นนอก ที่ที่เฝ้ามาทั้งชีวิต','จากไปด้วยวัยชรา ท่ามกลางศิษย์และลูกหลานในนครกำแพง']);render();checkDeath();saveGame();flush()}
+ sync();if(S.age>=S.mw.end&&!S.deathCause)S.deathCause=(!K.beast&&window._dvPick&&window._dvPick('sky'))||(K.beast?pick(['สิ้นอายุขัยในร่างอสูรกลางป่าลึก','หลับไปตลอดกาลในถ้ำที่ฝูงอสูรเฝ้าอยู่']):pick([`จากไปอย่างสงบด้วยวัยชราใน${K.city}`,'หลับไปตลอดกาลบนเก้าอี้ริมกำแพงชั้นนอก ที่ที่เฝ้ามาทั้งชีวิต','จากไปด้วยวัยชรา ท่ามกลางศิษย์และลูกหลานในนครกำแพง']));render();checkDeath();saveGame();flush()}
 
 // ---------- เริ่มชีวิต ----------
 window.skyStart=function(bg){window._frS=1;try{closeM()}catch(e){}

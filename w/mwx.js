@@ -58,7 +58,7 @@ SL.impl.mwEnter=mwEnter;mwEnter=function(){return globalThis.mwEnter.apply(this,
 // ---- ท่อน mwx7 (เดิมอยู่ app.js บรรทัด 15517) · ห่อ: regTry, checkDeath ----
 (function(){const SL=globalThis.__wSlots['mwx7'];let regTry=SL.base.regTry;let checkDeath=SL.base.checkDeath;
 {const _cdR=checkDeath;checkDeath=function(){try{if(mwOn()&&S.alive&&!S.deathCause&&S.age>=S.mw.end){const M=S.mw,with_=M.linMet&&M.lin>=40?(M.fl.linK?' หลินและหลานสาวกุมมืออยู่ข้างๆ':' หลินกุมมืออยู่ข้างๆ'):'';
- S.deathCause=(M.dieAt==='roof'?'หลับไปบนดาดฟ้าตึกเก่าใจกลางกรุงเทพฯ ใต้แสงไฟเมืองที่ไม่เคยดับ':M.dieAt==='temple'?'สิ้นลมในท่านั่งสมาธิที่วัดบนดอย ลมหายใจสุดท้ายเต็มไปด้วยปราณ':'จากไปอย่างสงบด้วยวัยชราในยุคที่ไม่ใช่ยุคของตัวเอง')+with_;
+ S.deathCause=(!M.dieAt&&M.native&&window._dvPick&&window._dvPick('mw'))||(M.dieAt==='roof'?'หลับไปบนดาดฟ้าตึกเก่าใจกลางกรุงเทพฯ ใต้แสงไฟเมืองที่ไม่เคยดับ':M.dieAt==='temple'?'สิ้นลมในท่านั่งสมาธิที่วัดบนดอย ลมหายใจสุดท้ายเต็มไปด้วยปราณ':'จากไปอย่างสงบด้วยวัยชราในยุคที่ไม่ใช่ยุคของตัวเอง')+(M.native?'':with_);
  try{keyAdd(`ใช้ชีวิตในยุคปัจจุบัน ${M.y} ปี`)}catch(e){}}}catch(e){}
  if(!mwOn())return _cdR.apply(this,arguments);
  // ยุคปัจจุบัน: ไม่มีระบบชุบชีวิต/ย้อนเวลาช่วยพ้นความตาย
