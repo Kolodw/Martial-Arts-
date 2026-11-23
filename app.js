@@ -45274,7 +45274,7 @@ const st=document.createElement('style');st.textContent=`
 // BLOCK 195: ⚡ ประสิทธิภาพอนิเมชัน — แสงวิ่งบนการ์ด/ปุ่มหน้าแรก (เดิมขยับ left ทุกเฟรม = คำนวณเลย์เอาต์ใหม่) เปลี่ยนเป็น transform (GPU) · ปุ่มเรืองแสงผู้สนับสนุนเปลี่ยนจาก box-shadow เป็น opacity
 try{(()=>{const st=document.createElement('style');st.textContent=`@keyframes mwShineT{0%{transform:translateX(0)}60%,100%{transform:translateX(620%)}}
 .mwseg:after,#tMwCard:after,#tAqBtn:after,#tGrid .gSt:after,#tGrid .gAq:after,.mnHero .hSt:after,#wPick .wc:after{left:-50%!important;animation-name:mwShineT!important;will-change:transform}
-@media (prefers-reduced-motion:reduce){.mwseg:after,#tMwCard:after,#tAqBtn:after,#tGrid .gSt:after,#tGrid .gAq:after,.mnHero .hSt:after,#wPick .wc:after{animation:none!important}}`;document.head.appendChild(st)})()}catch(e){console.error('block198',e)}
+@media (prefers-reduced-motion:reduce){.mwseg:after,#tMwCard:after,#tAqBtn:after,#tGrid .gSt:after,#tGrid .gAq:after,.mnHero .hSt:after,#wPick .wc:after{animation:none!important}}`;document.head.appendChild(st)})()}catch(e){console.error('block200',e)}
 
 // BLOCK 196: 🏝️ ไดนามิกไอส์แลนด์โหมดภาพปกติ (lite) — เดิมขนาดกระโดดทันทีและเนื้อหาสลับแบบตัดฉับ → ยืด/หดแบบสปริงสั้น + เนื้อหาจางเข้า (ยังเบา: ไม่มีย่อขยายทั้งก้อน)
 try{(()=>{const st=document.createElement('style');st.textContent=`#isl.lite{transition:width .26s cubic-bezier(.3,1.25,.45,1),height .26s cubic-bezier(.3,1.25,.45,1),opacity .2s ease!important}
@@ -45299,10 +45299,10 @@ setInterval(run,350);{const _md=modal;modal=function(){const r=_md.apply(this,ar
 try{(()=>{const I='input:not([type]),input[type=text],input[type=search],input[type=number],input[type=email],input[type=tel],input[type=url],input[type=password],textarea,select';
 const st=document.createElement('style');st.textContent=`body.dark :is(${I}){color:var(--fg,#f1e8d4)!important;-webkit-text-fill-color:var(--fg,#f1e8d4)!important;caret-color:#ffd36e!important;background-color:#15121f!important;border:1px solid color-mix(in srgb,var(--pink,#e8b54a) 45%,transparent)!important}
 body.dark select option{background:#1b1626;color:#f1e8d4}body.dark :is(input,textarea)::placeholder{color:#9a90a8!important;-webkit-text-fill-color:#9a90a8!important}
-body.dark select{color-scheme:dark}body:not(.dark) select{color-scheme:light}`;document.head.appendChild(st)})()}catch(e){console.error('block198',e)}
+body.dark select{color-scheme:dark}body:not(.dark) select{color-scheme:light}`;document.head.appendChild(st)})()}catch(e){console.error('block200',e)}
 
 // BLOCK 199: 🚀 ฟีดยาวไม่หน่วง — ข้อความในฟีดที่อยู่นอกจอไม่ต้องวาด (content-visibility) · ไม่ลบอะไรทิ้ง เลื่อนกลับไปอ่านได้ครบเหมือนเดิม
 try{(()=>{const st=document.createElement('style');st.textContent=`#feed>.bub:not(:nth-last-child(-n+12)){content-visibility:auto;contain-intrinsic-size:auto 56px}`;document.head.appendChild(st)})()}catch(e){console.error('block199',e)}
-// BLOCK 198: 📅 ชะตาประจำวันในโลกที่เดินปีเอง (นครม่านหมอก · ทะลุฟ้าดารา) — เรียกเหตุการณ์ชะตาเดียวกันหลังปีของโลกนั้น
+// BLOCK 200: 📅 ชะตาประจำวันในโลกที่เดินปีเอง (นครม่านหมอก · ทะลุฟ้าดารา) — เรียกเหตุการณ์ชะตาเดียวกันหลังปีของโลกนั้น
 try{(()=>{const ins=()=>{const p=passYear;passYear=function(){const r=p.apply(this,arguments);try{if(S&&S.dl&&!S.dl.done&&S.mw&&(S.mw.fog||S.mw.sky)&&window._dlTick)window._dlTick()}catch(e){}return r}};
- const _wr=window.wReady;window.wReady=function(n){const r=_wr.apply(this,arguments);if(n==='fog'||n==='sky')try{ins()}catch(e){console.error('dl ins',e)}return r}})()}catch(e){console.error('block198',e)}
+ const _wr=window.wReady;window.wReady=function(n){const r=_wr.apply(this,arguments);if(n==='fog'||n==='sky')try{ins()}catch(e){console.error('dl ins',e)}return r}})()}catch(e){console.error('block200',e)}
