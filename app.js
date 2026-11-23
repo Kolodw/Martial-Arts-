@@ -41763,7 +41763,7 @@ try{(()=>{
 const R={},P={};
 window.wReady=n=>{R[n]=1;try{(P[n]&&P[n].ok)&&P[n].ok()}catch(e){}};
 window.wIs=n=>!!R[n];
-const DEP={sky:['mw'],mw:['mwb','mwx'],ghr:['mw']};
+const DEP={sky:['mw'],mw:['mwb','mwx'],ghr:['mw'],wld2:['hrt']};
 // ⚡ เน็ตช้า: ไฟล์ที่โหลดเบื้องหลังเข้าคิวทีละ 2 ไฟล์ · ไฟล์ที่ผู้เล่นรออยู่ (wNeed) แซงคิวทันที
 const U={},Q=[];let act=0,tap=0;try{addEventListener('pointerdown',()=>{tap=Date.now()},true);addEventListener('keydown',()=>{tap=Date.now()},true)}catch(e){}const pump=()=>{while(act<2&&Q.length){const g=Q.shift();if(!g.st){g.st=1;act++;g()}}};
 window.wLoad=function(n){n=String(n).replace(/[^a-z0-9_-]/g,'');if(R[n])return Promise.resolve();if(Date.now()-tap<900)U[n]=1;if(P[n]){if(U[n]&&P[n].go&&!P[n].go.st){P[n].go.st=1;act++;P[n].go()}return P[n].p}if(DEP[n]&&DEP[n].some(d=>!R[d])){if(U[n])DEP[n].forEach(d=>U[d]=1);const o={};o.p=Promise.all(DEP[n].map(d=>wLoad(d))).then(()=>{delete P[n];return wLoad(n)});P[n]=o;return o.p}
@@ -45596,3 +45596,6 @@ try{setTimeout(()=>{try{const go=()=>wLoad('ghr');go().catch(()=>setTimeout(()=>
 
 // BLOCK 207: 🕸️ โหลด /w/hrt.js — สายใยข้ามชาติ (ของสืบทอด · ด้ายแดง · บทวัยกลางคน) ใช้ทุกโลก
 try{setTimeout(()=>{try{const go=()=>wLoad('hrt');go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},3800)}catch(e){console.error('block207',e)}
+
+// BLOCK 208: 🌐 โหลด /w/wld2.js — กลไกประจำโลก (อาวุธมีชีวิต · ศิษย์หักหลัง · เตาหลอม · ผู้สืบทอดฝูง · งานเลี้ยงรุ่น · ยีนกลืนคน · ตะเกียง/คดีข้ามชาติ · ดวงจิตมีอารมณ์) ต่อจาก hrt.js
+try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4200)}catch(e){console.error('block208',e)}

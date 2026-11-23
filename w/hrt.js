@@ -43,7 +43,7 @@ const css=document.createElement('style');css.textContent=`
 #hrtOv .hRes{padding:12px;border-radius:12px;margin:10px 0}#hrtOv .ok{background:#16301f;border:1px solid #3a7a52}#hrtOv .bad{background:#3a1414;border:1px solid #8a2a2a}
 #hrtOv .hBar{height:10px;border-radius:6px;background:#ffffff14;overflow:hidden;margin:10px 0}#hrtOv .hBar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd9a8,#ff8a5a)}
 #hrtOv .hBig{display:block;margin:16px auto;width:150px;height:150px;border-radius:50%;border:2px solid #ffd9a888;background:radial-gradient(circle,#3a2a18,#120c06);color:#ffd9a8;font:inherit;font-size:18px;font-weight:800;touch-action:manipulation}
-#hrtOv .hi{font-size:46px;text-align:center;margin:6px 0}`;document.head.appendChild(css);
+#hrtOv .hi{font-size:46px;text-align:center;margin:6px 0}body:has(#hrtOv) :is(#isl,#islDots,#islCards,#mFloat,#mvBar,#mvRz,#tipCard){display:none!important}`;document.head.appendChild(css);
 const ov=h=>{let o=document.getElementById('hrtOv');if(!o){o=document.createElement('div');o.id='hrtOv';document.body.appendChild(o)}o.innerHTML=`<div class="hB">${h}</div>`;o.scrollTop=0;return o};
 const ovX=()=>{const o=document.getElementById('hrtOv');if(o)o.remove();try{render()}catch(e){}};
 const done=(ok,t,after)=>{ov(`<div class="hRes ${ok?'ok':'bad'}">${t}</div><button class="hO" id="hrtOk">${ok?'✨':'…'} ไปต่อ</button>`);document.getElementById('hrtOk').onclick=()=>{ovX();if(after)setTimeout(after,200)}};
