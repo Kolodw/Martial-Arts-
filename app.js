@@ -47362,3 +47362,19 @@ try{setTimeout(()=>{try{wLoad('hidden').catch(()=>setTimeout(()=>wLoad('hidden')
 // BLOCK 177: 🌀 โหลด /w/twist.js — กฎโลกพลิกกลางชีวิต · ชีวิตกลับด้าน · ชีวิตของผู้เล่นจริงไหลเข้ามา (จากสุสานผู้เล่นจริง) · หลับไปสิบปี
 // ============================================================
 try{setTimeout(()=>{try{wLoad('twist').catch(()=>setTimeout(()=>wLoad('twist').catch(()=>{}),6000))}catch(e){}},4600)}catch(e){console.error('block177',e)}
+
+// ============================================================
+// BLOCK 178: ตัวเลือกไม่เด้งบังตอนกดหยุด/อ่านประวัติ (ผู้เล่นแจ้ง: กดหยุดแล้วตัวเลือกเด้งมาบัง กดผิด · เลื่อนอ่านข้อความเก่าโดนบัง)
+//  · ตอนหยุดเกมอยู่ หรือกำลังเลื่อนอ่านข้อความเก่า → ตัวเลือกใหม่ขึ้นเป็นแถบย่อด้านล่าง (เวลาหยุดรอ) แตะเมื่อพร้อม
+//  · เพิ่งแตะจอไม่ถึง 0.6 วิ ตอนตัวเลือกเด้ง → ปุ่มตัวเลือกยังกดไม่ได้ครู่หนึ่ง กันนิ้วที่ตั้งใจกดอย่างอื่นไปโดนตัวเลือก
+// ============================================================
+try{(()=>{let tapAt=0,scrAt=0;
+ document.addEventListener('pointerdown',()=>{tapAt=performance.now()},{capture:true,passive:true});
+ const feed=()=>document.getElementById('feed');
+ const reading=()=>{try{const f=feed();if(!f||!f.offsetParent)return false;const up=f.scrollHeight-f.scrollTop-f.clientHeight>160;return up||performance.now()-scrAt<1200&&f.scrollHeight-f.scrollTop-f.clientHeight>40}catch(e){return false}};
+ const hook=()=>{const f=feed();if(f&&!f._chRd){f._chRd=1;['scroll','wheel','touchmove'].forEach(ev=>f.addEventListener(ev,()=>{scrAt=performance.now()},{passive:true}))}};hook();setTimeout(hook,3000);
+ const hold=()=>{try{if(!S||!S.alive||!choice._cur||choice._min)return false;if(auto&&!paused)return false;return paused||reading()}catch(e){return false}};
+ const _ch=choice;choice=function(){const r=_ch.apply(this,arguments);try{const c=choice._cur;if(c&&!choice._min&&modalOpen&&$('modal').dataset.k==='choice'){
+  if(hold()){clearInterval(choice._cd);clearTimeout(choice._t);choice._min=true;closeM();pendBar();const b=$('pendBar');if(b){b.classList.remove('pbNew');void b.offsetWidth;b.classList.add('pbNew')}}
+  else if(performance.now()-tapAt<600){const m=$('modal');m.classList.add('chGuard');setTimeout(()=>{try{m.classList.remove('chGuard')}catch(e){}},550)}}}catch(e){}return r};for(const k in _ch)try{choice[k]=_ch[k]}catch(e){}
+ const cs=document.createElement('style');cs.textContent=`#modal.chGuard .opt{pointer-events:none;opacity:.7;transition:opacity .2s}#pendBar.pbNew{animation:pbNew .9s ease-out 2}@keyframes pbNew{0%{transform:translateY(8px);box-shadow:0 0 0 0 #ffd36e00}40%{transform:none;box-shadow:0 0 18px 4px #ffd36e88}100%{box-shadow:0 0 0 0 #ffd36e00}}`;document.head.appendChild(cs)})()}catch(e){console.error('block178',e)}
