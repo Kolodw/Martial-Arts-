@@ -491,7 +491,7 @@ details.item summary{cursor:pointer}
 </style>
 <script>
 // โหลดเกมแบบเห็นความคืบหน้า: ดึง app.js ผ่าน fetch (นับไบต์) แล้วค่อยใส่ <script src> ซึ่งได้ไฟล์จากแคชทันที
-(function(){var L=document.getElementById('bootL'),B=document.getElementById('bootB'),T=document.getElementById('bootT'),S=document.getElementById('bootS'),t0=Date.now(),ts=t0,tot0=10700000,gone=0,SZ=10700000,tries=0;
+(function(){var L=document.getElementById('bootL'),B=document.getElementById('bootB'),T=document.getElementById('bootT'),S=document.getElementById('bootS'),t0=Date.now(),ts=t0,tot0=10400000,gone=0,SZ=10400000,tries=0;
 function set(f,n){f=Math.max(.03,Math.min(.99,f));B.style.width=(f*100).toFixed(1)+'%';T.textContent='กำลังโหลดเกม '+Math.round(f*100)+'%';if(n&&Date.now()-t0>1500){var el=(Date.now()-ts)/1000,sp=el>1?(n/el):0,eta=sp>0?Math.max(0,(tot0-n)/sp):0;S.textContent=(n/1048576).toFixed(1)+' MB'+(eta>4&&f<.97?' · อีกประมาณ '+(eta>=90?Math.round(eta/60)+' นาที':Math.round(eta)+' วินาที'):'')+' · ครั้งต่อไปจะเปิดเร็วขึ้น'}}
 function done(){if(gone)return;gone=1;B.style.width='100%';L.classList.add('out');setTimeout(function(){try{L.remove()}catch(e){}},400)}
 function fail(){T.textContent='โหลดไม่สำเร็จ — เน็ตอาจหลุด';S.textContent='';document.getElementById('bootR').style.display='inline-block'}
