@@ -44797,19 +44797,19 @@ const css=document.createElement('style');css.textContent=`
 #modal.mvOn{translate:var(--mvx,0px) var(--mvy,0px)}
 #modal.mvW{width:var(--mvw)!important;max-width:96vw!important}
 #modal.mvH{height:var(--mvh)!important;max-height:var(--mvh)!important;bottom:auto!important}
-#mvBar{position:fixed;z-index:100060;display:none;align-items:center;gap:5px;transform:translate(-50%,-50%);pointer-events:none;user-select:none;-webkit-user-select:none}
+#mvBar{position:fixed;z-index:100060;display:none;align-items:center;gap:2px;transform:translate(-50%,-34%);pointer-events:none;user-select:none;-webkit-user-select:none}
 #mvBar.on{display:flex}
 #mvBar>*{pointer-events:auto}
-#mvBar .mvG{touch-action:none;cursor:grab;width:38px;height:22px;border-radius:999px;background:#241a33e6;color:#f3e6c4;border:1.5px solid #c9a24acc;font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 6px #0007;opacity:.88}
+#mvBar .mvG{touch-action:none;cursor:grab;width:30px;height:24px;background:none;border:0;color:#f3e6c4;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;text-shadow:0 0 3px #000,0 0 6px #000,0 1px 2px #000;opacity:.8}
 #mvBar .mvG:active{cursor:grabbing;opacity:1}
-#mvBar .mvM{display:none;gap:5px}#mvBar.open .mvM{display:flex}
-#mvBar .mvM button{width:28px;height:22px;border-radius:999px;border:1.5px solid #c9a24acc;background:#241a33f2;color:#f3e6c4;font-size:12px;line-height:1;cursor:pointer;padding:0;box-shadow:0 1px 6px #0007}
+#mvBar .mvM{display:none;gap:0}#mvBar.open .mvM{display:flex}
+#mvBar .mvM button{width:28px;height:24px;border:0;background:none;color:#f3e6c4;font-size:15px;line-height:1;cursor:pointer;padding:0;text-shadow:0 0 3px #000,0 0 6px #000,0 1px 2px #000;opacity:.9}
 #mvRz{position:fixed;z-index:100060;display:none;width:24px;height:24px;touch-action:none;cursor:nwse-resize;opacity:.8;background:linear-gradient(135deg,transparent 45%,#c9a24a 46% 54%,transparent 55%,transparent 64%,#c9a24a 65% 73%,transparent 74%);transform:translate(-85%,-85%)}
 #mvRz.on{display:block}
 #modal.mvAn{transition:translate .28s ease,width .28s ease,height .28s ease}
-@media (pointer:coarse){#mvBar .mvG{width:46px;height:28px;font-size:15px}#mvBar .mvM button{width:36px;height:28px;font-size:14px}#mvRz{width:32px;height:32px}}`;
+@media (pointer:coarse){#mvBar .mvG{width:40px;height:32px;font-size:19px}#mvBar .mvM button{width:36px;height:32px;font-size:17px}#mvRz{width:32px;height:32px}}`;
 document.head.appendChild(css);
-const bar=document.createElement('div');bar.id='mvBar';bar.innerHTML='<div class="mvG" title="ลากเพื่อย้ายหน้าต่าง · แตะเพื่อเปิดปุ่มย่อ/ขยาย · แตะสองครั้งเพื่อคืนค่า">✥</div><span class="mvM"><button type="button" class="mvS" aria-label="ย่อ">➖</button><button type="button" class="mvL" aria-label="ขยาย">➕</button><button type="button" class="mvR" aria-label="คืนค่า">↺</button></span>';document.body.appendChild(bar);
+const bar=document.createElement('div');bar.id='mvBar';bar.innerHTML='<div class="mvG" title="ลากเพื่อย้ายหน้าต่าง · แตะเพื่อเปิดปุ่มย่อ/ขยาย · แตะสองครั้งเพื่อคืนค่า">✥</div><span class="mvM"><button type="button" class="mvS" aria-label="ย่อ">−</button><button type="button" class="mvL" aria-label="ขยาย">+</button><button type="button" class="mvR" aria-label="คืนค่า">↺</button></span>';document.body.appendChild(bar);
 const rz=document.createElement('div');rz.id='mvRz';rz.title='ลากเพื่อย่อ/ขยาย';document.body.appendChild(rz);
 let V=get(),lastDev=dev();
 function apply(){const m=M();if(!m)return;const on=ok();
