@@ -357,7 +357,7 @@ function tick(){const M=MM();if(!M)return;try{if(choice._cur||modalOpen||G0)retu
  try{if(h.army&&h.army.length){const g=h.army.reduce((s,x)=>s+(x.lv||1),0);S.power=(+S.power||0)+g*2}}catch(e){}
  if(step(M))return;if(wOf(M)==='game'&&g2(M))return;if(start(M))return;pz(M)}
 {const _y=mwYear;mwYear=function(){const r=_y.apply(this,arguments);try{setTimeout(()=>{try{tick()}catch(e){console.error('mhTick',e)}},50)}catch(e){}return r}}
-window._mh={A,H,mg,tick,step,start,g2,pz,clear,MQ,SECRET};
+window._mh={A,H,mg,tick,step,start,g2,pz,clear,MQ,SECRET,eff,ask,unit,nm,wOf,MM};
 const st=document.createElement('style');st.textContent=`
 .mhTag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(255,120,200,.15);border:1px solid rgba(255,120,200,.55);color:#ffb3e0;margin-bottom:4px}
 .mhSub{opacity:.8;font-size:13px;margin:-4px 0 10px}.mhSt{text-align:center;margin-top:8px;font-size:13px;opacity:.85}
