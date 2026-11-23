@@ -3177,6 +3177,27 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       await pipe([['LPUSH', dk, JSON.stringify(e)], ['LTRIM', dk, 0, 2999], ['EXPIRE', dk, 86400 * 15]]);
       return res.json({ ok: 1 });
     }
+    // 📖 มังฮวา (w/mhw.js): k='f' ชั้นซ่อนหอคอย — คนแรกที่พิชิตได้ชื่อถาวร · k='s' ภารกิจหลักบังคับทั้งโลก — นับผู้รอด/ทั้งหมดรายสัปดาห์
+    if (a === 'mhx') {
+      if (!okId(id)) return res.status(400).json({ err: 'id' });
+      const dk = new Date(now + 7 * 3600e3).toISOString().slice(0, 10), [dn] = await pipe([['INCR', 'mhxd:' + id + ':' + dk], ['EXPIRE', 'mhxd:' + id + ':' + dk, 86400 * 2]]);
+      if (+dn > 40) return res.json({ ok: 0, err: 'limit' });
+      const k = String(b.k || '');
+      if (k === 'f') {
+        const fl = Math.max(1, Math.min(999, b.fl | 0)), nm = clean(b.n, 20) || 'นิรนาม', key = 'mhf:' + fl;
+        const got = await cmd('SET', key, JSON.stringify({ n: nm, i: String(id), t: now }), 'NX');
+        let who = got ? { n: nm, i: String(id), t: now } : null; if (!who) { try { who = JSON.parse(await cmd('GET', key) || 'null') } catch { who = null } }
+        const [, c] = await pipe([['SADD', 'mhfu:' + fl, String(id)], ['SCARD', 'mhfu:' + fl]]);
+        return res.json({ ok: 1, first: got ? 1 : 0, who: who ? { n: who.n, t: who.t, me: who.i === String(id) ? 1 : 0 } : null, c: +c });
+      }
+      if (k === 's') {
+        const q = String(b.q || '').replace(/[^a-z0-9]/g, '').slice(0, 12) || 'x', wk = Math.floor((now + 7 * 3600e3) / (7 * 86400e3)), hk = 'mhs:' + wk;
+        const fk = 'mhsv:' + wk + ':' + q + ':' + id; const fresh = +(await cmd('SET', fk, '1', 'NX', 'EX', 86400 * 8) ? 1 : 0);
+        const cmds = fresh ? [['HINCRBY', hk, q + ':a', 1], b.ok ? ['HINCRBY', hk, q + ':o', 1] : ['HGET', hk, q + ':o'], ['EXPIRE', hk, 86400 * 21]] : [['HGET', hk, q + ':a'], ['HGET', hk, q + ':o']];
+        const r = await pipe(cmds); return res.json({ ok: 1, a: +r[0] || 0, o: +r[1] || 0, wk });
+      }
+      return res.json({ ok: 0 });
+    }
     if (a === 'krt' || a === 'krtp') {
       if (!okId(id)) return res.status(400).json({ err: 'id' });
       if (now >= KRT_END) return res.json({ ok: 0, err: 'ended' });

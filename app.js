@@ -47378,3 +47378,8 @@ try{(()=>{let tapAt=0,scrAt=0;
   if(hold()){clearInterval(choice._cd);clearTimeout(choice._t);choice._min=true;closeM();pendBar();const b=$('pendBar');if(b){b.classList.remove('pbNew');void b.offsetWidth;b.classList.add('pbNew')}}
   else if(performance.now()-tapAt<600){const m=$('modal');m.classList.add('chGuard');setTimeout(()=>{try{m.classList.remove('chGuard')}catch(e){}},550)}}}catch(e){}return r};for(const k in _ch)try{choice[k]=_ch[k]}catch(e){}
  const cs=document.createElement('style');cs.textContent=`#modal.chGuard .opt{pointer-events:none;opacity:.7;transition:opacity .2s}#pendBar.pbNew{animation:pbNew .9s ease-out 2}@keyframes pbNew{0%{transform:translateY(8px);box-shadow:0 0 0 0 #ffd36e00}40%{transform:none;box-shadow:0 0 18px 4px #ffd36e88}100%{box-shadow:0 0 0 0 #ffd36e00}}`;document.head.appendChild(cs)})()}catch(e){console.error('block178',e)}
+
+// ============================================================
+// BLOCK 179: 📖 โหลด /w/mhw.js — เส้นเรื่องมังฮวาของโลกยุคปัจจุบัน (ฮันเตอร์ · ใต้ดิน/นักเลง · หอคอย · ระบบเกม · ผู้มีระบบ) + มินิเกม
+// ============================================================
+try{setTimeout(()=>{try{wLoad('mhw').catch(()=>setTimeout(()=>wLoad('mhw').catch(()=>{}),6000))}catch(e){}},4800)}catch(e){console.error('block179',e)}
