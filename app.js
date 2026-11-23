@@ -44939,3 +44939,8 @@ window.rrx.reg({id:'mw',
  snap(){return JSON.parse(JSON.stringify(window._mbGet()))},restore(s){window._mbSet(JSON.parse(JSON.stringify(s)))},
  draw(){try{window.mwBornPage(false)}catch(e){}}});
 })()}catch(e){console.error('block190',e)}
+
+// BLOCK 191: ปุ่ม ? (คู่มือ) ไม่ทับกากบาท — วางไว้ทางซ้ายของ ✕ เสมอ ไม่ว่ากากบาทจะใหญ่แค่ไหน
+try{(()=>{const st=document.createElement('style');st.textContent=`#modal .xbtn.qbtn,#mask .xbtn.qbtn,.modal .xbtn.qbtn{right:auto!important;left:auto!important}`;document.head.appendChild(st);
+const fix=()=>{try{const m=document.getElementById('modal');if(!m)return;m.querySelectorAll('.xbtn.qbtn').forEach(q=>{const x=[...q.parentNode.querySelectorAll(':scope>.xbtn:not(.qbtn)')][0];if(!x)return;const cs=getComputedStyle(x);const r=parseFloat(cs.right)||8,w=x.offsetWidth||38;const v=(r+w+8)+'px';if(q.style.right!==v){q.style.setProperty('right',v,'important');q.style.setProperty('top',cs.top,'important')}})}catch(e){}};
+{const _md=modal;modal=function(){const r=_md.apply(this,arguments);fix();setTimeout(fix,60);return r}}setInterval(fix,800)})()}catch(e){console.error('block191',e)}
