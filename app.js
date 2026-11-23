@@ -43141,7 +43141,7 @@ try{clearTimeout(liveT)}catch(e){}
 liveSend=async function(){try{clearTimeout(liveT)}catch(e){}};
 openSpecSet=function(){};specAsk=function(){};
 openLiveList=function(){try{return openOnline('chat')}catch(e){}};
-openSpectate=function(){toast('👁 ระบบดูคนอื่นเล่นถูกนำออกแล้ว')};
+{const _osMe=openSpectate;openSpectate=function(k){if(k==='@me')return _osMe.apply(this,arguments);toast('👁 ระบบดูคนอื่นเล่นถูกนำออกแล้ว')}};
 try{window.spList=function(){toast('👁 ระบบดูคนอื่นเล่นถูกนำออกแล้ว')}}catch(e){}
 try{delete ONL_NAV.live}catch(e){}
 const st=document.createElement('style');st.textContent=`#watchBadge{display:none!important}#modal [onclick*="openLiveList"],#modal [onclick*="openSpectate"],#modal [onclick*="spList"],#modal [onclick*="openSpecSet"],#modal [data-t="live"],#modal [onclick*="'live'"]{display:none!important}`;document.head.appendChild(st);
@@ -45630,7 +45630,7 @@ try{setTimeout(()=>{try{const go=()=>wLoad('hrt');go().catch(()=>setTimeout(()=>
 try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4200)}catch(e){console.error('block208',e)}
 
 // BLOCK 209: 📖 โหลด /w/xw.js — เส้นเรื่องแบบนิยายทุกโลก (คำสาบานผูกมัด · อีกคนในตัวฉัน · รู้วันตาย · คำทำนายกำกวม · ต้นเรื่องแบบนิยาย · ทำเนียบฟ้า · ร้านตอนวางมือ · หลายตัวตน) ต่อจาก wld2.js
-try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2')).then(()=>wLoad('xw'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4600)}catch(e){console.error('block209',e)}
+try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2')).then(()=>wLoad('xw')).then(()=>wLoad('mx'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4600)}catch(e){console.error('block209',e)}
 
 // BLOCK 210: 🌕 หน้าแรกคืนลอยกระทง 2569 — แสดงอัตโนมัติ 24 พ.ย. 00:00 ถึง 25 พ.ย. 06:00 (เวลาไทย) · นับถอยหลังตั้งแต่ 23 พ.ย. 23:30
 //  ฉากพิกเซลเต็มจอ: ฟ้า ดาว พระจันทร์เต็มดวงค่อยๆ ขึ้น เจดีย์ริมฝั่ง โคมลอย พลุ หิ่งห้อย แม่น้ำ เงาจันทร์ กระทงจริงของผู้เล่นทั้งเว็บ (api krtl) พร้อมคำอธิษฐาน
@@ -45651,7 +45651,7 @@ const LOW=(navigator.hardwareConcurrency||4)<=4||RM;
 const rnd=Math.random,R=(a,b)=>a+rnd()*(b-a),Ri=(a,b)=>Math.floor(R(a,b+1)),esc2=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 // ---------- CSS ----------
 const st=document.createElement('style');st.textContent=`
-#loyX{position:fixed;inset:0;z-index:9000;background:#060820;overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none;opacity:0;transition:opacity .9s ease}
+#loyX{position:fixed;inset:0;z-index:2147483000;background:#060820;overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none;opacity:0;transition:opacity .9s ease}
 #loyX.on{opacity:1}#loyX.out{opacity:0;transition:opacity .7s ease}
 #loyC{position:absolute;inset:0;width:100%;height:100%;display:block}
 #loyUI{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;pointer-events:none;padding:0 18px;text-align:center}
@@ -45785,6 +45785,40 @@ try{(()=>{const BAD={hell:1,short:1,junk:1};
  const _py=passYear;passYear=function(){fix();return _py.apply(this,arguments)};
  const _sv=saveGame;saveGame=function(){fix();return _sv.apply(this,arguments)};
 })()}catch(e){console.error('chFix',e)}
+// ===================== BLOCK 212: 🚦 คิวหน้าต่าง — เหตุการณ์ที่เด้งเอง (ไม่ได้มาจากการแตะ) ไม่ทับตัวเลือก/มินิเกม/ดวล/เมนูที่เปิดอยู่ · รอแล้วขึ้นทีละอัน =====================
+try{(()=>{let tap=0;try{addEventListener('pointerdown',()=>{tap=Date.now()},true);addEventListener('keydown',()=>{tap=Date.now()},true)}catch(e){}
+ const user=()=>Date.now()-tap<1200;
+ const busy=()=>{try{return !!(window._mgBusy&&window._mgBusy())||(typeof DU!=='undefined'&&!!DU)}catch(e){return false}};
+ const curK=()=>{try{return modalOpen?($('modal').dataset.k||''):''}catch(e){return''}};
+ const PASS={choice:1,duel:1,mg2:1,bye:1};
+ // หน้าต่างที่ต้องปกป้อง: ตัวเลือกที่กำลังแสดง · มินิเกม · ดวล
+ const guarded=()=>{const k=curK();if(k==='mg2'||k==='duel')return true;if(k==='choice'&&choice._cur&&!choice._min)return true;return false};
+ const MQ=[];let me=null;
+ {const _m=modal;modal=function(html,k){try{k=k||'';if(!user()&&!PASS[k]&&k!==curK()&&guarded()&&S&&S.alive){if(MQ.length<10){MQ.push([html,k]);me=S}return}}catch(e){}return _m.apply(this,arguments)}}
+ // ตัวเลือกที่เด้งเองตอนมีหน้าต่างอื่นเปิดอยู่ (เมนู ผลลัพธ์ ร้านค้า ฯลฯ) → เข้าคิวตัวเลือกเดิมของเกม
+ {const _ch=choice;choice=function(title,text,opts){try{const k=curK();if(!auto&&S&&S.alive&&!choice._cur&&!user()&&((k&&k!=='choice')||busy())){if(!choice._q)choice._q=[];if(!choice._q.some(x=>x[0]===title)&&choice._q.length<40)choice._q.push([title,text,opts,S]);return}}catch(e){}return _ch.apply(this,arguments)};Object.assign(choice,_ch)}
+ // ตัวเลือกในคิวรอให้หน้าต่างอื่นปิดก่อน (เดิมเช็คแค่ว่าไม่มีตัวเลือกค้าง)
+ {const _dq=chDeq;chDeq=function(){try{const k=curK();if((k&&k!=='choice')||busy())return}catch(e){}return _dq.apply(this,arguments)}}
+ // ผู้เล่นปิดหน้าต่างเอง → อย่าให้เหตุการณ์ถัดไปเด้งในเสี้ยววินาทีเดียวกัน
+ let gap=0;{const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);gap=Date.now();return r}}
+ setInterval(()=>{try{if(Date.now()-gap<450||busy()||modalOpen)return;if(MQ.length){if(me!==S||!S||!S.alive){MQ.length=0;return}if(choice._cur&&!choice._min)return;const x=MQ.shift();modal(x[0],x[1]);return}if(!choice._cur&&choice._q&&choice._q.length&&!chDeq._w)chDeq()}catch(e){}},400);
+ // ปีถัดไปรอจนหน้าต่างที่เข้าคิวขึ้นครบ
+ {const _py=passYear;passYear=function(){if(MQ.length&&me===S&&S&&S.alive)return;return _py.apply(this,arguments)}}
+ window._popQ=()=>({m:MQ.length,c:choice._q?choice._q.length:0});
+})()}catch(e){console.error('block212',e)}
+
+// ===================== BLOCK 213: 🧭 เมนูและการ์ดตัวละครให้ตรงโลกที่เล่น (ทะลุฟ้าดารา · นครม่านหมอก · จิตวิญญาณยุทธ์) =====================
+try{(()=>{const W=()=>{try{const M=S&&S.mw;if(M&&M.sky)return'sky';if(M&&M.fog)return'fog'}catch(e){}return''};
+ // ปุ่มของ "ยอดฝีมือหลงยุค/ยุทธภพ" ที่ไม่มีความหมายในสองโลกนี้
+ const HIDE=['mwInfo(','openQiMW(','openIdMW(','mwLowToggle(','openMoveBook(','openChron(','mwOutfitMenu('];
+ const clean=()=>{try{if(!W()||!modalOpen||$('modal').dataset.k!=='menu')return;$('modal').querySelectorAll('[onclick]').forEach(b=>{const o=b.getAttribute('onclick')||'';if(HIDE.some(h=>o.indexOf(h)>=0))b.remove()})}catch(e){}};
+ {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);clean();setTimeout(clean,60);setTimeout(clean,400);return r}}
+ // การ์ดตัวละคร: ป้ายโลกและระดับ
+ {const _ls=liveSnap;liveSnap=function(){const d=_ls.apply(this,arguments);try{if(!d||!S)return d;const w=W();
+  if(w==='sky'){const K=S.mw.sky,RK=window._skyRK;d.mx=Object.assign({},d.mx||{},{ic:'🌠',wn:'ทะลุฟ้าดารา'});d.rl=(K.rk|0)<0?'ยังไม่ตื่นยีน':(RK&&RK[K.rk]?RK[K.rk].n:'ขั้น '+((K.rk|0)+1))}
+  else if(w==='fog'){const K=S.mw.fog,F=window._fog;d.mx=Object.assign({},d.mx||{},{ic:'🌉',wn:'นครม่านหมอก'});d.rl=K.path&&K.tier>0?((F&&F.PATH&&F.PATH[K.path]&&F.PATH[K.path].t[K.tier-1])||'ธรณีที่ '+K.tier):'คนธรรมดา'}
+  else if(d.wd==='sv')d.wd='⭕ จิตวิญญาณยุทธ์'}catch(e){}return d}}
+})()}catch(e){console.error('block213',e)}
 // BLOCK 211: ✍️ สร้างเอง / 🎨 ออกแบบหน้าตา ทุกโลก — ตัวเลือกกลาง ccPick (เลือกทุกช่องเอง) · ccLook (ออกแบบหน้าตา ที่เหลือลิขิต)
 //  ชีวิตที่ "สร้างเอง" ตั้ง S.custom + S.ccOwn → ไม่ส่งขึ้นทำเนียบ (ห่อ sendLife) · ตั้งผ่าน window._ccOwnPending ก่อน startLife ของแต่ละโลก
 //  ใช้ใน: 🐾 สัตว์อสูร (หน้ากำเนิด) · 🌉 นครม่านหมอก (w/fog.js) · 🌠 ทะลุฟ้าดารา (w/sky.js) · โลกอื่นมีอยู่แล้ว (goBirthPick / ยุคปัจจุบัน)
