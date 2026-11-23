@@ -3840,3 +3840,13 @@ window._skyOrg={CATS,COMBO,LATER,applyOrg,ST};
 SL.impl.passYear=passYear;passYear=function(){return window.passYear.apply(this,arguments)};SL.impl.meLook=meLook;meLook=function(){return window.meLook.apply(this,arguments)};})();
 
 wReady('sky');
+
+// ---------- ✍️ สร้างเอง: เลือกการ์ดกำเนิดทุกใบเอง (ใช้ ccPick จาก BLOCK 211 ใน app.js) · ไม่ขึ้นทำเนียบ ----------
+try{(()=>{const O=window._skyOrg;if(!O)return;const ST=O.ST,CATS=O.CATS;
+ const lab=(k,x)=>k==='place'?x[2]:k==='bg'?x[2]+' '+x[3]:x[2],des=(k,x)=>k==='place'?x[4]:k==='bg'?x[5]:x[3],rar=(k,x)=>k==='place'?x[3]:x[1],RI=['⚪','🔵','🟡'];
+ window.skyCcOwn=function(){if(!window.ccPick)return;ccPick({title:'สร้างชีวิตในนครกำแพงเอง',sub:'เลือกการ์ดกำเนิดทุกใบเอง · หน้าตา ชื่อ เพศ แก้ได้ที่ปุ่ม 👗',fields:CATS.map(c=>({k:c.k,ic:c.ic,n:c.n,cur:Math.max(0,c.L.indexOf(ST.cards[c.k])),opts:c.L.map((x,j)=>({v:j,t:(RI[rar(c.k,x)]||'')+' '+lab(c.k,x),d:des(c.k,x)}))})),
+  onDone(s){CATS.forEach(c=>{const j=+s[c.k];if(c.L[j])ST.cards[c.k]=c.L[j]});ST.own=sig();try{window.skyOrgG(ST.g)}catch(e){}}})};
+ const sig=()=>CATS.map(c=>c.L.indexOf(ST.cards[c.k])).join(',');const isOwn=()=>!!ST.own&&ST.own===sig();
+ setInterval(()=>{try{const el=document.getElementById('skB');if(!el||!el.classList.contains('on'))return;if(el.querySelector('.ccSkB'))return;const ed=el.querySelector('.skEd');if(!ed)return;ed.insertAdjacentHTML('afterend',`<button class="gbtn skEd ccSkB" onclick="skyCcOwn()">✍️ สร้างเอง<br><small>เลือกการ์ดทุกใบ · ไม่ขึ้นทำเนียบ</small></button>${isOwn()?'<div style="text-align:center"><span class="ccTag">✍️ สร้างเอง · ไม่ขึ้นทำเนียบ</span></div>':''}`)}catch(e){}},500);
+ {const _g=window.skyOrgGo;window.skyOrgGo=function(){let own=0;try{own=isOwn();if(own)window._ccOwnPending=1;ST.own=0}catch(e){}const r=_g.apply(this,arguments);if(own)setTimeout(()=>{try{if(S&&S.ccOwn)S.custom=true}catch(e){}},1600);return r}}
+})()}catch(e){console.error('sky cc',e)}

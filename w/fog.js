@@ -1963,5 +1963,18 @@ EVS.push([K=>has(K,'mirror')&&K.tier>=2&&rnd()<.25,K=>mirrorCity(K)],[K=>K.path=
 {const _cm=closeM;closeM=function(){const k=$('modal').dataset.k;const r=_cm.apply(this,arguments);try{if(k==='fogmg'&&MG){const m=MG;MG=null;clearInterval(m.t);clearTimeout(m.t2);setTimeout(()=>{try{m.cb(.15)}catch(e){}},60)}if(k==='fogboard'&&BD){BD=null;try{toast('📓 แฟ้มคดียังค้างอยู่ เปิดได้จากสมุดคดี')}catch(e){}}}catch(e){}return r}}
 window._fog={mgPath,PATH,FAC,ART,CASE,LORE,FG,caseStart:()=>caseStart(FG()),evAwake:()=>evAwake(FG()),riteAsk:()=>riteAsk(FG())};
 window._fog.p4={X4,mgRitual,mgVault,mgWit,mgBall,mgDiv,mgHarvest,mgDW,loopEv,nightEv,ballEv,trialEv,plStart,plAsk,schInit,schMove,sinkEv,futEv,famEv,godEv,vowEv,harvestEv,ashEv,beastEv,jourEv,mentorEv,ptHumanEv,holyEv,kidTick,loveEv,nameLearn,vaultOffer,genCase};
+// ---------- ✍️ สร้างเอง / 🎨 ออกแบบหน้าตา ในหน้าสุ่มกำเนิด (ใช้ ccPick / ccLook จาก BLOCK 211 ใน app.js) ----------
+{const _d=fgDraw;fgDraw=function(){const r=_d.apply(this,arguments);try{const el=document.getElementById('fgB');if(!el||!FB||!window.ccPick)return r;const bar=el.querySelector('.fgBar');if(!bar||el.querySelector('.ccFgRow'))return r;
+ bar.insertAdjacentHTML('beforebegin',`<div class="ccFgRow" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0"><button class="gbtn" onclick="fgCcLook()">🎨 ออกแบบหน้าตา<br><small>เพศ ชื่อ สีผม สีผิว · ที่เหลือลิขิต</small></button><button class="gbtn" onclick="fgCcOwn()">✍️ สร้างเอง<br><small>เลือกทุกช่อง · ไม่ขึ้นทำเนียบ</small></button></div>${fgIsOwn()?'<div style="text-align:center;margin-bottom:6px"><span class="ccTag">✍️ สร้างเอง · ไม่ขึ้นทำเนียบ</span></div>':''}`)}catch(e){console.error('cc fog',e)}return r}}
+const fgSig=()=>FB?[FB.dist,FB.bg,FB.omen,(FB.tl||[]).join('-')].join('|'):'';const fgIsOwn=()=>!!(FB&&FB.own&&FB.own===fgSig());
+window.fgCcLook=()=>{if(!FB)return;ccLook({g:[[0,'♂ ชาย'],[1,'♀ หญิง']],cur:{g:FB.gi,hair:FB.hair,skin:FB.skin,name:FB.name},hair:HAIR,skin:SKIN,onDone(c){FB.gi=+c.g;FB.hair=c.hair;FB.skin=c.skin;if(c.name&&c.name!==FB.name){FB.name=c.name;FB.edited=1}fgDraw()}})};
+window.fgCcOwn=()=>{if(!FB)return;if(!FB.tl)tlRoll(true);const ks=Object.keys(ORIG);const tlOpts=TL.map(t=>({v:t[0],t:`${RAR[t[1]][0]} ${t[2]} ${t[3]}`,d:t[4]}));
+ ccPick({title:'สร้างชีวิตในนครม่านหมอกเอง',sub:'เลือกย่าน ชาติกำเนิด ลาง และพรสวรรค์ทั้ง 3 ใบ · หน้าตาแก้ได้ที่ปุ่ม 🎨',fields:[
+  {k:'dist',ic:'📍',n:'ย่านที่เกิด',cur:FB.dist,opts:DIST0.map(d=>({v:d,t:d}))},
+  {k:'bg',ic:'👪',n:'ชาติกำเนิด',cur:FB.bg,opts:ks.map(k=>({v:k,t:ORIG[k][0]+' '+ORIG[k][1],d:ORIG[k][2]}))},
+  {k:'omen',ic:'🔮',n:'ลางตอนเกิด',cur:FB.omen,opts:OMEN.map((o,i)=>({v:i,t:o.ic+' '+o.n,d:o.d}))},
+  ...[0,1,2].map(i=>({k:'tl'+i,ic:'🌟',n:'พรสวรรค์ '+(i+1),cur:FB.tl[i],opts:tlOpts}))],
+  onDone(s){FB.dist=s.dist;FB.bg=s.bg;FB.omen=+s.omen;FB.tl=[+s.tl0,+s.tl1,+s.tl2];FB.tlk={0:1,1:1};FB.own=fgSig();fgDraw()}})};
+{const _go=window.fgGo;window.fgGo=function(){try{if(fgIsOwn())window._ccOwnPending=1}catch(e){}return _go.apply(this,arguments)}}
 try{wReady('fog')}catch(e){}
 })();

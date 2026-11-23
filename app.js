@@ -44999,7 +44999,9 @@ window.rrxGo=async function(i){const ad=window._rrxAd,o=(window._rrxO||[])[i];if
  <button class="pbtn" style="width:100%" onclick="rrxBest()">⭐ เอาชะตาที่ดีที่สุด</button><button class="gbtn" style="width:100%;margin-top:6px" onclick="rrxClose()">เอาผลสุดท้าย</button>`:`<button class="pbtn" style="width:100%" onclick="rrxClose()">ตกลง</button>`}`,'rrx');try{sfx('bad')}catch(e){}};
 window.rrxBest=function(){const ad=window._rrxAd,b=window._rrxBest;CUR=null;try{closeM()}catch(e){}if(!ad||!b)return;try{ad.restore(b);ad.draw(false);toast('⭐ กลับไปชะตาที่ดีที่สุดแล้ว')}catch(e){console.error(e)}};
 // ปุ่มในหน้าสุ่มเกิดของแต่ละโลก (หน้าถูกวาดใหม่บ่อย จึงเช็กเป็นระยะ)
-function ensure(){try{for(const id in AD){const ad=AD[id];let h=null;try{h=ad.host()}catch(e){}const par=h&&h.parentNode;const old=document.querySelector('.rrxB[data-w="'+id+'"]');
+function ensure(){try{for(const id in AD){const ad=AD[id];let h=null;try{h=ad.host()}catch(e){}
+  // host ที่เป็น "ลูกตัวแรกของแถบ" จะชี้มาที่ปุ่มสุ่มรัวเองหลังแทรกแล้ว → ข้ามไปตัวถัดไป ไม่งั้นปุ่มถูกลบ/แทรกสลับกันจนกระพริบ
+  while(h&&h.classList&&h.classList.contains('rrxB'))h=h.nextElementSibling;const par=h&&h.parentNode;const old=document.querySelector('.rrxB[data-w="'+id+'"]');
   if(!h||!par){if(old&&!(old.offsetParent))old.remove();continue}
   const t=T(),html=t>=2?`⚡ สุ่มรัว <small>· ให้ระบบสุ่มจนเจอชะตาที่ต้องการ</small>`:`⚡ สุ่มรัว 🔒 <small>· สำหรับผู้สนับสนุน</small>`;
   let b=old;if(b&&(b.parentNode!==par||b.nextSibling!==h)){b.remove();b=null}
@@ -45753,4 +45755,45 @@ if(document.readyState==='complete')setTimeout(boot,1200);else addEventListener(
 // ถ้าเปิดค้างไว้ข้ามเที่ยงคืนโดยไม่ได้อยู่ในหน้าจอนับถอยหลัง ให้เด้งฉากเที่ยงคืนเมื่ออยู่หน้าแรก
 if(inCd()&&Q!=='cd'){const iv=setInterval(()=>{if(now()>=A){clearInterval(iv);const t=document.getElementById('title');const c=document.getElementById('loyChip');if(c)c.textContent=L('🌕 คืนลอยกระทง แตะเพื่อดูสายน้ำ','🌕 Loy Krathong night — see the river');if(!el&&t&&t.classList.contains('on'))open(true)}},1000)}
 })()}catch(e){console.error('block210',e)}
+// BLOCK 211: ✍️ สร้างเอง / 🎨 ออกแบบหน้าตา ทุกโลก — ตัวเลือกกลาง ccPick (เลือกทุกช่องเอง) · ccLook (ออกแบบหน้าตา ที่เหลือลิขิต)
+//  ชีวิตที่ "สร้างเอง" ตั้ง S.custom + S.ccOwn → ไม่ส่งขึ้นทำเนียบ (ห่อ sendLife) · ตั้งผ่าน window._ccOwnPending ก่อน startLife ของแต่ละโลก
+//  ใช้ใน: 🐾 สัตว์อสูร (หน้ากำเนิด) · 🌉 นครม่านหมอก (w/fog.js) · 🌠 ทะลุฟ้าดารา (w/sky.js) · โลกอื่นมีอยู่แล้ว (goBirthPick / ยุคปัจจุบัน)
+try{(()=>{
+const EN=()=>{try{return LANG==='en'}catch(e){return false}};const L=(th,en)=>EN()?en:th;
+const st=document.createElement('style');st.textContent=`.ccF{margin:8px 0;padding:9px 10px;border:1px solid var(--line,#5a4a7a);border-radius:12px;background:#ffffff08}.ccF .k{font-size:12.5px;opacity:.8;margin-bottom:4px}.ccF select{width:100%;font:inherit;font-size:15px;padding:9px 8px;border-radius:10px;border:1px solid #8a7ac0;background:#1a1430;color:#f1e7ff}.ccF .d{font-size:12px;opacity:.75;margin-top:5px;line-height:1.45}.ccW{color:#ff8a7a;font-size:12.5px;margin:4px 0 8px}.ccSw{display:flex;gap:7px;flex-wrap:wrap}.ccSw button{width:36px;height:36px;border-radius:50%;border:2px solid #0006;cursor:pointer}.ccSw button.on{outline:3px solid #ffd36a;outline-offset:2px}.ccG{display:flex;gap:6px}.ccG button{flex:1;padding:9px;border-radius:10px;border:1px solid #8a7ac0;background:transparent;color:inherit;font:inherit}.ccG button.on{background:#ffd36a33;border-color:#ffd36a}.ccIn{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:9px;border-radius:10px;border:1px solid #8a7ac0;background:#1a1430;color:#fff}.ccBtnRow{display:flex;gap:8px;margin-top:10px}.ccBtnRow button{flex:1}.ccOwnB{width:100%;margin-top:8px}.ccTag{display:inline-block;margin-top:6px;padding:3px 10px;border-radius:99px;border:1px dashed #ff8a7a;color:#ffb0a0;font-size:12px}`;document.head.appendChild(st);
+// fields: [{k, ic, n, opts:[{v, t, d}], cur}] · onDone(map)
+window.ccPick=function(o){const F=o.fields||[];const sel={};F.forEach(f=>sel[f.k]=f.cur);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>✍️ ${o.title||L('สร้างเอง','Build your own')}</h3><p class="tag2">${o.sub||L('เลือกเองทุกช่อง','Choose every slot yourself')}</p><div class="ccW">⚠️ ${L('ชีวิตที่สร้างเองจะไม่ขึ้นทำเนียบ','Lives you build yourself do not go on the leaderboard')}</div>
+ ${F.map((f,i)=>`<div class="ccF"><div class="k">${f.ic||''} ${f.n}</div><select data-i="${i}">${f.opts.map((x,j)=>`<option value="${j}"${String(x.v)===String(f.cur)?' selected':''}>${x.t}</option>`).join('')}</select><div class="d" id="ccD${i}"></div></div>`).join('')}
+ <div class="ccBtnRow"><button class="gbtn" onclick="closeM()">${L('ยกเลิก','Cancel')}</button><button class="pbtn" id="ccOk">✅ ${L('ใช้ชุดนี้','Use this')}</button></div>`,'ccpick');
+ const m=document.getElementById('modal');const upd=i=>{const s=m.querySelector(`select[data-i="${i}"]`),f=F[i],x=f.opts[+s.value];sel[f.k]=x.v;const d=m.querySelector('#ccD'+i);if(d)d.innerHTML=x.d||''};
+ m.querySelectorAll('select').forEach(s=>{s.onchange=()=>upd(+s.dataset.i);upd(+s.dataset.i)});
+ m.querySelector('#ccOk').onclick=()=>{closeM();try{o.onDone(sel)}catch(e){console.error('ccPick',e)}}};
+// ออกแบบหน้าตา: {g:[[v,label]], cur:{g,hair,skin,name}, hair:[], skin:[], onDone}
+window.ccLook=function(o){const c=Object.assign({},o.cur||{});const sw=(k,L0)=>`<div class="ccSw" data-k="${k}">${L0.map(v=>`<button style="background:${v}" data-v="${v}" class="${c[k]===v?'on':''}" aria-label="${v}"></button>`).join('')}</div>`;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎨 ${L('ออกแบบหน้าตา ที่เหลือให้ฟ้าลิขิต','Design your look; heaven decides the rest')}</h3><p class="tag2">${L('เลือกเพศ ชื่อ สีผม และสีผิวเอง ชาติกำเนิดและชะตายังสุ่มตามปกติ · ยังขึ้นทำเนียบได้','Choose sex, name, hair and skin. Origin and fate stay random · still counts for the leaderboard')}</p>
+ <div class="ccF"><div class="k">⚧ ${L('เพศ','Sex')}</div><div class="ccG">${o.g.map(([v,l])=>`<button data-g="${v}" class="${String(c.g)===String(v)?'on':''}">${l}</button>`).join('')}</div></div>
+ <div class="ccF"><div class="k">✏️ ${L('ชื่อ','Name')}</div><input class="ccIn" id="ccNm" maxlength="24" value="${esc(c.name||'')}"></div>
+ ${o.hair?`<div class="ccF"><div class="k">💇 ${L('สีผม','Hair colour')}</div>${sw('hair',o.hair)}</div>`:''}${o.skin?`<div class="ccF"><div class="k">🖐️ ${L('สีผิว','Skin colour')}</div>${sw('skin',o.skin)}</div>`:''}
+ <div class="ccBtnRow"><button class="gbtn" onclick="closeM()">${L('ยกเลิก','Cancel')}</button><button class="pbtn" id="ccOk">✅ ${L('ใช้หน้าตานี้','Use this look')}</button></div>`,'cclook');
+ const m=document.getElementById('modal');m.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{c.g=isNaN(+b.dataset.g)?b.dataset.g:+b.dataset.g;m.querySelectorAll('[data-g]').forEach(x=>x.classList.toggle('on',x===b))});
+ m.querySelectorAll('.ccSw').forEach(w=>w.querySelectorAll('button').forEach(b=>b.onclick=()=>{c[w.dataset.k]=b.dataset.v;w.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))}));
+ m.querySelector('#ccOk').onclick=()=>{const n=String(m.querySelector('#ccNm').value||'').trim().slice(0,24);if(n)c.name=n;closeM();try{o.onDone(c)}catch(e){console.error('ccLook',e)}}};
+// ชีวิตที่สร้างเอง → ไม่ขึ้นทำเนียบ
+{const _sl=startLife;startLife=function(){const own=window._ccOwnPending;window._ccOwnPending=0;const r=_sl.apply(this,arguments);try{if(own&&S){S.custom=true;S.ccOwn=1}}catch(e){}return r}}
+{const _snd=sendLife;sendLife=async function(){try{if(S&&S.ccOwn){try{customNote()}catch(e){}return}}catch(e){}return _snd.apply(this,arguments)}}
+// ---------- 🐾 สัตว์อสูร: ✍️ สร้างเองในหน้ากำเนิด ----------
+{const _bs=brShow;brShow=function(){const r=_bs.apply(this,arguments);try{const B=document.getElementById('brB');if(B&&!B.querySelector('.ccOwnB')){const row=B.querySelector('button[onclick="brReroll()"]');const p=row&&row.parentNode;if(p){(B.querySelector('.rrxB')||p).insertAdjacentHTML('beforebegin',`<button class="gbtn ccOwnB" onclick="brOwn()">✍️ ${L('สร้างเอง','Build your own')} <small>· ${L('เลือกเผ่าพันธุ์ ธาตุ สายเลือด รากปราณ เอง · ไม่ขึ้นทำเนียบ','pick species, element, bloodline and root · not on the leaderboard')}</small></button>${brRoll&&brRoll.own?`<div style="text-align:center"><span class="ccTag">✍️ ${L('สร้างเอง · ไม่ขึ้นทำเนียบ','Self-built · not on the leaderboard')}</span></div>`:''}`)}}}catch(e){console.error('cc br',e)}return r}}
+window.brOwn=function(){const r=brRoll;if(!r)return;const en=EN();
+ ccPick({title:L('สร้างสัตว์อสูรเอง','Build your own beast'),sub:L('ถิ่นกำเนิดและนิสัยยังสุ่ม','Birthplace and temperament stay random'),fields:[
+  {k:'sp',ic:'🐾',n:L('เผ่าพันธุ์','Species'),cur:r.sp,opts:BL_SP.map((s,i)=>({v:i,t:s[0],d:s[3]}))},
+  {k:'el',ic:'✨',n:L('ธาตุ','Element'),cur:r.el,opts:BEL.map((e,i)=>({v:i,t:e[0]}))},
+  {k:'bl',ic:'🩸',n:L('สายเลือด','Bloodline'),cur:r.bl,opts:BBLOOD.map((b,i)=>({v:i,t:b.n,d:b.d}))},
+  {k:'t',ic:'🌱',n:L('รากปราณ','Qi root'),cur:r.t,opts:TALENT.map((x,i)=>({v:i,t:(typeof BTAL_N!=='undefined'&&BTAL_N[i])||x.n,d:(typeof BTAL_D!=='undefined'&&BTAL_D[i])||''}))},
+  {k:'g',ic:'⚧',n:L('เพศ','Sex'),cur:r.g,opts:[{v:0,t:L('เพศผู้','Male')},{v:1,t:L('เพศเมีย','Female')}]},
+  ...(typeof BPAR!=='undefined'?[{k:'par',ic:'👪',n:L('ครอบครัว','Family'),cur:r.par|0,opts:BPAR.map((p,i)=>({v:i,t:en&&p.e?p.e:p.n,d:en&&p.de?p.de:p.d}))}]:[])],
+  onDone(s){Object.keys(s).forEach(k=>r[k]=+s[k]);r.own=1;r.rare=null;try{brShow(false)}catch(e){console.error(e)}}})};
+{const _bb=beastBirth2;beastBirth2=function(r){try{if(r&&r.own)window._ccOwnPending=1}catch(e){}return _bb.apply(this,arguments)}}
+try{Object.assign(I18N.d,{'สร้างเอง':'Build your own'})}catch(e){}
+})()}catch(e){console.error('block211',e)}
 
