@@ -45258,3 +45258,6 @@ try{(()=>{const I='input:not([type]),input[type=text],input[type=search],input[t
 const st=document.createElement('style');st.textContent=`body.dark :is(${I}){color:var(--fg,#f1e8d4)!important;-webkit-text-fill-color:var(--fg,#f1e8d4)!important;caret-color:#ffd36e!important;background-color:#15121f!important;border:1px solid color-mix(in srgb,var(--pink,#e8b54a) 45%,transparent)!important}
 body.dark select option{background:#1b1626;color:#f1e8d4}body.dark :is(input,textarea)::placeholder{color:#9a90a8!important;-webkit-text-fill-color:#9a90a8!important}
 body.dark select{color-scheme:dark}body:not(.dark) select{color-scheme:light}`;document.head.appendChild(st)})()}catch(e){console.error('block198',e)}
+
+// BLOCK 199: 🚀 ฟีดยาวไม่หน่วง — ข้อความในฟีดที่อยู่นอกจอไม่ต้องวาด (content-visibility) · ไม่ลบอะไรทิ้ง เลื่อนกลับไปอ่านได้ครบเหมือนเดิม
+try{(()=>{const st=document.createElement('style');st.textContent=`#feed>.bub:not(:nth-last-child(-n+12)){content-visibility:auto;contain-intrinsic-size:auto 56px}`;document.head.appendChild(st)})()}catch(e){console.error('block199',e)}
