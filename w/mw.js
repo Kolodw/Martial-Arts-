@@ -2297,6 +2297,7 @@ window._wx13={NW,mx(M){const w=wOf(M);
  if(w==='gatewon'){const X=rI(M);return{r:rk(RRK,X.res),g:[['🚩','ยึดคืน',X.res+'%'],['🧱','กำแพง',X.wall+'/100'],['🏁','เป้าหมาย',[25,50,75].filter(x=>X.ms[x]).length+'/3'],['🌀','เกตแม่',X.fin?'จบแล้ว':'ยังอยู่']],l:[X.fall?'🔥 เคยเห็นเมืองแตก':'🏙️ เมืองยังยืนอยู่']}}
  if(w==='doom'){const D=dI(M);return{r:D.fin?'ผู้รอดหลังวันสิ้นโลก':'อีก '+D.left+' ปีถึงวันสิ้นโลก',g:[['☄️','เหลือ',D.fin?'ผ่านแล้ว':D.left+' ปี'],['🏗️','เตรียมตัว',D.prep+'/100'],['💞','คนข้างกาย',D.bond+'/100'],['🎟️','บังเกอร์',D.bunk?'มี':'ไม่มี']],l:[]}}
  return null}};
+window._scrLad=Object.assign(window._scrLad||{},{tower:['🏰 โลกหอคอย',TR,M=>tI(M).fl,'ชั้นที่ปีนถึง'],game:['🎮 โลกระบบเกม',GRK,M=>qI(M).lv,'เลเวล'],gatewon:['💀 โลกที่เกตชนะ',RRK,M=>rI(M).res,'ยึดคืน %']});
 window._wld13={ids:['wi_tower','t_b25','t_b50','t_b75','t_top','t_hurt','t_party','t_loot','t_fam','wi_game','g_pk','g_bug','g_guild','g_hid','g_free','g_final','wi_gatewon','r_m25','r_m50','r_m75','r_top','r_fall','r_food','r_beast','wi_doom','d_lot','d_riot','d_msn','d_end','d_post'],tI,qI,rI,dI};
 })()}catch(e){console.error('block13',e)}
 SL.impl.mwYear=mwYear;mwYear=function(){return globalThis.mwYear.apply(this,arguments)};SL.impl.render=render;render=function(){return globalThis.render.apply(this,arguments)};SL.impl.endGame=endGame;endGame=function(){return globalThis.endGame.apply(this,arguments)};})();

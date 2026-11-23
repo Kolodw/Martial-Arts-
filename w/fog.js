@@ -1961,7 +1961,7 @@ window.fogTal=function(){const K=FG();if(!K)return;const L=(K.tl||[]).map(n=>{co
 
 EVS.push([K=>has(K,'mirror')&&K.tier>=2&&rnd()<.25,K=>mirrorCity(K)],[K=>K.path==='mist'&&K.tier>=4&&rnd()<.25,K=>mirrorCity(K)]);
 {const _cm=closeM;closeM=function(){const k=$('modal').dataset.k;const r=_cm.apply(this,arguments);try{if(k==='fogmg'&&MG){const m=MG;MG=null;clearInterval(m.t);clearTimeout(m.t2);setTimeout(()=>{try{m.cb(.15)}catch(e){}},60)}if(k==='fogboard'&&BD){BD=null;try{toast('📓 แฟ้มคดียังค้างอยู่ เปิดได้จากสมุดคดี')}catch(e){}}}catch(e){}return r}}
-window._fog={mgPath,PATH,FAC,ART,CASE,LORE,FG,caseStart:()=>caseStart(FG()),evAwake:()=>evAwake(FG()),riteAsk:()=>riteAsk(FG())};
+window._fog={FRK,mgPath,PATH,FAC,ART,CASE,LORE,FG,caseStart:()=>caseStart(FG()),evAwake:()=>evAwake(FG()),riteAsk:()=>riteAsk(FG())};
 window._fog.p4={X4,mgRitual,mgVault,mgWit,mgBall,mgDiv,mgHarvest,mgDW,loopEv,nightEv,ballEv,trialEv,plStart,plAsk,schInit,schMove,sinkEv,futEv,famEv,godEv,vowEv,harvestEv,ashEv,beastEv,jourEv,mentorEv,ptHumanEv,holyEv,kidTick,loveEv,nameLearn,vaultOffer,genCase};
 // ---------- ✍️ สร้างเอง / 🎨 ออกแบบหน้าตา ในหน้าสุ่มกำเนิด (ใช้ ccPick / ccLook จาก BLOCK 211 ใน app.js) ----------
 {const _d=fgDraw;fgDraw=function(){const r=_d.apply(this,arguments);try{const el=document.getElementById('fgB');if(!el||!FB||!window.ccPick)return r;const bar=el.querySelector('.fgBar');if(!bar||el.querySelector('.ccFgRow'))return r;

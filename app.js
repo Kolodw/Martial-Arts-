@@ -45851,7 +45851,39 @@ function scrFix(){try{const m=document.getElementById('modal');if(!m||m.dataset.
  [...SCR].forEach(f=>mv.filter(b=>fnOf(b)===f).forEach(b=>{const k=f+'|'+b.textContent;if(seen.has(k)){b.remove();return}seen.add(k);G.appendChild(b)}));
  [...root.querySelectorAll('.mch15')].forEach(h=>{const g=h.nextElementSibling;if(g&&g.matches('.mgrid')&&!g.children.length){g.remove();h.remove()}});
 }catch(e){console.error(e)}}
-{const _or=openRealm;openRealm=function(t){try{if(S&&S.mw&&S.mw.sky&&typeof window.skyCodex==='function')return window.skyCodex('rank')}catch(e){console.error(e)}return _or.apply(this,arguments)}}
+
+// ---- 📜 คัมภีร์ประจำโลก: ยุคปัจจุบัน · นครม่านหมอก · จิตวิญญาณยุทธ์ · ภพเทพ ----
+function scrCards(title,intro,items,extra){const cur=items.findIndex(x=>x.cur);
+ return`<button class="xbtn" onclick="closeM()">✕</button><h3>${title}</h3><p class="tag2">${intro}</p>${extra||''}`+items.map((x,i)=>`<div class="rlmc ${x.cur?'cur':''}" style="--c1:#6a5acd;--c2:#2a2a55"><div class="rlmch"><span class="rlmci">${x.ic||'✦'}</span><div><b>${esc(x.n)}</b>${x.cur?' <span class="rlmnow">ตอนนี้</span>':(cur>=0&&i<cur?' <span class="tag2">✓ ผ่านแล้ว</span>':'')}</div></div>${x.d?`<div class="rlmcd">${x.d}</div>`:''}</div>`).join('')+`<div class="rlmel"><button class="gbtn" onclick="closeM();setTimeout(()=>openGuide(),60)">📘 คู่มืออธิบายทุกระบบ</button></div>`}
+const SCR_HOW={
+under:['🥊 <b>งานใต้ดิน</b> — อิทธิพล +4–8 (แรงขึ้นตามฐานะ) ได้เงิน แต่ความร้อน +8–16 เสี่ยงโดนซ้อมหรือถูกทำร้ายถึงตายเมื่อความร้อนสูง','🤝 <b>ซื้อใจผู้ใหญ่</b> — ความร้อน −10–20 อิทธิพล +1–4 เสียเงินเล็กน้อย','ปีที่ไม่ทำสองอย่างนี้ อิทธิพลลด 1'],
+ghost:['👻 <b>รับงานปราบผี</b> — บารมี +3–7 ได้เงิน แต่ผีตามหลอน +7–15 (ผีตามหลอนสูงเสี่ยงป่วยหนักและตาย)','🙏 <b>ทำบุญผูกบารมี</b> — ผีตามหลอน −10–18 บารมี +1–4 เสียเงินเล็กน้อย','เครื่องรางช่วยลดผีตามหลอนที่ได้จากงานปราบผี'],
+loop:['🔁 <b>จดบันทึกวันซ้ำ</b> — ความทรงจำ +3–7 แต่ความเหนื่อยล้า +6–12','🌅 <b>ใช้วันนี้ให้เต็มที่</b> — ความเหนื่อยล้า −10–18 ความทรงจำ +1–3','เหนื่อยล้าสูงเสี่ยงล้มและหมดสติ ถึง 90 ขึ้นไปเสี่ยงตาย'],
+zombie:['🧟 <b>ออกหาเสบียง</b> — ทักษะรอด +3–7 ได้เงิน แต่ติดเชื้อ +8–16 และเสี่ยงโดนฝูงไล่ตาม','🏠 <b>เสริมที่พัก</b> — ติดเชื้อ −10–18 ทักษะรอด +1–4 เสียเงินเล็กน้อย','ติดเชื้อ 90 ขึ้นไปเสี่ยงตาย'],
+tower:['🧗 <b>ปีนหอคอย</b> — ชั้น +2–5 (อุปกรณ์ช่วยเพิ่มและลดความบาดเจ็บ) ได้เงินตามชั้น แต่บาดเจ็บสะสมเพิ่มและเสียพลังชีวิต','ชั้น 25 / 50 / 75 มีประตูปิดอยู่ ต้องผ่านด่านก่อนจึงปีนต่อได้ · ชั้นสูงสุด 100','🩹 <b>พักฟื้นและเตรียมตัว</b> — ใช้ปีนั้นลดความบาดเจ็บ · บาดเจ็บสะสม 95 ขึ้นไปเสี่ยงตกตาย'],
+game:['⚔️ <b>ล่าเควส</b> — เลเวล +2–4 (นักรบ +1) เลเวลตันที่ 60 จนกว่าจะผ่านบอสโลก จากนั้นขึ้นได้ถึง 99','💼 <b>ใช้สกิลหาเงิน</b> — ได้เงินตามเลเวล (ช่างคราฟต์ได้มากกว่า)','คลาส: ⚔️ นักรบ เลเวลขึ้นเร็วกว่า · 🔮 นักเวท ชนะบอสง่ายกว่า · 🔨 ช่างคราฟต์ หาเงินจากสกิลได้มาก · 🗡️ โจร รอดจาก PK ง่าย'],
+gatewon:['🗡️ <b>ออกนอกกำแพง</b> — ยึดคืน +3–7% ต่อปี แต่เสียพลังชีวิตและเสี่ยงตายนอกกำแพง · ที่ 25% / 50% / 75% มีเป้าหมายใหญ่ต้องทำให้สำเร็จก่อนจึงไปต่อ','🧱 <b>เฝ้ากำแพง</b> — ความมั่นคงของเมือง +9–15','ทุกปีมอนสเตอร์กดดัน ความมั่นคงของกำแพงลด 4–8']};
+function scrWorld(){if(!S||!S.alive)return false;let h=null;
+ const M=S.mw;
+ if(M&&M.fog){const F=window._fog;if(!F||!F.FRK)return false;const K=M.fog,ks=Object.keys(F.FRK),need=[15,35,55,75];
+  h=`<button class="xbtn" onclick="closeM()">✕</button><h3>📜 คัมภีร์นครม่านหมอก</h3><p class="tag2">เข้าร่วมฝ่ายแล้วสะสมชื่อเสียงกับฝ่ายนั้นเพื่อไต่ขั้นภายในฝ่าย (5 ขั้น) · ชื่อเสียงที่ต้องมีเพื่อขึ้นขั้นถัดไป: ${need.join(' → ')} · ฝ่ายคู่แค้นเสียชื่อเมื่อคุณเข้าข้าง</p>`+ks.map(k=>{const f=F.FAC[k],mine=K.fac===k,r=K.frk|0;return`<div class="rlmc ${mine?'cur':''}" style="--c1:#5b7c99;--c2:#1f2a36"><div class="rlmch"><span class="rlmci">${f.ic}</span><div><b>${esc(f.n)}</b>${mine?' <span class="rlmnow">ฝ่ายของคุณ</span>':''}</div></div><div class="rlmcd">${f.d}</div><div class="rlmca">${F.FRK[k].map((n,i)=>`<span style="${mine&&i===r?'font-weight:900;color:#ffd76a':mine&&i<r?'opacity:.55':''}">${i+1}. ${esc(n)}</span>`).join('')}</div></div>`}).join('')+`<div class="rlmel"><button class="gbtn" onclick="closeM();setTimeout(()=>openGuide(),60)">📘 คู่มืออธิบายทุกระบบ</button></div>`}
+ else if(M){const w=window._wld&&window._wld.wOf?window._wld.wOf(M):'normal';let T=null,v=0,nm='',un='';const L=window._wld||{},L2=window._wld2||{},LD=window._scrLad||{};
+  if(w==='under'&&M.U){T=L.UR;v=M.U.inf;nm='🥊 โลกใต้ดิน';un='อิทธิพล'}
+  else if(w==='ghost'&&M.G){T=L.GR;v=M.G.ward;nm='👻 โลกเร้นลับ';un='ความเชื่อถือ'}
+  else if(w==='loop'&&M.LP){T=L2.LR;v=M.LP.mem;nm='🔁 โลกวันซ้ำ';un='ความทรงจำ'}
+  else if(w==='zombie'&&M.Z){T=L2.ZR;v=M.Z.surv;nm='🧟 โลกซอมบี้';un='ทักษะรอด'}
+  else if(LD[w]){nm=LD[w][0];T=LD[w][1];v=LD[w][2](M);un=LD[w][3]}
+  if(T){let ci=0;T.forEach((t,i)=>{if(v>=t[0])ci=i});
+   const nx=T[ci+1],H=SCR_HOW[w];h=scrCards('📜 คัมภีร์ · '+nm,`ฐานะไต่ตาม<b>${un}</b> · ตอนนี้ ${fmt(v)}${nx?` · ขั้นถัดไป <b>${esc(nx[1])}</b> ต้องมี ${nx[0]} (อีก ${fmt(Math.max(0,nx[0]-v))})`:' · ถึงขั้นสูงสุดแล้ว'}`,T.map((t,i)=>({n:t[1],ic:i===ci?'⭐':i<ci?'✅':'🔒',cur:i===ci,d:`ต้องมี${un} ${t[0]}+${i<T.length-1?(T[i+1][0]-1>t[0]?` · ช่วง ${t[0]}–${T[i+1][0]-1}`:''):' · ขั้นสูงสุด'}`})),H?`<div class="rlmel"><b>📈 เพิ่ม${un}ได้ยังไง</b><br>${H.map(x=>'• '+x).join('<br>')}</div>`:'')}
+  else if(w==='hunter'&&typeof HR!=='undefined'){const r=M.H?M.H.r:-1;
+   h=scrCards('📜 คัมภีร์ฮันเตอร์','ระดับฮันเตอร์ตามพลังที่สะสม ยิ่งสูงยิ่งเข้าดันเจี้ยนระดับอันตรายได้',[{n:'ยังไม่ปลุกพลัง',cur:r<0,ic:'🧍',d:'คนธรรมดาในยุคประตูมิติ'}].concat(HR.map((g,i)=>({n:'ฮันเตอร์ระดับ '+g,cur:r===i,ic:'🌀',d:'พลังสะสม '+HR_T[i]+'+'}))))}
+  else h=scrCards('📜 คัมภีร์ยุคปัจจุบัน','โหมดนี้ไม่มีบันไดระดับพลังแยก ความก้าวหน้าดูได้จากอาชีพ ฐานะ และสถานะในหน้าเล่น · ถ้าชีวิตเข้าสู่โลกย่อย (เช่น ฮันเตอร์ ระบบเกม หอคอย) คัมภีร์จะแสดงระดับของโลกนั้นให้เอง',[])}
+ else if(S.ch==='soul'&&S.sv){const G=S.sv,B=window._blk34,sg=window._sgScr;
+  if(G.gd&&G.gd.on&&sg){const d=sg.GD()||G.gd;h=scrCards('📜 คัมภีร์ภพเทพแห่งทวีป','เมื่อกลายเป็นเทพ ชื่อเสียงวัดจากผู้ศรัทธา · ครบจำนวนแล้วต้องผ่านมติสภาจึงขึ้นขั้น',sg.RK.map((n,i)=>({n,cur:d.rk===i,ic:'🌟',d:i<3?`ต้องมีผู้ศรัทธา ${sg.RKN[i]} เพื่อขอมติขึ้นขั้นถัดไป`:'ขั้นสูงสุด'})))}
+  else if(B&&B.RANK){const lv=G.lv|0,ci=Math.min(B.RANK.length-1,Math.floor((Math.max(1,lv)-1)/10));
+   h=scrCards('📜 คัมภีร์ทวีปจิตวิญญาณยุทธ์',`ระดับจิต <b>${lv}</b>/100 · ทุก 10 ระดับได้ฉายาใหม่ (10 ฉายา)<br>📈 ระดับจิตเพิ่มจากการฝึกทุกปี · เมื่อถึง<b>คอขวด</b>ระดับจะหยุด ต้อง<b>ออกล่าสัตว์วิญญาณ</b>มาหลอมเป็นวงแหวนวงใหม่ก่อนจึงไต่ต่อได้ · ครบ 9 วงถึงระดับ 100 · ตั้งแต่ระดับ 30 ดวงจิตบางสายจะตื่นพลังเพิ่ม`,B.RANK.map((n,i)=>({n,cur:i===ci,ic:'⭕',d:`ระดับจิต ${i*10+1}–${i*10+10}`})))}}
+ if(!h)return false;modal(h,'wscroll');return true}
+{const _or=openRealm;openRealm=function(t){try{if(S&&S.mw&&S.mw.sky&&typeof window.skyCodex==='function')return window.skyCodex('rank');if(scrWorld())return}catch(e){console.error(e)}return _or.apply(this,arguments)}}
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);scrFix();setTimeout(scrFix,0);setTimeout(scrFix,120);setTimeout(scrFix,400);return r}}
 {const _ot=openTitleMenu;openTitleMenu=function(){const r=_ot.apply(this,arguments);try{if(!(S&&S.alive)){const m=document.getElementById('modal');m&&m.querySelectorAll('.tmgrid>button').forEach(b=>{if(/^(openCodex|openGuide)\(/.test(b.getAttribute('onclick')||''))b.remove()})}}catch(e){}return r}}
 try{const st=document.createElement('style');st.textContent='.rlmLk{font-size:.78em;opacity:.8;text-decoration:underline;cursor:pointer;white-space:nowrap;margin-left:4px}.rlmLk:active{opacity:1}';document.head.appendChild(st)}catch(e){}
