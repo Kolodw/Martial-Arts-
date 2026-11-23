@@ -44711,3 +44711,15 @@ window.gbNpcTick=function(){if(!S||!S.alive)return false;const L=gbL(),b=L.find(
  if((S.xt|0)>0&&!(S.sv&&S.sv.gd&&S.sv.gd.on)&&!choice._cur&&!modalOpen){if(!gbNpcTick()&&Math.random()<.07)gbNpcEv()}}catch(e){console.error('gb',e)}return r}}
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(gbGod()&&!(S.sv&&S.sv.gd&&S.sv.gd.on)){const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.gbM'))g.insertAdjacentHTML('afterbegin','<button class="opt gbM" onclick="closeM();gbSend()">🌟 ส่งพรลงโลกล่าง<small>สุ่มผู้เล่นที่ออนไลน์อยู่ · 6 ชั่วโมงครั้ง</small></button>')}}catch(e){}return r}}
 })()}catch(e){console.error('block186',e)}
+// ============================================================
+// BLOCK 187: 🗓️ เลิกทำเนียบรายวัน — เหลือรายสัปดาห์/รายเดือน (เซิร์ฟเวอร์ไม่แจกรางวัลรายวันแล้ว)
+//   กรอบ/ฉายารายวันที่เคยได้ไปยังอยู่ครบ · ทุกหน้าทำเนียบเปิดที่รายสัปดาห์ · ซ่อนแท็บรายวันทุกหมวด
+// ============================================================
+try{(()=>{
+try{if(!openOnline._bp||openOnline._bp==='d')openOnline._bp='w'}catch(e){}
+{const _oo=openOnline;const nf=function(tab){try{if(openOnline._bp==='d'||!openOnline._bp)openOnline._bp='w'}catch(e){}return _oo.apply(this,arguments)};for(const k in _oo)nf[k]=_oo[k];if(!nf._bp||nf._bp==='d')nf._bp='w';openOnline=nf}
+if(typeof openRgBoard==='function'){const _rg=openRgBoard;const nf=function(p){if(!p||p==='d')p=openRgBoard._p&&openRgBoard._p!=='d'?openRgBoard._p:'w';openRgBoard._p=p;return _rg.call(this,p)};for(const k in _rg)nf[k]=_rg[k];nf._p=nf._p&&nf._p!=='d'?nf._p:'w';openRgBoard=nf}
+const strip=()=>{try{const m=$('modal');if(!m)return;m.querySelectorAll('.tabb').forEach(b=>{if(/📅\s*รายวัน|^\s*รายวัน\s*$|^\s*วัน\s*$/.test(b.textContent)&&b.parentNode&&[...b.parentNode.querySelectorAll('.tabb')].some(x=>/สัปดาห์/.test(x.textContent)))b.remove()})}catch(e){}};
+try{const mo=new MutationObserver(()=>strip());const go=()=>{const m=$('modal');if(m)mo.observe(m,{childList:true,subtree:true});else setTimeout(go,1000)};go()}catch(e){}
+try{const g=(typeof SYS_GUIDE!=='undefined'?SYS_GUIDE:[]).find(x=>/ฉายาทำเนียบ รายวัน/.test(x.t||''));if(g){g.t='ฉายาทำเนียบ รายสัปดาห์/รายเดือน อยู่ไหน';g.d=String(g.d||'').replace(/รายวัน\s*[\/·,]?\s*/g,'')}}catch(e){}
+})()}catch(e){console.error('block187',e)}

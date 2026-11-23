@@ -1829,7 +1829,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       for (let i = 0; i < cmds.length; i += 200) await pipe(cmds.slice(i, i + 200)) } catch (e) { } };
     await avgMig();
     const bdSettle = async () => { const yk = new Date(now + 7 * 3600e3 - 86400e3).toISOString().slice(0, 10);
-      await bdSettle1('d', 'bdset:' + yk, 7); await bdSettle1('w', 'bdsetw:' + week(new Date(now - 7 * 86400e3)), 30); await bdSettle1('m', 'bdsetm:' + bdMon(now, 1), 90) };
+      // v22.x: เลิกทำเนียบรายวันแล้ว (ไม่แจกกรอบ/ฉายา/กรรมรายวัน) · เหลือรายสัปดาห์และรายเดือน
+      await bdSettle1('w', 'bdsetw:' + week(new Date(now - 7 * 86400e3)), 30); await bdSettle1('m', 'bdsetm:' + bdMon(now, 1), 90) };
     // v17.12: ย้ายชีวิตโหมดท้าทายของรอบปัจจุบัน ออกจากทำเนียบรวม/ทำเนียบโลก ไปทำเนียบของโหมดตัวเอง (ครั้งเดียว)
     const bdSplit = async () => { try { if (!(await cmd('SET', 'bdsplit1', 1, 'NX'))) return;
       for (const p of ['d', 'w', 'm']) { for (let back = 0; back <= 1; back++) {
@@ -1853,7 +1854,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     const bdWipe = async () => { await bdSplit(); await bdRescore(); await bdHellFloor(); try { if (!(await cmd('SET', 'bd3init', 1, 'NX'))) return; let cur = '0', n = 0; do { const r = await cmd('SCAN', cur, 'MATCH', 'bd2:*', 'COUNT', 500); cur = String(r[0]); if (r[1].length) await cmd('DEL', ...r[1]); n++ } while (cur !== '0' && n < 200); await cmd('DEL', 'bdhide') } catch {} };
     if (a === 'rgboard') {
       await bdSettle();
-      const p0 = String(b.p || qOf(req).p || 'd'), per = ['d', 'w', 'm', 'all'].includes(p0) ? p0 : 'd';
+      const p0 = String(b.p || qOf(req).p || 'w'), per = ['w', 'm', 'all'].includes(p0) ? p0 : 'w';
       const key = per === 'all' ? 'rgb:all' : bdKeyP(per, 'r', now);
       const raw = (await cmd('ZREVRANGE', key, 0, 49)) || [];
       const prevRaw = per === 'all' ? [] : ((await cmd('ZREVRANGE', bdKeyP(per, 'r', now, 1), 0, 2)) || []);
@@ -1938,7 +1939,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     if (a === 'board') {
       await bdWipe(); await bdSettle();
       const ar = await cmd('ZREVRANGE', 'arenaW:' + W, 0, 9, 'WITHSCORES');
-      const per = ['d', 'w', 'm'].includes(String(b.p || qOf(req).p || 'd')) ? String(b.p || qOf(req).p || 'd') : 'd';
+      const per = ['w', 'm'].includes(String(b.p || qOf(req).p || 'w')) ? String(b.p || qOf(req).p || 'w') : 'w';
       const Q = []; BD_CATS.forEach(c => { Q.push(['ZREVRANGE', bdKeyP(per, c, now), 0, 39]); Q.push(['ZREVRANGE', bdKeyP(per, c, now, 1), 0, 2]) });
       const R0 = await pipe(Q);
       const hide = new Set(['f18abdmw8fuj8d', ...((await cmd('SMEMBERS', 'bdhide')) || [])]);
