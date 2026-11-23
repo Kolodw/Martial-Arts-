@@ -827,7 +827,16 @@ const withCap = (p, ms) => Promise.race([p, new Promise(r => setTimeout(() => r(
 // 🏯 สำนักผู้เล่น: เลเวล · ภารกิจ · บอสบุก · วิชาลับ · หอตำนาน · ตำแหน่ง · ส่งพร · สงคราม · ตราสำนัก
 // แต้มทั้งหมดมาจากชีวิตที่ผ่านการตรวจกันโกงฝั่งเซิร์ฟเวอร์แล้วเท่านั้น · มีเพดานต่อคนต่อวัน
 // ============================================================
-const GD_LVX = [0, 300, 900, 2200, 4500, 8000, 13000, 20000, 30000, 45000];
+const GD_LVX = [0, 500, 1500, 4000, 9000, 17000, 30000, 50000, 80000, 120000];
+// เพดานแต้มเลเวลรวมของสำนักต่อวัน: 4 คนแรกนับเต็ม คนที่เกินนับแบบรากที่สอง (คนเยอะได้เปรียบ แต่ไม่ทิ้งห่างจนตันในสองสัปดาห์)
+const gdCapD = m => Math.round(GD_XPD0 * Math.min(m, 4 + Math.sqrt(Math.max(0, m - 4)) * 2)), GD_XPD0 = 300;
+// ย้ายแต้มสำนักเดิมไปเกณฑ์ใหม่ครั้งเดียว: เลเวลเดิมคงเดิม ความคืบหน้าในเลเวลคงสัดส่วน
+const GD_LVX_OLD = [0, 300, 900, 2200, 4500, 8000, 13000, 20000, 30000, 45000];
+const gdConv = x => { let L = 1; for (let i = 1; i < 10; i++) if (x >= GD_LVX_OLD[i]) L = i + 1; if (L >= 10) return GD_LVX[9] + (x - GD_LVX_OLD[9]); const f = (x - GD_LVX_OLD[L - 1]) / (GD_LVX_OLD[L] - GD_LVX_OLD[L - 1]); return Math.round(GD_LVX[L - 1] + f * (GD_LVX[L] - GD_LVX[L - 1])) };
+let GDMIG = false;
+async function gdMig() { try { if (await cmd('GET', 'gdmig2')) { GDMIG = true; return } if ((await cmd('SET', 'gdmig2lk', 1, 'NX', 'EX', 120)) !== 'OK') return; let cur = '0', n = 0;
+  do { const r = await cmd('SCAN', cur, 'MATCH', 'gdx:*', 'COUNT', 500); cur = String(r[0]); const ks = (r[1] || []).filter(k => /^gdx:[^:]+$/.test(k)); if (ks.length) { const vs = await cmd('MGET', ...ks); const L = []; ks.forEach((k, i) => { const x = +(vs || [])[i] || 0, nx = gdConv(x); if (nx !== x) L.push(['SET', k, String(nx)]) }); if (L.length) await pipe(L); n += ks.length } } while (cur !== '0');
+  await cmd('SET', 'gdmig2', String(Date.now())); GDMIG = true; console.log('gdmig2 done', n) } catch (e) { console.error('gdmig2', e) } }
 const GD_CAP = [20, 25, 30, 35, 40, 45, 50, 55, 60, 70];
 const GD_UN = { q: 2, rk: 3, boss: 4, tech: 5, hall: 6, bless: 7, hard: 8, war: 9, emb: 10 };
 const GD_IC0 = ['🏯', '⛩️', '🐉', '🦅', '🐺', '🌙', '🔥', '🌊', '⚔️', '🌸', '🪷', '☯️'], GD_IC10 = ['🐲', '🦚', '👑', '🌟', '🗡️', '🏔️'];
@@ -874,8 +883,9 @@ async function gdWar(wk) {
 async function gdLife(gid, pu, e, b, now) {
   const wk = chrWk(now), d = gdDay(now), age = +e.age || 0, pt = 10 + Math.min(40, Math.floor(age / 3)) + (e.ch ? 5 : 0);
   const [xp0, m0, td, gj] = await pipe([['GET', 'gdx:' + gid], ['HLEN', 'gdm:' + gid], ['HINCRBY', 'gdxd:' + gid + ':' + d, pu, pt], ['GET', 'gd:' + gid]]); const T = gdT(jp(gj)), wd = String((b.fs && b.fs.w) || '').replace(/[^a-z0-9_]/g, '').slice(0, 12) || (e.g ? 'god' : e.x ? 'xian' : 'murim');
-  const lv = gdLv(+xp0 || 0), m = +m0 || 1, prev = (+td || 0) - pt, add = Math.max(0, Math.min(pt, GD_XPD - prev)); let bonus = 0;
+  const lv = gdLv(+xp0 || 0), m = +m0 || 1, prev = (+td || 0) - pt, add = Math.max(0, Math.min(pt, GD_XPD - prev)); let bonus = 0, addX = add;
   const L = [['EXPIRE', 'gdxd:' + gid + ':' + d, 86400 * 2]];
+  if (add > 0) { const tk = 'gdxt:' + gid + ':' + d, tot = +(await cmd('INCRBY', tk, add)) || 0, over = Math.max(0, tot - gdCapD(m)); if (over > 0) { addX = Math.max(0, add - over); await cmd('DECRBY', tk, add - addX) } L.push(['EXPIRE', tk, 86400 * 2]) }
   // หอตำนาน: เก็บชีวิตยืนยาวที่สุดของสำนัก 10 อันดับ (เก็บตั้งแต่เลเวลแรก พอปลดล็อกก็มีของโชว์)
   if (age >= 20) { const hj = { n: clean(e.n, 20), age, u: pu, lid: e.lid || '', r: clean(e.r, 30), w: wd, t: now }; L.push(['ZADD', 'gdh:' + gid, age, JSON.stringify(hj)], ['ZREMRANGEBYRANK', 'gdh:' + gid, 0, -11]); try { const o0 = jp(await cmd('HGET', 'gdhw:' + gid, wd)); if (!o0 || age > (+o0.age || 0)) L.push(['HSET', 'gdhw:' + gid, wd, JSON.stringify(hj)]) } catch {} }
   if (add > 0) {
@@ -894,16 +904,16 @@ async function gdLife(gid, pu, e, b, now) {
     // วิชาลับประจำสำนัก
     if (lv >= GD_UN.tech) L.push(['HINCRBY', 'gdt:' + gid, 'p', add]);
   }
-  if (add + bonus > 0) L.push(['INCRBY', 'gdx:' + gid, add + bonus]);
-  const nl = gdLv((+xp0 || 0) + add + bonus); if (nl > lv) L.push(['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: `🎉 ${T.g}ขึ้นเลเวล ${nl}! รับ${T.m}ได้ ${GD_CAP[nl - 1]} คน`, t: now })]);
+  if (addX + bonus > 0) L.push(['INCRBY', 'gdx:' + gid, addX + bonus]);
+  const nl = gdLv((+xp0 || 0) + addX + bonus); if (nl > lv) L.push(['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: `🎉 ${T.g}ขึ้นเลเวล ${nl}! รับ${T.m}ได้ ${GD_CAP[nl - 1]} คน`, t: now })]);
   L.push(['LTRIM', 'gdc:' + gid, 0, 59]); await pipe(L)
 }
 // ข้อมูลส่วนขยายของสำนัก (แนบไปกับข้อมูลเดิม)
 async function gdExt(g, G0, M0, pu, now) {
   const wk = chrWk(now), d = gdDay(now), m = Math.max(1, Object.keys(M0).length), qk = 'gdq:' + g + ':' + wk, bk = 'gdb:' + g + ':' + wk;
-  const r = await pipe([['GET', 'gdx:' + g], ['HGETALL', qk], ['SCARD', qk + ':w'], ['SCARD', qk + ':m'], ['HGETALL', bk], ['HGETALL', 'gdt:' + g], ['ZREVRANGE', 'gdh:' + g, 0, 9], ['HGETALL', 'gdhp:' + g], ['GET', 'gdpr:' + pu + ':' + d], ['GET', 'gdbs:' + pu + ':' + d], ['HGET', 'gdter', g], ['GET', 'gdwon:' + g + ':' + wk], ['HGET', 'gdxd:' + g + ':' + d, pu], ['LLEN', 'gdbl:' + pu], ['HGETALL', 'gdhw:' + g]]);
+  const r = await pipe([['GET', 'gdx:' + g], ['HGETALL', qk], ['SCARD', qk + ':w'], ['SCARD', qk + ':m'], ['HGETALL', bk], ['HGETALL', 'gdt:' + g], ['ZREVRANGE', 'gdh:' + g, 0, 9], ['HGETALL', 'gdhp:' + g], ['GET', 'gdpr:' + pu + ':' + d], ['GET', 'gdbs:' + pu + ':' + d], ['HGET', 'gdter', g], ['GET', 'gdwon:' + g + ':' + wk], ['HGET', 'gdxd:' + g + ':' + d, pu], ['LLEN', 'gdbl:' + pu], ['HGETALL', 'gdhw:' + g], ['GET', 'gdxt:' + g + ':' + d]]);
   const xp = +r[0] || 0, lv = gdLv(xp), H = gdHv(r[1]), cur = { n: +H.n || 0, o: +H.o || 0, c: +H.c || 0, x: +H.x || 0, f: +H.f || 0, w: +r[2] || 0, m: +r[3] || 0 };
-  const o = { th: GD_TH[G0.th] ? G0.th : 'murim', cgw: cgOf(wk).w, xp, lv, cap: GD_CAP[lv - 1], nx: GD_LVX[lv] || 0, cx: GD_LVX[lv - 1], el: Array.isArray(G0.el) ? G0.el : [], ann: G0.ann || '', mxd: +r[12] || 0, xpd: GD_XPD, bl: +r[13] || 0, ter: +r[10] || 0 };
+  const o = { th: GD_TH[G0.th] ? G0.th : 'murim', cgw: cgOf(wk).w, xp, lv, cap: GD_CAP[lv - 1], nx: GD_LVX[lv] || 0, cx: GD_LVX[lv - 1], el: Array.isArray(G0.el) ? G0.el : [], ann: G0.ann || '', mxd: +r[12] || 0, xpd: GD_XPD, gxd: +r[15] || 0, gcap: gdCapD(m), bl: +r[13] || 0, ter: +r[10] || 0 };
   if (lv >= GD_UN.q) o.q = gdQs(g, wk).map((k, i) => ({ k, c: cur[k], t: gdQT(k, m), d: H['d' + i] ? 1 : 0 })), o.qa = H.all ? 1 : 0;
   if (lv >= GD_UN.boss) { const B = gdBoss(g, wk, lv, m), BH = gdHv(r[4]), dm = {}; for (const k in BH) if (k.startsWith('u:')) dm[k.slice(2)] = +BH[k] || 0; o.boss = { n: B.n, w: B.w, hp: B.hp, hp2: lv >= GD_UN.hard ? B.hp2 : 0, d: +BH.d || 0, w1: BH.w1 ? 1 : 0, w2: BH.w2 ? 1 : 0, me: dm[pu] || 0, top: Object.entries(dm).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([u, v]) => ({ n: (M0[u] && M0[u].n) || '?', v })) } }
   if (lv >= GD_UN.tech) { const T = gdHv(r[5]), p = +T.p || 0, mx = lv >= GD_UN.hard ? 5 : 3, tl = Math.min(mx, gdTech(p)); o.tech = { p, lv: tl, mx, nx: tl < mx ? GD_TPT[tl] : 0, path: ['sword', 'mind', 'body'].includes(G0.tp) ? G0.tp : 'sword' } }
@@ -923,6 +933,7 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (!URL_ || !TOKEN) return res.status(503).json({ err: 'nodb' });
   const a = qOf(req).a;
+  if (!GDMIG) await gdMig();
   if (a === 'memfix') { // บีบอัดเซฟคลาวด์เดิม + ตัด cs2 ที่ซ้ำกับ cs3 (ทำซ้ำได้ปลอดภัย) · ผลเขียนลง log เท่านั้น
     if (global._mfB) return res.json({ ok: 0 }); global._mfB = 1; const t0 = Date.now(); let dd = 0, zz = 0, sv = 0, seen = 0;
     try { let cur = String(global._mfC || '0');

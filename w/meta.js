@@ -77,7 +77,7 @@ const bar=(c,t,cl)=>`<div class="gdBar${cl?' '+cl:''}"><i style="width:${t>0?Mat
 const roleOf=(g,u)=>u===g.ld?' 👑':(g.el||[]).includes(u)?' 🎖️':'';
 function gdHome(g){const me=myPu(),ld=g.ld===me,amEl=(g.el||[]).includes(me),lv=g.lv||1,tot=g.m.reduce((a,m)=>a+m.p,0);
  return`<div class="gdLv"><div><b>เลเวล ${lv}</b>${lv>=10?' <span class="gdEmb">ตรา'+Z.g+'</span>':''}<small>${g.nx?`${N(g.xp)} / ${N(g.nx)} แต้ม${Z.g}`:`${N(g.xp)} แต้ม${Z.g} · เลเวลสูงสุด`}</small></div>${bar(g.xp-(g.cx||0),g.nx?g.nx-(g.cx||0):0,'gold')}
- <small class="tag2">วันนี้คุณช่วย${Z.g}แล้ว ${N(Math.min(g.mxd||0,g.xpd||300))}/${N(g.xpd||300)} แต้ม (เกินนี้ยังนับคะแนนสัปดาห์ แต่ไม่นับเลเวล)</small></div>
+ <small class="tag2">วันนี้คุณช่วย${Z.g}แล้ว ${N(Math.min(g.mxd||0,g.xpd||300))}/${N(g.xpd||300)} แต้ม (เกินนี้ยังนับคะแนนสัปดาห์ แต่ไม่นับเลเวล)${g.gcap?`<br>ทั้ง${Z.g}วันนี้ ${N(Math.min(g.gxd||0,g.gcap))}/${N(g.gcap)} แต้มเลเวล${(g.gxd||0)>=g.gcap?' · เต็มแล้ว ภารกิจ/บอสยังนับต่อ':''}`:''}</small></div>
  ${g.ann?`<div class="gdAnn">📢 ${E(g.ann)}</div>`:''}
  <div class="gdSt"><div><b>${g.rk>0?'#'+g.rk:'—'}</b><small>อันดับสัปดาห์</small></div><div><b>${N(g.sc)}</b><small>แต้มสัปดาห์</small></div><div><b>${g.m.length}/${g.cap||20}</b><small>${Z.m}</small></div></div>
  ${g.bl?`<div class="gdAnn">🙏 มีพรรออยู่ ${g.bl} อย่าง จะติดตัวในชีวิตถัดไป</div>`:''}
