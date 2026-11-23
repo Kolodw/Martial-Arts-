@@ -44871,7 +44871,7 @@ const TIERS=[[.3,'ติด 30% บนสุด'],[.1,'ติด 10% บนส�
 const fmtN=n=>{try{return fmt(Math.round(n))}catch(e){return String(Math.round(n))}};
 const ovC=()=>{let o=document.getElementById('rrxOv');if(!o){o=document.createElement('div');o.id='rrxOv';document.body.appendChild(o)}return o};
 const ovClose=()=>{const o=document.getElementById('rrxOv');if(o)o.remove()};
-try{const st=document.createElement('style');st.textContent=`.rrxB{flex:1 1 100%;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:8px 0 6px;padding:9px 12px;border-radius:12px;border:1.5px solid #c9a24a;background:linear-gradient(90deg,#c9a24a22,#c9a24a08);color:inherit;font:inherit;font-weight:700;font-size:14px;line-height:1.2;cursor:pointer;box-sizing:border-box;grid-column:1/-1;order:-1}
+try{const st=document.createElement('style');st.textContent=`#mwB .mbBar{flex-wrap:wrap}#mwB .mbBar .rrxB{flex:1 1 100%;margin:0;padding:8px 12px;order:-1;background:#1b1626;color:#f3e6c4}#mwB .mbWrap{padding-bottom:150px!important}.rrxB{flex:1 1 100%;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:8px 0 6px;padding:9px 12px;border-radius:12px;border:1.5px solid #c9a24a;background:linear-gradient(90deg,#c9a24a22,#c9a24a08);color:inherit;font:inherit;font-weight:700;font-size:14px;line-height:1.2;cursor:pointer;box-sizing:border-box;grid-column:1/-1;order:-1}
 .rrxB small{font-weight:400;font-size:11.5px;opacity:.75}.rrxB.lk{border-style:dashed;opacity:.85}
 #rrxOv{position:fixed;inset:0;z-index:100070;background:#000b;display:flex;align-items:center;justify-content:center;padding:14px;box-sizing:border-box}
 #rrxOv .rrxP{width:min(440px,100%);max-height:92vh;overflow:auto;background:#17121f;color:#f3e6c4;border:1.5px solid #c9a24a;border-radius:18px;padding:16px 16px 14px;box-shadow:0 10px 40px #000c;position:relative;box-sizing:border-box}
@@ -44918,7 +44918,7 @@ function ensure(){try{for(const id in AD){const ad=AD[id];let h=null;try{h=ad.ho
   let b=old;if(b&&(b.parentNode!==par||b.nextSibling!==h)){b.remove();b=null}
   if(!b){b=document.createElement('button');b.type='button';b.className='rrxB';b.dataset.w=id;b.onclick=()=>window.rrxOpen(id);par.insertBefore(b,h)}
   if(b.innerHTML!==html)b.innerHTML=html;b.classList.toggle('lk',t<2)}}catch(e){}}
-setInterval(ensure,900);
+setInterval(ensure,900);{let q=0;const mo=new MutationObserver(()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;if(document.querySelector('#mwB,#skB.on,#fgB.on,#brB'))ensure()})});mo.observe(document.body,{childList:true,subtree:true})}
 window.rrx={reg:ad=>{AD[ad.id]=ad;ensure()},AD};
 // ---------- 🐾 สัตว์อสูร ----------
 window.rrx.reg({id:'beast',
@@ -44927,7 +44927,7 @@ window.rrx.reg({id:'beast',
  snap(){return brRoll},restore(s){brRoll=s},draw(a){try{brShow(!!a)}catch(e){}}});
 // ---------- 🏙️ ยุคปัจจุบัน ----------
 window.rrx.reg({id:'mw',
- host(){const o=document.getElementById('mwB');if(!o||o.style.display==='none'||!o.getClientRects().length)return null;return o.querySelector('.mbBar')},
+ host(){const o=document.getElementById('mwB');if(!o||o.style.display==='none'||!o.getClientRects().length)return null;const b=o.querySelector('.mbBar');return b&&b.firstElementChild},
  left(){const M=window._mbGet&&window._mbGet();return M?M.rr|0:0},
  spend(){const M=window._mbGet();if(M)M.rr=Math.max(0,(M.rr|0)-1)},
  reroll(){const M=window._mbGet();if(!M)return;const k=M.rr;M.rr=Math.max(1,k|0);try{window.mwBReroll()}catch(e){}const M2=window._mbGet();if(M2)M2.rr=k},
