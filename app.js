@@ -22767,7 +22767,7 @@ admVerify().then(mwLockTick);setInterval(mwLockTick,1500);
 const AF_BIG=/ทัณฑ์|ข้ามโลก|ข้ามมิติ|รอยแยก|สามภพ|กัลป์|โลกเซียน|โลกเทพ|แดนเทพ|เหาะ|สำนัก|เจ้าสำนัก|แต่ง|หย่า|คู่ชีวิต|ทายาท|สืบทอด|บัลลังก์|ระบบ|ย้อนกาล|ด้ายแดง|พันธสัญญา|นรก|ผนึก|บรรพกาล|ละสังขาร|ทางแยก|เส้นทาง|ปณิธาน|เปลี่ยนร่าง|แปลงกาย|กลืน|ทรยศ|ล้างแค้น/;
 const AF_RISK=/ตาย|เสี่ยง|ดวล|สู้|ทุ่มสุดตัว|แกล้งตาย|ฝ่า|บุก|ท้า|ขโมย|ปล้น|ลอบ|ฆ่า|ทรยศ|พนัน|เดิมพัน|ระเบิด|ลองดู|ทุ่ม|เผา|สละ|เสียสละ/;
 const afTxt=o=>String((o&&o.t)||'')+' '+String((o&&o.s)||'');
-function afBig(c){try{if(!c)return false;if(c.keep||/^🔁/.test(String(c.title||'')))return true;if(c.opts&&c.opts.some(o=>o&&o.noFate))return true;return AF_BIG.test(String(c.title||'').replace(/<[^>]+>/g,''))}catch(e){return false}}
+function afBig(c){try{if(!c)return false;if(c.keep||(/^🔁/.test(String(c.title||''))&&S&&S.ch==='regress'))return true;if(c.opts&&c.opts.some(o=>o&&o.noFate))return true;return AF_BIG.test(String(c.title||'').replace(/<[^>]+>/g,''))}catch(e){return false}}
 function afSafe(c){const O=c.opts||[];const sk=O.findIndex(o=>o&&o.skip);if(sk>=0)return sk;let best=0,bs=1e9;O.forEach((o,i)=>{if(!o||o.noFate)return;const t=afTxt(o);let r=0;if(AF_RISK.test(t))r+=3;const m=t.match(/(\d{1,3})\s*%/);if(m&&+m[1]<60)r+=2;if(/[−-]\s*\d|เสีย|ลดลง|หัก/.test(o.s||''))r+=1;if(r<bs){bs=r;best=i}});return best}
 // 1) ตัวเลือกใหม่ต่อคิวเสมอ (รวมโหมดอัตโนมัติ) — ไม่สุ่มตอบอันเก่าทิ้ง
 {const _chA=choice;const nc=function(title,text,opts){try{if(choice._cur&&S&&S.alive){if(choice._cur.title===title)return;if(!choice._q)choice._q=[];if(choice._q.length>=12)choice._q.splice(choice._q.findIndex(q=>!afBig({title:q[0],opts:q[2]}))>>>0,1);choice._q.push([title,text,opts,S]);return}}catch(e){}return _chA.apply(this,arguments)};for(const k in _chA)nc[k]=_chA[k];choice=nc}
@@ -31229,7 +31229,7 @@ window.supJoin=async function(off){const n=($('shlN')||{}).value||'',dmE=documen
  try{const r=await fetch('/api/pay?a=supjoin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:pid,off:off?1:0,n,sa,dm,cb,look})});const j=await r.json();if(j&&j.ok){toast(off?'กลับเป็นนิรนามแล้ว':'ขึ้นชื่อบนหอผู้สนับสนุนแล้ว 💛');supHall(supHall._s)}else toast(j&&j.err==='name'?'ใส่ชื่อก่อน':'ทำไม่สำเร็จ')}catch(e){toast('ทำไม่สำเร็จ')}};
 
 // 🔁 ผู้ย้อนกาล: เควสช่วยเพื่อนร่วมชะตาห้ามถูกข้าม — (1) โหมดออโต้หยุดรอ และดวลจริงไม่ถูกตัดสินอัตโนมัติ (2) ถ้ามีเหตุการณ์อื่นเด้งซ้อน ให้ต่อคิวรอ ไม่ให้ชะตาเลือกแทนตัวเลือกที่ค้างอยู่
-{const _chK=choice;choice=function(t,x,o){try{const cur=choice._cur;if(cur&&cur.keep){(choice._q=choice._q||[]).push([t,x,o,S]);return}}catch(e){}const r=_chK.apply(this,arguments);try{if(choice._cur&&/^🔁/.test(String(t)))choice._cur.keep=1}catch(e){}return r}}
+{const _chK=choice;choice=function(t,x,o){try{const cur=choice._cur;if(cur&&cur.keep){(choice._q=choice._q||[]).push([t,x,o,S]);return}}catch(e){}const r=_chK.apply(this,arguments);try{if(choice._cur&&/^🔁/.test(String(t))&&S&&S.ch==='regress')choice._cur.keep=1}catch(e){}return r}}
 {const _crK=choiceRun;choiceRun=function(i){let rg=false;try{const c=choice._cur;rg=!!(c&&c.keep)}catch(e){}if(rg&&auto){auto=false;try{render()}catch(e){}try{toast('โหมดอัตโนมัติหยุดรอ เรื่องของเพื่อนร่วมชะตา')}catch(e){}}const r=_crK.apply(this,arguments);try{if(!choice._cur&&choice._q&&choice._q.length){const a=choice._q.shift();if(a[3]===S)setTimeout(()=>{if(!choice._cur&&S===a[3]&&S.alive)choice.call(null,a[0],a[1],a[2]);else if(S===a[3])choice._q.unshift(a)},(typeof rdGap==='function'?Math.max(400,rdGap()):400))}}catch(e){}return r}}
 
 // 🏯💛 หมวดผู้ก่อตั้ง: แท็บสลับ หอผู้ก่อตั้ง / หอผู้สนับสนุน ในหน้าเดียวกัน
@@ -40491,7 +40491,7 @@ const nz=s=>plain(s).replace(/[\d๐-๙][\d๐-๙,.]*|[%+−×]/g,'#').replace
 const offT=()=>!!LS.get('murim_akoff',0),askU=()=>!!LS.get('murim_akask',0);
 const keep=()=>{try{LS.set('murim_ak',AK)}catch(e){}};
 const act=()=>AK.l.slice(0,AK.n);
-const big=c=>{try{if(!c)return true;const t=plain(c.title);if(c.keep||/^🔁/.test(t))return true;if((c.opts||[]).some(o=>o&&o.noFate))return true;return (typeof AF_BIG!=='undefined'&&AF_BIG.test(t))||/ตาย|จบชีวิต|เกิดใหม่|ทะลวง|ขั้นใหม่/.test(t)}catch(e){return true}};
+const big=c=>{try{if(!c)return true;const t=plain(c.title);if(c.keep||(/^🔁/.test(t)&&S&&S.ch==='regress'))return true;if((c.opts||[]).some(o=>o&&o.noFate))return true;return (typeof AF_BIG!=='undefined'&&AF_BIG.test(t))||/ตาย|จบชีวิต|เกิดใหม่|ทะลวง|ขั้นใหม่/.test(t)}catch(e){return true}};
 const bg2=s=>{s=String(s||'');const m=new Map();for(let i=0;i<s.length-1;i++){const g=s.substr(i,2);m.set(g,(m.get(g)||0)+1)}return m},dice=(a,b)=>{if(!a||!b)return 0;if(a===b)return 1;const A=bg2(a),B=bg2(b);let n=0,ta=0,tb=0;A.forEach(v=>ta+=v);B.forEach(v=>tb+=v);A.forEach((v,g)=>{n+=Math.min(v,B.get(g)||0)});return ta+tb?2*n/(ta+tb):0};
 // จับคู่แบบยืดหยุ่น: ชื่อคน/ของในหัวข้อและตัวเลือกเปลี่ยนทุกครั้ง (เดิมต้องตรงทุกตัวอักษร เลยล็อกแล้วยังถามซ้ำ)
 const lkOf=c=>{if(!c)return null;const k=nz(c.title),L=act();let e=L.find(x=>x.k===k);if(e)return e;let best=null,bs=.72;L.forEach(x=>{const d=dice(x.k,k);if(d>bs){bs=d;best=x}});return best};
@@ -42836,6 +42836,7 @@ const mark=(k)=>{const A=get(),lid=S._lid||S.name+S.age;const o=A[k]||{n:0};if(o
 try{const A=get();if(!A._mig){const T=LS.get('murim_mtried',{})||{},mp={normal:'murim',hell:'murim',short:'murim',junk:'murim',soul:'soul',regress:'loop',beast:'beast',sky:'sky'};Object.keys(T).forEach(k=>{const m=mp[k];if(m&&!A['m:'+m])A['m:'+m]={n:1}});if(LS.get('murim_skytut',0)&&!A['m:sky'])A['m:sky']={n:1};A._mig=1;LS.set(KEY,A)}}catch(e){}
 // ติดตาม + การ์ดแนะนำโลกย่อยครั้งแรก
 let pend=null;setInterval(()=>{try{if(!S||!S.alive)return;const m=mainOf();if(m)mark('m:'+m);if(m==='mw'&&!S.mw.kid){const w=subOf();const first=mark('s:'+w);if(first&&TIP[w])pend=w}
+ if(pend&&typeof auto!=='undefined'&&auto&&LS.get('murim_fa',0)){pend=null}
  if(pend&&!modalOpen&&!(typeof choice!=='undefined'&&choice._cur)&&!document.hidden&&!$('coach')&&!$('ctOv')){const w=pend;pend=null;const n=SUBN[w];const wasP=typeof paused!=='undefined'?paused:false;try{paused=true}catch(e){}
   modal(`<h3>${n[0]} ${n[1]}</h3><p class="tag2">ครั้งแรกในโลกนี้ สิ่งที่ควรรู้</p>${TIP[w].map((t,i)=>`<div class="item" style="padding:8px 10px;margin:5px 0">${['🎯','⚙️','💡'][i]} ${t}</div>`).join('')}<div style="display:flex;gap:6px;margin-top:8px"><button class="pbtn" style="flex:1" onclick="closeM();try{paused=${wasP?'true':'false'}}catch(e){}">เข้าใจแล้ว</button><button class="gbtn" onclick="closeM();setTimeout(()=>openAtlas(),60)">🌍 สมุดโลก</button></div>`,'wintro')}}catch(e){}},2500);
 // สมุดโลก

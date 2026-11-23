@@ -59,7 +59,9 @@ const TH={story:['#ffcf5a','#ff6a3d','#fff3c4'],star:['#ffe066','#ff7ad9','#fff'
 let H={};
 window._wsH=(i)=>{const f=H[i];H={};try{closeM()}catch(e){}if(f)try{f()}catch(e){console.error('wsys',e)}};
 function pop(th,o){const t=TH[th]||TH.ai;H={};const op=(o.opts||[]).map((x,i)=>{H[i]=x.f;return`<button class="wsO" style="--o:${x.c||t[i%2]}" ${x.dis?'disabled':''} onclick="_wsH(${i})">${x.t}${x.s?`<small>${x.s}</small>`:''}</button>`}).join('');
- modal(`<div class="wsP" style="--a:${t[0]};--b:${t[1]};--c:${t[2]}"><div class="wsIn2">${o.x?'<button class="wsX" onclick="closeM()">✕</button>':''}<div class="wsHd"><div class="wsIc">${o.ic||'📟'}</div><div><div class="wsT${o.gl?' wsG':''}">${o.t}</div><div class="wsS">${o.s||''}</div></div></div>${o.top||''}<div class="wsB${o.gl?' wsG':''}">${o.b||''}</div>${op}</div></div>`,'wsys')}
+ modal(`<div class="wsP" style="--a:${t[0]};--b:${t[1]};--c:${t[2]}"><div class="wsIn2">${o.x?'<button class="wsX" onclick="closeM()">✕</button>':''}<div class="wsHd"><div class="wsIc">${o.ic||'📟'}</div><div><div class="wsT${o.gl?' wsG':''}">${o.t}</div><div class="wsS">${o.s||''}</div></div></div>${o.top||''}<div class="wsB${o.gl?' wsG':''}">${o.b||''}</div>${op}</div></div>`,'wsys');
+ // โหมด "ให้ชะตาเล่นแทนทั้งหมด": ออโต้กดให้เอง ไม่ค้างรอ
+ try{if(typeof auto!=='undefined'&&auto&&LS.get('murim_fa',0)){const me=H;setTimeout(()=>{try{const m=document.getElementById('modal');if(!auto||!modalOpen||!m||m.dataset.k!=='wsys'||H!==me)return;const ks=Object.keys(H).filter(i=>!((o.opts||[])[i]||{}).dis);if(!ks.length){closeM();return}const i=ks[Math.random()*ks.length|0],x=(o.opts||[])[i]||{};try{addFeed('ev',`🎲 ชะตาเลือกแทน — <b>${String(o.t||'').replace(/<[^>]+>/g,'')}</b>: ${String(x.t||'').replace(/<[^>]+>/g,'')}`,'sum')}catch(e){}_wsH(i)}catch(e){}},1600)}}catch(e){}}
 // รอจอว่างแล้วค่อยเด้ง (กันทับเหตุการณ์อื่น)
 function ask(th,o){let n=0;const me=S;const go=()=>{if(S!==me||!S||!S.alive)return;if(!free()){if(++n<60)setTimeout(go,900);return}pop(th,o)};setTimeout(go,700)}
 
