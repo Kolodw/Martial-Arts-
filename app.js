@@ -45341,3 +45341,8 @@ window.openTickets=function(){draw();const RR=window._RR;try{if(RR&&(RR.f==null|
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.tkEnt')){const a=m.querySelector('.dlyB')||m.querySelector('.svStat');if(a)a.insertAdjacentHTML('afterend','<button class="gbtn tkEnt" onclick="openTickets()">🎟️ ตั๋วของฉัน <small style="opacity:.75">· ใช้ทำอะไร · ได้จากไหน</small></button>')}}catch(e){}return r};window.openMenu=openMenu}
 {const _rm=window.rrMenu;if(typeof _rm==='function'){window.rrMenu=function(){const r=_rm.apply(this,arguments);try{const m=$('modal'),h=m&&m.querySelector('h3');if(h&&!m.querySelector('.tkEnt'))h.insertAdjacentHTML('afterend','<button class="gbtn tkEnt" onclick="openTickets()">🎟️ ตั๋วของฉัน — ตั๋วแต่ละแบบใช้ทำอะไร</button>')}catch(e){}return r};try{rrMenu=window.rrMenu}catch(e){}}}
 })()}catch(e){console.error('block201',e)}
+
+// BLOCK 202: 🌌 แก้ผู้เล่นตายด้วย "วัยชรา" ตรงขอบกัลป์ — อายุขัยในช่วงกัลป์เท่ากับขอบกัลป์พอดี การเช็กตาย (ใน passYear) จึงมาก่อนการเปิดประตูกัลป์
+//   ช่วงกัลป์ (กัลป์ที่ 2 ขึ้นไป หรืออายุถึงขอบกัลป์แรก): ไม่ตายเพราะอายุ → ถึงขอบกัลป์แล้วเปิดประตู kalpaHit แทน (ตายจากบาดแผล/เหตุอื่นยังตายได้ตามปกติ)
+try{{const _cdK=checkDeath;checkDeath=function(){try{if(S&&S.alive&&!S.deathCause&&S.hp>0&&!(S.flags&&S.flags.kEnd)&&typeof kcap==='function'){const K=S.kalpa||{n:0},cap=kcap();
+ if((K.n>=1||S.age>=cap)&&S.age>=lifeMax()){if(S.age>=cap){S.age=cap;if(!K.pend)try{kalpaHit()}catch(e){console.error(e)}}return false}}}catch(e){console.error('kalDeath',e)}return _cdK.apply(this,arguments)};window.checkDeath=checkDeath}}catch(e){console.error('block202',e)}
