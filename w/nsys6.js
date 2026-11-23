@@ -111,16 +111,17 @@ function kidQ(M){const N=NSo(M);if(!N)return;const sys=byId(N.id);const g=KG[sys
   if(k==='g')later(()=>mg(sys,RN(0,(sys.mg||[1]).length-1),0,q[0].replace(/^\S+\s/,''),(sc)=>fin(sc>=.5,sc)));else fin(Math.random()<(k==='s'?.9:.5))},{s:{g:'🎮 มินิเกม',s:'🛡️ ชัวร์',r:'🎲 เสี่ยง ได้มาก'}[o[1]]||''})))}
 
 // ---------- 🛒 ร้านค้าระบบ + 🎁 กล่องสุ่ม ----------
-const SHOP=[['xp','🧪 ยาเพิ่มสมาธิ','⭐ +20 ทันที',3],['shield','🛡️ บัตรยกเว้นโทษ','กันบทลงโทษ/ช็อตไฟฟ้าได้ 1 ครั้ง',2],['heal','💊 ยาฟื้นฟูเต็มหลอด','พลังชีวิตเต็ม · ความสุข +5',2],['exam','📄 ตั๋วสอบซ้ำ','สอบเลื่อนขั้นได้อีกครั้งในปีนี้',3],['box','🎁 กล่องสุ่มระบบ','สุ่มรางวัล ธรรมดา/หายาก/ตำนาน',2],['re','🔄 สุ่มเช็กลิสต์ใหม่','เปลี่ยนเช็กลิสต์ปีนี้ทั้ง 3 ข้อ',1],['life','⏳ ยาต่อชีวิต','อายุขัย +2 ปี',6]];
+const SHOP=[['xp','🧪 ยาเพิ่มสมาธิ','⭐ +20 ทันที',3],['shield','🛡️ บัตรยกเว้นโทษ','กันบทลงโทษ/ช็อตไฟฟ้าได้ 1 ครั้ง',2],['heal','💊 ยาฟื้นฟูเต็มหลอด','พลังชีวิตเต็ม · ความสุข +5',2],['exam','📄 ตั๋วสอบซ้ำ','สอบเลื่อนขั้นได้อีกครั้งในปีนี้',3],['box','🎁 กล่องสุ่มระบบ','สุ่มรางวัล ธรรมดา/หายาก/ตำนาน',2],['re','🔄 สุ่มเช็กลิสต์ใหม่','เปลี่ยนเช็กลิสต์ปีนี้ทั้ง 3 ข้อ',1],['life','⏳ ยาต่อชีวิต','อายุขัย +2 ปี · ชาติละ 5 ขวด ราคาขึ้นทุกครั้ง',6]];
+try{Object.defineProperty(SHOP[6],3,{get(){try{const N=NSo(life());return 6+4*((N&&N.lb)|0)}catch(e){return 6}}})}catch(e){}
 window.nsShop=function(){const M=life(),N=NSo(M);if(!N)return;const sys=byId(N.id);
  modal(`<button class="xbtn" onclick="closeM();nsOpen()">✕</button><h3>🛒 ร้านค้าระบบ</h3><div class="nsApp"><div class="row">🪙 แต้มระบบของคุณ <b>${N.sp|0}</b> <small>· ได้จากเช็กลิสต์ประจำปี เควสวัยเรียน และกล่องสุ่ม</small></div>
  ${SHOP.map(x=>`<div class="row shR"><div><b>${x[1]}</b><br><small>${x[2]}</small></div><button class="${(N.sp|0)>=x[3]?'pbtn':'gbtn'}" ${(N.sp|0)>=x[3]?'':'disabled'} onclick="nsBuy('${x[0]}')">🪙 ${x[3]}</button></div>`).join('')}</div>`,'nsshop')};
 window.nsBuy=function(k){const M=life(),N=NSo(M);if(!N)return;const it=SHOP.find(x=>x[0]===k);if(!it||(N.sp|0)<it[3])return toast('แต้มไม่พอ');const sys=byId(N.id);
- if(k==='exam'&&!ready(N))return toast('ยังไม่ถึงเวลาสอบเลื่อนขั้น');if(k==='shield'&&N.shield)return toast('มีบัตรยกเว้นโทษอยู่แล้ว');if(k==='re'&&(!N.cl||N.cl.done))return toast('ยังไม่มีเช็กลิสต์ปีนี้');
+ if(k==='exam'&&!ready(N))return toast('ยังไม่ถึงเวลาสอบเลื่อนขั้น');if(k==='shield'&&N.shield)return toast('มีบัตรยกเว้นโทษอยู่แล้ว');if(k==='re'&&(!N.cl||N.cl.done))return toast('ยังไม่มีเช็กลิสต์ปีนี้');if(k==='life'&&(N.lb|0)>=5)return toast('ชาตินี้ซื้อครบ 5 ขวดแล้ว');
  pts(N,-it[3]);sfxS('good');
  if(k==='xp'){addXP(M,N,20);toast('🧪 ⭐ +20')}else if(k==='shield'){N.shield=1;toast('🛡️ ได้บัตรยกเว้นโทษ')}else if(k==='heal'){S.hp=S.maxHp;try{joy(5)}catch(e){}toast('💊 ฟื้นฟูเต็มหลอด')}
  else if(k==='exam'){N.ey=-9;toast('📄 สอบเลื่อนขั้นได้อีกครั้งปีนี้')}else if(k==='box'){N.box=(N.box|0)+1;return nsBox()}else if(k==='re'){newList(M,N);toast('🔄 สุ่มเช็กลิสต์ใหม่แล้ว')}
- else if(k==='life'){try{M.end=(M.end||80)+2}catch(e){}S.lifespan=(S.lifespan||0)+2;toast('⏳ อายุขัย +2 ปี')}
+ else if(k==='life'){N.lb=(N.lb|0)+1;try{M.end=(M.end||80)+2}catch(e){}S.lifespan=(S.lifespan||0)+2;toast('⏳ อายุขัย +2 ปี')}
  try{log(`🛒 ซื้อ ${it[1]} จากร้านค้าระบบ (🪙 −${it[3]})`,'')}catch(e){}try{render()}catch(e){}nsShop()};
 const BOXR=[['ธรรมดา','#9fb4c8',60],['หายาก','#4aa3ff',30],['ตำนาน','#ffcf3a',10]];
 window.nsBox=function(){const M=life(),N=NSo(M);if(!N)return;if(!(N.box>0))return toast('ไม่มีกล่องสุ่ม');N.box--;const sys=byId(N.id),t=lvT(N.lv);
