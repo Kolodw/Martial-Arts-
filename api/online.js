@@ -3702,13 +3702,30 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const ok = await cmd('SET', 'mtl:' + id, 1, 'NX', 'EX', 15);
       if (!ok) return res.status(429).json({ err: 'rate' });
       const to = String(b.to || '').replace(/[^a-z0-9]/g, '').slice(0, 12), x = b.x ? 1 : 0;
-      const all = await cmd('HKEYS', 'mp:' + x);
-      const tid = (all || []).find(k0 => k0.slice(0, 6) + k0.slice(-4) === to);
+      const [all0, all1] = await pipe([['HKEYS', 'mp:' + x], ['HKEYS', 'mp:' + (1 - x)]]);
+      const tid = (all0 || []).concat(all1 || []).find(k0 => k0.slice(0, 6) + k0.slice(-4) === to);
       if (!tid || tid === id) return res.json({ ok: 0 });
-      const kind = ['fight', 'ally'].includes(b.kind) ? b.kind : 'fight';
+      const kind = ['fight', 'ally', 'bless', 'thank', 'gift', 'cross'].includes(b.kind) ? b.kind : 'fight';
+      if (kind === 'bless') { const ok2 = await cmd('SET', 'gbl:' + id, 1, 'NX', 'EX', 21600); if (!ok2) return res.json({ ok: 0, wait: 1 }) }
       const m = { kind, n: clean(b.n, 20) || 'นิรนาม', win: b.win ? 1 : 0, ok: b.ok ? 1 : 0, ri: Math.max(0, Math.min(12, +b.ri || 0)), k: id.slice(0, 6) + id.slice(-4), t: now };
+      if (kind === 'bless') { m.v = Math.max(.01, Math.min(.05, +b.v || .03)); m.w = clean(b.w, 24) }
+      if (kind === 'gift' || kind === 'cross') { m.it = clean(b.it, 40); m.w = clean(b.w, 24) }
       await pipe([['LPUSH', 'mbox:' + tid, JSON.stringify(m)], ['LTRIM', 'mbox:' + tid, 0, 9], ['EXPIRE', 'mbox:' + tid, 3600]]);
       return res.json({ ok: 1 });
+    }
+    // ---- 🌟 พรเทพ: ส่งพรให้ผู้เล่นที่ออนไลน์อยู่หนึ่งคนแบบสุ่ม (ทุกโลก) · 6 ชั่วโมงครั้ง · เพดาน 5% ----
+    if (a === 'gbless') {
+      if (!okId(id) || b.tp || await isBanned()) return res.json({ ok: 0 });
+      const lk = await cmd('SET', 'gbl:' + id, 1, 'NX', 'EX', 21600);
+      if (!lk) return res.json({ ok: 0, wait: Math.max(0, +(await cmd('TTL', 'gbl:' + id)) || 0) });
+      const [h0, h1] = await pipe([['HGETALL', 'mp:0'], ['HGETALL', 'mp:1']]);
+      const cand = [];
+      [h0, h1].forEach(h => { for (let i = 0; i < (h || []).length; i += 2) { const k0 = h[i]; if (k0 === id) continue; let v = null; try { v = JSON.parse(h[i + 1]) } catch {} if (v && now - v.t <= 300e3 && !v.bm) cand.push([k0, v]) } });
+      if (!cand.length) { await cmd('DEL', 'gbl:' + id); return res.json({ ok: 0, none: 1 }) }
+      const [tid, tv] = cand[Math.floor(Math.random() * cand.length)];
+      const m = { kind: 'bless', n: clean(b.n, 20) || 'เทพนิรนาม', w: clean(b.w, 24), v: Math.max(.01, Math.min(.05, +b.v || .03)), ri: Math.max(0, Math.min(12, +b.ri || 0)), k: id.slice(0, 6) + id.slice(-4), t: now };
+      await pipe([['LPUSH', 'mbox:' + tid, JSON.stringify(m)], ['LTRIM', 'mbox:' + tid, 0, 9], ['EXPIRE', 'mbox:' + tid, 86400]]);
+      return res.json({ ok: 1, to: { n: tv.n, ri: tv.ri, f: tv.f, age: tv.age } });
     }
     // ---- พบผู้เล่นจริงแบบสองฝ่าย: ห้องพบกัน มีเวลาเลือกฝ่ายละ 10 วิ ไม่เลือกสุ่มให้ ----
     if (a === 'mtopen' || a === 'mtpick' || a === 'mtmsg' || a === 'mtst') {

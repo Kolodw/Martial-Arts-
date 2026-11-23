@@ -5730,12 +5730,14 @@ let meetC=null,meetT=0;
 async function meetPoll(){try{if(!onlineOK||!S||!S.alive||S.beastMode||paused||document.hidden)return;if(Date.now()-meetT<(idleMs()>300000?600000:240000))return;meetT=Date.now();
  const j=await api('meet',Object.assign({n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0},typeof mwMe==='function'?mwMe():{}));try{if(typeof paNote==='function')paNote(j)}catch(e){};meetC=j.o?Object.assign(j.o,{at:Date.now()}):null;try{if(!j.o&&j.gh&&typeof ghSet==='function')ghSet(j.gh)}catch(e){}
  (j.inbox||[]).forEach(m=>{if(!S||!S.alive)return;if(m.kind==='ally'){if(m.ok){allyAdd(m.n,'ผู้เล่นจริง');log(`🤝 ผู้เล่น <b>${esc(m.n)}</b> สาบานเป็นพันธมิตรกับคุณข้ามจักรวาล เขาจะมาช่วยตอนจวนตัว`,'epic',true)}}
+  else if(/^(bless|thank|gift|cross)$/.test(m.kind||'')){try{gbInbox(m)}catch(e){}}
   else if(m.kind==='gh'){try{ghInbox(m)}catch(e){}}else if(m.kind==='mmsg'||m.kind==='room'||m.kind==='mres'||/^bh/.test(m.kind||'')){try{mtInbox(m)}catch(e){}}else{if(m.win){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.08));S.fame=Math.max(0,S.fame-5);log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา คุณพ่ายแพ้ บาดเจ็บเล็กน้อย`,'bad',true)}else{S.fame+=20;log(`⚔️ ผู้เล่น <b>${esc(m.n)}</b> บุกมาท้าดวลในจักรวาลของเขา แต่คุณเป็นฝ่ายชนะ! ชื่อเสียง +20`,'epic',true)}}});try{render()}catch(e){}}catch(e){}}
 setInterval(meetPoll,5000);
 function meetTick(){if(!meetC||Date.now()-meetC.at>300000||S.age<14||choice._cur||modalOpen||S.beastMode||Math.random()>.06)return;const o=meetC;meetC=null;const RN=S.xian?XREALM:REALMS.map(r=>r.n),ep=Math.max(50,o.p||100),r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100)));
  choice(`🌐 พบผู้เล่นจริง!`,`รอยแยกมิติเปิดออกชั่วครู่ <b>${esc(o.n)}</b> ผู้เล่นที่กำลังจำลองชีวิตอยู่ตอนนี้ ก้าวข้ามมาสู่จักรวาลคุณ<br>${esc(RN[o.ri]||'')} · ${esc(o.f||'')} · อายุ ${fmt(o.age||0)} ปี<br><span class="tag2">พลังคุณราว ${Math.round(r*100)}% ของเขา · สิ่งที่คุณเลือกจะส่งผลถึงเขาด้วย</span>`,[
   {t:'⚔️ ท้าดวล',s:`โอกาสชนะราว ${pw}%`,f(){const w=fight(o.n,ep);if(w){S.fame+=fameR(30);log(`🌐 ชนะผู้เล่น <b>${esc(o.n)}</b> ในการดวลข้ามจักรวาล!`,'epic',true)}else{S.hp-=Math.round(S.maxHp*.15);log(`🌐 แพ้ผู้เล่น <b>${esc(o.n)}</b> ถูกซัดกลับเข้ารอยแยกมิติ`,'bad',true)}api('meetact',{to:o.k,kind:'fight',win:w?1:0,n:pname(),ri:realmIdx(),x:S.xian?1:0}).catch(()=>{})}},
   {t:'🤝 ชวนเป็นพันธมิตร',s:'ใช้เสน่ห์ · ทั้งสองฝ่ายจะได้พันธมิตร',f(){const ok=roll01(.45+(S.cha||0)/300);if(ok){allyAdd(o.n,'ผู้เล่นจริง');log(`🤝 คุณกับผู้เล่น <b>${esc(o.n)}</b> สาบานเป็นพันธมิตรข้ามจักรวาล`,'epic',true)}else log(`ผู้เล่น ${esc(o.n)} ยังไม่ไว้ใจคุณ รอยแยกปิดลงก่อนจะได้คุยกัน`);api('meetact',{to:o.k,kind:'ally',ok:ok?1:0,n:pname(),ri:realmIdx(),x:S.xian?1:0}).catch(()=>{})}},
+  ...(typeof gbGod==='function'&&gbGod()?[{t:'🌟 ประทานพรเทพ',s:'แบ่งพลังส่วนหนึ่งให้เขา · ได้ศรัทธากลับมา',f(){gbGive(o)}}]:[]),
   {t:'🙇 ปล่อยให้รอยแยกปิดลง',s:'ไม่มีผลเสีย',skip:true,f(){log('คุณมองรอยแยกมิติปิดลงอย่างเงียบๆ')}}])}
 {const _py10=passYear;passYear=function(){const r=_py10.apply(this,arguments);try{if(S&&S.alive){shareTick();meetTick()}}catch(e){console.error(e)}return r}}
 {const _ql2=questList;questList=function(){const L=_ql2.apply(this,arguments);try{if(S&&S.allies&&S.allies.length)L.push({k:'ally',ic:'🤝',n:'พันธมิตร',p:S.allies.map(a=>esc(a.n)).join(' · '),d:'พันธมิตรมีโอกาสมาช่วยตอนจวนตัวในการต่อสู้'});const w=wsGet();if(w)L.push({k:'ws',ic:'🌍',n:w.n,p:w.d,d:w.m!==1?`ศัตรู ×${w.m}`:'ศัตรูปกติ'})}catch(e){}return L}}
@@ -6128,7 +6130,7 @@ const EN_TOTAL=EN_SUR.length*(EN_GM.length+EN_GF.length);
 const AC_W=new WeakMap();
 {const _af=acFlag;acFlag=function(why){try{if(S&&!AC_W.has(S))AC_W.set(S,why)}catch(e){}return _af.apply(this,arguments)}}
 function acTp(){try{const w=(S&&(AC_W.get(S)||S._tp))||'';return /^(cap-|save-jump)/.test(String(w))?'':w}catch(e){return''}}
-{const _apiAC=api;api=async function(a,b){try{const tp=acTp();if(b&&tp){if(a==='live'&&b.spec)b=Object.assign({},b,{spec:0});if(['meet','meetact','arena','ar2go','ar2rv','live','pabid','pachat','paforce','pavote','bhopen','bhpick','mtopen','mtpick','mtmsg','achfirst'].includes(a))b=Object.assign({},b,{tp})}if(b&&!tp&&(a==='arena'||a==='ar2go'||a==='ar2rv')){acCheck();if(acTp())b=Object.assign({},b,{tp:acTp()})}}catch(e){}const j=await _apiAC.call(this,a,b);try{if(a==='board'&&window._shareCall&&j){j.top=(j.top||[]).filter(e=>!e.anon);j.prev=(j.prev||[]).filter(e=>!e.anon)}}catch(e){}return j}}
+{const _apiAC=api;api=async function(a,b){try{const tp=acTp();if(b&&tp){if(a==='live'&&b.spec)b=Object.assign({},b,{spec:0});if(['meet','meetact','gbless','arena','ar2go','ar2rv','live','pabid','pachat','paforce','pavote','bhopen','bhpick','mtopen','mtpick','mtmsg','achfirst'].includes(a))b=Object.assign({},b,{tp})}if(b&&!tp&&(a==='arena'||a==='ar2go'||a==='ar2rv')){acCheck();if(acTp())b=Object.assign({},b,{tp:acTp()})}}catch(e){}const j=await _apiAC.call(this,a,b);try{if(a==='board'&&window._shareCall&&j){j.top=(j.top||[]).filter(e=>!e.anon);j.prev=(j.prev||[]).filter(e=>!e.anon)}}catch(e){}return j}}
 {const _sl2=sendLife;sendLife=async function(){try{acCheck()}catch(e){}return _sl2.apply(this,arguments)}}
 {const _py14=passYear;passYear=function(){try{acCheck()}catch(e){}const r=_py14.apply(this,arguments);try{acCheck()}catch(e){}return r}}
 setInterval(()=>{try{acCheck()}catch(e){}},1500);
@@ -35485,9 +35487,10 @@ const CAP=lv=>lv>=99?250:lv>=90?180:lv>=70?140:lv>=30?110:90;
 // เป็นเทพแล้ว → เลือกขึ้นสู่ดินแดนเทพ (จบแบบตำนาน) หรืออยู่ต่อเป็นเทพผู้พิทักษ์
 function ascend(){S.flags=S.flags||{};S.flags.svAsc=1;S.fame+=50000;try{const d=LS.get('murim_ttl',{});const t='เทพวิญญาณผู้ขึ้นสู่ดินแดนเทพ';if(!d[t]){d[t]={n:S.name,t:Date.now(),c:1};LS.set('murim_ttl',d)}}catch(e){}
  log('🌟 <b>ประตูดินแดนเทพเปิดออก</b> คุณก้าวขึ้นไปโดยไม่หันกลับมามอง','myth',true);
+ try{if(window._sg&&S.sv&&!S.sv.gd){S.sv.x=S.sv.x||{};S.sv.x.ge='ascend';setTimeout(()=>{try{choice._cur=null;window._sg.sgStart()}catch(e){console.error(e)}},500);return}}catch(e){}
  // จบชีวิตตรง ๆ ไม่ผ่านระบบชุบชีวิต/กันตายต่าง ๆ (นี่ไม่ใช่ความตาย)
  setTimeout(()=>{try{if(!S||!S.alive)return;const cause='ขึ้นสู่ดินแดนเทพ วงแหวนทั้งเก้ากลายเป็นแสงนำทาง ชื่อคุณถูกจารึกเป็นตำนานแห่งทวีป';S.flags.ascended=1;try{flushReveal()}catch(e){}S.alive=false;S.cause=cause;try{saveLegacy()}catch(e){}try{clearSave()}catch(e){}try{setScene('aura');sfx('good')}catch(e){}log('🌟 '+cause,'myth');const dn=S;setTimeout(()=>{if(S===dn){try{choice._cur=null;closeM()}catch(e){}endGame()}},1800)}catch(e){console.error('svAsc',e)}},400)}
-window.svAscend=function(){if(!soul()||!isGod()||!S.alive)return;closeM();choice('🌟 ขึ้นสู่ดินแดนเทพ','เทพผู้เป็นอมตะไม่จำเป็นต้องอยู่ในทวีปอีกต่อไป ประตูเปิดรอคุณอยู่',[{t:'🌟 ขึ้นไปตอนนี้',s:'จบชีวิตแบบตำนาน · ชื่อเสียงมหาศาล · ฉายาเทพวิญญาณ',noFate:1,f:ascend},{t:'🛡️ อยู่ต่อเป็นเทพผู้พิทักษ์',s:'อมตะ · ขึ้นไปเมื่อไหร่ก็ได้ที่หน้าดวงจิต',noFate:1,f(){log('🛡️ คุณเลือกเฝ้าทวีปต่อไป ขึ้นสู่ดินแดนเทพได้ทุกเมื่อที่หน้าดวงจิต','epic')}}])};
+window.svAscend=function(){if(!soul()||!isGod()||!S.alive)return;closeM();choice('🌟 ขึ้นสู่ดินแดนเทพ','เทพผู้เป็นอมตะไม่จำเป็นต้องอยู่ในทวีปอีกต่อไป ประตูเปิดรอคุณอยู่',[{t:'🌟 ขึ้นไปตอนนี้',s:'เข้าสู่ภพเทพแห่งทวีป · ชีวิตช่วงใหม่ในฐานะเทพ · ชื่อเสียงมหาศาล · ฉายาเทพวิญญาณ',noFate:1,f:ascend},{t:'🛡️ อยู่ต่อเป็นเทพผู้พิทักษ์',s:'อมตะ · ขึ้นไปเมื่อไหร่ก็ได้ที่หน้าดวงจิต',noFate:1,f(){log('🛡️ คุณเลือกเฝ้าทวีปต่อไป ขึ้นสู่ดินแดนเทพได้ทุกเมื่อที่หน้าดวงจิต','epic')}}])};
 setInterval(()=>{try{if(!soul()||!S.alive||!isGod()||S.sv._godAsk||choice._cur||modalOpen)return;S.sv._godAsk=1;log('🌟 <b>คุณกลายเป็นเทพ</b> อายุขัยไม่มีขีดจำกัดอีกต่อไป','myth',true);svAscend()}catch(e){}},1500);
 {const _os=window.openSoul;if(_os)window.openSoul=function(){const r=_os.apply(this,arguments);try{if(!soul())return r;const m=$('modal'),h=m.querySelector('h3');if(!h||m.querySelector('.svLife'))return r;const g=S.sv,lm=Math.round(lifeMax());
  h.insertAdjacentHTML('afterend',`<div class="item svLife"><b>⏳ อายุขัย</b> · ${isGod()?'<b>♾️ อมตะ (เทพ)</b>':`ราว ${lm} ปี <span class="tag2">(อายุตอนนี้ ${S.age})</span>`}<br><span class="tag2">ยิ่งระดับจิตสูงยิ่งอายุยืน: ต่ำกว่า 30 ≈ 90 · 30+ ≈ 110 · 70+ ≈ 140 · 90+ ≈ 180 · 99 ≈ 250 · เป็นเทพ = อมตะ</span>${isGod()?'<button class="pbtn" style="width:100%;margin-top:6px" onclick="svAscend()">🌟 ขึ้นสู่ดินแดนเทพ</button>':''}</div>`)}catch(e){}return r}}
@@ -44644,3 +44647,67 @@ function mwFame(){const M=S.mw;if(!M||M.sky||M.fog||M.kid||!(M.fame>30000))retur
   if(q.kind==='item'){q.need=Math.round(q.need*(1+ri*.35));try{const m=BAGIT[q.m];q.d=`มี ${m.ic} ${m.n} ${q.need} ชิ้นในกระเป๋า`}catch(e){}if(q.rw&&q.rw.money)q.rw.money=Math.round(q.rw.money*(1+ri*.12))}
   else if(q.kind==='kills'){q.need+=Math.floor(ri*.7);q.d=`ชนะการต่อสู้ ${q.need} ครั้ง ภายในเวลาที่กำหนด`;if(q.rw&&q.rw.money)q.rw.money=Math.round(q.rw.money*(1+ri*.1))}}}catch(e){}return q}}
 })()}catch(e){console.error('block185',e)}
+// ============================================================
+// BLOCK 186: 🌟 พรเทพทุกโลก + 🌀 พบผู้เล่นกลางรอยต่อโลก
+//   เทพ (แดนเทพของโลกหลัก / ภพเทพของทวีปจิตวิญญาณยุทธ์) แบ่งพลังให้ NPC ในเหตุการณ์ หรือให้ผู้เล่นจริงที่ออนไลน์อยู่ได้
+//   ทุกครั้งที่ข้ามโลก มีโอกาสพบผู้เล่นจริงที่กำลังเล่นอยู่ (หรือเห็นเงาของคนที่เพิ่งข้ามไป)
+//   เซิร์ฟเวอร์: meetact kind bless/thank/gift/cross · gbless (สุ่มผู้เล่นออนไลน์ · 6 ชั่วโมงครั้ง · เพดาน 5%)
+// ============================================================
+try{(()=>{
+const rr=a=>a[Math.floor(Math.random()*a.length)];
+const WN={murim:'⚔️ ยุทธภพ',xian:'☁️ โลกเซียน',god:'🌟 แดนเทพ',soul:'⭕ ทวีปจิตวิญญาณยุทธ์',sg:'🌌 ภพเทพแห่งทวีป',mw:'🏙️ ยุคปัจจุบัน',sky:'🚀 ทะลุฟ้าดารา',fog:'🌉 นครม่านหมอก'};
+const SOUV={murim:['ป้ายหยกของสำนักเก่า','กระบี่ไม้ที่ใช้ฝึกวิชาครั้งแรก'],xian:['ยาเม็ดรวมปราณหนึ่งเม็ด','ขนนกกระเรียนเซียน'],god:['เศษแสงศรัทธาในขวดแก้ว','ขนนกจากปีกเทพรับใช้'],soul:['เศษกระดูกวิญญาณ','ขนสัตว์วิญญาณพันปี'],sg:['ก้อนเมฆจากเกาะลอยฟ้า','ใบไม้ทองจากสวนเทพ'],mw:['บัตรรถเมล์ที่ยังไม่ได้ใช้','แก้วกาแฟจากร้านประจำ'],sky:['หินดาวตกเรืองแสง','ชิปนำทางยานเก่า'],fog:['ตั๋วรถรางเที่ยวสุดท้าย','ไส้ตะเกียงสีเทา']};
+const wkey=()=>{try{if(!S)return null;if(S.beastMode)return'beast';if(S.mw&&S.mw.sky)return'sky';if(S.mw&&S.mw.fog)return'fog';if(S.mw)return'mw';if(S.ch==='soul'&&S.sv)return S.sv.gd&&S.sv.gd.on?'sg':'soul';if(S.xt)return'god';if(S.xian)return'xian'}catch(e){}return'murim'};
+const meP=()=>Object.assign({n:pname(),ri:realmIdx(),x:S.xian?1:0,p:Math.round(total()),f:S.faction?S.faction.n:'พเนจร',age:S.age,cha:S.cha||0},typeof mwMe==='function'?mwMe():{});
+window.gbGod=()=>!!(S&&S.alive&&!S.beastMode&&((S.xt|0)>0||(S.sv&&S.sv.gd&&S.sv.gd.on)));
+window.gbWorld=()=>WN[wkey()]||'🌟 แดนเทพ';
+// ศรัทธา: ภพเทพของทวีปมีแสงศรัทธาเป็นของตัวเอง (ไฟล์ soul) · แดนเทพโลกหลักได้ชื่อเสียงกับกรรมแทน
+const faith=(n,why)=>{try{if(typeof window._sgFaith==='function'&&S.sv&&S.sv.gd&&S.sv.gd.on)return window._sgFaith(n,why)}catch(e){}S.fame=(S.fame||0)+n*40;S.karma=(S.karma||0)+Math.ceil(n/2);return` · ⭐ +${fmt(n*40)}`};
+const rankV=()=>{try{if(S.sv&&S.sv.gd&&S.sv.gd.on)return[.03,.035,.04,.05][S.sv.gd.rk|0]||.03}catch(e){}return Math.min(.05,.03+(realmIdx()|0)*.003)};
+// ---------- ให้ผู้เล่นจริงที่เจอกัน ----------
+window.gbGive=function(o){if(!gbGod()||!o)return;const v=rankV();api('meetact',{to:o.k,kind:'bless',v,w:gbWorld(),n:pname(),ri:realmIdx(),x:S.xian?1:0}).then(j=>{if(j&&j.ok){const c=Math.round((S.power||0)*v*.8);S.power=Math.max(1,(S.power||0)-c);log(`🌟 คุณแตะหน้าผาก<b>${esc(o.n)}</b> แสงส่วนหนึ่งของคุณไหลเข้าไปในตัวเขา · พลัง −${fmt(c)}${faith(3,'ประทานพรผู้เล่น')}`,'myth',true);try{keyAdd(`${S.age} ปี — ประทานพรเทพให้ผู้เล่น ${o.n}`)}catch(e){}}else if(j&&j.wait)toast('🌟 พรเทพส่งได้ทุก 6 ชั่วโมง');else toast('🌟 เขาข้ามกลับไปแล้ว พรไปไม่ถึง')}).catch(()=>toast('ออฟไลน์อยู่'))};
+// ---------- ส่งพรลงโลกล่าง: สุ่มผู้เล่นที่ออนไลน์อยู่ ----------
+window.gbSend=function(){if(!gbGod())return toast('ต้องเป็นเทพก่อน');if(!onlineOK)return toast('ต้องออนไลน์ก่อน');const v=rankV();
+ api('gbless',{n:pname(),w:gbWorld(),v,ri:realmIdx()}).then(j=>{if(j&&j.ok&&j.to){const c=Math.round((S.power||0)*v*.8);S.power=Math.max(1,(S.power||0)-c);log(`🌟 <b>คุณส่งพรลงโลกล่าง</b> แสงตกลงบน <b>${esc(j.to.n)}</b> ${esc(j.to.f||'')} อายุ ${fmt(j.to.age||0)} ปี ผู้เล่นที่กำลังเล่นอยู่ตอนนี้ · พลัง −${fmt(c)}${faith(3,'ส่งพรลงโลกล่าง')}`,'myth',true);render()}else if(j&&j.wait)toast(`🌟 ส่งได้อีกครั้งในอีก ${Math.ceil(j.wait/3600)} ชั่วโมง`);else if(j&&j.none)toast('🌟 ตอนนี้ยังไม่มีผู้เล่นคนอื่นออนไลน์');else toast('ส่งไม่สำเร็จ')}).catch(()=>toast('ออฟไลน์อยู่'))};
+// ---------- กล่องข้อความ ----------
+const thanked={};
+window.gbThank=function(k,n){if(thanked[k])return;thanked[k]=1;api('meetact',{to:k,kind:'thank',n:pname(),ri:realmIdx(),x:S.xian?1:0}).catch(()=>{});toast(`🙏 ส่งคำขอบคุณถึง${n}แล้ว`)};
+window.gbInbox=function(m){if(!S||!S.alive)return;const n=esc(m.n||'นิรนาม');
+ if(m.kind==='bless'){const g=pctPow(Math.max(.01,Math.min(.05,+m.v||.03)));S.power=(S.power||0)+g;log(`🌟 <b>แสงจากเบื้องบนตกลงมาที่คุณ</b> — <b>${n}</b> เทพจาก${esc(m.w||'แดนเทพ')} ผู้เล่นจริงอีกคน ประทานพรให้คุณ · พลัง +${fmt(g)} <button class="sysb" onclick="gbThank('${String(m.k||'').replace(/[^a-z0-9]/g,'')}','${n.replace(/'/g,'')}')">🙏 ขอบคุณ</button>`,'myth',true);try{keyAdd(`${S.age} ปี — ได้รับพรจากเทพ ${m.n}`)}catch(e){}}
+ else if(m.kind==='thank'){log(`🙏 ผู้เล่น <b>${n}</b> ที่คุณเคยประทานพรให้ ส่งคำขอบคุณขึ้นมาถึงแดนเทพ${gbGod()?faith(2,'คำขอบคุณ'):''}`,'epic')}
+ else if(m.kind==='gift'){S.karma=(S.karma||0)+2;S.fame=(S.fame||0)+20;log(`🎁 ผู้เล่น <b>${n}</b> ฝาก<b>${esc(m.it||'ของที่ระลึก')}</b>จาก${esc(m.w||'โลกอื่น')}ไว้ให้คุณกลางรอยต่อโลก`,'epic')}
+ else if(m.kind==='cross'){allyAdd(m.n,'ผู้เล่นจริง');log(`🌀 ผู้เล่น <b>${n}</b> ที่สวนทางกันกลางรอยต่อโลกจำคุณได้ — สาบานเป็นพันธมิตรข้ามโลก`,'epic',true)}};
+// ---------- 🌀 พบกันกลางรอยต่อโลก ----------
+function crossShow(o,from,to,tries){if(!S||!S.alive)return;if(choice._cur||modalOpen){if((tries|0)<12)setTimeout(()=>crossShow(o,from,to,(tries|0)+1),1500);return}
+ const ep=Math.max(50,o.p||100),r=total()/ep,pw=Math.round(Math.max(1,Math.min(97,(.5+(r-1)*1.25)*100))),it=rr(SOUV[from]||SOUV.murim),base={to:o.k,n:pname(),ri:realmIdx(),x:S.xian?1:0};
+ choice('🌀 พบกันกลางรอยต่อโลก',`ระหว่างที่คุณข้ามจาก${WN[from]||'โลกเดิม'}ไป${WN[to]||'โลกใหม่'} ในช่องว่างระหว่างโลกมีอีกคนกำลังเดินสวนทางมา<br><b>${esc(o.n)}</b> ผู้เล่นจริงที่กำลังเล่นอยู่ตอนนี้ · ${esc(o.f||'')} · อายุ ${fmt(o.age||0)} ปี<br><span class="tag2">ช่องว่างนี้เปิดอยู่แค่ชั่วอึดใจ · พลังคุณราว ${Math.round(r*100)}% ของเขา</span>`,[
+  {t:'🤝 ร่วมทางข้ามโลก',s:'เป็นพันธมิตรทั้งสองฝ่าย · ได้แรงส่งตอนตั้งตัวในโลกใหม่',ai:.5,f(){allyAdd(o.n,'ผู้เล่นจริง');const g=pctPow(.03);S.power=(S.power||0)+g;log(`🤝 คุณกับ <b>${esc(o.n)}</b> จับมือกันข้ามรอยต่อ แสงจากสองโลกผลักคุณไปข้างหน้า · พลัง +${fmt(g)}`,'epic',true);api('meetact',Object.assign({kind:'cross',w:WN[to]||''},base)).catch(()=>{})}},
+  {t:'⚔️ ประลองแย่งทาง',s:`ผู้ชนะเข้าโลกใหม่พร้อมพลังเพิ่ม · โอกาสชนะราว ${pw}%`,ai:pw/100,f(){const w=fight(o.n,ep);if(w){const g=pctPow(.05);S.power=(S.power||0)+g;log(`⚔️ คุณผลัก <b>${esc(o.n)}</b> ถอยกลับเข้ารอยต่อ แล้วก้าวเข้าโลกใหม่ก่อน · พลัง +${fmt(g)}`,'epic',true)}else{S.hp-=Math.round(S.maxHp*.12);log(`⚔️ <b>${esc(o.n)}</b> แซงคุณข้ามไปก่อน คุณกระเด็นลงโลกใหม่แบบไม่สวยนัก`,'bad')}api('meetact',Object.assign({kind:'fight',win:w?1:0},base)).catch(()=>{})}},
+  {t:`🎁 ฝาก${it}ไว้ให้`,s:'ของที่ระลึกจากโลกเดิม · กรรมดี',ai:.3,f(){S.karma=(S.karma||0)+5;log(`🎁 คุณยื่น${it}ให้ <b>${esc(o.n)}</b> ก่อนช่องว่างจะปิด เขาโค้งให้คุณหนึ่งครั้ง`,'good');api('meetact',Object.assign({kind:'gift',it,w:WN[from]||''},base)).catch(()=>{})}},
+  ...(gbGod()?[{t:'🌟 ประทานพรเทพ',s:'แบ่งพลังส่วนหนึ่งให้เขา · ได้ศรัทธา',ai:.2,f(){gbGive(o)}}]:[]),
+  {t:'🙇 เดินผ่านกันไป',s:'ไม่มีผลเสีย',skip:true,ai:.1,f(){log(`🌀 คุณกับ${esc(o.n)}เดินสวนกันไปเงียบๆ ต่างคนต่างไปโลกของตัวเอง`)}}]);try{keyAdd(`${S.age} ปี — พบผู้เล่น ${o.n} กลางรอยต่อโลก`)}catch(e){}}
+window.gbCross=function(from,to){try{if(!onlineOK||!S||!S.alive||S.age<10||from===to)return;try{meetT=Date.now()}catch(e){}
+ api('meet',meP()).then(j=>{if(!j||!S||!S.alive)return;if(j.o)return crossShow(j.o,from,to);if(j.gh&&j.gh.n)log(`🌀 กลางรอยต่อโลกมีรอยเท้าสดๆ ของ <b>${esc(j.gh.n)}</b> ผู้เล่นที่เพิ่งข้ามไปเมื่อไม่นาน ทิ้งความรู้สึกอุ่นๆ ไว้ในความว่าง`,'sum')}).catch(()=>{})}catch(e){}};
+// ---------- 🙏 พรให้ NPC (เทพทุกโลก) ----------
+const PET=[['ทหารหนุ่มที่ต้องเฝ้าประตูเมืองคนเดียว','ขอให้มีแรงพอจะยืนจนถึงเช้า'],['แม่ที่ลูกถูกสัตว์อสูรลักไป','ขอแค่ให้ได้ลูกคืน'],['เด็กกำพร้าที่ถูกทุกสำนักปฏิเสธ','อยากแข็งแกร่งพอจะไม่ต้องร้องไห้อีก'],['นักบวชแก่ที่สวดถึงคุณมาหกสิบปี','ไม่เคยขออะไร จนวันนี้ที่เขาใกล้ตาย'],['หัวหน้าหมู่บ้านที่ภัยแล้งกำลังกลืนกิน','ขอฝนหนึ่งฤดู แลกกับอะไรก็ได้'],['หญิงสาวที่ถูกบังคับให้แต่งงานกับคนชั่ว','ขอพลังพอจะหนีไป'],['ช่างตีเหล็กพิการ','อยากตีดาบเล่มสุดท้ายให้ลูกชาย']];
+const gbL=()=>{S.gbN=S.gbN||[];return S.gbN};
+window.gbNpcEv=function(cb){if(!gbGod())return cb&&cb();const p=rr(PET),n=(typeof anyName==='function'?anyName():'')||rr(['หลินอวี่','ซูหมิง','อาเหม่ย','เฉินเฟย','หวังลี่','ไป๋เซียว']);const one=v=>{const c=Math.round((S.power||0)*v);S.power=Math.max(1,(S.power||0)-c);gbL().push({n,r:p[0],v,y:S.age,st:0});log(`🙏 คุณแบ่งแสงส่วนหนึ่งลงไปหา<b>${esc(n)}</b> ${p[0]} · พลัง −${fmt(c)}${faith(v>.05?4:2,'พรให้ผู้ศรัทธา')}`,'epic',true);if(cb)cb()};
+ choice('🙏 คำอธิษฐานจากโลกล่าง',`เสียงหนึ่งดังขึ้นมาถึง${gbWorld()}ชัดกว่าเสียงอื่น — <b>${esc(n)}</b> ${p[0]} “${p[1]}”<br><span class="tag2">พลังที่แบ่งไปจะไม่กลับมา · คนที่ได้พรจะมีชีวิตของเขาต่อ และวันหนึ่งผลจะย้อนกลับมาหาคุณ</span>`,[
+  {t:'✨ แบ่งพลังเล็กน้อย (3%)',s:'ปลอดภัย · เขาเปลี่ยนชีวิตได้นิดหน่อย',ai:.45,f(){one(.03)}},
+  {t:'🌟 ทุ่มพลังให้ (8%)',s:'เขาอาจกลายเป็นวีรบุรุษ หรืออาจรับไม่ไหว',ai:.25,f(){one(.08)}},
+  {t:'💬 ส่งแค่คำปลอบใจ',s:'ไม่เสียพลัง',ai:.2,f(){S.karma=(S.karma||0)+1;log(`💬 คุณส่งความฝันอุ่นๆ ไปให้${esc(n)} เขาตื่นมาร้องไห้แต่ใจเบาลง`);if(cb)cb()}},
+  {t:'🙉 ปิดหูจากเสียงนั้น',s:'',skip:true,ai:.1,f(){log(`🙉 เสียงของ${esc(n)}ค่อยๆ เงียบลง`);if(cb)cb()}}])};
+window.gbNpcTick=function(){if(!S||!S.alive)return false;const L=gbL(),b=L.find(x=>!x.st&&S.age-x.y>=4&&Math.random()<.35);if(!b)return false;b.st=1;const big=b.v>.05,r=Math.random();
+ if(r<(big?.25:.12)){const ep=Math.round(total()*(big?.7:.45));choice(`🔥 ${b.n}รับพรไม่ไหว`,`พลังที่คุณให้${esc(b.n)}เมื่อ ${S.age-b.y} ปีก่อนกลืนตัวเขาไปทีละน้อย ตอนนี้เขาอาละวาดอยู่ในเมืองด้วยแสงที่เคยเป็นของคุณ`,[
+   {t:'⚔️ ลงไปเก็บพลังคืนเอง',s:'ดวล',ai:.7,f(){duel(b.n,ep,w=>{if(w){S.power=(S.power||0)+pctPow(b.v*.6);log(`🔥 คุณดึงแสงกลับคืนมาจากร่างของ${esc(b.n)} เขาหลับไปเหมือนเด็ก`,'epic',true)}else{S.hp-=Math.round(S.maxHp*.2);log(`🔥 พลังของคุณเองถูกใช้ย้อนกลับมา`,'bad')}})}},
+   {t:'🙈 ปล่อยให้คนอื่นจัดการ',s:'',ai:.3,f(){S.karma=(S.karma||0)-8;log(`🙈 ข่าวว่ามีเมืองหนึ่งพังทั้งเมืองลอยขึ้นมาถึงคุณ`,'bad')}}]);return true}
+ if(r<(big?.4:.25)){choice(`👑 ${b.n}ตั้งตัวเป็นเทพ`,`${esc(b.n)}ที่คุณเคยให้พรประกาศว่าพลังนั้นเป็นของเขาเอง ตั้งวิหารและเริ่มมีผู้ศรัทธา — ทั้งที่แสงในวิหารนั้นเป็นแสงของคุณ`,[
+   {t:'🤝 ยอมรับเป็นเทพรองใต้ตัวคุณ',s:'ศรัทธาไหลมาที่คุณบางส่วน',ai:.5,f(){log(`🤝 วิหารของ${esc(b.n)}ติดรูปของคุณไว้เหนือประตู${faith(5,'เทพรอง')}`,'epic')}},
+   {t:'⚡ ดับวิหารนั้น',s:'ศรัทธาของเขากลับมาหาคุณ แต่ผู้คนกลัว',ai:.3,f(){S.karma=(S.karma||0)-5;log(`⚡ วิหารของ${esc(b.n)}ถล่มในคืนเดียว${faith(6,'ดับวิหาร')}`,'bad')}},
+   {t:'🌫️ ปล่อยไป',s:'',ai:.2,f(){log(`🌫️ คุณปล่อยให้${esc(b.n)}เป็นเทพของคนกลุ่มเล็กๆ ต่อไป`)}}]);return true}
+ allyAdd(b.n,'ผู้ถือพรของคุณ');log(`🌟 <b>${esc(b.n)}</b> ${esc(b.r)} ที่คุณเคยให้พรเมื่อ ${S.age-b.y} ปีก่อน กลายเป็นวีรบุรุษของแผ่นดิน ทุกครั้งที่เล่าเรื่องตัวเอง เขาเริ่มด้วยชื่อของคุณ${faith(big?6:3,'วีรบุรุษ')} · เขาจะมาช่วยตอนคุณจวนตัว`,'myth',true);return true};
+// ---------- วงจรรายปี (แดนเทพโลกหลัก + จับการข้ามโลกทุกโลก) ----------
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(!S||!S.alive)return r;const k=wkey();if(S._wk&&S._wk!==k&&k!=='beast'&&S._wk!=='beast')gbCross(S._wk,k);S._wk=k;
+ if((S.xt|0)>0&&!(S.sv&&S.sv.gd&&S.sv.gd.on)&&!choice._cur&&!modalOpen){if(!gbNpcTick()&&Math.random()<.07)gbNpcEv()}}catch(e){console.error('gb',e)}return r}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(gbGod()&&!(S.sv&&S.sv.gd&&S.sv.gd.on)){const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.gbM'))g.insertAdjacentHTML('afterbegin','<button class="opt gbM" onclick="closeM();gbSend()">🌟 ส่งพรลงโลกล่าง<small>สุ่มผู้เล่นที่ออนไลน์อยู่ · 6 ชั่วโมงครั้ง</small></button>')}}catch(e){}return r}}
+})()}catch(e){console.error('block186',e)}
