@@ -47412,3 +47412,8 @@ body.mF #game .box.top>.hudr>.cloudt{margin-left:auto!important;position:static!
 body.mF #game .box.top>#chev{position:absolute!important;right:10px;top:12px}}`;document.head.appendChild(cs);
  const fit=()=>{try{document.querySelectorAll('#stats .st>b').forEach(b=>{b.style.fontSize='';let f=parseFloat(getComputedStyle(b).fontSize)||16,n=0;while(b.scrollWidth>b.clientWidth+1&&f>10&&n<10){f-=1;n++;b.style.fontSize=f+'px'}});document.querySelectorAll('#stats .st').forEach(st=>{st.querySelectorAll('*').forEach(x=>{if(x.scrollWidth>x.clientWidth+1&&x.clientWidth>0&&!x.classList.contains('pxi')){x.style.fontSize='';let f=parseFloat(getComputedStyle(x).fontSize)||14,n=0;while(x.scrollWidth>x.clientWidth+1&&f>9&&n<8){f-=1;n++;x.style.fontSize=f+'px'}}})})}catch(e){}};
  const _r=render;render=function(){const r=_r.apply(this,arguments);try{if(detailOpen)requestAnimationFrame(fit)}catch(e){}return r};addEventListener('resize',()=>{try{if(detailOpen)fit()}catch(e){}},{passive:true})})()}catch(e){console.error('block181',e)}
+
+// ============================================================
+// BLOCK 182: 🎴 โหลด /w/mhx.js — มังฮวาชุด 3: วังหลัง · เจ็ดวันก่อนสิ้นโลก · สัญญากับผี · ทั้งห้องถูกส่งไปต่างโลก · ดวงจิตจำชาติก่อน · นักฆ่าถูกสั่งฆ่าตัวเอง · ชาติก่อนคือผู้เล่นจริง · ฮันเตอร์เกษียณ · เลี้ยงเด็กแรงก์ S · พรจากดวงดาว · เกมเด็กเล่นมรณะประจำสัปดาห์ · เกตจากผู้เล่นจริง
+// ============================================================
+try{setTimeout(()=>{try{const go=()=>wLoad('mhw').then(()=>wLoad('mhx'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},5600)}catch(e){console.error('block182',e)}

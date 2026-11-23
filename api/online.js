@@ -3196,6 +3196,33 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const cmds = fresh ? [['HINCRBY', hk, q + ':a', 1], b.ok ? ['HINCRBY', hk, q + ':o', 1] : ['HGET', hk, q + ':o'], ['EXPIRE', hk, 86400 * 21]] : [['HGET', hk, q + ':a'], ['HGET', hk, q + ':o']];
         const r = await pipe(cmds); return res.json({ ok: 1, a: +r[0] || 0, o: +r[1] || 0, wk });
       }
+      // ⭐ พรจากผู้เล่นจริง: bl = ทิ้งพรไว้ให้คนถัดไป · bg = รับพรสุ่ม 3 อัน (ไม่ใช่ของตัวเอง เว้นแต่ไม่มีอื่น)
+      if (k === 'bl') {
+        const day = 'mhbld:' + id + ':' + dk; if (!+(await cmd('SET', day, '1', 'NX', 'EX', 86400 * 2) ? 1 : 0)) return res.json({ ok: 0, err: 'dup' });
+        const e = { i: String(id), n: clean(b.n, 20) || 'นิรนาม', b: Math.max(0, Math.min(3, b.b | 0)), m: Math.max(0, Math.min(7, b.m | 0)), t: now };
+        await pipe([['LPUSH', 'mhbl', JSON.stringify(e)], ['LTRIM', 'mhbl', 0, 299]]); return res.json({ ok: 1 });
+      }
+      if (k === 'bg') {
+        const raw = await cmd('LRANGE', 'mhbl', 0, 299) || [], L = []; for (const x of raw) { try { L.push(JSON.parse(x)) } catch {} }
+        const hid = new Set(await cmd('SMEMBERS', 'chat:hidden') || []);
+        const oth = L.filter(x => x.i !== String(id) && !hid.has(x.i)), mine = L.filter(x => x.i === String(id));
+        const pick = []; const pool = oth.slice(); while (pick.length < 3 && pool.length) pick.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+        const out = pick.map(x => ({ n: x.n, b: x.b, m: x.m, t: x.t })); if (mine.length && Math.random() < .35) out.push({ n: mine[0].n, b: mine[0].b, m: mine[0].m, t: mine[0].t, me: 1 });
+        return res.json({ ok: 1, g: out, tot: L.length });
+      }
+      // 🎎 เกมเด็กเล่นมรณะประจำสัปดาห์: st=ด่าน c=ตัวเลือก ok=รอด · v=โหวต 1 หยุด 2 ไปต่อ · end=ด่านสุดท้ายที่ไปถึง · fin=ชนะ (ชื่อคนแรกเป็นผู้คุมเกมสัปดาห์หน้า)
+      if (k === 'dg') {
+        const wk = Math.floor((now + 7 * 3600e3) / (7 * 86400e3)), hk = 'mhdg:' + wk, st = Math.max(0, Math.min(9, b.st | 0)), c = Math.max(-1, Math.min(3, b.c == null ? -1 : b.c | 0)), out = { ok: 1, wk };
+        const once = async t => +(await cmd('SET', 'mhdgo:' + wk + ':' + id + ':' + t, '1', 'NX', 'EX', 86400 * 9) ? 1 : 0);
+        if (b.q) { const f = ['a', 'o'].flatMap(x => [0, 1, 2, 3].map(i => 's' + st + 'c' + i + x)); const r = await cmd('HMGET', hk, ...f) || []; out.cs = [0, 1, 2, 3].map(i => [+r[i] || 0, +r[4 + i] || 0]) }
+        if (b.rec && c >= 0 && await once('s' + st)) { await pipe([['HINCRBY', hk, 's' + st + 'c' + c + 'a', 1], ...(b.ok ? [['HINCRBY', hk, 's' + st + 'c' + c + 'o', 1]] : []), ['EXPIRE', hk, 86400 * 21]]) }
+        if (b.v === 1 || b.v === 2) { if (await once('v')) await cmd('HINCRBY', hk, 'v' + b.v, 1); const r = await cmd('HMGET', hk, 'v1', 'v2') || []; out.v = [+r[0] || 0, +r[1] || 0] }
+        if (b.end != null && await once('end')) await cmd('HINCRBY', hk, 'm' + Math.max(0, Math.min(9, b.end | 0)), 1);
+        if (b.end != null || b.fin) { const r = await cmd('HMGET', hk, ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => 'm' + i)) || []; out.m = r.map(x => +x || 0) }
+        if (b.fin && await once('fin')) { const nm = clean(b.n, 20) || 'นิรนาม'; await cmd('SET', 'mhdgw:' + wk, JSON.stringify({ n: nm, t: now }), 'NX', 'EX', 86400 * 30) }
+        if (b.host) { try { out.host = JSON.parse(await cmd('GET', 'mhdgw:' + (wk - 1)) || 'null') } catch { out.host = null } }
+        return res.json(out);
+      }
       return res.json({ ok: 0 });
     }
     if (a === 'krt' || a === 'krtp') {
