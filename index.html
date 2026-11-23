@@ -477,7 +477,7 @@ details.item summary{cursor:pointer}
 <div class="mask" id="mask"><div class="modal" id="modal"></div></div>
 <div class="toast" id="toast"></div>
 
-<div id="bootL" aria-live="polite"><div class="bl-in"><div class="bl-ic">📖</div><b>1 ใน นวนิยาย</b><div class="bl-bar"><i id="bootB"></i></div><small id="bootT">กำลังเปิดเกม…</small><small class="bl-sub" id="bootS"></small><button id="bootR" onclick="location.reload()">🔄 ลองใหม่</button></div></div>
+<div id="bootL" aria-live="polite"><div class="bl-in"><div class="bl-ic">📖</div><b>1 ใน นวนิยาย</b><div class="bl-bar"><i id="bootB"></i></div><small id="bootT">กำลังเปิดเกม…</small><small class="bl-sub" id="bootS"></small><button id="bootR" onclick="location.reload()">🔄 ลองใหม่</button><div id="bootG" hidden><canvas id="bootC" width="720" height="340"></canvas><div id="bootGH">👆 แตะเพื่อวิ่งระหว่างรอ</div><button id="bootGo" hidden>✅ พร้อมแล้ว · แตะเพื่อเข้าโลก</button></div></div></div>
 <style>
 #bootL{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;background:rgba(15,13,22,.92);color:#f6ecd6;font-family:Itim,Sarabun,system-ui,sans-serif;transition:opacity .35s}
 #bootL.out{opacity:0;pointer-events:none}
@@ -486,14 +486,93 @@ details.item summary{cursor:pointer}
 #bootL .bl-bar{width:100%;height:10px;border-radius:9px;background:rgba(255,255,255,.12);overflow:hidden;border:1px solid rgba(255,215,106,.35)}
 #bootL .bl-bar i{display:block;height:100%;width:3%;border-radius:9px;background:linear-gradient(90deg,#ffb340,#ffd76a,#fff2b8);transition:width .25s}
 #bootL small{font-size:14px;opacity:.9}#bootL .bl-sub{font-size:12px;opacity:.6;min-height:1em}
+#bootG{width:min(360px,92vw);margin-top:6px;display:flex;flex-direction:column;align-items:center;gap:6px}#bootG[hidden]{display:none}
+#bootC{width:100%;height:auto;aspect-ratio:36/17;border-radius:14px;border:1px solid rgba(255,215,106,.45);box-shadow:0 6px 24px rgba(0,0,0,.5),0 0 18px rgba(255,170,80,.15);background:#141026;touch-action:none;-webkit-user-select:none;user-select:none;cursor:pointer}
+#bootGH{font-size:13px;opacity:.85;min-height:1.2em}
+#bootGo{padding:10px 18px;border-radius:12px;border:2px solid #7fe08a;background:#12301a;color:#a8ffb2;font:inherit;font-weight:700;cursor:pointer;animation:blB 1.2s ease-in-out infinite}#bootGo[hidden]{display:none}
 #bootR{display:none;margin-top:6px;padding:8px 16px;border-radius:12px;border:2px solid #ffd76a;background:#2a2210;color:#ffd76a;font:inherit;cursor:pointer}
 @keyframes blB{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 </style>
 <script>
+// 🏃 มินิเกม "วิ่งข้ามหลังคา" ระหว่างรอโหลด (โชว์เมื่อโหลดเกิน 3 วิ · วาดด้วยโค้ดล้วน ไม่มีรูป · หยุดทันทีเมื่อเข้าเกม)
+(function(){var G=document.getElementById('bootG'),C=document.getElementById('bootC'),H=document.getElementById('bootGH'),GO=document.getElementById('bootGo');if(!G||!C||!C.getContext)return;
+var x=C.getContext('2d'),W=360,_s=x.setTransform?x.setTransform(2,0,0,2,0,0):0,Ht=170,GY=128,on=0,play=0,dead=0,raf=0,last=0,spd=3,dist=0,best=0,coins=0,touched=0,lastIn=0,readyCb=null,fin=0,hold=0,holdT=0,runs=0,bestRun=0;
+try{best=+(localStorage.getItem('murim_bootrun')||0)||0}catch(e){}
+var P={y:GY,vy:0,g:1,f:0},obs=[],cns=[],roofs=[],stars=[];for(var i=0;i<26;i++)stars.push([Math.random()*W,Math.random()*70,Math.random()]);
+function reset(){P.y=GY;P.vy=0;P.g=1;obs=[];cns=[];roofs=[{x:0,w:W+60}];spd=3;dist=0;coins=0;dead=0}
+reset();
+function roofAt(px){for(var i=0;i<roofs.length;i++){var r=roofs[i];if(px>=r.x&&px<=r.x+r.w)return r}return null}
+function spawn(){var r=roofs[roofs.length-1],end=r.x+r.w;if(end<W+40){var gap=dist<40?0:(Math.random()<.45?38+Math.random()*Math.min(46,20+dist/12):0),w=110+Math.random()*120;roofs.push({x:end+gap,w:w});
+ var k=Math.random();if(dist>8&&k<.38)obs.push({t:'box',x:end+gap+40+Math.random()*(w-80),y:GY-16,w:14,h:16});else if(dist>25&&k<.62)obs.push({t:'arw',x:W+60+Math.random()*80,y:GY-46-Math.random()*10,w:22,h:4});
+ if(Math.random()<.6)cns.push({x:end+gap+30+Math.random()*(w-40),y:GY-30-Math.random()*40,got:0})}}
+function jump(){if(dead){reset();return}if(P.g){P.vy=-6.6;P.g=0;hold=1;holdT=0;puff(44,GY,4,'#9a8ab5')}}
+function inp(e){if(e){try{e.preventDefault()}catch(_){}}lastIn=Date.now();if(!play){play=1;touched=1;H.textContent='แตะ = กระโดด · แตะค้าง = กระโดดสูง';runs++;reset();return}jump()}
+function up(){hold=0}
+C.addEventListener('pointerdown',inp);C.addEventListener('pointerup',up);C.addEventListener('pointercancel',up);
+document.addEventListener('keydown',function(e){if(!on||fin)return;if(e.code==='Space'||e.key===' '||e.key==='ArrowUp'){inp(e)}});document.addEventListener('keyup',function(e){if(e.code==='Space'||e.key===' '||e.key==='ArrowUp')up()});
+GO.addEventListener('click',function(){finish()});
+function hit(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
+function step(){if(!play||dead)return;spd=Math.min(7.5,3+dist/60);dist+=spd/22;
+ for(var i=0;i<roofs.length;i++)roofs[i].x-=spd;while(roofs.length&&roofs[0].x+roofs[0].w<-10)roofs.shift();
+ for(i=0;i<obs.length;i++)obs[i].x-=spd*(obs[i].t==='arw'?1.6:1);obs=obs.filter(function(o){return o.x>-40});
+ for(i=0;i<cns.length;i++)cns[i].x-=spd;cns=cns.filter(function(c){return c.x>-10&&!c.got});spawn();
+ if(hold&&!P.g&&holdT<14&&P.vy<0){P.vy-=.32;holdT++}
+ P.vy+=.42;P.y+=P.vy;var r=roofAt(46);if(r&&P.y>=GY&&P.vy>=0&&P.y-P.vy<=GY+2){if(!P.g&&P.vy>2)puff(46,GY,6,'#c9b8d8');P.y=GY;P.vy=0;P.g=1}else if(P.y<GY-.5||!r)P.g=0;
+ if(P.y>Ht+20)die();var me={x:40,y:P.y-22,w:12,h:22};
+ for(i=0;i<obs.length;i++)if(hit(me,obs[i]))die();
+ for(i=0;i<cns.length;i++){var c=cns[i];if(!c.got&&Math.abs(c.x-46)<12&&Math.abs(c.y-(P.y-12))<16){c.got=1;coins++;puff(c.x,c.y,8,'#ffe38a')}}
+ P.f+=spd/10}
+function die(){if(dead)return;dead=1;shake=6;flash=.45;puff(46,P.y-10,12,'#e8433a');var sc=Math.floor(dist)+coins*5;if(sc>bestRun)bestRun=sc;if(sc>best){best=sc;try{localStorage.setItem('murim_bootrun',String(best))}catch(e){}}H.textContent='💥 ล้มแล้ว · แตะเพื่อวิ่งใหม่'}
+function px(c,X,Y,w,h){x.fillStyle=c;x.fillRect(Math.round(X),Math.round(Y),w,h)}
+var sky=null,pts=[],shake=0,flash=0,petals=[];for(var q=0;q<14;q++)petals.push([Math.random()*W,Math.random()*Ht,.3+Math.random()*.7,Math.random()*6.3]);
+function puff(X,Y,n,c){for(var i=0;i<n;i++)pts.push({x:X,y:Y,vx:(Math.random()-.5)*2.2,vy:-Math.random()*1.8,l:18+Math.random()*12,c:c})}
+function eave(X,Y,w,col,dark){x.fillStyle=col;x.beginPath();x.moveTo(X-10,Y+2);x.quadraticCurveTo(X-4,Y+4,X+2,Y-6);x.lineTo(X+w-2,Y-6);x.quadraticCurveTo(X+w+4,Y+4,X+w+10,Y+2);x.lineTo(X+w+6,Y+5);x.lineTo(X-6,Y+5);x.closePath();x.fill();x.fillStyle=dark;x.fillRect(X-6,Y+4,w+12,2)}
+function pagoda(X,base,s,c1,c2,lit){var w=26*s,h=14*s;for(var f=0;f<3;f++){var ww=w-f*7*s,xx=X+(w-ww)/2,yy=base-h*(f+1);x.fillStyle=c1;x.fillRect(xx,yy,ww,h);if(lit){x.fillStyle='rgba(255,190,90,.85)';for(var k=0;k<3;k++)if((k+f+Math.floor(X))%2)x.fillRect(xx+4*s+k*(ww-8*s)/3,yy+4*s,3*s,4*s)}eave(xx,yy,ww,c2,c1)}x.fillStyle=c2;x.fillRect(X+w/2-1,base-h*3-12*s,2,12*s)}
+function hero(X,Y){var run=P.g&&play&&!dead,f=Math.floor(P.f)%4,bob=run?(f%2?-1:0):0,Y2=Y+bob;
+ var sw=Math.sin(P.f*.9)*3;x.strokeStyle='#e8433a';x.lineWidth=2;x.beginPath();x.moveTo(X+3,Y2-19);x.quadraticCurveTo(X-6,Y2-20+sw,X-14,Y2-16+sw*1.4);x.stroke();
+ px('#3a2b22',X+9,Y2-24,3,14);px('#c9c9d8',X+10,Y2-27,1,4);
+ var l1=run?[0,3,0,-3][f]:(P.g?0:2),l2=-l1;px('#1d1a2e',X+3+l1,Y2-6,3,6);px('#1d1a2e',X+7+l2,Y2-6,3,6);px('#5a3a22',X+2+l1,Y2-1,4,1);px('#5a3a22',X+6+l2,Y2-1,4,1);
+ px('#2c4fa8',X+1,Y2-15,11,10);px('#3d68d6',X+1,Y2-15,11,2);px('#e8c23a',X+1,Y2-9,11,2);
+ px('#f1d0a8',X+2,Y2-22,8,7);px('#1d1a2e',X+1,Y2-24,10,3);px('#1d1a2e',X+1,Y2-22,2,4);px('#1d1a2e',X+4,Y2-27,4,3);px('#e8433a',X+3,Y2-23,6,1);px('#1d1a2e',X+8,Y2-20,1,2);
+ var ar=run?[2,-1,-2,1][f]:-3;px('#f1d0a8',X+11,Y2-13+ar,3,3);px('#2c4fa8',X-1,Y2-13-ar,3,4)}
+function draw(){if(!sky){sky=x.createLinearGradient(0,0,0,Ht);sky.addColorStop(0,'#0b0a24');sky.addColorStop(.55,'#2a1d52');sky.addColorStop(.85,'#5b2c5e');sky.addColorStop(1,'#8a3f56')}
+ x.save();if(shake>0){x.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);shake*=.85;if(shake<.3)shake=0}
+ x.fillStyle=sky;x.fillRect(-4,-4,W+8,Ht+8);var D=dist*12;
+ for(var i=0;i<stars.length;i++){var s0=stars[i],tw=.5+.5*Math.sin(last/400+i);x.globalAlpha=.3+.7*tw*s0[2];px(s0[2]>.7?'#fff6d0':'#b9b0ff',((s0[0]-D*.05*(s0[2]+.2))%W+W)%W,s0[1],s0[2]>.8?2:1,s0[2]>.8?2:1)}x.globalAlpha=1;
+ var mg=x.createRadialGradient(290,40,4,290,40,46);mg.addColorStop(0,'rgba(255,240,190,.55)');mg.addColorStop(1,'rgba(255,240,190,0)');x.fillStyle=mg;x.fillRect(240,0,100,90);
+ x.fillStyle='#fff1c8';x.beginPath();x.arc(290,40,15,0,6.3);x.fill();x.fillStyle='rgba(220,200,150,.35)';x.beginPath();x.arc(285,36,4,0,6.3);x.arc(295,45,3,0,6.3);x.fill();
+ x.fillStyle='rgba(200,190,255,.08)';for(i=0;i<3;i++){var cx=((i*150-D*.12)%540+540)%540-90;x.beginPath();x.ellipse(cx,30+i*14,50,7,0,0,6.3);x.fill()}
+ x.fillStyle='#1c1540';x.beginPath();x.moveTo(0,Ht);for(i=0;i<=W+40;i+=20){var mx=i-((D*.15)%40);x.lineTo(mx,96-Math.abs(Math.sin((i+Math.floor(D*.15/40)*40)*.031))*34)}x.lineTo(W+40,Ht);x.fill();
+ for(i=0;i<6;i++){var bx=((i*95-D*.35)%570+570)%570-70;pagoda(bx,118,.8+(i%3)*.15,'#2a1f4a','#3b2b63',true)}
+ for(i=0;i<roofs.length;i++){var r=roofs[i];px('#2b1d3a',r.x,GY+2,r.w,Ht-GY);
+  for(var k=r.x+6;k<r.x+r.w-6;k+=16){px('#40294f',k,GY+12,10,12);px((Math.floor(k/16)%3===0)?'#ffcf7a':'#5a3d6b',k+2,GY+14,6,8)}
+  eave(r.x,GY-2,r.w,'#7c2f2a','#4a1a1d');x.fillStyle='#a8443a';x.fillRect(r.x-2,GY-8,r.w+4,2);for(k=r.x;k<r.x+r.w;k+=6)px('#5e2422',k,GY-6,1,4);
+  px('#d8a548',r.x-10,GY-1,3,3);px('#d8a548',r.x+r.w+7,GY-1,3,3)}
+ for(i=0;i<roofs.length-1;i++){var a1=roofs[i],a2=roofs[i+1],gx=a1.x+a1.w,gw=a2.x-gx;if(gw>4&&gw<120){x.strokeStyle='rgba(30,20,30,.8)';x.lineWidth=1;x.beginPath();x.moveTo(gx,GY-6);x.quadraticCurveTo(gx+gw/2,GY+4,a2.x,GY-6);x.stroke();var lx=gx+gw/2,ly=GY-1+Math.sin(last/300+i)*1.5;x.fillStyle='rgba(255,90,60,.25)';x.beginPath();x.arc(lx,ly+5,8,0,6.3);x.fill();px('#e83a2e',lx-3,ly,6,8);px('#ffcf5a',lx-1,ly+8,2,3);px('#ffd76a',lx-3,ly,6,1)}}
+ for(i=0;i<cns.length;i++){var c=cns[i],gl=.6+.4*Math.sin(last/150+i);x.fillStyle='rgba(255,215,106,'+(.25*gl)+')';x.beginPath();x.arc(c.x,c.y,8,0,6.3);x.fill();x.fillStyle='#e8b93a';x.beginPath();x.arc(c.x,c.y,5,0,6.3);x.fill();x.fillStyle='#fff0a8';x.beginPath();x.arc(c.x-1,c.y-1,2.5,0,6.3);x.fill();px('#7a5418',c.x-1.5,c.y-1.5,3,3)}
+ for(i=0;i<obs.length;i++){var o=obs[i];if(o.t==='box'){px('#5a3a22',o.x-1,o.y+2,o.w+2,o.h-2);px('#8a5a2e',o.x,o.y+3,o.w,o.h-5);px('#c08a48',o.x+2,o.y+4,o.w-4,2);px('#3a2414',o.x+o.w/2-1,o.y+3,2,o.h-3);px('#c9c9d8',o.x+2,o.y-3,2,5);px('#c9c9d8',o.x+6,o.y-5,2,7);px('#c9c9d8',o.x+10,o.y-3,2,5)}
+  else{x.strokeStyle='rgba(255,220,200,.25)';x.beginPath();x.moveTo(o.x+o.w,o.y+1);x.lineTo(o.x+o.w+18,o.y+1);x.stroke();px('#d9cbb0',o.x+4,o.y,o.w-4,2);px('#c9c9d8',o.x,o.y-1,5,4);px('#e8433a',o.x+o.w-4,o.y-3,4,3);px('#e8433a',o.x+o.w-4,o.y+2,4,3)}}
+ x.save();x.translate(46,P.y);x.scale(1.35,1.35);x.translate(-46,-P.y);x.fillStyle='rgba(0,0,0,.25)';if(P.g)x.fillRect(40,P.y,14,2);hero(40,P.y);x.restore();
+ for(i=pts.length-1;i>=0;i--){var p0=pts[i];p0.x+=p0.vx-spd*.3;p0.y+=p0.vy;p0.vy+=.08;p0.l--;if(p0.l<=0){pts.splice(i,1);continue}x.globalAlpha=Math.min(1,p0.l/14);px(p0.c,p0.x,p0.y,2,2)}x.globalAlpha=1;
+ for(i=0;i<petals.length;i++){var pe=petals[i];pe[0]-=(.4+spd*.15)*pe[2];pe[1]+=.25*pe[2];pe[3]+=.05;if(pe[0]<-4)pe[0]=W+4;if(pe[1]>Ht)pe[1]=-4;x.fillStyle='rgba(255,170,200,'+(.5*pe[2])+')';x.fillRect(pe[0]+Math.sin(pe[3])*3,pe[1],2,1.5)}
+ if(flash>0){x.fillStyle='rgba(255,80,60,'+flash+')';x.fillRect(0,0,W,Ht);flash*=.85;if(flash<.02)flash=0}
+ x.restore();
+ x.font='bold 12px Itim,sans-serif';x.textAlign='left';x.fillStyle='rgba(0,0,0,.45)';x.fillText((play?Math.floor(dist)+coins*5:0)+' ลี้',9,17);x.fillStyle='#ffd76a';x.fillText((play?Math.floor(dist)+coins*5:0)+' ลี้',8,16);
+ x.textAlign='right';x.fillStyle='rgba(0,0,0,.45)';x.fillText('🏆 '+best,W-7,17);x.fillStyle='#fff2b8';x.fillText('🏆 '+best,W-8,16);
+ if(!play){x.fillStyle='rgba(8,6,20,.55)';x.fillRect(0,0,W,Ht);x.textAlign='center';x.font='bold 18px Itim,sans-serif';x.fillStyle='#000';x.fillText('🏮 วิ่งข้ามหลังคา 🏮',W/2+1,Ht/2-5);x.fillStyle='#ffd76a';x.fillText('🏮 วิ่งข้ามหลังคา 🏮',W/2,Ht/2-6);x.font='13px Itim,sans-serif';x.fillStyle='#fff2b8';x.fillText('แตะเพื่อเริ่ม · แตะค้างกระโดดสูง',W/2,Ht/2+16)}}
+function loop(t){if(fin||!on)return;raf=requestAnimationFrame(loop);if(document.hidden)return;var dt=t-last;if(dt<14)return;last=t;var n=Math.min(3,Math.round(dt/16.7)||1);for(var i=0;i<n;i++)step();draw();
+ if(readyCb&&Date.now()-lastIn>3000)finish()}
+function finish(){if(fin)return;fin=1;on=0;try{cancelAnimationFrame(raf)}catch(e){}var cb=readyCb;readyCb=null;var sc=Math.max(bestRun,play&&!dead?Math.floor(dist)+coins*5:0);if(sc>best){best=sc;try{localStorage.setItem('murim_bootrun',String(best))}catch(e){}}if(cb)cb();
+ if(touched&&sc>0)setTimeout(function(){try{window.toast&&toast('🏃 ระหว่างรอ คุณวิ่งได้ '+sc+' ลี้'+(sc>=best&&runs>0?' · สถิติของคุณ':''))}catch(e){}},1800)}
+setTimeout(function(){if(window.__bootDoneEarly)return;var L=document.getElementById('bootL');if(!L||L.classList.contains('out'))return;G.hidden=false;on=1;draw();raf=requestAnimationFrame(loop)},3000);
+window.__bootRun={hold:function(){if(on&&touched)return true;on=0;fin=1;try{cancelAnimationFrame(raf)}catch(e){}return false},ready:function(cb){readyCb=cb;lastIn=Math.max(lastIn,Date.now()-1500);GO.hidden=false;H.textContent='โหลดเสร็จแล้ว · เล่นต่อได้ หรือแตะปุ่มด้านล่าง'}};
+})();
+</script>
+<script>
 // โหลดเกมแบบเห็นความคืบหน้า: ดึง app.js ผ่าน fetch (นับไบต์) แล้วค่อยใส่ <script src> ซึ่งได้ไฟล์จากแคชทันที
 (function(){var L=document.getElementById('bootL'),B=document.getElementById('bootB'),T=document.getElementById('bootT'),S=document.getElementById('bootS'),t0=Date.now(),ts=t0,tot0=10400000,gone=0,SZ=10400000,tries=0;
 function set(f,n){f=Math.max(.03,Math.min(.99,f));B.style.width=(f*100).toFixed(1)+'%';T.textContent='กำลังโหลดเกม '+Math.round(f*100)+'%';if(n&&Date.now()-t0>1500){var el=(Date.now()-ts)/1000,sp=el>1?(n/el):0,eta=sp>0?Math.max(0,(tot0-n)/sp):0;S.textContent=(n/1048576).toFixed(1)+' MB'+(eta>4&&f<.97?' · อีกประมาณ '+(eta>=90?Math.round(eta/60)+' นาที':Math.round(eta)+' วินาที'):'')+' · ครั้งต่อไปจะเปิดเร็วขึ้น'}}
-function done(){if(gone)return;gone=1;B.style.width='100%';L.classList.add('out');setTimeout(function(){try{L.remove()}catch(e){}},400)}
+function done(){if(gone)return;gone=1;B.style.width='100%';var fin=function(){L.classList.add('out');setTimeout(function(){try{L.remove()}catch(e){}},400)};try{var R=window.__bootRun;if(R&&R.hold()){T.textContent='โหลดเสร็จแล้ว';S.textContent='';return R.ready(fin)}}catch(e){}fin()}
 function fail(){T.textContent='โหลดไม่สำเร็จ — เน็ตอาจหลุด';S.textContent='';document.getElementById('bootR').style.display='inline-block'}
 var ran=0;function go(){if(ran)return;ran=1;T.textContent='กำลังเตรียมโลก…';var s=document.createElement('script');s.src='/app.js';s.charset='utf-8';s.async=false;s.onload=function(){setTimeout(done,60)};s.onerror=fail;document.body.appendChild(s)}
 // เก็บไฟล์เกมไว้ในเครื่อง (service worker) + บอกเมื่อมีเวอร์ชันใหม่พร้อมใช้
@@ -509,7 +588,7 @@ try{if(!window.fetch||!window.ReadableStream||!window.TextDecoder||(navigator.se
   function retry(){if(dead||ran)return;dead=1;clearInterval(wd);try{ac&&ac.abort()}catch(e){}if(++tries<=3){T.textContent='เน็ตสะดุด กำลังลองใหม่ ('+tries+'/3)…';setTimeout(dl,1500*tries)}else go()}
   wd=setInterval(function(){if(Date.now()-last>25000)retry()},3000);
   fetch('/app.js',{credentials:'same-origin',signal:ac?ac.signal:undefined}).then(function(r){if(!r.ok||!r.body){clearInterval(wd);dead=1;return go()}var cl=+r.headers.get('content-length')||0,enc=r.headers.get('content-encoding'),tot=(!enc&&cl>1e6)?cl:SZ,n=0,rd=r.body.getReader(),parts=[];tot0=tot;
-  (function pump(){rd.read().then(function(x){if(dead)return;last=Date.now();if(x.done){clearInterval(wd);dead=1;set(1,n);var all=new Uint8Array(n),o=0;for(var i=0;i<parts.length;i++){all.set(parts[i],o);o+=parts[i].length}parts=null;all=null;return go()}parts.push(x.value);n+=x.value.length;set(n/tot,n);pump()}).catch(retry)})()}).catch(retry)}
+  (function pump(){rd.read().then(function(x){if(dead)return;last=Date.now();if(x.done){clearInterval(wd);dead=1;set(1,n);var all=new Uint8Array(n),o=0;for(var i=0;i<parts.length;i++){all.set(parts[i],o);o+=parts[i].length}parts=null;try{if(window.caches&&location.protocol==='https:'){var hh={'content-type':'application/javascript; charset=utf-8'},et=r.headers.get('etag'),lm=r.headers.get('last-modified');if(et)hh.etag=et;if(lm)hh['last-modified']=lm;var cp=all;caches.open('game-files-v2').then(function(c){return c.put('/app.js',new Response(cp,{headers:hh}))}).catch(function(){})}}catch(e){}return run(all)}parts.push(x.value);n+=x.value.length;set(n/tot,n);pump()}).catch(retry)})()}).catch(retry)}
  dl()}catch(e){go()}
 })();
 </script>
