@@ -19824,8 +19824,11 @@ setInterval(()=>{try{if(!islOn())return;const g=$('game'),inG=!!(S&&S.alive&&g&&
 .islBolt{position:fixed;top:0;width:28px;z-index:99989;pointer-events:none;animation:islBolt .5s steps(2,end) forwards;filter:drop-shadow(0 0 6px #ffd76a)}
 .islBolt svg{width:100%;height:100%}@keyframes islBolt{0%{opacity:1}30%{opacity:.2}45%{opacity:1}100%{opacity:0}}
 #game.islShake{animation:islGm .4s ease}@keyframes islGm{20%{transform:translate(-3px,1px)}40%{transform:translate(3px,-1px)}60%{transform:translate(-2px,0)}80%{transform:translate(2px,1px)}}
-#islDock .islChip{animation:islBreath 3.2s ease-in-out infinite}
-@keyframes islBreath{50%{transform:scale(1.06);box-shadow:0 2px 6px rgba(0,0,0,.35),0 0 calc(4px + 10px*var(--gl,0)) rgba(255,215,106,calc(.25 + .5*var(--gl,0)))}}
+/* ⚡ perf: เดิมเคลื่อนไหว box-shadow ตรงๆ ทำให้เบราว์เซอร์วาดใหม่ทุกเฟรมตลอดเวลา → ย้ายแสงไปอยู่ ::after แล้วเคลื่อนไหวแค่ opacity (ทำงานบน GPU · หน้าตาเหมือนเดิม) */
+#islDock .islChip{position:relative;animation:islBreath 3.2s ease-in-out infinite}
+#islDock .islChip::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;box-shadow:0 0 calc(4px + 10px*var(--gl,0)) rgba(255,215,106,calc(.25 + .5*var(--gl,0)));animation:islGlowP 3.2s ease-in-out infinite}
+@keyframes islBreath{50%{transform:scale(1.06)}}
+@keyframes islGlowP{50%{opacity:1}}
 #islDock .islChip.pop{animation:islChipPop .45s cubic-bezier(.3,1.8,.5,1)}#islDock .islChip.bye{animation:islChipBye .35s ease-in forwards}#islDock .islChip.wait{animation:none}
 .islChip em{font-style:normal;font-size:10px;font-weight:700;opacity:.9}
 .islChip[data-k="ff"]{background:conic-gradient(#6fc3a0 calc(var(--p,0)*360deg),#0b0810 0) border-box}
@@ -37137,7 +37140,7 @@ const scGet=()=>{const v=LS.get('murim_scsz','n');return SC.includes(v)?v:'n'};
 function scApply(){const v=scGet();document.body.classList.toggle('scS',v==='s');document.body.classList.toggle('scH',v==='h');const b=$('scTog');if(b)b.textContent=SCN[v]}
 window.scCycle=function(e){if(e)e.stopPropagation();LS.set('murim_scsz',SC[(SC.indexOf(scGet())+1)%3]);scApply()};
 const ctGet=()=>!!LS.get('murim_ctlmin',0);
-function ctApply(){const m=ctGet();document.body.classList.toggle('ctlMin',m);const b=$('ctlTog');if(!b)return;let f='';try{const on=document.querySelector('#focus .fc.on');if(on)f=on.innerText.split('\n')[0].trim()}catch(e){}const t=m?`▴ เปิดแผงโฟกัส${f?' · '+f:''}`:'▾ ย่อแผงโฟกัส';if(b.textContent!==t)b.textContent=t}
+function ctApply(){const m=ctGet();document.body.classList.toggle('ctlMin',m);const b=$('ctlTog');if(!b)return;let f='';try{const on=document.querySelector('#focus .fc.on');if(on){const tc=on.textContent;if(ctApply._e===on&&ctApply._k===tc)f=ctApply._f;else{f=on.innerText.split('\n')[0].trim();ctApply._e=on;ctApply._k=tc;ctApply._f=f}}}catch(e){}const t=m?`▴ เปิดแผงโฟกัส${f?' · '+f:''}`:'▾ ย่อแผงโฟกัส';if(b.textContent!==t)b.textContent=t}
 window.ctToggle=function(){LS.set('murim_ctlmin',ctGet()?0:1);ctApply();try{const f=$('feed');if(f)f.scrollTop=f.scrollHeight}catch(e){}};
 function mount(){try{const sb=$('sceneBox');if(sb&&!$('scTog')){sb.insertAdjacentHTML('beforeend','<button id="scTog" type="button" onclick="scCycle(event)"></button>')}
  const r=document.querySelector('#game .ctrl .onrow');if(r&&!$('ctlTog'))r.insertAdjacentHTML('afterbegin','<button id="ctlTog" type="button" onclick="ctToggle()"></button>');scApply();ctApply()}catch(e){}}
@@ -38523,11 +38526,11 @@ const toggle=i=>{const c=choice._cur;if(!c||big(c))return;const o=c.opts[i];if(!
   AK.l.unshift({k,o:ov,oi:c.opts.filter(z=>z&&!z.skip).indexOf(o),t:plain(c.title).slice(0,60),ot:plain(o.t).slice(0,60),oo:c.opts.filter(z=>z&&!z.skip).slice(0,5).map(z=>plain(z.t).slice(0,60))});toast('🔒 จำคำตอบแล้ว ครั้งหน้าชะตาจะเลือกข้อนี้ให้')}
  save();paint();try{if(find(c))soon(c)}catch(e){}};
 const paint=()=>{try{const m=$('modal');if(!m||m.dataset.k!=='choice')return;const c=choice._cur;if(!c)return;
- m.querySelectorAll('.akB').forEach(b=>b.remove());m.querySelectorAll('.opt.akL').forEach(b=>b.classList.remove('akL'));const nt=m.querySelector('.akNt');if(nt)nt.remove();
+ m.querySelectorAll('.akB').forEach(b=>b.remove());m.querySelectorAll('.opt.akL,.opt.akH').forEach(b=>b.classList.remove('akL','akH'));const nt=m.querySelector('.akNt');if(nt)nt.remove();
  if(!(AK.n||AK.l.length)||offT())return;
  const bg=big(c),cur=lkOf(c),hit=find(c);
  if(bg){const h=m.querySelector('h3');if(h&&AK.n)h.insertAdjacentHTML('afterend','<div class="akNt tag2">✋ เรื่องสำคัญ ล็อกคำตอบไม่ได้ ต้องเลือกเอง</div>');return}
- m.querySelectorAll('.opt[data-i]').forEach(b=>{const i=+b.dataset.i,o=c.opts[i];if(!o||o.skip)return;const on=!!(hit&&hit.i===i);if(on)b.classList.add('akL');
+ m.querySelectorAll('.opt[data-i]').forEach(b=>{const i=+b.dataset.i,o=c.opts[i];if(!o||o.skip)return;const on=!!(hit&&hit.i===i);if(on)b.classList.add('akL');b.classList.add('akH');
   b.insertAdjacentHTML('beforeend',`<span class="akB${on?' on':''}" title="${on?'ปลดล็อก':'ล็อกคำตอบนี้'}">${on?'🔒':'🔓'}</span>`);const s=b.querySelector('.akB');s.onclick=e=>{e.stopPropagation();e.preventDefault();toggle(i)}});
  if(hit){const h=m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend',`<div class="akNt tag2">🔒 ล็อกไว้: ชะตาจะเลือก “${esc(hit.e.ot||'')}” ให้ · แตะ 🔒 ข้างตัวเลือกเพื่อปลดล็อก</div>`)}
  else if(cur){const h=m.querySelector('h3');if(h)h.insertAdjacentHTML('afterend','<div class="akNt tag2">🔒 เคยล็อกเหตุการณ์นี้ไว้ แต่ครั้งนี้ไม่มีตัวเลือกเดิม เลือกเองนะ</div>')}}catch(e){console.error('akPaint',e)}};
@@ -38586,7 +38589,7 @@ window.akPaid=async function(btn,pk){const f=$('supImg')&&$('supImg').files&&$('
  if(m.dataset.k==='menu'&&!m.querySelector('.akMo')){const hs=[...m.querySelectorAll('.mch15')].find(h=>/ตั้งค่า/.test(h.textContent)),nx=hs&&hs.nextElementSibling,g=(nx&&nx.classList.contains('mgrid')?nx:null)||m.querySelector('.mgrid');if(g)g.insertAdjacentHTML('afterbegin',`<button class="opt akMo" onclick="akMenu()">🔒 ล็อกคำตอบ<small>${AK.l.length?'จำไว้ '+AK.l.length+' เหตุการณ์ · ปลดล็อกได้ที่นี่':'จำคำตอบให้ชะตาเลือกเอง'}</small></button>`)}}catch(e){}return r}}
 // ปุ่มในหน้า VIP
 {const _vm=window.vipMenu;if(typeof _vm==='function')window.vipMenu=function(){const r=_vm.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.akVb')){const tb=m.querySelector('table'),b=tb||m.querySelector('.vcard')||m.querySelector('h3');if(b)b.insertAdjacentHTML(tb?'afterend':'beforebegin','<button class="gbtn akVb" style="width:100%;margin:4px 0" onclick="akMenu()">🔒 ล็อกคำตอบ VIP 1/2/3 ได้ฟรี 5/10/20 ช่อง</button>')}}catch(e){}return r}}
-const st=document.createElement('style');st.textContent=`#modal .opt{position:relative}#modal .opt:has(.akB){padding-right:44px}
+const st=document.createElement('style');st.textContent=`#modal .opt{position:relative}#modal .opt.akH{padding-right:44px}
 .akB{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:9px;border:1.5px dashed #9a8a6a66;font-size:15px;opacity:.75;cursor:pointer;background:#ffffff10}
 .akB.on{border:1.5px solid #e9b949;background:#e9b94930;opacity:1}#modal .opt.akL{border-color:#e9b949!important;box-shadow:0 0 0 2px #e9b94955 inset}
 .akNt{margin:-2px 0 6px;color:#b98a1c}.akC{margin:6px 0 2px;font-size:14px}.akC small{opacity:.7}.akM{height:8px;border-radius:9px;background:#8882;overflow:hidden;margin-bottom:8px}.akM i{display:block;height:100%;background:linear-gradient(90deg,#e9b949,#ffd77a)}
@@ -39334,7 +39337,7 @@ const st=document.createElement('style');st.textContent=`@property --z3a{syntax:
 .frw.fr-v3go>:first-child{border-radius:50%!important}
 
 ${KF.join('\n')}`;document.head.appendChild(st);
-const fit=()=>{try{document.querySelectorAll('.frw.fr-xa3').forEach(e=>{const w=e.offsetWidth;if(!w||e._z3w===w)return;e._z3w=w;e.style.setProperty('--s',w+'px');e.classList.toggle('z3big',w>=64);let q=e.parentElement;for(let k=0;q&&k<5&&q!==document.body&&q.id!=='modal';k++,q=q.parentElement){const c=getComputedStyle(q);if(/hidden|clip/.test(c.overflow+c.overflowX+c.overflowY)){q.style.overflow='visible';q.style.overflowX='visible';q.style.overflowY='visible'}if(/paint|strict|content/.test(c.contain||''))q.style.setProperty('contain','none','important')}})}catch(x){}};
+const fit=()=>{try{window._z3g&&window._z3g()}catch(x){}try{document.querySelectorAll('.frw.fr-xa3').forEach(e=>{const w=e.offsetWidth;if(!w||e._z3w===w)return;e._z3w=w;e.style.setProperty('--s',w+'px');e.classList.toggle('z3big',w>=64);let q=e.parentElement;for(let k=0;q&&k<5&&q!==document.body&&q.id!=='modal';k++,q=q.parentElement){const c=getComputedStyle(q);if(/hidden|clip/.test(c.overflow+c.overflowX+c.overflowY)){q.style.overflow='visible';q.style.overflowX='visible';q.style.overflowY='visible'}if(/paint|strict|content/.test(c.contain||''))q.style.setProperty('contain','none','important')}})}catch(x){}};
 try{new MutationObserver(()=>{clearTimeout(fit._t);fit._t=setTimeout(fit,60)}).observe(document.body,{childList:true,subtree:true})}catch(x){}
 addEventListener('resize',()=>{document.querySelectorAll('.frw.fr-xa3').forEach(e=>e._z3w=0);fit()});setTimeout(fit,500);setInterval(()=>{if(!document.hidden)fit()},1500)}
 
@@ -39347,7 +39350,9 @@ const _rf=bowFx;bowFx=function(){const r=_rf.apply(this,arguments);try{const o=$
  const vol=Math.min(1,((typeof VOL!=='undefined'&&VOL.b)||.7)*.9);const hadBgm=typeof bgmOn!=='undefined'&&bgmOn;try{if(hadBgm)stopBgm()}catch(e){}
  if(!RA){RA=new Audio('bowleg.mp3');RA.loop=true;RA.preload='auto'}RA.currentTime=0;RA.volume=0;RA.play().then(()=>fade(RA,vol,900)).catch(()=>{});
  const close=o.onclick;o.onclick=function(){fade(RA,0,500,()=>{RA.pause()});try{if(hadBgm)setTimeout(()=>{try{startBgm()}catch(e){}},550)}catch(e){}return close&&close.apply(this,arguments)}}catch(e){}return r}}
-(function(){const st=document.createElement('style');st.textContent='.frw.fr-xa3{z-index:6}*:has(>.frw.fr-xa3){overflow:visible!important}.frpick:has(.fr-xa3),.cav:has(.fr-xa3),.frprev:has(.fr-xa3),.frbig:has(.fr-xa3){position:relative;z-index:6;overflow:visible!important}';document.head.appendChild(st)})();
+(function(){const st=document.createElement('style');st.textContent='.frw.fr-xa3{z-index:6}*:has(>.frw.fr-xa3){overflow:visible!important}.frpick:has(.fr-xa3),.cav:has(.fr-xa3),.frprev:has(.fr-xa3),.frbig:has(.fr-xa3){position:relative;z-index:6;overflow:visible!important}';
+ // ⚡ perf: กฎ *:has(...) ทำให้ทุกองค์ประกอบในเว็บถูกตรวจซ้ำทุกครั้งที่คำนวณสไตล์ → เปิดใช้เฉพาะตอนมีกรอบ fr-xa3 อยู่ในหน้าจริง (กฎพวกนี้จับคู่ได้ก็ต่อเมื่อมีกรอบนี้อยู่แล้ว ผลเหมือนเดิม)
+ st.media='not all';document.head.appendChild(st);let gl=0;window._z3g=()=>{const on=!!document.querySelector('.frw.fr-xa3');if(on!==gl){gl=on;st.media=on?'all':'not all'}};window._z3g()})();
 (function(){const st=document.createElement('style');st.textContent='.frw.fr-xa3 .z3tag{display:none!important}';document.head.appendChild(st)})();
 
 (function(){const st=document.createElement('style');st.textContent='#chatBox .cav:has(.fr-xa3),.cav:has(.fr-xa3){contain:none!important;position:relative;z-index:6;overflow:visible!important}#chatBox .cm:has(.fr-xa3){contain:none!important;overflow:visible!important}';document.head.appendChild(st)})();
@@ -40109,6 +40114,14 @@ const P=s=>{s=s||'';let m=/color\(srgb ([^)]+)\)/.exec(s);if(m){const v=m[1].spl
 const L=c=>{const f=x=>{x/=255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)};return .2126*f(c[0])+.7152*f(c[1])+.0722*f(c[2])};
 const CR=(a,b)=>{const x=L(a),y=L(b);return(Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
 const over=(t,b)=>[t[0]*t[3]+b[0]*(1-t[3]),t[1]*t[3]+b[1]*(1-t[3]),t[2]*t[3]+b[2]*(1-t[3]),1];
+// ⚡ perf: bgOfM = bgOf เดิมแต่จำผลต่อสายพ่อแม่ (ต่อรอบสแกน) — ไม่ไล่ getComputedStyle ซ้ำทุกลูก · ผลลัพธ์เท่าเดิม
+function bgBase(){return document.body.classList.contains('dark')||/mono|jade|ember|gold|royal/.test(document.body.className)?[20,18,26,1]:[250,246,238,1]}
+function bgOfM(e,C){if(!e||e.nodeType!==1)return bgBase();if(C.has(e))return C.get(e);const cs=getComputedStyle(e),own=[];let stop=false,res;
+  if(cs.backgroundImage&&cs.backgroundImage!=='none'&&/gradient/.test(cs.backgroundImage)){const cols=(cs.backgroundImage.match(/(rgba?|color)\([^)]+\)/g)||[]).map(P).filter(Boolean);if(cols.length){const avg=[0,1,2].map(i=>cols.reduce((s,c)=>s+c[i],0)/cols.length),al=cols.reduce((s,c)=>s+c[3],0)/cols.length;own.push([...avg,al]);if(al>.85)stop=true}}
+  if(!stop){const c=P(cs.backgroundColor);if(c&&c[3]>.02){own.push(c);if(c[3]>.85)stop=true}}
+  if(!stop&&cs.backgroundImage&&/url\(/.test(cs.backgroundImage))res=null;
+  else{let base=stop?bgBase():bgOfM(e.parentElement,C);if(base===null)res=null;else{for(let i=own.length-1;i>=0;i--)base=over(own[i],base);res=base}}
+  C.set(e,res);return res}
 function bgOf(el){const stack=[];let e=el;while(e&&e.nodeType===1){const cs=getComputedStyle(e);
   if(cs.backgroundImage&&cs.backgroundImage!=='none'&&/gradient/.test(cs.backgroundImage)){const cols=(cs.backgroundImage.match(/(rgba?|color)\([^)]+\)/g)||[]).map(P).filter(Boolean);if(cols.length){const avg=[0,1,2].map(i=>cols.reduce((s,c)=>s+c[i],0)/cols.length),al=cols.reduce((s,c)=>s+c[3],0)/cols.length;stack.push([...avg,al]);if(al>.85)break}}
   const c=P(cs.backgroundColor);if(c&&c[3]>.02){stack.push(c);if(c[3]>.85)break}
@@ -40116,14 +40129,16 @@ function bgOf(el){const stack=[];let e=el;while(e&&e.nodeType===1){const cs=getC
  let base=document.body.classList.contains('dark')||/mono|jade|ember|gold|royal/.test(document.body.className)?[20,18,26,1]:[250,246,238,1];
  for(let i=stack.length-1;i>=0;i--)base=over(stack[i],base);return base}
 const SKIP=/^(SCRIPT|STYLE|CANVAS|SVG|IMG|VIDEO|INPUT|TEXTAREA|SELECT|OPTION|BR)$/;
-function fix(el){if(!el||el.nodeType!==1||SKIP.test(el.tagName)||el.closest('svg'))return;let txt=false;for(const n of el.childNodes)if(n.nodeType===3&&n.nodeValue.trim()){txt=true;break}if(!txt)return;
+function fix(el,W,C){if(!el||el.nodeType!==1||SKIP.test(el.tagName)||el.closest('svg'))return;let txt=false;for(const n of el.childNodes)if(n.nodeType===3&&n.nodeValue.trim()){txt=true;break}if(!txt)return;
  const cs=getComputedStyle(el);if(cs.visibility==='hidden'||cs.display==='none'||+cs.opacity<.15)return;const fg=P(cs.color);if(!fg||fg[3]<.15)return;if(/text/.test(cs.webkitBackgroundClip||cs.backgroundClip||''))return;
- const bg=bgOf(el);if(!bg)return;const f=over(fg,bg),r=CR(f,bg),big=parseFloat(cs.fontSize)>=18||(parseFloat(cs.fontSize)>=14&&+cs.fontWeight>=700),need=big?3:4.2;
- if(r>=need)return;const light=L(bg)>.4;el.style.setProperty('color',light?'#1c1408':'#f6efe2','important');el.style.setProperty('-webkit-text-fill-color',light?'#1c1408':'#f6efe2','important');el.dataset.cfix=light?'d':'l'}
+ const bg=C?bgOfM(el,C):bgOf(el);if(!bg)return;const f=over(fg,bg),r=CR(f,bg),big=parseFloat(cs.fontSize)>=18||(parseFloat(cs.fontSize)>=14&&+cs.fontWeight>=700),need=big?3:4.2;
+ if(r>=need)return;const light=L(bg)>.4;const wr=()=>{el.style.setProperty('color',light?'#1c1408':'#f6efe2','important');el.style.setProperty('-webkit-text-fill-color',light?'#1c1408':'#f6efe2','important');el.dataset.cfix=light?'d':'l'};if(W)W.push([el,wr]);else wr()}
 function unfix(root){for(const e of (root||document).querySelectorAll('[data-cfix]')){e.style.removeProperty('color');e.style.removeProperty('-webkit-text-fill-color');delete e.dataset.cfix}}
 // แคช: ตรวจแล้วจำไว้ต่อองค์ประกอบ (คลาส+สไตล์+คลาสของพ่อ) ตรวจซ้ำเฉพาะเมื่อเปลี่ยน — เดิมเรียก getComputedStyle ไล่ทั้งสายทุกครั้งที่ข้อความเปลี่ยน
 let FCK=new WeakMap();const fsig=e=>{const p=e.parentElement;return(e.getAttribute('class')||'')+'|'+(e.getAttribute('style')||'')+'|'+(p?(p.getAttribute('class')||''):'')};
-function scan(root,max){if(!root||root.nodeType!==1)return;const all=[root,...root.querySelectorAll('*')];let n=0;for(const e of all){if(++n>(max||1500))break;try{if(FCK.get(e)===fsig(e))continue;fix(e);FCK.set(e,fsig(e))}catch(x){}}}
+// ⚡ perf: อ่านทั้งหมดก่อนแล้วค่อยเขียนทีเดียว (เดิมอ่าน→เขียน→อ่าน สลับกัน ทำให้เบราว์เซอร์คำนวณสไตล์ใหม่ซ้ำหลายสิบรอบตอนเปิดเมนู)
+function scan(root,max){if(!root||root.nodeType!==1)return;const all=[root,...root.querySelectorAll('*')],W=[],C=new Map(),done=[];let n=0;for(const e of all){if(++n>(max||1500))break;try{if(FCK.get(e)===fsig(e))continue;fix(e,W,C);done.push(e)}catch(x){}}
+ for(const [el,wr] of W){try{wr()}catch(x){}}for(const e of done){try{FCK.set(e,fsig(e))}catch(x){}}}
 window.cfixScan=scan;
 // ของใหม่ในหน้า
 const Q=new Set();let tm=0;
@@ -42998,7 +43013,7 @@ window.mDockUp=function(){try{const d=$$('mDock');if(!d)return;const p=d.querySe
 function swipeUp(el){let y0=null;el.addEventListener('touchstart',e=>{y0=e.touches[0].clientY},{passive:true});el.addEventListener('touchmove',e=>{if(y0!==null&&y0-e.touches[0].clientY>24){y0=null;mImmTog(false)}},{passive:true});el.addEventListener('click',()=>mImmTog(false))}
 
 // ---------- ป้ายปุ่มฝึก ----------
-function focLbl(){try{const b=$$('mFoc');if(!b)return;const on=document.querySelector('#focus .fc.on');let ic='🥋',tx='ฝึก';if(on){const s=(on.innerText||'').trim();const m=s.match(/^(\p{Extended_Pictographic}️?(‍\p{Extended_Pictographic}️?)*)/u);if(m)ic=m[1];const w=s.replace(m?m[1]:'','').trim().split(/[\s·(]/)[0];if(w&&!on.disabled)tx=w}
+function focLbl(){try{const b=$$('mFoc');if(!b)return;const on=document.querySelector('#focus .fc.on');let ic='🥋',tx='ฝึก';if(on){const tc=on.textContent+'|'+on.disabled;let s;if(focLbl._e===on&&focLbl._k===tc)s=focLbl._s;else{s=(on.innerText||'').trim();focLbl._e=on;focLbl._k=tc;focLbl._s=s}const m=s.match(/^(\p{Extended_Pictographic}️?(‍\p{Extended_Pictographic}️?)*)/u);if(m)ic=m[1];const w=s.replace(m?m[1]:'','').trim().split(/[\s·(]/)[0];if(w&&!on.disabled)tx=w}
  const h=`${ic}<small class="cbL">${tx}</small>`;if(b.innerHTML!==h)b.innerHTML=h;b.style.display=document.querySelector('#focus .fc')?'':'none'}catch(e){}}
 
 // ---------- แผ่นจากล่าง: ย้ายของเข้าไปชั่วคราว ----------
@@ -43099,13 +43114,15 @@ try{if(typeof window.owSync!=='function'&&window._owb&&window._owb.owSync)window
 // BLOCK 149: 🌐 หน้าต่างออนไลน์ (แท็บแชท) — กล่องแชทสูงตายตัว 460px ทำให้ช่องพิมพ์/ปุ่มส่งหล่นไปใต้จอ ต้องเลื่อนหน้าต่างลงถึงจะเห็น (ทั้งคอมและมือถือ)
 // แก้: หน้าต่างสูงพอดีจอ · กล่องแชทยืด/หดตามที่ว่าง · ช่องพิมพ์อยู่ล่างสุดเห็นตลอด
 try{(()=>{const st=document.createElement('style');st.textContent=`
-#modal[data-k="online"]:has(> #chatBox){display:flex!important;flex-direction:column;overflow:hidden!important;height:calc(100vh - 48px);height:calc(100dvh - 48px)}
-body.mUI #mask.mSh #modal[data-k="online"]:has(> #chatBox){height:90vh;height:90dvh}
-#modal[data-k="online"]:has(> #chatBox) > *{flex-shrink:0}
-#modal[data-k="online"]:has(> #chatBox) > #chatBox{flex:1 1 0!important;height:auto!important;min-height:120px;max-height:none!important}
-#modal[data-k="online"]:has(> #chatBox) > .gdTip{max-height:26vh;overflow:auto}
-#modal[data-k="online"]:has(> #chatBox) > .xbtn,#modal[data-k="online"]:has(> #chatBox) > .mGrab{flex-shrink:0}
+#modal[data-k="online"].hasChat{display:flex!important;flex-direction:column;overflow:hidden!important;height:calc(100vh - 48px);height:calc(100dvh - 48px)}
+body.mUI #mask.mSh #modal[data-k="online"].hasChat{height:90vh;height:90dvh}
+#modal[data-k="online"].hasChat > *{flex-shrink:0}
+#modal[data-k="online"].hasChat > #chatBox{flex:1 1 0!important;height:auto!important;min-height:120px;max-height:none!important}
+#modal[data-k="online"].hasChat > .gdTip{max-height:26vh;overflow:auto}
+#modal[data-k="online"].hasChat > .xbtn,#modal[data-k="online"].hasChat > .mGrab{flex-shrink:0}
 `;document.head.appendChild(st);
+// ⚡ perf: เดิมใช้ :has(> #chatBox) ทำให้ทุกครั้งที่เพิ่มปุ่ม/โหนดในหน้าต่าง เบราว์เซอร์ต้องคำนวณสไตล์ลูกทุกตัวใหม่ (ช้าแค่เปิดเมนู) → ใช้คลาส .hasChat ที่สลับตอนลูกตรงของ #modal เปลี่ยนเท่านั้น (ผลลัพธ์หน้าตาเหมือนเดิมทุกอย่าง)
+{const M=document.getElementById('modal');if(M){const sync=()=>{const on=M.dataset.k==='online'&&!!M.querySelector(':scope>#chatBox');if(M.classList.contains('hasChat')!==on)M.classList.toggle('hasChat',on)};new MutationObserver(sync).observe(M,{childList:true,attributes:true,attributeFilter:['data-k']});sync()}}
 // เลื่อนแชทขึ้นดูข้อความเก่า (นิ้วลากลง) ไม่ให้ไปลากหน้าต่างปิด
 setInterval(()=>{try{const c=document.getElementById('chatBox');if(c&&!c._b149){c._b149=1;c.addEventListener('touchstart',e=>{if(c.scrollTop>0)e.stopPropagation()},{passive:true})}}catch(e){}},700)})()}catch(e){console.error('block149',e)}
 // ============================================================
@@ -45240,7 +45257,9 @@ function pass(h){const rows=rowsOf(h);if(!rows.length)return;const fresh=rows.fi
  later(step,60)}
 const later0=(f,ms)=>setTimeout(()=>{try{f()}catch(e){}},ms);
 function scan(){try{for(const s of HOSTS){const h=document.querySelector(s);if(!h||!h.isConnected||h.offsetParent===null&&getComputedStyle(h).position!=='fixed')continue;pass(h);if(h._rvPend&&!fast()&&!RUN){h._rvPend=0;oddsShow(h,true)}}}catch(e){console.error('rv scan',e)}}
-let q=0;new MutationObserver(ms=>{if(q)return;let hit=false;for(const m of ms){for(const n of m.addedNodes){if(n.nodeType===1&&!(n.className&&typeof n.className==='string'&&/^rv/.test(n.className))){hit=true;break}}if(hit)break}if(!hit)return;q=requestAnimationFrame(()=>{q=0;scan()})}).observe(document.body,{childList:true,subtree:true});
+// ⚡ perf: สแกนเฉพาะเมื่อมีโหนดใหม่ในจอที่เป็นเป้าหมาย (เดิมสแกนทุกครั้งที่ DOM ตรงไหนก็ได้เปลี่ยน → บังคับเลย์เอาต์ทั้งหน้า ทำให้เปิดเมนูหน่วง)
+const HS_RV=HOSTS.join(',');
+let q=0;new MutationObserver(ms=>{if(q)return;let hit=false;for(const m of ms){for(const n of m.addedNodes){if(n.nodeType===1&&!(n.className&&typeof n.className==='string'&&/^rv/.test(n.className))&&(n.closest(HS_RV)||n.querySelector(HS_RV))){hit=true;break}}if(hit)break}if(!hit)return;q=requestAnimationFrame(()=>{q=0;scan()})}).observe(document.body,{childList:true,subtree:true});
 setInterval(scan,1000);
 document.addEventListener('pointerdown',e=>{if(RUN&&!(e.target.closest&&e.target.closest('button,input,select,a')))finish()},true);
 window.rvSkip=finish;
