@@ -36596,11 +36596,11 @@ const segBtn=(k,v)=>document.querySelector(`#title .seg[data-k="${k}"] button[da
 const click=(k,v)=>{const b=segBtn(k,v);if(b&&!b.classList.contains('on'))b.click();return !!b};
 function cur(){try{if(CFG.mw)return'mw';if(CFG.chm===5)return'soul';if(CFG.chm===4)return'loop';return CFG.xian?'xian':'murim'}catch(e){return'murim'}}
 let SEL=null;
-function apply(w){try{window._skySel=!!w.sky;if(w.fog){SEL='fog';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}if(w.sky){SEL='sky';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}if(w.beast){SEL='beast';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}
+function apply(w){try{window._skySel=!!w.sky;window._fogSel=!!w.fog;if(w.fog){SEL='fog';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}if(w.sky){SEL='sky';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}if(w.beast){SEL='beast';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}
  if(w.mw){const b=document.querySelector('#title .seg[data-k="xian"] .mwopt');if(b){if(!b.classList.contains('on'))b.click()}else CFG.mw=1;SEL='mw';return}
  click('xian',w.x);CFG.mw=0;if(w.c)click('chm',w.c);else if(CFG.chm>=4)click('chm',0);SEL=w.k}catch(e){console.error('wp',e)}}
 function go(k){const w=W.find(x=>x.k===k);if(!w)return;apply(w);try{LS.set('murim_wlast',{k,c:CFG.chm|0})}catch(e){}
- if(w.fog){try{fogStart()}catch(e){console.error(e)}return}if(w.sky){try{skyStart()}catch(e){console.error(e)}return}if(w.beast){try{goBeastLife()}catch(e){}return}try{goBirthPick()}catch(e){try{goBirth()}catch(x){}}}
+ if(w.fog){window._fogSel=0;try{fogStart()}catch(e){console.error(e)}return}if(w.sky){try{skyStart()}catch(e){console.error(e)}return}if(w.beast){try{goBeastLife()}catch(e){}return}try{goBirthPick()}catch(e){try{goBirth()}catch(x){}}}
 window.wpGo=go;
 window.wpSel=function(k){const w=W.find(x=>x.k===k);if(!w)return;apply(w);paint();try{const c=document.querySelector(`#wPick .wc[data-k="${k}"]`);if(c)c.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}catch(e){}};
 window.wpChal=function(v){const w=W.find(x=>x.k===(SEL||cur()));if(!w||!w.ch)return toast('ความท้าทายใช้ได้กับยุทธภพและโลกเทพเซียน');if(v==='ab'){if(!abU())return toast('🕳️ ผ่านนรกให้ถึงชั้น 100 ก่อน ถึงจะเปิดอเวจีได้');click('chm',1);abSet(1);paint();return toast('🕳️ เปิดโหมดอเวจี 1000 ชั้น')}if(v===1)abSet(0);click('chm',v);paint()};
@@ -41749,6 +41749,7 @@ const idle=window.requestIdleCallback||(f=>setTimeout(f,3000));setTimeout(()=>id
 setTimeout(()=>idle(()=>{wLoad('sky').catch(()=>{})}),8000);
 // 🌫️ นครม่านหมอก อยู่ที่ /w/fog.js — ทางเข้า: การ์ดหน้าเลือกโลก · โหลดเซฟที่อยู่ในโลกนี้
 {const stub=function(){const a=arguments,t=this;return wNeed('fog',()=>{if(window.fogStart===stub)throw new Error('fogStart missing');return window.fogStart.apply(t,a)})};if(!R.fog)window.fogStart=stub}
+{const _gbF=goBirthPick;goBirthPick=function(){if(window._fogSel){window._fogSel=0;try{return fogStart()}catch(e){console.error(e)}}return _gbF.apply(this,arguments)};const _gbF2=goBirth;goBirth=function(){if(window._fogSel){window._fogSel=0;try{return fogStart()}catch(e){console.error(e)}}return _gbF2.apply(this,arguments)}}
 {const _lg=loadGame;loadGame=function(n){try{if(!R.fog){const d=readSave(n||1);if(d&&d.S&&d.S.mw&&d.S.mw.fog){const a=arguments,t=this;return wNeed('fog',()=>loadGame.apply(t,a))}}}catch(e){}return _lg.apply(this,arguments)}}
 })()}catch(e){console.error('block117',e)}
 
