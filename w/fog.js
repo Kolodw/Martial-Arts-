@@ -143,7 +143,7 @@ const tName=K=>K.path&&K.tier>0?PATH[K.path].t[K.tier-1]:'คนธรรมด�
 const offName=K=>K.path?PATH[K.path].o[Math.min(8,K.tier)]:'';
 function sync(){const K=FG();if(!K)return;const cap=capOf(K.tier)*(has(K,'jade')?1.3:1);K.pw=Math.min(K.pw,cap);S.power=Math.round(K.pw);const mh=Math.round(60+K.tier*22+(K.path==='debt'?K.tier*12:0));if(S.maxHp<mh)S.maxHp=mh;
  S.mw.end=Math.round((K.endB||72)+K.tier*6);S.money=Math.max(0,Math.round(S.money||0))}
-function anc(d){const K=FG();if(!K)return'';const old=K.anc;K.anc=cl(K.anc+d,0,100);const r=Math.round(K.anc-old);return r?` · ⚓ ${r>0?'+':''}${r}`:''}
+function anc(d){const K=FG();if(!K)return'';const old=K.anc;K.anc=cl(K.anc+d,0,K.lost?ancMax(K):100);const r=Math.round(K.anc-old);return r?` · ⚓ ${r>0?'+':''}${r}`:''}
 function cash(v){S.money=Math.max(0,Math.round((S.money||0)+v));return` · 🪙 ${v>=0?'+':''}${fmt(Math.round(v))}`}
 function rep(k,d){const K=FG();if(!K||!FAC[k])return'';K.rep[k]=cl((K.rep[k]||0)+d,-100,100);K.enc.f[k]=1;if(d>0)(FOE[k]||[]).forEach(o=>{K.rep[o]=cl((K.rep[o]||0)-Math.round(d*.4),-100,100)});return` · ${FAC[k].ic}${d>0?'+':''}${d}`}
 function fame(d){S.fame=Math.max(0,Math.round((S.fame||0)+d));return d?` · ⭐ ${d>0?'+':''}${fmt(d)}`:''}
@@ -158,7 +158,7 @@ const threat=K=>Math.max(8,capOf(Math.max(1,K.tier))*.55);
 // =================== คิวเหตุการณ์ ===================
 const QU=[];function queue(f){QU.push(f)}
 let FL=0;function flush(){if(!QU.length||FL)return;FL=1;const go=()=>{if(!on()){QU.length=0;FL=0;return}if(choice._cur||modalOpen)return setTimeout(go,700);const f=QU.shift();if(typeof f==='function')try{f()}catch(e){console.error('fog ev',e)}if(QU.length)setTimeout(go,900);else FL=0};setTimeout(go,300)}
-const C=(t,x,o)=>{try{setScene('fog')}catch(e){}return choice(t,x,o)};
+const C=(t,x,o)=>{try{setScene('fog')}catch(e){}try{const K=FG();if(K&&K.anc<25&&Array.isArray(o)&&o.length>=2&&rnd()<.45)o=o.concat([halOpt(K)])}catch(e){}return choice(t,x,o)};
 
 // =================== เริ่มชีวิต ===================
 window.fogStart=function(){window._frS=1;try{closeM()}catch(e){}
@@ -184,7 +184,7 @@ const FOK=[
  ['fg_power','✴️','ฝึกพลังสาย',K=>age()>=15&&K.tier>0],['fg_hunt','🕯️','ล่าสิ่งผิดธรรมชาติ',K=>age()>=17&&K.tier>0],
  ['fg_kin','🫂','อยู่กับคนที่รัก',K=>age()>=15],['fg_rest','☕','ใช้ชีวิตธรรมดา',K=>age()>=15]];
 const fList=K=>FOK.filter(f=>f[3](K));
-function fogYear(){const K=FG();try{if(auto)autoFocus()}catch(e){}S.age++;S.mw.y++;K.yr++;try{ensureHeader()}catch(e){}const f=S.focus,p=P(K),t=K.tier;
+function fogYear(){const K=FG();ensure(K);try{if(auto)autoFocus()}catch(e){}S.age++;S.mw.y++;K.yr++;try{ensureHeader()}catch(e){}const f=S.focus,p=P(K),t=K.tier;
  const work=Math.round((35+(S.int||0)*.6+t*40)*(p?p.earn:1)*(K.bg==='dock'?1.1:1));
  if(f==='fg_study'){S.int+=R(2,5);feed('📚 เรียนที่โรงเรียนวัดและอ่านหนังสือพิมพ์เก่าทุกฉบับ · ปัญญา +')}
  else if(f==='fg_street'){S.cha+=R(1,3);let t2='🏃 วิ่งเล่นในตรอกกับ'+K.friend+' รู้จักทุกซอกของ'+K.dist;if(rnd()<.25){K.f.peek=(K.f.peek|0)+1;t2+=' · เห็นอะไรบางอย่างในหมอกที่ผู้ใหญ่ไม่เห็น'}feed(t2)}
@@ -199,10 +199,14 @@ function fogYear(){const K=FG();try{if(auto)autoFocus()}catch(e){}S.age++;S.mw.y
  yearFx(K);
  // เรื่องที่นัดไว้
  if(K.later.length){const due=K.later.filter(x=>x[0]<=S.age);K.later=K.later.filter(x=>x[0]>S.age);due.forEach(x=>{const fn=LATER[x[1]];if(fn)queue(()=>fn(K,x[2]))})}
+ // เส้นเรื่องหลัก · ผลย้อนหลัง · คู่หู · จดหมายท้าทาย
+ if(age()>=15){if(!arcTick(K)&&!echoTick(K)&&K.pt&&K.pt.alive&&!K.pt.rv&&(K.f.solved|0)>=3)queue(()=>ptArc(K));if(K.nem&&!K.nem.done&&K.nem.let.length<3&&rnd()<.08)nemLetter(K)}
  // ปลุกตรา
  if(!K.path&&!K.awk&&age()>=16&&(rnd()<.22+(K.f.peek|0)*.04||age()>=23))queue(()=>evAwake(K));
  // พิธีข้ามธรณี
  if(ready(K)&&(auto||rnd()<.25)&&!QU.length)queue(()=>riteAsk(K));
+ // คดีค้าง (โหลดเซฟ/ปิดกระดาน) → ทำต่อ
+ if(K.cur&&K.cur.v2&&(!K.cur.bz||Date.now()-K.cur.bz>8000)&&!choice._cur&&!MG&&!QU.length)queue(()=>{if(K.cur)K.cur.rd>3?board(K):(K.cur.rd=Math.max(0,K.cur.rd-1),round(K))});
  // คดี
  const pCase=age()<14?0:(K.f.invY===S.age?.65:.28)+(K.tier?.07:0);
  if(!QU.length&&!K.cur&&rnd()<pCase)queue(()=>caseStart(K));
@@ -249,63 +253,25 @@ window.fogRite=function(){const K=FG();if(!K)return;closeM();if(!ready(K))return
 function riteAsk(K){if(!ready(K))return;const p=P(K),nx=K.tier+1,o=offName(K);const L=[
  O('📜 ทำตามขั้นตอนอย่างเคร่งครัด',()=>rite(K,'calm'),'ปลอดภัยที่สุด'+pc(riteP(K,'calm')),riteP(K,'calm'))];
  if(K.arts.length)L.push(O('🗝️ ใช้วัตถุลึกลับช่วยค้ำพิธี',()=>rite(K,'art'),'สำเร็จง่ายขึ้น แต่หลักยึด −5'+pc(riteP(K,'art')),riteP(K,'art')*.9));
+ if(K.mem&&K.mem.length)L.push(O('🧠 จ่ายด้วยความทรงจำแทนหลักยึด',()=>rite(K,'mem'),'ไม่เสียหลักยึด แต่ลืมบางอย่างไปตลอดกาล'+pc(riteP(K,'calm')),K.anc<35?riteP(K,'calm'):.05));
  L.push(O('🔥 เร่งพิธีให้จบในคืนเดียว',()=>rite(K,'rush'),'หลักยึดเสียเป็นสองเท่า'+pc(riteP(K,'rush')),K.anc>50?riteP(K,'rush')*.8:.05));
  L.push(O('⏳ ยังไม่พร้อม',()=>feed('⏳ คุณเก็บเครื่องสังเวยไว้ในกล่อง รอคืนที่ใจนิ่งกว่านี้'),'',.15));
  C(`🚪 พิธีข้ามธรณีที่ ${nx}`,`คุณวาง<b>${esc(o)}</b>ไว้กลางวงชอล์ก จุดตะเกียงแปดดวงตามทิศของเสียงระฆัง แล้วท่องชิ้นความจริงที่สะสมมา ${needIns(K.tier)} ชิ้น<br>ถ้าสำเร็จจะเป็น <b>${p.ic} ${p.t[nx-1]}</b><br><span class="tag2">⚓ หลักยึดตอนนี้ ${Math.round(K.anc)} · ยิ่งต่ำยิ่งเสี่ยงถูกกลืน</span>`,L)}
-function rite(K,m){const p=P(K),pr=riteP(K,m),cost=Math.round((6+K.tier*1.5)*(m==='rush'?2:1)*(has(K,'bellx')?.6:1)+(m==='art'?5:0));
+function rite(K,m){const p=P(K),pr=riteP(K,m==='mem'?'calm':m),cost=m==='mem'?0:Math.round((6+K.tier*1.5)*(m==='rush'?2:1)*(has(K,'bellx')?.6:1)+(m==='art'?5:0));let ml='';if(m==='mem')ml=memLose(K,'ค่าพิธีข้ามธรณี');
  if(rnd()<pr){K.ins-=needIns(K.tier);K.tier++;K.lore=Math.max(K.lore,K.tier);K.pw=Math.max(K.pw,capOf(K.tier)*.45);S.maxHp=Math.round(S.maxHp*1.12);sync();
-  say(`🚪 <b>ข้ามธรณีที่ ${K.tier} สำเร็จ — ${p.ic} ${p.t[K.tier-1]}</b> เสียงจากหลังม่านชัดขึ้นอีกระดับ${anc(-cost)}${K.lore<=LORE.length?` · 📚 ปลดความจริงของโลก: 「${LORE[Math.min(LORE.length,K.tier)-1][0]}」`:''}`,'myth',true);
+  say(`🚪 <b>ข้ามธรณีที่ ${K.tier} สำเร็จ — ${p.ic} ${p.t[K.tier-1]}</b> เสียงจากหลังม่านชัดขึ้นอีกระดับ${anc(-cost)}${ml}${K.lore<=LORE.length?` · 📚 ปลดความจริงของโลก: 「${LORE[Math.min(LORE.length,K.tier)-1][0]}」`:''}`,'myth',true);
   try{island({big:1,ic:p.ic,h:`ธรณีที่ ${K.tier}`,t:p.t[K.tier-1],kind:'gold',ms:5000})}catch(e){}try{keyAdd(`${S.age} ปี — ข้ามธรณีที่ ${K.tier} (${p.t[K.tier-1]})`)}catch(e){}
   if(K.tier>=9)K.later.push([S.age+1,'final'])}
  else{const lost=rnd()<.5;if(lost)K.off=K.tier;say(`💥 พิธีล้มเหลว ตะเกียงดับพร้อมกันทั้งแปดดวง${anc(-(cost*2))}${hurt(.3)}${lost?' · เครื่องสังเวยไหม้เป็นเถ้า':''}`,'bad',true);
   if(K.anc<15&&rnd()<.35){K.f.swallow=1;S.deathCause='ถูกเสียงจากหลังม่านกลืนกลางพิธี กลายเป็นเงาร้างที่ยังเดินวนในหมอก';say('🕳️ เสียงจากหลังม่านดังเกินกว่าจะทนไหว…','bad',true);setTimeout(()=>{try{checkDeath()}catch(e){}},400)}}
  sync();render()}
 
-// =================== คดีสืบสวน ===================
-function caseStart(K){if(K.cur)return;const done=new Set(K.cases.map(c=>c.id));let L=CASE.filter(c=>!done.has(c.id)&&(!c.x||legName()));if(!L.length)L=CASE.slice();
- const W=L.map(c=>(c.th===K.path?3:1)*(c.d<=1+K.tier*.08?1.4:1));let r=rnd()*W.reduce((a,b)=>a+b,0),i=0;while(i<L.length-1&&(r-=W[i])>0)i++;const T=L[i];
- const sus=T.sus.map(s=>({r:s[0],m:s[1],n:pick(FN)+' '+pick(LN)}));const cul=Math.floor(rnd()*3);
- K.cur={id:T.id,cul,sus,pt:[0,0,0],notes:[],st:0,y:S.age,retry:has(K,'watch')?1:0,L:legName()||'ผู้เดินทางนิรนาม'};
- if(has(K,'mirror'))clue(K,1,'🪞 กระจกในกระเป๋าสะท้อนใบหน้าที่ไม่ใช่คุณ');
- const txt=T.in.replace(/\{L\}/g,esc(K.cur.L));
- C(`${T.ic} คดี: ${T.n}`,`${txt}<br><span class="tag2">ผู้ต้องสงสัย: ${sus.map(s=>`<b>${esc(s.n)}</b> (${s.r})`).join(' · ')}${T.th===K.path?' · 🧩 คดีนี้ตรงกับสายของคุณ (ชิ้นความจริง ×2)':''}</span>`,[
-  O('🔎 รับคดี',()=>{K.enc.d[pick(DIST)]=1;step(K)},'',.75),
-  O('🏮 ส่งเรื่องให้หน่วยตะเกียงเทา',()=>{feed(`🏮 คุณส่งรายละเอียดคดีให้หน่วยตะเกียงเทา${rep('lamp',4)}${cash(20)}`);K.cases.push({id:T.id,y:S.age,r:'pass'});K.cur=null},'ไม่เสี่ยง · ไม่ได้ชิ้นความจริง',.15),
-  O('🚶 ไม่ยุ่ง',()=>{K.cur=null;feed('🚶 คุณทำเป็นไม่ได้ยินข่าวนั้น แต่ภาพมันยังติดตาอยู่หลายคืน')},'',.1)])}
-const CT=id=>CASE.find(c=>c.id===id);
-function clue(K,n,src,force){const c=K.cur;if(!c)return'';const T=CT(c.id),out=[];for(let i=0;i<n;i++){const truth=force||rnd()<.72;const who=truth?c.cul:pick([0,1,2].filter(x=>x!==c.cul));c.pt[who]++;
- const line=pick(T.cl).replace(/\{s\}/g,`<b>${esc(c.sus[who].n)}</b>`).replace(/\{L\}/g,esc(c.L));c.notes.push((src?src+' — ':'')+line);out.push(line)}return out.length?`<br>🧩 ${out.join('<br>🧩 ')}`:''}
-function chk(K,p){if(rnd()<p)return true;const c=K.cur;if(c&&c.retry){c.retry=0;feed('🕰️ เข็มนาฬิกาพกเดินถอยหลัง… คุณได้ลองอีกครั้ง');return rnd()<p}return false}
-function step(K){const c=K.cur;if(!c)return;const T=CT(c.id),p=P(K);c.st++;
- if(c.st===2&&rnd()<.35+(has(K,'lamp')?.15:0)){return danger(K,T.an,`ระหว่างสืบคดี ${T.n} คุณเจอ<b>${T.an}</b>เข้ากับตัว`,()=>step2(K))}
- if(c.st>=4)return accuse(K);
- const sP=cl(.4+(S.int||0)/((S.int||0)+160)*.45+(has(K,'glove')?.15:0),.1,.95)*(p?Math.min(1.15,p.inv/1.2):1),tP=cl(.4+(S.cha||0)/((S.cha||0)+160)*.45+(has(K,'violin')?.15:0)+(has(K,'mask')?.2:0),.1,.95)*(p?Math.min(1.2,p.soc/1.1):1),cost=Math.round(25*Math.pow(1+K.tier,1.4));
- const L=[O('🔍 ค้นที่เกิดเหตุ',()=>{if(chk(K,sP))feed(`🔍 ค้นทุกซอกจนเจอสิ่งที่คนอื่นมองข้าม${clue(K,1,'ค้นที่เกิดเหตุ')}`);else feed('🔍 ค้นทั้งวันไม่เจออะไร ฝนตกล้างรอยไปหมด');next(K)},'ใช้ปัญญา'+pc(sP),sP),
-  O('🗣️ สอบปากคำ',()=>{if(chk(K,tP))feed(`🗣️ พยานยอมเล่าเรื่องที่ไม่เคยบอกตำรวจ${clue(K,1,'สอบปากคำ')}`);else feed('🗣️ ไม่มีใครยอมพูด ประตูปิดใส่หน้าคุณทุกบาน');next(K)},'ใช้เสน่ห์'+pc(tP),tP)];
- if(K.tier>0)L.push(O(`${p.ic} ใช้พลัง: ${p.ab}`,()=>{feed(`${p.ic} ${p.ab}${clue(K,K.path===T.th?2:1,'พลังสาย'+p.n,1)}${anc(-(4+Math.round(K.tier*.6)))}`);if(K.path==='debt')K.debt+=1;next(K)},'เบาะแสจริงแน่นอน · หลักยึดลด',.6));
- if(has(K,'key')&&c.st===3)L.push(O('🗝️ ไขห้องลับด้วยกุญแจไม่มีฟัน',()=>{feed(`🗝️ ประตูที่ไม่มีใครรู้ว่ามีอยู่เปิดออก${clue(K,2,'ห้องลับ',1)}${anc(-2)}`);next(K)},'เบาะแสจริง 2 ชิ้น',.7));
- L.push(O(`💰 ซื้อข่าวจากสมาคมถนนกระจก (${coin(cost)})`,()=>{if(S.money<cost){feed('💸 เงินไม่พอ คนขายข่าวหัวเราะใส่');return next(K)}S.money-=cost;feed(`🔮 คนของสมาคมยื่นซองให้${clue(K,1,'ข่าวซื้อ',rnd()<.85)}${rep('glass',3)}`);if(rnd()<.2){c.tip=1;feed('⚠️ แต่ดูเหมือนข่าวจะรั่วไปถึงคนร้ายด้วย')}next(K)},S.money>=cost?'ได้เบาะแสเกือบแน่นอน':'⚠️ เงินไม่พอ',S.money>=cost*3?.5:0));
- C(`${T.ic} ${T.n} · ฉากที่ ${c.st}/3`,`${['','คุณไปถึงที่เกิดเหตุ หมอกยังเกาะอยู่ตามมุมห้องเหมือนไม่อยากให้ใครเห็น','เรื่องเริ่มซับซ้อน มีคนพยายามลบร่องรอยก่อนคุณมาถึง','ใกล้ความจริงแล้ว คุณต้องเลือกให้ดีว่าจะใช้วิธีไหนในวันสุดท้าย'][c.st]}<br><span class="tag2">เบาะแสตอนนี้: ${c.sus.map((s,i)=>`${esc(s.n)} ×${c.pt[i]}`).join(' · ')}</span>`,L)}
-function step2(K){if(!K.cur)return;step(K)}
-function next(K){setTimeout(()=>{try{if(!on()||!K.cur)return;if(choice._cur||modalOpen){const w=()=>{if(choice._cur||modalOpen)return setTimeout(w,500);step(K)};return w()}step(K)}catch(e){console.error(e)}},500)}
 function danger(K,nm,txt,after){const ep=threat(K)*(.85+rnd()*.45),wp=winP(ep,1),fp=cl(.35+(K.path==='mist'?.35:0)+(has(K,'violin')?.15:0)+(S.int||0)/2000,.1,.92);const L=[
  O('⚔️ สู้',()=>{if(fight(ep,1)){feed(`⚔️ คุณจัดการ${nm}ได้${fame(10+K.tier*5)}${pw(capOf(K.tier)*.04)}${anc(-3)}`);encAdd('n',nm)}else{feed(`💥 ${nm}แรงเกินคาด${hurt(.35)}${anc(-6)}`);if(K.cur)K.cur.hurt=1}if(after)after()},'โอกาส'+pc(wp),wp),
  O(K.path==='mist'?'🌫️ ถอยเข้าหมอก':'🏃 หนี',()=>{if(rnd()<fp)feed('🏃 คุณหลุดออกมาได้ หัวใจเต้นแรงจนได้ยินเสียง'+anc(-2));else feed(`🏃 หนีไม่พ้น${hurt(.25)}${anc(-4)}`);if(after)after()},'โอกาส'+pc(fp),fp*.6)];
  if(K.tier>=2&&(K.path==='bell'||K.path==='lock'))L.push(O(K.path==='bell'?'🔔 ตีระฆังเงียบขับไล่':'🗝️ ผนึกมันไว้หลังประตู',()=>{feed(`${PATH[K.path].ic} ${nm}ถูก${K.path==='bell'?'เสียงที่ไม่มีใครได้ยินผลักกลับใต้หมอก':'ผนึกไว้ในประตูขนาดฝ่ามือ'}${fame(12+K.tier*4)}${anc(-5)}`);encAdd('n',nm);if(after)after()},'แน่นอน · หลักยึด −5',.85));
  C(`👁️ ${nm}`,txt+`<br><span class="tag2">แข็งแรงราว ${Math.round(ep/Math.max(1,S.power)*100)}% ของพลังคุณ</span>`,L)}
-function accuse(K){const c=K.cur,T=CT(c.id),tot=c.pt.reduce((a,b)=>a+b,0),best=c.pt.indexOf(Math.max(...c.pt));
- C(`⚖️ ${T.n} · ชี้ตัวคนร้าย`,`คุณวางเบาะแสทั้งหมดบนโต๊ะ (${tot} ชิ้น)<br>${c.notes.slice(-6).map(n=>'🧩 '+n).join('<br>')}<br><span class="tag2">${tot>=4?'หลักฐานชี้ไปทางเดียวชัดเจน':tot>=2?'หลักฐานยังไม่แน่นพอ แต่ก็พอเห็นทาง':'หลักฐานน้อยมาก นี่แทบจะเป็นการเดา'}</span>`,
-  c.sus.map((s,i)=>O(`👉 ${s.n} (${s.r})`,()=>verdict(K,i),`เบาะแสชี้ ${c.pt[i]} ชิ้น`,i===best?.85:.07)).concat([O('🏮 ยกคดีให้หน่วยตะเกียงเทาตัดสิน',()=>{K.cases.push({id:T.id,y:S.age,r:'pass',n:c.notes.slice(0,6)});K.cur=null;feed(`🏮 คุณส่งสมุดจดทั้งหมดให้หน่วยตะเกียงเทา พวกเขาขอบคุณแล้วปิดแฟ้มโดยไม่บอกอะไรอีก${rep('lamp',6)}${cash(30)}`)},'ปลอดภัย · ไม่ได้ชิ้นความจริง',.1)]))}
-function verdict(K,i){const c=K.cur,T=CT(c.id),ok=i===c.cul,cu=c.sus[c.cul],p=P(K);
- if(!ok){K.cases.push({id:T.id,y:S.age,r:'wrong',w:c.sus[i].n,n:c.notes.slice(0,6)});K.cur=null;S.karma-=5;
-  say(`⚖️ คุณชี้ตัว<b>${esc(c.sus[i].n)}</b> เขาถูกพาตัวไปทั้งที่ร้องว่าไม่ได้ทำ… สามเดือนต่อมา เรื่องประหลาดเกิดขึ้นอีกครั้ง${anc(-8)}${fame(-10)}`,'bad');K.later.push([S.age+R(2,4),'redux',T.id]);return}
- const fr=(T.th===K.path?2:1)+(c.hurt?0:0);encAdd('n',T.an);
- C(`⚖️ ความจริงของ${T.n}`,`<b>${esc(cu.n)}</b> (${cu.r}) คือคนที่อยู่เบื้องหลัง — ${cu.m}<br>คุณจะจัดการอย่างไร?`,[
-  O('🏮 ส่งตัวให้หน่วยตะเกียงเทา',()=>close(K,T,fr,rep('lamp',10)+fame(15),'หน่วยตะเกียงเทาพาตัวไปเงียบๆ พยานทุกคนตื่นมาโดยจำอะไรไม่ได้'),'ชื่อเสียง · ทางการพอใจ',.4),
-  O('⛪ ส่งให้โบสถ์ไถ่บาป',()=>close(K,T,fr,rep('church',10)+anc(3),'โบสถ์รับตัวไปสารภาพบาป คุณได้ยินว่าพิธีชำระนั้นใช้ไฟ'),'หลักยึด +3 · โบสถ์พอใจ',.3),
-  O('🤝 ปล่อยไปแลกคำสัญญา',()=>{S.karma+=4;close(K,T,fr,rep(rnd()<.5?'steam':'cult',6),`คุณปล่อย${esc(cu.n)}ไปพร้อมคำสาบานว่าจะไม่ทำอีก คนในเงาจดจำน้ำใจนี้`);if(rnd()<.35)K.later.push([S.age+R(2,5),'promise',cu.n])},'เสี่ยงถูกหักหลัง · คนบางกลุ่มนับถือ',.2),
-  O('🔮 ขายข้อมูลให้สมาคมถนนกระจก',()=>close(K,T,fr,rep('glass',10)+cash(60*(1+K.tier)),'สมาคมจ่ายงามเกินคาด คุณไม่ได้ถามว่าพวกเขาจะทำอะไรกับคนร้าย'),'ได้เงินก้อนใหญ่',.25)])}
-function close(K,T,fr,fx,line){const c=K.cur;K.cases.push({id:T.id,y:S.age,r:'ok',c:c.sus[c.cul].n,n:c.notes.slice(0,6)});K.cur=null;K.ins+=fr;K.f.solved=(K.f.solved|0)+1;
+function close(K,T,fr,fx,line){const c=K.cur;K.cases.push({id:T.id,y:S.age,r:'ok',c:c.sus[c.cul].n,ty:c.ty,cl:c.cl.map(k=>(k.f?'❌ ':'✔️ ')+'คนร้าย'+k.v)});K.cur=null;K.ins+=fr;K.f.solved=(K.f.solved|0)+1;
  let a='';const pool=(T.xa||[T.a]).filter(x=>!K.arts.includes(x));if(pool.length&&rnd()<.4){const id=pick(pool);K.arts.push(id);encAdd('a',id);K.rum[id]=1;a=` · ได้วัตถุลึกลับ ${ART[id].ic} <b>${ART[id].n}</b>${ART[id].x?' <i>(ของที่หลุดมาจากอีกโลก)</i>':''}`}
  if(K.path&&rnd()<.3&&K.off<=K.tier){K.off=K.tier+1;a+=` · พบเครื่องสังเวยประจำธรณี: <b>${esc(offName(K))}</b>`}
  say(`📓 ปิดคดี「${T.n}」 — ${line}${fx} · 🧩 ชิ้นความจริง +${fr}${a}`,'epic');if(T.x)K.lore=Math.max(K.lore,6);render()}
@@ -315,6 +281,237 @@ const LATER={
   const sus=T.sus.map(s=>({r:s[0],m:s[1],n:pick(FN)+' '+pick(LN)}));K.cur={id,cul:Math.floor(rnd()*3),sus,pt:[0,0,0],notes:[],st:1,y:S.age,retry:has(K,'watch')?1:0,L:legName()||'ผู้เดินทางนิรนาม'};step(K)},
  promise:(K,n)=>{C('🤝 คำสัญญา',`${esc(n)} คนที่คุณเคยปล่อยไป กลับมาหาคุณกลางดึก`,[O('ฟังเขา',()=>{if(rnd()<.55){const g=R(1,2);K.ins+=g;say(`🤝 ${esc(n)}ตอบแทนด้วยความลับที่คนนอกไม่มีวันรู้ · 🧩 ชิ้นความจริง +${g}`,'good')}else say(`🗡️ ${esc(n)}ไม่ได้มาขอบคุณ ${hurt(.3)}${anc(-6)}`,'bad')},'',.6)])},
  final:K=>evFinal(K)};
+// =================== คดีสืบสวน (เฟส 1: อนุมานจริง) ===================
+// ผู้ต้องสงสัยทุกคนมีลักษณะ 5 ด้าน · เบาะแสบอก "ลักษณะของคนร้าย" บางชิ้นเป็นของหลอกที่มีคนจงใจวาง · ผู้เล่นต้องตัดเบาะแสหลอกบนกระดานเอง
+const TR={hand:['ถนัดซ้าย','ถนัดขวา'],smell:['มีกลิ่นน้ำมันเครื่อง','มีกลิ่นธูป','มีกลิ่นน้ำหอมกุหลาบ','มีกลิ่นยาสูบ'],shoe:['ใส่บูทหนัง','ใส่รองเท้าผ้า','ใส่เกี๊ยะไม้'],mark:['มีรอยแผลที่มือ','ใส่แหวนทองเหลือง','สวมถุงมือตลอดเวลา','มีหมึกเปื้อนนิ้ว'],tall:['ตัวสูง','ตัวเตี้ย']};
+const SH={'ถนัดซ้าย':'ซ้าย','ถนัดขวา':'ขวา','มีกลิ่นน้ำมันเครื่อง':'น้ำมัน','มีกลิ่นธูป':'ธูป','มีกลิ่นน้ำหอมกุหลาบ':'กุหลาบ','มีกลิ่นยาสูบ':'ยาสูบ','ใส่บูทหนัง':'บูท','ใส่รองเท้าผ้า':'ผ้าใบ','ใส่เกี๊ยะไม้':'เกี๊ยะ','มีรอยแผลที่มือ':'แผลมือ','ใส่แหวนทองเหลือง':'แหวน','สวมถุงมือตลอดเวลา':'ถุงมือ','มีหมึกเปื้อนนิ้ว':'หมึก','ตัวสูง':'สูง','ตัวเตี้ย':'เตี้ย'};
+const TC=Object.keys(TR),TCN={hand:'✋ มือ',smell:'👃 กลิ่น',shoe:'👞 รองเท้า',mark:'🩹 ตำหนิ',tall:'📏 รูปร่าง'};
+const rprof=()=>{const o={};TC.forEach(c=>o[c]=pick(TR[c]));return o};
+const shuf=a=>a.slice().sort(()=>rnd()-.5);
+const CTYPE={normal:'คดีธรรมดา',layer:'คดีซ้อนชั้น',nocul:'คดีที่อาจไม่มีคนร้าย',good:'คนร้ายที่มีเหตุผล',frame:'มีคนวางหลักฐาน'};
+const CT=id=>CASE.find(c=>c.id===id);
+const MEM0=['ใบหน้าของแม่','กลิ่นขนมปังเช้าวันอาทิตย์','เพลงกล่อมที่พ่อร้อง','ชื่อเพื่อนสนิทวัยเด็ก','หิมะแรกที่เคยเห็น','วันแรกที่อ่านหนังสือออก','เสียงระฆังโบสถ์ตอนเช้า','รสชาติชาของยาย'];
+function ensure(K){if(!K.mem){K.mem=shuf(MEM0).slice(0,5);K.lost=[]}if(!K.sty)K.sty={s:0,t:0,l:0,p:0,b:0,a:0};if(!K.echo)K.echo=[];if(!K.vc)K.vc=pick(['honest','honest','liar','mixed']);
+ if(!K.arcs){K.arcs=shuf(Object.keys(ARC)).slice(0,3).map((id,i)=>({id,ch:0,at:Math.max(age()+1,R(16,22)+i*R(5,9)),f:{}}))}if(K.cur&&!K.cur.v2)K.cur=null}
+const ancMax=K=>100-((K.lost||[]).length)*8;
+function memLose(K,why){if(!K.mem||!K.mem.length)return'';const m=K.mem.shift();K.lost.push(m);return` · 🧠 ลืม「${m}」ไปตลอดกาล (${why})`}
+const loved=K=>{const L=[];if(S.spouse)L.push({n:S.spouse,r:'คู่ชีวิตของคุณ',k:'sp'});if(K.pt&&K.pt.alive)L.push({n:K.pt.n,r:'คู่หูของคุณ',k:'pt'});L.push({n:K.friend,r:'เพื่อนวัยเด็กของคุณ',k:'fr'});return L};
+function caseStart(K,forceId){ensure(K);if(K.cur)return;const done=new Set(K.cases.map(c=>c.id));let L=CASE.filter(c=>!done.has(c.id)&&(!c.x||legName()));if(!L.length)L=CASE.slice();
+ let T=forceId?CT(forceId):null;if(!T){const W=L.map(c=>(c.th===K.path?3:1));let r=rnd()*W.reduce((a,b)=>a+b,0),i=0;while(i<L.length-1&&(r-=W[i])>0)i++;T=L[i]}
+ const ok=K.cases.filter(c=>c.r==='ok').length;const ty=pick(['normal','normal','normal'].concat(ok>=1?['layer','layer']:[],ok>=1?['nocul']:[],['good','good'],ok>=2?['frame','frame']:[]));
+ const q=shuf(TC);const cul=ty==='nocul'?-1:Math.floor(rnd()*3);const cp=rprof();
+ const sus=T.sus.map(s=>({r:s[0],m:s[1],n:pick(FN)+' '+pick(LN),p:rprof()}));
+ let fr=pick([0,1,2].filter(x=>x!==cul));
+ if(ty==='frame'){const lv=pick(loved(K));sus[fr]={n:lv.n,r:lv.r,m:'',p:rprof(),love:lv.k}}
+ sus.forEach((s,i)=>{if(i===cul){s.p=Object.assign({},cp);return}s.p=Object.assign({},cp);TC.forEach(t=>{if(rnd()<.4)s.p[t]=pick(TR[t])});const d=q[R(0,2)];s.p[d]=pick(TR[d].filter(v=>v!==cp[d]))});
+ K.cur={v2:1,id:T.id,ty,cul,cp,q,qi:0,sus,fr,cl:[],heat:0,rd:0,y:S.age,retry:has(K,'watch')?1:0,L:legName()||'ผู้เดินทางนิรนาม',acts:[]};
+ if(!K.pt&&age()>=15)ptNew(K);if(!K.rv)K.rv={n:pick(FN)+' '+pick(LN),me:0,him:0};
+ if(has(K,'mirror'))addClue(K,0,'🪞 กระจกในกระเป๋า');
+ const txt=T.in.replace(/\{L\}/g,esc(K.cur.L));
+ C(`${T.ic} คดี: ${T.n}`,`${txt}<br><span class="tag2">ผู้ต้องสงสัย: ${sus.map(s=>`<b>${esc(s.n)}</b> (${s.r})`).join(' · ')}${T.th===K.path?' · 🧩 ตรงกับสายของคุณ (ชิ้นความจริง ×2)':''}${ty==='frame'?' · ⚠️ <b style="color:#ffb27a">ชื่อคนที่คุณรักอยู่ในรายชื่อ</b>':''}</span>${K.rv?`<br><span class="tag2">🎯 นักสืบ${esc(K.rv.n)}ก็รับคดีนี้เหมือนกัน</span>`:''}`,[
+  O('🔎 รับคดี',()=>{K.enc.d[pick(DIST)]=1;round(K)},'',.8),
+  O('🏮 ส่งเรื่องให้หน่วยตะเกียงเทา',()=>{feed(`🏮 คุณส่งรายละเอียดคดีให้หน่วยตะเกียงเทา${rep('lamp',4)}${cash(20)}`);K.cases.push({id:T.id,y:S.age,r:'pass'});K.cur=null},'ไม่เสี่ยง · ไม่ได้ชิ้นความจริง',ty==='frame'?.02:.12),
+  O('🚶 ไม่ยุ่ง',()=>{K.cur=null;feed('🚶 คุณทำเป็นไม่ได้ยินข่าวนั้น แต่ภาพมันยังติดตาอยู่หลายคืน')},'',.05)])}
+// ---------- เบาะแส ----------
+function addClue(K,fake,src){const c=K.cur;if(!c)return'';let cat,val;
+ if(!fake){if(c.qi>=c.q.length)return`<br>🧩 ${src}: ไม่พบอะไรที่ยังไม่รู้`;cat=c.q[c.qi++];val=c.cp[cat]}
+ else{const pool=TC.filter(x=>!c.cl.some(k=>k.c===x&&k.f));cat=pick(pool.length?pool:TC);const fs=c.sus[c.fr];val=fs.p[cat]!==c.cp[cat]?fs.p[cat]:pick(TR[cat].filter(v=>v!==c.cp[cat]))}
+ if(c.cl.some(k=>k.c===cat&&k.v===val))return`<br>🧩 ${src}: ยืนยันซ้ำว่าคนร้าย${val}`;
+ c.cl.push({c:cat,v:val,f:fake?1:0,src,x:0});return`<br>🧩 ${src}: <b>คนร้าย${val}</b>`}
+function fakeP(K,m){const c=K.cur;let p={s:.18,t:.22,l:.12,p:0,b:.15,a:.1}[m]||.15;if(c.ty==='frame')p+=.15;const top=Object.entries(K.sty).sort((a,b)=>b[1]-a[1])[0];if(top&&top[0]===m&&top[1]>=4){p+=.15;if(!c.warn){c.warn=1;feed('🧠 คนร้ายเหมือนรู้วิธีสืบของคุณ — เขาเตรียมรับมือทางนี้ไว้แล้ว')}}
+ if(m==='a'&&K.pt&&K.pt.bad)p+=.5;return p}
+const flavor=c=>{const T=CT(c.id);return pick(T.cl).replace(/\{s\}/g,'ใครบางคน').replace(/\{L\}/g,esc(c.L))};
+// ---------- รอบสืบสวน ----------
+function round(K){const c=K.cur;if(!c)return;c.bz=Date.now();c.rd++;const T=CT(c.id),p=P(K);
+ if(c.rd>3)return board(K);
+ const L=[O('🔍 ค้นที่เกิดเหตุ',()=>{K.sty.s++;mgSearch(sc=>{let t='';const n=Math.round(sc*3);for(let i=0;i<n;i++)t+=addClue(K,rnd()<fakeP(K,'s'),'ค้นที่เกิดเหตุ');feed(n?`🔍 ${flavor(c)}${t}`:'🔍 หลักฐานเปราะแตกหมด ไม่ได้อะไรเลย');after(K,!n)})},'มินิเกม · ใช้ความคิด',.5),
+  O('🗣️ สอบปากคำ (จับคำโกหก)',()=>{K.sty.t++;mgObj(K,sc=>{let t='';if(sc>=.5){t=addClue(K,rnd()<fakeP(K,'t'),'สอบปากคำ');if(sc>=.9)t+=addClue(K,0,'พยานยอมพูดหมด')}feed(sc>=.5?`🗣️ พยานหน้าซีดเมื่อคุณชี้จุดที่ขัดกัน${t}`:`🗣️ คุณกล่าวหาผิดจุด พยานปิดปากเงียบ${anc(-1)}`);after(K,sc<.5)})},'มินิเกม · ฟังให้ดี',.5),
+  O('⏱️ ไล่ไทม์ไลน์คืนเกิดเหตุ',()=>{K.sty.l++;mgTime(K,(sc,liarCul)=>{let t='';if(sc>=.5){t=addClue(K,rnd()<fakeP(K,'l'),'ไทม์ไลน์');if(liarCul)t+=addClue(K,0,'คนที่โกหกเรื่องเวลา')}feed(sc>=.5?`⏱️ เวลาไม่ตรงกัน มีคนโกหก${t}`:'⏱️ คุณจับผิดคนผิด ไทม์ไลน์ยุ่งเหยิงกว่าเดิม');after(K,sc<.5)})},'มินิเกม · คิดเลขระยะทาง',.45)];
+ if(K.tier>0){const cost=4+Math.round(K.tier*.6);L.push(O(`${p.ic} ใช้พลัง: ${p.ab}`,()=>{K.sty.p++;let t=addClue(K,0,'พลังสาย'+p.n);if(K.path===T.th)t+=addClue(K,0,'พลังสาย'+p.n);feed(`${p.ic} ${p.ab}${t}${anc(-cost)}`);if(K.path==='debt')K.debt++;after(K)},`เบาะแสจริงแน่นอน · หลักยึด −${cost}`,.55));
+  if(K.mem&&K.mem.length&&K.anc<35)L.push(O(`🧠 ใช้พลังโดยแลกความทรงจำ`,()=>{K.sty.p++;let t=addClue(K,0,'พลังสาย'+p.n)+addClue(K,0,'พลังสาย'+p.n);feed(`${p.ic} คุณจ่ายด้วยสิ่งที่ไม่มีวันได้คืน${t}${memLose(K,'จ่ายค่าพลัง')}`);after(K)},'เบาะแสจริง 2 ชิ้น · ไม่เสียหลักยึด แต่ลืมบางอย่างถาวร',.15))}
+ if(K.pt&&K.pt.alive)L.push(O(`🤝 ให้${K.pt.n}ช่วย (${K.pt.sk})`,()=>{K.sty.a++;const t=addClue(K,rnd()<fakeP(K,'a'),'คู่หู '+K.pt.n);K.pt.tr=(K.pt.tr|0)+1;feed(`🤝 ${esc(K.pt.n)}${pick(['หายไปทั้งคืน กลับมาพร้อมสมุดจด','คุยกับคนท่าเรือที่ไม่ยอมคุยกับคุณ','แอบเข้าไปในห้องที่คุณไม่ได้เข้า'])}${t}`);after(K)},'ได้เบาะแสโดยไม่ต้องเสี่ยง',.45));
+ const ec=K.echo.find(e=>e.k==='beggar');if(ec&&c.rd===1){K.echo.splice(K.echo.indexOf(ec),1);feed(`🪙 ขอทานที่คุณเคยให้เหรียญเมื่อ ${S.age-ec.y} ปีก่อนเดินเข้ามาหา “ข้าเห็นคืนนั้น”${addClue(K,0,'พยานที่จำบุญคุณได้')}`)}
+ if(has(K,'key')&&c.rd===2)L.push(O('🗝️ ไขห้องลับด้วยกุญแจไม่มีฟัน',()=>{feed(`🗝️ ประตูที่ไม่มีใครรู้ว่ามีอยู่เปิดออก${addClue(K,0,'ห้องลับ')}${addClue(K,0,'ห้องลับ')}${anc(-2)}`);after(K)},'เบาะแสจริง 2 ชิ้น',.6));
+ const cost=Math.round(25*Math.pow(1+K.tier,1.4));
+ L.push(O(`💰 ซื้อข่าวจากสมาคม (${coin(cost)})`,()=>{if(S.money<cost){feed('💸 เงินไม่พอ คนขายข่าวหัวเราะใส่');return after(K,1)}K.sty.b++;S.money-=cost;feed(`🔮 คนของสมาคมยื่นซองให้${addClue(K,rnd()<fakeP(K,'b'),'ข่าวซื้อ')}${rep('glass',2)}`);after(K)},S.money>=cost?'':'⚠️ เงินไม่พอ',S.money>=cost*3?.3:0));
+ C(`${T.ic} ${T.n} · รอบที่ ${c.rd}/3`,`${['','คุณไปถึงที่เกิดเหตุ หมอกยังเกาะอยู่ตามมุมห้องเหมือนไม่อยากให้ใครเห็น','ข่าวว่าคุณกำลังสืบแพร่ไปทั่ว คนร้ายเริ่มขยับ','วันสุดท้ายก่อนต้องชี้ตัว เลือกให้ดี'][c.rd]}<br><span class="tag2">เบาะแส ${c.cl.length} ชิ้น · 🔥 ความตึง ${c.heat}/4${c.acts.length?' · เกิดเรื่องแล้ว: '+c.acts.join(', '):''}</span>`,L)}
+function after(K,bad){const c=K.cur;if(!c)return;c.bz=Date.now();c.heat+=bad?2:1;
+ const go=()=>{if(!on()||!K.cur)return;if(choice._cur||modalOpen)return setTimeout(go,500);
+  if(c.heat>=2&&rnd()<.3+c.heat*.08&&c.acts.length<2)return susAct(K,()=>round(K));
+  if(c.rd===2&&rnd()<.3+(has(K,'lamp')?.15:0))return danger(K,CT(c.id).an,`ระหว่างสืบคดี คุณเจอ<b>${CT(c.id).an}</b>เข้ากับตัว`,()=>round(K));
+  round(K)};setTimeout(go,500)}
+// ผู้ต้องสงสัยมีชีวิตของตัวเอง
+function susAct(K,next){const c=K.cur,k=pick(c.cul>=0?['flee','witness','burn','confess','attack']:['witness','burn','confess']);c.heat=Math.max(0,c.heat-2);
+ if(k==='flee'){const s=c.sus[c.cul];c.acts.push('มีคนหนี');C('🏃 มีคนเก็บกระเป๋าหนี',`<b>${esc(s.n)}</b> (${s.r}) ถูกเห็นวิ่งไปทางท่าเรือพร้อมกระเป๋าใบใหญ่ตอนตีสาม`,[
+  O('ไล่ตามไป',()=>{if(fight(threat(K)*.7,0)||(K.echo.some(e=>e.k==='thief')&&rnd()<.6)){feed(`🏃 คุณดักเขาได้ที่ท่าน้ำ เขาทำของหล่นไว้${addClue(K,0,'ของที่ทำหล่น')}${addClue(K,0,'ของที่ทำหล่น')}`)}else feed(`🌊 เขากระโดดลงเรือหายไปในหมอก${hurt(.15)}`);next()},'ถ้าจับได้ ได้เบาะแสจริง 2 ชิ้น',.6),
+  O('ปล่อยไป คนหนีไม่ได้แปลว่าผิด',()=>{feed('🤔 คุณจดชื่อเขาไว้ในใจ แต่ไม่ตามไป');next()},'',.4)]);return}
+ if(k==='witness'){c.acts.push('พยานถูกปิดปาก');const ls=c.cl.filter(x=>!x.f);feed(`🕯️ พยานคนสำคัญถูกพบลอยอยู่ในคลอง ใครบางคนไม่อยากให้เขาพูด${anc(-4)}`);S.karma-=1;next();return}
+ if(k==='burn'){c.acts.push('หลักฐานถูกเผา');const t=c.cl.filter(x=>!x.f);if(t.length){const x=t[t.length-1];c.cl.splice(c.cl.indexOf(x),1);c.qi=Math.max(0,c.qi-1);feed(`🔥 ห้องเก็บหลักฐานถูกไฟไหม้ เบาะแส「คนร้าย${x.v}」หายไปกับเปลวไฟ`)}else feed('🔥 มีคนพยายามเผาห้องเก็บหลักฐาน แต่คุณยังไม่ได้เก็บอะไรไว้ที่นั่น');next();return}
+ if(k==='confess'){c.acts.push('มีคนรับสารภาพ');const i=c.fr,s=c.sus[i];C('🙇 คำสารภาพที่ไม่มีใครขอ',`<b>${esc(s.n)}</b> (${s.r}) เดินมารับสารภาพว่าทำเอง ตัวสั่น ตาแดงก่ำ เหมือนกำลังปกป้องใครบางคน`,[
+  O('จดคำสารภาพไว้',()=>{c.conf=i;feed(`📝 คำสารภาพถูกบันทึก${addClue(K,1,'คำสารภาพ')}`);next()},'',.5),O('ถามว่าเขาปกป้องใคร',()=>{if(rnd()<.45+(S.cha||0)/500){feed(`😢 เขาร้องไห้แล้วเล่าความจริงบางส่วน${addClue(K,0,'คนที่ยอมรับผิดแทน')}`)}else feed('🤐 เขาไม่พูดอะไรอีกเลย');next()},'ใช้เสน่ห์',.5)]);return}
+ c.acts.push('คุณถูกลอบทำร้าย');danger(K,'มือมีดในตรอกมืด','ระหว่างเดินกลับบ้าน มีคนถือมีดดักรออยู่ในตรอก ใครบางคนอยากให้คดีนี้จบ',next)}
+// ---------- กระดานอนุมาน ----------
+let BD=null;
+function matchN(s,cl){return cl.filter(k=>!k.x&&s.p[k.c]===k.v).length}
+function board(K){const c=K.cur;if(!c)return;c.bz=Date.now();BD={K};if(K.rv&&c.rvPick==null)c.rvPick=rnd()<.55&&c.cul>=0?c.cul:Math.floor(rnd()*3);
+ if(auto){const act=c.cl.filter(k=>!k.f||rnd()<.35);const sc=c.sus.map(s=>act.filter(k=>s.p[k.c]===k.v).length),act2=act.length,best=sc.indexOf(Math.max(...sc));const none=sc.every(v=>v<act2)&&rnd()<.6;return verdict(K,none?-1:best)}
+ drawBoard()}
+function drawBoard(){const K=BD&&BD.K,c=K&&K.cur;if(!c)return;const T=CT(c.id),act=c.cl.filter(k=>!k.x);
+ if(c.vh==null)c.vh=voiceHint(K);const vh=c.vh;const rvp=K.rv&&c.rvPick!=null?c.sus[c.rvPick]:null;
+ const rows=c.sus.map((s,i)=>{const n=matchN(s,act),all=act.length&&n===act.length;return`<tr class="${all?'all':''}"><td><b>${esc(s.n)}</b><small>${esc(s.r)}${s.love?' 💔':''}</small></td>${TC.map(t=>`<td class="${act.some(k=>k.c===t&&k.v===s.p[t])?'hit':act.some(k=>k.c===t)?'miss':''}">${SH[s.p[t]]||s.p[t]}</td>`).join('')}<td class="n">${n}/${act.length}</td></tr>`}).join('');
+ fgModal(`<h3>🗺️ กระดานคดี: ${T.n}</h3><p class="tag2">แตะเบาะแสที่คิดว่า<b>เป็นของหลอก</b>เพื่อขีดฆ่า · คนร้ายต้องตรงกับเบาะแสจริง<b>ทุกข้อ</b> · ถ้ามีเบาะแสสองชิ้นขัดกัน แปลว่ามีชิ้นหนึ่งถูกวาง${c.ty==='nocul'?'':''}</p>
+ <div class="fgClues">${c.cl.map((k,i)=>`<button class="${k.x?'x':''}" onclick="fogBdT(${i})">${TCN[k.c].split(' ')[0]} คนร้าย${k.v}<small>${esc(k.src)}</small></button>`).join('')||'<i>ไม่มีเบาะแสเลย</i>'}</div>
+ <div class="fgTbW"><table class="fgTb"><tr><th>ผู้ต้องสงสัย</th>${TC.map(t=>`<th>${TCN[t].split(' ')[0]}</th>`).join('')}<th>ตรง</th></tr>${rows}</table></div>
+ ${vh?`<p class="fgVc">🗨️ ${vh}</p>`:''}${rvp?`<p class="tag2">🎯 นักสืบ${esc(K.rv.n)}ปักหมุดไว้ที่ <b>${esc(rvp.n)}</b></p>`:''}${c.conf!=null?`<p class="tag2">📝 ${esc(c.sus[c.conf].n)} รับสารภาพไว้แล้ว</p>`:''}
+ <div class="fgAcc">${c.sus.map((s,i)=>`<button onclick="fogAcc(${i})">👉 ชี้ ${esc(s.n)}</button>`).join('')}<button class="alt" onclick="fogAcc(-1)">🌫️ ไม่มีคนร้าย (สิ่งผิดธรรมชาติ/อุบัติเหตุ)</button><button class="alt" onclick="fogAcc(-2)">🏮 ยกให้หน่วยตะเกียงเทาตัดสิน</button></div>`,'fogboard')}
+window.fogBoardOpen=function(){const K=FG();if(K&&K.cur&&K.cur.rd>3)board(K)};
+window.fogBdT=function(i){const c=BD&&BD.K.cur;if(!c||!c.cl[i])return;c.cl[i].x^=1;drawBoard()};
+window.fogAcc=function(i){const K=BD&&BD.K;if(!K||!K.cur)return;BD=null;closeM();if(i===-2){const T=CT(K.cur.id);K.cases.push({id:T.id,y:S.age,r:'pass',cl:K.cur.cl.map(k=>'คนร้าย'+k.v)});K.cur=null;feed(`🏮 คุณส่งแฟ้มคดีให้หน่วยตะเกียงเทา${rep('lamp',6)}${cash(30)}`);return}verdict(K,i)};
+function voiceHint(K){if(K.anc>=45||!K.cur)return'';const c=K.cur,tr={honest:.85,liar:.2,mixed:.5}[K.vc];const truth=rnd()<tr;let who=truth?c.cul:pick([-1,0,1,2].filter(x=>x!==c.cul));if(who===-1&&c.cul!==-1&&truth)who=c.cul;
+ K.vcN=(K.vcN|0)+1;c.vcSaid=who;return`เสียงในหัวกระซิบ: “${who<0?'ไม่มีใครทำหรอก… มันมาจากหมอก':'คือ'+c.sus[who].n}”`}
+// ---------- ตัดสิน ----------
+function verdict(K,i){const c=K.cur,T=CT(c.id),ok=i===c.cul;if(c.vcSaid!=null){K.vcT=(K.vcT|0)+(c.vcSaid===c.cul?1:0)}
+ if(K.rv&&c.rvPick!=null){const rOk=c.rvPick===c.cul;if(rOk)K.rv.him++;if(ok)K.rv.me++;if(ok&&!rOk)feed(`🎯 นักสืบ${esc(K.rv.n)}ชี้ผิด หนังสือพิมพ์พาดหัวชื่อคุณแทน${fame(10)}`);else if(!ok&&rOk)feed(`🎯 นักสืบ${esc(K.rv.n)}ไขคดีได้ก่อนคุณ เขายิ้มเยาะผ่านกระจกร้านกาแฟ${fame(-8)}${anc(-2)}`)}
+ if(!ok){const w=i>=0?c.sus[i]:null;K.cases.push({id:T.id,y:S.age,r:'wrong',w:w?w.n:'(ไม่มีคนร้าย)',c:c.cul>=0?c.sus[c.cul].n:'(ไม่มีคนร้าย)',ty:c.ty,cl:c.cl.map(k=>(k.f?'❌ ':'✔️ ')+'คนร้าย'+k.v)});K.cur=null;S.karma-=5;
+  if(w&&w.love){const sv=K.echo.find(e=>e.k==='lie');if(sv){K.echo.splice(K.echo.indexOf(sv),1);say(`⚖️ คุณชี้ไปที่<b>${esc(w.n)}</b>… แต่คนที่คุณเคยโกหกเพื่อปกป้องเมื่อหลายปีก่อนลุกขึ้นให้การว่าเขาบริสุทธิ์ ศาลยกฟ้อง${anc(-6)}`,'bad');return}
+   say(`💔 <b>คุณชี้ตัว${esc(w.n)} ${w.r}</b> หลักฐานที่ถูกวางไว้ทำงานได้สมบูรณ์แบบ เขามองหน้าคุณครั้งสุดท้ายก่อนถูกพาตัวไป${anc(-18)}${fame(-15)}`,'bad',true);if(w.love==='sp'){K.f.jail=S.spouse;S.spouse=null;K.later.push([S.age+R(2,4),'jail'])}if(w.love==='pt'&&K.pt){K.pt.alive=0;K.pt.fate='jail'}nemSeed(K,'วางหลักฐานใส่คนที่คุณรัก');return}
+  if(i===-1)say(`⚖️ คุณปิดคดีว่าไม่มีคนร้าย… สามเดือนต่อมา ${esc(c.sus[c.cul].n)} ทำซ้ำอีกครั้ง${anc(-6)}${fame(-10)}`,'bad');
+  else say(`⚖️ คุณชี้ตัว<b>${esc(w.n)}</b> เขาถูกพาตัวไปทั้งที่ร้องว่าไม่ได้ทำ… ${c.cul<0?'ภายหลังพบว่าเป็นฝีมือสิ่งผิดธรรมชาติ ไม่มีคนร้ายตั้งแต่แรก':'แล้วเรื่องประหลาดก็เกิดขึ้นอีกครั้ง'}${anc(-8)}${fame(-10)}`,'bad');
+  if(c.cul>=0)K.later.push([S.age+R(2,4),'redux',T.id]);return}
+ const fr=(T.th===K.path?2:1);encAdd('n',T.an);
+ if(c.ty==='nocul'){K.cases.push({id:T.id,y:S.age,r:'ok',c:'(ไม่มีคนร้าย)',ty:c.ty,cl:c.cl.map(k=>(k.f?'❌ ':'✔️ ')+'คนร้าย'+k.v)});K.cur=null;K.ins+=fr+1;K.f.solved=(K.f.solved|0)+1;say(`📓 <b>ไม่มีคนร้ายตั้งแต่แรก</b> — ${T.an}คือต้นเหตุ คุณช่วยผู้ต้องสงสัยทั้งสามคนให้พ้นข้อกล่าวหา${fame(18)} · 🧩 +${fr+1}${S.karma+=4,''}`,'epic');return}
+ const cu=c.sus[c.cul];
+ if(c.ty==='frame'){const lv=c.sus[c.fr];feed(`🧩 คุณไม่หลงกล — หลักฐานทั้งหมดที่ชี้ไปที่<b>${esc(lv.n)}</b>ถูกวางไว้ ใครบางคนรู้ว่าจะทำร้ายคุณได้ตรงไหน`);nemSeed(K,'วางหลักฐานใส่'+lv.r)}
+ if(c.ty==='layer')return layer(K,T,fr,cu);
+ if(c.ty==='good')return good(K,T,fr,cu);
+ hand(K,T,fr,cu)}
+function hand(K,T,fr,cu){C(`⚖️ ความจริงของ${T.n}`,`<b>${esc(cu.n)}</b> (${cu.r}) คือคนที่อยู่เบื้องหลัง — ${cu.m}<br>คุณจะจัดการอย่างไร?`,[
+ O('🏮 ส่งตัวให้หน่วยตะเกียงเทา',()=>close(K,T,fr,rep('lamp',10)+fame(15),'หน่วยตะเกียงเทาพาตัวไปเงียบๆ พยานทุกคนตื่นมาโดยจำอะไรไม่ได้'),'ชื่อเสียง · ทางการพอใจ',.4),
+ O('⛪ ส่งให้โบสถ์ไถ่บาป',()=>close(K,T,fr,rep('church',10)+anc(3),'โบสถ์รับตัวไปสารภาพบาป คุณได้ยินว่าพิธีชำระนั้นใช้ไฟ'),'หลักยึด +3',.3),
+ O('🤝 ปล่อยไปแลกคำสัญญา',()=>{S.karma+=4;close(K,T,fr,rep(rnd()<.5?'steam':'cult',6),`คุณปล่อย${esc(cu.n)}ไปพร้อมคำสาบานว่าจะไม่ทำอีก`);if(rnd()<.35)K.later.push([S.age+R(2,5),'promise',cu.n])},'เสี่ยงถูกหักหลัง',.15),
+ O('🔮 ขายข้อมูลให้สมาคมถนนกระจก',()=>close(K,T,fr,rep('glass',10)+cash(60*(1+K.tier)),'สมาคมจ่ายงามเกินคาด คุณไม่ได้ถามว่าพวกเขาจะทำอะไรกับคนร้าย'),'ได้เงินก้อนใหญ่',.2)])}
+function good(K,T,fr,cu){const why=pick(['ลูกสาวของเขาถูกขายให้โรงงานใต้ดิน และสิ่งที่เขาทำคือทางเดียวที่จะพาเธอกลับมา','คนที่ตายคือคนที่ทำร้ายเด็กในโรงทานมาสิบปี และกฎหมายไม่เคยแตะต้องเขา','เขาทำเพื่อหยุดสิ่งที่เลวร้ายกว่า ถ้าเขาไม่ทำ ตอนนี้ทั้งย่านคงจมหายไปในหมอก']);
+ C('⚖️ คนร้ายที่มีเหตุผล',`คุณจับ<b>${esc(cu.n)}</b>ได้คาหลักฐาน แต่เมื่อฟังจนจบ… ${why}<br><span class="tag2">กฎหมายบอกว่าเขาผิด แต่คุณไม่แน่ใจอีกต่อไปแล้ว</span>`,[
+  O('⚖️ กฎก็คือกฎ ส่งตัวเขา',()=>close(K,T,fr,rep('lamp',10)+anc(-6),'เขาไม่ขัดขืน แค่ขอให้คุณช่วยดูแลคนที่เขาปกป้อง'),'หลักยึด −6 (รู้สึกผิด)',.35),
+  O('🕊️ ปล่อยเขาไป ปิดคดีเงียบ',()=>{S.karma+=8;K.echo.push({k:'freed',y:S.age,n:cu.n});close(K,T,fr,rep('lamp',-8)+rep('steam',6),'คุณเผาแฟ้มคดีในเตาผิง เขาจะจำบุญคุณนี้')},'ทางการไม่พอใจ · เขาจะจำได้',.35),
+  O('🧠 หาทางที่สาม: ให้คนเลวรับผลแทน',()=>{if(rnd()<.35+(S.int||0)/600+(S.cha||0)/800){S.karma+=6;close(K,T,fr,fame(25)+anc(4),'คุณเปิดโปงความเลวของอีกฝ่ายจนเมืองทั้งเมืองเห็น เขาได้รับโทษเบาที่สุดที่กฎหมายให้ได้')}else close(K,T,fr,anc(-8)+fame(-5),'แผนไม่สำเร็จ ทั้งคนดีและคนเลวต่างเสียหาย คุณกลับบ้านมามือเปล่า')},'ยากมาก · ใช้ปัญญาและเสน่ห์',.3)])}
+function layer(K,T,fr,cu){const nm=nemOf(K);const cand=shuf([nm,{n:pick(['ท่านลอร์ดแอชเวลผู้น้อง','ผู้อาวุโสแห่งระฆังล่ม','รองหัวหน้าหน่วยตะเกียงเทา','เจ้าของโรงงานทอผ้า']),p:rprof()}]);
+ const truth=TC.filter(t=>cand[0].p[t]!==cand[1].p[t]);const t1=truth[0]||'hand',c1={c:t1,v:nm.p[t1]};const fk=TC.find(t=>t!==t1&&cand.find(x=>x!==nm).p[t]!==nm.p[t]);
+ const clues=[`คนบงการ${c1.v}`].concat(fk?[`คนบงการ${cand.find(x=>x!==nm).p[fk]}`]:[]).sort(()=>rnd()-.5);
+ C('🎭 ยังไม่จบ',`${esc(cu.n)}หัวเราะทั้งน้ำตา “ข้าแค่ทำตามจดหมาย…” ในกระเป๋าเขามีจดหมายไม่ลงชื่อที่สั่งทุกอย่าง<br>เบาะแสถึงผู้บงการ: ${clues.map(x=>'🧩 '+x).join(' · ')} <span class="tag2">(หนึ่งในนี้อาจถูกวาง)</span><br>${cand.map(x=>`<b>${esc(x.n)}</b>: ${TC.map(t=>x.p[t]).join(', ')}`).join('<br>')}`,
+  cand.map(x=>O(`👉 ผู้บงการคือ ${x.n}`,()=>{if(x===nm){K.ins+=1;say(`🎭 คุณจับได้ว่าเป็น<b>${esc(x.n)}</b> แต่ก่อนจะถูกจับ เขายิ้ม… “ข้าก็แค่หมากอีกตัว” แล้วกัดยาพิษ ในมือมีจดหมายท้าทายถึงคุณ`,'epic');nemLetter(K)}else{say(`🎭 คุณชี้ผิด ${esc(x.n)}ถูกสอบสวนจนเสียชื่อเสียง ผู้บงการตัวจริงส่งดอกไม้มาแสดงความยินดีที่บ้านคุณ${anc(-6)}`,'bad');nemLetter(K,1)}hand(K,T,fr+(x===nm?1:0),cu)},'',x===nm?.6:.3)))}
+// ---------- มือที่มองไม่เห็น ----------
+function nemCands(K){const L=[{k:'mentor',n:K.mentor,r:'อาจารย์ผู้สอนเรื่องตรา'},{k:'friend',n:K.friend,r:'เพื่อนวัยเด็ก'},{k:'house',n:'ท่านลอร์ดแอชเวล',r:'ประมุขตระกูลแอชเวล'}];if(K.rv)L.push({k:'rival',n:K.rv.n,r:'นักสืบคู่ปรับ'});if(K.pt)L.push({k:'pt',n:K.pt.n,r:'คู่หูของคุณ'});return L}
+function nemSeed(K,why){if(K.nem)return;const C0=nemCands(K);let who=pick(C0);if(K.pt&&K.pt.sec==='nemesis')who=C0.find(x=>x.k==='pt');K.nem={k:who.k,n:who.n,P:{},let:[],done:0};C0.forEach(x=>K.nem.P[x.k]=rprof());feed(`✉️ คืนนั้นมีจดหมายสอดใต้ประตู ลายมือที่คุณไม่รู้จัก: “ข้าเห็นเจ้าแล้ว นักสืบน้อย” — มีใครบางคน${why}`)}
+function nemOf(K){if(!K.nem)nemSeed(K,'เฝ้ามองคุณ');const N=K.nem;return{n:N.n,p:N.P[N.k]}}
+function nemLetter(K,mock){if(!K.nem)nemSeed(K,'เฝ้ามองคุณ');const N=K.nem;if(N.done)return;const known=N.let.map(l=>l.c);const cs=TC.filter(t=>!known.includes(t));if(!cs.length)return;const t=pick(cs),fake=rnd()<.2;
+ const v=fake?pick(TR[t].filter(x=>x!==N.P[N.k][t])):N.P[N.k][t];N.let.push({c:t,v,f:fake?1:0});
+ feed(`✉️ <b>จดหมายจากมือที่มองไม่เห็น (${N.let.length}/3)</b>: “${pick(['เกมนี้สนุกกว่าที่คิด','เจ้าเกือบตามข้าทันแล้ว','ข้าอยู่ใกล้กว่าที่เจ้าคิดเสมอ','คนที่เจ้าไว้ใจที่สุดน่ะ… ลองมองอีกที'])}” ในซองมีเบาะแส: <b>${v}</b>${mock?' (เขาเขียนมาเยาะเย้ย)':''}`);
+ if(N.let.length>=3)K.later.push([S.age+1,'nem'])}
+function nemFace(K){const N=K.nem;if(!N||N.done)return;const C0=nemCands(K).filter(x=>N.P[x.k]);
+ C('🕯️ เผชิญหน้ามือที่มองไม่เห็น',`จดหมายฉบับสุดท้ายนัดคุณที่หอนาฬิกาตอนเที่ยงคืน ในมือคุณมีเบาะแส ${N.let.map(l=>'<b>'+l.v+'</b>').join(' · ')} <span class="tag2">(อาจมีชิ้นหนึ่งที่เขาโกหก)</span><br>${C0.map(x=>`${esc(x.n)} (${x.r}): ${TC.map(t=>N.P[x.k][t]).join(', ')}`).join('<br>')}<br>คุณต้องเรียกชื่อเขาก่อนเขาจะเปิดหน้ากาก`,
+  C0.map(x=>{const m=N.let.filter(l=>N.P[x.k][l.c]===l.v).length;return O(`👉 ${x.n}`,()=>nemEnd(K,x),'',m/3)}))}
+function nemEnd(K,x){const N=K.nem;N.done=1;if(x.k===N.k){const ep=threat(K)*1.4;say(`🎭 หน้ากากหลุดลง <b>${esc(N.n)}</b> ยืนอยู่ตรงนั้นจริงๆ “เจ้าเก่งกว่าที่ข้าคิด” แล้วชักอาวุธ`,'myth',true);
+  duelX(ep,v=>{if(v){K.ins+=3;K.f.legend=1;say(`🏆 <b>คุณล้มมือที่มองไม่เห็นได้</b> ทั้งเมืองเรียกคุณว่านักสืบแห่งหมอก${fame(80)}${anc(10)} · 🧩 +3`,'myth',true);try{keyAdd(`${S.age} ปี — ล้มมือที่มองไม่เห็น (${N.n})`)}catch(e){}if(N.k==='pt'&&K.pt){K.pt.alive=0;K.pt.fate='nem'}}else{say(`🩸 เขาหนีไปพร้อมรอยยิ้ม และทิ้งคำสัญญาว่าจะเอาสิ่งที่คุณรักไปหนึ่งอย่าง${hurt(.4)}${anc(-15)}`,'bad',true);loseLoved(K)}})}
+ else{say(`💔 คุณเรียกชื่อ<b>${esc(x.n)}</b> เขาหันมามองด้วยสายตาที่คุณจะไม่มีวันลืม… แล้วหอนาฬิกาก็ตีเที่ยงคืน มือที่มองไม่เห็นตัวจริงหัวเราะอยู่ข้างหลังคุณ${anc(-20)}`,'bad',true);loseLoved(K)}}
+function loseLoved(K){if(S.spouse&&rnd()<.5){say(`🕯️ ${esc(S.spouse)}หายตัวไปในคืนหมอกหนา ไม่มีใครพบอีกเลย`,'bad',true);K.f.lostSp=S.spouse;S.spouse=null;K.anc=Math.max(0,K.anc-10)}else if(K.pt&&K.pt.alive){K.pt.alive=0;K.pt.fate='killed';say(`🕯️ ${esc(K.pt.n)}คู่หูของคุณถูกพบเสียชีวิตที่ท่าเรือ`,'bad',true)}else feed(`🕯️ บ้านเก่าของ${esc(K.friend)}ถูกเผา เขารอดมาได้แต่ไม่ยอมพูดกับคุณอีก`)}
+function duelX(ep,cb){if(fight(ep,0))cb(1);else cb(0)}
+// ---------- คู่หู ----------
+function ptNew(K){const sec=pick(['loyal','loyal','spy','cult','dying','nemesis']);K.pt={n:pick(FN)+' '+pick(LN),sk:pick(['ช่างสังเกต','ช่างพูด','รู้จักคนทั้งเมือง']),sec,alive:1,tr:0};
+ feed(`🤝 <b>${esc(K.pt.n)}</b> (${K.pt.sk}) ขอติดตามคุณสืบคดี “ข้าไม่มีที่ไป แต่ข้ามีตาดี” — ตั้งแต่วันนั้นคุณมีคู่หู`)}
+function ptArc(K){const p=K.pt;if(!p||!p.alive||p.rv||(K.f.solved|0)<3)return false;p.rv=1;
+ if(p.sec==='spy'){C(`🤝 ความลับของ${p.n}`,`คุณเจอสมุดรายงานในเสื้อคลุมของ${esc(p.n)} ทุกหน้าเขียนเรื่องของคุณ ส่งถึง “หน่วยตะเกียงเทา ฝ่ายเฝ้าระวังผู้ถือตรา”`,[
+  O('เผชิญหน้า',()=>{if(rnd()<.5){feed(`😢 ${esc(p.n)}ร้องไห้ “เขาจับน้องข้าไว้” คุณช่วยเขาวางแผนส่งรายงานปลอมแทน${rep('lamp',-6)}${anc(4)}`);p.sec='loyal'}else{p.alive=0;p.fate='left';feed(`🚪 ${esc(p.n)}ไม่พูดอะไร เก็บของแล้วหายไปคืนนั้น${anc(-8)}`)}},'',.5),
+  O('แกล้งไม่รู้ ป้อนข่าวปลอมกลับ',()=>{p.bad=0;K.f.dbl=1;feed(`🎭 คุณเริ่มเล่าเรื่องที่ไม่จริงให้${esc(p.n)}ฟังทุกคืน หน่วยตะเกียงเทาเริ่มไล่ล่าเงา${rep('lamp',-3)}`)},'',.5)]);return true}
+ if(p.sec==='cult'){p.bad=1;C(`🤝 ${p.n}ชวนไปงานเลี้ยง`,`${esc(p.n)}พาคุณไปงานที่ทุกคนใส่เสื้อคลุมสีเทา ร้องเพลงที่คุณเคยได้ยินจากใต้คลอง “ที่นี่ไม่มีใครต้องเจ็บอีก”`,[
+  O('ดึงเขาออกมา',()=>{if(rnd()<.45+(S.cha||0)/500){p.bad=0;p.sec='loyal';feed(`🫂 ${esc(p.n)}ยอมเดินออกมากับคุณ${rep('cult',-10)}${anc(5)}`)}else{p.alive=0;p.fate='cult';feed(`🕳️ ${esc(p.n)}ปล่อยมือคุณแล้วเดินกลับเข้าไปในวง${anc(-10)}`)}},'ใช้เสน่ห์',.6),
+  O('ฟังพวกเขาต่อ',()=>{K.ins++;feed(`🕳️ พวกเขาเล่าเรื่องระฆังของผู้ก่อตั้ง · 🧩 +1${rep('cult',8)}${anc(-6)}`)},'',.4)]);return true}
+ if(p.sec==='dying'){C(`🤝 ${p.n}ไอเป็นเลือด`,`หมอบอกว่า${esc(p.n)}เหลือเวลาไม่ถึงปี เขาขอแค่อย่างเดียว: ไขคดีสุดท้ายด้วยกัน`,[
+  O('อยู่กับเขาจนวาระสุดท้าย',()=>{K.later.push([S.age+1,'ptdie']);feed(`🫂 คุณตั้งโต๊ะไว้ข้างเตียงเขา อ่านแฟ้มคดีเก่าให้ฟังทุกคืน${anc(4)}`)},'',.7),O('พาไปหาหมอเถื่อนที่ว่ากันว่ารักษาได้ทุกโรค',()=>{if(K.path==='debt'||rnd()<.25){p.sec='loyal';feed(`🩸 ไข้ย้ายออกจากร่างของเขา…${K.path==='debt'?' มาอยู่ในร่างคุณ'+hurt(.3):''} ${esc(p.n)}รอด`)}else{K.later.push([S.age+1,'ptdie']);feed('🩺 หมอเถื่อนรับเงินไปแล้วส่ายหัว'+cash(-80))}},'',.3)]);return true}
+ if(p.sec==='nemesis'){feed(`🤔 ช่วงนี้${esc(p.n)}มักหายไปตอนกลางคืน และกลับมาพร้อมกลิ่นหมึกพิมพ์ใหม่`);return false}
+ C(`🤝 ${p.n}`,`ระหว่างนั่งดื่มหลังปิดคดี ${esc(p.n)}พูดเบาๆ “ข้าดีใจที่ได้ตามเจ้ามา ถ้าวันไหนเจ้าจะตาย ข้าจะไปก่อน”`,[O('ยกแก้วชน',()=>{p.oath=1;feed('🍺 คุณสองคนนั่งจนร้านปิด'+anc(6))},'',.9)]);return true}
+// ---------- เส้นเรื่องหลัก ----------
+const ARC={
+ shadow:{n:'เด็กที่ไม่มีเงา',c:[
+  (K,a)=>C('👧 เด็กที่ไม่มีเงา','เด็กหญิงตัวเล็กนั่งอยู่หน้าบ้านคุณกลางหมอก เธอไม่มีเงา ไม่จำชื่อตัวเอง และกำกระดุมทองเหลืองที่มีตราตระกูลแอชเวลไว้แน่น',[O('พาเข้าบ้าน',()=>{a.f.home=1;feed('🏠 เธอกินซุปไปสามชาม แล้วหลับบนเก้าอี้ข้างเตาผิง'+anc(5))},'',.6),O('ส่งไปโรงทานโบสถ์',()=>{a.f.church=1;feed('⛪ แม่ชีรับเธอไป เธอหันมามองคุณตลอดทาง'+rep('church',3))},'',.3),O('แจ้งหน่วยตะเกียงเทา',()=>{a.f.lamp=1;feed('🏮 หน่วยตะเกียงเทามารับตัวตอนตีสอง'+rep('lamp',4))},'',.1)]),
+  (K,a)=>C('👧 เงาที่ตามหาเจ้าของ',`ข่าวลือแพร่ทั่วเมือง: เงาของเด็กหญิงคนหนึ่งเดินวนตามถนนตะเกียงทุกคืน มันกำลังตามหาร่าง${a.f.lamp?' และคุณรู้ว่าหน่วยตะเกียงเทาขังเด็กคนนั้นไว้':''}`,[O('พาเงาไปหาเด็ก',()=>{a.f.join=1;feed('🌫️ คุณเดินนำเงาผ่านหมอกทั้งคืน มันเกาะหลังคุณเหมือนเด็กกลัวความมืด'+anc(-5))},'',.5),O('ผนึกเงาไว้',()=>{a.f.seal=1;feed('🗝️ เงาถูกผนึกในกล่องดนตรี มันยังร้องเพลงเบาๆ ทุกคืน'+anc(-3))},'',.5)]),
+  (K,a)=>{const e=a.f.join&&a.f.home?'เด็กกับเงารวมกันอีกครั้ง เธอคือลูกสาวที่ตระกูลแอชเวลสังเวยให้หมอกเมื่อสามสิบปีก่อน และเธอเลือกเรียกคุณว่า “บ้าน”':a.f.join?'เด็กกับเงารวมกัน แต่ห้องขังของหน่วยตะเกียงเทาว่างเปล่า เธอหายไปกับหมอก เหลือแค่กระดุมทองเหลือง':a.f.seal?'กล่องดนตรีหยุดร้องในคืนหนึ่ง เด็กหญิงล้มลงไม่ตื่นอีกเลย คุณไม่มีวันรู้ว่าเลือกถูกหรือผิด':'เด็กหญิงโตขึ้นในโรงทานโดยไม่มีเงา และไม่เคยรู้ว่าตัวเองเป็นใคร';
+   say(`👧 <b>เด็กที่ไม่มีเงา — บทสุดท้าย</b>: ${e}${a.f.join&&a.f.home?anc(15)+rep('house',-15):a.f.seal?anc(-10):''}`,'myth',true);if(a.f.join&&a.f.home){S.kids=(S.kids||0)+1;K.ins++}}]},
+ bell2:{n:'ระฆังใบที่สอง',c:[
+  (K,a)=>C('🔔 เศษทองแดงในท้องปลา','แม่ค้าปลาเจอเศษทองแดงสลักตัวอักษรโบราณในท้องปลาตัวใหญ่ ใครถือมันจะได้ยินเสียงระฆังตลอดเวลา',[O('ซื้อเก็บไว้',()=>{a.f.keep=1;feed('🔔 เสียงระฆังดังในหัวทั้งคืน'+anc(-4)+cash(-30))},'',.5),O('ส่งให้โบสถ์',()=>{a.f.church=1;feed('⛪ นักบวชรับไปด้วยมือสั่น'+rep('church',5))},'',.3),O('ขายให้สมาคม',()=>{a.f.glass=1;feed('🔮 สมาคมจ่ายแพงผิดปกติ'+cash(120)+rep('glass',4))},'',.2)]),
+  (K,a)=>C('🔔 ลัทธิตามหาเศษระฆัง',`บุตรแห่งระฆังล่มประกาศว่าพวกเขามีเศษระฆังใบที่สองครบเจ็ดในแปดชิ้น${a.f.keep?' และชิ้นสุดท้ายอยู่ในบ้านคุณ':a.f.glass?' และชิ้นสุดท้ายถูกประมูลในถนนกระจกคืนนี้':' ชิ้นสุดท้ายอยู่ในห้องใต้ดินโบสถ์'}`,[O('ชิงเศษระฆังมาก่อน',()=>{if(fight(threat(K),0)){a.f.have=1;feed('⚔️ คุณได้เศษชิ้นสุดท้ายมาอยู่ในมือ'+rep('cult',-10))}else feed('💥 ลัทธิได้ชิ้นสุดท้ายไป'+hurt(.3))},'ต่อสู้',.5),O('ให้ลัทธิไป ดูว่าพวกเขาจะทำอะไร',()=>{a.f.give=1;feed('🕳️ พวกเขาขอบคุณคุณด้วยน้ำตา'+rep('cult',12))},'',.5)]),
+  (K,a)=>{const e=a.f.have?'คุณหลอมเศษระฆังใบที่สองเป็นกระดิ่งเล็กๆ เสียงของมันทำให้หมอกรอบบ้านคุณบางลงตลอดไป':a.f.give?'คืนวันสุริยคราส ลัทธิตีระฆังใบที่สอง เมืองทั้งเมืองได้ยินเสียงจากใต้หมอกตอบกลับมาเป็นครั้งแรก ไม่มีใครรู้ว่ามันพูดว่าอะไร':'เศษชิ้นสุดท้ายหายไปจากทุกที่ ราวกับว่ามันไม่เคยมีอยู่';say(`🔔 <b>ระฆังใบที่สอง — บทสุดท้าย</b>: ${e}`,'myth',true);if(a.f.have){K.arts.includes('bellx')||K.arts.push('bellx');K.ins++}if(a.f.give){K.lore=Math.max(K.lore,7);K.anc=Math.max(0,K.anc-10)}}]},
+ prev:{n:'นักสืบคนก่อนที่หายไป',c:[
+  (K,a)=>C('📓 สมุดของนักสืบคนก่อน',`คุณเจอสมุดจดคดีในห้องเช่าที่เพิ่งย้ายเข้า เจ้าของเดิมคือนักสืบชื่อดังที่หายตัวไปเมื่อยี่สิบปีก่อน หน้าสุดท้ายเขียนว่า “ถ้าใครอ่านอยู่ อย่าไว้ใจ${esc(K.mentor)}”`,[O('อ่านทั้งเล่ม',()=>{a.f.read=1;S.int+=6;K.ins++;feed('📓 คดีในสมุดเชื่อมโยงกันเป็นใยแมงมุม · 🧩 +1'+anc(-4))},'',.6),O('เอาไปถามอาจารย์ตรงๆ',()=>{a.f.ask=1;feed(`🧓 ${esc(K.mentor)}เงียบไปนาน “เขาเป็นศิษย์คนแรกของข้า และเป็นคนที่ข้าล้มเหลวที่สุด”`)},'',.4)]),
+  (K,a)=>C('📓 ตามรอยสมุด','รอยสุดท้ายในสมุดพาคุณไปถึงประตูเหล็กใต้หอนาฬิกา มีเสียงคนเคาะจากข้างใน',[O('ไขประตู',()=>{a.f.open=1;feed('🗝️ ข้างในมีชายผอมแห้งที่ไม่แก่ลงเลยตลอดยี่สิบปี'+anc(-6))},'',.6),O('ถอยออกมา รายงานหน่วยตะเกียงเทา',()=>{a.f.rep=1;feed('🏮 วันรุ่งขึ้นประตูถูกเชื่อมปิดตาย'+rep('lamp',6))},'',.4)]),
+  (K,a)=>{const e=a.f.open?(a.f.read?`นักสืบคนก่อนบอกความจริง: ${esc(K.mentor)}ขังเขาไว้เพราะเขารู้ว่าหมอกมาจากไหน ก่อนจะสลายเป็นฝุ่นต่อหน้าคุณ เขายื่นกุญแจดอกหนึ่งให้`:'ชายคนนั้นจำอะไรไม่ได้อีกแล้ว นอกจากชื่อคุณ เขาเรียกชื่อคุณซ้ำๆ ก่อนจะหลับไปตลอดกาล'):a.f.rep?'ประตูถูกปิดตาย แต่ทุกคืนคุณยังได้ยินเสียงเคาะในความฝัน':'สมุดเล่มนั้นหายไปจากห้อง ราวกับไม่เคยมีอยู่';say(`📓 <b>นักสืบคนก่อนที่หายไป — บทสุดท้าย</b>: ${e}`,'myth',true);if(a.f.open&&a.f.read){K.ins+=2;if(!K.arts.includes('key'))K.arts.push('key');if(K.nem&&!K.nem.done&&K.nem.k==='mentor')nemLetter(K)}}]},
+ eclipse:{n:'พิธีวันสุริยคราสดับ',c:[
+  (K,a)=>C('🌑 ประกาศสุริยคราส','หอดูดาวประกาศว่าอีกไม่กี่ปีจะเกิดสุริยคราสเต็มดวงเหนือเมือง ทุกองค์กรเริ่มเตรียมบางอย่าง',[O('สืบว่าใครเตรียมอะไร',()=>{a.f.spy=1;feed('🔎 ทุกฝ่ายเตรียมพิธี: เปิดม่าน ปิดม่าน หรือขายตั๋วชม'+anc(-2))},'',.6),O('ไม่ยุ่ง ใช้ชีวิตไป',()=>{a.f.calm=1;feed('☕ คุณเลือกไม่สนใจ'+anc(3))},'',.4)]),
+  (K,a)=>{const top=Object.entries(K.rep).sort((x,y)=>y[1]-x[1])[0][0];C('🌑 คืนก่อนคราส',`${FAC[top].ic} ${FAC[top].n}ซึ่งไว้ใจคุณที่สุด ขอให้คุณยืนในวงพิธีของพวกเขาพรุ่งนี้`,[O('ไปยืนในวง',()=>{a.f.side=top;feed(`${FAC[top].ic} คุณตอบรับ`+rep(top,8))},'',.6),O('ทำลายพิธีทุกวง',()=>{a.f.break=1;feed('🔥 คุณเตรียมน้ำมันกับไม้ขีด'+anc(-4))},'',.4)])},
+  (K,a)=>{const s=a.f.side;const e=a.f.break?(fight(threat(K)*1.2,0)?'คุณทำลายวงพิธีได้ทั้งหมด ท้องฟ้ามืดสามนาทีแล้วสว่างเหมือนไม่มีอะไรเกิดขึ้น ทุกองค์กรต่างตั้งค่าหัวคุณ':'คุณทำลายได้แค่สองวง วงที่สามสำเร็จ และไม่มีใครรู้ว่าพิธีนั้นทำอะไรกับเมือง'):s?`${FAC[s].n}ทำพิธีสำเร็จ อำนาจในเมืองเปลี่ยนมือ และชื่อคุณถูกสลักไว้ในบันทึกของพวกเขา`:'คุณดูคราสจากหลังคาบ้าน เห็นแสงแปลกๆ ขึ้นจากหลายมุมเมือง และไม่เคยรู้ว่าเกิดอะไรขึ้น';
+   say(`🌑 <b>พิธีวันสุริยคราสดับ — บทสุดท้าย</b>: ${e}`,'myth',true);if(a.f.break)FK.forEach(k=>K.rep[k]=cl(K.rep[k]-15,-100,100));if(s){K.rep[s]=cl(K.rep[s]+20,-100,100);K.ins++}}]},
+ future:{n:'จดหมายจากตัวเองในอนาคต',c:[
+  (K,a)=>C('✉️ ลายมือของตัวเอง',`จดหมายลายมือคุณเอง ลงวันที่อีก ${R(10,20)} ปีข้างหน้า: “อย่าไว้ใจคนที่ยื่นร่มให้ อย่ารับคดีเรือ และอย่าเรียกชื่อตอนเที่ยงคืน”`,[O('เชื่อทุกคำ',()=>{a.f.trust=1;feed('✉️ คุณเก็บจดหมายไว้ในกระเป๋าเสื้อตลอดเวลา')},'',.5),O('คิดว่าเป็นเรื่องล้อเล่น',()=>{a.f.no=1;feed('🔥 คุณเผาจดหมายทิ้ง'+(K.echo.push({k:'burn',y:S.age}),''))},'',.5)]),
+  (K,a)=>C('✉️ จดหมายฉบับที่สอง','ฉบับที่สองมาถึง ลายมือสั่นกว่าเดิม: “เจ้าไม่ฟังข้า ทุกอย่างเกิดขึ้นตามที่ข้าเขียน แต่ยังเปลี่ยนได้หนึ่งเรื่อง เลือกว่าจะช่วยใคร”',[O(`ช่วย${S.spouse?S.spouse:K.friend}`,()=>{a.f.save='love';feed('✉️ คุณเขียนชื่อเขาลงในจดหมายตอบ แล้วโยนลงคลอง')},'',.5),O('ช่วยตัวเอง',()=>{a.f.save='me';feed('✉️ คุณเขียนชื่อตัวเอง มือสั่นตลอดเวลา'+anc(-3))},'',.5)]),
+  (K,a)=>{const e=a.f.save==='love'?'ในคืนที่ทุกอย่างควรจบไม่ดี คนที่คุณเลือกช่วยรอดมาได้ แต่จดหมายฉบับสุดท้ายว่างเปล่า ราวกับตัวคุณในอนาคตไม่มีอยู่อีกแล้ว':a.f.save==='me'?'คุณรอดจากคืนที่ควรตาย แต่ทุกครั้งที่ส่องกระจก คนในนั้นแก่กว่าคุณเล็กน้อย':'จดหมายหยุดมา และคุณไม่รู้ว่านั่นแปลว่าดีหรือร้าย';say(`✉️ <b>จดหมายจากตัวเองในอนาคต — บทสุดท้าย</b>: ${e}`,'myth',true);if(a.f.save==='love'){S.mw.end=Math.max(S.age+3,S.mw.end-6);K.endB-=6;K.anc=Math.min(ancMax(K),K.anc+10)}if(a.f.save==='me'){K.endB+=8;K.anc=Math.max(0,K.anc-8)}}]},
+ play:{n:'ละครที่เล่นเรื่องชีวิตคุณ',c:[
+  (K,a)=>C('🎭 ละครเรื่องใหม่','โรงละครริมคลองเปิดการแสดงเรื่องใหม่ ตัวเอกมีชื่อเดียวกับคุณ และฉากแรกคือวันที่คุณเกิด ทุกรายละเอียดถูกต้องหมด',[O('ดูจนจบองก์แรก',()=>{a.f.watch=1;feed('🎭 องก์แรกจบที่ปีนี้พอดี นักแสดงหันมาโค้งให้คุณคนเดียว'+anc(-4))},'',.6),O('ตามหาคนเขียนบท',()=>{a.f.hunt=1;S.int+=4;feed('🖋️ คนเขียนบทใช้นามแฝงว่า “ผู้ประพันธ์ความจริง”')},'',.4)]),
+  (K,a)=>C('🎭 องก์ที่สอง','องก์ที่สองเล่นเหตุการณ์ที่ยังไม่เกิด: คนที่คุณรักถูกพาตัวไปในคืนหมอก',[O('แก้บทละคร',()=>{if(K.path==='liar'||rnd()<.35+(S.int||0)/700){a.f.rewrite=1;feed('🖋️ คุณแอบเข้าไปเขียนบทองก์ที่สองใหม่ทั้งองก์'+anc(-6))}else{a.f.fail=1;feed('🖋️ หมึกที่คุณเขียนจางหายภายในคืนเดียว')}},'',.5),O('เผาโรงละคร',()=>{a.f.burn=1;S.karma-=6;feed('🔥 โรงละครไหม้ทั้งหลัง'+rep('lamp',-6))},'',.2),O('ปล่อยให้ละครดำเนินไป',()=>{a.f.let=1},'',.3)]),
+  (K,a)=>{const e=a.f.rewrite?'ม่านปิดองก์สุดท้ายด้วยฉากที่คุณเขียนเอง ตัวเอกนั่งดื่มชากับคนที่รัก และเรื่องจริงก็เป็นอย่างนั้น':a.f.burn?'โรงละครไหม้ แต่ละครยังเล่นต่อในความฝันของคนทั้งเมือง':'องก์สุดท้ายจบตรงฉากที่ตัวเอกนั่งดูละครเรื่องชีวิตตัวเอง… แล้วม่านก็ไม่ยอมปิด';say(`🎭 <b>ละครที่เล่นเรื่องชีวิตคุณ — บทสุดท้าย</b>: ${e}`,'myth',true);if(a.f.rewrite){K.anc=Math.min(ancMax(K),K.anc+15);K.ins++}if(a.f.let||a.f.fail)loseLoved(K)}]},
+ plague:{n:'ไข้หมอกครั้งใหญ่',c:[
+  (K,a)=>C('🤒 ไข้หมอก','คนในท่าเรือเก่าเริ่มไอเป็นหมอกสีเทา หมอบอกว่ามันไม่ใช่โรคธรรมดา',[O('ช่วยหมอตรอกล่างรักษา',()=>{a.f.help=1;S.karma+=4;feed('🩺 คุณช่วยแบกคนป่วยทั้งคืน'+hurt(.1))},'',.6),O('ปิดบ้าน ห้ามใครเข้าออก',()=>{a.f.hide=1;feed('🚪 คุณปิดหน้าต่างทุกบาน'+anc(2))},'',.4)]),
+  (K,a)=>C('🤒 คำสั่งปิดเมือง','ทางการจะปิดท่าเรือเก่าและเผาทุกบ้านที่มีคนป่วย สหายไอน้ำประกาศว่าจะสู้',[O('ช่วยสหายไอน้ำขวาง',()=>{a.f.steam=1;feed('⚙️ คุณยืนแนวหน้ากับกรรมกร'+rep('steam',12))},'',.4),O('ช่วยทางการอพยพคนที่ยังไม่ป่วย',()=>{a.f.lamp=1;feed('🏮 คุณพาคนสองร้อยคนออกจากย่าน'+rep('lamp',10))},'',.4),O('หาต้นเหตุจริง',()=>{a.f.cause=1;K.ins++;feed('🔎 ไข้มาจากเรือที่เทียบท่าจากใต้หมอก · 🧩 +1'+anc(-5))},'',.2)]),
+  (K,a)=>{const e=a.f.cause?'คุณจมเรือต้นเหตุลงกลางคลอง ไข้หมอกค่อยๆ หายไปจากเมือง':a.f.steam?'ท่าเรือเก่าไม่ถูกเผา แต่ไข้ลามไปอีกสามย่าน กรรมกรเรียกคุณว่าพี่น้อง ทางการเรียกคุณว่ากบฏ':a.f.lamp?'ท่าเรือเก่าถูกเผาราบ คนที่คุณพาออกมารอด คนที่เหลือไม่มีใครพูดถึงอีก':'ไข้ผ่านไปเอง ทิ้งหลุมศพใหม่ไว้หลายร้อยหลุม';say(`🤒 <b>ไข้หมอกครั้งใหญ่ — บทสุดท้าย</b>: ${e}`,'myth',true);if(a.f.steam)K.rep.lamp=cl(K.rep.lamp-20,-100,100);if(a.f.lamp){K.rep.steam=cl(K.rep.steam-20,-100,100);K.anc=Math.max(0,K.anc-8)}if(a.f.cause)S.fame+=40}]},
+ sib:{n:'พี่น้องที่ไม่เคยมี',c:[
+  (K,a)=>{const n=pick(FN)+' '+S.name.split(' ').slice(-1)[0];a.f.n=n;C('👥 คนที่บอกว่าเป็นพี่น้องของคุณ',`<b>${esc(n)}</b> มาเคาะประตู ถือรูปถ่ายครอบครัวที่มีคุณกับเขายืนคู่กัน คุณจำเขาไม่ได้เลย แต่แม่คุณในรูปยิ้มให้เขา`,[O('ให้เข้าบ้าน',()=>{a.f.in=1;feed('🏠 เขารู้ว่าคุณกลัวอะไรตอนเด็ก รู้ว่าคุณซ่อนขนมไว้ที่ไหน'+anc(-4))},'',.6),O('ไล่เขาไป',()=>{a.f.out=1;feed('🚪 เขาวางรูปไว้หน้าประตูแล้วเดินจากไป')},'',.4)])},
+  (K,a)=>C('👥 ความทรงจำที่ถูกตัด',`คุณพบว่ามีคนตัดความทรงจำเรื่อง${esc(a.f.n)}ออกจากหัวคุณเมื่อยี่สิบปีก่อน คนที่ทำคือคนในครอบครัวเอง`,[O('ขุดความทรงจำกลับมา',()=>{a.f.dig=1;feed(`🌑 คุณจำได้ทั้งหมด… รวมถึงเหตุผลที่ต้องลืม${anc(-10)}`)},'หลักยึด −10',.5),O('ยอมรับเขาเป็นพี่น้องโดยไม่ต้องจำ',()=>{a.f.accept=1;feed('🫂 คุณกอดเขา ทั้งที่ยังจำอะไรไม่ได้'+anc(6))},'',.5)]),
+  (K,a)=>{const e=a.f.dig?`ความทรงจำที่กลับมาบอกว่า${esc(a.f.n)}คือคนที่ตายแทนคุณในคืนที่คุณควรถูกหมอกกลืนตอนเด็ก สิ่งที่มาเคาะประตูคือเสียงสะท้อนของเขา และมันกำลังจางหาย`:a.f.accept?`${esc(a.f.n)}อยู่ด้วยกันกับคุณจนแก่ ไม่มีใครรู้ว่าเขาเป็นใครจริงๆ และไม่มีใครสนใจอีกแล้ว`:`รูปถ่ายหน้าประตูซีดลงทุกวัน จนเหลือแค่คุณยืนคนเดียว`;say(`👥 <b>พี่น้องที่ไม่เคยมี — บทสุดท้าย</b>: ${e}`,'myth',true);if(a.f.dig){K.ins+=2;K.lore=Math.max(K.lore,3)}if(a.f.accept)K.anc=Math.min(ancMax(K),K.anc+12)}]}};
+function arcTick(K){for(const a of K.arcs){if(a.ch>=3||S.age<a.at)continue;const A=ARC[a.id];queue(()=>{try{A.c[a.ch](K,a)}catch(e){console.error(e)}a.ch++;a.at=S.age+R(4,8)});return true}return false}
+// ---------- ผลย้อนหลัง (เมล็ดเล็กๆ ที่กลับมาทีหลัง) ----------
+const SEEDS=[
+ [K=>!K.echo.some(e=>e.k==='beggar'),K=>C('🪙 ขอทานใต้สะพาน','ชายตาบอดข้างหนึ่งนั่งขอทานใต้สะพานเก้าโค้ง ทุกคนเดินผ่านไป',[O('ให้เหรียญ',()=>{S.money=Math.max(0,S.money-5);K.echo.push({k:'beggar',y:S.age});feed('🪙 เขาจำเสียงคุณได้ คุณไม่รู้ตัว')},'',.6),O('เดินผ่าน',()=>{},'',.4)])],
+ [K=>!K.echo.some(e=>e.k==='thief'),K=>C('🍞 เด็กขโมยขนมปัง','เด็กชายผอมกะหร่องขโมยขนมปังแล้ววิ่งชนคุณ คนขายตะโกนให้จับ',[O('ปล่อยเขาไป แล้วจ่ายค่าขนมปังแทน',()=>{S.money=Math.max(0,S.money-8);K.echo.push({k:'thief',y:S.age});feed('🏃 เด็กหันมามองคุณครั้งเดียวแล้วหายเข้าซอย')},'',.6),O('จับส่งคนขาย',()=>{S.karma-=2;feed('👮 เด็กร้องไห้ตอนถูกลากไป')},'',.4)])],
+ [K=>age()>=18&&!K.echo.some(e=>e.k==='lie'),K=>C('🤥 คำโกหกเล็กๆ',`ตำรวจถาม${esc(K.friend)}ว่าคืนนั้นอยู่ที่ไหน เขามองคุณเหมือนขอร้อง คุณรู้ว่าเขาไม่ได้อยู่บ้าน`,[O('โกหกให้ว่าเขาอยู่กับคุณ',()=>{K.echo.push({k:'lie',y:S.age});feed('🤥 ตำรวจจดคำให้การของคุณแล้วเดินจากไป'+anc(-2))},'',.5),O('พูดความจริง',()=>{feed(`😶 ${esc(K.friend)}ไม่ได้โกรธ แต่ไม่เคยมองคุณเหมือนเดิม`)},'',.5)])],
+ [K=>age()>=18&&!K.echo.some(e=>e.k==='noble'),K=>C('🦉 ขุนนางบนรถม้า','รถม้าของตระกูลแอชเวลสาดโคลนใส่เด็กข้างทาง ขุนนางหนุ่มหัวเราะ',[O('ตะโกนต่อว่า',()=>{K.echo.push({k:'noble',y:S.age});S.karma+=2;feed('🦉 ขุนนางจ้องหน้าคุณนานผิดปกติ')},'',.5),O('ช่วยเด็กลุกขึ้นเงียบๆ',()=>{S.karma+=2;feed('🧒 เด็กยิ้มให้ทั้งที่หน้าเปื้อนโคลน'+anc(2))},'',.5)])]];
+function echoTick(K){const n=K.echo.find(e=>e.k==='noble'&&S.age-e.y>=R(5,9)&&!e.d);if(n){n.d=1;queue(()=>C('🦉 ขุนนางคนนั้น',`ขุนนางหนุ่มที่คุณเคยต่อว่าเมื่อ ${S.age-n.y} ปีก่อน ตอนนี้นั่งอยู่ในสภาเมือง และเขาจำหน้าคุณได้`,[O('ขอโทษ',()=>feed('🙇 เขารับคำขอโทษด้วยรอยยิ้มที่ไม่ถึงตา'+rep('house',-5)),'',.5),O('ยืนยันคำเดิม',()=>{feed('🦉 ใบอนุญาตทุกอย่างของคุณถูกตรวจสอบย้อนหลัง'+rep('house',-15)+fame(15)+cash(-60))},'',.5)]));return true}
+ const fd=K.echo.find(e=>e.k==='freed'&&S.age-e.y>=3&&!e.d);if(fd&&rnd()<.3){fd.d=1;queue(()=>{say(`🕊️ ${esc(fd.n)}คนที่คุณเคยปล่อยไป ส่งของขวัญมาโดยไม่ลงชื่อ: ${pick(['ข้อมูลลับขององค์กร','เครื่องสังเวยที่คุณตามหา','สมุดจดชื่อคนที่อยากฆ่าคุณ'])}`,'good');K.off=Math.max(K.off,K.tier+1);K.ins++});return true}return false}
+LATER.jail=K=>{const n=K.f.jail;if(!n)return;C('⛓️ คนที่คุณส่งเข้าคุก',`${esc(n)}ยังอยู่ในคุกเพราะหลักฐานที่ถูกวาง และคุณเพิ่งรู้ว่าใครเป็นคนวาง`,[O('แหกคุกช่วยเขาออกมา',()=>{if(fight(threat(K)*.9,0)){S.spouse=n;K.f.jail=0;say(`⛓️ คุณพา${esc(n)}หนีออกมาได้ เขาไม่พูดอะไรนอกจากจับมือคุณแน่น${rep('lamp',-20)}${anc(10)}`,'epic')}else say('⛓️ แผนล้มเหลว คุณเกือบถูกจับไปด้วย'+hurt(.35),'bad')},'',.5),O('หาหลักฐานใหม่ยื่นศาล',()=>{if(rnd()<.4+(S.int||0)/600){S.spouse=n;K.f.jail=0;say(`⚖️ ศาลยกฟ้อง ${esc(n)}ได้กลับบ้าน${fame(20)}${anc(8)}`,'epic')}else{feed('⚖️ ศาลไม่รับหลักฐาน'+anc(-6));K.later.push([S.age+3,'jail'])}},'ใช้ปัญญา',.5)])};
+LATER.ptdie=K=>{const p=K.pt;if(!p||!p.alive)return;p.alive=0;p.fate='died';say(`🕯️ <b>${esc(p.n)}จากไปอย่างสงบ</b> ก่อนหลับตาเขายื่นสมุดจดคดีทั้งหมดที่ทำด้วยกันให้คุณ · 🧩 +2${anc(-12)}`,'bad',true);K.ins+=2;if(!K.arts.includes('doll'))K.arts.push('doll')};
+LATER.nem=K=>nemFace(K);
+LATER.redux=(K,id)=>{if(K.cur)return;const T=CT(id);if(!T)return;const i=K.cases.findIndex(x=>x.id===id&&x.r==='wrong');if(i>=0)K.cases.splice(i,1);feed(`🔁 คดี「${T.n}」กลับมาอีกครั้ง คนร้ายตัวจริงยังลอยนวล`);caseStart(K,id)};
+// ---------- ภาพหลอนเมื่อหลักยึดต่ำ ----------
+const HAL=['ประตูบานที่สามที่คุณไม่เคยเห็นมาก่อน','เดินตามแมวสีขาวที่มีเงาเป็นคน','ขอความช่วยเหลือจากคนในกระจก','ตอบเสียงที่เรียกชื่อคุณ'];
+function halOpt(K){return O(`👁️ ${pick(HAL)}`,()=>{say(`👁️ คุณเอื้อมมือไป… <i>ไม่มีตัวเลือกนี้อยู่ตั้งแต่แรก</i>${anc(-3)}`,'bad')},'',.02)}
+// ---------- มินิเกมสืบสวน ----------
+let MG=null;
+const autoSc=()=>cl(.3+(S.int||0)/700+rnd()*.35,.1,.95);
+function mgEnd(sc,x){if(!MG)return;const m=MG;MG=null;clearInterval(m.t);clearTimeout(m.t2);if(modalOpen&&$('modal').dataset.k==='fogmg')closeM();setTimeout(()=>{try{m.cb(cl(sc,0,1),x)}catch(e){console.error(e)}},60)}
+function mgShell(ti,sub,body){fgModal(`<h3>${ti}</h3><p class="tag2">${sub}</p>${body}`,'fogmg')}
+// 🔍 ค้นที่เกิดเหตุ: ตัวเลขบอกจำนวนหลักฐานรอบช่อง · ของเปราะทำให้หลักฐานที่เก็บได้แตก
+function mgSearch(cb){if(auto)return cb(autoSc());const N=16,ev=shuf([...Array(N).keys()]).slice(0,5),E=ev.slice(0,3),X=ev.slice(3);const st={left:6,got:0,rv:{}};
+ const adj=i=>{const r=Math.floor(i/4),c0=i%4;let n=0;for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){if(!dr&&!dc)continue;const rr=r+dr,cc=c0+dc;if(rr<0||cc<0||rr>3||cc>3)continue;if(E.includes(rr*4+cc))n++}return n};
+ MG={cb,st};const draw=()=>{const g=$('fgSg'),h=$('fgSh');if(g)g.innerHTML=[...Array(N).keys()].map(i=>{const v=st.rv[i];return`<button class="${v?'o '+v[0]:''}" onclick="fogSrc(${i})">${v?v[1]:''}</button>`}).join('');if(h)h.innerHTML=`🧩 ${st.got}/3 · เหลือแตะ ${st.left} ครั้ง`};
+ window.fogSrc=i=>{if(!MG||st.rv[i]||st.left<=0)return;st.left--;if(E.includes(i)){st.got++;st.rv[i]=['e','🧩'];try{sfx('good')}catch(e){}}else if(X.includes(i)){st.rv[i]=['x','💥'];if(st.got>0)st.got--;try{sfx('bad')}catch(e){}}else{const n=adj(i);st.rv[i]=['n'+n,n||'·']}draw();if(st.got>=3||st.left<=0)setTimeout(()=>mgEnd(st.got/3),500)};
+ mgShell('🔍 ค้นที่เกิดเหตุ','แตะช่องเพื่อค้น · <b>ตัวเลข</b> = จำนวนหลักฐานในช่องรอบๆ (8 ทิศ) · 💥 ของเปราะ ทำหลักฐานที่ได้แตก 1 ชิ้น · ได้แตะ 6 ครั้ง',`<div class="fgSh" id="fgSh"></div><div class="fgSg" id="fgSg"></div><button class="gbtn" style="width:100%;margin-top:8px" onclick="mgQuit()">หยุดค้น</button>`);draw()}
+window.mgQuit=()=>{if(MG&&MG.st)mgEnd(MG.st.got/3)};
+// 🗣️ สอบปากคำ: แตะประโยคที่ขัดกับข้อเท็จจริง
+const OBJ=[['ฝนตกหนักตั้งแต่สองทุ่มจนรุ่งเช้า','ข้าเดินกลับบ้านตอนสามทุ่ม เสื้อยังแห้งสนิท'],['ไฟถนนทั้งย่านดับตอนสามทุ่ม','ข้าเห็นหน้าเขาชัดใต้แสงตะเกียงตอนสามทุ่มครึ่ง'],['สะพานเก้าโค้งปิดซ่อมทั้งคืน','ข้าเดินข้ามสะพานเก้าโค้งกลับบ้านตามปกติ'],['หน้าต่างห้องเกิดเหตุถูกตอกตะปูปิดตาย','ข้าได้ยินเสียงหน้าต่างห้องนั้นเปิดปิดทั้งคืน'],['หอนาฬิกาหยุดเดินตั้งแต่เมื่อวาน','ข้าดูเวลาจากหอนาฬิกา ตอนนั้นสี่ทุ่มพอดี'],['ผู้ตายแพ้ดอกกุหลาบอย่างรุนแรง','ข้าส่งช่อกุหลาบให้เขาทุกเช้า เขาชอบมาก'],['รถรางเที่ยวสุดท้ายออกสองทุ่มครึ่ง','ข้านั่งรถรางกลับมาถึงตอนสี่ทุ่ม'],['สุนัขเฝ้าบ้านเห่าใส่คนแปลกหน้าทุกคน','ข้าไม่เคยไปบ้านนั้น แต่คืนนั้นสุนัขเงียบตอนข้าเดินผ่านประตู'],['ประตูห้องใต้ดินมีกุญแจดอกเดียว อยู่กับผู้ตาย','ข้าลงไปห้องใต้ดินเองตอนเช้า ประตูเปิดอยู่แล้ว'],['ผู้ตายตาบอดมาสิบปี','เขาอ่านจดหมายของข้าต่อหน้าข้าเลย'],['คืนนั้นหมอกหนาจนมองไม่เห็นเกินสามก้าว','ข้ามองจากหน้าต่างอีกฝั่งถนน เห็นเขาใส่เสื้อสีเทาชัดเจน'],['ร้านขนมปังหัวมุมปิดมาสามเดือนแล้ว','เช้านั้นข้าแวะซื้อขนมปังที่ร้านหัวมุมก่อนไปทำงาน']];
+const FIL=['คืนนั้นข้าดื่มชาร้อนก่อนนอน','ข้ากับเขาไม่ค่อยได้คุยกันหรอก','ข้าได้ยินเสียงระฆังไกลๆ','ข้าทำงานกะดึกที่ท่าเรือตามปกติ','มีแมวดำเดินผ่านหน้าบ้าน','ข้าจำได้ว่าเขาชอบใส่เสื้อคลุมยาว','ข้าเกลียดหมอกในเมืองนี้','ภรรยาข้าบ่นเรื่องค่าถ่านทั้งคืน','ข้าไม่ได้ยินเสียงอะไรผิดปกติเลย','ข้านับเงินในลิ้นชักสองรอบ'];
+function mgObj(K,cb){if(auto)return cb(autoSc());const L=shuf(OBJ),lie=L[0],facts=shuf([lie[0],L[1][0],L[2][0]]),lines=shuf(shuf(FIL).slice(0,4).concat([lie[1]]));const st={w:0,left:20};
+ MG={cb,st};window.fogObj=i=>{if(!MG)return;const b=document.querySelectorAll('#fgOl button')[i];if(lines[i]===lie[1]){if(b)b.classList.add('ok');try{sfx('good')}catch(e){}setTimeout(()=>mgEnd(st.w?.6:1),600)}else{st.w++;if(b){b.classList.add('ng');b.disabled=true}try{sfx('bad')}catch(e){}if(st.w>=2)setTimeout(()=>mgEnd(0),500)}};
+ MG.t=setInterval(()=>{st.left--;const e=$('fgOt');if(e)e.textContent=st.left;if(st.left<=0)mgEnd(0)},1000);
+ mgShell('🗣️ สอบปากคำ','พยานกำลังให้การ · แตะ <b>คัดค้าน!</b> ที่ประโยคที่ขัดกับข้อเท็จจริงที่คุณรู้ · ผิด 2 ครั้งพยานเลิกพูด',`<div class="fgFact">📌 ข้อเท็จจริงที่คุณรู้:<br>${facts.map(f=>'• '+f).join('<br>')}</div><div class="fgSh">⏱ <b id="fgOt">20</b> วิ</div><div id="fgOl" class="fgOl">${lines.map((l,i)=>`<button onclick="fogObj(${i})">“${l}” <i>คัดค้าน!</i></button>`).join('')}</div>`)}
+// ⏱️ ไทม์ไลน์: หาคนที่เดินทางเร็วเกินจริง
+const PLC=['ท่าเรือเก่า','โรงละคร','โบสถ์','สะพานเก้าโค้ง','ตลาดน้ำมืด','หอนาฬิกา'];
+const hm=m=>`${String(Math.floor(m/60)%24).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
+function mgTime(K,cb){const c=K.cur,liar=c.cul>=0&&rnd()<.6?c.cul:Math.floor(rnd()*3);if(auto)return cb(autoSc(),liar===c.cul);
+ const P0=shuf(PLC).slice(0,4),tv={};const key=(a,b)=>[a,b].sort().join('|');for(let i=0;i<4;i++)for(let j=i+1;j<4;j++)tv[key(P0[i],P0[j])]=R(3,9)*5;
+ const st=c.sus.map((s,i)=>{const a=pick(P0),b=pick(P0.filter(x=>x!==a)),t=tv[key(a,b)],t1=R(20,22)*60+R(0,5)*10;let gap=i===liar?Math.max(5,t-R(2,Math.max(2,Math.floor(t/5)))*5):t+R(0,3)*5;if(i===liar&&gap>=t)gap=t-5;return{n:s.n,a,b,t1,t2:t1+gap,k:key(a,b)}});
+ const used=[...new Set(st.map(x=>x.k))];const S0={w:0};MG={cb,st:S0};
+ window.fogTm=i=>{if(!MG)return;const b=document.querySelectorAll('#fgTl button')[i];if(i===liar){if(b)b.classList.add('ok');try{sfx('good')}catch(e){}setTimeout(()=>mgEnd(S0.w?.6:1,liar===c.cul),600)}else{S0.w++;if(b){b.classList.add('ng');b.disabled=true}try{sfx('bad')}catch(e){}if(S0.w>=2)setTimeout(()=>mgEnd(0,0),500)}};
+ mgShell('⏱️ ไทม์ไลน์คืนเกิดเหตุ','ผู้ต้องสงสัยเล่าว่าคืนนั้นไปไหนบ้าง · ดูเวลาเดินจริงด้านบน แล้วแตะคนที่<b>เดินทางเร็วเกินกว่าที่ทำได้</b> · ผิด 2 ครั้งแพ้',
+  `<div class="fgFact">🚶 เวลาเดินเท้าในหมอก (อย่างน้อย):<br>${used.map(k=>{const[a,b]=k.split('|');return`• ${a} ↔ ${b}: <b>${tv[k]} นาที</b>`}).join('<br>')}</div><div id="fgTl" class="fgOl">${st.map((x,i)=>`<button onclick="fogTm(${i})"><b>${esc(x.n)}</b>: “ข้าออกจาก${x.a}ตอน ${hm(x.t1)} ไปถึง${x.b}ตอน ${hm(x.t2)}”</button>`).join('')}</div>`)}
+
 
 // =================== เหตุการณ์ชีวิต ===================
 const EVS=[
@@ -336,7 +533,7 @@ const EVS=[
   O('เล่าแค่บางส่วน',()=>feed('⛪ ใจเบาขึ้นนิดหน่อย'+anc(5)),'',.4)])],
  [K=>K.path==='gear'&&K.tier>=2,K=>C('⚙️ หุ่นกลที่ถามคำถาม',`หุ่นเฝ้าบ้านที่คุณสร้างถามขึ้นมากลางดึกว่า “ข้าเป็นใคร”`,[
   O('ตั้งชื่อให้มัน',()=>{K.f.golem=1;feed(`⚙️ คุณตั้งชื่อมันว่า “${pick(['ทิก','เบลโล','มอสส์','ปิ๊ป'])}” มันเงียบไปทั้งคืน เช้ามามันชงชาให้${anc(4)}${pw(capOf(K.tier)*.05)}`)},'',.6),O('ถอดหัวใจกลออก',()=>feed('🔧 คุณถอดหัวใจกลออก ห้องเงียบลงอย่างน่ากลัว'+anc(-3)+cash(40)),'',.4)])]];
-function evPick(K){const L=EVS.filter(e=>{try{return e[0](K)}catch(x){return false}});return L.length?(()=>pick(L)[1](K)):null}
+function evPick(K){const L=EVS.concat(SEEDS).filter(e=>{try{return e[0](K)}catch(x){return false}});return L.length?(()=>pick(L)[1](K)):null}
 function evLove(K){const n=pick(FN)+' '+pick(LN);C('💕 คนที่ยืนรอใต้ตะเกียง',`<b>${esc(n)}</b> ยืนหลบฝนใต้ตะเกียงแก๊สเดียวกับคุณสามคืนติด คืนที่สี่เขา/เธอยื่นร่มมาให้`,[
  O('รับร่มแล้วชวนคุย',()=>{if(rnd()<.6+(S.cha||0)/400){S.spouse=n;say(`💍 หนึ่งปีต่อมาคุณแต่งงานกับ<b>${esc(n)}</b> ในโบสถ์เล็กริมคลอง${anc(12)}`,'epic')}else feed(`🌧️ คุยกันถูกคอ แต่${n}ย้ายไปเมืองอื่นตอนปลายปี${anc(-2)}`)},'',.7),O('ยิ้มแล้วเดินจากไป',()=>feed('🌧️ บางคืนคุณยังนึกถึงร่มคันนั้น'),'',.3)])}
 function evLow(K){const L=[O('ตามเสียงนั้นไป',()=>{if(rnd()<.5){K.ins++;feed(`🕳️ เสียงพาคุณไปถึงกำแพงที่มีตัวอักษรเรืองแสง · 🧩 ชิ้นความจริง +1${anc(-8)}`)}else feed(`🕳️ คุณตื่นมากลางสะพานเก้าโค้ง ไม่รู้ว่ามาได้อย่างไร${anc(-10)}`)},'ได้ความจริง หรือเสียตัวตน',.25),
@@ -385,21 +582,35 @@ const css=document.createElement('style');css.textContent=`
 .fgIt{display:flex;gap:9px;align-items:flex-start;background:#161b22;border:1px solid #2f3844;border-radius:11px;padding:8px 10px;margin:6px 0;color:#e3e8ee}
 .fgIt .ic{font-size:22px;line-height:1.1;flex:none;width:28px;text-align:center}.fgIt b{color:#f2e6c9}.fgIt small{display:block;color:#9aa7b4;font-size:12px;margin-top:2px;line-height:1.45}.fgIt.no{opacity:.6}.fgIt.no b{color:#8b98a6}
 .fgIt .r{margin-left:auto;flex:none}.fgIt button{background:#c9a24a;border:0;border-radius:8px;padding:5px 9px;font-weight:800;color:#1a1408;font-family:inherit}.fgIt button:disabled{opacity:.4}
-body.fogW #goalBox{display:none!important}body.fogW #modal[data-k="choice"] h3{color:#cfe1f0}`;document.head.appendChild(css);
+body.fogW #goalBox{display:none!important}
+.fgClues{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}.fgClues button{background:#232a35;border:1px solid #6d7a88;color:#f1e7cf;border-radius:9px;padding:5px 8px;font-size:12px;font-family:inherit;text-align:left}.fgClues button small{display:block;font-size:10px;color:#8b98a6}.fgClues button.x{opacity:.45;text-decoration:line-through;border-style:dashed}
+.fgTbW{overflow-x:auto;margin:6px 0}.fgTb{border-collapse:collapse;font-size:12px;min-width:100%;color:#dfe5ec}.fgTb th{background:#1b222c;color:#9fb0c2;padding:4px;font-weight:600;white-space:nowrap}.fgTb td{border-top:1px solid #2c3440;padding:4px;text-align:center;white-space:nowrap}.fgTb td:first-child{text-align:left}.fgTb td small{display:block;color:#8b98a6;font-size:10px}
+.fgTb td.hit{background:#2c5a3a;color:#e9ffe9}.fgTb td.miss{color:#7b8794}.fgTb tr.all td:first-child{box-shadow:inset 3px 0 #f0d58a}.fgTb td.n{font-weight:800;color:#f0d58a}
+.fgVc{color:#c9a0ff;font-style:italic;font-size:13px;margin:4px 0}.fgAcc{display:grid;gap:6px;margin-top:8px}.fgAcc button{background:linear-gradient(180deg,#c9a24a,#8a6a24);border:0;border-radius:10px;padding:9px;font-weight:800;color:#1a1408;font-family:inherit}.fgAcc button.alt{background:#232a35;color:#dfe5ec;border:1px solid #4a5666;font-weight:600}
+.fgSg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-width:300px;margin:8px auto}.fgSg button{aspect-ratio:1;border-radius:9px;border:1px solid #4a5666;background:linear-gradient(180deg,#2a313c,#1b2028);color:#f1e7cf;font-size:20px;font-weight:800;font-family:inherit}.fgSg button.o{background:#11161d}.fgSg button.e{background:#2c5a3a}.fgSg button.x{background:#5a2c2c}
+.fgSg button.n1{color:#7fd0ff}.fgSg button.n2{color:#9fe07a}.fgSg button.n3{color:#ffb35a}.fgSh{text-align:center;font-size:13px;color:#c9b27a;margin:4px 0}
+.fgFact{background:#0f141a;border:1px dashed #6d7a88;border-radius:10px;padding:8px 10px;font-size:12.5px;line-height:1.6;color:#dfe5ec;margin:6px 0}.fgOl{display:grid;gap:6px}.fgOl button{text-align:left;background:#1b222c;border:1px solid #3c4756;color:#eef2f6;border-radius:10px;padding:8px 10px;font-size:13px;font-family:inherit;line-height:1.5}.fgOl button i{float:right;color:#f0d58a;font-style:normal;font-size:11px;font-weight:800}
+.fgOl button.ok{background:#2c5a3a;border-color:#7fe0a0}.fgOl button.ng{background:#4a2222;border-color:#c96a6a;opacity:.7}
+body.fogHal #feed .ev:nth-child(5n){animation:fgHal 3.2s steps(2) infinite}body.fogHal #mwHud.fog{animation:fgHal2 6s ease-in-out infinite}@keyframes fgHal{50%{transform:translateX(1px);filter:blur(.4px) hue-rotate(40deg)}}@keyframes fgHal2{50%{box-shadow:0 0 22px #6a1a2a inset}}
+body.fogW #modal[data-k="choice"] h3{color:#cfe1f0}`;document.head.appendChild(css);
 function hudHTML(K){const p=P(K),need=needIns(K.tier),a=Math.round(K.anc),ac=a<30?'lo':a<55?'md':'';
  const rk=K.path?`${p.ic} ธรณีที่ ${K.tier} · ${p.n} <span>${esc(tName(K))}</span>`:`👤 คนธรรมดา <span>${age()<16?'ยังเด็กเกินกว่าจะได้ยินเสียงในหมอก':'ยังไม่ได้รับตรา'}</span>`;
  return`<div class="fgT"><span>นครม่านหมอก · ศักราชไอน้ำปีที่ ${K.yr}</span><span>${esc(K.dist)}${K.fac?' · '+FAC[K.fac].ic:''}</span></div><div class="fgR">${rk}</div>
  <div class="fgA ${ac}">⚓ หลักยึด<div class="bar"><i style="width:${a}%"></i></div><b>${a}</b></div>
  <div class="fgG"><div><small>พลัง</small><b>${fmt(S.power||0)}</b></div><div><small>ปัญญา</small><b>${fmt(S.int||0)}</b></div><div><small>เหรียญ</small><b>${fmt(S.money||0)}</b></div><div><small>ชื่อเสียง</small><b>${fmt(S.fame||0)}</b></div></div>
  ${K.path&&K.tier<9?`<div class="fgN">🧩 ชิ้นความจริง ${K.ins}/${need} · ⚗️ ${K.off>K.tier?'มีเครื่องสังเวยแล้ว':'ยังขาด「'+esc(offName(K))+'」'}${K.cur?' · 🔎 มีคดีค้าง':''}</div>`:K.cur?'<div class="fgN">🔎 มีคดีค้างอยู่</div>':''}
- <div class="fgB"><button onclick="fogBook()">📓 สมุดคดี</button><button onclick="fogEnc()">📚 สารานุกรม</button><button onclick="fogArts()">🗝️ วัตถุ ${K.arts.length}</button><button onclick="fogFac()">🏛️ องค์กร</button><button onclick="fogShop()">🕯️ ตลาดมืด</button>${ready(K)?'<button class="hot" onclick="fogRite()">🚪 พิธีข้ามธรณี</button>':''}</div>`}
+ ${K.pt||K.rv||K.nem?`<div class="fgN">${K.pt&&K.pt.alive?'🤝 '+esc(K.pt.n)+' ':''}${K.rv?'🎯 '+K.rv.me+':'+K.rv.him+' ':''}${K.nem&&!K.nem.done?'✉️ '+K.nem.let.length+'/3 ':''}${(K.lost||[]).length?'🧠 ลืมไป '+K.lost.length+' ':''}</div>`:''}<div class="fgB"><button onclick="fogBook()">📓 สมุดคดี</button><button onclick="fogEnc()">📚 สารานุกรม</button><button onclick="fogArts()">🗝️ วัตถุ ${K.arts.length}</button><button onclick="fogFac()">🏛️ องค์กร</button><button onclick="fogShop()">🕯️ ตลาดมืด</button>${ready(K)?'<button class="hot" onclick="fogRite()">🚪 พิธีข้ามธรณี</button>':''}</div>`}
 const fgModal=(h,k)=>modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="fgM">${h}</div>`,k);
-window.fogBook=function(){const K=FG();if(!K)return;const R0={ok:'✅ ปิดได้ถูกต้อง',wrong:'❌ ชี้ผิดตัว',pass:'🏮 ยกให้ทางการ'};
- const cur=K.cur?(()=>{const T=CT(K.cur.id);return`<div class="fgIt"><div class="ic">${T.ic}</div><div><b>${T.n} <i>· กำลังสืบ</i></b><small>ผู้ต้องสงสัย: ${K.cur.sus.map((s,i)=>`${esc(s.n)} (${s.r}) ×${K.cur.pt[i]}`).join(' · ')}</small>${K.cur.notes.map(n=>`<small>🧩 ${n}</small>`).join('')}</div></div>`})():'';
- fgModal(`<h3>📓 สมุดคดี</h3><p class="tag2">ปิดถูกต้อง ${K.cases.filter(c=>c.r==='ok').length} · ชี้ผิด ${K.cases.filter(c=>c.r==='wrong').length} · ยกให้ทางการ ${K.cases.filter(c=>c.r==='pass').length}</p>${cur}
- ${K.cases.slice().reverse().map(c=>{const T=CT(c.id);return T?`<div class="fgIt"><div class="ic">${T.ic}</div><div><b>${T.n}</b><small>อายุ ${c.y} ปี · ${R0[c.r]}${c.c?' · คนร้าย: '+esc(c.c):''}${c.w?' · คนที่ถูกชี้: '+esc(c.w):''}</small>${(c.n||[]).slice(0,4).map(n=>`<small>🧩 ${n}</small>`).join('')}</div></div>`:''}).join('')||'<p class="tag2">ยังไม่มีคดี · ตั้งโฟกัส 🔎 สืบเรื่องแปลก จะเจอคดีบ่อยขึ้น</p>'}`,'fogbook')};
+window.fogBook=function(){const K=FG();if(!K)return;ensure(K);const R0={ok:'✅ ปิดได้ถูกต้อง',wrong:'❌ ชี้ผิด',pass:'🏮 ยกให้ทางการ'};
+ const cur=K.cur?(()=>{const T=CT(K.cur.id),c=K.cur;return`<div class="fgIt"><div class="ic">${T.ic}</div><div><b>${T.n} <i>· กำลังสืบ (รอบ ${c.rd}/3)</i></b><small>ผู้ต้องสงสัย: ${c.sus.map(s=>`${esc(s.n)} (${s.r})`).join(' · ')}</small>${c.cl.map(k=>`<small>🧩 คนร้าย${k.v} <i>— ${esc(k.src)}</i></small>`).join('')}</div></div>`})():'';
+ const N=K.nem&&!K.nem.done?`<div class="fgIt"><div class="ic">✉️</div><div><b>มือที่มองไม่เห็น</b><small>จดหมาย ${K.nem.let.length}/3 · เบาะแส: ${K.nem.let.map(l=>l.v).join(' · ')||'—'}</small></div></div>`:'';
+ fgModal(`<h3>📓 สมุดคดี</h3>${K.cur&&K.cur.rd>3?'<button class="gbtn" style="width:100%" onclick="closeM();setTimeout(()=>fogBoardOpen(),200)">🗺️ เปิดกระดานคดีที่ค้าง</button>':''}<p class="tag2">ปิดถูก ${K.cases.filter(c=>c.r==='ok').length} · ชี้ผิด ${K.cases.filter(c=>c.r==='wrong').length} · ยกให้ทางการ ${K.cases.filter(c=>c.r==='pass').length}${K.rv?` · 🎯 คุณ ${K.rv.me} : ${K.rv.him} ${esc(K.rv.n)}`:''}</p>${cur}${N}
+ ${K.cases.slice().reverse().map(c=>{const T=CT(c.id);return T?`<div class="fgIt"><div class="ic">${T.ic}</div><div><b>${T.n}</b><small>อายุ ${c.y} ปี · ${R0[c.r]}${c.ty?' · '+CTYPE[c.ty]:''}${c.c?' · คนร้าย: '+esc(c.c):''}${c.w?' · คนที่ถูกชี้: '+esc(c.w):''}</small>${(c.cl||c.n||[]).slice(0,5).map(n=>`<small>${n}</small>`).join('')}</div></div>`:''}).join('')||'<p class="tag2">ยังไม่มีคดี · ตั้งโฟกัส 🔎 สืบเรื่องแปลก จะเจอคดีบ่อยขึ้น</p>'}`,'fogbook')};
 let ET='p';
-window.fogEnc=function(t){const K=FG();if(!K)return;if(t)ET=t;const T=[['p','🕯️ เส้นทาง'],['f','🏛️ องค์กร'],['a','🗝️ วัตถุ'],['n','👁️ สิ่งผิดธรรมชาติ'],['d','🏙️ สถานที่'],['l','📜 ความจริงของโลก']];let b='';
+window.fogEnc=function(t){const K=FG();if(!K)return;if(t)ET=t;ensure(K);const T=[['p','🕯️ เส้นทาง'],['f','🏛️ องค์กร'],['a','🗝️ วัตถุ'],['n','👁️ สิ่งผิดธรรมชาติ'],['d','🏙️ สถานที่'],['l','📜 ความจริงของโลก'],['h','👥 ผู้คน'],['m','🧠 ความทรงจำ'],['s','🎬 เส้นเรื่อง']];let b='';
+ if(ET==='m')b=`<p class="tag2">ใช้พลังหนักหรือทำพิธีแบบแลกความทรงจำ จะลืมไปตลอดกาล · ลืม 1 อย่าง หลักยึดสูงสุดลด 8</p>`+K.mem.map(m=>`<div class="fgIt"><div class="ic">💭</div><div><b>${m}</b></div></div>`).join('')+K.lost.map(m=>`<div class="fgIt no"><div class="ic">🕳️</div><div><b>${'█'.repeat(Math.min(12,m.length))}</b><small>ลืมไปแล้ว</small></div></div>`).join('');
+ if(ET==='h'){const P0=K.pt;b=[P0?`<div class="fgIt${P0.alive?'':' no'}"><div class="ic">🤝</div><div><b>${esc(P0.n)} — คู่หู</b><small>${P0.sk} · ${P0.alive?'ยังอยู่กับคุณ':({jail:'ถูกจับเพราะคุณชี้ตัว',left:'จากไปแล้ว',cult:'เข้าลัทธิไปแล้ว',died:'จากไปอย่างสงบ',killed:'ถูกฆ่า',nem:'คือมือที่มองไม่เห็น'})[P0.fate]||'ไม่อยู่แล้ว'}</small></div></div>`:'',K.rv?`<div class="fgIt"><div class="ic">🎯</div><div><b>${esc(K.rv.n)} — นักสืบคู่ปรับ</b><small>คะแนนคดี คุณ ${K.rv.me} : ${K.rv.him}</small></div></div>`:'',`<div class="fgIt"><div class="ic">🧓</div><div><b>${esc(K.mentor)} — อาจารย์</b></div></div>`,`<div class="fgIt"><div class="ic">🧒</div><div><b>${esc(K.friend)} — เพื่อนวัยเด็ก</b></div></div>`,K.nem?`<div class="fgIt"><div class="ic">🎭</div><div><b>${K.nem.done?esc(K.nem.n)+' — มือที่มองไม่เห็น':'มือที่มองไม่เห็น ???'}</b><small>${K.nem.done?'จบเรื่องแล้ว':'เก็บจดหมายให้ครบ 3 ฉบับเพื่อเผชิญหน้า'}</small></div></div>`:'',K.vcN?`<div class="fgIt"><div class="ic">🗨️</div><div><b>เสียงในหัว</b><small>พูดถูก ${K.vcT|0} จาก ${K.vcN} ครั้ง</small></div></div>`:''].join('')}
+ if(ET==='s')b=K.arcs.map(a=>`<div class="fgIt${a.ch?'':' no'}"><div class="ic">🎬</div><div><b>${a.ch?ARC[a.id].n:'เส้นเรื่องที่ยังไม่เริ่ม'}</b><small>${a.ch>=3?'จบแล้ว':a.ch?'บทที่ '+a.ch+'/3 · บทต่อไปราวอายุ '+a.at:'จะเริ่มราวอายุ '+a.at}</small></div></div>`).join('');
  if(ET==='p')b=PK.map(k=>{const p=PATH[k],s=K.enc.p[k];return s?`<div class="fgIt"><div class="ic">${p.ic}</div><div><b>${p.n}</b><small>${p.d}</small><small>💪 ${p.st}<br>⚠️ ${p.wk}</small><small>ธรณี 1–9: ${p.t.map((x,i)=>i<(K.path===k?K.tier:3)?x:'???').join(' → ')}</small></div></div>`:`<div class="fgIt no"><div class="ic">❔</div><div><b>เส้นทางที่ยังไม่รู้จัก</b><small>เจอผู้ถือตราสายนี้ในคดี หรือรับตราสายนี้เอง</small></div></div>`}).join('');
  if(ET==='f')b=FK.map(k=>{const F=FAC[k],s=K.enc.f[k];return s?`<div class="fgIt"><div class="ic">${F.ic}</div><div><b>${F.n}</b><small>${F.d}</small><small>เป้าหมาย: ${F.w} · ความสัมพันธ์ ${K.rep[k]>0?'+':''}${K.rep[k]|0}</small></div></div>`:`<div class="fgIt no"><div class="ic">❔</div><div><b>องค์กรที่ยังไม่เคยติดต่อ</b><small>ทำคดีหรือเลือกทางที่เกี่ยวกับพวกเขา</small></div></div>`}).join('');
  if(ET==='a')b=AK.map(k=>{const A=ART[k],own=K.arts.includes(k),r=K.rum[k];return own?`<div class="fgIt"><div class="ic">${A.ic}</div><div><b>${A.n}</b><small>✨ ${A.p}<br>⚠️ ${A.s}</small></div></div>`:r?`<div class="fgIt no"><div class="ic">❔</div><div><b>${A.n} (ยังไม่ได้ครอบครอง)</b><small>คำใบ้: “${A.h}”</small></div></div>`:`<div class="fgIt no"><div class="ic">❔</div><div><b>???</b><small>ค้นหอสมุด ฟังข่าวลือในตลาดมืด หรือปิดคดี</small></div></div>`}).join('');
@@ -442,13 +653,14 @@ function drawFog(ctx){g=ctx;PS=ctx.canvas.width/SW;ctx.setTransform(PS,0,0,PS,0,
 {const _fo=focusOK;focusOK=function(k){if(on())return fList(FG()).some(f=>f[0]===k);if(/^fg_/.test(String(k)))return false;return _fo.apply(this,arguments)}}
 {const _af=autoFocus;autoFocus=function(){if(on()){const K=FG(),L=fList(K).map(f=>f[0]);if(age()<15)S.focus=pick(L);else if(S.hp<S.maxHp*.4)S.focus='fg_rest';else if(K.anc<45)S.focus=pick(['fg_rest','fg_kin','fg_kin']);else if(K.path&&K.off<=K.tier&&S.money<offPrice(K.tier))S.focus=pick(['fg_work','fg_work','fg_inv']);else S.focus=pick(L.filter(x=>x!=='fg_rest').concat(K.tier?['fg_power','fg_inv']:['fg_inv','fg_work']));if(K.path&&K.off<=K.tier&&S.money>=offPrice(K.tier)*1.2){S.money-=offPrice(K.tier);K.off=K.tier+1;feed(`⚗️ ซื้อ${esc(offName(K))}จากตลาดน้ำมืด`)}return}return _af.apply(this,arguments)}}
 {const _lm=lifeMax;lifeMax=function(){if(on())return S.mw.end;return _lm.apply(this,arguments)}}
-{const _rn=render;render=function(){const r=_rn.apply(this,arguments);try{document.body.classList.toggle('fogW',on());if(!on())return r;const K=FG(),fe=$('focus');
+{const _rn=render;render=function(){const r=_rn.apply(this,arguments);try{document.body.classList.toggle('fogW',on());try{document.body.classList.toggle('fogHal',on()&&FG().anc<25)}catch(e){}if(!on())return r;const K=FG(),fe=$('focus');
  if(fe){const L=fList(K);fe.innerHTML=L.map(f=>`<button class="fc ${S.focus===f[0]?'on':''}" onclick="setFocus('${f[0]}')">${f[1]} ${f[2]}</button>`).join('');if(L.length&&!L.some(f=>f[0]===S.focus))S.focus=L[0][0];
   let h=$('mwHud');if(!h){h=document.createElement('div');h.id='mwHud';fe.parentNode.insertBefore(h,fe)}h.className='fog';{const top=document.querySelector('#game .box.top');if(top&&h.previousElementSibling!==top)top.insertAdjacentElement('afterend',h)}h.innerHTML=hudHTML(K)}
  {const gm=$('gMini');if(gm)gm.innerHTML=`🪙 ${fmt(S.money||0)} เหรียญ · ⚓ ${Math.round(K.anc)}`}{const gr=$('gRealm');if(gr)gr.textContent=K.path?`ธรณีที่ ${K.tier} · ${tName(K)}`:'คนธรรมดาในเมืองหมอก'}
  }catch(e){console.error('fog render',e)}return r}}
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(on()){const gd=$('modal').querySelector('.mgrid');if(gd&&!gd.querySelector('[data-fg]')){const d=document.createElement('div');d.style.cssText='grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px';d.setAttribute('data-fg',1);
  d.innerHTML=`<button class="opt" onclick="fogBook()">📓 สมุดคดี<small>คดีที่สืบมา</small></button><button class="opt" onclick="fogEnc()">📚 สารานุกรม<small>เส้นทาง องค์กร วัตถุ</small></button><button class="opt" onclick="fogArts()">🗝️ วัตถุลึกลับ<small>พลังและผลข้างเคียง</small></button><button class="opt" onclick="fogShop()">🕯️ ตลาดน้ำมืด<small>เครื่องสังเวย ยา บ้าน</small></button>`;gd.prepend(d)}}}catch(e){}return r}}
+{const _cm=closeM;closeM=function(){const k=$('modal').dataset.k;const r=_cm.apply(this,arguments);try{if(k==='fogmg'&&MG){const m=MG;MG=null;clearInterval(m.t);clearTimeout(m.t2);setTimeout(()=>{try{m.cb(.15)}catch(e){}},60)}if(k==='fogboard'&&BD){BD=null;try{toast('📓 แฟ้มคดียังค้างอยู่ เปิดได้จากสมุดคดี')}catch(e){}}}catch(e){}return r}}
 window._fog={PATH,FAC,ART,CASE,LORE,FG,caseStart:()=>caseStart(FG()),evAwake:()=>evAwake(FG()),riteAsk:()=>riteAsk(FG())};
 try{wReady('fog')}catch(e){}
 })();
