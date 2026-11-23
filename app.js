@@ -45602,3 +45602,151 @@ try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2'));go().c
 
 // BLOCK 209: 📖 โหลด /w/xw.js — เส้นเรื่องแบบนิยายทุกโลก (คำสาบานผูกมัด · อีกคนในตัวฉัน · รู้วันตาย · คำทำนายกำกวม · ต้นเรื่องแบบนิยาย · ทำเนียบฟ้า · ร้านตอนวางมือ · หลายตัวตน) ต่อจาก wld2.js
 try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2')).then(()=>wLoad('xw'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4600)}catch(e){console.error('block209',e)}
+
+// BLOCK 210: 🌕 หน้าแรกคืนลอยกระทง 2569 — แสดงอัตโนมัติ 24 พ.ย. 00:00 ถึง 25 พ.ย. 06:00 (เวลาไทย) · นับถอยหลังตั้งแต่ 23 พ.ย. 23:30
+//  ฉากพิกเซลเต็มจอ: ฟ้า ดาว พระจันทร์เต็มดวงค่อยๆ ขึ้น เจดีย์ริมฝั่ง โคมลอย พลุ หิ่งห้อย แม่น้ำ เงาจันทร์ กระทงจริงของผู้เล่นทั้งเว็บ (api krtl) พร้อมคำอธิษฐาน
+//  แตะน้ำ = วงคลื่น · แตะฟ้า = พลุ · แตะโคม = โคมพุ่งขึ้น · เที่ยงคืนพอดี = โคมลอยพร้อมกัน + พลุ · ทดสอบด้วย ?loy=1 (ฉากปกติ) หรือ ?loy=cd (นับถอยหลัง 8 วิ)
+//  ปิดแล้วมีปุ่ม 🌕 ที่หน้าแรกให้เปิดซ้ำ · ไม่แตะเซฟ
+try{(()=>{
+const Q=(()=>{try{return new URLSearchParams(location.search).get('loy')}catch(e){return null}})();
+const A=Date.UTC(2026,10,23,17,0,0),B=Date.UTC(2026,10,24,23,0,0),C0=Date.UTC(2026,10,23,16,30,0);
+const T0=Date.now(),MID=Q==='cd'?T0+8000:A;
+const now=()=>Date.now();
+const inDay=()=>Q==='1'||(now()>=A&&now()<B)||(Q==='cd'&&now()>=MID);
+const inCd=()=>Q==='cd'?now()<MID:(now()>=C0&&now()<A);
+if(!inDay()&&!inCd())return;
+const EN=()=>{try{return LANG==='en'}catch(e){return false}};
+const L=(th,en)=>EN()?en:th;
+const RM=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}})();
+const LOW=(navigator.hardwareConcurrency||4)<=4||RM;
+const rnd=Math.random,R=(a,b)=>a+rnd()*(b-a),Ri=(a,b)=>Math.floor(R(a,b+1)),esc2=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// ---------- CSS ----------
+const st=document.createElement('style');st.textContent=`
+#loyX{position:fixed;inset:0;z-index:9000;background:#060820;overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none;opacity:0;transition:opacity .9s ease}
+#loyX.on{opacity:1}#loyX.out{opacity:0;transition:opacity .7s ease}
+#loyC{position:absolute;inset:0;width:100%;height:100%;display:block}
+#loyUI{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;pointer-events:none;padding:0 18px;text-align:center}
+#loyUI .lySp{flex:0 0 calc(31% + 6px)}
+#loyUI h1{margin:0;font-size:clamp(30px,9vw,46px);line-height:1.15;font-weight:800;letter-spacing:.5px;background:linear-gradient(100deg,#fff6d0 0%,#ffd36a 30%,#fff3c0 45%,#ffb43a 60%,#ffe9a8 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 #3a1a00) drop-shadow(0 0 14px #ffb84a88);animation:loyShine 5s linear infinite,loyUp 1.1s cubic-bezier(.2,.9,.25,1) .5s both}
+#loyUI .lyS1{margin-top:6px;color:#ffe9b8;font-size:14px;letter-spacing:.4px;opacity:.95;animation:loyUp 1s ease .85s both;text-shadow:0 1px 6px #000c}
+#loyUI .lyS2{margin-top:10px;color:#ffd9ec;font-size:15px;font-style:italic;animation:loyUp 1s ease 1.15s both;text-shadow:0 1px 8px #000d}
+#loyUI .lyCnt{margin-top:8px;font-size:12.5px;color:#cfe0ff;opacity:.9;animation:loyUp 1s ease 1.4s both;text-shadow:0 1px 6px #000c}
+#loyUI .lyOrn{font-size:18px;letter-spacing:10px;color:#ffd36a;opacity:.85;animation:loyUp 1s ease .3s both;text-shadow:0 0 10px #ffb84a}
+#loyUI .lyBt{position:absolute;left:0;right:0;bottom:max(18px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:9px;align-items:center;padding:0 22px;pointer-events:auto;animation:loyUp 1s ease 1.7s both}
+#loyUI .lyB1{width:min(360px,100%);border:0;border-radius:16px;padding:15px 10px;font:inherit;font-size:18px;font-weight:800;color:#3a1600;background:linear-gradient(#ffe9a0,#ffbf47 55%,#f29a20);box-shadow:0 0 0 2px #ffe9b8 inset,0 6px 0 #a85a10,0 10px 30px #ffb84a77;position:relative;overflow:hidden;cursor:pointer}
+#loyUI .lyB1:after{content:'';position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,#ffffffaa,transparent);animation:loySweep 3.2s ease-in-out 2.4s infinite}
+#loyUI .lyB1:active{transform:translateY(3px);box-shadow:0 0 0 2px #ffe9b8 inset,0 3px 0 #a85a10}
+#loyUI .lyRow{display:flex;gap:8px;width:min(360px,100%)}
+#loyUI .lyB2{flex:1;border:1px solid #ffd36a88;border-radius:13px;padding:11px 6px;font:inherit;font-size:14.5px;color:#ffeccb;background:#140f3acc;backdrop-filter:blur(4px);cursor:pointer}
+#loyUI .lyB2.on{background:#3a2a10dd;border-color:#ffd36a}
+#loyUI .lyHint{font-size:11.5px;color:#b8c4ff;opacity:.75}
+#loyUI .lyCd{margin-top:14px;font-size:clamp(44px,15vw,72px);font-weight:800;color:#fff3c4;letter-spacing:2px;text-shadow:0 0 18px #ffd36a,0 3px 0 #5a3000;font-variant-numeric:tabular-nums;animation:loyPulse 1s ease-in-out infinite}
+#loyUI.cdm h1{font-size:clamp(24px,7.4vw,36px)}#loyUI.cdm .lyCnt{animation-delay:.6s;opacity:1;font-size:13px}#loyUI .lyCdl{color:#ffe9b8;font-size:14px;margin-top:4px}
+#loyUI .lyFlash{position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#fff8dc,#ffd36a55 40%,transparent 70%);opacity:0;pointer-events:none}
+#loyUI .lyFlash.go{animation:loyFlash 1.6s ease-out both}
+#loyCl{position:absolute;top:max(12px,env(safe-area-inset-top));right:12px;width:38px;height:38px;border-radius:50%;border:1px solid #ffd36a88;background:#140f3acc;color:#ffeccb;font-size:17px;pointer-events:auto;cursor:pointer;z-index:2}
+#loyChip{display:block;margin:8px auto 0;border:1px solid #ffd36a;border-radius:99px;padding:6px 14px;font:inherit;font-size:13.5px;color:#3a1600;background:linear-gradient(#ffe9a0,#ffbf47);box-shadow:0 0 14px #ffb84a88;cursor:pointer;animation:loyBob 2.6s ease-in-out infinite}
+@keyframes loyShine{to{background-position:-250% 0}}
+@keyframes loyUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes loySweep{0%{left:-60%}55%,100%{left:130%}}
+@keyframes loyPulse{50%{transform:scale(1.05)}}
+@keyframes loyFlash{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
+@keyframes loyBob{50%{transform:translateY(-3px)}}
+@media (prefers-reduced-motion:reduce){#loyUI h1,#loyChip,#loyUI .lyB1:after,#loyUI .lyCd{animation:none}}`;
+document.head.appendChild(st);
+// ---------- ข้อมูลกระทงจริง ----------
+const KC={w0:['#3f8a3a','#6fbf5a','#f7a8c4'],w1:['#3ab8a0','#9ff0dc','#ffffff'],mn:['#c88a4a','#e8b878','#ffe08a'],o:['#2a4a3a','#4a7a5a','#c8f0e0'],k:['#3a3a8a','#7a7aff','#c8b0ff'],l:['#8a4a2a','#e8a04a','#ff8a5a']};
+let REAL=[],TOT=0;
+async function loadReal(){try{if(typeof api!=='function')return;const j=await api('krtl');if(j&&Array.isArray(j.L))REAL=j.L.filter(x=>x&&x.n).slice(0,40);TOT=+(j&&j.tot)||0;const c=document.querySelector('#loyUI .lyCnt');if(c&&TOT)c.textContent=L(`🪷 คืนนี้มีกระทงลอยอยู่ในสายน้ำแล้ว ${TOT.toLocaleString()} ใบ จากผู้เล่นทั้งเว็บ`,`🪷 ${TOT.toLocaleString()} krathongs are already on the river from players across the site`);seedReal()}catch(e){}}
+// ---------- ฉาก ----------
+let cv,cx,Wd,Ht,P,DPR,run=0,raf=0,t0=0,lastT=0,stars=[],lan=[],kr=[],rip=[],fw=[],ff=[],sp=[],moonK=0,boom=0;
+const Wl=180;let Hl=320;const HOR=()=>Hl*.66;
+function fit(){DPR=Math.min(2,window.devicePixelRatio||1);Wd=innerWidth;Ht=innerHeight;cv.width=Math.round(Wd*DPR);cv.height=Math.round(Ht*DPR);P=Wd/Wl;Hl=Ht/P;cx.setTransform(DPR,0,0,DPR,0,0);cx.imageSmoothingEnabled=false;
+ stars=[];const n=LOW?55:95;for(let i=0;i<n;i++)stars.push({x:R(0,Wl),y:R(0,HOR()*.92),s:rnd()<.12?2:1,p:R(0,6.3),v:R(.6,2.2)});
+ ff=[];for(let i=0;i<(LOW?8:16);i++)ff.push({x:R(0,Wl),y:R(HOR()-10,HOR()+4),p:R(0,6.3),vx:R(-.1,.1)})}
+const px=(x,y,w,h,c)=>{cx.fillStyle=c;cx.fillRect(Math.round(x*P),Math.round(y*P),Math.ceil(w*P),Math.ceil(h*P))};
+const glow=(x,y,r,c,a)=>{const g=cx.createRadialGradient(x*P,y*P,0,x*P,y*P,r*P);g.addColorStop(0,c);g.addColorStop(1,'rgba(0,0,0,0)');cx.globalAlpha=a;cx.fillStyle=g;cx.beginPath();cx.arc(x*P,y*P,r*P,0,6.2832);cx.fill();cx.globalAlpha=1};
+function spawnLan(burst,x0,y0){const far=rnd();lan.push({x:x0!=null?x0:R(8,Wl-8),y:y0!=null?y0:R(HOR()-2,HOR()+18),vy:-(burst?R(.18,.32):R(.07,.16)),ph:R(0,6.3),sw:R(.15,.45),s:far<.5?1.3:far<.85?1.9:2.6,a:0,life:0,fast:0})}
+function spawnKr(o){const lane=rnd();const y=HOR()+8+lane*(Hl-HOR()-26);const s=1+lane*1.15;const r=o||null;kr.push({x:R(-40,Wl),y,s,v:R(.03,.07)*(.7+lane*.6),ph:R(0,6.3),c:KC[(r&&r.w)||pickK()]||KC.w0,n:r?r.n:'',x2:r?r.x:'',fl:R(0,6.3)});kr.sort((a,b)=>a.y-b.y)}
+const pickK=()=>['w0','w0','w0','w1','mn','o','k','l'][Ri(0,7)];
+function seedReal(){if(!REAL.length)return;const take=REAL.slice(0,LOW?10:16);kr=kr.filter(k=>!k.n).slice(0,4);take.forEach(r=>spawnKr(r))}
+function firework(x,y,big){const n=big?(LOW?40:70):(LOW?22:36);const hue=['#ffd36a','#ff8ac0','#9ff0ff','#c8b0ff','#ffb04a','#ffffff'][Ri(0,5)];for(let i=0;i<n;i++){const a=i/n*6.283+R(-.1,.1),v=R(.35,big?1.3:.9);fw.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:R(50,90),c:rnd()<.2?'#ffffff':hue})}}
+function chedi(x,base,h,c){const w=h*.55;px(x-w/2,base-h*.28,w,h*.28,c);px(x-w*.36,base-h*.42,w*.72,h*.16,c);px(x-w*.22,base-h*.62,w*.44,h*.22,c);px(x-w*.1,base-h*.88,w*.2,h*.28,c);px(x-.5,base-h-3,1,4,c)}
+function palm(x,base,h,c){px(x,base-h,1,h,c);for(let i=-3;i<=3;i++)px(x+i,base-h-Math.abs(i)*.6+(Math.abs(i)>2?1:0),1,1,c);px(x-4,base-h+1,2,1,c);px(x+3,base-h+1,2,1,c)}
+function draw(ts){if(!run)return;raf=requestAnimationFrame(draw);if(document.hidden)return;const t=(ts-t0)/1000,dt=Math.min(.05,(ts-(lastT||ts))/1000)*60;lastT=ts;
+ const hor=HOR();
+ // ฟ้า
+ const g=cx.createLinearGradient(0,0,0,hor*P);g.addColorStop(0,'#050720');g.addColorStop(.55,'#120f45');g.addColorStop(1,'#3a1d58');cx.fillStyle=g;cx.fillRect(0,0,Wd,hor*P+1);
+ stars.forEach(s=>{const a=.35+.65*(.5+.5*Math.sin(t*s.v+s.p));cx.globalAlpha=a;px(s.x,s.y,s.s,s.s,s.s>1?'#fff6d0':'#cfd8ff')});cx.globalAlpha=1;
+ // พระจันทร์ขึ้น
+ moonK=Math.min(cdHold?.035:1,moonK+(boom?.02:.006)*dt);const e=1-Math.pow(1-moonK,3);const mR=Math.min(26,Wl*.15),mx=Wl*.5,my=hor-6+(hor*.3-(hor-6))*e;
+ glow(mx,my,mR*(3.2+.25*Math.sin(t*.8)),'rgba(255,214,120,0.55)',.55*e+.1);glow(mx,my,mR*1.7,'rgba(255,245,205,0.8)',.5*e+.1);
+ cx.fillStyle='#fff3c4';cx.beginPath();cx.arc(mx*P,my*P,mR*P,0,6.283);cx.fill();
+ [[-.35,-.25,.22],[.3,.1,.16],[-.1,.38,.12],[.42,-.38,.1],[-.5,.2,.08]].forEach(c=>{cx.fillStyle='#f1dfa0';cx.beginPath();cx.arc((mx+c[0]*mR)*P,(my+c[1]*mR)*P,c[2]*mR*P,0,6.283);cx.fill()});
+ // พลุ
+ for(let i=fw.length-1;i>=0;i--){const f=fw[i];f.x+=f.vx*dt;f.y+=f.vy*dt;f.vy+=.012*dt;f.vx*=.985;f.l-=dt;if(f.l<=0){fw.splice(i,1);continue}cx.globalAlpha=Math.min(1,f.l/40);px(f.x,f.y,1,1,f.c);cx.globalAlpha=1}
+ if(!RM&&rnd()<(boom?.08:.006)*dt)firework(R(20,Wl-20),R(hor*.12,hor*.5),boom&&rnd()<.4);
+ // ฝั่งไกล: ต้นไม้ เจดีย์
+ px(0,hor-4,Wl,5,'#0b0c2a');chedi(Wl*.2,hor-2,26,'#0b0c2a');chedi(Wl*.31,hor-2,16,'#0b0c2a');chedi(Wl*.82,hor-2,20,'#0b0c2a');palm(Wl*.08,hor-2,14,'#0b0c2a');palm(Wl*.68,hor-2,12,'#0b0c2a');palm(Wl*.93,hor-2,16,'#0b0c2a');
+ for(let i=0;i<14;i++){const x=(i*13.7)%Wl;px(x,hor-5-((i*7)%4),9,3,'#0b0c2a')}
+ // แม่น้ำ
+ const w2=cx.createLinearGradient(0,hor*P,0,Ht);w2.addColorStop(0,'#1a1650');w2.addColorStop(.4,'#0d0f38');w2.addColorStop(1,'#05061c');cx.fillStyle=w2;cx.fillRect(0,hor*P,Wd,Ht-hor*P);
+ // เงาจันทร์บนน้ำ
+ for(let y=hor+1;y<Hl;y+=2){const k=(y-hor)/(Hl-hor);const wv=mR*(.6+k*1.4)*(.55+.45*Math.sin(t*2.2+y*.9));cx.globalAlpha=(.55-k*.4)*(.6+.4*Math.sin(t*3+y))*e;px(mx-wv/2+Math.sin(t*1.3+y*.5)*2,y,wv,1,k<.3?'#fff3c4':'#ffd36a')}cx.globalAlpha=1;
+ // ริ้วน้ำ
+ for(let i=0;i<(LOW?18:30);i++){const y=hor+3+((i*37)%(Hl-hor-3));const x=((i*53+t*6*(1+(i%3)))%(Wl+20))-10;cx.globalAlpha=.25;px(x,y,R(4,9),1,'#5a6ac8')}cx.globalAlpha=1;
+ // วงคลื่น
+ for(let i=rip.length-1;i>=0;i--){const r=rip[i];r.r+=.35*dt;r.a-=.012*dt;if(r.a<=0){rip.splice(i,1);continue}cx.strokeStyle=`rgba(200,220,255,${r.a})`;cx.lineWidth=Math.max(1,P*.6);cx.beginPath();cx.ellipse(r.x*P,r.y*P,r.r*P,r.r*.32*P,0,0,6.283);cx.stroke()}
+ // โคมลอย (หลังกระทง)
+ if(lan.length<(LOW?14:26)&&rnd()<.03*dt)spawnLan();
+ for(let i=lan.length-1;i>=0;i--){const l=lan[i];l.life+=dt;l.a=Math.min(1,l.a+.01*dt);l.y+=l.vy*dt*(l.fast?3:1);l.x+=Math.sin(t*.7+l.ph)*l.sw*.08*dt;const sc=l.s*(1-.45*Math.max(0,(hor-l.y)/hor));const fade=l.y<hor*.15?Math.max(0,l.y/(hor*.15)):1;if(l.y<-6||fade<=0){lan.splice(i,1);continue}
+  const fl=.75+.25*Math.sin(t*9+l.ph);cx.globalAlpha=l.a*fade;glow(l.x,l.y,8.5*sc,'rgba(255,170,70,0.9)',.62*l.a*fade*fl);px(l.x-1.5*sc,l.y-2*sc,3*sc,4*sc,'#ff9a3a');px(l.x-1*sc,l.y-1.5*sc,2*sc,2.6*sc,'#ffd36a');px(l.x-.5*sc,l.y+1.4*sc,1*sc,.8*sc,'#fff3c4');cx.globalAlpha=1}
+ // กระทง
+ if(kr.length<(LOW?9:15)&&rnd()<.01*dt)spawnKr(REAL.length&&rnd()<.6?REAL[Ri(0,REAL.length-1)]:null);
+ cx.textAlign='center';
+ for(let i=kr.length-1;i>=0;i--){const k=kr[i];k.x+=k.v*dt;if(k.x>Wl+30){kr.splice(i,1);continue}const by=k.y+Math.sin(t*1.6+k.ph)*.8*k.s,s=k.s;
+  rip.forEach(r=>{const d=Math.hypot(r.x-k.x,(r.y-k.y)*3);if(d<r.r+4&&d>r.r-4)k.ph+=.05});
+  cx.globalAlpha=.35;px(k.x-6*s,by+2.2*s,12*s,1,'#ffd36a');cx.globalAlpha=1;
+  glow(k.x,by-4*s,10*s,'rgba(255,190,90,0.85)',.35+.1*Math.sin(t*7+k.fl));
+  px(k.x-6*s,by,12*s,2*s,k.c[0]);px(k.x-5*s,by-1*s,10*s,1.2*s,k.c[1]);
+  [-4,-2,0,2,4].forEach((o,j)=>{const h=(j===2?3:2.2)*s;px(k.x+o*s-.8*s,by-1*s-h,1.6*s,h,k.c[2]);px(k.x+o*s-.4*s,by-1*s-h,.8*s,.8*s,'#ffffff')});
+  px(k.x-.5*s,by-6*s,1*s,3.4*s,'#fff8e8');const fh=1.6+.7*Math.sin(t*14+k.fl);px(k.x-.6*s,by-6*s-fh*s,1.2*s,fh*s,'#ffd36a');px(k.x-.3*s,by-6*s-fh*.6*s,.6*s,fh*.5*s,'#ffffff');
+  px(k.x+2.5*s,by-6.5*s,.5*s,3.5*s,'#c87a4a');px(k.x+3.4*s,by-6*s,.5*s,3*s,'#c87a4a');
+  if(k.n&&s>1){const a=Math.min(1,Math.min(k.x+20,Wl+30-k.x)/20);cx.globalAlpha=Math.max(0,a)*.95;cx.font=`${Math.round(9+s*1.5)}px sans-serif`;cx.fillStyle='#ffe9b8';cx.shadowColor='#000';cx.shadowBlur=4;cx.fillText(k.n.slice(0,18),k.x*P,(by-11*s)*P);if(k.x2){cx.font=`italic ${Math.round(8+s*1.3)}px sans-serif`;cx.fillStyle='#ffd0e8';cx.fillText('“'+k.x2.slice(0,26)+(k.x2.length>26?'…':'')+'”',k.x*P,(by-11*s)*P-14)}cx.shadowBlur=0;cx.globalAlpha=1}}
+ // หิ่งห้อย
+ ff.forEach(f=>{f.x+=f.vx*dt+Math.sin(t+f.p)*.03*dt;if(f.x<0)f.x=Wl;if(f.x>Wl)f.x=0;const a=.5+.5*Math.sin(t*2+f.p);cx.globalAlpha=a;glow(f.x,f.y+Math.sin(t*.8+f.p)*2,3,'rgba(200,255,140,0.9)',a*.6);px(f.x,f.y+Math.sin(t*.8+f.p)*2,1,1,'#e8ffb0');cx.globalAlpha=1});
+ // ประกาย
+ for(let i=sp.length-1;i>=0;i--){const s=sp[i];s.y+=s.vy*dt;s.l-=dt;if(s.l<=0){sp.splice(i,1);continue}cx.globalAlpha=s.l/40;px(s.x,s.y,1,1,'#fff3c4');cx.globalAlpha=1}
+ if(boom)boom=Math.max(0,boom-dt/60)}
+function tap(e){const r=cv.getBoundingClientRect();const x=(e.clientX-r.left)/P,y=(e.clientY-r.top)/P;
+ const l=lan.find(l=>Math.abs(l.x-x)<5&&Math.abs(l.y-y)<6);if(l){l.fast=1;for(let i=0;i<10;i++)sp.push({x:l.x+R(-2,2),y:l.y,vy:R(-.4,-.1),l:R(25,45)});return}
+ if(y>HOR()){rip.push({x,y,r:1,a:.8});if(rnd()<.35)spawnLan(1,x,y)}else firework(x,y,0)}
+// ---------- หน้าจอ ----------
+let el=null,cdIv=0,cdHold=0;
+function open(auto){if(el)return;el=document.createElement('div');el.id='loyX';el.innerHTML=`<canvas id="loyC"></canvas><button id="loyCl" aria-label="close">✕</button><div id="loyUI"><div class="lySp"></div><div class="lyOrn">✦ 🪷 ✦</div><h1></h1><div class="lyS1"></div><div class="lyS2"></div><div class="lyCnt"></div><div class="lyFlash"></div><div class="lyBt"></div></div>`;document.body.appendChild(el);
+ cv=el.querySelector('#loyC');cx=cv.getContext('2d');fit();addEventListener('resize',fit);cv.addEventListener('pointerdown',tap);el.querySelector('#loyCl').onclick=close;
+ for(let i=0;i<(LOW?6:10);i++){spawnLan();lan[lan.length-1].y=R(HOR()*.25,HOR());lan[lan.length-1].a=1}for(let i=0;i<(LOW?5:8);i++)spawnKr(null);
+ run=1;t0=performance.now();lastT=0;raf=requestAnimationFrame(draw);requestAnimationFrame(()=>el.classList.add('on'));
+ if(inCd())countdown();else reveal(false);loadReal()}
+function reveal(midnight){const U=el.querySelector('#loyUI');U.classList.remove('cdm');cdHold=0;U.querySelector('h1').textContent=L('สุขสันต์วันลอยกระทง','Happy Loy Krathong');U.querySelector('.lyS1').textContent=L('คืนวันเพ็ญเดือนสิบสอง · ๒๔ พฤศจิกายน ๒๕๖๙','Full moon of the twelfth month · 24 November 2026');U.querySelector('.lyS2').textContent=L('ขอให้สิ่งไม่ดีลอยไปกับสายน้ำ','May everything bad drift away with the river');U.querySelector('.lyCnt').textContent=TOT?U.querySelector('.lyCnt').textContent:L('แตะน้ำ แตะฟ้า หรือแตะโคมลอยดูสิ','Tap the water, the sky, or a lantern');
+ const mus=(()=>{try{return LS.get('murim_track','')==='lotus'&&bgmOn}catch(e){return false}})();
+ U.querySelector('.lyBt').innerHTML=`<button class="lyB1" id="loyGo">🪷 ${L('ลอยกระทงข้ามภพ','Float a krathong across lives')}</button><div class="lyRow"><button class="lyB2" id="loyIn">🌙 ${L('เข้าสู่เกม','Enter the game')}</button><button class="lyB2 ${mus?'on':''}" id="loyMu">🎵 ${L('เพลงลอยกระทง','Lotus music')}</button></div><div class="lyHint">${L('ปิดแล้วเปิดใหม่ได้จากปุ่ม 🌕 ที่หน้าแรก','Reopen anytime from the 🌕 button on the home screen')}</div>`;
+ U.querySelector('#loyGo').onclick=()=>{close();setTimeout(()=>{try{openKrt('river')}catch(e){}},350)};U.querySelector('#loyIn').onclick=close;
+ U.querySelector('#loyMu').onclick=e=>{try{LS.set('murim_track','lotus');LS.set('murim_trkpick',Date.now());if(typeof stopBgm==='function')stopBgm();bgmOn=true;LS.set('murim_bgm',true);setTimeout(()=>{try{startBgm()}catch(x){}},80);e.currentTarget.classList.add('on')}catch(x){}};
+ ['h1','.lyS1','.lyS2','.lyCnt','.lyBt','.lyOrn'].forEach(s=>{const n=U.querySelector(s);if(n){n.style.animation='none';void n.offsetWidth;n.style.animation=''}});
+ if(midnight){boom=6;moonK=Math.max(.6,moonK);U.querySelector('.lyFlash').classList.add('go');for(let i=0;i<(LOW?18:34);i++)setTimeout(()=>spawnLan(1,R(10,Wl-10),R(HOR(),Hl)),i*70);for(let i=0;i<6;i++)setTimeout(()=>firework(R(25,Wl-25),R(HOR()*.12,HOR()*.45),1),300+i*420);try{navigator.vibrate&&navigator.vibrate([60,80,60])}catch(e){}}}
+function countdown(){const U=el.querySelector('#loyUI');U.querySelector('h1').textContent=L('ใกล้ถึงคืนลอยกระทง','Loy Krathong is almost here');U.querySelector('.lyS1').textContent=L('คืนวันเพ็ญเดือนสิบสอง','Full moon of the twelfth month');U.classList.add('cdm');U.querySelector('.lyS2').textContent='';U.querySelector('.lyCnt').innerHTML=`<div class="lyCd" id="loyCd">--:--</div><div class="lyCdl">${L('จนถึงเที่ยงคืน','until midnight')}</div>`;cdHold=1;
+ U.querySelector('.lyBt').innerHTML=`<div class="lyRow"><button class="lyB2" id="loyIn">🌙 ${L('เข้าสู่เกมก่อน','Enter the game for now')}</button></div>`;U.querySelector('#loyIn').onclick=close;moonK=.0;
+ const tick=()=>{const ms=MID-now();if(ms<=0){clearInterval(cdIv);cdIv=0;reveal(true);return}const s=Math.ceil(ms/1000),m=Math.floor(s/60);const d=el.querySelector('#loyCd');if(d)d.textContent=`${String(Math.floor(m/60)).padStart(2,'0')!=='00'?String(Math.floor(m/60)).padStart(2,'0')+':':''}${String(m%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;if(s<=10&&d)d.style.color=s%2?'#ffd36a':'#fff3c4'};tick();cdIv=setInterval(tick,250)}
+function close(){if(!el)return;try{LS.set('murim_loy26',Date.now())}catch(e){}el.classList.add('out');const e2=el;setTimeout(()=>{run=0;cancelAnimationFrame(raf);clearInterval(cdIv);cdIv=0;removeEventListener('resize',fit);e2.remove();if(el===e2)el=null;lan=[];kr=[];fw=[];rip=[];sp=[]},720);chip()}
+window.loyOpen=()=>open(false);
+// ปุ่ม 🌕 ที่หน้าแรก
+function chip(){try{const t=document.getElementById('title');if(!t||document.getElementById('loyChip'))return;const b=document.createElement('button');b.id='loyChip';b.textContent=inCd()?L('🌕 นับถอยหลังสู่คืนลอยกระทง','🌕 Countdown to Loy Krathong'):L('🌕 คืนลอยกระทง แตะเพื่อดูสายน้ำ','🌕 Loy Krathong night — see the river');b.onclick=()=>open(false);const big=t.querySelector('.big');if(big)big.insertAdjacentElement('afterend',b);else t.prepend(b)}catch(e){}}
+// เปิดเอง: ครั้งแรกของวันบนเครื่องนี้ (ช่วงนับถอยหลังเปิดทุกครั้ง) · เฉพาะตอนอยู่หน้าแรก
+const seen=()=>{try{const v=+LS.get('murim_loy26',0);return v&&v>=A&&!Q}catch(e){return false}};
+const boot=()=>{const t=document.getElementById('title');const onT=t&&t.classList.contains('on');chip();if(onT&&(inCd()||!seen()))setTimeout(()=>{if(document.getElementById('title').classList.contains('on')&&!(typeof S!=='undefined'&&S&&S.alive&&!document.getElementById('title').classList.contains('on')))open(true)},700)};
+if(document.readyState==='complete')setTimeout(boot,1200);else addEventListener('load',()=>setTimeout(boot,1200));
+// ถ้าเปิดค้างไว้ข้ามเที่ยงคืนโดยไม่ได้อยู่ในหน้าจอนับถอยหลัง ให้เด้งฉากเที่ยงคืนเมื่ออยู่หน้าแรก
+if(inCd()&&Q!=='cd'){const iv=setInterval(()=>{if(now()>=A){clearInterval(iv);const t=document.getElementById('title');const c=document.getElementById('loyChip');if(c)c.textContent=L('🌕 คืนลอยกระทง แตะเพื่อดูสายน้ำ','🌕 Loy Krathong night — see the river');if(!el&&t&&t.classList.contains('on'))open(true)}},1000)}
+})()}catch(e){console.error('block210',e)}
+
