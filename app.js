@@ -19372,7 +19372,7 @@ const BXU={pos:{}};
 function bxIsOn(b){return b.classList.contains('on')||b.classList.contains('sel')||/outline/.test(b.getAttribute('style')||'')}
 function bxRect(c,b){return{x:b.offsetLeft,y:b.offsetTop,w:b.offsetWidth,h:b.offsetHeight}}
 function bxPut(p,o,anim){if(!anim)p.style.transition='none';p.style.width=o.w+'px';p.style.height=o.h+'px';p.style.transform=`translate(${o.x}px,${o.y}px)`;if(!anim){void p.offsetWidth;p.style.transition=''}}
-function bxGroups(m){const out=[];[m,...m.querySelectorAll('*')].forEach(c=>{if((c._bx&&(c!==m||m._bxH===m.querySelector(':scope>h3')))||c.matches('.tabs,.mgrid,.tmgrid,.seg,#focus,.qmBody,.nav,.crow,.chips')||c.closest('#qm'))return;let B=[...c.children].filter(x=>x.tagName==='BUTTON'&&x.offsetParent&&!x.matches('.xbtn,.mnX'));if(B.length<2)return;
+function bxGroups(m){const out=[];const PS=new Set();m.querySelectorAll('button').forEach(b=>{const c=b.parentElement;if(c&&(c===m||m.contains(c)))PS.add(c)});const PL=[...PS].sort((x,y)=>x===y?0:(x.compareDocumentPosition(y)&4)?-1:1);PL.forEach(c=>{if((c._bx&&(c!==m||m._bxH===m.querySelector(':scope>h3')))||c.matches('.tabs,.mgrid,.tmgrid,.seg,#focus,.qmBody,.nav,.crow,.chips')||c.closest('#qm'))return;let B=[...c.children].filter(x=>x.tagName==='BUTTON'&&x.offsetParent&&!x.matches('.xbtn,.mnX'));if(B.length<2)return;
  let on=B.filter(bxIsOn);if(on.length===1&&!c.matches('.stbar .brow')){const f=on[0].classList[0];if(f&&f!=='on'&&f!=='sel')B=B.filter(x=>x.classList.contains(f));if(B.length<2)return}if(c.matches('.stbar .brow')){on=B.filter(b=>b.classList.contains('pbtn'))}if(on.length!==1)return;if(B.length>2&&on.length===1&&B.filter(bxIsOn).length!==1&&!c.matches('.stbar .brow'))return;out.push([c,B,on[0]])});return out}
 function bxSetup(m){if(!tuOn())return;const k=m.dataset.k||'';bxGroups(m).forEach(([c,B,on],gi)=>{c._bx=1;if(c===m){m._bxH=m.querySelector(':scope>h3');m.querySelectorAll(':scope>.bxPill').forEach(x=>x.remove())}c.classList.add('bxRow');on.classList.add('bxOn');const key=k+':'+gi+':'+B.length;
  const p=document.createElement('span');p.className='bxPill';c.prepend(p);const now=bxRect(c,on),o=BXU.pos[key];
@@ -19597,7 +19597,7 @@ function islEl(){let e=document.getElementById('isl');if(!e){e=document.createEl
   let y0=null;e.addEventListener('touchstart',ev=>{y0=ev.touches[0].clientY},{passive:true});e.addEventListener('touchmove',ev=>{if(y0!=null&&y0-ev.touches[0].clientY>18){y0=null;islNext(true)}},{passive:true})}
  e.classList.toggle('lite',islLite());return e}
 function islHtml(n){const k=n.kind||'info';
- if(n.big)return`<div class="islBig k-${k}"><div class="islIc">${n.ic||'🔔'}</div><div class="islTx"><div class="islH">${n.h||''}</div><div class="islT">${n.t}</div>${n.st?`<div class="islSt">${n.st}</div>`:''}${n.d?`<div class="islD">${n.d}</div>`:''}${n.act?`<div class="islAct">${n.act.t}</div>`:''}</div></div>`;
+ if(n.big)return`<div class="islBig k-${k}"><div class="islIc">${n.ic||'🔔'}</div><div class="islTx"><div class="islH">${n.h||''}</div><div class="islT">${n.t}</div>${n.st?`<div class="islSt">${n.st}</div>`:''}${n.d?`<div class="islD${/class="aiR"/.test(n.d)?' hasAiR':''}">${n.d}</div>`:''}${n.act?`<div class="islAct">${n.act.t}</div>`:''}</div></div>`;
  return`<div class="islSm k-${k}"><span class="islIc">${n.ic||''}</span><span class="islT">${n.t}</span>${n.n>1?`<b class="islN">×${n.n}</b>`:''}${n.live?'<i class="islDot"></i>':''}</div>`}
 function islRender(n,morph){const e=islEl(),c=e.querySelector('.islC');const ow=e.offsetWidth,oh=e.offsetHeight,was=e.classList.contains('on');
  // เคยเก็บแค่ลูกตัวแรกไว้จางหาย — ถ้ามีป้ายใหม่มาภายใน 0.18 วิ ป้ายก่อนหน้าค้างทับกันถาวร → เหลือแค่ตัวล่าสุดที่กำลังจาง ที่เหลือลบทันที
@@ -20236,7 +20236,7 @@ function annIslShow(a,force){if(!a||!a.i)return;const n=annIslNode(a);
 #isl .aiO i{position:absolute;left:0;top:0;bottom:0;background:rgba(255,215,106,.28);border-radius:7px;transition:width .5s cubic-bezier(.3,1.2,.5,1)}
 #isl .aiO.top i{background:rgba(255,215,106,.45)}#isl .aiO.me{box-shadow:inset 0 0 0 1.5px #7ad48a}#isl .aiO.me i{background:rgba(110,210,130,.38)}
 #isl .aiO span,#isl .aiO b{position:relative;z-index:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#isl .aiO b{flex:none;font-variant-numeric:tabular-nums;opacity:.9}
-#isl .aiT{font-size:11.5px;opacity:.75;text-align:left}#isl .islD:has(.aiR){opacity:1}#isl .aiO{color:#fff3d6}#isl .aiT{color:#f0dcb0}`;document.head.appendChild(st)})();
+#isl .aiT{font-size:11.5px;opacity:.75;text-align:left}#isl .islD.hasAiR{opacity:1}#isl .aiO{color:#fff3d6}#isl .aiT{color:#f0dcb0}`;document.head.appendChild(st)})();
 
 
 // ===================== เควสระบบ v2: เป้าแฟร์ · รางวัลตามความยาก · ออกล่า · สุ่มเควสใหม่ฟรี · คำแนะนำ =====================
@@ -45853,8 +45853,41 @@ function scrFix(){try{const m=document.getElementById('modal');if(!m||m.dataset.
 }catch(e){console.error(e)}}
 
 // ---- 📜 คัมภีร์ประจำโลก: ยุคปัจจุบัน · นครม่านหมอก · จิตวิญญาณยุทธ์ · ภพเทพ ----
+
+// ---- ความหมายของแต่ละขั้น + พลังที่ได้เมื่อถึงขั้น (ทุกโลกที่ไม่มีหน้าคัมภีร์ของตัวเอง) ----
+const SCR_LORE={
+under:['เด็กธรรมดาที่โตมากับซอย รู้ว่าร้านไหนห้ามเข้า คนไหนห้ามมองหน้า','คนในย่านเริ่มจำหน้าได้ พ่อค้าแม่ค้ายอมจ่ายค่าดูแลให้ก๊กผ่านมือคุณ','คนที่หัวหน้าไว้ใจที่สุด งานสำคัญทุกงานต้องผ่านมือคุณ','มีลูกน้องเป็นของตัวเอง คุมได้ทั้งตลาดและบ่อน','คนทั้งย่านต้องเกรงใจ ตำรวจท้องที่ยังต้องโทรมาถามก่อนลงมือ','ชื่อคุณไปถึงนักการเมืองและนายทุน ไม่ต้องลงมือเองอีกแล้ว'],
+ghost:['มองไม่เห็นอะไร แค่ขนลุกบ้างตอนดึก','เริ่มเห็นเงาที่คนอื่นไม่เห็น รู้ว่าบ้านไหนมีของ','ถือย่ามตามหมอผีไปงาน เรียนคาถาและวิธีตั้งศาล','ชาวบ้านทั้งย่านมาหาเมื่อเจอเรื่องแปลก','คนต่างจังหวัดยอมขับรถข้ามคืนมาหา ผีเจ้าที่ยังต้องเกรงใจ','รู้วิชาครบทั้งไสยขาวไสยดำ ผีใหญ่ยอมเจรจาด้วย'],
+loop:['ชีวิตเหมือนเดิมทุกวัน แต่บางอย่างรู้สึกคุ้นเกินไป','เริ่มจำได้ว่าวันนี้เคยเกิดมาแล้ว','รู้ล่วงหน้าว่าใครจะพูดอะไร ใช้ความรู้นั้นเปลี่ยนเหตุการณ์เล็กๆ ได้','จัดวันได้ตามใจ รู้ทุกจังหวะของเมือง','ข้ามจุดเริ่มของลูปได้ พกความรู้จากหลายรอบติดตัวไป','มองเห็นต้นเหตุของวงจร และหาทางออกจากวันที่ซ้ำได้'],
+zombie:['แค่เอาตัวรอดไปวันๆ หลบซ่อนจากฝูง','รู้ว่าซูเปอร์มาร์เก็ตไหนยังมีของ ทางไหนปลอดภัย','นำทีมออกหาเสบียง ทุกคนกลับมาครบเพราะคุณ','ที่พักทั้งแห่งฟังคำสั่งคุณ คุมเวรยามและการแบ่งอาหาร','หลายที่พักรวมตัวกันใต้การนำของคุณ','ชื่อคุณกลายเป็นตำนานของโลกหลังวันสิ้นสุด'],
+tower:['ยังไม่เคยเหยียบหอคอย','ผ่านชั้นแรกๆ ที่มีแค่สัตว์ประหลาดตัวเล็ก','ผ่านประตูชั้น 25 มาได้ เริ่มมีทีมชวนเข้าร่วม','ผ่านประตูชั้น 50 อยู่กลุ่มหัวแถวของโลก','ผ่านประตูชั้น 75 มีคนแค่หยิบมือที่มาถึงตรงนี้','ยืนบนยอดหอคอย ได้รู้ว่าหอคอยถูกสร้างขึ้นเพื่ออะไร'],
+game:['หน้าต่างระบบเพิ่งเปิด ยังงงกับค่าสถานะ','รู้จักเควสและไอเทม เริ่มเก็บเลเวลได้คล่อง','มีชื่อในกิลด์ ได้รับเชิญเข้าดันเจี้ยนกลุ่ม','ชื่ออยู่บนกระดานจัดอันดับ คนทั้งเซิร์ฟเวอร์รู้จัก','พร้อมท้าบอสโลกที่ตันเลเวล 60 ไว้','อันดับหนึ่งของเซิร์ฟเวอร์ หน้าต่างสถานะเป็นสีทอง'],
+gatewon:['อยู่ในกำแพงสุดท้ายของมนุษย์ ไม่เคยออกไปข้างนอก','ออกลาดตระเวนรอบกำแพง เห็นโลกที่มอนสเตอร์ยึดไป','สู้นอกกำแพงได้ ยึดพื้นที่คืนทีละนิด','นำหน่วยยึดคืนทั้งภูมิภาค','คนทั้งเมืองฝากความหวังไว้กับคุณ','ปิดเกตแม่ได้สำเร็จ โลกกลับเป็นของมนุษย์'],
+hunter:['คนธรรมดาในยุคประตูมิติ ยังไม่ปลุกพลัง','ฮันเตอร์เกรดต่ำสุด เข้าได้แค่ดันเจี้ยนเล็ก','เริ่มเข้าทีมล่าดันเจี้ยนระดับกลางได้','กิลด์เล็กเริ่มทาบทาม','ฮันเตอร์ฝีมือดี เป็นกำลังหลักของกิลด์','ฮันเตอร์ระดับสูง ได้รับเรียกตัวเมื่อเกตใหญ่เปิด','ฮันเตอร์ระดับสูงสุด เทียบเท่ากองทัพหนึ่งกอง'],
+soul:['เพิ่งปลุกดวงจิต วงแหวนแรกยังจางๆ','ใช้พลังดวงจิตต่อสู้ได้จริง','ปรมาจารย์ในหมู่ศิษย์รุ่นเดียวกัน','เป็นที่นับหน้าถือตาของสำนัก','ระดับที่สำนักใหญ่ยอมเชิญเป็นผู้อาวุโส','ราชาในหมู่ผู้ใช้ดวงจิต','จักรพรรดิของทวีป ปรากฏตัวทีเดียวสะเทือนทั้งเมือง','พลังเกินมนุษย์ ใกล้เทพเข้าไปทุกที','ยืนอยู่บนยอดสุดของทวีป','ครบ 9 วงถึงระดับ 100 พร้อมก้าวสู่ความเป็นเทพ'],
+sg:['เทพที่เพิ่งได้ตำแหน่ง มีผู้ศรัทธาไม่กี่คน','มีตำแหน่งประจำ ได้รับพรจากโลกล่างสม่ำเสมอ','ถือกฎของภพเทพ คุมเทพชั้นล่าง','นั่งในสภาเทพ ร่วมกำหนดชะตาทวีป']};
+const SCR_FOGL=['เพิ่งได้เข้าฝ่าย ยังถูกจับตาดู','ได้รับมอบหมายงานภาคสนาม รู้ความลับระดับแรก','คุมคนของฝ่ายเป็นชุด','อยู่ในวงในของฝ่าย รู้เรื่องที่คนนอกไม่มีวันรู้','ผู้นำสูงสุดของฝ่าย ชี้ทางให้ทั้งเมือง'];
+const SCR_BON=[null,['hp',.05,'พลังชีวิตสูงสุด +5%'],['pow',.03,'พลัง +3%'],['hp',.08,'พลังชีวิตสูงสุด +8% · ชื่อเสียง +20'],['pow',.05,'พลัง +5%'],['life',3,'อายุขัย +3 ปี · พลัง +5%'],['pow',.06,'พลัง +6%'],['hp',.1,'พลังชีวิตสูงสุด +10%'],['pow',.06,'พลัง +6%'],['life',4,'อายุขัย +4 ปี · พลัง +6%']];
+const scrBonTxt=i=>SCR_BON[i]?SCR_BON[i][2]:'จุดเริ่มต้น';
+function scrBonGive(i){const B=SCR_BON[i];if(!B)return'';const pw=v=>{try{if(typeof pctPow==='function'&&typeof S.power==='number')S.power+=pctPow(v)}catch(e){}};
+ if(B[0]==='hp'){const g=Math.round((S.maxHp||0)*B[1]);S.maxHp+=g;S.hp+=g;if(i===3)S.fame=(S.fame||0)+20}else if(B[0]==='pow')pw(B[1]);else if(B[0]==='life'){S.lifespan=(S.lifespan||0)+B[1];pw(B[1]===3?.05:.06)}return B[2]}
+function scrRank(){if(!S||!S.alive)return null;const M=S.mw;
+ if(M&&M.sky)return null;
+ if(M&&M.fog){const K=M.fog;return K.fac?{k:'fog_'+K.fac,i:K.frk|0}:null}
+ if(M){if(M.kid)return null;const w=window._wld&&window._wld.wOf?window._wld.wOf(M):'normal',L=window._wld||{},L2=window._wld2||{},LD=window._scrLad||{};let T=null,v=0;
+  if(w==='under'&&M.U){T=L.UR;v=M.U.inf}else if(w==='ghost'&&M.G){T=L.GR;v=M.G.ward}else if(w==='loop'&&M.LP){T=L2.LR;v=M.LP.mem}else if(w==='zombie'&&M.Z){T=L2.ZR;v=M.Z.surv}else if(LD[w]){try{T=LD[w][1];v=LD[w][2](M)}catch(e){T=null}}
+  if(T){let ci=0;T.forEach((t,i)=>{if(v>=t[0])ci=i});return{k:w,i:ci}}
+  if(w==='hunter'&&M.H)return{k:'hunter',i:(M.H.r|0)+1};return null}
+ if(S.ch==='soul'&&S.sv){const G=S.sv;if(G.gd&&G.gd.on){const sg=window._sgScr,d=sg&&sg.GD?sg.GD():G.gd;return{k:'sg',i:(d&&d.rk)|0}}if(G.aw===0)return null;return{k:'soul',i:Math.min(9,Math.floor((Math.max(1,G.lv|0)-1)/10))}}
+ return null}
+function scrTick(){try{const r=scrRank();if(!r)return;const B=S.scrB=S.scrB||{};if(B[r.k]==null){B[r.k]=r.i;return}if(r.i<=B[r.k])return;const got=[];for(let i=B[r.k]+1;i<=r.i;i++){const t=scrBonGive(i);if(t)got.push(t)}B[r.k]=r.i;
+ if(got.length)log(`📜 <b>ถึงขั้นใหม่ พลังตื่นขึ้น</b> — ${got.join(' · ')} <a class="rlmLk" onclick="event.stopPropagation();openRealm()">📜 ดูคัมภีร์</a>`,'epic')}catch(e){console.error(e)}}
+{const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);scrTick();return r}}
+window._scrTick=scrTick;
+let SCRK=null;
+function scrExtra(i){const L=SCRK&&(SCRK.slice(0,4)==='fog_'?SCR_FOGL:SCR_LORE[SCRK]);if(!L)return'';return`${L[i]?`<div class="rlmcd">${L[i]}</div>`:''}<div class="rlmca"><span>🎁 ${scrBonTxt(i)}</span></div>`}
 function scrCards(title,intro,items,extra){const cur=items.findIndex(x=>x.cur);
- return`<button class="xbtn" onclick="closeM()">✕</button><h3>${title}</h3><p class="tag2">${intro}</p>${extra||''}`+items.map((x,i)=>`<div class="rlmc ${x.cur?'cur':''}" style="--c1:#6a5acd;--c2:#2a2a55"><div class="rlmch"><span class="rlmci">${x.ic||'✦'}</span><div><b>${esc(x.n)}</b>${x.cur?' <span class="rlmnow">ตอนนี้</span>':(cur>=0&&i<cur?' <span class="tag2">✓ ผ่านแล้ว</span>':'')}</div></div>${x.d?`<div class="rlmcd">${x.d}</div>`:''}</div>`).join('')+`<div class="rlmel"><button class="gbtn" onclick="closeM();setTimeout(()=>openGuide(),60)">📘 คู่มืออธิบายทุกระบบ</button></div>`}
+ return`<button class="xbtn" onclick="closeM()">✕</button><h3>${title}</h3><p class="tag2">${intro}</p>${extra||''}`+items.map((x,i)=>`<div class="rlmc ${x.cur?'cur':''}" style="--c1:#6a5acd;--c2:#2a2a55"><div class="rlmch"><span class="rlmci">${x.ic||'✦'}</span><div><b>${esc(x.n)}</b>${x.cur?' <span class="rlmnow">ตอนนี้</span>':(cur>=0&&i<cur?' <span class="tag2">✓ ผ่านแล้ว</span>':'')}</div></div>${x.d?`<div class="rlmcd">${x.d}</div>`:''}${scrExtra(i)}</div>`).join('')+`<div class="rlmel"><button class="gbtn" onclick="closeM();setTimeout(()=>openGuide(),60)">📘 คู่มืออธิบายทุกระบบ</button></div>`}
 const SCR_HOW={
 under:['🥊 <b>งานใต้ดิน</b> — อิทธิพล +4–8 (แรงขึ้นตามฐานะ) ได้เงิน แต่ความร้อน +8–16 เสี่ยงโดนซ้อมหรือถูกทำร้ายถึงตายเมื่อความร้อนสูง','🤝 <b>ซื้อใจผู้ใหญ่</b> — ความร้อน −10–20 อิทธิพล +1–4 เสียเงินเล็กน้อย','ปีที่ไม่ทำสองอย่างนี้ อิทธิพลลด 1'],
 ghost:['👻 <b>รับงานปราบผี</b> — บารมี +3–7 ได้เงิน แต่ผีตามหลอน +7–15 (ผีตามหลอนสูงเสี่ยงป่วยหนักและตาย)','🙏 <b>ทำบุญผูกบารมี</b> — ผีตามหลอน −10–18 บารมี +1–4 เสียเงินเล็กน้อย','เครื่องรางช่วยลดผีตามหลอนที่ได้จากงานปราบผี'],
@@ -45863,24 +45896,24 @@ zombie:['🧟 <b>ออกหาเสบียง</b> — ทักษะรอ
 tower:['🧗 <b>ปีนหอคอย</b> — ชั้น +2–5 (อุปกรณ์ช่วยเพิ่มและลดความบาดเจ็บ) ได้เงินตามชั้น แต่บาดเจ็บสะสมเพิ่มและเสียพลังชีวิต','ชั้น 25 / 50 / 75 มีประตูปิดอยู่ ต้องผ่านด่านก่อนจึงปีนต่อได้ · ชั้นสูงสุด 100','🩹 <b>พักฟื้นและเตรียมตัว</b> — ใช้ปีนั้นลดความบาดเจ็บ · บาดเจ็บสะสม 95 ขึ้นไปเสี่ยงตกตาย'],
 game:['⚔️ <b>ล่าเควส</b> — เลเวล +2–4 (นักรบ +1) เลเวลตันที่ 60 จนกว่าจะผ่านบอสโลก จากนั้นขึ้นได้ถึง 99','💼 <b>ใช้สกิลหาเงิน</b> — ได้เงินตามเลเวล (ช่างคราฟต์ได้มากกว่า)','คลาส: ⚔️ นักรบ เลเวลขึ้นเร็วกว่า · 🔮 นักเวท ชนะบอสง่ายกว่า · 🔨 ช่างคราฟต์ หาเงินจากสกิลได้มาก · 🗡️ โจร รอดจาก PK ง่าย'],
 gatewon:['🗡️ <b>ออกนอกกำแพง</b> — ยึดคืน +3–7% ต่อปี แต่เสียพลังชีวิตและเสี่ยงตายนอกกำแพง · ที่ 25% / 50% / 75% มีเป้าหมายใหญ่ต้องทำให้สำเร็จก่อนจึงไปต่อ','🧱 <b>เฝ้ากำแพง</b> — ความมั่นคงของเมือง +9–15','ทุกปีมอนสเตอร์กดดัน ความมั่นคงของกำแพงลด 4–8']};
-function scrWorld(){if(!S||!S.alive)return false;let h=null;
+function scrWorld(){if(!S||!S.alive)return false;let h=null;SCRK=null;{const r=scrRank();if(r)SCRK=r.k}
  const M=S.mw;
  if(M&&M.fog){const F=window._fog;if(!F||!F.FRK)return false;const K=M.fog,ks=Object.keys(F.FRK),need=[15,35,55,75];
-  h=`<button class="xbtn" onclick="closeM()">✕</button><h3>📜 คัมภีร์นครม่านหมอก</h3><p class="tag2">เข้าร่วมฝ่ายแล้วสะสมชื่อเสียงกับฝ่ายนั้นเพื่อไต่ขั้นภายในฝ่าย (5 ขั้น) · ชื่อเสียงที่ต้องมีเพื่อขึ้นขั้นถัดไป: ${need.join(' → ')} · ฝ่ายคู่แค้นเสียชื่อเมื่อคุณเข้าข้าง</p>`+ks.map(k=>{const f=F.FAC[k],mine=K.fac===k,r=K.frk|0;return`<div class="rlmc ${mine?'cur':''}" style="--c1:#5b7c99;--c2:#1f2a36"><div class="rlmch"><span class="rlmci">${f.ic}</span><div><b>${esc(f.n)}</b>${mine?' <span class="rlmnow">ฝ่ายของคุณ</span>':''}</div></div><div class="rlmcd">${f.d}</div><div class="rlmca">${F.FRK[k].map((n,i)=>`<span style="${mine&&i===r?'font-weight:900;color:#ffd76a':mine&&i<r?'opacity:.55':''}">${i+1}. ${esc(n)}</span>`).join('')}</div></div>`}).join('')+`<div class="rlmel"><button class="gbtn" onclick="closeM();setTimeout(()=>openGuide(),60)">📘 คู่มืออธิบายทุกระบบ</button></div>`}
+  h=`<button class="xbtn" onclick="closeM()">✕</button><h3>📜 คัมภีร์นครม่านหมอก</h3><p class="tag2">เข้าร่วมฝ่ายแล้วสะสมชื่อเสียงกับฝ่ายนั้นเพื่อไต่ขั้นภายในฝ่าย (5 ขั้น) · ชื่อเสียงที่ต้องมีเพื่อขึ้นขั้นถัดไป: ${need.join(' → ')} · ฝ่ายคู่แค้นเสียชื่อเมื่อคุณเข้าข้าง</p>`+ks.map(k=>{const f=F.FAC[k],mine=K.fac===k,r=K.frk|0;return`<div class="rlmc ${mine?'cur':''}" style="--c1:#5b7c99;--c2:#1f2a36"><div class="rlmch"><span class="rlmci">${f.ic}</span><div><b>${esc(f.n)}</b>${mine?' <span class="rlmnow">ฝ่ายของคุณ</span>':''}</div></div><div class="rlmcd">${f.d}</div>${F.FRK[k].map((n,i)=>`<div class="rlmcd" style="${mine&&i===r?'font-weight:900;color:#ffd76a':mine&&i<r?'opacity:.6':''}">${mine&&i===r?'⭐':mine&&i<r?'✅':'✦'} <b>${i+1}. ${esc(n)}</b> — ${SCR_FOGL[i]}${i>0?` · ต้องมีชื่อเสียง ${[15,35,55,75][i-1]}`:''} · 🎁 ${scrBonTxt(i)}</div>`).join('')}</div>`}).join('')+`<div class="rlmel"><button class="gbtn" onclick="closeM();setTimeout(()=>openGuide(),60)">📘 คู่มืออธิบายทุกระบบ</button></div>`}
  else if(M){const w=window._wld&&window._wld.wOf?window._wld.wOf(M):'normal';let T=null,v=0,nm='',un='';const L=window._wld||{},L2=window._wld2||{},LD=window._scrLad||{};
   if(w==='under'&&M.U){T=L.UR;v=M.U.inf;nm='🥊 โลกใต้ดิน';un='อิทธิพล'}
   else if(w==='ghost'&&M.G){T=L.GR;v=M.G.ward;nm='👻 โลกเร้นลับ';un='ความเชื่อถือ'}
   else if(w==='loop'&&M.LP){T=L2.LR;v=M.LP.mem;nm='🔁 โลกวันซ้ำ';un='ความทรงจำ'}
   else if(w==='zombie'&&M.Z){T=L2.ZR;v=M.Z.surv;nm='🧟 โลกซอมบี้';un='ทักษะรอด'}
   else if(LD[w]){nm=LD[w][0];T=LD[w][1];v=LD[w][2](M);un=LD[w][3]}
-  if(T){let ci=0;T.forEach((t,i)=>{if(v>=t[0])ci=i});
+  if(T){SCRK=w;let ci=0;T.forEach((t,i)=>{if(v>=t[0])ci=i});
    const nx=T[ci+1],H=SCR_HOW[w];h=scrCards('📜 คัมภีร์ · '+nm,`ฐานะไต่ตาม<b>${un}</b> · ตอนนี้ ${fmt(v)}${nx?` · ขั้นถัดไป <b>${esc(nx[1])}</b> ต้องมี ${nx[0]} (อีก ${fmt(Math.max(0,nx[0]-v))})`:' · ถึงขั้นสูงสุดแล้ว'}`,T.map((t,i)=>({n:t[1],ic:i===ci?'⭐':i<ci?'✅':'🔒',cur:i===ci,d:`ต้องมี${un} ${t[0]}+${i<T.length-1?(T[i+1][0]-1>t[0]?` · ช่วง ${t[0]}–${T[i+1][0]-1}`:''):' · ขั้นสูงสุด'}`})),H?`<div class="rlmel"><b>📈 เพิ่ม${un}ได้ยังไง</b><br>${H.map(x=>'• '+x).join('<br>')}</div>`:'')}
-  else if(w==='hunter'&&typeof HR!=='undefined'){const r=M.H?M.H.r:-1;
+  else if(w==='hunter'&&typeof HR!=='undefined'){SCRK='hunter';const r=M.H?M.H.r:-1;
    h=scrCards('📜 คัมภีร์ฮันเตอร์','ระดับฮันเตอร์ตามพลังที่สะสม ยิ่งสูงยิ่งเข้าดันเจี้ยนระดับอันตรายได้',[{n:'ยังไม่ปลุกพลัง',cur:r<0,ic:'🧍',d:'คนธรรมดาในยุคประตูมิติ'}].concat(HR.map((g,i)=>({n:'ฮันเตอร์ระดับ '+g,cur:r===i,ic:'🌀',d:'พลังสะสม '+HR_T[i]+'+'}))))}
   else h=scrCards('📜 คัมภีร์ยุคปัจจุบัน','โหมดนี้ไม่มีบันไดระดับพลังแยก ความก้าวหน้าดูได้จากอาชีพ ฐานะ และสถานะในหน้าเล่น · ถ้าชีวิตเข้าสู่โลกย่อย (เช่น ฮันเตอร์ ระบบเกม หอคอย) คัมภีร์จะแสดงระดับของโลกนั้นให้เอง',[])}
  else if(S.ch==='soul'&&S.sv){const G=S.sv,B=window._blk34,sg=window._sgScr;
-  if(G.gd&&G.gd.on&&sg){const d=sg.GD()||G.gd;h=scrCards('📜 คัมภีร์ภพเทพแห่งทวีป','เมื่อกลายเป็นเทพ ชื่อเสียงวัดจากผู้ศรัทธา · ครบจำนวนแล้วต้องผ่านมติสภาจึงขึ้นขั้น',sg.RK.map((n,i)=>({n,cur:d.rk===i,ic:'🌟',d:i<3?`ต้องมีผู้ศรัทธา ${sg.RKN[i]} เพื่อขอมติขึ้นขั้นถัดไป`:'ขั้นสูงสุด'})))}
-  else if(B&&B.RANK){const lv=G.lv|0,ci=Math.min(B.RANK.length-1,Math.floor((Math.max(1,lv)-1)/10));
+  if(G.gd&&G.gd.on&&sg){SCRK='sg';const d=sg.GD()||G.gd;h=scrCards('📜 คัมภีร์ภพเทพแห่งทวีป','เมื่อกลายเป็นเทพ ชื่อเสียงวัดจากผู้ศรัทธา · ครบจำนวนแล้วต้องผ่านมติสภาจึงขึ้นขั้น',sg.RK.map((n,i)=>({n,cur:d.rk===i,ic:'🌟',d:i<3?`ต้องมีผู้ศรัทธา ${sg.RKN[i]} เพื่อขอมติขึ้นขั้นถัดไป`:'ขั้นสูงสุด'})))}
+  else if(B&&B.RANK){SCRK='soul';const lv=G.lv|0,ci=Math.min(B.RANK.length-1,Math.floor((Math.max(1,lv)-1)/10));
    h=scrCards('📜 คัมภีร์ทวีปจิตวิญญาณยุทธ์',`ระดับจิต <b>${lv}</b>/100 · ทุก 10 ระดับได้ฉายาใหม่ (10 ฉายา)<br>📈 ระดับจิตเพิ่มจากการฝึกทุกปี · เมื่อถึง<b>คอขวด</b>ระดับจะหยุด ต้อง<b>ออกล่าสัตว์วิญญาณ</b>มาหลอมเป็นวงแหวนวงใหม่ก่อนจึงไต่ต่อได้ · ครบ 9 วงถึงระดับ 100 · ตั้งแต่ระดับ 30 ดวงจิตบางสายจะตื่นพลังเพิ่ม`,B.RANK.map((n,i)=>({n,cur:i===ci,ic:'⭕',d:`ระดับจิต ${i*10+1}–${i*10+10}`})))}}
  if(!h)return false;modal(h,'wscroll');return true}
 {const _or=openRealm;openRealm=function(t){try{if(S&&S.mw&&S.mw.sky&&typeof window.skyCodex==='function')return window.skyCodex('rank');if(scrWorld())return}catch(e){console.error(e)}return _or.apply(this,arguments)}}
