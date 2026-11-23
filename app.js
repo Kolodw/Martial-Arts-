@@ -44812,6 +44812,7 @@ const css=document.createElement('style');css.textContent=`
 #mvRz{position:fixed;z-index:100060;display:none;width:22px;height:22px;touch-action:none;cursor:nwse-resize;opacity:.75;background:linear-gradient(135deg,transparent 52%,#c9a24a 53% 61%,transparent 62%,transparent 72%,#c9a24a 73% 81%,transparent 82%);transform:translate(-100%,-100%)}
 #mvRz.on{display:block}
 #modal.mvAn{transition:translate .28s ease,width .28s ease,height .28s ease}
+#mask.on #modal.mvNo,body.mUI #mask.on #modal.mvNo,body.mUI #mask.on:not(.mSh) #modal.mvNo{animation:none!important}#mask.on:has(#modal.mvNo){animation:none!important}
 @media (pointer:coarse){#mvBar .mvG{width:84px;height:30px}#mvBar .mvG::before{top:10px}#mvBar .mvM button{width:36px;height:30px;font-size:17px}#mvRz{width:30px;height:30px}}`;
 document.head.appendChild(css);
 const bar=document.createElement('div');bar.id='mvBar';bar.innerHTML='<div class="mvG" title="ลากเพื่อย้ายหน้าต่าง · แตะเพื่อเปิดปุ่มย่อ/ขยาย · แตะสองครั้งเพื่อคืนค่า"></div><span class="mvM"><button type="button" class="mvS" aria-label="ย่อ">−</button><button type="button" class="mvL" aria-label="ขยาย">+</button><button type="button" class="mvR" aria-label="คืนค่า">↺</button><button type="button" class="mvX" aria-label="ปิดเมนู">✕</button></span>';document.body.appendChild(bar);
@@ -44860,8 +44861,8 @@ window.mvReset=reset;
 // ติดตามทุกเฟรมแบบเบาๆ (เฉพาะตอนหน้าต่างเปิด)
 let raf=0,wasOn=false;const loop=()=>{raf=0;try{if(dev()!==lastDev){lastDev=dev();V=get()}apply();const on=bar.classList.contains('on');if(on&&!wasOn)setTimeout(()=>{try{clampV(false)}catch(e){}},120);if(!on)bar.classList.remove('open');wasOn=on}catch(e){}if(modalOpen||bar.classList.contains('on'))raf=requestAnimationFrame(loop)};
 const kick=()=>{if(!raf)raf=requestAnimationFrame(loop)};
-{const _md=modal;modal=function(){const r=_md.apply(this,arguments);kick();return r}}
-{const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);kick();return r}}
+let lastC=0;{const _md=modal;modal=function(){const was=modalOpen||Date.now()-lastC<700;const r=_md.apply(this,arguments);try{const m=M();if(m){if(was&&ok())m.classList.add('mvNo');else m.classList.remove('mvNo')}}catch(e){}kick();return r}}
+{const _cm=closeM;closeM=function(){lastC=Date.now();const r=_cm.apply(this,arguments);kick();return r}}
 setInterval(kick,700);addEventListener('resize',()=>{kick();setTimeout(()=>clampV(true),80)});
 })()}catch(e){console.error('block189',e)}
 
