@@ -45274,7 +45274,7 @@ const st=document.createElement('style');st.textContent=`
 // BLOCK 195: ⚡ ประสิทธิภาพอนิเมชัน — แสงวิ่งบนการ์ด/ปุ่มหน้าแรก (เดิมขยับ left ทุกเฟรม = คำนวณเลย์เอาต์ใหม่) เปลี่ยนเป็น transform (GPU) · ปุ่มเรืองแสงผู้สนับสนุนเปลี่ยนจาก box-shadow เป็น opacity
 try{(()=>{const st=document.createElement('style');st.textContent=`@keyframes mwShineT{0%{transform:translateX(0)}60%,100%{transform:translateX(620%)}}
 .mwseg:after,#tMwCard:after,#tAqBtn:after,#tGrid .gSt:after,#tGrid .gAq:after,.mnHero .hSt:after,#wPick .wc:after{left:-50%!important;animation-name:mwShineT!important;will-change:transform}
-@media (prefers-reduced-motion:reduce){.mwseg:after,#tMwCard:after,#tAqBtn:after,#tGrid .gSt:after,#tGrid .gAq:after,.mnHero .hSt:after,#wPick .wc:after{animation:none!important}}`;document.head.appendChild(st)})()}catch(e){console.error('block200',e)}
+@media (prefers-reduced-motion:reduce){.mwseg:after,#tMwCard:after,#tAqBtn:after,#tGrid .gSt:after,#tGrid .gAq:after,.mnHero .hSt:after,#wPick .wc:after{animation:none!important}}`;document.head.appendChild(st)})()}catch(e){console.error('block201',e)}
 
 // BLOCK 196: 🏝️ ไดนามิกไอส์แลนด์โหมดภาพปกติ (lite) — เดิมขนาดกระโดดทันทีและเนื้อหาสลับแบบตัดฉับ → ยืด/หดแบบสปริงสั้น + เนื้อหาจางเข้า (ยังเบา: ไม่มีย่อขยายทั้งก้อน)
 try{(()=>{const st=document.createElement('style');st.textContent=`#isl.lite{transition:width .26s cubic-bezier(.3,1.25,.45,1),height .26s cubic-bezier(.3,1.25,.45,1),opacity .2s ease!important}
@@ -45299,10 +45299,45 @@ setInterval(run,350);{const _md=modal;modal=function(){const r=_md.apply(this,ar
 try{(()=>{const I='input:not([type]),input[type=text],input[type=search],input[type=number],input[type=email],input[type=tel],input[type=url],input[type=password],textarea,select';
 const st=document.createElement('style');st.textContent=`body.dark :is(${I}){color:var(--fg,#f1e8d4)!important;-webkit-text-fill-color:var(--fg,#f1e8d4)!important;caret-color:#ffd36e!important;background-color:#15121f!important;border:1px solid color-mix(in srgb,var(--pink,#e8b54a) 45%,transparent)!important}
 body.dark select option{background:#1b1626;color:#f1e8d4}body.dark :is(input,textarea)::placeholder{color:#9a90a8!important;-webkit-text-fill-color:#9a90a8!important}
-body.dark select{color-scheme:dark}body:not(.dark) select{color-scheme:light}`;document.head.appendChild(st)})()}catch(e){console.error('block200',e)}
+body.dark select{color-scheme:dark}body:not(.dark) select{color-scheme:light}`;document.head.appendChild(st)})()}catch(e){console.error('block201',e)}
 
 // BLOCK 199: 🚀 ฟีดยาวไม่หน่วง — ข้อความในฟีดที่อยู่นอกจอไม่ต้องวาด (content-visibility) · ไม่ลบอะไรทิ้ง เลื่อนกลับไปอ่านได้ครบเหมือนเดิม
 try{(()=>{const st=document.createElement('style');st.textContent=`#feed>.bub:not(:nth-last-child(-n+12)){content-visibility:auto;contain-intrinsic-size:auto 56px}`;document.head.appendChild(st)})()}catch(e){console.error('block199',e)}
 // BLOCK 200: 📅 ชะตาประจำวันในโลกที่เดินปีเอง (นครม่านหมอก · ทะลุฟ้าดารา) — เรียกเหตุการณ์ชะตาเดียวกันหลังปีของโลกนั้น
 try{(()=>{const ins=()=>{const p=passYear;passYear=function(){const r=p.apply(this,arguments);try{if(S&&S.dl&&!S.dl.done&&S.mw&&(S.mw.fog||S.mw.sky)&&window._dlTick)window._dlTick()}catch(e){}return r}};
- const _wr=window.wReady;window.wReady=function(n){const r=_wr.apply(this,arguments);if(n==='fog'||n==='sky')try{ins()}catch(e){console.error('dl ins',e)}return r}})()}catch(e){console.error('block200',e)}
+ const _wr=window.wReady;window.wReady=function(n){const r=_wr.apply(this,arguments);if(n==='fog'||n==='sky')try{ins()}catch(e){console.error('dl ins',e)}return r}})()}catch(e){console.error('block201',e)}
+
+
+// BLOCK 201: 🎟️ ตั๋วของฉัน — รวมตั๋วทุกแบบไว้ที่เดียว: มีกี่ใบ · ใช้ทำอะไร · ได้จากไหน · ปุ่มไปที่ใช้/ที่หาได้ (เมนู ☰ และหน้าสุ่มเกิดเพิ่ม)
+try{(()=>{
+const onBirth=()=>{try{return['birth','skB','fgB'].some(id=>{const e=document.getElementById(id);return e&&e.classList.contains('on')})||!!(document.getElementById('mwB')&&document.getElementById('mwB').getClientRects().length)}catch(e){return false}};
+const n=v=>v==null?(window._tkOff?'<i class="tkL">—</i>':'<i class="tkL">…</i>'):fmt(v);
+const pity=()=>{try{return +LS.get('murim_pity')||0}catch(e){return 0}};
+try{const st=document.createElement('style');st.textContent=`.tkW{display:grid;gap:10px}.tkC{border:1px solid #ffffff1f;border-radius:14px;padding:12px;background:#ffffff08}.tkC.g{border-color:#e8b54a88;background:linear-gradient(160deg,#e8b54a1c,#ffffff05)}.tkC.l{border-color:#8fb4ff66}
+.tkH{display:flex;align-items:center;gap:10px}.tkI{font-size:28px;line-height:1}.tkH b{font-size:16px;display:block}.tkH small{opacity:.75;font-size:12px}.tkN{margin-left:auto;font-size:26px;font-weight:900;min-width:48px;text-align:right}.tkN small{display:block;font-size:11px;font-weight:400;opacity:.7}
+.tkC ul{margin:8px 0 0;padding-left:18px;font-size:13px;line-height:1.55}.tkC ul li b{color:#ffd36e}.tkB{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.tkB button{flex:1 1 auto;min-height:38px;font-size:13px}
+.tkBar{height:7px;border-radius:5px;background:#ffffff1a;overflow:hidden;margin-top:6px}.tkBar i{display:block;height:100%;background:linear-gradient(90deg,#ffd36e,#ff9a3d)}.tkL{opacity:.6;font-style:normal}
+.tkEnt{width:100%;margin:6px 0}`;document.head.appendChild(st)}catch(e){}
+function draw(){const RR=window._RR||{},LK=window._LK||{},p=pity(),b=onBirth(),cap=RR.cap||10,used=RR.used||0;
+ const useBtn=(lbl,fn)=>b?`<button class="pbtn" onclick="closeM();setTimeout(()=>{try{${fn}}catch(e){}},80)">${lbl}</button>`:`<button class="gbtn" disabled title="ใช้ได้ในหน้าสุ่มกำเนิด">${lbl} (ตอนสุ่มกำเนิด)</button>`;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎟️ ตั๋วของฉัน</h3>
+ ${window._tkOff&&!onlineOK?'<p class="tag2" style="color:#e0a040">📶 ต้องออนไลน์และล็อกอินถึงจะเห็นจำนวนตั๋ว</p>':''}<p class="tag2" style="margin-top:-4px">ตั๋วทุกแบบใช้<b>ตอนสุ่มกำเนิด</b> (หน้า "คุณได้ถือกำเนิดขึ้นแล้ว") ก่อนกดใช้ชีวิต${b?' · ตอนนี้อยู่หน้าสุ่มกำเนิด ใช้ได้เลย':''}</p>
+ <div class="tkW">
+ <div class="tkC"><div class="tkH"><span class="tkI">🎫</span><div><b>ตั๋วธรรมดา</b><small>สุ่มเกิดเพิ่ม 1 ครั้ง</small></div><span class="tkN">${n(RR.f)}<small>ใบ</small></span></div>
+  <ul><li>ใช้: กด <b>🎲 สุ่มเพิ่ม</b> → ใช้ตั๋วธรรมดา = ได้สุ่มเกิดใหม่อีก 1 ครั้ง (สุ่มปกติ)</li><li>ได้จาก: <b>ภารกิจรายวัน</b> · จบชีวิตตอนอายุ 18+ ขณะออนไลน์ · ได้วันละไม่เกิน 3 ใบ ถือได้ 10 ใบ</li></ul>
+  <div class="tkB">${useBtn('🎲 ใช้ตั๋ว','rrMenu()')}<button class="gbtn" onclick="closeM();setTimeout(()=>{try{openAQ()}catch(e){}},80)">📜 ไปทำภารกิจ</button></div></div>
+ <div class="tkC g"><div class="tkH"><span class="tkI">🎟️</span><div><b>ตั๋วทอง</b><small>สุ่มเกิดเพิ่ม · การันตีชะตาดี</small></div><span class="tkN">${n(RR.c)}<small>ใบ</small></span></div>
+  <ul><li>ใช้: <b>🎲 สุ่มเพิ่ม</b> → "ใช้สิทธิ์ที่ซื้อไว้" = สุ่มใหม่ที่<b>การันตีมีของดีอย่างน้อย 1 อย่าง</b> และไม่มีพรสวรรค์ร้าย</li><li>ใช้ครบ <b>10 ใบ</b> ใบที่ 10 การันตี<b>ชะตาระดับตำนาน</b></li><li>ได้จาก: ภารกิจรายสัปดาห์ · สมุดภารกิจรายเดือน · ประกาศิตฟ้า · ของขวัญกิจกรรม · ซื้อ · ไม่มีวันหมดอายุ</li></ul>
+  <div class="tkBar"><i style="width:${p*10}%"></i></div><div class="tag2" style="margin-top:3px">ความคืบหน้าสู่การันตีตำนาน ${p}/10 ${p>=9?'· ใบถัดไปได้ตำนาน!':''}</div>
+  <div class="tkB">${useBtn('🎟️ ใช้ตั๋วทอง','rrMenu()')}<button class="gbtn" onclick="closeM();setTimeout(()=>{try{openAQ()}catch(e){}},80)">📜 ภารกิจที่ให้ตั๋วทอง</button></div></div>
+ <div class="tkC l"><div class="tkH"><span class="tkI">🔒</span><div><b>ตั๋วล็อกชะตา</b><small>ล็อกผลสุ่มที่ชอบไว้</small></div><span class="tkN">${n(LK.c)}<small>ใบ</small></span></div>
+  <ul><li>ใช้: ในหน้าสุ่มกำเนิด แตะ 🔓 ที่ <b>พรสวรรค์ / ชาติกำเนิด / พรสวรรค์พิเศษ / ยุคสมัย</b> → 1 ใบล็อก 1 อย่าง (สูงสุด 2 อย่าง)</li><li>ล็อกแล้วสุ่มใหม่กี่ครั้งก็ไม่เปลี่ยน จนกว่าจะกดใช้ชีวิต · ใช้คู่กับตั๋วทองได้</li><li>ได้จาก: ผู้สนับสนุน (2 / 6 / 10+5 ใบทุก 30 วัน) · ซื้อ</li></ul>
+  <div class="tkB">${useBtn('🔒 ไปล็อกชะตา','lkMenu()')}<button class="gbtn" onclick="closeM();setTimeout(()=>{try{vipMenu()}catch(e){}},80)">🏮 ผู้สนับสนุน</button></div></div>
+ <div class="tag2" style="text-align:center">ชีวิตนี้ใช้สุ่มเพิ่มไปแล้ว ${used}/${cap} ครั้ง · ไม่มีตั๋วก็ใช้ <b>☯️ กรรม</b> แลกสุ่มเพิ่มได้วันละ ${RR.kday||5} ครั้ง</div>
+ </div>`,'tickets')}
+window.openTickets=function(){draw();const RR=window._RR;try{if(RR&&(RR.f==null||RR.c==null))api('rrget').then(j=>{RR.f=Math.max(0,+j.f||0);RR.c=Math.max(0,+j.c||0);if($('modal').dataset.k==='tickets')draw()}).catch(()=>{window._tkOff=1;if($('modal').dataset.k==='tickets')draw()})}catch(e){}
+ try{const LK=window._LK;if(LK&&LK.c==null&&window.lkLoad)Promise.resolve(window.lkLoad()).then(()=>{if($('modal').dataset.k==='tickets')draw()}).catch(()=>{})}catch(e){}};
+// ทางเข้า: เมนู ☰ (ต่อจากเช็คอินและภารกิจ) · หน้าสุ่มเกิดเพิ่ม
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.tkEnt')){const a=m.querySelector('.dlyB')||m.querySelector('.svStat');if(a)a.insertAdjacentHTML('afterend','<button class="gbtn tkEnt" onclick="openTickets()">🎟️ ตั๋วของฉัน <small style="opacity:.75">· ใช้ทำอะไร · ได้จากไหน</small></button>')}}catch(e){}return r};window.openMenu=openMenu}
+{const _rm=window.rrMenu;if(typeof _rm==='function'){window.rrMenu=function(){const r=_rm.apply(this,arguments);try{const m=$('modal'),h=m&&m.querySelector('h3');if(h&&!m.querySelector('.tkEnt'))h.insertAdjacentHTML('afterend','<button class="gbtn tkEnt" onclick="openTickets()">🎟️ ตั๋วของฉัน — ตั๋วแต่ละแบบใช้ทำอะไร</button>')}catch(e){}return r};try{rrMenu=window.rrMenu}catch(e){}}}
+})()}catch(e){console.error('block201',e)}
