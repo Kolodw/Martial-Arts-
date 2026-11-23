@@ -16555,19 +16555,19 @@ const MWQ_T=[
  ['guild',M=>hwOn(M)&&M.H&&M.H.r>=1&&!M.H.gu,M=>({t:'เข้าร่วมกิลด์ฮันเตอร์',v:'gu',tgt:1,dl:3,rw:{joy:5}})],
  ['def',M=>hwOn(M),M=>({t:'ปกป้องผู้คนจากเกตแตกให้ได้ 1 ครั้ง',v:'def',tgt:(M.H?M.H.def:0)+1,dl:4,rw:{joy:10,fame:30000}})],
  ['reg',M=>hwOn(M)&&M.H&&M.H.r<0&&!M.H.no&&M.H.aw&&M.H.aw!=='none',M=>({t:'ลงทะเบียนกับสมาคมฮันเตอร์',v:'hr',tgt:0,dl:2,rw:{joy:4}})]];
-function mwQGen(M){M.qs=M.qs||[];const have=new Set(M.qs.map(q=>q.k)),L=MWQ_T.filter(t=>!have.has(t[0])&&!(M.qDone&&M.qDone[t[0]]>=M.y-2)&&(()=>{try{return t[1](M)}catch(e){return false}})());
+function mwQGen(M){if(M&&M.sky){M.qs=[];return}M.qs=M.qs||[];const have=new Set(M.qs.map(q=>q.k)),L=MWQ_T.filter(t=>!have.has(t[0])&&!(M.qDone&&M.qDone[t[0]]>=M.y-2)&&(()=>{try{return t[1](M)}catch(e){return false}})());
  const hwFirst=L.filter(t=>['gate','rank','guild','def','reg'].includes(t[0]));let n=0;
  while(M.qs.length<3&&L.length&&n++<6){const pool=hwOn(M)&&hwFirst.length&&Math.random()<.6?hwFirst:L,t=pool[Math.floor(Math.random()*pool.length)];[L,hwFirst].forEach(a=>{const i=a.indexOf(t);if(i>=0)a.splice(i,1)});
   try{const q=t[2](M);q.k=t[0];q.dl=M.y+q.dl;M.qs.push(q);addFeed('ev',`📋 เควสใหม่: <b>${esc(q.t)}</b> <span class="tag2">(ภายใน ${q.dl-M.y} ปี)</span>`,'sum')}catch(e){}}}
 function mwQCheck(M){if(!M.qs)return;M.qs=M.qs.filter(q=>{let cur=0;try{cur=MWQ_V[q.v](M)}catch(e){}
  if(cur>=q.tgt){mwFx(q.rw||{});(M.qDone=M.qDone||{})[q.k]=M.y;M.qN=(M.qN||0)+1;log(`📋 <b>เควสสำเร็จ:</b> ${esc(q.t)}`,'good',true);return false}
  if(M.y>q.dl){addFeed('ev',`📋 เควสหมดเวลา: ${esc(q.t)}`,'sum');joy(-2);(M.qDone=M.qDone||{})[q.k]=M.y;return false}return true})}
-{const _myQ=mwYear;mwYear=function(){const r=_myQ.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(M&&S.age>=12){mwQCheck(M);if(M.y>=2)mwQGen(M)}}catch(e){console.error(e)}return r}}
+{const _myQ=mwYear;mwYear=function(){const r=_myQ.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(M&&M.sky&&M.qs&&M.qs.length)M.qs=[];if(M&&!M.sky&&S.age>=12){mwQCheck(M);if(M.y>=2)mwQGen(M)}}catch(e){console.error(e)}return r}}
 function openMwQuests(){const M=S.mw;if(!M)return;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📋 เควสในยุคนี้</h3><p class="tag2">เควสถูกสร้างจากสถานการณ์ตอนนี้ของคุณ${hwOn(M)?' และโลกฮันเตอร์':''} · สำเร็จแล้ว ${M.qN||0} เควส</p><div class="jobL">${(M.qs||[]).map(q=>{let cur=0;try{cur=MWQ_V[q.v](M)}catch(e){}const sh=q.v==='money'||q.v==='save'?v=>mwLocal(v*mwCC().rate,M):q.v==='sec'?v=>Math.round(-v)+'%':q.v==='hr'?v=>v>=0?'แรงก์ '+HR[v]:'ยังไม่ลงทะเบียน':v=>fmt(Math.round(v*10)/10);return `<div class="jobC"><b>${esc(q.t)}</b><div class="tag2">ตอนนี้ ${sh(cur)} · เป้า ${sh(q.tgt)} · เหลือ ${Math.max(0,q.dl-M.y)} ปี</div></div>`}).join('')||'<p class="tag2">ยังไม่มีเควส เควสใหม่จะมาทุกปี</p>'}</div><button class="gbtn" style="width:100%;margin-top:8px" onclick="closeM();openGoals()">🎯 ดูเป้าหมายชีวิต</button>`,'mwq')}
 // ปุ่ม 📋 ด้านล่าง → เควสยุคนี้ · เมนูเพิ่ม 📋 เควส
-{const _rnQB=render;render=function(){const r=_rnQB.apply(this,arguments);try{if(mwOn()){const b=document.querySelector('#game button[data-mwo="openQuests()"]');if(b){b.setAttribute('onclick','openMwQuests()');b.innerHTML='📋'}}}catch(e){}return r}}
-{const _omQ=openMenu;openMenu=function(){const r=_omQ.apply(this,arguments);try{if(mwOn()){const gd=$('modal').querySelector('.mgrid');if(gd&&!gd.querySelector('.mwQB')){const M=S.mw,a=gd.querySelector('.mwMB');const h=`<button class="opt mwMB mwQB" onclick="openMwQuests()">📋 เควส<small>${(M.qs||[]).length} เควสที่ทำอยู่</small></button>`;if(a)a.insertAdjacentHTML('beforebegin',h);else gd.insertAdjacentHTML('afterbegin',h)}}}catch(e){}return r}}
+{const _rnQB=render;render=function(){const r=_rnQB.apply(this,arguments);try{if(mwOn()&&!S.mw.sky){const b=document.querySelector('#game button[data-mwo="openQuests()"]');if(b){b.setAttribute('onclick','openMwQuests()');b.innerHTML='📋'}}}catch(e){}return r}}
+{const _omQ=openMenu;openMenu=function(){const r=_omQ.apply(this,arguments);try{if(mwOn()&&!S.mw.sky){const gd=$('modal').querySelector('.mgrid');if(gd&&!gd.querySelector('.mwQB')){const M=S.mw,a=gd.querySelector('.mwMB');const h=`<button class="opt mwMB mwQB" onclick="openMwQuests()">📋 เควส<small>${(M.qs||[]).length} เควสที่ทำอยู่</small></button>`;if(a)a.insertAdjacentHTML('beforebegin',h);else gd.insertAdjacentHTML('afterbegin',h)}}}catch(e){}return r}}
 // ซ่อนปุ่ม "ล่าเกต" ถ้ายังไม่ได้เป็นฮันเตอร์
 {const _rnFG=render;render=function(){const r=_rnFG.apply(this,arguments);try{if(mwOn()&&!focusOK('mwgate')){const b=document.querySelector('#focus [onclick*="mwgate"]');if(b)b.remove()}}catch(e){}return r}}
 

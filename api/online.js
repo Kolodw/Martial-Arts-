@@ -2718,7 +2718,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
 
     const findLive = async (k2, adm) => { const [pub, prv] = await pipe([['ZRANGEBYSCORE', 'livez', now - 60e3, '+inf'], ['ZRANGEBYSCORE', 'livezp', now - 330e3, '+inf']]); const f1 = (pub || []).find(x => x.slice(0, 6) + x.slice(-4) === k2); if (f1) return f1; if (adm) return (prv || []).find(x => x.slice(0, 6) + x.slice(-4) === k2) || null; return null };
     const RPC = [[120, 350, 800, 2200, 5500, 12000, 24000, 24000], [250, 900, 2500, 7000, 18000, 42000, 90000, 90000]];
-    const powOk = (p, ri, x, age) => { ri = Math.max(0, Math.min(7, +ri || 0)); if (!(p >= 0) || !isFinite(p) || p > 1e30) return false; if (ri < 7 && p > RPC[x ? 1 : 0][ri] * 8 + 1000) return false; if (age != null && +age < 1000 && p > (x ? 60000 : 25000) * (1 + (+age || 1) / 8) + 300000) return false; return true };
+    const powOk = (p, ri, x, age) => { ri = Math.max(0, Math.min(7, +ri || 0)); if (!(p >= 0) || !isFinite(p) || p > 1e300) return false; if (ri < 7 && p > RPC[x ? 1 : 0][ri] * 8 + 1000) return false; if (age != null && +age < 1000 && p > (x ? 60000 : 25000) * (1 + (+age || 1) / 8) + 300000) return false; return true };
     // v20: แบนเฉพาะที่แอดมินกดแบนเอง (cheaters) — ธงอัตโนมัติทุกแบบเป็นแค่ 'ข้อมูลให้แอดมินตรวจ' ไม่ตัดชีวิต/ไม่แบน (ค่าแปลกจากการเล่นจริงต้องไม่โดนลงโทษ)
     const isBanned = async () => !!+(await cmd('SISMEMBER', 'cheaters', id));
     const isAdmQ = k => !!ADM_KEY && String(k || '') === ADM_KEY;
@@ -3560,7 +3560,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     }
     if (a === 'meet') {
       const x = b.x ? 1 : 0, key = 'mp:' + x;
-      const me = { n: clean(b.n, 20) || 'นิรนาม', ri: Math.max(0, Math.min(12, +b.ri || 0)), p: Math.max(0, Math.min(1e30, +b.p || 0)), f: clean(b.f, 30), age: Math.max(0, +b.age || 0), c: Math.max(0, Math.min(999, Math.round(+b.cha || 0))), t: now, g: b.g === 'f' ? 'f' : 'm', ms: b.ms ? 1 : 0, w: Math.max(0, Math.min(3, +b.w || 0)), td: ['fight', 'ally', 'betray', 'leave', 'bond'].includes(b.td) ? b.td : 'ally' };
+      const me = { n: clean(b.n, 20) || 'นิรนาม', ri: Math.max(0, Math.min(12, +b.ri || 0)), p: Math.max(0, Math.min(1e300, +b.p || 0)), f: clean(b.f, 30), age: Math.max(0, +b.age || 0), c: Math.max(0, Math.min(999, Math.round(+b.cha || 0))), t: now, g: b.g === 'f' ? 'f' : 'm', ms: b.ms ? 1 : 0, w: Math.max(0, Math.min(3, +b.w || 0)), td: ['fight', 'ally', 'betray', 'leave', 'bond'].includes(b.td) ? b.td : 'ally' };
       if (b.bm) { me.bm = 1; me.sp = clean(b.sp, 20); me.st = Math.max(0, Math.min(9, +b.st || 0)); me.p = Math.min(me.p, 1e12) }
       const okMe = !b.tp && (me.bm ? me.p <= 1e12 : powOk(me.p, me.ri, x, me.age)) && !(await isBanned());
       const [, all, box, gbox] = await pipe([okMe ? ['HSET', key, id, JSON.stringify(me)] : ['HDEL', key, id], ['HGETALL', key], ['LRANGE', 'mbox:' + id, 0, 9], ['LRANGE', 'gbox:' + id, 0, 9]]);
@@ -3593,7 +3593,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const ok = await cmd('SET', 'bshl:' + id, 1, 'NX', 'EX', 20);
       if (!ok) return res.status(429).json({ err: 'rate' });
       const x = b.x ? 1 : 0, key = 'bsh:' + x;
-      const me = { n: clean(b.n, 20) || 'นิรนาม', sp: clean(b.sp, 16), st: Math.max(0, Math.min(12, +b.st || 0)), p: Math.max(0, Math.min(1e30, +b.p || 0)), k: id.slice(0, 6) + id.slice(-4), t: now };
+      const me = { n: clean(b.n, 20) || 'นิรนาม', sp: clean(b.sp, 16), st: Math.max(0, Math.min(12, +b.st || 0)), p: Math.max(0, Math.min(1e300, +b.p || 0)), k: id.slice(0, 6) + id.slice(-4), t: now };
       const [, , nl] = await pipe([['HSET', key, id, JSON.stringify(me)], ['EXPIRE', key, 86400 * 3], ['LRANGE', 'bsn:' + id, 0, 9], ['DEL', 'bsn:' + id]]);
       let o = null;
       for (let k = 0; k < 4 && !o; k++) {
@@ -3706,7 +3706,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const all = await cmd('HGETALL', 'mp:' + x); let tid = null, B = null;
         for (let i = 0; i < (all || []).length; i += 2) if (all[i].slice(0, 6) + all[i].slice(-4) === to) { tid = all[i]; try { B = JSON.parse(all[i + 1]) } catch {} }
         if (!tid || tid === id || !B || now - B.t > 330e3 || B.bm) return res.json({ ok: 0 });
-        const A = { n: clean(b.n, 20) || 'นิรนาม', ri: Math.max(0, Math.min(12, +b.ri || 0)), p: Math.max(0, Math.min(1e30, +b.p || 0)), f: clean(b.f, 30), age: Math.max(0, +b.age || 0), c: Math.max(0, Math.min(999, Math.round(+b.cha || 0))), k: id.slice(0, 6) + id.slice(-4), g: b.g === 'f' ? 'f' : 'm', ms: b.ms ? 1 : 0, w: Math.max(0, Math.min(3, +b.w || 0)) };
+        const A = { n: clean(b.n, 20) || 'นิรนาม', ri: Math.max(0, Math.min(12, +b.ri || 0)), p: Math.max(0, Math.min(1e300, +b.p || 0)), f: clean(b.f, 30), age: Math.max(0, +b.age || 0), c: Math.max(0, Math.min(999, Math.round(+b.cha || 0))), k: id.slice(0, 6) + id.slice(-4), g: b.g === 'f' ? 'f' : 'm', ms: b.ms ? 1 : 0, w: Math.max(0, Math.min(3, +b.w || 0)) };
         B = { n: B.n, ri: B.ri, p: B.p, f: B.f, age: B.age, c: B.c || 0, k: to, g: B.g || '', ms: B.ms ? 1 : 0, w: B.w || 0 };
         const rid = (now.toString(36) + Math.random().toString(36).slice(2, 6)).slice(-10);
         const r = { rid, a: id, b: tid, A, B, t0: now, c: {}, m: {}, x };
@@ -3788,7 +3788,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const all = await cmd('HGETALL', 'mp:' + x); let tid = null, B = null;
         for (let i = 0; i < (all || []).length; i += 2) if (all[i].slice(0, 6) + all[i].slice(-4) === to) { tid = all[i]; try { B = JSON.parse(all[i + 1]) } catch {} }
         if (!tid || tid === id || !B || !B.bm || now - B.t > 150e3) return res.json({ ok: 0 });
-        const me = { id, n: clean(b.n, 20) || 'นิรนาม', p: Math.max(1, Math.min(1e30, +b.p || 1)), k: id.slice(0, 6) + id.slice(-4) };
+        const me = { id, n: clean(b.n, 20) || 'นิรนาม', p: Math.max(1, Math.min(1e300, +b.p || 1)), k: id.slice(0, 6) + id.slice(-4) };
         const cur = await cmd('GET', 'bhc:' + tid); let r = cur ? await ld('bhr:' + cur) : null;
         if (r && !r.res && now - r.t0 < BH_JOIN && r.H.length < 2 && !r.H.some(h => h.id === id)) {
           r.H.push(me); await pipe([sv(r.rid, r), ['LPUSH', 'mbox:' + r.H[0].id, JSON.stringify({ kind: 'bhj', rid: r.rid, n: me.n, t: now })], ['LTRIM', 'mbox:' + r.H[0].id, 0, 9], ['EXPIRE', 'mbox:' + r.H[0].id, 3600]]);
