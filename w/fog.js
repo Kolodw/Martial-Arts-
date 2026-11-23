@@ -232,7 +232,7 @@ window.fgGo=()=>{if(!FB)return;const RR=Object.assign({},FB);FB=null;try{const e
 window.fogStart=function(){window._frS=1;try{closeM()}catch(e){}
  const tot=Math.max(3,(window.vipTot&&window.vipTot())|0);FB={left:(typeof CFG!=='undefined'&&CFG.chm==1)?0:tot,edited:0,lock:{}};fgRoll(true)};
 try{if(window.rrx)window.rrx.reg({id:'fog',
- host(){const e=document.getElementById('fgB');return e&&e.classList.contains('on')&&FB?e.querySelector('.fgBar'):null},
+ host(){const e=document.getElementById('fgB');const b=e&&e.classList.contains('on')&&FB?e.querySelector('.fgBar'):null;return b&&b.firstElementChild},
  left(){return FB?FB.left|0:0},spend(){if(FB)FB.left=Math.max(0,FB.left-1)},
  reroll(){const l=FB.left;FB.left=1;const ed=FB.edited;fgRoll(false);FB.left=l;FB.edited=ed},N(){return FB?fgN():1},
  snap(){return JSON.parse(JSON.stringify(FB))},restore(s){FB=JSON.parse(JSON.stringify(s))},draw(){fgDraw()}})}catch(e){console.error('rrx fog',e)}

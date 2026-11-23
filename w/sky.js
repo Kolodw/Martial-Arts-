@@ -3768,7 +3768,7 @@ window.skyOrgG=v=>{ST.g=v;ui()};
 window.skyOrgRe=()=>{if(ST.left<=0)return;ST.left--;window._frS=(window._frS||1)+1;ST.ask=null;rollAll(false);try{sfx('click')}catch(e){}ui()};
 // ⚡ สุ่มรัว (BLOCK 190 ใน app.js): ตัวกลางหน้าสุ่มเกิด
 try{if(window.rrx)window.rrx.reg({id:'sky',
- host(){const o=$('skB');if(!o||!o.classList.contains('on'))return null;const a=o.querySelector('.sdAct'),b=o.querySelector('.skBar');return a&&a.offsetParent?a:(b&&b.offsetParent?b:null)},
+ host(){const o=$('skB');if(!o||!o.classList.contains('on'))return null;const a=o.querySelector('.sdAct'),b=o.querySelector('.skBar');return a&&a.offsetParent?a:(b&&b.offsetParent?b.firstElementChild:null)},
  left(){return ST.left|0},spend(){ST.left=Math.max(0,(ST.left|0)-1)},reroll(){rollAll(false)},
  N(){let pr=1;for(const c of CATS){const x=ST.cards[c.k];if(!x)continue;const t=rOf({k:c.k,x});pr*=t?RW[t]/100:1}return Math.max(1,1/Math.max(pr,1e-15))},
  snap(){const o={};for(const k in ST.cards)o[k]=ST.cards[k];return o},restore(s){for(const k in s)ST.cards[k]=s[k]},draw(){window._frS=(window._frS||1)+1;ST.ask=null;ui()}})}catch(e){console.error('rrx sky',e)}
