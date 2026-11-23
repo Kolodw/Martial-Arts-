@@ -1506,7 +1506,7 @@ body.mUI #modal[data-k="choice"] .opt{animation:mIn .32s cubic-bezier(.2,.9,.3,1
 /* ---- คำแนะนำ / ป้ายด้านล่าง ไม่ทับแถบล่าง ---- */
 @media (max-width:1099px){body.mUI #tipCard{bottom:calc(var(--islB,118px) + 6px)!important}body.mUI #updBar,body.mUI #modeTour{bottom:calc(var(--islB,118px) + 6px)!important}}
 body.mUI #game>#hintBar.mNo{display:none!important}
-body.mUI:has(#isl.on) #game>#hintBar{visibility:hidden}
+body.mUI.hs-isl #game>#hintBar{visibility:hidden}
 `;document.head.appendChild(css);
 
 // ---------- โซน 1 ----------

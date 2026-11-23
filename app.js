@@ -42565,8 +42565,8 @@ if(typeof openCodex==='function'){const _oc=openCodex;openCodex=function(){try{c
 })()}catch(e){console.error('block134',e)}
 
 // BLOCK 135: หน้าสุ่มกำเนิดทะลุฟ้าดารา (modal skyorg) ไม่ต้องมีปุ่ม ✕ ลอย — ต้องกด "เกิด!" เท่านั้น
-try{document.head.insertAdjacentHTML('beforeend','<style>#mask.on #modal[data-k="skyorg"]~#mFloat,body:has(#modal[data-k="skyorg"]) #mFloat{display:none!important}</style>')}catch(e){console.error('block135',e)}
-try{document.head.insertAdjacentHTML('beforeend','<style>body:has(#mask.on #modal[data-k="broll"]) #mFloat .mfx{display:none!important}</style>')}catch(e){}
+try{document.head.insertAdjacentHTML('beforeend','<style>#mask.on #modal[data-k="skyorg"]~#mFloat,body.hk-skyorg #mFloat{display:none!important}</style>')}catch(e){console.error('block135',e)}
+try{document.head.insertAdjacentHTML('beforeend','<style>body.hm-broll #mFloat .mfx{display:none!important}</style>')}catch(e){}
 
 // BLOCK 136: 🏛️ ประมูลทั่วยุทธภพ ไม่ขึ้นในยุคปัจจุบันทุกประเภทโลก (รวมทะลุฟ้าดารา) และทวีปจิตวิญญาณยุทธ์
 try{(()=>{const no=()=>{try{return !!(S&&(S.mw||S.ch==='soul'))}catch(e){return false}};
@@ -42932,7 +42932,7 @@ body.mUI #game .crow .cb:active{transform:scale(.94)}
 body.mUI #game .crow .cb{transition:transform .18s cubic-bezier(.3,1.6,.5,1)}
 /* ---------- โหมดซ่อน UI ---------- */
 body.mUI.mImm #game>:not(#sceneBox):not(#feed):not(#pendBar){display:none!important}
-body.mUI:has(#mask.on) :is(#isl,#islDots,#tipCard){opacity:0!important;pointer-events:none!important}
+body.mUI.hs-mask :is(#isl,#islDots,#tipCard){opacity:0!important;pointer-events:none!important}
 body.mUI.mImm #game{padding-bottom:0}
 body.mUI.mImm #isl,body.mUI.mImm #islDots{opacity:.0;pointer-events:none}
 body.mUI.mImm #sceneBox{margin-top:4px}
@@ -45922,3 +45922,11 @@ function scrWorld(){if(!S||!S.alive)return false;let h=null;SCRK=null;{const r=s
 try{const st=document.createElement('style');st.textContent='.rlmLk{font-size:.78em;opacity:.8;text-decoration:underline;cursor:pointer;white-space:nowrap;margin-left:4px}.rlmLk:active{opacity:1}';document.head.appendChild(st)}catch(e){}
 try{Object.assign(I18N.d,{'สุ่มวิชา':'Draw skill','ตำราและคัมภีร์':'Books & Scriptures','📖 ตำราและคัมภีร์':'📖 Books & Scriptures','ดูคัมภีร์':'View scripture','📜 ดูคัมภีร์':'📜 View scripture'})}catch(e){}
 })()}catch(e){console.error('scrPlace',e)}
+
+// ⚡ สถานะหน้าจอเป็นคลาสบน <body> (แทนกฎ CSS แบบ body:has(...) ที่ทำให้ทั้งหน้าคำนวณสไตล์ใหม่ทุกครั้งที่เมนู/หน้าต่างเติมของ) — หน้าตาเหมือนเดิมทุกพิกเซล
+try{(()=>{const B=document.body,g=id=>document.getElementById(id),T=(c,on)=>{if(B.classList.contains(c)!==on)B.classList.toggle(c,on)},obs=new Set();
+const sync=()=>{try{const mk=g('mask'),md=g('modal'),on=!!(mk&&mk.classList.contains('on')),k=md?(md.dataset.k||''):'',i=g('isl'),t=g('title');
+ T('hs-mask',on);['love','wsys','skyorg'].forEach(x=>T('hk-'+x,k===x));T('hm-broll',on&&k==='broll');T('hs-isl',!!(i&&i.classList.contains('on')));T('hs-title',!!(t&&t.classList.contains('on')));T('hs-ghr',!!g('ghr'));T('hs-hrt',!!g('hrtOv'))}catch(e){}};
+const mo=new MutationObserver(sync),watch=()=>{[['mask',['class']],['modal',['data-k']],['isl',['class']],['title',['class']]].forEach(([id,a])=>{const e=g(id);if(e&&!obs.has(e)){obs.add(e);mo.observe(e,{attributes:true,attributeFilter:a})}})};
+new MutationObserver(()=>{watch();sync()}).observe(B,{childList:true});
+watch();sync()})()}catch(e){console.error('hasSync',e)}

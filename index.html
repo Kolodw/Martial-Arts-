@@ -329,7 +329,7 @@ label.item.auto,.item.auto{display:flex;gap:10px;align-items:flex-start;cursor:p
 .onlinebadge{display:inline-block;margin:4px auto 0;padding:3px 10px;border:2px solid var(--line);border-radius:20px;font-size:.78em;background:var(--w);cursor:pointer}
 details.item summary{cursor:pointer}
 #titleBg{position:fixed;inset:0;width:100vw;height:100vh;object-fit:cover;image-rendering:pixelated;z-index:-1;display:none}
-#title.on #titleBg{display:block}#title{background:transparent}body:has(#title.on){background-image:none}
+#title.on #titleBg{display:block}#title{background:transparent}body.hs-title:not(#_hs){background-image:none}
 .tmenu{position:fixed;top:max(10px,env(safe-area-inset-top));right:12px;z-index:5;width:46px;height:46px;font-size:24px;border:2px solid #e8d8a8;border-radius:10px;background:rgba(20,16,24,.72);color:#f4e4b4;box-shadow:0 3px 0 rgba(0,0,0,.4);display:none}
 #title.on .tmenu{display:block}
 .tmgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.tmgrid .cb{font-size:12px;padding:8px 2px;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:58px;line-height:1.2}.tmgrid .cb i{font-style:normal;font-size:20px}
@@ -390,7 +390,7 @@ details.item summary{cursor:pointer}
 @media (pointer:coarse){.gbtn,.pbtn{min-height:44px}.xbtn{width:40px;height:40px}.qbtn{right:54px}button.mini,.tab,.chip{min-height:36px}}
 </style>
 </head>
-<body>
+<body class="hs-title">
 
 <!-- TITLE -->
 <div id="title" class="screen on">

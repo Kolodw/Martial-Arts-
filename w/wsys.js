@@ -34,7 +34,7 @@ const css=`
 .wsIc{font-size:30px;width:46px;height:46px;display:grid;place-items:center;border-radius:13px;background:radial-gradient(circle at 30% 30%,color-mix(in srgb,var(--a) 70%,#fff),color-mix(in srgb,var(--b) 60%,#000));box-shadow:0 0 16px var(--a);animation:wsPulse 2.2s ease-in-out infinite}
 @keyframes wsPulse{50%{transform:scale(1.07);box-shadow:0 0 26px var(--b)}}
 .wsT{font-weight:800;font-size:16px;color:var(--c);text-shadow:0 0 10px var(--a),0 0 22px color-mix(in srgb,var(--b) 60%,transparent);letter-spacing:.3px}
-#mask.on #modal[data-k="wsys"]~#mFloat,body:has(#modal[data-k="wsys"]) #mFloat{display:none!important}
+#mask.on #modal[data-k="wsys"]~#mFloat,body.hk-wsys #mFloat{display:none!important}
 .wsX{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.1)!important;opacity:.85!important}
 .wsS{font-size:11.5px;opacity:.75;font-family:ui-monospace,monospace}
 .wsB{font-size:14px;line-height:1.6;margin:6px 0 10px;position:relative}

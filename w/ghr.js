@@ -157,7 +157,7 @@ const css=document.createElement('style');css.textContent=`
 #ghJS canvas{width:min(92vw,92vh);height:min(92vw,92vh);image-rendering:pixelated;animation:ghZ .55s ease-out forwards}
 @keyframes ghJs{0%,70%{opacity:1}100%{opacity:0}}@keyframes ghZ{from{transform:scale(.6) rotate(-3deg)}to{transform:scale(1.15) rotate(2deg)}}
 body.ghShake{animation:ghSh .35s linear}@keyframes ghSh{20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-4px,-2px)}80%{transform:translate(3px,4px)}}
-body:has(#ghr) :is(#mvBar,#mvRz,#mFloat,#islCards,#islDots,#tipCard){display:none!important}body:has(#ghr):not(.ghLie) #isl{display:none!important}
+body.hs-ghr :is(#mvBar,#mvRz,#mFloat,#islCards,#islDots,#tipCard){display:none!important}body.hs-ghr:not(.ghLie) #isl{display:none!important}
 @media (prefers-reduced-motion:reduce){#ghr.flk,body.ghShake{animation:none}}`;document.head.appendChild(css);
 
 // จั้มสแกร: หน้าผีพิกเซลวาดด้วยโค้ด

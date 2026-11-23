@@ -53,7 +53,7 @@ function fill(){const lv=LV();lv.L=lv.L.filter(x=>x.st==='free');while(lv.L.leng
 // ---------------------------------------------------------------- UI
 const css=`
 #modal[data-k="love"]{background:transparent!important;box-shadow:none!important;border:0!important;padding:0!important;overflow:visible!important}
-body:has(#modal[data-k="love"]) #mFloat{display:none!important}
+body.hk-love #mFloat{display:none!important}
 .lvP{position:relative;border-radius:18px;padding:2px;background:linear-gradient(135deg,#ff5fa2,#ffb86b,#b46bff,#ff5fa2);background-size:300% 300%;animation:lvBg 6s ease infinite,lvIn .35s cubic-bezier(.2,1.4,.4,1);box-shadow:0 0 26px #ff5fa288}
 @keyframes lvBg{50%{background-position:100% 100%}}@keyframes lvIn{from{transform:scale(.88);opacity:0}}
 .lvI{border-radius:16px;padding:12px;background:linear-gradient(170deg,rgba(28,10,26,.97),rgba(14,8,24,.97));color:#fbeaf3;max-height:80vh;overflow:auto}
