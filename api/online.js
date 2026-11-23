@@ -888,7 +888,9 @@ async function gdLife(gid, pu, e, b, now) {
   if (add > 0) { const tk = 'gdxt:' + gid + ':' + d, tot = +(await cmd('INCRBY', tk, add)) || 0, over = Math.max(0, tot - gdCapD(m)); if (over > 0) { addX = Math.max(0, add - over); await cmd('DECRBY', tk, add - addX) } L.push(['EXPIRE', tk, 86400 * 2]) }
   // หอตำนาน: เก็บชีวิตยืนยาวที่สุดของสำนัก 10 อันดับ (เก็บตั้งแต่เลเวลแรก พอปลดล็อกก็มีของโชว์)
   if (age >= 20) { const hj = { n: clean(e.n, 20), age, u: pu, lid: e.lid || '', r: clean(e.r, 30), w: wd, t: now }; L.push(['ZADD', 'gdh:' + gid, age, JSON.stringify(hj)], ['ZREMRANGEBYRANK', 'gdh:' + gid, 0, -11]); try { const o0 = jp(await cmd('HGET', 'gdhw:' + gid, wd)); if (!o0 || age > (+o0.age || 0)) L.push(['HSET', 'gdhw:' + gid, wd, JSON.stringify(hj)]) } catch {} }
-  if (add > 0) {
+  // ภารกิจ/บอส นับแยกจากเพดานแต้มรายวัน (เดิมผูกกับ add>0 → เล่นเกินเพดานแต้มแล้วภารกิจไม่ขึ้น) · กันปั่น: นับภารกิจได้ไม่เกิน 15 ชีวิต/คน/วัน
+  const [qd] = await pipe([['HINCRBY', 'gdqd:' + gid + ':' + d, pu, 1], ['EXPIRE', 'gdqd:' + gid + ':' + d, 86400 * 2]]); const qOk = (+qd || 0) <= 15;
+  if (qOk) {
     // ภารกิจ
     if (lv >= GD_UN.q) { const qk = 'gdq:' + gid + ':' + wk;
       const r = await pipe([['HINCRBY', qk, 'f', wd === cgOf(wk).w ? 1 : 0], ['HINCRBY', qk, 'n', 1], ['HINCRBY', qk, 'o', age >= 60 ? 1 : 0], ['HINCRBY', qk, 'c', e.ch ? 1 : 0], ['HINCRBY', qk, 'x', age >= 100 ? 1 : 0], ['SADD', qk + ':w', wd], ['SADD', qk + ':m', pu], ['SCARD', qk + ':w'], ['SCARD', qk + ':m'], ['HGETALL', qk], ['EXPIRE', qk, 86400 * 21], ['EXPIRE', qk + ':w', 86400 * 21], ['EXPIRE', qk + ':m', 86400 * 21]]);
@@ -901,6 +903,8 @@ async function gdLife(gid, pu, e, b, now) {
       if (dmg > 0) { const r = await pipe([['HINCRBY', bk, 'd', dmg], ['HINCRBY', bk, 'u:' + pu, dmg], ['EXPIRE', bk, 86400 * 21]]); const tot = +r[0] || 0;
         if (tot >= B.hp && await cmd('HSETNX', bk, 'w1', now)) { bonus += 400; L.push(['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: `⚔️ ล้ม ${B.n} สำเร็จ! +400 แต้ม${T.g} · ${T.m}ทุกคนได้ตราพิชิตบอสสัปดาห์นี้`, t: now })]) }
         if (lv >= GD_UN.hard && tot >= B.hp + B.hp2 && await cmd('HSETNX', bk, 'w2', now)) { bonus += 600; L.push(['LPUSH', 'gdc:' + gid, JSON.stringify({ s: 1, x: `💀 ล้ม ${B.n} ร่างคลั่งสำเร็จ! +600 แต้ม${T.g} · ตราพิชิตบอสขั้นสูง`, t: now })]) } } }
+  }
+  if (add > 0) {
     // วิชาลับประจำสำนัก
     if (lv >= GD_UN.tech) L.push(['HINCRBY', 'gdt:' + gid, 'p', add]);
   }

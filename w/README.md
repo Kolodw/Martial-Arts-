@@ -9,6 +9,7 @@
 - แผนที่ไฟล์: `node tools/split-map.mjs > /tmp/map.json && node tools/split-report.mjs /tmp/map.json` (ต้องมี acorn, acorn-walk)
 
 ## โลกที่ย้ายแล้ว
+- `fog.js` 🌉 นครม่านหมอก — โลกใหม่แนวสืบสวนลึกลับยุคไอน้ำ (ต้นฉบับทั้งหมด) · สถานะ S.mw.fog (ใช้โครงยุคปัจจุบันแบบทะลุฟ้าดารา จุดที่ต้องข้ามระบบยุคปัจจุบันใน app.js เช็ค `M.fog` คู่กับ `M.sky`) · 8 เส้นทาง × ธรณี 1–9 · ⚓ หลักยึด · คดี (CASE) · วัตถุ (ART) · 6 องค์กร (FAC/FOE) · สมุดคดี/สารานุกรม · ตอนจบ LS murim_fogleg · ภาพ /fog-bg.png (ฉาก) /fog-card.png (การ์ด 2 เฟรม) · ทางเข้า: การ์ด `fog` ในหน้าเลือกโลก → fogStart() (stub ใน BLOCK 117)
 - `sky.js` 🌠 ทะลุฟ้าดารา — โค้ดใหม่ของโลกนี้เพิ่มในไฟล์นี้ (เดิมที่ app.js ก่อน `window._sky={...}` ตอนนี้อยู่ในท่อน sky1 ของ w/sky.js)
 - `mw.js` 🏙️ ระบบโลกย่อยยุคปัจจุบัน (window._wld…_wld33 ฯลฯ) — บล็อกใหม่ที่ต่อยอด window._wld* ให้เขียนในไฟล์นี้ (ต่อท้ายก่อน `wReady('mw')`) ถ้าเขียนใน app.js ตอนโหลด window._wld จะยังไม่มี
 - `mwb.js` 🏙️ หน้าเกิด/ออกแบบตัวละคร/วัยเด็กยุคปัจจุบัน (window._lifeTbl, mwBornPage, mwBStart …) — โหลดก่อน mw.js

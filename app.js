@@ -16555,19 +16555,19 @@ const MWQ_T=[
  ['guild',M=>hwOn(M)&&M.H&&M.H.r>=1&&!M.H.gu,M=>({t:'เข้าร่วมกิลด์ฮันเตอร์',v:'gu',tgt:1,dl:3,rw:{joy:5}})],
  ['def',M=>hwOn(M),M=>({t:'ปกป้องผู้คนจากเกตแตกให้ได้ 1 ครั้ง',v:'def',tgt:(M.H?M.H.def:0)+1,dl:4,rw:{joy:10,fame:30000}})],
  ['reg',M=>hwOn(M)&&M.H&&M.H.r<0&&!M.H.no&&M.H.aw&&M.H.aw!=='none',M=>({t:'ลงทะเบียนกับสมาคมฮันเตอร์',v:'hr',tgt:0,dl:2,rw:{joy:4}})]];
-function mwQGen(M){if(M&&M.sky){M.qs=[];return}M.qs=M.qs||[];const have=new Set(M.qs.map(q=>q.k)),L=MWQ_T.filter(t=>!have.has(t[0])&&!(M.qDone&&M.qDone[t[0]]>=M.y-2)&&(()=>{try{return t[1](M)}catch(e){return false}})());
+function mwQGen(M){if(M&&(M.sky||M.fog)){M.qs=[];return}M.qs=M.qs||[];const have=new Set(M.qs.map(q=>q.k)),L=MWQ_T.filter(t=>!have.has(t[0])&&!(M.qDone&&M.qDone[t[0]]>=M.y-2)&&(()=>{try{return t[1](M)}catch(e){return false}})());
  const hwFirst=L.filter(t=>['gate','rank','guild','def','reg'].includes(t[0]));let n=0;
  while(M.qs.length<3&&L.length&&n++<6){const pool=hwOn(M)&&hwFirst.length&&Math.random()<.6?hwFirst:L,t=pool[Math.floor(Math.random()*pool.length)];[L,hwFirst].forEach(a=>{const i=a.indexOf(t);if(i>=0)a.splice(i,1)});
   try{const q=t[2](M);q.k=t[0];q.dl=M.y+q.dl;M.qs.push(q);addFeed('ev',`📋 เควสใหม่: <b>${esc(q.t)}</b> <span class="tag2">(ภายใน ${q.dl-M.y} ปี)</span>`,'sum')}catch(e){}}}
 function mwQCheck(M){if(!M.qs)return;M.qs=M.qs.filter(q=>{let cur=0;try{cur=MWQ_V[q.v](M)}catch(e){}
  if(cur>=q.tgt){mwFx(q.rw||{});(M.qDone=M.qDone||{})[q.k]=M.y;M.qN=(M.qN||0)+1;log(`📋 <b>เควสสำเร็จ:</b> ${esc(q.t)}`,'good',true);return false}
  if(M.y>q.dl){addFeed('ev',`📋 เควสหมดเวลา: ${esc(q.t)}`,'sum');joy(-2);(M.qDone=M.qDone||{})[q.k]=M.y;return false}return true})}
-{const _myQ=mwYear;mwYear=function(){const r=_myQ.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(M&&M.sky&&M.qs&&M.qs.length)M.qs=[];if(M&&!M.sky&&S.age>=12){mwQCheck(M);if(M.y>=2)mwQGen(M)}}catch(e){console.error(e)}return r}}
+{const _myQ=mwYear;mwYear=function(){const r=_myQ.apply(this,arguments);try{const M=S&&S.alive&&S.mw;if(M&&(M.sky||M.fog)&&M.qs&&M.qs.length)M.qs=[];if(M&&!M.sky&&!M.fog&&S.age>=12){mwQCheck(M);if(M.y>=2)mwQGen(M)}}catch(e){console.error(e)}return r}}
 function openMwQuests(){const M=S.mw;if(!M)return;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📋 เควสในยุคนี้</h3><p class="tag2">เควสถูกสร้างจากสถานการณ์ตอนนี้ของคุณ${hwOn(M)?' และโลกฮันเตอร์':''} · สำเร็จแล้ว ${M.qN||0} เควส</p><div class="jobL">${(M.qs||[]).map(q=>{let cur=0;try{cur=MWQ_V[q.v](M)}catch(e){}const sh=q.v==='money'||q.v==='save'?v=>mwLocal(v*mwCC().rate,M):q.v==='sec'?v=>Math.round(-v)+'%':q.v==='hr'?v=>v>=0?'แรงก์ '+HR[v]:'ยังไม่ลงทะเบียน':v=>fmt(Math.round(v*10)/10);return `<div class="jobC"><b>${esc(q.t)}</b><div class="tag2">ตอนนี้ ${sh(cur)} · เป้า ${sh(q.tgt)} · เหลือ ${Math.max(0,q.dl-M.y)} ปี</div></div>`}).join('')||'<p class="tag2">ยังไม่มีเควส เควสใหม่จะมาทุกปี</p>'}</div><button class="gbtn" style="width:100%;margin-top:8px" onclick="closeM();openGoals()">🎯 ดูเป้าหมายชีวิต</button>`,'mwq')}
 // ปุ่ม 📋 ด้านล่าง → เควสยุคนี้ · เมนูเพิ่ม 📋 เควส
-{const _rnQB=render;render=function(){const r=_rnQB.apply(this,arguments);try{if(mwOn()&&!S.mw.sky){const b=document.querySelector('#game button[data-mwo="openQuests()"]');if(b){b.setAttribute('onclick','openMwQuests()');b.innerHTML='📋'}}}catch(e){}return r}}
-{const _omQ=openMenu;openMenu=function(){const r=_omQ.apply(this,arguments);try{if(mwOn()&&!S.mw.sky){const gd=$('modal').querySelector('.mgrid');if(gd&&!gd.querySelector('.mwQB')){const M=S.mw,a=gd.querySelector('.mwMB');const h=`<button class="opt mwMB mwQB" onclick="openMwQuests()">📋 เควส<small>${(M.qs||[]).length} เควสที่ทำอยู่</small></button>`;if(a)a.insertAdjacentHTML('beforebegin',h);else gd.insertAdjacentHTML('afterbegin',h)}}}catch(e){}return r}}
+{const _rnQB=render;render=function(){const r=_rnQB.apply(this,arguments);try{if(mwOn()&&!S.mw.sky&&!S.mw.fog){const b=document.querySelector('#game button[data-mwo="openQuests()"]');if(b){b.setAttribute('onclick','openMwQuests()');b.innerHTML='📋'}}}catch(e){}return r}}
+{const _omQ=openMenu;openMenu=function(){const r=_omQ.apply(this,arguments);try{if(mwOn()&&!S.mw.sky&&!S.mw.fog){const gd=$('modal').querySelector('.mgrid');if(gd&&!gd.querySelector('.mwQB')){const M=S.mw,a=gd.querySelector('.mwMB');const h=`<button class="opt mwMB mwQB" onclick="openMwQuests()">📋 เควส<small>${(M.qs||[]).length} เควสที่ทำอยู่</small></button>`;if(a)a.insertAdjacentHTML('beforebegin',h);else gd.insertAdjacentHTML('afterbegin',h)}}}catch(e){}return r}}
 // ซ่อนปุ่ม "ล่าเกต" ถ้ายังไม่ได้เป็นฮันเตอร์
 {const _rnFG=render;render=function(){const r=_rnFG.apply(this,arguments);try{if(mwOn()&&!focusOK('mwgate')){const b=document.querySelector('#focus [onclick*="mwgate"]');if(b)b.remove()}}catch(e){}return r}}
 
@@ -38478,7 +38478,8 @@ const W=[
  {k:'soul',ic:'⭕',n:'จิตวิญญาณยุทธ์',d:'อายุ 6 ขวบปลุกวิญญาณยุทธ์ · ล่าวงแหวนวิญญาณ ไต่ระดับจิต',tg:['ทีม · ดูโอ · โซโล่'],bd:'#3ad0b0',bg:'radial-gradient(120% 120% at 100% 0%,#0f8a7a,#0a3a36 60%,#06201e)',x:0,c:5,tk:'soul'},
  {k:'loop',ic:'🔁',n:'ผู้ย้อนกาล',d:'ตายแล้วย้อนไปอายุ 15 · ใช้ความรู้จากรอบก่อนช่วยเพื่อนร่วมชะตา',tg:['เล่าเรื่องต่อเนื่อง'],bd:'#8aa8ff',bg:'radial-gradient(120% 120% at 100% 0%,#3a5ad0,#18245a 60%,#0c1230)',x:0,c:4,tk:'regress'},
  {k:'beast',ic:'🐾',n:'เกิดเป็นสัตว์',d:'เริ่มจากลูกสัตว์ในป่า บำเพ็ญจนเป็นอสูร แล้วเลือกแปลงกายหรือครองป่า',tg:['อายุยืนมาก'],bd:'#6ad08a',bg:'radial-gradient(120% 120% at 100% 0%,#2a8a4a,#103a1e 60%,#081e10)',beast:1,tk:'beast'},
- {k:'sky',ic:'🌠',n:'ทะลุฟ้าดารา',d:'ประเทศไทยหลังมหันตภัยดาวตก · นครกำแพง ยีนอสูร ไต่ 36 ขั้นสู่ดวงดาว',tg:['โลกใหม่','มินิเกม'],bd:'#ff8a3d',bg:'radial-gradient(120% 120% at 100% 0%,#c8501a,#3a1a0c 55%,#0a1016)',sky:1,tk:'sky'}];
+ {k:'sky',ic:'🌠',n:'ทะลุฟ้าดารา',d:'ประเทศไทยหลังมหันตภัยดาวตก · นครกำแพง ยีนอสูร ไต่ 36 ขั้นสู่ดวงดาว',tg:['โลกใหม่','มินิเกม'],bd:'#ff8a3d',bg:'radial-gradient(120% 120% at 100% 0%,#c8501a,#3a1a0c 55%,#0a1016)',sky:1,tk:'sky'},
+ {k:'fog',ic:'🌉',n:'นครม่านหมอก',d:'เมืองไอน้ำใต้หมอกที่ไม่เคยจาง · สืบคดีประหลาด 8 เส้นทาง 9 ธรณี · ยิ่งแกร่งยิ่งเสี่ยงเสียตัวตน',tg:['โลกใหม่','สืบสวน'],bd:'#9fb4c8',bg:'radial-gradient(120% 120% at 100% 0%,#5a6878,#1e242c 55%,#0c0f14)',fog:1,tk:'fog'}];
 const CHAL=[[0,'🙂','ปกติ'],[1,'🔥','นรก'],[2,'⏳','ชีวิตสั้น'],[3,'🗑️','รากขยะ']];
 const abU=()=>{try{return(+LS.get('murim_hlbest',0)||0)>=100||(+LS.get('murim_abbest',0)||0)>0||!!LS.get('murim_abunl',0)}catch(e){return false}};
 const abSet=v=>{try{LS.set('murim_abyss',v?1:0);if(typeof abPaint==='function')abPaint();updateHints()}catch(e){}};
@@ -38489,11 +38490,11 @@ const segBtn=(k,v)=>document.querySelector(`#title .seg[data-k="${k}"] button[da
 const click=(k,v)=>{const b=segBtn(k,v);if(b&&!b.classList.contains('on'))b.click();return !!b};
 function cur(){try{if(CFG.mw)return'mw';if(CFG.chm===5)return'soul';if(CFG.chm===4)return'loop';return CFG.xian?'xian':'murim'}catch(e){return'murim'}}
 let SEL=null;
-function apply(w){try{window._skySel=!!w.sky;if(w.sky){SEL='sky';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}if(w.beast){SEL='beast';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}
+function apply(w){try{window._skySel=!!w.sky;if(w.fog){SEL='fog';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}if(w.sky){SEL='sky';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}if(w.beast){SEL='beast';CFG.mw=0;if((CFG.chm|0)>=2)click('chm',0);return}
  if(w.mw){const b=document.querySelector('#title .seg[data-k="xian"] .mwopt');if(b){if(!b.classList.contains('on'))b.click()}else CFG.mw=1;SEL='mw';return}
  click('xian',w.x);CFG.mw=0;if(w.c)click('chm',w.c);else if(CFG.chm>=4)click('chm',0);SEL=w.k}catch(e){console.error('wp',e)}}
 function go(k){const w=W.find(x=>x.k===k);if(!w)return;apply(w);try{LS.set('murim_wlast',{k,c:CFG.chm|0})}catch(e){}
- if(w.sky){try{skyStart()}catch(e){console.error(e)}return}if(w.beast){try{goBeastLife()}catch(e){}return}try{goBirthPick()}catch(e){try{goBirth()}catch(x){}}}
+ if(w.fog){try{fogStart()}catch(e){console.error(e)}return}if(w.sky){try{skyStart()}catch(e){console.error(e)}return}if(w.beast){try{goBeastLife()}catch(e){}return}try{goBirthPick()}catch(e){try{goBirth()}catch(x){}}}
 window.wpGo=go;
 window.wpSel=function(k){const w=W.find(x=>x.k===k);if(!w)return;apply(w);paint();try{const c=document.querySelector(`#wPick .wc[data-k="${k}"]`);if(c)c.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}catch(e){}};
 window.wpChal=function(v){const w=W.find(x=>x.k===(SEL||cur()));if(!w||!w.ch)return toast('ความท้าทายใช้ได้กับยุทธภพและโลกเทพเซียน');if(v==='ab'){if(!abU())return toast('🕳️ ผ่านนรกให้ถึงชั้น 100 ก่อน ถึงจะเปิดอเวจีได้');click('chm',1);abSet(1);paint();return toast('🕳️ เปิดโหมดอเวจี 1000 ชั้น')}if(v===1)abSet(0);click('chm',v);paint()};
@@ -41937,7 +41938,7 @@ try{CHM_T.k={d:['','ผู้ทะลวงกำแพงเหล็ก','ส
 {const _cs=chmSel;chmSel=function(){const v=openOnline._cm;if(v==='k')return'k';if(!v&&skyOn())return'k';return _cs.apply(this,arguments)}}
 {const _oo=openOnline;openOnline=function(tab){try{if(tab==='board'&&openOnline._bw==null&&skyOn()){openOnline._bw=4;openOnline._cm='k'}}catch(e){}return _oo.apply(this,arguments)};for(const k in _oo)try{openOnline[k]=_oo[k]}catch(e){}window.openOnline=openOnline}
 // ส่งชีวิตขึ้นทำเนียบของโหมด
-{const _api=api;api=async function(a,body){try{if(a==='life'&&body&&skyOn()){const K=S.mw.sky;body.ch='sky';body.skr=K.rk;body.sks=K.sub|0;body.cu=0}}catch(e){}return _api.apply(this,arguments)}}
+{const _api=api;api=async function(a,body){try{if(a==='life'&&body&&S&&S.mw&&S.mw.fog){body.cu=1;body.ch='fog'}}catch(e){}try{if(a==='life'&&body&&skyOn()){const K=S.mw.sky;body.ch='sky';body.skr=K.rk;body.sks=K.sub|0;body.cu=0}}catch(e){}return _api.apply(this,arguments)}}
 // ชีวิตทะลุฟ้าดาราที่เริ่มจากหน้าสุ่มกำเนิด = สุ่มจริง ขึ้นทำเนียบได้
 {const O=window._skyOrg;if(O&&O.applyOrg){const _ao=O.applyOrg;O.applyOrg=function(){const r=_ao.apply(this,arguments);try{S.custom=false}catch(e){}return r}}}
 // ---------- กรอบประจำ 3 อันดับ ----------
@@ -42731,7 +42732,7 @@ try{(()=>{const c=document.createElement('style');c.textContent=`
 // ============================================================
 try{(()=>{
 const fnOk=n=>typeof window[n]==='function';
-const wk=()=>{try{if(!S)return'';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.mw&&S.mw.sky)return'sky';if(S.mw)return'mw';if(S.ch==='soul'&&S.sv)return'soul';return'murim'}catch(e){return''}};
+const wk=()=>{try{if(!S)return'';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.mw&&S.mw.fog)return'fog';if(S.mw&&S.mw.sky)return'sky';if(S.mw)return'mw';if(S.ch==='soul'&&S.sv)return'soul';return'murim'}catch(e){return''}};
 const P=(ic,l,c,n,h)=>({ic,l,c:+c||0,n:+n||0,h});
 // ---------- 1) เป้าหมายถัดไปตามโลก ----------
 if(typeof goalInfo==='function'){const _gi=goalInfo;goalInfo=function(){try{if(!S||!S.alive)return _gi.apply(this,arguments);const w=wk();
@@ -43059,7 +43060,7 @@ function duelInit(B,api,{me,foe,title}){const T=[['💢','ตั้งท่า�
  return{sc:()=>win/5,stop:()=>clearTimeout(tm)}}
 window._n10={duelInit};
 // ---------- ตัวช่วยเหตุการณ์ ----------
-const wid=()=>{try{if(!S||!S.alive)return'';if(S.beastMode&&!S.beastMode.human)return'';const M=S.mw;if(M&&M.sky)return'sky';if(M)return'mw:'+(M.hw>0?'hunter':(M.wx&&M.wx.on?M.wx.id:'normal'));if(S.ch==='soul'&&S.sv)return'soul';return'murim'}catch(e){return''}};
+const wid=()=>{try{if(!S||!S.alive)return'';if(S.beastMode&&!S.beastMode.human)return'';const M=S.mw;if(M&&M.fog)return'';if(M&&M.sky)return'sky';if(M)return'mw:'+(M.hw>0?'hunter':(M.wx&&M.wx.on?M.wx.id:'normal'));if(S.ch==='soul'&&S.sv)return'soul';return'murim'}catch(e){return''}};
 const mon=thb=>{try{const M=S.mw;const v=M&&typeof mwToB==='function'?mwToB(thb,M):thb;S.money=Math.max(0,(S.money||0)+v);return(v>=0?'+':'')+fmt(v)}catch(e){return''}};
 const fame=n=>{try{const M=S.mw;if(M){M.fame=Math.max(0,(M.fame||0)+n)}else S.fame=(S.fame||0)+n;return'ผู้ติดตาม/ชื่อเสียง +'+fmt(n)}catch(e){return''}};
 const hpd=f=>{const d=Math.round(S.maxHp*f);S.hp=cl(S.hp+d,1,S.maxHp);return(d>=0?'พลังชีวิต +':'พลังชีวิต ')+fmt(d)};
@@ -43601,7 +43602,7 @@ const L2W={},W2L={},INFO={};MW.forEach(x=>{L2W[x[0]]=x[1];W2L[x[1]]=x[0];INFO[x[
 const PAL={v:['#e8b54a','#fff2c8','#8a5cff','#0e0818'],n:['#3a8bff','#d6ebff','#9a5bff','#060c1e'],u:['#ff3fa4','#ffd6ef','#30e0ff','#12061a'],o:['#ffb340','#fff0c8','#e0304a','#140a06'],p:['#3fd8c8','#e0fffb','#ffcf4a','#04141a'],z:['#7bd34a','#e8ffd8','#ffd23a','#0a1406'],t:['#ffc23a','#fff4d0','#7a6cff','#120e04'],e:['#a66bff','#f0e4ff','#3affb0','#0c0618'],q:['#ff5a4a','#ffe2da','#b8c0d0','#160606'],y:['#ff7a1a','#ffe8cc','#ff2a5a','#180a04']};
 const RK=[null,['#ffd76a','#fff6cc','#c8901a'],['#e6eef8','#ffffff','#8a9ab0'],['#ffb27a','#ffe2cc','#a8582a']];
 // โลกที่กำลังเล่น (ยกเว้นทะลุฟ้าดารา) → ตัวอักษรทำเนียบ
-const mwLet=()=>{try{const M=S&&S.mw;if(!M||M.sky)return'';let w=M.hw>0?'hunter':(M.wx&&M.wx.id?M.wx.id:'normal');if(w==='hunterhi')w='hunter';return W2L[w]||''}catch(e){return''}};
+const mwLet=()=>{try{const M=S&&S.mw;if(!M||M.sky||M.fog)return'';let w=M.hw>0?'hunter':(M.wx&&M.wx.id?M.wx.id:'normal');if(w==='hunterhi')w='hunter';return W2L[w]||''}catch(e){return''}};
 window._mwBid=mwLet;
 // ---------- ฉายาประจำ (สำรอง · ชุดจริงสุ่มจาก RKG) ----------
 const FIX={v:{d:['','ผู้เปิดประตูแห่งวัน','นักเดินทางสองภพ','ผู้หลงทางที่ไม่หลง'],w:['','จ้าวแห่งประตูสุดโลก','ผู้ข้ามเจ็ดภพ','นักสะสมเศษพลัง'],m:['','ผู้เขียนตอนจบของทุกโลก','จักรพรรดิเหนือหน้ากระดาษ','ตำนานผู้ไม่มีบ้านเกิด']},n:{d:['','ฮันเตอร์ดาวรุ่งแห่งวัน','ผู้ปิดเกตไวที่สุด','นักล่าลูทแรร์'],w:['','ราชาแห่งเกตมิติ','ฮันเตอร์แรงก์เอสแห่งสัปดาห์','ผู้คุมดันเจี้ยน'],m:['','จักรพรรดิฮันเตอร์','ผู้ตื่นพลังเหนือแรงก์','ตำนานสมาคมฮันเตอร์']},
@@ -43854,6 +43855,7 @@ let css=`.wim{display:inline-block;width:64px;aspect-ratio:3/2;background:url(${
 #wPick .wc::before{content:'';position:absolute;left:0;top:0;width:100%;aspect-ratio:3/2;min-height:100%;z-index:0;background:url(${URL0}) 0 var(--wy,0%)/200% ${N*100}% no-repeat;image-rendering:pixelated;opacity:.95}
 #wPick .wc::after{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,#0000 0%,#0004 38%,#000c 72%,#000e)}
 #wPick .wc b,#wPick .wc small{text-shadow:0 1px 3px #000}
+#wPick .wc[data-k="fog"]::before{background:url(/fog-card.png?v=1) 0 0/200% 100% no-repeat;animation:fgCard 2.4s steps(1) infinite}@keyframes fgCard{50%{background-position:100% 0}}
 .wintroBan{margin:-4px 0 8px}
 .atlWim{position:relative;flex:none;width:60px;line-height:0}.atlWim .wim{width:60px}.atlWim.no .wim{filter:grayscale(1) brightness(.3) blur(.6px)}.atlWim.no::after{content:'❓';position:absolute;inset:0;display:grid;place-items:center;font-size:18px;line-height:1}
 .mwEnd>span .wim{width:56px}
@@ -43917,6 +43919,9 @@ const idle=window.requestIdleCallback||(f=>setTimeout(f,3000));setTimeout(()=>id
 {const _lg=loadGame;loadGame=function(n){try{if(!R.sky){const d=readSave(n||1);if(d&&d.S&&d.S.mw&&d.S.mw.sky){const a=arguments,t=this;return wNeed('sky',()=>loadGame.apply(t,a))}}}catch(e){}return _lg.apply(this,arguments)}}
 ['openBook','openGuide','openCodex'].forEach(n=>{const f=window[n];if(typeof f!=='function')return;window[n]=function(){if(R.sky)return f.apply(this,arguments);const a=arguments,t=this;return wNeed('sky',()=>f.apply(t,a))}});
 setTimeout(()=>idle(()=>{wLoad('sky').catch(()=>{})}),8000);
+// 🌫️ นครม่านหมอก อยู่ที่ /w/fog.js — ทางเข้า: การ์ดหน้าเลือกโลก · โหลดเซฟที่อยู่ในโลกนี้
+{const stub=function(){const a=arguments,t=this;return wNeed('fog',()=>{if(window.fogStart===stub)throw new Error('fogStart missing');return window.fogStart.apply(t,a)})};if(!R.fog)window.fogStart=stub}
+{const _lg=loadGame;loadGame=function(n){try{if(!R.fog){const d=readSave(n||1);if(d&&d.S&&d.S.mw&&d.S.mw.fog){const a=arguments,t=this;return wNeed('fog',()=>loadGame.apply(t,a))}}}catch(e){}return _lg.apply(this,arguments)}}
 })()}catch(e){console.error('block117',e)}
 
 // ============================================================
@@ -45319,7 +45324,7 @@ try{const g={s:'grow',ic:'🌸',t:'สมุดคนงาม / ชีวิต
 // (2) ข้ามมาจากโลกอื่นแล้วโดนบล็อกเพราะไม่มีเอกสาร → เปิดทางเลือกยื่นเรื่อง/ซื้อเอกสารให้เลย ไม่ใช่แค่ขึ้นข้อความ
 // (3) เหตุการณ์ยุทธภพ (มาร/ศาลสวรรค์/ศิษย์มาร/แดนมาร ที่ผ่าน wpWait) ไม่โผล่ในยุคปัจจุบัน/ทะลุฟ้าดารา/จิตวิญญาณ
 try{(()=>{
-const fixId=()=>{try{const M=S&&S.mw;if(M&&!M.sky&&(M.native||M.par||(S.rift&&S.rift.how==='soul'))&&(M.id||0)<2){M.id=2;M.idP=0}}catch(e){}};
+const fixId=()=>{try{const M=S&&S.mw;if(M&&!M.sky&&!M.fog&&(M.native||M.par||(S.rift&&S.rift.how==='soul'))&&(M.id||0)<2){M.id=2;M.idP=0}}catch(e){}};
 {const _y=mwYear;mwYear=function(){fixId();return _y.apply(this,arguments)}}
 setInterval(fixId,3000);
 const idAsk=()=>{try{const M=S&&S.mw;if(!M||(M.id||0)>0||M.idP||choice._cur)return false;const e=MW_R.find(x=>x.id==='id1');if(e){closeM();setTimeout(()=>e.go(M),120);return true}}catch(e){}return false};
@@ -46033,7 +46038,7 @@ body.mUI #mobAvaW.meTap:active{transform:scale(.94)}
 `;document.head.appendChild(css);
 
 // ---------- ข้อมูลสำหรับแสดงผล (อ่านอย่างเดียว) ----------
-function world(){return T(()=>{if(S.beastMode&&!S.beastMode.human)return'🐾 เกิดเป็นสัตว์';if(S.mw&&S.mw.sky)return'🌠 ทะลุฟ้าดารา';if(S.mw)return'🏙️ ยุคปัจจุบัน';if(S.ch==='soul')return'⭕ จิตวิญญาณยุทธ์';if(S.ch==='regress')return'🔁 ผู้ย้อนกาล';if(S.xt)return'🌌 โลกเทพ';if(S.xian)return'☁️ โลกเทพเซียน';return'⚔️ ยุทธภพ'},'⚔️ ยุทธภพ')}
+function world(){return T(()=>{if(S.beastMode&&!S.beastMode.human)return'🐾 เกิดเป็นสัตว์';if(S.mw&&S.mw.fog)return'🌉 นครม่านหมอก';if(S.mw&&S.mw.sky)return'🌠 ทะลุฟ้าดารา';if(S.mw)return'🏙️ ยุคปัจจุบัน';if(S.ch==='soul')return'⭕ จิตวิญญาณยุทธ์';if(S.ch==='regress')return'🔁 ผู้ย้อนกาล';if(S.xt)return'🌌 โลกเทพ';if(S.xian)return'☁️ โลกเทพเซียน';return'⚔️ ยุทธภพ'},'⚔️ ยุทธภพ')}
 function sex(){const g=T(()=>S.gender,'');const ba=T(()=>S.beastMode&&!S.beastMode.human,false);if(g==='ชาย')return ba?'♂ ตัวผู้':'♂ ชาย';if(g==='หญิง')return ba?'♀ ตัวเมีย':'♀ หญิง';return g?esc(g):'ไม่ระบุเพศ'}
 function realm(){const h=T(()=>($$('gRealm').textContent||'').split('·')[0].replace(/\s+/g,' ').trim(),'');if(h)return h;return T(()=>REALMS[realmIdx()].n,'')}
 function origin(){const f=T(()=>S.family,null);let n=T(()=>f.n,'');const cl=T(()=>S.clan.n,'');if(cl&&!n.includes(cl))n=n?n+' · '+cl:cl;const ht=T(()=>f.heirType,'');return n?{v:n,s:ht?`ทายาทฝ่าย${ht}`:T(()=>f.d,'')}:{v:'ไม่มีบันทึก',s:'เซฟนี้ไม่ได้เก็บชาติกำเนิดไว้'}}
@@ -47425,7 +47430,7 @@ try{setTimeout(()=>{try{const go=()=>wLoad('mhw').then(()=>wLoad('mhy'));go().ca
 // BLOCK 184: 💰 เศรษฐกิจตามฐานะ (ทุกโลก) — ค่าดูแลทรัพย์แบบขั้นบันไดเทียบรายได้ตัวเอง · ค่าครองชีพ/หนี้/ล้มละลาย · ยิ่งรวยยิ่งเจอเรื่อง · ของใหญ่ให้ทุ่ม
 //            + 🧭 ภารกิจทางแยก — หลายวิธี (สู้/จ่าย/ไหวพริบ) · มีกำหนดเวลา · ต่อเนื่อง 3 ขั้น · หักมุม · ขัดกับเส้นทาง · รางวัลไม่ใช่เงินเป็นหลัก
 try{(function(){
-const ecW=()=>{try{if(!S||!S.alive)return'';if(S.beastMode&&!S.beastMode.human)return'';const M=S.mw;if(M){if(M.sky||M.kid)return'';if(M.wx&&M.wx.on&&M.wx.id==='zombie')return'z';return'mw'}if(S.ch==='short')return'';return ECO_W()}catch(e){return''}};
+const ecW=()=>{try{if(!S||!S.alive)return'';if(S.beastMode&&!S.beastMode.human)return'';const M=S.mw;if(M){if(M.sky||M.fog||M.kid)return'';if(M.wx&&M.wx.on&&M.wx.id==='zombie')return'z';return'mw'}if(S.ch==='short')return'';return ECO_W()}catch(e){return''}};
 const ri=()=>{try{return Math.max(0,realmIdx())}catch(e){return 0}};
 // หน่วยเงิน "ปีปกติ" ของโลกนั้น (ขั้นสูงขึ้น ชีวิตก็แพงขึ้น)
 function ecU(w){try{if(w==='mw'||w==='z'){const M=S.mw;let y=60000;try{y=mwToB(mwYearCost(M).yr,M)}catch(e){}return Math.max(30000,y||0)}return ({m:600,x:1500,g:1e5})[w]*(1+ri()*(w==='g'?.5:1))}catch(e){return 600}}
@@ -47609,7 +47614,7 @@ function chal(){const ri=Math.max(0,realmIdx()),d=1+Math.random()*.35,ep=total()
   if(okW()&&!pend&&(realmIdx()>=4||S.age>=90)&&S.age-(S._chY||-9)>=4&&Math.random()<.06){S._chY=S.age;pend=chal}
   mwFame()}}catch(e){console.error('block185',e)}return r}}
 // 8) ชื่อเสียงยุคปัจจุบัน: เกิน 30,000 ค่อยๆ ลดลง · ยิ่งดังยิ่งเสี่ยงดราม่า
-function mwFame(){const M=S.mw;if(!M||M.sky||M.kid||!(M.fame>30000))return;const net=S.focus==='mwnet',dc=Math.round((M.fame-30000)*(net?.02:.06));M.fame-=dc;
+function mwFame(){const M=S.mw;if(!M||M.sky||M.fog||M.kid||!(M.fame>30000))return;const net=S.focus==='mwnet',dc=Math.round((M.fame-30000)*(net?.02:.06));M.fame-=dc;
  if(Math.random()<Math.min(.08,.015*Math.log10(M.fame/30000+1)*4)){const l=Math.round(M.fame*(.12+Math.random()*.2));M.fame-=l;try{joy(-6)}catch(e){}log(`📉 ${ch(['คลิปเก่าถูกขุดขึ้นมาวิจารณ์','ดราม่าในโซเชียลลุกลาม','มีคนปล่อยข่าวลือเสียหาย','คนดูเบื่อคอนเทนต์ซ้ำๆ'])} — ผู้ติดตามหายไป ${fmt(l)}`,'bad')}}
 // 7) กระดานเมือง: งานส่งของ/ชนะศึก เพิ่มจำนวนตามขั้นพลัง รางวัลเพิ่มตาม
 {const _tm=tqMake;tqMake=function(kind,g,extra){const q=_tm.apply(this,arguments);try{const ri=Math.max(0,realmIdx());if(ri>0&&q&&q.v2){
