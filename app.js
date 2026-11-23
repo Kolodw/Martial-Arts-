@@ -19053,7 +19053,7 @@ if(typeof openRgBoard==='function'){const _orU=openRgBoard;openRgBoard=async fun
 const TU={pos:{},act:/^\s*(←|🔄|ส่ง|ลองใหม่|ส่งขึ้น|ส่งที่)/};
 function tuOn(){try{return LS.get('murim_tabui','ios')!=='old'}catch(e){return true}}
 function tuKey(r){return [...r.querySelectorAll(':scope>.tabb')].map(b=>b.textContent.trim()).join('|').slice(0,200)}
-function tuPlace(r,b,anim){const p=r.querySelector(':scope>.tuPill');if(!p||!b)return;if(!anim)p.style.transition='none';p.style.width=b.offsetWidth+'px';p.style.height=b.offsetHeight+'px';p.style.transform=`translate(${b.offsetLeft}px,${b.offsetTop}px)`;if(!anim){void p.offsetWidth;p.style.transition=''}TU.pos[r._tuK]={x:b.offsetLeft,y:b.offsetTop,w:b.offsetWidth,h:b.offsetHeight}}
+function tuPlace(r,b,anim){const p=r.querySelector(':scope>.tuPill');if(!p||!b)return;const W=b.offsetWidth+'px',H=b.offsetHeight+'px',T=`translate(${b.offsetLeft}px,${b.offsetTop}px)`;if(p.style.width===W&&p.style.height===H&&p.style.transform===T){TU.pos[r._tuK]={x:b.offsetLeft,y:b.offsetTop,w:b.offsetWidth,h:b.offsetHeight};return}if(!anim)p.style.transition='none';p.style.width=W;p.style.height=H;p.style.transform=T;if(!anim){void p.offsetWidth;p.style.transition=''}TU.pos[r._tuK]={x:b.offsetLeft,y:b.offsetTop,w:b.offsetWidth,h:b.offsetHeight}}
 function tuSetup(r){if(r._tu)return;const tabs=[...r.querySelectorAll(':scope>.tabb')];const on=tabs.find(b=>b.classList.contains('on'));if(!on||tabs.length<2)return;r._tu=1;
  // ปุ่มคำสั่งที่ปนอยู่ในแถวแท็บ → แยกออกเป็นปุ่มปกติ
  tabs.filter(b=>TU.act.test(b.textContent)&&!b.classList.contains('on')).forEach(b=>{b.classList.add('tuAct');r.before(b)});
@@ -33204,7 +33204,7 @@ function labels(){if(innerWidth>=700)return;if(Date.now()-(labels._t||0)<1200)re
 // --- ตำแหน่งเกาะ: เหนือแถวปุ่ม/แถบรอเลือก ---
 function islPos(){try{let v=24;if(gOn()){const c=document.querySelector('#game .ctrl'),pb=$$('pendBar');let top=c?c.getBoundingClientRect().top:innerHeight-118;if(pb&&pb.offsetHeight)top=Math.min(top,pb.getBoundingClientRect().top);v=Math.max(24,Math.round(innerHeight-top+8))}document.documentElement.style.setProperty('--islB',v+'px')}catch(e){}}
 // --- แถวฝึก: บอกว่าเลื่อนได้ ---
-function fcHint(){const f=$$('focus');if(!f)return;const more=f.scrollLeft+f.clientWidth<f.scrollWidth-4,less=f.scrollLeft>4;f.classList.toggle('more',more);f.classList.toggle('less',less);if(!f._fh){f._fh=1;f.addEventListener('scroll',fcHint,{passive:true})}}
+function fcHint(e){if(!e||e.type!=='scroll'){const t=performance.now();if(t-(fcHint._t||0)<600)return;fcHint._t=t}const f=$$('focus');if(!f)return;const more=f.scrollLeft+f.clientWidth<f.scrollWidth-4,less=f.scrollLeft>4;f.classList.toggle('more',more);f.classList.toggle('less',less);if(!f._fh){f._fh=1;f.addEventListener('scroll',fcHint,{passive:true})}}
 // --- บทสอน: ปิดเองเมื่อหน้าต่างที่สอนอยู่ถูกปิด · ซ่อนเกาะระหว่างสอน ---
 let coMk=null,coId=null;
 function coWatch(){try{const on=!!(typeof CO!=='undefined'&&CO.id&&document.getElementById('coach'));document.body.classList.toggle('coOn',on);if(!on){coId=null;coMk=null;return}
@@ -40049,12 +40049,12 @@ window.cfixScan=scan;
 // ของใหม่ในหน้า
 const Q=new Set();let tm=0;
 const run=()=>{tm=0;const L2=[...Q];Q.clear();for(const r of L2)if(r.isConnected)scan(r,600)};
-new MutationObserver(ms=>{for(const m of ms){if(m.type==='childList'){for(const n of m.addedNodes){if(n.nodeType===1)Q.add(n);else if(n.nodeType===3&&n.parentElement)Q.add(n.parentElement)}}else if(m.type==='characterData'&&m.target.parentElement)Q.add(m.target.parentElement)}if(Q.size>300){Q.clear();Q.add(document.body)}if(!tm)tm=setTimeout(run,120)}).observe(document.body,{childList:true,subtree:true,characterData:true});
+new MutationObserver(ms=>{for(const m of ms){if(m.type==='childList'){for(const n of m.addedNodes){if(n.nodeType===1)Q.add(n);else if(n.nodeType===3&&n.parentElement)Q.add(n.parentElement)}}else if(m.type==='characterData'&&m.target.parentElement)Q.add(m.target.parentElement)}if(Q.size>300){Q.clear();Q.add(document.body)}if(!tm)tm=(window.requestIdleCallback?requestIdleCallback(run,{timeout:600}):setTimeout(run,120))}).observe(document.body,{childList:true,subtree:true,characterData:true});
 // เปลี่ยนธีม → ล้างแล้วตรวจใหม่ทั้งหน้า
 {const _at=applyTheme;applyTheme=function(){const r=_at.apply(this,arguments);try{FCK=new WeakMap();unfix(document);setTimeout(()=>scan(document.body,5000),60)}catch(e){}return r};window.applyTheme=applyTheme}
 setTimeout(()=>scan(document.body,5000),1500);
 // หน้าต่างที่เปิดอยู่: ตรวจซ้ำเบาๆ (กรณีสลับคลาส/สีโดยไม่เพิ่มโหนด)
-setInterval(()=>{try{const m=document.getElementById('modal');if(m&&m.offsetParent!==null)scan(m,800);const c=document.getElementById('choice');if(c&&c.offsetParent!==null)scan(c,300)}catch(e){}},1500);
+setInterval(()=>{const go=()=>{try{const m=document.getElementById('modal');if(m&&m.offsetParent!==null)scan(m,800);const c=document.getElementById('choice');if(c&&c.offsetParent!==null)scan(c,300)}catch(e){}};window.requestIdleCallback?requestIdleCallback(go,{timeout:1000}):go()},1500);
 })()}catch(e){console.error('block102',e)}
 
 // ============================================================
@@ -44787,7 +44787,7 @@ try{document.head.insertAdjacentHTML('beforeend','<style>@media (pointer:coarse)
 //   ทั้งมือถือและคอม · จำตำแหน่ง/ขนาดแยกมือถือกับคอม (murim_mv) · ปุ่มจับอยู่นอกตัวหน้าต่าง (หน้าต่างวาดใหม่ทุกเหตุการณ์)
 // ============================================================
 try{(()=>{const KEY='murim_mv';
-const dev=()=>innerWidth<700?'m':'d';
+let _dv=innerWidth<700?'m':'d';addEventListener('resize',()=>{_dv=innerWidth<700?'m':'d'});const dev=()=>_dv;
 const all=()=>{try{return LS.get(KEY,{})||{}}catch(e){return{}}};
 const get=()=>Object.assign({x:0,y:0,w:0,h:0},all()[dev()]||{});
 const put=v=>{try{const a=all();a[dev()]=v;LS.set(KEY,a)}catch(e){}};
@@ -44819,14 +44819,15 @@ const bar=document.createElement('div');bar.id='mvBar';bar.innerHTML='<div class
 const rz=document.createElement('div');rz.id='mvRz';rz.title='ลากเพื่อย่อ/ขยาย';document.body.appendChild(rz);
 let V=get(),lastDev=dev();
 function apply(){const m=M();if(!m)return;const on=ok();
- if(!on){m.classList.remove('mvOn');if(m._mvSet){['width','max-width','min-width','height','max-height','bottom'].forEach(k=>m.style.removeProperty(k));m._mvSet=0}bar.classList.remove('on');rz.classList.remove('on');return}
- m.classList.add('mvOn');m.style.setProperty('--mvx',V.x+'px');m.style.setProperty('--mvy',V.y+'px');
- const sp=(k,v)=>{if(v)m.style.setProperty(k,v,'important');else m.style.removeProperty(k)};
+ if(!on){apply._sig='';m.classList.remove('mvOn');if(m._mvSet){['width','max-width','min-width','height','max-height','bottom'].forEach(k=>m.style.removeProperty(k));m._mvSet=0}bar.classList.remove('on');rz.classList.remove('on');return}
+ if(!m.classList.contains('mvOn'))m.classList.add('mvOn');const S1=(k,v)=>{if(m.style.getPropertyValue(k)!==v)m.style.setProperty(k,v)};S1('--mvx',V.x+'px');S1('--mvy',V.y+'px');
+ const sp=(k,v)=>{if(v){if(m.style.getPropertyValue(k)!==v||m.style.getPropertyPriority(k)!=='important')m.style.setProperty(k,v,'important')}else if(m.style.getPropertyValue(k))m.style.removeProperty(k)};
  sp('width',V.w?V.w+'px':'');sp('max-width',V.w?'96vw':'');sp('min-width',V.w?'0':'');
  sp('height',V.h?V.h+'px':'');sp('max-height',V.h?V.h+'px':'');sp('bottom',V.h?'auto':'');m._mvSet=1;
  const z=zf(),r=m.getBoundingClientRect();
- bar.classList.add('on');bar.style.left=((r.left+r.width/2)/z)+'px';bar.style.top=((Math.max(2,r.top)+1)/z)+'px';
- rz.classList.add('on');rz.style.left=((Math.min(innerWidth,r.right)-5)/z)+'px';rz.style.top=((Math.min(innerHeight,r.bottom)-5)/z)+'px'}
+ const sig=[r.left,r.top,r.width,r.height,z,innerWidth,innerHeight].map(v=>Math.round(v)).join();if(apply._sig===sig&&bar.classList.contains('on'))return false;apply._sig=sig;
+ if(!bar.classList.contains('on'))bar.classList.add('on');bar.style.left=((r.left+r.width/2)/z)+'px';bar.style.top=((Math.max(2,r.top)+1)/z)+'px';
+ if(!rz.classList.contains('on'))rz.classList.add('on');rz.style.left=((Math.min(innerWidth,r.right)-5)/z)+'px';rz.style.top=((Math.min(innerHeight,r.bottom)-5)/z)+'px';return true}
 function clampV(anim){const m=M();if(!m)return;const z=zf(),r=m.getBoundingClientRect(),W=innerWidth,H=innerHeight,t=6;
  const out=r.left<-t||r.right>W+t||r.top<-t||r.bottom>H+t;if(!out)return;
  const moved=V.x||V.y;
@@ -44859,7 +44860,7 @@ function reset(){V={x:0,y:0,w:0,h:0};put(V);apply();try{toast('↺ คืนต�
 bar.querySelector('.mvS').onclick=()=>step(.85);bar.querySelector('.mvL').onclick=()=>step(1.15);bar.querySelector('.mvR').onclick=reset;bar.querySelector('.mvX').onclick=()=>bar.classList.remove('open');
 window.mvReset=reset;
 // ติดตามทุกเฟรมแบบเบาๆ (เฉพาะตอนหน้าต่างเปิด)
-let raf=0,wasOn=false;const loop=()=>{raf=0;try{if(dev()!==lastDev){lastDev=dev();V=get()}apply();try{window._mfUpd&&window._mfUpd()}catch(e){}const on=bar.classList.contains('on');if(on&&!wasOn)setTimeout(()=>{try{clampV(false)}catch(e){}},120);if(!on)bar.classList.remove('open');wasOn=on}catch(e){}if(modalOpen||bar.classList.contains('on'))raf=requestAnimationFrame(loop)};
+let raf=0,wasOn=false;const loop=()=>{raf=0;try{if(dev()!==lastDev){lastDev=dev();V=get()}if(apply()){try{window._mfUpd&&window._mfUpd()}catch(e){}}const on=bar.classList.contains('on');if(on&&!wasOn)setTimeout(()=>{try{clampV(false)}catch(e){}},120);if(!on)bar.classList.remove('open');wasOn=on}catch(e){}if(modalOpen||bar.classList.contains('on'))raf=requestAnimationFrame(loop)};
 const kick=()=>{if(!raf)raf=requestAnimationFrame(loop)};
 let lastC=0;{const _md=modal;modal=function(){const was=modalOpen||Date.now()-lastC<700;const r=_md.apply(this,arguments);try{const m=M();if(m){if(was&&ok())m.classList.add('mvNo');else m.classList.remove('mvNo')}}catch(e){}kick();return r}}
 {const _cm=closeM;closeM=function(){lastC=Date.now();const r=_cm.apply(this,arguments);kick();return r}}
@@ -45147,3 +45148,8 @@ const st=document.createElement('style');st.textContent=`
 @media (prefers-reduced-motion:reduce){#rvFx{display:none}.rvRun{animation:none}}
 `;document.head.appendChild(st);
 })()}catch(e){console.error("block194",e)}
+
+// BLOCK 195: ⚡ ประสิทธิภาพอนิเมชัน — แสงวิ่งบนการ์ด/ปุ่มหน้าแรก (เดิมขยับ left ทุกเฟรม = คำนวณเลย์เอาต์ใหม่) เปลี่ยนเป็น transform (GPU) · ปุ่มเรืองแสงผู้สนับสนุนเปลี่ยนจาก box-shadow เป็น opacity
+try{(()=>{const st=document.createElement('style');st.textContent=`@keyframes mwShineT{0%{transform:translateX(0)}60%,100%{transform:translateX(620%)}}
+.mwseg:after,#tMwCard:after,#tAqBtn:after,#tGrid .gSt:after,#tGrid .gAq:after,.mnHero .hSt:after,#wPick .wc:after{left:-50%!important;animation-name:mwShineT!important;will-change:transform}
+@media (prefers-reduced-motion:reduce){.mwseg:after,#tMwCard:after,#tAqBtn:after,#tGrid .gSt:after,#tGrid .gAq:after,.mnHero .hSt:after,#wPick .wc:after{animation:none!important}}`;document.head.appendChild(st)})()}catch(e){console.error('block195',e)}
