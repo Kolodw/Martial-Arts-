@@ -45599,3 +45599,6 @@ try{setTimeout(()=>{try{const go=()=>wLoad('hrt');go().catch(()=>setTimeout(()=>
 
 // BLOCK 208: 🌐 โหลด /w/wld2.js — กลไกประจำโลก (อาวุธมีชีวิต · ศิษย์หักหลัง · เตาหลอม · ผู้สืบทอดฝูง · งานเลี้ยงรุ่น · ยีนกลืนคน · ตะเกียง/คดีข้ามชาติ · ดวงจิตมีอารมณ์) ต่อจาก hrt.js
 try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4200)}catch(e){console.error('block208',e)}
+
+// BLOCK 209: 📖 โหลด /w/xw.js — เส้นเรื่องแบบนิยายทุกโลก (คำสาบานผูกมัด · อีกคนในตัวฉัน · รู้วันตาย · คำทำนายกำกวม · ต้นเรื่องแบบนิยาย · ทำเนียบฟ้า · ร้านตอนวางมือ · หลายตัวตน) ต่อจาก wld2.js
+try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2')).then(()=>wLoad('xw'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4600)}catch(e){console.error('block209',e)}
