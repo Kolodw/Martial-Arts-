@@ -3766,6 +3766,12 @@ window.skyRRMore=function(){skHold();window._skT=Date.now();try{rrMenu()}catch(e
 {const _cm=closeM;closeM=function(){try{const m=$('modal');if(modalOpen&&m&&m.dataset.k==='skyorg'&&!window._skOk)return}catch(e){}return _cm.apply(this,arguments)}}
 window.skyOrgG=v=>{ST.g=v;ui()};
 window.skyOrgRe=()=>{if(ST.left<=0)return;ST.left--;window._frS=(window._frS||1)+1;ST.ask=null;rollAll(false);try{sfx('click')}catch(e){}ui()};
+// ⚡ สุ่มรัว (BLOCK 190 ใน app.js): ตัวกลางหน้าสุ่มเกิด
+try{if(window.rrx)window.rrx.reg({id:'sky',
+ host(){const o=$('skB');if(!o||!o.classList.contains('on'))return null;const a=o.querySelector('.sdAct'),b=o.querySelector('.skBar');return a&&a.offsetParent?a:(b&&b.offsetParent?b:null)},
+ left(){return ST.left|0},spend(){ST.left=Math.max(0,(ST.left|0)-1)},reroll(){rollAll(false)},
+ N(){let pr=1;for(const c of CATS){const x=ST.cards[c.k];if(!x)continue;const t=rOf({k:c.k,x});pr*=t?RW[t]/100:1}return Math.max(1,1/Math.max(pr,1e-15))},
+ snap(){const o={};for(const k in ST.cards)o[k]=ST.cards[k];return o},restore(s){for(const k in s)ST.cards[k]=s[k]},draw(){window._frS=(window._frS||1)+1;ST.ask=null;ui()}})}catch(e){console.error('rrx sky',e)}
 window.skyOrgGo=()=>{if(window._skyBornAt&&Date.now()-window._skyBornAt<3000)return;window._skyBornAt=Date.now();window._skySel=0;const pickd=Object.assign({},ST.cards),g=ST.g||pick(['ชาย','หญิง']);try{LS.del(SKH)}catch(e){}window._skOk=1;try{closeM()}catch(e){}window._skOk=0;
  const base=pickd.bg[4];window._skyOrgRun=1;try{_ss(base)}finally{window._skyOrgRun=0}
  const cLook=ST.look?Object.assign({},ST.look):null,cName=ST.name||'';setTimeout(()=>{try{applyOrg(pickd,g)}catch(e){console.error('skyorg apply',e)}try{if(cLook){S.look=Object.assign({},S.look||{},cLook);const K=SKY()&&SKY().SK();if(K&&K.og)K.og.lk=null}if(cName)S.name=cName;render()}catch(e){}},900)};

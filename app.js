@@ -44804,14 +44804,14 @@ const css=document.createElement('style');css.textContent=`
 #mvBar .mvG{touch-action:none;cursor:grab;width:64px;height:22px;position:relative;font-size:0}
 #mvBar .mvG::before{content:'';position:absolute;left:50%;top:7px;width:38px;height:4px;margin-left:-19px;border-radius:4px;background:#f3e6c4;opacity:.55;box-shadow:0 0 3px #000a}
 #mvBar .mvG:active::before,#mvBar.open .mvG::before{opacity:1}
-#mvBar .mvM{display:none;position:absolute;right:100%;top:1px;gap:0;white-space:nowrap;background:#120d1de0;border-radius:9px;padding:0 3px}#mvBar.open .mvM{display:flex}
-#mvBar .mvM button{width:28px;height:20px;border:0;background:none;color:#f3e6c4;font-size:15px;line-height:1;cursor:pointer;padding:0;text-shadow:0 0 3px #000,0 0 6px #000,0 1px 2px #000;opacity:.95}
+#mvBar .mvM{display:none;position:absolute;left:50%;top:-6px;transform:translateX(-50%);gap:4px;align-items:center;white-space:nowrap;background:#1b1626f5;border:1px solid #ffffff26;border-radius:999px;padding:5px 9px;box-shadow:0 4px 16px #000a}#mvBar.open .mvM{display:flex}#mvBar.open .mvG::before{opacity:0}
+#mvBar .mvM button{width:40px;height:34px;border:0;border-radius:999px;background:#ffffff12;color:#f3e6c4;font-size:20px;line-height:1;cursor:pointer;padding:0}#mvBar .mvM button:active{background:#ffffff2e}
 #mvRz{position:fixed;z-index:100060;display:none;width:22px;height:22px;touch-action:none;cursor:nwse-resize;opacity:.75;background:linear-gradient(135deg,transparent 52%,#c9a24a 53% 61%,transparent 62%,transparent 72%,#c9a24a 73% 81%,transparent 82%);transform:translate(-100%,-100%)}
 #mvRz.on{display:block}
 #modal.mvAn{transition:translate .28s ease,width .28s ease,height .28s ease}
-@media (pointer:coarse){#mvBar .mvG{width:84px;height:30px}#mvBar .mvG::before{top:10px}#mvBar .mvM button{width:36px;height:28px;font-size:17px}#mvRz{width:30px;height:30px}}`;
+@media (pointer:coarse){#mvBar .mvG{width:84px;height:30px}#mvBar .mvG::before{top:10px}#mvBar .mvM button{width:46px;height:40px;font-size:22px}#mvRz{width:30px;height:30px}}`;
 document.head.appendChild(css);
-const bar=document.createElement('div');bar.id='mvBar';bar.innerHTML='<div class="mvG" title="ลากเพื่อย้ายหน้าต่าง · แตะเพื่อเปิดปุ่มย่อ/ขยาย · แตะสองครั้งเพื่อคืนค่า"></div><span class="mvM"><button type="button" class="mvS" aria-label="ย่อ">−</button><button type="button" class="mvL" aria-label="ขยาย">+</button><button type="button" class="mvR" aria-label="คืนค่า">↺</button></span>';document.body.appendChild(bar);
+const bar=document.createElement('div');bar.id='mvBar';bar.innerHTML='<div class="mvG" title="ลากเพื่อย้ายหน้าต่าง · แตะเพื่อเปิดปุ่มย่อ/ขยาย · แตะสองครั้งเพื่อคืนค่า"></div><span class="mvM"><button type="button" class="mvS" aria-label="ย่อ">−</button><button type="button" class="mvL" aria-label="ขยาย">+</button><button type="button" class="mvR" aria-label="คืนค่า">↺</button><button type="button" class="mvX" aria-label="ปิดเมนู">✕</button></span>';document.body.appendChild(bar);
 const rz=document.createElement('div');rz.id='mvRz';rz.title='ลากเพื่อย่อ/ขยาย';document.body.appendChild(rz);
 let V=get(),lastDev=dev();
 function apply(){const m=M();if(!m)return;const on=ok();
@@ -44852,7 +44852,7 @@ const endRs=()=>{if(!rs)return;rs=null;put(V);clampV(true)};rz.addEventListener(
 function step(f){if(!ok())return;const m=M(),z=zf(),r=m.getBoundingClientRect(),W=innerWidth/z,H=innerHeight/z;const w0=V.w||r.width/z,h0=V.h||r.height/z;
  V.w=Math.round(Math.max(240,Math.min(W*.96,w0*f)));V.h=Math.round(Math.max(200,Math.min(H*.94,h0*f)));apply();put(V);clampV(true)}
 function reset(){V={x:0,y:0,w:0,h:0};put(V);apply();try{toast('↺ คืนตำแหน่งและขนาดหน้าต่างแล้ว')}catch(e){}}
-bar.querySelector('.mvS').onclick=()=>step(.85);bar.querySelector('.mvL').onclick=()=>step(1.15);bar.querySelector('.mvR').onclick=reset;
+bar.querySelector('.mvS').onclick=()=>step(.85);bar.querySelector('.mvL').onclick=()=>step(1.15);bar.querySelector('.mvR').onclick=reset;bar.querySelector('.mvX').onclick=()=>bar.classList.remove('open');
 window.mvReset=reset;
 // ติดตามทุกเฟรมแบบเบาๆ (เฉพาะตอนหน้าต่างเปิด)
 let raf=0,wasOn=false;const loop=()=>{raf=0;try{if(dev()!==lastDev){lastDev=dev();V=get()}apply();const on=bar.classList.contains('on');if(on&&!wasOn)setTimeout(()=>{try{clampV(false)}catch(e){}},120);if(!on)bar.classList.remove('open');wasOn=on}catch(e){}if(modalOpen||bar.classList.contains('on'))raf=requestAnimationFrame(loop)};
@@ -44861,3 +44861,77 @@ const kick=()=>{if(!raf)raf=requestAnimationFrame(loop)};
 {const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);kick();return r}}
 setInterval(kick,700);addEventListener('resize',()=>{kick();setTimeout(()=>clampV(true),80)});
 })()}catch(e){console.error('block189',e)}
+
+// BLOCK 190: ⚡ สุ่มรัว ทุกโลก (ยุคปัจจุบัน · ทะลุฟ้าดารา · นครม่านหมอก · สัตว์อสูร) — ปุ่มเหมือนหน้าสุ่มเกิดยุทธภพ · ผู้สนับสนุนพิเศษขึ้นไป · ใช้สิทธิ์สุ่มฟรีของชีวิตนี้
+//   ตัวกลางกลาง window.rrx.reg(adapter) · adapter = {id, host(), left(), spend(), reroll(), N(), snap(), restore(s), draw()} · N = "1 ใน N" ของชีวิตที่สุ่มได้ (มาก = หายาก)
+try{(()=>{
+const T=()=>{try{return window.vipT?window.vipT():0}catch(e){return 0}};
+const AD={};let STOP=0,BUSY=0;
+const TIERS=[[.3,'ติด 30% บนสุด'],[.1,'ติด 10% บนสุด'],[.03,'ติด 3% บนสุด'],[.01,'ติด 1% บนสุด']];
+const fmtN=n=>{try{return fmt(Math.round(n))}catch(e){return String(Math.round(n))}};
+const ovC=()=>{let o=document.getElementById('rrxOv');if(!o){o=document.createElement('div');o.id='rrxOv';document.body.appendChild(o)}return o};
+const ovClose=()=>{const o=document.getElementById('rrxOv');if(o)o.remove()};
+try{const st=document.createElement('style');st.textContent=`.rrxB{flex:1 1 100%;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:8px 0 6px;padding:9px 12px;border-radius:12px;border:1.5px solid #c9a24a;background:linear-gradient(90deg,#c9a24a22,#c9a24a08);color:inherit;font:inherit;font-weight:700;font-size:14px;line-height:1.2;cursor:pointer;box-sizing:border-box;grid-column:1/-1;order:-1}
+.rrxB small{font-weight:400;font-size:11.5px;opacity:.75}.rrxB.lk{border-style:dashed;opacity:.85}
+#rrxOv{position:fixed;inset:0;z-index:100070;background:#000b;display:flex;align-items:center;justify-content:center;padding:14px;box-sizing:border-box}
+#rrxOv .rrxP{width:min(440px,100%);max-height:92vh;overflow:auto;background:#17121f;color:#f3e6c4;border:1.5px solid #c9a24a;border-radius:18px;padding:16px 16px 14px;box-shadow:0 10px 40px #000c;position:relative;box-sizing:border-box}
+#rrxOv h3{margin:0 0 4px;font-size:19px}#rrxOv .tg{font-size:12.5px;opacity:.8;margin:2px 0 10px;line-height:1.5}
+#rrxOv .x{position:absolute;right:10px;top:8px;width:34px;height:34px;border-radius:10px;border:1px solid #c9a24a66;background:none;color:inherit;font-size:16px}
+#rrxOv .g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#rrxOv .o{display:flex;flex-direction:column;gap:2px;text-align:left;padding:10px 11px;border-radius:12px;border:1px solid #ffffff2a;background:#ffffff0d;color:inherit;font:inherit;cursor:pointer;min-height:64px}
+#rrxOv .o b{font-size:14px}#rrxOv .o small{font-size:11.5px;opacity:.75;line-height:1.35}
+#rrxOv .p{width:100%;margin-top:10px;padding:12px;border-radius:12px;border:0;background:linear-gradient(180deg,#ffe9a8,#e8b54a 55%,#c98d22);color:#2a1a04;font:inherit;font-weight:900;font-size:15px}
+#rrxOv .q{width:100%;margin-top:8px;padding:10px;border-radius:12px;border:1px solid #ffffff2a;background:#ffffff0d;color:inherit;font:inherit}
+#rrxOv .bar{height:10px;border-radius:6px;background:#ffffff1f;overflow:hidden;margin:10px 0 6px}#rrxOv .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f1c94a,#d9604a)}
+#rrxOv label{display:flex;gap:6px;align-items:center;margin-top:8px;font-size:12.5px}`;document.head.appendChild(st)}catch(e){}
+const left=ad=>{try{const v=ad.left();return v>50?Infinity:Math.max(0,v|0)}catch(e){return 0}};
+function teaser(){ovC().innerHTML=`<div class="rrxP"><button class="x" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tg">ระบบสุ่มให้เองจนเจอชีวิตที่หายากตามเป้า ไม่ต้องกดทีละครั้ง</p>
+ <div class="tg">🏮 <b>ผู้สนับสนุนพิเศษ (99 บาท / 30 วัน)</b> เลือกเป้า "ติด 30% / 10% / 3% / 1% บนสุด" แล้วระบบสุ่มให้ ใช้สิทธิ์สุ่มของชีวิตนี้ และเก็บชะตาที่ดีที่สุดให้ถ้างบหมดก่อนเจอ</div>
+ <button class="p" onclick="rrxClose();vipMenu()">🏮 ดูสิทธิ์ผู้สนับสนุน</button></div>`}
+function samp(ad,n){const s0=ad.snap(),out=[];try{for(let i=0;i<n;i++){ad.reroll();const v=+ad.N();if(v>0)out.push(v)}}catch(e){console.error('rrx samp',e)}ad.restore(s0);try{ad.draw(false)}catch(e){}return out.sort((a,b)=>a-b)}
+function menu(ad){const L=left(ad);if(L<=0&&L!==Infinity){ovC().innerHTML=`<div class="rrxP"><button class="x" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tg">สิทธิ์สุ่มของชีวิตนี้หมดแล้ว · เพิ่มสิทธิ์ได้จากปุ่ม "สุ่มเพิ่ม" ในหน้านี้</p><button class="p" onclick="rrxClose()">ตกลง</button></div>`;return}
+ ovC().innerHTML=`<div class="rrxP"><button class="x" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tg">กำลังประเมินโอกาส…</p></div>`;
+ setTimeout(()=>{const s=samp(ad,ad.id==='mw'?160:300),n=s.length;if(!ovC()||!document.getElementById('rrxOv'))return;if(n<20){ovC().innerHTML=`<div class="rrxP"><button class="x" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tg">ประเมินโอกาสไม่ได้ในตอนนี้ ลองใหม่อีกครั้ง</p></div>`;return}
+  const opts=TIERS.map(([q,t])=>{const X=s[Math.min(n-1,Math.floor((1-q)*n))],p=s.filter(v=>v>=X).length/n,ch=L===Infinity?1:1-Math.pow(1-p,L);return{t,X,p,ch}});window._rrxO=opts;window._rrxAd=ad;
+  ovC().innerHTML=`<div class="rrxP"><button class="x" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tg">ระบบสุ่มให้เองจนเจอชีวิตที่หายากตามเป้า ใช้สิทธิ์สุ่มของชีวิตนี้ (เหลือ ${L===Infinity?'ไม่จำกัด':L} ครั้ง) · ถ้าหมดก่อนเจอ เลือกเอาชะตาที่ดีที่สุดระหว่างทางได้ · ที่ล็อก 🔒 ไว้ไม่เปลี่ยน</p>
+  <div class="g2">${opts.map((o,i)=>`<button class="o" onclick="rrxGo(${i})"><b>${o.t}</b><small>โอกาสต่อครั้ง ≈ ${o.p>=.1?Math.round(o.p*100)+'%':(Math.round(o.p*1000)/10)+'%'}${L===Infinity?'':' · งบนี้เจอราว '+Math.round(o.ch*100)+'%'}</small></button>`).join('')}</div></div>`},60)}
+window.rrxClose=()=>{STOP=1;ovClose()};
+window.rrxOpen=function(id){const ad=AD[id];if(!ad||BUSY)return;if(T()<2){teaser();return}menu(ad)};
+window.rrxStop=()=>{STOP=1};
+window.rrxGo=async function(i){const ad=window._rrxAd,o=(window._rrxO||[])[i];if(!ad||!o||BUSY)return;BUSY=1;STOP=0;
+ const L0=left(ad);let n=0,hit=false,best=ad.snap(),bN=+ad.N();const t0=Date.now();
+ const prog=()=>{const e=document.getElementById('rrxOv');if(!e)return;e.innerHTML=`<div class="rrxP"><h3>⚡ กำลังสุ่มรัว…</h3><div class="bar"><i style="width:${L0===Infinity?Math.min(100,n/3):Math.min(100,Math.round(n/Math.max(1,L0)*100))}%"></i></div><div class="tg">สุ่มแล้ว ${n} ครั้ง · เป้า ${o.t} (1 ใน ${fmtN(o.X)} ขึ้นไป) · ดีที่สุดตอนนี้ 1 ใน ${fmtN(bN)}</div><button class="q" onclick="rrxStop()">⏹ หยุด</button></div>`};
+ prog();
+ if(bN>=o.X)hit=true;
+ try{while(!hit&&!STOP&&left(ad)>0){ad.spend();ad.reroll();n++;const v=+ad.N();if(v>bN){bN=v;best=ad.snap()}if(v>=o.X){hit=true;break}if(n>=2500)break;if(n%6===0){prog();await new Promise(r=>setTimeout(r,0))}}}catch(e){console.error('rrx run',e)}
+ BUSY=0;try{ad.draw(true)}catch(e){}
+ const sum=`สุ่ม ${n} ครั้ง · ${Math.round((Date.now()-t0)/100)/10} วินาที`;
+ if(hit){ovClose();try{toast(n?`⚡ เจอแล้ว! ${sum}`:'⚡ ชีวิตนี้ตรงเป้าอยู่แล้ว')}catch(e){}try{sfx('good')}catch(e){}return}
+ window._rrxBest=best;window._rrxAd=ad;const cur=+ad.N(),better=bN>cur*1.0001;
+ const e=document.getElementById('rrxOv');if(!e)return;
+ e.innerHTML=`<div class="rrxP"><h3>⚡ ${STOP?'หยุดแล้ว':'งบหมดแล้ว ยังไม่เจอ'}</h3><p class="tg">${sum}</p>${better?`<div class="tg">⭐ ชะตาที่ดีที่สุดระหว่างทาง: <b>1 ใน ${fmtN(bN)}</b> (ตอนนี้ 1 ใน ${fmtN(cur)})</div><button class="p" onclick="rrxBest()">⭐ เอาชะตาที่ดีที่สุด</button><button class="q" onclick="rrxClose()">เอาผลสุดท้าย</button>`:`<button class="p" onclick="rrxClose()">ตกลง</button>`}</div>`;try{sfx('bad')}catch(e){}};
+window.rrxBest=function(){const ad=window._rrxAd,b=window._rrxBest;ovClose();if(!ad||!b)return;try{ad.restore(b);ad.draw(false);toast('⭐ กลับไปชะตาที่ดีที่สุดแล้ว')}catch(e){console.error(e)}};
+// ปุ่มในหน้าสุ่มเกิดของแต่ละโลก (หน้าถูกวาดใหม่บ่อย จึงเช็กเป็นระยะ)
+function ensure(){try{for(const id in AD){const ad=AD[id];let h=null;try{h=ad.host()}catch(e){}const par=h&&h.parentNode;const old=document.querySelector('.rrxB[data-w="'+id+'"]');
+  if(!h||!par){if(old&&!(old.offsetParent))old.remove();continue}
+  const t=T(),html=t>=2?`⚡ สุ่มรัว <small>· ให้ระบบสุ่มจนเจอชะตาที่ต้องการ</small>`:`⚡ สุ่มรัว 🔒 <small>· สำหรับผู้สนับสนุน</small>`;
+  let b=old;if(b&&(b.parentNode!==par||b.nextSibling!==h)){b.remove();b=null}
+  if(!b){b=document.createElement('button');b.type='button';b.className='rrxB';b.dataset.w=id;b.onclick=()=>window.rrxOpen(id);par.insertBefore(b,h)}
+  if(b.innerHTML!==html)b.innerHTML=html;b.classList.toggle('lk',t<2)}}catch(e){}}
+setInterval(ensure,900);
+window.rrx={reg:ad=>{AD[ad.id]=ad;ensure()},AD};
+// ---------- 🐾 สัตว์อสูร ----------
+window.rrx.reg({id:'beast',
+ host(){const b=document.querySelector('#brB button[onclick="brReroll()"]');return b&&b.parentNode&&document.getElementById('modal')&&document.getElementById('modal').dataset.k==='broll'?b.parentNode:null},
+ left(){return brRR},spend(){if(brRR<50)brRR--},reroll(){brRoll=brGen()},N(){const r=brRoll;return r?(r.rare&&r.rare.N?r.rare.N:1/r.p):1},
+ snap(){return brRoll},restore(s){brRoll=s},draw(a){try{brShow(!!a)}catch(e){}}});
+// ---------- 🏙️ ยุคปัจจุบัน ----------
+window.rrx.reg({id:'mw',
+ host(){const o=document.getElementById('mwB');if(!o||o.style.display==='none'||!o.getClientRects().length)return null;return o.querySelector('.mbBar')},
+ left(){const M=window._mbGet&&window._mbGet();return M?M.rr|0:0},
+ spend(){const M=window._mbGet();if(M)M.rr=Math.max(0,(M.rr|0)-1)},
+ reroll(){const M=window._mbGet();if(!M)return;const k=M.rr;M.rr=Math.max(1,k|0);try{window.mwBReroll()}catch(e){}const M2=window._mbGet();if(M2)M2.rr=k},
+ N(){try{const P=window.mwFateParts(window._mbGet()).filter(x=>x&&x.p>0&&x.p<=1);return Math.max(1,1/P.reduce((a,x)=>a*Math.max(x.p,1e-15),1))}catch(e){return 1}},
+ snap(){return JSON.parse(JSON.stringify(window._mbGet()))},restore(s){window._mbSet(JSON.parse(JSON.stringify(s)))},
+ draw(){try{window.mwBornPage(false)}catch(e){}}});
+})()}catch(e){console.error('block190',e)}

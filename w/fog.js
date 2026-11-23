@@ -161,14 +161,15 @@ let FL=0;function flush(){if(!QU.length||FL)return;FL=1;const go=()=>{if(!on()){
 const C=(t,x,o)=>{try{const tt=String(t);window._fgSc=/ห้วงใต้/.test(tt)?'under':/กระจกเงา/.test(tt)?'mirror':/ศาล/.test(tt)?'court':/ศพ|ฆาตกร|กับดัก/.test(tt)?'grave':(window._fgSc==='under'&&/ห้อง/.test(tt))?'under':'';setScene('fog')}catch(e){}try{const K=FG();if(K&&K.anc<25&&Array.isArray(o)&&o.length>=2&&rnd()<.45)o=o.concat([halOpt(K)])}catch(e){}return choice(t,x,o)};
 
 // =================== เริ่มชีวิต ===================
-window.fogStart=function(){window._frS=1;try{closeM()}catch(e){}
- const bg=pick(Object.keys(ORIG));
- try{CFG.xian=0;CFG.mw=0;if((CFG.chm|0)>=2)CFG.chm=0;goBirth();doRoll(true);startLife()}catch(e){console.error(e);return}
+window.fogBegin=function(RR){window._frS=1;try{closeM()}catch(e){}
+ const bg=RR.bg;
+ try{CFG.xian=0;CFG.mw=0;if((CFG.chm|0)>=2)CFG.chm=0;crForce={g:RR.gi,look:{hair:RR.hair,skin:RR.skin}};goBirth();doRoll(true);startLife()}catch(e){console.error(e);return}
  setTimeout(()=>{try{if(choice._cur)choice._cur=null;if(modalOpen)closeM();
-  S.name=pick(FN)+' '+pick(LN);S.age=8;S.power=4;S.qi=0;S.money=bg==='fallen'?120:30;S.maxHp=60;S.hp=60;S.int=bg==='clerk'?30:18;S.cha=bg==='fallen'?28:16;S.fame=0;S.karma=0;S.xian=false;S.xt=0;S.faction=null;S.ownSect=null;S.custom=true;S.arts=[];S.sys=null;S.spouse=null;
+  S.name=RR.name||(pick(FN)+' '+pick(LN));S.age=8;S.power=4;S.qi=0;S.money=bg==='fallen'?120:30;S.maxHp=60;S.hp=60;S.int=bg==='clerk'?30:18;S.cha=bg==='fallen'?28:16;S.fame=0;S.karma=0;S.xian=false;S.xt=0;S.faction=null;S.ownSect=null;S.custom=true;S.arts=[];S.sys=null;S.spouse=null;
   S.mw={y:0,sec:0,fame:0,adapt:100,qi:0,lin:0,linMet:0,native:1,rnd:1,cc:'th',uni:0,qlv:0,past:{n:S.name,realm:'',yr:87,how:'native',pow0:4},seen:{e1:1,e2:1,e3:1,e4:1,e5:1,e6:1,e7:1,e8:1,e9:1,e10:1,e11:1,e12:1,e13:1,e14:1,e15:1},q:[],fl:{},end:72,clk:0,hum:1,mon0:0,par:null,ast:{h:0,bike:0,car:0,ins:0,mort:0,mortY:0,save:0},lives:[]};
-  S.key=[`8 ปี — ${ORIG[bg][1]} แห่งนครม่านหมอก`];try{S.era=null}catch(e){}const K=S.mw.fog=newK(bg);K.endB=R(66,78);if(bg==='orphan')K.anc=80;
+  S.key=[`8 ปี — ${ORIG[bg][1]} แห่งนครม่านหมอก`];try{S.era=null}catch(e){}const K=S.mw.fog=newK(bg);if(RR.dist)K.dist=RR.dist;K.endB=R(66,78);if(bg==='orphan')K.anc=80;
   const leg=LS.get('murim_fogleg',null);if(leg&&leg.t){K.ins+=1;K.f.leg=1}
+  try{const om=OMEN[RR.omen|0];if(om&&om.fx)om.fx(K);if(om&&om.id)K.f.omen=om.id}catch(e){console.error('omen',e)}
   S.focus='fg_study';try{const fd=$('feed');if(fd)fd.innerHTML=''}catch(e){}
   try{const T=LS.get('murim_mtried',{})||{};if(!T.fog){T.fog=1;LS.set('murim_mtried',T)}}catch(e){}
   encAdd('d',K.dist);
@@ -176,6 +177,65 @@ window.fogStart=function(){window._frS=1;try{closeM()}catch(e){}
   feed(`${ORIG[bg][0]} ${esc(S.name)} อายุ 8 ปี · ${ORIG[bg][1]} · ${K.dist} — ${ORIG[bg][2]}`);
   if(K.f.leg)feed(`🌀 คุณจำบางอย่างจากชาติก่อนได้รางๆ — เสียงระฆังใต้หมอก (ชิ้นความจริง +1)`);
   sync();render();saveGame()}catch(e){console.error('fogStart',e)}},700)};
+
+// =================== หน้าสุ่มกำเนิด (สไตล์เดียวกับยุทธภพ) ===================
+const OMEN=[
+ {id:'',ic:'🌫️',n:'ไม่มีลางอะไร',d:'เกิดมาเหมือนเด็กทั่วไปของเมือง',w:58},
+ {id:'bell',ic:'🔔',n:'ได้ยินเสียงระฆังใต้หมอก',d:'ทุกคืนมีเสียงที่คนอื่นไม่ได้ยิน · เห็นสิ่งผิดปกติเร็วขึ้น',w:10,fx:K=>{K.f.peek=(K.f.peek|0)+1}},
+ {id:'luck',ic:'🍀',n:'โชคเด็กหมอก',d:'เจอเหรียญเก่าในตรอกตั้งแต่ยังเล็ก · เงินตั้งต้น +60',w:12,fx:K=>{S.money=(S.money||0)+60}},
+ {id:'eye',ic:'👁️',n:'ตาไวผิดคน',d:'สังเกตสิ่งที่ผู้ใหญ่มองข้าม · ปัญญา +6',w:10,fx:K=>{S.int=(S.int||0)+6}},
+ {id:'anchor',ic:'⚓',n:'หลักยึดแน่นตั้งแต่เกิด',d:'จิตใจนิ่งกว่าเด็กทั่วไป · หลักยึดเริ่มที่ 80',w:7,fx:K=>{K.anc=Math.max(K.anc,80)}},
+ {id:'call',ic:'🕯️',n:'หมอกเรียกชื่อ',d:'มีบางอย่างในหมอกรู้จักชื่อคุณ · เห็นสิ่งผิดปกติ +2 และชิ้นความจริง +1',w:3,fx:K=>{K.f.peek=(K.f.peek|0)+2;K.ins+=1}}];
+const OW={dock:30,clerk:25,orphan:20,fallen:15,med:10};
+const HAIR=['#1f1a17','#3a2a1e','#5b3a24','#8a6a3a','#c9b27a','#2a3550','#6a2a2a'],SKIN=['#f1c9a0','#e0ac69','#c68642','#8d5524','#f5d5b8'];
+let FB=null;
+const wPick=(items,w)=>{let t=items.reduce((a,x,i)=>a+w(x,i),0)*Math.random();for(let i=0;i<items.length;i++){t-=w(items[i],i);if(t<=0)return i}return items.length-1};
+function fgRoll(first){const L=FB.lock||{};if(!first){if(FB.left<=0)return;FB.left--}
+ const ks=Object.keys(ORIG);FB.bg=ks[wPick(ks,k=>OW[k])];FB.dist=pick(DIST0);FB.omen=wPick(OMEN,o=>o.w);
+ if(first||!FB.edited){FB.gi=Math.random()<.5?0:1;FB.name=pick(FN)+' '+pick(LN)}FB.hair=pick(HAIR);FB.skin=pick(SKIN);fgDraw()}
+function fgN(){const ks=Object.keys(OW),tw=ks.reduce((a,k)=>a+OW[k],0),tO=OMEN.reduce((a,o)=>a+o.w,0);return Math.max(1,1/((1/8)*(OW[FB.bg]/tw)*(OMEN[FB.omen].w/tO)))}
+function fgParts(){const ks=Object.keys(OW),tw=ks.reduce((a,k)=>a+OW[k],0),tO=OMEN.reduce((a,o)=>a+o.w,0);return[{ic:'📍',n:FB.dist,p:1/8},{ic:ORIG[FB.bg][0],n:ORIG[FB.bg][1],p:OW[FB.bg]/tw},{ic:OMEN[FB.omen].ic,n:OMEN[FB.omen].n,p:OMEN[FB.omen].w/tO}]}
+function fgCss(){if(document.getElementById('fgBcss'))return;let out='';const walk=(L,pre,post)=>{for(const r of L){try{if(r.cssRules&&r.media){walk(r.cssRules,'@media '+r.media.mediaText+'{','}');continue}if(r.selectorText&&r.selectorText.indexOf('#birth')>=0){out+=pre+r.cssText.replace(/#birth/g,'#fgB')+post+'\n'}}catch(e){}}};
+ for(const sh of document.styleSheets){let L=null;try{L=sh.cssRules}catch(e){continue}if(L)walk(L,'','')}
+ out+=`#fgB.on{display:block!important;width:min(760px,100%)!important;max-width:760px!important;box-sizing:border-box;margin:0 auto!important;grid-template-columns:none!important;padding-bottom:96px}#fgB.on>*{grid-column:auto!important;grid-row:auto!important;width:auto!important;max-width:none!important}#fgB .bwld{justify-content:center}#fgB .bstage canvas{image-rendering:pixelated}
+#fgB .fgG{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}#fgB .fgG button{padding:4px 11px;border-radius:14px;border:1px solid var(--line);background:transparent;color:inherit;font:inherit;font-size:12.5px}#fgB .fgG button.on{background:var(--pink,#e8b54a);color:#1a1200;border-color:transparent;font-weight:700}
+#fgB .fgIn{width:100%;box-sizing:border-box;font:inherit;font-size:20px;line-height:1.2;background:transparent!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0;border-bottom:1px dashed #c9a24a88;padding:2px 0;margin:0}
+#fgB .fgEd{margin-top:8px;width:100%;font-size:13px;padding:7px}#fgB .fgOdds{margin:10px 0;padding:12px}
+#fgB .fgBar{position:sticky;bottom:0;z-index:5;display:grid;grid-template-columns:1fr 1.3fr;gap:8px;padding:10px 0 calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg,#120e18) 30%)}#fgB .fgBar button{min-height:56px;font-size:15px;border-radius:16px}#fgB .fgBar .pbtn{font-size:17px}
+#fgB .rrxB{grid-column:1/-1}@media (min-width:700px){#fgB .fgTr{display:grid;grid-template-columns:1fr;gap:6px}}`;
+ const st=document.createElement('style');st.id='fgBcss';st.textContent=out;document.head.appendChild(st)}
+function fgEl(){let el=document.getElementById('fgB');if(!el){el=document.createElement('div');el.id='fgB';el.className='screen';const b=document.getElementById('birth');if(b&&b.parentNode)b.parentNode.insertBefore(el,b.nextSibling);else document.body.appendChild(el)}fgCss();return el}
+function fgLook(){return{robe:'#4a4f5a',trim:null,belt:'#00000055',hat:null,hs:1,mood:'happy',seed:FB.seed||(FB.seed=R(1,99999)),age:14,g:GENDER[FB.gi].n,skin:FB.skin,hair:FB.hair,old:false,beard:null,sword:null,glow:false,aura:null}}
+function fgPaint(){try{const cv=document.getElementById('fgAva');if(!cv)return;const ctx=cv.getContext('2d'),sg=g,sp=PS;g=ctx;PS=cv.width/28;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);
+ const gr=ctx.createLinearGradient(0,0,0,cv.height);gr.addColorStop(0,'#2a3340');gr.addColorStop(.6,'#7d8a93');gr.addColorStop(1,'#232a30');ctx.fillStyle=gr;ctx.fillRect(0,0,cv.width,cv.height);
+ ctx.fillStyle='#161c22';for(let i=0;i<9;i++){const w=10+((i*37)%14),h=34+((i*53)%46);ctx.fillRect(i*16,cv.height-h-18,w,h)}ctx.fillStyle='#e8ecef55';ctx.fillRect(0,cv.height*.55,cv.width,cv.height*.18);
+ ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;try{person(10,30,fgLook(),'stand')}catch(e){}g=sg;PS=sp}catch(e){}}
+function fgDraw(){const el=fgEl(),o=ORIG[FB.bg],om=OMEN[FB.omen],fx=Math.max(0,fgN()),N=fmt(Math.round(fx));
+ const row=(ic,k,v,d,p)=>`<div class="trait r${p<.05?4:p<.15?2:0} show"><div><div class="k">${ic} ${k}</div><div class="v t${p<.05?4:p<.15?2:0}">${v}</div><div class="d">${d}</div></div><span class="o t${p<.05?4:p<.15?2:0}">1 ใน ${fmt(Math.round(1/p))}</span></div>`;
+ const P=fgParts();
+ el.innerHTML=`<h2>คุณได้ถือกำเนิดขึ้นแล้ว</h2><div class="bwld"><span class="bchip">🌉 นครม่านหมอก</span><span class="bchip">⚙️ ศักราชไอน้ำ 87</span><span class="bchip">${o[0]} ${esc(o[1])}</span></div>
+ <div class="box hcard"><div class="row1"><div class="bstage"><canvas id="fgAva" width="136" height="150"></canvas><div class="bcap">📍 ${esc(FB.dist)}</div></div>
+  <div class="bname" style="flex:1;min-width:0"><div class="tag2">ชื่อ</div><input class="fgIn" id="fgNm" maxlength="24" value="${esc(FB.name)}" onchange="fgSetName(this.value)" aria-label="ชื่อ">
+  <div class="fgG">${[[0,'♂ ชาย'],[1,'♀ หญิง']].map(([v,l])=>`<button class="${FB.gi===v?'on':''}" onclick="fgSetG(${v})">${l}</button>`).join('')}<button onclick="fgLookRoll()">🎲 สุ่มหน้าตา</button></div></div></div></div>
+ <div class="fgTr" style="margin-top:8px">
+  ${row('📍','ย่านที่เกิด',esc(FB.dist),'ย่านที่คุณโตมา · เรื่องและผู้คนรอบตัวจะผูกกับที่นี่',1/8)}
+  ${row(o[0],'ชาติกำเนิด',esc(o[1]),esc(o[2]),OW[FB.bg]/100)}
+  ${row(om.ic,'ลางตอนเกิด',esc(om.n),esc(om.d),om.w/100)}</div>
+ <div class="box fgOdds">${window.fateBoxH?fateBoxH(P):`<div class="tag2">ความหายากของชีวิตนี้</div><div class="n px">1 ใน ${N}</div>`}</div>
+ <div class="fgBar"><button class="gbtn" ${FB.left<=0?'disabled':''} onclick="fgReroll()">🔄 เกิดใหม่ (${FB.left})</button><button class="pbtn" onclick="fgGo()">ใช้ชีวิต ▶</button></div>`;
+ if(!el.classList.contains('on'))show('fgB');fgPaint()}
+window.fgSetName=v=>{v=String(v||'').trim().slice(0,24);if(v){FB.name=v;FB.edited=1}};
+window.fgSetG=v=>{FB.gi=v;FB.edited=FB.edited||0;if(!FB.edited)FB.name=pick(FN)+' '+pick(LN);fgDraw()};
+window.fgLookRoll=()=>{FB.hair=pick(HAIR);FB.skin=pick(SKIN);fgDraw()};
+window.fgReroll=()=>{if(FB.left<=0)return;try{sfx('click')}catch(e){}fgRoll(false)};
+window.fgGo=()=>{if(!FB)return;const RR=Object.assign({},FB);FB=null;try{const e=document.getElementById('fgB');if(e)e.classList.remove('on')}catch(e){}window.fogBegin(RR)};
+window.fogStart=function(){window._frS=1;try{closeM()}catch(e){}
+ const tot=Math.max(3,(window.vipTot&&window.vipTot())|0);FB={left:(typeof CFG!=='undefined'&&CFG.chm==1)?0:tot,edited:0,lock:{}};fgRoll(true)};
+try{if(window.rrx)window.rrx.reg({id:'fog',
+ host(){const e=document.getElementById('fgB');return e&&e.classList.contains('on')&&FB?e.querySelector('.fgBar'):null},
+ left(){return FB?FB.left|0:0},spend(){if(FB)FB.left=Math.max(0,FB.left-1)},
+ reroll(){const l=FB.left;FB.left=1;const ed=FB.edited;fgRoll(false);FB.left=l;FB.edited=ed},N(){return FB?fgN():1},
+ snap(){return JSON.parse(JSON.stringify(FB))},restore(s){FB=JSON.parse(JSON.stringify(s))},draw(){fgDraw()}})}catch(e){console.error('rrx fog',e)}
 
 // =================== โฟกัสรายปี ===================
 const FOK=[
