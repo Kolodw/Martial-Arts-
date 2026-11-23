@@ -45593,3 +45593,6 @@ window._dvPick=function(w){try{const f=W[w];return f?f(ctx()):null}catch(e){cons
 
 // BLOCK 206: 📜 โหลด /w/ghr.js — เกมกฎผี (โลกผีไทย · ยุคปัจจุบัน) ต่อจาก mw.js
 try{setTimeout(()=>{try{const go=()=>wLoad('ghr');go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},6400)}catch(e){console.error('block206',e)}
+
+// BLOCK 207: 🕸️ โหลด /w/hrt.js — สายใยข้ามชาติ (ของสืบทอด · ด้ายแดง · บทวัยกลางคน) ใช้ทุกโลก
+try{setTimeout(()=>{try{const go=()=>wLoad('hrt');go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},3800)}catch(e){console.error('block207',e)}
