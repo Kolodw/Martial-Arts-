@@ -2604,7 +2604,7 @@ const pool=(P,n)=>nx=>{const b=bs();const Lp=shuf(P.filter(e=>!b.seen.includes(e
 const pw=n=>{bs().pw=(bs().pw||0)+n};
 const scar=()=>{const b=bs();b.scar=(b.scar||0)+1};
 const nmR=b=>b.rival?L(b.rival[0],b.rival[1]):'';
-function startBeast(){const g=G();const b=g.bst||(g.bst={});Object.assign(b,{pro:1,sx:1,seen:[],pw:0,hu:0,cun:0,inst:0,ht:0});busy=1;Q.length=0;
+function startBeast(){try{if(LS.get('murim_svbstOnce',0)){LS.set('murim_svbst',0);LS.set('murim_svbstOnce',0)}}catch(e){}const g=G();const b=g.bst||(g.bst={});Object.assign(b,{pro:1,sx:1,seen:[],pw:0,hu:0,cun:0,inst:0,ht:0});busy=1;Q.length=0;
  Q.push(birth,forage,pool(P0,2),stage(1,'หนึ่งร้อยปี · ป่าเริ่มรู้จักชื่อคุณ','One hundred years · the forest learns your name'),territory,pool(P1,2),stage(2,'หนึ่งพันปี · วงแหวนในตัวคุณเปลี่ยนเป็นสีม่วง','One thousand years · the ring inside you turns purple'),pool(P2,2),stage(3,'หนึ่งหมื่นปี · ขนของคุณดูดแสงจนเงาหายไป','Ten thousand years · your fur drinks the light'),pool(P3,2),stage(4,'เก้าหมื่นเก้าพันปีเศษ · มนุษย์เริ่มเข้ามาใกล้','Ninety-nine thousand years · humans come closer'),hunters,child,pool(P4,1),storm,final);
  run()}
 // ---------- ฉากเกิด ----------
