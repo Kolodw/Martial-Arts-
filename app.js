@@ -44889,32 +44889,39 @@ try{const st=document.createElement('style');st.textContent=`#mwB .mbBar{flex-wr
 #rrxOv .bar{height:10px;border-radius:6px;background:#ffffff1f;overflow:hidden;margin:10px 0 6px}#rrxOv .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f1c94a,#d9604a)}
 #rrxOv label{display:flex;gap:6px;align-items:center;margin-top:8px;font-size:12.5px}`;document.head.appendChild(st)}catch(e){}
 const left=ad=>{try{const v=ad.left();return v>50?Infinity:Math.max(0,v|0)}catch(e){return 0}};
-function teaser(){ovC().innerHTML=`<div class="rrxP"><button class="x" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tg">ระบบสุ่มให้เองจนเจอชีวิตที่หายากตามเป้า ไม่ต้องกดทีละครั้ง</p>
- <div class="tg">🏮 <b>ผู้สนับสนุนพิเศษ (99 บาท / 30 วัน)</b> เลือกเป้า "ติด 30% / 10% / 3% / 1% บนสุด" แล้วระบบสุ่มให้ ใช้สิทธิ์สุ่มของชีวิตนี้ และเก็บชะตาที่ดีที่สุดให้ถ้างบหมดก่อนเจอ</div>
- <button class="p" onclick="rrxClose();vipMenu()">🏮 ดูสิทธิ์ผู้สนับสนุน</button></div>`}
+// หน้าต่างแบบเดียวกับสุ่มรัวของยุทธภพ (modal มาตรฐาน · .item · .rrpk · pbtn/gbtn)
+let CUR=null;const back=(ad,a)=>{try{closeM()}catch(e){}if(ad&&ad.id==='beast')try{ad.draw(!!a)}catch(e){}};
+function teaser(ad){CUR=ad;modal(`<button class="xbtn" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><div class="item"><b>ระบบสุ่มให้เองจนเจอชีวิตที่ต้องการ</b><p class="tag2" style="margin:6px 0">🏮 <b>ผู้สนับสนุนพิเศษ (99 บาท / 30 วัน)</b> เลือกเป้า ติด 30% / 10% / 3% / 1% บนสุด แล้วกดครั้งเดียว ระบบสุ่มให้จนเจอ · เก็บชะตาที่ดีที่สุดระหว่างทางให้ด้วย</p>
+ <p class="tag2" style="margin:6px 0">👑 <b>ผู้ก่อตั้ง (599 บาท ตลอดไป)</b> ใช้ได้ทุกโลกเช่นกัน</p></div>
+ <button class="pbtn" style="width:100%" onclick="vipMenu()">🏮 ดูสิทธิ์ผู้สนับสนุน</button>`,'rrx')}
 function samp(ad,n){const s0=ad.snap(),out=[];try{for(let i=0;i<n;i++){ad.reroll();const v=+ad.N();if(v>0)out.push(v)}}catch(e){console.error('rrx samp',e)}ad.restore(s0);try{ad.draw(false)}catch(e){}return out.sort((a,b)=>a-b)}
-function menu(ad){const L=left(ad);if(L<=0&&L!==Infinity){ovC().innerHTML=`<div class="rrxP"><button class="x" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tg">สิทธิ์สุ่มของชีวิตนี้หมดแล้ว · เพิ่มสิทธิ์ได้จากปุ่ม "สุ่มเพิ่ม" ในหน้านี้</p><button class="p" onclick="rrxClose()">ตกลง</button></div>`;return}
- ovC().innerHTML=`<div class="rrxP"><button class="x" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tg">กำลังประเมินโอกาส…</p></div>`;
- setTimeout(()=>{const s=samp(ad,ad.id==='mw'?160:300),n=s.length;if(!ovC()||!document.getElementById('rrxOv'))return;if(n<20){ovC().innerHTML=`<div class="rrxP"><button class="x" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tg">ประเมินโอกาสไม่ได้ในตอนนี้ ลองใหม่อีกครั้ง</p></div>`;return}
+const pTx=p=>p>=.1?Math.round(p*100)+'%':(Math.round(p*1000)/10)+'%';
+function menu(ad){CUR=ad;const L=left(ad);if(L<=0&&L!==Infinity){modal(`<button class="xbtn" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tag2">สิทธิ์สุ่มของชีวิตนี้หมดแล้ว · เพิ่มสิทธิ์ได้จากปุ่ม "สุ่มเพิ่ม" ในหน้านี้</p><button class="pbtn" style="width:100%" onclick="rrxClose()">ตกลง</button>`,'rrx');return}
+ modal(`<button class="xbtn" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tag2">กำลังประเมินโอกาส…</p>`,'rrx');
+ setTimeout(()=>{if(CUR!==ad)return;const s=samp(ad,ad.id==='mw'?160:300),n=s.length;if(CUR!==ad)return;if(n<20){modal(`<button class="xbtn" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tag2">ประเมินโอกาสไม่ได้ในตอนนี้ ลองใหม่อีกครั้ง</p><button class="pbtn" style="width:100%" onclick="rrxClose()">ตกลง</button>`,'rrx');return}
   const opts=TIERS.map(([q,t])=>{const X=s[Math.min(n-1,Math.floor((1-q)*n))],p=s.filter(v=>v>=X).length/n,ch=L===Infinity?1:1-Math.pow(1-p,L);return{t,X,p,ch}});window._rrxO=opts;window._rrxAd=ad;
-  ovC().innerHTML=`<div class="rrxP"><button class="x" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tg">ระบบสุ่มให้เองจนเจอชีวิตที่หายากตามเป้า ใช้สิทธิ์สุ่มของชีวิตนี้ (เหลือ ${L===Infinity?'ไม่จำกัด':L} ครั้ง) · ถ้าหมดก่อนเจอ เลือกเอาชะตาที่ดีที่สุดระหว่างทางได้ · ที่ล็อก 🔒 ไว้ไม่เปลี่ยน</p>
-  <div class="g2">${opts.map((o,i)=>`<button class="o" onclick="rrxGo(${i})"><b>${o.t}</b><small>โอกาสต่อครั้ง ≈ ${o.p>=.1?Math.round(o.p*100)+'%':(Math.round(o.p*1000)/10)+'%'}${L===Infinity?'':' · งบนี้เจอราว '+Math.round(o.ch*100)+'%'}</small></button>`).join('')}</div></div>`},60)}
-window.rrxClose=()=>{STOP=1;ovClose()};
-window.rrxOpen=function(id){const ad=AD[id];if(!ad||BUSY)return;if(T()<2){teaser();return}menu(ad)};
+  modal(`<button class="xbtn" onclick="rrxClose()">✕</button><h3>⚡ สุ่มรัว</h3><p class="tag2">ระบบสุ่มให้เองจนเจอชีวิตที่หายากตามเป้า ใช้สิทธิ์สุ่มฟรีของชีวิตนี้ (เหลือ ${L===Infinity?'ไม่จำกัด':L} ครั้ง) · ถ้าหมดก่อนเจอ เลือกได้ว่าจะเอาผลสุดท้ายหรือผลที่ดีที่สุดระหว่างทาง · 🔒 ที่ล็อกไว้ยังอยู่ทุกครั้ง</p>
+  <div class="rrpk" style="grid-template-columns:repeat(2,minmax(0,1fr))">${opts.map((o,i)=>`<button class="opt" style="min-width:0" onclick="rrxGo(${i})"><b>${o.t}</b><small style="white-space:normal;text-align:center">โอกาสต่อครั้ง ${pTx(o.p)}${L===Infinity?'':'<br>งบนี้เจอราว '+Math.round(o.ch*100)+'%'}</small></button>`).join('')}</div>
+  <p class="tag2">ความหายากวัดจาก "1 ใน N" ของชีวิตที่สุ่มได้ในโลกนี้</p>`,'rrx')},60)}
+window.rrxClose=()=>{STOP=1;const ad=CUR;CUR=null;back(ad,false)};
+window.rrxOpen=function(id){const ad=AD[id];if(!ad||BUSY)return;if(T()<2){teaser(ad);return}menu(ad)};
 window.rrxStop=()=>{STOP=1};
-window.rrxGo=async function(i){const ad=window._rrxAd,o=(window._rrxO||[])[i];if(!ad||!o||BUSY)return;BUSY=1;STOP=0;
+window.rrxGo=async function(i){const ad=window._rrxAd,o=(window._rrxO||[])[i];if(!ad||!o||BUSY)return;BUSY=1;STOP=0;CUR=ad;
  const L0=left(ad);let n=0,hit=false,best=ad.snap(),bN=+ad.N();const t0=Date.now();
- const prog=()=>{const e=document.getElementById('rrxOv');if(!e)return;e.innerHTML=`<div class="rrxP"><h3>⚡ กำลังสุ่มรัว…</h3><div class="bar"><i style="width:${L0===Infinity?Math.min(100,n/3):Math.min(100,Math.round(n/Math.max(1,L0)*100))}%"></i></div><div class="tg">สุ่มแล้ว ${n} ครั้ง · เป้า ${o.t} (1 ใน ${fmtN(o.X)} ขึ้นไป) · ดีที่สุดตอนนี้ 1 ใน ${fmtN(bN)}</div><button class="q" onclick="rrxStop()">⏹ หยุด</button></div>`};
+ modal(`<h3>⚡ กำลังสุ่มรัว…</h3><div id="rrxPr"></div><button class="gbtn" style="width:100%;margin-top:8px" onclick="rrxStop()">⏹ หยุด</button>`,'rrxrun');
+ const prog=()=>{const e=document.getElementById('rrxPr');if(!e)return;e.innerHTML=`<div style="height:10px;border-radius:6px;background:#0002;overflow:hidden"><div style="height:100%;width:${L0===Infinity?Math.min(100,n/3):Math.min(100,Math.round(n/Math.max(1,L0)*100))}%;background:linear-gradient(90deg,#f1c94a,#d9604a)"></div></div><div class="tag2" style="margin-top:4px">สุ่มแล้ว ${n} ครั้ง · เป้า ${o.t} (1 ใน ${fmtN(o.X)} ขึ้นไป) · ดีสุดตอนนี้: 1 ใน ${fmtN(bN)}</div>`};
  prog();
  if(bN>=o.X)hit=true;
  try{while(!hit&&!STOP&&left(ad)>0){ad.spend();ad.reroll();n++;const v=+ad.N();if(v>bN){bN=v;best=ad.snap()}if(v>=o.X){hit=true;break}if(n>=2500)break;if(n%6===0){prog();await new Promise(r=>setTimeout(r,0))}}}catch(e){console.error('rrx run',e)}
- BUSY=0;try{ad.draw(true)}catch(e){}
+ BUSY=0;
  const sum=`สุ่ม ${n} ครั้ง · ${Math.round((Date.now()-t0)/100)/10} วินาที`;
- if(hit){ovClose();try{toast(n?`⚡ เจอแล้ว! ${sum}`:'⚡ ชีวิตนี้ตรงเป้าอยู่แล้ว')}catch(e){}try{sfx('good')}catch(e){}return}
+ if(hit){CUR=null;try{closeM()}catch(e){}try{ad.draw(true)}catch(e){}try{toast(n?`⚡ เจอแล้ว! ${sum}`:'⚡ ชีวิตนี้ตรงเป้าอยู่แล้ว')}catch(e){}try{sfx('good')}catch(e){}return}
+ try{if(ad.id!=='beast')ad.draw(true)}catch(e){}
  window._rrxBest=best;window._rrxAd=ad;const cur=+ad.N(),better=bN>cur*1.0001;
- const e=document.getElementById('rrxOv');if(!e)return;
- e.innerHTML=`<div class="rrxP"><h3>⚡ ${STOP?'หยุดแล้ว':'งบหมดแล้ว ยังไม่เจอ'}</h3><p class="tg">${sum}</p>${better?`<div class="tg">⭐ ชะตาที่ดีที่สุดระหว่างทาง: <b>1 ใน ${fmtN(bN)}</b> (ตอนนี้ 1 ใน ${fmtN(cur)})</div><button class="p" onclick="rrxBest()">⭐ เอาชะตาที่ดีที่สุด</button><button class="q" onclick="rrxClose()">เอาผลสุดท้าย</button>`:`<button class="p" onclick="rrxClose()">ตกลง</button>`}</div>`;try{sfx('bad')}catch(e){}};
-window.rrxBest=function(){const ad=window._rrxAd,b=window._rrxBest;ovClose();if(!ad||!b)return;try{ad.restore(b);ad.draw(false);toast('⭐ กลับไปชะตาที่ดีที่สุดแล้ว')}catch(e){console.error(e)}};
+ modal(`<h3>⚡ ${STOP?'หยุดแล้ว':'งบหมดแล้ว ยังไม่เจอ'}</h3><p class="tag2">${sum}</p>
+ ${better?`<div class="item"><b>⭐ ชะตาที่ดีที่สุดระหว่างทาง</b><br>1 ใน ${fmtN(bN)}<br><span class="tag2">ผลสุดท้ายตอนนี้: 1 ใน ${fmtN(cur)}</span></div>
+ <button class="pbtn" style="width:100%" onclick="rrxBest()">⭐ เอาชะตาที่ดีที่สุด</button><button class="gbtn" style="width:100%;margin-top:6px" onclick="rrxClose()">เอาผลสุดท้าย</button>`:`<button class="pbtn" style="width:100%" onclick="rrxClose()">ตกลง</button>`}`,'rrx');try{sfx('bad')}catch(e){}};
+window.rrxBest=function(){const ad=window._rrxAd,b=window._rrxBest;CUR=null;try{closeM()}catch(e){}if(!ad||!b)return;try{ad.restore(b);ad.draw(false);toast('⭐ กลับไปชะตาที่ดีที่สุดแล้ว')}catch(e){console.error(e)}};
 // ปุ่มในหน้าสุ่มเกิดของแต่ละโลก (หน้าถูกวาดใหม่บ่อย จึงเช็กเป็นระยะ)
 function ensure(){try{for(const id in AD){const ad=AD[id];let h=null;try{h=ad.host()}catch(e){}const par=h&&h.parentNode;const old=document.querySelector('.rrxB[data-w="'+id+'"]');
   if(!h||!par){if(old&&!(old.offsetParent))old.remove();continue}
