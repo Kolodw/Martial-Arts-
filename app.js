@@ -39454,7 +39454,7 @@ wSlot('mw37',["openSoul","openMenu","mwYear","passYear"]);
 //   pixelfx: MIT, Copyright (c) 2026 Patch · Copyright (c) 2026 Hugo Duprez — https://github.com/patch-gg/pixelfx
 // ============================================================
 try{(()=>{
-let st=0;const PV='6';
+let st=0;const PV='7';
 const want=()=>{try{return LS.get('murim_pfx',1)!==0}catch(e){return true}};
 const vq=()=>{try{return typeof vfxQ==='function'?vfxQ():1}catch(e){return 1}};
 function load(){if(st||!want())return;st=1;const s=document.createElement('script');s.src='/pfx.js?v='+PV;s.async=true;s.onload=()=>{st=window.PFX?2:0;sync()};s.onerror=()=>{st=0};document.head.appendChild(s)}
@@ -43799,9 +43799,9 @@ body.desk.evDock #modal[data-k="choice"] .chtop{flex-wrap:wrap;gap:4px 10px}
 `;document.head.appendChild(st);
 const B=document.body;
 function dock(){try{const L=document.getElementById('deskL'),on=B.classList.contains('desk')&&!!L&&modalOpen&&$('modal').dataset.k==='choice';
- B.classList.toggle('evDock',on);if(!on)return;const r=L.getBoundingClientRect(),H=innerHeight;
- const top=Math.max(8,r.top),w=Math.max(280,Math.round(r.width)+6);
- B.style.setProperty('--evL',Math.max(6,Math.round(r.left)-3)+'px');B.style.setProperty('--evT',Math.round(top)+'px');B.style.setProperty('--evW',w+'px');B.style.setProperty('--evH',Math.round(H-top-10)+'px')}catch(e){}}
+ if(B.classList.contains('evDock')!==on)B.classList.toggle('evDock',on);if(!on)return;const r=L.getBoundingClientRect(),H=innerHeight;
+ const top=Math.max(8,r.top),w=Math.max(280,Math.round(r.width)+6),v=[Math.max(6,Math.round(r.left)-3),Math.round(top),w,Math.round(H-top-10)],k=v.join();
+ if(k===dock._k)return;dock._k=k;B.style.setProperty('--evL',v[0]+'px');B.style.setProperty('--evT',v[1]+'px');B.style.setProperty('--evW',v[2]+'px');B.style.setProperty('--evH',v[3]+'px')}catch(e){}}
 window._evDock=dock;
 {const _cs=choiceShow;choiceShow=function(){const r=_cs.apply(this,arguments);dock();return r}}
 {const _m=modal;modal=function(){const r=_m.apply(this,arguments);dock();return r};for(const k in _m)try{modal[k]=_m[k]}catch(e){}}
