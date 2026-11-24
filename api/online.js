@@ -1509,6 +1509,15 @@ module.exports = async (req, res) => {
         if (a === 'xbg') { const t = +(await cmd('GET', 'xbs:' + wk)) || 0; return res.json({ d: t, hp: BHP }) }
       } catch (e) { return res.json({}) }
     }
+    if (a === 'xap') {
+      const cl = x => String(x || '').replace(/[<>"'&\\\/\n\r`]/g, '').trim();
+      const it = { n: cl(b.n).slice(0, 20), e: cl(b.e).replace(/[^a-z]/g, '').slice(0, 8), a: Math.max(0, Math.min(1e9, Math.floor(+b.a || 0))), t: Date.now() };
+      if (it.n && it.e) { try { await pipe([['LPUSH', 'xaw', JSON.stringify(it)], ['LTRIM', 'xaw', 0, 99], ['ZADD', 'xaf', it.a, JSON.stringify(it)], ['ZREMRANGEBYRANK', 'xaf', 50, -1]]) } catch (e) {} }
+      return res.json({ ok: 1 });
+    }
+    if (a === 'xar') {
+      try { const rs = await pipe([['LRANGE', 'xaw', 0, 9], ['ZRANGE', 'xaf', 0, 9]]); const P = r => (Array.isArray(r) ? r : []).map(x => { try { return JSON.parse(x) } catch (e) { return null } }).filter(Boolean); return res.json({ R: P(rs[0]), F: P(rs[1]) }) } catch (e) { return res.json({ R: [], F: [] }) }
+    }
     if (a === 'lgp') {
       const cl = x => String(x || '').replace(/[<>"'&\\\/\n\r`]/g, '').trim();
       const it = { n: cl(b.n).slice(0, 20), w: cl(b.w).replace(/[^a-z]/g, '').slice(0, 8), k: cl(b.k).replace(/[^a-z]/g, '').slice(0, 6), x: cl(b.x).slice(0, 30), v: Math.max(0, Math.min(999999, Math.floor(+b.v || 0))) };

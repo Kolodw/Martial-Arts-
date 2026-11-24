@@ -22523,7 +22523,7 @@ function openKalpa(){const K=kK();if(!K)return toast('ยังไม่ถึ�
  ${K.n>=3||A.met?`<h4 style="margin:8px 0 4px">👁️ บรรพกาลเทพ</h4><p class="tag2">สังเกตเห็นคุณแล้ว ${A.aw}/100 · เศษกฎดั้งเดิม ${A.pc}/3 ครบ 3 ชิ้นก่อนกัลป์ที่เก้าเพื่อเลือกชะตาของวงจร</p>`:''}
  ${K.wall&&K.wall.length?`<h4 style="margin:8px 0 4px">🗿 กำแพงกาล</h4><p class="tag2">${K.wall.slice(0,8).map((x,i)=>(i+1)+'. '+esc(x.n)).join(' · ')}</p>`:''}`,'kalpa')}
 {const _omK=openMenu;openMenu=function(){const r=_omK.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid');if(g&&S&&S.kalpa&&!g.querySelector('.klB'))g.insertAdjacentHTML('afterbegin',`<button class="opt klB" onclick="openKalpa()">♾️ วัฏจักรกัลป์<small>${KAL_N[S.kalpa.n]}</small></button>`)}catch(e){}return r}}
-try{SYS_GUIDE.push({s:'world',nw:1,ic:'♾️',t:'วัฏจักรกัลป์',go:'openKalpa',d:'อยู่ในโลกเทพจนอายุครบล้านปี (อย่ากดก้าวข้ามสามภพ เพราะชีวิตจะจบ) · ก่อนข้ามกัลป์เลือกของขึ้นเรือได้ 3 อย่าง · กัลป์ใหม่มีผู้รอดจากกัลป์ก่อน 1–3 ตน และต้องชิงกฎแห่งกัลป์ 3 ข้อ · บทบาท พันธมิตรที่สาบาน และกฎ ช่วยตอนฝ่าภัย · ตั้งแต่กัลป์ที่ 4 บรรพกาลเทพเริ่มตามล่า เก็บเศษกฎดั้งเดิมครบ 3 ชิ้นเพื่อเลือกชะตาที่กัลป์ที่เก้า · ชื่อผู้เล่นที่มาถึงแต่ละกัลป์ถูกสลักบนกำแพงกาล'})}catch(e){}
+try{SYS_GUIDE.push({s:'world',nw:1,ic:'♾️',t:'วัฏจักรกัลป์',go:'openKalpa',d:'อยู่ในโลกเทพจนอายุครบล้านปี (ผ่านทัณฑ์สุดท้ายแล้วเลือก 🏯 อยู่ต่อ · ถ้าเลือก 🌌 จากไป จะเข้าบทสุดท้ายและชีวิตจบ) · ก่อนข้ามกัลป์เลือกของขึ้นเรือได้ 3 อย่าง · กัลป์ใหม่มีผู้รอดจากกัลป์ก่อน 1–3 ตน และต้องชิงกฎแห่งกัลป์ 3 ข้อ · บทบาท พันธมิตรที่สาบาน และกฎ ช่วยตอนฝ่าภัย · ตั้งแต่กัลป์ที่ 4 บรรพกาลเทพเริ่มตามล่า เก็บเศษกฎดั้งเดิมครบ 3 ชิ้นเพื่อเลือกชะตาที่กัลป์ที่เก้า · ชื่อผู้เล่นที่มาถึงแต่ละกัลป์ถูกสลักบนกำแพงกาล'})}catch(e){}
 
 // ===================== v17.9h ปิดยุคปัจจุบันเด็ดขาด — เข้าได้เฉพาะแอดมินที่เซิร์ฟเวอร์ยืนยันรหัสแล้ว =====================
 MW_PUBLIC=false;let _admV=null;
@@ -45639,7 +45639,7 @@ try{setTimeout(()=>{try{const go=()=>wLoad('hrt');go().catch(()=>setTimeout(()=>
 try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4200)}catch(e){console.error('block208',e)}
 
 // BLOCK 209: 📖 โหลด /w/xw.js — เส้นเรื่องแบบนิยายทุกโลก (คำสาบานผูกมัด · อีกคนในตัวฉัน · รู้วันตาย · คำทำนายกำกวม · ต้นเรื่องแบบนิยาย · ทำเนียบฟ้า · ร้านตอนวางมือ · หลายตัวตน) ต่อจาก wld2.js
-try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2')).then(()=>wLoad('xw')).then(()=>wLoad('mx')).then(()=>wLoad('xl')).then(()=>wLoad('xp')).then(()=>wLoad('xt_data')).then(()=>wLoad('xt'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4600)}catch(e){console.error('block209',e)}
+try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2')).then(()=>wLoad('xw')).then(()=>wLoad('mx')).then(()=>wLoad('xl')).then(()=>wLoad('xp')).then(()=>wLoad('xt_data')).then(()=>wLoad('xt')).then(()=>wLoad('xa'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4600)}catch(e){console.error('block209',e)}
 
 // BLOCK 210: 🌕 หน้าแรกคืนลอยกระทง 2569 — แสดงอัตโนมัติ 24 พ.ย. 00:00 ถึง 25 พ.ย. 06:00 (เวลาไทย) · นับถอยหลังตั้งแต่ 23 พ.ย. 23:30
 //  ฉากพิกเซลเต็มจอ: ฟ้า ดาว พระจันทร์เต็มดวงค่อยๆ ขึ้น เจดีย์ริมฝั่ง โคมลอย พลุ หิ่งห้อย แม่น้ำ เงาจันทร์ กระทงจริงของผู้เล่นทั้งเว็บ (api krtl) พร้อมคำอธิษฐาน
