@@ -46445,17 +46445,46 @@ body.lite :is(.ii,i.iiB).qa1,body.lite :is(.ii,i.iiB).qa2,body.lite :is(.ii,i.ii
  if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
 })()}catch(e){console.error('mod-itic',e)}
 
-// 🎨 ไอคอนเมนู/แถบล่างแบบภาพ (items4.webp 8×6) — ทับภาพ pixel emoji เดิมของปุ่มที่ชื่อตรงกัน · ไม่ตรง = ของเดิม
+// 🎨 ไอคอนเมนู/ปุ่มแบบภาพ (items4.webp + items5.webp 8×6) — ทับภาพ pixel emoji เดิมของปุ่มที่ชื่อตรงกัน · ไม่ตรง = ของเดิม · อนิเมชันเล็กๆ บางไอคอน
 try{(function(){
- const LB=['ตัวละครของฉัน','วิชา','สุ่มวิชา','สำนัก','ตลาดยุทธภพ','ครอบครัว','ทำเนียบสำนัก','คนที่เกิดพร้อมกัน','ของต่างโลก','ระบบ',null,'สัตว์คู่ใจ','สมุดสัตว์','ผู้คน','ตระกูล','งานช่าง','ดันเจี้ยน','อัตโนมัติ','ชุดสวมใส่','บันทึกเควส','แผนที่','คู่แค้น','ของตกแต่ง','ตัวอักษร','วิธีเล่น','สมุดตำนาน','สารานุกรม','สถิติรวม','อัปเดต','เสียง','คู่มือ','แจ้งบั๊ก','ความคิดเห็น','ย้ายเซฟ','ภาพฉาก','กระเป๋า'];
- const IX={};LB.forEach((n,i)=>{if(n)IX[n]=i});
- const NAV={bagBtn:35,questBtn:19,menuBtn:39,sysBtn:9,autoBtn:17};
+ const L4=['ตัวละครของฉัน','วิชา','สุ่มวิชา','สำนัก','ตลาดยุทธภพ','ครอบครัว','ทำเนียบสำนัก','คนที่เกิดพร้อมกัน','ของต่างโลก','ระบบ',null,'สัตว์คู่ใจ','สมุดสัตว์','ผู้คน','ตระกูล','งานช่าง','ดันเจี้ยน','อัตโนมัติ','ชุดสวมใส่','บันทึกเควส','แผนที่','คู่แค้น','ของตกแต่ง','ตัวอักษร','วิธีเล่น','สมุดตำนาน','สารานุกรม','สถิติรวม','อัปเดต','เสียง','คู่มือ','แจ้งบั๊ก','ความคิดเห็น','ย้ายเซฟ','ภาพฉาก','กระเป๋า'];
+ const L5=['คัมภีร์ระดับ','สมุดความลับ','หอฝึกมินิเกม','ตู้เสื้อผ้า','ลานประลองหมื่นเงา','ห้องเล่นบท','ป่าและถ้ำ','สอนปุ่มด้านล่าง','ภัยประจำสัปดาห์','สนามฝึกประจำวัน','ทุ่มทรัพย์','สมุดโลก','มินิเกมสุ่มประจำปี*','พงศาวดาร','กลุ่มผู้เล่น','เป้าหมายทั้งเว็บ','เส้นทางชีวิต','นิยายปกแข็ง','อาชีพ','วิถียุทธ์','ฉายาของฉัน','พรสวรรค์ของฉัน','ทำอะไรดี?','แสงเรือง','ของคู่ชีวิต','ความรัก','ร้านแลกกรอบ','โปรไฟล์','สุสานจอมยุทธ์','สมุดนิยาย','การ์ดตัวละคร','ตำนานบรรพกาล','คัมภีร์ท่า','เวลาต่อปี','ล็อกคำตอบ','คุณภาพภาพ','ขนาดหน้าจอ','สรุปก่อนตัวเลือก','ตัวเลขพลัง','ธีม','แจ้งเตือน','คู่มือระบบ','ถามความคิดตามอายุ','เอฟเฟกต์ต่อสู้*','ชะตาวันนี้','ร้านค้า','ชุมชน','ออนไลน์'];
+ // อนิเมชันตามไอคอน: sw=แกว่ง rg=สั่นกระดิ่ง sp=หมุน fl=กะพริบ tw=ประกาย bt=หัวใจเต้น pu=หายใจ fx=พลิก
+ const AN={'4:29':'rg','4:37':'fx','4:9':'fl','4:17':'sp','4:31':'sw','4:32':'bt','5:2':'sw','5:12':'sp','5:22':'fl','5:23':'tw','5:25':'bt','5:40':'rg','5:38':'fl','5:43':'fl','5:44':'tw','5:45':'tw','5:46':'bt','5:47':'pu','5:1':'pu','5:10':'tw'};
+ const EX={},PF=[];[[4,L4],[5,L5]].forEach(([n,L])=>L.forEach((t,i)=>{if(!t)return;if(t.endsWith('*'))PF.push([t.slice(0,-1),n,i]);else if(EX[t]==null)EX[t]=[n,i]}));
+ PF.push(['แต้มชะตา',4,44]);EX['ฉายา']=EX['ฉายา']||[5,20];
+ const find=t=>{if(!t)return null;if(EX[t])return EX[t];for(const [p,n,i] of PF)if(t.startsWith(p))return[n,i];return null};
+ const NAV={bagBtn:[4,35],questBtn:[4,19],menuBtn:[4,39],sysBtn:[4,9],autoBtn:[4,17]};
  const pos=i=>((i%8)/7*100)+'% '+(((i/8|0)/5)*100)+'%';
- function paint(sp,i){if(!sp||sp.dataset.u4==i)return;sp.dataset.u4=i;const S=sp.style;S.setProperty('background-image','url(/items4.webp)','important');S.setProperty('background-position',pos(i),'important');S.setProperty('background-size','800% 600%','important');S.setProperty('background-repeat','no-repeat','important');S.setProperty('image-rendering','auto','important');if(sp.classList.contains('pxa')){sp.classList.remove('pxa');sp.querySelectorAll('px-f').forEach(x=>x.remove())}}
- function scan(root){if(!root||!root.querySelectorAll)return;root.querySelectorAll('.opt > span.pxi:first-child').forEach(sp=>{let t=sp.nextSibling;const tx=t&&t.nodeType===3?t.nodeValue.trim():'';let i=IX[tx];if(i==null&&sp.textContent==='🏘️')i=10;if(i!=null)paint(sp,i)})}
- function nav(){for(const id in NAV){const b=document.getElementById(id);if(!b)continue;let sp=b.querySelector(':scope > span.pxi');if(!sp&&id==='menuBtn'){const t=b.firstChild;if(t&&t.nodeType===3&&t.nodeValue.trim()==='☰'){sp=document.createElement('span');sp.className='pxi';sp.textContent='☰';b.replaceChild(sp,t)}}if(sp)paint(sp,NAV[id])}}
- const ob=new MutationObserver(ms=>{let n=0;for(const m of ms)for(const x of m.addedNodes){if(x.nodeType===1){scan(x);n=1}}if(n){const md=document.getElementById('modal');if(md)scan(md)}});
- const go=()=>{scan(document.body);nav();ob.observe(document.body,{childList:true,subtree:true});setInterval(nav,1500)};
+ function paint(sp,n,i){const k=n+':'+i;if(!sp||sp.dataset.u4===k)return;sp.dataset.u4=k;const S=sp.style;S.setProperty('background-image','url(/items'+n+'.webp)','important');S.setProperty('background-position',pos(i),'important');S.setProperty('background-size','800% 600%','important');S.setProperty('background-repeat','no-repeat','important');S.setProperty('image-rendering','auto','important');if(sp.classList.contains('pxa')){sp.classList.remove('pxa');sp.querySelectorAll('px-f').forEach(x=>x.remove())}if(AN[k])sp.dataset.ua=AN[k];else delete sp.dataset.ua}
+ function lab(sp){let a=sp;if(a.parentNode&&a.parentNode.tagName==='I'&&a.parentNode.childNodes.length===1)a=a.parentNode;const t=a.nextSibling;if(t&&t.nodeType===1&&/^(B|STRONG|SPAN)$/.test(t.tagName))return t.textContent.trim();return t&&t.nodeType===3?t.nodeValue.trim():''}
+ function scan(root){if(!root||!root.querySelectorAll)return;root.querySelectorAll('button span.pxi').forEach(sp=>{const b=sp.closest('button');if(!b||b.querySelector('span.pxi')!==sp)return;let r=find(lab(sp));if(!r&&sp.textContent==='🏘️'&&b.classList.contains('opt'))r=[4,10];if(r)paint(sp,r[0],r[1])})}
+ function nav(){for(const id in NAV){const b=document.getElementById(id);if(!b)continue;let sp=b.querySelector(':scope > span.pxi');if(!sp&&id==='menuBtn'){const t=b.firstChild;if(t&&t.nodeType===3&&t.nodeValue.trim()==='☰'){sp=document.createElement('span');sp.className='pxi';sp.textContent='☰';b.replaceChild(sp,t)}}if(sp)paint(sp,NAV[id][0],NAV[id][1])}}
+ const st=document.createElement('style');st.textContent=`
+ span.pxi[data-ua]{transform-origin:50% 60%}
+ span.pxi[data-ua=sw]{animation:uaSw 3.2s ease-in-out infinite;transform-origin:50% 0}
+ span.pxi[data-ua=rg]{animation:uaRg 5s ease-in-out infinite;transform-origin:50% 10%}
+ span.pxi[data-ua=sp]{animation:uaSp 9s linear infinite}
+ span.pxi[data-ua=fl]{animation:uaFl 4.4s steps(1) infinite}
+ span.pxi[data-ua=tw]{animation:uaTw 3.6s ease-in-out infinite}
+ span.pxi[data-ua=bt]{animation:uaBt 2.4s ease-in-out infinite}
+ span.pxi[data-ua=pu]{animation:uaPu 3s ease-in-out infinite}
+ span.pxi[data-ua=fx]{animation:uaFx 6s ease-in-out infinite}
+ button:active span.pxi[data-u4]{transform:scale(.86)!important;transition:transform .08s}
+ @media (hover:hover){button:hover span.pxi[data-u4]:not([data-ua]){animation:uaHop .45s ease-out}}
+ @keyframes uaSw{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+ @keyframes uaRg{0%,78%,100%{transform:rotate(0)}81%{transform:rotate(16deg)}84%{transform:rotate(-14deg)}87%{transform:rotate(10deg)}90%{transform:rotate(-6deg)}93%{transform:rotate(3deg)}}
+ @keyframes uaSp{to{transform:rotate(360deg)}}
+ @keyframes uaFl{0%,86%,100%{filter:none}88%{filter:brightness(1.8)}90%{filter:none}92%{filter:brightness(1.6)}}
+ @keyframes uaTw{0%,100%{transform:scale(1);filter:none}50%{transform:scale(1.08);filter:brightness(1.35)}}
+ @keyframes uaBt{0%,60%,100%{transform:scale(1)}15%{transform:scale(1.14)}30%{transform:scale(.97)}45%{transform:scale(1.08)}}
+ @keyframes uaPu{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+ @keyframes uaFx{0%,80%,100%{transform:rotate(0)}88%,96%{transform:rotate(180deg)}}
+ @keyframes uaHop{0%,100%{transform:none}40%{transform:translateY(-14%) scale(1.06)}}
+ @media (prefers-reduced-motion:reduce){span.pxi[data-u4]{animation:none!important}}
+ body.lite span.pxi[data-u4]{animation:none!important}`;document.head.appendChild(st);
+ const ob=new MutationObserver(ms=>{let n=0;for(const m of ms)for(const x of m.addedNodes){if(x.nodeType===1){scan(x.tagName==='SPAN'&&x.parentNode?x.parentNode:x);n=1}}if(n){const md=document.getElementById('modal');if(md)scan(md)}});
+ const go=()=>{scan(document.body);nav();ob.observe(document.body,{childList:true,subtree:true});setInterval(()=>{nav();const t=document.getElementById('title');if(t&&t.offsetParent)scan(t)},1500)};
  if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
 })()}catch(e){console.error('mod-ui4',e)}
 // 🚪 ตัวเลือกที่พาย้ายโลก (รอยแยก · ประตูสุดโลก · มิติปริศนา · ประตูเปิดอีกครั้ง): ออโต้/ชะตา/AI ไม่เลือกให้ ต้องกดเอง
