@@ -46381,3 +46381,25 @@ try{window.secretBook=window.secretBook||function(){return wNeed('secret',()=>wi
 try{window.mgHall=window.mgHall||function(){return wNeed('mg3',()=>window._mgHall&&window._mgHall())};setTimeout(()=>{try{wLoad('mg3').catch(()=>{})}catch(e){}},1800)}catch(e){console.error('mg3Stub',e)}
 // 🔮 อยากเล่นต่ออีกชาติ (w/hook.js): เส้นทางชะตา · ภารกิจชาติ · หน้าจบชวนเกิดใหม่ · แชร์ผล/ลิงก์ท้าชะตาประจำวัน · ชาติก่อนของตัวเอง · ช่องทางผู้เล่น
 try{window.hkOpen=window.hkOpen||function(){return wNeed('hook',()=>window.hkOpen&&window.hkOpen())};setTimeout(()=>{try{wLoad('hook').catch(()=>{})}catch(e){}},2000)}catch(e){console.error('hkStub',e)}
+
+// 🎨 ไอคอนของในกระเป๋าแบบภาพ (items.webp 8×4) — แทน emoji ที่ตามด้วยชื่อของ ทุกจุดในเกม · ไม่มีภาพ = emoji เดิม
+try{(function(){
+ const K=['hp','qi','brk','elix','cure','lpill','bpill','dew','herb','ore','jade','hide','silk','ink','core','bcore','tal','egg','fruit','mirror','phx','seal','star','void','food','gem','map','scroll','charm','wine'];
+ const st=document.createElement('style');st.textContent='.ii{display:inline-block;width:1.5em;height:1.5em;vertical-align:-.42em;background:url(/items.webp) 0 0/800% 400% no-repeat;margin:0 .06em;flex:0 0 auto}';document.head.appendChild(st);
+ const M={},L=[];K.forEach((k,i)=>{const I=typeof BAGIT!=='undefined'&&BAGIT[k];if(!I||!I.ic||!I.n)return;const s=I.ic+' '+I.n;M[s]={k,ic:I.ic,n:I.n,x:(i%8)/7*100,y:(i/8|0)/3*100};L.push(s)});
+ if(!L.length)return;L.sort((a,b)=>b.length-a.length);
+ const IX={};K.forEach((k,i)=>IX[k]=i);const pos=i=>(i%8)/7*100+'% '+((i/8|0)/3*100)+'%';
+ st.textContent+='.pxf i.iiB{display:block;width:32px;height:32px;background:url(/items.webp) 0 0/800% 400% no-repeat;position:relative;z-index:1}.pxf.big i.iiB{width:48px;height:48px}#modal.bgDk .bgGrid>.bagit .pxf i.iiB{width:40px;height:40px}';
+ const _px=window.pxi;if(typeof _px==='function')window.pxi=function(kind,r,tint,seed,big){if(typeof seed==='string'&&IX[seed]!=null)return`<span class="pxf r${r|0}${big?' big':''}"><i class="iiB" style="background-position:${pos(IX[seed])}"></i></span>`;return _px.apply(this,arguments)};
+ const RE=new RegExp(L.map(s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
+ const SK=/^(SCRIPT|STYLE|TEXTAREA|INPUT|OPTION|SELECT|TITLE)$/;
+ window.itIc=k=>{const s=Object.keys(M).find(x=>M[x].k===k);return s?`<i class="ii" title="${M[s].n}" style="background-position:${M[s].x}% ${M[s].y}%"></i>`:((typeof BAGIT!=='undefined'&&BAGIT[k]&&BAGIT[k].ic)||'')};
+ function proc(t){const v=t.nodeValue;if(!v||v.length<3)return;RE.lastIndex=0;if(!RE.test(v))return;const p=t.parentNode;if(!p||SK.test(p.nodeName)||p.isContentEditable)return;
+  RE.lastIndex=0;const f=document.createDocumentFragment();let last=0,m;
+  while((m=RE.exec(v))){const o=M[m[0]];if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));const i=document.createElement('i');i.className='ii';i.title=o.n;i.style.backgroundPosition=o.x+'% '+o.y+'%';f.appendChild(i);f.appendChild(document.createTextNode(m[0].slice(o.ic.length)));last=m.index+m[0].length}
+  if(last<v.length)f.appendChild(document.createTextNode(v.slice(last)));p.replaceChild(f,t)}
+ function walk(n){if(n.nodeType===3)return proc(n);if(n.nodeType!==1||SK.test(n.nodeName))return;const w=document.createTreeWalker(n,NodeFilter.SHOW_TEXT),a=[];let x;while((x=w.nextNode()))a.push(x);a.forEach(proc)}
+ const ob=new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')proc(m.target);else m.addedNodes.forEach(walk)}});
+ const go=()=>{walk(document.body);ob.observe(document.body,{childList:true,subtree:true,characterData:true})};
+ if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
+})()}catch(e){console.error('mod-itic',e)}
