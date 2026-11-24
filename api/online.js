@@ -3264,6 +3264,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       }
       if (!okId(from) || !okId(to) || from === to) return res.json(Object.assign(out, { ok: 0, err: 'ids', from, to }));
       out.from = from; out.to = to; out.go = go; const pB = from.slice(0, 12), pA = to.slice(0, 12), did = [];
+      try { const inf = async u => { const [nm, gu, gl, rt] = await pipe([['HGET', 'arn', u], ['GET', 'gdu:' + u.slice(0, 12)], ['GET', 'gof:' + u], ['HGET', 'arr:' + W, u]]); return { name: nm || '', guild: gu || '', google: gl ? 1 : 0, rating: rt == null ? null : +rt } }; if (!go) { out.fromInfo = await inf(from); out.toInfo = await inf(to) } } catch (e) { }
       // สำนักผู้เล่น
       try { const [gB, gA] = await pipe([['GET', 'gdu:' + pB], ['GET', 'gdu:' + pA]]);
         if (gB && !gA) { did.push('guild ' + gB); if (go) { const G = jp(await cmd('GET', 'gd:' + gB)); const [mv, la, pq] = await pipe([['HGET', 'gdm:' + gB, pB], ['HGET', 'gdla:' + gB, pB], ['HGET', 'gdpq:' + gB, pB]]); const L = [['SET', 'gdu:' + pA, gB], ['DEL', 'gdu:' + pB], ['HDEL', 'gdm:' + gB, pB], ['HDEL', 'gdla:' + gB, pB], ['HDEL', 'gdpq:' + gB, pB]]; if (mv != null) L.push(['HSET', 'gdm:' + gB, pA, mv]); if (la != null) L.push(['HSET', 'gdla:' + gB, pA, la]); if (pq != null) L.push(['HSET', 'gdpq:' + gB, pA, pq]); if (G) { if (G.ld === pB) G.ld = pA; if (Array.isArray(G.el)) G.el = G.el.map(x => x === pB ? pA : x); L.push(['SET', 'gd:' + gB, JSON.stringify(G)]) } await pipe(L) } }
