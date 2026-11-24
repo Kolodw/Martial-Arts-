@@ -3104,8 +3104,8 @@ function xcRoom(K,t){const W=K.cw,Z=ZN[W.z],dg=xcDg(K),pw=cl(.55-dg*.12+tqHunt(K
    else if(r==='gp'){K.gp=(K.gp|0)+1;W.x.push('🧬 ยีนต้นแบบ');say('🧬 <b>หลอดยีนต้นแบบในตู้เย็นที่ยังทำงาน</b> · แต้มยีน +1','epic')}
    else{W.x.push('📼 เทปลับ');K.f.tape=1;queueLater(K,'xc_tape',1);say('📼 ในห้องมีเทปบันทึกเสียงม้วนเดียว ติดป้าย “ลับที่สุด · 3 วันก่อนดาวตก”','epic')}}
    else{const d=xcHit(K,.06);say(`🚨 ระบบป้องกันยิงเข็มยาสลบ · พลังชีวิต −${d}`,'bad')}xcGo(K)}),'มินิเกมใหม่'),O('ปล่อยไว้',()=>xcGo(K))]);
- if(t==='trader')return C('🛺 พ่อค้าเร่จากนิคม',`ชายแก่ลากรถเข็นติดกระดิ่ง “ของดีนอกกำแพง ไม่มีภาษี”${K.og&&K.og.cur==='bm'?' เขาเห็นรอยสักตลาดมืดของคุณแล้วยิ้ม “คนกันเอง ลดครึ่ง”':''}`,[
-  O(`ยาสมานแผล (${K.og&&K.og.cur==='bm'?1:2} แก่น)`,()=>{const c=K.og&&K.og.cur==='bm'?1:2;if(W.co+K.cores<c)return say('🔶 แก่นไม่พอ',''),xcGo(K);if(W.co>=c)W.co-=c;else{K.cores-=c-W.co;W.co=0}heal(.35);say('🩹 แผลหายเกือบหมด','good');xcGo(K)}),
+ if(t==='trader')return C('🛺 พ่อค้าเร่จากนิคม',`ชายแก่ลากรถเข็นติดกระดิ่ง “ของดีนอกกำแพง ไม่มีภาษี”${K.fc&&K.fc.cur==='bm'?' เขาเห็นรอยสักตลาดมืดของคุณแล้วยิ้ม “คนกันเอง ลดครึ่ง”':''}`,[
+  O(`ยาสมานแผล (${K.fc&&K.fc.cur==='bm'?1:2} แก่น)`,()=>{const c=K.fc&&K.fc.cur==='bm'?1:2;if(W.co+K.cores<c)return say('🔶 แก่นไม่พอ',''),xcGo(K);if(W.co>=c)W.co-=c;else{K.cores-=c-W.co;W.co=0}heal(.35);say('🩹 แผลหายเกือบหมด','good');xcGo(K)}),
   O('ซื้อข่าว (400 เครดิต)',()=>{if((S.money||0)<400)return say('💸 เงินไม่พอ',''),xcGo(K);cr(-400);K.intel=(K.intel|0)+1;say('📜 ข่าวกรอง +1 (ใช้เพิ่มโอกาสล่า)','');xcGo(K)}),O('ไม่ซื้อ',()=>xcGo(K))]);
  // camp
  return C('⛺ จุดพัก','ถ้ำแห้งที่มองเห็นทางเข้าได้ทางเดียว',[
@@ -3134,7 +3134,8 @@ const FC={
  cult:{ic:'☄️',n:'ลัทธิบุตรแห่งดาว',rk:['ผู้ฟัง','ผู้จุดเทียน','ผู้อ่านดาว','นักบวชอุกกาบาต','ศาสดา'],en:['co','mil'],req:K=>age()>=14,rq:'อายุ 14 ขึ้นไป',d:'เชื่อว่าดาวตกไม่ใช่ภัย แต่เป็นการเรียก อสูรคือ “บุตรแห่งดาว” และมนุษย์ต้องฟังให้ทัน',pk:r=>`จิต +${r*4} ต่อปี`},
  slum:{ic:'🏚️',n:'ขบวนการคนนอกกำแพง',rk:['คนในซอย','อาสาซอย','แกนนำซอย','เสียงของสลัม','ผู้นำขบวนการ'],en:['co'],req:K=>age()>=12,rq:'อายุ 12 ขึ้นไป',d:'คนสามแสนที่อยู่ระหว่างกำแพงชั้นนอกกับชั้นใน ไม่มีสิทธิ์เลือกตั้ง ไม่มีที่ในหลุมหลบภัย',pk:r=>`กรรม +1/ปี · กันคลื่นดีขึ้น`}};
 const FCR=[0,15,40,70,110];
-function fcG(K){return K.og||(K.og={cur:null,rep:{},st:{},y:-9,spy:null,cx:null})}
+// ฝ่าย/กลุ่มอำนาจใช้ K.fc แยกจาก K.og (ข้อมูลกำเนิด) — เดิมใช้คีย์เดียวกันจนชนกัน (y เป็นปี vs โบนัสรายปี) และเซฟที่มีแต่กำเนิดพังเพราะไม่มี rep
+function fcG(K){if(!K.fc){if(K.og&&K.og.rep&&!K.og.ids){K.fc=K.og;K.og=undefined}else K.fc={cur:null,rep:{},st:{},y:-9,spy:null,cx:null}}const g=K.fc;if(!g.rep)g.rep={};if(!g.st)g.st={};if(typeof g.y!=='number')g.y=-9;return g}
 const fcRk=(K,id)=>{const v=fcG(K).rep[id]|0;let r=0;FCR.forEach((t,i)=>{if(v>=t)r=i});return r};
 function fcRep(K,id,n){const g=fcG(K);g.rep[id]=(g.rep[id]|0)+n;return g.rep[id]}
 const fcCur=K=>{const g=fcG(K);return g.cur&&FC[g.cur]?g.cur:null};
@@ -3460,12 +3461,12 @@ const EN2=[
  ['bm','👑','ราชาใต้สะพาน','ทุกอย่างที่นครห้ามผ่านมือคุณ',K=>K.f.bmKing],
  ['co','🧬','เจ้าของพันธุกรรม','นั่งเก้าอี้บอร์ดบริษัทที่คุมยีนทั้งนคร',K=>K.f.coBoard||wfF(K,'coAlly')],
  ['truth','📼','ผู้เปิดความจริง','ทั้งนครรู้ความลับที่บริษัทซ่อนไว้เพราะคุณ',K=>K.f.coEnemy&&(S.fame||0)>=8000],
- ['slum','✊','ผู้นำคนนอกกำแพง','คนสามแสนที่ไม่มีสิทธิ์อะไร มีคุณเป็นเสียง',K=>(K.og&&K.og.st&&K.og.st.slum>=3)||K.f.exodus],
+ ['slum','✊','ผู้นำคนนอกกำแพง','คนสามแสนที่ไม่มีสิทธิ์อะไร มีคุณเป็นเสียง',K=>(K.fc&&K.fc.st&&K.fc.st.slum>=3)||K.f.exodus],
  ['spy','🎭','เงาสองหน้า','ไม่มีใครรู้จริงๆ ว่าคุณอยู่ฝ่ายไหน รวมถึงตัวคุณเอง',K=>K.f.dblSpy],
  ['ruin','🔥','ผู้ล่มนคร','นครยังอยู่ แต่ไม่ใช่เพราะคุณ',K=>K.wall<=10||wfF(K,'sacr')||(S.karma||0)<=-60],
  ['king','⛰️','ผู้ล้มราชา','ชื่อของคุณอยู่คู่กับราชาอสูรที่ล้มลง',K=>K.f.kingKill||(K.kk||[]).length],
  ['tower','🏯','ที่หนึ่งแห่งหอนักรบ','ไม่มีใครในรุ่นเดียวกันไปได้ไกลกว่าคุณ',K=>K.rv&&rvPos(K)===1&&K.rk>=3],
- ['wall','🧱','วีรชนกำแพง','กำแพงยังยืนอยู่ และมีชื่อคุณสลักไว้',K=>K.wall>=80||(K.waveW|0)>=3||(K.og&&K.og.cur==='mil'&&fcRk(K,'mil')>=3)],
+ ['wall','🧱','วีรชนกำแพง','กำแพงยังยืนอยู่ และมีชื่อคุณสลักไว้',K=>K.wall>=80||(K.waveW|0)>=3||(K.fc&&K.fc.cur==='mil'&&fcRk(K,'mil')>=3)],
  ['plain','🗡️','นักล่าที่รอดมาได้','ไม่มีตำนาน ไม่มีรูปปั้น มีแต่ชีวิตที่ผ่านมาได้ในโลกที่ไม่ควรมีใครรอด',()=>1]];
 const enOf=K=>{if(K.endK){const e=EN2.find(x=>x[0]===K.endK);if(e)return e}return EN2.find(e=>{try{return e[4](K)}catch(x){return false}})};
 function wfEnd(K){if(K.endD)return;K.endD=1;const e=enOf(K);if(!e)return;let C0={};try{C0=LS.get(WEK,{})||{}}catch(x){}const first=!C0[e[0]];C0[e[0]]=(C0[e[0]]|0)+1;try{LS.set(WEK,C0)}catch(x){}

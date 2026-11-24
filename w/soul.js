@@ -3031,7 +3031,7 @@ const X1rk=v=>{try{if(G().sx)G().sx._rk=v;setTimeout(()=>{try{G().sx._rk=0}catch
 const nmR=()=>{try{return typeof anyName==='function'?anyName(rnd()<.5?'ชาย':'หญิง'):pick(['หลิงเฟิง','ซูเหยียน','ไป๋อวี่'])}catch(e){return 'หลิงเฟิง'}};
 const spRand=f=>{const L0=B.SP.filter(p=>!/^b9/.test(p[0])&&(!f||f(p)));return pick(L0)};
 const spIc=id=>{const p=B.SP.find(z=>z[0]===id);return p?p[1]+' '+p[2]:id};
-function twPlan(){const y=Y();if(y.tw)return;const r=rnd(),n=r<.15?0:r<.75?1:2;const g=G();const ks=shuf(['swap','rig','plague','fake','law']).filter(k=>k!=='rig'||(B.spNow(g.sp[0]).r||0)<=1).slice(0,n);
+function twPlan(){const y=Y();if(y.tw)return;const r=rnd(),n=r<.15?0:r<.75?1:2;const g=G();const ks=shuf(['swap','rig','plague','fake','law']).filter(k=>k!=='rig'||((g.sp&&g.sp[0]?B.spNow(g.sp[0]).r:0)||0)<=1).slice(0,n);
  const AG={swap:[14,35],rig:[16,26],plague:[18,50],fake:[25,55],law:[15,45]};y.tw=ks.map(k=>({k,a:Math.max(S.age+1,Ri(AG[k][0],AG[k][1])),st:0}))}
 function twStep(){const y=Y();if(!y.tw)return false;const t=y.tw.find(t=>t.st<9&&S.age>=t.a);if(!t)return false;return TW[t.k](t,G(),y)}
 const TW={

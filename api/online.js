@@ -1497,6 +1497,18 @@ module.exports = async (req, res) => {
       return res.json({ ok: 1 });
     }
     // 🌌 กระดานตำนานข้ามโลก: เก็บแค่ชื่อตัวละคร + ชนิดของที่ทิ้งไว้ (ไม่เก็บตัวตนผู้เล่น)
+    // 🎲 ผีของผู้เล่นอื่น · ตลาดนัดข้ามชีวิต · บอสโลกประจำสัปดาห์ (เก็บแค่ชื่อตัวละคร ไม่เก็บตัวตน)
+    if (a === 'xgp' || a === 'xgr' || a === 'xmt' || a === 'xbh' || a === 'xbg') {
+      const cl = x => String(x || '').replace(/[<>"'&\\\/\n\r`]/g, '').trim();
+      const wk = Math.floor((now + 7 * 3600e3 - 4 * 86400e3) / 604800e3), BHP = 3000000;
+      try {
+        if (a === 'xgp') { const it = { n: cl(b.n).slice(0, 20), w: cl(b.w).replace(/[^a-z]/g, '').slice(0, 8), a: Math.max(0, Math.min(99999, Math.floor(+b.a || 0))) }; if (it.n && it.w) await pipe([['LPUSH', 'xgh', JSON.stringify(it)], ['LTRIM', 'xgh', 0, 199]]); return res.json({ ok: 1 }) }
+        if (a === 'xgr') { const r = await cmd('LRANGE', 'xgh', 0, 199); const A = (Array.isArray(r) ? r : []).map(x => { try { return JSON.parse(x) } catch (e) { return null } }).filter(Boolean); for (let i = A.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [A[i], A[j]] = [A[j], A[i]] } return res.json({ L: A.slice(0, 8) }) }
+        if (a === 'xmt') { const it = { n: cl(b.n).slice(0, 20), w: cl(b.w).replace(/[^a-z]/g, '').slice(0, 8), k: cl(b.k).replace(/[^a-z]/g, '').slice(0, 8) }; const len = +(await cmd('LLEN', 'xmk')) || 0; let o = null; if (len > 0) { const r = await cmd('LINDEX', 'xmk', Math.floor(Math.random() * len)); try { o = JSON.parse(r) } catch (e) {} } if (it.n && it.k) await pipe([['LPUSH', 'xmk', JSON.stringify(it)], ['LTRIM', 'xmk', 0, 299]]); return res.json({ o }) }
+        if (a === 'xbh') { const d = Math.max(1, Math.min(1500, Math.floor(+b.d || 0))); const ok = await cmd('SET', 'xbhl:' + (id || ip || 'x'), 1, 'NX', 'EX', 20); if (!ok) { const t = +(await cmd('GET', 'xbs:' + wk)) || 0; return res.json({ d: t, hp: BHP }) } const rs = await pipe([['INCRBY', 'xbs:' + wk, d], ['EXPIRE', 'xbs:' + wk, 86400 * 14]]); return res.json({ d: +rs[0] || 0, hp: BHP }) }
+        if (a === 'xbg') { const t = +(await cmd('GET', 'xbs:' + wk)) || 0; return res.json({ d: t, hp: BHP }) }
+      } catch (e) { return res.json({}) }
+    }
     if (a === 'lgp') {
       const cl = x => String(x || '').replace(/[<>"'&\\\/\n\r`]/g, '').trim();
       const it = { n: cl(b.n).slice(0, 20), w: cl(b.w).replace(/[^a-z]/g, '').slice(0, 8), k: cl(b.k).replace(/[^a-z]/g, '').slice(0, 6), x: cl(b.x).slice(0, 30), v: Math.max(0, Math.min(999999, Math.floor(+b.v || 0))) };
