@@ -3248,6 +3248,13 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (adm && (q.gl || b.gl)) { // ค้นไอดีที่ผูก Google เป็นช่วงๆ: ?a=idmerge&key=&gl=1[&e=ส่วนของอีเมล][&cur=ค่า next จากรอบก่อน]
         const f = String(q.e || b.e || '').toLowerCase(), r0 = [], t0 = Date.now(); let cur = String(q.cur || b.cur || '0').replace(/[^0-9]/g, '') || '0', n = 0, rounds = 0;
         do { const r = await cmd('SCAN', cur, 'MATCH', 'gacc:*', 'COUNT', 3000); cur = String(r[0]); rounds++; const ks = r[1] || []; if (ks.length) { const vs = await cmd('MGET', ...ks); ks.forEach((k, i) => { const x = jp((vs || [])[i]); n++; if (x && x.id && (!f || String(x.e || '').toLowerCase().includes(f))) r0.push({ id: x.id, e: x.e || '', t: x.t || 0 }) }) } } while (cur !== '0' && Date.now() - t0 < 4500);
+        if (String(q.act || b.act || '') === '1' && r0.length) { // เรียงตามเวลาเซฟล่าสุด (คนที่เปิดเกมอยู่ขึ้นบน) + ชื่อตัวละครในสล็อต
+          for (let i = 0; i < r0.length; i += 200) { const ch = r0.slice(i, i + 200), v = await cmd('HMGET', 'lm', ...ch.map(x => x.id)); ch.forEach((x, j) => { x.lm = +((v || [])[j]) || 0 }) }
+          r0.sort((x, y) => y.lm - x.lm); const top = r0.slice(0, 10);
+          for (const x of top) { x.ago = x.lm ? Math.round((now - (x.lm > 1e12 ? x.lm : x.lm * 1000)) / 60000) + ' นาที' : '-'; x.guild = (await cmd('GET', 'gdu:' + x.id.slice(0, 12))) || ''; x.arena = (await cmd('HGET', 'arn', x.id)) || ''; x.chars = [];
+            try { const sl = await cs3Fill(x.id, await pipe([1, 2, 3, 4, 5].map(i => ['GET', 'cs3:' + x.id + ':' + i]))); for (const d0 of sl) { if (!d0) continue; try { const d = JSON.parse(Buffer.from(zUnpack(d0), 'base64').toString('utf8')); x.chars.push((d.S && d.S.name || '?') + ' · ' + ((d.S && d.S.age) | 0)) } catch (e) { } } } catch (e) { } }
+          return res.json({ ok: 1, scanned: n, done: cur === '0' ? 1 : 0, next: cur === '0' ? '' : cur, list: top });
+        }
         r0.sort((x, y) => y.t - x.t); const top = r0.slice(0, 30); for (const x of top) x.guild = (await cmd('GET', 'gdu:' + x.id.slice(0, 12))) || '';
         return res.json({ ok: 1, scanned: n, done: cur === '0' ? 1 : 0, next: cur === '0' ? '' : cur, list: top });
       }
