@@ -37896,7 +37896,7 @@ const on=()=>{try{return Date.now()<Date.parse('2027-01-01T00:00:00+07:00')}catc
 setInterval(()=>{try{const T=$('title');if(!T||!T.classList.contains('on')||!$('tSup'))return;let b=$('tSp');
  if(!on()){if(b)b.remove();return}
  if(!b){T.insertAdjacentHTML('afterbegin','<button id="tSp" type="button" onclick="openSP(\'tr\')"><i class="au"></i><i class="tbi">❄</i><span>คัมภีร์</span><i class="dt" style="display:none"></i></button>');b=$('tSp')}
- if(document.body.classList.contains('tsOn')){['position','right','left','width','height','visibility'].forEach(k=>b.style.removeProperty(k));const set2=(k,v)=>b.style.setProperty(k,v,'important');set2('flex-direction','row');set2('justify-content','flex-start');set2('gap','7px');set2('padding','0 12px');set2('font-size','13px');return}
+ if(document.body.classList.contains('tsOn')){['position','right','left','width','height','visibility'].forEach(k=>{if(b.style.getPropertyValue(k))b.style.removeProperty(k)});const set2=(k,v)=>{if(b.style.getPropertyValue(k)!==v)b.style.setProperty(k,v,'important')};set2('flex-direction','row');set2('justify-content','flex-start');set2('gap','7px');set2('padding','0 12px');set2('font-size','13px');return}
  const vis=e=>e&&e.getClientRects().length>0&&getComputedStyle(e).display!=='none',ref=vis($('tEv'))?$('tEv'):vis($('tFb'))?$('tFb'):null;if(!ref){b.style.setProperty('visibility','hidden');return}b.style.removeProperty('visibility');const cs=getComputedStyle(ref);
  const top=(parseFloat(cs.top)||0)+ref.offsetHeight+(ref.id==='tEv'?6:60),set=(k,v)=>{if(b.style.getPropertyValue(k)!==v)b.style.setProperty(k,v,'important')};
  set('position',cs.position==='fixed'?'fixed':'absolute');set('top',top+'px');set('right',cs.right);set('left','auto');set('width',ref.offsetWidth+'px');set('height',ref.offsetHeight+'px');const wide=ref.offsetWidth>100;set('flex-direction',wide?'row':'column');set('justify-content',wide?'flex-start':'center');set('gap',wide?'7px':'1px');set('padding',wide?'0 14px':'0');set('font-size',wide?'13px':'10.5px');const sp=b.querySelector('span'),tx=wide?'คัมภีร์ฤดูกาล':'คัมภีร์';if(sp&&sp.textContent!==tx)sp.textContent=tx;
@@ -42416,7 +42416,7 @@ try{(()=>{
 const st=document.createElement('style');st.textContent=`@media (min-width:1000px){#deskC>.ctrl{flex-shrink:0!important;overflow:visible!important}#deskC>#feed{min-height:110px}}
 @media (min-width:1000px) and (max-height:860px){#deskC>#sceneBox{max-height:96px}#deskC>#hintBox,#deskC>#hintBar{display:none!important}#deskC>.ctrl>#focus{max-height:112px;overflow-y:auto}}
 #isl .islBig{max-width:min(calc(100vw - 48px),520px)}#isl .islBig .islTx{overflow:hidden}`;document.head.appendChild(st);
-let busy=0;const fit=()=>{const e=document.getElementById('isl');if(!e||busy)return;busy=1;try{e.style.marginLeft='';const r=e.getBoundingClientRect(),W=innerWidth;if(r.width&&r.width<W-12){let d=0;if(r.right>W-6)d=W-6-r.right;else if(r.left<6)d=6-r.left;if(d)e.style.marginLeft=Math.round(d)+'px'}}catch(x){}busy=0};
+let busy=0;const fit=()=>{const e=document.getElementById('isl');if(!e||busy)return;busy=1;try{const ml=parseFloat(e.style.marginLeft)||0,r0=e.getBoundingClientRect(),W=innerWidth,L=r0.left-ml,R=r0.right-ml;let d=0;if(r0.width&&r0.width<W-12){if(R>W-6)d=W-6-R;else if(L<6)d=6-L}d=Math.round(d);if(d!==Math.round(ml))e.style.marginLeft=d?d+'px':''}catch(x){}busy=0};
 const hook=()=>{const e=document.getElementById('isl');if(!e){setTimeout(hook,1500);return}try{new ResizeObserver(()=>requestAnimationFrame(fit)).observe(e)}catch(x){}addEventListener('resize',fit)};hook();
 })()}catch(e){console.error('block126',e)}
 
@@ -46178,8 +46178,8 @@ const ids=['tSup','tFb','tCos','tEv','tSp'];
 setInterval(()=>{try{const on=document.body.classList.contains('tsOn');let i=0;
  ids.forEach(id=>{const e=document.getElementById(id);if(!e)return;if(!on){if(e.classList.contains('tsG')){e.classList.remove('tsG');e.style.removeProperty('top')}return}
   if(getComputedStyle(e).display==='none'){if(e.classList.contains('tsG')){e.classList.remove('tsG');e.style.removeProperty('top')}return}
-  e.classList.add('tsG');const c=i%2,r=(i/2)|0;e.style.setProperty('--tx',`calc(100vw - 24px - var(--tsW) + ${c} * (var(--tsW) + 8px) / 2)`);e.style.setProperty('--ty',(14+r*50)+'px');e.style.setProperty('top',(14+r*50)+'px','important');i++});
- if(on)document.body.style.setProperty('--tsTop',(14+Math.ceil(i/2)*50+14)+'px')}catch(e){}},600);
+  if(!e.classList.contains('tsG'))e.classList.add('tsG');const c=i%2,r=(i/2)|0,tx=`calc(100vw - 24px - var(--tsW) + ${c} * (var(--tsW) + 8px) / 2)`,ty=(14+r*50)+'px';if(e.style.getPropertyValue('--tx')!==tx)e.style.setProperty('--tx',tx);if(e.style.getPropertyValue('top')!==ty){e.style.setProperty('--ty',ty);e.style.setProperty('top',ty,'important')}i++});
+ if(on){const v=(14+Math.ceil(i/2)*50+14)+'px';if(document.body.style.getPropertyValue('--tsTop')!==v)document.body.style.setProperty('--tsTop',v)}}catch(e){}},600);
 })()}catch(e){console.error('tsDesk',e)}
 
 // ===== 🖥️ หน้าต่างในเกมบนคอม (≥1200px): หน้าที่เนื้อหายาว (เมนู คัมภีร์ คู่มือ ฯลฯ) กว้างขึ้น + จัดการ์ดเป็นหลายคอลัมน์ ไม่ต้องเลื่อนยาว =====
@@ -46316,9 +46316,9 @@ const kick=()=>{if(!q)q=requestAnimationFrame(()=>requestAnimationFrame(go))};co
 const boot=()=>{const m=$('modal'),k=$('mask');if(!m||!k)return setTimeout(boot,500);new MutationObserver(kick2).observe(m,{childList:true,attributes:true,attributeFilter:['data-k']});new MutationObserver(kick2).observe(k,{attributes:true,attributeFilter:['class']});addEventListener('resize',kick)};boot();
 
 // ---------- ป้ายแจ้งเตือนในเกม: มุมขวาบนของช่องกลาง (บนภาพฉาก) ----------
-setInterval(()=>{try{const g=$('game'),c=$('deskC'),ic=$('islCards');const on=DK()&&g&&g.classList.contains('on')&&c&&ic;document.body.classList.toggle('dkG',!!on);if(!on)return;
+setInterval(()=>{try{const g=$('game'),c=$('deskC'),ic=$('islCards');const on=!!(DK()&&g&&g.classList.contains('on')&&c&&ic);if(document.body.classList.contains('dkG')!==on)document.body.classList.toggle('dkG',on);if(!on)return;
  const r=c.getBoundingClientRect(),sc=$('sceneBox'),t=sc&&sc.getBoundingClientRect().height?sc.getBoundingClientRect().top+8:r.top+60,w=ic.offsetWidth||340;
- document.body.style.setProperty('--icL',Math.max(r.left+8,r.right-w-12)+'px');document.body.style.setProperty('--icT',t+'px')}catch(e){}},700);
+ const L=Math.round(Math.max(r.left+8,r.right-w-12))+'px',T=Math.round(t)+'px',bs=document.body.style;if(bs.getPropertyValue('--icL')!==L)bs.setProperty('--icL',L);if(bs.getPropertyValue('--icT')!==T)bs.setProperty('--icT',T)}catch(e){}},700);
 })()}catch(e){console.error('dkUI',e)}
 
 // ===== 🖥️ ป้ายแจ้งเตือนบนคอม: ระหว่างเปิดหน้าต่าง (เมนู/ตัวเลือก ฯลฯ) ป้ายการ์ดใหญ่จะรอคิวไว้ แล้วขึ้นตามลำดับเมื่อปิดหน้าต่าง ไม่หายไปใต้หน้าต่าง =====
