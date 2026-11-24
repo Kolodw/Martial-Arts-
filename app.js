@@ -1257,7 +1257,7 @@ function checkDeath(){
  else if(S.age>=lifeMax())cause=S.ch==='short'&&S.age<=30&&lifeMax0()>30?'ชะตาสามสิบปีมาถึงที่สุด ลมหายใจสุดท้ายหลุดลอยไปตามคำสาป':'จากไปอย่างสงบด้วยวัยชรา'+(S.kids?' ท่ามกลางลูกหลาน':'');
  if(!cause)return false;
  try{if(ndSys(cause))return false}catch(e){console.error(e)}
- if(S.sys&&S.sys.revive>0&&!(S.flags.ascended&&(!S.flags.ascStay||S.flags.ascLeft))&&!(S.flags.eternal&&(S.flags.kEnd||/กัลป์|กาลเวลา|จักรวาล|สามภพ/.test(cause)))&&!(S.ch==='short'&&S.age>=30)&&!(/วัยชรา|อย่างสงบ|หลับไปตลอดกาล/.test(cause)||S.age>=lifeMax())){S.sys.revive--;S.hp=Math.max(1,Math.round(S.maxHp*.5));S.deathCause=null;S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) ฟื้นขึ้นมาด้วยพลังชีวิตครึ่งหนึ่ง`,'up');setScene('system');return false}
+ if(S.sys&&S.sys.revive>0&&!S.rvU&&!(S.flags.ascended&&(!S.flags.ascStay||S.flags.ascLeft))&&!(S.flags.eternal&&(S.flags.kEnd||/กัลป์|กาลเวลา|จักรวาล|สามภพ/.test(cause)))&&!(S.ch==='short'&&S.age>=30)&&!(/วัยชรา|อย่างสงบ|หลับไปตลอดกาล/.test(cause)||S.age>=lifeMax())){S.sys.revive--;S.rvU=1;S.hp=Math.max(1,Math.round(S.maxHp*.5));S.deathCause=null;S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) ฟื้นขึ้นมาด้วยพลังชีวิตครึ่งหนึ่ง`,'up');setScene('system');return false}
  try{if(typeof regTry==='function'&&regTry(cause))return false}catch(e){console.error(e)}
  flushReveal();S.alive=false;S.cause=cause;saveLegacy();clearSave();const _asc=!!S.flags.ascended;setScene(_asc?'aura':'death');setTimeout(()=>sfx(_asc?'good':'death'),300);log(`${_asc?'🌟':'🪦'} ${cause}`,_asc?'myth':'bad');
  const _dn=S;setTimeout(()=>{if(!S||S!==_dn)return;modal(`<h3>${S.flags.ascended?'🌟 ตำนานบรรลุ — '+esc(S.name):'ลาก่อน '+esc(S.name)}</h3><p>${cause} ในวัย ${S.age} ปี${S.flags.ascended&&(!S.flags.ascStay||S.flags.ascLeft)?'<br><span class="tag2">ไม่ใช่ความตาย คุณก้าวพ้นสามภพไปแล้ว ใบชุบจึงไม่ถูกใช้</span>':''}<br>อยากบอกอะไรกับคนคนนี้เป็นครั้งสุดท้าย?</p><input class="ta" id="byeIn" maxlength="80" placeholder="คำอำลาสุดท้าย"><button class="pbtn" style="width:100%" onclick="endGame()">อำลา</button>`,'bye')},900);
@@ -6645,7 +6645,7 @@ const BAGX={
  bcore:{r:4,d:()=>`พลังยุทธ์ +${fmt(yrPow0()*8)} · สัตว์เลี้ยงใช้วิวัฒนาการได้ดีเยี่ยม`,use(){const g=yrPow0()*8;S.power+=g;return`พลังยุทธ์ +${fmt(g)}`}},
  egg:{r:4,d:'ฟักเป็นสัตว์วิญญาณคู่กาย ช่วยต่อสู้ · ฟักเองได้หรือรอฟักเอง',use(){if(S.pet&&S.pet.spirit)return null;const n=ch(['พยัคฆ์ขาว','จิ้งจอกเพลิง','มังกรน้ำ','หงส์น้ำแข็ง']);S.pet={i:'🐉',n,t:'สัตว์วิญญาณ',age:S.age,spirit:1,lv:0};return`ฟักออกมาเป็น<b>${n}</b>`}},
  fruit:{r:4,d:()=>`อายุขัย +${frV()} ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ`,use(){const v=frV();if(S.xt)S.glExtra=(S.glExtra||0)+v;else lsAdd(v);return`อายุขัย +${v} ปี`}},
- phx:{r:5,d:()=>`ติดตัวไว้ เมื่อพลังชีวิตหมดจะลุกเป็นไฟแล้วชุบชีวิตขึ้นมาด้วยพลังชีวิต 30% · แลกด้วยพลังชีวิตสูงสุด −10% และอายุขัย −5 ปี · ใช้กับการแก่ตายไม่ได้ · ชาติละครั้ง${S&&S.phxU?' (ชาตินี้ใช้ไปแล้ว)':''}`},
+ phx:{r:5,d:()=>`ติดตัวไว้ เมื่อพลังชีวิตหมดจะลุกเป็นไฟแล้วชุบชีวิตขึ้นมาด้วยพลังชีวิต 30% · แลกด้วยพลังชีวิตสูงสุด −10% และอายุขัย −5 ปี · ใช้กับการแก่ตายไม่ได้ · ชาติละครั้ง (นับรวมกับการ์ดคืนชีพและวิญญาณสำรอง)${S&&S.phxU?' (ชาตินี้ใช้ไปแล้ว)':''}`},
  star:{r:5,d:'อายุขัย +40 ปี พลังยุทธ์มหาศาล ปัญญา +10',use(){S.lifespan+=40;S.power+=yrPow0()*10;S.int+=10;return'ดวงดาวหลอมรวมเข้ากับวิญญาณ'}},
  seal:{r:6,d:'ติดตัวไว้ ปลดล็อกตัวเลือกพิเศษในเหตุการณ์ผนึกมาร ผนึกได้สำเร็จแน่นอน'},
  void:{r:7,d:'ไม่มีใครรู้ว่ามันคืออะไร… ใช้แล้วจะเกิดอะไรขึ้นก็ได้',use(){const r=Math.random();
@@ -6655,7 +6655,7 @@ const BAGX={
   if(r<.95){const a=newArt(3);S.arts.push(a);return`เห็นภาพนิมิตของจักรวาลก่อนกำเนิด ได้ ${artHtml(a)}`}
   return'มันหายไปพร้อมเสียงหัวเราะเบาๆ… ไม่มีอะไรเกิดขึ้น'}}};
 function talBoost(m){if(!S)return'';if((S.talX|0)>=2){const g=Math.max(yrPow0()*4,pctPow(.12));S.power+=g;return`พรสวรรค์ถูกเสริมจนเต็มขีดแล้ว (ชาติละ 2 ครั้ง) พลังส่วนเกินกลายเป็นพลังยุทธ์ +${fmt(g)}`}S.talX=(S.talX|0)+1;S.talent=Object.assign({},S.talent,{m:+(S.talent.m*m).toFixed(2)});return`พรสวรรค์ ×${m.toFixed(2)} ถาวร (${S.talX}/2 ครั้งต่อชาติ)`}
-function phxUse(){if(!S||S.phxU||!bagHas('phx')||!bagUse('phx'))return false;S.phxU=1;S.maxHp=Math.max(10,Math.round(S.maxHp*.9));S.hp=Math.max(1,Math.round(S.maxHp*.3));S.lifespan=Math.max(S.age+1,S.lifespan-5);return true}
+function phxUse(){if(!S||S.phxU||S.rvU||!bagHas('phx')||!bagUse('phx'))return false;S.phxU=1;S.rvU=1;S.maxHp=Math.max(10,Math.round(S.maxHp*.9));S.hp=Math.max(1,Math.round(S.maxHp*.3));S.lifespan=Math.max(S.age+1,S.lifespan-5);return true}
 const bRar=id=>BAGX[id]?BAGX[id].r:1,rarC=r=>RAR[r]||RAR[1];
 function rarTag(r){const R0=rarC(r);return `<span class="rtag rar${r}" style="${R0.x?'':`color:${R0.c};border-color:${R0.c}`}">${R0.n}</span>`}
 function rarName(id){const I=BAGIT[id],r=bRar(id),R0=rarC(r);return `${I.ic} <b class="rar${r}" style="${R0.x?'':`color:${R0.c}`}">${I.n}</b>`}
@@ -14285,7 +14285,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
  // ---- ศัตรูได้พรนรก ----
  {const _f=fight;fight=function(n,ep){const h=H();if(h){const k=ncur('foe');if(k)ep*=Math.pow(1.08,k)}return _f.call(this,n,ep)}}
  // ---- วิญญาณสำรอง ----
- {const _rt=regTry;regTry=function(cause){try{const h=H();if(h&&h.rev>0&&S&&!/วัยชรา|กัลป์|กาลเวลา|จักรวาล/.test(cause||'')&&!(S.flags&&S.flags.kEnd)){h.rev--;S.hp=S.maxHp;S.deathCause=null;log(`🩸 วิญญาณสำรองจากนรกแตกสลายแทนคุณ ฟื้นคืนชีพ (${esc(cause||'')}) · เหลือ ${h.rev} ดวง`,'myth',true);return true}}catch(e){}return _rt.apply(this,arguments)}}
+ {const _rt=regTry;regTry=function(cause){try{const h=H();if(h&&h.rev>0&&S&&!S.rvU&&!/วัยชรา|กัลป์|กาลเวลา|จักรวาล/.test(cause||'')&&!(S.flags&&S.flags.kEnd)){h.rev--;S.rvU=1;S.hp=S.maxHp;S.deathCause=null;log(`🩸 วิญญาณสำรองจากนรกแตกสลายแทนคุณ ฟื้นคืนชีพ (${esc(cause||'')}) · เหลือ ${h.rev} ดวง`,'myth',true);return true}}catch(e){}return _rt.apply(this,arguments)}}
  function addCurse(k){const h=S.hell;h.cur.push(k);const C=CUR[k];if(k==='weak'){S.maxHp=Math.max(30,Math.round(S.maxHp*.85));S.hp=Math.min(S.hp,S.maxHp)}if(k==='dull')S.int=Math.round(S.int*.85);if(k==='love'&&S.sp)S.sp.aff=Math.max(0,(S.sp.aff||60)-30);if(k==='luck'&&!(S.traits||[]).includes('unlucky')&&!(S.traits||[]).includes('lucky'))S.traits=[...(S.traits||[]),'unlucky'];log(`☠️ รับคำสาปนรก <b>${C[0]}</b> — ${C[1]}`,'bad',true)}
  function offerCurse(after){const h=S.hell,r=rngOf(h.sd+h.lv*977),ks=Object.keys(CUR).filter(k=>ncur(k)<3);for(let i=ks.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[ks[i],ks[j]]=[ks[j],ks[i]]}const o=ks.slice(0,3);
   choice(`☠️ กฎนรกชั้นที่ ${h.lv}`,`ผ่านประตูมาได้ แต่นรกไม่ปล่อยใครออกไปมือเปล่า<br>เลือกคำสาปที่<b>ร้ายน้อยที่สุด</b> 1 ข้อ (ติดตัวถาวร)`,o.map(k=>({t:CUR[k][0],s:CUR[k][1]+(ncur(k)?` · ซ้อนครั้งที่ ${ncur(k)+1}`:''),noFate:1,f(){addCurse(k);setTimeout(after,350)}})))}
