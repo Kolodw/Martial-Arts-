@@ -46422,11 +46422,11 @@ try{(function(){
  st.textContent+=`.ii,i.iiB{background:var(--u) var(--p)/var(--s) no-repeat;position:relative}
 :is(.ii,i.iiB).qa1{--gc:rgba(90,170,255,.55)}:is(.ii,i.iiB).qa2{--gc:rgba(180,90,255,.6)}:is(.ii,i.iiB).qa3{--gc:rgba(255,200,70,.6)}:is(.ii,i.iiB).qa4{--gc:rgba(255,100,40,.7)}:is(.ii,i.iiB).qad{--gc:rgba(200,30,80,.6)}:is(.ii,i.iiB).qay{--gc:rgba(60,180,255,.6)}
 :is(.ii,i.iiB).qa1,:is(.ii,i.iiB).qa2,:is(.ii,i.iiB).qa3,:is(.ii,i.iiB).qa4,:is(.ii,i.iiB).qad,:is(.ii,i.iiB).qay{background:var(--u) var(--p)/var(--s) no-repeat,radial-gradient(closest-side,var(--gc),transparent) 50% 50%/80% 80% no-repeat}
-:is(.ii,i.iiB).qa1,:is(.ii,i.iiB).qay{animation:qaG 2.8s ease-in-out infinite}:is(.ii,i.iiB).qay{animation-timing-function:steps(5)}
+:is(.ii,i.iiB).qa1,:is(.ii,i.iiB).qay{animation:qaG 2.8s ease-in-out infinite}:is(.ii,i.iiB).qay{animation-timing-function:ease-in-out}
 :is(.ii,i.iiB).qad{animation:qaG 4.2s ease-in-out infinite}
 :is(.ii,i.iiB).qa2{animation:qaF 3.2s ease-in-out infinite,qaG 3.2s ease-in-out infinite}
 :is(.ii,i.iiB).qa3{animation:qaF 2.8s ease-in-out infinite,qaG 2.8s ease-in-out infinite}
-:is(.ii,i.iiB).qa4{animation:qaF 2.4s ease-in-out infinite,qaG 1.8s ease-in-out infinite,qaB 3s ease-in-out infinite}
+:is(.ii,i.iiB).qa4{animation:qaF 2.4s ease-in-out infinite,qaG 1.8s ease-in-out infinite}
 :is(.ii,i.iiB).qa3::after,:is(.ii,i.iiB).qa4::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.8) 50%,transparent 62%) no-repeat;background-size:300% 100%;-webkit-mask:var(--u) var(--p)/var(--s) no-repeat;mask:var(--u) var(--p)/var(--s) no-repeat;animation:qaS 3.6s ease-in-out infinite}
 :is(.ii,i.iiB).qa4::after{animation-duration:2.6s}
 @keyframes qaG{0%,100%{background-size:var(--s),60% 60%}50%{background-size:var(--s),115% 115%}}
@@ -46448,6 +46448,8 @@ body.lite :is(.ii,i.iiB).qa1,body.lite :is(.ii,i.iiB).qa2,body.lite :is(.ii,i.ii
  if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
 })()}catch(e){console.error('mod-itic',e)}
 
+// 🖼️ โหลดภาพไอคอนทั้ง 6 แผ่นไว้ล่วงหน้า + ค้างไว้ในหน่วยความจำ (กันกะพริบตอนปุ่มถูกวาดใหม่)
+try{(function(){const U=[1,2,3,4,5,6].map(n=>'/items'+(n>1?n:'')+'.webp');window._icKeep=U.map(u=>{const im=new Image();im.decoding='sync';im.src=u;try{im.decode().catch(()=>{})}catch(e){}return im});const d=document.createElement('div');d.setAttribute('aria-hidden','true');d.style.cssText='position:fixed;left:-9px;top:-9px;width:1px;height:1px;overflow:hidden;opacity:.01;pointer-events:none;background:'+U.map(u=>'url('+u+') 0 0/1px 1px no-repeat').join(',');(document.body||document.documentElement).appendChild(d)})()}catch(e){}
 // 🎨 ไอคอนเมนู/ปุ่มแบบภาพ (items4.webp + items5.webp 8×6) — ทับภาพ pixel emoji เดิมของปุ่มที่ชื่อตรงกัน · ไม่ตรง = ของเดิม · อนิเมชันเล็กๆ บางไอคอน
 try{(function(){
  const L4=['ตัวละครของฉัน','วิชา','สุ่มวิชา','สำนัก','ตลาดยุทธภพ','ครอบครัว','ทำเนียบสำนัก','คนที่เกิดพร้อมกัน','ของต่างโลก','ระบบ',null,'สัตว์คู่ใจ','สมุดสัตว์','ผู้คน','ตระกูล','งานช่าง','ดันเจี้ยน','อัตโนมัติ','ชุดสวมใส่','บันทึกเควส','แผนที่','คู่แค้น','ของตกแต่ง','ตัวอักษร','วิธีเล่น','สมุดตำนาน','สารานุกรม','สถิติรวม','อัปเดต','เสียง','คู่มือ','แจ้งบั๊ก','ความคิดเห็น','ย้ายเซฟ','ภาพฉาก','กระเป๋า'];
@@ -46476,7 +46478,7 @@ try{(function(){
  span.pxi[data-ua=sp]{animation:uaSp 9s linear infinite}
  span.pxi[data-ua=spr]{animation:uaSp 7s linear infinite reverse}
  span.pxi[data-ua=spl]{animation:uaSp 24s linear infinite}
- span.pxi[data-ua=fl]{animation:uaFl 4.4s steps(1) infinite}
+ span.pxi[data-ua=fl]{animation:uaFl 3.6s ease-in-out infinite}
  span.pxi[data-ua=tw]{animation:uaTw 3.6s ease-in-out infinite}
  span.pxi[data-ua=bt]{animation:uaBt 2.4s ease-in-out infinite}
  span.pxi[data-ua=pu]{animation:uaPu 3s ease-in-out infinite}
@@ -46486,8 +46488,8 @@ try{(function(){
  @keyframes uaSw{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
  @keyframes uaRg{0%,78%,100%{transform:rotate(0)}81%{transform:rotate(16deg)}84%{transform:rotate(-14deg)}87%{transform:rotate(10deg)}90%{transform:rotate(-6deg)}93%{transform:rotate(3deg)}}
  @keyframes uaSp{to{transform:rotate(360deg)}}
- @keyframes uaFl{0%,86%,100%{filter:none}88%{filter:brightness(1.8)}90%{filter:none}92%{filter:brightness(1.6)}}
- @keyframes uaTw{0%,100%{transform:scale(1);filter:none}50%{transform:scale(1.08);filter:brightness(1.35)}}
+ @keyframes uaFl{0%,100%{filter:brightness(1)}50%{filter:brightness(1.18)}}
+ @keyframes uaTw{0%,100%{transform:scale(1);filter:none}50%{transform:scale(1.06);filter:brightness(1.12)}}
  @keyframes uaBt{0%,60%,100%{transform:scale(1)}15%{transform:scale(1.14)}30%{transform:scale(.97)}45%{transform:scale(1.08)}}
  @keyframes uaPu{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
  @keyframes uaFx{0%,80%,100%{transform:rotate(0)}88%,96%{transform:rotate(180deg)}}
