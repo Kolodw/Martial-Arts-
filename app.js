@@ -45188,10 +45188,9 @@ function syn(h,rows,anim){try{h.querySelectorAll(':scope>.rvLinks').forEach(x=>x
  if(!P.length)return;P.sort((x,y)=>Math.max(y[0].I.t,y[1].I.t)-Math.max(x[0].I.t,x[1].I.t));const L=P.slice(0,2);
  if(getComputedStyle(h).position==='static')h.style.position='relative';const hr=h.getBoundingClientRect();
  const sv=document.createElementNS('http://www.w3.org/2000/svg','svg');sv.setAttribute('class','rvLinks'+(anim?' an':''));sv.style.cssText=`position:absolute;left:0;top:0;width:${h.scrollWidth}px;height:${h.scrollHeight}px;pointer-events:none;z-index:4;overflow:visible`;
- let top=0;L.forEach(([a,b])=>{const ra=a.r.getBoundingClientRect(),rb=b.r.getBoundingClientRect();const x1=ra.right-hr.left-10,y1=ra.top-hr.top+h.scrollTop+ra.height/2,x2=rb.right-hr.left-10,y2=rb.top-hr.top+h.scrollTop+rb.height/2,bx=Math.max(x1,x2)+26;
-  const c=GC[Math.max(a.I.t,b.I.t)];top=Math.max(top,a.I.t,b.I.t);sv.insertAdjacentHTML('beforeend',`<path d="M${x1} ${y1} C ${bx} ${y1}, ${bx} ${y2}, ${x2} ${y2}" stroke="${c}" /><circle cx="${x1}" cy="${y1}" r="4" fill="${c}"/><circle cx="${x2}" cy="${y2}" r="4" fill="${c}"/>`);
+ let top=0;sv._L=[];L.forEach(([a,b])=>{const c=GC[Math.max(a.I.t,b.I.t)];top=Math.max(top,a.I.t,b.I.t);sv._L.push([a.r,b.r]);sv.insertAdjacentHTML('beforeend',`<path stroke="${c}" /><circle r="4" fill="${c}"/><circle r="4" fill="${c}"/>`);
   [[a,b],[b,a]].forEach(([p,q])=>{const k=$q(p.r,'.k')||$q(p.r,'.mbTh');if(k&&!k.querySelector('.rvSyn')){const s=document.createElement('span');s.className='rvSyn';s.style.setProperty('--cc',c);s.textContent=(SYNW[theme(h)]||'✦ เข้าทาง')+': '+nameOf(q.r).replace(/^[^\wก-๙]+/,'').slice(0,22);k.appendChild(s)}})});
- h.appendChild(sv);
+ h.appendChild(sv);try{window.rvLinkFit&&window.rvLinkFit(sv)}catch(e){}
  if(anim){snd('ach');if(top>=3){rows.forEach(r=>r.classList.add('rvSet'));setTimeout(()=>rows.forEach(r=>r.classList.remove('rvSet')),1600);banner({murim:'✦ ฟ้าลิขิตคู่กัน ✦',xian:'✦ วาสนาเกื้อหนุนกัน ✦',soul:'✦ วิญญาณเข้าคู่ ✦',fog:'✦ ชะตาเข้าทาง ✦',beast:'✦ สายเลือดเข้าคู่ ✦',mw:'✦ ชะตาเข้าทาง ✦'}[theme(h)]||'✦ ชะตาเข้าทาง ✦',GC[top],false)}}}catch(e){console.error('rv syn',e)}}
 // ---------- นับเลข "1 ใน N" ----------
 function countUp(h){try{h.querySelectorAll('.n,.fdN,.oddsN').forEach(n=>{if(n._rvc)return;const m=n.textContent.match(/1\s*ใน\s*([\d,]+)/);if(!m)return;const N=+m[1].replace(/,/g,'');if(!(N>=10&&N<1e9))return;n._rvc=1;const pre=n.textContent.slice(0,m.index),post=n.textContent.slice(m.index+m[0].length);const t0=nowT(),D=900;
@@ -45871,6 +45870,15 @@ try{(()=>{const DK=()=>innerWidth>=1100;
  #brB.dk3 .dkR .brAct{position:static!important;display:flex;gap:8px}#brB.dk3 .dkR .brAct button{flex:1}
 }`;document.head.appendChild(st);
 })()}catch(e){console.error('block215',e)}
+// ===================== BLOCK 216: 🔗 เส้นเชื่อมพรสวรรค์ "เข้าทาง" — คำนวณตำแหน่งใหม่ทุกครั้งที่เลย์เอาต์ขยับ (จอคอม 3 คอลัมน์ · ย่อขยาย · การ์ดกางออก) =====================
+try{(()=>{window.rvLinkFit=function(sv){try{const h=sv.parentNode;if(!h||!sv._L)return;const hr=h.getBoundingClientRect();sv.style.width=h.scrollWidth+'px';sv.style.height=h.scrollHeight+'px';const P=sv.querySelectorAll('path'),C=sv.querySelectorAll('circle');
+ sv._L.forEach(([A,B],i)=>{if(!A.isConnected||!B.isConnected||!A.offsetParent||!B.offsetParent){P[i]&&P[i].setAttribute('d','');return}const ra=A.getBoundingClientRect(),rb=B.getBoundingClientRect(),ox=-hr.left+h.scrollLeft,oy=-hr.top+h.scrollTop;let x1,y1,x2,y2,d;
+  const sameCol=Math.min(ra.right,rb.right)-Math.max(ra.left,rb.left)>Math.min(ra.width,rb.width)*.5;
+  if(sameCol){x1=ra.right+ox-10;x2=rb.right+ox-10;y1=ra.top+oy+ra.height/2;y2=rb.top+oy+rb.height/2;const bx=Math.max(x1,x2)+26;d=`M${x1} ${y1} C ${bx} ${y1}, ${bx} ${y2}, ${x2} ${y2}`}
+  else{const L0=ra.left<rb.left?ra:rb,R0=L0===ra?rb:ra;x1=L0.right+ox-8;y1=L0.top+oy+L0.height/2;x2=R0.left+ox+8;y2=R0.top+oy+R0.height/2;const mx=(x1+x2)/2;d=`M${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`}
+  P[i]&&P[i].setAttribute('d',d);const c1=C[i*2],c2=C[i*2+1];if(c1){c1.setAttribute('cx',x1);c1.setAttribute('cy',y1)}if(c2){c2.setAttribute('cx',x2);c2.setAttribute('cy',y2)}})}catch(e){}};
+ const all=()=>document.querySelectorAll('svg.rvLinks').forEach(sv=>window.rvLinkFit(sv));setInterval(all,350);addEventListener('resize',all);
+})()}catch(e){console.error('block216',e)}
 // BLOCK 211: ✍️ สร้างเอง / 🎨 ออกแบบหน้าตา ทุกโลก — ตัวเลือกกลาง ccPick (เลือกทุกช่องเอง) · ccLook (ออกแบบหน้าตา ที่เหลือลิขิต)
 //  ชีวิตที่ "สร้างเอง" ตั้ง S.custom + S.ccOwn → ไม่ส่งขึ้นทำเนียบ (ห่อ sendLife) · ตั้งผ่าน window._ccOwnPending ก่อน startLife ของแต่ละโลก
 //  ใช้ใน: 🐾 สัตว์อสูร (หน้ากำเนิด) · 🌉 นครม่านหมอก (w/fog.js) · 🌠 ทะลุฟ้าดารา (w/sky.js) · โลกอื่นมีอยู่แล้ว (goBirthPick / ยุคปัจจุบัน)
