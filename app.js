@@ -46440,3 +46440,17 @@ body.lite :is(.ii,i.iiB).qa1,body.lite :is(.ii,i.iiB).qa2,body.lite :is(.ii,i.ii
  const go=()=>{walk(document.body);ob.observe(document.body,{childList:true,subtree:true,characterData:true})};
  if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
 })()}catch(e){console.error('mod-itic',e)}
+
+// 🎨 ไอคอนเมนู/แถบล่างแบบภาพ (items4.webp 8×6) — ทับภาพ pixel emoji เดิมของปุ่มที่ชื่อตรงกัน · ไม่ตรง = ของเดิม
+try{(function(){
+ const LB=['ตัวละครของฉัน','วิชา','สุ่มวิชา','สำนัก','ตลาดยุทธภพ','ครอบครัว','ทำเนียบสำนัก','คนที่เกิดพร้อมกัน','ของต่างโลก','ระบบ',null,'สัตว์คู่ใจ','สมุดสัตว์','ผู้คน','ตระกูล','งานช่าง','ดันเจี้ยน','อัตโนมัติ','ชุดสวมใส่','บันทึกเควส','แผนที่','คู่แค้น','ของตกแต่ง','ตัวอักษร','วิธีเล่น','สมุดตำนาน','สารานุกรม','สถิติรวม','อัปเดต','เสียง','คู่มือ','แจ้งบั๊ก','ความคิดเห็น','ย้ายเซฟ','ภาพฉาก','กระเป๋า'];
+ const IX={};LB.forEach((n,i)=>{if(n)IX[n]=i});
+ const NAV={bagBtn:35,questBtn:19,menuBtn:39,sysBtn:9,autoBtn:17};
+ const pos=i=>((i%8)/7*100)+'% '+(((i/8|0)/5)*100)+'%';
+ function paint(sp,i){if(!sp||sp.dataset.u4==i)return;sp.dataset.u4=i;const S=sp.style;S.setProperty('background-image','url(/items4.webp)','important');S.setProperty('background-position',pos(i),'important');S.setProperty('background-size','800% 600%','important');S.setProperty('background-repeat','no-repeat','important');S.setProperty('image-rendering','auto','important');if(sp.classList.contains('pxa')){sp.classList.remove('pxa');sp.querySelectorAll('px-f').forEach(x=>x.remove())}}
+ function scan(root){if(!root||!root.querySelectorAll)return;root.querySelectorAll('.opt > span.pxi:first-child').forEach(sp=>{let t=sp.nextSibling;const tx=t&&t.nodeType===3?t.nodeValue.trim():'';let i=IX[tx];if(i==null&&sp.textContent==='🏘️')i=10;if(i!=null)paint(sp,i)})}
+ function nav(){for(const id in NAV){const b=document.getElementById(id);if(!b)continue;let sp=b.querySelector(':scope > span.pxi');if(!sp&&id==='menuBtn'){const t=b.firstChild;if(t&&t.nodeType===3&&t.nodeValue.trim()==='☰'){sp=document.createElement('span');sp.className='pxi';sp.textContent='☰';b.replaceChild(sp,t)}}if(sp)paint(sp,NAV[id])}}
+ const ob=new MutationObserver(ms=>{let n=0;for(const m of ms)for(const x of m.addedNodes){if(x.nodeType===1){scan(x);n=1}}if(n){const md=document.getElementById('modal');if(md)scan(md)}});
+ const go=()=>{scan(document.body);nav();ob.observe(document.body,{childList:true,subtree:true});setInterval(nav,1500)};
+ if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
+})()}catch(e){console.error('mod-ui4',e)}
