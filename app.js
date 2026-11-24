@@ -7580,9 +7580,11 @@ function ascSquash(why){if(!S)return;const rest=total()-S.power,cap=REALMS[2].p*
 // ⭐ ดาวเหนือนิรันดร์: ถึงชั้นสูงสุดของแดนเทพแล้ว พลังรวมเกินเพดานทุก 2% = ดาว 1 ดวง · ดาวใหม่ = ช่องพลังรวมถาวร % ได้เต็มอีกรอบ (เดิมถึงจุดสูงสุดแล้วซื้อของไม่ขึ้นเลย)
 function ovStar(){try{if(!S||!S.xt||!S.pv2||typeof postLv!=='function'||postLv()<RS_MAX)return 0;const b=postP(RS_MAX);return Math.max(0,Math.floor((total()/b-1)/.02+1e-9))}catch(e){return 0}}
 function ovKey(){const n=ovStar();return n?':s'+n:''}
-function ppPeek(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx()+ovKey(),a=S._pp&&S._pp.k===k?S._pp.a:0;const room=Math.max(0,.3-a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,a));return Math.round(pvT()*eff)}
+function ppPeek(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx()+ovKey(),a=S._pp&&S._pp.k===k?S._pp.a:0;const room=Math.max(0,.3-a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,a));return Math.round(pvB()*eff)}
+/* แดนเทพ: ฐานของ % พลังรวมถาวร ไม่ต่ำกว่า 10% ของพลังรวมจริง (เดิมยึดฐานขั้นบนสุดของโลกเซียน คนพลังหลายสิบล้านซื้อ +30% ได้ไม่ถึง 1% ผู้เล่นแจ้งว่าซื้อแล้วเท่าเดิม) */
+function pvB(){const b=pvT();try{if(S&&S.xt){const t=total();if(t*.1>b)return t*.1}}catch(e){}return b}
 function pwD(v){const s=`พลังรวมถาวร +${+(v*100).toFixed(1)}%`;try{if(!S||!S.alive)return s;const t=total();if(!(t>0))return s;const g=ppPeek(v);if(g>=t*v*.75)return s;const p=g/t*100;return `${s} (ตอนนี้ได้จริง +${fmt(g)} ≈ ${p>=1?p.toFixed(1):p.toFixed(2)}%)`}catch(e){return s}}
-function pctPow(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx()+ovKey();if(!S._pp||S._pp.k!==k)S._pp={k,a:0};const room=Math.max(0,.3-S._pp.a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,S._pp.a));S._pp.a+=v;return Math.round(pvT()*eff)}
+function pctPow(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx()+ovKey();if(!S._pp||S._pp.k!==k)S._pp={k,a:0};const room=Math.max(0,.3-S._pp.a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,S._pp.a));S._pp.a+=v;return Math.round(pvB()*eff)}
 
 // ---- v13.2b ยาทะลวงขั้น: ใช้เองแล้วต้องทะลวงจริง (ไม่เสียยาฟรี) · คอขวดใหญ่ขั้น 6–7 ได้โอกาส +15% · ทัณฑ์โลกเซียน +10% ----
 function brkInfo(){if(!S)return{k:'none'};if(S.xt)return{k:'god'};const i=realmIdx(),raw=rawRealm();
