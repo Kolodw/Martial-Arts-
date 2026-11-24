@@ -45986,6 +45986,27 @@ try{(()=>{const E=t=>{try{return esc(t)}catch(e){return t}};const R=(a,b)=>a+Mat
 @media(prefers-reduced-motion:reduce){#rvCine *{animation-duration:.01s!important}}
 `;document.head.appendChild(st);
 })()}catch(e){console.error('block217',e)}
+// ===================== BLOCK 218: 🚦 เหตุการณ์ไม่ขึ้นรัวติดกัน =====================
+// เดิม: หลายระบบโยนตัวเลือกมาในปีเดียวกัน → เข้าคิว แล้วเด้งต่อกัน 4–5 อันทันทีหลังปิดอันแรก
+// ใหม่: ปีหนึ่งปล่อยจากคิวได้ 1 อัน ที่เหลือรอปีถัดไป (ตัวเลือกต่อเนื่องของเหตุการณ์เดียวกันไม่ถูกกระทบ เพราะไม่ได้ผ่านคิว)
+//       ของในคิวที่ค้างเกิน 4 ปีถูกตัดทิ้ง ยกเว้นเรื่องสำคัญ · คิวเก็บได้ไม่เกิน 5 อัน
+try{(()=>{const KEEP=/ทัณฑ์|ทะลวง|เลื่อนขั้น|แต่งงาน|ขอแต่ง|คลอด|ตาย|สืบทอด|เชิญเข้าสำนัก|ระบบ|ประตู|กัลป์|🌌|📖|🧵|Tribulation|Breakthrough/i;
+ const strip=t=>String(t||'').replace(/<[^>]*>/g,'');const yr=()=>S?Math.floor(S.age||0):0;
+ const prune=()=>{const Q=choice._q;if(!Q||!Q.length)return;for(const q of Q)if(q[4]==null)q[4]=yr();
+  for(let i=Q.length-1;i>=0;i--){const q=Q[i];if(q[3]!==S||yr()-q[4]>4&&!KEEP.test(strip(q[0])))Q.splice(i,1)}
+  while(Q.length>5){const i=Q.findIndex(q=>!KEEP.test(strip(q[0])));Q.splice(i<0?0:i,1)}};
+ const _dq=chDeq;chDeq=function(){try{if(choice._cur||!choice._q||!choice._q.length)return;prune();if(!choice._q.length)return;
+   if(S&&S._qrY===yr()&&!auto)return; // ปีนี้ปล่อยไปแล้ว รอปีหน้า
+   if(S)S._qrY=yr()}catch(e){}return _dq.apply(this,arguments)};
+ const _py=passYear;passYear=function(){let held=null;try{if(!auto&&S&&S.alive&&!choice._cur&&choice._q&&choice._q.length){prune();if(S._qrY===yr()){held=choice._q;choice._q=[]}}}catch(e){}
+  let r;try{r=_py.apply(this,arguments)}finally{if(held){const nw=choice._q||[];choice._q=held.concat(nw.filter(x=>!held.some(h=>h[0]===x[0])))}}
+  try{if(S&&S.alive&&!choice._cur&&choice._q&&choice._q.length&&S._qrY!==yr())setTimeout(()=>{try{chDeq()}catch(e){}},(typeof rdGap==='function'?rdGap():400))}catch(e){}return r};
+ // งบเหตุการณ์ที่เด้งเองต่อปี: เกิน 2 เรื่องอิสระในปีเดียว → เก็บเข้าคิวไว้ปีหน้า (เหตุการณ์ต่อเนื่องที่เปิดจากตัวเลือกเดิมไม่นับ)
+ let inRun=0;{const _cr=choiceRun;choiceRun=function(){inRun++;try{return _cr.apply(this,arguments)}finally{inRun--}}}
+ const FREE=/^\s*(🎲|🌌|🍃|🔁|✉️)|ทัณฑ์|ทะลวง|เลื่อนขั้น|กัลป์|ประตู/;
+ const _ch=choice;choice=function(title,text,opts){try{if(!auto&&S&&S.alive&&!choice._cur&&!inRun&&!(S._xa&&S._xa.run)&&!FREE.test(strip(title))){const y=yr();if(S._chY!==y){S._chY=y;S._chN=0}
+   if(S._chN>=2){if(!choice._q)choice._q=[];if(!choice._q.some(x=>x[0]===title))choice._q.push([title,text,opts,S,y]);return}S._chN++}}catch(e){}return _ch.apply(this,arguments)};for(const k in _ch)try{choice[k]=_ch[k]}catch(e){}
+})()}catch(e){console.error('block218',e)}
 // BLOCK 211: ✍️ สร้างเอง / 🎨 ออกแบบหน้าตา ทุกโลก — ตัวเลือกกลาง ccPick (เลือกทุกช่องเอง) · ccLook (ออกแบบหน้าตา ที่เหลือลิขิต)
 //  ชีวิตที่ "สร้างเอง" ตั้ง S.custom + S.ccOwn → ไม่ส่งขึ้นทำเนียบ (ห่อ sendLife) · ตั้งผ่าน window._ccOwnPending ก่อน startLife ของแต่ละโลก
 //  ใช้ใน: 🐾 สัตว์อสูร (หน้ากำเนิด) · 🌉 นครม่านหมอก (w/fog.js) · 🌠 ทะลุฟ้าดารา (w/sky.js) · โลกอื่นมีอยู่แล้ว (goBirthPick / ยุคปัจจุบัน)
