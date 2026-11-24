@@ -25144,14 +25144,21 @@ function frgSearch(){const q=String(window._frg.q||'').trim().toLowerCase(),res=
 
 // ===================== ปุ่มกลุ่มเฟสบุ๊ก (ใต้ปุ่มสนับสนุนเกม หน้าแรก) =====================
 const FB_URL='https://www.facebook.com/groups/2160641727993657/';
-function openFbGroup(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👥 กลุ่มเฟสบุ๊กของเกม</h3>
- <a href="${FB_URL}" target="_blank" rel="noopener noreferrer" style="display:block;margin-bottom:10px"><img src="/fb-banner.jpg" alt="1 ใน นวนิยาย" width="960" height="540" loading="lazy" style="display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:12px;border:2px solid #17348a;box-shadow:0 3px 0 #17348a;background:#1a1a4a"></a>
- <div class="box" style="padding:12px;margin-bottom:10px"><p style="margin:0 0 8px">เจอบั๊ก มีไอเดีย หาเพื่อนเล่น หรือหาเกมไม่เจอ เข้ามาคุยกันในกลุ่มได้เลย</p><p class="tag2" style="margin:0">แชร์ให้เพื่อนที่ยังหาเกมนี้ไม่เจอได้ด้วย</p></div>
- <a class="pbtn" href="${FB_URL}" target="_blank" rel="noopener noreferrer" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box">เปิดกลุ่มเฟสบุ๊ก ↗</a>
- <button class="gbtn" style="width:100%;margin-top:8px" onclick="fbCopy()">📋 คัดลอกลิงก์กลุ่ม</button>`,'fb')}
-function fbCopy(){try{navigator.clipboard.writeText(FB_URL).then(()=>toast('คัดลอกลิงก์แล้ว'),()=>toast(FB_URL))}catch(e){toast(FB_URL)}}
+const DC_URL='https://discord.gg/8qqFY26fr';
+function openFbGroup(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👥 ชุมชนผู้เล่น</h3>
+ <img src="/fb-banner.jpg" alt="1 ใน นวนิยาย" width="960" height="540" loading="lazy" style="display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:12px;border:2px solid #17348a;box-shadow:0 3px 0 #17348a;background:#1a1a4a;margin-bottom:10px">
+ <div class="box" style="padding:12px;margin-bottom:10px"><p style="margin:0 0 6px">เจอบั๊ก มีไอเดีย หาเพื่อนเล่น หรืออยากคุยเรื่องเกม เข้ามาได้ทั้ง 2 ที่</p><p class="tag2" style="margin:0">💬 Discord คุยสด แจ้งบั๊กไว · 👥 เฟสบุ๊ก ข่าวอัปเดตและโพสต์รวม</p></div>
+ <div class="cmty">
+  <div class="cmc dc"><div class="cmh"><span class="cmi">💬</span><div><b>Discord</b><small>ห้องแชทสด · ห้องแจ้งบั๊ก · หาเพื่อนเล่น</small></div></div>
+   <a class="cmb" href="${DC_URL}" target="_blank" rel="noopener noreferrer">เข้าดิสคอร์ด ↗</a><button class="cmcp" onclick="cmCopy(DC_URL)">📋 คัดลอกลิงก์</button></div>
+  <div class="cmc fb"><div class="cmh"><span class="cmi">👥</span><div><b>กลุ่มเฟสบุ๊ก</b><small>ข่าวอัปเดต · โพสต์ไอเดีย · แชร์ชีวิตเด็ด</small></div></div>
+   <a class="cmb" href="${FB_URL}" target="_blank" rel="noopener noreferrer">เปิดกลุ่มเฟสบุ๊ก ↗</a><button class="cmcp" onclick="cmCopy(FB_URL)">📋 คัดลอกลิงก์</button></div>
+ </div><p class="tag2" style="margin:8px 0 0;text-align:center">แชร์ให้เพื่อนที่ยังหาเกมนี้ไม่เจอได้ด้วย</p>`,'fb')}
+function cmCopy(u){try{navigator.clipboard.writeText(u).then(()=>toast('คัดลอกลิงก์แล้ว'),()=>toast(u))}catch(e){toast(u)}}
+function fbCopy(){cmCopy(FB_URL)}
+(function(){const st=document.createElement('style');st.textContent='.cmty{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.cmc{border-radius:14px;padding:12px;color:#fff;display:flex;flex-direction:column;gap:8px}.cmc.dc{background:linear-gradient(160deg,#6b77ff,#4752c4);border:2px solid #2e3592;box-shadow:0 3px 0 #2e3592}.cmc.fb{background:linear-gradient(160deg,#4a7bff,#2a55d0);border:2px solid #17348a;box-shadow:0 3px 0 #17348a}.cmc .cmh{display:flex;gap:10px;align-items:center}.cmc .cmi{font-size:26px}.cmc .cmh b{display:block;font-size:16px}.cmc .cmh small{display:block;font-size:12px;opacity:.9}.cmc .cmb{display:block;text-align:center;text-decoration:none;font-weight:800;color:#1f2050;background:#fff;border-radius:10px;padding:9px;box-shadow:0 2px 0 rgba(0,0,0,.25)}.cmc .cmb:active{transform:translateY(1px)}.cmc .cmcp{border:1.5px solid rgba(255,255,255,.6);background:transparent;color:#fff;border-radius:10px;padding:6px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}#tFb{background:linear-gradient(180deg,#6b77ff,#4752c4)!important;border-color:#2e3592!important;box-shadow:0 3px 0 #2e3592!important}';document.head.appendChild(st)})();
 (function(){const st=document.createElement('style');st.textContent='#tFb{position:absolute;right:10px;top:58px;z-index:6;font:inherit;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(180deg,#4a7bff,#2a55d0);border:2px solid #17348a;border-radius:12px;padding:6px 11px;box-shadow:0 3px 0 #17348a;cursor:pointer}#tFb:active{transform:translateY(2px);box-shadow:0 1px 0 #17348a}';document.head.appendChild(st);
- setInterval(()=>{try{const T=$('title');if(T&&$('tSup')&&!$('tFb'))$('tSup').insertAdjacentHTML('afterend','<button id="tFb" onclick="openFbGroup()">👥 กลุ่มเฟส</button>')}catch(e){}},1200)})();
+ setInterval(()=>{try{const T=$('title');if(T&&$('tSup')&&!$('tFb'))$('tSup').insertAdjacentHTML('afterend','<button id="tFb" onclick="openFbGroup()">💬 ชุมชน</button>')}catch(e){}},1200)})();
 
 // ===================== พบผู้เล่นจริง v3: แต่ละโลกเจอกันต่างกัน · ผูกรัก (เพศตรงข้าม) / พี่น้องร่วมสาบาน (ทุกเพศ) · เงาผู้เล่นที่ออฟไลน์ =====================
 function mwW(){if(!S)return 0;if((S.kalpa&&(S.kalpa.n>0||S.kalpa.pend))||S.age>=1e6)return 3;if(S.xt)return 2;if(S.xian)return 1;return 0}
@@ -31189,7 +31196,7 @@ body.tuOn #title .seg.tuTs > button.on,#title .box.opts .seg button.on,#title .s
 #title .seg button.on::before{content:"✓ ";font-weight:900}
 #title [onclick="goDaily()"]{font-size:15px!important;font-weight:800}#title #dailyInfo{font-size:13px!important}
 `;document.head.appendChild(st);
-const M={tSup:['🙏','สนับสนุน'],tFb:['👥','เฟส'],tCos:['🎨','ตกแต่ง'],tEv:['🏮','ลอยกระทง']};
+const M={tSup:['🙏','สนับสนุน'],tFb:['💬','ชุมชน'],tCos:['🎨','ตกแต่ง'],tEv:['🏮','ลอยกระทง']};
 setInterval(()=>{try{for(const k in M){const e=$(k);if(e&&!e.querySelector('.tbi')){e.title=e.textContent.trim();e.innerHTML=`<i class="tbi">${M[k][0]}</i><span>${M[k][1]}</span>`}}}catch(e){}},900);
 }
 
