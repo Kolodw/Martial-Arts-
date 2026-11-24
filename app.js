@@ -46196,9 +46196,117 @@ body.desk #modal.mWide .obTabs{flex-wrap:wrap}
 `;document.head.appendChild(st);
 const WIDE=new Set(['menu','rlmbook','guide','wscroll','obworlds','lessons','codex','sky_codex','ach','legacy','shop','sup','spshop']);
 let q=0;const fit=()=>{q=0;try{const m=document.getElementById('modal');if(!m)return;const on=document.body.classList.contains('desk')&&innerWidth>=1200&&document.getElementById('mask').classList.contains('on');
- const k=m.dataset.k||'';const want=on&&k!=='choice'&&(WIDE.has(k)||m.scrollHeight>innerHeight*1.35);
+ const k=m.dataset.k||'';const want=on&&k!=='choice'&&(WIDE.has(k)||!!m.querySelector(':scope>.bagit,:scope>.bgGrid,:scope>#bagBuyB')||m.scrollHeight>innerHeight*1.35);
  if(want!==m.classList.contains('mWide'))m.classList.toggle('mWide',want)}catch(e){}};
 const kick=()=>{if(!q)q=requestAnimationFrame(fit)};
 const boot=()=>{const m=document.getElementById('modal'),k=document.getElementById('mask');if(!m||!k)return setTimeout(boot,500);
  new MutationObserver(kick).observe(m,{childList:true,attributes:true,attributeFilter:['data-k']});new MutationObserver(kick).observe(k,{attributes:true,attributeFilter:['class']});addEventListener('resize',kick)};boot();
 })()}catch(e){console.error('mWide',e)}
+
+// ===== 🖥️ โครงหน้าต่างแบบคอม (≥1200px · body.desk): เมนู = หมวดซ้าย+ตารางขวา · กระเป๋า = ช่องของ+แผงรายละเอียด · เมือง = ย่านซ้าย · รายการยาว = 2 คอลัมน์ · ป้ายแจ้งเตือนย้ายไม่ทับแผง =====
+try{(()=>{
+const DK=()=>document.body.classList.contains('desk')&&innerWidth>=1200;
+let css='';for(let i=0;i<20;i++)css+=`#modal.mDk:not(.mnQ)[data-ms="${i}"] .msx:not(.ms${i}){display:none!important}`;
+const st=document.createElement('style');st.textContent=css+`
+#modal.mDk{display:grid!important;grid-template-columns:220px minmax(0,1fr);column-gap:22px;align-content:start}
+#modal.mDk>*{grid-column:2;min-width:0}
+#modal.mDk>.xbtn{grid-column:auto}
+#modal.mDk>.mnSide{grid-column:1;grid-row:1/span 60;align-self:start;position:sticky;top:0;display:flex;flex-direction:column;gap:4px;padding:10px 8px;border-radius:16px;background:rgba(0,0,0,.22);border:1px solid rgba(232,181,74,.25);margin-top:4px}
+.mnSide button{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;padding:0 12px;border-radius:10px;border:0;background:transparent;color:inherit;font:inherit;font-size:14.5px;text-align:left;cursor:pointer}
+.mnSide button:hover{background:rgba(232,181,74,.12)}
+.mnSide button.on{background:linear-gradient(180deg,#ffe29a,#e8b54a);color:#1d1405;font-weight:800}
+.mnSide button small{opacity:.7;font-size:12px}
+.mnSide .mnSh{font-size:12px;opacity:.6;padding:2px 12px 6px}
+#modal.mDk .mnJump{display:none!important}
+#modal.mDk .mcat15>.mgrid{display:grid!important}
+#modal.mDk .mcat15>h4.mch15 .mnChev{display:none}
+#modal.mDk:not(.mnQ) .mcat15>h4.mch15{pointer-events:none}
+#modal.mDk .mnTri{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:4px 0 10px}#modal.mDk .mnTri>button{width:auto!important;margin:0!important;min-height:46px}
+#modal.mDk>.msx.ms99{display:inline-flex;width:calc(33.33% - 6px)!important;margin:0 3px 8px!important;justify-content:center}
+/* กระเป๋า */
+#modal.bgDk{display:grid!important;grid-template-columns:minmax(0,1fr) 320px;column-gap:20px;align-content:start}
+#modal.bgDk>*{grid-column:1;min-width:0}
+#modal.bgDk>.xbtn{grid-column:auto}
+#modal.bgDk>.bgSide{grid-column:2;grid-row:1/span 60;align-self:start;position:sticky;top:0;padding:16px;border-radius:16px;background:rgba(0,0,0,.25);border:1px solid rgba(232,181,74,.3);display:flex;flex-direction:column;gap:10px;margin-top:40px}
+.bgSide .bgPic{height:150px;border-radius:14px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center}
+.bgSide .bgPic img{width:96px;height:96px;image-rendering:pixelated}
+.bgSide .bgN{font-size:20px;font-weight:800}.bgSide .bgD{font-size:14px;line-height:1.6;opacity:.9}
+.bgSide .bgB{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}.bgSide .bgB button{flex:1 1 40%;min-height:44px!important;font-size:15px!important;padding:6px 12px!important}
+.bgSide .bgE{opacity:.6;font-size:14px;text-align:center;padding:30px 6px}
+#modal.bgDk .bgGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:8px 0}
+#modal.bgDk .bgGrid>.bagit{margin:0!important;cursor:pointer;display:flex;flex-direction:column;gap:6px;min-height:96px;border:1px solid var(--rc,#666)}
+#modal.bgDk .bgGrid>.bagit.sel{box-shadow:0 0 0 2px #e8b54a,0 6px 18px #0008}
+#modal.bgDk .bgGrid>.bagit>.h{flex-direction:column;align-items:flex-start!important}
+#modal.bgDk .bgGrid>.bagit .pxf img{width:40px;height:40px;image-rendering:pixelated}
+#modal.bgDk #bagBuyB:not([open]){max-width:340px}
+/* เมือง */
+#modal.twDk{display:grid!important;grid-template-columns:200px minmax(0,1fr);column-gap:20px;align-content:start}
+#modal.twDk>*{grid-column:1/-1;min-width:0}#modal.twDk>.xbtn{grid-column:auto}
+#modal.twDk>.tabs{grid-column:1;grid-row:span 30;align-self:start;position:sticky;top:0;display:flex!important;flex-direction:column;gap:6px;height:auto!important;background:none!important;border:0!important;padding:0!important}
+#modal.twDk>.tabs .tuPill{display:none!important}
+#modal.twDk>.tabs .tabb{min-height:48px;justify-content:flex-start;text-align:left;padding:0 14px!important;border-radius:12px!important;border:1px solid rgba(232,181,74,.3)!important}
+#modal.twDk>.tabs .tabb.on{background:linear-gradient(180deg,#ffe29a,#e8b54a)!important;color:#1d1405!important}
+#modal.twDk>.tabs~.mgrid,#modal.twDk>.tabs~*{grid-column:2}
+#modal.twDk .mgrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+/* รายการยาว */
+.dkRun{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:6px 0}
+.dkRun>.item{margin:0!important}
+/* ป้ายแจ้งเตือน */
+body.tsOn #islCards{left:50%!important;right:auto!important;top:64px!important;bottom:auto!important;transform:translateX(-50%)}
+body.desk.dkG #islCards{right:auto!important;bottom:auto!important;left:var(--icL)!important;top:var(--icT)!important}
+`;document.head.appendChild(st);
+
+// ---------- เมนู ----------
+let msKey=null;
+function menuDk(m){if(m.querySelector(':scope>.mnSide'))return;const cat=m.querySelector('.mcat15');if(!cat)return;
+ const secs=[];let cur=null;
+ [...cat.children].forEach(c=>{if(c.matches('h4.mch15')){cur={h:c,n:c.textContent.replace('▾','').trim(),el:[c]};secs.push(cur);}else if(cur)cur.el.push(c)});
+ if(!secs.length)return;
+ const tail=[];let after=false;[...m.children].forEach(c=>{if(c===cat){after=true;return}if(after&&c.matches('button.gbtn'))tail.push(c)});
+ secs.forEach((s,i)=>s.el.forEach(e=>e.classList.add('msx','ms'+i)));
+ const oi=secs.length;if(tail.length){secs.push({n:'อื่นๆ · ออกจากชีวิต',el:tail});tail.forEach(e=>e.classList.add('msx','ms'+oi))}
+ let idx=Math.max(0,secs.findIndex(s=>s.n===msKey));m.dataset.ms=idx;
+ const side=document.createElement('nav');side.className='mnSide';side.setAttribute('aria-label','หมวดเมนู');
+ side.innerHTML='<div class="mnSh">หมวด</div>'+secs.map((s,i)=>{const n=s.el.reduce((a,e)=>a+(e.matches('.mgrid')?e.querySelectorAll(':scope>button').length:e.matches('button')?1:0),0);return `<button type="button" data-i="${i}" class="${i===idx?'on':''}"><span>${s.n}</span><small>${n||''}</small></button>`}).join('');
+ side.addEventListener('click',e=>{const b=e.target.closest('button[data-i]');if(!b)return;const i=+b.dataset.i;m.dataset.ms=i;msKey=secs[i].n;side.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));const inp=m.querySelector('.mnSearch input');if(inp&&inp.value){inp.value='';inp.dispatchEvent(new Event('input',{bubbles:true}))}m.classList.remove('mnQ');try{const h=secs[i].el[0];h.scrollIntoView({block:'nearest'})}catch(x){}m.scrollTop=0});
+ const sr=m.querySelector(':scope>.mnSearch');(sr||cat).insertAdjacentElement('beforebegin',side);
+ const tri=[...m.querySelectorAll(':scope>.glB,:scope>.dlyB,:scope>.tkEnt')];if(tri.length>1){const w=document.createElement('div');w.className='mnTri';tri[0].insertAdjacentElement('beforebegin',w);tri.forEach(e=>w.appendChild(e))}
+ m.classList.add('mDk');
+ const inp=m.querySelector('.mnSearch input');if(inp){const up=()=>m.classList.toggle('mnQ',!!inp.value.trim());inp.addEventListener('input',up);up()}}
+function menuUndo(m){m.classList.remove('mDk','mnQ');const s=m.querySelector(':scope>.mnSide');if(s)s.remove()}
+
+// ---------- กระเป๋า ----------
+function bagDk(m){if(m.querySelector(':scope>.bgSide'))return;const its=[...m.querySelectorAll(':scope>.bagit')];if(!its.length&&!m.querySelector('#bagBuyB'))return;
+ if(its.length){const g=document.createElement('div');g.className='bgGrid';its[0].insertAdjacentElement('beforebegin',g);its.forEach(e=>g.appendChild(e))}
+ const side=document.createElement('aside');side.className='bgSide';side.setAttribute('aria-label','รายละเอียดของ');m.insertBefore(side,m.children[1]||null);
+ const show=it=>{m.querySelectorAll('.bgGrid>.bagit.sel').forEach(x=>x.classList.remove('sel'));if(!it){side.innerHTML='<div class="bgE">คลิกของในกระเป๋า<br>เพื่อดูรายละเอียดและใช้</div>';return}it.classList.add('sel');
+  const img=it.querySelector('.pxf img'),nm=it.querySelector('b'),tg=it.querySelector('.rtag'),q=(it.querySelector('.h>span')||it).textContent.match(/×\s*([\d,]+)/);
+  const desc=[...it.children].filter(c=>!c.classList.contains('h')).map(c=>c.textContent.trim()).filter(Boolean).join(' · ');
+  side.innerHTML=`<div class="bgPic">${img?`<img src="${img.getAttribute('src')}" alt="">`:''}</div><div><div class="bgN" style="color:${nm?nm.style.color:''}">${nm?esc(nm.textContent):''}</div><div class="tag2">${tg?esc(tg.textContent):''}${q?' · มี '+q[1]+' ชิ้น':''}</div></div>${desc?`<div class="bgD">${esc(desc)}</div>`:''}<div class="bgB"></div>`;
+  const bb=side.querySelector('.bgB');it.querySelectorAll('button').forEach(b=>{const c=b.cloneNode(true);c.removeAttribute('style');c.className=/ใช้/.test(b.textContent)?'pbtn':'gbtn';bb.appendChild(c)})};
+ m.addEventListener('click',e=>{const it=e.target.closest('.bgGrid>.bagit');if(!it||e.target.closest('button'))return;show(it)});
+ show(its[0]||null);const buy=m.querySelector('#bagBuyB');if(buy&&!buy._dk){buy._dk=1;buy.open=false}
+ m.classList.add('bgDk')}
+
+// ---------- เมือง ----------
+function townDk(m){if(m.querySelector(':scope>.tabs'))m.classList.add('twDk')}
+
+// ---------- รายการยาว: .item ติดกัน ≥4 → 2 คอลัมน์ ----------
+const RUNK=new Set(['family','fam','people','peers','shop','sect','job','ach','legacy','friends','pets','rel']);
+function runs(m,min){if(m.querySelector(':scope>.dkRun'))return;let run=[];const flush=()=>{if(run.length>=(min||4)){const w=document.createElement('div');w.className='dkRun';run[0].insertAdjacentElement('beforebegin',w);run.forEach(e=>w.appendChild(e))}run=[]};
+ [...m.children].forEach(c=>{if(c.matches('.item')&&!c.matches('.bagit'))run.push(c);else flush()});flush()}
+
+let q=0;const go=()=>{q=0;try{const m=$('modal'),mk=$('mask');if(!m||!mk)return;const on=DK()&&mk.classList.contains('on'),k=m.dataset.k||'';
+ if(!on){if(m.classList.contains('mDk'))menuUndo(m);m.classList.remove('twDk');return}
+ if(k==='menu')menuDk(m);else if(m.classList.contains('mDk'))menuUndo(m);
+ if(m.querySelector(':scope>.bagit,:scope>#bagBuyB,:scope>.bgGrid'))bagDk(m);else m.classList.remove('bgDk');
+ if(k==='town')townDk(m);else m.classList.remove('twDk');
+ if(RUNK.has(k)||m.classList.contains('mWide'))runs(m,k==='family'?2:4)}catch(e){console.error('dkUI',e)}};
+const kick=()=>{if(!q)q=requestAnimationFrame(()=>requestAnimationFrame(go))};
+const boot=()=>{const m=$('modal'),k=$('mask');if(!m||!k)return setTimeout(boot,500);new MutationObserver(kick).observe(m,{childList:true,attributes:true,attributeFilter:['data-k']});new MutationObserver(kick).observe(k,{attributes:true,attributeFilter:['class']});addEventListener('resize',kick)};boot();
+
+// ---------- ป้ายแจ้งเตือนในเกม: มุมขวาบนของช่องกลาง (บนภาพฉาก) ----------
+setInterval(()=>{try{const g=$('game'),c=$('deskC'),ic=$('islCards');const on=DK()&&g&&g.classList.contains('on')&&c&&ic;document.body.classList.toggle('dkG',!!on);if(!on)return;
+ const r=c.getBoundingClientRect(),sc=$('sceneBox'),t=sc&&sc.getBoundingClientRect().height?sc.getBoundingClientRect().top+8:r.top+60,w=ic.offsetWidth||340;
+ document.body.style.setProperty('--icL',Math.max(r.left+8,r.right-w-12)+'px');document.body.style.setProperty('--icT',t+'px')}catch(e){}},700);
+})()}catch(e){console.error('dkUI',e)}
