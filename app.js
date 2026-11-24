@@ -46379,3 +46379,5 @@ try{window.secretBook=window.secretBook||function(){return wNeed('secret',()=>wi
 
 // ===== 🎮 มินิเกมยุคใหม่ (คีย์บอร์ดบนคอม · แตะรัว→กดค้าง · ปรับยากเอง · ดาว/สถิติแยกเครื่อง · โหมดช้าลง · หอฝึกมินิเกม) อยู่ที่ /w/mg3.js =====
 try{window.mgHall=window.mgHall||function(){return wNeed('mg3',()=>window._mgHall&&window._mgHall())};setTimeout(()=>{try{wLoad('mg3').catch(()=>{})}catch(e){}},1800)}catch(e){console.error('mg3Stub',e)}
+// 🔮 อยากเล่นต่ออีกชาติ (w/hook.js): เส้นทางชะตา · ภารกิจชาติ · หน้าจบชวนเกิดใหม่ · แชร์ผล/ลิงก์ท้าชะตาประจำวัน · ชาติก่อนของตัวเอง · ช่องทางผู้เล่น
+try{window.hkOpen=window.hkOpen||function(){return wNeed('hook',()=>window.hkOpen&&window.hkOpen())};setTimeout(()=>{try{wLoad('hook').catch(()=>{})}catch(e){}},2000)}catch(e){console.error('hkStub',e)}

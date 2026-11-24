@@ -3313,6 +3313,29 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       }
       return res.json({ ok: 1, m });
     }
+    // 📊 ช่องทางผู้เล่น (w/hook.js · ไม่ระบุตัวตน): นับรวมรายวัน (เวลาไทย) · ส่งได้ไม่เกิน 30 ครั้ง/เครื่อง/วัน · fnlget = แอดมินดู 14 วัน
+    if (a === 'fnl' || a === 'fnlget') {
+      const dayOf = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10);
+      if (a === 'fnl') {
+        const who = okId(id) ? String(id) : 'ip:' + String(ip || '').slice(0, 40);
+        const d = dayOf(now), rl = 'fnlr:' + who + ':' + d, [n] = await pipe([['INCR', rl], ['EXPIRE', rl, 86400 * 2]]);
+        if (+n > 30) return res.json({ ok: 0 });
+        const OK = /^(st|dg|qt|ret|new|fa|hq)$/, ops = [];
+        for (const x of (Array.isArray(b.e) ? b.e : []).slice(0, 25)) {
+          if (!Array.isArray(x)) continue; const k = String(x[0] || ''); if (!OK.test(k)) continue;
+          const v = String(x[1] == null ? '' : x[1]).replace(/[\r\n\t|]/g, ' ').slice(0, 40);
+          ops.push(['HINCRBY', (k === 'fa' ? 'fnlf:' : 'fnl:') + d, k + '|' + v, 1]);
+        }
+        if (!ops.length) return res.json({ ok: 1 });
+        ops.push(['EXPIRE', 'fnl:' + d, 86400 * 35], ['EXPIRE', 'fnlf:' + d, 86400 * 20]);
+        await pipe(ops); return res.json({ ok: 1 });
+      }
+      if (!isAdmKey(qOf(req).key || b.key)) return res.status(403).json({ err: 'admin' });
+      const days = []; for (let i = 0; i < 14; i++) days.push(dayOf(now - i * 864e5));
+      const R = await pipe(days.flatMap(x => [['HGETALL', 'fnl:' + x], ['HGETALL', 'fnlf:' + x]]));
+      const ho = h => { const o = {}; if (Array.isArray(h)) { for (let j = 0; j + 1 < h.length; j += 2) o[h[j]] = +h[j + 1] } else for (const k in (h || {})) o[k] = +h[k]; return o };
+      return res.json({ days: days.map((x, i) => ({ d: x, m: ho(R[2 * i]), f: ho(R[2 * i + 1]) })) });
+    }
     if (a === 'perf') {
       // 📈 ข้อมูลความลื่นจากเครื่องผู้เล่น (ไม่มีชื่อ/เซฟ) · 1 รายงานต่อเครื่องต่อ 2 ชม. · เก็บ 15 วัน
       const who = okId(id) ? String(id) : 'ip:' + String(ip || '').slice(0, 40);
