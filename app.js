@@ -46209,7 +46209,7 @@ ld();
 
 // ===== ⏳ ชะตาตัดสินแทน: ตั้ง 5 วิแล้วไม่ทำงาน (เพราะ 🔒 ล็อกตัวเลือกบังอยู่และโชว์เป็น "ปิด") → ตั้งเวลาเมื่อไหร่ ปลดล็อกให้เอง + เพิ่มตัวเลือก 3/8/15/30 วิ =====
 try{
-FATE_L.splice(0,FATE_L.length,0,3,5,8,10,15,20,30);
+FATE_L.splice(0,FATE_L.length,0,3,5,8,10,15,20,30,45,60);
 {const _set=LS.set;LS.set=function(k,v){const r=_set.apply(this,arguments);try{if(k==='murim_fate'&&+v>0&&LS.get('murim_chlock',0)){_set.call(LS,'murim_chlock',0);toast('🔓 ปลดล็อกตัวเลือกให้แล้ว — ชะตาจะตัดสินแทนใน '+v+' วิ');if(choice._cur&&$('modal')&&$('modal').dataset.k==='choice')choiceShow()}}catch(e){}return r}}
 }catch(e){console.error('fateSet',e)}
 

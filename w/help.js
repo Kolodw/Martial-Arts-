@@ -97,6 +97,13 @@ window.aOpen=aOpen;window.aSet=(k,v)=>{if(k==='stop'){LSS('murim_fa',v?0:1);retu
 {let pv=false,mp=false,uz=false,n=0;{const _tp=togglePause;togglePause=function(){const r=_tp.apply(this,arguments);uz=!!paused;mp=false;return r}}
  setInterval(()=>{try{if(!alive()){pv=false;mp=false;return}const p=!!paused;if(p&&!pv){mp=!uz&&!!modalOpen}if(!p){uz=false;mp=false}pv=p;
   if(p&&mp&&!modalOpen&&!choice._cur&&!(typeof DU!=='undefined'&&DU)&&!window._scrOpen&&!document.hidden&&!$$('coach')&&!$$('ctOv')){if(++n>=12){n=0;mp=false;paused=false;try{render()}catch(e){}}}else n=0}catch(e){}},250)}
+// ---------- ⏳ จับเวลาตัวเลือก: หยุดนับ/ปิดได้จากหน้าตัวเลือกเลย (ผู้เล่นอ่านช้าแจ้งว่าอ่านไม่ทันแล้วเกมเลือกให้ และหาที่ปิดไม่เจอ) ----------
+function fateStop(){try{clearInterval(choice._cd);clearTimeout(choice._t);const m=$$('modal');if(m&&m._chuT)clearInterval(m._chuT);const c=choice._cur;if(c)c._noFate=1;const e=$$('chCd');if(e)e.innerHTML='⏸ หยุดนับแล้ว อ่านได้ตามสบาย'}catch(e){}}
+window.fateStop=fateStop;window.fateOff=function(){try{LS.set('murim_fate',0)}catch(e){}fateStop();toast('⏳ ปิดจับเวลาแล้ว ตัวเลือกจะรอคุณเสมอ · เปิดใหม่ได้ที่ ☰ → ⚙️ อัตโนมัติ')};
+{const _cs=choiceShow;choiceShow=function(){const r=_cs.apply(this,arguments);try{const c=choice._cur;if(c&&c._noFate){fateStop();return r}
+ const e=$$('chCd');if(e&&!(typeof auto!=='undefined'&&auto)&&/วิ/.test(e.textContent)&&!e.parentNode.querySelector('.fsB')){const w=document.createElement('span');w.className='fsB';w.innerHTML='<button type="button" onclick="fateStop()">⏸ หยุดนับ</button><button type="button" onclick="fateOff()">ปิดจับเวลา</button>';e.insertAdjacentElement('afterend',w)}}catch(e){}return r}}
+// ถ้าผู้เล่นกดหยุดนับ ชะตาจะไม่เลือกแทนในคำถามนั้น (ยกเว้นออโต้)
+{const _fc=fateChoice;fateChoice=function(){try{const c=choice._cur;if(c&&c._noFate&&!(typeof auto!=='undefined'&&auto))return}catch(e){}return _fc.apply(this,arguments)}}
 // ---------- 4) ร้านสมบัติ: คุ้มสำหรับคุณตอนนี้ ----------
 function pick(){try{if(!alive()||typeof ecoCat!=='function')return[];const w=ECO_W(),m=S.money||0;if(m<=0)return[];const t=total(),lsLeft=(()=>{try{return Math.max(1,(S.lifespan||80)-S.age)}catch(e){return 50}})(),hpR=S.maxHp?S.hp/S.maxHp:1;
  const out=[];for(const it of ecoCat(w)){if(!/^(pow|hp|qi|life)$/.test(it.fx))continue;const p=ecoPrice(it);if(p>m||p<=0)continue;let e;try{e=ecoV(it)}catch(x){continue}if(!e||!e.v)continue;let sc=0,why='';
@@ -138,7 +145,7 @@ const st=document.createElement('style');st.textContent=`
 .wsC{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;margin:5px 0;border-radius:10px;border:1px solid var(--line,#5554);font-size:13.5px}.wsC .sysb{white-space:nowrap}.wsC .sysb.on{outline:2px solid #e0a030}
 .aGr{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}.aGr div{padding:8px;border-radius:10px;border:1px solid var(--line,#5554);font-size:12px;text-align:center}.aGr b{display:block;font-size:15px}
 .aEv{margin:4px 0;padding-left:18px;font-size:13px;line-height:1.5}.aWhy{padding:6px 10px;border-radius:10px;background:#e0a03022;font-weight:700}
-.mnMoreH{display:none!important}.spRec{margin:6px 0 10px;padding:10px 12px;border-radius:12px;border:1.5px solid #e0a030;background:linear-gradient(160deg,#e0a03022,transparent)}.spR{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line,#5554);font-size:13px}.spR:last-child{border:0}
+.mnMoreH{display:none!important}.fsB{display:inline-flex;gap:6px;margin-left:8px}.fsB button{font:inherit;font-size:12px;padding:3px 9px;border-radius:999px;border:1px solid #e0a03088;background:#e0a03022;color:inherit;cursor:pointer}.spRec{margin:6px 0 10px;padding:10px 12px;border-radius:12px;border:1.5px solid #e0a030;background:linear-gradient(160deg,#e0a03022,transparent)}.spR{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line,#5554);font-size:13px}.spR:last-child{border:0}
 @media (max-width:420px){.aGr{grid-template-columns:repeat(2,1fr)}}
 `;document.head.appendChild(st);
 window._help={diag,checks,pick,AC,aStart,aStop,ovNow};
