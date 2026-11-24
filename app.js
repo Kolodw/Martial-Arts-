@@ -46336,3 +46336,6 @@ try{setTimeout(()=>{try{wLoad('life').catch(()=>{})}catch(e){}},2600)}catch(e){c
 
 // ===== 🔮 ความลับ 200 อย่าง (ตัวเลือกลับ · ฉากลับ · ตอนจบลับ · สมุดความลับ) อยู่ที่ /w/secret.js — โหลดเบื้องหลัง =====
 try{window.secretBook=window.secretBook||function(){return wNeed('secret',()=>window._secretBook&&window._secretBook())};setTimeout(()=>{try{wLoad('secret').catch(()=>{})}catch(e){}},2900)}catch(e){console.error('scrStub',e)}
+
+// ===== 🎮 มินิเกมยุคใหม่ (คีย์บอร์ดบนคอม · แตะรัว→กดค้าง · ปรับยากเอง · ดาว/สถิติแยกเครื่อง · โหมดช้าลง · หอฝึกมินิเกม) อยู่ที่ /w/mg3.js =====
+try{window.mgHall=window.mgHall||function(){return wNeed('mg3',()=>window._mgHall&&window._mgHall())};setTimeout(()=>{try{wLoad('mg3').catch(()=>{})}catch(e){}},1800)}catch(e){console.error('mg3Stub',e)}
