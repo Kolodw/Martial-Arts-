@@ -3248,9 +3248,13 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (adm && String(q.act || b.act || '') === '2') { // คนที่เปิดเกมอยู่ล่าสุด: ?a=idmerge&key=&act=2[&min=30][&cur=] → เฉพาะที่ผูก Google
         const mn = Math.min(10080, Math.max(1, +(q.min || b.min) || 30)), cn = String(q.cn || b.cn || '').trim().slice(0, 30), t0 = Date.now(), act = []; let cur = String(q.cur || b.cur || '0').replace(/[^0-9]/g, '') || '0', n = 0;
         do { const r = await cmd('HSCAN', 'lm', cur, 'COUNT', 3000); cur = String(r[0]); const kv = r[1] || []; for (let i = 0; i < kv.length; i += 2) { n++; const m = jp(kv[i + 1]); if (m && m.t && now - m.t <= mn * 60000) act.push({ id: kv[i], ago: Math.round((now - m.t) / 60000), dev: (m.d || '') + ' ' + (m.b || '') }) } } while (cur !== '0' && Date.now() - t0 < 4500);
-        const out = []; let cut = 0; for (const x of act) { if (Date.now() - t0 > 9000) { cut = 1; break } const g = await cmd('GET', 'gof:' + x.id); if (!g) continue; x.guild = (await cmd('GET', 'gdu:' + x.id.slice(0, 12))) || ''; x.arena = (await cmd('HGET', 'arn', x.id)) || ''; x.chars = [];
-          try { const sl = await cs3Fill(x.id, await pipe([1, 2, 3, 4, 5].map(i => ['GET', 'cs3:' + x.id + ':' + i]))); for (const d0 of sl) { if (!d0) continue; try { const d = JSON.parse(Buffer.from(zUnpack(d0), 'base64').toString('utf8')); x.chars.push((d.S && d.S.name || '?') + ' · ' + ((d.S && d.S.age) | 0)) } catch (e) { } } } catch (e) { } if (cn && !x.chars.some(c => c.includes(cn))) continue; out.push(x); if (out.length >= 15) break }
-        return res.json({ ok: 1, scanned: n, done: cur === '0' ? 1 : 0, next: cur === '0' ? '' : cur, active: act.length, cut, list: out });
+        act.sort((x, y) => x.ago - y.ago || (x.id < y.id ? -1 : 1));
+        const gv = act.length ? await pipe(act.map(x => ['GET', 'gof:' + x.id])) : []; const ga = act.filter((x, i) => gv[i]);
+        const i0 = Math.max(0, +(q.i || b.i) || 0), out = []; let i = i0, cut = 0;
+        const one = async x => { const [gu, an] = await pipe([['GET', 'gdu:' + x.id.slice(0, 12)], ['HGET', 'arn', x.id]]); x.guild = gu || ''; x.arena = an || ''; x.chars = [];
+          try { const sl = await cs3Fill(x.id, await pipe([1, 2, 3, 4, 5].map(k => ['GET', 'cs3:' + x.id + ':' + k]))); for (const d0 of sl) { if (!d0) continue; try { const d = JSON.parse(Buffer.from(zUnpack(d0), 'base64').toString('utf8')); x.chars.push((d.S && d.S.name || '?') + ' · ' + ((d.S && d.S.age) | 0)) } catch (e) { } } } catch (e) { } return x };
+        while (i < ga.length) { if (Date.now() - t0 > 8000) { cut = 1; break } const ch = ga.slice(i, i + 12); i += ch.length; const r = await Promise.all(ch.map(one)); for (const x of r) if (!cn || x.chars.some(c => c.includes(cn))) out.push(x); if (out.length >= 15) break }
+        return res.json({ ok: 1, scanned: n, done: cur === '0' ? 1 : 0, next: cur === '0' ? '' : cur, active: act.length, google: ga.length, checked: i, more: i < ga.length ? 'เติม &i=' + i + ' เพื่อเช็กต่อ' : '', cut, list: out });
       }
       if (adm && (q.gl || b.gl)) { // ค้นไอดีที่ผูก Google เป็นช่วงๆ: ?a=idmerge&key=&gl=1[&e=ส่วนของอีเมล][&cur=ค่า next จากรอบก่อน]
         const f = String(q.e || b.e || '').toLowerCase(), r0 = [], t0 = Date.now(); let cur = String(q.cur || b.cur || '0').replace(/[^0-9]/g, '') || '0', n = 0, rounds = 0;
