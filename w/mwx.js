@@ -1378,7 +1378,7 @@ const onS=id=>{const e=document.getElementById(id);return !!(e&&e.classList.cont
 function which(){try{const m=document.getElementById('modal');
  const bb=document.getElementById('brB');if(bb&&bb.offsetParent!==null)return['w2','beast'];
  const mb=document.getElementById('mwB');if(mb&&getComputedStyle(mb).display!=='none')return['mn','mw'];
- if(onS('skB'))return['k','sky'];
+ if(onS('skB'))return['k','sky'];if(onS('fgB'))return['mn','fog'];
  if(onS('create'))return[window._skyLookFlow?'k':window._mwLookFlow?'mn':(CFG.xian?'w1':'w0'),'create'];
  if(onS('birth'))return[CFG.xian?'w1':(CFG.chm==='soul'||(window.CFG&&CFG.soul))?'l':'w0','birth'];}catch(e){}return null}
 let bg=null;

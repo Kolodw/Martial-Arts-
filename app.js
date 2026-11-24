@@ -45836,6 +45836,41 @@ try{(()=>{const fogOn=()=>{try{return !!(S&&S.mw&&S.mw.fog)}catch(e){return fals
  {const _cs=chmSel;chmSel=function(){const v=openOnline._cm;if(v==='f')return'f';if(!v&&fogOn())return'f';return _cs.apply(this,arguments)}}
  {const _oo=openOnline;openOnline=function(tab){try{if(tab==='board'&&openOnline._bw==null&&fogOn()){openOnline._bw=4;openOnline._cm='f'}}catch(e){}return _oo.apply(this,arguments)};for(const k in _oo)try{openOnline[k]=_oo[k]}catch(e){}window.openOnline=openOnline}
 })()}catch(e){console.error('block214',e)}
+// ===================== BLOCK 215: 🖥️ หน้าสุ่มกำเนิดบนจอคอม — แบ่ง 3 คอลัมน์ให้เหมือนยุทธภพ (นครม่านหมอก · สัตว์อสูร) =====================
+try{(()=>{const DK=()=>innerWidth>=1100;
+ // ย้ายของเข้า 3 คอลัมน์ (ทำซ้ำได้ไม่กระพริบ: ย้ายเฉพาะชิ้นที่ยังไม่อยู่ในคอลัมน์)
+ const col=(R,cls,sels,before)=>{let c=R.querySelector(':scope>.'+cls);if(!c){c=document.createElement('div');c.className='dkCol '+cls;before&&before.parentNode===R?R.insertBefore(c,before):R.appendChild(c)}sels.forEach(q=>R.querySelectorAll(':scope>'+q).forEach(e=>c.appendChild(e)));return c};
+ const SETS={fog:{id:'fgB',L:['.hcard','.ccFgRow'],M:['.fgTr','.fbTls','.fbHint'],R:['.rrxB','.fgOdds','.fbVh','.fbVs','.fbRe2','.fgBar']},
+  beast:{id:'brB',L:['.brst','.brhd','.ccOwnB'],M:['.brtr'],R:['.rrxB','#brOdds','#brGoal','.brAct']}};
+ const run=()=>{try{const on=document.body.classList.contains('bdOn')&&DK();for(const k in SETS){const S0=SETS[k],R=document.getElementById(S0.id);if(!R)continue;const want=on&&document.body.dataset.bdw===k;
+  if(!want){if(R.querySelector(':scope>.dkCol')){/* กลับเป็นคอลัมน์เดียว */const cs=[...R.querySelectorAll(':scope>.dkCol')];cs.forEach(c=>{while(c.firstChild)R.insertBefore(c.firstChild,c);c.remove()})}R.classList.remove('dk3');continue}
+  if(!R.firstElementChild)continue;R.classList.add('dk3');const first=R.querySelector(':scope>'+S0.L.concat(S0.M,S0.R).join(',:scope>'));const L=col(R,'dkL',S0.L,first),M=col(R,'dkM',S0.M,null),Rr=col(R,'dkR',S0.R,null);
+  if(M.previousElementSibling!==L)R.insertBefore(M,L.nextSibling);if(Rr.previousElementSibling!==M)R.insertBefore(Rr,M.nextSibling)}}catch(e){}};
+ setInterval(run,300);addEventListener('resize',run);
+ const st=document.createElement('style');st.textContent=`
+@media(min-width:1100px){
+ body.bdOn[data-bdw="fog"] #fgB.on{display:grid!important;grid-template-columns:300px minmax(0,1fr) 360px!important;column-gap:18px;row-gap:12px;align-items:start;width:min(1400px,100%)!important;max-width:1400px!important;padding:14px 18px 30px!important}
+ body.bdOn[data-bdw="fog"] #fgB.on>h2,body.bdOn[data-bdw="fog"] #fgB.on>.bwld,body.bdOn[data-bdw="fog"] #fgB.on>:not(.dkCol){grid-column:1/-1!important}
+ body.bdOn[data-bdw="fog"] #fgB.on>.dkL{grid-column:1!important;position:sticky;top:12px}
+ body.bdOn[data-bdw="fog"] #fgB.on>.dkM{grid-column:2!important}
+ body.bdOn[data-bdw="fog"] #fgB.on>.dkR{grid-column:3!important;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;scrollbar-width:thin}
+ #fgB.dk3 .dkCol>*{margin-top:0;margin-bottom:12px}
+ #fgB.dk3 .dkL .row1{flex-direction:column!important;align-items:stretch!important;gap:10px}
+ #fgB.dk3 .dkL .bstage{width:100%!important;height:auto!important}#fgB.dk3 .dkL .bstage canvas{width:100%!important;height:auto!important;aspect-ratio:136/150}
+ #fgB.dk3 .dkL .bname{width:auto!important}#fgB.dk3 .ccFgRow{display:flex;flex-direction:column;gap:8px}#fgB.dk3 .ccFgRow button{width:100%}
+ #fgB.dk3 .dkM .fgTr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#fgB.dk3 .dkM .fgTr .trait{margin:0}#fgB.dk3 .dkM .fgTr .trait:first-child{grid-column:1/-1}
+ #fgB.dk3 .dkR .fbVs{grid-template-columns:1fr!important}
+ #fgB.dk3 .dkR .fgBar{position:static!important;background:none!important;padding:0!important;grid-template-columns:1fr 1.4fr 1fr}
+ body.bdOn[data-bdw="beast"] #brB.dk3{grid-template-columns:320px minmax(0,1fr) 340px!important;grid-template-areas:"h h h" "p p p" "L M R"!important}
+ body.bdOn[data-bdw="beast"] #brB.dk3>.dkL{grid-area:L;position:sticky;top:0}body.bdOn[data-bdw="beast"] #brB.dk3>.dkM{grid-area:M}body.bdOn[data-bdw="beast"] #brB.dk3>.dkR{grid-area:R;position:sticky;top:0}
+ body.bdOn[data-bdw="beast"] #brB.dk3>:not(.dkCol):not(h3):not(p){grid-column:1/-1}
+ #brB.dk3 .dkCol>*{margin-top:0!important;margin-bottom:10px!important}
+ #brB.dk3 .dkL .brst canvas{aspect-ratio:160/120!important}
+ #brB.dk3 .dkL .brhd{flex-direction:column;align-items:flex-start}#brB.dk3 .dkL .ccOwnB{width:100%}
+ #brB.dk3 .dkM .brtr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:0}#brB.dk3 .dkM .brtr .trait{margin:0}#brB.dk3 .dkM .brtr .trait.wide{grid-column:1/-1}
+ #brB.dk3 .dkR .brAct{position:static!important;display:flex;gap:8px}#brB.dk3 .dkR .brAct button{flex:1}
+}`;document.head.appendChild(st);
+})()}catch(e){console.error('block215',e)}
 // BLOCK 211: ✍️ สร้างเอง / 🎨 ออกแบบหน้าตา ทุกโลก — ตัวเลือกกลาง ccPick (เลือกทุกช่องเอง) · ccLook (ออกแบบหน้าตา ที่เหลือลิขิต)
 //  ชีวิตที่ "สร้างเอง" ตั้ง S.custom + S.ccOwn → ไม่ส่งขึ้นทำเนียบ (ห่อ sendLife) · ตั้งผ่าน window._ccOwnPending ก่อน startLife ของแต่ละโลก
 //  ใช้ใน: 🐾 สัตว์อสูร (หน้ากำเนิด) · 🌉 นครม่านหมอก (w/fog.js) · 🌠 ทะลุฟ้าดารา (w/sky.js) · โลกอื่นมีอยู่แล้ว (goBirthPick / ยุคปัจจุบัน)
