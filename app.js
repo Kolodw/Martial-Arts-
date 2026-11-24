@@ -37896,6 +37896,7 @@ const on=()=>{try{return Date.now()<Date.parse('2027-01-01T00:00:00+07:00')}catc
 setInterval(()=>{try{const T=$('title');if(!T||!T.classList.contains('on')||!$('tSup'))return;let b=$('tSp');
  if(!on()){if(b)b.remove();return}
  if(!b){T.insertAdjacentHTML('afterbegin','<button id="tSp" type="button" onclick="openSP(\'tr\')"><i class="au"></i><i class="tbi">❄</i><span>คัมภีร์</span><i class="dt" style="display:none"></i></button>');b=$('tSp')}
+ if(document.body.classList.contains('tsOn')){['position','right','left','width','height','visibility'].forEach(k=>b.style.removeProperty(k));const set2=(k,v)=>b.style.setProperty(k,v,'important');set2('flex-direction','row');set2('justify-content','flex-start');set2('gap','7px');set2('padding','0 12px');set2('font-size','13px');return}
  const vis=e=>e&&e.getClientRects().length>0&&getComputedStyle(e).display!=='none',ref=vis($('tEv'))?$('tEv'):vis($('tFb'))?$('tFb'):null;if(!ref){b.style.setProperty('visibility','hidden');return}b.style.removeProperty('visibility');const cs=getComputedStyle(ref);
  const top=(parseFloat(cs.top)||0)+ref.offsetHeight+(ref.id==='tEv'?6:60),set=(k,v)=>{if(b.style.getPropertyValue(k)!==v)b.style.setProperty(k,v,'important')};
  set('position',cs.position==='fixed'?'fixed':'absolute');set('top',top+'px');set('right',cs.right);set('left','auto');set('width',ref.offsetWidth+'px');set('height',ref.offsetHeight+'px');const wide=ref.offsetWidth>100;set('flex-direction',wide?'row':'column');set('justify-content',wide?'flex-start':'center');set('gap',wide?'7px':'1px');set('padding',wide?'0 14px':'0');set('font-size',wide?'13px':'10.5px');const sp=b.querySelector('span'),tx=wide?'คัมภีร์ฤดูกาล':'คัมภีร์';if(sp&&sp.textContent!==tx)sp.textContent=tx;
@@ -46046,3 +46047,53 @@ FATE_L.splice(0,FATE_L.length,0,3,5,8,10,15,20,30);
 
 // ===== 🧭 ระบบพาผู้เล่นใหม่ (เลือกทางเล่น · ทุกโลกทุกโหมด · ภารกิจปีแรก · ค้นหาในคู่มือ) อยู่ที่ /w/onb.js — ทางเข้าโหลดเมื่อเรียกใช้ =====
 try{['obPath','obWorlds'].forEach(n=>{window[n]=function(){const a=arguments;return wNeed('onb',()=>{const f=window['_'+n];if(f)return f.apply(null,a)})}});setTimeout(()=>{try{wLoad('onb').catch(()=>{})}catch(e){}},2500)}catch(e){console.error('onbStub',e)}
+
+// ===== 🖥️ หน้าแรกบนคอม (≥1100px · body.tsOn): 3 คอลัมน์สมส่วน · ปุ่มมุมขวาเป็นแผง 2×2 · โลกตาราง 4 ช่อง · แถบเกิดอยู่ในคอลัมน์กลาง =====
+try{(()=>{const st=document.createElement('style');st.textContent=`
+body.tsOn{--tsW:clamp(250px,19vw,320px);--tsC:min(980px,calc(100vw - 2*var(--tsW) - 96px))}
+body.tsOn #title.screen{max-width:none;width:var(--tsC);padding-bottom:190px!important}
+body.tsOn .tsP{top:116px;bottom:20px;width:var(--tsW)}
+body.tsOn #tTop{left:24px!important;width:var(--tsW);box-sizing:border-box}
+body.tsOn #title #tSup.tsG,body.tsOn #title #tFb.tsG,body.tsOn #title #tCos.tsG,body.tsOn #title #tEv.tsG,body.tsOn #title #tSp.tsG{position:fixed!important;right:auto!important;left:var(--tx)!important;top:var(--ty)!important;width:calc((var(--tsW) - 8px)/2)!important;height:42px!important;box-sizing:border-box;margin:0!important;transform:none}
+body.tsOn .tsP{top:var(--tsTop,116px)}
+body.tsOn #wPick .wpS{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(max(136px,calc((100% - 36px)/4)),1fr));gap:12px;padding:4px 2px 8px}
+body.tsOn #wPick .wc{flex:none!important;width:auto!important;max-width:none!important;min-height:0!important;height:clamp(170px,22vh,210px);margin:0!important;box-sizing:border-box}
+body.tsOn #wPick .wc.on{transform:translateY(-3px)}
+body.tsOn #tDock{left:50%!important;right:auto!important;transform:translateX(-50%);width:var(--tsC);bottom:12px;box-sizing:border-box;padding:10px 12px 8px!important;border-radius:20px;background:rgba(14,10,30,.94)!important;border:1px solid rgba(255,214,130,.35);box-shadow:0 14px 40px #000a}
+body.tsOn #tDock .row,body.tsOn #tDock .nav{max-width:none}
+body.tsOn #tDock .tgo{flex:1.6}
+@media (min-width:1240px){body.tsOn #tDock{display:none}body.tsOn.ttl #tDock{display:flex!important;align-items:stretch;gap:10px;padding:8px 10px!important}body.tsOn #tDock .nav{order:-1;margin:0!important;flex:0 0 auto;gap:2px}body.tsOn #tDock .nav button{flex:0 0 auto;width:clamp(50px,4.2vw,64px);font-size:10.5px}body.tsOn #tDock .row{flex:1;min-width:0}body.tsOn #title.screen{padding-bottom:110px!important}}
+body.tsOn #tHeroCap{display:none}body.tsOn #title .big{margin-top:0!important;margin-bottom:2px!important}
+body.tsOn #tDock .nav{margin-top:6px}
+body.tsOn #tDock .nav button{padding:4px 0}
+body.tsOn #tDock .nav button:hover{background:rgba(255,214,130,.1)}
+@media (max-height:820px){body.tsOn #wPick .wc{height:142px}body.tsOn #wPick .wc small{-webkit-line-clamp:1}body.tsOn #title #syncSt{display:none}}
+`;document.head.appendChild(st);
+const ids=['tSup','tFb','tCos','tEv','tSp'];
+setInterval(()=>{try{const on=document.body.classList.contains('tsOn');let i=0;
+ ids.forEach(id=>{const e=document.getElementById(id);if(!e)return;if(!on){if(e.classList.contains('tsG')){e.classList.remove('tsG');e.style.removeProperty('top')}return}
+  if(getComputedStyle(e).display==='none'){if(e.classList.contains('tsG')){e.classList.remove('tsG');e.style.removeProperty('top')}return}
+  e.classList.add('tsG');const c=i%2,r=(i/2)|0;e.style.setProperty('--tx',`calc(100vw - 24px - var(--tsW) + ${c} * (var(--tsW) + 8px) / 2)`);e.style.setProperty('--ty',(14+r*50)+'px');e.style.setProperty('top',(14+r*50)+'px','important');i++});
+ if(on)document.body.style.setProperty('--tsTop',(14+Math.ceil(i/2)*50+14)+'px')}catch(e){}},600);
+})()}catch(e){console.error('tsDesk',e)}
+
+// ===== 🖥️ หน้าต่างในเกมบนคอม (≥1200px): หน้าที่เนื้อหายาว (เมนู คัมภีร์ คู่มือ ฯลฯ) กว้างขึ้น + จัดการ์ดเป็นหลายคอลัมน์ ไม่ต้องเลื่อนยาว =====
+try{(()=>{const st=document.createElement('style');st.textContent=`
+@media (min-width:1200px){
+body.desk #mask #modal.mWide{max-width:min(1100px,calc(100vw - 80px))!important;width:min(1100px,calc(100vw - 80px))!important;max-height:88vh!important;max-height:88dvh!important}
+body.desk #modal.mWide .mgrid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+body.desk #modal.mWide[data-k="rlmbook"] .cxbody,body.desk #modal.mWide[data-k="guide"] .cxbody{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:start}
+body.desk #modal.mWide[data-k="rlmbook"] .cxbody>:not(.rlmc),body.desk #modal.mWide[data-k="guide"] .cxbody>:not(.gdc){grid-column:1/-1}
+body.desk #modal.mWide[data-k="rlmbook"] .cxbody>.rlmc,body.desk #modal.mWide[data-k="guide"] .cxbody>.gdc{margin:0!important}
+body.desk #modal.mWide .obTabs{flex-wrap:wrap}
+}
+@media (min-width:1600px){body.desk #modal.mWide .mgrid{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
+`;document.head.appendChild(st);
+const WIDE=new Set(['menu','rlmbook','guide','wscroll','obworlds','lessons','codex','sky_codex','ach','legacy','shop','sup','spshop']);
+let q=0;const fit=()=>{q=0;try{const m=document.getElementById('modal');if(!m)return;const on=document.body.classList.contains('desk')&&innerWidth>=1200&&document.getElementById('mask').classList.contains('on');
+ const k=m.dataset.k||'';const want=on&&k!=='choice'&&(WIDE.has(k)||m.scrollHeight>innerHeight*1.35);
+ if(want!==m.classList.contains('mWide'))m.classList.toggle('mWide',want)}catch(e){}};
+const kick=()=>{if(!q)q=requestAnimationFrame(fit)};
+const boot=()=>{const m=document.getElementById('modal'),k=document.getElementById('mask');if(!m||!k)return setTimeout(boot,500);
+ new MutationObserver(kick).observe(m,{childList:true,attributes:true,attributeFilter:['data-k']});new MutationObserver(kick).observe(k,{attributes:true,attributeFilter:['class']});addEventListener('resize',kick)};boot();
+})()}catch(e){console.error('mWide',e)}
