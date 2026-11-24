@@ -2408,7 +2408,7 @@ const uPg=K=>K.u&&K.u.pg?Object.keys(K.u.pg).length:0;
 const uPage=(K,p)=>{if(!K.u.pg)K.u.pg={};if(K.u.pg[p])return'';K.u.pg[p]=1;try{island({big:1,ic:'📜',h:'หน้ากระดาษนวนิยาย',t:`${uPg(K)}/7 · ${PAGES[p]}`,kind:'gold',ms:5000})}catch(e){}return ` · 📜 <b>ได้หน้ากระดาษนวนิยาย ${uPg(K)}/7</b> — ${PAGES[p]}`};
 {const _ypU=spYP;spYP=function(K){const e=uEra(K);return e>=5?[2000,10000,100000,1000000][e-5]:_ypU.apply(this,arguments)}}
 {const _syU=sync;sync=function(){_syU.apply(this,arguments);const K=SK();if(K&&!K.beast&&K.rk>=18)S.mw.end=Math.round(S.mw.end*Math.pow(1.2,Math.max(0,idx(K)-180)))}}
-GATEV[17]=K=>K.u&&K.u.out?null:(K.gx&&['ender','emperor'].includes(K.gx.end)?'u_launch':null);
+GATEV[17]=K=>K.u&&K.u.out?null:(K.gx&&['ender','emperor'].includes(K.gx.end)?'u_launch':(K.gx&&!K.gx.end?'gx_finale':null)); // ฉากฟ้าสุดท้ายหลุดคิว (ปิดหน้าต่าง/โหลดเซฟ/ล้างคิว) → เดิมไม่มีทางกลับมา ติดขั้นผู้ทะลุฟ้าดาราถาวร
 GATEV[18]=K=>uDis(K).length>=3?null:'u_disq';GATEV[19]=K=>K.u.cw?null:'e5_war';GATEV[20]=K=>K.u.gal?null:'e5_galq';GATEV[21]=K=>K.u.uc?null:'e5_trial';GATEV[22]=K=>uLawN(K,1)?null:'e6_first';
 GATEV[23]=K=>null;GATEV[24]=K=>K.u.lr?null:'e6_rival';GATEV[25]=K=>K.u.fuse?null:'e6_fuse';GATEV[26]=K=>K.u.past?null:'e6_past';GATEV[27]=K=>K.u.rift?null:'e6_rift';
 GATEV[28]=K=>null;GATEV[29]=K=>K.u.selfW?null:'e7_selfq';GATEV[30]=K=>K.u.save?null:'e7_save';GATEV[31]=K=>K.u.src?null:'e7_src';GATEV[32]=K=>K.u.ogate?null:'e8_gate';
