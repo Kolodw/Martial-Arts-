@@ -108,7 +108,7 @@ function legacy(x,E,done){const ks=Object.keys(LEG);let opt=x.gate>=.67?ks:ks.so
 // ---------- จับจังหวะ "จากไป" ----------
 {const _cd=checkDeath;checkDeath=function(){try{if(S&&S.alive){if(S._xa&&S._xa.run){if(S.hp<=0)S.hp=1;return}
    if(S.hp<=0&&S.flags&&S.flags.ascended&&S.xt&&!S._xaOK&&ASC.test(S.deathCause||'')){S.hp=1;S.flags.ascLeft=1;startFinal();return}}}catch(e){console.error('xa',e)}return _cd.apply(this,arguments)}}
-{const _py=passYear;passYear=function(){if(S&&S._xa&&S._xa.run)return;const r=_py.apply(this,arguments);try{tick()}catch(e){console.error('xa tick',e)}return r}}
+{const _py=passYear;passYear=function(){if(S&&S._xa&&S._xa.run)return;let w=0;try{w=tick()}catch(e){console.error('xa tick',e)}if(w)return;return _py.apply(this,arguments)}}
 
 // ---------- มรดก + เทพผู้เฝ้ามอง ในชีวิตถัดไป ----------
 function tick(){if(!S||!S.alive)return;
@@ -124,7 +124,7 @@ function tick(){if(!S||!S.alive)return;
  const low=S.hp<S.maxHp*.35;if(rnd()>(low?.06:.012))return;S._xaW=1;const o=pick(G),E=ENDS.find(e=>e.id===o.e)||ENDS[ENDS.length-1];const who=`${E.ic} <b>${es(o.n)}</b>`;
  if(low){S.hp=S.maxHp;say(L(`${who} ผู้ก้าวพ้นสามภพ ยื่นมือลงมาจากเมฆ บาดแผลของคุณหายสนิท "ยังไม่ถึงเวลาของเจ้า"`,`${who}, who transcended the Three Realms, reaches down from the clouds. Your wounds close. "It is not your time yet."`),'myth',true);return}
  if(rnd()<.5){const p=pw(.01);S.karma=(S.karma||0)+5;say(L(`${who} ปรากฏในความฝัน กระซิบคำทำนายสั้นๆ ก่อนหายไป (พลังยุทธ์ +${fm(p)} · กรรม +5)`,`${who} appears in a dream, whispers a short prophecy, then fades (power +${fm(p)} · karma +5)`),'epic');return}
- C(L('🌌 บททดสอบจากผู้ก้าวพ้น','🌌 A Trial from the Ascendant'),L(`ร่างเงาของ${who} ยืนอยู่บนยอดเขา "ข้าเคยเดินบันไดนี้ เจ้าล่ะ เดินได้ไหม"`,`The shade of ${who} stands on the peak. "I once climbed this stair. Can you?"`),[
+ return void C(L('🌌 บททดสอบจากผู้ก้าวพ้น','🌌 A Trial from the Ascendant'),L(`ร่างเงาของ${who} ยืนอยู่บนยอดเขา "ข้าเคยเดินบันไดนี้ เจ้าล่ะ เดินได้ไหม"`,`The shade of ${who} stands on the peak. "I once climbed this stair. Can you?"`),[
   {t:L('🌌 รับบททดสอบ','🌌 Accept the trial'),f(){setTimeout(()=>{try{mg2Play('xaGate',{},(sc,sk)=>{if(!sk&&sc>=.67){const p=pw(.03);say(L(`${who} พยักหน้า "ไม่เลว" (พลังยุทธ์ +${fm(p)})`,`${who} nods. "Not bad." (power +${fm(p)})`),'epic')}else say(L(`${who} ยิ้ม "กลับมาลองใหม่ในชาติหน้า"`,`${who} smiles. "Try again in another life."`),'')})}catch(e){}},200)}},
   {t:L('🙇 ก้มหัวคารวะแล้วจากไป','🙇 Bow and leave'),f(){S.karma=(S.karma||0)+2}}])}
 
@@ -154,6 +154,6 @@ const st=document.createElement('style');st.textContent=`
 #xaEnd .xaSt{font-size:12px;opacity:.8;margin-top:12px}#xaEnd .xaTap{font-size:12px;opacity:.6;margin-top:18px;animation:xaB 1.2s infinite alternate}@keyframes xaB{to{opacity:.2}}
 @media(prefers-reduced-motion:reduce){#xaEnd *{animation-duration:.01s!important}}`;document.head.appendChild(st);
 try{Object.assign(I18N.d,{'ผู้ก้าวพ้นสามภพ':'The Ascendants','บันไดแสงเก้าขั้น':'The Nine Steps of Light','ผู้เดินบนแสง':'Walker of Light','วงแสงแกว่งไปมา แตะตอนวงอยู่ในช่องทองเพื่อก้าวขึ้นหนึ่งขั้น · ขั้นสูงขึ้นช่องจะแคบลงและวงเร็วขึ้น · พลาดได้ 2 ครั้ง':'A ring of light swings back and forth. Tap when it is inside the gold zone to climb one step. Higher steps have narrower zones and faster rings. You may miss twice'})}catch(e){}
-window._xa={startFinal,endOf,ENDS};
+window._xa={startFinal,endOf,ENDS,tick};
 })()}catch(e){console.error('xa',e)}
 try{wReady('xa')}catch(e){}
