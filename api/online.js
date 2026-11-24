@@ -3015,7 +3015,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       return res.json({ ok: 1, d: v.d, z: v.z });
     }
     if (req.method !== 'POST' && a !== 'dccb' && a !== 'dcstat') return res.status(405).json({ err: 'method' });
-    if (!okId(id)) return res.status(400).json({ err: 'id' });
+    if (!okId(id) && a !== 'dccb') return res.status(400).json({ err: 'id' });
     if (a === 'logreq') {
       const k2 = String(b.t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
       const full = await findLive(k2, isAdmQ(b.key));
