@@ -46330,3 +46330,6 @@ const o=window.island;if(typeof o==='function'){window.island=function(n){try{if
 const flush=()=>{if(maskOn()||!HOLD.length)return;const L=HOLD.splice(0);L.forEach((n,i)=>setTimeout(()=>{try{o.call(window,n)}catch(e){}},120+i*40))};
 const boot=()=>{const k=document.getElementById('mask');if(!k)return setTimeout(boot,500);new MutationObserver(()=>setTimeout(flush,250)).observe(k,{attributes:true,attributeFilter:['class']})};boot();
 })()}catch(e){console.error('islHold',e)}
+
+// ===== 🧠 ชีวิตที่มีความหมาย (ความทรงจำ · วันสำคัญ · เสียงในใจ · อารมณ์ · ผลที่มาช้า · สมุดภาพตอนจบ) อยู่ที่ /w/life.js — โหลดเบื้องหลัง =====
+try{setTimeout(()=>{try{wLoad('life').catch(()=>{})}catch(e){}},2600)}catch(e){console.error('lifeStub',e)}
