@@ -46488,7 +46488,7 @@ try{(function(){
  const find=t=>{if(!t)return null;if(EX[t])return EX[t];for(const [p,n,i] of PF)if(t.startsWith(p))return[n,i];return null};
  const NAV={bagBtn:[4,35],questBtn:[4,19],menuBtn:[4,39],sysBtn:[4,9],autoBtn:[4,17]};
  const pos=i=>((i%8)/7*100)+'% '+(((i/8|0)/5)*100)+'%';
- function paint(sp,n,i){const k=n+':'+i;if(!sp||sp.dataset.u4===k)return;sp.dataset.u4=k;const S=sp.style;S.setProperty('background-image','url(/items'+n+'.webp)','important');S.setProperty('background-position',pos(i),'important');S.setProperty('background-size','800% 600%','important');S.setProperty('background-repeat','no-repeat','important');S.setProperty('image-rendering','auto','important');if(sp.classList.contains('pxa')){sp.classList.remove('pxa');sp.querySelectorAll('px-f').forEach(x=>x.remove())}if(AN[k])sp.dataset.ua=AN[k];else delete sp.dataset.ua}
+ function paint(sp,n,i){const k=n+':'+i;if(!sp||sp.dataset.u4===k)return;sp.dataset.u4=k;delete sp.dataset.a7;const S=sp.style;S.setProperty('background-image','url(/items'+n+'.webp)','important');S.setProperty('background-position',pos(i),'important');S.setProperty('background-size','800% 600%','important');S.setProperty('background-repeat','no-repeat','important');S.setProperty('image-rendering','auto','important');if(sp.classList.contains('pxa')){sp.classList.remove('pxa');sp.querySelectorAll('px-f').forEach(x=>x.remove())}if(AN[k])sp.dataset.ua=AN[k];else delete sp.dataset.ua}
  function lab(sp){let a=sp;const bt=sp.closest('button');while(a.parentNode&&a.parentNode!==bt&&/^(I|SPAN)$/.test(a.parentNode.tagName)&&a.parentNode.children.length===1)a=a.parentNode;const t=a.nextSibling;if(t&&t.nodeType===1&&/^(B|STRONG|SPAN)$/.test(t.tagName)){const c=t.cloneNode(true);c.querySelectorAll('.pxi,small').forEach(x=>x.remove());return c.textContent.trim()}return t&&t.nodeType===3?t.nodeValue.trim():''}
  function scan(root){if(!root||!root.querySelectorAll)return;try{owScan(root)}catch(e){}root.querySelectorAll('button span.pxi').forEach(sp=>{const b=sp.closest('button');if(!b||b.querySelector('span.pxi')!==sp)return;const lb=lab(sp);let r=EE[sp.textContent+'|'+lb]||(lb==='ปกติ'?null:find(lb));if(!r&&sp.textContent==='🏘️'&&b.classList.contains('opt'))r=[4,10];if(r)paint(sp,r[0],r[1])})}
  const OW={'สมาร์ตโฟน + แบตโซลาร์':32,'ปืนพก (6 นัด)':33,'ชุดปฐมพยาบาล + ยาปฏิชีวนะ':34,'ตำราเคมี ม.6':35,'บะหมี่กึ่งสำเร็จรูป 1 ลัง':36,'คัมภีร์เวทลูกไฟ':37,'น้ำยาฟื้นฟูชั้นสูง ×3':38,'ดาบพลาสมา':39,'นาโนบอทรักษา':40,'โดรนสอดแนม':41,'เม็ดยาสร้างรากฐาน':42,'คัมภีร์เซียนบทแรก':43,'น้ำยาฟื้นฟูจากร้านระบบ ×2':44,'เม็ดยาจากร้านระบบ':44,'กล่องปฐมพยาบาลจากร้านระบบ ×3':45,'วัคซีนต้านพิษ':46,'ขวานดับเพลิง':47};
@@ -46547,3 +46547,57 @@ try{(function(){const st=document.createElement('style');st.textContent=`.wlbw{d
 @keyframes wlS{50%{transform:translateX(0)}55%{transform:translateX(-5px)}60%{transform:translateX(5px)}65%{transform:translateX(-3px)}70%{transform:translateX(3px)}75%{transform:none}}
 .wlb.dead{background-position:100% 0;filter:grayscale(.35) brightness(.85)}.wlb.gone{background-position:0 0;filter:grayscale(1);opacity:.55}
 body.lite .wlb{animation:none!important}@media (prefers-reduced-motion:reduce){.wlb{animation:none!important}}`;document.head.appendChild(st)})()}catch(e){console.error('mod-wl',e)}
+// 🎨 ชุดที่ 7 (items7.webp 8×12): อิโมจิที่ใช้บ่อย 96 ตัว แทนภาพพิกเซลเดิมทุกจุด (ยกเว้นปุ่มที่มีไอคอนเฉพาะแล้ว) + แอนิเมชันเฉพาะตัว
+try{(function(){
+ const K7='🩸❤🧠💪👁⏳💀💊|👶🧒🧑👴🧓🧘🙏🤝|🙂😶😤😈🤫💬👤👥|🏯🏠🛖🏰🏙🏫🏥🏟|🏔🌲🌊☁☀🌙🌌🌍|📜📖📚🗺🧭🗝🔒🔓|⚖🎲🎯🎁🔔📢🕯🏮|🪞📱🤖🎫🪙💰💎💍|💼🎒📦🔍💡📋🏆👑|⚔🗡🛡🏹🔥⚡🌀✨|💥⭐☯🔮⛓☠🧪🧬|🐾🐉👻🪷⚠✅▶⏸'.split('|').flatMap(r=>[...r]);
+ const M=new Map();K7.forEach((k,i)=>M.set(k,i));
+ [['🏡','🏠'],['🔎','🔍'],['🎟','🎫'],['🌟','⭐'],['💖','❤'],['💗','❤'],['🔐','🔒'],['🧙','🧘'],['😀','🙂'],['😊','🙂'],['🗨','💬'],['💭','💬'],['⛩','🏯'],['🌏','🌍'],['🌎','🌍'],['✔','✅'],['☑','✅']].forEach(([a,b])=>{if(!M.has(a))M.set(a,M.get(b))});
+ // แอนิเมชัน: bt=หัวใจเต้น fk=เปลวไฟ tw=ประกาย sh=แสงวาบ sp=หมุนช้า zp=สายฟ้า rg=กระดิ่ง fx=พลิก fz=ลอย sw=แกว่ง pu=หายใจ dr=หยดน้ำ gl=เรืองแสง bk=กะพริบเตือน hp=กระโดด
+ const A={'❤':'bt','🩸':'dr','🔥':'fk','🕯':'fk','✨':'tw','⭐':'tw','🌟':'tw','💎':'sh','🪙':'sh','💍':'sh','👑':'sh','🏆':'sh','🎫':'sh','🌀':'sp','🌌':'sp','☯':'sp','☀':'sp','⚡':'zp','💥':'pu','🔔':'rg','📢':'rg','⏳':'fx','👻':'fz','🐉':'sw','🏮':'sw','🌙':'sw','🔮':'gl','🧪':'gl','💡':'gl','⚠':'bk','🎁':'hp','🪷':'pu','🌊':'sw','🧘':'pu','🧠':'pu','💰':'hp','🐾':'hp'};
+ const pos=i=>((i%8)/7*100)+'% '+(((i/8|0)/11)*100)+'%';
+ function paint(s){if(s.dataset.p7||s.dataset.u4)return;const k=(s.textContent||'').replace(/️/g,'').replace(/[\u{1F3FB}-\u{1F3FF}]/gu,'');const i=M.get(k);if(i==null){s.dataset.p7='-';return}s.dataset.p7=i;
+  if(s.classList.contains('pxa')){s.classList.remove('pxa');s.querySelectorAll('px-f').forEach(x=>x.remove())}
+  const S=s.style;S.setProperty('background-image','url(/items7.webp)','important');S.setProperty('background-size','800% 1200%','important');S.setProperty('background-position',pos(i),'important');S.setProperty('background-repeat','no-repeat','important');S.setProperty('image-rendering','auto','important');
+  const a=A[K7[i]]||A[k];if(a){s.dataset.a7=a;S.setProperty('--d7',(-(Math.random()*4)).toFixed(2)+'s')}}
+ function scan(r){if(!r)return;if(r.nodeType===1&&r.matches&&r.matches('span.pxi'))return paint(r);if(r.querySelectorAll)r.querySelectorAll('span.pxi:not([data-p7]):not([data-u4])').forEach(paint)}
+ const st=document.createElement('style');st.textContent=`
+ span.pxi[data-p7]:not([data-p7="-"]):not([data-u4]){filter:saturate(.92)}
+ span.pxi[data-a7]{animation-delay:var(--d7,0s)!important;transform-origin:50% 55%}
+ span.pxi[data-a7=bt]{animation:p7Bt 1.6s ease-in-out infinite}
+ span.pxi[data-a7=dr]{animation:p7Dr 2.4s ease-in-out infinite}
+ span.pxi[data-a7=fk]{animation:p7Fk .9s steps(3) infinite;transform-origin:50% 95%}
+ span.pxi[data-a7=tw]{animation:p7Tw 2.2s ease-in-out infinite}
+ span.pxi[data-a7=sh]{animation:p7Sh 3.4s ease-in-out infinite}
+ span.pxi[data-a7=sp]{animation:p7Sp 8s linear infinite}
+ span.pxi[data-a7=zp]{animation:p7Zp 2.6s steps(1) infinite}
+ span.pxi[data-a7=rg]{animation:p7Rg 4.2s ease-in-out infinite;transform-origin:50% 10%}
+ span.pxi[data-a7=fx]{animation:p7Fx 5s ease-in-out infinite}
+ span.pxi[data-a7=fz]{animation:p7Fz 2.8s ease-in-out infinite}
+ span.pxi[data-a7=sw]{animation:p7Sw 3.2s ease-in-out infinite;transform-origin:50% 15%}
+ span.pxi[data-a7=pu]{animation:p7Pu 2.8s ease-in-out infinite}
+ span.pxi[data-a7=gl]{animation:p7Gl 2.6s ease-in-out infinite}
+ span.pxi[data-a7=bk]{animation:p7Bk 2s steps(1) infinite}
+ span.pxi[data-a7=hp]{animation:p7Hp 3.6s ease-out infinite;transform-origin:50% 100%}
+ button:active span.pxi[data-p7]{transform:scale(.86)!important;transition:transform .08s}
+ @keyframes p7Bt{0%,55%,100%{transform:scale(1)}12%{transform:scale(1.18)}24%{transform:scale(.96)}36%{transform:scale(1.1)}}
+ @keyframes p7Dr{0%,100%{transform:translateY(0) scaleY(1)}45%{transform:translateY(8%) scaleY(1.06)}60%{transform:translateY(0) scaleY(.94)}}
+ @keyframes p7Fk{0%{transform:scale(1,1);filter:brightness(1)}33%{transform:scale(1.05,.95) skewX(-3deg);filter:brightness(1.15)}66%{transform:scale(.96,1.07) skewX(3deg);filter:brightness(1.05)}}
+ @keyframes p7Tw{0%,100%{transform:scale(1) rotate(0);filter:brightness(1)}50%{transform:scale(1.12) rotate(8deg);filter:brightness(1.3) drop-shadow(0 0 3px #ffe9a0)}}
+ @keyframes p7Sh{0%,70%,100%{filter:brightness(1)}80%{filter:brightness(1.45) drop-shadow(0 0 3px #fff6c8)}90%{filter:brightness(1.1)}}
+ @keyframes p7Sp{to{transform:rotate(360deg)}}
+ @keyframes p7Zp{0%,40%,48%,100%{filter:brightness(1);transform:none}42%,50%{filter:brightness(1.7) drop-shadow(0 0 4px #fff59a);transform:scale(1.1)}}
+ @keyframes p7Rg{0%,75%,100%{transform:rotate(0)}78%{transform:rotate(16deg)}81%{transform:rotate(-14deg)}84%{transform:rotate(10deg)}87%{transform:rotate(-6deg)}90%{transform:rotate(3deg)}}
+ @keyframes p7Fx{0%,78%,100%{transform:rotate(0)}86%,94%{transform:rotate(180deg)}}
+ @keyframes p7Fz{0%,100%{transform:translateY(0)}50%{transform:translateY(-14%)}}
+ @keyframes p7Sw{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+ @keyframes p7Pu{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+ @keyframes p7Gl{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25) drop-shadow(0 0 4px #c8a0ff)}}
+ @keyframes p7Bk{0%,70%,100%{opacity:1}80%,90%{opacity:.45}}
+ @keyframes p7Hp{0%,80%,100%{transform:none}86%{transform:translateY(-16%) scale(1.06,.96)}92%{transform:translateY(0) scale(1.04,.94)}}
+ @media (prefers-reduced-motion:reduce){span.pxi[data-a7]{animation:none!important}}
+ body.lite span.pxi[data-a7]{animation:none!important}`;document.head.appendChild(st);
+ const ob=new MutationObserver(ms=>{for(const m of ms){for(const x of m.addedNodes)if(x.nodeType===1)scan(x)}});
+ const go=()=>{scan(document.body);ob.observe(document.body,{childList:true,subtree:true})};
+ if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
+ try{const im=new Image();im.src='/items7.webp';(window._icKeep=window._icKeep||[]).push(im)}catch(e){}
+})()}catch(e){console.error('mod-p7',e)}
