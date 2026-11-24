@@ -45114,7 +45114,7 @@ let RUN=null;const PREV=new Map();
 const nowT=()=>Date.now();
 const $q=(r,s)=>{try{return r.querySelector(s)}catch(e){return null}};
 const fx=()=>{let o=document.getElementById('rvFx');if(!o){o=document.createElement('div');o.id='rvFx';document.body.appendChild(o)}return o};
-const theme=h=>{const id=h.id;if(id==='fgB')return'fog';if(id==='skB')return'sky';if(id==='brB')return'beast';if(id==='mwB')return'mw';try{if(h.querySelector('.trait.sv')||(typeof CH_KEYS!=='undefined'&&CH_KEYS[CFG.chm]==='soul'))return'soul';if(CFG.xian)return'xian'}catch(e){}return'murim'};
+const theme=h=>{const id=h.id;if(id==='fgB')return'fog';if(id==='skB')return'sky';if(id==='brB')return'beast';if(id==='mwB')return'mw';try{if(h.querySelector('.trait.sv')||(typeof CH_KEYS!=='undefined'&&CH_KEYS[CFG.chm]==='soul'))return'soul';if(CFG.xian)return'xian';if(CFG.mw)return'mw'}catch(e){}return'murim'};
 const rowsOf=h=>[...h.querySelectorAll(h.id==='mwB'?'.mbT':'.trait')].filter(e=>!e.closest('.rvSkip'));
 const nameOf=e=>{const v=$q(e,'.v')||$q(e,'.mbTv');return v?v.textContent.trim():''};
 const keyOf=e=>{const k=$q(e,'.k')||$q(e,'.mbTh');return((k?k.textContent.trim():'')+'|'+nameOf(e)).replace(/[🔒🔓]/g,'').slice(0,90)};
@@ -45164,10 +45164,11 @@ function reveal(e,I,th,quick,done){const c=I.bad?BADC:GC[I.t],T=TH[th]||TH.murim
  if(I.bad){e.classList.remove('rvW');e.classList.add('rvCov','rvPre');const h=e.closest(HOSTS.join(','));if(h)h.classList.add('rvGray');snd('bad');vib([20,90,20]);
   later(()=>{if(h)h.classList.remove('rvGray');e.classList.remove('rvCov','rvPre');e.classList.add('show','rvFlipS','rvDone');crack(e);sparks(e,8,['#ff4a4a','#3a0a0a'],{sp:40,s:4});chip(e,BADW[th]||BADW.murim,BADC);if(I.t>=3)banner(BADW[th]||BADW.murim,'#ff4a4a')},750);return later(fin,1300)}
  if(I.t===0){e.classList.remove('rvW');e.classList.add('show','rvA0','rvDone');snd('click');return later(fin,90)}
- if(I.t===1){e.classList.remove('rvW');e.classList.add('rvCov','rvPre');e.style.setProperty('--pd','.28s');
-  later(()=>{e.classList.remove('rvCov','rvPre');e.classList.add('show','rvFlip','rvType','rvDone');sparks(e,6,[c,'#fff'],{sp:45,s:4,cx:Math.random()<.5?0:1,cy:0});snd('good')},280);return later(fin,650)}
+ if(I.t===1){e.classList.remove('rvW');e.classList.add('show','rvA0','rvDone','rvGlowR');snd('good');later(()=>e.classList.remove('rvGlowR'),1400);return later(fin,260)}
+ if(e._rvCine&&window.rvCine){e.classList.remove('rvW');e.classList.add('rvCov','rvPre');return window.rvCine(th,(I.t===3&&!first)?2:I.t,e,{lbl:lbw(th,I.t),c},()=>{e.classList.remove('rvCov','rvPre');e.classList.add('show','rvFlip','rvDone');if(I.t>=3)legKeep(e,c);ring(e,c,I.t>=3);sparks(e,I.t>=4?22:12,[c,'#fff'],{sp:80,s:5,dia:1,cx:.5,cy:.5});chip(e,(I.t>=4?'✹ ':I.t>=3?'★ ':'✦ ')+lbw(th,I.t),c);fin()})}
+ if(I.t>=3){I={t:2,bad:false,_hi:I.t}}
  if(I.t===2){e.classList.remove('rvW');e.classList.add('rvCov','rvPre','rvShake1');e.style.setProperty('--pd','.45s');
-  later(()=>{e.classList.remove('rvCov','rvPre','rvShake1');e.classList.add('show','rvFlip','rvType','rvDone');sparks(e,12,[c,'#fff',T.p[0]],{sp:70,s:5,dia:1});ring(e,c);chip(e,'✦ '+lbw(th,2),c);snd('rare')},460);return later(fin,1000)}
+  later(()=>{e.classList.remove('rvCov','rvPre','rvShake1');e.classList.add('show','rvFlip','rvType','rvDone');sparks(e,12,[c,'#fff',T.p[0]],{sp:70,s:5,dia:1});ring(e,c);chip(e,(I._hi>=4?'✹ ':I._hi>=3?'★ ':'✦ ')+lbw(th,I._hi||2),c);if(I._hi>=3)legKeep(e,c);snd('rare')},460);return later(fin,1000)}
  // ตำนาน / เหนือตำนาน
  const go=()=>{const h=e.closest(HOSTS.join(','));const others=h?rowsOf(h).filter(x=>x!==e):[];others.forEach(x=>x.classList.add('rvDim'));
   try{const r=R0(e);if(r.top<60||r.bottom>innerHeight-120)e.scrollIntoView({block:'center',behavior:'smooth'})}catch(x){}
@@ -45259,6 +45260,7 @@ function pass(h){const rows=rowsOf(h);if(!rows.length)return;const fresh=rows.fi
  fresh.filter(e=>nw.indexOf(e)<0).forEach(e=>{showNow(e);if(e._rvI.t>=3&&!e._rvI.bad)legKeep(e,GC[e._rvI.t]);if(e._rvI.bad)crack(e)});
  nw.forEach(e=>{e.classList.add('rvW')});
  const ord=nw.map((e,i)=>({e,i,s:e._rvI.bad?(e._rvI.t>=3?3.5:1.5):e._rvI.t})).sort((a,b)=>a.s-b.s||a.i-b.i).map(x=>x.e);
+ {const top=ord[ord.length-1];nw.forEach(e=>{e._rvCine=0});if(top&&!top._rvI.bad&&top._rvI.t>=2)top._rvCine=1}
  RUN={h,rows:nw,t:[]};const R=RUN;let i=0;
  const step=()=>{if(RUN!==R)return;if(i>=ord.length){RUN=null;later0(()=>{syn(h,rowsOf(h),true);oddsShow(h,true)},120);return}const e=ord[i++];reveal(e,e._rvI,th,false,ms=>{if(RUN!==R)return;if(ms===0)step();else later(step,e._rvI.t===0&&!e._rvI.bad?0:120)})};
  later(step,60)}
@@ -45881,6 +45883,109 @@ try{(()=>{window.rvLinkFit=function(sv){try{const h=sv.parentNode;if(!h||!sv._L)
   P[i]&&P[i].setAttribute('d',d);const c1=C[i*2],c2=C[i*2+1];if(c1){c1.setAttribute('cx',x1);c1.setAttribute('cy',y1)}if(c2){c2.setAttribute('cx',x2);c2.setAttribute('cy',y2)}})}catch(e){}};
  const all=()=>document.querySelectorAll('svg.rvLinks').forEach(sv=>window.rvLinkFit(sv));setInterval(all,350);addEventListener('resize',all);
 })()}catch(e){console.error('block216',e)}
+// ===================== BLOCK 217: 🎬 ฉากเปิดพรสวรรค์ตามระดับ · ตามโลก =====================
+//  R = การ์ดเรืองอย่างเดียว · SR (หายากมาก) = ฉากสั้นเป็นแถบกลางจอ · SSR (ตำนาน) = ฉากเต็มจอ · UR (เหนือตำนาน) = จอมืดก่อน แล้วระเบิด
+//  ภาพแต่ละโลก: ยุทธภพ=หมึก+แสงกระบี่+กลีบท้อ · เซียน=เมฆแยก+สายฟ้าทัณฑ์+วงยันต์ · จิตวิญญาณ=วงแหวนกระแทกร่าง · ยุคปัจจุบัน=แจ้งเตือน+แฟลช+ข่าวด่วน
+//  ทะลุฟ้า=อุกกาบาต+เศษหิน · ม่านหมอก=หมอกแยก+เฟือง+ไอน้ำ · สัตว์=รอยกรงเล็บ+ดวงตาในความมืด · ผู้ย้อนกาล=นาฬิกาหมุนย้อน+กระจกแตกประกอบกลับ
+try{(()=>{const E=t=>{try{return esc(t)}catch(e){return t}};const R=(a,b)=>a+Math.random()*(b-a);
+ const rg=()=>{try{return CH_KEYS[CFG.chm]==='regress'||(S&&S.alive&&S.ch==='regress')}catch(e){return false}};
+ const EN=()=>{try{return LANG==='en'}catch(e){return false}};const Lx=(t,e)=>EN()?e:t;
+ const N=(n,f)=>Array.from({length:n},(_,i)=>f(i)).join('');
+ const ART={
+  murim:t=>`<div class="cnBg" style="background:radial-gradient(ellipse at 50% 45%,#efe3c4,#c8b48a 60%,#6a5434)"></div>${N(t>=3?7:4,i=>`<i class="cnInk" style="left:${R(10,80)}%;top:${R(15,70)}%;--s:${R(90,220)}px;animation-delay:${i*90}ms"></i>`)}<i class="cnSlash" style="animation-delay:${t>=3?520:260}ms"></i>${t>=3?N(t>=4?30:18,i=>`<i class="cnPet" style="left:${R(0,100)}%;animation-delay:${R(300,1600)}ms;animation-duration:${R(1800,3000)}ms">🌸</i>`):''}${t>=4?'<i class="cnSeal">命</i>':''}`,
+  xian:t=>`<div class="cnBg" style="background:linear-gradient(#05081e,#16245a 55%,#3a4a8a)"></div><i class="cnCl l"></i><i class="cnCl r"></i>${t>=3?'<svg class="cnBolt" viewBox="0 0 100 300" preserveAspectRatio="none"><path d="M60 0 L35 120 L58 120 L30 300 L78 100 L52 100 L70 0Z"/></svg>':''}<i class="cnRune"><b>☯</b></i>${t>=4?'<i class="cnRune r2"></i>':''}<i class="cnSea"></i>`,
+  soul:t=>{const C=t>=4?['#ffd84a','#b46aff','#1a1a1a','#ff2a2a','#ffcf4d']:t>=3?['#ffd84a','#b46aff','#1a1a1a']:['#ffd84a'];return`<div class="cnBg" style="background:radial-gradient(circle at 50% 55%,#2a1048,#0a0418 70%)"></div><i class="cnSil">🧍</i>${C.map((c,i)=>`<i class="cnRing" style="--rc:${c};animation-delay:${180+i*170}ms;bottom:${30+i*5}%"></i>`).join('')}`},
+  mw:t=>`<div class="cnBg" style="background:linear-gradient(#0e1220,#1a2236)"></div>${N(t>=3?5:3,i=>`<div class="cnNt" style="top:${6+i*10}%;animation-delay:${i*130}ms">${['📱','🔔','💬','📈','🔥'][i]} <b>${(EN()?['Fate alert','Someone mentioned you','999+ new messages','#1 trending','Viral nationwide']:['แจ้งเตือนชะตา','มีคนพูดถึงคุณ','ข้อความใหม่ 999+','เทรนด์อันดับ 1','ไวรัลทั้งประเทศ'])[i]}</b></div>`)}<i class="cnFlash" style="animation-delay:${t>=3?700:420}ms"></i>${t>=3?`<div class="cnNews"><b>${Lx('ข่าวด่วน','BREAKING')}</b><span>${Lx('ทั้งประเทศจับตา · ชีวิตที่หายากที่สุดของปีเกิดขึ้นแล้ว · ','The whole nation is watching · The rarest life of the year has begun · ').repeat(2)}</span></div>`:''}`,
+  sky:t=>`<div class="cnBg" style="background:radial-gradient(#0a1a3a,#02040c 75%)"></div>${N(40,i=>`<i class="cnStar" style="left:${R(0,100)}%;top:${R(0,100)}%;animation-delay:${R(0,900)}ms"></i>`)}<i class="cnMet"></i>${N(t>=3?16:8,i=>{const a=R(0,6.28),d=R(80,280);return`<i class="cnFr" style="--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d}px;animation-delay:${t>=3?640:420}ms"></i>`})}<i class="cnScan"></i>`,
+  fog:t=>`<div class="cnBg" style="background:radial-gradient(#4a3c26,#14100a 75%)"></div><i class="cnGear g1">⚙️</i><i class="cnGear g2">⚙️</i>${t>=3?'<i class="cnGear g3">⚙️</i>':''}<i class="cnFog l"></i><i class="cnFog r"></i>${N(t>=3?8:4,i=>`<i class="cnStm" style="left:${R(5,90)}%;animation-delay:${R(200,1200)}ms"></i>`)}${t>=3?'<i class="cnClk">🕰️</i>':''}`,
+  beast:t=>`<div class="cnBg" style="background:radial-gradient(#10200e,#020402 75%)"></div><i class="cnEye l"></i><i class="cnEye r"></i>${N(3,i=>`<i class="cnClaw" style="left:${32+i*12}%;animation-delay:${(t>=3?650:380)+i*70}ms"></i>`)}`,
+  rg:t=>`<div class="cnBg" style="background:radial-gradient(#10224a,#02060e 75%)"></div><div class="cnClock"><i class="h"></i><i class="m"></i>${N(12,i=>`<b style="transform:rotate(${i*30}deg) translateY(-92px)">${i?i:12}</b>`)}</div>${t>=3?N(10,i=>`<i class="cnGl" style="--a:${i*36}deg;animation-delay:${600+i*30}ms"></i>`):''}`};
+ const TXC={murim:'#1a1208',xian:'#ffe7a0',soul:'#fff',mw:'#fff',sky:'#9af0ff',fog:'#f0c878',beast:'#f4ecd8',rg:'#cfe0ff'};
+ const LBE={'หายาก':'Rare','หายากมาก':'Very Rare','ตำนาน':'Legendary','เหนือตำนาน':'Beyond Legend','มีวาสนา':'Fortunate','วาสนาสูง':'Blessed','เซียนลิขิต':'Immortal-Fated','สวรรค์ลิขิต':'Heaven-Fated','วิญญาณตำนาน':'Legendary Soul','ลี้ลับ':'Mysterious','ตำนานใต้หมอก':'Legend of the Fog','เหนือม่านหมอก':'Beyond the Fog','ระดับ B':'Rank B','ระดับ A':'Rank A','ระดับ S':'Rank S','ระดับ SSS':'Rank SSS','สายเลือดดี':'Fine Bloodline','ราชันย์แห่งป่า':'King of the Wild','เทพอสูร':'Beast God','ระดับประเทศ':'National Level','ระดับโลก':'World Level','คอมโบลับ':'Secret Combo'};
+ try{Object.assign(I18N.d,LBE)}catch(e){}
+ let on=null;
+ window.rvCine=function(th,t,e,o,done){try{if(on){try{on.end()}catch(x){}}const W=rg()?'rg':(ART[th]?th:'murim');const nm=(()=>{try{return((e.querySelector('.v')||{}).textContent||'').trim()}catch(x){return''}})(),kd=(()=>{try{return((e.querySelector('.k')||{}).textContent||'').trim().replace(/\s+/g,' ').slice(0,30)}catch(x){return''}})();
+  const d=document.createElement('div');d.id='rvCine';d.className=`cn-${W} cnT${t}`;d.style.setProperty('--gc',o.c||'#ffcf4d');d.style.setProperty('--tx',TXC[W]);
+  if(EN()&&LBE[o.lbl])o.lbl=LBE[o.lbl];const lbl=t>=4?`✹ ${o.lbl} ✹`:t>=3?`★ ${o.lbl} ★`:`✦ ${o.lbl}`;
+  d.innerHTML=`${t>=4?'<div class="cnDark"><i class="cnBeat"></i></div>':''}<div class="cnStage">${ART[W](t)}<div class="cnTx"><div class="cnL">${E(lbl)}</div><div class="cnN">${E(nm)}</div><div class="cnK">${E(kd)}</div></div>${t>=4?'<i class="cnBoom"></i>':''}</div><div class="cnSkip">${Lx('แตะเพื่อข้าม','tap to skip')}</div>`;
+  document.body.appendChild(d);let ended=0;const T0=t>=4?3700:t>=3?2400:1450;const tmr=[];
+  const end=()=>{if(ended)return;ended=1;tmr.forEach(clearTimeout);d.classList.add('out');setTimeout(()=>{try{d.remove()}catch(x){}},320);on=null;try{done&&done()}catch(x){console.error(x)}};
+  on={end};d.addEventListener('pointerdown',ev=>{ev.stopPropagation();end()},true);
+  const sf=k=>{try{sfx(k)}catch(x){}},vb=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(x){}};
+  if(t>=4){sf('click');vb([20,200,20]);tmr.push(setTimeout(()=>{d.classList.add('go');sf('realm');vb([60,40,160])},900))}else{d.classList.add('go');sf(t>=3?'realm':'rare');vb(t>=3?[40,30,80]:[30])}
+  tmr.push(setTimeout(end,T0));return 0}catch(x){console.error('rvCine',x);try{done&&done()}catch(_){}return 0}};
+ // กาชาชาติกำเนิดแบบเก่า (รังสีม่วง + ตัวอักษร SR) → ปิด เพราะฉากใหม่ครอบคลุมแล้ว · เหลือเฉพาะ "คอมโบลับ" ใช้ฉาก UR
+ {const old=window.gachaShow;window.gachaShow=function(L){try{if(!L||!L.length)return;const c=L.find(x=>/คอมโบลับ/.test(x.k));if(!c)return;setTimeout(()=>{try{const f=document.createElement('div');f.innerHTML=`<div class="k">🌟 คอมโบลับ</div><div class="v">${E(c.n)}</div>`;window.rvCine('murim',4,f,{lbl:Lx('คอมโบลับ','Secret Combo'),c:'#ff5ad8'},()=>{})}catch(e){}},2600)}catch(e){}}}
+ const st=document.createElement('style');st.textContent=`
+#rvCine{position:fixed;inset:0;z-index:9998;pointer-events:auto;cursor:pointer;overflow:hidden;font-family:inherit}
+#rvCine.out{animation:cnOut .32s forwards}@keyframes cnOut{to{opacity:0}}
+#rvCine .cnStage{position:absolute;inset:0;opacity:0}#rvCine.go .cnStage{opacity:1;animation:cnIn .35s ease-out}
+@keyframes cnIn{from{opacity:0;transform:scale(1.08)}}
+#rvCine.cnT2{background:#0008}#rvCine.cnT2 .cnStage{top:31%;bottom:31%;border-top:2px solid var(--gc);border-bottom:2px solid var(--gc);box-shadow:0 0 40px var(--gc)}
+#rvCine.cnT2.go .cnStage{animation:cnBand .4s cubic-bezier(.2,1.3,.4,1)}@keyframes cnBand{from{transform:scaleY(0)}}
+#rvCine .cnBg{position:absolute;inset:0}
+#rvCine .cnTx{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;color:var(--tx);z-index:5;padding:0 18px}
+#rvCine .cnL{font-size:30px;font-weight:900;letter-spacing:3px;color:var(--gc);text-shadow:0 0 12px var(--gc),0 0 34px var(--gc);opacity:0;animation:cnL .6s cubic-bezier(.2,1.6,.4,1) forwards;animation-delay:.25s}
+#rvCine .cnL{white-space:nowrap}#rvCine.cnT3 .cnL,#rvCine.cnT4 .cnL{font-size:clamp(26px,8.5vw,46px);animation-delay:.75s}
+#rvCine .cnN{font-size:26px;font-weight:800;margin-top:8px;text-shadow:0 0 14px #0009;opacity:0;animation:cnU .5s forwards;animation-delay:.45s}
+#rvCine.cnT3 .cnN,#rvCine.cnT4 .cnN{font-size:clamp(24px,7.5vw,38px);animation-delay:1s}
+#rvCine .cnK{font-size:13px;opacity:0;margin-top:6px;animation:cnU .5s forwards;animation-delay:.6s}#rvCine.cnT3 .cnK,#rvCine.cnT4 .cnK{animation-delay:1.2s}
+@keyframes cnL{from{opacity:0;transform:scale(2.4);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}@keyframes cnU{from{opacity:0;transform:translateY(16px)}to{opacity:.95;transform:none}}
+#rvCine .cnSkip{position:absolute;bottom:22px;left:0;right:0;text-align:center;font-size:12px;color:#fff8;z-index:9}
+#rvCine .cnDark{position:absolute;inset:0;background:#000;z-index:8;transition:opacity .25s}#rvCine.go .cnDark{opacity:0;pointer-events:none}
+#rvCine .cnBeat{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px;border-radius:50%;background:var(--gc);box-shadow:0 0 30px var(--gc);animation:cnBeat .45s ease-in-out infinite alternate}@keyframes cnBeat{to{transform:scale(2.2);opacity:.4}}
+#rvCine .cnBoom{position:absolute;left:50%;top:50%;width:160vmax;height:160vmax;margin:-80vmax;border-radius:50%;background:radial-gradient(circle,#fff,var(--gc) 22%,transparent 62%);opacity:0;z-index:6;pointer-events:none}#rvCine.go .cnBoom{animation:cnBoom .9s ease-out forwards}@keyframes cnBoom{0%{opacity:1;transform:scale(.2)}100%{opacity:0;transform:scale(2.4)}}
+#rvCine.cnT4.go .cnStage{animation:cnShake .5s .05s}@keyframes cnShake{20%{transform:translate(-8px,5px)}40%{transform:translate(7px,-6px)}60%{transform:translate(-5px,-4px)}80%{transform:translate(4px,6px)}}
+/* ยุทธภพ */
+#rvCine.cn-murim .cnInk{position:absolute;width:var(--s);height:var(--s);margin:calc(var(--s)/-2);border-radius:50%;background:radial-gradient(#0d0a06 40%,#0d0a0699 60%,transparent 72%);filter:blur(2px);transform:scale(0);animation:cnInk 1s cubic-bezier(.2,.8,.3,1) forwards}@keyframes cnInk{to{transform:scale(1)}}
+#rvCine.cn-murim .cnSlash{position:absolute;left:-20%;top:50%;width:0;height:4px;background:linear-gradient(90deg,transparent,#fff7c0,#ffcf4d,transparent);box-shadow:0 0 18px #ffcf4d;transform:rotate(-18deg);animation:cnSl .45s ease-out forwards}@keyframes cnSl{to{width:140%}}
+#rvCine.cn-murim .cnPet{position:absolute;top:-30px;font-size:22px;animation:cnFall linear forwards}@keyframes cnFall{to{transform:translate(-60px,110vh) rotate(540deg)}}
+#rvCine.cn-murim .cnSeal{position:absolute;right:16%;top:22%;width:64px;height:64px;border:4px solid #c0201a;color:#c0201a;font:900 40px/56px serif;text-align:center;transform:rotate(-12deg) scale(3);opacity:0;animation:cnSeal .35s 1.3s forwards}@keyframes cnSeal{to{transform:rotate(-12deg);opacity:.9}}
+#rvCine.cn-murim .cnN{text-shadow:0 0 6px #f4e8c8,0 0 12px #f4e8c8,0 0 22px #f4e8c8}#rvCine.cn-murim .cnK{text-shadow:0 0 6px #f4e8c8}#rvCine.cn-murim .cnL{color:#8a1a10;text-shadow:0 0 10px #fff8}
+/* เซียน */
+#rvCine.cn-xian .cnCl{position:absolute;top:0;bottom:0;width:60%;background:radial-gradient(ellipse at 50% 50%,#fff 0,#dfe6ff 35%,#a8b8f055 60%,transparent 72%);filter:blur(10px);animation:cnCl 1.2s cubic-bezier(.6,0,.3,1) forwards}#rvCine.cn-xian .cnCl.l{left:-5%}#rvCine.cn-xian .cnCl.r{right:-5%}
+@keyframes cnCl{to{transform:translateX(var(--to,-70%));opacity:.35}}#rvCine.cn-xian .cnCl.r{--to:70%}
+#rvCine.cn-xian .cnBolt{position:absolute;left:44%;top:-5%;width:12%;height:65%;fill:#fffbe0;filter:drop-shadow(0 0 16px #fff) drop-shadow(0 0 30px #9ad0ff);opacity:0;animation:cnBolt .5s .55s forwards}@keyframes cnBolt{0%{opacity:1}30%{opacity:.2}50%{opacity:1}100%{opacity:0}}
+#rvCine.cn-xian .cnRune{position:absolute;left:50%;top:50%;width:300px;height:300px;margin:-150px;border-radius:50%;border:2px dashed #ffd76a;box-shadow:0 0 30px #ffd76a66,inset 0 0 30px #ffd76a44;animation:cnSpin 6s linear infinite,cnPop .6s cubic-bezier(.2,1.5,.4,1)}#rvCine.cn-xian .cnRune b{position:absolute;left:50%;top:-18px;margin-left:-14px;font-size:28px;color:#ffd76a}#rvCine.cn-xian .cnRune.r2{width:420px;height:420px;margin:-210px;animation-direction:reverse}
+@keyframes cnSpin{to{transform:rotate(360deg)}}@keyframes cnPop{from{transform:scale(0)}}
+#rvCine.cn-xian .cnSea{position:absolute;left:-10%;right:-10%;bottom:-6%;height:30%;background:radial-gradient(ellipse at 50% 0,#e8eeff,#b8c6f0 50%,transparent 70%);filter:blur(8px);animation:cnSea 3s ease-in-out infinite alternate}@keyframes cnSea{to{transform:translateX(4%)}}
+/* จิตวิญญาณยุทธ์ */
+#rvCine.cn-soul .cnSil{position:absolute;left:50%;bottom:18%;font-size:120px;margin-left:-60px;filter:brightness(0) drop-shadow(0 0 20px var(--gc));opacity:.9}
+#rvCine.cn-soul .cnRing{position:absolute;left:50%;width:240px;height:240px;margin-left:-120px;border-radius:50%;border:6px solid var(--rc);box-shadow:0 0 24px var(--rc),inset 0 0 18px var(--rc);transform:rotateX(74deg) scale(3);opacity:0;animation:cnRing .55s cubic-bezier(.5,0,.3,1.4) forwards}@keyframes cnRing{to{transform:rotateX(74deg) scale(1);opacity:1}}
+#rvCine.cn-soul .cnTx{top:17%}#rvCine.cnT2.cn-soul .cnTx{top:50%}#rvCine.cnT2.cn-soul .cnRing{bottom:-30%!important}#rvCine.cnT2.cn-soul .cnSil{font-size:64px;margin-left:-32px;bottom:-6%;opacity:.45}
+/* ยุคปัจจุบัน */
+#rvCine.cn-mw .cnNt{position:absolute;left:50%;width:min(340px,82%);margin-left:max(-170px,-41%);padding:10px 14px;border-radius:16px;background:#ffffffee;color:#111;font-size:14px;box-shadow:0 8px 24px #0006;transform:translateY(-120px);opacity:0;animation:cnNt .4s cubic-bezier(.2,1.4,.4,1) forwards}@keyframes cnNt{to{transform:none;opacity:1}}
+#rvCine.cn-mw .cnFlash{position:absolute;inset:0;background:#fff;opacity:0;animation:cnFl .5s forwards}@keyframes cnFl{0%{opacity:.95}100%{opacity:0}}
+#rvCine.cn-mw .cnNews{position:absolute;left:0;right:0;bottom:12%;display:flex;align-items:center;background:#c00;color:#fff;font-weight:700;overflow:hidden;white-space:nowrap;transform:translateY(80px);animation:cnNw .35s 1s forwards}#rvCine.cn-mw .cnNews b{background:#fff;color:#c00;padding:6px 12px;margin-right:10px}#rvCine.cn-mw .cnNews span{animation:cnTk 6s linear infinite}@keyframes cnNw{to{transform:none}}@keyframes cnTk{to{transform:translateX(-50%)}}
+#rvCine.cn-mw .cnTx{top:68%}#rvCine.cnT2.cn-mw .cnNt:nth-child(n+3){display:none}#rvCine.cnT2.cn-mw .cnTx{top:64%}
+/* ทะลุฟ้าดารา */
+#rvCine.cn-sky .cnStar{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:0;animation:cnTw 1.2s infinite alternate}@keyframes cnTw{to{opacity:.9}}
+#rvCine.cn-sky .cnMet{position:absolute;right:-10%;top:-10%;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 0 30px #9af0ff,0 0 60px #4ab0ff;animation:cnMet .6s cubic-bezier(.6,0,1,1) forwards,cnGone .25s .6s forwards}@keyframes cnGone{to{opacity:0;transform:scale(4)}}#rvCine.cn-sky .cnMet::after{content:'';position:absolute;right:-180px;top:4px;width:200px;height:14px;background:linear-gradient(90deg,#9af0ff,transparent);transform-origin:left;transform:rotate(-35deg);border-radius:8px}
+@keyframes cnMet{to{right:calc(50% - 11px);top:calc(50% - 11px)}}
+#rvCine.cn-sky .cnFr{position:absolute;left:50%;top:50%;width:10px;height:10px;background:#6a7a8a;box-shadow:0 0 8px #9af0ff;transform:rotate(45deg);opacity:0;animation:cnFr .9s ease-out forwards}@keyframes cnFr{0%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(400deg)}}
+#rvCine.cn-sky .cnScan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,#9af0ff0d 0 2px,transparent 2px 5px);pointer-events:none}#rvCine.cn-sky .cnL{font-family:monospace}
+#rvCine.cn-sky.go .cnStage{animation:cnShake .4s .6s}
+/* ม่านหมอก */
+#rvCine.cn-fog .cnGear{position:absolute;font-size:170px;opacity:.5;filter:sepia(1) saturate(2) brightness(.9);animation:cnSpin 7s linear infinite}#rvCine.cn-fog .g1{left:-50px;top:-40px}#rvCine.cn-fog .g2{right:-60px;bottom:-50px;animation-direction:reverse;font-size:210px}#rvCine.cn-fog .g3{right:10%;top:6%;font-size:110px}
+#rvCine.cn-fog .cnFog{position:absolute;top:0;bottom:0;width:62%;background:radial-gradient(ellipse,#cfc6b8 0,#a89c88aa 40%,transparent 72%);filter:blur(14px);animation:cnCl 1.3s cubic-bezier(.6,0,.3,1) forwards}#rvCine.cn-fog .cnFog.l{left:-6%;--to:-72%}#rvCine.cn-fog .cnFog.r{right:-6%;--to:72%}
+#rvCine.cn-fog .cnStm{position:absolute;bottom:-40px;width:60px;height:60px;border-radius:50%;background:#fff6;filter:blur(8px);animation:cnStm 1.6s ease-out forwards}@keyframes cnStm{to{transform:translateY(-70vh) scale(2.5);opacity:0}}
+#rvCine.cn-fog .cnClk{position:absolute;left:50%;top:14%;font-size:60px;margin-left:-30px;animation:cnRingClk .3s 1s 3 alternate}@keyframes cnRingClk{to{transform:rotate(14deg)}}
+/* สัตว์ */
+#rvCine.cn-beast .cnEye{position:absolute;top:34%;width:70px;height:26px;border-radius:50%;background:radial-gradient(#ffe24a,#ff9a1a 60%,transparent 72%);box-shadow:0 0 30px #ffb02a;transform:scaleY(0);animation:cnEye .5s .15s forwards}#rvCine.cn-beast .cnEye.l{left:calc(50% - 110px)}#rvCine.cn-beast .cnEye.r{left:calc(50% + 40px)}@keyframes cnEye{to{transform:scaleY(1)}}
+#rvCine.cn-beast .cnEye::after{content:'';position:absolute;left:44%;top:0;width:12%;height:100%;background:#000;border-radius:50%}
+#rvCine.cn-beast .cnClaw{position:absolute;top:10%;width:10px;height:0;background:linear-gradient(#fff,#ff3a3a);box-shadow:0 0 16px #ff3a3a;border-radius:6px;transform:rotate(18deg);animation:cnClaw .25s ease-out forwards}@keyframes cnClaw{to{height:78%}}
+#rvCine.cn-beast.go .cnStage{animation:cnShake .45s .7s}#rvCine.cn-beast .cnTx{top:68%}
+/* ผู้ย้อนกาล */
+#rvCine.cn-rg .cnClock{position:absolute;left:50%;top:50%;width:220px;height:220px;margin:-110px;border-radius:50%;border:4px solid #9ab8ff;box-shadow:0 0 30px #6a8aff88,inset 0 0 30px #6a8aff55;opacity:.6}
+#rvCine.cn-rg .cnClock b{position:absolute;left:50%;top:50%;width:20px;margin:-10px;text-align:center;color:#cfe0ff;font-size:14px}
+#rvCine.cn-rg .cnClock i{position:absolute;left:50%;bottom:50%;width:4px;margin-left:-2px;background:#cfe0ff;border-radius:2px;transform-origin:bottom}#rvCine.cn-rg .cnClock .h{height:60px;animation:cnBack 1.4s linear infinite}#rvCine.cn-rg .cnClock .m{height:90px;width:2px;animation:cnBack .35s linear infinite}@keyframes cnBack{to{transform:rotate(-360deg)}}
+#rvCine.cn-rg .cnGl{position:absolute;left:50%;top:50%;width:120px;height:120px;margin:-60px;background:linear-gradient(135deg,#cfe0ff88,#ffffff22);clip-path:polygon(50% 0,100% 40%,60% 100%,0 70%);transform:rotate(var(--a)) translate(280px) rotate(90deg);opacity:0;animation:cnGl .5s ease-in forwards}@keyframes cnGl{to{transform:rotate(var(--a)) translate(0) rotate(0);opacity:.9}}
+#rvCine.cn-rg .cnTx{top:50%}
+/* R: การ์ดเรืองอย่างเดียว */
+.rvGlowR{animation:rvGR 1.4s ease-out}@keyframes rvGR{0%{box-shadow:0 0 0 2px #5fb0ff,0 0 26px #5fb0ffaa}100%{box-shadow:none}}
+@media(prefers-reduced-motion:reduce){#rvCine *{animation-duration:.01s!important}}
+`;document.head.appendChild(st);
+})()}catch(e){console.error('block217',e)}
 // BLOCK 211: ✍️ สร้างเอง / 🎨 ออกแบบหน้าตา ทุกโลก — ตัวเลือกกลาง ccPick (เลือกทุกช่องเอง) · ccLook (ออกแบบหน้าตา ที่เหลือลิขิต)
 //  ชีวิตที่ "สร้างเอง" ตั้ง S.custom + S.ccOwn → ไม่ส่งขึ้นทำเนียบ (ห่อ sendLife) · ตั้งผ่าน window._ccOwnPending ก่อน startLife ของแต่ละโลก
 //  ใช้ใน: 🐾 สัตว์อสูร (หน้ากำเนิด) · 🌉 นครม่านหมอก (w/fog.js) · 🌠 ทะลุฟ้าดารา (w/sky.js) · โลกอื่นมีอยู่แล้ว (goBirthPick / ยุคปัจจุบัน)
