@@ -3229,11 +3229,11 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const me = await dcApi('GET', '/users/@me'); out.bot = { status: me.status, id: me.json && me.json.id, name: me.json && me.json.username };
         const g = await dcApi('GET', `/guilds/${DC_GUILD}`); out.guildStatus = g.status; out.guildName = g.json && g.json.name;
         const rl = await dcApi('GET', `/guilds/${DC_GUILD}/roles`); const RL = Array.isArray(rl.json) ? rl.json : [];
-        out.supRoles = DC_SUP.map((r, t) => { const x = RL.find(z => z.id === r); return { t, id: r, found: !!x, name: x && x.name, pos: x && x.position } }); out.supFn = !!DC_SUP_FN;
+        out.supRoles = DC_SUP.concat(DC_SUPALL).map((r, t) => { const x = RL.find(z => z.id === r); return { t, id: r, found: !!x, name: x && x.name, pos: x && x.position } }); out.supFn = !!DC_SUP_FN;
         out.vipRoles = Object.entries(DC_ROLE).map(([t, r]) => { const x = RL.find(z => z.id === r); return { t, id: r, found: !!x, name: x && x.name, pos: x && x.position } });
         if (me.json && me.json.id) { const bm = await dcApi('GET', `/guilds/${DC_GUILD}/members/${me.json.id}`); const br = ((bm.json && bm.json.roles) || []).map(r => RL.find(z => z.id === r)).filter(Boolean); out.botTop = br.reduce((m, r) => Math.max(m, r.position), 0); out.botRoles = br.map(r => r.name + '#' + r.position); out.botCanManage = br.some(r => (BigInt(r.permissions || '0') & 0x10000000n) || (BigInt(r.permissions || '0') & 0x8n)); out.hierarchyOK = out.vipRoles.concat(out.supRoles).every(v => !v.found || v.pos < out.botTop) }
         const ids = ((await cmd('SMEMBERS', 'dcall')) || []).slice(0, 40); out.linked = [];
-        for (const u of ids) { const did = await cmd('GET', 'dc:' + u); const v = jp(await cmd('GET', 'vip:' + u)); let nm = ''; try { const x = jp(await cmd('HGET', 'vipu', u)); nm = x && x.n || '' } catch (e) { } const m = did ? await dcApi('GET', `/guilds/${DC_GUILD}/members/${did}`) : { status: 0 }; out.linked.push({ id: u, n: nm, dc: did ? '…' + String(did).slice(-4) : '', tier: dcTier(v), member: m.status, nick: m.json && (m.json.nick || (m.json.user && m.json.user.username)), hasRoles: ((m.json && m.json.roles) || []).filter(r => Object.values(DC_ROLE).includes(r)), sup: DC_SUP_FN ? await DC_SUP_FN(u).catch(() => 'err') : null, hasSup: ((m.json && m.json.roles) || []).filter(r => DC_SUP.includes(r)).map(r => DC_SUP.indexOf(r)) }) }
+        for (const u of ids) { const did = await cmd('GET', 'dc:' + u); const v = jp(await cmd('GET', 'vip:' + u)); let nm = ''; try { const x = jp(await cmd('HGET', 'vipu', u)); nm = x && x.n || '' } catch (e) { } const m = did ? await dcApi('GET', `/guilds/${DC_GUILD}/members/${did}`) : { status: 0 }; out.linked.push({ id: u, n: nm, dc: did ? '…' + String(did).slice(-4) : '', tier: dcTier(v), member: m.status, nick: m.json && (m.json.nick || (m.json.user && m.json.user.username)), hasRoles: ((m.json && m.json.roles) || []).filter(r => Object.values(DC_ROLE).includes(r)), sup: DC_SUP_FN ? await DC_SUP_FN(u).catch(() => 'err') : null, hasSup: ((m.json && m.json.roles) || []).filter(r => DC_SUP.includes(r) || r === DC_SUPALL).map(r => r === DC_SUPALL ? 'all' : DC_SUP.indexOf(r)) }) }
       } catch (e) { out.err = String(e && e.message || e) }
       return res.json(out);
     }
@@ -4310,6 +4310,7 @@ const DC_GUILD = process.env.DISCORD_GUILD_ID || '1574695520235159572';
 const DC_ROLE = { 1: '1574706027943825449', 2: '1574711355494375485', 3: '1574711356689481788' }; // 💎 VIP · VIP+ · VIP MAX
 // ระดับผู้สนับสนุนในหอผู้สนับสนุน (ยอดสะสมตลอดกาล: ≥1฿ · ≥200 · ≥1,000 · ≥5,000 · ≥20,000) → 0..4 : ✨ Spark · 🔥 Ember · ⚡ Flare · 🌟 Nova · 🌑 Eclipse
 const DC_SUP = ['1574779077309763605', '1574779076592410724', '1574779075627716708', '1574779074596044932', '1574777706846093464'];
+const DC_SUPALL = '1574704946056536116'; // ⭐ ผู้สนับสนุน (ทุกคนที่มียอดในหอ ≥1฿)
 let DC_SUP_FN = null; // ตั้งจาก cloudflare/worker.js (อ่านยอดจาก D1) · ไม่มี = ไม่ยุ่งกับยศผู้สนับสนุน
 module.exports.setSupTierFn = f => { DC_SUP_FN = typeof f === 'function' ? f : null };
 const DC_INVITE = process.env.DISCORD_INVITE || 'https://discord.gg/8qqFY26fr';
@@ -4345,6 +4346,7 @@ async function dcSync(uid, force0, supT) {
       const r = DC_SUP[t], want = t === supT, base = `/guilds/${DC_GUILD}/members/${did}/roles/${r}`;
       if (want && !have.has(r)) { await dcApi('PUT', base); ch++ } else if (!want && have.has(r)) { await dcApi('DELETE', base); ch++ }
     }
+    { const want = supT >= 0, base = `/guilds/${DC_GUILD}/members/${did}/roles/${DC_SUPALL}`; if (want && !have.has(DC_SUPALL)) { await dcApi('PUT', base); ch++ } else if (!want && have.has(DC_SUPALL)) { await dcApi('DELETE', base); ch++ } }
   }
   return { ok: 1, tier, sup: typeof supT === 'number' ? supT : null, ch };
 }
