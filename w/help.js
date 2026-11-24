@@ -68,7 +68,9 @@ function aSum(A){try{if(!A||!alive())return;const d=(x,y,f)=>{const v=x-y;return
 // เก็บเรื่องสำคัญระหว่างออโต้
 {const _lg=log;log=function(t,c){try{if(AS&&auto&&(c==='myth'||c==='epic'||c==='bad')){const x=strip(t).slice(0,110);if(x&&AS.ev[AS.ev.length-1]!==x){AS.ev.push(E(x));if(AS.ev.length>40)AS.ev.shift()}}}catch(e){}return _lg.apply(this,arguments)}}
 // เลี่ยงตัวเลือกเสี่ยง (ถ้ามีทางที่ปลอดภัยกว่า) — ใช้ระบบ noFate เดิม: ออโต้/ชะตาจะไม่เลือกให้
-{const _c=choice;choice=function(title,text,opts){try{if(typeof auto!=='undefined'&&auto&&AC().risk&&Array.isArray(opts)&&opts.length>1){const rk=o=>o&&RISK.test(strip((o.t||'')+' '+(o.s||'')));if(opts.some(o=>o&&!rk(o)&&!o.skip&&!o.noFate)&&opts.some(rk))opts=opts.map(o=>rk(o)&&!o.noFate?Object.assign({},o,{noFate:1}):o)}}catch(e){}return _c.call(this,title,text,opts)};Object.keys(_c).forEach(k=>{try{choice[k]=_c[k]}catch(e){}})}
+{const _c=choice;choice=function(title,text,opts){try{if(typeof auto!=='undefined'&&auto&&AC().risk&&Array.isArray(opts)&&opts.length>1){const rk=o=>o&&RISK.test(strip((o.t||'')+' '+(o.s||'')));if(opts.some(o=>o&&!rk(o)&&!o.skip&&!o.noFate)&&opts.some(rk))opts=opts.map(o=>rk(o)&&!o.noFate?Object.assign({},o,{_risk:1}):o)}}catch(e){}return _c.call(this,title,text,opts)};Object.keys(_c).forEach(k=>{try{choice[k]=_c[k]}catch(e){}})}
+// ⚠️ เดิมใช้ noFate → ระบบเดิมถือว่าเป็น "เรื่องสำคัญ" ออโต้เลยหยุดแทบทุกคำถาม · ตอนนี้แค่ซ่อนตัวเลือกเสี่ยงชั่วคราวตอนชะตา/ออโต้เลือก
+{const _fc=fateChoice;fateChoice=function(){const c=choice._cur,T=[];try{if(c&&AC().risk&&c.opts.some(o=>o._risk)&&c.opts.some(o=>!o._risk&&!o.skip&&!o.noFate))c.opts.forEach(o=>{if(o._risk&&!o.skip){o.skip=true;T.push(o)}})}catch(e){}try{return _fc.apply(this,arguments)}finally{T.forEach(o=>{o.skip=false})}}}
 // หยุดเมื่อเจอเหตุการณ์สำคัญ
 // หยุดเมื่อเจอเรื่องสำคัญ = ระบบเดิม murim_fa=0 (afBig) · ออโต้ถูกปิดจากทางไหนก็ตาม → โชว์สรุป
 let lastBig='';{const _cs=choiceShow;choiceShow=function(){try{const c=choice._cur;if(c&&IMP.test(strip(c.title)))lastBig=strip(c.title).slice(0,40)}catch(e){}return _cs.apply(this,arguments)}}
@@ -84,6 +86,17 @@ function aOpen(){const c=AC(),row=(k,on,t,d)=>`<div class="wsC"><div><b>${t}</b>
  <p class="tag2">ตัวเลือกย้ายโลก (รอยแยก/ประตู) ออโต้ไม่เลือกให้เสมอ</p>`,'autocfg')}
 window.aOpen=aOpen;window.aSet=(k,v)=>{if(k==='stop'){LSS('murim_fa',v?0:1);return aOpen()}const c=AC();delete c.stop;c[k]=v;LSS(AK,c);aOpen()};
 
+// ---------- 🛟 กันเกมค้าง (เจอจากรายงานผู้เล่น) ----------
+// ก) ออโต้เปิดอยู่แต่เกมถูกหยุด (หน้าต่างที่หยุดเวลาถูกปิดโดยไม่คืนค่า) และไม่มีอะไรรอ → เดินเวลาต่อ
+// ข) มีเหตุการณ์ค้างคิวแต่ปีไม่เดิน (เช่น ยืนอยู่ขอบกัลป์ อายุถูกตรึง งบเหตุการณ์ต่อปีเต็ม) นานเกิน 8 วิ → เปิดเหตุการณ์นั้นเลย
+{let pz=0,qz=0;setInterval(()=>{try{if(!alive()||document.hidden)return;const idle=!choice._cur&&!modalOpen&&!(typeof DU!=='undefined'&&DU)&&!(window._mgBusy&&_mgBusy());
+ if(typeof auto!=='undefined'&&auto&&paused&&idle){if(++pz>=2){pz=0;paused=false;try{render()}catch(e){}}}else pz=0;
+ if(!paused&&idle&&choice._q&&choice._q.length){if(++qz>=4){qz=0;const q=choice._q.shift();if(q&&q[3]===S){S._chN=0;choice(q[0],q[1],q[2])}}}else qz=0}catch(e){}},2000)}
+// ค) หน้าต่างที่หยุดเวลาไว้ (แนะนำโหมด ฉากพิเศษ ฯลฯ) ถูกปิดทางอื่น/ถูกหน้าต่างอื่นทับ → เดิมเกมหยุดค้างไม่มีปุ่มให้กด
+//    จับเฉพาะการหยุดที่เกิดขึ้นตอนมีหน้าต่างเปิด (ไม่ยุ่งกับ ⏸ ที่ผู้เล่นกดเอง หรือ "เล่น N ปีแล้วหยุด")
+{let pv=false,mp=false,uz=false,n=0;{const _tp=togglePause;togglePause=function(){const r=_tp.apply(this,arguments);uz=!!paused;mp=false;return r}}
+ setInterval(()=>{try{if(!alive()){pv=false;mp=false;return}const p=!!paused;if(p&&!pv){mp=!uz&&!!modalOpen}if(!p){uz=false;mp=false}pv=p;
+  if(p&&mp&&!modalOpen&&!choice._cur&&!(typeof DU!=='undefined'&&DU)&&!window._scrOpen&&!document.hidden&&!$$('coach')&&!$$('ctOv')){if(++n>=12){n=0;mp=false;paused=false;try{render()}catch(e){}}}else n=0}catch(e){}},250)}
 // ---------- 4) ร้านสมบัติ: คุ้มสำหรับคุณตอนนี้ ----------
 function pick(){try{if(!alive()||typeof ecoCat!=='function')return[];const w=ECO_W(),m=S.money||0;if(m<=0)return[];const t=total(),lsLeft=(()=>{try{return Math.max(1,(S.lifespan||80)-S.age)}catch(e){return 50}})(),hpR=S.maxHp?S.hp/S.maxHp:1;
  const out=[];for(const it of ecoCat(w)){if(!/^(pow|hp|qi|life)$/.test(it.fx))continue;const p=ecoPrice(it);if(p>m||p<=0)continue;let e;try{e=ecoV(it)}catch(x){continue}if(!e||!e.v)continue;let sc=0,why='';

@@ -22554,10 +22554,11 @@ admVerify().then(mwLockTick);setInterval(mwLockTick,1500);
 {const _slMW=startLife;startLife=function(){try{if(!mwAllowed()&&typeof CFG!=='undefined')CFG.mw=0}catch(e){}const r=_slMW.apply(this,arguments);setTimeout(mwLockTick,100);return r}}
 
 // ===================== v17.9i ระบบเลือกแทนแบบใหม่: ไม่สุ่มทับ · เรื่องใหญ่ต้องเลือกเอง · เลือกแทนแบบปลอดภัย · บอกทุกครั้ง =====================
-const AF_BIG=/ทัณฑ์|ข้ามโลก|ข้ามมิติ|รอยแยก|สามภพ|กัลป์|โลกเซียน|โลกเทพ|แดนเทพ|เหาะ|สำนัก|เจ้าสำนัก|แต่ง|หย่า|คู่ชีวิต|ทายาท|สืบทอด|บัลลังก์|ระบบ|ย้อนกาล|ด้ายแดง|พันธสัญญา|นรก|ผนึก|บรรพกาล|ละสังขาร|ทางแยก|เส้นทาง|ปณิธาน|เปลี่ยนร่าง|แปลงกาย|กลืน|ทรยศ|ล้างแค้น/;
+// เดิมกว้างเกิน (สำนัก · ระบบ · แต่ง · กัลป์ · เส้นทาง · กลืน · แดนเทพ ฯลฯ) → ออโต้/ชะตาตัดสินแทนหยุดแทบทุกคำถาม ผู้เล่นแจ้งว่าออโต้ไม่ตอบให้ · เหลือเฉพาะเรื่องใหญ่จริง
+const AF_BIG=/ทัณฑ์|ข้ามโลก|ข้ามมิติ|รอยแยก|ก้าวข้ามสามภพ|ขอบของ|สิ้นกัลป์|เหาะ|เจ้าสำนัก|เปิดรับศิษย์|แต่งงาน|ขอแต่ง|หย่า|คู่ชีวิต|ทายาท|สืบทอด|บัลลังก์|ด้ายแดง|พันธสัญญา|ละสังขาร|ปณิธาน|เปลี่ยนร่าง|แปลงกาย|ทรยศ|ประตูสุดโลก|มิติปริศนา|เลือกโลก|ฟ้าสุดท้าย/;
 const AF_RISK=/ตาย|เสี่ยง|ดวล|สู้|ทุ่มสุดตัว|แกล้งตาย|ฝ่า|บุก|ท้า|ขโมย|ปล้น|ลอบ|ฆ่า|ทรยศ|พนัน|เดิมพัน|ระเบิด|ลองดู|ทุ่ม|เผา|สละ|เสียสละ/;
 const afTxt=o=>String((o&&o.t)||'')+' '+String((o&&o.s)||'');
-function afBig(c){try{if(!c)return false;if(c.keep||(/^🔁/.test(String(c.title||''))&&S&&S.ch==='regress'))return true;if(c.opts&&c.opts.some(o=>o&&o.noFate))return true;return AF_BIG.test(String(c.title||'').replace(/<[^>]+>/g,''))}catch(e){return false}}
+function afBig(c){try{if(!c)return false;if(c.keep||(/^🔁/.test(String(c.title||''))&&S&&S.ch==='regress'))return true;if(c.opts&&c.opts.length&&!c.opts.some(o=>o&&!o.noFate&&!o.skip))return true;/* เดิม: มีตัวเลือก noFate แม้ข้อเดียว = เรื่องใหญ่ ออโต้หยุดบ่อยมาก · ตอนนี้หยุดเฉพาะเมื่อไม่มีตัวเลือกที่ชะตาเลือกแทนได้ */return AF_BIG.test(String(c.title||'').replace(/<[^>]+>/g,''))}catch(e){return false}}
 function afSafe(c){const O=c.opts||[];const sk=O.findIndex(o=>o&&o.skip);if(sk>=0)return sk;let best=0,bs=1e9;O.forEach((o,i)=>{if(!o||o.noFate)return;const t=afTxt(o);let r=0;if(AF_RISK.test(t))r+=3;const m=t.match(/(\d{1,3})\s*%/);if(m&&+m[1]<60)r+=2;if(/[−-]\s*\d|เสีย|ลดลง|หัก/.test(o.s||''))r+=1;if(r<bs){bs=r;best=i}});return best}
 // 1) ตัวเลือกใหม่ต่อคิวเสมอ (รวมโหมดอัตโนมัติ) — ไม่สุ่มตอบอันเก่าทิ้ง
 {const _chA=choice;const nc=function(title,text,opts){try{if(choice._cur&&S&&S.alive){if(choice._cur.title===title)return;if(!choice._q)choice._q=[];if(choice._q.length>=12)choice._q.splice(choice._q.findIndex(q=>!afBig({title:q[0],opts:q[2]}))>>>0,1);choice._q.push([title,text,opts,S]);return}}catch(e){}return _chA.apply(this,arguments)};for(const k in _chA)nc[k]=_chA[k];choice=nc}
@@ -38511,7 +38512,7 @@ window.rebirthSame=function(){const w=lastW||{};try{toTitle()}catch(e){}setTimeo
 setInterval(()=>{try{const e=$('end');if(!e||!e.classList.contains('on')||e.querySelector('.endSame'))return;const b=[...e.querySelectorAll('button')].find(x=>/เกิดใหม่/.test(x.textContent));if(!b)return;b.parentElement.insertAdjacentHTML('afterend','<div class="brow endSame"><button class="pbtn" style="width:100%" onclick="rebirthSame()">⚡ เกิดใหม่แบบเดิมเลย<br><small style="font-weight:400">โลกและโหมดเดิม · สุ่มชาติกำเนิดใหม่ · ข้ามหน้าเลือกทั้งหมด</small></button></div>')}catch(e){}},800);
 // ---------- 8) สรุปทุก 10 ปี ----------
 {const _py=passYear;passYear=function(){const me=S,a0=S&&S.age;const r=_py.apply(this,arguments);try{if(!S||S!==me||!S.alive||S.age===a0||S.age%10!==0)return r;const d=S._dec;const now={a:S.age,m:S.money||0,p:(()=>{try{return total()}catch(e){return 0}})(),f:S.fame||0,h:S.happy||0};S._dec=now;if(!d||typeof addFeed!=='function')return r;
- const df=(x,y,mn)=>{const v=Math.round(x-y);return(v>=0?'+':'')+(mn&&typeof fmtM==='function'?fmtM(v)+(typeof curW==='function'?' '+curW():''):fmt(v))} // พลัง/ชื่อเสียงเดิมผ่าน fmtM → แดนเทพถูกหาร 4,000 ผิด;
+ const df=(x,y,mn)=>{const v=Math.round(x-y);return(v>=0?'+':'')+(mn&&typeof fmtM==='function'?fmtM(v)+(typeof curW==='function'?' '+curW():''):fmt(v))} /* พลัง/ชื่อเสียงเดิมผ่าน fmtM → แดนเทพถูกหาร 4,000 ผิด */;
  addFeed('ev',`📅 <b>สรุป ${d.a}–${S.age-1} ปี</b> — เงิน ${df(now.m,d.m,1)}${S.mw?'':' · พลัง '+df(now.p,d.p)} · ชื่อเสียง ${df(now.f,d.f)} · ความสุข ${Math.round(now.h)}/100`,'sum')}catch(e){}return r}}
 setInterval(()=>{try{if(S&&S.alive&&!S._dec)S._dec={a:S.age,m:S.money||0,p:(()=>{try{return total()}catch(e){return 0}})(),f:S.fame||0,h:S.happy||0}}catch(e){}},3000);
 // ---------- 9) ได้กรอบใหม่ตอนยังไม่ได้สวมกรอบ → สวมให้เลย ----------
@@ -46035,13 +46036,13 @@ try{(()=>{const KEEP=/ทัณฑ์|ทะลวง|เลื่อนขั�
  const _dq=chDeq;chDeq=function(){try{if(choice._cur||!choice._q||!choice._q.length)return;prune();if(!choice._q.length)return;
    if(S&&S._qrY===yr()&&!auto)return; // ปีนี้ปล่อยไปแล้ว รอปีหน้า
    if(S)S._qrY=yr()}catch(e){}return _dq.apply(this,arguments)};
- const _py=passYear;passYear=function(){let held=null;try{if(!auto&&S&&S.alive&&!choice._cur&&choice._q&&choice._q.length){prune();if(S._qrY===yr()){held=choice._q;choice._q=[]}}}catch(e){}
+ const _py=passYear;passYear=function(){let held=null;try{if(!auto&&S&&S.alive&&!choice._cur&&choice._q&&choice._q.length){prune();if(S._qrY===yr()&&!(S.kalpa&&S.kalpa.pend)){held=choice._q;choice._q=[]}}}catch(e){}
   let r;try{r=_py.apply(this,arguments)}finally{if(held){const nw=choice._q||[];choice._q=held.concat(nw.filter(x=>!held.some(h=>h[0]===x[0])))}}
-  try{if(S&&S.alive&&!choice._cur&&choice._q&&choice._q.length&&S._qrY!==yr())setTimeout(()=>{try{chDeq()}catch(e){}},(typeof rdGap==='function'?rdGap():400))}catch(e){}return r};
+  try{if(S&&S.alive&&!choice._cur&&choice._q&&choice._q.length&&(S._qrY!==yr()||(S.kalpa&&S.kalpa.pend)))setTimeout(()=>{try{chDeq()}catch(e){}},(typeof rdGap==='function'?rdGap():400))}catch(e){}return r};
  // งบเหตุการณ์ที่เด้งเองต่อปี: เกิน 2 เรื่องอิสระในปีเดียว → เก็บเข้าคิวไว้ปีหน้า (เหตุการณ์ต่อเนื่องที่เปิดจากตัวเลือกเดิมไม่นับ)
  let inRun=0;{const _cr=choiceRun;choiceRun=function(){inRun++;try{return _cr.apply(this,arguments)}finally{inRun--}}}
- const FREE=/^\s*(🎲|🌌|🍃|🔁|✉️)|ทัณฑ์|ทะลวง|เลื่อนขั้น|กัลป์|ประตู/;
- const _ch=choice;choice=function(title,text,opts){try{if(!auto&&S&&S.alive&&!choice._cur&&!inRun&&!(S._xa&&S._xa.run)&&!FREE.test(strip(title))){const y=yr();if(S._chY!==y){S._chY=y;S._chN=0}
+ const FREE=/^\s*(🎲|🌌|🍃|🔁|✉️|♾️)|ทัณฑ์|ทะลวง|เลื่อนขั้น|กัลป์|ประตู|ความมืดกลืนดวงดาว|ห้วงสุญตา/; /* ยืนขอบกัลป์ อายุถูกตรึง: งบเหตุการณ์ต่อปีไม่รีเซ็ต → ประตูข้ามกัลป์เข้าคิวค้าง ต้องเปิดออโต้ถึงจะขึ้น (ผู้เล่นแจ้ง) */
+ const _ch=choice;choice=function(title,text,opts){try{if(!auto&&S&&S.alive&&!choice._cur&&!inRun&&!(S._xa&&S._xa.run)&&!(S.kalpa&&S.kalpa.pend)&&!FREE.test(strip(title))){const y=yr();if(S._chY!==y){S._chY=y;S._chN=0}
    if(S._chN>=2){if(!choice._q)choice._q=[];if(!choice._q.some(x=>x[0]===title))choice._q.push([title,text,opts,S,y]);return}S._chN++}}catch(e){}return _ch.apply(this,arguments)};for(const k in _ch)try{choice[k]=_ch[k]}catch(e){}
 })()}catch(e){console.error('block218',e)}
 // BLOCK 211: ✍️ สร้างเอง / 🎨 ออกแบบหน้าตา ทุกโลก — ตัวเลือกกลาง ccPick (เลือกทุกช่องเอง) · ccLook (ออกแบบหน้าตา ที่เหลือลิขิต)

@@ -103,7 +103,7 @@ function lRunE(M,e){const l=Ls(M);if(e.c&&!e.c(M,l))return;const d=typeof e.d===
 const LE=[],LS=[];
 const E=(id,w,c,t,d,o,cd)=>LE.push({id,w,c,t,d,o,cd:cd==null?5:cd}),SY=(id,p,c,t,d,o)=>LS.push({id,p,c,t,d,o,cd:3});
 // ---------- การเรียน ----------
-function lEnroll(M,l,id,free){const P=LEDU[id];if(!P||l.prog)return false;const ok=(P.min<0||l.edu>=P.min)&&l.edu<=P.max&&(P.give<=l.edu||!P.give);if(!ok&&!free)return false;l.prog={id,left:P.yrs,paid:0};addFeed('ev',`${P.ic} ลงเรียน <b>${esc(P.n)}</b> (${P.yrs} ปี)`,'sum');return true}
+function lEnroll(M,l,id,free){const P=LEDU[id];if(!P||l.prog)return false;const ok=(P.min<0||l.edu>=P.min)&&l.edu<=P.max&&(!P.give||P.give>l.edu);if(!ok&&!free)return false; /* เดิมเช็คกลับด้าน (give<=edu) → ปริญญาตรี/โท/ปวส./กศน. กดเรียนไม่ได้เลย ทั้งที่ปุ่มขึ้น */l.prog={id,left:P.yrs,paid:0};addFeed('ev',`${P.ic} ลงเรียน <b>${esc(P.n)}</b> (${P.yrs} ปี)`,'sum');return true}
 function lEduYear(M,l){const p=l.prog;if(!p)return;const P=LEDU[p.id];let c=Math.round(P.cost*l.cpi);const gy=l.fl.schol&&p.id==='bach';if(gy)c=Math.round(c/2);
  if((S.money||0)>=c){S.money-=c}else if(P.loan&&l.edu>=1){const need=c-(S.money||0);S.money=0;l.loan+=need}else{S.money=Math.max(0,(S.money||0)-c);l.debt+=Math.max(0,c-(S.money||0))}
  l.st=cl(l.st+P.st,0,100);if(M.job)M.job.perf=cl(M.job.perf-3,0,100);p.left--;

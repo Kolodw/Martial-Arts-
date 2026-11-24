@@ -317,11 +317,16 @@ function fire(e){if(!alive()||got(e[0]))return;if(e[2]==='y'&&!/s\.a===|=== *s\.
  const o=e[2]==='s'?e[8].o[0]:null;
  busy=1;try{const rw=give(o?o[2]:e[7]);log(`🔮 <b>${E(e[3])}</b> · ${E(o?e[6]+' — '+o[1]:e[6])}${rw?` <span class="tag2">(${E(rw)})</span>`:''}`,'epic');discover(e)}catch(x){}busy=0}
 let sceneQ=[],scTry=0;
-function scene(){if(!sceneQ.length||!alive())return;let blocked=false;try{blocked=modalOpen||!!choice._cur||!!(window._CO&&window._CO.id)}catch(x){}
- if(blocked){if(++scTry<30)return setTimeout(scene,1500);scTry=0;const L=sceneQ.splice(0);busy=1;L.forEach(e=>{try{const o=e[8].o[0],rw=give(o[2]);log(`🔮 <b>${E(e[3])}</b> · ${E(e[6]+' — '+o[1])}${rw?` <span class="tag2">(${E(rw)})</span>`:''}`,'epic');discover(e)}catch(x){}});busy=0;return}scTry=0;
- const e=sceneQ.shift();let was=null;try{was=paused;paused=true}catch(x){}
+function scene(){if(!sceneQ.length||!alive())return;let blocked=false,au=false;try{au=!!auto;blocked=modalOpen||!!choice._cur||!!(window._CO&&window._CO.id)}catch(x){}
+ // ออโต้เปิดอยู่: ไม่เปิดฉาก (เดิมฉากหยุดเกมไว้รอกด ออโต้เลยค้าง) → ใช้ผลตัวเลือกแรกแล้วบันทึกลงบันทึกแทน
+ if(blocked||au){if(!au&&++scTry<30)return setTimeout(scene,1500);scTry=0;const L=sceneQ.splice(0);busy=1;L.forEach(e=>{try{const o=e[8].o[0],rw=give(o[2]);log(`🔮 <b>${E(e[3])}</b> · ${E(e[6]+' — '+o[1])}${rw?` <span class="tag2">(${E(rw)})</span>`:''}`,'epic');discover(e)}catch(x){}});busy=0;return}scTry=0;
+ const e=sceneQ.shift();let was=null;try{was=paused;paused=true}catch(x){}window._scrOpen={e,was};
  modal(`<div class="scrS"><small>🔮 ฉากลับ · อายุ ${S.age|0}</small><h3>${E(e[3])}</h3><p>${E(e[6])}</p><div class="scrO">${e[8].o.map((o,i)=>`<button class="opt" data-i="${i}">${E(o[0])}</button>`).join('')}</div></div>`,'scrscene');
- const m=$$('modal');m.querySelectorAll('.scrO button').forEach(b=>b.onclick=()=>{const o=e[8].o[+b.dataset.i];busy=1;try{const rw=give(o[2]);closeM();log(`🔮 <b>${E(e[3])}</b> · ${E(o[0])} — ${E(o[1])}${rw?` <span class="tag2">(${E(rw)})</span>`:''}`,'epic');discover(e);try{onPick(o[0])}catch(x){}}catch(x){}busy=0;try{paused=was}catch(x){}try{render()}catch(x){}})}
+ const m=$$('modal');m.querySelectorAll('.scrO button').forEach(b=>b.onclick=()=>{const o=e[8].o[+b.dataset.i];window._scrOpen=null;busy=1;try{const rw=give(o[2]);closeM();log(`🔮 <b>${E(e[3])}</b> · ${E(o[0])} — ${E(o[1])}${rw?` <span class="tag2">(${E(rw)})</span>`:''}`,'epic');discover(e);try{onPick(o[0])}catch(x){}}catch(x){}busy=0;window._scrOpen=null;try{paused=was}catch(x){}try{render()}catch(x){}})}
+// 🛟 ฉากลับถูกหน้าต่างอื่นทับ → ใช้ผลตัวเลือกแรกแล้วคืนเวลา (กันเกมหยุดค้าง)
+setInterval(()=>{try{const O=window._scrOpen;if(!O)return;const k=modalOpen&&$$('modal')?$$('modal').dataset.k:'';if(k==='scrscene')return;if(modalOpen||choice._cur)return;window._scrOpen=null;if(!alive()){paused=O.was;return}const e=O.e,o=e[8].o[0];busy=1;try{const rw=give(o[2]);log(`🔮 <b>${E(e[3])}</b> · ${E(e[6]+' — '+o[1])}${rw?` <span class="tag2">(${E(rw)})</span>`:''}`,'epic');discover(e)}catch(x){}busy=0;paused=O.was;try{render()}catch(x){}}catch(x){}},2000);
+// ปิดฉากลับโดยไม่เลือก (แตะพื้นหลัง/ปุ่มย้อน/หน้าต่างอื่นทับ) → เดิมเกมหยุดค้าง (paused ไม่คืน) · ตอนนี้ใช้ผลตัวเลือกแรกแล้วเดินเวลาต่อ
+{const _cm=closeM;closeM=function(){const O=window._scrOpen;let k='';try{k=$$('modal').dataset.k}catch(x){}const r=_cm.apply(this,arguments);try{if(O&&k==='scrscene'){window._scrOpen=null;const e=O.e,o=e[8].o[0];busy=1;try{const rw=give(o[2]);log(`🔮 <b>${E(e[3])}</b> · ${E(e[6]+' — '+o[1])}${rw?` <span class="tag2">(${E(rw)})</span>`:''}`,'epic');discover(e)}catch(x){}busy=0;paused=O.was;try{render()}catch(x){}}}catch(x){}return r};for(const k in _cm)try{closeM[k]=_cm[k]}catch(x){}}
 
 // ───────── ตัวเลือกลับ ─────────
 function wrapChoice(){const o=window.choice;if(typeof o!=='function'||o._scr)return;

@@ -107,6 +107,8 @@ let inEnd=0;function endScene(){const c=cur;if(!c)return;cur=null;inEnd=1;try{if
  const t=c.r.length>=c.def.beats.length-1?c.def.mem(c.r):c.def.title+(c.m.nm?' · '+c.m.nm:'');busy=1;try{const mm=remember(c.tag==='loss'?'loss':c.tag,t,{who:c.m.who,nm:c.m.nm,sc:1});log(`🧠 <b>ความทรงจำใหม่</b> · ${E(t)}`,'sum');try{albumSnap(c.def.title)}catch(e){}}catch(e){}busy=0;
  try{paused=c.was}catch(e){}try{render()}catch(e){}if(qScene.length)setTimeout(tryScene,1200)}
 
+// 🛟 ฉากวันสำคัญถูกหน้าต่างอื่นทับ (ไม่ได้ปิดผ่าน closeM) → เดิมเกมหยุดค้างถาวร (paused ไม่คืน) และฉากต่อไปไม่ขึ้นอีก · ตอนนี้วาดฉากกลับมาเมื่อหน้าต่างอื่นปิด
+setInterval(()=>{try{if(!cur)return;if(!alive()){cur=null;return}const k=modalOpen&&$$('modal')?$$('modal').dataset.k:'';if(k==='keyday')return;if(!modalOpen&&!choice._cur)drawScene()}catch(e){}},2000);
 // ───────── เสียงในใจทุกปี ─────────
 function topPers(){try{const p=S.pers||{};let k=null,v=2;for(const x in p)if(p[x]>v){v=p[x];k=x}return k}catch(e){return null}}
 const VO={
