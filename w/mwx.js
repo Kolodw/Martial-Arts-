@@ -1611,20 +1611,24 @@ function addLife(v){if(S.mw&&S.mw.end){S.mw.end+=v;return}S.lifespan=(S.lifespan
 const can=()=>S&&S.alive&&!choice._cur&&!modalOpen&&!(window._inQmFF);
 function addMoney(v){S.money=Math.max(0,Math.round((+S.money||0)+v))}
 // ---------- ค่าดูแลทรัพย์/ค่าครองชีพ ----------
-function ecTick(st,m0){const w=ecW();if(!w)return;const E=EC(),U=ecU(w),cw=w==='z'?'mw':w;if(E.w!==cw){if(E.w){E.inc=0;E.n=0;E.debt=0;E.biz=0;E.inv=null;E.loan=null;E.qx=null;E.qnx=null}E.w=cw;return}
- if(S.age>=14){let d=((+S.money||0)-m0)/st;if(d>0)E.earn=(E.earn||0)+d*st;const cap=2.5*Math.max(U,E.inc||0);if(d>cap)d=cap;if(d>0)E.inc=E.n?E.inc*.85+d*.15:d;else E.inc*=Math.pow(.96,st);E.n++}
+const N0=n=>{try{return fmt(n)}catch(e){return n}};
+window._ecT=(a,b)=>ecTick(a,b);function ecTick(st,m0){const w=ecW();if(!w)return;const E=EC(),U=ecU(w),cw=w==='z'?'mw':w;if(E.w!==cw){if(E.w){E.inc=0;E.n=0;E.debt=0;E.biz=0;E.inv=null;E.loan=null;E.qx=null;E.qnx=null}E.w=cw;return}
+ if(S.age>=14){let d=((+S.money||0)-m0)/st;if(d>0)E.earn=(E.earn||0)+d*st;const cap=2.5*Math.max(U,E.inc||0);if(d>cap)d=cap;if(d>0)E.inc=E.n?E.inc*.85+d*.15:d;else E.inc*=Math.pow(.96,Math.min(st,5));E.n++}
  if(w==='z'||S.age<16)return;
  const A=anc(w);let sum=0;
  // หนี้ค้าง → ใช้เงินชำระก่อน
  if(E.debt>0){const p=Math.min(E.debt,+S.money||0);addMoney(-p);E.debt-=p}
  // ค่าครองชีพ (โลกปัจจุบันมีระบบนี้อยู่แล้ว ไม่คิดซ้ำ) — ตามรายได้เฉลี่ย + ครอบครัว
- if(w!=='mw'){const kids=Math.min(10,S.kids||0),life=Math.round((E.inc||0)*.12*(1+kids*.06+(S.spouse?.15:0))*st);
-  if((+S.money||0)>=life){addMoney(-life);E.life+=life;sum+=life}else{const sh=life-(+S.money||0);E.life+=S.money;sum+=S.money;S.money=0;E.debt+=sh;try{joy(-3)}catch(e){}}}
+ if(w!=='mw'){const kids=Math.min(10,S.kids||0);let life=Math.round((E.inc||0)*.12*(1+kids*.06+(S.spouse?.15:0))*st);
+  // แดนเทพ/โลกที่ปีหนึ่งข้ามหลายพันปี: เดิมคิด 12% ของรายได้เฉลี่ย × ทุกปีที่ข้าม ทั้งที่ช่วงนั้นอาจไม่ได้เงินเลย → หนี้พอกจนล้มละลายทุกรอบ
+  // ตอนนี้: ค่าครองชีพไม่เกิน 35% ของเงินที่ได้จริงในช่วงนั้น + ค่าพื้นฐานไม่เกิน 10 ปี (โลกปีละ 1 ปีเหมือนเดิม)
+  {const gain=Math.max(0,(+S.money||0)-m0+sum),base=Math.round(U*.12*Math.min(st,10));if(st>1)life=Math.min(life,Math.round(gain*.35)+base)}
+  if((+S.money||0)>=life){addMoney(-life);E.life+=life;sum+=life;E.ysL=(E.ysL||0)+life}else{const sh=life-(+S.money||0);E.life+=S.money;sum+=S.money;E.ysL=(E.ysL||0)+(+S.money||0);S.money=0;E.debt+=sh;try{joy(-3)}catch(e){}}}
  // ค่าดูแลทรัพย์แบบขั้นบันได: เกิน 6 เท่าของรายได้ปกติเริ่มเสีย ยิ่งรวยยิ่งเสียหนัก
- const P=6*A,M=+S.money||0;if(M>P){const rate=Math.min(.12,.03+.025*Math.log10(M/P)),c=Math.round((M-P)*(1-Math.pow(1-rate,Math.min(st,200))));if(c>0){addMoney(-c);E.upk+=c;sum+=c}}
- E.ys=(E.ys||0)+sum;if(!E.lg||S.age-E.lg>=5){if(E.ys>0&&E.lg)log(`🏦 ${fl(w,'up')} รวมทั้ง${fl(w,'life')} ช่วง ${S.age-E.lg} ปีที่ผ่านมา: −${mt(E.ys,w)}${(+S.money||0)>P?' <span class="tag2">(ยิ่งเก็บเงินไว้มาก ค่าดูแลยิ่งสูง ลองใช้ซื้อของใหญ่)</span>':''}`,'');E.lg=S.age;E.ys=0}
+ const P=6*A*Math.max(1,Math.min(st,1000)),M=+S.money||0; // เกณฑ์ = เงินได้ราว 6 รอบ (โลกที่รอบหนึ่งข้ามหลายปีคูณตามจำนวนปีต่อรอบ)if(M>P){const rate=Math.min(.12,.03+.025*Math.log10(M/P)),c=Math.round((M-P)*(1-Math.pow(1-rate,Math.min(st,5))));if(c>0){addMoney(-c);E.upk+=c;sum+=c;E.ysU=(E.ysU||0)+c}} // เดิมทบได้ถึง 200 ปีต่อครั้ง → แดนเทพข้ามทีละพันปี ถูกยึดเกือบหมดทุกรอบ
+ E.ys=(E.ys||0)+sum;if(!E.lg||S.age-E.lg>=5){if(E.ys>0&&E.lg)log(`🏦 ค่าใช้จ่าย ${N0(S.age-E.lg)} ปีที่ผ่านมา: −${mt(E.ys,w)}<br><span class="tag2">• ${fl(w,'life')} −${mt(E.ysL||0,w)} (ราว 12% ของรายได้ ครอบครัวใหญ่จ่ายมากขึ้น)${E.ysU?` · ${fl(w,'up')} −${mt(E.ysU,w)} (เก็บเงินเกิน ${mt(P,w)} ส่วนที่เกินโดนหัก · ฝากธนาคาร/ซื้อของใหญ่ไม่โดน)`:''}${E.debt>0?` · ⚠️ หนี้ค้าง ${mt(E.debt,w)}`:''}</span>`,'');E.lg=S.age;E.ys=0;E.ysL=0;E.ysU=0}
  // ล้มละลาย
- if(E.debt>3*A){E.debt=0;let t='';try{const h=S.gear&&S.gear.house;if(h&&GEAR.house){const i=GEAR.house.findIndex(x=>x.id===h);if(i>0){S.gear.house=GEAR.house[i-1].id;t=` ต้องขายบ้านย้ายไปอยู่${GEAR.house[i-1].n}`}else if(i===0){delete S.gear.house;t=' ต้องขายบ้านไปเช่าห้องเล็กๆ อยู่'}}}catch(e){}
+ if(E.debt>3*A*Math.max(1,Math.min(st,10))){E.debt=0;let t='';try{const h=S.gear&&S.gear.house;if(h&&GEAR.house){const i=GEAR.house.findIndex(x=>x.id===h);if(i>0){S.gear.house=GEAR.house[i-1].id;t=` ต้องขายบ้านย้ายไปอยู่${GEAR.house[i-1].n}`}else if(i===0){delete S.gear.house;t=' ต้องขายบ้านไปเช่าห้องเล็กๆ อยู่'}}}catch(e){}
   S.fame=Math.round((S.fame||0)*.85);try{joy(-15)}catch(e){}log(`💸 <b>ล้มละลาย!</b> หนี้สินพอกพูนจนเจ้าหนี้มายึดทรัพย์${t} ชื่อเสียงตกต่ำ`,'bad',true)}
  // กิจการของตัวเอง
  if(E.biz>0){const g=Math.round(E.biz*(.6+Math.random()*.8)*st);addMoney(g)}
