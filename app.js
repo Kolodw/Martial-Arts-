@@ -25549,8 +25549,8 @@ function b2HuntRes(nm,good,t,sea){const x=b2();let m=b2HuntMul(t,sea);if(!good&&
 const B2MV=[['ย่อตัวต่ำ กล้ามเนื้อขาเกร็ง','pounce'],['ก้มหัว ตะกุยดินสองครั้ง','charge'],['เดินวนรอบ ตาไม่ละจากคอคุณ','circle']];
 const B2CT={pounce:['↔️ กระโดดหลบข้าง',"dodge"],charge:['🪨 ตั้งหลักรับแรงปะทะ',"brace"],circle:['⚡ ชิงกัดก่อน',"strike"]};
 const B2BN=['พยัคฆ์ตาเดียวแห่งหุบเขา','หมีดำกรงเล็บเหล็ก','ราชาหมาป่าหิมะ','อินทรีปีกพายุ','งูยักษ์เจ็ดเศียร','กระทิงเขาทองแดง'];
-function b2Read(title,intro,rounds,done){let sc=0,i=0;const go=()=>{if(i>=rounds)return done(sc);const mv=B2MV[R(0,2)];i++;
- choice(`${title} · ยกที่ ${i}/${rounds}`,`${i===1?intro+'<br>':''}มัน<b>${mv[0]}</b>${i>1?`<br><span class="tag2">อ่านถูกแล้ว ${sc}/${i-1}</span>`:''}`,Object.keys(B2CT).map(k=>({t:B2CT[k][0],noFate:1,f(){if(k===mv[1])sc++;setTimeout(go,250)}})))};go()}
+function b2Read(title,intro,rounds,done,pre){let sc=0,i=0;const go=()=>{if(i>=rounds)return done(sc);const mv=B2MV[R(0,2)];i++;
+ choice(`${title} · ยกที่ ${i}/${rounds}`,`${pre||''}${i===1?intro+'<br>':''}มัน<b>${mv[0]}</b>${i>1?`<br><span class="tag2">อ่านถูกแล้ว ${sc}/${i-1}</span>`:''}`,Object.keys(B2CT).map(k=>({t:B2CT[k][0],noFate:1,f(){if(k===mv[1])sc++;setTimeout(go,250)}})))};go()}
 function b2Big(){const x=b2(),nm=ch(B2BN);x.big=S.age;b2Read(`👑 เจ้าป่า: ${nm}`,`<b>${nm}</b> เจ้าถิ่นป่าข้างเคียงบุกเข้ามา อ่านท่ามันให้ออก<br><span class="tag2">ย่อตัว→หลบข้าง · ตะกุยดิน→ตั้งหลัก · เดินวน→ชิงกัดก่อน</span>`,3,sc=>{
  const ep=total()*(1.35-sc*.25)*(b2Has('fang')?.9:1),w=fight(nm,ep);
  if(w){const g=b2G(.05+sc*.01);S.power+=g;S.fame+=60+sc*20;x.bigW=(x.bigW||0)+1;log(`👑 อ่านท่าถูก ${sc}/3 — ล้ม<b>${nm}</b>ได้! ป่านั้นเป็นของคุณ · พลังยุทธ์ +${fmt(g)} · ชื่อเสียง +${60+sc*20}`,'myth',true);try{keyAdd('ล้มเจ้าป่า '+nm)}catch(e){}b2TerAdd(`ถ้ำของ${nm}`,'cave',true)}
@@ -25610,18 +25610,20 @@ function b2ShFetch(){try{if(!onlineOK||!b2On())return;const x=b2();if(x.shT&&Dat
 function b2ShRes(k,win){try{api('bshres',{to:k,win:win?1:0,n:S.name,x:S.xian?1:0}).catch(()=>{})}catch(e){}}
 // ---------- 5) อสูรร้ายประจำสัปดาห์ ----------
 const B2WB=['ราชาอสูรเก้าหาง','มังกรดำกลืนจันทร์','พญาวานรหินผา','อินทรีเพลิงพันปี','ราชันหมาป่าเงา','เต่าดำแบกภูเขา','วาฬฟ้าพายุ'];
-function b2WbName(){const w=Math.floor((Date.now()+7*3600e3-4*864e5)/(7*864e5));return B2WB[w%B2WB.length]}
-async function openWBoss(){if(!b2On())return;const x=b2();let j=null;try{j=await api('wboss',{})}catch(e){}
+function b2WbIdx(){const w=Math.floor((Date.now()+7*3600e3-4*864e5)/(7*864e5));return w%B2WB.length}
+function b2WbName(){return B2WB[b2WbIdx()]}
+function wbSp(m,sz){return `<div class="wbsp ${m}" style="--y:${b2WbIdx()/6*100}%;width:${sz||160}px;height:${sz||160}px"></div>`}
+async function openWBoss(h){if(!b2On())return;const x=b2();let j=null;try{j=await api('wboss',{})}catch(e){}
  const cd=x.wbY!=null&&S.age-x.wbY<5,HP=50000,dealt=j?Math.min(HP,+j.tot||0):0;
- modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👹 อสูรร้ายประจำสัปดาห์</h3><p><b>${b2WbName()}</b> ออกอาละวาดทุกป่า สัตว์อสูรของผู้เล่นทุกคนช่วยกันล้ม</p>
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👹 อสูรร้ายประจำสัปดาห์</h3><div style="text-align:center">${wbSp(dealt>=HP?'dead':h?'hurt':'idle',170)}</div><p><b>${b2WbName()}</b> ออกอาละวาดทุกป่า สัตว์อสูรของผู้เล่นทุกคนช่วยกันล้ม</p>
  <div style="height:12px;border:2px solid var(--line);border-radius:6px;overflow:hidden;margin:6px 0"><i style="display:block;height:100%;width:${Math.max(0,100-dealt/HP*100)}%;background:#d84a4a"></i></div><p class="tag2">พลังชีวิตที่เหลือ ${fmt(Math.max(0,HP-dealt))}/${fmt(HP)}${dealt>=HP?' · 💀 ล้มแล้วสัปดาห์นี้! ยังตีเก็บแต้มได้':''} · รีเซ็ตทุกวันจันทร์ ${typeof arResetTxt==='function'?'('+arResetTxt()+')':''}</p>
  ${j?`<p class="tag2">ดาเมจคุณสัปดาห์นี้: <b>${fmt(+j.mine||0)}</b>${j.rk!=null?` · อันดับ ${j.rk+1}`:''}</p>${(j.top||[]).map((r,i)=>`<div class="tag2">${i+1}. ${esc(r[0])} — ${fmt(+r[1])}</div>`).join('')}`:'<p class="tag2">เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่ภายหลัง</p>'}
- <button class="pbtn" style="width:100%;margin-top:8px" ${cd||!j?'disabled':''} onclick="b2WbGo()">⚔️ เข้าโจมตี${cd?` (อีก ${5-(S.age-x.wbY)} ปี)`:''}</button><p class="tag2">โจมตีได้ทุก 5 ปีในเกม · อ่านท่า 3 ยก ยิ่งอ่านถูกยิ่งแรง · ได้พลังและชื่อเสียงตามดาเมจ</p>`,'b2wb')}
+ <button class="pbtn" style="width:100%;margin-top:8px" ${cd||!j?'disabled':''} onclick="b2WbGo()">⚔️ เข้าโจมตี${cd?` (อีก ${5-(S.age-x.wbY)} ปี)`:''}</button><p class="tag2">โจมตีได้ทุก 5 ปีในเกม · อ่านท่า 3 ยก ยิ่งอ่านถูกยิ่งแรง · ได้พลังและชื่อเสียงตามดาเมจ</p>`,'b2wb');if(h)setTimeout(()=>{const e=document.querySelector('.wbsp.hurt');if(e){e.classList.remove('hurt');e.classList.add(dealt>=HP?'dead':'idle')}},1500)}
 function b2WbGo(){const x=b2();if(x.wbY!=null&&S.age-x.wbY<5)return;x.wbY=S.age;closeM();const nm=b2WbName();
  b2Read(`👹 ${nm}`,`ผู้เล่นหลายสิบตัวรุมอยู่รอบร่างยักษ์ หาจังหวะคุณ<br><span class="tag2">ย่อตัว→หลบข้าง · ตะกุยดิน→ตั้งหลัก · เดินวน→ชิงกัดก่อน</span>`,3,sc=>{
   const d=Math.round(Math.min(2000,(20+18*Math.log10(Math.max(10,total())))*(1+(S.beastMode.st||0)*.25)*(.5+sc*.5)*(.85+Math.random()*.3)));
   const g=b2G(.01+sc*.008);S.power+=g;S.fame+=Math.round(d/10);log(`👹 อ่านถูก ${sc}/3 — ฝากแผลไว้บน<b>${nm}</b> ${fmt(d)} ดาเมจ · พลังยุทธ์ +${fmt(g)} · ชื่อเสียง +${Math.round(d/10)}`,'epic',true);
-  api('wboss',{d,n:S.name,tp:typeof acTp==='function'?acTp():0}).then(()=>{}).catch(()=>{});render()})}
+  api('wboss',{d,n:S.name,tp:typeof acTp==='function'?acTp():0}).then(()=>{}).catch(()=>{}).then(()=>{try{openWBoss(1)}catch(e){}});render()},`<div style="text-align:center">${wbSp('atk',130)}</div>`)}
 // ---------- ผูกเข้ากับปีของสัตว์ ----------
 {const _byX=beastYear;beastYear=function(){if(!b2On())return _byX.apply(this,arguments);const x=b2(),f=S.focus,p0=S.power,q0=S.qi,i0=S.int;b2Sea();const r=_byX.apply(this,arguments);
  try{if(!b2On())return r;const dp=S.power-p0,dq=S.qi-q0,di=S.int-i0;
@@ -46519,3 +46521,9 @@ try{(()=>{const TT=/รอยแยก|ประตูเปิดอีกค�
 try{window.whyStuck=window.whyStuck||function(){return wNeed('help',()=>window.whyStuck&&window.whyStuck())};setTimeout(()=>{try{wLoad('help').catch(()=>{})}catch(e){}},1600)}catch(e){console.error('helpStub',e)}
 // 🛟 มินิเกมรวมปราณ: ถ้าหน้าต่างถูกกันไว้ (มีตัวเลือก/ดวลเปิดอยู่) ผืนผ้าใบไม่ถูกสร้าง → เดิม error แล้วผลการทะลวงหายไป ตอนนี้ปล่อยตามชะตาแทน (บอทเล่นทดสอบเจอ)
 try{{const _qgF=qiGame;qiGame=function(o,cb){try{return _qgF.apply(this,arguments)}catch(e){if(!document.getElementById('qgC')&&typeof cb==='function'){try{QGM.done=true;QGM.closed=1;cb(o&&o.noRoll?null:Math.random()<((o&&o.p)||.5),.5,(o&&o.p)||.5,1)}catch(x){console.error('qiGame fb',x)}return}throw e}}}}catch(e){console.error('qgFix',e)}
+try{(function(){const st=document.createElement('style');st.textContent=`.wbsp{background:url(/wboss.webp) 0 var(--y)/600% 700% no-repeat;image-rendering:pixelated;margin:2px auto;max-width:100%}
+.wbsp.idle{animation:wbI 1.1s steps(1) infinite}@keyframes wbI{0%{background-position:0% var(--y)}50%{background-position:20% var(--y)}}
+.wbsp.atk{animation:wbA .45s steps(1) infinite}@keyframes wbA{0%{background-position:40% var(--y)}50%{background-position:60% var(--y)}}
+.wbsp.hurt{background-position:80% var(--y)}.wbsp.dead{background-position:100% var(--y)}
+body.lite .wbsp{animation:none!important;background-position:0% var(--y)}
+@media (prefers-reduced-motion:reduce){.wbsp{animation:none!important;background-position:0% var(--y)}}`;document.head.appendChild(st)})()}catch(e){console.error('mod-wb',e)}
