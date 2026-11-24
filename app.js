@@ -32658,11 +32658,12 @@ const isNew=()=>{try{return !LS.get('murim_tut',0)&&!LS.get('murim_nbOff',0)&&!(
 const SL=[
  ['🏯','นี่คือเกมใช้ชีวิตหนึ่งชาติ','คุณจะเกิดเป็นใครสักคนในยุทธภพ <b>ชาติกำเนิด ชื่อ และชะตาถูกสุ่มให้</b><br>แล้วชีวิตจะเดินไปเองทีละปี คุณแค่ดูว่าจะเป็นอย่างไร'],
  ['🔀','คุณมีหน้าที่แค่ตัดสินใจ','เมื่อเกิดเรื่องสำคัญ เกมจะ<b>หยุดให้คุณเลือกทาง</b><br>เลือกอะไรก็ได้ ไม่มีถูกผิด ทางเลือกคุณ คือเรื่องราวของชีวิตนี้<br>อยากพักก็หยุดได้ทุกเมื่อ'],
+ ['🗺️','มีหลายโลกให้เลือกเล่น','ยุทธภพ โลกเซียน ยุคปัจจุบัน สัตว์อสูร ทะลุฟ้าดารา นครม่านหมอก และอีกหลายโลก<br>ไม่แน่ใจจะเริ่มตรงไหน <b>ให้เกมช่วยเลือกทางเล่น</b>ได้ ไม่ต้องรู้อะไรมาก่อน'],
  ['🌱','ตายแล้วลองใหม่ได้เสมอ','ชีวิตจบลงเมื่อไหร่ก็<b>เกิดใหม่เป็นคนใหม่</b>ได้เลย ไม่ต้องกลัวพลาด<br>กดปุ่ม <b>เริ่มเล่น</b> เกมจะจัดให้ทุกอย่าง แล้วมีปู่คอยบอกทางระหว่างเล่น']
 ];
 let si=0;
 window.nbWel=function(i){si=Math.max(0,Math.min(SL.length-1,i==null?0:i));const s=SL[si],last=si===SL.length-1;
- modal(`<div class="nbWel"><div class="ic">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p><div class="nbDots">${SL.map((_,k)=>`<i class="${k===si?'on':''}"></i>`).join('')}</div>${last?`<button class="go" onclick="nbDone(1)">▶ เริ่มเล่นเลย</button>`:`<button class="go" onclick="nbWel(${si+1})">ต่อไป ›</button>`}<button class="sk" onclick="nbDone(0)">${last?'ปิด':'ข้าม'}</button></div>`,'nbwel')};
+ modal(`<div class="nbWel"><div class="ic">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p><div class="nbDots">${SL.map((_,k)=>`<i class="${k===si?'on':''}"></i>`).join('')}</div>${last?`<button class="go" onclick="nbDone(1)">▶ เริ่มเล่นเลย</button><button class="sk" onclick="nbDone(0);setTimeout(()=>obPath(),200)">🧭 ยังไม่แน่ใจ ช่วยเลือกทางเล่นให้หน่อย</button>`:`<button class="go" onclick="nbWel(${si+1})">ต่อไป ›</button>`}<button class="sk" onclick="nbDone(0)">${last?'ปิด':'ข้าม'}</button></div>`,'nbwel')};
 window.nbDone=function(go){try{LS.set('murim_welcome',1)}catch(e){}try{closeM()}catch(e){}if(go){setTimeout(()=>{try{goBirthPick()}catch(e){}},150)}};
 window.nbMore=function(){try{LS.set('murim_nbOff',1)}catch(e){}const T=document.getElementById('title');if(T)T.classList.remove('nb');document.body.classList.remove('nbOn');const r=document.getElementById('nbRow');if(r)r.remove();mkHelp()};
 function mkHelp(){const T=document.getElementById('title');if(!T)return;const old=document.getElementById('nbHelp');const nb=T.classList.contains('nb');
@@ -45998,3 +45999,6 @@ try{
 FATE_L.splice(0,FATE_L.length,0,3,5,8,10,15,20,30);
 {const _set=LS.set;LS.set=function(k,v){const r=_set.apply(this,arguments);try{if(k==='murim_fate'&&+v>0&&LS.get('murim_chlock',0)){_set.call(LS,'murim_chlock',0);toast('🔓 ปลดล็อกตัวเลือกให้แล้ว — ชะตาจะตัดสินแทนใน '+v+' วิ');if(choice._cur&&$('modal')&&$('modal').dataset.k==='choice')choiceShow()}}catch(e){}return r}}
 }catch(e){console.error('fateSet',e)}
+
+// ===== 🧭 ระบบพาผู้เล่นใหม่ (เลือกทางเล่น · ทุกโลกทุกโหมด · ภารกิจปีแรก · ค้นหาในคู่มือ) อยู่ที่ /w/onb.js — ทางเข้าโหลดเมื่อเรียกใช้ =====
+try{['obPath','obWorlds'].forEach(n=>{window[n]=function(){const a=arguments;return wNeed('onb',()=>{const f=window['_'+n];if(f)return f.apply(null,a)})}});setTimeout(()=>{try{wLoad('onb').catch(()=>{})}catch(e){}},2500)}catch(e){console.error('onbStub',e)}
