@@ -841,6 +841,7 @@ const GD_CAP = [20, 25, 30, 35, 40, 45, 50, 55, 60, 70];
 const GD_UN = { q: 2, rk: 3, boss: 4, tech: 5, hall: 6, bless: 7, hard: 8, war: 9, emb: 10 };
 const GD_IC0 = ['🏯', '⛩️', '🐉', '🦅', '🐺', '🌙', '🔥', '🌊', '⚔️', '🌸', '🪷', '☯️'], GD_IC10 = ['🐲', '🦚', '👑', '🌟', '🗡️', '🏔️'];
 const GD_ICT = ['🛡️', '🏙️', '🧟', '🌀', '👻', '☁️', '🏹', '🔮'];
+const GD_ICP = Array.from({ length: 100 }, (_, i) => String.fromCharCode(0xE000 + i)); // 🖼️ ตรากิลด์แบบภาพ 100 แบบ (guild1/2.webp) เก็บเป็นอักษร PUA
 const GD_XPD = 300, GD_DMGD = 600, GD_TPT = [0, 500, 1500, 3500, 7000];
 const gdLv = x => { let l = 1; for (let i = 1; i < GD_LVX.length; i++) if (x >= GD_LVX[i]) l = i + 1; return l };
 const gdDay = t => Math.floor((t + 7 * 3600e3) / 86400e3);
@@ -1961,7 +1962,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (!(await cmd('SET', 'gdcd:' + pu, 1, 'NX', 'EX', 3600))) return res.json({ err: 'cd' });
         const key = 'gdn:' + gn.toLowerCase(); const g = Math.random().toString(36).slice(2, 10).replace(/[^a-z0-9]/g, 'x').padEnd(8, 'x');
         if (!(await cmd('SET', key, g, 'NX'))) return res.json({ err: 'taken' });
-        const ic = [...GD_IC0, ...GD_ICT].includes(b.ic) ? b.ic : '🏯';
+        const ic = [...GD_IC0, ...GD_ICT, ...GD_ICP].includes(b.ic) ? b.ic : '🏯';
         const th = GD_TH[b.th] ? String(b.th) : 'murim';
         await pipe([['SET', 'gd:' + g, JSON.stringify({ id: g, n: gn, ic, ld: pu, t: now, ds: clean(b.ds, 60), th })], ['HSET', 'gdm:' + g, pu, JSON.stringify({ n: nm, j: now })], ['SET', 'gdu:' + pu, g], ['ZADD', 'gdall', now, g]]);
         return res.json({ ok: 1, g: await full(g) }) }
@@ -2021,7 +2022,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (!(await cmd('SET', 'gdpr:' + pu + ':' + d0, 1, 'NX', 'EX', 86400 * 2))) return res.json({ err: 'prd' }); await pipe([['HINCRBY', 'gdhp:' + my, k, 1], ['RPUSH', 'gdbl:' + pu, JSON.stringify({ k: 'lg', n: x.n, t: now })], ['LTRIM', 'gdbl:' + pu, -5, -1], ['EXPIRE', 'gdbl:' + pu, 86400 * 30]]); return res.json({ ok: 1, g: await full(my) }) }
       if (o === 'bless') { if (lvG < GD_UN.bless) return res.json({ err: 'lv' }); const u = String(b.u || '').replace(/[^a-z0-9]/g, '').slice(0, 12); if (!u || u === pu || !M1[u]) return res.json({ err: 'u' });
         if (!(await cmd('SET', 'gdbs:' + pu + ':' + d0, 1, 'NX', 'EX', 86400 * 2))) return res.json({ err: 'bsd' }); await pipe([['RPUSH', 'gdbl:' + u, JSON.stringify({ k: 'mb', n: nm, t: now })], ['LTRIM', 'gdbl:' + u, -5, -1], ['EXPIRE', 'gdbl:' + u, 86400 * 30], sys(`🙏 ${nm} ส่งพรให้ ${M1[u].n}`), ['LTRIM', 'gdc:' + my, 0, 59]]); return res.json({ ok: 1, g: await full(my) }) }
-      if (o === 'icon') { if (lvG < GD_UN.emb) return res.json({ err: 'lv' }); if (G1.ld !== pu) return res.json({ err: 'ld' }); const ic = String(b.ic || ''); if (![...GD_IC0, ...GD_ICT, ...GD_IC10].includes(ic)) return res.json({ err: 'op' }); G1.ic = ic; await cmd('SET', 'gd:' + my, JSON.stringify(G1)); return res.json({ ok: 1, g: await full(my) }) }
+      if (o === 'icon') { if (lvG < GD_UN.emb) return res.json({ err: 'lv' }); if (G1.ld !== pu) return res.json({ err: 'ld' }); const ic = String(b.ic || ''); if (![...GD_IC0, ...GD_ICT, ...GD_IC10, ...GD_ICP].includes(ic)) return res.json({ err: 'op' }); G1.ic = ic; await cmd('SET', 'gd:' + my, JSON.stringify(G1)); return res.json({ ok: 1, g: await full(my) }) }
       if (o === 'theme') { if (G1.ld !== pu) return res.json({ err: 'ld' }); const th = String(b.th || ''); if (!GD_TH[th]) return res.json({ err: 'op' }); if (G1.th === th) return res.json({ ok: 1, g: await full(my) }); if (G1.th && !(await cmd('SET', 'gdthcd:' + my, 1, 'NX', 'EX', 86400 * 7))) return res.json({ err: 'thcd' }); G1.th = th; await pipe([['SET', 'gd:' + my, JSON.stringify(G1)], sys(`🎨 เปลี่ยนแนวเป็น${GD_TH[th].g}`), ['LTRIM', 'gdc:' + my, 0, 59]]); return res.json({ ok: 1, g: await full(my) }) }
       return res.json({ err: 'op' });
     }

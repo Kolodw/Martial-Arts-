@@ -46418,8 +46418,16 @@ try{(function(){
  try{(DUNG||[]).slice(0,7).forEach((d,i)=>d&&d.ic&&P3.push([d.ic,d.n,41+i]))}catch(e){}
  P3.forEach(([ic,n,i])=>{const s3=ic+' '+n;if(M[s3])return;M[s3]={k:'s3_'+i,ic,n,u:'/items3.webp',c:8,r:6,i};L.push(s3)});L.sort((a,b)=>b.length-a.length);
  window.facImg=n=>{const i=FN.indexOf(n);return i<0?'':`<i class="ii ${QA('/items3.webp',i)}" title="${n}" style="${ST('/items3.webp',i,8,6)}"></i>`};
- const RE=new RegExp(L.map(s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
+ const RE=new RegExp(L.map(s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+'|[\uE000-\uE063]','g');
  st.textContent+=`.ii,i.iiB{background:var(--u) var(--p)/var(--s) no-repeat;position:relative}
+.gdIcs button .gem{width:30px;height:30px;vertical-align:middle}.gdIcs button.on .gem{animation:gmPu 1.6s ease-in-out infinite}
+.gdIc .gem{width:1.25em;height:1.25em;vertical-align:middle;animation:gmFl 3.4s ease-in-out infinite}
+.gdL .i .gem,.gdWar span .gem{width:1.4em;height:1.4em;vertical-align:middle}
+@media (hover:hover){.gdIcs button:hover .gem,.gdL:hover .gem{animation:gmHop .45s ease-out}}
+@keyframes gmPu{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+@keyframes gmFl{0%,100%{transform:translateY(0)}50%{transform:translateY(-7%)}}
+@keyframes gmHop{0%,100%{transform:none}40%{transform:translateY(-14%) scale(1.08)}}
+@media (prefers-reduced-motion:reduce){.gem{animation:none!important}}body.lite .gem{animation:none!important}
 :is(.ii,i.iiB).qa1{--gc:rgba(90,170,255,.55)}:is(.ii,i.iiB).qa2{--gc:rgba(180,90,255,.6)}:is(.ii,i.iiB).qa3{--gc:rgba(255,200,70,.6)}:is(.ii,i.iiB).qa4{--gc:rgba(255,100,40,.7)}:is(.ii,i.iiB).qad{--gc:rgba(200,30,80,.6)}:is(.ii,i.iiB).qay{--gc:rgba(60,180,255,.6)}
 :is(.ii,i.iiB).qa1,:is(.ii,i.iiB).qa2,:is(.ii,i.iiB).qa3,:is(.ii,i.iiB).qa4,:is(.ii,i.iiB).qad,:is(.ii,i.iiB).qay{background:var(--u) var(--p)/var(--s) no-repeat,radial-gradient(closest-side,var(--gc),transparent) 50% 50%/80% 80% no-repeat}
 :is(.ii,i.iiB).qa1,:is(.ii,i.iiB).qay{animation:qaG 2.8s ease-in-out infinite}:is(.ii,i.iiB).qay{animation-timing-function:ease-in-out}
@@ -46438,9 +46446,9 @@ body.lite :is(.ii,i.iiB).qa1,body.lite :is(.ii,i.iiB).qa2,body.lite :is(.ii,i.ii
  const SK=/^(SCRIPT|STYLE|TEXTAREA|INPUT|OPTION|SELECT|TITLE)$/;
  const sty=o=>ST(o.u,o.i,o.c,o.r);
  window.itIc=k=>{const s=Object.keys(M).find(x=>M[x].k===k);return s?`<i class="ii ${QA(M[s].u,M[s].i)}" title="${M[s].n}" style="${sty(M[s])}"></i>`:((typeof BAGIT!=='undefined'&&BAGIT[k]&&BAGIT[k].ic)||'')};
- function proc(t){const v=t.nodeValue;if(!v||v.length<3)return;RE.lastIndex=0;if(!RE.test(v))return;const p=t.parentNode;if(!p||SK.test(p.nodeName)||p.isContentEditable)return;
+ function proc(t){const v=t.nodeValue;if(!v)return;RE.lastIndex=0;if(!RE.test(v))return;const p=t.parentNode;if(!p||SK.test(p.nodeName)||p.isContentEditable)return;
   RE.lastIndex=0;const f=document.createDocumentFragment();let last=0,m;
-  while((m=RE.exec(v))){const o=M[m[0]];if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));const i=document.createElement('i');i.className='ii';i.title=o.n;i.style.cssText=sty(o);const q=QA(o.u,o.i);if(q)i.classList.add(q);f.appendChild(i);f.appendChild(document.createTextNode(m[0].slice(o.ic.length)));last=m.index+m[0].length}
+  while((m=RE.exec(v))){const cc=m[0].length===1?m[0].charCodeAt(0)-0xE000:-1;if(cc>=0&&cc<100){if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));const gi=document.createElement('i');const sh=cc<50?1:2,ix=cc%50;gi.className='ii gem';gi.style.cssText=ST('/guild'+sh+'.webp',ix,10,5);f.appendChild(gi);last=m.index+1;continue}const o=M[m[0]];if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));const i=document.createElement('i');i.className='ii';i.title=o.n;i.style.cssText=sty(o);const q=QA(o.u,o.i);if(q)i.classList.add(q);f.appendChild(i);f.appendChild(document.createTextNode(m[0].slice(o.ic.length)));last=m.index+m[0].length}
   if(last<v.length)f.appendChild(document.createTextNode(v.slice(last)));p.replaceChild(f,t)}
  function walk(n){if(n.nodeType===3)return proc(n);if(n.nodeType!==1||SK.test(n.nodeName))return;const w=document.createTreeWalker(n,NodeFilter.SHOW_TEXT),a=[];let x;while((x=w.nextNode()))a.push(x);a.forEach(proc)}
  const ob=new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')proc(m.target);else m.addedNodes.forEach(walk)}});
@@ -46449,7 +46457,7 @@ body.lite :is(.ii,i.iiB).qa1,body.lite :is(.ii,i.iiB).qa2,body.lite :is(.ii,i.ii
 })()}catch(e){console.error('mod-itic',e)}
 
 // 🖼️ โหลดภาพไอคอนทั้ง 6 แผ่นไว้ล่วงหน้า + ค้างไว้ในหน่วยความจำ (กันกะพริบตอนปุ่มถูกวาดใหม่)
-try{(function(){const U=[1,2,3,4,5,6].map(n=>'/items'+(n>1?n:'')+'.webp');window._icKeep=U.map(u=>{const im=new Image();im.decoding='sync';im.src=u;try{im.decode().catch(()=>{})}catch(e){}return im});const d=document.createElement('div');d.setAttribute('aria-hidden','true');d.style.cssText='position:fixed;left:-9px;top:-9px;width:1px;height:1px;overflow:hidden;opacity:.01;pointer-events:none;background:'+U.map(u=>'url('+u+') 0 0/1px 1px no-repeat').join(',');(document.body||document.documentElement).appendChild(d)})()}catch(e){}
+try{(function(){const U=[1,2,3,4,5,6].map(n=>'/items'+(n>1?n:'')+'.webp').concat(['/guild1.webp','/guild2.webp']);window._icKeep=U.map(u=>{const im=new Image();im.decoding='sync';im.src=u;try{im.decode().catch(()=>{})}catch(e){}return im});const d=document.createElement('div');d.setAttribute('aria-hidden','true');d.style.cssText='position:fixed;left:-9px;top:-9px;width:1px;height:1px;overflow:hidden;opacity:.01;pointer-events:none;background:'+U.map(u=>'url('+u+') 0 0/1px 1px no-repeat').join(',');(document.body||document.documentElement).appendChild(d)})()}catch(e){}
 // 🎨 ไอคอนเมนู/ปุ่มแบบภาพ (items4.webp + items5.webp 8×6) — ทับภาพ pixel emoji เดิมของปุ่มที่ชื่อตรงกัน · ไม่ตรง = ของเดิม · อนิเมชันเล็กๆ บางไอคอน
 try{(function(){
  const L4=['ตัวละครของฉัน','วิชา','สุ่มวิชา','สำนัก','ตลาดยุทธภพ','ครอบครัว','ทำเนียบสำนัก','คนที่เกิดพร้อมกัน','ของต่างโลก','ระบบ',null,'สัตว์คู่ใจ','สมุดสัตว์','ผู้คน','ตระกูล','งานช่าง','ดันเจี้ยน','อัตโนมัติ','ชุดสวมใส่','บันทึกเควส','แผนที่','คู่แค้น','ของตกแต่ง','ตัวอักษร','วิธีเล่น','สมุดตำนาน','สารานุกรม','สถิติรวม','อัปเดต','เสียง','คู่มือ','แจ้งบั๊ก','ความคิดเห็น','ย้ายเซฟ','ภาพฉาก','กระเป๋า'];

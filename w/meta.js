@@ -72,6 +72,7 @@ const GTH={murim:{pb:'ศิษย์ฝึกหัด',n:'ยุทธภพ',
  ghost:{pb:'ลูกศิษย์ฝึกหัด',n:'ผีไทย',ic:'👻',g:'สำนักไสยเวท',ld:'อาจารย์ใหญ่',el:'หมอผี',m:'ลูกศิษย์',art:'คาถาประจำสำนัก',hall:'หิ้งบูชาครู',p:{sword:['📿','สายอาคม'],mind:['🕯️','สายสมาธิ'],body:['🪬','สายของขลัง']}}};
 let Z=GTH.murim;const thOf=g=>GTH[g&&g.th]||GTH.murim;
 const GICT=['🛡️','🏙️','🧟','🌀','👻','☁️','🏹','🔮'];
+const GICP=Array.from({length:100},(_,i)=>String.fromCharCode(0xE000+i));
 // โลกที่เกิด → แนว (ใช้แปลชื่อพลังติดตัวให้เข้ากับโลกนั้น) และชื่อโลก
 const wTh=w=>/^m_zombie|m_doom/.test(w)?'zombie':/^m_hunter|m_tower|m_gatewon|m_game/.test(w)?'hunter':w==='m_ghost'?'ghost':/^m_/.test(w)?'modern':/^(xian|god|soul|sky)$/.test(w)?'xian':'murim';
 const wNm=w=>(WN[w]||[w])[0],wIc=w=>(WN[w]||['','',''])[2]||'🌍';
@@ -131,7 +132,7 @@ window.gdAnn=async()=>{const d=prompt('ประกาศ'+Z.g+' (ไม่เ�
 window.gdPath=async tp=>{const j=await gdW('path',{tp});if(j&&j.ok){toast('📖 เลือกสายวิชาแล้ว');redraw()}};
 window.gdPray=async k=>{const j=await gdW('pray',{k});if(j&&j.ok){toast('🙏 อธิษฐานแล้ว รับพรจากตำนานในชีวิตถัดไป');redraw()}};
 window.gdBless=async(u,n)=>{const j=await gdW('bless',{u});if(j&&j.ok){toast(`🙏 ส่งพรให้ ${n} แล้ว`);redraw()}};
-window.gdIcon=()=>{const b=$('gdBody');if(!b)return;b.innerHTML=`<div class="gdB"><p>เลือกตรา${Z.g} (ไอคอนพิเศษสำหรับเลเวล 10)</p><div class="gdIcs">${GIC.concat(GICT,GIC10).map(i=>`<button onclick="gdIconSet('${i}')">${i}</button>`).join('')}</div><button class="gbtn" style="width:100%" onclick="redraw2()">↩️ กลับ</button></div>`};
+window.gdIcon=()=>{const b=$('gdBody');if(!b)return;b.innerHTML=`<div class="gdB"><p>เลือกตรา${Z.g} (ไอคอนพิเศษสำหรับเลเวล 10)</p><div class="gdIcs">${GIC.concat(GICT,GIC10,GICP).map(i=>`<button onclick="gdIconSet('${i}')">${i}</button>`).join('')}</div><button class="gbtn" style="width:100%" onclick="redraw2()">↩️ กลับ</button></div>`};
 window.gdIconSet=async ic=>{const j=await gdW('icon',{ic});if(j&&j.ok)redraw()};window.redraw2=()=>redraw();
 // ---- พรสำนักติดตัวตอนเกิด (วิชาลับ · ตราพิชิตบอส · พรผู้ชนะสงคราม · พรจากตำนาน/เพื่อน) ----
 const GBK='murim_gdbuf';const cwk=()=>Math.floor((Date.now()+7*3600e3-4*86400e3)/604800e3);
@@ -150,7 +151,7 @@ try{const _bl=beginLife;beginLife=function(){const r=_bl.apply(this,arguments);g
 let gdTh='murim';
 function gdNew(){Z=GTH[gdTh];return`<div class="gdB">${GGL===0?`<div class="gdAnn">🔐 <b>ต้องล็อกอิน Google ก่อน</b> ถึงจะตั้งกลุ่มหรือเข้ากลุ่มได้ <button class="gbtn gdS" onclick="gWarn()">ล็อกอิน</button></div>`:''}${GREQ?`<div class="gdAnn">⏳ คำขอเข้าร่วม <b>${E(GREQ.ic||'')} ${E(GREQ.n)}</b> กำลังรอหัวหน้าหรือผู้ดูแลอนุมัติ (หมดอายุใน 3 วัน) <button class="gbtn gdS" onclick="gdCancel()">ยกเลิกคำขอ</button></div>`:''}<p>ยังไม่มีกลุ่ม — ตั้งกลุ่มเองหรือขอเข้ากลุ่มของคนอื่น ทุกชีวิตที่จบ (ทุกโลก) ส่งแต้มเข้ากลุ่ม แข่งกันทุกสัปดาห์</p>
  <h4 style="margin:8px 0 4px">🎨 เลือกแนวกลุ่ม</h4><div class="gdThs">${Object.entries(GTH).map(([k,v])=>`<button class="${k===gdTh?'on':''}" onclick="gdThPick('${k}')"><b>${v.ic} ${v.g}</b><small>แนว${v.n} · ${v.ld} · ${v.m}</small></button>`).join('')}</div>
- <h4 style="margin:8px 0 4px">🏗️ ตั้ง${Z.g}ใหม่</h4><input id="gdNmI" maxlength="16" placeholder="ชื่อ${Z.g} (2–16 ตัว)"><div class="gdIcs">${[Z.ic,...GIC,...GICT].filter((x,i,a)=>a.indexOf(x)===i).map(i=>`<button class="${i===gdIc?'on':''}" onclick="gdPick('${i}',this)">${i}</button>`).join('')}</div>
+ <h4 style="margin:8px 0 4px">🏗️ ตั้ง${Z.g}ใหม่</h4><input id="gdNmI" maxlength="16" placeholder="ชื่อ${Z.g} (2–16 ตัว)"><div class="gdIcs">${[Z.ic,...GIC,...GICT,...GICP].filter((x,i,a)=>a.indexOf(x)===i).map(i=>`<button class="${i===gdIc?'on':''}" onclick="gdPick('${i}',this)">${i}</button>`).join('')}</div>
  <input id="gdDsI" maxlength="60" placeholder="คำขวัญ (ไม่ใส่ก็ได้)" style="margin-bottom:6px"><button class="pbtn" style="width:100%" onclick="gdMake()">ตั้ง${Z.g}</button>
  <h4 style="margin:12px 0 4px">🔑 มีรหัสเชิญหรือรหัสกลุ่ม</h4><div class="gdRow"><input id="gdJI" maxlength="10" placeholder="รหัสเชิญ 6 ตัว หรือรหัสกลุ่ม 8 ตัว"><button class="gbtn" style="flex:0 0 auto" onclick="gdJoin(($('gdJI')||{}).value)">เข้าร่วม</button></div>
  <h4 style="margin:12px 0 4px">🏆 กลุ่มที่รับสมาชิก</h4><div id="gdLst"><p class="tag2">กำลังโหลด…</p></div></div>`}
