@@ -32780,7 +32780,13 @@ function roll(n,lim){let best=0,out=[];for(let i=0;i<n;i++){const r=Math.random(
  if(n>=10)best=Math.max(best,2);const k=['gold','qi','train','forge'][best];const t=EFF[k]();return`${['⚪ ธรรมดา','🔵 หายาก','🟣 SR','🌈 SSR'][best]} — ${t}`}
 
 // ---------- สกิล: ปลดตามเลเวล ใช้ได้ตามคูลดาวน์ ----------
-const slots=()=>{const x=X(),L=DT().sk.map((k,i)=>({k,i:String(i),own:1}));(x.fr||[]).forEach((t,j)=>{const q=D[t];if(q)L.push({k:q.sk[0],i:'f'+j,fr:t})});if(x.end==='admin'&&x.adm&&D[x.adm])L.push({k:D[x.adm].sk[1],i:'a',fr:x.adm});return L};
+// ชิ้นส่วนระบบที่กลืน: ช่องเพิ่มตามเลเวล (3 → 6) · ซ้ำกับที่มีให้ EXP แทน · เต็มให้เลือกแทนที่ (เดิมเต็ม 3 แล้วเงียบหาย แต่ข้อความบอกว่าได้)
+const frCap=()=>{const l=S.sys.lv|0;return 3+(l>=100?1:0)+(l>=150?1:0)+(l>=200?1:0)};
+const frAdd=t=>{const x=X();x.fr=x.fr||[];const q=D[t];if(!q)return'none';const nm=q.sk[0][1];
+ if(t===S.sys.t||x.fr.includes(t)||DT().sk.some(k=>k[1]===nm)||x.fr.some(f=>D[f]&&D[f].sk[0][1]===nm)){try{gainExp(Math.round(expNeed(S.sys.lv)*.5))}catch(e){}sl(`🧩 สกิล「${esc(nm)}」ซ้ำกับที่ระบบมีอยู่แล้ว — ย่อยเป็น EXP ระบบแทน`,'');return'dup'}
+ if(x.fr.length<frCap()){x.fr.push(t);return'add'}
+ setTimeout(()=>{try{if(!S||!S.alive)return;choice('🧩 หน้าต่างระบบเต็ม',`ได้ชิ้นส่วนสกิล「${esc(nm)}」มา แต่ช่องเก็บสกิลที่กลืนมาเต็มแล้ว (${x.fr.length}/${frCap()} · ช่องเพิ่มที่ Lv.100 / 150 / 200) จะแทนที่อันไหน`,x.fr.map((f,j)=>({t:`🔄 แทน「${esc(D[f]?D[f].sk[0][1]:f)}」`,s:'',f(){x.fr[j]=t;if(x.cd)x.cd['f'+j]=-99;sl(`🧩 แทนที่ด้วยสกิล「${esc(nm)}」แล้ว`,'myth')}})).concat([{t:'🗑️ ทิ้งไป',s:'ได้ EXP ระบบ',f(){try{gainExp(expNeed(S.sys.lv))}catch(e){}}}]))}catch(e){}},600);return'full'};window._sxFr=frAdd;
+const slots=()=>{const x=X(),L=DT().sk.map((k,i)=>({k,i:String(i),own:1}));if(x.fr&&x.fr.includes(S.sys.t))x.fr=x.fr.filter(t=>t!==S.sys.t);(x.fr||[]).forEach((t,j)=>{const q=D[t];if(q&&t!==S.sys.t&&!L.some(z=>z.k[1]===q.sk[0][1]))L.push({k:q.sk[0],i:'f'+j,fr:t})});if(x.end==='admin'&&x.adm&&D[x.adm])L.push({k:D[x.adm].sk[1],i:'a',fr:x.adm});return L};
 const cdOf=k=>Math.max(1,k[4]-(has('cdr')?1:0)-(X().end==='merge'?1:0));
 const ready=sl=>{const x=X(),last=x.cd[sl.i];return last==null||S.age-last>=cdOf(sl.k)};
 window.sxUse=function(id,silent){if(!on())return;const x=X(),s=S.sys,L=slots(),q=L.find(z=>z.i===String(id));if(!q)return;
@@ -32918,7 +32924,7 @@ const ATT={demon:'ระบบคุณน้ำลายไหล "กลืน
 ev(2,12,s=>on()&&s.sys.lv>=20&&!(s.sys.x&&s.sys.x.stl)&&!(s.sys.x&&s.sys.x.al&&s.sys.x.al.st==='ok'),()=>{const x=X(),s=S.sys,others=SYS_TYPES.filter(t=>t.id!==s.t&&D[t.id]),T=pk(others),rl=Math.max(5,Math.round(s.lv*(.7+Math.random()*.6))),n=pk(RV_NM);
  const r={n,t:T.id,lv:rl,a:S.age};sxPop('⚠️ ตรวจพบโฮสต์อื่น',`${T.ic} ${esc(T.n)} Lv.${rl} · ระยะ 30 เมตร`,'bug');
  choice(`🟥 โฮสต์อีกคน: ${n}`,`หน้าต่างระบบคุณกับของ<b>${n}</b>เด้งขึ้นพร้อมกัน <span class="px">[ตรวจพบโฮสต์อื่น]</span> ${T.ic} ${esc(T.n)} Lv.${rl}${x.v>=2?` (${VN[x.v]})`:''}<br><span class="tag2">${ATT[s.t]||`ระบบคุณเงียบ รอดูว่าคุณจะเลือกอะไร`}</span>`,[
-  O('🩸 กลืนระบบของเขา','ต้องชนะ · ได้สกิลของระบบเขา',()=>duel(n,Math.round(total()*cl(rl/Math.max(1,s.lv),.6,1.5)*1.1),w=>{if(!S||!S.alive)return;if(w){x.fr=x.fr||[];if(!x.fr.includes(T.id)&&x.fr.length<3)x.fr.push(T.id);gainExp(expNeed(s.lv));x.tr=cl(x.tr+(s.t==='demon'?10:s.t==='saint'?-15:0),0,100);S.karma-=8;sxPop('🩸 ABSORB COMPLETE',`ได้สกิล ${esc(D[T.id].sk[0][1])}`,'gold');sl(`🩸 <b>กลืนระบบ${esc(T.n)}สำเร็จ</b> — ได้สกิล「${esc(D[T.id].sk[0][1])}」เพิ่มในหน้าต่างระบบ`,'myth')}
+  O('🩸 กลืนระบบของเขา','ต้องชนะ · ได้สกิลของระบบเขา',()=>duel(n,Math.round(total()*cl(rl/Math.max(1,s.lv),.6,1.5)*1.1),w=>{if(!S||!S.alive)return;if(w){const _fr=frAdd(T.id);gainExp(expNeed(s.lv));x.tr=cl(x.tr+(s.t==='demon'?10:s.t==='saint'?-15:0),0,100);S.karma-=8;if(_fr==='add'){sxPop('🩸 ABSORB COMPLETE',`ได้สกิล ${esc(D[T.id].sk[0][1])}`,'gold');sl(`🩸 <b>กลืนระบบ${esc(T.n)}สำเร็จ</b> — ได้สกิล「${esc(D[T.id].sk[0][1])}」เพิ่มในหน้าต่างระบบ`,'myth')}else sl(`🩸 <b>กลืนระบบ${esc(T.n)}สำเร็จ</b>`,'myth')}
    else if(Math.random()<.35){x.stl={n,t:T.id,a:S.age};sxPop('💀 SYSTEM HIJACKED',`ข้อมูล 50% ถูก${n}ขโมย`,'bug');sl(`💀 <b>${n}กลืนระบบคุณไปครึ่งหนึ่ง!</b> สกิลทั้งหมดใช้ไม่ได้จนกว่าจะทวงคืน`,'fail')}else{s.lv=Math.max(1,Math.round(s.lv*.85));HPx(30);sl(`🩸 แพ้ ระบบคุณเสียข้อมูลไปบางส่วน (Lv.${s.lv})`,'fail')}})),
   O('🤝 จับมือเป็นพันธมิตร','ได้โบนัสทุกปี · วันหนึ่งเขาอาจเปลี่ยนใจ',()=>{x.al=Object.assign(r,{st:'ok'});x.tr=cl(x.tr+(s.t==='saint'?10:0),0,100);sl(`🤝 คุณกับ${n}แลกพิกัดหน้าต่างระบบกัน พันธมิตรโฮสต์คนแรกในชีวิต`,'good')}),
   O('📡 แลกข้อมูลแล้วแยกทาง','ได้เบาะแสความจริงของระบบ + SP',()=>{x.cl++;s.sp+=150*x.v;sl(`📡 ${n}เล่าว่าระบบของเขาก็เคยพูดว่า "${esc(D[T.id].T[Math.min(3,x.ch)])}"`,'myth')}),
@@ -32926,14 +32932,14 @@ ev(2,12,s=>on()&&s.sys.lv>=20&&!(s.sys.x&&s.sys.x.stl)&&!(s.sys.x&&s.sys.x.al&&s
 // พันธมิตร: หักหลัง / ตาย / ช่วย
 ev(3,6,s=>on()&&s.sys.x&&s.sys.x.al&&s.sys.x.al.st==='ok'&&s.age-s.sys.x.al.a>=8,()=>{const x=X(),A=x.al,r=Math.random();A.a=S.age;
  if(r<.3){A.st='bad';choice(`🗡️ ${A.n}หักหลัง`,`${esc(A.n)}ลอบโจมตีกลางดึก "ระบบข้าสั่งให้กลืนเจ้า ข้าขอโทษ"`,[
-   O('⚔️ สู้กลับ','',()=>duel(A.n,Math.round(total()*1.15),w=>{if(!S.alive)return;if(w){x.fr=x.fr||[];if(!x.fr.includes(A.t)&&x.fr.length<3)x.fr.push(A.t);sl(`🩸 ${A.n}ล้มลง ระบบของเขาไหลเข้าหาคุณเอง`,'myth')}else{x.stl={n:A.n,t:A.t,a:S.age};sl(`💀 ${A.n}ขโมยระบบคุณไปครึ่งหนึ่ง`,'fail')}})),
+   O('⚔️ สู้กลับ','',()=>duel(A.n,Math.round(total()*1.15),w=>{if(!S.alive)return;if(w){const _fr=frAdd(A.t);sl(`🩸 ${A.n}ล้มลง ระบบของเขาไหลเข้าหาคุณเอง`,'myth')}else{x.stl={n:A.n,t:A.t,a:S.age};sl(`💀 ${A.n}ขโมยระบบคุณไปครึ่งหนึ่ง`,'fail')}})),
    O('🕊️ ปล่อยเขาไป','',()=>{S.karma+=10;x.tr=cl(x.tr+5,0,100);sl(`🕊️ คุณปล่อย${A.n}ไป เขาร้องไห้ตอนหันหลัง`,'good')})])}
- else if(r<.55){A.st='dead';x.fr=x.fr||[];if(!x.fr.includes(A.t)&&x.fr.length<3)x.fr.push(A.t);sl(`🕯️ ${esc(A.n)}ตายในศึกที่คุณไม่ได้ไปด้วย ระบบของเขาส่งตัวเองมาหาคุณเป็นชิ้นสุดท้าย ได้สกิล「${esc(D[A.t].sk[0][1])}」`,'myth')}
+ else if(r<.55){A.st='dead';const _fr=frAdd(A.t);sl(`🕯️ ${esc(A.n)}ตายในศึกที่คุณไม่ได้ไปด้วย ระบบของเขาส่งตัวเองมาหาคุณเป็นชิ้นสุดท้าย ได้สกิล「${esc(D[A.t].sk[0][1])}」`,'myth')}
  else{S.power+=pctPow(.05*vm());S.sys.sp+=100*X().v;sl(`🤝 ${esc(A.n)}แวะมาหา พาเควสลับมาแบ่งด้วย`,'good')}});
 // ทวงระบบคืน
 ev(4,3,s=>on()&&s.sys.x&&s.sys.x.stl&&s.age-s.sys.x.stl.a>=2,()=>{const x=X(),T=x.stl;
  choice(`🔥 ทวงคืนระบบจาก${T.n}`,`คุณตามรอยสัญญาณระบบที่ถูกขโมยไปจนเจอ${esc(T.n)}`,[
-  O('⚔️ ทวงคืน','',()=>duel(T.n,Math.round(total()*1.1),w=>{if(!S.alive)return;if(w){x.stl=null;x.fr=x.fr||[];if(!x.fr.includes(T.t)&&x.fr.length<3)x.fr.push(T.t);sl('🔥 <b>ระบบกลับคืนมาครบ</b> พร้อมชิ้นส่วนของระบบอีกฝ่ายติดมาด้วย','myth')}else{T.a=S.age;HPx(30);sl('🩸 ยังทวงคืนไม่สำเร็จ','fail')}})),
+  O('⚔️ ทวงคืน','',()=>duel(T.n,Math.round(total()*1.1),w=>{if(!S.alive)return;if(w){x.stl=null;const _fr=frAdd(T.t);sl('🔥 <b>ระบบกลับคืนมาครบ</b> พร้อมชิ้นส่วนของระบบอีกฝ่ายติดมาด้วย','myth')}else{T.a=S.age;HPx(30);sl('🩸 ยังทวงคืนไม่สำเร็จ','fail')}})),
   O('💰 ไถ่คืนด้วย SP',`${fmt(300*x.v)} SP`,()=>{if(S.sys.sp>=300*x.v){S.sys.sp-=300*x.v;x.stl=null;sl('💰 ไถ่ระบบคืนมาได้','good')}else sl('💸 SP ไม่พอ','fail')}),
   O('🧘 สร้างส่วนที่หายไปใหม่เอง','ช้า แต่ได้ความเชื่อใจเต็ม',()=>{x.stl=null;x.tr=100;S.sys.lv=Math.max(1,Math.round(S.sys.lv*.9));sl('🧘 คุณกับระบบเย็บส่วนที่หายไปขึ้นมาใหม่ทีละบรรทัด ระบบตอนนี้เป็นของคุณสองคนจริงๆ','myth')})])});
 
