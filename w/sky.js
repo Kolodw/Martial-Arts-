@@ -2411,8 +2411,17 @@ const uPage=(K,p)=>{if(!K.u.pg)K.u.pg={};if(K.u.pg[p])return'';K.u.pg[p]=1;try{i
 GATEV[17]=K=>K.u&&K.u.out?null:(K.gx&&['ender','emperor'].includes(K.gx.end)?'u_launch':(K.gx&&!K.gx.end?'gx_finale':null)); // ฉากฟ้าสุดท้ายหลุดคิว (ปิดหน้าต่าง/โหลดเซฟ/ล้างคิว) → เดิมไม่มีทางกลับมา ติดขั้นผู้ทะลุฟ้าดาราถาวร
 GATEV[18]=K=>uDis(K).length>=3?null:'u_disq';GATEV[19]=K=>K.u.cw?null:'e5_war';GATEV[20]=K=>K.u.gal?null:'e5_galq';GATEV[21]=K=>K.u.uc?null:'e5_trial';GATEV[22]=K=>uLawN(K,1)?null:'e6_first';
 GATEV[23]=K=>null;GATEV[24]=K=>K.u.lr?null:'e6_rival';GATEV[25]=K=>K.u.fuse?null:'e6_fuse';GATEV[26]=K=>K.u.past?null:'e6_past';GATEV[27]=K=>K.u.rift?null:'e6_rift';
-GATEV[28]=K=>null;GATEV[29]=K=>K.u.selfW?null:'e7_selfq';GATEV[30]=K=>K.u.save?null:'e7_save';GATEV[31]=K=>K.u.src?null:'e7_src';GATEV[32]=K=>K.u.ogate?null:'e8_gate';
-GATEV[33]=K=>null;GATEV[34]=K=>K.u.author?null:'e8_author';
+GATEV[28]=K=>uSelfN(K)>=3?null:'u_selfx';GATEV[29]=K=>K.u.selfW?null:'e7_selfq';GATEV[30]=K=>K.u.save?null:'e7_save';GATEV[31]=K=>K.u.src?null:'e7_src';GATEV[32]=K=>K.u.ogate?null:'e8_gate';
+GATEV[33]=K=>uPg(K)>=7?null:'u_pagex';
+// 🛟 ขั้น 29 และ 34 เดิมไม่มีด่านเรียก ต้องรอเหตุการณ์สุ่มอย่างเดียว ถ้าพลาดเหตุการณ์ (เลือกทางอื่น/หลุดคิว) ติดขั้นสมบูรณ์ถาวร → ด่านสำรองพาไปหาตัวตน/หน้ากระดาษที่ยังขาด (บอทเล่นทดสอบชี้จุด)
+def('u_selfx',{c:()=>false,w:0,go(K){if(!K.u)return;K.u.sv=K.u.sv||{};const L=Object.keys(SELF).filter(k=>!K.u.sv[k]);if(!L.length)return;const k=L[Math.floor(Math.random()*L.length)],s0=SELF[k];
+ C(`🪞 ${s0[0]} เงาที่ตามหาคุณ`,`รอยร้าวระหว่างจักรวาลเปิดเองกลางห้องฝึก อีกฝั่งคือ${s0[1]} — ${s0[2]} เขากำลังมองหาคุณเหมือนกัน`,[
+  O('ก้าวข้ามไปพบเขา',()=>{K.u.sv[k]='meet';mindA(8);say(`🪞 คุณกับ${s0[1]}นั่งคุยกันจนรอยร้าวปิด · พบตัวเองจากจักรวาลอื่น ${uSelfN(K)}/3`,'myth',true);if(K.sub>=10)advance()}),
+  O('ยังไม่พร้อม',()=>say('🪞 รอยร้าวปิดลงช้าๆ มันจะกลับมาอีก',''))].filter(o=>!(mgAuto()&&o.t==='ยังไม่พร้อม')))}});
+def('u_pagex',{c:()=>false,w:0,go(K){if(!K.u)return;const L=Object.keys(PAGES).filter(p=>!(K.u.pg&&K.u.pg[p]));if(!L.length)return;const p=L[0];
+ C('📜 หน้ากระดาษที่ปลิวมา','กระดาษแผ่นหนึ่งลอยมาตกตรงหน้าคุณ ลายมือเหมือนลายมือของคุณเอง แต่คุณไม่เคยเขียนมัน',[
+  O('เก็บไว้',()=>{say('📜 กระดาษอุ่นเหมือนเพิ่งออกจากมือใครสักคน'+uPage(K,p),'myth',true);if(K.sub>=10)advance()}),
+  O('ปล่อยให้ปลิวไป',()=>say('📜 กระดาษปลิวหายไปในความว่าง แต่คุณรู้ว่ามันจะกลับมา',''))].filter(o=>!(mgAuto()&&o.t==='ปล่อยให้ปลิวไป')))}});GATEV[34]=K=>K.u.author?null:'e8_author';
 TTL.push(...Array(18).fill(null).map((_,i)=>[[()=>1,RK[18+i].n]]));
 {const _rkU=e2Rank;e2Rank=function(K){if(K.rk>=18){const m={18:'u_r5',23:'u_r6',28:'u_r7',33:'u_r8',35:'u_finale'}[K.rk];if(m)queue(m);ttlCheck(K);return}return _rkU.apply(this,arguments)}}
 

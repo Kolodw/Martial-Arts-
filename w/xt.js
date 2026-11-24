@@ -30,7 +30,7 @@ XT_FORMS.trim().split('\n').forEach(l=>{const p=l.split('|');if(p.length<5)retur
 const CB=XT_COMBO.trim().split('\n').map(l=>{const p=l.split('|');return{a:p[0],b:p[1],n:[p[2],p[3]],d:[p[4],p[5]],fx:pfx(p[6]),id:p[0]+'+'+p[1]}}).filter(c=>T[c.a]&&T[c.b]);
 const VW=XT_VOW.trim().split('\n').map(l=>{const p=l.split('|');return{id:p[0],ty:p[1],n:[p[2],p[3]],d:[p[4],p[5]],chk:p[6],dl:+p[7]}});
 window.XT_COUNT={base:BASE.length,forms:Object.keys(T).length-BASE.length,combos:CB.length,vows:VW.length};
-const RN={1:['ธรรมดา','Common','#c9c9d6'],2:['หายาก','Rare','#6aa8ff'],3:['ตำนาน','Legendary','#ffcf4d'],9:['ต้องสาป','Cursed','#ff5a6a']};
+const RN={1:['ธรรมดา','Common','#c9c9d6'],2:['หายาก','Rare','#6aa8ff'],3:['ตำนาน','Legendary','#ffcf4d'],4:['เหนือตำนาน','Mythic','#ff8cf0'],9:['ต้องสาป','Cursed','#ff5a6a']};
 const TY={2:['⚖️','สองคม','Double-edged'],3:['🌱','วิวัฒน์','Evolving'],4:['❔','ซ่อนอยู่','Hidden'],5:['🎲','เปลี่ยนกติกา','Rule-bender'],6:['🤝','ผูกกับคนอื่น','Bonded'],7:['🧩','ชิ้นส่วนคอมโบ','Combo piece']};
 const tN=t=>L(t.n[0],t.n[1]);
 // คำอธิบายผลอัตโนมัติ (ให้ตัวเลขตรงกับที่เกิดขึ้นจริงเสมอ)

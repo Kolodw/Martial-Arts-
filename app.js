@@ -7158,7 +7158,7 @@ function qiGame(o,cb){S.qgAt=S.age;const d=o.diff||1,N=S.ch==='hell'?6:5,col=S.x
  <div id="qgSc" style="text-align:center;letter-spacing:4px;font-size:18px">${'▫️'.repeat(N)}</div>
  <p class="tag2" style="text-align:center">โอกาสพื้นฐาน ${Math.round(o.p*100)}% · ยิ่งรวมเป๊ะ โอกาสยิ่งสูง (สูงสุด ×1.55) · พลาดเยอะโอกาสลดลง</p>
  <div style="display:flex;gap:6px"><button class="pbtn" id="qgB" style="flex:2" onclick="qgTap()">☯️ รวมปราณ!</button><button class="gbtn" style="flex:1" onclick="qgSkip()">🎲 ปล่อยตามชะตา</button></div>`,'qigame');
- const cv=$('qgC');cv.addEventListener('pointerdown',e=>{e.preventDefault();qgTap()});
+ const cv=$('qgC');if(!cv){QGM.done=true;QGM.closed=1;try{cb(o.noRoll?null:Math.random()<o.p,.5,o.p,1)}catch(e){console.error(e)}return}cv.addEventListener('pointerdown',e=>{e.preventDefault();qgTap()});
  if(!QGM.kb){QGM.kb=1;document.addEventListener('keydown',e=>{if(($('modal').dataset.k==='qigame')&&(e.code==='Space'||e.key==='Enter')){e.preventDefault();qgTap()}})}
  qgNext();requestAnimationFrame(qgDraw)}
 function qgNext(){if(QGM.i>=QGM.N)return qgFinish();QGM.ring={r:44,t0:performance.now(),dur:1700/QGM.d*(.9+Math.random()*.25)}}
@@ -26093,7 +26093,8 @@ function mysYear(){const M=S.mys;M.left--;if(M.left<=0){const c=M.sus[M.cul];mem
   {t:'💰 จ้างนักสืบ',s:'เงิน -15% · ตัดได้ 1 คนแน่นอน',f(){lose(.15);const inn=M.sus.map((x,i)=>i).filter(i=>i!==M.cul&&!M.sus[i].out);if(inn.length){const i=ch(inn);M.sus[i].out=1;M.cl++;log(`🔍 นักสืบพบว่า ${M.sus[i].n} บริสุทธิ์`,'good')}}}];
  M.sus.forEach((x,i)=>{if(!x.out)opts.push({t:`☝️ ชี้ตัว: ${x.n}`,s:x.r,noFate:1,f(){mysAccuse(i)}})});
  Ev(`🔍 คดีห้องปิดตาย · เหลือ ${M.left} ปี`,mysSusTxt(),opts)}
-function mysAccuse(i){const M=S.mys,x=M.sus[i];S.mys=null;
+function mysAccuse(i){const M=S.mys,x=M&&M.sus&&M.sus[i];if(!x){log('🔍 คดีนี้ปิดไปก่อนแล้ว — คนร้ายหนีไปได้','');return}S.mys=null; // หน้าต่างชี้ตัวค้างอยู่ขณะคดีหมดเวลา (S.mys=null) เคยทำให้ error
+
  if(i===M.cul)tfight(x.n,ep(1.1),w=>{S.fame+=150;rp({sect:20,pp:10});keyAdd(`ไขคดีห้องปิดตาย คนร้ายคือ${x.n}`);log(`🔍 ถูกต้อง! ${x.n} (${x.r})${w?' ถูกจับได้':' หนีไปได้แต่ทุกคนรู้ความจริงแล้ว'}`,'myth')},'🔍 คนร้ายจนตรอก');
  else{const c=M.sus[M.cul];S.karma-=20;S.fame=Math.max(0,S.fame-60);rp({sect:-20});mem(c.n,-2,'เกือบจับได้แต่ชี้ผิดคน');keyAdd(`ชี้ผิดตัวในคดีห้องปิดตาย ${x.n}ถูกประหารทั้งที่บริสุทธิ์`);log(`💀 ${x.n}ถูกประหาร… สามเดือนต่อมา ${c.n} (${c.r}) หัวเราะอยู่ในที่ปลอดภัย`,'bad')}}
 // ---------- 6) ชีวิตสองหน้า ----------
@@ -46516,3 +46517,5 @@ try{(()=>{const TT=/รอยแยก|ประตูเปิดอีกค�
  Object.keys(_c).forEach(k=>{try{choice[k]=_c[k]}catch(e){}})})()}catch(e){console.error('noFateWorld',e)}
 // 🧭 ช่วยผู้เล่นไม่งง (w/help.js): ทำไมไปต่อไม่ได้ · แจ้งบั๊กแนบข้อมูลเอง · ออโต้ฉลาดขึ้น · ร้านแนะนำของคุ้ม · ดาวเหนือนิรันดร์
 try{window.whyStuck=window.whyStuck||function(){return wNeed('help',()=>window.whyStuck&&window.whyStuck())};setTimeout(()=>{try{wLoad('help').catch(()=>{})}catch(e){}},1600)}catch(e){console.error('helpStub',e)}
+// 🛟 มินิเกมรวมปราณ: ถ้าหน้าต่างถูกกันไว้ (มีตัวเลือก/ดวลเปิดอยู่) ผืนผ้าใบไม่ถูกสร้าง → เดิม error แล้วผลการทะลวงหายไป ตอนนี้ปล่อยตามชะตาแทน (บอทเล่นทดสอบเจอ)
+try{{const _qgF=qiGame;qiGame=function(o,cb){try{return _qgF.apply(this,arguments)}catch(e){if(!document.getElementById('qgC')&&typeof cb==='function'){try{QGM.done=true;QGM.closed=1;cb(o&&o.noRoll?null:Math.random()<((o&&o.p)||.5),.5,(o&&o.p)||.5,1)}catch(x){console.error('qiGame fb',x)}return}throw e}}}}catch(e){console.error('qgFix',e)}

@@ -106,8 +106,18 @@ function ovNow(){try{return typeof ovStar==='function'?ovStar():0}catch(e){retur
   return{t:`⭐ ดาวเหนือนิรันดร์ ${n} ดวง`,note:`ถึงชั้นสูงสุดของแดนเทพแล้ว พลังรวมเกินเพดานทุก 2% = ดาว 1 ดวง · <b>ดาวใหม่ทุกดวง ของพลังรวมถาวรได้เต็มอีกรอบ</b> · สถิติสูงสุดข้ามชาติ ${best} ดวง · ดาวที่เกินสถิติ = +1 แต้ม🔮`,L:[{ic:'⚔️',l:'พลังรวม',c:total(),n:nx,h:'🏬 ของพลังรวมถาวร · ฝึก · วิชา'}]}}}catch(e){}return g}}
 setInterval(()=>{try{if(!alive()||!S.xt)return;const n=ovNow();if(!n)return;const best=LSG(OVK,0)|0;if(n>best){LSS(OVK,n);try{const P=window._hk&&_hk.P();if(P){P.p+=n-best;_hk.SV(P)}}catch(e){}try{island({big:1,ic:'⭐',h:'ดาวเหนือนิรันดร์ดวงใหม่',t:`${n} ดวง · สถิติใหม่ · +${n-best} แต้ม🔮 · ของพลังรวมถาวรได้เต็มอีกรอบ`,kind:'gold',ms:5000})}catch(e){}}}catch(e){}},3000);
 
+// ---------- 🧹 เมนู: หมวด ⭐ ใช้บ่อย ยาวเกิน (ระบบใหม่ถูกดันเข้าหมวดนี้เรื่อยๆ จนเกือบ 30 ปุ่ม) → โชว์ 10 ปุ่ม (ที่คุณกดบ่อยขึ้นก่อน) ที่เหลือพับไว้ ----------
+function favTrim(m){try{if(!m||m.dataset.k!=='menu'||m._ft)return;const h=[...m.querySelectorAll('h4')].find(x=>/ใช้บ่อย/.test(x.textContent));let g=h&&h.nextElementSibling;while(g&&!g.matches('.mgrid'))g=g.nextElementSibling;if(!g)return;
+ const B=[...g.children].filter(b=>b.tagName==='BUTTON'&&!b.classList.contains('mnMoreB'));if(B.length<=12)return;m._ft=1;
+ const cnt=LSG('murim_mnc',{})||{},key=b=>{try{return 'menu|'+mnKey(b)}catch(e){return''}};
+ const rank=B.map((b,i)=>({b,i,c:(cnt[key(b)]|0)+(b.classList.contains('wsMB')&&/ทำไม/.test(b.textContent)?99:0)})).sort((x,y)=>y.c-x.c||x.i-y.i);
+ const keep=new Set(rank.slice(0,10).map(x=>x.b));B.forEach(b=>{if(!keep.has(b))b.classList.add('mnMoreH')});
+ rank.slice(0,10).forEach(x=>g.appendChild(x.b)); // ปุ่มที่โชว์เรียงตามที่กดบ่อย
+ const more=document.createElement('button');more.type='button';more.className='opt mnMoreB';more.style.gridColumn='1/-1';more.innerHTML=`▾ อีก ${B.length-10} ระบบในหมวดนี้<small>แตะเพื่อดูทั้งหมด · หรือพิมพ์ค้นหาด้านบน</small>`;
+ more.onclick=()=>{g.querySelectorAll('.mnMoreH').forEach(b=>b.classList.remove('mnMoreH'));more.remove()};g.appendChild(more);
+ const q=m.querySelector('.mnSearch input');if(q)q.addEventListener('input',()=>{if(q.value)more.click()})}catch(e){console.error('favTrim',e)}}
 // ---------- ปุ่มใน ☰ เมนู ----------
-{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$$('modal'),g=m&&m.querySelector('.mgrid');if(g&&!m.querySelector('.wsMB')){const mk=(t,f)=>{const b=document.createElement('button');b.className='opt wsMB';b.innerHTML=t;b.onclick=f;return b};g.insertBefore(mk('🧭 ทำไมไปต่อไม่ได้<small>เช็คเป้าหมาย · แก้เกมค้าง</small>',()=>whyStuck()),g.children[1]||null);g.insertBefore(mk('🤖 ตั้งค่าออโต้<small>เลี่ยงเสี่ยง · หยุดเรื่องสำคัญ · สรุป</small>',()=>aOpen()),g.children[2]||null)}}catch(e){}return r}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$$('modal'),g=m&&m.querySelector('.mgrid');if(g&&!m.querySelector('.wsMB')){const mk=(t,f)=>{const b=document.createElement('button');b.className='opt wsMB';b.innerHTML=t;b.onclick=f;return b};g.insertBefore(mk('🧭 ทำไมไปต่อไม่ได้<small>เช็คเป้าหมาย · แก้เกมค้าง</small>',()=>whyStuck()),g.children[1]||null);g.insertBefore(mk('🤖 ตั้งค่าออโต้<small>เลี่ยงเสี่ยง · หยุดเรื่องสำคัญ · สรุป</small>',()=>aOpen()),g.children[2]||null)}setTimeout(()=>favTrim($$('modal')),60)}catch(e){}return r}}
 
 const st=document.createElement('style');st.textContent=`
 .wsG{padding:10px 12px;border-radius:12px;border:1.5px solid #c9a24a88;background:#c9a24a14;margin:6px 0}.wsG p{margin:4px 0;font-size:13px}
@@ -115,7 +125,7 @@ const st=document.createElement('style');st.textContent=`
 .wsC{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;margin:5px 0;border-radius:10px;border:1px solid var(--line,#5554);font-size:13.5px}.wsC .sysb{white-space:nowrap}.wsC .sysb.on{outline:2px solid #e0a030}
 .aGr{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}.aGr div{padding:8px;border-radius:10px;border:1px solid var(--line,#5554);font-size:12px;text-align:center}.aGr b{display:block;font-size:15px}
 .aEv{margin:4px 0;padding-left:18px;font-size:13px;line-height:1.5}.aWhy{padding:6px 10px;border-radius:10px;background:#e0a03022;font-weight:700}
-.spRec{margin:6px 0 10px;padding:10px 12px;border-radius:12px;border:1.5px solid #e0a030;background:linear-gradient(160deg,#e0a03022,transparent)}.spR{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line,#5554);font-size:13px}.spR:last-child{border:0}
+.mnMoreH{display:none!important}.spRec{margin:6px 0 10px;padding:10px 12px;border-radius:12px;border:1.5px solid #e0a030;background:linear-gradient(160deg,#e0a03022,transparent)}.spR{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line,#5554);font-size:13px}.spR:last-child{border:0}
 @media (max-width:420px){.aGr{grid-template-columns:repeat(2,1fr)}}
 `;document.head.appendChild(st);
 window._help={diag,checks,pick,AC,aStart,aStop,ovNow};
