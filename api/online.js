@@ -612,7 +612,7 @@ async function uaGhostEnd(id, b, now) {
   if (ops.length) await pipe(ops);
 }
 const OWP = { r_soulgod: [3500, 'g'], r_abyss: [3000, 'e'], r_prince: [2000, 'g'], r_suit: [1200, 'e'], r_hunterS: [2500, 'g'], r_idol: [1500, 'g'], r_astro: [2000, 'g'], r_cyber: [2500, 'e'], r_galemp: [5000, 'g'], r_dragon: [3000, 'g'], r_moon: [2000, 'e'], r_blood: [3500, 'e'], r_cloud: [1500, 'g'], r_star: [4000, 'g'], r_phoenix: [3000, 'g'], r_heaven: [5000, 'g'], r_asura: [4000, 'e'] }; // 👘 ชุดหายากตามโลก (ต้องตรงกับ BLOCK 106 ใน app.js)
-const SENS_A = new Set(['comp', 'svlg', 'gdw', 'owbuy', 'owget', 'kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool', 'dcstat', 'dcauth', 'dcunlink']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
+const SENS_A = new Set(['comp', 'idmerge', 'svlg', 'gdw', 'owbuy', 'owget', 'kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool', 'dcstat', 'dcauth', 'dcunlink']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
 
 function uaMeta(req, now) {
   const ua = String(req.headers['user-agent'] || '');
@@ -3015,8 +3015,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       try { if (!(await cmd('SET', 'mgseen:' + tk, 1, 'NX', 'EX', 86400 * 30))) throw 0; const d0 = thDay(now); await pipe([['INCR', 'migst:get:' + d0], ['EXPIRE', 'migst:get:' + d0, 86400 * 40], ['INCR', 'migst:get:all']]) } catch (e) {}
       return res.json({ ok: 1, d: v.d, z: v.z });
     }
-    if (req.method !== 'POST' && a !== 'dccb' && a !== 'dcstat' && a !== 'dcdiag' && a !== 'dcsync') return res.status(405).json({ err: 'method' });
-    if (!okId(id) && a !== 'dccb' && a !== 'dcdiag' && a !== 'dcsync') return res.status(400).json({ err: 'id' });
+    if (req.method !== 'POST' && a !== 'dccb' && a !== 'dcstat' && a !== 'dcdiag' && a !== 'dcsync' && a !== 'idmerge') return res.status(405).json({ err: 'method' });
+    if (!okId(id) && a !== 'dccb' && a !== 'dcdiag' && a !== 'dcsync' && a !== 'idmerge') return res.status(400).json({ err: 'id' });
     if (a === 'logreq') {
       const k2 = String(b.t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
       const full = await findLive(k2, isAdmQ(b.key));
@@ -3221,6 +3221,35 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const did = await cmd('GET', 'dc:' + id);
       if (did) { try { await withCap(dcSync(id, 1).catch(() => { }), 4000) } catch (e) { } await pipe([['DEL', 'dc:' + id], ['DEL', 'dcr:' + did], ['SREM', 'dcall', id]]) }
       return res.json({ ok: 1 });
+    }
+    // 🔀 สลับบัญชี Google (ไอดีเครื่องนี้ B → ไอดีที่ผูก Google ไว้ A): ย้ายสำนักผู้เล่น + แต้มลานหมื่นเงาสัปดาห์นี้ จาก B ไป A ไม่ให้หาย
+    // ผู้เล่น: id=B (ต้องผ่าน ctok ของ B) + b.to=A + b.tt=โทเคนของ A (ได้มาจากเซิร์ฟหลังยืนยัน Google) · แอดมิน: ?key=&from=&to= หรือ ?key=&name=ชื่อในลาน (หาให้เอง) · ไม่ใส่ go=1 = ดูผลก่อน
+    if (a === 'idmerge') {
+      const q = qOf(req), adm = isAdmKey(q.key || b.key); let from = '', to = '', go = 1, out = { ok: 1 };
+      if (adm) {
+        go = (q.go || b.go) === '1' || b.go === 1 ? 1 : 0; from = String(q.from || b.from || ''); to = String(q.to || b.to || '');
+        const nm = String(q.name || b.name || '').trim();
+        if (nm && (!from || !to)) { const all = (await cmd('HGETALL', 'arn')) || []; const ids = []; for (let i = 0; i < all.length; i += 2) if (String(all[i + 1]).trim() === nm) ids.push(all[i]);
+          out.found = []; for (const u of ids) { const [gu, gl, rt] = await pipe([['GET', 'gdu:' + u.slice(0, 12)], ['GET', 'gof:' + u], ['HGET', 'arr:' + W, u]]); out.found.push({ id: u, guild: gu || '', google: gl ? 1 : 0, rating: rt == null ? null : +rt }) }
+          const gl = out.found.filter(x => x.google), ng = out.found.filter(x => !x.google); if (gl.length === 1 && ng.length >= 1) { to = gl[0].id; from = (ng.find(x => x.guild) || ng.sort((x, y) => (y.rating || 0) - (x.rating || 0))[0]).id } }
+      } else {
+        if (req.method !== 'POST' || !okId(id)) return res.status(403).json({ err: 'forbidden' });
+        from = id; to = String(b.to || ''); if (!okId(to)) return res.json({ err: 'to' });
+        const tA = await cmd('GET', 'ctok:' + to), tt = String(b.tt || '').replace(/[^a-z0-9]/g, '').slice(0, 20); if (tA && tA !== tt) return res.status(403).json({ err: 'auth' });
+      }
+      if (!okId(from) || !okId(to) || from === to) return res.json(Object.assign(out, { ok: 0, err: 'ids', from, to }));
+      out.from = from; out.to = to; out.go = go; const pB = from.slice(0, 12), pA = to.slice(0, 12), did = [];
+      // สำนักผู้เล่น
+      try { const [gB, gA] = await pipe([['GET', 'gdu:' + pB], ['GET', 'gdu:' + pA]]);
+        if (gB && !gA) { did.push('guild ' + gB); if (go) { const G = jp(await cmd('GET', 'gd:' + gB)); const [mv, la, pq] = await pipe([['HGET', 'gdm:' + gB, pB], ['HGET', 'gdla:' + gB, pB], ['HGET', 'gdpq:' + gB, pB]]); const L = [['SET', 'gdu:' + pA, gB], ['DEL', 'gdu:' + pB], ['HDEL', 'gdm:' + gB, pB], ['HDEL', 'gdla:' + gB, pB], ['HDEL', 'gdpq:' + gB, pB]]; if (mv != null) L.push(['HSET', 'gdm:' + gB, pA, mv]); if (la != null) L.push(['HSET', 'gdla:' + gB, pA, la]); if (pq != null) L.push(['HSET', 'gdpq:' + gB, pA, pq]); if (G) { if (G.ld === pB) G.ld = pA; if (Array.isArray(G.el)) G.el = G.el.map(x => x === pB ? pA : x); L.push(['SET', 'gd:' + gB, JSON.stringify(G)]) } await pipe(L) } }
+        else if (gB && gA) did.push('guild skip: ทั้งสองไอดีมีสำนักอยู่แล้ว') } catch (e) { did.push('guild err') }
+      // ลานหมื่นเงา (สัปดาห์นี้ + สัปดาห์ก่อน): เอาแต้มที่สูงกว่าไว้ที่ A
+      try { for (const wk of [W, week(new Date(now - 7 * 86400e3))]) { const [rB, rA, wB] = await pipe([['HGET', 'arr:' + wk, from], ['HGET', 'arr:' + wk, to], ['ZSCORE', 'arwin:' + wk, from]]);
+          if (rB != null && rB !== '' && (rA == null || rA === '' || +rB > +rA)) { did.push('arena ' + wk + ': ' + rB + (rA != null ? ' (แทน ' + rA + ')' : '')); if (go) await pipe([['HSET', 'arr:' + wk, to, rB], ['ZADD', 'ars:' + wk, +rB, to], ['HDEL', 'arr:' + wk, from], ['ZREM', 'ars:' + wk, from]]) }
+          if (wB != null && +wB > 0) { did.push('wins ' + wk + ': ' + wB); if (go) await pipe([['ZINCRBY', 'arwin:' + wk, +wB, to], ['ZREM', 'arwin:' + wk, from]]) } } } catch (e) { did.push('arena err') }
+      try { const nB = await cmd('HGET', 'arn', from); if (nB && !(await cmd('HGET', 'arn', to)) && go) await cmd('HSET', 'arn', to, nB) } catch (e) { }
+      out.did = did; if (go) { try { await pipe([['LPUSH', 'idmergelog', JSON.stringify({ from, to, did, adm: adm ? 1 : 0, t: now })], ['LTRIM', 'idmergelog', 0, 199]]) } catch (e) { } }
+      return res.json(out);
     }
     if (a === 'dcdiag') { // 🩺 แอดมิน: ตรวจระบบยศ Discord ทั้งหมด (บอทอยู่ในเซิร์ฟไหม ลำดับยศ และสถานะคนที่ผูก)
       if (!isAdmKey(qOf(req).key || b.key)) return res.status(403).json({ err: 'forbidden' });
