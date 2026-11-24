@@ -3014,8 +3014,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       try { if (!(await cmd('SET', 'mgseen:' + tk, 1, 'NX', 'EX', 86400 * 30))) throw 0; const d0 = thDay(now); await pipe([['INCR', 'migst:get:' + d0], ['EXPIRE', 'migst:get:' + d0, 86400 * 40], ['INCR', 'migst:get:all']]) } catch (e) {}
       return res.json({ ok: 1, d: v.d, z: v.z });
     }
-    if (req.method !== 'POST' && a !== 'dccb' && a !== 'dcstat') return res.status(405).json({ err: 'method' });
-    if (!okId(id) && a !== 'dccb') return res.status(400).json({ err: 'id' });
+    if (req.method !== 'POST' && a !== 'dccb' && a !== 'dcstat' && a !== 'dcdiag') return res.status(405).json({ err: 'method' });
+    if (!okId(id) && a !== 'dccb' && a !== 'dcdiag') return res.status(400).json({ err: 'id' });
     if (a === 'logreq') {
       const k2 = String(b.t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
       const full = await findLive(k2, isAdmQ(b.key));
@@ -3218,6 +3218,21 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const did = await cmd('GET', 'dc:' + id);
       if (did) { try { await withCap(dcSync(id, 1).catch(() => { }), 4000) } catch (e) { } await pipe([['DEL', 'dc:' + id], ['DEL', 'dcr:' + did], ['SREM', 'dcall', id]]) }
       return res.json({ ok: 1 });
+    }
+    if (a === 'dcdiag') { // 🩺 แอดมิน: ตรวจระบบยศ Discord ทั้งหมด (บอทอยู่ในเซิร์ฟไหม ลำดับยศ และสถานะคนที่ผูก)
+      if (!isAdmKey(qOf(req).key || b.key)) return res.status(403).json({ err: 'forbidden' });
+      const out = { on: dcOn(), guild: DC_GUILD, roles: DC_ROLE };
+      if (!dcOn()) return res.json(out);
+      try {
+        const me = await dcApi('GET', '/users/@me'); out.bot = { status: me.status, id: me.json && me.json.id, name: me.json && me.json.username };
+        const g = await dcApi('GET', `/guilds/${DC_GUILD}`); out.guildStatus = g.status; out.guildName = g.json && g.json.name;
+        const rl = await dcApi('GET', `/guilds/${DC_GUILD}/roles`); const RL = Array.isArray(rl.json) ? rl.json : [];
+        out.vipRoles = Object.entries(DC_ROLE).map(([t, r]) => { const x = RL.find(z => z.id === r); return { t, id: r, found: !!x, name: x && x.name, pos: x && x.position } });
+        if (me.json && me.json.id) { const bm = await dcApi('GET', `/guilds/${DC_GUILD}/members/${me.json.id}`); const br = ((bm.json && bm.json.roles) || []).map(r => RL.find(z => z.id === r)).filter(Boolean); out.botTop = br.reduce((m, r) => Math.max(m, r.position), 0); out.botRoles = br.map(r => r.name + '#' + r.position); out.botCanManage = br.some(r => (BigInt(r.permissions || '0') & 0x10000000n) || (BigInt(r.permissions || '0') & 0x8n)); out.hierarchyOK = out.vipRoles.every(v => !v.found || v.pos < out.botTop) }
+        const ids = ((await cmd('SMEMBERS', 'dcall')) || []).slice(0, 40); out.linked = [];
+        for (const u of ids) { const did = await cmd('GET', 'dc:' + u); const v = jp(await cmd('GET', 'vip:' + u)); let nm = ''; try { const x = jp(await cmd('HGET', 'vipu', u)); nm = x && x.n || '' } catch (e) { } const m = did ? await dcApi('GET', `/guilds/${DC_GUILD}/members/${did}`) : { status: 0 }; out.linked.push({ id: u, n: nm, dc: did ? '…' + String(did).slice(-4) : '', tier: dcTier(v), member: m.status, nick: m.json && (m.json.nick || (m.json.user && m.json.user.username)), hasRoles: ((m.json && m.json.roles) || []).filter(r => Object.values(DC_ROLE).includes(r)) }) }
+      } catch (e) { out.err = String(e && e.message || e) }
+      return res.json(out);
     }
     if (a === 'dcsync') { // ⏱️ cron รายวัน: ปรับยศของทุกคนที่ผูกไว้ให้ตรงกับ VIP (เอายศออกเมื่อหมดอายุ)
       const au = String(req.headers['authorization'] || ''), cs = process.env.CRON_SECRET || '';
