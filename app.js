@@ -46028,7 +46028,7 @@ try{(()=>{const E=t=>{try{return esc(t)}catch(e){return t}};const R=(a,b)=>a+Mat
 // เดิม: หลายระบบโยนตัวเลือกมาในปีเดียวกัน → เข้าคิว แล้วเด้งต่อกัน 4–5 อันทันทีหลังปิดอันแรก
 // ใหม่: ปีหนึ่งปล่อยจากคิวได้ 1 อัน ที่เหลือรอปีถัดไป (ตัวเลือกต่อเนื่องของเหตุการณ์เดียวกันไม่ถูกกระทบ เพราะไม่ได้ผ่านคิว)
 //       ของในคิวที่ค้างเกิน 4 ปีถูกตัดทิ้ง ยกเว้นเรื่องสำคัญ · คิวเก็บได้ไม่เกิน 5 อัน
-try{(()=>{const KEEP=/ทัณฑ์|ทะลวง|เลื่อนขั้น|แต่งงาน|ขอแต่ง|คลอด|ตาย|สืบทอด|เชิญเข้าสำนัก|ระบบ|ประตู|กัลป์|🌌|📖|🧵|Tribulation|Breakthrough/i;
+try{(()=>{const KEEP=/ทัณฑ์|ทะลวง|เลื่อนขั้น|แต่งงาน|ขอแต่ง|คลอด|ตาย|สืบทอด|เชิญเข้าสำนัก|ระบบ|ประตู|กัลป์|🌌|📖|🧵|🏹|วงแหวน|ล้มลงตรงหน้า|ร่างกายรับไม่ไหว|Tribulation|Breakthrough/i;
  const strip=t=>String(t||'').replace(/<[^>]*>/g,'');const yr=()=>S?Math.floor(S.age||0):0;
  const prune=()=>{const Q=choice._q;if(!Q||!Q.length)return;for(const q of Q)if(q[4]==null)q[4]=yr();
   for(let i=Q.length-1;i>=0;i--){const q=Q[i];if(q[3]!==S||yr()-q[4]>4&&!KEEP.test(strip(q[0])))Q.splice(i,1)}
@@ -46040,9 +46040,13 @@ try{(()=>{const KEEP=/ทัณฑ์|ทะลวง|เลื่อนขั�
   let r;try{r=_py.apply(this,arguments)}finally{if(held){const nw=choice._q||[];choice._q=held.concat(nw.filter(x=>!held.some(h=>h[0]===x[0])))}}
   try{if(S&&S.alive&&!choice._cur&&choice._q&&choice._q.length&&(S._qrY!==yr()||(S.kalpa&&S.kalpa.pend)))setTimeout(()=>{try{chDeq()}catch(e){}},(typeof rdGap==='function'?rdGap():400))}catch(e){}return r};
  // งบเหตุการณ์ที่เด้งเองต่อปี: เกิน 2 เรื่องอิสระในปีเดียว → เก็บเข้าคิวไว้ปีหน้า (เหตุการณ์ต่อเนื่องที่เปิดจากตัวเลือกเดิมไม่นับ)
- let inRun=0;{const _cr=choiceRun;choiceRun=function(){inRun++;try{return _cr.apply(this,arguments)}finally{inRun--}}}
+ let inRun=0,lastAct=0;const mark=()=>{lastAct=performance.now()};{const _cr=choiceRun;choiceRun=function(){inRun++;try{return _cr.apply(this,arguments)}finally{inRun--;mark()}}}
+ /* เหตุการณ์ต่อเนื่องที่เปิดหลังดวล/มินิเกม/ตัวเลือก (เช่น จิตวิญญาณยุทธ์: ชนะสัตว์ → ดูดซับวงแหวน) เดิมถูกนับเป็นเหตุการณ์อิสระ → เข้าคิวปีหน้า แล้วโดนตัดทิ้งเมื่อคิวเต็ม = ล่าชนะแต่ไม่ได้วงแหวน */
+ try{const _de=duelEnd;duelEnd=function(){const r=_de.apply(this,arguments);mark();return r}}catch(e){}
+ try{const _mp=window.mg2Play;if(typeof _mp==='function')window.mg2Play=function(id,o,cb){return _mp.call(this,id,o,typeof cb==='function'?function(){mark();return cb.apply(this,arguments)}:cb)}}catch(e){}
+ {const _cm=closeM;closeM=function(){let k='';try{k=$('modal').dataset.k}catch(e){}const r=_cm.apply(this,arguments);if(/^(duel|mg2|mg|chmg|fogmg|skymg|qigame)$/.test(k))mark();return r};for(const k in _cm)try{closeM[k]=_cm[k]}catch(e){}}
  const FREE=/^\s*(🎲|🌌|🍃|🔁|✉️|♾️)|ทัณฑ์|ทะลวง|เลื่อนขั้น|กัลป์|ประตู|ความมืดกลืนดวงดาว|ห้วงสุญตา/; /* ยืนขอบกัลป์ อายุถูกตรึง: งบเหตุการณ์ต่อปีไม่รีเซ็ต → ประตูข้ามกัลป์เข้าคิวค้าง ต้องเปิดออโต้ถึงจะขึ้น (ผู้เล่นแจ้ง) */
- const _ch=choice;choice=function(title,text,opts){try{if(!auto&&S&&S.alive&&!choice._cur&&!inRun&&!(S._xa&&S._xa.run)&&!(S.kalpa&&S.kalpa.pend)&&!FREE.test(strip(title))){const y=yr();if(S._chY!==y){S._chY=y;S._chN=0}
+ const _ch=choice;choice=function(title,text,opts){try{if(!auto&&S&&S.alive&&!choice._cur&&!inRun&&performance.now()-lastAct>4000&&!(S._xa&&S._xa.run)&&!(S.kalpa&&S.kalpa.pend)&&!FREE.test(strip(title))){const y=yr();if(S._chY!==y){S._chY=y;S._chN=0}
    if(S._chN>=2){if(!choice._q)choice._q=[];if(!choice._q.some(x=>x[0]===title))choice._q.push([title,text,opts,S,y]);return}S._chN++}}catch(e){}return _ch.apply(this,arguments)};for(const k in _ch)try{choice[k]=_ch[k]}catch(e){}
 })()}catch(e){console.error('block218',e)}
 // BLOCK 211: ✍️ สร้างเอง / 🎨 ออกแบบหน้าตา ทุกโลก — ตัวเลือกกลาง ccPick (เลือกทุกช่องเอง) · ccLook (ออกแบบหน้าตา ที่เหลือลิขิต)
