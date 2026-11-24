@@ -3014,7 +3014,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       try { if (!(await cmd('SET', 'mgseen:' + tk, 1, 'NX', 'EX', 86400 * 30))) throw 0; const d0 = thDay(now); await pipe([['INCR', 'migst:get:' + d0], ['EXPIRE', 'migst:get:' + d0, 86400 * 40], ['INCR', 'migst:get:all']]) } catch (e) {}
       return res.json({ ok: 1, d: v.d, z: v.z });
     }
-    if (req.method !== 'POST' && a !== 'dccb') return res.status(405).json({ err: 'method' });
+    if (req.method !== 'POST' && a !== 'dccb' && a !== 'dcstat') return res.status(405).json({ err: 'method' });
     if (!okId(id)) return res.status(400).json({ err: 'id' });
     if (a === 'logreq') {
       const k2 = String(b.t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -3183,9 +3183,10 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     }
     // ---- 🎮 Discord ผูกบัญชี (OAuth2 identify) → ยศ VIP อัตโนมัติ ----
     if (a === 'dcstat') {
-      if (!okId(id)) return res.json({ on: 0 });
+      const miss = ['DISCORD_CLIENT_ID', 'DISCORD_CLIENT_SECRET', 'DISCORD_BOT_TOKEN'].filter(k => !process.env[k]);
+      if (!okId(id)) return res.json({ on: 0, miss });
       const did = dcOn() ? await cmd('GET', 'dc:' + id) : '';
-      return res.json({ on: dcOn() ? 1 : 0, l: did ? String(did).slice(-4) : '' });
+      return res.json({ on: dcOn() ? 1 : 0, miss, l: did ? String(did).slice(-4) : '' });
     }
     if (a === 'dcauth') {
       if (!dcOn() || !okId(id)) return res.status(503).json({ err: 'off' });
