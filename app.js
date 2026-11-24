@@ -46333,3 +46333,6 @@ const boot=()=>{const k=document.getElementById('mask');if(!k)return setTimeout(
 
 // ===== 🧠 ชีวิตที่มีความหมาย (ความทรงจำ · วันสำคัญ · เสียงในใจ · อารมณ์ · ผลที่มาช้า · สมุดภาพตอนจบ) อยู่ที่ /w/life.js — โหลดเบื้องหลัง =====
 try{setTimeout(()=>{try{wLoad('life').catch(()=>{})}catch(e){}},2600)}catch(e){console.error('lifeStub',e)}
+
+// ===== 🔮 ความลับ 200 อย่าง (ตัวเลือกลับ · ฉากลับ · ตอนจบลับ · สมุดความลับ) อยู่ที่ /w/secret.js — โหลดเบื้องหลัง =====
+try{window.secretBook=window.secretBook||function(){return wNeed('secret',()=>window._secretBook&&window._secretBook())};setTimeout(()=>{try{wLoad('secret').catch(()=>{})}catch(e){}},2900)}catch(e){console.error('scrStub',e)}
