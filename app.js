@@ -45636,7 +45636,7 @@ try{setTimeout(()=>{try{const go=()=>wLoad('hrt');go().catch(()=>setTimeout(()=>
 try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4200)}catch(e){console.error('block208',e)}
 
 // BLOCK 209: 📖 โหลด /w/xw.js — เส้นเรื่องแบบนิยายทุกโลก (คำสาบานผูกมัด · อีกคนในตัวฉัน · รู้วันตาย · คำทำนายกำกวม · ต้นเรื่องแบบนิยาย · ทำเนียบฟ้า · ร้านตอนวางมือ · หลายตัวตน) ต่อจาก wld2.js
-try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2')).then(()=>wLoad('xw')).then(()=>wLoad('mx')).then(()=>wLoad('xl')).then(()=>wLoad('xp'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4600)}catch(e){console.error('block209',e)}
+try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2')).then(()=>wLoad('xw')).then(()=>wLoad('mx')).then(()=>wLoad('xl')).then(()=>wLoad('xp')).then(()=>wLoad('xt_data')).then(()=>wLoad('xt'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4600)}catch(e){console.error('block209',e)}
 
 // BLOCK 210: 🌕 หน้าแรกคืนลอยกระทง 2569 — แสดงอัตโนมัติ 24 พ.ย. 00:00 ถึง 25 พ.ย. 06:00 (เวลาไทย) · นับถอยหลังตั้งแต่ 23 พ.ย. 23:30
 //  ฉากพิกเซลเต็มจอ: ฟ้า ดาว พระจันทร์เต็มดวงค่อยๆ ขึ้น เจดีย์ริมฝั่ง โคมลอย พลุ หิ่งห้อย แม่น้ำ เงาจันทร์ กระทงจริงของผู้เล่นทั้งเว็บ (api krtl) พร้อมคำอธิษฐาน
@@ -45872,9 +45872,10 @@ try{(()=>{const DK=()=>innerWidth>=1100;
 })()}catch(e){console.error('block215',e)}
 // ===================== BLOCK 216: 🔗 เส้นเชื่อมพรสวรรค์ "เข้าทาง" — คำนวณตำแหน่งใหม่ทุกครั้งที่เลย์เอาต์ขยับ (จอคอม 3 คอลัมน์ · ย่อขยาย · การ์ดกางออก) =====================
 try{(()=>{window.rvLinkFit=function(sv){try{const h=sv.parentNode;if(!h||!sv._L)return;const hr=h.getBoundingClientRect();sv.style.width=h.scrollWidth+'px';sv.style.height=h.scrollHeight+'px';const P=sv.querySelectorAll('path'),C=sv.querySelectorAll('circle');
- sv._L.forEach(([A,B],i)=>{if(!A.isConnected||!B.isConnected||!A.offsetParent||!B.offsetParent){P[i]&&P[i].setAttribute('d','');return}const ra=A.getBoundingClientRect(),rb=B.getBoundingClientRect(),ox=-hr.left+h.scrollLeft,oy=-hr.top+h.scrollTop;let x1,y1,x2,y2,d;
+ sv._L.forEach(([A,B],i)=>{if(!A.isConnected||!B.isConnected||!A.offsetParent||!B.offsetParent){P[i]&&P[i].setAttribute('d','');return}const ra=A.getBoundingClientRect(),rb=B.getBoundingClientRect(),sr=sv.getBoundingClientRect(),ox=-sr.left,oy=-sr.top;/* วัดจากตัว svg เอง: ในกริดจอคอม กล่องอ้างอิงของ svg คือช่องกริด ไม่ใช่ตัวหน้า */let x1,y1,x2,y2,d;
   const sameCol=Math.min(ra.right,rb.right)-Math.max(ra.left,rb.left)>Math.min(ra.width,rb.width)*.5;
   if(sameCol){x1=ra.right+ox-10;x2=rb.right+ox-10;y1=ra.top+oy+ra.height/2;y2=rb.top+oy+rb.height/2;const bx=Math.max(x1,x2)+26;d=`M${x1} ${y1} C ${bx} ${y1}, ${bx} ${y2}, ${x2} ${y2}`}
+  else if(Math.min(ra.bottom,rb.bottom)-Math.max(ra.top,rb.top)>Math.min(ra.height,rb.height)*.5){/* แถวเดียวกัน: โค้งข้ามด้านบนการ์ด ไม่ทับข้อความ */const L0=ra.left<rb.left?ra:rb,R0=L0===ra?rb:ra;x1=L0.left+ox+L0.width*.7;y1=L0.top+oy+4;x2=R0.left+ox+R0.width*.3;y2=R0.top+oy+4;const up=Math.min(y1,y2)-22;d=`M${x1} ${y1} C ${x1} ${up}, ${x2} ${up}, ${x2} ${y2}`}
   else{const L0=ra.left<rb.left?ra:rb,R0=L0===ra?rb:ra;x1=L0.right+ox-8;y1=L0.top+oy+L0.height/2;x2=R0.left+ox+8;y2=R0.top+oy+R0.height/2;const mx=(x1+x2)/2;d=`M${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`}
   P[i]&&P[i].setAttribute('d',d);const c1=C[i*2],c2=C[i*2+1];if(c1){c1.setAttribute('cx',x1);c1.setAttribute('cy',y1)}if(c2){c2.setAttribute('cx',x2);c2.setAttribute('cy',y2)}})}catch(e){}};
  const all=()=>document.querySelectorAll('svg.rvLinks').forEach(sv=>window.rvLinkFit(sv));setInterval(all,350);addEventListener('resize',all);
