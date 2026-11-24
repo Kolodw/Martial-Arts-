@@ -612,7 +612,7 @@ async function uaGhostEnd(id, b, now) {
   if (ops.length) await pipe(ops);
 }
 const OWP = { r_soulgod: [3500, 'g'], r_abyss: [3000, 'e'], r_prince: [2000, 'g'], r_suit: [1200, 'e'], r_hunterS: [2500, 'g'], r_idol: [1500, 'g'], r_astro: [2000, 'g'], r_cyber: [2500, 'e'], r_galemp: [5000, 'g'], r_dragon: [3000, 'g'], r_moon: [2000, 'e'], r_blood: [3500, 'e'], r_cloud: [1500, 'g'], r_star: [4000, 'g'], r_phoenix: [3000, 'g'], r_heaven: [5000, 'g'], r_asura: [4000, 'e'] }; // 👘 ชุดหายากตามโลก (ต้องตรงกับ BLOCK 106 ใน app.js)
-const SENS_A = new Set(['comp', 'idmerge', 'svlg', 'gdw', 'owbuy', 'owget', 'kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool', 'dcstat', 'dcauth', 'dcunlink']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
+const SENS_A = new Set(['comp', 'idmerge', 'idreq', 'svlg', 'gdw', 'owbuy', 'owget', 'kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool', 'dcstat', 'dcauth', 'dcunlink']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
 
 function uaMeta(req, now) {
   const ua = String(req.headers['user-agent'] || '');
@@ -3224,8 +3224,27 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     }
     // 🔀 สลับบัญชี Google (ไอดีเครื่องนี้ B → ไอดีที่ผูก Google ไว้ A): ย้ายสำนักผู้เล่น + แต้มลานหมื่นเงาสัปดาห์นี้ จาก B ไป A ไม่ให้หาย
     // ผู้เล่น: id=B (ต้องผ่าน ctok ของ B) + b.to=A + b.tt=โทเคนของ A (ได้มาจากเซิร์ฟหลังยืนยัน Google) · แอดมิน: ?key=&from=&to= หรือ ?key=&name=ชื่อในลาน (หาให้เอง) · ไม่ใส่ go=1 = ดูผลก่อน
+    // 🛟 ผู้เล่นที่เชื่อม Google แล้วขอกู้สำนัก/แต้มลานจากเครื่องเก่า: ระบบหาไอดีเก่าจากชื่อในลานให้ แล้วรอแอดมินกดอนุมัติ
+    if (a === 'idreq') {
+      if (req.method !== 'POST' || !okId(id)) return res.status(403).json({ err: 'forbidden' });
+      if (!(await cmd('GET', 'gof:' + id))) return res.json({ err: 'google' });
+      if (!(await cmd('SET', 'idrl:' + id, 1, 'NX', 'EX', 60))) return res.json({ err: 'wait' });
+      const nm = String(b.n || '').trim().slice(0, 30); if (!nm) return res.json({ ok: 1, found: 0 });
+      const all = (await cmd('HGETALL', 'arn')) || [], cand = [];
+      for (let i = 0; i < all.length; i += 2) if (String(all[i + 1]).trim() === nm && all[i] !== id) { const u = all[i]; const [gu, gl, rt] = await pipe([['GET', 'gdu:' + u.slice(0, 12)], ['GET', 'gof:' + u], ['HGET', 'arr:' + W, u]]); if (!gl) cand.push({ id: u, g: gu || '', r: rt == null ? 0 : +rt }) }
+      cand.sort((x, y) => (y.g ? 1 : 0) - (x.g ? 1 : 0) || y.r - x.r);
+      if (!cand.length) return res.json({ ok: 1, found: 0 });
+      await cmd('HSET', 'idreqs', id, JSON.stringify({ from: cand[0].id, g: cand[0].g, r: cand[0].r, n: nm, alt: cand.length - 1, t: now }));
+      return res.json({ ok: 1, found: 1 });
+    }
     if (a === 'idmerge') {
       const q = qOf(req), adm = isAdmKey(q.key || b.key); let from = '', to = '', go = 1, out = { ok: 1 };
+      if (adm && (q.q || b.q)) { // รายการคำขอกู้: ?a=idmerge&key=&q=1 · อนุมัติ: &ok=<ไอดีผู้ขอ> · ปฏิเสธ: &no=<ไอดีผู้ขอ>
+        const no = String(q.no || ''); if (no) { await cmd('HDEL', 'idreqs', no); return res.json({ ok: 1, removed: no }) }
+        const ok = String(q.ok || '');
+        if (ok) { const r = jp(await cmd('HGET', 'idreqs', ok)); if (!r) return res.json({ ok: 0, err: 'noreq' }); q.from = r.from; q.to = ok; q.go = '1'; await cmd('HDEL', 'idreqs', ok); delete q.q; delete q.name }
+        else { const all = (await cmd('HGETALL', 'idreqs')) || [], list = []; for (let i = 0; i < all.length; i += 2) { const r = jp(all[i + 1]); if (r) list.push({ ok: all[i], n: r.n, guild: r.g, rating: r.r, alt: r.alt, from: r.from, ago: Math.round((now - r.t) / 60000) + ' นาที' }) } return res.json({ ok: 1, n: list.length, list, hint: 'เติม &ok=<ok> เพื่ออนุมัติ หรือ &no=<ok> เพื่อปฏิเสธ' }) }
+      }
       if (adm && (q.gl || b.gl)) { // ค้นไอดีที่ผูก Google เป็นช่วงๆ: ?a=idmerge&key=&gl=1[&e=ส่วนของอีเมล][&cur=ค่า next จากรอบก่อน]
         const f = String(q.e || b.e || '').toLowerCase(), r0 = [], t0 = Date.now(); let cur = String(q.cur || b.cur || '0').replace(/[^0-9]/g, '') || '0', n = 0, rounds = 0;
         do { const r = await cmd('SCAN', cur, 'MATCH', 'gacc:*', 'COUNT', 3000); cur = String(r[0]); rounds++; const ks = r[1] || []; if (ks.length) { const vs = await cmd('MGET', ...ks); ks.forEach((k, i) => { const x = jp((vs || [])[i]); n++; if (x && x.id && (!f || String(x.e || '').toLowerCase().includes(f))) r0.push({ id: x.id, e: x.e || '', t: x.t || 0 }) }) } } while (cur !== '0' && Date.now() - t0 < 4500);
