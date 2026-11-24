@@ -3191,7 +3191,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     if (a === 'dcauth') {
       if (!dcOn() || !okId(id)) return res.status(503).json({ err: 'off' });
       const ts = Date.now(), st = id + '.' + ts + '.' + dcSign(id, ts);
-      return res.json({ url: 'https://discord.com/oauth2/authorize?response_type=code&scope=identify&prompt=consent&client_id=' + encodeURIComponent(process.env.DISCORD_CLIENT_ID) + '&redirect_uri=' + encodeURIComponent(dcRedirect()) + '&state=' + encodeURIComponent(st) });
+      return res.json({ url: 'https://discord.com/oauth2/authorize?response_type=code&scope=identify&prompt=consent&client_id=' + encodeURIComponent(String(process.env.DISCORD_CLIENT_ID||'').trim()) + '&redirect_uri=' + encodeURIComponent(dcRedirect()) + '&state=' + encodeURIComponent(st) });
     }
     if (a === 'dccb') {
       res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.setHeader('Cache-Control', 'no-store');
@@ -3200,7 +3200,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         if (!dcOn()) return res.status(200).send(dcPage('ยังไม่เปิดใช้งาน', 0));
         const sp = String(q.state || '').split('.'), uid = sp[0] || '', ts = +sp[1] || 0;
         if (!okId(uid) || !ts || Date.now() - ts > 600e3 || sp[2] !== dcSign(uid, ts) || !q.code) return res.status(200).send(dcPage('ลิงก์หมดอายุหรือไม่ถูกต้อง', 0, '<p>กลับไปที่เกมแล้วกด “ผูก Discord” ใหม่อีกครั้ง</p>'));
-        const tr = await fetch('https://discord.com/api/v10/oauth2/token', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: process.env.DISCORD_CLIENT_ID, client_secret: process.env.DISCORD_CLIENT_SECRET, grant_type: 'authorization_code', code: String(q.code), redirect_uri: dcRedirect() }) });
+        const tr = await fetch('https://discord.com/api/v10/oauth2/token', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: String(process.env.DISCORD_CLIENT_ID||'').trim(), client_secret: String(process.env.DISCORD_CLIENT_SECRET||'').trim(), grant_type: 'authorization_code', code: String(q.code), redirect_uri: dcRedirect() }) });
         const tj = await tr.json().catch(() => ({})); if (!tj.access_token) return res.status(200).send(dcPage('ผูกไม่สำเร็จ', 0, '<p>ลองใหม่อีกครั้ง</p>'));
         const ur = await fetch('https://discord.com/api/v10/users/@me', { headers: { Authorization: 'Bearer ' + tj.access_token } });
         const uj = await ur.json().catch(() => ({})), did = String(uj.id || ''); if (!/^\d{15,25}$/.test(did)) return res.status(200).send(dcPage('อ่านบัญชี Discord ไม่ได้', 0));
@@ -4291,12 +4291,12 @@ module.exports.payGrant = async (uid, pk, name) => {
 const DC_GUILD = process.env.DISCORD_GUILD_ID || '1574695520235159572';
 const DC_ROLE = { 1: '1574706027943825449', 2: '1574711355494375485', 3: '1574711356689481788' }; // 💎 VIP · VIP+ · VIP MAX
 const DC_INVITE = process.env.DISCORD_INVITE || 'https://discord.gg/8qqFY26fr';
-const dcOn = () => !!(process.env.DISCORD_BOT_TOKEN && process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET);
+const dcOn = () => !!(process.env.DISCORD_BOT_TOKEN && String(process.env.DISCORD_CLIENT_ID||'').trim() && process.env.DISCORD_CLIENT_SECRET);
 const dcRedirect = () => process.env.DISCORD_REDIRECT || 'https://www.1inanovel.com/api/online?a=dccb';
 const dcTier = v => { const t = Date.now(); if (!v) return 0; if (v.u) return 3; if ((+v.e2 || 0) > t) return 2; if ((+v.e1 || 0) > t) return 1; return 0 };
 async function dcApi(method, path, body) {
   for (let i = 0; i < 2; i++) {
-    const r = await fetch('https://discord.com/api/v10' + path, { method, headers: { Authorization: 'Bot ' + process.env.DISCORD_BOT_TOKEN, 'Content-Type': 'application/json', 'User-Agent': 'DiscordBot (1inanovel, 1.0)' }, body: body ? JSON.stringify(body) : undefined });
+    const r = await fetch('https://discord.com/api/v10' + path, { method, headers: { Authorization: 'Bot ' + String(process.env.DISCORD_BOT_TOKEN||'').trim(), 'Content-Type': 'application/json', 'User-Agent': 'DiscordBot (1inanovel, 1.0)' }, body: body ? JSON.stringify(body) : undefined });
     if (r.status === 429) { let w = 1; try { w = (await r.json()).retry_after || 1 } catch { } await new Promise(z => setTimeout(z, Math.min(3, w) * 1000 + 100)); continue }
     let j = null; try { j = await r.json() } catch { }
     return { status: r.status, json: j };
