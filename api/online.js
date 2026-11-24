@@ -4266,7 +4266,7 @@ module.exports.payGrant = async (uid, pk, name) => {
 // ไม่บล็อกการจ่ายเงิน: ทุกจุดเรียกแบบ try/catch + withCap
 const DC_GUILD = process.env.DISCORD_GUILD_ID || '1574695520235159572';
 const DC_ROLE = { 1: '1574706027943825449', 2: '1574711355494375485', 3: '1574711356689481788' }; // 💎 VIP · VIP+ · VIP MAX
-const DC_INVITE = process.env.DISCORD_INVITE || 'https://discord.gg/NfvvHwZsHj';
+const DC_INVITE = process.env.DISCORD_INVITE || 'https://discord.gg/8qqFY26fr';
 const dcOn = () => !!(process.env.DISCORD_BOT_TOKEN && process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET);
 const dcRedirect = () => process.env.DISCORD_REDIRECT || 'https://www.1inanovel.com/api/online?a=dccb';
 const dcTier = v => { const t = Date.now(); if (!v) return 0; if (v.u) return 3; if ((+v.e2 || 0) > t) return 2; if ((+v.e1 || 0) > t) return 1; return 0 };
