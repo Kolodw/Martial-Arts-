@@ -17,6 +17,8 @@ async function handler() {
   process.env.LOW_CPU = process.env.LOW_CPU || '1'; // ลด CPU ตอนบีบอัดเซฟ (Workers แพ็กฟรีจำกัด 10ms/คำขอ)
   try { if (ENV.SAVES && typeof ENV.SAVES.put === 'function') globalThis.SAVES_R2 = ENV.SAVES } catch (e) {} // ที่เก็บเซฟคลาวด์ R2 (ถ้าผูกไว้ใน wrangler.toml)
   const m = await import('../api/online.js');
+  // 🎖️ ยศผู้สนับสนุนใน Discord: อ่านยอดสะสมจาก D1 ให้ online.js (เกณฑ์เดียวกับหอผู้สนับสนุน: ≥1฿ · 200 · 1,000 · 5,000 · 20,000 → ขั้น 0..4, ไม่มียอด = -1)
+  try { if (m.setSupTierFn && ENV.PAY_DB) m.setSupTierFn(async uid => { const r = await ENV.PAY_DB.prepare("SELECT COALESCE(SUM(amount_satang),0) s FROM orders WHERE uid=? AND status IN ('done','donation')").bind(uid).first(); const b = Math.round(((r && r.s) || 0) / 100); const T = [20000, 5000, 1000, 200, 1]; for (let i = 0; i < T.length; i++) if (b >= T[i]) return 4 - i; return -1 }) } catch (e) {}
   H = m.default || m;
   return H;
 }
@@ -348,5 +350,9 @@ export default {
     const req = new Request('https://1inanovel.com/api/online?a=pushre', { method: 'GET', headers: key ? { authorization: 'Bearer ' + key } : {} });
     const url = new URL(req.url); if (!key && env.ADMIN_KEY2) url.searchParams.set('key', env.ADMIN_KEY2);
     ctx.waitUntil(api(key ? req : new Request(url, { method: 'GET' }), url).then(r => r.text()).then(t => console.log('pushre', String(t).slice(0, 300))).catch(e => console.error('pushre err', String(e && e.message || e))));
+    // 🎮 ปรับยศ VIP/ผู้สนับสนุนใน Discord ของคนที่ผูกบัญชีไว้ (ถอดเมื่อหมดอายุ) · ไม่ตั้ง env Discord = ตอบ off เฉยๆ
+    const req2 = new Request('https://1inanovel.com/api/online?a=dcsync', { method: 'GET', headers: key ? { authorization: 'Bearer ' + key } : {} });
+    const url2 = new URL(req2.url); if (!key && env.ADMIN_KEY2) url2.searchParams.set('key', env.ADMIN_KEY2);
+    ctx.waitUntil(api(key ? req2 : new Request(url2, { method: 'GET' }), url2).then(r => r.text()).then(t => console.log('dcsync', String(t).slice(0, 300))).catch(e => console.error('dcsync err', String(e && e.message || e))));
   },
 };

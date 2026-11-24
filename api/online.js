@@ -4290,6 +4290,10 @@ module.exports.payGrant = async (uid, pk, name) => {
 // ไม่บล็อกการจ่ายเงิน: ทุกจุดเรียกแบบ try/catch + withCap
 const DC_GUILD = process.env.DISCORD_GUILD_ID || '1574695520235159572';
 const DC_ROLE = { 1: '1574706027943825449', 2: '1574711355494375485', 3: '1574711356689481788' }; // 💎 VIP · VIP+ · VIP MAX
+// ระดับผู้สนับสนุนในหอผู้สนับสนุน (ยอดสะสมตลอดกาล: ≥1฿ · ≥200 · ≥1,000 · ≥5,000 · ≥20,000) → 0..4 : ✨ Spark · 🔥 Ember · ⚡ Flare · 🌟 Nova · 🌑 Eclipse
+const DC_SUP = ['1574779077309763605', '1574779076592410724', '1574779075627716708', '1574779074596044932', '1574777706846093464'];
+let DC_SUP_FN = null; // ตั้งจาก cloudflare/worker.js (อ่านยอดจาก D1) · ไม่มี = ไม่ยุ่งกับยศผู้สนับสนุน
+module.exports.setSupTierFn = f => { DC_SUP_FN = typeof f === 'function' ? f : null };
 const DC_INVITE = process.env.DISCORD_INVITE || 'https://discord.gg/8qqFY26fr';
 const dcOn = () => !!(process.env.DISCORD_BOT_TOKEN && String(process.env.DISCORD_CLIENT_ID||'').trim() && process.env.DISCORD_CLIENT_SECRET);
 const dcRedirect = () => process.env.DISCORD_REDIRECT || 'https://www.1inanovel.com/api/online?a=dccb';
@@ -4304,7 +4308,7 @@ async function dcApi(method, path, body) {
   return { status: 429, json: null };
 }
 // ปรับยศ VIP ของคนนี้ให้ตรงกับสิทธิ์ในเกม (ระดับสูงสุดที่ยังไม่หมดอายุ) · force0 = ถอดทุกยศ (ตอนเลิกผูก)
-async function dcSync(uid, force0) {
+async function dcSync(uid, force0, supT) {
   if (!dcOn() || !okId(uid)) return { off: 1 };
   const did = await cmd('GET', 'dc:' + uid); if (!did) return { none: 1 };
   const tier = force0 ? 0 : dcTier(jp(await cmd('GET', 'vip:' + uid)));
@@ -4315,7 +4319,16 @@ async function dcSync(uid, force0) {
     const r = DC_ROLE[t], want = t === tier, base = `/guilds/${DC_GUILD}/members/${did}/roles/${r}`;
     if (want && !have.has(r)) { await dcApi('PUT', base); ch++ } else if (!want && have.has(r)) { await dcApi('DELETE', base); ch++ }
   }
-  return { ok: 1, tier, ch };
+  // ยศผู้สนับสนุน (ตามยอดสะสมในหอผู้สนับสนุน) · supT: 0..4 = ขั้น, -1 = ไม่มียอด, undefined = ไม่ยุ่ง
+  if (supT === undefined && DC_SUP_FN && !force0) { try { supT = await DC_SUP_FN(uid) } catch { supT = undefined } }
+  if (force0) supT = -1;
+  if (typeof supT === 'number') {
+    for (let t = 0; t < DC_SUP.length; t++) {
+      const r = DC_SUP[t], want = t === supT, base = `/guilds/${DC_GUILD}/members/${did}/roles/${r}`;
+      if (want && !have.has(r)) { await dcApi('PUT', base); ch++ } else if (!want && have.has(r)) { await dcApi('DELETE', base); ch++ }
+    }
+  }
+  return { ok: 1, tier, sup: typeof supT === 'number' ? supT : null, ch };
 }
 const dcSoft = uid => withCap(dcSync(uid).catch(() => ({ err: 1 })), 4000);
 const dcSign = (uid, ts) => crypto.createHmac('sha256', process.env.DISCORD_CLIENT_SECRET || 'x').update(uid + '.' + ts).digest('hex').slice(0, 32);
@@ -4343,6 +4356,6 @@ module.exports.payGrant = async (uid, pk, name, an) => {
   return P;
 };
 const _pgDc = module.exports.payGrant;
-module.exports.payGrant = async (uid, pk, name, an) => { const P = await _pgDc(uid, pk, name, an); try { if (P && P.kind === 'vip' && okId(uid)) await dcSoft(uid) } catch { } return P };
+module.exports.payGrant = async (uid, pk, name, an) => { const P = await _pgDc(uid, pk, name, an); try { if (P && okId(uid) && (P.kind === 'vip' || P.amt > 0)) await dcSoft(uid) } catch { } return P };
 module.exports.isAdm = isAdmKey;
 module.exports.cmd = cmd; module.exports.okId = okId; module.exports.clean = clean; module.exports.pipe = pipe;
