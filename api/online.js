@@ -3231,10 +3231,10 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (!(await cmd('SET', 'idrl:' + id, 1, 'NX', 'EX', 60))) return res.json({ err: 'wait' });
       const nm = String(b.n || '').trim().slice(0, 30); if (!nm) return res.json({ ok: 1, found: 0 });
       const all = (await cmd('HGETALL', 'arn')) || [], cand = [];
-      for (let i = 0; i < all.length; i += 2) if (String(all[i + 1]).trim() === nm && all[i] !== id) { const u = all[i]; const [gu, gl, rt] = await pipe([['GET', 'gdu:' + u.slice(0, 12)], ['GET', 'gof:' + u], ['HGET', 'arr:' + W, u]]); if (!gl) cand.push({ id: u, g: gu || '', r: rt == null ? 0 : +rt }) }
-      cand.sort((x, y) => (y.g ? 1 : 0) - (x.g ? 1 : 0) || y.r - x.r);
+      for (let i = 0; i < all.length; i += 2) if (String(all[i + 1]).trim() === nm && all[i] !== id) { const u = all[i]; const [gu, gl, rt] = await pipe([['GET', 'gdu:' + u.slice(0, 12)], ['GET', 'gof:' + u], ['HGET', 'arr:' + W, u]]); cand.push({ id: u, g: gu || '', r: rt == null ? 0 : +rt, gl: gl ? 1 : 0 }) } // รวมไอดีที่ผูก Google ด้วย (กรณีเคยย้ายผิดไปไว้ไอดีอื่น)
+      cand.sort((x, y) => (y.g ? 1 : 0) - (x.g ? 1 : 0) || y.r - x.r || x.gl - y.gl);
       // บันทึกคำขอทุกครั้ง (แม้ไม่เจอไอดีเก่า) เพื่อให้แอดมินรู้ไอดีจริงของผู้ขอ
-      await cmd('HSET', 'idreqs', id, JSON.stringify({ from: cand.length ? cand[0].id : '', g: cand.length ? cand[0].g : '', r: cand.length ? cand[0].r : 0, n: nm, alt: Math.max(0, cand.length - 1), gl: gof0 ? 1 : 0, t: now }));
+      await cmd('HSET', 'idreqs', id, JSON.stringify({ from: cand.length ? cand[0].id : '', g: cand.length ? cand[0].g : '', r: cand.length ? cand[0].r : 0, n: nm, alt: Math.max(0, cand.length - 1), c: cand.slice(0, 5), gl: gof0 ? 1 : 0, t: now }));
       if (!cand.length) return res.json({ ok: 1, found: 0, sent: 1 });
       return res.json({ ok: 1, found: 1 });
     }
@@ -3243,8 +3243,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (adm && (q.q || b.q)) { // รายการคำขอกู้: ?a=idmerge&key=&q=1 · อนุมัติ: &ok=<ไอดีผู้ขอ> · ปฏิเสธ: &no=<ไอดีผู้ขอ>
         const no = String(q.no || ''); if (no) { await cmd('HDEL', 'idreqs', no); return res.json({ ok: 1, removed: no }) }
         const ok = String(q.ok || '');
-        if (ok) { const r = jp(await cmd('HGET', 'idreqs', ok)); if (!r) return res.json({ ok: 0, err: 'noreq' }); if (!r.from) return res.json({ ok: 0, err: 'nofrom', hint: 'คำขอนี้ไม่มีไอดีเก่า ใช้ from=...&to=' + ok + ' แทน' }); q.from = r.from; q.to = ok; q.go = '1'; await cmd('HDEL', 'idreqs', ok); delete q.q; delete q.name }
-        else { const all = (await cmd('HGETALL', 'idreqs')) || [], list = []; for (let i = 0; i < all.length; i += 2) { const r = jp(all[i + 1]); if (r) list.push({ ok: all[i], n: r.n, google: r.gl == null ? 1 : r.gl, guild: r.g, rating: r.r, alt: r.alt, from: r.from, ago: Math.round((now - r.t) / 60000) + ' นาที' }) } return res.json({ ok: 1, n: list.length, list, hint: 'เติม &ok=<ok> เพื่ออนุมัติ หรือ &no=<ok> เพื่อปฏิเสธ' }) }
+        if (ok) { const r = jp(await cmd('HGET', 'idreqs', ok)); if (!r) return res.json({ ok: 0, err: 'noreq' }); const fr = String(q.from || r.from || ''); if (!fr) return res.json({ ok: 0, err: 'nofrom', hint: 'คำขอนี้ไม่มีไอดีเก่า เติม &from=<ไอดีเก่า> (หาด้วย &a=idmerge&name=ชื่อลาน หรือ gl=1) ' }); const doGo = (q.go || b.go) === '1'; q.from = fr; q.to = ok; q.go = doGo ? '1' : '0'; if (doGo) await cmd('HDEL', 'idreqs', ok); else out.hint = 'นี่คือดูผลก่อน (ยังไม่ย้าย) · ถ้าถูกต้องเติม &go=1 ต่อท้ายลิงก์เดิม'; delete q.q; delete q.name }
+        else { const all = (await cmd('HGETALL', 'idreqs')) || [], list = []; for (let i = 0; i < all.length; i += 2) { const r = jp(all[i + 1]); if (r) list.push({ ok: all[i], n: r.n, google: r.gl == null ? 1 : r.gl, guild: r.g, rating: r.r, alt: r.alt, from: r.from, cands: r.c || [], ago: Math.round((now - r.t) / 60000) + ' นาที' }) } return res.json({ ok: 1, n: list.length, list, hint: 'เติม &ok=<ok> ดูผลก่อน → เติม &go=1 ย้ายจริง · ถ้า from ว่างให้เติม &from=<ไอดีเก่า> (ดูตัวเลือกใน cands) · &no=<ok> ปฏิเสธ/ปิดคำขอ' }) }
       }
       if (adm && String(q.act || b.act || '') === '2') { // คนที่เปิดเกมอยู่ล่าสุด: ?a=idmerge&key=&act=2[&min=30][&cur=] → เฉพาะที่ผูก Google
         const mn = Math.min(10080, Math.max(1, +(q.min || b.min) || 30)), cn = String(q.cn || b.cn || '').trim().slice(0, 30), t0 = Date.now(), act = []; let cur = String(q.cur || b.cur || '0').replace(/[^0-9]/g, '') || '0', n = 0;
