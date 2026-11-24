@@ -228,7 +228,7 @@ const SCE=[
   O(L('😈 ประกาศว่าคุณสั่งเอง','😈 Claim you ordered it'),L('ความกลัวพุ่ง','Fear soars'),()=>{c.fear+=20;c.heat+=20;S.karma-=40;S.fame+=300})])},
  c=>{const n=nm(S.gender==='หญิง'?'ชาย':'หญิง');ch3(L('🌸 คนจากฝ่ายธรรมะ','🌸 Someone from the Orthodox side'),L(`${n} ศิษย์สำนักธรรมะที่เคยช่วยชีวิตคุณ แอบมาหาตอนกลางคืน "ยุบพรรคเถอะ แล้วไปกับข้า"`,`${n}, an Orthodox disciple who once saved your life, sneaks in at night. "Disband the sect and come with me."`),[
   O(L('💔 ปฏิเสธ','💔 Refuse'),'',()=>{c.loy+=5;say(L(`${n} จากไปโดยไม่หันกลับ ปีต่อมาคุณเห็นนางอยู่ในทัพพันธมิตร`,`${n} leaves without looking back. A year later you see them among the Alliance ranks`),'')}),
-  O(L('🕊️ ยุบพรรค','🕊️ Disband the sect'),L('จบเส้นทางมาร','End the demonic path'),()=>{c.dead=1;S.karma+=150;say(L(`${scN(c)} ถูกยุบในคืนเดียว ลูกน้องบางคนร้องไห้ บางคนสาปแช่ง`,`${scN(c)} is disbanded in a single night. Some members weep, some curse you`),'myth',true);try{if(!S.spouse)S.spouse={n,alive:true}}catch(e){}}),
+  O(L('🕊️ ยุบพรรค','🕊️ Disband the sect'),L('จบเส้นทางมาร','End the demonic path'),()=>{c.dead=1;S.karma+=150;say(L(`${scN(c)} ถูกยุบในคืนเดียว ลูกน้องบางคนร้องไห้ บางคนสาปแช่ง`,`${scN(c)} is disbanded in a single night. Some members weep, some curse you`),'myth',true);try{if(!S.spouse)marry(n,L('ยุบพรรคแล้วแต่งงานกับ','You disbanded the sect and married'))}catch(e){}}),
   O(L('🪤 จับตัวไว้เป็นตัวประกัน','🪤 Take them hostage'),'',()=>{S.karma-=50;c.heat=Math.max(0,c.heat-25);c.fear+=10})])}];
 function scEv(){const c=X().sc;if(!c||c.dead||rnd()>.5)return false;let k=pick([0,1,3,4,5,0]);if(c.heat>=60&&rnd()<.6)k=2;SCE[k](c);return true}
 

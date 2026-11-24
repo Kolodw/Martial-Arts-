@@ -140,7 +140,7 @@ const RW_L = ['mn_mu', 'mz_mu', 'mh_so', 'sk_mn', 'mg_xi', 'dm_any', 'mu_gm', 'm
 const rwOf = wk => RW_L[((wk * 7 + 3) % RW_L.length + RW_L.length) % RW_L.length];
 const CH_OK = ['hell', 'short', 'junk', 'regress', 'soul', 'sky'];
 // 🏙️ ยุคปัจจุบัน: แยกทำเนียบตามโลกพิเศษ 9 แบบ (ch = 'mw_' + id) · คะแนนเฉลี่ยทุกด้านทั้งชีวิตแบบโหมดปกติ
-const MW_B = { hunter: 'n', under: 'u', ghost: 'o', loop: 'p', zombie: 'z', tower: 't', game: 'e', gatewon: 'q', doom: 'y', trav: 'v' }; // trav = 🚪 ผู้ข้ามโลก
+const MW_B = { hunter: 'n', under: 'u', ghost: 'o', loop: 'p', zombie: 'z', tower: 't', game: 'e', gatewon: 'q', doom: 'y', trav: 'v', fog: 'f' }; // fog = 🌉 นครม่านหมอก // trav = 🚪 ผู้ข้ามโลก
 for (const [w, l] of Object.entries(MW_B)) { CHC['mw_' + w] = 'c' + l; CHM[l] = 'c' + l; CHF['c' + l] = l; CH_OK.push('mw_' + w) }
 // ฉายาทำเนียบ (ชั่วคราว): รายวัน/สัปดาห์/เดือน · อันดับ 1–3
 const RKT = { d: ['', 'ตะวันเจิดจ้า', 'จันทร์เหนือเมฆ', 'ดาวประกาย'], w: ['', 'จ้าวยุทธภพ', 'ขุนศึกไร้พ่าย', 'ยอดฝีมือผงาด'], m: ['', 'จักรพรรดิเหนือฟ้า', 'มหาเทพบัญชาสวรรค์', 'ตำนานผู้ถูกจารึก'] };
@@ -1495,6 +1495,16 @@ module.exports = async (req, res) => {
         else { const k = cl(b.k), t = Math.max(0, Math.min(4, Math.floor(+b.t || 0))), r = b.r ? 1 : 0; if (k) await pipe([['LPUSH', 'svr:' + w, JSON.stringify({ k, t, r })], ['LTRIM', 'svr:' + w, 0, 39], ['EXPIRE', 'svr:' + w, 86400 * 14]]) }
       } catch (e) {}
       return res.json({ ok: 1 });
+    }
+    // 🌌 กระดานตำนานข้ามโลก: เก็บแค่ชื่อตัวละคร + ชนิดของที่ทิ้งไว้ (ไม่เก็บตัวตนผู้เล่น)
+    if (a === 'lgp') {
+      const cl = x => String(x || '').replace(/[<>"'&\\\/\n\r`]/g, '').trim();
+      const it = { n: cl(b.n).slice(0, 20), w: cl(b.w).replace(/[^a-z]/g, '').slice(0, 8), k: cl(b.k).replace(/[^a-z]/g, '').slice(0, 6), x: cl(b.x).slice(0, 30), v: Math.max(0, Math.min(999999, Math.floor(+b.v || 0))) };
+      if (it.n && it.k && it.x && it.w) { try { await pipe([['LPUSH', 'xlg', JSON.stringify(it)], ['LTRIM', 'xlg', 0, 299]]) } catch (e) {} }
+      return res.json({ ok: 1 });
+    }
+    if (a === 'lgr') {
+      try { const r = await cmd('LRANGE', 'xlg', 0, 299); const A = (Array.isArray(r) ? r : []).map(x => { try { return JSON.parse(x) } catch (e) { return null } }).filter(Boolean); for (let i = A.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [A[i], A[j]] = [A[j], A[i]] } return res.json({ L: A.slice(0, 10) }) } catch (e) { return res.json({ L: [] }) }
     }
     if (a === 'svg') {
       const w = +String((qOf(req).w || b.w) || '').replace(/[^0-9]/g, '').slice(0, 6); if (!w) return res.json({});

@@ -39839,7 +39839,7 @@ try{CHM_T.k={d:['','ผู้ทะลวงกำแพงเหล็ก','ส
 {const _cs=chmSel;chmSel=function(){const v=openOnline._cm;if(v==='k')return'k';if(!v&&skyOn())return'k';return _cs.apply(this,arguments)}}
 {const _oo=openOnline;openOnline=function(tab){try{if(tab==='board'&&openOnline._bw==null&&skyOn()){openOnline._bw=4;openOnline._cm='k'}}catch(e){}return _oo.apply(this,arguments)};for(const k in _oo)try{openOnline[k]=_oo[k]}catch(e){}window.openOnline=openOnline}
 // ส่งชีวิตขึ้นทำเนียบของโหมด
-{const _api=api;api=async function(a,body){try{if(a==='life'&&body&&S&&S.mw&&S.mw.fog){body.cu=1;body.ch='fog'}}catch(e){}try{if(a==='life'&&body&&skyOn()){const K=S.mw.sky;body.ch='sky';body.skr=K.rk;body.sks=K.sub|0;body.cu=0}}catch(e){}return _api.apply(this,arguments)}}
+{const _api=api;api=async function(a,body){try{if(a==='life'&&body&&S&&S.mw&&S.mw.fog){body.ch='mw_fog';body.cu=S.ccOwn?1:0}}catch(e){}try{if(a==='life'&&body&&skyOn()){const K=S.mw.sky;body.ch='sky';body.skr=K.rk;body.sks=K.sub|0;body.cu=0}}catch(e){}return _api.apply(this,arguments)}}
 // ชีวิตทะลุฟ้าดาราที่เริ่มจากหน้าสุ่มกำเนิด = สุ่มจริง ขึ้นทำเนียบได้
 {const O=window._skyOrg;if(O&&O.applyOrg){const _ao=O.applyOrg;O.applyOrg=function(){const r=_ao.apply(this,arguments);try{S.custom=false}catch(e){}return r}}}
 // ---------- กรอบประจำ 3 อันดับ ----------
@@ -45636,7 +45636,7 @@ try{setTimeout(()=>{try{const go=()=>wLoad('hrt');go().catch(()=>setTimeout(()=>
 try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4200)}catch(e){console.error('block208',e)}
 
 // BLOCK 209: 📖 โหลด /w/xw.js — เส้นเรื่องแบบนิยายทุกโลก (คำสาบานผูกมัด · อีกคนในตัวฉัน · รู้วันตาย · คำทำนายกำกวม · ต้นเรื่องแบบนิยาย · ทำเนียบฟ้า · ร้านตอนวางมือ · หลายตัวตน) ต่อจาก wld2.js
-try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2')).then(()=>wLoad('xw')).then(()=>wLoad('mx'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4600)}catch(e){console.error('block209',e)}
+try{setTimeout(()=>{try{const go=()=>wLoad('hrt').then(()=>wLoad('wld2')).then(()=>wLoad('xw')).then(()=>wLoad('mx')).then(()=>wLoad('xl'));go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},4600)}catch(e){console.error('block209',e)}
 
 // BLOCK 210: 🌕 หน้าแรกคืนลอยกระทง 2569 — แสดงอัตโนมัติ 24 พ.ย. 00:00 ถึง 25 พ.ย. 06:00 (เวลาไทย) · นับถอยหลังตั้งแต่ 23 พ.ย. 23:30
 //  ฉากพิกเซลเต็มจอ: ฟ้า ดาว พระจันทร์เต็มดวงค่อยๆ ขึ้น เจดีย์ริมฝั่ง โคมลอย พลุ หิ่งห้อย แม่น้ำ เงาจันทร์ กระทงจริงของผู้เล่นทั้งเว็บ (api krtl) พร้อมคำอธิษฐาน
@@ -45825,6 +45825,16 @@ try{(()=>{const W=()=>{try{const M=S&&S.mw;if(M&&M.sky)return'sky';if(M&&M.fog)r
   else if(w==='fog'){const K=S.mw.fog,F=window._fog;d.mx=Object.assign({},d.mx||{},{ic:'🌉',wn:'นครม่านหมอก'});d.rl=K.path&&K.tier>0?((F&&F.PATH&&F.PATH[K.path]&&F.PATH[K.path].t[K.tier-1])||'ธรณีที่ '+K.tier):'คนธรรมดา'}
   else if(d.wd==='sv')d.wd='⭕ จิตวิญญาณยุทธ์'}catch(e){}return d}}
 })()}catch(e){console.error('block213',e)}
+// ===================== BLOCK 214: 🌉 ทำเนียบนครม่านหมอก (หมวด 'f' · ฝั่งเซิร์ฟเวอร์ ch = 'mw_fog') =====================
+try{(()=>{const fogOn=()=>{try{return !!(S&&S.mw&&S.mw.fog)}catch(e){return false}};
+ try{CHM_T.f={d:['','ผู้เดินฝ่าหมอกแห่งวัน','เสียงหวีดไอน้ำ','ช่างกลดาวรุ่ง'],w:['','จ้าวแห่งโรงหมอก','ผู้ถือกุญแจทองเหลือง','นักเดินท่อใต้นคร'],m:['','ราชาแห่งนครม่านหมอก','ประธานสมาคมเงา','ตำนานหมอกไม่จาง']};
+  CHM_N.f=['🌉','นครม่านหมอก','#c8a46a','คะแนนเฉลี่ยทุกด้านของทั้งชีวิต แบบเดียวกับโหมดปกติ · เฉพาะชีวิตในนครม่านหมอก'];
+  for(const p of ['d','w','m']){RKC[p+'f']=CHM_T.f[p];RKC_TR[p+'f']=RKC_TR[p+'c']||RKC_TR[p];RKC_PN[p+'f']='นครม่านหมอก'+(p==='d'?'รายวัน':p==='w'?'รายสัปดาห์':'รายเดือน')}
+  BD_CN.cf='🌉 ทำเนียบนครม่านหมอก'}catch(e){console.error('b214 tables',e)}
+ {const _h=chBoardHead;chBoardHead=function(bp){let h=_h.apply(this,arguments);try{if(!/openOnline._cm='f'/.test(h)){const m=chmSel(),on=m==='f',N=CHM_N.f;h=h.replace(/(<div class="tabs chmTabs">[\s\S]*?)(<\/div>)/,`$1<button class="tabb ${on?'on':''}" style="${on?`background:${N[2]};color:#1a1208;border-color:${N[2]}`:''}" onclick="openOnline._cm='f';openOnline._bw=4;openOnline('board')">${N[0]} ${N[1]}</button>$2`)}}catch(e){}return h}}
+ {const _cs=chmSel;chmSel=function(){const v=openOnline._cm;if(v==='f')return'f';if(!v&&fogOn())return'f';return _cs.apply(this,arguments)}}
+ {const _oo=openOnline;openOnline=function(tab){try{if(tab==='board'&&openOnline._bw==null&&fogOn()){openOnline._bw=4;openOnline._cm='f'}}catch(e){}return _oo.apply(this,arguments)};for(const k in _oo)try{openOnline[k]=_oo[k]}catch(e){}window.openOnline=openOnline}
+})()}catch(e){console.error('block214',e)}
 // BLOCK 211: ✍️ สร้างเอง / 🎨 ออกแบบหน้าตา ทุกโลก — ตัวเลือกกลาง ccPick (เลือกทุกช่องเอง) · ccLook (ออกแบบหน้าตา ที่เหลือลิขิต)
 //  ชีวิตที่ "สร้างเอง" ตั้ง S.custom + S.ccOwn → ไม่ส่งขึ้นทำเนียบ (ห่อ sendLife) · ตั้งผ่าน window._ccOwnPending ก่อน startLife ของแต่ละโลก
 //  ใช้ใน: 🐾 สัตว์อสูร (หน้ากำเนิด) · 🌉 นครม่านหมอก (w/fog.js) · 🌠 ทะลุฟ้าดารา (w/sky.js) · โลกอื่นมีอยู่แล้ว (goBirthPick / ยุคปัจจุบัน)
