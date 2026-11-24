@@ -162,7 +162,7 @@ function arcStep(){if(!S||!S.alive||!S._arcs)return;try{if(choice._cur||modalOpe
 // =====================================================================
 // 2) เหตุการณ์ซ้ำ → ภาคต่อ · 3) ปิดผลบางเรื่อง + ผลย้อนหลัง
 // =====================================================================
-const NOSEQ=/^🧵|📝|ด่านที่|สำนักต่างๆ เปิดรับศิษย์|ภารกิจประจำวัน|สอบ|บทสอน|มินิเกม|ทายผล|^🌌|ก้าวพ้น|ทิ้งอะไรไว้|ข้างกายมาทั้งชีวิต|สร้างมากับมือ|รออยู่หน้าประตู|Before the Gate|Ascendant|Leave Behind|Beside You|Sect You Built|Shadow at the Gate|Steps of Light/;
+const NOSEQ=/^🧵|📝|ด่านที่|สำนักต่างๆ เปิดรับศิษย์|ภารกิจประจำวัน|สอบ|บทสอน|มินิเกม|ทายผล|^🌌|ก้าวพ้น|ทิ้งอะไรไว้|ข้างกายมาทั้งชีวิต|สร้างมากับมือ|รออยู่หน้าประตู|Before the Gate|Ascendant|Leave Behind|Beside You|Sect You Built|Shadow at the Gate|Steps of Light|^🍃|^🔁|^🎲|^✉️|ช่วงเวลาเงียบ|Quiet Moment|Someone Who Remembers|Debt Not Yet|No One Expects/;
 const ESC=['คราวนี้เดิมพันสูงกว่าครั้งก่อน','มีคนจำได้ว่าคุณเคยตัดสินใจเรื่องนี้มาแล้ว','ข่าวเรื่องครั้งก่อนยังลือกันไม่หาย','ทุกคนรอดูว่าคุณจะทำเหมือนเดิมไหม','สถานการณ์เหมือนเดิม… แต่คุณไม่ใช่คนเดิมแล้ว'];
 {const _c=choice;choice=function(title,text,opts){try{if(S&&Array.isArray(opts)&&opts.length){const key=norm(title).replace(/^[^\wก-๙]+/,'').slice(0,40);S._sq=S._sq||{};const rec=S._sq[key];
   if(!NOSEQ.test(strip(title))){
