@@ -46631,5 +46631,5 @@ try{(function(){
  const ob=new MutationObserver(ms=>{for(const m of ms){for(const x of m.addedNodes)if(x.nodeType===1)scan(x)}});
  const go=()=>{scan(document.body);ob.observe(document.body,{childList:true,subtree:true})};
  if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
- try{['/items7.webp','/items8.webp','/items9.webp','/items10.webp','/items11.webp','/items12.webp','/items13.webp'].forEach(u=>{const im=new Image();im.src=u;(window._icKeep=window._icKeep||[]).push(im)})}catch(e){}
+ try{const pl=L=>L.forEach(u=>{const im=new Image();im.src=u;(window._icKeep=window._icKeep||[]).push(im)});pl(['/items7.webp','/items8.webp']);setTimeout(()=>pl(['/items9.webp','/items10.webp','/items11.webp','/items12.webp','/items13.webp']),6000)}catch(e){} // ชุดหลักโหลดทันที ชุดที่ใช้น้อยโหลดทีหลังไม่ให้หน้าแรกหนัก
 })()}catch(e){console.error('mod-p7',e)}
