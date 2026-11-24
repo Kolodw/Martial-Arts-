@@ -46196,11 +46196,14 @@ body.desk #modal.mWide .obTabs{flex-wrap:wrap}
 `;document.head.appendChild(st);
 const WIDE=new Set(['menu','rlmbook','guide','wscroll','obworlds','lessons','codex','sky_codex','ach','legacy','shop','sup','spshop']);
 let q=0;const fit=()=>{q=0;try{const m=document.getElementById('modal');if(!m)return;const on=document.body.classList.contains('desk')&&innerWidth>=1200&&document.getElementById('mask').classList.contains('on');
- const k=m.dataset.k||'';const want=on&&k!=='choice'&&(WIDE.has(k)||!!m.querySelector(':scope>.bagit,:scope>.bgGrid,:scope>#bagBuyB')||m.scrollHeight>innerHeight*1.35);
+ const k=m.dataset.k||'';const h3=m.querySelector(':scope>h3');const sig=k+'|'+(h3?h3.textContent.slice(0,30):'');
+ const keep=on&&m.classList.contains('mWide')&&m._wsig===sig;
+ const want=keep||(on&&k!=='choice'&&(WIDE.has(k)||!!m.querySelector(':scope>.bagit,:scope>.bgGrid,:scope>#bagBuyB')||m.scrollHeight>m.clientHeight+24));
+ m._wsig=want?sig:'';
  if(want!==m.classList.contains('mWide'))m.classList.toggle('mWide',want)}catch(e){}};
 const kick=()=>{if(!q)q=requestAnimationFrame(fit)};
 const boot=()=>{const m=document.getElementById('modal'),k=document.getElementById('mask');if(!m||!k)return setTimeout(boot,500);
- new MutationObserver(kick).observe(m,{childList:true,attributes:true,attributeFilter:['data-k']});new MutationObserver(kick).observe(k,{attributes:true,attributeFilter:['class']});addEventListener('resize',kick)};boot();
+ new MutationObserver(()=>{kick();setTimeout(kick,350);setTimeout(kick,1100)}).observe(m,{childList:true,attributes:true,attributeFilter:['data-k']});new MutationObserver(()=>{kick();setTimeout(kick,350);setTimeout(kick,1100)}).observe(k,{attributes:true,attributeFilter:['class']});addEventListener('resize',kick)};boot();
 })()}catch(e){console.error('mWide',e)}
 
 // ===== 🖥️ โครงหน้าต่างแบบคอม (≥1200px · body.desk): เมนู = หมวดซ้าย+ตารางขวา · กระเป๋า = ช่องของ+แผงรายละเอียด · เมือง = ย่านซ้าย · รายการยาว = 2 คอลัมน์ · ป้ายแจ้งเตือนย้ายไม่ทับแผง =====
@@ -46250,7 +46253,7 @@ const st=document.createElement('style');st.textContent=css+`
 #modal.twDk .mgrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 /* รายการยาว */
 .dkRun{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:6px 0}
-.dkRun>.item{margin:0!important}
+.dkRun>*{margin:0!important;min-width:0}
 /* ป้ายแจ้งเตือน */
 body.tsOn #islCards{left:50%!important;right:auto!important;top:64px!important;bottom:auto!important;transform:translateX(-50%)}
 body.desk.dkG #islCards{right:auto!important;bottom:auto!important;left:var(--icL)!important;top:var(--icT)!important}
@@ -46296,14 +46299,21 @@ const RUNK=new Set(['family','fam','people','peers','shop','sect','job','ach','l
 function runs(m,min){if(m.querySelector(':scope>.dkRun'))return;let run=[];const flush=()=>{if(run.length>=(min||4)){const w=document.createElement('div');w.className='dkRun';run[0].insertAdjacentElement('beforebegin',w);run.forEach(e=>w.appendChild(e))}run=[]};
  [...m.children].forEach(c=>{if(c.matches('.item')&&!c.matches('.bagit'))run.push(c);else flush()});flush()}
 
+// หน้าต่างกว้าง: ตารางที่มี 2 คอลัมน์ → 3 · แถวรายการซ้ำกัน ≥5 → 2 คอลัมน์
+function wideUp(m){if(m.classList.contains('mDk')||m.classList.contains('bgDk'))return;
+ m.querySelectorAll(':scope>*,:scope>*>*,:scope>*>*>*').forEach(e=>{if(e._wu||e.closest('.dkRun,.mnSide'))return;const cs=getComputedStyle(e);if(cs.display==='grid'&&e.offsetWidth>700){const n=cs.gridTemplateColumns.split(' ').filter(Boolean).length;if(n===2&&e.children.length>=3){e._wu=1;e.style.gridTemplateColumns='repeat(3,minmax(0,1fr))'}}});
+ const groups=[m,...m.querySelectorAll(':scope>div:not(.dkRun):not(.bgGrid)')].filter(x=>x.children.length>=5&&getComputedStyle(x).display!=='grid'&&getComputedStyle(x).display!=='flex'||x===m);
+ groups.forEach(par=>{let run=[],cls=null;const ok=c=>c.tagName==='DIV'&&c.className&&!/dkRun|mnSide|bgSide|gdTip|hpbar|tabs/.test(c.className)&&c.offsetHeight>24&&c.offsetHeight<170&&getComputedStyle(c).position==='static';
+  const flush=()=>{if(run.length>=5){const w=document.createElement('div');w.className='dkRun';run[0].insertAdjacentElement('beforebegin',w);run.forEach(e=>w.appendChild(e))}run=[];cls=null};
+  [...par.children].forEach(c=>{if(ok(c)&&(cls===null||c.className===cls)){cls=c.className;run.push(c)}else{flush();if(ok(c)){cls=c.className;run.push(c)}}});flush()})}
 let q=0;const go=()=>{q=0;try{const m=$('modal'),mk=$('mask');if(!m||!mk)return;const on=DK()&&mk.classList.contains('on'),k=m.dataset.k||'';
  if(!on){if(m.classList.contains('mDk'))menuUndo(m);m.classList.remove('twDk');return}
  if(k==='menu')menuDk(m);else if(m.classList.contains('mDk'))menuUndo(m);
  if(m.querySelector(':scope>.bagit,:scope>#bagBuyB,:scope>.bgGrid'))bagDk(m);else m.classList.remove('bgDk');
  if(k==='town')townDk(m);else m.classList.remove('twDk');
- if(RUNK.has(k)||m.classList.contains('mWide'))runs(m,k==='family'?2:4)}catch(e){console.error('dkUI',e)}};
-const kick=()=>{if(!q)q=requestAnimationFrame(()=>requestAnimationFrame(go))};
-const boot=()=>{const m=$('modal'),k=$('mask');if(!m||!k)return setTimeout(boot,500);new MutationObserver(kick).observe(m,{childList:true,attributes:true,attributeFilter:['data-k']});new MutationObserver(kick).observe(k,{attributes:true,attributeFilter:['class']});addEventListener('resize',kick)};boot();
+ if(RUNK.has(k)||m.classList.contains('mWide'))runs(m,k==='family'?2:4);if(m.classList.contains('mWide'))wideUp(m)}catch(e){console.error('dkUI',e)}};
+const kick=()=>{if(!q)q=requestAnimationFrame(()=>requestAnimationFrame(go))};const kick2=()=>{kick();setTimeout(kick,450);setTimeout(kick,1250)};
+const boot=()=>{const m=$('modal'),k=$('mask');if(!m||!k)return setTimeout(boot,500);new MutationObserver(kick2).observe(m,{childList:true,attributes:true,attributeFilter:['data-k']});new MutationObserver(kick2).observe(k,{attributes:true,attributeFilter:['class']});addEventListener('resize',kick)};boot();
 
 // ---------- ป้ายแจ้งเตือนในเกม: มุมขวาบนของช่องกลาง (บนภาพฉาก) ----------
 setInterval(()=>{try{const g=$('game'),c=$('deskC'),ic=$('islCards');const on=DK()&&g&&g.classList.contains('on')&&c&&ic;document.body.classList.toggle('dkG',!!on);if(!on)return;
