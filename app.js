@@ -46310,3 +46310,13 @@ setInterval(()=>{try{const g=$('game'),c=$('deskC'),ic=$('islCards');const on=DK
  const r=c.getBoundingClientRect(),sc=$('sceneBox'),t=sc&&sc.getBoundingClientRect().height?sc.getBoundingClientRect().top+8:r.top+60,w=ic.offsetWidth||340;
  document.body.style.setProperty('--icL',Math.max(r.left+8,r.right-w-12)+'px');document.body.style.setProperty('--icT',t+'px')}catch(e){}},700);
 })()}catch(e){console.error('dkUI',e)}
+
+// ===== 🖥️ ป้ายแจ้งเตือนบนคอม: ระหว่างเปิดหน้าต่าง (เมนู/ตัวเลือก ฯลฯ) ป้ายการ์ดใหญ่จะรอคิวไว้ แล้วขึ้นตามลำดับเมื่อปิดหน้าต่าง ไม่หายไปใต้หน้าต่าง =====
+try{(()=>{const HOLD=window._islHold=[];
+const maskOn=()=>{const k=document.getElementById('mask');return !!(k&&k.classList.contains('on'))};
+const dk=()=>document.body.classList.contains('desk')&&innerWidth>=1200;
+const big=n=>{try{return typeof islLongD==='function'?!!islLongD(n):!!n.big}catch(e){return !!n.big}};
+const o=window.island;if(typeof o==='function'){window.island=function(n){try{if(n&&n.t&&dk()&&maskOn()&&!n.now&&big(n)){const key=n.key||(n.ic||'')+n.t;if(!HOLD.some(x=>(x.key||(x.ic||'')+x.t)===key)){HOLD.push(n);if(HOLD.length>12)HOLD.shift()}return}}catch(e){}return o.apply(this,arguments)};try{island=window.island}catch(e){}}
+const flush=()=>{if(maskOn()||!HOLD.length)return;const L=HOLD.splice(0);L.forEach((n,i)=>setTimeout(()=>{try{o.call(window,n)}catch(e){}},120+i*40))};
+const boot=()=>{const k=document.getElementById('mask');if(!k)return setTimeout(boot,500);new MutationObserver(()=>setTimeout(flush,250)).observe(k,{attributes:true,attributeFilter:['class']})};boot();
+})()}catch(e){console.error('islHold',e)}
