@@ -46420,7 +46420,7 @@ try{(function(){
  window.facImg=n=>{const i=FN.indexOf(n);return i<0?'':`<i class="ii ${QA('/items3.webp',i)}" title="${n}" style="${ST('/items3.webp',i,8,6)}"></i>`};
  const RE=new RegExp(L.map(s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+'|[\uE000-\uE063]','g');
  st.textContent+=`.ii,i.iiB{background:var(--u) var(--p)/var(--s) no-repeat;position:relative}
-.gdIcs button .gem{width:30px;height:30px;vertical-align:middle}.gdIcs button.on .gem{animation:gmPu 1.6s ease-in-out infinite}
+.gdIcs button .gem{width:30px;height:30px;vertical-align:middle}.gdMore{margin:6px 0 8px;border:1px solid rgba(255,215,120,.25);border-radius:10px;padding:6px 8px}.gdMore>summary{cursor:pointer;font-weight:700;color:#f4d27a;list-style:none;padding:4px 2px}.gdMore>summary::-webkit-details-marker{display:none}.gdMore>summary::after{content:' ▾';opacity:.8}.gdMore[open]>summary::after{content:' ▴'}.gdMore>summary small{font-weight:400;opacity:.65}.gdMore .gdIcs{margin-top:6px}.gdIcs button.on .gem{animation:gmPu 1.6s ease-in-out infinite}
 .gdIc .gem{width:1.25em;height:1.25em;vertical-align:middle;animation:gmFl 3.4s ease-in-out infinite}
 .gdL .i .gem,.gdWar span .gem{width:1.4em;height:1.4em;vertical-align:middle}
 @media (hover:hover){.gdIcs button:hover .gem,.gdL:hover .gem{animation:gmHop .45s ease-out}}
