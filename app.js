@@ -22801,12 +22801,16 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'🧘',t:'หยั่งรู้ฟ้�
 // ภายในยังเก็บเป็นหน่วยเดิม (ราคา/ห้องประมูล/คลังสำนักไม่เปลี่ยน) แต่แดนเทพแสดงผลเป็นหยกดาราเทพ 1 ก้อน = 4,000 หน่วย
 // ขึ้นแดนเทพแล้วเงินโลกล่าง (เงินติดตัว · เงินฝากธนาคารเมือง · เงินลงทุน · คลังสำนัก) ใช้ต่อไม่ได้ — แลกได้ 10% ที่ศาลเทวสภา หรือถวายเป็นบุญ
 function gJ(){return !!(S&&S.xian&&S.xt&&!S.mw)}
-function curW(){return gJ()?JADE_N:S&&S.xian?'หินวิญญาณ':'ตำลึง'}
-function fmtJ(n){const v=(+n||0)/JADE,a=Math.abs(v);if(a>=100)return fmt(v);return (+v.toFixed(a>=10?1:2)).toLocaleString('th-TH')}
+function curW(){return gJ()?JADE_N:S&&S.mw?(mwCC().cur||'บาท'):S&&S.xian?'หินวิญญาณ':'ตำลึง'}
+function fmtJ(n){const v=(+n||0)/JADE,a=Math.abs(v);if(a>=100)return fmt(v)+'\u2060';return (+v.toFixed(a>=10?1:2)).toLocaleString('th-TH')+'\u2060'}
 function fmtM(n){return gJ()?fmtJ(n):fmt(n)}
 {const _st=stoneTxt;stoneTxt=function(n){return gJ()?`${fmtJ(n)} ${JADE_N}`:_st.apply(this,arguments)}}
 // แทนคำเฉพาะที่เป็น "เงิน": คำว่าตำลึง (ใช้เป็นเงินเสมอ) และหินวิญญาณที่ตามหลังตัวเลข — ชื่อฉายา/สิ่งของที่มีคำว่าหินวิญญาณไม่ถูกแตะ
-function jadeW(t){if(typeof t!=='string'||!gJ())return t;return t.replace(/ตำลึง/g,JADE_N).replace(/(\d[\d,\.]*(?:\s*(?:ล้านล้าน|แสนล้าน|หมื่นล้าน|พันล้าน|ร้อยล้าน))?\s*(?:<\/b>)?\s*)หินวิญญาณ/g,'$1'+JADE_N).replace(/หาหินวิญญาณ/g,'หา'+JADE_N)}
+// ตัวเลขที่ผ่าน fmtJ แล้วจะมีเครื่องหมายมองไม่เห็น (\u2060) ต่อท้าย → แค่เปลี่ยนชื่อหน่วย · ตัวเลขดิบที่ตามด้วย ตำลึง/หินวิญญาณ → แปลงค่าเป็นหยกด้วย (เดิมเปลี่ยนแค่ชื่อหน่วย ตัวเลขเลยผิด)
+const JMUL={'ล้านล้าน':1e12,'แสนล้าน':1e11,'หมื่นล้าน':1e10,'พันล้าน':1e9,'ร้อยล้าน':1e8,'ล้าน':1e6};
+function jadeW(t){if(typeof t!=='string'||!gJ())return t;
+ t=t.replace(/([+\-−]?)(\d[\d,]*(?:\.\d+)?)(\u2060)?(\s*(?:ล้านล้าน|แสนล้าน|หมื่นล้าน|พันล้าน|ร้อยล้าน|ล้าน))?(\s*(?:<\/b>)?\s*)(ตำลึง|หินวิญญาณ)/g,(m,sg,num,mk,mul,mid,u)=>{if(mk)return sg+num+mk+(mul||'')+mid+JADE_N;const v=parseFloat(num.replace(/,/g,''))*(mul?JMUL[mul.trim()]||1:1);if(!isFinite(v))return m;return sg+fmtJ(v)+mid+JADE_N});
+ return t.replace(/ตำลึง/g,JADE_N).replace(/หาหินวิญญาณ/g,'หา'+JADE_N)}
 {const _xJ=xT;xT=function(t){return jadeW(_xJ.call(this,jadeW(t)))}}
 {const _lgJ=log;log=function(t){arguments[0]=jadeW(t);return _lgJ.apply(this,arguments)}}
 {const _agJ=ascendGod;ascendGod=function(){const was=S&&!S.xt;const m=was?Math.max(0,S.money||0):0,bk=was&&S.tw?Math.max(0,S.tw.bank||0):0,iv=was&&S.invest?Math.max(0,S.invest.c||0):0,lt=was&&S.lead?Math.max(0,S.lead.tr||0):0;
