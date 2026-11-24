@@ -508,7 +508,7 @@ function focusOK(k){if(S.beastMode&&!S.beastMode.human)return BFOCUS.some(f=>f[0
 function render(){
  if(!S)return;pendBar();qTrack();{const ym=$('ymon');if(ym)ym.textContent=MON_N[curMon()]}const ri=realmIdx(),nx=REALMS[ri+1];
  $('gAge').innerHTML=`${S.age}<small>ปี</small>`;$('gName').textContent=S.name+(S.gen>1?` (รุ่น ${S.gen})`:'');
- let tg=S.faction?`<span class="tag ${S.faction.t}">${S.faction.n}${S.faction.tier==='เล็ก'?' (เล็ก)':' #'+sectPos(S.faction.n)} · ${rankName()}</span>`:`<span class="tag">พเนจร</span>`;
+ let tg=S.faction?`<span class="tag ${S.faction.t}">${(window.facImg&&facImg(S.faction.n))||''}${S.faction.n}${S.faction.tier==='เล็ก'?' (เล็ก)':' #'+sectPos(S.faction.n)} · ${rankName()}</span>`:`<span class="tag">พเนจร</span>`;
  if(S.ow&&S.awake)tg+=`<span class="tag ow">🌌 วิญญาณ: ${S.soul?S.soul.n:'ผู้ข้ามมิติ'}</span>`;
  tg+=`<span class="tag">${S.karma>=40?'ผู้ทรงธรรม':S.karma>=10?'จิตใจดี':S.karma>-10?'กลางๆ':S.karma>-40?'ไร้ศีลธรรม':'จิตมาร'}</span>`;
  {const ak=(S.children||[]).filter(c=>c.alive).length;if(S.spouse)tg+=`<span class="tag">💍 ${S.spouse}${S.sp?' ❤'+Math.round(S.sp.aff):''}${ak?` · ลูก ${ak}`:''}</span>`;else if(ak)tg+=`<span class="tag">ลูก ${ak}</span>`;if(S.grand)tg+=`<span class="tag">หลาน ${S.grand}</span>`}
@@ -46394,9 +46394,18 @@ try{(function(){
  const bgs=v=>`background:url(${v[0]}) ${(v[1]%v[2])/(v[2]-1)*100}% ${((v[1]/v[2]|0)/(v[3]-1))*100}%/${v[2]*100}% ${v[3]*100}% no-repeat`;
  st.textContent+='.pxf i.iiB{display:block;width:32px;height:32px;position:relative;z-index:1}.pxf.big i.iiB{width:48px;height:48px}#modal.bgDk .bgGrid>.bagit .pxf i.iiB{width:40px;height:40px}';
  const _px=window.pxi;if(typeof _px==='function')window.pxi=function(kind,r,tint,seed,big){if(typeof seed==='string'&&IX[seed]!=null)return`<span class="pxf r${r|0}${big?' big':''}"><i class="iiB" style="${bgs(IX[seed])}"></i></span>`;return _px.apply(this,arguments)};
- window.itImg=k=>IX[k]!=null?`<i class="iiB" style="${bgs(IX[k])}"></i>`:'';st.textContent+='.eqTi:has(i.iiB){width:34px;margin:0 6px 0 -6px}.eqTi i.iiB{display:block;width:34px;height:34px}';
+ window.itImg=k=>IX[k]!=null?`<i class="iiB" style="${bgs(IX[k])}"></i>`:'';st.textContent+='.eqTi:has(i.iiB){width:30px;margin-right:4px}.eqTi i.iiB{display:block;width:30px;height:30px}h3 .ii,h4 .ii{width:1.25em;height:1.25em;vertical-align:-.25em}.tag .ii{width:1.3em;height:1.3em;vertical-align:-.35em;margin:-.2em .15em -.2em -.1em}';
  try{if(typeof EQI!=='undefined')K2.forEach((k,i)=>{const I=k&&EQI[k];if(!I||!I.ic||!I.n)return;const s2=I.ic+' '+I.n;if(M[s2])return;M[s2]={k,ic:I.ic,n:I.n,u:'/items2.webp',c:8,r:6,i};L.push(s2)});L.sort((a,b)=>b.length-a.length)}catch(e){}
 
+ // ชุดที่ 3 (items3.webp 8×6): ตราสำนัก 24 · ระบบ 10 · สายอาชีพ 4 · กิจการ 3 · ดันเจี้ยน 7 (จับคู่ "อีโมจิ ชื่อ")
+ const FN=['สำนักภูผาขาว','วัดศิลาธรรม','พรรคกระยาจก','สำนักเขาเมฆม่วง','หุบเขาดอกท้อ','สำนักกระบี่สิบทิศ','หุบเขาโอสถเทวดา','สำนักมวยต้นหลิว','พรรคเงาโลหิต','หอพิษทมิฬ','สมาคมโจรสลัดสายน้ำ','หอข่าวกรองหมื่นลี้','ค่ายเสือดำ','อารามเมฆขาวน้อย','สำนักกระบี่ริมธาร','แก๊งมีดสั้นตลาดเหนือ','ลัทธิมารสวรรค์','พรรคมารโลหิต','นิกายเงาจันทร์ดำ','สำนักหมื่นวิญญาณ','ซ่องโจรเขาหมาป่า','สมาคมลูกเต๋าทอง','ลัทธิกระดูกขาว (สาขาย่อย)','ศาลเจ้าวิญญาณร้าง'];
+ const P3=[];FN.forEach((n,i)=>P3.push(['🏯',n,i]));
+ try{(SYS_TYPES||[]).slice(0,10).forEach((T,i)=>T&&T.ic&&P3.push([T.ic,T.n,24+i]))}catch(e){}
+ try{['alch','smith','array','talis'].forEach((k,i)=>PROF[k]&&P3.push([PROF[k].ic,PROF[k].n,34+i]))}catch(e){}
+ try{['inn','smith','pharm'].forEach((k,i)=>BIZ[k]&&P3.push([BIZ[k].ic,BIZ[k].n,38+i]))}catch(e){}
+ try{(DUNG||[]).slice(0,7).forEach((d,i)=>d&&d.ic&&P3.push([d.ic,d.n,41+i]))}catch(e){}
+ P3.forEach(([ic,n,i])=>{const s3=ic+' '+n;if(M[s3])return;M[s3]={k:'s3_'+i,ic,n,u:'/items3.webp',c:8,r:6,i};L.push(s3)});L.sort((a,b)=>b.length-a.length);
+ window.facImg=n=>{const i=FN.indexOf(n);return i<0?'':`<i class="ii" title="${n}" style="background:url(/items3.webp) ${(i%8)/7*100}% ${((i/8|0)/5)*100}%/800% 600% no-repeat"></i>`};
  const RE=new RegExp(L.map(s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
  const SK=/^(SCRIPT|STYLE|TEXTAREA|INPUT|OPTION|SELECT|TITLE)$/;
  const sty=o=>'background:url('+o.u+') '+((o.i%o.c)/(o.c-1)*100)+'% '+(((o.i/o.c|0)/(o.r-1))*100)+'%/'+(o.c*100)+'% '+(o.r*100)+'% no-repeat';
