@@ -41510,7 +41510,7 @@ window._pxPass=pass;
 const pxMark=t=>{try{if(t&&t.nodeType===1&&t!==document.body&&t.id!=='modal'&&t.id!=='feed'&&!t.querySelector('input,textarea,select')){const h=t.innerHTML;if(h.length<1500)t.__pxOut=h}}catch(e){}};
 {const Q=new Set(),TG=new Set();let qr=0,gmo=null;const run=()=>{qr=0;const L=[...Q];Q.clear();window.__pxBusy=1;try{for(const n of L){if(!n.isConnected)continue;if(n.nodeType===3){if(n.parentNode&&!(n.parentNode.classList&&n.parentNode.classList.contains('pxi')))wrapText(n)}else if(n.nodeType===1&&!n.classList.contains('pxi'))pass(n)}}finally{window.__pxBusy=0}TG.forEach(pxMark);TG.clear();if(gmo)gmo.takeRecords()};
  const hasE=t=>{const r=RE.test(t||'');RE.lastIndex=0;return r};const want=n=>n&&(n.nodeType===3?hasE(n.nodeValue):n.nodeType===1&&n.localName!=='px-f'&&!(n.classList&&n.classList.contains('pxi'))&&hasE(n.textContent));
- const start=()=>{try{pass(document.body);gmo=new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData'){if(want(m.target)){Q.add(m.target);TG.add(m.target.parentNode)}}else{let w=0;for(const n of m.addedNodes)if(want(n)){Q.add(n);w=1}if(w)TG.add(m.target)}}if(Q.size&&!qr)qr=requestAnimationFrame(run)});gmo.observe(document.body,{childList:true,subtree:true,characterData:true})}catch(e){console.error('pxAll',e)}};
+ const start=()=>{try{pass(document.body);gmo=new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData'){if(want(m.target)){Q.add(m.target);TG.add(m.target.parentNode)}}else{let w=0;for(const n of m.addedNodes)if(want(n)){Q.add(n);w=1}if(w)TG.add(m.target)}}if(Q.size){if(Q.size<=80){if(qr){cancelAnimationFrame(qr);qr=0}run()}else if(!qr)qr=requestAnimationFrame(run)}});gmo.observe(document.body,{childList:true,subtree:true,characterData:true})}catch(e){console.error('pxAll',e)}};
  if(document.body)start();else addEventListener('DOMContentLoaded',start)}
 // ---------- ✨ เอฟเฟกต์ pixelfx ตอนกดปุ่มทั้งเว็บ (นอกมินิเกม) ----------
 {const pre=()=>{['spark','fw','burst','confetti','mana','poof'].forEach(k=>fxImg(FX[k].src+'?v='+VER))};setTimeout(pre,4000);
@@ -46580,7 +46580,7 @@ try{(function(){
  function paint(s){if(s.dataset.p7||s.dataset.u4)return;const k=(s.textContent||'').replace(/️/g,'').replace(/[\u{1F3FB}-\u{1F3FF}]/gu,'');const i=M.get(k);if(i==null){s.dataset.p7='-';return}s.dataset.p7=i;
   if(s.classList.contains('pxa')){s.classList.remove('pxa');s.querySelectorAll('px-f').forEach(x=>x.remove())}
   const S=s.style,g=7+(i/100|0),j=i%100;S.setProperty('background-image','url(/items'+g+'.webp)','important');S.setProperty('background-size','800% 1200%','important');S.setProperty('background-position',pos(j),'important');S.setProperty('background-repeat','no-repeat','important');S.setProperty('image-rendering','auto','important');
-  const a=A[KS[g-7][j]]||A[k];if(a){s.dataset.a7=a;S.setProperty('--d7',(-(Math.random()*4)).toFixed(2)+'s')}}
+  const a=A[KS[g-7][j]]||A[k];if(a){s.dataset.a7=a;S.setProperty('--d7',(-(performance.now()/1000+(i%9)*.41)).toFixed(2)+'s')}}
  function scan(r){if(!r)return;if(r.nodeType===1&&r.matches&&r.matches('span.pxi'))return paint(r);if(r.querySelectorAll)r.querySelectorAll('span.pxi:not([data-p7]):not([data-u4])').forEach(paint)}
  const st=document.createElement('style');st.textContent=`
  span.pxi[data-p7]:not([data-p7="-"]):not([data-u4]){filter:saturate(.92)}
