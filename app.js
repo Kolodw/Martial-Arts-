@@ -32242,9 +32242,9 @@ const better=k=>{const c=curIt(k);return Object.keys(S.eqInv||{}).some(id=>{cons
 const cmp=(it,k)=>{const c=curIt(k);if(!c)return'<span class="eqU">⬆️ ช่องว่าง</span>';const a=sc(c),b=sc(it);if(b===a)return'<span class="eqE">= เท่ากัน</span>';if(it.s==='fw'){return b>a?'<span class="eqU">⬆️ ระดับสูงกว่า</span>':'<span class="eqD">⬇️ ระดับต่ำกว่า</span>'}const p=Math.round((b-a)/Math.max(1,a)*100);return p>0?'<span class="eqU">⬆️ +'+p+'%</span>':'<span class="eqD">⬇️ '+p+'%</span>'};
 const seen=()=>{S.eqSeen=S.eqSeen||{};return S.eqSeen};
 const CAT=[['all','ทั้งหมด',()=>true],['acc','💍 เครื่องประดับ',it=>it.s==='acc'],['trs','🧿 ของวิเศษ',it=>it.s==='trs'],['fit','👘 ชุด',it=>it.s==='fit'],['fw','🗡️ อาวุธหลอม',it=>it.s==='fw']];
-function tile(k){let ic='',nm='— ว่าง —',on=false;if(GS.includes(k)){const g=gearOf(k);if(g){on=true;nm=g.n+(k==='weapon'||k==='armor'?(gupLv(k)?' +'+gupLv(k):''):'')}}else{const it=curIt(k);if(it){on=true;ic=it.ic;nm=it.n}}
+function tile(k){let ic='',nm='— ว่าง —',on=false,sid='';if(GS.includes(k)){const g=gearOf(k);if(g){on=true;sid=g.id;nm=g.n+(k==='weapon'||k==='armor'?(gupLv(k)?' +'+gupLv(k):''):'')}}else{const it=curIt(k);if(it){on=true;ic=it.ic;nm=it.n;sid=S.eq[k]}}
  const sel=window._eqSel===k,dot=!GS.includes(k)&&better(k);
- return '<button class="eqT'+(on?' on':'')+(sel?' sel':'')+'" onclick="eqSel(\''+k+'\')"><span class="eqTi">'+(ic||ICO(k))+'</span><span class="eqTt"><small>'+LBL(k).replace(/^\S+\s/,'')+'</small><b>'+esc(nm)+'</b></span>'+(dot?'<i class="eqDot"></i>':'')+'</button>'}
+ return '<button class="eqT'+(on?' on':'')+(sel?' sel':'')+'" onclick="eqSel(\''+k+'\')"><span class="eqTi">'+((sid&&window.itImg&&itImg(sid))||ic||ICO(k))+'</span><span class="eqTt"><small>'+LBL(k).replace(/^\S+\s/,'')+'</small><b>'+esc(nm)+'</b></span>'+(dot?'<i class="eqDot"></i>':'')+'</button>'}
 function itemRow(id,k){const it=EQI[id];if(!it)return'';const n=S.eqInv[id]||0,nw=!seen()[id];const sl=k?[k]:slotsOf(it);
  return '<div class="eqR"><div class="eqRh"><b>'+it.ic+' '+esc(it.n)+(n>1?' ×'+n:'')+'</b>'+(nw?'<span class="eqNew">✨ ใหม่</span>':'')+(sl.length===1&&sl[0]!=='fit'?' '+cmp(it,sl[0]):'')+'</div><div class="tag2">'+it.d+'</div><div class="eqRb">'+sl.map(s=>'<button class="sysb" onclick="eqPut(\''+s+'\',\''+id+'\');openEquip()">สวม'+(sl.length>1?(s==='acc1'?' ช่อง 1':' ช่อง 2'):'')+'</button>').join(' ')+' <button class="sysb" onclick="eqSell(\''+id+'\')">ขาย '+fmtM(Math.round(it.v*.4))+'</button>'+(typeof eqSalv==='function'?' <button class="sysb" onclick="eqSalv(\''+id+'\')">🔧 แยก</button>':'')+'</div></div>'}
 function panel(k){if(!k)return'';let h='<div class="eqP"><div class="eqPh"><b>'+ICO(k)+' '+LBL(k).replace(/^\S+\s/,'')+'</b><button class="sysb" onclick="eqSel(null)">ปิด</button></div>';
@@ -46385,18 +46385,25 @@ try{window.hkOpen=window.hkOpen||function(){return wNeed('hook',()=>window.hkOpe
 // 🎨 ไอคอนของในกระเป๋าแบบภาพ (items.webp 8×4) — แทน emoji ที่ตามด้วยชื่อของ ทุกจุดในเกม · ไม่มีภาพ = emoji เดิม
 try{(function(){
  const K=['hp','qi','brk','elix','cure','lpill','bpill','dew','herb','ore','jade','hide','silk','ink','core','bcore','tal','egg','fruit','mirror','phx','seal','star','void','food','gem','map','scroll','charm','wine'];
- const st=document.createElement('style');st.textContent='.ii{display:inline-block;width:1.5em;height:1.5em;vertical-align:-.42em;background:url(/items.webp) 0 0/800% 400% no-repeat;margin:0 .06em;flex:0 0 auto}';document.head.appendChild(st);
- const M={},L=[];K.forEach((k,i)=>{const I=typeof BAGIT!=='undefined'&&BAGIT[k];if(!I||!I.ic||!I.n)return;const s=I.ic+' '+I.n;M[s]={k,ic:I.ic,n:I.n,x:(i%8)/7*100,y:(i/8|0)/3*100};L.push(s)});
+ const st=document.createElement('style');st.textContent='.ii{display:inline-block;width:1.5em;height:1.5em;vertical-align:-.42em;margin:0 .06em;flex:0 0 auto}';document.head.appendChild(st);
+ const M={},L=[];K.forEach((k,i)=>{const I=typeof BAGIT!=='undefined'&&BAGIT[k];if(!I||!I.ic||!I.n)return;const s=I.ic+' '+I.n;M[s]={k,ic:I.ic,n:I.n,u:'/items.webp',c:8,r:4,i};L.push(s)});
  if(!L.length)return;L.sort((a,b)=>b.length-a.length);
- const IX={};K.forEach((k,i)=>IX[k]=i);const pos=i=>(i%8)/7*100+'% '+((i/8|0)/3*100)+'%';
- st.textContent+='.pxf i.iiB{display:block;width:32px;height:32px;background:url(/items.webp) 0 0/800% 400% no-repeat;position:relative;z-index:1}.pxf.big i.iiB{width:48px;height:48px}#modal.bgDk .bgGrid>.bagit .pxf i.iiB{width:40px;height:40px}';
- const _px=window.pxi;if(typeof _px==='function')window.pxi=function(kind,r,tint,seed,big){if(typeof seed==='string'&&IX[seed]!=null)return`<span class="pxf r${r|0}${big?' big':''}"><i class="iiB" style="background-position:${pos(IX[seed])}"></i></span>`;return _px.apply(this,arguments)};
+ // ชุดที่ 2 (items2.webp 8×6): อาวุธ เกราะ พาหนะ บ้าน ของร้านระบบ เครื่องประดับ ชุด · null = ไม่มีของตรงในเกม
+ const K2=['w1','w2','w3','w4','a1','a2','a3','m1','m2','m3','h1','h2','h3','pill','heal',null,'art','life','break','revive','ticket','furnace','body','mask','soulp','r1','r5','r6','r2','r3','r4','r9','r7','r8','t1','t4','t2','t3','o1','o2','o3','o4','o5','o6','o7',null,null,null];
+ const IX={};K.forEach((k,i)=>IX[k]=['/items.webp',i,8,4]);K2.forEach((k,i)=>{if(k&&IX[k]==null)IX[k]=['/items2.webp',i,8,6]});
+ const bgs=v=>`background:url(${v[0]}) ${(v[1]%v[2])/(v[2]-1)*100}% ${((v[1]/v[2]|0)/(v[3]-1))*100}%/${v[2]*100}% ${v[3]*100}% no-repeat`;
+ st.textContent+='.pxf i.iiB{display:block;width:32px;height:32px;position:relative;z-index:1}.pxf.big i.iiB{width:48px;height:48px}#modal.bgDk .bgGrid>.bagit .pxf i.iiB{width:40px;height:40px}';
+ const _px=window.pxi;if(typeof _px==='function')window.pxi=function(kind,r,tint,seed,big){if(typeof seed==='string'&&IX[seed]!=null)return`<span class="pxf r${r|0}${big?' big':''}"><i class="iiB" style="${bgs(IX[seed])}"></i></span>`;return _px.apply(this,arguments)};
+ window.itImg=k=>IX[k]!=null?`<i class="iiB" style="${bgs(IX[k])}"></i>`:'';st.textContent+='.eqTi:has(i.iiB){width:34px;margin:0 6px 0 -6px}.eqTi i.iiB{display:block;width:34px;height:34px}';
+ try{if(typeof EQI!=='undefined')K2.forEach((k,i)=>{const I=k&&EQI[k];if(!I||!I.ic||!I.n)return;const s2=I.ic+' '+I.n;if(M[s2])return;M[s2]={k,ic:I.ic,n:I.n,u:'/items2.webp',c:8,r:6,i};L.push(s2)});L.sort((a,b)=>b.length-a.length)}catch(e){}
+
  const RE=new RegExp(L.map(s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
  const SK=/^(SCRIPT|STYLE|TEXTAREA|INPUT|OPTION|SELECT|TITLE)$/;
- window.itIc=k=>{const s=Object.keys(M).find(x=>M[x].k===k);return s?`<i class="ii" title="${M[s].n}" style="background-position:${M[s].x}% ${M[s].y}%"></i>`:((typeof BAGIT!=='undefined'&&BAGIT[k]&&BAGIT[k].ic)||'')};
+ const sty=o=>'background:url('+o.u+') '+((o.i%o.c)/(o.c-1)*100)+'% '+(((o.i/o.c|0)/(o.r-1))*100)+'%/'+(o.c*100)+'% '+(o.r*100)+'% no-repeat';
+ window.itIc=k=>{const s=Object.keys(M).find(x=>M[x].k===k);return s?`<i class="ii" title="${M[s].n}" style="${sty(M[s])}"></i>`:((typeof BAGIT!=='undefined'&&BAGIT[k]&&BAGIT[k].ic)||'')};
  function proc(t){const v=t.nodeValue;if(!v||v.length<3)return;RE.lastIndex=0;if(!RE.test(v))return;const p=t.parentNode;if(!p||SK.test(p.nodeName)||p.isContentEditable)return;
   RE.lastIndex=0;const f=document.createDocumentFragment();let last=0,m;
-  while((m=RE.exec(v))){const o=M[m[0]];if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));const i=document.createElement('i');i.className='ii';i.title=o.n;i.style.backgroundPosition=o.x+'% '+o.y+'%';f.appendChild(i);f.appendChild(document.createTextNode(m[0].slice(o.ic.length)));last=m.index+m[0].length}
+  while((m=RE.exec(v))){const o=M[m[0]];if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));const i=document.createElement('i');i.className='ii';i.title=o.n;i.style.cssText=sty(o);f.appendChild(i);f.appendChild(document.createTextNode(m[0].slice(o.ic.length)));last=m.index+m[0].length}
   if(last<v.length)f.appendChild(document.createTextNode(v.slice(last)));p.replaceChild(f,t)}
  function walk(n){if(n.nodeType===3)return proc(n);if(n.nodeType!==1||SK.test(n.nodeName))return;const w=document.createTreeWalker(n,NodeFilter.SHOW_TEXT),a=[];let x;while((x=w.nextNode()))a.push(x);a.forEach(proc)}
  const ob=new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')proc(m.target);else m.addedNodes.forEach(walk)}});
