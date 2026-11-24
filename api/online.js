@@ -3226,6 +3226,12 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     // ผู้เล่น: id=B (ต้องผ่าน ctok ของ B) + b.to=A + b.tt=โทเคนของ A (ได้มาจากเซิร์ฟหลังยืนยัน Google) · แอดมิน: ?key=&from=&to= หรือ ?key=&name=ชื่อในลาน (หาให้เอง) · ไม่ใส่ go=1 = ดูผลก่อน
     if (a === 'idmerge') {
       const q = qOf(req), adm = isAdmKey(q.key || b.key); let from = '', to = '', go = 1, out = { ok: 1 };
+      if (adm && (q.gl || b.gl)) { // ค้นไอดีที่ผูก Google: ?a=idmerge&key=&gl=1[&e=ส่วนของอีเมลที่เห็น]
+        const f = String(q.e || b.e || '').toLowerCase(), r0 = []; let cur = '0', n = 0;
+        do { const r = await cmd('SCAN', cur, 'MATCH', 'gacc:*', 'COUNT', 500); cur = String(r[0]); const ks = r[1] || []; if (ks.length) { const vs = await cmd('MGET', ...ks); ks.forEach((k, i) => { const x = jp((vs || [])[i]); if (x && x.id && (!f || String(x.e || '').toLowerCase().includes(f))) r0.push({ id: x.id, e: x.e || '', t: x.t || 0 }) }); n += ks.length } } while (cur !== '0' && n < 200000);
+        r0.sort((x, y) => y.t - x.t); const top = r0.slice(0, 30); for (const x of top) x.guild = (await cmd('GET', 'gdu:' + x.id.slice(0, 12))) || '';
+        return res.json({ ok: 1, total: r0.length, list: top });
+      }
       if (adm) {
         go = (q.go || b.go) === '1' || b.go === 1 ? 1 : 0; from = String(q.from || b.from || ''); to = String(q.to || b.to || '');
         const nm = String(q.name || b.name || '').trim();
