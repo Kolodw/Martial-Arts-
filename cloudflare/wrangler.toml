@@ -4,6 +4,8 @@ name = "martial-arts"
 main = "worker.js"
 compatibility_date = "2025-09-01"
 compatibility_flags = ["nodejs_compat"]
+# กันไม่ให้ deploy ลบตัวแปรที่ตั้งในหน้า Cloudflare (เช่น DISCORD_CLIENT_ID)
+keep_vars = true
 
 # ไฟล์หน้าเว็บ (index.html, รูป, เพลง ฯลฯ) = โฟลเดอร์หลักของ repo · ไฟล์ที่ไม่ควรเปิดให้โหลดอยู่ใน ../.assetsignore
 [assets]
