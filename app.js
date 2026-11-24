@@ -45982,3 +45982,9 @@ const ld=()=>{try{const v=+LS.get(K,0);if(v>=1000&&v<=60000&&PRE.indexOf(v)<0)CF
 ld();
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='menu'&&!m.querySelector('[data-lenc]')){const hs=[...m.querySelectorAll('.mch15')],h=hs.find(x=>/ตั้งค่า/.test(x.textContent)),g=(h&&h.nextElementSibling&&h.nextElementSibling.matches('.mgrid')?h.nextElementSibling:m.querySelector('.mcat15 .mgrid:last-of-type'));if(g)g.insertAdjacentHTML('afterbegin',`<button class="opt" data-lenc="1" onclick="lenCustom()">⏱️ เวลาต่อปี<small>ตั้งเอง 1–60 วิ · ตอนนี้ ${fm(CFG.len)}</small></button>`)}}catch(e){}return r}}
 })()}catch(e){console.error('lenCustom',e)}
+
+// ===== ⏳ ชะตาตัดสินแทน: ตั้ง 5 วิแล้วไม่ทำงาน (เพราะ 🔒 ล็อกตัวเลือกบังอยู่และโชว์เป็น "ปิด") → ตั้งเวลาเมื่อไหร่ ปลดล็อกให้เอง + เพิ่มตัวเลือก 3/8/15/30 วิ =====
+try{
+FATE_L.splice(0,FATE_L.length,0,3,5,8,10,15,20,30);
+{const _set=LS.set;LS.set=function(k,v){const r=_set.apply(this,arguments);try{if(k==='murim_fate'&&+v>0&&LS.get('murim_chlock',0)){_set.call(LS,'murim_chlock',0);toast('🔓 ปลดล็อกตัวเลือกให้แล้ว — ชะตาจะตัดสินแทนใน '+v+' วิ');if(choice._cur&&$('modal')&&$('modal').dataset.k==='choice')choiceShow()}}catch(e){}return r}}
+}catch(e){console.error('fateSet',e)}
