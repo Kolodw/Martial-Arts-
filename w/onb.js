@@ -79,7 +79,7 @@ const OB_V=[
 const wOf=k=>OB_W.find(x=>x.k===k);
 const onTitle=()=>{const t=$$('title');return !!(t&&t.classList.contains('on'))};
 const inLife=()=>{try{return !!(S&&S.alive&&$$('game')&&$$('game').classList.contains('on'))}catch(e){return false}};
-const curW=()=>{try{const M=S&&S.mw;if(M&&M.sky)return'sky';if(M&&M.fog)return'fog';if(S&&S.sv&&S.ch==='soul')return'soul';if(S&&S.beastMode)return'beast';if(M)return'mw';return S&&S.xian?'xian':'murim'}catch(e){return'murim'}};
+const curW=()=>{try{const M=S&&S.mw;if(M&&M.sky)return'sky';if(M&&M.fog)return'fog';if(S&&(S.ch==='soul'||S.sv&&S.ch==='soul'))return'soul';if(S&&(S.ch==='regress'||S.ch==='loop'))return'loop';if(S&&S.beastMode)return'beast';if(M)return'mw';return S&&S.xian?'xian':'murim'}catch(e){return'murim'}};
 
 // ───────── ไปเกิด ─────────
 function goBorn(k){
@@ -131,7 +131,7 @@ const Q=[
 const QS=()=>LSG('murim_obq',{d:{},off:0});
 const qSave=s=>LSS('murim_obq',s);
 function qDone(id){try{const s=QS();if(s.off||s.d[id])return;s.d[id]=1;qSave(s);const n=Q.filter(x=>s.d[x[0]]).length;
- try{toast(n>=Q.length?'🎓 ครบแล้ว! คุณพร้อมเล่นเองแล้ว':`✅ ทำแล้ว ${n}/${Q.length}`)}catch(e){}
+ try{toast(n>=Q.length?'👴 ครบแล้ว! ข้าสอนหมดแล้ว คุณพร้อมเล่นเองแล้ว':`👴 ${window._obPraise?window._obPraise():'ดีมาก'} (${n}/${Q.length})`)}catch(e){}
  if(n>=Q.length){s.off=1;s.cert=1;qSave(s);try{log('🎓 ผ่านภารกิจมือใหม่ครบทั้งหมด ได้ตราผู้เริ่มต้น','up')}catch(e){}}
  qPaint()}catch(e){}}
 function qShow(){try{const s=QS();if(s.off)return false;if(!inLife())return false;if((S.age|0)>14&&Object.keys(s.d).length===0)return false;return true}catch(e){return false}}
@@ -191,6 +191,82 @@ hookAfter('toTitle',()=>{const b=$$('obQb');if(b)b.remove();const c=$$('obQc');i
 try{if(typeof SYS_GUIDE!=='undefined'&&!SYS_GUIDE.some(g=>g.t==='เลือกทางเล่น')){
  SYS_GUIDE.unshift({s:'base',ic:'🧭',t:'เลือกทางเล่น',d:'ตอบคำถามข้อเดียว แล้วเกมจะแนะนำโลกที่เหมาะกับสไตล์ของคุณ',go:'obPath'},{s:'base',ic:'🗺️',t:'ทุกโลก ทุกโหมด',d:'อ่านสั้นๆ ว่าแต่ละโลกเล่นอะไร เป้าหมายคืออะไร และปีแรกควรทำอะไร',go:'obWorlds'})}}catch(e){}
 
+// ───────── 👴 ปู่สอน เวอร์ชันตามโลก/โหมด ─────────
+const coOff=()=>!!LSG('murim_coOff',0);
+const GP={
+ murim:'ข้าเป็นผู้เฒ่าที่จะพาคุณเดินในยุทธภพ ชีวิตจะเดินไปเองทีละปี คุณมีหน้าที่แค่ตัดสินใจเมื่อเกมถาม',
+ xian:'ยินดีต้อนรับสู่โลกผู้บำเพ็ญ ข้าจะคอยบอกทางเท่าที่จำเป็น ที่นี่ชีวิตยาวนาน ไม่ต้องรีบร้อน',
+ mw:'ที่นี่คือยุคปัจจุบัน ชีวิตแบบคนธรรมดา มีเรียน มีงาน มีเงินต้องดูแล ข้าจะบอกเท่าที่คุณต้องรู้',
+ soul:'ทวีปนี้ทุกคนมีวิญญาณยุทธ์ติดตัว ข้าจะอยู่ข้างๆ ตอนถึงวันปลุก',
+ loop:'คุณได้โอกาสที่สองแล้ว จำสิ่งที่เคยเกิดไว้ให้ดี ข้าจะช่วยเตือนเท่าที่ทำได้',
+ beast:'เริ่มจากตัวเล็กๆ ในป่า ไม่ต้องกลัว ข้าจะบอกว่าอะไรอันตราย',
+ sky:'หลังดาวตกโลกเปลี่ยนไปหมดแล้ว ข้าจะพาคุณรู้จักนครกำแพงก่อน',
+ fog:'หมอกที่นี่ไม่เคยจาง และคดีก็ไม่เคยหมด ตามข้ามาแล้วจะไม่หลงทาง'
+};
+function startSteps(){
+ const k=curW(),w=wOf(k)||OB_W[0],mode=S&&S.ch,mm={hell:1,short:2,junk:3}[mode];
+ const pre=[{t:`${w.ic} ${w.n}`,d:GP[k]||GP.murim}];
+ const mid=[{t:'โลกนี้เล่นอะไร',d:`${w.do}<br><br><b>เป้าหมาย:</b> ${w.goal}`},{t:'ปีแรกๆ ทำอะไรดี',d:`${w.first}<br><br>อยากรู้ว่าตอนนี้ระดับไหน เปิด <b>☰ เมนู → 📜 คัมภีร์</b> ได้ทุกเมื่อ`,btn:['🗺️ อ่านเรื่องโลกนี้',`obWorlds('${k}')`]}];
+ return{pre,mid}}
+function wrapCo(){try{
+ const L=window._LESSON;if(!L||!L.start||L.start._obBase)return;
+ L.start._obBase=L.start.s.slice();
+ OB_W.filter(w=>w.k==='sky'||w.k==='fog').forEach(w=>{L['w_'+w.k]={t:`โลก${w.n}`,s:[{t:`${w.ic} ${w.n}`,d:`${GP[w.k]}<br><br>${w.do}`},{t:'เป้าหมาย',d:`${w.goal}<br><br>${w.first}`,btn:['🗺️ อ่านเรื่องโลกนี้',`obWorlds('${w.k}')`]}]}});
+ L.duel={t:'การต่อสู้',s:[{t:'⚔️ นี่คือการต่อสู้',d:'ดูท่าของคู่ต่อสู้แล้วเลือกท่าที่เหมาะ ไม่ต้องรีบ เกมหยุดรอคุณอยู่ · แพ้ก็ไม่ได้แปลว่าชีวิตจบเสมอไป แต่ถ้าอีกฝ่ายแกร่งกว่ามาก การถอยคือทางที่ฉลาด'}]};
+ L.realm={t:'คัมภีร์',s:[{t:'📜 คัมภีร์ของโลกนี้',d:'หน้านี้บอกว่าตอนนี้อยู่ขั้นไหน ขั้นต่อไปต้องทำอะไร และขึ้นแล้วได้อะไร · ถ้าติดอยู่ไม่รู้จะไปต่อทางไหน มาเปิดดูหน้านี้ก่อนเสมอ'}]};
+ L.danger={t:'ข้อเสี่ยง',s:[{t:'⚠️ ระวังนะ',d:'ตัวเลือกนี้มีทางที่อาจถึงตาย ถ้าไม่แน่ใจ กด <b>ℹ️</b> ดูรายละเอียดก่อน หรือ <b>▾ ย่อไว้ก่อน</b> แล้วไปดูกระเป๋ากับสถานะ พอพร้อมค่อยกลับมาเลือก'}]};
+try{if(!LSG('murim_obvet',0)){LSS('murim_obvet',1);if((LSG('murim_legacy',[])||[]).length>=5)['w_sky','w_fog','duel','realm','danger'].forEach(coMark)}}catch(e){}
+}catch(e){console.error('obCo',e)}}
+function hookCo(){try{
+ wrapCo();
+ const o=window.coStart;if(typeof o!=='function'||o._ob)return;
+ const w=function(id,force){
+  try{
+   if(coOff()&&!force)return;
+   if(id==='start'&&window._LESSON&&window._LESSON.start&&S){const L=window._LESSON.start,b=L._obBase||L.s,st=startSteps();
+    const i=b.findIndex(x=>x.sel==='#menuBtn');const head=b.slice(0,i<0?b.length:i),tail=i<0?[]:b.slice(i);
+    L.s=st.pre.concat(head,st.mid,tail);}
+  }catch(e){console.error(e)}
+  return o.apply(this,arguments)};
+ w._ob=1;window.coStart=w;
+}catch(e){console.error('hookCo',e)}}
+hookCo();setTimeout(hookCo,1500);setTimeout(hookCo,5000);
+
+// ปู่โผล่ตามจังหวะ: โลกใหม่ · โหมดพิเศษ · ครั้งแรกที่ต่อสู้ / เปิดคัมภีร์ / เจอตัวเลือกเสี่ยง
+function coLater(id,ms){try{if(coOff()||coSeen(id))return;setTimeout(()=>{try{if(coOff()||coSeen(id))return;if(typeof coStart==='function')coStart(id,true)}catch(e){}},ms||600)}catch(e){}}
+hookAfter('passYear',()=>{try{if(!S||!S.alive||(S.age|0)<2||coOff())return;if(typeof coCan==='function'&&!coCan())return;
+ const k=curW();
+ if(!coSeen('start'))return;
+ if((k==='sky'||k==='fog')&&!coSeen('w_'+k)){coStart('w_'+k);return}
+}catch(e){}});
+hook('duel',()=>{if(!coSeen('duel'))coLater('duel',900)});
+hookAfter('openRealm',()=>{if(!coSeen('realm'))coLater('realm',700)});
+
+// ⚠️ แถบเตือนเมื่อมีตัวเลือกที่เสี่ยงตาย
+const RISK=/เสี่ยงตาย|อาจตาย|ถึงตาย|ตายได้|โอกาสตาย|เสี่ยงชีวิต|เสี่ยงสูง/;
+hookAfter('choiceShow',()=>{try{const c=choice._cur,m=$$('modal');if(!c||!m||m.dataset.k!=='choice'||m.querySelector('.obWarn'))return;
+ if(!c.opts.some(o=>o&&RISK.test(String(o.t||'')+' '+String(o.s||''))))return;
+ const p=m.querySelector('p');if(!p)return;
+ p.insertAdjacentHTML('afterend','<div class="obWarn">⚠️ <span>มีทางเลือกที่เสี่ยงตาย ถ้าไม่แน่ใจ ลองกด ℹ️ ดูรายละเอียดก่อน</span></div>');
+ if(!coSeen('danger'))coLater('danger',700)}catch(e){}});
+
+// 😴 ถ้าหยุดเกมไว้นานๆ ปู่ถามไถ่ (ไม่เกิน 3 ครั้งต่อชีวิต)
+let idle=0;
+setInterval(()=>{try{if(!inLife()||coOff()||document.hidden){idle=0;return}
+ if(!(typeof paused!=='undefined'&&paused)||modalOpen||choice._cur||(window._CO&&window._CO.id)){idle=0;return}
+ idle+=5;if(idle<45||(S._obN|0)>=3||(S.age|0)>30)return;
+ idle=0;S._obN=(S._obN|0)+1;
+ const L=['ยังอยู่ไหม? กด ▶ ให้ชีวิตเดินต่อได้เลย','ข้านั่งรออยู่ กดเล่นต่อเมื่อพร้อมนะ','ไม่แน่ใจจะทำอะไร? เปิด ☰ เมนู แล้วลองดู 📘 คู่มือ'];
+ if(typeof island==='function'&&typeof islOn==='function'&&islOn())island({big:1,key:'obIdle',ic:'👴',h:'ปู่ถาม',t:L[(S._obN-1)%3],kind:'info',ms:5500});else toast('👴 '+L[(S._obN-1)%3])}catch(e){}},5000);
+
+// เสียงปู่ตอนผ่านภารกิจ
+try{const praise=['เก่งมาก!','ดีแล้ว!','ถูกต้องเลย','เข้าใจเร็วนี่','ไปต่อได้อีกข้อ'];window._obPraise=()=>praise[Math.floor(Math.random()*praise.length)]}catch(e){}
+
+// ปุ่มปิด/เปิดปู่ (หน้าบทเรียน + ข้างปู่ตอนสอน)
+window._obCoOff=function(v){LSS('murim_coOff',v?1:0);try{const c=$$('coach');if(c&&v&&typeof coEnd==='function')coEnd(true)}catch(e){}toast(v?'👴 ปู่จะไม่โผล่เองอีก เปิดใหม่ได้ที่หน้า 🎓 บทเรียน':'👴 ปู่กลับมาช่วยแล้ว')};
+hookAfter('openLessons',()=>{try{const m=$$('modal');if(!m||m.dataset.k!=='lessons'||m.querySelector('.obCoT'))return;const off=coOff();m.insertAdjacentHTML('beforeend',`<button class="obGh obCoT" style="width:100%;margin-top:8px" onclick="_obCoOff(${off?0:1});openLessons()">${off?'👴 เปิดให้ปู่ช่วยสอนเอง':'🔇 ปิดไม่ให้ปู่โผล่มาเอง'}</button>`)}catch(e){}});
+hookAfter('coStep',()=>{setTimeout(()=>{try{const n=document.querySelector('#coach .cnav');if(!n||document.querySelector('#coach .obCoX'))return;const b=document.createElement('button');b.className='obCoX';b.textContent='ไม่ต้องสอนแล้ว';b.onclick=()=>_obCoOff(1);n.parentNode.appendChild(b)}catch(e){}},80)});
+
 // ───────── สไตล์ ─────────
 const st=document.createElement('style');st.textContent=`
 .obHd{text-align:center;margin:2px 0 10px}.obHd h3{margin:2px 0 4px}.obHd p{margin:0;font-size:14px;opacity:.8;line-height:1.5}.obIc{font-size:44px;line-height:1.1}
@@ -224,6 +300,8 @@ const st=document.createElement('style');st.textContent=`
 #obQc{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 100px);z-index:9000;width:min(86vw,320px);padding:10px 12px;border-radius:16px;border:2px solid #e8b54a;background:rgba(20,14,30,.95);color:#f5ead0;box-shadow:0 8px 28px #000a}
 .obQh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.obQh button{font:inherit;font-size:12px;background:none;border:0;color:#bba882;text-decoration:underline;cursor:pointer}
 .obQr{display:flex;gap:9px;align-items:flex-start;padding:6px 0;border-top:1px solid #ffffff18}.obQr i{font-style:normal;font-size:18px;width:22px;text-align:center}.obQr b{display:block;font-size:13.5px}.obQr small{display:block;opacity:.7;font-size:12px;line-height:1.4}.obQr.ok{opacity:.55}.obQr.ok b{text-decoration:line-through}
+.obWarn{margin:6px 0;padding:8px 12px;border-radius:12px;border:1px solid #ff8a5a;background:rgba(255,120,70,.14);font-size:13.5px;line-height:1.5;display:flex;gap:8px;align-items:flex-start}
+#coach .obCoX{display:block;margin:8px auto 0;background:none;border:0;font:inherit;font-size:12px;color:inherit;opacity:.6;text-decoration:underline;cursor:pointer}
 `;document.head.appendChild(st);
 
 setTimeout(()=>{titleBtns();qPaint()},400);
