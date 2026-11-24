@@ -612,7 +612,7 @@ async function uaGhostEnd(id, b, now) {
   if (ops.length) await pipe(ops);
 }
 const OWP = { r_soulgod: [3500, 'g'], r_abyss: [3000, 'e'], r_prince: [2000, 'g'], r_suit: [1200, 'e'], r_hunterS: [2500, 'g'], r_idol: [1500, 'g'], r_astro: [2000, 'g'], r_cyber: [2500, 'e'], r_galemp: [5000, 'g'], r_dragon: [3000, 'g'], r_moon: [2000, 'e'], r_blood: [3500, 'e'], r_cloud: [1500, 'g'], r_star: [4000, 'g'], r_phoenix: [3000, 'g'], r_heaven: [5000, 'g'], r_asura: [4000, 'e'] }; // 👘 ชุดหายากตามโลก (ต้องตรงกับ BLOCK 106 ใน app.js)
-const SENS_A = new Set(['comp', 'svlg', 'gdw', 'owbuy', 'owget', 'kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
+const SENS_A = new Set(['comp', 'svlg', 'gdw', 'owbuy', 'owget', 'kbspend', 'kbget', 'lkuse', 'rruse', 'rrtake', 'rrback', 'rrclaim', 'rrearn', 'kbdep', 'kbimp', 'cosclaim', 'cosset', 'vipsay', 'vipttl', 'vipinc', 'vipwall', 'gunlink', 'save', 'profack', 'psput', 'say', 'lifepub', 'lbclaim', 'lawclaim', 'paclaim', 'pabid', 'oneroll', 'mgput', 'sw', 'gpray', 'profile', 'sp', 'nv', 'wtr', 'wpool', 'dcstat', 'dcauth', 'dcunlink']); // ไม่ใส่ life/live: การส่งชีวิตขึ้นทำเนียบต้องไม่พังเพราะรหัสเครื่องไม่ตรง
 
 function uaMeta(req, now) {
   const ua = String(req.headers['user-agent'] || '');
@@ -1126,7 +1126,7 @@ module.exports = async (req, res) => {
       const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'admin' });
       const tid = String(q.id || b.id || ''), tr = Math.max(1, Math.min(3, +(q.t || b.t) || 1)), dy = Math.round(+(q.d || b.d) || 0);
       if (!okId(tid)) return res.json({ err: 'id' });
-      const v = await vipAdd(tid, tr, Math.abs(dy), dy < 0 ? -1 : 1);
+      const v = await vipAdd(tid, tr, Math.abs(dy), dy < 0 ? -1 : 1); try { await dcSoft(tid) } catch (e) { }
       if (tr === 3 && dy >= 0 && !(await cmd('HEXISTS', 'vipu', tid))) { const o = Math.max(0, Math.floor(+(q.o || b.o) || 0)) || (+(await cmd('INCR', 'vipuN')) || 1); await cmd('HSET', 'vipu', tid, JSON.stringify({ n: clean(String(q.n || b.n || ''), 24), o, t: Date.now() })) }
       return res.json({ ok: 1, vip: vipOut(v) });
     }
@@ -1368,7 +1368,7 @@ module.exports = async (req, res) => {
         let pr = null; if (cur.st === 'ok' && was !== 'ok' && okId(cur.fid)) { await cmd('SADD', 'supok', cur.fid); if (String(qOf(req).ty || '1') === '1' && !cur.rp) { const x = '🙏 ได้รับแล้ว ขอบคุณมากครับ! เงินสนับสนุนจะเอาไปพัฒนาเกมต่อ 💛'; cur.rp = { x, t: now, auto: 1 }; pr = await withCap(noteTo(cur.fid, { t: '💬 ผู้พัฒนาตอบคุณ', b: x, u: '/?go=support' }), 4000) } }
         try { if (cur.lk && LK_PK[cur.lk] && okId(cur.fid)) { if (cur.st === 'ok' && !cur.lg) { cur.lg = LK_PK[cur.lk][1]; await cmd('INCRBY', 'lkc:' + cur.fid, cur.lg) } else if (cur.st !== 'ok' && cur.lg) { const left = +(await cmd('DECRBY', 'lkc:' + cur.fid, cur.lg)) || 0; if (left < 0) await cmd('SET', 'lkc:' + cur.fid, 0); cur.lg = 0 } } } catch (e) {}
         try { if (cur.pk && RR_PK[cur.pk] && okId(cur.fid)) { if (cur.st === 'ok' && !cur.rg) { cur.rg = RR_PK[cur.pk][1]; await cmd('INCRBY', 'rrc:' + cur.fid, cur.rg) } else if (cur.st !== 'ok' && cur.rg) { const left = +(await cmd('DECRBY', 'rrc:' + cur.fid, cur.rg)) || 0; if (left < 0) await cmd('SET', 'rrc:' + cur.fid, 0); cur.rg = 0 } } } catch (e) {}
-        try { if (cur.vp && VIP_PK[cur.vp] && okId(cur.fid)) { const vx = VIP_PK[cur.vp]; if (cur.st === 'ok' && !cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], 1); cur.vg = 1; if (vx[1] === 3 && !(await cmd('HEXISTS', 'vipu', cur.fid))) { const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', cur.fid, JSON.stringify({ n: clean(String(cur.n || ''), 24), o, t: Date.now() })) } } else if (cur.st === 'ok' && cur.vg && vx[1] === 3) { await vipHeal(cur.fid) } else if (cur.st !== 'ok' && cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], -1); cur.vg = 0; if (vx[1] === 3) await cmd('HDEL', 'vipu', cur.fid) } } } catch (e) {}
+        try { if (cur.vp && VIP_PK[cur.vp] && okId(cur.fid)) { const vx = VIP_PK[cur.vp]; if (cur.st === 'ok' && !cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], 1); cur.vg = 1; if (vx[1] === 3 && !(await cmd('HEXISTS', 'vipu', cur.fid))) { const o = +(await cmd('INCR', 'vipuN')) || 1; await cmd('HSET', 'vipu', cur.fid, JSON.stringify({ n: clean(String(cur.n || ''), 24), o, t: Date.now() })) } } else if (cur.st === 'ok' && cur.vg && vx[1] === 3) { await vipHeal(cur.fid) } else if (cur.st !== 'ok' && cur.vg) { await vipAdd(cur.fid, vx[1], vx[2], -1); cur.vg = 0; if (vx[1] === 3) await cmd('HDEL', 'vipu', cur.fid) } } } catch (e) {} try { if (cur.vp && VIP_PK[cur.vp] && okId(cur.fid)) await dcSoft(cur.fid) } catch (e) { }
         if (cur.st !== 'ok' && was === 'ok' && okId(cur.fid)) { const others = ((await cmd('HVALS', 'suppay')) || []).map(jp).filter(z => z && z.fid === cur.fid && z.i !== cur.i && z.st === 'ok'); if (!others.length) await cmd('SREM', 'supok', cur.fid) }
         await cmd('HSET', 'suppay', sid, JSON.stringify(cur)); return res.json({ ok: 1, push: pr }) } }
       return res.json({ ok: 1 });
@@ -3181,6 +3181,51 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (!cur || cur.id === id) { await pipe([['SET', gk, JSON.stringify({ id, tk: tk || (cur && cur.tk) || '', t: now, e: em })], ['SET', 'gof:' + id, gk]]); return res.json({ ok: 1, linked: 1, e: em, same: cur ? 1 : 0 }) }
       return res.json({ ok: 1, other: { id: cur.id, tk: cur.tk || '' }, e: em });
     }
+    // ---- 🎮 Discord ผูกบัญชี (OAuth2 identify) → ยศ VIP อัตโนมัติ ----
+    if (a === 'dcstat') {
+      if (!okId(id)) return res.json({ on: 0 });
+      const did = dcOn() ? await cmd('GET', 'dc:' + id) : '';
+      return res.json({ on: dcOn() ? 1 : 0, l: did ? String(did).slice(-4) : '' });
+    }
+    if (a === 'dcauth') {
+      if (!dcOn() || !okId(id)) return res.status(503).json({ err: 'off' });
+      const ts = Date.now(), st = id + '.' + ts + '.' + dcSign(id, ts);
+      return res.json({ url: 'https://discord.com/oauth2/authorize?response_type=code&scope=identify&prompt=consent&client_id=' + encodeURIComponent(process.env.DISCORD_CLIENT_ID) + '&redirect_uri=' + encodeURIComponent(dcRedirect()) + '&state=' + encodeURIComponent(st) });
+    }
+    if (a === 'dccb') {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.setHeader('Cache-Control', 'no-store');
+      const q = qOf(req);
+      try {
+        if (!dcOn()) return res.status(200).send(dcPage('ยังไม่เปิดใช้งาน', 0));
+        const sp = String(q.state || '').split('.'), uid = sp[0] || '', ts = +sp[1] || 0;
+        if (!okId(uid) || !ts || Date.now() - ts > 600e3 || sp[2] !== dcSign(uid, ts) || !q.code) return res.status(200).send(dcPage('ลิงก์หมดอายุหรือไม่ถูกต้อง', 0, '<p>กลับไปที่เกมแล้วกด “ผูก Discord” ใหม่อีกครั้ง</p>'));
+        const tr = await fetch('https://discord.com/api/v10/oauth2/token', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: process.env.DISCORD_CLIENT_ID, client_secret: process.env.DISCORD_CLIENT_SECRET, grant_type: 'authorization_code', code: String(q.code), redirect_uri: dcRedirect() }) });
+        const tj = await tr.json().catch(() => ({})); if (!tj.access_token) return res.status(200).send(dcPage('ผูกไม่สำเร็จ', 0, '<p>ลองใหม่อีกครั้ง</p>'));
+        const ur = await fetch('https://discord.com/api/v10/users/@me', { headers: { Authorization: 'Bearer ' + tj.access_token } });
+        const uj = await ur.json().catch(() => ({})), did = String(uj.id || ''); if (!/^\d{15,25}$/.test(did)) return res.status(200).send(dcPage('อ่านบัญชี Discord ไม่ได้', 0));
+        const owner = await cmd('GET', 'dcr:' + did);
+        if (owner && owner !== uid) return res.status(200).send(dcPage('บัญชี Discord นี้ผูกกับผู้เล่นอื่นแล้ว', 0, '<p>ถ้าเป็นบัญชีของคุณ ให้ทีมงานช่วยตรวจสอบ</p>'));
+        const old = await cmd('GET', 'dc:' + uid); if (old && old !== did) { await dcSync(uid, 1).catch(() => { }); await cmd('DEL', 'dcr:' + old) }
+        await pipe([['SET', 'dc:' + uid, did], ['SET', 'dcr:' + did, uid], ['SADD', 'dcall', uid]]);
+        const r = await dcSync(uid).catch(() => ({ err: 1 }));
+        if (r.notin) return res.status(200).send(dcPage('ผูกบัญชีแล้ว แต่ยังไม่ได้อยู่ในเซิร์ฟเวอร์ Discord', 1, '<p>เข้าเซิร์ฟเวอร์ที่ลิงก์นี้ ยศ VIP จะเข้าให้เองภายในวันถัดไป หรือกลับมากด “ผูก Discord” อีกครั้ง</p><p><a href="' + DC_INVITE + '">เข้าเซิร์ฟเวอร์ Discord</a></p>'));
+        return res.status(200).send(dcPage(r.tier ? 'ผูกบัญชีสำเร็จ ได้ยศ VIP แล้ว' : 'ผูกบัญชีสำเร็จ', 1, r.tier ? '' : '<p>ยังไม่มี VIP ในบัญชีนี้ เมื่อเติมแล้วยศจะเข้าให้อัตโนมัติ</p>'));
+      } catch (e) { return res.status(200).send(dcPage('เกิดข้อผิดพลาด ลองใหม่อีกครั้ง', 0)) }
+    }
+    if (a === 'dcunlink') {
+      if (!okId(id)) return res.json({ ok: 0 });
+      const did = await cmd('GET', 'dc:' + id);
+      if (did) { try { await withCap(dcSync(id, 1).catch(() => { }), 4000) } catch (e) { } await pipe([['DEL', 'dc:' + id], ['DEL', 'dcr:' + did], ['SREM', 'dcall', id]]) }
+      return res.json({ ok: 1 });
+    }
+    if (a === 'dcsync') { // ⏱️ cron รายวัน: ปรับยศของทุกคนที่ผูกไว้ให้ตรงกับ VIP (เอายศออกเมื่อหมดอายุ)
+      const au = String(req.headers['authorization'] || ''), cs = process.env.CRON_SECRET || '';
+      if (!(cs && au === 'Bearer ' + cs) && !isAdmKey(qOf(req).key || b.key)) return res.status(403).json({ err: 'forbidden' });
+      if (!dcOn()) return res.json({ ok: 0, why: 'off' });
+      const ids = ((await cmd('SMEMBERS', 'dcall')) || []).slice(0, 500); let ch = 0, nin = 0, er = 0;
+      for (const u of ids) { try { const r = await dcSync(u); ch += r.ch || 0; if (r.notin) nin++; if (r.err) er++ } catch (e) { er++ } }
+      return res.json({ ok: 1, n: ids.length, changed: ch, notin: nin, err: er });
+    }
     if (a === 'gunlink') { const gk = await cmd('GET', 'gof:' + id); if (gk) { const cur = jp(await cmd('GET', gk)); if (cur && cur.id === id) await cmd('DEL', gk) } await cmd('DEL', 'gof:' + id); return res.json({ ok: 1 }) }
     if (a === 'jserr') {
       if (!okId(id)) return res.json({ ok: 0 });
@@ -4216,6 +4261,41 @@ module.exports.payGrant = async (uid, pk, name) => {
   return P;
 };
 
+// ---- 🎮 Discord: ผูกบัญชีผู้เล่นกับ Discord → ให้/เอายศ VIP ในเซิร์ฟเวอร์อัตโนมัติ ----
+// ต้องตั้ง env: DISCORD_BOT_TOKEN · DISCORD_CLIENT_ID · DISCORD_CLIENT_SECRET (ไม่ตั้ง = ปิดฟีเจอร์ ไม่กระทบการซื้อ/VIP)
+// ไม่บล็อกการจ่ายเงิน: ทุกจุดเรียกแบบ try/catch + withCap
+const DC_GUILD = process.env.DISCORD_GUILD_ID || '1574695520235159572';
+const DC_ROLE = { 1: '1574706027943825449', 2: '1574711355494375485', 3: '1574711356689481788' }; // 💎 VIP · VIP+ · VIP MAX
+const DC_INVITE = process.env.DISCORD_INVITE || 'https://discord.gg/NfvvHwZsHj';
+const dcOn = () => !!(process.env.DISCORD_BOT_TOKEN && process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET);
+const dcRedirect = () => process.env.DISCORD_REDIRECT || 'https://www.1inanovel.com/api/online?a=dccb';
+const dcTier = v => { const t = Date.now(); if (!v) return 0; if (v.u) return 3; if ((+v.e2 || 0) > t) return 2; if ((+v.e1 || 0) > t) return 1; return 0 };
+async function dcApi(method, path, body) {
+  for (let i = 0; i < 2; i++) {
+    const r = await fetch('https://discord.com/api/v10' + path, { method, headers: { Authorization: 'Bot ' + process.env.DISCORD_BOT_TOKEN, 'Content-Type': 'application/json', 'User-Agent': 'DiscordBot (1inanovel, 1.0)' }, body: body ? JSON.stringify(body) : undefined });
+    if (r.status === 429) { let w = 1; try { w = (await r.json()).retry_after || 1 } catch { } await new Promise(z => setTimeout(z, Math.min(3, w) * 1000 + 100)); continue }
+    let j = null; try { j = await r.json() } catch { }
+    return { status: r.status, json: j };
+  }
+  return { status: 429, json: null };
+}
+// ปรับยศ VIP ของคนนี้ให้ตรงกับสิทธิ์ในเกม (ระดับสูงสุดที่ยังไม่หมดอายุ) · force0 = ถอดทุกยศ (ตอนเลิกผูก)
+async function dcSync(uid, force0) {
+  if (!dcOn() || !okId(uid)) return { off: 1 };
+  const did = await cmd('GET', 'dc:' + uid); if (!did) return { none: 1 };
+  const tier = force0 ? 0 : dcTier(jp(await cmd('GET', 'vip:' + uid)));
+  const m = await dcApi('GET', `/guilds/${DC_GUILD}/members/${did}`);
+  if (m.status === 404) return { notin: 1 }; if (m.status !== 200) return { err: m.status };
+  const have = new Set((m.json && m.json.roles) || []); let ch = 0;
+  for (const t of [1, 2, 3]) {
+    const r = DC_ROLE[t], want = t === tier, base = `/guilds/${DC_GUILD}/members/${did}/roles/${r}`;
+    if (want && !have.has(r)) { await dcApi('PUT', base); ch++ } else if (!want && have.has(r)) { await dcApi('DELETE', base); ch++ }
+  }
+  return { ok: 1, tier, ch };
+}
+const dcSoft = uid => withCap(dcSync(uid).catch(() => ({ err: 1 })), 4000);
+const dcSign = (uid, ts) => crypto.createHmac('sha256', process.env.DISCORD_CLIENT_SECRET || 'x').update(uid + '.' + ts).digest('hex').slice(0, 32);
+const dcPage = (t, ok, more) => `<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>ผูก Discord</title><style>body{font-family:system-ui,sans-serif;background:#16131c;color:#eee;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0;padding:16px}.c{max-width:420px;text-align:center;background:#211d2a;border-radius:14px;padding:24px}h1{font-size:20px}a{color:#8fa4ff}</style></head><body><div class="c"><h1>${ok ? '✅' : '⚠️'} ${t}</h1>${more || ''}<p><a href="/">กลับไปที่เกม</a></p></div></body></html>`;
 // ประกาศการซื้อด้วยเงินจริงลงแชท (แบนเนอร์ตามระดับราคา) · เก็บ 30 รายการล่าสุด
 const EVN = { f_e1: 'กระทงใบตอง', f_e4: 'พญานาคเฝ้าท่า', t_e1: 'ฉายาผู้ปล่อยโคม', t_e4: 'ฉายานาคาเฝ้าท่า', c_e1: 'ธีมริมน้ำคืนเพ็ญ', c_e4: 'ธีมท่าน้ำนาคา' };
 const EVBN = { evb1: 'ชุดผู้ปล่อยโคม', evb2: 'ชุดพญานาค' };
@@ -4238,5 +4318,7 @@ module.exports.payGrant = async (uid, pk, name, an) => {
   } catch { }
   return P;
 };
+const _pgDc = module.exports.payGrant;
+module.exports.payGrant = async (uid, pk, name, an) => { const P = await _pgDc(uid, pk, name, an); try { if (P && P.kind === 'vip' && okId(uid)) await dcSoft(uid) } catch { } return P };
 module.exports.isAdm = isAdmKey;
 module.exports.cmd = cmd; module.exports.okId = okId; module.exports.clean = clean; module.exports.pipe = pipe;
