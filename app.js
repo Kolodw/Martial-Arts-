@@ -46391,10 +46391,15 @@ try{(function(){
  // ชุดที่ 2 (items2.webp 8×6): อาวุธ เกราะ พาหนะ บ้าน ของร้านระบบ เครื่องประดับ ชุด · null = ไม่มีของตรงในเกม
  const K2=['w1','w2','w3','w4','a1','a2','a3','m1','m2','m3','h1','h2','h3','pill','heal',null,'art','life','break','revive','ticket','furnace','body','mask','soulp','r1','r5','r6','r2','r3','r4','r9','r7','r8','t1','t4','t2','t3','o1','o2','o3','o4','o5','o6','o7',null,null,null];
  const IX={};K.forEach((k,i)=>IX[k]=['/items.webp',i,8,4]);K2.forEach((k,i)=>{if(k&&IX[k]==null)IX[k]=['/items2.webp',i,8,6]});
- const bgs=v=>`background:url(${v[0]}) ${(v[1]%v[2])/(v[2]-1)*100}% ${((v[1]/v[2]|0)/(v[3]-1))*100}%/${v[2]*100}% ${v[3]*100}% no-repeat`;
+ // ✨ อนิเมชันตามความหายาก (ไม่มีไฟล์เพิ่ม · CSS ล้วน) c=นิ่ง r=เรือง e=เรือง+ลอย l=ลอย+ประกาย m=ลอย+วาบ+ประกายไฟ d=หมอกมาร y=ระบบ
+ const QR={'/items.webp':'ccelcerrccrcccreellrmmmmcrrecr','/items2.webp':'crelcelcrecrerreeeelrleeecrcreerllreelccrrrelcel','/items3.webp':'rrrrrrrcccccccccddddccddyyyyyyyyyycccccccccrrell'};
+ const QC={r:'qa1',e:'qa2',l:'qa3',m:'qa4',d:'qad',y:'qay'};
+ const QA=(u,i)=>QC[(QR[u]||'')[i]]||'';
+ const ST=(u,i,c,r)=>`--u:url(${u});--p:${(i%c)/(c-1)*100}% ${((i/c|0)/(r-1))*100}%;--s:${c*100}% ${r*100}%`;
+ const bgs=v=>ST(v[0],v[1],v[2],v[3]);
  st.textContent+='.pxf i.iiB{display:block;width:32px;height:32px;position:relative;z-index:1}.pxf.big i.iiB{width:48px;height:48px}#modal.bgDk .bgGrid>.bagit .pxf i.iiB{width:40px;height:40px}';
- const _px=window.pxi;if(typeof _px==='function')window.pxi=function(kind,r,tint,seed,big){if(typeof seed==='string'&&IX[seed]!=null)return`<span class="pxf r${r|0}${big?' big':''}"><i class="iiB" style="${bgs(IX[seed])}"></i></span>`;return _px.apply(this,arguments)};
- window.itImg=k=>IX[k]!=null?`<i class="iiB" style="${bgs(IX[k])}"></i>`:'';st.textContent+='.eqTi:has(i.iiB){width:30px;margin-right:4px}.eqTi i.iiB{display:block;width:30px;height:30px}h3 .ii,h4 .ii{width:1.25em;height:1.25em;vertical-align:-.25em}.tag .ii{width:1.3em;height:1.3em;vertical-align:-.35em;margin:-.2em .15em -.2em -.1em}';
+ const _px=window.pxi;if(typeof _px==='function')window.pxi=function(kind,r,tint,seed,big){if(typeof seed==='string'&&IX[seed]!=null)return`<span class="pxf r${r|0}${big?' big':''}"><i class="iiB ${QA(IX[seed][0],IX[seed][1])}" style="${bgs(IX[seed])}"></i></span>`;return _px.apply(this,arguments)};
+ window.itImg=k=>IX[k]!=null?`<i class="iiB ${QA(IX[k][0],IX[k][1])}" style="${bgs(IX[k])}"></i>`:'';st.textContent+='.eqTi:has(i.iiB){width:30px;margin-right:4px}.eqTi i.iiB{display:block;width:30px;height:30px}h3 .ii,h4 .ii{width:1.25em;height:1.25em;vertical-align:-.25em}.tag .ii{width:1.3em;height:1.3em;vertical-align:-.35em;margin:-.2em .15em -.2em -.1em}';
  try{if(typeof EQI!=='undefined')K2.forEach((k,i)=>{const I=k&&EQI[k];if(!I||!I.ic||!I.n)return;const s2=I.ic+' '+I.n;if(M[s2])return;M[s2]={k,ic:I.ic,n:I.n,u:'/items2.webp',c:8,r:6,i};L.push(s2)});L.sort((a,b)=>b.length-a.length)}catch(e){}
 
  // ชุดที่ 3 (items3.webp 8×6): ตราสำนัก 24 · ระบบ 10 · สายอาชีพ 4 · กิจการ 3 · ดันเจี้ยน 7 (จับคู่ "อีโมจิ ชื่อ")
@@ -46405,14 +46410,30 @@ try{(function(){
  try{['inn','smith','pharm'].forEach((k,i)=>BIZ[k]&&P3.push([BIZ[k].ic,BIZ[k].n,38+i]))}catch(e){}
  try{(DUNG||[]).slice(0,7).forEach((d,i)=>d&&d.ic&&P3.push([d.ic,d.n,41+i]))}catch(e){}
  P3.forEach(([ic,n,i])=>{const s3=ic+' '+n;if(M[s3])return;M[s3]={k:'s3_'+i,ic,n,u:'/items3.webp',c:8,r:6,i};L.push(s3)});L.sort((a,b)=>b.length-a.length);
- window.facImg=n=>{const i=FN.indexOf(n);return i<0?'':`<i class="ii" title="${n}" style="background:url(/items3.webp) ${(i%8)/7*100}% ${((i/8|0)/5)*100}%/800% 600% no-repeat"></i>`};
+ window.facImg=n=>{const i=FN.indexOf(n);return i<0?'':`<i class="ii ${QA('/items3.webp',i)}" title="${n}" style="${ST('/items3.webp',i,8,6)}"></i>`};
  const RE=new RegExp(L.map(s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
+ st.textContent+=`.ii,i.iiB{background:var(--u) var(--p)/var(--s) no-repeat;position:relative}
+:is(.ii,i.iiB).qa1{--gc:rgba(90,170,255,.55)}:is(.ii,i.iiB).qa2{--gc:rgba(180,90,255,.6)}:is(.ii,i.iiB).qa3{--gc:rgba(255,200,70,.6)}:is(.ii,i.iiB).qa4{--gc:rgba(255,100,40,.7)}:is(.ii,i.iiB).qad{--gc:rgba(200,30,80,.6)}:is(.ii,i.iiB).qay{--gc:rgba(60,180,255,.6)}
+:is(.ii,i.iiB).qa1,:is(.ii,i.iiB).qa2,:is(.ii,i.iiB).qa3,:is(.ii,i.iiB).qa4,:is(.ii,i.iiB).qad,:is(.ii,i.iiB).qay{background:var(--u) var(--p)/var(--s) no-repeat,radial-gradient(closest-side,var(--gc),transparent) 50% 50%/80% 80% no-repeat}
+:is(.ii,i.iiB).qa1,:is(.ii,i.iiB).qay{animation:qaG 2.8s ease-in-out infinite}:is(.ii,i.iiB).qay{animation-timing-function:steps(5)}
+:is(.ii,i.iiB).qad{animation:qaG 4.2s ease-in-out infinite}
+:is(.ii,i.iiB).qa2{animation:qaF 3.2s ease-in-out infinite,qaG 3.2s ease-in-out infinite}
+:is(.ii,i.iiB).qa3{animation:qaF 2.8s ease-in-out infinite,qaG 2.8s ease-in-out infinite}
+:is(.ii,i.iiB).qa4{animation:qaF 2.4s ease-in-out infinite,qaG 1.8s ease-in-out infinite,qaB 3s ease-in-out infinite}
+:is(.ii,i.iiB).qa3::after,:is(.ii,i.iiB).qa4::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.8) 50%,transparent 62%) no-repeat;background-size:300% 100%;-webkit-mask:var(--u) var(--p)/var(--s) no-repeat;mask:var(--u) var(--p)/var(--s) no-repeat;animation:qaS 3.6s ease-in-out infinite}
+:is(.ii,i.iiB).qa4::after{animation-duration:2.6s}
+@keyframes qaG{0%,100%{background-size:var(--s),60% 60%}50%{background-size:var(--s),115% 115%}}
+@keyframes qaF{0%,100%{transform:translateY(0)}50%{transform:translateY(-8%)}}
+@keyframes qaS{0%,55%{background-position:130% 0}85%,100%{background-position:-30% 0}}
+@keyframes qaB{0%,90%,100%{filter:none}94%{filter:brightness(1.7)}}
+@media (prefers-reduced-motion:reduce){:is(.ii,i.iiB).qa1,:is(.ii,i.iiB).qa2,:is(.ii,i.iiB).qa3,:is(.ii,i.iiB).qa4,:is(.ii,i.iiB).qad,:is(.ii,i.iiB).qay,:is(.ii,i.iiB).qa3::after,:is(.ii,i.iiB).qa4::after{animation:none!important}}
+body.lite :is(.ii,i.iiB).qa1,body.lite :is(.ii,i.iiB).qa2,body.lite :is(.ii,i.iiB).qa3,body.lite :is(.ii,i.iiB).qa4,body.lite :is(.ii,i.iiB).qad,body.lite :is(.ii,i.iiB).qay,body.lite :is(.ii,i.iiB).qa3::after,body.lite :is(.ii,i.iiB).qa4::after{animation:none!important}`;
  const SK=/^(SCRIPT|STYLE|TEXTAREA|INPUT|OPTION|SELECT|TITLE)$/;
- const sty=o=>'background:url('+o.u+') '+((o.i%o.c)/(o.c-1)*100)+'% '+(((o.i/o.c|0)/(o.r-1))*100)+'%/'+(o.c*100)+'% '+(o.r*100)+'% no-repeat';
- window.itIc=k=>{const s=Object.keys(M).find(x=>M[x].k===k);return s?`<i class="ii" title="${M[s].n}" style="${sty(M[s])}"></i>`:((typeof BAGIT!=='undefined'&&BAGIT[k]&&BAGIT[k].ic)||'')};
+ const sty=o=>ST(o.u,o.i,o.c,o.r);
+ window.itIc=k=>{const s=Object.keys(M).find(x=>M[x].k===k);return s?`<i class="ii ${QA(M[s].u,M[s].i)}" title="${M[s].n}" style="${sty(M[s])}"></i>`:((typeof BAGIT!=='undefined'&&BAGIT[k]&&BAGIT[k].ic)||'')};
  function proc(t){const v=t.nodeValue;if(!v||v.length<3)return;RE.lastIndex=0;if(!RE.test(v))return;const p=t.parentNode;if(!p||SK.test(p.nodeName)||p.isContentEditable)return;
   RE.lastIndex=0;const f=document.createDocumentFragment();let last=0,m;
-  while((m=RE.exec(v))){const o=M[m[0]];if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));const i=document.createElement('i');i.className='ii';i.title=o.n;i.style.cssText=sty(o);f.appendChild(i);f.appendChild(document.createTextNode(m[0].slice(o.ic.length)));last=m.index+m[0].length}
+  while((m=RE.exec(v))){const o=M[m[0]];if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));const i=document.createElement('i');i.className='ii';i.title=o.n;i.style.cssText=sty(o);const q=QA(o.u,o.i);if(q)i.classList.add(q);f.appendChild(i);f.appendChild(document.createTextNode(m[0].slice(o.ic.length)));last=m.index+m[0].length}
   if(last<v.length)f.appendChild(document.createTextNode(v.slice(last)));p.replaceChild(f,t)}
  function walk(n){if(n.nodeType===3)return proc(n);if(n.nodeType!==1||SK.test(n.nodeName))return;const w=document.createTreeWalker(n,NodeFilter.SHOW_TEXT),a=[];let x;while((x=w.nextNode()))a.push(x);a.forEach(proc)}
  const ob=new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')proc(m.target);else m.addedNodes.forEach(walk)}});
