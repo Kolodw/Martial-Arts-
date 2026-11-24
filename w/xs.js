@@ -193,7 +193,7 @@ function quietFx(k){const x=X();switch(k){case'r':return R.heal(.35);case'p':ret
  case'f':x.help.push({t:L('คนที่นั่งข้างคุณในวันธรรมดาวันหนึ่ง','the one who sat beside you on an ordinary day'),p:L('ชวนคุย','talked'),a:S.age|0,at:(S.age|0)+Ri(6,16),w:1});return R.kar(2);
  case'rev':{const r=pick(REV);return P(r[0])+' · '+r[1]()}
  default:if(/^k:/.test(k)){keepAdd(k.slice(2));return''}return''}}
-function quietEv(){const x=X();const q=pick(QUIET[FAM()]);window._xsC=1;try{choice(L('🍃 ช่วงเวลาเงียบ','🍃 A Quiet Moment'),P(q.t),q.o.map(o=>({t:P(o[0]),noFate:1,f(){x.quiet++;const r=quietFx(o[1]);if(r&&!/^k:/.test(o[1]))say(`🍃 ${r}`,'')}})))}finally{window._xsC=0}}
+function quietEv(){if(typeof auto!=='undefined'&&auto)return; /* ช่วงเวลาเงียบทุกตัวเลือกต้องกดเอง → ระหว่างออโต้ไม่เปิด (เดิมออโต้หยุดรอบ่อย) */const x=X();const q=pick(QUIET[FAM()]);window._xsC=1;try{choice(L('🍃 ช่วงเวลาเงียบ','🍃 A Quiet Moment'),P(q.t),q.o.map(o=>({t:P(o[0]),noFate:1,f(){x.quiet++;const r=quietFx(o[1]);if(r&&!/^k:/.test(o[1]))say(`🍃 ${r}`,'')}})))}finally{window._xsC=0}}
 
 // ---------- จดหมายที่ยังไม่เปิด ----------
 function letterEv(){const x=X();window._xsC=1;try{choice(L('✉️ '+kN('letter'),'✉️ '+kN('letter')),V({a:['คืนนี้มือคุณหยิบมันขึ้นมาเองโดยไม่ได้ตั้งใจ ซองยังปิดผนึกอยู่เหมือนวันแรก','Tonight your hand picks it up on its own. It\'s still sealed, just as on the first day'],m:['นิ้วคุณค้างอยู่เหนือปุ่มเล่นนานกว่าทุกครั้ง','Your thumb hovers over the play button longer than ever before'],f:['คืนนี้คุณถือมันไว้ใกล้ตะเกียงนานกว่าทุกครั้ง จนครั่งเริ่มอ่อนตัว','Tonight you hold it near the lamp longer than ever, until the wax begins to soften'],b:['กลิ่นนั้นลอยมาตามลมอีกครั้ง ชัดกว่าทุกครั้ง','That scent drifts in on the wind again, stronger than ever']}),[
