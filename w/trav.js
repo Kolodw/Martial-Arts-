@@ -58,8 +58,22 @@ const SCAR={
 function scarRoll(){const have=TV().scar||[];const L=Object.keys(SCAR).filter(k=>!have.includes(k));return L.length?pk(L):pk(Object.keys(SCAR))}
 
 // ---------- ปลายทาง ----------
-const DEST=['murim','xian','soul','m_normal','m_hunter','m_zombie'];
-const DNOTE={murim:'พลังถูกแปลงเป็นลมปราณ เริ่มที่ราวขั้นกลางของยุทธภพ',xian:'พลังถูกแปลงเป็นปราณเซียน เริ่มที่ราวขั้นกลางของโลกเซียน',soul:'ร่างนี้ปลุกวิญญาณยุทธ์ได้ทันที เริ่มที่ระดับวิญญาณ 30',m_normal:'ไม่มีลมปราณ แต่ร่างกายแข็งแรงผิดมนุษย์ แก่ช้า ความรู้ติดตัวมาเต็ม',m_hunter:'ปลุกพลังเป็นฮันเตอร์ได้ทันที',m_zombie:'ร่างทนกว่าคนทั่วไป เชื้อซอมบี้ไม่ค่อยติด'};
+const DEST=['murim','xian','soul','m_normal','m_hunter','m_zombie','m_under','m_ghost','m_loop','m_tower','m_game','m_gatewon','m_doom'];
+// 🔒 โลกที่ต้องมี "กุญแจ" ก่อน ประตูถึงจะยอมพาไป (ไม่ใช่ข้ามไปเฉยๆ) · คืนค่า '' = เปิดแล้ว
+const bookW=()=>{try{return (LS.get('murim_trav',{})||{}).w||{}}catch(e){return{}}};
+const t3=()=>{try{return window._m3?window._m3.threeCount():0}catch(e){return 0}};
+const KEY={
+ m_under:['กรรม ≤ 0 หรือฆ่า 5 ครั้ง|มือเคยเปื้อน','กรรมต้องไม่เป็นบวก หรือเคยลงมือสังหารมาแล้ว 5 ครั้ง',()=>(S.karma||0)<=0||(S.kills|0)>=5],
+ m_ghost:['เคยเสียคนสำคัญ หรือกรรม 100|คนที่วิญญาณไว้ใจ','เคยเสียคนสำคัญไปแล้ว หรือกรรมดีถึง 100',()=>(S.lfMem||[]).some(m=>m.tag==='loss')||(S.karma||0)>=100],
+ m_loop:['เคยข้ามโลก 1 ครั้ง|ผู้ที่เคยข้ามมาก่อน','ต้องเคยผ่านประตูสุดโลกมาแล้วอย่างน้อย 1 ครั้ง',()=>(TV().n|0)>=1],
+ m_tower:['3 ดาวมินิเกม 5 เกม|ผู้ผ่านบททดสอบ','ได้ 3 ดาวในมินิเกมอย่างน้อย 5 เกม (ดูได้ที่ 🏮 หอฝึกมินิเกม)',()=>t3()>=5],
+ m_game:['ปัญญา 60|ผู้ที่อ่านระบบออก','ปัญญาต้องถึง 60',()=>(S.int||0)>=60],
+ m_gatewon:['เคยไปโลกฮันเตอร์|ผู้รอดจากเกต','ต้องเคยไปโลกฮันเตอร์มาแล้ว (ชีวิตไหนก็ได้)',()=>!!bookW().m_hunter||(TV().path||[]).includes('m_hunter')],
+ m_doom:['เคยข้ามโลก 2 ครั้ง|ผู้ข้ามสองภพ','ต้องเคยข้ามโลกมาแล้ว 2 ครั้งในชีวิตนี้',()=>(TV().n|0)>=2]};
+const kNm=d=>KEY[d][0].split('|')[1],kSh=d=>KEY[d][0].split('|')[0];
+window._trvDbg=()=>({go,lockOf,DEST,relPick,where});
+const lockOf=d=>{const k=KEY[d];if(!k)return'';try{return k[2]()?'':k[1]}catch(e){return k[1]}};
+const DNOTE={m_under:'เริ่มเป็นคนนอกของวงการใต้ดิน ร่างกายแข็งแรงผิดมนุษย์ ความรู้ติดตัวมาเต็ม',m_ghost:'มองเห็นวิญญาณตั้งแต่วันแรก ร่างกายแข็งแรงผิดมนุษย์',m_loop:'ติดอยู่ในวันซ้ำ แต่จำได้ทุกรอบ',m_tower:'ตื่นมาหน้าหอคอย เริ่มปีนจากชั้นแรก',m_game:'มีหน้าต่างระบบลอยอยู่ตรงหน้า เริ่มที่เลเวลต่ำ',m_gatewon:'โลกที่เกตชนะไปแล้ว เริ่มจากการยึดคืนทีละเขต',m_doom:'ดาวหางกำลังมา เหลือเวลาไม่กี่ปี',murim:'พลังถูกแปลงเป็นลมปราณ เริ่มที่ราวขั้นกลางของยุทธภพ',xian:'พลังถูกแปลงเป็นปราณเซียน เริ่มที่ราวขั้นกลางของโลกเซียน',soul:'ร่างนี้ปลุกวิญญาณยุทธ์ได้ทันที เริ่มที่ระดับวิญญาณ 30',m_normal:'ไม่มีลมปราณ แต่ร่างกายแข็งแรงผิดมนุษย์ แก่ช้า ความรู้ติดตัวมาเต็ม',m_hunter:'ปลุกพลังเป็นฮันเตอร์ได้ทันที',m_zombie:'ร่างทนกว่าคนทั่วไป เชื้อซอมบี้ไม่ค่อยติด'};
 // ⭕ ผู้ข้ามโลกเข้าทวีปจิตวิญญาณยุทธ์: ตาม DNOTE ต้อง "ปลุกวิญญาณยุทธ์ได้ทันที" แต่ cross() ของ rift.js ตั้ง aw:2 (ไร้ดวงจิต)
 //   และเหตุการณ์ผสานของ rift ผูกกับคู่ mh_so เท่านั้น → ผู้ข้ามผ่านประตูสุดโลกไม่ได้ดวงจิตเลย (ผู้เล่นแจ้ง) · ตอนนี้ปลุกดวงจิตให้ทันที (สุ่มตามโอกาสปกติ)
 function svRoll(){try{const SP=window._blk34.SP,r=Math.random(),rr=r<.02?3:r<.12?2:r<.4?1:0;const L=SP.filter(x=>x[5]===rr);return(L[Math.floor(Math.random()*L.length)]||SP[0])[0]}catch(e){return null}}
@@ -81,7 +95,11 @@ function gate(manual){if(!S||!S.alive)return;const w=where(),T=TV();T.gw=T.gw||{
   O('⏳ ยังไม่ไป','ประตูรออยู่ · เปิดได้จาก ☰ เมนู → 🚪 ประตูสุดโลก',()=>{try{log('🚪 คุณหันหลังให้ประตู มันไม่ปิด แค่รอ <span class="tag2">(เปิดได้จาก ☰ เมนู)</span>','')}catch(e){}})])}
 window.trvGate=()=>{if(!peak())return toast('ประตูสุดโลกยังไม่เปิด — '+ptxt(where()));try{closeM()}catch(e){}gate(1)};
 function pickDest(){const w=where();const L=DEST.filter(d=>d!==w&&!(w==='god'&&d==='xian'));
- ask('🌍 เลือกโลกถัดไป',`ประตูแสดงภาพหลายโลกซ้อนกัน แตะภาพไหน ประตูจะพาไปที่นั่น`,L.map(d=>O(wn(d),DNOTE[d]||'',()=>setTimeout(()=>pickHow(d),300))).concat([O('↩️ ยังไม่ไป','',()=>{})]))}
+ const open=L.filter(d=>!lockOf(d)),shut=L.filter(d=>lockOf(d));
+ ask('🌍 เลือกโลกถัดไป',`ประตูแสดงภาพหลายโลกซ้อนกัน แตะภาพไหน ประตูจะพาไปที่นั่น<br><span class="tag2">โลกเปิดแล้ว ${open.length} · ยังล็อก ${shut.length} — บางโลกต้องมี “กุญแจ” จากชีวิตที่ผ่านมาก่อน ประตูถึงจะยอมพาไป</span>`,
+  open.map(d=>O(wn(d)+(KEY[d]?` · 🔑 ${kNm(d)}`:''),DNOTE[d]||'',()=>setTimeout(()=>pickHow(d),300)))
+  .concat(shut.map(d=>O(`🔒 ${wn(d)} · ต้อง${kSh(d)}`,`กุญแจ: ${kNm(d)} — ${lockOf(d)}`,()=>{try{toast(`🔒 ${(WN[d]||['',''])[1]} ยังไม่เปิด — ${lockOf(d)}`)}catch(e){}setTimeout(pickDest,400)})))
+  .concat([O('↩️ ยังไม่ไป','',()=>{})]))}
 function pickHow(T){ask(`🚪 ข้ามไป${wn(T)}`,`จะข้ามไปแบบไหน`,[
   O('🌀 ข้ามทั้งร่าง','ร่างเดิม ชื่อเดิม · ร่างถูกปรับเป็นวัย 18–30 ตามกฎโลกใหม่ · ไม่มีใครรู้จักคุณ · พลังแปลงได้มากกว่า',()=>setTimeout(()=>pickRel(T,'body'),300)),
   O('👤 สิงร่าง','ตื่นในร่างคนอายุ 15–22 · ได้ครอบครัวของเจ้าของร่าง (และปมของเขา) · พลังแปลงได้น้อยกว่า',()=>setTimeout(()=>pickRel(T,'soul'),300)),
@@ -107,6 +125,7 @@ function after(R,T,how,rk,from,pw0,age0,name0){try{R.done=1;R.trv=1;const V=TV()
   <br>🩸 บาดแผลมิติ: <b>${s[0]} ${s[1]}</b> <span class="tag2">${s[2]}</span>
   <br><span class="tag2">⚖️ ${E(DNOTE[T]||'')} · พลังเดิม ${fmt(pw0)} · ชีวิตผู้ข้ามโลกไม่ขึ้นทำเนียบของโลกเดียว (มีทำเนียบผู้ข้ามโลกแยกในอนาคต)</span>`,'myth',true);
  if(T==='m_hunter'){try{const M=S.mw;if(M&&typeof hwInit==='function'&&!(M.hw>0))hwInit(M,true)}catch(e){console.error('trav hunter',e)}}
+ else if(/^m_/.test(T)&&T!=='m_normal'&&T!=='m_zombie'){try{const M=S.mw,id=T.slice(2);if(M&&window._wld&&window._wld.wOn)window._wld.wOn(M,id,0)}catch(e){console.error('trav wOn',e)}}
  try{render()}catch(e){}try{saveGame()}catch(e){}}catch(e){console.error('trav after',e)}}
 
 // ---------- ฉากประตู ----------

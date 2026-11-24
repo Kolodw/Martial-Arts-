@@ -346,6 +346,7 @@ export default {
   // ⏰ cron (ตั้งใน wrangler.toml [triggers]) → ส่ง push ดึงผู้เล่นที่หายไปกลับมา (แทน Vercel cron) · ใช้ CRON_SECRET หรือ ADMIN_KEY2 ที่ตั้งไว้ใน secret
   async scheduled(event, env, ctx) {
     const key = env.CRON_SECRET || '';
+    try { const k2 = env.CRON_SECRET || ''; const u2 = new URL('https://1inanovel.com/api/online?a=dcsync'); if (!k2 && env.ADMIN_KEY2) u2.searchParams.set('key', env.ADMIN_KEY2); ctx.waitUntil(api(new Request(u2, { method: 'GET', headers: k2 ? { authorization: 'Bearer ' + k2 } : {} }), u2).then(r => r.text()).then(t => console.log('dcsync', String(t).slice(0, 200))).catch(e => console.error('dcsync err', String(e && e.message || e)))) } catch (e) { }
     const req = new Request('https://1inanovel.com/api/online?a=pushre', { method: 'GET', headers: key ? { authorization: 'Bearer ' + key } : {} });
     const url = new URL(req.url); if (!key && env.ADMIN_KEY2) url.searchParams.set('key', env.ADMIN_KEY2);
     ctx.waitUntil(api(key ? req : new Request(url, { method: 'GET' }), url).then(r => r.text()).then(t => console.log('pushre', String(t).slice(0, 300))).catch(e => console.error('pushre err', String(e && e.message || e))));

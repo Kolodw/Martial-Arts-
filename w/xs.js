@@ -218,7 +218,7 @@ function backEv(it,good){const x=X(),yrs=(S.age|0)-(it.a|0);const mem=L(`${yrs} 
 const SKIP=/📖|🧵|บทที่|ตอนที่|มินิเกม|ดวล|ทัณฑ์|🌌|🗝️|🔁|🍃|🎲|สอบ|ภารกิจ|ตั้งค่า|ยืนยัน|รีเซ็ต|บันทึก|เลือกโลก|ระบบ|เควส|Confirm|Delete|Reset|Quest|System/i;
 const RISK=/เสี่ยง|ตาย|อันตราย|บาดเจ็บ|เจ็บ|หนี้|เดิมพัน|risk|die|death|danger|wound|bet/i;
 let actT=0;
-{const _ch=choice;choice=function(title,text,opts){try{if(!window._xsC&&S&&S.alive&&!(S._xa&&S._xa.run)&&Array.isArray(opts)&&opts.length>=2&&!SKIP.test(strip(title))&&(S.age|0)>=4&&!isAuto()){
+{const _ch=choice;choice=function(title,text,opts){try{if(String(text||'').indexOf('<!--xs-->')<0)text=String(text||'')+'<!--xs-->';else throw 0}catch(e){return _ch.call(this,title,text,opts)}try{if(!window._xsC&&S&&S.alive&&!(S._xa&&S._xa.run)&&Array.isArray(opts)&&opts.length>=2&&!SKIP.test(strip(title))&&(S.age|0)>=4&&!isAuto()){
   const x=X(),plain=strip(title)+' '+strip(text),cats=catsOf(plain);opts=opts.slice();let added=0;
   // นิสัย + คนที่จำได้ (ห่อทุกตัวเลือกเดิม)
   const isF=cats.includes('fight'),isS=cats.some(c=>['stranger','danger','love','money'].includes(c));if(isF)x.fSeen++;

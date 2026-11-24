@@ -60,8 +60,10 @@ applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
 
 // ============ UPDATE LOG ============
-const VERSION='22.2';
+const VERSION='22.2.login';
 const CHANGELOG=[
+  {v:'22.2.login',d:'24 พ.ย. 2026',l:['💬 <b>ผูกบัญชี Discord</b> — เข้าโปรไฟล์ แล้วกด “🎮 ผูก Discord” ผู้ที่เติม VIP จะได้ยศในเซิร์ฟเวอร์ Discord ของเกมอัตโนมัติ (VIP · VIP+ · VIP MAX) ต่ออายุหรืออัปเกรดแล้วยศปรับให้เอง และถอดให้เมื่อสิทธิ์หมด ยกเลิกการผูกได้ทุกเมื่อ',
+   '🌐 <b>หน้าชุมชนผู้เล่น</b> — มีทั้ง Discord และกลุ่มเฟสบุ๊กในที่เดียว กดเข้าร่วมหรือคัดลอกลิงก์ได้ทันที · ปุ่มหน้าแรกเปลี่ยนเป็น “💬 ชุมชน”']},
   {v:'22.2',d:'23 พ.ย. 2026',l:['🌉 <b>นครม่านหมอก: พรสวรรค์ 130 แบบ + ปณิธาน 70 ข้อ</b> — สุ่มตอนเกิด ล็อกพรสวรรค์ที่ชอบได้ 2 ช่อง แต่ละพรสวรรค์มีทั้งข้อดีและข้อเสีย ปณิธานมีเป้าหมายให้ทำทั้งชีวิต ทำได้รับรางวัล ทำพังมีผลตามมา · มีปุ่มสุ่มเพิ่มและสุ่มรัวแบบเดียวกับยุทธภพ',
    '✨ <b>อนิเมชันเปิดพรสวรรค์ใหม่ทุกโลก</b> — ยิ่งหายากยิ่งอลังการ ของหายากที่สุดเปิดเป็นใบสุดท้าย แต่ละโลกมีลูกเล่นและคำบรรยายของตัวเอง พรสวรรค์ที่เข้ากันจะมีเส้นเชื่อมโยงให้เห็น · แตะเพื่อข้ามได้',
    '🎰 <b>ตัวเลข "1 ใน N" แบบใหม่</b> — ตัวเลขหมุนเหมือนสล็อตก่อนหยุด ยิ่งหายากยิ่งมีฉากพิเศษ ฟ้าสั่น ดาวตก และบันทึกสถิติชะตาที่หายากที่สุดของคุณในแต่ละโลก',
@@ -506,7 +508,7 @@ function focusOK(k){if(S.beastMode&&!S.beastMode.human)return BFOCUS.some(f=>f[0
 function render(){
  if(!S)return;pendBar();qTrack();{const ym=$('ymon');if(ym)ym.textContent=MON_N[curMon()]}const ri=realmIdx(),nx=REALMS[ri+1];
  $('gAge').innerHTML=`${S.age}<small>ปี</small>`;$('gName').textContent=S.name+(S.gen>1?` (รุ่น ${S.gen})`:'');
- let tg=S.faction?`<span class="tag ${S.faction.t}">${S.faction.n}${S.faction.tier==='เล็ก'?' (เล็ก)':' #'+sectPos(S.faction.n)} · ${rankName()}</span>`:`<span class="tag">พเนจร</span>`;
+ let tg=S.faction?`<span class="tag ${S.faction.t}">${(window.facImg&&facImg(S.faction.n))||''}${S.faction.n}${S.faction.tier==='เล็ก'?' (เล็ก)':' #'+sectPos(S.faction.n)} · ${rankName()}</span>`:`<span class="tag">พเนจร</span>`;
  if(S.ow&&S.awake)tg+=`<span class="tag ow">🌌 วิญญาณ: ${S.soul?S.soul.n:'ผู้ข้ามมิติ'}</span>`;
  tg+=`<span class="tag">${S.karma>=40?'ผู้ทรงธรรม':S.karma>=10?'จิตใจดี':S.karma>-10?'กลางๆ':S.karma>-40?'ไร้ศีลธรรม':'จิตมาร'}</span>`;
  {const ak=(S.children||[]).filter(c=>c.alive).length;if(S.spouse)tg+=`<span class="tag">💍 ${S.spouse}${S.sp?' ❤'+Math.round(S.sp.aff):''}${ak?` · ลูก ${ak}`:''}</span>`;else if(ak)tg+=`<span class="tag">ลูก ${ak}</span>`;if(S.grand)tg+=`<span class="tag">หลาน ${S.grand}</span>`}
@@ -1255,7 +1257,7 @@ function checkDeath(){
  else if(S.age>=lifeMax())cause=S.ch==='short'&&S.age<=30&&lifeMax0()>30?'ชะตาสามสิบปีมาถึงที่สุด ลมหายใจสุดท้ายหลุดลอยไปตามคำสาป':'จากไปอย่างสงบด้วยวัยชรา'+(S.kids?' ท่ามกลางลูกหลาน':'');
  if(!cause)return false;
  try{if(ndSys(cause))return false}catch(e){console.error(e)}
- if(S.sys&&S.sys.revive>0&&!(S.flags.ascended&&(!S.flags.ascStay||S.flags.ascLeft))&&!(S.flags.eternal&&(S.flags.kEnd||/กัลป์|กาลเวลา|จักรวาล|สามภพ/.test(cause)))&&!(S.ch==='short'&&S.age>=30)&&!(/วัยชรา|อย่างสงบ|หลับไปตลอดกาล/.test(cause)||S.age>=lifeMax())){S.sys.revive--;S.hp=Math.max(1,Math.round(S.maxHp*.5));S.deathCause=null;S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) ฟื้นขึ้นมาด้วยพลังชีวิตครึ่งหนึ่ง`,'up');setScene('system');return false}
+ if(S.sys&&S.sys.revive>0&&!S.rvU&&!(S.flags.ascended&&(!S.flags.ascStay||S.flags.ascLeft))&&!(S.flags.eternal&&(S.flags.kEnd||/กัลป์|กาลเวลา|จักรวาล|สามภพ/.test(cause)))&&!(S.ch==='short'&&S.age>=30)&&!(/วัยชรา|อย่างสงบ|หลับไปตลอดกาล/.test(cause)||S.age>=lifeMax())){S.sys.revive--;S.rvU=1;S.hp=Math.max(1,Math.round(S.maxHp*.5));S.deathCause=null;S.flags.revived=1;sysLog(`การ์ดคืนชีพถูกใช้งาน! (${cause}) ฟื้นขึ้นมาด้วยพลังชีวิตครึ่งหนึ่ง`,'up');setScene('system');return false}
  try{if(typeof regTry==='function'&&regTry(cause))return false}catch(e){console.error(e)}
  flushReveal();S.alive=false;S.cause=cause;saveLegacy();clearSave();const _asc=!!S.flags.ascended;setScene(_asc?'aura':'death');setTimeout(()=>sfx(_asc?'good':'death'),300);log(`${_asc?'🌟':'🪦'} ${cause}`,_asc?'myth':'bad');
  const _dn=S;setTimeout(()=>{if(!S||S!==_dn)return;modal(`<h3>${S.flags.ascended?'🌟 ตำนานบรรลุ — '+esc(S.name):'ลาก่อน '+esc(S.name)}</h3><p>${cause} ในวัย ${S.age} ปี${S.flags.ascended&&(!S.flags.ascStay||S.flags.ascLeft)?'<br><span class="tag2">ไม่ใช่ความตาย คุณก้าวพ้นสามภพไปแล้ว ใบชุบจึงไม่ถูกใช้</span>':''}<br>อยากบอกอะไรกับคนคนนี้เป็นครั้งสุดท้าย?</p><input class="ta" id="byeIn" maxlength="80" placeholder="คำอำลาสุดท้าย"><button class="pbtn" style="width:100%" onclick="endGame()">อำลา</button>`,'bye')},900);
@@ -6643,7 +6645,7 @@ const BAGX={
  bcore:{r:4,d:()=>`พลังยุทธ์ +${fmt(yrPow0()*8)} · สัตว์เลี้ยงใช้วิวัฒนาการได้ดีเยี่ยม`,use(){const g=yrPow0()*8;S.power+=g;return`พลังยุทธ์ +${fmt(g)}`}},
  egg:{r:4,d:'ฟักเป็นสัตว์วิญญาณคู่กาย ช่วยต่อสู้ · ฟักเองได้หรือรอฟักเอง',use(){if(S.pet&&S.pet.spirit)return null;const n=ch(['พยัคฆ์ขาว','จิ้งจอกเพลิง','มังกรน้ำ','หงส์น้ำแข็ง']);S.pet={i:'🐉',n,t:'สัตว์วิญญาณ',age:S.age,spirit:1,lv:0};return`ฟักออกมาเป็น<b>${n}</b>`}},
  fruit:{r:4,d:()=>`อายุขัย +${frV()} ปี · ใช้เองอัตโนมัติเมื่อใกล้หมดอายุ`,use(){const v=frV();if(S.xt)S.glExtra=(S.glExtra||0)+v;else lsAdd(v);return`อายุขัย +${v} ปี`}},
- phx:{r:5,d:()=>`ติดตัวไว้ เมื่อพลังชีวิตหมดจะลุกเป็นไฟแล้วชุบชีวิตขึ้นมาด้วยพลังชีวิต 30% · แลกด้วยพลังชีวิตสูงสุด −10% และอายุขัย −5 ปี · ใช้กับการแก่ตายไม่ได้ · ชาติละครั้ง${S&&S.phxU?' (ชาตินี้ใช้ไปแล้ว)':''}`},
+ phx:{r:5,d:()=>`ติดตัวไว้ เมื่อพลังชีวิตหมดจะลุกเป็นไฟแล้วชุบชีวิตขึ้นมาด้วยพลังชีวิต 30% · แลกด้วยพลังชีวิตสูงสุด −10% และอายุขัย −5 ปี · ใช้กับการแก่ตายไม่ได้ · ชาติละครั้ง (นับรวมกับการ์ดคืนชีพและวิญญาณสำรอง)${S&&S.phxU?' (ชาตินี้ใช้ไปแล้ว)':''}`},
  star:{r:5,d:'อายุขัย +40 ปี พลังยุทธ์มหาศาล ปัญญา +10',use(){S.lifespan+=40;S.power+=yrPow0()*10;S.int+=10;return'ดวงดาวหลอมรวมเข้ากับวิญญาณ'}},
  seal:{r:6,d:'ติดตัวไว้ ปลดล็อกตัวเลือกพิเศษในเหตุการณ์ผนึกมาร ผนึกได้สำเร็จแน่นอน'},
  void:{r:7,d:'ไม่มีใครรู้ว่ามันคืออะไร… ใช้แล้วจะเกิดอะไรขึ้นก็ได้',use(){const r=Math.random();
@@ -6653,7 +6655,7 @@ const BAGX={
   if(r<.95){const a=newArt(3);S.arts.push(a);return`เห็นภาพนิมิตของจักรวาลก่อนกำเนิด ได้ ${artHtml(a)}`}
   return'มันหายไปพร้อมเสียงหัวเราะเบาๆ… ไม่มีอะไรเกิดขึ้น'}}};
 function talBoost(m){if(!S)return'';if((S.talX|0)>=2){const g=Math.max(yrPow0()*4,pctPow(.12));S.power+=g;return`พรสวรรค์ถูกเสริมจนเต็มขีดแล้ว (ชาติละ 2 ครั้ง) พลังส่วนเกินกลายเป็นพลังยุทธ์ +${fmt(g)}`}S.talX=(S.talX|0)+1;S.talent=Object.assign({},S.talent,{m:+(S.talent.m*m).toFixed(2)});return`พรสวรรค์ ×${m.toFixed(2)} ถาวร (${S.talX}/2 ครั้งต่อชาติ)`}
-function phxUse(){if(!S||S.phxU||!bagHas('phx')||!bagUse('phx'))return false;S.phxU=1;S.maxHp=Math.max(10,Math.round(S.maxHp*.9));S.hp=Math.max(1,Math.round(S.maxHp*.3));S.lifespan=Math.max(S.age+1,S.lifespan-5);return true}
+function phxUse(){if(!S||S.phxU||S.rvU||!bagHas('phx')||!bagUse('phx'))return false;S.phxU=1;S.rvU=1;S.maxHp=Math.max(10,Math.round(S.maxHp*.9));S.hp=Math.max(1,Math.round(S.maxHp*.3));S.lifespan=Math.max(S.age+1,S.lifespan-5);return true}
 const bRar=id=>BAGX[id]?BAGX[id].r:1,rarC=r=>RAR[r]||RAR[1];
 function rarTag(r){const R0=rarC(r);return `<span class="rtag rar${r}" style="${R0.x?'':`color:${R0.c};border-color:${R0.c}`}">${R0.n}</span>`}
 function rarName(id){const I=BAGIT[id],r=bRar(id),R0=rarC(r);return `${I.ic} <b class="rar${r}" style="${R0.x?'':`color:${R0.c}`}">${I.n}</b>`}
@@ -7336,7 +7338,7 @@ function ecoCat(w){if(ECO_CAT[w])return ECO_CAT[w];const rnd=srng({m:11,x:22,g:3
  return ECO_CAT[w]=L}
 function ecoV(it){const r=it.r,w=it.w,K={qi:{m:1,x:3,g:10},life:{m:1,x:6,g:60},int:{m:1,x:2,g:4},fame:{m:1,x:3,g:10}};
  const T=[.01,.02,.035,.05,.08,.12,.18,.3][r];
- switch(it.fx){case'pow':return{v:T,d:`พลังรวมถาวร +${Math.round(T*100)}%`};case'hp':return{v:T*1.5,d:`พลังชีวิตสูงสุด +${Math.round(T*150)}%`};
+ switch(it.fx){case'pow':return{v:T,d:pwD(T)};case'hp':return{v:T*1.5,d:`พลังชีวิตสูงสุด +${Math.round(T*150)}%`};
   case'qi':{const v=[1,2,4,7,12,20,35,60][r]*K.qi[w];return{v,d:`ลมปราณ +${fmt(v)} ปี`}}case'life':{const v=[2,4,7,12,20,35,60,100][r]*K.life[w];return{v,d:`อายุขัย +${fmt(v)} ปี`}}
   case'int':{const v=[3,5,8,12,18,26,40,70][r]*K.int[w];return{v,d:`ปัญญา +${v}`}}case'cha':{const v=[3,5,8,12,18,26,40,70][r];return{v,d:`เสน่ห์ +${v}`}}
   case'karma':{const v=[3,5,8,12,18,26,40,70][r];return{v,d:`กรรมดี +${v}`}}case'fame':{const v=[10,25,50,90,150,250,400,700][r]*K.fame[w];return{v,d:`ชื่อเสียง +${fmt(v)}`}}
@@ -7428,7 +7430,7 @@ const PA_CT=[['w','pow',['กระบี่','ทวน','ดาบ','พัด
 function paItem(r,k){const g=srng(r*1000003+k*7+13),pk=a=>a[Math.floor(g()*a.length)];let C=pk(PA_CT);if(C[1]==='tal'&&r<4)C=PA_CT[0];if(C[1]==='myst')C=PA_CT[k%6];
  const pf=pk(PA_PF);return{r,k,c:C[0],fx:C[1],n:`${pk(C[2])}${pf?pf:''}แห่ง${pk(PA_SJ)}`}}
 function paEff(it){const w=ECO_W(),r=it.r,b=ecoV({r,w,fx:it.fx==='int'?'int':it.fx==='cha'?'cha':it.fx==='life'?'life':it.fx==='qi'?'qi':it.fx==='fight'?'fight':'pow'});
- switch(it.fx){case'pow':return{v:b.v*1.5,d:`พลังรวมถาวร +${(b.v*150).toFixed(1)}%`};case'hp':return{v:b.v*2.25,d:`พลังชีวิตสูงสุด +${Math.round(b.v*225)}%`};
+ switch(it.fx){case'pow':return{v:b.v*1.5,d:pwD(b.v*1.5)};case'hp':return{v:b.v*2.25,d:`พลังชีวิตสูงสุด +${Math.round(b.v*225)}%`};
   case'qi':case'life':case'int':case'cha':{const v=Math.round(b.v*1.5);return{v,d:b.d.replace(/[\d,]+/,fmt(v))}}
   case'art':{const v=Math.min(4,Math.floor(r/2)+1);return{v,d:`ได้วิชาระดับ${ART_TIER[v].n}ขึ้นไป 1 วิชา`}}
   case'fight':{const v=+(1+(b.v-1)*1.5).toFixed(2),y=b.y+3;return{v,y,d:`ต่อสู้ ×${v} นาน ${y} ปี`}}
@@ -7573,6 +7575,10 @@ function ascSquash(why){if(!S)return;const rest=total()-S.power,cap=REALMS[2].p*
 // มรดกวิชาของลูก: ร่างเด็กรับพลังเต็มของวิชาบรรพบุรุษไม่ไหว
 {const _ih=inherit;inherit=function(){const r=_ih.apply(this,arguments);try{if(S&&S.arts){const cap=REALMS[2].p*.8,rest=total()-S.power,h=S.arts.find(a=>a&&a.heir);if(h&&rest>cap){const ab=artBonus(),f=Math.max(.02,Math.min(1,(ab-(rest-cap))/ab));if(f<1){h.b=Math.max(1,Math.round(h.b*f));log(`🧒 ร่างเด็กยังรับพลังเต็มของวิชามรดกไม่ไหว พลังของวิชาจะถูกผนึกไว้บางส่วน`,'')}}}}catch(e){}return r}}
 // พลังรวมถาวร % : ต่อขั้น ได้เต็มรวมไม่เกิน 30% ส่วนเกินได้แค่ 20%
+// ราคา/คำอธิบาย "พลังรวมถาวร +X%": X% คิดจากฐานพลัง (แดนเทพชั้นสูงใช้ฐานของขั้นบนสุดของโลกเซียน) และในขั้นเดียวกันได้เต็มรวมแค่ 30% → ของชิ้นหลังๆ แทบไม่ขึ้น
+// แต่เดิมป้ายบอกแค่ +X% ผู้เล่นซื้อซ้ำแล้วงงว่าทำไมพลังเท่าเดิม → ถ้าได้จริงน้อยกว่าที่ป้ายบอกมาก ให้บอกตัวเลขที่จะได้จริงตอนนี้ (ไม่เปลี่ยนสมดุล)
+function ppPeek(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx(),a=S._pp&&S._pp.k===k?S._pp.a:0;const room=Math.max(0,.3-a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,a));return Math.round(pvT()*eff)}
+function pwD(v){const s=`พลังรวมถาวร +${+(v*100).toFixed(1)}%`;try{if(!S||!S.alive)return s;const t=total();if(!(t>0))return s;const g=ppPeek(v);if(g>=t*v*.75)return s;const p=g/t*100;return `${s} (ตอนนี้ได้จริง +${fmt(g)} ≈ ${p>=1?p.toFixed(1):p.toFixed(2)}%)`}catch(e){return s}}
 function pctPow(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx();if(!S._pp||S._pp.k!==k)S._pp={k,a:0};const room=Math.max(0,.3-S._pp.a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,S._pp.a));S._pp.a+=v;return Math.round(pvT()*eff)}
 
 // ---- v13.2b ยาทะลวงขั้น: ใช้เองแล้วต้องทะลวงจริง (ไม่เสียยาฟรี) · คอขวดใหญ่ขั้น 6–7 ได้โอกาส +15% · ทัณฑ์โลกเซียน +10% ----
@@ -12692,7 +12698,7 @@ const PA_UQ=[
 {const _paE=paEff;paEff=function(it){let e;const w=ECO_W(),r=it.r;
  if(it.fx==='fame'||it.fx==='karma'){const b=ecoV({r,w,fx:it.fx});e={v:Math.round(b.v*1.5),d:b.d.replace(/[\d,]+/,fmt(Math.round(b.v*1.5)))}}
  else if(it.fx==='money'){const v=Math.round({m:3e4,x:1.5e6,g:1.5e8}[w]*[1,1,1,2,4,8,15,30][r]);e={v,d:`เงิน +${fmtM(v)} ตำลึง`}}
- else if(it.fx==='duo'){const b=ecoV({r,w,fx:'pow'});e={v:b.v,d:`พลังรวมถาวร +${(b.v*100).toFixed(1)}% · พลังชีวิตสูงสุด +${Math.round(b.v*150)}%`}}
+ else if(it.fx==='duo'){const b=ecoV({r,w,fx:'pow'});e={v:b.v,d:`${pwD(b.v)} · พลังชีวิตสูงสุด +${Math.round(b.v*150)}%`}}
  else e=_paE(it);
  if(it.q!=null&&PA_UQ[it.q])e=Object.assign({},e,{d:e.d+` <i class="tag2">— ${PA_UQ[it.q][4]}</i>`});return e}}
 {const _paA=paApply;paApply=function(it){if(it.fx==='fame'||it.fx==='karma'||it.fx==='money'||it.fx==='duo'){const e=paEff(it);
@@ -14283,7 +14289,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
  // ---- ศัตรูได้พรนรก ----
  {const _f=fight;fight=function(n,ep){const h=H();if(h){const k=ncur('foe');if(k)ep*=Math.pow(1.08,k)}return _f.call(this,n,ep)}}
  // ---- วิญญาณสำรอง ----
- {const _rt=regTry;regTry=function(cause){try{const h=H();if(h&&h.rev>0&&S&&!/วัยชรา|กัลป์|กาลเวลา|จักรวาล/.test(cause||'')&&!(S.flags&&S.flags.kEnd)){h.rev--;S.hp=S.maxHp;S.deathCause=null;log(`🩸 วิญญาณสำรองจากนรกแตกสลายแทนคุณ ฟื้นคืนชีพ (${esc(cause||'')}) · เหลือ ${h.rev} ดวง`,'myth',true);return true}}catch(e){}return _rt.apply(this,arguments)}}
+ {const _rt=regTry;regTry=function(cause){try{const h=H();if(h&&h.rev>0&&S&&!S.rvU&&!/วัยชรา|กัลป์|กาลเวลา|จักรวาล/.test(cause||'')&&!(S.flags&&S.flags.kEnd)){h.rev--;S.rvU=1;S.hp=S.maxHp;S.deathCause=null;log(`🩸 วิญญาณสำรองจากนรกแตกสลายแทนคุณ ฟื้นคืนชีพ (${esc(cause||'')}) · เหลือ ${h.rev} ดวง`,'myth',true);return true}}catch(e){}return _rt.apply(this,arguments)}}
  function addCurse(k){const h=S.hell;h.cur.push(k);const C=CUR[k];if(k==='weak'){S.maxHp=Math.max(30,Math.round(S.maxHp*.85));S.hp=Math.min(S.hp,S.maxHp)}if(k==='dull')S.int=Math.round(S.int*.85);if(k==='love'&&S.sp)S.sp.aff=Math.max(0,(S.sp.aff||60)-30);if(k==='luck'&&!(S.traits||[]).includes('unlucky')&&!(S.traits||[]).includes('lucky'))S.traits=[...(S.traits||[]),'unlucky'];log(`☠️ รับคำสาปนรก <b>${C[0]}</b> — ${C[1]}`,'bad',true)}
  function offerCurse(after){const h=S.hell,r=rngOf(h.sd+h.lv*977),ks=Object.keys(CUR).filter(k=>ncur(k)<3);for(let i=ks.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[ks[i],ks[j]]=[ks[j],ks[i]]}const o=ks.slice(0,3);
   choice(`☠️ กฎนรกชั้นที่ ${h.lv}`,`ผ่านประตูมาได้ แต่นรกไม่ปล่อยใครออกไปมือเปล่า<br>เลือกคำสาปที่<b>ร้ายน้อยที่สุด</b> 1 ข้อ (ติดตัวถาวร)`,o.map(k=>({t:CUR[k][0],s:CUR[k][1]+(ncur(k)?` · ซ้อนครั้งที่ ${ncur(k)+1}`:''),noFate:1,f(){addCurse(k);setTimeout(after,350)}})))}
@@ -14631,7 +14637,7 @@ const PA_OP=[
  ['🌀','ประตูมิติว่างเปล่า','เปิดแล้วจะได้อะไร… ขึ้นกับว่ามิติไหนตอบรับ',[['rnd',3]]],
  ['🗡️','กระบี่ผู้พิชิตเก้าสวรรค์','ฟันเทพตกสวรรค์มาแล้วเก้าองค์',[['pow',1.3],['fight',1.4]]],
  ['🐢','กระดองเต่าค้ำโลก','เต่าที่แบกแผ่นดินไว้ ผลัดกระดองทุกหมื่นปี',[['hp',1.5],['life',1.5],['qi',.8]]]];
-{const LB={pow:v=>`พลังรวมถาวร +${(v*100).toFixed(1)}%`,hp:v=>`พลังชีวิตสูงสุด +${Math.round(v*100)}%`,qi:v=>`ลมปราณ +${fmt(v)} ปี`,life:v=>`อายุขัย +${fmt(v)} ปี`,int:v=>`ปัญญา +${fmt(v)}`,cha:v=>`เสน่ห์ +${fmt(v)}`,money:v=>`เงิน +${fmtM(v)} ตำลึง`,fame:v=>`ชื่อเสียง +${fmt(v)}`,tal:v=>`พรสวรรค์ ×${(1+v).toFixed(2)} ถาวร`};
+{const LB={pow:v=>pwD(v),hp:v=>`พลังชีวิตสูงสุด +${Math.round(v*100)}%`,qi:v=>`ลมปราณ +${fmt(v)} ปี`,life:v=>`อายุขัย +${fmt(v)} ปี`,int:v=>`ปัญญา +${fmt(v)}`,cha:v=>`เสน่ห์ +${fmt(v)}`,money:v=>`เงิน +${fmtM(v)} ตำลึง`,fame:v=>`ชื่อเสียง +${fmt(v)}`,tal:v=>`พรสวรรค์ ×${(1+v).toFixed(2)} ถาวร`};
  const RND=['pow','hp','qi','life','int','cha'];
  const parts=it=>{const o=PA_OP[it.op];let L=o[3];if(L[0][0]==='rnd'){const g=srng(it.k*31+7),P=RND.slice();L=[];for(let i=0;i<3;i++)L.push([P.splice(Math.floor(g()*P.length),1)[0],1.1])}
   return L.map(([fx,m])=>{if(fx==='trib')return{fx,v:.25,d:'ทัณฑ์สวรรค์ครั้งถัดไป: โอกาสผ่านทุกระลอก +25%'};const e=paEff({r:it.r,k:it.k,fx});
@@ -22801,12 +22807,16 @@ try{SYS_GUIDE.push({s:'world',nw:1,ic:'🧘',t:'หยั่งรู้ฟ้�
 // ภายในยังเก็บเป็นหน่วยเดิม (ราคา/ห้องประมูล/คลังสำนักไม่เปลี่ยน) แต่แดนเทพแสดงผลเป็นหยกดาราเทพ 1 ก้อน = 4,000 หน่วย
 // ขึ้นแดนเทพแล้วเงินโลกล่าง (เงินติดตัว · เงินฝากธนาคารเมือง · เงินลงทุน · คลังสำนัก) ใช้ต่อไม่ได้ — แลกได้ 10% ที่ศาลเทวสภา หรือถวายเป็นบุญ
 function gJ(){return !!(S&&S.xian&&S.xt&&!S.mw)}
-function curW(){return gJ()?JADE_N:S&&S.xian?'หินวิญญาณ':'ตำลึง'}
-function fmtJ(n){const v=(+n||0)/JADE,a=Math.abs(v);if(a>=100)return fmt(v);return (+v.toFixed(a>=10?1:2)).toLocaleString('th-TH')}
+function curW(){return gJ()?JADE_N:S&&S.mw?(mwCC().cur||'บาท'):S&&S.xian?'หินวิญญาณ':'ตำลึง'}
+function fmtJ(n){const v=(+n||0)/JADE,a=Math.abs(v);if(a>=100)return fmt(v)+'\u2060';return (+v.toFixed(a>=10?1:2)).toLocaleString('th-TH')+'\u2060'}
 function fmtM(n){return gJ()?fmtJ(n):fmt(n)}
 {const _st=stoneTxt;stoneTxt=function(n){return gJ()?`${fmtJ(n)} ${JADE_N}`:_st.apply(this,arguments)}}
 // แทนคำเฉพาะที่เป็น "เงิน": คำว่าตำลึง (ใช้เป็นเงินเสมอ) และหินวิญญาณที่ตามหลังตัวเลข — ชื่อฉายา/สิ่งของที่มีคำว่าหินวิญญาณไม่ถูกแตะ
-function jadeW(t){if(typeof t!=='string'||!gJ())return t;return t.replace(/ตำลึง/g,JADE_N).replace(/(\d[\d,\.]*(?:\s*(?:ล้านล้าน|แสนล้าน|หมื่นล้าน|พันล้าน|ร้อยล้าน))?\s*(?:<\/b>)?\s*)หินวิญญาณ/g,'$1'+JADE_N).replace(/หาหินวิญญาณ/g,'หา'+JADE_N)}
+// ตัวเลขที่ผ่าน fmtJ แล้วจะมีเครื่องหมายมองไม่เห็น (\u2060) ต่อท้าย → แค่เปลี่ยนชื่อหน่วย · ตัวเลขดิบที่ตามด้วย ตำลึง/หินวิญญาณ → แปลงค่าเป็นหยกด้วย (เดิมเปลี่ยนแค่ชื่อหน่วย ตัวเลขเลยผิด)
+const JMUL={'ล้านล้าน':1e12,'แสนล้าน':1e11,'หมื่นล้าน':1e10,'พันล้าน':1e9,'ร้อยล้าน':1e8,'ล้าน':1e6};
+function jadeW(t){if(typeof t!=='string'||!gJ())return t;
+ t=t.replace(/([+\-−]?)(\d[\d,]*(?:\.\d+)?)(\u2060)?(\s*(?:ล้านล้าน|แสนล้าน|หมื่นล้าน|พันล้าน|ร้อยล้าน|ล้าน))?(\s*(?:<\/b>)?\s*)(ตำลึง|หินวิญญาณ)/g,(m,sg,num,mk,mul,mid,u)=>{if(mk)return sg+num+mk+(mul||'')+mid+JADE_N;const v=parseFloat(num.replace(/,/g,''))*(mul?JMUL[mul.trim()]||1:1);if(!isFinite(v))return m;return sg+fmtJ(v)+mid+JADE_N});
+ return t.replace(/ตำลึง/g,JADE_N).replace(/หาหินวิญญาณ/g,'หา'+JADE_N)}
 {const _xJ=xT;xT=function(t){return jadeW(_xJ.call(this,jadeW(t)))}}
 {const _lgJ=log;log=function(t){arguments[0]=jadeW(t);return _lgJ.apply(this,arguments)}}
 {const _agJ=ascendGod;ascendGod=function(){const was=S&&!S.xt;const m=was?Math.max(0,S.money||0):0,bk=was&&S.tw?Math.max(0,S.tw.bank||0):0,iv=was&&S.invest?Math.max(0,S.invest.c||0):0,lt=was&&S.lead?Math.max(0,S.lead.tr||0):0;
@@ -25150,14 +25160,21 @@ function frgSearch(){const q=String(window._frg.q||'').trim().toLowerCase(),res=
 
 // ===================== ปุ่มกลุ่มเฟสบุ๊ก (ใต้ปุ่มสนับสนุนเกม หน้าแรก) =====================
 const FB_URL='https://www.facebook.com/groups/2160641727993657/';
-function openFbGroup(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👥 กลุ่มเฟสบุ๊กของเกม</h3>
- <a href="${FB_URL}" target="_blank" rel="noopener noreferrer" style="display:block;margin-bottom:10px"><img src="/fb-banner.jpg" alt="1 ใน นวนิยาย" width="960" height="540" loading="lazy" style="display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:12px;border:2px solid #17348a;box-shadow:0 3px 0 #17348a;background:#1a1a4a"></a>
- <div class="box" style="padding:12px;margin-bottom:10px"><p style="margin:0 0 8px">เจอบั๊ก มีไอเดีย หาเพื่อนเล่น หรือหาเกมไม่เจอ เข้ามาคุยกันในกลุ่มได้เลย</p><p class="tag2" style="margin:0">แชร์ให้เพื่อนที่ยังหาเกมนี้ไม่เจอได้ด้วย</p></div>
- <a class="pbtn" href="${FB_URL}" target="_blank" rel="noopener noreferrer" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box">เปิดกลุ่มเฟสบุ๊ก ↗</a>
- <button class="gbtn" style="width:100%;margin-top:8px" onclick="fbCopy()">📋 คัดลอกลิงก์กลุ่ม</button>`,'fb')}
-function fbCopy(){try{navigator.clipboard.writeText(FB_URL).then(()=>toast('คัดลอกลิงก์แล้ว'),()=>toast(FB_URL))}catch(e){toast(FB_URL)}}
+const DC_URL='https://discord.gg/8qqFY26fr';
+function openFbGroup(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👥 ชุมชนผู้เล่น</h3>
+ <img src="/fb-banner.jpg" alt="1 ใน นวนิยาย" width="960" height="540" loading="lazy" style="display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:12px;border:2px solid #17348a;box-shadow:0 3px 0 #17348a;background:#1a1a4a;margin-bottom:10px">
+ <div class="box" style="padding:12px;margin-bottom:10px"><p style="margin:0 0 6px">เจอบั๊ก มีไอเดีย หาเพื่อนเล่น หรืออยากคุยเรื่องเกม เข้ามาได้ทั้ง 2 ที่</p><p class="tag2" style="margin:0">💬 Discord คุยสด แจ้งบั๊กไว · 👥 เฟสบุ๊ก ข่าวอัปเดตและโพสต์รวม</p></div>
+ <div class="cmty">
+  <div class="cmc dc"><div class="cmh"><span class="cmi">💬</span><div><b>Discord</b><small>ห้องแชทสด · ห้องแจ้งบั๊ก · หาเพื่อนเล่น</small></div></div>
+   <a class="cmb" href="${DC_URL}" target="_blank" rel="noopener noreferrer">เข้าดิสคอร์ด ↗</a><button class="cmcp" onclick="cmCopy(DC_URL)">📋 คัดลอกลิงก์</button></div>
+  <div class="cmc fb"><div class="cmh"><span class="cmi">👥</span><div><b>กลุ่มเฟสบุ๊ก</b><small>ข่าวอัปเดต · โพสต์ไอเดีย · แชร์ชีวิตเด็ด</small></div></div>
+   <a class="cmb" href="${FB_URL}" target="_blank" rel="noopener noreferrer">เปิดกลุ่มเฟสบุ๊ก ↗</a><button class="cmcp" onclick="cmCopy(FB_URL)">📋 คัดลอกลิงก์</button></div>
+ </div><p class="tag2" style="margin:8px 0 0;text-align:center">แชร์ให้เพื่อนที่ยังหาเกมนี้ไม่เจอได้ด้วย</p>`,'fb')}
+function cmCopy(u){try{navigator.clipboard.writeText(u).then(()=>toast('คัดลอกลิงก์แล้ว'),()=>toast(u))}catch(e){toast(u)}}
+function fbCopy(){cmCopy(FB_URL)}
+(function(){const st=document.createElement('style');st.textContent='.cmty{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.cmc{border-radius:14px;padding:12px;color:#fff;display:flex;flex-direction:column;gap:8px}.cmc.dc{background:linear-gradient(160deg,#6b77ff,#4752c4);border:2px solid #2e3592;box-shadow:0 3px 0 #2e3592}.cmc.fb{background:linear-gradient(160deg,#4a7bff,#2a55d0);border:2px solid #17348a;box-shadow:0 3px 0 #17348a}.cmc .cmh{display:flex;gap:10px;align-items:center}.cmc .cmi{font-size:26px}.cmc .cmh b{display:block;font-size:16px}.cmc .cmh small{display:block;font-size:12px;opacity:.9}.cmc .cmb{display:block;text-align:center;text-decoration:none;font-weight:800;color:#1f2050;background:#fff;border-radius:10px;padding:9px;box-shadow:0 2px 0 rgba(0,0,0,.25)}.cmc .cmb:active{transform:translateY(1px)}.cmc .cmcp{border:1.5px solid rgba(255,255,255,.6);background:transparent;color:#fff;border-radius:10px;padding:6px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}#tFb{background:linear-gradient(180deg,#6b77ff,#4752c4)!important;border-color:#2e3592!important;box-shadow:0 3px 0 #2e3592!important}';document.head.appendChild(st)})();
 (function(){const st=document.createElement('style');st.textContent='#tFb{position:absolute;right:10px;top:58px;z-index:6;font:inherit;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(180deg,#4a7bff,#2a55d0);border:2px solid #17348a;border-radius:12px;padding:6px 11px;box-shadow:0 3px 0 #17348a;cursor:pointer}#tFb:active{transform:translateY(2px);box-shadow:0 1px 0 #17348a}';document.head.appendChild(st);
- setInterval(()=>{try{const T=$('title');if(T&&$('tSup')&&!$('tFb'))$('tSup').insertAdjacentHTML('afterend','<button id="tFb" onclick="openFbGroup()">👥 กลุ่มเฟส</button>')}catch(e){}},1200)})();
+ setInterval(()=>{try{const T=$('title');if(T&&$('tSup')&&!$('tFb'))$('tSup').insertAdjacentHTML('afterend','<button id="tFb" onclick="openFbGroup()">💬 ชุมชน</button>')}catch(e){}},1200)})();
 
 // ===================== พบผู้เล่นจริง v3: แต่ละโลกเจอกันต่างกัน · ผูกรัก (เพศตรงข้าม) / พี่น้องร่วมสาบาน (ทุกเพศ) · เงาผู้เล่นที่ออฟไลน์ =====================
 function mwW(){if(!S)return 0;if((S.kalpa&&(S.kalpa.n>0||S.kalpa.pend))||S.age>=1e6)return 3;if(S.xt)return 2;if(S.xian)return 1;return 0}
@@ -31195,7 +31212,7 @@ body.tuOn #title .seg.tuTs > button.on,#title .box.opts .seg button.on,#title .s
 #title .seg button.on::before{content:"✓ ";font-weight:900}
 #title [onclick="goDaily()"]{font-size:15px!important;font-weight:800}#title #dailyInfo{font-size:13px!important}
 `;document.head.appendChild(st);
-const M={tSup:['🙏','สนับสนุน'],tFb:['👥','เฟส'],tCos:['🎨','ตกแต่ง'],tEv:['🏮','ลอยกระทง']};
+const M={tSup:['🙏','สนับสนุน'],tFb:['💬','ชุมชน'],tCos:['🎨','ตกแต่ง'],tEv:['🏮','ลอยกระทง']};
 setInterval(()=>{try{for(const k in M){const e=$(k);if(e&&!e.querySelector('.tbi')){e.title=e.textContent.trim();e.innerHTML=`<i class="tbi">${M[k][0]}</i><span>${M[k][1]}</span>`}}}catch(e){}},900);
 }
 
@@ -32229,9 +32246,9 @@ const better=k=>{const c=curIt(k);return Object.keys(S.eqInv||{}).some(id=>{cons
 const cmp=(it,k)=>{const c=curIt(k);if(!c)return'<span class="eqU">⬆️ ช่องว่าง</span>';const a=sc(c),b=sc(it);if(b===a)return'<span class="eqE">= เท่ากัน</span>';if(it.s==='fw'){return b>a?'<span class="eqU">⬆️ ระดับสูงกว่า</span>':'<span class="eqD">⬇️ ระดับต่ำกว่า</span>'}const p=Math.round((b-a)/Math.max(1,a)*100);return p>0?'<span class="eqU">⬆️ +'+p+'%</span>':'<span class="eqD">⬇️ '+p+'%</span>'};
 const seen=()=>{S.eqSeen=S.eqSeen||{};return S.eqSeen};
 const CAT=[['all','ทั้งหมด',()=>true],['acc','💍 เครื่องประดับ',it=>it.s==='acc'],['trs','🧿 ของวิเศษ',it=>it.s==='trs'],['fit','👘 ชุด',it=>it.s==='fit'],['fw','🗡️ อาวุธหลอม',it=>it.s==='fw']];
-function tile(k){let ic='',nm='— ว่าง —',on=false;if(GS.includes(k)){const g=gearOf(k);if(g){on=true;nm=g.n+(k==='weapon'||k==='armor'?(gupLv(k)?' +'+gupLv(k):''):'')}}else{const it=curIt(k);if(it){on=true;ic=it.ic;nm=it.n}}
+function tile(k){let ic='',nm='— ว่าง —',on=false,sid='';if(GS.includes(k)){const g=gearOf(k);if(g){on=true;sid=g.id;nm=g.n+(k==='weapon'||k==='armor'?(gupLv(k)?' +'+gupLv(k):''):'')}}else{const it=curIt(k);if(it){on=true;ic=it.ic;nm=it.n;sid=S.eq[k]}}
  const sel=window._eqSel===k,dot=!GS.includes(k)&&better(k);
- return '<button class="eqT'+(on?' on':'')+(sel?' sel':'')+'" onclick="eqSel(\''+k+'\')"><span class="eqTi">'+(ic||ICO(k))+'</span><span class="eqTt"><small>'+LBL(k).replace(/^\S+\s/,'')+'</small><b>'+esc(nm)+'</b></span>'+(dot?'<i class="eqDot"></i>':'')+'</button>'}
+ return '<button class="eqT'+(on?' on':'')+(sel?' sel':'')+'" onclick="eqSel(\''+k+'\')"><span class="eqTi">'+((sid&&window.itImg&&itImg(sid))||ic||ICO(k))+'</span><span class="eqTt"><small>'+LBL(k).replace(/^\S+\s/,'')+'</small><b>'+esc(nm)+'</b></span>'+(dot?'<i class="eqDot"></i>':'')+'</button>'}
 function itemRow(id,k){const it=EQI[id];if(!it)return'';const n=S.eqInv[id]||0,nw=!seen()[id];const sl=k?[k]:slotsOf(it);
  return '<div class="eqR"><div class="eqRh"><b>'+it.ic+' '+esc(it.n)+(n>1?' ×'+n:'')+'</b>'+(nw?'<span class="eqNew">✨ ใหม่</span>':'')+(sl.length===1&&sl[0]!=='fit'?' '+cmp(it,sl[0]):'')+'</div><div class="tag2">'+it.d+'</div><div class="eqRb">'+sl.map(s=>'<button class="sysb" onclick="eqPut(\''+s+'\',\''+id+'\');openEquip()">สวม'+(sl.length>1?(s==='acc1'?' ช่อง 1':' ช่อง 2'):'')+'</button>').join(' ')+' <button class="sysb" onclick="eqSell(\''+id+'\')">ขาย '+fmtM(Math.round(it.v*.4))+'</button>'+(typeof eqSalv==='function'?' <button class="sysb" onclick="eqSalv(\''+id+'\')">🔧 แยก</button>':'')+'</div></div>'}
 function panel(k){if(!k)return'';let h='<div class="eqP"><div class="eqPh"><b>'+ICO(k)+' '+LBL(k).replace(/^\S+\s/,'')+'</b><button class="sysb" onclick="eqSel(null)">ปิด</button></div>';
@@ -39441,7 +39458,7 @@ wSlot('mw37',["openSoul","openMenu","mwYear","passYear"]);
 //   pixelfx: MIT, Copyright (c) 2026 Patch · Copyright (c) 2026 Hugo Duprez — https://github.com/patch-gg/pixelfx
 // ============================================================
 try{(()=>{
-let st=0;const PV='6';
+let st=0;const PV='7';
 const want=()=>{try{return LS.get('murim_pfx',1)!==0}catch(e){return true}};
 const vq=()=>{try{return typeof vfxQ==='function'?vfxQ():1}catch(e){return 1}};
 function load(){if(st||!want())return;st=1;const s=document.createElement('script');s.src='/pfx.js?v='+PV;s.async=true;s.onload=()=>{st=window.PFX?2:0;sync()};s.onerror=()=>{st=0};document.head.appendChild(s)}
@@ -43786,9 +43803,9 @@ body.desk.evDock #modal[data-k="choice"] .chtop{flex-wrap:wrap;gap:4px 10px}
 `;document.head.appendChild(st);
 const B=document.body;
 function dock(){try{const L=document.getElementById('deskL'),on=B.classList.contains('desk')&&!!L&&modalOpen&&$('modal').dataset.k==='choice';
- B.classList.toggle('evDock',on);if(!on)return;const r=L.getBoundingClientRect(),H=innerHeight;
- const top=Math.max(8,r.top),w=Math.max(280,Math.round(r.width)+6);
- B.style.setProperty('--evL',Math.max(6,Math.round(r.left)-3)+'px');B.style.setProperty('--evT',Math.round(top)+'px');B.style.setProperty('--evW',w+'px');B.style.setProperty('--evH',Math.round(H-top-10)+'px')}catch(e){}}
+ if(B.classList.contains('evDock')!==on)B.classList.toggle('evDock',on);if(!on)return;const r=L.getBoundingClientRect(),H=innerHeight;
+ const top=Math.max(8,r.top),w=Math.max(280,Math.round(r.width)+6),v=[Math.max(6,Math.round(r.left)-3),Math.round(top),w,Math.round(H-top-10)],k=v.join();
+ if(k===dock._k)return;dock._k=k;B.style.setProperty('--evL',v[0]+'px');B.style.setProperty('--evT',v[1]+'px');B.style.setProperty('--evW',v[2]+'px');B.style.setProperty('--evH',v[3]+'px')}catch(e){}}
 window._evDock=dock;
 {const _cs=choiceShow;choiceShow=function(){const r=_cs.apply(this,arguments);dock();return r}}
 {const _m=modal;modal=function(){const r=_m.apply(this,arguments);dock();return r};for(const k in _m)try{modal[k]=_m[k]}catch(e){}}
@@ -45992,6 +46009,27 @@ try{(()=>{const E=t=>{try{return esc(t)}catch(e){return t}};const R=(a,b)=>a+Mat
 @media(prefers-reduced-motion:reduce){#rvCine *{animation-duration:.01s!important}}
 `;document.head.appendChild(st);
 })()}catch(e){console.error('block217',e)}
+// ===================== BLOCK 218: 🚦 เหตุการณ์ไม่ขึ้นรัวติดกัน =====================
+// เดิม: หลายระบบโยนตัวเลือกมาในปีเดียวกัน → เข้าคิว แล้วเด้งต่อกัน 4–5 อันทันทีหลังปิดอันแรก
+// ใหม่: ปีหนึ่งปล่อยจากคิวได้ 1 อัน ที่เหลือรอปีถัดไป (ตัวเลือกต่อเนื่องของเหตุการณ์เดียวกันไม่ถูกกระทบ เพราะไม่ได้ผ่านคิว)
+//       ของในคิวที่ค้างเกิน 4 ปีถูกตัดทิ้ง ยกเว้นเรื่องสำคัญ · คิวเก็บได้ไม่เกิน 5 อัน
+try{(()=>{const KEEP=/ทัณฑ์|ทะลวง|เลื่อนขั้น|แต่งงาน|ขอแต่ง|คลอด|ตาย|สืบทอด|เชิญเข้าสำนัก|ระบบ|ประตู|กัลป์|🌌|📖|🧵|Tribulation|Breakthrough/i;
+ const strip=t=>String(t||'').replace(/<[^>]*>/g,'');const yr=()=>S?Math.floor(S.age||0):0;
+ const prune=()=>{const Q=choice._q;if(!Q||!Q.length)return;for(const q of Q)if(q[4]==null)q[4]=yr();
+  for(let i=Q.length-1;i>=0;i--){const q=Q[i];if(q[3]!==S||yr()-q[4]>4&&!KEEP.test(strip(q[0])))Q.splice(i,1)}
+  while(Q.length>5){const i=Q.findIndex(q=>!KEEP.test(strip(q[0])));Q.splice(i<0?0:i,1)}};
+ const _dq=chDeq;chDeq=function(){try{if(choice._cur||!choice._q||!choice._q.length)return;prune();if(!choice._q.length)return;
+   if(S&&S._qrY===yr()&&!auto)return; // ปีนี้ปล่อยไปแล้ว รอปีหน้า
+   if(S)S._qrY=yr()}catch(e){}return _dq.apply(this,arguments)};
+ const _py=passYear;passYear=function(){let held=null;try{if(!auto&&S&&S.alive&&!choice._cur&&choice._q&&choice._q.length){prune();if(S._qrY===yr()){held=choice._q;choice._q=[]}}}catch(e){}
+  let r;try{r=_py.apply(this,arguments)}finally{if(held){const nw=choice._q||[];choice._q=held.concat(nw.filter(x=>!held.some(h=>h[0]===x[0])))}}
+  try{if(S&&S.alive&&!choice._cur&&choice._q&&choice._q.length&&S._qrY!==yr())setTimeout(()=>{try{chDeq()}catch(e){}},(typeof rdGap==='function'?rdGap():400))}catch(e){}return r};
+ // งบเหตุการณ์ที่เด้งเองต่อปี: เกิน 2 เรื่องอิสระในปีเดียว → เก็บเข้าคิวไว้ปีหน้า (เหตุการณ์ต่อเนื่องที่เปิดจากตัวเลือกเดิมไม่นับ)
+ let inRun=0;{const _cr=choiceRun;choiceRun=function(){inRun++;try{return _cr.apply(this,arguments)}finally{inRun--}}}
+ const FREE=/^\s*(🎲|🌌|🍃|🔁|✉️)|ทัณฑ์|ทะลวง|เลื่อนขั้น|กัลป์|ประตู/;
+ const _ch=choice;choice=function(title,text,opts){try{if(!auto&&S&&S.alive&&!choice._cur&&!inRun&&!(S._xa&&S._xa.run)&&!FREE.test(strip(title))){const y=yr();if(S._chY!==y){S._chY=y;S._chN=0}
+   if(S._chN>=2){if(!choice._q)choice._q=[];if(!choice._q.some(x=>x[0]===title))choice._q.push([title,text,opts,S,y]);return}S._chN++}}catch(e){}return _ch.apply(this,arguments)};for(const k in _ch)try{choice[k]=_ch[k]}catch(e){}
+})()}catch(e){console.error('block218',e)}
 // BLOCK 211: ✍️ สร้างเอง / 🎨 ออกแบบหน้าตา ทุกโลก — ตัวเลือกกลาง ccPick (เลือกทุกช่องเอง) · ccLook (ออกแบบหน้าตา ที่เหลือลิขิต)
 //  ชีวิตที่ "สร้างเอง" ตั้ง S.custom + S.ccOwn → ไม่ส่งขึ้นทำเนียบ (ห่อ sendLife) · ตั้งผ่าน window._ccOwnPending ก่อน startLife ของแต่ละโลก
 //  ใช้ใน: 🐾 สัตว์อสูร (หน้ากำเนิด) · 🌉 นครม่านหมอก (w/fog.js) · 🌠 ทะลุฟ้าดารา (w/sky.js) · โลกอื่นมีอยู่แล้ว (goBirthPick / ยุคปัจจุบัน)
@@ -46345,3 +46383,112 @@ try{window.secretBook=window.secretBook||function(){return wNeed('secret',()=>wi
 
 // ===== 🎮 มินิเกมยุคใหม่ (คีย์บอร์ดบนคอม · แตะรัว→กดค้าง · ปรับยากเอง · ดาว/สถิติแยกเครื่อง · โหมดช้าลง · หอฝึกมินิเกม) อยู่ที่ /w/mg3.js =====
 try{window.mgHall=window.mgHall||function(){return wNeed('mg3',()=>window._mgHall&&window._mgHall())};setTimeout(()=>{try{wLoad('mg3').catch(()=>{})}catch(e){}},1800)}catch(e){console.error('mg3Stub',e)}
+// 🔮 อยากเล่นต่ออีกชาติ (w/hook.js): เส้นทางชะตา · ภารกิจชาติ · หน้าจบชวนเกิดใหม่ · แชร์ผล/ลิงก์ท้าชะตาประจำวัน · ชาติก่อนของตัวเอง · ช่องทางผู้เล่น
+try{window.hkOpen=window.hkOpen||function(){return wNeed('hook',()=>window.hkOpen&&window.hkOpen())};setTimeout(()=>{try{wLoad('hook').catch(()=>{})}catch(e){}},2000)}catch(e){console.error('hkStub',e)}
+
+// 🎨 ไอคอนของในกระเป๋าแบบภาพ (items.webp 8×4) — แทน emoji ที่ตามด้วยชื่อของ ทุกจุดในเกม · ไม่มีภาพ = emoji เดิม
+try{(function(){
+ const K=['hp','qi','brk','elix','cure','lpill','bpill','dew','herb','ore','jade','hide','silk','ink','core','bcore','tal','egg','fruit','mirror','phx','seal','star','void','food','gem','map','scroll','charm','wine'];
+ const st=document.createElement('style');st.textContent='.ii{display:inline-block;width:1.5em;height:1.5em;vertical-align:-.42em;margin:0 .06em;flex:0 0 auto}';document.head.appendChild(st);
+ const M={},L=[];K.forEach((k,i)=>{const I=typeof BAGIT!=='undefined'&&BAGIT[k];if(!I||!I.ic||!I.n)return;const s=I.ic+' '+I.n;M[s]={k,ic:I.ic,n:I.n,u:'/items.webp',c:8,r:4,i};L.push(s)});
+ if(!L.length)return;L.sort((a,b)=>b.length-a.length);
+ // ชุดที่ 2 (items2.webp 8×6): อาวุธ เกราะ พาหนะ บ้าน ของร้านระบบ เครื่องประดับ ชุด · null = ไม่มีของตรงในเกม
+ const K2=['w1','w2','w3','w4','a1','a2','a3','m1','m2','m3','h1','h2','h3','pill','heal',null,'art','life','break','revive','ticket','furnace','body','mask','soulp','r1','r5','r6','r2','r3','r4','r9','r7','r8','t1','t4','t2','t3','o1','o2','o3','o4','o5','o6','o7',null,null,null];
+ const IX={};K.forEach((k,i)=>IX[k]=['/items.webp',i,8,4]);K2.forEach((k,i)=>{if(k&&IX[k]==null)IX[k]=['/items2.webp',i,8,6]});
+ // ✨ อนิเมชันตามความหายาก (ไม่มีไฟล์เพิ่ม · CSS ล้วน) c=นิ่ง r=เรือง e=เรือง+ลอย l=ลอย+ประกาย m=ลอย+วาบ+ประกายไฟ d=หมอกมาร y=ระบบ
+ const QR={'/items.webp':'ccelcerrccrcccreellrmmmmcrrecr','/items2.webp':'crelcelcrecrerreeeelrleeecrcreerllreelccrrrelcel','/items3.webp':'rrrrrrrcccccccccddddccddyyyyyyyyyycccccccccrrell'};
+ const QC={r:'qa1',e:'qa2',l:'qa3',m:'qa4',d:'qad',y:'qay'};
+ const QA=(u,i)=>QC[(QR[u]||'')[i]]||'';
+ const ST=(u,i,c,r)=>`--u:url(${u});--p:${(i%c)/(c-1)*100}% ${((i/c|0)/(r-1))*100}%;--s:${c*100}% ${r*100}%`;
+ const bgs=v=>ST(v[0],v[1],v[2],v[3]);
+ st.textContent+='.pxf i.iiB{display:block;width:32px;height:32px;position:relative;z-index:1}.pxf.big i.iiB{width:48px;height:48px}#modal.bgDk .bgGrid>.bagit .pxf i.iiB{width:40px;height:40px}';
+ const _px=window.pxi;if(typeof _px==='function')window.pxi=function(kind,r,tint,seed,big){if(typeof seed==='string'&&IX[seed]!=null)return`<span class="pxf r${r|0}${big?' big':''}"><i class="iiB ${QA(IX[seed][0],IX[seed][1])}" style="${bgs(IX[seed])}"></i></span>`;return _px.apply(this,arguments)};
+ window.itImg=k=>IX[k]!=null?`<i class="iiB ${QA(IX[k][0],IX[k][1])}" style="${bgs(IX[k])}"></i>`:'';st.textContent+='.eqTi:has(i.iiB){width:30px;margin-right:4px}.eqTi i.iiB{display:block;width:30px;height:30px}h3 .ii,h4 .ii{width:1.25em;height:1.25em;vertical-align:-.25em}.tag .ii{width:1.3em;height:1.3em;vertical-align:-.35em;margin:-.2em .15em -.2em -.1em}';
+ try{if(typeof EQI!=='undefined')K2.forEach((k,i)=>{const I=k&&EQI[k];if(!I||!I.ic||!I.n)return;const s2=I.ic+' '+I.n;if(M[s2])return;M[s2]={k,ic:I.ic,n:I.n,u:'/items2.webp',c:8,r:6,i};L.push(s2)});L.sort((a,b)=>b.length-a.length)}catch(e){}
+
+ // ชุดที่ 3 (items3.webp 8×6): ตราสำนัก 24 · ระบบ 10 · สายอาชีพ 4 · กิจการ 3 · ดันเจี้ยน 7 (จับคู่ "อีโมจิ ชื่อ")
+ const FN=['สำนักภูผาขาว','วัดศิลาธรรม','พรรคกระยาจก','สำนักเขาเมฆม่วง','หุบเขาดอกท้อ','สำนักกระบี่สิบทิศ','หุบเขาโอสถเทวดา','สำนักมวยต้นหลิว','พรรคเงาโลหิต','หอพิษทมิฬ','สมาคมโจรสลัดสายน้ำ','หอข่าวกรองหมื่นลี้','ค่ายเสือดำ','อารามเมฆขาวน้อย','สำนักกระบี่ริมธาร','แก๊งมีดสั้นตลาดเหนือ','ลัทธิมารสวรรค์','พรรคมารโลหิต','นิกายเงาจันทร์ดำ','สำนักหมื่นวิญญาณ','ซ่องโจรเขาหมาป่า','สมาคมลูกเต๋าทอง','ลัทธิกระดูกขาว (สาขาย่อย)','ศาลเจ้าวิญญาณร้าง'];
+ const P3=[];FN.forEach((n,i)=>P3.push(['🏯',n,i]));
+ try{(SYS_TYPES||[]).slice(0,10).forEach((T,i)=>T&&T.ic&&P3.push([T.ic,T.n,24+i]))}catch(e){}
+ try{['alch','smith','array','talis'].forEach((k,i)=>PROF[k]&&P3.push([PROF[k].ic,PROF[k].n,34+i]))}catch(e){}
+ try{['inn','smith','pharm'].forEach((k,i)=>BIZ[k]&&P3.push([BIZ[k].ic,BIZ[k].n,38+i]))}catch(e){}
+ try{(DUNG||[]).slice(0,7).forEach((d,i)=>d&&d.ic&&P3.push([d.ic,d.n,41+i]))}catch(e){}
+ P3.forEach(([ic,n,i])=>{const s3=ic+' '+n;if(M[s3])return;M[s3]={k:'s3_'+i,ic,n,u:'/items3.webp',c:8,r:6,i};L.push(s3)});L.sort((a,b)=>b.length-a.length);
+ window.facImg=n=>{const i=FN.indexOf(n);return i<0?'':`<i class="ii ${QA('/items3.webp',i)}" title="${n}" style="${ST('/items3.webp',i,8,6)}"></i>`};
+ const RE=new RegExp(L.map(s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
+ st.textContent+=`.ii,i.iiB{background:var(--u) var(--p)/var(--s) no-repeat;position:relative}
+:is(.ii,i.iiB).qa1{--gc:rgba(90,170,255,.55)}:is(.ii,i.iiB).qa2{--gc:rgba(180,90,255,.6)}:is(.ii,i.iiB).qa3{--gc:rgba(255,200,70,.6)}:is(.ii,i.iiB).qa4{--gc:rgba(255,100,40,.7)}:is(.ii,i.iiB).qad{--gc:rgba(200,30,80,.6)}:is(.ii,i.iiB).qay{--gc:rgba(60,180,255,.6)}
+:is(.ii,i.iiB).qa1,:is(.ii,i.iiB).qa2,:is(.ii,i.iiB).qa3,:is(.ii,i.iiB).qa4,:is(.ii,i.iiB).qad,:is(.ii,i.iiB).qay{background:var(--u) var(--p)/var(--s) no-repeat,radial-gradient(closest-side,var(--gc),transparent) 50% 50%/80% 80% no-repeat}
+:is(.ii,i.iiB).qa1,:is(.ii,i.iiB).qay{animation:qaG 2.8s ease-in-out infinite}:is(.ii,i.iiB).qay{animation-timing-function:steps(5)}
+:is(.ii,i.iiB).qad{animation:qaG 4.2s ease-in-out infinite}
+:is(.ii,i.iiB).qa2{animation:qaF 3.2s ease-in-out infinite,qaG 3.2s ease-in-out infinite}
+:is(.ii,i.iiB).qa3{animation:qaF 2.8s ease-in-out infinite,qaG 2.8s ease-in-out infinite}
+:is(.ii,i.iiB).qa4{animation:qaF 2.4s ease-in-out infinite,qaG 1.8s ease-in-out infinite,qaB 3s ease-in-out infinite}
+:is(.ii,i.iiB).qa3::after,:is(.ii,i.iiB).qa4::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.8) 50%,transparent 62%) no-repeat;background-size:300% 100%;-webkit-mask:var(--u) var(--p)/var(--s) no-repeat;mask:var(--u) var(--p)/var(--s) no-repeat;animation:qaS 3.6s ease-in-out infinite}
+:is(.ii,i.iiB).qa4::after{animation-duration:2.6s}
+@keyframes qaG{0%,100%{background-size:var(--s),60% 60%}50%{background-size:var(--s),115% 115%}}
+@keyframes qaF{0%,100%{transform:translateY(0)}50%{transform:translateY(-8%)}}
+@keyframes qaS{0%,55%{background-position:130% 0}85%,100%{background-position:-30% 0}}
+@keyframes qaB{0%,90%,100%{filter:none}94%{filter:brightness(1.7)}}
+@media (prefers-reduced-motion:reduce){:is(.ii,i.iiB).qa1,:is(.ii,i.iiB).qa2,:is(.ii,i.iiB).qa3,:is(.ii,i.iiB).qa4,:is(.ii,i.iiB).qad,:is(.ii,i.iiB).qay,:is(.ii,i.iiB).qa3::after,:is(.ii,i.iiB).qa4::after{animation:none!important}}
+body.lite :is(.ii,i.iiB).qa1,body.lite :is(.ii,i.iiB).qa2,body.lite :is(.ii,i.iiB).qa3,body.lite :is(.ii,i.iiB).qa4,body.lite :is(.ii,i.iiB).qad,body.lite :is(.ii,i.iiB).qay,body.lite :is(.ii,i.iiB).qa3::after,body.lite :is(.ii,i.iiB).qa4::after{animation:none!important}`;
+ const SK=/^(SCRIPT|STYLE|TEXTAREA|INPUT|OPTION|SELECT|TITLE)$/;
+ const sty=o=>ST(o.u,o.i,o.c,o.r);
+ window.itIc=k=>{const s=Object.keys(M).find(x=>M[x].k===k);return s?`<i class="ii ${QA(M[s].u,M[s].i)}" title="${M[s].n}" style="${sty(M[s])}"></i>`:((typeof BAGIT!=='undefined'&&BAGIT[k]&&BAGIT[k].ic)||'')};
+ function proc(t){const v=t.nodeValue;if(!v||v.length<3)return;RE.lastIndex=0;if(!RE.test(v))return;const p=t.parentNode;if(!p||SK.test(p.nodeName)||p.isContentEditable)return;
+  RE.lastIndex=0;const f=document.createDocumentFragment();let last=0,m;
+  while((m=RE.exec(v))){const o=M[m[0]];if(m.index>last)f.appendChild(document.createTextNode(v.slice(last,m.index)));const i=document.createElement('i');i.className='ii';i.title=o.n;i.style.cssText=sty(o);const q=QA(o.u,o.i);if(q)i.classList.add(q);f.appendChild(i);f.appendChild(document.createTextNode(m[0].slice(o.ic.length)));last=m.index+m[0].length}
+  if(last<v.length)f.appendChild(document.createTextNode(v.slice(last)));p.replaceChild(f,t)}
+ function walk(n){if(n.nodeType===3)return proc(n);if(n.nodeType!==1||SK.test(n.nodeName))return;const w=document.createTreeWalker(n,NodeFilter.SHOW_TEXT),a=[];let x;while((x=w.nextNode()))a.push(x);a.forEach(proc)}
+ const ob=new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')proc(m.target);else m.addedNodes.forEach(walk)}});
+ const go=()=>{walk(document.body);ob.observe(document.body,{childList:true,subtree:true,characterData:true})};
+ if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
+})()}catch(e){console.error('mod-itic',e)}
+
+// 🎨 ไอคอนเมนู/ปุ่มแบบภาพ (items4.webp + items5.webp 8×6) — ทับภาพ pixel emoji เดิมของปุ่มที่ชื่อตรงกัน · ไม่ตรง = ของเดิม · อนิเมชันเล็กๆ บางไอคอน
+try{(function(){
+ const L4=['ตัวละครของฉัน','วิชา','สุ่มวิชา','สำนัก','ตลาดยุทธภพ','ครอบครัว','ทำเนียบสำนัก','คนที่เกิดพร้อมกัน','ของต่างโลก','ระบบ',null,'สัตว์คู่ใจ','สมุดสัตว์','ผู้คน','ตระกูล','งานช่าง','ดันเจี้ยน','อัตโนมัติ','ชุดสวมใส่','บันทึกเควส','แผนที่','คู่แค้น','ของตกแต่ง','ตัวอักษร','วิธีเล่น','สมุดตำนาน','สารานุกรม','สถิติรวม','อัปเดต','เสียง','คู่มือ','แจ้งบั๊ก','ความคิดเห็น','ย้ายเซฟ','ภาพฉาก','กระเป๋า'];
+ const L5=['คัมภีร์ระดับ','สมุดความลับ','หอฝึกมินิเกม','ตู้เสื้อผ้า','ลานประลองหมื่นเงา','ห้องเล่นบท','ป่าและถ้ำ','สอนปุ่มด้านล่าง','ภัยประจำสัปดาห์','สนามฝึกประจำวัน','ทุ่มทรัพย์','สมุดโลก','มินิเกมสุ่มประจำปี*','พงศาวดาร','กลุ่มผู้เล่น','เป้าหมายทั้งเว็บ','เส้นทางชีวิต','นิยายปกแข็ง','อาชีพ','วิถียุทธ์','ฉายาของฉัน','พรสวรรค์ของฉัน','ทำอะไรดี?','แสงเรือง','ของคู่ชีวิต','ความรัก','ร้านแลกกรอบ','โปรไฟล์','สุสานจอมยุทธ์','สมุดนิยาย','การ์ดตัวละคร','ตำนานบรรพกาล','คัมภีร์ท่า','เวลาต่อปี','ล็อกคำตอบ','คุณภาพภาพ','ขนาดหน้าจอ','สรุปก่อนตัวเลือก','ตัวเลขพลัง','ธีม','แจ้งเตือน','คู่มือระบบ','ถามความคิดตามอายุ','เอฟเฟกต์ต่อสู้*','ชะตาวันนี้','ร้านค้า','ชุมชน','ออนไลน์'];
+ // อนิเมชันตามไอคอน: sw=แกว่ง rg=สั่นกระดิ่ง sp=หมุน fl=กะพริบ tw=ประกาย bt=หัวใจเต้น pu=หายใจ fx=พลิก
+ const AN={'4:29':'rg','4:37':'fx','4:9':'fl','4:17':'sp','4:31':'sw','4:32':'bt','5:2':'sw','5:12':'sp','5:22':'fl','5:23':'tw','5:25':'bt','5:40':'rg','5:38':'fl','5:43':'fl','5:44':'tw','5:45':'tw','5:46':'bt','5:47':'pu','5:1':'pu','5:10':'tw'};
+ const EX={},PF=[];[[4,L4],[5,L5]].forEach(([n,L])=>L.forEach((t,i)=>{if(!t)return;if(t.endsWith('*'))PF.push([t.slice(0,-1),n,i]);else if(EX[t]==null)EX[t]=[n,i]}));
+ PF.push(['แต้มชะตา',4,44]);EX['ฉายา']=EX['ฉายา']||[5,20];
+ const find=t=>{if(!t)return null;if(EX[t])return EX[t];for(const [p,n,i] of PF)if(t.startsWith(p))return[n,i];return null};
+ const NAV={bagBtn:[4,35],questBtn:[4,19],menuBtn:[4,39],sysBtn:[4,9],autoBtn:[4,17]};
+ const pos=i=>((i%8)/7*100)+'% '+(((i/8|0)/5)*100)+'%';
+ function paint(sp,n,i){const k=n+':'+i;if(!sp||sp.dataset.u4===k)return;sp.dataset.u4=k;const S=sp.style;S.setProperty('background-image','url(/items'+n+'.webp)','important');S.setProperty('background-position',pos(i),'important');S.setProperty('background-size','800% 600%','important');S.setProperty('background-repeat','no-repeat','important');S.setProperty('image-rendering','auto','important');if(sp.classList.contains('pxa')){sp.classList.remove('pxa');sp.querySelectorAll('px-f').forEach(x=>x.remove())}if(AN[k])sp.dataset.ua=AN[k];else delete sp.dataset.ua}
+ function lab(sp){let a=sp;if(a.parentNode&&a.parentNode.tagName==='I'&&a.parentNode.childNodes.length===1)a=a.parentNode;const t=a.nextSibling;if(t&&t.nodeType===1&&/^(B|STRONG|SPAN)$/.test(t.tagName))return t.textContent.trim();return t&&t.nodeType===3?t.nodeValue.trim():''}
+ function scan(root){if(!root||!root.querySelectorAll)return;root.querySelectorAll('button span.pxi').forEach(sp=>{const b=sp.closest('button');if(!b||b.querySelector('span.pxi')!==sp)return;let r=find(lab(sp));if(!r&&sp.textContent==='🏘️'&&b.classList.contains('opt'))r=[4,10];if(r)paint(sp,r[0],r[1])})}
+ function nav(){for(const id in NAV){const b=document.getElementById(id);if(!b)continue;let sp=b.querySelector(':scope > span.pxi');if(!sp&&id==='menuBtn'){const t=b.firstChild;if(t&&t.nodeType===3&&t.nodeValue.trim()==='☰'){sp=document.createElement('span');sp.className='pxi';sp.textContent='☰';b.replaceChild(sp,t)}}if(sp)paint(sp,NAV[id][0],NAV[id][1])}}
+ const st=document.createElement('style');st.textContent=`
+ span.pxi[data-ua]{transform-origin:50% 60%}
+ span.pxi[data-ua=sw]{animation:uaSw 3.2s ease-in-out infinite;transform-origin:50% 0}
+ span.pxi[data-ua=rg]{animation:uaRg 5s ease-in-out infinite;transform-origin:50% 10%}
+ span.pxi[data-ua=sp]{animation:uaSp 9s linear infinite}
+ span.pxi[data-ua=fl]{animation:uaFl 4.4s steps(1) infinite}
+ span.pxi[data-ua=tw]{animation:uaTw 3.6s ease-in-out infinite}
+ span.pxi[data-ua=bt]{animation:uaBt 2.4s ease-in-out infinite}
+ span.pxi[data-ua=pu]{animation:uaPu 3s ease-in-out infinite}
+ span.pxi[data-ua=fx]{animation:uaFx 6s ease-in-out infinite}
+ button:active span.pxi[data-u4]{transform:scale(.86)!important;transition:transform .08s}
+ @media (hover:hover){button:hover span.pxi[data-u4]:not([data-ua]){animation:uaHop .45s ease-out}}
+ @keyframes uaSw{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+ @keyframes uaRg{0%,78%,100%{transform:rotate(0)}81%{transform:rotate(16deg)}84%{transform:rotate(-14deg)}87%{transform:rotate(10deg)}90%{transform:rotate(-6deg)}93%{transform:rotate(3deg)}}
+ @keyframes uaSp{to{transform:rotate(360deg)}}
+ @keyframes uaFl{0%,86%,100%{filter:none}88%{filter:brightness(1.8)}90%{filter:none}92%{filter:brightness(1.6)}}
+ @keyframes uaTw{0%,100%{transform:scale(1);filter:none}50%{transform:scale(1.08);filter:brightness(1.35)}}
+ @keyframes uaBt{0%,60%,100%{transform:scale(1)}15%{transform:scale(1.14)}30%{transform:scale(.97)}45%{transform:scale(1.08)}}
+ @keyframes uaPu{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+ @keyframes uaFx{0%,80%,100%{transform:rotate(0)}88%,96%{transform:rotate(180deg)}}
+ @keyframes uaHop{0%,100%{transform:none}40%{transform:translateY(-14%) scale(1.06)}}
+ @media (prefers-reduced-motion:reduce){span.pxi[data-u4]{animation:none!important}}
+ body.lite span.pxi[data-u4]{animation:none!important}`;document.head.appendChild(st);
+ const ob=new MutationObserver(ms=>{let n=0;for(const m of ms)for(const x of m.addedNodes){if(x.nodeType===1){scan(x.tagName==='SPAN'&&x.parentNode?x.parentNode:x);n=1}}if(n){const md=document.getElementById('modal');if(md)scan(md)}});
+ const go=()=>{scan(document.body);nav();ob.observe(document.body,{childList:true,subtree:true});setInterval(()=>{nav();const t=document.getElementById('title');if(t&&t.offsetParent)scan(t)},1500)};
+ if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
+})()}catch(e){console.error('mod-ui4',e)}
+// 🚪 ตัวเลือกที่พาย้ายโลก (รอยแยก · ประตูสุดโลก · มิติปริศนา · ประตูเปิดอีกครั้ง): ออโต้/ชะตา/AI ไม่เลือกให้ ต้องกดเอง
+//   เดิมเล่นออโต้ในยุทธภพแล้วชะตาสุ่มกด "ก้าวข้ามไปทั้งตัว" ให้ → โผล่ยุคปัจจุบันเอง
+try{(()=>{const TT=/รอยแยก|ประตูเปิดอีกครั้ง|ประตูสุดโลก|เลือกโลกถัดไป|มิติปริศนา|หลงยุค/,OT=/ก้าว|ข้าม|วิญญาณหลุด|กลับบ้าน|เปิดประตู|พา.+ไปด้วย/,NO=/(^|[^เ])ปิดประตู|ยังไม่ไป|ไม่ข้าม|จ้องมอง|เฝ้ามอง/;
+ const _c=choice;choice=function(title,text,opts){try{if(TT.test(String(title||''))&&Array.isArray(opts)&&opts.some(o=>o&&NO.test(String(o.t||''))))opts=opts.map(o=>{const t=String(o&&o.t||'');return o&&!o.noFate&&OT.test(t)&&!NO.test(t)?Object.assign({},o,{noFate:1,s:(o.s?o.s+' · ':'')+'🔒 ออโต้ไม่เลือกให้ ต้องกดเอง'}):o})}catch(e){}return _c.call(this,title,text,opts)};
+ Object.keys(_c).forEach(k=>{try{choice[k]=_c[k]}catch(e){}})})()}catch(e){console.error('noFateWorld',e)}
