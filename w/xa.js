@@ -58,13 +58,15 @@ MG.xaGate={n:'บันไดแสงเก้าขั้น',ic:'🌌',mt:'�
   return{sc:()=>cl(st/9,0,1),stop(){stop=1;clearInterval(iv)}}}};
 
 // ---------- บทสุดท้าย ----------
-const C=(t,x,o)=>{try{choice(t,x,o.map(a=>Object.assign({noFate:1},a)))}catch(e){console.error(e)}};
+const C=(t,x,o)=>{window._xaC=1;try{choice(t,x,o.map(a=>Object.assign({noFate:1},a)))}catch(e){console.error(e)}finally{window._xaC=0}};
+// ระหว่างบทสุดท้าย ไม่ให้เหตุการณ์อื่นแทรก
+{const _ch=choice;choice=function(){try{if(S&&S._xa&&S._xa.run&&!window._xaC)return}catch(e){}return _ch.apply(this,arguments)};for(const k in _ch)try{choice[k]=_ch[k]}catch(e){}}
 const nemRec=()=>{try{const n=LSg('murim_xlNem',null);if(n&&n.n&&!n.peace)return n}catch(e){}return null};
-function startFinal(){const x=S._xa={run:1,pair:0,sect:'',nem:'',gate:0};
+function startFinal(){const x=S._xa={run:1,pair:0,sect:'',nem:'',gate:0};try{choice._q=[];if(choice._cur&&modalOpen&&$('modal').dataset.k==='choice'){choice._cur=null;closeM()}}catch(e){}
  const steps=[];
  steps.push(nx=>C(L('🌌 ก่อนก้าวผ่านประตู','🌌 Before the Gate'),L('ประตูดินแดนเซียนแท้เปิดรออยู่ แต่ในใจยังมีบางอย่างที่ต้องปิดให้จบ<br><span class="tag2">บทสุดท้ายจะตัดสินว่าคุณได้ตอนจบแบบไหน และทิ้งอะไรไว้ให้ชีวิตถัดไป</span>','The gate to the true immortal realm awaits, but something in your heart still needs closing.<br><span class="tag2">This final chapter decides your ending and what you leave for your next life</span>'),[
   {t:L('📖 เริ่มบทสุดท้าย','📖 Begin the final chapter'),f(){nx()}},
-  {t:L('🌌 ไม่มีอะไรค้างแล้ว เดินผ่านไปเลย','🌌 Nothing left. Walk through'),s:L('ข้ามไปที่บันไดแสง','Skip to the stair of light'),f(){steps.splice(1,steps.length-2);nx()}}]));
+  {t:L('🌌 ไม่มีอะไรค้างแล้ว เดินผ่านไปเลย','🌌 Nothing left. Walk through'),s:L('ข้ามไปที่บันไดแสง','Skip to the stair of light'),f(){steps.splice(1,steps.length-3);nx()}}]));
  if(S.spouse&&typeof S.spouse==='string')steps.push(nx=>C(L('💞 คนที่อยู่ข้างกายมาทั้งชีวิต','💞 The One Beside You'),L(`<b>${es(S.spouse)}</b> ยืนอยู่ที่ตีนบันได "เจ้าจะไปแล้วใช่ไหม"`,`<b>${es(S.spouse)}</b> stands at the foot of the stair. "You are leaving, aren't you?"`),[
   {t:L('🤝 จูงมือไปด้วยกัน','🤝 Take their hand and go together'),s:L('ฟ้าอาจไม่ยอม ต้องเดินบันไดให้ดีพอ','Heaven may refuse. You must climb well enough'),f(){x.pairTry=1;nx()}},
   {t:L('🫂 บอกลา แล้วไปคนเดียว','🫂 Say goodbye and go alone'),f(){kA(L(`บอกลา${S.spouse}ก่อนก้าวข้ามสามภพ`,`Said goodbye to ${S.spouse} before transcending`));say(L(`🫂 คุณกอด${es(S.spouse)}เป็นครั้งสุดท้าย "รอข้าในชาติหน้า"`,`🫂 You embrace ${es(S.spouse)} one last time. "Wait for me in the next life."`),'epic');nx()}}]));
@@ -139,7 +141,7 @@ window.xaPanel=function(){const B=LSg('murim_xaBook',{})||{},G=LSg('murim_xaGods
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');const B=LSg('murim_xaBook',{})||{};if(S&&S.alive&&m&&!m.querySelector('.xaB')&&(S.xt||Object.keys(B).length||(LSg('murim_xaGods',[])||[]).length)){const b=document.createElement('button');b.className='gbtn xaB';b.style.cssText='width:100%;margin-top:6px';b.textContent='🌌 '+L('ผู้ก้าวพ้นสามภพ','The Ascendants');b.onclick=()=>xaPanel();m.appendChild(b)}}catch(e){}return r}}
 
 const st=document.createElement('style');st.textContent=`
-#xaEnd{position:fixed;inset:0;z-index:9999;background:#000;overflow:hidden;cursor:pointer;animation:xaF .6s}#xaEnd.out{animation:xaO .4s forwards}@keyframes xaF{from{opacity:0}}@keyframes xaO{to{opacity:0}}
+#xaEnd{position:fixed;inset:0;z-index:100000;background:#000;overflow:hidden;cursor:pointer;animation:xaF .6s}#xaEnd.out{animation:xaO .4s forwards}@keyframes xaF{from{opacity:0}}@keyframes xaO{to{opacity:0}}
 #xaEnd .xaDoor{position:absolute;top:0;bottom:0;width:50%;background:linear-gradient(90deg,#1a1408,#3a2c10);border:2px solid #6a5020;z-index:3;animation:xaDoor 1.6s .3s cubic-bezier(.6,0,.3,1) forwards}#xaEnd .xaDoor.l{left:0}#xaEnd .xaDoor.r{right:0;--d:100%}#xaEnd .xaDoor.l{--d:-100%}@keyframes xaDoor{to{transform:translateX(var(--d))}}
 #xaEnd .xaRay{position:absolute;left:50%;top:50%;width:220vmax;height:220vmax;margin:-110vmax;background:repeating-conic-gradient(from 0deg,var(--ec) 0 4deg,transparent 4deg 16deg);opacity:.16;animation:xaSpin 30s linear infinite;z-index:1}@keyframes xaSpin{to{transform:rotate(360deg)}}
 #xaEnd::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,#fff 0,var(--ec) 18%,#0a0614 65%);opacity:.55;z-index:0}
