@@ -7577,9 +7577,12 @@ function ascSquash(why){if(!S)return;const rest=total()-S.power,cap=REALMS[2].p*
 // พลังรวมถาวร % : ต่อขั้น ได้เต็มรวมไม่เกิน 30% ส่วนเกินได้แค่ 20%
 // ราคา/คำอธิบาย "พลังรวมถาวร +X%": X% คิดจากฐานพลัง (แดนเทพชั้นสูงใช้ฐานของขั้นบนสุดของโลกเซียน) และในขั้นเดียวกันได้เต็มรวมแค่ 30% → ของชิ้นหลังๆ แทบไม่ขึ้น
 // แต่เดิมป้ายบอกแค่ +X% ผู้เล่นซื้อซ้ำแล้วงงว่าทำไมพลังเท่าเดิม → ถ้าได้จริงน้อยกว่าที่ป้ายบอกมาก ให้บอกตัวเลขที่จะได้จริงตอนนี้ (ไม่เปลี่ยนสมดุล)
-function ppPeek(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx(),a=S._pp&&S._pp.k===k?S._pp.a:0;const room=Math.max(0,.3-a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,a));return Math.round(pvT()*eff)}
+// ⭐ ดาวเหนือนิรันดร์: ถึงชั้นสูงสุดของแดนเทพแล้ว พลังรวมเกินเพดานทุก 2% = ดาว 1 ดวง · ดาวใหม่ = ช่องพลังรวมถาวร % ได้เต็มอีกรอบ (เดิมถึงจุดสูงสุดแล้วซื้อของไม่ขึ้นเลย)
+function ovStar(){try{if(!S||!S.xt||!S.pv2||typeof postLv!=='function'||postLv()<RS_MAX)return 0;const b=postP(RS_MAX);return Math.max(0,Math.floor((total()/b-1)/.02+1e-9))}catch(e){return 0}}
+function ovKey(){const n=ovStar();return n?':s'+n:''}
+function ppPeek(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx()+ovKey(),a=S._pp&&S._pp.k===k?S._pp.a:0;const room=Math.max(0,.3-a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,a));return Math.round(pvT()*eff)}
 function pwD(v){const s=`พลังรวมถาวร +${+(v*100).toFixed(1)}%`;try{if(!S||!S.alive)return s;const t=total();if(!(t>0))return s;const g=ppPeek(v);if(g>=t*v*.75)return s;const p=g/t*100;return `${s} (ตอนนี้ได้จริง +${fmt(g)} ≈ ${p>=1?p.toFixed(1):p.toFixed(2)}%)`}catch(e){return s}}
-function pctPow(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx();if(!S._pp||S._pp.k!==k)S._pp={k,a:0};const room=Math.max(0,.3-S._pp.a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,S._pp.a));S._pp.a+=v;return Math.round(pvT()*eff)}
+function pctPow(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx()+ovKey();if(!S._pp||S._pp.k!==k)S._pp={k,a:0};const room=Math.max(0,.3-S._pp.a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,S._pp.a));S._pp.a+=v;return Math.round(pvT()*eff)}
 
 // ---- v13.2b ยาทะลวงขั้น: ใช้เองแล้วต้องทะลวงจริง (ไม่เสียยาฟรี) · คอขวดใหญ่ขั้น 6–7 ได้โอกาส +15% · ทัณฑ์โลกเซียน +10% ----
 function brkInfo(){if(!S)return{k:'none'};if(S.xt)return{k:'god'};const i=realmIdx(),raw=rawRealm();
@@ -46492,3 +46495,5 @@ try{(function(){
 try{(()=>{const TT=/รอยแยก|ประตูเปิดอีกครั้ง|ประตูสุดโลก|เลือกโลกถัดไป|มิติปริศนา|หลงยุค/,OT=/ก้าว|ข้าม|วิญญาณหลุด|กลับบ้าน|เปิดประตู|พา.+ไปด้วย/,NO=/(^|[^เ])ปิดประตู|ยังไม่ไป|ไม่ข้าม|จ้องมอง|เฝ้ามอง/;
  const _c=choice;choice=function(title,text,opts){try{if(TT.test(String(title||''))&&Array.isArray(opts)&&opts.some(o=>o&&NO.test(String(o.t||''))))opts=opts.map(o=>{const t=String(o&&o.t||'');return o&&!o.noFate&&OT.test(t)&&!NO.test(t)?Object.assign({},o,{noFate:1,s:(o.s?o.s+' · ':'')+'🔒 ออโต้ไม่เลือกให้ ต้องกดเอง'}):o})}catch(e){}return _c.call(this,title,text,opts)};
  Object.keys(_c).forEach(k=>{try{choice[k]=_c[k]}catch(e){}})})()}catch(e){console.error('noFateWorld',e)}
+// 🧭 ช่วยผู้เล่นไม่งง (w/help.js): ทำไมไปต่อไม่ได้ · แจ้งบั๊กแนบข้อมูลเอง · ออโต้ฉลาดขึ้น · ร้านแนะนำของคุ้ม · ดาวเหนือนิรันดร์
+try{window.whyStuck=window.whyStuck||function(){return wNeed('help',()=>window.whyStuck&&window.whyStuck())};setTimeout(()=>{try{wLoad('help').catch(()=>{})}catch(e){}},1600)}catch(e){console.error('helpStub',e)}
