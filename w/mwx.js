@@ -1597,7 +1597,7 @@ const ri=()=>{try{return Math.max(0,realmIdx())}catch(e){return 0}};
 // หน่วยเงิน "ปีปกติ" ของโลกนั้น (ขั้นสูงขึ้น ชีวิตก็แพงขึ้น)
 function ecU(w){try{if(w==='mw'||w==='z'){const M=S.mw;let y=60000;try{y=mwToB(mwYearCost(M).yr,M)}catch(e){}return Math.max(30000,y||0)}return ({m:600,x:1500,g:1e5})[w]*(1+ri()*(w==='g'?.5:1))}catch(e){return 600}}
 function mt(v,w){v=Math.round(Math.max(0,v||0));return (w==='mw'||w==='z')?fmt(v)+' บาท':fmtM(v)+' '+curW()}
-const EC=()=>S.ec||(S.ec={inc:0,n:0,upk:0,life:0,debt:0,evY:-9,biz:0,inv:null,loan:null,qx:null,qN:0,qOk:0,qF:0});
+const EC=()=>S.ec||(S.ec={rf1:1,inc:0,n:0,upk:0,life:0,debt:0,evY:-9,biz:0,inv:null,loan:null,qx:null,qN:0,qOk:0,qF:0});
 const anc=w=>Math.max(ecU(w),EC().inc||0);
 const FL={
  m:{fire:'ไฟไหม้โกดังสินค้าของคุณกลางดึก',gov:'ขุนนางประจำแคว้นส่งคนมาเรียกเก็บส่วยย้อนหลัง',scam:'พ่อค้าแปลกหน้าชวนลงขันค้าเกลือเถื่อนข้ามแดน บอกว่าได้คืนสองเท่าในไม่กี่ปี',kin:'ญาติห่างๆ ที่ไม่เคยเห็นหน้า',crash:'สงครามชายแดนปะทุ เส้นทางการค้าทั่วแผ่นดินถูกปิด',up:'ค่าคนรับใช้ ยามเฝ้าคลัง และส่วยหลวง',life:'ค่าข้าวของ ค่าเลี้ยงดูคนในบ้าน',book:'คัมภีร์ลับจากสำนักที่ล่มสลาย',pill:'โอสถยืดชะตาจากหมอเทวดา',biz:'โรงเตี๊ยมและกองคาราวานของตัวเอง',don:'สร้างสะพานและโรงทานให้ชาวบ้าน',mas:'จ้างยอดฝีมือเกษียณมาชี้แนะส่วนตัว'},
@@ -1612,7 +1612,12 @@ const can=()=>S&&S.alive&&!choice._cur&&!modalOpen&&!(window._inQmFF);
 function addMoney(v){S.money=Math.max(0,Math.round((+S.money||0)+v))}
 // ---------- ค่าดูแลทรัพย์/ค่าครองชีพ ----------
 const N0=n=>{try{return fmt(n)}catch(e){return n}};
-window._ecT=(a,b)=>ecTick(a,b);function ecTick(st,m0){const w=ecW();if(!w)return;const E=EC(),U=ecU(w),cw=w==='z'?'mw':w;if(E.w!==cw){if(E.w){E.inc=0;E.n=0;E.debt=0;E.biz=0;E.inv=null;E.loan=null;E.qx=null;E.qnx=null}E.w=cw;return}
+window._ecT=(a,b)=>ecTick(a,b);// 💰 ชดเชยบั๊กค่าบำรุงแดนเทพ (v ก่อน 24 พ.ย. 2026): ชีวิตที่อยู่แดนเทพตอนเปิดเซฟ ได้คืน 70% ของค่าครองชีพ+ค่าดูแลทรัพย์ที่เคยโดนหัก ครั้งเดียว
+// ชีวิตอื่นแค่ติดธงว่าตรวจแล้ว (ไม่คืน) · ชีวิตใหม่หลังแก้มีธงตั้งแต่สร้าง
+setInterval(()=>{try{if(!S||!S.alive||!S.ec||S.ec.rf1)return;const E=S.ec;E.rf1=1;if(!S.xt)return;const lost=(+E.upk||0)+(+E.life||0),g=Math.round(lost*.7);if(g<=0)return;
+ E.debt=0;addMoney(g);log(`💰 <b>ชดเชยบั๊กค่าบำรุงแดนเทพ</b> — ก่อนหน้านี้ระบบหักค่าใช้จ่ายเกินจริงในแดนเทพ คืนให้ ${mt(g,'g')} (70% ของที่เคยโดนหักทั้งหมด) และล้างหนี้ค้างแล้ว ขออภัยครับ`,'myth',true);
+ try{island({big:1,pri:1,ic:'💰',h:'ชดเชยบั๊กค่าบำรุงแดนเทพ',t:`ได้คืน ${mt(g,'g')} · ล้างหนี้ค้าง`,kind:'gold',ms:7000})}catch(e){}try{render();saveGame()}catch(e){}}catch(e){console.error('ec refund',e)}},2500);
+function ecTick(st,m0){const w=ecW();if(!w)return;const E=EC(),U=ecU(w),cw=w==='z'?'mw':w;if(E.w!==cw){if(E.w){E.inc=0;E.n=0;E.debt=0;E.biz=0;E.inv=null;E.loan=null;E.qx=null;E.qnx=null}E.w=cw;return}
  if(S.age>=14){let d=((+S.money||0)-m0)/st;if(d>0)E.earn=(E.earn||0)+d*st;const cap=2.5*Math.max(U,E.inc||0);if(d>cap)d=cap;if(d>0)E.inc=E.n?E.inc*.85+d*.15:d;else E.inc*=Math.pow(.96,Math.min(st,5));E.n++}
  if(w==='z'||S.age<16)return;
  const A=anc(w);let sum=0;
