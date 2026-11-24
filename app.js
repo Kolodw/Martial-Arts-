@@ -7338,7 +7338,7 @@ function ecoCat(w){if(ECO_CAT[w])return ECO_CAT[w];const rnd=srng({m:11,x:22,g:3
  return ECO_CAT[w]=L}
 function ecoV(it){const r=it.r,w=it.w,K={qi:{m:1,x:3,g:10},life:{m:1,x:6,g:60},int:{m:1,x:2,g:4},fame:{m:1,x:3,g:10}};
  const T=[.01,.02,.035,.05,.08,.12,.18,.3][r];
- switch(it.fx){case'pow':return{v:T,d:`พลังรวมถาวร +${Math.round(T*100)}%`};case'hp':return{v:T*1.5,d:`พลังชีวิตสูงสุด +${Math.round(T*150)}%`};
+ switch(it.fx){case'pow':return{v:T,d:pwD(T)};case'hp':return{v:T*1.5,d:`พลังชีวิตสูงสุด +${Math.round(T*150)}%`};
   case'qi':{const v=[1,2,4,7,12,20,35,60][r]*K.qi[w];return{v,d:`ลมปราณ +${fmt(v)} ปี`}}case'life':{const v=[2,4,7,12,20,35,60,100][r]*K.life[w];return{v,d:`อายุขัย +${fmt(v)} ปี`}}
   case'int':{const v=[3,5,8,12,18,26,40,70][r]*K.int[w];return{v,d:`ปัญญา +${v}`}}case'cha':{const v=[3,5,8,12,18,26,40,70][r];return{v,d:`เสน่ห์ +${v}`}}
   case'karma':{const v=[3,5,8,12,18,26,40,70][r];return{v,d:`กรรมดี +${v}`}}case'fame':{const v=[10,25,50,90,150,250,400,700][r]*K.fame[w];return{v,d:`ชื่อเสียง +${fmt(v)}`}}
@@ -7430,7 +7430,7 @@ const PA_CT=[['w','pow',['กระบี่','ทวน','ดาบ','พัด
 function paItem(r,k){const g=srng(r*1000003+k*7+13),pk=a=>a[Math.floor(g()*a.length)];let C=pk(PA_CT);if(C[1]==='tal'&&r<4)C=PA_CT[0];if(C[1]==='myst')C=PA_CT[k%6];
  const pf=pk(PA_PF);return{r,k,c:C[0],fx:C[1],n:`${pk(C[2])}${pf?pf:''}แห่ง${pk(PA_SJ)}`}}
 function paEff(it){const w=ECO_W(),r=it.r,b=ecoV({r,w,fx:it.fx==='int'?'int':it.fx==='cha'?'cha':it.fx==='life'?'life':it.fx==='qi'?'qi':it.fx==='fight'?'fight':'pow'});
- switch(it.fx){case'pow':return{v:b.v*1.5,d:`พลังรวมถาวร +${(b.v*150).toFixed(1)}%`};case'hp':return{v:b.v*2.25,d:`พลังชีวิตสูงสุด +${Math.round(b.v*225)}%`};
+ switch(it.fx){case'pow':return{v:b.v*1.5,d:pwD(b.v*1.5)};case'hp':return{v:b.v*2.25,d:`พลังชีวิตสูงสุด +${Math.round(b.v*225)}%`};
   case'qi':case'life':case'int':case'cha':{const v=Math.round(b.v*1.5);return{v,d:b.d.replace(/[\d,]+/,fmt(v))}}
   case'art':{const v=Math.min(4,Math.floor(r/2)+1);return{v,d:`ได้วิชาระดับ${ART_TIER[v].n}ขึ้นไป 1 วิชา`}}
   case'fight':{const v=+(1+(b.v-1)*1.5).toFixed(2),y=b.y+3;return{v,y,d:`ต่อสู้ ×${v} นาน ${y} ปี`}}
@@ -7575,6 +7575,10 @@ function ascSquash(why){if(!S)return;const rest=total()-S.power,cap=REALMS[2].p*
 // มรดกวิชาของลูก: ร่างเด็กรับพลังเต็มของวิชาบรรพบุรุษไม่ไหว
 {const _ih=inherit;inherit=function(){const r=_ih.apply(this,arguments);try{if(S&&S.arts){const cap=REALMS[2].p*.8,rest=total()-S.power,h=S.arts.find(a=>a&&a.heir);if(h&&rest>cap){const ab=artBonus(),f=Math.max(.02,Math.min(1,(ab-(rest-cap))/ab));if(f<1){h.b=Math.max(1,Math.round(h.b*f));log(`🧒 ร่างเด็กยังรับพลังเต็มของวิชามรดกไม่ไหว พลังของวิชาจะถูกผนึกไว้บางส่วน`,'')}}}}catch(e){}return r}}
 // พลังรวมถาวร % : ต่อขั้น ได้เต็มรวมไม่เกิน 30% ส่วนเกินได้แค่ 20%
+// ราคา/คำอธิบาย "พลังรวมถาวร +X%": X% คิดจากฐานพลัง (แดนเทพชั้นสูงใช้ฐานของขั้นบนสุดของโลกเซียน) และในขั้นเดียวกันได้เต็มรวมแค่ 30% → ของชิ้นหลังๆ แทบไม่ขึ้น
+// แต่เดิมป้ายบอกแค่ +X% ผู้เล่นซื้อซ้ำแล้วงงว่าทำไมพลังเท่าเดิม → ถ้าได้จริงน้อยกว่าที่ป้ายบอกมาก ให้บอกตัวเลขที่จะได้จริงตอนนี้ (ไม่เปลี่ยนสมดุล)
+function ppPeek(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx(),a=S._pp&&S._pp.k===k?S._pp.a:0;const room=Math.max(0,.3-a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,a));return Math.round(pvT()*eff)}
+function pwD(v){const s=`พลังรวมถาวร +${+(v*100).toFixed(1)}%`;try{if(!S||!S.alive)return s;const t=total();if(!(t>0))return s;const g=ppPeek(v);if(g>=t*v*.75)return s;const p=g/t*100;return `${s} (ตอนนี้ได้จริง +${fmt(g)} ≈ ${p>=1?p.toFixed(1):p.toFixed(2)}%)`}catch(e){return s}}
 function pctPow(v){if(!S)return 0;const k=(S.xt?'g'+(typeof postLv==='function'?postLv():0):S.xian?'x':'m')+realmIdx();if(!S._pp||S._pp.k!==k)S._pp={k,a:0};const room=Math.max(0,.3-S._pp.a),full=Math.min(v,room),eff=full+(v-full)*.2*Math.min(1,.6/Math.max(.3,S._pp.a));S._pp.a+=v;return Math.round(pvT()*eff)}
 
 // ---- v13.2b ยาทะลวงขั้น: ใช้เองแล้วต้องทะลวงจริง (ไม่เสียยาฟรี) · คอขวดใหญ่ขั้น 6–7 ได้โอกาส +15% · ทัณฑ์โลกเซียน +10% ----
@@ -12694,7 +12698,7 @@ const PA_UQ=[
 {const _paE=paEff;paEff=function(it){let e;const w=ECO_W(),r=it.r;
  if(it.fx==='fame'||it.fx==='karma'){const b=ecoV({r,w,fx:it.fx});e={v:Math.round(b.v*1.5),d:b.d.replace(/[\d,]+/,fmt(Math.round(b.v*1.5)))}}
  else if(it.fx==='money'){const v=Math.round({m:3e4,x:1.5e6,g:1.5e8}[w]*[1,1,1,2,4,8,15,30][r]);e={v,d:`เงิน +${fmtM(v)} ตำลึง`}}
- else if(it.fx==='duo'){const b=ecoV({r,w,fx:'pow'});e={v:b.v,d:`พลังรวมถาวร +${(b.v*100).toFixed(1)}% · พลังชีวิตสูงสุด +${Math.round(b.v*150)}%`}}
+ else if(it.fx==='duo'){const b=ecoV({r,w,fx:'pow'});e={v:b.v,d:`${pwD(b.v)} · พลังชีวิตสูงสุด +${Math.round(b.v*150)}%`}}
  else e=_paE(it);
  if(it.q!=null&&PA_UQ[it.q])e=Object.assign({},e,{d:e.d+` <i class="tag2">— ${PA_UQ[it.q][4]}</i>`});return e}}
 {const _paA=paApply;paApply=function(it){if(it.fx==='fame'||it.fx==='karma'||it.fx==='money'||it.fx==='duo'){const e=paEff(it);
@@ -14633,7 +14637,7 @@ const PA_OP=[
  ['🌀','ประตูมิติว่างเปล่า','เปิดแล้วจะได้อะไร… ขึ้นกับว่ามิติไหนตอบรับ',[['rnd',3]]],
  ['🗡️','กระบี่ผู้พิชิตเก้าสวรรค์','ฟันเทพตกสวรรค์มาแล้วเก้าองค์',[['pow',1.3],['fight',1.4]]],
  ['🐢','กระดองเต่าค้ำโลก','เต่าที่แบกแผ่นดินไว้ ผลัดกระดองทุกหมื่นปี',[['hp',1.5],['life',1.5],['qi',.8]]]];
-{const LB={pow:v=>`พลังรวมถาวร +${(v*100).toFixed(1)}%`,hp:v=>`พลังชีวิตสูงสุด +${Math.round(v*100)}%`,qi:v=>`ลมปราณ +${fmt(v)} ปี`,life:v=>`อายุขัย +${fmt(v)} ปี`,int:v=>`ปัญญา +${fmt(v)}`,cha:v=>`เสน่ห์ +${fmt(v)}`,money:v=>`เงิน +${fmtM(v)} ตำลึง`,fame:v=>`ชื่อเสียง +${fmt(v)}`,tal:v=>`พรสวรรค์ ×${(1+v).toFixed(2)} ถาวร`};
+{const LB={pow:v=>pwD(v),hp:v=>`พลังชีวิตสูงสุด +${Math.round(v*100)}%`,qi:v=>`ลมปราณ +${fmt(v)} ปี`,life:v=>`อายุขัย +${fmt(v)} ปี`,int:v=>`ปัญญา +${fmt(v)}`,cha:v=>`เสน่ห์ +${fmt(v)}`,money:v=>`เงิน +${fmtM(v)} ตำลึง`,fame:v=>`ชื่อเสียง +${fmt(v)}`,tal:v=>`พรสวรรค์ ×${(1+v).toFixed(2)} ถาวร`};
  const RND=['pow','hp','qi','life','int','cha'];
  const parts=it=>{const o=PA_OP[it.op];let L=o[3];if(L[0][0]==='rnd'){const g=srng(it.k*31+7),P=RND.slice();L=[];for(let i=0;i<3;i++)L.push([P.splice(Math.floor(g()*P.length),1)[0],1.1])}
   return L.map(([fx,m])=>{if(fx==='trib')return{fx,v:.25,d:'ทัณฑ์สวรรค์ครั้งถัดไป: โอกาสผ่านทุกระลอก +25%'};const e=paEff({r:it.r,k:it.k,fx});
@@ -46454,3 +46458,8 @@ try{(function(){
  const go=()=>{scan(document.body);nav();ob.observe(document.body,{childList:true,subtree:true});setInterval(nav,1500)};
  if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
 })()}catch(e){console.error('mod-ui4',e)}
+// 🚪 ตัวเลือกที่พาย้ายโลก (รอยแยก · ประตูสุดโลก · มิติปริศนา · ประตูเปิดอีกครั้ง): ออโต้/ชะตา/AI ไม่เลือกให้ ต้องกดเอง
+//   เดิมเล่นออโต้ในยุทธภพแล้วชะตาสุ่มกด "ก้าวข้ามไปทั้งตัว" ให้ → โผล่ยุคปัจจุบันเอง
+try{(()=>{const TT=/รอยแยก|ประตูเปิดอีกครั้ง|ประตูสุดโลก|เลือกโลกถัดไป|มิติปริศนา|หลงยุค/,OT=/ก้าว|ข้าม|วิญญาณหลุด|กลับบ้าน|เปิดประตู|พา.+ไปด้วย/,NO=/(^|[^เ])ปิดประตู|ยังไม่ไป|ไม่ข้าม|จ้องมอง|เฝ้ามอง/;
+ const _c=choice;choice=function(title,text,opts){try{if(TT.test(String(title||''))&&Array.isArray(opts)&&opts.some(o=>o&&NO.test(String(o.t||''))))opts=opts.map(o=>{const t=String(o&&o.t||'');return o&&!o.noFate&&OT.test(t)&&!NO.test(t)?Object.assign({},o,{noFate:1,s:(o.s?o.s+' · ':'')+'🔒 ออโต้ไม่เลือกให้ ต้องกดเอง'}):o})}catch(e){}return _c.call(this,title,text,opts)};
+ Object.keys(_c).forEach(k=>{try{choice[k]=_c[k]}catch(e){}})})()}catch(e){console.error('noFateWorld',e)}
