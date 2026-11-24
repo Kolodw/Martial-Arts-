@@ -312,6 +312,10 @@
     {
       "path": "/api/online?a=pushre",
       "schedule": "0 12 * * *"
+    },
+    {
+      "path": "/api/online?a=dcsync",
+      "schedule": "30 18 * * *"
     }
   ]
 }
