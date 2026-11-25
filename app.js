@@ -46569,6 +46569,7 @@ try{setTimeout(()=>{try{wLoad('front').catch(()=>{})}catch(e){}},300)}catch(e){c
 try{setTimeout(()=>{try{wLoad('hall').catch(()=>{})}catch(e){}},1500)}catch(e){console.error('hallStub',e)} /* 🏯 หอผู้ก่อตั้งใหม่ (/w/hall.js) */
 try{setTimeout(()=>{try{wLoad('arena2').catch(()=>{})}catch(e){}},1700)}catch(e){console.error('ar2Stub',e)} /* ⚔️ ลานหมื่นเงา ภาค 2 (/w/arena2.js) */
 try{setTimeout(()=>{try{wLoad('soul2').catch(()=>setTimeout(()=>wLoad('soul2').catch(()=>{}),6000))}catch(e){}},2600)}catch(e){console.error('sv2Stub',e)} /* ⭕ วิญญาณยุทธ์ภาค 2: ขีดปีวงแหวน · บัลลังก์เทพ · สัตว์ผู้เล่น (/w/soul2.js) */
+try{setTimeout(()=>{try{wLoad('store').catch(()=>setTimeout(()=>wLoad('store').catch(()=>{}),5000))}catch(e){}},900)}catch(e){console.error('stStub',e)} /* 💎 ร้านค้าหลักโฉมใหม่ (/w/store.js) */
 
 // 🎨 ไอคอนของในกระเป๋าแบบภาพ (items.webp 8×4) — แทน emoji ที่ตามด้วยชื่อของ ทุกจุดในเกม · ไม่มีภาพ = emoji เดิม
 try{(function(){
