@@ -3815,6 +3815,86 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (!(await arLock())) return res.status(429).json({ err: 'rate' });
       try { const v = await arWal(), p0 = v.pot | 0; v.c += p0; v.pot = 0; await arWalSet(v); return res.json({ ok: 1, got: p0, wal: arWalPub(v) }) } finally { await arUnlock() }
     }
+    // ============ 🌟 บัลลังก์เทพ · บททดสอบเทพที่ผู้เล่นสร้าง · สัตว์ของผู้เล่นในป่าจิตวิญญาณ (w/soul2.js) ============
+    if (a === 'godset' || a === 'godpick' || a === 'godres' || a === 'godlist' || a === 'bpush' || a === 'bpool' || a === 'bhunt' || a === 'bgive') {
+      if (!okId(id)) return res.status(403).json({ err: 'id' });
+      const q = qOf(req), cut = (v, n) => String(v == null ? '' : v).replace(/[<>\u0000-\u001f]/g, '').trim().slice(0, n);
+      const SN = thDay(now).slice(0, 7), GK = ['hrt', 'pow', 'sac', 'puz', 'grd'];
+      const tPub = t => ({ tid: t.tid, nm: t.nm, tt: t.tt, sn: t.sn, tr: t.tr | 0, ps: t.ps | 0, sc: t.sc | 0, at: t.at, hr: (t.hr || []).slice(-5), st: (t.st || []).map(s => ({ k: s.k, d: s.d })), me: t.o === id ? 1 : 0 });
+      const seatTry = async (tt, nm, sc) => { const k = 'godseat:' + SN, cur = jp(await cmd('HGET', k, tt)); if (cur && cur.id !== id && (cur.sc | 0) >= sc) return { won: 0, h: cur.nm }; if (cur && cur.id === id && (cur.sc | 0) >= sc) return { won: 1, keep: 1 };
+        await pipe([['HSET', k, tt, JSON.stringify({ id, nm, sc, at: now })], ['EXPIRE', k, 86400 * 70]]);
+        if (cur && cur.id !== id) { try { await withCap(noteTo(cur.id, { t: '👑 บัลลังก์เทพถูกชิง', b: `${nm} ชิงบัลลังก์「${tt}」ไปจากคุณด้วยคะแนน ${sc} (ของคุณ ${cur.sc | 0}) · ผ่านบททดสอบให้คะแนนสูงกว่าเพื่อชิงคืน`, u: '/' }), 3000) } catch {} }
+        return { won: 1, prev: cur && cur.id !== id ? cur.nm : '' } };
+      if (a === 'godset') {
+        const tt = cut(b.tt, 28), nm = cut(b.nm, 24) || 'นิรนาม', sn = cut(b.sn, 24); if (!tt) return res.json({ err: 'tt' });
+        const st = (Array.isArray(b.st) ? b.st : []).slice(0, 3).map(s => { const k = GK.includes(s && s.k) ? s.k : 'hrt', o = { k, tx: cut(s.tx, 160), d: Math.max(1, Math.min(5, +s.d | 0 || 1)) }; if (k === 'puz') { o.a = (Array.isArray(s.a) ? s.a : []).slice(0, 3).map(x => cut(x, 40)); if (o.a.length < 3 || o.a.some(x => !x)) o.k = 'hrt' } return o });
+        if (st.length < 3) return res.json({ err: 'st' });
+        if (!(await cmd('SET', 'godcd:' + id, 1, 'NX', 'EX', 3600 * 6))) return res.json({ err: 'cd' });
+        const tid = id.slice(0, 8) + now.toString(36), t = { tid, o: id, nm, tt, sn, st, tr: 0, ps: 0, sc: 0, at: now, hr: [] };
+        await pipe([['HSET', 'godt', tid, JSON.stringify(t)], ['ZADD', 'godz', now, tid]]);
+        try { const n = +(await cmd('ZCARD', 'godz')) || 0; if (n > 300) { const old = await cmd('ZRANGE', 'godz', 0, n - 301); if (old && old.length) await pipe([['ZREM', 'godz', ...old], ['HDEL', 'godt', ...old]]) } } catch {}
+        let seat = null; try { seat = await seatTry(tt, nm, Math.max(1, Math.min(200, +b.sc | 0))) } catch {}
+        return res.json({ ok: 1, tid, seat });
+      }
+      if (a === 'godpick') {
+        const ids = (await cmd('ZREVRANGE', 'godz', 0, 149)) || []; let pk = ids.filter(x => !x.startsWith(id.slice(0, 8))); if (!pk.length) return res.json({ ok: 1, t: null });
+        const ft = cut(q.tt, 28); let t = null;
+        if (ft) { const vs = await cmd('HMGET', 'godt', ...pk); const c = (vs || []).map(jp).filter(v => v && v.tt === ft && v.o !== id); t = c.length ? c[Math.floor(Math.random() * c.length)] : null }
+        else { const tid = pk[Math.floor(Math.random() * pk.length)]; t = jp(await cmd('HGET', 'godt', tid)) }
+        if (!t || t.o === id) return res.json({ ok: 1, t: null });
+        const seat = jp(await cmd('HGET', 'godseat:' + SN, t.tt));
+        return res.json({ ok: 1, t: Object.assign(tPub(t), { st: t.st }), seat: seat ? { nm: seat.nm, sc: seat.sc | 0 } : null });
+      }
+      if (a === 'godres') {
+        const tid = cut(b.tid, 40), nm = cut(b.nm, 24) || 'นิรนาม', ok = b.ok ? 1 : 0, sc = Math.max(0, Math.min(200, +b.sc | 0));
+        if (!(await cmd('SET', 'godr:' + id + ':' + tid, 1, 'NX', 'EX', 3600 * 3))) return res.json({ err: 'cd' });
+        const t = jp(await cmd('HGET', 'godt', tid)); if (!t) return res.json({ err: 'none' }); if (t.o === id) return res.json({ err: 'own' });
+        t.tr = (t.tr | 0) + 1; if (ok) { t.ps = (t.ps | 0) + 1; t.hr = (t.hr || []).concat(nm).slice(-12) } else t.sc = (t.sc | 0) + 1;
+        await cmd('HSET', 'godt', tid, JSON.stringify(t));
+        if (ok) { try { await withCap(noteTo(t.o, { t: '🌟 มีผู้สืบทอดบททดสอบเทพของคุณ', b: `${nm} ผ่านบททดสอบ「${t.tt}」ที่คุณสร้าง กลายเป็นผู้สืบทอดคนที่ ${t.ps}`, u: '/' }), 3000) } catch {} }
+        else if (t.sc % 10 === 0) { try { await withCap(noteTo(t.o, { t: '🔥 บททดสอบเทพของคุณศักดิ์สิทธิ์ขึ้น', b: `「${t.tt}」ล้มผู้ท้าทายมาแล้ว ${t.sc} คน`, u: '/' }), 3000) } catch {} }
+        let seat = null; if (ok) { try { seat = await seatTry(t.tt, nm, sc) } catch {} }
+        return res.json({ ok: 1, n: t.ps, sc: t.sc, seat });
+      }
+      if (a === 'godlist') {
+        const ids = (await cmd('ZREVRANGE', 'godz', 0, 59)) || []; const vs = ids.length ? await cmd('HMGET', 'godt', ...ids) : [];
+        const L = (vs || []).map(jp).filter(Boolean).map(tPub); const h = await cmd('HGETALL', 'godseat:' + SN), seat = {};
+        if (Array.isArray(h)) { for (let i = 0; i + 1 < h.length; i += 2) { const e = jp(h[i + 1]); if (e) seat[h[i]] = { nm: e.nm, sc: e.sc | 0, me: e.id === id ? 1 : 0 } } } else if (h) for (const k in h) { const e = jp(h[k]); if (e) seat[k] = { nm: e.nm, sc: e.sc | 0, me: e.id === id ? 1 : 0 } }
+        return res.json({ ok: 1, l: L, seat, sn: SN });
+      }
+      if (a === 'bpush') {
+        if (!(await cmd('SET', 'bpcd:' + id, 1, 'NX', 'EX', 300))) return res.json({ err: 'cd' });
+        const v = { o: id, n: cut(b.n, 24) || 'สัตว์ไร้นาม', sp: cut(b.sp, 20), el: cut(b.el, 12), y: Math.max(1, Math.min(2e6, +b.y | 0)), st: Math.max(0, Math.min(9, +b.st | 0)), at: now };
+        await pipe([['HSET', 'bpool', id, JSON.stringify(v)], ['ZADD', 'bpz', now, id]]);
+        try { const n = +(await cmd('ZCARD', 'bpz')) || 0; if (n > 400) { const old = await cmd('ZRANGE', 'bpz', 0, n - 401); if (old && old.length) await pipe([['ZREM', 'bpz', ...old], ['HDEL', 'bpool', ...old]]) } } catch {}
+        return res.json({ ok: 1 });
+      }
+      if (a === 'bpool') { // ผู้เล่นโลกจิตวิญญาณ: ดึงสัตว์ของผู้เล่นมาเป็นเหยื่อ + ของสังเวยที่ส่งถึงตัวเอง
+        const nm = cut(q.nm, 24); if (nm) { try { await pipe([['ZADD', 'svp', now, id], ['HSET', 'svpn', id, nm]]); const n = +(await cmd('ZCARD', 'svp')) || 0; if (n > 300) { const old = await cmd('ZRANGE', 'svp', 0, n - 301); if (old && old.length) await pipe([['ZREM', 'svp', ...old], ['HDEL', 'svpn', ...old]]) } } catch {} }
+        const ids = ((await cmd('ZREVRANGE', 'bpz', 0, 79)) || []).filter(x => x !== id); const pk = []; while (ids.length && pk.length < 6) pk.push(ids.splice(Math.floor(Math.random() * ids.length), 1)[0]);
+        const vs = pk.length ? await cmd('HMGET', 'bpool', ...pk) : []; const L = (vs || []).map(jp).filter(Boolean).map(v => ({ o: v.o, n: v.n, sp: v.sp, el: v.el, y: v.y, st: v.st }));
+        let gf = []; try { const [g0] = await pipe([['LRANGE', 'bgift:' + id, 0, 4], ['DEL', 'bgift:' + id]]); gf = (g0 || []).map(jp).filter(Boolean) } catch {}
+        return res.json({ ok: 1, l: L, gift: gf });
+      }
+      if (a === 'bhunt') {
+        const bo = cut(b.bo, 24), nm = cut(b.nm, 24) || 'นิรนาม', ri = Math.max(1, Math.min(9, +b.ri | 0)); if (!okId(bo) || bo === id) return res.json({ err: 'bo' });
+        if (!(await cmd('SET', 'bhcd:' + id + ':' + bo, 1, 'NX', 'EX', 86400))) return res.json({ err: 'cd' });
+        const v = jp(await cmd('HGET', 'bpool', bo)); if (!v) return res.json({ err: 'none' });
+        await pipe([['HDEL', 'bpool', bo], ['ZREM', 'bpz', bo]]);
+        try { await withCap(noteTo(bo, { t: '🐾 สัตว์ของคุณกลายเป็นวงแหวน', b: `${v.n}ของคุณกลายเป็นวงแหวนที่ ${ri} ของ ${nm} ในทวีปจิตวิญญาณยุทธ์`, u: '/' }), 3000) } catch {}
+        return res.json({ ok: 1 });
+      }
+      if (a === 'bgive') { // เจ้าของสัตว์สังเวยสัตว์ของตัวเองให้ผู้เล่นโลกจิตวิญญาณที่ถูกใจ
+        if (b.ls) { const ids = ((await cmd('ZREVRANGE', 'svp', 0, 19)) || []).filter(x => x !== id).slice(0, 10); const ns = ids.length ? await cmd('HMGET', 'svpn', ...ids) : []; return res.json({ ok: 1, l: ids.map((x, i) => ({ id: x, nm: (ns || [])[i] || 'นิรนาม' })) }) }
+        const to = cut(b.to, 24); if (!okId(to) || to === id) return res.json({ err: 'to' });
+        if (!(await cmd('ZSCORE', 'svp', to))) return res.json({ err: 'to' });
+        if (!(await cmd('SET', 'bgcd:' + id, 1, 'NX', 'EX', 3600 * 12))) return res.json({ err: 'cd' });
+        const g = { fn: cut(b.fn, 24) || 'นิรนาม', n: cut(b.n, 24) || 'สัตว์ไร้นาม', sp: cut(b.sp, 20), y: Math.max(1, Math.min(2e6, +b.y | 0)), at: now };
+        await pipe([['LPUSH', 'bgift:' + to, JSON.stringify(g)], ['LTRIM', 'bgift:' + to, 0, 4], ['EXPIRE', 'bgift:' + to, 86400 * 30], ['HDEL', 'bpool', id], ['ZREM', 'bpz', id]]);
+        try { await withCap(noteTo(to, { t: '🩸 มีสัตว์วิญญาณสังเวยตนให้คุณ', b: `${g.n} (${g.y} ปี) ของ ${g.fn} เลือกมอบชีวิตเป็นวงแหวนให้คุณ มันจะออกมาหาคุณในชีวิตทวีปจิตวิญญาณยุทธ์`, u: '/' }), 3000) } catch {}
+        return res.json({ ok: 1 });
+      }
+    }
     if (a === 'arcol') { // สมุดสะสมเงา
       if (!okId(id)) return res.json({ err: 'id' });
       const h = await cmd('HGETALL', 'arcol:' + id), L = []; if (Array.isArray(h)) { for (let i = 0; i + 1 < h.length; i += 2) { const e = jp(h[i + 1]); if (e) L.push(e) } } else if (h) for (const k in h) { const e = jp(h[k]); if (e) L.push(e) }

@@ -41988,7 +41988,7 @@ try{(()=>{
 const R={},P={};
 window.wReady=n=>{R[n]=1;try{(P[n]&&P[n].ok)&&P[n].ok()}catch(e){}};
 window.wIs=n=>!!R[n];
-const DEP={sky:['mw'],mw:['mwb','mwx'],ghr:['mw'],wld2:['hrt']};
+const DEP={sky:['mw'],mw:['mwb','mwx'],ghr:['mw'],wld2:['hrt'],soul2:['soul']};
 // ⚡ เน็ตช้า: ไฟล์ที่โหลดเบื้องหลังเข้าคิวทีละ 2 ไฟล์ · ไฟล์ที่ผู้เล่นรออยู่ (wNeed) แซงคิวทันที
 const U={},Q=[];let act=0,tap=0;try{addEventListener('pointerdown',()=>{tap=Date.now()},true);addEventListener('keydown',()=>{tap=Date.now()},true)}catch(e){}const pump=()=>{while(act<2&&Q.length){const g=Q.shift();if(!g.st){g.st=1;act++;g()}}};
 window.wLoad=function(n){n=String(n).replace(/[^a-z0-9_-]/g,'');if(R[n])return Promise.resolve();if(Date.now()-tap<900)U[n]=1;if(P[n]){if(U[n]&&P[n].go&&!P[n].go.st){P[n].go.st=1;act++;P[n].go()}return P[n].p}if(DEP[n]&&DEP[n].some(d=>!R[d])){if(U[n])DEP[n].forEach(d=>U[d]=1);const o={};o.p=Promise.all(DEP[n].map(d=>wLoad(d))).then(()=>{delete P[n];return wLoad(n)});P[n]=o;return o.p}
@@ -46568,6 +46568,7 @@ try{setTimeout(()=>{try{wLoad('hud').catch(()=>{})}catch(e){}},400)}catch(e){con
 try{setTimeout(()=>{try{wLoad('front').catch(()=>{})}catch(e){}},300)}catch(e){console.error('frStub',e)} /* 🏯 หน้าแรกใหม่ ธีมตามโลก (/w/front.js) */
 try{setTimeout(()=>{try{wLoad('hall').catch(()=>{})}catch(e){}},1500)}catch(e){console.error('hallStub',e)} /* 🏯 หอผู้ก่อตั้งใหม่ (/w/hall.js) */
 try{setTimeout(()=>{try{wLoad('arena2').catch(()=>{})}catch(e){}},1700)}catch(e){console.error('ar2Stub',e)} /* ⚔️ ลานหมื่นเงา ภาค 2 (/w/arena2.js) */
+try{setTimeout(()=>{try{wLoad('soul2').catch(()=>setTimeout(()=>wLoad('soul2').catch(()=>{}),6000))}catch(e){}},2600)}catch(e){console.error('sv2Stub',e)} /* ⭕ วิญญาณยุทธ์ภาค 2: ขีดปีวงแหวน · บัลลังก์เทพ · สัตว์ผู้เล่น (/w/soul2.js) */
 
 // 🎨 ไอคอนของในกระเป๋าแบบภาพ (items.webp 8×4) — แทน emoji ที่ตามด้วยชื่อของ ทุกจุดในเกม · ไม่มีภาพ = emoji เดิม
 try{(function(){
