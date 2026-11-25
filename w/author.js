@@ -6,6 +6,8 @@
 //     (โลก · พรกำเนิด สูงสุด 2 · เส้นเรื่องหลัก story.js · กฎโลกพลิก twist.js)
 //  4) เริ่มชีวิตใหม่ในโลกที่เลือก → บทนำทำงาน · ชีวิตที่เขียนเองไม่ขึ้นทำเนียบ (S.custom)
 //  เฟส 2: 📌 ปักหมุดชะตา (≤3 หมุด · เหตุการณ์ที่เขียนไว้เกิดตามช่วงวัย) · 💞 แก้ชะตาคนจากชีวิตก่อน (เจอกันอีกครั้งในชีวิตใหม่)
+//  เฟส 3: 🌀 รอยแยกกาล (จารึกเพิ่ม = หมึก×3 · ชีวิตธรรมดาลด 8) → ⏳ ผู้ตรวจกาลตามลบด้าย · ≥70% หมุดอาจถักเพี้ยน
+//         👁️ ตอนจบแท้: จบชีวิตที่เขียนเองครบ 3 โลก → 👑 อยู่บนบัลลังก์ / 🕊️ ปล่อยด้าย / 🔥 ตัดด้ายทั้งหมด
 //  ข้อมูล: LS murim_thr {w:{โลก:จำนวน}, ink, log[], miss, seen, pend} · ในเซฟ: S._au
 // ============================================================
 try{(()=>{
@@ -15,7 +17,7 @@ const WN={murim:['⚔️','ยุทธภพ','#e8c86a'],xian:['☁️','เซ
 const CAN=['murim','xian','soul','mw','sky','fog'];/* โลกที่เขียนบทนำได้ */
 const STW={murim:'murim',xian:'xian',soul:'soul',mw:'mw',sky:'sky'};/* ชื่อโลกใน story.js */
 const TWW={murim:1,xian:1,soul:1};/* โลกที่มีกฎโลกพลิก */
-const BOON={int:['🧠','ปัญญาเหนือวัย','ปัญญา +15'],body:['💪','กายาฟ้าประทาน','พลังชีวิตสูงสุด +30%'],life:['⏳','ด้ายยาว','อายุขัย +10 ปี'],rich:['💰','เกิดบนกองทรัพย์','เงินก้อนแรกเกิด']};
+const BOON={int:['🧠','ปัญญาเหนือวัย','ปัญญา +15'],body:['💪','กายาฟ้าประทาน','พลังชีวิตสูงสุด +30%'],life:['⏳','ด้ายยาว','อายุขัย +10 ปี'],rich:['💰','เกิดบนกองทรัพย์','เงินก้อนแรกเกิด'],dark:['🖤','ด้ายดำ','พลังพื้นฐาน +30% · อายุขัย −10 ปี']};
 const COST={boon:2,arc:3,tw:2,pin:2,re:3};
 const AGE=[['เด็ก',8,15],['หนุ่มสาว',16,30],['กลางคน',31,50],['บั้นปลาย',51,75]];
 const cashV=v=>Math.round(v*(S&&S.mw?400:1));
@@ -52,8 +54,10 @@ function rec(){try{if(!S||S._auE)return;const E0=$('end');if(!E0)return;S._auE=1
  const gain=1+((S.age|0)>=60?1:0)+(first?1:0)+(big?2:0);
  d.w[w]=(d.w[w]|0)+1;d.ink+=gain;
  d.log.push({w,n:String(S.name||'ไร้นาม').slice(0,24),a:S.age|0,au:S._au?1:0,p:ppl()});if(d.log.length>40)d.log=d.log.slice(-40);
+ if(S._au){d.auW=d.auW||{};d.auW[w]=1}else d.rift=Math.max(0,(d.rift|0)-8);
  const n=nW(d);let hit=false;
- if(n>=NEED){const p=d.miss>=4?1:(d.seen?.25:.5);hit=Math.random()<p;if(hit)d.miss=0;else d.miss++}
+ if(d.fin==='stay')hit=true;
+ else if(n>=NEED){const p=d.miss>=4?1:(d.seen?.25:.5);hit=Math.random()<p;if(hit)d.miss=0;else d.miss++}
  SV(d);box(E0,d,gain,first,big,hit)}catch(e){console.error('au rec',e)}}
 function ppl(){const o=[],add=(n,r,pet)=>{n=typeof n==='string'?n:(n&&n.n);n=String(n||'').replace(/<[^>]+>/g,'').trim().slice(0,24);if(n&&n!==S.name&&!o.some(x=>x.n===n)&&o.length<4)o.push(pet?{n,r,pet:1}:{n,r})};
  try{add(S.spouse,'คู่ชีวิต')}catch(e){}try{add(S.disc,'ศิษย์')}catch(e){}try{add(S.nem,'คู่ปรับ')}catch(e){}
@@ -95,22 +99,25 @@ function draw(){const d=G(),el=$('auTh');if(!el)return;const ws=CAN.filter(k=>d.
  const A=arcsOf(F.w),R=rulesOf(F.w);if(F.arc&&!A.some(a=>a.id===F.arc))F.arc='';if(F.tw&&!R.some(r=>r[0]===F.tw))F.tw='';
  const c=cost(),ok=c<=d.ink&&!!F.w;
  const chip=(on,t,a,dis,tip)=>`<button type="button" class="auC${on?' on':''}" ${dis?'disabled':''} data-a="${a}"${tip?` title="${E(tip)}"`:''}>${t}</button>`;
- el.innerHTML=`<div class="auHd">🪑 บัลลังก์ด้ายกาล <span>หมึกชะตา <b>${d.ink}</b></span></div>
+ const rf=d.rift|0,aw=Object.keys(d.auW||{}).length,ttl=TTL[d.fin]||'';
+ el.innerHTML=`<div class="auHd">🪑 บัลลังก์ด้ายกาล <span>หมึกชะตา <b>${d.ink}</b></span></div>${ttl?`<div class="auTtl">${ttl}</div>`:''}
+ <div class="auRf"><div class="auRfB"><i style="width:${rf}%"></i></div><span>🌀 รอยแยกกาล <b>${rf}%</b> · ${rf>=90?'⏳ ผู้ตรวจกาลจะตามมา 3 ครั้ง':rf>=60?'⏳ ผู้ตรวจกาลจะตามมา 2 ครั้ง':rf>=30?'⏳ ผู้ตรวจกาลจะตามมา 1 ครั้ง':'เส้นเวลายังนิ่ง'}${rf>=70?' · 📌 หมุดอาจถักเพี้ยน':''}</span></div>
+ ${d.fin!=='stay'?(aw>=3?`<div class="auFin"><b>👁️ ปลายด้ายทั้งหมดอยู่ในมือคุณแล้ว</b><div class="auSub">คุณเขียนชีวิตจนครบ ${aw} โลก ถึงเวลาตัดสินว่าจะทำอะไรกับด้ายทั้งหมด</div><button type="button" class="auBtn" id="auFinB">👁️ ไปยังปลายด้าย</button></div>`:`<div class="auSm">👁️ ตอนจบแท้: จบชีวิตที่เขียนเองให้ครบ 3 โลก (ตอนนี้ ${aw}/3)</div>`):''}
  <div class="auSub">จารึกบทนำของชีวิตถัดไป เมื่อคุณเริ่มชีวิตใหม่ในโลกที่เลือก ด้ายจะถูกถักตามนี้ · ชีวิตที่เขียนเองจะไม่ขึ้นทำเนียบ</div>
  ${d.pend?`<div class="auPend">📜 มีบทนำที่จารึกไว้แล้ว: ${E((WN[d.pend.w]||WN.murim)[1])} — จารึกใหม่จะคืนหมึกเก่าให้ก่อน</div>`:''}
  <h5>1 · โลกที่จะเกิด</h5><div class="auCs">${ws.length?ws.map(k=>chip(F.w===k,`${WN[k][0]} ${WN[k][1]}`,'w:'+k)).join(''):'<span class="auSm">ยังไม่มีด้ายจากโลกที่เขียนบทนำได้</span>'}</div>
- <h5>2 · พรกำเนิด <span>${COST.boon} หมึก · เลือกได้ 2</span></h5><div class="auCs">${Object.entries(BOON).map(([k,b])=>chip(F.b.includes(k),`${b[0]} ${b[1]}<small>${b[2]}</small>`,'b:'+k,!F.b.includes(k)&&F.b.length>=2)).join('')}</div>
+ <h5>2 · พรกำเนิด <span>${COST.boon} หมึก · เลือกได้ 2</span></h5><div class="auCs">${Object.entries(BOON).filter(([k])=>k!=='dark'||d.dark).map(([k,b])=>chip(F.b.includes(k),`${b[0]} ${b[1]}<small>${b[2]}</small>`,'b:'+k,!F.b.includes(k)&&F.b.length>=2)).join('')}</div>
  <h5>3 · เส้นเรื่องหลัก <span>${COST.arc} หมึก</span></h5><div class="auCs auScr">${A.length?chip(!F.arc,'🎲 ให้ฟ้าสุ่ม','arc:')+A.map(a=>chip(F.arc===a.id,'🧵 '+E(a.n),'arc:'+a.id)).join(''):`<span class="auSm">${window._story?'โลกนี้ยังไม่มีเส้นเรื่องให้เลือก':'กำลังเปิดม้วนเส้นเรื่อง…'}</span>`}</div>
  ${TWW[F.w]?`<h5>4 · กฎโลกพลิก <span>${COST.tw} หมึก · เกิดช่วงกลางชีวิต</span></h5><div class="auCs">${R.length?chip(!F.tw,'🎲 ให้ฟ้าสุ่ม','tw:')+R.map(([k,r])=>chip(F.tw===k,`${r.ic} ${E(r.n)}`,'tw:'+k,false,r.d)).join(''):'<span class="auSm">กำลังเปิดม้วนกฎโลก…</span>'}</div>`:''}
  <h5>5 · 📌 ปักหมุดชะตา <span>${COST.pin} หมึก/หมุด · สูงสุด 3 · เกิดแน่นอนในช่วงวัยที่เลือก</span></h5><div class="auCs">${Object.entries(PIN).map(([k,v])=>{const on=F.pins.findIndex(x=>x.k===k);return chip(on>=0,`${v[0]} ${v[1]}<small>${v[2]}</small>`,'p:'+k,on<0&&F.pins.length>=3)}).join('')}</div>
  ${F.pins.map((x,i)=>`<div class="auPin">${PIN[x.k][0]} ${PIN[x.k][1]} · ${AGE.map((a,j)=>chip(x.a===j,`${a[0]} <small>${a[1]}–${a[2]} ปี</small>`,'pa:'+i+'.'+j)).join('')}</div>`).join('')}
  <h5>6 · 💞 แก้ชะตาคนจากชีวิตก่อน <span>${COST.re} หมึก · จะได้เจอกันอีกครั้ง</span></h5><div class="auCs auScr">${(()=>{const P=people();return P.length?chip(F.re<0,'— ไม่แก้','re:-1')+P.map((q,i)=>chip(F.re===i,`${q.pet?'🐾':'🕯️'} ${E(q.n)}<small>${E(q.r)} ของ${E(q.of)} · ${(WN[q.w]||WN.murim)[1]}</small>`,'re:'+i)).join(''):'<span class="auSm">ยังไม่มีคนจากชีวิตก่อนที่บันทึกไว้ (จะเริ่มเก็บตั้งแต่ตอนจบครั้งถัดไป เช่น คู่ชีวิต ศิษย์ คู่ปรับ)</span>'})()}</div>
- <div class="auFt"><span>รวม <b>${c}</b> หมึก${c>d.ink?' · <i>หมึกไม่พอ</i>':''}</span><button type="button" class="auBtn" id="auW" ${ok?'':'disabled'}>✍️ จารึกบทนำ</button></div>
+ <div class="auFt"><span>รวม <b>${c}</b> หมึก${c?` · 🌀 +${c*3}%`:''}${c>d.ink?' · <i>หมึกไม่พอ</i>':''}</span><button type="button" class="auBtn" id="auW" ${ok?'':'disabled'}>✍️ จารึกบทนำ</button></div>
  <button type="button" class="auX" id="auBack">กลับไปที่ตอนจบ</button>`;
  el.querySelectorAll('.auC').forEach(b=>b.onclick=()=>{const [t,v]=b.dataset.a.split(':');if(t==='w'){F.w=v;F.arc='';F.tw=''}else if(t==='b'){F.b=F.b.includes(v)?F.b.filter(x=>x!==v):F.b.concat(v).slice(0,2)}else if(t==='arc')F.arc=v;else if(t==='tw')F.tw=v;else if(t==='p'){const i=F.pins.findIndex(x=>x.k===v);if(i>=0)F.pins.splice(i,1);else if(F.pins.length<3)F.pins.push({k:v,a:1})}else if(t==='pa'){const [i,j]=v.split('.').map(Number);if(F.pins[i])F.pins[i].a=j}else if(t==='re')F.re=+v;draw()});
- $('auBack').onclick=shut;$('auW').onclick=write}
+ $('auBack').onclick=shut;$('auW').onclick=write;const fb=$('auFinB');if(fb)fb.onclick=finale}
 function write(){const d=G();if(d.pend&&d.pend.c)d.ink+=d.pend.c;const c=cost();if(!F.w||c>d.ink){SV(d);return draw()}
- const RE=F.re>=0?people()[F.re]:null;d.ink-=c;d.pend={w:F.w,b:F.b.slice(),arc:F.arc,tw:F.tw,pins:F.pins.map(x=>({k:x.k,a:x.a})),re:RE?{n:RE.n,r:RE.r,pet:RE.pet?1:0,of:RE.of}:null,c,t:Date.now()};SV(d);
+ const RE=F.re>=0?people()[F.re]:null;d.ink-=c;d.rift=Math.min(100,(d.rift|0)+c*3);d.pend={w:F.w,b:F.b.slice(),arc:F.arc,tw:F.tw,pins:F.pins.map(x=>({k:x.k,a:x.a})),re:RE?{n:RE.n,r:RE.r,pet:RE.pet?1:0,of:RE.of}:null,c,t:Date.now()};SV(d);
  const A=arcsOf(F.w).find(a=>a.id===F.arc),R=F.tw&&window._tw&&window._tw.RULE[F.tw];
  const L=[`${WN[F.w][0]} เกิดใน<b>${WN[F.w][1]}</b>`].concat(F.b.map(k=>`${BOON[k][0]} ${BOON[k][1]}`),A?[`🧵 ${E(A.n)}`]:[],R?[`${R.ic} ${E(R.n)}`]:[],F.pins.map(x=>`📌 ${PIN[x.k][0]} ${PIN[x.k][1]} · วัย${AGE[x.a][0]}`),RE?[`💞 พบ <b>${E(RE.n)}</b> อีกครั้ง`]:[]);
  const el=$('auTh');if(el)el.innerHTML=`<div class="auHd">📜 บทนำถูกจารึกแล้ว</div><ul class="auL">${L.map(x=>`<li>${x}</li>`).join('')}</ul>
@@ -124,13 +131,17 @@ function write(){const d=G();if(d.pend&&d.pend.c)d.ink+=d.pend.c;const c=cost();
 let S0=null;try{S0=S}catch(e){}const T0=new WeakMap();
 function apply(){try{if(typeof S==='undefined'||!S||S===S0||S._au)return;const g=$('game');if(!S.alive||!g||!g.classList.contains('on'))return;
  if(!T0.has(S))T0.set(S,Date.now());if(Date.now()-T0.get(S)>25000)return;
- const d=G(),P=d.pend;if(!P||WK()!==P.w||(S.age|0)>30)return;
+ const d=G(),P=d.pend;
+ if(d.fin==='free'&&!S._auF&&(S.age|0)<=30&&(!P||WK()!==P.w)){S._auF=1;add('int',5);lifeAdd(5);setTimeout(()=>{try{log('🕊️ <b>ความทรงจำเลือนรางจากผู้ปล่อยด้าย</b> · ปัญญา +5 · อายุขัย +5 ปี','myth')}catch(e){}},700)}
+ if(!P||WK()!==P.w||(S.age|0)>30)return;
  d.pend=null;d.done=(d.done|0)+1;SV(d);const ag=S.age|0,rA=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
- S._au={w:P.w,b:P.b,arc:P.arc,tw:P.tw,pins:(P.pins||[]).map(x=>{const A=AGE[x.a]||AGE[1];return{k:x.k,age:Math.max(ag+1,rA(A[1],A[2])),done:0}}),re:P.re?Object.assign({},P.re,{age:Math.max(ag+1,rA(16,26)),done:0}):null};S.custom=true;
+ S._au={w:P.w,b:P.b,arc:P.arc,tw:P.tw,pins:(P.pins||[]).map(x=>{const A=AGE[x.a]||AGE[1];return{k:x.k,age:Math.max(ag+1,rA(A[1],A[2])),done:0}}),re:P.re?Object.assign({},P.re,{age:Math.max(ag+1,rA(16,26)),done:0}):null,
+  aud:Array.from({length:(d.rift|0)>=90?3:(d.rift|0)>=60?2:(d.rift|0)>=30?1:0},()=>({age:ag+rA(6,40),done:0})).sort((a,b)=>a.age-b.age)};S.custom=true;
  const out=[];
  if(P.b.includes('int')){S.int=(+S.int||0)+15;out.push('🧠 ปัญญา +15')}
  if(P.b.includes('body')){S.maxHp=Math.round((+S.maxHp||100)*1.3);S.hp=S.maxHp;out.push('💪 พลังชีวิตสูงสุด +30%')}
  if(P.b.includes('life')){if(S.mw){S.mw.wsL=(S.mw.wsL|0)+10;S.mw.end=(S.mw.end||80)+10}else S.lifespan=(+S.lifespan||70)+10;out.push('⏳ อายุขัย +10 ปี')}
+ if(P.b.includes('dark')){const g=pwr(.3);lifeAdd(-10);out.push('🖤 ด้ายดำ: พลัง +'+fmtN(g)+' · อายุขัย −10 ปี')}
  if(P.b.includes('rich')){const v=Math.round(300*(S.mw?400:1));S.money=(+S.money||0)+v;out.push('💰 ได้เงินก้อนแรกเกิด')}
  if(P.arc)wLoad('story').then(()=>{try{const st=window._story;st.arcInit();const a=st.ARCS.find(x=>x.id===P.arc);if(!a||!S._arcs||S._arcs.some(x=>x.id===a.id))return;
    const x=S._arcs[0]||{p:[],pt:[],ag:[],npc:'คนแปลกหน้า'};Object.assign(x,{id:a.id,i:0,nx:Math.max((S.age|0)+1,a.min|0),p:[],pt:[],ag:[],f:{hid:rp(a.hid||['x'])}});if(!S._arcs.length)S._arcs.push(x)}catch(e){console.error('au arc',e)}}).catch(()=>{});
@@ -145,9 +156,10 @@ function busy(){try{return !!(choice._cur||modalOpen||(typeof DU!=='undefined'&&
 function tick(){try{if(typeof S==='undefined'||!S||!S.alive||!S._au||busy())return;const U=S._au,ag=S.age|0;
  const p=(U.pins||[]).find(x=>!x.done&&ag>=x.age);if(p){p.done=1;return pinGo(p)}
  const r=U.re;if(r&&!r.done&&ag>=r.age){r.done=1;return reGo(r)}
+ const q=(U.aud||[]).find(x=>!x.done&&ag>=x.age);if(q){q.done=1;return audGo()}
  if(U.ally&&U.allyY!==ag){U.allyY=ag;S.hp=Math.min(S.maxHp,Math.round(S.hp+S.maxHp*.05))}}catch(e){console.error('au tick',e)}}
 function pinGo(p){const v=PIN[p.k];if(!v)return;
- choice(`📌 หมุดชะตา: ${v[0]} ${v[1]}`,`${v[3]}<br><span class="tag2">หมุดชะตาที่คุณปักไว้บนบัลลังก์ด้ายกาล</span>`,v[4].map(([t,sub,f])=>({t,s:sub,f(){let r='';try{r=f()}catch(e){console.error('au pin',e)}try{log(`📌 <b>${v[1]}</b> — ${t.replace(/^\S+\s/,'')}${r?' · '+r:''}`,'myth');render&&render()}catch(e){}}})))}
+ choice(`📌 หมุดชะตา: ${v[0]} ${v[1]}`,`${v[3]}<br><span class="tag2">หมุดชะตาที่คุณปักไว้บนบัลลังก์ด้ายกาล</span>`,v[4].map(([t,sub,f])=>({t,s:sub,f(){let r='';try{r=f()}catch(e){console.error('au pin',e)}try{if((G().rift|0)>=70&&Math.random()<.25){S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.2));add('karma',-3);r+=' · 🌀 แต่ด้ายถูกถักเพี้ยน พลังชีวิต −20% · บุญ −3'}}catch(e){}try{log(`📌 <b>${v[1]}</b> — ${t.replace(/^\S+\s/,'')}${r?' · '+r:''}`,'myth');render&&render()}catch(e){}}})))}
 function reGo(r){const n=E(r.n),R0=E(r.r),can=!r.pet&&!S.spouse&&!S.mw&&!S.beastMode&&(S.age|0)>=16;
  const o=[];
  if(can)o.push({t:'💞 ใช้ชีวิตร่วมกันอีกครั้ง',s:`${n}จะเป็นคู่ชีวิตของคุณในชาตินี้`,f(){S.spouse=String(r.n);try{keyAdd&&keyAdd(`ได้พบ${r.n}อีกครั้ง`)}catch(e){}log(`💞 คุณกับ<b>${n}</b>ใช้ชีวิตร่วมกันอีกครั้ง ด้ายสองเส้นที่เคยขาด ถูกถักกลับมาเป็นเส้นเดียว`,'myth',true)}});
@@ -155,6 +167,39 @@ function reGo(r){const n=E(r.n),R0=E(r.r),can=!r.pet&&!S.spouse&&!S.mw&&!S.beast
  o.push({t:'🕊️ แค่ยิ้มให้ แล้วปล่อยไป',s:'บุญ +10 · ปัญญา +5',f(){add('karma',10);add('int',5);log(`🕊️ คุณยิ้มให้<b>${n}</b> แล้วเดินจากมา ชาตินี้${n}จะมีชีวิตที่ยาวนาน เพราะคุณเป็นคนแก้ด้ายเส้นนั้นเอง`,'myth',true)}});
  choice(`💞 ด้ายที่ถูกแก้: คนที่คุณเคยเสียไป`,`ท่ามกลางผู้คน คุณสบตากับ<b>${n}</b> ชาตินี้${r.pet?'มัน':'เขา'}ไม่ได้เป็น${R0}ของคุณ แต่คุณจำได้ทันที<br><span class="tag2">ด้ายเส้นนี้คุณเป็นคนแก้เองบนบัลลังก์ด้ายกาล</span>`,o)}
 setInterval(tick,1500);
+
+// ---------------------------------------------------------------- 6) ⏳ ผู้ตรวจกาล
+const rfAdd=v=>{const d=G();d.rift=Math.max(0,Math.min(100,(d.rift|0)+v));SV(d);return d.rift};
+function erase(){const U=S._au;if(!U)return'';const p=(U.pins||[]).find(x=>!x.done);if(p){p.done=1;p.cut=1;return`หมุด ${PIN[p.k][0]} ${PIN[p.k][1]} ถูกลบ`}
+ if(U.re&&!U.re.done){U.re.done=1;U.re.cut=1;return`ด้ายของ ${E(U.re.n)} ถูกลบ ชาตินี้จะไม่ได้พบกัน`}
+ if(U.ally){const n=U.ally;U.ally=null;return`${E(n)}จำคุณไม่ได้อีกต่อไป แล้วเดินจากไป`}
+ lifeAdd(-5);return'อายุขัย −5 ปี'}
+function audGo(){const rf=G().rift|0,pF=Math.max(.3,Math.min(.7,.75-rf/200)),pT=Math.max(.3,Math.min(.75,.3+(+S.int||0)/400)),L=(t,c)=>{try{log(t,c||'',true);render&&render()}catch(e){}};
+ choice(`⏳ ผู้ตรวจกาล`,`เวลารอบตัวคุณหยุดนิ่ง ผู้คนค้างกลางก้าว เงาสวมเสื้อคลุมสีเทาก้าวออกมาจากรอยแยกกลางอากาศ <b>"ชีวิตนี้มีคนเขียนไว้ล่วงหน้า และมันผิดกฎของเส้นเวลา"</b><br><span class="tag2">🌀 รอยแยกกาล ${rf}%</span>`,[
+  {t:'⚔️ สู้เพื่อรักษาด้าย',s:`ชนะ ~${Math.round(pF*100)}% · แพ้: ด้าย 1 เส้นถูกลบ และเจ็บหนัก`,f(){if(Math.random()<pF){add('fame',60);const v=rfAdd(-12);L(`⚔️ <b>คุณฟันผู้ตรวจกาลจนร่างแตกเป็นเศษเวลา</b> · ชื่อเสียง +60 · รอยแยก ${v}%`,'myth')}else{const x=erase();S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.35));L(`⏳ ผู้ตรวจกาลชนะ · ${x} · พลังชีวิต −35%`,'bad')}}},
+  {t:'🎭 หลอกล่อด้วยไหวพริบ',s:`สำเร็จ ~${Math.round(pT*100)}% (ยิ่งปัญญาสูงยิ่งง่าย) · พลาด: ด้ายถูกลบ`,f(){if(Math.random()<pT){add('int',3);const v=rfAdd(-6);L(`🎭 คุณชี้ไปที่เส้นเวลาอื่น ผู้ตรวจกาลหันไปตามแล้วหายวับ · ปัญญา +3 · รอยแยก ${v}%`,'good')}else{const x=erase();S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.2));L(`⏳ ผู้ตรวจกาลมองทะลุแผน · ${x} · พลังชีวิต −20%`,'bad')}}},
+  {t:'📜 ยอมให้ลบด้าย 1 เส้น',s:'ปลอดภัย · รอยแยก −8%',f(){const x=erase();const v=rfAdd(-8);L(`📜 ผู้ตรวจกาลตัดด้ายไปหนึ่งเส้นอย่างสุภาพ · ${x} · รอยแยก ${v}%`,'')}}])}
+
+// ---------------------------------------------------------------- 7) 👁️ ตอนจบแท้
+const TTL={stay:'👑 ผู้ประพันธ์นิรันดร์',free:'🕊️ ผู้ปล่อยด้าย',cut:'🔥 ผู้ตัดด้าย'};
+const FIN={
+ stay:['👑','อยู่บนบัลลังก์ตลอดไป','คุมทุกเส้นเวลา แต่จะไม่ได้ใช้ชีวิตของตัวเองอีก',['บัลลังก์เปิดให้ทุกครั้งที่จบชีวิต (ไม่ต้องลุ้น)','ฉายา 👑 ผู้ประพันธ์นิรันดร์'],
+  'คุณนั่งลงบนบัลลังก์ แล้วด้ายนับล้านเส้นก็พันรอบข้อมือ คุณได้ยินทุกชีวิตในทุกโลกพร้อมกัน เสียงหัวเราะ เสียงร้องไห้ เสียงดาบ เสียงฝน คุณรู้ว่าจะไม่มีวันได้ลุกจากที่นี่ และนั่นคือราคาของการเป็นคนเขียน'],
+ free:['🕊️','ปล่อยด้าย','คืนชะตาให้ทุกคนเลือกเอง แล้วเกิดใหม่เป็นคนธรรมดา',['ทุกชีวิตต่อจากนี้เริ่มด้วยปัญญา +5 · อายุขัย +5 ปี','รอยแยกกาลกลับเป็น 0','ฉายา 🕊️ ผู้ปล่อยด้าย'],
+  'คุณคลายมือ ด้ายทุกเส้นค่อยๆ ลอยออกไปหาเจ้าของ บางเส้นสั่นเพราะไม่เคยต้องเลือกเองมาก่อน บางเส้นพุ่งออกไปอย่างมีความสุข บัลลังก์ว่างลง และคุณก็ลืมตาขึ้นเป็นทารกที่ไม่รู้ว่าพรุ่งนี้จะเป็นอย่างไร เป็นครั้งแรกในรอบหลายชีวิต'],
+ cut:['🔥','ตัดด้ายทั้งหมด','ลบทุกเส้นเวลา แล้วเริ่มจักรวาลใหม่',['ด้ายชะตาและบันทึกทุกชีวิตถูกลบ (ต้องเก็บใหม่ 4 โลก)','ได้หมึกชะตาตั้งต้น 15','ปลดล็อกพรกำเนิด 🖤 ด้ายดำ (พลังพื้นฐาน +30% แต่อายุขัย −10 ปี)','ฉายา 🔥 ผู้ตัดด้าย'],
+  'คุณดึงกรรไกรออกจากความว่าง แล้วตัด เส้นแรกเงียบ เส้นที่สิบเริ่มมีเสียงกรีดร้อง เส้นที่ร้อยไม่มีใครเหลือให้ร้องอีก เมื่อด้ายเส้นสุดท้ายขาด ความมืดก็กลายเป็นความเงียบที่สมบูรณ์ แล้วจากความเงียบนั้น ด้ายเส้นใหม่สีดำเส้นแรกก็เริ่มงอกออกมา']};
+function finale(){const o=ov();o.innerHTML=`<div class="auBox auTh"><div class="auHd">👁️ ปลายด้าย</div><div class="auSub">ด้ายทุกเส้นที่คุณเคยเขียน มาบรรจบกันตรงนี้ เลือกได้ทางเดียว</div>
+ ${Object.entries(FIN).map(([k,f])=>`<div class="auFc"><b>${f[0]} ${f[1]}</b><div class="auSub">${f[2]}</div><ul class="auL">${f[3].map(x=>`<li>${x}</li>`).join('')}</ul><button type="button" class="auBtn" data-k="${k}">${f[0]} เลือกทางนี้</button></div>`).join('')}
+ <button type="button" class="auX" id="auFinX">ยังไม่ตัดสินใจ</button></div>`;
+ o.querySelectorAll('.auFc .auBtn').forEach(b=>b.onclick=()=>{if(b.dataset.c){finGo(b.dataset.k);return}o.querySelectorAll('.auFc .auBtn').forEach(x=>{x.dataset.c='';x.textContent=FIN[x.dataset.k][0]+' เลือกทางนี้'});b.dataset.c='1';b.textContent='แตะอีกครั้งเพื่อยืนยัน (ย้อนกลับไม่ได้)'});
+ $('auFinX').onclick=throne}
+function finGo(k){const d=G(),f=FIN[k];d.fin=k;d.fins=(d.fins|0)+1;d.auW={};
+ if(k==='free')d.rift=0;
+ if(k==='cut'){d.w={};d.log=[];d.ink=15;d.rift=0;d.miss=0;d.pend=null;d.dark=1}
+ SV(d);try{keyAdd&&keyAdd('ตอนจบแท้: '+f[1])}catch(e){}
+ const o=ov();o.innerHTML=`<div class="auBox auEndF auE_${k}"><div class="auBig">${f[0]}</div><div class="auT">${f[1]}</div><p class="auStory">${f[4]}</p><div class="auTtl">${TTL[k]}</div><div class="auSm">— ตอนจบแท้ของด้ายกาล —</div><button type="button" class="auBtn" id="auFinOk">${k==='stay'?'🪑 กลับสู่บัลลังก์':'🌱 เริ่มต้นใหม่'}</button></div>`;
+ $('auFinOk').onclick=()=>{if(k==='stay')throne();else shut()}}
 
 const st=document.createElement('style');st.textContent=`
 .auEnd{margin:10px 0;padding:10px 14px;border-radius:14px;border:1.5px solid #6b8cff66;background:linear-gradient(160deg,#141a38cc,#0c0f22cc);color:#e6ebff}
@@ -180,7 +225,13 @@ const st=document.createElement('style');st.textContent=`
 .auC small{display:block;font-size:11px;opacity:.7}.auC.on{border-color:#ffd76a;background:#ffd76a26;color:#fff3c4;box-shadow:0 0 8px #ffd76a55}.auC:disabled{opacity:.35;cursor:not-allowed}
 .auFt{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;border-top:1px solid #ffffff1f;padding-top:8px}.auFt i{color:#ff9a9a;font-style:normal}
 .auPin{margin:6px 0 2px;padding:6px 8px;border-radius:10px;background:#ffffff08;font-size:13px;display:flex;flex-wrap:wrap;gap:5px;align-items:center}.auPin .auC{padding:3px 8px;font-size:12px}
+.auRf{margin:8px 0 4px;font-size:12px}.auRfB{height:6px;border-radius:4px;background:#ffffff14;overflow:hidden;margin-bottom:3px}.auRfB i{display:block;height:100%;background:linear-gradient(90deg,#6bb8ff,#c79bff,#ff6b8a)}
+.auTtl{display:inline-block;margin:4px 0;padding:2px 10px;border-radius:10px;background:#ffd76a26;border:1px solid #ffd76a88;color:#ffe9a8;font-size:12px;font-weight:700}
+.auFin{margin:8px 0;padding:10px;border-radius:12px;border:1.5px solid #c79bff;background:#c79bff1a;text-align:center;animation:auPulse 2.4s ease-in-out infinite}
+.auFc{margin:10px 0;padding:10px;border-radius:12px;border:1px solid #ffffff2a;background:#ffffff08}.auFc .auBtn{display:block;margin:8px auto 0}
+.auEndF{text-align:center;padding:24px 16px}.auBig{font-size:64px;line-height:1.1;animation:auIn 1.2s ease}.auStory{font-size:14px;line-height:1.8;margin:14px auto;max-width:460px;opacity:.92}
+.auE_cut .auBig{filter:drop-shadow(0 0 18px #ff5a3a)}.auE_free .auBig{filter:drop-shadow(0 0 18px #bfe8ff)}.auE_stay .auBig{filter:drop-shadow(0 0 18px #ffd76a)}
 .auPend{font-size:12px;margin:6px 0;padding:6px 8px;border-radius:8px;background:#ffd76a1a;border:1px dashed #ffd76a77}`;document.head.appendChild(st);
-window._au={G,SV,rec,scene,throne,apply,tick,PIN,NEED};
+window._au={G,SV,rec,scene,throne,apply,tick,PIN,NEED,audGo,finale,finGo};
 try{wReady('author')}catch(e){}
 })()}catch(e){console.error('author.js',e)}
