@@ -37,15 +37,17 @@ html body #modal.hall2 #vipWallL{display:block!important;grid-template-columns:n
 .h2Tb button.on{background:#e8c46a;border-color:#e8c46a;color:#120d08;font-weight:700}
 .h2Tb input{margin-left:auto;width:240px;max-width:100%;height:38px;border-radius:12px;background:#1c140c;border:1px solid #4a3520;color:#f6ecd8;padding:0 12px;font:inherit}
 .h2Gr{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;padding-top:12px}
-.h2T{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 10px 12px;border-radius:70px 70px 10px 10px;background:linear-gradient(180deg,#3a2614,#1f150c);border:1px solid #4a3520;box-shadow:inset 0 0 0 4px #00000033,0 6px 16px rgba(0,0,0,.4);text-align:center;min-width:0}
+.h2T{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 10px 12px;border-radius:70px 70px 10px 10px;background:linear-gradient(180deg,#3a2614,#1f150c);border:1px solid #4a3520;box-shadow:0 4px 0 rgba(0,0,0,.35);text-align:center;min-width:0}
+.h2T .pfav.hlpf{display:flex;justify-content:center;margin:0 auto 4px;line-height:0}.h2T .pfav.hlpf:empty{display:none}.h2T .pfav.hlpf .frph{width:54px!important;height:60px!important}
+.h2T.big .pfav.hlpf .frph{width:66px!important;height:73px!important}
 .h2T.mine{border:2px solid #e8c46a}
 .h2T .mt{position:absolute;top:-10px;padding:1px 10px;border-radius:99px;background:#e8c46a;color:#120d08;font-size:11px;font-weight:700}
 .h2T .lo{font-size:11px;color:#b9a684}.h2T .no{font-family:'Charm','Itim',serif;font-size:24px;color:#e8c46a;line-height:1}
-.h2T .nm{font-size:14px;font-weight:700;color:#f6ecd8;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.h2T .nm{font-size:14px;font-weight:700;color:#f6ecd8;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .h2T .dt{font-size:11px;color:#b9a684}.h2T .ws{font-size:12px;color:#e6d6b4;font-style:italic;min-height:17px;overflow-wrap:anywhere}
 .h2T .sk{display:flex;gap:4px;justify-content:center;height:24px;align-items:flex-end}
 .h2T .sk i{width:3px;height:22px;border-radius:2px;background:#8a7550}
-.h2T .sk.lit i{background:linear-gradient(180deg,#ffb04a 0 4px,#c9a36a 4px);box-shadow:0 -4px 8px #ff9a3a}
+.h2T .sk.lit i{background:linear-gradient(180deg,#ffb04a 0 4px,#c9a36a 4px)}
 .h2T .ib{display:flex;align-items:center;gap:6px;padding:5px 14px;border-radius:99px;border:0;background:#a8321f;color:#fff;font:inherit;font-size:12px;cursor:pointer}
 .h2T .ib:disabled{background:#3a2a14;color:#b9a684;cursor:default}
 .h2T.big .no{font-size:30px}.h2T.big .nm{font-size:17px}
@@ -54,8 +56,8 @@ html body #modal.hall2 #vipWallL{display:block!important;grid-template-columns:n
 `;
 function tab(r,big){
  const n=Math.min(5,Math.max(1,Math.ceil((r.c||0)/6)));
- return `<div class="h2T${r.k?' mine':''}${big?' big':''}" data-o="${r.o}">${r.k&&!big?'<span class="mt">ป้ายของฉัน</span>':''}<span class="lo">ลำดับที่</span><b class="no">${r.o}</b>
- <span class="nm">${r.pu?`<span class="pfav hlpf hlpfw" data-pu="${E(r.pu)}"></span>`:''}${E(r.n||'ไม่ระบุนาม')}</span><span class="dt">${dT(r.t)}</span><span class="ws">${r.w?E(r.w):'—'}</span>
+ return `<div class="h2T${r.k?' mine':''}${big?' big':''}" data-o="${r.o}">${r.k&&!big?'<span class="mt">ป้ายของฉัน</span>':''}${r.pu?`<span class="pfav hlpf hlpfw" data-pu="${E(r.pu)}"></span>`:''}<span class="lo">ลำดับที่</span><b class="no">${r.o}</b>
+ <span class="nm">${E(r.n||'ไม่ระบุนาม')}</span><span class="dt">${dT(r.t)}</span><span class="ws">${r.w?E(r.w):'—'}</span>
  <span class="sk${r.m?' lit':''}">${'<i></i>'.repeat(n)}</span><button type="button" class="ib" ${r.m?'disabled':''} onclick="h2Inc(${r.o},this)">${r.m?'จุดแล้ว':'จุดธูป'} · ${r.c||0}</button></div>`}
 function grid(){
  const g=$('h2Gr');if(!g)return;let a=L.slice();
@@ -76,7 +78,7 @@ function draw(){
  <div class="h2Bd"><aside class="h2As" id="h2As">${side()}</aside><div class="h2Mn"><div class="h2Tb">${[['o','ตามลำดับเข้าร่วม'],['c','ธูปมากสุด'],['t','ล่าสุด']].map(x=>`<button type="button" data-s="${x[0]}" class="${sortK===x[0]?'on':''}">${x[1]}</button>`).join('')}<input id="h2Q" placeholder="ค้นหาชื่อ" value="${E(q)}"></div>
  <div class="h2Gr" id="h2Gr"></div></div></div>`;
  el.querySelectorAll('.h2Tb button').forEach(b=>b.onclick=()=>{sortK=b.dataset.s;el.querySelectorAll('.h2Tb button').forEach(x=>x.classList.toggle('on',x===b));grid()});
- const i=$('h2Q');if(i)i.oninput=()=>{q=i.value.trim().toLowerCase();grid()};
+ const i=$('h2Q');let qt=0;if(i)i.oninput=()=>{clearTimeout(qt);qt=setTimeout(()=>{q=i.value.trim().toLowerCase();grid()},180)};
  grid();try{m.scrollTop=0}catch(e){}}
 window.h2Inc=async function(o,b){b.disabled=true;try{const j=await api('vipinc',{o});const r=L.find(x=>x.o===o);if(r){r.m=1;r.c=(j&&j.c)||((r.c||0)+1)}
  grid();const a=$('h2As');if(a)a.innerHTML=side();const s=$('h2St');if(s)s.innerHTML=stats();try{sfx('good')}catch(e){}}catch(e){b.disabled=false;try{toast('จุดธูปไม่สำเร็จ')}catch(x){}}};

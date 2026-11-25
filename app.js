@@ -46909,7 +46909,7 @@ html body.desk #modal[data-k="book"] .bkjs{flex-wrap:wrap!important;overflow:vis
 /* จัดขนาดหน้าต่าง + พับกล่องคำอธิบาย ทุกครั้งที่หน้าต่างเปลี่ยน */
 const fit=()=>{try{const m=document.getElementById('modal');if(!m)return;const on=document.body.classList.contains('desk')&&innerWidth>=1100;const k=m.dataset.k||'';
  m.classList.toggle('dkL',on&&L.has(k));m.classList.toggle('dkS',on&&S_.has(k));m.classList.toggle('dkM',on&&!L.has(k)&&!S_.has(k)&&k!=='choice');
- if(!on)return;
+ if(!on||m.classList.contains('hall2'))return;
  /* ปุ่มเดี่ยวที่ยืดเกือบเต็มหน้าต่าง → กว้างตามข้อความ (ไม่แตะปุ่มในตาราง/แถวที่มีหลายปุ่ม) */
  if(k!=='choice'){const mw=m.clientWidth;m.querySelectorAll('button:not(.opt):not(.xbtn):not(.dkBC)').forEach(b=>{const p=b.parentElement;if(!p||b.closest('.mgrid,.item,.grid,details,summary,.tabs,nav,.uxRow,.mnTri,.dk-btns,.wpS'))return;const ds=getComputedStyle(p).display;
   if(ds.includes('grid'))return;if(ds.includes('flex')&&[...p.children].filter(x=>x.tagName==='BUTTON').length>1)return;if(b.offsetWidth<mw*.72||b.offsetHeight>140)return;b.classList.add('dkBC')})}
