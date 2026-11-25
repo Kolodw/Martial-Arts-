@@ -46644,3 +46644,25 @@ try{(function(){
  if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
  try{const pl=L=>L.forEach(u=>{const im=new Image();im.src=u;(window._icKeep=window._icKeep||[]).push(im)});pl(['/items7.webp','/items8.webp']);setTimeout(()=>pl(['/items9.webp','/items10.webp','/items11.webp','/items12.webp','/items13.webp']),6000)}catch(e){} // ชุดหลักโหลดทันที ชุดที่ใช้น้อยโหลดทีหลังไม่ให้หน้าแรกหนัก
 })()}catch(e){console.error('mod-p7',e)}
+
+// ☰ เมนูอยู่ที่เดิมตลอด (ผู้เล่นแจ้ง: เมนูสลับที่จนหาไม่เจอ) — ปุ่มที่โผล่ตามสถานการณ์ (งานประมูล ล่าสัตว์ ฯลฯ) เคยแทรกหน้า/กลางหมวดทำให้ปุ่มอื่นเลื่อน
+// จำลำดับปุ่มของแต่ละหมวดไว้ในเครื่อง ปุ่มที่เพิ่งเห็นครั้งแรกต่อท้ายหมวด · ปุ่มเหตุการณ์ที่กำลังเปิดอยู่ใช้กรอบเรืองแสงแทนการย้ายขึ้นหน้า
+try{(function(){if(typeof openMenu!=='function')return;const KEY='murim_mnord';let ORD={};try{ORD=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){ORD={}}
+ const lab=b=>[...b.childNodes].filter(x=>x.nodeType===3||(x.nodeType===1&&x.tagName!=='SMALL'&&!x.classList.contains('mHotB'))).map(x=>x.textContent).join('').replace(/[\d,.]+/g,'').replace(/\s+/g,' ').trim();
+ const kOf=b=>{const oc=(b.getAttribute('onclick')||'').replace(/closeM\(\)\s*;?/g,'').replace(/\s+/g,'');return oc&&oc.length<80?oc.replace(/\(.*$/,''):'t:'+lab(b).slice(0,24)};
+ const HOT=/กำลังเปิด|พร้อมรับ|ใกล้ปิด|เหลือ\s*[\d,]+\s*ชิ้น/;
+ const fix=()=>{const m=document.getElementById('modal');if(!m||m.dataset.k!=='menu')return;let ch=0;
+  m.querySelectorAll('h4.mch15').forEach(h=>{let g=h.nextElementSibling;while(g&&!g.classList.contains('mgrid')&&g.tagName!=='H4')g=g.nextElementSibling;if(!g||!g.classList.contains('mgrid'))return;const cat=h.textContent.replace(/\(.*?\)|[▾▸▴▼▶►◂◀·]|\d+|ซ่อน.*$/g,'').replace(/\s+/g,' ').trim();const L=ORD[cat]||(ORD[cat]=[]);
+   const bs=[...g.children].filter(b=>b.matches('button.opt'));const seen=new Set();bs.forEach(b=>{let k=kOf(b);if(seen.has(k))k+='#'+[...seen].filter(x=>x.split('#')[0]===k).length;seen.add(k);b._mk=k;if(!L.includes(k)){L.push(k);ch=1}});
+   if(L.length>120)L.splice(0,L.length-120);
+   bs.sort((a,b)=>L.indexOf(a._mk)-L.indexOf(b._mk)).forEach(b=>g.appendChild(b));
+   bs.forEach(b=>{const hot=b._mk==='paJoin'||HOT.test((b.querySelector('small')||{}).textContent||'');b.classList.toggle('mHot',hot);const bd=b.querySelector(':scope>.mHotB');if(hot&&!bd)b.insertAdjacentHTML('beforeend','<i class="mHotB">เปิดอยู่</i>');else if(!hot&&bd)bd.remove()})});
+  if(ch)try{localStorage.setItem(KEY,JSON.stringify(ORD))}catch(e){}};
+ let busy=0,qd=0,mo=null;const run=()=>{qd=0;if(busy)return;busy=1;try{fix()}catch(e){console.error('mnord',e)}finally{if(mo)mo.takeRecords();busy=0}};
+ const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);run();try{if(!mo){const md=document.getElementById('modal');if(md){mo=new MutationObserver(()=>{if(!busy&&!qd&&md.dataset.k==='menu'){qd=1;Promise.resolve().then(run)}});mo.observe(md,{childList:true,subtree:true})}}}catch(e){}return r};
+ const st=document.createElement('style');st.textContent=`#modal .mgrid>button.opt.mHot{position:relative;border-color:#ffd25a!important;box-shadow:0 0 0 1px #ffd25a,0 0 12px rgba(255,200,70,.55);animation:mHotG 2.2s ease-in-out infinite}
+ #modal .mgrid>button.opt .mHotB{font-style:normal;position:absolute;top:4px;left:4px;z-index:2;font-size:10px;line-height:1;padding:3px 5px;border-radius:8px;background:#e8452c;color:#fff;font-weight:bold;box-shadow:0 1px 3px rgba(0,0,0,.4);pointer-events:none}
+ @keyframes mHotG{0%,100%{box-shadow:0 0 0 1px #ffd25a,0 0 8px rgba(255,200,70,.35)}50%{box-shadow:0 0 0 2px #ffe58a,0 0 18px rgba(255,200,70,.75)}}
+ body.lite #modal .mgrid>button.opt.mHot{animation:none}@media (prefers-reduced-motion:reduce){#modal .mgrid>button.opt.mHot{animation:none}}`;document.head.appendChild(st);
+ try{Object.assign(I18N.d,{'เปิดอยู่':'Live'})}catch(e){}
+})()}catch(e){console.error('mod-mnord',e)}
